@@ -1,311 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D212135A5;
-	Thu,  6 Feb 2025 12:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738844133; cv=fail; b=WziMOSJimaalIgoXM1AXF3BhuBX7hDCOv8/MCbEME6/CVq9fPg1FNshoVefc9c+5WPAp69Lmql+Uogmmzahndk096Wb8gzyobEUqhqUAycoetlmsB6QaNCfpyHAxnjlLvqarBBb7NqG8K32PEVLgp5pBwTPfl3aURvVHWMwyhRk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738844133; c=relaxed/simple;
-	bh=sduliqItnl+/Mj8Po0dS4rhD8e+N++5UPdljKZJFm1I=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=huMVI/H+dHou8WG9MujB3/obM7wryGBMQOB9tUUYWMdp6IpRdlAwe7IqyZjfItUGGN0LAudRrLGa2NHq7YBtQc0pblsYnEsA5Hu5lSta0ML4gnRy8tvICmZIFrpX/Z36kJ+TFYTet7RvEe2eQEuWVgivpqHkhHH9fVbc+bQzSAk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PaSDh7Fa; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PaSDh7Fa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738844131; x=1770380131;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=sduliqItnl+/Mj8Po0dS4rhD8e+N++5UPdljKZJFm1I=;
-  b=PaSDh7Fat0wamjDN6uGOJzailXtxpqsiTuvydpPSVhIc/Zpa/T/cUcg3
-   MWScFw/ukcyx+GXpqovNuVdnAbgZ0qnaNAPt9iu5GUI3aOrihd/OM+VFd
-   967wjOmMzCiSv+vjI1Bsyjnco34omIIXn8wLZjAtXftEBKVa/0hhHRFD8
-   diqhkoMvk0Z1/VPTV9zV/4kQ2KhbWhVGjig6279Wiy3ZF/6sL+smccntJ
-   +SK8kibRz0cp0YL5LcO70A+Y/EnxGHc6tocg+fX0bLjdecjYh0NbFZQ0M
-   I3SVQRdWYAu52CPks49gbeLug7Ujg8R/0htThDCDDgChg790QuUwaFP2P
-   A==;
-X-CSE-ConnectionGUID: Ri9SK4uyStaC7q2o+tZvDg==
-X-CSE-MsgGUID: 1lZkJjGVT1C/iq9T6sqzXQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39138584"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="39138584"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 04:15:30 -0800
-X-CSE-ConnectionGUID: FSnuv1IHQ02g17HJ8V6Cug==
-X-CSE-MsgGUID: MK1Yi94zR/yUFw762cISQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="115279870"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Feb 2025 04:15:29 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 6 Feb 2025 04:15:27 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Thu, 6 Feb 2025 04:15:27 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 6 Feb 2025 04:15:27 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EF3PYp/HrYecF41SBDYJ5Lz/v+iObPeRKi0Q9DB/1TqGx2WrpetkRDDTzQ318b6t/yigKY7n5vgRpBkknB1RTmkwUVQSPGQVXcWUxiMIZlAFQ3rwbidbsXTEl5OHpazakowCOHh73WsT7t7GtpOPXpyRUbJSOAa1dq6eab6ExPmke1m7+S11exndJV08L2oKY6I1SuYnFq3nElW9RUze+XidzGW+reYYdnLfMwGiX+pGgadjj1HYMWD8XPwUcuDvx5oDkekDODq0uy+uF0vRQqPPXqS+bxJqbOHXlk/0Z/NVgwpinb8bdCbumgwb4owSJlZ3WvLMQUlZihCI0NInew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BUtNmKGMyF1EtpyUXoVU5BPCtw1UnxggdEveqs4awDo=;
- b=b/NILc2y5kAIU132AOGhDJPvKxhcfxWrC1lwiJamnh31Ub4sh60XaludeZXr9t+qfc6bGLMxPHKP/BWngxX+XtMtrEnSXyK8HmnLoxMuF6QggFvhtzyfaDfpKkvy/5GaH49UW02EtwD0YS4zciS3ZPkimpC2JcoZ7Wx78etwYLj+KzmRcy+Jn0XNRgdBcwKtrt1HhOensIL5zYcjHKKzoihVaWi16j/FbTdVIwo0jk6/u4tuzWzfwsOflUvnva7bnODE01ya+g83ICymatrWlv1PooiYi0leas969mWQfe91wM3308FsJTEI9EZGpHtAbvOgcYaR4nnao+w7J4MHUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
- by PH7PR11MB8480.namprd11.prod.outlook.com (2603:10b6:510:2fe::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.10; Thu, 6 Feb
- 2025 12:15:24 +0000
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::4b3b:9dbe:f68c:d808]) by DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::4b3b:9dbe:f68c:d808%6]) with mapi id 15.20.8398.021; Thu, 6 Feb 2025
- 12:15:24 +0000
-Message-ID: <fe1b0def-89d1-4db3-bf98-7d6c61ff5361@intel.com>
-Date: Thu, 6 Feb 2025 13:12:03 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 1/8] net: gro: decouple GRO from the NAPI
- layer
-To: Eric Dumazet <edumazet@google.com>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
-	<davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Lorenzo Bianconi <lorenzo@kernel.org>, Daniel Xu
-	<dxu@dxuuu.xyz>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
-	<daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, John Fastabend
-	<john.fastabend@gmail.com>, =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?=
-	<toke@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, Martin KaFai Lau
-	<martin.lau@linux.dev>, <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?=
-	<toke@redhat.com>
-References: <20250205163609.3208829-1-aleksander.lobakin@intel.com>
- <20250205163609.3208829-2-aleksander.lobakin@intel.com>
- <CANn89iJjCOThDqwsK4v2O8LfcwAB55YohNZ8T2sR40uM2ZoX5w@mail.gmail.com>
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-Content-Language: en-US
-In-Reply-To: <CANn89iJjCOThDqwsK4v2O8LfcwAB55YohNZ8T2sR40uM2ZoX5w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: VI1PR0502CA0029.eurprd05.prod.outlook.com
- (2603:10a6:803:1::42) To DS0PR11MB8718.namprd11.prod.outlook.com
- (2603:10b6:8:1b9::20)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AC1D2288F5;
+	Thu,  6 Feb 2025 12:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738844158; cv=none; b=ZdLtUI5iFOSEq8nNFhFyM9vjF0w3Fhs9AoWKN39d5/LSQtUK5uw9EZ1cAmiChOxuK+F+RQ92vUgKkWF0tDi4sjZR9SVB4j1o8NG1CaOliX0ry+38MDHXHv//BU7ucnGKWTteR04RukVu8I/BamQEE5bnHYeiYunkVxNoiftBhVY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738844158; c=relaxed/simple;
+	bh=biMuNNUnivOyJHCNz5R+9p74VtDFagjLNpn2KojOK94=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dVJ6n7/XfjXYXqEd7/RjL3ghkleRPDisaIRhpSI1SzXM7uSpHYOZ/JiiAa58DNkWGJc9aF0nz/yfVJVjLIErERZDkriHmOOhNLYa1IpRML5vnKg91+YeCwNpJu/nzRjuNRFYWCJxs1iMpVk2/FRqdJ4waFPwWpYFNaTapcdgM9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1943912FC;
+	Thu,  6 Feb 2025 04:16:18 -0800 (PST)
+Received: from [10.57.80.166] (unknown [10.57.80.166])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98B683F63F;
+	Thu,  6 Feb 2025 04:15:49 -0800 (PST)
+Message-ID: <ed3f2549-cacc-4eaa-80c3-3f220835c9e6@arm.com>
+Date: Thu, 6 Feb 2025 12:15:47 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|PH7PR11MB8480:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8a2531b6-ae51-4b5f-4d1d-08dd46a7eee8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?SWs1dmcyWFJDRjlRSlZSNXZBSmxDUzgxaTFqOVYwYkIvdVhvUHczWEgvTVZT?=
- =?utf-8?B?T0xFSHQzMFFOQ0wzbTY1djI3dUFIUjU2dnpUVFJSZkFhUEVUMFk1VjhYSXM3?=
- =?utf-8?B?NGE2OHRWeE9lN05Gb0xoRE9GS0JGYWVHbXZxQ1p3TVA5VkQxL0l0VUJjcWNy?=
- =?utf-8?B?UFh4dm9OYTVvSFZFeU9ISTdqQlZPUGE5SGNEc05VUTdCdXltMlJKT2psRUlh?=
- =?utf-8?B?cmU2YzZ5dUZlRGRCaVdyRXZzcWJZKy9BRFg4RXd0aDBId3luYWlLc3JzN1ZM?=
- =?utf-8?B?MkVnczIyR2V0YWdHc2F4T08rU3F6amdtWnp4bEVHajQ1WnlRK1NwOTl2WVlr?=
- =?utf-8?B?VGVoOURnbjNtN2Y0Lzc1b0kxZklkd2x2ZTJoU3NoTjllNWVuTWRaSGEwdTB1?=
- =?utf-8?B?d3RCWU1HQjI0b0N3QjZMbVMvT2RZNHNBSytSdjRzaVQrMWJqa0NEWVExQ2hE?=
- =?utf-8?B?NWJoSy9ZbHJLcVlxcDgzb0pjWVROQ1Y0UUhHZGc0a0xyUFBUM2VWcVQyYS9v?=
- =?utf-8?B?dEdlWDQ2c2dueS9oV0EwR2VYN1U0OUNSUk5mVzd1VFZINW5pZkRna1g2Qisr?=
- =?utf-8?B?QkI2eVNRc295MUJtZUhNRHlDNVB4L25JeUd6ai94TDhqeExveTdidk1KTEZE?=
- =?utf-8?B?YVl1QnZiZEw1c1JxME10b2d0d2IxSGpSUm1MTUEzN2x1bTY2OEtCRW9GUzJP?=
- =?utf-8?B?Q1VOcG5OcmtuTUY4MVNaeXBZU1ZnTDlxSzJZejlxYnhYdWlxNjdGa2w1dWho?=
- =?utf-8?B?Z0RwTHdUai9Id1V4YkZLMzZ5NU43WnlkeEV4NkkyejIvRno3UGJncUxuMmR5?=
- =?utf-8?B?MXNpWEhWQ3B6TTQrMWNFek03Um1HcnEyb2JjK3hnakZoQ2twL3E5dXFBUVd6?=
- =?utf-8?B?TkVCWko4VlhYMndxV2FSV0ZRU0VvQlFOK0FvSlZSMXdyaWZxQ1JpRzBab0tG?=
- =?utf-8?B?KzNubzdBUnNacEJPWVQvR2tOc0Zqb1V5N2pyckpQb2NYc1BRLzZra0JnTk0y?=
- =?utf-8?B?YmM4aHF3M1RjcXhZU0YyRHFqVmorQ3VJTXh6Ym9sVllxdC8zdjlZWll6b0lj?=
- =?utf-8?B?OFp1cjRqVFVmbndlTTBiZ25GUWw3eDlxYVRYbnluV1JuZkJDR2J4S2xMOUwz?=
- =?utf-8?B?M3NaRENXamFzWVp6R0NYYzFDT3M5SWYydExCR1M3WE9uclY2Tm50WFhoekc4?=
- =?utf-8?B?bVJMY3dhVklhNU96WWF4Y2VzdFlpYkxBRm96OXJZWTdFcEhBcUNIdEdqeC94?=
- =?utf-8?B?YU9GY210WnY3L2F6QldCSmVKcHRRZXA3Wm04QThkVXBlWUs3VVJlL2pSTEQ5?=
- =?utf-8?B?WnJkekFTUDNnQnFpRG1xUDFMQWViVU5jd3hFTzJnbEQ2djlnamkydVRlQU5i?=
- =?utf-8?B?MW05UC9YZzd3N1VreXl5bkZWaDhGdldEUko5d3FvU1FTR24veTVQY0FqL3cy?=
- =?utf-8?B?VXBpeWNCS2xOVmFPR2NPaXZ3UXBQQWZCRjgvUnAxRkdzbW9IeFNhQmJSWmJJ?=
- =?utf-8?B?MU90OTJDY21iOGE5YkMxL2xkd1RHMTZiQkNZcTNYbHB2bXZJYnlRM1N3NFVk?=
- =?utf-8?B?NEJ5WXBkZGFWdGxCUFZiQU0yWXNkY1B3cjBkR3RwRXBzTjZsK2lqUWM0RnVi?=
- =?utf-8?B?ZXpMYmxFS3FXeXp2R084eTdsSEZkVmNEL2Z3cnYrQXdOVnYyY0M2SGN4amh4?=
- =?utf-8?B?UEdiVy9ybURGY016bXkvUnhsZXJLbktPYjZkSUxpOHJtdS9xOEVxZEtuNllW?=
- =?utf-8?B?QlZ0ejlpUlJCQjJUNHlwZXE1d2lpWDRCS2pvSmJXS0JMRzYvRzIrYmNsQ0xq?=
- =?utf-8?B?d2hOQmRzeTVXcmNiWENvUWM2RG1sNzVNQitOeloycjZRWUlCYXZiZUd0YUoy?=
- =?utf-8?Q?iyx1sn2DcLWDg?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?L1drL1ZnWFlxT3BtRHVLb0ZJZE56TlVkc1pQcjBWbFV4RzBVU2FDQ2k1TVho?=
- =?utf-8?B?R0d5cGZxMlI5YjUxclE3NmRqZnBWQ1lwMjZ6elZUTXV6TEdtbWRIeG54OWN0?=
- =?utf-8?B?dU5QSkw3TldIZHBCQm5USXlLYlR0VnhhZG1NcDZ5SHBaemVDQ3czWVg0L01R?=
- =?utf-8?B?TE01MDhsNGZLbFhUYmhqNTQ1eWxyK21zYzFBRUlnaElqWS9aamVMQ2dVVGFv?=
- =?utf-8?B?MWtYYmdKVlJWUmg2ZnorMzVLSGZXQU80WHFMZEt0K0pBZmJhUXlPZCt5Smox?=
- =?utf-8?B?bHRyNXp1RkpwM1UySjhTZFVxbGpWdU5qY3JLQ1pLUXo3UWdBQU8xVU9FTk9E?=
- =?utf-8?B?dHdtWUl6bTk5NWhsaFh3b1o2VThpWlRkL1hBb2psd2o3R1Q1UittRzExalVT?=
- =?utf-8?B?MENLYnJZL25IS2V6NnRuT0FZMmRVMVlYZFZacjVqRGd4SUJBUGZvMmZZdzU0?=
- =?utf-8?B?WGVKWjBocE5nRTRmcXZzUThqUkpVZ05hVjcrYTNFekJqUnNQWWZXcWwvdUdE?=
- =?utf-8?B?NzdaMFFJWE95RmRhQlJlbHhCWi9PZHoxd3JJb0p6aGhONGt1ZnBwRlFOUVZj?=
- =?utf-8?B?WXdLMVJVaXdNbEw4cFpGSC80eHljd2pDSkdlU1lGYnhnSFViMzByWGhFU3VF?=
- =?utf-8?B?cVN1YlVyeDBIVFFaZ2dDTWRrZFNJRmlIU2VsSExxL3lZNzFodHdkU011TUhm?=
- =?utf-8?B?MzNvRFJXOWVrdVJCUWxmeHNaS0M5c3hJYnVVUUlicU1PZ3hrTkY3YlpKWktN?=
- =?utf-8?B?NmtSYWJaNHNDVTkra1pnL3FKeXZ3UFEvcGNQeG8xMlcxYVpLMXpjejdKL2Y2?=
- =?utf-8?B?YSttcTVxYi9LQm9zL3VxSHRWNngrME1wRzlHMzVTbHg0SkVyVzhZZUJhOWVx?=
- =?utf-8?B?TmdFa25sOUpPa3R6Vkl1QVphSFhOWHBWTFM2MzdTblhMTUZ3cER0ZjZJK1h6?=
- =?utf-8?B?T3U4RWNUaEtOZDVSOW0zb2JNK2pIaEp2SzBQNWFUK2pjbkpOK1JCYXR6d1lJ?=
- =?utf-8?B?eVdxU29pUDVjUUdHampzMmhyMGxhSUhXN0dUc0c5TTNtZ0Jqb1RFb3JoblBY?=
- =?utf-8?B?cEhTSkhTNVRqS29Lbzc2UVNQTFl5TWptKzQvWDV1NmVhaTF3bWl0bGE1UkZu?=
- =?utf-8?B?U0JJNktCUFNCTnkrLzVoUGtLV0g1SGh3Y3FJV0twbTFPc1VHY0RhaGczYlRF?=
- =?utf-8?B?ZmcrZ3VFcnZlOEg0VjBZODhnZHVzSzUrcmFzWklRS29xVHhZQk1UVzNXS1F5?=
- =?utf-8?B?UURTTnYyTkkvak5sTTZxU3NDa1pBSWZ3bFhGeGpyaWdvTmY2Q1A2dEVPUExz?=
- =?utf-8?B?dzBoNktyWHEzMWFMUG5nMHNQWnhrcDFqbkFNNVI4T3E4SzFEU1k4eGNjRGNL?=
- =?utf-8?B?UFg1dXMyTGxOZHgwbXRQUVJROTlPc2tWVkxDa2VqYzdqVDdsWHVFV2FraHYw?=
- =?utf-8?B?TmtVRWk3YlNOS0NlT3dMQzBuV0w3L1FaQVpsbmZpclpmT1V0NVhRZFlyTm1j?=
- =?utf-8?B?aGhXZ0JXcUZlWE9JcXR0ak1SY3gzSTAxR1IyMHVCSU5XTHR3T1RjRkt0SW83?=
- =?utf-8?B?cjJGQ1FRdjJnZzhIbm9JU3lhSldQRk1QVzVFTk1uTDR6Y1lKVTBFT3JpbUp6?=
- =?utf-8?B?VWppODQ5QlIwQkQ2dkJPRldpakJwbEJyWW04aFByclk0cHIyVDRGT1YxL2JC?=
- =?utf-8?B?L0ZlQ2lxMERScDZkbm9uc0VJc0pZaU1VSUFVUFZxMUNhbVM5N0tmci9TNFlq?=
- =?utf-8?B?dTFFY2YvY0Npa1EzeWZrV2dESERieUVUdis4eXlCM0szNWVhd3YrcWx6TGxI?=
- =?utf-8?B?Sno3TmhtNzdXaXdnNkthWWxZN1NnRnpQQXFxOEJ4M2FYQi8wNmwwWWFMUUMz?=
- =?utf-8?B?Vjl6UGRHcXg5UjhVUGhTQzMxRXIya05aZldEMjNpTmtsb3YzTjZsQm5oUFhx?=
- =?utf-8?B?R3lTNHNFbzZKWm1kRnJKK1lwcHcxQjJtclNYQkNZT0JMRnVyK0xDaGtMczNR?=
- =?utf-8?B?WDlZdnVOc2VhMW1nMVlHeVNpVjlqYUt2emxiT0dVNjhZRUVLcTJvcXhtUUtt?=
- =?utf-8?B?RFU3a1c1UkdHSmVTWlRmbGFzemhkQ3dPb0kvSGJBcDh0VTZaeU0zd28xVkh2?=
- =?utf-8?B?VzNqekx4cnc1TFJGczBMNzVHNTJQSVg5eUVBWWZxK3orbUNjV3QybWNaVlZi?=
- =?utf-8?B?Y2c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a2531b6-ae51-4b5f-4d1d-08dd46a7eee8
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 12:15:24.4841
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jtgQCibdRUkabsLbaSnnp1kTiZKOKf+FgxsJczlGM21LrFjkYpjEP1G9DWLYOA6X7TMt7fVt8CtRk7upC0BzFF6LYzrP28w+vm3Kwbjjm6E=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8480
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 01/16] mm: hugetlb: Add huge page size param to
+ huge_ptep_get_and_clear()
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, stable@vger.kernel.org
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
+ <20250205151003.88959-2-ryan.roberts@arm.com>
+ <d8ef8240-e202-464c-ad16-1a34953cc872@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <d8ef8240-e202-464c-ad16-1a34953cc872@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 5 Feb 2025 18:48:50 +0100
+Thanks for the review!
 
-> On Wed, Feb 5, 2025 at 5:46 PM Alexander Lobakin
-> <aleksander.lobakin@intel.com> wrote:
+On 06/02/2025 05:03, Anshuman Khandual wrote:
+> 
+> 
+> On 2/5/25 20:39, Ryan Roberts wrote:
+>> In order to fix a bug, arm64 needs to be told the size of the huge page
+>> for which the huge_pte is being set in huge_ptep_get_and_clear().
+>> Provide for this by adding an `unsigned long sz` parameter to the
+>> function. This follows the same pattern as huge_pte_clear() and
+>> set_huge_pte_at().
 >>
->> In fact, these two are not tied closely to each other. The only
->> requirements to GRO are to use it in the BH context and have some
->> sane limits on the packet batches, e.g. NAPI has a limit of its
->> budget (64/8/etc.).
->> Move purely GRO fields into a new tagged group, &gro_node. Embed it
->> into &napi_struct and adjust all the references. napi_id doesn't
->> really belong to GRO, but:
+>> This commit makes the required interface modifications to the core mm as
+>> well as all arches that implement this function (arm64, loongarch, mips,
+>> parisc, powerpc, riscv, s390, sparc). The actual arm64 bug will be fixed
+>> in a separate commit.
 >>
->> 1. struct gro_node has a 4-byte padding at the end anyway. If you
->>    leave napi_id outside, struct napi_struct takes additional 8 bytes
->>    (u32 napi_id + another 4-byte padding).
->> 2. gro_receive_skb() uses it to mark skbs. We don't want to split it
->>    into two functions or add an `if`, as this would be less efficient,
->>    but we need it to be NAPI-independent. The current approach doesn't
->>    change anything for NAPI-backed GROs; for standalone ones (which
->>    are less important currently), the embedded napi_id will be just
->>    zero => no-op.
->>
->> Three Ethernet drivers use napi_gro_flush() not really meant to be
->> exported, so move it to <net/gro.h> and add that include there.
->> napi_gro_receive() is used in more than 100 drivers, keep it
->> in <linux/netdevice.h>.
->> This does not make GRO ready to use outside of the NAPI context
->> yet.
->>
->> Tested-by: Daniel Xu <dxu@dxuuu.xyz>
->> Acked-by: Jakub Kicinski <kuba@kernel.org>
->> Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
->> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+>> Cc: <stable@vger.kernel.org>
+>> Fixes: 66b3923a1a0f ("arm64: hugetlb: add support for PTE contiguous bit")
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 >> ---
->>  include/linux/netdevice.h                  | 26 +++++---
->>  include/net/busy_poll.h                    | 11 +++-
->>  include/net/gro.h                          | 35 +++++++----
->>  drivers/net/ethernet/brocade/bna/bnad.c    |  1 +
->>  drivers/net/ethernet/cortina/gemini.c      |  1 +
->>  drivers/net/wwan/t7xx/t7xx_hif_dpmaif_rx.c |  1 +
->>  net/core/dev.c                             | 60 ++++++++-----------
->>  net/core/gro.c                             | 69 +++++++++++-----------
->>  8 files changed, 112 insertions(+), 92 deletions(-)
+>>  arch/arm64/include/asm/hugetlb.h     |  4 ++--
+>>  arch/arm64/mm/hugetlbpage.c          |  8 +++++---
+>>  arch/loongarch/include/asm/hugetlb.h |  6 ++++--
+>>  arch/mips/include/asm/hugetlb.h      |  6 ++++--
+>>  arch/parisc/include/asm/hugetlb.h    |  2 +-
+>>  arch/parisc/mm/hugetlbpage.c         |  2 +-
+>>  arch/powerpc/include/asm/hugetlb.h   |  6 ++++--
+>>  arch/riscv/include/asm/hugetlb.h     |  3 ++-
+>>  arch/riscv/mm/hugetlbpage.c          |  2 +-
+>>  arch/s390/include/asm/hugetlb.h      | 12 ++++++++----
+>>  arch/s390/mm/hugetlbpage.c           | 10 ++++++++--
+>>  arch/sparc/include/asm/hugetlb.h     |  2 +-
+>>  arch/sparc/mm/hugetlbpage.c          |  2 +-
+>>  include/asm-generic/hugetlb.h        |  2 +-
+>>  include/linux/hugetlb.h              |  4 +++-
+>>  mm/hugetlb.c                         |  4 ++--
+>>  16 files changed, 48 insertions(+), 27 deletions(-)
 >>
->> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
->> index 2a59034a5fa2..d29b6ebde73f 100644
->> --- a/include/linux/netdevice.h
->> +++ b/include/linux/netdevice.h
->> @@ -340,8 +340,8 @@ struct gro_list {
->>  };
->>
->>  /*
->> - * size of gro hash buckets, must less than bit number of
->> - * napi_struct::gro_bitmask
->> + * size of gro hash buckets, must be <= the number of bits in
->> + * gro_node::bitmask
->>   */
->>  #define GRO_HASH_BUCKETS       8
->>
->> @@ -370,7 +370,6 @@ struct napi_struct {
->>         unsigned long           state;
->>         int                     weight;
->>         u32                     defer_hard_irqs_count;
->> -       unsigned long           gro_bitmask;
->>         int                     (*poll)(struct napi_struct *, int);
->>  #ifdef CONFIG_NETPOLL
->>         /* CPU actively polling if netpoll is configured */
->> @@ -379,11 +378,14 @@ struct napi_struct {
->>         /* CPU on which NAPI has been scheduled for processing */
->>         int                     list_owner;
->>         struct net_device       *dev;
->> -       struct gro_list         gro_hash[GRO_HASH_BUCKETS];
->>         struct sk_buff          *skb;
->> -       struct list_head        rx_list; /* Pending GRO_NORMAL skbs */
->> -       int                     rx_count; /* length of rx_list */
->> -       unsigned int            napi_id; /* protected by netdev_lock */
->> +       struct_group_tagged(gro_node, gro,
->> +               unsigned long           bitmask;
->> +               struct gro_list         hash[GRO_HASH_BUCKETS];
->> +               struct list_head        rx_list; /* Pending GRO_NORMAL skbs */
->> +               int                     rx_count; /* length of rx_list */
->> +               u32                     napi_id; /* protected by netdev_lock */
->> +
+>> diff --git a/arch/arm64/include/asm/hugetlb.h b/arch/arm64/include/asm/hugetlb.h
+>> index c6dff3e69539..03db9cb21ace 100644
+>> --- a/arch/arm64/include/asm/hugetlb.h
+>> +++ b/arch/arm64/include/asm/hugetlb.h
+>> @@ -42,8 +42,8 @@ extern int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+>>  				      unsigned long addr, pte_t *ptep,
+>>  				      pte_t pte, int dirty);
+>>  #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+>> -extern pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+>> -				     unsigned long addr, pte_t *ptep);
+>> +extern pte_t huge_ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
+>> +				     pte_t *ptep, unsigned long sz);
 > 
-> I am old school, I would prefer a proper/standalone old C construct.
-> 
-> struct gro_node  {
->                 unsigned long           bitmask;
->                struct gro_list         hash[GRO_HASH_BUCKETS];
->                struct list_head        rx_list; /* Pending GRO_NORMAL skbs */
->                int                     rx_count; /* length of rx_list */
->                u32                     napi_id; /* protected by netdev_lock */
-> };
-> 
-> Really, what struct_group_tagged() can possibly bring here, other than
-> obfuscation ?
+> If VMA could be passed instead of MM, the size of the huge page can
+> be derived via huge_page_size(hstate_vma(vma)) and another argument
+> here need not be added. Also MM can be derived from VMA if required.
 
-You'd need to adjust every ->napi_id access, which is a lot.
-Plus, as I wrote previously, napi_id doesn't really belong here, but
-embedding it here eases life.
+I considered this approach; infact that's what I first implemented when fixing
+an equivalent bug on set_huge_pte_at() in the past. But that was problematic
+because there are some cases where the helper is used for kernel mappings (see
+vmalloc) and there is no VMA to pass in that case. See [1].
 
-I'm often an old school, too, but sometimes this helps a lot.
-Unless you have very strong preference on this.
+To fix this bug, usage of this helper for kernel mappings is not an issue (yet)
+so I guess technically it could be fixed by passing VMA. But later in this
+series I start using huge_ptep_get_and_clear() for the vmap (see patch 11) so it
+would break at that point.
 
-> 
-> Less than 30 uses in the whole kernel tree...
+Another approach I considered was to allocate a spare swap-pte bit (we have a
+few) to indicate PTE_CONT for non-present PTEs. Then no API change is required
+at all. But given set_huge_pte_at() and huge_pte_clear() already pass "sz", it
+seemed best just to keep things simple and follow that pattern.
+
+[1] https://lore.kernel.org/all/20230922115804.2043771-1-ryan.roberts@arm.com/
 
 Thanks,
-Olek
+Ryan
+
