@@ -1,83 +1,105 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A65E239567
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CFB4C8E;
+	Thu,  6 Feb 2025 17:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738861672; cv=none; b=U6AcPwGr+QVtOBiZQvTN1ltUzKNjJdvFsRYxsbxZY2fkUzw6wua7g5vb9ob3yLXG0MGydXBKu8Peo9iZdrB4vY5x4ecoSpAtUi840kgPBdtyj9yKox9r3Wxdf/fRMey+Bx4MpPhLC6m2tGQXOQ6bscfQUTRsCVEohMwu65CDm6I=
+	t=1738861841; cv=none; b=ZNrQhbq7zojvq9zxvl8anv7CH66vwxz8rfPlS+2HFAdv8mGrkMoUYAbCdJi+37I3K6/M6cz/2UzJEylL5AAom2sPi8yle4FT4AWaX6b97/zzwF1KJtaFof7kQAPvF+0GoqQFs5GFgRO/k5jjBHXhMxqr+8GJ5BGo2bV9QnbFrwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738861672; c=relaxed/simple;
-	bh=NFOu8YkYKMLVSMWOlSerZdbn6qxsZhfGpBaw2vec+SM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=uOo8iJDUBoNkK8BqWQveIQ47/crVys126HVerTN7171U2wpdW+4SVkWi1vvpkkDAgPrYS3V1lRm1P4DKJXFNnqq6qO4ktqFR/8spnKYoRasvlSw1n2C8lOcw4YVFMSzJx8qNmbUJdlUR06NZY5wdtFvICPn8HwtouzD80u6aCw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=V5tfF/Go; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1738861841; c=relaxed/simple;
+	bh=NOTO4+zXZEoBsrz9z+45KaUNMnLZfNLozSWhAbN475U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sbEOm6RMVrzxWAx97z3Q9lT9ixc8rBTbk7YLiLaSzrXsASEnFpXS5M5MG0Rg8xlBhdjSx4HOhR0dw+iIDiNEECwKexB7LsZ/inejZ7pj51aNm9T0p0b0j6ViZFAIP7n029pkZWj98zHii6JuOA0kmqsC57VVZ8jVfSzu5gJC0ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n2jc8AcK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="V5tfF/Go"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6B855442BE;
-	Thu,  6 Feb 2025 17:07:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738861668;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2taOfS6UmQKEI7wuUTCU2ak/Qb2Q0kvynZ5wujlAtSc=;
-	b=V5tfF/GoO7XLmaaGdKISt5kKntHgBSJf5ZjHNlComoZFQ4/xN5fjvGf4psMk1mDVcPqDWK
-	cl5W5kheP7+tDXNzuot35RvTtVCPKlVW0qBhj000Bm/CLuu8Nxw1dGzgh9b45G0O/Hp/Ch
-	e0nWUVWpXcApeNbkQXzcRW2XLn9Ak2Sedn2RbUbgCq5h81YBhbAPs/9Klp6SYl0Qa19GpT
-	4YgR78mABE65Jb+cpcIVcZ3ZtSl3C/o/FIml5jbVkjyGYvKDGzKEEddOvOq906QEaona1Y
-	r7nMH98CCbMvGxR4HRDKJM8Dg0A7tE3E3EV4L8gKAolYWwMnlyg15Es4BhMqew==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Cheng Ming Lin <linchengming884@gmail.com>
-Cc: vigneshr@ti.com,  linux-mtd@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  richard@nod.at,  alvinzhou@mxic.com.tw,
-  leoyu@mxic.com.tw,  Cheng Ming Lin <chengminglin@mxic.com.tw>
-Subject: Re: [PATCH v3 2/2] mtd: spi-nand: macronix: Add support for read retry
-In-Reply-To: <20250122065605.285145-3-linchengming884@gmail.com> (Cheng Ming
-	Lin's message of "Wed, 22 Jan 2025 14:56:05 +0800")
-References: <20250122065605.285145-1-linchengming884@gmail.com>
-	<20250122065605.285145-3-linchengming884@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Thu, 06 Feb 2025 18:07:46 +0100
-Message-ID: <87pljv3st9.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n2jc8AcK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C57EC4CEDD;
+	Thu,  6 Feb 2025 17:10:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738861841;
+	bh=NOTO4+zXZEoBsrz9z+45KaUNMnLZfNLozSWhAbN475U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n2jc8AcKTg73NviSgUcSyGx9M5x2tEx6pBQCo5lUlGfPGdhQBTH7Je22/bg/sZo+R
+	 2OetnZeoghyUATVy88sVrmPVoMCSarpMkh/Om4ImRTmCJ5HJ+pc0sh/nauE8prcAqM
+	 9MWiNVVePgtYdzqHsYe0bugcD563Rhdj5OzFYjM1Rult+rDKbXE7Oy7Alud3Fqn6VX
+	 uasHcMWgof9iFW6uf2bVi3mI7wtvH67ncVOOS35Sr4U3APieXStvavCTTDzEBdZM61
+	 tnR+gmGy7jAWimr1xF3GzTvuFgEraDUakwI/+UWs9+5havil/Ctc2PzYUt7Lmd/qgw
+	 h28d/5x2jJT4g==
+Date: Thu, 6 Feb 2025 10:10:36 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Brendan Jackman <jackmanb@google.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] objtool: Add option to fail build on vmlinux
+ warnings
+Message-ID: <20250206171036.GF180182@ax162>
+References: <20250113-objtool-strict-v3-0-8b51f94957fb@google.com>
+ <20250114001440.cagqlvjfvw6ghsj7@jpoimboe>
+ <CA+i-1C0MFQCLOah56wWQhPhtk4p0ynhxh48eTmQ0-0x+pB6fvw@mail.gmail.com>
+ <20250130183042.GB3394637@ax162>
+ <CA+i-1C2rw6uNOpeY8fakco8T75udRhLJLxJ4CHgJNKBhbxGa_A@mail.gmail.com>
+ <20250131204920.GA1974131@ax162>
+ <CA+i-1C1A_0nkY6G+W3n=dYqEJHZGuEwNXK=xrWNwDh7561x_9A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieelgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepkedprhgtphhtthhopehlihhntghhvghnghhmihhnghekkeegsehgmhgrihhlrdgtohhmpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehlihhnuhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtp
- dhrtghpthhtoheprghlvhhinhiihhhouhesmhigihgtrdgtohhmrdhtfidprhgtphhtthhopehlvghohihusehmgihitgdrtghomhdrthifpdhrtghpthhtoheptghhvghnghhmihhnghhlihhnsehmgihitgdrtghomhdrthif
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+i-1C1A_0nkY6G+W3n=dYqEJHZGuEwNXK=xrWNwDh7561x_9A@mail.gmail.com>
 
-Hello,
+On Thu, Feb 06, 2025 at 04:05:01PM +0100, Brendan Jackman wrote:
+> OK, it would be interesting to spend a couple of hours staring at
+> these errors and see if I can get a feel for the overal picture..
+> 
+> Also, now that I think about it I'm a bit embarrassed I didn't try
+> building allmodconfig before sending this series (maybe I had
+> forgotten it exists?)! Sorry about that :)
+> 
+> On Fri, 31 Jan 2025 at 21:49, Nathan Chancellor <nathan@kernel.org> wrote:
+> > > But I can also envisage a world where that creates exactly as much
+> > > work for you, just introducing Kconfig hackery for no reason!
+> >
+> > Such is the nature of such changes. It is not that big of a deal for us
+> > to work around in the short term but it would still need to be addressed
+> > pretty quickly at that point.
+> 
+> I can't quite parse what you're getting at here - is this an opinion
+> about the idea to depend on !COMPILE_TEST, and if so are you in favour
+> of it?
 
-On 22/01/2025 at 14:56:05 +08, Cheng Ming Lin <linchengming884@gmail.com> w=
-rote:
+Sorry, that was more of a comment around having to disable that
+configuration for builds such as allmodconfig if necessary to keep our
+builds green. We can do it but that is not a long term solution because
+we are not the only ones building allmodconfig with clang and we cannot
+just tell everyone to disable it.
 
-> @@ -377,7 +424,9 @@ static const struct spinand_info macronix_spinand_tab=
-le[] =3D {
->  		     SPINAND_HAS_QE_BIT,
->  		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
->  				     macronix_ecc_get_status),
-> -		     SPINAND_CONT_READ(macronix_set_cont_read)),
-> +		     SPINAND_CONT_READ(macronix_set_cont_read)
+> My thinking is that if it defaults n and isn't in allmodconfig, the
+> only people who will turn it on are those who actively care about
+> clean objtool for their build. Which.. isn't really what we want long
+> term, but it's better than not having the option at all and is already
+> a step in the direction of something that can act as a "ratchet".
 
-I think there is a missing coma here and everywhere else where there is
-continuous read support?
+Right, I think gating on '!COMPILE_TEST' would not be a terrible way to
+introduce it. We would definitely want to remove that dependency as
+soon as possible because we want compile testers to be qble to find
+these problems and have them be noticeable but it should make the
+introduction of CONFIG_OBJTOOL_WERROR less disruptive.
 
-> +		     SPINAND_READ_RETRY(MACRONIX_NUM_READ_RETRY_MODES,
-> +					macronix_set_read_retry)),
->  	SPINAND_INFO("MX35UF1GE4AC",
->  		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0x92, 0x01),
->  		     NAND_MEMORG(1, 2048, 64, 64, 1024, 20, 1, 1, 1),
+> If not, I'll go ahead with the OBJTOOL_FLAGS thing. (Which is still a
+> nice step in that direction).
 
-Thanks,
-Miqu=C3=A8l
+This may still be worth doing because with the aforementioned
+dependency, it would make it difficult to test with --Werror for
+COMPILE_TEST configurations.  Maybe Josh or Peter have other opinions
+though.
+
+Cheers,
+Nathan
