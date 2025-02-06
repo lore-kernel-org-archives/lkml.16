@@ -1,120 +1,118 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EED2451F0;
-	Thu,  6 Feb 2025 13:20:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A978248184
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738848027; cv=none; b=ev6S5pQzQ8MNAFkBTINT4VAPSJKGFZO5OY7mDefOvOalp2vefrY8PkRq/mP/bz9S521i2gFjoT7h7wLADlMJ0xn6Pt8Y1Ot0Rd6A+6/xyAVpCAtBXvf1C0KnJHgZvNRAOwgnD3x/n5lxWTPnZ43NZmYSHFggfvzG3nnRqFc6fUQ=
+	t=1738848028; cv=none; b=ObEdMo2b+8Aterud9Hm9zJUOTpTAzFPa33OwTORETk9rfRg5f459pQqbcjcjCVPMp2JGiIAzLUGw8WEyqLur8BpYYk2Q5HPMTBL0jK9fzk6f2hUNyN2V1CYhaFL5AOQRgEQgFrWkCvYgVCT8fSOjwlElFzGmpGbvbUfq3RSTh6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738848027; c=relaxed/simple;
-	bh=85OGFqCAaYhHp9+67jN8c6VZPGWz0QLxevvnw8zRwLE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AQR6yTzu3ZkYlHVA3+ke0JA7BY83L8dxXdOKxSwcCBYyMSx+TeeMU3KgBvCgCQnxd4R53GmWnyi+TGsMcQLet9v2MbdmYBbU22QlqLBZbbs9N8pBN/L0DRIOPY1A1ZnS+FjEyj9sgOFF3+frFSEcuwlU6Ceq9hiFFGojAMkLBGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Vsra+7bh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IvIe/z1D; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738848028; c=relaxed/simple;
+	bh=/8yDtOhiTSdR/J3JnQgABqnDOPtJ5A90copPotre4SA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mFYVAtKWagbO0b9hqh7F0KllEpUQsFjOmT1KVDsON4YNAkTSJtvOhfeKw/d6fx0bq5Y5pPpM9S3hgI3IPzHt+O3YELm4SEqicBypf91nuLhUYxNNuvJPSF5tscUMorhXKb3Lf/iq2EZAAtBm9LrELdHrQ8L8BFAkec0M7frWcQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=OTShSsiU; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Vsra+7bh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IvIe/z1D"
-Date: Thu, 6 Feb 2025 14:20:22 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738848023;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0Ud3Qu2rXs7gKlmPU8x2diyWcmreX5g6Jir9z7AYo2Q=;
-	b=Vsra+7bhKm9lHVvPeMv4HsaPWHQq0miNDYD4giIigcTE6+1b92B9WaqzWrT+Hhbjp9x4hO
-	etvZB5QjHgy0MhYdnIdnRqAOlhb6RGf3UT9ohGnEzoODPuqjNCsCHwm7zRtLEDbNZh0ZxX
-	1JdnkzAzcUj3XNu/4i+ZL92CL37DzoXS1cVcRiJqSPMngIOAeTtEJ6AhFdKsWf8FZjb8m8
-	I+4K3HvD6HkGXwNw4AH7pI9OEl5GND7Uhqp/72nm3UTppsPaMyT/B0vuCCqz8MeThBGCdT
-	CnT7lh5XcqFgpH2c0N8vk+zFjAfWsf+KGd3HHQPYylr3cP/OaWCfyFEuA+EEhw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738848023;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0Ud3Qu2rXs7gKlmPU8x2diyWcmreX5g6Jir9z7AYo2Q=;
-	b=IvIe/z1DEyPwDIET7ND0p6Do1/gTd/Eu+o6lDk7vaU30Voa8a/qwsrPUCezHNX9XvfwWDZ
-	ZrVHN26MvqfrHGBA==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: enh <enh@google.com>
-Cc: Jeff Xu <jeffxu@chromium.org>, Pedro Falcato <pedro.falcato@gmail.com>, 
-	Benjamin Berg <benjamin@sipsolutions.net>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Kees Cook <kees@kernel.org>, akpm@linux-foundation.org, jannh@google.com, 
-	torvalds@linux-foundation.org, adhemerval.zanella@linaro.org, oleg@redhat.com, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, linux-mm@kvack.org, 
-	jorgelo@chromium.org, sroettger@google.com, ojeda@kernel.org, adobriyan@gmail.com, 
-	anna-maria@linutronix.de, mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com, 
-	deller@gmx.de, rdunlap@infradead.org, davem@davemloft.net, hch@lst.de, 
-	peterx@redhat.com, hca@linux.ibm.com, f.fainelli@gmail.com, gerg@kernel.org, 
-	dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org, Liam.Howlett@oracle.com, 
-	mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, 
-	rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au, 
-	Vlastimil Babka <vbabka@suse.cz>, Andrei Vagin <avagin@gmail.com>, 
-	Dmitry Safonov <0x7f454c46@gmail.com>, Mike Rapoport <mike.rapoport@gmail.com>, 
-	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
-Subject: Re: [PATCH v4 1/1] exec: seal system mappings
-Message-ID: <20250206135150-6c770e7d-9af8-4924-b760-82cff5092586@linutronix.de>
-References: <202501061647.6C8F34CB1A@keescook>
- <CABi2SkUfAoCbsknnXnyoFbCPOFRahDx+Vqz3ohnyf_G1p4eszA@mail.gmail.com>
- <CABi2SkXS9OOwP2BZGQOa=Pn+NoL1VmOJBJEn-6tWBBQwLtpYiw@mail.gmail.com>
- <5cf1601b-70c3-45bb-81ef-416d89c415c2@lucifer.local>
- <CABi2SkX--gf8XtzBd1G7wS6E=F51rFckP62V0GrONuXs1TCOcQ@mail.gmail.com>
- <7071878c-7857-4acd-ac27-f049cbc84de2@lucifer.local>
- <2e5de601da34342d8eb0d8319dcf81ff213c7ef0.camel@sipsolutions.net>
- <CAKbZUD1btTbeEht6W5MmhgtEJk3dg55cBpBtoDL0ieaL=23qeQ@mail.gmail.com>
- <CABi2SkWoNTd5sRJ7-7arPfutYZx6xi9iac0mXZyfzuVXuh1atA@mail.gmail.com>
- <CAJgzZop04=7+13jjV_zDfJF4dyJ7tp-86G8_mRe=C=sBEp+z3Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="OTShSsiU"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21661be2c2dso16224455ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 05:20:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1738848025; x=1739452825; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xce49/BY9vfXB35z8CeRZ6MSP3HJqpKyFsN4Gqyc7dc=;
+        b=OTShSsiUIG0spRMll8phJSoMy2YnBIKT52PySrZSXQGBfSBizhbax4N8RZTyX0WWRE
+         P3bjyjwtpdrpP5tIo3oD8sCh1vROHPd2nh0gEVOxUy8F8MtnBo2MEbefIff5KuyJWNyx
+         itUNEYwym67Lx6hwo4YINDES0RftGwJJLcZCGnLC6qT3dz1ThwMyJNPRA5NSysEYIoxi
+         RC1mFRSK2rqAwgs0TXXYx8VUZqzRdUYXUV262J0+64TxeocBhEUOPxOXwglSKf37ZXpb
+         VyZ5ILFLB3LtvMqsu5q2GTanJOMVtQFt+eaEq9Kpfm08NJnvDkP21vjWEm1HoQi1adY5
+         5xhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738848025; x=1739452825;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xce49/BY9vfXB35z8CeRZ6MSP3HJqpKyFsN4Gqyc7dc=;
+        b=d+dKLHo9tEKUQNcjB0c01n+adLOhqhlmkF1OX91mfxY+nEiXaRhRLe4bYY9rUiT1v6
+         UBiCFHtYKLl4NfR2+D4ltY5p29peWsBGbu4K27CdDJGMfsgh/mIzKHVU+CYVkPlfP8qY
+         LRgtsKKtv/YwPlh/cqs+ioEAhaBLn1ynOslgnx7YXtkU3a97x8PHAzr7iY59rCpu1Vec
+         zHIuVcVanoiPKjeSumT+xhgxrlo5TtHbNnUixg9c3V+YS7btGyUprSUY7frxMJVX0jDI
+         f6F7WCq6RaNCSYJ4HMURlGeAg5FfU6xaOqsHxkKXR7J2dZ7mkYzck659YgZP/562SImp
+         PDMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkEVJhzW7QKMXkhWrMXoei2ifxatxAyYGtbcarmS2wRuHlweWNZbDAnrrGABsY1ufHFsuVGMt4u8rS3os=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybBaoAqNEm1yEusy9tWFyq5k2zh6+KMpU5BTBOygG0tN2nRT42
+	dqrvcGCiTL+p+x6PCq0tCQNlHcc5dtqot1hETzuPfKDbQbz3UePqnpc9NwWjZ2o=
+X-Gm-Gg: ASbGnct14yzgB01FLdBYkQojrVKe23xAnUvW/JYgM4SXu7nxhDnJ0EnmWVzfQIuitFA
+	jgHJYcURf8E8J5cF0aohGmNgHQrkNk7bkovJBbUPgiEkjpgeou2ar3MaRCvz3JHrWJUAQKudL6b
+	dbsfLk5cLBOFRUG4FbhrqfJQNE1ivTwNVHvH6kXpdigsr6Zjia1k5IWcaGqeeIUECO8QoHaMPOK
+	+WYIeWvuoEELHPNrLy48siySAnQPrJXWPPtmYeLMtpVVU/K6XpZ0e7ihum016/Oy6D5S4LAxiNd
+	hQUcgWHds3EZt0AQWA==
+X-Google-Smtp-Source: AGHT+IFcNT/rNgI2uCAPNRIwNCrMXf037u5qAVa3V5iSa1fu7wy92g99/HkKLyrbAq4szqQ1+3GzCQ==
+X-Received: by 2002:a17:902:eccc:b0:21f:1af3:b318 with SMTP id d9443c01a7336-21f1af3b387mr108852145ad.53.1738848025272;
+        Thu, 06 Feb 2025 05:20:25 -0800 (PST)
+Received: from L4CR4519N7.bytedance.net ([203.208.189.11])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d987sm12170775ad.120.2025.02.06.05.20.20
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 06 Feb 2025 05:20:25 -0800 (PST)
+From: Rui Qi <qirui.001@bytedance.com>
+X-Google-Original-From: Rui Qi
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	ardb@kernel.org,
+	haibo1.xu@intel.com,
+	guohanjun@huawei.com,
+	sunilvl@ventanamicro.com,
+	samuel.holland@sifive.com,
+	parri.andrea@gmail.com,
+	ericchancf@google.com
+Cc: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	Rui Qi <qirui.001@bytedance.com>
+Subject: [RFC 5/5] RISC-V: define ioremap_cache
+Date: Thu,  6 Feb 2025 21:19:26 +0800
+Message-Id: <20250206131926.91289-6-qirui.001@bytedance.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20250206131926.91289-1-qirui.001@bytedance.com>
+References: <20250206131926.91289-1-qirui.001@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJgzZop04=7+13jjV_zDfJF4dyJ7tp-86G8_mRe=C=sBEp+z3Q@mail.gmail.com>
 
-On Fri, Jan 17, 2025 at 02:35:18PM -0500, enh wrote:
-> On Fri, Jan 17, 2025 at 1:20 PM Jeff Xu <jeffxu@chromium.org> wrote:
+From: Rui Qi <qirui.001@bytedance.com>
 
-<snip>
+Define ioremap_cache for riscv, otherwise it will
+cause compile errors for bert.c and einj.c
 
-> > There are technical difficulties to seal vdso/vvar from the glibc
-> > side. The dynamic linker lacks vdso/vvar mapping size information, and
-> > architectural variations for vdso/vvar also means sealing from the
-> > kernel side is a simpler solution. Adhemerval has more details in case
-> > clarification is needed from the glibc side.
-> 
-> as a maintainer of a different linux libc, i've long wanted a "tell me
-> everything there is to know about this vma" syscall rather than having
-> to parse /proc/maps...
-> 
-> ...but in this special case, is the vdso/vvar size ever anything other
-> than "one page" in practice?
+Signed-off-by: Rui Qi <qirui.001@bytedance.com>
+---
+ arch/riscv/include/asm/io.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-x86 has two additional vvar pages for virtual clocks.
-(Since v6.13 even split into their own mapping)
-Loongarch has per-cpu vvar data which is larger than one page.
-The vdso mapping is however many pages the code ends up being compiled as,
-for example on my current x86_64 distro kernel it's two pages.
-In the near future, probably v6.14, vvars will be split over multiple
-pages in general [0].
+diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io.h
+index 1c5c641075d2..c81d2de007bc 100644
+--- a/arch/riscv/include/asm/io.h
++++ b/arch/riscv/include/asm/io.h
+@@ -134,6 +134,11 @@ __io_writes_outs(outs, u64, q, __io_pbr(), __io_paw())
+ #endif
+ 
+ #include <asm-generic/io.h>
++#define ioremap_cache ioremap_cache
++static inline void __iomem *ioremap_cache(phys_addr_t addr, size_t size)
++{
++	return (__force void *)ioremap_prot(addr, size, _PAGE_KERNEL);
++}
+ 
+ #ifdef CONFIG_MMU
+ #define arch_memremap_wb(addr, size)	\
+-- 
+2.20.1
 
-Figuring out the start and size from /proc/maps, or the new
-PROCMAP_QUERY ioctl, is not trivial, due to architectural variations.
-
-Trying to construct the size from the ELF header is also problematic as
-that only contains information about the vdso code.
-The vvars are mapped before the code in memory independently.
-
-A dedicated interface like a prctl() would be actually reliable.
-Or theoretically a function from the vdso itself.
-
-<snip>
-
-[0] https://lore.kernel.org/lkml/20250204-vdso-store-rng-v3-0-13a4669dfc8c@linutronix.de/
