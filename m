@@ -1,123 +1,172 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25FE18C03D;
-	Thu,  6 Feb 2025 17:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9C718C03D;
+	Thu,  6 Feb 2025 17:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738863484; cv=none; b=Dx/xZS+lZtvGEbqu6BJjYvcaPGTfC8TBQ6+IbF5IwlItcrF9jfygG/dJLR3JwSul22SG2Vt4AgqyHafsruJlzNKoXZL/dbXE2S2y1Jh9Q4BpJQebvyDHqn8Z1GfQ+ZaVMWJRmTxFj9GuXO/ujB5lDva94Gty/E0dj1Z2gpc7Smg=
+	t=1738863489; cv=none; b=TJkdq3O9JP0cZkJMTnnNw6b3ezi3yVPnaOAyu0rhHzXzUmgq1I/+gw/DQiFvLOtbew1Y6I7Gqlo6cJ7to9xEQysSZvT3cpF/euhGGKgnspqTmQba1/I7h0iaukHoH+QZmrWA4Y1vKJ1NFsWectuwvLRdSHAX8Mz5QjxU0HQHxmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738863484; c=relaxed/simple;
-	bh=tPfSmrDpunQu3eiZmacptJEJWHn0VJK/OxlF68AoqXo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=esQNdLl52pk3j8uJNEnt7SL0wZGKe78PGUqhHkg4aFd4DxI97kYYkqwlBW8g9SnfnWI/hrZ1pHppN3om2UCClfwhgdGd8S8tixXWoy2/7GqdxEMCr4y3+1ojmF6xGJjrOl3PpgAG0EkFk4X8b2EZQg5f/2OxRi396tjnWrO0IKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hk2IKZN6; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738863489; c=relaxed/simple;
+	bh=dqJ4n9Q3ZVtMUaFbbzHiUawoZJfE32xuznAZa6at1pM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ubRQgBj79RkoLq7Nl7Maw0e1nW6QahBdOyLoBv5pM9r1lfkmHRM+8UorplqW69qmgcvVtSa3RWPKasHCtpG3OxamTGqgSSJ/yaFgbVxP0gfbwaUmF96NmbE8UgaGdKlcVl2UMo8dZd6nJRXZa7TOMMvCEQ4sIF5fX6xfLT5PXaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a0WQuEwY; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hk2IKZN6"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 516HbQ5V3669272
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 6 Feb 2025 11:37:26 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738863446;
-	bh=x15m93AblVbz0xCdBhH0P7Wxy7u1wg8ByFlIodaKRVA=;
-	h=From:To:CC:Subject:Date;
-	b=hk2IKZN6GXSpLupszh6NWLN/r9szHN0zZgr7nGQ97z/CUiNcWsHHjuVLgR4G1mv6W
-	 HgBiGj6j3qu6WoLcq+1eG0AHM5so9thQTa1BFyV6FBVxLV09UAEndkcWRTXuycGn+l
-	 ly4LwgDxcGl5Fd/3OaA4WmylrxokVEWIL6WRUo0s=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 516HbQie015513;
-	Thu, 6 Feb 2025 11:37:26 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 6
- Feb 2025 11:37:25 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 6 Feb 2025 11:37:25 -0600
-Received: from DMZ007XYY.dhcp.ti.com (dmz007xyy.dhcp.ti.com [128.247.29.251])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 516HbPCD015728;
-	Thu, 6 Feb 2025 11:37:25 -0600
-From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-To: <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <aaro.koskinen@iki.fi>,
-        <andreas@kemnade.info>, <khilman@baylibre.com>, <rogerq@kernel.org>,
-        <tony@atomide.com>, <lee@kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC: <m-leonard@ti.com>, <praneeth@ti.com>
-Subject: [PATCH v5 0/5] Add TI TPS65214 & TPS65215 PMIC MFD Driver Support
-Date: Thu, 6 Feb 2025 11:37:20 -0600
-Message-ID: <20250206173725.386720-1-s-ramamoorthy@ti.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0WQuEwY"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4679d366adeso11687251cf.1;
+        Thu, 06 Feb 2025 09:38:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738863487; x=1739468287; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kXvQ5Oc/m98jyk1RhupMsIszSXWKUMyfwetIuKs4jAA=;
+        b=a0WQuEwYlC9s+M6ng+X5psGljcNmNrrDwdtAwavWpSrYaCixt8NZD9y5crvGfvYXq+
+         5KmZCH32gvMiQ6xxsz2YV8lJNf4piQfA+S1Q4lQtGBCIWm+1sdsojFSbzBIWwZP4Cw2X
+         7kEwn/4lWEAbU6xIQQ07dOL1maAl8LMv81zYZmNG14pDf66jwzjkoqEHfmS9UB3Y7281
+         8F1x4lvFx+IjwtLAe9PIsT3PnnUOz7Yk0XaHo2QkRvY91zUPecelUowGvam4BUz2T5ex
+         ZgV10Qasd4uir+JBW6oH2b9F2vR5xxXElAAwdRC1A5PPGMi7buWW3ZRc2pvp0Sac0eHW
+         9J6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738863487; x=1739468287;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kXvQ5Oc/m98jyk1RhupMsIszSXWKUMyfwetIuKs4jAA=;
+        b=u5TIIo+oUYcZ/CcZhm62YlgNEAFyrcDzT/45stQVCa3VdGHdncha5npP9sfcwLETlY
+         aTGbHCa7AMusO87H5pf7Xm+rCksC+E1U6A26+Z02BNJrr+5X8QiSQYz5Kp0x+fnPCYao
+         YlPvISmA1qCDDAt/R2YJbFYWOy5iaq2qmg/8mqJBvLBizBj3HohpJag2hqvLkuzhk82W
+         x907UmcSzgoWq1cQOs9jpPjaFQ2jg1J/zIOJSVWzEplWm/BVR1S9lskfq0p+RVOqZ6ST
+         MAjy3mkJvdl/knv30Lf+04UlPK+49pgl9D7Mu3/8WXr/ff8w++7ad/W8EDswp39FQkR+
+         daWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVLYsehQ3f4OAzKta91PDyowdH0sIPPLh+Kji0+bl7lTs0xhrzrUHIyQqTA+53XzYHf8Ac5Th57m5ohA14=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqoPDr+fDcuq+cZuBr+7yYKjBmEr6HMdSYENCZP4enHHW/445D
+	72EIswz1oENB/bbPJj6dLGd59Ruk+0FanMaQx3bCz3gANkOF1mNL
+X-Gm-Gg: ASbGncsW9SQtlqsTbBBswBMngGVr2VeGfdg24iftZDJ1GkVaXYV3t5uYXrGjBh3zwjj
+	WWKCNPaEP7pVVIZeW5WTuzk/fRH121ioBAr0AfdxBD+kQpuPm5N3ZXWdpnHtAPLsQAfrdQgWfMn
+	6U5o/l42Fk+1MvHrsZguUuJLhAik9gqOdICbVH4I/v9yCwMbCwsqEp3jcG6klMzh8JodL/kuETS
+	d6Kxxkb42pB8i3bMplDT+lUSRAG2XNb5sfo6d4cRRVODI0BouumWo9bqqPBCVal3/CcUdALbi+p
+	LIP18oL0qWV7R2EwRdJsrX7iAnX+bFFPod0HFGTT2kZPiB6jNKda1mkXG3OPEi5T9h1jzaoASLH
+	dRx/J3Q==
+X-Google-Smtp-Source: AGHT+IFzwIat12wI/zpa6cZf7XjFOO+p/98ordKeVkTu/KP2O23RX3u6+03GYe3oGIQayjNBOgcYwQ==
+X-Received: by 2002:ac8:5992:0:b0:467:5cd2:4001 with SMTP id d75a77b69052e-4703357d6eamr51550521cf.3.1738863487082;
+        Thu, 06 Feb 2025 09:38:07 -0800 (PST)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4714928d97bsm7390491cf.19.2025.02.06.09.38.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 09:38:06 -0800 (PST)
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 02CE7120006A;
+	Thu,  6 Feb 2025 12:38:06 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Thu, 06 Feb 2025 12:38:06 -0500
+X-ME-Sender: <xms:ffOkZ5gLbdOvBP-vbsuD5FkPs-6Cq9msxRJIUqvcZHmDDDoLWyZaEg>
+    <xme:ffOkZ-Cb7sVIqf_LFl-sJ8XzduwYlmcto-VOi1_DDhTMZiXACeRadT5WtjvqWyoyx
+    zOebxEzrXu7v1mtIA>
+X-ME-Received: <xmr:ffOkZ5H2g5B_NEjn8iFDUdkiFiAI0d4WUvk06K5miySZTgSXl_yHyY8vYw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedttdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
+    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
+    drtghomheqnecuggftrfgrthhtvghrnhephfetvdfgtdeukedvkeeiteeiteejieehvdet
+    heduudejvdektdekfeegvddvhedtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhn
+    odhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejje
+    ekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhn
+    rghmvgdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoh
+    epphgruhhlmhgtkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgtuhesvhhgvghr
+    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvg
+    hrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvghrnhgvlhdqthgvrghmsehmvght
+    rgdrtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhrtg
+    hpthhtoheplhgvihhtrghoseguvggsihgrnhdrohhrghdprhgtphhtthhopehvshgthhhn
+    vghiugesrhgvughhrghtrdgtohhmpdhrtghpthhtohepfhhrvgguvghrihgtsehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopegsohhquhhnsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:ffOkZ-StRWhvSY4jgcthUiD0F45GOrDEUjLnkmTywveChLT8P9L0TQ>
+    <xmx:ffOkZ2ymWUIXuSqtaw9lnKW6p7jqfturDaqUQMVhsJcuwp_hSwcFrQ>
+    <xmx:ffOkZ06AJ2AmCWvVtDYn3N0e6t2rSC43h1kvDFPmU0R6Lh5XbwYAKQ>
+    <xmx:ffOkZ7xGnczSsikgIjzOGrJ9J64pwF9RRg5YxtBLgi04rqjBj1KYNg>
+    <xmx:ffOkZ-jShLKmQh8YHw9IV_uZPq8RaQaykbYYIEOtK2S3fWtlf4ixqYPG>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 6 Feb 2025 12:38:05 -0500 (EST)
+Date: Thu, 6 Feb 2025 09:38:04 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	rostedt@goodmis.org, leitao@debian.org, vschneid@redhat.com,
+	frederic@kernel.org
+Subject: Re: [PATCH rcu 6/5] Make RCU watch ct_kernel_exit_state() warning
+Message-ID: <Z6TzfG4UZyKcpRzB@Mac.home>
+References: <7b24a850-7d56-4386-8544-be5e643b6b9f@paulmck-laptop>
+ <43f70961-1884-42bf-b303-1d33665d99d2@paulmck-laptop>
+ <bd911cd9-1fe9-447c-85e0-ea811a1dc896@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bd911cd9-1fe9-447c-85e0-ea811a1dc896@paulmck-laptop>
 
-TPS65214 and TPS65215 are Power Management Integrated Circuits (PMICs) that
-have significant register map overlap with TPS65219 and each other. The 
-series introduces the 2 new PMICs and restructures the existing driver to 
-support multiple devices.
+On Thu, Feb 06, 2025 at 02:15:09AM -0800, Paul E. McKenney wrote:
+> The WARN_ON_ONCE() in ct_kernel_exit_state() follows the call to
+> ct_state_inc(), which means that RCU is not watching this WARN_ON_ONCE().
+> This can (and does) result in extraneous lockdep warnings when this
+> WARN_ON_ONCE() triggers.  These extraneous warnings are the opposite
+> of helpful.
+> 
+> Therefore, invert the WARN_ON_ONCE() condition and move it before the
+> call to ct_state_inc().  This does mean that the ct_state_inc() return
+> value can no longer be used in the WARN_ON_ONCE() condition, so discard
+> this return value and instead use a call to rcu_is_watching_curr_cpu().
+> This call is executed only in CONFIG_RCU_EQS_DEBUG=y kernels, so there
+> is no added overhead in production use.
+> 
+> Reported-by: Breno Leitao <leitao@debian.org>
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+> 
 
-- TPS65214, TPS65215, and TPS65219 each have 3 Buck regulators
-- TPS65214 has 2 LDOS and 1 GPO, whereas TPS65219 has 4 LDOs and 2 GPOs.
-- TPS65214's LDO1 maps to TPS65219's LDO3.
-- A key difference between TPS65215 & TPS65214 are the LDO current and
-  voltage output ranges and the configurable options available.
-- TPS65215 has 2 LDOs, whereas TPS65219 has 4 LDOs.
-- TPS65215's LDO2 maps to TPS65219's LDO3.
-- TPS65215 has 1 GPO, whereas TPS65219 has 2 GPOs.
+Queued at:
 
-TPS65214 TRM: https://www.ti.com/lit/pdf/slvud30
-TPS65215 TRM: https://www.ti.com/lit/pdf/slvucw5/
+	git://git.kernel.org/pub/scm/linux/kernel/git/rcu/linux.git misc.2025.02.06a
 
-AM62L + TPS65214 Test Logs:
-https://gist.github.com/ramamoorthyhs/0793f7813332d94423ca1baee02f62c9
-AM62L + TPS65215 Test Logs:
-https://gist.github.com/ramamoorthyhs/7560eca6110fafc77b51894fa2c0fd22
+I added the "context_tracking:" tag to the title while I'm at it.
 
----
-Change Log:
-v4 -> v5:
-- TPS65214 dt-binding patch: Remove duplicated "then:", combine "if:" 
-  statements with enum.
-v3 -> v4:
-- Update commit header to be "mfd: tps65219" since the driver name has not 
-  been changed from TPS65219.
-- Added dt-bindings patches to mfd series.
-- Combined TPS65214 & TPS65215 dt-binding and mfd patches into 1 series, 
-  since the series' share a dependency & these patches add more device support
-- Elimate the need for TPS65214 gpio patches by registering TPS65214 as 
-  "tps65215-gpio" from the MFD driver, since both have the same GPIO module
-- "Remove regmap_read" patch: Drop chip_id variable
-- move enum pmic_id struct from "remove regmap_read" patch to "Add support 
-  for TPS65215" patch.
-v2 -> v3:
-- Remove duplicated of_device_id table entries
-- Re-order mfd patches to clean up diff displayed
-v1 -> v2:
-- have any PMIC lists be in alpha-numeric order: TPS65215, then TPS65219
-- Add driver prefix to chip_data struct
----
-Shree Ramamoorthy (5):
-  regulator: dt-bindings: Add TI TPS65215 PMIC bindings
-  regulator: dt-bindings: Add TI TPS65214 PMIC bindings
-  mfd: tps65219: Remove regmap_read check
-  mfd: tps65219: Add support for TI TPS65215 PMIC
-  mfd: tps65219: Add support for TI TPS65214 PMIC
+Regards,
+Boqun
 
- .../bindings/regulator/ti,tps65219.yaml       |  27 +-
- drivers/mfd/tps65219.c                        | 279 +++++++++++++++++-
- include/linux/mfd/tps65219.h                  | 136 ++++++++-
- 3 files changed, 417 insertions(+), 25 deletions(-)
-
--- 
-2.43.0
-
+> diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
+> index 938c48952d26..fb5be6e9b423 100644
+> --- a/kernel/context_tracking.c
+> +++ b/kernel/context_tracking.c
+> @@ -80,17 +80,16 @@ static __always_inline void rcu_task_trace_heavyweight_exit(void)
+>   */
+>  static noinstr void ct_kernel_exit_state(int offset)
+>  {
+> -	int seq;
+> -
+>  	/*
+>  	 * CPUs seeing atomic_add_return() must see prior RCU read-side
+>  	 * critical sections, and we also must force ordering with the
+>  	 * next idle sojourn.
+>  	 */
+>  	rcu_task_trace_heavyweight_enter();  // Before CT state update!
+> -	seq = ct_state_inc(offset);
+> -	// RCU is no longer watching.  Better be in extended quiescent state!
+> -	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && (seq & CT_RCU_WATCHING));
+> +	// RCU is still watching.  Better not be in extended quiescent state!
+> +	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !rcu_is_watching_curr_cpu());
+> +	(void)ct_state_inc(offset);
+> +	// RCU is no longer watching.
+>  }
+>  
+>  /*
+> 
