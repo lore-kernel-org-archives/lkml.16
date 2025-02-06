@@ -1,386 +1,189 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7E11624CF;
-	Thu,  6 Feb 2025 13:30:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671C7226884;
+	Thu,  6 Feb 2025 13:30:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738848600; cv=none; b=ZN5H+gZv2QJ8a8EsoJ716UJiPAtJ+ga8ggk3rotnsQ4B9k22wUxtEhkdXto05x2FM/ghW8r4/bfgJ+4B4/byNIXUOx86oSpz7ukTz/a1j7k30E9uWZ1PDViIJ5ndE9GeZEehytxquEexKVnPMlVN0dG1qmQJbzViJ72/23EYJeg=
+	t=1738848604; cv=none; b=DPecFIFCmEpr2YfkpW+GpHCSEISYRHm2RbI1R/I55F2TMh88SsM2ww3pRbqp0KhQS1EcfSAYyKUGhzqM4iKFwnG4eblw12Q9iDOeVW/i+nXkn0qe6bLtND3kymBy1mHxbTuVl92jZ93Fjuj4/Mw208J7GXqYIfjr7/kJdA/bDpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738848600; c=relaxed/simple;
-	bh=ZLI3PhtfbLyx7JnTAOow9a9GGOT0TaY/xFogSnBbQeU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lg+SB137f0si2ArgDZp/Pz0OU5DY+cGMNC7pZ28EWdKSwrpnMf/slFvvPTHhDd6of1Qix8HE4Y84+qvDTvzIE/CE0wo1tc0+OfhMtmsP/J8PFk6xWPlQBBj3W7UiSUf8YvaLC8iACfOstlu8Zbzi+E3+EuRwXw3cvfDqhlEmcUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZKP2u0Dm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZKP2u0Dm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6D0AC4CEE9;
-	Thu,  6 Feb 2025 13:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738848600;
-	bh=ZLI3PhtfbLyx7JnTAOow9a9GGOT0TaY/xFogSnBbQeU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZKP2u0DmQtzkHULrFH/6I9xUJaeF14jOC22mE3/TdRIN5KIY+tqvl22/iMfUSIMB7
-	 ssJ07XcHsfiBXs4ZMugUK8Nv2eF7PCFeVqM/PLV8nUKFLAa9Nv5UrmDU1cczs+JXqC
-	 mF2k8z8sD/iXn8fdH0JjbPArU+rAppsJAS/kDGwUodoqRKPrV6FOdfB0wMTExbXQYI
-	 S1O68MIju5Y6e3S80+QWPnUImIvd22PIz//r8WiLTwXzL1I5U7NL1eMHD/g2kXn0F8
-	 q7Aszxn7QllRcHUNHaru/Li90DSjqGIyY65LSyFzHMnbAC+EIGsdGO12L/LElXxX53
-	 QHivTVOmdIJ2A==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Gowans <jgowans@amazon.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Will Deacon <will@kernel.org>,
-	devicetree@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org,
-	linux-mm@kvack.org,
-	x86@kernel.org
-Subject: [PATCH v4 12/14] x86: Add KHO support
-Date: Thu,  6 Feb 2025 15:27:52 +0200
-Message-ID: <20250206132754.2596694-13-rppt@kernel.org>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250206132754.2596694-1-rppt@kernel.org>
-References: <20250206132754.2596694-1-rppt@kernel.org>
+	s=arc-20240116; t=1738848604; c=relaxed/simple;
+	bh=DYpME27A+ab/pShQvnBeasd17GEf4TEkvqRicVcaXYQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I0o1ck4ghPsdLrwAvvR0/Ymy5a1QzoEN/E4wamgybXU+LrX1xc1Tn7R0GzF5/EQN6YNvGJt81Xu3Mm5jtflrVn78zoCamuBfbIYN0tgf4B3GDufAKqPrxHACUhffCyNtzZvnLoKRofRb9GhvhTDPTo2jQ7FMmnGj6+bv99S2EaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51590C4CEE2;
+	Thu,  6 Feb 2025 13:30:00 +0000 (UTC)
+Date: Thu, 6 Feb 2025 08:30:39 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Joel Fernandes <joel@joelfernandes.org>
+Cc: Prakash Sangappa <prakash.sangappa@oracle.com>, Peter Zijlstra
+ <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+ Ankur Arora <ankur.a.arora@oracle.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, linux-mm@kvack.org, x86@kernel.org, Andrew
+ Morton <akpm@linux-foundation.org>, luto@kernel.org, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
+ jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Konrad Wilk <konrad.wilk@oracle.com>,
+ jgross@suse.com, Andrew.Cooper3@citrix.com, Vineeth Pillai
+ <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo Molnar
+ <mingo@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de,
+ daniel.wagner@suse.com, Joseph Salisbury <joseph.salisbury@oracle.com>,
+ broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250206083039.0916ad24@gandalf.local.home>
+In-Reply-To: <CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
+References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
+	<9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
+	<20250204220418.35949317@gandalf.local.home>
+	<CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
+	<20250205081635.397eacb0@gandalf.local.home>
+	<CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Alexander Graf <graf@amazon.com>
+On Wed, 5 Feb 2025 22:07:12 -0500
+Joel Fernandes <joel@joelfernandes.org> wrote:
+> >
+> > RT tasks don't have a time slice. They are affected by events. An external
+> > interrupt coming in, or a timer going off that states something is
+> > happening. Perhaps we could use this for SCHED_RR or maybe even
+> > SCHED_DEADLINE, as those do have time slices.
+> >
+> > But if it does get used, it should only be used when the task being
+> > scheduled is the same SCHED_RR priority, or if SCHED_DEADLINE will not fail
+> > its guarantees.
+> >  
+> 
+> Right, it would apply still to RR/DL though...
 
-We now have all bits in place to support KHO kexecs. This patch adds
-awareness of KHO in the kexec file as well as boot path for x86 and
-adds the respective kconfig option to the architecture so that it can
-use KHO successfully.
+But it would have to guarantee that the RR it is delaying is of the same
+priority, and that delaying the DL is not going to cause something to miss
+its deadline.
 
-In addition, it enlightens it decompression code with KHO so that its
-KASLR location finder only considers memory regions that are not already
-occupied by KHO memory.
+> 
+> > > In any case, if you want this to only work on FAIR tasks and not RT
+> > > tasks, why is that only possible to do with rseq() + LAZY preemption
+> > > and not Prakash's new API + all preemption modes?
+> > >
+> > > Also you can just ignore RT tasks (not that I'm saying that's a good
+> > > idea but..) in taskshrd_delay_resched() in that patch if you ever
+> > > wanted to do that.
+> > >
+> > > I just feel the RT latency thing is a non-issue AFAICS.  
+> >
+> > Have you worked on any RT projects before?  
+> 
+> Heh.. I think maybe you misunderstood my statement, I was mentioning
+> that I felt (similar to Peter I think) that NOT adopting this feature
+> generically for all tasks due to a concern of 50us latency maybe does
+> not make sense since poorly designed app / random hardware already
+> have this issue. I think the main concern discussed in this thread is
+> (and please CMIIW):
 
-Signed-off-by: Alexander Graf <graf@amazon.com>
-Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- arch/x86/Kconfig                       |  3 ++
- arch/x86/boot/compressed/kaslr.c       | 52 +++++++++++++++++++++++++-
- arch/x86/include/asm/setup.h           |  4 ++
- arch/x86/include/uapi/asm/setup_data.h | 13 ++++++-
- arch/x86/kernel/e820.c                 | 18 +++++++++
- arch/x86/kernel/kexec-bzimage64.c      | 36 ++++++++++++++++++
- arch/x86/kernel/setup.c                | 25 +++++++++++++
- arch/x86/realmode/init.c               |  2 +
- 8 files changed, 151 insertions(+), 2 deletions(-)
+We have code that has sub 100us latency and less. If some random user space
+application applies this, adding 50us (or even 20us) will break these. And
+this has nothing to do with poorly designed applications or hardware.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 87198d957e2f..3a2d7b381704 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2090,6 +2090,9 @@ config ARCH_SUPPORTS_KEXEC_BZIMAGE_VERIFY_SIG
- config ARCH_SUPPORTS_KEXEC_JUMP
- 	def_bool y
- 
-+config ARCH_SUPPORTS_KEXEC_HANDOVER
-+	def_bool y
-+
- config ARCH_SUPPORTS_CRASH_DUMP
- 	def_bool X86_64 || (X86_32 && HIGHMEM)
- 
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index f03d59ea6e40..c932a30deb20 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -760,6 +760,55 @@ static void process_e820_entries(unsigned long minimum,
- 	}
- }
- 
-+/*
-+ * If KHO is active, only process its scratch areas to ensure we are not
-+ * stepping onto preserved memory.
-+ */
-+#ifdef CONFIG_KEXEC_HANDOVER
-+static bool process_kho_entries(unsigned long minimum, unsigned long image_size)
-+{
-+	struct kho_mem *kho_scratch;
-+	struct setup_data *ptr;
-+	int i, nr_areas = 0;
-+
-+	ptr = (struct setup_data *)(unsigned long)boot_params_ptr->hdr.setup_data;
-+	while (ptr) {
-+		if (ptr->type == SETUP_KEXEC_KHO) {
-+			struct kho_data *kho = (struct kho_data *)ptr->data;
-+
-+			kho_scratch = (void *)kho->scratch_addr;
-+			nr_areas = kho->scratch_size / sizeof(*kho_scratch);
-+
-+			break;
-+		}
-+
-+		ptr = (struct setup_data *)(unsigned long)ptr->next;
-+	}
-+
-+	if (!nr_areas)
-+		return false;
-+
-+	for (i = 0; i < nr_areas; i++) {
-+		struct kho_mem *area = &kho_scratch[i];
-+		struct mem_vector region = {
-+			.start = area->addr,
-+			.size = area->size,
-+		};
-+
-+		if (process_mem_region(&region, minimum, image_size))
-+			break;
-+	}
-+
-+	return true;
-+}
-+#else
-+static inline bool process_kho_entries(unsigned long minimum,
-+				       unsigned long image_size)
-+{
-+	return false;
-+}
-+#endif
-+
- static unsigned long find_random_phys_addr(unsigned long minimum,
- 					   unsigned long image_size)
- {
-@@ -775,7 +824,8 @@ static unsigned long find_random_phys_addr(unsigned long minimum,
- 		return 0;
- 	}
- 
--	if (!process_efi_entries(minimum, image_size))
-+	if (!process_kho_entries(minimum, image_size) &&
-+	    !process_efi_entries(minimum, image_size))
- 		process_e820_entries(minimum, image_size);
- 
- 	phys_addr = slots_fetch_random();
-diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
-index 85f4fde3515c..70e045321d4b 100644
---- a/arch/x86/include/asm/setup.h
-+++ b/arch/x86/include/asm/setup.h
-@@ -66,6 +66,10 @@ extern void x86_ce4100_early_setup(void);
- static inline void x86_ce4100_early_setup(void) { }
- #endif
- 
-+#ifdef CONFIG_KEXEC_HANDOVER
-+#include <linux/kexec_handover.h>
-+#endif
-+
- #ifndef _SETUP
- 
- #include <asm/espfix.h>
-diff --git a/arch/x86/include/uapi/asm/setup_data.h b/arch/x86/include/uapi/asm/setup_data.h
-index b111b0c18544..c258c37768ee 100644
---- a/arch/x86/include/uapi/asm/setup_data.h
-+++ b/arch/x86/include/uapi/asm/setup_data.h
-@@ -13,7 +13,8 @@
- #define SETUP_CC_BLOB			7
- #define SETUP_IMA			8
- #define SETUP_RNG_SEED			9
--#define SETUP_ENUM_MAX			SETUP_RNG_SEED
-+#define SETUP_KEXEC_KHO			10
-+#define SETUP_ENUM_MAX			SETUP_KEXEC_KHO
- 
- #define SETUP_INDIRECT			(1<<31)
- #define SETUP_TYPE_MAX			(SETUP_ENUM_MAX | SETUP_INDIRECT)
-@@ -78,6 +79,16 @@ struct ima_setup_data {
- 	__u64 size;
- } __attribute__((packed));
- 
-+/*
-+ * Locations of kexec handover metadata
-+ */
-+struct kho_data {
-+	__u64 dt_addr;
-+	__u64 dt_size;
-+	__u64 scratch_addr;
-+	__u64 scratch_size;
-+} __attribute__((packed));
-+
- #endif /* __ASSEMBLY__ */
- 
- #endif /* _UAPI_ASM_X86_SETUP_DATA_H */
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 82b96ed9890a..0b81cd70b02a 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -1329,6 +1329,24 @@ void __init e820__memblock_setup(void)
- 		memblock_add(entry->addr, entry->size);
- 	}
- 
-+	/*
-+	 * At this point with KHO we only allocate from scratch memory.
-+	 * At the same time, we configure memblock to only allow
-+	 * allocations from memory below ISA_END_ADDRESS which is not
-+	 * a natural scratch region, because Linux ignores memory below
-+	 * ISA_END_ADDRESS at runtime. Beside very few (if any) early
-+	 * allocations, we must allocate real-mode trapoline below
-+	 * ISA_END_ADDRESS.
-+	 *
-+	 * To make sure that we can actually perform allocations during
-+	 * this phase, let's mark memory below ISA_END_ADDRESS as scratch
-+	 * so we can allocate from there in a scratch-only world.
-+	 *
-+	 * After real mode trampoline is allocated, we clear scratch
-+	 * marking from the memory below ISA_END_ADDRESS
-+	 */
-+	memblock_mark_kho_scratch(0, ISA_END_ADDRESS);
-+
- 	/* Throw away partial pages: */
- 	memblock_trim_memory(PAGE_SIZE);
- 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 68530fad05f7..15fc3c1a92e8 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -233,6 +233,31 @@ setup_ima_state(const struct kimage *image, struct boot_params *params,
- #endif /* CONFIG_IMA_KEXEC */
- }
- 
-+static void setup_kho(const struct kimage *image, struct boot_params *params,
-+		      unsigned long params_load_addr,
-+		      unsigned int setup_data_offset)
-+{
-+#ifdef CONFIG_KEXEC_HANDOVER
-+	struct setup_data *sd = (void *)params + setup_data_offset;
-+	struct kho_data *kho = (void *)sd + sizeof(*sd);
-+
-+	sd->type = SETUP_KEXEC_KHO;
-+	sd->len = sizeof(struct kho_data);
-+
-+	/* Only add if we have all KHO images in place */
-+	if (!image->kho.dt.buffer || !image->kho.scratch.buffer)
-+		return;
-+
-+	/* Add setup data */
-+	kho->dt_addr = image->kho.dt.mem;
-+	kho->dt_size = image->kho.dt.bufsz;
-+	kho->scratch_addr = image->kho.scratch.mem;
-+	kho->scratch_size = image->kho.scratch.bufsz;
-+	sd->next = params->hdr.setup_data;
-+	params->hdr.setup_data = params_load_addr + setup_data_offset;
-+#endif /* CONFIG_KEXEC_HANDOVER */
-+}
-+
- static int
- setup_boot_parameters(struct kimage *image, struct boot_params *params,
- 		      unsigned long params_load_addr,
-@@ -312,6 +337,13 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
- 				     sizeof(struct ima_setup_data);
- 	}
- 
-+	if (IS_ENABLED(CONFIG_KEXEC_HANDOVER)) {
-+		/* Setup space to store preservation metadata */
-+		setup_kho(image, params, params_load_addr, setup_data_offset);
-+		setup_data_offset += sizeof(struct setup_data) +
-+				     sizeof(struct kho_data);
-+	}
-+
- 	/* Setup RNG seed */
- 	setup_rng_seed(params, params_load_addr, setup_data_offset);
- 
-@@ -479,6 +511,10 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 		kbuf.bufsz += sizeof(struct setup_data) +
- 			      sizeof(struct ima_setup_data);
- 
-+	if (IS_ENABLED(CONFIG_KEXEC_HANDOVER))
-+		kbuf.bufsz += sizeof(struct setup_data) +
-+			      sizeof(struct kho_data);
-+
- 	params = kzalloc(kbuf.bufsz, GFP_KERNEL);
- 	if (!params)
- 		return ERR_PTR(-ENOMEM);
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index c80c124af332..e0a89f4bb46f 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -385,6 +385,28 @@ int __init ima_get_kexec_buffer(void **addr, size_t *size)
- }
- #endif
- 
-+static void __init add_kho(u64 phys_addr, u32 data_len)
-+{
-+#ifdef CONFIG_KEXEC_HANDOVER
-+	struct kho_data *kho;
-+	u64 addr = phys_addr + sizeof(struct setup_data);
-+	u64 size = data_len - sizeof(struct setup_data);
-+
-+	kho = early_memremap(addr, size);
-+	if (!kho) {
-+		pr_warn("setup: failed to memremap kho data (0x%llx, 0x%llx)\n",
-+			addr, size);
-+		return;
-+	}
-+
-+	kho_populate(kho->dt_addr, kho->scratch_addr, kho->scratch_size);
-+
-+	early_memunmap(kho, size);
-+#else
-+	pr_warn("Passed KHO data, but CONFIG_KEXEC_HANDOVER not set. Ignoring.\n");
-+#endif
-+}
-+
- static void __init parse_setup_data(void)
- {
- 	struct setup_data *data;
-@@ -413,6 +435,9 @@ static void __init parse_setup_data(void)
- 		case SETUP_IMA:
- 			add_early_ima_buffer(pa_data);
- 			break;
-+		case SETUP_KEXEC_KHO:
-+			add_kho(pa_data, data_len);
-+			break;
- 		case SETUP_RNG_SEED:
- 			data = early_memremap(pa_data, data_len);
- 			add_bootloader_randomness(data->data, data->len);
-diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-index f9bc444a3064..9b9f4534086d 100644
---- a/arch/x86/realmode/init.c
-+++ b/arch/x86/realmode/init.c
-@@ -65,6 +65,8 @@ void __init reserve_real_mode(void)
- 	 * setup_arch().
- 	 */
- 	memblock_reserve(0, SZ_1M);
-+
-+	memblock_clear_kho_scratch(0, SZ_1M);
- }
- 
- static void __init sme_sev_setup_real_mode(struct trampoline_header *th)
--- 
-2.47.2
+By adding this as a feature that works everywhere, you will break use cases
+that work today.
 
+
+> 1. Locking down this feature to only SCHED_OTHER versus making it
+> generic (maybe sched_ext could also use it?).
+
+sched_ext can do whatever it wants ;-)
+
+But the reason I picked SCHED_OTHER is because that's the only policy that
+has no control of when it gets preempted by lower priority processes.
+
+This isn't about "hey I'm in a critical section can you delay higher
+priority applications with strict deadlines for me?"
+
+The scheduler tick comes at random moments. SCHED_OTHER is more about
+performance and not about latency. Sure, we want better latency when it
+comes to reaction times, but that's usually in the millisec range. Not
+microsecond range. RT and DL tasks do care about microseconds. And every
+microsecond counts. This is why I was fine in limiting this to 50us.
+
+> 2. Tying it to specific preemption methods which may change user mode
+> behavior/expectation (because LAZY is tied to preemption method).
+
+Well, every time a user task calls a system call, it is affected by the
+preemption method. And I also reported how this can work in all preemption
+methods, but only for SCHED_OTHER. It will just take some work on how the
+kernel handles NEED_RESCHED_LAZY. User space will be unaware of any of this.
+
+> 3. Overloading the purpose of LAZY: My understanding is, the purpose
+> of LAZY is to let the scheduler decide if it wants to preempt based on
+> preemption mode. It is not based on any hint, just on the preemption
+> mode. I guess you are overloading LAZY by making LAZY flag also extend
+> userspace timeslice (versus say making the time-slice extension hint
+> its own thing...).
+
+I already replied about that. Note, LAZY was created in PREEMPT_RT for this
+very purpose (but in the kernel), and ported to vanilla for a slightly
+different purpose.
+
+Here's the history:
+
+  PREEMPT_RT would convert spin_locks in the kernel to sleeping mutexes.
+
+  This made RT tasks respond much faster to events.
+
+  But non-RT (SCHED_OTHER) started suffering performance issues.
+
+  When looking at the performance issues, we found that it was due to tasks
+  holding these sleeping spin_locks and being preempted. That is, the
+  preemption of holding spin_locks was causing more contention and slowing
+  things down tremendously.
+
+  To first handle this, adaptive mutexes was introduced. These would spin
+  if the owner of the lock was still running, and would go to sleep if the
+  owner goes to sleep. This helped things quite a bit, but PREEMPT_RT was
+  still suffer a performance deficit compared to non-RT.
+
+  This was because of the timer tick on SCHED_OTHER tasks that could
+  preempt a task holding a spin lock.
+
+  NEED_RESCHED_LAZY was introduced to remedy this. It would be set for
+  SCHED_OTHER tasks and NEED_RESCHED for RT tasks. If the task was holding
+  a sleeping spin lock, the NEED_RESCHED_LAZY would not preempt the running
+  task, but NEED_RESCHED would. If the SCHED_OTHER task was not holding a
+  sleeping spin_lock it would be preempted regardless.
+
+This improved the performance of SCHED_OTHER tasks in PREEMPT_RT to be as
+good as what was in vanilla.
+
+You see, LAZY was *created* for this purpose. Of letting the scheduler know
+that the running task is in a critical section and the timer tick should
+not preempt a SCHED_OTHER task.
+
+I just wanted to extend this to SCHED_OTHER in user space too.
+
+> 
+> Yes, I have worked on RT projects before --  you would know better
+> than anyone. :-D. But admittedly, I haven't got to work much with
+> PREEMPT_RT systems.
+
+Just using RT policy to improve performance is not an RT project. I'm
+talking about projects that if you miss a deadline things crash. Where the
+project works very hard to make sure everything works as intended.
+
+I'm totally against allowing SCHED_OTHER to use any feature that can delay
+an RT/DL task (unless of course it is to help those, like priority inheritance).
+
+There's several RT folks on this thread. I wonder if any of
+them are OK with this?
+
+-- Steve
