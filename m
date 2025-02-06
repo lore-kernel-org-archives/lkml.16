@@ -1,193 +1,146 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2068.outbound.protection.outlook.com [40.107.94.68])
+Received: from black.elm.relay.mailchannels.net (black.elm.relay.mailchannels.net [23.83.212.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B2719994F;
-	Thu,  6 Feb 2025 21:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA771E1035;
+	Thu,  6 Feb 2025 21:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.19
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738877030; cv=fail; b=UETWdC2HnhYF6IKsMcJw3av4fmHsDLcmU4x0IblBkRnpFD9Zg68RIDbqGPsqI5h2VVWZTGwloyslSqlwhNwFK92gr/XefPnDkjxXldrBfjV1jSbHXm03RShm/oASYgBWFp3bnPzjY427ZhyAtTIq7uWL1RpAV+ybBObTliyXQiM=
+	t=1738877170; cv=pass; b=q66puGk6LQtCs9iwgr3nOCSVlK+WBkJx3asjXhI2uuuId6NldvhqM2rLVa3o9fpsaLgt1fp1+czI8EkoqdwtQW1NZ0pPVACkLXbVA2f6jtW+KVPC0znyOpmJuzn9Q2lQpWUOkIXwM9rB0tKDJGHjEd4oLzzKMsRSjpoCmiv+WiA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738877030; c=relaxed/simple;
-	bh=gCuiZ5/Y/3JNZ0aLimpoueGwcWw4URorYt/XR4aUTh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Q2j2Bfx63I4JMaRov34gOa5vRfXN8X9hCdrpxX8hW85ZgTjPHaQ8zFvsgNVlzAIfQk9+U5s3mKvuOQV1fBEJ6n0Qd6betjJMN30+mI7F8i76qfdok5jHUsBU5mnq3dAo9rz+7Ciy1osw9iY3mD4dkGI+eoJb/TgZGNZwt8X9uXY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JXowtN0S; arc=fail smtp.client-ip=40.107.94.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1738877170; c=relaxed/simple;
+	bh=Aoq8DR0tmBwK/2qmp6nHnMm7CfMGYf5gDRatYYdmJS4=;
+	h=From:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc:Date; b=uRZLVF70lCLOqiObr74SwW8pq1j+9qQMp9NW6Z3feEVFgZHnlQzgUanM+YOl5cWyGGj1HGhFANLKsNSAIlMN4oxtcyVsPOBpZYtb7x9uEryWdOk6OGcoJGj5VB8zOFPJEWisqkY0SoyzUH8Dsl+njetYx2cuDwiLk5iCf3ocfKU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai; spf=pass smtp.mailfrom=invicto.ai; dkim=fail (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b=UdaOjjry reason="key not found in DNS"; arc=pass smtp.client-ip=23.83.212.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invicto.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JXowtN0S"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QPxEo8bBXWnE+k/vYOwTRySjhVvL/H1En5szLl22mzOYIck90rtnZ2U2TZGLlQ1yOIurlk0whBIsmGkv1Wc4roNQ5VIjozLvX6CiAbc0ILEJqymwSNgGRnLhm+64G/iofbgBzi5OJvjInFd6D9jfumh9SUJ0IqxH3gfOXQIsqZ0Ouo9mvMIcW0WdiwI8+yXz5qlSIBb9mQ35PAzZDHP22lWM0FfblBjqRacpnslPoNgboalIkLH7jheRpTHUEP89VgsCL24w6Toedb38r8ahS3j/X2g7ejcixF00biRbEOZXJ7ZZkfoyzvHO9qCp2gqoqpTBdCeqRIyn9PPyzWKfTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+XEkjM+bXh72cpwcf/TgovzvYH9Gsfm+RC8ivlTGDNo=;
- b=K1ZHTlhjD79VfZCXdsqKagwvLcXupE5zRcojy4UOf2R3lIkpoN872Ip6ekah+TwBn+aw13Ojh47T9sSoWP1lWBWFYE32iQV/K2TQkUtlNBbjB8Bdn6h0ZuzplQLSY9WaVwmUEGZg06XASbg74HtGTdEXpGrsL1vv6Xa+hokix+jvze4MaLS3rXW1dxjMmWznZQaKFq4MQ3eDyDLQStYU+W6agdQGUgVqBP7xp32kvVdUO5LKhJ9uUkfocg5strd6+8X4UzLES51vP0R/RnnthLwerjr6UP5qHMdtVn0NccOY8QaMwjrMmNlOorRL+lGoJxxkAVUWE8cFkOM3z+XbTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+XEkjM+bXh72cpwcf/TgovzvYH9Gsfm+RC8ivlTGDNo=;
- b=JXowtN0SonWQ7i155v/aGpD85lozLhKonPXLqtEfFMa6L9VFWwMcinYg0W6eiEp82cj89rZVLo/SI8OXe5v+2ZREARovRWqK8oMgu1PFL84VNn6g1CeKHGYQj8CyJNdEdHTNuMDHWaBfqmV51eV/agzDi4Sr6IUznGCbypWPl7w=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com (2603:10b6:930:be::18)
- by CH3PR12MB7498.namprd12.prod.outlook.com (2603:10b6:610:143::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Thu, 6 Feb
- 2025 21:23:46 +0000
-Received: from CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a]) by CYYPR12MB8750.namprd12.prod.outlook.com
- ([fe80::b965:1501:b970:e60a%5]) with mapi id 15.20.8398.021; Thu, 6 Feb 2025
- 21:23:46 +0000
-Date: Thu, 6 Feb 2025 22:23:40 +0100
-From: Robert Richter <rrichter@amd.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v1 28/29] cxl/region: Show message on broken target list
-Message-ID: <Z6UoXDqmh3ARH_10@rric.localdomain>
-References: <20250107141015.3367194-1-rrichter@amd.com>
- <20250107141015.3367194-29-rrichter@amd.com>
- <20250114111641.00001cf5@huawei.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250114111641.00001cf5@huawei.com>
-X-ClientProxiedBy: FR3P281CA0194.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a4::10) To CYYPR12MB8750.namprd12.prod.outlook.com
- (2603:10b6:930:be::18)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b="UdaOjjry"
+X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 5B209161EA9;
+	Thu,  6 Feb 2025 21:07:59 +0000 (UTC)
+Received: from fr-int-smtpout8.hostinger.io (trex-3.trex.outbound.svc.cluster.local [100.125.12.218])
+	(Authenticated sender: hostingeremail)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 169D9161B25;
+	Thu,  6 Feb 2025 21:07:54 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738876079; a=rsa-sha256;
+	cv=none;
+	b=SS2OZOpxhGLSWS4WYX3g8CdxQUp/uNdJD6w3hcSK3mf2L3zOlZEUWP4nB7d0DQHz97+iHd
+	SbbFLC2/iuehUNzVG5W8qphOeJifufNH/9nEEUkdg8YePQIs5vQoxaKW+n8aJrrb/iku7J
+	GFqRLUaLV62F5EoY6bmAxyQXmHPfHOWN7epPNkFWGbgKr2EfGxTqDOaw3g81ZAF5pvV0AQ
+	saEnNoZesEizafATZYObRGaA7hUIKakk6uXCvWD+oORiWE12zeTtJkW64yP0R8BT7GGSEq
+	4E7I9G2ANrYN+wKIbZ5h78mUhFTRd7cgynGY/hQfyFJxfVYMVjumx2I4YzLkRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1738876079;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=QiXyubdeOKIcHLGUBolab2yRgrtdSgwKfCo8KFHBIQ0=;
+	b=W535iN4cjuht4mFgWuEjluFesNq+1YAgpndQrsd5cnJegSOLFU9s8E9KGbf0i5PjRzBayi
+	SKDMz0HTXalG6aUxRlRCX+2tYkO1se+S/uzZURgg6HCSwwKSr8MfqwFMBuWjIjEwscIIxa
+	aNbzXF31wM1j2q/bQBEviZPsRQDwjtJZUT1w7M76DxJ8mCwKUSntEFqe7w6ysil/Jtq1nK
+	jsckRKXHHaAGd9MZ3O/PkHzqsK4vQjOpJfm6sj1h+1emHV5MDdrtO9psTsKSdY2gKiT7ku
+	1K/NhkS5pA854yfP1MzRuowIjcVUf9J6lz7NjKHeOAJvFosutIZlN3IKhpRYXg==
+ARC-Authentication-Results: i=1;
+	rspamd-8586946c78-zkzf8;
+	auth=pass smtp.auth=hostingeremail smtp.mailfrom=kurti@invicto.ai
+X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostingeremail|x-authuser|kurti@invicto.ai
+X-MailChannels-Auth-Id: hostingeremail
+X-Keen-Thread: 40f4450b18a3cc77_1738876079201_511394290
+X-MC-Loop-Signature: 1738876079201:1092380178
+X-MC-Ingress-Time: 1738876079200
+Received: from fr-int-smtpout8.hostinger.io (fr-int-smtpout8.hostinger.io
+ [89.116.146.204])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.125.12.218 (trex/7.0.2);
+	Thu, 06 Feb 2025 21:07:59 +0000
+From: Alban Kurti <kurti@invicto.ai>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invicto.ai;
+	s=hostingermail-a; t=1738876073;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QiXyubdeOKIcHLGUBolab2yRgrtdSgwKfCo8KFHBIQ0=;
+	b=UdaOjjrygfJ26g/NDouNl3plGw34C+tlqJfFZScsyxIUXmv8sg88ygyK/Okdg33br2P4VX
+	LQ6NqGbA55PZdviqc7cWl/ScE62QiXoErvufGRJ0KK79/22aNoQROBKF6xOFl6Nr3rjVe2
+	mHvVwT3sN1gV+qCnuPBZ8guI8e3q+aXwQ+ZKcZZeRJ5OotVlb9R1+24rtvQ3DHaA8i9nVO
+	b5BmaHz7x/TVH6/Xtq1Rtmdt+di7nDjHZvrcnPA2alEpVzZxe5JxT/DgnNZefVrzOIRWAJ
+	JEm9VIt2dHh5CDXO6dvT/vObC+3PcDbrHFKUXqu07LAZDxPm7QXDVDZNBGDFrA==
+Subject: [PATCH v3 1/6] rust: docs: add missing newline to printing macro
+ examples
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR12MB8750:EE_|CH3PR12MB7498:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2b844c70-bfd7-4bb5-b365-08dd46f48a75
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?MfHGaAUFbapjESRYGIcdZeLpu+68t12ELT8ZPtsDwIVpXFGpi7WLWVXn9cy8?=
- =?us-ascii?Q?UeiZ6X5P0os0W1ShCMbxobdAuuUjHD+7NOjbf0sBI4KvQkGnBM2Gdpl6WWl0?=
- =?us-ascii?Q?8sUSsfnnAd+LYJnNZbKHImqfKnpvkNUrhELE8PTfNTOOEdW7DZ+OVgcZB60i?=
- =?us-ascii?Q?4+MIxqKoxex//199IeHEQg88LujsnvSK5Qjp0nBulxWXsGxKDYyBDkT3/R+f?=
- =?us-ascii?Q?znezdIozR//51x9giGA2Z3tnvjQS+L+N9/ZtCTI94w/LFgfw+/WXRSi7L9aX?=
- =?us-ascii?Q?Tfhj6Lf+XU8JC/loO4x90h/jY+UCYm6GVdCYqAghw5jYBAqOjOUEchZ3Cz6P?=
- =?us-ascii?Q?WriiSUG+ERnFEOzWEo9eWntH6xyyzHfKNaj9WXHXAnM0LpqsD6T6SixEIyDr?=
- =?us-ascii?Q?J/RHzM7xa3NagQ2h5z8mp9MFoG5SrryoXNQPyU/nv5Qkcgo1vSep4uxJgORC?=
- =?us-ascii?Q?T65r33nStCPDt8ECETL/u5wjm6pP4ClrcqP8xGkpUX323+1NOVHy3d/tdh+5?=
- =?us-ascii?Q?MN+fKM7pLr6w99UCJo16rwZCtNcY+PGDQNc9AsygPAxiXiH12ZD/YVyWhSTb?=
- =?us-ascii?Q?wlf+5IWzcphQoV0IW9a9LLWFELHXgo2Sc9fy9/Von631pXwj3yryGRjlhCks?=
- =?us-ascii?Q?ZP7KvlItKZyQfBWk38PmikOcnmcDfwZePYjo9x4gxP9ToG36JJGHj0B5eWKA?=
- =?us-ascii?Q?Yqgu0bQrXx5QmCnFedxj2KYD9BmzvLbm6jsFayXxxKeVtCDdhuq5MCboaJI4?=
- =?us-ascii?Q?VeS8i5X0h3D/8w40RHk7vvfa0VQhWBE4rtImdT3USMiLeVb63sASWzt/kbyx?=
- =?us-ascii?Q?IWYlnFew9GaLRhE5ePLx5SZBMB14SHOaY0dfeJde42QHWw7lY7lrOZ9szsRZ?=
- =?us-ascii?Q?MOt1eDCsTGF2nDn8zrembYLMOq300HVV3GW62c7Usoq6dzHfD4r1DttEmuMC?=
- =?us-ascii?Q?btGnrT5eLW99cwAi/8FENsyCOd/Ur55b+PRgVuGI/B8towFo+uikkXJCMiUz?=
- =?us-ascii?Q?5/en8svs9LtcgnwVtrNT1NJklWUMK1P5KsFsI+Tj4x3X5m4SriKfq+DGPl9k?=
- =?us-ascii?Q?xWPCGuyHQitxlDaPc7QS6m2LYfE5gSYhTWg5dYKsDweSJ/mhI1XQK1IfHQO3?=
- =?us-ascii?Q?LxlSjsMdXi4Jj0pIbRVT5AlAVU6XxpgerwS5bw2a2R+hm11SgFQl281FCIeD?=
- =?us-ascii?Q?ktRXoO5g20HLOv08MSMKKbBefWsv/Jk+lf9kT4tVm4JrhkMiYOkrSf6tz2ph?=
- =?us-ascii?Q?tyoWmmwMbIjMlJ0YgfbikyQrWAf738yLKmvK3CrsiBBAzMDB9NScAx+DAeHE?=
- =?us-ascii?Q?TaqXLDqjOXYyp8dvkbTUUYQkz6+I/MmuLjl+RTnc0zrXuyROv9v5KmLoTf+I?=
- =?us-ascii?Q?scdOR615COiczUamGr66EbhyTk0e?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR12MB8750.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?zlt6AAfqxZYRhrCXxQraGCIYsAR8+qqQZeoNjutVihr2LjE/UpN61/qdGvjh?=
- =?us-ascii?Q?qCSq4PHg8Pg9QfZcDulLlEo/TS2I4ItNPiddu5C2svauyqhZkDXPUYpFwy7d?=
- =?us-ascii?Q?4IuZqfKusnhv7nrz9O0UP6UgPgX/mpUCn1qfJBWZDyCv6+1ub2WNvfZY4eYJ?=
- =?us-ascii?Q?oxKRH4edNEDDTziuFyk+CJQe9xQ5/XRsIQgwk/sGy0UIoKYgi2c8J5kWPqt4?=
- =?us-ascii?Q?Y+N+1bcl5+xwi9ea2hv5c7TgA1a5H4aR4czrSxP5VERh4F/p3tEqYCxKJqVL?=
- =?us-ascii?Q?duWa2sVjUmLSPY2NS0BeKVzJpfXBOszG3S6nzScIlwxWMQv1RJzcXVz1ZK3V?=
- =?us-ascii?Q?NxzlOtNNRX2P8R0mdbVD4hLGfXm26Gye8npuMI9AAIbgrY6Z5E6MqbPHwrXC?=
- =?us-ascii?Q?osCDs3MXLI3uraLvj3A+0C4dUkxOO2Gt8H74wGYxl+v7MTuBgUxoy+JPAN1z?=
- =?us-ascii?Q?PxKOHPHwo/PverYyV3Osl8dNjoZTHdWj4VApuhTwyALFhy2MSv5zaiSr3ITd?=
- =?us-ascii?Q?fLRZra1VgqCdULQGSkUC1RTlLOEyKA438snSqSuODnEa7qIQemKpKLRehigy?=
- =?us-ascii?Q?ad7FofqNCBqQ4jLEZxF4qvDerBzshZUGW8qY/3mqreHjIbL0EKezAf5MoVkz?=
- =?us-ascii?Q?LrZT82jQZ3NfRXO4gStoXvLK0YqSOfjp//lKayKCmqjZCoKnHwCtwZFuY3lx?=
- =?us-ascii?Q?PRExtHWvyOFwaqUU0jluGuR1KSos57f1yupDboERf0d04bTax8uu76U7N4Ec?=
- =?us-ascii?Q?Xb3McV5li8J2s7lwSWpR+7lr/4F9Thp1ANiHlEVKs9XhEbOteXFJxDWOvEyk?=
- =?us-ascii?Q?w+LkAwtxFmRwJ45f1T5DeprRUai2XI7jF0cyCRzr/77C5sK3rhAZoJ/yzhEV?=
- =?us-ascii?Q?b09fyrbBaAb6NTu2L3djUJlYm0wBm7DX7mOF7i6ZYdOBxRpq40k7XZ7Am5Cr?=
- =?us-ascii?Q?sg1mCBgu2t3/fFGdL/32OZOf7PUKNrBkaVITv75/pPOjtTbHBpAgYSnG2olq?=
- =?us-ascii?Q?UhSpERM35dhMEXK8b03DBLnxkMRuGeS3f+RG7k2u3Q4bXOE0qPtFHDTyqxfX?=
- =?us-ascii?Q?/lYrjGDviCvbqeXjFilDUXohT0/wQGdX7GxwhXPW/XAsf4Iue9ac9XdqkViJ?=
- =?us-ascii?Q?LkhUISNNhs1ZtoWAwzdQacj6cyxEPVZIgcOG08fLPAkIdXfA26r/Ww2xPxdW?=
- =?us-ascii?Q?GolcDD0uyIfQBldfPh9kr0ACX0Kk9CjBonJJCuy81aatYIHeEEDvq7V8a0nA?=
- =?us-ascii?Q?zvM2v4+9+6eGyA+pxENLZXIhFiDieU3yilEPduNBjX7YaKFewUSvJ6Vo4otj?=
- =?us-ascii?Q?xb/KA6A+9cjcM0H+KAAsOVThw94L3twJvN7KV2jxjwuHC4A9TYEISe/Ms0Ny?=
- =?us-ascii?Q?w0R1h6vy+naGhSq6DGOl8QVjb8oY41QcVHTHZTER0dyeQo+5lYPCaFYewAlA?=
- =?us-ascii?Q?t8eeqVal7C8DmFQ/jfCqKawPApBcWpCF7YiwgViyUqXZagOxfyoNqDeUkPd+?=
- =?us-ascii?Q?SGAvwBDLwytmbpRoIzJDe3nbjS0Nd2dZUYJ3Af1jE7RreKF/eLz2W9Mo2OmA?=
- =?us-ascii?Q?UcuOlWZo6L4KIepJQ7BLi8XugoxLu33Ef3GNO0k0?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b844c70-bfd7-4bb5-b365-08dd46f48a75
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR12MB8750.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 21:23:46.6813
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NNh8/I0aRsOX+xS9w8itlPHUFCupyZ1/yfwJQB5Orf+eqzKlE5J1KWKSYK8PGz03wj4k3LkIHBE5xSNOCVb7LA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7498
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250206-printing_fix-v3-1-a85273b501ae@invicto.ai>
+References: <20250206-printing_fix-v3-0-a85273b501ae@invicto.ai>
+In-Reply-To: <20250206-printing_fix-v3-0-a85273b501ae@invicto.ai>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Jonathan Corbet <corbet@lwn.net>, 
+ David Gow <davidgow@google.com>, Dirk Behme <dirk.behme@de.bosch.com>, 
+ Asahi Lina <lina@asahilina.net>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+ Wedson Almeida Filho <walmeida@microsoft.com>, 
+ "Andreas Hindborg (Samsung)" <nmi@metaspace.dk>, Tejun Heo <tj@kernel.org>, 
+ Fiona Behrens <me@kloenk.dev>, 
+ Vincenzo Palazzo <vincenzopalazzodev@gmail.com>, 
+ Xiangfei Ding <dingxiangfei2009@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Alban Kurti <kurti@invicto.ai>, 
+ Martin Rodriguez Reboredo <yakoyoku@gmail.com>, 
+ Fox Chen <foxhlchen@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738876070; l=994;
+ i=kurti@invicto.ai; s=20250206; h=from:subject:message-id;
+ bh=Aoq8DR0tmBwK/2qmp6nHnMm7CfMGYf5gDRatYYdmJS4=;
+ b=Eg90l4a/6yjDvdcx9mylSKH9TwrCcYGbL5wRllwirwpydxVlF+6oOrh2toKrQYqOCfGeYTNDK
+ fD5qHTYXdEUDDzYLf/rmLm8HcoHKuAODuKe1m9eJifdWRY0ibabQ93N
+X-Developer-Key: i=kurti@invicto.ai; a=ed25519;
+ pk=D1lKs+JFapuEVI9zJ2QUTLSf5u4aT12tG0ny6vMMuOc=
+Date: Thu, 06 Feb 2025 21:07:52 +0000 (UTC)
+X-CM-Analysis: v=2.4 cv=PMNd+uqC c=1 sm=1 tr=0 ts=67a524a9 a=9/DLicljd4JGVkZ5BRdAJQ==:117 a=9/DLicljd4JGVkZ5BRdAJQ==:17 a=IkcTkHD0fZMA:10 a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8 a=c9EISN1oOV-dU950GokA:9 a=QEXdDO2ut3YA:10
+X-CM-Envelope: MS4xfBif+Uu3UMiyyU3J2G4rL9XjRNFgaliUqVvWA+0J0KfByC89iygW/TK7LxcvGtEhR64jjQ/kng2PNfuzzvTZ+KhmSJPXwteMLawGlY0DD1xK005kV+EB aZ+qU8iIURNZz4ohIbaxz/MFrOg/jOdXp0P+zYSBQ6lRRHurwExpxOw3x7h2SicBM18ttiGdmUJRQi+V7zU3l/omDZODpYOxXfDj+OMFwP7brUVUFYDFaXb7 u5dEJ+Wl9/yfGmzhn4/hBeVh/FzpFqq1haYEwI6JvDbVoj5S6R088jYTUpohRw5GQmx3anfX0/yGCz0PKEnUNnNnf3q9944GzVOEpKAJwZz8STjM7qmDWQIj myO/17u+UXeYiFJLwXcIkAELeiYUfOhotSnQVrUCw3VvL9iHWsVWJzPNH3Fk7W2SNiCETWTbL6G6iwiz1FajCu31k/HUxPLhQZ5OlX1cDq1eiQVb0GEtmg7L i2xnGowZkvNgIOAtnzzADarhKZA2XTpMz8VVGJxg0ph83Mp/95vjiIVDkgyDeypCrog7bitWXbU6t45Up9+5Cd0A9+D6e7ZdaV/KdTerNaJNJtRBZJhbRmbE RuDTn8fdxinrdRtVS8VQI1MOh/HwHFTz1qaEqI+YXmyg5RqbredGI1TnV1coW8l5lxdivod0GE1z7nMZPzpRL1qugCN8Le6JTfte1GKsjxHFgIqog+KOIkSk 9sUSqFv6mUKQ0O3CzL2PXQ3kbP46eEMDdjpcgG4q0tT0/qQZMbDTkHVTth2W/UZXwWrGPFGMJ/JpfeTUdS4N6uNyPFjHewO9YLjRQ0FGUOYbhM/11hQPVXMh GfBH6b6pn5GlJuYsxE2rOdFE6U2+tj89REyxi1nHdHOh465Mddf4IcDEMtLCFX6/ZnwpBEo9Ay+5WmiWojoaTNkxNH3hRWB8xUevfH7HS9Xm2VUkmfgqZSGU y96MvbgA8ONk5vq
+ 3Q48kLNBtX5h5GXJywJXSI+/k/xgsFtGz
+X-AuthUser: kurti@invicto.ai
 
-On 14.01.25 11:16:41, Jonathan Cameron wrote:
-> On Tue, 7 Jan 2025 15:10:14 +0100
-> Robert Richter <rrichter@amd.com> wrote:
-> 
-> > Broken target lists are hard to discover as the driver fails at a
-> > later initialization stage. Add an error message for this.
-> > 
-> > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > ---
-> >  drivers/cxl/core/region.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 775450a1a887..2af3b6c14f46 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -1870,6 +1870,13 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
-> >  	}
-> >  	put_device(dev);
-> >  
-> > +	if (rc)
-> > +		dev_err(port->uport_dev,
-> > +			"failed to find %s:%s in target list of %s\n",
-> > +			dev_name(&port->dev),
-> > +			dev_name(port->parent_dport->dport_dev),
-> > +			dev_name(&cxlsd->cxld.dev));
-> > +
-> >  	return rc;
-> >  }
-> This function would benefit from some __free() magic dust.
-> Then we could return in the good path in the loop and not need the if (rc)
-> check here.
+Fix adding a newline at the end of the usage of pr_info! in the
+documentation
 
-That does not really simplify the code. It would just this one
-indentation. On the other side there is a central exit for the code
-and we just need only that one put_device(). Plus, I like to have the
-'success' code path returning at the end of block.
+Fixes: e3c3d34507c7 ("docs: rust: Add description of Rust documentation test as KUnit ones")
+Reported-by: Miguel Ojeda <ojeda@kernel.org>
+Closes: https://github.com/Rust-for-Linux/linux/issues/1139
+Signed-off-by: Alban Kurti <kurti@invicto.ai>
+---
+ Documentation/rust/testing.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--Robert
+diff --git a/Documentation/rust/testing.rst b/Documentation/rust/testing.rst
+index 568b71b415a4525772cb77ce76c7f9da32fac1c4..180b886e0f1ee997779f04ce85eba858e64946c0 100644
+--- a/Documentation/rust/testing.rst
++++ b/Documentation/rust/testing.rst
+@@ -97,7 +97,7 @@ operator are also supported as usual, e.g.:
+ 
+ 	/// ```
+ 	/// # use kernel::{spawn_work_item, workqueue};
+-	/// spawn_work_item!(workqueue::system(), || pr_info!("x"))?;
++	/// spawn_work_item!(workqueue::system(), || pr_info!("x\n"))?;
+ 	/// # Ok::<(), Error>(())
+ 	/// ```
+ 
 
-> 
-> Otherwise looks fine.
-> 
-> Jonathan
-> 
-> >  
-> 
+-- 
+2.48.1
+
