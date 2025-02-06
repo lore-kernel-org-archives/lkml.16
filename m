@@ -1,292 +1,284 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABFD227574;
-	Thu,  6 Feb 2025 10:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738838522; cv=none; b=sVpzFHitKePsPEGTZPh/hSSFiXeqFbW7UGkDrZ4mxS9U5nZ/Jf3ZMQ6h/5uQdpY9naCpvwXaM5otrXyb7qrYSR8vMlqb6dc7fxCrk9mM/nLLqWdr+MiXdgIdaBLhh6/6K3qETX3GDLsdW4rvy0BHaSjbNSBzx3gFjGx4l4TLaK8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738838522; c=relaxed/simple;
-	bh=76nO2MrcPa38uCZidWF0apKjo6kITcQCKF+I18br5Ao=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LA/lp6/3m+cf9160GzEXexQsna1JQS5HrTxce7gCAnmudHTad3Hifq8ouPeJFnoRFzF8M82MAGNdgURCZCjdsxbyBCVFmhhkZUxV39dmYyLxGBxoU99lLLeDi1bPwR56BhIfUrqmzAgFy38sPHJHvQqn63cf/Jqj0HrwEQFlyZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EF+WvkQq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ylF0STyd; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EF+WvkQq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ylF0STyd; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C49518B03;
+	Thu,  6 Feb 2025 10:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738838610; cv=fail; b=cnLVYl4p31HKkqIZ7DabAkpPqM5erE9l+p54w3Nnf56njd9ol2QaQHa78nk+NngI1m6gFWeddSIkpD79WWJqKL761/PCAPstaN2u84jO+qzmLdNEBXFuA3yXfCjUjXxPDjq5oOWXAYOYvRo09OnLkAKdgQDZYe+NlJatSdszjsY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738838610; c=relaxed/simple;
+	bh=ZFdqxmVZCbWbCnaTmXReMBP5I9lAjjIIBRm+3aVKokg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Bmlkf/8nuUGMo4u3nylXydnogvxElOPqz6k+wnJOL2Ez91M623DEhqTXQIbKwK3gNIwnbF3b7qkBIU84+aLokgxDaIhMaBjpcd1iNlYdnA5bnUg8MHLG0TtjCunHYtZsK2F1xGs1wUJQ/nAjyT04x9z2VbzDcAdeliVDfPBTBLI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ZfyC3Xdu; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=cqwfBvPL; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EF+WvkQq";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ylF0STyd";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EF+WvkQq";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ylF0STyd"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3DC5E21163;
-	Thu,  6 Feb 2025 10:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738838518; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9nAH5O3dKn0ela33TBo40pW/2FZBzDM9roViKwIVSsc=;
-	b=EF+WvkQqx0DT1Ro/yrSMO2X5MkW2SmGGMo/f1j4Zx/IF8HCOcQACTIUU4X60PHx34Im/OP
-	VilMyPykC5x0E6sC01/QG1RBsV4BUn4ASQXq0Hv3zmh/zn50kD8FJYloURCessGvGxAa1Y
-	cJYCIDejPsqQIf72jThgu6umMd/aE+E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738838518;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9nAH5O3dKn0ela33TBo40pW/2FZBzDM9roViKwIVSsc=;
-	b=ylF0STydj7lcDT4Z8Ch27M0XE2RLGw72IGfCsMrUvLBN4+T2UEHkkjv+KHZesbnUfWscYs
-	Grq8+K3pyHO8F6AA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=EF+WvkQq;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=ylF0STyd
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738838518; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9nAH5O3dKn0ela33TBo40pW/2FZBzDM9roViKwIVSsc=;
-	b=EF+WvkQqx0DT1Ro/yrSMO2X5MkW2SmGGMo/f1j4Zx/IF8HCOcQACTIUU4X60PHx34Im/OP
-	VilMyPykC5x0E6sC01/QG1RBsV4BUn4ASQXq0Hv3zmh/zn50kD8FJYloURCessGvGxAa1Y
-	cJYCIDejPsqQIf72jThgu6umMd/aE+E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738838518;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9nAH5O3dKn0ela33TBo40pW/2FZBzDM9roViKwIVSsc=;
-	b=ylF0STydj7lcDT4Z8Ch27M0XE2RLGw72IGfCsMrUvLBN4+T2UEHkkjv+KHZesbnUfWscYs
-	Grq8+K3pyHO8F6AA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E8FBA13694;
-	Thu,  6 Feb 2025 10:41:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id exVEN/WRpGfoXAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 06 Feb 2025 10:41:57 +0000
-Message-ID: <d203b3bd-eae0-4114-a243-212db99339ba@suse.cz>
-Date: Thu, 6 Feb 2025 11:41:57 +0100
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZfyC3Xdu";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="cqwfBvPL"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5166B7oL032706;
+	Thu, 6 Feb 2025 10:43:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=CcKG6Nx5PDOISVE2muvOmeYdIsTGXmCemF9FaVsKD+g=; b=
+	ZfyC3XduvYdIlsvnTEsEnZLjj33E9DGnJs1s9flLghitZtn+RrTj4JIvjjUwR/TQ
+	oVjsA7t35DxG71DIM7ROZunUbdJ53TDX8e1POZiD5LzVfTwQ9LhD1TwEsIpe9eT4
+	GObx9dAUVGMBh8LlhYuOFBvhsejsLpQn3exmdM3BRp0exAcNfsgE9SEqDs4wlcHE
+	Uj5008QlLa/VyEesQzoCbxtatriBsxzoGmnLK+3keywqBCRsuusHZwVOsETBBgd6
+	4NncIrAsGGt4hrL6GfVeRIotEBt60Mco7c5i52THU0juoKhJkOMbwDxnDe8EMTpi
+	Z3YKHeqvYR1sB7oGyi+9Mg==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44mqk88c1g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 06 Feb 2025 10:43:16 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 516AbgHR020618;
+	Thu, 6 Feb 2025 10:43:14 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2044.outbound.protection.outlook.com [104.47.66.44])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44j8frnu14-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 06 Feb 2025 10:43:14 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eXW5ySY4U7nVo100mmOnbHOAEEbo4/HUzxe0Vk23kFBA22bfxqbrullEoZFquAamXttzJYb8NlbZKPCzPM1+aVyxwfJBIEEJwK385LMph/w6RCNtOW9FBkUHoD3JKowFhDJhhSmrxfM+YaRXmaJv+GLKn86ilddWPV6J7g8W6sh3IGRTUNJFAMHHoVJtDsZakPBzkeRg98SwUtWO3rGSeE5A0zl+Vl3VPKtCw2U0WmxjIOz+kLBWaAhzTgPNzg3PgHMSawx0L4FlJ45+k6leslQg3p6nmusBZtfR1EjtXyRy/PJb/ZQwmYV73vACdjZ9nLQRuyarcVNDw5JVp3Nn7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CcKG6Nx5PDOISVE2muvOmeYdIsTGXmCemF9FaVsKD+g=;
+ b=NRRKnqB36bohEVV6Vx4P/JfdAF/cG7HLKIbZ3ltNSFBJ3t1MfwNQcVY9EtzilbNsOGHmkezdWVP4bQpKsSg9FDXWzCr8q9j+TewLVnnr7sfwtaDOCXj0XeFjjGfZFxy6DTDQfVoR5QpcTuoXp8ifRDEFzKo5PZj5iI3ot2zQSPL9xOnhV61dj8rkPRQNSMTADrsR+SVjs9Nzvf/BBdxgQo/S47T3ggwgVkFxzbZtDtC4gnS2Cu/K/3rcc66ppni1ZTHm70JL8UVN9GOZUdhxo8B2YtrZv4q9xk+g1SB2xsyG8VxEtgcOER5KpzZtuhOuJKSyeLZVr6dAKlRXwBjuZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CcKG6Nx5PDOISVE2muvOmeYdIsTGXmCemF9FaVsKD+g=;
+ b=cqwfBvPLciZWq8iyrDLlkyjW68RYj0yds/HEO4wPOziy+6zzvuGyWGKkdKZqcEvujGltsNUvTT1NpRSdTfOt4y/JZjUS46gEBTTwUOgZtzqCuDQ5np5bakCevZssNtSTlsknzf5GZYtIivtKhicprN4pCgjHb62RbDZB0xCcnHk=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by SJ0PR10MB5584.namprd10.prod.outlook.com (2603:10b6:a03:3d3::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Thu, 6 Feb
+ 2025 10:43:12 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088%6]) with mapi id 15.20.8422.009; Thu, 6 Feb 2025
+ 10:43:12 +0000
+Message-ID: <2150abab-5c70-424b-ad83-74868f8afc8a@oracle.com>
+Date: Thu, 6 Feb 2025 10:43:08 +0000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 07/10] xfs: Add xfs_file_dio_write_atomic()
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: brauner@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
+        ritesh.list@gmail.com, martin.petersen@oracle.com
+References: <20250204120127.2396727-1-john.g.garry@oracle.com>
+ <20250204120127.2396727-8-john.g.garry@oracle.com>
+ <20250205195540.GY21808@frogsfrogsfrogs>
+Content-Language: en-US
+From: John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <20250205195540.GY21808@frogsfrogsfrogs>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO6P265CA0004.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:339::20) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] refcount: provide ops for cases when object's memory
- can be reused
-To: Suren Baghdasaryan <surenb@google.com>, peterz@infradead.org
-Cc: will@kernel.org, paulmck@kernel.org, boqun.feng@gmail.com,
- mark.rutland@arm.com, mjguzik@gmail.com, akpm@linux-foundation.org,
- willy@infradead.org, liam.howlett@oracle.com, lorenzo.stoakes@oracle.com,
- david.laight.linux@gmail.com, mhocko@suse.com, hannes@cmpxchg.org,
- oliver.sang@intel.com, mgorman@techsingularity.net, david@redhat.com,
- peterx@redhat.com, oleg@redhat.com, dave@stgolabs.net, brauner@kernel.org,
- dhowells@redhat.com, hdanton@sina.com, hughd@google.com,
- lokeshgidra@google.com, minchan@google.com, jannh@google.com,
- shakeel.butt@linux.dev, souravpanda@google.com, pasha.tatashin@soleen.com,
- klarasmodin@gmail.com, richard.weiyang@gmail.com, corbet@lwn.net,
- linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kernel-team@android.com
-References: <CAJuCfpHJedxhZuuoKkKaQXsT-3tPSkhUwHadJRGEdTxSkzRc_w@mail.gmail.com>
- <20250206025201.979573-1-surenb@google.com>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <20250206025201.979573-1-surenb@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 3DC5E21163
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[37];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,sina.com];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,arm.com,linux-foundation.org,infradead.org,oracle.com,suse.com,cmpxchg.org,intel.com,techsingularity.net,redhat.com,stgolabs.net,sina.com,google.com,linux.dev,soleen.com,lwn.net,vger.kernel.org,kvack.org,android.com];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	TAGGED_RCPT(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLk41rrgs15z4i1nmqiwtynpyh)];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[infradead.org:email,suse.cz:dkim,suse.cz:mid,suse.cz:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|SJ0PR10MB5584:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0083c884-b9e6-4d6f-2a9c-08dd469b0d8b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MlRrbXZOUEdLM3hVclVzUDVhRmlSMXdOSlc0MWVoamtuTnNHeHZUZFc0b0VT?=
+ =?utf-8?B?dTVxNHlrR0pTVnVGUHVIbXNkbTErbFR6cHEveEJ3WGU0L3JFREgzOUxicFhP?=
+ =?utf-8?B?Y1FiVkxVTnZGaDVaRUlmMEpWY243bzdiVDBxRkFvMmxYckpERnV5VDFCYlVq?=
+ =?utf-8?B?S2gxckZQbE1vRzZtZnR0djQ4aVdyaEFtZHhhaG1LUGNiY1lPdVo3d2lSVXZ6?=
+ =?utf-8?B?YytsdU4yUjF2NkRROEFsdUVuYUxBRU1Lc055SlBWM3JlcGhMckJseXk3bmJ2?=
+ =?utf-8?B?K09pQ1c3V3JPMnpEMmZQWDBxWFloRjRmTnNSOUhEeDg4Yi9idWc0dWVsWkcz?=
+ =?utf-8?B?Vi9MWXYwbzBxZDhKd2hxZ0pEMmt0VTNqRU8yai83U2FWaUJkQ3RiS1RxYXYx?=
+ =?utf-8?B?SlZ1ZnBDN1I5Nm9LLzNiZjFsUW55blEreTVjVlJONU1sNXBZbWU0RHUxYThG?=
+ =?utf-8?B?QUQ3bWpvWEF6R2h2QzRva1Q5UmszVG80VkZ6UTBmYjdKZWRUTUxxUjdYb1Jt?=
+ =?utf-8?B?VWtxZHUvS1RoOTdOK1lnbmNBV0ZNTTY3aWxpSm1wY0F2NFdzYVNkbVpuNDdS?=
+ =?utf-8?B?Nkg5YURhSTBWWEgrZ1VyMUN0VkxSY1U4SjNjZmlPR2lWT1RvbUVsVSs1MVpa?=
+ =?utf-8?B?cUUvSXYvdWRjcEtsWWVuUTVUMGs5eG0zWWpjT0tOSnJVdUlVT3hHR2hCbjdL?=
+ =?utf-8?B?M1JwVGh6ZUtZdVdHYXFBRkkxaTlqQ3UwVVJjVHRiQzFqYlNsNEJXN2FSUEMr?=
+ =?utf-8?B?akF5dmh0dVBoQmJteDhLWVlMN2hMWmVpeFRIc0ZaUFZEbnZkR3gyL1hWRFJB?=
+ =?utf-8?B?TnNJVUYyVE8xWmc3UkNGcWFldkhuSDRWTm1pbVJnbUltY0dCajVEMVVXK2ZZ?=
+ =?utf-8?B?YzRvOE1RMjJRQlczNFRTUWtPclN3SS9EcUlkT3EzM1Znc2lqMVVpUDY5RHI3?=
+ =?utf-8?B?SGRYbHF2c0FvZzBpLzY4VkU0QmdWQ0I5blJDc01ucVZib2daZlNyOGFsOWpC?=
+ =?utf-8?B?ckErWU1YcERMemFZSHdxKzBJN2drM0kraE1Wc3N0a1NJVnVKVWZEeXkvbGtv?=
+ =?utf-8?B?eFBiRXpPZVFpMnpPUjhPckpycDdmaEcvVm9reGpEWURCZjNwU3VoVjJBTXh2?=
+ =?utf-8?B?b1VQU0VMOUVzUkpCL0JSbnlwNDd2OEZ4bnljYXRoSDYwbCsyQzR0OW1MTEF4?=
+ =?utf-8?B?blJhQklXNjZMR0taZWZVQnRMUFNWMnhlazFTUTl5aXpYN2h3QWIyVzN2TXFR?=
+ =?utf-8?B?dTNTL2ZkQTRaMVFscy9PbkVubStBUW91dmMrSjFuOTYvVHVoOFpobUdxR1hD?=
+ =?utf-8?B?bzJhSWI3NUpTaldzRUlmSllqcGhCdHpEWnVod1RVQ3k4WklJakZHZ2hyVWw5?=
+ =?utf-8?B?ZGVIOHd1dXdwOXJ1MDJmU0ZlMThJWXJObzc5cFJXWi9LV3MzVktGS1daeEd3?=
+ =?utf-8?B?RVFmUndIWW1QS2hGYkwxOG5rTFYrYkJTRG1Pc050SGVGczkvQTNpRnBLTDlj?=
+ =?utf-8?B?SktvNmpza1ltaGRlWWNWYzBCS3QvbmFNWUh5dGpZWk05WWhrZ0pabUlTYy9B?=
+ =?utf-8?B?UkdubjBIYW5RYVRWZElpN3RDL1dkVHNTWjg5T0lpOXRQRTBFeldzMmtTdjN4?=
+ =?utf-8?B?Qy9OcWxnc1ZmQW01MFlyN0E5THVzTVBiZ0tBKytMR2hxcTVIZFczWFVLUWhS?=
+ =?utf-8?B?bHBGd1FLeVB2K2JKVXJOa2dLSG92STJrL0dGSTkxam9wc25wNU1qNkN4MDgz?=
+ =?utf-8?B?bWc3Ymp0WFNnOXVsMHE2MVhWZHFUUnhNN01uT3U4OG9XUjhGMDVhNDIzbjAz?=
+ =?utf-8?B?emNoY1Vka2dPVUhxaDNxdHNNUXVNVnpPS1R3YUxDRnFrOVdlSFhaQ1BoUmcr?=
+ =?utf-8?Q?O8oUlHX3XtEBV?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MkNqM3ZONkk3ejJ2RjZDN0hGRVdDWDF5WjZ3MUpMVjdQVWFMQ0tzdlZZRVRx?=
+ =?utf-8?B?eEg1Sk9WWUI3d2hmS3lSM09FbHFvOGVxMFV0SEgza0U4ZDk5TjB1ckcrS0Q1?=
+ =?utf-8?B?ajFvQW5XMmhCODFNNjFLbElocHpZQitmZnJxY1JTOEdZQ0VQZTRienNaV3pu?=
+ =?utf-8?B?ck1lOFJFcVFMbWtTT05vcHlSWVdjaEwzTUVlb1cxb1ZDZWU2VHhkT3RhMGhW?=
+ =?utf-8?B?ZzZNeEdmOWJmejNpOFBaVWcyQ2ZLTlV2TWFMODdJbncvSzd6S1QwdjJuS2sz?=
+ =?utf-8?B?ME9nVjNJNjdTVFNZc3puaVdUbkx1N1RBYUVERWhjTy9QT3VmMmx2QkV4MG00?=
+ =?utf-8?B?Qk1wdU5ZR1RDbFJSOXJUVzQ2aTVOTTM0OTRZTjdEK0RrUnBGbm9UbkVQU0dq?=
+ =?utf-8?B?VHhmRDZidjgwUUYva2dndHJJLzdQYk1RUTlPVEh1djU2R0VTdVRtR1cyWS9D?=
+ =?utf-8?B?ZXl5dXg4TzhnRmo1NVoxaWJ6M2pPOUg3MWpBZ2RVTHlpR3V1aklIS0V1WTQ5?=
+ =?utf-8?B?UVFrZmVuZnBCcFBuNTFsc3ZWSTNDdk1rT1k2bEVsakQvMXlLQzIrQ2piS2Ix?=
+ =?utf-8?B?YUdqT0RTL2ZOMUhKT1ZGT3o1cmdTeCt1Qi9zYWVXaE9Td0ErQmpoZUkyZ1RL?=
+ =?utf-8?B?SGhQNFozVjhGd0hXSUJzcW9OQnlMbTFrTWs0cjJIeG5UOTQ3TVZ1Mno1dkx6?=
+ =?utf-8?B?ZEUwQ1dCWlFvKzlQZWR2c3BoWVhpaExTTGYrRkIwdUxleUkrVEhMWjd1eVhS?=
+ =?utf-8?B?clFhamNqd3hQQnFrbGU5OEx1Sy9RSStDYTlOckpzdHA4MER6VkxiQUFZUFJG?=
+ =?utf-8?B?MzVROVdWbTQ1NG5JN2kySG1JWWFSTmhqUmNzNWR1bWJYSUdFNEhSSFZzMi94?=
+ =?utf-8?B?SHpkLzBlMXFGZ2Yzb2VCbHpSOCtjNlh1ZE9FOFlvdjlLVmdPNVB5Z1ZhM3Zq?=
+ =?utf-8?B?cEJDZ3JFOEFuNG1sOWVIbzVXQ1daMEVNd1RBdUJCa2lSQTh5NGpXbDFGUVNl?=
+ =?utf-8?B?QTArb2IzREsyWkVIWnQzTmZxL3BXZlEzQUszNVcxWS9mUmJIOWVFdzQ4RjU3?=
+ =?utf-8?B?eE03Z0Q2RXNDcUNScTA0OGp3dTJ4ejdmL0t2cVNtelRNSlhqcXZCQUJVT29U?=
+ =?utf-8?B?a21BUk5USktSM2xBMkNCSFE4NnBSK3RQaGswK0Q1ZDZVT1JwRDF5dnZ3RWVM?=
+ =?utf-8?B?aTRyRTQvRGNMUlNoSmtJM3NOb29sbDlvMHpubkpDbHBUMzIrWjVSR2dzQytw?=
+ =?utf-8?B?amJjUFRMMkh2VkMwcnRSRHV0K3I4YzNadFdhR2Y0VW9PYkdGOFliRThkeWdY?=
+ =?utf-8?B?SmxzNU91bys1Z1poSnFOWUlLTWZtdHlDYWxtUlFrYk9MTVp0NTU2U1pVUVhN?=
+ =?utf-8?B?U04xL0VKNXJGQm16bmUyTEZ0RENxbnN4UDFYTjlvdTFQaEp3MmdPNUZZVmEz?=
+ =?utf-8?B?cVZkVVpsVjVmamVCWkUrS3ozK2svOENkNDJ3Q0NEMHlaTlhCVTRIWC9BN2ZE?=
+ =?utf-8?B?N09SU0l5T0ZZbGZRU3BJcktpUkNlVmZNSTZqNGh5TUdBMkpHeElwSWxOdFJ2?=
+ =?utf-8?B?WS9WdERRQWthUFRvSXRNV2ZVay9ZMktSK0pTMlRKRDk4TVgyZXFNN1RpSktL?=
+ =?utf-8?B?K1hZNlAxL3RYU2VYV0hWRlBQUlh3T0R5bitkakE1R0ZPeFVKZkhqb3hUaDRV?=
+ =?utf-8?B?dDY1WHFrTG1ORTBmSHdTbUxnWkRnYSt4WTJOMDVVMWVZTGZwSmxpelorT3dU?=
+ =?utf-8?B?Q2QrdnFKbjFacUJaTWNTU0VIZGhnUXJZMjN0d283MEdGRHl3alUzR0ZSQjFR?=
+ =?utf-8?B?V0dtaTZyOXRHbUJaMzZjdGh6dk10VDc4NU1NWlJBRHdkM1J0RzVlQ1VaSTZC?=
+ =?utf-8?B?M0hFeUJYQXIvbU1CVzRHdy9rSWVYZ2wrbDQxc1dVV28rS25YSmZVbW9XOVYy?=
+ =?utf-8?B?WXExVmg5OUFVYW44bllxN1hvd1FCNzJMTFNVWk03SS92dTl0MWpRSVQvT0Zl?=
+ =?utf-8?B?MGE0Y3BBcGViMHpnbnlHaGZBVDNqUW9MR3lDT05kVHppNmhMZytBWWF6bndX?=
+ =?utf-8?B?Ly9wRWhGMnl2dm1JdmprWnRHSFBSNG5sUE9EOUpPQmZOTmRFb21JdGdkR0xK?=
+ =?utf-8?B?YjRMaVo5d1ZvZ1Nsbmp0MUYveHQ2NE1sa2pxZll0UlRadGVxQVFWVUtoTmpW?=
+ =?utf-8?B?MlE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	cGafCMsdPLos0bYcqxNAFsWcHmmfc/UwP27ua+xo1i1keEJEau4g1JeMMrglkAmGrFNozZkJCEz+NUvFIuDhwqoRHZzwTIvvcxzwSbUB3q8GfLmnOudiRDapDA8TEgxcTJ+FgKNgzDaX3MpOJ91yfLpbL/UfQOrYLffezSYxF7V99XduEpki+NxQ1AALEO+4FOdFPy693XyN60pp8mRiGpLsml4SDlX1UIGTtlOts1NDrgWKXRcvBGztZFDlBMer8Wtz1PEAtlXC+eJyv0CQvSZbgmU22ff1n4Q+IZj8SEMA0+zp4Qq4P7J+nWf4+28nkaGcgsq9yM54YjtODxu2+Eeliktxf/pDSCeN0CXmAAl3XyNTdqHPfWanAgvrK37ZZ8G0I4eLZsEBGBdXHppfivPcQvJiewY/XZSn1SrzToK21CMg4U8ftyTDej/sSIR7EGUY7fytH+Ur8thwj4xe2u4l/sTT2LNPNW0J6d0trpvyaNAlCsrdapZQXPsg3cOqHZGvRgrqNDpmFXorUsU8D2eRUNAaXqO+2vmX184rP1PLLSEqYlgLr7uwpmKxxGbu8cJwAnbPmxExgBRzdGXnMzgbUAdfFF+4DP4SBMXU4Cg=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0083c884-b9e6-4d6f-2a9c-08dd469b0d8b
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 10:43:12.0079
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ecA/VGdEWZazv4q1SbfgOxHZapyZMUrxpkkX5UKo5zJT2MVy0aUxa1inHYpk/ZofqIM81fhX46J366UAa1EFAg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5584
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-06_02,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2501170000
+ definitions=main-2502060088
+X-Proofpoint-GUID: UIvmxR5rn85NPoc33DiLYT7nh81QM7dV
+X-Proofpoint-ORIG-GUID: UIvmxR5rn85NPoc33DiLYT7nh81QM7dV
 
-On 2/6/25 03:52, Suren Baghdasaryan wrote:
-> For speculative lookups where a successful inc_not_zero() pins the
-> object, but where we still need to double check if the object acquired
-> is indeed the one we set out to acquire (identity check), needs this
-> validation to happen *after* the increment.
-> Similarly, when a new object is initialized and its memory might have
-> been previously occupied by another object, all stores to initialize the
-> object should happen *before* refcount initialization.
+On 05/02/2025 19:55, Darrick J. Wong wrote:
+> On Tue, Feb 04, 2025 at 12:01:24PM +0000, John Garry wrote:
+>> Add xfs_file_dio_write_atomic() for dedicated handling of atomic writes.
+>>
+>> In case of -EAGAIN being returned from iomap_dio_rw(), reissue the write
+>> in CoW-based atomic write mode.
+>>
+>> In the CoW-based atomic write mode, first unshare blocks so that we don't
+>> have a cow fork for the data in the range which we are writing.
+>>
+>> Signed-off-by: John Garry <john.g.garry@oracle.com>
+>> ---
+>>   fs/xfs/xfs_file.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 51 insertions(+)
+>>
+>> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+>> index fd05b66aea3f..12af5cdc3094 100644
+>> --- a/fs/xfs/xfs_file.c
+>> +++ b/fs/xfs/xfs_file.c
+>> @@ -619,6 +619,55 @@ xfs_file_dio_write_aligned(
+>>   	return ret;
+>>   }
+>>   
+>> +static noinline ssize_t
+>> +xfs_file_dio_write_atomic(
+>> +	struct xfs_inode	*ip,
+>> +	struct kiocb		*iocb,
+>> +	struct iov_iter		*from)
+>> +{
+>> +	unsigned int		iolock = XFS_IOLOCK_SHARED;
+>> +	bool			use_cow = false;
+>> +	unsigned int		dio_flags;
+>> +	ssize_t			ret;
+>> +
+>> +retry:
+>> +	ret = xfs_ilock_iocb_for_write(iocb, &iolock);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = xfs_file_write_checks(iocb, from, &iolock);
+>> +	if (ret)
+>> +		goto out_unlock;
+>> +
+>> +	if (use_cow) {
+>> +		ret = xfs_reflink_unshare(ip, iocb->ki_pos,
+>> +			iov_iter_count(from));
 > 
-> Notably SLAB_TYPESAFE_BY_RCU is one such an example when this ordering
-> is required for reference counting.
+> Nit: continuation lines should be indented two tabs:
 > 
-> Add refcount_{add|inc}_not_zero_acquire() to guarantee the proper ordering
-> between acquiring a reference count on an object and performing the
-> identity check for that object.
-> Add refcount_set_release() to guarantee proper ordering between stores
-> initializing object attributes and the store initializing the refcount.
-> refcount_set_release() should be done after all other object attributes
-> are initialized. Once refcount_set_release() is called, the object should
-> be considered visible to other tasks even if it was not yet added into an
-> object collection normally used to discover it. This is because other
-> tasks might have discovered the object previously occupying the same
-> memory and after memory reuse they can succeed in taking refcount for the
-> new object and start using it.
-> 
-> Object reuse example to consider:
-> 
-> consumer:
->     obj = lookup(collection, key);
->     if (!refcount_inc_not_zero_acquire(&obj->ref))
->         return;
->     if (READ_ONCE(obj->key) != key) { /* identity check */
->         put_ref(obj);
->         return;
->     }
->     use(obj->value);
-> 
->                  producer:
->                      remove(collection, obj->key);
->                      if (!refcount_dec_and_test(&obj->ref))
->                          return;
->                      obj->key = KEY_INVALID;
->                      free(obj);
->                      obj = malloc(); /* obj is reused */
->                      obj->key = new_key;
->                      obj->value = new_value;
->                      refcount_set_release(obj->ref, 1);
->                      add(collection, new_key, obj);
-> 
-> refcount_{add|inc}_not_zero_acquire() is required to prevent the following
-> reordering when refcount_inc_not_zero() is used instead:
-> 
-> consumer:
->     obj = lookup(collection, key);
->     if (READ_ONCE(obj->key) != key) { /* reordered identity check */
->         put_ref(obj);
->         return;
->     }
->                  producer:
->                      remove(collection, obj->key);
->                      if (!refcount_dec_and_test(&obj->ref))
->                          return;
->                      obj->key = KEY_INVALID;
->                      free(obj);
->                      obj = malloc(); /* obj is reused */
->                      obj->key = new_key;
->                      obj->value = new_value;
->                      refcount_set_release(obj->ref, 1);
->                      add(collection, new_key, obj);
-> 
->     if (!refcount_inc_not_zero(&obj->ref))
->         return;
->     use(obj->value); /* USING WRONG OBJECT */
-> 
-> refcount_set_release() is required to prevent the following reordering
-> when refcount_set() is used instead:
-> 
-> consumer:
->     obj = lookup(collection, key);
-> 
->                  producer:
->                      remove(collection, obj->key);
->                      if (!refcount_dec_and_test(&obj->ref))
->                          return;
->                      obj->key = KEY_INVALID;
->                      free(obj);
->                      obj = malloc(); /* obj is reused */
->                      obj->key = new_key; /* new_key == old_key */
->                      refcount_set(obj->ref, 1);
-> 
->     if (!refcount_inc_not_zero_acquire(&obj->ref))
->         return;
->     if (READ_ONCE(obj->key) != key) { /* pass since new_key == old_key */
->         put_ref(obj);
->         return;
->     }
->     use(obj->value); /* USING STALE obj->value */
-> 
->                      obj->value = new_value; /* reordered store */
->                      add(collection, key, obj);
-> 
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Paul E. McKenney <paulmck@kernel.org>
+> 		ret = xfs_reflink_unshare(ip, iocb->ki_pos,
+> 				iov_iter_count(from));
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz> #slab
+ok
 
+> 
+>> +		if (ret)
+>> +			goto out_unlock;
+>> +	}
+>> +
+>> +	trace_xfs_file_direct_write(iocb, from);
+>> +	if (use_cow)
+>> +		dio_flags = IOMAP_DIO_ATOMIC_COW;
+>> +	else
+>> +		dio_flags = 0;
+> 
+> I also think you could eliminate use_cow by initializing dio_flags to
+> zero at the top, OR'ing in IOMAP_DIO_ATOMIC_COW in the retry clause
+> below, and using (dio_flags & IOMAP_DIO_ATOMIC_COW) to determine if you
+> should call unshare above.
+
+ok, fine, if you think that it is better
+
+> 
+> Note: This serializes all the software untorn direct writes.  I think
+> a more performant solution would allocate the cow staging blocks ondisk,
+> attach them to the directio ioend context, and alter ->iomap_begin and
+> the ioend remap to use the attached blocks, but that's a lot more
+> surgery.
+
+sure, that does sound like it's quite intrusive. But whatever we do I 
+would like to keep the behaviour that racing reads and atomic writes 
+mean that a read sees all old or all new data. That is how SCSI and NVMe 
+behaves, even though it is not an advertised atomic write feature.
+
+Thanks,
+John
