@@ -1,80 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD7C1B4231;
-	Thu,  6 Feb 2025 20:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D1A1D5ACF;
+	Thu,  6 Feb 2025 20:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738872362; cv=none; b=GOHXLIWdz63knXSIBBSRu5KnwHCKWu31CJCwY2HQtR2VBTyHevWJvTpYN+zmWpSkeRdyMp7hq8hbNuetnfl0qX72r0U+5UhNL0NPTckbv2lTPc4IC9jZ4Xzqy4XbFZbpoZTQtINDfG4KnqcrV0OXEKu3Z2mxvfh+EkQPtXHL+Ko=
+	t=1738872365; cv=none; b=YM3rRYt/4JAEeKq2/v6NeBzdhvlmoEjZAyQLaflLIh46TpPYCdJPUK83m7SF39l3KmHvtopX4h8NOuxsRMzQMyM34KJ9n4eOMx8PTnVhSz+TLIAUGtJLXWx52P/KwYK5E5i4ULBxH8XJl27rvRgvIN/SYxo0A1EMV/7Ymz+0P6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738872362; c=relaxed/simple;
-	bh=zIOxhng+9030YiafVBMIF0uinyUABG6TP/2uiKz/A/8=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=rfbM+JeeZzim8/bCyDbyX7GeLJlxSI6pP+9fFUVqgaQFNm7BVD3hwkzy3gOeayhfqu1u1UdPpWtbZUQiqtI5KUO3mNuSsYPS+npeB+iWl94nx2uxUPRpHkcrAYp2vLqlS9DVCyJbJCol14CJDb9pTkN5aXKGzv2iZcujsJczDrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M0drsea/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738872365; c=relaxed/simple;
+	bh=vSTIuybZy5DJn49mPWMLVQD4HMxFkEzZ34vFkrDQIXI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QMS80Y+6oC6pmD3Kp+qrD3k6wcHQneExhT3qHP5FCPf9iCZ+ugQMGeJIMLVZe7d2ZSs1CT0iDbx+AJbUC/UXc9MYJTOSQ1FAL1PkKRUIa5CGVr8hk/ckLezDlXJbYmlEHtuzEgRjpBJY/0ADLDc7e4u4RBRhNh1lXpbATJVbUuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=kFyUiykl; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M0drsea/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75A7DC4CEDD;
-	Thu,  6 Feb 2025 20:06:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738872361;
-	bh=zIOxhng+9030YiafVBMIF0uinyUABG6TP/2uiKz/A/8=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=M0drsea/HyZE1xa7yUTso301Gdw3Gk+GPpxzYfnvohY+PoRnWlB5J9WBiT41q2SgR
-	 h8IS/sh70fuYAn2ETIUWhAYXuF1NDdIS4Yj5ix1awHKCI/K/HGp1Ti069WVDAhexf9
-	 sj4TuI85jWaFJd/QCLGwHfXeARrhK8D0oWZ/cAfpdOcNmSfSQ9B4pPnUvlceYlu33t
-	 NqgOTeK8Dsz/gEO1EfRw109jEmLURrwxQYT6hHpmKpgyhC3Hm5ilE6RiOY/SzS3RfJ
-	 QaRKagxmPZ6uLy6Dx5kJA2ypD75NoGKuVV43RIYXJztroJ5BebGCykwY9iPhWIKIGt
-	 PyRB7x1n5UNzw==
-Message-ID: <0cd42d2d683ea057e6034978b02c7f84.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="kFyUiykl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1738871841; bh=vSTIuybZy5DJn49mPWMLVQD4HMxFkEzZ34vFkrDQIXI=;
+	h=From:Subject:Date:To:Cc;
+	b=kFyUiykl/7z3qQfnICIR0kDom0+Q9kTaQi42YaE2toan6uWvysE1ydkel30a19bOL
+	 I/TQbO6ZDcUkKhlewtqJ/57nAIw0sJ8oASVgdtPDCbiSseXsG2F9/Ln5/icpK06Hmn
+	 RF/OB5rakVo3qjXChmjhG3SDkz9pqvxbceCuirYk=
+From: Luca Weiss <luca@lucaweiss.eu>
+Subject: [PATCH v2 0/2] Support single-PD in wcnss driver
+Date: Thu, 06 Feb 2025 20:56:46 +0100
+Message-Id: <20250206-wcnss-singlepd-v2-0-9a53ee953dee@lucaweiss.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <Z6SiiRubSXGInbgj@pollux>
-References: <cover.1738832118.git.viresh.kumar@linaro.org> <c68081e18d939aefc7f6dac798df6b72e81bba4b.1738832118.git.viresh.kumar@linaro.org> <Z6ShsuLykigNscz8@pollux> <Z6SiiRubSXGInbgj@pollux>
-Subject: Re: [PATCH V8 06/14] rust: Add bare minimal bindings for clk framework
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Rafael J. Wysocki <rafael@kernel.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Michael Turquette <mturquette@baylibre.com>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org, Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, Erik Schilling <erik.schilling@linaro.org>, Alex =?utf-8?q?Benn=C3=A9e?= <alex.bennee@linaro.org>, Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-To: Danilo Krummrich <dakr@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
-Date: Thu, 06 Feb 2025 12:05:59 -0800
-User-Agent: alot/0.12.dev1+gaa8c22fdeedb
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAP4TpWcC/3XMyw6CMBCF4Vchs7ambSyKK9/DsOhlgElIIR0BD
+ em7W9m7/E9yvh0YEyHDvdoh4UpMUyyhTxX4wcYeBYXSoKU2UulGbD4yC6bYjzgH0TVY38xFmys
+ GKKc5YUfvA3y2pQfi15Q+h7+q3/qXWpWQwklla2elUy48xsXbDYn5jAu0OecvY2Kr9K8AAAA=
+X-Change-ID: 20250129-wcnss-singlepd-f9e6854257ed
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Stephan Gerhold <stephan.gerhold@linaro.org>, 
+ =?utf-8?q?Matti_Lehtim=C3=A4ki?= <matti.lehtimaki@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Luca Weiss <luca@lucaweiss.eu>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1043; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=vSTIuybZy5DJn49mPWMLVQD4HMxFkEzZ34vFkrDQIXI=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBnpRQC3xLAYr6wHYazamtoiaGwWG7Flfqhtv/DI
+ V4SI2C8NSSJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZ6UUAgAKCRBy2EO4nU3X
+ Vk9eEACT936C0NBzS0pMXn60Jg14OnSDFFJOCb0lG2zwS/j7JDzbTkxoo0aZtNqxypFjy3X36yo
+ scC57Qyq23tmT9+9XZWyVeBSe9nOvFLeSicq5FZHK7qTHG5D+nPvpTwD4OGt658TfOE+2tBsMji
+ Rk0f1Z36yyW67FCN1SzeaG0t1gTRVMcEaz/E0bwpaFeWAl39ShjtYvJrKl9UodGwQsLkRDq5B5g
+ ADZQ5As5JJwmC5epkuOuWtpMBFiBZUXPjYaczzxoCd5JZ7JfsNYYBjd07jRiQ4Mf3POFi+Ila5Q
+ KjUtxr5JcOwQaQgGatKzboe6HFYBq/X2DRKUaKiwGrYk8AH/0PA50s9+6PyUyCtGZYWEooeU+ET
+ tp27kTFBXhgZxebpwZM0kW/F7qr5ITk3vMrhRhwm4Y7gBBcn2vBlFPvj5MKFKA3U5Kl2jOE21x9
+ NMx/umvKjoy1j5S+ck0h0RYOy6N7EUi/omWpq9vXeLYSxGZgw2nevMkSAgiBeSpEmBsd7sL2V42
+ EcFrUS4haYA0oocu6cEQil8ZZFR+opZ+TNkDfxE2NGd8WYYnEdNQkYB3vstGcoMzD312EPhJDpV
+ JGkChCb7bFKyIdf5ZDzOMP+qTW3q2KUiavsLVk3EKyj3z4oLmxvH1RYeuCpGq82pv0sTjziwFh7
+ 1rvJRkytTZ7iVeg==
+X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-Quoting Danilo Krummrich (2025-02-06 03:52:41)
-> On Thu, Feb 06, 2025 at 12:49:14PM +0100, Danilo Krummrich wrote:
-> > On Thu, Feb 06, 2025 at 02:58:27PM +0530, Viresh Kumar wrote:
-> > > diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
-> > > new file mode 100644
-> > > index 000000000000..123cdb43b115
-> > > --- /dev/null
-> > > +++ b/rust/kernel/clk.rs
-> > > @@ -0,0 +1,48 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +
-> > > +//! Clock abstractions.
-> > > +//!
-> > > +//! C header: [`include/linux/clk.h`](srctree/include/linux/clk.h)
-> > > +
-> > > +use crate::{
-> > > +    bindings,
-> > > +    device::Device,
-> > > +    error::{from_err_ptr, Result},
-> > > +    prelude::*,
-> > > +};
-> > > +
-> > > +use core::ptr;
-> > > +
-> > > +/// A simple implementation of `struct clk` from the C code.
-> > > +#[repr(transparent)]
-> > > +pub struct Clk(*mut bindings::clk);
-> >=20
-> > Guess this should be Opaque<bindings::clk>.
->=20
-> Sorry, I meant NonNull<bindings::clk>.
+Both MSM8974 and MSM8226 only model CX as power domain, leaving MX & PX
+as regulators. Add some patches to support this use case.
 
-NULL is a valid clk. It's like "don't care" in the common clk framework
-as most clk consumer operations bail out early in that case.
+Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+---
+Changes in v2:
+- Narrow down dt-schema to only allow one of these three options:
+    - cx regulator + mx regulator (still deprecated)
+    - cx pd + mx regulator
+    - cx pd + mx pd
+- Link to v1: https://lore.kernel.org/r/20250129-wcnss-singlepd-v1-0-b01a6ba0b1bd@lucaweiss.eu
+
+---
+Matti Lehtimäki (2):
+      dt-bindings: remoteproc: qcom,wcnss-pil: Add support for single power-domain platforms
+      remoteproc: qcom_wcnss: Handle platforms with only single power domain
+
+ .../bindings/remoteproc/qcom,wcnss-pil.yaml        | 45 +++++++++++++++++-----
+ drivers/remoteproc/qcom_wcnss.c                    | 32 +++++++++++----
+ 2 files changed, 61 insertions(+), 16 deletions(-)
+---
+base-commit: 808eb958781e4ebb6e9c0962af2e856767e20f45
+change-id: 20250129-wcnss-singlepd-f9e6854257ed
+
+Best regards,
+-- 
+Luca Weiss <luca@lucaweiss.eu>
+
