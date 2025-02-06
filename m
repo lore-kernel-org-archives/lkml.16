@@ -1,140 +1,87 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF53F19D884;
-	Thu,  6 Feb 2025 19:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E725D1A08B8;
+	Thu,  6 Feb 2025 19:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738868734; cv=none; b=Rronqfyvch2pkUvf/Nin2k2oRuq4c21aw37IEf16B3InQJWyyDp5LOG9HpRUhFi7z6UAyVlQCjIjhB+m8kAnxmqysPM5FDVs/Xn7TrBQ5XjtBwn1N/XJrj8O5Cu9Yjucyon85eYTXJq/dxG3vN+OyBYl5oAv/G2Wtl8p6UtgUWU=
+	t=1738868845; cv=none; b=AvB8FJoZaZz49BzPMpkyDAe29gqHOrOPYe2s691/E0QE4/HM3yc/FXne0JJsY2kYyZG7wE+g7PJXPqx2D37R4GUrmqjBxh9z12AcU9Ejyc8enGN9fPgNCbrQnXGAgBB9qEy4eq+lagw3zMWPf7lmTgIjWqIjyDaJYjJjyVEy+Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738868734; c=relaxed/simple;
-	bh=9uQVOmifnreGhQsc1A9lVrH5St/iFksctqFWAQBdxkU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QfYfYgptqByhIq0HNSh5tvspmkXrVipMjTynoWI88ERr275lnFJv+sIbBhEbDJLgGn/aWOq2x5IfrOil6xBLKfihAfEoL2W0pAClU+KVbV9qHTb+09WMt0pzaURV0AbNlnAHvQ7Y7SAWrXuY7lv1Dia9iX3SFzv929CzVPBghOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iFyLyS8O; arc=none smtp.client-ip=209.85.167.52
+	s=arc-20240116; t=1738868845; c=relaxed/simple;
+	bh=3Y9lKJZTXxPn/bEFEPxof9cM95KTnLOaiPaLer/sG+U=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=sqgt1HoJ1dLKNzxYMoxvNF3orTGM0jpkylZFpdcTsBmB7YORHbE91Q0a26E3RW7S9tuDml4XLz2KcmAVWE9DbjobEGm/i2v/CtqbMar2mgm4Kd0Omj1BYr1u7iYBE1bPhHSNe33PD0chQUirUuMsOKx6Irh/WJukoK0ZzWhhgus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TFiACaW1; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iFyLyS8O"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5440d1f506aso1406541e87.2;
-        Thu, 06 Feb 2025 11:05:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFiACaW1"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ab7814aa2adso67618166b.0;
+        Thu, 06 Feb 2025 11:07:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738868731; x=1739473531; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vWe/2ua+fmh35CLfAMD65N/tcnFfhiqpINTofFDfa4s=;
-        b=iFyLyS8OhWx70qdmlIVIj1vXx7cNvGG/jkBCk5yoXNZqEwGPj6TL4wqsBrHp/IDLH2
-         m2hI0Skp8I6nE+q34QxMZfQEnOTKg9WbKeOui6sEiPlRospWZYXy3iTaIONInNyXM1LA
-         UInm6aieSKsoU3hYiUy9/uBWLJGCpUHBSIyYpyL2aIkx7jVLELrhGGlBsMzFZrCGY/Bj
-         GxgyH0GJHOxRziuuFgwzD5lg76ucIQtD5UB6bULgk7kdrGPWliPhlgnmybK1qjgU0aa6
-         sHcywuORPj35So3+zakOgOW2OM4TKOHSbLRvDRVUxmVcdsCjMzLofx9ElnhYo21tNnPe
-         Lbeg==
+        d=gmail.com; s=20230601; t=1738868842; x=1739473642; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=piS44ekru2Q2hy3mmivZUbYVvyIzizTuKsNZi6ZY4iE=;
+        b=TFiACaW1vrVZ779iAtJkR4eKYp4XcpSmE96MCXIcCMd+OB5v87dLzi6Ed5J0hFRo2P
+         MpS2VyZhAiHT6Hxh7GJFrICLrKE5mQzwgdh/iENyiwUsBep6QnvPbbI+Prl/GHPOcJ9Q
+         evwN5fRHCoAaQnrqf0e++pGfb7PZ7B+8FaSXSXdN6LQQioMuvliaaOkeka/DPPLSvWqc
+         VpqBX2d0H6JdWQcrc3HWprh3V0A5AyfUUh9oT0FNaRKqXwQS+2YpZcvPNmm4FLRAlmpf
+         pfSQwdwEKY+9BipCAl0ix1jFNIvVukbIlV7+i+U55Zwl3MkoQjEx9BGVi9CiyyfYvUt2
+         +W7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738868731; x=1739473531;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vWe/2ua+fmh35CLfAMD65N/tcnFfhiqpINTofFDfa4s=;
-        b=Bnmi3tsbm4AFAPafD/arRly+R0GI0PNPaAAdKpDWm6MXuLufpZUiyQL5GpqPTrb2VW
-         DHTdDGBfw+1lf7++zsBMt3kNEbWeaIfyGk2Oq0XIKlPt++anDrFhIhf/I5KvOaRlnAjt
-         ujsivC+8vjEDrD4qishOqk1BU8jKpOQwA3SVtSWT4YMqWCuxG0kRAbFUSaNwLaNRmXmo
-         thRtdu44boSpljiYleAbvSbZxRE6UslJytd4MMPQelbww3J2Uy0dffMVDYSlXktkcf62
-         KVSC2lME5rhUaB6EXFY+zcP9PfJh6Zkk8P1doNgOZfiZ7lfBhc7PXKOu1x4l7+bD0rs9
-         MzKw==
-X-Forwarded-Encrypted: i=1; AJvYcCXk/l33H/dvGyHlViktgmMukMiJA7RPFbn38CeSW3sfeM4y7d7v1xJnCBU6id4v0BS426FFB5CMYJK/wI79L24=@vger.kernel.org, AJvYcCXkL4BaRHNERWazToiLDQU704PJZDiqNiJlRXxE/KZkXcjxFx4taZ/UvR5cT/q+P0LHB5KsWPCvcpZ0MwE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPjPghvjrgZMF5rT0vVTvBJD+ieZvlbFGBBNfe5nrFligA/l/l
-	fqycLP3HEetXN9QMh3FTSpfm2jUCy+mia0+gRZ+l7l1B4YbKXikJ+RYf5uGWe3OiuEGASlyT4+4
-	/WZPOW5jH1EUnoCA56iU/afikLuM=
-X-Gm-Gg: ASbGncu2Z/2eWTBb4p1LJi2oBYpHTEAEBh0RBaMfjHS2g5tf4fysz4oExaqLmd1xd6e
-	VUUtPmWRh1QSMWYSTQg7yRaonxEMwIcsGzYvXDv0zXoH04+CrkZRC7+aiaXwpMRUpdRZui+KlVL
-	VmYpm6XMLTNYTDDhLbM7rjGwl2qLj8
-X-Google-Smtp-Source: AGHT+IFb/vF56J/Q4fncJH5D5onPYZnsacNHsk//1uyVv8nEb2/jnZ4MfdBuw2ZeWkVaH6sI4P7kJQed7OhU5P9x8BI=
-X-Received: by 2002:a05:6512:2399:b0:540:206b:c355 with SMTP id
- 2adb3069b0e04-54414a9d0bbmr24781e87.19.1738868730481; Thu, 06 Feb 2025
- 11:05:30 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738868842; x=1739473642;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=piS44ekru2Q2hy3mmivZUbYVvyIzizTuKsNZi6ZY4iE=;
+        b=gBI2uChUrRnln4CK2tyagqXRzYDPj9Pwf6pLulR2GV/fp+SrK3pVJiyAamohqaYDRk
+         EMPUZaMgKS3MGPDuvYaBTblTo8/2WUEnQ7UJvy9h32+G2Vnkdi40o9LcP/6rudUIc6KV
+         y7vRR7XDYV61eC4yJVfVUxFEjoLJ98IrdK4y04szAlb+uGgW5a1OwVG2tc53CaI0VoFu
+         bG5SSM4CvmY2y7EeMp/gzMIdiMHiv/J3w9dBk3Yeglyc8PuCrEOO/JNZJyvNd4j4/KZf
+         hZOrsxiTiO6BNK+UCyaHuFqTQi/YoJ0XNDVBhuyRydR4Z3YNOsWZfvHD+3wPH1f0zyO+
+         m0Og==
+X-Forwarded-Encrypted: i=1; AJvYcCV3wwERHSdk+3R0APUtdNd0NSYx5QlrP0BPLakTKacPiIqNpgkgTbEQBgWUPmp0ZaWZVRX62AWBgVwZ183w@vger.kernel.org, AJvYcCVEn41DAgcFruDKxTTo19W1GbOiGVptLv6Tpv7ocalxHA44kilBPc/qEuyfHV8FToasLryVLQg1ftgtNv4U@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywq5pYDsDPatClhMG6XTjQRIcIvfYj3pSwP/TAxQVxFzIl+Kea6
+	dtzWQ09XRh+ZdYw/AIYm9xAQB0gyDEA7Tz20yTN3upjgHNAIKh0H75Fh/Yd0OxBaLLQcDLbYIOd
+	jqtKdvuKhy6OoP3gnkaNBNsYqYIQ=
+X-Gm-Gg: ASbGncsj4Vv2fea1j126WR1ximY59ZzaiOmzCWqdmDyuzaLxZ6a6GmGN3/pnFfCch62
+	jU844//kTUP4peTdNGa4Q/HXosCC/vPCzsq1VT02bNgdA6B45EyTiqi2EH8LrTg35ZFZlFPUn
+X-Google-Smtp-Source: AGHT+IH3nxCUMU8lFe7u/yFJ06VJpdagvQubxRPShgigcGMaXy9qQT1KRxOG36kQUroJS2+DLpf/1D0xoR+VUl982lE=
+X-Received: by 2002:a05:6402:5386:b0:5dc:74fd:abf1 with SMTP id
+ 4fb4d7f45d1cf-5de45017b76mr1308453a12.15.1738868841642; Thu, 06 Feb 2025
+ 11:07:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250202-aligned-alloc-v2-1-5af0b5fdd46f@gmail.com>
- <CANiq72nH3N9UMu2hsPG7WfYCZQwy9M_4q_rQHJnJMScQ3D9-Jg@mail.gmail.com>
- <Z6T5sOWXxmUsflW7@pollux> <CANiq72n7jx5ve9UL3oDD08=PjY55QHoMY8fyfsW9RNEvjH_b4Q@mail.gmail.com>
- <Z6UGNbowcvqTN0-T@pollux>
-In-Reply-To: <Z6UGNbowcvqTN0-T@pollux>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 6 Feb 2025 14:04:54 -0500
-X-Gm-Features: AWEUYZkktBtBZNaQMCoEzUE1Y4SVul1Gh2koh9oJg_zJds6xgzDkBGw1WFiJBy0
-Message-ID: <CAJ-ks9mwB+9F8Bz89TB0ZecijOftM49yfPzn5GgcyPDEput+xg@mail.gmail.com>
-Subject: Re: [PATCH v2] rust: alloc: satisfy `aligned_alloc` requirements
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Thu, 6 Feb 2025 20:07:09 +0100
+X-Gm-Features: AWEUYZkW3aoeWrfipuvTdCTz8cvkAXXkprTJUaqtWApk47UMeczz5KSjQTxbZ0g
+Message-ID: <CAGudoHFLnmp3tQHOwUAFBKxrno=ejxHmJXta=sTxVMtN9L1T9w@mail.gmail.com>
+Subject: audit_reusename in getname_flags
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 6, 2025 at 1:58=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
-rote:
->
-> On Thu, Feb 06, 2025 at 07:20:20PM +0100, Miguel Ojeda wrote:
-> > On Thu, Feb 6, 2025 at 7:04=E2=80=AFPM Danilo Krummrich <dakr@kernel.or=
-g> wrote:
-> > >
-> > > I previously checked man posix_memalign(3) and it says:
-> > >
-> > > ERRORS
-> > >         EINVAL The alignment argument was not a power of two, or was =
-not a
-> > >                multiple of sizeof(void *).
-> >
-> > Yeah, but that may not apply to `alligned_alloc` as far as I can see.
->
-> What makes you think so?
->
-> AFAICS, the man page applies for posix_memalign, aligned_alloc, memalign,
-> valloc and pvalloc.
->
-> In case behavior differs between the functions, this is stated explicitly=
-, e.g.
-> in the "RETURN VALUE" section.
->
-> The "ERRORS" setion does not differentiate, hence it should apply to all =
-the
-> functions above, including aligned_alloc.
->
-> Do I miss anything?
+You added it in:
+commit 7ac86265dc8f665cc49d6e60a125e608cd2fca14
+Author: Jeff Layton <jlayton@kernel.org>
+Date:   Wed Oct 10 15:25:28 2012 -0400
 
-The writing is definitely obtuse.
+    audit: allow audit code to satisfy getname requests from its names_list
 
-> Return Value
->.  aligned_alloc(), memalign(), valloc(), and pvalloc() return a pointer t=
-o the allocated memory, or NULL if the request fails.
->
->   posix_memalign() returns zero on success, or one of the error values li=
-sted in the next section on failure. Note that errno is not set.
->
-> Errors
->   EINVAL
->     The alignment argument was not a power of two, or was not a multiple =
-of sizeof(void *).
->   ENOMEM
->.    There was insufficient memory to fulfill the allocation request.
+Do I read correctly this has no user-visible impact, but merely tries
+to shave off some memory usage in case of duplicated user bufs?
 
-It seems that the errors section applies to posix_memalign only. The
-description section also contains:
+This is partially getting in the way of whacking atomics for filename
+ref management (but can be worked around).
 
-> The obsolete function memalign() allocates size bytes and returns a point=
-er to the allocated memory. The memory address will be a multiple of alignm=
-ent, which must be a power of two.
->
-> The function aligned_alloc() is the same as memalign(), except for the ad=
-ded restriction that size should be a multiple of alignment.
+AFAIU this change is not all *that* beneficial in its own right, so
+should not be a big deal to whack it regardless of what happens with
+refs? Note it would also remove some branches in the common case as
+normally audit either has dummy context or there is no match anyway.
 
-So aligned_alloc has the same alignment requirement as memalign, which
-is only that it's a power of two.
+-- 
+Mateusz Guzik <mjguzik gmail.com>
