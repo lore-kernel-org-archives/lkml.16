@@ -1,133 +1,106 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD1B22331F
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 10:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A534522331F;
+	Thu,  6 Feb 2025 10:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738836631; cv=none; b=aQZC/AVXmZV3XdeIzvEAu2MKns2S7H46shhTUxCw8qVgobtD+CDZI2OheQzqWLso1d0zNuMZTBON+zZJV4/0+5AcqvTcL3L0WbTH5lVhgtI8wynz4HvCvzxeNBWfIRz5rf2EINkn/ASBL5YqIOa9D6KPqSv3T+In8fUO7OlVCtI=
+	t=1738836730; cv=none; b=m89Knyqx1TokM709CrC/EieX0I1hVGF/3bnww0giyOi2xDyUfc8PcrucLXYl6IxvErfP4eA7JYSi8SAplMVFIUpQL79d+72Rlfi/Hb29L5Q6nUtoKuOOMdHdEpWivbFWmf94p49boWPrSk7u7d/mFNUW0CIt7DWGx1UWKkSucVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738836631; c=relaxed/simple;
-	bh=8f8034OL+cutSRceHZhMdda+h+5yVL61It9YemNpLfk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N9lmJqYj8v/xeGjuh7F6isar0YfCeLwqffZUkmLr36zBMaabsI6E+Mt5PkRHgO5J3kXSR2Jley4zKaoVmXCjeamnjzP9OMqEIpsRGXdowbIsVysbMnQUFwaNgceExu5kXsvyy1J9ZJlocBPGl3FdDtf6itakArHxHDeBaR0zTAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iTA7Vug/; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738836730; c=relaxed/simple;
+	bh=dl8ZXnQCbi3Y8kVYZFjrzTlPj5aOIr0W5r+muArOoeY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YkMJkWSij0OWUSTujRw8OV1dOIifjSc9oEExxXIJgc5ZZBhQ2RaeRdr3+pVRSVFA2AFaU0B05o9QthjW6ImrSSm8mHDbqJQiVK7gH4aPfsDiaN/FWMMtrvZj93YyvwZe+UhZbyla+jLPBsX9xywmerE4jnx3qXDN+YxIcF/pEzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=VrGjZMXN; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iTA7Vug/"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5167WkSv005463;
-	Thu, 6 Feb 2025 10:10:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=BKe363xUYdTGSVnLtLxWIoU4LNfPlnwqtWO22Dr3y
-	mo=; b=iTA7Vug/CC3rO2oOXdwjqHqu4z5sf185vohHhj8x0RNCoc5QCdpBYxydD
-	ZCXgvnZ4c9QMj3AXdBsc3IcyVc7jkZ3BXpEw7jCaMwb9E5yVSow4R3QOwyRANP69
-	Z/i2I2lnLXObE/LwVrO2kOKK6ThZrSF2YMt0o948/xxdc4Djg/iV1o0oB2Gmb3rs
-	2B45lgNo3Ilk9TzEw7g3ccZTtTbQw+1V0jZbTgu6SgqAYHKcbS3Y9/yHeYvgW9DB
-	iaKFWKpdG26l0o1zPTAPAzzFICSrIBCqmXwKTcEJII5uInTm8mLIWfLbs8JRSF5C
-	2W76XOCvp/AcDsF4VWPU1GssK6Q1Q==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44mrsp0pxp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 10:10:06 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5169tPLC031332;
-	Thu, 6 Feb 2025 10:10:05 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44mrsp0pxh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 10:10:05 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5166hIfF016288;
-	Thu, 6 Feb 2025 10:10:05 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44hwxsnv8t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 10:10:05 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 516AA1ME58327340
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 6 Feb 2025 10:10:01 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9873920043;
-	Thu,  6 Feb 2025 10:10:01 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1FB5F20040;
-	Thu,  6 Feb 2025 10:09:59 +0000 (GMT)
-Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.in.ibm.com (unknown [9.204.206.66])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  6 Feb 2025 10:09:58 +0000 (GMT)
-From: Gautam Menghani <gautam@linux.ibm.com>
-To: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        naveen@kernel.org, maddy@linux.ibm.com, clg@kaod.org,
-        brking@linux.vnet.ibm.com, vaibhav@linux.ibm.com
-Cc: Gautam Menghani <gautam@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] powerpc/pseries/msi: Avoid reading PCI device registers in reduced power state
-Date: Thu,  6 Feb 2025 15:39:53 +0530
-Message-ID: <20250206100956.438888-1-gautam@linux.ibm.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="VrGjZMXN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=IGtT4jJj54W9qkniOIuHDmAyLAJNfLsZ3atVdSoL2Sw=; b=VrGjZMXNKqp11sBPpNPyr9bd8j
+	iDW8pjUfPny4JDeSdAM75qSlzDloRDzAuw8WPJ+YuCmZrT/uT0LWIy5VkIf9jmIxSMpOpb6SgsdTz
+	+G/JpsS0x5S/EIl2UzUs7CYJrHEb12+B0+LZp+ntHccablhQbEOP6Cy+ZaXE0VSy1uFyMo53wgLfH
+	2hzZRTL4roOnp4giNFVCOQ1gW/WFSYAStewJD3KnebYOAQ68PoitLuWosk5mUgkGk6NMo3H8ZUfCN
+	PpjJf3Ew9XEO+zWoiOltaJbtDSQyt0EopVzMPvXzJaHI9iniyUZh974YIgNFl/TXHxlLDo/DfkjRE
+	J+0zciZA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58646)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tfyqw-0001h6-11;
+	Thu, 06 Feb 2025 10:11:22 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tfyqn-0003LY-04;
+	Thu, 06 Feb 2025 10:11:13 +0000
+Date: Thu, 6 Feb 2025 10:11:12 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
+	Jose Abreu <Jose.Abreu@synopsys.com>,
+	David E Box <david.e.box@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	David E Box <david.e.box@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jiawen Wu <jiawenwu@trustnetic.com>,
+	Mengyuan Lou <mengyuanlou@net-swift.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH net-next v6 4/7] stmmac: intel: configure SerDes
+ according to the interface mode
+Message-ID: <Z6SKwNF8ib2BgIsL@shell.armlinux.org.uk>
+References: <20250204061020.1199124-1-yong.liang.choong@linux.intel.com>
+ <20250204061020.1199124-5-yong.liang.choong@linux.intel.com>
+ <Z6IDWiRF73sdVWob@shell.armlinux.org.uk>
+ <f272cb2a-1167-4e34-9209-ffdbbb107bdd@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: RygOwVXffmHk1_hoB5psPTYDI9SMW8yq
-X-Proofpoint-ORIG-GUID: v-t-pT3qbGANSnVigATCvmLFtqgu-MX5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-06_02,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 adultscore=0
- spamscore=0 phishscore=0 priorityscore=1501 mlxlogscore=828 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502060082
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f272cb2a-1167-4e34-9209-ffdbbb107bdd@linux.intel.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-When a system is being suspended to RAM, the PCI devices are also
-suspended and the code ends up calling pseries_msi_compose_msg() and this
-triggers the BUG_ON() in __pci_read_msi_msg() because the device at that
-point is in reduced power state. In reduced power state, the memory
-mapped registers of the device are not accessible.
+On Thu, Feb 06, 2025 at 10:22:04AM +0800, Choong Yong Liang wrote:
+> Thank you for your feedback on the patch. Based on your suggestion, I have
+> updated the code to align with the mac_finish() method and included the AN
+> mode as well. The updated function signature is as follows:
+> 
+> int (*mac_finish)(struct net_device *ndev,
+>                   void *priv,
+>                   unsigned int mode,
+>                   phy_interface_t interface);
+> 
+> Could you please confirm if this meets your expectations, or if there are
+> any further adjustments needed?
 
-To replicate the bug:
-1. Make sure deep sleep is selected
-	# cat /sys/power/mem_sleep
-	s2idle [deep]
+That's fine, thanks.
 
-2. Suspend the system
-	echo mem > /sys/power/state
-
-To fix this behaviour, read the cached msi message of the device when the
-device is not in PCI_D0 power state instead of touching the hardware.
-
-Fixes: a5f3d2c17b07 ("powerpc/pseries/pci: Add MSI domains")
-Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
----
- arch/powerpc/platforms/pseries/msi.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/platforms/pseries/msi.c b/arch/powerpc/platforms/pseries/msi.c
-index fdc2f7f38dc9..458d95c8c755 100644
---- a/arch/powerpc/platforms/pseries/msi.c
-+++ b/arch/powerpc/platforms/pseries/msi.c
-@@ -525,7 +525,12 @@ static struct msi_domain_info pseries_msi_domain_info = {
- 
- static void pseries_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
- {
--	__pci_read_msi_msg(irq_data_get_msi_desc(data), msg);
-+	struct pci_dev *dev = msi_desc_to_pci_dev(irq_data_get_msi_desc(data));
-+
-+	if (dev->current_state == PCI_D0)
-+		__pci_read_msi_msg(irq_data_get_msi_desc(data), msg);
-+	else
-+		get_cached_msi_msg(data->irq, msg);
- }
- 
- static struct irq_chip pseries_msi_irq_chip = {
 -- 
-2.47.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
