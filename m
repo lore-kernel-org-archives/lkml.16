@@ -1,210 +1,98 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m15599.qiye.163.com (mail-m15599.qiye.163.com [101.71.155.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A24144D21
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 03:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2094C8F;
+	Thu,  6 Feb 2025 03:09:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738811328; cv=none; b=NpLcJE+Su2HRTbreLSBZ1xeFl2+FsZ0vt963dknDa/CAr/wr68MhVJopImmmaPInXQrwknPyem01tSPVX3KC8yltdKTd2dIjm2IizaGgJo+1mrW8jjmrOCzCXcARrrFEJn5487dbdXcMC4ErLpuoxqlZXwI5IPUUE4EejCGfW/0=
+	t=1738811371; cv=none; b=A5AfY3I+AG4n5nwgUo6RWPU8dipOL4d7YyjUvuReKD68SnmlyCcg9fx+l0FeOcVQazg6yvO72YlkFPVrzWXqZYgBVXJw2hYf4DEWoEtAD+qMHvQc0LzBr+M5yYeLIljHXRLBCpEi9xHPkpfZHiI0ltCbTF3tcmfEAUFYI0R1858=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738811328; c=relaxed/simple;
-	bh=JArX3Dk5id3BJMLZVxmy3A6G5kMaoHM7Enl4wTky7vM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rpXZSTHuCOj174w7c8WbI/f+4MS1IKoM+yj4Y1hHZZepilnFEDwecB81aAZ8WU5BkDKVQWUDK9jZacFgxWVig/yI09ZVVmJpIMwgxBz0RoWSn+jPaqPn0jBwKQWOB0gEjnyLD/ngan7Xmhbu0NBMyurXrwkO8ZxyLu9F8LFT6AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PpZeXDBW; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738811371; c=relaxed/simple;
+	bh=dNZT3JsYYtAs2vqS4CbgU8EpoTZki1QGNV+kTM0ewt4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HCJsNk1+29V1WeHuuBdFP7YnQYQu+qnYvahwHRf2netJLAGbfokjgN0vnlvUNTjLY+kGl5rxgc0moqw7ztXV8ZbbsuIIf/bMuFvDdaQ/1pYBIFwW5D0p/yqEs600nu4B2KXivI1K3sbKZdkjBa8wh35GQjdCwEUzv3YxeUx0bDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=hmxGW/uj; arc=none smtp.client-ip=101.71.155.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PpZeXDBW"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6f6ca1a8aa6so2713757b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 19:08:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738811324; x=1739416124; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y0IrdqFJIK9pHEJeBBjQmGRdouO7wy9i+RTIEY9ibaQ=;
-        b=PpZeXDBWLiVN9pfDWy5qo4/mQi/LuUre9VNWIj0GyKS8hH8zv5nMEEFkLzD9nPbAXa
-         DHsiPghRhFD7bL1G83YXlDwmP44Xl9b3gwUpo5CZ4KiNJHSa0OecEmLD2wiVhEZAgJPg
-         iOMHHxT4DchnyILeTz0a8s6fROk9HhivvtFkDC59HH/nqKr6MbL2GOAUQ6RmiwuXXZTc
-         yAZ+BSW5cFZwUhkUa0xHD7X7R/95CUa7E053l6qu6BKwmVmTeAEJMXh0Pfx4aL0UaWuP
-         phcHKSTAQtRWA71T61vX6ysDs8oFglncNWiTcO9FjQGIjLEv4VdZs5sVTrZ1tbxfKhfK
-         4Vuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738811324; x=1739416124;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y0IrdqFJIK9pHEJeBBjQmGRdouO7wy9i+RTIEY9ibaQ=;
-        b=KLZGItQq7UvB5lmwQX1rMJxCrD8Dden4W5PosQOmUBwv3YKsmqqXqnN2QxKkGYCTUN
-         p733ZlCCoZCi8oszvUCypf0AZE08EbHGgBHVN2N1OEVbev6VCEYN9XacxgpPbnst6Pou
-         WZhCHrK7kdNLeMwI6d7FuVwAoCw9yETb/cswEGA5fmFszze3u/pCXzr1EJEusfIkMaQR
-         dRZkYXJclAK4gVCUBGAi+fau2DD9sWyZQSJoNdJGeoDTHDzT+Sahvh7qPsmgRoGXqXFM
-         lMCVyJPgaHwQ/ENpwgIpJl1AKHBnjitxh8P7cEAqlqRYqkL/DqQkXN589fHZP1KpReyD
-         6yJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxEs8mpVVj+wyDQmPWJ9UG+SqyBg7CTh75StMoJIxj2Tpny8k4dXAwe8hNCt7tTYWmrnJPoMgH3bam6Bw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLE51JTzyO4rVlpDWN3hgykkhuN5QUcQQkcHzhGjCUrQlJitk3
-	188iKVJ3Y6NxsbmuaP9ouUWt02/rdHx/tNzJiRCj6xiZIAnresBoTLTaa5MbwTZhMWRKQVf+5a9
-	2D8H8LOEbWQ2MNK27g7TCBn8gQdGIrTpEViJBUQ==
-X-Gm-Gg: ASbGncu1v25VvTZPGIE3BTVI8CiOHpYW4P4pwTKsZeg4MkMx+5PCioTGGyeE6Nt8Cfm
-	D6J8HM8J8DQa+ipV1c0SLBEHyvD65XAa3ueYVdC6QqqFv4qtp5b0G2bCUMWk+SMsQ1X/p7LA=
-X-Google-Smtp-Source: AGHT+IFEPX9hCQ37/v1Pk0bdptcnsa+EQY/WxVASIRCTOf/ifZHDhvU9xxe9pscbkAdV3OuowrmuPIF57zfJMGu9KWQ=
-X-Received: by 2002:a05:690c:7407:b0:6f9:82a8:e5dd with SMTP id
- 00721157ae682-6f989f817d1mr51911407b3.29.1738811324572; Wed, 05 Feb 2025
- 19:08:44 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="hmxGW/uj"
+Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id a47c7aa7;
+	Thu, 6 Feb 2025 11:04:16 +0800 (GMT+08:00)
+From: Damon Ding <damon.ding@rock-chips.com>
+To: heiko@sntech.de
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	andy.yan@rock-chips.com,
+	hjc@rock-chips.com,
+	sebastian.reichel@collabora.com,
+	cristian.ciocaltea@collabora.com,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Damon Ding <damon.ding@rock-chips.com>
+Subject: [PATCH v7 0/2] Fix label name of hdptxphy for RK3588
+Date: Thu,  6 Feb 2025 11:03:28 +0800
+Message-Id: <20250206030330.680424-1-damon.ding@rock-chips.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250126-drm-hdmi-connector-cec-v3-0-5b5b2d4956da@linaro.org>
- <20250126-drm-hdmi-connector-cec-v3-1-5b5b2d4956da@linaro.org>
- <wchzy3tnppv5ql7k2juhynqz7kwjjsod3taykw3znxrzoomqdw@fudbksambvat>
- <mtzfnr53hug7ina7hf3s6ihzkdl7xswz6ibf46dgei73khj4ms@cfrxg32vdrbw> <20250205-strong-azure-koel-f5b1f1@houat>
-In-Reply-To: <20250205-strong-azure-koel-f5b1f1@houat>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 6 Feb 2025 05:08:33 +0200
-X-Gm-Features: AWEUYZk_XPi6NCy5jyqMsGwvKZsHdQsYK-xH8hzJ8BsWLzkccfb-e2uy9WbcVj8
-Message-ID: <CAA8EJpoLcgYkKwyXNJtWi_Ym62rCRqnUPgztFXwdpdHv6k3yjQ@mail.gmail.com>
-Subject: Re: [PATCH v3 01/10] drm/connector: add CEC-related fields
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Dave Stevenson <dave.stevenson@raspberrypi.com>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0pPT1ZPSx1LGE1CTxkaSkxWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a94d937235a03a3kunma47c7aa7
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OSo6Qhw5TTIJFgkhFS80FS4s
+	OhUwFDJVSlVKTEhDQ0pKS05DSExCVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFJS05KNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=hmxGW/ujnIBUnqOd2kHaYMDkwiyHlXllkRrXoVAfcVaTt2di6w368VAv/rbgQYgiStTbse0vwbnsCirj2+ys8xbVE2KvoLxnz6tRcDmjKBxphES/Vy7oYP8jvlIdEkxLn2PONn/3iqP0ZqLRQ4yqjTKj71s+Duo1Y13l4++fAFg=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=FKRHF1m9vSxG53fGyhmajJ13PLGzPs6jS768SI2ZSR8=;
+	h=date:mime-version:subject:message-id:from;
 
-On Wed, 5 Feb 2025 at 16:28, Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Tue, Jan 28, 2025 at 03:12:41PM +0200, Dmitry Baryshkov wrote:
-> > On Tue, Jan 28, 2025 at 11:33:05AM +0100, Maxime Ripard wrote:
-> > > On Sun, Jan 26, 2025 at 03:29:06PM +0200, Dmitry Baryshkov wrote:
-> > > > As a preparation to adding HDMI CEC helper code, add CEC-related fields
-> > > > to the struct drm_connector. Include both cec_adapter and cec_notifier,
-> > > > allowing drivers to select which one to use. The unregister callback
-> > > > is provided to let drivers unregister CEC-related data in a generic way
-> > > > without polluting drm_connector.c with dependencies on the CEC
-> > > > functions.
-> > > >
-> > > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > > ---
-> > > >  drivers/gpu/drm/drm_connector.c | 13 ++++++++++++
-> > > >  include/drm/drm_connector.h     | 44 +++++++++++++++++++++++++++++++++++++++++
-> > > >  2 files changed, 57 insertions(+)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connector.c
-> > > > index 1383fa9fff9bcf31488453e209a36c6fe97be2f1..fffb718b09eaaac200e6abc7524bbfe98c4741f4 100644
-> > > > --- a/drivers/gpu/drm/drm_connector.c
-> > > > +++ b/drivers/gpu/drm/drm_connector.c
-> > > > @@ -279,6 +279,7 @@ static int drm_connector_init_only(struct drm_device *dev,
-> > > >   INIT_LIST_HEAD(&connector->probed_modes);
-> > > >   INIT_LIST_HEAD(&connector->modes);
-> > > >   mutex_init(&connector->mutex);
-> > > > + mutex_init(&connector->cec.mutex);
-> > > >   mutex_init(&connector->eld_mutex);
-> > > >   mutex_init(&connector->edid_override_mutex);
-> > > >   mutex_init(&connector->hdmi.infoframes.lock);
-> > > > @@ -698,6 +699,16 @@ static void drm_mode_remove(struct drm_connector *connector,
-> > > >   drm_mode_destroy(connector->dev, mode);
-> > > >  }
-> > > >
-> > > > +static void drm_connector_cec_unregister(struct drm_connector *connector)
-> > > > +{
-> > > > + mutex_lock(&connector->cec.mutex);
-> > > > +
-> > > > + if (connector->cec.funcs->unregister)
-> > > > +         connector->cec.funcs->unregister(connector);
-> > > > +
-> > > > + mutex_unlock(&connector->cec.mutex);
-> > > > +}
-> > > > +
-> > > >  /**
-> > > >   * drm_connector_cleanup - cleans up an initialised connector
-> > > >   * @connector: connector to cleanup
-> > > > @@ -718,6 +729,8 @@ void drm_connector_cleanup(struct drm_connector *connector)
-> > > >
-> > > >   platform_device_unregister(connector->hdmi_audio.codec_pdev);
-> > > >
-> > > > + drm_connector_cec_unregister(connector);
-> > > > +
-> > >
-> > > This should either be in a separate patch, or mentioned in the commit title/log
-> >
-> > I'll mention it in the commit message.
-> >
-> > >
-> > > >   if (connector->privacy_screen) {
-> > > >           drm_privacy_screen_put(connector->privacy_screen);
-> > > >           connector->privacy_screen = NULL;
-> > > > diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-> > > > index f13d597370a30dc1b14c630ee00145256052ba56..6da840673b1209c84bbc396643c6033679a7ec74 100644
-> > > > --- a/include/drm/drm_connector.h
-> > > > +++ b/include/drm/drm_connector.h
-> > > > @@ -46,6 +46,7 @@ struct drm_property_blob;
-> > > >  struct drm_printer;
-> > > >  struct drm_privacy_screen;
-> > > >  struct drm_edid;
-> > > > +struct cec_adapter;
-> > > >  struct edid;
-> > > >  struct hdmi_codec_daifmt;
-> > > >  struct hdmi_codec_params;
-> > > > @@ -1191,6 +1192,19 @@ struct drm_connector_hdmi_audio_funcs {
-> > > >                      bool enable, int direction);
-> > > >  };
-> > > >
-> > > > +/**
-> > > > + * struct drm_connector_cec_funcs - drm_hdmi_connector control functions
-> > > > + */
-> > > > +struct drm_connector_cec_funcs {
-> > > > + /**
-> > > > +  * @adap_unregister: unregister CEC adapter / notifier.
-> > > > +  *
-> > > > +  * The callback to unregister CEC adapter or notifier, so that the core
-> > > > +  * DRM layer doesn't depend on the CEC_CORE.
-> > > > +  */
-> > > > + void (*unregister)(struct drm_connector *connector);
-> > > > +};
-> > > > +
-> > > >  /**
-> > > >   * struct drm_connector_hdmi_funcs - drm_hdmi_connector control functions
-> > > >   */
-> > > > @@ -1832,6 +1846,31 @@ struct drm_connector_hdmi {
-> > > >   } infoframes;
-> > > >  };
-> > > >
-> > > > +/**
-> > > > + * struct drm_connector_cec - DRM Connector CEC-related structure
-> > > > + */
-> > > > +struct drm_connector_cec {
-> > > > + /**
-> > > > +  * @mutex: protects all CEC-related fields
-> > > > +  */
-> > >
-> > > All fields? Which fields require to be protected by a specific mutex
-> > > here?
-> >
-> > Yes, all the fields. adapter, notifier and funcs are all protected by
-> > the mutex. See the drm_connector_cec_unregister() implementation (and
-> > corresponding unregister() callbacks implementations.
->
-> That's still surprising to me. Like, what concurrency source / code path
-> will need to make sure funcs is updated properly? or the adapter and
-> notifier?
+Picked from:
+https://patchwork.kernel.org/project/linux-rockchip/list/?series=927102
 
-I'll have to check, maybe we can lift that and really protect only the
-adapter and the notifier. I was using ->funcs != NULL as a way to
-check that CEC is registered at all (and thus unsetting it on CEC
-unregistration). But maybe that's not that necessary.
+The hdptxphy is a combo transmit-PHY for HDMI2.1 TMDS Link, FRL Link, DP
+and eDP Link. Therefore, it is better to name it hdptxphy0 other than
+hdptxphy_hdmi0, which will be referenced by both hdmi0 and edp0 nodes.
 
->
-> Maxime
+Damon Ding (2):
+  dt-bindings: display: rockchip: Fix label name of hdptxphy for RK3588
+    HDMI TX Controller
+  arm64: dts: rockchip: Fix label name of hdptxphy for RK3588
 
-
+ .../bindings/display/rockchip/rockchip,rk3588-dw-hdmi-qp.yaml | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi                 | 4 ++--
+ arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-evb.dts        | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588-coolpi-cm5-genbook.dts    | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dts              | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588-firefly-itx-3588j.dts     | 2 +-
+ .../boot/dts/rockchip/rk3588-friendlyelec-cm3588-nas.dts      | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588-h96-max-v58.dts           | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts                | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588-nanopc-t6.dtsi            | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-max.dts        | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588-orangepi-5-plus.dts       | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts               | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588-tiger-haikou.dts          | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588s-coolpi-4b.dts            | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588s-indiedroid-nova.dts      | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588s-nanopi-r6.dtsi           | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588s-odroid-m2.dts            | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588s-orangepi-5.dtsi          | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts              | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3588s-rock-5c.dts              | 2 +-
+ 21 files changed, 22 insertions(+), 22 deletions(-)
 
 -- 
-With best wishes
-Dmitry
+2.34.1
+
