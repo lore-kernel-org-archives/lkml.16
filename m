@@ -1,72 +1,75 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0791EA7C6;
-	Thu,  6 Feb 2025 13:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB821EA7C6
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738850288; cv=none; b=UcrpLtl7ap33Ywe8PFx2rQGvR5JTIsQioXagN5VNRrYFKIjp04eUd0z82Bsq7yM5C/y9hs6pLazBiuUIXUJ16ntUyMo6SjgKe8cAfVQBBvd/UaIEWVEKvQyAEObo6TgqD+1Kc1fxfjzMWSt9BS/fHieZadKaTSL+259KBxdFBMM=
+	t=1738850366; cv=none; b=kxJtYDHHNQ8Vd8g4Hgg4ItPYUE+mnRApz6cMcl3NrHwbBC3I3y+YtiZpVu5viMi5+ZkDcABc31oRoh0xZpZ4ob+QxOsqtcu4+GDBg38HPDs+wSBCb5NLHLbrdOPFzl+Z+Qd5mpJdpuLR8RT4ZdhWix6T4GbMCAIz7/9mCv/W4o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738850288; c=relaxed/simple;
-	bh=cEhkfPaoicf2zxAScAcOmhV+Jht47Dii7DLMmmIYkC4=;
+	s=arc-20240116; t=1738850366; c=relaxed/simple;
+	bh=5fteU1gF781gid+8eh5MjlcPKwLt80L36gWbaB+12iI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EvO3bHP7pJqhIqRNPp43ZF94spNQ9zo3PbCBZqVDisE8GdtfBH2p5AQWletB7n9VdG8B5KXN3ivxpKy8/G6tDKE6KXCXSxjlMcoRBk3Uz3CGAsAQlUuCmTuTbX4y7FLfiF9oKPa2zreLlWk27I9ULr4qv9XAFA48tQJiG87EHBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qFAwRwU9; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=j6Iu0KUSx9+DueE0rvXAFhsNo4p6Ch9o0T2nQ5R7pWkxBeNs2+k6vTSWhchwJvKRgtF0uOOkkodmNcjpuM1KN5NVDQFHk1sVy54+BLYVTGZakq1rksekhnvjfRinXrTES82gNF2EES3Dte8gpXC2Ninn3K7+v0ZJ3SIWHqdrA4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OatzRcim; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qFAwRwU9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=aS8G2mLVXo/L1oMuqtZDMH9m5wICqaE0EgdSFqltFMQ=; b=qFAwRwU94EzqKbEILUMXjByVGu
-	JJUSIYThEUJtvIxP64w/gKtfzM6b27fey57XMLUMpS/KXaNn0cCKxSiHGGPQzWuNbLAbzhWA+r/Ku
-	MychWV9G2HX0R3YVIouwsRdbEu/CR82pZr5Xd8D5PNzyBJPoabJPnmNyQAZ2c9zw3e6Pn3IMsM7Nq
-	8B7w7WH0BdIVUjvQG89CwZo7NMODIyVO5WSPm7SboBMh5rFiJvdFbsSzbN0iNKnv1NecjbtIIaV7U
-	GtNwR/t/gAZeKGy9ZD97CTVPQ25AGA20AVxOtwZ7YGrRT5+0/8VyPgZjSOrhzbi/j0BKytkEQnH4G
-	LzO0Kbow==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tg2O1-000000065sw-1yNY;
-	Thu, 06 Feb 2025 13:57:45 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3D9B23003E1; Thu,  6 Feb 2025 14:57:44 +0100 (CET)
-Date: Thu, 6 Feb 2025 14:57:44 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Prakash Sangappa <prakash.sangappa@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
-	x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	luto@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
-	bharata@amd.com, raghavendra.kt@amd.com,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com,
-	Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Clark Williams <clark.williams@gmail.com>, daniel.wagner@suse.com,
-	Joseph Salisbury <joseph.salisbury@oracle.com>, broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250206135744.GQ7145@noisy.programming.kicks-ass.net>
-References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
- <9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
- <20250204220418.35949317@gandalf.local.home>
- <CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
- <20250205081635.397eacb0@gandalf.local.home>
- <CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
- <20250206083039.0916ad24@gandalf.local.home>
- <20250206134408.lD_POjuG@linutronix.de>
- <20250206134859.GP7145@noisy.programming.kicks-ass.net>
- <20250206135353.i1tp4vDv@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OatzRcim"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-436345cc17bso6762285e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 05:59:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738850363; x=1739455163; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yiwqOK4FVjPPZWydFoWK7z8lcOGoGBb2vdMSdzrBdU8=;
+        b=OatzRcimDGdLls//YoBjw+3AT/P3yBXg7j2nABbUhb30Ny3IIz4uvLLrJlAXxgygnY
+         z7Ubvhwe4C7+G9jvIONILzFbZolANH3Y5Q5EVzs8qjngkq0eh5NUrEP2oY3SrBC0QBgd
+         Ew5jqfHp6fHDS/oiXdjVdeYYOh4fnIwInMSrmaSM9PIwMSTYD7XyB3FC+LSnzgVkkD7f
+         HL5SVa2N3UKZNT8cSD/g8RN40OMJK9sJD2B5lLgBGjjWTjyNTvFHUmuZV/6GuEP8/Mip
+         cbVf3v8BZ3ZYOgac8af/oWZytR/seG0REYDeFMGgVe1ICBN8BjcILU40nA9rAUsRXBfM
+         ggug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738850363; x=1739455163;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yiwqOK4FVjPPZWydFoWK7z8lcOGoGBb2vdMSdzrBdU8=;
+        b=S/7UT9d9GoMa52aDiZ4YLvh2vHmp7evxRn2YEpYeCHQnzO9eFZuC8WmcWAloF4eKGf
+         vcIy3qjU+onK4GRK/VuaV/bJWub+2LjIV/ip9Eehl5SQAGIchlGvZX1S2juG1LWB6oRJ
+         E2LsFAq0hwyO3D4chg9WBXfN5hhiDGtXq0W24VcudD0jTsYX9HI52G7gRb3TgdLLH2KE
+         dCldMmaJPM9SJisa3hr0VtHOGHsr6Zdl71z9FrGaKK9DoqYpIWBMqWcBCXmNDFGsdkGj
+         f93jhaGQhIMhK3Kf/6cOmiiPoDi8gxg1NZEeH3p3gDBEi61ySH+HjL9E5mHhkJZ9zeFn
+         jTSA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMj8yBXfnyY9neM9EmUcCbKNJb5iLIzE9iMbpdnJUv7EKxR/6ewdufH3btFBbO6s5+peGkS77VbCiA/EM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx770HwNChRnwhU56SvjPGorvKZBeSqFnJ9rG/1KtgI+UO09D38
+	R6fGaWJaUPrFZy5YWo6260l314WSZTzYbJEyVFMhFWCUHEHmCs/xGCbE3U4l+hw=
+X-Gm-Gg: ASbGncvXSiGGXkqvbyeLpcqOojpy3Qv8iD7uMiUxPJDlOksIT8F8CoHgiKwr9QU13oO
+	zod1508dVrU1A/LetrzZVyr/kETMonoLQMvuY9V7dA1gw8g1gd6zo9ido0oW/z+BqIucoC6Nwod
+	lgeS0MFXdEnOu5d7osBpdU5iYAdhX3V51F61Cpdj48hdYFb/1ZPsDy2iKDgbABH5F5fLzzUIjz/
+	ABKKB5MLR6bLtn/5fY30UVHNp5Y8ZC+Lk65tzFdkg6igAdnhCODV4dEz5UJcIGPK/8gldUVJy7o
+	dA8qZ2WRpcwjQw==
+X-Google-Smtp-Source: AGHT+IEQ/bjSZV+56yIOq5wwNb3seJyTMrV6PD6QY8xe23aPssG7mgZFZVTL2HkADa9VSfJyXBrBsw==
+X-Received: by 2002:a05:600c:4f8e:b0:438:ad4d:cf01 with SMTP id 5b1f17b1804b1-4390d433b21mr58938875e9.7.1738850362808;
+        Thu, 06 Feb 2025 05:59:22 -0800 (PST)
+Received: from linaro.org ([86.123.96.125])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391da965a6sm20583685e9.6.2025.02.06.05.59.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 05:59:22 -0800 (PST)
+Date: Thu, 6 Feb 2025 15:59:21 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Rajendra Nayak <quic_rjendra@quicinc.com>
+Subject: Re: [PATCH] arm64: dts: qcom: x1e80100: Add the watchdog device
+Message-ID: <Z6TAOPhYpl2M+SZc@linaro.org>
+References: <20250206-x1e80100-add-watchdog-v1-1-77147510c2d7@linaro.org>
+ <Z6SSgmoUPFv3vDDY@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,32 +78,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250206135353.i1tp4vDv@linutronix.de>
+In-Reply-To: <Z6SSgmoUPFv3vDDY@hovoldconsulting.com>
 
-On Thu, Feb 06, 2025 at 02:53:53PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2025-02-06 14:48:59 [+0100], Peter Zijlstra wrote:
-> > On Thu, Feb 06, 2025 at 02:44:08PM +0100, Sebastian Andrzej Siewior wrote:
-> > > SCHED_OTHER vs SCHED_OTHER after all. But please don't delay a wakeup of
-> > > SCHED_FIFO/ RR/ DL because of this LAZY hint.
+On 25-02-06 11:44:18, Johan Hovold wrote:
+> On Thu, Feb 06, 2025 at 12:37:13PM +0200, Abel Vesa wrote:
+> > From: Rajendra Nayak <quic_rjendra@quicinc.com>
 > > 
-> > Thing will get delayed if interrupts are disabled or kernel has
-> > preemption disabled too. So as long as we ensure hint crap is of equal
-> > order, nothing cares if you do.
+> > The X Elite implements Server Base System Architecture (SBSA) specification
+> > compliant generic watchdog.
 > > 
-> > If you can't tell the difference between task does hint crap in
-> > userspace and task is in the middle of syscall, you can't tell the
-> > difference.
+> > Describe it.
+> > 
+> > Signed-off-by: Rajendra Nayak <quic_rjendra@quicinc.com>
+> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> > index 9d38436763432892ceef95daf0335d4cf446357c..007815699e4b9137c3b5cf72263c9dd3a64e6bb3 100644
+> > --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> > @@ -3708,6 +3708,13 @@ pcie4_phy: phy@1c0e000 {
+> >  			status = "disabled";
+> >  		};
+> >  
+> > +		watchdog@1c840000 {
 > 
-> I can tell the difference if I see a trace where an interrupt fires,
-> performs a wakeup and the SCHED_OTHER task remains on CPU while the task
-> SCHED_FIFO task sits on the runqueue until a timer fires.
+> Please keep the nodes sorted by unit address. Looks like this ones goes
+> much further down.
 
-Right, but so what? Same delay will happen if interrupt fires in the
-middle of a preempt_disable() region.
+Oups. Yes, you are right. Will move and respin.
 
-Or if interrupt gets pending while interrupts are disabled, except your
-trace will not show that.
+> 
+> > +			compatible = "arm,sbsa-gwdt";
+> > +			reg = <0 0x1c840000 0 0x1000>,
+> > +			      <0 0x1c850000 0 0x1000>;
+> > +			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+> > +		};
+> > +
+> >  		tcsr_mutex: hwlock@1f40000 {
+> >  			compatible = "qcom,tcsr-mutex";
+> >  			reg = <0 0x01f40000 0 0x20000>;
+> 
+> Johan
 
-Your worst case response time isn't affected. That's all that matters.
+Thanks for reviewing,
 
-
+Abel
