@@ -1,99 +1,96 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBED923959B;
-	Thu,  6 Feb 2025 19:13:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DAFA157A5C
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 19:14:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738869183; cv=none; b=dPVMNYzbUc9ydERiusbJY7YzsCpNuxvBitMfyoVAoSwV0OOqkG5PTijdD8N2ogyU1rsyw99UpX2yxwUAQh1qZliXGqOl62/k+k1SZ8+W/cOXGUMM71RQiFFJmRpJWtElonIKdep+AUSCbeMIwKCipBYmNhltDhNxTvmsyfsIH/4=
+	t=1738869254; cv=none; b=ep+0mQ7N1FinmU1O02mux5yavBj7BetGoYtWFws2idm3y7BHfR1YxNQDcmCKNmPcn6KqSDr/Q1pG+AqIfHfIduq5WWm4u1XwO4jqfy3IkCB0faBimHRtUU3qmfYFrpPp3cDnx2eHlIJ6qRGU73J3jogRaIKhkkHzWtmRBmq1hWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738869183; c=relaxed/simple;
-	bh=hhRBRUdqB9PgcJ8rttKlgxiZynWfr8f5RE3RGCNNA6w=;
+	s=arc-20240116; t=1738869254; c=relaxed/simple;
+	bh=6qZMePHjYGI3HrblpDkkzq2CCyuYf7jkYyTtV03nb8M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mx9RNrvJNG+ktQsNWhN9YaqJnyFCQ5V0QFMWD3ZPnZ3J89Yi1W7tTp6JtlxMgLK+x9s8eO8PxS0E7H6kFRL3xCMxZkD8JQItlIKPeHsJ2G8mGxLnHEkVJrwXUKcCBTzaXWMjUNfrw99Xk/shsTjZOWxIDuqjL2bMACnnzLjyX64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: c1DecBebRBa+bmgdE8hdJA==
-X-CSE-MsgGUID: r8OMDaBCQkSvgWFfUE9FOw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39189146"
+	 Content-Type:Content-Disposition:In-Reply-To; b=OMNcdmGmOtCqBvUHxYW/2uMUQ4CFe3NNmqsVo00H8+2VobBL9MorCjvGaqn7DCPGJEXrtbmhL/VQkdcOvIPm1BrYO4y2KxLMSrOM+nZt+Kj3VilkLcfpkroJomtsF9Gq2UPq6Iic34ifZtED9lVr4fIlHs4uBmJKXZ02CDC0FyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mjsar08E; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mjsar08E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738869253; x=1770405253;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6qZMePHjYGI3HrblpDkkzq2CCyuYf7jkYyTtV03nb8M=;
+  b=mjsar08EgB8e9S3lJ11oswyNBXeHICbqRXrNB18v4S5qI9cuj1kkqJzH
+   ny/u898LHZiETBRSDEL3FIHtJiMpgN05arS6ZA14OlnJ1hOOvr7XnmuUp
+   BFyIrwwRpIOMjV17pyl5xUoP2+oo+VVJfnItZiPIxUdcfmv3l34Vuvk4P
+   po7rKfoiq4JOjq/tDtQDEh1Kgb7T03s4vkfvRnqSvob+gQBVBouE9eTsL
+   QVevhsvBQMeTURjTPM/IzT57PTH7P/pxqdOZjxbaC31uBDRQWvSZNIFY0
+   S/qnyZJAW1vzR4qkIhAD2lCJpv0RoUsdi6JXu1IOa+pnMbltUpcffX4/A
+   g==;
+X-CSE-ConnectionGUID: TOfbTplYSNSmm4v9zRMVHQ==
+X-CSE-MsgGUID: meE5BV6QT8CQOKLVtK5Cag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39189369"
 X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="39189146"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 11:13:02 -0800
-X-CSE-ConnectionGUID: 0Ysy79jQQiyrMYzoIz0tog==
-X-CSE-MsgGUID: UFpXcEGvS6um270/TAk51A==
+   d="scan'208";a="39189369"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 11:14:01 -0800
+X-CSE-ConnectionGUID: T5K8LW2ARDupRejRwQiSDw==
+X-CSE-MsgGUID: 7uyCuQqjQeCVbAhIwhFN3g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="148519631"
+   d="scan'208";a="112198601"
 Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 11:12:57 -0800
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 11:13:59 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1tg7J0-00000008pGD-24HP;
-	Thu, 06 Feb 2025 21:12:54 +0200
-Date: Thu, 6 Feb 2025 21:12:54 +0200
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Philipp Reisner <philipp.reisner@linbit.com>,
-	Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 0/3] string.h: Use ARRAY_SIZE() for
- memtostr*()/strtomem*()
-Message-ID: <Z6UJtt2QNNAjSE_w@smile.fi.intel.com>
-References: <20250206175216.work.225-kees@kernel.org>
- <CAHp75Vf=84tWvv57Kj5A5bLenQSkC5yDHTHy-u0iK1_U87nvBw@mail.gmail.com>
- <CANiq72kGUOgP60SaEwiBcgsDJnjdvJZ1VJtyf3a_+sQJjiffng@mail.gmail.com>
- <CAHp75Veo-C3A+XVr1RuFumoULWNOugN+CFE65d1T5o+TZSmw-g@mail.gmail.com>
- <202502061050.EC48F506B1@keescook>
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tg7K0-00000008pHL-03ht;
+	Thu, 06 Feb 2025 21:13:56 +0200
+Date: Thu, 6 Feb 2025 21:13:55 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ofir Bitton <obitton@habana.ai>, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: Oded Gabbay <ogabbay@kernel.org>
+Subject: Re: [PATCH v1 1/1] accel/habanalabs: Switch to use %ptTs
+Message-ID: <Z6UJ87h0QZ0HHmui@smile.fi.intel.com>
+References: <20250206154855.1125731-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202502061050.EC48F506B1@keescook>
+In-Reply-To: <20250206154855.1125731-1-andriy.shevchenko@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Feb 06, 2025 at 10:52:18AM -0800, Kees Cook wrote:
-> On Thu, Feb 06, 2025 at 08:45:41PM +0200, Andy Shevchenko wrote:
-> > On Thu, Feb 6, 2025 at 8:44 PM Miguel Ojeda
-> > <miguel.ojeda.sandonis@gmail.com> wrote:
-> > > On Thu, Feb 6, 2025 at 7:42 PM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > >
-> > > > What's the minimum Clang version we build kernel with? 12?
-> > >
-> > > 13.0.1 for most architectures according to `scripts/min-tool-version.sh`.
-> > 
-> > Okay, does it mean 13 has no such a bug?
-> 
-> It probably did, but Clang 13 didn't support compile-time error messages
-> (added in 14). Regardless, this fixes it there and makes the API more
-> robust.
-> 
-> > Otherwise the commit message and other comments might be clearer...
-> 
-> How should I rephrase things? I mention the bug and when it was fixed
-> in patch 3:
-> 
->   ...
->   benefit of working around a bug in Clang (fixed[1] in 15+) that got
->   ...
+On Thu, Feb 06, 2025 at 05:48:55PM +0200, Andy Shevchenko wrote:
+> Use %ptTs instead of open-coded variant to print contents of time64_t type
+> in human readable form.
 
-Ah, the version is mentioned only in cover letter. So, the patch's commit
-message seems good to me.
+...
+
+>  		dev_err(hdev->dev,
+> -			"EQ: {CI %u, HB counter %u, last HB time: %s}, PQ: {PI: %u, CI: %u (%u), last HB time: %s}\n",
+> +			"EQ: {CI %u, HB counter %u, last HB time: %ptTs}, PQ: {PI: %u, CI: %u (%u), last HB time: %ptTs}\n",
+>  			hdev->event_queue.ci,
+>  			heartbeat_debug_info->heartbeat_event_counter,
+> -			eq_time_str,
+> +			hdev->heartbeat_debug_info.last_eq_heartbeat_ts,
+
+This has to be a pointer...
+
+>  			hdev->kernel_queues[cpu_q_id].pi,
+>  			atomic_read(&hdev->kernel_queues[cpu_q_id].ci),
+>  			atomic_read(&hdev->kernel_queues[cpu_q_id].ci) & pq_pi_mask,
+> -			pq_time_str);
+> +			hdev->heartbeat_debug_info.last_pq_heartbeat_ts);
+
+...and this.
+
+I will fix these typos in v2.
 
 -- 
 With Best Regards,
