@@ -1,108 +1,94 @@
-Received: from mail-m49220.qiye.163.com (mail-m49220.qiye.163.com [45.254.49.220])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BD61B7F4
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 01:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048495103F;
+	Thu,  6 Feb 2025 01:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738806820; cv=none; b=adqf+SuF5uTpgdM7isM+XMQI3D/owSHKrjLOP8giv8C/xyjlA6EAgFMUr0t/GakjowppZmqT+enlzsJ+KBMXFSYvbLJSU4+UebSztj3eJXcneqb+tp7lGaPFJztVrmzkhOg4Uj0TwymwONfrYlxFZeFd/ftlytB+7mgAwykUiXw=
+	t=1738806825; cv=none; b=VGE2ihbYzVrMf46QTLpZcUsH4dWCV5VQC0eVu+WVvEdwyheImwDaGRmetlpjHQWSxr36LJuhf/y/SpOOTIEH6lPtZfaUKjaf0ZB+H2q1raYSy0U/HfmD52pGquluaUCqlOCv6qYP5xFWcFFHhNyD/2I3Fpm1YoTXD+/qhBVJH48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738806820; c=relaxed/simple;
-	bh=X0CUDcDHmjpvbIoz51hnk8KlJbu6iEbn9xwp50PgRuk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KS6Y3wgfxoAWVzGuMhUyRYCreXx5ZbP3sNkU1PnF8So7Rxpw+vbpN+DkNl17teEzHbwJwIsxbBGRldyfl8mf5QXuXvoeuMQN9Fq0hWGhUQ7c3gTJges8T4OMQVVYERzCN8MXhl7wufaYGQ0WmD3c6T/dGPVpDdudRxcExN5l+Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=UN6n1G5S; arc=none smtp.client-ip=45.254.49.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="UN6n1G5S"
-Received: from [172.16.12.26] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id a459f8a5;
-	Thu, 6 Feb 2025 09:48:24 +0800 (GMT+08:00)
-Message-ID: <465d8ecd-25bf-411e-8b12-95f88eb8620b@rock-chips.com>
-Date: Thu, 6 Feb 2025 09:48:24 +0800
+	s=arc-20240116; t=1738806825; c=relaxed/simple;
+	bh=i1447m7XQLHq2APBpUMTQzWjGGeYa5kePCEYkMeHtb8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=WQ/VVNXrjtzwE/tWCammtPfgduNV9XKKw4aCqKdqTSYqzuyOR12sC17UNdWsXJTEIy48cXWPIN/4z4bn8eH3XT28Ky1HOEUfYPmi/k4I32mIiEMqrxhcY0yUnbDum22tivdBFRWlEqnMSyF18U9TvdmpJKiAbc7GfDNZRXqSMlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YpKr46sMbz4f3jMQ;
+	Thu,  6 Feb 2025 09:53:08 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 6F5011A06DC;
+	Thu,  6 Feb 2025 09:53:31 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgDnSl8aFqRnHiYjDA--.26918S3;
+	Thu, 06 Feb 2025 09:53:31 +0800 (CST)
+Subject: Re: [PATCH 6.6 0/6] md/md-bitmap: move bitmap_{start, end}write to md
+ upper layer
+To: Greg KH <gregkh@linuxfoundation.org>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: stable@vger.kernel.org, song@kernel.org, linux-raid@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250127085351.3198083-1-yukuai1@huaweicloud.com>
+ <2025020447-hesitant-corroding-16c1@gregkh>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <a2fce7b4-11d1-eaa8-55db-b028e5517892@huaweicloud.com>
+Date: Thu, 6 Feb 2025 09:53:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] phy: core: don't require set_mode() callback for
- phy_get_mode() to work
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250107-phy-fix-set-moe-v1-1-b3dfe9391672@linaro.org>
-Content-Language: en-US
-From: Damon Ding <damon.ding@rock-chips.com>
-In-Reply-To: <20250107-phy-fix-set-moe-v1-1-b3dfe9391672@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQklOGFZLTR1PGk4ZTx9PSExWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a94d8f1abd603a3kunma459f8a5
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OBw6OAw5HjIKQwlLAjMjLyka
-	NTBPFAxVSlVKTEhDQ0tNTktOSU9LVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFKTUNJNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=UN6n1G5SBJMCG5+EL85ZCWAcyzd4m+NGNoLAmD5XCnU7Oql0EYGWDljLJ37UfS6HtQS1VtdVnnebATES9utF2A8B+1NAphtXPRJp4oOpABuHgJmI/+w3f27NV7mM6hlTuiOdE3tQCf5CwN88c3bZ3SUIDi8xXsZx5yE8XK+IaVQ=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=aSm+b636JXlhsI6UQo+/pRLW7JvXY0L+B+9AfrOID3M=;
-	h=date:mime-version:subject:message-id:from;
+In-Reply-To: <2025020447-hesitant-corroding-16c1@gregkh>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDnSl8aFqRnHiYjDA--.26918S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrtrWDuw4UGrW3KF4DZw43KFg_yoWxCrc_uF
+	4xua48u3srXF1UWr4DtFn3Zryvk3y5WrWrtryDXFy3Jr1fZ3Z5Ga9ru3s5Z3WfWrs7JFZ5
+	tayqkw4qyryDWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+	Y487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
+	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
+	nxnUUI43ZEXa7VU13ku3UUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi Dmitry,
+Hi,
 
-On 2025/1/7 19:34, Dmitry Baryshkov wrote:
-> As reported by Diamond Ding, the phy_get_mode() call doesn't work as
-> expected unless the PHY driver has a .set_mode() call. This prompts PHY
-> drivers to have empty stubs for .set_mode() for the sake of being able
-> to get the mode.
+ÔÚ 2025/02/04 19:40, Greg KH Ð´µÀ:
+> On Mon, Jan 27, 2025 at 04:53:45PM +0800, Yu Kuai wrote:
+>> From: Yu Kuai <yukuai3@huawei.com>
+>>
+>> This set fix reported problem:
+>>
+>> https://lore.kernel.org/all/CAJpMwyjmHQLvm6zg1cmQErttNNQPDAAXPKM3xgTjMhbfts986Q@mail.gmail.com/
+>> https://lore.kernel.org/all/ADF7D720-5764-4AF3-B68E-1845988737AA@flyingcircus.io/
+>>
+>> See details in patch 6.
 > 
+> Please redo this series and describe in it what you changed from the
+> original commits, as these are not just normal cherry-picks at all.
 
-I believe the correct spelling should be 'Damon' instead of 'Diamond'. ;-)
+Got it, the difference is that bitmap_ops doesn't exist in 6.6.
 
-> Make .set_mode() callback truly optional and update PHY's mode even if
-> it there is none.
-> 
-> Cc: Damon Ding <damon.ding@rock-chips.com>
-> Link: https://lore.kernel.org/r/96f8310f-93f1-4bcb-8637-137e1159ff83@rock-chips.com
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->   drivers/phy/phy-core.c | 7 ++++---
->   1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index 8dfdce605a905d7f38205727151258af41f807a9..067316dfcd83a6fc8428cddd27d3b7ebfc270831 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -405,13 +405,14 @@ EXPORT_SYMBOL_GPL(phy_power_off);
->   
->   int phy_set_mode_ext(struct phy *phy, enum phy_mode mode, int submode)
->   {
-> -	int ret;
-> +	int ret = 0;
->   
-> -	if (!phy || !phy->ops->set_mode)
-> +	if (!phy)
->   		return 0;
->   
->   	mutex_lock(&phy->mutex);
-> -	ret = phy->ops->set_mode(phy, mode, submode);
-> +	if (phy->ops->set_mode)
-> +		ret = phy->ops->set_mode(phy, mode, submode);
->   	if (!ret)
->   		phy->attrs.mode = mode;
->   	mutex_unlock(&phy->mutex);
-> 
-> ---
-> base-commit: 7b4b9bf203da94fbeac75ed3116c84aa03e74578
-> change-id: 20250107-phy-fix-set-moe-d275cff5e27b
-> 
-> Best regards,
+Thanks,
+Kuai
 
-Best regards
-Damon
+> 
+> thanks,
+> 
+> greg k-h
+> .
+> 
 
