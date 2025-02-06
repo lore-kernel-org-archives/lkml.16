@@ -1,339 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A678B18A6AD;
-	Thu,  6 Feb 2025 05:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1755322331B;
+	Thu,  6 Feb 2025 05:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738819355; cv=none; b=RxD28TNU2LFO2KykIfulUA+s1Lji/cwPp98H28J5fixqBX22VF3ZnQhkbnP2Hp7FbdJQyg1Q3Cyim7roqG194Mz6iQ0/HLqQAeScAeKckqQ4wi2NZv3PijYVqgiCky7zcyWd3QtfzofaX1XScy2NJx6Tb/2WG/HomCuvxhFxV5M=
+	t=1738819456; cv=none; b=d6GkKGK42FmdQb7VHSuKraplRTxdmX7/0QRuvigpyCQTK1S2YUnmwp3FsLt1PR6yuIj3Kk6drD7ugaARqfcKM7eVkojEaMxy8097VnCUvrcV3dbWs3aHlp7piUsJkK7vutYfjWcY7ZmsdoEB94W2yNFwm1jMjcgStLzmSUcqf8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738819355; c=relaxed/simple;
-	bh=fXp5l+d6hVf0eMnKwpmt1GpjidcY0mNOjDjrEJ7fpTE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ePl1UThz07IaoJ672fsWIUZD40tfMxutVQsUfpFamGfKxEI8DPl+WFefIw7OnAgFlepGTue3p1Le/90lN7aRNlemA/W7mTeG1neQ0/TUbI/tqlBdpvdQOvCj+h/47ZPG3UtU18z/3wZOwUSkEhGa7jN4eFxZ6DZqkAIBAD2u/v0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P9lkfBfu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738819456; c=relaxed/simple;
+	bh=yJvkxpDGwTNaijMwj9XOXTsxlkj2PVrqhOisXVINv6E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H9rRyTx5aE5FXRFZ1BFP+PQdF3w0ECWBMJ/ypl8uVQksP4C4+twYWssT8mywN9oNtIzvesv4/G9YmFYqIWitytk6CBUcDYQpZ4n1AL3mYCHSV5VHKwmzLlV6vieGbCf/G5I5zBiMBaOzH9bsKCMi/8cwZVV2tGdydc1d3CioUjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ltI95x10; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P9lkfBfu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4D70C4CEDD;
-	Thu,  6 Feb 2025 05:22:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738819355;
-	bh=fXp5l+d6hVf0eMnKwpmt1GpjidcY0mNOjDjrEJ7fpTE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=P9lkfBfu4+5CfywJRfN/7pTo6f9iV51Yk5WNCcAunUDxT1g9HUadD6kF1xU6zPOGr
-	 3AFjbOFn1/LVQ4KmCAMLyCSofIvHbwWaXRmjkYdN/dAojeI2MDef7JXKJ+zrta8+k6
-	 3BZjQ761SyJvywNLToOMwK1SVqgtDtLhWcM7jQMZD9UcWkf8+sdLyxJ0XfRUd37q+W
-	 4LrjXYyM3XloSDfX71UM8GhbVIQl000umMwiZvr5feffLASFieYOrh2XuSLrUiHvL9
-	 2fCsmoz3gjU8xRUeYQKqDogLbWTK52eWT3mbRkjWYbaV/dDOWz6+uAUZojOt1wDVm5
-	 QCMwKB7PU863A==
-Date: Thu, 6 Feb 2025 14:22:32 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH 4/8] tracing: Have persistent trace instances save KASLR
- offset
-Message-Id: <20250206142232.5a10545649210f3b3ba172c2@kernel.org>
-In-Reply-To: <20250205225103.596907199@goodmis.org>
-References: <20250205225031.799739376@goodmis.org>
-	<20250205225103.596907199@goodmis.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ltI95x10"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1738819437; x=1739424237; i=w_armin@gmx.de;
+	bh=hsOHi2sO4JiGzgSiRcyDa6NeBiH19V/EzhD9pSIn8qc=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=ltI95x10Y0Txm4GFHYorIyF4PAWUoa8hDQ8qrL702DOlCwV79TwoGMFwmpyMqiiF
+	 BG6tujY8zDw+d+JsBahQ9r4McwANiEF9kHClOtvMIxBJ+ZxCgokinyPo8os+mrJq1
+	 qt3Fn5ooCqfnpnHLEE9bfATIsOdfjoashXgHMyOFS40Sy/XRBCctxVQxGgwaLOcpV
+	 D3Z2Qd/v4l7ataKxs25Y7KzxddUub1kddPSihAY4jUyxsTObGO/siPb12s1AbhRD7
+	 LQYW2jzo867ntmCzdmFE3rU5D0/VDih3vCElDixaK5IZzywMvN62DHDYdipi/nCCj
+	 vum6WCGhzIzxfUJkPw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([91.14.238.232]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MTABT-1tqbBK0DTr-00QM6w; Thu, 06
+ Feb 2025 06:23:57 +0100
+Message-ID: <2a080bfb-643e-4d77-823d-8ca1da907b82@gmx.de>
+Date: Thu, 6 Feb 2025 06:23:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 00/14] platform/x86: alienware-wmi driver rework
+To: Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com,
+ linux-kernel@vger.kernel.org
+References: <20250203182713.27446-1-kuurtb@gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250203182713.27446-1-kuurtb@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:TIFEjza2x5saEzT2gak29J/PsPkdp93MZWxOZyHm3zTT8ypI1ZT
+ 9KRX5Sa69naRXUZYuLGU4H5KrLTXdMGcGwtdbm9/2YTIvROHz6H4Q4gxl4c99lO0dsHPPYv
+ RV+BQrvUtsarC8Q3A8mRBEPic9stQWfWTyC3JWpoN+vE+xCjScMjm6Z/DuKoN16a55s4t/a
+ m8qbFQFf11r9k+P0yy4UA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:fHZDobiFZN0=;wXe5Uv3vfTT5qf8MOyrDjUgy9VB
+ 6G+iZajdJsUlAwGaL4z0FYaCdhV+fvU7ZFNjv14auRCFl+YbjB4nsXMk6pW8ZN830GGMpBCAR
+ A/k2GSm9/PDFEq1MgKEAc/rfEoRu3toIJzFeYLOkTn6NHTqR0oJg7oHYOn0f124X7Axqe8wk0
+ 9PQcir7WvtC/T88Nsvu49LtwZnaPhvkMuuOYvR1b3lxnHfj/tP2snwosEyHjGIpMiyviC97OL
+ aUd8RKR6JP9SMrOKcD1l1uQVh2wO+HN+16dX4Wj6cD3blab121yf0pf9Oa4BAhsBAXxcYmHlY
+ NRj9S/vz8cjo/t19u0BkmCMfixxJhCIkUp2jhsFD36ZlIAhw0q1O65izaVhSjvVjsxHGg/plS
+ lCvIxYZGqBWy3iukaNCPoekwolIT/NVxIIDZbOjoDsZcT/f28FJ1bs3xRzvmgweHpSQrEcwOz
+ ZlPBXrdJA0uN8g+MgVh1kDyAv5UrzPFUluUAWAHHErg7norrMO8fbi6LyknKiGEEibIeCiSFe
+ oKXexYXgoGwzVcR+JWunj9S9QJTzsLdjgw0MZDH7i5+86IUS1RYOUJbZjv50Uc5mauJ/OpHHz
+ gr82ser9j5P+pvcspm2IiSgLnAY3DPLSjSN+q5kZCW/kMpXZOiN5b+qj0QXnl/M1QQztXvJQr
+ USxWzZ5tVJA6ueQ4YNoUzz8Te/NnfX/TRIwRs+FMrnUGz+uWRhRGBvAxXnB2KafZEASJyQT5J
+ cfwsy9clfg8caAKeHoXLhP4EJt8+LS+t4uR3iLAGkrHlohzTnMa1ncv0irBzs/LdrGkPIm3zy
+ 0rG8VUQGE1BI1UOhPimmL5uPIIO6vKUH1EXdNxq0UKpqmuyRXlEVOa6jD71PkCL3HFImc2NAs
+ o8eNEVuQZsKRVdw0+jd6svqr8vPx9j+GHvgC6FGkQZe6AV5oZzcOAPwwCwEgHKMhMAHahUNwr
+ ouVrsGPd+FnFX35lSCnpAAa16dfR2pLrEMtMySC2arf/9LPNYqdAabpzgif90WOr0JxJXFo+a
+ Tpvm3Z+LmEEjr8AQhHLxGcwogYzUHv8+ld0i0DAdLJGNFnW8gWIs/wiOphwISQFg9Esjnut0o
+ MD2HqLXDwJIgpQbMRSsMD6kmRnw7/VzvMuasKsf2Bjqr7tOeK7xz1O7ea+sWtisX2pqSTMCVc
+ w9drpT4tyQvptdPfr6JA11LCR0SfaHLj2sJcT2ZbwCQ3cJTG3QzR1dz6a1KnKNV52KzDmCoLm
+ 4QbCtcERj64xP26qHf2cGC/EKXlTwmYxPX0Vb5yPvRJrehhlTj3SPUge7lX4ZhZomA45Q9Ep2
+ YFCq7ljGEGcNwsskd+We/n/Ew==
 
-On Wed, 05 Feb 2025 17:50:35 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Am 03.02.25 um 19:26 schrieb Kurt Borja:
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> There's no reason to save the KASLR offset for the ring buffer itself.
-> That is used by the tracer. Now that the tracer has a way to save data in
-> the persistent memory of the ring buffer, have the tracing infrastructure
-> take care of the saving of the KASLR offset.
-> 
+> Hello!
 
-Looks good to me. But note that the scratchpad size may not enough for
-module table later, because 1 module requires at least the name[]
-(64byte - sizeof(ulong)) and the base address (ulong). This means
-1 entry consumes 64byte. Thus there can be only 63 entries + meta
-data in 4K page. My ubuntu loads 189(!) modules;
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
 
-$ lsmod | wc -l
-190
-
-so we want 255 entries, which requires 16KB.
-
-Thank you,
-
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>
 > ---
->  include/linux/ring_buffer.h |  1 -
->  kernel/trace/ring_buffer.c  | 47 -------------------------------------
->  kernel/trace/trace.c        | 38 ++++++++++++++++++++++++++----
->  kernel/trace/trace.h        |  6 +++--
->  4 files changed, 38 insertions(+), 54 deletions(-)
-> 
-> diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-> index b95f940fd07a..d6d9c94e8d8a 100644
-> --- a/include/linux/ring_buffer.h
-> +++ b/include/linux/ring_buffer.h
-> @@ -94,7 +94,6 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
->  					       unsigned long range_size,
->  					       struct lock_class_key *key);
->  
-> -bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, unsigned long *kaslr_addr);
->  void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int *size);
->  
->  /*
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 5a81ff785665..a42406287281 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -55,7 +55,6 @@ struct ring_buffer_meta {
->  };
->  
->  struct ring_buffer_cpu_meta {
-> -	unsigned long	kaslr_addr;
->  	unsigned long	first_buffer;
->  	unsigned long	head_buffer;
->  	unsigned long	commit_buffer;
-> @@ -557,8 +556,6 @@ struct trace_buffer {
->  
->  	struct ring_buffer_meta		*meta;
->  
-> -	unsigned long			kaslr_addr;
-> -
->  	unsigned int			subbuf_size;
->  	unsigned int			subbuf_order;
->  	unsigned int			max_data_size;
-> @@ -1931,15 +1928,6 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
->  	}
->  }
->  
-> -static void rb_meta_init_text_addr(struct ring_buffer_cpu_meta *meta)
-> -{
-> -#ifdef CONFIG_RANDOMIZE_BASE
-> -	meta->kaslr_addr = kaslr_offset();
-> -#else
-> -	meta->kaslr_addr = 0;
-> -#endif
-> -}
-> -
->  static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
->  {
->  	struct ring_buffer_cpu_meta *meta;
-> @@ -1967,7 +1955,6 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
->  			meta->first_buffer += delta;
->  			meta->head_buffer += delta;
->  			meta->commit_buffer += delta;
-> -			buffer->kaslr_addr = meta->kaslr_addr;
->  			continue;
->  		}
->  
-> @@ -1984,7 +1971,6 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
->  		subbuf = rb_subbufs_from_meta(meta);
->  
->  		meta->first_buffer = (unsigned long)subbuf;
-> -		rb_meta_init_text_addr(meta);
->  
->  		/*
->  		 * The buffers[] array holds the order of the sub-buffers
-> @@ -2514,27 +2500,6 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
->  	return alloc_buffer(size, flags, order, start, start + range_size, key);
->  }
->  
-> -/**
-> - * ring_buffer_last_boot_delta - return the delta offset from last boot
-> - * @buffer: The buffer to return the delta from
-> - * @text: Return text delta
-> - * @data: Return data delta
-> - *
-> - * Returns: The true if the delta is non zero
-> - */
-> -bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, unsigned long *kaslr_addr)
-> -{
-> -	if (!buffer)
-> -		return false;
-> -
-> -	if (!buffer->kaslr_addr)
-> -		return false;
-> -
-> -	*kaslr_addr = buffer->kaslr_addr;
-> -
-> -	return true;
-> -}
-> -
->  void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int *size)
->  {
->  	if (!buffer || !buffer->meta)
-> @@ -6098,7 +6063,6 @@ static void reset_disabled_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
->  void ring_buffer_reset_cpu(struct trace_buffer *buffer, int cpu)
->  {
->  	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
-> -	struct ring_buffer_cpu_meta *meta;
->  
->  	if (!cpumask_test_cpu(cpu, buffer->cpumask))
->  		return;
-> @@ -6117,11 +6081,6 @@ void ring_buffer_reset_cpu(struct trace_buffer *buffer, int cpu)
->  	atomic_dec(&cpu_buffer->record_disabled);
->  	atomic_dec(&cpu_buffer->resize_disabled);
->  
-> -	/* Make sure persistent meta now uses this buffer's addresses */
-> -	meta = rb_range_meta(buffer, 0, cpu_buffer->cpu);
-> -	if (meta)
-> -		rb_meta_init_text_addr(meta);
-> -
->  	mutex_unlock(&buffer->mutex);
->  }
->  EXPORT_SYMBOL_GPL(ring_buffer_reset_cpu);
-> @@ -6136,7 +6095,6 @@ EXPORT_SYMBOL_GPL(ring_buffer_reset_cpu);
->  void ring_buffer_reset_online_cpus(struct trace_buffer *buffer)
->  {
->  	struct ring_buffer_per_cpu *cpu_buffer;
-> -	struct ring_buffer_cpu_meta *meta;
->  	int cpu;
->  
->  	/* prevent another thread from changing buffer sizes */
-> @@ -6164,11 +6122,6 @@ void ring_buffer_reset_online_cpus(struct trace_buffer *buffer)
->  
->  		reset_disabled_cpu_buffer(cpu_buffer);
->  
-> -		/* Make sure persistent meta now uses this buffer's addresses */
-> -		meta = rb_range_meta(buffer, 0, cpu_buffer->cpu);
-> -		if (meta)
-> -			rb_meta_init_text_addr(meta);
-> -
->  		atomic_dec(&cpu_buffer->record_disabled);
->  		atomic_sub(RESET_BIT, &cpu_buffer->resize_disabled);
->  	}
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index a9e8eaf1d47e..cb9f8e6878a0 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -5994,8 +5994,14 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
->  	return ret;
->  }
->  
-> +struct trace_scratch {
-> +	unsigned long		kaslr_addr;
-> +};
-> +
->  static void update_last_data(struct trace_array *tr)
->  {
-> +	struct trace_scratch *tscratch;
-> +
->  	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
->  		return;
->  
-> @@ -6010,6 +6016,17 @@ static void update_last_data(struct trace_array *tr)
->  	/* Using current data now */
->  	tr->text_delta = 0;
->  
-> +	if (!tr->scratch)
-> +		return;
-> +
-> +	tscratch = tr->scratch;
-> +
-> +	/* Set the persistent ring buffer meta data to this address */
-> +#ifdef CONFIG_RANDOMIZE_BASE
-> +	tscratch->kaslr_addr = kaslr_offset();
-> +#else
-> +	tscratch->kaslr_addr = 0;
-> +#endif
->  	tr->flags &= ~TRACE_ARRAY_FL_LAST_BOOT;
->  }
->  
-> @@ -6823,6 +6840,7 @@ static ssize_t
->  tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
->  {
->  	struct trace_array *tr = filp->private_data;
-> +	struct trace_scratch *tscratch = tr->scratch;
->  	struct seq_buf seq;
->  	char buf[64];
->  
-> @@ -6835,10 +6853,10 @@ tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t
->  	 * Otherwise it shows the KASLR address from the previous boot which
->  	 * should not be the same as the current boot.
->  	 */
-> -	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
-> +	if (!tscratch || !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
->  		seq_buf_puts(&seq, "Offset: current\n");
->  	else
-> -		seq_buf_printf(&seq, "Offset: %lx\n", tr->kaslr_addr);
-> +		seq_buf_printf(&seq, "Offset: %lx\n", tscratch->kaslr_addr);
->  
->  	return simple_read_from_buffer(ubuf, cnt, ppos, buf, seq_buf_used(&seq));
->  }
-> @@ -9212,6 +9230,8 @@ static int
->  allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size)
->  {
->  	enum ring_buffer_flags rb_flags;
-> +	unsigned int scratch_size;
-> +	void *scratch;
->  
->  	rb_flags = tr->trace_flags & TRACE_ITER_OVERWRITE ? RB_FL_OVERWRITE : 0;
->  
-> @@ -9222,10 +9242,20 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
->  						      tr->range_addr_start,
->  						      tr->range_addr_size);
->  
-> +		scratch = ring_buffer_meta_scratch(buf->buffer, &scratch_size);
-> +		if (scratch) {
-> +			tr->scratch = scratch;
-> +			tr->scratch_size = scratch_size;
-> +
->  #ifdef CONFIG_RANDOMIZE_BASE
-> -		if (ring_buffer_last_boot_delta(buf->buffer, &tr->kaslr_addr))
-> -			tr->text_delta = kaslr_offset() - tr->kaslr_addr;
-> +			{
-> +				struct trace_scratch *tscratch = tr->scratch;
-> +
-> +				if (tscratch->kaslr_addr)
-> +					tr->text_delta = kaslr_offset() - tscratch->kaslr_addr;
-> +			}
->  #endif
-> +		}
->  		/*
->  		 * This is basically the same as a mapped buffer,
->  		 * with the same restrictions.
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index abe8169c3e87..3a020fb82a34 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -348,8 +348,11 @@ struct trace_array {
->  	unsigned int		mapped;
->  	unsigned long		range_addr_start;
->  	unsigned long		range_addr_size;
-> -	unsigned long		kaslr_addr;
->  	long			text_delta;
-> +	void			*scratch; /* pointer in persistent memory */
-> +	int			scratch_size;
-> +
-> +	int			buffer_disabled;
->  
->  	struct trace_pid_list	__rcu *filtered_pids;
->  	struct trace_pid_list	__rcu *filtered_no_pids;
-> @@ -367,7 +370,6 @@ struct trace_array {
->  	 * CONFIG_TRACER_MAX_TRACE.
->  	 */
->  	arch_spinlock_t		max_lock;
-> -	int			buffer_disabled;
->  #ifdef CONFIG_FTRACE_SYSCALLS
->  	int			sys_refcount_enter;
->  	int			sys_refcount_exit;
-> -- 
-> 2.45.2
-> 
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> [02/14]
+>    - Dropped device_add_groups from wmax_wmi_probe
+>    - Added `interface == WMAX` condition to WMAX's groups visibility
+>
+> [10/14]
+>    - Add prefix to WMAX groups variable names
+>    - Exported WMAX groups as extern variables in header file
+>    - Exported `interface` as `alienware_interface` in header file
+>    - Added WMAX_DEV_GROUPS macro to add WMAX groups to the platform
+>      driver .dev_groups
+>
+> [13/14]
+>    - Define empty WMAX_DEV_GROUPS in case CONFIG_ALIENWARE_WMI_WMAX is
+>      not enabled
+>
+> v7: https://lore.kernel.org/platform-driver-x86/20250203062055.2915-1-kuurtb@gmail.com/
+>
+> Kurt Borja (14):
+>    platform/x86: alienware-wmi: Add a state container for LED control
+>      feature
+>    platform/x86: alienware-wmi: Add WMI Drivers
+>    platform/x86: alienware-wmi: Add a state container for thermal control
+>      methods
+>    platform/x86: alienware-wmi: Refactor LED control methods
+>    platform/x86: alienware-wmi: Refactor hdmi, amplifier, deepslp methods
+>    platform/x86: alienware-wmi: Refactor thermal control methods
+>    platform/x86: alienware-wmi: Split DMI table
+>    MAINTAINERS: Update ALIENWARE WMI DRIVER entry
+>    platform/x86: Rename alienware-wmi.c
+>    platform/x86: Add alienware-wmi.h
+>    platform/x86: Split the alienware-wmi driver
+>    platform/x86: dell: Modify Makefile alignment
+>    platform/x86: Update alienware-wmi config entries
+>    platform/x86: alienware-wmi: Update header and module information
+>
+>   MAINTAINERS                                   |    4 +-
+>   drivers/platform/x86/dell/Kconfig             |   30 +-
+>   drivers/platform/x86/dell/Makefile            |   45 +-
+>   .../platform/x86/dell/alienware-wmi-base.c    |  491 +++++++
+>   .../platform/x86/dell/alienware-wmi-legacy.c  |   95 ++
+>   .../platform/x86/dell/alienware-wmi-wmax.c    |  775 ++++++++++
+>   drivers/platform/x86/dell/alienware-wmi.c     | 1249 -----------------
+>   drivers/platform/x86/dell/alienware-wmi.h     |  117 ++
+>   8 files changed, 1530 insertions(+), 1276 deletions(-)
+>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
+>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
+>   create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
+>   delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
+>   create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
+>
+>
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
