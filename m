@@ -1,128 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26FF19ABBB
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD9319CC3E
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738866110; cv=none; b=Pu8xidUU0iRF+Cku4p/a6EFNhE08asoQnjNxgduVY95O2WFQIOjLHtLhWQycmVVjUtUm+cbLmK5qrybetyizGGbLfZF8NPQlNDfrQZ7+fU+M1p6iE2VV1SaBTCnS4p6EWWvwFsxGRtln6WqPb1LADb2mWP+cC8N1b8dwi/cywMY=
+	t=1738866114; cv=none; b=LsGvARaoD6F71w14SmIPJOIJLiRga0dRbY4lv23aTzmJhiCeu4v0UG9L7uvcAZoo9KfXsX8iZz3F7vNVmNYFE464moA/AnGaOFUFJ5ASLDRrgwiz9Hi0HdJMVUi4lOwo6FPycp+cp0rfltZmW1Obs5a/tYiHsinvnzWtfuINAh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738866110; c=relaxed/simple;
-	bh=weAKqXf6Y8AhG7m0BqxFtr8VPRuv1H8LfjKFnuTDoZ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LEIHOXRH6pEqMVPalwx9St2WRKuwRgZ+S1mOPSf0aT94E85TfBx3l+Adn3tdGFIGfL9PD7YgmZViDV6gIyLsz9cq26m6qPVJkr36exIpv56jTTO2jnCLPMJNXuee3Ax0bvO+wdy0CyieuDQpU7xQftOgB02cxqjEbGV7nqhOlL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gUbfz5sr; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738866114; c=relaxed/simple;
+	bh=w+tIK8+0l5BhzRoAP5UEKwhDAiORNA+a1qua81/n1Cs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=oaV+ozoH0dZWxkFnoXoYt/kzPJeL/VL2Ar0NqmRDqozdSk/V403EQwn4eskqxAE4d0lj0xNBOJiUhZVWjVT/PG2sNFbgM7x23tDgelDJ/jHq2zpvTTZKvAfi/oa5FR0CRxrXa78wLyDRtuV/t+FlWpnQ0d7eqVrB9yqzyDNrpSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st; spf=pass smtp.mailfrom=marcan.st; dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b=RCLSyfSo; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marcan.st
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gUbfz5sr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738866109; x=1770402109;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=weAKqXf6Y8AhG7m0BqxFtr8VPRuv1H8LfjKFnuTDoZ8=;
-  b=gUbfz5srUa9f57iX83lKfiIWKayZf3z24fdC0/wrs4Qsv7Gj4+tQrrVt
-   zw4dxh6COZPKcxeKwP8fe6FS4QyGb7Ri0vkvfii6Z9wTbIfa4GAg2oFRC
-   cKlNeeRowlMdtSfDyWbbjGoYqE6pxUeaeRBFoBphuYNvgg8bDuZMHDYLZ
-   tQXv/Fw5HqvKOqHd22Ys5OVWwE7UDANPnliJ2GTqP4bPHnVzmpIlVSRIT
-   9LUt9DXsXsqFFQFBocLTk+OlhSvv7Y2x2cAde1RrYuaw73NdPO4V3hRH9
-   GIaD+AlpVYkMGyy+JKEw/lvLrzKeXZ5RvZ2umQJwKsClJf+G6U4dFabBb
-   g==;
-X-CSE-ConnectionGUID: N1qeekNeRDuXAhDyEgI8eg==
-X-CSE-MsgGUID: PxsYwcU/RxGTLcVlywM/tA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="43246757"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="43246757"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 10:21:36 -0800
-X-CSE-ConnectionGUID: 0VPAEPdzT9ONVf+us53e9A==
-X-CSE-MsgGUID: jDcTGLTCSEyB/s4rpfu72g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="111892478"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.111.17]) ([10.125.111.17])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 10:21:34 -0800
-Message-ID: <1f3f60b3-1741-4ced-951c-8e103970170f@intel.com>
-Date: Thu, 6 Feb 2025 10:21:36 -0800
+	dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b="RCLSyfSo"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sendonly@marcansoft.com)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id 4BE5F3FA6A;
+	Thu,  6 Feb 2025 18:21:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
+	t=1738866108; bh=w+tIK8+0l5BhzRoAP5UEKwhDAiORNA+a1qua81/n1Cs=;
+	h=From:Date:Subject:To:Cc;
+	b=RCLSyfSoXCAG3kJgf3lFz39Qq6pbAuSQVNpu2/3AZHuKaFV24Fl74RbxG7x/onwAY
+	 Ja5w+tWRhtysA784lWOjtS1SoGKsXonGIAmaHDvE8PLF5dI5BBfWdGREb+wyLr6O5c
+	 x18uFA7nDJ46HprMd+xxiEc9eZoZb1IZddzU2qeD3cF4ki1AdE30sk138TmFbGUjna
+	 io9q7903dJG94s9owhzrCSvNOn+MkKWCHkUGtmUMlSrQdV9ZkPehKyjofEPXIH0080
+	 /e9RUbDd12ZHG9n3bVmoXWEKM+WwdOF3CjliExrxrpLR25d1S4WztyqRgykLC1xBz0
+	 VlNaI5lsOa0Sg==
+From: Hector Martin <marcan@marcan.st>
+Date: Fri, 07 Feb 2025 03:21:46 +0900
+Subject: [PATCH] MAINTAINERS: Remove myself
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 3/5] x86/pkeys: Update PKRU to enable all pkeys before
- XSAVE
-To: Dmitry Vyukov <dvyukov@google.com>, aruna.ramakrishna@oracle.com,
- mathieu.desnoyers@efficios.com, peterz@infradead.org, paulmck@kernel.org,
- boqun.feng@gmail.com
-Cc: dave.hansen@linux.intel.com, jannh@google.com, jeffxu@chromium.org,
- jorgelo@chromium.org, keescook@chromium.org, keith.lucas@oracle.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, mingo@kernel.org,
- rick.p.edgecombe@intel.com, sroettger@google.com, tglx@linutronix.de,
- x86@kernel.org
-References: <20240802061318.2140081-4-aruna.ramakrishna@oracle.com>
- <20250204100134.1843654-1-dvyukov@google.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250204100134.1843654-1-dvyukov@google.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250207-rm-maint-v1-1-10f069a24f3d@marcan.st>
+X-B4-Tracking: v=1; b=H4sIALn9pGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIwNz3aJc3dzEzLwS3cQ082QgMDKyMDdUAiovKEpNy6wAGxUdW1sLAIV
+ A0VtaAAAA
+X-Change-ID: 20250207-rm-maint-af7cccc22871
+To: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, 
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, asahi@lists.linux.dev, 
+ soc@lists.linux.dev, Hector Martin <marcan@marcan.st>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1068; i=marcan@marcan.st;
+ h=from:subject:message-id; bh=w+tIK8+0l5BhzRoAP5UEKwhDAiORNA+a1qua81/n1Cs=;
+ b=owGbwMvMwCUm+yP4NEe/cRLjabUkhvQlf3ezrXGdPF1zqoJ5WKiloq/YyxfRaheVGfkmqm29O
+ O+j2UvmjlIWBjEuBlkxRZbGE72nuj2nn1NXTZkOM4eVCWQIAxenAEzE/BfD/3iJCy0urBe+St1i
+ nfGLoeFDl9eT8wUZvcJfV7L9OsSvEMnwT0H+1nEOBkuxnHSh8/r/cmos5nwyu87w7/ufmfa/HeZ
+ sZgAA
+X-Developer-Key: i=marcan@marcan.st; a=openpgp;
+ fpr=FC18F00317968B7BE86201CBE22A629A4C515DD5
 
-On 2/4/25 02:01, Dmitry Vyukov wrote:
->> But this updated PKRU value is also pushed onto the sigframe, which
->> means the register value restored from sigcontext will be different from
->> the user-defined one, which is unexpected. Fix that by overwriting the
->> PKRU value on the sigframe with the original, user-defined PKRU.
-> 
-> This unfortunatly seems to be broken for rseq user-space writes.
+I no longer have any faith left in the kernel development process or
+community management approach.
 
-Hi Dmitry,
+Apple/ARM platform development will continue downstream. If I feel like
+sending some patches upstream in the future myself for whatever subtree
+I may, or I may not. Anyone who feels like fighting the upstreaming
+fight themselves is welcome to do so.
 
-Are you saying that Aruna's patch caused a regression in the rseq code?
-Or that the rseq code has a separate but similar issue to the one that
-Aruna's patch fixed?
+Signed-off-by: Hector Martin <marcan@marcan.st>
+---
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1e930c7a58b13d8bbe6bf133ba7b36aa24c2b5e0..c9623439998709c9d6d6944cbd87e025356422da 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2177,7 +2177,6 @@ F:	sound/soc/codecs/cs42l84.*
+ F:	sound/soc/codecs/ssm3515.c
+ 
+ ARM/APPLE MACHINE SUPPORT
+-M:	Hector Martin <marcan@marcan.st>
+ M:	Sven Peter <sven@svenpeter.dev>
+ R:	Alyssa Rosenzweig <alyssa@rosenzweig.io>
+ L:	asahi@lists.linux.dev
+
+---
+base-commit: 40384c840ea1944d7c5a392e8975ed088ecf0b37
+change-id: 20250207-rm-maint-af7cccc22871
+
+Best regards,
+-- 
+Hector Martin <marcan@marcan.st>
+
