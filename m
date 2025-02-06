@@ -1,66 +1,67 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3943C22D4C8
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D599322DFB3
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738847303; cv=none; b=CY2R54aZJ1aKzzRVbOrvc6PlnFcTGKt6+aiAy44/pQpBOqwsNsNijtBdMt7S0jxE713Bk0nfLz90Ar7eVJwaVQqOn9JMUjI54mnjEGmpgefufRjI2A9HAyETp1R/qAfgDYpc94C+D5J+qydw9e/nxjV6rTL56AghcxBVbbPMPiE=
+	t=1738847303; cv=none; b=lI4rk5Yz1OB0hanRLaJzOjlNMcVt7rf4hnthX7aj1qoF0jLmq9wfmBQ0TtlQSwK+oFg7PUzPRvtLlVSE90kVLS5Ird7DYf8Ad+vcXPzRN/173CfksY+nHZkZi/VYbY4X6n6D5D5QEaNNSRewv2Ejd2CpY798z6OZaFaEAYZtRKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738847303; c=relaxed/simple;
-	bh=XgoQ89NLlToDu6WIUhA5TGdMOBSSYefS3ZZviogfjHo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mqMNv+arAnGz2opdBhGOzDofIMEzBqBKyKFfRWeypUSukfphniKmf4oXddiZNzu9x7bE2OzEaiJrlaWoYCfY/2H3Y3CVC1qsGDtUpCEoVzax5cSLyi/WYX1GQBw5SoeFPxLkLc0UJuGOIq/Nxww/bfIZOILjzxayLy5VfpdFIIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zClau+nW; arc=none smtp.client-ip=209.85.208.49
+	bh=g6CYlgIlCCDTKUM/OG+ZQtKIr6j1sM2JrhXAeW4MFQI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=JJkLlp0eEhowapwJkwxABGsq/C97gpTTHhALSYWHa8ld1rqXVUtomC78zOz7BS96APAbsdYKPNwVeHNhwXhDXjgJUxikjQSFK/gi8EZhSpKZvwyastVgmvWeU3YSuWQZMNIYa4vbgpy0eg1BXp1V3PXC+rzjulFgZtN5gycHKxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dBGxZTMD; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zClau+nW"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5de34b72ce8so535992a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 05:08:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dBGxZTMD"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5dcef821092so1001479a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 05:08:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738847299; x=1739452099; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CC73hfx/xdEwQzx0mqhvPJwAxj42f8+ghz1yMlEDxZ8=;
-        b=zClau+nWlFAcu2o1PC1sLaGRjHtTGcJeaIePsK2uFfnyfe8H9yZ7+MByFVPdOQ+jbY
-         NjpraJeZrb/U5svaCi9Qxf0LdatnSyNVURaaPVj7WBNVZqL39pDyXLHmEUynF/ylxBwv
-         e1VBMDVq0nOuWmHEr9LhlmC2l79s/ggyarf1ZR4hO4kftDCAFCu7roK2ePtrZO/iLlNn
-         VfvbD5PKUhnHR+WBtxlAOo7AeLXibtSy/Jme7wHNm8mhSvDVfrDaVZGkNJF76roWNfHk
-         uch7wZBz8p6oFiUU51jzmSX6qwJlSgeHuFdzH3k43oz0A7P3QP2mNXLL9kYU4FKNqsy2
-         4jYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738847299; x=1739452099;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1738847300; x=1739452100; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CC73hfx/xdEwQzx0mqhvPJwAxj42f8+ghz1yMlEDxZ8=;
-        b=VSRuvHWfxN9g8TYoenRC9rQLMUU5rgsUwhj/Qq6sNNx8kYnXnHUifW/UOLi3h1Xmh3
-         7Tc8m43aRiZsqYIJv6bwxOE8BSrr8W4y/zw/AFsbqAPMwBZZkPkLVPl8/SYQvNzvZgIT
-         TocJ1qKeF16NhhDhn8rRG8s9xpakZIR8EFqXro0vcQEqXZynxQBBLlrd7aqY9XP/K3zx
-         k4PaqnFdp166TRCm76T7DLHd+sKbVUm0a3v0tlfdO7fPsQjNLOFVGFc8pYvm6xdMBldk
-         Q1Ny5lheSFY7eTvckbDftVY+icGtS5NY/kBaFW3ehNAm9w4Bk5whHy2PYS3htQwTXbHq
-         N5Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCWzOW0OXuXkM+iaQ0zZJdvGYL381ONHOG1f3WlwJMYfjhfdVYgbN6+xxQ4q4Nsfca1A2neWeHtITmgituM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrBfFkEvTCbi1VcQAP3Oh9oq2hOBFLwvli27O9sdrDqv+Oak0r
-	+EfVuJTpY9cIzHZw0a3+N+sa8Dcy5cTjv96kw+QR01+HQx/EuNq2fkiO1ic6Y+7XHNqXc/ypQ6m
-	DLKws0A==
-X-Gm-Gg: ASbGncv8UhvksRiRbeNaYW04g+LAS9gRH6YQ0RxDgagJBlGlOLXpzCwxxex5NFqqJmG
-	40pJdkhZqVNMQ4o8U4cBcSI6k8mH6sz/X11g9XMAz9MTk28+wdnVeuFhUGX7vCwxuiahq/TFiue
-	jMsBgXXNZDu4BEyZvUcqXqVczxRkoF5Y6rQ3oG+AEuiEAJtj09nFs3I6tSEYFHDDWY8jCI1QRWT
-	yg5OlLR5bdoOyr07p1tU7dKUxs4kUPQaN58jmlz1/P0KtZ8QWQ3gdMFYAB9mFiej5aNXRrS+Gow
-	Cfwdu6oh/IIcChIMs9NVaPazZhhj91DoWmuYRepaPbyc+JBYfWE30blHHqYZXSrEU0dk9FcFurM
+        bh=sDAg+ppQjoLROQ6tgZmSgyH+iG6RB5+F1jMAwfLcm78=;
+        b=dBGxZTMDMDZ5FnAIbPi3/45HoEQGBa54OegsADxddHG+PuhgwsX7Y5YwaLu60L3TVC
+         zVJwVEXrtNHU51Wa8ulDC31IjNQ45ZCTTvVAD3tdtRRxHnBMWAraVH6iBZ5VFxIECqOT
+         LO3oY1JMcoWrC8WVCqx7ks6ODRnR1S+mCE/A/yLtDF2TCfmT0WyPi6wb7qAlY6+3c1we
+         FI63XGb0oAGb/PZ2N8ROmQ1zHPbsGeTjjT9tE998yQIwUeBGdhf3VlX29dhmjKaOgygm
+         u9qadk/mDlkNws+6/hZNI0Z0e2ZcaWZe7GKCUWmfpUS/bmOnCJuhDLNtcrONKPiQbIN1
+         Retg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738847300; x=1739452100;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sDAg+ppQjoLROQ6tgZmSgyH+iG6RB5+F1jMAwfLcm78=;
+        b=YEaBrteLE2k1bUBfh777iiGiVit7x3/OfM6sXmSuGcdJKIxn0NyrF0XYn3VHha7f5a
+         os438+iZdIEPD5MeSSenwI9c6rP132HKycWZYScAwhlVOR5v/tgtwML2Yrqw7K2Nx+80
+         vpjCd+yKRH8tjIvbnxhwh9rFtvvTKW133xlY5tGM288F5skht1l+365LjNwrx/yCtxaF
+         4+PkDPEskV2FiGDQKEic6Zgy4oh6W/alPiatGwfR1id4WjyDNmmuSkbdBCz+JDnyiRqv
+         ph8rrbhyEbKD4oejsfw1Jj0eVcD9OT3GZ/GbIjWBZbANU1HlUgF/ZsR2ESeBAY+yiKlF
+         HdAw==
+X-Forwarded-Encrypted: i=1; AJvYcCWoxPB9bM8YtbMATC30mPQ0TOr5jCdp5wsoT0JGRQ2jftDjswgNddKBbIHg7W3AKrm99pfVh5gQzvLA7MU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlWhetxWq7I3WJbcbAAcIvavdYfgaEj4+Rjge4iyAhcaAfXOHD
+	oBS/mm9NoyDJew3t4UQsc7GgwUezKRqUrMlMMoVT/ybbtt/+hE7u0m3F/b8GPgI=
+X-Gm-Gg: ASbGncvF2dOy5mvuRFtRVDanVuAjrWPJJjx+pid6U2+T0FBDdpu3FqvtnE0Bd3q1JT8
+	ql5o6C5MnHvyxk5mDHnDRijF7vqUYzZOvaZ28/5q2CHouXTE3BeXP0Lm/fECF416hBAOYC1o+Pg
+	l1DPvciYkSPETI+x9xxM9EP0djlgyhLgpDu9fetcH/tRbQzzvCSWC2uQnn+tLzIsfRXRO/UpnhU
+	vaj5x+B+3Eului330fVYn/+DN3qbRtkSRQ/S445JQKet0a6bsuiPujLj07K5M08DtJF74c38YsR
+	awS8pT105TdpaLqavs2IIWGsHXKqkaBYOtepWnSdTNORcpd6laPjhfbCStddgXvMEx+G5lOvrls
 	=
-X-Google-Smtp-Source: AGHT+IGHBChEeQbZZWdB6VUb2tAPzM2QubPuRCkq9llaK78PumUt20gOs9+K10OlU484h2rpI5M7EQ==
-X-Received: by 2002:a05:6402:27c8:b0:5d9:f5c4:a227 with SMTP id 4fb4d7f45d1cf-5dcdb778e7emr7219614a12.20.1738847299436;
-        Thu, 06 Feb 2025 05:08:19 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFTAdVpqgZ0wqgMByKwDevPfkkbqJL1+kBcqsh/Cv6cjwQ8nQLxo1utspkD+w2738TsWHLVKA==
+X-Received: by 2002:a05:6402:520d:b0:5dc:d34f:a315 with SMTP id 4fb4d7f45d1cf-5dcdb729597mr7450061a12.15.1738847300001;
+        Thu, 06 Feb 2025 05:08:20 -0800 (PST)
 Received: from puffmais.c.googlers.com (140.20.91.34.bc.googleusercontent.com. [34.91.20.140])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcf1b73f8csm830235a12.8.2025.02.06.05.08.18
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcf1b73f8csm830235a12.8.2025.02.06.05.08.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 06 Feb 2025 05:08:19 -0800 (PST)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Subject: [PATCH 0/3] gs101 reboot updates (DT)
-Date: Thu, 06 Feb 2025 13:08:17 +0000
-Message-Id: <20250206-gs101-renppt-dts-v1-0-cdfe993fb3c5@linaro.org>
+Date: Thu, 06 Feb 2025 13:08:18 +0000
+Subject: [PATCH 1/3] arm64: dts: exynos: gs101: drop explicit regmap from
+ reboot nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,9 +70,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAEG0pGcC/x3MQQqAIBBA0avErBtQKamuEi00x5qNiRMRRHdPW
- r7F/w8IFSaBqXmg0MXCR6rQbQPr7tJGyKEajDK9MsriJlppLJRyPjGcgqsfnLc+WjN2ULNcKPL
- 9L+flfT+SZeZYYgAAAA==
+Message-Id: <20250206-gs101-renppt-dts-v1-1-cdfe993fb3c5@linaro.org>
+References: <20250206-gs101-renppt-dts-v1-0-cdfe993fb3c5@linaro.org>
+In-Reply-To: <20250206-gs101-renppt-dts-v1-0-cdfe993fb3c5@linaro.org>
 To: Peter Griffin <peter.griffin@linaro.org>, 
  Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -82,35 +83,37 @@ Cc: Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.13.0
 
-Hi,
+The regmap property for syscon-poweroff and syscon-reboot is unneeded
+here because the poweroff and reboot nodes are children of syscon
+already. It also is deprecated.
 
-These patches update some of gs101's reboot / power off requests to
-bring them in line with downstream / bootloader / EL3 monitor
-expectations.
-
-In particular:
-* an unnecessary property is removed from the DT
-* the reboot / shutdown SMC calls are aligned with downstream now
-* we now implement the requested boot mode as a notification for the
-  boot loader 
-
-Cheers,
-Andre'
+We can just drop it to simplify the DT.
 
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
-André Draszik (3):
-      arm64: dts: exynos: gs101: drop explicit regmap from reboot nodes
-      arm64: dts: exynos: gs101: align reboot and poweroff writes with downstream
-      arm64: dts: exynos: gs101: add reboot-mode support (SYSIP_DAT0)
+ arch/arm64/boot/dts/exynos/google/gs101.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
- arch/arm64/boot/dts/exynos/google/gs101.dtsi | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
----
-base-commit: 808eb958781e4ebb6e9c0962af2e856767e20f45
-change-id: 20250206-gs101-renppt-dts-cb8ab6bf6294
+diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+index 813f96089578..e78dcd506a5c 100644
+--- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
++++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+@@ -1400,14 +1400,12 @@ pmu_system_controller: system-controller@17460000 {
+ 
+ 			poweroff: syscon-poweroff {
+ 				compatible = "syscon-poweroff";
+-				regmap = <&pmu_system_controller>;
+ 				offset = <0x3e9c>; /* PAD_CTRL_PWR_HOLD */
+ 				mask = <0x100>; /* reset value */
+ 			};
+ 
+ 			reboot: syscon-reboot {
+ 				compatible = "syscon-reboot";
+-				regmap = <&pmu_system_controller>;
+ 				offset = <0x3a00>; /* SYSTEM_CONFIGURATION */
+ 				mask = <0x2>; /* SWRESET_SYSTEM */
+ 				value = <0x2>; /* reset value */
 
-Best regards,
 -- 
-André Draszik <andre.draszik@linaro.org>
+2.48.1.362.g079036d154-goog
 
