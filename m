@@ -1,112 +1,124 @@
-Received: from out.smtpout.orange.fr (out-16.smtpout.orange.fr [193.252.22.16])
+Received: from mail-ed1-f67.google.com (mail-ed1-f67.google.com [209.85.208.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C364422757F;
-	Thu,  6 Feb 2025 10:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D11F22CBF4;
+	Thu,  6 Feb 2025 10:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738839424; cv=none; b=o1iqeAK3bgbMIYIUzbadP4a5OZox/5uyiYibUDkTBTCUERriZaC2wDGeYhByKLg5PZGMmAUjhkqJFzg0CMH8kCsEEKGCepP/ETIlvC2Qwx4/uD+NlqgArRHewyJitlveZUckFtLilgCaJWk+8hQFXl30Sh8+fXV1qb0eTFKjpj8=
+	t=1738839481; cv=none; b=M6NtpM1y6itMKuE3SELpZGcrrpwAqJJmC4edC1jzlcfOnitOSO9+TiqHRG7JS75ctnSlgyB7e14pwxouWeUXuE46pg1yg0km90Hah4JmAyHsEpq+/i2IDuwlfHOoNvNZHAZvHreFB13AVUgUiNKGbywbzBZmtMU0CjKeZWJLpJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738839424; c=relaxed/simple;
-	bh=mZF4WJ4wshkC4Qp7P9+LXM8kZ9ppCOLNmAFpDQZp3G4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bL2scXBEcUP8p+9ZIJ6+kQ6W1tEPoD27EXZjqpl4r/T3+otdwfRQVLdKr/o0jUvnXv+R7YVrL08yP9QK9dzlXJasr1C4bqI5rWTHmy30G0Z+erv4Rj/UzAG9aKnwgK0jMYYhLyjxiKzLMb+juWTBrbLkak9NjZ350LFFzlxq6+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=HlF2JkqG; arc=none smtp.client-ip=193.252.22.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1738839481; c=relaxed/simple;
+	bh=RWheo7jB9CFPRMRRn73ubD2be1ma2wgGJgQQNlUo3GI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BmJ0jwi7BMDVC9kwAuASpTnnKSD/Wr9nJcA5DfDjkrak/RmLZpQAv3HkzptVGG8bKzkpwffBFGPTlh9wd5DQ3UvJWzXhTFgSggN7Ba5A3NNHbG4o29l7H3e5WCmAoEpnYxxGR3ORke7r4uAxOyu0keZ5XyWo2uspdPlFtVJL2PE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YopcJIKb; arc=none smtp.client-ip=209.85.208.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="HlF2JkqG"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id fzYjtDgo1Ft3IfzYutp3tQ; Thu, 06 Feb 2025 11:56:54 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1738839414;
-	bh=wTaI7uWxfJ722CWHtIPOl9T+pRsm8ifKzI8h9O+PI5c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=HlF2JkqG5ukjEpbIBd4tr6yYQuDznjpL7a043gTv4H77qYLXx59j5W8NHZGzXGRyl
-	 GQ7q6N85iRiKLecZFckTpwlOCr2sakj3sZrltqKpvXf0kS02r7GWO+SjCkF6+LSLdM
-	 iq2XQ8/NsB9Gdul/7toFTk/XmIDsQNbIMOwzqohUOka8QI3SMtW+tIirxARB3wL5HN
-	 L3c0aRE+6OxptM+EIdcXj0qCVNGs1vFCqMi6ZeRRhwRS7xEFNmGoru7PhrQ5lf5Ak2
-	 X4lSj1n3zzZZ+MxAeJXyJ1bNsXexiQpE+SaPL17Z98ulsYrqtu08eGiR+aLyB2f48x
-	 KpRr3KtrNgjpQ==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 06 Feb 2025 11:56:54 +0100
-X-ME-IP: 124.33.176.97
-Message-ID: <e0aeefc5-bf01-42ab-91e4-e727d560c983@wanadoo.fr>
-Date: Thu, 6 Feb 2025 19:56:36 +0900
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YopcJIKb"
+Received: by mail-ed1-f67.google.com with SMTP id 4fb4d7f45d1cf-5dcdfa7df68so1372940a12.3;
+        Thu, 06 Feb 2025 02:57:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738839478; x=1739444278; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=UCwEnHmZYStesPLVZzhLCy/SlMOkoHP6UZc4smqj+Is=;
+        b=YopcJIKbWyQURFRey38A2CrBw7jKRlPebgyy0nBN/QXMpypfKHR6VF9Ekblf/hxLkS
+         CVggz8y/3CZc7SxLmaN6a4ZM7EQQSZM6EnipBKrwLYe8B5LgGcG4hnESHL1GS7ez9TWy
+         4zEsyGRecYIzxWQVzNzQkgC4iGaknJP3kcu9HPb4mZEpheRHtdnaSWN+K4KORSD1nwXL
+         GrKcLSc8vuYU3GXZMFGvRpKV76Jh49RYg948qHz+sKhe1bE73FbX+LPHQcPH0DF7rOnL
+         R7OUwv/fy5lK9QmLlP5S1oDsCh+MPwqZE4crD7b94yS6kbBEpwar+6+ztio0Rt6nJcG5
+         tcmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738839478; x=1739444278;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UCwEnHmZYStesPLVZzhLCy/SlMOkoHP6UZc4smqj+Is=;
+        b=B47BqDMTwIvLRbOpLCNs0IU3QHKBn7qSRYN5a7SfvcyjHzN3PumN359fv6N7EapuPZ
+         /O7/5DBmKiveToPbgraP4YnhYt3cQcGkOoUZQ5OgQA1i0vlXdOfe5/OQEpVYuYEI8BBd
+         9DUOTVJpjhyL469yoZ73t7czSJjKdOcxK2PUj3WDDaMTf4GjQDRjLGKgzFc/h299F0SZ
+         7GBgkxwMWMRsygLhMs+i8SgaLky9ST0dkXXoHSx8Y9uUo/ABAPILNPaGba3dc9Yo9Rw7
+         SgyCUyUBVwGE9l5JonAJnodBnc0WNo+G4sVAbqdDxA1AJqA/qfi8H5YSei6Marp2ku+9
+         iMnw==
+X-Forwarded-Encrypted: i=1; AJvYcCUzMGW5XFAP+gZgVfSbKGTHh3l/uUd3Uq7G0Yfm03GOe0fxvbXU1kbsrytYxfcErjB5Ecuv8y96ianUixQM@vger.kernel.org, AJvYcCVyA5f2bmP8dz+XZAIL59bOotiFwYR0+JMqIJq1RdRsfdEMc9TvMWU2tNjma3KxXdynfGM22zlH8h7k@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoQnAc74ynIFUQOOoOuSHDy7VA7EqUsYVbn1QQz3ap8cMnfCzh
+	GMizBslVOEB9M8uUhwDcwDTNwp74BjMPJm3Na815qPlRWD/PsEnqPkcW61+vqjlU4QFoDmBlc4K
+	oR15Snbt7byJKABNEj4dGe9j4jyI=
+X-Gm-Gg: ASbGncsyAg7LummNFHx3BtYU7kS7eXdxHzNsqTYqrcb8ClnyBQTnxlpFPTH5J9nHrRd
+	8FhvXOULxqwVBtWG9d/BZxvacE+ncOJloPvDv2Do11JTkbCt/2Bnh8ec6LJfIOd+cegmmKhVvq4
+	o=
+X-Google-Smtp-Source: AGHT+IGP8tAW0CXvHNHg7p5sWcAX+S7UmNuU0OrOMLWbPyPHRVVI4cXsDxphL4+JA8N5RtUQ7mSHl6x3rrvdPIqiBpg=
+X-Received: by 2002:a05:6402:27c6:b0:5da:a97:ad73 with SMTP id
+ 4fb4d7f45d1cf-5dcdb71bb7emr7512035a12.13.1738839477521; Thu, 06 Feb 2025
+ 02:57:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation: Remove repeated word in docs
-To: Charles Han <hanchunchao@inspur.com>
-Cc: linux-can@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
- linux-doc@vger.kernel.org, mkl@pengutronix.de,
- manivannan.sadhasivam@linaro.org, thomas.kopp@microchip.com,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, cem@kernel.org,
- djwong@kernel.org, corbet@lwn.net
-References: <20250206091530.4826-1-hanchunchao@inspur.com>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <20250206091530.4826-1-hanchunchao@inspur.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250203214911.898276-1-ankur.a.arora@oracle.com>
+In-Reply-To: <20250203214911.898276-1-ankur.a.arora@oracle.com>
+From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Date: Thu, 6 Feb 2025 11:57:21 +0100
+X-Gm-Features: AWEUYZn3un_MskJWBGcJT6aFZUZFVS49qML1cEO5eTlJd56xDvMM1MKgwwStIVI
+Message-ID: <CAP01T75B-UjoKugBsCHnfjwMmL5Bdfs+-YK3QH7mLUJs0+mmCA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] barrier: Introduce smp_cond_load_*_timeout()
+To: Ankur Arora <ankur.a.arora@oracle.com>
+Cc: bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	arnd@arndb.de, catalin.marinas@arm.com, will@kernel.org, peterz@infradead.org, 
+	mark.rutland@arm.com, harisokn@amazon.com, cl@gentwo.org, 
+	zhenglifeng1@huawei.com, joao.m.martins@oracle.com, 
+	boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 06/02/2025 at 18:15, Charles Han wrote:
-> Remove the repeated word "to" docs.
-> 
-> Signed-off-by: Charles Han <hanchunchao@inspur.com>
-> ---
->  .../devicetree/bindings/net/can/microchip,mcp251xfd.yaml        | 2 +-
->  Documentation/filesystems/xfs/xfs-online-fsck-design.rst        | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml b/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
-> index 2a98b26630cb..c155c9c6db39 100644
-> --- a/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
-> +++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
-> @@ -40,7 +40,7 @@ properties:
->  
->    microchip,rx-int-gpios:
->      description:
-> -      GPIO phandle of GPIO connected to to INT1 pin of the MCP251XFD, which
-> +      GPIO phandle of GPIO connected to INT1 pin of the MCP251XFD, which
->        signals a pending RX interrupt.
->      maxItems: 1
->  
-> diff --git a/Documentation/filesystems/xfs/xfs-online-fsck-design.rst b/Documentation/filesystems/xfs/xfs-online-fsck-design.rst
-> index 12aa63840830..994f9e5638ee 100644
-> --- a/Documentation/filesystems/xfs/xfs-online-fsck-design.rst
-> +++ b/Documentation/filesystems/xfs/xfs-online-fsck-design.rst
-> @@ -4521,7 +4521,7 @@ Both online and offline repair can use this strategy.
->  | For this second effort, the ondisk parent pointer format as originally   |
->  | proposed was ``(parent_inum, parent_gen, dirent_pos) → (dirent_name)``.  |
->  | The format was changed during development to eliminate the requirement   |
-> -| of repair tools needing to to ensure that the ``dirent_pos`` field       |
-> +| of repair tools needing to ensure that the ``dirent_pos`` field       |
+On Mon, 3 Feb 2025 at 22:49, Ankur Arora <ankur.a.arora@oracle.com> wrote:
+>
+> Hi,
+>
+> This series adds waited variants of the smp_cond_load() primitives:
+> smp_cond_load_relaxed_timewait(), and smp_cond_load_acquire_timewait().
+>
+> There are two known users for these interfaces:
+>
+>  - poll_idle() [1]
+>  - resilient queued spinlocks [2]
+>
+> For both of these cases we want to wait on a condition but also want
+> to terminate the wait at some point.
+>
+> Now, in theory, that can be worked around by making the time check a
+> part of the conditional expression provided to smp_cond_load_*():
+>
+>    smp_cond_load_relaxed(&cvar, !VAL || time_check());
+>
+> That approach, however, runs into two problems:
+>
+>   - smp_cond_load_*() only allow waiting on a condition: this might
+>     be okay when we are synchronously spin-waiting on the condition,
+>     but not on architectures where are actually waiting for a store
+>     to a cacheline.
+>
+>   - this semantic problem becomes a real problem on arm64 if the
+>     event-stream is disabled. That means that there will be no
+>     asynchronous event (the event-stream) that periodically wakes
+>     the waiter, which might lead to an interminable wait if VAL is
+>     never written to.
+>
+> This series extends the smp_cond_load_*() interfaces by adding two
+> arguments: a time-check expression and its associated time limit.
+> This is sufficient to allow for both a synchronously waited
+> implementation (like the generic cpu_relax() based loop), or one
+> where the CPU waits for a store to a cacheline with an out-of-band
+> timer.
+>
+> Any comments appreciated!
+>
 
-This breaks the indentation of the pipe on the right.
+Thanks for splitting this and sending it out.
++cc bpf@ for visibility (please keep it in cc for subsequent versions).
 
->  | always matched when reconstructing a directory.                          |
->  |                                                                          |
->  | There were a few other ways to have solved that problem:                 |
-
-
-Yours sincerely,
-Vincent Mailhol
-
+>
+>  [...]
