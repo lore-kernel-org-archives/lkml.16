@@ -1,95 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B5022D4E6;
-	Thu,  6 Feb 2025 11:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5022C22D4F7;
+	Thu,  6 Feb 2025 11:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738840594; cv=none; b=f4fKp4lmCCeHSaiLC37tDXkOqeUh/xczcQLsO1OXRYSLisVF7nDpu4jy2EgqTQS74OwN292Sf/WJxEqTCIffYd9lHz0lE3KktGJyv8waycghTAD7dcjNH+5lGCwafpc6pXZV/gw36hg6TvNMpUEOzRA+F2USHY6qa3JkJthLNTI=
+	t=1738840594; cv=none; b=qs8pE6wEBlGre9zHk1WJq227mCYCxR+mZbaAMhNGSXI929uQhSB2IPWDQthAZ9R3j+gmQJTVbW2NlbMS2TWJkTx/KhBlwZDZeA1rAqqfDCDflMAQI8W2QqPcuujOtZ78EfdntZ5CWzlz7GJnyugcv/xNioHeZ5nWJS0edT/LhRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738840594; c=relaxed/simple;
-	bh=zs0+BwxLlK6ivUzSt1CK3pZxZ6vu1Uq4LmDa+8MwPrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pPDXd1wCoQUKXLIngz1viUY5ye6ASfGzVkvtInr/gy93CpXt8teODQlJhugkD80nCrothpFrpHwETXwRBRfzdlM3s1mMA6q/P0TAT5t3vJGMqmdfRkzhsMrihgoduXfWF7nBB9klDBmNaGcmp/Y7ZwXhLJSSRuhmyYvtb83EKWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DIGCPeqv; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=g8sZxSFLsiXkSNWL2A0sHgPLK9t5ByTcoYVHdS0zGIw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mZJaNZxA+MkWkT0sHoMPwuNjqX7Oksc2ivyEww52LoUfxJaH9WVoB09ZaFaDxFYJp7/iZVFKHHH3pUVa4X/Ma0swCYIVCxzLBPmtSVFdl32ekAXsJndF4Ei01z7xRo9PQl1SI8NGmuBwok5S8nukSr1P3HBp1oFWaryAFdYNX98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=M+ORLG2F; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DIGCPeqv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738840593; x=1770376593;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zs0+BwxLlK6ivUzSt1CK3pZxZ6vu1Uq4LmDa+8MwPrs=;
-  b=DIGCPeqv8ZrsUtcePx4yoj6qI/mrWslx9c2wl6/n5ss2oOnANJ5/fnYY
-   kEqj/Kae7TB7lbR6LsBX6EEBODTe2R+q4kGLteS2s/GCNv0CygvPIIdVz
-   YfVgmOzO1IiZG+//+zsNleCoSKOBqfxadpillrcQicKARRbIGw+cQPvZj
-   /oFnbRh8SMX0c44ovkRYOuJkcv2mZWXec1VfubkL5vwrU16UpC96iqpYj
-   dzAZmBV7XKduly+xMvueHW0T3Vys0CGgT/qHuB3edbuUzduPBkdantTDO
-   aydo8uyDbqS/9zul6u7//l71LXeHxROoDsNrHjScMwWs14XFVPRwxtTvu
-   Q==;
-X-CSE-ConnectionGUID: 9OD8Y+ldQcyPLvTlka+glw==
-X-CSE-MsgGUID: eUL47CTCRmmfif1sYL7jWg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="27039874"
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="27039874"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 03:16:31 -0800
-X-CSE-ConnectionGUID: ys+oaFQtTTOPXHbXt6DIJw==
-X-CSE-MsgGUID: v/Q8hn8WRWapAGS1Wo2XZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
-   d="scan'208";a="111104631"
-Received: from carterle-desk.ger.corp.intel.com (HELO intel.com) ([10.245.246.42])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 03:16:25 -0800
-Date: Thu, 6 Feb 2025 12:16:21 +0100
-From: Andi Shyti <andi.shyti@linux.intel.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Brian Geffon <bgeffon@google.com>, intel-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH next] drm/i915: Fix NULL vs IS_ERR() check in
- __shmem_writeback()
-Message-ID: <Z6SaBeZ_DmdDstka@ashyti-mobl2.lan>
-References: <7f99a56b-d517-40b0-92b7-421c4fd813f2@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="M+ORLG2F"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5169mSOh015035;
+	Thu, 6 Feb 2025 11:16:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=pNVh5eD3DpvboaY47LThbF3u
+	WUViMD0xyrlSgw1xZTc=; b=M+ORLG2FaAN+smHncQcgoRafQpoA1ZpIFgebwB8u
+	po4g60nuzhwOhbTkT9bpGVMHarftB4AONmFi2yk1dsUIsVvMkkeXPF4A7O+g3F0K
+	agSs750bu67CaOqcJM+pqgN0L4ctzOL+Kbj/XWDbFLkbRsHM+WcLuDUdYdEJLk0b
+	k6ouNy632JM3Z3RIEufcG8ETYM2IMVo0Dk0NZYcg39HU4aCCVTqGbPGLmWWxAO2o
+	38mbp5mcoiAf8liyAYNx17mbviMRRq9nPZo1G6cykK6XEkv+V06iZMjhhhnLrUwY
+	hOR4MMTG5vuu9zPoZQEkAFYOwVtSWfSD9YSRtlSLeYPYIw==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44mtsa06tt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Feb 2025 11:16:28 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 516BGRi9002160
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 6 Feb 2025 11:16:27 GMT
+Received: from hu-akakum-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 6 Feb 2025 03:16:23 -0800
+From: Akash Kumar <quic_akakum@quicinc.com>
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Jack Pham <quic_jackp@quicinc.com>, <kernel@oss.qualcomm.com>,
+        Wesley Cheng <quic_wcheng@quicinc.com>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Vijayavardhan
+ Vennapusa" <quic_vvreddy@quicinc.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Akash Kumar <quic_akakum@quicinc.com>
+Subject: [PATCH 05/18] arm64: dts: qcom: sm8150: Enable high bandwidth for hs isoc eps
+Date: Thu, 6 Feb 2025 16:45:30 +0530
+Message-ID: <20250206111543.17392-6-quic_akakum@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250206111543.17392-1-quic_akakum@quicinc.com>
+References: <20250206111543.17392-1-quic_akakum@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f99a56b-d517-40b0-92b7-421c4fd813f2@stanley.mountain>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: zaXhAw4WJotHa3zVl5GiOocDC7zFmU1u
+X-Proofpoint-ORIG-GUID: zaXhAw4WJotHa3zVl5GiOocDC7zFmU1u
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-06_03,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ lowpriorityscore=0 spamscore=0 impostorscore=0 priorityscore=1501
+ clxscore=1015 mlxscore=0 adultscore=0 bulkscore=0 mlxlogscore=984
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502060093
 
-> The filemap_lock_folio() function doesn't return NULL, it returns error
-> pointers.
-> 
-> Fixes: 25dd342f0cc8 ("drm/i915/gem: convert __shmem_writeback() to folios")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+It is observed while testing multiple audio devices,
+a glitch is observed during testing.
+As per dwc datasheet,By default, HC reserves 80% of the bandwidth for
+periodic EPs.
 
-...
+Add quirk to set GUCTL BIT 16 to accommodate higher bandwidth for
+2 isoc eps.
 
->  		struct folio *folio;
->  
->  		folio = filemap_lock_folio(mapping, i);
-> -		if (!folio)
-> +		if (IS_ERR(folio))
+If this bit is set, the bandwidth is relaxed to 85% to
+accommodate two high speed, high bandwidth ISOC EPs.
+USB 2.0 required 80% bandwidth allocated for ISOC traffic. If
+two High-bandwidth ISOC devices (HD Webcams) are
+connected, and if each requires 1024-bytes X 3 packets per
+Micro-Frame, then the bandwidth required is around 82%. If
+this bit is set, then it is possible to connect two Webcams of
+1024bytes X 3 paylod per Micro-Frame each. Otherwise, you
+may have to reduce the resolution of the Webcams.
+This bit is valid in Host and DRD configuration and is used in
+host mode operation only.
+USe this quirk to set bit for host mode uvc uac usecases where two
+isoc eps are used and flicker is seen.
 
-ops! Thanks, Dan
+Signed-off-by: Akash Kumar <quic_akakum@quicinc.com>
+---
+ arch/arm64/boot/dts/qcom/sm8150.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Reviewed-by: Andi Shyti <andi.shyti@linux.intel.com>
+diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+index 4dbda54b47a5..56d0d72aa499 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+@@ -3660,6 +3660,7 @@
+ 				snps,dis_enblslpm_quirk;
+ 				snps,dis-u1-entry-quirk;
+ 				snps,dis-u2-entry-quirk;
++				snps,dwc3_guctl_resbwhseps_quirk;
+ 				phys = <&usb_1_hsphy>, <&usb_1_qmpphy QMP_USB43DP_USB3_PHY>;
+ 				phy-names = "usb2-phy", "usb3-phy";
+ 
+@@ -3739,6 +3740,7 @@
+ 				snps,dis_enblslpm_quirk;
+ 				snps,dis-u1-entry-quirk;
+ 				snps,dis-u2-entry-quirk;
++				snps,dwc3_guctl_resbwhseps_quirk;
+ 				phys = <&usb_2_hsphy>, <&usb_2_qmpphy>;
+ 				phy-names = "usb2-phy", "usb3-phy";
+ 			};
+-- 
+2.17.1
 
-Andi
