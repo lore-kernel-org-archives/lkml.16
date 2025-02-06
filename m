@@ -1,124 +1,103 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F8323958D;
-	Thu,  6 Feb 2025 17:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C653E15B54A
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738863217; cv=none; b=bA/oZ9YFCWui1vmIm58uai45Y6kWyUS8Gtv+h8QiuYcA+fe10lVLdSskkQXImsce86IbBk9vQe3msjkjQC/wDG1qfB7oJf8/nUM00mic/YhS1YHoueKAL5IeLFZtNIUz8TNlZezn9NOvvvAVsnhhUmSPMLNg9J5SqvvDdwNRqY8=
+	t=1738863238; cv=none; b=TpYULeCEY7TSwGAjzetX/0fRZPYr0ZmI1ABT62V5+YMBeb6Yz0rMAKvx/YQMMmBZ6b1rWCIgN87NShmy743yn51UJbbCwaZceNVVCfBxk6IxJts3rJR1t2kcfii5hVhSuJlyN3khnwAav0bIzBsQihksX0+fC8uXwgWmZXAvYB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738863217; c=relaxed/simple;
-	bh=rmyUVqDV0Dd6+V/sY8D5DcgMwUBbzomMg++afH4Z45k=;
+	s=arc-20240116; t=1738863238; c=relaxed/simple;
+	bh=GbON6iayiWvDvkdRopsxmojLnkcggg0RSYyaElN8EeA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q5ejoELVo4lDI0niFcOk84V268HFWkkeBvPDo2S6nwzVl0mdWZi1ybpt4ym8oIZMelEi3gvOxYIl00TW6nbf1dWnuAFUfTxA6Olg1Y9ifNQeM0MbM9zaL+qrIucH3UcdiHG/1Drx0I+hSCpkaX5goifgymDA/DBfDntCNvTNPPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b8PgQjVn; arc=none smtp.client-ip=209.85.167.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=ZPspxJ6vhMOd5i5a1o7w8Pco9nl4+eH0U1eRj7lVRkd8uVtnzQ41bEw/JxP2ErkbkX/kaCxVY/YpeD0H5hbQExlohDYbk42JX386CbU4e6ESsL0imhkfC/uS5WmG51ZV6mllokN6y9NAaHAe9hTdMf62ShpAq/94uLwQT2yeMWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=A7NIx92d; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8PgQjVn"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3eba0f09c3aso374568b6e.1;
-        Thu, 06 Feb 2025 09:33:35 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A7NIx92d"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5de38c3d2acso892616a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 09:33:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738863215; x=1739468015; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1738863234; x=1739468034; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=q2T8qPWHLAVuFW9JkcOBDXxo93BC/anexNkzeETso0c=;
-        b=b8PgQjVnrqGc/8ZGZJUZMlg4OkfdXQO7tWjeQN4PpnrIrG9f6O6SueDcsm7/LCbHkj
-         hQgdVFDZ6/cs8zG1JirapzVprhHr4XWXW6V1pXyYVyKWQ+0Ac1CKUU6gv4pZFfQpMBGA
-         1KVjwJLtA0nku5629ZeNYtVpc+U/MZyhE901QwexWFBfd1kSlyPj7yYkiUr+QnkbwR3+
-         depl1grnC00prKH26lgpJqTGtNFyrjkI4pSBJIcgLuSkp0sB8qDJefpxnqQ5e64jdBgv
-         GlmBOdIDLvRhqEe9am49rlAsT+BbygOD/bYzLw6WfubR4t7hU7YLHHxWCgbzzHaZMcIp
-         v+DA==
+        bh=mJUUUjrLov9sJIl9/dsnkCvRrMfN6OAfg15ppJicsmM=;
+        b=A7NIx92dayLynk+oRC/gIORcbQecAEBk4ttL6/8bv/k8i1Yqpcb3CwUHY8Gxoo7y+O
+         33ducGMqcpRQEeOkfnPLlXYY8OSzRu6hJ33E5gN92UZVDcMqRbx5TZUa6xvCOaMLQecA
+         rdX6o6VaaPm6Etjrd3mN/7v9cGuhi/Lu9/Pt4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738863215; x=1739468015;
+        d=1e100.net; s=20230601; t=1738863234; x=1739468034;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=q2T8qPWHLAVuFW9JkcOBDXxo93BC/anexNkzeETso0c=;
-        b=vAuBv8CgqvE8i/anl7HHJy2IJdZ4bF6zMIWiiikLpH9qhDJdpz1I34qjSw3kEiQl1n
-         9+pBO2YNsfK6NQiUs7fDVFfwwYS29ABYscWnqeQXkx6H0r/EOAtkNUrmq4zWZ6CIySOy
-         ep7YYSS9ikGF+WVACWy2YqCHB4oCqa+4sAZjrtjN3FxrQ7UKrZzHpQokCdeAHYl6a0fX
-         SqoBm4IECbEvvCuGDTcaYfEvPIVz3RBfuliiVL3KwVgoC4fGoj36r40saJP6s7ktCsOr
-         2tc69+WzBvkV/G1xhLNPTipp9rIkaUZ71Hxnpk3crztmyYaIGMyRvqypcHjXgTkALYVo
-         lXtw==
-X-Forwarded-Encrypted: i=1; AJvYcCW8TT4wfz52ZPyEOy08/W5P+tRPmUgME6ltQuFgYS5dPWk6OqbG3Pz0Ryy/1zUyOdDPXPq0FUEXfiGgZaaf@vger.kernel.org, AJvYcCWg8De901W/h5hCtOBn5QkbOwLW6MsugCGhgLTglFygZ3rSDRs4Hb6C1f+WkZyBIZS11zYotNT4P5yEh/Jl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+FXIvxjiuo/mlXuo8tCyvtVHsB2XnMTDcgem9eBQcy54uni1B
-	iYlB55VW9y0MWzV+qDBF1w71l6IuAyB6f1ssbvMb5F+AdViQHngk83PmT29D5P+vgaiR1a62r6m
-	GtmC0S8OeJKd5Fz35/eej6y9SiFpXnLjt
-X-Gm-Gg: ASbGncsUO/vWmldCzwkHI1Y63BWR/5vmVOGQO2QOoadVahmZX1AYnj9CIn0rk/y/Fl6
-	2AUlCwxy8P/xieCn2+08W9sg7uTvdzQ8+vhKnX70r6fH4k9i04Ath/82T7OfR2BwNCxqAsO4=
-X-Google-Smtp-Source: AGHT+IHi9dLQuoI1fel4aPQz1hBkIlLQ6dQM/fvNm6pw/w01ORPppKmQG5v7muFffAbwf2kXGMQMN9GqmUEwIGTra+0=
-X-Received: by 2002:a05:6808:2e8e:b0:3f3:1ca8:96b with SMTP id
- 5614622812f47-3f39231a58bmr88929b6e.21.1738863214996; Thu, 06 Feb 2025
- 09:33:34 -0800 (PST)
+        bh=mJUUUjrLov9sJIl9/dsnkCvRrMfN6OAfg15ppJicsmM=;
+        b=GjDb0eefYnYJMoI+/g7p36iWef2JHC66yP3DATCMUocLjSJOS9TfL/QCLTsnDhRwyA
+         fv5/W0Vd3SxNYh6oHkYV0LLtglJIpvQVcVvBKiUCHzh9EszS2p0zyDpeKqEeu7dKWknk
+         QdNtC4vKlWQRP2xzQn+zsPTxKpFGM89hyqaIgNHFQ4/T9B+XHExYa+Pk5DUrndpydWTl
+         rHmg2G9PEX30p3GvXqpmLM3JN7UuMBc85Uanj3OnpFm6SAkOvFVwtPFt5rMYn8t3yDof
+         Ebdr1PTe0IDUOmVO9LtmuiTkv+jNSATr8syVv1QaPBdebANON4v/dyZYwgd46IwWKsh/
+         TjyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3AtnsnEC32NscGdGA2jHm2dOd1nQ4yg/EeR7Y5VTGvE+GhA3MTazguZNVLTwVIKhA8xX25cxgOTP1gGc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXVJA60SjyX2TfhURotRLEdUzPDhJNtO9niRpOkunR9zk0lK/6
+	QCBIhvtGgqWHWU8NDSFlCpUPVo+OnNaODnsyaAia+isn/BjFpPurTFNGUOtEqfWpqx+oHDIJHMn
+	kz/p/
+X-Gm-Gg: ASbGncsvoSdOhKXxSQBJ0yKMm+sdtgJxK3RPkmsIZbSi7NmnnHJjQfjRgZcXlfjOO8Y
+	f43+fe0ui9VE5H9lynqhpA/TNHkdKOsKhfvWl+XoEaJDm2d4L11aYZ8VOS3nUwaIXl8F/YHqomC
+	ahlJweNxOvdUcv75FWYrpt4Xv5ZB2IYxIIIWF47PUBIXK/P76rWd1hXpmcjAMfMQATUtKXDQgSr
+	/X/I9hfaErskMnyWpjMIgIki/4q3u2JPy52YusXqE5FlmA6LFnZ5EzPcgCaL38czxG1FN/IO3x8
+	fI2sfMBsmKp0mJbsOr6X9KrKnPfhxFOJV0l5pCl0ybKPmpDgCXk4RnA=
+X-Google-Smtp-Source: AGHT+IEAQ4SBocFtFOuFbhV3au9A/iP6YcA0ZyZdAl0KRyGvl5YZiIoYNMwR2TDxLEBGeEbx/Mkp8w==
+X-Received: by 2002:a05:6402:27cd:b0:5dc:d913:f8ae with SMTP id 4fb4d7f45d1cf-5de450b0688mr194852a12.23.1738863233800;
+        Thu, 06 Feb 2025 09:33:53 -0800 (PST)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcf1b739e2sm1158962a12.14.2025.02.06.09.33.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 09:33:52 -0800 (PST)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5dcdd427227so2253983a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 09:33:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW8EoKEHhKYxX2b0eQyuBERBIahQCbEV28po1rzoEHV5ZKVjp+KR/nyJSgHN9DwJLAgoCqra3tegTxZ3Tc=@vger.kernel.org
+X-Received: by 2002:ac2:5f75:0:b0:542:9636:2981 with SMTP id
+ 2adb3069b0e04-54405a1ead1mr1769381e87.29.1738862871039; Thu, 06 Feb 2025
+ 09:27:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206170307.451403-1-mjguzik@gmail.com>
-In-Reply-To: <20250206170307.451403-1-mjguzik@gmail.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 6 Feb 2025 18:33:20 +0100
-X-Gm-Features: AWEUYZm9-_915UUWg8F38hjRbsunffre-kyyd1_IEjk61gxUUot0w7K8GIImmGE
-Message-ID: <CAGudoHGiHTZVMmP2eS0ePNL=KHGEssU5NeME7Ofr5pwUGtjFFw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] CONFIG_VFS_DEBUG at last
-To: brauner@kernel.org
-Cc: viro@zeniv.linux.org.uk, jack@suse.cz, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org
+References: <20250206-drm-cleanups-v1-0-93df60faa756@bootlin.com> <20250206-drm-cleanups-v1-1-93df60faa756@bootlin.com>
+In-Reply-To: <20250206-drm-cleanups-v1-1-93df60faa756@bootlin.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Thu, 6 Feb 2025 09:27:38 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UV+psKjd9R=Z=v1jf5y48dS3-O+uu+5qp-bZNteXJ5yQ@mail.gmail.com>
+X-Gm-Features: AWEUYZm6jGvL4mZzbh9s5YygPSphYTnr2ocZgOhaskVwIuc8XI42h9zOQQmsmW4
+Message-ID: <CAD=FV=UV+psKjd9R=Z=v1jf5y48dS3-O+uu+5qp-bZNteXJ5yQ@mail.gmail.com>
+Subject: Re: [PATCH 1/8] drm/panel: remove unnecessary forward declaration
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 6, 2025 at 6:03=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> wr=
-ote:
->
-> This adds a super basic version just to get the mechanism going and
-> adds sample usage.
->
-> The macro set is incomplete (e.g., lack of locking macros) and
-> dump_inode routine fails to dump any state yet, to be implemented(tm).
->
-> I think despite the primitive state this is complete enough to start
-> sprinkling warns as necessary.
->
-> v2:
-> - correct may_open
-> - fixed up condition reporting:
-> before:
-> VFS_WARN_ON_INODE(__builtin_choose_expr((sizeof(int) =3D=3D
-> sizeof(*(8 ? ((void *)((long)(__builtin_strlen(link)) * 0l)) : (int
-> *)8))), __builtin_strlen(link), __fortify_strlen(link)) !=3D linklen)
-> failed for inode ff32f7c350c8aec8
-> after:
-> VFS_WARN_ON_INODE(strlen(link) !=3D linklen) failed for inode ff2b81ddca1=
-3f338
->
+Hi,
 
-welp, the BSD asserts fire when the condition is false, while Linux
-when it is true, so the *text* is backwards. should:
-VFS_WARN_ON_INODE(strlen(link) !=3D linklen) encountered for inode
-ff2b81ddca13f338
-
-modulo this bit I think this is fine for now
-
-> Mateusz Guzik (3):
->   vfs: add initial support for CONFIG_VFS_DEBUG
->   vfs: catch invalid modes in may_open()
->   vfs: use the new debug macros in inode_set_cached_link()
+On Thu, Feb 6, 2025 at 9:02=E2=80=AFAM Luca Ceresoli <luca.ceresoli@bootlin=
+.com> wrote:
 >
->  fs/namei.c               |  2 ++
->  include/linux/fs.h       | 16 +++----------
->  include/linux/vfsdebug.h | 49 ++++++++++++++++++++++++++++++++++++++++
->  lib/Kconfig.debug        |  9 ++++++++
->  4 files changed, 63 insertions(+), 13 deletions(-)
->  create mode 100644 include/linux/vfsdebug.h
+> 'struct drm_device' is not used at all in this file since commit
+> aa6c43644bc5 ("drm/panel: drop drm_device from drm_panel").
 >
-> --
-> 2.43.0
->
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> ---
+>  include/drm/drm_panel.h | 1 -
+>  1 file changed, 1 deletion(-)
 
-
---=20
-Mateusz Guzik <mjguzik gmail.com>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
