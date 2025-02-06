@@ -1,72 +1,193 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A609E146A6F
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 04:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1302042AB4;
+	Thu,  6 Feb 2025 04:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738815245; cv=none; b=EKB+IDiZ0hMz8Vzrp/ZujAbrT0Cbk5M6oYeZzcH+o5R912zH+95Ziq9F93WomoOZUsGPUtdKtkJifxR2DO47rE6QYEqTiRek9bXxd9y4hzlzCnNkcGLtWH32ciBuZbqh3ZHpASFgCm4eBMP3WTojKFk+q2uC94WTOAnS5AwD+ik=
+	t=1738815381; cv=none; b=XgckqGbu5r8XErmUIeT1o5uHDa/fjhkYX2LUJ5x4+PuTv/Y004nEQXky7UaYUPYn8cDQSJW2xyxI7v9UkLhHTTsGl33+9doPG1EN944XLaprrP3ZQoyJuReVR6O72lnn2bbzQbprpyY4HYRhy8BmdWqtDwwngcuty4XQyLqCNaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738815245; c=relaxed/simple;
-	bh=F+4xQ5qTrvJuJo35mJWNh/cQ6qhChTu2/BP37p56TjI=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Ywyvb1xHxr+oggmE87xA69fhTDK/3e4w3lnjrBlqLwGdyqa5EO+QQmORl55p8XkBXEN52kzr8PiO0BaozOb6Nlcr9lYTQt4/Xdb+4IUF+bItN+bIjuhVbFWkQikPGx/wAKoioG+JxKWkQA2+b1gBIC3AsSoN6B8e8k8wi8lFmrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d04db7732cso11909365ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 20:14:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738815243; x=1739420043;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NLObZFqUmhvJjEHToh0EYrUYWxwKIPdnzPfXdGavApE=;
-        b=k8qILgZYUScX7Yrx+gRnu365YXOJPkM7lM5tXnIQf+4hIZuJ/FqjBgujya+waA99Mk
-         knY0+r60UMDZbbBxl7Lfk25s/H7D9EPZkFH1Yp0KtN5NG3TifHw5A5GidcsR/0H8QOav
-         7DNmWY35jWdBsRH8uX/XCoo4dIUyAxJ1sLVr5KyOMECQzRypMb+yGxd20Z410ZD2s/1h
-         n3gwTCpHVaWjOdLE2R7EFRmB5jxO2gGpYUuPFHZQ3td987se50T5BpbGrT9kXmI56FWI
-         QakWf///+a3Dny9WbajHFq/AZUmwmlA4EeajJHjTy2TNvxJZd88z9syMpTba6QxhRZJ8
-         NNYA==
-X-Forwarded-Encrypted: i=1; AJvYcCWeMttaKh+t9QxZeZ1yL6akW/J4wiV4kTNH3idLjJkQ0H3iodY0I+Fua7GuYLDiF/jOhDJe3rxbD6aILqE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOZpvMrTd6UAfBq6JRz/NapLvdbSr7q2Bh9NMqyrxqvtwv3gOf
-	eioXdlHG4KiyhK7ZGOOKf+Ra0VzK2vgtz/l4g3wIk9+CNOzgEIX7V7IRRfTaz5lsn9IVAXsQ6z8
-	fL54js61I+CzjxwFi03g1rWlJIlWK4AUWqTn/a5sKcP4YCgH7PKIitdg=
-X-Google-Smtp-Source: AGHT+IET5jTrlrcy/GSnxoV6CEdBQL6o+QlP8M4tm6nnRLqTI5o2Xo7DwE7+9qoRBnkWaZWtJ7aQLWrb+tm5376rwqMe6bikIVmg
+	s=arc-20240116; t=1738815381; c=relaxed/simple;
+	bh=4s3sILqFlowuVPjG6GdU0he0O6BERybC1R9EnR07xaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tlArfX/Mp5fdV9eKmy6j2YKlpoijI+HCW6tG7/k6iF7ywg9giGPd1FhslRhOMSC3J7M9H9oFoncftXZxjlCUgiV8dOt9J7wuz5J3QHbDbMvslG/PqyF6XBWf6wmiDtkLVjXjQ5ffzm1hZrQEa3WG0a+9ki/ybuX5IS2XNZgEFAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RQqFdbdN; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RQqFdbdN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738815381; x=1770351381;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4s3sILqFlowuVPjG6GdU0he0O6BERybC1R9EnR07xaU=;
+  b=RQqFdbdNMB7m1+wQNkea1yXXotl9nbLdND28ueJNY0Q/NXd6Yjq0Laj8
+   SmAzw+c4bFoduM6rdhEjvoJHlys3cw1iZNh3vrW6X4axGiUHlGpDtSEOI
+   mIq1dCwelPneHtr/azzMrWwYbZW+foh4cDKd74MLYHf9xP4es6KtF97Bf
+   nSBR0qgsZ5Rin4+48nb8qpeR0Xdg9SkUde1+DtqPokiKiqbGxlB10oaJ6
+   6g9BX6iPMEB8PCOom0g2fHS6k3MPiJIIhz3mDu0/BCzsdPRu8lIA1C5IT
+   aC72J6HtNU67VRzisz87MktqDUkA8K+XTf3CkGvjdPvcnpd9p0TzhAUTu
+   Q==;
+X-CSE-ConnectionGUID: P9kDzEzuSFOJcsUj0TSbow==
+X-CSE-MsgGUID: s5IrIscGQc25W9OcNapXbw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="49649784"
+X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
+   d="scan'208";a="49649784"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 20:16:19 -0800
+X-CSE-ConnectionGUID: GswcwIFiTOGXiY3G6tEpAA==
+X-CSE-MsgGUID: OLfJOYpMQ82w452uAM9kTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="148292679"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa001.jf.intel.com with ESMTP; 05 Feb 2025 20:16:15 -0800
+Date: Thu, 6 Feb 2025 12:15:23 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Yidong Zhang <yidong.zhang@amd.com>
+Cc: linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org,
+	mdf@kernel.org, hao.wu@intel.com, yilun.xu@intel.com,
+	lizhi.hou@amd.com, DMG Karthik <Karthik.DMG@amd.com>,
+	Nishad Saraf <nishads@amd.com>,
+	Prapul Krishnamurthy <prapulk@amd.com>,
+	Hayden Laccabue <hayden.laccabue@amd.com>
+Subject: Re: [PATCH V2 1/4] drivers/fpga/amd: Add new driver amd versal-pci
+Message-ID: <Z6Q3W2mUw/ZbtnWV@yilunxu-OptiPlex-7050>
+References: <20241210183734.30803-1-yidong.zhang@amd.com>
+ <20241210183734.30803-2-yidong.zhang@amd.com>
+ <Z5YPWHVmL29zuQNm@yilunxu-OptiPlex-7050>
+ <3b520bab-d948-470a-b06f-5494243ebc1a@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d1a:b0:3cf:fb97:c313 with SMTP id
- e9e14a558f8ab-3d04f8f6ee9mr57356905ab.18.1738815242810; Wed, 05 Feb 2025
- 20:14:02 -0800 (PST)
-Date: Wed, 05 Feb 2025 20:14:02 -0800
-In-Reply-To: <tencent_447A36884A8A75C577A166683D2336A09609@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a4370a.050a0220.19061f.05f4.GAE@google.com>
-Subject: Re: [syzbot] [usb?] KASAN: slab-use-after-free Read in usbhid_raw_request
-From: syzbot <syzbot+90ac8355c8ac84b1b464@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3b520bab-d948-470a-b06f-5494243ebc1a@amd.com>
 
-Hello,
+On Sun, Jan 26, 2025 at 11:46:54AM -0800, Yidong Zhang wrote:
+> 
+> 
+> On 1/26/25 02:32, Xu Yilun wrote:
+> > Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> > 
+> > 
+> > On Tue, Dec 10, 2024 at 10:37:30AM -0800, Yidong Zhang wrote:
+> > > AMD Versal based PCIe card, including V70, is designed for AI inference
+> > > efficiency and is tuned for video analytics and natural language processing
+> > > applications.
+> > > 
+> > > The driver architecture:
+> > > 
+> > >    +---------+  Communication +---------+  Remote  +-----+------+
+> > >    |         |  Channel       |         |  Queue   |     |      |
+> > >    | User PF | <============> | Mgmt PF | <=======>| FW  | FPGA |
+> > >    +---------+                +---------+          +-----+------+
+> > >      PL Data                    base FW
+> > >                                 APU FW
+> > >                                 PL Data (copy)
+> > >   - PL (FPGA Program Logic)
+> > >   - FW (Firmware)
+> > > 
+> > > There are 2 separate drivers from the original XRT[1] design.
+> > >   - UserPF driver
+> > >   - MgmtPF driver
+> > > 
+> > > The new AMD versal-pci driver will replace the MgmtPF driver for Versal
+> > > PCIe card.
+> > > 
+> > > The XRT[1] is already open-sourced. It includes solution of runtime for
+> > > many different type of PCIe Based cards. It also provides utilities for
+> > > managing and programming the devices.
+> > > 
+> > > The AMD versal-pci stands for AMD Versal brand PCIe device management
+> > > driver. This driver provides the following functionalities:
+> > > 
+> > >     - module and PCI device initialization
+> > >       this driver will attach to specific device id of V70 card;
+> > >       the driver will initialize itself based on bar resources for
+> > >       - communication channel:
+> > >         a hardware message service between mgmt PF and user PF
+> > >       - remote queue:
+> > >         a hardware queue based ring buffer service between mgmt PF and PCIe
+> > >         hardware firmware for programming FPGA Program Logic, loading
+> > >         firmware and checking card healthy status.
+> > > 
+> > >     - programming FW
+> > >       - The base FW is downloaded onto the flash of the card.
+> > >       - The APU FW is downloaded once after a POR (power on reset).
+> > >       - Reloading the MgmtPF driver will not change any existing hardware.
+> > > 
+> > >     - programming FPGA hardware binaries - PL Data
+> > >      - using fpga framework ops to support re-programing FPGA
+> > >      - the re-programming request will be initiated from the existing UserPF
+> > >        driver only, and the MgmtPF driver load the matched PL Data after
+> > >        receiving request from the communication channel. The matching PL
+> > 
+> > I think this is not the way the FPGA generic framework should do. A FPGA
+> > region user (your userPF driver) should not also be the reprogram requester.
+> > The user driver cannot deal with the unexpected HW change if it happens.
+> > Maybe after reprogramming, the user driver cannot match the device
+> > anymore, and if user driver is still working on it, crash.
+> 
+> One thing to clarify. The current design is:
+> 
+> The userPF driver is the only requester. The mgmtPF has no uAPI to reprogram
+> the FPGA.
+> 
+> 
+> > 
+> > The expected behavior is, the FPGA region removes user devices (thus
+> > detaches user drivers), does reprogramming, re-enumerates/rescans and
+> > matches new devices with new drivers. And I think that's what Nava is
+> > working on.
+> > 
+> 
+> Nava's work is different than our current design, our current design is:
+> 
+> the separate userPF driver will detach all services before requesting to the
+> mgmtPF to program the FPGA, and after the programming is done, the userPF
+> will re-enumerate/rescan the matching new devices.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+That's not align with the Device-Driver Model, A device driver should not
+re-enumerate/rescan a matching device.
 
-Reported-by: syzbot+90ac8355c8ac84b1b464@syzkaller.appspotmail.com
-Tested-by: syzbot+90ac8355c8ac84b1b464@syzkaller.appspotmail.com
+> 
+> The mgmtPF is a util driver which is responsible for communicating with the
+> mgmtPF PCIe bar resources.
+> 
+> 
+> > BTW, AFAICS the expected flow is easier to implement for of-fpga-region,
+> > but harder for PCI devices. But I think that's the right direction and
+> > should try to work it out.
+> 
+> Could I recap the suggested design if I understand that correctly...
+> 
+> You are thinking that the mgmtPF (aka. versal-pci) driver should have a uAPI
 
-Tested on:
+This should be the unified fpga-region class uAPI.
 
-commit:         9682c35f usb: typec: thunderbolt: Remove IS_ERR check ..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-console output: https://syzkaller.appspot.com/x/log.txt?x=15ca81b0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ed7570f7f6046a71
-dashboard link: https://syzkaller.appspot.com/bug?extid=90ac8355c8ac84b1b464
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=11b481b0580000
+> to trigger the FPGA re-programing; and using Nava's callback ops to detach
+> the separate userPF driver; after re-programing is done, re-attch the userPF
 
-Note: testing is done by a robot and is best-effort only.
+No need to detach a specific driver, remove all devices in the
+fpga-region. I imagine this could also be a generic flow for all PCI/e
+based FPGA cards.
+
+Thanks,
+Yilun
+
+> driver and allow the userPF driver re-enumerate all to match the new
+> hardware.
+> 
+> I think my understanding is correct, it is doable.
+> 
+> As long as we can keep our userPF driver as separate driver, the code change
+> won't be too big.
+> 
+> > 
+> > Thanks,
+> > Yilun
