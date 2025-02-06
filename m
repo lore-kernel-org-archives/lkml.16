@@ -1,16 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C8316DEA9
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 04:44:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F6118950A
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 04:44:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738817058; cv=none; b=T0HW57nlewL5JKEJVYWH5g4/QReo6pApVuKMGwGpZRCZgkMRUZIWjN89trGB3OMvDV/P+ypfQBauJEbxBMQvB/NYKkY8hDTJWhNzjygJxOvR02l2SMx+hgvPrqr1Gp0wmCc8nAxZhUq25FHyBk7hEPyn/uQwEJqFEVci2ga2G5c=
+	t=1738817059; cv=none; b=AgItvllXbe2PRZFWqXrxGWaZgp6Y5oVArBi72ikTnmLzVg1ZIaGTfF/CYhZjcvInmLv3dTKxQn34WwYhzvm3lk7zfzDlkGvQVkDtfkBqhihOmKcHPxvMB6iahgHdUJ80I3JXL3v5arIeYOShcLJuiP06e+Y89sPrrGj3yqu1JRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738817058; c=relaxed/simple;
-	bh=FCF4J27rl0Y1TlIx4gXdyeCjfh34nB394+2260jYXzk=;
+	s=arc-20240116; t=1738817059; c=relaxed/simple;
+	bh=+5zbRciSoFCWXXamUnMkT2CsyUGmDo1Fd8UoKqH+Xa8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CkP45ah2x3TnMNV1J3VijqEn0yL9thzcp8wTxHjLMNSyuaOzVnHrGd7mAbr2/9xUXnNa9GjItFMzxwkdpCWYukMpBDKYsUrTkyB44t3M1n+OIsfsoe2x9vTVQD5u/7uApfYzoKYgVYHtiRUQ0iTHaSC67K3QZsvNM/eoTMZWDJ8=
+	 MIME-Version; b=eBYEjF0gcnXINMv6jfAlh70GChaLbLaimtOmVgA0ynzqUkw0ufRxOIvtWnk9FjQPyob1XoNnOCk54xfSYhzp8k0ixDyj6cYS/MhGJnWCyy5xqxwV9qcMuaxNlnC5+UaDrGTnzyuR2Vb2cJqfludls0l/10RLXmx8LwOpAnxOZAA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -18,7 +18,7 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1tftjw-000000004tQ-2FVL;
+	id 1tftjw-000000004tQ-2Ndp;
 	Wed, 05 Feb 2025 23:43:48 -0500
 From: Rik van Riel <riel@surriel.com>
 To: x86@kernel.org
@@ -37,9 +37,9 @@ Cc: linux-kernel@vger.kernel.org,
 	andrew.cooper3@citrix.com,
 	Rik van Riel <riel@surriel.com>,
 	Manali Shukla <Manali.Shukla@amd.com>
-Subject: [PATCH v9 06/12] x86/mm: use INVLPGB for kernel TLB flushes
-Date: Wed,  5 Feb 2025 23:43:25 -0500
-Message-ID: <20250206044346.3810242-7-riel@surriel.com>
+Subject: [PATCH v9 07/12] x86/mm: use INVLPGB in flush_tlb_all
+Date: Wed,  5 Feb 2025 23:43:26 -0500
+Message-ID: <20250206044346.3810242-8-riel@surriel.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250206044346.3810242-1-riel@surriel.com>
 References: <20250206044346.3810242-1-riel@surriel.com>
@@ -52,62 +52,48 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: riel@surriel.com
 
-Use broadcast TLB invalidation for kernel addresses when available.
-
-Remove the need to send IPIs for kernel TLB flushes.
+The flush_tlb_all() function is not used a whole lot, but we might
+as well use broadcast TLB flushing there, too.
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
 Tested-by: Manali Shukla <Manali.Shukla@amd.com>
 ---
- arch/x86/mm/tlb.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ arch/x86/mm/tlb.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 36939b104561..227e972b6fbc 100644
+index 227e972b6fbc..d225a3df9aa7 100644
 --- a/arch/x86/mm/tlb.c
 +++ b/arch/x86/mm/tlb.c
-@@ -1086,6 +1086,30 @@ void flush_tlb_all(void)
- 	on_each_cpu(do_flush_tlb_all, NULL, 1);
+@@ -1074,6 +1074,19 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
  }
  
-+static bool broadcast_kernel_range_flush(struct flush_tlb_info *info)
+ 
++static bool broadcast_flush_tlb_all(void)
 +{
-+	unsigned long addr;
-+	unsigned long nr;
-+
 +	if (!IS_ENABLED(CONFIG_X86_BROADCAST_TLB_FLUSH))
 +		return false;
 +
 +	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
 +		return false;
 +
-+	if (info->end == TLB_FLUSH_ALL) {
-+		invlpgb_flush_all();
-+		return true;
-+	}
-+
-+	for (addr = info->start; addr < info->end; addr += nr << PAGE_SHIFT) {
-+		nr = min((info->end - addr) >> PAGE_SHIFT, invlpgb_count_max);
-+		invlpgb_flush_addr_nosync(addr, nr);
-+	}
-+	tlbsync();
++	guard(preempt)();
++	invlpgb_flush_all();
 +	return true;
 +}
 +
- static void do_kernel_range_flush(void *info)
+ static void do_flush_tlb_all(void *info)
  {
- 	struct flush_tlb_info *f = info;
-@@ -1105,7 +1129,9 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
- 	info = get_flush_tlb_info(NULL, start, end, PAGE_SHIFT, false,
- 				  TLB_GENERATION_INVALID);
+ 	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH_RECEIVED);
+@@ -1082,6 +1095,8 @@ static void do_flush_tlb_all(void *info)
  
--	if (info->end == TLB_FLUSH_ALL)
-+	if (broadcast_kernel_range_flush(info))
-+		; /* Fall through. */
-+	else if (info->end == TLB_FLUSH_ALL)
- 		on_each_cpu(do_flush_tlb_all, NULL, 1);
- 	else
- 		on_each_cpu(do_kernel_range_flush, info, 1);
+ void flush_tlb_all(void)
+ {
++	if (broadcast_flush_tlb_all())
++		return;
+ 	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH);
+ 	on_each_cpu(do_flush_tlb_all, NULL, 1);
+ }
 -- 
 2.47.1
 
