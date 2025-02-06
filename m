@@ -1,88 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D76D1E5B7C;
-	Thu,  6 Feb 2025 14:51:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F49D13BADF;
+	Thu,  6 Feb 2025 14:51:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738853498; cv=none; b=UYwkTqLmXWvBo0O1iZAOwltIYiPZIMUZduSzQAOGA5Nmynbqq5tw3aMkj0RmVSOb/MBLyjc8YSwgsvof8aq6kHoEvZaF60C7TMXzqj2R+KCCv3lAB6+eYPMXuQ33HUB++VFBD0aRtBzzpoMll3uZNkGrNVOQRQ6lR3GrlyNrogQ=
+	t=1738853511; cv=none; b=g07Oid0xFmEIRvc24KHU17itS1mkNMAwtm6uPvxwdXt93qYXx1tXgZZq5EUluYXTmiVS+RaU4n2VKF2PLxGV4mh3n7oeTsMXX0C4s74Wjh30L+778YkFHLs3yfN6P2tATSp4U5DSMJMKbttroKcM84QjnjTp9gvgBRmDGmCdOSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738853498; c=relaxed/simple;
-	bh=X+x9iyoHGF6Lvhht2aFT4YH89HuQZZS/7/lffm80aPM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=YNUhXzMMxqGoI0+nTRsTUV78nkzn9CyZ3VhOMV+yboPYZ4uWpgidcs4id1fv9MirV51roRUHg/46S8/PMwTO7VoXXxDpOU18D9sEq/OHTRQlEI4P1JoTZ+iSrTGXWwbZp/CEoHWtBH6TNksAcNwQFhhjClRN3NYAir3S4vruizo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NQfSr8u9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738853511; c=relaxed/simple;
+	bh=fMj8Mk7m+/sOohY6VfoATzz94KYI2Kpefe1/ceI/S8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rXY94ONjih3uVVaYMRQLhYe1xiHyXBhUDnmRKMNTXEYLD7yC8B70SEj3rOSQsm94kJ0cc1vtp6zxWZY+LGi5CnMrxGhGIz//222PIImPt+zUeArmbVFM++QCv4/d8+LVHM7spDAg8iYZfmSXthoWeUT6YYDT8u75dI+8P8Zsy6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=R/bNzBO7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NQfSr8u9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2134C4CEDD;
-	Thu,  6 Feb 2025 14:51:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738853497;
-	bh=X+x9iyoHGF6Lvhht2aFT4YH89HuQZZS/7/lffm80aPM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=NQfSr8u9zdCrkE0tS70Yun61gY6rHe/MeoAP8jfHK+ydox4grkkxaGL/lniQVTl7e
-	 xxUCjrQqQ/6rWtGO38J8pgpANyAhEuMm2xqJ/f5r5kpDuVMBunDtOHgs51wYSD0084
-	 QRO4OUfR1uPvIj3gUdKSrVKh+uatqjTwAEW9Aqv+7gjjydLwiAYdv8NY2fa49PoRV3
-	 0vaczqmNJuA24iCv6LugNPQUaTbC7xMa7tQanrBbL5Gqua537ATp8Tk7Ki0bQcmi9r
-	 Odz/i+a4bCg82xIdcwn75Zu2FlXPSQhdPUPkE+3vN4aqeFQArOzbuajoFNRW9/xo1b
-	 KmB4zLCKjg9XQ==
-From: Mark Brown <broonie@kernel.org>
-To: Stefan Binding <sbinding@opensource.cirrus.com>
-Cc: =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- patches@opensource.cirrus.com
-In-Reply-To: <20250205164806.414020-1-sbinding@opensource.cirrus.com>
-References: <20250205164806.414020-1-sbinding@opensource.cirrus.com>
-Subject: Re: [PATCH v1] ASoC: cs35l41: Fallback to using HID for
- system_name if no SUB is available
-Message-Id: <173885349645.198179.1975399790365419548.b4-ty@kernel.org>
-Date: Thu, 06 Feb 2025 14:51:36 +0000
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="R/bNzBO7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EB63C4CEDD;
+	Thu,  6 Feb 2025 14:51:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738853511;
+	bh=fMj8Mk7m+/sOohY6VfoATzz94KYI2Kpefe1/ceI/S8Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R/bNzBO7JxuqvpLv0EHCr1ZG+kFk8HBOobm7zslzz6r343f2ZFFmAeBH3I85ZxS30
+	 +yrRCowGSTA9GR764E0ct3SslVvjmY8sICsKNbC72ca0h//veqWVCpjCkmM1fN1QyJ
+	 o84onU6JrleqTyISxP4mVLxLoFhQd0fj4Jn/BDI4=
+Date: Thu, 6 Feb 2025 15:51:48 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: =?utf-8?Q?=C5=81ukasz?= Bartosik <ukaszb@chromium.org>,
+	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+	Benson Leung <bleung@chromium.org>,
+	Pavan Holla <pholla@chromium.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	"Christian A. Ehrhardt" <lk@c--e.de>,
+	Jameson Thies <jthies@google.com>,
+	"Katiyar, Pooja" <pooja.katiyar@intel.com>,
+	"Pathak, Asutosh" <asutosh.pathak@intel.com>,
+	"Jayaraman, Venkat" <venkat.jayaraman@intel.com>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] usb: typec: ucsi: Command mailbox interface for
+ the userspace
+Message-ID: <2025020643-federal-uneatable-5da4@gregkh>
+References: <20250206141936.1117222-1-heikki.krogerus@linux.intel.com>
+ <20250206141936.1117222-2-heikki.krogerus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206141936.1117222-2-heikki.krogerus@linux.intel.com>
 
-On Wed, 05 Feb 2025 16:48:04 +0000, Stefan Binding wrote:
-> For systems which load firmware on the cs35l41 which use ACPI, the
-> _SUB value is used to differentiate firmware and tuning files for the
-> individual systems. In the case where a system does not have a _SUB
-> defined in ACPI node for cs35l41, there needs to be a fallback to
-> allow the files for that system to be differentiated. Since all
-> ACPI nodes for cs35l41 should have a HID defined, the HID should be a
-> safe option.
+On Thu, Feb 06, 2025 at 04:19:31PM +0200, Heikki Krogerus wrote:
+> Some of the UCSI commands can be used to configure the
+> entire Platform Policy Manager (PPM) instead of just
+> individual connectors. To allow the user space communicate
+> those commands with the PPM, adding a mailbox interface. The
+> interface is a single attribute file that represents the
+> main "OPM to PPM" UCSI data structure.
 > 
-> [...]
+> The mailbox allows any UCSI command to be sent to the PPM so
+> it should be also useful for validation, testing and
+> debugging purposes.
 
-Applied to
+As it's for this type of thing, why not put it in debugfs instead?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> +static ssize_t ucsi_write(struct file *filp, struct kobject *kobj,
+> +			  const struct bin_attribute *attr,
+> +			  char *buf, loff_t off, size_t count)
+> +{
+> +	struct ucsi_sysfs *sysfs = attr->private;
+> +	struct ucsi *ucsi = sysfs->ucsi;
+> +	int ret;
+> +
+> +	u64 *control = (u64 *)&sysfs->mailbox[UCSI_CONTROL];
+> +	u32 *cci = (u32 *)&sysfs->mailbox[UCSI_CCI];
+> +	void *data = &sysfs->mailbox[UCSI_MESSAGE_IN];
+> +
+> +	/* TODO: MESSAGE_OUT. */
+> +	if (off != UCSI_CONTROL || count != sizeof(*control))
+> +		return -EFAULT;
+> +
+> +	mutex_lock(&sysfs->lock);
+> +
+> +	memset(data, 0, UCSI_MAX_DATA_LENGTH(ucsi));
+> +
+> +	/* PPM_RESET has to be handled separately. */
+> +	*control = get_unaligned_le64(buf);
+> +	if (UCSI_COMMAND(*control) == UCSI_PPM_RESET) {
+> +		ret = ucsi_reset_ppm(ucsi, cci);
+> +		goto out_unlock_sysfs;
+> +	}
+> +
+> +	mutex_lock(&ucsi->ppm_lock);
+> +
+> +	ret = ucsi->ops->sync_control(ucsi, *control, cci, NULL, 0);
+> +	if (ret)
+> +		goto out_unlock_ppm;
+> +
+> +	if (UCSI_CCI_LENGTH(*cci) && ucsi->ops->read_message_in(ucsi, data, UCSI_CCI_LENGTH(*cci)))
+> +		dev_err(ucsi->dev, "failed to read MESSAGE_IN\n");
+> +
+> +	ret = ucsi->ops->sync_control(ucsi, UCSI_ACK_CC_CI | UCSI_ACK_COMMAND_COMPLETE,
+> +				      NULL, NULL, 0);
+> +out_unlock_ppm:
+> +	mutex_unlock(&ucsi->ppm_lock);
+> +out_unlock_sysfs:
+> +	mutex_unlock(&sysfs->lock);
+> +
+> +	return ret ?: count;
+> +}
 
-Thanks!
+This worries me, any userspace tool can now do this?  What other "bad"
+things can it to the connection?
 
-[1/1] ASoC: cs35l41: Fallback to using HID for system_name if no SUB is available
-      commit: 1d44a30ae3f9195cb4eb7d81bb9ced2776232094
+> +
+> +int ucsi_sysfs_register(struct ucsi *ucsi)
+> +{
+> +	struct ucsi_sysfs *sysfs;
+> +	int ret;
+> +
+> +	sysfs = kzalloc(struct_size(sysfs, mailbox, UCSI_MAILBOX_SIZE(ucsi)), GFP_KERNEL);
+> +	if (!sysfs)
+> +		return -ENOMEM;
+> +
+> +	sysfs->ucsi = ucsi;
+> +	mutex_init(&sysfs->lock);
+> +	memcpy(sysfs->mailbox, &ucsi->version, sizeof(ucsi->version));
+> +
+> +	sysfs_bin_attr_init(&sysfs->bin_attr);
+> +
+> +	sysfs->bin_attr.attr.name = "ucsi";
+> +	sysfs->bin_attr.attr.mode = 0644;
+> +
+> +	sysfs->bin_attr.size = UCSI_MAILBOX_SIZE(ucsi);
+> +	sysfs->bin_attr.private = sysfs;
+> +	sysfs->bin_attr.read_new = ucsi_read;
+> +	sysfs->bin_attr.write_new = ucsi_write;
+> +
+> +	ret = sysfs_create_bin_file(&ucsi->dev->kobj, &sysfs->bin_attr);
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+You raced with userspace and lost, right?  Why are you dynamically
+creating this attribute, can't you just use a static one?
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+But again, why not debugfs?  I'd feel a lot more comfortable with that
+instead of sysfs.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+thanks,
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+greg k-h
 
-Thanks,
-Mark
 
