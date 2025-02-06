@@ -1,107 +1,143 @@
-Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42F01FC0A;
-	Thu,  6 Feb 2025 07:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.248.49.38
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7057145B3E;
+	Thu,  6 Feb 2025 07:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738825550; cv=none; b=p3vGj0hJZ+Ov8xY8DJ+fYdBccKc6qpZqtNKbgYKzUysl9QftbBtmi9dEPqoSL+MTxplFd6l18n/7lcR/Ou/f50EV7DO1gPk5IJyUDwfYJB1vs+GZ9uoq5goL/gB5j1DO8PPoPgKZwVeg6GHQianiGmIs/SL8kX/aK/xtoyAzaiY=
+	t=1738825623; cv=none; b=aR6lgaKw6aK6UfpVFN5JII0R8lo3ESDfXho+cMAwmd5e1X8Qt1sobn02LxGcPapMCZHMRZszvjDMYXfTID+hdBcOSUoJ87du4jkk5zxZvS+yYheybmVdI7PrRyM8RS9bx2Lpyt7FFQbPbOA2tRxrKOLiKLozQgLOCL9T7olouTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738825550; c=relaxed/simple;
-	bh=8+jUVZiYKGnZrclx7DOOFWR+vHgGDmVWRoQmfd56CBo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ANi2CbXhCpcVzDUDlQ61j98MllJGuOs7Eub1VKMtG+j37mMDgZ+bD+8+40HlZRJJ7vKbeY8OAnk7ERaCeK2aSGeoVAq1NQiEli/qnIMztn7isRj8Jscxy/Ms197JLJZiM6LpZJ1NVvcrWnGL5UbLCZ9ekKVjguWBNXuzjwCILe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com; spf=pass smtp.mailfrom=socionext.com; arc=none smtp.client-ip=202.248.49.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=socionext.com
-Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 06 Feb 2025 16:05:41 +0900
-Received: from mail.mfilter.local (mail-arc02.css.socionext.com [10.213.46.40])
-	by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 139D8200705C;
-	Thu,  6 Feb 2025 16:05:41 +0900 (JST)
-Received: from iyokan2.css.socionext.com ([172.31.9.53]) by m-FILTER with ESMTP; Thu, 6 Feb 2025 16:05:41 +0900
-Received: from [192.168.1.141] (unknown [10.213.44.71])
-	by iyokan2.css.socionext.com (Postfix) with ESMTP id 14A9CAB188;
-	Thu,  6 Feb 2025 16:05:40 +0900 (JST)
-Message-ID: <ac319cf8-5501-40f2-bf23-fc04a91d4f1f@socionext.com>
-Date: Thu, 6 Feb 2025 16:05:39 +0900
+	s=arc-20240116; t=1738825623; c=relaxed/simple;
+	bh=4s/rd6ox4/7YQRDgSwO2fPO7qLeAZL+viGcf5t53deQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CJWGwbEWa1sxacgCYMveKiCNz9xbu3kmGz5IF2Du2J75m5/dJewY9cDUB+fV0lCfTRTl5Mjlz0qCuVuWs+Eyy+IopcoAU+Zx9hArdAGNreac3JcPDilRWVDfIsY4UGnyaNgJIiI39kEYrGnTx9Vi/f/HKYT3UzsoCe6x9uvlRYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KmdDjhgS; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KmdDjhgS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738825621; x=1770361621;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4s/rd6ox4/7YQRDgSwO2fPO7qLeAZL+viGcf5t53deQ=;
+  b=KmdDjhgSLdE2AqpmlwKIpYDdGv309Q2UM3CpzcanJTt2YNKC2urcAGpP
+   i4PFN7+KpE9yONaLaC2U56i/3lg87xT4jOfZuQrER8gwZq+HdHHMEjUA+
+   fKrWsKXFJV7o9GgY4zdYZnJyGPJgqM5KSCGTCNqa2R3PRXHhvEc4/Rky/
+   hMJHizYz6tfZR/Tc28chQ9qtOKB4IQG0EmmHChKg2gmT6d6kHAoqU0WVv
+   B+wZAwAxWzZBNfJn9LVVSmzkmpLtp4kwr5m2GB9KneeOc28jHmg8UH/A4
+   BDYT8T5VHOoO5m6Cs7+lrSzH9QBZBRXP55Rb/7n6E0SsLGwFhSVFWg6HF
+   g==;
+X-CSE-ConnectionGUID: HF9xww6BQQmgu0wPNz5s/Q==
+X-CSE-MsgGUID: DdR73e9vR5y/0gYByR15Sg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="50840507"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="50840507"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 23:07:01 -0800
+X-CSE-ConnectionGUID: Ek0RWKdIQEqcK8J84mFO1A==
+X-CSE-MsgGUID: GeKq7cOFTQOPH6MIsu9jTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
+   d="scan'208";a="116160577"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa004.fm.intel.com with ESMTP; 05 Feb 2025 23:06:58 -0800
+Date: Thu, 6 Feb 2025 15:06:05 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Mahesh Rao <mahesh.rao@intel.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Wu Hao <hao.wu@intel.com>, Ho Yin <adrian.ho.yin.ng@altera.com>,
+	Niravkumar L Rabara <nirav.rabara@altera.com>,
+	linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Mahesh Rao <mahesh.rao@altera.com>
+Subject: Re: [PATCH v3 3/3] firmware: stratix10-svc: Add
+ of_platform_default_populate()
+Message-ID: <Z6RfXSzMEVPlZAj6@yilunxu-OptiPlex-7050>
+References: <20250204-socfpga_sip_svc_misc-v3-0-697f7f153cfa@intel.com>
+ <20250204-socfpga_sip_svc_misc-v3-3-697f7f153cfa@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: stmmac: Allow zero for [tr]x_fifo_size
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Yanteng Si <si.yanteng@linux.dev>
-Cc: Jakub Kicinski <kuba@kernel.org>, Steven Price <steven.price@arm.com>,
- "David S. Miller" <davem@davemloft.net>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Jose Abreu <joabreu@synopsys.com>, Paolo Abeni <pabeni@redhat.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com, netdev@vger.kernel.org,
- Furong Xu <0x1207@gmail.com>, Petr Tesarik <petr@tesarici.cz>,
- Serge Semin <fancer.lancer@gmail.com>, Xi Ruoyao <xry111@xry111.site>
-References: <20250203093419.25804-1-steven.price@arm.com>
- <Z6CckJtOo-vMrGWy@shell.armlinux.org.uk>
- <811ea27c-c1c3-454a-b3d9-fa4cd6d57e44@arm.com>
- <Z6Clkh44QgdNJu_O@shell.armlinux.org.uk> <20250203142342.145af901@kernel.org>
- <f728a006-e588-4eab-b667-b1ff7dfd66c5@linux.dev>
- <Z6N4J-_C3lq5a_VQ@shell.armlinux.org.uk>
-Content-Language: en-US
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-In-Reply-To: <Z6N4J-_C3lq5a_VQ@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204-socfpga_sip_svc_misc-v3-3-697f7f153cfa@intel.com>
 
-Hi Russell,
-
-On 2025/02/05 23:39, Russell King (Oracle) wrote:
-> On Wed, Feb 05, 2025 at 10:22:00PM +0800, Yanteng Si wrote:
->>
->> 在 2/4/25 06:23, Jakub Kicinski 写道:
->>> On Mon, 3 Feb 2025 11:16:34 +0000 Russell King (Oracle) wrote:
->>>>> I've no opinion whether the original series "had value" - I'm just
->>>>> trying to fix the breakage that entailed. My first attempt at a
->>>>> patch
->>>>> was indeed a (partial) revert, but Andrew was keen to find a better
->>>>> solution[1].
->>>> There are two ways to fix the breakage - either revert the original
->>>> patches (which if they have little value now would be the sensible
->>>> approach IMHO)
->>> +1, I also vote revert FWIW
->>
->> +1, same here.
->>
->>
->> For a driver that runs on so much hardware, we need to act
->>
->> cautiously. A crucial prerequisite is that code changes must
->>
->> never cause some hardware to malfunction. I was too simplistic
->>
->> in my thinking when reviewing this before, and I sincerely
->>
->> apologize for that.
->>
->>
->> Steven, thank you for your tests, Let's revert it.
+On Tue, Feb 04, 2025 at 08:58:07PM +0800, Mahesh Rao wrote:
+> Add of_platform_default_populate() to stratix10-svc
+> driver as the firmware/svc node was moved out of soc.
+> This fixes the failed probing of child drivers of
+> svc node.
 > 
-> https://lore.kernel.org/r/E1tfeyR-003YGJ-Gb@rmk-PC.armlinux.org.uk
+> Fixes: 23c3ebed382a ("arm64: dts: socfpga: agilex: move firmware out of soc node")
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Mahesh Rao <mahesh.rao@intel.com>
+> ---
+>  drivers/firmware/stratix10-svc.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
+> index 3c52cb73237a43aac6984e497d75bab389e3eb9d..e3f990d888d71829f0ab22b8a59aa7af0316bea0 100644
+> --- a/drivers/firmware/stratix10-svc.c
+> +++ b/drivers/firmware/stratix10-svc.c
+> @@ -1224,22 +1224,28 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
+>  	if (!svc->intel_svc_fcs) {
+>  		dev_err(dev, "failed to allocate %s device\n", INTEL_FCS);
+>  		ret = -ENOMEM;
+> -		goto err_unregister_dev;
+> +		goto err_unregister_rsu_dev;
+>  	}
+>  
+>  	ret = platform_device_add(svc->intel_svc_fcs);
+>  	if (ret) {
+>  		platform_device_put(svc->intel_svc_fcs);
+> -		goto err_unregister_dev;
+> +		goto err_unregister_rsu_dev;
+>  	}
+>  
+> +	ret = of_platform_default_populate(dev_of_node(dev), NULL, dev);
 
-I'm sorry to bother you. Thanks for posting revert.
+I checked of_platform_populate/of_platform_bus_create() and see these
+functions will not error out if some sub device registration fails. So
+LGTM.
 
-There are variations in the capabilities that the hardware has, and more
-hardware needs to be verified to show that they work correctly, so it had
-to be handled carefully. Reports that the change patch "worked" or
-"didn't work" on any hardware are helpful.
+Reviewed-by: Xu Yilun <yilun.xu@intel.com>
 
-I apologize that posting this change to "-net" was inappropriate
-because I added a completely new feature.
-
-Thank you,
-
----
-Best Regards
-Kunihiko Hayashi
+> +	if (ret)
+> +		goto err_unregister_fcs_dev;
+> +
+>  	dev_set_drvdata(dev, svc);
+>  
+>  	pr_info("Intel Service Layer Driver Initialized\n");
+>  
+>  	return 0;
+>  
+> -err_unregister_dev:
+> +err_unregister_fcs_dev:
+> +	platform_device_unregister(svc->intel_svc_fcs);
+> +err_unregister_rsu_dev:
+>  	platform_device_unregister(svc->stratix10_svc_rsu);
+>  err_free_kfifo:
+>  	kfifo_free(&controller->svc_fifo);
+> @@ -1253,6 +1259,8 @@ static void stratix10_svc_drv_remove(struct platform_device *pdev)
+>  	struct stratix10_svc *svc = dev_get_drvdata(&pdev->dev);
+>  	struct stratix10_svc_controller *ctrl = platform_get_drvdata(pdev);
+>  
+> +	of_platform_depopulate(ctrl->dev);
+> +
+>  	platform_device_unregister(svc->intel_svc_fcs);
+>  	platform_device_unregister(svc->stratix10_svc_rsu);
+>  
+> 
+> -- 
+> 2.35.3
+> 
+> 
