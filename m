@@ -1,193 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1302042AB4;
-	Thu,  6 Feb 2025 04:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BDE42AB4;
+	Thu,  6 Feb 2025 04:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738815381; cv=none; b=XgckqGbu5r8XErmUIeT1o5uHDa/fjhkYX2LUJ5x4+PuTv/Y004nEQXky7UaYUPYn8cDQSJW2xyxI7v9UkLhHTTsGl33+9doPG1EN944XLaprrP3ZQoyJuReVR6O72lnn2bbzQbprpyY4HYRhy8BmdWqtDwwngcuty4XQyLqCNaM=
+	t=1738815438; cv=none; b=f44Pffde+UBLjwq5/YrnMo4kgXhndPkMChrczRTcBDUSS6QX2W2oIN/psGWhoNIDe9xL/DsPWcCls9GUz2Qaxz+7PtVc1sKkuhex+D3x8Efxw13i3bom55Z574sIr1xaeICnDMmTkYN4Ww16nucmGf6qn6WghguiH3W24Zn/zxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738815381; c=relaxed/simple;
-	bh=4s3sILqFlowuVPjG6GdU0he0O6BERybC1R9EnR07xaU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tlArfX/Mp5fdV9eKmy6j2YKlpoijI+HCW6tG7/k6iF7ywg9giGPd1FhslRhOMSC3J7M9H9oFoncftXZxjlCUgiV8dOt9J7wuz5J3QHbDbMvslG/PqyF6XBWf6wmiDtkLVjXjQ5ffzm1hZrQEa3WG0a+9ki/ybuX5IS2XNZgEFAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RQqFdbdN; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738815438; c=relaxed/simple;
+	bh=HCq5b0fDR0TmfBCtLQJgUTCL8Se2exjE7cI0z7FCH5Q=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=fC+WEOeW+OyW3f5l2kRBkcj2+r2hJTXlXlb8vKFXQK1ykq88FW2tXwx+AOwXeART77AoKDgC56wmxG9Du6zKRZUpC5Z4qWSyHOwUdVOmAKN4I9b9r0L7F8Bmo1OwHdBFtx+7d4EdVAXinFiewB2aB5BS6OuMw2mqensRmyx16vM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O2Q/Gl6h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RQqFdbdN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738815381; x=1770351381;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4s3sILqFlowuVPjG6GdU0he0O6BERybC1R9EnR07xaU=;
-  b=RQqFdbdNMB7m1+wQNkea1yXXotl9nbLdND28ueJNY0Q/NXd6Yjq0Laj8
-   SmAzw+c4bFoduM6rdhEjvoJHlys3cw1iZNh3vrW6X4axGiUHlGpDtSEOI
-   mIq1dCwelPneHtr/azzMrWwYbZW+foh4cDKd74MLYHf9xP4es6KtF97Bf
-   nSBR0qgsZ5Rin4+48nb8qpeR0Xdg9SkUde1+DtqPokiKiqbGxlB10oaJ6
-   6g9BX6iPMEB8PCOom0g2fHS6k3MPiJIIhz3mDu0/BCzsdPRu8lIA1C5IT
-   aC72J6HtNU67VRzisz87MktqDUkA8K+XTf3CkGvjdPvcnpd9p0TzhAUTu
-   Q==;
-X-CSE-ConnectionGUID: P9kDzEzuSFOJcsUj0TSbow==
-X-CSE-MsgGUID: s5IrIscGQc25W9OcNapXbw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="49649784"
-X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
-   d="scan'208";a="49649784"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 20:16:19 -0800
-X-CSE-ConnectionGUID: GswcwIFiTOGXiY3G6tEpAA==
-X-CSE-MsgGUID: OLfJOYpMQ82w452uAM9kTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="148292679"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa001.jf.intel.com with ESMTP; 05 Feb 2025 20:16:15 -0800
-Date: Thu, 6 Feb 2025 12:15:23 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Yidong Zhang <yidong.zhang@amd.com>
-Cc: linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org,
-	mdf@kernel.org, hao.wu@intel.com, yilun.xu@intel.com,
-	lizhi.hou@amd.com, DMG Karthik <Karthik.DMG@amd.com>,
-	Nishad Saraf <nishads@amd.com>,
-	Prapul Krishnamurthy <prapulk@amd.com>,
-	Hayden Laccabue <hayden.laccabue@amd.com>
-Subject: Re: [PATCH V2 1/4] drivers/fpga/amd: Add new driver amd versal-pci
-Message-ID: <Z6Q3W2mUw/ZbtnWV@yilunxu-OptiPlex-7050>
-References: <20241210183734.30803-1-yidong.zhang@amd.com>
- <20241210183734.30803-2-yidong.zhang@amd.com>
- <Z5YPWHVmL29zuQNm@yilunxu-OptiPlex-7050>
- <3b520bab-d948-470a-b06f-5494243ebc1a@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O2Q/Gl6h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEBAFC4CEDD;
+	Thu,  6 Feb 2025 04:17:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738815436;
+	bh=HCq5b0fDR0TmfBCtLQJgUTCL8Se2exjE7cI0z7FCH5Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=O2Q/Gl6hBJbueVxCp+5BLPjn4hq/5oezqB0gdyWfqNFZFlKahL8sBCNM/DRKN0ITL
+	 LKi17iHZerhO9d0FbdcGSjWdW/5rKBPBriWbIA9IId47+B8P/I21oVfeoASVuNSAsG
+	 qhRFZqsSTqhpna2GxT6mWrP6StQma8VmaEfPLN/aZ3JQKhknvVANYGvtfq9ux/ufO1
+	 6P58hXcVosIsRgSMX2IMkOg2cFm3EL4JARUwuy67H1T8cNBXt71YRn6K7qqBQFCMOs
+	 LzhVRx2dzwBdDVpgzw7Y5But3K6l9JIkbrwMkQLLuEZlpFbAvDyJggpOKDftpGnjig
+	 mWTlBT6mRt9qQ==
+Date: Thu, 6 Feb 2025 13:17:11 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Haiyue Wang <haiyuewa@163.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
+ linux-trace-kernel@vger.kernel.org, samitolvanen@google.com, Mark Rutland
+ <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ "open list:FUNCTION HOOKS (FTRACE)" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] ftrace: Fix compile error when CONFIG_GENDWARFKSYMS
+ is enabled
+Message-Id: <20250206131711.ea536f165d5b5980b3909acd@kernel.org>
+In-Reply-To: <767d054d-1d00-40bb-b8c7-0e990b1578b9@163.com>
+References: <20250205180116.88644-1-haiyuewa@163.com>
+	<20250206093853.4e55405ccfcba7111705f395@kernel.org>
+	<20250205195300.42d3e3b0@gandalf.local.home>
+	<20250206114529.d2483df2c9d09726f1f3a43d@kernel.org>
+	<767d054d-1d00-40bb-b8c7-0e990b1578b9@163.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3b520bab-d948-470a-b06f-5494243ebc1a@amd.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jan 26, 2025 at 11:46:54AM -0800, Yidong Zhang wrote:
+On Thu, 6 Feb 2025 11:23:02 +0800
+Haiyue Wang <haiyuewa@163.com> wrote:
+
 > 
 > 
-> On 1/26/25 02:32, Xu Yilun wrote:
-> > Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> On 2025/2/6 10:45, Masami Hiramatsu (Google) wrote:
+> > On Wed, 5 Feb 2025 19:53:00 -0500
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
 > > 
+> >> On Thu, 6 Feb 2025 09:38:53 +0900
+> >> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> >>
+> >>> Thanks for the fix. And this fixes one of problems.
+> >>> Another one is that `is_endbr()` is defined in <asm/ibt.h> but that also depend
+> >>> on CONFIG_HAVE_FENTRY.
+> >>>
+> >>> Let's pick this and fix above issue.
+> >>
+> >> OK, I'll pull this into my urgent tree and start testing it.
 > > 
-> > On Tue, Dec 10, 2024 at 10:37:30AM -0800, Yidong Zhang wrote:
-> > > AMD Versal based PCIe card, including V70, is designed for AI inference
-> > > efficiency and is tuned for video analytics and natural language processing
-> > > applications.
-> > > 
-> > > The driver architecture:
-> > > 
-> > >    +---------+  Communication +---------+  Remote  +-----+------+
-> > >    |         |  Channel       |         |  Queue   |     |      |
-> > >    | User PF | <============> | Mgmt PF | <=======>| FW  | FPGA |
-> > >    +---------+                +---------+          +-----+------+
-> > >      PL Data                    base FW
-> > >                                 APU FW
-> > >                                 PL Data (copy)
-> > >   - PL (FPGA Program Logic)
-> > >   - FW (Firmware)
-> > > 
-> > > There are 2 separate drivers from the original XRT[1] design.
-> > >   - UserPF driver
-> > >   - MgmtPF driver
-> > > 
-> > > The new AMD versal-pci driver will replace the MgmtPF driver for Versal
-> > > PCIe card.
-> > > 
-> > > The XRT[1] is already open-sourced. It includes solution of runtime for
-> > > many different type of PCIe Based cards. It also provides utilities for
-> > > managing and programming the devices.
-> > > 
-> > > The AMD versal-pci stands for AMD Versal brand PCIe device management
-> > > driver. This driver provides the following functionalities:
-> > > 
-> > >     - module and PCI device initialization
-> > >       this driver will attach to specific device id of V70 card;
-> > >       the driver will initialize itself based on bar resources for
-> > >       - communication channel:
-> > >         a hardware message service between mgmt PF and user PF
-> > >       - remote queue:
-> > >         a hardware queue based ring buffer service between mgmt PF and PCIe
-> > >         hardware firmware for programming FPGA Program Logic, loading
-> > >         firmware and checking card healthy status.
-> > > 
-> > >     - programming FW
-> > >       - The base FW is downloaded onto the flash of the card.
-> > >       - The APU FW is downloaded once after a POR (power on reset).
-> > >       - Reloading the MgmtPF driver will not change any existing hardware.
-> > > 
-> > >     - programming FPGA hardware binaries - PL Data
-> > >      - using fpga framework ops to support re-programing FPGA
-> > >      - the re-programming request will be initiated from the existing UserPF
-> > >        driver only, and the MgmtPF driver load the matched PL Data after
-> > >        receiving request from the communication channel. The matching PL
+> > Sorry, Gabriel found another issue.
+> > Let me fix this instead of this patch.
 > > 
-> > I think this is not the way the FPGA generic framework should do. A FPGA
-> > region user (your userPF driver) should not also be the reprogram requester.
-> > The user driver cannot deal with the unexpected HW change if it happens.
-> > Maybe after reprogramming, the user driver cannot match the device
-> > anymore, and if user driver is still working on it, crash.
-> 
-> One thing to clarify. The current design is:
-> 
-> The userPF driver is the only requester. The mgmtPF has no uAPI to reprogram
-> the FPGA.
-> 
-> 
-> > 
-> > The expected behavior is, the FPGA region removes user devices (thus
-> > detaches user drivers), does reprogramming, re-enumerates/rescans and
-> > matches new devices with new drivers. And I think that's what Nava is
-> > working on.
+> > https://lore.kernel.org/all/CAFEugPfFykYsHqS-J36CNWDn+d34bSQg-e5hJ=AaJPC8=6Ej-g@mail.gmail.com/
 > > 
 > 
-> Nava's work is different than our current design, our current design is:
+> If I put the fix above '#ifndef __ASSEMBLY__', then I can reproduce 
+> Gabriel's founding:
 > 
-> the separate userPF driver will detach all services before requesting to the
-> mgmtPF to program the FPGA, and after the programming is done, the userPF
-> will re-enumerate/rescan the matching new devices.
 
-That's not align with the Device-Driver Model, A device driver should not
-re-enumerate/rescan a matching device.
+Yeah, thanks. Anyway, I would not like introduce header file dependency
+too much, especially header files under asm.
+Please check below my fix;
 
-> 
-> The mgmtPF is a util driver which is responsible for communicating with the
-> mgmtPF PCIe bar resources.
-> 
-> 
-> > BTW, AFAICS the expected flow is easier to implement for of-fpga-region,
-> > but harder for PCI devices. But I think that's the right direction and
-> > should try to work it out.
-> 
-> Could I recap the suggested design if I understand that correctly...
-> 
-> You are thinking that the mgmtPF (aka. versal-pci) driver should have a uAPI
+https://lore.kernel.org/all/173881156244.211648.1242168038709680511.stgit@devnote2/
 
-This should be the unified fpga-region class uAPI.
+Thank you,
 
-> to trigger the FPGA re-programing; and using Nava's callback ops to detach
-> the separate userPF driver; after re-programing is done, re-attch the userPF
-
-No need to detach a specific driver, remove all devices in the
-fpga-region. I imagine this could also be a generic flow for all PCI/e
-based FPGA cards.
-
-Thanks,
-Yilun
-
-> driver and allow the userPF driver re-enumerate all to match the new
-> hardware.
+> +#ifdef CONFIG_X86_KERNEL_IBT
+> +#include <linux/uaccess.h>
+> +#endif
+> +
+>   #ifndef __ASSEMBLY__
 > 
-> I think my understanding is correct, it is doable.
 > 
-> As long as we can keep our userPF driver as separate driver, the code change
-> won't be too big.
+> In file included from ./include/linux/kcsan-checks.h:13,
+>                   from ./include/linux/instrumented.h:12,
+>                   from ./include/linux/uaccess.h:6,
+>                   from ./arch/x86/include/asm/ftrace.h:26,
+>                   from arch/x86/kernel/ftrace_64.S:11:
+> ./include/linux/compiler_attributes.h:91:20: error: missing binary 
+> operator before token "("
+>     91 | #if __has_attribute(__copy__)
+>        |                    ^
+> ./include/linux/compiler_attributes.h:103:20: error: missing binary 
+> operator before token "("
+>    103 | #if __has_attribute(__diagnose_as_builtin__)
+>        |                    ^
+> ./include/linux/compiler_attributes.h:126:20: error: missing binary 
+> operator before token "("
+>    126 | #if __has_attribute(__designated_init__)
+>        |                    ^
+> ./include/linux/compiler_attributes.h:137:20: error: missing binary 
+> operator before token "("
+>    137 | #if __has_attribute(__error__)
+>        |                    ^
 > 
+> 
+> >>
+> >> -- Steve
 > > 
-> > Thanks,
-> > Yilun
+> > 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
