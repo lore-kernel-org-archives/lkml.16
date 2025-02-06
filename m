@@ -1,62 +1,62 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1911422E412
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC48622FE04
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 13:13:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738847596; cv=none; b=mS6Z8PqAXtwCellUu/sJnT4UEjOYMawp4XHA1pJUd6BPKOhopBoWgUUsC0G8BLGvSDj3qeaggSBqQQBqRZoZZUdn713VHNeDWFFrDPy3lmLmZepIgPTdGQANi9Fib/ex4cV0fT3gh2C0F0SHo5WmFWyppZDF3nCSjDGus0tIkr0=
+	t=1738847599; cv=none; b=bO27LSyTcujVmdVNOEUorc/0oLKvpc1CHKzkTJICfICR17Fgpj5PnbUG5/9Dsr1SteUc84jvgz8xnPKulbOt+bjlCoKaSaEDnLzRLkoFPHJ6OXhfEl14Dzn1r8QXzN9JdS9SIVLgdAt2+RhIZRNc+zxa3kocKCnmY7Z0Tr2N+mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738847596; c=relaxed/simple;
-	bh=K9HkvI4uN9Uo+e9aX/9cHbyPDpUHNNB4CZUEDwOkD+Q=;
+	s=arc-20240116; t=1738847599; c=relaxed/simple;
+	bh=jK8NJOHWZm36URhFMWSvMnun3oLcAHypEDPr90IqvEw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YUg5NoxnfFWI5UHtCMRB1UB+sfeR50Ro4LBLkT35JNWfJ+tSkmymtXS71F5GSV9dLcBgBQ+QVxGl2anfFTEH2/buXoAxSx/Bucv8W5j1glcJ/Kl3NloOF6sFYplpHYjTvhhw488cwLCJ0OXd1dlP2eG5Juw1sz54CFvJ2ce+eSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=DgpG9RED; arc=none smtp.client-ip=209.85.214.174
+	 MIME-Version; b=M55OgaTY7GyS77LQN+RAxJzDGKGs7lDtB3igA04fvrRszYl9buWofmOnQMd6IAtDokFd5s+cEieyuSnbUNPErIP1Px1Ihq1StJfSWNvFlo8zNuclrCKFbw533ED3PpTilDKB1Ck+ao5pQQuStHoLKX9tQxtlUtizWlgBv+kXrQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=m8wZWj0M; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="DgpG9RED"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f3c119fe6so10469115ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 05:13:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="m8wZWj0M"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ee9a780de4so1239340a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 05:13:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1738847593; x=1739452393; darn=vger.kernel.org;
+        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1738847597; x=1739452397; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uRpcrg83W4YC9Q6eBSOmMfqvqVxhGz5np6EgD/qHnrY=;
-        b=DgpG9RED/rOxvgOxcyN9N6uyqH5YNjvFljFynFcpML/I2BUYCRtt07wLnIi9U0Pfr9
-         SOGY+Yft2/zdg0CZBsebxgLG9SGWJ4ZG4pgB4hPS3gutUELlxJ4dRU8mmwIVmbP0amAb
-         QB8uX+tJGwZRCsKtjs1z25g2r9jriih0GdWC1RKqCImfvSwbLpBDnGECgoSCbxzDtROH
-         Ms3N7V5J/1zaI7UoYsa1a0uQDNtgvnDuiXQt7mbEis5y4cSapbyM0ly7tUHjDtu7FKF6
-         ctZKHUgFn2+q2TbqPYwwxD+5azEcSF7ferkt/N6itnktxve+CjJ3NPAs1gOYT/HWrTqO
-         yH0g==
+        bh=KR6bvb5577L4rReraIvZgFjKc18SS0Qabaw0b2hBG1U=;
+        b=m8wZWj0MGc1Yqyjad6/KObv8e3mO1FvdJ0q+xyPn2zjeMUkT9smbgvqHRVoGOpQsZ6
+         a7dg8XDc20lHrNDgjst7wff2lZUzb1yzHB0BzCKYi0Z3oEIjMLydFqsAMzayOvzk6AKJ
+         CzNy4sh3D2ULOQHOpJXV+nSSM1E2Pr4IaVyu1LGPDBTxrg8aG92zrkF2D/Ub4KdHLMfQ
+         CeZs3am5kOdLgCl5LzRFiMq95/DCAncwSUZSJMCw7PTaltS4umsOohYQx8Z3KEhRxCt1
+         uAtdCd+4jS40srxzQ6VT81T9g66Yc3wxNJiJXrzMPyLvslJbRYaSLKRRpPR/Sjg5K8b7
+         HTmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738847593; x=1739452393;
+        d=1e100.net; s=20230601; t=1738847597; x=1739452397;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uRpcrg83W4YC9Q6eBSOmMfqvqVxhGz5np6EgD/qHnrY=;
-        b=ozz2g6j20i5+QajIie8rLGqMBbvWhesw0GgTR25wS5PRUXPW9ZWk2d7m92SmEk3pYz
-         UXknSvdlc9RO8PfyrU+fFepAxoMKoCP4xTMifr6TO1yi56vW5yUUKFc2JE0f0rUcs8oO
-         h3Aw5AECfYgkNEB5nd9w+lqfvS0qsNsyC0MMhBfq+4AdhjRYUDTZDLzh4QnjWGUuPz2M
-         l41t2L93Oaf3jtkxHHbozMZf0TB9DevK0DSBME6BVUihK26j8+rcBIVfemI4YmfZ2llO
-         UmUNUBLxTVbBAt7Yei8orpY7S139bPLRdPX3VNJKSSeCpMKnaDC8sWPSUT+2VJ8OsjxM
-         zI6A==
-X-Forwarded-Encrypted: i=1; AJvYcCXYOaKH6Vid+i3CoTHcB25ulmYoN2bRoJwPC+IkctCQsBnIUhzy9E74k1aeDlcMQpdXiX2Vw7Xmhghyvok=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVE3IbAwEvNyO5eWuFuv9/XOofmf4epGKVEtH325c8Coid38Y9
-	XT4mxJ/lCbqVi+qNeZ4G8kBaQ8mh4XFrTNdEY9mwR9W/iBYY5/try0R+eDTlh+0=
-X-Gm-Gg: ASbGncteQFf7rm9GhA88zDN+lAvowPZyrt5Fg9SblaA4/1JsLnG6RCDTshCqqS35rNJ
-	GanL80FjfOJbrytKVuzwNli/4MSUKYVsxVPDLGWcHWvPlm1JwICL68i4lY/UA1sHlqp6lJpsXvm
-	JIyDj0/jJxaUgoAlRd6AqXHkpvCSPS2sCYSy4P87ibARfTvXaxYuYULxoFHT4Ba6xU3a9/Cf77E
-	0JexiFNDCKfreaTqTzR7Yw4LPA8lD8AsqN5YSjdmuAPJzss65isfP11mo/JMYkR8gOWXzXPdMYE
-	+FVCrzs88Cc2qd8QNhXpKNSRjfqFYQkkOB5YCKGbfOdZZUHb2ojfPpjjh1qu7Ew=
-X-Google-Smtp-Source: AGHT+IHSlKv+WX3I/TgMDMO34ZgxTwNFmFgGoB+Q3vS2y02BNpmlvXFZebCnCofwbuz6K+dOMWGR0w==
-X-Received: by 2002:a17:902:e5d1:b0:21f:3a7b:f4eb with SMTP id d9443c01a7336-21f3a7bf984mr34756045ad.22.1738847593324;
-        Thu, 06 Feb 2025 05:13:13 -0800 (PST)
+        bh=KR6bvb5577L4rReraIvZgFjKc18SS0Qabaw0b2hBG1U=;
+        b=ImhsIA4j6Y31HWFsM9jpmmhQw76rOy+EzekIaj+Ln8QJOoqDtyAgqxnNjU8pMYGvwO
+         4HYQbqG2CJkboKJzOou4Lxm7QaTnhKh2k9lSD1kRgO5VdzkqPE9KenoQIvt8Mr/6HQvi
+         OjaqRnZQcgrYQ+sYIY/G2GsvziCPIt9eZezORGIexJsqL4wMK2AIwG5tRk80E81PVpFv
+         /tnOvzcKnNoynVtIs6YaelzJlwWT/yNPIeX36YUhSYfcrguxlvw9QyRy5OVjtFEnwJrG
+         8AbaH51JFogWvmSA83reY7y2G/UqmJ4SdqgmNgV9qSvi3tf9K2xv5UnB6eRvEMPC4Kta
+         QcEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTWhlYDGmnMtRK9uZsAeBL5RKAbvDVmVCDxeP26NGj1iGcZLTpI+JlhzjyH40jXGzBDiS0/bdrgkjYa60=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKVnxj8HAIZ9YlRzE9kif59lEopqcPwKLQ0pmwK2+gXxgHUQCR
+	U0djo9rnTf5ULOteO4lR4weE8i4ebSGo9cv7ABYnqwdyhlq7XUVu9cf79bH+SCs=
+X-Gm-Gg: ASbGnctMUVmDUjpgmTU+h1qKcD5Brpo2yScPrV+8t2+kngK6ikIYmR53rwVdp2Ivf/f
+	aT3T022WdtLs8rByDn1pa7etd7hITsGrg1iBNDq+WG7JtB0ITzGo5UkgmvWQV0d8rxEseijeQ0Q
+	wmJpfT5sGjD2+Yyb5X9NjA5wG+5qRLlver6RjC+fjRGonpDQliAO7CMDihEFJhZMRZXjJP99YOQ
+	OlxODcs0X0iRNZKn6yHM17IVckQg6QfLl7+ibWp+JYfg5vdfqAPX4TUjY8Z2Ga0Zm4EpviZP+A6
+	mvvNeziQjdsTMRSO9YeaNEnHCleJ/PSaRQVyGSuiKIjDad/TOyusnMMn3kul7mE=
+X-Google-Smtp-Source: AGHT+IEeP4W9/tywc5ydRSYsXCTBvBKkM6gGNs7RhK3amCq8atrSM8kmtYxSMdc0gY5vOMT2Nun1AA==
+X-Received: by 2002:a17:90b:394e:b0:2ee:44ec:e524 with SMTP id 98e67ed59e1d1-2f9e0834a1fmr10732218a91.35.1738847596801;
+        Thu, 06 Feb 2025 05:13:16 -0800 (PST)
 Received: from dgp100339560-01.huaqin.com ([116.66.212.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653afc2sm12237925ad.62.2025.02.06.05.13.10
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653afc2sm12237925ad.62.2025.02.06.05.13.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 05:13:12 -0800 (PST)
+        Thu, 06 Feb 2025 05:13:16 -0800 (PST)
 From: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
 To: neil.armstrong@linaro.org,
 	quic_jesszhan@quicinc.com,
@@ -73,9 +73,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
-Subject: [PATCH v2 1/3] dt-bindings: vendor: add csot
-Date: Thu,  6 Feb 2025 21:12:58 +0800
-Message-Id: <20250206131300.1295111-2-yelangyan@huaqin.corp-partner.google.com>
+Subject: [PATCH v2 2/3] dt-bindings: display: panel: Add compatible for CSOT PNA957QT1-1
+Date: Thu,  6 Feb 2025 21:12:59 +0800
+Message-Id: <20250206131300.1295111-3-yelangyan@huaqin.corp-partner.google.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250206131300.1295111-1-yelangyan@huaqin.corp-partner.google.com>
 References: <20250206131300.1295111-1-yelangyan@huaqin.corp-partner.google.com>
@@ -87,26 +87,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add "csot" to the Devicetree Vendor Prefix Registry.
+Add a new compatible for the panel CSOT PNA957QT1-1. This panel uses
+HX83102 IC, so add the compatible to the hx83102 binding files.
 
 Signed-off-by: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ .../devicetree/bindings/display/panel/himax,hx83102.yaml        | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 42d14899d584..375f1f7c79ef 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -336,6 +336,8 @@ patternProperties:
-     description: Crystalfontz America, Inc.
-   "^csky,.*":
-     description: Hangzhou C-SKY Microsystems Co., Ltd
-+  "^csot,.*":
-+    description: Guangzhou China Star Optoelectronics Technology Co., Ltd
-   "^csq,.*":
-     description: Shenzen Chuangsiqi Technology Co.,Ltd.
-   "^ctera,.*":
+diff --git a/Documentation/devicetree/bindings/display/panel/himax,hx83102.yaml b/Documentation/devicetree/bindings/display/panel/himax,hx83102.yaml
+index c649fb085833..d876269e1fac 100644
+--- a/Documentation/devicetree/bindings/display/panel/himax,hx83102.yaml
++++ b/Documentation/devicetree/bindings/display/panel/himax,hx83102.yaml
+@@ -18,6 +18,8 @@ properties:
+       - enum:
+           # Boe nv110wum-l60 11.0" WUXGA TFT LCD panel
+           - boe,nv110wum-l60
++          # CSOT pna957qt1-1 10.95" WUXGA TFT LCD panel
++          - csot,pna957qt1-1
+           # IVO t109nw41 11.0" WUXGA TFT LCD panel
+           - ivo,t109nw41
+           # STARRY himax83102-j02 10.51" WUXGA TFT LCD panel
 -- 
 2.34.1
 
