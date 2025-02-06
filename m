@@ -1,145 +1,109 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A2E2288EC;
-	Thu,  6 Feb 2025 11:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1A9227B97;
+	Thu,  6 Feb 2025 11:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738839605; cv=none; b=QpxMT13luwscfuRBNXqs+61Z6pk4AbMiBx+FsYQyetuz0uu+HoQqMg6Wdjj6eUbkHeq78WVJGMlvIO4GznmJ1M7kVe31U3EzV0AkWIlEZ1P4QRt93Qkx1QI2y7DfTI7JH+wXcKAgjhHrh6wkmXJEl48oFnQCqPBSyI5fi1sMrbg=
+	t=1738839654; cv=none; b=QEMsUfbGwGshRRNztHlKgqdXHsN2hY3Rrs4sQZ68s09AZujjEfUTEdJN6jvTbKt25J4/JOrReF/iacpNyMZ/Tc6qlgPD5R6VNAyVmbUMLCoD/hFoP4g9efjKKkop+AGdpK8XZovdgzqZyAfZUyphKmNG8mHI+zM0OuQjiBrU/RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738839605; c=relaxed/simple;
-	bh=xQ1t5p/G1PuTyMUQl7uec82DUkXuAxu+nr72fhZ0FqQ=;
+	s=arc-20240116; t=1738839654; c=relaxed/simple;
+	bh=lgguq41ag7NZ8RJD+fKNnzSkF4NX3+Q9xeQx3U6XfrY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L34PNd4Pms0OpTc29xkdbMK8Bhe5NuvGv/i4Hj0C7t/PkC/LSHDxAPwDlxWPfK2W+YYGa7Q1kOo5N8njwZUMipUcMNVloauY0W0CyWyj9khsSh6p5U8DeFeuMY0iu8MUitDzQSZeuOn0PW6RzTMuxuShbCDVAqvtiPocyGKr5os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YGZTZnxX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gSo8yfFy; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YGZTZnxX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gSo8yfFy"
-Date: Thu, 6 Feb 2025 11:59:59 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738839601;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ru5WdIbpSL0IOKGQMyXAT/ZbwjxtTCZKvCRArp1oQDE=;
-	b=YGZTZnxXjpdI6oZKS05b+5XvnP+boGHN1C9QVygV7IAjLA8pAEovdmFAH8xFn7WI+w/Xhp
-	8K+GjBJMH0JXK40pNxioacxcseFzn+iXVx4WoYt+J0VaxAt6ID0MNK8tJHkPrEinPnHwJG
-	q7T7uflCus2GZC60/Vo9hxiLt7lbmMt3uhYS5TbYuilZ8s9n9kIooocVm9DSgR45+vozV8
-	mKs7HvnUnL+HLLe1fD2OiCIYZL6f6ix3Bee88IjX4iDMFE94To0mtXdotTD+DhoAabPdO5
-	+hTLhUwkR8YuE1I+6rX+payvbnygcsEtyByLEI0nCsLk7XsBFKKaA2MPCL7vew==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738839601;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ru5WdIbpSL0IOKGQMyXAT/ZbwjxtTCZKvCRArp1oQDE=;
-	b=gSo8yfFya9Ajm2CmxNsGxQ1eCLyB3wbR/PEUj366khtBpyQwoXLrVFgUwGilu8dL/eMyJd
-	VQWqN9SewyqCZ4BQ==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Helge Deller <deller@gmx.de>, Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Theodore Ts'o <tytso@mit.edu>, 
-	"Jason A. Donenfeld" <Jason@zx2c4.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Russell King <linux@armlinux.org.uk>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>, linux-parisc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev, linux-s390@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org, 
-	Nam Cao <namcao@linutronix.de>, linux-csky@vger.kernel.org, 
-	"Ridoux, Julien" <ridouxj@amazon.com>, "Luu, Ryan" <rluu@amazon.com>, kvm <kvm@vger.kernel.org>
-Subject: Re: [PATCH v3 00/18] vDSO: Introduce generic data storage
-Message-ID: <20250206110648-ec4cf3d0-0aef-4feb-a859-c69e53ab110c@linutronix.de>
-References: <20250204-vdso-store-rng-v3-0-13a4669dfc8c@linutronix.de>
- <ff83dc5c91b4e46bcf2d99680ec6af250fb05b27.camel@infradead.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=DI3eE1ewIokYPHK8H2m2nOF2qOXlWMEfCFdvTLyUZK0woE5idi8TF3l2cdmvEZswrFTztJTgWDRs3h5E1sGu2ILu6/llsS8GhX7AW+uC9W2NDLWe5MKbv/Oz/0x2mKriA9NZjFLrCkoiK1OaYr1fzsoJ4v17vSRI0274uM5LQcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ab39f84cbf1so147459666b.3;
+        Thu, 06 Feb 2025 03:00:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738839651; x=1739444451;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SwKJXVHXHe+Pd1Jk6Ye1Al5WM2L8urqsmCy7YofkgtQ=;
+        b=M2WEIiCk9Qk/G7QM1rSz95wrkgtqJYQqd1qjILvft629+Z9ai8/MxUquUNgO+thZOq
+         3goXwNUZR77JFsP0A5zG/kD+78CaLJdlb9z5CeIEga1C116IdnexuvKUW/aYJtydGdXx
+         lI5YyE7kfz3PjQpaTjSE8nGWy33REPDdHZBCFO0XdHWl2aPH9YkfTq3nuhG5D3ZZT7CB
+         eDp88QYkPn1mm/DW+ySNijbHT+y0eXamcHjEaSA1SLGYOs0UzncWbiSUmFXHNPjQ0w+r
+         rWpOMYcIJSIm3iUUxaBuT/3OyWvuZmuZ7R8oyZJtPW78bTTW6Y189vsg94McBdrKdgad
+         yudw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOCBdPcox0+OP4r0y8ip3qVlOqnyDP/17pyLwFKmaP4R+7Shqd2w3tdAIRuw/s1H1UOZbUGvlO7aLzxQyz@vger.kernel.org, AJvYcCVkakrS7RiGiYzjvbzNAJRwWLrYDtMqRLMw51Xy3HWj9NTyQqFQbQBw7Jsqq+DOu/hTsPeITD6N@vger.kernel.org, AJvYcCVpBWcL2MNdGBSNg1ndhpvXf1QqS5W/ncEB+QJE6pR8HAakhlx1iJkI0x6QvMRgJMUpaUkbCd8SiU917oYz+Jjt@vger.kernel.org, AJvYcCW7AP/a66GnQyepP/uFVzReFMR5xPleKaAWFIKvJKwF+zRN6BqpL6cfhyBwv5bgiY7ybxsJUZpykgg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB6rxJvuVYpFF+bMX5Gf/P/i+WVx/paK/+6P1nj0YV60sM185F
+	2Ur5f95WHRz42OG1obpm03xa0QFp+KPjQjXXN2n6c4+C8KRSzl2N
+X-Gm-Gg: ASbGncvZvngY6R/wEXPBGLlCpKqkkETpoB5uGlQ+rtPXLaFupTA5Y2eiRYbH5ZB1WTH
+	2bXueTTxwGB1rNQU7GSmUkzBd4D+Q4uqGQXK7GyzXB11ubqelxJDa0C8TjyusCevqsSZg6RcWUR
+	zR8sUuwrbRZY29+DNbzqWiKhFF7mVyG8ADcmsd3QwbXVt44eKjADk5KXtXr2hBogmZCuJleNpMR
+	qfG0ZUuo//cjHPoA8APwg0vDzG8JJ79l4N/ydd0OZ3GLc9XGZjHQsn1BDwyxZVNZ0OlJxyZXBud
+	9f1WhA==
+X-Google-Smtp-Source: AGHT+IF07cShoiJEg2MNO6wHX118GUCYrDdki/b++DDfI3QCu+una1KNnGQWdeAerFAwn129vhYMNA==
+X-Received: by 2002:a17:907:7285:b0:aae:fd36:f511 with SMTP id a640c23a62f3a-ab75e36429emr563241966b.47.1738839650440;
+        Thu, 06 Feb 2025 03:00:50 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:9::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab77333943asm81887566b.141.2025.02.06.03.00.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 03:00:49 -0800 (PST)
+Date: Thu, 6 Feb 2025 03:00:47 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Simon Horman <horms@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	rdunlap@infradead.org, kernel-team@meta.com
+Subject: Re: [PATCH net-next v4 1/8] netconsole: consolidate send buffers
+ into netconsole_target struct
+Message-ID: <20250206-rough-hissing-armadillo-fb5dfa@leitao>
+References: <20250204-netcon_cpu-v4-0-9480266ef556@debian.org>
+ <20250204-netcon_cpu-v4-1-9480266ef556@debian.org>
+ <20250205133455.GD554665@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ff83dc5c91b4e46bcf2d99680ec6af250fb05b27.camel@infradead.org>
+In-Reply-To: <20250205133455.GD554665@kernel.org>
 
-On Thu, Feb 06, 2025 at 09:31:42AM +0000, David Woodhouse wrote:
-> On Tue, 2025-02-04 at 13:05 +0100, Thomas Weißschuh wrote:
-> > Currently each architecture defines the setup of the vDSO data page on
-> > its own, mostly through copy-and-paste from some other architecture.
-> > Extend the existing generic vDSO implementation to also provide generic
-> > data storage.
-> > This removes duplicated code and paves the way for further changes to
-> > the generic vDSO implementation without having to go through a lot of
-> > per-architecture changes.
+Hello Simon,
+
+On Wed, Feb 05, 2025 at 01:34:55PM +0000, Simon Horman wrote:
+> On Tue, Feb 04, 2025 at 03:35:09AM -0800, Breno Leitao wrote:
+> > Move the static buffers from send_msg_no_fragmentation() and
+> > send_msg_fragmented() into the netconsole_target structure. This
+> > simplifies the code by:
+> > - Eliminating redundant static buffers
+> > - Centralizing buffer management in the target structure
+> > - Reducing memory usage by 1KB (one buffer instead of two)
 > > 
-> > Based on v6.14-rc1 and intended to be merged through the tip tree.
-
-Note: The real answer will need to come from the timekeeping
-maintainers, my personal two cents below.
-
-> Thanks for working on this. Is there a plan to expose the time data
-> directly to userspace in a form which is usable *other* than by
-> function calls which get the value of the clock at a given moment?
-
-There are no current plans that I am aware of.
-
-> For populating the vmclock device¹ we need to know the actual
-> relationship between the hardware counter (TSC, arch timer, etc.) and
-> real time in order to propagate that to the guest.
+> > The buffer in netconsole_target is protected by target_list_lock,
+> > maintaining the same synchronization semantics as the original code.
+> > 
+> > Suggested-by: Jakub Kicinski <kuba@kernel.org>
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > Reviewed-by: Simon Horman <horms@kernel.org>
 > 
-> I see two options for doing this:
+> Hi Breno,
 > 
->  1. Via userspace, exposing the vdso time data (and a notification when
->     it changes?) and letting the userspace VMM populate the vmclock.
->     This is complex for x86 because of TSC scaling; in fact userspace
->     doesn't currently know the precise scaling from host to guest TSC
->     so we'd have to be able to extract that from KVM.
+> Unfortunately this series did not apply to net-next cleanly,
+> which trips up the Netdev CI. Could you rebase and repost?
 
-Exposing the raw vdso time data is problematic as it precludes any
-evolution to its datastructures, like the one we are currently doing.
+Right, I was expecting it since I rebased it on top of the
+netcons_frag_msgs selftest[1]. I've commented it in the cover page, but,
+clearly it was not the best decision, since we missed the Netdev CI. So,
+next time I will send it against pristine 'netnext/main' even if there
+are oher conflicting patches being discussed.
 
-An additional, trimmed down and stable data structure could be used.
-But I don't think it makes sense. The vDSO is all about a stable
-highlevel function interface on top of an unstable data interface.
-However the vmclock needs the lowlevel data to populate its own
-datastructure, wrapping raw data access in function calls is unnecessary.
-If no functions are involved then the vDSO is not needed. The data can
-be maintained separately in any other place in the kernel and accessed
-or mapped by userspace from there.
-Also the vDSO does not have an active notification mechanism, this would
-probably be implemented through a filedescriptor, but then the data
-can also be mapped through exactly that fd.
+[1] https://lore.kernel.org/all/20250203-netcons_frag_msgs-v1-1-5bc6bedf2ac0@debian.org/
 
->  2. In kernel, asking KVM to populate the vmclock structure much like
->     it does other pvclocks shared with the guest. KVM/x86 already uses
->     pvclock_gtod_register_notifier() to hook changes; should we expand
->     on that? The problem with that notifier is that it seems to be
->     called far more frequently than I'd expect.
+> Also, one minor nit below.
 
-This sounds better, especially as any custom ABI from the host kernel to
-the VMM would look a lot like the vmclock structure anyways.
+I will update and send a new version.
 
-Timekeeper updates are indeed very frequent, but what are the concrete
-issues? That frequency is fine for regular vDSO data page updates,
-updating the vmclock data page should be very similar.
-The timekeeper core can pass context to the notifier callbacks, maybe
-this can be used to skip some expensive steps where possible.
-
-> ¹ https://gitlab.com/qemu-project/qemu/-/commit/3634039b93cc5
+Thanks for the review,
+--breno
