@@ -1,90 +1,98 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46ACB2417DB;
-	Thu,  6 Feb 2025 23:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266FD2417F8
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 23:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738883377; cv=none; b=r9ephxbPmU4dVaPQhCHVp0QaJqkgbRebHWMEOHYTMTc1Jy7UU/l8YCC8j3+/eZTmiNUW4YM8rWsVLwCoN6K+oXmiU3c+8J4beGN8TTU1gh2pfud2Q+UEti0RzdHD8po05XWBWqHlw5fHNdEi9eZ47nCdDYrQx3AzHgsDXAVRlSc=
+	t=1738883400; cv=none; b=JenAx8v/1Efu9PIOrRrpvtSJX7oh2iYcEBobfCtOF82tcz+8z+N8xz/aP+FQ+WQNOQFQKewU9TLjL2CEmA3h6hajWh4KEScWgQgEJWNs3NDkyT3YkSFwRMNBnpfGlUEP+5unxlYJ3ub6wAq7ZsP7WO9gO1d6IvZfnXbSYA57eu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738883377; c=relaxed/simple;
-	bh=KfxhyXrH38jjr1oqIcH++dTxi7xm/REBXgyIzG8a2dU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cpIoFDvDA5EIlGsyr7TLG7aUEzCLuNyWycvH2wpIO6RhiXKQgGcn0Jx/LxQUioMQzVClSt0BmzPDvSMRCEKvrzQDHgQTbMetvbl7V+WMjuJVMr9jpihJi0j/yUDzqb+ZnzywOa4xFs5AdQPaIM5mH4xdDhwQ7AG0woxbVOUjMGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=FGy3IzmX; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1738883400; c=relaxed/simple;
+	bh=kPQLaiE17kEvtVVIcklJiOtE0vJC6esAyz2PHe7aHgw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=elZVPTd8nHH9nuzSoJ6lHSRmjuszKT0/CVwoc/n4ZecgoQDogRXgMZMfQqR118HxkyjARdZXRak7p6dKmUoei518mJXrbt+hg9dJQT4g2aDuVHNvKWL5DSoSeVDsEZXTPH8DWxDKhfO6DfXtE2DNgVrbO4zoBDcy7jrtCVr+oV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=z0yl9JsL; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FGy3IzmX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1738883357;
-	bh=rGqsljqGMX7xEW53BsyCyCBBe2QrE7QcUxT5WZRLVKg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FGy3IzmXSbGBahEdQPHj8MOOBoyIBKgjssNxyHUAGzxQ3IBBfFYrweun5bKy8FY2q
-	 pcyoQB1rUGRsUJC7qqUcewe6qWh/xzyffffT7ERAWFJpr8NVur9s9v0D/YZ7u6Wr0A
-	 th+4r0kv3NP8D3IUXQzB8EAmdu1VrideJohu10JqTGyTxCSjnJkL0qGFBGA7WXRJK2
-	 u20R8qkxYFdPlcewzV8lM2Hqfqlbs74hpF54U45O7TAPjNQJfRtstMzXfajuSJgGqd
-	 YwbfCHPJ4Aj5a9MPbftseQDHr43go9tBqIVpZ87+28Pz1Oiw6IR4FS4XegXgSpj0qq
-	 7e9m0Ts0r47xQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Ypt8X72l3z4wcl;
-	Fri,  7 Feb 2025 10:09:16 +1100 (AEDT)
-Date: Fri, 7 Feb 2025 10:09:25 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Greg KH <greg@kroah.com>
-Cc: Benjamin Larsson <benjamin.larsson@genexis.eu>, Linux Kernel Mailing
- List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the tty tree
-Message-ID: <20250207100925.73f9acba@canb.auug.org.au>
-In-Reply-To: <2025020621-feeble-attire-0611@gregkh>
-References: <20250206135328.4bad1401@canb.auug.org.au>
-	<647d4d6b-615d-4c0c-b001-fab43fb7ab4d@genexis.eu>
-	<2025020621-feeble-attire-0611@gregkh>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="z0yl9JsL"
+Received: from eig-obgw-5002a.ext.cloudfilter.net ([10.0.29.215])
+	by cmsmtp with ESMTPS
+	id g8ygtL3qv1T3hgB0PtU768; Thu, 06 Feb 2025 23:09:57 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id gB0NtWSzhdY0fgB0Ntc6JH; Thu, 06 Feb 2025 23:09:55 +0000
+X-Authority-Analysis: v=2.4 cv=NoUacNdJ c=1 sm=1 tr=0 ts=67a54143
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=6Vi/Wpy7sgpXGMLew8oZcg==:17
+ a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7T7KSl7uo7wA:10
+ a=5NrVWRCCLrfdh0Jvg2MA:9 a=QEXdDO2ut3YA:10 a=0lgtpPvCYYIA:10
+ a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=E+YTnOMYFTRww4vc+3L6vgtI2NWn1P0qdxz7Mx881oE=; b=z0yl9JsLXoRh1h3AVY+uLJtw4X
+	n+Hz1G6DVZbr32LccMc47/N6SN4IcKu1lFTicgeWulkvu7Iqc2w509Bgk/M6YlEZstXO5gqvfWoXP
+	dIAodwRLmFy8ppN3Be5uKiRtajKK3iaHd1BKZ9g2XWiKqfNQn5hrarCjRlxKv64ynqQUBa3SxBNtv
+	uWtcTIV5kARh73IG73WeIh3bCvSntiB08J9YBN9LQAkFCuw5S+qyEET7bl53wdB5q0xzpJejP8PHO
+	HYDiVh6rXlRb+OLhC4HsHXCywhKlOGYZnYgNj2ZH6zvIiXgUvolo0BM4LMiV2eZAVAvDZV8Am+CzZ
+	d5dL+73Q==;
+Received: from [45.124.203.140] (port=54600 helo=[192.168.0.152])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1tgB0M-001s8r-2D;
+	Thu, 06 Feb 2025 17:09:54 -0600
+Message-ID: <09e5992a-46a7-410e-a57f-3d337d282943@embeddedor.com>
+Date: Fri, 7 Feb 2025 09:39:42 +1030
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_fsqgrR7x9TBSqbQS3By+qM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] ext4: avoid dozens of
+ -Wflex-array-member-not-at-end warnings
+To: Theodore Ts'o <tytso@mit.edu>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>
+Cc: Andreas Dilger <adilger.kernel@dilger.ca>, linux-ext4@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <Zz0TEX3GycUEmISN@kspp> <20250206150910.GA1130956@mit.edu>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20250206150910.GA1130956@mit.edu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 45.124.203.140
+X-Source-L: No
+X-Exim-ID: 1tgB0M-001s8r-2D
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.152]) [45.124.203.140]:54600
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfMPPfiA9sNQLQrCt1WkX7u1bUuzGhdFrUhns190PpWeiaIc5iOWxVRKSu9m8/PlB8Eu6ay2p336NlkCzju+jCLRRNxaBuowtPwnPCcqVfvTquf/+7EIJ
+ oRvbr/JOYBUBFPjfkP7B2aWU/nQPWXrSqktXlvUVmA+YhVI+SBR/naB6fnBUpYpMbAC25Bz4njKTd+A+8Qoy/Nmz/3ku0dzJO3zIKVAfbYbU2FnBpd/2QxXH
 
---Sig_/_fsqgrR7x9TBSqbQS3By+qM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Greg,
+> Thanks, for this patch!  It appears that this patch has since been
+> obviated by Eric Bigger's commit f2b4fa19647e (" ext4: switch to using
+> the crc32c library"), which landed during this merge window, so this
+> patch should not be needed.
 
-On Thu, 6 Feb 2025 09:14:02 +0100 Greg KH <greg@kroah.com> wrote:
->
-> No, you should allow COMPILE_TEST to build the code, right?  Odd that I
-> can't build it here for some reason, I guess I need to enable OF on my
-> test builds...
+Oh, nice! Thanks for letting me know. :)
 
-An allmodconfig build (even on x86_64) will do that ....
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/_fsqgrR7x9TBSqbQS3By+qM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmelQSUACgkQAVBC80lX
-0GxqJgf/ZurobKHBqOrwdRzdnGc9u6wqcJv+jwrbiGsn6hMJzxcKSA7y8HKBREQ0
-mMn8EmggAprpn1YALkdMqO5A0rmFVPA+UrfLnnScZproEG2CLYXbmWur109aRddL
-R8yy4YPRS7cSyMbVqc4CSN+oYOhp3GcHsafBede4bUQVmLzhJJ+PlOLUcWbjreGV
-FhsaYZGyao7gHC/tD9880zbgyWdmCVnNryOTxHl9jb8KPHZ+qyO64MwhLSirXd+M
-zYfFT9U+niW3EghWUX5qvWAD6ajVZHBlr4H2qe3ADpnQeJ8T3KRWVpaofWnyKV9P
-LCW1e6IVSGPWYW4GeMh/06KTB+S12g==
-=iqlh
------END PGP SIGNATURE-----
-
---Sig_/_fsqgrR7x9TBSqbQS3By+qM--
+-Gustavo
