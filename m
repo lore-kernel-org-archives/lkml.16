@@ -1,118 +1,130 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8EA1225403;
-	Thu,  6 Feb 2025 07:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B3222578D
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 07:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738828447; cv=none; b=U7nhD0nPg5qus15EpJCU4NKwq1VKlkpzAz2n0YgGWRXFagSG/uRfTgjkyWoZrpV4vjo9SVoW1vnNL5GWwIJSSs2PioF2uGwIP7Hn1zG6I8fj/5OeCQZagPSWF+fnT73BpsCFgIgzzEuGvXbYBs5QtzLrunyaYo6MUjfkrddWjCA=
+	t=1738828452; cv=none; b=gL3gBI9Z8797T5Y0Hjs9T1Q5OsOqtOdcnpCvK4vbt3ujNG3LUWGSOYV102kSBUmVIUXFz5AsUcx8J3cgNV1MwW4q0NiQmK+kPQmBJHwyp8Vt+qylz0VW+/Mt3rrsGbc2K6+BYS/QCBSoYTyBNND2i/USEk5BXQOnR5wUzlQ+/6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738828447; c=relaxed/simple;
-	bh=v/9j4H1SumVNswTEB2Bzev+qU+VGsBh3b/2fynpUEI0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OvlPaHJAbj+a6BW/W8frZMbzgBsF0aDwIimnW9XNSBNeODvYz8KCvJoJ3bg1QlsEbMbC7DB0DDBMzx0pqI9jd4qBY9WMpLvj4xKrFhcnttmbv/4gdZdirl4YYr+3d7W0q19Q/yfZOa+xfdolDo8E0s/nhTCUAF0KuxzN5fcVJI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DcqhBu4J; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738828452; c=relaxed/simple;
+	bh=Y9WC87bLe5NehjYOXZdbt0lMGSd6u5imi7raAGHmnlI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=puEyOeWY4ac7QuuVLeky+k3J9tF4uD2Ze4lyznU5qF1V/b/xRbulQHDxbRlwX0+uHAZiuNbRkhmQV275yCwBF16jWYwjMSBb/9iC48sMS3eQT8zBBawVTdCc6UgXBtFw8J/SWN8laIelKoXDeVwXHEMBHh87LvO9Slsuo9VK4N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f46bTA+f; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DcqhBu4J"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=a9pYqLRoxBjhQQODtbQiPWkuyLKJRbcRMir3jVYiFx4=; b=DcqhBu4JKY5iso98bZeB9UaC/k
-	SiJBbdAaSE6gY3TZwACzBjb3tQ+J7Ppnrq92twnFeped0uSKDQwHirPg+NmQ7kKEgW9NSihuE50D3
-	UTSUYIUxDWffmEEMJJHRu3qXlNXi+CFnlmQDbc0ITATVEfQM5EvKH4ZQBMiyVXSkgpmBJfcLYby5N
-	wc1zDSeZF4olcmQBEPh5cGL9HoRUyPUs9iNL+LPL4udcX2TqEXKd8l2jNR2jg6k7EfyjZFHraLB6T
-	Q8J33oU6GRtfmzrE/dDXlbtT1OA7w2saG9rAN2+VBZeQg57eDcXJaXovyA8tywYdeHNsg7urE6aqG
-	9M6k5QGA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfwhy-00000005f1r-0vQ6;
-	Thu, 06 Feb 2025 07:53:58 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id D6DCC3003AF; Thu,  6 Feb 2025 08:53:56 +0100 (CET)
-Date: Thu, 6 Feb 2025 08:53:56 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [PATCH 01/20] perf/x86/intel: Add PMU support for Clearwater
- Forest
-Message-ID: <20250206075356.GF7145@noisy.programming.kicks-ass.net>
-References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
- <20250123140721.2496639-2-dapeng1.mi@linux.intel.com>
- <20250127162651.GL16742@noisy.programming.kicks-ass.net>
- <d31dcd21-7455-4108-96d7-e29ecde1c5de@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f46bTA+f"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43635796b48so2993085e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 23:54:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738828449; x=1739433249; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q+U3GhEYNSJGMFlCgGumTWq6/ff6zdU5LVaoQovoEL0=;
+        b=f46bTA+fgEP+fXkSL+GMzyFtvwYIT2yEc+poTM16ziYwTCale8LeTnOEqptd8WUDyi
+         OyFkAZy3FwkV4OxCw02944vff23zQo1aoxcoREe8QCqRC2lc2DMGXf6j1P1ZgBntKo1l
+         ALRKP+E7THxvvmqrpIBxPGAmzDkfHY3CBm8rq0Ig8MQFRjpeidatuJ7SzEitkKx3k4is
+         KG4wxIviW4v/RSK2+SyenQ8yEWnPvuWg5G3BTjga/Mp3Wb4Icyop+FC4thTqUoHso24x
+         vN6B2tdv5mzgX+HXIENkrUiY94BGfGKe1BhdecaQVblWNNR7TFvq+LfW7GJu/I1XevPy
+         SawQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738828449; x=1739433249;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Q+U3GhEYNSJGMFlCgGumTWq6/ff6zdU5LVaoQovoEL0=;
+        b=V2sbxr1cSN31FetfICUH13TWGXdf8r6Q9xuTrXJDhFl18MCN6MXlrWQ6BEVs6Xkgy/
+         v5R5yZkN9IZ9em4Fk3xhuyr2CsYCzxUzbVwTxItRh53fccJg0Cwx2UK9Nh08lvsYN2RT
+         eV8Az86Mp9r7WTB9hn0uNs8IaJzu5rsA/67xHn4/xDJdobHz243Y2bl/37wU4+IiWvVq
+         cC0G0DFqF5OuTi8dZM5vCiH5rRVzt6CDkA7QwaE4W/lk3X7CP2zbQBpadsDdVO3ZoeIX
+         5GOO27WWUAelF3VZyHZc5b0x40epTZ96xOaZ5ep54gPVY1+nSEAgbRjPUaJNTALHRcK8
+         ZNNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUMM2gTLa9fvNviI7V0PByYRq10Q8KTR6M+bj6d8whyCQRN3r3r4Nedjb6lNcwm2+4ZZSI4hlMs4UFwFiY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3FSVmb5tPDzejdkJN4nbHyLcBdMSyFsoZVXxJcJTQZOi38+zu
+	120/4G/GXXkP2CKFo/VmEBH+Qen/0ySe2Rn2vdMo+lrszVTD7YO/tltOJuOYUm0=
+X-Gm-Gg: ASbGnctB8LNicgTrNPpU+Jx/XwBWxI+X2lKteidrQnrI52fKYCyXf1ELxIAfYHH6N9v
+	z3/WO2Kq0lXDTJzZDjkSVaunQhkm1gXM7VOdbKx9Ah8i5ajMzl2xUzsPtbG/C/NetqQsaMfIgA/
+	IkUC1JbjBsHKwrxl5SjvVNj8G4yuowvO7uCXvGDrgMI1rB+KVjavQZOInptnCBaP279LrUi01m7
+	8eWeRt8CEc794KwbZx9d8fHVRKrj78S3TLpDDUSopCfZPRmfNLIdCQdZIrSEHGY+ujpvUE7oD+Q
+	xVRFG35SntFp9Db1P30ZHgXsw2phT1jQxGjgxloZzTbfeosBRtkEDZxMlUB1GU1pecjL
+X-Google-Smtp-Source: AGHT+IGrzW1LdzySmLH3XUvU+ruX4SLesnotJf/9MZ7S4Ul1OkUGYV9PvZdjXAlQoh8a/JyV5GRRkQ==
+X-Received: by 2002:a05:600c:4703:b0:436:185f:dfae with SMTP id 5b1f17b1804b1-43912d1510emr13458025e9.6.1738828448157;
+        Wed, 05 Feb 2025 23:54:08 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:4972:46a2:e0cb:c0a6? ([2a01:e0a:982:cbb0:4972:46a2:e0cb:c0a6])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc050d688sm522181f8f.24.2025.02.05.23.54.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2025 23:54:07 -0800 (PST)
+Message-ID: <9db01455-f3e9-474b-b87a-30f934ff6a02@linaro.org>
+Date: Thu, 6 Feb 2025 08:54:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d31dcd21-7455-4108-96d7-e29ecde1c5de@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v5 0/5] Driver for pre-DCP apple display controller.
+To: fnkl.kernel@gmail.com, Hector Martin <marcan@marcan.st>,
+ Sven Peter <sven@svenpeter.dev>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jessica Zhang
+ <quic_jesszhan@quicinc.com>, asahi@lists.linux.dev
+Cc: linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Alyssa Ross <hi@alyssa.is>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Janne Grunau <j@jannau.net>, Nick Chan <towinchenmi@gmail.com>
+References: <20250205-adpdrm-v5-0-4e4ec979bbf2@gmail.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250205-adpdrm-v5-0-4e4ec979bbf2@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 06, 2025 at 09:31:46AM +0800, Mi, Dapeng wrote:
+On 05/02/2025 23:10, Sasha Finkelstein via B4 Relay wrote:
+> Hi.
 > 
-> On 1/28/2025 12:26 AM, Peter Zijlstra wrote:
-> > On Thu, Jan 23, 2025 at 02:07:02PM +0000, Dapeng Mi wrote:
-> >> From PMU's perspective, Clearwater Forest is similar to the previous
-> >> generation Sierra Forest.
-> >>
-> >> The key differences are the ARCH PEBS feature and the new added 3 fixed
-> >> counters for topdown L1 metrics events.
-> >>
-> >> The ARCH PEBS is supported in the following patches. This patch provides
-> >> support for basic perfmon features and 3 new added fixed counters.
-> >>
-> >> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> >> ---
-> >>  arch/x86/events/intel/core.c | 24 ++++++++++++++++++++++++
-> >>  1 file changed, 24 insertions(+)
-> >>
-> >> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> >> index b140c1473a9d..5e8521a54474 100644
-> >> --- a/arch/x86/events/intel/core.c
-> >> +++ b/arch/x86/events/intel/core.c
-> >> @@ -2220,6 +2220,18 @@ static struct extra_reg intel_cmt_extra_regs[] __read_mostly = {
-> >>  	EVENT_EXTRA_END
-> >>  };
-> >>  
-> >> +EVENT_ATTR_STR(topdown-fe-bound,       td_fe_bound_skt,        "event=0x9c,umask=0x01");
-> >> +EVENT_ATTR_STR(topdown-retiring,       td_retiring_skt,        "event=0xc2,umask=0x02");
-> >> +EVENT_ATTR_STR(topdown-be-bound,       td_be_bound_skt,        "event=0xa4,umask=0x02");
-> >> +
-> >> +static struct attribute *skt_events_attrs[] = {
-> >> +	EVENT_PTR(td_fe_bound_skt),
-> >> +	EVENT_PTR(td_retiring_skt),
-> >> +	EVENT_PTR(td_bad_spec_cmt),
-> >> +	EVENT_PTR(td_be_bound_skt),
-> >> +	NULL,
-> >> +};
-> > The skt here is skymont, which is what Sierra Forest was based on, and
-> > you just said that these counters are new with Darkmont, and as such the
-> > lot should be called: dmt or whatever the proper trigraph is.
+> This patch series adds support for a secondary display controller
+> present on Apple M1/M2 chips and used to drive the display of the
+> "touchbar" touch panel present on those.
 > 
-> Sorry for late response since the Chinese new year holiday.
-> 
-> Sierra Forest is based on Crestmont instead of Skymont. 
+> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> ---
 
-I hate all these names :-( But yeah, you're right.
+LGTM should patches 1, 2, 3 & 5 go via drm-misc ?
 
-> The 3 new fixed counters are introduced from Skymont and Darkmont
-> inherits them. So these attributes are named with "skt" suffix.
-
-Fair enough.
-
-But how come this is new for darkmont and wasn't done for
-arrowlake/lunarlake which have skymont based e-cores?
-
+Neil
