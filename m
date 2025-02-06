@@ -1,43 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDF723642A;
-	Thu,  6 Feb 2025 15:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6551EDA12
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738855374; cv=none; b=J42IFMXH8L/raWKQZGzjk44bTm0bHxhGUUMBuu5ZBDMGwVLqmtbeiofji9LX0yAOcUn1pyT/AM212FM+4vUBRWLY23h59bfph7mhx62txzAMkhOcHGDwnYSVzcfFUdmiEDQeTF2Wx8FU7MwxtxJtTtGgmUilslQrNz+EReAwiiU=
+	t=1738855402; cv=none; b=Lxq3OT//wT50Jj+3pQXxxJcz4cLQMqaqB0IWY/DZqr7b3CvmoByuRqZCDFK355GqgZoPzpRQzcGgotOz/ac4vFzn2Q7Vfq3dWyxjWQSIGuliUyQzkR5rnRYQbHO6nq3/9aWZqFDfj1s3SlP3IaGEdJftzL3NR3/myxnzOn5Sapw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738855374; c=relaxed/simple;
-	bh=FrLHXacAKu7E8PIh7mv5/7UyuK0ZoDb/ggVEpXUiGJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lsKJqLXz5dY2hc8TAXFzpWx9A02J1K3u/3Jx5MQlna4G5AQre8pRKcaA6/OAIDBDTGnZmT42tkENd5ab/h+Xdk64bedNXXoYyIKkRkJt3lEEsSa1cDO5fDMDHEk5iqeFiRrAMGm4V1NcSCXHqpkWrtELvYuj2OWXGXCT7ndIWRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GtJx5H6u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738855402; c=relaxed/simple;
+	bh=49CxXWqNMJo3LLTz5/6MYzTh9c+8a/TlbxFx7hF9vms=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=nidOTukyak8YzqICH4DnjJNjsTotrXO5t4eWzW74097Y8dzGwUiT4sSzNPvKOHfXFUVDEZrURsH/8leK8f3eQhvY4FdLe62wFbgyY+uMnIV0YZqMJ3mdn982y0/LDWrgfMotxxjDCIJjNDKq8KT34lWXR2SqSsEYlZnrnzO7VOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UHIfKXH7; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GtJx5H6u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85CB8C4CEDD;
-	Thu,  6 Feb 2025 15:22:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738855371;
-	bh=FrLHXacAKu7E8PIh7mv5/7UyuK0ZoDb/ggVEpXUiGJI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GtJx5H6uD4arsQxYHReeieGtNLb5HEPaP+XikrDzrkEIEkr5tFKHPffQXcFzGR4wc
-	 8RpS2oaekOqsSGsbQi906lQjVUomwO5uAB0h8gx72/aFNZ34DL9/Bvj7uB1u9NRN4d
-	 oKxW/VFr56qRdgy+5FlwxFr7JnLgLwrFVX2TM8v3M3G4muu5uJXDly6tN/B4EVM6Nz
-	 CK5gQCkbnEzr9KtIaHF/keibaJMTkX5azZZEiC6/xuTeh6fIrroFwX69zD8JF/I7mR
-	 qE5diBGxt4zDD43aNOb2VpZUZO/+LJggzzk1T2TJjrkhbMGg7zwBYGY/zrY/6bCcKP
-	 sXSlKD5XSKFLg==
-Date: Thu, 6 Feb 2025 15:22:47 +0000
-From: Will Deacon <will@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: Handle .ARM.attributes section in linker
- scripts
-Message-ID: <20250206152246.GA3468@willie-the-truck>
-References: <20250204-arm64-handle-arm-attributes-in-linker-script-v2-1-d684097f5554@kernel.org>
- <20250206130526.GB3204@willie-the-truck>
- <20250206135715.GA180182@ax162>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UHIfKXH7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738855400;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=sXb2TzZ4qNkvPYjvI+q6HbdB0AiVpUWbLTX92W4CirE=;
+	b=UHIfKXH7V9OCIwkAxxSb9Tl+9S4XR35po6WvO1NC/5/8uNsBbiHskOxako0F6eBy0h8g5c
+	AmrFXC2LRDbcJYXcBHcLP0WyUIMT4rJyuI0GQGMTfjrZUrq/6CS24OIGboyvOzSw8TLJa9
+	rYbsIln2Mzq/eCvIvNkv/OZWZ6QzNbc=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-73-drc8I9dbPbqRzl9VgOK5pw-1; Thu,
+ 06 Feb 2025 10:23:16 -0500
+X-MC-Unique: drc8I9dbPbqRzl9VgOK5pw-1
+X-Mimecast-MFC-AGG-ID: drc8I9dbPbqRzl9VgOK5pw
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EE07E1800991;
+	Thu,  6 Feb 2025 15:23:14 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.34.53])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 0A16B1955BCB;
+	Thu,  6 Feb 2025 15:23:11 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu,  6 Feb 2025 16:22:48 +0100 (CET)
+Date: Thu, 6 Feb 2025 16:22:44 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: Mateusz Guzik <mjguzik@gmail.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] exit: change the release_task() paths to call
+ flush_sigqueue() lockless
+Message-ID: <20250206152244.GA14609@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,65 +61,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250206135715.GA180182@ax162>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Thu, Feb 06, 2025 at 06:57:15AM -0700, Nathan Chancellor wrote:
-> Hi Will,
-> 
-> On Thu, Feb 06, 2025 at 01:05:26PM +0000, Will Deacon wrote:
-> > On Tue, Feb 04, 2025 at 10:48:55AM -0700, Nathan Chancellor wrote:
-> > > A recent LLVM commit [1] started generating an .ARM.attributes section
-> > > similar to the one that exists for 32-bit, which results in orphan
-> > > section warnings (or errors if CONFIG_WERROR is enabled) from the linker
-> > > because it is not handled in the arm64 linker scripts.
-> > > 
-> > >   ld.lld: error: arch/arm64/kernel/vdso/vgettimeofday.o:(.ARM.attributes) is being placed in '.ARM.attributes'
-> > >   ld.lld: error: arch/arm64/kernel/vdso/vgetrandom.o:(.ARM.attributes) is being placed in '.ARM.attributes'
-> > > 
-> > >   ld.lld: error: vmlinux.a(lib/vsprintf.o):(.ARM.attributes) is being placed in '.ARM.attributes'
-> > >   ld.lld: error: vmlinux.a(lib/win_minmax.o):(.ARM.attributes) is being placed in '.ARM.attributes'
-> > >   ld.lld: error: vmlinux.a(lib/xarray.o):(.ARM.attributes) is being placed in '.ARM.attributes'
-> > > 
-> > > Discard the new sections in the necessary linker scripts to resolve the
-> > > warnings, as the kernel and vDSO do not need to retain it, similar to
-> > > the .note.gnu.property section.
-> > > 
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: b3e5d80d0c48 ("arm64/build: Warn on orphan section placement")
-> > > Link: https://github.com/llvm/llvm-project/commit/ee99c4d4845db66c4daa2373352133f4b237c942 [1]
-> > > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> > > ---
-> > > Changes in v2:
-> > > - Discard the section instead of adding it to the final artifacts to
-> > >   mirror the .note.gnu.property section handling (Will).
-> > 
-> > Thanks for the v2. Just a minor nit:
-> > 
-> > > - Link to v1: https://lore.kernel.org/r/20250124-arm64-handle-arm-attributes-in-linker-script-v1-1-74135b6cf349@kernel.org
-> > > ---
-> > >  arch/arm64/kernel/vdso/vdso.lds.S | 1 +
-> > >  arch/arm64/kernel/vmlinux.lds.S   | 1 +
-> > >  2 files changed, 2 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/kernel/vdso/vdso.lds.S b/arch/arm64/kernel/vdso/vdso.lds.S
-> > > index 4ec32e86a8da..8095fef66209 100644
-> > > --- a/arch/arm64/kernel/vdso/vdso.lds.S
-> > > +++ b/arch/arm64/kernel/vdso/vdso.lds.S
-> > > @@ -80,6 +80,7 @@ SECTIONS
-> > >  		*(.data .data.* .gnu.linkonce.d.* .sdata*)
-> > >  		*(.bss .sbss .dynbss .dynsbss)
-> > >  		*(.eh_frame .eh_frame_hdr)
-> > > +		*(.ARM.attributes)
-> > >  	}
-> > 
-> > Can we chuck this in the earlier /DISCARD/ section along with
-> > .note.gnu.property? i.e.
-> 
-> Sure, I don't see why not. Do you want the comment above it updated to
-> mention this section or should I leave it as is?
+Changes:
 
-If you can think of something useful to add to the comment, don't let me
-stop you!
+	- add a comment to explain why the lockless flush_sigqueue() is safe
 
-Will
+	- make a separate 2/2 oneliner for TIF_SIGPENDING removal
+
+Link to v1: https://lore.kernel.org/all/20250205175136.GA8702@redhat.com/
+
+Oleg.
+
