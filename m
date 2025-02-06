@@ -1,137 +1,116 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC293198831
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA959199EB0;
+	Thu,  6 Feb 2025 17:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738864463; cv=none; b=Syt9rPZ0CU4Ok3f6gT+BBZ1hIHK1Yej8NxKVeDmcuzwgvPLRzgFQfDKCHJasXH6hVHbG7GD/QrmL3D1IDwnGjeL3HHlH/MJ2fcoRYKkO7zqcGlr/tsPvyDNPWO2OpA8I47dsvebwYG8SGmrPE1TA7DxQ4FS9hw2S14HOsK5FzLw=
+	t=1738864612; cv=none; b=V6TY/mofDctPxup94MmzY+naf+5bJz7fOsxQ0FNHAvUZDHZssF6vuFhTYcz2mGbN0CogVF5gXOHBLuHLit7u1MUIFuBVydtatnaEYDm+mzDqDPJjk8xNHXjB34NeHSUmhiSvf3lR0KrjahI2VQLzFhrmkElB2UbKSaBbQxSGrn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738864463; c=relaxed/simple;
-	bh=yXEbeWeqjKA9XGHGLsQUOCuz+0M+Py1Hm7kwBlYjedQ=;
+	s=arc-20240116; t=1738864612; c=relaxed/simple;
+	bh=jYytCP0qJpBGP5wsER5Uqp4WrKqtMrE7BId2DaMrAyU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UZHPGF6r7srlVDtSy4ShD9nj5BiYV8yx3wpv2QR63kvPxmeBonJQJT7G5uCuDNoVZkBF3IlapOt7AdmQ/Z3a8cfsq+fn+n5SlsV0esMJljZP4D86lTQ3vC7d2KFFWYtLfj1Zf0Aos+iUh5NPj/3jJi0GLmnCaZaerQ9Mogn5JuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1C7EZF0W; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=MXn+VPRQ3ujCcjhz5z52eDSXEDU64UdwOS/X9Ie+fxHzP0Hr2SGjSl8fEkp63So0/wx3udVEF0gAyOwCPWXli81RL9vC58qEqLTU5J9p3I4nYWxzj9JmVHfKQTUVLzMVaB7jOmg9U7yFxGwY7+ZKxljbLvPfP2D52fg2Hb+PA7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=avlLjutf; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1C7EZF0W"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3d06258e029so3935ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 09:54:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avlLjutf"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2f9f90103bbso275929a91.3;
+        Thu, 06 Feb 2025 09:56:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738864460; x=1739469260; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738864610; x=1739469410; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yXEbeWeqjKA9XGHGLsQUOCuz+0M+Py1Hm7kwBlYjedQ=;
-        b=1C7EZF0WbDikys0zxntsrRX7OoG7NuM/7iWq9i27aV592t7GgKt/UJe1BPe3W4Hfsl
-         KE9HPqUi+jx7G5O2X/zsvywxVz9kuj1N3WnW912BkdqxSpe95fQuPicTTnkcH1VOMjjG
-         VAUD0Py+MVk5K+xXeTFP0iCTfdatN6hC8mI+zxYOcsFcnn+ioeNyRlifXPP49CSsWuhC
-         OB1WnCDBzNBJXqBZ+8wOoSHVtdB8mgyvpNqtV7uqF6Yw4lj5gG0KtHPbq8t0qyKJlkou
-         9qjZXu3TxikVq88V9qX+T4iop1hRzdICsJ0sV7dG/fF7+YlF9agtna6xM9pv4WKQpXyL
-         EVvw==
+        bh=0GZrPR55++iXGHv46F7g0+fM5+kgSZFZP7hSh6P6V9I=;
+        b=avlLjutfu57NrmcWUEm7e/vwEKJiqujOYyf4hBJV1tE8gG1ksrE/qAIBs+SGajYd3r
+         UbCOmBYvJNHm0bqGZcbklU5w1jOeQ6U2CDm5qcPQ5FNHkawbo08bpZKcfY/zBr2lt/u+
+         di6jlXebNpIQF5Uq+JlJqSStSrNDYrBuBs9UC58u988IHzTzvXL/eEVJDQL9IyywH/m2
+         xfbK1mi4PD2w3T7PClXJy/oAuHQliWK6JRYO48Vu9Jfm5wM4CabwHHtKsi7ZCt9XNM2D
+         d+jBf84zcN0YRIPWqDgl/xL3AKOl6PvKYi20fU9/lTKtbtJC06Nkun+RaZcrH0Ng1bQT
+         CUKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738864460; x=1739469260;
+        d=1e100.net; s=20230601; t=1738864610; x=1739469410;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yXEbeWeqjKA9XGHGLsQUOCuz+0M+Py1Hm7kwBlYjedQ=;
-        b=R7kLXNC3zxA5nNC+ooH2k4aFRg8di6avl+hAP2v1jLo2DRCgTi8J+CNQQVlenX1mA3
-         1k1iJ42p8xrW37s+E6RJ0O7/04hPlux5+v3uohBOtu+XD7Os9DWXW61YqRU/VsUiV0bu
-         DN7wrXWan3M/XwU2mA1LXi0dpJVyBVqTl2hi55b2aeSD633D0REDEn5BC4Oi9cSWfsLJ
-         +SAj04ozstW66GTRXA1skWN44cYYjM9aYV4BxGuXLAmE/o8HsguhZDULoRkfPodQxaAp
-         jdAkq1AOybz1/iPad922djgVcwWr126wBkuLk3WW7Yh5JNA1MCk8i2k9jaYRcrGivKnJ
-         CBBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmagW7xZ1rDuNd35vDlW5GJPHntqpV8wEc8oWUIU9SsYOQQp9T/YxyxBGl1OfQtPLWD0MdIw0Kpj9YBTU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNqH0R5HgipUibtZdAYZp26PUnkDeIa8j+Hy8e9EHVzcElipsd
-	l//hm3aN+1EaYZqzZSXqdoZqShjD04q/TelrVsQkusTEBDsAlq4AUGdqUNDGDNY9k9EDooFZ04P
-	IJO/CfxfGBh6OoL7zRQ2omcVd/UozV1+8mlmJ
-X-Gm-Gg: ASbGncvFIB14mCrZkFHSxgalt2QvVZwngDoYbC/kUWW8Z//f7EeZMeO2sdg5V1sDiPx
-	S6UMWhPwYVoEEvqXDt0dPh20rdFvT0qe6gcYJe7baOduNgJmNIZL6+5HBkgqJPG//BSelIXU6y6
-	SDjQPKiUjYUifKu48v1/K2o+eI
-X-Google-Smtp-Source: AGHT+IHjRfAEWOgF09ADnBFeQssh9J2LLV+7w2g1Ey2qvdksWuX/fXYlxc7n2cyjQutjoGNaI0Pi1u97ZrsTCB7CmCM=
-X-Received: by 2002:a05:6e02:3113:b0:3cf:cedd:b5ea with SMTP id
- e9e14a558f8ab-3d135dbd377mr646515ab.7.1738864460397; Thu, 06 Feb 2025
- 09:54:20 -0800 (PST)
+        bh=0GZrPR55++iXGHv46F7g0+fM5+kgSZFZP7hSh6P6V9I=;
+        b=Y5J97DLUShNSIS9lwPoVc47oatCNYXmrBP61OiQpqAHZezLyfr2ZIUS2qW+kuuBMR4
+         JHeUfzf7BH7RGeNlAEes8eI5V3F1hyXCEYtSP1UIlSmVLcQtR/E7+pV9N1iOeUoNjnIj
+         qwmZBz/dZVdWdiDcYIJ8NajmgYsocQUTTmwp0e87ITr1uFPdzZ9gDv5PoM3C2LP3fM05
+         0zy9rEjkZUPU3/mSou+m8HBbSllUv4R3qAsrPKoeNps7RNQr5TeDgoi2Klt9b/RAPAcM
+         ZrhDImIRxstkAXfzbV0G9qxscLaD4XBwP4ebM/WP1sZbRUL7HqZt8ikomcV+KJlIy2kE
+         UDZw==
+X-Forwarded-Encrypted: i=1; AJvYcCVZWzhB5kPc++itvIMT6Gln9sbVrVlcw5LGpo+4GbUY6VPiAdVzpiupKmoWQ+sRsmgV//buSF9g1kkdFOg=@vger.kernel.org, AJvYcCXaOBCDTU4QV6ItGVZ/bW/JyZXsBogJP/cGkuOPORKYdhfvd8tdRxmXFLXFFder+6m9dk0mOeiNMworf4YEY9U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTm4k1OULnYLPfU1XJHYMkdsRGVeXcKQ3Go0+XU46dXAevDPZm
+	x/TeywLL4hjbSg1AFsHK9Qv6Yfgn4UdYhs9XqD+CVowUPH3vNfFQlMrAT/TcW8v03jz/rSGx47e
+	rDsHRi53TXUaDhKMRw5fWdp5NrVE=
+X-Gm-Gg: ASbGncuFTlsM7xnJaW6/f/KhG8IqROTaWvkHLOmUnRGbPX3fYlCqIynGVEFhfoYy2hp
+	qVzs5XBFUhCu4hFpXfVk0ncOcCcryQ9UAgjiwRFBnxc8ixah61UU3qGa4gd7QiAKtwrDZ2Bwa
+X-Google-Smtp-Source: AGHT+IFhIUrL/iRslgofpHmTLm44LnZvL0EAnTMQ851MDmHJpegXVB0rNBhsBYYYtPfLp3GfzTexItNV+S9LcYeoeQs=
+X-Received: by 2002:a17:90b:2786:b0:2ea:5e0c:2844 with SMTP id
+ 98e67ed59e1d1-2f9e08318ebmr5225875a91.5.1738864610127; Thu, 06 Feb 2025
+ 09:56:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206113314.335376-2-krzysztof.m.lopatowski@gmail.com>
-In-Reply-To: <20250206113314.335376-2-krzysztof.m.lopatowski@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 6 Feb 2025 09:54:07 -0800
-X-Gm-Features: AWEUYZnIi6UrXFoluEJsHxcLNKVze0a8CepMT-61FiOjqL1rQAfhVBDuQsJX3Ow
-Message-ID: <CAP-5=fXV6b2g9QxPe1EsSTcHZpSPq+EAR71jvpBGW7ehydN+Uw@mail.gmail.com>
-Subject: Re: [PATCH] perf: Improve startup time by reducing unnecessary stat() calls
-To: =?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>
-Cc: namhyung@kernel.org, acme@kernel.org, linux-perf-users@vger.kernel.org, 
+References: <20250202-aligned-alloc-v2-1-5af0b5fdd46f@gmail.com>
+In-Reply-To: <20250202-aligned-alloc-v2-1-5af0b5fdd46f@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 6 Feb 2025 18:56:38 +0100
+X-Gm-Features: AWEUYZm_5N8OHkOjyTQbw9Lz6WqRR10ZL-9xQM761VqgRlJzih3prqz5Z4HIMlo
+Message-ID: <CANiq72nH3N9UMu2hsPG7WfYCZQwy9M_4q_rQHJnJMScQ3D9-Jg@mail.gmail.com>
+Subject: Re: [PATCH v2] rust: alloc: satisfy `aligned_alloc` requirements
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 6, 2025 at 3:35=E2=80=AFAM Krzysztof =C5=81opatowski
-<krzysztof.m.lopatowski@gmail.com> wrote:
+On Sun, Feb 2, 2025 at 12:27=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
 >
-> When testing perf trace on NixOS, I noticed significant startup delays:
-> - `ls`: ~2ms
-> - `strace ls`: ~10ms
-> - `perf trace ls`: ~550ms
->
-> Profiling showed that 51% of the time is spent reading files,
-> 26% in loading BPF programs, and 11% in `newfstatat`.
->
-> This patch optimizes module path exploration by avoiding `stat()` calls
-> unless necessary. For filesystems that do not implement `d_type`
-> (DT_UNKNOWN), it falls back to the old behavior.
-> See `readdir(3)` for details.
->
-> This reduces `perf trace ls` time to ~500ms.
->
-> A more thorough startup optimization based on command parameters would
-> be ideal, but that is a larger effort.
+> requirements of `aligned_alloc`. These requirements may not be enforced
+> on all systems, but they are on macOS. Ensure that alignment is at least
 
+Which requirements? `aligned_alloc` comes from ISO C, and POSIX says
+it is aligned with it; i.e. the change to make it work in macOS seems
+fine, but please see below.
 
- Hi Krzysztof,
+> +        // According to `man aligned_alloc`:
+> +        //
+> +        // aligned_alloc() returns a NULL pointer and sets errno to EINV=
+AL if size is not an
+> +        // integral multiple of alignment, or if alignment is not a powe=
+r of 2 at least as large as
+> +        // sizeof(void *).
 
-Thanks for the contribution! I did a series and a new io_dir set of
-primitives. The last version of which is:
-https://lore.kernel.org/lkml/20231207050433.1426834-1-irogers@google.com/
-That did something very similar along with mainly memory usage
-optimizations. In patch2:
-```
-+static inline bool io_dir__is_dir(const struct io_dir *iod, struct
-io_dirent64 *dent)
-+{
-+ if (dent->d_type =3D=3D DT_UNKNOWN) {
-+ struct stat st;
-+
-+ if (fstatat(iod->dirfd, dent->d_name, &st, /*flags=3D*/0))
-+ return false;
-+
-+ if (S_ISDIR(st.st_mode)) {
-+ dent->d_type =3D DT_DIR;
-+ return true;
-+ }
-+ }
-+ return dent->d_type =3D=3D DT_DIR;
-+}
-```
-I stopped pursuing the series as the maintainers were complaining
-about unpopular libcs/platforms missing system call definitions
-(getdents) and the series breaking on those platforms. I tried to go
-the usual feature testing route, etc. but we seemed to have entered
-into wac-a-mole wrt those libcs/platforms and my patience had worn
-thin. I carry the changes in Google's tree where the libc/platform
-issue isn't a concern.
+These requirements seem to come from the macOS man pages, not the
+actual specification. The C one seems required to fail on invalid
+alignments, but is the set of those the ones that macOS mentions? (It
+seems the history of the requirements of that function is convoluted
+and involves at least a DR, and glibc is very lax, more than
+apparently its docs say)
 
-I mention this as I think that series may be a better route than this
-change as it solves a little bit more of the performance issue. I can
-and do rebase the changes for Google in the tree:
-https://github.com/googleprodkernel/linux-perf
-I don't mind this patch as an expedient, obvious performance win.
+Anyway, if those requirements are not the actual requirements from the
+spec, then we should explain better why we are using those stricter
+ones, e.g. we could prepend something like "In macOS, the set of valid
+alignments is stricter than in other platforms, thus follow those to
+support the test in that platform: ..." or similar.
 
-Thanks,
-Ian
+> base-commit: 89a010129b2a60185d34d7377ef8aec7fbb92e76
+
+Hmm... I don't have this base commit (but the patch applied fine).
+
+Thanks!
+
+Cheers,
+Miguel
