@@ -1,50 +1,33 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B104D26ACD;
-	Thu,  6 Feb 2025 02:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E0413A244
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 02:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738808608; cv=none; b=uaVJlB4JvoCh2p1Vexgs8ml/I/3nqmLC9uUKTJRLY4lacuW3ZKtm1L+ko9M2A2Xaw2ubeH0hRH2MFr63USNLFqaQ89EOMXo5HUsQSNPdBb9EhzUWz13RRxPUvG5R3y0ymQJhglB7pRvIsT5uFtWfQavg/af78mhkhvqheFUe5nw=
+	t=1738808608; cv=none; b=NWYuy5b/84cOSiKIS+ukSliJu/UFWsvS+S/Y3jHe5wcICpk985Y2dB2XHm3dImGWDjxnnjbdA1O7MMnFZe9X+AvgYPuNugsmrf22THrT1GwaCmmBdNMxKZC4HjUQK0OpfXy7xdKFvZHoOBu+nAlVAGX+Rjq1QikHjqqcyBdlTq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738808608; c=relaxed/simple;
-	bh=MX/9vrVMWFYRt4Rmji6I71xtTK2XSPOEL24m4oemfv0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X4qjKNcTvi6GTMTE23kOgkOAWWrdd7R8gdQmnFxbu9197e189U2TR1BsC7+CLvWt3W9GzYLwvBnPcNDsvkJXpDABzb2GBV9NW9TtrSdMxPQ6H3wKoNZIiaxl+zqMJrUSW3yA9klRS0u3rnz+Cgb+8P5ozhxsIaYWuMqVOk1/fxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S/KZ4PMq; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=2SljbGoSXJOV8ubsUMhGM9GIm0R+x/EUIoTcIzxBn1Y=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=OCglY92zC/cgKw5KrmsvQFQQsjucU88N+906Ieknt1zt371XT9l+bnhv/gtshUp6Nt+6b5uAFotgQyRKy48c/3i2am3wRQxjwWjFL7JZSb24qkxdicrqc2VMIbF1f8yPpRKzaeEmLvauKYY8b4b0iieyCZjKhiu+mXimzCcfF98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bOlnWB+w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S/KZ4PMq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738808607; x=1770344607;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=MX/9vrVMWFYRt4Rmji6I71xtTK2XSPOEL24m4oemfv0=;
-  b=S/KZ4PMq7WF/gYuI8RXuhLzQEpKo13v+7CihM5xA7zhEVJRgiMrVfFM5
-   PT9934gj3/jgcMOt/PR3HJ70ZpTxW+1V+2l4iu4znPs9a4HoziCHmgMo3
-   RtP1l/5a9v8gJDsZSKlqNPWGav8zzWzE2l5/rj4ccx4DvMqyJJjFuayl0
-   ccslGIb1xkPuMdUS37gyvtJdcoq0Gkos2tWR5WTuQAvgyFE7aHiPyDcDe
-   ooelGd8SwYM9D5o9/oqQh4MUJWCssUNqKcu6rWyR2fhL7kFWVjO+Qt+sS
-   cOAW1a3M+Ie3JT1BpI8HqAPMDgRsmLbOZf6QAIQM3mR/dkVTlvdWBLHLS
-   Q==;
-X-CSE-ConnectionGUID: xJ/LPEodTbCTFW3QhUGQlA==
-X-CSE-MsgGUID: tE7084xZSuWPJJxm/8+jEQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56945591"
-X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
-   d="scan'208";a="56945591"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 18:23:26 -0800
-X-CSE-ConnectionGUID: 9N2QkdZTQnGEp6akn4nL/A==
-X-CSE-MsgGUID: E5VLiOZUS+ykXC3zAo3hKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,263,1732608000"; 
-   d="scan'208";a="110858842"
-Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.114.122]) ([10.247.114.122])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 18:23:18 -0800
-Message-ID: <603921dc-4cc0-4bc6-960a-00ce6f8dfd5a@linux.intel.com>
-Date: Thu, 6 Feb 2025 10:23:14 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bOlnWB+w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 460F3C4CED6;
+	Thu,  6 Feb 2025 02:23:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738808608;
+	bh=2SljbGoSXJOV8ubsUMhGM9GIm0R+x/EUIoTcIzxBn1Y=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=bOlnWB+wA2QChjIVS1AxYAg+2eL3MypeUvpNlqnE9Nf7ySgdcFx+GOCilr6DgMeGe
+	 3x8frXU15FNGDQpruxhrrpUo1Vj+YGZeR66pjwj7vkgLg5CAMbhpI75j0YAIuLotrD
+	 GSn7PdCv6XnAi8NfCCIZc4owTGjlvQtPWJrxJ2q2gWxQyiVIANFdaj8DOjZq/BnO0h
+	 cpC7ctg1JFCtwsojMBerElc2q1T4cqXlKtGFfQGSEf+bPRE/5TMOherd8YMJovRVtR
+	 +5VX7iJw4/Xi+/+juK91Ol9CnH+odEwTXqMuJ+f8nOH8YoJ9ZOiPeHsUNvRNyNCvzb
+	 JGYhyxj1DJcJw==
+Message-ID: <8fe50d87-b395-4679-a069-a2e3a890e700@kernel.org>
+Date: Thu, 6 Feb 2025 10:23:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,102 +35,280 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v6 4/7] stmmac: intel: configure SerDes according
- to the interface mode
-To: Simon Horman <horms@kernel.org>
-Cc: Jose Abreu <joabreu@synopsys.com>, Jose Abreu <Jose.Abreu@synopsys.com>,
- David E Box <david.e.box@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
- Mengyuan Lou <mengyuanlou@net-swift.com>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Richard Cochran <richardcochran@gmail.com>,
- Andrew Halaney <ahalaney@redhat.com>, Serge Semin <fancer.lancer@gmail.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250204061020.1199124-1-yong.liang.choong@linux.intel.com>
- <20250204061020.1199124-5-yong.liang.choong@linux.intel.com>
- <20250204181339.GM234677@kernel.org>
+Cc: chao@kernel.org
+Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: add a sysfs entry to request donate
+ file-backed pages
+To: Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net
+References: <20250131222914.1634961-1-jaegeuk@kernel.org>
+ <20250131222914.1634961-3-jaegeuk@kernel.org>
 Content-Language: en-US
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-In-Reply-To: <20250204181339.GM234677@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250131222914.1634961-3-jaegeuk@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 5/2/2025 2:13 am, Simon Horman wrote:
->> +static int intel_config_serdes(struct net_device *ndev,
->> +			       void *intel_data,
->> +			       phy_interface_t interface)
->> +{
->> +	struct intel_priv_data *intel_priv = intel_data;
->> +	struct stmmac_priv *priv = netdev_priv(ndev);
->> +	int ret = 0;
->> +
->> +	if (!intel_tsn_lane_is_available(ndev, intel_priv)) {
->> +		netdev_info(priv->dev,
->> +			    "No TSN lane available to set the registers.\n");
->> +		goto pmc_read_error;
->> +	}
->> +
->> +	if (intel_priv->pid_modphy == PID_MODPHY1) {
->> +		if (interface == PHY_INTERFACE_MODE_2500BASEX) {
->> +			ret = intel_set_reg_access(pid_modphy1_2p5g_regs,
->> +						   ARRAY_SIZE(pid_modphy1_2p5g_regs));
->> +		} else {
->> +			ret = intel_set_reg_access(pid_modphy1_1g_regs,
->> +						   ARRAY_SIZE(pid_modphy1_1g_regs));
->> +		}
->> +	} else {
->> +		if (interface == PHY_INTERFACE_MODE_2500BASEX) {
->> +			ret = intel_set_reg_access(pid_modphy3_2p5g_regs,
->> +						   ARRAY_SIZE(pid_modphy3_2p5g_regs));
->> +		} else {
->> +			ret = intel_set_reg_access(pid_modphy3_1g_regs,
->> +						   ARRAY_SIZE(pid_modphy3_1g_regs));
->> +		}
->> +	}
->> +
->> +	priv->plat->phy_interface = interface;
->> +
->> +	if (ret < 0)
->> +		goto pmc_read_error;
+On 2/1/25 06:27, Jaegeuk Kim via Linux-f2fs-devel wrote:
+> 1. ioctl(fd1, F2FS_IOC_DONATE_RANGE, {0,3});
+> 2. ioctl(fd2, F2FS_IOC_DONATE_RANGE, {1,2});
+> 3. ioctl(fd3, F2FS_IOC_DONATE_RANGE, {3,1});
+> 4. echo 1024 > /sys/fs/f2fs/tuning/reclaim_caches_kb
 > 
-> Perhaps this is an artifact of earlier refactoring,
-> but the condition above seems to be without meaning
-> as in either case the code goes directly to pmc_read_error.
+> This gives a way to reclaim file-backed pages by iterating all f2fs mounts until
+> reclaiming 1MB page cache ranges, registered by #1, #2, and #3.
 > 
->> +
->> +pmc_read_error:
->> +	intel_serdes_powerdown(ndev, intel_priv);
->> +	intel_serdes_powerup(ndev, intel_priv);
->> +
->> +	return ret;
->> +}
->> +
->>   static void common_default_data(struct plat_stmmacenet_data *plat)
->>   {
->>   	plat->clk_csr = 2;	/* clk_csr_i = 20-35MHz & MDC = clk_csr_i/16 */
+> 5. cat /sys/fs/f2fs/tuning/reclaim_caches_kb
+> -> gives total number of registered file ranges.
 > 
-> ...
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> ---
+>  Documentation/ABI/testing/sysfs-fs-f2fs |  7 ++
+>  fs/f2fs/f2fs.h                          |  2 +
+>  fs/f2fs/shrinker.c                      | 90 +++++++++++++++++++++++++
+>  fs/f2fs/sysfs.c                         | 63 +++++++++++++++++
+>  4 files changed, 162 insertions(+)
 > 
+> diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
+> index 3e1630c70d8a..81deae2af84d 100644
+> --- a/Documentation/ABI/testing/sysfs-fs-f2fs
+> +++ b/Documentation/ABI/testing/sysfs-fs-f2fs
+> @@ -828,3 +828,10 @@ Date:		November 2024
+>  Contact:	"Chao Yu" <chao@kernel.org>
+>  Description:	It controls max read extent count for per-inode, the value of threshold
+>  		is 10240 by default.
+> +
+> +What:		/sys/fs/f2fs/tuning/reclaim_caches_kb
+> +Date:		February 2025
+> +Contact:	"Jaegeuk Kim" <jaegeuk@kernel.org>
+> +Description:	It reclaims the given KBs of file-backed pages registered by
+> +		ioctl(F2FS_IOC_DONATE_RANGE).
+> +		For example, writing N tries to drop N KBs spaces in LRU.
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 805585a7d2b6..bd0d8138b71d 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -4241,6 +4241,8 @@ unsigned long f2fs_shrink_count(struct shrinker *shrink,
+>  			struct shrink_control *sc);
+>  unsigned long f2fs_shrink_scan(struct shrinker *shrink,
+>  			struct shrink_control *sc);
+> +unsigned int f2fs_donate_files(void);
+> +void f2fs_reclaim_caches(unsigned int reclaim_caches_kb);
+>  void f2fs_join_shrinker(struct f2fs_sb_info *sbi);
+>  void f2fs_leave_shrinker(struct f2fs_sb_info *sbi);
+>  
+> diff --git a/fs/f2fs/shrinker.c b/fs/f2fs/shrinker.c
+> index 83d6fb97dcae..45efff635d8e 100644
+> --- a/fs/f2fs/shrinker.c
+> +++ b/fs/f2fs/shrinker.c
+> @@ -130,6 +130,96 @@ unsigned long f2fs_shrink_scan(struct shrinker *shrink,
+>  	return freed;
+>  }
+>  
+> +unsigned int f2fs_donate_files(void)
+> +{
+> +	struct f2fs_sb_info *sbi;
+> +	struct list_head *p;
+> +	unsigned int donate_files = 0;
+> +
+> +	spin_lock(&f2fs_list_lock);
+> +	p = f2fs_list.next;
+> +	while (p != &f2fs_list) {
+> +		sbi = list_entry(p, struct f2fs_sb_info, s_list);
+> +
+> +		/* stop f2fs_put_super */
+> +		if (!mutex_trylock(&sbi->umount_mutex)) {
+> +			p = p->next;
+> +			continue;
+> +		}
+> +		spin_unlock(&f2fs_list_lock);
+> +
+> +		donate_files += sbi->donate_files;
+> +
+> +		spin_lock(&f2fs_list_lock);
+> +		p = p->next;
+> +		mutex_unlock(&sbi->umount_mutex);
+> +	}
+> +	spin_unlock(&f2fs_list_lock);
+> +
+> +	return donate_files;
+> +}
+> +
+> +static unsigned int do_reclaim_caches(struct f2fs_sb_info *sbi,
+> +				unsigned int reclaim_caches_kb)
+> +{
+> +	struct inode *inode;
+> +	struct f2fs_inode_info *fi;
+> +	unsigned int nfiles = sbi->donate_files;
+> +	pgoff_t npages = reclaim_caches_kb >> (PAGE_SHIFT - 10);
+> +
+> +	while (npages && nfiles--) {
+> +		pgoff_t len;
+> +
+> +		spin_lock(&sbi->inode_lock[DONATE_INODE]);
+> +		if (list_empty(&sbi->inode_list[DONATE_INODE])) {
+> +			spin_unlock(&sbi->inode_lock[DONATE_INODE]);
+> +			break;
+> +		}
+> +		fi = list_first_entry(&sbi->inode_list[DONATE_INODE],
+> +					struct f2fs_inode_info, gdonate_list);
+> +		list_move_tail(&fi->gdonate_list, &sbi->inode_list[DONATE_INODE]);
+> +		inode = igrab(&fi->vfs_inode);
+> +		spin_unlock(&sbi->inode_lock[DONATE_INODE]);
+> +
+> +		if (!inode)
+> +			continue;
+> +
+> +		len = fi->donate_end - fi->donate_start + 1;
+> +		npages = npages < len ? 0 : npages - len;
+> +		invalidate_inode_pages2_range(inode->i_mapping,
+> +					fi->donate_start, fi->donate_end);
+> +		iput(inode);
+> +		cond_resched();
+> +	}
+> +	return npages << (PAGE_SHIFT - 10);
+> +}
+> +
+> +void f2fs_reclaim_caches(unsigned int reclaim_caches_kb)
+> +{
+> +	struct f2fs_sb_info *sbi;
+> +	struct list_head *p;
+> +
+> +	spin_lock(&f2fs_list_lock);
+> +	p = f2fs_list.next;
+> +	while (p != &f2fs_list && reclaim_caches_kb) {
+> +		sbi = list_entry(p, struct f2fs_sb_info, s_list);
+> +
+> +		/* stop f2fs_put_super */
+> +		if (!mutex_trylock(&sbi->umount_mutex)) {
+> +			p = p->next;
+> +			continue;
+> +		}
+> +		spin_unlock(&f2fs_list_lock);
+> +
+> +		reclaim_caches_kb = do_reclaim_caches(sbi, reclaim_caches_kb);
+> +
+> +		spin_lock(&f2fs_list_lock);
+> +		p = p->next;
+> +		mutex_unlock(&sbi->umount_mutex);
+> +	}
+> +	spin_unlock(&f2fs_list_lock);
+> +}
+> +
+>  void f2fs_join_shrinker(struct f2fs_sb_info *sbi)
+>  {
+>  	spin_lock(&f2fs_list_lock);
+> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+> index 4bd7b17a20c8..579226a05a69 100644
+> --- a/fs/f2fs/sysfs.c
+> +++ b/fs/f2fs/sysfs.c
+> @@ -916,6 +916,39 @@ static struct f2fs_base_attr f2fs_base_attr_##_name = {		\
+>  	.show	= f2fs_feature_show,				\
+>  }
+>  
+> +static ssize_t f2fs_tune_show(struct f2fs_base_attr *a, char *buf)
+> +{
+> +	unsigned int res;
+> +
+> +	if (!strcmp(a->attr.name, "reclaim_caches_kb"))
+> +		res = f2fs_donate_files();
+> +
+> +	return sysfs_emit(buf, "%u\n", res);
+> +}
+> +
+> +static ssize_t f2fs_tune_store(struct f2fs_base_attr *a,
+> +			const char *buf, size_t count)
+> +{
+> +	unsigned long t;
+> +	int ret;
+> +
+> +	ret = kstrtoul(skip_spaces(buf), 0, &t);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!strcmp(a->attr.name, "reclaim_caches_kb"))
+> +		f2fs_reclaim_caches(t);
+> +
+> +	return ret ? ret : count;
 
-Hi Simon,
+return count;
 
-You are right.
-I will perform the cleanup on the code and submit the next version.
+Thanks,
 
-Thank you for your feedback.
+> +}
+> +
+> +#define F2FS_TUNE_RW_ATTR(_name)				\
+> +static struct f2fs_base_attr f2fs_base_attr_##_name = {		\
+> +	.attr = {.name = __stringify(_name), .mode = 0644 },	\
+> +	.show	= f2fs_tune_show,				\
+> +	.store	= f2fs_tune_store,				\
+> +}
+> +
+>  static ssize_t f2fs_sb_feature_show(struct f2fs_attr *a,
+>  		struct f2fs_sb_info *sbi, char *buf)
+>  {
+> @@ -1368,6 +1401,14 @@ static struct attribute *f2fs_sb_feat_attrs[] = {
+>  };
+>  ATTRIBUTE_GROUPS(f2fs_sb_feat);
+>  
+> +F2FS_TUNE_RW_ATTR(reclaim_caches_kb);
+> +
+> +static struct attribute *f2fs_tune_attrs[] = {
+> +	BASE_ATTR_LIST(reclaim_caches_kb),
+> +	NULL,
+> +};
+> +ATTRIBUTE_GROUPS(f2fs_tune);
+> +
+>  static const struct sysfs_ops f2fs_attr_ops = {
+>  	.show	= f2fs_attr_show,
+>  	.store	= f2fs_attr_store,
+> @@ -1401,6 +1442,20 @@ static struct kobject f2fs_feat = {
+>  	.kset	= &f2fs_kset,
+>  };
+>  
+> +static const struct sysfs_ops f2fs_tune_attr_ops = {
+> +	.show	= f2fs_base_attr_show,
+> +	.store	= f2fs_base_attr_store,
+> +};
+> +
+> +static const struct kobj_type f2fs_tune_ktype = {
+> +	.default_groups = f2fs_tune_groups,
+> +	.sysfs_ops	= &f2fs_tune_attr_ops,
+> +};
+> +
+> +static struct kobject f2fs_tune = {
+> +	.kset	= &f2fs_kset,
+> +};
+> +
+>  static ssize_t f2fs_stat_attr_show(struct kobject *kobj,
+>  				struct attribute *attr, char *buf)
+>  {
+> @@ -1637,6 +1692,11 @@ int __init f2fs_init_sysfs(void)
+>  	if (ret)
+>  		goto unregister_out;
+>  
+> +	ret = kobject_init_and_add(&f2fs_tune, &f2fs_tune_ktype,
+> +				   NULL, "tuning");
+> +	if (ret)
+> +		goto put_feat;
+> +
+>  	f2fs_proc_root = proc_mkdir("fs/f2fs", NULL);
+>  	if (!f2fs_proc_root) {
+>  		ret = -ENOMEM;
+> @@ -1645,6 +1705,8 @@ int __init f2fs_init_sysfs(void)
+>  
+>  	return 0;
+>  put_kobject:
+> +	kobject_put(&f2fs_tune);
+> +put_feat:
+>  	kobject_put(&f2fs_feat);
+>  unregister_out:
+>  	kset_unregister(&f2fs_kset);
+> @@ -1653,6 +1715,7 @@ int __init f2fs_init_sysfs(void)
+>  
+>  void f2fs_exit_sysfs(void)
+>  {
+> +	kobject_put(&f2fs_tune);
+>  	kobject_put(&f2fs_feat);
+>  	kset_unregister(&f2fs_kset);
+>  	remove_proc_entry("fs/f2fs", NULL);
+
