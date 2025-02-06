@@ -1,172 +1,136 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50E423642F
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 14:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51A2236420;
+	Thu,  6 Feb 2025 14:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738852647; cv=none; b=dEXErkJSbR7THg0jV8WQoqQQ4Cejfd7Eo+iuFzYKvPFmNXGsonaUcHRadLQDQXsUCgRfkfSOMcWxE2+2Zi08YxIG+FDjECkF4oLa0bqbenEgj+3c8NVq3jrC0UG4zwJoVlbdvgZ9LhF9gFC0vKNJyOYr+2agCQ8jY+Z7zLRs4sM=
+	t=1738852656; cv=none; b=UBpHVIgzwjIf6mCMr0f8BxV138f+FrFija4pngoo9KTwSAj7jUmzm75cDv9KnKDDMcgL2zPSggLsctd3GwTZEk9Raw0BShkxU5eax1Torn4JFcZuvXyiQKhrkqL5grlevnQZ8MovfFEMkVVrtLpIX4dCBaPFWvgAy75BEVnYNCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738852647; c=relaxed/simple;
-	bh=cWW9uaj5btARuTOtAzQ7Ntg5bsR34Hrv1hOCWz5pJfk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c+20f3RwCMm6DBzkV0s7jL6+9iBRYuuWkgtemZgLjWPEwEsOAZw3i1OpZbjCcD5ZX8NCEYmeHvNqV+nbmJUiDl0gQAYemDaqYK0iBgcgR22JSy2frxF0T2GGA70ihoUoTVWTAxzsbrC154D6+lcyc4jfvRxRlN2axn3Pvl8RAmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=YRHHjnwK; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1738852656; c=relaxed/simple;
+	bh=4uK47KEygQEWwVGcoVZkeuoHQF2iiSJDgicszxMhLUE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k5ai2n9+m4KEaF7gcAeppKY/eLApeYT1/q0HLCZXxVzrdOGK7eVZQ1nJ/HckES6/dvcQg2lW1Q7ZhLk/yKiDO0snUIdWgJyHmIzFP3fcNAUOfxkytRdYPbvIDTeh1HeEVbqc5m+nBOfyraRL9v2C9qyNIYIlowP86E73kgrsM2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cYNHlu9L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="YRHHjnwK"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38dae9a0566so466095f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 06:37:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738852643; x=1739457443; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NF98C5d2ZTnvdUxMyQwmWIlQzv8/8YoukSIjQ9ItWNU=;
-        b=YRHHjnwKbzC1bMTjFr3aED+pcoLHUR6hFwo478EOHb9d9ivzAKiNAeYOuzCn+GUgnj
-         RPFVclpNbHHQQ3cUsGiKSMJPSG9Pvbp3/2qc2+7ehwb5YrGqSn16fvKOkWmh9oFWTLQ9
-         7V+iZZhF71lZ8PPtrX4Yo4lXyCkOGAauSQqoHpkBIE6fI8emFDM0W6XrUa2i7avoMCFI
-         f/akOU0dTtA4SzwZ/gPFQPoRti2WEhNuK8UFUspvpLgMlULrXcBmVuBZwTN+UJN+Ygbt
-         nV8F+zx9qam17Olly3jT55VR4cmeZC6ruIo8tYSps9VhFlUa1242IjchW8in7OSXTjfo
-         jJgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738852643; x=1739457443;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NF98C5d2ZTnvdUxMyQwmWIlQzv8/8YoukSIjQ9ItWNU=;
-        b=IpwN87Z4VlfVV3dKmc7mjbOlaruC7pehoc9rLhPx5/jkTCWauiMhzvDLwObGplS+CD
-         UK4a80LiyLfywgH9dleJQ2IqavqfOXCguVtoxufmZCG0j/lzMBL3TSUB/BEtEZ2BgiZq
-         iDP3r/1HFemV50EuBXKp5ksScAVsvge77b/MHUbHgriP+xcX78YCPDIA3pBtnnUZUYo1
-         dYTqe6iDT+BYiK1uIwb60C6yHULFYLb6AbciD4JaWT7HLtSSwF7ldbgl8o5URhtAt8L5
-         FJpgBDBcVSyLKqZyohkKw7cbdb5Nj7IcEOY7pK20ToCIGcwVTJvm3Otgw+UF66LJgvZ5
-         875Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVgMvh50dX/zvMQv0L5wFV00uUCD5YtBARHWguf2jar/v1e80jyk0mUd18xN9ZxaiVCeqnv+E9AIRnvjpg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK5UWBAoYDVvolIjmwbxzqqO1ihyvRw+dbaB5hKOv5ZCfN1t6O
-	tXF0FY6t4eoMXnrk3bdHXHzLDvouBDrC7SZ/hiB00Bp2RwEFZgO7EYtuYxtY6hE=
-X-Gm-Gg: ASbGncvWL83HqCfUyZ4FyZQqq06sWETtbqqDwjD01IPF7T6Q3MaFLpa0rnhzADi3nFy
-	PKqI3eDvSKztt2bjnQEQCSeZuD8x6DbgaZB65E/F3QSRCbiH8XtdFHun9dgR0OYyiL4VRd+fdgI
-	Os8526WyXRK/eCbTaetoO1qy6ov0xPnZWBWaC4hbk80WCEQZkWWU9NtIzROti0ioX48UXbZDYHp
-	/ckLdO8tUZjswI9xNMGoBvFYTKgq7+Hkxn2esodMMwkZ/cX5m+G1X8i9DsS59/Q4072HBpejI2q
-	KC7IBj2XMKhZ
-X-Google-Smtp-Source: AGHT+IFo/YE/ZtOR+lTWdRiCCfpRQ8d0qEwBCkSp6K2f24hkXXHc1rTYV9AZD/HJU1mRVqh7TuuJCw==
-X-Received: by 2002:adf:f38f:0:b0:38d:b283:2c48 with SMTP id ffacd0b85a97d-38db4938a63mr4602821f8f.50.1738852642865;
-        Thu, 06 Feb 2025 06:37:22 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:c726:a8e:825:b823])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbdd7e5f9sm1929769f8f.57.2025.02.06.06.37.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 06:37:22 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Dipen Patel <dipenp@nvidia.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	timestamp@lists.linux.dev,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpiolib: don't build HTE code with CONFIG_HTE disabled
-Date: Thu,  6 Feb 2025 15:37:14 +0100
-Message-ID: <20250206143714.182230-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cYNHlu9L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B04C4CEE2;
+	Thu,  6 Feb 2025 14:37:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738852656;
+	bh=4uK47KEygQEWwVGcoVZkeuoHQF2iiSJDgicszxMhLUE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=cYNHlu9Li16/cYWcECllsDQkMwp2U97D6xVnP/8nzhJTAEsXMTsiQhC8pZHLAlABY
+	 85hGt0RWff2gJotCXsWO7d/ARUxGF0Tqi5VR23W32Sk8T35fkMVPm/8jzd1UDEsAwx
+	 pAscphsIJ5bXztzp2HNNbRETz4RhQyk19LSMCBS+1NTWdEDSMxnGYWW3Cctop2174I
+	 ccl3VsNOYeaX0fLZYanmqkSCu+04H/849FA+VdSFwPIgjhVL4HV9P1xaEADmeDop5Y
+	 lo0UeTw39pECPnMd4E4zWwm0lPAY70PoSNXlk9BRwvXI3blMOCKG6yR68Nss0spp+K
+	 rBYa2KMX7O8gQ==
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3f37207259bso315023b6e.1;
+        Thu, 06 Feb 2025 06:37:36 -0800 (PST)
+X-Gm-Message-State: AOJu0YzkbOKoE6Xhl/iYMKpBwYXBjHxs+8AUoWr+ldmTRxsaSbi8ALEv
+	5ubkNORlB+Z7qUr0QHxSjvhQVZcwrC1ufa/fSJ/7f3OO12t1TV6y715/huq48m83PRTR8sDbqbk
+	MTR0vnfVsR5kb0VMT2QGR5cfIwPU=
+X-Google-Smtp-Source: AGHT+IFqvm0IT213/DuLt1yySZz9h6W/+Lgpa3XAdb39n5pbDxYtVyQhvT9JQ/FRsPvebCcRG1HvpSiXFmcHbSZVRKI=
+X-Received: by 2002:a05:6808:1706:b0:3ea:4e7c:a91a with SMTP id
+ 5614622812f47-3f37c1da666mr5218854b6e.34.1738852655622; Thu, 06 Feb 2025
+ 06:37:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <12630185.O9o76ZdvQC@rjwysocki.net>
+In-Reply-To: <12630185.O9o76ZdvQC@rjwysocki.net>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 6 Feb 2025 15:37:24 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hCQ0nm+yy+Fg25kKX-76eZAR9r-855FrPLjiA4ytuufQ@mail.gmail.com>
+X-Gm-Features: AWEUYZkL0yQLslAU0j1j8oFF-2xzqbXOFs-8dR946nFfkTScbiU8mjTRkXUyuW8
+Message-ID: <CAJZ5v0hCQ0nm+yy+Fg25kKX-76eZAR9r-855FrPLjiA4ytuufQ@mail.gmail.com>
+Subject: Re: [RFT][PATCH v1] cpuidle: teo: Avoid selecting deepest idle state over-eagerly
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Christian Loehle <christian.loehle@arm.com>, 
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Aboorva Devarajan <aboorvad@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Feb 4, 2025 at 9:58=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.net=
+> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> It has been observed that the recent teo governor update which concluded
+> with commit 16c8d7586c19 ("cpuidle: teo: Skip sleep length computation
+> for low latency constraints") caused the max-jOPS score of the SPECjbb
+> 2015 benchmark [1] on Intel Granite Rapids to decrease by around 1.4%.
+> While it may be argued that this is not a significant increase, the
+> previous score can be restored by tweaking the inequality used by teo
+> to decide whether or not to preselect the deepest enabled idle state.
+> That change also causes the critical-jOPS score of SPECjbb to increase
+> by around 2%.
+>
+> Namely, the likelihood of selecting the deepest enabled idle state in
+> teo on the platform in question has increased after commit 13ed5c4a6d9c
+> ("cpuidle: teo: Skip getting the sleep length if wakeups are very
+> frequent") because some timer wakeups were previously counted as non-
+> timer ones and they were effectively added to the left-hand side of the
+> inequality deciding whether or not to preselect the deepest idle state.
+>
+> Many of them are now (accurately) counted as timer wakeups, so the left-
+> hand side of that inequality is now effectively smaller in some cases,
+> especially when timer wakeups often occur in the range below the target
+> residency of the deepest enabled idle state and idle states with target
+> residencies below CPUIDLE_FLAG_POLLING are often selected, but the
+> majority of recent idle intervals are still above that value most of
+> the time.  As a result, the deepest enabled idle state may be selected
+> more often than it used to be selected in some cases.
+>
+> To counter that effect, add the sum of the hits metric for all of the
+> idle states below the candidate one (which is the deepest enabled idle
+> state at that point) to the left-hand side of the inequality mentioned
+> above.  This will cause it to be more balanced because, in principle,
+> putting both timer and non-timer wakeups on both sides of it is more
+> consistent than only taking into account the timer wakeups in the range
+> above the target residency of the deepest enabled idle state.
+>
+> Link: https://www.spec.org/jbb2015/
+> Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/cpuidle/governors/teo.c |    6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> --- a/drivers/cpuidle/governors/teo.c
+> +++ b/drivers/cpuidle/governors/teo.c
+> @@ -349,13 +349,13 @@
+>         }
+>
+>         /*
+> -        * If the sum of the intercepts metric for all of the idle states
+> -        * shallower than the current candidate one (idx) is greater than=
+ the
+> +        * If the sum of the intercepts and hits metric for all of the id=
+le
+> +        * states below the current candidate one (idx) is greater than t=
+he
+>          * sum of the intercepts and hits metrics for the candidate state=
+ and
+>          * all of the deeper states, a shallower idle state is likely to =
+be a
+>          * better choice.
+>          */
+> -       if (2 * idx_intercept_sum > cpu_data->total - idx_hit_sum) {
+> +       if (2 * (idx_intercept_sum + idx_hit_sum) > cpu_data->total) {
+>                 int first_suitable_idx =3D idx;
+>
+>                 /*
 
-Hardware timestamping is only used on tegra186 platforms but we include
-the code and export the symbols everywhere. Shrink the binary a bit by
-compiling the relevant functions conditionally.
+For easier reference/testing this has been exposed in the git branch at
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib.c        |  2 ++
- include/linux/gpio/consumer.h | 36 +++++++++++++++++++++--------------
- 2 files changed, 24 insertions(+), 14 deletions(-)
+https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=
+=3Dexperimental/teo-tweak
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index be3351583508..0f4b31f4a995 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2908,6 +2908,7 @@ int gpiod_direction_output_nonotify(struct gpio_desc *desc, int value)
- 	return ret;
- }
- 
-+#if IS_ENABLED(CONFIG_HTE)
- /**
-  * gpiod_enable_hw_timestamp_ns - Enable hardware timestamp in nanoseconds.
-  *
-@@ -2973,6 +2974,7 @@ int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags)
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(gpiod_disable_hw_timestamp_ns);
-+#endif /* CONFIG_HTE */
- 
- /**
-  * gpiod_set_config - sets @config for a GPIO
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index db2dfbae8edb..2175f62e2178 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -110,8 +110,6 @@ int gpiod_get_direction(struct gpio_desc *desc);
- int gpiod_direction_input(struct gpio_desc *desc);
- int gpiod_direction_output(struct gpio_desc *desc, int value);
- int gpiod_direction_output_raw(struct gpio_desc *desc, int value);
--int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
--int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
- 
- /* Value get/set from non-sleeping context */
- int gpiod_get_value(const struct gpio_desc *desc);
-@@ -348,18 +346,6 @@ static inline int gpiod_direction_output_raw(struct gpio_desc *desc, int value)
- 	WARN_ON(desc);
- 	return -ENOSYS;
- }
--static inline int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc,
--					       unsigned long flags)
--{
--	WARN_ON(desc);
--	return -ENOSYS;
--}
--static inline int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc,
--						unsigned long flags)
--{
--	WARN_ON(desc);
--	return -ENOSYS;
--}
- static inline int gpiod_get_value(const struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
-@@ -560,6 +546,28 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 
- #endif /* CONFIG_GPIOLIB */
- 
-+#if IS_ENABLED(CONFIG_GPIOLIB) && IS_ENABLED(CONFIG_HTE)
-+int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
-+int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
-+#else
-+static inline int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc,
-+					       unsigned long flags)
-+{
-+#if !IS_ENABLED(CONFIG_GPIOLIB)
-+	WARN_ON(desc);
-+#endif
-+	return -ENOSYS;
-+}
-+static inline int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc,
-+						unsigned long flags)
-+{
-+#if !IS_ENABLED(CONFIG_GPIOLIB)
-+	WARN_ON(desc);
-+#endif
-+	return -ENOSYS;
-+}
-+#endif /* CONFIG_GPIOLIB && CONFIG_HTE */
-+
- static inline
- struct gpio_desc *devm_fwnode_gpiod_get(struct device *dev,
- 					struct fwnode_handle *fwnode,
--- 
-2.45.2
-
+on top of the cpuidle material that went into 6.14-rc1.
