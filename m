@@ -1,25 +1,64 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 122A213D897;
-	Thu,  6 Feb 2025 12:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6156513D897
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 12:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738846549; cv=none; b=jRwlX/vd7pt9N1/2sALFYuQx0c+96vM5cUQxarlj60Mdrw8soaDr0eSXGkKiddNABCgmG8NgWyxWZ0wxeVPghIROmhxotBdcdcoU0cW4FOZiLtJcRQpASj3t7bA/56Byd3uN8UDZ9Y7j30Tt5424fu2ZI/t9EaVhlsfzKsGsfKc=
+	t=1738846596; cv=none; b=ZYew3BHMbVzsD+MPqn/HfgPq5zQsJiqLoVPp8hU/QkDj2ZXF4Rxna8wvfqeebrpEBGSZ9mykrWnSYxCsO+QNC72yWVt3b375jSa4kQ6ztPa0JUzwD9oeiv4YWxccMSZ1VVzJen312eJQSBE3MS2gWZ6nGGUHQ2wMvIgdBhpY6AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738846549; c=relaxed/simple;
-	bh=0jO54oDwqDlt/hq9ItcIf8nOdlvMa2coe35cjfuqPLw=;
+	s=arc-20240116; t=1738846596; c=relaxed/simple;
+	bh=3g/wINSloqxIGUCYfp0t6LFlzfc4hL1rcpwnzCDRZUA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hw8DcGl1e8/0H+Cp4KZr9cUJ0WCFqJM3NHbuiuLVWDWpTACmSRxokY8nSaydZfIhOiq8sOtYaMn6VD2k5FMPJdX8RNxYfuH6u3dOVssshnSssBD3LOONRhdR94cc3OWH2kOPhdYD6WkgIy0e1VNuEoDa5/di0AOU99UfTA25qpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C6B9FEC;
-	Thu,  6 Feb 2025 04:56:09 -0800 (PST)
-Received: from [10.57.80.166] (unknown [10.57.80.166])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FE513F5A1;
-	Thu,  6 Feb 2025 04:55:43 -0800 (PST)
-Message-ID: <25155f6e-8a62-405e-852d-c07a55be0ac5@arm.com>
-Date: Thu, 6 Feb 2025 12:55:41 +0000
+	 In-Reply-To:Content-Type; b=R/iPMgIQNr50Wbv8HuWNKmuxLFR4dQmjILlqF3FErZVIwppgS6BnnW4B+iiShTQVFkXKxB4wEnJE3EGbUaY1huxmHjFmWk4RIl6yUrzpJKxQ4JluL07uHulmLoSchPKURP0rF8un9yF5DVCX24yeHZwePoTwCqf9HmFxfCm7LRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=A4amCw3V; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="A4amCw3V"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4361c705434so5950175e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 04:56:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738846592; x=1739451392; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dSneZhQMz42NLjIZ9INmqk/5Ehqq2enW8mbh8jsOOB0=;
+        b=A4amCw3VFFd0gqBO/UFM9gSXELeRlXBB9b4KhozlMibnc0gaeTU7yXBJHWx5Z1yOvk
+         Cyq9Qvb/FQDfnCJPTCAJHZ/fq0+2oMknHkagt8Cz7RuajqbCbM1Mam9DfHm8MfQjsqi5
+         4Ic3/X5ATY7okVNjiH3YK3U4mFJ3SyD26weUHTLB3MRjR8wzUrvEJC+qwXUpJVlWcHeE
+         yR4ZN3te1+8kmQKsSkpVbDBcGCOj1k9KgyLJk41iBHTzP7/vuDKTxd+ayiLbHFyoPrD5
+         I7Gp/AOJgCxquSVSzB2M3u/hBJ/OO8O5eyrVboAKEGsf6XYuoFEVYiVY9Z5wD8IpAfz9
+         elVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738846592; x=1739451392;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dSneZhQMz42NLjIZ9INmqk/5Ehqq2enW8mbh8jsOOB0=;
+        b=mm6oF9UwAeR1F3eaxIJ2/MNhaz+6F3tHNZKKj4Gf4Z3ZZ6C6WZTiHXzJ5QoG2LCD7T
+         5UzGQ8Wof0M/fZVKgp7PaQChPay+amifjTkANUjG4dqbyJurQUmQy/YKQY8t8jDdo0Jq
+         FFCk+uEUmz8hGhgvt6/P8RIHj+Id8DeRSk4slIkpcfSr/m+tb4bzeIWrCKF6gcyTeNQG
+         SysQoYqy/kPGI1RwK4bUYbeF1t8lJbIOCYEXT+hjyGS/uEn2aigXOkKNKIQkl2sLS3XE
+         x8pxMUsxVI1XQTEG8I0Dpfmrfjd32yZoFuHnK9GWOkLrKiCcs7JFXmu5s+QpQ/rLQD7M
+         Y9Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCW4SyMwTQMd6chro7OTxHgw613bL7n+R8zV8X4iLYAbao0R1MmQ2m0Z4eQKu2IG3KgVjoE0Fb0sMu1jUj8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymS09WL7DuoFjLfXO+YXkYDomZDMnMQS49ywokWZLkGamDOxmV
+	owjpxPk/S8aSxI3lWNVESjIlZHYJnc2qgkxRgCt2PKAJrU2xJClA///gzTsnJOI=
+X-Gm-Gg: ASbGncvWRtD6YB9MmzSHh8lVjXzYbr+OHeW61gIxOL3h31Y5IKph4VPYfVzCjpL6ZkB
+	RtXkCJaMhiRPqToidjHt/S7x23Kcniz9k+FQxXcg0C0T2e4rrumxGR0qnPOjFmsEQlACzGEHVrq
+	Mi9cTAgBoPSvjCO/X3lc69sMQh31XnnSxO66gZWWJjzL9ZIxEk3Z+j85rncr1CcQhRZBcnxFSGV
+	88U8Y64A0sjaQCuVGFNba41dMhs9QHHYUkqbJiorUY/n8WBQ8VPnEGUxdX6JOX9SUEc2LI6/pR9
+	c9YqtOHJkVL48qRlpSeBaSY7f+lKYEjt8lzku3x53KvWwH1E3lz+GPPvYn7H
+X-Google-Smtp-Source: AGHT+IHo0rAwCXLXwfKWz6RSqfUjc9Bk6Vt9OF485t+NIZ62i+CSdactAKssxCygX1CrtVfPW8ntaQ==
+X-Received: by 2002:a05:600c:3b0f:b0:434:a529:3b87 with SMTP id 5b1f17b1804b1-4390d434065mr56547865e9.10.1738846591542;
+        Thu, 06 Feb 2025 04:56:31 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dfd8000sm18420605e9.37.2025.02.06.04.56.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 04:56:31 -0800 (PST)
+Message-ID: <00485221-2343-4d5c-93ca-3a28a59427d2@rivosinc.com>
+Date: Thu, 6 Feb 2025 13:56:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,334 +66,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 02/16] arm64: hugetlb: Fix huge_ptep_get_and_clear()
- for non-present ptes
-Content-Language: en-GB
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Muchun Song <muchun.song@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250205151003.88959-1-ryan.roberts@arm.com>
- <20250205151003.88959-3-ryan.roberts@arm.com>
- <83103cbb-e2b8-4177-aeaf-c3b6e6b08008@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <83103cbb-e2b8-4177-aeaf-c3b6e6b08008@arm.com>
+Subject: Re: [PATCH v3 2/6] RISC-V: add vector crypto extension validation
+ checks
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-riscv@lists.infradead.org, Conor Dooley
+ <conor.dooley@microchip.com>, Eric Biggers <ebiggers@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Andy Chiu <andybnac@gmail.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250205-cobbler-unpadded-5580c1f5d946@spud>
+ <20250205-quench-entrench-09bed8c8c823@spud>
+ <00dc2fb7-da9b-42c3-9c3b-47d917df7cf6@rivosinc.com>
+ <20250206-overcook-legibly-0350a9af8a2a@spud>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20250206-overcook-legibly-0350a9af8a2a@spud>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 06/02/2025 06:15, Anshuman Khandual wrote:
-> On 2/5/25 20:39, Ryan Roberts wrote:
->> arm64 supports multiple huge_pte sizes. Some of the sizes are covered by
->> a single pte entry at a particular level (PMD_SIZE, PUD_SIZE), and some
->> are covered by multiple ptes at a particular level (CONT_PTE_SIZE,
->> CONT_PMD_SIZE). So the function has to figure out the size from the
->> huge_pte pointer. This was previously done by walking the pgtable to
->> determine the level, then using the PTE_CONT bit to determine the number
->> of ptes.
+
+
+On 06/02/2025 12:24, Conor Dooley wrote:
+> On Thu, Feb 06, 2025 at 11:20:35AM +0100, Clément Léger wrote:
+>> On 05/02/2025 17:05, Conor Dooley wrote:
+>>> From: Conor Dooley <conor.dooley@microchip.com>
+>>>
+>>> Using Clement's new validation callbacks, support checking that
+>>> dependencies have been satisfied for the vector crpyto extensions.
+>>> Currently riscv_isa_extension_available(<vector crypto>) will return
+>>> true on systems that support the extensions but vector itself has been
+>>> disabled by the kernel, adding validation callbacks will prevent such a
+>>> scenario from occuring and make the behaviour of the extension detection
+>>> functions more consistent with user expectations - it's not expected to
+>>> have to check for vector AND the specific crypto extension.
+>>>
+>>> The 1.0.0 Vector crypto spec states:
+>>> 	The Zvknhb and Zvbc Vector Crypto Extensions --and accordingly
+>>> 	the composite extensions Zvkn and Zvks-- require a Zve64x base,
+>>> 	or application ("V") base Vector Extension. All of the other
+>>> 	Vector Crypto Extensions can be built on any embedded (Zve*) or
+>>> 	application ("V") base Vector Extension.
+>>> and this could be used as the basis for checking that the correct base
+>>> for individual crypto extensions, but that's not really the kernel's job
+>>> in my opinion and it is sufficient to leave that sort of precision to
+>>> the dt-bindings. The kernel only needs to make sure that vector, in some
+>>> form, is available.
+>>>
+>>> Since vector will now be disabled proactively, there's no need to clear
+>>> the bit in elf_hwcap in riscv_fill_hwcap() any longer.
+>>
+>> To which part of the commit does this refer to ?
 > 
-> Actually PTE_CONT gets used to determine if the entry is normal i.e
-> PMD/PUD based huge page or cont PTE/PMD based huge page just to call
-> into standard __ptep_get_and_clear() or specific get_clear_contig(),
-> after determining find_num_contig() by walking the page table.
+> Copy-paste mistake when splitting in two, whoops.
 > 
-> PTE_CONT presence is only used to determine the switch above but not
-> to determine the number of ptes for the mapping as mentioned earlier.
-
-Sorry I don't really follow your distinction; PTE_CONT is used to decide whether
-we are operating on a single entry (pte_cont()==false) or on multiple entires
-(pte_cont()==true). For the multiple entry case, the level tells you the exact
-number.
-
-I can certainly tidy up this description a bit, but I think we both agree that
-the value of PTE_CONT is one of the inputs into deciding how many entries need
-to be operated on?
-
-> 
-> There are two similar functions which determines the 
-> 
-> static int find_num_contig(struct mm_struct *mm, unsigned long addr,
->                            pte_t *ptep, size_t *pgsize)
-> {
->         pgd_t *pgdp = pgd_offset(mm, addr);
->         p4d_t *p4dp;
->         pud_t *pudp;
->         pmd_t *pmdp;
-> 
->         *pgsize = PAGE_SIZE;
->         p4dp = p4d_offset(pgdp, addr);
->         pudp = pud_offset(p4dp, addr);
->         pmdp = pmd_offset(pudp, addr);
->         if ((pte_t *)pmdp == ptep) {
->                 *pgsize = PMD_SIZE;
->                 return CONT_PMDS;
->         }
->         return CONT_PTES;
-> }
-> 
-> find_num_contig() already assumes that the entry is contig huge page and
-> it just finds whether it is PMD or PTE based one. This always requires a
-> prior PTE_CONT bit being set determination via pte_cont() before calling
-> find_num_contig() in each instance.
-
-Agreed.
-
-> 
-> But num_contig_ptes() can get the same information without walking the
-> page table and thus without predetermining if PTE_CONT is set or not.
-> size can be derived from VMA argument when present.
-
-Also agreed. But VMA is not provided to this function. And because we want to
-use it for kernel space mappings, I think it's a bad idea to pass VMA.
-
-> 
-> static inline int num_contig_ptes(unsigned long size, size_t *pgsize)
-> {
->         int contig_ptes = 0;
-> 
->         *pgsize = size;
-> 
->         switch (size) {
-> #ifndef __PAGETABLE_PMD_FOLDED
->         case PUD_SIZE:
->                 if (pud_sect_supported())
->                         contig_ptes = 1;
->                 break;
-> #endif
->         case PMD_SIZE:
->                 contig_ptes = 1;
->                 break;
->         case CONT_PMD_SIZE:
->                 *pgsize = PMD_SIZE;
->                 contig_ptes = CONT_PMDS;
->                 break;
->         case CONT_PTE_SIZE:
->                 *pgsize = PAGE_SIZE;
->                 contig_ptes = CONT_PTES;
->                 break;
->         }
-> 
->         return contig_ptes;
-> }
-> 
-> On a side note, why cannot num_contig_ptes() be used all the time and
-> find_num_contig() be dropped ? OR am I missing something here.
-
-There are 2 remaining users of find_num_contig() after my series:
-huge_ptep_set_access_flags() and huge_ptep_set_wrprotect(). Both of them can
-only be legitimately called for present ptes (so its safe to check pte_cont()).
-huge_ptep_set_access_flags() already has the VMA so it would be easy to convert
-to num_contig_ptes(). huge_ptep_set_wrprotect() doesn't have the VMA but I guess
-you could do the trick where you take the size of the folio that the pte points to?
-
-So yes, I think we could drop find_num_contig() and I agree it would be an
-improvement.
-
-But to be honest, grabbing the folio size also feels like a hack to me (we do
-this in other places too). While today, the folio size is guarranteed to be be
-the same size as the huge pte in practice, I'm not sure there is any spec that
-mandates that?
-
-Perhaps the most robust thing is to just have a PTE_CONT bit for the swap-pte so
-we can tell the size of both present and non-present ptes, then do the table
-walk trick to find the level. Shrug.
-
+>>> @@ -397,8 +414,8 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+>>>  	__RISCV_ISA_EXT_DATA(zksed, RISCV_ISA_EXT_ZKSED),
+>>>  	__RISCV_ISA_EXT_DATA(zksh, RISCV_ISA_EXT_ZKSH),
+>>>  	__RISCV_ISA_EXT_DATA(ztso, RISCV_ISA_EXT_ZTSO),
+>>> -	__RISCV_ISA_EXT_SUPERSET(zvbb, RISCV_ISA_EXT_ZVBB, riscv_zvbb_exts),
+>>> -	__RISCV_ISA_EXT_DATA(zvbc, RISCV_ISA_EXT_ZVBC),
+>>> +	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zvbb, RISCV_ISA_EXT_ZVBB, riscv_zvbb_exts, riscv_ext_vector_x_validate),
+>>> +	__RISCV_ISA_EXT_DATA_VALIDATE(zvbc, RISCV_ISA_EXT_ZVBC, riscv_ext_vector_crypto_validate),
 > 
 >>
->> But the PTE_CONT bit is only valid when the pte is present. For
->> non-present pte values (e.g. markers, migration entries), the previous
->> implementation was therefore erroniously determining the size. There is
->> at least one known caller in core-mm, move_huge_pte(), which may call
->> huge_ptep_get_and_clear() for a non-present pte. So we must be robust to
->> this case. Additionally the "regular" ptep_get_and_clear() is robust to
->> being called for non-present ptes so it makes sense to follow the
->> behaviour.
+>> I'm not sure if I already made that comment, so here we go again.
+>> Shouldn't Zvbb use riscv_ext_vector_crypto_validate() as well ?  The
+>> spec states that Zvbb is a superset of Zvkb and Zvkb uses the
+>> riscv_ext_vector_crypto_validate() validation callback. I guess Zvbc
+>> should also use it based on your spec excerpt in the commmit log.
 > 
-> With VMA argument and num_contig_ptes() dependency on PTE_CONT being set
-> and the entry being mapped might not be required.
-> >>
->> Fix this by using the new sz parameter which is now provided to the
->> function. Additionally when clearing each pte in a contig range, don't
->> gather the access and dirty bits if the pte is not present.
-> 
-> Makes sense.
-> 
->>
->> An alternative approach that would not require API changes would be to
->> store the PTE_CONT bit in a spare bit in the swap entry pte. But it felt
->> cleaner to follow other APIs' lead and just pass in the size.
-> 
-> Right, changing the arguments in the API will help solve this problem.
-> 
->>
->> While we are at it, add some debug warnings in functions that require
->> the pte is present.
->>
->> As an aside, PTE_CONT is bit 52, which corresponds to bit 40 in the swap
->> entry offset field (layout of non-present pte). Since hugetlb is never
->> swapped to disk, this field will only be populated for markers, which
->> always set this bit to 0 and hwpoison swap entries, which set the offset
->> field to a PFN; So it would only ever be 1 for a 52-bit PVA system where
->> memory in that high half was poisoned (I think!). So in practice, this
->> bit would almost always be zero for non-present ptes and we would only
->> clear the first entry if it was actually a contiguous block. That's
->> probably a less severe symptom than if it was always interpretted as 1
->> and cleared out potentially-present neighboring PTEs.
->>
->> Cc: <stable@vger.kernel.org>
->> Fixes: 66b3923a1a0f ("arm64: hugetlb: add support for PTE contiguous bit")
->> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
->> ---
->>  arch/arm64/mm/hugetlbpage.c | 54 ++++++++++++++++++++-----------------
->>  1 file changed, 29 insertions(+), 25 deletions(-)
->>
->> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
->> index 06db4649af91..328eec4bfe55 100644
->> --- a/arch/arm64/mm/hugetlbpage.c
->> +++ b/arch/arm64/mm/hugetlbpage.c
->> @@ -163,24 +163,23 @@ static pte_t get_clear_contig(struct mm_struct *mm,
->>  			     unsigned long pgsize,
->>  			     unsigned long ncontig)
->>  {
->> -	pte_t orig_pte = __ptep_get(ptep);
->> -	unsigned long i;
->> -
->> -	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++) {
->> -		pte_t pte = __ptep_get_and_clear(mm, addr, ptep);
->> -
->> -		/*
->> -		 * If HW_AFDBM is enabled, then the HW could turn on
->> -		 * the dirty or accessed bit for any page in the set,
->> -		 * so check them all.
->> -		 */
->> -		if (pte_dirty(pte))
->> -			orig_pte = pte_mkdirty(orig_pte);
->> -
->> -		if (pte_young(pte))
->> -			orig_pte = pte_mkyoung(orig_pte);
->> +	pte_t pte, tmp_pte;
->> +	bool present;
->> +
->> +	pte = __ptep_get_and_clear(mm, addr, ptep);
->> +	present = pte_present(pte);
->> +	while (--ncontig) {
-> 
-> Although this does the right thing by calling __ptep_get_and_clear() once
-> for non-contig huge pages but wondering if cont/non-cont separation should
-> be maintained in the caller huge_ptep_get_and_clear(), keeping the current
-> logical bifurcation intact.
+> Zvbc does use it, no? I'll amend the Zvbb one, there should only be two
+> users of the "x" variant.
 
-To what benefit?
+Oh yes Zvbc is already ok, forget that then.
 
-> 
->> +		ptep++;
->> +		addr += pgsize;
->> +		tmp_pte = __ptep_get_and_clear(mm, addr, ptep);
->> +		if (present) {
-> 
-> Checking for present entries makes sense here.
-> 
->> +			if (pte_dirty(tmp_pte))
->> +				pte = pte_mkdirty(pte);
->> +			if (pte_young(tmp_pte))
->> +				pte = pte_mkyoung(pte);
->> +		}
->>  	}
->> -	return orig_pte;
->> +	return pte;
->>  }
->>  
->>  static pte_t get_clear_contig_flush(struct mm_struct *mm,
->> @@ -401,13 +400,8 @@ pte_t huge_ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
->>  {
->>  	int ncontig;
->>  	size_t pgsize;
->> -	pte_t orig_pte = __ptep_get(ptep);
->> -
->> -	if (!pte_cont(orig_pte))
->> -		return __ptep_get_and_clear(mm, addr, ptep);
->> -
->> -	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
->>  
->> +	ncontig = num_contig_ptes(sz, &pgsize);
-> 
-> __ptep_get_and_clear() can still be called here if 'ncontig' is
-> returned as 0 indicating a normal non-contig huge page thus
-> keeping get_clear_contig() unchanged just to handle contig huge
-> pages.
-
-I think you're describing the case where num_contig_ptes() returns 0? The
-intention, from my reading of the function, is that num_contig_ptes() returns
-the number of ptes that need to be operated on (e.g. 1 for a single entry or N
-for a contig block). It will only return 0 if called with an invalid huge size.
-I don't believe it will ever "return 0 indicating a normal non-contig huge page".
-
-Perhaps the right solution is to add a warning if returning 0?
-
-> 
->>  	return get_clear_contig(mm, addr, ptep, pgsize, ncontig);
->>  }
->>  
->> @@ -451,6 +445,8 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
->>  	pgprot_t hugeprot;
->>  	pte_t orig_pte;
->>  
->> +	VM_WARN_ON(!pte_present(pte));
->> +
->>  	if (!pte_cont(pte))
->>  		return __ptep_set_access_flags(vma, addr, ptep, pte, dirty);
->>  
->> @@ -461,6 +457,7 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
->>  		return 0;
->>  
->>  	orig_pte = get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
->> +	VM_WARN_ON(!pte_present(orig_pte));
->>  
->>  	/* Make sure we don't lose the dirty or young state */
->>  	if (pte_dirty(orig_pte))
->> @@ -485,7 +482,10 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
->>  	size_t pgsize;
->>  	pte_t pte;
->>  
->> -	if (!pte_cont(__ptep_get(ptep))) {
->> +	pte = __ptep_get(ptep);
->> +	VM_WARN_ON(!pte_present(pte));
->> +
->> +	if (!pte_cont(pte)) {
->>  		__ptep_set_wrprotect(mm, addr, ptep);
->>  		return;
->>  	}
->> @@ -509,8 +509,12 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
->>  	struct mm_struct *mm = vma->vm_mm;
->>  	size_t pgsize;
->>  	int ncontig;
->> +	pte_t pte;
->>  
->> -	if (!pte_cont(__ptep_get(ptep)))
->> +	pte = __ptep_get(ptep);
->> +	VM_WARN_ON(!pte_present(pte));
->> +
->> +	if (!pte_cont(pte))
->>  		return ptep_clear_flush(vma, addr, ptep);
->>  
->>  	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
-> 
-> In all the above instances should not num_contig_ptes() be called to determine
-> if a given entry is non-contig or contig huge page, thus dropping the need for
-> pte_cont() and pte_present() tests as proposed here.
-
-Yeah maybe. But as per above, we have options for how to do that. I'm not sure
-which is preferable at the moment. What do you think? Regardless, I think that
-cleanup would be a separate patch (which I'm happy to add for v2). For this bug
-fix, I was trying to do the minimum.
-
-Thanks,
-Ryan
+Clément
 
 
