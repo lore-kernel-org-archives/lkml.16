@@ -1,416 +1,129 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C2A22F38F
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46AB22FAC4
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 09:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738834175; cv=none; b=bEo97p8z4pfRUHCi3T5DUNyacF7uGthWSMZQCzHWEqZpTC+o5a3m6HEIkLEshrfNIJVwrehSJthK7RAVOuLDhbNaantjj/AvH7pk26yOcJVWEK10t7Dd9b2N85OvsFdmbz9IU/ThP/B1+FkxA16cUZ+AnfMuysMmSAdncHjaHX4=
+	t=1738834180; cv=none; b=BEKMXHzesx/N8xOdVDNBQxvKzumbr1mlS8yhmhXEsOTiKboSNaX6lEHGPwwob/cx+8vlz5HCxJwbdr+ArWN4Q1igwM9sY/cGs1P9mFvscS/YL12c3yx0w8nZfhHVDnG5sHF/ckMx7X17Zm4Rd6ZhhaKHvCzPxV4BFPNSMLTm8Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738834175; c=relaxed/simple;
-	bh=tnICjcIhVFFy17Cq4G+BHstf/G1WFVbXzocDK31tTZ8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YGbaAajeIyka5G+inCLQth00K4GGXxLcy0otWycfPPVSOcQGWRhm6amirdVBpukSLT0IrC1R4WxUfxNrl4Lz4aEGqGzu/P+27A9Rx7ffhV2sx+BeSUoJlAeH9l6KrAcO1m4eZmEZSNKzvsqvDz8vdyH4G6PWFZ9TAjsWAoDULIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y+hIGgs5; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738834180; c=relaxed/simple;
+	bh=EYcX+Tl80Sl7d+CDd9SpGmBn5rsXiLy+uE7dn71Jszk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f7pBws8NbWP10Nj8sRFTWDOOBAsfkbk0124sN2Tvt+0h0s4bKjLsvpOC+F6vntiFNHaeQD1PGLtLSbGhCTV+zOl5jxz6RsxANca0iAezMk82N1QvLVnx2ghXn9+wTul9DyPPMlO2JIgjmMfKosHGuoR9r6x+tqylqqdMxYgf1w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IHQrJ32W; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y+hIGgs5"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f11b0e580so14002505ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:29:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738834172; x=1739438972; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ssve9dmZgI6qS1KPS1tMtwF1lG6DTg964KCzf8z+2OY=;
-        b=y+hIGgs5xX+L7rZHUvsInfj2z9m7DybqhCwxTMaF+1lW5jaFxf0kMtdaucru1YBzi5
-         FL9tzPDESeL3dA3fE3SEENf9aCWRB1a5OodfZban85mun2hu6xWWICzagzUUTeVKQQ4S
-         JZP1SnnSPAbMnkk0tPf9n060hHxamGV15plwVZzG3kaUO3L+VP9FkegbDRzVcqM+Qd+p
-         HotlUhe46yeFHCmoGA+EtMGHB/uX2sD4srgEqcoua2DC7H6cBjkHsQ/pvqhbaFChVhM1
-         i66wxU+G13rfxhV0SiLmGOQC40bvUjIbGu2CZrMuIktgixnseiOoWnEL4RC9wGJ2e0St
-         iymw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IHQrJ32W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738834177;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KOagAZK7fofXxMgw0dAFRrT7sTcHKFQ+LQJsrXs9r54=;
+	b=IHQrJ32Wa3Wy9ahAdbzxKsxPZ5sEKscqRjiGZ4z+TeVpIrGqKWkId/K8DVkkTGahUdOMZG
+	e47tKBltyBTp32dBIHNCjxonDl3BlvpSme9gBp7ypcU9pg2SVksrb4J5Qc3dJvDThkJ42R
+	eSsfhF/zmk/MgypgMG5rM90RQCtHfAc=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-435-J5OxNHLTP6K3T1I0tuSBkw-1; Thu, 06 Feb 2025 04:29:36 -0500
+X-MC-Unique: J5OxNHLTP6K3T1I0tuSBkw-1
+X-Mimecast-MFC-AGG-ID: J5OxNHLTP6K3T1I0tuSBkw
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38dabace77aso256920f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 01:29:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738834172; x=1739438972;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ssve9dmZgI6qS1KPS1tMtwF1lG6DTg964KCzf8z+2OY=;
-        b=EV2VrtkheXoHBse1oMNUDKW/ctqYIFtggERvWd/im8heZsrnW5LI1HjMOBBRso4CQB
-         M4BDM3bHltJRwmEeVodIM+L+kNqFyl+SmyaLxAnjJ/awBi2HwvkqbPXWv94Wp7ogcdco
-         7A5uDlVnJmY0Hqo7WiGRjkDW7GxxsRhpDw+GGIUd8xBU9z0IENyi/f4xxPcuiR6vMvNQ
-         eqIDygbrDYDep4CcjQey+mLcytnUjJc18zeAV1kllJnQAIzanhWQxFj7GcRFQm47a8hn
-         bdfQQfCO9uAXuw3esVtvLg4fFpl4XBQvIFFj0ZWfeP63oI2ScyX4Y9eLEKFG4XQoA/th
-         56MQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUEm+R8cKpFoXyX+5XS6BorGpCf/pWxgyfvZO9Mxzsr3nebgNfIfIotNpzN3m+wKMG5WwgPLvakt7VBuDM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw70Eosbe6sLL5V54J8qrQOdGr51YDnZc9AaTP1aY69KCk7DFJh
-	95aE1t7R/WxjqEfcjRUiligaYoL06L/V8TGbPJrSwscF8pMPH4fZHD14BrgtNX0=
-X-Gm-Gg: ASbGncuUbgar8rQRwxM4Lrn7SDpHn2PMGSz+ti8fJny78tvuBta765MtufA3qieWz2I
-	REIfAmzINJqyDALewrlp2FG3IN9/w4DfNdGHOymHDp5fHkyoD1XTptguvWC/9G0jZ02mk7dOlBJ
-	zw7j6ugJ9jhVvV9R3fxE4kjdVkLzgsyYlIfrlv3t355KWsRY7kbJQLmKdNWz3LO31XTAiBplcvD
-	h7u7BQipN8ScrHS3mV7exKJLsw3WYEfbFyB29baJ/YVt7vajW9AKX+mhKV9yLCLA4/61X3eLyBL
-	aI99Bg8m9oLQyY2Ugw==
-X-Google-Smtp-Source: AGHT+IHmkA9y1OofEwZ0TlDzuR/nVNF/oPVAK27Xb6GbzCKrWlWgxuFLMMtmHljRUa/MOaRJPGT9iA==
-X-Received: by 2002:a05:6a00:2908:b0:72d:8fa2:9998 with SMTP id d2e1a72fcca58-7303513ac4amr10286481b3a.14.1738834172363;
-        Thu, 06 Feb 2025 01:29:32 -0800 (PST)
-Received: from localhost ([122.172.84.139])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048ad26c5sm854293b3a.46.2025.02.06.01.29.31
+        d=1e100.net; s=20230601; t=1738834175; x=1739438975;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KOagAZK7fofXxMgw0dAFRrT7sTcHKFQ+LQJsrXs9r54=;
+        b=d1hHGSEvyaM+wtFawknFLcbY7SnIN1avPhJb6L2Kl7cBIq3j73LmpU4fGAwoRN3g/b
+         dbPOUJAhLeqobUO7oe3TQGyRsI3v7x8kj72xJeh+eyco6olWE6yzijlLheOHy1SGIIxi
+         I6mpA+9qIqEZ+rOHSE24OwTvZFF4mV2w9IXHZYTJO3iA2jLQXLtut1H0kZGL1JgY9BDc
+         9XqIJJgDgNM1Ffd7SdvLvNxEJuxHbZnLjhSa4r4kNYqTcQ/WhNgQ0Bs216qm+KeFB845
+         V5JGA5V1WME41juhNnY8j4iWP9+c33zHZe7rnbasssdzjnKjhCdOqP92fugCltaHPb1l
+         o8qA==
+X-Forwarded-Encrypted: i=1; AJvYcCWBT8Qoxv31UNWiy0sSKV2T6irhKg0hzl0Og+RBKi3/S2iysh/5zs8ibRq0IHc2BRPVGhokOhFMzgowr8k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydP6vs4f1ZiLpnyUpYsULLXpD7FDq7Hm2+Rw7TLiO0dS4Avepv
+	Vk/666WrY37A5E9nnnspaoYC/QMwP24fcCEgdwpeUZCT4YRjSNiZ3UVrjdFD5nDxEJM8X2wX675
+	vApaWv9wlDBaTnXhkkpdjfcxvY+Rfr8NwWav5pzJ/4yw1+WRHwDf9lZL6Re6r2g==
+X-Gm-Gg: ASbGncssngsxBhNvu30UXTapaKJjJWiIyu4b2QJffIGd1+mD+g9gcSo42UeAq2vfNg7
+	+hVZOm1ewZHDk4zZWiO0igOsWJ+hweKNMGIAnoLY1K6+d129j9AjQz5suFG5Xd/po1OSjEwcVwg
+	XpXdQ6h6Z2tXMPH2xeaP9z3Sv2qbH+wowA0uB0NVw+6yVmpCx7sbZ2nR5ILfmidWd0S24aXWUzT
+	nABJiJ2tzogzrD3doYVG1pUyOpSahIYgfpn65xSSdP967tkMqYmdeut1onkF9wVxvy2+hmftOwF
+	uBHAUS7nSbQYOdoNZJ9y1Qg4P6kBdinf7DUo
+X-Received: by 2002:a5d:5988:0:b0:38c:1362:41b5 with SMTP id ffacd0b85a97d-38db486108amr4535903f8f.6.1738834175189;
+        Thu, 06 Feb 2025 01:29:35 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEACMLPnRenHtTztqiW2IAcbQnqshOGTNeLp4rXCm+kaU1iNlAag5arspiSZQxoQu++qZxvNA==
+X-Received: by 2002:a5d:5988:0:b0:38c:1362:41b5 with SMTP id ffacd0b85a97d-38db486108amr4535875f8f.6.1738834174782;
+        Thu, 06 Feb 2025 01:29:34 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.128.176])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390692a66esm53015975e9.0.2025.02.06.01.29.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 01:29:31 -0800 (PST)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-pm@vger.kernel.org,
+        Thu, 06 Feb 2025 01:29:34 -0800 (PST)
+Date: Thu, 6 Feb 2025 10:29:31 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Thierry Reding <treding@nvidia.com>, Waiman Long <longman@redhat.com>,
+	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Vincent Guittot <vincent.guittot@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nishanth Menon <nm@ti.com>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Erik Schilling <erik.schilling@linaro.org>,
-	=?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V8 10/14] rust: Add initial bindings for cpufreq framework
-Date: Thu,  6 Feb 2025 14:58:31 +0530
-Message-Id: <4dd915bf503b77166b134e4b3dfeed389b1a5bcf.1738832119.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
-In-Reply-To: <cover.1738832118.git.viresh.kumar@linaro.org>
-References: <cover.1738832118.git.viresh.kumar@linaro.org>
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Aashish Sharma <shraash@google.com>,
+	Shin Kawamura <kawasin@google.com>,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
+ for hotplug
+Message-ID: <Z6SA-1Eyr1zDTZDZ@jlelli-thinkpadt14gen4.remote.csb>
+References: <Z4TdofljoDdyq9Vb@jlelli-thinkpadt14gen4.remote.csb>
+ <e9f527c0-4530-42ad-8cc9-cb04aa3d94b7@nvidia.com>
+ <Z4ZuaeGssJ-9RQA2@jlelli-thinkpadt14gen4.remote.csb>
+ <Z4fd_6M2vhSMSR0i@jlelli-thinkpadt14gen4.remote.csb>
+ <aebb2c29-2224-4d14-94e0-7a495923b401@nvidia.com>
+ <Z4kr7xq7tysrKGoR@jlelli-thinkpadt14gen4.remote.csb>
+ <cfcea236-5b4c-4037-a6f5-267c4c04ad3c@nvidia.com>
+ <Z6MLAX_TKowbmdS1@jlelli-thinkpadt14gen4.remote.csb>
+ <Z6M5fQB9P1_bDF7A@jlelli-thinkpadt14gen4.remote.csb>
+ <8572b3bc-46ec-4180-ba55-aa6b9ab7502b@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8572b3bc-46ec-4180-ba55-aa6b9ab7502b@nvidia.com>
 
-This commit adds initial Rust bindings for the cpufreq core. This adds
-basic bindings for cpufreq flags, relations and cpufreq table.
+On 05/02/25 16:56, Jon Hunter wrote:
 
-Reviewed-by: Manos Pitsidianakis <manos.pitsidianakis@linaro.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- MAINTAINERS                     |   1 +
- rust/bindings/bindings_helper.h |   1 +
- rust/helpers/cpufreq.c          |  10 ++
- rust/helpers/helpers.c          |   1 +
- rust/kernel/cpufreq.rs          | 228 ++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs              |   2 +
- 6 files changed, 243 insertions(+)
- create mode 100644 rust/helpers/cpufreq.c
- create mode 100644 rust/kernel/cpufreq.rs
+...
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cda0d2b74e29..f0270ceb82d9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6024,6 +6024,7 @@ F:	drivers/cpufreq/
- F:	include/linux/cpufreq.h
- F:	include/linux/sched/cpufreq.h
- F:	kernel/sched/cpufreq*.c
-+F:	rust/kernel/cpufreq.rs
- F:	tools/testing/selftests/cpufreq/
- 
- CPU HOTPLUG
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index 7f851d5907af..68bf1bc5bae8 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -12,6 +12,7 @@
- #include <linux/blkdev.h>
- #include <linux/clk.h>
- #include <linux/cpu.h>
-+#include <linux/cpufreq.h>
- #include <linux/cpumask.h>
- #include <linux/cred.h>
- #include <linux/errname.h>
-diff --git a/rust/helpers/cpufreq.c b/rust/helpers/cpufreq.c
-new file mode 100644
-index 000000000000..7c1343c4d65e
---- /dev/null
-+++ b/rust/helpers/cpufreq.c
-@@ -0,0 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/cpufreq.h>
-+
-+#ifdef CONFIG_CPU_FREQ
-+void rust_helper_cpufreq_register_em_with_opp(struct cpufreq_policy *policy)
-+{
-+	cpufreq_register_em_with_opp(policy);
-+}
-+#endif
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index de2341cfd917..32d0462219e5 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -11,6 +11,7 @@
- #include "bug.c"
- #include "build_assert.c"
- #include "build_bug.c"
-+#include "cpufreq.c"
- #include "cpumask.c"
- #include "cred.c"
- #include "device.c"
-diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
-new file mode 100644
-index 000000000000..4546a70c7063
---- /dev/null
-+++ b/rust/kernel/cpufreq.rs
-@@ -0,0 +1,228 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! CPU frequency scaling.
-+//!
-+//! This module provides bindings for interacting with the cpufreq subsystem.
-+//!
-+//! C header: [`include/linux/cpufreq.h`](srctree/include/linux/cpufreq.h)
-+
-+use crate::{
-+    bindings,
-+    error::{code::*, to_result, Result},
-+    prelude::*,
-+};
-+
-+use core::{
-+    pin::Pin,
-+};
-+
-+/// Default transition latency value.
-+pub const ETERNAL_LATENCY: u32 = bindings::CPUFREQ_ETERNAL as u32;
-+
-+/// Container for cpufreq driver flags.
-+pub mod flags {
-+    use crate::bindings;
-+
-+    /// Set by drivers that need to update internal upper and lower boundaries along with the
-+    /// target frequency and so the core and governors should also invoke the driver if the target
-+    /// frequency does not change, but the policy min or max may have changed.
-+    pub const NEED_UPDATE_LIMITS: u16 = bindings::CPUFREQ_NEED_UPDATE_LIMITS as _;
-+
-+    /// Set by drivers for platforms where loops_per_jiffy or other kernel "constants" aren't
-+    /// affected by frequency transitions.
-+    pub const CONST_LOOPS: u16 = bindings::CPUFREQ_CONST_LOOPS as _;
-+
-+    /// Set by drivers that want the core to automatically register the cpufreq driver as a thermal
-+    /// cooling device.
-+    pub const IS_COOLING_DEV: u16 = bindings::CPUFREQ_IS_COOLING_DEV as _;
-+
-+    /// Set by drivers for platforms that have multiple clock-domains, i.e. supporting multiple
-+    /// policies. With this sysfs directories of governor would be created in cpu/cpuN/cpufreq/
-+    /// directory and so they can use the same governor with different tunables for different
-+    /// clusters.
-+    pub const HAVE_GOVERNOR_PER_POLICY: u16 = bindings::CPUFREQ_HAVE_GOVERNOR_PER_POLICY as _;
-+
-+    /// Set by drivers which do POSTCHANGE notifications from outside of their ->target() routine.
-+    pub const ASYNC_NOTIFICATION: u16 = bindings::CPUFREQ_ASYNC_NOTIFICATION as _;
-+
-+    /// Set by drivers that want cpufreq core to check if CPU is running at a frequency present in
-+    /// freq-table exposed by the driver. For these drivers if CPU is found running at an out of
-+    /// table freq, the cpufreq core will try to change the frequency to a value from the table.
-+    /// And if that fails, it will stop further boot process by issuing a BUG_ON().
-+    pub const NEED_INITIAL_FREQ_CHECK: u16 = bindings::CPUFREQ_NEED_INITIAL_FREQ_CHECK as _;
-+
-+    /// Set by drivers to disallow use of governors with "dynamic_switching" flag set.
-+    pub const NO_AUTO_DYNAMIC_SWITCHING: u16 = bindings::CPUFREQ_NO_AUTO_DYNAMIC_SWITCHING as _;
-+}
-+
-+/// CPU frequency selection relations. Each value contains a `bool` argument which corresponds to
-+/// the Relation being efficient.
-+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-+pub enum Relation {
-+    /// Select the lowest frequency at or above target.
-+    Low(bool),
-+    /// Select the highest frequency below or at target.
-+    High(bool),
-+    /// Select the closest frequency to the target.
-+    Close(bool),
-+}
-+
-+impl Relation {
-+    // Converts from a value compatible with the C code.
-+    fn new(val: u32) -> Result<Self> {
-+        let efficient = val & bindings::CPUFREQ_RELATION_E != 0;
-+
-+        Ok(match val & !bindings::CPUFREQ_RELATION_E {
-+            bindings::CPUFREQ_RELATION_L => Self::Low(efficient),
-+            bindings::CPUFREQ_RELATION_H => Self::High(efficient),
-+            bindings::CPUFREQ_RELATION_C => Self::Close(efficient),
-+            _ => return Err(EINVAL),
-+        })
-+    }
-+
-+    /// Converts to a value compatible with the C code.
-+    pub fn val(&self) -> u32 {
-+        let (mut val, e) = match self {
-+            Self::Low(e) => (bindings::CPUFREQ_RELATION_L, e),
-+            Self::High(e) => (bindings::CPUFREQ_RELATION_H, e),
-+            Self::Close(e) => (bindings::CPUFREQ_RELATION_C, e),
-+        };
-+
-+        if *e {
-+            val |= bindings::CPUFREQ_RELATION_E;
-+        }
-+
-+        val
-+    }
-+}
-+
-+/// Equivalent to `struct cpufreq_policy_data` in the C code.
-+#[repr(transparent)]
-+pub struct PolicyData(*mut bindings::cpufreq_policy_data);
-+
-+impl PolicyData {
-+    /// Creates new instance of [`PolicyData`].
-+    ///
-+    /// # Safety
-+    ///
-+    /// Callers must ensure that `ptr` is valid and non-null.
-+    pub unsafe fn from_raw_policy_data(ptr: *mut bindings::cpufreq_policy_data) -> Self {
-+        Self(ptr)
-+    }
-+
-+    /// Returns the raw pointer to the C structure.
-+    #[inline]
-+    pub fn as_raw(&self) -> *mut bindings::cpufreq_policy_data {
-+        self.0
-+    }
-+
-+    /// Provides a wrapper to the generic verify routine.
-+    pub fn generic_verify(&self) -> Result<()> {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
-+        // use it now.
-+        to_result(unsafe { bindings::cpufreq_generic_frequency_table_verify(self.as_raw()) })
-+    }
-+}
-+
-+/// Builder for the `struct cpufreq_frequency_table` in the C code.
-+#[repr(transparent)]
-+#[derive(Default)]
-+pub struct TableBuilder {
-+    entries: KVec<bindings::cpufreq_frequency_table>,
-+}
-+
-+impl TableBuilder {
-+    /// Creates new instance of [`TableBuilder`].
-+    pub fn new() -> Self {
-+        Self {
-+            entries: KVec::new(),
-+        }
-+    }
-+
-+    /// Adds a new entry to the table.
-+    pub fn add(&mut self, frequency: u32, flags: u32, driver_data: u32) -> Result<()> {
-+        // Adds new entry to the end of the vector.
-+        Ok(self.entries.push(
-+            bindings::cpufreq_frequency_table {
-+                flags,
-+                driver_data,
-+                frequency,
-+            },
-+            GFP_KERNEL,
-+        )?)
-+    }
-+
-+    /// Creates [`Table`] from [`TableBuilder`].
-+    pub fn into_table(mut self) -> Result<Table> {
-+        // Add last entry to the table.
-+        self.add(bindings::CPUFREQ_TABLE_END as u32, 0, 0)?;
-+        Table::from_builder(self.entries)
-+    }
-+}
-+
-+/// A simple implementation of the cpufreq table, equivalent to the `struct
-+/// cpufreq_frequency_table` in the C code.
-+pub struct Table {
-+    #[allow(dead_code)]
-+    // Dynamically created table.
-+    entries: Option<Pin<KVec<bindings::cpufreq_frequency_table>>>,
-+
-+    // Pointer to the statically or dynamically created table.
-+    ptr: *mut bindings::cpufreq_frequency_table,
-+}
-+
-+impl Table {
-+    /// Creates new instance of [`Table`] from [`TableBuilder`].
-+    fn from_builder(entries: KVec<bindings::cpufreq_frequency_table>) -> Result<Self> {
-+        if entries.is_empty() {
-+            return Err(EINVAL);
-+        }
-+
-+        // Pin the entries to memory, since we are passing its pointer to the C code.
-+        let mut entries = Pin::new(entries);
-+
-+        // The pointer is valid until the table gets dropped.
-+        let ptr = entries.as_mut_ptr();
-+
-+        Ok(Self {
-+            entries: Some(entries),
-+            ptr,
-+        })
-+    }
-+
-+    /// Creates new instance of [`Table`] from raw pointer.
-+    ///
-+    /// # Safety
-+    ///
-+    /// Callers must ensure that `ptr` is valid and non-null for the lifetime of the [`Table`].
-+    pub unsafe fn from_raw(ptr: *mut bindings::cpufreq_frequency_table) -> Self {
-+        Self { entries: None, ptr }
-+    }
-+
-+    /// Returns raw pointer to the `struct cpufreq_frequency_table` compatible with the C code.
-+    #[inline]
-+    pub fn as_raw(&self) -> *mut bindings::cpufreq_frequency_table {
-+        self.ptr
-+    }
-+
-+    /// Returns `frequency` at index in the [`Table`].
-+    pub fn freq(&self, index: usize) -> Result<u32> {
-+        // SAFETY: The pointer is guaranteed to be valid for the lifetime of `self` and `index` is
-+        // guaranteed to be within limits of the frequency table by the C API.
-+        Ok(unsafe { (*self.ptr.add(index)).frequency })
-+    }
-+
-+    /// Returns `flags` at index in the [`Table`].
-+    pub fn flags(&self, index: usize) -> Result<u32> {
-+        // SAFETY: The pointer is guaranteed to be valid for the lifetime of `self` and `index` is
-+        // guaranteed to be within limits of the frequency table by the C API.
-+        Ok(unsafe { (*self.ptr.add(index)).flags })
-+    }
-+
-+    /// Returns `data` at index in the [`Table`].
-+    pub fn data(&self, index: usize) -> Result<u32> {
-+        // SAFETY: The pointer is guaranteed to be valid for the lifetime of `self` and `index` is
-+        // guaranteed to be within limits of the frequency table by the C API.
-+        Ok(unsafe { (*self.ptr.add(index)).driver_data })
-+    }
-+}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 8956f78a2805..2a42e21d57f2 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -43,6 +43,8 @@
- #[cfg(CONFIG_COMMON_CLK)]
- pub mod clk;
- pub mod cpu;
-+#[cfg(CONFIG_CPU_FREQ)]
-+pub mod cpufreq;
- pub mod cpumask;
- pub mod cred;
- pub mod device;
--- 
-2.31.1.272.g89b43f80a514
+> Thanks! That did make it easier :-)
+> 
+> Here is what I see ...
+
+Thanks!
+
+Still different from what I can repro over here, so, unfortunately, I
+had to add additional debug printks. Pushed to the same branch/repo.
+
+Could I ask for another run with it? Please also share the complete
+dmesg from boot, as I would need to check debug output when CPUs are
+first onlined.
+
+Best,
+Juri
 
