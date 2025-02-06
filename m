@@ -1,123 +1,142 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35AFD198842
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5219C19ABBB;
+	Thu,  6 Feb 2025 18:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865240; cv=none; b=IQERqizTITJNxjCl3KHdZprBz0IAXA3XzmlvCHc7rCKbYWZSiUWrUmKLqnTX/KdNfC8NuAg1Ps8L29sgINQZyyJsgW20p147QKT8RITzVno6Kyjq6i3+RAk3rAhq3Qu1/yKyNlyKPAoOtT4HD+o6wDzFnbSvgDqv+YqF6BUFCxs=
+	t=1738865257; cv=none; b=TBdi3aKTr5LyucDG7RP46n+X9aN6dvxplMbHWrobiK1W8jfz5Rbia/9qxpEgDvj3Y2axsIcxjg+qwD7T62Cep2jnUckIqvcHEoo1DnKSjmb87ClbnWlCifh67btRXb9rpg6Iuu9XRlgLgHLylaSVwHgWt28bCjawFrxoc5Sndeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865240; c=relaxed/simple;
-	bh=LA6Op/VaTOhJKe72M7oQe6NRQa7SxDnVNr8EdMbdizM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P5EK5b+EFGWXpgd2FG6RwEWMMyKqU3Bx0wwFjwyTgJItRycYup91sx+PEY2IeKv/20RWV+W/sGyM6ki/NfTyLWEvC9F2QbcVNZrTcmMXG6ipkjjIKRzCTDREMYef6yLIcHxZMjVF35Ct1w3+dqo0eGCaRfKrGWOjD69HgGcBD6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UMjqKrHC; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1738865257; c=relaxed/simple;
+	bh=jMuvhUKLqZNm/NID8WYuGFhPA5+By/cKOCgJa0yRzus=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J2PqghH/p3cne8I0BFu9xrUxbsBPULaXUsY1TEqQFJxvtjUzzEzLcXWnE1y3WFGNd/yPWvbMF9LOdpMV4HEEczFcuSXH9q7RBjps8qunJo/o6c2LJgngFJEf/HuFtuPtjnpKWKVZ3KsBat/DRMvjU3C0Dts45Lbz0mERZ9FTkzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QJ7tmR4E; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UMjqKrHC"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54411e3c610so750780e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:07:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJ7tmR4E"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-724f4d99ba0so588752a34.0;
+        Thu, 06 Feb 2025 10:07:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1738865234; x=1739470034; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5VkJ1I/mpTOj70lVolwV2vn4N+hDhU0UEmqKxlKybuw=;
-        b=UMjqKrHCUaZlS4KRlqSdFLKumcN8+7a3o+zarDsc65cg/qfr5HeLj03AVqlElc/JAZ
-         8Yuj5vSK96HpZ+fOaqBOWwvP8k9aKdoxYb3HiLxvGMvp1Bzl7e0yXX3SSjxxPGGaHzpK
-         VSc5grQLpV4cL4fXFdd/Dr0fkwbVMA24skbvA=
+        d=gmail.com; s=20230601; t=1738865255; x=1739470055; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=u/pJDW/eJDOfTkN6r44qxtsR0qaMVVuKMoOa/io0dHQ=;
+        b=QJ7tmR4Ep2ph6Fmzii0uJCTWxoPySXcy3cKkQCh6zHaYSuDCcBFk5WpBFw51z7jH0N
+         ai+5qEs9JfMzw6uIS7GbBjddAVLd47V5UeFcQhVVVOdPTOwWnc+dcbaJn4vHQd1nXw+I
+         Q2f7tIf/XdSIjfyy8HVZz8MRRWH71VX9jRgL34GuiiNf4G/wgsZGi9hL1xDuO25mGSR/
+         eGWF/NQ4R+nPSfkHoOueWdK7UhYYDAEp90uunpjv94bpEg4sVdMEEjP9U5eI0T9KnEpF
+         8Y2/GaD/EO7B44xE0rJbupDbL1mGTOhUy+jKMjPcK7BC2v+pqWo4MKpm9Dw293TD6p/n
+         qoAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738865234; x=1739470034;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5VkJ1I/mpTOj70lVolwV2vn4N+hDhU0UEmqKxlKybuw=;
-        b=lm52R/PWmF9nC01lIv21xuAm28CeFpm2/7rYZPLneDf6IJe8twBCmmJVQmhg8qErMg
-         w7HyOFFtmC9sMuwwVhqEYZwmK2dOktJgPD+f4aMtxAJwKAvkc5EzY0yeRTKWKVripx4i
-         Ns3iuW5PwQwY/ZRss738TyXh9RIE1u8OJz56XZblyJhJHRaRCEYTiK6ZjKS2Sw+EnewF
-         lLS+afRN4zfeP6JmNBoHAmhDokvbeJ1JhNOyyeAYr0SFujx+S+sFa0E6Z2dCQ00xxlvK
-         wHsim87Y0sWumYKJY/eXMkgEdgJISCa2JLJfl6s/RJyjCFY/OFdoASMSks1aHBR7fDvE
-         43Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCUOEYDnCv7bcvujTJC8Zk8CINOEpu522e1RUTwac6Mh6c6NuTKHrs9e0QUnTdllf8V/gEA/TNJfva3oEsY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywtc4D94mnnVfqWctd7lHbk36kw+XL5h9seJAB5G/WQPSmwDd4b
-	/9fryhGJzTSTGgxbUNuNgIcLRZm+pRv3Ey5vfPF3W08zkirZiekhH2Wvt2EaNV/fJH4iCgWifMZ
-	3g1lu7g==
-X-Gm-Gg: ASbGncs11bnZhE0lfIIaDIbz1jgjjH1qGKFgOOtfgPBg0d72+aAgsnUz+ONAkVt/rTl
-	fNnFMbJkarx7IvblVE/Vxi99vUxskOIfNDszUJUtGQBPVrjPWyJsNFEXFIdV+NGGuptTaDxsqzv
-	+PMcdCN+vpaICk97tqD7YlLZCyaa1SYjfL+t046uzgv4vndg+oK2AnsgG73zIKlW3MF0QnL4b9/
-	Op4xL0Ym/+vf/llvggJC5IjKpJMP8fQo6pwpXaE8MQZnhzq7A045jfEXRrMyL4WAt7HrLkQCEhp
-	szjRfJHC8mTyG0mvtcwn+6EMUVslGPIBA0yg4QU5jsb26vS04k3hHtOpZn1WxdOvHMfP+w==
-X-Google-Smtp-Source: AGHT+IG8bt/iHJc31TwZABiryQZNh8vwVityChKEjK0bvn+1eANlZ27WVkauhPOtfI4pnhGnOpbXCQ==
-X-Received: by 2002:a05:6512:3d92:b0:540:1a40:ab0d with SMTP id 2adb3069b0e04-54405a2514dmr2701031e87.28.1738865233921;
-        Thu, 06 Feb 2025 10:07:13 -0800 (PST)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de1a6c40sm1893511fa.49.2025.02.06.10.07.12
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1738865255; x=1739470055;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u/pJDW/eJDOfTkN6r44qxtsR0qaMVVuKMoOa/io0dHQ=;
+        b=IVMkWngWYXVLcGk12XiZgjaq3UiDE7+dXU7f1bwuA70K0rdF6FPmQ4MNVhZhmORSU4
+         7o8wUD0CJNmhyc4iLqp2WJg9J0UP1c82XY1zUX8vSws0p47ecSOpPIfESZjB2bCiGdV9
+         kdC2J7fmAKGyeelB49SRYhX3WQGblj3ewfRTuMMG9Y55gjQ5ljNxzmaLth70X/w4s8wU
+         4oumADYc6cgfMkdWWqFxwsrOFsyH6yCke2CGZEXDNt5iNXWzzLZSvOVhI9XMES1AB6DT
+         NzfyLq/I9HWhEb4JDMKbHN10p6G7+P/qfWAwJvmYeCFepSedYoblT5PEWTTEDMahvXwy
+         FpCA==
+X-Forwarded-Encrypted: i=1; AJvYcCViDRC6gqBfnLxQLZ8YxkOssolnuAAOrSGI3fmxX9lMyv1T6vgaVJCqNj8Wyoz3+umVZU6puXJ+@vger.kernel.org, AJvYcCWab1lZCY5cJ2w/XVirgR3jxy2UXU6VaelBzRlYebMZ4y4ohjmrxxMS6Kvbpcfg7qtOrUjX+TTvvtsdXsg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGEa0FXmR8Jskv75fXT3Rv6mFpxsbU0ABi7RW5Vm8hAQpa9iFB
+	5abOmEXc8ZtA0Vy05FTNXR6DQlvM+RV/x8Myw5Gtl+n2wyd/zO43
+X-Gm-Gg: ASbGncsXfMp6AduAZxVtc5SDfL3XVgMp9IIAv8vxg/I0ad/cEYDIDjkwbC4x619knXL
+	9lC6Zt/nv1KbI5oVWL9UA6hklwjIit2jkL/A7iCoFtAa95SmnO7xQ5KCCD8yvmgR2UWoTyLBk/c
+	mRZlLbXhLKNwVrToxAZwvnFWzJUwm9OW6JaUPe8iYXCPfpHcYK6WgcIsUTWDJixt8B7cbHHzH89
+	YKhcohig6sTAMbCp5TaMnrEi0OmaJkg49qGaQJCroNZr5Zjy6Sp49xdIspwu4kFX3ofLF1c6c+k
+	JgZqiYtiQYkAR6AOcTjYqlHBZ/LzOXpTiH1sFCwR1t0=
+X-Google-Smtp-Source: AGHT+IFqiRN7vtbQnLqrA2aPCvxFCOAk254jjb1g49vcVV/z+6bJFQMSilqUf097jiFTU7wk6Xr+nw==
+X-Received: by 2002:a05:6830:668e:b0:71e:48b1:ad28 with SMTP id 46e09a7af769-726b87b3665mr63069a34.4.1738865255036;
+        Thu, 06 Feb 2025 10:07:35 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726af914859sm397298a34.6.2025.02.06.10.07.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 10:07:13 -0800 (PST)
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-307b8e4fc25so12738321fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:07:12 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWElPB6lZwrnlsBCqpkvpzOZwF77Zp9nE4csdfdXxQMwOcM+KD/jtjETCKm2jPNLSz1vgRvbm+0Kd9EBxs=@vger.kernel.org
-X-Received: by 2002:a17:907:7f0f:b0:ab6:d6c3:f1e4 with SMTP id
- a640c23a62f3a-ab75e2f2393mr881845566b.38.1738864732223; Thu, 06 Feb 2025
- 09:58:52 -0800 (PST)
+        Thu, 06 Feb 2025 10:07:33 -0800 (PST)
+Message-ID: <6c11c5a1-872e-4109-a144-2d7e9f8fc60d@gmail.com>
+Date: Thu, 6 Feb 2025 10:07:31 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z4D5a5NYrAbNxUL6@pollux> <Z4kG5AcVeQKegLnb@pollux>
- <20250128092334.GA28548@lst.de> <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
- <20250130154646.GA2298732@nvidia.com> <2025013030-gummy-cosmic-7927@gregkh>
- <20250130172437.GN5556@nvidia.com> <2025013148-reversal-pessimism-1515@gregkh>
- <20250131135421.GO5556@nvidia.com> <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
- <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local> <CAPM=9tzPR9wd=3Wbjnp-T0W8-dDfGah-H3Ny52G85B+2Ev9ksA@mail.gmail.com>
- <208e1fc3-cfc3-4a26-98c3-a48ab35bb9db@marcan.st>
-In-Reply-To: <208e1fc3-cfc3-4a26-98c3-a48ab35bb9db@marcan.st>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 6 Feb 2025 09:58:36 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wi=ZmP2=TmHsFSUGq8vUZAOWWSK1vrJarMaOhReDRQRYQ@mail.gmail.com>
-X-Gm-Features: AWEUYZkS6oHFUn-g-IGnkz4FJ-irLv59VoaubaKbNOcXpu9gE5INymKIQSe6irw
-Message-ID: <CAHk-=wi=ZmP2=TmHsFSUGq8vUZAOWWSK1vrJarMaOhReDRQRYQ@mail.gmail.com>
-Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma
- coherent allocator abstraction.)
-To: Hector Martin <marcan@marcan.st>
-Cc: Dave Airlie <airlied@gmail.com>, Jason Gunthorpe <jgg@nvidia.com>, 
-	Greg KH <gregkh@linuxfoundation.org>, phasta@kernel.org, 
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>, 
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>, daniel.almeida@collabora.com, 
-	aliceryhl@google.com, robin.murphy@arm.com, rust-for-linux@vger.kernel.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>, 
-	open list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	airlied@redhat.com, "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>, 
-	DRI Development <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.6 000/389] 6.6.76-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250206155234.095034647@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+In-Reply-To: <20250206155234.095034647@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 6 Feb 2025 at 01:19, Hector Martin <marcan@marcan.st> wrote:
->
-> If shaming on social media does not work, then tell me what does,
-> because I'm out of ideas.
+On 2/6/25 08:06, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.76 release.
+> There are 389 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 08 Feb 2025 15:51:12 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.76-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-How about you accept the fact that maybe the problem is you.
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-You think you know better. But the current process works.
-
-It has problems, but problems are a fact of life.  There is no perfect.
-
-However, I will say that the social media brigading just makes me not
-want to have anything at all to do with your approach.
-
-Because if we have issues in the kernel development model, then social
-media sure as hell isn't the solution. The same way it sure as hell
-wasn't the solution to politics.
-
-Technical patches and discussions matter. Social media brigading - no
-than\k you.
-
-                 Linus
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
