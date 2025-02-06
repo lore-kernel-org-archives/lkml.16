@@ -1,237 +1,140 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEAE19F13B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 19:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF251A9B46;
+	Thu,  6 Feb 2025 19:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738870799; cv=none; b=XCSehEuiRmu7UO0BNH+wpZCeDajBlHxur3/HgahjG3dW7JG3Neto+r1FCoOWZOXysVp2sObuzzVN5wDJbrp18v7IHDQW1Wa+7GptETjXR2GLKoRVDKASs9d2uZ9X+aXMsHWTaPiBEQ//xt7dZ2aluZ/DfyXQhUQg5zh/ZVg/LJc=
+	t=1738870804; cv=none; b=tA2NITMRPkYEJnu7gJ9tN2s3LcnhD5FTZBcUb3zDr29ahUE7u94Hc4B/gRkkYKKjUIubR9VDsbdEkzlnr8vbUM7axW0klz+yX+ql70K/UBCZ++3+713BaMylhvOLl1CJQnkA6zYo4m+Uk0v//tehO722Kj7PTipEeCcNvWkjNTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738870799; c=relaxed/simple;
-	bh=+WbuNCbIwc6pfCulwPbDp8XIejeaiwIMGRWFBt5zaJM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bcNwtGyXdJBgkufOuVMcMyfoYINOsbKd5I82zf7sqmqV52K56tc/AzF7b4LT3G0JM2t9XfMhzFFAH8eI5HpVPBNahMM0PWeCTH46B3ly2B/3Oerob4fx47gqDHvnk3wGV5AD/u0Ku86s+lHt3+jOn5YU3f1ZL+fkBb5gOz2an9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=F7Z0xR85; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1738870804; c=relaxed/simple;
+	bh=x/gRAVP5w48dDy3Q4GLG6EyEXkg923PyyQPCeIGWkXE=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=nMz5Mm/1IoDuKA3y9n8CXvDpVtAMWXUBx0F+zSrXnOp4Vs5QSYBs4zjBqO65jWEQHrarqq+LguWKuvf7I/gWGAN4Pk2Lf+Y8f4YflhlPpnqVWfupSGZtQFmmXqraWdUy7CFvaVl+hisdkf3givPd4mQNCdsGlSWCGNtRD2/j5Fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QrFbyYfQ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="F7Z0xR85"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54410d769f7so992433e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 11:39:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1738870796; x=1739475596; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BfWlg5ALvLHQGr8GCm9cqqAF8kFfpr+8rGK2kWtvU+k=;
-        b=F7Z0xR85D6xbBYx1up9hwyUo1wkDZdpZVjnoJbQYwsQPsp8dP6/UFnt3VoLR71yR++
-         irdXRrSBW5V4gGlVcZXWWUfS8Emh1yqUVZkSpmHJuSK5TdAB4jojuzf9Tx/qYYSMRFdX
-         FYnGsaz/IND+YCq4IAhcfy0FTQGUEaBaj/oS4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738870796; x=1739475596;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BfWlg5ALvLHQGr8GCm9cqqAF8kFfpr+8rGK2kWtvU+k=;
-        b=JSmXooTk9IPkGG0gtRj+rqJRUW9TbB58rtpy/MXW1Zd6Zf3IxY0+Z0NTDeZQOX50rS
-         f7ZFxoAP9lnFSPLG84b5hIe85l1H188HN3Xbk04GwFfS4glK7WDpE1pCbkwOpOWs9qdG
-         rQddes1ELPcMZIn8/vqNa+RjpDoWmgP7h+V5/06xGUB8brsKvvmdJzl65MlW0L2m1epj
-         ZoycBByz0/zAwiOXPWZ7L3GWFESfHFHnotGLlwfw5A0ALh2Ez5rsa8gP/idmaglQbJkc
-         DHvEJ+fNXZ0Ao0nl1bXpRO/pfITLy+NV0saYUFR8LBYSjYD7pis3xOzIx51e8lo4KLZQ
-         4A5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXfsdaJGqbSBrkg9+ZdvzwDqxLNX7lo+CSCGY6PuvqJA9mCgicDCQYScw/hh5jEo/JYisDts5j/q0Lb2YM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKUR/5CEnmYxah3aBmHDGDa6aOytnmOdpV9gbIJ6IOAeEwprzt
-	9qQRMgTdG1D9VsJa8BQ5zNwDXek2gz4I7XfytG0lLlXCEAWB97qFZFRUaO5Eww+htEPQkSSHda1
-	YTLyIG6QFjzOEpo20qBr50vVWoRXnbF3qzPg233BbhXXkOiHygg==
-X-Gm-Gg: ASbGncsv1Yl0e/Tap1CEzz2tY+x2RKwXFW1S+jjYsXakez+BsCvCppeniqhLhHne+z0
-	bGWG0gjmbyqtYcVo/JBIzgfL9nkOHXaii05vLnwgXBrkDWYh2od7eoKLLpDv8hJOOejYqT+0kiw
-	==
-X-Google-Smtp-Source: AGHT+IEcLjm//BRgdSvW6BdZVtXln0kkGrDo5VDCw6zizTEiDrZsnTY6/xpZnzEp0UWLsdq/tQ4o0WfZNT4rm70r4hg=
-X-Received: by 2002:a05:6512:b9b:b0:544:ed0:b686 with SMTP id
- 2adb3069b0e04-54414a9cbe8mr51784e87.15.1738870795950; Thu, 06 Feb 2025
- 11:39:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QrFbyYfQ"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516Hrior018154;
+	Thu, 6 Feb 2025 19:39:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:date:from:message-id:subject:to; s=qcppdkim1; bh=N3DbkgSLvQT9
+	Mh8DpNYxq3rF29ncrXImS+5D27fnjTA=; b=QrFbyYfQWh1/ApBAiTMN02bPXADx
+	YVjKABqCc++ZnP0sQu60M3xazSMRRtJBDo2pIk4XkckFROXVPsCtfe6I3uPMf2S7
+	i2bNdTQIO6OmBKxTbqY3EckZvSK8NnEGEefTa7YGSDCiQ6iH5hYXJkLZj6LjO14u
+	dIdaYwm+4xjHgShlOZ+hDUlnd1bNiVqD43dm7Io5nJIYxCUEETshf+Z7Em28ZQOL
+	oXbSSkAU97Rykas5hGWu68FADDW8lJAFSwabqRjO5cM3tXlTV4kaD+AYxVENAbFo
+	c2H0fWA3bx+beITAtA2HXmLcQLaF6IeQ/1AXD+N+1P++UN9w5fRsTah36A==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44n1vng8dj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Feb 2025 19:39:56 +0000 (GMT)
+Received: from pps.filterd (NALASPPMTA04.qualcomm.com [127.0.0.1])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 516Jdtea012577;
+	Thu, 6 Feb 2025 19:39:55 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by NALASPPMTA04.qualcomm.com (PPS) with ESMTP id 44n335r65a-1;
+	Thu, 06 Feb 2025 19:39:55 +0000
+Received: from NALASPPMTA04.qualcomm.com (NALASPPMTA04.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 516JbT6X008333;
+	Thu, 6 Feb 2025 19:39:55 GMT
+Received: from hu-devc-lv-u18-c.qualcomm.com (hu-eserrao-lv.qualcomm.com [10.47.235.27])
+	by NALASPPMTA04.qualcomm.com (PPS) with ESMTP id 516JdsVD012557;
+	Thu, 06 Feb 2025 19:39:55 +0000
+Received: by hu-devc-lv-u18-c.qualcomm.com (Postfix, from userid 464172)
+	id C0DDC624CA9; Thu,  6 Feb 2025 11:39:54 -0800 (PST)
+From: Elson Roy Serrao <quic_eserrao@quicinc.com>
+To: gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com,
+        xu.yang_2@nxp.com
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Elson Roy Serrao <quic_eserrao@quicinc.com>, stable@vger.kernel.org
+Subject: [PATCH v2] usb: roles: set switch registered flag early on
+Date: Thu,  6 Feb 2025 11:39:50 -0800
+Message-Id: <20250206193950.22421-1-quic_eserrao@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: mZCfhr0dpV2NxLO4jK71MJD8fEodPPjp
+X-Proofpoint-GUID: mZCfhr0dpV2NxLO4jK71MJD8fEodPPjp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-06_06,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ spamscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0 impostorscore=0
+ mlxscore=0 priorityscore=1501 suspectscore=0 lowpriorityscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502060155
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CA+-6iNwws3On9-VJ-vF55o5LwKYpOHtfRYLtoQ5=bh7uGTfYkg@mail.gmail.com>
- <20250206183455.GA994612@bhelgaas>
-In-Reply-To: <20250206183455.GA994612@bhelgaas>
-From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Thu, 6 Feb 2025 14:39:44 -0500
-X-Gm-Features: AWEUYZmJV49J_V5lCzC8oSRhkYqAedlRPse_RFiaEYA4qurfDTZPYmCNEGGz38I
-Message-ID: <CA+-6iNxz-==Ws-EZTBbSzqmEApAX=bsq9=x=3=Z9G3kqxD53Hg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/6] PCI: brcmstb: Fix error path upon call of regulator_bulk_get()
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>, 
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000020ffe8062d7e68f6"
 
---00000000000020ffe8062d7e68f6
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The role switch registration and set_role() can happen in parallel as they
+are invoked independent of each other. There is a possibility that a driver
+might spend significant amount of time in usb_role_switch_register() API
+due to the presence of time intensive operations like component_add()
+which operate under common mutex. This leads to a time window after
+allocating the switch and before setting the registered flag where the set
+role notifications are dropped. Below timeline summarizes this behavior
 
-On Thu, Feb 6, 2025 at 1:34=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
-rote:
->
-> On Thu, Feb 06, 2025 at 01:22:54PM -0500, Jim Quinlan wrote:
-> > On Thu, Feb 6, 2025 at 12:29=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.o=
-rg> wrote:
-> > > On Wed, Feb 05, 2025 at 02:12:02PM -0500, Jim Quinlan wrote:
-> > > > If regulator_bulk_get() returns an error, no regulators are
-> > > > created and we need to set their number to zero.  If we do
-> > > > not do this and the PCIe link-up fails, regulator_bulk_free()
-> > > > will be invoked and effect a panic.
-> > > >
-> > > > Also print out the error value, as we cannot return an error
-> > > > upwards as Linux will WARN on an error from add_bus().
->
-> > > > Fixes: 9e6be018b263 ("PCI: brcmstb: Enable child bus device regulat=
-ors from DT")
-> > > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > > > ---
-> > > >  drivers/pci/controller/pcie-brcmstb.c | 3 ++-
-> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/co=
-ntroller/pcie-brcmstb.c
-> > > > index f8fc3d620ee2..bf919467cbcd 100644
-> > > > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > > > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > > > @@ -1417,7 +1417,8 @@ static int brcm_pcie_add_bus(struct pci_bus *=
-bus)
-> > > >
-> > > >               ret =3D regulator_bulk_get(dev, sr->num_supplies, sr-=
->supplies);
-> > > >               if (ret) {
-> > > > -                     dev_info(dev, "No regulators for downstream d=
-evice\n");
-> > > > +                     dev_info(dev, "Did not get regulators; err=3D=
-%d\n", ret);
-> > > > +                     sr->num_supplies =3D 0;
-> > > >                       goto no_regulators;
-> > >
-> > > I think it might have been better if we could do the
-> > > regulator_bulk_get() separately, before pci_host_probe(), so that if
-> > > this error happens, we can deal with it more easily.
-> >
-> > Keep in mind that brcm_pcie_add_bus() cannot return a non-zero error
-> > code, as it will get a WARN() from the caller if it does.
-> >
-> > Would you  accept deallocating the "sr" array and setting it to NULL
-> > like the following error condition does?  In that way we would not be
-> > invoking any regulator_bulk_xxxx() functions with nr=3D=3D0.  I'm reall=
-y
-> > wary of moving things around...
->
-> Yeah, don't move anything around right now.  My wondering is just
-> about whether the alloc and bulk_get() could be done earlier, leaving
-> only the bulk_enable() to be done in brcm_pcie_add_bus().
->
-> The alloc and bulk_get() depend on DT things and it's nice to catch
-> those errors earlier.
+Thread1				|	Thread2
+usb_role_switch_register()	|
+	|			|
+	---> allocate switch	|
+	|			|
+	---> component_add()	|	usb_role_switch_set_role()
+	|			|	|
+	|			|	--> Drop role notifications
+	|			|	    since sw->registered
+	|			|	    flag is not set.
+	|			|
+	--->Set registered flag.|
 
-IIRC, I believe the reason that this code is in
-brcm_pcie_{add,remove}_bus() is because the reviewers wanted the code
-outside of the RC driver, as it was the port driver that "owned'  the
-regulator.  I also vaguely recall one of my submissions that had
-generic pci_subdev_regulators_{add,remove}_bus()  calls in pcie/bus.c,
-but  was  later redirected back to the brcmstb RC driver.
+To avoid this, set the registered flag early on in the switch register
+API.
 
-Regards,
-Jim Quinlan
-Broadcom STB/CM
->
-> Bjorn
+Fixes: b787a3e78175 ("usb: roles: don't get/set_role() when usb_role_switch is unregistered")
+cc: stable@vger.kernel.org
+Signed-off-by: Elson Roy Serrao <quic_eserrao@quicinc.com>
+---
+Changes in v2:
+ - Set the switch registered flag from the get-go as suggested by
+   Heikki.
+ - Modified subject line and commit next as per the new logic.
+ - Link to v1: https://lore.kernel.org/all/20250127230715.6142-1-quic_eserrao@quicinc.com/
 
---00000000000020ffe8062d7e68f6
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+ drivers/usb/roles/class.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-MIIQbgYJKoZIhvcNAQcCoIIQXzCCEFsCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-gg3FMIIFDTCCA/WgAwIBAgIQeEqpED+lv77edQixNJMdADANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA5MTYwMDAwMDBaFw0yODA5MTYwMDAwMDBaMFsxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBS
-MyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-vbCmXCcsbZ/a0fRIQMBxp4gJnnyeneFYpEtNydrZZ+GeKSMdHiDgXD1UnRSIudKo+moQ6YlCOu4t
-rVWO/EiXfYnK7zeop26ry1RpKtogB7/O115zultAz64ydQYLe+a1e/czkALg3sgTcOOcFZTXk38e
-aqsXsipoX1vsNurqPtnC27TWsA7pk4uKXscFjkeUE8JZu9BDKaswZygxBOPBQBwrA5+20Wxlk6k1
-e6EKaaNaNZUy30q3ArEf30ZDpXyfCtiXnupjSK8WU2cK4qsEtj09JS4+mhi0CTCrCnXAzum3tgcH
-cHRg0prcSzzEUDQWoFxyuqwiwhHu3sPQNmFOMwIDAQABo4IB2jCCAdYwDgYDVR0PAQH/BAQDAgGG
-MGAGA1UdJQRZMFcGCCsGAQUFBwMCBggrBgEFBQcDBAYKKwYBBAGCNxQCAgYKKwYBBAGCNwoDBAYJ
-KwYBBAGCNxUGBgorBgEEAYI3CgMMBggrBgEFBQcDBwYIKwYBBQUHAxEwEgYDVR0TAQH/BAgwBgEB
-/wIBADAdBgNVHQ4EFgQUljPR5lgXWzR1ioFWZNW+SN6hj88wHwYDVR0jBBgwFoAUj/BLf6guRSSu
-TVD6Y5qL3uLdG7wwegYIKwYBBQUHAQEEbjBsMC0GCCsGAQUFBzABhiFodHRwOi8vb2NzcC5nbG9i
-YWxzaWduLmNvbS9yb290cjMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5j
-b20vY2FjZXJ0L3Jvb3QtcjMuY3J0MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vcm9vdC1yMy5jcmwwWgYDVR0gBFMwUTALBgkrBgEEAaAyASgwQgYKKwYBBAGgMgEo
-CjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAN
-BgkqhkiG9w0BAQsFAAOCAQEAdAXk/XCnDeAOd9nNEUvWPxblOQ/5o/q6OIeTYvoEvUUi2qHUOtbf
-jBGdTptFsXXe4RgjVF9b6DuizgYfy+cILmvi5hfk3Iq8MAZsgtW+A/otQsJvK2wRatLE61RbzkX8
-9/OXEZ1zT7t/q2RiJqzpvV8NChxIj+P7WTtepPm9AIj0Keue+gS2qvzAZAY34ZZeRHgA7g5O4TPJ
-/oTd+4rgiU++wLDlcZYd/slFkaT3xg4qWDepEMjT4T1qFOQIL+ijUArYS4owpPg9NISTKa1qqKWJ
-jFoyms0d0GwOniIIbBvhI2MJ7BSY9MYtWVT5jJO3tsVHwj4cp92CSFuGwunFMzCCA18wggJHoAMC
-AQICCwQAAAAAASFYUwiiMA0GCSqGSIb3DQEBCwUAMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9v
-dCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5
-MDMxODEwMDAwMFoXDTI5MDMxODEwMDAwMFowTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENB
-IC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqG
-SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJXaQeQZ4Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0E
-XyTLLkvhYIJG4VKrDIFHcGzdZNHr9SyjD4I9DCuul9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+J
-J5U4nwbXPsnLJlkNc96wyOkmDoMVxu9bi9IEYMpJpij2aTv2y8gokeWdimFXN6x0FNx04Druci8u
-nPvQu7/1PQDhBjPogiuuU6Y6FnOM3UEOIDrAtKeh6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTv
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBU0wggQ1oAMCAQICDEjuN1Vuw+TT9V/ygzANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE3MTNaFw0yNTA5MTAxMjE3MTNaMIGO
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xFDASBgNVBAMTC0ppbSBRdWlubGFuMSkwJwYJKoZIhvcNAQkB
-FhpqYW1lcy5xdWlubGFuQGJyb2FkY29tLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
-ggEBAKtQZbH0dDsCEixB9shqHxmN7R0Tywh2HUGagri/LzbKgXsvGH/LjKUjwFOQwFe4EIVds/0S
-hNqJNn6Z/DzcMdIAfbMJ7juijAJCzZSg8m164K+7ipfhk7SFmnv71spEVlo7tr41/DT2HvUCo93M
-7Hu+D3IWHBqIg9YYs3tZzxhxXKtJW6SH7jKRz1Y94pEYplGQLM+uuPCZaARbh+i0auVCQNnxgfQ/
-mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
-uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
-BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
-VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
-z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
-b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
-+R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
-AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
-75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
-AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
-AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCAHXCadyti7wrHNm0RaYE58d9lufGDA
-rpDfVD/f0wT5UTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTAy
-MDYxOTM5NTZaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAp/SsdJlI4AzqdMYTvmdQDTNHS+DdQnMN7GkLqf2R16n/ycFa
-NVOb05deVoMqimoJxG0BJgwlgIdEYiw55tmEgjDmKcoNnlVxpmar8u/jrtCub4DqYOmwRqcO8Awz
-VNz88W05eAt9Am9haTYqKPR3eBAfRbVYYSHDEzHDl+rDY8HvEmyRl1TuSW+kp+KFsdXlolJ9f7/N
-8L95PVWhERX5Fky/BUm4xFhbsW0gAddFx2DRIv0I2V3+L54lKcGGPzKcC9zEI4cT+gjbNoFmzD+w
-5iUrX9/BXty5Dmh0qBiluLtsnFqQ+E9JaAy06Gjw8wQoFYyRr/wFf078XaoKHyVmnA==
---00000000000020ffe8062d7e68f6--
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index c58a12c147f4..30482d4cf826 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -387,8 +387,11 @@ usb_role_switch_register(struct device *parent,
+ 	dev_set_name(&sw->dev, "%s-role-switch",
+ 		     desc->name ? desc->name : dev_name(parent));
+ 
++	sw->registered = true;
++
+ 	ret = device_register(&sw->dev);
+ 	if (ret) {
++		sw->registered = false;
+ 		put_device(&sw->dev);
+ 		return ERR_PTR(ret);
+ 	}
+@@ -399,8 +402,6 @@ usb_role_switch_register(struct device *parent,
+ 			dev_warn(&sw->dev, "failed to add component\n");
+ 	}
+ 
+-	sw->registered = true;
+-
+ 	/* TODO: Symlinks for the host port and the device controller. */
+ 
+ 	return sw;
+-- 
+2.17.1
+
