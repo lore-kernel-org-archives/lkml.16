@@ -1,98 +1,212 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF37B1422D4;
-	Thu,  6 Feb 2025 02:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE03C13AD18;
+	Thu,  6 Feb 2025 02:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738810418; cv=none; b=jSt6Xgw5hrshiDIMPKZgQ/1B4S+//1wQMBE/aZ0zc0OlUBhHGktofRc3vK1YlmiyJwqCdUBUpEA+k/7OfC11pWcqtF/uc0F7e1oidMWHnep7LjX583353+hedHQ8OBB1x2GfYH7YxP4hUcFg+MfdKenbfIyS/mpPhwfK3x/k/rc=
+	t=1738810498; cv=none; b=qIIer0VqLa5/XgWgZVDGj9MvxDeKBG7W8gt5+6uDBlmEQn6gHdCs+KNs+xRQEct48d91ezhpAZNCKj0UxL5Q5eZFUym7evMwPszI7TBgsOiDIIPzmDSZpsWgXUAJGoi+z1fa0dFAK4QaBzhBBS/mMfxFAFUNPXNzXEu8BG0wwXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738810418; c=relaxed/simple;
-	bh=KaIqYSpMI2Kcjo9Dk1clxhX5KjFMB/7s/tbYlEm2v2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=VahET0BEOxfPJOMOKq81WmfG7vSn1OfuumgG+ONGIxgWWpp3FUeGdRW3noqKf/7LGvcy6vnx9/pBahSPAWWeX2QcRXrjUo/519boKyV8TdayqRK9E1Gzcuk/1tRpDMYjSN1iHuAn+kvNiS/toHLg4JOokOqxNq1d0yx3zvnJhKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=VGbixHn5; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1738810498; c=relaxed/simple;
+	bh=cuh23/guRoIQwP/CHmkEvoRkDVmV3WnIEIa0dzmdwUg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pWTf09p2q2kO4HowkV6r+4psqA+ePzoXb15fnCLNDHvpwxvmJxTpBlr7zoylghTFM1xLMdH3AuHSLsrWIybS63ERAgDkfFzvz0YZwKR9kwL/kvXZmRAbs+jFlczgYr5AiaX4jcPO4IBD780z4RM8YuNK3jM8FxLuQOXbdVfwC9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tlKKBkfT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VGbixHn5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1738810401;
-	bh=YuhrVy0QKQnIHMyTWgPFjnFm1OG18Fln7T1zxKKh/EQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=VGbixHn5OFIYvutRjF+MlTIDXu4TDiTzYNqX74CC5RK3gRIkh//7TJsxILMIcuWrk
-	 tsEyeZaG+NmShToFxLAmErXeKNeQraljn5RfuWo/bATnN2LWuAdJICxE6VuWobNXdK
-	 FmZ/JQX6pB5QULa7nia/DdKyzAjAKUCePHBDKkHOLXXq9l0lF5oZsi7WE26BkTX3aF
-	 iriUahBbzMwBz//kG1YVAJlafM1AXtRd+zzlsjFtJQQmktdHfaMroCwAGCNjHg6orQ
-	 wSp9s0KznHx4qqVnbVH5MZAKBeRHyrfSSTEDpcxKYswt7C9QLhAZF0wM1tVYklEV6a
-	 00ZEDj0CFq6Bg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YpM9X04ZCz4wcD;
-	Thu,  6 Feb 2025 13:53:19 +1100 (AEDT)
-Date: Thu, 6 Feb 2025 13:53:28 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Greg KH <greg@kroah.com>
-Cc: Benjamin Larsson <benjamin.larsson@genexis.eu>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the tty tree
-Message-ID: <20250206135328.4bad1401@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tlKKBkfT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D14CC4CED1;
+	Thu,  6 Feb 2025 02:54:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738810498;
+	bh=cuh23/guRoIQwP/CHmkEvoRkDVmV3WnIEIa0dzmdwUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tlKKBkfTGx3Fn0IbDHUyaN4fArX/tyiUHwKQZz3b78jJ8TUS8K2LEBCOdaQYfAFLK
+	 gv0Cxf/nYR1kfDKzl4Y11b+YngVUi+iuqYQLZzxgNgXNJ4YIsxGjh8Fhjk9Jsnc9gK
+	 Up7G7+VW3cxVjDcXUfxw+3AzFgUG82r4KdXSVgSRXPjrAi9twIs4B3CAQ5O4hYcZTS
+	 JUk4fitEAxHoQ8rkmmrrpquDq2QCM3teo9LvBr3DGqwYz8/D3xBxIwAmLI1e3MjY87
+	 pXQkyvZ0rx727utPnrUIAeeF8oJwP9phKJkGljMLw3fnQHjwhLAX9tKYLSgIOLHwLL
+	 OJdgt/AB+D5Jg==
+Date: Wed, 5 Feb 2025 20:54:53 -0600
+From: Bjorn Andersson <andersson@kernel.org>
+To: Frank Oltmanns <frank@oltmanns.dev>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Chris Lew <quic_clew@quicinc.com>, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Stephan Gerhold <stephan.gerhold@linaro.org>, 
+	Johan Hovold <johan+linaro@kernel.org>, Caleb Connolly <caleb.connolly@linaro.org>, 
+	Joel Selvaraj <joelselvaraj.oss@gmail.com>, Alexey Minnekhanov <alexeymin@postmarketos.org>, 
+	stable@vger.kernel.org
+Subject: Re: [PATCH] soc: qcom: pd-mapper: defer probing on sdm845
+Message-ID: <2vfwtuiorefq64ood4k7y7ukt34ubdomyezfebkeu2wu5omvkb@c5h2sbqs47ya>
+References: <20250205-qcom_pdm_defer-v1-1-a2e9a39ea9b9@oltmanns.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pYaJ/yzPbG7Rmf1iL9+kcs9";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250205-qcom_pdm_defer-v1-1-a2e9a39ea9b9@oltmanns.dev>
 
---Sig_/pYaJ/yzPbG7Rmf1iL9+kcs9
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Feb 05, 2025 at 10:57:11PM +0100, Frank Oltmanns wrote:
+> On xiaomi-beryllium and oneplus-enchilada audio does not work reliably
+> with the in-kernel pd-mapper. Deferring the probe solves these issues.
+> Specifically, audio only works reliably with the in-kernel pd-mapper, if
+> the probe succeeds when remoteproc3 triggers the first successful probe.
+> I.e., probes from remoteproc0, 1, and 2 need to be deferred until
+> remoteproc3 has been probed.
+> 
+> Introduce a device specific quirk that lists the first auxdev for which
+> the probe must be executed. Until then, defer probes from other auxdevs.
+> 
+> Fixes: 1ebcde047c54 ("soc: qcom: add pd-mapper implementation")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Frank Oltmanns <frank@oltmanns.dev>
+> ---
+> The in-kernel pd-mapper has been causing audio issues on sdm845
+> devices (specifically, xiaomi-beryllium and oneplus-enchilada). I
+> observed that Stephan’s approach [1] - which defers module probing by
+> blocklisting the module and triggering a later probe - works reliably.
+> 
+> Inspired by this, I experimented with delaying the probe within the
+> module itself by returning -EPROBE_DEFER in qcom_pdm_probe() until a
+> certain time (13.9 seconds after boot, based on ktime_get()) had
+> elapsed. This method also restored audio functionality.
+> 
+> Further logging of auxdev->id in qcom_pdm_probe() led to an interesting
+> discovery: audio only works reliably with the in-kernel pd-mapper when
+> the first successful probe is triggered by remoteproc3. In other words,
+> probes from remoteproc0, 1, and 2 must be deferred until remoteproc3 has
+> been probed.
+> 
 
-Hi all,
+The remoteproc numbering is assigned at the time of registering each
+remoteproc driver, and does not necessarily relate to the order in which
+they are launched. That said, it sounds like what you're saying is that
+is that audio only works if we launch the pd-mapper after the
+remoteprocs has started?
 
-After merging the tty tree, today's linux-next build (x86_64_allmodconfig)
-failed like this:
+Can you please confirm which remoteproc is which in your numbering? (In
+particular, which remoteproc instance is the audio DSP?)
 
-drivers/tty/serial/8250/8250_airoha.c:52:6: error: redefinition of 'airoha8=
-250_set_baud_rate'
-   52 | void airoha8250_set_baud_rate(struct uart_port *port,
-      |      ^~~~~~~~~~~~~~~~~~~~~~~~
-In file included from drivers/tty/serial/8250/8250_airoha.c:10:
-drivers/tty/serial/8250/8250.h:328:20: note: previous definition of 'airoha=
-8250_set_baud_rate' with type 'void(struct uart_port *, unsigned int,  unsi=
-gned int)'
-  328 | static inline void airoha8250_set_baud_rate(struct uart_port *port,
-      |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+> To address this, I propose introducing a quirk table (which currently
+> only contains sdm845) to defer probing until the correct auxiliary
+> device (remoteproc3) initiates the probe.
+> 
+> I look forward to your feedback.
+> 
 
-Caused by commit
+I don't think the proposed workaround is our path forward, but I very
+much appreciate your initiative and the insights it provides! Seems to
+me that we have a race-condition in the pdr helper.
 
-  e12ebf14fa36 ("serial: Airoha SoC UART and HSUART support")
+Regards,
+Bjorn
 
-I have used the tty tree from next-20250205 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/pYaJ/yzPbG7Rmf1iL9+kcs9
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmekJCgACgkQAVBC80lX
-0GwEOAf8DLXNL4Pv3SpAnHBs5jrPP7rnPF70U47jEzd2dIz8wG53HQHPyCRVOo7P
-VB1yLTMzR2gUzhBsCTNdi08RdS77T17cl2dIZ13DxtlYXJnmKHcnn/Mm1Tjf5R1O
-pj4YtNV4IRuhh0ieTuLcUW/OCXd7dXhHcfVHwmQuHJR0siMD7iMDWcUzx0hlPLmI
-emB6pdyyOqvz1BLPL8Nzo/UcyDHovQNr6AeCjszb12M6VGEf19smsbiMAbwXGvsr
-euyvCOCel314HKgwajpkakMGLfxaHd/+7nB7vo8PvJfmw6az6UT7qRIYR6LTaFlK
-NHDNET1b3ajxD0WFMCa10iRabwF8wQ==
-=ivRd
------END PGP SIGNATURE-----
-
---Sig_/pYaJ/yzPbG7Rmf1iL9+kcs9--
+> Thanks,
+>   Frank
+> 
+> [1]: https://lore.kernel.org/linux-arm-msm/Zwj3jDhc9fRoCCn6@linaro.org/
+> ---
+>  drivers/soc/qcom/qcom_pd_mapper.c | 43 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+> 
+> diff --git a/drivers/soc/qcom/qcom_pd_mapper.c b/drivers/soc/qcom/qcom_pd_mapper.c
+> index 154ca5beb47160cc404a46a27840818fe3187420..34b26df665a888ac4872f56e948e73b561ae3b6b 100644
+> --- a/drivers/soc/qcom/qcom_pd_mapper.c
+> +++ b/drivers/soc/qcom/qcom_pd_mapper.c
+> @@ -46,6 +46,11 @@ struct qcom_pdm_data {
+>  	struct list_head services;
+>  };
+>  
+> +struct qcom_pdm_probe_first_dev_quirk {
+> +	const char *name;
+> +	u32 id;
+> +};
+> +
+>  static DEFINE_MUTEX(qcom_pdm_mutex); /* protects __qcom_pdm_data */
+>  static struct qcom_pdm_data *__qcom_pdm_data;
+>  
+> @@ -526,6 +531,11 @@ static const struct qcom_pdm_domain_data *x1e80100_domains[] = {
+>  	NULL,
+>  };
+>  
+> +static const struct qcom_pdm_probe_first_dev_quirk first_dev_remoteproc3 = {
+> +	.id = 3,
+> +	.name = "pd-mapper"
+> +};
+> +
+>  static const struct of_device_id qcom_pdm_domains[] __maybe_unused = {
+>  	{ .compatible = "qcom,apq8016", .data = NULL, },
+>  	{ .compatible = "qcom,apq8064", .data = NULL, },
+> @@ -566,6 +576,10 @@ static const struct of_device_id qcom_pdm_domains[] __maybe_unused = {
+>  	{},
+>  };
+>  
+> +static const struct of_device_id qcom_pdm_defer[] __maybe_unused = {
+> +	{ .compatible = "qcom,sdm845", .data = &first_dev_remoteproc3, },
+> +	{},
+> +};
+>  static void qcom_pdm_stop(struct qcom_pdm_data *data)
+>  {
+>  	qcom_pdm_free_domains(data);
+> @@ -637,6 +651,25 @@ static struct qcom_pdm_data *qcom_pdm_start(void)
+>  	return ERR_PTR(ret);
+>  }
+>  
+> +static bool qcom_pdm_ready(struct auxiliary_device *auxdev)
+> +{
+> +	const struct of_device_id *match;
+> +	struct device_node *root;
+> +	struct qcom_pdm_probe_first_dev_quirk *first_dev;
+> +
+> +	root = of_find_node_by_path("/");
+> +	if (!root)
+> +		return true;
+> +
+> +	match = of_match_node(qcom_pdm_defer, root);
+> +	of_node_put(root);
+> +	if (!match)
+> +		return true;
+> +
+> +	first_dev = (struct qcom_pdm_probe_first_dev_quirk *) match->data;
+> +	return (auxdev->id == first_dev->id) && !strcmp(auxdev->name, first_dev->name);
+> +}
+> +
+>  static int qcom_pdm_probe(struct auxiliary_device *auxdev,
+>  			  const struct auxiliary_device_id *id)
+>  
+> @@ -647,6 +680,15 @@ static int qcom_pdm_probe(struct auxiliary_device *auxdev,
+>  	mutex_lock(&qcom_pdm_mutex);
+>  
+>  	if (!__qcom_pdm_data) {
+> +		if (!qcom_pdm_ready(auxdev)) {
+> +			pr_debug("%s: Deferring probe for device %s (id: %u)\n",
+> +				__func__, auxdev->name, auxdev->id);
+> +			ret = -EPROBE_DEFER;
+> +			goto probe_stop;
+> +		}
+> +		pr_debug("%s: Probing for device %s (id: %u), starting pdm\n",
+> +			__func__, auxdev->name, auxdev->id);
+> +
+>  		data = qcom_pdm_start();
+>  
+>  		if (IS_ERR(data))
+> @@ -659,6 +701,7 @@ static int qcom_pdm_probe(struct auxiliary_device *auxdev,
+>  
+>  	auxiliary_set_drvdata(auxdev, __qcom_pdm_data);
+>  
+> +probe_stop:
+>  	mutex_unlock(&qcom_pdm_mutex);
+>  
+>  	return ret;
+> 
+> ---
+> base-commit: 7f048b202333b967782a98aa21bb3354dc379bbf
+> change-id: 20250205-qcom_pdm_defer-3dc1271d74d9
+> 
+> Best regards,
+> -- 
+> Frank Oltmanns <frank@oltmanns.dev>
+> 
