@@ -1,94 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F4519F130;
-	Thu,  6 Feb 2025 20:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48281A76AE
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 20:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738872526; cv=none; b=EHy/757XtyfJpOqsvIErDO5W9FZnIQ0dN/e/iuhU3trejDctSupGZitj0Gs5ea+Ft7BEvS4jjYQCpKmmlbZX8g6HjflcNvlZ5Vbq3LeTt+Pn9MjXP/KZqH6cA2chytcmTVvV8J6vGe+AIG/KRaUYjXF+nINIhnONRPgHgiTn0f8=
+	t=1738872677; cv=none; b=N/tHcgjJqGAN/axP0BkBu1w2IrMl83gQZgTwCCtfys/YdNjypoeIPhjUKJKmGjIzupAYm6y/oNarb843iEcJGV47LWRHqU05JMdq0aF6zw1BgLAqZmH58k2KoLVEENATYCqqC+1u9C74ymR9kNWTTuKEFM655GupcHTRBLuTrxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738872526; c=relaxed/simple;
-	bh=u/QIXJeop5o5I8El11vS3bzPXtpJvCeLgqhra0aH0m8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YTNMPH390Q4ivdCyKQlJRAg/ixo0J8n52k1Sls/h0steM5aIk7Av6mQ50aNN1CksTtQ4Ow2wJbSFbHc2bPHmj6S6Eye28VEfDyq/+TRb4VDN4NN5M8vuBO+UzVJEtAdl/Zmq94clEX+Uvqr9cS+khg2MQN7Os8kEIvlelW342yA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6338piQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738872677; c=relaxed/simple;
+	bh=0ahfcfXvduwegKwL8GvGGFBIQenHgnxg2fJRLgq9luU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VZzWuI9MoE0B9dDFx03Mtk/TILBwEBdgUNlxehmfc4kKwOy+ru6vEWuATYG3rp8F0hDng+lqN93gahgQ+x3Pd8gPL5MChzZYmdJS0RbMtFwsJHOo5I4/90Evwxqgs1YCtivG/1iBIEHXf0O+vm6BAN6OEFvDgHzz528QxqXuH/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qggsptGd; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6338piQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D256DC4CEDD;
-	Thu,  6 Feb 2025 20:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738872525;
-	bh=u/QIXJeop5o5I8El11vS3bzPXtpJvCeLgqhra0aH0m8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L6338piQodTpgNu8A0idKJTWqs8a2vUUNSK0BqtXXv2pj/8zcqx7mixUHqWmnmbSk
-	 ltFopAjL8QFm9oruDT0zTVGEP7bHQ3o8/nVsWurzs63Ga8SqNopS7kB2rCWHTogzKz
-	 tEwZIuulqg7ffzRLwARV4M7cUGHZeOOQjRxaDZkPBpesN8mw9k9TvdvK7hqygj19JR
-	 3XRRkwaiIkwsAWq9Pdczs0UCKhcbUhQ/KFv3qgnYHjNlFIpKV+B0KYG6T1/9UGUSI8
-	 LwwY9o2Y8HxgrMiLRE6zGMuUGYslx17UR3uFtMatDGgZUb1feg9G7n2HHuSiP38K3c
-	 fxdjo5VATVa6w==
-Date: Thu, 6 Feb 2025 12:08:43 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	x86@kernel.org, linux-block@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>, Keith Busch <kbusch@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v3 2/6] scripts/gen-crc-consts: add gen-crc-consts.py
-Message-ID: <20250206200843.GA1237@sol.localdomain>
-References: <20250206073948.181792-1-ebiggers@kernel.org>
- <20250206073948.181792-3-ebiggers@kernel.org>
- <20250206193117.7a9a463c@pumpkin>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qggsptGd"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738872667;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PF5hZGMvLAEl9volfS3ZgWDttX3TNY4bhsRMPhjvOic=;
+	b=qggsptGdqozsGhq8QqxQXXmw3SaPpQw8+MKsVudm47RUGIkGnKpLnSA7i/RV72tSiG/nVy
+	Y3w3vynPWj6eit5fm1V4YNLS+s4grHu7uxut61Y4HzJNDbUKe8JAeFraeanD3bRHTQS3o8
+	fM6jmqQHKTpnvOGbJcyUToj282Va7DM=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	netdev@vger.kernel.org
+Cc: Michal Simek <michal.simek@amd.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Sean Anderson <sean.anderson@linux.dev>
+Subject: [PATCH net-next v5 1/4] net: xilinx: axienet: Combine CR calculation
+Date: Thu,  6 Feb 2025 15:10:33 -0500
+Message-Id: <20250206201036.1516800-2-sean.anderson@linux.dev>
+In-Reply-To: <20250206201036.1516800-1-sean.anderson@linux.dev>
+References: <20250206201036.1516800-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206193117.7a9a463c@pumpkin>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Feb 06, 2025 at 07:31:17PM +0000, David Laight wrote:
-> On Wed,  5 Feb 2025 23:39:44 -0800
-> Eric Biggers <ebiggers@kernel.org> wrote:
-> 
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > Add a Python script that generates constants for computing the given CRC
-> > variant(s) using x86's pclmulqdq or vpclmulqdq instructions.
-> > 
-> > This is specifically tuned for x86's crc-pclmul-template.S.  However,
-> > other architectures with a 64x64 => 128-bit carryless multiplication
-> > instruction should be able to use the generated constants too.  (Some
-> > tweaks may be warranted based on the exact instructions available on
-> > each arch, so the script may grow an arch argument in the future.)
-> > 
-> > The script also supports generating the tables needed for table-based
-> > CRC computation.  Thus, it can also be used to reproduce the tables like
-> > t10_dif_crc_table[] and crc16_table[] that are currently hardcoded in
-> > the source with no generation script explicitly documented.
-> > 
-> > Python is used rather than C since it enables implementing the CRC math
-> > in the simplest way possible, using arbitrary precision integers.  The
-> > outputs of this script are intended to be checked into the repo, so
-> > Python will continue to not be required to build the kernel, and the
-> > script has been optimized for simplicity rather than performance.
-> 
-> It might be better to output #defines that just contain array
-> initialisers rather than the definition of the actual array itself.
-> 
-> Then any code that wants the values can include the header and
-> just use the constant data it wants to initialise its own array.
-> 
-> 	David
+Combine the common parts of the CR calculations for better code reuse.
+While we're at it, simplify the code a bit.
 
-The pclmul constants use structs, not arrays.  Maybe you are asking for the
-script to only generate the struct initializers?  This suggestion seems a bit
-more complicated than just having everything in one place.  It would allow
-putting the struct definitions in the CRC-variant-specific files while keeping
-the struct initializers all in one file, so __maybe_unused would no longer need
-to be used on the definitions.  But the actual result would be the same, just
-achieved in what seems like a slightly more difficult way.
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+Reviewed-by: Shannon Nelson <shannon.nelson@amd.com>
+---
 
-- Eric
+(no changes since v3)
+
+Changes in v3:
+- Fix mismatched parameter name documentation for axienet_calc_cr
+- Integrate some cleanups originally included in
+  https://lore.kernel.org/netdev/20240909230908.1319982-1-sean.anderson@linux.dev/
+
+Changes in v2:
+- Split off from runtime coalesce modification support
+
+ drivers/net/ethernet/xilinx/xilinx_axienet.h  |  3 -
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 64 ++++++++++---------
+ 2 files changed, 34 insertions(+), 33 deletions(-)
+
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+index a3f4f3e42587..8fd3b45ef6aa 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+@@ -112,9 +112,6 @@
+ #define XAXIDMA_DELAY_MASK		0xFF000000 /* Delay timeout counter */
+ #define XAXIDMA_COALESCE_MASK		0x00FF0000 /* Coalesce counter */
+ 
+-#define XAXIDMA_DELAY_SHIFT		24
+-#define XAXIDMA_COALESCE_SHIFT		16
+-
+ #define XAXIDMA_IRQ_IOC_MASK		0x00001000 /* Completion intr */
+ #define XAXIDMA_IRQ_DELAY_MASK		0x00002000 /* Delay interrupt */
+ #define XAXIDMA_IRQ_ERROR_MASK		0x00004000 /* Error interrupt */
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index 9e7fa012e4fa..bd95f2ba3bae 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -224,22 +224,40 @@ static void axienet_dma_bd_release(struct net_device *ndev)
+ }
+ 
+ /**
+- * axienet_usec_to_timer - Calculate IRQ delay timer value
+- * @lp:		Pointer to the axienet_local structure
+- * @coalesce_usec: Microseconds to convert into timer value
++ * axienet_calc_cr() - Calculate control register value
++ * @lp: Device private data
++ * @count: Number of completions before an interrupt
++ * @usec: Microseconds after the last completion before an interrupt
++ *
++ * Calculate a control register value based on the coalescing settings. The
++ * run/stop bit is not set.
+  */
+-static u32 axienet_usec_to_timer(struct axienet_local *lp, u32 coalesce_usec)
++static u32 axienet_calc_cr(struct axienet_local *lp, u32 count, u32 usec)
+ {
+-	u32 result;
+-	u64 clk_rate = 125000000; /* arbitrary guess if no clock rate set */
++	u32 cr;
+ 
+-	if (lp->axi_clk)
+-		clk_rate = clk_get_rate(lp->axi_clk);
++	cr = FIELD_PREP(XAXIDMA_COALESCE_MASK, count) | XAXIDMA_IRQ_IOC_MASK |
++	     XAXIDMA_IRQ_ERROR_MASK;
++	/* Only set interrupt delay timer if not generating an interrupt on
++	 * the first packet. Otherwise leave at 0 to disable delay interrupt.
++	 */
++	if (count > 1) {
++		u64 clk_rate = 125000000; /* arbitrary guess if no clock rate set */
++		u32 timer;
+ 
+-	/* 1 Timeout Interval = 125 * (clock period of SG clock) */
+-	result = DIV64_U64_ROUND_CLOSEST((u64)coalesce_usec * clk_rate,
+-					 XAXIDMA_DELAY_SCALE);
+-	return min(result, FIELD_MAX(XAXIDMA_DELAY_MASK));
++		if (lp->axi_clk)
++			clk_rate = clk_get_rate(lp->axi_clk);
++
++		/* 1 Timeout Interval = 125 * (clock period of SG clock) */
++		timer = DIV64_U64_ROUND_CLOSEST((u64)usec * clk_rate,
++						XAXIDMA_DELAY_SCALE);
++
++		timer = min(timer, FIELD_MAX(XAXIDMA_DELAY_MASK));
++		cr |= FIELD_PREP(XAXIDMA_DELAY_MASK, timer) |
++		      XAXIDMA_IRQ_DELAY_MASK;
++	}
++
++	return cr;
+ }
+ 
+ /**
+@@ -249,27 +267,13 @@ static u32 axienet_usec_to_timer(struct axienet_local *lp, u32 coalesce_usec)
+ static void axienet_dma_start(struct axienet_local *lp)
+ {
+ 	/* Start updating the Rx channel control register */
+-	lp->rx_dma_cr = (lp->coalesce_count_rx << XAXIDMA_COALESCE_SHIFT) |
+-			XAXIDMA_IRQ_IOC_MASK | XAXIDMA_IRQ_ERROR_MASK;
+-	/* Only set interrupt delay timer if not generating an interrupt on
+-	 * the first RX packet. Otherwise leave at 0 to disable delay interrupt.
+-	 */
+-	if (lp->coalesce_count_rx > 1)
+-		lp->rx_dma_cr |= (axienet_usec_to_timer(lp, lp->coalesce_usec_rx)
+-					<< XAXIDMA_DELAY_SHIFT) |
+-				 XAXIDMA_IRQ_DELAY_MASK;
++	lp->rx_dma_cr = axienet_calc_cr(lp, lp->coalesce_count_rx,
++					lp->coalesce_usec_rx);
+ 	axienet_dma_out32(lp, XAXIDMA_RX_CR_OFFSET, lp->rx_dma_cr);
+ 
+ 	/* Start updating the Tx channel control register */
+-	lp->tx_dma_cr = (lp->coalesce_count_tx << XAXIDMA_COALESCE_SHIFT) |
+-			XAXIDMA_IRQ_IOC_MASK | XAXIDMA_IRQ_ERROR_MASK;
+-	/* Only set interrupt delay timer if not generating an interrupt on
+-	 * the first TX packet. Otherwise leave at 0 to disable delay interrupt.
+-	 */
+-	if (lp->coalesce_count_tx > 1)
+-		lp->tx_dma_cr |= (axienet_usec_to_timer(lp, lp->coalesce_usec_tx)
+-					<< XAXIDMA_DELAY_SHIFT) |
+-				 XAXIDMA_IRQ_DELAY_MASK;
++	lp->tx_dma_cr = axienet_calc_cr(lp, lp->coalesce_count_tx,
++					lp->coalesce_usec_tx);
+ 	axienet_dma_out32(lp, XAXIDMA_TX_CR_OFFSET, lp->tx_dma_cr);
+ 
+ 	/* Populate the tail pointer and bring the Rx Axi DMA engine out of
+-- 
+2.35.1.1320.gc452695387.dirty
+
