@@ -1,127 +1,479 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB842214203;
-	Thu,  6 Feb 2025 11:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60BC46BF
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738841083; cv=none; b=nUGw5IClF0HpS36BGjEB4uJABAq9DrP1jGmSeE92IcNSqVXRUQHrwZnvJhc8Zhsvi/GHsIQhA7lpDlpPJYWPkBMPvOn0YzrQDzA2mpTEFbW+hPAuCE8HS7Nej+Xlsi15fm2w8yyvcWRSMj1YpGU1J1twkuoh4BhLhPXmA18tdwA=
+	t=1738841101; cv=none; b=ksbz30FgHtVYzALUH8F/CLgh/UbBEguj2WDDlkyOVNVxYARAnbAQmLYxUZ9j08Ka9s8dqPGlRP/m3eUzyJFTAvE90QtNH/UNx1k/lPkndK9Jd5LANwmICE/z/H3IbCpgbsyUUQ6Rst1EcqnxvgXZ2hggC+pfiwbziJZH2ILI18E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738841083; c=relaxed/simple;
-	bh=sNzc9rpJrSGgiXFYTxSNOLd9piOIMO0s74xHHWxepHs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ur/aDpQKGcXVXy6tLR0ajQxTv9kRTvZcP8loPEwOkPIQn/zxrTV0tJ4sfjTiaPUheBdEjq4qaxqWmdCzxbrBGHZCNFWm34/ZbULLltQrJBJQk/tNPfuikPyLg4Ba5VHtWGtAocj4BjcSf/K4A3nTLXBxrN8c55zvXh9VzQGSlgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G90odWPx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738841101; c=relaxed/simple;
+	bh=6aBeDYJmGK9pM2jhjYlRdQQA10VlwX/5VBh400FtEoA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=fdK+z0shQL6uLmEw/hpPdaqoeCxU4QGgqsIK7bb5fvfOWN/jWiqgiJnHNzDIkmimglK7804EfOwf+aecSqEtCnI/8qx8TR1uNUHxhBvt5k9eW/Dsze+wkp5Z64p2ecjihnRc57DGFbp2uHhikPVYKQKlA+9P/7ET/mGlr8j3cf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0oYRr92n; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gSAGiid5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0oYRr92n; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gSAGiid5; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G90odWPx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5272FC4CEDD;
-	Thu,  6 Feb 2025 11:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738841082;
-	bh=sNzc9rpJrSGgiXFYTxSNOLd9piOIMO0s74xHHWxepHs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G90odWPxAXNcL5p8b/ZM6942sxWRYqIyydeudZGXD7kDgY9UdK6wJb20MdLg/aSp0
-	 9IDUywrkI2UzLH+JdHjbcyKaq+jnZOSfai2sF8LU+n1oxJKC6fzU8scOHU7e8NC10r
-	 BTTlrg0L4UgJkjQICHlroN4o6IoU8OYMoNxQhBW5+2EHF+ClinNegdSlybx7vazQLW
-	 cgYYu+wxSa/LHSL8crd+mR/i/SpuC1eWFtX/0+FADDTDWQRREH+ptLR34MpyG6upJ5
-	 BgxACN0F58lagv7sBgUSiTBxamJ5sd6D5NBRV0pZLOkoYicvbU7d8sHXHdozPOWaxf
-	 P81Kwk0ihXTdA==
-Date: Thu, 6 Feb 2025 11:24:38 +0000
-From: Conor Dooley <conor@kernel.org>
-To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Eric Biggers <ebiggers@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Andy Chiu <andybnac@gmail.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] RISC-V: add vector crypto extension validation
- checks
-Message-ID: <20250206-overcook-legibly-0350a9af8a2a@spud>
-References: <20250205-cobbler-unpadded-5580c1f5d946@spud>
- <20250205-quench-entrench-09bed8c8c823@spud>
- <00dc2fb7-da9b-42c3-9c3b-47d917df7cf6@rivosinc.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0oYRr92n";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gSAGiid5";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0oYRr92n";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gSAGiid5"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B759D21151;
+	Thu,  6 Feb 2025 11:24:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738841097; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LxlBqgQZ2mGevUkwUY0XWfJI/prk0cOqvknMgsqxTz4=;
+	b=0oYRr92nFBfP0dTM7ews1LOJHGWwtKo5+xwFPHIwc+MNtmz/WltWJ7gapF6mz1aWXdVRoC
+	WnG0d7xp/OgrI2dfhT7BH1e2ZpTTOpxt/xHA4e4NaKrm19AvUX4jYZwMq/xVksjTtdpEFv
+	w2rXsGxC/SkoXAfFQDeMYhGlmDqMwHk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738841097;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LxlBqgQZ2mGevUkwUY0XWfJI/prk0cOqvknMgsqxTz4=;
+	b=gSAGiid53eeJMYtQ1Ut/LjpaL9yThUumW2XTl8VgKKCMlmhZcIZ8C81cCIbRRUxLG1aMah
+	aWvvywoEaYPrEhBA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=0oYRr92n;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=gSAGiid5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738841097; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LxlBqgQZ2mGevUkwUY0XWfJI/prk0cOqvknMgsqxTz4=;
+	b=0oYRr92nFBfP0dTM7ews1LOJHGWwtKo5+xwFPHIwc+MNtmz/WltWJ7gapF6mz1aWXdVRoC
+	WnG0d7xp/OgrI2dfhT7BH1e2ZpTTOpxt/xHA4e4NaKrm19AvUX4jYZwMq/xVksjTtdpEFv
+	w2rXsGxC/SkoXAfFQDeMYhGlmDqMwHk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738841097;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LxlBqgQZ2mGevUkwUY0XWfJI/prk0cOqvknMgsqxTz4=;
+	b=gSAGiid53eeJMYtQ1Ut/LjpaL9yThUumW2XTl8VgKKCMlmhZcIZ8C81cCIbRRUxLG1aMah
+	aWvvywoEaYPrEhBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 71D1813694;
+	Thu,  6 Feb 2025 11:24:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id mfdxGgmcpGe3aQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Thu, 06 Feb 2025 11:24:57 +0000
+Message-ID: <c2308a59-ab8f-407a-bdd9-5c7824bb9d13@suse.de>
+Date: Thu, 6 Feb 2025 12:24:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="1iqbN1jWYKwYUDZR"
-Content-Disposition: inline
-In-Reply-To: <00dc2fb7-da9b-42c3-9c3b-47d917df7cf6@rivosinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/mgag200: Added support for the new device G200eH5
+To: Gwenael Georgeault <ggeorgea@matrox.com>, Dave Airlie
+ <airlied@redhat.com>, Jocelyn Falempe <jfalempe@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <alpine.LFD.2.00.2502051724170.31360@pluton.matrox.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <alpine.LFD.2.00.2502051724170.31360@pluton.matrox.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: B759D21151
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_TO(0.00)[matrox.com,redhat.com,linux.intel.com,kernel.org,gmail.com,ffwll.ch,vger.kernel.org,lists.freedesktop.org];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
+
+Hi,
+
+I want to second what Jocelyn said.
 
 
---1iqbN1jWYKwYUDZR
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Am 05.02.25 um 23:28 schrieb Gwenael Georgeault:
+> - Added the new device ID
+> - Added new pll algorithm
+>
+> Co-authored-by: Mamadou Insa Diop <mdiop@matrox.com>
+> ---
+>  drivers/gpu/drm/mgag200/Makefile          |   1 +
+>  drivers/gpu/drm/mgag200/mgag200_drv.c     |   4 +
+>  drivers/gpu/drm/mgag200/mgag200_drv.h     |   3 +
+>  drivers/gpu/drm/mgag200/mgag200_g200eh5.c | 202 ++++++++++++++++++++++
+>  4 files changed, 210 insertions(+)
+>  create mode 100644 drivers/gpu/drm/mgag200/mgag200_g200eh5.c
+>
+> diff --git a/drivers/gpu/drm/mgag200/Makefile 
+> b/drivers/gpu/drm/mgag200/Makefile
+> index 5a02203fad12..94f063c8722a 100644
+> --- a/drivers/gpu/drm/mgag200/Makefile
+> +++ b/drivers/gpu/drm/mgag200/Makefile
+> @@ -6,6 +6,7 @@ mgag200-y := \
+>      mgag200_g200.o \
+>      mgag200_g200eh.o \
+>      mgag200_g200eh3.o \
+> +    mgag200_g200eh5.o \
+>      mgag200_g200er.o \
+>      mgag200_g200ev.o \
+>      mgag200_g200ew3.o \
+> diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.c 
+> b/drivers/gpu/drm/mgag200/mgag200_drv.c
+> index 069fdd2dc8f6..1c257f5b5136 100644
+> --- a/drivers/gpu/drm/mgag200/mgag200_drv.c
+> +++ b/drivers/gpu/drm/mgag200/mgag200_drv.c
+> @@ -214,6 +214,7 @@ static const struct pci_device_id 
+> mgag200_pciidlist[] = {
+>      { PCI_VENDOR_ID_MATROX, 0x534, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
+> G200_ER },
+>      { PCI_VENDOR_ID_MATROX, 0x536, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
+> G200_EW3 },
+>      { PCI_VENDOR_ID_MATROX, 0x538, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
+> G200_EH3 },
+> +    { PCI_VENDOR_ID_MATROX, 0x53A, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
+> G200_EH5 },
 
-On Thu, Feb 06, 2025 at 11:20:35AM +0100, Cl=E9ment L=E9ger wrote:
-> On 05/02/2025 17:05, Conor Dooley wrote:
-> > From: Conor Dooley <conor.dooley@microchip.com>
-> >=20
-> > Using Clement's new validation callbacks, support checking that
-> > dependencies have been satisfied for the vector crpyto extensions.
-> > Currently riscv_isa_extension_available(<vector crypto>) will return
-> > true on systems that support the extensions but vector itself has been
-> > disabled by the kernel, adding validation callbacks will prevent such a
-> > scenario from occuring and make the behaviour of the extension detection
-> > functions more consistent with user expectations - it's not expected to
-> > have to check for vector AND the specific crypto extension.
-> >=20
-> > The 1.0.0 Vector crypto spec states:
-> > 	The Zvknhb and Zvbc Vector Crypto Extensions --and accordingly
-> > 	the composite extensions Zvkn and Zvks-- require a Zve64x base,
-> > 	or application ("V") base Vector Extension. All of the other
-> > 	Vector Crypto Extensions can be built on any embedded (Zve*) or
-> > 	application ("V") base Vector Extension.
-> > and this could be used as the basis for checking that the correct base
-> > for individual crypto extensions, but that's not really the kernel's job
-> > in my opinion and it is sufficient to leave that sort of precision to
-> > the dt-bindings. The kernel only needs to make sure that vector, in some
-> > form, is available.
-> >=20
-> > Since vector will now be disabled proactively, there's no need to clear
-> > the bit in elf_hwcap in riscv_fill_hwcap() any longer.
->=20
-> To which part of the commit does this refer to ?
+It's a personal preference, but I tend to use lower case hex values, 
+0x53a  would be preferable here. There might be other instances in the 
+patch.
 
-Copy-paste mistake when splitting in two, whoops.
+Apart from this and what Jocelyn noted, the patch looks good.
 
-> > @@ -397,8 +414,8 @@ const struct riscv_isa_ext_data riscv_isa_ext[] =3D=
- {
-> >  	__RISCV_ISA_EXT_DATA(zksed, RISCV_ISA_EXT_ZKSED),
-> >  	__RISCV_ISA_EXT_DATA(zksh, RISCV_ISA_EXT_ZKSH),
-> >  	__RISCV_ISA_EXT_DATA(ztso, RISCV_ISA_EXT_ZTSO),
-> > -	__RISCV_ISA_EXT_SUPERSET(zvbb, RISCV_ISA_EXT_ZVBB, riscv_zvbb_exts),
-> > -	__RISCV_ISA_EXT_DATA(zvbc, RISCV_ISA_EXT_ZVBC),
-> > +	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zvbb, RISCV_ISA_EXT_ZVBB, riscv_zvb=
-b_exts, riscv_ext_vector_x_validate),
-> > +	__RISCV_ISA_EXT_DATA_VALIDATE(zvbc, RISCV_ISA_EXT_ZVBC, riscv_ext_vec=
-tor_crypto_validate),
+Best regards
+Thomas
 
->=20
-> I'm not sure if I already made that comment, so here we go again.
-> Shouldn't Zvbb use riscv_ext_vector_crypto_validate() as well ?  The
-> spec states that Zvbb is a superset of Zvkb and Zvkb uses the
-> riscv_ext_vector_crypto_validate() validation callback. I guess Zvbc
-> should also use it based on your spec excerpt in the commmit log.
+> {0,}
+>  };
+>
+> @@ -256,6 +257,9 @@ mgag200_pci_probe(struct pci_dev *pdev, const 
+> struct pci_device_id *ent)
+>      case G200_EH3:
+>          mdev = mgag200_g200eh3_device_create(pdev, &mgag200_driver);
+>          break;
+> +    case G200_EH5:
+> +        mdev = mgag200_g200eh5_device_create(pdev, &mgag200_driver);
+> +        break;
+>      case G200_ER:
+>          mdev = mgag200_g200er_device_create(pdev, &mgag200_driver);
+>          break;
+> diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.h 
+> b/drivers/gpu/drm/mgag200/mgag200_drv.h
+> index 0608fc63e588..819a7e9381e3 100644
+> --- a/drivers/gpu/drm/mgag200/mgag200_drv.h
+> +++ b/drivers/gpu/drm/mgag200/mgag200_drv.h
+> @@ -196,6 +196,7 @@ enum mga_type {
+>      G200_EV,
+>      G200_EH,
+>      G200_EH3,
+> +    G200_EH5,
+>      G200_ER,
+>      G200_EW3,
+>  };
+> @@ -334,6 +335,8 @@ struct mga_device 
+> *mgag200_g200eh_device_create(struct pci_dev *pdev,
+>                          const struct drm_driver *drv);
+>  struct mga_device *mgag200_g200eh3_device_create(struct pci_dev *pdev,
+>                           const struct drm_driver *drv);
+> +struct mga_device *mgag200_g200eh5_device_create(struct pci_dev *pdev,
+> +                         const struct drm_driver *drv);
+>  struct mga_device *mgag200_g200er_device_create(struct pci_dev *pdev,
+>                          const struct drm_driver *drv);
+>  struct mga_device *mgag200_g200ew3_device_create(struct pci_dev *pdev,
+> diff --git a/drivers/gpu/drm/mgag200/mgag200_g200eh5.c 
+> b/drivers/gpu/drm/mgag200/mgag200_g200eh5.c
+> new file mode 100644
+> index 000000000000..8cb01116ac33
+> --- /dev/null
+> +++ b/drivers/gpu/drm/mgag200/mgag200_g200eh5.c
+> @@ -0,0 +1,202 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include <linux/pci.h>
+> +#include <linux/units.h>
+> +
+> +#include <drm/drm_atomic.h>
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_drv.h>
+> +#include <drm/drm_gem_atomic_helper.h>
+> +#include <drm/drm_probe_helper.h>
+> +
+> +#include "mgag200_drv.h"
+> +
+> +/*
+> + * PIXPLLC
+> + */
+> +
+> +static int mgag200_g200eh5_pixpllc_atomic_check(struct drm_crtc *crtc,
+> +                        struct drm_atomic_state *new_state)
+> +{
+> +    const unsigned long long VCO_MAX = 10 * GIGA; // Hz
+> +    const unsigned long long VCO_MIN = 2500 * MEGA; // Hz
+> +    const unsigned long long PLL_FREQ_REF = 25 * MEGA; // Hz
+> +
+> +    struct drm_crtc_state *new_crtc_state = 
+> drm_atomic_get_new_crtc_state(new_state, crtc);
+> +    struct mgag200_crtc_state *new_mgag200_crtc_state = 
+> to_mgag200_crtc_state(new_crtc_state);
+> +    long clock = new_crtc_state->mode.clock;
+> +    struct mgag200_pll_values *pixpllc = 
+> &new_mgag200_crtc_state->pixpllc;
+> +
+> +    unsigned long long fdelta = 0xFFFFFFFFFFFFFFFFULL;
+> +
+> +    u16 mult_max = (u16)(VCO_MAX / PLL_FREQ_REF); // 400 (0x190)
+> +    u16 mult_min = (u16)(VCO_MIN / PLL_FREQ_REF); // 100 (0x64)
+> +
+> +    u64 ftmp_delta;
+> +    u64 computed_fo;
+> +
+> +    u16 test_m;
+> +    u8 test_div_a;
+> +    u8 test_div_b;
+> +    u64 fo_hz;
+> +
+> +    u8 uc_m = 0;
+> +    u8 uc_n = 0;
+> +    u8 uc_p = 0;
+> +
+> +    fo_hz = (u64)clock * HZ_PER_KHZ;
+> +
+> +    for (test_m = mult_min; test_m <= mult_max; test_m++) { // This 
+> gives 100 <= M <= 400
+> +        for (test_div_a = 8; test_div_a > 0; test_div_a--) { // This 
+> gives 1 <= A <= 8
+> +            for (test_div_b = 1; test_div_b <= test_div_a; 
+> test_div_b++) {
+> +                // This gives 1 <= B <= A
+> +                computed_fo = (PLL_FREQ_REF * test_m) /
+> +                    (4 * test_div_a * test_div_b);
+> +
+> +                if (computed_fo > fo_hz)
+> +                    ftmp_delta = computed_fo - fo_hz;
+> +                else
+> +                    ftmp_delta = fo_hz - computed_fo;
+> +
+> +                if (ftmp_delta < fdelta) {
+> +                    fdelta = ftmp_delta;
+> +                    uc_m = (u8)(0xFF & test_m);
+> +                    uc_n = (u8)((0x7 & (test_div_a - 1))
+> +                        | (0x70 & (0x7 & (test_div_b - 1)) << 4));
+> +                    uc_p = (u8)(1 & (test_m >> 8));
+> +                }
+> +                if (fdelta == 0)
+> +                    break;
+> +            }
+> +            if (fdelta == 0)
+> +                break;
+> +        }
+> +        if (fdelta == 0)
+> +            break;
+> +    }
+> +
+> +    pixpllc->m = uc_m + 1;
+> +    pixpllc->n = uc_n + 1;
+> +    pixpllc->p = uc_p + 1;
+> +    pixpllc->s = 0;
+> +
+> +    return 0;
+> +    }
+> +
+> +/*
+> + * Mode-setting pipeline
+> + */
+> +
+> +static const struct drm_plane_helper_funcs 
+> mgag200_g200eh5_primary_plane_helper_funcs = {
+> +    MGAG200_PRIMARY_PLANE_HELPER_FUNCS,
+> +};
+> +
+> +static const struct drm_plane_funcs 
+> mgag200_g200eh5_primary_plane_funcs = {
+> +    MGAG200_PRIMARY_PLANE_FUNCS,
+> +};
+> +
+> +static const struct drm_crtc_helper_funcs 
+> mgag200_g200eh5_crtc_helper_funcs = {
+> +    MGAG200_CRTC_HELPER_FUNCS,
+> +};
+> +
+> +static const struct drm_crtc_funcs mgag200_g200eh5_crtc_funcs = {
+> +    MGAG200_CRTC_FUNCS,
+> +};
+> +
+> +static int mgag200_g200eh5_pipeline_init(struct mga_device *mdev)
+> +{
+> +    struct drm_device *dev = &mdev->base;
+> +    struct drm_plane *primary_plane = &mdev->primary_plane;
+> +    struct drm_crtc *crtc = &mdev->crtc;
+> +    int ret;
+> +
+> +    ret = drm_universal_plane_init(dev, primary_plane, 0,
+> +                       &mgag200_g200eh5_primary_plane_funcs,
+> +                       mgag200_primary_plane_formats,
+> +                       mgag200_primary_plane_formats_size,
+> +                       mgag200_primary_plane_fmtmods,
+> +                       DRM_PLANE_TYPE_PRIMARY, NULL);
+> +    if (ret) {
+> +        drm_err(dev, "drm_universal_plane_init() failed: %d\n", ret);
+> +        return ret;
+> +    }
+> +    drm_plane_helper_add(primary_plane, 
+> &mgag200_g200eh5_primary_plane_helper_funcs);
+> +    drm_plane_enable_fb_damage_clips(primary_plane);
+> +
+> +    ret = drm_crtc_init_with_planes(dev, crtc, primary_plane, NULL,
+> +                    &mgag200_g200eh5_crtc_funcs, NULL);
+> +    if (ret) {
+> +        drm_err(dev, "drm_crtc_init_with_planes() failed: %d\n", ret);
+> +        return ret;
+> +    }
+> +
+> +    drm_crtc_helper_add(crtc, &mgag200_g200eh5_crtc_helper_funcs);
+> +
+> +    /* FIXME: legacy gamma tables, but atomic gamma doesn't work 
+> without */
+> +    drm_mode_crtc_set_gamma_size(crtc, MGAG200_LUT_SIZE);
+> +    drm_crtc_enable_color_mgmt(crtc, 0, false, MGAG200_LUT_SIZE);
+> +    ret = mgag200_vga_bmc_output_init(mdev);
+> +
+> +    if (ret)
+> +        return ret;
+> +
+> +    return 0;
+> +}
+> +
+> +/*
+> + * DRM device
+> + */
+> +
+> +static const struct mgag200_device_info mgag200_g200eh5_device_info =
+> +    MGAG200_DEVICE_INFO_INIT(2048, 2048, 0, false, 1, 0, false);
+> +
+> +static const struct mgag200_device_funcs mgag200_g200eh5_device_funcs 
+> = {
+> +    .pixpllc_atomic_check = mgag200_g200eh5_pixpllc_atomic_check,
+> +    .pixpllc_atomic_update = mgag200_g200eh_pixpllc_atomic_update, // 
+> same as G200EH
+> +};
+> +
+> +struct mga_device *mgag200_g200eh5_device_create(struct pci_dev *pdev,
+> +                         const struct drm_driver *drv)
+> +{
+> +    struct mga_device *mdev;
+> +    struct drm_device *dev;
+> +    resource_size_t vram_available;
+> +    int ret;
+> +
+> +    mdev = devm_drm_dev_alloc(&pdev->dev, drv, struct mga_device, base);
+> +
+> +    if (IS_ERR(mdev))
+> +        return mdev;
+> +    dev = &mdev->base;
+> +
+> +    pci_set_drvdata(pdev, dev);
+> +
+> +    ret = mgag200_init_pci_options(pdev, 0x00000120, 0x0000b000);
+> +    if (ret)
+> +        return ERR_PTR(ret);
+> +
+> +    ret = mgag200_device_preinit(mdev);
+> +    if (ret)
+> +        return ERR_PTR(ret);
+> +
+> +    ret = mgag200_device_init(mdev, &mgag200_g200eh5_device_info,
+> +                  &mgag200_g200eh5_device_funcs);
+> +
+> +    if (ret)
+> +        return ERR_PTR(ret);
+> +
+> +    mgag200_g200eh_init_registers(mdev); // same as G200EH
+> +    vram_available = mgag200_device_probe_vram(mdev);
+> +
+> +    ret = mgag200_mode_config_init(mdev, vram_available);
+> +    if (ret)
+> +        return ERR_PTR(ret);
+> +
+> +    ret = mgag200_g200eh5_pipeline_init(mdev);
+> +    if (ret)
+> +        return ERR_PTR(ret);
+> +
+> +    drm_mode_config_reset(dev);
+> +    drm_kms_helper_poll_init(dev);
+> +
+> +    return mdev;
+> +}
 
-Zvbc does use it, no? I'll amend the Zvbb one, there should only be two
-users of the "x" variant.
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
---1iqbN1jWYKwYUDZR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6Sb9QAKCRB4tDGHoIJi
-0ldwAP983+O6h9quEOj+A8/HT/Ck02DGt4dHGhmvorY2AWRn6AEA45wAgwsU68ns
-s/Feax0psZjLxql/U1SmCwWvWvDHiAc=
-=FI6o
------END PGP SIGNATURE-----
-
---1iqbN1jWYKwYUDZR--
