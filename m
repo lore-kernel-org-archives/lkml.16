@@ -1,315 +1,330 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F52D19E7ED
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738866783; cv=none; b=bR9cFRe+/NroIrUtzk+rsyrWB6w7yhF3VvDFaWbiOMdmHN2JfV48VQZVHFI2U8DQzcz9QIQr8lxSJKhlvdjahgaPtIHGA+FRU6swYNJZOosvoJ0m7rh8sFx/2MFEi0M3ytTqV+TizKZViBhtT8+LtfZvUaAQ1AJQgglw5wTh33w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738866783; c=relaxed/simple;
-	bh=591sNnloYxZ7gVyCY8Ao+sjYsik5UgdF7aW6/GP+lxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yx24YCp5bz5lBYHYRnxQQmjXYzKtNhDg4It/uGSc7FllSk2EP/r0DVosYf5CGdalmv7WOA81ofZwtDPTuTelrp07ez/iuAQb8j9fdeEwe0fuZ4Hsi1KRA9JnAbfVZIVzNpVw3AhouEcHaMQ0j5NJ8jVx2dK9/AI1arOXXovIrFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G9v7kC/J; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B951194A6B;
+	Thu,  6 Feb 2025 18:33:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738866829; cv=fail; b=rY8hQYccvmWimovOMyhpMHF9BGhgXlWveu865ea+U9xaABimeYTXKMuqRES0jnZJtrEW1QjPfb7j5690Llf++CZws0f/T7Z2uuibhBVUnseRJF/3S0ZAcmcDVL0yUtAa5qs8K6hqEsG91RnsdN0H3rrg9SYfviWOBgEhyp7oXI0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738866829; c=relaxed/simple;
+	bh=eKEzO1Dd1sHRow+bR+XRp9duRinHz2mfuAVB9qEx0qQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=exB0Pz8smC1b9kEr6QViWWR1hmQtkj40YAOF0qkhOC3j0nKKGgJCOskdvKehKLiW5obd1jb5wUKvm5RYla8plpM+6jV5M45OWaV5kUKKNEvFg/LnzyxCSbpa1kk6S3F8HxArb564lEGIWpcBr0aAcTaS6t/Jp6+cBG5k6D58BeU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Vf4e4o7I; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=YGfviPaN; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G9v7kC/J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45ACCC4CEDD;
-	Thu,  6 Feb 2025 18:33:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738866783;
-	bh=591sNnloYxZ7gVyCY8Ao+sjYsik5UgdF7aW6/GP+lxQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G9v7kC/JEiWtm9A0p9I5cqN8YnvTZa2cy6Y7a8xitA503NqlbgP21vjyQRpYqNbyj
-	 envOA7Cfiw8fnq/RGKEJ7Tt5SIK0Q+pITE/WSwzcg6O2fjUfFB1sHitzPlipFQXoq9
-	 4V8ON6gcmxvccaQHnd2qoXiK+7+WtjNjcfe3gEQQuiNTLRuSw53/xO6rQiSiD63we7
-	 mAOvSt5NHTOfBDSvkxjC0womtN4au+CmTsrr0//PLP8Z63ng5IX8vTwak9F9+YtCJ+
-	 LxRD3v7qQaaJyaCmIRwnCp6foIh9TKNelWnlLo0YhCkiaikgk3PPdqmIX1/OSZhOE/
-	 ykbnEKu/wrUvg==
-Date: Thu, 6 Feb 2025 18:33:01 +0000
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH 2/2] f2fs: add a sysfs entry to request donate
- file-backed pages
-Message-ID: <Z6UAXWFXo4-7rMWQ@google.com>
-References: <20250131222914.1634961-1-jaegeuk@kernel.org>
- <20250131222914.1634961-3-jaegeuk@kernel.org>
- <8fe50d87-b395-4679-a069-a2e3a890e700@kernel.org>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Vf4e4o7I";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="YGfviPaN"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 516EB1gb028568;
+	Thu, 6 Feb 2025 18:33:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=b0fenm+ZC6gPGm4GYDvoF8x6TsznJW8ObQVK8ttxWpk=; b=
+	Vf4e4o7IY10d814l2c6JcszJu+YGYUvpIHRg+nZFPtuJOmuQvCKO69HMC/b14kf/
+	HXpnffv7qk/M/kYhzdSE6IOpeEejAjS3AjjWgrmfeqOrP9Tjp2UYy8LSRVREAZ9x
+	ZSph0sJhjB2T7QeQDwsl0zLEfH2RHLhg99gHuma6gdM4dmosQdU0cHU3Tlbe+fnr
+	FqWG6zJLqlHe4djS1JQn3pOUIwOhhQCUZPapzsVF04E3KBxlGXQPHuSV/XbF0TsQ
+	PEttuMq22Bth1kmgiYQCEdGiNv10/0i9LgYgNr4pesm95IE3rqqWoK+PWWy9r1/F
+	Z/eiQS511uyJQk+9pDwCoA==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44kku4w6sx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 06 Feb 2025 18:33:37 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 516HUOCY027958;
+	Thu, 6 Feb 2025 18:33:36 GMT
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2045.outbound.protection.outlook.com [104.47.57.45])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44j8dqgmck-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 06 Feb 2025 18:33:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Zhd/zi0XRUaLQAaZiEKl6GgrRTNAVTUT4XmEEV9vkciXm+Nr/zZZUl9g7I+gD4FuZ7UeLDNtgsew7olohqXPxQG3UdJmkwYZfUfyjuTwoybax1G1tUQWnKbwyxUsHeadoYcA7Ad3fMYFcor3MQiScXWOALxbFDESG7l2sKoXZ0HfRRbjEc4/3zykH5/ucfBbLqssOKnL8ihZX5bDhtpSRVrq5UE5W8oJtx6EZLbZtpMpMStl9VgJPA8Y4kMr+H6ntxN72tr9nxpIO1rnkg0Zzh70QYDdaETD7Vj7pAOU2jIU/hzmno8iY4GzdCEAr0kejBBZpXsllE0+i0lr/BVpAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=b0fenm+ZC6gPGm4GYDvoF8x6TsznJW8ObQVK8ttxWpk=;
+ b=qU7Cy7bSRvUO7n+p5Ae5Vpt9BCbSi/X2FSrRG/ldwvTpd66sPKZ9Dia6Rg3E6K/vKGEHE58x/oBpYsXc7HvuXuRI6bHkeqhoCmDMPPykWzlpOCWwbR5+x02f1tfv0G0LIy5ly++Pc+VG3IfjnQ6in6axmF7503ZaAYgD99pUIhL2pQbW/LEFOaErPBtxi+nUBHcZ13JLW96K6PMF97qr2cMp1Mn1cLXtGmdR8n2KOGMWV0mp6fDCAk4rHNo+d5hq8Of3l+sQlGbXWik3SsfRYUSuBcSgdOjyWQeR+jpdI8uLVPxFA7IOhSebwVK9IRHwtaEyeQGPN2eKW5EDmCll3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b0fenm+ZC6gPGm4GYDvoF8x6TsznJW8ObQVK8ttxWpk=;
+ b=YGfviPaN7yD15YECM9SlcHE2drN+ZB85r8R3IObSGgEwV6FGstEokUouGDb99Do5IbeyDdPpkBJQHc+AsWzIMTZLywoc1c6PUSOH2AH+qtxc7e6jL876bhhxBNjiaIz3koCgzKVx7jm4m2nghvlEo61B2WMpHuFBruYQPPqoUHI=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CH2PR10MB4232.namprd10.prod.outlook.com (2603:10b6:610:a4::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Thu, 6 Feb
+ 2025 18:33:12 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.8422.010; Thu, 6 Feb 2025
+ 18:33:12 +0000
+Message-ID: <b3abd065-ec91-4c1c-bbfb-6a9b5e44d9d4@oracle.com>
+Date: Thu, 6 Feb 2025 13:33:10 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nfsd: don't ignore the return code of svc_proc_register()
+To: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>, Josef Bacik <josef@toxicpanda.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzbot+e34ad04f27991521104c@syzkaller.appspotmail.com
+References: <20250206-nfsd-fixes-v1-1-c6647b92ca6f@kernel.org>
+ <d6ecad5f-b2a5-435c-9209-d784a23b013c@oracle.com>
+ <232559042f0d52a858d02273a047a52282597d6b.camel@kernel.org>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <232559042f0d52a858d02273a047a52282597d6b.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CH2PR07CA0043.namprd07.prod.outlook.com
+ (2603:10b6:610:5b::17) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8fe50d87-b395-4679-a069-a2e3a890e700@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CH2PR10MB4232:EE_
+X-MS-Office365-Filtering-Correlation-Id: f7053ff1-de43-4a2c-ac25-08dd46dcb641
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bnhsNVkwZHArRWdMZDJPd3MrVGpIaFN1S2FQN3dHN1ZxbEJRamZOM2NuTlhv?=
+ =?utf-8?B?RUZ6d3dCR0RpNFo5b2ZrQjJRQzJpWHA5ZjZNamIzYkdYS3lpU21oalRqREF5?=
+ =?utf-8?B?TmlEMG42MFpwVWhMRnorUkt3T2tiY1pFbWhIbTdTTU9ITzhOaXRCc3Y5eGtL?=
+ =?utf-8?B?NVR2MFloK1JHTzM3YThQMDJMdDViYVRFNjhVZnM5RXBRTkUzeVdUWEl4NEJ4?=
+ =?utf-8?B?VUVTR2Q0alVOSjVzaVY1MHhWbXJ2K0JxL3JFYUZodUxSSGZ5dDU3TVc0enR2?=
+ =?utf-8?B?L3hhSjNENzFvM2ZtK0dpV2FOL3ZlY2lHNmZoOFRSdkFyQkRXK3BqQWhNdTNv?=
+ =?utf-8?B?N0k0eWIvc1l5a0V6dDlhaDNncCtrelVKT1IrdFNaaStxNm9lTWlTZkxhS1pi?=
+ =?utf-8?B?Vk9leGU0WUVaTDlrSWRKUXNEWStkQjRSSGJOa2lCakVJQW5xUmw5NUVUUDlK?=
+ =?utf-8?B?T1V2cWJMRFMxSktoM2Q5UkNSMWl3UUQrME94Um5mUjRSaHdRZm1rcXF6dWlP?=
+ =?utf-8?B?cnI3NCtydENHeC9TRUozV2pHZHJURjRYVWZQdjBjbWRhRjNrSW1ieXh1YzlH?=
+ =?utf-8?B?ZHhFa0d2eXdhNGoyeDlwSzk1ZzZ3RGhza3VHK1dnWTE3b1F5QjFZemQ2YjBN?=
+ =?utf-8?B?VmNQakpyYUpEcWNzMmtXSUxhOGZqaU85di9XUk5Fa2FRd2xmL3ArVlFsODVp?=
+ =?utf-8?B?dHRSSHhEbWpsc3YzU2xjMHg3aCthanJrTlFiNUhHQWVHQ1ozUFc4RHErWk5F?=
+ =?utf-8?B?MmVqVVVwZEtzVUZCQXloVUI2M1FKZkVXdGFnVFllanBpaE5nV0VqMllrU2hr?=
+ =?utf-8?B?TnJQNENWa0xsdXRlZzVIbWMycWdlMFg2djZyTkFZR3RwMS9ROFlxVW9IWkc5?=
+ =?utf-8?B?dlBLLzFlTlljR2pOenE0UUtTWVBIMU9CaWhGbFV5aGJqRjA4L0JTSjhBTldL?=
+ =?utf-8?B?R3N5VFNVZEhnbFNnMXp1SnN2TkowVy9xNTZJTTBDZk1YMks5TkZDbDVENnZQ?=
+ =?utf-8?B?RUF0TVFFbFQ3UTZzTWdXU2xLb0dKb2FTU25NWVFPQk44MHpZQURnMy9ORDBz?=
+ =?utf-8?B?SmpBMlIzRUFHRVBsR1VneDhYaG00Um9MUE9DK1dIRC9zaGlOQ1c3VnYzeGJk?=
+ =?utf-8?B?YzNEYWY1dTJFSWlrNk03b0dIOXNmK3Q4QjNVQW5RenZzTHd5NTN6SWpITUFR?=
+ =?utf-8?B?bUMwY05VanRNY3YwUE5SeUk3OGdCelNhOHQ4aysyelFQRmFpYUpOY0MwRjVi?=
+ =?utf-8?B?cEpZT2MvN2F3eWFBRjJWM3VZNGdhRzhVWGpaeEZ4OThIcFduMVRQcnU3M2JW?=
+ =?utf-8?B?c2RzSGNBWkZrWXg0RFpkV3loYm9QTEJheWp6UDlWRysxSkRvWm1TNk9UdFJZ?=
+ =?utf-8?B?L0h5Y3FHMzJoK0VmcW9vSWdraW81K1l0cmNCRVd0TU9ISEVNbEJ3aXFWSnhQ?=
+ =?utf-8?B?Qzg2blUyRHo3V1REZ3VqVlJIUjRTMUVxOEFaYU1ERWR1a0o2cHpxa05oNjQw?=
+ =?utf-8?B?QVEvTDA3S092aDJQM2RqZWhZcHhwbFlTTjJsMVIwUFpYVlRSTFlpTnllT3ox?=
+ =?utf-8?B?WS9rRmVVQi9qTHV1RlFrN3Q0SmVuSGpzZXZ2V1AwdEprS1oxcmlPNTlVTVpK?=
+ =?utf-8?B?RmxHTXJIb0tmYkl6VWg1VXVOUThtbkM4NHgzRFVWRzJ0L29uaDd3cS9KN09r?=
+ =?utf-8?B?TFY0azl4OWJYWEQ0cnN2bHg3VmVNT1lMczhKamU3T0lEcXF4dE9uVmxIUlpx?=
+ =?utf-8?B?YXFCc0lRc04wWnc0bFdWM0lSa2pDdTFPNjJLUlhmK2FhWHNMTTNuejY4cnl1?=
+ =?utf-8?B?dHl0cjg5VFFydkNTdnVtdXBITGZXeGJwUnFSZ1F3N2xQMHhGeUZpei91eCtR?=
+ =?utf-8?Q?4pU/ngUVWkUX5?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ckpJQ3doSmZCbjZybnQwVUhNQThFcklxQVZaVXZnN01kcTAremdDTkxDVm84?=
+ =?utf-8?B?YXJFY3Q4R2g2N1o2am95TEgyeFRaVWZFNXdRK0JiNVZWYkh3L2FhdDk4RHZy?=
+ =?utf-8?B?N2pwU3hkdFVSQ2VXQ3BrbDVLczIwZEY2Y0s1cE9KMDQ2cHU2enNabmNoWGo3?=
+ =?utf-8?B?a2hacEFYUlRPZFdPTm00b1FYRjR5cUNJWHJFeXptM3c2WXRkZTk4TEhEZHIy?=
+ =?utf-8?B?V0djYUVRbUY0U0VRZUdUdEI1b0tBY3orZnhvR3Q5THYzamlpYkdTUHlHelNy?=
+ =?utf-8?B?UlRqL2FXQjVIK3F4YmR1TUd2U3F3Wk1VQ3MvSWNYL25aaGxMR3VYbzN3bE85?=
+ =?utf-8?B?Z3ljZ1ZLV3hlTW5DVDk5VVBKWlNBNmdNR1YwaHNIVGhGVTdGOGswaVpvSG5X?=
+ =?utf-8?B?MUhFTC84VGI2VFFmOThEM0JyYXMwczR2dUJJV3Q4cjN2K3RXQ2JHQ1ZLdmtB?=
+ =?utf-8?B?b2w3NEkrcWZqQjE0Z3p4K0NEUm8zcGhJdmpnQXF5bHRKbXFLdGhSMTdnUlhn?=
+ =?utf-8?B?UEtRMzFCN2I2aFcxeUtLZ2pEVFFIeDY2NUNqZkxDOWIxY0xJZk0vM2hOTGtX?=
+ =?utf-8?B?ZnpZeWsxNmhjVTlPRExrS3Y2aFpiVFl3T2FxUnp3UENVek8rR1NweDgyanYr?=
+ =?utf-8?B?N2lLUkZNUmQrdFNBRmYrNEI1TVNNNVY1bEIxeS83enVUUmsyVkdyRk9XQVBk?=
+ =?utf-8?B?VUgyWWdVamkzUmttdk8rVXR2RmtPTU9ML3RrdCs1UEZCWEV5SVE2VjVYcnN0?=
+ =?utf-8?B?WlBDaENhTHBIeXdncGxSMktocU1zMHpFMTlhSlJOVjE1R25yWnU1Rmt5ZUxk?=
+ =?utf-8?B?NGZtRnUwOHRtY0VSVjRyaUs2RXNtNU51cFZPUHlabUNNY2YreGtodWROZ0Np?=
+ =?utf-8?B?T1pRcURlOXdsdEVuMWloT2VWb0t4OVBNZGNyWm1IR2NFNDJCVmczVEMzaUE2?=
+ =?utf-8?B?YWcwLzJiV0thMUJUTWRSSEJjYUl0a2srVXhPYm1NcktuV2NzT3BDc0tWUTJY?=
+ =?utf-8?B?MDBGY1BYTlc3NGVCYlFpVVJOUkFmNzRnTVRjQUUwQ05VQk45c21xYU5OaGs3?=
+ =?utf-8?B?NzRHME4raXUrTkZHa1VLT3dWKzVWY2VjbE9qRmx3L1VnZk1DMEFpUmlwSlFO?=
+ =?utf-8?B?ZG55VW9peEp6eTNBTmxNWUJCeDY4aDh5VG45V20zUzJIbmZlZ2ZtaExrZWQr?=
+ =?utf-8?B?QUE5dk15NDZDS0pGcWJRbnltam4wK2FZazA4dVZTYVBRUGtsbWxxa2dlVjdM?=
+ =?utf-8?B?Q0JHUWQ1M0ttWWxadDNJSWU2TnlwbVg0RjVmS2hubkRnTWVnUTZyTFk0VUpR?=
+ =?utf-8?B?QzRhVGRSZnpCT1B4aTZ4WEtYMWFldWlZdlNvajlaYktpYUhIMUhNSTI2emR6?=
+ =?utf-8?B?ZWZkT2RiUmZGSlRNSTgwVUlKdTdwVm9ScVBSQ1orQkNoR1NYdWJiSVBFNUxy?=
+ =?utf-8?B?S1Vua2ZlL0NoVDV0VXFwb2QwLzBEMWZIaFc2cnh4dVI3YXVIc0F4bVhUdjBk?=
+ =?utf-8?B?cXhVU1hXNXZCd1pYZDJrSG50Ly84bCsvWk1QeUYzOWZnQjYvRXEzbS9aWmJt?=
+ =?utf-8?B?Qk5sVnArRW5CZVh2ZHZvaXZmUGFDbURjc05CYnNISDZOaFhJRXB3clVPaWxB?=
+ =?utf-8?B?RWdaSjNGQTdZTGxBZDdaWDNhNGxTYjJlWlBSMTN5TXNqZ1ByZW51YTlqeXNt?=
+ =?utf-8?B?YklyUDNndG5ZZ1VJT0dYTDdVMnZQVXpiRTQ3ZFJ0NFpsbENha1lJWFBwLzYy?=
+ =?utf-8?B?ZjcwZ0xweFJteTBlQzhYeWNZaGNSWUtCQnlrUUNnUlM1cGNTQytJcEh4M0pm?=
+ =?utf-8?B?UDZ4ZmxaUzBtVHFRNEg5cHQ0QVcxR1h5OVFNZ00zdlFiN1RYVmVDT2E3Skkr?=
+ =?utf-8?B?TklDaklHQUJMMVNQTGYwcllBNXgyZVhpdDY1MnZxK1NJTXBUclNYd0l0OFNu?=
+ =?utf-8?B?dXhJTjkyQ3EvWHJWeXJ2eHBBVjhsYlY1RTJjcW1URCtDVmlVdmlBTmxEZ2Zw?=
+ =?utf-8?B?VTZRQXNnazk2V0hyWERqZmJ4ODA2R3FTM3JsRUhvbTcyTFhhN0svUDA5R2lX?=
+ =?utf-8?B?MU5sbzF6cHplYTlmSDRNTDVYelFUa0FXdUNaaTA4bUFHWUEwb2lQVTM4S0lD?=
+ =?utf-8?B?WktEQlI0REdVL0x2YzRDdXdPSndtSm40Zk4yRk1JMFg5TDFpdGRUMG1YODY4?=
+ =?utf-8?B?Mmc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	7BMecqJQncbdSVFmhUcDNF+829Z5IQzZiCGI4L+2p0n9rpD5GmiuBdHmmlbiJlLMwS6Bfh/Q6cY2B6Bij2UIoUTMUiLRdHBcn2ko/eXOZTnt5g+vlsHJke1jEULZlDhTQNylZFVWE9fOwnFFQQ7LNfGwjZET27FNvxVbWg0NR/rV3iDexw79Ie9gShG1r/e+WSRA8dO8IRP00PJsrPyBNxGnwvKjzZE2e66i84zERqDUDgoxHrNKY6QN75C1mJNEdXx1QMo5dPRsjsjwCLSTuebldpE1JgPUFmCqJOsaxE+pkXet3wG33/q7iiU0c75PEKX/6ROYbcB21lY2Ig7A0NroGUh54b0iwivJnjPfdjcAVsR4HAldPDTYbY5xlfCokYqcg2UMn+/D+Xba/DaO46LlNzcRieQHaNoWVBh1KeuL1rjLQTkIQbobl9G/iLmovyTaXX1snmVHoxuccO/Zdzot1EzmsfS0mo/3PEKqr93z8o5Cv5BAHICZe3+avJjRBe5wwLzo5eVzcY+OOlQuCFrSct88Z9AAqgKHlF/rBEpmXRvba0/KBTSFN1flOhLc/7AAi88hmSujR9BPI2vxF6EOd1SKuBnskb65vekxdg0=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7053ff1-de43-4a2c-ac25-08dd46dcb641
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 18:33:12.2338
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2ty2j85uorg1uoC109gUwBsAt3LrLdzOOXTWbMsaWE5YHMQ/AdhlbemYGasEr0QMGoXe2bnIV/ov+QAZOIGyfw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB4232
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-06_05,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2501170000
+ definitions=main-2502060149
+X-Proofpoint-GUID: rdbumQeFQgT9EEX3ew9Psv9CZXS5K-EM
+X-Proofpoint-ORIG-GUID: rdbumQeFQgT9EEX3ew9Psv9CZXS5K-EM
 
-On 02/06, Chao Yu wrote:
-> On 2/1/25 06:27, Jaegeuk Kim via Linux-f2fs-devel wrote:
-> > 1. ioctl(fd1, F2FS_IOC_DONATE_RANGE, {0,3});
-> > 2. ioctl(fd2, F2FS_IOC_DONATE_RANGE, {1,2});
-> > 3. ioctl(fd3, F2FS_IOC_DONATE_RANGE, {3,1});
-> > 4. echo 1024 > /sys/fs/f2fs/tuning/reclaim_caches_kb
-> > 
-> > This gives a way to reclaim file-backed pages by iterating all f2fs mounts until
-> > reclaiming 1MB page cache ranges, registered by #1, #2, and #3.
-> > 
-> > 5. cat /sys/fs/f2fs/tuning/reclaim_caches_kb
-> > -> gives total number of registered file ranges.
-> > 
-> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> > ---
-> >  Documentation/ABI/testing/sysfs-fs-f2fs |  7 ++
-> >  fs/f2fs/f2fs.h                          |  2 +
-> >  fs/f2fs/shrinker.c                      | 90 +++++++++++++++++++++++++
-> >  fs/f2fs/sysfs.c                         | 63 +++++++++++++++++
-> >  4 files changed, 162 insertions(+)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
-> > index 3e1630c70d8a..81deae2af84d 100644
-> > --- a/Documentation/ABI/testing/sysfs-fs-f2fs
-> > +++ b/Documentation/ABI/testing/sysfs-fs-f2fs
-> > @@ -828,3 +828,10 @@ Date:		November 2024
-> >  Contact:	"Chao Yu" <chao@kernel.org>
-> >  Description:	It controls max read extent count for per-inode, the value of threshold
-> >  		is 10240 by default.
-> > +
-> > +What:		/sys/fs/f2fs/tuning/reclaim_caches_kb
-> > +Date:		February 2025
-> > +Contact:	"Jaegeuk Kim" <jaegeuk@kernel.org>
-> > +Description:	It reclaims the given KBs of file-backed pages registered by
-> > +		ioctl(F2FS_IOC_DONATE_RANGE).
-> > +		For example, writing N tries to drop N KBs spaces in LRU.
-> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> > index 805585a7d2b6..bd0d8138b71d 100644
-> > --- a/fs/f2fs/f2fs.h
-> > +++ b/fs/f2fs/f2fs.h
-> > @@ -4241,6 +4241,8 @@ unsigned long f2fs_shrink_count(struct shrinker *shrink,
-> >  			struct shrink_control *sc);
-> >  unsigned long f2fs_shrink_scan(struct shrinker *shrink,
-> >  			struct shrink_control *sc);
-> > +unsigned int f2fs_donate_files(void);
-> > +void f2fs_reclaim_caches(unsigned int reclaim_caches_kb);
-> >  void f2fs_join_shrinker(struct f2fs_sb_info *sbi);
-> >  void f2fs_leave_shrinker(struct f2fs_sb_info *sbi);
-> >  
-> > diff --git a/fs/f2fs/shrinker.c b/fs/f2fs/shrinker.c
-> > index 83d6fb97dcae..45efff635d8e 100644
-> > --- a/fs/f2fs/shrinker.c
-> > +++ b/fs/f2fs/shrinker.c
-> > @@ -130,6 +130,96 @@ unsigned long f2fs_shrink_scan(struct shrinker *shrink,
-> >  	return freed;
-> >  }
-> >  
-> > +unsigned int f2fs_donate_files(void)
-> > +{
-> > +	struct f2fs_sb_info *sbi;
-> > +	struct list_head *p;
-> > +	unsigned int donate_files = 0;
-> > +
-> > +	spin_lock(&f2fs_list_lock);
-> > +	p = f2fs_list.next;
-> > +	while (p != &f2fs_list) {
-> > +		sbi = list_entry(p, struct f2fs_sb_info, s_list);
-> > +
-> > +		/* stop f2fs_put_super */
-> > +		if (!mutex_trylock(&sbi->umount_mutex)) {
-> > +			p = p->next;
-> > +			continue;
-> > +		}
-> > +		spin_unlock(&f2fs_list_lock);
-> > +
-> > +		donate_files += sbi->donate_files;
-> > +
-> > +		spin_lock(&f2fs_list_lock);
-> > +		p = p->next;
-> > +		mutex_unlock(&sbi->umount_mutex);
-> > +	}
-> > +	spin_unlock(&f2fs_list_lock);
-> > +
-> > +	return donate_files;
-> > +}
-> > +
-> > +static unsigned int do_reclaim_caches(struct f2fs_sb_info *sbi,
-> > +				unsigned int reclaim_caches_kb)
-> > +{
-> > +	struct inode *inode;
-> > +	struct f2fs_inode_info *fi;
-> > +	unsigned int nfiles = sbi->donate_files;
-> > +	pgoff_t npages = reclaim_caches_kb >> (PAGE_SHIFT - 10);
-> > +
-> > +	while (npages && nfiles--) {
-> > +		pgoff_t len;
-> > +
-> > +		spin_lock(&sbi->inode_lock[DONATE_INODE]);
-> > +		if (list_empty(&sbi->inode_list[DONATE_INODE])) {
-> > +			spin_unlock(&sbi->inode_lock[DONATE_INODE]);
-> > +			break;
-> > +		}
-> > +		fi = list_first_entry(&sbi->inode_list[DONATE_INODE],
-> > +					struct f2fs_inode_info, gdonate_list);
-> > +		list_move_tail(&fi->gdonate_list, &sbi->inode_list[DONATE_INODE]);
-> > +		inode = igrab(&fi->vfs_inode);
-> > +		spin_unlock(&sbi->inode_lock[DONATE_INODE]);
-> > +
-> > +		if (!inode)
-> > +			continue;
-> > +
-> > +		len = fi->donate_end - fi->donate_start + 1;
-> > +		npages = npages < len ? 0 : npages - len;
-> > +		invalidate_inode_pages2_range(inode->i_mapping,
-> > +					fi->donate_start, fi->donate_end);
-> > +		iput(inode);
-> > +		cond_resched();
-> > +	}
-> > +	return npages << (PAGE_SHIFT - 10);
-> > +}
-> > +
-> > +void f2fs_reclaim_caches(unsigned int reclaim_caches_kb)
-> > +{
-> > +	struct f2fs_sb_info *sbi;
-> > +	struct list_head *p;
-> > +
-> > +	spin_lock(&f2fs_list_lock);
-> > +	p = f2fs_list.next;
-> > +	while (p != &f2fs_list && reclaim_caches_kb) {
-> > +		sbi = list_entry(p, struct f2fs_sb_info, s_list);
-> > +
-> > +		/* stop f2fs_put_super */
-> > +		if (!mutex_trylock(&sbi->umount_mutex)) {
-> > +			p = p->next;
-> > +			continue;
-> > +		}
-> > +		spin_unlock(&f2fs_list_lock);
-> > +
-> > +		reclaim_caches_kb = do_reclaim_caches(sbi, reclaim_caches_kb);
-> > +
-> > +		spin_lock(&f2fs_list_lock);
-> > +		p = p->next;
-> > +		mutex_unlock(&sbi->umount_mutex);
-> > +	}
-> > +	spin_unlock(&f2fs_list_lock);
-> > +}
-> > +
-> >  void f2fs_join_shrinker(struct f2fs_sb_info *sbi)
-> >  {
-> >  	spin_lock(&f2fs_list_lock);
-> > diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-> > index 4bd7b17a20c8..579226a05a69 100644
-> > --- a/fs/f2fs/sysfs.c
-> > +++ b/fs/f2fs/sysfs.c
-> > @@ -916,6 +916,39 @@ static struct f2fs_base_attr f2fs_base_attr_##_name = {		\
-> >  	.show	= f2fs_feature_show,				\
-> >  }
-> >  
-> > +static ssize_t f2fs_tune_show(struct f2fs_base_attr *a, char *buf)
-> > +{
-> > +	unsigned int res;
-> > +
-> > +	if (!strcmp(a->attr.name, "reclaim_caches_kb"))
-> > +		res = f2fs_donate_files();
-> > +
-> > +	return sysfs_emit(buf, "%u\n", res);
-> > +}
-> > +
-> > +static ssize_t f2fs_tune_store(struct f2fs_base_attr *a,
-> > +			const char *buf, size_t count)
-> > +{
-> > +	unsigned long t;
-> > +	int ret;
-> > +
-> > +	ret = kstrtoul(skip_spaces(buf), 0, &t);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (!strcmp(a->attr.name, "reclaim_caches_kb"))
-> > +		f2fs_reclaim_caches(t);
-> > +
-> > +	return ret ? ret : count;
+On 2/6/25 1:29 PM, Jeff Layton wrote:
+> On Thu, 2025-02-06 at 13:17 -0500, Chuck Lever wrote:
+>> On 2/6/25 1:12 PM, Jeff Layton wrote:
+>>> Currently, nfsd_proc_stat_init() ignores the return value of
+>>> svc_proc_register(). If the procfile creation fails, then the kernel
+>>> will WARN when it tries to remove the entry later.
+>>>
+>>> Fix nfsd_proc_stat_init() to return the same type of pointer as
+>>> svc_proc_register(), and fix up nfsd_net_init() to check that and fail
+>>> the nfsd_net construction if it occurs.
+>>>
+>>> svc_proc_register() can fail if the dentry can't be allocated, or if an
+>>> identical dentry already exists. The second case is pretty unlikely in
+>>> the nfsd_net construction codepath, so if this happens, return -ENOMEM.
+>>>
+>>> Fixes: 93483ac5fec6 ("nfsd: expose /proc/net/sunrpc/nfsd in net namespaces")
+>>> Reported-by: syzbot+e34ad04f27991521104c@syzkaller.appspotmail.com
+>>> Closes: https://lore.kernel.org/linux-nfs/67a47501.050a0220.19061f.05f9.GAE@google.com/
+>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>>> ---
+>>> I looked at the console log from the report, and syzkaller is doing
+>>> fault injection on allocations. You can see the stack where the "nfsd"
+>>> directory under /proc failed to be created due to one. This is a pretty
+>>> unlikely bug under normal circumstances, but it's simple to fix. The
+>>> problem predates the patch in Fixes:, but it's not worth the effort to
+>>> backport this to anything earlier.
+>>
+>> I'd prefer to document this by labeling the actual commit that
+>> introduced the problem in the Fixes: tag, then using
+>>
+>> "Cc: stable # vN.M"
+>>
+>> to block automatic backporting to LTS kernels where this patch won't
+>> apply cleanly. I can derive the values of N and M from the commit you
+>> mention above, but do you happen to know the actual culprit commit?
+>>
+>>
 > 
-> return count;
+> Unfortunately this bug goes back to the initial 2.6.12 import into git.
+> I didn't look earlier. Note that nfsd is not alone here. Ignoring the
+> result of proc_create_data() is very common.
+> 
+> If you want to drop the Fixes: tag, and add the Cc: stable instead,
+> then that's fine with me. Whatever works best.
 
-Applied. Thanks,
+OK. If we don't know the culprit, then a lone "Cc: stable" should be
+sufficient.
 
+
+>>> ---
+>>>  fs/nfsd/nfsctl.c | 9 ++++++++-
+>>>  fs/nfsd/stats.c  | 4 ++--
+>>>  fs/nfsd/stats.h  | 2 +-
+>>>  3 files changed, 11 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+>>> index 95ea4393305bd38493b640fbaba2e8f57f5a501d..583eda0df54dca394de4bbe8d148be2892df39cb 100644
+>>> --- a/fs/nfsd/nfsctl.c
+>>> +++ b/fs/nfsd/nfsctl.c
+>>> @@ -2204,8 +2204,14 @@ static __net_init int nfsd_net_init(struct net *net)
+>>>  					  NFSD_STATS_COUNTERS_NUM);
+>>>  	if (retval)
+>>>  		goto out_repcache_error;
+>>> +
+>>>  	memset(&nn->nfsd_svcstats, 0, sizeof(nn->nfsd_svcstats));
+>>>  	nn->nfsd_svcstats.program = &nfsd_programs[0];
+>>> +	if (!nfsd_proc_stat_init(net)) {
+>>> +		retval = -ENOMEM;
+>>> +		goto out_proc_error;
+>>> +	}
+>>> +
+>>>  	for (i = 0; i < sizeof(nn->nfsd_versions); i++)
+>>>  		nn->nfsd_versions[i] = nfsd_support_version(i);
+>>>  	for (i = 0; i < sizeof(nn->nfsd4_minorversions); i++)
+>>> @@ -2215,12 +2221,13 @@ static __net_init int nfsd_net_init(struct net *net)
+>>>  	nfsd4_init_leases_net(nn);
+>>>  	get_random_bytes(&nn->siphash_key, sizeof(nn->siphash_key));
+>>>  	seqlock_init(&nn->writeverf_lock);
+>>> -	nfsd_proc_stat_init(net);
+>>>  #if IS_ENABLED(CONFIG_NFS_LOCALIO)
+>>>  	INIT_LIST_HEAD(&nn->local_clients);
+>>>  #endif
+>>>  	return 0;
+>>>  
+>>> +out_proc_error:
+>>> +	percpu_counter_destroy_many(nn->counter, NFSD_STATS_COUNTERS_NUM);
+>>>  out_repcache_error:
+>>>  	nfsd_idmap_shutdown(net);
+>>>  out_idmap_error:
+>>> diff --git a/fs/nfsd/stats.c b/fs/nfsd/stats.c
+>>> index bb22893f1157e4c159e123b6d8e25b8eab52e187..f7eaf95e20fc8758566f469c6c2de79119fea070 100644
+>>> --- a/fs/nfsd/stats.c
+>>> +++ b/fs/nfsd/stats.c
+>>> @@ -73,11 +73,11 @@ static int nfsd_show(struct seq_file *seq, void *v)
+>>>  
+>>>  DEFINE_PROC_SHOW_ATTRIBUTE(nfsd);
+>>>  
+>>> -void nfsd_proc_stat_init(struct net *net)
+>>> +struct proc_dir_entry *nfsd_proc_stat_init(struct net *net)
+>>>  {
+>>>  	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+>>>  
+>>> -	svc_proc_register(net, &nn->nfsd_svcstats, &nfsd_proc_ops);
+>>> +	return svc_proc_register(net, &nn->nfsd_svcstats, &nfsd_proc_ops);
+>>>  }
+>>>  
+>>>  void nfsd_proc_stat_shutdown(struct net *net)
+>>> diff --git a/fs/nfsd/stats.h b/fs/nfsd/stats.h
+>>> index 04aacb6c36e2576ba231ee481e3a3e9e9f255a61..e4efb0e4e56d467c13eaa5a1dd312c85dadeb4b8 100644
+>>> --- a/fs/nfsd/stats.h
+>>> +++ b/fs/nfsd/stats.h
+>>> @@ -10,7 +10,7 @@
+>>>  #include <uapi/linux/nfsd/stats.h>
+>>>  #include <linux/percpu_counter.h>
+>>>  
+>>> -void nfsd_proc_stat_init(struct net *net);
+>>> +struct proc_dir_entry *nfsd_proc_stat_init(struct net *net);
+>>>  void nfsd_proc_stat_shutdown(struct net *net);
+>>>  
+>>>  static inline void nfsd_stats_rc_hits_inc(struct nfsd_net *nn)
+>>>
+>>> ---
+>>> base-commit: ebbdc9429c39336a406b191cfe84bca2c12c2f73
+>>> change-id: 20250206-nfsd-fixes-8e61bdf66347
+>>>
+>>> Best regards,
+>>
+>>
 > 
-> Thanks,
-> 
-> > +}
-> > +
-> > +#define F2FS_TUNE_RW_ATTR(_name)				\
-> > +static struct f2fs_base_attr f2fs_base_attr_##_name = {		\
-> > +	.attr = {.name = __stringify(_name), .mode = 0644 },	\
-> > +	.show	= f2fs_tune_show,				\
-> > +	.store	= f2fs_tune_store,				\
-> > +}
-> > +
-> >  static ssize_t f2fs_sb_feature_show(struct f2fs_attr *a,
-> >  		struct f2fs_sb_info *sbi, char *buf)
-> >  {
-> > @@ -1368,6 +1401,14 @@ static struct attribute *f2fs_sb_feat_attrs[] = {
-> >  };
-> >  ATTRIBUTE_GROUPS(f2fs_sb_feat);
-> >  
-> > +F2FS_TUNE_RW_ATTR(reclaim_caches_kb);
-> > +
-> > +static struct attribute *f2fs_tune_attrs[] = {
-> > +	BASE_ATTR_LIST(reclaim_caches_kb),
-> > +	NULL,
-> > +};
-> > +ATTRIBUTE_GROUPS(f2fs_tune);
-> > +
-> >  static const struct sysfs_ops f2fs_attr_ops = {
-> >  	.show	= f2fs_attr_show,
-> >  	.store	= f2fs_attr_store,
-> > @@ -1401,6 +1442,20 @@ static struct kobject f2fs_feat = {
-> >  	.kset	= &f2fs_kset,
-> >  };
-> >  
-> > +static const struct sysfs_ops f2fs_tune_attr_ops = {
-> > +	.show	= f2fs_base_attr_show,
-> > +	.store	= f2fs_base_attr_store,
-> > +};
-> > +
-> > +static const struct kobj_type f2fs_tune_ktype = {
-> > +	.default_groups = f2fs_tune_groups,
-> > +	.sysfs_ops	= &f2fs_tune_attr_ops,
-> > +};
-> > +
-> > +static struct kobject f2fs_tune = {
-> > +	.kset	= &f2fs_kset,
-> > +};
-> > +
-> >  static ssize_t f2fs_stat_attr_show(struct kobject *kobj,
-> >  				struct attribute *attr, char *buf)
-> >  {
-> > @@ -1637,6 +1692,11 @@ int __init f2fs_init_sysfs(void)
-> >  	if (ret)
-> >  		goto unregister_out;
-> >  
-> > +	ret = kobject_init_and_add(&f2fs_tune, &f2fs_tune_ktype,
-> > +				   NULL, "tuning");
-> > +	if (ret)
-> > +		goto put_feat;
-> > +
-> >  	f2fs_proc_root = proc_mkdir("fs/f2fs", NULL);
-> >  	if (!f2fs_proc_root) {
-> >  		ret = -ENOMEM;
-> > @@ -1645,6 +1705,8 @@ int __init f2fs_init_sysfs(void)
-> >  
-> >  	return 0;
-> >  put_kobject:
-> > +	kobject_put(&f2fs_tune);
-> > +put_feat:
-> >  	kobject_put(&f2fs_feat);
-> >  unregister_out:
-> >  	kset_unregister(&f2fs_kset);
-> > @@ -1653,6 +1715,7 @@ int __init f2fs_init_sysfs(void)
-> >  
-> >  void f2fs_exit_sysfs(void)
-> >  {
-> > +	kobject_put(&f2fs_tune);
-> >  	kobject_put(&f2fs_feat);
-> >  	kset_unregister(&f2fs_kset);
-> >  	remove_proc_entry("fs/f2fs", NULL);
+
+
+-- 
+Chuck Lever
