@@ -1,54 +1,54 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EEF01D90A9
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6505F1DC9B4
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 18:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738867908; cv=none; b=j/I9scB+kmByvRPiU66vaT1/ucAie36zkMg6zIcQY63ACEsOjTC90DFB1RPXTs8254kLtmVDrBGrGIpHIKiN0wIErHHFQiMNYO+cyah2k5gtpyRW1Yq4THEXSNwAnpf8X+CXUg8uHzJIhmiG+ckPQVBd7GXo3e9dEXMxa8URVyQ=
+	t=1738867911; cv=none; b=skOZYLbyjkNw5j8OKdGHk1tX3JxoPIZWn7VfvEsGUVsNISq7zghJnhjr4zax4u7hVVZq0q5qtLM597++RGiPBc6Trr5NSE9nSnOk91IS3i6+aqO4IL0dFYoDgs+raGHG36uloGBXaG93Y3vnaF1yPC49v7R1UsYwE2hWAdC2mIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738867908; c=relaxed/simple;
-	bh=WVn7vDPfu+EjljprrRLvQ+shC+V+6zeTvZGJJUUZmjs=;
+	s=arc-20240116; t=1738867911; c=relaxed/simple;
+	bh=MwQoEMcDUUcX7Mfjoxiv5kP8Ft1uxkLcbUM1Sp/36xE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=uKcWaGuNEf4dHAtGhh4pak9rqioIHSkdu1HTKtvWm4flmy1RMPXcNPJElrw/NLZeHjjGL2PGtEcYuLc9jaXRCmDTz0r+HN9zIXG5HjK+Bx07p/uAgYRuzpQIpU7Zt7tWBwe1MnjShhjnuievc2E6bk3DyVwvUIgVeCaQNzCFpzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mnCY+qgt; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=BdgsVqugDUlZMRRlo5iaXVRhkRHl6AvE7n0UxhfOB0rhclvkudN4Vf291SuHmWdqSLOYJt3An2ZMjW155oppFsdjy+u/ODRhgsJ6BowkhSWrLtsmIADZ4HYEyV+e/g1IepM6/UovzjmE88ywWRImTVUpA+DxPNRxJklwDLXWg50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cz/knLmH; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mnCY+qgt"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21f1a7dc0e6so46757615ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:51:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cz/knLmH"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2f9c02f54f2so2486922a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 10:51:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738867905; x=1739472705; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738867909; x=1739472709; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1RY4Sckn7GWnsNuNzDlgUqe5LNqypC0myFrtZsSR9cE=;
-        b=mnCY+qgtr4grN+xA1KMlx+B7FPBv+gs/+cfBa4w14pyBG7QIxF5hZk3NuH1QB97hzA
-         NQIKVBSB5erxyX65px844xm/XXah1aLSIX87qo2eXG86GPWfBon/+n78PHXwR2HtsnrH
-         sM+ppOd4CDuLLZeH8qQ3ZuxgXLT+cRUWQtZ4M4lj009KOcDg4DUGHqZChN0O+Sq7hTxk
-         VUx2sE/lP9l27rnleWFdcNaLD5vzJGEeL1i9kyf5k/XroJ8zI+aDSUPEecCwkSkqcktI
-         20bLcAhRKJ/J+3A00hqIfOc1LAbHwrzuDS31zDwy6nuIYR/VPlnx2tSJp1vFFcZ7mt0B
-         vfag==
+        bh=41QLNtbtqhWSGZ/oObOknHg0NviKslOOeQUP783wlTM=;
+        b=cz/knLmH3pBALSWrayHfVEUE05zCPIG4hClr4aInennr0TUNkLT7BzeZBS9vkTLpll
+         Pafvbck2Ej2AeoC5o8sk6CAQuaNfyhG6PqgZ5dp2e4N4Doh9dw3jPyH+WvM52a9vsN96
+         wNCUqmOrylSYLIWUD4BK0EE9QUxzvFU+vLrQxnPfBGjauwOTEruoh4tcJZoD+XY4Lf10
+         Y71epegm3mTXLadOj7eAT2mxmoKzjVvz2rJtnVJQBxvDKvTvL89HuhOrZNgyz1JIis27
+         6R9HdVfT3FHEQrScZJHeLgUp6BWOI6Ahel8u3+Ps9J1U8wvgpB6b08M7cVyilhq3VOIi
+         oFcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738867905; x=1739472705;
+        d=1e100.net; s=20230601; t=1738867909; x=1739472709;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1RY4Sckn7GWnsNuNzDlgUqe5LNqypC0myFrtZsSR9cE=;
-        b=LulP01ck2z1mHwmDC5CxGwncnZ4TV50YZvJQMJkDh1PO4gIzDyNnc3AYaBFd/PgJzY
-         rI8SI4UwAE0DT4qiD7s8JMElUWx2W967Ze5rYYZ/xQ9UDThtRbQ+9QWlr6NwHtlE3boI
-         QcljRol/+FJozorRbciQD68Y/pFub1PsLrTFnOLcEPAzlbSjyPBzRoexXzUvZYY/sl9P
-         KuyVzQrEclp7XKJCL6ZRXpYHTUUL40LtrZtqzGQur3S18fVl7Ebt1xqVxOoRTDVN6OA6
-         K0W6ZXPinUE/iZNImHG5aKwD/nktcA2HgICg18ztqjMDculAH3sgQRCcw/YrbZeZN+VO
-         EdcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXlaexQMoA4GF/UtnNmElH+ZTorfDobJ2cGFdm+w64n4PiP9cJO53Bf2yCjTa6QUqUBM1B2rEpbGpKLGrM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZVvB4uaUJfDyG5Xkfd+1xLi6xlaaQNRktwztMfyJnFxpsxAZf
-	lnhZwyNhpHk3Z6brUeCY61VK5MFavZPBuR8OOefUaPcMlMKdN8CGohDr8sXyHh8AWR9PWA==
-X-Google-Smtp-Source: AGHT+IGv5wn5p5nXx7RKxFjYk6wjYFPCzyPzBbZhXtDcOU21vQXSokgZmbD3Gr14JvKdrzDwy2bARR7t
-X-Received: from pgev18.prod.google.com ([2002:a63:ac12:0:b0:abb:a12f:81a8])
- (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:9985:b0:1eb:7da4:305e
- with SMTP id adf61e73a8af0-1ee03b70cbcmr733791637.39.1738867905422; Thu, 06
- Feb 2025 10:51:45 -0800 (PST)
-Date: Thu,  6 Feb 2025 18:50:58 +0000
+        bh=41QLNtbtqhWSGZ/oObOknHg0NviKslOOeQUP783wlTM=;
+        b=YM0HWg/k/1tPXrfwOiCsJtPuqu5wUPIReWxSUxOoTqsEY3abeHgydUp3LJi8tVW/Y3
+         SrFq6UTUQQG7xC/aBPzz4CkliffRe8XvBbVMgOwHxxCAVIJcASUcaugCeV7RGylSHYu1
+         gzS+DfpU6uqY8zSDmIozMaA8n/SU3uNn/PoZuSB2R0WaxKviLnc1KNrRJuFmV4cN+35j
+         MAWt9CPknmR3K8ZoJAvYMCIL1+jjtVMhtzLMRTwULBpNopLA5Do6ESRB+vy+TShl5k41
+         0MOJlAx68pWjqq6kzxhF/drIwt96PbyYvyMHwFeKpZYAVZ+BGBHheItq5tIwmdLpsVZ3
+         dR3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW5C+a21UZsXYQWPVUSmqUVmSY6hdQuhwq9S56DY/3ezpzcvdlEgWVXDVGOj3ESPmPvxZOKImqaB0s/TN8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEa9nijmk7umg33k0zMfNvsIoqw5Ud2AOAppFcBpC6rdmtfhJc
+	+5qV4+i/vWYak0CVg+CQyQRXK9RhaigeHdZoLXc/o+TpT2+xnMaz9WbW5icICvd0IjGeSw==
+X-Google-Smtp-Source: AGHT+IGVxYFLO6PMMj5YOBtKJIkBsk+UPteT4nuImFK20RZLySxCL3GaHTYjR4JwUAp1YZGI3vapG7Y+
+X-Received: from pfbhd4.prod.google.com ([2002:a05:6a00:6584:b0:72f:8e60:adb8])
+ (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2e9c:b0:725:e405:6df7
+ with SMTP id d2e1a72fcca58-7305d46f7bemr390731b3a.10.1738867908791; Thu, 06
+ Feb 2025 10:51:48 -0800 (PST)
+Date: Thu,  6 Feb 2025 18:51:00 +0000
 In-Reply-To: <20250206185109.1210657-1-fvdl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250206185109.1210657-1-fvdl@google.com>
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250206185109.1210657-19-fvdl@google.com>
-Subject: [PATCH v3 18/28] mm/hugetlb: add pre-HVO framework
+Message-ID: <20250206185109.1210657-21-fvdl@google.com>
+Subject: [PATCH v3 20/28] mm/hugetlb: do pre-HVO for bootmem allocated pages
 From: Frank van der Linden <fvdl@google.com>
 To: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org
@@ -67,236 +67,280 @@ Cc: yuzhao@google.com, usamaarif642@gmail.com, joao.m.martins@oracle.com,
 	roman.gushchin@linux.dev, Frank van der Linden <fvdl@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Define flags for pre-HVOed bootmem hugetlb pages, and act on them.
+For large systems, the overhead of vmemmap pages for hugetlb
+is substantial. It's about 1.5% of memory, which is about
+45G for a 3T system. If you want to configure most of that
+system for hugetlb (e.g. to use as backing memory for VMs),
+there is a chance of running out of memory on boot, even
+though you know that the 45G will become available later.
 
-The most important flag is the HVO flag, signalling that a bootmem
-allocated gigantic page has already been HVO-ed. If this flag is
-seen by the hugetlb bootmem gather code, the page is marked
-as HVO optimized. The HVO code will then not try to optimize
-it again. Instead, it will just map the tail page mirror pages
-read-only, completing the HVO steps.
+To avoid this scenario, and since it's a waste to first
+allocate and then free that 45G during boot, do pre-HVO
+for hugetlb bootmem allocated pages ('gigantic' pages).
 
-No functional change, as nothing sets the flags yet.
+pre-HVO is done by adding functions that are called from
+sparse_init_nid_early and sparse_init_nid_late. The first
+is called before memmap allocation, so it takes care of
+allocating memmap HVO-style. The second verifies that all
+bootmem pages look good, specifically it checks that they
+do not intersect with multiple zones. This can only be done
+from sparse_init_nid_late path, when zones have been
+initialized.
+
+The hugetlb page size must be aligned to the section size,
+and aligned to the size of memory described by the number
+of page structures contained in one PMD (since pre-HVO
+is not prepared to split PMDs). This should be true for
+most 'gigantic' pages, it is for 1G pages on x86, where
+both of these alignment requirements are 128M.
+
+This will only have an effect if hugetlb_bootmem_alloc was
+called early in boot. If not, it won't do anything, and
+HVO for bootmem hugetlb pages works as before.
 
 Signed-off-by: Frank van der Linden <fvdl@google.com>
 ---
- arch/powerpc/mm/hugetlbpage.c |  1 +
- include/linux/hugetlb.h       |  4 +++
- mm/hugetlb.c                  | 24 ++++++++++++++++-
- mm/hugetlb_vmemmap.c          | 50 +++++++++++++++++++++++++++++++++--
- mm/hugetlb_vmemmap.h          | 15 +++++++++++
- 5 files changed, 91 insertions(+), 3 deletions(-)
+ include/linux/hugetlb.h |   2 +
+ mm/hugetlb.c            |   4 +-
+ mm/hugetlb_vmemmap.c    | 143 ++++++++++++++++++++++++++++++++++++++++
+ mm/hugetlb_vmemmap.h    |   6 ++
+ mm/sparse-vmemmap.c     |   4 ++
+ 5 files changed, 157 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index 6b043180220a..d3c1b749dcfc 100644
---- a/arch/powerpc/mm/hugetlbpage.c
-+++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -113,6 +113,7 @@ static int __init pseries_alloc_bootmem_huge_page(struct hstate *hstate)
- 	gpage_freearray[nr_gpages] = 0;
- 	list_add(&m->list, &huge_boot_pages[0]);
- 	m->hstate = hstate;
-+	m->flags = 0;
- 	return 1;
- }
- 
 diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 5061279e5f73..10a7ce2b95e1 100644
+index 10a7ce2b95e1..2512463bca49 100644
 --- a/include/linux/hugetlb.h
 +++ b/include/linux/hugetlb.h
-@@ -681,8 +681,12 @@ struct hstate {
- struct huge_bootmem_page {
- 	struct list_head list;
- 	struct hstate *hstate;
-+	unsigned long flags;
- };
+@@ -687,6 +687,8 @@ struct huge_bootmem_page {
+ #define HUGE_BOOTMEM_HVO		0x0001
+ #define HUGE_BOOTMEM_ZONES_VALID	0x0002
  
-+#define HUGE_BOOTMEM_HVO		0x0001
-+#define HUGE_BOOTMEM_ZONES_VALID	0x0002
++bool hugetlb_bootmem_page_zones_valid(int nid, struct huge_bootmem_page *m);
 +
  int isolate_or_dissolve_huge_page(struct page *page, struct list_head *list);
  int replace_free_hugepage_folios(unsigned long start_pfn, unsigned long end_pfn);
  struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
 diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 52ee5514a1f2..7e0810c217ce 100644
+index 7e0810c217ce..29b3a6e70a53 100644
 --- a/mm/hugetlb.c
 +++ b/mm/hugetlb.c
-@@ -3219,6 +3219,7 @@ int __alloc_bootmem_huge_page(struct hstate *h, int nid)
- 	INIT_LIST_HEAD(&m->list);
- 	list_add(&m->list, &huge_boot_pages[node]);
- 	m->hstate = h;
-+	m->flags = 0;
- 	return 1;
+@@ -3310,8 +3310,8 @@ static void __init prep_and_add_bootmem_folios(struct hstate *h,
+ 	}
  }
  
-@@ -3286,7 +3287,7 @@ static void __init prep_and_add_bootmem_folios(struct hstate *h,
- 	struct folio *folio, *tmp_f;
- 
- 	/* Send list for bulk vmemmap optimization processing */
--	hugetlb_vmemmap_optimize_folios(h, folio_list);
-+	hugetlb_vmemmap_optimize_bootmem_folios(h, folio_list);
- 
- 	list_for_each_entry_safe(folio, tmp_f, folio_list, lru) {
- 		if (!folio_test_hugetlb_vmemmap_optimized(folio)) {
-@@ -3315,6 +3316,13 @@ static bool __init hugetlb_bootmem_page_zones_valid(int nid,
+-static bool __init hugetlb_bootmem_page_zones_valid(int nid,
+-						    struct huge_bootmem_page *m)
++bool __init hugetlb_bootmem_page_zones_valid(int nid,
++					     struct huge_bootmem_page *m)
+ {
  	unsigned long start_pfn;
  	bool valid;
- 
-+	if (m->flags & HUGE_BOOTMEM_ZONES_VALID) {
-+		/*
-+		 * Already validated, skip check.
-+		 */
-+		return true;
-+	}
-+
- 	start_pfn = virt_to_phys(m) >> PAGE_SHIFT;
- 
- 	valid = !pfn_range_intersects_zones(nid, start_pfn,
-@@ -3347,6 +3355,11 @@ static void __init hugetlb_bootmem_free_invalid_page(int nid, struct page *page,
- 	}
- }
- 
-+static bool __init hugetlb_bootmem_page_prehvo(struct huge_bootmem_page *m)
-+{
-+	return (m->flags & HUGE_BOOTMEM_HVO);
-+}
-+
- /*
-  * Put bootmem huge pages into the standard lists after mem_map is up.
-  * Note: This only applies to gigantic (order > MAX_PAGE_ORDER) pages.
-@@ -3387,6 +3400,15 @@ static void __init gather_bootmem_prealloc_node(unsigned long nid)
- 		hugetlb_folio_init_vmemmap(folio, h,
- 					   HUGETLB_VMEMMAP_RESERVE_PAGES);
- 		init_new_hugetlb_folio(h, folio);
-+
-+		if (hugetlb_bootmem_page_prehvo(m))
-+			/*
-+			 * If pre-HVO was done, just set the
-+			 * flag, the HVO code will then skip
-+			 * this folio.
-+			 */
-+			folio_set_hugetlb_vmemmap_optimized(folio);
-+
- 		list_add(&folio->lru, &folio_list);
- 
- 		/*
 diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
-index 5b484758f813..be6b33ecbc8e 100644
+index be6b33ecbc8e..9a99dfa3c495 100644
 --- a/mm/hugetlb_vmemmap.c
 +++ b/mm/hugetlb_vmemmap.c
-@@ -649,14 +649,39 @@ static int hugetlb_vmemmap_split_folio(const struct hstate *h, struct folio *fol
- 	return vmemmap_remap_split(vmemmap_start, vmemmap_end, vmemmap_reuse);
+@@ -743,6 +743,149 @@ void hugetlb_vmemmap_optimize_bootmem_folios(struct hstate *h, struct list_head
+ 	__hugetlb_vmemmap_optimize_folios(h, folio_list, true);
  }
  
--void hugetlb_vmemmap_optimize_folios(struct hstate *h, struct list_head *folio_list)
-+static void __hugetlb_vmemmap_optimize_folios(struct hstate *h,
-+					      struct list_head *folio_list,
-+					      bool boot)
- {
- 	struct folio *folio;
-+	int nr_to_optimize;
- 	LIST_HEAD(vmemmap_pages);
- 	unsigned long flags = VMEMMAP_REMAP_NO_TLB_FLUSH | VMEMMAP_SYNCHRONIZE_RCU;
- 
-+	nr_to_optimize = 0;
- 	list_for_each_entry(folio, folio_list, lru) {
--		int ret = hugetlb_vmemmap_split_folio(h, folio);
-+		int ret;
-+		unsigned long spfn, epfn;
++#ifdef CONFIG_SPARSEMEM_VMEMMAP_PREINIT
 +
-+		if (boot && folio_test_hugetlb_vmemmap_optimized(folio)) {
-+			/*
-+			 * Already optimized by pre-HVO, just map the
-+			 * mirrored tail page structs RO.
-+			 */
-+			spfn = (unsigned long)&folio->page;
-+			epfn = spfn + pages_per_huge_page(h);
-+			vmemmap_wrprotect_hvo(spfn, epfn, folio_nid(folio),
-+					HUGETLB_VMEMMAP_RESERVE_SIZE);
-+			register_page_bootmem_memmap(pfn_to_section_nr(spfn),
-+					&folio->page,
-+					HUGETLB_VMEMMAP_RESERVE_SIZE);
-+			static_branch_inc(&hugetlb_optimize_vmemmap_key);
++/* Return true of a bootmem allocated HugeTLB page should be pre-HVO-ed */
++static bool vmemmap_should_optimize_bootmem_page(struct huge_bootmem_page *m)
++{
++	unsigned long section_size, psize, pmd_vmemmap_size;
++	phys_addr_t paddr;
++
++	if (!READ_ONCE(vmemmap_optimize_enabled))
++		return false;
++
++	if (!hugetlb_vmemmap_optimizable(m->hstate))
++		return false;
++
++	psize = huge_page_size(m->hstate);
++	paddr = virt_to_phys(m);
++
++	/*
++	 * Pre-HVO only works if the bootmem huge page
++	 * is aligned to the section size.
++	 */
++	section_size = (1UL << PA_SECTION_SHIFT);
++	if (!IS_ALIGNED(paddr, section_size) ||
++	    !IS_ALIGNED(psize, section_size))
++		return false;
++
++	/*
++	 * The pre-HVO code does not deal with splitting PMDS,
++	 * so the bootmem page must be aligned to the number
++	 * of base pages that can be mapped with one vmemmap PMD.
++	 */
++	pmd_vmemmap_size = (PMD_SIZE / (sizeof(struct page))) << PAGE_SHIFT;
++	if (!IS_ALIGNED(paddr, pmd_vmemmap_size) ||
++	    !IS_ALIGNED(psize, pmd_vmemmap_size))
++		return false;
++
++	return true;
++}
++
++/*
++ * Initialize memmap section for a gigantic page, HVO-style.
++ */
++void __init hugetlb_vmemmap_init_early(int nid)
++{
++	unsigned long psize, paddr, section_size;
++	unsigned long ns, i, pnum, pfn, nr_pages;
++	unsigned long start, end;
++	struct huge_bootmem_page *m = NULL;
++	void *map;
++
++	/*
++	 * Noting to do if bootmem pages were not allocated
++	 * early in boot, or if HVO wasn't enabled in the
++	 * first place.
++	 */
++	if (!hugetlb_bootmem_allocated())
++		return;
++
++	if (!READ_ONCE(vmemmap_optimize_enabled))
++		return;
++
++	section_size = (1UL << PA_SECTION_SHIFT);
++
++	list_for_each_entry(m, &huge_boot_pages[nid], list) {
++		if (!vmemmap_should_optimize_bootmem_page(m))
 +			continue;
++
++		nr_pages = pages_per_huge_page(m->hstate);
++		psize = nr_pages << PAGE_SHIFT;
++		paddr = virt_to_phys(m);
++		pfn = PHYS_PFN(paddr);
++		map = pfn_to_page(pfn);
++		start = (unsigned long)map;
++		end = start + nr_pages * sizeof(struct page);
++
++		if (vmemmap_populate_hvo(start, end, nid,
++					HUGETLB_VMEMMAP_RESERVE_SIZE) < 0)
++			continue;
++
++		memmap_boot_pages_add(HUGETLB_VMEMMAP_RESERVE_SIZE / PAGE_SIZE);
++
++		pnum = pfn_to_section_nr(pfn);
++		ns = psize / section_size;
++
++		for (i = 0; i < ns; i++) {
++			sparse_init_early_section(nid, map, pnum,
++					SECTION_IS_VMEMMAP_PREINIT);
++			map += section_map_size();
++			pnum++;
 +		}
 +
-+		nr_to_optimize++;
-+
-+		ret = hugetlb_vmemmap_split_folio(h, folio);
- 
- 		/*
- 		 * Spliting the PMD requires allocating a page, thus lets fail
-@@ -668,6 +693,16 @@ void hugetlb_vmemmap_optimize_folios(struct hstate *h, struct list_head *folio_l
- 			break;
- 	}
- 
-+	if (!nr_to_optimize)
-+		/*
-+		 * All pre-HVO folios, nothing left to do. It's ok if
-+		 * there is a mix of pre-HVO and not yet HVO-ed folios
-+		 * here, as __hugetlb_vmemmap_optimize_folio() will
-+		 * skip any folios that already have the optimized flag
-+		 * set, see vmemmap_should_optimize_folio().
-+		 */
-+		goto out;
-+
- 	flush_tlb_all();
- 
- 	list_for_each_entry(folio, folio_list, lru) {
-@@ -693,10 +728,21 @@ void hugetlb_vmemmap_optimize_folios(struct hstate *h, struct list_head *folio_l
- 		}
- 	}
- 
-+out:
- 	flush_tlb_all();
- 	free_vmemmap_page_list(&vmemmap_pages);
- }
- 
-+void hugetlb_vmemmap_optimize_folios(struct hstate *h, struct list_head *folio_list)
-+{
-+	__hugetlb_vmemmap_optimize_folios(h, folio_list, false);
++		m->flags |= HUGE_BOOTMEM_HVO;
++	}
 +}
 +
-+void hugetlb_vmemmap_optimize_bootmem_folios(struct hstate *h, struct list_head *folio_list)
++void __init hugetlb_vmemmap_init_late(int nid)
 +{
-+	__hugetlb_vmemmap_optimize_folios(h, folio_list, true);
++	struct huge_bootmem_page *m, *tm;
++	unsigned long phys, nr_pages, start, end;
++	unsigned long pfn, nr_mmap;
++	struct hstate *h;
++	void *map;
++
++	if (!hugetlb_bootmem_allocated())
++		return;
++
++	if (!READ_ONCE(vmemmap_optimize_enabled))
++		return;
++
++	list_for_each_entry_safe(m, tm, &huge_boot_pages[nid], list) {
++		if (!(m->flags & HUGE_BOOTMEM_HVO))
++			continue;
++
++		phys = virt_to_phys(m);
++		h = m->hstate;
++		pfn = PHYS_PFN(phys);
++		nr_pages = pages_per_huge_page(h);
++
++		if (!hugetlb_bootmem_page_zones_valid(nid, m)) {
++			/*
++			 * Oops, the hugetlb page spans multiple zones.
++			 * Remove it from the list, and undo HVO.
++			 */
++			list_del(&m->list);
++
++			map = pfn_to_page(pfn);
++
++			start = (unsigned long)map;
++			end = start + nr_pages * sizeof(struct page);
++
++			vmemmap_undo_hvo(start, end, nid,
++					 HUGETLB_VMEMMAP_RESERVE_SIZE);
++			nr_mmap = end - start - HUGETLB_VMEMMAP_RESERVE_SIZE;
++			memmap_boot_pages_add(DIV_ROUND_UP(nr_mmap, PAGE_SIZE));
++
++			memblock_phys_free(phys, huge_page_size(h));
++			continue;
++		} else
++			m->flags |= HUGE_BOOTMEM_ZONES_VALID;
++	}
 +}
++#endif
 +
  static const struct ctl_table hugetlb_vmemmap_sysctls[] = {
  	{
  		.procname	= "hugetlb_optimize_vmemmap",
 diff --git a/mm/hugetlb_vmemmap.h b/mm/hugetlb_vmemmap.h
-index 2fcae92d3359..a6354a27e63f 100644
+index 926b8b27b5cb..0031e49b12f7 100644
 --- a/mm/hugetlb_vmemmap.h
 +++ b/mm/hugetlb_vmemmap.h
-@@ -24,6 +24,8 @@ long hugetlb_vmemmap_restore_folios(const struct hstate *h,
- 					struct list_head *non_hvo_folios);
+@@ -9,6 +9,8 @@
+ #ifndef _LINUX_HUGETLB_VMEMMAP_H
+ #define _LINUX_HUGETLB_VMEMMAP_H
+ #include <linux/hugetlb.h>
++#include <linux/io.h>
++#include <linux/memblock.h>
+ 
+ /*
+  * Reserve one vmemmap page, all vmemmap addresses are mapped to it. See
+@@ -25,6 +27,10 @@ long hugetlb_vmemmap_restore_folios(const struct hstate *h,
  void hugetlb_vmemmap_optimize_folio(const struct hstate *h, struct folio *folio);
  void hugetlb_vmemmap_optimize_folios(struct hstate *h, struct list_head *folio_list);
-+void hugetlb_vmemmap_optimize_bootmem_folios(struct hstate *h, struct list_head *folio_list);
-+
+ void hugetlb_vmemmap_optimize_bootmem_folios(struct hstate *h, struct list_head *folio_list);
++#ifdef CONFIG_SPARSEMEM_VMEMMAP_PREINIT
++void hugetlb_vmemmap_init_early(int nid);
++void hugetlb_vmemmap_init_late(int nid);
++#endif
+ 
  
  static inline unsigned int hugetlb_vmemmap_size(const struct hstate *h)
+diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+index 8cc848c4b17c..fd2ab5118e13 100644
+--- a/mm/sparse-vmemmap.c
++++ b/mm/sparse-vmemmap.c
+@@ -32,6 +32,8 @@
+ #include <asm/pgalloc.h>
+ #include <asm/tlbflush.h>
+ 
++#include "hugetlb_vmemmap.h"
++
+ /*
+  * Flags for vmemmap_populate_range and friends.
+  */
+@@ -594,6 +596,7 @@ struct page * __meminit __populate_section_memmap(unsigned long pfn,
+  */
+ void __init sparse_vmemmap_init_nid_early(int nid)
  {
-@@ -64,6 +66,19 @@ static inline void hugetlb_vmemmap_optimize_folios(struct hstate *h, struct list
- {
++	hugetlb_vmemmap_init_early(nid);
  }
  
-+static inline void hugetlb_vmemmap_init_early(int nid)
-+{
-+}
-+
-+static inline void hugetlb_vmemmap_init_late(int nid)
-+{
-+}
-+
-+static inline void hugetlb_vmemmap_optimize_bootmem_folios(struct hstate *h,
-+						struct list_head *folio_list)
-+{
-+}
-+
- static inline unsigned int hugetlb_vmemmap_optimizable_size(const struct hstate *h)
+ /*
+@@ -604,5 +607,6 @@ void __init sparse_vmemmap_init_nid_early(int nid)
+  */
+ void __init sparse_vmemmap_init_nid_late(int nid)
  {
- 	return 0;
++	hugetlb_vmemmap_init_late(nid);
+ }
+ #endif
 -- 
 2.48.1.502.g6dc24dfdaf-goog
 
