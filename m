@@ -1,241 +1,123 @@
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA191990C1;
-	Thu,  6 Feb 2025 19:18:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7585E157A5C;
+	Thu,  6 Feb 2025 19:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738869540; cv=none; b=qMJFeMlW/5/l58lAczG/fN4WSX8mnI5HXIEZOawQdE9vZ3famfy3cpAC13ZK9nf/3VEYll4kF84W03S6OO/QSdD/zoC1KHQa8Np8e/FVmBwm1PlSzjhlO6A6IfVXu7LJVGYpgE0k+U5DtfbTQHRhjMEvGFPnPR2RJHeD5v2aeO4=
+	t=1738869605; cv=none; b=HcmgrHNc3jTrmqKIZdcXOaIygbHWFrzq3CFCDDhq4MgWxwg4J2Q60lJxwLQH+/GIKSKRwc5+3RS2NgEUO4sX+7UwzaLvMTQfgSbSKkWSD7j+4DeC2mTMu/6pS77Mdx2OsD5/xtSYz6xigNUDVzgTasgSkvXeZlpovHu3pKu5Av4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738869540; c=relaxed/simple;
-	bh=ZL//EHotRWwQ+ac5qyjmVmFj7JZNLt25zwPXSoKAebc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PGvDZ7eurCvh8MQ0LAvi7rlLQi0wijJaFF6IPencXjmQvaYOBVynoKGcX6ebrZJA8OePAjerW+Yl7g/AZG4+02PTZcEz4f+TRZaxlHGBQmThzD8kEIWP8f2fZoguMtWseDsCgjvXpIgXTXP14cgSBsZOZcVl3PeSrANzYiTfqLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net; spf=pass smtp.mailfrom=asahilina.net; dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b=g3QhZjxe; arc=none smtp.client-ip=212.63.210.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=asahilina.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asahilina.net
+	s=arc-20240116; t=1738869605; c=relaxed/simple;
+	bh=lpceZ522M3/G2j+23ZqHSKSS/XNc3DjrXYEVrd34Eck=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ncpjaXZHfn1ma+kgMPnp4ZzCGYNZOLYGi2RuMyFD6dD91pnXQDdYijp5onNfIuobzvwB29+09wJAEvnR7dr+93Jmbs8Y7XpHabPH8ZgQkI7kZ96sUxpKE7jPQ0ctWyY32oWehRHE0KH1JxgvyM0isP8IbVK5BbOoMZf1BWgpr04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qdp0xjse; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=asahilina.net header.i=@asahilina.net header.b="g3QhZjxe"
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: lina@asahilina.net)
-	by mail.marcansoft.com (Postfix) with ESMTPSA id 748D943A93;
-	Thu,  6 Feb 2025 19:18:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=asahilina.net;
-	s=default; t=1738869535;
-	bh=ZL//EHotRWwQ+ac5qyjmVmFj7JZNLt25zwPXSoKAebc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=g3QhZjxedOMejOxLX7SKYeyUoBjljnaLGkVWFRt/nOQdqh1fMviXexyEi2ZKDYEbg
-	 FNj8ledgvUh1T4tFLuHvKmFN4f642ZowNR5fvdbADXe+PEJ2yMdQGwZqQSpp4HYQX+
-	 3f/BMw2f9uQbxmxZRbCEGXmDdWbhw+HTTlVQpJu2i0ZswSXqIwwpGaqA0O5Y+UkyNd
-	 d43qrhLcoTR1Zz/mRku1Gv1LmMZbfz0FsmFrJAe0K63ZNyMrmZjQKXwWk2kcR2/5+x
-	 D3khF1TK3QcCe/dmOQHDrhvr3ZFYwQxZs7g+WvHMjjy0Y+XCa8R9YSA5hiCrLAvNS2
-	 1sN62EZxHiTmg==
-Message-ID: <bfc81fb0-917a-4518-851b-c7fcf3a91c5b@asahilina.net>
-Date: Fri, 7 Feb 2025 04:18:52 +0900
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qdp0xjse"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-467a17055e6so16172841cf.3;
+        Thu, 06 Feb 2025 11:20:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738869603; x=1739474403; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DcrbolGONnkzpsMRrj1p29h31Hv8IReG8unYB/3cb/8=;
+        b=Qdp0xjseY0c/IP6lKLHPasAAyAPFWSK1Rah4FxghQHFaQ7UD8lsHeIU+0lBTinmthD
+         3Oxe4oRxjPScdlnhXii5FSDWEGVcdEIbaHQPNGK0buhNGz0rxwg/q3ymFioGcINGH4/s
+         /tjYawP4IqBriydlLWM6GDAT3BZHA0Nbfs1YCqiXp/gG4YxZpDsekUdEEsWeQxLK8Y3Q
+         K02oe5ICPhr9RRq5ftkX268Jk14QLSEhcjGn1nuuYe2reiDcQKnB/lY6zwuOxqdFBipr
+         egdXcm0VrLB/fo6TOucZD4PcDGEtwTKH0CLpsxJ8sZokO+rQHki7qPy0pbd0ZBNCah0l
+         0JAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738869603; x=1739474403;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DcrbolGONnkzpsMRrj1p29h31Hv8IReG8unYB/3cb/8=;
+        b=Zk1mq7OLOrO/Q32a3/ppPdHN6ywDR8WhR15UOMD4cPuaa5/yjKfO9yTAdX29IAOM6P
+         4MzaN1u1iHDh4RN0fMMMJ+r8Ak3b20Vo7bgrlBVU5epYEtkJ8WkgVoBlXsg/pT77uw9s
+         PQPFToYk2U1cQS5IRWVpBXX/AualICbpKVQllqkNYxLb34idqYSLUZTNaknwWNBanN/z
+         CnKAkFPaHp13785WdE5xxXvLoYeQQnMRamYYJYWut6klTmxC48TrrvScrXfuM33Qa7XA
+         UScOcBdr2qxOhQTYny1Gz44CgtQZd3V9qp05+HflYJ4NgU3J19sCDP9yFt9rR1nDHTys
+         +xkw==
+X-Forwarded-Encrypted: i=1; AJvYcCWhYMVPF9zo/8DVR2ooFLupUMPXANmulyfSGg/oBfvK9hZvcTLkJ26ZI4pFxFkqboGfKbQaOQkVG3fE73s=@vger.kernel.org, AJvYcCWzJJMYG/WDoLdRAQ0CgQX6LhOSNKbyvHpX1Q63rVDgDevQwoRXl6Qrtd16Uwh5LKwnSkCqtjSV@vger.kernel.org, AJvYcCXI0/mpGxXnknNgqxmdFQxI55fkCzrzsyZqpGl54Sm7nzSTKORrdffUFftVod6C5cku7plHn83kYTWTFA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAlqlNhLJH/eOn8TEI7EMJ7TpjHjcxYWqm+REACphIpZ8GaceC
+	Pzjl59FVjAqDHD14ap0bwtnfmUVbPNUJ2T7CGti9pY8QT14tG2th
+X-Gm-Gg: ASbGncsTcdzaWTm6+FKfc2WaL8RQZlh03chUDa4p72Q5aVzyR835jf7MnIjI5OEyr4U
+	6vRY86JMYlV1tYMTSALvbgMKkLiXg78SWn62Y2mXlMY0uo3dKWd7oYcK1V+0tb0lX8Fr8VL9YvG
+	ysMahPejZ0QGg+tSIyaC7PZjVKPzJ9G3Q5LjwTkMVwB+VbV7A7mQkzcHcMI32kiq2RvMy5k13Bx
+	1MwnPsWyCwfUhW1aqjQhe1H3ZBOu7Hsuf9RZIqoPzHrbdi0JwFkwYgdzzgp18vCRAAu69unVtQw
+	mAFRFGwT7p8EVElZ1TjeSnnBbkIPsOJeQB4HCA==
+X-Google-Smtp-Source: AGHT+IEcRLsPCYAccwqi/4g0hJA3ZEAnkWiTfxeLFqTMx/RVl+ZVNZJLt+NvBYaDZEWcgxWuIHugYA==
+X-Received: by 2002:a05:622a:493:b0:46e:2a18:93b4 with SMTP id d75a77b69052e-47167bce490mr5808821cf.33.1738869603185;
+        Thu, 06 Feb 2025 11:20:03 -0800 (PST)
+Received: from newman.cs.purdue.edu ([128.10.127.250])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471492763ebsm8159161cf.1.2025.02.06.11.20.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 11:20:02 -0800 (PST)
+From: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+To: gregkh@linuxfoundation.org
+Cc: GR-QLogic-Storage-Upstream@marvell.com,
+	James.Bottomley@hansenpartnership.com,
+	arun.easi@cavium.com,
+	bvanassche@acm.org,
+	jhasan@marvell.com,
+	jiashengjiangcool@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	manish.rangankar@cavium.com,
+	markus.elfring@web.de,
+	martin.petersen@oracle.com,
+	nilesh.javali@cavium.com,
+	skashyap@marvell.com,
+	stable@vger.kernel.org
+Subject: [PATCH v2 1/2] scsi: qedf: Replace kmalloc_array() with kcalloc()
+Date: Thu,  6 Feb 2025 19:19:59 +0000
+Message-Id: <20250206192000.17827-1-jiashengjiangcool@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <2025020658-backlog-riot-5faf@gregkh>
+References: <2025020658-backlog-riot-5faf@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] rust: page: Support borrowing `struct page` and
- physaddr conversion
-To: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Jann Horn <jannh@google.com>,
- Matthew Wilcox <willy@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>, Wedson Almeida Filho
- <wedsonaf@gmail.com>, Valentin Obst <kernel@valentinobst.de>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- airlied@redhat.com, Abdiel Janulgue <abdiel.janulgue@gmail.com>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- asahi@lists.linux.dev, Oscar Salvador <osalvador@suse.de>,
- Muchun Song <muchun.song@linux.dev>
-References: <20250202-rust-page-v1-0-e3170d7fe55e@asahilina.net>
- <Z6CTLB2NggwYafi9@phenom.ffwll.local>
- <41ca3445-80cd-43c1-8f9e-634c195c9187@asahilina.net>
- <37A0729B-A711-4D45-B9F0-328FDB9ADD28@nvidia.com>
- <0e19e1c3-293b-4740-93f3-2c410893288b@redhat.com>
- <82047858-480a-45e3-b826-3a46fbebe842@asahilina.net>
- <f1498b22-0bc1-489a-8c2c-35aa48c7fe7d@redhat.com>
- <1e9ae833-4293-4e48-83b2-c0af36cb3fdc@asahilina.net>
- <026c1a0c-e53a-4a5e-92da-6e4f18ce0fee@redhat.com>
- <cc1cd991-1871-4929-851e-d9672a45dcf0@asahilina.net>
- <6bcd3315-a0f9-463c-ab97-a43736f9b4f4@redhat.com>
- <2a513c3e-818c-4040-b3d3-7835861bab4f@asahilina.net>
- <0dffaa7d-340f-4ce1-9a2e-54cfd9079266@redhat.com>
-Content-Language: en-US
-From: Asahi Lina <lina@asahilina.net>
-In-Reply-To: <0dffaa7d-340f-4ce1-9a2e-54cfd9079266@redhat.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Replace kmalloc_array() with kcalloc() to avoid old (dirty) data being
+used/freed.
 
+Fixes: 61d8658b4a43 ("scsi: qedf: Add QLogic FastLinQ offload FCoE driver framework.")
+Cc: <stable@vger.kernel.org> # v5.10+
+Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+---
+Changlog:
 
-On 2/7/25 2:58 AM, David Hildenbrand wrote:
-> On 04.02.25 22:06, Asahi Lina wrote:
->>
->>
->> On 2/5/25 5:10 AM, David Hildenbrand wrote:
->>> On 04.02.25 18:59, Asahi Lina wrote:
->>>> On 2/4/25 11:38 PM, David Hildenbrand wrote:
->>>>>>>> If the answer is "no" then that's fine. It's still an unsafe
->>>>>>>> function
->>>>>>>> and we need to document in the safety section that it should
->>>>>>>> only be
->>>>>>>> used for memory that is either known to be allocated and pinned and
->>>>>>>> will
->>>>>>>> not be freed while the `struct page` is borrowed, or memory that is
->>>>>>>> reserved and not owned by the buddy allocator, so in practice
->>>>>>>> correct
->>>>>>>> use would not be racy with memory hot-remove anyway.
->>>>>>>>
->>>>>>>> This is already the case for the drm/asahi use case, where the pfns
->>>>>>>> looked up will only ever be one of:
->>>>>>>>
->>>>>>>> - GEM objects that are mapped to the GPU and whose physical
->>>>>>>> pages are
->>>>>>>> therefore pinned (and the VM is locked while this happens so the
->>>>>>>> objects
->>>>>>>> cannot become unpinned out from under the running code),
->>>>>>>
->>>>>>> How exactly are these pages pinned/obtained?
->>>>>>
->>>>>> Under the hood it's shmem. For pinning, it winds up at
->>>>>> `drm_gem_get_pages()`, which I think does a
->>>>>> `shmem_read_folio_gfp()` on
->>>>>> a mapping set as unevictable.
->>>>>
->>>>> Thanks. So we grab another folio reference via shmem_read_folio_gfp()-
->>>>>> shmem_get_folio_gfp().
->>>>>
->>>>> Hm, I wonder if we might end up holding folios residing in
->>>>> ZONE_MOVABLE/
->>>>> MIGRATE_CMA longer than we should.
->>>>>
->>>>> Compared to memfd_pin_folios(), which simulates FOLL_LONGTERM and
->>>>> makes
->>>>> sure to migrate pages out of ZONE_MOVABLE/MIGRATE_CMA.
->>>>>
->>>>> But that's a different discussion, just pointing it out, maybe I'm
->>>>> missing something :)
->>>>
->>>> I think this is a little over my head. Though I only just realized that
->>>> we seem to be keeping the GEM objects pinned forever, even after unmap,
->>>> in the drm-shmem core API (I see no drm-shmem entry point that would
->>>> allow the sgt to be freed and its corresponding pages ref to be
->>>> dropped,
->>>> other than a purge of purgeable objects or final destruction of the
->>>> object). I'll poke around since this feels wrong, I thought we were
->>>> supposed to be able to have shrinker support for swapping out whole GPU
->>>> VMs in the modern GPU MM model, but I guess there's no
->>>> implementation of
->>>> that for gem-shmem drivers yet...?
->>>
->>> I recall that shrinker as well, ... or at least a discussion around it.
->>>
->>> [...]
->>>
->>>>>
->>>>> If it's only for crash dumps etc. that might even be opt-in, it makes
->>>>> the whole thing a lot less scary. Maybe this could be opt-in
->>>>> somewhere,
->>>>> to "unlock" this interface? Just an idea.
->>>>
->>>> Just to make sure we're on the same page, I don't think there's
->>>> anything
->>>> to unlock in the Rust abstraction side (this series). At the end of the
->>>> day, if nothing else, the unchecked interface (which the regular
->>>> non-crash page table management code uses for performance) will let you
->>>> use any pfn you want, it's up to documentation and human review to
->>>> specify how it should be used by drivers. What Rust gives us here is
->>>> the
->>>> mandatory `unsafe {}`, so any attempts to use this API will necessarily
->>>> stick out during review as potentially dangerous code that needs extra
->>>> scrutiny.
->>>>
->>>> For the client driver itself, I could gate the devcoredump stuff behind
->>>> a module parameter or something... but I don't think it's really worth
->>>> it. We don't have a way to reboot the firmware or recover from this
->>>> condition (platform limitations), so end users are stuck rebooting to
->>>> get back a usable machine anyway. If something goes wrong in the
->>>> crashdump code and the machine oopses or locks up worse... it doesn't
->>>> really make much of a difference for normal end users. I don't think
->>>> this will ever really happen given the constraints I described, but if
->>>> somehow it does (some other bug somewhere?), well... the machine was
->>>> already in an unrecoverable state anyway.
->>>>
->>>> It would be nice to have userspace tooling deployed by default that
->>>> saves off the devcoredump somewhere, so we can have a chance at
->>>> debugging hard-to-hit firmware crashes... if it's opt-in, it would only
->>>> really be useful for developers and CI machines.
->>>
->>> Is this something that possibly kdump can save or analyze? Because that
->>> is our default "oops, kernel crashed, let's dump the old content so we
->>> can dump it" mechanism on production systems.
->>
->> kdump does not work on Apple ARM systems because kexec is broken and
->> cannot be fully fixed, due to multiple platform/firmware limitations. A
->> very limited version of kexec might work well enough for kdump, but I
->> don't think anyone has looked into making that work yet...
->>
->>> but ... I am not familiar with devcoredump. So I don't know when/how it
->>> runs, and if the source system is still alive (and remains alive --  in
->>> contrast to a kernel crash).
->>
->> Devcoredump just makes the dump available via /sys so it can be
->> collected by the user. The system is still alive, the GPU is just dead
->> and all future GPU job submissions fail. You can still SSH in or (at
->> least in theory, if enough moving parts are graceful about it) VT-switch
->> to a TTY. The display controller is not part of the GPU, it is separate
->> hardware.
-> 
-> 
-> Thanks for all the details (and sorry for the delay, I'm on PTO until
-> Monday ... :)
-> 
-> (regarding the other mail) Adding that stuff to rust just so we have a
-> devcoredump that ideally wouldn't exist is a bit unfortunate.
-> 
-> So I'm curious: we do have /proc/kcore, where we do all of the required
-> filtering, only allowing for reading memory that is online, not
-> hwpoisoned etc.
-> 
-> makedumpfile already supports /proc/kcore.
-> 
-> Would it be possible to avoid Devcoredump completely either by dumping /
-> proc/kcore directly or by having a user-space script that walks the page
-> tables to dump the content purely based on /proc/kcore?
-> 
-> If relevant memory ranges are inaccessible from /proc/kcore, we could
-> look into exposing them.
+v1 -> v2:
 
-I'm not sure that's a good idea... the dump code runs when the GPU
-crashes, and makes copies of all the memory pages into newly allocated
-pages (this is around 16MB for a typical dump, and if allocation fails
-we just bail and clean up). Then userspace can read the coredump at its
-leisure. AIUI, this is exactly the intended use case of devcoredump. It
-also means that anyone can grab a core dump with just a `cp`, without
-needing any bespoke tools.
+1. Replace kzalloc() with kcalloc() to not reintroduce the possibility of multiplication overflow.
+---
+ drivers/scsi/qedf/qedf_io.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-After the snapshot is taken, the kernel will complete (fail) all GPU
-jobs, which means much of the shared memory will be freed and some
-structures will change contents. If we defer the coredump to userspace,
-then it would not be able to capture the state of all relevant memory
-exactly at the crash time, which could be very confusing.
-
-In theory I could change the allocators to not free or touch anything
-after a crash, and add guards to any mutations in the driver to avoid
-any changes after a crash... but that feels a lot more brittle and
-error-prone than just taking the core dump at the right time.
-
-~~ Lina
+diff --git a/drivers/scsi/qedf/qedf_io.c b/drivers/scsi/qedf/qedf_io.c
+index fcfc3bed02c6..d52057b97a4f 100644
+--- a/drivers/scsi/qedf/qedf_io.c
++++ b/drivers/scsi/qedf/qedf_io.c
+@@ -254,9 +254,7 @@ struct qedf_cmd_mgr *qedf_cmd_mgr_alloc(struct qedf_ctx *qedf)
+ 	}
+ 
+ 	/* Allocate pool of io_bdts - one for each qedf_ioreq */
+-	cmgr->io_bdt_pool = kmalloc_array(num_ios, sizeof(struct io_bdt *),
+-	    GFP_KERNEL);
+-
++	cmgr->io_bdt_pool = kcalloc(num_ios, sizeof(*cmgr->io_bdt_pool), GFP_KERNEL);
+ 	if (!cmgr->io_bdt_pool) {
+ 		QEDF_WARN(&(qedf->dbg_ctx), "Failed to alloc io_bdt_pool.\n");
+ 		goto mem_err;
+-- 
+2.25.1
 
