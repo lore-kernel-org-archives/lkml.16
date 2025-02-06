@@ -1,322 +1,211 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2FD222594;
-	Thu,  6 Feb 2025 21:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C738F222594;
+	Thu,  6 Feb 2025 21:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738878222; cv=none; b=JvbQ2GR5/fw8ri/kcmbuIM26tCfaJXH0Uol1PaNUo144N9qtRdlDWllF5srYJtsHex9dxKSRJ9xY63AG+JZZor9r+4q4T1Klstc9N+s5AsP8fgdNdrsy63mgHACMI5sViPOeXf6ftYQPpODnwkIw6SG8urq0REfEN/SB3/x/gGw=
+	t=1738878257; cv=none; b=XPTzx/re3aFuc4HM9XjxesdIos1qMDjU8E06OCMRa28xy6KZ5F3QuKPByM+Mtkk6AVez7yITGYW8qehvrM8em8AB2DvkyN18h57FnMQgiE4qF8JBnDAnWFd5ZSs4djjeOhVIc7O7T/2cypwIPosE3jFbYHS0PZIRWmDYlkkivhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738878222; c=relaxed/simple;
-	bh=vCJladhhKUfbgbqOYBTWjl54ZrM+0wQvVN3ul7hgg0o=;
+	s=arc-20240116; t=1738878257; c=relaxed/simple;
+	bh=6zObI4C337nw+w0a2+/LBlBPr3WJ+YI2x3tcPiGCBR8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O0MDPSSFE2TZg+nd02G4UoMN1DP/3AiTLZK1bpmBaAVZADNkp0CKa1aIA4Uo4fD4/plgRPoOZHFCS/JFsXgRmB5M7MVfhqBMgl2fLBPGC2uK9Yqt74knU3vbj+ObZfK3dTZTv3w+zX+4MHWk6jT2Dv0UvvyGRdnEmsjEshJdXPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=oQeNubVm; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Whi9vAru0RyRHlyJb7MWvM+i5rynKpQbNkcp+Y5YlRmtxXQXa+YLXWtlK2jCn2KHE/n9h8X4EfoMNKtGSr0jmpP35+sHSQ6OdaCssODakuglx10A9aUpYGlct04RCzQON8YxrM2Jfl+xjwOvNS4bQXNUmujY58OET+QsHeRWwJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tn+fcOSs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oQeNubVm"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 43E45227;
-	Thu,  6 Feb 2025 22:42:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1738878145;
-	bh=vCJladhhKUfbgbqOYBTWjl54ZrM+0wQvVN3ul7hgg0o=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tn+fcOSs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C7B3C4CEDF;
+	Thu,  6 Feb 2025 21:44:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738878257;
+	bh=6zObI4C337nw+w0a2+/LBlBPr3WJ+YI2x3tcPiGCBR8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oQeNubVmqwP0rNji7oxX4H3Mf/fHcr4G+HBPlSc/WSHb5AQNVrZXuwM2fSpFT/eoK
-	 5BQrGd0okwH5BjozdDBczw+qdGE/GexPkekQjE2Vp4Xf5uXzapxLDRZVY66cp2B4qT
-	 iiOiSDc2tQSAOGTJoSgG0kuJW4whvOMrZxrBjDbA=
-Date: Thu, 6 Feb 2025 23:43:34 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>, linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, "Guoniu.zhou" <guoniu.zhou@nxp.com>,
-	Robby Cai <robby.cai@nxp.com>,
-	Robert Chiras <robert.chiras@nxp.com>
-Subject: Re: [PATCH v2 02/14] phy: freescale: Add MIPI CSI PHY driver for
- i.MX8Q
-Message-ID: <20250206214334.GB24886@pendragon.ideasonboard.com>
-References: <20250205-8qxp_camera-v2-0-731a3edf2744@nxp.com>
- <20250205-8qxp_camera-v2-2-731a3edf2744@nxp.com>
+	b=Tn+fcOSsTEzLUCbA+pPMxIZE8ESiMmMJW0s1HmPZVHK+kUrqVWV/IbFgFXj/5T1Jg
+	 fk3KFiv6qHk4Rdvsb3aiR9BMS6RzETxLSb53f340I1i7wDmBY8uJz7phpUlPCxf2h7
+	 Xd+y9/g9UpgEbgq57gKI/v7HEVDGB/rQYKOCq4+5ku8iHOsrMaBkl+texDH18P0ZAw
+	 WtDXO4AksOd9P2L1QAoO9C76XTVvtHepHAfGgSderN4PWCZHw6mk1s7HiopSycmI27
+	 39r4Ajqtfdcqpv2UE5RpAN8yQkhz6adPm/m0tyqjrQYPZMNupMMziEFJLSB20hDT43
+	 G3rqbA/9s1yxQ==
+Date: Thu, 6 Feb 2025 13:44:17 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de,
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
+	ritesh.list@gmail.com, martin.petersen@oracle.com
+Subject: Re: [PATCH RFC 06/10] xfs: iomap CoW-based atomic write support
+Message-ID: <20250206214417.GW21808@frogsfrogsfrogs>
+References: <20250204120127.2396727-1-john.g.garry@oracle.com>
+ <20250204120127.2396727-7-john.g.garry@oracle.com>
+ <20250205200517.GZ21808@frogsfrogsfrogs>
+ <58f630a4-3e02-451c-bd6e-22427cec5c11@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250205-8qxp_camera-v2-2-731a3edf2744@nxp.com>
+In-Reply-To: <58f630a4-3e02-451c-bd6e-22427cec5c11@oracle.com>
 
-Hi Frank,
-
-Thank you for the patch.
-
-On Wed, Feb 05, 2025 at 12:18:11PM -0500, Frank Li wrote:
-> Add MIPI CSI PHY driver for i.MX8QM, i.MX8QXP.
+On Thu, Feb 06, 2025 at 11:10:40AM +0000, John Garry wrote:
+> On 05/02/2025 20:05, Darrick J. Wong wrote:
+> > On Tue, Feb 04, 2025 at 12:01:23PM +0000, John Garry wrote:
+> > > In cases of an atomic write occurs for misaligned or discontiguous disk
+> > > blocks, we will use a CoW-based method to issue the atomic write.
+> > > 
+> > > So, for that case, return -EAGAIN to request that the write be issued in
+> > > CoW atomic write mode. The dio write path should detect this, similar to
+> > > how misaligned regalar DIO writes are handled.
+> > > 
+> > > Signed-off-by: John Garry <john.g.garry@oracle.com>
+> > > ---
+> > >   fs/xfs/xfs_iomap.c | 68 ++++++++++++++++++++++++++++++++++++++++++++--
+> > >   1 file changed, 66 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+> > > index ae3755ed00e6..2c2867d728e4 100644
+> > > --- a/fs/xfs/xfs_iomap.c
+> > > +++ b/fs/xfs/xfs_iomap.c
+> > > @@ -809,9 +809,12 @@ xfs_direct_write_iomap_begin(
+> > >   	struct xfs_bmbt_irec	imap, cmap;
+> > >   	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
+> > >   	xfs_fileoff_t		end_fsb = xfs_iomap_end_fsb(mp, offset, length);
+> > > +	bool			atomic = flags & IOMAP_ATOMIC;
+> > >   	int			nimaps = 1, error = 0;
+> > >   	bool			shared = false;
+> > > +	bool			found = false;
+> > >   	u16			iomap_flags = 0;
+> > > +	bool			need_alloc;
+> > >   	unsigned int		lockmode;
+> > >   	u64			seq;
+> > > @@ -832,7 +835,7 @@ xfs_direct_write_iomap_begin(
+> > >   	 * COW writes may allocate delalloc space or convert unwritten COW
+> > >   	 * extents, so we need to make sure to take the lock exclusively here.
+> > >   	 */
+> > > -	if (xfs_is_cow_inode(ip))
+> > > +	if (xfs_is_cow_inode(ip) || atomic)
+> > >   		lockmode = XFS_ILOCK_EXCL;
+> > >   	else
+> > >   		lockmode = XFS_ILOCK_SHARED;
+> > > @@ -857,12 +860,73 @@ xfs_direct_write_iomap_begin(
+> > >   	if (error)
+> > >   		goto out_unlock;
+> > > +
+> > > +	if (flags & IOMAP_ATOMIC_COW) {
+> > > +		error = xfs_reflink_allocate_cow(ip, &imap, &cmap, &shared,
+> > > +				&lockmode,
+> > > +				(flags & IOMAP_DIRECT) || IS_DAX(inode), true);
+> > 
+> > Weird nit not relate to this patch: Is there ever a case where
+> > IS_DAX(inode) and (flags & IOMAP_DAX) disagree?  I wonder if this odd
+> > construction could be simplified to:
+> > 
+> > 	(flags & (IOMAP_DIRECT | IOMAP_DAX))
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> Change from v1 to v2
-> - remove un-test code for 8ulp.
-> - remove unused regiser define
-> ---
->  drivers/phy/freescale/Kconfig                   |   9 ++
->  drivers/phy/freescale/Makefile                  |   1 +
->  drivers/phy/freescale/phy-fsl-imx8q-mipi-cphy.c | 185 ++++++++++++++++++++++++
->  3 files changed, 195 insertions(+)
+> I'm not sure. I assume that we always want to convert for DAX, and IOMAP_DAX
+> may not be set always for DIO path - but I only see xfs_file_write_iter() ->
+> xfs_file_dax_write() ->dax_iomap_rw(xfs_dax_write_iomap_ops), which sets
+> IOMAP_DAX in iomap_iter.flags
 > 
-> diff --git a/drivers/phy/freescale/Kconfig b/drivers/phy/freescale/Kconfig
-> index dcd9acff6d01a..f412fa405b9b6 100644
-> --- a/drivers/phy/freescale/Kconfig
-> +++ b/drivers/phy/freescale/Kconfig
-> @@ -35,6 +35,15 @@ config PHY_FSL_IMX8M_PCIE
->  	  Enable this to add support for the PCIE PHY as found on
->  	  i.MX8M family of SOCs.
->  
-> +config PHY_FSL_IMX8Q_MIPI_CPHY
-> +        tristate "Freescale MIPI CSI PHY support"
-> +        depends on OF && HAS_IOMEM
-> +        select GENERIC_PHY
-> +        select REGMAP_MMIO
-> +        help
-> +          Enable this to add support for the MIPI CSI PHY as found
-> +          on NXP's i.MX8 family of SOCs.
-> +
->  config PHY_FSL_IMX8QM_HSIO
->  	tristate "Freescale i.MX8QM HSIO PHY"
->  	depends on OF && HAS_IOMEM
-> diff --git a/drivers/phy/freescale/Makefile b/drivers/phy/freescale/Makefile
-> index 658eac7d0a622..8ff72dfdcf654 100644
-> --- a/drivers/phy/freescale/Makefile
-> +++ b/drivers/phy/freescale/Makefile
-> @@ -3,6 +3,7 @@ obj-$(CONFIG_PHY_FSL_IMX8MQ_USB)	+= phy-fsl-imx8mq-usb.o
->  obj-$(CONFIG_PHY_MIXEL_LVDS_PHY)	+= phy-fsl-imx8qm-lvds-phy.o
->  obj-$(CONFIG_PHY_MIXEL_MIPI_DPHY)	+= phy-fsl-imx8-mipi-dphy.o
->  obj-$(CONFIG_PHY_FSL_IMX8M_PCIE)	+= phy-fsl-imx8m-pcie.o
-> +obj-$(CONFIG_PHY_FSL_IMX8Q_MIPI_CPHY)	+= phy-fsl-imx8q-mipi-cphy.o
->  obj-$(CONFIG_PHY_FSL_IMX8QM_HSIO)	+= phy-fsl-imx8qm-hsio.o
->  obj-$(CONFIG_PHY_FSL_LYNX_28G)		+= phy-fsl-lynx-28g.o
->  obj-$(CONFIG_PHY_FSL_SAMSUNG_HDMI_PHY)	+= phy-fsl-samsung-hdmi.o
-> diff --git a/drivers/phy/freescale/phy-fsl-imx8q-mipi-cphy.c b/drivers/phy/freescale/phy-fsl-imx8q-mipi-cphy.c
-> new file mode 100644
-> index 0000000000000..3137c89eab057
-> --- /dev/null
-> +++ b/drivers/phy/freescale/phy-fsl-imx8q-mipi-cphy.c
-> @@ -0,0 +1,185 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright 2025 NXP
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +struct imx8_mipi_phy {
-> +	struct phy *phy;
-> +	struct device *dev;
-> +	struct regmap *phy_gpr;
-> +	int speed;
-> +	const struct imx8_mipi_drvdata *drvdata;
-> +};
-> +
-> +#define CSI2SS_PL_CLK_INTERVAL_US		10000
-> +#define CSI2SS_PL_CLK_TIMEOUT_US		100000
-> +
-> +#define CSI2SS_PLM_CTRL				0x0
-> +#define CSI2SS_PLM_CTRL_PL_CLK_RUN		BIT(31)
-> +#define CSI2SS_PLM_CTRL_VSYNC_OVERRIDE		BIT(9)
-> +#define CSI2SS_PLM_CTRL_HSYNC_OVERRIDE		BIT(10)
-> +#define CSI2SS_PLM_CTRL_VALID_OVERRIDE		BIT(11)
-> +#define CSI2SS_PLM_CTRL_POLARITY_MASK		BIT(12)
-> +#define CSI2SS_PLM_CTRL_ENABLE_PL		BIT(0)
-> +
-> +#define CSI2SS_PHY_CTRL				0x4
-> +#define CSI2SS_PHY_CTRL_PD			BIT(22)
-> +#define CSI2SS_PHY_CTRL_RTERM_SEL		BIT(21)
-> +#define CSI2SS_PLM_CTRL_POLARITY		BIT(12)
-> +#define CSI2SS_PHY_CTRL_RX_HS_SETTLE_MASK	GENMASK(9, 4)
-> +#define CSI2SS_PHY_CTRL_CONT_CLK_MODE		BIT(3)
-> +#define CSI2SS_PHY_CTRL_DDRCLK_EN		BIT(2)
-> +#define CSI2SS_PHY_CTRL_AUTO_PD_EN		BIT(1)
-> +#define CSI2SS_PHY_CTRL_RX_ENABLE		BIT(0)
-> +
-> +#define CSI2SS_DATA_TYPE			0x38
-> +#define CSI2SS_DATA_TYPE_MASK			GENMASK(23, 0)
-> +
-> +#define CSI2SS_CTRL_CLK_RESET			0x44
-> +#define CSI2SS_CTRL_CLK_RESET_EN		BIT(0)
-> +
-> +static int imx8_mipi_phy_power_on(struct phy *phy)
-> +{
-> +	struct imx8_mipi_phy *imx8_phy = phy_get_drvdata(phy);
-> +	int ret;
-> +	u32 val;
-> +
-> +	/* clear format */
-> +	regmap_clear_bits(imx8_phy->phy_gpr, CSI2SS_DATA_TYPE, CSI2SS_DATA_TYPE_MASK);
-> +
-> +	/* clear polarity */
-> +	regmap_clear_bits(imx8_phy->phy_gpr, CSI2SS_PLM_CTRL,
-> +			  CSI2SS_PLM_CTRL_VSYNC_OVERRIDE |
-> +			  CSI2SS_PLM_CTRL_HSYNC_OVERRIDE |
-> +			  CSI2SS_PLM_CTRL_VALID_OVERRIDE |
-> +			  CSI2SS_PLM_CTRL_POLARITY_MASK);
-> +
-> +	regmap_update_bits(imx8_phy->phy_gpr, CSI2SS_PHY_CTRL, CSI2SS_PHY_CTRL_RX_HS_SETTLE_MASK,
-> +			   FIELD_PREP(CSI2SS_PHY_CTRL_RX_HS_SETTLE_MASK, imx8_phy->speed));
+> > 
+> > ?
+> > 
+> > > +		if (error)
+> > > +			goto out_unlock;
+> > > +
+> > > +		end_fsb = imap.br_startoff + imap.br_blockcount;
+> > > +		length = XFS_FSB_TO_B(mp, end_fsb) - offset;
+> > > +
+> > > +		if (imap.br_startblock != HOLESTARTBLOCK) {
+> > > +			seq = xfs_iomap_inode_sequence(ip, 0);
+> > > +
+> > > +			error = xfs_bmbt_to_iomap(ip, srcmap, &imap, flags,
+> > > +				iomap_flags | IOMAP_F_ATOMIC_COW, seq);
+> > > +			if (error)
+> > > +				goto out_unlock;
+> > > +		}
+> > > +		seq = xfs_iomap_inode_sequence(ip, 0);
+> > > +		xfs_iunlock(ip, lockmode);
+> > > +		return xfs_bmbt_to_iomap(ip, iomap, &cmap, flags,
+> > > +					iomap_flags | IOMAP_F_ATOMIC_COW, seq);
+> > > +	}
+> > 
+> > /me wonders if this should be a separate helper so that the main
+> > xfs_direct_write_iomap_begin doesn't get even longer... but otherwise
+> > the logic in here looks sane.
+> 
+> I can do that. Maybe some code can be factored out for regular "found cow
+> path".
+> 
+> > 
+> > > +
+> > > +	need_alloc = imap_needs_alloc(inode, flags, &imap, nimaps);
+> > > +
+> > > +	if (atomic) {
+> > > +		/* Use CoW-based method if any of the following fail */
+> > > +		error = -EAGAIN;
+> > > +
+> > > +		/*
+> > > +		 * Lazily use CoW-based method for initial alloc of data.
+> > > +		 * Check br_blockcount for FSes which do not support atomic
+> > > +		 * writes > 1x block.
+> > > +		 */
+> > > +		if (need_alloc && imap.br_blockcount > 1)
+> > > +			goto out_unlock;
+> > > +
+> > > +		/* Misaligned start block wrt size */
+> > > +		if (!IS_ALIGNED(imap.br_startblock, imap.br_blockcount))
+> > > +			goto out_unlock;
+> > > +
+> > > +		/* Discontiguous or mixed extents */
+> > > +		if (!imap_spans_range(&imap, offset_fsb, end_fsb))
+> > > +			goto out_unlock;
+> > > +	}
+> > 
+> > (Same two comments here.)
+> 
+> ok
+> 
+> > 
+> > > +
+> > >   	if (imap_needs_cow(ip, flags, &imap, nimaps)) {
+> > >   		error = -EAGAIN;
+> > >   		if (flags & IOMAP_NOWAIT)
+> > >   			goto out_unlock;
+> > > +		if (atomic) {
+> > > +			/* Detect whether we're already covered in a cow fork */
+> > > +			error  = xfs_find_trim_cow_extent(ip, &imap, &cmap, &shared, &found);
+> > > +			if (error)
+> > > +				goto out_unlock;
+> > > +
+> > > +			if (shared) {
+> > > +				error = -EAGAIN;
+> > > +				goto out_unlock;
+> > 
+> > What is this checking?  That something else already created a mapping in
+> > the COW fork, so we want to bail out to get rid of it?
+> 
+> I want to check if some data is shared. In that case, we should unshare.
 
-Quite annoying the .set_speed() operation is badly documented, the speed
-unit is not specified. Wouldn't it still be better to pass the speed as
-a link frequency in Hz, and do the conversion here ?
+Why is it necessary to unshare?  Userspace gave us a buffer of new
+contents, and we're already prepared to write that out of place and
+remap it.
 
-> +
-> +	regmap_set_bits(imx8_phy->phy_gpr, CSI2SS_PHY_CTRL,
-> +			CSI2SS_PHY_CTRL_RX_ENABLE | CSI2SS_PHY_CTRL_DDRCLK_EN |
-> +			CSI2SS_PHY_CTRL_CONT_CLK_MODE | CSI2SS_PHY_CTRL_PD |
-> +			CSI2SS_PHY_CTRL_RTERM_SEL | CSI2SS_PHY_CTRL_AUTO_PD_EN);
-> +
-> +	ret = regmap_read_poll_timeout(imx8_phy->phy_gpr, CSI2SS_PLM_CTRL,
-> +				       val, !(val & CSI2SS_PLM_CTRL_PL_CLK_RUN),
-> +				       CSI2SS_PL_CLK_INTERVAL_US,
-> +				       CSI2SS_PL_CLK_TIMEOUT_US);
-> +
-> +	if (ret) {
-> +		dev_err(imx8_phy->dev, "Timeout waiting for Pixel-Link clock");
-> +		return ret;
-> +	}
-> +
-> +	/* Enable Pixel link Master*/
-> +	regmap_set_bits(imx8_phy->phy_gpr, CSI2SS_PLM_CTRL,
-> +			CSI2SS_PLM_CTRL_ENABLE_PL | CSI2SS_PLM_CTRL_VALID_OVERRIDE);
-> +
-> +	/* PHY Enable */
-> +	regmap_clear_bits(imx8_phy->phy_gpr, CSI2SS_PHY_CTRL,
-> +			  CSI2SS_PHY_CTRL_PD | CSI2SS_PLM_CTRL_POLARITY);
+> And I am not sure if that check is sufficient.
+> 
+> On the buffered write path, we may have something in a CoW fork - in that
+> case it should be flushed, right?
 
-While this register is PHY-related, the others are not. They control the
-pixel link interface at the output of the CSI-2 receiver, the clock
-gate, or the VC/DT filtering. Modeling all this as a PHY driver works
-for now, but it's a hack. How will this support other features in the
-future ?
+Flushed against what?  Concurrent writeback or something?  The directio
+setup should have flushed dirty pagecache, so the only things left in
+the COW fork are speculative preallocations.  (IOWs, I don't understand
+what needs to be flushed or why.)
 
-> +
-> +	/* Release Reset */
-> +	regmap_set_bits(imx8_phy->phy_gpr, CSI2SS_CTRL_CLK_RESET, CSI2SS_CTRL_CLK_RESET_EN);
-> +
-> +	return ret;
-> +}
-> +
-> +static int imx8_mipi_phy_power_off(struct phy *phy)
-> +{
-> +	struct imx8_mipi_phy *imx8_phy = phy_get_drvdata(phy);
-> +
-> +	/* Disable Pixel Link */
-> +	regmap_write(imx8_phy->phy_gpr, CSI2SS_PLM_CTRL, 0x0);
-> +
-> +	/* Disable  PHY */
-> +	regmap_write(imx8_phy->phy_gpr, CSI2SS_PHY_CTRL, 0x0);
-> +
-> +	return 0;
-> +};
-> +
-> +static int imx8_mipi_phy_set_speed(struct phy *phy, int speed)
-> +{
-> +	struct imx8_mipi_phy *imx8_phy = phy_get_drvdata(phy);
-> +
-> +	imx8_phy->speed = speed;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct phy_ops imx8_mipi_phy_ops = {
-> +	.power_on = imx8_mipi_phy_power_on,
-> +	.power_off = imx8_mipi_phy_power_off,
-> +	.set_speed = imx8_mipi_phy_set_speed,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static const struct of_device_id imx8_mipi_phy_of_match[] = {
-> +	{ .compatible = "fsl,imx8qxp-mipi-cphy" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, imx8_mipi_phy_of_match);
-> +
-> +static const struct regmap_config regmap_config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +};
-> +
-> +static int imx8_mipi_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct phy_provider *phy_provider;
-> +	struct device *dev = &pdev->dev;
-> +	struct imx8_mipi_phy *imx8_phy;
-> +	void __iomem *base;
-> +
-> +	imx8_phy = devm_kzalloc(dev, sizeof(*imx8_phy), GFP_KERNEL);
-> +	if (!imx8_phy)
-> +		return -ENOMEM;
-> +
-> +	imx8_phy->dev = dev;
-> +	imx8_phy->drvdata = of_device_get_match_data(dev);
-> +
-> +	base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(base))
-> +		return dev_err_probe(dev, IS_ERR(base), "missed phy base register\n");
-> +
-> +	imx8_phy->phy_gpr = devm_regmap_init_mmio(dev, base, &regmap_config);
-> +	if (IS_ERR(imx8_phy->phy_gpr))
-> +		return dev_err_probe(dev, PTR_ERR(imx8_phy->phy_gpr),
-> +				     "unable to find iomuxc registers\n");
-> +
-> +	imx8_phy->phy = devm_phy_create(dev, NULL, &imx8_mipi_phy_ops);
-> +	if (IS_ERR(imx8_phy->phy))
-> +		return PTR_ERR(imx8_phy->phy);
-> +
-> +	phy_set_drvdata(imx8_phy->phy, imx8_phy);
-> +
-> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +
-> +	return PTR_ERR_OR_ZERO(phy_provider);
-> +}
-> +
-> +static struct platform_driver imx8_mipi_phy_driver = {
-> +	.probe = imx8_mipi_phy_probe,
-> +	.driver = {
-> +		.name = "imx8-mipi-cphy",
-> +		.of_match_table = imx8_mipi_phy_of_match,
-> +	}
-> +};
-> +module_platform_driver(imx8_mipi_phy_driver);
-> +
-> +MODULE_DESCRIPTION("FSL IMX8 MIPI CSI PHY driver");
-> +MODULE_LICENSE("GPL");
+--D
 
--- 
-Regards,
-
-Laurent Pinchart
+> 
+> Thanks,
+> John
+> 
