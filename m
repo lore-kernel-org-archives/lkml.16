@@ -1,109 +1,123 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8453118DF86
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D1418DF86;
+	Thu,  6 Feb 2025 17:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738861292; cv=none; b=TwsY7MUqa7IV9NKYP8iJffncHdTD9yTp7o80ne7ycQT2tKfba9KO0S9OMUsJXctX4EgfiGjWcGzRG3/kbSsLsUjrmadjlWS66etqS8ZM3AQiILEjUakyBU5tfLYUYP6Oe6AK1Oh9zUN89ZwC3l4VP+kOVTvucEkUr12UtoKDo58=
+	t=1738861302; cv=none; b=Q32x74kEqN0xmqdvrJ9Mnf4nkTI9pPl5JD1p7FkbA6gk1s+qzwXvkBhS0k/mX/K8o5KqwE/VoEczrupCfhlOqIrGjN97fqQTVFrHWOgdwVPVEut0+8kubs684urOjGHkujcPLjjhVofSpTBzO5HGNmL+Vpmfy7TvXm3kc4BVA6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738861292; c=relaxed/simple;
-	bh=mUQxeAoVhGLDKfZCjmQ+zwGLwy+EoSUmrYxPfxXIL6k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uh6abiHygKwPLKjyTOC69HGFfZhPLHurSYao5EKE1xi0A3ICx3wUHKw2axPfCzlIzUKTT+eGWqhUlsmnLF9v/ff0woOV+61yZTPFb3LmrmnZaJFMU+lP4tG6SSrnZKWe6/jK3yC9ptPRTx0vJ8br54YKG6HWc5KDqOGmiu6crig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=NkIXopTr; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1738861302; c=relaxed/simple;
+	bh=UJQQI/vkueVkM4LiOEGZpMl39Ri+HuaVkJJe4HFDf9s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=VyaH+wVXEzgqsYTTw7VL1s0G3HYJkBPM3H+ykqdGt52v8FkC998k2YmvvTjJGOyY2dkG7Rq1g3kF79iRTo7KV6pq2LiSnZ4GuCVVZIQJSb0X3WPYQBDor5w5jO7LAutdSZjatrQDKShX6qKH5udLybNPyBgTjR/HDntee0C2T+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SRkeT0/0; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="NkIXopTr"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7b6eb531e13so57530285a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 09:01:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738861289; x=1739466089; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OgBoTjTd0P6BFI3Nbzw9+84X02WOLlHkP1rNoeDXlds=;
-        b=NkIXopTrIiKEVYjUtldwS67oh1iABkZl5vv5sXrd8hUM80sF+WxAd+LcL45rhx1b9T
-         B+fTolK+Ilaq2g7yt587b9WNhMKblPdZOXH2GXkoIZFB6wBMLtSv9YsCoW7LW5pqS+Lt
-         m9FIyulpjayclUUPAyJeq9PeWVFqkkxoqH+m+RivG+rYO4MtG7EGjXHg3QIjTCmPg8+2
-         WZP581FWEMqClswqJxoZ3H5QNLW6nSq24j3CmgSYrNmRJC6Sv9gjqP/dkHO5olHKAFeL
-         Q/R2yCkhvDjlaHar8mgiLchHp5xRCBoMxL5YlxOP4elQ2kBuOXXome7cK6gL/gNbaz+O
-         RGBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738861289; x=1739466089;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OgBoTjTd0P6BFI3Nbzw9+84X02WOLlHkP1rNoeDXlds=;
-        b=O+bIlvaXrKiYmGc0HUaXqJhcQGFBDmLC6Pevy7CcJBJd6Wfy99MXonTHk5KJHHyUGS
-         cz5siR0o7liXl8zm7jeOY+j7YSkZrcEBW4N7uJSJ7PDw9lfRsXB1PovXvqbn/DobgmrV
-         H06KSkRvqTMLDYuNQRCg3YrhsozA/ZOOjJ95633cI6AU2YUpJPLUP+xizu3Pm3IMQpAk
-         EM3s6o5ZH2Pm2vXAjvdPRnkmUjPbHSPAb5uMwg1d2RDOZtiqyT3vAsKEFVmpsCqVIhJT
-         otETbWYtg8y5tEn0GeE9BrngBHRVys/NTlHSGTQgTawc4YWCOZJQFfvqw0fSrABNa5/S
-         8aCA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7Ei9zv8bMDREcIgxRHPV7LAxpO0uOK8kJoZABOxT/mwfB4pPOoeTqo41xj8CR+nHmALvo63kEvRnQwu0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJj28tF36UXK6Rb6A//1Yu828iOnEhAKY/uyIG8VtktLkmbcun
-	f8sECWRwOam0l6fxL1pYCdAw9GH7FiQvf6IEXUTHsMuOPeRpFrzvEDG65rVgiHE=
-X-Gm-Gg: ASbGncvFSoV558Rm2CV45e7EjcQjUNBMevf01pNzadijYgX9jfbDNA3owF/uED//nuR
-	pV7UdpYHmgxOEQ/eWoRnLMRS8Bdmb0eXQ1eDApeRxgsZJ8QeB2EswjrJ+XmqeEYstwmfspW67ue
-	PLOt8ExSBtlTchaVp4w/EBLz5DQrqHnDeCyDehbeluq72XO6n9Ge+GYOl2vmZQw67aRTv5v7tih
-	FQfP6fQ0FF00TNXyhh7wUhRJf03UHHQXyIZ5Jc/bYgpBTw491Odoeu68JmMyyYrx13+8DrqcBaa
-	kRHF2cX8Xd/KqIcwWuTDegJdSZ9TcYdegwkdfLS8U0oKDxy6jY4uvpsM4VsnjNMJq7z8Dk6B1Q=
-	=
-X-Google-Smtp-Source: AGHT+IEz2w/jzoGAbYYUG4jWVTjuyIsaInPSObipS3QKdXNC4LTgYymhViMzJNqRP4gdORV7RtRXSg==
-X-Received: by 2002:a05:620a:2602:b0:7b6:d1f6:3df with SMTP id af79cd13be357-7c039fcf500mr1192368485a.21.1738861289178;
-        Thu, 06 Feb 2025 09:01:29 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041e9f4desm79480285a.81.2025.02.06.09.01.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 09:01:28 -0800 (PST)
-Date: Thu, 6 Feb 2025 12:01:26 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
-	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
-	rrichter@amd.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
-	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com,
-	alucerop@amd.com
-Subject: Re: [PATCH v5 01/16] PCI/AER: Introduce 'struct cxl_err_handlers'
- and add to 'struct pci_driver'
-Message-ID: <Z6Tq5mWoxiD3LyQ3@gourry-fedora-PF4VCD3F>
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
- <20250107143852.3692571-2-terry.bowman@amd.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SRkeT0/0"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 54F02441CC;
+	Thu,  6 Feb 2025 17:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738861293;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UJQQI/vkueVkM4LiOEGZpMl39Ri+HuaVkJJe4HFDf9s=;
+	b=SRkeT0/0Z/bP3Ro4IzZ+8dyfhzZfsQt9nEN5/uqUx/7pjuFUaQwBWLfN3D/cmOnADFtOfQ
+	jrOaPT02dUXFK0osuNgv+3BOxVncBdweltrde428ViMvo1LAKNOQkC1AZfE5tLBApS4lgS
+	B+mo0cgeCwMzzvhKLF9OsclOAPecgsgK9qprjpKjXusE26JsVJotK2dzyXQMwrOQdHSQJW
+	dfd/1x7m75Es/XA8esWOpEtJs0+tc/4tVSCoCOUlU93uo8rvjHth4q631Q64woWeh3qJdW
+	OpfoBmqzsPBF6xuOW+RhpMZuwr51uZ+JVAGacgRAKcEacATJ5e814G7CdcfsvQ==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: "Rabara, Niravkumar L" <niravkumar.l.rabara@intel.com>
+Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
+ <vigneshr@ti.com>,  "linux@treblig.org" <linux@treblig.org>,  Shen Lichuan
+ <shenlichuan@vivo.com>,  Jinjie Ruan <ruanjinjie@huawei.com>,
+  "u.kleine-koenig@baylibre.com" <u.kleine-koenig@baylibre.com>,
+  "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+  "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] mtd: rawnand: cadence: support deferred prob
+ when DMA is not ready
+In-Reply-To: <BL3PR11MB653239DDBD9D8E7D413B60F4A2F42@BL3PR11MB6532.namprd11.prod.outlook.com>
+	(Niravkumar L. Rabara's message of "Tue, 4 Feb 2025 14:11:16 +0000")
+References: <20250116032154.3976447-1-niravkumar.l.rabara@intel.com>
+	<20250116032154.3976447-2-niravkumar.l.rabara@intel.com>
+	<87plkgpk8k.fsf@bootlin.com>
+	<BL3PR11MB653276DFD3339ADAADC70CCFA2EE2@BL3PR11MB6532.namprd11.prod.outlook.com>
+	<874j1i0wfq.fsf@bootlin.com>
+	<BL3PR11MB65321B556C59C995DC05C70AA2E92@BL3PR11MB6532.namprd11.prod.outlook.com>
+	<87msf8z5uu.fsf@bootlin.com>
+	<BL3PR11MB6532451B44E7C5D82F5EC4AFA2F42@BL3PR11MB6532.namprd11.prod.outlook.com>
+	<87o6zi83se.fsf@bootlin.com>
+	<BL3PR11MB6532369D14375CC94AA2714BA2F42@BL3PR11MB6532.namprd11.prod.outlook.com>
+	<87frkt96nw.fsf@bootlin.com>
+	<BL3PR11MB653239DDBD9D8E7D413B60F4A2F42@BL3PR11MB6532.namprd11.prod.outlook.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Thu, 06 Feb 2025 18:01:30 +0100
+Message-ID: <877c6357o5.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250107143852.3692571-2-terry.bowman@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieelfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepteehkeelvddvheehtdefkedtjeeutedthfegudekgeefleetkeettdekiefftdeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepnhhirhgrvhhkuhhmrghrrdhlrdhrrggsrghrrgesihhnthgvlhdrtghomhdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtoheplhhinhhugiesthhrvggslhhighdrohhrghdprhgtphhtthhopehshhgvnhhlihgthhhurghnsehvihhvo
+ hdrtghomhdprhgtphhtthhopehruhgrnhhjihhnjhhivgeshhhurgifvghirdgtohhmpdhrtghpthhtohepuhdrkhhlvghinhgvqdhkohgvnhhighessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Tue, Jan 07, 2025 at 08:38:37AM -0600, Terry Bowman wrote:
-> CXL.io provides protocol error handling on top of PCIe Protocol Error
-> handling. But, CXL.io and PCIe have different handling requirements
-> for uncorrectable errors (UCE).
-> 
-> The PCIe AER service driver may attempt recovering PCIe devices with
-> UCE while recovery is not used for CXL.io. Recovery is not used in the
-> CXL.io case because of potential corruption on what can be system memory.
-> 
-> Create pci_driver::cxl_err_handlers structure similar to
-> pci_driver::error_handler. Create handlers for correctable and
-> uncorrectable CXL.io error handling.
-> 
-> The CXL error handlers will be used in future patches adding CXL PCIe
-> Port Protocol Error handling.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Fan Ni <fan.ni@samsung.com>
+Hello,
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+>> >> > My apologies for the confusion.
+>> >> > Slave DMA terminology used in cadence nand controller bindings and
+>> >> > driver is indeed confusing.
+>> >> >
+>> >> > To answer your question it is,
+>> >> > 1 - External DMA (Generic DMA controller).
+>> >> >
+>> >> > Nand controller IP do not have embedded DMA controller (2 -
+>> >> > peripheral
+>> >> DMA).
+>> >> >
+>> >> > FYR, how external DMA is used.
+>> >> > https://elixir.bootlin.com/linux/v6.13.1/source/drivers/mtd/nand/ra
+>> >> > w/c
+>> >> > adence-nand-controller.c#L1962
+>> >>
+>> >> In this case we should have a dmas property (and perhaps dma-names), =
+no?
+>> >>
+>> > No, I believe.
+>> > Cadence NAND controller IP do not have dedicated handshake interface
+>> > to connect with DMA controller.
+>> > My understanding is dmas (and dma-names) are only used for the
+>> > dedicated handshake interface between peripheral and the DMA controlle=
+r.
+>>=20
+>> I don't see well how you can defer if there is no resource to grab. And =
+if there is
+>> a resource to grab, why is it not described anywhere?
+>>=20
+>
+> Since NAND controller do not have handshake interface with DMA controller.
+> Driver is using external DMA for memory-to-memory copy.
+
+I'm sorry you lost me again. What do you mean handshake? There is no
+request line? There is no way the NAND controller can trigger DMA
+transfers?
+
+What do you mean mem-to-mem, how is this useful to the controller?
+
+> Your point is since the driver is using external DMA and it should be
+> described in bindings?
+
+Yes. But maybe I still don't get it correctly.
+
+Thanks,
+Miqu=C3=A8l
