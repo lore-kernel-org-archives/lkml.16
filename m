@@ -1,93 +1,42 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDDEB22489C;
-	Thu,  6 Feb 2025 05:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09B102248A0;
+	Thu,  6 Feb 2025 05:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738820797; cv=none; b=brCh9UGVoSRf2VJ2PyhCzeXbMCWfUBM98sJna7GiLyT2ufI5p9y7/uksZq9cnIHX3l/R8wlFY3tZJ95TYLa6iOj+MphJhQ0ktYGpDRcBtc/ezJzfeZZurdnBY4FVPHCreFJwfIcgqhwg6dqusyeIGYr654iiupHMxYQoKT4Zb+w=
+	t=1738820801; cv=none; b=LXm0ZwQa+KhbRl2mZeWRE9ewqpKslNgKZUtshBu/FsbCqeu5wuuzUe00bsabpRBq1KK69lWxFitDwowRjpRkhzP/TrRQQ55pjxUXzkcmqgheZ7pHBR3/r5lp3YIEvRGLQCHsCtJm47KBjUlJocZp0l1HdW3T+2sxvmwNRa++t5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738820797; c=relaxed/simple;
-	bh=t0MO4Xthm06JoD2KBBBPHCuqBY6I1wuhuOK+pFBBIgM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XS+PMkLw+RDsX3z4AZ7gKONDYEgKdo/FF85fPRqiWvf0bCKPLTJqA25du3Qp0SOI0S/s5CP5HRKVXM746HpSxKfS+rAZzLgakO4UXiUtYax6yVb1z10be9dSOpPs680+eSRo+DefiVr+p/9HtgnhTKrBIg6SAdNiGrUNhZxluKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BdXSljiK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gy7nnXnH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BdXSljiK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gy7nnXnH; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1738820801; c=relaxed/simple;
+	bh=UuUMuBAxmaaA9ODzyfCc1LG6fzSGQOP/4NGSDrfvQzQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iJUKnRprP7I+Y8Z7wzM3ua596H9MPiLmYs0UU+Eg/5CAiBfZ0KQ+H6dxi3BMLRMHsLcFAKhN2Dn9SWsE4o3GFPWqYT10ksfXNZO/4TFROsL6qn3+cxpkEG0vkH8ZIXoUuBXNxS+gCOq5gksvtTjBw91eHFvOilcRXOZfb2CEvSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ANfgefCf; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BdXSljiK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gy7nnXnH";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BdXSljiK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gy7nnXnH"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 447BD1F381;
-	Thu,  6 Feb 2025 05:46:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738820794; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pDLQ5/tKoGgGRjuqm2ZNWoZwMtK0kQNV8iRObc8Hijo=;
-	b=BdXSljiKOgP7NP72GsFD0oeKHdyJrVHK9Pf+AXQ8ccALMbG+vXGQefFj+m98ar/wamDvdj
-	TUhhsjvogWYz4VD4Z3OCSdjEKL9ZVjF7eAPIV34xd1nx1wQIwVKB/Lf1MwFkaDLMb+C2rP
-	lazDmaa+Kat2uf9wdBKHqZXTK1dPf40=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738820794;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pDLQ5/tKoGgGRjuqm2ZNWoZwMtK0kQNV8iRObc8Hijo=;
-	b=gy7nnXnHEgQZMRLk+HBI2p5zB65oV3Nc6Z++Q2BQ5uCDEB3ZVfFf36Ux5Bv9SIXfuR787v
-	3vqdwPegqMgw5tBQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738820794; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pDLQ5/tKoGgGRjuqm2ZNWoZwMtK0kQNV8iRObc8Hijo=;
-	b=BdXSljiKOgP7NP72GsFD0oeKHdyJrVHK9Pf+AXQ8ccALMbG+vXGQefFj+m98ar/wamDvdj
-	TUhhsjvogWYz4VD4Z3OCSdjEKL9ZVjF7eAPIV34xd1nx1wQIwVKB/Lf1MwFkaDLMb+C2rP
-	lazDmaa+Kat2uf9wdBKHqZXTK1dPf40=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738820794;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pDLQ5/tKoGgGRjuqm2ZNWoZwMtK0kQNV8iRObc8Hijo=;
-	b=gy7nnXnHEgQZMRLk+HBI2p5zB65oV3Nc6Z++Q2BQ5uCDEB3ZVfFf36Ux5Bv9SIXfuR787v
-	3vqdwPegqMgw5tBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7D2B313795;
-	Thu,  6 Feb 2025 05:46:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id q6EYDLdMpGeJBwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Thu, 06 Feb 2025 05:46:31 +0000
-From: NeilBrown <neilb@suse.de>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Dave Chinner <david@fromorbit.com>
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 07/19] VFS: repack LOOKUP_ bit flags.
-Date: Thu,  6 Feb 2025 16:42:44 +1100
-Message-ID: <20250206054504.2950516-8-neilb@suse.de>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250206054504.2950516-1-neilb@suse.de>
-References: <20250206054504.2950516-1-neilb@suse.de>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ANfgefCf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ivQkA
+	lP9eA/Lpn22LOFvP6SLgOnTGtAKhz5Ti7LeVGo=; b=ANfgefCfoU75AutUU7+LC
+	9EQupM2JOtFEBH3roX17UR+SLSAhx/OUbZ0Nz6hI6QBjPZKKbzCNWw3vzMhVK8gw
+	3fGPOXmdXU0B1fPT5qekHrCScnWQJvEV/3YE6NYjgI6kB7uhOQ9jn55Uh9QoIODf
+	dGxNe/FDkEsZaVFiN6CcEc=
+Received: from hello.company.local (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wAn_uJ7TKRn6jjdJw--.36629S2;
+	Thu, 06 Feb 2025 13:45:32 +0800 (CST)
+From: Liang Jie <buaajxlj@163.com>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Jakub Kicinski <kuba@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Michal Luczaj <mhal@rbox.co>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Liang Jie <liangjie@lixiang.com>
+Subject: [PATCH net-next v2] af_unix: Refine UNIX pathname sockets autobind identifier length
+Date: Thu,  6 Feb 2025 13:44:51 +0800
+Message-Id: <20250206054451.4070941-1-buaajxlj@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -95,115 +44,94 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+X-CM-TRANSID:_____wAn_uJ7TKRn6jjdJw--.36629S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGFykJw18JFyxKrW7WFykXwb_yoW5ZFWxpF
+	W3K34DZrs5JFsrur4xJa1rCrs3ta1rtFyUGFZ2g3WSvFsxWr4xZF1kKFWjva4DGrW8tay3
+	JF4jgr4jva4DAw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbkuxUUUUU=
+X-CM-SenderInfo: pexdtyx0omqiywtou0bp/1tbiNhjrIGekLSi1UgABsF
 
-The LOOKUP_ bits are not in order, which can make it awkward when adding
-new bits.  Two bits have recently been added to the end which makes them
-look like "scoping flags", but in fact they aren't.
+From: Liang Jie <liangjie@lixiang.com>
 
-Also LOOKUP_PARENT is described as "internal use only" but is used in
-fs/nfs/
+Refines autobind identifier length for UNIX pathname sockets, addressing
+issues of memory waste and code readability.
 
-This patch:
- - Moves these three flags into the "pathwalk mode" section
- - changes all bits to use the BIT(n) macro
- - Allocates bits in order leaving gaps between the sections,
-   and documents those gaps.
+The previous implementation in the unix_autobind function of UNIX pathname
+sockets used hardcoded values such as 16 and 6 for memory allocation and
+setting the length of the autobind identifier, which was not only
+inflexible but also led to reduced code clarity. Additionally, allocating
+16 bytes of memory for the autobind path was excessive, given that only 6
+bytes were ultimately used.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
+To mitigate these issues, introduces the following changes:
+ - A new macro UNIX_AUTOBIND_LEN is defined to clearly represent the total
+   length of the autobind identifier, which improves code readability and
+   maintainability. It is set to 6 bytes to accommodate the unique autobind
+   process identifier.
+ - Memory allocation for the autobind path is now precisely based on
+   UNIX_AUTOBIND_LEN, thereby preventing memory waste.
+ - To avoid buffer overflow and ensure that only the intended number of
+   bytes are written, sprintf is replaced by snprintf with the proper
+   buffer size set explicitly.
+
+The modifications result in a leaner memory footprint and elevated code
+quality, ensuring that the functional aspect of autobind behavior in UNIX
+pathname sockets remains intact.
+
+Signed-off-by: Liang Jie <liangjie@lixiang.com>
+Suggested-by: Kuniyuki Iwashima <kuniyu@amazon.com>
 ---
- include/linux/namei.h | 46 +++++++++++++++++++++----------------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
 
-diff --git a/include/linux/namei.h b/include/linux/namei.h
-index 839a64d07f8c..0d81e571a159 100644
---- a/include/linux/namei.h
-+++ b/include/linux/namei.h
-@@ -18,38 +18,38 @@ enum { MAX_NESTED_LINKS = 8 };
- enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT};
+Changes in v2:
+ - Removed the comments describing AUTOBIND_LEN.
+ - Renamed the macro AUTOBIND_LEN to UNIX_AUTOBIND_LEN for clarity and
+   specificity.
+ - Corrected the buffer length in snprintf to prevent potential buffer
+   overflow issues.
+ - Addressed warning from checkpatch.
+ - Link to v1: https://lore.kernel.org/all/20250205060653.2221165-1-buaajxlj@163.com/
+
+ net/unix/af_unix.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index 34945de1fb1f..6c449f78f0a6 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -1186,6 +1186,8 @@ static struct sock *unix_find_other(struct net *net,
+ 	return sk;
+ }
  
- /* pathwalk mode */
--#define LOOKUP_FOLLOW		0x0001	/* follow links at the end */
--#define LOOKUP_DIRECTORY	0x0002	/* require a directory */
--#define LOOKUP_AUTOMOUNT	0x0004  /* force terminal automount */
--#define LOOKUP_EMPTY		0x4000	/* accept empty path [user_... only] */
--#define LOOKUP_DOWN		0x8000	/* follow mounts in the starting point */
--#define LOOKUP_MOUNTPOINT	0x0080	/* follow mounts in the end */
--
--#define LOOKUP_REVAL		0x0020	/* tell ->d_revalidate() to trust no cache */
--#define LOOKUP_RCU		0x0040	/* RCU pathwalk mode; semi-internal */
-+#define LOOKUP_FOLLOW		BIT(0)	/* follow links at the end */
-+#define LOOKUP_DIRECTORY	BIT(1)	/* require a directory */
-+#define LOOKUP_AUTOMOUNT	BIT(2)  /* force terminal automount */
-+#define LOOKUP_EMPTY		BIT(3)	/* accept empty path [user_... only] */
-+#define LOOKUP_LINKAT_EMPTY	BIT(4) /* Linkat request with empty path. */
-+#define LOOKUP_DOWN		BIT(5)	/* follow mounts in the starting point */
-+#define LOOKUP_MOUNTPOINT	BIT(6)	/* follow mounts in the end */
-+#define LOOKUP_REVAL		BIT(7)	/* tell ->d_revalidate() to trust no cache */
-+#define LOOKUP_RCU		BIT(8)	/* RCU pathwalk mode; semi-internal */
-+#define LOOKUP_CACHED		BIT(9) /* Only do cached lookup */
-+#define LOOKUP_PARENT		BIT(10)	/* Looking up final parent in path */
-+/* 5 spare bits for pathwalk */
++#define UNIX_AUTOBIND_LEN 6
++
+ static int unix_autobind(struct sock *sk)
+ {
+ 	struct unix_sock *u = unix_sk(sk);
+@@ -1203,12 +1205,12 @@ static int unix_autobind(struct sock *sk)
+ 		goto out;
  
- /* These tell filesystem methods that we are dealing with the final component... */
--#define LOOKUP_OPEN		0x0100	/* ... in open */
--#define LOOKUP_CREATE		0x0200	/* ... in object creation */
--#define LOOKUP_EXCL		0x0400	/* ... in target must not exist */
--#define LOOKUP_RENAME_TARGET	0x0800	/* ... in destination of rename() */
-+#define LOOKUP_OPEN		BIT(16)	/* ... in open */
-+#define LOOKUP_CREATE		BIT(17)	/* ... in object creation */
-+#define LOOKUP_EXCL		BIT(18)	/* ... in target must not exist */
-+#define LOOKUP_RENAME_TARGET	BIT(19)	/* ... in destination of rename() */
+ 	err = -ENOMEM;
+-	addr = kzalloc(sizeof(*addr) +
+-		       offsetof(struct sockaddr_un, sun_path) + 16, GFP_KERNEL);
++	addr = kzalloc(sizeof(*addr) + offsetof(struct sockaddr_un, sun_path) +
++			UNIX_AUTOBIND_LEN, GFP_KERNEL);
+ 	if (!addr)
+ 		goto out;
  
- #define LOOKUP_INTENT_FLAGS	(LOOKUP_OPEN | LOOKUP_CREATE | LOOKUP_EXCL |	\
- 				 LOOKUP_RENAME_TARGET)
--
--/* internal use only */
--#define LOOKUP_PARENT		0x0010
-+/* 4 spare bits for intent */
+-	addr->len = offsetof(struct sockaddr_un, sun_path) + 6;
++	addr->len = offsetof(struct sockaddr_un, sun_path) + UNIX_AUTOBIND_LEN;
+ 	addr->name->sun_family = AF_UNIX;
+ 	refcount_set(&addr->refcnt, 1);
  
- /* Scoping flags for lookup. */
--#define LOOKUP_NO_SYMLINKS	0x010000 /* No symlink crossing. */
--#define LOOKUP_NO_MAGICLINKS	0x020000 /* No nd_jump_link() crossing. */
--#define LOOKUP_NO_XDEV		0x040000 /* No mountpoint crossing. */
--#define LOOKUP_BENEATH		0x080000 /* No escaping from starting point. */
--#define LOOKUP_IN_ROOT		0x100000 /* Treat dirfd as fs root. */
--#define LOOKUP_CACHED		0x200000 /* Only do cached lookup */
--#define LOOKUP_LINKAT_EMPTY	0x400000 /* Linkat request with empty path. */
-+#define LOOKUP_NO_SYMLINKS	BIT(24) /* No symlink crossing. */
-+#define LOOKUP_NO_MAGICLINKS	BIT(25) /* No nd_jump_link() crossing. */
-+#define LOOKUP_NO_XDEV		BIT(26) /* No mountpoint crossing. */
-+#define LOOKUP_BENEATH		BIT(27) /* No escaping from starting point. */
-+#define LOOKUP_IN_ROOT		BIT(28) /* Treat dirfd as fs root. */
- /* LOOKUP_* flags which do scope-related checks based on the dirfd. */
- #define LOOKUP_IS_SCOPED (LOOKUP_BENEATH | LOOKUP_IN_ROOT)
-+/* 3 spare bits for scoping */
+@@ -1217,7 +1219,7 @@ static int unix_autobind(struct sock *sk)
+ 	lastnum = ordernum & 0xFFFFF;
+ retry:
+ 	ordernum = (ordernum + 1) & 0xFFFFF;
+-	sprintf(addr->name->sun_path + 1, "%05x", ordernum);
++	snprintf(addr->name->sun_path + 1, 5, "%05x", ordernum);
  
- extern int path_pts(struct path *path);
- 
+ 	new_hash = unix_abstract_hash(addr->name, addr->len, sk->sk_type);
+ 	unix_table_double_lock(net, old_hash, new_hash);
 -- 
-2.47.1
+2.25.1
 
