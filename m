@@ -1,45 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA76A23645D;
-	Thu,  6 Feb 2025 21:54:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE495225A52;
+	Thu,  6 Feb 2025 21:56:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738878864; cv=none; b=gmj+4FYoDvMQQgufnWAJ8plRKbiyMf0TmBiLLMui+oMOhFNM4492I6K8i+WwQo+/Fr6bs6rqDkdSokw3H1b/WC252xcO3nOq1dkmQQ7cmMwqihrk60o4USO0abmojCUDakkF56csBBxSGfe+FvB5nsksVQ6pbrWiiaKXipy3Ue0=
+	t=1738878991; cv=none; b=gOcq6qZLkc/MCgCk/zLF0CH/qNW+XwDavKcB58le/GpIWbZoy3Bg2gr9k9S5QPx/bpJWZekdFsu+dBEJRKbMRB5v4mcjTP03O/WrakOEHHGwqKrLEaEuLObLiF000z+tMqcs8Dp4RHp8EsSZqkIcCbYpPtd271f0HYl0sExnqDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738878864; c=relaxed/simple;
-	bh=B231tugVCPWzN9vzBk0pgA7JVKtCX4QjkKBLeDcM4uo=;
+	s=arc-20240116; t=1738878991; c=relaxed/simple;
+	bh=QLEA8ohyIX8hj6vGPgsirNp6XqzX1i1bIJAJO4b/5I8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r8oXN0GeZ2MWuq91lz3DPvf0+x5GoxEMfKmLUk64Q3JaxaSLMgOZyR4VRddnmkCuPnw8A8FtkARAuBRnFXF7AZs+0ERlGEwGQs+YjhlUF+GwXSY26p5bm26QArSq9EOp6KVRUulYxDsf6IaN/6cf0Go/DhSF8xEnH8gHBNjtc7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EIOEFYcM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cs+rPncPyyXFvdYSyUwhm7wJlyu7qw85kkjzALOVOt8f0w1zXEG3D+ss4mw1X/Mg7zoa82YDYUzpBIDvE0oOcprFbdtmfbBt3tlKeN2PT2mXtnhC1Xon5GZC+6st1ksSNYZUB0fuxHBpUuDGfBlwC970+32V/P44nbXKJQoI50I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UXr4Ygby; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EIOEFYcM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DCC5C4CEDD;
-	Thu,  6 Feb 2025 21:54:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UXr4Ygby"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E09F2C4CEDD;
+	Thu,  6 Feb 2025 21:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738878863;
-	bh=B231tugVCPWzN9vzBk0pgA7JVKtCX4QjkKBLeDcM4uo=;
+	s=k20201202; t=1738878991;
+	bh=QLEA8ohyIX8hj6vGPgsirNp6XqzX1i1bIJAJO4b/5I8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EIOEFYcMmj92WShJiyDBtChc5W0rHXWp/wt8PZmGMAmMKmIq3L+Tfw6Hkc5lNDVnV
-	 Qe7HfCWOTyxgfTJBCkbXgnZgDEKcaMCkOZJhlg6jUKqgvjtEWH93mCS9utpcaQ4zC5
-	 +n84jBfFHO20Rt0CaupQgqEuc6tnN9+68ZA30zd8/X+o76AK4hkLR2RaG37qNi1AEB
-	 GJDmm33ZuBwGDlFwTgfEcjYQIMQEW1CCBNImfd2gydb3TSEEqdDcD5cU5eTgYnVFrB
-	 ajGov/wCADrcA2HT/FxtbP6LGXRoMOuPyx4Zy0IlllQAgrfasiL1c3FDDjw7I/S4Rh
-	 xcCNxi7hxdR8g==
-Date: Thu, 6 Feb 2025 13:54:22 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: brauner@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de,
-	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
-	ritesh.list@gmail.com, martin.petersen@oracle.com
-Subject: Re: [PATCH RFC 10/10] xfs: Allow block allocator to take an
- alignment hint
-Message-ID: <20250206215422.GZ21808@frogsfrogsfrogs>
-References: <20250204120127.2396727-1-john.g.garry@oracle.com>
- <20250204120127.2396727-11-john.g.garry@oracle.com>
- <20250205192039.GU21808@frogsfrogsfrogs>
- <0bcd5bee-132f-417b-b77c-64b80e007c72@oracle.com>
+	b=UXr4Ygby3tsCgsNjJPbjqbEOpLA2kV6LXwGMCw/GMwalPFlcz8Ta8BSyFIsJnDjoD
+	 SwZk/pWwGHWoHiDMII80f1+4wD/3gz2rzOS0ZIDoy4dLHN4cQoDG8xAx9Ksqk2MOJ4
+	 S1Fwfgwcudf56JxNp8o8eUkQZRZuKoxObGqTaQrpLvQM8HldT6ImvLOff23xvE+B7Z
+	 HSUmgAn+z9pWMSbpTy+5c8M8dZ5lW4dlcL6m9DDq+vERYLX8z9yjqPQUlq2zfW87y+
+	 FTdBrk6Lwl0Jgr6DHUNnZF3d4C380Gc0AevwraBvI85MfSFNCoI1o7QaHpOFU/pHmh
+	 0uFrvuIk4ghpQ==
+Date: Thu, 6 Feb 2025 22:56:26 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] rust: allocator_test: use `posix_memalign`
+Message-ID: <Z6UwCtaO-qVYEN2Z@cassiopeiae>
+References: <20250206-aligned-alloc-v3-1-0cbc0ab0306d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,120 +47,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0bcd5bee-132f-417b-b77c-64b80e007c72@oracle.com>
+In-Reply-To: <20250206-aligned-alloc-v3-1-0cbc0ab0306d@gmail.com>
 
-On Thu, Feb 06, 2025 at 08:10:24AM +0000, John Garry wrote:
-> On 05/02/2025 19:20, Darrick J. Wong wrote:
-> > On Tue, Feb 04, 2025 at 12:01:27PM +0000, John Garry wrote:
-> > > When issuing an atomic write by the CoW method, give the block allocator a
-> > > hint to naturally align the data blocks.
-> > > 
-> > > This means that we have a better chance to issuing the atomic write via
-> > > HW offload next time.
-> > > 
-> > > Signed-off-by: John Garry <john.g.garry@oracle.com>
-> > > ---
-> > >   fs/xfs/libxfs/xfs_bmap.c | 7 ++++++-
-> > >   fs/xfs/libxfs/xfs_bmap.h | 6 +++++-
-> > >   fs/xfs/xfs_reflink.c     | 8 ++++++--
-> > >   3 files changed, 17 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-> > > index 40ad22fb808b..7a3910018dee 100644
-> > > --- a/fs/xfs/libxfs/xfs_bmap.c
-> > > +++ b/fs/xfs/libxfs/xfs_bmap.c
-> > > @@ -3454,6 +3454,12 @@ xfs_bmap_compute_alignments(
-> > >   		align = xfs_get_cowextsz_hint(ap->ip);
-> > >   	else if (ap->datatype & XFS_ALLOC_USERDATA)
-> > >   		align = xfs_get_extsz_hint(ap->ip);
-> > > +
-> > > +	if (align > 1 && ap->flags & XFS_BMAPI_NALIGN)
-> > > +		args->alignment = align;
-> > > +	else
-> > > +		args->alignment = 1;
-> > > +
-> > >   	if (align) {
-> > >   		if (xfs_bmap_extsize_align(mp, &ap->got, &ap->prev, align, 0,
-> > >   					ap->eof, 0, ap->conv, &ap->offset,
-> > > @@ -3781,7 +3787,6 @@ xfs_bmap_btalloc(
-> > >   		.wasdel		= ap->wasdel,
-> > >   		.resv		= XFS_AG_RESV_NONE,
-> > >   		.datatype	= ap->datatype,
-> > > -		.alignment	= 1,
-> > >   		.minalignslop	= 0,
-> > >   	};
-> > >   	xfs_fileoff_t		orig_offset;
-> > > diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
-> > > index 4b721d935994..d68b594c3fa2 100644
-> > > --- a/fs/xfs/libxfs/xfs_bmap.h
-> > > +++ b/fs/xfs/libxfs/xfs_bmap.h
-> > > @@ -87,6 +87,9 @@ struct xfs_bmalloca {
-> > >   /* Do not update the rmap btree.  Used for reconstructing bmbt from rmapbt. */
-> > >   #define XFS_BMAPI_NORMAP	(1u << 10)
-> > > +/* Try to naturally align allocations */
-> > > +#define XFS_BMAPI_NALIGN	(1u << 11)
-> > > +
-> > >   #define XFS_BMAPI_FLAGS \
-> > >   	{ XFS_BMAPI_ENTIRE,	"ENTIRE" }, \
-> > >   	{ XFS_BMAPI_METADATA,	"METADATA" }, \
-> > > @@ -98,7 +101,8 @@ struct xfs_bmalloca {
-> > >   	{ XFS_BMAPI_REMAP,	"REMAP" }, \
-> > >   	{ XFS_BMAPI_COWFORK,	"COWFORK" }, \
-> > >   	{ XFS_BMAPI_NODISCARD,	"NODISCARD" }, \
-> > > -	{ XFS_BMAPI_NORMAP,	"NORMAP" }
-> > > +	{ XFS_BMAPI_NORMAP,	"NORMAP" },\
-> > > +	{ XFS_BMAPI_NALIGN,	"NALIGN" }
-> > 
-> > Tihs isn't really "naturally" aligned, is it?  It really means "try to
-> > align allocations to the extent size hint", which isn't required to be a
-> > power of two.
+On Thu, Feb 06, 2025 at 03:49:00PM -0500, Tamir Duberstein wrote:
+> The implementation added in commit dd09538fb409 ("rust: alloc: implement
+> `Cmalloc` in module allocator_test") used `aligned_malloc` which has
+> implementation-defined requirements of its `alignment` parameter.
 > 
-> Sure, so I would expect that the user will set extsize/cowextsize according
-> to the size what we want to do atomics for, and we can align to that. I
-> don't think that it makes a difference that either extsize isn't mandated to
-> be a power-of-2.
+> The macOS implementation of `aligned_alloc` appears to be based on
+> `posix_memalign` and inherits the stricter requirements of that
+> function, causing test failures on macOS.
 > 
-> So then I should rename to XFS_BMAPI_EXTSZALIGN or something like that - ok?
+> Replace `aligned_alloc` with `posix_memalign` and comply with its
+> requirements. This ensures uniform behavior across systems.
+> 
+> Fixes: dd09538fb409 ("rust: alloc: implement `Cmalloc` in module allocator_test")
+> 
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-Yep.
+Let's wait for clarification before moving on. :)
 
---D
+> ---
+> I've intentionally not picked up Danilo's Acked-by from v2 because the
+> approach has changed quite a bit.
+> ---
+> Changes in v3:
+> - Replace `aligned_malloc` with `posix_memalign` for portability.
+> - Link to v2: https://lore.kernel.org/r/20250202-aligned-alloc-v2-1-5af0b5fdd46f@gmail.com
+> 
+> Changes in v2:
+> - Shorten some variable names. (Danilo Krummrich)
+> - Replace shadowing alignment variable with a second call to
+>   Layout::align. (Danilo Krummrich)
+> - Link to v1: https://lore.kernel.org/r/20250201-aligned-alloc-v1-1-c99a73f3cbd4@gmail.com
+> ---
+>  rust/kernel/alloc/allocator_test.rs | 27 +++++++++++++++++++++++----
+>  1 file changed, 23 insertions(+), 4 deletions(-)
+> 
+> diff --git a/rust/kernel/alloc/allocator_test.rs b/rust/kernel/alloc/allocator_test.rs
+> index e3240d16040b..0aa68d955b39 100644
+> --- a/rust/kernel/alloc/allocator_test.rs
+> +++ b/rust/kernel/alloc/allocator_test.rs
+> @@ -23,8 +23,19 @@
+>  pub type KVmalloc = Kmalloc;
+>  
+>  extern "C" {
+> -    #[link_name = "aligned_alloc"]
+> -    fn libc_aligned_alloc(align: usize, size: usize) -> *mut crate::ffi::c_void;
+> +    // NB: `posix_memalign` is intentionally used instead of `aligned_malloc`.
+> +    //
+> +    // ISO C (ISO/IEC 9899:2011) defines `aligned_malloc`:
+> +    //
+> +    // > The value of alignment shall be a valid alignment supported by the implementation [...].
+> +    //
+> +    // POSIX.1-2001 (IEEE 1003.1-2001) defines `posix_memalign`:
+> +    //
+> +    // > The value of alignment shall be a power of two multiple of sizeof (void *).
+> +    //
+> +    // `posix_memalign` is more portable than (but otherwise identical to) `aligned_malloc`.
+> +    #[link_name = "posix_memalign"]
+> +    fn libc_posix_memalign(align: usize, size: usize) -> *mut crate::ffi::c_void;
 
-> Thanks,
-> John
-> 
-> 
-> > 
-> > --D
-> > 
-> > >   static inline int xfs_bmapi_aflag(int w)
-> > > diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-> > > index 60c986300faa..198fb5372f10 100644
-> > > --- a/fs/xfs/xfs_reflink.c
-> > > +++ b/fs/xfs/xfs_reflink.c
-> > > @@ -445,6 +445,11 @@ xfs_reflink_fill_cow_hole(
-> > >   	int			nimaps;
-> > >   	int			error;
-> > >   	bool			found;
-> > > +	uint32_t		bmapi_flags = XFS_BMAPI_COWFORK |
-> > > +					XFS_BMAPI_PREALLOC;
-> > > +
-> > > +	if (atomic)
-> > > +		bmapi_flags |= XFS_BMAPI_NALIGN;
-> > >   	resaligned = xfs_aligned_fsb_count(imap->br_startoff,
-> > >   		imap->br_blockcount, xfs_get_cowextsz_hint(ip));
-> > > @@ -478,8 +483,7 @@ xfs_reflink_fill_cow_hole(
-> > >   	/* Allocate the entire reservation as unwritten blocks. */
-> > >   	nimaps = 1;
-> > >   	error = xfs_bmapi_write(tp, ip, imap->br_startoff, imap->br_blockcount,
-> > > -			XFS_BMAPI_COWFORK | XFS_BMAPI_PREALLOC, 0, cmap,
-> > > -			&nimaps);
-> > > +			bmapi_flags, 0, cmap, &nimaps);
-> > >   	if (error)
-> > >   		goto out_trans_cancel;
-> > > -- 
-> > > 2.31.1
-> > > 
-> > > 
-> 
-> 
+I don't think this can work. posix_memalign() is defined as follows.
+
+int posix_memalign(void **memptr, size_t alignment, size_t size)
+
+Besides that, I don't think switching to posix_memalign() is desirable, it only
+seems to make the code more complicated.
