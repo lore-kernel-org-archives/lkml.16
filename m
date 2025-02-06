@@ -1,188 +1,144 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2055.outbound.protection.outlook.com [40.107.92.55])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED852BA33;
-	Thu,  6 Feb 2025 03:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738811776; cv=fail; b=TipxcZY8/zqvPfdJ9wKZC19PRBFOJaquHo5lEOPUQK12z12bSSocGYgepT3opjcBfClC0h+xk9ukR2fc1ABs0h0jkC9tcVtefB3xpPcgSco1Ac6k1bgFOiVA/oOXbPW7yKWV3bXRWqNt5uQWgK2rIQMS2pmfARcQB0/leglGusY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738811776; c=relaxed/simple;
-	bh=kD24G8G5VtsLO5NB9MQUnSX00NQp6iz4QvzDzhFQ650=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=C2AVAc8Qxm60cCcpbRldiRvbsn5h8YYAz13xTW9+dCq6njcDOMNTi8qTRYzpZbMC3uQMrZe7X6sNzanRiEJP8zaiV5zbtnzXXQntru5xbWAljdlTcRlG94ySmksWu2QZBcM3mM1Hg7IouVzKYHl558zopopm0SotWcR9GeW50zE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aNptVgs2; arc=fail smtp.client-ip=40.107.92.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688E2BA33;
+	Thu,  6 Feb 2025 03:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738811945; cv=none; b=Gt8FrrmVnDVmLLD5/V1p2wsJoHR6Lwf9GedA0F/fKtpqjwHSSX2kEgGCPbpce5V0H/KxUs8bOx9cMTv33M8+XEVJNdvXSJ/QrEgTDlQZlZZ1FDAsu9lU9/HB3sIoVbOzERN/4rI7kCwK1XSOz9tb9TqHS1TRWM2A3yPkdeQk3uo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738811945; c=relaxed/simple;
+	bh=c9ou0wKHJc8RJ4SXUeYgRc+fmx1V/8+eRPumSgOuT7U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mgi1Zl3GxcOJREq6EX3vNsbQ1inYTusffpTe/Wl3iUWmuovGmVMazfZFsxB1sijShym85x6A4GSYsfp8ep5hoeqeKX2das2YIL3qbShxfo+IK0H1UG73OKHYKamZ5CM1xNgyu/DYx0kUYLGGEYiKPoc6h9K8US7DsKHA7wl0zOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Cte1lhGq; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aNptVgs2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=V29uiwa1VaKV2euY/42XjB0ptlKBqCXnL6jmFfXbc6kMci/zyaHYll+oRyfFM8KyRxEQ9VP0P9uCdO/2OCu/7SDrLrf4oIJOC0F8ut2Pj5SAInJsoqU9sIEQnvNlOExvVDX6bsNhWhW9wy9GUK4pJt1HtTv7naE0iJEwjo8A1zBuJHBfWJLAGqP7ZG2jTcuJbGpemkCiNVJ+7ivUTNA7I+ufiQvRYMw9tz0n6aK/JHgdm1KVieQdI+sfUnhxZdak25UBtXiGtbfU9IuUM03EzfIItnGSo4ZtJ+8MZ/pdTHug/1Sq2FAaD9mJBAKqL4hKUt53N3wfj/uIpMsNN1m97w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q/T1fC1oAC98z0b6PDhtI7ba6jI0t8WSKkPI0DW16YE=;
- b=s8s4rHRubgh7QZ0TPo+Np6uA8KsIUgKwAmYNpOmBzGugxnuSEClWBezlrRPsVrYWmy42ZoscnP5xK/8EKIWhkvsZFVVyuhi7UQyfyUeRuMmx9hTyWhQjD2J6WWc5bCbEjeJY6JJ3E9yXAYWS40l+anCm+HzE3N/xZzAjnSDykXFD05eU/+TrUDaOgMMXZfQ31opvHKB7us56ZYCjfG3HpLOEjJf7A9h+YkrRbzUUFSe0GEcY3hNqe1AWcd2O1OzMe74Y2MGRHHQJ5WEQ5UQlmMHEIwLLMzveOA9edgWmh1wA5tqwBSIXDLqweYUpvtbFaS9WScBo4/5Y0SV661OFAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q/T1fC1oAC98z0b6PDhtI7ba6jI0t8WSKkPI0DW16YE=;
- b=aNptVgs2F544ARj4z0lCrjOl83W5Ro2B3wD0rvmE065O13HDvh7aNu0g8URdNmyB/a4xFOFOqE+Ffq7dqOx+iVFv65GdyzqfITPRrOy1zlgyoZJOv17DDUnVCafO9lZzvEskCpubWVqnbLMYdccAsAUg1Wm03COwnwZV1h+iCyU=
-Received: from BN0PR04CA0187.namprd04.prod.outlook.com (2603:10b6:408:e9::12)
- by IA1PR12MB6459.namprd12.prod.outlook.com (2603:10b6:208:3a9::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.26; Thu, 6 Feb
- 2025 03:16:08 +0000
-Received: from BN1PEPF0000467F.namprd03.prod.outlook.com
- (2603:10b6:408:e9:cafe::7d) by BN0PR04CA0187.outlook.office365.com
- (2603:10b6:408:e9::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.25 via Frontend Transport; Thu,
- 6 Feb 2025 03:16:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN1PEPF0000467F.mail.protection.outlook.com (10.167.243.84) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Thu, 6 Feb 2025 03:16:07 +0000
-Received: from [10.136.39.79] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 5 Feb
- 2025 21:13:02 -0600
-Message-ID: <28ed3e72-d219-4a02-aa8a-5b3ab413bc65@amd.com>
-Date: Thu, 6 Feb 2025 08:42:12 +0530
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Cte1lhGq"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1738811930; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=YZ5n1XJ9+2OBem80bOrpZoJZQ6iinxivAYHPRnPkHK4=;
+	b=Cte1lhGqCbMwPKiY5oCpIdhZjHQ4Cc5k/Yvc7badM0eNlrroXSW6i8OZYj3DjNakFYg4pTB5FsE4OKDlQSlJwfeMOCwkjPYR3xToSQpmdw4mRe1h3uHEbzW6/wRq9/2H0Md1M+ZxmF1XYZ9OoXU9oKoBH4PfI9Zii69UNT01so0=
+Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WOuPi4K_1738811930 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 06 Feb 2025 11:18:50 +0800
+Date: Thu, 6 Feb 2025 11:18:49 +0800
+From: Feng Tang <feng.tang@linux.alibaba.com>
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonthan.Cameron@huawei.com>,
+	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI/portdrv: Add necessary delay for disabling
+ hotplug events
+Message-ID: <Z6QqGRNQ0UQZSKBB@U-2FWC9VHC-2323.local>
+References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
+ <7e5e9bad-b66b-4a7f-8868-af5f1ab2fda1@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] pipe: don't update {a,c,m}time for anonymous pipes
-To: Oleg Nesterov <oleg@redhat.com>
-CC: David Howells <dhowells@redhat.com>, "Gautham R. Shenoy"
-	<gautham.shenoy@amd.com>, Mateusz Guzik <mjguzik@gmail.com>, Neeraj Upadhyay
-	<Neeraj.Upadhyay@amd.com>, Christian Brauner <brauner@kernel.org>, "Jeff
- Layton" <jlayton@kernel.org>, Oliver Sang <oliver.sang@intel.com>, "Swapnil
- Sapkal" <swapnil.sapkal@amd.com>, WangYuli <wangyuli@uniontech.com>,
-	<linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Linus
- Torvalds" <torvalds@linux-foundation.org>
-References: <20250205181716.GA13817@redhat.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <20250205181716.GA13817@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF0000467F:EE_|IA1PR12MB6459:EE_
-X-MS-Office365-Filtering-Correlation-Id: ba830744-5834-45fe-5149-08dd465c9956
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700013|82310400026|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NVpjeVFiSjNoSHlwNHlmQ3FTeS9kT1ZkRkxkMlN5WVBJSE1YQW8zZEhROEF5?=
- =?utf-8?B?eFJ0djdBVVFQMHJXWk9GOG14Q1lnM0Y5Q3k2SDg2Q1Y1K1FjRnF5ZU5pdE9T?=
- =?utf-8?B?RUJjWWIzaTJYRkdJTXc0MWZWUjhrNDNmSUZiVU9sOFEzcWVqYnZFdVk3OTJi?=
- =?utf-8?B?OGRSQnNTNGwycWhob0RBTTJVQnhiYi82Y3IvTmlkOTN5a05Ra0Z5V05sOFpV?=
- =?utf-8?B?d29FVlk0NjllME5DS2JVK1hDVXBYQzR1dlVxZndhK1BJTlVmTjRETG42OU8z?=
- =?utf-8?B?WjRQRWd3MDZRUEVwQ1FPc3JCSmJFT041M0pud2trSWZrNWlMMTdNSm1OQ3pW?=
- =?utf-8?B?eENESjd6Y01mNDdGUVhjaVJaekVYdUNZb2pEOUQxV3JHd1JGdkp3cjE1cTZ1?=
- =?utf-8?B?VkpmVkRjb291UHd1YW95bmtRSzhXbWRvaHpUZVpnYWwyeXVVNWltNUVzQnB5?=
- =?utf-8?B?T05sYzJ2MWZkemVrR2RPNjhJZk5xZ2lyZ1I5US9lMlhQKzlwYnRJRXUxTitn?=
- =?utf-8?B?bTJlRjVuRzhBazBaTDdRWTVPZ2E2TXQydUhNUXA5OTVHU1h4YlAyNkxrY3Vw?=
- =?utf-8?B?UXp4WWJFZVVqa2Y3Rk03MEtrTmlTRzdQZHdjN3kwNXRnTDBSYkphYkRrRzVu?=
- =?utf-8?B?MytSUXJQLzQwdEVOSERodm9YRWoyZnhVNTVpMXY4WDlJZlQvbitaWTB0eTZ6?=
- =?utf-8?B?S2RreVdIRVRkTFhDNkhrWTMzaDExbVVHc1VUalhFQW9MM1V3R2NXTDZWM1ZE?=
- =?utf-8?B?ZndLNHYxRUdCZDNSOW5uN3p0eXVncVdmMFQ2UXVveXNuVUpndThLeGtJTUpy?=
- =?utf-8?B?MGl1RXF0cVNlQTdVMk1kTnYvL2FJYW9WRUZrZjBMUHFBUU41NHRxY3dvVFBQ?=
- =?utf-8?B?Y21kUERjc3IzMlFXL1FCTDRJckpmN21SaFBWTmJnaUhLNDBnbFpGc0xIRnFT?=
- =?utf-8?B?ZmdYSmg1TC9na0E0Q0wrb3pGQkpXandhY0hLTU41K29vSG5RQ3JwcnZmeVNo?=
- =?utf-8?B?ajNlZndZby8xQUczRU9RWGNSQ0Ixc0hYWTUyc1BrRGsvcXhydWJLNVJHTUIy?=
- =?utf-8?B?YWlsNFNsKzZKTk1tTG1aeXhrUjUrREUvQnVLdEVEcUx2MVA5WGdHQnM5bnBp?=
- =?utf-8?B?Z0hVWURJY1YxZk5SQ2cxZENIQy9STVpwNjk3QkRVdTVjb1U0VCt0R2Jid2Js?=
- =?utf-8?B?Q3RNM1BYbS9vRThwWWEzUGpoQm9rZEV0MHk5ZzRHOWZkZ0VkNVF0eEl6WXp3?=
- =?utf-8?B?am0xdURkSWtWYjJ3N1NicWhBWFBzWTB4SmdSeTNIaEE1dmFvaXdMc0JRcE5E?=
- =?utf-8?B?TWpzdTEwOEk5MVljdUlCcCtSZlVqdjFxUzVKMTVDQmpyMWFpdnlOVXIvMlFG?=
- =?utf-8?B?OFBRcFBZOC8zak1uWHRQSWhZNVRBRGJRS0xCYkVJdWZ0MllyenZZeHdJWlFC?=
- =?utf-8?B?Wjd4bm40U3hWanZCRStHdERnTnNOd0pabURjYVE1bTZFa0VrRGp4S1E2QmNM?=
- =?utf-8?B?SWZ5OGlzUWFRQngwQVNsTWwvaDA3cUt1UzdzcXNSQk5UNEtCNGlncWkyY3R0?=
- =?utf-8?B?ZWFXMzJkbUN1R3ZLV3pTdXVPMkVyUFRvWi9hdElNd3pLMUhvdDg3M1BlTjZW?=
- =?utf-8?B?WEJFOUtQaXdjc0Z4UE5rVTVhTFBRTWthT3ZsWkMzek1jWmtnWGR2d2VDcUd4?=
- =?utf-8?B?NVB3Z1IzbnVOa0dlVmNJbnRCcldHVVpTNVFsSkpNSmxXUkFpTGt4bTYwc0tP?=
- =?utf-8?B?RmlJRG9GN3lmL281OFV2M2FCUDVNRWFoMHNvc29DMEEwL0Y1VDVveUczVEt0?=
- =?utf-8?B?RFBheGpxblcxVDM4ejg4UEdBM3JRNnF5ak13bEUrYXEyWTh3RnJsdEx3MkZm?=
- =?utf-8?B?MnB5b3lpTTFYUlJlK3pjaDhkYTJhRldZNjdQZllyV0hRTUdOTVlNTGN6RjZl?=
- =?utf-8?B?dVVTL25lMEtKTTIzWGE2bTA5SDl3eWNEcmhJNDZsWGNYTVF5MTF2SDN1NmU4?=
- =?utf-8?Q?mc/tcsNrnLzRdKxJF35Whmu5TOQGVI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700013)(82310400026)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 03:16:07.9359
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba830744-5834-45fe-5149-08dd465c9956
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF0000467F.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6459
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <7e5e9bad-b66b-4a7f-8868-af5f1ab2fda1@linux.intel.com>
 
-Hello Oleg,
+Hi Sathyanarayanan,
 
-On 2/5/2025 11:47 PM, Oleg Nesterov wrote:
-> OK, let me send v3 right now...
+On Wed, Feb 05, 2025 at 10:26:59AM -0800, Sathyanarayanan Kuppuswamy wrote:
+> 
+> On 2/3/25 9:37 PM, Feng Tang wrote:
+> > According to PCIe 6.1 spec, section 6.7.3.2, software need to wait at
+> > least 1 second for the command-complete event, before resending the cmd
+> > or sending a new cmd.
+> > 
+> > Currently get_port_device_capability() sends slot control cmd to disable
+> > PCIe hotplug interrupts without waiting for its completion and there was
+> > real problem reported for the lack of waiting.
+> 
+> Can you include the error log associated with this issue? What is the
+> actual issue you are seeing and in which hardware?
 
-Tested this series with sched-messaging on my 3rd Generation EPYC
-system (2 x64c/128T, boost on, C2 disabled) and I see slight
-improvements:
+For this one, we don't have specific log, as it was raised by firmware
+developer, as in https://lore.kernel.org/lkml/Z6LRAozZm1UfgjqT@U-2FWC9VHC-2323.local/
 
-   ==================================================================
-   Test          : sched-messaging
-   Units         : Normalized time in seconds
-   Interpretation: Lower is better
-   Statistic     : AMean
-   ==================================================================
-   Case:      upstream[pct imp](CV)    skip_{a,c,m}_time[pct imp](CV)
-    1-groups     1.00 [ -0.00]( 9.88)     1.05 [ -5.16]( 7.19) *
-    2-groups     1.00 [ -0.00]( 3.49)     0.97 [  2.70]( 3.54)
-    4-groups     1.00 [ -0.00]( 1.22)     0.97 [  2.70]( 2.78)
-    8-groups     1.00 [ -0.00]( 0.80)     0.99 [  0.94]( 1.04)
-   16-groups     1.00 [ -0.00]( 1.40)     0.98 [  2.43]( 1.02)
-   
-   * Disregard these data points due to large run to run variation
+When handling PCI hotplug problem, they hit issue and found their state
+machine corrupted , and back traced to OS. They didn't expect to receive
+2 link control commands at almost the same time, which doesn't comply to
+pcie spec, and normally the handling of one command will take some time
+in BIOS, though not as long as 1 second. The HW is an ARM server.
 
-Feel free to add:
-
-Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
-
-I'll go test the pipe_{read,write}() cleanup you had posted on the
-other thread.
-
--- 
-Thanks and Regards,
-Prateek
+I will try to add these info to commit log in next version.
 
 > 
-> Changes: make pipeanon_fops static.
+> > 
+> > Add the necessary wait to comply with PCIe spec. The waiting logic refers
+> > existing pcie_poll_cmd().
+> > 
+> > Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+> > ---
+> >   drivers/pci/pci.h          |  2 ++
+> >   drivers/pci/pcie/portdrv.c | 33 +++++++++++++++++++++++++++++++--
+> >   2 files changed, 33 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index 01e51db8d285..c1e234d1b81d 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -759,12 +759,14 @@ static inline void pcie_ecrc_get_policy(char *str) { }
+> >   #ifdef CONFIG_PCIEPORTBUS
+> >   void pcie_reset_lbms_count(struct pci_dev *port);
+> >   int pcie_lbms_count(struct pci_dev *port, unsigned long *val);
+> > +void pcie_disable_hp_interrupts_early(struct pci_dev *dev);
+> >   #else
+> >   static inline void pcie_reset_lbms_count(struct pci_dev *port) {}
+> >   static inline int pcie_lbms_count(struct pci_dev *port, unsigned long *val)
+> >   {
+> >   	return -EOPNOTSUPP;
+> >   }
+> > +static inline void pcie_disable_hp_interrupts_early(struct pci_dev *dev) {}
+> >   #endif
+> >   struct pci_dev_reset_methods {
+> > diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+> > index 02e73099bad0..16010973bfe2 100644
+> > --- a/drivers/pci/pcie/portdrv.c
+> > +++ b/drivers/pci/pcie/portdrv.c
+> > @@ -18,6 +18,7 @@
+> >   #include <linux/string.h>
+> >   #include <linux/slab.h>
+> >   #include <linux/aer.h>
+> > +#include <linux/delay.h>
+> >   #include "../pci.h"
+> >   #include "portdrv.h"
+> > @@ -205,6 +206,35 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+> >   	return 0;
+> >   }
+> > +static int pcie_wait_sltctl_cmd_raw(struct pci_dev *pdev)
+> > +{
+> > +	u16 slot_status;
+> > +	/* 1000 ms, according toPCIe spec 6.1, section 6.7.3.2 */
+> > +	int timeout = 1000;
+> > +
+> > +	do {
+> > +		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+> > +		if (slot_status & PCI_EXP_SLTSTA_CC) {
+> > +			pcie_capability_write_word(pdev, PCI_EXP_SLTSTA,
+> > +						   PCI_EXP_SLTSTA_CC);
+> > +			return 0;
+> > +		}
+> > +		msleep(10);
+> > +		timeout -= 10;
+> > +	} while (timeout);
+> > +
+> > +	/* Timeout */
+> > +	return  -1;
+> > +}
 > 
-> Link to v1: https://lore.kernel.org/all/20250204132153.GA20921@redhat.com/
-> Link to v2: https://lore.kernel.org/all/20250205161636.GA1001@redhat.com/
-> 
-> Oleg.
-> ---
-> 
->   fs/pipe.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++---------------
->   1 file changed, 47 insertions(+), 15 deletions(-)
-> 
+> May be this logic can be simplified using readl_poll_timeout()?
 
+Seems this is what exactly I needed :) Many thanks for the suggestion!
+
+- Feng
