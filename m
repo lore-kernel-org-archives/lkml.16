@@ -1,111 +1,71 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F5522617B
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 14:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEA11624F0
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 14:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738851798; cv=none; b=N9FdLLw8Y27c25AOC2CcogEi0M2kPaqMK10UX+RBhdMMqbxhclHAgIZtR+zPYY/VpZ+KYSQFgFFQNi0UsU1imbmlUsZLBfufULSKOZ+Oz0usWL4detebc8icVUYpHUqAHPwAk3lRlHriOKgkFMrkFEPCMPMU1KNqndtU7Vhkj2s=
+	t=1738851817; cv=none; b=OlkVe9RhT7A9fnWHdiwosibSH3D3hcF5SrWH5jR4lpd3yFDAnOscZuoT+4P9GSjwlpst1znB/49EHyeQewr2NibPPTcCFK9I5SqlVv9Htm3v7kItLFNzXgKs5tSW3/K7IWjQFdZv0uzfv9/K0QTh5ZM6EAZ55DEWxJPivQRfR3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738851798; c=relaxed/simple;
-	bh=hYNDYZyhU3vPLzYPSaPWEcPzJSNHuY39jWh45uxHumU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D+xgsc9tbArYkFPrAVTrvV3JdTrllCvuOY07CGomceXcg7V9UdEOecXZDWrrSyGlQFIfCrSNFWZSI6LCJpwrXQz0ixKV36VrpXx4oJgYo4qlVfklUmM42gDk6T0h9cDSBYKVlw83K0uXyfqr2QojlJnKJhtYvtxC/3/PhTnKvL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=w4WBJPzX; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	s=arc-20240116; t=1738851817; c=relaxed/simple;
+	bh=vUvOXnud/9ZjNeBwkbZ3OCAJc6KYq9+6A5h/intuZtU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N9PolXjopchhEULw2DNm+5r1m+k1BjPtCu9xFQ8sD0JL/atFlbPEAjCc17nHhbBb12o7obuvs8hWB133LSPC6HOTHBHeOTSGuRYaOon6GUjbuo5WCy92rT/YGj7FVOdcYkEGIS8jM46vYIOMeaLyZbwcZfNsdXK7x9AqGTYMLJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ESG6W7Ut; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="w4WBJPzX"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaeef97ff02so171473466b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 06:23:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1738851794; x=1739456594; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gFMFd8yvXqVnAGCGrRETRe/V8KRYdG7T8ArDcX9VBwI=;
-        b=w4WBJPzX5UOyQ4pAoq2W+LwYbdYtyhv13tvBJnEyAwICDjjNPnZJdDRsX1IFceliKl
-         4hD8mN066oU7ph/Y+RIveutEVH3p95RV7bChlz5h0viKFz1CfIB4G3oRIvDEt1KzziC/
-         ZT6r19Aa1ISdkPQzzRxSrq37Pf78WKrbKwdP1LEkDD+8WHG6Q3kqZa5v2uPDaTba1Trr
-         g2hEIDczbeLjDtzpWJTEawV5dNbp7aFPxf0Km5LPPuhLjdjybpBq28lp1sWjmWb08qjv
-         KbLbOvUj7i8WEWfdScP3L26R4oNps+CVHb3VxOHsOGaHnsM+9kjbTGXXPkd08fUew9XN
-         OYLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738851794; x=1739456594;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gFMFd8yvXqVnAGCGrRETRe/V8KRYdG7T8ArDcX9VBwI=;
-        b=M90o4K3DiudVr45cRWJYoJqqzR7sGzL5a2o0IVe/zvjUXxS0gC4Cs50HMBHOtOKrUq
-         vGbGP68nOTDd9piVuTnuZZxIE5hG5C4KJYcmwR04xfJjmY0wXJMtfcodwLfcHqw5ca1S
-         t96XjeMtfmxZZovx50PYbmzF95tnguP6kZRg4UtAM3xOTaV4+dRcN39CtiMbUtFH+5lZ
-         azzkYVGKSYh+TYwK0eKUcIhNj9SZIW2h29E+lcco+HjPSnKzPNah9uX5ZSLmcil211B0
-         GTCEAqaP18UtLMdiYWjpaV4S9tFfDuc60Zfv39EAL/mo25lLYtdpKzYwbBxIsIGsxp4v
-         a48Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWIzDy419wediotv3X5E8Ul5G7cHUbk+NQs7N+qrSYr0NMPTHyOZOt+eMWYkEPok0vSTLv6QjnRTyYoKc0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2aOsa8qppfRsaBxyZHxHXHL3KtxuYQ7si1lmwkxKhQBwB5YdJ
-	NGTjvez3gP3p8KOuk2gweXSUUURZkwrhbw/pqsWzYi6lp3vQhg+nyzYBqJvQCm4=
-X-Gm-Gg: ASbGncvc2XdiNazBvhUzEWCc2hWgABVPfKgwPiapM422MHmpaFrL2m4vYtoYiA0fOFI
-	c04svrt4qqwELqdD5EEkAP3fvHMwbcjNsl8OpyCEET6gcmF3CWTQbGKNp7032uZsG4jbF1LVeKf
-	XyMgCiaLKfHnJUH3lM+QpMj2h0vCi8ZniN+SUUnn5MZcn996bFLKV0k9FvvMMjwj2zFKjK0gfFQ
-	ZmQWk8umKtRlb5D+AtdsU7Lv/E1wCXh7+LxTo4q5gzHZEV7yPqBKfjq/oxdoxdHjImRparCSdST
-	FlwKUx0Kkv+vfMa70YEKkr5N4nnzYS1t2nx3K3UHYodbG+M=
-X-Google-Smtp-Source: AGHT+IFFyvQfINAl6lz2A01y9ohntI7gR0hYfp3ILlqctgCUIUMFbzNkfcNhO1QK5iS0p6NSxCJe9w==
-X-Received: by 2002:a17:907:8694:b0:ab7:b93:f77d with SMTP id a640c23a62f3a-ab75e245be1mr816768366b.3.1738851793676;
-        Thu, 06 Feb 2025 06:23:13 -0800 (PST)
-Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f486c7sm106211766b.23.2025.02.06.06.23.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 06:23:13 -0800 (PST)
-Message-ID: <5de6707a-6a77-41d1-8964-19667a0e91b2@blackwall.org>
-Date: Thu, 6 Feb 2025 16:23:11 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ESG6W7Ut"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7PnrjZRFTqLvEtvRHv+8ucyPFuvDArddQ1Wq7UL4EbY=; b=ESG6W7Ut9sm6CGovvRv9w/3m1w
+	gVTcdbwKYaDx8C6BihkI7ezfS0ws10WXXJ+hyWxOaX77rcfnLGRrO97H8MRdp5ay/4Az/KM6vz8ln
+	uackznOcjH/M37ZSy1r+OpoRD8HMWK5eivGXKv3zUN6CTBaYyGO5BxuxAGbT/g4jx4LB7LOIQmB0j
+	lZcHHGDxqeFgCkjNL42iZxsrATTMdwRw6WQosVHFvyo5vkq3BOAR4rR+CkKZeWhnT0NsLjUDPwFSo
+	GP++6L9QjfIYhEqYkoi4cxUe29r8Nj/Fh/rtXKCGlhQlhyNN6ansmKExkpNAoMqelKkk67ndpjg0p
+	TP1Jm3Qg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tg2ma-0000000Gy2X-3or3;
+	Thu, 06 Feb 2025 14:23:09 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1394C300318; Thu,  6 Feb 2025 15:23:08 +0100 (CET)
+Date: Thu, 6 Feb 2025 15:23:08 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Rik van Riel <riel@surriel.com>
+Cc: Oleksandr Natalenko <oleksandr@natalenko.name>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, bp@alien8.de,
+	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com,
+	mhklinux@outlook.com, andrew.cooper3@citrix.com
+Subject: Re: [PATCH v9 00/12] AMD broadcast TLB invalidation
+Message-ID: <20250206142308.GR7145@noisy.programming.kicks-ass.net>
+References: <20250206044346.3810242-1-riel@surriel.com>
+ <12602226.O9o76ZdvQC@natalenko.name>
+ <8111558b52cec1152746b05a9c1d657d18df0fe2.camel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 net-next 06/14] net: core: dev: Add
- dev_fill_bridge_path()
-To: Eric Woudstra <ericwouds@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Pablo Neira Ayuso <pablo@netfilter.org>,
- Jozsef Kadlecsik <kadlec@netfilter.org>, Jiri Pirko <jiri@resnulli.us>,
- Ivan Vecera <ivecera@redhat.com>, Roopa Prabhu <roopa@nvidia.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Joe Damato <jdamato@fastly.com>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- Vladimir Oltean <olteanv@gmail.com>,
- Frank Wunderlich <frank-w@public-files.de>,
- Daniel Golle <daniel@makrotopia.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
- bridge@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20250204194921.46692-1-ericwouds@gmail.com>
- <20250204194921.46692-7-ericwouds@gmail.com>
-Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <20250204194921.46692-7-ericwouds@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8111558b52cec1152746b05a9c1d657d18df0fe2.camel@surriel.com>
 
-On 2/4/25 21:49, Eric Woudstra wrote:
-> New function dev_fill_bridge_path(), similar to dev_fill_forward_path().
-> It handles starting from a bridge port instead of the bridge master.
-> The structures ctx and nft_forward_info need to be already filled in with
-> the (vlan) encaps.
-> 
-> Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
-> ---
->  include/linux/netdevice.h |  2 ++
->  net/core/dev.c            | 66 +++++++++++++++++++++++++++++++--------
->  2 files changed, 55 insertions(+), 13 deletions(-)
-> 
+On Thu, Feb 06, 2025 at 09:16:35AM -0500, Rik van Riel wrote:
 
-Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
+> This can result in flush_tlb_mm_range being called
+> with a stride_shift for 2MB pages, but a range ending
+> on a 4kB aligned (not 2MB aligned) boundary.
+> 
+> Peter, how should we solve this one?
+
+I don't think that's wrong per-se, since all we really need is for end
+to be past the end, one byte, one page, or one stride don't matter much.
+
+Anyway, I'm in desperate need of a break, so I'm not quite sure what the
+best way forward is.
