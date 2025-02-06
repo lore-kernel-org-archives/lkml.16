@@ -1,99 +1,227 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBB22248B2
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 08:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FC22248B2;
+	Thu,  6 Feb 2025 08:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738830400; cv=none; b=KbsEDf54Z4gca13twyFo/FDHMm1xzweHstP5MozbtXCwYrcc574dH7Fwyz6ktZb8KUAoRt20aTgsmdF5m/kYrwvdq2t7dRGOS7dKf+E/AtKFPp7cJdQKWz8bPeXb8lVJyo8xAv2ze/CsPPmsiLgg/cwRQU0EWQT0TULszAgctBI=
+	t=1738830406; cv=none; b=aQ0VS8xnVCfpzKnetSRtpHsDkY7tGuQNJVRFerONWI5Hc3E6qYEIKVSdN/tEaUPFuYBH4FhRPodoeTk/FtFCw1/AvxA/R5tOsdOjWKTDLuYi8vP7WiQOjdZlnrkhvXPHyIBEG8k6EmXRMvi/ChXB8J9Pv+9liQUcB6+dez6ADf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738830400; c=relaxed/simple;
-	bh=52wRk3SznrfEJoHtR1xl7/jAP4p0cP3HWb9A2fgmKHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z8Nrlj8VB2mPEZvftSN8op6nyE8Z9QfkdrI9+XYMDT0jBXWB9B9oeJzN2PYaeSOSqGRc/p4pQjpJxepFUenx2nVfWURJtvZ3zMO4EB9dDLdcJ75tJcPPW+VXV5Zicpt75iQo7+4HFJYkrxDmvfqKuOXwSwa5j9/ElGdhJJ9AuNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=g8vMM88P; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ygs3gv4g; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738830406; c=relaxed/simple;
+	bh=T5UOvt5rBtRb9ezz2YfV0roQ9+rJUKYAr8x++BCEjzA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=KmMDvpd0XIDYBmGqTHYNHQe/rEPkfzCYTI+HminVYC7YO1NnbgwfBljylHiRkGbWkToxpVWa7mK/r7xQ1wJDZ5MGf2/qSUcvPDhkfG8AgVzBohUJs/g317FA+UZsa9deL4ZWiHQyThkTBQiXhHqNtzK0EbFUWdE+BMsOcTDvprc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GHlDfvQE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g8vMM88P";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ygs3gv4g"
-Date: Thu, 6 Feb 2025 09:26:35 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738830396;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y7yn31S5+WkTjV1+0qPR9v48o1ew83Px5+6NG1IqRQI=;
-	b=g8vMM88PTwYStI0kJDY9MEdEPpk5nApUrjpqkyGlrfNHhGu3lBEtvummEGcXXDAmjBqeCH
-	EBKzfMa5M1G+zU6+D4tq9f+fmWUouyBaMnCM7vqQR8I8D0mfm5Et1n+qhnJWJ9fVcRR2gG
-	7kAfYm12lYfZhQUEBbuvTBxPVNCb0q+LpSFu2W05LqlS17w8JQICwWDqSrjUprlnzQcPrJ
-	WsSD5R6QCWJoa8swUK8U146NR+9YtPZoq6UV20QZls/se8dVWWKjrVp9+KGfUUiD3Ax20z
-	eCckHXe5zltM17hhcKx+Hh2K+f1RDTDkvM1ybvZaeHibn0jXTJ3l152mp9tBGA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738830396;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y7yn31S5+WkTjV1+0qPR9v48o1ew83Px5+6NG1IqRQI=;
-	b=ygs3gv4gfPo6kEwC2Q5D7gNHL/t7J9FygnRR44QxN9ugfxi9HK9qaNx8HjtEk8KVwRAfaK
-	wsoQyUh540zt5wDA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
-	Mike Galbraith <umgwanakikbuti@gmail.com>
-Subject: Re: [PATCHv4 01/17] zram: switch to non-atomic entry locking
-Message-ID: <20250206082635.dZ1qhyhU@linutronix.de>
-References: <20250131090658.3386285-1-senozhatsky@chromium.org>
- <20250131090658.3386285-2-senozhatsky@chromium.org>
- <20250131145536.d7a0483331b0ebfde80a5754@linux-foundation.org>
- <itapje7ikrv532bwn67udwtjmmmyqp6j4yqc777smbi4rjgmm6@6se3rdy6ufbk>
- <20250206073803.c2tiyIq6@linutronix.de>
- <46ttdyaiweca7qou2t3mx5jy7hefg3htrv4covt5htcex7zaq4@p6is3ukmtbhy>
- <20250206081326.xMa5Z5oJ@linutronix.de>
- <zgaitute72xlzukunnhioqk4e2copgtkonxtn7iuvjq6gufwhr@yg4kry4wq3p2>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GHlDfvQE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88F11C4CEDD;
+	Thu,  6 Feb 2025 08:26:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738830405;
+	bh=T5UOvt5rBtRb9ezz2YfV0roQ9+rJUKYAr8x++BCEjzA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GHlDfvQEaJHR/DX7qUansSDeG0WNfMBEDVbiWCcODxi5f8vjUc+MPD81ZqrMKsVwb
+	 L8UPXWf2OHRF1EGxN6gCCegJ9L8Nfop2tBmL0KVXeKTwYE6uHYaBlE0/jOVasjd0dC
+	 qgvTMfIBhGYfgzkdSG4LovWnbWoIS/y6k6GniLeBOx+AFJ1Ir3JqGK8ev9MWoohWXk
+	 Mvx5DTX8oHLtrIAvQ9YSs3y7sr1+cIVmssc8vm/QTN4ho8pvnaylOmJvFeI9tS1lvF
+	 BfHFiRt+zbu7k2qsmrqCEfIcIoYT88dK16GxPS41I3zLYs/UuXvqmLvbvk1MZv3cKy
+	 hYWbWfVscqexQ==
+Date: Thu, 6 Feb 2025 17:26:42 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH 6/8] tracing: Have persistent trace instances save
+ module addresses
+Message-Id: <20250206172642.391c16d75dbce00518ef9688@kernel.org>
+In-Reply-To: <20250205225103.930895467@goodmis.org>
+References: <20250205225031.799739376@goodmis.org>
+	<20250205225103.930895467@goodmis.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <zgaitute72xlzukunnhioqk4e2copgtkonxtn7iuvjq6gufwhr@yg4kry4wq3p2>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2025-02-06 17:17:41 [+0900], Sergey Senozhatsky wrote:
-> > Okay. So there are requirements for the sleeping lock. A mutex isn't
-> > fitting the requirement because it is too large I guess.
+On Wed, 05 Feb 2025 17:50:37 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> Correct.
-
-I would nice to state this why a generic locking implementation can not
-be used. From what I have seen it should play along with RT nicely.
-
-> > > > > static void zram_slot_lock(struct zram *zram, u32 index)
-> > > > > {
-> > > > >         unsigned long *lock = &zram->table[index].flags;
-> > > > > 
-> > > > >         WARN_ON_ONCE(!preemptible());
-> > > > 
-> > > > you want might_sleep() here instead. preemptible() works only on
-> > > > preemptible kernels. And might_sleep() is already provided by
-> > > > wait_on_bit_lock(). So this can go.
-> > > 
-> > > wait_on_bit_lock() has might_sleep().
-> > 
-> > My point exactly. This makes the WARN_ON_ONCE() obsolete.
+> For trace instances that are mapped to persistent memory, have them use
+> the scratch area to save the currently loaded modules. This will allow
+> where the modules have been loaded on the next boot so that their
+> addresses can be deciphered by using where they were loaded previously.
 > 
-> Right, might_sleep() can be disabled, as far as I understand,
-> via CONFIG_DEBUG_ATOMIC_SLEEP, unlike WARN_ON_ONCE().  But I
-> can drop it and then just rely on might_sleep(), should be
-> enough.
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace.c | 99 ++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 87 insertions(+), 12 deletions(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index cb9f8e6878a0..a8e5f7ac2193 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -5994,14 +5994,60 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
+>  	return ret;
+>  }
+>  
+> +struct trace_mod_entry {
+> +	unsigned long	mod_addr;
+> +	char		mod_name[MODULE_NAME_LEN];
+> +};
+> +
+>  struct trace_scratch {
+>  	unsigned long		kaslr_addr;
+> +	unsigned long		nr_entries;
+> +	struct trace_mod_entry	entries[];
+>  };
+>  
+> +static int save_mod(struct module *mod, void *data)
+> +{
+> +	struct trace_array *tr = data;
+> +	struct trace_scratch *tscratch;
+> +	struct trace_mod_entry *entry;
+> +	unsigned int size;
+> +
+> +	tscratch = tr->scratch;
+> +	if (!tscratch)
+> +		return -1;
+> +	size = tr->scratch_size;
+> +
+> +	if (struct_size(tscratch, entries, tscratch->nr_entries + 1) > size)
+> +		return -1;
+> +
+> +	entry = &tscratch->entries[tscratch->nr_entries];
+> +
+> +	tscratch->nr_entries++;
+> +
+> +	entry->mod_addr = (unsigned long)mod->mem[MOD_TEXT].base;
+> +	strscpy(entry->mod_name, mod->name);
+> +
+> +	return 0;
+> +}
+> +
+>  static void update_last_data(struct trace_array *tr)
+>  {
+>  	struct trace_scratch *tscratch;
+>  
+> +	if (!(tr->flags & TRACE_ARRAY_FL_BOOT))
+> +		return;
+> +
+> +	/* Reset the module list and reload them */
+> +	if (tr->scratch) {
+> +		struct trace_scratch *tscratch = tr->scratch;
+> +
+> +		memset(tscratch->entries, 0,
+> +		       flex_array_size(tscratch, entries, tscratch->nr_entries));
+> +		tscratch->nr_entries = 0;
+> +
+> +		module_for_each_mod(save_mod, tr);
+> +	}
 
-It should be enough. mutex_lock(), down() and so on relies solely on it.
-As I said, preemptible() only works on preemptible kernels if it comes
-to the preemption counter on and !preemptible kernels with enabled
-debugging.
+This maybe too frequently scan the module because the update_last_data() is
+called when;
+- change tracer (this maybe OK)
+- update "set_event"
+- write 1 to "enable" under events
+- change pid filter
+- etc.
 
-Sebastian
+Once it is scanned, it should not scan again, but update by module
+callback, because usually events are enabled individually (thus
+write 1 to "event" can happen multiple time online).
+
+I think we can move this after TRACE_ARRAY_FL_LAST_BOOT check,
+if TRACE_ARRAY_FL_LAST_BOOT flag is set, that flag should be cleared
+with updating the tscratch, and the flag is not set, we can skip updating
+the scratch.
+
+Thank you,
+
+> +
+>  	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
+>  		return;
+>  
+> @@ -9226,6 +9272,46 @@ static struct dentry *trace_instance_dir;
+>  static void
+>  init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer);
+>  
+> +static void setup_trace_scratch(struct trace_array *tr, void *scratch, unsigned int size)
+> +{
+> +	struct trace_scratch *tscratch = scratch;
+> +	struct trace_mod_entry *entry;
+> +
+> +	if (!scratch)
+> +		return;
+> +
+> +	tr->scratch = scratch;
+> +	tr->scratch_size = size;
+> +
+> +#ifdef CONFIG_RANDOMIZE_BASE
+> +	if (tscratch->kaslr_addr)
+> +		tr->text_delta = kaslr_offset() - tscratch->kaslr_addr;
+> +#endif
+> +
+> +	if (struct_size(tscratch, entries, tscratch->nr_entries) > size)
+> +		goto reset;
+> +
+> +	/* Check if each module name is a valid string */
+> +	for (int i = 0; i < tscratch->nr_entries; i++) {
+> +		int n;
+> +
+> +		entry = &tscratch->entries[i];
+> +
+> +		for (n = 0; n < MODULE_NAME_LEN; n++) {
+> +			if (entry->mod_name[n] == '\0')
+> +				break;
+> +			if (!isprint(entry->mod_name[n]))
+> +				goto reset;
+> +		}
+> +		if (n == MODULE_NAME_LEN)
+> +			goto reset;
+> +	}
+> +	return;
+> + reset:
+> +	/* Invalid trace modules */
+> +	memset(scratch, 0, size);
+> +}
+> +
+>  static int
+>  allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size)
+>  {
+> @@ -9243,19 +9329,8 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
+>  						      tr->range_addr_size);
+>  
+>  		scratch = ring_buffer_meta_scratch(buf->buffer, &scratch_size);
+> -		if (scratch) {
+> -			tr->scratch = scratch;
+> -			tr->scratch_size = scratch_size;
+> +		setup_trace_scratch(tr, scratch, scratch_size);
+>  
+> -#ifdef CONFIG_RANDOMIZE_BASE
+> -			{
+> -				struct trace_scratch *tscratch = tr->scratch;
+> -
+> -				if (tscratch->kaslr_addr)
+> -					tr->text_delta = kaslr_offset() - tscratch->kaslr_addr;
+> -			}
+> -#endif
+> -		}
+>  		/*
+>  		 * This is basically the same as a mapped buffer,
+>  		 * with the same restrictions.
+> -- 
+> 2.45.2
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
