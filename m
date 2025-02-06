@@ -1,82 +1,105 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3069F215F52;
-	Thu,  6 Feb 2025 10:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE0618B03
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 10:32:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738837750; cv=none; b=AS87eQ+va9wlCsT3X/MT3b7yo3wLpnRGyyzkQZ/RkK0RsBP1WYFLYwexCRLLcRwsffCab1Q4+bgLJ/rHpyDPcUmLkQG3KtWlvWs3BDAXnfD7Uv0OygEl/GDRV1q/V+ggk+tHGGy0sHWlGJVFJFPxfNsMQirqLm6dq+TeYF7GflU=
+	t=1738837923; cv=none; b=aUH7Z1lK0gVluqpAP1nMBhvcD8NohKE5XK6AWPKcuOPpMDdoSruiagor6BpGle2oWNaFMf5mZMndwyp1ecgxg2MQm3Dbv/VICfryw91nn3rpnsH91w2NLH4KefIjJrmGamtl/Q1j0fmfQ1GpF+hO6Rp/fgtk2yTGpbVtpdW1Y+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738837750; c=relaxed/simple;
-	bh=S7P6lVDUiM8BkwNZyEPAIeV/qXqEvPpGQZH6A/FLfSA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JMlz6A7GzVgCOS8FTmIp7t1VlSUuWf/JPDR8x38XkE0jhJbanLqlWdo4M2kx/IrOVcD9w+/MAc5KfUcHRXo7scT3PnC+n2ttmuYaXustQOzABJEEbopnRZp2+PYn6180umscQ5mj7H5jMGZ0WC38vXGz0TiYkxngUv60DVJusVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=PacvTEnv; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1738837923; c=relaxed/simple;
+	bh=bUGeXmWT5XSJqfUBD8u87jiMstXWrf8zNBVNAGPLRmU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DyimMDJS67iojAJWkC9+2tYDaorXOxI05aRxDXTrIE9JuGBc2xUMcYrhJ+NWVi//ghDI99g9ZtiE7At9TG/9XJrgB+RhWAlZXFO4tllBK/8S6FzzMc2NpNOH4b1IB+80JV+uBo+r/zHtb7bCXMDIkPr2KJYFW5l9Lz4ELtrIiYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KsoWnIYn; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="PacvTEnv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=8lEz4PZA3e6wBA7eHEmBgEXubre6UC4Pm/7j8argqZw=;
-	t=1738837749; x=1740047349; b=PacvTEnvoOY8gAlKBWsCqZ/Idw0yYEsO7z5e0clCvDBmgRa
-	NfZLCn9Mh3gJWDmjvXiOLhenrS/BilGBFtdEsrhLvB/jne5aaG+2wsZZSq4DbzltUBdXSvjwygw2T
-	RghTCwg8HcyEIl/YzixLjgtlb5Amn9n6meghOu2qBSFoKsgt5WSs4QIFi573hPWqZBN27Sg4NwR4M
-	eoionr/5Od39ND3rFlNvX3fbAJmIg1YyuX+VJgFGRqwyBlp7xS1QS7B7s5zGgMuAA2cjc5kLD8esy
-	Aq7uhAr6glJaswwx/bKDpvV8H0kfUd/OTQYw4hTgEeR6ALo0OEuRheqGPAk8ydUw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1tfz7z-00000004zMd-04fP;
-	Thu, 06 Feb 2025 11:28:59 +0100
-Message-ID: <da5a789176b6a4c3e7c6d5f40dd75e50c9fbae39.camel@sipsolutions.net>
-Subject: Re: [PATCH v3 1/2] net, treewide: define and use MAC_ADDR_STR_LEN
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Cc: Uday Shankar <ushankar@purestorage.com>, Breno Leitao
- <leitao@debian.org>,  Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet	 <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni	 <pabeni@redhat.com>, Srinivas
- Kandagatla <srinivas.kandagatla@linaro.org>, 
- =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?=	 <rafal@milecki.pl>, Simon Horman
- <horms@kernel.org>, Andrew Morton	 <akpm@linux-foundation.org>, Jonathan
- Corbet <corbet@lwn.net>, 	netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-wireless@vger.kernel.org,
- linux-doc@vger.kernel.org
-Date: Thu, 06 Feb 2025 11:28:57 +0100
-In-Reply-To: <Z6SNxrEteMx0/0sb@mev-dev.igk.intel.com>
-References: <20250205-netconsole-v3-0-132a31f17199@purestorage.com>
-	 <20250205-netconsole-v3-1-132a31f17199@purestorage.com>
-	 <Z6SEeO0QFx9Y52LJ@mev-dev.igk.intel.com>
-	 <a2a26c7eaf20bb972289a804ecfe0e532f0f85ae.camel@sipsolutions.net>
-	 <Z6SNxrEteMx0/0sb@mev-dev.igk.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KsoWnIYn"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2f9b91dff71so1018299a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 02:32:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738837921; x=1739442721; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oOv2q05Wc/8r3cHmnMTiInwipXGNLksWe6Qh8TWn+5Q=;
+        b=KsoWnIYnf6+wjsActtFDS4uLXK+zBsS1DFciRfk0gqoenoflcanYrxsBw/pF9S5XPB
+         KVQB1yrKZq1seU87QPOKwzFo2nmswPu9tIIhqYdGR1+VSYOwE8qUZ3LJtLVofD07Se3l
+         ALb79SOzK6/tSsFQHzBtmglPUVz5JKkDvreMoySJgTRGX3gBITUOCMIqdHMKNVP5mwnY
+         m8cP5m6nAt/9dQkTH/g0rD2DlF68urVdIkh5W02TA47tlLerF2TxlZELit63Eby0ju0W
+         6srsTL1TfiLvbI9S7lHCf4HCOyb2YbFj/bgHc/VDT48t8dx6SgPRsRWkFGYImrLEIVVQ
+         GmCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738837921; x=1739442721;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oOv2q05Wc/8r3cHmnMTiInwipXGNLksWe6Qh8TWn+5Q=;
+        b=bu4pTpz45W0OazhCGWuj1DWJwWFRXo0udQnyhwoyvRm5NHKoj1YKPDIqy1j6WwHdj6
+         8Ws5oVesyFl5GpV/TOP5NDGHbSVzWXiOt8J79kvEu1k0S6QV5XLO3vi9lRGK19Ghh8N4
+         S8JKCiqthhGzaSitK5nQ0ohuDUe/murkmxKqFOYvrxdcQ9xGb/0AShJmZob/WFdAYNRa
+         VSCkCbzaWTj8wcvGPGnUhSrOHH9qAvP1gHedv9XEWk8rq+bIaXCZZhzmYpSouxHQ5TOG
+         xGhX/XL/Ewi0HLDwxMGiiL/iCq63A9dAiewyEBRz7+pEXlrAoPWd3WtIgDXiWpjdZERr
+         c6UA==
+X-Forwarded-Encrypted: i=1; AJvYcCVA/AtnAA62Z0ReIAN2zJOpipRGb3xbCSvIC9o28NfdZZ9HRteEWTMTt2i0RaSDGAS4mhLkG3ywPdSbyZs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw25OjL9s1BaD946KUN8yxsGSC+fc1Wwv3S2BaAaBR40IQLkFhJ
+	Lg/Y9Ghwb+/xTi3AgYOfFbDQJmLgUul/mjUvUnboI/FBidDtOCZmGCQ27g==
+X-Gm-Gg: ASbGncsm8PuUTO+jtUPMP0QgtMJd3K56ce5tA2JsrJQHq1YPyNMFFCAq6/YScJkiXdy
+	QuhZPU25Va7Ax9qCnJRmC6kOqqbkuCJGfA+gIRh7yVCw7Nvlv9E2cxgbVihBPzj/LwqQ7qD/5YZ
+	sHHYkA+u7I2tnx8XDtYG/IA1wRsFWinzWuD4Z71HDW6ckZEBugodkM8NhJJwCrsMO2WgnFXQhmL
+	IBSxQ6gJjJWt5v6AV0MAzaZJVBJnSUqMhgeBXS3mDkXfWkF/V4NNRkTOLVJ+tSSfB/aDBYPavtq
+	Mx/n3WY3bG7X3cNTlOo=
+X-Google-Smtp-Source: AGHT+IFZ2RiVwsZRFuasmx/shuC9Fbx8yXoXLOhOqYBu/h3MUD+eOdqS5z1t/mIinpFLRUwHbUGZtg==
+X-Received: by 2002:a17:90a:6fc4:b0:2fa:15ab:4dff with SMTP id 98e67ed59e1d1-2fa15ab5041mr566133a91.31.1738837921445;
+        Thu, 06 Feb 2025 02:32:01 -0800 (PST)
+Received: from HOME-PC ([223.185.135.17])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa099f59f0sm1010247a91.5.2025.02.06.02.32.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 02:32:01 -0800 (PST)
+From: Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
+To: michael.hennerich@analog.com
+Cc: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
+Subject: [PATCH drivers-next] regulator: ad5398: Fix incorrect power down bit mask
+Date: Thu,  6 Feb 2025 16:01:53 +0530
+Message-Id: <20250206103153.59114-1-dheeraj.linuxdev@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-02-06 at 11:24 +0100, Michal Swiatkowski wrote:
-> On Thu, Feb 06, 2025 at 10:50:36AM +0100, Johannes Berg wrote:
-> > On Thu, 2025-02-06 at 10:44 +0100, Michal Swiatkowski wrote:
-> > >=20
-> > > >  net/mac80211/debugfs_sta.c         | 5 +++--
-> > >=20
-> > > What about ieee80211_sta_debugfs_add()? (net/mac80211/debugfs_sta.c)
-> >=20
-> > What about it? It's modified accordingly, just needs a bit more +/-1
-> > now.
->=20
-> I meant that it can be done in this patch too.=20
+AD5398_SW_POWER_DOWN was defined with a bit position outside the valid
+range of the device's 16-bit register. The bitwise operation with an
+unsigned short would always evaluate to 0, making the power down check
+ineffective.
 
-Oh, oops, right. I thought it _was_ done here, because I didn't pay
-enough attention to the actual change. Either way is fine to me though.
+Update AD5398_SW_POWER_DOWN to use a valid bit position within the
+16-bit range of the register.
 
-johannes
+Fixes: 19d022d67d73 ("regulator: ad5398: change enable bit name to improve readibility")
+Signed-off-by: Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
+---
+ drivers/regulator/ad5398.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/ad5398.c b/drivers/regulator/ad5398.c
+index 0274f41d0233..eb2a666a45cb 100644
+--- a/drivers/regulator/ad5398.c
++++ b/drivers/regulator/ad5398.c
+@@ -16,7 +16,7 @@
+ #include <linux/regulator/machine.h>
+ #include <linux/regulator/of_regulator.h>
+ 
+-#define AD5398_SW_POWER_DOWN	BIT(16)
++#define AD5398_SW_POWER_DOWN	BIT(15)
+ 
+ struct ad5398_chip_info {
+ 	struct i2c_client *client;
+-- 
+2.34.1
+
