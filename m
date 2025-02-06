@@ -1,46 +1,46 @@
 Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1410D1AB6C8
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:52:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FDBA1B4133
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 17:52:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738864367; cv=none; b=S01EsZ7NKG/SdoLKI1Xsh2x4478oa6na4QxmwK26pidxzRuPGV8BjRAVGuDKEm95EW0Ibx1ftrb0UVEFkAXfUjBTFLyFALptGxM3fSMxtdUdR6LwkepibX31k+FXvBPjdyKlesRK3idxWFRT/QRBjdE7/orWpXnM5zka1xN/s+Y=
+	t=1738864369; cv=none; b=BzQMLB0JagJEIwBTEpvSAxCGCdZdSCy5iBMYD+cuBhJPGeEyZas2kOtKr/Sz+6bmcHk+i40NJ9TjaV7QRpJru8HUI70x44oZeF0Yq5f3sbHCfLqImyJSuGh+g1bjMU8FMMwEcgd0zyz98StjmqlE3aEXLw/gLdpmZI4Dqb945yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738864367; c=relaxed/simple;
-	bh=aniC6S3kqyQiMLO/4qxM/4Xy6Y8l0wrKcHxfKiNkAc8=;
+	s=arc-20240116; t=1738864369; c=relaxed/simple;
+	bh=2IUUDDhDZUFWvFP75651zvq5cZZKyQeslhVofDf/ZVU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HVMc6BZLXgS9DDZSIKQT5HAhuOVVe6h+oyYA9O4pBfmzX+XMzA76kBXj8AFboImNXvnHWZAzfNK6I8JFoIvxDRq4BXDCwCTZDeajgsvDdjnnyMJDz3snVEv4W+7W6I+XS+bVLWSw65PFjN13o1MqVTxRvJ11Ze2uB4y2eDQCV0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=5GWs9nsd; arc=none smtp.client-ip=199.89.1.12
+	 MIME-Version; b=daTPaXWOI6Zvm5AXJiCfIN9J9mMS0f48Jc2yWJOn7RWAoHFxPNkLPocqS9sDv6vKFQA1pg0oGqjbdfJJa3CybvM8QmKcsbFTE74iey8ertlqpqWtp5aqZwaBl2lGkrwUYwMgSU4DubI/n7JHVKBzvQLlALUJqvTeqn/4Zm8HvLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=fJY3kcjO; arc=none smtp.client-ip=199.89.1.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="5GWs9nsd"
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="fJY3kcjO"
 Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Ypl7K49gRzlgTvC;
-	Thu,  6 Feb 2025 17:52:45 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Ypl7N09hnzlgTvG;
+	Thu,  6 Feb 2025 17:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
 	content-transfer-encoding:mime-version:references:in-reply-to
 	:x-mailer:message-id:date:date:subject:subject:from:from
-	:received:received; s=mr01; t=1738864360; x=1741456361; bh=w/2wf
-	TFoZ/813Z1AKjjXK5RmQ73/6PAnXWrTN9IGy/U=; b=5GWs9nsd33ZbCBH66Wwwm
-	+nkTXfXtnfGXUyNqQQMmWUyusXKlHqGtoBfNtDUsyoWGRCBzKzRYgwuLSlhImZtA
-	XWAK/BiMUE/S3TRX5LQx6ce34JelFacWGayopa3M295EgFggKdDEvADAxuVtq4Gz
-	w9CwU/Fg/Yp9O3wHIo54EBrvFzy6PHKbpTYrzxrz64sG20uQLCW6VTj1vogEkkY8
-	de13MQt/uCqbd0FsRPE5vVZc04aiMiOPs2CsKXDTpWLNlZizsfPkE52ofLe6+PdE
-	PYvO9cpKa84qe8WiH2fz2AsoYWlAB5Pu3Y1tYt9GS/Bviff0Ml0RlIyI83HIjwaO
-	g==
+	:received:received; s=mr01; t=1738864363; x=1741456364; bh=UY8Z0
+	nvlOd8POJXSF+AjfI7CRiaEU3djgwJ/yxyCzPA=; b=fJY3kcjOb7WR8xLswF1G3
+	pdIEfSlMTZOHrvCjZMhKINJvqYVDzBUh+WhilRQRBMOdt8G14mEKay4iPrlOyqO3
+	JQcK2UNzd3/0S9X0loAR7Lr4pXHS4WEQGk83ynYMWaBKOSs6IyT5G45l90JryeV+
+	FxU1j2lXtvHEGcHgBmGX97Iap6S4p88ivT0ttHRHTeKNxiSUFSfGzDJF0RKFkujw
+	JBTsohTHPBvp4V/CVg2DP2HtVfAEf8WUmpAzyJ0faPJpXMsUCY89TISzmJOKvOqz
+	/pg72V16enPNPuR9hFiOFyDlchYrknEBLlvB/HCTx3BtmyX6EzjvTBySQ0gRgVz+
+	A==
 X-Virus-Scanned: by MailRoute
 Received: from 009.lax.mailroute.net ([127.0.0.1])
  by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id IZI_2A-uRSuy; Thu,  6 Feb 2025 17:52:40 +0000 (UTC)
+ id phWl0qrDzq5X; Thu,  6 Feb 2025 17:52:43 +0000 (UTC)
 Received: from bvanassche.mtv.corp.google.com (unknown [104.135.204.82])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Ypl795zt8zlgTxg;
-	Thu,  6 Feb 2025 17:52:37 +0000 (UTC)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Ypl7D4l7WzlgTxr;
+	Thu,  6 Feb 2025 17:52:40 +0000 (UTC)
 From: Bart Van Assche <bvanassche@acm.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Will Deacon <will@kernel.org>,
@@ -53,11 +53,11 @@ Cc: Will Deacon <will@kernel.org>,
 	Jann Horn <jannh@google.com>,
 	linux-kernel@vger.kernel.org,
 	Bart Van Assche <bvanassche@acm.org>,
-	Charles Han <hanchunchao@inspur.com>,
-	Felix Fietkau <nbd@nbd.name>
-Subject: [PATCH RFC 28/33] wifi: mt76: mt7925: Fix a locking bug in an error path
-Date: Thu,  6 Feb 2025 09:51:09 -0800
-Message-ID: <20250206175114.1974171-29-bvanassche@acm.org>
+	Frank Crawford <frank@crawford.emu.id.au>,
+	Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH RFC 29/33] hwmon: (it87) Check the it87_lock() return value
+Date: Thu,  6 Feb 2025 09:51:10 -0800
+Message-ID: <20250206175114.1974171-30-bvanassche@acm.org>
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
 In-Reply-To: <20250206175114.1974171-1-bvanassche@acm.org>
 References: <20250206175114.1974171-1-bvanassche@acm.org>
@@ -69,35 +69,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Call mt792x_mutex_release() before returning.
+Return early in it87_resume() if it87_lock() fails instead of ignoring th=
+e
+return value of that function. This patch suppresses a Clang thread-safet=
+y
+warning.
 
-This bug has been detected by the Clang thread-safety checker.
-
-Cc: Charles Han <hanchunchao@inspur.com>
-Cc: Felix Fietkau <nbd@nbd.name>
-Fixes: 5cd0bd815c8a ("wifi: mt76: mt7925: fix NULL deref check in mt7925_=
-change_vif_links")
+Cc: Frank Crawford <frank@crawford.emu.id.au>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Fixes: 376e1a937b30 ("hwmon: (it87) Add calls to smbus_enable/smbus_disab=
+le as required")
 Signed-off-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7925/main.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/hwmon/it87.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7925/main.c b/drivers/n=
-et/wireless/mediatek/mt76/mt7925/main.c
-index 98daf80ac131..40e898f24628 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7925/main.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7925/main.c
-@@ -1992,8 +1992,10 @@ mt7925_change_vif_links(struct ieee80211_hw *hw, s=
-truct ieee80211_vif *vif,
- 					     GFP_KERNEL);
- 			mlink =3D devm_kzalloc(dev->mt76.dev, sizeof(*mlink),
- 					     GFP_KERNEL);
--			if (!mconf || !mlink)
--				return -ENOMEM;
-+			if (!mconf || !mlink) {
-+				err =3D -ENOMEM;
-+				goto free;
-+			}
- 		}
+diff --git a/drivers/hwmon/it87.c b/drivers/hwmon/it87.c
+index e233aafa8856..8e3935089fca 100644
+--- a/drivers/hwmon/it87.c
++++ b/drivers/hwmon/it87.c
+@@ -3593,7 +3593,9 @@ static int it87_resume(struct device *dev)
 =20
- 		mconfs[link_id] =3D mconf;
+ 	it87_resume_sio(pdev);
+=20
+-	it87_lock(data);
++	int err =3D it87_lock(data);
++	if (err)
++		return err;
+=20
+ 	it87_check_pwm(dev);
+ 	it87_check_limit_regs(data);
