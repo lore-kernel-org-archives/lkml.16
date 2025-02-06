@@ -1,309 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8785154C05;
-	Fri,  7 Feb 2025 00:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35AB19995D
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 00:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738886405; cv=none; b=bGlbsdQZYZ/e11GftKH4wO60ZDGaadzapOv1M9siVc7quIZw/kw4wRcLuhKOyop4r4FHv/+B0P3ncFFNqzHUjwLW8hN0Dg8FYgrqfZI8JFynwaKM3S8dJmShNkmPraIIRvrnfdefdOxELh0luBEho6moRRH4eT5yZWzRL2ggrzI=
+	t=1738886408; cv=none; b=R2RHPXDUTx3UWUYUXQWdXTyIN81U6w3Uq521WMRj29VCBm8s0+rHnS7y8rYo9SgIjBn4QdnqmN3yrIr2I6EpzcZoFbVLnB4QUXVo9nCqaU8yNrI2/ot8l/kVVFrkDex2KhXJn+PC5FslNJQw8vYLb+pjXYaPchahuFDlRcDUfXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738886405; c=relaxed/simple;
-	bh=vMRk5eYT1y1j5Eoi9kn/BArzU2FKpJtaHLaZmkaLB14=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=RjN8D9snV8DlWpRdA6wP8aoWRDs9q43UYQe822LyGF+RY2jlq7BlG2RYfexYVACCkOsoLAGVUeLW7/RZyL+7/EYW2KAUQYfMuCZ/hpJYFJaMQXIqsvgunB8csDMD6hArly0qtHP064lgaEvsowE50HOp0MwXyHlbRtad0lB5kfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ucLXRBWK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738886408; c=relaxed/simple;
+	bh=chUCDcEzEInCWiQXbeEg0w+EOP4qjigrh2i2js7DTAQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fVEfWc4U+Rywx64aX9wl8+EwdFrTl4cHtXsIsM9dC84jPFcACBFN/cPzarhDHtSum2AmjM98V+Y1UwDMcpNaNpoUFrWyeH8yfn7lybXoRpK+BaSpkEeUmIChcD2eR7m4FyyhVCcaDM361ocBFHf9erW41DWoWTdD0Cex5kULvSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XTNwQWVB; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ucLXRBWK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83A62C4CEDD;
-	Fri,  7 Feb 2025 00:00:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738886404;
-	bh=vMRk5eYT1y1j5Eoi9kn/BArzU2FKpJtaHLaZmkaLB14=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ucLXRBWK+0oBTvB+oa5GNOdHVgVswHqbAtNJ1nOxVTEwmmglOeBRZ2iH+3KAOI+Ri
-	 q2GYr4YMaMt+lb1zeB06BXIKfLQH2zRtva+Pjf6IlvHZmVQ1iECKt+SpdyqsiA02Nw
-	 o2XprQkTCnkvGxZcnKnLlyjszR0CJpuOqi9TzhAKQJnZ2qx4PHn7ATlPX+CFDJD6hC
-	 OFYuyrt6clfATDRzg/BN1tL0mGmLjR9GHjgzjlBhoZ6wepBD/TXmz5t+imGtMhOFTS
-	 JYkIY3kuZvPVfltt7j5Ywuby6MpxWQvO6tR4nKj1HF1zKYMZmz97qjuoWuN9lvGVCr
-	 HZZVoJZNQo33Q==
-Date: Fri, 7 Feb 2025 08:59:59 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Gabriel de Perthuis
- <g2p.code@gmail.com>, Haiyue Wang <haiyuewa@163.com>, Sami Tolvanen
- <samitolvanen@google.com>, Mark Rutland <mark.rutland@arm.com>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
- get_kernel_nofault()
-Message-Id: <20250207085959.b3e9d922eab33edf885368e3@kernel.org>
-In-Reply-To: <20250206123307.GO7145@noisy.programming.kicks-ass.net>
-References: <173881156244.211648.1242168038709680511.stgit@devnote2>
-	<20250206081225.GI7145@noisy.programming.kicks-ass.net>
-	<20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
-	<20250206121328.GN7145@noisy.programming.kicks-ass.net>
-	<20250206123307.GO7145@noisy.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XTNwQWVB"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-467abce2ef9so96631cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 16:00:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738886405; x=1739491205; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3s2OEGfvS1PfxV3TnGZWGqOwe5jfP7CRQxSK+W5cvuM=;
+        b=XTNwQWVBYUTafna7IK7vDgJ7sgqIUgmnv8UgChjfzV07d4Gj4O5K91hfcV5UbutmwA
+         RS2AB7Gwn1se/0t6Lu+gtkMMOBXyS5oBqDWrV784h1Gi/rOb1RhS9KatQ3erhQANV5/6
+         rk/aQPJKENB0l/Nonsgt4drDYzgoDdqhNxVaeMbL0XIUVTkHkPkKdu3Gfhs7JSle1HzS
+         xZG4Koom9UOt6M7EVtghyuxZY4+HlYe6uqd6hKdzO3/OdJA4ic2gXsjtIIrWz4tefjC8
+         zqaztqAWcsIAvU2kVBXh6vuGkSS8j3P9UZ6xlBZEufZ2Xbf3qwvfKJN1JryhtGjLy4LE
+         zA6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738886405; x=1739491205;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3s2OEGfvS1PfxV3TnGZWGqOwe5jfP7CRQxSK+W5cvuM=;
+        b=tbC7BMORdVoBV0yg8nXmtT84vy0zPePrO1YSU/UEZFvppzdu7giGwu1c0i2A1hGUrI
+         YQ468n4/ygRT2JZRw11+g3vHl5zfPoHms1tKU7UzG7u1aPP5cw3x+r3Moz8RkkVZi8mt
+         me+0mQHPjaS4wY75TnTUF56apGqRpZwHu0PkEI2dNApqd6969TzZDHDh2YuxB+p3x/4z
+         45YSvaUJdfVNDNjyWD8KZbROvC3R3y0WUqWBUpNmJi3e2X4Zyk2I+OQrz1BpMWC4D4A1
+         WRRzgikbPjigjVds2vb5Kd/f6gJMPyHrIQ4kc3boGcYE8CQ1nqSbMQl1z8BI8/cZIo6r
+         B/cQ==
+X-Forwarded-Encrypted: i=1; AJvYcCViFuVNcmyW4pdvu9NPt4fGyP9bRgJwsqA9+RzrWQFRrJfllfdBtR73IOuNObLCsPTSoKzeXdJcpGPEr64=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoQHNFqiPjUudSyllLo5jUTQgTUcw0PVA/RYmkx71jtL5nplJ+
+	2KMg2oiNJ5YDeJEOvOcDe51PWWuqZHVm265o5V8Lt1pqo72cJLA0fOl1t6S/dFQAwyC6WLSrf6i
+	pO3QhyeQQaGW+ANQgc1nY2nCeSSpozk0r7g6F
+X-Gm-Gg: ASbGnctq1KeoS5jGA4kanZIRRzQuSLwANm3JuGCAzz2KE98bD/2QYtmtRvsspwjrb52
+	hD5e69Ko2XuOzBf6KyOxD2WMTER7cfzDoRYcA2Z2R5mRLICHwFou+c1dcllCamNPImgrRAh9Q1l
+	SvmbocVX25o4z4wknUzYsfRHkyqQ==
+X-Google-Smtp-Source: AGHT+IHsY1ag2sOIK3JK02gum2DZEW5zecE4KoEUXFFjDCnoCQZYFjF6l1ExbdpVfmOOkIc1JXq8L8KU1rbrQRi3s3o=
+X-Received: by 2002:a05:622a:1b8e:b0:466:861a:f633 with SMTP id
+ d75a77b69052e-47169c018f0mr532361cf.5.1738886405231; Thu, 06 Feb 2025
+ 16:00:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250206213532.it.087-kees@kernel.org> <20250206214014.3567372-3-kees@kernel.org>
+In-Reply-To: <20250206214014.3567372-3-kees@kernel.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 6 Feb 2025 15:59:53 -0800
+X-Gm-Features: AWEUYZl-0BsWMPB7YR915iCrl5G_SmVkXfJHEMoYyMVyZZI3P_9T9W0LUcexzms
+Message-ID: <CAJuCfpEDdtC-NmYu1-RNC8R=Spuc1iQoqy44O8ML92fztF=1bw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] string.h: Use ARRAY_SIZE() for memtostr*()/strtomem*()
+To: Kees Cook <kees@kernel.org>
+Cc: kernel test robot <lkp@intel.com>, Kent Overstreet <kent.overstreet@linux.dev>, nathan@kernel.org, 
+	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
+	Miguel Ojeda <ojeda@kernel.org>, Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Philipp Reisner <philipp.reisner@linbit.com>, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 6 Feb 2025 13:33:07 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu, Feb 6, 2025 at 1:40=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
+>
+> The destination argument of memtostr*() and strtomem*() must be a
+> fixed-size char array at compile time, so there is no need to use
+> __builtin_object_size() (which is useful for when an argument is
+> either a pointer or unknown). Instead use ARRAY_SIZE(), which has the
+> benefit of working around a bug in Clang (fixed[1] in 15+) that got
+> __builtin_object_size() wrong sometimes.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202501310832.kiAeOt2z-lkp@i=
+ntel.com/
+> Suggested-by: Kent Overstreet <kent.overstreet@linux.dev>
+> Link: https://github.com/llvm/llvm-project/commit/d8e0a6d5e9dd2311641f9a8=
+a5d2bf90829951ddc [1]
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-> On Thu, Feb 06, 2025 at 01:13:28PM +0100, Peter Zijlstra wrote:
-> 
-> > No, it just cleans up this utter trainwreck. I also noticed this is a
-> > second (new) copy of this garbage. Clearly I didn't yell loud enough
-> > last time and people didn't think to vomit when doing the copy/paste :/
-> > 
-> > Function will look something like:
-> > 
-> > unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
-> > {
-> > 	if (is_endbr(fentry_ip - ENDBR_INSN_SIZE))
-> > 		fentry_op -= ENDBR_INSN_SIZE;
-> > 	return fentry_ip;
-> > }
-> > 
-> > Let me finish local build test before I push out.
-> 
-> Bah, still waiting for a LLVM build, but patch should be here:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/ibt
-> 
-> I was supposed to merge this last cycle, but then akpm shat all over
-> arch/x86/kernel/alternative.c and we had to clean that up :/
-> 
-> Notably, this patch, not sure it applies out of order.
-> 
+Tested-by: Suren Baghdasaryan <surenb@google.com>
 
-Ah, this looks good to me except for the removing redundant asm/ibt.h
-which Haiyue pointed.
+Thanks Kees!
+CC'ing Andrew Morton since mm-unstable contains my workaround patch
+[1] for the issue fixed by this patchset. I'm not sure which tree will
+be taking these fixes but once they are in we should drop [1]. Or
+maybe we just drop it now from mm-unstable? Seems like only testbot
+was the only one who complained...
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
+[1] 0e91345e75b2 ("alloc_tag: work around clang-14 build issue with
+__builtin_object_size()")
 
 > ---
-> 
-> Subject: x86/ibt: Clean up is_endbr()
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Mon Nov 27 09:58:06 CET 2023
-> 
-> Pretty much every caller of is_endbr() actually wants to test something at an
-> address and ends up doing get_kernel_nofault(). Fold the lot into a more
-> convenient helper.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Acked-by: Alexei Starovoitov <ast@kernel.org>
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: nathan@kernel.org
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Cc: linux-hardening@vger.kernel.org
 > ---
->  arch/x86/events/core.c         |    2 +-
->  arch/x86/include/asm/ftrace.h  |   17 +++--------------
->  arch/x86/include/asm/ibt.h     |    5 +++--
->  arch/x86/kernel/alternative.c  |   20 ++++++++++++++------
->  arch/x86/kernel/kprobes/core.c |   11 +----------
->  arch/x86/net/bpf_jit_comp.c    |    4 ++--
->  kernel/trace/bpf_trace.c       |   20 +++-----------------
->  7 files changed, 27 insertions(+), 52 deletions(-)
-> 
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -2857,7 +2857,7 @@ static bool is_uprobe_at_func_entry(stru
->  		return true;
->  
->  	/* endbr64 (64-bit only) */
-> -	if (user_64bit_mode(regs) && is_endbr(*(u32 *)auprobe->insn))
-> +	if (user_64bit_mode(regs) && is_endbr((u32 *)auprobe->insn))
->  		return true;
->  
->  	return false;
-> --- a/arch/x86/include/asm/ftrace.h
-> +++ b/arch/x86/include/asm/ftrace.h
-> @@ -2,6 +2,7 @@
->  #ifndef _ASM_X86_FTRACE_H
->  #define _ASM_X86_FTRACE_H
->  
-> +#include "asm/ibt.h"
->  #include <asm/ptrace.h>
->  
->  #ifdef CONFIG_FUNCTION_TRACER
-> @@ -36,21 +37,9 @@ static inline unsigned long ftrace_call_
->  
->  static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
->  {
-> -#ifdef CONFIG_X86_KERNEL_IBT
-> -	u32 instr;
-> +	if (is_endbr((void*)(fentry_ip - ENDBR_INSN_SIZE)))
-> +		fentry_ip -= ENDBENDBR_INSN_SIZE;
->  
-> -	/* We want to be extra safe in case entry ip is on the page edge,
-> -	 * but otherwise we need to avoid get_kernel_nofault()'s overhead.
-> -	 */
-> -	if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
-> -		if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_INSN_SIZE)))
-> -			return fentry_ip;
-> -	} else {
-> -		instr = *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
-> -	}
-> -	if (is_endbr(instr))
-> -		fentry_ip -= ENDBR_INSN_SIZE;
-> -#endif
->  	return fentry_ip;
->  }
->  #define ftrace_get_symaddr(fentry_ip)	arch_ftrace_get_symaddr(fentry_ip)
-> --- a/arch/x86/include/asm/ibt.h
-> +++ b/arch/x86/include/asm/ibt.h
-> @@ -65,7 +65,7 @@ static __always_inline __attribute_const
->  	return 0x001f0f66; /* osp nopl (%rax) */
->  }
->  
-> -static inline bool is_endbr(u32 val)
-> +static inline bool __is_endbr(u32 val)
->  {
->  	if (val == gen_endbr_poison())
->  		return true;
-> @@ -74,6 +74,7 @@ static inline bool is_endbr(u32 val)
->  	return val == gen_endbr();
->  }
->  
-> +extern __noendbr bool is_endbr(u32 *val);
->  extern __noendbr u64 ibt_save(bool disable);
->  extern __noendbr void ibt_restore(u64 save);
->  
-> @@ -98,7 +99,7 @@ extern __noendbr void ibt_restore(u64 sa
->  
->  #define __noendbr
->  
-> -static inline bool is_endbr(u32 val) { return false; }
-> +static inline bool is_endbr(u32 *val) { return false; }
->  
->  static inline u64 ibt_save(bool disable) { return 0; }
->  static inline void ibt_restore(u64 save) { }
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -852,16 +852,24 @@ void __init_or_module noinline apply_ret
->  
->  #ifdef CONFIG_X86_KERNEL_IBT
->  
-> +__noendbr bool is_endbr(u32 *val)
-> +{
-> +	u32 endbr;
-> +
-> +	__get_kernel_nofault(&endbr, val, u32, Efault);
-> +	return __is_endbr(endbr);
-> +
-> +Efault:
-> +	return false;
-> +}
-> +
->  static void poison_cfi(void *addr);
->  
->  static void __init_or_module poison_endbr(void *addr, bool warn)
->  {
-> -	u32 endbr, poison = gen_endbr_poison();
-> -
-> -	if (WARN_ON_ONCE(get_kernel_nofault(endbr, addr)))
-> -		return;
-> +	u32 poison = gen_endbr_poison();
->  
-> -	if (!is_endbr(endbr)) {
-> +	if (!is_endbr(addr)) {
->  		WARN_ON_ONCE(warn);
->  		return;
->  	}
-> @@ -984,7 +992,7 @@ static u32  cfi_seed __ro_after_init;
->  static u32 cfi_rehash(u32 hash)
->  {
->  	hash ^= cfi_seed;
-> -	while (unlikely(is_endbr(hash) || is_endbr(-hash))) {
-> +	while (unlikely(__is_endbr(hash) || __is_endbr(-hash))) {
->  		bool lsb = hash & 1;
->  		hash >>= 1;
->  		if (lsb)
-> --- a/arch/x86/kernel/kprobes/core.c
-> +++ b/arch/x86/kernel/kprobes/core.c
-> @@ -373,16 +373,7 @@ static bool can_probe(unsigned long padd
->  kprobe_opcode_t *arch_adjust_kprobe_addr(unsigned long addr, unsigned long offset,
->  					 bool *on_func_entry)
->  {
-> -	u32 insn;
-> -
-> -	/*
-> -	 * Since 'addr' is not guaranteed to be safe to access, use
-> -	 * copy_from_kernel_nofault() to read the instruction:
-> -	 */
-> -	if (copy_from_kernel_nofault(&insn, (void *)addr, sizeof(u32)))
-> -		return NULL;
-> -
-> -	if (is_endbr(insn)) {
-> +	if (is_endbr((u32 *)addr)) {
->  		*on_func_entry = !offset || offset == 4;
->  		if (*on_func_entry)
->  			offset = 4;
-> --- a/arch/x86/net/bpf_jit_comp.c
-> +++ b/arch/x86/net/bpf_jit_comp.c
-> @@ -641,7 +641,7 @@ int bpf_arch_text_poke(void *ip, enum bp
->  	 * See emit_prologue(), for IBT builds the trampoline hook is preceded
->  	 * with an ENDBR instruction.
->  	 */
-> -	if (is_endbr(*(u32 *)ip))
-> +	if (is_endbr(ip))
->  		ip += ENDBR_INSN_SIZE;
->  
->  	return __bpf_arch_text_poke(ip, t, old_addr, new_addr);
-> @@ -3036,7 +3036,7 @@ static int __arch_prepare_bpf_trampoline
->  		/* skip patched call instruction and point orig_call to actual
->  		 * body of the kernel function.
->  		 */
-> -		if (is_endbr(*(u32 *)orig_call))
-> +		if (is_endbr(orig_call))
->  			orig_call += ENDBR_INSN_SIZE;
->  		orig_call += X86_PATCH_SIZE;
->  	}
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1038,27 +1038,13 @@ static const struct bpf_func_proto bpf_g
->  	.arg1_type	= ARG_PTR_TO_CTX,
->  };
->  
-> -#ifdef CONFIG_X86_KERNEL_IBT
-> -static unsigned long get_entry_ip(unsigned long fentry_ip)
-> +static inline unsigned long get_entry_ip(unsigned long fentry_ip)
->  {
-> -	u32 instr;
-> -
-> -	/* We want to be extra safe in case entry ip is on the page edge,
-> -	 * but otherwise we need to avoid get_kernel_nofault()'s overhead.
-> -	 */
-> -	if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
-> -		if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_INSN_SIZE)))
-> -			return fentry_ip;
-> -	} else {
-> -		instr = *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
-> -	}
-> -	if (is_endbr(instr))
-> +	if (is_endbr((void *)(fentry_ip - ENDBR_INSN_SIZE)))
->  		fentry_ip -= ENDBR_INSN_SIZE;
-> +
->  	return fentry_ip;
->  }
-> -#else
-> -#define get_entry_ip(fentry_ip) fentry_ip
-> -#endif
->  
->  BPF_CALL_1(bpf_get_func_ip_kprobe, struct pt_regs *, regs)
->  {
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>  include/linux/string.h | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 493ac4862c77..fc5ae145bd78 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -411,7 +411,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, cons=
+t void *src, size_t count,
+>   * must be discoverable by the compiler.
+>   */
+>  #define strtomem_pad(dest, src, pad)   do {                            \
+> -       const size_t _dest_len =3D __builtin_object_size(dest, 1);       =
+ \
+> +       const size_t _dest_len =3D __must_be_byte_array(dest) +          =
+ \
+> +                                ARRAY_SIZE(dest);                      \
+>         const size_t _src_len =3D __builtin_object_size(src, 1);         =
+ \
+>                                                                         \
+>         BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||                \
+> @@ -434,7 +435,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, cons=
+t void *src, size_t count,
+>   * must be discoverable by the compiler.
+>   */
+>  #define strtomem(dest, src)    do {                                    \
+> -       const size_t _dest_len =3D __builtin_object_size(dest, 1);       =
+ \
+> +       const size_t _dest_len =3D __must_be_byte_array(dest) +          =
+ \
+> +                                ARRAY_SIZE(dest);                      \
+>         const size_t _src_len =3D __builtin_object_size(src, 1);         =
+ \
+>                                                                         \
+>         BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||                \
+> @@ -453,7 +455,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, cons=
+t void *src, size_t count,
+>   * Note that sizes of @dest and @src must be known at compile-time.
+>   */
+>  #define memtostr(dest, src)    do {                                    \
+> -       const size_t _dest_len =3D __builtin_object_size(dest, 1);       =
+ \
+> +       const size_t _dest_len =3D __must_be_byte_array(dest) +          =
+ \
+> +                                ARRAY_SIZE(dest);                      \
+>         const size_t _src_len =3D __builtin_object_size(src, 1);         =
+ \
+>         const size_t _src_chars =3D strnlen(src, _src_len);              =
+ \
+>         const size_t _copy_len =3D min(_dest_len - 1, _src_chars);       =
+ \
+> @@ -478,7 +481,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, cons=
+t void *src, size_t count,
+>   * Note that sizes of @dest and @src must be known at compile-time.
+>   */
+>  #define memtostr_pad(dest, src)                do {                     =
+       \
+> -       const size_t _dest_len =3D __builtin_object_size(dest, 1);       =
+ \
+> +       const size_t _dest_len =3D __must_be_byte_array(dest) +          =
+ \
+> +                                ARRAY_SIZE(dest);                      \
+>         const size_t _src_len =3D __builtin_object_size(src, 1);         =
+ \
+>         const size_t _src_chars =3D strnlen(src, _src_len);              =
+ \
+>         const size_t _copy_len =3D min(_dest_len - 1, _src_chars);       =
+ \
+> --
+> 2.34.1
+>
