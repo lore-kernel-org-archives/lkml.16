@@ -1,136 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51A2236420;
-	Thu,  6 Feb 2025 14:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95294EB51
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 14:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738852656; cv=none; b=UBpHVIgzwjIf6mCMr0f8BxV138f+FrFija4pngoo9KTwSAj7jUmzm75cDv9KnKDDMcgL2zPSggLsctd3GwTZEk9Raw0BShkxU5eax1Torn4JFcZuvXyiQKhrkqL5grlevnQZ8MovfFEMkVVrtLpIX4dCBaPFWvgAy75BEVnYNCo=
+	t=1738852703; cv=none; b=mLFqoUUmOSLFqPjaWn9Zuw2nF++MMgyDjYOSE4lyUjyYZXkq+IWMiXC55tAZ//KsH2UgHAfjzpigAJmF3QmHB32kulnY86odGjFLgb3bdx8X9Cp0bZXpFHEvDaBdpTTbcfoiLWLkCFW6NPlEjG34iDv0oe1aKAXK3CJdPnCSazM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738852656; c=relaxed/simple;
-	bh=4uK47KEygQEWwVGcoVZkeuoHQF2iiSJDgicszxMhLUE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k5ai2n9+m4KEaF7gcAeppKY/eLApeYT1/q0HLCZXxVzrdOGK7eVZQ1nJ/HckES6/dvcQg2lW1Q7ZhLk/yKiDO0snUIdWgJyHmIzFP3fcNAUOfxkytRdYPbvIDTeh1HeEVbqc5m+nBOfyraRL9v2C9qyNIYIlowP86E73kgrsM2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cYNHlu9L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738852703; c=relaxed/simple;
+	bh=wQw2TdeuTizcqF3Q9lrwzFprE3cAuiPJ1x44hiY1wKc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dmjS3bJ/XkdaJPvV5pYFoEo00tZGx/o00Ht0SCTE2lbQLZmI1oY/myfa8YWSqHgn3RQJOTesyUvLrZF3ksDLRm5Vo0RegeV9P6gVesbTnA8W56wAPVH/8KvSsM1e2aCBAO5vu3lsIj3PeIdQRWalWIr0h5LpZ7xJ34vf1iNH0LY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=yxb82rKu; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cYNHlu9L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B04C4CEE2;
-	Thu,  6 Feb 2025 14:37:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738852656;
-	bh=4uK47KEygQEWwVGcoVZkeuoHQF2iiSJDgicszxMhLUE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=cYNHlu9Li16/cYWcECllsDQkMwp2U97D6xVnP/8nzhJTAEsXMTsiQhC8pZHLAlABY
-	 85hGt0RWff2gJotCXsWO7d/ARUxGF0Tqi5VR23W32Sk8T35fkMVPm/8jzd1UDEsAwx
-	 pAscphsIJ5bXztzp2HNNbRETz4RhQyk19LSMCBS+1NTWdEDSMxnGYWW3Cctop2174I
-	 ccl3VsNOYeaX0fLZYanmqkSCu+04H/849FA+VdSFwPIgjhVL4HV9P1xaEADmeDop5Y
-	 lo0UeTw39pECPnMd4E4zWwm0lPAY70PoSNXlk9BRwvXI3blMOCKG6yR68Nss0spp+K
-	 rBYa2KMX7O8gQ==
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3f37207259bso315023b6e.1;
-        Thu, 06 Feb 2025 06:37:36 -0800 (PST)
-X-Gm-Message-State: AOJu0YzkbOKoE6Xhl/iYMKpBwYXBjHxs+8AUoWr+ldmTRxsaSbi8ALEv
-	5ubkNORlB+Z7qUr0QHxSjvhQVZcwrC1ufa/fSJ/7f3OO12t1TV6y715/huq48m83PRTR8sDbqbk
-	MTR0vnfVsR5kb0VMT2QGR5cfIwPU=
-X-Google-Smtp-Source: AGHT+IFqvm0IT213/DuLt1yySZz9h6W/+Lgpa3XAdb39n5pbDxYtVyQhvT9JQ/FRsPvebCcRG1HvpSiXFmcHbSZVRKI=
-X-Received: by 2002:a05:6808:1706:b0:3ea:4e7c:a91a with SMTP id
- 5614622812f47-3f37c1da666mr5218854b6e.34.1738852655622; Thu, 06 Feb 2025
- 06:37:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="yxb82rKu"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5dcebd8604bso1318524a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 06:38:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1738852700; x=1739457500; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PGl8f7Yf7qIHwGS9qrFDj3Wy7/eEHYp4eEWPnG5nI64=;
+        b=yxb82rKu7CGO8G07j/nAb1pq0YotoiKsSjDIi2m6WtE2gsVSmYeofNivkzv/ed/QyN
+         6u0KAfju5eoAdlVjIAxZ2H4NBfVy4ZoOn1r8+ufYb12uRJY8ZER7DB2tfI33M5934ULa
+         w5sWx5OQC/QRdHQMVxbssiGkuZR/916UrR03G9M4Diz5oG/H6qdoIxKifH74XzyWl31B
+         P8fPQOgV1y9unbfi3N5pV9lTUynGDSofFaC2XAfZyg1zLbb7XjN5pDA8BuN5UZNV9WV2
+         1c5JhseQIEaPvM0ES7qm07gT+SvcOYbcXRQfNZSkowtyXOOL9O+sklVTQbbnpUg5/L1C
+         wBCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738852700; x=1739457500;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PGl8f7Yf7qIHwGS9qrFDj3Wy7/eEHYp4eEWPnG5nI64=;
+        b=M3PGfGHMQpUPQmviQF7sHg5we78v6+F4LImB25bOYAJ3/tXVLdRnGWmcDKI1tR6HW0
+         7BWYCeOKo4ZTzKK5P3U4jEhRK3R6ueOOxo6rkCcmRnCZHMMwsFg/us5sZ7FiS8x/Z540
+         +CL14S5IAMxLeLmIGtOzwgfsVz0jS0cv9g9CrapbIK6R93kLOKhIx6FMccMtZgyP7P00
+         seUsC+/u+yRlUUVJNPSpvUArZM06YRrkR2zuqlWL3sLenc94yi6kOYMBSbxjdJDrsHtj
+         F1gYndKiO6NnDIo5KajMMXrbwhVuAOuP/6u/wqzzcNWRIyhc5VWsYxF/oSXptboMMhIr
+         MXpg==
+X-Forwarded-Encrypted: i=1; AJvYcCWomi8+Qa01Xtb+osR4ym8ksekGnATK+J/txJoOum8vUfQYAKnp+t8p5YI4fZQ/LPspXYiGx24uQm4AbD4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwflZRHEOFKZ84Onby1EO+sCE0gk3Hm2+ZDQijfQB2gR8YgWkG3
+	j9zUOmiNhyGUgxrCMwUYKlEGG1wPQQQdwJQnOij6JgBpKR6pgY1xHbReCRVU+ho=
+X-Gm-Gg: ASbGncvjkKFuCbBQ3Mz9Rc8pVJ9Lg3qP73XRS4joxUwzSf/OzC45p3iZx5XI+6xsqUu
+	AZF0xUU/Owbh+NRyVOm7rLwgL2TO1vmLbKH1e3DUNePK8yG8hhseAXkm5+mRNnhb2jA98m6O8PP
+	6xC8ZW+rocHvQYmOEn10Xdl+e55m/dVgn1Me6E3pFX595XJpENg4tkAAp4d+iTRYhp0LhJQFsnl
+	OyvRj8OQtuWRgeUNcUay7aT9Opta2HEse8x7quDYb5rnQ8VsAgjPmhVp28kKWEta0B6SUrvsgNA
+	UMRJPu3ilIF9bhQMburCKFkJT2nqyIIkIPCc/doyV2IMMmk=
+X-Google-Smtp-Source: AGHT+IHtlKzpr7zCul0guNkxORZKS7E5zmeQUNtvu4QsPr2PA2enKb+nYgF0UWob2xBe5euOje74bg==
+X-Received: by 2002:a05:6402:35c8:b0:5dc:89e0:8ea5 with SMTP id 4fb4d7f45d1cf-5dcdb6f9f8cmr18518934a12.3.1738852700066;
+        Thu, 06 Feb 2025 06:38:20 -0800 (PST)
+Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7732e7120sm108661666b.91.2025.02.06.06.38.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 06:38:19 -0800 (PST)
+Message-ID: <568586b4-aeb4-43b8-b645-a2a0517e3fc7@blackwall.org>
+Date: Thu, 6 Feb 2025 16:38:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <12630185.O9o76ZdvQC@rjwysocki.net>
-In-Reply-To: <12630185.O9o76ZdvQC@rjwysocki.net>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 6 Feb 2025 15:37:24 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0hCQ0nm+yy+Fg25kKX-76eZAR9r-855FrPLjiA4ytuufQ@mail.gmail.com>
-X-Gm-Features: AWEUYZkL0yQLslAU0j1j8oFF-2xzqbXOFs-8dR946nFfkTScbiU8mjTRkXUyuW8
-Message-ID: <CAJZ5v0hCQ0nm+yy+Fg25kKX-76eZAR9r-855FrPLjiA4ytuufQ@mail.gmail.com>
-Subject: Re: [RFT][PATCH v1] cpuidle: teo: Avoid selecting deepest idle state over-eagerly
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Christian Loehle <christian.loehle@arm.com>, 
-	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	Aboorva Devarajan <aboorvad@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 net-next 01/14] netfilter: nf_flow_table_offload: Add
+ nf_flow_encap_push() for xmit direct
+To: Eric Woudstra <ericwouds@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Pablo Neira Ayuso <pablo@netfilter.org>,
+ Jozsef Kadlecsik <kadlec@netfilter.org>, Jiri Pirko <jiri@resnulli.us>,
+ Ivan Vecera <ivecera@redhat.com>, Roopa Prabhu <roopa@nvidia.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Kuniyuki Iwashima <kuniyu@amazon.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Joe Damato <jdamato@fastly.com>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Vladimir Oltean <olteanv@gmail.com>,
+ Frank Wunderlich <frank-w@public-files.de>,
+ Daniel Golle <daniel@makrotopia.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+ bridge@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20250204194921.46692-1-ericwouds@gmail.com>
+ <20250204194921.46692-2-ericwouds@gmail.com>
+Content-Language: en-US
+From: Nikolay Aleksandrov <razor@blackwall.org>
+In-Reply-To: <20250204194921.46692-2-ericwouds@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 4, 2025 at 9:58=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.net=
-> wrote:
->
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> It has been observed that the recent teo governor update which concluded
-> with commit 16c8d7586c19 ("cpuidle: teo: Skip sleep length computation
-> for low latency constraints") caused the max-jOPS score of the SPECjbb
-> 2015 benchmark [1] on Intel Granite Rapids to decrease by around 1.4%.
-> While it may be argued that this is not a significant increase, the
-> previous score can be restored by tweaking the inequality used by teo
-> to decide whether or not to preselect the deepest enabled idle state.
-> That change also causes the critical-jOPS score of SPECjbb to increase
-> by around 2%.
->
-> Namely, the likelihood of selecting the deepest enabled idle state in
-> teo on the platform in question has increased after commit 13ed5c4a6d9c
-> ("cpuidle: teo: Skip getting the sleep length if wakeups are very
-> frequent") because some timer wakeups were previously counted as non-
-> timer ones and they were effectively added to the left-hand side of the
-> inequality deciding whether or not to preselect the deepest idle state.
->
-> Many of them are now (accurately) counted as timer wakeups, so the left-
-> hand side of that inequality is now effectively smaller in some cases,
-> especially when timer wakeups often occur in the range below the target
-> residency of the deepest enabled idle state and idle states with target
-> residencies below CPUIDLE_FLAG_POLLING are often selected, but the
-> majority of recent idle intervals are still above that value most of
-> the time.  As a result, the deepest enabled idle state may be selected
-> more often than it used to be selected in some cases.
->
-> To counter that effect, add the sum of the hits metric for all of the
-> idle states below the candidate one (which is the deepest enabled idle
-> state at that point) to the left-hand side of the inequality mentioned
-> above.  This will cause it to be more balanced because, in principle,
-> putting both timer and non-timer wakeups on both sides of it is more
-> consistent than only taking into account the timer wakeups in the range
-> above the target residency of the deepest enabled idle state.
->
-> Link: https://www.spec.org/jbb2015/
-> Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 2/4/25 21:49, Eric Woudstra wrote:
+> Loosely based on wenxu's patches:
+> 
+> "nf_flow_table_offload: offload the vlan/PPPoE encap in the flowtable".
+> 
+> Fixed double vlan and pppoe packets, almost entirely rewriting the patch.
+> 
+> After this patch, it is possible to transmit packets in the fastpath with
+> outgoing encaps, without using vlan- and/or pppoe-devices.
+> 
+> This makes it possible to use more different kinds of network setups.
+> For example, when bridge tagging is used to egress vlan tagged
+> packets using the forward fastpath. Another example is passing 802.1q
+> tagged packets through a bridge using the bridge fastpath.
+> 
+> This also makes the software fastpath process more similar to the
+> hardware offloaded fastpath process, where encaps are also pushed.
+> 
+> After applying this patch, always info->outdev = info->hw_outdev,
+> so the netfilter code can be further cleaned up by removing:
+>  * hw_outdev from struct nft_forward_info
+>  * out.hw_ifindex from struct nf_flow_route
+>  * out.hw_ifidx from struct flow_offload_tuple
+> 
+> Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
 > ---
->  drivers/cpuidle/governors/teo.c |    6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> --- a/drivers/cpuidle/governors/teo.c
-> +++ b/drivers/cpuidle/governors/teo.c
-> @@ -349,13 +349,13 @@
->         }
->
->         /*
-> -        * If the sum of the intercepts metric for all of the idle states
-> -        * shallower than the current candidate one (idx) is greater than=
- the
-> +        * If the sum of the intercepts and hits metric for all of the id=
-le
-> +        * states below the current candidate one (idx) is greater than t=
-he
->          * sum of the intercepts and hits metrics for the candidate state=
- and
->          * all of the deeper states, a shallower idle state is likely to =
-be a
->          * better choice.
->          */
-> -       if (2 * idx_intercept_sum > cpu_data->total - idx_hit_sum) {
-> +       if (2 * (idx_intercept_sum + idx_hit_sum) > cpu_data->total) {
->                 int first_suitable_idx =3D idx;
->
->                 /*
+>  net/netfilter/nf_flow_table_ip.c | 96 +++++++++++++++++++++++++++++++-
+>  net/netfilter/nft_flow_offload.c |  6 +-
+>  2 files changed, 96 insertions(+), 6 deletions(-)
+> 
 
-For easier reference/testing this has been exposed in the git branch at
+Too bad the existing vlan push helpers can't be used. :)
+Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
 
-https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=
-=3Dexperimental/teo-tweak
-
-on top of the cpuidle material that went into 6.14-rc1.
