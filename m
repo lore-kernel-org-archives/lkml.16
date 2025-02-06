@@ -1,39 +1,39 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926E71A072A;
-	Thu,  6 Feb 2025 18:14:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343AD19CCEC;
+	Thu,  6 Feb 2025 18:14:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865693; cv=none; b=kII1E1+EaDcITcLz6vhKESNdCwvET6VLqGBBr8AQvkr4dgooLsuX4zsVxMO3CxU9MddKmQgqiMKOMss9ToGrlb64Nu7TJ0Yl+PxU5JKDVTXZaHXdFj6YnARkEtmcakPawru9JxCkkCzzMcyy6itWGAFS8pLYU0abkwdKR1PRugk=
+	t=1738865699; cv=none; b=p7cCOE09Lj4k3KyScmvHuSgpgQPR5xjx4DGhUAlMkBAvfrU/YD+/xykXi0zkAG4FDkcE3YlfaYksFHEUbmfFl5ppOlZ2MamDApA/1GxMujh0G2SxrQgzixt4MK8SFT8ypz5wm21ZZyfKix34Hm18Cd1QXOsNrQ8fVDvTv59QG8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865693; c=relaxed/simple;
-	bh=pSLJZkiL8tYJHw1SONKZ/yzYYmI7DSbkBpuCA53TGcM=;
+	s=arc-20240116; t=1738865699; c=relaxed/simple;
+	bh=RZaZLKxk1AaubRIkDIEwF+IZOvZ97/bKhy3Vs9L/6WI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=um51QzO60iHqlC9/2P0bSdtOTXUc5S95YM0FTVMaI/89Q5Szi4rrm1c1BbE2UhcNQl2PfRdzc45TTBLcInu+BM1cV48/6+VSUkaqTP1bCYGxzLMAbJ7aOCNbAZHqi3so8w/LDot93CFLFDAlI4+E/ZcaRpo4gJ9GX18Z7gTl2fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KexksfEm; arc=none smtp.client-ip=217.70.183.198
+	 In-Reply-To:To:Cc; b=cleBip80RdFSB0DI78FokBxLQ2KmloKxykxVe5HwXKTE7gk/FBuiA4mMGSpRc7EI1QwlMSUjUyyGqR3CVcifU+UR2v6EoOCtbnK/kojTJVDOwce8q+aAl/rUUFk0sTytgcFUOdv06nQ5nSjkYed7lulJB+xAj/5b2f2std+nWfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Q9jQ0R4K; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KexksfEm"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1C8CF44264;
-	Thu,  6 Feb 2025 18:14:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Q9jQ0R4K"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1128643297;
+	Thu,  6 Feb 2025 18:14:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738865689;
+	t=1738865695;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yP620PYatjyFXh/aDySr+BDD8kR1Bb16xt407+qxPo4=;
-	b=KexksfEmeiTlO2+62+R7roIyq7DiZ7ru87zBYA62jX6Zn9XbWYDS6ieujw1g1oyjev8huh
-	ebXQY+XaBl1UQGziOaE/A/R0zIDExVj1DW3A4Km5EKBDlY54FEhWApjrytd4zRDHwTYJIR
-	YD121I2CHo0LNrV3xaQ0Y5TfZiMZagwsW4b12gcRlBVr/YTUm/hkWYVSjl/uDzej+pPYVp
-	XeJw2zVLCkmNSnsOn+gRryNmBBBwte5aQY7F6sER4PdduowkUJs2S7LNgqDKVlCjhO6fDU
-	9Dwu68kgLVemO2oY7YpnXJj/q4c0bCQ4XF45/y+vDfaGSYwwntUf22nhTwMRKQ==
+	bh=7hEIMHOGsS3+ATVWYr8D/aXMIeb192mdar/am881FQI=;
+	b=Q9jQ0R4KMalETViSW+r0bhr24TWVJb/1mXJe9b8MrFtitkFWCkQlJdBKFEk45jqtb60UFX
+	JAcsGbZ+YyMhxJR6myPefToAm7CJtn+STTAE8Jy4zHHKf/3ERgYKAaAU9nDcAQCuCBB+9N
+	o2WEtgVRE92wzsO8cx2CBBjHLEeB1ustH0WkmAxXETPTeVl67f2H/5iJvfP0vLIzLouxKK
+	Q8do/LvDCnla/UaPo0iFl+JRchKWlDzzKbAdtcBnw+bMhfz5+3fOOCs5NPAr9X82p84CNm
+	yKGGE288BwGuBnNpmTGhgCZ7kQFQP6UWtkb0JcqafPkVldLBV10F4RPiPaA4JA==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Thu, 06 Feb 2025 19:14:20 +0100
-Subject: [PATCH v6 05/26] drm/debugfs: add top-level 'bridges' file showing
- all added bridges
+Date: Thu, 06 Feb 2025 19:14:22 +0100
+Subject: [PATCH v6 07/26] drm/bridge: panel: forbid initializing a panel
+ with unknown connector type
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250206-hotplug-drm-bridge-v6-5-9d6f2c9c3058@bootlin.com>
+Message-Id: <20250206-hotplug-drm-bridge-v6-7-9d6f2c9c3058@bootlin.com>
 References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
 In-Reply-To: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
 To: Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, 
@@ -75,21 +75,21 @@ Cc: Paul Kocialkowski <contact@paulk.fr>,
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedtkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieeiuedvffetgfeuudelheeutefggfejieettdetteekueeuueeukeevvedvueevnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemhegrgedtmedvughfieemrgdulegvmedutgejgeenucevlhhushhtvghrufhiiigvpeegnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemhegrgedtmedvughfieemrgdulegvmedutgejgedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeekpdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmp
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedtkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieeiuedvffetgfeuudelheeutefggfejieettdetteekueeuueeukeevvedvueevnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemhegrgedtmedvughfieemrgdulegvmedutgejgeenucevlhhushhtvghrufhiiigvpeehnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemhegrgedtmedvughfieemrgdulegvmedutgejgedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeekpdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmp
  dhrtghpthhtoheptghlrghuughiuhdrsggviihnvggrsehtuhigohhnrdguvghvpdhrtghpthhtohepmhdrshiihihprhhofihskhhisehsrghmshhunhhgrdgtohhmpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhg
 X-GND-Sasl: luca.ceresoli@bootlin.com
 
-The global bridges_list holding all the bridges between drm_bridge_add()
-and drm_bridge_remove() cannot be inspected via debugfs. Add a file showing
-it.
+Having an DRM_MODE_CONNECTOR_Unknown connector type is consuidered bad, and
+drm_panel_bridge_add_typed() and derivatives are deprecated for this.
 
-To avoid code duplication, move the code printing a bridge info to a common
-function.
+drm_panel_init() won't prevent initializing a panel with a
+DRM_MODE_CONNECTOR_Unknown connector type. Luckily there are no in-tree
+users doing it, so take this as an opportinuty to document a valid
+connector type must be passed.
 
-Note: this change requires exporting bridge_list and the mutex protecting
-it.
-
-Also add a comment about bridge_lock to make checkpatch happy.
+Returning an error if this rule is violated is not possible because
+drm_panel_init() is a void function. Add at least a warning to make any
+violations noticeable, especially to non-upstream drivers.
 
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
@@ -97,166 +97,32 @@ Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
 This patch was added in v6.
 ---
- drivers/gpu/drm/drm_bridge.c   |  5 +--
- drivers/gpu/drm/drm_debugfs.c  | 70 +++++++++++++++++++++++++++++-------------
- drivers/gpu/drm/drm_drv.c      |  1 +
- drivers/gpu/drm/drm_internal.h |  9 ++++++
- 4 files changed, 61 insertions(+), 24 deletions(-)
+ drivers/gpu/drm/bridge/panel.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-index 241a384ebce39b4a3db58c208af27960904fc662..87cebec2de806781cee22da54d666eee9bde3648 100644
---- a/drivers/gpu/drm/drm_bridge.c
-+++ b/drivers/gpu/drm/drm_bridge.c
-@@ -195,8 +195,9 @@
-  * driver.
-  */
- 
--static DEFINE_MUTEX(bridge_lock);
--static LIST_HEAD(bridge_list);
-+/* Protect bridge_list */
-+DEFINE_MUTEX(bridge_lock);
-+LIST_HEAD(bridge_list);
- 
- /**
-  * drm_bridge_add - add the given bridge to the global bridge list
-diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
-index 6b2178864c7ee12db9aa1f562e106b2f604439f8..7424d5237e7615d63de6bba572ee6050da6709d0 100644
---- a/drivers/gpu/drm/drm_debugfs.c
-+++ b/drivers/gpu/drm/drm_debugfs.c
-@@ -740,6 +740,30 @@ void drm_debugfs_crtc_remove(struct drm_crtc *crtc)
- 	crtc->debugfs_entry = NULL;
- }
- 
-+static void bridge_print(struct drm_printer *p, struct drm_bridge *bridge, unsigned int idx)
-+{
-+	drm_printf(p, "bridge[%u]: %ps\n", idx, bridge->funcs);
-+	drm_printf(p, "\ttype: [%d] %s\n",
-+		   bridge->type,
-+		   drm_get_connector_type_name(bridge->type));
-+
-+	if (bridge->of_node)
-+		drm_printf(p, "\tOF: %pOFfc\n", bridge->of_node);
-+
-+	drm_printf(p, "\tops: [0x%x]", bridge->ops);
-+	if (bridge->ops & DRM_BRIDGE_OP_DETECT)
-+		drm_puts(p, " detect");
-+	if (bridge->ops & DRM_BRIDGE_OP_EDID)
-+		drm_puts(p, " edid");
-+	if (bridge->ops & DRM_BRIDGE_OP_HPD)
-+		drm_puts(p, " hpd");
-+	if (bridge->ops & DRM_BRIDGE_OP_MODES)
-+		drm_puts(p, " modes");
-+	if (bridge->ops & DRM_BRIDGE_OP_HDMI)
-+		drm_puts(p, " hdmi");
-+	drm_puts(p, "\n");
-+}
-+
- static int bridges_show(struct seq_file *m, void *data)
+diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+index bd61e57e1a2dd3d1eb034da4f9213a6bcb3e6dc5..58570ff6952ca313b3def084262c9bb3772272ef 100644
+--- a/drivers/gpu/drm/bridge/panel.c
++++ b/drivers/gpu/drm/bridge/panel.c
+@@ -40,7 +40,7 @@ static LIST_HEAD(panel_list);
+  * @dev: parent device of the panel
+  * @funcs: panel operations
+  * @connector_type: the connector type (DRM_MODE_CONNECTOR_*) corresponding to
+- *	the panel interface
++ *	the panel interface (must NOT be DRM_MODE_CONNECTOR_Unknown)
+  *
+  * Initialize the panel structure for subsequent registration with
+  * drm_panel_add().
+@@ -48,6 +48,9 @@ static LIST_HEAD(panel_list);
+ void drm_panel_init(struct drm_panel *panel, struct device *dev,
+ 		    const struct drm_panel_funcs *funcs, int connector_type)
  {
- 	struct drm_encoder *encoder = m->private;
-@@ -747,28 +771,8 @@ static int bridges_show(struct seq_file *m, void *data)
- 	struct drm_bridge *bridge;
- 	unsigned int idx = 0;
- 
--	drm_for_each_bridge_in_chain(encoder, bridge) {
--		drm_printf(&p, "bridge[%u]: %ps\n", idx++, bridge->funcs);
--		drm_printf(&p, "\ttype: [%d] %s\n",
--			   bridge->type,
--			   drm_get_connector_type_name(bridge->type));
--
--		if (bridge->of_node)
--			drm_printf(&p, "\tOF: %pOFfc\n", bridge->of_node);
--
--		drm_printf(&p, "\tops: [0x%x]", bridge->ops);
--		if (bridge->ops & DRM_BRIDGE_OP_DETECT)
--			drm_puts(&p, " detect");
--		if (bridge->ops & DRM_BRIDGE_OP_EDID)
--			drm_puts(&p, " edid");
--		if (bridge->ops & DRM_BRIDGE_OP_HPD)
--			drm_puts(&p, " hpd");
--		if (bridge->ops & DRM_BRIDGE_OP_MODES)
--			drm_puts(&p, " modes");
--		if (bridge->ops & DRM_BRIDGE_OP_HDMI)
--			drm_puts(&p, " hdmi");
--		drm_puts(&p, "\n");
--	}
-+	drm_for_each_bridge_in_chain(encoder, bridge)
-+		bridge_print(&p, bridge, idx++);
- 
- 	return 0;
- }
-@@ -802,3 +806,25 @@ void drm_debugfs_encoder_remove(struct drm_encoder *encoder)
- 	debugfs_remove_recursive(encoder->debugfs_entry);
- 	encoder->debugfs_entry = NULL;
- }
++	if (connector_type == DRM_MODE_CONNECTOR_Unknown)
++		DRM_WARN("%s: %s: a valid connector type is required!\n", __func__, dev_name(dev));
 +
-+static int allbridges_show(struct seq_file *m, void *data)
-+{
-+	struct drm_printer p = drm_seq_file_printer(m);
-+	struct drm_bridge *bridge;
-+	unsigned int idx = 0;
-+
-+	mutex_lock(&bridge_lock);
-+
-+	list_for_each_entry(bridge, &bridge_list, list)
-+		bridge_print(&p, bridge, idx++);
-+
-+	mutex_unlock(&bridge_lock);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(allbridges);
-+
-+void drm_debugfs_global_add(struct dentry *root)
-+{
-+	debugfs_create_file("bridges", 0444, root, NULL, &allbridges_fops);
-+}
-diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
-index 3cf440eee8a2ab3de134d925db8f1d2ce68062b7..9b6d7bd16ba409b6a9155a9fecbec6bfdd5ea0c2 100644
---- a/drivers/gpu/drm/drm_drv.c
-+++ b/drivers/gpu/drm/drm_drv.c
-@@ -1120,6 +1120,7 @@ static int __init drm_core_init(void)
- 	}
- 
- 	drm_debugfs_root = debugfs_create_dir("dri", NULL);
-+	drm_debugfs_global_add(drm_debugfs_root);
- 
- 	ret = register_chrdev(DRM_MAJOR, "drm", &drm_stub_fops);
- 	if (ret < 0)
-diff --git a/drivers/gpu/drm/drm_internal.h b/drivers/gpu/drm/drm_internal.h
-index b2b6a8e49dda46f1cb3b048ef7b28356dd3aaa4e..b6e875d4b25faae6bb0bb952c3c12bd4819698ec 100644
---- a/drivers/gpu/drm/drm_internal.h
-+++ b/drivers/gpu/drm/drm_internal.h
-@@ -48,6 +48,10 @@ struct drm_prime_file_private;
- struct drm_printer;
- struct drm_vblank_crtc;
- 
-+// for drm_debugfs.c
-+extern struct mutex bridge_lock;
-+extern struct list_head bridge_list;
-+
- /* drm_client_event.c */
- #if defined(CONFIG_DRM_CLIENT)
- void drm_client_debugfs_init(struct drm_device *dev);
-@@ -196,6 +200,7 @@ void drm_debugfs_crtc_remove(struct drm_crtc *crtc);
- void drm_debugfs_crtc_crc_add(struct drm_crtc *crtc);
- void drm_debugfs_encoder_add(struct drm_encoder *encoder);
- void drm_debugfs_encoder_remove(struct drm_encoder *encoder);
-+void drm_debugfs_global_add(struct dentry *drm_debugfs_root);
- #else
- static inline void drm_debugfs_dev_fini(struct drm_device *dev)
- {
-@@ -241,6 +246,10 @@ static inline void drm_debugfs_encoder_remove(struct drm_encoder *encoder)
- {
- }
- 
-+static inline void drm_debugfs_global_add(struct dentry *drm_debugfs_root)
-+{
-+}
-+
- #endif
- 
- drm_ioctl_t drm_version;
+ 	INIT_LIST_HEAD(&panel->list);
+ 	INIT_LIST_HEAD(&panel->followers);
+ 	mutex_init(&panel->follower_lock);
 
 -- 
 2.34.1
