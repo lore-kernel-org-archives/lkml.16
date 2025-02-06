@@ -1,295 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from slategray.cherry.relay.mailchannels.net (slategray.cherry.relay.mailchannels.net [23.83.223.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE269194094;
-	Thu,  6 Feb 2025 21:14:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738876485; cv=none; b=rKTQR+Qg6dR7YpIHDmhDl0siYRyWwnzSTtqQtuE5XNS6mdR4fyUadCQNfVcP1InXi78wkKJAWdQN80+HJPO+xZSgLallneOeibzvHvCHbs4+YwdguNJPnpUu465roKXdR2KDdwjtBeWQse0NqIr2utyU5vUzayUc736iv3SLFMQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738876485; c=relaxed/simple;
-	bh=e2SOY182HjtRf1jcrCmT/yGU2J8GDiU314PnbVwrp7g=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ll4VZp4s2EFzWiDD57dzqERl5nkIvB7aGQtLbshfhIzpOJrlcvh9G7EZJufdu/T8DuLXBE+zvdsa//j5Ki4ptUHPyBZqX4hnQJmH/zrOT0VljgeBFlsPROGvEXUAb5x27UBEAHTHOPM/vnHcuUP1BJl6uPj3kTH8KPJK6uzvdAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gd1alUST; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB9E15B54A;
+	Thu,  6 Feb 2025 21:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.169
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738876561; cv=pass; b=ihTZEuzpfN6eBzTLuoZXBE/7VR+oGSBzKe84twk8cmzhCvMZpzacOsmYcyT+qnEzwTSfx30xglefms80ZDbFCX02Z15WPjtrA1LaCQqNG7OXrpnP/x0fDBmsh8K4xMYqynk3YrE0yVLzXdwYqs7WSbubwg3d8dNz94izR8p37hE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738876561; c=relaxed/simple;
+	bh=1lB3R1po6WZgdxaHmY/1OrqiJzK67pHd7MlXm4BGTbs=;
+	h=From:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc:Date; b=hkrQL5kxT36jxTFWxBd7g2/bf8AQ1w4abFW7wMkRMidCevfumMeZnYqMVTiHca3rGiPrnSMZEv7tKvOlLHUiojThlyEqba8zUuUMsBzjeLtMD53ITIvWB6xCwm7JOC6q5dLG22aqHsIILpwal8glNxIWrc5kDkQCyAqyjYEEnNE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai; spf=pass smtp.mailfrom=invicto.ai; dkim=fail (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b=bVvxAaAD reason="key not found in DNS"; arc=pass smtp.client-ip=23.83.223.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invicto.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gd1alUST"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AD4FC4CEDD;
-	Thu,  6 Feb 2025 21:14:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738876483;
-	bh=e2SOY182HjtRf1jcrCmT/yGU2J8GDiU314PnbVwrp7g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gd1alUST0IO6Lv5wd3A05bXQe2+4UMAsApIHndqvLWYKsFxSJzLnSIV1pH9/FJEqq
-	 Oi/vtKp55eWJktVqKpkXp4yTqD78gZ2JEtTIG56M//S0kfut3Q3jDQb5ptyEq5BacG
-	 +wKIIYrqqsV3d4LGFrh7nZXDTaDYVpD6MxHmJYSvB41BRRfYFWNdwmkSspuGzhqrPP
-	 eEUwS7WCmQfGgwo58hQ1FGiPp0H/tp/WuNVSAJ6mvbyo9ELleMKAqT3Vsoj/DDL52s
-	 q71wajBFFmlPiKz/UXxG1M4pIua9Wx016A9MJYiMBWeMuD8VSVqvPOhkbjHAu/dzBN
-	 gwiHw8Tl3Pjgw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tg9Cq-001J8q-PU;
-	Thu, 06 Feb 2025 21:14:40 +0000
-Date: Thu, 06 Feb 2025 21:14:39 +0000
-Message-ID: <86o6zeu668.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-Cc: kvm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	darren@os.amperecomputing.com,
-	scott@os.amperecomputing.com
-Subject: Re: [RFC PATCH 1/2] KVM: arm64: nv: selftests: Add guest hypervisor test
-In-Reply-To: <20250206164120.4045569-2-gankulkarni@os.amperecomputing.com>
-References: <20250206164120.4045569-1-gankulkarni@os.amperecomputing.com>
-	<20250206164120.4045569-2-gankulkarni@os.amperecomputing.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b="bVvxAaAD"
+X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 358F523E23;
+	Thu,  6 Feb 2025 21:08:03 +0000 (UTC)
+Received: from fr-int-smtpout8.hostinger.io (trex-0.trex.outbound.svc.cluster.local [100.127.46.110])
+	(Authenticated sender: hostingeremail)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 972352365D;
+	Thu,  6 Feb 2025 21:07:58 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738876082; a=rsa-sha256;
+	cv=none;
+	b=1Ro95qpUCKFjFPLJNu8SqmKrowz8ebWLBK0ke4hxfPF7go44Bgl8i1EC+3KuECSPtyVOAm
+	Q7MaNFWG8DAJpsHxFK678m7tL76MlHbhD5aV3PVJSOfc1QfAuE3HyNpBNKPF/fpxvvdmgL
+	1kBuX1D4eFwY7E3BHy0xJW09EgDH9hYKoLHtVVrRFk/jZZyrCR6S3ZFimNZIIwaUhnqgDu
+	8GwHQTq8RznFaNzrmBIWLzoc8iwDacIq4nqYZ2juVsndjpWWdSWydLypR3lSqJEQB8jOZG
+	syltYKifmR28IuR34GxD+HN73RqWXJfnxZ4BnJpYDc1vRpbOi2UgyRskOvZStA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1738876082;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=ao/6CpQGIug2s3g4qNBT7wztDldQnzKpiipkzTE6D5o=;
+	b=5IC4YPNGJIo8Kydl+twjBmAJRqqTcmKAbOJbs1voRM45xPEH+XB+nWW2CBuvF2XIRNM5cL
+	tsmrRDjFw01Dr6eeCDwk8ikdRFeG8Noor1f3qDlM2snYDsSLIrRW/ypvSDoq53siy4LaPS
+	2VPaB8ARQ97I/BurZW3JZF1rkh9SlfaEatgo/Wa4hzmfWxfWtUPoSkAMSi9W5LGN5pVxXE
+	u1T9gsPNggSjf0yr4rJigyz1uyJKyusMmC6OsodPzD4jaaiyaWkFRAjfUcN28o79UCQZFI
+	Rd5q18ovfYGJGIGN+qA/XWHeomZqvUYzzHTXNvNWyW3XLQG1voemmPJJWQmqew==
+ARC-Authentication-Results: i=1;
+	rspamd-8586946c78-qtn6w;
+	auth=pass smtp.auth=hostingeremail smtp.mailfrom=kurti@invicto.ai
+X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: hostingeremail|x-authuser|kurti@invicto.ai
+X-MailChannels-Auth-Id: hostingeremail
+X-Abaft-Thoughtful: 2d3304e215659c98_1738876082965_3725378742
+X-MC-Loop-Signature: 1738876082965:1669363260
+X-MC-Ingress-Time: 1738876082965
+Received: from fr-int-smtpout8.hostinger.io (fr-int-smtpout8.hostinger.io
+ [89.116.146.204])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.127.46.110 (trex/7.0.2);
+	Thu, 06 Feb 2025 21:08:02 +0000
+From: Alban Kurti <kurti@invicto.ai>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invicto.ai;
+	s=hostingermail-a; t=1738876076;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ao/6CpQGIug2s3g4qNBT7wztDldQnzKpiipkzTE6D5o=;
+	b=bVvxAaADvjx5XLZNsFSnJWB7Q5KkJg0iuA88QTQ/4UDAlzQyo9dCwTL07g0XUI727AxmqF
+	zF1RPn+3/utlITDKEQlxqb8dZo6+gg4qK4/qbGZT7T8InS3BnC1olO3WzLl0JQNPCFYBAa
+	0UMmVPuiMJbNU8lc9tw8wa53kr47Bpt9I8Rqf7BDD6WScFb2v5tBEZVYciNhIJ8zvwNc8H
+	KmOeICzsGOvkaLLmJR7TVSN8I7yojm92tvgkWM+lvk1Gh2awrHv8OkPD4CowSiMul88buq
+	isNsIMcxVNk72Lc2/vi4K6LVbE8w+EFOtx15QmQkbQtXnEXbnzjL6u2OTuXuqw==
+Subject: [PATCH v3 4/6] rust: sync: add missing newline in locked_by log
+ example
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: gankulkarni@os.amperecomputing.com, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, darren@os.amperecomputing.com, scott@os.amperecomputing.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250206-printing_fix-v3-4-a85273b501ae@invicto.ai>
+References: <20250206-printing_fix-v3-0-a85273b501ae@invicto.ai>
+In-Reply-To: <20250206-printing_fix-v3-0-a85273b501ae@invicto.ai>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Jonathan Corbet <corbet@lwn.net>, 
+ David Gow <davidgow@google.com>, Dirk Behme <dirk.behme@de.bosch.com>, 
+ Asahi Lina <lina@asahilina.net>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+ Wedson Almeida Filho <walmeida@microsoft.com>, 
+ "Andreas Hindborg (Samsung)" <nmi@metaspace.dk>, Tejun Heo <tj@kernel.org>, 
+ Fiona Behrens <me@kloenk.dev>, 
+ Vincenzo Palazzo <vincenzopalazzodev@gmail.com>, 
+ Xiangfei Ding <dingxiangfei2009@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Alban Kurti <kurti@invicto.ai>, 
+ Martin Rodriguez Reboredo <yakoyoku@gmail.com>, 
+ Fox Chen <foxhlchen@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738876070; l=1151;
+ i=kurti@invicto.ai; s=20250206; h=from:subject:message-id;
+ bh=1lB3R1po6WZgdxaHmY/1OrqiJzK67pHd7MlXm4BGTbs=;
+ b=T2Q3yA6xogxLqNEE7t5drQ/TCrHRborZiGAai2Ql3KXdyLGKyixlfgH1IPiFUFaAQdR4bEWyB
+ BqAoG05NfyrBrI/phI06pVPYyK9VqR6ZMg7WxcRoyolWYcC70lLeki1
+X-Developer-Key: i=kurti@invicto.ai; a=ed25519;
+ pk=D1lKs+JFapuEVI9zJ2QUTLSf5u4aT12tG0ny6vMMuOc=
+Date: Thu, 06 Feb 2025 21:07:55 +0000 (UTC)
+X-CM-Envelope: MS4xfNJAmCzuHi2orbdWWk7lB74rjaapN9N8+53MQ/FHyFECiF7kuvBHA5DfX6TCj3cLKJnUaQhp6fGDmlFoc8aEqqBS8RlwS8Ri+WCX02TcGWCXOgwTyQV/ y5/UaSF75T7oo/FG59DEjnX0++CbmR1c2DebI2VcCjMIYbEwd/TzC012ilfGe4MNso4oaO42VgB7wiuLXuOgm9JOTDWnaLKhanzjzca5Wuxrvd1ZeyvAxUBq DT3U6iKrpY1LVtRg+DQNCx1D2YYb7Gat07FUbZgR78MxZqFCZj3ADVs30yolixQ497I2KaS2YDoJCMjPrcqKWxlvO3FomlUvqUQsxp21qD+PYK+yZowri7Xr sRSeMhM8ptzPDqw/TgzoAQZSauS9td6mP8NZOm0k+SWrhkpLwh367IljKaRI+ZToNDwZ9+G+3RqZxD77YRWsp+Tr4ygwlCVD0Tj9KtRaLAbz8JZMDrhniWmx j4PyPGdke0tbKiUQ5KClZ8zCqRf+YANGBnRh6PFqqBv9mF4nt+czyztiGRWcmZJ0jXk6nP2HTMvI8y7mpOW+F/+uw7Gr4tXDEwFZgzvIsPgskx0dinZiusuy GopnleOgR1jVZbs7ekpSXY7ivmL+gEojPF+k2DdFaVNqTcgUFqZ3MVXcQSEz/26H24AdeqSIO4pQAp6WRI0UDVLhhYoqBbLlobtpTaFT05ZGT+K8l3e1ee47 aIgi3xzatQoUdBRTBtV+xh8+6J7kceEhZo5hhVsO4kby/XDtlHP3fGFMNtgiy8NMLvVbSeT1TEO9k/rKeNdCsPR5C51ffFPxItW5rfO04NcQjoeqvri4wNhv QB0SO7sShKHyijxDCGtmPClTw7OKyaEaQI2Z9Jsg/1kq3FDjpyx16F1dT6oH1uuylG7eppiy+LBjVHLBb/3OHLwdMlFhL39SCmS+9MuXClr3Qy9bUGZZfyZR BNUrKZW5a7BXvi/
+ P/ll+xr5V2zC5/Jr1DK3feMCs9P1eRpxS
+X-CM-Analysis: v=2.4 cv=PMNd+uqC c=1 sm=1 tr=0 ts=67a524ac a=9/DLicljd4JGVkZ5BRdAJQ==:117 a=9/DLicljd4JGVkZ5BRdAJQ==:17 a=IkcTkHD0fZMA:10 a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8 a=HeOr5W89t27ReWMoupIA:9 a=QEXdDO2ut3YA:10
+X-AuthUser: kurti@invicto.ai
 
-On Thu, 06 Feb 2025 16:41:19 +0000,
-Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com> wrote:
-> 
-> This patch adds the required changes to init vcpu in vEL2 context.
-> Also adds a KVM selftest to execute guest code as a guest hypervisor(L1).
-> 
-> Signed-off-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-> ---
->  tools/testing/selftests/kvm/Makefile.kvm      |  1 +
->  .../selftests/kvm/arm64/nv_guest_hypervisor.c | 83 +++++++++++++++++++
->  .../kvm/include/arm64/kvm_util_arch.h         |  3 +
->  .../selftests/kvm/include/arm64/nv_util.h     | 28 +++++++
->  .../testing/selftests/kvm/include/kvm_util.h  |  1 +
->  .../selftests/kvm/lib/arm64/processor.c       | 59 +++++++++----
->  6 files changed, 161 insertions(+), 14 deletions(-)
->  create mode 100644 tools/testing/selftests/kvm/arm64/nv_guest_hypervisor.c
->  create mode 100644 tools/testing/selftests/kvm/include/arm64/nv_util.h
-> 
-> diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-> index 4277b983cace..a85d3bec9fb1 100644
-> --- a/tools/testing/selftests/kvm/Makefile.kvm
-> +++ b/tools/testing/selftests/kvm/Makefile.kvm
-> @@ -154,6 +154,7 @@ TEST_GEN_PROGS_arm64 += arm64/vgic_irq
->  TEST_GEN_PROGS_arm64 += arm64/vgic_lpi_stress
->  TEST_GEN_PROGS_arm64 += arm64/vpmu_counter_access
->  TEST_GEN_PROGS_arm64 += arm64/no-vgic-v3
-> +TEST_GEN_PROGS_arm64 += arm64/nv_guest_hypervisor
->  TEST_GEN_PROGS_arm64 += access_tracking_perf_test
->  TEST_GEN_PROGS_arm64 += arch_timer
->  TEST_GEN_PROGS_arm64 += coalesced_io_test
-> diff --git a/tools/testing/selftests/kvm/arm64/nv_guest_hypervisor.c b/tools/testing/selftests/kvm/arm64/nv_guest_hypervisor.c
-> new file mode 100644
-> index 000000000000..5aeefe43aff7
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/arm64/nv_guest_hypervisor.c
-> @@ -0,0 +1,83 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2025 Ampere Computing LLC
-> + */
-> +#include <kvm_util.h>
-> +#include <nv_util.h>
-> +#include <processor.h>
-> +#include <vgic.h>
-> +
-> +static void guest_code(void)
-> +{
-> +	if (read_sysreg(CurrentEL) == CurrentEL_EL2)
-> +		GUEST_PRINTF("Executing guest code in vEL2\n");
-> +	else
-> +		GUEST_FAIL("Fail to run in vEL2\n");
-> +
-> +	GUEST_DONE();
-> +}
-> +
-> +static void guest_undef_handler(struct ex_regs *regs)
-> +{
-> +	GUEST_FAIL("Unexpected exception far_el1 = 0x%lx", read_sysreg(far_el1));
-> +}
-> +
-> +static void test_run_vcpu(struct kvm_vcpu *vcpu)
-> +{
-> +	struct ucall uc;
-> +
-> +	do {
-> +		vcpu_run(vcpu);
-> +
-> +		switch (get_ucall(vcpu, &uc)) {
-> +		case UCALL_ABORT:
-> +			REPORT_GUEST_ASSERT(uc);
-> +			break;
-> +		case UCALL_PRINTF:
-> +			printf("%s", uc.buffer);
-> +			break;
-> +		case UCALL_DONE:
-> +			printf("Test PASS\n");
-> +			break;
-> +		default:
-> +			TEST_FAIL("Unknown ucall %lu", uc.cmd);
-> +		}
-> +	} while (uc.cmd != UCALL_DONE);
-> +}
-> +
-> +static void test_nv_guest_hypervisor(void)
-> +{
-> +	struct kvm_vcpu *vcpu;
-> +	struct kvm_vm *vm;
-> +	struct kvm_vcpu_init init;
-> +	int gic_fd;
-> +
-> +	vm = vm_create(1);
-> +	vm_ioctl(vm, KVM_ARM_PREFERRED_TARGET, &init);
-> +
-> +	init.features[0] = 0;
-> +	init_vcpu_nested(&init);
-> +	vcpu = aarch64_vcpu_add(vm, 0, &init, guest_code);
-> +
-> +	__TEST_REQUIRE(is_vcpu_nested(vcpu), "Failed to Enable NV");
-> +
-> +	vm_init_descriptor_tables(vm);
-> +	vcpu_init_descriptor_tables(vcpu);
-> +	gic_fd = vgic_v3_setup(vm, 1, 64);
-> +	__TEST_REQUIRE(gic_fd >= 0, "Failed to create vgic-v3");
-> +
-> +	vm_install_sync_handler(vm, VECTOR_SYNC_CURRENT,
-> +				ESR_ELx_EC_UNKNOWN, guest_undef_handler);
-> +
-> +	test_run_vcpu(vcpu);
-> +	kvm_vm_free(vm);
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_EL2));
-> +
-> +	test_nv_guest_hypervisor();
-> +
-> +	return 0;
-> +}
-> diff --git a/tools/testing/selftests/kvm/include/arm64/kvm_util_arch.h b/tools/testing/selftests/kvm/include/arm64/kvm_util_arch.h
-> index e43a57d99b56..ab5279c24413 100644
-> --- a/tools/testing/selftests/kvm/include/arm64/kvm_util_arch.h
-> +++ b/tools/testing/selftests/kvm/include/arm64/kvm_util_arch.h
-> @@ -2,6 +2,9 @@
->  #ifndef SELFTEST_KVM_UTIL_ARCH_H
->  #define SELFTEST_KVM_UTIL_ARCH_H
->  
-> +#define CurrentEL_EL1		(1 << 2)
-> +#define CurrentEL_EL2		(2 << 2)
-> +
->  struct kvm_vm_arch {};
->  
->  #endif  // SELFTEST_KVM_UTIL_ARCH_H
-> diff --git a/tools/testing/selftests/kvm/include/arm64/nv_util.h b/tools/testing/selftests/kvm/include/arm64/nv_util.h
-> new file mode 100644
-> index 000000000000..4fecf1f18554
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/include/arm64/nv_util.h
-> @@ -0,0 +1,28 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2025 Ampere Computing
-> + */
-> +#ifndef SELFTEST_NV_UTIL_H
-> +#define SELFTEST_NV_UTIL_H
-> +
-> +#include <linux/bitmap.h>
-> +
-> +/* NV helpers */
-> +static inline void init_vcpu_nested(struct kvm_vcpu_init *init)
-> +{
-> +	init->features[0] |= (1 << KVM_ARM_VCPU_HAS_EL2);
-> +}
-> +
-> +static inline bool kvm_arm_vcpu_has_el2(struct kvm_vcpu_init *init)
-> +{
-> +	unsigned long features = init->features[0];
-> +
-> +	return test_bit(KVM_ARM_VCPU_HAS_EL2, &features);
-> +}
-> +
-> +static inline bool is_vcpu_nested(struct kvm_vcpu *vcpu)
-> +{
-> +	return vcpu->nested;
-> +}
-> +
-> +#endif /* SELFTEST_NV_UTIL_H */
-> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> index 4c4e5a847f67..8c53dbc17f8f 100644
-> --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> @@ -58,6 +58,7 @@ struct kvm_vcpu {
->  	struct kvm_dirty_gfn *dirty_gfns;
->  	uint32_t fetch_index;
->  	uint32_t dirty_gfns_count;
-> +	bool nested;
->  };
->  
->  struct userspace_mem_regions {
-> diff --git a/tools/testing/selftests/kvm/lib/arm64/processor.c b/tools/testing/selftests/kvm/lib/arm64/processor.c
-> index 7ba3aa3755f3..35ba2ace61a2 100644
-> --- a/tools/testing/selftests/kvm/lib/arm64/processor.c
-> +++ b/tools/testing/selftests/kvm/lib/arm64/processor.c
-> @@ -10,6 +10,7 @@
->  
->  #include "guest_modes.h"
->  #include "kvm_util.h"
-> +#include "nv_util.h"
->  #include "processor.h"
->  #include "ucall_common.h"
->  
-> @@ -258,14 +259,47 @@ void virt_arch_dump(FILE *stream, struct kvm_vm *vm, uint8_t indent)
->  	}
->  }
->  
-> +static void aarch64_vcpu_set_reg(struct kvm_vcpu *vcpu, uint64_t sctlr_el1,
-> +			uint64_t tcr_el1, uint64_t ttbr0_el1)
-> +{
-> +	uint64_t fpen;
-> +
-> +	/*
-> +	 * Enable FP/ASIMD to avoid trapping when accessing Q0-Q15
-> +	 * registers, which the variable argument list macros do.
-> +	 */
-> +	fpen = 3 << 20;
-> +
-> +	if (is_vcpu_nested(vcpu)) {
-> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_CPTR_EL2), fpen);
-> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_SCTLR_EL2), sctlr_el1);
-> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TCR_EL2), tcr_el1);
-> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_MAIR_EL2), DEFAULT_MAIR_EL1);
-> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TTBR0_EL2), ttbr0_el1);
-> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TPIDR_EL2), vcpu->id);
+The pr_info! example in rust/kernel/sync/locked_by.rs was missing
+a newline. This patch appends the missing newline to ensure
+that log messages for locked resources display correctly.
 
-How about some of the basics such as HCR_EL2, MDCR_EL2? A bunch of
-things there do have an impact on how the guest behaves, and relying
-on defaults feels like a bad idea.
+Fixes: 7b1f55e3a984 ("rust: sync: introduce `LockedBy`")
+Reported-by: Miguel Ojeda <ojeda@kernel.org>
+Closes: https://github.com/Rust-for-Linux/linux/issues/1139
+Signed-off-by: Alban Kurti <kurti@invicto.ai>
+---
+ rust/kernel/sync/locked_by.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This also assumes VHE, without trying to enforce it.
-
-Finally, how to you plan to make all the existing tests run as EL2
-guests if TPIDR_EL1 isn't populated with the expected value? Surely
-you need to change the read side...
-
-	M.
+diff --git a/rust/kernel/sync/locked_by.rs b/rust/kernel/sync/locked_by.rs
+index a7b244675c2b96a36a6fe2e3ddd9a68e6ea01cb7..61f100a45b3507c750c1e3c405f9a8f67ced5346 100644
+--- a/rust/kernel/sync/locked_by.rs
++++ b/rust/kernel/sync/locked_by.rs
+@@ -55,7 +55,7 @@
+ /// fn print_bytes_used(dir: &Directory, file: &File) {
+ ///     let guard = dir.inner.lock();
+ ///     let inner_file = file.inner.access(&guard);
+-///     pr_info!("{} {}", guard.bytes_used, inner_file.bytes_used);
++///     pr_info!("{} {}\n", guard.bytes_used, inner_file.bytes_used);
+ /// }
+ ///
+ /// /// Increments `bytes_used` for both the directory and file.
 
 -- 
-Without deviation from the norm, progress is not possible.
+2.48.1
+
