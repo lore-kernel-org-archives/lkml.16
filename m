@@ -1,153 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53192376;
-	Thu,  6 Feb 2025 05:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11E4376;
+	Thu,  6 Feb 2025 05:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738819702; cv=none; b=fR2SYn25/s9B5AFmZ1hlKxdd3HuB+HNn09yasnczIIASbZk+rWCG+5FbjGPEA9TZ+a49eiSEGo/HAd57rdwOOEA6cusFkuHWZ91ib3rzlmBNTjHUF2dEOBd1BmVrqKepDH/1zueiDYVRPJrl4/qRLXJMzYyXYmNXKLH8YeWALWU=
+	t=1738819790; cv=none; b=ddZ99fDaCuNSsn2k6qnbNK+pTpqh9fLKJIr7Ubz+H9xski7hmAae0qK2lF46ZKOZD8cuFb1f6O9HJL6DWsuqVyuSE30iGgghGlIO8khmVIo0TMfg4+FEDjOWBd3a9EWbHIip0NeYrJfw58HZBt9im3TFTRDM1TCbiOQJfwE4UyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738819702; c=relaxed/simple;
-	bh=p6qRiWNTzvrTf4hk+vP0W1Rn4gHn2Xhlk2nTNDwSYFc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=gln3QxiXMuB7JopG4tZenhfcStMC6Mqij4qPfhERGOEPdFqUTnKArqyXjiQSwrLSQ5ZuyhC1vPZgxkXb36Vx5MiuBvbXqwdelTlqGokV8ISeKHPgWPDOa5I3ZTnuWmCHSMSzaC3fdcnjCV2W+UjdNFWAhcfS3mbIqNANyKaBM0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dG/8bWMb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738819790; c=relaxed/simple;
+	bh=sPkE2H7TRcVJFXCbyejleJMn2GkjiA93cL6WofHY1Oo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ox9Q5My0n/Ymc4Y03HT8sC7ceEi0lvVaEsSbK+bhAuG0XtSIZnfATcDSOBhl17F/zTFAYdRxueaZT+9gO6tSDugSsZCyFrvoPmfmlcMx5U1E2mONdfqRelrst31UpEy9Ifo3AL6Gis3S56UKTytsf5VH1Be/QeK22y2EaL0F1bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hhwGI1fI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dG/8bWMb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CCD7C4CEDD;
-	Thu,  6 Feb 2025 05:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738819701;
-	bh=p6qRiWNTzvrTf4hk+vP0W1Rn4gHn2Xhlk2nTNDwSYFc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dG/8bWMbKr9pkPFUIuIh4T5HdKheWD46h1i+IN1nPAal1Rm5mjmF5PC2GOnZEm5p7
-	 5qJbo+TeeSttd4DaVxECqgkyXJzekpLYxN4dcgK+mGtIaUR9uLgoJKw2JFyzpBRwGr
-	 inyMQp4qaOMzjLpo5MrAOiQpv0cTAaRAE3A7Z+o9RhN3Bt0W2DRphfprE1v1a34Se2
-	 rXlsPTcGkoVl8lN09TcWt58FmR6s/bP4sV+BHqs8u9+dXctILj6aD1G7rnj0BU/xKh
-	 zV2W55ssrphzr6ScftVC13MBDwNDYgilxSJHzvI8X9Ojzuk80KoObZ5/4yxH8ZDGce
-	 Bqtzi4xoryM5w==
-Date: Thu, 6 Feb 2025 14:28:17 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, Petr
- Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>,
- Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org
-Subject: Re: [PATCH 5/8] module: Add module_for_each_mod() function
-Message-Id: <20250206142817.91853f475c681bc2ef7ca962@kernel.org>
-In-Reply-To: <20250205225103.760856859@goodmis.org>
-References: <20250205225031.799739376@goodmis.org>
-	<20250205225103.760856859@goodmis.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hhwGI1fI"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515FDYFb030209;
+	Thu, 6 Feb 2025 05:29:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	HqNZCSPe9MF37Q5T+4kjTCzADjtZNkVnwXEV6pjLaXQ=; b=hhwGI1fIoDV2bgcC
+	ZohJGQOsnoLNC7jXo4Kaaj/XrZ5YgALylT+pb1Tlm4HmuC+KWOYESFvxIToXMDMq
+	dZFipDm0n86WpqNTxSzVLzti9V4YHfWu4iSVU5ftS/sXLGQnucaPJYFX14eoxDL6
+	jxjGoFKoVwUo5veSnjGq9rP0WcKobjeDtdT00L2vSo/uCt4wtGRbBqrlBngwPqJU
+	vr2OKXh6YLKlwt1YEvaa5Cqiv81Y00gsJ0yTXuMMsqRQ9XTx6mMcfk0GYm4tnbHX
+	/YMjgIjkllB5y8D7xcOTtHPb76j8h45xS+LegOowdPubsvw7eZRpQyeR9FKqHYpb
+	1pURLQ==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44maep9qvn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 06 Feb 2025 05:29:12 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5165TC20020014
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 6 Feb 2025 05:29:12 GMT
+Received: from [10.216.41.37] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 5 Feb 2025
+ 21:29:03 -0800
+Message-ID: <ffbd8209-116a-a4ad-1b5a-cd61665758fd@quicinc.com>
+Date: Thu, 6 Feb 2025 10:59:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [RESEND v5 3/4] soundwire: qcom: Add set_channel_map api support
+Content-Language: en-US
+To: Mark Brown <broonie@kernel.org>
+CC: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Vinod Koul
+	<vkoul@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        "Jaroslav
+ Kysela" <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Pierre-Louis Bossart
+	<pierre-louis.bossart@linux.dev>,
+        Sanyog Kale <sanyog.r.kale@intel.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_pkumpatl@quicinc.com>,
+        <kernel@quicinc.com>
+References: <20250123042823.2067740-1-quic_mohs@quicinc.com>
+ <20250123042823.2067740-4-quic_mohs@quicinc.com>
+ <a82a33a8-d27c-45c8-a39a-58e6357e0d99@sirena.org.uk>
+From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+In-Reply-To: <a82a33a8-d27c-45c8-a39a-58e6357e0d99@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: k1NjFBqjvvM6nUIMBobsAedehUiWsiQ-
+X-Proofpoint-ORIG-GUID: k1NjFBqjvvM6nUIMBobsAedehUiWsiQ-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-06_01,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0
+ adultscore=0 priorityscore=1501 impostorscore=0 bulkscore=0 spamscore=0
+ mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502060043
 
-On Wed, 05 Feb 2025 17:50:36 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> From: Steven Rostedt <rostedt@goodmis.org>
+On 2/3/2025 6:49 PM, Mark Brown wrote:
+> On Thu, Jan 23, 2025 at 09:58:22AM +0530, Mohammad Rafi Shaik wrote:
+>> Added qcom_swrm_set_channel_map api to set the master channel mask for
+>> TX and RX paths based on the provided slots.
 > 
-> The tracing system needs a way to save all the currently loaded modules
-> and their addresses into persistent memory so that it can evaluate the
-> addresses on a reboot from a crash. When the persistent memory trace
-> starts, it will load the module addresses and names into the persistent
-> memory. To do so, it will call the module_for_each_mod() function and pass
-> it a function and data structure to get called on each loaded module. Then
-> it can record the memory.
+> This breaks an allmodconfig build, and arm64 defconfig:
 > 
-> This only implements that function.
-> 
-> Cc: Luis Chamberlain <mcgrof@kernel.org>
-> Cc: Petr Pavlu <petr.pavlu@suse.com>
-> Cc: Sami Tolvanen <samitolvanen@google.com>
-> Cc: Daniel Gomez <da.gomez@samsung.com>
-> Cc: linux-modules@vger.kernel.org
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  include/linux/module.h |  6 ++++++
->  kernel/module/main.c   | 14 ++++++++++++++
->  2 files changed, 20 insertions(+)
-> 
-> diff --git a/include/linux/module.h b/include/linux/module.h
-> index 23792d5d7b74..9e1f42f03511 100644
-> --- a/include/linux/module.h
-> +++ b/include/linux/module.h
-> @@ -779,6 +779,8 @@ static inline void *module_writable_address(struct module *mod, void *loc)
->  	return __module_writable_address(mod, loc);
->  }
->  
-> +void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data);
-> +
->  #else /* !CONFIG_MODULES... */
->  
->  static inline struct module *__module_address(unsigned long addr)
-> @@ -891,6 +893,10 @@ static inline void *module_writable_address(struct module *mod, void *loc)
->  {
->  	return loc;
->  }
-> +
-> +static inline void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
-> +{
-> +}
->  #endif /* CONFIG_MODULES */
->  
->  #ifdef CONFIG_SYSFS
-> diff --git a/kernel/module/main.c b/kernel/module/main.c
-> index 1fb9ad289a6f..ea1fe313fb89 100644
-> --- a/kernel/module/main.c
-> +++ b/kernel/module/main.c
-> @@ -3809,6 +3809,20 @@ bool is_module_text_address(unsigned long addr)
->  	return ret;
->  }
->  
+> /build/stage/linux/drivers/soundwire/qcom.c: In function ‘qcom_swrm_set_channel_map’:
+> /build/stage/linux/drivers/soundwire/qcom.c:1283:36: warning: unused variable ‘sruntime’ [-Wunused-variable]
+>   1283 |         struct sdw_stream_runtime *sruntime = ctrl->sruntime[dai->id];
+>        |                                    ^~~~~~~~
+> /build/stage/linux/drivers/soundwire/qcom.c: At top level:
+> /build/stage/linux/drivers/soundwire/qcom.c:1335:28: error: initialization of ‘int (*)(struct snd_soc_dai *, unsigned int,  const unsigned int *, unsigned int,  const unsigned int *)’ from incompatible pointer type ‘int (*)(struct snd_soc_dai *, unsigned int,  unsigned int *, unsigned int,  unsigned int *)’ [-Werror=incompatible-pointer-types]
+>   1335 |         .set_channel_map = qcom_swrm_set_channel_map,
+>        |                            ^~~~~~~~~~~~~~~~~~~~~~~~~
+> /build/stage/linux/drivers/soundwire/qcom.c:1335:28: note: (near initialization for ‘qcom_swrm_pdm_dai_ops.set_channel_map’)
 
-It is better to add a kerneldoc for this API.
+ACK,
 
-/** 
- * module_for_each_mod() - iterate all modules
- * @func: Callback function
- * @data: User data
- *
- * Call the @func with each module in the system. If @func returns !0, this
- * stops itrating. Note that @func must not sleep since it is called under
- * the preemption disabled.
- */
+Thanks for the review and test.
 
-BTW, do we really need to disable preempt or is it enough to call
-rcu_read_lock()?
+Somehow above build errors not reproduced in my build setup.
 
-Thank you,
+I am Using below commands for build:
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- allmodconfig
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j32
 
-> +void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
-> +{
-> +	struct module *mod;
-> +
-> +	preempt_disable();
-> +	list_for_each_entry_rcu(mod, &modules, list) {
-> +		if (mod->state == MODULE_STATE_UNFORMED)
-> +			continue;
-> +		if (func(mod, data))
-> +			break;
-> +	}
-> +	preempt_enable();
-> +}
-> +
->  /**
->   * __module_text_address() - get the module whose code contains an address.
->   * @addr: the address.
-> -- 
-> 2.45.2
-> 
-> 
+Will check and fix in next version.
 
+Thanks & Regards,
+Rafi
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
