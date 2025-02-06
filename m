@@ -1,84 +1,77 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1D0224890
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 08:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3610421CFE8;
+	Thu,  6 Feb 2025 08:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.248.49.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738830913; cv=none; b=JP6wg3FMNZF4w5uD+E9OgHLMEoMfcl9/e2oGeXjYxEgdb1VzZl20wTq5byMQpALckQ+icNxijW8iM5oLyvbHwrQHWAszkQ6CAvCpUdGVsmdM9xc8C4tRJ3dscfiqYEeWVUAKj9PDAbbcuDyTwQL1Z/5OTDcX1fXKgflQxXaY13w=
+	t=1738830971; cv=none; b=JftMYRjl3ceuV2tZDo8M35HmYnX5SlQNvSpxjEXXZCT71h3Pw70U/w6qIkHdLHtkZf9NzcoR9n+jqSJtQgEcZ6oCsQTi2n7AwjZDFzPNW8muYBn7lWBXOInuEnh71nrNLgZxdovr2bL4CdAt0lAV6xwlVOixvAN8kytHKKQb8C0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738830913; c=relaxed/simple;
-	bh=aqSVekwags+CA0/oC4ZRKtB6fBvm3awNyJi+swkyxYA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g+WzYoPZklsPjUIulPYKInNIucYMVZXIii6DuAmojzAUq2tYq+DKcu4CUV+vzMUAeP2uG4gJqNKF414xXoN1bfXh8q/pV4GeBdPtMZypPdIrUKRTVfalLpjvAm8GP7uY13p61srULsuP4NQnlJQiIl9dHA+6orTXDsOC0NxrtIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uW1eqCox; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uW1eqCox"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5440efe97baso662207e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 00:35:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738830910; x=1739435710; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aqSVekwags+CA0/oC4ZRKtB6fBvm3awNyJi+swkyxYA=;
-        b=uW1eqCoxUAWYsqBv3S+IRJNpv6MRUbC75+5sBnTuyRiRhyQ6tA8xn/WEPYwAQqyV7J
-         WkmSGjT6BWrDU3cpMCioTi/iiZOvfVL0Uu5qHsAC9DKgfJqmTtNxS+UDLjNyJ8j1yVr7
-         s6ml7UDCfgyWl+aK1pwLYH6uPc4rMO5LQd0Mkhp92MvLcZGOIBZnlmlyiDTePgLUum0i
-         8WD+yvzU6XNq4vnWf8gjFWFetzJaS5zpvEmx5Efa8LD9NHe9d3TlwPHkNnWwQ8hQlP8F
-         lI4mA5zuZ56UmGcLpDgo7m+FqCIyGVhAr17ODYOxDqE9+7iEQNAX9EDIc1EMWZpu+CEi
-         7OmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738830910; x=1739435710;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aqSVekwags+CA0/oC4ZRKtB6fBvm3awNyJi+swkyxYA=;
-        b=BK6cILlA5iZgLld5YKnG9KsFoW6YaV6xchJKzUUqFa5G3yrPLT7jwN94JNA/zWL12g
-         j60eYfZpsVRZcaW1CEOSkmcPFNVY+5Akj5rQI1ogcZ4K1PhyFwmgMPRyvN6wbxTCtKA5
-         hpd/qlopEHZ+rdIAjODz0vimOnSJtU0tWbbiQz3GJXlEG2pbCBP5ia6uPVauu4C7WwLY
-         vo/UEihV7LldpFo3/0GNgS5pU1feUldzGTlC/fNYyvmNiOeh6r+d3FoKW2cFYPA1Xn+C
-         Ks0UeISJs6Kz9K5oj7VqOazZJiw78rHiC2qYFCCbtVu5dh7Vn7dJSvsdED9y1imgiGpY
-         /1LA==
-X-Forwarded-Encrypted: i=1; AJvYcCXnsS4ZyBmYzgEk9za/F+EJ70igra/tvOVjgiQF3YZgdmKBEF9Jc9nr9bwcXTkA3bu5aNCAXU6zyTxIyCg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6WY4UljB8TMBxlKR2KTDHe9wxamJT9DmBcV3FhG9TU9a3wVtr
-	GHAFv4j4fcL3vBM5WHEuWsglZSfWWQwKAQjditTX+/B6MCOnbJv8jbKasSYt0GRZ2/0kXr6TnQA
-	ZEG0h1+rVh/d+3sTtONqLhCC8NMzJCe9oMjw0kwuzzIKKqmSl
-X-Gm-Gg: ASbGnctNbJMpmtcORAb9lfB37WhGxeQebf8Z/1K0J2dvYVCuvLXmjN07A5Tj5CJUnmi
-	E5/NAsuWdQnHKyiqoPmpCAf8O6Fm1+McAj1WHbJHBBLE6eBQmOx23ToEGToepS+658td01iE=
-X-Google-Smtp-Source: AGHT+IE4jL1biJ6V9cZ4/VPk7KnL1/9etk1mBhO7a/OlzJhKKy82lzPY62t9BmXNvglrokw+AmlgJ3IQWmBjB57cLLI=
-X-Received: by 2002:a05:6512:3ed:b0:544:f8e:ff98 with SMTP id
- 2adb3069b0e04-5440f8f0034mr374420e87.42.1738830910149; Thu, 06 Feb 2025
- 00:35:10 -0800 (PST)
+	s=arc-20240116; t=1738830971; c=relaxed/simple;
+	bh=WyJziOCrYNiJVEcvVqZdVq6DD7WSAOUr4Lx0YbijaGQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Z8EDDSpDsPoXO3g6cA29h2q5DERYzD78hnjpWxptQx/L5vphRVjBEIFDCeFMPr1bxw5OudfnI/Gx8GNUfOUCLHQ6/9Gr8d5IkIhdxRdIzep7UPFw8tAGHnEeoepw8KCkd3qgDuuQthy571Eb+rT0Pe/Z1jhn5lSqvZ2tMLV0ZUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com; spf=pass smtp.mailfrom=socionext.com; arc=none smtp.client-ip=202.248.49.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=socionext.com
+Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 06 Feb 2025 17:36:08 +0900
+Received: from mail.mfilter.local (mail-arc01.css.socionext.com [10.213.46.36])
+	by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 4A4B8200705C;
+	Thu,  6 Feb 2025 17:36:08 +0900 (JST)
+Received: from iyokan2.css.socionext.com ([172.31.9.53]) by m-FILTER with ESMTP; Thu, 6 Feb 2025 17:36:08 +0900
+Received: from [192.168.1.141] (unknown [10.213.44.71])
+	by iyokan2.css.socionext.com (Postfix) with ESMTP id E910FAB188;
+	Thu,  6 Feb 2025 17:36:07 +0900 (JST)
+Message-ID: <e606acef-adff-4e19-beb0-b587f8c269c6@socionext.com>
+Date: Thu, 6 Feb 2025 17:36:07 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250118031145.243104-1-yuehaibing@huawei.com>
-In-Reply-To: <20250118031145.243104-1-yuehaibing@huawei.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 6 Feb 2025 09:34:59 +0100
-X-Gm-Features: AWEUYZlTbmZNXFLuAIG7clgvEuMK_8C5v6IB51lMqv4nWoj4Y6P6R_UYsPx-1dU
-Message-ID: <CACRpkdYxpy3QbjRD5drxD7E7pO18amSvKHYukfOPmU_fp4bRPg@mail.gmail.com>
-Subject: Re: [PATCH -next] pinctrl: pistachio: Remove dead code in pistachio_gpio_register()
-To: Yue Haibing <yuehaibing@huawei.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] spi: sn-f-ospi: Fix division by zero
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250206082717.3833004-1-hayashi.kunihiko@socionext.com>
+Content-Language: en-US
+In-Reply-To: <20250206082717.3833004-1-hayashi.kunihiko@socionext.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jan 18, 2025 at 3:58=E2=80=AFAM Yue Haibing <yuehaibing@huawei.com>=
- wrote:
+On 2025/02/06 17:27, Kunihiko Hayashi wrote:
+> When there is no dummy cycle in the spi-nor commands, both dummy bus cycle
+> bytes and width are zero. Because of the cpu's warning when divided by
+> zero, the warning should be avoided. Return just zero to avoid such
+> calculations.
+> 
+> Fixes: 1b74dd64c861 ("spi: Add Socionext F_OSPI SPI flash controller
+> driver")
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>   drivers/spi/spi-sn-f-ospi.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/spi/spi-sn-f-ospi.c b/drivers/spi/spi-sn-f-ospi.c
+> index adac645732fe..56ef114effc9 100644
+> --- a/drivers/spi/spi-sn-f-ospi.c
+> +++ b/drivers/spi/spi-sn-f-ospi.c
+> @@ -116,6 +116,9 @@ struct f_ospi {
+>   
+>   static u32 f_ospi_get_dummy_cycle(const struct spi_mem_op *op)
+>   {
+> +	if (!op->dummy.nbytes)
+> +		return 0;
+> +
+>   	return (op->dummy.nbytes * 8) / op->dummy.buswidth;
+>   }
+>   
 
-> fwnode_irq_get() was changed to not return 0, so this check is dead code =
-now.
->
-> Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+Sorry, I missed a tag. I'll resend the patch.
 
-Patch applied!
+Thank you,
 
-Yours,
-Linus Walleij
+---
+Best Regards
+Kunihiko Hayashi
