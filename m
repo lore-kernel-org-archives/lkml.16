@@ -1,124 +1,108 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525A91F4176
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738857465; cv=none; b=exkzLyt0R7wTim90hjEDdzR/ALI+V5L9rkf6ATgUJBNINZx02W411DU84znGS2NYm6/8UXTS/IefbDGnXoI/qI/10DQe3fHhwNNd9jT/9iPuRF+kCNL/fMpDYxOE6FfxktG4CnhCVKPy+3sJZjIkalQa0ndwbSdU9NkHOrAVeLo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738857465; c=relaxed/simple;
-	bh=VVbyILDZ8O23cCbLemWssIEyMVaqbxgt8Ip2vBbHLgI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZEHZ/mcrpY3F2dTRdZzS7Zp3WhnxBIQXPwl/6Sf4BqW2XyZYG2/e6CWqULh81a/L5/AW2kLDjOMt7XuPhqtDeh7OvuYVQ0ChteMoTFp3qTWivNuNBjyAGaGWefPGECGy9rWJ7GHlEzfpBC1Sgr9q521DzcMQHJDlTXtKASkuhJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LQ7TU7r9; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450AA4C8E;
+	Thu,  6 Feb 2025 15:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738857492; cv=pass; b=rM78hcvULIHiDNh/QJuEOrColBQNkSM8HGfUtI+MIzGtWkdFrYazv7tdiLHimANtQvdVyOluHbcjzirj0od/HYS4KGxlnfQql3Ccl1wMCx2H8B2cwMBiGKZWz5j1kuLGgcFE57TOqQwVbzumM5WfRRGE8+O9p+YnoPZoanFZtJU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738857492; c=relaxed/simple;
+	bh=yDPUsCT9hmh7vT+oOHRxNlaZfB9DoCgl5znzJqhS3go=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Aefkh3Q2PXSuxlWai43H4WFSVfhcIan6TZVtKuPrQyFiI/3AMEr4042qyD0w/qg2/xjS8kBf5YyTHNVkteTkxq2dJEmxzSGKz0QMUeWQLtcXKVI3Ubr8zfXoxlclyVapf+CpYZKvXAvxXyF96RzEoUN23xdaAWXV/txiron77PI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=lUvaMDEr; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LQ7TU7r9"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4361dc6322fso7538185e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 07:57:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738857461; x=1739462261; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VVbyILDZ8O23cCbLemWssIEyMVaqbxgt8Ip2vBbHLgI=;
-        b=LQ7TU7r9X3vpvWHFqz5/RnQFlO7jYbQxA7b6omxtGjka9Sr7TippAcHldsloIeqAGC
-         hQZecHToCJ0ZgtwJi6P9t3pokD1eNf8sFoRxSZz/Je7hzL5FlV6bwUV0pKdeOny6XAhi
-         VChIqtwJDzCY6vq82syNRoYlqAwbeNesRUWK2MrGn/Si1cv3WRSu6Vg60iQCuDNOMYAe
-         9954EY8459nUhTt/BZMIVM5MDJNXMMjoctmT4CHRw4jl9iVhVJH9hgbf38BcXurDl95L
-         QHEZCdaCZONEXmC2I+hWprmWJ0yRUGBlFg+cYgbXQCuUsp+miSl0YmS8rQPe2FBmpfii
-         QTMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738857461; x=1739462261;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VVbyILDZ8O23cCbLemWssIEyMVaqbxgt8Ip2vBbHLgI=;
-        b=ME50LkLQGhq2jeueQ5H28RdwgEHq7q9VIekg+niWwUrcOPPYGFl6CypukrQ5nGJgN1
-         O5nQ/N3C6G+CnRZG0/KU6u8cyG/gTnUHGbBqlSK6k3+lEueqquEdcO/ebpwLPhURR5FL
-         i/nOqVJQIAcFPmVYhcmw9eEhllS+kQ0Wy1bJP60BDodB3MLGVYhdnKMT4vlkYY6wwgV5
-         Vucc24N4rHj7msex/RC1iX1p5tgRdjRJ+IE8NN/Ac9EDPtkhF6Db2Ew24DDpXhwnb4Mt
-         /WQrrnvvbUbuB/MvBU/lEZpHTLj04kt2xHieWm0VriDmTLa2U7eMOmwrrYJTIM/wyUPT
-         3LYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUSFhrh6tWS8vAylKqAXyeXnCFoh4W8kt3/XJ/+1fJvAnLcJ1VwtmUNnyML1VF4nx7JzT2XV84xiMHL0H0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWB5ZoTTBsmCjxbQsKQsJwv4cI0wR+R7NUXgEGQPiiWosfCOef
-	Rq/v0ymmIC9zJ82O6ZRrAg8wBlOgJSiPeQryvGWtITG477zjvm4pnfm1Nun4F8k=
-X-Gm-Gg: ASbGncsUEnA+LtTrOPRV0UbN9nZj4ySt1KUZXJsm7ADLoyh0Sbag8jSncBu/FpMKr2Y
-	fglJfMJ9HmoNfrba8HQqei2elBe6ZpSbBChIrfTcrLqXKHX3N+/7HD1A35DJcABKH7Ya+2fy6ft
-	f5OHXGtIhVs6Kgyl75yPVPxDZg7/ELTLF6DqZ0ScrfF+7AXNrwXvH1C/7IeTY52aHS2h3XwQOyW
-	+KWg/We5KUVqAaPpK34GoWHQg4j+sw/ABoyYaskHVAnPMLOJ/1tE2Q6AuWHZ/Y8V9FaSuetA8hU
-	CkbeUa9f2n0TApr6bw==
-X-Google-Smtp-Source: AGHT+IEtnYVZgigZSV9GOOjiw4uU0akvJHJHUr5mEW7I59L42GPOmQnzeJu25Ocod8gQri8uVU0GSg==
-X-Received: by 2002:a05:600c:354a:b0:434:fbcd:1382 with SMTP id 5b1f17b1804b1-4390d435cf2mr78308015e9.11.1738857461578;
-        Thu, 06 Feb 2025 07:57:41 -0800 (PST)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390692a66esm58718075e9.0.2025.02.06.07.57.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 07:57:41 -0800 (PST)
-Date: Thu, 6 Feb 2025 16:57:39 +0100
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH] memcg: add hierarchical effective limits for v2
-Message-ID: <mshcu3puv5zjsnendao73nxnvb2yiprml7aqgndc37d7k4f2em@vqq2l6dj7pxh>
-References: <20250205222029.2979048-1-shakeel.butt@linux.dev>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="lUvaMDEr"
+ARC-Seal: i=1; a=rsa-sha256; t=1738857469; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=LWbKxtA5zrBaCf1ULzQDJOKBTk1Sj46wqe/FDnz6FZ8AM+q5XV8+SGVZQdJYt/foor+ehUx3C+3lp6tq88TL0m1CUyBhmBHA2GDTA7R/BBaWZ/vOa1kdziw0mVLZGwIVkhMqcwFo+ED0ra5YZLPOIssAZROAXPMOOBONffXsVFA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1738857469; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=yDPUsCT9hmh7vT+oOHRxNlaZfB9DoCgl5znzJqhS3go=; 
+	b=YXbtygPTI/6Y1IJBjf4LP5luGto+SCbTBYXBpaA/dlylU6ii2GV/hVcJ8jQ32eqK5NTnA2va1+cC2LZ6QpLOH57h/mh6r1/eJ4Z+u78VFpY/GYGSM17sTSuPSkrTiB1MRwiJpxEG/SfdaQObqoMKsNm89xq4vm2MEQQtNWwCkh8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738857468;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=yDPUsCT9hmh7vT+oOHRxNlaZfB9DoCgl5znzJqhS3go=;
+	b=lUvaMDErbtrHOvXxZEu2MSleKY8tSy7uOEJK6m5aMLFo6YfdOd8H6ZopYKDJKwDP
+	isNQ7BbDGwFaBpMcWA7x+0ZoSyCkavf81bzzuX6W0A2y2Gwc/7uXK39sATjpnCfFPUR
+	1aJvHLFhmWQwHKkH9trEmJ8iigO5a1m+onEzrXKo=
+Received: by mx.zohomail.com with SMTPS id 1738857465134608.811360113628;
+	Thu, 6 Feb 2025 07:57:45 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="toufq4e4fjypkuvv"
-Content-Disposition: inline
-In-Reply-To: <20250205222029.2979048-1-shakeel.butt@linux.dev>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
+Subject: Re: [PATCH v6 2/3] rust: io: mem: add a generic iomem abstraction
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <tencent_2E2CD1359817A58BB51F59E790325CFA6A0A@qq.com>
+Date: Thu, 6 Feb 2025 12:57:30 -0300
+Cc: a.hindborg@kernel.org,
+ alex.gaynor@gmail.com,
+ aliceryhl@google.com,
+ benno.lossin@proton.me,
+ bjorn3_gh@protonmail.mco,
+ boqun.feng@gmail.com,
+ boris.brezillon@collabora.com,
+ dakr@kernel.org,
+ gary@garyguo.net,
+ gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org,
+ ojeda@kernel.org,
+ rafael@kernel.org,
+ robh@kernel.org,
+ rust-for-linux@vger.kernel.org,
+ tmgross@umich.edu
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <67AB9311-3EDC-44A8-9C7C-ABF2ED6B632C@collabora.com>
+References: <20250130220529.665896-3-daniel.almeida@collabora.com>
+ <tencent_2E2CD1359817A58BB51F59E790325CFA6A0A@qq.com>
+To: Guangbo Cui <2407018371@qq.com>,
+ Miguel Ojeda <ojeda@kernel.org>
+X-Mailer: Apple Mail (2.3826.300.87.4.3)
+X-ZohoMailClient: External
 
+Btw, Miguel & others,
 
---toufq4e4fjypkuvv
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH] memcg: add hierarchical effective limits for v2
-MIME-Version: 1.0
+IMHO, I think we should write a comment about this somewhere in the =
+docs.
 
-Hello Shakeel.
+When I first came across this issue myself, it took me a while to =
+understand that
+the build_error was actually triggering.
 
-On Wed, Feb 05, 2025 at 02:20:29PM -0800, Shakeel Butt <shakeel.butt@linux.dev> wrote:
-> Memcg-v1 exposes hierarchical_[memory|memsw]_limit counters in its
-> memory.stat file which applications can use to get their effective limit
-> which is the minimum of limits of itself and all of its ancestors.
+That=E2=80=99s because the result is:
 
-I was fan of equal idea too [1]. The referenced series also tackles
-change notifications (to make this complete for apps that really want to
-scale based on the actual limit). I ceased to like it when I realized
-there can be hierarchies when the effective value cannot be effectively
-:) determined [2].
+```
+ERROR: modpost: "rust_build_error" [rust_platform_uio_driver.ko] =
+undefined!
+```
 
-> This is pretty useful in environments where cgroup namespace is used
-> and the application does not have access to the full view of the
-> cgroup hierarchy. Let's expose effective limits for memcg v2 as well.
+When a symbol is undefined, someone would be within their rights to =
+assume that
+something is broken in some KConfig somewhere, like this person did. It =
+specifically
+doesn=E2=80=99t tell them that the problem is their own code triggering =
+a build_error because
+they are misusing an API.
 
-Also, the case for this exposition was never strongly built.
-Why isn't PSI enough in your case?
+I know that we can=E2=80=99t really provide a message through =
+build_error itself, hence my
+suggestion about the docs.
 
-Thanks,
-Michal
+I can send a patch if you agree, it will prevent this confusion from =
+coming up in the
+future.
 
-[1] https://lore.kernel.org/r/20240606152232.20253-1-mkoutny@suse.com
-[2] https://lore.kernel.org/r/7chi6d2sdhwdsfihoxqmtmi4lduea3dsgc7xorvonugkm4qz2j@gehs4slutmtg
-
---toufq4e4fjypkuvv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ6Tb8AAKCRAt3Wney77B
-SV0+AQDW1xJCBatKi6xRC0ZESDInrTI1kQ6qqN9CO6w5z8FpQgEA1zRlG0NxFEN7
-nUgSeD9K4yF5HvSYXGo3jlGZRYaPPAc=
-=wGHN
------END PGP SIGNATURE-----
-
---toufq4e4fjypkuvv--
+=E2=80=94 Daniel=
