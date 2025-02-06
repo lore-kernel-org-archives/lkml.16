@@ -1,105 +1,107 @@
-Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
+Received: from gentwo.org (gentwo.org [62.72.0.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF631D619D;
-	Thu,  6 Feb 2025 21:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AA819AD70;
+	Thu,  6 Feb 2025 21:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738877382; cv=none; b=Rbn61KiNx4tCYj6SEF8fwmFWOudyogJjXeUCnsGzW3DW8GsQOykHgpaqNt8c2/ilh8YxagaH8iG2wMnfSEnhNtGXXSwJSMQqfgYWYbFsy21Fcrq7cDIiFrQHaNwE+BL93hyRsr+2zTb9WxZn/aUrrKUpgiemhSr285AP8KVCN3k=
+	t=1738877490; cv=none; b=iHgpsMX8hZyqN0MOtKICdvfpBErtDwntmszqDDVtKVaWtsqW3hIAwRZNkqpcRjIT44KGCM3zyrWFzMI1uScxy9//01WHKx+hFw+sHyECaXzcnjvZ6/UD7ZhTfWNotYEP7IxVHtQ4pNAYWbdePwUkYx2Q0Aa442H0zczAUKJM+oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738877382; c=relaxed/simple;
-	bh=V+agB2RgEaJE6GABRMSM1kt8oPczg2s4klAFFVYvIO0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n2tFtRps25n36uk7/OtCcOiXTcu5o+27wVO2bB6M/nFWhzX3KAVCY3wLctrXf7vLDPGuNB7nnqTBXcgku/pAb85DC3ii5sB5zBkh8TVO1IKIwxrF8Veaq/tl3E8qOKmCrCELFnhZyIVmLzT9Kt3/ShPvcv9Qj+XYb+EnamFvcAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=yUhEgFbx; arc=none smtp.client-ip=199.89.1.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1738877490; c=relaxed/simple;
+	bh=F2jqlpwTo2MW743dx82l7OJPk/nMa2jFFcu4kDo1YtI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=nSbRUK0YsNLmJLpnM/UdRPq83CDd9yQaj1geLi8b8bXsP5RvpQau/V4xRoIv+Vp6gur8s3DdF3ll+80uSQwKowJN81oy7MUyG8MH6ou81gTxmEX4C1acxQ7hCHcuz7Ld7lGE2pkvQqzmwcpqZK927bjVnP6E0wZKhfx1XrFPzDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=FYcvTqLE; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="yUhEgFbx"
+	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="FYcvTqLE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
+	s=default; t=1738869076;
+	bh=F2jqlpwTo2MW743dx82l7OJPk/nMa2jFFcu4kDo1YtI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=FYcvTqLETvIDV898S86+xT9SbePWJllnFgwWELTqoYC+Ih5/O0lacqyjKvIwxKeYl
+	 0bRynm64ajsLxhkOs9IC2kkFJOFCeX8dIdo5rb/+Td+a2jaoRxPwY+5pkECXs4UPOq
+	 jRDzNL1vUjiJGkL0HmYhRBF7jwa5kXwPsOZoma2c=
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 257D54028B; Thu,  6 Feb 2025 11:11:16 -0800 (PST)
 Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Ypqxb3yCRzlgTwF;
-	Thu,  6 Feb 2025 21:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1738877367; x=1741469368; bh=ygRwFLCUciivthCdQYJVLmlK
-	5fpOtVZDy4dVAV/W3mE=; b=yUhEgFbxzsS+oxc9l6BoSmJ8G72/YtxdS8rXiQg/
-	fi1Ee/BF9gtkmoU//eiyffo5NnvZPRfYsIS12uvt3MsvcH7o5i3AhGEvdznPwqEB
-	ybbD0NcivhuFBcgACdN981oThG2ZrbU+50GqWb5/fqdG8YM50Vy2NY5LMYbZY75s
-	qRukSRU0zjIZSj8uPoCFXjq7LtnaS3wHbEWAJ9DyqLJrzPV0VMCwzuaTScE9jxq1
-	xJO8/li++bH5ssw8vuYocpKDi8dlegssBKlz7hX2PKg2SDBmAd/JvwlGytu1IFKy
-	jAGPlEjN10yccRwH1a1ekeRB47cDSrqNBFl7AVed1lBHcA==
-X-Virus-Scanned: by MailRoute
-Received: from 009.lax.mailroute.net ([127.0.0.1])
- by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id NqM4EdqVb7bb; Thu,  6 Feb 2025 21:29:27 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4YpqxB2wn3zlgTw4;
-	Thu,  6 Feb 2025 21:29:17 +0000 (UTC)
-Message-ID: <4ce8f5f2-4196-43e7-88a2-0b5fa2af37fb@acm.org>
-Date: Thu, 6 Feb 2025 13:29:17 -0800
+	by gentwo.org (Postfix) with ESMTP id 215A9400CA;
+	Thu,  6 Feb 2025 11:11:16 -0800 (PST)
+Date: Thu, 6 Feb 2025 11:11:16 -0800 (PST)
+From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+To: Jessica Clarke <jrtc27@jrtc27.com>
+cc: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, luto@kernel.org, 
+    xin@zytor.com, kirill.shutemov@linux.intel.com, palmer@dabbelt.com, 
+    tj@kernel.org, andreyknvl@gmail.com, brgerst@gmail.com, ardb@kernel.org, 
+    dave.hansen@linux.intel.com, jgross@suse.com, will@kernel.org, 
+    akpm@linux-foundation.org, arnd@arndb.de, corbet@lwn.net, 
+    dvyukov@google.com, richard.weiyang@gmail.com, ytcoode@gmail.com, 
+    tglx@linutronix.de, hpa@zytor.com, seanjc@google.com, 
+    paul.walmsley@sifive.com, aou@eecs.berkeley.edu, justinstitt@google.com, 
+    jason.andryuk@amd.com, glider@google.com, ubizjak@gmail.com, 
+    jannh@google.com, bhe@redhat.com, vincenzo.frascino@arm.com, 
+    rafael.j.wysocki@intel.com, ndesaulniers@google.com, mingo@redhat.com, 
+    catalin.marinas@arm.com, junichi.nomura@nec.com, nathan@kernel.org, 
+    ryabinin.a.a@gmail.com, dennis@kernel.org, bp@alien8.de, 
+    kevinloughlin@google.com, morbo@google.com, dan.j.williams@intel.com, 
+    julian.stecklina@cyberus-technology.de, peterz@infradead.org, 
+    kees@kernel.org, kasan-dev@googlegroups.com, x86@kernel.org, 
+    linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+    linux-kernel@vger.kernel.org, linux-mm@kvack.org, llvm@lists.linux.dev, 
+    linux-doc@vger.kernel.org
+Subject: Re: [PATCH 00/15] kasan: x86: arm64: risc-v: KASAN tag-based mode
+ for x86
+In-Reply-To: <29A74A26-E922-4A4F-9B4A-8DB0336B99DF@jrtc27.com>
+Message-ID: <94f81328-a135-b99b-7f73-43fb77bd7292@gentwo.org>
+References: <cover.1738686764.git.maciej.wieczor-retman@intel.com> <8bd9c793-aac6-a330-ea8f-3bde0230a20b@gentwo.org> <F974BA79-80D8-4414-9DFD-1EEF9395143C@jrtc27.com> <72837fcd-97a8-c213-0098-c8f308c3415d@gentwo.org>
+ <29A74A26-E922-4A4F-9B4A-8DB0336B99DF@jrtc27.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 07/24] cleanup: Basic compatibility with capability
- analysis
-To: Marco Elver <elver@google.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
- Alexander Potapenko <glider@google.com>, Bill Wendling <morbo@google.com>,
- Boqun Feng <boqun.feng@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Frederic Weisbecker <frederic@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
- Joel Fernandes <joel@joelfernandes.org>, Jonathan Corbet <corbet@lwn.net>,
- Josh Triplett <josh@joshtriplett.org>, Justin Stitt
- <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>,
- Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
- Thomas Gleixner <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>,
- Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
- kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, rcu@vger.kernel.org, linux-crypto@vger.kernel.org
-References: <20250206181711.1902989-1-elver@google.com>
- <20250206181711.1902989-8-elver@google.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250206181711.1902989-8-elver@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="8323329-815475849-1738869076=:2425008"
 
-On 2/6/25 10:10 AM, Marco Elver wrote:
-> @@ -243,15 +243,18 @@ const volatile void * __must_check_fn(const volatile void *val)
->   #define DEFINE_CLASS(_name, _type, _exit, _init, _init_args...)		\
->   typedef _type class_##_name##_t;					\
->   static inline void class_##_name##_destructor(_type *p)			\
-> +	__no_capability_analysis					\
->   { _type _T = *p; _exit; }						\
->   static inline _type class_##_name##_constructor(_init_args)		\
-> +	__no_capability_analysis					\
->   { _type t = _init; return t; }
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-guard() uses the constructor and destructor functions defined by
-DEFINE_GUARD(). The DEFINE_GUARD() implementation uses DEFINE_CLASS().
-Here is an example that I found in <linux/mutex.h>:
+--8323329-815475849-1738869076=:2425008
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-DEFINE_GUARD(mutex, struct mutex *, mutex_lock(_T), mutex_unlock(_T))
+On Thu, 6 Feb 2025, Jessica Clarke wrote:
 
-For this example, how is the compiler told that mutex _T is held around
-the code protected by guard()?
+> On 5 Feb 2025, at 18:51, Christoph Lameter (Ampere) <cl@gentwo.org> wrote:
+> > On Ampere Processor hardware there is no penalty since the logic is build
+> > into the usual read/write paths. This is by design. There may be on other
+> > platforms that cannot do this.
+>
+> You helpfully cut out all the explanation of where the performance
+> penalty comes from. But if it’s as you say I can only assume your
+> design chooses to stall all stores until they have actually written, in
+> which case you have a performance cost compared with hardware that
+> omitted MTE or optimises for non-synchronous MTE. The literature on MTE
+> agrees that it is not no penalty (but can be low penalty). I don’t
+> really want to have some big debate here about the ins and outs of MTE,
+> it’s not the place for it, but I will stand up and point out that
+> claiming MTE to be “no performance penalty” is misrepresentative of the
+> truth
 
-Thanks,
+I cannot share details since this information has not been released to be
+public yet. I hear that a whitepaper will be coming soon to explain this
+feature. The AmpereOne processors have been released a couple of months
+ago.
 
-Bart.
+I also see that KASAN_HW_TAGS exist but this means that the tags can only
+be used with CONFIG_KASAN which is a kernel configuration for debug
+purposes.
+
+What we are interested in is a *production* implementation with minimal
+software overhead that will be the default on ARM64 if the appropriate
+hardware is detected. That in turn will hopefully allow other software
+instrumentation that is currently used to keep small objects secure and in
+turn creates overhead.
+
+--8323329-815475849-1738869076=:2425008--
