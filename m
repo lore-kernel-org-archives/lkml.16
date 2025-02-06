@@ -1,210 +1,216 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2052.outbound.protection.outlook.com [40.107.101.52])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9504B223703;
-	Thu,  6 Feb 2025 05:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738820526; cv=fail; b=K8+BRlKkaoc+5E3MqH1GMsdB8k5jzsXw36HQl+tkn79aYemixVkWSRltn5SMukngtJi7SvT7h5zu7wXEGUYWg+ORJ+PKEvTfYVs4ovLAYO04w0K1ph7Cth5ijPNpbeIIgeqfxDNnHWdBL8qXYc09CarMIzfjF+HuOfxTmD/kILw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738820526; c=relaxed/simple;
-	bh=uhWNocZRZKjyjWLfSh6IwTJtjxO0L+OY9rxESjZANLM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Rj4pe4W/8dx046l/jPGpva1EK/U0IfRAwrwDtsgqXVFexXFozgN84VoXU8qMhY48qEEabCyz6StQs4V8DIyVh2NIjeVfOJQKP2mHjhU7cAjbS6Aigs2BpmFst00Lz229v/jkFM82/L44i/uM/AzjG4MmvjOwUEbNRls3lC5wqh8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=C8Os7qkd; arc=fail smtp.client-ip=40.107.101.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08995209F3F;
+	Thu,  6 Feb 2025 05:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738820586; cv=none; b=pfs/aeA8+BctqTkGPSmRMiCP5N8tjEBNg/FJMJyxOodcmt+JkOp6gu07KyylqCuzGV71oQN6BcbRe9hdo+RNGtksK2uizx6T/BQLS2Pw4JI1GnbtibLpG88G15Dw/DJ11Sqv+KEQK/SxGuNAJEkVGndrv2WvkN9GK5m0TfjRiuc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738820586; c=relaxed/simple;
+	bh=9BZe+cEyYou1blzEL+/9tbvtA8C9HEgYEu+jv9YOTGg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YRQw8D/LHCWbt70AaWBET4rmXkXMX6zd72lMb6MDK8VtsokcnMAlUWVFZ70yqhdEltL1OwyVaRY3aGLO6n34Rulg1OJKvOFBkIcml+kWkMGbAaqplB4MJmBktCmXyc4NUPk4zl8nAoR3WpYN0lfj4DXlzYtQcCTqeGoxe/VOPe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=T2iOuy0X; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="C8Os7qkd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=goYDntZrxQ++iUaLpI/w9kw4ldfB3pjYvo0sTeCZ7EKnS8Uix72wwPp2chjWlZ7m40wcqarkAZigXPLP8QXEi94g7t/n8YisigcrQvckj7kwB9wxWgLX3m2OwWKEmCSmowx5A+V4i3P9ItOom2ncvXe5lPw2zJ1DGGRXW6Jo82/Sg8UUuEwEB2ITuL4E8fpBu9gtaZMMLwzxlUml49lk3PTOxjGj1koXPrnpIMBZuoYlf7/VrIwJv2uc6UoUChHlUqGFZSoesqn+n2IJo74E8YjglwzpxjhgiAzOu5/wfYg+QG+Dc+L+Z8aKKeAVPEXMy9dhpZmimmHQ2Fdz/QjnZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5ozGlKHFennasnNlmAeXZ225S6wLQwXPPDom976F5zs=;
- b=eUX43epTu4h00sgvFLV0Lc2Scck2SX5osRO7aywfLw+WSHcEUXOgwf4h6gEaYc0pDI+x8yvCrVa4eyRfOpPE00BFAtOvt29kqDFrPwaY0aJyu8cJN/uD4IoBSW2huY07183QT6YfvSHyU5yDOSVrrmYZs9nHLI2k11eocDerETeTKMcJ2VLfA4fs9d0Uyc8iBE3lurYgm7s1MhWQaCrWrqHed3t44gGQLm+6nrC9Nrp0N+0/0WJjRVdzqNNkPiZvr/p6AmJE5yddUZsm8v4eVZtuJjzRbjQo4K7oPXuzXXQQ+e995Vr4TH7fLNLmseDzlRTPY/RUrFIlD6gxa/Zu+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5ozGlKHFennasnNlmAeXZ225S6wLQwXPPDom976F5zs=;
- b=C8Os7qkdt9GErgE8Im/mFfrkevj/vUi7tRwFcXX4IsLQzWErSx+o7FdN/kwhUQo5mjAdKUTThvVtCVKtMRVKs7S8M5VW48+guayM+OGVBlZd+iWazRv6dvgD0T+lVwgZgw7hhGDyH8i3SsOWICPNx/kdS+PncAPXXAza3CUW8vY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
- DS7PR12MB6287.namprd12.prod.outlook.com (2603:10b6:8:94::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8422.10; Thu, 6 Feb 2025 05:42:02 +0000
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5]) by DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5%6]) with mapi id 15.20.8398.025; Thu, 6 Feb 2025
- 05:42:02 +0000
-Message-ID: <8a4e9350-8a0e-469b-969c-25cd81926f7a@amd.com>
-Date: Thu, 6 Feb 2025 11:11:48 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] x86/sev: Fix broken SNP support with KVM module
- built-in
-To: Sean Christopherson <seanjc@google.com>
-Cc: Ashish Kalra <Ashish.Kalra@amd.com>, pbonzini@redhat.com,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- thomas.lendacky@amd.com, john.allen@amd.com, herbert@gondor.apana.org.au,
- davem@davemloft.net, joro@8bytes.org, suravee.suthikulpanit@amd.com,
- will@kernel.org, robin.murphy@arm.com, michael.roth@amd.com,
- dionnaglaze@google.com, nikunj@amd.com, ardb@kernel.org,
- kevinloughlin@google.com, Neeraj.Upadhyay@amd.com, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-coco@lists.linux.dev, iommu@lists.linux.dev
-References: <cover.1738618801.git.ashish.kalra@amd.com>
- <e9f542b9f96a3de5bb7983245fa94f293ef96c9f.1738618801.git.ashish.kalra@amd.com>
- <62b643dd-36d9-4b8d-bed6-189d84eeab59@amd.com> <Z6OA9OhxBgsTY2ni@google.com>
- <8f7822df-466d-497c-9c41-77524b2870b6@amd.com> <Z6O8p96ExhWFEn_9@google.com>
-Content-Language: en-US
-From: Vasant Hegde <vasant.hegde@amd.com>
-In-Reply-To: <Z6O8p96ExhWFEn_9@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0156.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:26::11) To DS7PR12MB6048.namprd12.prod.outlook.com
- (2603:10b6:8:9f::5)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="T2iOuy0X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1738820541;
+	bh=QF38I/tzVHyo4qFvBBwEmSImd2gsUnZ/WmAknAwOxvs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=T2iOuy0XJZXHm356exHiR97MYyzTgNUTtdf0CkhIYf12mwC3CFTgCI3U8R8J+0i/Y
+	 rg7Ya25xjVFGiUdDeYwAuk3no5MWXJ/5Z7RBfb/5XQUNsqre4w8YBzkYoLF0k62ztx
+	 oP8NcRftnmbk0DYON0TZNbO9+XHbYroVsCRxuyCM=
+X-QQ-mid: bizesmtpip4t1738820480tfodjpw
+X-QQ-Originating-IP: sg7VSIWw9r0NsVjElq7vwWqxXNOLvBEtzTSj2AbwP5U=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 06 Feb 2025 13:41:18 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 2559714310624554631
+From: WangYuli <wangyuli@uniontech.com>
+To: stern@rowland.harvard.edu,
+	gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org,
+	usb-storage@lists.one-eyed-alien.net,
+	linux-kernel@vger.kernel.org,
+	zhanjun@uniontech.com,
+	guanwentao@uniontech.com,
+	chenlinxuan@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>,
+	Xinwei Zhou <zhouxinwei@uniontech.com>,
+	Xu Rao <raoxu@uniontech.com>,
+	Yujing Ming <mingyujing@uniontech.com>
+Subject: [PATCH] usb-storage: Bypass certain SCSI commands on disks with "use_192_bytes_for_3f" attribute
+Date: Thu,  6 Feb 2025 13:41:07 +0800
+Message-ID: <AC1BB7F0327EFB9C+20250206054107.9085-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|DS7PR12MB6287:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b2babeb-1128-45ec-95c8-08dd4670faea
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?KzdrajY0ei9YcHNpVnQ1dU9zMFdteHltSG9USFdvZHNZSGZTbTJTUitlU3FJ?=
- =?utf-8?B?T0NJd0JLSVZvUlIyQVRSSEd6aWlFTnVJeVZTU2haaysxUzVwYmU2UkZISkJK?=
- =?utf-8?B?ckFZZlBkWkJkK2E3L0RlK1pmQXVrR0FqZERHRHQxY1IrNlZ4K1lqb3JpNnlE?=
- =?utf-8?B?V0VCK2JlbUZUUVJqVUJZVlo3MnBJTE9Nclk5UThHYlBSWmJkYkphY2lYc01W?=
- =?utf-8?B?Yk5XZ29yRzJRRzZNcFk4eENYenQxdm9xbTlqTS9Ma3MrOXczNyt4YVZPdlI4?=
- =?utf-8?B?VkpnY0x4VG1wR3dGSmkzeVFkN0k3MWhYeUtaU28vY2d6Y29OcUdKQ3lKUG4z?=
- =?utf-8?B?TWJxOHNVcXNFcWkwZGFtU0lJM2t6bUM2Y3NZRm1hN2M4TURJS01la3dvUkEx?=
- =?utf-8?B?c2NHc0dCNy9xZWVyaUZIbzVRYmFuc1UrNGRoTzRtWGRqajkvdTNtdjAvUGpn?=
- =?utf-8?B?dUhobWw1QnFOOHN4cmluWnE3N3hQa3RDNUozUTdZQk5JTVU3dFFWT0dGRENI?=
- =?utf-8?B?TmUvQzFBUlM1anNJamNYMGtZaXcvSDhIRVVFSkNPV1grNkxGSGpOb2lYNTZF?=
- =?utf-8?B?ekZXZDBpL09GU2FGU2FUL2dzSjB3THhCcGFMTlBiNFdKcm00Q2pZVnFZcXg4?=
- =?utf-8?B?akZHS1NPWDhhUldzOU93dmJTT1cwZEtKdkpBSnBSSzZubDk2aGNxUjRVVHhr?=
- =?utf-8?B?VEQvaWo1UkdKd0ZEMWtMSmVSTFc4WmNhV2JvN3VFQUM3UTF0QmtQTjAxeUxU?=
- =?utf-8?B?TjJFa0VLYmJIVUJsUG81bEdFeFhCODUzQ2kvSmNhTzN4RDREcEJIbjAycE55?=
- =?utf-8?B?NDVnRTVGdUYrNFYzNS93MFpPUEhCQXhCVFVKenNhSnZRdlFhdk05TXRXUmZo?=
- =?utf-8?B?VVFteVFEalFvQVdpVHFDRkppTm1McmJaaGprM3lvSHllTTFDSVVaS2VrWWFQ?=
- =?utf-8?B?NzdCUDYzQm1HblIxRm13OXBheGhiZC90VFhicmpxTnAvWk1IeDBnY0RnM0U4?=
- =?utf-8?B?Ris4M1pQR1l6bDdyc1BFeC9selR2YmhPZjM3WTJWbWtjNzM4NUkzQzZxZCtI?=
- =?utf-8?B?ZXBRTEJHMEFDNjVPYTNNVmVqd0h2TklIYzByQ0RPaDE2RWNhSmw4azJ0c0U5?=
- =?utf-8?B?cU1aVGl4cXE1OFRyWHg0MXF6c3ZXa2t0dkNnZW94QlNNRDNIYklmNnQ4TStq?=
- =?utf-8?B?NzNObzNVYWUwcFQwZFBoNkhmM3RUTjYrOERBVWlBWXByOTEwUDVnN2diY0tu?=
- =?utf-8?B?bnV2RVNJeksxa0VRY0g0OHJOM1hLVGVzam4rNDJld2dYYVcveXFIOCszQVR5?=
- =?utf-8?B?cVl2aEZYNzZKR1l1T2RjOUlpSHFCczNuQUluZkEwdnh2cnRvbGZWS01TS3A5?=
- =?utf-8?B?ZHJOMDk4ajJEUGQvNE1YU3g0YkQybXhHOFZvdzI1Um9Na2JmK1NzVVVkUEN0?=
- =?utf-8?B?Q1hSdUJ2NHdvUXVYMXJrb09XaG1nMFVIdkNnc0JQdmZya0luZzc5eVNoUzhs?=
- =?utf-8?B?M3ZzUXdHdWtGait0dnpjcGdsbmp6czVGREJCYStXamJXTWJBb09UZnhueWNI?=
- =?utf-8?B?MnpUb1ZVclV3R29XdmhvMTQzOFQyeGwwQWVTNjBSKzIvVkthYzRzeFV5QjZF?=
- =?utf-8?B?V0h2QUUwNXVIZWxKVitzdTZoYk05Wmxuc1o2ZVdiK1FTM1ZwL2RWdEZsRWNq?=
- =?utf-8?B?bHV3YUhQbnY1TmJzK1Q3aTJKeGtiNURRWVVoUGlRallPR2VVUWxLUVpUaGtQ?=
- =?utf-8?B?a2ZuR2VSYndzNlRGcVpYblBqaGNIanZ4clEwa201ejFlTFppa28xQ2JTYWJO?=
- =?utf-8?B?TmpPY29QWG5VTE44NlZKOUtXQ1RoVFFrc0RXWlY0MjBuS3QxOUdMQ00xaHdW?=
- =?utf-8?Q?2z/NfnO3MzVLA?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZDFYZ2pJMmx6UFVENm5pL1YyTE9FaVhxNjdPbWY4a05VZFc2aUVla0hmTTda?=
- =?utf-8?B?U2pENEYrcWhyVjVhMEtwWXQxek9RbDU2b3U0amQwYzNPTzIxR0ViVEY2aEty?=
- =?utf-8?B?ZVJ2b2s5UjAyYVlmM1krK3oyK0lsQ3Q1V2Z1ZVM1YjA5Q29OZDNCUTRzVXBJ?=
- =?utf-8?B?by9GY3IvSUIrcXRYK09BKzR2eitTOXZ3aXh3VzVkUEU1eXF3R1BWT0tXM1ly?=
- =?utf-8?B?UW5SN2dFNFgvTUhlcHJzd29mV1J3SUxTVzdTaU0wNUF1WWFLMnVJTytDbXox?=
- =?utf-8?B?VjZ3YSs2NnFQa212SjlrQ3VYNWp3QlFLME1VWTEreUpoNnJjc3RkVDZPR2J3?=
- =?utf-8?B?RHBGK2JueXhpQjZ1WHZYSDJ5b3VMd1NjMnZHakExZGE3TWMxK2lzOUJrNSs4?=
- =?utf-8?B?S0J4RmZOV21RRWNaUDl2bzI2d0FOU0lWRzF5KzZkQXZFa045cks2VkRuUWlw?=
- =?utf-8?B?UjRJcEM2QlkwVzBTWVVoV240YTlaYzJFQUZwNDA3VmxvVkZGTmxHcWQycGQw?=
- =?utf-8?B?WEd6bmVXaFNJWWxiM1M2aTc1ZFBmUFNYakozTysyVm8wZ0RJSHJwVW1vdkxK?=
- =?utf-8?B?YnNHbm5mN29vZmpxaWFRcS9xNjZmUVRDWnZ1elNpaFpDaXVMU2pjaWJFMTI3?=
- =?utf-8?B?WkREbXdDa2tERFVSdHMxeTY0amF2a1BLWXNvR0sxaGMyMVVva0ZNVUFML05w?=
- =?utf-8?B?MVRJeFlOV1pHNEhMVzlMZjZCU3RVU1BiWUdkWE00MUZCU083UnFsRUVRa1RH?=
- =?utf-8?B?OW5HdVdGd3E3RW00NXZLNmpRK0lreEZweWNqTURwUGY2T3YxL0lMZXJtWjVR?=
- =?utf-8?B?QTVvNVcwZGY0cnRjNzVxUmFOWGxVWWJwUng0YVQ5czBrMndqb2pOOE80OEw5?=
- =?utf-8?B?YmhiM3VFSkZ4MFJqM0c3TDdaWFRmUVVjdG0ra042M0JmdDFFbWVLTUVpZlF2?=
- =?utf-8?B?dlJEVXpwU1ZYTXM2Vy90Qzl6bnRlUTYxNWFENTlmVXE0ZW5vWElhOTVhS1JS?=
- =?utf-8?B?QlpuQnNNNEtVc2FSeGR5b0thMEEwSnYyQyszY3dwKzR2NjFLTlN2ZWgzQ3Zl?=
- =?utf-8?B?S1Q2RkFOcnBrVllKRkF0YWVWRHlyZnpCTTNWQTJEK3BKY0dJTk5wZGsxU21L?=
- =?utf-8?B?OUxPSitzK3NXQXA4M1dDUnQ4M3YxYjFrTXFMa043Nmk2S3FKY3NCaFhoQURm?=
- =?utf-8?B?c2M1Mm8xL0hEdVRuZU1yL3FRSFBzd003eTJsTEp6NlhRYmtmcDJpQUF4SkJl?=
- =?utf-8?B?Rk5CUEV6SS8vZG1HTFBFeTl3N3dpVDEyZTNJRGI0WlJYWjJydmJZVHFMZ3VK?=
- =?utf-8?B?UStTcDlIeW5sVzlsZUxnN3VDREpOYzUrT1ptWTJnL2ZHQmE1czJUdTZDZU1s?=
- =?utf-8?B?WGRsRFBNOVkxS1Bsa2NUZGx3WGVFQTNVTkpFcVd4eHMrTThzT1psS3hFSE1n?=
- =?utf-8?B?aW1QMmx4cmJjZy9GU29DaXM2d0tBM1hmM1pNclYrMFNPQTZpZEdxYnIvWDQr?=
- =?utf-8?B?RUhpUWJEWE5TUW96Ymtvbkl5c3RVWFA1emtBWFFQVGVja2ZXdllxbDJRclJw?=
- =?utf-8?B?ZTYzdmozV2dZeng3U0VnOHRwdmlpZXRYUEdmRVhRZGNTclJIWUlpVUVSR0p1?=
- =?utf-8?B?eUhQaWU2bVpPMEhuSUJkaUZWYmF1QmNJbERCTHBHcVFlWUh5ZzNXM0R2Rkpw?=
- =?utf-8?B?ZjNnc2pPZ01PTWV1Mnl2VGJaelBRbW1PSU14M3VvR3NyZDlvS3NCQzM2bDUv?=
- =?utf-8?B?VytUN1pqRHVEcXlzVUM5bndqMTkvcXl4bitmbGd1dmFuY2JlcFNITDgycTFw?=
- =?utf-8?B?aEgzTXdGK1daQXlsUE9KVEhUMklveHB1SjFxY2ZJSGdrcTFlRmVFb2c3elRv?=
- =?utf-8?B?SVFhcHUrbzFrUW1uRTNka1FMMEROUGlUQUkwV0pjNnduazdabTR0M0RUS0JC?=
- =?utf-8?B?cUhybktNVGZkUkdkbTlVLzMzbktMWVBLN3IxTWNMMHdIQ2RHU05yWnU2bTBt?=
- =?utf-8?B?aDBYelFKbkJHaEZwWlBuVHl1NU1jYnhqZHZ2TjFZaCtJYjhONisrZ1liZU9a?=
- =?utf-8?B?dE5YYitaYlR0QmtISElla0ZFQ2NqWnZubWZoekVURUpXSWlHRjhOZjYvZTlp?=
- =?utf-8?Q?ssGs0IxVNW1/nYLywdEQZdGMi?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b2babeb-1128-45ec-95c8-08dd4670faea
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6048.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 05:42:02.0005
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fUoFgZJXLRrP+IqD+xnvhnRUqXcN/lnYLLlVXrN+EOU1zYtPCAk4+ngyydT72DXUpUTpiyR3xa6N4OU2kyLjZw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6287
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NN51gi9eLBwaclD7ocwpjimzAwSzQsbHtwRR75ZQCv+V3veeHZBxADAm
+	RVAWsSBAri17QjfFjIro4wbRD55CxZAWXc2YFIpXXDF7Dy4+IoAi6JX9ZHMtKX0Fttk6vxQ
+	cVXzMTipUDGwbp4WdeG+QxADPQuLucoxWiLYUB+XEFAGFxuBJnwK+rnFI/JyKBplI2URnJG
+	/jKNkmeUEUsOL7inYy0x38zKpGqOdu4Zc0Etvy65rYcrouJF7ArMjY19OIN3osK1rGmiTIe
+	1hRUgQJFLMww8xiTLJrPz4Ufqrg4mrm0+LwwjYPtf4SYbg56MBzWiikt3r8IIMWeP4C8HM/
+	oCMU/BQm4RDCZz2ViOrRaSx8PZ9ZSMOb4jaYLuRecUjx4MyNI3DcM4ZGNDy7Qkv2ansljGm
+	KC1Kmjw21e0vtUfJeeTZgl0wuykJMczcizzyGL8RcusJcTYtzgwIvdtpF/a3VpYRMoXJeqX
+	t+NLzKfnQ/jQ/mM5iK20XMrGf23dzHDBvthtLMlAT+sNQOlSvglw5jGYNVlEznUPO9+pE0I
+	Xgu9uKBttSl8NspQbRGiixnJFU4PRYVAa3NAF6AF0YkyIBkzpeQXhzdsveMP5VQxqOxSmqV
+	F8VKPsQzlU72+mlhjPDEJ6/Owh9a/c4I1piJ6rXkPTGIrUUFKd24i23InqgoJYyxUfd2xyk
+	YnWt5v0AZt15aVzvURcCZ39UzBF4An5s8sv0waOj5OrvAXdRxE5oD68KzmwNBVMV0pfQ0mT
+	uC4tSbhnKbT+cFJypPG5ligAmoZODR7xVsV7TZ29tOOCHoVR2rB6jfAuNPU52aS6RGRfCzv
+	EQOjD3PxZAHZip2BX4rfHAGYGPfKhdcPmRMbAewzL/MNCaEYNRqywAWi/LI2JI29PoYO2oI
+	pGbp7zxEgjPd4pe11NQG9ku6uuApShThuR86P1IbISUUv3RAPzXbCjikkgxcO4S1vhMt7w+
+	5b+eMr1R7C+dbUUFhWKRzO6sAOmw7BFhxoCqkv4fipEe5FMJcXdJJNOZ7tLxKuCVK/d09dC
+	wIlLJ6MQgnxyQmYE75AOlw8scn2I8=
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 
-Sean,
+On some external USB hard drives, mounting can fail if "lshw" is
+executed during the process.
 
-On 2/6/2025 1:01 AM, Sean Christopherson wrote:
-> On Wed, Feb 05, 2025, Vasant Hegde wrote:
->> On 2/5/2025 8:47 PM, Sean Christopherson wrote:
->>> On Wed, Feb 05, 2025, Vasant Hegde wrote:
->>>>> @@ -3318,6 +3326,9 @@ static int __init iommu_go_to_state(enum iommu_init_state state)
->>>>>  		ret = state_next();
->>>>>  	}
->>>>>  
->>>>> +	if (ret && !amd_iommu_snp_en && cc_platform_has(CC_ATTR_HOST_SEV_SNP))
->>>>
->>>>
->>>> I think we should clear when `amd_iommu_snp_en` is true.
->>>
->>> That doesn't address the case where amd_iommu_prepare() fails, because amd_iommu_snp_en
->>> will be %false (its init value) and the RMP will be uninitialized, i.e.
->>> CC_ATTR_HOST_SEV_SNP will be incorrectly left set.
->>
->> You are right. I missed early failure scenarios :-(
->>
->>>
->>> And conversely, IMO clearing CC_ATTR_HOST_SEV_SNP after initializing the IOMMU
->>> and RMP is wrong as well.  Such a host is probably hosed regardless, but from
->>> the CPU's perspective, SNP is supported and enabled.
->>
->> So we don't want to clear  CC_ATTR_HOST_SEV_SNP after RMP initialization -OR-
->> clear for all failures?
-> 
-> I honestly don't know, because the answer largely depends on what happens with
-> hardware.  I asked in an earlier version of this series if IOMMU initialization
-> failure after the RMP is configured is even survivable.
-> 
-> For this series, I think it makes sense to match the existing behavior, unless
-> someone from AMD can definitively state that we should do something different.
-> And the existing behavior is that amd_iommu_snp_en and CC_ATTR_HOST_SEV_SNP will
-> be left set if the IOMMU completes iommu_snp_enable(), and the kernel completes
-> RMP setup.
+This occurs because data sent to the device's output endpoint in
+certain abnormal scenarios does not receive a response, leading to
+a mount timeout.
 
-Thanks for the clarification. Patch looks OK to me.
+[ Description of "use_192_bytes_for_3f" in the kernel code: ]
+  /*
+   * Many disks only accept MODE SENSE transfer lengths of
+   * 192 bytes (that's what Windows uses).
+   */
+   sdev->use_192_bytes_for_3f = 1;
 
--Vasant
+The kernel's SCSI driver, when handling devices with this attribute,
+sends commands with a length of 192 bytes like this:
+  if (sdp->use_192_bytes_for_3f)
+  	res = sd_do_mode_sense(sdp, 0, 0x3F, buffer, 192, &data, NULL);
+
+However, "lshw" disregards the "use_192_bytes_for_3f" attribute and
+transmits data with a length of 0xff bytes via ioctl, which can cause
+some hard drives to hang and become unusable.
+
+To resolve this issue, prevent commands with a length of 0xff bytes
+from being queued via ioctl when it detects the "use_192_bytes_for_3f"
+attribute on the device.
+
+The hard drive device identified with the issue is Lenovo USB 17ef:4531.
+Tested on HONOR NBLK-WAX9X (C234) Notebook with AMD Ryzen 7 3700U.
+
+[ Kernel logs: ]
+  2024-10-31 13:36:11 localhost kernel: [   25.770091] usb 2-2: new SuperSpeed Gen 1 USB device number 2 using xhci_hcd
+  2024-10-31 13:36:11 localhost kernel: [   25.798558] usb 2-2: New USB device found, idVendor=17ef, idProduct=4531, bcdDevice= 5.12
+  2024-10-31 13:36:11 localhost kernel: [   25.798562] usb 2-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+  2024-10-31 13:36:11 localhost kernel: [   25.798564] usb 2-2: Product: Lenovo Portable HDD
+  2024-10-31 13:36:11 localhost kernel: [   25.798566] usb 2-2: Manufacturer: Lenovo
+  2024-10-31 13:36:11 localhost kernel: [   25.798567] usb 2-2: SerialNumber: 000000001E4C
+  2024-10-31 13:36:11 localhost kernel: [   25.820244] usb-storage 2-2:1.0: USB Mass Storage device detected
+  2024-10-31 13:36:11 localhost kernel: [   25.820457] scsi host0: usb-storage 2-2:1.0
+  2024-10-31 13:36:11 localhost kernel: [   25.820633] usbcore: registered new interface driver usb-storage
+  2024-10-31 13:36:11 localhost kernel: [   25.825598] usbcore: registered new interface driver uas
+  2024-10-31 13:36:14 localhost kernel: [   28.852179] scsi 0:0:0:0: Direct-Access     Lenovo   USB Hard Drive   0006 PQ: 0 ANSI: 2
+  2024-10-31 13:36:14 localhost kernel: [   28.852961] sd 0:0:0:0: Attached scsi generic sg0 type 0
+  2024-10-31 13:36:14 localhost kernel: [   28.891218] sd 0:0:0:0: [sda] 976773164 512-byte logical blocks: (500 GB/466 GiB)
+  2024-10-31 13:36:14 localhost kernel: [   28.906892] sd 0:0:0:0: [sda] Write Protect is off
+  2024-10-31 13:36:14 localhost kernel: [   28.906896] sd 0:0:0:0: [sda] Mode Sense: 03 00 00 00
+  2024-10-31 13:36:14 localhost kernel: [   28.922606] sd 0:0:0:0: [sda] No Caching mode page found
+  2024-10-31 13:36:14 localhost kernel: [   28.922612] sd 0:0:0:0: [sda] Assuming drive cache: write through
+  2024-10-31 13:36:14 localhost kernel: [   29.007816]  sda: sda1
+  2024-10-31 13:36:15 localhost kernel: [   30.180380] sd 0:0:0:0: [sda] Attached SCSI disk
+  2024-10-31 13:36:16 localhost kernel: [   30.722863] snd_hda_codec_realtek hdaudioC1D0: hda_codec_setup_stream: NID=0x3, stream=0x5, channel=0, format=0x4011
+  2024-10-31 13:36:16 localhost kernel: [   30.734139] snd_hda_codec_realtek hdaudioC1D0: hda_codec_setup_stream: NID=0x2, stream=0x5, channel=0, format=0x4011
+  2024-10-31 13:36:17 localhost kernel: [   31.396011] start_addr=(0x20000), end_addr=(0x40000), buffer_size=(0x20000), smp_number_max=(16384)
+  2024-10-31 13:36:18 localhost kernel: [   32.933537] snd_hda_codec_realtek hdaudioC1D0: hda_codec_cleanup_stream: NID=0x3
+  2024-10-31 13:36:18 localhost kernel: [   32.933541] snd_hda_codec_realtek hdaudioC1D0: hda_codec_cleanup_stream: NID=0x2
+  2024-10-31 13:36:39 localhost kernel: [   54.242220] usb 2-2: reset SuperSpeed Gen 1 USB device number 2 using xhci_hcd
+  2024-10-31 13:36:50 localhost kernel: [   64.408879] start_addr=(0x20000), end_addr=(0x40000), buffer_size=(0x20000), smp_number_max=(16384)
+  2024-10-31 13:37:11 localhost kernel: [   85.466479] usb 2-2: reset SuperSpeed Gen 1 USB device number 2 using xhci_hcd
+  2024-10-31 13:37:11 localhost kernel: [   85.490248] sd 0:0:0:0: [sda] tag#0 FAILED Result: hostbyte=DID_TIME_OUT driverbyte=DRIVER_OK
+  2024-10-31 13:37:11 localhost kernel: [   85.490255] sd 0:0:0:0: [sda] tag#0 CDB: Read(10) 28 00 00 00 00 20 00 00 08 00
+  2024-10-31 13:37:11 localhost kernel: [   85.490258] print_req_error: I/O error, dev sda, sector 32
+  2024-10-31 13:37:33 localhost kernel: [  107.432186] start_addr=(0x20000), end_addr=(0x40000), buffer_size=(0x20000), smp_number_max=(16384)
+  2024-10-31 13:37:41 localhost kernel: [  116.194201] usb 2-2: reset SuperSpeed Gen 1 USB device number 2 using xhci_hcd
+  2024-10-31 13:37:49 localhost kernel: [  123.555484] dolphin[7271]: segfault at 10 ip 00007fcccc0d7f76 sp 00007ffe8004b860 error 4 in libKF5CoreAddons.so.5.102.0[7fcccc0a5000+83000]
+  2024-10-31 13:37:49 localhost kernel: [  123.555502] Code: d6 90 66 90 41 54 41 89 d4 55 48 89 fd 53 48 89 f3 e8 8e 94 01 00 ba 04 00 00 00 48 89 de 48 89 c7 e8 4e 8f 01 00 84 c0 75 2a <48> 8b 7d 10 48 85 ff 74 21 45 89 e1 48 89 da 48 89 ee 5b 41 b8 01
+  2024-10-31 13:38:11 localhost kernel: [  146.229510] usb 2-2: USB disconnect, device number 2
+  2024-10-31 13:38:11 localhost kernel: [  146.237993] scsi 0:0:0:0: rejecting I/O to dead device
+  2024-10-31 13:38:11 localhost kernel: [  146.238003] print_req_error: I/O error, dev sda, sector 32
+  2024-10-31 13:38:11 localhost kernel: [  146.238009] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238029] scsi 0:0:0:0: rejecting I/O to dead device
+  2024-10-31 13:38:11 localhost kernel: [  146.238030] print_req_error: I/O error, dev sda, sector 36
+  2024-10-31 13:38:11 localhost kernel: [  146.238032] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238045] scsi 0:0:0:0: rejecting I/O to dead device
+  2024-10-31 13:38:11 localhost kernel: [  146.238047] print_req_error: I/O error, dev sda, sector 6291480
+  2024-10-31 13:38:11 localhost kernel: [  146.238062] Buffer I/O error on dev sda1, logical block 786431, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238168] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238170] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238175] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238176] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238184] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238185] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238199] Buffer I/O error on dev sda, logical block 40, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238201] Buffer I/O error on dev sda, logical block 41, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238205] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238206] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238210] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238211] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238215] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238217] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238220] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238221] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238224] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238226] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:12 localhost kernel: [  146.482007] snd_hda_codec_realtek hdaudioC1D0: hda_codec_setup_stream: NID=0x3, stream=0x5, channel=0, format=0x4011
+  2024-10-31 13:38:12 localhost kernel: [  146.494064] snd_hda_codec_realtek hdaudioC1D0: hda_codec_setup_stream: NID=0x2, stream=0x5, channel=0, format=0x4011
+  2024-10-31 13:38:15 localhost kernel: [  150.065848] snd_hda_codec_realtek hdaudioC1D0: hda_codec_cleanup_stream: NID=0x3
+  2024-10-31 13:38:15 localhost kernel: [  150.065852] snd_hda_codec_realtek hdaudioC1D0: hda_codec_cleanup_stream: NID=0x2
+  2024-10-31 13:38:26 localhost kernel: [  160.433037] start_addr=(0x20000), end_addr=(0x40000), buffer_size=(0x20000), smp_number_max=(16384)
+  2024-10-31 13:39:29 localhost kernel: [  223.444589] start_addr=(0x20000), end_addr=(0x40000), buffer_size=(0x20000), smp_number_max=(16384)
+
+Link: https://linux-hardware.org/?id=usb:17ef-4531
+Reported-by: Xinwei Zhou <zhouxinwei@uniontech.com>
+Co-developed-by: Xu Rao <raoxu@uniontech.com>
+Signed-off-by: Xu Rao <raoxu@uniontech.com>
+Tested-by: Yujing Ming <mingyujing@uniontech.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ drivers/usb/storage/scsiglue.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/usb/storage/scsiglue.c b/drivers/usb/storage/scsiglue.c
+index d2f476e48d0c..366ab402217c 100644
+--- a/drivers/usb/storage/scsiglue.c
++++ b/drivers/usb/storage/scsiglue.c
+@@ -361,6 +361,7 @@ static int queuecommand_lck(struct scsi_cmnd *srb)
+ {
+ 	void (*done)(struct scsi_cmnd *) = scsi_done;
+ 	struct us_data *us = host_to_us(srb->device->host);
++	struct scsi_device *sdev = srb->device;
+ 
+ 	/* check for state-transition errors */
+ 	if (us->srb != NULL) {
+@@ -369,6 +370,13 @@ static int queuecommand_lck(struct scsi_cmnd *srb)
+ 		return SCSI_MLQUEUE_HOST_BUSY;
+ 	}
+ 
++	if (srb->cmnd[0] == MODE_SENSE && sdev->use_192_bytes_for_3f == 1 &&
++		srb->cmnd[2] == 0x3f && srb->cmnd[4] != 192) {
++	   srb->result = DID_ABORT << 16;
++	   done(srb);
++	   return 0;
++	}
++
+ 	/* fail the command if we are disconnecting */
+ 	if (test_bit(US_FLIDX_DISCONNECTING, &us->dflags)) {
+ 		usb_stor_dbg(us, "Fail command during disconnect\n");
+-- 
+2.47.2
 
