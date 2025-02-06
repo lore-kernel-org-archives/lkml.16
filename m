@@ -1,307 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839C4151995;
-	Thu,  6 Feb 2025 00:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEEAADDA8;
+	Thu,  6 Feb 2025 00:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738801962; cv=none; b=uhkC6AUTXb+aA8SXc7mKssx2yCskENMCpWzCv6Y3M/+h6jG3eBTedVxhpPqpwS8BokhVZGJEqleL8abnjkqKkbKemuLgCvg3woDD/SycmNAecphGO88/qKVExUQqJPD3UoUDq5FnIy33Lu/bisXKede4kXwNSNkmiISvXrvk328=
+	t=1738802000; cv=none; b=LwuUvzU/aPXvimzPegxltSUdWq9ycUAnYv/PP/hQ0gmiUpGz+Aym3uxoRPuKvN7VdZKHdB16OrLKX1+ieGVLSx1iFQUXRPd+t3fbSy//lvzuGUoR7NbAH9c8blDIieL16HJrhuxejT6R0zkidPUFv+VKCEkKtP1P7S0FHXGx7H8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738801962; c=relaxed/simple;
-	bh=69KdJFxqeM6HAhhz0iyWsMNwG5/qgSIr6RNoMtY8A3E=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Iq8oK4mLj6/LRYheOJRf+kAp4k37pI6fvrjJz++aLHUcTaRIVfsDC7nyzvQDnRXP/oC6GtaKO672eUIaIRsUqSHk9Li37wDQJj11L9ZimuMxm38x1xZFLx+z+oBirGco2J0q+WUs11QrTXL3KN28RSPMKn+Al8VV7LPk/yj1ZE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dhD7cuz+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738802000; c=relaxed/simple;
+	bh=JQU31/eBMumGK/y474bnjAS9L6di9TI/in6y76m1tS0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YiAnE8+CkMxwWMTK7n/mIP6A1kVSolde/owkBJ+ZKVxobHWA/sdzibjLdIq72nvnj4vJ4fjnbaP+BcahjxRQ3Rwcd9pa48UfvFv5T7sF5cLiI36qhOiAF5zyKYHqSROvGzQ5cw+5hbZa9g0hd/npq5P36Qq9SQUjuxFjmEzhil4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=azxRmQsy; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dhD7cuz+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB88AC4CED1;
-	Thu,  6 Feb 2025 00:32:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738801962;
-	bh=69KdJFxqeM6HAhhz0iyWsMNwG5/qgSIr6RNoMtY8A3E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dhD7cuz+C2nOXZUetDSutkQOlpJoBFc4hUy4/K0QTFog8imy15jbiCAAtnt5E/v5M
-	 w5Fwr9pq4OYOA4pWFGguuNUoJPBhcHBckkx2CCNyK3s2xy8WT3HUXhEd8F8lIo4P5L
-	 lh+DCTTW7o6N+Oqjg2xWTL9vWWQU1o9QvBLaoT9GYRIF6HQWKAwwNqXU2CxT7Nrspc
-	 Gnf/NpXI8VAaixrwam68Zjg1QDfkTrmR6X4tKfTBulymOnsuote1pp2B/o+4jytzVN
-	 khCLujKlSIchJYbRarJgZsz0+qYFUxW4gxDQCr3L2VXFtIEoKgizq7TDNgVyxmfujl
-	 IKMJm10DKEWDQ==
-Date: Thu, 6 Feb 2025 09:32:38 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH 1/8] ring-buffer: Use kaslr address instead of text
- delta
-Message-Id: <20250206093238.7a716d97b1c31e55a011c591@kernel.org>
-In-Reply-To: <20250205225103.090463674@goodmis.org>
-References: <20250205225031.799739376@goodmis.org>
-	<20250205225103.090463674@goodmis.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="azxRmQsy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=c2cZwaXHdVn2MdjWizwyaY/IsNIaCB2/noejX4wAdcU=; b=azxRmQsyyXfqI4Etd/eCRpl9R+
+	YBORqZYsr3VX8w4NlReIE4myF8FxrWQ06pK8vdsGanP1ltxCqshZG/K1gIAYPEgvO+5z5o9LnmqvS
+	n2/nrP3uvfk55vq4U7KDO9beLXv5vIWqRrZAw368uAlxZkGgnlS3H//4w2mI0uAgQ8dH58Fk+D6er
+	oEuQ6bA3pwUL/GEKOI1feYmblNY2UrX9zWV9rvPk6EK27Ep3W1Em9VJOHWtAhNupVnrvQ+sB7PqyB
+	ck7Q54AYodVG+RkzCSDZIPdUQy8Apot/vZ5EaPMQxbiDAIIWLaO36bMsDqYWTerWKQMH72yi5u7zH
+	g3k5YbMg==;
+Received: from [50.53.2.24] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tfppP-00000005E6o-3HCW;
+	Thu, 06 Feb 2025 00:33:12 +0000
+Message-ID: <e085496c-f267-44e7-94e3-c09521981439@infradead.org>
+Date: Wed, 5 Feb 2025 16:33:02 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] docs/arch: remove deprecated function name
+To: Jiayuan Chen <mrpre@163.com>, linux-doc@vger.kernel.org, corbet@lwn.net
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ linux-kernel@vger.kernel.org
+References: <20250114094832.350073-1-mrpre@163.com>
+ <20250116162056.186121-1-mrpre@163.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250116162056.186121-1-mrpre@163.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Wed, 05 Feb 2025 17:50:32 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi:
 
-> From: Steven Rostedt <rostedt@goodmis.org>
+On 1/16/25 8:20 AM, Jiayuan Chen wrote:
+> The dumpstack.c file has undergone many modifications, and the
+> print_context_stack() function was removed or rewritten a long time ago,
+> so it's better to remove the incorrect guidance.
 > 
-> Instead of saving off the text and data pointers and using them to compare
-> with the current boot's text and data pointers, just save off the KASLR
-> offset. Then that can be used to figure out how to read the previous boots
-> buffer.
+> I also want to preserve the original contributor info by keeping email
+> adress and name.
 > 
-> The last_boot_info will now show this offset, but only if it is for a
-> previous boot:
-> 
->   # cat instances/boot_mapped/last_boot_info
->   Offset: 39000000
-> 
->   # echo function > instances/boot_mapped/current_tracer
->   # cat instances/boot_mapped/last_boot_info
->   Offset: current
-> 
-> If the KASLR offset saved is for the current boot, the last_boot_info will
-> show the value of "current".
-
-Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you!
-
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Signed-off-by: Jiayuan Chen <mrpre@163.com>
 > ---
->  include/linux/ring_buffer.h |  3 +--
->  kernel/trace/ring_buffer.c  | 31 ++++++++++++-------------------
->  kernel/trace/trace.c        | 30 +++++++++++++++++++++---------
->  kernel/trace/trace.h        |  9 +++++----
->  4 files changed, 39 insertions(+), 34 deletions(-)
+>  Documentation/arch/x86/kernel-stacks.rst | 51 +++++++++---------------
+>  1 file changed, 18 insertions(+), 33 deletions(-)
 > 
-> diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-> index 17fbb7855295..8de035f4f0d9 100644
-> --- a/include/linux/ring_buffer.h
-> +++ b/include/linux/ring_buffer.h
-> @@ -94,8 +94,7 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
->  					       unsigned long range_size,
->  					       struct lock_class_key *key);
+> diff --git a/Documentation/arch/x86/kernel-stacks.rst b/Documentation/arch/x86/kernel-stacks.rst
+> index 738671a4070b..f780f4b09761 100644
+> --- a/Documentation/arch/x86/kernel-stacks.rst
+> +++ b/Documentation/arch/x86/kernel-stacks.rst
+> @@ -112,41 +112,26 @@ Printing backtraces on x86
+>  ==========================
 >  
-> -bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, long *text,
-> -				 long *data);
-> +bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, unsigned long *kaslr_addr);
->  
->  /*
->   * Because the ring buffer is generic, if other users of the ring buffer get
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index b8e0ae15ca5b..7146b780176f 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -31,6 +31,7 @@
->  
->  #include <asm/local64.h>
->  #include <asm/local.h>
-> +#include <asm/setup.h>
->  
->  #include "trace.h"
->  
-> @@ -49,8 +50,7 @@ static void update_pages_handler(struct work_struct *work);
->  struct ring_buffer_meta {
->  	int		magic;
->  	int		struct_size;
-> -	unsigned long	text_addr;
-> -	unsigned long	data_addr;
-> +	unsigned long	kaslr_addr;
->  	unsigned long	first_buffer;
->  	unsigned long	head_buffer;
->  	unsigned long	commit_buffer;
-> @@ -550,8 +550,7 @@ struct trace_buffer {
->  	unsigned long			range_addr_start;
->  	unsigned long			range_addr_end;
->  
-> -	long				last_text_delta;
-> -	long				last_data_delta;
-> +	unsigned long			kaslr_addr;
->  
->  	unsigned int			subbuf_size;
->  	unsigned int			subbuf_order;
-> @@ -1874,16 +1873,13 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
->  	}
->  }
->  
-> -/* Used to calculate data delta */
-> -static char rb_data_ptr[] = "";
-> -
-> -#define THIS_TEXT_PTR		((unsigned long)rb_meta_init_text_addr)
-> -#define THIS_DATA_PTR		((unsigned long)rb_data_ptr)
-> -
->  static void rb_meta_init_text_addr(struct ring_buffer_meta *meta)
->  {
-> -	meta->text_addr = THIS_TEXT_PTR;
-> -	meta->data_addr = THIS_DATA_PTR;
-> +#ifdef CONFIG_RANDOMIZE_BASE
-> +	meta->kaslr_addr = kaslr_offset();
-> +#else
-> +	meta->kaslr_addr = 0;
-> +#endif
->  }
->  
->  static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
-> @@ -1906,8 +1902,7 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
->  			meta->first_buffer += delta;
->  			meta->head_buffer += delta;
->  			meta->commit_buffer += delta;
-> -			buffer->last_text_delta = THIS_TEXT_PTR - meta->text_addr;
-> -			buffer->last_data_delta = THIS_DATA_PTR - meta->data_addr;
-> +			buffer->kaslr_addr = meta->kaslr_addr;
->  			continue;
->  		}
->  
-> @@ -2459,17 +2454,15 @@ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flag
->   *
->   * Returns: The true if the delta is non zero
->   */
-> -bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, long *text,
-> -				 long *data)
-> +bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, unsigned long *kaslr_addr)
->  {
->  	if (!buffer)
->  		return false;
->  
-> -	if (!buffer->last_text_delta)
-> +	if (!buffer->kaslr_addr)
->  		return false;
->  
-> -	*text = buffer->last_text_delta;
-> -	*data = buffer->last_data_delta;
-> +	*kaslr_addr = buffer->kaslr_addr;
->  
->  	return true;
->  }
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 1496a5ac33ae..a9e8eaf1d47e 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -50,7 +50,7 @@
->  #include <linux/irq_work.h>
->  #include <linux/workqueue.h>
->  
-> -#include <asm/setup.h> /* COMMAND_LINE_SIZE */
-> +#include <asm/setup.h> /* COMMAND_LINE_SIZE and kaslr_offset() */
->  
->  #include "trace.h"
->  #include "trace_output.h"
-> @@ -4193,7 +4193,7 @@ static enum print_line_t print_trace_fmt(struct trace_iterator *iter)
->  		 * safe to use if the array has delta offsets
->  		 * Force printing via the fields.
->  		 */
-> -		if ((tr->text_delta || tr->data_delta) &&
-> +		if ((tr->text_delta) &&
->  		    event->type > __TRACE_LAST_TYPE)
->  			return print_event_fields(iter, event);
->  
-> @@ -5996,7 +5996,7 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
->  
->  static void update_last_data(struct trace_array *tr)
->  {
-> -	if (!tr->text_delta && !tr->data_delta)
-> +	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
->  		return;
->  
->  	/*
-> @@ -6009,7 +6009,8 @@ static void update_last_data(struct trace_array *tr)
->  
->  	/* Using current data now */
->  	tr->text_delta = 0;
-> -	tr->data_delta = 0;
-> +
-> +	tr->flags &= ~TRACE_ARRAY_FL_LAST_BOOT;
->  }
->  
->  /**
-> @@ -6827,8 +6828,17 @@ tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t
->  
->  	seq_buf_init(&seq, buf, 64);
->  
-> -	seq_buf_printf(&seq, "text delta:\t%ld\n", tr->text_delta);
-> -	seq_buf_printf(&seq, "data delta:\t%ld\n", tr->data_delta);
-> +	/*
-> +	 * Do not leak KASLR address. This only shows the KASLR address of
-> +	 * the last boot. When the ring buffer is started, the LAST_BOOT
-> +	 * flag gets cleared, and this should only report "current".
-> +	 * Otherwise it shows the KASLR address from the previous boot which
-> +	 * should not be the same as the current boot.
-> +	 */
-> +	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
-> +		seq_buf_puts(&seq, "Offset: current\n");
-> +	else
-> +		seq_buf_printf(&seq, "Offset: %lx\n", tr->kaslr_addr);
->  
->  	return simple_read_from_buffer(ubuf, cnt, ppos, buf, seq_buf_used(&seq));
->  }
-> @@ -9212,8 +9222,10 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
->  						      tr->range_addr_start,
->  						      tr->range_addr_size);
->  
-> -		ring_buffer_last_boot_delta(buf->buffer,
-> -					    &tr->text_delta, &tr->data_delta);
-> +#ifdef CONFIG_RANDOMIZE_BASE
-> +		if (ring_buffer_last_boot_delta(buf->buffer, &tr->kaslr_addr))
-> +			tr->text_delta = kaslr_offset() - tr->kaslr_addr;
-> +#endif
->  		/*
->  		 * This is basically the same as a mapped buffer,
->  		 * with the same restrictions.
-> @@ -10461,7 +10473,7 @@ __init static void enable_instances(void)
->  		 * to it.
->  		 */
->  		if (start) {
-> -			tr->flags |= TRACE_ARRAY_FL_BOOT;
-> +			tr->flags |= TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT;
->  			tr->ref++;
->  		}
->  
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index 9c21ba45b7af..abe8169c3e87 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -348,8 +348,8 @@ struct trace_array {
->  	unsigned int		mapped;
->  	unsigned long		range_addr_start;
->  	unsigned long		range_addr_size;
-> +	unsigned long		kaslr_addr;
->  	long			text_delta;
-> -	long			data_delta;
->  
->  	struct trace_pid_list	__rcu *filtered_pids;
->  	struct trace_pid_list	__rcu *filtered_no_pids;
-> @@ -433,9 +433,10 @@ struct trace_array {
->  };
->  
->  enum {
-> -	TRACE_ARRAY_FL_GLOBAL	= BIT(0),
-> -	TRACE_ARRAY_FL_BOOT	= BIT(1),
-> -	TRACE_ARRAY_FL_MOD_INIT	= BIT(2),
-> +	TRACE_ARRAY_FL_GLOBAL		= BIT(0),
-> +	TRACE_ARRAY_FL_BOOT		= BIT(1),
-> +	TRACE_ARRAY_FL_LAST_BOOT	= BIT(2),
-> +	TRACE_ARRAY_FL_MOD_INIT		= BIT(3),
->  };
->  
->  #ifdef CONFIG_MODULES
-> -- 
-> 2.45.2
-> 
-> 
+>  The question about the '?' preceding function names in an x86 stacktrace
+> -keeps popping up, here's an indepth explanation. It helps if the reader
+> -stares at print_context_stack() and the whole machinery in and around
+> -arch/x86/kernel/dumpstack.c.
+> +keeps popping up, here provides guidance about it. It helps if the reader
 
+         popping up. This provides
+
+> +stares at printk_stack_addressk() and its callers and pay special
+
+                                                         pays
+
+> +attention to the 'reliable' parameter ('?' basically means that the
+> +address is unreliable).
+>  
+> -Adapted from Ingo's mail, Message-ID: <20150521101614.GA10889@gmail.com>:
+> +The detail about '?' can be found in the comments within dumpstack.c:
+> +::
+>  
+> -We always scan the full kernel stack for return addresses stored on
+> -the kernel stack(s) [1]_, from stack top to stack bottom, and print out
+> -anything that 'looks like' a kernel text address.
+> +    /*
+> +     * Scan the stack, printing any text addresses we find.  At the
+> +     * same time, follow proper stack frames with the unwinder.
+> +     *
+> +     * Addresses found during the scan which are not reported by
+> +     * the unwinder are considered to be additional clues which are
+> +     * sometimes useful for debugging and are prefixed with '?'.
+> +     * This also serves as a failsafe option in case the unwinder
+> +     * goes off in the weeds.
+> +     */
+>  
+> -If it fits into the frame pointer chain, we print it without a question
+> -mark, knowing that it's part of the real backtrace.
+>  
+> -If the address does not fit into our expected frame pointer chain we
+> -still print it, but we print a '?'. It can mean two things:
+> +You can also get more info from Ingo's original emal [1]_
+
+                                                   email
+and end that sentence with a period ('.').
+
+>  
+> - - either the address is not part of the call chain: it's just stale
+> -   values on the kernel stack, from earlier function calls. This is
+> -   the common case.
+> -
+> - - or it is part of the call chain, but the frame pointer was not set
+> -   up properly within the function, so we don't recognize it.
+> -
+> -This way we will always print out the real call chain (plus a few more
+> -entries), regardless of whether the frame pointer was set up correctly
+> -or not - but in most cases we'll get the call chain right as well. The
+> -entries printed are strictly in stack order, so you can deduce more
+> -information from that as well.
+> -
+> -The most important property of this method is that we _never_ lose
+> -information: we always strive to print _all_ addresses on the stack(s)
+> -that look like kernel text addresses, so if debug information is wrong,
+> -we still print out the real call chain as well - just with more question
+> -marks than ideal.
+> -
+> -.. [1] For things like IRQ and IST stacks, we also scan those stacks, in
+> -       the right order, and try to cross from one stack into another
+> -       reconstructing the call chain. This works most of the time.
+> +.. [1] https://lore.kernel.org/lkml/20150521101614.GA10889@gmail.com/
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+~Randy
+
