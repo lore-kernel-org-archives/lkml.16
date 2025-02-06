@@ -1,92 +1,156 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7E21A071C;
-	Thu,  6 Feb 2025 18:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFBD19CC05;
+	Thu,  6 Feb 2025 18:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738866036; cv=none; b=OhGKncs5h22FuTxkVswB9q67wAosEk92N4ACuUDB5GfOiGTkmXmPpPRd+B+nNMyItENfS7rekivZXRhDI2FO2zPhiCXhtGSkHGfzN59UNaOXdBdwIhdBHOsHn9iA6ErMqt2nn1r8Vj0tcavJOPONNqW7tDt5IzZX7I0ndnzETdA=
+	t=1738866059; cv=none; b=D4Fn2BjPLYeS5duArDf5s3PwWAyPvEK+DwQJnAd3ydKrbLOQfVowVSnOdINOxPHXvHi1LHGIdh0qrbKuABhqQP/exbsqNmGpE3WTAd+QrkuQ0FobEzJFUCU2JW7Q1oAvf3eDxaTrcdng/oMqldLyycXcVDUiPjQxGKSK0BAIMcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738866036; c=relaxed/simple;
-	bh=bjR3GSMFFSZYCybPUhajVdcWFFbaKLMJ/3DrRBWH9bs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AvRFDSk/pJ48v7WoysjPTwFYuIZWjBF3e/25xlcFsQyzfR4jVoMvZpG0/KrUrPh247CAOiwe22jMlAZMBtpR7PJDTZFvUP2vWXn+X5V4TkSVltQJK/eEpwiWYMJumJGbfzEjfzQWVpPDBfZTGiqgrKoq5OZ1LHS2m8lESNxlyPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WQ6zYsc6; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738866059; c=relaxed/simple;
+	bh=j6HGYyGPwE2tuf0qT9ePG+naFb8GANLvOkDxNv/9coI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DLeku0V2xMYCKvDGzPNBhJnL9b4KdF8wepGz8BI7+pPHqCk0yZhzpZBLT2xeNAktqelZAOjHhfx7zMrl+fKMOooZhZVj/FfuzJpy3KVSLGOBCE8yaf17kVYMeL+fXZmk3FZvwC2Dav0cTM7QJ5N5gcy3DbDgu7cLQUHNWr/DdG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnvkdD6w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQ6zYsc6"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2fa1a428f6aso120682a91.1;
-        Thu, 06 Feb 2025 10:20:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738866033; x=1739470833; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+IREsyOA/jcDv51eqhhOAz7HNwCH8HVyuTl6Zg2BaEg=;
-        b=WQ6zYsc6/GfilrMTiTN2Q6fgfbrdi+TFq3uj4VTUjb1R0JgaM31wMU3MieHpRckghe
-         RwtkVb+h8xxiGjqFM4YdcbhNXcUsKXb8gUU/QrJ1PRuxXIMh7LF7akkgOasIXfW8SWyX
-         fii4ZqT9nke+Pe28rjnT9NTrHI3vETtS9sTgqT4yezKaynetuInwezj32lcdA2gmC6sW
-         gdOJEZH7U0KZYKPfECR7iEMC5z/hBygIlkwH9HljCj08Bq9c0WQIjk0fjud+urM04wDc
-         PCS5MT8qNnnRevAgi20UX1vbWHbALIPtr8CprVo/YKTpPMgFUpDQ2mQK5ZmPjY8ea4It
-         s2lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738866033; x=1739470833;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+IREsyOA/jcDv51eqhhOAz7HNwCH8HVyuTl6Zg2BaEg=;
-        b=bS/ENPYoolzYreArexTRzvZ7Ia2UQoJNtcOogBltgwBiFzqy2a9oLlx8PIXOaaCV60
-         Q30/yxQPazOJL24S+olsv8sq24QMGsFPbg1ImDiahC/d44kx1f0G62NwZ5Z/UsIkhOSA
-         WVs9e1bejWGCy/p+BOn0Rl83wtl4fFn6XayKdFd+SBIZWKxHm/ek+EhFXoxRz6VzCoSE
-         aIeagvu3ZsPpLVoSNGXWVkHZXeKgbvQyNKwQaSZwNPmRU/A3gZnjHIz3y+3OSfu7C+WK
-         gExmtz9X7B1SnEfoLGAA9FTZZfzBpA5G+T0Uv6nU7Ux6HX+guR6XLFfY6rMiNs9V3IP+
-         8IYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRV9pMhUT7QO0NH1QR/lyZomiDHjbECYWB9kdLLKhBS3RntjkP4Hl0srFPzrA9FIzWX0xEgREJJnboeJw=@vger.kernel.org, AJvYcCWe6+ll/IPXX/lLaWPMtLUKjHounjyP/3e/3+W1wWmixzfE+pIi2HRWPmaTGN8vKqoP0+EymwqzbdOOhBvkEg4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6tZBxCmUUtkkf/PVJBp9pAiwwgOiYTYtYdLAs82cmXmOADWNB
-	rnfMseK/uCTVNDEfiAb+4QsHXdOlBigUQhOkSj5pE5qrU6uPfNbs4mgHynpXrziw/ZEZjY3DqqC
-	0Xnt8dbs1zcRtzwsA035iP3tqtQA=
-X-Gm-Gg: ASbGncuogu+EjZUBnR76y4ZVkzYM269A5GTceBzX1PK44/fZlrV5Yu/8x9WUHEff5wC
-	NbB0JqrNgGGKEM+/qDWAr0HwhSvYVjtgFgmVKi7w7RcCIqVvpi4q4ViCk7tDYTpfda7FmV/yw
-X-Google-Smtp-Source: AGHT+IEyLbANBJQyA5ILGICFvQ2vMxKNRXnI8A8+uzucw9F+g+JR+GxTJU8j5vpteiu+ih7ozLZ2v5VxDCkxL/j7ZmI=
-X-Received: by 2002:a17:90b:3b4a:b0:2ef:c419:6930 with SMTP id
- 98e67ed59e1d1-2fa244fbb48mr1399a91.6.1738866033134; Thu, 06 Feb 2025 10:20:33
- -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnvkdD6w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5426C4CEDD;
+	Thu,  6 Feb 2025 18:20:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738866059;
+	bh=j6HGYyGPwE2tuf0qT9ePG+naFb8GANLvOkDxNv/9coI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pnvkdD6wwCvetXTtTU3DD3qXLbEz1k1pUj2N2g6iKUSc30+eHNEzEtkNcxkbR8Nk/
+	 n4wEBey7C85XeSyqkSi2PFuHoH/Eu8kYbN3VtWttfEkbkbprlIwfWr9oGDErtayuVw
+	 QAMJd9NGhvXhoJrKBg6hnNvgVQmpkU0eGG+MfE/vtzRK3oOg9SjsDsA0vdnYNUaSHw
+	 mzZ7kfhPXN9xbEed5e934I0LZkffaWfhdarAElMCQIlRvEf1KwKruDCTHWyPJxVsF3
+	 6rLSr7Y4qlh+1T0Cj1PRR8hBVWN859Nkp1mXVG2sl9S5tU1wAvu8U0XRtbH4oK7pA6
+	 I6Rho8WVdEJFg==
+Date: Thu, 6 Feb 2025 18:20:54 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Hermes Zhang <Hermes.Zhang@axis.com>
+Cc: jic23@kernel.org, robh@kernel.org, lars@metafoo.de, krzk+dt@kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hermes Zhang <chenhuiz@axis.com>, kernel@axis.com,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: iio: chemical: sensirion,senxx: Add
+ yaml description
+Message-ID: <20250206-italics-reproduce-35d554c38751@spud>
+References: <20250206061521.2546108-1-Hermes.Zhang@axis.com>
+ <20250206061521.2546108-3-Hermes.Zhang@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250202-aligned-alloc-v2-1-5af0b5fdd46f@gmail.com>
- <CANiq72nH3N9UMu2hsPG7WfYCZQwy9M_4q_rQHJnJMScQ3D9-Jg@mail.gmail.com> <Z6T5sOWXxmUsflW7@pollux>
-In-Reply-To: <Z6T5sOWXxmUsflW7@pollux>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 6 Feb 2025 19:20:20 +0100
-X-Gm-Features: AWEUYZkbY91BAEYFX4AXNub-_ruLyROQHMaEng8J3mYMBruxN3v834JxG5Y-xRE
-Message-ID: <CANiq72n7jx5ve9UL3oDD08=PjY55QHoMY8fyfsW9RNEvjH_b4Q@mail.gmail.com>
-Subject: Re: [PATCH v2] rust: alloc: satisfy `aligned_alloc` requirements
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Tamir Duberstein <tamird@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Gevec6sj3mQRLmUh"
+Content-Disposition: inline
+In-Reply-To: <20250206061521.2546108-3-Hermes.Zhang@axis.com>
+
+
+--Gevec6sj3mQRLmUh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 6, 2025 at 7:04=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> w=
-rote:
->
-> I previously checked man posix_memalign(3) and it says:
->
-> ERRORS
->         EINVAL The alignment argument was not a power of two, or was not =
-a
->                multiple of sizeof(void *).
+On Thu, Feb 06, 2025 at 02:15:16PM +0800, Hermes Zhang wrote:
+> Add documentation for the SEN5x/SEN6x environmental sensor from Sensirion.
+>=20
+> Signed-off-by: Hermes Zhang <Hermes.Zhang@axis.com>
+> ---
+>  .../iio/chemical/sensirion,senxx.yaml         | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/chemical/sensir=
+ion,senxx.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/chemical/sensirion,sen=
+xx.yaml b/Documentation/devicetree/bindings/iio/chemical/sensirion,senxx.ya=
+ml
+> new file mode 100644
+> index 000000000000..4d998eabe441
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/chemical/sensirion,senxx.yaml
 
-Yeah, but that may not apply to `alligned_alloc` as far as I can see.
+filename matching a compatible please.
 
-Cheers,
-Miguel
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/chemical/sensirion,senxx.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sensirion SEN5x/SEN6x environmental sensor
+> +
+> +maintainers:
+> +  - Hermes Zhang <chenhuiz@axis.com>
+> +
+> +description: |
+> +  The SEN5x/SEN6x is a sensor module family combining the measurement of=
+ air
+> +  quality parameters: particulate matter, VOC, NOx, humidity, and temper=
+ature.
+> +
+> +  Datasheet:
+> +  https://sensirion.com/media/documents/6791EFA0/62A1F68F/Sensirion_Data=
+sheet_Environmental_Node_SEN5x.pdf
+> +  https://sensirion.com/media/documents/FAFC548D/6731FFFA/Sensirion_Data=
+sheet_SEN6x.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - sensirion,sen50
+> +      - sensirion,sen54
+> +      - sensirion,sen55
+> +      - sensirion,sen60
+> +      - sensirion,sen65
+> +      - sensirion,sen66
+
+I'd like a note in the commit message as to how all of these devices are
+different please.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+
+No supplies needed for this device? Seems like you would need at least
+one, no?
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +
+> +      sen55@69 {
+> +        compatible =3D "sensirion,sen55";
+> +        reg =3D <0x69>;
+> +      };
+> +    };
+> --=20
+> 2.45.2
+>=20
+
+--Gevec6sj3mQRLmUh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6T9hgAKCRB4tDGHoIJi
+0iSRAPkBaE83GiZYvgBcL3QGaQsIGlJ/PlgGutZFblMaxfjLdQD9GxJeK4n5HSG6
+8azZAY5MEzmkXd7mLi4SAOdf5GHc9gI=
+=E6hP
+-----END PGP SIGNATURE-----
+
+--Gevec6sj3mQRLmUh--
