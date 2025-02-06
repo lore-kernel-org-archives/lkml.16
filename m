@@ -1,130 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E264B4F5E0;
-	Thu,  6 Feb 2025 14:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E2622577F;
+	Thu,  6 Feb 2025 14:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738852036; cv=none; b=Y4OM/Hcs7fPjEjSOLgF3Bpl7jLH/CJxyK2fWhViQx3LNE33n5vzIRJ+vvI4iu3GwSo9QNrd50/yPjv4IjZO3D/nR1yB29RU53h4IinudZSsC3HY7jQTGlyAJy06Mqpn+OiU7mmQaH6in8xfUYQ3exbwxlhuIFUMMTW+Mq9avvmM=
+	t=1738852058; cv=none; b=U6/DELhzG6+Bo99i59OkGYnNSvekcMs2BtCNELNls7ZWw8ddKkvrMHCPlbWKvsKTyzRQuLWw+IwGQoCgmQ9Sky4l9BDfoYD4cBL6qH1alHa3DoGcsPvprUBprcYJpbCfNVPwa9HyvWeeYb25Y4gPAc8pBo+j8OQm9GE0g3Z0U70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738852036; c=relaxed/simple;
-	bh=3tAWcnKNqDoBbrghD8bFuVei6JTnTZIxA7LitV8jDSM=;
+	s=arc-20240116; t=1738852058; c=relaxed/simple;
+	bh=BezN76/8VPt9jHagI6jVcVKYjsqhc56dWOvbCZY7qQQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ejva7Nso78yuSgs/2BS3DTmKHgPkJ9CxUiXaY7gniuE5bfh6d6ajwomiycYkLgpxXIVNyaYIe/AMOlowNgVH+SdhG3UJfS6MrN5AZcSyTd9Wd0fHdkkO8H4+2+Mu9rk6MhoUl0bZffpYeL4zPbEzx2s19B6kWqnpRymxUTO1OyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bkiKAwKc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=eqyl0dc1eOZDiXc10WyemHCL1LUxAzIO5r7fCmoDrBum30d4fu3QKVtNqGCCWqpZHDf7C1LQyLom1/BRSPLwa6KlaobjkMHICLGrlMK11w4gK49EObeyqUYwuQm0In9/ksghrK6l8z0yuXzIhoP7TJUrMv8yK1YG8yNWstXnTwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=r/sXPZbY; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bkiKAwKc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E77F5C4CEDD;
-	Thu,  6 Feb 2025 14:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738852035;
-	bh=3tAWcnKNqDoBbrghD8bFuVei6JTnTZIxA7LitV8jDSM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bkiKAwKcGBNkb4hFno2C+qPBVfdLZiJKE1hWM8FsawRhtjRwiei04dyGsxqE1S7KH
-	 cdyr0oSE3zLh/ZKPjoPii+9JLrjzGF/bQqmMlt7PhFEcnHBKitT6TFSig8y1bTRUvF
-	 28/EF32FjQF3PwczmN6hfiJRBB4BYriDj4G5PAAY=
-Date: Wed, 5 Feb 2025 19:45:07 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>
-Subject: Re: [PATCH] perf/core: move all of the pmu devices into their own
- location
-Message-ID: <2025020544-shakily-flattered-93b7@gregkh>
-References: <2025020304-chip-trench-4e56@gregkh>
- <CAP-5=fXwprvLc3ubPmAuyUaTL2aD1frqL+RHJzkp8oe5z85oRw@mail.gmail.com>
- <2025020444-chivalry-wanting-7f0c@gregkh>
- <CAP-5=fUk3DB4orma=vM=+cKrztsRqHVhvvPk+py+G+9w9sOdqg@mail.gmail.com>
- <2025020507-anteater-icy-44ab@gregkh>
- <CAP-5=fUCDA1YLDrMgMpr=o4ESFey1b51+DfBwCF+cG7+-yidwg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r/sXPZbY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=aHjwizHLsq1lp0fJhwaBPxokex1B77SgmxhHOi1t7L4=; b=r/sXPZbYGcHJakUNZ5H8VPoe8J
+	5t+SagAgodvqNeWJRNs61iA7b5jFFhQR6nvR6jI2szVVsvdl17Kt4HNUy/TTbDYQuwLwo9YaeF0Rl
+	kXU5rbHE+BjzmQ+zZXrvj4/+tgbxyqeZn3BchWXCTjtFa+5QkSPY3cX/IuT4Cdg9QJ8ZKd/wkRb2L
+	RT1S/LWVPiThEL9JUU+fgXykigzgHuuw1yldZBRp0abuKDxXxcwoacNCAuV76ChhVz/txX7RBEJgo
+	+Te0w0e0+MNi7kxnqjk/PTt5BFfACddZiyadZed8Tt5l0wY2fiQ2MIbgH5u8V13OEmfQrb1myD/bj
+	IjWlru7Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tg2qb-000000067kn-3VUi;
+	Thu, 06 Feb 2025 14:27:17 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 6802E30050D; Thu,  6 Feb 2025 15:27:17 +0100 (CET)
+Date: Thu, 6 Feb 2025 15:27:17 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Prakash Sangappa <prakash.sangappa@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+	x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	luto@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
+	bharata@amd.com, raghavendra.kt@amd.com,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com,
+	Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Clark Williams <clark.williams@gmail.com>, daniel.wagner@suse.com,
+	Joseph Salisbury <joseph.salisbury@oracle.com>, broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250206142717.GS7145@noisy.programming.kicks-ass.net>
+References: <20250204220418.35949317@gandalf.local.home>
+ <CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
+ <20250205081635.397eacb0@gandalf.local.home>
+ <CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
+ <20250206083039.0916ad24@gandalf.local.home>
+ <20250206134408.lD_POjuG@linutronix.de>
+ <20250206134859.GP7145@noisy.programming.kicks-ass.net>
+ <20250206135353.i1tp4vDv@linutronix.de>
+ <20250206135744.GQ7145@noisy.programming.kicks-ass.net>
+ <20250206142234.-kcSg0xr@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUCDA1YLDrMgMpr=o4ESFey1b51+DfBwCF+cG7+-yidwg@mail.gmail.com>
+In-Reply-To: <20250206142234.-kcSg0xr@linutronix.de>
 
-On Wed, Feb 05, 2025 at 08:48:21AM -0800, Ian Rogers wrote:
-> On Tue, Feb 4, 2025 at 9:41 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Feb 04, 2025 at 10:17:17AM -0800, Ian Rogers wrote:
-> > > On Mon, Feb 3, 2025 at 11:05 PM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Mon, Feb 03, 2025 at 11:44:13AM -0800, Ian Rogers wrote:
-> > > > > On Mon, Feb 3, 2025 at 11:25 AM Greg Kroah-Hartman
-> > > > > <gregkh@linuxfoundation.org> wrote:
-> > > [snip]
-> > > > > > Note, if you all don't like "pmu_bus" for the name, that's fine, please
-> > > > > > let me know and I can rename it to something else, but it should be
-> > > > > > something to get these objects out of the root sysfs directory.
-> > > > >
-> > > > > Excuse my ignorance, does the event_source bus already provide a
-> > > > > similar solution?
-> > > > > ```
-> > > > > $ ls /sys/bus/event_source/devices
-> > > > > breakpoint   i915       msr         uncore_arb     uncore_cbox_3
-> > > > > uncore_cbox_7              uprobe
-> > > > > cpu          intel_bts  power       uncore_cbox_0  uncore_cbox_4  uncore_clock
-> > > > > cstate_core  intel_pt   software    uncore_cbox_1  uncore_cbox_5
-> > > > > uncore_imc_free_running_0
-> > > > > cstate_pkg   kprobe     tracepoint  uncore_cbox_2  uncore_cbox_6
-> > > > > uncore_imc_free_running_1
-> > > > > $ ls /sys/devices
-> > > > > breakpoint   intel_pt     platform    uncore_arb     uncore_cbox_5
-> > > > >          uprobe
-> > > > > cpu          isa          pnp0        uncore_cbox_0  uncore_cbox_6
-> > > > >          virtual
-> > > > > cstate_core  kprobe       power       uncore_cbox_1  uncore_cbox_7
-> > > > > cstate_pkg   LNXSYSTM:00  software    uncore_cbox_2  uncore_clock
-> > > > > i915         msr          system      uncore_cbox_3  uncore_imc_free_running_0
-> > > > > intel_bts    pci0000:00   tracepoint  uncore_cbox_4  uncore_imc_free_running_1
-> > > > > ```
-> > > >
-> > > > Those are the exact same device structures :)
-> > > >
-> > > > Look at /sys/bus/event_source/devices/ those are symlinks back to
-> > > > /sys/devices.  In other words, that's the exact same structures, and
-> > > > the mess in /sys/devices/ with these event devices is what I am trying
-> > > > to clean up.
-> > >
-> > > Thanks! Again my ignorance, why do we need pmu_bus?
-> >
-> > You need some sort of "bus" to group all of your devices on.  It could
-> > also be a class, your call.  This is how the driver model in the kernel
-> > works.
-> 
-> Sure, I wasn't clear how this mapped out in sysfs.
-> 
-> > > Could the symlinks in event_source be the actual devices?
-> >
-> > That's not how the driver model works.
-> 
-> Ok, so I guess that's what's confusing me. Where will the new devices
-> be in sysfs? If it is /sys/bus/pmu_bus then why is
-> /sys/bus/event_source a different case? I guess I should read docs and
-> the source :-)
+On Thu, Feb 06, 2025 at 03:22:34PM +0100, Sebastian Andrzej Siewior wrote:
+>  Then this feature adds 20us on top?
 
-Look at what is in /sys/bus/event_source/devices/ today.  That's a bunch
-of symlinks to where in /sys/devices/ the devices are located.
+The point has always been for the number to be < the observable
+scheduling latency.
 
-I just moved all of the pmu bus devices under /sys/devices/pmu_bus/
-instead of them showing up in the root at /sys/devices/ as that's not
-where a bus should be placing individual devices like this.
+I'm not sure what that number is, and it is always hardware dependent. I
+measured it on a random test box when I did the prototype a long while
+ago, and ended up at 50us, but for all I know that machine was running a
+lockdep enabled kernel at the time (won't be the first and certainly
+won't be the last time I try and do a performance measurement on a debug
+kernel).
 
-thanks,
+That was not the important part -- but everybody fixates on the number,
+instead of the intent.
 
-greg k-h
+I'm assuming you have a recent number around -- what's sane? 5us, less?
