@@ -1,184 +1,128 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2082.outbound.protection.outlook.com [40.107.223.82])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9ECE22A4F2;
-	Thu,  6 Feb 2025 11:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738841894; cv=fail; b=JcH7I1oaJXd5wzzV7zhow8CDuKtaWZkqdUBX99as7JlWFzM8ECrlEoCMgb5WLX3v9WceL7msQHBIotQROtYEjdOE8jeqO8GgMXrYsmUJUKFJcMZsY/GjuOnjb2CwIU/7lpcdQdtoSNgnhV+Op6inkw+YTZcu/nOkqakqt7W8wd4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738841894; c=relaxed/simple;
-	bh=CzNUkDiKb0nqMFX6eCS2NA0P1241FhwHk8op7TjEZd0=;
-	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID:Date; b=cpx3ZEnHnhQtOlZLCf6rhNkAbaqfD4skdyNGvvnp2k8YcB8/xeFPFXufYsmfghAal9wXiBEZpu8xjum8sSp+hWS5MrT7OpShGtk+e1n3kEoJXfNPRDIyqvt5GU32eKzQnJyHbabBE+3h2hS8zSMhN5NWjFLFD0oKCsDKc6Sexw8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=p9pwKQ6x; arc=fail smtp.client-ip=40.107.223.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="p9pwKQ6x"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AaQi2wPrB8zWv9ke2FwVFdLyDg32gMC/Tr2eXKy8u4BVkgqnVt9KTJcTdFwJzi+GKbmUqiSqe+w6F+Sz7EKAg9mEGzcp79/d1XuiAR/NL9ZGxu7+fOHCQj9+3S5b+t/bssdMJ114ZUqnJrOkSLyBIEhiSdPbszDf+QXaOZnwnRtdJloFCA/i/IXlGXjTci/EE1boUS7pACMX5U3HmGQrtvYF5KKoTUMwTPg0Wij206Iqy3DSewUsvBZHfCKv17hcFaRm4ziVMOOkDNzXFjny25D/pQV1e77E+wZhJLZiFYn4CUY6Ep7x7c/Fo9RkurlwG+/U1FDdaDK2CU6Ua5LraQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=w+48BfDRHRvhGMxiZpgslw2EKpdHZvBn8dGOgRRABOU=;
- b=CuxO8AA+TNtdqhMtKQUEl5ioktX0MAQOFsjrBGLd0plq+NcJtzjX2288f236MvMqlTifoJpys15iYlph4MWX4yF7CsEE3EwP7o8BGq8TFKUQKA7EEn9Hd+Ugwo6DPi14BJFD0M66boKj6uBhUdv6FJyLkqPCCN6m9c90/b2zmDoDnyKctAk+Y9dia7UJ90yt4+ZXDwXjHR0qUy6xylSJ1Uq+Ly4ZafN9jXRyB0d3El9vtkiYR7/OfTH9KR0Ydgr258ozoYb/4+bF0Boyljej/81dlu164eVY+B9O6ToIO/lmvSioiBbewvyE+3RZtksH5GrCjLjUDLnP+4UzbqMt/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w+48BfDRHRvhGMxiZpgslw2EKpdHZvBn8dGOgRRABOU=;
- b=p9pwKQ6xE0QnARsD6GdYnKsUE1qjJKusxH6OOfyLChKOmfOqAB/0AqFBZ0ruCWjG5e36Jh9q/NPgcn4AR8Bb8O52KyOjwSyMJ1w9OFYWXJxkLM+2dCWuiPizYScZTlNFC2FdOIr6LD9nmeKNVFR4LS1gPkS2vgI/PfSLyDQeAWwTuN2mFHL+2P/I5yZPYWP0NFx5K3gm73NcQVUvKCGvz0JXiXEpRw/ufKYx5sxzUda0T/TNLTvDEmc2tHkW0R8U4GKTgiYQoEBItQj8d4Eklkhlvpz49gQhu04qgWe0VeQy3wqXBsSI/e4fUQAzqrvh18nnL47e08bXuDbHdOnQMg==
-Received: from BY3PR10CA0009.namprd10.prod.outlook.com (2603:10b6:a03:255::14)
- by BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Thu, 6 Feb
- 2025 11:38:09 +0000
-Received: from SJ1PEPF00001CE5.namprd03.prod.outlook.com
- (2603:10b6:a03:255:cafe::fa) by BY3PR10CA0009.outlook.office365.com
- (2603:10b6:a03:255::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.24 via Frontend Transport; Thu,
- 6 Feb 2025 11:38:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- SJ1PEPF00001CE5.mail.protection.outlook.com (10.167.242.21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8398.14 via Frontend Transport; Thu, 6 Feb 2025 11:38:09 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 6 Feb 2025
- 03:38:04 -0800
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A221F227B8B
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738841949; cv=none; b=BpRVVdPmPimfHSbfZTODM5WEpFus1TabVoLl0EQrFeLGPSktiQ6GE5p51P4SOvYUBbtzYyDnXQ/SV6Z7/j5w+sLcaYN4xAmSETmz2xQneUik+rXqvEZTP3vbmjwSnw08aZF3HYW+YeeazSZO9p/t4P7TJNlDDGJEq7mp5PpwD7s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738841949; c=relaxed/simple;
+	bh=YgOJD+kd2mC/GASdIn57a6LE/LeB1QV1j6FJAJ2yk94=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=CdvzG3IgKc2M4G7l//AQtJanHuqXK0pvkq785mbPoshFk6KYYNBKnJ+YAsuXCsxx6htMawyyuJrATCKbAuS+zsKBTBuaEPZ9nYoHq3slz990fqPOCpAgzZUWYPTWNzvDe280Y3boHScDDWp/w+JCTitvSdfTIUgIMoY493q2y+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4YpZlw722fz1V66D;
+	Thu,  6 Feb 2025 19:35:24 +0800 (CST)
+Received: from kwepemd200019.china.huawei.com (unknown [7.221.188.193])
+	by mail.maildlp.com (Postfix) with ESMTPS id D2DF01A0188;
+	Thu,  6 Feb 2025 19:39:03 +0800 (CST)
+Received: from [10.173.127.72] (10.173.127.72) by
+ kwepemd200019.china.huawei.com (7.221.188.193) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 6 Feb 2025 03:38:04 -0800
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.126.190.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Thu, 6 Feb 2025 03:38:04 -0800
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
-	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 6.13 000/623] 6.13.2-rc1 review
-In-Reply-To: <20250205134456.221272033@linuxfoundation.org>
-References: <20250205134456.221272033@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+ 15.2.1544.11; Thu, 6 Feb 2025 19:39:02 +0800
+Subject: Re: kismet: WARNING: unmet direct dependencies detected for HUGETLBFS
+ when selected by PPC_8xx
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+CC: Paul Gazzillo <paul@pgazz.com>, Necip Fazil Yildiran
+	<fazilyildiran@gmail.com>, <oe-kbuild-all@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, kernel test
+ robot <lkp@intel.com>
+References: <202501240611.LDmD2nkj-lkp@intel.com>
+ <29cf621d-db67-6c5c-0dc5-ebe79edc6cc6@huawei.com>
+ <08a51873-7510-4552-9bb1-3ea7ef9fbc2d@csgroup.eu>
+ <0c0c6af5-7766-6cc0-d141-d725b84bef09@huawei.com>
+ <5528c76d-d8f1-41be-a742-8bafa74c24f9@csgroup.eu>
+ <d6c06a9c-4d43-4528-c5d1-019f91087f30@huawei.com>
+ <5c99458f-4a91-485f-8a35-3618a992e2e4@csgroup.eu>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <053701eb-b2da-b3e2-de16-50384805b69f@huawei.com>
+Date: Thu, 6 Feb 2025 19:39:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <3d6efed5-b25b-4836-8063-fc53d6471e31@drhqmail203.nvidia.com>
-Date: Thu, 6 Feb 2025 03:38:04 -0800
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE5:EE_|BY5PR12MB4130:EE_
-X-MS-Office365-Filtering-Correlation-Id: b4c57d22-0126-4cc9-a9d0-08dd46a2bb2c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YmJNMDlqUjlUVFVxWXA0T2Jxb1hmWnhFLzlobExqVTdDWnFLaVhYYnZFNWdo?=
- =?utf-8?B?ZlhxQ0E4Y0ZhYXBpUkZsbXlLdHdPMCtBcjhiVEtsSFR6TCtiWEV5Y0RzSzRq?=
- =?utf-8?B?YVhWUVpjZHE4eDIwTDZiRUZEN3lTdDN1N095c25hL1BJS0VlMTV6Y3l6TXZn?=
- =?utf-8?B?Rk5uUkhZOXlXcUhqQWNpNWtmalZRRGxGMGRUWVFVY3VSTEJDL0pCU2dhNVlL?=
- =?utf-8?B?c3pPR3I3Q2NMUHQ4WmlCdlBwZURNZzZjVWM5VEl4TDZnRUtLZ1B2Zk1MZzdo?=
- =?utf-8?B?YzRlTUtUUEJvTDZJQkNKZzM2YWJjRDZ1Zm0yWC9XOHNDVVAyS01XRjNMVWZ6?=
- =?utf-8?B?TFNqUTJSY3BoVFNVTkV6TkpIWlFQNUo2clpnSk1WdklVY284YVFmVDlxZS90?=
- =?utf-8?B?ODhZUm0rMVFoZlduSDRtN3UwOHZKSGNKWGxXK0UyK3RIeVYyWmpUVXE2MnBQ?=
- =?utf-8?B?ZGZyQytMM0xYemxIUDFkWS8yTnV6YWZDeVJyRDVhV3YzaG50dUd4eHZiL2Q1?=
- =?utf-8?B?VHluemRORnRKRzhLUWRaSFFPWmZ1dWkrRjFpdUZ6M1pMaUszVHBIdjNsYnhZ?=
- =?utf-8?B?b2M1NWpDanYxb2VoTzdoMVE4SG9qQnpPaDBSTE5lbWRHUUc1Nk91V2hSWGlT?=
- =?utf-8?B?RGc4dTJ6L1B2Y2tEZk4xZ0RlTEswd21rc01FUVJDWWpDZWZxVDJ6Qm1Tc2pX?=
- =?utf-8?B?ZzFHNmxGd2tpZCtBYkVicG1zRk5ZeUZiMTJaWmZGY2ZIWjB1WjZWd0tHeDlG?=
- =?utf-8?B?S1loOTVMTmR4Ry8yY2FVcS91SURhY0lqRHM3d2xOeHg1U1J3WVpFczZvOHov?=
- =?utf-8?B?ZzdGUnRyMXZobHNINFEwS3ZtQ2FLenRBczBTdlFKYXJ2TTh4QkhhTGFHZTls?=
- =?utf-8?B?VFlvSEZMOW56K0FKcG9NVGMzS2M4QUdJTGx2VzBpaC9kajdMbWZoczdMODNi?=
- =?utf-8?B?d1JVbmg3Tm0yeXFmemwrbmtCUHlUSzA5NlRTMm9WNXpraVhrQUd5Z09kSndj?=
- =?utf-8?B?WlhtaG5lUnJNd0MwUHlCc1FCWHNSTkc4OTBPVjVtMG9LYlpGOGRsZUNBNkdU?=
- =?utf-8?B?cHpBUzlpMlVCc1lvWm43S3VmbElWK2YxRmtkSmtMMk1KZzRCaDY3WUFzaGwy?=
- =?utf-8?B?S01iVVFET1pmWVdWVWhMRGZiZHh5NGlTdGVaYy8yREtvMmFMOTBER2xiUGxE?=
- =?utf-8?B?WGJzaVRycXQ4K2ovT0VoSDFlR3E1UjZKY0ZMWXNRUzN6d094dkRpRk1lbDhx?=
- =?utf-8?B?MGp0ZzdoMUppdjVnZVFubndxeXFkQUM4dDAvSnFFOXJkTFBrRTZhRVNYUWhX?=
- =?utf-8?B?MFBFS01GQ2Y5SnRoZ0tkV2dZNHZBb0ZNMHcvZDZEVHo1eTR3R2QxeWNmSE9o?=
- =?utf-8?B?dXdrdGVlSFB4RU1DdnkvbkFmSWdkMTl2ZFZqTlRvYnJCSFNYUit4Z204NW8r?=
- =?utf-8?B?cDZHSjlFMzhGbXc0dUU0YzhvQVhGVTI0VXRSanltTTkvVDM4RWZxaXhaY0ov?=
- =?utf-8?B?ZmV6SWVuVFpiOG5ibGxabUhpMFlEWHl1TUVoZXVTWFZDTnZnODZERUg3TCtQ?=
- =?utf-8?B?Z3hXWVJzeEpCOHp3dXdmRGJyc1BoM1Z0dDgrTk1QZ2dLTGxuWnRUY2RRcjU3?=
- =?utf-8?B?U1FBWXBEZUY1YVh3YzZoOElhQWFNQlJIcmovMVJuSXhiT1o5YitqSzdSa2Vs?=
- =?utf-8?B?bTc5cjZMd3dIemMxL3k2OE80Mk5jeE05aE1BbXg1MDdxVHdKOTE0cWpZbk9W?=
- =?utf-8?B?Z2NrSzRZczRJUlZrVWIyblg4SzRqNksrSFlEM0V3amZkMUNMTWQ1UTA0UVUv?=
- =?utf-8?B?QnV2YlY4Y0lja2k2OGYvNVQ1UmFMK1d3VVUwRVp4NmZSNWdndW5ZVFZ4T0VF?=
- =?utf-8?B?NlQ5V1ZtbThmWUhXRW5VR0l4RThNbnZRckxMRkNPeWNISndGSU1OaGFTYWVL?=
- =?utf-8?B?a2hlOXgrMlRaQ0tad3hxU05ieG1BMEhWWSt0NkJ5bmdBSVJjbnF3L0xxbE8w?=
- =?utf-8?Q?weUlvTIqMn48awqn6vEiIyQDfSbtcE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 11:38:09.5078
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4c57d22-0126-4cc9-a9d0-08dd46a2bb2c
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE5.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4130
+In-Reply-To: <5c99458f-4a91-485f-8a35-3618a992e2e4@csgroup.eu>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemd200019.china.huawei.com (7.221.188.193)
 
-On Wed, 05 Feb 2025 14:35:42 +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.2 release.
-> There are 623 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 2025/2/6 16:47, Christophe Leroy wrote:
 > 
-> Responses should be made by Fri, 07 Feb 2025 13:42:57 +0000.
-> Anything received after that time might be too late.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.2-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
-> and the diffstat can be found below.
+> Le 06/02/2025 à 08:12, Miaohe Lin a écrit :
+>> On 2025/2/6 14:30, Christophe Leroy wrote:
+>>>
+>>>
+>>> Le 06/02/2025 à 03:08, Miaohe Lin a écrit :
+>>>> On 2025/2/6 0:35, Christophe Leroy wrote:
+>>>>>
+>>>>>
+>>>>> Le 05/02/2025 à 03:39, Miaohe Lin a écrit :
+>>>>>> On 2025/1/24 6:24, kernel test robot wrote:
+>>>>>>> tree:   https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ftorvalds%2Flinux.git&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4568427e535f47ba6e7108dd467da005%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638744227571348001%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=rpToSy%2BI2rTH5db2ST62gNZF0efdupnNQRpYevV2CRY%3D&reserved=0 master
+>>>>>>> head:   d0d106a2bd21499901299160744e5fe9f4c83ddb
+>>>>>>> commit: f8142cf94d4737ea0c3baffb3b9bad8addcb9b6b hugetlb: make hugetlb depends on SYSFS or SYSCTL
+>>>>>>> date:   2 years, 4 months ago
+>>>>>>> config: powerpc-kismet-CONFIG_HUGETLBFS-CONFIG_PPC_8xx-0-0 (https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdownload.01.org%2F0day-ci%2Farchive%2F20250124%2F202501240611.LDmD2nkj-lkp%40intel.com%2Fconfig&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4568427e535f47ba6e7108dd467da005%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638744227571371397%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=27pzb6aOPaarlX2fX%2B3%2FvCp8GWwysleJoVw9L6Yrytc%3D&reserved=0)
+>>>>>>> reproduce: (https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdownload.01.org%2F0day-ci%2Farchive%2F20250124%2F202501240611.LDmD2nkj-lkp%40intel.com%2Freproduce&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4568427e535f47ba6e7108dd467da005%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638744227571381016%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=XEjM2tEaDz%2BINDJbCOD2ciJU24koPd9msdwNiP3lPLw%3D&reserved=0)
+>>>>>>>
+>>>>>>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>>>>>>> the same patch/commit), kindly add following tags
+>>>>>>> | Reported-by: kernel test robot <lkp@intel.com>
+>>>>>>> | Closes: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Foe-kbuild-all%2F202501240611.LDmD2nkj-lkp%40intel.com%2F&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4568427e535f47ba6e7108dd467da005%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638744227571390239%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=W%2F8GHsXQwmaG22bsTyQes1zdMG7o2aHc%2Fly%2BHO57LwI%3D&reserved=0
+>>>>>>
+>>>>>> Thanks for report. Sorry for late respond. I was on my Spring Festival vacation.
+>>>>>>
+>>>>>>>
+>>>>>>> kismet warnings: (new ones prefixed by >>)
+>>>>>>>>> kismet: WARNING: unmet direct dependencies detected for HUGETLBFS when selected by PPC_8xx
+>>>>>>>       WARNING: unmet direct dependencies detected for HUGETLBFS
+>>>>>>>         Depends on [n]: (X86 || IA64 || SPARC64 || ARCH_SUPPORTS_HUGETLBFS [=y] || BROKEN [=n]) && (SYSFS [=n] || SYSCTL [=n])
+>>>>>>>         Selected by [y]:
+>>>>>>>         - PPC_8xx [=y] && <choice>
+>>>>>>
+>>>>>> I am a bit confused. HUGETLBFS depends on SYSFS or SYSCTL. How can it be selected while SYSFS [=n] || SYSCTL [=n]?
+>>>>>> Or am I miss something?
+>>>>>
+>>>>> CONFIG_HUGETLBFS is selected by CONFIG_PPC_8xx, see commit 34536d780683 ("powerpc/8xx: Add a function to early map kernel via huge pages")
+>>>>
+>>>> Thanks for your providing. But I'm saying that since HUGETLBFS depends on (SYSFS or SYSCTL), how CONFIG_PPC_8xx succeeds to select it while
+>>>> SYSFS and SYSCTL are disabled? I'm not really familiar with Kconfig but I assume Kconfig will confirm that the dependencies are satisfied
+>>>> before HUGETLBFS is enabled. Or am I miss something?
+>>>
+>>> I suggest you read https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs.kernel.org%2Fkbuild%2Fkconfig-language.html&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C4568427e535f47ba6e7108dd467da005%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638744227571400924%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=UtQJlI0P7JV%2BQy0jlHFoGZ8ipnl5SzhuL1G%2Bbr0an9Y%3D&reserved=0
+>>
+>> Thanks.
+>>
+>>>
+>>> Extract:
+>>>
+>>> Note:
+>>>      select should be used with care. select will force a symbol to a value without visiting the dependencies. By abusing select you are able to select a symbol FOO even if FOO depends on BAR that is not set.
+>>
+>> IMHO, it seems it's the use of "select" breaks the dependencies and leads to the kismet warnings. So it might be better to fix the PPC_8xx side.
 > 
-> thanks,
 > 
-> greg k-h
+> The dependencies are wrong, I have a kernel without CONFIG_SYSFS and without CONFIG_SYSCTL and hugetlbfs works perfecly well.
+> 
+> I boot the kernel with following parameters:
+> 
+>     hugepagesz=512k hugepages=8 hugepagesz=8M hugepages=2
 
-Failures detected for Tegra ...
+I think you are right. Hugetlb can still be used with boot parameter while CONFIG_SYSFS and CONFIG_SYSCTL are disabled.
+So my commit should be reverted.
 
-Test results for stable-v6.13:
-    10 builds:	10 pass, 0 fail
-    26 boots:	26 pass, 0 fail
-    116 tests:	115 pass, 1 fail
-
-Linux version:	6.13.2-rc1-g32cbb2e169ed
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra194-p3509-0000+p3668-0000,
-                tegra20-ventana, tegra210-p2371-2180,
-                tegra210-p3450-0000, tegra30-cardhu-a04
-
-Test failures:	tegra194-p2972-0000: pm-system-suspend.sh
-
-
-Jon
+Thanks.
+.
