@@ -1,47 +1,59 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68064BA33;
-	Thu,  6 Feb 2025 15:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFA04C8E
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 15:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738856748; cv=none; b=mFN0wbIQgUB603CjHx/amMXmsscCciBHkbliCOhTwmP6+egFUF2wR/pEpvgRpbVKo8HFtZoSu+Od6aHch0v0M8TdQR1jhruMoipkZnKOa6W/O/O2X6lWdYlBbfIWK3kmlg1vdZ9W+rxlcKkhCFiv1SRdvCcyAlHUfSEctBn0lwA=
+	t=1738856942; cv=none; b=HFtGeRHw1PrkL8tD/EizPWmQs3sxxmmfPZChzCecGoBa4GYp3Lffb0kFQRvpQzrh6+j94M+8MFcB56XA11cNbHlHCTQyc9BVoBMOwnyMfooRrPFJ3gFHr1fdpe64ZVyR14bNnS0rGkj1bGLbaVxkL7Pd8tLnVM27pikjcVoxA9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738856748; c=relaxed/simple;
-	bh=gRP4MG9risPvnbuNQJsv8sRMJhilt04gH9bgMGNXRPU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=clcL2EZi2aLbQbINruybXGnSBCt2AAoRi+mE+SLgrsdOqZ4VndrVt3GLgJgX2qBUsH8HFuQBpntRHMwyGBk0oGLF+/dP9m3aps81LabbltCuB0f4X6u/7ef9r9WXwN8lUZ/jMWeUFnj6tPUnJraG4PhfIHYcrhJFizpjiXXm4AE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=sNo7iFwF; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1738856942; c=relaxed/simple;
+	bh=zOY+ZCzmFJLL0Q8wdwGki3w85BL6fTQODYs1Wl3IQdw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f9TOBP7+REH6V+c+AY2mybk71u2bwbfw+GzgqIDV5NQTcndM08eZSZUReysqq8D2t6vvACzEwTsmSSn+Be6hj2xOJWtjG4O284Z9hOhkoDBIfAbSTox46CUltp8z2EXXnskvi3nLCFrGoZOoiY2Z+XK2/wzl7k8lOTGPF80C7tI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CG0q0ltk; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="sNo7iFwF"
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id B4F9B1FA0A;
-	Thu,  6 Feb 2025 16:39:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1738856359;
-	bh=kH0+JGJ28AOCheBpS02kDekVXIgobDL51e4ShaB0Zjs=; h=From:To:Subject;
-	b=sNo7iFwFXaS/G6IrumBfAqnjDFIN5KPso8Am/Ghd0RMqQpT+D6DzlP7h4fmvEtmJU
-	 vbUQlhZC6EXau5evJUgdZs0/eRdOD7Et7STwiVL3lOSk5/10vpmdbsjDcoXZj4Qi+J
-	 sUQo5JgqQ9AIOiPuNFUrOgdCh6AA5DoXBskUWlvp5mW2/LbdwEcyYDKzhK1AXpwk0v
-	 TecKe1fU+gGo0bSDIUXeyP1HhkIsaEiEj7fa6GNu348aWtlsZhps4LHuMoes3gvXgE
-	 xz+yo9NAJ5IFyoWxxSGw5FuCs609qX9vJPq5AmTxnM8xoOT6Iha7ONVHRawR21EsJV
-	 eV03cTtxB9Ugw==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CG0q0ltk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738856941; x=1770392941;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zOY+ZCzmFJLL0Q8wdwGki3w85BL6fTQODYs1Wl3IQdw=;
+  b=CG0q0ltk00PJs1QHjf56mOyy/xXO49YAvIQSPcN+vES3VDKsbWSMH9/k
+   iDpz5UnI8y22/8wPWjhBkWDzPvP97iZRxVFNwiN385R1bDo9LYear+6UU
+   Y7EU0VfvZPUOfbVQ2JTInBVb/FsT5f/Hqosgbw4HlgKYrKoWbcSfIClCq
+   HncxKRzscDSzHh4A7KGDjKb7qXlDipC0BZ9xdpR3CKuqmeZU+56uIap8P
+   veiU13QETdpdddFXYv/Y7hSacJKOgwLqyd5n4B+xH0Ummr08Yw0M1cCl9
+   IJb0Q1DvwH3Ehau23XZp+N/OYXMZb69W3RHVoiYAdLH8BWosV6I+79kKB
+   A==;
+X-CSE-ConnectionGUID: FBrBF/qdQySQ5w5byG097g==
+X-CSE-MsgGUID: Xwf328HST9S5u+DjwNdalA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="38697044"
+X-IronPort-AV: E=Sophos;i="6.13,264,1732608000"; 
+   d="scan'208";a="38697044"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 07:49:00 -0800
+X-CSE-ConnectionGUID: GAlsV9GUQxaWn7G3GmrZsA==
+X-CSE-MsgGUID: SLZklxN/T6i82CuUuEWhWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="116198640"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP; 06 Feb 2025 07:48:58 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id C6FF3EE; Thu, 06 Feb 2025 17:48:56 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Ofir Bitton <obitton@habana.ai>,
+	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] arm64: dts: ti: k3-am62p: Enable AUDIO_REFCLKx
-Date: Thu,  6 Feb 2025 16:39:11 +0100
-Message-Id: <20250206153911.414702-1-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.5
+Cc: Oded Gabbay <ogabbay@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] accel/habanalabs: Switch to use %ptTs
+Date: Thu,  6 Feb 2025 17:48:55 +0200
+Message-ID: <20250206154855.1125731-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,49 +62,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Francesco Dolcini <francesco.dolcini@toradex.com>
+Use %ptTs instead of open-coded variant to print contents of time64_t type
+in human readable form.
 
-On AM62P-based SoCs the AUDIO_REFCLKx clocks can be used as an input to
-external peripherals when configured through CTRL_MMR, so add the
-clock nodes.
-
-Link: http://downloads.ti.com/tisci/esd/latest/5_soc_doc/am62px/clocks.html
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/arm64/boot/dts/ti/k3-am62p-main.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/accel/habanalabs/common/device.c | 25 +++---------------------
+ 1 file changed, 3 insertions(+), 22 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-index 420c77c8e9e5..4b47b0774330 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-@@ -42,6 +42,26 @@ &inta_main_dmss {
- 	ti,interrupt-ranges = <5 69 35>;
- };
+diff --git a/drivers/accel/habanalabs/common/device.c b/drivers/accel/habanalabs/common/device.c
+index 30277ae410d4..b5dad5a54d5a 100644
+--- a/drivers/accel/habanalabs/common/device.c
++++ b/drivers/accel/habanalabs/common/device.c
+@@ -1066,28 +1066,11 @@ static bool is_pci_link_healthy(struct hl_device *hdev)
+ 	return (device_id == hdev->pdev->device);
+ }
  
-+&main_conf {
-+	audio_refclk0: clock-controller@82e0 {
-+		compatible = "ti,am62-audio-refclk";
-+		reg = <0x82e0 0x4>;
-+		clocks = <&k3_clks 157 0>;
-+		assigned-clocks = <&k3_clks 157 0>;
-+		assigned-clock-parents = <&k3_clks 157 16>;
-+		#clock-cells = <0>;
-+	};
-+
-+	audio_refclk1: clock-controller@82e4 {
-+		compatible = "ti,am62-audio-refclk";
-+		reg = <0x82e4 0x4>;
-+		clocks = <&k3_clks 157 18>;
-+		assigned-clocks = <&k3_clks 157 18>;
-+		assigned-clock-parents = <&k3_clks 157 34>;
-+		#clock-cells = <0>;
-+	};
-+};
-+
- &main_pmx0 {
- 	pinctrl-single,gpio-range =
- 		<&main_pmx0_range 0 32 PIN_GPIO_RANGE_IOPAD>,
+-static void stringify_time_of_last_heartbeat(struct hl_device *hdev, char *time_str, size_t size,
+-						bool is_pq_hb)
+-{
+-	time64_t seconds = is_pq_hb ? hdev->heartbeat_debug_info.last_pq_heartbeat_ts
+-					: hdev->heartbeat_debug_info.last_eq_heartbeat_ts;
+-	struct tm tm;
+-
+-	if (!seconds)
+-		return;
+-
+-	time64_to_tm(seconds, 0, &tm);
+-
+-	snprintf(time_str, size, "%ld-%02d-%02d %02d:%02d:%02d (UTC)",
+-		tm.tm_year + 1900, tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+-}
+-
+ static bool hl_device_eq_heartbeat_received(struct hl_device *hdev)
+ {
+ 	struct eq_heartbeat_debug_info *heartbeat_debug_info = &hdev->heartbeat_debug_info;
+ 	u32 cpu_q_id = heartbeat_debug_info->cpu_queue_id, pq_pi_mask = (HL_QUEUE_LENGTH << 1) - 1;
+ 	struct asic_fixed_properties *prop = &hdev->asic_prop;
+-	char pq_time_str[64] = "N/A", eq_time_str[64] = "N/A";
+ 
+ 	if (!prop->cpucp_info.eq_health_check_supported)
+ 		return true;
+@@ -1095,17 +1078,15 @@ static bool hl_device_eq_heartbeat_received(struct hl_device *hdev)
+ 	if (!hdev->eq_heartbeat_received) {
+ 		dev_err(hdev->dev, "EQ heartbeat event was not received!\n");
+ 
+-		stringify_time_of_last_heartbeat(hdev, pq_time_str, sizeof(pq_time_str), true);
+-		stringify_time_of_last_heartbeat(hdev, eq_time_str, sizeof(eq_time_str), false);
+ 		dev_err(hdev->dev,
+-			"EQ: {CI %u, HB counter %u, last HB time: %s}, PQ: {PI: %u, CI: %u (%u), last HB time: %s}\n",
++			"EQ: {CI %u, HB counter %u, last HB time: %ptTs}, PQ: {PI: %u, CI: %u (%u), last HB time: %ptTs}\n",
+ 			hdev->event_queue.ci,
+ 			heartbeat_debug_info->heartbeat_event_counter,
+-			eq_time_str,
++			hdev->heartbeat_debug_info.last_eq_heartbeat_ts,
+ 			hdev->kernel_queues[cpu_q_id].pi,
+ 			atomic_read(&hdev->kernel_queues[cpu_q_id].ci),
+ 			atomic_read(&hdev->kernel_queues[cpu_q_id].ci) & pq_pi_mask,
+-			pq_time_str);
++			hdev->heartbeat_debug_info.last_pq_heartbeat_ts);
+ 
+ 		hl_eq_dump(hdev, &hdev->event_queue);
+ 
 -- 
-2.39.5
+2.43.0.rc1.1336.g36b5255a03ac
 
