@@ -1,93 +1,181 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F7113AD18;
-	Thu,  6 Feb 2025 07:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF1F156968
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 07:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738828000; cv=none; b=GgbbuBUB+WZU5pjk6Th8SSLIFdqy/r4/4Uc4Jx4Fi/6x8mwmT+8vLVc6tKPya7uwUkI8TbeZTCXtmVGTZC09RQHmKR8gZTUdxbuteleunIiTRgJyT4pw6BxKOKbXTgz4ME1V7xIw4mueYf5fS+5w67SIksXCxx0ZewCK7PntAEE=
+	t=1738828031; cv=none; b=Eur/k8F+l9m63gE2ecuKVlP4wwrUw71ZRNMeqri4F5BRPdjvA79Dwx1Jpe2uzWIe6Bw/XUF8TP50Ic43HzMCrkShTc87i1xC4G3aiVThoKln3S1lJSfb3ATM7hbB3OhKjbCplc09PopQCvTxXYpXZ1O3/BpLMRXSTfMLoxUU6YU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738828000; c=relaxed/simple;
-	bh=Yi9Uin22rnBvV+AbChLdnvx0g3ZnLrcBMeay5ZdCrsI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=EuRcjZ/hfiFGaK2xrYELENqC1aXJ24Ew+ZWpZX77xT5HBrG4qDTf1Dy4NdvanjsLwV+Sy1cJ1wxKVGunjzZc3/0AiBvMKD91JAY9B+Mmh/Ys+EvKqDoQOwcGu7iYAcT14Eo9bVrmeFs7xSGAzUa9kMRFMecpa9pcKcgqUZgQPVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=j0prtUEZ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738828031; c=relaxed/simple;
+	bh=zPJWMPt/N02vQSRF79vFxDV4zUaF4imCzlvRWODmNSI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=omGy1XUV2TgwKLH5k8HglKyBnQGedV8Ajz13vPA+DbLtbO5xwSAqaNzm8L207sxd1x4HQpHGWbdzhGSq9MadCzWyCH7OSoic5BHDPJALvzCvUr7BJiQN6rOPBgZeHLs5CZEQTrSWGJalWjee0J2lpkiL58j+Et5qkXM4TyntvVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Hbtsxf6q; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="j0prtUEZ"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5165WgWa008340;
-	Thu, 6 Feb 2025 07:46:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	u8zAkc5/qP+ByAbXrbpXW3BsRNr6mwhyvhlUPAxusKI=; b=j0prtUEZOOZ5SZ61
-	hTJHkLK7pGFWQu91EGxceFbkIzrrop6DHAvti9yK+Vy1f5JvDdbQGaMtr3KhFfP6
-	RQ7RJC+4YEst19zzeMpTh37PTj42WLnDAfuLCPQcj7Eqgn9TrYJiBzNCaAbj65ch
-	rlGcP4plwQBcEUwQP3CaPUWxlu973kvYOA+/W7/qOrgivT4DigQqx9JlCfVfoqSj
-	nJj3jTu03H4+DCChiuQi5jNX9w4Np0wS50TEqOYE6b+/D8KkMfGdxtVOpwvIBb/p
-	NDzXyUXct2kBznvFPcY3y5IkOVuY2JJrGLxuqnnAzeznPfRO2vbIGzJtJbxeO+f7
-	ZoTfaA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44mq1br9cy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Feb 2025 07:46:34 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5167kXNL009139
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 6 Feb 2025 07:46:33 GMT
-Received: from [10.231.195.16] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 5 Feb 2025
- 23:46:32 -0800
-Message-ID: <e1c9b030-8a6c-4aba-8bdd-853113bef396@quicinc.com>
-Date: Thu, 6 Feb 2025 15:46:29 +0800
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Hbtsxf6q"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f301269cdso9989365ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2025 23:47:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1738828029; x=1739432829; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=biMRc3fGoaOBSDFj2CcD30wMdiQPWFVETBwCmRR/cHY=;
+        b=Hbtsxf6qNApW4HbuAVr89T4t2Fe2v6qWRanHQhlsE4Zpm6LnmvyvpcVxa05B5kanFF
+         zlu6zCfgTRWXbyIT/dcicbU4apG7RpCV3ZvNj7dQqruAXUT0cOzkaes9RwAU/nCePh5o
+         GDMEf1BWjBBTaGDYjcTK4c1yiTfuizQt7Z+m0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738828029; x=1739432829;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=biMRc3fGoaOBSDFj2CcD30wMdiQPWFVETBwCmRR/cHY=;
+        b=ZEm5ujbXrs+K1iaqDg7hYKFG9GQuvkNg+QQ2Av+UJ5eIGKS8pvMAipazRQF2gu13Tz
+         VajH+g6AmeUwTcx+u1z8YpbyOgGh/GNscS81Qbwfk3aSbxyPv3hjBUBhBHqnSlk9rAx6
+         1T7Aqjv4puKZCwRK+N3dMR0qB7MP/Xs0D7Eox5OKNG3/bjxYzX1rOS9YlCromAMufbjC
+         S9uKYM+w6bFX1+KLVVVx51pzpblc+udEh/vGniSR+iAW3GENlwtQLoXeuCkj32jr+G6N
+         GwZf/nYvOCfY+3IAQfWgKcvmpsmsMw4HIe02/mflBcFm/b4k+Dx0tilY1YzJAFoNawjh
+         GHOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVC4bL2jUyddhdQdwMsI6JXErk8AhyGtEBK9NNf7SlC1NM34Des5Z4iFg54bq8FXUeO5i0QqjFvfhNRR3c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrC1h6ONL3+JzdEwpF5Cla4xPMYoX5qHjrgfpt62waH+dHH8j4
+	bsFFRm2+MiTNzjK9UIfvK2vGH3j7uLSlllwY/eC2B9Hap134vca/S0wp5dCfKOfVN166MoJeTlg
+	=
+X-Gm-Gg: ASbGncu3eW5tqXYoZXbGxN2m7H2gya/bekqXnWwKRSiB27sI7vpb0SBXjc65zk3P0W/
+	VQNfYKFL9nKh4+RW8JX7/fQBATmIcCjAcfoXDE6fY6wk+/HiGWMC+Go+Yvr3Kaw6LuGVtEJ2iBK
+	zoSDA7fFustSQAm8l4sl9WNZfVHbBClFK5ek7E0wka3CN9ococpwQNUeJ+ec67uulcNVwaiO3DH
+	UetmgJkUy47UaZuFuJTRSGRUL6P7qzfjVc7ueDg55aQTxNPFZcGDH+jXtIRuEh3b9dtzj7lrR9Y
+	m0w5ywlD1EmWJYUOQl8=
+X-Google-Smtp-Source: AGHT+IFEIahDVpsRpMFTqaJvxTh7l1xv1hlgDIwPM1sGOynIktgBvR6HXJgMi6JHKvqQbqMMxnceSA==
+X-Received: by 2002:a62:f247:0:b0:730:399f:9593 with SMTP id d2e1a72fcca58-730399f9e50mr6203147b3a.2.1738828029329;
+        Wed, 05 Feb 2025 23:47:09 -0800 (PST)
+Received: from google.com ([2401:fa00:8f:203:28ab:cea4:aa8a:127a])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048ae7558sm682026b3a.68.2025.02.05.23.47.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Feb 2025 23:47:08 -0800 (PST)
+Date: Thu, 6 Feb 2025 16:47:02 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Hillf Danton <hdanton@sina.com>, 
+	Mike Galbraith <umgwanakikbuti@gmail.com>
+Subject: Re: [PATCHv4 01/17] zram: switch to non-atomic entry locking
+Message-ID: <46ttdyaiweca7qou2t3mx5jy7hefg3htrv4covt5htcex7zaq4@p6is3ukmtbhy>
+References: <20250131090658.3386285-1-senozhatsky@chromium.org>
+ <20250131090658.3386285-2-senozhatsky@chromium.org>
+ <20250131145536.d7a0483331b0ebfde80a5754@linux-foundation.org>
+ <itapje7ikrv532bwn67udwtjmmmyqp6j4yqc777smbi4rjgmm6@6se3rdy6ufbk>
+ <20250206073803.c2tiyIq6@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: ath11k: allow APs combination when dual stations
- are supported
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-CC: <ath11k@lists.infradead.org>, <jjohnson@kernel.org>, <kvalo@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-wireless@vger.kernel.org>
-References: <d410576f-2fc7-4de1-af51-29fbe8b14948@quicinc.com>
- <20250115130359.138890-1-jtornosm@redhat.com>
- <748a5a75-1385-4691-85c1-e9cc5eb4ffc2@oss.qualcomm.com>
-Content-Language: en-US
-From: "Yu Zhang (Yuriy)" <quic_yuzha@quicinc.com>
-In-Reply-To: <748a5a75-1385-4691-85c1-e9cc5eb4ffc2@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: qHhCslNjS-S32Lq3iWcKAEj-ISPFHeXz
-X-Proofpoint-ORIG-GUID: qHhCslNjS-S32Lq3iWcKAEj-ISPFHeXz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-06_01,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=420
- suspectscore=0 phishscore=0 priorityscore=1501 adultscore=0 bulkscore=0
- clxscore=1015 malwarescore=0 mlxscore=0 impostorscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502060063
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250206073803.c2tiyIq6@linutronix.de>
 
-
-
-On 1/16/2025 8:31 AM, Jeff Johnson wrote:
-
-> Kalle, can you review? You currently have this deferred in patchwork:
-> https://patchwork.kernel.org/project/linux-wireless/patch/20240829064420.3074140-1-quic_yuzha@quicinc.com/
+On (25/02/06 08:38), Sebastian Andrzej Siewior wrote:
+> On 2025-02-06 16:01:12 [+0900], Sergey Senozhatsky wrote:
+> > So I completely reworked this bit and we don't have that problem
+> > anymore, nor the problem of "inventing locking schemes in 2025".
+> > 
+> > In short - we are returning back to bit-locks, what zram has been using
+> > until commit 9518e5bfaae19 ("zram: Replace bit spinlocks with a spinlock_t),
+> > not bit-spinlock these time around, that won't work with linux-rt, but
+> > wait_on_bit and friends.  Entry lock is exclusive, just like before,
+> > but lock owner can sleep now, any task wishing to lock that same entry
+> > will wait to be woken up by the current lock owner once it unlocks the
+> > entry.  For cases when lock is taken from atomic context (e.g. slot-free
+> > notification from softirq) we continue using TRY lock, which has been
+> > introduced by commit 3c9959e025472 ("zram: fix lockdep warning of free block
+> > handling"), so there's nothing new here.  In addition I added some lockdep
+> > annotations, just to be safe.
+> > 
+> > There shouldn't be too many tasks competing for the same entry.  I can
+> > only think of cases when read/write (or slot-free notification if zram
+> > is used as a swap device) vs. writeback or recompression (we cannot have
+> > writeback and recompression simultaneously).
 > 
-> /jeff
+> So if I understand, you want to get back to bit spinlocks but sleeping
+> instead of polling. But why? Do you intend to have more locks per entry
+> so that you use the additional bits with the "lock"?
+
+zram is atomic right now, e.g.
+
+zram_read()
+	lock entry by index   # disables preemption
+	map zsmalloc entry    # possibly memcpy
+	decompress
+	unmap zsmalloc
+	unlock entry          # enables preemption
+
+That's a pretty long time to keep preemption disabled (e.g. using slow
+algorithm like zstd or deflate configured with high compression levels).
+Apart from that that, difficult to use async algorithms, which can
+e.g. wait for a H/W to become available, or algorithms that might want
+to allocate memory internally during compression/decompression, e.g.
+zstd).
+
+Entry lock is not the only lock in zram currently that makes it
+atomic, just one of.
+
+> > It currently looks like this:
+> > 
+> …
+> > static __must_check bool zram_slot_try_lock(struct zram *zram, u32 index)
+> > {
+> >         unsigned long *lock = &zram->table[index].flags;
+> > 
+> >         if (!test_and_set_bit_lock(ZRAM_ENTRY_LOCK, lock)) {
+> > #ifdef CONFIG_DEBUG_LOCK_ALLOC
+> >                 mutex_acquire(&zram->table[index].lockdep_map, 0, 0, _RET_IP_);
+> > #endif
+> >                 return true;
+> >         }
+> >         return false;
+> > }
 > 
-Jeff, can you help with this because Kallo has stepped down?
+> I hope the caller does not poll.
 
+Yeah, we don't that in the code.
 
-/Yuriy
+> > static void zram_slot_lock(struct zram *zram, u32 index)
+> > {
+> >         unsigned long *lock = &zram->table[index].flags;
+> > 
+> >         WARN_ON_ONCE(!preemptible());
+> 
+> you want might_sleep() here instead. preemptible() works only on
+> preemptible kernels. And might_sleep() is already provided by
+> wait_on_bit_lock(). So this can go.
+
+wait_on_bit_lock() has might_sleep().
+
+> >         wait_on_bit_lock(lock, ZRAM_ENTRY_LOCK, TASK_UNINTERRUPTIBLE);
+> > #ifdef CONFIG_DEBUG_LOCK_ALLOC
+> >         mutex_acquire(&zram->table[index].lockdep_map, 0, 0, _RET_IP_);
+> > #endif
+> 
+> I would argue that you want this before the wait_on_bit_lock() simply
+> because you want to see a possible deadlock before it happens.
+
+Ack.
+
+> > static void zram_slot_unlock(struct zram *zram, u32 index)
+> > {
+> >         unsigned long *lock = &zram->table[index].flags;
+> > 
+> >         clear_and_wake_up_bit(ZRAM_ENTRY_LOCK, lock);
+> > #ifdef CONFIG_DEBUG_LOCK_ALLOC
+> >         mutex_release(&zram->table[index].lockdep_map, _RET_IP_);
+> > #endif
+> Also before. So it complains about release a not locked lock before it
+> happens.
+
+OK.
