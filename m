@@ -1,95 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA46214209;
-	Thu,  6 Feb 2025 11:45:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29574227596
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:45:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738842338; cv=none; b=Gn3388UbOu9/kFxSbtkHMxgu31wyRq538qrfOWFMITFabTUnd0G9W5lQUPfEj7dUkFTyQl/hVrRr6z+bMYXqXf+DT0zBnbv5YLKQGKDptvfPe051otmKFuMHaujHkAsi5sE91VGOCZpLUFpn5aafdldS7IfF2sGhVhiqWb67csI=
+	t=1738842342; cv=none; b=ho8m9T7u+bn8NiQ3ZDDZfyE6c7sJUVLzXgEjoDvR2Qx0P20WfbQfTnU3WDNyHCDjkUCmcuXAwLWPe7GWACwqop7OydJgqcntan/eQDzFO0g/a7/zIR13fq/Zz74pASmxoWmprH6DIUW+Nskmbwn0Rk8Q0Q+OKYcLJIFrWMt11G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738842338; c=relaxed/simple;
-	bh=4WMwn/PouydQAcfdYq9D0Bi/1e6v3nBuTp8T6kN0Uu4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bDWsRkKCvidr0F/wQR9haESztq6Ol54TpSUZ3obBXa6VSjEqQpdQe+UJn1scB2oM21zkeFgqXlIH+66N/hGOSDaAZQnyw1y6clVz5R3SEiWYRCzKe0wzZOtt4whBfg49nSDjEXDkjmtjzwr7bWLLINxY6ozrywdN6eQ6qRiAYVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cwvBZ9eX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cwvBZ9eX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F16AC4CEDD;
-	Thu,  6 Feb 2025 11:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738842337;
-	bh=4WMwn/PouydQAcfdYq9D0Bi/1e6v3nBuTp8T6kN0Uu4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cwvBZ9eX0/ic+Nq0scUr4+6X6SJ7CrmDohJF2qj4EzPjAC+f9g55SJWQU9DJcAO8N
-	 /pQmWPklWXtSshhzo3VtFXvurX+l0sRlsYcd+vhU4FwasVJtIDu374GLrlOS5TwyKo
-	 SNUsGX3vSckA0a48CbvDoC99bq7vIVvDfczVy+GwfofpdTwAjxxTmzDxSgU44d4cyg
-	 eeF4Dzi3bZQMYQUOPizexOYBDDk+s5hYG+Wrw3hkW7AoODIA5Zt1OVjpN2gP7aZBDN
-	 knmgwLvqmbsLITWu9nGxMpqKpqIklXWwg5iDesNlPSHTP/uGyrPh84lLr0XNWYPiny
-	 taJUbz74MXeUw==
-Date: Thu, 6 Feb 2025 12:45:34 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Ben Zong-You Xie <ben717@andestech.com>
-Cc: krzk@kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org
-Subject: Re: [v3 2/2] pwm: atcpit100: add Andes PWM driver support
-Message-ID: <pfqsycjocrlfsxmty7lm44niuv4723n74hyofpmvuvpandat5v@tvnahmf6zg7m>
-References: <20250123193534.874256-1-ben717@andestech.com>
- <20250123193534.874256-3-ben717@andestech.com>
- <5514fa03-139e-456e-b522-6a774b52eac1@kernel.org>
- <Z6RuGrszOiPFWHyU@atctrx.andestech.com>
+	s=arc-20240116; t=1738842342; c=relaxed/simple;
+	bh=b0yvRIBIpthkqDi7L/clTFreoOB5wkqMdLy9sEul7cs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FLVR7l9W7T/8d6gcOibVl78qDeSFkSq8bb71rozGEIpMNk1RQ9pHhxh6PQXx5E7KkPejqOecxCtc1SSCRFOrQbGU15aZ7diWQgUUNqeQcC8c5Fc91jRY0tBC1b37hcbCGSZAlG1RaFA+PT9tX4ie4hxsk0A8uEcfr7Bbz05PTi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC287C4CEE2;
+	Thu,  6 Feb 2025 11:45:40 +0000 (UTC)
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 1/2] mm: kmemleak: Add support for dumping physical and __percpu object info
+Date: Thu,  6 Feb 2025 11:45:36 +0000
+Message-Id: <20250206114537.2597764-2-catalin.marinas@arm.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250206114537.2597764-1-catalin.marinas@arm.com>
+References: <20250206114537.2597764-1-catalin.marinas@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="n7l7m4k6emmmi2kp"
-Content-Disposition: inline
-In-Reply-To: <Z6RuGrszOiPFWHyU@atctrx.andestech.com>
+Content-Transfer-Encoding: 8bit
 
+Currently, echo dump=... > /sys/kernel/debug/kmemleak only looks up the
+main virtual address object tree. However, for debugging, it's useful to
+dump information about physical address and __percpu objects.
 
---n7l7m4k6emmmi2kp
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [v3 2/2] pwm: atcpit100: add Andes PWM driver support
-MIME-Version: 1.0
+Search all three object trees for the dump= command and also print the
+type of the object if not virtual: "(phys)" or "(percpu)". In addition,
+allow search by alias (pointer within the object).
 
-Hello Ben,
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+---
+ mm/kmemleak.c | 54 ++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 40 insertions(+), 14 deletions(-)
 
-On Thu, Feb 06, 2025 at 04:08:58PM +0800, Ben Zong-You Xie wrote:
-> Also, I will remove "depends on RISCV" [...]
-
-Krzysztof didn't say so explicitly, but I think he wanted the dependency
-to be more restrictive, not less. At least that would be my concern
-here.
-
-The rational is: Don't annoy people who work on ARM or x86 with
-questions about this driver that they don't need anyhow. If there is no
-stricter dependency possible, I'm happy with
-
-	depends on RISCV || COMPILE_TEST
-
-. If however your driver is implemented in an FPGA, adding a dependency
-on a set of SoCs that have the known FPGA that provides that device
-would be a good idea.
-
-Best regards
-Uwe
-
---n7l7m4k6emmmi2kp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmekoNwACgkQj4D7WH0S
-/k7/6gf9GqpAf+X8w6dCTLYj95mwQmBNhDGgBmjC9LHusgBKYdlIxNYMJglMJlMa
-SJCHwBx9G5T20HNhMZHifnQRBjvwBNLPV0cb9ZKM9ycFX5/ZPrJWj/DhI/XkOJwR
-J7rnvJIQ5Y8FGMArf0FTdvrxYJvXdHEwC9GlIkvIxTxPsnQrxCkssxwS4SZFVZlO
-sjP3AD2QsvrcTJZlCWzsf+sNLccHBbzszhk+XdOVpZg6l8SpFeff6no691nDhyl7
-XlW1F17XE3tJBQq0glwDO7YRNtoIGvALvNph8GtwMd7osugBdQa9U97RFbGOkkpm
-DydBvmPjP36Xr0og409Bl+UuuJMB9Q==
-=OOxv
------END PGP SIGNATURE-----
-
---n7l7m4k6emmmi2kp--
+diff --git a/mm/kmemleak.c b/mm/kmemleak.c
+index c6ed68604136..c12cef3eeb32 100644
+--- a/mm/kmemleak.c
++++ b/mm/kmemleak.c
+@@ -352,6 +352,15 @@ static bool unreferenced_object(struct kmemleak_object *object)
+ 			       jiffies_last_scan);
+ }
+ 
++static const char *__object_type_str(struct kmemleak_object *object)
++{
++	if (object->flags & OBJECT_PHYS)
++		return " (phys)";
++	if (object->flags & OBJECT_PERCPU)
++		return " (percpu)";
++	return "";
++}
++
+ /*
+  * Printing of the unreferenced objects information to the seq file. The
+  * print_unreferenced function must be called with the object->lock held.
+@@ -364,8 +373,9 @@ static void print_unreferenced(struct seq_file *seq,
+ 	unsigned int nr_entries;
+ 
+ 	nr_entries = stack_depot_fetch(object->trace_handle, &entries);
+-	warn_or_seq_printf(seq, "unreferenced object 0x%08lx (size %zu):\n",
+-			  object->pointer, object->size);
++	warn_or_seq_printf(seq, "unreferenced object%s 0x%08lx (size %zu):\n",
++			   __object_type_str(object),
++			   object->pointer, object->size);
+ 	warn_or_seq_printf(seq, "  comm \"%s\", pid %d, jiffies %lu\n",
+ 			   object->comm, object->pid, object->jiffies);
+ 	hex_dump_object(seq, object);
+@@ -384,10 +394,10 @@ static void print_unreferenced(struct seq_file *seq,
+  */
+ static void dump_object_info(struct kmemleak_object *object)
+ {
+-	pr_notice("Object 0x%08lx (size %zu):\n",
+-			object->pointer, object->size);
++	pr_notice("Object%s 0x%08lx (size %zu):\n",
++		  __object_type_str(object), object->pointer, object->size);
+ 	pr_notice("  comm \"%s\", pid %d, jiffies %lu\n",
+-			object->comm, object->pid, object->jiffies);
++		  object->comm, object->pid, object->jiffies);
+ 	pr_notice("  min_count = %d\n", object->min_count);
+ 	pr_notice("  count = %d\n", object->count);
+ 	pr_notice("  flags = 0x%x\n", object->flags);
+@@ -1998,25 +2008,41 @@ static int kmemleak_open(struct inode *inode, struct file *file)
+ 	return seq_open(file, &kmemleak_seq_ops);
+ }
+ 
+-static int dump_str_object_info(const char *str)
++static bool __dump_str_object_info(unsigned long addr, unsigned int objflags)
+ {
+ 	unsigned long flags;
+ 	struct kmemleak_object *object;
+-	unsigned long addr;
+ 
+-	if (kstrtoul(str, 0, &addr))
+-		return -EINVAL;
+-	object = find_and_get_object(addr, 0);
+-	if (!object) {
+-		pr_info("Unknown object at 0x%08lx\n", addr);
+-		return -EINVAL;
+-	}
++	object = __find_and_get_object(addr, 1, objflags);
++	if (!object)
++		return false;
+ 
+ 	raw_spin_lock_irqsave(&object->lock, flags);
+ 	dump_object_info(object);
+ 	raw_spin_unlock_irqrestore(&object->lock, flags);
+ 
+ 	put_object(object);
++
++	return true;
++}
++
++static int dump_str_object_info(const char *str)
++{
++	unsigned long addr;
++	bool found = false;
++
++	if (kstrtoul(str, 0, &addr))
++		return -EINVAL;
++
++	found |= __dump_str_object_info(addr, 0);
++	found |= __dump_str_object_info(addr, OBJECT_PHYS);
++	found |= __dump_str_object_info(addr, OBJECT_PERCPU);
++
++	if (!found) {
++		pr_info("Unknown object at 0x%08lx\n", addr);
++		return -EINVAL;
++	}
++
+ 	return 0;
+ }
+ 
