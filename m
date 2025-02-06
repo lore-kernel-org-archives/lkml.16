@@ -1,74 +1,79 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9132846BF
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178E946BF
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738841164; cv=none; b=QPR+v2x/s5B3C1HCzyzDpM39R4DbVNZV8Rpc6jzi0G8XSgw+I6dPwPMNAU8h4f+FNX635h/hXspPZhnV8/fqRjiLMIMrf69o/zXAaKedU69XuDiHNSt83IwvSJsP9LV/TbLRXtMQ0d5/+m0TpEXFycyYA2TVe5u3gxHfOViOiuI=
+	t=1738841304; cv=none; b=ao7ev5r7kpvQqhHlQygH84GLd8BCdC/+rSBRoKanSEe/VZRU7CdSW7cwFBMaV22GPuz2bBtnxe/xONW0Wb0jgaTzInRBeRLX9TJoqICbDaa+f0grHfX6LAEVZNwqWuuPes1u3HxDGsIykfa0nBfC+fw0LrlBJ0q7SLYXdDCl/S8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738841164; c=relaxed/simple;
-	bh=DJnpzmAexKfLvY0bRrpiDroNGWaogxgQcTHY6f9DaOY=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=F14ugvyDADvvd0Q+45hvgCbzsxBwJzoGfEmfMlPkQBLCy2GBrO452RiesgB97FJf0iwfppT+9klPqUfG0Hi7Vp7RiHAcjDtYQWzYmrJIzsA35lC2f4b+oz1A7rPN91hcYoMEIat1f2ZGJhrVTltu+slBVoecq12x60IfhIXR3mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d060cfe752so1699225ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 03:26:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738841161; x=1739445961;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0OBl/hXV9fEbR+eFXA+ZhQn920Ln2bytw0DZPAM8VJ4=;
-        b=rFx+Ty9BqsfcWUc8fBa7yj34otWcLEHvP9rI3Hy+uLJaN/W4RXbMoT9GDj/eo+jSlO
-         0tPKuyX97WOv2ZBaeZN1asF4rxpa8k9qqvCergR93BZg9mZYI6h29xh9Z+/AeUbD7yGG
-         MG++9ovoGaNzZX0d45PknA4/XJxHR3VJQRxwXTQ2oud0TgKJ9ycClH1KidHsTAf6SkvZ
-         N0qHJmp4arQ9iQfvYrCUr+YJ3ZIwQiuLgQHUTyAcXCcoc9QmiaEAM4njaGFA/f1EtuLJ
-         cDTzvxnpORcTEXuowwlhHJHONxah9lHs/DyDXs0t37+MXAoAhqWsCeKnZ5hfKIhnEXN+
-         GF+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUrlyVhFPJNV2ffVs1PRsZ+Ze4kDx0uLmxNtvaclioMyn+cWrv6ComoGQc1cgZHeNs4OSxggHcgX3ZzYag=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRaRRFENlaVdd6ghhtBNZzLZopFKjRSsO7HPNwuuGvJF8mihVG
-	w8oeZXkQJGmSGk4570mVMDtJnP5sAEltqVWZfbH6TvrATjkUUPHecN/tbdIcanW1Wi0nrTDFU0+
-	dAOsPuQYaSiHdOxqnuYbtMLhX1tk1UgacDHhu8O5MQeL2d+98ZMFIuV8=
-X-Google-Smtp-Source: AGHT+IHgFUE20LYgumQM6ZMouVkHx44+MCZnYaMI7/II4PkI4JCoP/OM1ExDh/Ap/rrW/9r/b1fXFGzhP1Sfx/hC1Nddd0gATX8H
+	s=arc-20240116; t=1738841304; c=relaxed/simple;
+	bh=NfowIVG729IO+yiwiyj7GtyAVxjfjagBcIdwCuBGCFA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sejrtq2ubNGo10KlYpcViarvg+LGA6CDKSbVuuwMIQHBMBHDNurIO4BGL8rngE+TFUNDVCoBPGx6HxkK1jPBt4vv+qLVYK1Wrpn6VrvPM7E24EYzN8hpjaW8zS834KJ38o1hxGzgNYpS6gjq6DRfqBATpD+vhKQb5QIqaeT3aDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xw6BZ5xj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xw6BZ5xj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91DCFC4CEDD;
+	Thu,  6 Feb 2025 11:28:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738841303;
+	bh=NfowIVG729IO+yiwiyj7GtyAVxjfjagBcIdwCuBGCFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xw6BZ5xj8u/KuoHtzaigoAY7SGI5VUEK7fJOrFNXZmXgsyJnySMKUxn/nNeO8Rqkn
+	 XvPGc75dWRJy1gnhFwrKLrR74UEmLd8ORHpdIonGnHkGmLKom8eqbZ1M8kTbtQBG2v
+	 FwmFaN1NsYcX2cbRrlu3tZqW6fjbXcfB/3Y0B49vMTIoW6ARbMSpm+nR0vpiVHLDB+
+	 7DJODckBf/flgw/vF1bZovuimHVblm/OCXgA8mRHfQfv+2sFk/KNhsGA3PVKhyv2FY
+	 xtMVnwbDea/bJAMEAPrj7r1KohcqT93gcD8PektJj/c0rBJZ0/tjhz9PBmzAheqkAC
+	 Qyr3wairNsVfQ==
+Date: Thu, 6 Feb 2025 11:28:19 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Dheeraj Reddy Jonnalagadda <dheeraj.linuxdev@gmail.com>
+Cc: michael.hennerich@analog.com, lgirdwood@gmail.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH drivers-next] regulator: ad5398: Fix incorrect power down
+ bit mask
+Message-ID: <6d856228-e5e7-4502-9d0b-9755626faf40@sirena.org.uk>
+References: <20250206103153.59114-1-dheeraj.linuxdev@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:ca0e:0:b0:3d0:24c0:bd3e with SMTP id
- e9e14a558f8ab-3d04f42ba4bmr64146925ab.7.1738841161718; Thu, 06 Feb 2025
- 03:26:01 -0800 (PST)
-Date: Thu, 06 Feb 2025 03:26:01 -0800
-In-Reply-To: <20250206112417.1996-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a49c49.050a0220.264083.0001.GAE@google.com>
-Subject: Re: [syzbot] [net?] general protection fault in ip6_pol_route (3)
-From: syzbot <syzbot+3201be560ebfa39bc6bd@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot tried to test the proposed patch but the build/boot failed:
-
-failed to apply patch:
-checking file net/ipv6/route.c
-checking file drivers/hid/hid-corsair-void.c
-patch: **** unexpected end of file in patch
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="JPVmE2z9ZrAS0Un0"
+Content-Disposition: inline
+In-Reply-To: <20250206103153.59114-1-dheeraj.linuxdev@gmail.com>
+X-Cookie: With your bare hands?!?
 
 
+--JPVmE2z9ZrAS0Un0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Tested on:
+On Thu, Feb 06, 2025 at 04:01:53PM +0530, Dheeraj Reddy Jonnalagadda wrote:
+> AD5398_SW_POWER_DOWN was defined with a bit position outside the valid
+> range of the device's 16-bit register. The bitwise operation with an
+> unsigned short would always evaluate to 0, making the power down check
+> ineffective.
 
-commit:         92514ef2 Merge tag 'for-6.14-rc1-tag' of git://git.ker..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d2aeec8c0b2e420c
-dashboard link: https://syzkaller.appspot.com/bug?extid=3201be560ebfa39bc6bd
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1068a4a4580000
+Please don't add noise like drivers-next to your subject lines - it just
+makes it harder to see the actual subject.
 
+--JPVmE2z9ZrAS0Un0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmeknNIACgkQJNaLcl1U
+h9BUtAgAgeCf9JzL3c9wGNQaF+L0qhep+IZMCkAX3x+lLSkKdY94noJdP1hEKD7h
+4FXJeCMSwdOvXja0fxOuykH/YwYPXXXFPPJCmiX1pNe5FulyIjyejwOnbNShtCIY
+bEhVooQv7iCa6r0YNuA8QueFuF0mFW287slOxoUiPl2Wz5cqUyWWEiU1Ho3zQ/tO
+dLOGGOBVmOCUnobfN4oesWrJcXeT5mfEQRiW/Q1cm9eCSFkpETShSuwMRWvmg4E4
+XealJ3lJheUBEXXxaX2eKDb7gQ93205Dcth/xQCFfKb5ksznPQ64WLqbT/t9Y8pn
+x0MFZKaQ49pJ4B7HrKUThcWIvbYNSw==
+=bobQ
+-----END PGP SIGNATURE-----
+
+--JPVmE2z9ZrAS0Un0--
