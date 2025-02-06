@@ -1,119 +1,113 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54991A2564;
-	Thu,  6 Feb 2025 04:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 699A01F91C7;
+	Thu,  6 Feb 2025 05:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738817784; cv=none; b=XGg5OtnZXwT59sylT6I79me0HHQ8x3ugbll0afTgN13sQS2knkQTeqvUflWwlfkF+Z/T6/QPhzNUU7F+3xfydPUlAasxG8XfJ8yWBcOUzvxaxfCm4ugHuoOo0RYNGyUMP1aumbIubWfHlgfJUhMwbbam1xuXdi3ZlNyxeQh4kag=
+	t=1738818250; cv=none; b=a4xCVZch7N9l+2rnTInnC3tSdqZzyemzuXbheqAP5RGMYmMAN58FaH9UwV1kzPL9qHweWaQXhaGCa9OygSWualesiLyHuoUHCKzxYTc1v207s5KYVoETNwJVlxrBwNklSa9ku3H1HgN4ak0baVB9wvVnX6UD0DyTS6T94V/AbPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738817784; c=relaxed/simple;
-	bh=553hF+T7BWF2LLgAhHz451B5EJreka9CG49KJHF3jzI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Tmt8/paNMX8Z565sblI+rXrzvhSLWCIbvVCbmpdJHje0RoAN2E/4s1qGsKcRruHvfLjHb63YE0C74zGbRdxfh+rAKSBR9ykpTr/EtcZN7FzFbfnFBSDM7y2JFHMmYYzGL+ax7hH9h/6V3v+AhKINmrxPN7L9I+unQWMBcdsKZFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mlgEm6MK; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlgEm6MK"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30761be8fa7so4629631fa.2;
-        Wed, 05 Feb 2025 20:56:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738817781; x=1739422581; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=553hF+T7BWF2LLgAhHz451B5EJreka9CG49KJHF3jzI=;
-        b=mlgEm6MKhabGIgmMxfaoNAwbkwi9SWfpClqcvzFNCIDLk7npQbBHNtDktNeKm+X5jF
-         c8Dk6SX1dvLN5vIxXWE+/tBNFry7XroF87KxuVP67vSKBbI3CwTnskN4+3xOdPUnePuG
-         LGAVqYLOVBvB5QMic6y8WefmOq48CtSpQV7ueXp3iHuFiHJ08KrFvGn+3urGBT69nTqW
-         zAAnBimUBNNRqVUhorqipzZOt3NnXte6JjR0J2d6dPU4kDqmY+RyP18m8PX1VydcOkcI
-         vQ9FGxeADgBD1pOF/bXRXR7gydfLUQrl70Z7Pg0esuLxJgLGC88kxQsoF6Li5O6UZtVH
-         5zvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738817781; x=1739422581;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=553hF+T7BWF2LLgAhHz451B5EJreka9CG49KJHF3jzI=;
-        b=RVn8U9OuPVMk6YW1kARGledhnYWFmGQbSrjvfXKmYPDTU0xISZw+vVqQ9LZXGBLNJC
-         K4cLXMXFMNy080PRKNhfKPYWvMEhvm7H5S19KYi2uz5CtB79XQ6g6oqeATlO/6mSes52
-         4zEVSYX17rAcvpIhaMkym9RhDTeosBqmpTJRz231VGlaoWQNkwNBrZX3Nb0N071DXwX7
-         /kb/yfQH9dqnMewgn3iVPnOLEMU4hnLMXKAfZmp+VboNLAFJNZZ4d6FCYWqNLJ+1wmMO
-         73RXRQ1+Koxc9gz9wmy59ObaX8GhgZqM59pk6BVGELuFLmDX1WeQXqwPQH0BIG7Hy3df
-         ggHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUwNBwXrQs64CG5x3fCtO2rZ9aaX9QJquKCcr4KY8jPYWj/6ViylV4+gHZ3gPuaMLuL0lMVpOZ+iIi8w1TC@vger.kernel.org, AJvYcCXbaa5qoJ5Ate+B2R4H8xssICOpH0W7PiPcsxeXObIqv3uophbMrAeBFvFRPeRUzws4UeGieTPh@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDWvJLonHbcBqoiHes6f9r7r1HbfcXItI8MeE8jwToLzWIjgqD
-	jM4pOoLZX4EU7MVEJDf048hid5a3Te4xtWUVQz5GaPgkYu1INwoT1fHkDudLRmReJaX5gQoP/CT
-	qh5SMFDcOgC2nFRfZuXq0r6YSSYU=
-X-Gm-Gg: ASbGncs1Bs9vE7cZD2D6aSivGn5mo6XFGE4c6D8/OzaBQq/i92i/8QIec4WZINpM6UL
-	M27LHpQEppiLCnZczRtg0MKSmf6l4Jdv+Dy7nD7lSwuVOdEZea90mzR4ObeQm+dpq1jz13IU=
-X-Google-Smtp-Source: AGHT+IFonN6lOudu0OFZFWXDq7UQ7mw0D1dsFuCqkLDlH0Ywbx7YEuGZX14bATC+gLWbyC0JYnl24IokY0f+9SOIW34=
-X-Received: by 2002:a05:651c:220b:b0:302:40ee:4c2e with SMTP id
- 38308e7fff4ca-307cf301980mr21525041fa.2.1738817780478; Wed, 05 Feb 2025
- 20:56:20 -0800 (PST)
+	s=arc-20240116; t=1738818250; c=relaxed/simple;
+	bh=6xzbrppa6un+Hr484YuSU1+C6Rt7jgi8gZJnBEATVnc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TJsbtwBTGhT3K6F7Ets4ngKkNnVXjGw5JknqGx/ayVOv3ZWV63wbyj0CIMEudWw8fvmOgQIzhu8or1c8vng9KZS3QvDDxLP41UzK1cliog0WS/o+djQFtRzk/yZuyNFkCGXqdGTxPYCyoNR3Qw72Uo2IdlOICc99reFkmhSAHOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D88401063;
+	Wed,  5 Feb 2025 21:04:24 -0800 (PST)
+Received: from [10.163.34.115] (unknown [10.163.34.115])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F04D3F63F;
+	Wed,  5 Feb 2025 21:03:47 -0800 (PST)
+Message-ID: <d8ef8240-e202-464c-ad16-1a34953cc872@arm.com>
+Date: Thu, 6 Feb 2025 10:33:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z6OkXXYDorPrBvEQ@hm-sls2> <ccd67fd2-268a-4e83-9491-e401fa57229c@linux.microsoft.com>
- <20250205180842.GC1183495@cmpxchg.org> <Z6Oq47ruBzfQh0do@google.com>
-In-Reply-To: <Z6Oq47ruBzfQh0do@google.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Thu, 6 Feb 2025 12:56:03 +0800
-X-Gm-Features: AWEUYZkWAfEEjK0QEPwBPRIyhrI2ANWH_0Fhnn48KPULDYSPjpkjIWKEHfuhVA4
-Message-ID: <CAMgjq7BjBoCWeB-MwUGYA=jLvigZ6tC3pLxz6SHAj3eVcsCgnA@mail.gmail.com>
-Subject: Re: A path forward to cleaning up dying cgroups?
-To: Yosry Ahmed <yosry.ahmed@linux.dev>, Muchun Song <muchun.song@linux.dev>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>, 
-	linux-mm@kvack.org, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Tejun Heo <tj@kernel.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Michal Hocko <mhocko@kernel.org>, "Zach O'Keefe" <zokeefe@google.com>, Kinsey Ho <kinseyho@google.com>, 
-	Yosry Ahmed <yosryahmed@google.com>, Allen Pais <apais@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 01/16] mm: hugetlb: Add huge page size param to
+ huge_ptep_get_and_clear()
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, stable@vger.kernel.org
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
+ <20250205151003.88959-2-ryan.roberts@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250205151003.88959-2-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 6, 2025 at 2:16=E2=80=AFAM Yosry Ahmed <yosry.ahmed@linux.dev> =
-wrote:
->
-> On Wed, Feb 05, 2025 at 01:08:42PM -0500, Johannes Weiner wrote:
-> > On Wed, Feb 05, 2025 at 12:50:19PM -0500, Hamza Mahfooz wrote:
-> > > Cc: Shakeel Butt <shakeel.butt@linux.dev>
-> > >
-> > > On 2/5/25 12:48, Hamza Mahfooz wrote:
-> > > > I was just curious as to what the status of the issue described in =
-[1]
-> > > > is. It appears that the last time someone took a stab at it was in =
-[2].
-> >
-> > If memory serves, the sticking point was whether pages should indeed
-> > be reparented on cgroup death, or whether they could be moved
-> > arbitrarily to other cgroups that are still using them.
-> >
-> > It's a bit unfortunate, because the reparenting patches were tested
-> > and reviewed, and the arbitrary recharging was just an idea that
-> > ttbomk nobody seriously followed up on afterwards.
->
-> There was an RFC series [1] for the recharging, but all memcg
-> maintainers hated it :P
->
-> https://lore.kernel.org/lkml/20230720070825.992023-1-yosryahmed@google.co=
-m/
 
-We have been suffering from dying cgroup issues for years too, and I
-just saw this series. Will it be a good idea to combine this with
-reparenting instead (if we will go with the reparenting approach)?
-Using objcg API to charge the folios does help speed up the
-reparenting, but also adds some overhead and complexity. Just walking
-and reparenting the folios seems a more direct approach.
 
-And another idea is, per our observation, dying cgroups have few pages
-that are mapped, as the process has all exited. Most folios are just
-cache. Shared mapped pages are minor especially for containers. So a
-deferred recharge on access seems good enough? Mapped folios may also
-be finally unmap someday and get recharged. And at least this makes
-accounting more accurate.
+On 2/5/25 20:39, Ryan Roberts wrote:
+> In order to fix a bug, arm64 needs to be told the size of the huge page
+> for which the huge_pte is being set in huge_ptep_get_and_clear().
+> Provide for this by adding an `unsigned long sz` parameter to the
+> function. This follows the same pattern as huge_pte_clear() and
+> set_huge_pte_at().
+> 
+> This commit makes the required interface modifications to the core mm as
+> well as all arches that implement this function (arm64, loongarch, mips,
+> parisc, powerpc, riscv, s390, sparc). The actual arm64 bug will be fixed
+> in a separate commit.
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: 66b3923a1a0f ("arm64: hugetlb: add support for PTE contiguous bit")
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+>  arch/arm64/include/asm/hugetlb.h     |  4 ++--
+>  arch/arm64/mm/hugetlbpage.c          |  8 +++++---
+>  arch/loongarch/include/asm/hugetlb.h |  6 ++++--
+>  arch/mips/include/asm/hugetlb.h      |  6 ++++--
+>  arch/parisc/include/asm/hugetlb.h    |  2 +-
+>  arch/parisc/mm/hugetlbpage.c         |  2 +-
+>  arch/powerpc/include/asm/hugetlb.h   |  6 ++++--
+>  arch/riscv/include/asm/hugetlb.h     |  3 ++-
+>  arch/riscv/mm/hugetlbpage.c          |  2 +-
+>  arch/s390/include/asm/hugetlb.h      | 12 ++++++++----
+>  arch/s390/mm/hugetlbpage.c           | 10 ++++++++--
+>  arch/sparc/include/asm/hugetlb.h     |  2 +-
+>  arch/sparc/mm/hugetlbpage.c          |  2 +-
+>  include/asm-generic/hugetlb.h        |  2 +-
+>  include/linux/hugetlb.h              |  4 +++-
+>  mm/hugetlb.c                         |  4 ++--
+>  16 files changed, 48 insertions(+), 27 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/hugetlb.h b/arch/arm64/include/asm/hugetlb.h
+> index c6dff3e69539..03db9cb21ace 100644
+> --- a/arch/arm64/include/asm/hugetlb.h
+> +++ b/arch/arm64/include/asm/hugetlb.h
+> @@ -42,8 +42,8 @@ extern int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+>  				      unsigned long addr, pte_t *ptep,
+>  				      pte_t pte, int dirty);
+>  #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+> -extern pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+> -				     unsigned long addr, pte_t *ptep);
+> +extern pte_t huge_ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
+> +				     pte_t *ptep, unsigned long sz);
+
+If VMA could be passed instead of MM, the size of the huge page can
+be derived via huge_page_size(hstate_vma(vma)) and another argument
+here need not be added. Also MM can be derived from VMA if required.
