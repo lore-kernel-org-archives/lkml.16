@@ -1,739 +1,263 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f65.google.com (mail-ej1-f65.google.com [209.85.218.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351591C7013;
-	Fri,  7 Feb 2025 21:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA301AAA11
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 21:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738963836; cv=none; b=VOgpBw2aI8tP/+eaW5C7Wbky8MWDwMV8g7cTImkxzioOZd1UaCd+lFHFzOlVYpqKMEPNnN1DCJHG2Sz7+CKxBTRV1Iahf7FDOlKRBx1SgdzXO7rhHsXdxfgZcIBMr9ISMEREpOnFA7SDSe2FoeeRMcyR3mhozFzg358CyXtccqk=
+	t=1738963860; cv=none; b=Zk9qJGHWYRJi5t0W4EyE0zsSAo54hgSgHj2Esn6ihAaC5i4St/toQbETTG2effX7KWibUuMHWZ5pRVo13uRpAGIiZr+MavC9Km/wJTav3r4c8R1rShF4XEkYLOngXdHj9EyQndYTJHLUurZsIaGdmcq4HzMOTBcMW1W9lIWSlSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738963836; c=relaxed/simple;
-	bh=h6xL5izEN9fKPQQU4NjratT5cyYtedfsyUrxhR3WmEU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PiHvJO09TnfsaukIWm8rraVC5tO3Ytpy9fJclB+IVr3PkDwGX/WmOoHXDwcF5YXdz5xMAEpJZemnaznVRCBFYqopReK/P5FBGiLw/fpNrdQOjGWSHRlHDDxB3U3YTGSzj2nGCK6CQhD+JInXOX+ZdvlojMTNk9BXptOFs8eQtas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GFtaIUSO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738963860; c=relaxed/simple;
+	bh=WHIGRxxdtzNqWH8ZAn4DwpUwVqIKiy4iGUCgzTzN1MQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=nR00tcl+AbjEaureXIEgvdXT4iyBB8hDM3wDGRkgT8yndeY6wJvQ0YWGpb/t4zUhy3BO37CBcw2PPUb3nPKyBjAVktMAx+1RON3ENSnQ78+dw1De7XZLtnNDMkq2cIhzffgM9H73besxQ8yLgzRyMoJ3zdqMzPul5lsnLDJR+2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GMIXLkWJ; arc=none smtp.client-ip=209.85.218.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GFtaIUSO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 82D8EC4CEF7;
-	Fri,  7 Feb 2025 21:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738963835;
-	bh=h6xL5izEN9fKPQQU4NjratT5cyYtedfsyUrxhR3WmEU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=GFtaIUSOUhKhCvKt6h9LhYwoM5eqRrBKwLNgOGu34gIQfp0oefoqNxVizrJN2KxqB
-	 Fm0AoQNHRU1Ogs6xekcL80BbEjYzfBROSs/8n2kYPKmDAOYzZDA+LC5cV9HTVsbqoh
-	 OEZ4i2CsyFh/Fu/bdsg/4fgwgKN3te9R2Sy/BDx0XCtNSFkUoDok17t037qnjQG+fU
-	 J2FnyWVOiE68cCQfKh/+G92vm7qLP6FIfTZ+dY0AM6DX9pYlnx7DhlK0PU9PJL7RO8
-	 xvTkZSu0euUVc8xXNhInzZcBqMcsfGP7KzfOl1z4fbLerHWF3BAWw18gBEeJY7x5OC
-	 nHA2eVcfAYttA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77383C02194;
-	Fri,  7 Feb 2025 21:30:35 +0000 (UTC)
-From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Fri, 07 Feb 2025 22:30:22 +0100
-Subject: [PATCH v2 05/12] dt-bindings: dma: Convert fsl,elo*-dma to YAML
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GMIXLkWJ"
+Received: by mail-ej1-f65.google.com with SMTP id a640c23a62f3a-aaf3c3c104fso452726766b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 13:30:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1738963856; x=1739568656; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HBJYgpNe2Zy2gRsFh41ExOz15Gu4bZ/zj8Bd9suI/jA=;
+        b=GMIXLkWJGIcyuzQOahhABfSDD+czMiLpzao+UNBbbjrPY+MjeHHAb8qUtjGyjD9+nI
+         dQFbP1KwLIiCc+41WUMl5Sh3tdGGmC0IL8h5jPOdSz43mb11oe2WAVE9/Kv0MxqhXOa/
+         Oz2AkNNO8kQD423onsM/QDvnBD0OLbDcuunQCVidx0wMaCSBNalokYODcqjatslW9Mdr
+         hXGShBQW/yEcTAMGqMR7LhNj0yVkeQndmJYkc7PdCohrU62hR0Cd0a2uQyRGRzqpESBc
+         40J5zGcUp1SaviUrRbsvD5hAShwkiDKBD20cVxQiK1Ha3bPPtfU3vS+a/RSaU33iqP1c
+         wZZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738963856; x=1739568656;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HBJYgpNe2Zy2gRsFh41ExOz15Gu4bZ/zj8Bd9suI/jA=;
+        b=PHH8ZLmTBFjGqQflrD5dq4u0/h6fmxj6Gut/1N2hJi5+5YHVe03JJoU9KNjKtwILt/
+         GaH4LAN4kSEoRDG/7GasspPS0IlyvYm3hXMrxuHNPyRDH5C93p8TrPdjlR6cz36Q6B4i
+         03GvOJnkz6u4fEurda3LC4Rz/Toj/Zp/mHzvz9P3yRkvzOcDpE1PRYnlQAua1uAHw3nM
+         saj6V1TV9m9g14Vby9SIKDeb8V3ZjOxXx7ijYMvlL5vKAz68sxsiPfzHb9S4yqb1Snwv
+         +7jc/QWm3ZBiyKh0UPMY95Bt+kH5iGvI+MBsX9SokiYpONU6jv7M0en4y3tctpL0oOXP
+         9abA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDjHi7DG9UZbfwKON5U/nSEVPsyWKsl7Qv7W5LBmZ9rZd+tGw2yx+MR1VGXKoLI5OUxxG/O9Pi4r+a+tc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTazn2tatkizurPQHFYjENBKdzUcoRpH+4xESh07QTCeR7TfGj
+	aqYqWJTucTDFATdW1S1OZZ0K94pvG/2pLE4yfGsz6dzFanxna+5C5fFBA5a73TU=
+X-Gm-Gg: ASbGncv5xL0el8kkg7ugZgkKJdjjad4CtiYa/iGKoDof9PIyZRfe0F4wBv5271b2jsS
+	EvHIk4sTrOv2vShfIly83oZ1pFZwmtlsnszI32VCoEYTmC3IGcY0apD67QiFHZ2m/tbjv0ZoAJB
+	3whTBxom6kIMIuJoJTquy1FjN9ZhNJPOl/qwRfb6vxtUQ/v1A/vj9SKaVq3V4JI9NOCi9ae+zwM
+	t+9waJaADECr7BzG67rf6vLK2HmExYvOpQkPgILbj4lqGPzQm84uhFcWAu4n7AQSHQG0/Mpx6NR
+	aY9IooJflgt1dmgj4B9XSKv/iubDqd/F4u8tsNL5jjaz+67wabEN4Yj4yyY=
+X-Google-Smtp-Source: AGHT+IHYuDDLuZlqtQ6Nspmj/6m4io2RGooeIQpuIOV6WNrioVZw+PtkcdK6Lw8MV30RRA4HV39EBQ==
+X-Received: by 2002:a17:907:7e94:b0:ab7:6d59:3b4c with SMTP id a640c23a62f3a-ab789adaf0bmr433844966b.21.1738963856272;
+        Fri, 07 Feb 2025 13:30:56 -0800 (PST)
+Received: from localhost (host-79-41-239-37.retail.telecomitalia.it. [79.41.239.37])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab79d4df211sm23307866b.32.2025.02.07.13.30.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 13:30:55 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v7 00/11] Add support for RaspberryPi RP1 PCI device using a DT overlay
+Date: Fri,  7 Feb 2025 22:31:40 +0100
+Message-ID: <cover.1738963156.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250207-ppcyaml-v2-5-8137b0c42526@posteo.net>
-References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
-In-Reply-To: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
-To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: imx@lists.linux.dev, Scott Wood <oss@buserror.net>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, 
- Niklas Cassel <cassel@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
- "David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>, 
- Vinod Koul <vkoul@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
- Wim Van Sebroeck <wim@linux-watchdog.org>, 
- Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
- linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, 
- linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, 
- linux-pci@vger.kernel.org, linux-watchdog@vger.kernel.org, 
- linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738963832; l=20225;
- i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=0XmxCWb0lxR3LKQhjqLbg3vhSL8R0BymC8p5/QN7IEo=;
- b=05RNsC0s0jckmF9E1/SzvMeR1f0Aoua2535hpLzteasCPplZ91iKphHfoA8GqLJQhjh9GhUEu
- KslD9fSC5kmAqZ1gOgKilLLHddoV7vpz38yDuGspx5agJ6+ujNxgn9q
-X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
- pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
-X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
- auth_id=156
-X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Reply-To: j.ne@posteo.net
 
-From: "J. Neuschäfer" <j.ne@posteo.net>
+RP1 is an MFD chipset that acts as a south-bridge PCIe endpoint sporting
+a pletora of subdevices (i.e.  Ethernet, USB host controller, I2C, PWM,
+etc.) whose registers are all reachable starting from an offset from the
+BAR address.  The main point here is that while the RP1 as an endpoint
+itself is discoverable via usual PCI enumeraiton, the devices it contains
+are not discoverable and must be declared e.g. via the devicetree.
 
-The devicetree bindings for Freescale DMA engines have so far existed as
-a text file. This patch converts them to YAML, and specifies all the
-compatible strings currently in use in arch/powerpc/boot/dts.
+This patchset is an attempt to provide a minimum infrastructure to allow
+the RP1 chipset to be discovered and perpherals it contains to be added
+from a devictree overlay loaded during RP1 PCI endpoint enumeration.
+Followup patches should add support for the several peripherals contained
+in RP1.
 
-Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
----
+This work is based upon dowstream drivers code and the proposal from RH
+et al. (see [1] and [2]). A similar approach is also pursued in [3].
 
-V2:
-- remove unnecessary multiline markers
-- fix additionalProperties to always be false
-- add description/maxItems to interrupts
-- add missing #address-cells/#size-cells properties
-- convert "Note on DMA channel compatible properties" to YAML by listing
-  fsl,ssi-dma-channel as a valid compatible value
-- fix property ordering in examples: compatible and reg come first
-- add missing newlines in examples
-- trim subject line (remove "bindings")
----
- .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 140 ++++++++++++++
- .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 123 +++++++++++++
- .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 134 ++++++++++++++
- .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
- 4 files changed, 397 insertions(+), 204 deletions(-)
+The patches are ordered as follows:
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..3d8be9973fb98891a73cb701c1f983a63f444837
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
-@@ -0,0 +1,140 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/fsl,elo-dma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale Elo DMA Controller
-+
-+maintainers:
-+  - J. Neuschäfer <j.ne@posteo.net>
-+
-+description:
-+  This is a little-endian 4-channel DMA controller, used in Freescale mpc83xx
-+  series chips such as mpc8315, mpc8349, mpc8379 etc.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - fsl,mpc8313-dma
-+          - fsl,mpc8315-dma
-+          - fsl,mpc8323-dma
-+          - fsl,mpc8347-dma
-+          - fsl,mpc8349-dma
-+          - fsl,mpc8360-dma
-+          - fsl,mpc8377-dma
-+          - fsl,mpc8378-dma
-+          - fsl,mpc8379-dma
-+      - const: fsl,elo-dma
-+
-+  reg:
-+    maxItems: 1
-+    description:
-+      DMA General Status Register, i.e. DGSR which contains status for
-+      all the 4 DMA channels.
-+
-+  cell-index:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Controller index. 0 for controller @ 0x8100.
-+
-+  ranges: true
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
-+  interrupts:
-+    maxItems: 1
-+    description: Controller interrupt.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+patternProperties:
-+  "^dma-channel@.*$":
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      compatible:
-+        oneOf:
-+          # native DMA channel
-+          - items:
-+              - enum:
-+                  - fsl,mpc8315-dma-channel
-+                  - fsl,mpc8323-dma-channel
-+                  - fsl,mpc8347-dma-channel
-+                  - fsl,mpc8349-dma-channel
-+                  - fsl,mpc8360-dma-channel
-+                  - fsl,mpc8377-dma-channel
-+                  - fsl,mpc8378-dma-channel
-+                  - fsl,mpc8379-dma-channel
-+              - const: fsl,elo-dma-channel
-+
-+          # audio DMA channel, see fsl,ssi.yaml
-+          - const: fsl,ssi-dma-channel
-+
-+      reg:
-+        maxItems: 1
-+
-+      cell-index:
-+        description: DMA channel index starts at 0.
-+
-+      interrupts:
-+        maxItems: 1
-+        description:
-+          Per-channel interrupt. Only necessary if no controller interrupt has
-+          been provided.
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    dma@82a8 {
-+        compatible = "fsl,mpc8349-dma", "fsl,elo-dma";
-+        reg = <0x82a8 4>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges = <0 0x8100 0x1a4>;
-+        interrupt-parent = <&ipic>;
-+        interrupts = <71 8>;
-+        cell-index = <0>;
-+
-+        dma-channel@0 {
-+            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-+            reg = <0 0x80>;
-+            cell-index = <0>;
-+            interrupt-parent = <&ipic>;
-+            interrupts = <71 8>;
-+        };
-+
-+        dma-channel@80 {
-+            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-+            reg = <0x80 0x80>;
-+            cell-index = <1>;
-+            interrupt-parent = <&ipic>;
-+            interrupts = <71 8>;
-+        };
-+
-+        dma-channel@100 {
-+            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-+            reg = <0x100 0x80>;
-+            cell-index = <2>;
-+            interrupt-parent = <&ipic>;
-+            interrupts = <71 8>;
-+        };
-+
-+        dma-channel@180 {
-+            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
-+            reg = <0x180 0x80>;
-+            cell-index = <3>;
-+            interrupt-parent = <&ipic>;
-+            interrupts = <71 8>;
-+        };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/dma/fsl,elo3-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,elo3-dma.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..36865836b48af78af32d4e11f55a32e32771a23e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/fsl,elo3-dma.yaml
-@@ -0,0 +1,123 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/fsl,elo3-dma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale Elo3 DMA Controller
-+
-+maintainers:
-+  - J. Neuschäfer <j.ne@posteo.net>
-+
-+description:
-+  DMA controller which has same function as EloPlus except that Elo3 has 8
-+  channels while EloPlus has only 4, it is used in Freescale Txxx and Bxxx
-+  series chips, such as t1040, t4240, b4860.
-+
-+properties:
-+  compatible:
-+    const: fsl,elo3-dma
-+
-+  reg:
-+    maxItems: 2
-+    description:
-+      contains two entries for DMA General Status Registers, i.e. DGSR0 which
-+      includes status for channel 1~4, and DGSR1 for channel 5~8
-+
-+  ranges: true
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
-+  interrupts:
-+    maxItems: 1
-+    description: Controller interrupt.
-+
-+patternProperties:
-+  "^dma-channel@.*$":
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      compatible:
-+        enum:
-+          # native DMA channel
-+          - fsl,eloplus-dma-channel
-+
-+          # audio DMA channel, see fsl,ssi.yaml
-+          - fsl,ssi-dma-channel
-+
-+      reg:
-+        maxItems: 1
-+
-+      interrupts:
-+        maxItems: 1
-+        description:
-+          Per-channel interrupt. Only necessary if no controller interrupt has
-+          been provided.
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    dma@100300 {
-+        compatible = "fsl,elo3-dma";
-+        reg = <0x100300 0x4>,
-+              <0x100600 0x4>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges = <0x0 0x100100 0x500>;
-+
-+        dma-channel@0 {
-+            compatible = "fsl,eloplus-dma-channel";
-+            reg = <0x0 0x80>;
-+            interrupts = <28 2 0 0>;
-+        };
-+
-+        dma-channel@80 {
-+            compatible = "fsl,eloplus-dma-channel";
-+            reg = <0x80 0x80>;
-+            interrupts = <29 2 0 0>;
-+        };
-+
-+        dma-channel@100 {
-+            compatible = "fsl,eloplus-dma-channel";
-+            reg = <0x100 0x80>;
-+            interrupts = <30 2 0 0>;
-+        };
-+
-+        dma-channel@180 {
-+            compatible = "fsl,eloplus-dma-channel";
-+            reg = <0x180 0x80>;
-+            interrupts = <31 2 0 0>;
-+        };
-+
-+        dma-channel@300 {
-+            compatible = "fsl,eloplus-dma-channel";
-+            reg = <0x300 0x80>;
-+            interrupts = <76 2 0 0>;
-+        };
-+
-+        dma-channel@380 {
-+            compatible = "fsl,eloplus-dma-channel";
-+            reg = <0x380 0x80>;
-+            interrupts = <77 2 0 0>;
-+        };
-+
-+        dma-channel@400 {
-+            compatible = "fsl,eloplus-dma-channel";
-+            reg = <0x400 0x80>;
-+            interrupts = <78 2 0 0>;
-+        };
-+
-+        dma-channel@480 {
-+            compatible = "fsl,eloplus-dma-channel";
-+            reg = <0x480 0x80>;
-+            interrupts = <79 2 0 0>;
-+        };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/dma/fsl,eloplus-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,eloplus-dma.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..513fee051657832dc031d32c1f701bf7c3b89daa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/fsl,eloplus-dma.yaml
-@@ -0,0 +1,134 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/fsl,eloplus-dma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale EloPlus DMA Controller
-+
-+maintainers:
-+  - J. Neuschäfer <j.ne@posteo.net>
-+
-+description:
-+  This is a 4-channel DMA controller with extended addresses and chaining,
-+  mainly used in Freescale mpc85xx/86xx, Pxxx and BSC series chips, such as
-+  mpc8540, mpc8641 p4080, bsc9131 etc.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - fsl,mpc8540-dma
-+              - fsl,mpc8541-dma
-+              - fsl,mpc8548-dma
-+              - fsl,mpc8555-dma
-+              - fsl,mpc8560-dma
-+              - fsl,mpc8572-dma
-+              - fsl,mpc8641-dma
-+          - const: fsl,eloplus-dma
-+      - const: fsl,eloplus-dma
-+
-+  reg:
-+    maxItems: 1
-+    description:
-+      DMA General Status Register, i.e. DGSR which contains
-+      status for all the 4 DMA channels
-+
-+  cell-index:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      controller index.  0 for controller @ 0x21000, 1 for controller @ 0xc000
-+
-+  ranges: true
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
-+  interrupts:
-+    maxItems: 1
-+    description: Controller interrupt.
-+
-+patternProperties:
-+  "^dma-channel@.*$":
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      compatible:
-+        oneOf:
-+          # native DMA channel
-+          - items:
-+              - enum:
-+                  - fsl,mpc8540-dma-channel
-+                  - fsl,mpc8541-dma-channel
-+                  - fsl,mpc8548-dma-channel
-+                  - fsl,mpc8555-dma-channel
-+                  - fsl,mpc8560-dma-channel
-+                  - fsl,mpc8572-dma-channel
-+              - const: fsl,eloplus-dma-channel
-+
-+          # audio DMA channel, see fsl,ssi.yaml
-+          - const: fsl,ssi-dma-channel
-+
-+      reg:
-+        maxItems: 1
-+
-+      cell-index:
-+        description: DMA channel index starts at 0.
-+
-+      interrupts:
-+        maxItems: 1
-+        description:
-+          Per-channel interrupt. Only necessary if no controller interrupt has
-+          been provided.
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    dma@21300 {
-+        compatible = "fsl,mpc8540-dma", "fsl,eloplus-dma";
-+        reg = <0x21300 4>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges = <0 0x21100 0x200>;
-+        cell-index = <0>;
-+
-+        dma-channel@0 {
-+            compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
-+            reg = <0 0x80>;
-+            cell-index = <0>;
-+            interrupt-parent = <&mpic>;
-+            interrupts = <20 2>;
-+        };
-+
-+        dma-channel@80 {
-+            compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
-+            reg = <0x80 0x80>;
-+            cell-index = <1>;
-+            interrupt-parent = <&mpic>;
-+            interrupts = <21 2>;
-+        };
-+
-+        dma-channel@100 {
-+            compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
-+            reg = <0x100 0x80>;
-+            cell-index = <2>;
-+            interrupt-parent = <&mpic>;
-+            interrupts = <22 2>;
-+        };
-+
-+        dma-channel@180 {
-+            compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
-+            reg = <0x180 0x80>;
-+            cell-index = <3>;
-+            interrupt-parent = <&mpic>;
-+            interrupts = <23 2>;
-+        };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-deleted file mode 100644
-index c11ad5c6db2190bf38c160632d9997122e169945..0000000000000000000000000000000000000000
---- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-+++ /dev/null
-@@ -1,204 +0,0 @@
--* Freescale DMA Controllers
--
--** Freescale Elo DMA Controller
--   This is a little-endian 4-channel DMA controller, used in Freescale mpc83xx
--   series chips such as mpc8315, mpc8349, mpc8379 etc.
--
--Required properties:
--
--- compatible        : must include "fsl,elo-dma"
--- reg               : DMA General Status Register, i.e. DGSR which contains
--                      status for all the 4 DMA channels
--- ranges            : describes the mapping between the address space of the
--                      DMA channels and the address space of the DMA controller
--- cell-index        : controller index.  0 for controller @ 0x8100
--- interrupts        : interrupt specifier for DMA IRQ
--
--- DMA channel nodes:
--        - compatible        : must include "fsl,elo-dma-channel"
--                              However, see note below.
--        - reg               : DMA channel specific registers
--        - cell-index        : DMA channel index starts at 0.
--
--Optional properties:
--        - interrupts        : interrupt specifier for DMA channel IRQ
--                              (on 83xx this is expected to be identical to
--                              the interrupts property of the parent node)
--
--Example:
--	dma@82a8 {
--		#address-cells = <1>;
--		#size-cells = <1>;
--		compatible = "fsl,mpc8349-dma", "fsl,elo-dma";
--		reg = <0x82a8 4>;
--		ranges = <0 0x8100 0x1a4>;
--		interrupt-parent = <&ipic>;
--		interrupts = <71 8>;
--		cell-index = <0>;
--		dma-channel@0 {
--			compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
--			cell-index = <0>;
--			reg = <0 0x80>;
--			interrupt-parent = <&ipic>;
--			interrupts = <71 8>;
--		};
--		dma-channel@80 {
--			compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
--			cell-index = <1>;
--			reg = <0x80 0x80>;
--			interrupt-parent = <&ipic>;
--			interrupts = <71 8>;
--		};
--		dma-channel@100 {
--			compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
--			cell-index = <2>;
--			reg = <0x100 0x80>;
--			interrupt-parent = <&ipic>;
--			interrupts = <71 8>;
--		};
--		dma-channel@180 {
--			compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
--			cell-index = <3>;
--			reg = <0x180 0x80>;
--			interrupt-parent = <&ipic>;
--			interrupts = <71 8>;
--		};
--	};
--
--** Freescale EloPlus DMA Controller
--   This is a 4-channel DMA controller with extended addresses and chaining,
--   mainly used in Freescale mpc85xx/86xx, Pxxx and BSC series chips, such as
--   mpc8540, mpc8641 p4080, bsc9131 etc.
--
--Required properties:
--
--- compatible        : must include "fsl,eloplus-dma"
--- reg               : DMA General Status Register, i.e. DGSR which contains
--                      status for all the 4 DMA channels
--- cell-index        : controller index.  0 for controller @ 0x21000,
--                                         1 for controller @ 0xc000
--- ranges            : describes the mapping between the address space of the
--                      DMA channels and the address space of the DMA controller
--
--- DMA channel nodes:
--        - compatible        : must include "fsl,eloplus-dma-channel"
--                              However, see note below.
--        - cell-index        : DMA channel index starts at 0.
--        - reg               : DMA channel specific registers
--        - interrupts        : interrupt specifier for DMA channel IRQ
--
--Example:
--	dma@21300 {
--		#address-cells = <1>;
--		#size-cells = <1>;
--		compatible = "fsl,mpc8540-dma", "fsl,eloplus-dma";
--		reg = <0x21300 4>;
--		ranges = <0 0x21100 0x200>;
--		cell-index = <0>;
--		dma-channel@0 {
--			compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
--			reg = <0 0x80>;
--			cell-index = <0>;
--			interrupt-parent = <&mpic>;
--			interrupts = <20 2>;
--		};
--		dma-channel@80 {
--			compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
--			reg = <0x80 0x80>;
--			cell-index = <1>;
--			interrupt-parent = <&mpic>;
--			interrupts = <21 2>;
--		};
--		dma-channel@100 {
--			compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
--			reg = <0x100 0x80>;
--			cell-index = <2>;
--			interrupt-parent = <&mpic>;
--			interrupts = <22 2>;
--		};
--		dma-channel@180 {
--			compatible = "fsl,mpc8540-dma-channel", "fsl,eloplus-dma-channel";
--			reg = <0x180 0x80>;
--			cell-index = <3>;
--			interrupt-parent = <&mpic>;
--			interrupts = <23 2>;
--		};
--	};
--
--** Freescale Elo3 DMA Controller
--   DMA controller which has same function as EloPlus except that Elo3 has 8
--   channels while EloPlus has only 4, it is used in Freescale Txxx and Bxxx
--   series chips, such as t1040, t4240, b4860.
--
--Required properties:
--
--- compatible        : must include "fsl,elo3-dma"
--- reg               : contains two entries for DMA General Status Registers,
--                      i.e. DGSR0 which includes status for channel 1~4, and
--                      DGSR1 for channel 5~8
--- ranges            : describes the mapping between the address space of the
--                      DMA channels and the address space of the DMA controller
--
--- DMA channel nodes:
--        - compatible        : must include "fsl,eloplus-dma-channel"
--        - reg               : DMA channel specific registers
--        - interrupts        : interrupt specifier for DMA channel IRQ
--
--Example:
--dma@100300 {
--	#address-cells = <1>;
--	#size-cells = <1>;
--	compatible = "fsl,elo3-dma";
--	reg = <0x100300 0x4>,
--	      <0x100600 0x4>;
--	ranges = <0x0 0x100100 0x500>;
--	dma-channel@0 {
--		compatible = "fsl,eloplus-dma-channel";
--		reg = <0x0 0x80>;
--		interrupts = <28 2 0 0>;
--	};
--	dma-channel@80 {
--		compatible = "fsl,eloplus-dma-channel";
--		reg = <0x80 0x80>;
--		interrupts = <29 2 0 0>;
--	};
--	dma-channel@100 {
--		compatible = "fsl,eloplus-dma-channel";
--		reg = <0x100 0x80>;
--		interrupts = <30 2 0 0>;
--	};
--	dma-channel@180 {
--		compatible = "fsl,eloplus-dma-channel";
--		reg = <0x180 0x80>;
--		interrupts = <31 2 0 0>;
--	};
--	dma-channel@300 {
--		compatible = "fsl,eloplus-dma-channel";
--		reg = <0x300 0x80>;
--		interrupts = <76 2 0 0>;
--	};
--	dma-channel@380 {
--		compatible = "fsl,eloplus-dma-channel";
--		reg = <0x380 0x80>;
--		interrupts = <77 2 0 0>;
--	};
--	dma-channel@400 {
--		compatible = "fsl,eloplus-dma-channel";
--		reg = <0x400 0x80>;
--		interrupts = <78 2 0 0>;
--	};
--	dma-channel@480 {
--		compatible = "fsl,eloplus-dma-channel";
--		reg = <0x480 0x80>;
--		interrupts = <79 2 0 0>;
--	};
--};
--
--Note on DMA channel compatible properties: The compatible property must say
--"fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
--driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
--DMA driver, such as the SSI sound drivers for the MPC8610.  Therefore, any DMA
--channel that should be used for another driver should not use
--"fsl,elo-dma-channel" or "fsl,eloplus-dma-channel".  For the SSI drivers, for
--example, the compatible property should be "fsl,ssi-dma-channel".  See ssi.txt
--for more information.
+-PATCHES 1 to 4: add binding schemas for clock, gpio and RP1 peripherals.
+ They are needed to support the other peripherals, e.g. the ethernet mac
+ depends on a clock generated by RP1 and the phy is reset though the
+ on-board gpio controller.
+
+-PATCH 5 and 6: add clock and gpio device drivers.
+
+-PATCH 7: the devicetree overlay describing the RP1 chipset. Please
+ note that this patch should be taken by the same maintainer that will
+ also take patch 11, since txeieh dtso is compiled in as binary blob and is
+ closely coupled to the driver.
+
+-PATCH 8: this is the main patch to support RP1 chipset and peripherals
+ enabling through dtb overlay. The dtso since is intimately coupled with
+ the driver and will be linked in as binary blob in the driver obj.
+ The real dtso is in devicetree folder while the dtso in driver folder is
+ just a placeholder to include the real dtso.
+ In this way it is possible to check the dtso against dt-bindings.
+ The reason why drivers/misc has been selected as containing folder
+ for this driver can be seen in [6], [7] and [8].
+
+-PATCH 9: add the external clock node (used by RP1) to the main dts.
+
+-PATCH 10: add the relevant kernel CONFIG_ options to defconfig.
+
+-PATCH 11 (OPTIONAL): enable CONFIG_OF_OVERLAY in order for 'make defconfig'
+ to produce a configuration valid for the RP1 driver. Without this
+ patch, the user has to explicitly enable it since the misc driver depends
+ on OF_OVERLAY.
+
+This patchset is also a first attempt to be more agnostic wrt hardware
+description standards such as OF devicetree and ACPI, where 'agnostic'
+means "using DT in coexistence with ACPI", as been already promoted
+by e.g. AL (see [4]). Although there's currently no evidence it will also
+run out of the box on purely ACPI system, it is a first step towards
+that direction.
+
+Please note that albeit this patchset has no prerequisites in order to
+be applied cleanly, it still depends on Stanimir's WIP patchset for BCM2712
+PCIe controller (see [5] and newer versions) in order to work at runtime.
+
+Many thanks,
+Andrea della Porta
+
+Links:
+- [1]: https://lpc.events/event/17/contributions/1421/attachments/1337/2680/LPC2023%20Non-discoverable%20devices%20in%20PCI.pdf
+- [2]: https://lore.kernel.org/lkml/20230419231155.GA899497-robh@kernel.org/t/
+- [3]: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/#t
+- [4]: https://lore.kernel.org/all/73e05c77-6d53-4aae-95ac-415456ff0ae4@lunn.ch/
+- [5]: https://lore.kernel.org/all/20240626104544.14233-1-svarbanov@suse.de/
+- [6]: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
+- [7]: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
+- [8]: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
+
+CHANGES IN V7
+
+
+PATCH RELATED -------------------------------------------------
+
+- patchset rebased upon v6.14-rc1
+- patch 1,2,3,4,7,9: added: Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+- patch 1: fixed a typo in the description
+- added new *optional* patch 11 to enable OF_OVERLAY in defconfig
+
+
+RP1 CLOCK DRIVER ------------------------------------
+
+- clk-rp1.c: general rework of the register fields defined via GENMASK
+
+
+RP1 MISC DRIVER -----------------------------------
+
+- Added a short explanation about the reasons why this driver
+  is contained in drivers/misc, as an addition to the links
+  pointing to the entire discussion in the maling list
+
+- Deleted rpi_pci.h which only contained extern reference to
+  symbols created automatically by cmd_wrap_S_dtb to include
+  the dtb overlay as a binary blob accessible by the driver.
+  Those symbols are only accessed by rpi_pci.c and are not intended
+  to be visible elsewhere. A new comment better specify this
+  to avoid confusion
+
+- Used KBUILD_MODNAME as pci_driver.name
+
+- Kconfig: solved a recursive dependency on OF_OVERLAY
+
+
+Andrea della Porta (11):
+  dt-bindings: clock: Add RaspberryPi RP1 clock bindings
+  dt-bindings: pinctrl: Add RaspberryPi RP1 gpio/pinctrl/pinmux bindings
+  dt-bindings: pci: Add common schema for devices accessible through PCI
+    BARs
+  dt-bindings: misc: Add device specific bindings for RaspberryPi RP1
+  clk: rp1: Add support for clocks provided by RP1
+  pinctrl: rp1: Implement RaspberryPi RP1 gpio support
+  arm64: dts: rp1: Add support for RaspberryPi's RP1 device
+  misc: rp1: RaspberryPi RP1 misc driver
+  arm64: dts: bcm2712: Add external clock for RP1 chipset on Rpi5
+  arm64: defconfig: Enable RP1 misc/clock/gpio drivers
+  arm64: defconfig: Enable OF_OVERLAY option
+
+ .../clock/raspberrypi,rp1-clocks.yaml         |   58 +
+ .../devicetree/bindings/misc/pci1de4,1.yaml   |  135 ++
+ .../devicetree/bindings/pci/pci-ep-bus.yaml   |   58 +
+ .../pinctrl/raspberrypi,rp1-gpio.yaml         |  198 +++
+ MAINTAINERS                                   |   14 +
+ .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     |    7 +
+ arch/arm64/boot/dts/broadcom/rp1.dtso         |   58 +
+ arch/arm64/configs/defconfig                  |    4 +
+ drivers/clk/Kconfig                           |    9 +
+ drivers/clk/Makefile                          |    1 +
+ drivers/clk/clk-rp1.c                         | 1511 +++++++++++++++++
+ drivers/misc/Kconfig                          |    1 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/rp1/Kconfig                      |   20 +
+ drivers/misc/rp1/Makefile                     |    3 +
+ drivers/misc/rp1/rp1-pci.dtso                 |    8 +
+ drivers/misc/rp1/rp1_pci.c                    |  305 ++++
+ drivers/pci/quirks.c                          |    1 +
+ drivers/pinctrl/Kconfig                       |   11 +
+ drivers/pinctrl/Makefile                      |    1 +
+ drivers/pinctrl/pinctrl-rp1.c                 |  789 +++++++++
+ .../clock/raspberrypi,rp1-clocks.h            |   61 +
+ include/linux/pci_ids.h                       |    3 +
+ 23 files changed, 3257 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+ create mode 100644 Documentation/devicetree/bindings/misc/pci1de4,1.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+ create mode 100644 arch/arm64/boot/dts/broadcom/rp1.dtso
+ create mode 100644 drivers/clk/clk-rp1.c
+ create mode 100644 drivers/misc/rp1/Kconfig
+ create mode 100644 drivers/misc/rp1/Makefile
+ create mode 100644 drivers/misc/rp1/rp1-pci.dtso
+ create mode 100644 drivers/misc/rp1/rp1_pci.c
+ create mode 100644 drivers/pinctrl/pinctrl-rp1.c
+ create mode 100644 include/dt-bindings/clock/raspberrypi,rp1-clocks.h
 
 -- 
-2.48.0.rc1.219.gb6b6757d772
-
+2.35.3
 
