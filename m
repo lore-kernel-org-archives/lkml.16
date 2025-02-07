@@ -1,113 +1,78 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F0E1E5B6C;
-	Fri,  7 Feb 2025 12:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D07D1DFE04;
+	Fri,  7 Feb 2025 12:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738932527; cv=none; b=AI+0DhA4WjSXbpPUjqXcb2eWWcRZxwqAc/mB6fvEQsw+yRpxyeOCRR5+u1B8N9qzN4fKV0B/X/52a5HemM6Hyud2UBwUFP0FRvCRfo1RSa3VAtZGmn9IdhmVB+LCwxLoFF8XwhTs5HO9Bqp1gDqlmf4ThFaSC7PZzFAEdSDW4dk=
+	t=1738932554; cv=none; b=CaTygLo+8DXzB4bFzxcXnfrI7DkkG1PZ+yTwffExN5q6CNLj+fp9GRdg7USgg39P7zsAbLGan49wyrvsdnsZiz4Q7apWD6AOHO1ZZfw1jKLKbQu4oU5RyfJBATULWpozv8KGEPZ1JURsXALLWlWXDyx7rdcCKorYqkipDSjEKaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738932527; c=relaxed/simple;
-	bh=B583Jt+dZN0idFwnznXbNLEdBMPIyxuJIgGbaof1NUQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LSxGFMxjQcxhwvOeDlpIZxjRO0N259489vH3/SYzwJRMTEHPH6Tjhy8sUHYlc1ybkJp086I/5mm9V86D8HZkWLXscxd/2tXRxKe+1NphLPiDt61KH/9ojLEsiHuQ7g2U7jeFKV7MfyT/qyhu4mA1FtAj7aaKeQ3+bqkEyD7Tm0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=iNLakeYL; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1738932554; c=relaxed/simple;
+	bh=rewFqSNHRICHMfqkDxgVEbgGirdxnhjcREMT1ec102k=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=fbXioQtKfxLjTXPDtX0H2G1mqTuo4xnok2t/menyT+iksmFjhNmbGnnalKqjl2evdunnOnR16XOzXH68UBLDAK+fHL8dGeoy6ktRibbQhkiisQA1fFZ083AHBIqn4kjnz60re+j2011LXUESwDh+WU9yIEZNQP2YAhQ68OuRwbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHvt6snT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="iNLakeYL"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.1)
- id 120da5e98b0c8ecc; Fri, 7 Feb 2025 13:48:41 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id CF36C6BAA02;
-	Fri,  7 Feb 2025 13:48:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1738932521;
-	bh=B583Jt+dZN0idFwnznXbNLEdBMPIyxuJIgGbaof1NUQ=;
-	h=From:Subject:Date;
-	b=iNLakeYLi+BrC5iPPaK53O9ZiJkiYEIu4KKa6Fad8zSOv7dpbXcLofQvJlUBVl5jg
-	 iy+ZO9AxrSJ7Av2qQjde30MAUWUUQ8ARufDIjtFQS9HdM+kRNYHnixZ5QGUD1UZkBw
-	 ZOv/7NYzfZ8zQ+lP7NiFtcDPOOjJFrD9lX32ZButH3+bgdHRFZNCIuoeilxE+wOIMD
-	 LEr85K4qxNpgFVxNZzqmmy15awR/nwcCBN0o4mBo9ujXfmkj8UyqX76LQqStuO5nF+
-	 3CMZ+ZVaEsHtjySxNVAQIE4BWt+i4NxuhgyjPBQtrugoXpfH9EBSNIKLz5ox+D3Y08
-	 TNlKOW6HQtGXw==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Zhang Rui <rui.zhang@intel.com>
-Subject: [PATCH v1] cpufreq: intel_pstate: Relocate platform preference check
-Date: Fri, 07 Feb 2025 13:48:40 +0100
-Message-ID: <2776745.mvXUDI8C0e@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHvt6snT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EA43C4CED1;
+	Fri,  7 Feb 2025 12:49:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738932553;
+	bh=rewFqSNHRICHMfqkDxgVEbgGirdxnhjcREMT1ec102k=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=jHvt6snT8i5LVK0+zxXKmikH/dFAT8bh55vD4J+GS0yGZY9e1An4XHhqrV/KG7Mn3
+	 fZ3aPT8L9xIjwyktOU2tSf4mYly9Z6RhMW+k7C06amDzCUwio1BgcidR926HKam6HG
+	 npEVrC2x9DWWOfF8cYLrEu/X1JbwU4xZRGNzDgt0LNbupTSowKYR+WXJn0U6Ws9uHV
+	 5Txb88152dscL/tPpw/cUIiu2afCvOwNBKloajCBMShon3DO+6QQVJQO6RR/bp+mSq
+	 BYLxAEs1AVUA9edvNm1hDGwD3LA2LRdaroXEBTB7jsJUk7Iz9JCOI4fR0dU1z5a/r5
+	 LjzzXjZAGLdiQ==
+Date: Fri, 7 Feb 2025 13:49:10 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: Philipp Stanner <phasta@kernel.org>
+cc: Even Xu <even.xu@intel.com>, Xinpeng Sun <xinpeng.sun@intel.com>, 
+    Benjamin Tissoires <bentiss@kernel.org>, 
+    Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, linux-input@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] HID: intel-thc-hid: Remove deprecated PCI API calls
+In-Reply-To: <20250128101156.77868-2-phasta@kernel.org>
+Message-ID: <96151032-84p2-17q9-3997-sn60r0n13sp9@xreary.bet>
+References: <20250128101156.77868-2-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: spam:low
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleeffecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnegoufhprghmkfhpucdlfedttddmnecujfgurhephffvvefufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeffffffkefgheehffelteeiveeffeevhfelteejvddvieejjeelvdeiheeuveeuffenucfkphepudelhedrudefiedrudelrdelgeenucfuphgrmhfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhrihhnihhvrghsrdhprghnughruhhvrggurgeslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehruhhirdiihhg
-X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
+Content-Type: text/plain; charset=US-ASCII
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Tue, 28 Jan 2025, Philipp Stanner wrote:
 
-Move the invocation of intel_pstate_platform_pwr_mgmt_exists() before
-checking whether or not HWP is enabled because it does not depend on
-any code running before it except for the vendor check and if CPU
-performance scaling is going to be carried out by the platform, all of
-the code that runs before that function (again, except for the vendor
-check) is redundant.
+> intel-thc-hid reintroduced the already deprecated PCI API functions
+> 
+> 	pcim_iomap_table(),
+> 	pcim_iomap_regions(),
+> 	pcim_iounmap_regions(),
+> 
+> none of which should be used anymore.
+> 
+> Furthermore, calling managed (pcim_*) functions in remove() and probe()
+> for cleanup is not necessary, since the managed functions clean up
+> automatically.
+> 
+> Replace / remove the deprecated functions.
+> 
+> Fixes: 61bb2714dc3a1 ("HID: intel-thc-hid: intel-quicki2c: Add THC QuickI2C driver skeleton")
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> ---
+> Hi,
+> 
+> I'm trying to remove this API since a year. Please pay attention to the
+> docstrings in PCI which mark certain functions as deprecated.
 
-This is not expected to alter any functionality except for the ordering
-of messages printed by intel_pstate_init() when it is going to return an
-error before attempting to register the driver.
+Applied, thanks.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/cpufreq/intel_pstate.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -3688,6 +3688,15 @@
- 	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
- 		return -ENODEV;
- 
-+	/*
-+	 * The Intel pstate driver will be ignored if the platform
-+	 * firmware has its own power management modes.
-+	 */
-+	if (intel_pstate_platform_pwr_mgmt_exists()) {
-+		pr_info("P-states controlled by the platform\n");
-+		return -ENODEV;
-+	}
-+
- 	id = x86_match_cpu(hwp_support_ids);
- 	if (id) {
- 		hwp_forced = intel_pstate_hwp_is_enabled();
-@@ -3743,15 +3752,6 @@
- 		default_driver = &intel_cpufreq;
- 
- hwp_cpu_matched:
--	/*
--	 * The Intel pstate driver will be ignored if the platform
--	 * firmware has its own power management modes.
--	 */
--	if (intel_pstate_platform_pwr_mgmt_exists()) {
--		pr_info("P-states controlled by the platform\n");
--		return -ENODEV;
--	}
--
- 	if (!hwp_active && hwp_only)
- 		return -ENOTSUPP;
- 
-
-
+-- 
+Jiri Kosina
+SUSE Labs
 
