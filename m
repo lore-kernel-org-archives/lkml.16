@@ -1,170 +1,238 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7ED52417D3;
-	Fri,  7 Feb 2025 02:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A522417D3;
+	Fri,  7 Feb 2025 02:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738894540; cv=none; b=fXqAUINJxs4C1TjqZmXk4ahFcCMy5p9J8cfI7orOrAuFTXLu1VOkVt3iQcOs3QhpTuLAPvopHbWIovGq/xW247cZKY3vPbAZvQzNAQIiQtYQyFA2ifVAcQ04DzLpByfuaDXSNEUmPZvtvhlMW5peXCOr09GpGHk7b5wSHbsGDGQ=
+	t=1738894635; cv=none; b=Sz7OkpckGsChFe0ieYJ7jddrAtAOclsMCB97CfSnjGV8hpg8jK6vYVwZvRVGV3vnBvVMRlZi3ALLpETe0PaNU8GcDXCo7Zt6ngXvH2CDABq19EceFmDwJ08TeM3oTJj/HqnNx6MwwjVwDXeilaTttdmC16M2W/+5r9RoHvvfAM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738894540; c=relaxed/simple;
-	bh=SWS1Hs+K2WCvk8+cgOLlEWSMg01BIf79cpM9X5fqRs0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SCgfEy/UNjgeP4EYL9obKliqkQ7WCwTb+dkLu/xEt+NYwBPuB7zO87B644eJN3ztIkLBaNP0N8x9wrz8POniV/17yNb0QIyEFEHx8lBlGb+2YmGpwl2BU2XKU2sHVCaDHdfp5tG1zFttxV3nfsz8eqyODDYPN7YiYRHp3Hfu+9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fOG/n/HF; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738894635; c=relaxed/simple;
+	bh=1e+RwjPPN2sO50qBjYvICNRSf32YSEvUcVQpef1EMVk=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=cEmSgIB6tCl8MpEFtNF4aeGpDze5Jva5KNYDW6kUR7H55MXWnUgUrMG2dtQh0KB/AV3+X4xw/QcEz+sdpcqeaI59vBgK3txLeZkoRpA3zjKZ/UVMJE9PEA06xqazfaHz/ZPpiAyT/jUBNEF8hhd9neS5HUuKlTDfuTp1+pgBtSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ss6c7U/l; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SArUN9Ff; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ss6c7U/l; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SArUN9Ff; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fOG/n/HF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738894539; x=1770430539;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SWS1Hs+K2WCvk8+cgOLlEWSMg01BIf79cpM9X5fqRs0=;
-  b=fOG/n/HFL+xW92b2nT3aXgF9YhIoAxITpKJ/JLWL0oVUpODN4No+s2pN
-   sWDoGCZMfhxGKJorTM1VYB8Xi1w6LZocTH0Z6ziiLfq0TBswWx7Oy8lgN
-   40rsG+SSCHgNeSz0lrHNIdajoaPm7BGefBa6EpnDqp9eKdEhXht7n5snU
-   Sr8l03cIRKXTaLCdKbCDqqeEdt/zh6sAfY+0OqLfNto/jA67NXa+3Zr8I
-   swOc52fxXSqqbcFJdj2fvdUaLBzVyfAFIUv4hGs/Vf68BdNTfPlev04r7
-   LZNSaOnoNRcUMbfR4X5xbP1QDvTkOislb4qhMU01wBNe/LGonOj7VEUlS
-   A==;
-X-CSE-ConnectionGUID: /zcTTFh4QsqeMA9A1YoMgA==
-X-CSE-MsgGUID: ImG9bJ8JSXqxFI5vr5QhwQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50510603"
-X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
-   d="scan'208";a="50510603"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 18:15:38 -0800
-X-CSE-ConnectionGUID: amFlnjj3T/2qc320CG/riQ==
-X-CSE-MsgGUID: U7CRgg7iR4upalKRpijatA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116013783"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 18:15:35 -0800
-Message-ID: <d041a9b4-3948-4aa0-985c-632b2eb9b64c@linux.intel.com>
-Date: Fri, 7 Feb 2025 10:15:32 +0800
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ss6c7U/l";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SArUN9Ff";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ss6c7U/l";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SArUN9Ff"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 8FDE41F38D;
+	Fri,  7 Feb 2025 02:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738894631; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/9MfRUjBovYT7C8N+g0JKWAPi7xoFRWK3tvTcwzpMM4=;
+	b=ss6c7U/lv/wXpwg2bU8lY3uVSXXiA6dI0mC2wyeVBJ3pfm4k3l4n3nbAPmaeVo6dF0NLEF
+	7BJRfdMdG4C4dUi0r37EdU8Smbm4z/ykBtIWp+/yDNWN7Mr8XrHrMOreM6jE/jvps3fgQx
+	YNoKg8NBiECSZua8Ygxk2khV/BzHgA0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738894631;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/9MfRUjBovYT7C8N+g0JKWAPi7xoFRWK3tvTcwzpMM4=;
+	b=SArUN9FfwPh9SQzO7XTNbIwdS6PcHi7m2c9op1pd7rBCzhNChR6Wb70maMWbBzEdcy69wp
+	QXSwbvLh2uwukwBQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738894631; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/9MfRUjBovYT7C8N+g0JKWAPi7xoFRWK3tvTcwzpMM4=;
+	b=ss6c7U/lv/wXpwg2bU8lY3uVSXXiA6dI0mC2wyeVBJ3pfm4k3l4n3nbAPmaeVo6dF0NLEF
+	7BJRfdMdG4C4dUi0r37EdU8Smbm4z/ykBtIWp+/yDNWN7Mr8XrHrMOreM6jE/jvps3fgQx
+	YNoKg8NBiECSZua8Ygxk2khV/BzHgA0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738894631;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/9MfRUjBovYT7C8N+g0JKWAPi7xoFRWK3tvTcwzpMM4=;
+	b=SArUN9FfwPh9SQzO7XTNbIwdS6PcHi7m2c9op1pd7rBCzhNChR6Wb70maMWbBzEdcy69wp
+	QXSwbvLh2uwukwBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CC9E713806;
+	Fri,  7 Feb 2025 02:17:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 4aZzHyRtpWfsagAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 02:17:08 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2 v3] perf test: Change event in perf test 114 perf
- record test subtest test_leader_sampling
-To: "Liang, Kan" <kan.liang@linux.intel.com>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- acme@kernel.org, linux-s390@vger.kernel.org, james.clark@linaro.org,
- agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
- hca@linux.ibm.com
-References: <20250131102756.4185235-1-tmricht@linux.ibm.com>
- <20250131102756.4185235-3-tmricht@linux.ibm.com>
- <Z6GMmxKvXd0-fd_-@google.com>
- <9b091546-8178-470b-8904-dc948fd9aa11@linux.intel.com>
- <688e9a7f-0b98-4f8a-b575-90d7de244589@linux.intel.com>
- <69f7d048-e7dd-4863-a21f-2d8fafafd280@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <69f7d048-e7dd-4863-a21f-2d8fafafd280@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: "NeilBrown" <neilb@suse.de>
+To: "Christian Brauner" <brauner@kernel.org>
+Cc: "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Jeff Layton" <jlayton@kernel.org>, "Dave Chinner" <david@fromorbit.com>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 14/19] VFS: Ensure no async updates happening in directory
+ being removed.
+In-reply-to: <20250206-ungeeignet-erhielten-1e46ff51d728@brauner>
+References: <>, <20250206-ungeeignet-erhielten-1e46ff51d728@brauner>
+Date: Fri, 07 Feb 2025 13:17:01 +1100
+Message-id: <173889462175.22054.10174686267926452398@noble.neil.brown.name>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
+On Fri, 07 Feb 2025, Christian Brauner wrote:
+> On Thu, Feb 06, 2025 at 04:42:51PM +1100, NeilBrown wrote:
+> > vfs_rmdir takes an exclusive lock on the target directory to ensure
+> > nothing new is created in it while the rmdir progresses.  With the
+>=20
+> It also excludes concurrent mount operations.
 
-On 2/6/2025 10:25 PM, Liang, Kan wrote:
->
-> On 2025-02-06 12:42 a.m., Mi, Dapeng wrote:
->> On 2/4/2025 11:55 PM, Liang, Kan wrote:
->>> On 2025-02-03 10:42 p.m., Namhyung Kim wrote:
->>>> Add Kan and Dapeng to CC.
->>>>
->>>> Thanks,
->>>> Namhyung
->>>>
->>>>
->>>> On Fri, Jan 31, 2025 at 11:27:56AM +0100, Thomas Richter wrote:
->>>>> On s390 the event instructions can not be used for recording.
->>>>> This event is only supported by perf stat.
->>>>>
->>>>> Change the event from instructions to cycles in
->>>>> subtest test_leader_sampling.
->>>>>
->>>>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
->>>>> Suggested-by: James Clark <james.clark@linaro.org>
->>>>> Reviewed-by: James Clark <james.clark@linaro.org>
->>>>> ---
->>>>>  tools/perf/tests/shell/record.sh | 10 +++++-----
->>>>>  1 file changed, 5 insertions(+), 5 deletions(-)
->>>>>
->>>>> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
->>>>> index fe2d05bcbb1f..ba8d873d3ca7 100755
->>>>> --- a/tools/perf/tests/shell/record.sh
->>>>> +++ b/tools/perf/tests/shell/record.sh
->>>>> @@ -231,7 +231,7 @@ test_cgroup() {
->>>>>  
->>>>>  test_leader_sampling() {
->>>>>    echo "Basic leader sampling test"
->>>>> -  if ! perf record -o "${perfdata}" -e "{instructions,instructions}:Su" -- \
->>>>> +  if ! perf record -o "${perfdata}" -e "{cycles,cycles}:Su" -- \
->>>>>      perf test -w brstack 2> /dev/null
->>> As a non-precise test, using cycles instead should be fine. But we
->>> should never use it for precise test, e.g., with p. Because cycles is a
->>> non-precise event. It would not surprise me if there is a skid when
->>> reading two cycles events at the point when the event overflow occurs.
->>>
->>> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
->> Kan, I suppose you mean only the case without counter snapshot, right? With
->> counter snapshot's help, there would be same period even for non-precise
->> events, right?
-> No, the counter-snapshot doesn't help. That's why I suggested to not
-> utilize it via enabling the modifier p. It should work for most of the
-> cases. But it's not 100% guaranteed for some non-precise events that the
-> same period is got at overflow. Since it's a test that could be run
-> everywhere, the occasional false alarm would just bring troubles.
->
-> Without p, it falls back to the traditional way of handling the sampling
-> read. In the PMI handler, the global control is disabled first, then all
-> the counters are read. The value may not be very accurate, since it's
-> stopped at the PMI handler, not the counter overflow. But because of the
-> global control, all the counters stop at the same time. The skid would
-> be the same. The test should work.
+And it excludes chown and ACL changes.  I doubt those are important.  I
+do need to check mount/unmount.
 
-Got it. Thanks for explaining.
+>=20
+> > possibility of async updates continuing after the inode lock is dropped
+> > we now need extra protection.
+> >=20
+> > Any async updates will have DCACHE_PAR_UPDATE set on the dentry.  We
+> > simply wait for that flag to be cleared on all children.
+> >=20
+> > Signed-off-by: NeilBrown <neilb@suse.de>
+> > ---
+> >  fs/dcache.c |  2 +-
+> >  fs/namei.c  | 40 ++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 41 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/fs/dcache.c b/fs/dcache.c
+> > index fb331596f1b1..90dee859d138 100644
+> > --- a/fs/dcache.c
+> > +++ b/fs/dcache.c
+> > @@ -53,7 +53,7 @@
+> >   *   - d_lru
+> >   *   - d_count
+> >   *   - d_unhashed()
+> > - *   - d_parent and d_chilren
+> > + *   - d_parent and d_children
+> >   *   - childrens' d_sib and d_parent
+> >   *   - d_u.d_alias, d_inode
+> >   *
+> > diff --git a/fs/namei.c b/fs/namei.c
+> > index 3a107d6098be..e8a85c9f431c 100644
+> > --- a/fs/namei.c
+> > +++ b/fs/namei.c
+> > @@ -1839,6 +1839,27 @@ bool d_update_lock(struct dentry *dentry,
+> >  	return true;
+> >  }
+> > =20
+> > +static void d_update_wait(struct dentry *dentry, unsigned int subclass)
+> > +{
+> > +	/* Note this may only ever be called in a context where we have
+> > +	 * a lock preventing this dentry from becoming locked, possibly
+> > +	 * an update lock on the parent dentry.  The must be a smp_mb()
+> > +	 * after that lock is taken and before this is called so that
+> > +	 * the following test is safe. d_update_lock() provides that
+> > +	 * barrier.
+> > +	 */
+> > +	if (!(dentry->d_flags & DCACHE_PAR_UPDATE))
+> > +		return
+> > +	lock_acquire_exclusive(&dentry->d_update_map, subclass,
+> > +			       0, NULL, _THIS_IP_);
+> > +	spin_lock(&dentry->d_lock);
+> > +	wait_var_event_spinlock(&dentry->d_flags,
+> > +				!check_dentry_locked(dentry),
+> > +				&dentry->d_lock);
+> > +	spin_unlock(&dentry->d_lock);
+> > +	lock_map_release(&dentry->d_update_map);
+> > +}
+> > +
+> >  bool d_update_trylock(struct dentry *dentry,
+> >  		      struct dentry *base,
+> >  		      const struct qstr *last)
+> > @@ -4688,6 +4709,7 @@ int vfs_rmdir(struct mnt_idmap *idmap, struct inode=
+ *dir,
+> >  		     struct dentry *dentry)
+> >  {
+> >  	int error =3D may_delete(idmap, dir, dentry, 1);
+> > +	struct dentry *child;
+> > =20
+> >  	if (error)
+> >  		return error;
+> > @@ -4697,6 +4719,24 @@ int vfs_rmdir(struct mnt_idmap *idmap, struct inod=
+e *dir,
+> > =20
+> >  	dget(dentry);
+> >  	inode_lock(dentry->d_inode);
+> > +	/*
+> > +	 * Some children of dentry might be active in an async update.
+> > +	 * We need to wait for them.  New children cannot be locked
+> > +	 * while the inode lock is held.
+> > +	 */
+> > +again:
+> > +	spin_lock(&dentry->d_lock);
+> > +	for (child =3D d_first_child(dentry); child;
+> > +	     child =3D d_next_sibling(child)) {
+> > +		if (child->d_flags & DCACHE_PAR_UPDATE) {
+> > +			dget(child);
+> > +			spin_unlock(&dentry->d_lock);
+> > +			d_update_wait(child, I_MUTEX_CHILD);
+> > +			dput(child);
+> > +			goto again;
+> > +		}
+> > +	}
+> > +	spin_unlock(&dentry->d_lock);
+>=20
+> That looks like it can cause stalls when you call rmdir on a directory
+> that has a lots of children and a larg-ish subset of them has pending
+> async updates, no?
+>=20
 
+It can certainly block waiting for other operations to complete, but
+that is already the case when waiting for an exclusive lock on i_rwsem.=20
+Any thread that has already tried to get that lock might get it before
+rmdir eventually succeeds.  So I don't think that is a behavioural
+change.
 
->
-> Thanks,
-> Kan
->>
->>> Thanks,
->>> Kan
->>>
->>>>>    then
->>>>>      echo "Leader sampling [Failed record]"
->>>>> @@ -243,15 +243,15 @@ test_leader_sampling() {
->>>>>    while IFS= read -r line
->>>>>    do
->>>>>      # Check if the two instruction counts are equal in each record
->>>>> -    instructions=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="instructions:") print $(i-1)}')
->>>>> -    if [ $(($index%2)) -ne 0 ] && [ ${instructions}x != ${prev_instructions}x ]
->>>>> +    cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
->>>>> +    if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
->>>>>      then
->>>>> -      echo "Leader sampling [Failed inconsistent instructions count]"
->>>>> +      echo "Leader sampling [Failed inconsistent cycles count]"
->>>>>        err=1
->>>>>        return
->>>>>      fi
->>>>>      index=$(($index+1))
->>>>> -    prev_instructions=$instructions
->>>>> +    prev_cycles=$cycles
->>>>>    done < $script_output
->>>>>    echo "Basic leader sampling test [Success]"
->>>>>  }
->>>>> -- 
->>>>> 2.48.1
->> The code changes look good for me.
->>
->>
+I'm not concerned about walking the sibling list under a spinlock if the
+list if very long.  Maybe I could periodically take a ref to the current
+child, drop and reclaim the spinlock, and hopefully continue from there.
+Doing that on a non-D_PAR_UPDATE dentry should be safe.  I wonder if
+that complexity is worth it.
+
+Thanks,
+NeilBrown
