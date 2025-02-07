@@ -1,153 +1,97 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2011F4E56;
-	Fri,  7 Feb 2025 13:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED8F1F37C6;
+	Fri,  7 Feb 2025 13:32:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738935149; cv=none; b=sTwfZfeW9VoZ6s0Wz6GBWlAg1cfkEz59OHWOGD6Zcws1YXQsR7t3Em3VOXULCdkc0+8faF/acmILhi/F7/vK2sBqjUTeg2Z7y2CcSnTmbRk8943TjOOc9nBSjFpSBf437I9YNteuP+34vFGujMZq3gzCrdU/yYlQ7MvTE8fLcZw=
+	t=1738935180; cv=none; b=BdNS6QUZ1IZ/PlU/gdUSqEggyKCCq2HPley2dtkWxLqpyO9vGmF7wbL7RvcIwkadvoseXphazT1K38YVPaCO/D4gbYXuUnZqLVXGj2YurpKm7TUVeV0WDxkoTo0sOJr84KqdDDdGIG86MtMP9TuZEHeywwcmfVQy/iiZRL/AvW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738935149; c=relaxed/simple;
-	bh=p/LLNspP63XeDluK8n1bB3ApPN0HiknOfwCoEOeBPsY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hZp7v2G/8UGCb1rJQMI4LE5po7VvqCdDPwnYgGoHK/Q1ZeQiPoelaRD0Fh5KXAN6VswEGQqMinUbK/MlhPiVrkC0RraXPIpkrJtsaVWKcS6GVPqYuoC8UqKKMbIPlBNLJNYgMcSzLKWD3n2tOm+ZNgUISc6ibDMiNcsgvPkms48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j+5LtLQz; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738935180; c=relaxed/simple;
+	bh=WFmNlRT/1piaJgm4c0NfJA8P9P62SmS6UdgYC76xKuM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lk38cJ16Ey8FIinMe+8P/TJBLgRZIXuZZVPVOCRinveHpZ5g2JLjyr3lirPcz5+LPq9v0UZXetaJLaIld+i+Lmmrn7Vigp00UnhxzrPBE7SKycbYFOTZaQ+KU13X8TGMF7G8Ojh1RmGNFUXhw1rsJCxQt92PgNJ3tzaPLXtb380=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ikZHdtyb; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+5LtLQz"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f5660c2fdso9590525ad.2;
-        Fri, 07 Feb 2025 05:32:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738935147; x=1739539947; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R57PZ40vsMBhmQU5DVB3HkIVq/yRk+LSm6ONd5T9PSk=;
-        b=j+5LtLQz4hKl9OtugRZi89BG3nF+IzTUkizVR2EhR3vMCOMOTUu9sovFpSgTCZEKBu
-         OMqY74VB9t13J3ad349EmLTqTkQbPmve3TL1OUuit1j/nJuuEurkIEy5y1QRoLIBy065
-         PS819Ny5ET663NbQbcxzbq3WIVUXyeOJDnKI2DZUOAxFJr0SjXxunY9gX2pFRrPwxKD3
-         xXYt2f9jdJMnbdZIqr8WHoJ1GpULB56GOG3YG8nsa8v+yu/Q0qhpLReiYCZdmUHZTqoC
-         0lG9bS4QfIorrgWs07KxwTL+yiSWDw4o4w//82VcyN/EOWswXUr2kVxMgtemESPQKCfE
-         84MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738935147; x=1739539947;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R57PZ40vsMBhmQU5DVB3HkIVq/yRk+LSm6ONd5T9PSk=;
-        b=hWiSmHI3r/IMbx3ML3DzwkgCO9Bv9V6vo6SR50vYv8hTzyELDDE+99j66+dx955n3d
-         qubvMEAL55pcBGA2PdLO/KbJcPdjOf7TpFMMkXVUs1YJC+1BnWJ1SEbIuBAEHJ3L5vnK
-         C6VcKh99ipFTpqpbD7r4RanmCFDBSJK25fVIXMZh6p5GiN7l/GdjhfVNOJklBosA/hJN
-         T5UOVo5vL7SYYZAagYUlhswzy5VbWn+Oq9XcXz/FVoi7/y149xB06lcPojUb/sWFK3u1
-         1tOBmL98PpCzLIvOKKS/9hAySG68/ezbM08X3rXi9krC6xKARIqEqtwitKGhlkn+Ulny
-         RpeA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbisuUmNKbqOrXXepEnpOdTa4rUdIRkchMEjgGKwEMJhvEECZ6Y0VBADMyUMPMKh0WRx+NxWWnQpXGpgCc8Ao=@vger.kernel.org, AJvYcCWNZEVKb25KXh4Edt/tthZlTl4oTK/gD0eJbFQgbvHm94vno0w5G4ddgqixoikJz6TAai8U+mY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNejoInx3c1o2mRWt9tlXzF99TONmywtwsBXQ0iiyHaxFQVO3l
-	QWDkUYlNgnXCZto1ab1l+QKhtE9694x8Vtc+tmPgmDzfxHIbYKCdN+l/L66V
-X-Gm-Gg: ASbGncvm/tQQhDBmzHMtUsK9qEWMCEk6BVddoOPvVVizNDXxLojhlh8ToTT3pVm61Ir
-	HnaVhXk5bEBHBjsYUP7PbGNHTifgCV6Q4zK5ee7k/e/jUS2Fk+8bA0nQc1d3nwMLS4G0F2qflkD
-	xvWDddc9+j+UMFHkXrlPlwW34DNn6CTptr+jsRMMfwTbU7hGni7e4l19TMVrExSYOKK8GFKeGwX
-	9YUVoRt3tKBp+XJfEWphYHX1td+wEBeXdBqRB+9RvBdx02pTiKjaPL4WREkvk9uH5hGSb7F0Zfb
-	yFmGVl1/CcmfVR/IiNr936+Jk8L2Mgfq1EENOBEvz/aXbbvonlRAQ03Bm6qsDlAE7+w=
-X-Google-Smtp-Source: AGHT+IHhtSG2duMocArmnuRm1/YUB2+aUWDxsujnMBlnADYjatNoIUDc8APNR9zWnp5zI5ykScedxA==
-X-Received: by 2002:a05:6a20:438c:b0:1ed:a72f:bed1 with SMTP id adf61e73a8af0-1ee03b5a90emr7910761637.32.1738935146765;
-        Fri, 07 Feb 2025 05:32:26 -0800 (PST)
-Received: from mew.. (p3882177-ipxg22501hodogaya.kanagawa.ocn.ne.jp. [180.15.148.177])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51ea79a47sm2877843a12.76.2025.02.07.05.32.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 05:32:26 -0800 (PST)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Gary Guo <gary@garyguo.net>,
-	rust-for-linux@vger.kernel.org,
-	netdev@vger.kernel.org,
-	hkallweit1@gmail.com,
-	tmgross@umich.edu,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@samsung.com,
-	anna-maria@linutronix.de,
-	frederic@kernel.org,
-	tglx@linutronix.de,
-	arnd@arndb.de,
-	jstultz@google.com,
-	sboyd@kernel.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	tgunders@redhat.com,
-	me@kloenk.dev
-Subject: [PATCH v10 8/8] net: phy: qt2025: Wait until PHY becomes ready
-Date: Fri,  7 Feb 2025 22:26:23 +0900
-Message-ID: <20250207132623.168854-9-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250207132623.168854-1-fujita.tomonori@gmail.com>
-References: <20250207132623.168854-1-fujita.tomonori@gmail.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ikZHdtyb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=7B6nKxsZ/sgpbYSbmczXl/HDAlWGMnjUjIEUqDEu3fE=; b=ikZHdtybyl/A4VFw2VkwQGYUTI
+	I5VXMO2Dsq9C6j9NPVSnVHI8byHRtV/uaWU/t71xO8V9YWONlWrw4NkA31Qgj7jaXKhYUM+5sSJwd
+	EGZH7ss/mH8O6TO7DqY00Yy1HTQRU6CUGICBH3CUAKUQ5s0GbwiSc7s9zIREc3Phv1Fs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tgOT6-00Br1x-S2; Fri, 07 Feb 2025 14:32:28 +0100
+Date: Fri, 7 Feb 2025 14:32:28 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+	Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
+	Jose Abreu <Jose.Abreu@synopsys.com>,
+	David E Box <david.e.box@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+	David E Box <david.e.box@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jiawen Wu <jiawenwu@trustnetic.com>,
+	Mengyuan Lou <mengyuanlou@net-swift.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH net-next v7 2/7] net: pcs: xpcs: re-initiate clause 37
+ Auto-negotiation
+Message-ID: <12e86fbe-9515-4b81-951c-8bf86e2939d6@lunn.ch>
+References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
+ <20250206131859.2960543-3-yong.liang.choong@linux.intel.com>
+ <Z6TVmdCZeWerAZKP@shell.armlinux.org.uk>
+ <564ede5d-9f53-40be-9305-63f63b384e15@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <564ede5d-9f53-40be-9305-63f63b384e15@linux.intel.com>
 
-Wait until a PHY becomes ready in the probe callback by
-using read_poll_timeout function.
+> Good point. I cannot find this scenario in the datasheet. Please allow me
+> some time to test this scenario. I will update you with the results.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Reviewed-by: Gary Guo <gary@garyguo.net>
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
----
- drivers/net/phy/qt2025.rs | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+By data sheet, do you mean documentation from Synopsis, or is this an
+internal document? Assuming the hardware engineers have not hacked up
+the Synopsis IP too much, the Synopsis documentation is probably the
+most accurate you have.
 
-diff --git a/drivers/net/phy/qt2025.rs b/drivers/net/phy/qt2025.rs
-index 1ab065798175..cdf0540f0a98 100644
---- a/drivers/net/phy/qt2025.rs
-+++ b/drivers/net/phy/qt2025.rs
-@@ -12,6 +12,7 @@
- use kernel::c_str;
- use kernel::error::code;
- use kernel::firmware::Firmware;
-+use kernel::io::poll::read_poll_timeout;
- use kernel::net::phy::{
-     self,
-     reg::{Mmd, C45},
-@@ -19,6 +20,7 @@
- };
- use kernel::prelude::*;
- use kernel::sizes::{SZ_16K, SZ_8K};
-+use kernel::time::Delta;
- 
- kernel::module_phy_driver! {
-     drivers: [PhyQT2025],
-@@ -93,7 +95,13 @@ fn probe(dev: &mut phy::Device) -> Result<()> {
-         // The micro-controller will start running from SRAM.
-         dev.write(C45::new(Mmd::PCS, 0xe854), 0x0040)?;
- 
--        // TODO: sleep here until the hw becomes ready.
-+        read_poll_timeout(
-+            || dev.read(C45::new(Mmd::PCS, 0xd7fd)),
-+            |val| *val != 0x00 && *val != 0x10,
-+            Delta::from_millis(50),
-+            Some(Delta::from_secs(3)),
-+        )?;
-+
-         Ok(())
-     }
- 
--- 
-2.43.0
+> > What about 1000BASE-X when AN is enabled or disabled and then switching
+> > to SGMII?
+> > 
+> According to the datasheet, a soft reset is required.
 
+Do you know if this is specific to Intels integration of the Synopsis
+IP, or this is part of the core licensed IP?
+
+We need to understand when we need a quirk because intel did something
+odd, or it is part of the licensed IP and should happen for all
+devices using the IP.
+
+	Andrew
