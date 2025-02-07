@@ -1,116 +1,95 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602C41E0DEA;
-	Fri,  7 Feb 2025 12:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3331E04AE;
+	Fri,  7 Feb 2025 12:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738930709; cv=none; b=oqMlNz9gCYFE4csB4Qo6NDjUR7JZIOTOicxZR7wsYVwJE7wVsWFb15aWpBoDQtEoBVTcpG9FbA/7koOUQx6Ytm+TH+81tMsVKxt2FJzw0W7SeXbImGfoaK9Mh+Dk7gal7AuYBgSsNqUqTTv2uyfbG+whFX5l3cIGzfyUVrMeNGU=
+	t=1738930760; cv=none; b=fa3T0YVzhVbZornjQ7TfyTCBlPFY8v8tLdp4UgM5239nu41c/5H0QhbLAgWzumS+D0vSvjW2qpy+peNPq26sjLP6IE30R2LSr7rjbnitX8gPktDhxysCRYiSE1ZT8uBB4J6J5ZqEvEKumsKJdNltFLuy4RKqY/fro6hk6sKcslM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738930709; c=relaxed/simple;
-	bh=gq6zzef9mN8VOP/B8pyInYMmzd2Gmkc2yEJH/o9LvxU=;
+	s=arc-20240116; t=1738930760; c=relaxed/simple;
+	bh=oDwmjypt8/G6DWzsb+Ic2fOcU6ddc9XqAgb0jGDaN50=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DXWTgTpsB4TMFXzAyyH5u25wtizZ2pwMU1mszK7WBRAexi2MrJiqvT6geQQCpVV1+TGN4EmlfkImJgTnlLxxw6kd/IJPABN16R2I4KvDQSmno59XqPyZtQIy67gX9whusqqL/phi0bNQbPCxK13NjQ6CqcqMoVim1ruzP3v9o3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vh1+POEC; arc=none smtp.client-ip=209.85.218.43
+	 To:Cc:Content-Type; b=hPghhj+/zqbXy1kQ00CHHIh3znqpi0W5feq14c5zkykRQxTHHeMOj+1P+zWqeT/d8gi5io4acwT8/j10+k6sCLcP9bBJISLNysGfEZzBz3ex2YACnBB4aBEQHsWNWpYL314cGqHw5WFad7gRc2AcPpIwbqMXLoL8tBMDoKw4OdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GOfuzZ5d; arc=none smtp.client-ip=209.85.216.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vh1+POEC"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab7157cf352so602818766b.0;
-        Fri, 07 Feb 2025 04:18:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GOfuzZ5d"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fa122f62b5so340376a91.3;
+        Fri, 07 Feb 2025 04:19:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738930706; x=1739535506; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738930758; x=1739535558; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9AnS6zB1IqaiTJ947vhQew0524hQrc2UQ2tC8yNLWiQ=;
-        b=Vh1+POECCSJFUpcHO5CVu7ONdQH24wUHOq5Gg6+oHKBQifbTxcMKQ4dFQYh4oZQ1xV
-         zl86Fbwk4W3l4ekGBh5l3oBjtsAlf/wlg96GypRke/3OQvbVrrkrCDxuDQQk/ZNTLt4r
-         fZ3pSNuOfw5K8MK754dalxmlXV1umz7eyxXHYyooCupnt8uNs6Rby2acfvws5ABUgvn6
-         bw64a4Eon29b/olyBl+AkFz7if1f79D43haxQCd2Hu6qOyg9Li6a/w+c6BY+An28r5oK
-         IBJuUsEXGCvHYPbQfRDIHybGYo9C+M3iN17gsixYnrJ1kyiMjj8wu2n7bq3SzTHU/gir
-         Sb1A==
+        bh=oDwmjypt8/G6DWzsb+Ic2fOcU6ddc9XqAgb0jGDaN50=;
+        b=GOfuzZ5d7mEUcWOx6bm2Y/YoZhPDsfVTwjS+pkEieitNzmFhuVuqch991NFrUIHHte
+         PXUBC4j1r78WliRIZHf0LfhRkaP0hmaRVIciWd+UIJymvXjpGGs6YvaYiODvebyeQFa0
+         rvyS/Hk9RHPVuCwSQO8VWAklwEJyfmE2b3u0KzIQzHlVcVozzy0d9NMVIqcbO0/kRUvR
+         onLiU8iupNezZhIU6zIF2cJK0GJRndWZ4KtAXJZOg9YpzUpvUH5a+RYhMZkS9wS3n+AH
+         l/2NE1Jn6P5siSVS9rVc//sCvOuSeEXEReaCY+5S0JaDgHoEsTKubBRcf/GM3ZT3GCmM
+         sv7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738930706; x=1739535506;
+        d=1e100.net; s=20230601; t=1738930758; x=1739535558;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9AnS6zB1IqaiTJ947vhQew0524hQrc2UQ2tC8yNLWiQ=;
-        b=vo+XKRxIyZmZmXWi+v+18C2DMqKYZhh9JrIB5BV0g/280l4dvVhw3mWwD/dpv6lIUF
-         6vhQI1vLM7hKdRqi04W4en15gb2PD/v4bPd/D+VIjcg3E+U1uM4WaxjmC+CGNOGvs/qz
-         bt+gL+6MFrapsySilxOkVgUceHxPpOKe6zk/S7FcSlh+M18sjzQUDy6xBy+Y6py2ktNN
-         PgCXG4XYY4/DFKoFdYA9oTeun3u0DLurTNSNUw7GugeZ/Q6VUVpEBF1DQJKBFW2MGZ9h
-         sI+FtOzPbYpv3D3YGXFHLMMR7j2vdjCb73RJn/Q8997R1fnHTkj/wG2HgJBUjEfR/Pu4
-         HJXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbDnazlTZwKvLePK0R5xaK2oy2eeLYZeoqf6wJ1EtG3rSYkr/xvpAb+sfLxsgQCGTF4lnb9GDVfaNyWvSg@vger.kernel.org, AJvYcCVs9MMUgPq5EWF6nOQkjqVXNS8l1cfLyukBAbj5jdgY/y8gX7VCznpzKJ5BwnKSCLQ73e9VAA0Y@vger.kernel.org, AJvYcCW/KtSt298qM3AndR3RRgq+Iypww5WH0sHugUPVkUAxioQaRKNCQ807u1gkwxMgpFcGm76jVlYQqkBJ@vger.kernel.org, AJvYcCWH3dzJz2IXwwEOt5JGf6OChfJFkWi/A4QzPhx4A7beDalL22ybBcjHKScrnI4OnoQdJKG2Y5IhUE2p@vger.kernel.org, AJvYcCXBslRLkZ2BzVNXcbJEXn8wX+V5wpw0CBEU4MwMGoyksb4CHkG05Vj+QJYeeeNlRRvATTfTP+Jjy3Xqtqw=@vger.kernel.org, AJvYcCXoMvEAGaZX/tPDRhZ4C8S2fZkPfSsIiofNP4b9n58vP+RwHJKqhuYrjLi4nPhB2mYGjvvA4mIvtNL0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/QDr/ZzUqxXMdddLl8NOHIOXQllS1tlDvTRUtZgW7jFG/Gngl
-	0RRPJGeM6/A4IR4jr9fPUNyhLtT1yDPXY3BjRyvbC/aLkV1V1b/meEEe6Kjn+jGLnp2Bs0RcnlU
-	0BRtsTdhCS8vixJ6fwLNZbGS+K3E=
-X-Gm-Gg: ASbGncuaypk84wAVujQnSDuCaDxgoKsimEyUset/XF+7Upek00IbVUMuK6iMWcNF0x5
-	9pJcdjTqu/PFqizYwbtJTGKouhhXbnzF7Brl4ZPtcvMhDbx9SHk4UJujAthSjF5fdaSwenYCRnc
-	o=
-X-Google-Smtp-Source: AGHT+IGlS0cVAd0st91xU2D48nCL2gCa3SCGAKqVvd3cM5wglhTfa7vJ1XBkyOj94B8CwdZQN+GSKTNE0VwWA7/YmEo=
-X-Received: by 2002:a17:907:7e97:b0:ab7:63fa:e4ae with SMTP id
- a640c23a62f3a-ab789a9a583mr278038666b.4.1738930705331; Fri, 07 Feb 2025
- 04:18:25 -0800 (PST)
+        bh=oDwmjypt8/G6DWzsb+Ic2fOcU6ddc9XqAgb0jGDaN50=;
+        b=XjjEYjkWFYRb53xJVcRd+gMjwgPJE9tjPj5wj97sjKeri2Lu7yxE+KSnlYf3RChHvE
+         It9zNH5Ji28nrRnoVSXlXCMPji6xb20HUoeLIq9SG6vWyO0txz3TXR3D6Rheb0eGR8ux
+         vA8RDPc0Ddu1zX+Er6FAhJPKzFDy4G0yYUTDSgLog5TwIBdgrKIsIvJBr8a3ziEtVdZy
+         zNU/iUjNNxi4QDzdaYHQh+LQLdc0GuZ5G6gOHX5pqBG+9wGJgh+scbsVEaWkkFrwUTXM
+         6l0crVVBz11hKTX9ey7L5jOvv44EFKCPSoxa50o2QlSYV7v8OqsqeFxja+Xg5nj6O/M/
+         hejw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4efwJpauv0B7VFQazmvailql7Yl6VLyxzdC1LkTER2W/IcJNrlLcWEYavl2S7MOpuW2tIKzLnZDsgjPIpNY4=@vger.kernel.org, AJvYcCVpdVBDC9z9njofsUvrNdx+5CzWT5DIIqmvEAyCtMpYUSfY6y+24SdBK26hotRcZOvwGstoLsnMDjiVGlk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywwo/LNyYeckjejnPQJlrYSzUpw6HO3VFui1MqqI9BfXUo7NlGn
+	JsldnyotlwzbI+Bwg4EfuWA8nH8kfYKwsRshYoBgDVwUN8ylfRjev2mE5Ow9d0Zjq63qlVzZ4Vc
+	kD3JNYSE+pURIQD/lJxoPuhy3v6k=
+X-Gm-Gg: ASbGncuMbvSipKmzWuUUOVeVMKf/G6Hd3aHOLeCgLtFx47e4b7jTAMZJXVOL921oQtJ
+	wD2OEAMpS4y5jPEuEe1pTuOLwVAD+5OF9XRQbB0+Xb4ok4fKbw7vyMTP0ezkbFxHZN0VqXiAn
+X-Google-Smtp-Source: AGHT+IFkNnQhokYL4R1tAFkCPTJBGfOs+kfO+CfhEhcWR3WujUHlCLaheoFzIor7FdQwpA8Wy95zSOkgf3PXLHL+4tA=
+X-Received: by 2002:a17:90b:3844:b0:2ee:6d73:7ae6 with SMTP id
+ 98e67ed59e1d1-2fa2455914cmr1706312a91.7.1738930758009; Fri, 07 Feb 2025
+ 04:19:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com>
- <20250206-gpio-set-array-helper-v2-4-1c5f048f79c3@baylibre.com> <CAHp75Vf+3pc84vV-900Ls64hM1M7Ji6Dmy8FPwL=n0=sJFSuVA@mail.gmail.com>
-In-Reply-To: <CAHp75Vf+3pc84vV-900Ls64hM1M7Ji6Dmy8FPwL=n0=sJFSuVA@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 7 Feb 2025 14:17:49 +0200
-X-Gm-Features: AWEUYZkSs8v-7WJQOys6Nw0fuSh0Pf6jrpjU3caLBhYNMllzG2w7Y5BACdTLgxs
-Message-ID: <CAHp75Vdt5EU83mJrB7Sb_pgRNbhvCQ=F2Lyq7mQLAvV-w6cqEA@mail.gmail.com>
-Subject: Re: [PATCH v2 04/13] bus: ts-nbus: use gpiod_multi_set_value_cansleep
-To: David Lechner <dlechner@baylibre.com>, Yury Norov <yury.norov@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andy Shevchenko <andy@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, 
-	Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
+References: <20250206-aligned-alloc-v3-1-0cbc0ab0306d@gmail.com>
+ <Z6UwCtaO-qVYEN2Z@cassiopeiae> <CAJ-ks9kvrBBLTnEmRPbrkoHYgg6wrXoTVXh8ecqYBSPTfpjx2g@mail.gmail.com>
+In-Reply-To: <CAJ-ks9kvrBBLTnEmRPbrkoHYgg6wrXoTVXh8ecqYBSPTfpjx2g@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 7 Feb 2025 13:19:04 +0100
+X-Gm-Features: AWEUYZlJUi-5tupzy-7IWx-TvdGH6k6ZORV0lBRzfg6ZrCg-hLR9RW2vOKIIxzw
+Message-ID: <CANiq72=P3O5Q=S4JBVGY0B0t5xSfMYGu3YbhT6SQmbVcAkEA8A@mail.gmail.com>
+Subject: Re: [PATCH v3] rust: allocator_test: use `posix_memalign`
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Alejandro Colomar <alx@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-+Yury.
-
-On Fri, Feb 7, 2025 at 2:15=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Fri, Feb 7, 2025 at 12:48=E2=80=AFAM David Lechner <dlechner@baylibre.=
-com> wrote:
-
-...
-
-> >  static void ts_nbus_write_byte(struct ts_nbus *ts_nbus, u8 byte)
-> >  {
-> > -       struct gpio_descs *gpios =3D ts_nbus->data;
-> >         DECLARE_BITMAP(values, 8);
-> >
-> >         values[0] =3D byte;
-> >
-> > -       gpiod_set_array_value_cansleep(8, gpios->desc, gpios->info, val=
-ues);
-> > +       gpiod_multi_set_value_cansleep(ts_nbus->data, values);
+On Fri, Feb 7, 2025 at 12:43=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
 >
-> As I said before, this is buggy code on BE64. Needs to be fixed.
+> I'm happy to wait for clarification, I'm just not sure whose court the
+> ball is in.
 
-Or isn't? Do we have a test case in bitmap for such a case?
+Ideally Alejandro would clarify, who I Cc'd in the previous thread (he
+was not Cc'd here, by the way).
 
-> >  }
+Anyway, I agree with Danilo that we shouldn't overcomplicate just for
+this. Using the previous patch, but being clear about that we are
+using stricter requirements so that it works on macOS too, should be
+fine I think. But I trust Danilo to decide which approach is best for
+maintaining this.
 
-
---=20
-With Best Regards,
-Andy Shevchenko
+Cheers,
+Miguel
