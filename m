@@ -1,151 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6424123F262
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D02238D56;
+	Fri,  7 Feb 2025 14:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738939660; cv=none; b=TRcAoPfi/wvjztDGh30mkLyz+I6PkeS454uJsjooXGxhJkV3jxAZsGNg6RSRWKSUNAlEVrEfiWV8SfHIBWZ3fsVZ9jyzcHBbpOsukPQuPq5FFy1gwZHHY5bk/XzvAPX2wjmKNGNl0sVA/3OdYe1cIotQM+FjfPMcq8udtluMu/g=
+	t=1738939723; cv=none; b=ttp7uhJoGH+shfo3HxXqddmU9rGpcZtvHfz5mA1Y/Wzq1UbSGhm1nzPIesiAKf7319kPX/iy5V0CKZRIN44CmKQ8t92dPoZ2GkJBo6jbQ51omv3WL5k6VZckJ8+Cqg/fpOzB0uTbknBgDnbut1s8pHBad2GeVx2hhZLINWhfDxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738939660; c=relaxed/simple;
-	bh=4RzRWhPUAVTh44sBQz5oaGdRaEsluRgEDlbi7AL24bI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r1kER59r/aHMx7Trtvo0q0Bf99pwqN9TXHQyTONYCBiVlKwzLotyByWovW9DmhmDEVYt5xl4pZTBGpb8ujIcBBqzw8tYyfnohEeihGvz0lebYLec5soB0CRY5wi88SekuRutmf8CcVqdP9tec6OEi5wwlnT8MT5rfRU5SyFhvWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D6aKlY6C; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738939723; c=relaxed/simple;
+	bh=5XIlGZsiLQw2hQ6a1oSKBh7M9NzM4ngrTEXTXgaUFr0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mINKGWPh/VZPcg6QE0qHBdn/WagQNh3u5hH3O2qbCQsI8TJcwXMbwI/z6SpTvIxDbpQNm/RSuILYOKDRLvJY6TmqwrCWkHzPkYX8nNTY14k2Egdiuh97Tx2FOUzHYwKyeYzpR8lo6z8PEeE9EdW3EewXHOhSNpEKE4IQTh+pu8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UaI62Dec; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D6aKlY6C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738939657;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8bv6etYsyi7Sbut9bO5Una9NY4dIImLZ4Vx56C3VC9k=;
-	b=D6aKlY6C/DVlq5zbYERR2noMCD1vL1yTl0wLogDfM3HcqA6G0wb8p2WjQaBtI/44WVX22H
-	XZNyAnF9LC/ez+TF9+N4FE1Z8klMmVxpdoy/dfCojm9Orxh2urHbKG7mVkc/riiqhqECYS
-	gBSUsgWnlIrOT2BaaqE5BjWeIsNvgxc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-339-LMv5HxPcNsS1atmef1M9Jw-1; Fri, 07 Feb 2025 09:47:35 -0500
-X-MC-Unique: LMv5HxPcNsS1atmef1M9Jw-1
-X-Mimecast-MFC-AGG-ID: LMv5HxPcNsS1atmef1M9Jw
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4361b090d23so12327705e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:47:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738939655; x=1739544455;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8bv6etYsyi7Sbut9bO5Una9NY4dIImLZ4Vx56C3VC9k=;
-        b=mjt1V7nypGHVJ7ehwCFhYltXGbSBkS0AkHjLog3OtmTdXbS4TxeOeCyE5BvmLcFmIU
-         9lbRVP+d5JwW1wi+M+OpkmeXBoarSZHa0uZ+BoBVkS7ud8cImrQe1ko4PsXRbLwtBxkL
-         jJokMSiVDLA8KeOYjtjkv6OeK3chFDrzwmN01YhE3g9gKPbp6rg36wakxo81JWnyYRo7
-         LJZODe0hLkuHBie13Etr5atSBnLiTogHv4sWg28bqMjxYqSdSdkzAjmC5+Rb165iDrDP
-         MZOQpmV1SEyaiXxnA15+F5aXBdmY+YzSrN0yK1x8XVQ+zs+9mvvQlMvEiTJ2cS5RKsnU
-         ucHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJMHCDJa0hQel9suQI7bIMnkHEdXOQYliZxWZylrkStkgGfVROItPHkENFnv93DYBI/9CpeM6fvBpsjbQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIo8M5f5q73pZnIFgiuvJNUjXkCr9fcsgzlNeWYpaHX4jCTL5h
-	eBRHNmADs0762EPqv9qAI32j4lne+xUhoRzz5OeAQN/rzvmUEWreM0xBAyreanNAlpsueYIjThX
-	Y7mpOVh8Pizd23GH2V6uP9jwdlZk8M0fF0Q/NVhxm7tyN6Qo9VEdZDYLOcec9hg==
-X-Gm-Gg: ASbGncv42odGM6QGnmxzLKIctFp/lWj+1BrMo4ZTOhYDa+OM99I5Im63hL9onG3yjI6
-	CdzpCx7AFH2ioRTB2Dn0dJDnl1w570n9nvaiPtVQgkwRO01HX6DXVZiQHUMxqknS1q9k7zFzfEA
-	bv53hBG32Z3yDjPzQ5WsL1CGlqt4IredIVnaCMgyared68EsNBO7CcDQulubtv4FuEXk9bsdcyS
-	NBSbDdf3IZBEqtdRK++oWqxK+OAz/UEY/Lbx7L5O79pfgl7f4KnfQKb1V4S9l/KbCW32aWtsaWU
-	qvx4NzosGaLFV+b1NeBJTv3aAJmt2uGcGaB9
-X-Received: by 2002:a05:600c:19d4:b0:431:44fe:fd9f with SMTP id 5b1f17b1804b1-439249b04e3mr29202005e9.23.1738939654677;
-        Fri, 07 Feb 2025 06:47:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGWSVFSye6dX0ZwjCow7MoC4gB4PaOUH9jwh4iqCn3EXYOKdOj/sEqkc/gAHwhMy+CsaAV0Xg==
-X-Received: by 2002:a05:600c:19d4:b0:431:44fe:fd9f with SMTP id 5b1f17b1804b1-439249b04e3mr29201855e9.23.1738939654304;
-        Fri, 07 Feb 2025 06:47:34 -0800 (PST)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.128.176])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbdd4df6bsm4766122f8f.39.2025.02.07.06.47.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 06:47:33 -0800 (PST)
-Date: Fri, 7 Feb 2025 15:47:31 +0100
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v8 03/15] futex: Add basic infrastructure for local task
- local hash.
-Message-ID: <Z6YdAxNRRbynfqEo@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250203135935.440018-1-bigeasy@linutronix.de>
- <20250203135935.440018-4-bigeasy@linutronix.de>
- <20250203142743.GI7145@noisy.programming.kicks-ass.net>
- <20250203155114.YVGnCHUT@linutronix.de>
- <20250204103447.GU7145@noisy.programming.kicks-ass.net>
- <20250205083926.etxnZAoP@linutronix.de>
- <Z6XVLqexaKZr0cy1@jlelli-thinkpadt14gen4.remote.csb>
- <20250207110050.stt_l7KT@linutronix.de>
- <20250207110634.GC7145@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UaI62Dec"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738939722; x=1770475722;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=5XIlGZsiLQw2hQ6a1oSKBh7M9NzM4ngrTEXTXgaUFr0=;
+  b=UaI62DecYncQ9pUWSqS9fWd9WXQjMj4yax8lx1MBOzLkp8RMG7MKOt5O
+   2pQG2HQX0UAus4xBpzX3/Mb4B+HKYx2VcPiA3GcubXQVHHfTglrpQmZnx
+   zWQfRzPaekFRSfN595rb9P+un5vlm/1bxy5b6MEcryiZ/o/vhkyL0no3n
+   guffdbB8E7r9x8Qawvu2mfB0ojKMrK4lj8YcF+HCSfrFTP/W3M9aOSjow
+   DArOSjFBvoqp9OcyhT4odd6iFXsruncMMklkpV1UPq//NBflV56rCXYSJ
+   ENMvz+si3OwPGj2J7UrKDoB8anD0zFEhlFvJXQK0M3f4HCAY6MJUsUNkl
+   Q==;
+X-CSE-ConnectionGUID: WgKSAi6CRwW5Cn822uCI4w==
+X-CSE-MsgGUID: CtYN7sAPQmyfHitXNazW7w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39274297"
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="39274297"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 06:48:41 -0800
+X-CSE-ConnectionGUID: 7Z+7UNi+QQe9rL9NzE4/cg==
+X-CSE-MsgGUID: DflmxkABT/WG7ezG8AN8Ww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="142415230"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 06:48:41 -0800
+Received: from abityuts-desk1.ger.corp.intel.com (abityuts-desk1.fi.intel.com [10.237.68.150])
+	by linux.intel.com (Postfix) with ESMTP id BB49D20B5713;
+	Fri,  7 Feb 2025 06:48:38 -0800 (PST)
+Message-ID: <4917ca35e5e0c7035f09c02d5080a69ed3e88c44.camel@linux.intel.com>
+Subject: Re: [RFT][PATCH v1 0/5] cpuidle: menu: Avoid discarding useful
+ information when processing recent idle intervals
+From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
+ <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Daniel Lezcano
+	 <daniel.lezcano@linaro.org>, Christian Loehle <christian.loehle@arm.com>, 
+ Aboorva Devarajan <aboorvad@linux.ibm.com>
+Date: Fri, 07 Feb 2025 16:48:37 +0200
+In-Reply-To: <1916668.tdWV9SEqCh@rjwysocki.net>
+References: <1916668.tdWV9SEqCh@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207110634.GC7145@noisy.programming.kicks-ass.net>
 
-On 07/02/25 12:06, Peter Zijlstra wrote:
-> On Fri, Feb 07, 2025 at 12:00:50PM +0100, Sebastian Andrzej Siewior wrote:
-> > On 2025-02-07 10:41:02 [+0100], Juri Lelli wrote:
-> > > Hi,
-> > > 
-> > > On 05/02/25 09:39, Sebastian Andrzej Siewior wrote:
-> > > > On 2025-02-04 11:34:47 [+0100], Peter Zijlstra wrote:
-> > > 
-> > > ...
-> > > 
-> > > > > Anyway, none of this solves anything when a process has both an active
-> > > > > RT part and an active !RT part (which isn't uncommon AFAICT).
-> > > > > 
-> > > > > Then the RT bits will still get interference from the !RT bits. Do we
-> > > > > want to complicate things and consider that?
-> > > > 
-> > > > I don't think so. The active and inactive are common but it is still the
-> > > > same process so you can expect it. The ugly part is when it is an
-> > > > entirely different task and it is random which one it is.
-> > > 
-> > > Not entirely sure we are thinking about the same situation, but it looks
-> > > like we have cases of RT tasks that are affected by the underlying issue
-> > > this set is about because they make use of libraries. So, in this case
-> > > we have a cross-process (RT/!RT) situation that I am not sure we can
-> > > address sanely. What do you think?
-> > 
-> > I wouldn't advice to use "unknown" code in a RT application and even
-> > threads. Audit libs before using them and not just collect them.
+Hi,
 
-Indeed, that is the message. But, you know, existing/legacy applications
-or applications "repurposed" for RT. :/
+thanks for the patches!
 
-> > A lock without PI in your RT thread is not good. A lot of locks, not
-> > knowing the "locked" time, also not good. Things that work most of the
-> > time due to the fastpath and only break from time to time.
-> > Also, a thread does fork() once during start up and things may continue
-> > to be good but may catch up eventually.
-> 
-> Anyway, supposing people want to tinker, it should be possible to split
-> the local hash based on if the address is mlocked or not.
+On Thu, 2025-02-06 at 15:21 +0100, Rafael J. Wysocki wrote:
+> Hi Everyone,
+>=20
+> This work had been triggered by a report that commit 0611a640e60a ("event=
+poll:
+> prefer kfree_rcu() in __ep_remove()") had caused the critical-jOPS metric=
+ of
+> the SPECjbb 2015 benchmark [1] to drop by around 50% even though it gener=
+ally
+> reduced kernel overhead.=C2=A0 Indeed, it was found during further invest=
+igation
+> that the total interrupt rate while running the SPECjbb workload had fall=
+en as
+> a result of that commit by 55% and the local timer interrupt rate had fal=
+len
+> by
+> almost 80%.
 
-So, fully agree that we don't want to implement changes just to target
-current broken usages, but wondered if there are saner situations (Peter's
-point above?) where the current idea might be further extended to.
+I ran SPECjbb2015 with and it doubles critical-jOPS and basically makes it
+"normal" again. Thanks!
 
-> This gives some obvious issues where people do futex_wait(), mlock() and
-> then expect futex_wake() to still work, but that should be rare. You
-> typically mlock before you start using the memory.
-> 
-> As always, mlockall is bad, do not use, like ever. But especially in
-> mixed mode RT programs.
-> 
+Reported-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
 
