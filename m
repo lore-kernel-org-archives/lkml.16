@@ -1,236 +1,193 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBA6238D27
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B2A238D2F
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738940149; cv=none; b=KqQ3U2f2tnstDWgwH0VLasquSpWX0Sq1+VbGFs5gtJq+dUBqOsNrXis9tzeD1ry/CUOKWgO/D+Nvx4GyAo/piBQ4oxB/UG+r1gNoztQC184QtfwaUnwODyH9RXOvUfA468mZw783u+9p+Zh2g4tB1N7m7/ad8kQgIDTJaYhdRYw=
+	t=1738940246; cv=none; b=OZ+C4BID+IrtLr0ErXM7XtOCQnm06rNHYTnqjXjojqScqtpb8v0RGC2UMKoD1TkG4GxNQDfx5uF+xIBUhlTV/LZLZvSi7XddNw1TuXz1ggxtOGwADos3eKf/7WldTdFs0sxDdYP21Fa3Q/jGj06V3yhFlIqqfzsFBRCU3PE40k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738940149; c=relaxed/simple;
-	bh=ps1zzEkNImieF8mbHoTKbxIx4PanamP60WsGwxnYYWA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MYNx4VvmsAy3su7kVh7TnEq/jLJEd/VYzOYxZZgFdrOlD+V7e+nBO9taYLYSJpArTyXLI8FilrUv/UWrglZMgIrvO8BRWdNih3E6Q0VDy0mQ2DBkySiID+RGC4bhzz2BwoL0uqPQIoObWW9MwO5XgKUIp6LSnF2Lme08F1FTbkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d6MwczPh; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738940246; c=relaxed/simple;
+	bh=Zlv8q7TgjhROaMibYT/4drmx95N9OLtbBAMv4y0Ny4Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tTaDknjyZtOJ73hhmI6k4joek0s86I5LXLoHZdfiA5TfaYecAbXpP3q8bXjJqxpCZP8kJuKCCqDn47IpI1R7QryMa6/eoIB9rOOLeSTxXDMdm9skPw7vF++CM7QcfJEbmnb8izeVxKHT4VPviXi4MQYXkZBI953w8/EIO+luv9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GdCNIYlP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d6MwczPh"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5de4c7720bcso1021912a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:55:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738940146; x=1739544946; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=daaNvLMzn/C14SPQHtJPlMGQZX0eBHgUr4X9JmhBDFI=;
-        b=d6MwczPh3qixMTJSmmI0xYIrQmuj40CPRK6Vt0AldkX3jOVeKyTsIhtr1/ExoYIJ0A
-         bdTQ8dPGSFBnCRlQXwu4haim6RrmJd15N7J022/SxY9ydueWMhNUwDx9W/mJiysFRGJ1
-         ai42TlxMf+6+sGAO/nwaKSq32AH1x/XbHxGUfng3PkoO8dNpNn94e9RJjPnLFqHyngSs
-         n/F08LFP28hEllBLIhlG/e9B5UVPjHafM8XthggoRifl3CbyloVvB7r2SsUmZYgaVyyO
-         Wt9pBj2+z4K/SFEQ8EyYhp54oF7tijFIkF6nT5JzXGB1R/Wu8qnpQft7c1k/55PchrDJ
-         UmXw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GdCNIYlP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738940243;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Zlv8q7TgjhROaMibYT/4drmx95N9OLtbBAMv4y0Ny4Y=;
+	b=GdCNIYlPz+P55dyflATsU94TnLwvvzPRSkr9mXJ3C5o/SwY63LK5zm3nr4nu12pOjhWg8f
+	Yz0d08d9YEOG9+FwlK7/GYW6KAb3mfZyaUVszTNmbPqAl/XS+DlQPxLS/jeGdyDMe6dWFo
+	6BOYJ7N+7n16n9k6XjGBuvjZoDN6uoY=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-495-C5KFWHdwMmK-FGYY8zDEiQ-1; Fri, 07 Feb 2025 09:57:22 -0500
+X-MC-Unique: C5KFWHdwMmK-FGYY8zDEiQ-1
+X-Mimecast-MFC-AGG-ID: C5KFWHdwMmK-FGYY8zDEiQ
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38dd0265d97so179681f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:57:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738940146; x=1739544946;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=daaNvLMzn/C14SPQHtJPlMGQZX0eBHgUr4X9JmhBDFI=;
-        b=s41SCTDE7ckvIVYuXg98qH2zhL4yfXTj+AZyvzGWE3io0mFbb71Firf3AoNXOHgqhJ
-         5do02LeFkTvCUDwJ5NaYlMPQiuKkW4BG2kylCtr4pNgc4h4wi38e5AZCSd7tne4VGpe5
-         lWMKGThbzeOZ79lF1sHRUxKwYi0bIxj2f9I7o0t+WstrDDjA/qT+LMpelaRzOJcBXIxB
-         39ZfDDNPt5NjBGMP2xltjEdA/WS/lcZFxus54pL5LX5zRM14P/QMDftHQvwritHSYvaE
-         UW1Cb8dSdVqeqf1r0GcrhwJhcyIkTAitP7EDVmsV+DdNQwJzRUiY3e4RxOUZa88rkSEJ
-         KIlA==
-X-Forwarded-Encrypted: i=1; AJvYcCW7PBfFMGmUMvnF/OrSTKKyX/L71oEny6cAq95OwuPXA7HuObexXSp7DTu4VZRAI5Qh/APo7GuN/fF0nNw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzl1ihinGZ9g/MjXCR+uZ5aRBFVlpFIo1uau7ROtfnztbYpj+CD
-	ALzTdTWlydy8kltMg1lDn9YLRY48bRLVruZ1u9iOtl/nfTjsipEJcE4NaXYcjX0oxfPwroYfFWk
-	DqOO0jbZibQHzxCPK7Xe5Bi2LUJYkx5Y8L3tI
-X-Gm-Gg: ASbGncvsVdZ729Gkq38ezJ0EhnS0O8l3H0lRDh+UWFY4M6Pgp0nKF2UwTPPzgbODP28
-	ShEedgRXrgE7DjBBbM3UvODeX6VHpw0gUix7oF49BlFy2DB/IWVMIgynpCf0LZNmwquuhBBty
-X-Google-Smtp-Source: AGHT+IFSsEet/4yJ/161O0Uvv6q3fbuknhI7ZPo2TFQ2ugoTZ1KvI6aQQGUzVl4jTas+kZyyjbO3zYDo95CL+8LTaLA=
-X-Received: by 2002:a17:906:7954:b0:ab7:ad9:7baf with SMTP id
- a640c23a62f3a-ab789a65709mr445745066b.4.1738940146034; Fri, 07 Feb 2025
- 06:55:46 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738940241; x=1739545041;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zlv8q7TgjhROaMibYT/4drmx95N9OLtbBAMv4y0Ny4Y=;
+        b=ssw6pQD0kqW1x5hGkyDl/20oKlhZGhhl+54PCM7ARl1ZXkrpoKrZaliWXN2uVpRUra
+         0zUTQ+AKuO/iEjN0/r3iawEvQIprFZ48ts03vP8bZcpx7FVR4iBArkxXXwOdkZhaBN8w
+         Xh+cr+R9xQb6bKPnqcLqtKgffxPIC/++9JmpC8jOSEW+i1jsFYz5Lyvz+9SnPoUxHn15
+         rFPjawaBgnmjxG4HQ5muKZ9sYi4IxrFDTgGQxzVagzRySuNLpE+KrYTuP0xVoq0gm56h
+         0TSgIWSP2Z1XvAPRRVS1WGLFAHlQ4oGUsmHAYTERv4vSRjx4++1Zm/kfH+pH+MmSHMwB
+         v7Dw==
+X-Gm-Message-State: AOJu0YwwWft/MTfruLERnwNNsAMuEU+YDJlvYQdWkF0deRC1GecgNan+
+	qaQLga9GKmryNhgnhVtwe7aTtNNkX7w9vvOBu3P/sTGu3nUO+Fjc+yOERKiL9hSkeijlPcssJmp
+	sKF2Pzx2xpBPNRnKNHUoWNzuS/mhYqoZwO3tkbvrVleQeWk18F2CLYmsIcfYHSQ==
+X-Gm-Gg: ASbGncsS/w8SMbt9fchEtICUO81QdMjYVzs4iGRqfAYavjCd5cbLeBy6ssaaD9Mq/Nc
+	Dq+CT4TfgY4tSBQdCypGzYapr8S8IIdPkp3nOoBlvYI2g45dPbGSmq7Ij4oTl5pgt3yHWbc++Ti
+	JAZ73jZ9Y4QhQETk5n65Kbw8n2NeywBL64McfyEcZc16ICJkbZk91KC0x2muy3NI9XdRoUAMgtt
+	eJmGGljwPnMtmkCDqbjZ4mBdujal/fZmcjGQeXncsUsO67fZvSryBpg4O2boCkhFzaVOwNB7wDo
+	F7yr8Y7/H9iDkaRGLgozqsM5LQa2msc=
+X-Received: by 2002:a05:6000:e8b:b0:38a:8ec6:f46f with SMTP id ffacd0b85a97d-38dc9351400mr2047643f8f.53.1738940241232;
+        Fri, 07 Feb 2025 06:57:21 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGsxt58t1ggpxOyV8Jw35Ibo+3DCejqzHyg3fxJQZBM9uxGG4KqiZt49GPYbE8JvBAjoXExpA==
+X-Received: by 2002:a05:6000:e8b:b0:38a:8ec6:f46f with SMTP id ffacd0b85a97d-38dc9351400mr2047621f8f.53.1738940240672;
+        Fri, 07 Feb 2025 06:57:20 -0800 (PST)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcc9bd251sm1608877f8f.9.2025.02.07.06.57.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 06:57:20 -0800 (PST)
+Message-ID: <71f969466238803df34d731bf9deafdf5f52c746.camel@redhat.com>
+Subject: Re: [RFC PATCH 00/11] rv: Add scheduler specification monitors
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Juri Lelli <juri.lelli@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Ingo
+ Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	linux-trace-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>, Clark
+ Williams <williams@redhat.com>
+Date: Fri, 07 Feb 2025 15:57:18 +0100
+In-Reply-To: <Z6YYPAiM0itlIVAH@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250206080952.98478-1-gmonaco@redhat.com>
+	 <czykavxpz46nwnelml6yorg3tvmyjvczqogeuqzji6qrfd2peu@qxr6wucv6mrj>
+	 <847c962745ef5bce757b9ae257ae279913ac711c.camel@redhat.com>
+	 <Z6YYPAiM0itlIVAH@jlelli-thinkpadt14gen4.remote.csb>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205163609.3208829-1-aleksander.lobakin@intel.com>
- <20250205163609.3208829-2-aleksander.lobakin@intel.com> <CANn89iJjCOThDqwsK4v2O8LfcwAB55YohNZ8T2sR40uM2ZoX5w@mail.gmail.com>
- <fe1b0def-89d1-4db3-bf98-7d6c61ff5361@intel.com> <CANn89iJr1R4BGK2Qd+OEgsE7kEPi7X8tgyxjHnYoU7VOU_wgfA@mail.gmail.com>
- <3decafb9-34fe-4fb7-9203-259b813f810c@intel.com>
-In-Reply-To: <3decafb9-34fe-4fb7-9203-259b813f810c@intel.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 7 Feb 2025 15:55:35 +0100
-X-Gm-Features: AWEUYZnJnHzdvKxve0MJIVdVjA-1GeUXFloJeOiMB6oD9CE892YP9IKOO_loV8U
-Message-ID: <CANn89iJNq2VC55c-DcA6YC-2EHYZoyov7EUXTHKF2fYy8-wW+w@mail.gmail.com>
-Subject: Re: [PATCH net-next v4 1/8] net: gro: decouple GRO from the NAPI layer
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: Kees Cook <kees@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@kernel.org>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, netdev@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	=?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 7, 2025 at 1:00=E2=80=AFPM Alexander Lobakin
-<aleksander.lobakin@intel.com> wrote:
->
-> From: Eric Dumazet <edumazet@google.com>
-> Date: Thu, 6 Feb 2025 19:35:50 +0100
->
-> > On Thu, Feb 6, 2025 at 1:15=E2=80=AFPM Alexander Lobakin
-> > <aleksander.lobakin@intel.com> wrote:
-> >>
-> >> From: Eric Dumazet <edumazet@google.com>
-> >> Date: Wed, 5 Feb 2025 18:48:50 +0100
-> >>
-> >>> On Wed, Feb 5, 2025 at 5:46=E2=80=AFPM Alexander Lobakin
-> >>> <aleksander.lobakin@intel.com> wrote:
-> >>>>
-> >>>> In fact, these two are not tied closely to each other. The only
-> >>>> requirements to GRO are to use it in the BH context and have some
-> >>>> sane limits on the packet batches, e.g. NAPI has a limit of its
-> >>>> budget (64/8/etc.).
-> >>>> Move purely GRO fields into a new tagged group, &gro_node. Embed it
-> >>>> into &napi_struct and adjust all the references. napi_id doesn't
-> >>>> really belong to GRO, but:
-> >>>>
-> >>>> 1. struct gro_node has a 4-byte padding at the end anyway. If you
-> >>>>    leave napi_id outside, struct napi_struct takes additional 8 byte=
-s
-> >>>>    (u32 napi_id + another 4-byte padding).
-> >>>> 2. gro_receive_skb() uses it to mark skbs. We don't want to split it
-> >>>>    into two functions or add an `if`, as this would be less efficien=
-t,
-> >>>>    but we need it to be NAPI-independent. The current approach doesn=
-'t
-> >>>>    change anything for NAPI-backed GROs; for standalone ones (which
-> >>>>    are less important currently), the embedded napi_id will be just
-> >>>>    zero =3D> no-op.
-> >>>>
-> >>>> Three Ethernet drivers use napi_gro_flush() not really meant to be
-> >>>> exported, so move it to <net/gro.h> and add that include there.
-> >>>> napi_gro_receive() is used in more than 100 drivers, keep it
-> >>>> in <linux/netdevice.h>.
-> >>>> This does not make GRO ready to use outside of the NAPI context
-> >>>> yet.
-> >>>>
-> >>>> Tested-by: Daniel Xu <dxu@dxuuu.xyz>
-> >>>> Acked-by: Jakub Kicinski <kuba@kernel.org>
-> >>>> Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-> >>>> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
-> >>>> ---
-> >>>>  include/linux/netdevice.h                  | 26 +++++---
-> >>>>  include/net/busy_poll.h                    | 11 +++-
-> >>>>  include/net/gro.h                          | 35 +++++++----
-> >>>>  drivers/net/ethernet/brocade/bna/bnad.c    |  1 +
-> >>>>  drivers/net/ethernet/cortina/gemini.c      |  1 +
-> >>>>  drivers/net/wwan/t7xx/t7xx_hif_dpmaif_rx.c |  1 +
-> >>>>  net/core/dev.c                             | 60 ++++++++-----------
-> >>>>  net/core/gro.c                             | 69 +++++++++++--------=
----
-> >>>>  8 files changed, 112 insertions(+), 92 deletions(-)
-> >>>>
-> >>>> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-> >>>> index 2a59034a5fa2..d29b6ebde73f 100644
-> >>>> --- a/include/linux/netdevice.h
-> >>>> +++ b/include/linux/netdevice.h
-> >>>> @@ -340,8 +340,8 @@ struct gro_list {
-> >>>>  };
-> >>>>
-> >>>>  /*
-> >>>> - * size of gro hash buckets, must less than bit number of
-> >>>> - * napi_struct::gro_bitmask
-> >>>> + * size of gro hash buckets, must be <=3D the number of bits in
-> >>>> + * gro_node::bitmask
-> >>>>   */
-> >>>>  #define GRO_HASH_BUCKETS       8
-> >>>>
-> >>>> @@ -370,7 +370,6 @@ struct napi_struct {
-> >>>>         unsigned long           state;
-> >>>>         int                     weight;
-> >>>>         u32                     defer_hard_irqs_count;
-> >>>> -       unsigned long           gro_bitmask;
-> >>>>         int                     (*poll)(struct napi_struct *, int);
-> >>>>  #ifdef CONFIG_NETPOLL
-> >>>>         /* CPU actively polling if netpoll is configured */
-> >>>> @@ -379,11 +378,14 @@ struct napi_struct {
-> >>>>         /* CPU on which NAPI has been scheduled for processing */
-> >>>>         int                     list_owner;
-> >>>>         struct net_device       *dev;
-> >>>> -       struct gro_list         gro_hash[GRO_HASH_BUCKETS];
-> >>>>         struct sk_buff          *skb;
-> >>>> -       struct list_head        rx_list; /* Pending GRO_NORMAL skbs =
-*/
-> >>>> -       int                     rx_count; /* length of rx_list */
-> >>>> -       unsigned int            napi_id; /* protected by netdev_lock=
- */
-> >>>> +       struct_group_tagged(gro_node, gro,
-> >>>> +               unsigned long           bitmask;
-> >>>> +               struct gro_list         hash[GRO_HASH_BUCKETS];
-> >>>> +               struct list_head        rx_list; /* Pending GRO_NORM=
-AL skbs */
-> >>>> +               int                     rx_count; /* length of rx_li=
-st */
-> >>>> +               u32                     napi_id; /* protected by net=
-dev_lock */
-> >>>> +
-> >>>
-> >>> I am old school, I would prefer a proper/standalone old C construct.
-> >>>
-> >>> struct gro_node  {
-> >>>                 unsigned long           bitmask;
-> >>>                struct gro_list         hash[GRO_HASH_BUCKETS];
-> >>>                struct list_head        rx_list; /* Pending GRO_NORMAL=
- skbs */
-> >>>                int                     rx_count; /* length of rx_list=
- */
-> >>>                u32                     napi_id; /* protected by netde=
-v_lock */
-> >>> };
-> >>>
-> >>> Really, what struct_group_tagged() can possibly bring here, other tha=
-n
-> >>> obfuscation ?
-> >>
-> >> You'd need to adjust every ->napi_id access, which is a lot.
-> >> Plus, as I wrote previously, napi_id doesn't really belong here, but
-> >> embedding it here eases life.
-> >>
-> >> I'm often an old school, too, but sometimes this helps a lot.
-> >> Unless you have very strong preference on this.
-> >>
-> >
-> > Is struct_group_tagged even supported by ctags ?
-> >
-> > In terms of maintenance, I am sorry to say this looks bad to me.
-> >
-> > Even without ctags, I find git grep -n "struct xxxx {" quite good.
->
-> compile_commands.json (already supported natively by Kbuild) + clangd is
-> not enough?
->
-> Elixir correctly tags struct_group()s.
->
-> napi->napi_id is used in a lot of core files and drivers, adjusting all
-> the references is not what I wanted to do in the series which does
-> completely different things.
+On Fri, 2025-02-07 at 15:27 +0100, Juri Lelli wrote:
+> On 07/02/25 12:36, Gabriele Monaco wrote:
+> >=20
+> >=20
+> > On Fri, 2025-02-07 at 11:55 +0100, Juri Lelli wrote:
+> > > Hi Gabriele,
+> > >=20
+> > > On 06/02/25 09:09, Gabriele Monaco wrote:
+> > > > This patchset starts including adapted scheduler specifications
+> > > > from
+> > > > Daniel's task model [1].
+> > >=20
+> > > Thanks a lot for working on this. Apart from being cool stuff
+> > > per-se,
+> > > it
+> > > means a lot personally to see Daniel's work continuing to be
+> > > developed.
+> > >=20
+> > > > As the model is fairly complicated, it is split in several
+> > > > generators
+> > > > and specifications. The tool used to create the model can
+> > > > output a
+> > > > unified model, but that would be hardly readable (9k states).
+> > > >=20
+> > > > RV allows monitors to run and react concurrently. Running the
+> > > > cumulative
+> > > > model is equivalent to running single components using the same
+> > > > reactors, with the advantage that it's easier to point out
+> > > > which
+> > > > specification failed in case of error.
+> > > >=20
+> > > > We allow this by introducing nested monitors, in short, the
+> > > > sysfs
+> > > > monitor folder will contain a monitor named sched, which is
+> > > > nothing
+> > > > but
+> > > > an empty container for other monitors. Controlling the sched
+> > > > monitor
+> > > > (enable, disable, set reactors) controls all nested monitors.
+> > > >=20
+> > > > The task model proposed by Daniel includes 12 generators and 33
+> > > > specifications. The generators are good for documentation but
+> > > > are
+> > > > usually implied in some specifications.
+> > > > Not all monitors work out of the box, mainly because of those
+> > > > reasons:
+> > > > * need to distinguish if preempt disable leads to schedule
+> > > > * need to distinguish if irq disable comes from an actual irq
+> > > > * assumptions not always true on SMP
+> > > >=20
+> > > > The original task model was designed for PREEMPT_RT and this
+> > > > patchset is
+> > > > only tested on an upstream kernel with full preemption enabled.
+> > >=20
+> > > I played with your additions a bit and I was able to
+> > > enable/disable
+> > > monitors, switch reactors, etc., w/o noticing any issue.
+> > >=20
+> >=20
+> > Thanks for trying it out!
+> >=20
+> > > I wonder if you also had ways to test that the monitors actually
+> > > react
+> > > properly in case of erroneous conditions (so that we can see a
+> > > reactor
+> > > actually react :).
+> > >=20
+> >=20
+> > Well, in my understanding, reactors should fire if there is a
+> > problem
+> > either in the kernel or in the model logic.
+>=20
+> Right. I guess I wonder if we can find a way to inject kernel
+> problems
+> somehow, so that model(s) can be further tested explicitly thus
+> making
+> us confident that they will be able to identify real problems when
+> they
+> occur.
+>=20
 
-Leave napi_id in struct napi, it has nothing to do with gro.
+Just for the sake of testing reactors there is already the wwnr monitor
+which is intentionally broken exactly for that reason, Daniel described
+a bit what scenario can trigger the error (some IRQ, so it may be
+harder to see in a VM).
 
->
-> Page Pool uses tagged struct groups, as well a ton of other different
-> files. Do you want to revert all this and adjust a couple thousand
-> references only due to ctags and grep?
->
-> (instead of just clicking on the references generated by clangd)
+If we want any monitor to react, yeah that could be a bit trickier. We
+could perhaps do something like livepatching/kprobes.
 
-I obviously can not catch all netdev traffic.
+I'd assume we'd need some care though, since some of those monitors are
+pretty basic and making them fail may cause pretty bad errors in the
+kernel.
+Another approach could be to just inject the tracepoint/handler call
+those are all static functions but we may have some luck there and
+wouldn't break the system, just trick the monitor.
+
+But good point, I can have a look.
+
