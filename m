@@ -1,175 +1,118 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED4123C8A0
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F35523C8A0;
+	Fri,  7 Feb 2025 16:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738945349; cv=none; b=SjhC0sWu8qT9WsBIaD0AGkgFZLXwJCAFr1INfCAG3MSsg+b2rkQTExBAL+7Q/I6RH6oZCqCCX8GlpemATpET5o7v8IivmMa4LmkQaQxQaZ4Q9IvlAps7uqmsXms90sAX6wsxWp3Zj+/fs3PovAyB8/+lm5xE0irvN6ibiMS6nn8=
+	t=1738945369; cv=none; b=Wshfg7AMLbMu25YNsfr/naun/Lykkx/eZkqEvT157Atufc2qnD2lzF+GlG49tl2dineBzX++JCrHfJQ0TQCMr9omqda+TB3H+1pMNW/Utsrs7jy9sAfRX6q96Jfe4QLGliVl7PDsepKq/RZhtYsQ2ia1dYPJ+Q1IXzzzi6pB5NY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738945349; c=relaxed/simple;
-	bh=iTsuxyEIymohulJzY7JTD8IGPdVLrm5BWF6T6qQbtUc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EX70h6Bhwdu32N2jADBOCVCcdw4ajQQX7T9KEjib/v8VBOljlsmEl/zF8ThcVn2swuZA2Wm+GZFlv5pRDdD2ygQRsvjPDdKTP1R50y6l5z38dXWRLXhqIoNkeQ74KsjHjWZi68ZwVSW/qJg2CBcirMCu/GM31tcjWiBZUNIM2Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=JUbYWZNH; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1738945369; c=relaxed/simple;
+	bh=aTqZWWRrr3L5wDUzhWRhEVYuAUqrYHPZoSJEJm+Zs8A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cHBHRwUYSWDUqRXccP2YLaJz+cfrbkfuS+iAxX8xsio/XdkSCy+sxkNWMBVxiSHaokyGQRR1XK3V/JZXCsuRCIbKSF53p4VjFB4ILQUJnMvA/YQqGeSi/bXMXr1SpT0/Om2fW3e2wXNzkYhDsa89tI3MvYgs9F9nTDSamK68Dis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=PWSav6FT; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JUbYWZNH"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab794ae3cf2so48257866b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:22:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738945346; x=1739550146; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MCn5Dk3vMVo7X1t68AtKlpToAukuif5wkQVCcdE+FHY=;
-        b=JUbYWZNHAyUHLGGBjQk9NOUHCfDIgvwTalD6XE6mPQ0WD95Fk925PgC0riqYDQXoeg
-         RnzfGEo0QdKWEGEyqiQu66bBEnL09SnM9UEBHkxtRJHK1MOibOjzQ94yDEgZo7RC8b2F
-         h93byUEHrxLBsraVPGxjm1Agtzl09YaJvoCaw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738945346; x=1739550146;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MCn5Dk3vMVo7X1t68AtKlpToAukuif5wkQVCcdE+FHY=;
-        b=IUDG6VzfcSVUsQaO+LmBZz+6B8Xt8rlKEqfES1yOVgjzJ1eugM8xFovYgaKOVJZE/N
-         Stqb9kSMYwIn3LzsqUrXWtSqoqEvCSV2P3N2qND0DADCZQZJYHc3iB1TFx0ieoZaTeCi
-         fvOxzYyPNc6IMBPMitcAAe39Xj/x+KFUez6YUcIhowkTE8GrwPbLRXvoDrT5H7km4E80
-         CIwmxcBzvMP7zBYr7fyhUjLY0BpPyC4v5VdskujnOE46hzw/ahX20y4St131DR6RCX81
-         bAhSlxrqaznCs6+aTnuTWpgdMZ0Ud2vL28Y/jZXBoKeEmpwgnCNUFu65yc2/LrKEC25j
-         FJbA==
-X-Forwarded-Encrypted: i=1; AJvYcCVj+zAOFZVVM3eVLQm+4RRhTuLNMeMPMwqzejxfhhSQ/yyFrrH4LALyGo1oC3/BZjSUqBO9h0OCUAWkaPs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOkWT1ZqQo17RgZJSZ7cb9Ln4ePqDeyRxW6vrTL5uTpT69VyJf
-	uSSh1XEX3hUIKcMY/P6WmvUlb49Lz55HypWZKKVRRTyE/XV3e+MLx85j/M6HgqMw2EOL9Ms5Jvt
-	DhObx
-X-Gm-Gg: ASbGncuGb0tCMFylzJDg/prZgoHcvbvug7BidBaTT7330v5YwfPS3t8MDyEQ4E6v5v9
-	YrSXQxixEmhLkT8lKqCwh51p28RhgajdnmZ7QGF7ivZHJwtpBZ0hsc2SWY7t0DIbI3p8TGQi4un
-	pW4kWYdFQQOXrGB60RchDOfnwJst5ItTxg5mn9EQs8kwdOeBNRjB2U0y7mgQ7czzdnRdqLuCJRG
-	WtIzRIyQJ2xafzJu+utMkJSmh4+mH9XA+vWckVYz+EbubxnUWoy7xy5vDniZ25eZoQhXNLzY7Mu
-	MTiYvHh6XDv4J+Jr+pZtconqGuoXQ9qjVARNbiupycyRXNgV4Ho=
-X-Google-Smtp-Source: AGHT+IEPrs4EH7/Z6+bBYYE//ub20rbteF5a8kQmVAMx2hToZtZLpXcLcs+yYXmRXd7dfunZ+KPCog==
-X-Received: by 2002:a17:906:f59c:b0:aa6:9624:78f7 with SMTP id a640c23a62f3a-ab789ac0db7mr315356666b.17.1738945345914;
-        Fri, 07 Feb 2025 08:22:25 -0800 (PST)
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7917d10d4sm80965566b.105.2025.02.07.08.22.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 08:22:25 -0800 (PST)
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5dcd33d9d9dso11195a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:22:25 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWArK4Rp/P+dLq6J+guCJ+qxTqib1jB+883xawBs6OPKisgIphz2oFB/WxwD9LTegZz6KK0tk6KSAsZtx8=@vger.kernel.org
-X-Received: by 2002:a50:ee16:0:b0:5dc:ccb4:cb11 with SMTP id
- 4fb4d7f45d1cf-5de46901c8dmr116990a12.4.1738945344498; Fri, 07 Feb 2025
- 08:22:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="PWSav6FT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1738945365;
+	bh=aTqZWWRrr3L5wDUzhWRhEVYuAUqrYHPZoSJEJm+Zs8A=;
+	h=From:Subject:Date:To:Cc:From;
+	b=PWSav6FT6CbpgynIS7njuhjV4RhHXRb9T9kQ/guIcR01M0+L0ebKvr25FcxatPcOB
+	 TTofFuV+nK6uP3OIMx9ziuDS/kPv4izJ0kRVXNEP8jgDBLkdDLDo59ecbvCxst8WUZ
+	 So/508Se3kG2NFlCv0Sc1yE8M4997GD/JJ28J1tK9pY1fSDW92JhuG6Zt150JAWFZz
+	 BQpNPWOHa161KVUIs86nUtody+l8fhGCMheZG0sJGNns2CEJvItrKDWQVBU3z3+3o3
+	 YEv64vGsVX8l2ovQJOL3hdVPjakhHATVmQBckr4+MjzQl8kG4yb1cSFRDcgy9GR9o1
+	 Z2ufjldq7gg+Q==
+Received: from jupiter.universe (dyndsl-091-248-211-114.ewe-ip-backbone.de [91.248.211.114])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id A7A7817E0E2C;
+	Fri,  7 Feb 2025 17:22:45 +0100 (CET)
+Received: by jupiter.universe (Postfix, from userid 1000)
+	id 696DB480035; Fri, 07 Feb 2025 17:22:45 +0100 (CET)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH v2 0/2] Rockchip W552793DBA-V10 panel support
+Date: Fri, 07 Feb 2025 17:21:46 +0100
+Message-Id: <20250207-raydium-rm67200-v2-0-1fdc927aae82@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250128-b4-rkisp-noncoherent-v3-0-baf39c997d2a@gmail.com> <20250128-b4-rkisp-noncoherent-v3-1-baf39c997d2a@gmail.com>
-In-Reply-To: <20250128-b4-rkisp-noncoherent-v3-1-baf39c997d2a@gmail.com>
-From: Tomasz Figa <tfiga@chromium.org>
-Date: Fri, 7 Feb 2025 17:22:08 +0100
-X-Gmail-Original-Message-ID: <CAAFQd5BkbJz4VJOvj8P5gBtbi=VCgsgebw12PnepLj6Qn6C_AQ@mail.gmail.com>
-X-Gm-Features: AWEUYZkLRr1JxCvNI8JDDZBOdbLkP21kufM0wZUw4Akj7bxs1aInWlFMBNe_a0o
-Message-ID: <CAAFQd5BkbJz4VJOvj8P5gBtbi=VCgsgebw12PnepLj6Qn6C_AQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] media: videobuf2: Fix dmabuf cache sync/flush in dma-contig
-To: Mikhail Rudenko <mike.rudenko@gmail.com>, Christoph Hellwig <hch@lst.de>, 
-	Robin Murphy <robin.murphy@arm.com>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Dafna Hirschfeld <dafna@fastmail.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIABozpmcC/x3MPQqAMAxA4atIZgsh4u9VxEHbqBmqkqIoxbtbH
+ L/hvQiBVThAl0VQviTIviVQnoFdx21hIy4ZCKlEwtro+Dg5vVFf1YRoeGqpLchSwxZSdSjPcv/
+ HfnjfD5bZiXhhAAAA
+X-Change-ID: 20250207-raydium-rm67200-eb92932c28ec
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ Andy Yan <andyshrk@163.com>, dri-devel@lists.freedesktop.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1267; i=sre@kernel.org;
+ h=from:subject:message-id; bh=aTqZWWRrr3L5wDUzhWRhEVYuAUqrYHPZoSJEJm+Zs8A=;
+ b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGemM1W0h0QldRB5+nEiCo7GdJR0R7StQM6B+
+ ZEilT+Yn9kmrIkCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJnpjNVAAoJENju1/PI
+ O/qaL6cQAIzzeTgxqG2UuEnIi6OW/zjPrINp6otQ9jGqqpQyufuCcrDEzAi2TTgsMO/jbrugy3l
+ t3C85zDmBuzMy312yTC5EA2wf34Y6onnzXlnOkMHfmqWmmSrLUMp6+Qcv18Q5YZwcoa1A/opaNZ
+ TytjhE5TtfEGSwMpORI+Dc+tete18lhwjnn6KpFZnSrGvMuVjdiccTswXlZkYAPInKb3zF3l3kW
+ amI03HIhhaue61W8w9uTVXEiPAQiGq151TxFqV30HD6XSyqiVLCo33dJiBX8qmou94F4OPtS92G
+ jtUEuwQ673+a5YspxL7x+dzlPkF0R6BvcAxWwhdFMhIEzQPN2b5HElbmCwecC+xQriXUVAT0tga
+ GEv+HbgS21HwNbtu9ZuQMrMDIrhC61bCqT0/BjtLxcqm6qbai+w2EQqJ/bYnHzlNzLy/1C9WsIG
+ F/ajZ6wwPORE+Nzgk8cjuXUvKoPTAvB1wr3lb0YzhZ1udtsPdJqlmZG/9+usohAo669dQz8nX9w
+ 8YaYNOahYfc7b6IO7oyVS28zfOmfT333MFRRS1lJhhs6YDlERvEJaFNAEbxXzr/9c0jwMqbIDoX
+ Ikkk9J618shL2KTXDUH3B3qmklEhwQcu09BozbR2OrARj2S/7I5MLUzUaN6UykbWJpbSGO+mKha
+ 6TPHLgqe9S8mYNuZ3KPc4mg==
+X-Developer-Key: i=sre@kernel.org; a=openpgp;
+ fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-On Tue, Jan 28, 2025 at 9:36=E2=80=AFPM Mikhail Rudenko <mike.rudenko@gmail=
-.com> wrote:
->
-> When support for V4L2_FLAG_MEMORY_NON_CONSISTENT was removed in
-> commit 129134e5415d ("media: media/v4l2: remove
-> V4L2_FLAG_MEMORY_NON_CONSISTENT flag"),
-> vb2_dc_dmabuf_ops_{begin,end}_cpu_access() functions were made
-> no-ops. Later, when support for V4L2_MEMORY_FLAG_NON_COHERENT was
-> introduced in commit c0acf9cfeee0 ("media: videobuf2: handle
-> V4L2_MEMORY_FLAG_NON_COHERENT flag"), the above functions remained
-> no-ops, making cache maintenance for non-coherent dmabufs allocated by
-> dma-contig impossible.
->
-> Fix this by reintroducing dma_sync_sgtable_for_{cpu,device} and
-> {flush,invalidate}_kernel_vmap_range calls to
-> vb2_dc_dmabuf_ops_{begin,end}_cpu_access() functions for non-coherent
-> buffers.
->
-> Fixes: c0acf9cfeee0 ("media: videobuf2: handle V4L2_MEMORY_FLAG_NON_COHER=
-ENT flag")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
-> ---
->  .../media/common/videobuf2/videobuf2-dma-contig.c  | 22 ++++++++++++++++=
-++++++
->  1 file changed, 22 insertions(+)
->
-> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/driv=
-ers/media/common/videobuf2/videobuf2-dma-contig.c
-> index bb0b7fa67b539aa73ad5ccf3c3bc318e26f8a4cb..146d7997a0da5989fb081a6f2=
-8ce0641fe726e63 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> @@ -427,6 +427,17 @@ static int
->  vb2_dc_dmabuf_ops_begin_cpu_access(struct dma_buf *dbuf,
->                                    enum dma_data_direction direction)
->  {
-> +       struct vb2_dc_buf *buf =3D dbuf->priv;
-> +       struct sg_table *sgt =3D buf->dma_sgt;
-> +
-> +       if (!buf->non_coherent_mem)
-> +               return 0;
-> +
-> +       if (buf->vaddr)
-> +               invalidate_kernel_vmap_range(buf->vaddr, buf->size);
-> +
-> +       dma_sync_sgtable_for_cpu(buf->dev, sgt, buf->dma_dir);
-> +
->         return 0;
->  }
->
-> @@ -434,6 +445,17 @@ static int
->  vb2_dc_dmabuf_ops_end_cpu_access(struct dma_buf *dbuf,
->                                  enum dma_data_direction direction)
->  {
-> +       struct vb2_dc_buf *buf =3D dbuf->priv;
-> +       struct sg_table *sgt =3D buf->dma_sgt;
-> +
-> +       if (!buf->non_coherent_mem)
-> +               return 0;
-> +
-> +       if (buf->vaddr)
-> +               flush_kernel_vmap_range(buf->vaddr, buf->size);
-> +
-> +       dma_sync_sgtable_for_device(buf->dev, sgt, buf->dma_dir);
-> +
->         return 0;
->  }
+Hi,
 
-I took some time (over)thinking the kernel vmap range synchronization,
-because these functions can be called both from the kernel space using
-respective dma_buf_*() kAPI and also from the user space using the
-DMA_BUF_SYNC IOCTLs, so we could in theory have the multiple
-invocations racing with each other, but then I realized that we don't
-really provide any guarantees for concurrent writes and reads from the
-CPU, so I believe this should work fine. Sorry for the delay.
+This has been tested in combination with the series from Heiko Stübner
+enabling DSI support for the RK3588 [0] (DSI controller support has been
+merged already, only the PHY support is missing) on the RK3588 EVB1.
 
-Acked-by: Tomasz Figa <tfiga@chromium.org>
+[0] https://lore.kernel.org/linux-rockchip/20241203164934.1500616-1-heiko@sntech.de/
 
-Let me add @Christoph Hellwig and @Robin Murphy just in case I'm wrong
-on that, though... Hans, let's give them some time to take a look
-before applying this.
+Changes since PATCHv1:
+ * https://lore.kernel.org/all/20241210164333.121253-1-sebastian.reichel@collabora.com/
+ * move additionalProperties below required in the DT binding
+ * collect Reviewed-by from Krzysztof Kozlowski, Andy Yan and Jessica Zhang
+ * improve Kconfig help text
+
+Thanks for having a look.
+
+Greetings,
+
+-- Sebastian
+
+---
+Sebastian Reichel (2):
+      dt-bindings: display: panel: Add Raydium RM67200
+      drm/panel: add Raydium RM67200 panel driver
+
+ .../bindings/display/panel/raydium,rm67200.yaml    |  72 +++
+ drivers/gpu/drm/panel/Kconfig                      |  10 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-raydium-rm67200.c      | 503 +++++++++++++++++++++
+ 4 files changed, 586 insertions(+)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250207-raydium-rm67200-eb92932c28ec
 
 Best regards,
-Tomasz
+-- 
+Sebastian Reichel <sre@kernel.org>
+
