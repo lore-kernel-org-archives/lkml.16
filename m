@@ -1,135 +1,74 @@
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4CD1DE8BC;
-	Fri,  7 Feb 2025 11:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8DE63D
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 11:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738926981; cv=none; b=PsLJtaS+Ac5UBPKGS6GY3hbd6GhdQiLqyfSBRrlZIJIRjYXgrnYwEqhjTrIGIOC+VkiYxW0fBMHBRpTVDoun3vBGJdEdotDlzgSgbzy8X3g89wIRwNH4lCl/tJQsz9irtMK99rE5/J5U4l73ubxMGxj1zWY4Sl5IbQ8We7ExbHY=
+	t=1738927176; cv=none; b=Xa7ZfvO2qWqhxRXI8t2zs+l5jf+usLBnM6VCQfZThZMUfd+9prTveqERnsEuv2Z0XyzbpmFPNJ8QxCwzmxepdFqfoNUJHOkExJ8SkURRNalYH6r2kXtwuYQ5CIVYr5drZRKgEJ5ei87bAiaJW/iGm1zQ0IgWfbm7/MukNoUrofg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738926981; c=relaxed/simple;
-	bh=DROL0ZXTKDjz9yzFbtNgyiI5REj61oxPGEL9qJLwF5M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qmjwv0qcJlFT0YxeZ2CVwjp2xvdFrBApOA3Tw4LlSv0auqD7Qz1WJdZ6ZFT5YdlqDOf8G2pfYYEsJCgeYkgkg2k3RbwOIgwjwKFGR75CgDReRTQtrJspbqagsBjb++UjRFMGi1auzLAZAE8Ix6L81VLCxwdpNTwqiVgdnPhfH3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com; spf=pass smtp.mailfrom=bsbernd.com; dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b=m/PsobRW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GSaFdmRK; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsbernd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b="m/PsobRW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GSaFdmRK"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id 318931380173;
-	Fri,  7 Feb 2025 06:16:16 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Fri, 07 Feb 2025 06:16:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bsbernd.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1738926976;
-	 x=1739013376; bh=6Aibj85N4Xec6Md8vzDUFOhcxs5xfx+jKDyQhwhdMb4=; b=
-	m/PsobRW644YOws6wEwgWIOiDRsrV3jqWbP5ZnESppbnJvawwsBs6OIPmakPwgQw
-	LNZz+wtWory4jdAZQ2go6zLjvR1qgNPL9u4h/baZCngKEuSzS65ZTZ5zNvxJIGEL
-	UjlQ2DdBAXZ7HhwNbub+2MLeELVQSAz6lxBX2E/mwtcBP4MX17nQLhFAvoWlr9+J
-	qqtuB6zb2o9b6f0E3A1LiKRjrN5iUAqfcKk90HIRq9YgSBzIi0IM+HZXVFxvEt2P
-	5cC6BaQMWxroQvO8jajcR1V1h5r6/mYjVnuIsf4peQmuav+qqMqQ5VzDtHlzj0ht
-	Nte1vBBPaNhURx7BApv3yA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738926976; x=
-	1739013376; bh=6Aibj85N4Xec6Md8vzDUFOhcxs5xfx+jKDyQhwhdMb4=; b=G
-	SaFdmRK8lPjTAepSVafaUoCjWzBBcE+1WuM9Hq/7TyHFONaXfKvAKQ02mXiJArk0
-	fF4tWhW3XqyCXyoa1rallflj4l+vI8PvSTGRNMSqMZX7u8ndU1HlxvTSmYbvA5Xc
-	fOTutlsDaeuqzsoS7zLHxoe3vBCdwiykSWYoqfFjToN+oWjF1fJ5AZ3Wajb0wdM8
-	JH5/7dYQ2XFS4h/phMJywtG7DEx1gAZXQ1Xuti3SOjuTd2I26DngBPn9fAwMqGB7
-	zd5d3ijabbE9BjBbh8Hnl4PACv8dj9Nx3NscSo8K9OArYwJTgPHYfEVBwaivud+K
-	lhTg03BXEqSF+/uZ1eX6w==
-X-ME-Sender: <xms:f-ulZ01q_VJ4rAl2wrjghhE_kZAC2tyueeWcTyuAJy-evyFmpPK8Jw>
-    <xme:f-ulZ_GMWRB74JUMU6wpfUUM2yQaZeyrZHuQ4QFNLSbOrOLGJ0Oqe190QdeO-kwMI
-    W653cX1I6Ax5Lv1>
-X-ME-Received: <xmr:f-ulZ87gTU6oVkM3kMCzpMQqA9BKLP90rQs4FD_RqDHPUjS2RYcsoi8CbiBsFRlTaAoAVdpNfYC7LohHHqYEK0_uCQi026dd5GIKEP__wND0vokYuVmy>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledugecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddv
-    jeenucfhrhhomhepuegvrhhnugcuufgthhhusggvrhhtuceosggvrhhnugessghssggvrh
-    hnugdrtghomheqnecuggftrfgrthhtvghrnhepuefgvedvgeeguedtlefggfeigfffjeeh
-    ffektdeiudffheelvdefveegjeehtdejnecuffhomhgrihhnpehgihhthhhusgdrtghomh
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsvghr
-    nhgusegsshgsvghrnhgurdgtohhmpdhnsggprhgtphhtthhopeduvddpmhhouggvpehsmh
-    htphhouhhtpdhrtghpthhtohepvhgsrggskhgrsehsuhhsvgdrtgiipdhrtghpthhtohep
-    mhhikhhlohhssehsiigvrhgvughirdhhuhdprhgtphhtthhopeifihhllhihsehinhhfrh
-    gruggvrggurdhorhhgpdhrtghpthhtoheptghhrhhishhtihgrnheshhgvuhhsvghlrdgv
-    uhdprhgtphhtthhopehjohhsvghfsehtohigihgtphgrnhgurgdrtghomhdprhgtphhtth
-    hopehmshiivghrvgguihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheprhgvghhrvghs
-    shhiohhnsheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqd
-    hkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhig
-    qdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:f-ulZ9037XXRMk8nBj87nbhmleQ-1eFdpxLz4kWX-V-rP9J0WWMs2g>
-    <xmx:f-ulZ3EbMbjvJ4uNwBjcaldrup2upqo7iLml8r4KvJtMhn9PtUvPDQ>
-    <xmx:f-ulZ2_Rolb0lsFmS-2pvgBZ1AnMzw1RPcWERKe93CegqYZ6QaFhyQ>
-    <xmx:f-ulZ8l3bvJBNoLfZUk8jK5-rw-bzEES6XpAsnsVGqvPXZbuVKVj8Q>
-    <xmx:gOulZ2f8u7iE_17qld9_K2K7zPjwn0-Agw7XXHYJivHCVmunR8NtYJSr>
-Feedback-ID: i5c2e48a5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 7 Feb 2025 06:16:13 -0500 (EST)
-Message-ID: <94df7323-4ded-416a-b850-41e7ba034fdc@bsbernd.com>
-Date: Fri, 7 Feb 2025 12:16:12 +0100
+	s=arc-20240116; t=1738927176; c=relaxed/simple;
+	bh=Zbolg3PsLFDa0CGp+azUPJzrjvq7a98V8bN0/XS3ifY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XAX7GtrkZdm4scPKNnXE3XkVZTyNUctXcU+Wi74ZnrQpGAsXaUR9MWlPhTAGHltFtPzYrIEzP2QWAIPu4l3MuTUNUI4bP+AQ1l2eKETT4kuOBLQnevH6+RaGTS3800ZFmig+KmEI1ihDkDSC9BDxFMza9FfMVbxmMUl6jYXW5ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost.localdomain (unknown [180.172.76.141])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 33AAC33FEF1;
+	Fri, 07 Feb 2025 11:19:27 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Yixun Lan <dlan@gentoo.org>
+Cc: Conor Dooley <conor@kernel.org>,
+	Yangyu Chen <cyy@cyyself.name>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Jesse Taube <mr.bossman075@gmail.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+	Alex Elder <elder@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev
+Subject: Re: [PATCH] MAINTAINERS: spacemit: update various info
+Date: Fri,  7 Feb 2025 19:19:10 +0800
+Message-ID: <173892684286.8747.5832912324248040390.b4-ty@gentoo.org>
+X-Mailer: git-send-email 2.48.0
+In-Reply-To: <20250128-k1-maintainer-1-v1-1-e5dec4f379eb@gentoo.org>
+References: <20250128-k1-maintainer-1-v1-1-e5dec4f379eb@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
- related applications since v6.13
-To: Vlastimil Babka <vbabka@suse.cz>, Miklos Szeredi <miklos@szeredi.hu>
-Cc: Matthew Wilcox <willy@infradead.org>,
- Christian Heusel <christian@heusel.eu>, Josef Bacik <josef@toxicpanda.com>,
- Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Joanne Koong <joannelkoong@gmail.com>, linux-mm <linux-mm@kvack.org>,
- =?UTF-8?Q?Mantas_Mikul=C4=97nas?= <grawity@gmail.com>
-References: <2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu>
- <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
- <Z6XWVU6ZTCIl3jnc@casper.infradead.org>
- <03eb13ad-03a2-4982-9545-0a5506e043d0@suse.cz>
- <CAJfpegtvy0N8dNK-jY1W-LX=TyGQxQTxHkgNJjFbWADUmzb6xA@mail.gmail.com>
- <f8b08ef9-5bba-490c-9d99-9ab955e68732@suse.cz>
-From: Bernd Schubert <bernd@bsbernd.com>
-Content-Language: en-US, de-DE, fr
-In-Reply-To: <f8b08ef9-5bba-490c-9d99-9ab955e68732@suse.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
 
-
-On 2/7/25 11:55, Vlastimil Babka wrote:
-> On 2/7/25 11:43, Miklos Szeredi wrote:
->> On Fri, 7 Feb 2025 at 11:25, Vlastimil Babka <vbabka@suse.cz> wrote:
->>
->>> Could be a use-after free of the page, which sets PG_lru again. The list
->>> corruptions in __rmqueue_pcplist also suggest some page manipulation after
->>> free. The -1 refcount suggests somebody was using the page while it was
->>> freed due to refcount dropping to 0 and then did a put_page()?
->>
->> Can you suggest any debug options that could help pinpoint the offender?
+On Tue, 28 Jan 2025 12:22:52 +0800, Yixun Lan wrote:
+> Add a wiki page to track status of mainline effort, add a dedicated
+> mailing list which can reduce the email's CC list a bit, the irc
+> channel should be useful for people to communicate.
 > 
-> CONFIG_DEBUG_VM enables a check in put_page_testzero() that would catch the
-> underflow (modulo a tiny race window where it wouldn't). Worth trying.
+> 
 
-I typically run all of my tests with these options enabled
+Thanks, Applied to SpacemiT's SoC tree:
+ https://github.com/spacemit-com/linux/ (for-next)
 
-https://github.com/bsbernd/tiny-qemu-virtio-kernel-config
+[1/1] MAINTAINERS: spacemit: update various info
+      https://github.com/spacemit-com/linux/commit/4a0c4e723c94172ae10cd6492a8a35f9aaae7163
 
+The for-next branch will be sent via a formal Pull Request to
+the Linux SoC maintainers for inclusion in next merge window.
 
-If Christian or Mantas could tell me what I need to install and run, I
-could probably quickly give it a try.
+Best regards,
+-- 
+Yixun Lan
 
-
-
-Thanks,
-Bernd
