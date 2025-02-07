@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDBA01C700E;
-	Fri,  7 Feb 2025 22:25:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F041D8A0D;
+	Fri,  7 Feb 2025 22:25:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738967128; cv=none; b=av5kohfw2D90jgjpZdDCGsSiZeHlolKErcrY8XGZUyLXSZff3EXwANxyvTFHmzG9SmiESrZUDcrWXeUGKSmaQMcHUf6KKJvtX5+JM6l88BHfWz04hxixnIY/lRwCYLQYhVKmdfS7HBA4SMoxCeUdHDLj84XSXB40VpC32NqFlFU=
+	t=1738967130; cv=none; b=NZc/9mSAr4s9h+RO5CkwYW2+f38EfMMkbnCxZ7FaK/eUsOMIz9CODekpi12v1DUbZIVT8y//TxWzgSvuZuCSv+Qd684cgXDTwO7V2ovvKdIthW+j9E9sEHVHX1SDvSArDwM6qOCP2eswp2JjuwmRt/b+QV5v5zaQmG2IF1PchJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738967128; c=relaxed/simple;
-	bh=w4NZfenP2gP64AtvDvAeTBAB5PW3D9MybjAsXzXHQtY=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=eAWHf9AUzmDoMYHK2GqDK4XTGLXyJuYl4wbW+Q4h4plI6pvQD/pHRDgK+wlUs8IeK3HOHDrFCNhb8PBPfmfa1dQerUn44fC971M+YcU1z48EgvwhjNEI6ArbEXPqip3rmH+H5AxbMwcaGyY+4awmQFrO7yGE9GMdcqaBztrUjmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WI5994/Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738967130; c=relaxed/simple;
+	bh=5hhacTFn74xU0FsdaFmOBJwM9/9saf2R32VpKccasyg=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Rm8mDLo5EDa7rxkHYNwUni16eQcPCq1RUSm9R64b1L7Qoj6qU9va4rxkA84vnqPn4ZDfu63st0g2vWOAdBavSkO4IOh8aTQ6auLqA472qg6VVixgsuROoFrv9iqArhPrmerz5d8xTeQyK8HqxZpF/AbNs93A7C1isudKUMjIcXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5Q5bd6S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WI5994/Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEE93C4CEE2;
-	Fri,  7 Feb 2025 22:25:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5Q5bd6S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF41BC4CED1;
+	Fri,  7 Feb 2025 22:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738967127;
-	bh=w4NZfenP2gP64AtvDvAeTBAB5PW3D9MybjAsXzXHQtY=;
+	s=k20201202; t=1738967130;
+	bh=5hhacTFn74xU0FsdaFmOBJwM9/9saf2R32VpKccasyg=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=WI5994/Ye0vsC6E93WJHxtDDL1wS/DAM2PkRuK6gZu9ZBYaqz3AEknnlAmtg8rN/2
-	 rbkC+2uEkrP42t4jrUhXbf0eq3McgrLl1m9hhomD5Wokknz09L/U0V67V7nGkFkbDj
-	 MUM+4TdIZ+Inj952+MgHdlu2QpYJDBAr9VongYY0rLFTt6BlHKCH22veIqtqtIT0Pq
-	 XXW8ALUtEXiSIVi5+0zS4WQDSVmwRQctFKkC+hbsi/8WYa4I6C91Yz/i/bX+0YLlKy
-	 vrTDDbPSPWVOvCj41cW3O13nUerssWCHljQmX+b+xz5F3Lth95WwBifygBG5ou+GuH
-	 O6qjxwnFZb3Dg==
+	b=O5Q5bd6SRNojzhGsrdtIVc6K7n5Xlwam6Dnf0e1C4hmukN8EixqxzVmM3AUmDWzec
+	 dE1GgnV07emh7XcwjRiDt4ZiGFrnCrLF3az7XEXhxdGhE+fzPLFxCtX/c72gzNM79i
+	 pnmlR5GszM/AN6Kwfqn/L1OZFc4FQD1HohB/M2q6lc9entfuXPrlI4yWIvXCoceVxz
+	 Mcls26WBtD5iE/tmJiYRJ79GaF+sqrK/FWBBQ2lT7gDLOb0WXf+5WKlzB7ax8Fbe/X
+	 qDhy1jSmOixmrMMZVoITNhkUnWbZ+QzxErtk/fglxmXD3TbVKpp8gmBmDWfJsnimXk
+	 K5rcuFiqNbDaw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EADCA380AAEB;
-	Fri,  7 Feb 2025 22:25:56 +0000 (UTC)
-Subject: Re: [GIT PULL] vfs fixes
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34004380AAEB;
+	Fri,  7 Feb 2025 22:25:59 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio fixes for v6.14-rc2
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250207-vfs-fixes-304444b009fc@brauner>
-References: <20250207-vfs-fixes-304444b009fc@brauner>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250207-vfs-fixes-304444b009fc@brauner>
-X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.14-rc2.fixes
-X-PR-Tracked-Commit-Id: 37d11cfc63604b3886308e2111d845d148ced8bc
+In-Reply-To: <20250207084211.35316-1-brgl@bgdev.pl>
+References: <20250207084211.35316-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250207084211.35316-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc2
+X-PR-Tracked-Commit-Id: 59ff2040f0a58923c787fdba5999100667338230
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8c67da5bc11a79833d9fd464e82b1b271c67fc87
-Message-Id: <173896715568.2405435.10562300116506440400.pr-tracker-bot@kernel.org>
-Date: Fri, 07 Feb 2025 22:25:55 +0000
-To: Christian Brauner <brauner@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 78b2a2328bf931ff7791dbfb82c2da97d10b42f9
+Message-Id: <173896715783.2405435.5145698733750809987.pr-tracker-bot@kernel.org>
+Date: Fri, 07 Feb 2025 22:25:57 +0000
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri,  7 Feb 2025 11:52:03 +0100:
+The pull request you sent on Fri,  7 Feb 2025 09:42:11 +0100:
 
-> git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.14-rc2.fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8c67da5bc11a79833d9fd464e82b1b271c67fc87
+https://git.kernel.org/torvalds/c/78b2a2328bf931ff7791dbfb82c2da97d10b42f9
 
 Thank you!
 
