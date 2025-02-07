@@ -1,97 +1,78 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED8F1F37C6;
-	Fri,  7 Feb 2025 13:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8CD1DE89B;
+	Fri,  7 Feb 2025 13:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738935180; cv=none; b=BdNS6QUZ1IZ/PlU/gdUSqEggyKCCq2HPley2dtkWxLqpyO9vGmF7wbL7RvcIwkadvoseXphazT1K38YVPaCO/D4gbYXuUnZqLVXGj2YurpKm7TUVeV0WDxkoTo0sOJr84KqdDDdGIG86MtMP9TuZEHeywwcmfVQy/iiZRL/AvW0=
+	t=1738935314; cv=none; b=FHQVtQtCQhuCH+vvPaVUbCHuNk4QlZene1hD1r6cisRPYObn5KL+StoT81xdj7Csodurzh4nnMbWVvhjd6a9ZxmNol7LMRbKDI787d3VzG+GGhSbyIGhO3+tdL6kTRDm5i0RFdXoDmJeE+yhNRk1nkezuF1cZd6y8WXJJxCy5hQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738935180; c=relaxed/simple;
-	bh=WFmNlRT/1piaJgm4c0NfJA8P9P62SmS6UdgYC76xKuM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lk38cJ16Ey8FIinMe+8P/TJBLgRZIXuZZVPVOCRinveHpZ5g2JLjyr3lirPcz5+LPq9v0UZXetaJLaIld+i+Lmmrn7Vigp00UnhxzrPBE7SKycbYFOTZaQ+KU13X8TGMF7G8Ojh1RmGNFUXhw1rsJCxQt92PgNJ3tzaPLXtb380=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ikZHdtyb; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1738935314; c=relaxed/simple;
+	bh=8d/alkOiqYWk8/dvgN22uTZykuYv49MXHiQ+Vhcxz7k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H1/5pt3OQ668Wjb+0kh/fr7QS8rzwE+P9mzI731bJ7BnlggwNQNdpRBrDvHo859M5KKgaSb1FvOKDTGGOaeeynMcjRIs33sL43xJ2hYMHrZY905RfQm4+pxWrBEcXf1Hax4r1sLruBojvXRpavI0y+MrGUrWCtJhogIA9oaYwqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=WX7zerXX; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ikZHdtyb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=7B6nKxsZ/sgpbYSbmczXl/HDAlWGMnjUjIEUqDEu3fE=; b=ikZHdtybyl/A4VFw2VkwQGYUTI
-	I5VXMO2Dsq9C6j9NPVSnVHI8byHRtV/uaWU/t71xO8V9YWONlWrw4NkA31Qgj7jaXKhYUM+5sSJwd
-	EGZH7ss/mH8O6TO7DqY00Yy1HTQRU6CUGICBH3CUAKUQ5s0GbwiSc7s9zIREc3Phv1Fs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tgOT6-00Br1x-S2; Fri, 07 Feb 2025 14:32:28 +0100
-Date: Fri, 7 Feb 2025 14:32:28 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-	Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next v7 2/7] net: pcs: xpcs: re-initiate clause 37
- Auto-negotiation
-Message-ID: <12e86fbe-9515-4b81-951c-8bf86e2939d6@lunn.ch>
-References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
- <20250206131859.2960543-3-yong.liang.choong@linux.intel.com>
- <Z6TVmdCZeWerAZKP@shell.armlinux.org.uk>
- <564ede5d-9f53-40be-9305-63f63b384e15@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="WX7zerXX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=MLIpvZkzFFyKPI7OoY68SAR7q1uURh6tXFwNkh5kNzk=; b=WX7zerXXuFRNHCXGywTeOQEjhe
+	nQT4Ul2gzgF5+kqWw5o5jMXpjkZMIvU1mow3QgNdyMbbuYE6xSGXDJLu6QLGUoEXGutfUUNq3/qHq
+	H8kE30RP/lxQcoUAuTB8LeG56tjG9vOCvLOetQq3VsQyqx0QYIx2lBXNFz2V3DFv4DUY7P+fhcKm0
+	TxljRbORLcfUQ6LUD/Msy2pcLSCtDk+LRYCsf93hgHqvdLV7VelDcUYfWqIMmcI/6V+lDkl+7+cAv
+	oCW4JSxgqBfC/x6YGrtlSwJGqX1bn0OElTRnghF6eGqJffrLkRV5plqaHRg3o7q3/WbwfjR2+4RuD
+	uFp1Ek9Q==;
+Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tgOVY-005pd9-N9; Fri, 07 Feb 2025 14:35:06 +0100
+From: Luis Henriques <luis@igalia.com>
+To: Miklos Szeredi <miklos@szeredi.hu>,
+	Bernd Schubert <bschubert@ddn.com>
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Luis Henriques <luis@igalia.com>
+Subject: [PATCH] fuse: removed unused function fuse_uring_create() from header
+Date: Fri,  7 Feb 2025 13:35:02 +0000
+Message-ID: <20250207133502.24209-1-luis@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <564ede5d-9f53-40be-9305-63f63b384e15@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-> Good point. I cannot find this scenario in the datasheet. Please allow me
-> some time to test this scenario. I will update you with the results.
+Function fuse_uring_create() is used only from dev_uring.c and does not
+need to be exposed in the header file.  Furthermore, it has the wrong
+signature.
 
-By data sheet, do you mean documentation from Synopsis, or is this an
-internal document? Assuming the hardware engineers have not hacked up
-the Synopsis IP too much, the Synopsis documentation is probably the
-most accurate you have.
+While there, also remove the 'struct fuse_ring' forward declaration.
 
-> > What about 1000BASE-X when AN is enabled or disabled and then switching
-> > to SGMII?
-> > 
-> According to the datasheet, a soft reset is required.
+Signed-off-by: Luis Henriques <luis@igalia.com>
+---
+ fs/fuse/dev_uring_i.h | 6 ------
+ 1 file changed, 6 deletions(-)
 
-Do you know if this is specific to Intels integration of the Synopsis
-IP, or this is part of the core licensed IP?
-
-We need to understand when we need a quirk because intel did something
-odd, or it is part of the licensed IP and should happen for all
-devices using the IP.
-
-	Andrew
+diff --git a/fs/fuse/dev_uring_i.h b/fs/fuse/dev_uring_i.h
+index 2102b3d0c1ae..0d67738850c5 100644
+--- a/fs/fuse/dev_uring_i.h
++++ b/fs/fuse/dev_uring_i.h
+@@ -172,12 +172,6 @@ static inline bool fuse_uring_ready(struct fuse_conn *fc)
+ 
+ #else /* CONFIG_FUSE_IO_URING */
+ 
+-struct fuse_ring;
+-
+-static inline void fuse_uring_create(struct fuse_conn *fc)
+-{
+-}
+-
+ static inline void fuse_uring_destruct(struct fuse_conn *fc)
+ {
+ }
