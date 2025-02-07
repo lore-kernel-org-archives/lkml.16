@@ -1,423 +1,251 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEAE2500AE;
-	Fri,  7 Feb 2025 14:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5222500C1
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738939563; cv=none; b=OmyY51dNLEEwAXLqnZe2LalIoA7r6wTyotN4RttCo9E4Mk29cD5SDq8d581Ssjm471dOhJgawYeAW2AS/K9HKQqHLvO4c51KlvRDRd/J2KuxZSzy9Ft0+mDzSFgg1ckeRLWKiTJPDlssTyAOaeLdsRt3cvuTps8qKLOAQh1rNIM=
+	t=1738939566; cv=none; b=a5WhqE/D6ObE+cfrwuz+j0aPWuW8BZvULEtltL3Di/VCZ/1aMaQ84fbKeNECd78TP2n9ojmApO7d4nToIPuyH4+zfdLh3Dln1MnhD8cEcxY/l6F8daWdZ8V28DESpu5aKv2V2oAuS84XsyT+eYlXAKRekq6I27skxFxdeSXnuQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738939563; c=relaxed/simple;
-	bh=2y2ONEbXn1zd/ikVHS5Yl3tAikIGjyrEZ8I8tHncphU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CjOwNn0f2CqvJMaoJ13bQSrbA50aQL0D13wJBc8upiS2i47oMoX9b1fXJ1zdFUfszG3tq8ZwBxafb1Z43UzKo/53cF1qx6KNFv8c+oL0euXWRsRlzQUJzSVb2h8NeJBpaqGtPjw45qr69a+OyTayziZvu8VV5dTfDZygVXWb3DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YqGth247Fz6H7QP;
-	Fri,  7 Feb 2025 22:43:40 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 081B8140A30;
-	Fri,  7 Feb 2025 22:45:59 +0800 (CST)
-Received: from P_UKIT01-A7bmah.china.huawei.com (10.126.173.5) by
- frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 7 Feb 2025 15:45:56 +0100
-From: <shiju.jose@huawei.com>
-To: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <linux-doc@vger.kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
-	<rafael@kernel.org>, <lenb@kernel.org>, <mchehab@kernel.org>,
-	<dan.j.williams@intel.com>, <dave@stgolabs.net>,
-	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <david@redhat.com>, <Vilas.Sridharan@amd.com>,
-	<leo.duran@amd.com>, <Yazen.Ghannam@amd.com>, <rientjes@google.com>,
-	<jiaqiyan@google.com>, <Jon.Grimm@amd.com>, <dave.hansen@linux.intel.com>,
-	<naoya.horiguchi@nec.com>, <james.morse@arm.com>, <jthoughton@google.com>,
-	<somasundaram.a@hpe.com>, <erdemaktas@google.com>, <pgonda@google.com>,
-	<duenwen@google.com>, <gthelen@google.com>, <wschwartz@amperecomputing.com>,
-	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
-	<nifan.cxl@gmail.com>, <yazen.ghannam@amd.com>, <tanxiaofei@huawei.com>,
-	<prime.zeng@hisilicon.com>, <roberto.sassu@huawei.com>,
-	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
-	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v19 12/15] cxl: Support for finding memory operation attributes from the current boot
-Date: Fri, 7 Feb 2025 14:44:41 +0000
-Message-ID: <20250207144445.1879-13-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20250207144445.1879-1-shiju.jose@huawei.com>
-References: <20250207144445.1879-1-shiju.jose@huawei.com>
+	s=arc-20240116; t=1738939566; c=relaxed/simple;
+	bh=fjBdQlRTPF9VM4NEq5Qg/Bh3wS/MhMuEtA2QuNxPKNw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GcdNSl8fsgXTDlUl3n5twCsVIFfFVR8EJ1lwee0r3DfT3WILIu8X2hnoMl2i4TIKbzODKtI4w3UezdFa24OdJd/K68kV3iU9/GBusmdR+1W+np/HefXtYsWa3ylrvaMNsOzVtsNAOl/QyzgzXWcaVnCyRMeMQLRir/9SFreMQKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=YKUUK84u; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="YKUUK84u"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4361dc6322fso14676155e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:46:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738939562; x=1739544362; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Hv90/4Ii7oHU4TLhsDR0XOWXVnCVpBGLvijyzK1ZPiM=;
+        b=YKUUK84umwKI1ZJIBgZPtFXziL+aWE9vgJ0zyMDwBCafWCSAkIDpNVa52sURTVLoC2
+         LHNapYaPy0jMxcGJUjVayaH8YEGfvirdkpqiBDtMieVtO0QmtdimRvQYBhlonQnxumYx
+         LerDIheP4kkM4w900YcOuh3mNJ/uaA6WsQc5MtJ6o/2eCj6mSmTJTkO4GTauDN1vdoYv
+         ns2Pa6L5Y59EDWBgddtG80Uv+jCS++WpYVpZYJxkbPRCfGWfShpo1yu3w7jgEK38uhl0
+         DNoZXb/Sa2zubZFyfdGXZzzl16r8sdmi7FjmeQyAfBcdRYmgjP/pve9JOu+WAhGsVZYN
+         Tu7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738939562; x=1739544362;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hv90/4Ii7oHU4TLhsDR0XOWXVnCVpBGLvijyzK1ZPiM=;
+        b=kumE5WIoC4RpakottANTcTv+ad2VSpBhHE1TNWP1jsJeCRhoq2yiDqbtdjB7L8E1p1
+         PJFHdBooct7WRfymDko/lfPCLizjGHeKGB9nSvjXgbEwsZEGuMc6/+5Rz7ehAcTITlAP
+         PB3g/Yo0Ktdh5dvv4U6ygw0ivVA4JMCN5J2eX/juR77kgvsvkddeg5r759NYU8MEda17
+         CPcLCiLIc0ZNS0/vhW7HODvLYHq+Wu/YSxzIy0+V3xXIGorNMrD8mYUUx0UhhNN+3ff6
+         gVA7qlMI6t3z49mvTHRqcmppMk5b0va2eII+b+9P5QuTp63XrkRaTgRVDfBQD2owNgDF
+         Ytww==
+X-Forwarded-Encrypted: i=1; AJvYcCVPL+zQSBNCBWA+fHi34lSlKs9WlJWpV3c/1KRJ9B6ui9xpDxhvZPbNQOAavlAdi1BnrdW4opiHQnCmGr8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yze032thzpF1BGP2r+N2EjewH3Tu/hN4ezxqy8qGyFpDYdRspYh
+	H6gpmoztWCwny/1UsQWme7aaY71lwH/bCo+9aSO8yF/miwjqJ/pySeqC1ScCkIc=
+X-Gm-Gg: ASbGncv5zqjgINgYgL9lZhMYa2aEHnuR9O7k1SEqnO6SpS1N4UDrQMxJhtmG5dXheWJ
+	XKrJIiFr4B93UogDMfzviVGXEWeBLhVTM15BhLAjFds+LonONj/NEU5W/KJJvIy5qPtAsXEnoHg
+	4+RGF/+ynrorwQJTHQyn5gCmDWUnpveCp0QaxQetVzePy0zRL6j+xD+/43/wQUsu3s9hO966nI0
+	HmF9N5xOK2hDBOY7D7n7DQ5WlqiP9suf+QnmOPnzTDGt/M/jLZJSLKAjbB/uINnWjUlbvrd/wrQ
+	J7GPT1iCGvCdGxbNiBujIpLKuj+abCDYJJiIqsZLt/0ELb+PRkz7/qV1fnyWuQE=
+X-Google-Smtp-Source: AGHT+IHFc+CaRU85moSCDGrb/7WzOtXGy8Znz1lNZW2tGN9O7ngj6L2f+YkxFTgGpjCIR2UBQc+Nww==
+X-Received: by 2002:a05:6000:188b:b0:38d:c58f:4ceb with SMTP id ffacd0b85a97d-38dc9374960mr2633679f8f.43.1738939561733;
+        Fri, 07 Feb 2025 06:46:01 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:5ee:79d0:a437:fa6a:2619:f5d8? ([2a01:e0a:5ee:79d0:a437:fa6a:2619:f5d8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc5839877sm3206265f8f.3.2025.02.07.06.46.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 06:46:01 -0800 (PST)
+Message-ID: <18fd9544-f9ef-4f58-9a8a-026737c26b94@baylibre.com>
+Date: Fri, 7 Feb 2025 15:45:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- frapeml500007.china.huawei.com (7.182.85.172)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 21/34] drm/mediatek: mtk_hdmi: Move CEC device parsing
+ in new function
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ chunkuang.hu@kernel.org
+Cc: p.zabel@pengutronix.de, airlied@gmail.com, simona@ffwll.ch,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, ck.hu@mediatek.com, jitao.shi@mediatek.com,
+ jie.qiu@mediatek.com, junzhi.zhao@mediatek.com,
+ dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, kernel@collabora.com,
+ dmitry.baryshkov@linaro.org, lewis.liao@mediatek.com,
+ ives.chenjh@mediatek.com, tommyyl.chen@mediatek.com,
+ jason-jh.lin@mediatek.com
+References: <20250113145232.227674-1-angelogioacchino.delregno@collabora.com>
+ <20250113145232.227674-22-angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+From: Alexandre Mergnat <amergnat@baylibre.com>
+In-Reply-To: <20250113145232.227674-22-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Shiju Jose <shiju.jose@huawei.com>
 
-Certain operations on memory, such as memory repair, are permitted
-only when the address and other attributes for the operation are
-from the current boot. This is determined by checking whether the
-memory attributes for the operation match those in the CXL gen_media
-or CXL DRAM memory event records reported during the current boot.
 
-The CXL event records must be backed up because they are cleared
-in the hardware after being processed by the kernel.
+On 13/01/2025 15:52, AngeloGioacchino Del Regno wrote:
+> Move the CEC device parsing logic to a new function called
+> mtk_hdmi_get_cec_dev(), and move the parsing action to the end
+> of mtk_hdmi_dt_parse_pdata(), allowing to remove gotos in this
+> function, reducing code size and improving readability.
 
-Support is added for storing CXL gen_media or CXL DRAM memory event
-records in xarrays. Additionally, helper functions are implemented
-to find a matching record in the xarray storage based on the memory
-attributes and repair type.
+Why CEC device parsing logic isn't done mtk_cec.c driver ? Then add "mtk_cec_get_dev" function to 
+mtk_cec.c too. Finally, call this new function in mtk_hdmi_probe after mtk_hdmi_dt_parse_pdata().
 
-Add validity check, when matching attributes for sparing, using
-the validity flag in the DRAM event record, to ensure that all
-required attributes for a requested repair operation are valid and
-set.
+> 
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> ---
+>   drivers/gpu/drm/mediatek/mtk_hdmi.c | 84 ++++++++++++++---------------
+>   1 file changed, 40 insertions(+), 44 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> index 48c37294dcbb..eb285ec394a3 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+> @@ -1367,24 +1367,16 @@ static const struct drm_bridge_funcs mtk_hdmi_bridge_funcs = {
+>   	.edid_read = mtk_hdmi_bridge_edid_read,
+>   };
+>   
+> -static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
+> -				   struct platform_device *pdev)
+> +static int mtk_hdmi_get_cec_dev(struct mtk_hdmi *hdmi, struct device *dev, struct device_node *np)
+>   {
+> -	struct device *dev = &pdev->dev;
+> -	struct device_node *np = dev->of_node;
+> -	struct device_node *remote, *i2c_np;
+>   	struct platform_device *cec_pdev;
+> -	struct regmap *regmap;
+> +	struct device_node *cec_np;
+>   	int ret;
+>   
+> -	ret = mtk_hdmi_get_all_clk(hdmi, np);
+> -	if (ret)
+> -		return dev_err_probe(dev, ret, "Failed to get clocks\n");
+> -
+>   	/* The CEC module handles HDMI hotplug detection */
+>   	cec_np = of_get_compatible_child(np->parent, "mediatek,mt8173-cec");
 
-Presently supported only when CONFIG_CXL_RAS_FEATURES is enabled, as
-this feature is specifically used for CXL RAS functionalities now.
+If it's done in mtk_cec.c, the hardcoded compatible string method will be replaced by of_match_table 
+(mtk_cec_of_ids), which is scalable and consistent.
 
-Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- drivers/cxl/core/Makefile |   2 +-
- drivers/cxl/core/mbox.c   |  11 ++-
- drivers/cxl/core/memdev.c |   9 +++
- drivers/cxl/core/ras.c    | 151 ++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxlmem.h      |  55 ++++++++++++++
- drivers/cxl/pci.c         |   3 +
- 6 files changed, 228 insertions(+), 3 deletions(-)
- create mode 100644 drivers/cxl/core/ras.c
+>   	if (!cec_np)
+> -		return dev_err_probe(dev, -EINVAL, "Failed to find CEC node\n");
+> +		return dev_err_probe(dev, -ENOTSUPP, "Failed to find CEC node\n");
+>   
+>   	cec_pdev = of_find_device_by_node(cec_np);
+>   	if (!cec_pdev) {
+> @@ -1393,65 +1385,69 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
+>   		return -EPROBE_DEFER;
+>   	}
+>   	of_node_put(cec_np);
+> -	hdmi->cec_dev = &cec_pdev->dev;
+>   
+>   	/*
+>   	 * The mediatek,syscon-hdmi property contains a phandle link to the
+>   	 * MMSYS_CONFIG device and the register offset of the HDMI_SYS_CFG
+>   	 * registers it contains.
+>   	 */
+> -	regmap = syscon_regmap_lookup_by_phandle(np, "mediatek,syscon-hdmi");
+> -	ret = of_property_read_u32_index(np, "mediatek,syscon-hdmi", 1,
+> -					 &hdmi->sys_offset);
+> -	if (IS_ERR(regmap))
+> -		ret = PTR_ERR(regmap);
+> -	if (ret) {
+> -		dev_err_probe(dev, ret,
+> -			      "Failed to get system configuration registers\n");
+> -		goto put_device;
+> -	}
+> -	hdmi->sys_regmap = regmap;
+> +	hdmi->sys_regmap = syscon_regmap_lookup_by_phandle(np, "mediatek,syscon-hdmi");
+> +	if (IS_ERR(hdmi->sys_regmap))
+> +		return PTR_ERR(hdmi->sys_regmap);
+> +
+> +	ret = of_property_read_u32_index(np, "mediatek,syscon-hdmi", 1, &hdmi->sys_offset);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret,
+> +				     "Failed to get system configuration registers\n");
+> +
+> +	hdmi->cec_dev = &cec_pdev->dev;
+> +	return 0;
+> +}
+> +
+> +static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
+> +				   struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct device_node *remote, *i2c_np;
+> +	int ret;
+> +
+> +	ret = mtk_hdmi_get_all_clk(hdmi, np);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to get clocks\n");
+>   
+>   	hdmi->regs = device_node_to_regmap(dev->of_node);
+> -	if (IS_ERR(hdmi->regs)) {
+> -		ret = PTR_ERR(hdmi->regs);
+> -		goto put_device;
+> -	}
+> +	if (IS_ERR(hdmi->regs))
+> +		return PTR_ERR(hdmi->regs);
+>   
+>   	remote = of_graph_get_remote_node(np, 1, 0);
+> -	if (!remote) {
+> -		ret = -EINVAL;
+> -		goto put_device;
+> -	}
+> +	if (!remote)
+> +		return -EINVAL;
+>   
+>   	if (!of_device_is_compatible(remote, "hdmi-connector")) {
+>   		hdmi->next_bridge = of_drm_find_bridge(remote);
+>   		if (!hdmi->next_bridge) {
+>   			dev_err(dev, "Waiting for external bridge\n");
+>   			of_node_put(remote);
+> -			ret = -EPROBE_DEFER;
+> -			goto put_device;
+> +			return -EPROBE_DEFER;
+>   		}
+>   	}
+>   
+>   	i2c_np = of_parse_phandle(remote, "ddc-i2c-bus", 0);
+>   	of_node_put(remote);
+> -	if (!i2c_np) {
+> -		ret = dev_err_probe(dev, -EINVAL, "No ddc-i2c-bus in connector\n");
+> -		goto put_device;
+> -	}
+> +	if (!i2c_np)
+> +		return dev_err_probe(dev, -EINVAL, "No ddc-i2c-bus in connector\n");
+>   
+>   	hdmi->ddc_adpt = of_find_i2c_adapter_by_node(i2c_np);
+>   	of_node_put(i2c_np);
+> -	if (!hdmi->ddc_adpt) {
+> -		ret = dev_err_probe(dev, -EINVAL, "Failed to get ddc i2c adapter by node\n");
+> -		goto put_device;
+> -	}
+> +	if (!hdmi->ddc_adpt)
+> +		return dev_err_probe(dev, -EINVAL, "Failed to get ddc i2c adapter by node\n");
+> +
+> +	ret = mtk_hdmi_get_cec_dev(hdmi, dev, np);
+> +	if (ret)
+> +		return ret;
+>   
+>   	return 0;
+> -put_device:
+> -	put_device(hdmi->cec_dev);
+> -	return ret;
+>   }
+>   
+>   /*
 
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 54baca513ecb..2fbdd6cd1357 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -17,4 +17,4 @@ cxl_core-y += cdat.o
- cxl_core-y += features.o
- cxl_core-$(CONFIG_TRACING) += trace.o
- cxl_core-$(CONFIG_CXL_REGION) += region.o
--cxl_core-$(CONFIG_CXL_RAS_FEATURES) += memfeature.o
-+cxl_core-$(CONFIG_CXL_RAS_FEATURES) += memfeature.o ras.o
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 93ef94c57092..435e9c0aff78 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -956,11 +956,18 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
- 		if (cxlr)
- 			hpa = cxl_dpa_to_hpa(cxlr, cxlmd, dpa);
- 
--		if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
-+		if (event_type == CXL_CPER_EVENT_GEN_MEDIA) {
-+			if (cxl_store_rec_gen_media((struct cxl_memdev *)cxlmd, evt))
-+				dev_warn(&cxlmd->dev, "CXL store rec_gen_media failed\n");
-+
- 			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
- 						&evt->gen_media);
--		else if (event_type == CXL_CPER_EVENT_DRAM)
-+		} else if (event_type == CXL_CPER_EVENT_DRAM) {
-+			if (cxl_store_rec_dram((struct cxl_memdev *)cxlmd, evt))
-+				dev_warn(&cxlmd->dev, "CXL store rec_dram failed\n");
-+
- 			trace_cxl_dram(cxlmd, type, cxlr, hpa, &evt->dram);
-+		}
- 	}
- }
- EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, "CXL");
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 2e2e035abdaa..99cfc7c70876 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -25,8 +25,17 @@ static DEFINE_IDA(cxl_memdev_ida);
- static void cxl_memdev_release(struct device *dev)
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_event_gen_media *rec_gen_media;
-+	struct cxl_event_dram *rec_dram;
-+	unsigned long index;
- 
- 	ida_free(&cxl_memdev_ida, cxlmd->id);
-+	xa_for_each(&cxlmd->rec_dram, index, rec_dram)
-+		kfree(rec_dram);
-+	xa_destroy(&cxlmd->rec_dram);
-+	xa_for_each(&cxlmd->rec_gen_media, index, rec_gen_media)
-+		kfree(rec_gen_media);
-+	xa_destroy(&cxlmd->rec_gen_media);
- 	kfree(cxlmd);
- }
- 
-diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-new file mode 100644
-index 000000000000..65994eec1037
---- /dev/null
-+++ b/drivers/cxl/core/ras.c
-@@ -0,0 +1,151 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * CXL RAS driver.
-+ *
-+ * Copyright (c) 2025 HiSilicon Limited.
-+ *
-+ */
-+
-+#include <linux/unaligned.h>
-+#include <cxlmem.h>
-+
-+#include "trace.h"
-+
-+struct cxl_event_gen_media *cxl_find_rec_gen_media(struct cxl_memdev *cxlmd,
-+						   struct cxl_mem_repair_attrbs *attrbs)
-+{
-+	struct cxl_event_gen_media *rec;
-+
-+	rec = xa_load(&cxlmd->rec_gen_media, attrbs->dpa);
-+	if (!rec)
-+		return NULL;
-+
-+	if (attrbs->repair_type == CXL_PPR)
-+		return rec;
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_find_rec_gen_media, "CXL");
-+
-+struct cxl_event_dram *cxl_find_rec_dram(struct cxl_memdev *cxlmd,
-+					 struct cxl_mem_repair_attrbs *attrbs)
-+{
-+	struct cxl_event_dram *rec;
-+	u16 validity_flags;
-+
-+	rec = xa_load(&cxlmd->rec_dram, attrbs->dpa);
-+	if (!rec)
-+		return NULL;
-+
-+	validity_flags = get_unaligned_le16(rec->media_hdr.validity_flags);
-+	if (!(validity_flags & CXL_DER_VALID_CHANNEL) ||
-+	    !(validity_flags & CXL_DER_VALID_RANK))
-+		return NULL;
-+
-+	switch (attrbs->repair_type) {
-+	case CXL_PPR:
-+		if (!(validity_flags & CXL_DER_VALID_NIBBLE) ||
-+		    get_unaligned_le24(rec->nibble_mask) == attrbs->nibble_mask)
-+			return rec;
-+		break;
-+	case CXL_CACHELINE_SPARING:
-+		if (!(validity_flags & CXL_DER_VALID_BANK_GROUP) ||
-+		    !(validity_flags & CXL_DER_VALID_BANK) ||
-+		    !(validity_flags & CXL_DER_VALID_ROW) ||
-+		    !(validity_flags & CXL_DER_VALID_COLUMN))
-+			return NULL;
-+
-+		if (rec->media_hdr.channel == attrbs->channel &&
-+		    rec->media_hdr.rank == attrbs->rank &&
-+		    rec->bank_group == attrbs->bank_group &&
-+		    rec->bank == attrbs->bank &&
-+		    get_unaligned_le24(rec->row) == attrbs->row &&
-+		    get_unaligned_le16(rec->column) == attrbs->column &&
-+		    (!(validity_flags & CXL_DER_VALID_NIBBLE) ||
-+		     get_unaligned_le24(rec->nibble_mask) == attrbs->nibble_mask) &&
-+		    (!(validity_flags & CXL_DER_VALID_SUB_CHANNEL) ||
-+		     rec->sub_channel == attrbs->sub_channel))
-+			return rec;
-+		break;
-+	case CXL_ROW_SPARING:
-+		if (!(validity_flags & CXL_DER_VALID_BANK_GROUP) ||
-+		    !(validity_flags & CXL_DER_VALID_BANK) ||
-+		    !(validity_flags & CXL_DER_VALID_ROW))
-+			return NULL;
-+
-+		if (rec->media_hdr.channel == attrbs->channel &&
-+		    rec->media_hdr.rank == attrbs->rank &&
-+		    rec->bank_group == attrbs->bank_group &&
-+		    rec->bank == attrbs->bank &&
-+		    get_unaligned_le24(rec->row) == attrbs->row &&
-+		    (!(validity_flags & CXL_DER_VALID_NIBBLE) ||
-+		     get_unaligned_le24(rec->nibble_mask) == attrbs->nibble_mask))
-+			return rec;
-+		break;
-+	case CXL_BANK_SPARING:
-+		if (!(validity_flags & CXL_DER_VALID_BANK_GROUP) ||
-+		    !(validity_flags & CXL_DER_VALID_BANK))
-+			return NULL;
-+
-+		if (rec->media_hdr.channel == attrbs->channel &&
-+		    rec->media_hdr.rank == attrbs->rank &&
-+		    rec->bank_group == attrbs->bank_group &&
-+		    rec->bank == attrbs->bank &&
-+		    (!(validity_flags & CXL_DER_VALID_NIBBLE) ||
-+		     get_unaligned_le24(rec->nibble_mask) == attrbs->nibble_mask))
-+			return rec;
-+		break;
-+	case CXL_RANK_SPARING:
-+		if (rec->media_hdr.channel == attrbs->channel &&
-+		    rec->media_hdr.rank == attrbs->rank &&
-+		    (!(validity_flags & CXL_DER_VALID_NIBBLE) ||
-+		     get_unaligned_le24(rec->nibble_mask) == attrbs->nibble_mask))
-+			return rec;
-+		break;
-+	default:
-+		return NULL;
-+	}
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_find_rec_dram, "CXL");
-+
-+int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt)
-+{
-+	void *old_rec;
-+	struct cxl_event_gen_media *rec = kmemdup(&evt->gen_media,
-+						  sizeof(*rec), GFP_KERNEL);
-+	if (!rec)
-+		return -ENOMEM;
-+
-+	old_rec = xa_store(&cxlmd->rec_gen_media,
-+			   le64_to_cpu(rec->media_hdr.phys_addr),
-+			   rec, GFP_KERNEL);
-+	if (xa_is_err(old_rec))
-+		return xa_err(old_rec);
-+
-+	kfree(old_rec);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_store_rec_gen_media, "CXL");
-+
-+int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
-+{
-+	void *old_rec;
-+	struct cxl_event_dram *rec = kmemdup(&evt->dram, sizeof(*rec), GFP_KERNEL);
-+
-+	if (!rec)
-+		return -ENOMEM;
-+
-+	old_rec = xa_store(&cxlmd->rec_dram,
-+			   le64_to_cpu(rec->media_hdr.phys_addr),
-+			   rec, GFP_KERNEL);
-+	if (xa_is_err(old_rec))
-+		return xa_err(old_rec);
-+
-+	kfree(old_rec);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_store_rec_dram, "CXL");
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 19c6ab45860c..8af0a32fe20f 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -34,6 +34,41 @@
- 	(FIELD_GET(CXLMDEV_RESET_NEEDED_MASK, status) !=                       \
- 	 CXLMDEV_RESET_NEEDED_NOT)
- 
-+enum cxl_mem_repair_type {
-+	CXL_PPR,
-+	CXL_CACHELINE_SPARING,
-+	CXL_ROW_SPARING,
-+	CXL_BANK_SPARING,
-+	CXL_RANK_SPARING,
-+	CXL_REPAIR_MAX,
-+};
-+
-+/**
-+ * struct cxl_mem_repair_attrbs - CXL memory repair attributes
-+ * @dpa: DPA of memory to repair
-+ * @nibble_mask: nibble mask, identifies one or more nibbles on the memory bus
-+ * @row: row of memory to repair
-+ * @column: column of memory to repair
-+ * @channel: channel of memory to repair
-+ * @sub_channel: sub channel of memory to repair
-+ * @rank: rank of memory to repair
-+ * @bank_group: bank group of memory to repair
-+ * @bank: bank of memory to repair
-+ * @repair_type: repair type. For eg. PPR, memory sparing etc.
-+ */
-+struct cxl_mem_repair_attrbs {
-+	u64 dpa;
-+	u32 nibble_mask;
-+	u32 row;
-+	u16 column;
-+	u8 channel;
-+	u8 sub_channel;
-+	u8 rank;
-+	u8 bank_group;
-+	u8 bank;
-+	enum cxl_mem_repair_type repair_type;
-+};
-+
- /**
-  * struct cxl_memdev - CXL bus object representing a Type-3 Memory Device
-  * @dev: driver core device object
-@@ -46,6 +81,8 @@
-  * @endpoint: connection to the CXL port topology for this memory device
-  * @id: id number of this memdev instance.
-  * @depth: endpoint port depth
-+ * @rec_gen_media: xarray to store CXL general media records
-+ * @rec_dram: xarray to store CXL DRAM records
-  */
- struct cxl_memdev {
- 	struct device dev;
-@@ -58,6 +95,8 @@ struct cxl_memdev {
- 	struct cxl_port *endpoint;
- 	int id;
- 	int depth;
-+	struct xarray rec_gen_media;
-+	struct xarray rec_dram;
- };
- 
- static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
-@@ -819,11 +858,27 @@ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa);
- #if IS_ENABLED(CONFIG_CXL_RAS_FEATURES)
- int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd);
- int devm_cxl_region_edac_register(struct cxl_region *cxlr);
-+struct cxl_event_gen_media *
-+cxl_find_rec_gen_media(struct cxl_memdev *cxlmd, struct cxl_mem_repair_attrbs *attrbs);
-+struct cxl_event_dram *cxl_find_rec_dram(struct cxl_memdev *cxlmd,
-+					 struct cxl_mem_repair_attrbs *attrbs);
-+int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt);
-+int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt);
- #else
- static inline int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
- { return 0; }
- static inline int devm_cxl_region_edac_register(struct cxl_region *cxlr)
- { return 0; }
-+static inline struct cxl_event_gen_media *
-+cxl_find_rec_gen_media(struct cxl_memdev *cxlmd, struct cxl_mem_repair_attrbs *attrbs)
-+{ return 0; }
-+static inline struct cxl_event_dram *cxl_find_rec_dram(struct cxl_memdev *cxlmd,
-+						       struct cxl_mem_repair_attrbs *attrbs)
-+{ return 0; }
-+static inline int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt)
-+{ return 0; }
-+static inline int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
-+{ return 0; }
- #endif
- 
- #ifdef CONFIG_CXL_SUSPEND
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index a96e54c6259e..a895ab75b7ec 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -1044,6 +1044,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- 	pci_save_state(pdev);
- 
-+	xa_init(&cxlmd->rec_gen_media);
-+	xa_init(&cxlmd->rec_dram);
-+
- 	return rc;
- }
- 
 -- 
-2.43.0
-
+Regards,
+Alexandre
