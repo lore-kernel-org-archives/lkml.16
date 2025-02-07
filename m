@@ -1,289 +1,121 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE7B184;
-	Fri,  7 Feb 2025 00:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9A6634;
+	Fri,  7 Feb 2025 00:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738886928; cv=none; b=FnN/+D6RJfjAzUcjiGhMv16zxaVgiBNW02cfxZhoKbQGzrFG36qHR83hK7FtvRJA/tOFRZj3D9L4CVissXCfZbFAoYliwOMrwHHinqJzxqX5wKwdZQywTAuBK6pLP60CvZd6isuHxakH5vpZJyW/ehm0+hKWKh98rDrMup4o+Zw=
+	t=1738887157; cv=none; b=EtZZUf7UZNUSMjSXr6k3png7rgoMGW5GcpNpfxUYVuZQPhS7ff0K/k2p0dGQG8xi9HYmlbg4g+m+mUeoFZs/i2BkMcui6HVm2kkklk0h9c4zo2KZS1mPSV3MhEuggiMFygFectFO1XOp23ccojm8aYUUfFPuwJTbcfNaQyIMjZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738886928; c=relaxed/simple;
-	bh=1R6usBM+LsTZvWsjlBzmGHuKsOpye6uZVWPv8IkL840=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=Jbxqcfs/3GvvCKnkBd6GuDbLOqvDSJnMjVUayg6WPvRjGPuzZXYR00+xBqWIyJnNSsoGe7m5WvdgwFh109ZKiCmrv7RQ4ZyvRMqRyKSXcfeUGMSbqy5nxuG2K+GoSfC0URCH0NyZsDV7tFrR4gJusmQt/lpkaz4GcQCnJnq5S9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tYVPqc4X; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZcgWolhn; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tYVPqc4X; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZcgWolhn; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1738887157; c=relaxed/simple;
+	bh=5HgEx8auY79rj9vlTAZRSa/TgAOS1e/wHs14rM+rt7g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ayi/qjNQx/m7P7VI3syuN3Rga+CEsm6i34CD6urWvIrFJadi1dU0CGHq3GVyLLVOknj+8/HnAKQjqDUX79Pe1KIb3GTmCQWx27n4Bw4X8DUHRJVAD8INpZBzEXnwDT9AyeNoSmRmUoAI7fGCRW2YXGdH0EyigUMfnXJrQyNQprI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=rWWg5DZx; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tYVPqc4X";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZcgWolhn";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tYVPqc4X";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZcgWolhn"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rWWg5DZx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1738887140;
+	bh=Bacfc9g4mK2N5F8ADgamDK4z6BaKuislD2vRGNhIeVs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=rWWg5DZxc/Ad2xR5t/K1x86gXsNRCKchPL2pcHDT8K/Aj3RRZOZ74fihi0SGbMszT
+	 BrpVFXrRoN7wyoet1J7oQg2pK/Spmth6xQCJABzA/U6JWmGX7uA/6IBLAH83b9pE29
+	 WeVmAOQN9gEYpTGD4rRZOlp/qe3j8kYBHziZ1CJffKDhKP4Pn+CItrQnndpX/qtJKO
+	 +5apEMUhkzjsjncuKjHOcDEJMlpEaefTXpiATQTyCE/u8UG4Jbr7mDPpNoP4CLayQI
+	 GAQeOMX7I17ev1+AVStGlRRkCbOYO/ZoBWxg+SPZVQ+n3MJrnGrg/fasLStV2DTid/
+	 9u0j8UKKYKbmQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A21AB1F38D;
-	Fri,  7 Feb 2025 00:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738886924; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=plQwxa1wkqAsSgnBriEp5ByWy+CvNHoYsmnLdolPu0I=;
-	b=tYVPqc4X5CqjvqUjXCJtkPn/dQfD8tiJNjxLoPpZCEWiT53XFiKl1IKgT84uYG4Ol9BYsv
-	aTbHMBvq3xVD4dP8VZe6HgPOzf+XouZpS03CIwpwEtqX6AuuWCq4g77X2FatqY7V969IeA
-	+9p//iFY1PldJEKOoGGKWDanPxOL88A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738886924;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=plQwxa1wkqAsSgnBriEp5ByWy+CvNHoYsmnLdolPu0I=;
-	b=ZcgWolhngZnG8T8axXkqbhmHr3JWmqFud4ONT/ZM7UV90xXqaS1uj/iAsOhNDWXkJL/EGy
-	l4fXFyLQJg2zdpAw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=tYVPqc4X;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ZcgWolhn
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738886924; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=plQwxa1wkqAsSgnBriEp5ByWy+CvNHoYsmnLdolPu0I=;
-	b=tYVPqc4X5CqjvqUjXCJtkPn/dQfD8tiJNjxLoPpZCEWiT53XFiKl1IKgT84uYG4Ol9BYsv
-	aTbHMBvq3xVD4dP8VZe6HgPOzf+XouZpS03CIwpwEtqX6AuuWCq4g77X2FatqY7V969IeA
-	+9p//iFY1PldJEKOoGGKWDanPxOL88A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738886924;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=plQwxa1wkqAsSgnBriEp5ByWy+CvNHoYsmnLdolPu0I=;
-	b=ZcgWolhngZnG8T8axXkqbhmHr3JWmqFud4ONT/ZM7UV90xXqaS1uj/iAsOhNDWXkJL/EGy
-	l4fXFyLQJg2zdpAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D9AEC13796;
-	Fri,  7 Feb 2025 00:08:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id RcqSIglPpWd9SgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 00:08:41 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4YpvYG6zY7z4wbR;
+	Fri,  7 Feb 2025 11:12:18 +1100 (AEDT)
+Date: Fri, 7 Feb 2025 11:12:27 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Simona Vetter <simona.vetter@ffwll.ch>, Jani Nikula
+ <jani.nikula@linux.intel.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Intel Graphics <intel-gfx@lists.freedesktop.org>, DRI
+ <dri-devel@lists.freedesktop.org>, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>, Imre Deak <imre.deak@intel.com>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the drm-intel tree with the drm-misc
+ tree
+Message-ID: <20250207111227.106a4468@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Christian Brauner" <brauner@kernel.org>
-Cc: "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
- "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Jeff Layton" <jlayton@kernel.org>, "Dave Chinner" <david@fromorbit.com>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/19] VFS: change kern_path_locked() and
- user_path_locked_at() to never return negative dentry
-In-reply-to: <20250206-verrechnen-ablenken-d1d58bc4931c@brauner>
-References: <>, <20250206-verrechnen-ablenken-d1d58bc4931c@brauner>
-Date: Fri, 07 Feb 2025 11:08:38 +1100
-Message-id: <173888691873.22054.11466111333534613133@noble.neil.brown.name>
-X-Rspamd-Queue-Id: A21AB1F38D
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+Content-Type: multipart/signed; boundary="Sig_/n0Mfrb3zlQJGaS5NfzRtVUu";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Fri, 07 Feb 2025, Christian Brauner wrote:
-> On Thu, Feb 06, 2025 at 01:31:56PM +0100, Christian Brauner wrote:
-> > On Thu, Feb 06, 2025 at 04:42:41PM +1100, NeilBrown wrote:
-> > > No callers of kern_path_locked() or user_path_locked_at() want a
-> > > negative dentry.  So change them to return -ENOENT instead.  This
-> > > simplifies callers.
-> > >=20
-> > > This results in a subtle change to bcachefs in that an ioctl will now
-> > > return -ENOENT in preference to -EXDEV.  I believe this restores the
-> > > behaviour to what it was prior to
-> > >  Commit bbe6a7c899e7 ("bch2_ioctl_subvolume_destroy(): fix locking")
-> > >=20
-> > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > ---
-> >=20
-> > It would be nice if you could send this as a separate cleanup patch.
-> > It seems unrelated to the series.
+--Sig_/n0Mfrb3zlQJGaS5NfzRtVUu
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I'll do that, thanks.
+Hi all,
 
-> >=20
-> > >  drivers/base/devtmpfs.c | 65 +++++++++++++++++++----------------------
-> > >  fs/bcachefs/fs-ioctl.c  |  4 ---
-> > >  fs/namei.c              |  4 +++
-> > >  kernel/audit_watch.c    | 12 ++++----
-> > >  4 files changed, 40 insertions(+), 45 deletions(-)
-> > >=20
-> > > diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
-> > > index b848764ef018..c9e34842139f 100644
-> > > --- a/drivers/base/devtmpfs.c
-> > > +++ b/drivers/base/devtmpfs.c
-> > > @@ -245,15 +245,12 @@ static int dev_rmdir(const char *name)
-> > >  	dentry =3D kern_path_locked(name, &parent);
-> > >  	if (IS_ERR(dentry))
-> > >  		return PTR_ERR(dentry);
-> > > -	if (d_really_is_positive(dentry)) {
-> > > -		if (d_inode(dentry)->i_private =3D=3D &thread)
-> > > -			err =3D vfs_rmdir(&nop_mnt_idmap, d_inode(parent.dentry),
-> > > -					dentry);
-> > > -		else
-> > > -			err =3D -EPERM;
-> > > -	} else {
-> > > -		err =3D -ENOENT;
-> > > -	}
-> > > +	if (d_inode(dentry)->i_private =3D=3D &thread)
-> > > +		err =3D vfs_rmdir(&nop_mnt_idmap, d_inode(parent.dentry),
-> > > +				dentry);
-> > > +	else
-> > > +		err =3D -EPERM;
-> > > +
-> > >  	dput(dentry);
-> > >  	inode_unlock(d_inode(parent.dentry));
-> > >  	path_put(&parent);
-> > > @@ -310,6 +307,8 @@ static int handle_remove(const char *nodename, stru=
-ct device *dev)
-> > >  {
-> > >  	struct path parent;
-> > >  	struct dentry *dentry;
-> > > +	struct kstat stat;
-> > > +	struct path p;
-> > >  	int deleted =3D 0;
-> > >  	int err;
-> > > =20
-> > > @@ -317,32 +316,28 @@ static int handle_remove(const char *nodename, st=
-ruct device *dev)
-> > >  	if (IS_ERR(dentry))
-> > >  		return PTR_ERR(dentry);
-> > > =20
-> > > -	if (d_really_is_positive(dentry)) {
-> > > -		struct kstat stat;
-> > > -		struct path p =3D {.mnt =3D parent.mnt, .dentry =3D dentry};
-> > > -		err =3D vfs_getattr(&p, &stat, STATX_TYPE | STATX_MODE,
-> > > -				  AT_STATX_SYNC_AS_STAT);
-> > > -		if (!err && dev_mynode(dev, d_inode(dentry), &stat)) {
-> > > -			struct iattr newattrs;
-> > > -			/*
-> > > -			 * before unlinking this node, reset permissions
-> > > -			 * of possible references like hardlinks
-> > > -			 */
-> > > -			newattrs.ia_uid =3D GLOBAL_ROOT_UID;
-> > > -			newattrs.ia_gid =3D GLOBAL_ROOT_GID;
-> > > -			newattrs.ia_mode =3D stat.mode & ~0777;
-> > > -			newattrs.ia_valid =3D
-> > > -				ATTR_UID|ATTR_GID|ATTR_MODE;
-> > > -			inode_lock(d_inode(dentry));
-> > > -			notify_change(&nop_mnt_idmap, dentry, &newattrs, NULL);
-> > > -			inode_unlock(d_inode(dentry));
-> > > -			err =3D vfs_unlink(&nop_mnt_idmap, d_inode(parent.dentry),
-> > > -					 dentry, NULL);
-> > > -			if (!err || err =3D=3D -ENOENT)
-> > > -				deleted =3D 1;
-> > > -		}
-> > > -	} else {
-> > > -		err =3D -ENOENT;
-> > > +	p.mnt =3D parent.mnt;
-> > > +	p.dentry =3D dentry;
-> > > +	err =3D vfs_getattr(&p, &stat, STATX_TYPE | STATX_MODE,
-> > > +			  AT_STATX_SYNC_AS_STAT);
-> > > +	if (!err && dev_mynode(dev, d_inode(dentry), &stat)) {
-> > > +		struct iattr newattrs;
-> > > +		/*
-> > > +		 * before unlinking this node, reset permissions
-> > > +		 * of possible references like hardlinks
-> > > +		 */
-> > > +		newattrs.ia_uid =3D GLOBAL_ROOT_UID;
-> > > +		newattrs.ia_gid =3D GLOBAL_ROOT_GID;
-> > > +		newattrs.ia_mode =3D stat.mode & ~0777;
-> > > +		newattrs.ia_valid =3D
-> > > +			ATTR_UID|ATTR_GID|ATTR_MODE;
-> > > +		inode_lock(d_inode(dentry));
-> > > +		notify_change(&nop_mnt_idmap, dentry, &newattrs, NULL);
-> > > +		inode_unlock(d_inode(dentry));
-> > > +		err =3D vfs_unlink(&nop_mnt_idmap, d_inode(parent.dentry),
-> > > +				 dentry, NULL);
-> > > +		if (!err || err =3D=3D -ENOENT)
-> > > +			deleted =3D 1;
-> > >  	}
-> > >  	dput(dentry);
-> > >  	inode_unlock(d_inode(parent.dentry));
-> > > diff --git a/fs/bcachefs/fs-ioctl.c b/fs/bcachefs/fs-ioctl.c
-> > > index 15725b4ce393..595b57fabc9a 100644
-> > > --- a/fs/bcachefs/fs-ioctl.c
-> > > +++ b/fs/bcachefs/fs-ioctl.c
-> > > @@ -511,10 +511,6 @@ static long bch2_ioctl_subvolume_destroy(struct bc=
-h_fs *c, struct file *filp,
-> > >  		ret =3D -EXDEV;
-> > >  		goto err;
-> > >  	}
-> > > -	if (!d_is_positive(victim)) {
-> > > -		ret =3D -ENOENT;
-> > > -		goto err;
-> > > -	}
-> > >  	ret =3D __bch2_unlink(dir, victim, true);
-> > >  	if (!ret) {
-> > >  		fsnotify_rmdir(dir, victim);
-> > > diff --git a/fs/namei.c b/fs/namei.c
-> > > index d684102d873d..1901120bcbb8 100644
-> > > --- a/fs/namei.c
-> > > +++ b/fs/namei.c
-> > > @@ -2745,6 +2745,10 @@ static struct dentry *__kern_path_locked(int dfd=
-, struct filename *name, struct
-> > >  	}
-> > >  	inode_lock_nested(path->dentry->d_inode, I_MUTEX_PARENT);
-> > >  	d =3D lookup_one_qstr(&last, path->dentry, 0);
-> > > +	if (!IS_ERR(d) && d_is_negative(d)) {
-> > > +		dput(d);
-> > > +		d =3D ERR_PTR(-ENOENT);
->=20
-> This doesn't unlock which afaict does cause issue with your devtmpfs
-> changes:
+Today's linux-next merge of the drm-intel tree got a conflict in:
 
-I unlocks a little further down.  The above leaves 'd' as an err, and it
-followed by
-	if (IS_ERR(d)) {
-		inode_unlock(path->dentry->d_inode);
-		path_put(path);
-	}
-	return d;
+  drivers/gpu/drm/i915/display/intel_dp_mst.c
 
-so I don't think there is a problem here.
+between commit:
 
-Thanks for the review.
+  66df9debcb29 ("drm/connector: make mode_valid_ctx take a const struct drm=
+_display_mode")
 
-NeilBrown
+from the drm-misc tree and commit:
+
+  d49b485d1be3 ("drm/i915/dp_mst: Use intel_connector vs. drm_connector poi=
+nter in intel_dp_mst.c")
+
+from the drm-intel tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/i915/display/intel_dp_mst.c
+index aecaaf1d0fe2,2324ca8f6096..000000000000
+--- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
++++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
+@@@ -1422,8 -1454,8 +1454,8 @@@ static int mst_connector_get_modes(stru
+  }
+ =20
+  static int
+- mst_connector_mode_valid_ctx(struct drm_connector *connector,
++ mst_connector_mode_valid_ctx(struct drm_connector *_connector,
+ -			     struct drm_display_mode *mode,
+ +			     const struct drm_display_mode *mode,
+  			     struct drm_modeset_acquire_ctx *ctx,
+  			     enum drm_mode_status *status)
+  {
+
+--Sig_/n0Mfrb3zlQJGaS5NfzRtVUu
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmelT+sACgkQAVBC80lX
+0Gx0Ewf/UGAeioMhhe79R0ggXFXY6vOyVUjXDM/68BsBElZERgqFHQeVPuB140/V
+DXKJOeUVgHX+t2lxqoBdWirPB5JfS35pjZs0BqxVL/c3y03IbaCaE2UyouJAEXoB
+40BPD+VZYmNRENsi5aGL/S8PYdTAnri/D3dzLSkY87G/TuZtuOQOKEDxc9XHIMUs
+gLUF4llz6IsbR12E/Ldnfgz5z+Ghbs+tGVmCg7j1srcnWMcVwnDVPUDfQ/KFMUSP
+2CzJmYAF7/d7676+lzk7phuNUWejFlYxf9avbmRkGOv4zaPug0VCgT8rhTAFmJkl
+l6yANLEp9yd4nxpprdUrOoiuwbiVYw==
+=/0Ww
+-----END PGP SIGNATURE-----
+
+--Sig_/n0Mfrb3zlQJGaS5NfzRtVUu--
