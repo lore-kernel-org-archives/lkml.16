@@ -1,37 +1,37 @@
 Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51CF9155321
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 06:41:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C320198831
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 06:41:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738910474; cv=none; b=MHgzYOu/KvEoVd7X0Y25BnY+V3yciPjM5deMvGzwGuF8rdb8/ZaMBKMSoZuiXfPK+OiYKfxffIDFbmhsmgxDbKCA5dkB9g1dhy9X5Zr8bVMVgptJHsEzJKU2LtHHI2VWEmsBbb6ov8l4qf0VCMxkFgyM/fNTe8iCkwGlIgr4pd4=
+	t=1738910478; cv=none; b=Je4l1lDT6p0iHhJiYkYlGYNYIW6DQv5EuJkR/pTqDNEnKpeUvSb5BJSFDc++HkkaP0U624Q6fjeANCJVCbhtEXMtdgpABL8rfQFs4S7kIUKJXDamSqrvlzm6vLDBJqAWy2WOsoe1p/mn892Zdc6dqKOkSNDegGYR0E4ho1DD6ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738910474; c=relaxed/simple;
-	bh=mFfNvPNFCNmFfkbdbE71PXRRXs4xWgHXOxGXwMJU8HA=;
+	s=arc-20240116; t=1738910478; c=relaxed/simple;
+	bh=PNzDsfeijeX0pwcQrXxAbqck9LLmdaMAxHm8ASHiEu0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HeCwcXnZZg6BP1y3jtwdXn7uLBqQYbc8EuHmpub2J3j1+FL3lyivpSl3HByxDABBIq8uVyrWhqXxR5bt/zTyJnlgzlPVR9gq9Zst/yfQo6j/l0ypCdo3VKMube5tMnEWl4vj3/54KNvU5Vn1GAefL4vhDgdlCFbe1zuk9xzjjxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=DQA5Jc5Q; arc=none smtp.client-ip=178.60.130.6
+	 MIME-Version; b=US7l9NfLkwbz/zQ09TBlNtbUE/7NFZm08ZCUf5Zn9HEjl4wYwWiraL1YdKadf/AoKPmm/6fBuGh+q/0jnub9DFlO8APHIpY1G/JIHZWDdtM99TMrMzbEsL+ti0rnSEdXU2Y4KCpt3hrVTf0+ZqtPKrxEg0U9eH/FSc5OGIqPVXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=VFIZJsKv; arc=none smtp.client-ip=178.60.130.6
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="DQA5Jc5Q"
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="VFIZJsKv"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
 	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=0BtpovqkvtmThTHwOLdaDpdhsnbOIfbSwVOEKFIXNKc=; b=DQA5Jc5Q1RPuslD4GlbvLVqS/P
-	MO9V6/TUEXHfuclrvaQMoj/JIx6U3KR9DT4yb9M7yfgMeFw6sB1/Nlw+QrGc2N3LeK0YioPcxNK01
-	R3IhGbxNpNuRwH7vJ/CnQjNmYg6V/3usc3kxQmihpyqlOTZrKQ4sfrPJAb5qCHktSJtnCVv+mjrYt
-	3YypkliemjVkjQ8vX0ZjgQtYYqmIU2KZI7t3teqbXfCTvWz0oXyjGQJaAcLUk9e26hGif1DhCWuRm
-	3KiQ9XrIrk7M14UXaGMMgjcKKLGsYggNwmMgYrDG2fGPTvbCC81HsottQy0CEFmIq9bi0yfrPJObV
-	8RRDrUng==;
+	bh=QQvtVw+9grQyes+NSrofVuvHU9QmOMCgSpiNXKMLte8=; b=VFIZJsKvnLoPpzf3A4/N9aVm+F
+	lLmN+dPzVGbcWjldnW5EGc59yHWHrwFdXNHgb8WzOOLA201c7k4rUrV7vt2XH63mYk3eCCuxKsmCn
+	j5bkX7WH2gXE4rycSr02/nosJyOlAEm8CnxFaTmWJ/3sNRq1BmEZ9Ithp0eeUD4YD7C99jDM/qN7R
+	m8wENx5tf5P1X7/NhnglKvwptL+D4fAjWflGb9kKodhodUMKKZ8p3P+hsJ0imeWRAHWrAv7wCVEUq
+	8QJACGRt92Oq+auSYrChLRnlIHH4yRj0xuw5AECf2mixU3l8qK0rvU6OaARIU+JnaxnUIXUEfJ16T
+	YlQHZ+GQ==;
 Received: from [58.29.143.236] (helo=localhost)
 	by fanzine2.igalia.com with utf8esmtpsa 
 	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tgI2r-005gha-Vw; Fri, 07 Feb 2025 07:41:04 +0100
+	id 1tgI2x-005ghi-Cw; Fri, 07 Feb 2025 07:41:09 +0100
 From: Changwoo Min <changwoo@igalia.com>
 To: tj@kernel.org,
 	void@manifault.com,
@@ -39,9 +39,9 @@ To: tj@kernel.org,
 Cc: kernel-dev@igalia.com,
 	linux-kernel@vger.kernel.org,
 	Changwoo Min <changwoo@igalia.com>
-Subject: [PATCH v2 1/2] sched_ext: Add an event, SCX_EV_ENQ_SLICE_DFL
-Date: Fri,  7 Feb 2025 15:40:51 +0900
-Message-ID: <20250207064052.399227-2-changwoo@igalia.com>
+Subject: [PATCH v2 2/2] sched_ext: Print an event, SCX_EV_ENQ_SLICE_DFL, in scx_qmap/central
+Date: Fri,  7 Feb 2025 15:40:52 +0900
+Message-ID: <20250207064052.399227-3-changwoo@igalia.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250207064052.399227-1-changwoo@igalia.com>
 References: <20250207064052.399227-1-changwoo@igalia.com>
@@ -53,101 +53,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a core event, SCX_EV_ENQ_SLICE_DFL, which represents how many
-tasks have been enqueued (or pick_task-ed or select_cpu-ed) with
-a default time slice (SCX_SLICE_DFL).
-
-Scheduling a task with SCX_SLICE_DFL unintentionally would be a source
-of latency spikes because SCX_SLICE_DFL is relatively long (20 msec).
-Thus, soaring the SCX_EV_ENQ_SLICE_DFL value would be a sign of BPF
-scheduler bugs, causing latency spikes, especially when ops.select_cpu()
-is provided.
-
-__scx_add_event() is used since the caller holds an rq lock or p->pi_lock,
-so the preemption has already been disabled.
+Modify the scx_qmap and scx_celtral schedulers
+to print the SCX_EV_ENQ_SLICE_DFL event every second.
 
 Signed-off-by: Changwoo Min <changwoo@igalia.com>
 ---
- kernel/sched/ext.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ tools/sched_ext/scx_central.bpf.c | 2 ++
+ tools/sched_ext/scx_qmap.bpf.c    | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 8a9a30895381..5ef90d9bcdd2 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -1468,6 +1468,12 @@ struct scx_event_stats {
- 	 */
- 	u64		SCX_EV_ENQ_SKIP_EXITING;
- 
-+	/*
-+	 * The total number of tasks enqueued (or pick_task-ed) with a
-+	 * default time slice (SCX_SLICE_DFL).
-+	 */
-+	u64		SCX_EV_ENQ_SLICE_DFL;
-+
- 	/*
- 	 * The total duration of bypass modes in nanoseconds.
- 	 */
-@@ -2134,6 +2140,7 @@ static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
- 	 */
- 	touch_core_sched(rq, p);
- 	p->scx.slice = SCX_SLICE_DFL;
-+	__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
- local_norefill:
- 	dispatch_enqueue(&rq->scx.local_dsq, p, enq_flags);
- 	return;
-@@ -2141,6 +2148,7 @@ static void do_enqueue_task(struct rq *rq, struct task_struct *p, u64 enq_flags,
- global:
- 	touch_core_sched(rq, p);	/* see the comment in local: */
- 	p->scx.slice = SCX_SLICE_DFL;
-+	__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
- 	dispatch_enqueue(find_global_dsq(p), p, enq_flags);
- }
- 
-@@ -3202,8 +3210,10 @@ static struct task_struct *pick_task_scx(struct rq *rq)
- 	 */
- 	if (keep_prev) {
- 		p = prev;
--		if (!p->scx.slice)
-+		if (!p->scx.slice) {
- 			p->scx.slice = SCX_SLICE_DFL;
-+			__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
-+		}
- 	} else {
- 		p = first_local_task(rq);
- 		if (!p) {
-@@ -3219,6 +3229,7 @@ static struct task_struct *pick_task_scx(struct rq *rq)
- 				scx_warned_zero_slice = true;
- 			}
- 			p->scx.slice = SCX_SLICE_DFL;
-+			__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
- 		}
- 	}
- 
-@@ -3306,6 +3317,7 @@ static int select_task_rq_scx(struct task_struct *p, int prev_cpu, int wake_flag
- 		if (found) {
- 			p->scx.slice = SCX_SLICE_DFL;
- 			p->scx.ddsp_dsq_id = SCX_DSQ_LOCAL;
-+			__scx_add_event(SCX_EV_ENQ_SLICE_DFL, 1);
- 		}
- 
- 		if (rq_bypass)
-@@ -5023,6 +5035,7 @@ static void scx_dump_state(struct scx_exit_info *ei, size_t dump_len)
- 	scx_dump_event(s, &events, SCX_EV_DISPATCH_LOCAL_DSQ_OFFLINE);
- 	scx_dump_event(s, &events, SCX_EV_DISPATCH_KEEP_LAST);
- 	scx_dump_event(s, &events, SCX_EV_ENQ_SKIP_EXITING);
-+	scx_dump_event(s, &events, SCX_EV_ENQ_SLICE_DFL);
- 	scx_dump_event(s, &events, SCX_EV_BYPASS_DURATION);
- 	scx_dump_event(s, &events, SCX_EV_BYPASS_DISPATCH);
- 	scx_dump_event(s, &events, SCX_EV_BYPASS_ACTIVATE);
-@@ -7163,6 +7176,7 @@ __bpf_kfunc void scx_bpf_events(struct scx_event_stats *events,
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_DISPATCH_LOCAL_DSQ_OFFLINE);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_DISPATCH_KEEP_LAST);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_ENQ_SKIP_EXITING);
-+		scx_agg_event(&e_sys, e_cpu, SCX_EV_ENQ_SLICE_DFL);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_DURATION);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_DISPATCH);
- 		scx_agg_event(&e_sys, e_cpu, SCX_EV_BYPASS_ACTIVATE);
+diff --git a/tools/sched_ext/scx_central.bpf.c b/tools/sched_ext/scx_central.bpf.c
+index 376c14d5dd0d..907a844723c1 100644
+--- a/tools/sched_ext/scx_central.bpf.c
++++ b/tools/sched_ext/scx_central.bpf.c
+@@ -305,6 +305,8 @@ static int central_timerfn(void *map, int *key, struct bpf_timer *timer)
+ 			   scx_read_event(&events, SCX_EV_DISPATCH_KEEP_LAST));
+ 		bpf_printk("%35s: %llu\n", "SCX_EV_ENQ_SKIP_EXITING",
+ 			   scx_read_event(&events, SCX_EV_ENQ_SKIP_EXITING));
++		bpf_printk("%35s: %llu\n", "SCX_EV_ENQ_SLICE_DFL",
++			   scx_read_event(&events, SCX_EV_ENQ_SLICE_DFL));
+ 		bpf_printk("%35s: %llu\n", "SCX_EV_BYPASS_DURATION",
+ 			   scx_read_event(&events, SCX_EV_BYPASS_DURATION));
+ 		bpf_printk("%35s: %llu\n", "SCX_EV_BYPASS_DISPATCH",
+diff --git a/tools/sched_ext/scx_qmap.bpf.c b/tools/sched_ext/scx_qmap.bpf.c
+index 5edb79742e37..7d9d1e5d2358 100644
+--- a/tools/sched_ext/scx_qmap.bpf.c
++++ b/tools/sched_ext/scx_qmap.bpf.c
+@@ -784,6 +784,8 @@ static int monitor_timerfn(void *map, int *key, struct bpf_timer *timer)
+ 		   scx_read_event(&events, SCX_EV_DISPATCH_KEEP_LAST));
+ 	bpf_printk("%35s: %llu\n", "SCX_EV_ENQ_SKIP_EXITING",
+ 		   scx_read_event(&events, SCX_EV_ENQ_SKIP_EXITING));
++	bpf_printk("%35s: %llu\n", "SCX_EV_ENQ_SLICE_DFL",
++		   scx_read_event(&events, SCX_EV_ENQ_SLICE_DFL));
+ 	bpf_printk("%35s: %llu\n", "SCX_EV_BYPASS_DURATION",
+ 		   scx_read_event(&events, SCX_EV_BYPASS_DURATION));
+ 	bpf_printk("%35s: %llu\n", "SCX_EV_BYPASS_DISPATCH",
 -- 
 2.48.1
 
