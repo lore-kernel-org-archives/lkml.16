@@ -1,50 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2873F2417C7;
-	Fri,  7 Feb 2025 12:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673D91DF73B;
+	Fri,  7 Feb 2025 12:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738929962; cv=none; b=XiEjFHRAKbzKcmPMMnEdKbjpX5M387mLIDS1rySdNHRRQZ6DhJQpjBqIcx/eq+pMCi5U/E1fMHEnDp0gMm0nNAiHgAi8pOMvjyYQxBaBlJ5vMnxUMcP/2GYBNiC6A7NsYBwjl3ucTH6TdLysyH1xwBdRBU//dtmgtrZ+5HsAIUY=
+	t=1738929965; cv=none; b=VtYTwsSB2iZF2SSJ8AMQ+cJe38VSlQnT8ShnB18RoeJZb+POuFxL4eiQruY0hPInfrg0hBL177XAXbg0vQ+ldeQ9b3TDVGuBE/pdhrXtbZu3eB0qKGCAkEC58w/OdhiSDy1Bz22W8Sk1JEFjrQHkYlQweMbC3Lx4+mM746NGeLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738929962; c=relaxed/simple;
-	bh=ma5Hb3GHBC/magnwae6faiDO9xx0GkENHYDG1un8qXY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IMLTmaWwDdj9aZS9CaTJZbQLi88sPLFkIrnmbXmIDpUEKNG4ETAxY40rDeKFc2q3xoZeueonhpQh85yK5yowrrjP2AQsYymQMYYPNRiSTPzrG1lT8cvpvC+vavEhYH0smbFosG9A+SEwmHyP+iv686EYd16NuFBVX2rKd5HG7Gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G+M4EFpD; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738929965; c=relaxed/simple;
+	bh=90ALkuxIPaV7zvMY92t/88IsGzMcqTS2ihJd4YGdkiw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=P2dLPfU19cM0HBPIk/rcbVHCTFYu955qwGSVlwYQt/Q1JLm0gpBV+QAyF8LmM+HtGSDM8S/Z0qlzw6/MqSNZPnWtC20JjRTZpaQobYZ27x7r3sSKFrVsdg4vco9QboBunTEPQTEY6hBjkjN3qrG5Ppa4Rmib9hhUb+DzA6x/Vq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=StKrhOji; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G+M4EFpD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738929961; x=1770465961;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ma5Hb3GHBC/magnwae6faiDO9xx0GkENHYDG1un8qXY=;
-  b=G+M4EFpDGk2x40HsBdsJSTl/9DcZZyxBeW+xQAbyxERj17lbH50espKP
-   9ovVeb6u1MYEtEQ46O+iqR+A9PSn/hg+KNERakmJLD5Bog6RA+XTLttR7
-   YmiryI5LF01ffG26jhGLlqCrF9M0/FuzgHF9wiMF2YfZ3jDz4REMoGr5m
-   A6NrW6h2GPrSBQN5/aeC6g/zSG+z3n91/OUsS20UxfaNz0NrL8RKAxc6G
-   q6+P3MSJMjOq/3F8Dym9JMFA3/8xFm0Y06P1tN75lt6knTVcpfxdZHlKH
-   pAbv+QUnLn9DSjDovDtMrXL47D8eut2tUJ5PupnXmt3S22skNqfQpO0nm
-   g==;
-X-CSE-ConnectionGUID: aGZ3uO/SS1K2tP7DYQiY9g==
-X-CSE-MsgGUID: 8RcjSbIfT3G5Ts/LGqLupg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50207443"
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="50207443"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 04:05:59 -0800
-X-CSE-ConnectionGUID: kHF5+SKUR8KAc4eXN8bJ/Q==
-X-CSE-MsgGUID: +CYmbFsHQUCok7kJ1kQq9A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="142389033"
-Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
-  by orviesa002.jf.intel.com with ESMTP; 07 Feb 2025 04:05:58 -0800
-Message-ID: <b19218ab-5248-47ba-8111-157818415247@linux.intel.com>
-Date: Fri, 7 Feb 2025 14:06:54 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="StKrhOji"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5176WWhe008285;
+	Fri, 7 Feb 2025 12:05:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	GX2fRni3VlDgRLhRmAQ2ij9iIbkWH1v1gTy6Vdln1ok=; b=StKrhOjilL7eYgeS
+	SQVOI8IcAQeMnPdn9IciOpiAzNJduR/VYwcFo97ShnIJsasf4k4Q05KwBeaO3UA3
+	EF/T5gAjyfqx1bymKtt49W6IG3LviWuJsbl1Vr9BhovVe4yPhPbKwX46PoELnxQR
+	EBFSZoqq0SC+UDpPgLB++QwIu+GtVikVi8Ge3ynMLY9Tam8R9bqQ9Vwbs3UmcCXS
+	Y2QW+buzJsEUWGEIqACpltUjgX9Io6z27h5jEm6lsv5AKzcIyMYLK+srMHQG0cvU
+	1Jw1lpx6nsMRChsOi6OpJtSViTnNV74Tw6VnOcL0bAgmZKRz1E2lZCicdBhG8Ee5
+	AkLROA==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nd0f0uvc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Feb 2025 12:05:49 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 517C5mBb028485
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 7 Feb 2025 12:05:48 GMT
+Received: from [10.216.49.103] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 7 Feb 2025
+ 04:05:44 -0800
+Message-ID: <0670d046-a69f-4840-b80b-3cd1d3b1ef43@quicinc.com>
+Date: Fri, 7 Feb 2025 17:35:39 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,75 +50,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/1] xhci: Correctly handle last TRB of isoc TD on
- Etron xHCI host
-To: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>
-Cc: gregkh@linuxfoundation.org, ki.chiang65@gmail.com,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- mathias.nyman@intel.com, stable@vger.kernel.org
-References: <20250205234205.73ca4ff8@foxbook>
+Subject: Re: [PATCH v1 0/3] Add Qualcomm i3c master controller driver support
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        <alexandre.belloni@bootlin.com>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <jarkko.nikula@linux.intel.com>, <linux-i3c@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250205143109.2955321-1-quic_msavaliy@quicinc.com>
+ <Z6OQb29Ca2tmQs2Q@shikoro>
 Content-Language: en-US
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <20250205234205.73ca4ff8@foxbook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <Z6OQb29Ca2tmQs2Q@shikoro>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Dw9mIXA4CBA4rLWnZ49OcEC2p9C5hghG
+X-Proofpoint-GUID: Dw9mIXA4CBA4rLWnZ49OcEC2p9C5hghG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_05,2025-02-07_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
+ lowpriorityscore=0 spamscore=0 suspectscore=0 mlxlogscore=898 mlxscore=0
+ adultscore=0 malwarescore=0 phishscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502070093
 
-On 6.2.2025 0.42, Michał Pecio wrote:
->> Not giving back the TD when we get an event for the last TRB in the
->> TD sounds risky. With this change we assume all old and future ETRON
->> hosts will trigger this additional spurious success event.
+Hi Wolfram,
+
+On 2/5/2025 9:53 PM, Wolfram Sang wrote:
 > 
-> error_mid_td can cope with hosts which don't produce the extra success
-> event, it was done this way to deal with buggy NECs. The cost is one
-> more ESIT of latency on TDs with error.
-
-It makes giving back the TD depend on a future event we can't guarantee.
-
-I still think it better fits the spurious success case.
-It's not an error mid TD, it's a spurious success event sent by host
-after a completion (error) event for the last TRB in the TD.
-
-Making this change to error_mid_td code also makes that code more
-confusing and harder to follow.
-
->> I think we could handle this more like the XHCI_SPURIOUS_SUCCESS case
->> seen with short transfers, and just silence the error message.
+>> This patchset was tested on Kailua SM8550 MTP device and data transfer
+>> has been tested in I3C SDR mode with i2c and i3c target devices.
 > 
-> That's a little dodgy because it frees the TD before the HC is
-> completely done with it. *Probably* no problem with data buffers
-> (no sensible reason to DMA into them after an earlier error), but
-> we could overwrite the transfer ring in rare cases and IDK if it
-> would or wouldn't cause problems in this particular case.
-
-We did get an event for the last TRB in the TD, so in normal cases
-this TD should be considered complete, and given back.
-
-I don't think the controller has any reason to touch data buffers at
-this stage either. Can't recall any iommu/dma issues related to this.
-
+> Can you share with which I3C targets you tested this driver?
 > 
-> Same applies to the "short packet" case existing today. I thought
-> about fixing it, but IIRC I ran into some differences between HCs
-> or out of spec behavior and it got tricky.
-
-For the short transfer case this is more valid concern. Here we give
-back the TD after an event mid TD, and we know hardware might still
-walk the rest of the TD. It shouldn't touch data buffers either as
-short transfer indicates all data has been written.
-
-> 
-> Maybe it would make sense to separate giveback (and freeing of the
-> data buffer by class drivers) from transfer ring inc_deq(). Do the
-> former when we reasonably believe the HC won't touch the buffers
-> anymore, do the latter when we are sure that it's in the next TD.
-
-This sounds reasonable, makes sense to keep the software dequeue
-pointer where hardware last reported its position. Currently we
-advance it to where we assume hardware will be next.
-
-But this is a separate project.
-Might need some work around in the driver.
-
-Thanks
-Mathias
+Tested with Prodigy : one target as i3c and another as i2c. It's not 
+having on board slave, but internally  we have target devices connected.
 
