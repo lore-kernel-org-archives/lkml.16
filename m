@@ -1,123 +1,173 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1135818DB0E
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 19:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E98318DB0E;
+	Fri,  7 Feb 2025 19:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738956281; cv=none; b=qdLfkiE3pqAmZl79EoyLNGSQU8jMr7Sw/W+T/lPwDdXPdjQfmPl6jXso5CCmOzVgdKPpvN5HZKKvGTOuo/DY+nwxPjP+x52OB2Z4WM1YVObclPTgtZeUoAoHHmYRqPmDcv0om0VSfNG+IAGmabBLFMbGXoH1Yq5Fj/Tdw0ODEZg=
+	t=1738956289; cv=none; b=Owb3+yoNK85Q6TnOx2bljlv3NBJ/P5HdUtU6NUtsX1cCNPQL2Dg0/2tu/LRAwBaWQDcnVmw4ny5jQYvc7/9CgIYRSIKs83mVYKb9muVpUbz7q7Pm6I8FjKZyk1XcDud3ShPiJIK7Im79P6hdNcSPK34kVtwb907p1lqL146M1DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738956281; c=relaxed/simple;
-	bh=vxU+tYVnh6kMXN1kCB92NtopAdH3cQ9eveg0cFzyLtc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m1e2UpZm1EUFDbmVvQzm/WtyZ4pC2Eo9qN6FmkUMFP9FJ8CJ2NS1LSG8rLxxM7UAkuFPmLu71LOJw5gM7oRysGITW4vtsBmwRsZbnPMPjyeadyaTEu9zCJ/jkMFw63osDsK32hXTTQeHANBIjbVv3z1ML1TUDkagy1R6GUpby0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=sghWfaAk; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1738956289; c=relaxed/simple;
+	bh=e01kz4cB1I17ePVMISIl77htfT3iTia1eMGA07YuSV4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ys5BW3Lxhk3AUJtUqDv7BLy+Jc2bj3IWpvn+fB6ZuWazecVQs2+12APySDtEPNy1nkdIv9j1i0JSMcCuUdOnJa7Cdo+3coVcbrBuW2EmqPtOMsUnpryqt9cJrNjJRaNjeo36STpuZ4hGM3FR3o/v+bFbTDJbY1n0XdYli4vq8wQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=oDjtXD08; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="sghWfaAk"
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com [209.85.218.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 356D84010B
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 19:24:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738956277;
-	bh=vxU+tYVnh6kMXN1kCB92NtopAdH3cQ9eveg0cFzyLtc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=sghWfaAkeYmtcePg+KTr9ukfvOSg5WANiPg9hZUaM3qhnTYuQ6mGce4gkWojSy13K
-	 22TEEi3vRPpJL/89/l+H0LpvhdVbkvN67bdgjKGCqfzfOxCOAfzIAJyNw+ID+1sbfl
-	 RjjBPHIKdmP6KNHrJi2CFZvXKfUQs3oMceFgKXy6S2lr4iIcdM3hmkovqnXk9626lJ
-	 4e6WecWg267A7dToqm1V7I0YA4bRpAf+gdLjdwukKoNppJhC0jQ4y2zzlu6CRLW0Vq
-	 h/7TuTIEnxzbXHuO1dyPOgEeMz4fDa8u8/9Lft/aOmo4cYP+MCfJFHQ0GI1uJO0gBl
-	 XUpqmttJ+CMbQ==
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ab7907bb87eso101947366b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 11:24:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738956277; x=1739561077;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vxU+tYVnh6kMXN1kCB92NtopAdH3cQ9eveg0cFzyLtc=;
-        b=kX293quo0L92X2RDQoOigRDZUaNqimTrjmgq5ZfjffGQEdm18JNgcWWPoYY0XtfByP
-         gD3Kff/BvszKMcTDMX+A5Coroh4JI+uImn1byljcCY0Al03mNlj+a0c9ZJolOL7Ofu2D
-         AbCF4H0HTdTuuS+CpcfFqcA8ZhyIJWX5XOlus9etFvOLvaR8jl85OsEj9yP266+XclH1
-         M0BPHegftRPTjwN6QzMaIymwxGDol9j0+Aprac+MxkEYO0flTeS1wKuJoQQ/IzTK1AxG
-         5IjwoRhtKqmOt3/buMFTIC8QiSucVSZX0dg0hWvAsW8UST1QFzfXC1YiByrQxzWkLa4X
-         8F2w==
-X-Forwarded-Encrypted: i=1; AJvYcCXTd1UuDy1eVuoT9zboV1n/E9ULy0LiUby82PSy8vZildjQlc3B/wpK87cMDa8P+lZhb/aXGyBhhjA2vCQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwY+QQfImNTInWzRZThrfnssLWvaLenMr3zBeSFd7PbowFfWxMP
-	DMQt8NMNCaKvArmDg9QymNpBLYETSh5zNzmHtKb4YNeQSbECcryuzSs5EezGRQ8CNzTMrz849jH
-	99oTxJoHDf1wNDaCJ3fA0+L6LW7AHH179z2vf+/le/oAIDWOtXQOsCm7lHDNp1wcKb7ke/lgbZ5
-	rtXyTt8ZkakYyyH+Eppsei+6VhtPlv6caZxzomv2nZ0PlkDbfAhNn9
-X-Gm-Gg: ASbGncsHd12t5Qu4twyZ/R2IDvwrdd+hYOb+3dbu9nvcm8rX8cJxVBVWXoeo/vMOcWq
-	ZsaLQhdfKhXKW97O9NKomWuRtj3ed6QHOmDe6BNWDz1jNagdP3BBIK1qrVL8H
-X-Received: by 2002:a17:906:6a29:b0:aa6:a572:49fd with SMTP id a640c23a62f3a-ab789ca2972mr420381866b.54.1738956276692;
-        Fri, 07 Feb 2025 11:24:36 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEW39V6vxQtVQ8dceJH6mGloMgI0XHnyBDpBS0JjWTn/3cHP5RLfgBQFsUPSHSqaPzI8YS3WFgZCGADlt7dVJo=
-X-Received: by 2002:a17:906:6a29:b0:aa6:a572:49fd with SMTP id
- a640c23a62f3a-ab789ca2972mr420379566b.54.1738956276318; Fri, 07 Feb 2025
- 11:24:36 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oDjtXD08"
+Received: from [10.17.64.61] (unknown [131.107.8.61])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 764502107307;
+	Fri,  7 Feb 2025 11:24:47 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 764502107307
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738956287;
+	bh=zt9HgV3CYEF4IgU9rUZoB8RGyFAs8v6Kh6vMoUBGx0A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oDjtXD08Lqb8ELFrQ7DgfZeT1+6Pmg2K01dpPAHVQTg9B3ponljVlqzBwlf8Wf4SN
+	 dcmXUAQLF+ePAWCawIJ0evruE3iRvUJNza1rjhQ4HtK5Y9vIxZKQwi91zNQLoit4G7
+	 5GLarvKTqn2ENCC7wHTCYNMZC9YE7xv6rw8uqVL8=
+Message-ID: <b9a4089e-d97a-4977-a73a-bb0ccd02672e@linux.microsoft.com>
+Date: Fri, 7 Feb 2025 11:24:47 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHTA-uaH9w2LqQdxY4b=7q9WQsuA6ntg=QRKrsf=mPfNBmM5pw@mail.gmail.com>
- <20250207155456.GA3665725@ziepe.ca> <CAHTA-uasZ+ZkdzaSzz-QH=brD3PDb+wGfvE-k377SW7BCEi6hg@mail.gmail.com>
- <20250207190152.GA3665794@ziepe.ca>
-In-Reply-To: <20250207190152.GA3665794@ziepe.ca>
-From: Mitchell Augustin <mitchell.augustin@canonical.com>
-Date: Fri, 7 Feb 2025 13:24:24 -0600
-X-Gm-Features: AWEUYZlr2pi0PkFPhk6g8C39Y1EN3TzUeAopLgpyoqvD13zRSg5s6jJmYOdIuQ4
-Message-ID: <CAHTA-uZMZ6qQZf_n55gNaTjQQ0j8nXdt1Yi_+8+-YUNhxcrs_A@mail.gmail.com>
-Subject: Re: modprobe mlx5_core on OCI bare-metal instance causes
- unrecoverable hang and I/O error
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com, 
-	andrew+netdev@lunn.ch, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Talat Batheesh <talatb@nvidia.com>, 
-	Feras Daoud <ferasda@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 3/7] ima: kexec: skip IMA segment validation after
+ kexec soft reboot
+To: Stefan Berger <stefanb@linux.ibm.com>, zohar@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+ James.Bottomley@HansenPartnership.com
+References: <20250203232033.64123-1-chenste@linux.microsoft.com>
+ <20250203232033.64123-4-chenste@linux.microsoft.com>
+ <00eeeb8b-cc28-42af-873f-3478cd22fb6e@linux.ibm.com>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <00eeeb8b-cc28-42af-873f-3478cd22fb6e@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-*facepalm*
-
-Thanks, I can't believe that wasn't my first thought as soon as I
-learned these instances were using iSCSI. That's almost certainly what
-is happening on this OCI instance, since the host adapter for its
-iSCSI transport is a ConnectX card.
-
-The fact that I was able to see similar behavior once on a machine
-booted from a local disk (in the A100 test I mentioned) is still
-confusing though. I'll update this thread if I can figure out a
-reliable way to reproduce that behavior.
-
-
-On Fri, Feb 7, 2025 at 1:01=E2=80=AFPM Jason Gunthorpe <jgg@ziepe.ca> wrote=
-:
+On 2/4/2025 11:39 AM, Stefan Berger wrote:
+> On 2/3/25 6:20 PM, steven chen wrote:
+>> kexec_calculate_store_digests() calculates and stores the digest of the
+>> segment at kexec_file_load syscall where the IMA segment is also
+>> allocated.  With this series, the IMA segment will be updated with the
+>> measurement log at kexec excute stage when soft reboot is initiated.
 >
-> On Fri, Feb 07, 2025 at 10:02:46AM -0600, Mitchell Augustin wrote:
-> > > Is it using iscsi/srp/nfs/etc for any filesystems?
-> >
-> > Yes, dev sda is using iSCSI:
+> s/excute/execute
 >
-> If you remove the driver that is providing transport for your
-> filesystem the system will hang like you showed.
+>> Therefore, it may fail digest verification in verify_sha256_digest()
+>> after kexec soft reboot into the new kernel. Therefore, the digest
+>> calculation/verification of the IMA segment needs to be skipped.
+>>
+>> Skip IMA segment from calculating and storing digest in function
 >
-> It can be done, but the process sequencing the load/unload has to be
-> entirely contained to a tmpfs so it doesn't become blocked on IO that
-> cannot complete.
+> Skip the calculation and storing of the digest of the IMA segment in 
+> kexec_calculate_store_digests() so that ...
 >
-> Jason
+>
+>> kexec_calculate_store_digests() so that it is not added to the
+>> 'purgatory_sha_regions'.
+>>
+>> Since verify_sha256_digest() only verifies 'purgatory_sha_regions',
+>> no change is needed in verify_sha256_digest() in this context.
+>>
+>> With this change, the IMA segment is not included in the digest
+>> calculation, storage, and verification.
+>>
+>> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+> > --->   include/linux/kexec.h              |  3 +++
+>>   kernel/kexec_file.c                | 23 +++++++++++++++++++++++
+>>   security/integrity/ima/ima_kexec.c |  3 +++
+>>   3 files changed, 29 insertions(+)
+>>
+>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>> index f8413ea5c8c8..f3246e881ac8 100644
+>> --- a/include/linux/kexec.h
+>> +++ b/include/linux/kexec.h
+>> @@ -362,6 +362,9 @@ struct kimage {
+>>         phys_addr_t ima_buffer_addr;
+>>       size_t ima_buffer_size;
+>> +
+>> +    unsigned long ima_segment_index;
+>> +    bool is_ima_segment_index_set;
+>>   #endif
+>>         /* Core ELF header buffer */
+>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+>> index 3eedb8c226ad..a3370a0dce20 100644
+>> --- a/kernel/kexec_file.c
+>> +++ b/kernel/kexec_file.c
+>> @@ -38,6 +38,22 @@ void set_kexec_sig_enforced(void)
+>>   }
+>>   #endif
+>>   +#ifdef CONFIG_IMA_KEXEC
+>> +static bool check_ima_segment_index(struct kimage *image, int i)
+>> +{
+>> +    if (image->is_ima_segment_index_set &&
+>> +            i == image->ima_segment_index)
+>
+> The 'i =' should be indented under 'image->'.
+>
+> With these nits fixed:
+>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+>
+>> +        return true;
+>> +    else
+>> +        return false;
+>> +}
+>> +#else
+>> +static bool check_ima_segment_index(struct kimage *image, int i)
+>> +{
+>> +    return false;
+>> +}
+>> +#endif
+>> +
+>>   static int kexec_calculate_store_digests(struct kimage *image);
+>>     /* Maximum size in bytes for kernel/initrd files. */
+>> @@ -764,6 +780,13 @@ static int kexec_calculate_store_digests(struct 
+>> kimage *image)
+>>           if (ksegment->kbuf == pi->purgatory_buf)
+>>               continue;
+>>   +        /*
+>> +         * Skip the segment if ima_segment_index is set and matches
+>> +         * the current index
+>> +         */
+>> +        if (check_ima_segment_index(image, i))
+>> +            continue;
+>> +
+>>           ret = crypto_shash_update(desc, ksegment->kbuf,
+>>                         ksegment->bufsz);
+>>           if (ret)
+>> diff --git a/security/integrity/ima/ima_kexec.c 
+>> b/security/integrity/ima/ima_kexec.c
+>> index b60a902460e2..283860d20521 100644
+>> --- a/security/integrity/ima/ima_kexec.c
+>> +++ b/security/integrity/ima/ima_kexec.c
+>> @@ -162,6 +162,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+>>       kbuf.buffer = kexec_buffer;
+>>       kbuf.bufsz = kexec_buffer_size;
+>>       kbuf.memsz = kexec_segment_size;
+>> +    image->is_ima_segment_index_set = false;
+>>       ret = kexec_add_buffer(&kbuf);
+>>       if (ret) {
+>>           pr_err("Error passing over kexec measurement buffer.\n");
+>> @@ -172,6 +173,8 @@ void ima_add_kexec_buffer(struct kimage *image)
+>>       image->ima_buffer_addr = kbuf.mem;
+>>       image->ima_buffer_size = kexec_segment_size;
+>>       image->ima_buffer = kexec_buffer;
+>> +    image->ima_segment_index = image->nr_segments - 1;
+>> +    image->is_ima_segment_index_set = true;
+>>         /*
+>>        * kexec owns kexec_buffer after kexec_add_buffer() is called
 
+Thanks, Stefan, I will update it in next version
 
-
---=20
-Mitchell Augustin
-Software Engineer - Ubuntu Partner Engineering
