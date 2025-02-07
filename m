@@ -1,107 +1,209 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF49238D56;
-	Fri,  7 Feb 2025 15:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1604A1A;
+	Fri,  7 Feb 2025 15:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738941305; cv=none; b=j7dXGQrDkHyPDtV6lS6+DVB3ZvUf5Fdnr26cfwiMpj9a+XIjbZo7iG1NQgvFm7LEApRZtWxyQMn29oF5PW4OPiPYtZ0d8euQ8S4Hhw8jZS0i3Hpijr61JPQ3wPcJaiEHKf/iYfhNKVn7g2w0drlpAuvLP/QexMEq59xnqP4ZBOk=
+	t=1738941404; cv=none; b=qOInvlyjKBzYdmuE/CKn2jRXd7ZFmTiilSiieCD0jPyCYi09tl2VP+QsTBKyqkk62+9NATAF3gkPV/ZVi0om208O1CpG/bqf4ow1JDTzotj/YKwxO6kFk/zWz3k5S5fi0zFKOKW3yHZyIASo9SDS16cWHfImOixBVIz5DA76Wvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738941305; c=relaxed/simple;
-	bh=4aQHZL17KzDSkEIgs4SxDbSylwmGyGTEP4iOI4qQiNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kwhA46/xzgYN9VlsD04Z+XpF5mOSaT/E1IBQgUfqHaIW4l29GdJBk9A14FZn1GVlRHI5Kaqc9Za4VmyULFkk9An8fmJNTyW1O5bWwaXYuVmWz4BbvNMkXiW392lTbsfKVYjFSkVdmExA0b/d9QfGATvwTANoPofkBdBwIBv4prE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=a00CFLc6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738941404; c=relaxed/simple;
+	bh=STVLK4/uc5Q8B1kLKI4AT+0I2EICiAVb6GGS+j2/+0I=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tF98RHg5LO+vzeELo6x6aU1sD3vCrcAOaWtu6EYIMmS0x6S7odh6S/UyGY7PcQw924SvX7rW6/VvJQR0gJ4SNIkgaTHe4XJlsUCwRtDI37NbMWz0Oi36dOFgCndLYlb64x9c5wymB3i5h6YYbIyVofHmsG68VR7OPyU93+mLRVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cDnX4KEZ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="a00CFLc6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88C6FC4CED1;
-	Fri,  7 Feb 2025 15:15:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738941305;
-	bh=4aQHZL17KzDSkEIgs4SxDbSylwmGyGTEP4iOI4qQiNc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a00CFLc6+63VzLsCrBNcU53PO9PYnHW2NQdOPCX+M3szPPOvUJHMHu1KTeBogsbIg
-	 pAv5xKWw1FkT6KKa78sdMtVVGJe47rNZ+BWJkikb1dY2xP5uDnNgkWIj4Dc1ZGOgI6
-	 mYaALWiE5snTvQMunfN9V6nUylGydbOoGC0OWNI8=
-Date: Fri, 7 Feb 2025 16:15:01 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Lyude Paul <lyude@redhat.com>, rust-for-linux@vger.kernel.org,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] rust/kernel: Add faux device bindings
-Message-ID: <2025020721-squirt-jam-e7f9@gregkh>
-References: <20250207004049.178049-1-lyude@redhat.com>
- <2025020702-garlic-kindly-8377@gregkh>
- <Z6X56URWy8zSHV9i@pollux>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cDnX4KEZ"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517ECPua027772;
+	Fri, 7 Feb 2025 15:16:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=bvv+C2
+	S+HfCmRHdGBlwkwlon1bQ1BEA6avgMHj66Kyg=; b=cDnX4KEZrEz8gtWyLF7EZG
+	J1lE9pQhuZFO6qmKgfD8jVdktkiXGsIALMIuVd4aXW/ToVvxy2R0Pl0apHjo2Edm
+	QKS0iDbFi35Mutiz91RI7CUN+KckzxLL0MkMqAFP4gTbFqyjrRn5KhQ1X2Hw480D
+	GdKGA3bAmOpAJB/xl2yeLMyQ1YOwEXTbIHpriGpljU6R5oXZSuFt2M01ZUkCNrrB
+	fwGtNbjw/1mSbWc2uodlqv5FN2gEiqnr0FLXgtvLPaR+0MWUsLO5wWt7a9ccWdae
+	xO3t50glTkRHXhKEXFfR8FG/Gam+aaXvi9JCtH0MyChPblGX2lfQJbnL2sx14YCQ
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44n910bcej-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Feb 2025 15:16:14 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 517BPNBL024635;
+	Fri, 7 Feb 2025 15:16:13 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxxnm429-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Feb 2025 15:16:13 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 517FGDCR18744016
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Feb 2025 15:16:13 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1DD6C58056;
+	Fri,  7 Feb 2025 15:16:13 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3077F58063;
+	Fri,  7 Feb 2025 15:16:12 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.150.111])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  7 Feb 2025 15:16:12 +0000 (GMT)
+Message-ID: <3a4053664cde06622e1f9a9d8e3a5aab80b9beb7.camel@linux.ibm.com>
+Subject: Re: [PATCH v7 7/7] ima: measure kexec load and exec events as
+ critical data
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com
+Date: Fri, 07 Feb 2025 10:16:11 -0500
+In-Reply-To: <20250203232033.64123-9-chenste@linux.microsoft.com>
+References: <20250203232033.64123-1-chenste@linux.microsoft.com>
+	 <20250203232033.64123-9-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6X56URWy8zSHV9i@pollux>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: bvWS2oA6QncdRQC_jDFMQVZrnEdHSfxp
+X-Proofpoint-GUID: bvWS2oA6QncdRQC_jDFMQVZrnEdHSfxp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_07,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 spamscore=0 malwarescore=0 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502070114
 
-On Fri, Feb 07, 2025 at 01:17:45PM +0100, Danilo Krummrich wrote:
-> On Fri, Feb 07, 2025 at 10:25:09AM +0100, Greg Kroah-Hartman wrote:
-> > On Thu, Feb 06, 2025 at 07:40:45PM -0500, Lyude Paul wrote:
-> > > +
-> > > +/// The registration of a faux device.
-> > > +///
-> > > +/// This type represents the registration of a [`struct faux_device`]. When an instance of this type
-> > > +/// is dropped, its respective faux device will be unregistered from the system.
-> > > +///
-> > > +/// # Invariants
-> > > +///
-> > > +/// `self.0` always holds a valid pointer to an initialized and registered [`struct faux_device`].
-> > > +///
-> > > +/// [`struct faux_device`]: srctree/include/linux/device/faux.h
-> > > +#[repr(transparent)]
-> > > +pub struct Registration(NonNull<bindings::faux_device>);
-> > > +
-> > > +impl Registration {
-> > > +    /// Create and register a new faux device with the given name.
-> > > +    pub fn new(name: &CStr) -> Result<Self> {
-> > > +        // SAFETY:
-> > > +        // - `name` is copied by this function into its own storage
-> > > +        // - `faux_ops` is safe to leave NULL according to the C API
-> > > +        let dev = unsafe { bindings::faux_device_create(name.as_char_ptr(), null()) };
-> > 
-> > I'm fine with null() here, but why wouldn't a rust binding want to allow
-> > this?  What's unique here that make it this way, or is it just that the
-> > current users you are thinking of don't care about it?
-> 
-> This is what I meant when I mentioned allowing NULL for the faux_device_ops
-> allows us to simplify the Rust abstraction quite a bit.
-> 
-> Having probe() and remove() doesn't do a lot for us in this case in Rust other
-> than needing a separate faux::Driver trait with a corresponding faux::Adapter
-> implementation to handle those callbacks. It'd be an unnecessary indirection.
-> 
-> Do you see any advantage going through probe()?
+On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
+> The amount of memory allocated at kexec load, even with the extra memory
+> allocated, might not be large enough for the entire measurement list.=C2=
+=A0 The
+> indeterminate interval between kexec 'load' and 'execute' could exacerbat=
+e
+> this problem.
+>=20
+> Define two new IMA events, 'kexec_load' and 'kexec_execute', to be=20
+> measured as critical data at kexec 'load' and 'execute' respectively.
+> Report the allocated kexec segment size, IMA binary log size and the
+> runtime measurements count as part of those events.
+>=20
+> These events, and the values reported through them, serve as markers in
+> the IMA log to verify the IMA events are captured during kexec soft
+> reboot.=C2=A0 The presence of a 'kexec_load' event in between the last tw=
+o
+> 'boot_aggregate' events in the IMA log implies this is a kexec soft
+> reboot, and not a cold-boot. And the absence of 'kexec_execute' event
+> after kexec soft reboot implies missing events in that window which
+> results in inconsistency with TPM PCR quotes, necessitating a cold boot
+> for a successful remote attestation.
 
-Only reason I implemented it was that we have a real user of it in the
-kernel that needed it, the regulator dummy driver.  Odds are we could
-rewrite the C code to not need it, but for now let's leave it.
+As a reminder, please include directions for verifying the buffer data hash=
+ against
+the buffer data.  The directions would be similar to those in commit 6b4da8=
+c0e7f
+("IMA: Define a new template field buf").
 
-If over time, no one else actually needs it, I'll refactor and remove
-the callbacks entirely after more of the tree is moved to the faux code.
+>=20
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+> ---
+> =C2=A0security/integrity/ima/ima_kexec.c | 23 +++++++++++++++++++++++
+> =C2=A01 file changed, 23 insertions(+)
+>=20
+> diff --git a/security/integrity/ima/ima_kexec.c
+> b/security/integrity/ima/ima_kexec.c
+> index c9c916f69ca7..0342ddfa9342 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -17,6 +17,8 @@
+> =C2=A0#include "ima.h"
+> =C2=A0
+> =C2=A0#ifdef CONFIG_IMA_KEXEC
+> +#define IMA_KEXEC_EVENT_LEN 256
+> +
+> =C2=A0static struct seq_file ima_kexec_file;
+> =C2=A0static void *ima_kexec_buffer;
+> =C2=A0static size_t kexec_segment_size;
+> @@ -36,6 +38,24 @@ static void ima_free_kexec_file_buf(struct seq_file *s=
+f)
+> =C2=A0	ima_reset_kexec_file(sf);
+> =C2=A0}
+> =C2=A0
+> +static void ima_measure_kexec_event(const char *event_name)
+> +{
+> +	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
+> +	size_t buf_size =3D 0;
+> +	long len;
+> +
+> +	buf_size =3D ima_get_binary_runtime_size();
+> +	len =3D atomic_long_read(&ima_htable.len);
+> +
+> +	scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
+> +			"kexec_segment_size=3D%lu;ima_binary_runtime_size=3D%lu;"
+> +			"ima_runtime_measurements_count=3D%ld;",
+> +				kexec_segment_size, buf_size, len);
 
-If you all don't need the callback, wonderful, I'll not complain :)
+From scripts/checkpatch.pl, "Alignment should match open parenthesis".=20
 
-thanks,
+> +
+> +	ima_measure_critical_data("ima_kexec", event_name, ima_kexec_event,
+> +					strlen(ima_kexec_event), false, NULL, 0);
 
-greg k-h
+From the kernel-doc scnprintf(), returns the number of bytes.  There should=
+ be no
+need to calculate it using strlen().
+
+> +}
+> +
+> =C2=A0static int ima_alloc_kexec_file_buf(size_t segment_size)
+> =C2=A0{
+> =C2=A0	/*
+> @@ -60,6 +80,7 @@ static int ima_alloc_kexec_file_buf(size_t segment_size=
+)
+> =C2=A0out:
+> =C2=A0	ima_kexec_file.read_pos =3D 0;
+> =C2=A0	ima_kexec_file.count =3D sizeof(struct ima_kexec_hdr);	/* reserved=
+ space
+> */
+> +	ima_measure_kexec_event("kexec_load");
+> =C2=A0
+> =C2=A0	return 0;
+> =C2=A0}
+> @@ -201,6 +222,8 @@ static int ima_update_kexec_buffer(struct notifier_bl=
+ock *self,
+> =C2=A0		return ret;
+> =C2=A0	}
+> =C2=A0
+> +	ima_measure_kexec_event("kexec_execute");
+> +
+> =C2=A0	ret =3D ima_dump_measurement_list(&buf_size, &buf,
+> =C2=A0					kexec_segment_size);
+> =C2=A0
+
+After fixing up and applying this patch set to 6.14.0-rc1, I'm not seeing t=
+he
+"kexec_execute".  Even after changing the default extra memory, I'm still n=
+ot seeing
+the measurement.
+
+Mimi
+
+
