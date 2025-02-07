@@ -1,119 +1,175 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBCEB13CFA6
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 05:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DCC13CFA6;
+	Fri,  7 Feb 2025 05:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738906555; cv=none; b=AhkRHAXuz/jTv6ZOPVWaPZglBKOYhwklUNQ8/IMzOe1Iugnhkqf0sW9xny+3mgRQk1VuMvGGkjAL9xJnY20hpVxRoWQVxu/uGo5B+YQSwZ/nfdjaNQE4s9lD+ELbYQmpCaL4Pm1LJwgtxNSJ1VoBO3VJydZFRh6rmbfwhFvSLdk=
+	t=1738906987; cv=none; b=BtDGGCuYpS5XRCwWnD/EklYlUjwMakiT8yzLNKtlc9BNTdi7BLeBtVmBk8PpnepKGqyCuVScQSnwOmAqIMIztynpoaa15pE3UbMqfhUrtyIefcT8ZPOylZ2tJLb3pV0IFbfpbXnx5deHYv7xcMuuVFuYI0z3hRlgMLVwFZUGnPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738906555; c=relaxed/simple;
-	bh=xljf9F05G6fuPrXi3u2VM28jvPvwIUQBqPPfPJBmi2s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q2xWUpGy6sHOa0rfZdOsMc75m9Uw74wX1mGZ+Jx99kGheD3WFzdYu/F/dquc8Yt6ONAUcQpIoJUBSlBgPe9N+gRWgRZmLMwfoNRD+tDZ6nXwzHXxdYQ7QJrzODdClfRnEYAf+bmPYF2g/NxKm714cfXHWoXcs3lyiuQ1S0mL92c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81E11106F;
-	Thu,  6 Feb 2025 21:36:07 -0800 (PST)
-Received: from [10.162.16.89] (a077893.blr.arm.com [10.162.16.89])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 681BE3F63F;
-	Thu,  6 Feb 2025 21:35:39 -0800 (PST)
-Message-ID: <858ecac5-9ba7-48da-8f34-ffda28d17609@arm.com>
-Date: Fri, 7 Feb 2025 11:05:36 +0530
+	s=arc-20240116; t=1738906987; c=relaxed/simple;
+	bh=11k0J7SJXQWZRFuWCglBUF7/hV4fhUXshZRVhbYDlL0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ElQSZtgIDeYQkBl6UDOcSDJvdwgwUyNn8PdcLgHSBRt1NSsAiVPKyWM1D+gX61DD2Md91eOL8Un4Tg/KaqMKYB1njqQ+WzVpxWaON5TP6mxC9eQS0Q8FCH1VUPQTmPHDdGr3BZIkjQjEPnjI0rxv8Lvjntt+Ibe/6KIfUNe0GGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hqgmSoZy; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hqgmSoZy"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5175gq222868858
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 6 Feb 2025 23:42:52 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738906972;
+	bh=H37U1nr2lOv9jYFyNln2CSztqFrKuMmT/UtblK3qmKo=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=hqgmSoZywUlBqmrCAcuuV6QlsFMrfFxXuVFw/rn3+23Kya2iHIDU5WD7xE2tcctho
+	 /lsrOdmumIvgbOa6OpkczXC/ODrOGEopDwh1kX15CGxmLaiLvFZ75eKiZBoWMgr2Zu
+	 AkJEnnvQqRQUC3Qntag//YDudh07urACNQCdPZBc=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5175gqS0016443
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 6 Feb 2025 23:42:52 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 6
+ Feb 2025 23:42:52 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 6 Feb 2025 23:42:52 -0600
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.104])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5175gptM115695;
+	Thu, 6 Feb 2025 23:42:51 -0600
+Date: Fri, 7 Feb 2025 11:12:50 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Peter Chen <peter.chen@kernel.org>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <pawell@cadence.com>,
+        <rogerq@kernel.org>, <gregkh@linuxfoundation.org>, <balbi@kernel.org>,
+        <jun.li@nxp.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
+Subject: Re: [PATCH] usb: cdns3: exit cdns3_gadget_udc_start if
+ FAST_REG_ACCESS cannot be set
+Message-ID: <tf7qwkoybolexehzagzel67kdxdfsve2f3qdueomedld72v7pp@bquo47wpsxul>
+References: <20250206125943.786949-1-s-vadapalli@ti.com>
+ <20250207022523.GA22848@nchen-desktop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 08/16] arm64/mm: Hoist barriers out of ___set_ptes()
- loop
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Muchun Song <muchun.song@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250205151003.88959-1-ryan.roberts@arm.com>
- <20250205151003.88959-9-ryan.roberts@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250205151003.88959-9-ryan.roberts@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250207022523.GA22848@nchen-desktop>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+On Fri, Feb 07, 2025 at 10:25:23AM +0800, Peter Chen wrote:
 
+Hello Peter,
 
-On 2/5/25 20:39, Ryan Roberts wrote:
-> ___set_ptes() previously called __set_pte() for each PTE in the range,
-> which would conditionally issue a DSB and ISB to make the new PTE value
-> immediately visible to the table walker if the new PTE was valid and for
-> kernel space.
+> On 25-02-06 18:29:36, Siddharth Vadapalli wrote:
+> > When the device is in a low power state, access to the following
+> > registers takes a long time:
+> > - EP_CFG
+> > - EP_TRADDR
+> > - EP_CMD
+> > - EP_SEL
+> > - EP_STS
+> > - USB_CONF
+> > 
+> > To address this, the fast register access feature can be enabled by
+> > setting PUSB_PWR_FST_REG_ACCESS bit of the USB_PWR register, which
+> > allows quick access by software. Software is expected to poll on
+> > PUSB_PWR_FST_REG_ACCESS_STAT to ensure that fast register access has
+> > been enabled by the controller. Attempting to access any of the
+> > aforementioned registers after setting PUSB_PWR_FST_REG_ACCESS but
+> > before PUSB_PWR_FST_REG_ACCESS_STAT has been set will result in
+> > undefined behavior and potentially result in system hang.
+> > 
+> > Hence, poll on PUSB_PWR_FST_REG_ACCESS_STAT before proceeding with
+> > gadget configuration, and exit if it cannot be enabled.
+> > 
+> > Fixes: b5148d946f45 ("usb: cdns3: gadget: set fast access bit")
+> > Cc: <stable@vger.kernel.org>
+> > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> > ---
+> > 
+> > Hello,
+> > 
+> > This patch is based on commit
+> > 92514ef226f5 Merge tag 'for-6.14-rc1-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+> > of Mainline Linux.
+> > 
+> > Regards,
+> > Siddharth.
+> > 
+> >  drivers/usb/cdns3/cdns3-gadget.c | 18 ++++++++++++++++--
+> >  1 file changed, 16 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/usb/cdns3/cdns3-gadget.c b/drivers/usb/cdns3/cdns3-gadget.c
+> > index fd1beb10bba7..b62691944272 100644
+> > --- a/drivers/usb/cdns3/cdns3-gadget.c
+> > +++ b/drivers/usb/cdns3/cdns3-gadget.c
+> > @@ -2971,8 +2971,6 @@ static void cdns3_gadget_config(struct cdns3_device *priv_dev)
+> >  	/* enable generic interrupt*/
+> >  	writel(USB_IEN_INIT, &regs->usb_ien);
+> >  	writel(USB_CONF_CLK2OFFDS | USB_CONF_L1DS, &regs->usb_conf);
+> > -	/*  keep Fast Access bit */
+> > -	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
+> >  
+> >  	cdns3_configure_dmult(priv_dev, NULL);
+> >  }
+> > @@ -2990,6 +2988,8 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
+> >  	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
+> >  	unsigned long flags;
+> >  	enum usb_device_speed max_speed = driver->max_speed;
+> > +	int ret;
+> > +	u32 reg;
+> >  
+> >  	spin_lock_irqsave(&priv_dev->lock, flags);
+> >  	priv_dev->gadget_driver = driver;
+> > @@ -2997,6 +2997,20 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
+> >  	/* limit speed if necessary */
+> >  	max_speed = min(driver->max_speed, gadget->max_speed);
+> >  
+> > +	/*  keep Fast Access bit */
+> > +	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
+> > +	reg = readl(&priv_dev->regs->usb_pwr);
+> > +	if (!(reg & PUSB_PWR_FST_REG_ACCESS_STAT)) {
+> > +		ret = readl_poll_timeout_atomic(&priv_dev->regs->usb_pwr, reg,
+> > +						(reg & PUSB_PWR_FST_REG_ACCESS_STAT),
+> > +						10, 1000);
+> > +		if (ret) {
+> > +			dev_err(priv_dev->dev, "Failed to enable fast access\n");
+> > +			spin_unlock_irqrestore(&priv_dev->lock, flags);
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> >  	switch (max_speed) {
+> >  	case USB_SPEED_FULL:
+> >  		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
 > 
-> We can do better than this; let's hoist those barriers out of the loop
-> so that they are only issued once at the end of the loop. We then reduce
-> the cost by the number of PTEs in the range.
+> Hi Siddharth,
 > 
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> ---
->  arch/arm64/include/asm/pgtable.h | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index 3b55d9a15f05..1d428e9c0e5a 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -317,10 +317,8 @@ static inline void __set_pte_nosync(pte_t *ptep, pte_t pte)
->  	WRITE_ONCE(*ptep, pte);
->  }
->  
-> -static inline void __set_pte(pte_t *ptep, pte_t pte)
-> +static inline void __set_pte_complete(pte_t pte)
->  {
-> -	__set_pte_nosync(ptep, pte);
-> -
->  	/*
->  	 * Only if the new pte is valid and kernel, otherwise TLB maintenance
->  	 * or update_mmu_cache() have the necessary barriers.
-> @@ -331,6 +329,12 @@ static inline void __set_pte(pte_t *ptep, pte_t pte)
->  	}
->  }
->  
-> +static inline void __set_pte(pte_t *ptep, pte_t pte)
-> +{
-> +	__set_pte_nosync(ptep, pte);
-> +	__set_pte_complete(pte);
-> +}
-> +
->  static inline pte_t __ptep_get(pte_t *ptep)
->  {
->  	return READ_ONCE(*ptep);
-> @@ -647,12 +651,14 @@ static inline void ___set_ptes(struct mm_struct *mm, pte_t *ptep, pte_t pte,
->  
->  	for (;;) {
->  		__check_safe_pte_update(mm, ptep, pte);
-> -		__set_pte(ptep, pte);
-> +		__set_pte_nosync(ptep, pte);
->  		if (--nr == 0)
->  			break;
->  		ptep++;
->  		pte = pte_advance_pfn(pte, stride);
->  	}
-> +
-> +	__set_pte_complete(pte);
+> Would you please keep this change at cdns3_gadget_config in case the
+> controller is power lost during the system suspend?
 
-Given that the loop now iterates over number of page table entries without corresponding
-consecutive dsb/isb sync, could there be a situation where something else gets scheduled
-on the cpu before __set_pte_complete() is called ? Hence leaving the entire page table
-entries block without desired mapping effect. IOW how __set_pte_complete() is ensured to
-execute once the loop above completes. Otherwise this change LGTM.
+I did think of that initially, but the problem with doing so is that we
+are already accessing USB_CONF above in the "switch(max_speed)" section.
+The PUSB_PWR_FST_REG_ACCESS bit needs to be set before accessing any of:
+- EP_CFG
+- EP_TRADDR
+- EP_CMD
+- EP_SEL
+- EP_STS
+- USB_CONF
 
->  }
->  
->  static inline void __set_ptes(struct mm_struct *mm,
+Please let me know if you have an alternate suggestion to address the
+above.
+
+Regards,
+Siddharth.
