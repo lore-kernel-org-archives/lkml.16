@@ -1,83 +1,427 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6164D2206A0;
-	Fri,  7 Feb 2025 14:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0572206A0
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:26:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738938348; cv=none; b=f6JDX/9irg6m684YcVFe6rwX5DvTIUkBwPtYTWOsvfHxxUJLeYGtbqHGGzQSNL+PCOW5B40pgcnRsZk2cW0zbmpqJa1l110+JOfdUezz3FfICjxFUZkMSnwODusijRT6CLVypmVGLaXORisTQKgj2ADsqD7CMZZzpZC7ox0PsKg=
+	t=1738938405; cv=none; b=Y2sGssH9MXCxNR2suRZwLtOIM4XRJHtuz2AVb56XxHjeVGFz3Y4FvAST0BTbkvEHsNS1gtiMD5RWnLSeqts8NJq0G2g8ERzTh1ER47wKomhHdHW2+AY44yM0+0nLxHvBFAPIZRCm8c8I4G/GoA9sftvnJ+b7l3el9OlzRRLpQpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738938348; c=relaxed/simple;
-	bh=lYLFGBWIHjf50mEl4tQ0Kf+suDLeghiTpv96c18Z6UE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XWRXVUHOUYILFJsekwxikDPMm9bAJ3ATHp8xbRfTKSZTm2txlVVg7bz9TxhK+umahU3fRplDIqKROAzFpimFeRPgr1ICVBBwTZPCwKVkoIYGAehIZ5Hwo3C0lcQZpVwNb81Z1rpjNgl3WkkCjJI1F7A7nYL8fSBJMvTTW7pM2xA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rMcoJToQ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738938405; c=relaxed/simple;
+	bh=ElPVUMIlHSZz9mo9r9J2FeJMfpyI9f6RDFT6AJdcNmQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=X0AUttwCAEijOkOQUbUSRrQdGMsXK+WXY0hoOvw3FfIwFHFH5DwM4/44I0d8cSNtTeu1PNCjA5nA9vDCQNV3EEWnpmhHicHFeMbpFp9CmWOemV0CF0oKnAFVvQLLDdb/SoVxsZN+a2BjcQynLFijjXi1cPx3dI+zq7hvOyA8Sl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KMtm3aq+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rMcoJToQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=yMVdJszBaJdWZfMzBrdhAbDbfib9SbTXaAtSt2p0jvA=; b=rMcoJToQeFy2UP+/3OdmTSurWq
-	61Ai1zOjD8PuYuT7Sm2uHn4y7NjxDjg4VyI1gJnjul/40si7h50+iAaqCbxHb/EDyG4+pEpooDsxZ
-	jt4tiyrKhyvATVcsFtPXZAQ5b1/2hQSdXL2V9YJ16x+OyAk1Qzc/igbyIayLW5oMxj5uwnMwSTcSE
-	HXA56gRV0Ygxhcs1oboCqBy6zZdfL8pKs0DduY3SD6g0cFAlMUayMvxi0atuu7zJlYwJir17wAvj3
-	dVmNwihsONhWCAkivxFgYeDYjXdn6X6dYf7A0wDk4kSBohYrfjFQskqLSBY0TJX5IRJHZn6Fv0Mz8
-	5D4X3ypQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgPIT-00000007wru-2G8d;
-	Fri, 07 Feb 2025 14:25:33 +0000
-Date: Fri, 7 Feb 2025 14:25:33 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Zi Yan <ziy@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Hugh Dickins <hughd@google.com>,
-	David Hildenbrand <david@redhat.com>,
-	Yang Shi <yang@os.amperecomputing.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Yu Zhao <yuzhao@google.com>, John Hubbard <jhubbard@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/7] Buddy allocator like (or non-uniform) folio split
-Message-ID: <Z6YX3RznGLUD07Ao@casper.infradead.org>
-References: <20250205031417.1771278-1-ziy@nvidia.com>
- <20250206000111.6c54e67d1933f8bbc01a46cd@linux-foundation.org>
- <019EB6CA-0F4B-496A-B2AE-A3A553585281@nvidia.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KMtm3aq+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738938402;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WI37PJY6W4SjT4jRC/9YBD4cM6hytEycAvqoqUwuQE0=;
+	b=KMtm3aq+hDojgPzGxqe6mhp6TJ+HyT7HiPLW8hcuSgKBSdGAh58evOSNhoOp2d/TS9nvxm
+	StwhD75a7fPNvHsZ8nCK6AYms/9eZFXzmLNQ6vXnsVh8uIREVrTza4n8lWqVW3Xjdgd7nM
+	VAA3YUdrK79rIsHC14vDVIOkdFozwGY=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-638-SRKuJXLHPnmq0mGZIMWjAA-1; Fri, 07 Feb 2025 09:26:41 -0500
+X-MC-Unique: SRKuJXLHPnmq0mGZIMWjAA-1
+X-Mimecast-MFC-AGG-ID: SRKuJXLHPnmq0mGZIMWjAA
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43621907030so18243075e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:26:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738938400; x=1739543200;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WI37PJY6W4SjT4jRC/9YBD4cM6hytEycAvqoqUwuQE0=;
+        b=dygucBjEE4UewvtU7svSJIgHt0mWd8XfpxkMvR0s/s6Dc3RHp77MPjDKbxwb4RuG1T
+         5l6CqUutTlc5M6xE+o0zO24s+UgP8uj+JTQPKsa7ewtxd7Ftiqd41rTaj/2rWpTSvMsO
+         z2Hh3kRMb747DZn4YobA1PORz9kQEYn7rKupqtfILo1nBThMBjwlRLLu+Gso+Ul4Qvx9
+         7IreOmgddSBA19agdXnIl3hnvNH1kmwHNvIi2WW/NcK3jSwgtp6Tc5YAHqltaFA7eN6B
+         iWRjOIX4QlnOIyUwm2X2b5GK1TRO5nQ1fC7pBDsDwxHKD8LOaUqEtX2Ckx+pDFdqwqBz
+         fkPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNY25PIR2ZRiwtiv8wHD3CI8E9hYxq8srNFOilD+yWU8WlI474yTtFnKb9LkESw2T4BilC4OatTL77jXw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3B9R7Oo+b+aUztXDYQFFTulN+xQU375sMNvW1XI3roMy8z2Fj
+	3DIhgXYTNwD8xuwHu+pljnF5yXXJcv5HwEclDDzc9miuGqloz9IZptUhL2gZBQuLioEcNLuerin
+	v59Su+rlGkQEuzsqRVjwnqrnRPw5ya5i6IhTltx2dWs3hbHrtTfJdnt0nAkXoaLAqnZAndw==
+X-Gm-Gg: ASbGncud3tP2Vh/rFAc8DPcJZUciYQ6LaUzNK2rJ8dzB7tRKnxjoLl4wgHraDU0SuOP
+	kJiLtcqlWh3dC/+5BB5fPWU2J2kTYUZgvzMcrXNLJDOjBFZ5m7bfukpC6Aayy4NNQdK/4VQgKOi
+	FgFESNx7Qhr6i6XoWR4EiitZkqyPVpZZfFxgHE1LxU9pDUJupGX487kzsqfumRCsEX6q0Zi3s5R
+	BtPuXQ8NTbLSs3uMRMh9CeQvAuCrpSKGGHLHPQO3gbPCYMLYV+1h6ToGZXy68m2m+IcSdVfeLB2
+	ZddcZXpBbhDyZXucIOsrZ6gRYIL7GNHylPLDJK54KHUF
+X-Received: by 2002:a05:600c:4f8e:b0:436:1baa:de1c with SMTP id 5b1f17b1804b1-43924990cdbmr37663015e9.13.1738938399600;
+        Fri, 07 Feb 2025 06:26:39 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFm3p0rosjbyax+gDDRtv5T4I5TGzOJoLbD3wNdOouEOGMa/3r9A0ACgt9OGGWj7t/zXMH1HA==
+X-Received: by 2002:a05:600c:4f8e:b0:436:1baa:de1c with SMTP id 5b1f17b1804b1-43924990cdbmr37662675e9.13.1738938399072;
+        Fri, 07 Feb 2025 06:26:39 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dc9ff10sm55889195e9.12.2025.02.07.06.26.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 06:26:38 -0800 (PST)
+Message-ID: <9a38c67c-ebd0-4ca7-82c8-6f29c807a85b@redhat.com>
+Date: Fri, 7 Feb 2025 15:26:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <019EB6CA-0F4B-496A-B2AE-A3A553585281@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/mgag200: Added support for the new device G200eH5
+To: Thomas Zimmermann <tzimmermann@suse.de>,
+ Gwenael Georgeault <ggeorgea@matrox.com>, Dave Airlie <airlied@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, mgi_lnx@matrox.com
+References: <alpine.LFD.2.00.2502070816590.23666@pluton.matrox.com>
+ <0ec78bb6-bb1b-49b0-aaa3-9d9ecfdda586@suse.de>
+Content-Language: en-US, fr
+From: Jocelyn Falempe <jfalempe@redhat.com>
+In-Reply-To: <0ec78bb6-bb1b-49b0-aaa3-9d9ecfdda586@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 07, 2025 at 09:11:39AM -0500, Zi Yan wrote:
-> Existing uniform split requires 2^(order % XA_CHUNK_SHIFT) xa_node allocations
-> during split, when the folio needs to be split to order-0. But non-uniform split
-> only requires at most 1 xa_node allocation. For example, to split an order-9
-> folio, 8 xa_nodes are needed for uniform split, since the folio takes 8
-> multi-index slots in the xarray. But for non-uniform split, only the slot
-> containing the given struct page needs a xa_node after the split. There will be
-> a 7 xa_node saving.
+On 07/02/2025 14:36, Thomas Zimmermann wrote:
+> Hi
 > 
-> Hi Matthew,
 > 
-> Do you mind checking my statement above on xarray memory saving? And correct me
-> if I miss anything. Thanks.
+> Am 07.02.25 um 14:21 schrieb Gwenael Georgeault:
+>> - Added the new device ID
+>> - Added new pll algorithm
+>>
+>> Signed-off-by: Gwenael Georgeault <ggeorgea@matrox.com>
+>> Co-authored-by: Mamadou Insa Diop <mdiop@matrox.com>
+> 
+> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+> 
+> There's a remark below, but it might not be an issue.
 
-We currently have a bug where we can't split order-12 (or above) to order-0 (or anything in the range 0-5) as we'd need to allocate two layers of nodes, and
-the preallocation can't do that.
+With the "#include <limits.h>" changed to "#include <linux/limits.h>" 
+(see below):
+Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
 
-As part of your series, I'd like to remove that limitation, so we'd need
-to allocate log_64(n - m) [ok, more complex than that, but ykwim].  So
-it's not quite "only allocate one node", but it's allocate O(log(current
-number of nodes needed to be allocated)).
+> 
+>> ---
+>>  drivers/gpu/drm/mgag200/Makefile          |   1 +
+>>  drivers/gpu/drm/mgag200/mgag200_drv.c     |   4 +
+>>  drivers/gpu/drm/mgag200/mgag200_drv.h     |   3 +
+>>  drivers/gpu/drm/mgag200/mgag200_g200eh5.c | 205 ++++++++++++++++++++++
+>>  4 files changed, 213 insertions(+)
+>>  create mode 100644 drivers/gpu/drm/mgag200/mgag200_g200eh5.c
+>>
+>> diff --git a/drivers/gpu/drm/mgag200/Makefile b/drivers/gpu/drm/ 
+>> mgag200/Makefile
+>> index 5a02203fad12..94f063c8722a 100644
+>> --- a/drivers/gpu/drm/mgag200/Makefile
+>> +++ b/drivers/gpu/drm/mgag200/Makefile
+>> @@ -6,6 +6,7 @@ mgag200-y := \
+>>      mgag200_g200.o \
+>>      mgag200_g200eh.o \
+>>      mgag200_g200eh3.o \
+>> +    mgag200_g200eh5.o \
+>>      mgag200_g200er.o \
+>>      mgag200_g200ev.o \
+>>      mgag200_g200ew3.o \
+>> diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.c b/drivers/gpu/drm/ 
+>> mgag200/mgag200_drv.c
+>> index 069fdd2dc8f6..32cd8ac018c0 100644
+>> --- a/drivers/gpu/drm/mgag200/mgag200_drv.c
+>> +++ b/drivers/gpu/drm/mgag200/mgag200_drv.c
+>> @@ -214,6 +214,7 @@ static const struct pci_device_id 
+>> mgag200_pciidlist[] = {
+>>      { PCI_VENDOR_ID_MATROX, 0x534, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
+>> G200_ER },
+>>      { PCI_VENDOR_ID_MATROX, 0x536, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
+>> G200_EW3 },
+>>      { PCI_VENDOR_ID_MATROX, 0x538, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
+>> G200_EH3 },
+>> +    { PCI_VENDOR_ID_MATROX, 0x53a, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
+>> G200_EH5 },
+>>      {0,}
+>>  };
+>>
+>> @@ -256,6 +257,9 @@ mgag200_pci_probe(struct pci_dev *pdev, const 
+>> struct pci_device_id *ent)
+>>      case G200_EH3:
+>>          mdev = mgag200_g200eh3_device_create(pdev, &mgag200_driver);
+>>          break;
+>> +    case G200_EH5:
+>> +        mdev = mgag200_g200eh5_device_create(pdev, &mgag200_driver);
+>> +        break;
+>>      case G200_ER:
+>>          mdev = mgag200_g200er_device_create(pdev, &mgag200_driver);
+>>          break;
+>> diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.h b/drivers/gpu/drm/ 
+>> mgag200/mgag200_drv.h
+>> index 0608fc63e588..819a7e9381e3 100644
+>> --- a/drivers/gpu/drm/mgag200/mgag200_drv.h
+>> +++ b/drivers/gpu/drm/mgag200/mgag200_drv.h
+>> @@ -196,6 +196,7 @@ enum mga_type {
+>>      G200_EV,
+>>      G200_EH,
+>>      G200_EH3,
+>> +    G200_EH5,
+>>      G200_ER,
+>>      G200_EW3,
+>>  };
+>> @@ -334,6 +335,8 @@ struct mga_device 
+>> *mgag200_g200eh_device_create(struct pci_dev *pdev,
+>>                          const struct drm_driver *drv);
+>>  struct mga_device *mgag200_g200eh3_device_create(struct pci_dev *pdev,
+>>                           const struct drm_driver *drv);
+>> +struct mga_device *mgag200_g200eh5_device_create(struct pci_dev *pdev,
+>> +                         const struct drm_driver *drv);
+>>  struct mga_device *mgag200_g200er_device_create(struct pci_dev *pdev,
+>>                          const struct drm_driver *drv);
+>>  struct mga_device *mgag200_g200ew3_device_create(struct pci_dev *pdev,
+>> diff --git a/drivers/gpu/drm/mgag200/mgag200_g200eh5.c b/drivers/gpu/ 
+>> drm/mgag200/mgag200_g200eh5.c
+>> new file mode 100644
+>> index 000000000000..2c4265293504
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/mgag200/mgag200_g200eh5.c
+>> @@ -0,0 +1,205 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +
+>> +#include <limits.h>
+> 
+> I'm skeptical of this line, as it looks like it pulls in a system 
+> header. But other drivers do the same, so it's OK, I guess.
 
-Makes sense?
+Good catch, most other drivers include <linux/limits.h>, which also have 
+ULLONG_MAX defined through include/vdso/limits.h:
+https://elixir.bootlin.com/linux/v6.13.1/source/include/linux/limits.h
+https://elixir.bootlin.com/linux/v6.13.1/source/include/vdso/limits.h
+
+Best regards,
+
+Jocelyn
+
+> 
+> Best regards
+> Thomas
+> 
+>> +
+>> +#include <linux/pci.h>
+>> +#include <linux/units.h>
+>> +
+>> +#include <drm/drm_atomic.h>
+>> +#include <drm/drm_atomic_helper.h>
+>> +#include <drm/drm_drv.h>
+>> +#include <drm/drm_gem_atomic_helper.h>
+>> +#include <drm/drm_probe_helper.h>
+>> +
+>> +#include "mgag200_drv.h"
+>> +
+>> +/*
+>> + * PIXPLLC
+>> + */
+>> +
+>> +static int mgag200_g200eh5_pixpllc_atomic_check(struct drm_crtc *crtc,
+>> +                        struct drm_atomic_state *new_state)
+>> +{
+>> +    const unsigned long long VCO_MAX = 10 * GIGA; // Hz
+>> +    const unsigned long long VCO_MIN = 2500 * MEGA; // Hz
+>> +    const unsigned long long PLL_FREQ_REF = 25 * MEGA; // Hz
+>> +
+>> +    struct drm_crtc_state *new_crtc_state = 
+>> drm_atomic_get_new_crtc_state(new_state, crtc);
+>> +    struct mgag200_crtc_state *new_mgag200_crtc_state = 
+>> to_mgag200_crtc_state(new_crtc_state);
+>> +    long clock = new_crtc_state->mode.clock;
+>> +    struct mgag200_pll_values *pixpllc = &new_mgag200_crtc_state- 
+>> >pixpllc;
+>> +
+>> +    unsigned long long fdelta = ULLONG_MAX;
+>> +
+>> +    u16 mult_max = (u16)(VCO_MAX / PLL_FREQ_REF); // 400 (0x190)
+>> +    u16 mult_min = (u16)(VCO_MIN / PLL_FREQ_REF); // 100 (0x64)
+>> +
+>> +    u64 ftmp_delta;
+>> +    u64 computed_fo;
+>> +
+>> +    u16 test_m;
+>> +    u8 test_div_a;
+>> +    u8 test_div_b;
+>> +    u64 fo_hz;
+>> +
+>> +    u8 uc_m = 0;
+>> +    u8 uc_n = 0;
+>> +    u8 uc_p = 0;
+>> +
+>> +    fo_hz = (u64)clock * HZ_PER_KHZ;
+>> +
+>> +    for (test_m = mult_min; test_m <= mult_max; test_m++) { // This 
+>> gives 100 <= M <= 400
+>> +        for (test_div_a = 8; test_div_a > 0; test_div_a--) { // This 
+>> gives 1 <= A <= 8
+>> +            for (test_div_b = 1; test_div_b <= test_div_a; 
+>> test_div_b++) {
+>> +                // This gives 1 <= B <= A
+>> +                computed_fo = (PLL_FREQ_REF * test_m) /
+>> +                    (4 * test_div_a * test_div_b);
+>> +
+>> +                if (computed_fo > fo_hz)
+>> +                    ftmp_delta = computed_fo - fo_hz;
+>> +                else
+>> +                    ftmp_delta = fo_hz - computed_fo;
+>> +
+>> +                if (ftmp_delta < fdelta) {
+>> +                    fdelta = ftmp_delta;
+>> +                    uc_m = (u8)(0xFF & test_m);
+>> +                    uc_n = (u8)((0x7 & (test_div_a - 1))
+>> +                        | (0x70 & (0x7 & (test_div_b - 1)) << 4));
+>> +                    uc_p = (u8)(1 & (test_m >> 8));
+>> +                }
+>> +                if (fdelta == 0)
+>> +                    break;
+>> +            }
+>> +            if (fdelta == 0)
+>> +                break;
+>> +        }
+>> +        if (fdelta == 0)
+>> +            break;
+>> +    }
+>> +
+>> +    pixpllc->m = uc_m + 1;
+>> +    pixpllc->n = uc_n + 1;
+>> +    pixpllc->p = uc_p + 1;
+>> +    pixpllc->s = 0;
+>> +
+>> +    return 0;
+>> +    }
+>> +
+>> +/*
+>> + * Mode-setting pipeline
+>> + */
+>> +
+>> +static const struct drm_plane_helper_funcs 
+>> mgag200_g200eh5_primary_plane_helper_funcs = {
+>> +    MGAG200_PRIMARY_PLANE_HELPER_FUNCS,
+>> +};
+>> +
+>> +static const struct drm_plane_funcs 
+>> mgag200_g200eh5_primary_plane_funcs = {
+>> +    MGAG200_PRIMARY_PLANE_FUNCS,
+>> +};
+>> +
+>> +static const struct drm_crtc_helper_funcs 
+>> mgag200_g200eh5_crtc_helper_funcs = {
+>> +    MGAG200_CRTC_HELPER_FUNCS,
+>> +};
+>> +
+>> +static const struct drm_crtc_funcs mgag200_g200eh5_crtc_funcs = {
+>> +    MGAG200_CRTC_FUNCS,
+>> +};
+>> +
+>> +static int mgag200_g200eh5_pipeline_init(struct mga_device *mdev)
+>> +{
+>> +    struct drm_device *dev = &mdev->base;
+>> +    struct drm_plane *primary_plane = &mdev->primary_plane;
+>> +    struct drm_crtc *crtc = &mdev->crtc;
+>> +    int ret;
+>> +
+>> +    ret = drm_universal_plane_init(dev, primary_plane, 0,
+>> +                       &mgag200_g200eh5_primary_plane_funcs,
+>> +                       mgag200_primary_plane_formats,
+>> +                       mgag200_primary_plane_formats_size,
+>> +                       mgag200_primary_plane_fmtmods,
+>> +                       DRM_PLANE_TYPE_PRIMARY, NULL);
+>> +    if (ret) {
+>> +        drm_err(dev, "drm_universal_plane_init() failed: %d\n", ret);
+>> +        return ret;
+>> +    }
+>> +    drm_plane_helper_add(primary_plane, 
+>> &mgag200_g200eh5_primary_plane_helper_funcs);
+>> +    drm_plane_enable_fb_damage_clips(primary_plane);
+>> +
+>> +    ret = drm_crtc_init_with_planes(dev, crtc, primary_plane, NULL,
+>> +                    &mgag200_g200eh5_crtc_funcs, NULL);
+>> +    if (ret) {
+>> +        drm_err(dev, "drm_crtc_init_with_planes() failed: %d\n", ret);
+>> +        return ret;
+>> +    }
+>> +
+>> +    drm_crtc_helper_add(crtc, &mgag200_g200eh5_crtc_helper_funcs);
+>> +
+>> +    /* FIXME: legacy gamma tables, but atomic gamma doesn't work 
+>> without */
+>> +    drm_mode_crtc_set_gamma_size(crtc, MGAG200_LUT_SIZE);
+>> +    drm_crtc_enable_color_mgmt(crtc, 0, false, MGAG200_LUT_SIZE);
+>> +    ret = mgag200_vga_bmc_output_init(mdev);
+>> +
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +/*
+>> + * DRM device
+>> + */
+>> +
+>> +static const struct mgag200_device_info mgag200_g200eh5_device_info =
+>> +    MGAG200_DEVICE_INFO_INIT(2048, 2048, 0, false, 1, 0, false);
+>> +
+>> +static const struct mgag200_device_funcs mgag200_g200eh5_device_funcs 
+>> = {
+>> +    .pixpllc_atomic_check = mgag200_g200eh5_pixpllc_atomic_check,
+>> +    .pixpllc_atomic_update = mgag200_g200eh_pixpllc_atomic_update, // 
+>> same as G200EH
+>> +};
+>> +
+>> +struct mga_device *mgag200_g200eh5_device_create(struct pci_dev *pdev,
+>> +                         const struct drm_driver *drv)
+>> +{
+>> +    struct mga_device *mdev;
+>> +    struct drm_device *dev;
+>> +    resource_size_t vram_available;
+>> +    int ret;
+>> +
+>> +    mdev = devm_drm_dev_alloc(&pdev->dev, drv, struct mga_device, base);
+>> +
+>> +    if (IS_ERR(mdev))
+>> +        return mdev;
+>> +    dev = &mdev->base;
+>> +
+>> +    pci_set_drvdata(pdev, dev);
+>> +
+>> +    ret = mgag200_init_pci_options(pdev, 0x00000120, 0x0000b000);
+>> +    if (ret)
+>> +        return ERR_PTR(ret);
+>> +
+>> +    ret = mgag200_device_preinit(mdev);
+>> +    if (ret)
+>> +        return ERR_PTR(ret);
+>> +
+>> +    ret = mgag200_device_init(mdev, &mgag200_g200eh5_device_info,
+>> +                  &mgag200_g200eh5_device_funcs);
+>> +
+>> +    if (ret)
+>> +        return ERR_PTR(ret);
+>> +
+>> +    mgag200_g200eh_init_registers(mdev); // same as G200EH
+>> +    vram_available = mgag200_device_probe_vram(mdev);
+>> +
+>> +    ret = mgag200_mode_config_init(mdev, vram_available);
+>> +    if (ret)
+>> +        return ERR_PTR(ret);
+>> +
+>> +    ret = mgag200_g200eh5_pipeline_init(mdev);
+>> +    if (ret)
+>> +        return ERR_PTR(ret);
+>> +
+>> +    drm_mode_config_reset(dev);
+>> +    drm_kms_helper_poll_init(dev);
+>> +
+>> +    return mdev;
+>> +}
+> 
+
