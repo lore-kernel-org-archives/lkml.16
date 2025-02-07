@@ -1,96 +1,138 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F07C2940B;
-	Fri,  7 Feb 2025 02:25:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E152940B;
+	Fri,  7 Feb 2025 02:25:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738895126; cv=none; b=WAiY6FPSzrMcTYDwjFCjj934MlrAgh2lGgRTL3uY8ws9hHhV6bBkqTB9n87M8xfimyWGoaMR+Srm9JgwSk+uyYmBNPW8/4Hu3Kz4IfX6kknrqHyeZpJCy2Tc+OPffksrniU66o+reHxtyfx+YsViEXWFwvVDfSu44xEnI/JVS1w=
+	t=1738895133; cv=none; b=SMBotkaoiN8beUmxJ9j2VCP0jKWRqp/uRqLb9d9ULCN5h5WouGA7MGi2hA6+h90Pt+YQ8mHREOkHX/VPcSQbrR49AR2IpEoqjsL5uJwpTscM/ivpi8juGQtVR4/j/Kt3oYJDpxv01vvKT+gr/Zx+oC3WXTf3inFO0PbE5moCCys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738895126; c=relaxed/simple;
-	bh=TIJY7SnPvNanNZ/wQCdJ3IMuVJFoKA0bi4mack9qR3g=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=c2vNwsjnP0k6MWqPliV+wBIvgkNvKkGqM5VfqDbdbF2QnNHFLvhZWSStRkkPjra9NpBYmfARM8T/nYGML48K5t6xKjHkuwo7S9BIkltJe+x5QnQaQbvHyE6rfPvZ3HfZBxyc1j30kyuYx7k/PFhIwNMcRERTai3YuYbDt9I37FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hTv3N5NC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738895133; c=relaxed/simple;
+	bh=O19jyvsGHqWSGaKQKD2496HsMxSWIhf1biOH4whG3x0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q7VBuQ+3Ke+YY1POyo/bREjAjELbajQwRtxENOOFTaLEu+hdtr0KMM816a9mcnuhzByyBJJEWCvu8tOneY4NHOEP2kq6Fr0HcGHpJeDtO5M5CIV3sTsldqGIBw4dmSUjgAPKyyl4Ptp5+v1O7WVZV3eSQ/UGItPN9SGSbEdTnj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mg81V0AF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hTv3N5NC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFEB1C4CEDD;
-	Fri,  7 Feb 2025 02:25:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mg81V0AF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56F8BC4CEDD;
+	Fri,  7 Feb 2025 02:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738895125;
-	bh=TIJY7SnPvNanNZ/wQCdJ3IMuVJFoKA0bi4mack9qR3g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hTv3N5NCEME+iJXYrn+n83YJjl383qpw2Lv6/UQuYi63fi35b+6NlQegz+KceaOz4
-	 E4PKuD4HSNDzVIjxnYpwjq4Oj1D+Nz86y1vD4tO03vyMHdRxSMwmT6PFncmJkjgRMX
-	 7wBkFK0tGzAKUrO6cvpOJGtHyf4VBa4Zjs7FEZWd7cGB6BLit6449x8gkFZyEFjYhr
-	 tiE/WZxUNfE5tDAjEfCBUV2QjFaWHf+Rvepdz/ry5rQ3B4lihFunDAXSlumIFWlj5+
-	 L8agdXvGVK/RmYIvFQefgclTTuX56eppCziOIzRvvcoc/Pz+qbqE3I/XbTvJRKrTo+
-	 gJftuqEJ220Fg==
-Date: Fri, 7 Feb 2025 11:25:21 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 7/8] tracing: Show module names and addresses of last
- boot
-Message-Id: <20250207112521.1bf4522aa65a4ae2d0a94eec@kernel.org>
-In-Reply-To: <20250206210247.4daa94c8@gandalf.local.home>
-References: <20250205225031.799739376@goodmis.org>
-	<20250205225104.096389081@goodmis.org>
-	<20250207105111.1067fc1421bf682818e488c1@kernel.org>
-	<20250206210247.4daa94c8@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1738895133;
+	bh=O19jyvsGHqWSGaKQKD2496HsMxSWIhf1biOH4whG3x0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Mg81V0AFzNqlLXufz6dZLoe/3L46leDO3mLZO8/31BU39J0EjYvtJ8S5c4716uDTY
+	 d9ndYowId6BWt/WubqUhpYnQ7cTx8hLic47al6XjRHmJQNvF+Jcfgf+vRmvh5v4xZH
+	 9jYR0/pFYucasHTWIZw9JjMub7QIhDMyL6ZWxeKnkgjU/poBd+/7dH0ZmJlOu+4NIG
+	 F6MyqeYX1R9s48C9SEdNJ7gRz9U23lq14c3zsyTXf/OPe0QOoFGVTnpO63TZBWsOIq
+	 6GBvj8FcJleDnKC9V3BIwtdhpJcSBWhe0Rrl3KhDNr+rgA9LouS6qZ6Zq6CwK9yBX3
+	 gf1yyH1n7rX+g==
+Date: Fri, 7 Feb 2025 10:25:23 +0800
+From: Peter Chen <peter.chen@kernel.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: pawell@cadence.com, rogerq@kernel.org, gregkh@linuxfoundation.org,
+	balbi@kernel.org, jun.li@nxp.com, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, srk@ti.com
+Subject: Re: [PATCH] usb: cdns3: exit cdns3_gadget_udc_start if
+ FAST_REG_ACCESS cannot be set
+Message-ID: <20250207022523.GA22848@nchen-desktop>
+References: <20250206125943.786949-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206125943.786949-1-s-vadapalli@ti.com>
 
-On Thu, 6 Feb 2025 21:02:47 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Fri, 7 Feb 2025 10:51:11 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On 25-02-06 18:29:36, Siddharth Vadapalli wrote:
+> When the device is in a low power state, access to the following
+> registers takes a long time:
+> - EP_CFG
+> - EP_TRADDR
+> - EP_CMD
+> - EP_SEL
+> - EP_STS
+> - USB_CONF
 > 
-> > >   # cat instances/boot_mapped/last_boot_info
-> > >   Offset: 10c00000
-> > >   ffffffffc00ca000 usb_serial_simple
-> > >   ffffffffc00ae000 usbserial
-> > >   ffffffffc008b000 bfq  
-> > 
-> > This is just a suggestion, what about using the same format for all
-> > lines? For example,
-> > 
-> > # cat instances/boot_mapped/last_boot_info
-> > 10c00000         [kernel]
-> > ffffffffc00ca000 usb_serial_simple
-> > ffffffffc00ae000 usbserial
-> > ffffffffc008b000 bfq
+> To address this, the fast register access feature can be enabled by
+> setting PUSB_PWR_FST_REG_ACCESS bit of the USB_PWR register, which
+> allows quick access by software. Software is expected to poll on
+> PUSB_PWR_FST_REG_ACCESS_STAT to ensure that fast register access has
+> been enabled by the controller. Attempting to access any of the
+> aforementioned registers after setting PUSB_PWR_FST_REG_ACCESS but
+> before PUSB_PWR_FST_REG_ACCESS_STAT has been set will result in
+> undefined behavior and potentially result in system hang.
 > 
-> This can be confusing because the first is an offset, and the others are
-> addresses.
+> Hence, poll on PUSB_PWR_FST_REG_ACCESS_STAT before proceeding with
+> gadget configuration, and exit if it cannot be enabled.
+> 
+> Fixes: b5148d946f45 ("usb: cdns3: gadget: set fast access bit")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
+> 
+> Hello,
+> 
+> This patch is based on commit
+> 92514ef226f5 Merge tag 'for-6.14-rc1-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+> of Mainline Linux.
+> 
+> Regards,
+> Siddharth.
+> 
+>  drivers/usb/cdns3/cdns3-gadget.c | 18 ++++++++++++++++--
+>  1 file changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/cdns3/cdns3-gadget.c b/drivers/usb/cdns3/cdns3-gadget.c
+> index fd1beb10bba7..b62691944272 100644
+> --- a/drivers/usb/cdns3/cdns3-gadget.c
+> +++ b/drivers/usb/cdns3/cdns3-gadget.c
+> @@ -2971,8 +2971,6 @@ static void cdns3_gadget_config(struct cdns3_device *priv_dev)
+>  	/* enable generic interrupt*/
+>  	writel(USB_IEN_INIT, &regs->usb_ien);
+>  	writel(USB_CONF_CLK2OFFDS | USB_CONF_L1DS, &regs->usb_conf);
+> -	/*  keep Fast Access bit */
+> -	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
+>  
+>  	cdns3_configure_dmult(priv_dev, NULL);
+>  }
+> @@ -2990,6 +2988,8 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
+>  	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
+>  	unsigned long flags;
+>  	enum usb_device_speed max_speed = driver->max_speed;
+> +	int ret;
+> +	u32 reg;
+>  
+>  	spin_lock_irqsave(&priv_dev->lock, flags);
+>  	priv_dev->gadget_driver = driver;
+> @@ -2997,6 +2997,20 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
+>  	/* limit speed if necessary */
+>  	max_speed = min(driver->max_speed, gadget->max_speed);
+>  
+> +	/*  keep Fast Access bit */
+> +	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
+> +	reg = readl(&priv_dev->regs->usb_pwr);
+> +	if (!(reg & PUSB_PWR_FST_REG_ACCESS_STAT)) {
+> +		ret = readl_poll_timeout_atomic(&priv_dev->regs->usb_pwr, reg,
+> +						(reg & PUSB_PWR_FST_REG_ACCESS_STAT),
+> +						10, 1000);
+> +		if (ret) {
+> +			dev_err(priv_dev->dev, "Failed to enable fast access\n");
+> +			spin_unlock_irqrestore(&priv_dev->lock, flags);
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	switch (max_speed) {
+>  	case USB_SPEED_FULL:
+>  		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
 
-I think both are the offset from the viewpoint of `nm` results. :)
+Hi Siddharth,
 
-$ nm vmlinux | grep " t " | sort | head -n 5
-ffffffff81000820 t __pfx_devkmsg_emit
-ffffffff81000830 t devkmsg_emit
-ffffffff81000a80 t __pfx_io_queue_deferred
-ffffffff81000a90 t io_queue_deferred
-ffffffff81000ca0 t __pfx_io_uring_drop_tctx_refs
+Would you please keep this change at cdns3_gadget_config in case the
+controller is power lost during the system suspend?
 
-$ nm samples/trace_events/trace-events-sample.ko | grep " t " | sort | head -n 5
-0000000000000440 t __pfx_trace_event_raw_event_foo_bar
-0000000000000450 t trace_event_raw_event_foo_bar
-0000000000000780 t __pfx_perf_trace_foo_bar
-0000000000000790 t perf_trace_foo_bar
-0000000000000af0 t __pfx_trace_event_raw_event_foo_bar_with_cond
-
-Thank you,
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Peter
