@@ -1,78 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6B12417C9;
-	Fri,  7 Feb 2025 13:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44F61E00A0
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 13:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738933492; cv=none; b=OJvo4wUV94rtXFRAQVnZ6cjyiDYxnqdo1Easr3DiDr9XAcZrRk5G8eTSge5lnm31aBgIMzbL9UgfxSUUeYAtup/wwxaky8oKrIo9QZNIRneIeBq2R5LGIvWeEf7wVdfTDrgcfL+Qs58L56IY5eMbL/nsf8DhAKORshEdfAJuC+Q=
+	t=1738933525; cv=none; b=W4tYFqtmyQgdmJ7mbqcTMpacGiMbU3xW2EO6FG2CCxSxqPvDmXVB1imb/yiYuR3Q5X5U0QskjLipwzQU2j1j/OnidjLvY/I4yaT3L6Gn6L6Eg124Fdojk5+qrpPrQ25Bzv3PjtOBbNr20pSwI2N0UfxVhNWe4dQhVFSqwEDhJ9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738933492; c=relaxed/simple;
-	bh=2Wm7yhjrV8kBL3GSqK0lXx4pISUYrPrALXpQctK7KXI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=X0lAC4OIGFPC1C810mQUEXM+On3+GnVnb5ZoRmmkl8UnreIdt/Kj58EBke3JsN82wQSms/tPsRcaYp00PEVvjk9bhsZcLpLDxtRjVCHh0TuC1sc3LJWSwJCrTje/I72Y+3MF9AlVxCojPP8eZoIvwLnlADy4hn3XM+T30G5OEIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJa4zIS/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJa4zIS/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9898C4CED1;
-	Fri,  7 Feb 2025 13:04:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738933492;
-	bh=2Wm7yhjrV8kBL3GSqK0lXx4pISUYrPrALXpQctK7KXI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=ZJa4zIS/t0YVKLltmPpKE9VHLY+4HPQP6OvcjWhtOwCOiSQI44GqY+lo6ECEvfWEb
-	 w1kJLXrZnuOS/3x/PwNf6H2/UwhsDXzKU725BkqzxaVqG0T3xB6ffuVnS4aeilZBqU
-	 BunObboFiv2U/rn5wDcR8dOSx3H0MCCIwct/G25jooaNldtQBdN5jYSrU48dVdm29/
-	 a9Le84gfSsGKH+C9/T7H+c6XtljXB7nogE0MfWaCoVwVB6+DoABY5Y1lncGqYG24R+
-	 GRK2w00W1onA3c6cAJ4ph4C10AmwJx57Oz7lzX1qPlLJkJNQxsPabxOXGElMGJeQwv
-	 YiEeJ/SYQSArQ==
-Date: Fri, 7 Feb 2025 14:04:49 +0100 (CET)
-From: Jiri Kosina <jikos@kernel.org>
-To: Aditya Garg <gargaditya08@live.com>
-cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
-    "bentiss@kernel.org" <bentiss@kernel.org>, 
-    Kerem Karabay <kekrby@gmail.com>, 
-    Orlando Chamberlain <orlandoch.dev@gmail.com>, 
-    "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, 
-    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/4] Touch Bar driver for Apple Macs with T2 Security
- Chip
-In-Reply-To: <E5CC067F-5CC8-4B33-B50C-40163C8A46E8@live.com>
-Message-ID: <9nrp7513-r931-12ro-5565-76p2835p02pr@xreary.bet>
-References: <E5CC067F-5CC8-4B33-B50C-40163C8A46E8@live.com>
+	s=arc-20240116; t=1738933525; c=relaxed/simple;
+	bh=/3TUutAEsyiEiao1f5FuJ2MBJPxkW4v41kYmALIyI0c=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=g+IY0Z86KB1jPGCPHjbpiivbo2a6sdvHJVONpwtU2FD1BOzLHAiNjaO1yqKyC9ZXml+IrQVomNnuzuqnyXCheUfAzFk+6yPfWIolAGY4WGxXehkbAWhKQLtu2LdoXmRrgz1RMiz/0D58F/o/+Ek09IiLikUsSRxlXpG0kUk2oDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d1445827f9so2259755ab.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 05:05:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738933522; x=1739538322;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IiVOJOpa7LbU2POENlx9r029/9cBmYAxUUpk+kw3rJE=;
+        b=DVqWwWc9caUo/yva4VKWWh9hRW0gTmQ48YT9An1qLcNsXwawGyDrkr2P+Dl6JYsQ8+
+         txO/2mhoBNbZ86YTNRVe6kqeAoknmtqP0gLiIf9/fvVyomead5Xcy6khKRBKNvZpl0sr
+         rrLc8kOyQSLh2EtzVA3TKEWPU2J2mCoRzewcSPJHQJMAzvJsMYV6Z5eHGTiGAnBrGvTW
+         U9gEnLVp1qGFeDRuyj1J7dsxmAKMA0A+CrQasIE2M5+kHjpjWLwKhSbbzimy9mPYg55M
+         PEhNUiIXs+ITnewaxrsEsm9Y04mYBvtF6N24Cg/kKOVKeOkk7H9vSNv7knNzsi6MEflc
+         Gx+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUMw9dPKlvdcFKI0O4Ii5uYxjV+JkyYxGGOQyW+iiBoT0IwZEktYQZ0RbZ7MmGsLRYm6OzIrrvKx0EaMvo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8BVdaXt9EGSS29fjGdmAwCJxEsjfZps73CUFxMbdR+0Oe87LJ
+	Xc2G24Rj78WDMgfUVvpsBg97oAa19DuzYYAnVbYnro5XLLSN9ID2KHzwSJBfq00at2VgEMMhh6Y
+	oebYNzZSJb9CAyifIjlE0qQMs5r252/UlSwagpxpkP0PxZj7Toh164uY=
+X-Google-Smtp-Source: AGHT+IG0tuY2b6nMAOLuwu6yK48ezZCBaK2ZBL+1JMYx0HTn541i6zfsmHzkEyOTjECukRqzo4b1KBq2R0zJRhzdL0+U7VRNyorx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Received: by 2002:a05:6e02:216a:b0:3cf:fd28:852 with SMTP id
+ e9e14a558f8ab-3d13dd0280fmr28382165ab.3.1738933522772; Fri, 07 Feb 2025
+ 05:05:22 -0800 (PST)
+Date: Fri, 07 Feb 2025 05:05:22 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a60512.050a0220.2b1e6.0024.GAE@google.com>
+Subject: [syzbot] Monthly wpan report (Feb 2025)
+From: syzbot <syzbot+list9ffec93ebc4680dc8d34@syzkaller.appspotmail.com>
+To: alex.aring@gmail.com, linux-kernel@vger.kernel.org, 
+	linux-wpan@vger.kernel.org, miquel.raynal@bootlin.com, netdev@vger.kernel.org, 
+	stefan@datenfreihafen.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 31 Dec 2024, Aditya Garg wrote:
+Hello wpan maintainers/developers,
 
-> From: Aditya Garg <gargaditya08@live.com>
-> 
-> This patch series adds support for Touch Bar on found on MacBook Pro
-> models with T2 Security Chip. These drivers support the mode found on
-> Windows Bootcamp drivers.
-> 
-> V2: Added checks to the keyboard driver to ensure backlight driver is
-> initialised first.
-> 
-> Aditya Garg (2):
->   HID: hid-appletb-kbd: add support for fn toggle between media and
->     function mode
->   HID: hid-appletb-kbd: add support for automatic brightness control
->     while using the touchbar
-> 
-> Kerem Karabay (2):
->   HID: hid-appletb-bl: add driver for the backlight of Apple Touch Bars
->   HID: hid-appletb-kbd: add driver for the keyboard mode of Apple Touch
->     Bars
+This is a 31-day syzbot report for the wpan subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/wpan
 
-Applied now to hid.git#for-6.15/apple. Thanks,
+During the period, 0 new issues were detected and 0 were fixed.
+In total, 5 issues are still open and 26 have already been fixed.
 
--- 
-Jiri Kosina
-SUSE Labs
+Some of the still happening issues:
 
+Ref Crashes Repro Title
+<1> 192     Yes   KMSAN: uninit-value in ieee802154_hdr_push (2)
+                  https://syzkaller.appspot.com/bug?extid=60a66d44892b66b56545
+<2> 20      No    KASAN: global-out-of-bounds Read in mac802154_header_create (2)
+                  https://syzkaller.appspot.com/bug?extid=844d670c418e0353c6a8
+<3> 11      No    WARNING in __dev_change_net_namespace (3)
+                  https://syzkaller.appspot.com/bug?extid=3344d668bbbc12996d46
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
