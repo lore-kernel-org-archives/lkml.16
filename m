@@ -1,283 +1,149 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC7A231C9F
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 04:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A89231CAE
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 04:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738901459; cv=none; b=dyNJ1hymryk8ZPNn4/yn5u369nte1/5hmHpELjr8G4FYKUv5zU8KwniHAldpjhYR+ZcGt2AdaCZCWKVJqH5LLz6YNGMUdOLFk/cHXvu7bm3tPtkWkXJDt1tVRHCVB2DBzNuLzsoqwDooIWogd1zgx6QU9xNmzseL8K8HRLlUneg=
+	t=1738901560; cv=none; b=KV/SHz66dyhMfSyHgpyjMJhb6bAkN6N2tDxmCU+v9cQR/19UcfhkQbARSyEom2jUeEBsAZUhMNn17Re+Gn3owYVrzzqFdKIUB1VyC5Et3VssZzKocHF02glFxAg7KFfyPhfrcXZ4ObjI46PizwUlm78c2DPnbfBdof2ZHvcSi70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738901459; c=relaxed/simple;
-	bh=/WuqGtx+K6eP+iK0k2Ti/Yj9IjGoQodgI8gj6iHK1pk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dDQxj3NEHyl7cmL98Qq20dxpG9CnohCLyA5t4UMHKfp0RUFPrpFjJSptk5LQKokQ6+bi9ZAW2oEadXbDW7PAZbnZEG+iQ105DlgwElAnYUhGcvmOXflO63DgByFe8AzRnnk6dcUSdp+u5gBSBGGqQh8bzqopzv3gZrzlglghK5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=LFaiz+7s; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1738901560; c=relaxed/simple;
+	bh=ljH7Na1CjKFmZ9WKQeQ3cW1kEi3W80vBZcOQYMb3Cug=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gghoKRqoGB6SQxkzT6mP/54oVVMWO3D1pPJ5piRLsQeH+v0HNWUJHX2d63xvvixaNfI03856zDCbDk1L0b1sM5sQ+jTgodgZPwTv5SJVDjshm9fkvIPDKbtA6OFQrRGaKL6PzXeOCu4yOeT6wsk4KX2PZKBjOJ3sk6YIFJV5iJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=WWadQTTu; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="LFaiz+7s"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-218c8ac69faso3629615ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 20:10:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="WWadQTTu"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab7814aa2adso116820566b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 20:12:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1738901457; x=1739506257; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=cloudflare.com; s=google09082023; t=1738901556; x=1739506356; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=A7F6Jk5p5R7n2K53wBQ1De4ty3jblv5oRK/XfgrdxAM=;
-        b=LFaiz+7sYZPPBaYHrBhsJDEo7TuiBawVoqLlRrXw6wNa5MtEqYBjBulTikXfPn9RCU
-         sv0EKfX3eg5m0FxfnMeXEl16v6je/wznr0Y5K42qGI0U/3IDvdwYzvv+ntlkWZGSFJp0
-         H3EpD53RNnRyulFJbkY4qeimKSJoUV/TS68z/xmk58aLVESiaVi9dNVP06UwxEuuXlb/
-         CcV1K1z3yGGnWS4bxqa9LpfebPlW+7JWlBiUdNO62ZOg+AV3CI4/pvFfj6FEdlg3IkoH
-         gBiSKaMp1XmD+pQvGD4nmOj6KxUzbpKPQLYbDtmIc3nDDhoUNFnhT4kLXv6nILvySzKK
-         C3Og==
+        bh=PfKeNd5YsT4IdLY3wC4IJkumtp1al9zTd0Fhjp7u0qk=;
+        b=WWadQTTuWKonMg+YWigynolMhGVCClf0b8wXsAavP85s6hzYphW+UPRcyhU1QFLUgq
+         2StENoPcal6yBlLhv8brdcj2ek2esQM68qizNaRQYoh4eeGgF4MULInBx4mTbLJgy4lG
+         R9pVQkIqSzvvvHjocTH2fhsyNKyldq1FwI9vwIZHqZPnPpaHDDMATfPa6lgMr+jkqC8r
+         OkYpr7ia0zXExGujWOV9J+OwE32TF+Op8hLZfxV8fV+sqAzoOqdOkGuN0JWrQN2/1oVD
+         Luj4HP2PxwcUDoEUDeqUBihNUjtAa3k5uamvuNSwv59UW29nE/jWgU7qPbR8JvTXQvIJ
+         3FvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738901457; x=1739506257;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1738901556; x=1739506356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=A7F6Jk5p5R7n2K53wBQ1De4ty3jblv5oRK/XfgrdxAM=;
-        b=L/MOMwxgRIkdKYN/4gT5ROVMgPKgY4gXeCDB5cq7CbvYTfpJx4p+bxwBjH1qLDTfU3
-         Mrhw5UG8CI42p435ro3nsu2d2HQ8IH3zCiWEMGcEuUGb1owP3+okk5oD2IdiIFtBiKPI
-         WR6urgOxfhUJ7/Aicbd9XQALVctFEAIQOrc+iRwg6hTd33ToiiP0S0Fs/SsLZ3vL6GBV
-         OnY/8dGDzo4XO0RQ6mG9O+sHqMeiyheujK6KvsDmzNtYQYB9mxtJySLMGVgrZI6DLfm1
-         8GWdsKGh9uabEBsTIo/0U41aJN/QzpoP0kxItcCjGzMTEXPRRbWL5avAJwiY6kuFtJqt
-         cqgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUbre/TBZO3XbuNPxSnXJvDei5nCSQYtfpWGpkgGE+6VOEx+gietZ8vfte/CwAaQpH3GjpY0IXbBLGXeb8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywy9BmDUyO79GOpfQVAQET3BAxP8ovkWZaHpo4bp4T/Qk9AVKv8
-	+PZdvbuFW++vPPJ1IwOIfxdnqpOMSOLgt2raRxezniDtwkiYy9AlqKUtI5cING8=
-X-Gm-Gg: ASbGncsMUA3789fG7yPR5DhWBMMp1UNxCS7p7ABHVYq8aWTxPzOKC5tzKLYz2W9+sjo
-	LQaxp+M2ZbDuK7D9YOD/MCBPfqREC0KEkxvreyNAfgtMeKNc8QM5O1/xIiC3CpJenxBCi+myMGL
-	Cepm9o+rsAQu3yz6agWRhwR5wZw0qaPjBBfDusRuXtnfxHzbz196IJEqIjHliqE6TAsj43U7Mvd
-	FObRTccxnQBoNFGSHSWpVqepte3qs2Egj37R3E4PJikYFTOMmUvdu76fqVu0074GcQo6qENl/RE
-	pWF0Fx5y1hHX6DWfad2PVbObo5uk3UX2JIGBH9Z4KguWdoOzYigT+Q==
-X-Google-Smtp-Source: AGHT+IGMttM8ydsBtBmcEXAfQlBmTHGrdwn3FVFgbbgH385LTqOErMCIGNcyDKcuP5ZFLCLDmNfYSg==
-X-Received: by 2002:a05:6a20:c88b:b0:1e1:9f77:da7b with SMTP id adf61e73a8af0-1ee03b0647amr1378658637.7.1738901457130;
-        Thu, 06 Feb 2025 20:10:57 -0800 (PST)
-Received: from C02DV8HUMD6R.bytedance.net ([139.177.225.244])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51aee7fbasm2135485a12.46.2025.02.06.20.10.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 20:10:56 -0800 (PST)
-From: Abel Wu <wuyun.abel@bytedance.com>
-To: Johannes Weiner <hannes@cmpxchg.org>,
-	Tejun Heo <tj@kernel.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bitao Hu <yaoma@linux.alibaba.com>,
-	Abel Wu <wuyun.abel@bytedance.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Yury Norov <yury.norov@gmail.com>,
-	Chen Ridong <chenridong@huawei.com>
-Cc: cgroups@vger.kernel.org (open list:CONTROL GROUP (CGROUP)),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 2/2] cgroup/rstat: Add run_delay accounting for cgroups
-Date: Fri,  7 Feb 2025 12:10:01 +0800
-Message-Id: <20250207041012.89192-3-wuyun.abel@bytedance.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20250207041012.89192-1-wuyun.abel@bytedance.com>
-References: <20250207041012.89192-1-wuyun.abel@bytedance.com>
+        bh=PfKeNd5YsT4IdLY3wC4IJkumtp1al9zTd0Fhjp7u0qk=;
+        b=Fi5IamYypXDC5iRQtGMNf1ejMMUjpIi+pg7gGi42zlXmuqT6ziw7IP29L4cEwtdNau
+         i2V9nx/DxKs65Z7i7/JDkfxjy3YIyzzPMO/Dtbk5KeAmtn4UQpbMukhH3Qkw4eYXJ2v/
+         jl0x3ttK2u/90rMKbHHsvWf6P+S1x2XqTmJRgQffhdIgnFnu/n3+EKkgSDK38mK+HyTy
+         oPEH5/hb960z3cTMhEVMl8qdy5QnMDqo9MjCquXja1BDGsFh5kR85OjiK+w+sjZVwWwN
+         Eb/qgR+f3YVYYALhy4TCElFwfwzWhYm3k/XMWwx4puC7uUTids9Ptcx5/kQVJ8CCbZ2U
+         GZiA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyLGFdk3cdsWBxC2lyryQplLzuy2UuFeefONU8etWUid0jar2Nl92ibH4wM/vvPYhix9uq1+OZ0gCAJWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywxb02PIuicQ8GBo7Y2fra/RAQ+FR5z3MNPkny50C71Gsx2E23D
+	e5zsPcBZO/EG4P2bitzHUF/F3MBWMmf/Fp8NVhGiGZy+uG2qAZBF8HkslMJYNzLcGs0QaJO4ElV
+	G9nkGFBvnu4435yafKPTEZkJllRAdDFSIyX3M1g==
+X-Gm-Gg: ASbGncvkNbhp+qbkxv5oDOi0qaKj/AfuNbEn8zkrcCa8Jm4aBCo/B32SKhVcyvHjxdu
+	Wf4BXz2szHVozkRriG/gFSI7A+f2RbLTtPkk0QbhmCk5oPS7zrqmFCvqKpG8HmKw+QCfn2gooEQ
+	orMIxHCO5xAxDGKEA=
+X-Google-Smtp-Source: AGHT+IF+Dr5Nq2mH34Odbm2J6M0KJZHkh2UhWnVHf00IT85KBVmDwpzVa2YALsjOafjhhAQObIf2PDcukGPveI5Ezxg=
+X-Received: by 2002:a05:6402:208a:b0:5dc:5a51:cbfa with SMTP id
+ 4fb4d7f45d1cf-5de44fe949emr4939486a12.6.1738901556568; Thu, 06 Feb 2025
+ 20:12:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <Z6OYbS4WqQnmzi2z@debian.debian> <5f6610a1-3cd0-764e-0f49-91af1004ea50@huaweicloud.com>
+ <CAO3-PbrGR-U0+TxgeUUZHSwvNw2Dx=o6_EYf60ND7BLiLA-xWQ@mail.gmail.com>
+In-Reply-To: <CAO3-PbrGR-U0+TxgeUUZHSwvNw2Dx=o6_EYf60ND7BLiLA-xWQ@mail.gmail.com>
+From: Yan Zhai <yan@cloudflare.com>
+Date: Thu, 6 Feb 2025 22:12:25 -0600
+X-Gm-Features: AWEUYZkk5n3m-qzxQp53kd6ix3x2ANE2POQRC5vHVyak4SJ0fxlTXB7Q5H7kjkk
+Message-ID: <CAO3-PbqOFMMzcy9VBLaTtvihnuCJ2u38RMPnYNPckjF8BzdDkQ@mail.gmail.com>
+Subject: Re: [PATCH bpf] bpf: skip non existing key in generic_map_lookup_batch
+To: Hou Tao <houtao@huaweicloud.com>
+Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, Brian Vazquez <brianvv@google.com>, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kernel-team@cloudflare.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The per-task and per-cpu accounting have already been tracked by
-t->sched_info.run_delay and rq->rq_sched_info.run_delay respectively.
-Extends this to also include cgroups.
+On Thu, Feb 6, 2025 at 2:20=E2=80=AFAM Yan Zhai <yan@cloudflare.com> wrote:
+>
+> On Thu, Feb 6, 2025 at 12:40=E2=80=AFAM Hou Tao <houtao@huaweicloud.com> =
+wrote:
+> >
+> >
+> >
+> > Yes, the retry logic doesn't change the previous key. Thanks for the
+> > clarifying.
+> > > And by "skipping to the next key", it's simply
+> > >
+> > >   if (err =3D=3D -ENOENT)
+> > >        goto next_key;
+> > >
+> > > Note the "next_key" label was not in the current codebase. It is only
+> > > in my posted patch. I don't think this would break lpm_trie unless I
+> > > missed something.
+> >
+> > I was trying to say that the proposed patch may break the lookup_batch
+> > operation for lpm_trie, and let me explain step by step:
+> >
+> > For LPM trie map:
+> > (1) ->map_get_next_key(map, prev_key, key) returns a valid key
+> >
+> > (2) bpf_map_copy_value() return -ENOMENT
+> > It means the key must be deleted concurrently.
+> >
+>
+> I see what you mean now, thanks for the detailed explanation!
+>
+> So for lpm_trie, if an element is deleted between get_next_key and
+> copy_value, then retry would still proceed to its next tree node. But
+> with or without retry, I think we cannot prevent the key from cycling
+> back to the beginning: an element can be deleted after copy_value, so
+> the key becomes invalid. After swap with prev_key and call
+> bpf_get_next_key, it cycles back to the leftmost. Similar can happen
+> if during retry the prev_key also gets invalidated. IIUC the rcu
+> locking in lookup really cannot prevent the tree structure from
+> changes.
+>
+> On the other hand, bpf_map_get_next_key manual already specifies "If a
+> key is not found, the operation returns zero and sets the next_key
+> pointer to the key of the first element.". IMHO it probably makes more
+> sense that, regardless of normal or batch lookup, it is ultimately the
+> user's responsibility to properly synchronize, or deduplicate what is
+> returned from the kernel. I intend to keep the "skip to next" to save
+> the unnecessary complexity here, unless there are strong objections
+> that I should not.
 
-The "some" field of cpu.pressure indicator may lose the insight into
-how severely one cgroup is stalled on certain cpu, because PSI tracks
-stall time for each cpu through:
+Thought about this again. It is interesting that hashmap batch lookup
+actually guarantees no duplicate in output today. If we want to
+achieve the same for lpm_trie, it should have its own batch lookup
+routine, which could properly lock the trie against mutation. For the
+generic batch, it is still better to be simple. Let me put this in the
+V2 patchset for discussion.
 
-	tSOME[cpu] = time(nr_delayed_tasks[cpu] != 0)
+best
+Yan
 
-which turns nr_delayed_tasks[cpu] into boolean value. So together with
-this cgroup level run_delay accounting, the scheduling info of cgroups
-will be better illustrated.
-
-Only cgroup v2 is supported. Similar to the task accounting, the cgroup
-accounting requires that CONFIG_SCHED_INFO is enabled.
-
-Signed-off-by: Abel Wu <wuyun.abel@bytedance.com>
----
- include/linux/cgroup-defs.h |  3 +++
- include/linux/kernel_stat.h | 14 ++++++++++++++
- kernel/cgroup/rstat.c       | 25 +++++++++++++++++++++++++
- kernel/sched/cputime.c      | 12 ++++++++++++
- kernel/sched/stats.h        |  3 +++
- 5 files changed, 57 insertions(+)
-
-diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
-index 1b20d2d8ef7c..287366e60414 100644
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -328,6 +328,9 @@ struct cgroup_base_stat {
- 	u64 forceidle_sum;
- #endif
- 	u64 ntime;
-+#ifdef CONFIG_SCHED_INFO
-+	u64 run_delay;
-+#endif
- };
- 
- /*
-diff --git a/include/linux/kernel_stat.h b/include/linux/kernel_stat.h
-index b97ce2df376f..e2ac42a166c1 100644
---- a/include/linux/kernel_stat.h
-+++ b/include/linux/kernel_stat.h
-@@ -31,6 +31,15 @@ enum cpu_usage_stat {
- 	CPUTIME_FORCEIDLE,
- #endif
- 	NR_STATS,
-+
-+#ifdef CONFIG_SCHED_INFO
-+	/*
-+	 * Instead of cputime, run_delay is tracked through
-+	 * sched_info by task and rq, so there is no need to
-+	 * extend the cpustat[] array.
-+	 */
-+	CPUTIME_RUN_DELAY,
-+#endif
- };
- 
- struct kernel_cpustat {
-@@ -141,4 +150,9 @@ extern void account_idle_ticks(unsigned long ticks);
- extern void __account_forceidle_time(struct task_struct *tsk, u64 delta);
- #endif
- 
-+#ifdef CONFIG_SCHED_INFO
-+extern void account_run_delay_time(struct task_struct *tsk, u64 delta);
-+extern u64 get_cpu_run_delay(int cpu);
-+#endif
-+
- #endif /* _LINUX_KERNEL_STAT_H */
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index c2784c317cdd..504da76553ee 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -445,6 +445,9 @@ static void cgroup_base_stat_add(struct cgroup_base_stat *dst_bstat,
- 	dst_bstat->forceidle_sum += src_bstat->forceidle_sum;
- #endif
- 	dst_bstat->ntime += src_bstat->ntime;
-+#ifdef CONFIG_SCHED_INFO
-+	dst_bstat->run_delay += src_bstat->run_delay;
-+#endif
- }
- 
- static void cgroup_base_stat_sub(struct cgroup_base_stat *dst_bstat,
-@@ -457,6 +460,9 @@ static void cgroup_base_stat_sub(struct cgroup_base_stat *dst_bstat,
- 	dst_bstat->forceidle_sum -= src_bstat->forceidle_sum;
- #endif
- 	dst_bstat->ntime -= src_bstat->ntime;
-+#ifdef CONFIG_SCHED_INFO
-+	dst_bstat->run_delay -= src_bstat->run_delay;
-+#endif
- }
- 
- static void cgroup_base_stat_flush(struct cgroup *cgrp, int cpu)
-@@ -551,6 +557,11 @@ void __cgroup_account_cputime_field(struct cgroup *cgrp,
- 	case CPUTIME_FORCEIDLE:
- 		rstatc->bstat.forceidle_sum += delta_exec;
- 		break;
-+#endif
-+#ifdef CONFIG_SCHED_INFO
-+	case CPUTIME_RUN_DELAY:
-+		rstatc->bstat.run_delay += delta_exec;
-+		break;
- #endif
- 	default:
- 		break;
-@@ -596,6 +607,9 @@ static void root_cgroup_cputime(struct cgroup_base_stat *bstat)
- 		bstat->forceidle_sum += cpustat[CPUTIME_FORCEIDLE];
- #endif
- 		bstat->ntime += cpustat[CPUTIME_NICE];
-+#ifdef CONFIG_SCHED_INFO
-+		bstat->run_delay += get_cpu_run_delay(i);
-+#endif
- 	}
- }
- 
-@@ -610,6 +624,16 @@ static void cgroup_force_idle_show(struct seq_file *seq, struct cgroup_base_stat
- #endif
- }
- 
-+static void cgroup_run_delay_show(struct seq_file *seq, struct cgroup_base_stat *bstat)
-+{
-+#ifdef CONFIG_SCHED_INFO
-+	u64 run_delay = bstat->run_delay;
-+
-+	do_div(run_delay, NSEC_PER_USEC);
-+	seq_printf(seq, "run_delay_usec %llu\n", run_delay);
-+#endif
-+}
-+
- void cgroup_base_stat_cputime_show(struct seq_file *seq)
- {
- 	struct cgroup *cgrp = seq_css(seq)->cgroup;
-@@ -640,6 +664,7 @@ void cgroup_base_stat_cputime_show(struct seq_file *seq)
- 			bstat.ntime);
- 
- 	cgroup_force_idle_show(seq, &bstat);
-+	cgroup_run_delay_show(seq, &bstat);
- }
- 
- /* Add bpf kfuncs for cgroup_rstat_updated() and cgroup_rstat_flush() */
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index 5d9143dd0879..e6be57cdb54e 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -243,6 +243,18 @@ void __account_forceidle_time(struct task_struct *p, u64 delta)
- }
- #endif
- 
-+#ifdef CONFIG_SCHED_INFO
-+void account_run_delay_time(struct task_struct *p, u64 delta)
-+{
-+	cgroup_account_cputime_field(p, CPUTIME_RUN_DELAY, delta);
-+}
-+
-+u64 get_cpu_run_delay(int cpu)
-+{
-+	return cpu_rq(cpu)->rq_sched_info.run_delay;
-+}
-+#endif
-+
- /*
-  * When a guest is interrupted for a longer amount of time, missed clock
-  * ticks are not redelivered later. Due to that, this function may on
-diff --git a/kernel/sched/stats.h b/kernel/sched/stats.h
-index 19cdbe96f93d..fdfd04a89b05 100644
---- a/kernel/sched/stats.h
-+++ b/kernel/sched/stats.h
-@@ -252,7 +252,9 @@ static inline void sched_info_dequeue(struct rq *rq, struct task_struct *t)
- 		t->sched_info.max_run_delay = delta;
- 	if (delta && (!t->sched_info.min_run_delay || delta < t->sched_info.min_run_delay))
- 		t->sched_info.min_run_delay = delta;
-+
- 	rq_sched_info_dequeue(rq, delta);
-+	account_run_delay_time(t, delta);
- }
- 
- /*
-@@ -279,6 +281,7 @@ static void sched_info_arrive(struct rq *rq, struct task_struct *t)
- 		t->sched_info.min_run_delay = delta;
- 
- 	rq_sched_info_arrive(rq, delta);
-+	account_run_delay_time(t, delta);
- }
- 
- /*
--- 
-2.37.3
-
+>
+> > (3) goto next_key
+> > It swaps the prev_key and key
+> >
+> > (4) ->map_get_next_key(map, prev_key, key) again
+> > prev_key points to a non-existing key, for LPM trie it will treat just
+> > like prev_key=3DNULL case, the returned key will be duplicated.
+> >
