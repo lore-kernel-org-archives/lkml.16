@@ -1,59 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D6219C558;
-	Fri,  7 Feb 2025 18:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734D31917D4
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738953050; cv=none; b=VjU9QgbOa9qS/Xvip0JaMn60pUbejdRKWoJNF8dxoWI8fgWQZCwvzrmlo1xcxLVhi+aLz0bgcYxejq7uoTxpKnCDcEDTpIRlU9EsA8SLl7EIDU6dsPFYU/ndSaGedhfd9p3GRfUj+rMTa0FFFc8aK7mpQ4V6DixKQ1z+o6327f4=
+	t=1738953070; cv=none; b=PlMMLU/ZyjZerHQ61YjX/yRtZPPwWrqL2RnASvW9hgkwCkYkTvUg0TLWU+nPgKdSTtY/BmIn0rq5LBztmVJmWigrFp5iamLNioJ9d6ti2kqrIkP9bfcTovU+vdqgDe6Vu169Go4zqCtpappWDMmoguJXGZQsAL3bX07ndptqvHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738953050; c=relaxed/simple;
-	bh=T3uQGNokuebOj0LHVuD5bDQu/1lgO4nWEJSqc0c4zfw=;
+	s=arc-20240116; t=1738953070; c=relaxed/simple;
+	bh=Na1GaVD2WleUIhZHv7ETYMCMGvK53tjoGJNuoSccjUM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dkrZyy/IjHGho1jtfLi8fF7+/Z6wAuRqo8LalqgBMLz3G6DvC2YOKsrUuCTrrutwOiC2IaI63NRoDXfguD5Z8/UrnxJccRqjDFHNMIucc/Yc+NT7jGZ6bNd/m8sIkBgW53IOBChVMkuf2Wh4SaXBdsNikvhogI07WHtL2lgQRnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fKZOGqF1; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=dlzuSVtl2A0tXKl7yh8Ssj9QzlyEi9TAq34v9S61FHIICnwWwSOolsNiHLS0o5dZCQp6++SISJo9P5H/XWJH8ss6s2LR6oK5H2txzVHuY4K5rh2G7yjKskz2hWRWkoNxRVhrT+tBFjkAm42eo1T0n6mh/Z0J0CiwWxzGTZfUpWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ItAped35; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fKZOGqF1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738953049; x=1770489049;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=T3uQGNokuebOj0LHVuD5bDQu/1lgO4nWEJSqc0c4zfw=;
-  b=fKZOGqF12MGvCLbfO+HYStbEqLimUF7XS7IKmW6y9By+7tomJzDiku4g
-   IBNU4cK/VyVf8Hbm/E/ketVXNHy51JRFbhWbuZ4WVaw29sSELVTyq0Hsl
-   4cUk8CBJ1XDJ7gLVvzgc6fjOTdd3e6OqdO8TiXCiMNg7BqEbN3+2jldHv
-   qibD8Wda8IzUTSna3cnmBnkUYedSVnTlDIeIjEy7hwbnnMz+PoQmav99z
-   eaR4Cddq46yITwA0k7ITctSoFs9LRkZhdIzf8aNHMCRFqcqUdTqteVqQX
-   Qm+iRLORc79EmDCSfZis9DXjLKuLJ8hgKw0x+nHuGMWqBhHIfJoc3/rt/
-   g==;
-X-CSE-ConnectionGUID: jKvo8mF/R9S3w36xouAC4w==
-X-CSE-MsgGUID: HbIqD1DFQvqmUiZ7Go2HoQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="38836722"
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="38836722"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 10:30:48 -0800
-X-CSE-ConnectionGUID: Y8x3+kBRSFqwhbweTwaEtg==
-X-CSE-MsgGUID: Q+VFW2RSTKusbNZYu7qd2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="116603371"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 10:30:47 -0800
-Date: Fri, 7 Feb 2025 10:30:45 -0800
-From: Andi Kleen <ak@linux.intel.com>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: namhyung@kernel.org, irogers@google.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v5 0/8] perf report: Add latency and parallelism profiling
-Message-ID: <Z6ZRVeoFxT0NV9yb@tassilo>
-References: <cover.1738772628.git.dvyukov@google.com>
- <87ldujkjsi.fsf@linux.intel.com>
- <CACT4Y+awFXT2j+HMeAy2RKnoBzb--+heFzJUoBZWp9iJevy1Dw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ItAped35"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738953067;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BN2ZmR2Ydnk53bpnRhCB0qi5vI3BoI4kNFdAP4vjWMQ=;
+	b=ItAped35DM6/0QzYPKXbsVX/Fib1XNcJkEChIktwTo5q45hZiiGm7HJGOeSZRxIRMQGSrQ
+	7iAcagaaEDEBpr+6NNt2Kj7RxVwH244znGatfNNLTVkbRoOd/izvNzCCbQq+zB4J76BJWn
+	O6lrfx5i6e9BIm9p3Xa0v69zQrKOwlQ=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-614-26llnX1DNXOyRf79HTOb-Q-1; Fri, 07 Feb 2025 13:31:06 -0500
+X-MC-Unique: 26llnX1DNXOyRf79HTOb-Q-1
+X-Mimecast-MFC-AGG-ID: 26llnX1DNXOyRf79HTOb-Q
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6dd43b16631so24118266d6.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 10:31:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738953065; x=1739557865;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BN2ZmR2Ydnk53bpnRhCB0qi5vI3BoI4kNFdAP4vjWMQ=;
+        b=clGPttINI4X6ZAwvXxf90+R5VuLVzATry+1DcEQ+yXrmuSti/h9pwiJVwyauHxWS7q
+         1aPdVyJTzqWaJ5hiVYbPRULVTwHGPpctxDWuvAdGngujT3N9iz0i+FBGHIbTsT3ZbSFg
+         vY8PE3e9No9IZXjaWnGMDrcuvGvpIOaqtoaKPmHR+Gs978OW3H0HsWMMs1+hkYJcPIBI
+         w3pb0W777LgNor2cEAlis1sMoIVLjeUDYbW7u6P8wgpGBN1oDycbIJI+OF7QctOFTdGE
+         kM3qQiXbxA064VHaQ13K5gSuiJ88a/9Thu6K8xsF7BUcnshezbw9HuHcagr/3ed5WehE
+         1JDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpzE2VCBZK1AeFa71mn0/TPeREfpSz0YAOaOikE+pE6bEQr3c7uUEJXtO0ljBQqSRqeLAQGNAbJQlYdnU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0MhG+Rua9TTSoEZVZ01haAmiYBCgkW4z6ETGA/VbqMYSF5A3w
+	mJYTvXC3NPC1FQZt6y4zLNqWEqWmLHmOmY4GH/OZeaWg/IN5utxYuzAkwGOKH9e4E/8TswT6K73
+	QhqBC6Ym5ALOQ9uATP9hdyMvQ36oWZNJKJxv6D8zKPX4Oc7o5d9iCYgoHHNoRLw==
+X-Gm-Gg: ASbGncuhcWazpVK1EhXxD8pf1ZY9oXkrFZodsLMDd80L54jSHRyIWHbQW7Z7gMRjeti
+	/DZGWkk0P+YPh9RKB6WY9TLyzzVjlXVW96uJ/3VgzUbStvgIAkRkOtWOc5wl/Wg01MTYOsofFKJ
+	Cqxwcb3MA6wQUeNZJSQbdb1xyx9En80iL6CaThhWGsCM6dRBSiHpGG0XNLJIY1ByNG4r7OHC49y
+	L/XxBX+8x+1pAmF1/B4jpmjZWXYgkaxUISTqoFFyVbnTn1h0ff3Q3tPaexIF2vCR0e4kdtU2RGj
+	2NlMhsEVE8jzAmXe9rC8FKIFiWpO4Td0Gg==
+X-Received: by 2002:a05:6214:2688:b0:6d8:850a:4d77 with SMTP id 6a1803df08f44-6e4455c19a6mr64469766d6.7.1738953065292;
+        Fri, 07 Feb 2025 10:31:05 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEk4+CS8K2R5Bg2mrVOVObtVzytFfN1/LyTW9OYchrvGyzV5wA3IwTF+tEX4OmsXLElACR85Q==
+X-Received: by 2002:a05:6214:2688:b0:6d8:850a:4d77 with SMTP id 6a1803df08f44-6e4455c19a6mr64469426d6.7.1738953064964;
+        Fri, 07 Feb 2025 10:31:04 -0800 (PST)
+Received: from localhost (ip70-163-223-251.ph.ph.cox.net. [70.163.223.251])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e44e113e99sm4461126d6.98.2025.02.07.10.31.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 10:31:04 -0800 (PST)
+Date: Fri, 7 Feb 2025 11:31:03 -0700
+From: Jerry Snitselaar <jsnitsel@redhat.com>
+To: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Mike Seo <mikeseohyungjin@gmail.com>, kernel-dev@igalia.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2] tpm: do not start chip while suspended
+Message-ID: <nounmgquiu46ii5kjsteg7r3qi5c6xmnuu4rlurxhk5mlsqq5m@w4lvevxc3eoa>
+References: <20250207-tpm-suspend-v2-1-b8cfb51d43ce@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,88 +80,114 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+awFXT2j+HMeAy2RKnoBzb--+heFzJUoBZWp9iJevy1Dw@mail.gmail.com>
+In-Reply-To: <20250207-tpm-suspend-v2-1-b8cfb51d43ce@igalia.com>
 
-> > I assume it just works, but might be worth checking.
+On Fri, Feb 07, 2025 at 03:07:46PM -0300, Thadeu Lima de Souza Cascardo wrote:
+> Checking TPM_CHIP_FLAG_SUSPENDED after the call to tpm_find_get_ops() can
+> lead to a spurious tpm_chip_start() call:
 > 
-> Yes, it seems to just work as one would assume. Things just combine as intended.
-
-Great.
-
+> [35985.503771] i2c i2c-1: Transfer while suspended
+> [35985.503796] WARNING: CPU: 0 PID: 74 at drivers/i2c/i2c-core.h:56 __i2c_transfer+0xbe/0x810
+> [35985.503802] Modules linked in:
+> [35985.503808] CPU: 0 UID: 0 PID: 74 Comm: hwrng Tainted: G        W          6.13.0-next-20250203-00005-gfa0cb5642941 #19 9c3d7f78192f2d38e32010ac9c90fdc71109ef6f
+> [35985.503814] Tainted: [W]=WARN
+> [35985.503817] Hardware name: Google Morphius/Morphius, BIOS Google_Morphius.13434.858.0 10/26/2023
+> [35985.503819] RIP: 0010:__i2c_transfer+0xbe/0x810
+> [35985.503825] Code: 30 01 00 00 4c 89 f7 e8 40 fe d8 ff 48 8b 93 80 01 00 00 48 85 d2 75 03 49 8b 16 48 c7 c7 0a fb 7c a7 48 89 c6 e8 32 ad b0 fe <0f> 0b b8 94 ff ff ff e9 33 04 00 00 be 02 00 00 00 83 fd 02 0f 5
+> [35985.503828] RSP: 0018:ffffa106c0333d30 EFLAGS: 00010246
+> [35985.503833] RAX: 074ba64aa20f7000 RBX: ffff8aa4c1167120 RCX: 0000000000000000
+> [35985.503836] RDX: 0000000000000000 RSI: ffffffffa77ab0e4 RDI: 0000000000000001
+> [35985.503838] RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
+> [35985.503841] R10: 0000000000000004 R11: 00000001000313d5 R12: ffff8aa4c10f1820
+> [35985.503843] R13: ffff8aa4c0e243c0 R14: ffff8aa4c1167250 R15: ffff8aa4c1167120
+> [35985.503846] FS:  0000000000000000(0000) GS:ffff8aa4eae00000(0000) knlGS:0000000000000000
+> [35985.503849] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [35985.503852] CR2: 00007fab0aaf1000 CR3: 0000000105328000 CR4: 00000000003506f0
+> [35985.503855] Call Trace:
+> [35985.503859]  <TASK>
+> [35985.503863]  ? __warn+0xd4/0x260
+> [35985.503868]  ? __i2c_transfer+0xbe/0x810
+> [35985.503874]  ? report_bug+0xf3/0x210
+> [35985.503882]  ? handle_bug+0x63/0xb0
+> [35985.503887]  ? exc_invalid_op+0x16/0x50
+> [35985.503892]  ? asm_exc_invalid_op+0x16/0x20
+> [35985.503904]  ? __i2c_transfer+0xbe/0x810
+> [35985.503913]  tpm_cr50_i2c_transfer_message+0x24/0xf0
+> [35985.503920]  tpm_cr50_i2c_read+0x8e/0x120
+> [35985.503928]  tpm_cr50_request_locality+0x75/0x170
+> [35985.503935]  tpm_chip_start+0x116/0x160
+> [35985.503942]  tpm_try_get_ops+0x57/0x90
+> [35985.503948]  tpm_find_get_ops+0x26/0xd0
+> [35985.503955]  tpm_get_random+0x2d/0x80
 > 
-> > It was intended to address some of these issues too.
+> Don't move forward with tpm_chip_start() inside tpm_try_get_ops(), unless
+> TPM_CHIP_FLAG_SUSPENDED is not set. tpm_find_get_ops() will return NULL in
+> such a failure case.
 > 
-> What issue? Latency profiling? I wonder what approach you had in mind?
+> Fixes: 9265fed6db60 ("tpm: Lock TPM chip in tpm_pm_suspend() first")
+> Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+> Cc: stable@vger.kernel.org
+> Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+> Cc: Mike Seo <mikeseohyungjin@gmail.com>
+> Cc: Jarkko Sakkinen <jarkko@kernel.org>
 
-The problem with gaps in parallelism is usually how things change
-over time. If you have e.g. idle periods they tend to look different
-in the profile. with the full aggregation you don't see it, but with
-a time series it tends to stand out.
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
-But yes that approach usually only works for large gaps. I guess
-yours is better for more fine grained issues.
-
-And I guess it might not be the most intutive for less experienced
-users.
-
-This is BTW actually a case for using a perf data GUI like hotspot or
-vtune which can visualize this better and you can zoom arbitrarily.
-Standard perf has only timechart for it, but it's a bit clunky to use
-and only shows the reschedules.
-
-> Also (1) user still needs to understand the default profile is wrong,
-> (2) be proficient with perf features, (3) manually aggregate lots of
-> data (time slicing increases amount of data in the profile X times),
-> (4) deal with inaccuracy caused by edge effects (e.g. slice is 1s, but
-> program phase changed mid-second).
-
-If you're lucky and the problem is not long tail you can use a high
-percentage cut off (--percent-limit) to eliminate most of the data.
-
-Then you just have "topN functions over time" which tends to be quite
-readable. One drawback of that approach is that it doesn't show
-the "other", but perhaps we'll fix that one day.
-
-But yes that perf has too many options and is not intuitive and most
-people miss most of the features is an inherent problem. I don't have
-a good solution for that unfortunately, other than perhaps better
-documentation.
-
+> ---
+> Changes in v2:
+> - Improve commit message as suggested by Jarkko Sakkinen.
+> - Link to v1: https://lore.kernel.org/r/20250205-tpm-suspend-v1-1-fb89a29c0b69@igalia.com
+> ---
+>  drivers/char/tpm/tpm-chip.c      | 5 +++++
+>  drivers/char/tpm/tpm-interface.c | 7 -------
+>  2 files changed, 5 insertions(+), 7 deletions(-)
 > 
-> But it does open some interesting capabilities in combination with a
-> latency profile, e.g. the following shows how parallelism was changing
-> over time.
+> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+> index 7df7abaf3e526bf7e85ac9dfbaa1087a51d2ab7e..6db864696a583bf59c534ec8714900a6be7b5156 100644
+> --- a/drivers/char/tpm/tpm-chip.c
+> +++ b/drivers/char/tpm/tpm-chip.c
+> @@ -168,6 +168,11 @@ int tpm_try_get_ops(struct tpm_chip *chip)
+>  		goto out_ops;
+>  
+>  	mutex_lock(&chip->tpm_mutex);
+> +
+> +	/* tmp_chip_start may issue IO that is denied while suspended */
+> +	if (chip->flags & TPM_CHIP_FLAG_SUSPENDED)
+> +		goto out_lock;
+> +
+>  	rc = tpm_chip_start(chip);
+>  	if (rc)
+>  		goto out_lock;
+> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+> index b1daa0d7b341b1a4c71a200115f0d29d2e87512d..f62f7871edbdb0181fad8af3367878308fa8a454 100644
+> --- a/drivers/char/tpm/tpm-interface.c
+> +++ b/drivers/char/tpm/tpm-interface.c
+> @@ -445,18 +445,11 @@ int tpm_get_random(struct tpm_chip *chip, u8 *out, size_t max)
+>  	if (!chip)
+>  		return -ENODEV;
+>  
+> -	/* Give back zero bytes, as TPM chip has not yet fully resumed: */
+> -	if (chip->flags & TPM_CHIP_FLAG_SUSPENDED) {
+> -		rc = 0;
+> -		goto out;
+> -	}
+> -
+>  	if (chip->flags & TPM_CHIP_FLAG_TPM2)
+>  		rc = tpm2_get_random(chip, out, max);
+>  	else
+>  		rc = tpm1_get_random(chip, out, max);
+>  
+> -out:
+>  	tpm_put_ops(chip);
+>  	return rc;
+>  }
 > 
-> for perf make profile:
+> ---
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> change-id: 20250205-tpm-suspend-b22f745f3124
+> 
+> Best regards,
+> -- 
+> Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+> 
 
-Very nice! Looks useful.
-
-Perhaps add that variant to tips.txt too.
-
-> 
-> perf report -F time,latency,parallelism --time-quantum=1s
-> 
-> # Time           Latency  Parallelism
-> # ............  ........  ...........
-> #
->   1795957.0000     1.42%            1
->   1795957.0000     0.07%            2
->   1795957.0000     0.01%            3
->   1795957.0000     0.00%            4
-> 
->   1795958.0000     4.82%            1
->   1795958.0000     0.11%            2
->   1795958.0000     0.00%            3
-> ...
->   1795964.0000     1.76%            2
->   1795964.0000     0.58%            4
->   1795964.0000     0.45%            1
->   1795964.0000     0.23%           10
->   1795964.0000     0.21%            6
-> 
-> /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
-> 
-> Here it finally started running on more than 1 CPU.
-
-
--Andi
