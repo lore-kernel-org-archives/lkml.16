@@ -1,226 +1,186 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2053.outbound.protection.outlook.com [40.107.21.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1926F154C05;
-	Fri,  7 Feb 2025 11:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738927793; cv=none; b=F7ck61Ff32PsTnFjcdFGDqPj4RzxLF5nww3Z34yGMaJJ5V9pP90L1K/99GjOBJ7M7cqaihaQgDxYW2vNvHkzDkcDHldcRv9Rp9IeZ9YlBdp5RweSUSGyqnJHcK1/Jam7+LW9MP00NkN+oPk4Pn/F88ECy1a+ujXX3m54e8QdP7s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738927793; c=relaxed/simple;
-	bh=H2y5D/PM5tYq3BpNaRBiJG8iQwkDq/AIoKQCoGOFvkI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UdFUjnsmrMZD94t7WFtUpRvPFMbkoqVRwadAPzuaJJNR85pdobSkAGio07lxA6JZpgLljHByVh1PAV+Jf6aEpLLBuEV3DWDL5jouZfLCmgCzD3EQwWHbksAwkTssAsr4MMSwtdpXcMo+RqdO/fc7tylExFYkv1ZSKUCjvnbiPTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mxl3GauP; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581542417FE;
+	Fri,  7 Feb 2025 11:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738927813; cv=fail; b=I178UF5Mw/KUBt3QBi2oqarEp8uADVXZJ29bKyPZUK+w3JhhhK3dYZ/T6ZC8lRsKjgsjH6dYpRr8bcopCobxP9PscFVg0padMvs28syaXPR5c9xyn6Dsh0UQP8lXZiQfCfUlIauFFs4jQ7c8QS6XudE6OD9NqxOc0P4PsqGLJ5I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738927813; c=relaxed/simple;
+	bh=A+Y7wax5aVM6pMdqjVFJKof0/DROpc8gc/4Moelggpo=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=dlib6Dbvkn1EePQUen6VhaCtXv0Ea5WrBIk7nqWiazFgxw54k9IaxwyAScFkwXJm/e9x615/1C3YyzJCBPVgodV4v7lbaqHu1wY+5q+nV8QMHGVZkGsS4/ncgH3+D18sPensFyAGAaKBcNkFpXYH7diLZzZWPiFL6hLbyJqDVro=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=nFUMJi20; arc=fail smtp.client-ip=40.107.21.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mxl3GauP"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5175OffB030394;
-	Fri, 7 Feb 2025 11:29:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=H2y5D/
-	PM5tYq3BpNaRBiJG8iQwkDq/AIoKQCoGOFvkI=; b=mxl3GauPqUZLJtd+33HcpY
-	s4iWRKsCSYfQ99QxbBGgs/gB5WFyQ6qED06APzMm3S+vUuZ2YbKHwEojQeeQl+JL
-	Y35MfyBIbdsbGAAF2++5s9t4y92SbG3llXF5Omh5n9k1UGUGQR58t0PYVMUdXwj6
-	x/RhouZJA9BfSbnoejLLFnVTFgnwx7HjjgmNBRZAF4nnsFK1JfHWvR6j/k7HyviJ
-	om6eOsE2sSc1EE+0BuFC0BpdWdKuJoytBGRsMkTWKh3+DSBS74rzoQqaqWWT6UAI
-	hceCK4H9qqXvhMDsq3bwwifsmzDQJzuF8Z5BDbaJ85cuV0If4FOms4FVmReR+kiA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44nc08hndc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 11:29:08 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 517BT77s016888;
-	Fri, 7 Feb 2025 11:29:07 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44nc08hncm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 11:29:07 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5179oG8g016391;
-	Fri, 7 Feb 2025 11:28:49 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44hwxsugjk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 11:28:49 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 517BSkqZ60031420
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Feb 2025 11:28:46 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 032A720169;
-	Fri,  7 Feb 2025 11:28:46 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 20C1520165;
-	Fri,  7 Feb 2025 11:28:44 +0000 (GMT)
-Received: from [127.0.0.1] (unknown [9.152.108.100])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  7 Feb 2025 11:28:44 +0000 (GMT)
-Message-ID: <cff3dc9eaa592dbe634e336eb83f9bb47dd9705a.camel@linux.ibm.com>
-Subject: Re: [PATCH bpf-next v2 4/9] bpf: Introduce load-acquire and
- store-release instructions
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Peilin Ye <yepeilin@google.com>, bpf@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc: bpf@ietf.org, Xu Kuohai <xukuohai@huaweicloud.com>,
-        Eduard Zingerman
- <eddyz87@gmail.com>,
-        David Vernet <void@manifault.com>,
-        Alexei Starovoitov
- <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko
- <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>, Song Liu
- <song@kernel.org>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        John Fastabend
- <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@fomichev.me>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Paul E. McKenney"
- <paulmck@kernel.org>,
-        Puranjay Mohan <puranjay@kernel.org>,
-        Heiko Carstens
- <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Catalin Marinas
- <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Quentin Monnet
- <qmo@kernel.org>,
-        Mykola Lysenko <mykolal@fb.com>, Shuah Khan
- <shuah@kernel.org>,
-        Ihor Solodrai <ihor.solodrai@linux.dev>,
-        Yingchi Long
- <longyingchi24s@ict.ac.cn>,
-        Josh Don <joshdon@google.com>, Barret Rhoden
- <brho@google.com>,
-        Neel Natu <neelnatu@google.com>, Benjamin Segall
- <bsegall@google.com>,
-        linux-kernel@vger.kernel.org
-Date: Fri, 07 Feb 2025 12:28:43 +0100
-In-Reply-To: <d03d8c3305e311c6cb29924119b5eecae8370bbc.1738888641.git.yepeilin@google.com>
-References: <cover.1738888641.git.yepeilin@google.com>
-	 <d03d8c3305e311c6cb29924119b5eecae8370bbc.1738888641.git.yepeilin@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="nFUMJi20"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GCOKtqA47VBgecsPAjVopHxWfBOC/sbKaugsbngn4R9Q1MpF+vvp/sdEVOV2Eq8ytwoGzyon5joz++t0CWjei1aYd8rY9jK+5myWSvQOLx7F/8nIbv2ptGVY5fU5uuCVvdxHfdTiGGKWieVJ6rLISjyETh5ASufYn10lQOCr7DjAjhzXn2VOlH2YwvSGdEecQ6nT6Tw8izrnQjT88NtUgUhQ2D2azgtrhsij+B11eFst9MXFwfSReuaPWdPGPa8VUuKWfeSnkBDQ290cbdUZNIT9LqYo6LR4v+4ea/1Eb+7FVbI9OwODHyOrjrdEJL2HXB3nh0gYCbfzxErF3Yd4bQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SAsbKF6gDO8myT5tx/n0FRXdc3Lj5fu4rJ9vu44eYVM=;
+ b=jQknGstyWJ63KbIRDRkW6WvM9RPpxZYeqHTC3b8+5KOp0p9wJUOcuKYMRa9ykU5HWzDwQ5K0ZDSqqu3WC2Upihpij8GmyXn575Z5dgjmx2a7rQBfB4PK85dvUCva5XdkqDh2ZWUfc4DEeFCfOp++4V7zeJwYt0cKYklZlT8OpZMhXfCVDwKv15S8GIXnSYsOj4Dfpr/doqAQe24czaZul9mURfxb+G5iso7dpVQcyd6Jx8QeipIwdrWTJpweS4BrHVdOO8YMWGmIoDtK4NNR/3+plh+lx/jJJhhDIUaH+GCGsjwNILJQ7SMaYvW8nx0gc2sz0vYS6XiIPxY4fymfdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SAsbKF6gDO8myT5tx/n0FRXdc3Lj5fu4rJ9vu44eYVM=;
+ b=nFUMJi20SQ0mHPV9BgWWiIP/6+mHJmwNpzSA/kctWHcuWKQIcD1gl+aAtIWtwHmEdr4u3mDt+NcHTDByPVwfACFOmfbuELTmwRkhVhhnn77raaLz0vGgVR4deHuYGGWzfFM+/y45QRHbNFFpjWU96NREy76QzHF7iCOzAnOMHjFX3QbrM0NYCgCPC8270p5+BGqyC5b3+4fpiTyJNrtn3Rzt2Tkxd3jKodVCmOqiFfqumwijuFYqM5pgd4DD6ormt7ablKOSBv5VFYubJA0c2OQWrgUrWU96lQRNcqpo9iUhSsHZWvbXdiq4RXl4LCTxasKNs6pXOK7kO8A5nE47HA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from AS4PR04MB9576.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::12)
+ by PA4PR04MB9392.eurprd04.prod.outlook.com (2603:10a6:102:2ab::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.23; Fri, 7 Feb
+ 2025 11:30:07 +0000
+Received: from AS4PR04MB9576.eurprd04.prod.outlook.com
+ ([fe80::9cf2:8eae:c3d1:2f30]) by AS4PR04MB9576.eurprd04.prod.outlook.com
+ ([fe80::9cf2:8eae:c3d1:2f30%6]) with mapi id 15.20.8398.025; Fri, 7 Feb 2025
+ 11:30:07 +0000
+From: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+To: Julien Massot <julien.massot@collabora.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org
+Subject: [PATCH 0/5] media/i2c: max96717: a few changes
+Date: Fri,  7 Feb 2025 13:29:52 +0200
+Message-Id: <20250207112958.2571600-1-laurentiu.palcu@oss.nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: AM4PR0302CA0002.eurprd03.prod.outlook.com
+ (2603:10a6:205:2::15) To AS4PR04MB9576.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4fe::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 2vqE_S-ZCmh4StDB4kvU9q_CRNjPQL4t
-X-Proofpoint-GUID: o5rg8snT-IXIrJ5LScYMNJP6aBEmf57u
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_05,2025-02-07_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=884 bulkscore=0
- malwarescore=0 spamscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0
- suspectscore=0 impostorscore=0 priorityscore=1501 clxscore=1011
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502070088
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR04MB9576:EE_|PA4PR04MB9392:EE_
+X-MS-Office365-Filtering-Correlation-Id: d704bf51-2024-4081-29b9-08dd476ac63b
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Q2Yu84XyaxVsnyrI5XWgwaw/cb9J0TxGSC1KqaVkwhIOSZNbqIitqJ2X7ayh?=
+ =?us-ascii?Q?d+sf+1IQFElRU2fhaXoWOQD1SqnjYJf/3wTlDIaa1mb1Uv4IOCi7D1XclLtA?=
+ =?us-ascii?Q?kV8JH6n6S4ZvaIASvSRb4U+OBuW233nd0cTm7D/O8byBgRvuFA/Nesik/5Rg?=
+ =?us-ascii?Q?PMMJrekuKsOKmhfbYqydQZWS6aVYk2A6Yp+WpygVkpJ3YWcCMOSn2hw47qWq?=
+ =?us-ascii?Q?lKVmpRDwl8VWR+uuDDZkSkxS5eT4sKpMgVPdjhhUZC8KMoq6juBFcZtRPBO+?=
+ =?us-ascii?Q?s7mZ7ebwKr3esdAgexKq/NXSksknc2hXouIx3QKaZ3uNu6pRTup07j1+qkvW?=
+ =?us-ascii?Q?LTkWhmJfLPts2a11r2FqCAM4+dnVcCYPg2GCyP8wNfpSQFmOD0Bh0BB8VVvh?=
+ =?us-ascii?Q?nFSEJT6XbVYP6oMcDGK3PD9ztfLArM/ycgg3z3S63Q9E+mY1NsKdSKN8L5tO?=
+ =?us-ascii?Q?YAaLAGIma7fZt0M4xxAbXCM0Yx234Xl/2lutQXO5dVx/4a7AhT1UnNodNtSI?=
+ =?us-ascii?Q?ghIDRvWHeo9gArys4L+ZE7NBYO1qlbNNKbRNZ22QX6wX8jOVhaE0gPNldZG/?=
+ =?us-ascii?Q?tf9x+vizEiP6/iS6g47YYNJBJFB6NqyGdVGjAf3eX3n3eFwb1IRiw3vg2skH?=
+ =?us-ascii?Q?HHI5Uz4Xvj7wyhd9Xz42A2JG8y7KpRCHM+gsXgHwX9YgMCC23ACG39lzncJi?=
+ =?us-ascii?Q?8rz2Nem7nceBZReWkWdSuo3EULOQI1Qn6RU8/BNglVfNHaANSpquoLOzG5wC?=
+ =?us-ascii?Q?ddhsPJ53j3VUw9RdI8Np0V7MR9DLtX3WxEznKvjs0+C0yHHHHqMKl0uUcIGB?=
+ =?us-ascii?Q?AsV+QGbbK0w4hmQlFO6H7no8xK/FAisbO9zC5gNNUxxGMkaGfBBVmvzlrKii?=
+ =?us-ascii?Q?VN5NtQauGzAJHfQVF8RSDMh1FAIczqozIGRqr/vaPbPVQdcfEONdkG5y/xIs?=
+ =?us-ascii?Q?52MFUUcfLPeepN3hRToNa7woia8cizT4pt1IY08lHiuEDvf0mr1lbdn4A7DX?=
+ =?us-ascii?Q?Vp8JFUL7Rym360orhzo5Ab+wPgHGnFfCfudnkN01nE2CVax+9BmZSXKcdaiT?=
+ =?us-ascii?Q?3mW2KloduvUjJ0ek2IrWVbxMPI3pzJLPbeRvv8oAdtVuUa6H6cXJJY6F4tu6?=
+ =?us-ascii?Q?qnY12dxrWstyHQDta8HFNMZQeMugs9NPcradXo3VfB7TjJWM8/NeX2fZAe7w?=
+ =?us-ascii?Q?WYPCfXmi9y+2UZ8MnDNkeX0kXb1XHwTSvTGzDLj+qH4Rzfob/mZDiV15mpVf?=
+ =?us-ascii?Q?EO+c8zSSn8hPGElgpWxHaLSPo+aIKegDY3lrhMJM7aLMMxgMTWmkG5xTePZ6?=
+ =?us-ascii?Q?G7c7cqmRoGqiVXm0eHPOJw4itxee+JX8+LJixLWz3wLXLA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9576.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?8/PeLfL1JDYH+qnnFjqse+hBb8YBVTBWkDrTz2lP4mG0iT7Ikpn6/dH/9cs1?=
+ =?us-ascii?Q?V4tKcxkzJO602fDZ1DeeehTm1NiW1i87lLdOeLVOHMglBpRR99N7uKvGlkKQ?=
+ =?us-ascii?Q?jGAiyD8NN9W52j5zssD3iEKCqR7guVz/bl4MpaJnWeQzuv6iC0U8DzI5USbR?=
+ =?us-ascii?Q?2NJDCgF51N8YMI295xv9MAJSYAnebXRWxgCn6xVEDG24VIl2XzzI0e6AjKsK?=
+ =?us-ascii?Q?EetlFACz7rhfEOeJkkwOtMH/FF1SH6yyeJoj2EA3QCG8PaX3cm1zVqsZwLIQ?=
+ =?us-ascii?Q?ZKbdSrlDGahIvg7QqzbPGeq+RubNP+fIQhkDL3tQ8Pe4wwNXYE2r+JNJCOYC?=
+ =?us-ascii?Q?YOxAn0MieB7qsvOAzdJ+1LXLKXdzi5MGIJaNbYKHlFCWp1lbfz31lqpyVgrb?=
+ =?us-ascii?Q?EKY9aaY65EYhAu8nVWEZdhQiZeatjJcmqlXWeNxLxlDeSiooIN69Bl60ESyA?=
+ =?us-ascii?Q?o0oAQxkDqDocNKMKAkFIoOT1rJvmYD1x3NNGqVZpDaPFoj69ufTCrHjMCBhY?=
+ =?us-ascii?Q?0PSlS1EeQACVsWWs0ydy/RQMledjspuCKS7UO50oYMQInQoWOSgKypJS2eC1?=
+ =?us-ascii?Q?8DT4otKuPRyNtvRp9JBa9+TGFNpVTfxl83hE8jSHTu/iZq7aBIlxC5P7E/O6?=
+ =?us-ascii?Q?5M09TjRql6D60SB34r8YSc07+daBCSUKwRD9KxH+qObnuv7OeaG3FY0+H3dj?=
+ =?us-ascii?Q?3Z2Ttb9cI6xekzHxt3RbNIbgdd99Yg50sxyCcWPjtkesuZUfJVdl0j6WxYCU?=
+ =?us-ascii?Q?r+wRSh7Tbjyifs+Jcebk6W/LCMt7OGTo1bOcBP2XKk8StOu0hh2ieZqyurcx?=
+ =?us-ascii?Q?6V+H1TZkoPp0m6c124FzD4PTMxNQOvSvcJEjPvXHiZBEDQO3+NgZaw1XkUsS?=
+ =?us-ascii?Q?uN640Gw0KKqWzU0t3TlTlwPhRIoy79p4iUoTfhSTTCnTlxAuCckSDuAVBfD3?=
+ =?us-ascii?Q?2mcK1uADXMIy6PnrIHikl+fSH/KQeDyYR1FEduG79kI0R1SOeCL7XBbyz0Ji?=
+ =?us-ascii?Q?5E5Y2bwYNbEzIobjSROH3X/fP4nkjZCqhCpL2XeXR/zJ/eaQ0KdCYvIurx4V?=
+ =?us-ascii?Q?5TdkxYHoep5lGl/bcLGuKAFU43JBkB6/l6KrLtRKd3CmYPoufSOYBaImoEV2?=
+ =?us-ascii?Q?5pWHN6ShBdneKFgpmmD36+xkuuSz8J1Dy88fK6Iy/O5yELBArZ2kjIgrq5Gq?=
+ =?us-ascii?Q?anUSI7NiFbYoz5/ftoSwGhMjPZTZhGWbWI5ixpEZUOSvlIVeBBxFZnSFyxvs?=
+ =?us-ascii?Q?f63T4Gnk8QIlHVwepLEQ1TbGs4UqeYL//tvl03pE+iE9oXjEi8LEsfzlaEEX?=
+ =?us-ascii?Q?LuPkwAcd+hjcjbyT5WkwLyOnJhYMl45SGHvMwjB+isO8yseA/earf3CErHc2?=
+ =?us-ascii?Q?HGK34ZDl4WvExGmS2zV/jL4i5ot4wmvwYRDx4DBd9O7x3pq85zeB51W8uIsT?=
+ =?us-ascii?Q?HLYEbR7y9N2LtPBYXnSDPTdgX0hndf/z73+FEjKXfkxmTkn1/Ao5DVLRi6rH?=
+ =?us-ascii?Q?hw1iksnPh1jFJJHanBuRNug3kXGzl/R/3UJozYgoZCFt1DV1997quxfNX4+M?=
+ =?us-ascii?Q?CJFdps9qll9FEA4KBtOWltGhnKMg/83gOFT9jvaDpjqXnQb9DNRT7yQLbQ2I?=
+ =?us-ascii?Q?kw=3D=3D?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d704bf51-2024-4081-29b9-08dd476ac63b
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9576.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 11:30:07.6265
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Jjc3Wb96Y1Jr9cJk4mhQ2+Glzj/w2Cvh6MwVyaPsTAv1QoCD8Ltpv1LkcYg3FAk1COS3nU64gW1ESNbfmiuhbw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9392
 
-On Fri, 2025-02-07 at 02:05 +0000, Peilin Ye wrote:
-> Introduce BPF instructions with load-acquire and store-release
-> semantics, as discussed in [1].=C2=A0 The following new flags are defined=
-:
->=20
-> =C2=A0 BPF_ATOMIC_LOAD=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x=
-10
-> =C2=A0 BPF_ATOMIC_STORE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x20
-> =C2=A0 BPF_ATOMIC_TYPE(imm)=C2=A0=C2=A0=C2=A0 ((imm) & 0xf0)
->=20
-> =C2=A0 BPF_RELAXED=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0
-> =C2=A0 BPF_ACQUIRE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1
-> =C2=A0 BPF_RELEASE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x2
-> =C2=A0 BPF_ACQ_REL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x3
-> =C2=A0 BPF_SEQ_CST=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x4
->=20
-> =C2=A0 BPF_LOAD_ACQ=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (BPF_ATOMIC_LOAD =
-| BPF_ACQUIRE)
-> =C2=A0 BPF_STORE_REL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (BPF_ATOMIC_STORE | BP=
-F_RELEASE)
->=20
-> A "load-acquire" is a BPF_STX | BPF_ATOMIC instruction with the 'imm'
-> field set to BPF_LOAD_ACQ (0x11).
->=20
-> Similarly, a "store-release" is a BPF_STX | BPF_ATOMIC instruction
-> with
-> the 'imm' field set to BPF_STORE_REL (0x22).
->=20
-> Unlike existing atomic operations that only support BPF_W (32-bit)
-> and
-> BPF_DW (64-bit) size modifiers, load-acquires and store-releases also
-> support BPF_B (8-bit) and BPF_H (16-bit).=C2=A0 An 8- or 16-bit load-
-> acquire
-> zero-extends the value before writing it to a 32-bit register, just
-> like
-> ARM64 instruction LDARH and friends.
->=20
-> As an example, consider the following 64-bit load-acquire BPF
-> instruction:
->=20
-> =C2=A0 db 10 00 00 11 00 00 00=C2=A0 r0 =3D load_acquire((u64 *)(r1 + 0x0=
-))
->=20
-> =C2=A0 opcode (0xdb): BPF_ATOMIC | BPF_DW | BPF_STX
-> =C2=A0 imm (0x00000011): BPF_LOAD_ACQ
->=20
-> Similarly, a 16-bit BPF store-release:
->=20
-> =C2=A0 cb 21 00 00 22 00 00 00=C2=A0 store_release((u16 *)(r1 + 0x0), w2)
->=20
-> =C2=A0 opcode (0xcb): BPF_ATOMIC | BPF_H | BPF_STX
-> =C2=A0 imm (0x00000022): BPF_STORE_REL
->=20
-> In arch/{arm64,s390,x86}/net/bpf_jit_comp.c, have
-> bpf_jit_supports_insn(..., /*in_arena=3D*/true) return false for the
-> new
-> instructions, until the corresponding JIT compiler supports them.
->=20
-> [1]
-> https://lore.kernel.org/all/20240729183246.4110549-1-yepeilin@google.com/
->=20
-> Acked-by: Eduard Zingerman <eddyz87@gmail.com>
-> Signed-off-by: Peilin Ye <yepeilin@google.com>
-> ---
-> =C2=A0arch/arm64/net/bpf_jit_comp.c=C2=A0 |=C2=A0 4 +++
-> =C2=A0arch/s390/net/bpf_jit_comp.c=C2=A0=C2=A0 | 14 +++++---
-> =C2=A0arch/x86/net/bpf_jit_comp.c=C2=A0=C2=A0=C2=A0 |=C2=A0 4 +++
-> =C2=A0include/linux/bpf.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 | 11 ++++++
-> =C2=A0include/linux/filter.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 2 ++
-> =C2=A0include/uapi/linux/bpf.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 13 +=
-++++++
-> =C2=A0kernel/bpf/core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 63 ++++++++++++++++++++++++++++++--
-> --
-> =C2=A0kernel/bpf/disasm.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 | 12 +++++++
-> =C2=A0kernel/bpf/verifier.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 45 ++++++++++++++++++++++--
-> =C2=A0tools/include/uapi/linux/bpf.h | 13 +++++++
-> =C2=A010 files changed, 168 insertions(+), 13 deletions(-)
+Hi,
 
-Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
+This series adds support for:
+ * get_frame_sync(), so that we can pass the VCs and DTs from the
+   incoming sensor streams over to the downstream drivers (CSI, ISI);
+ * frame synchronization in multi-sensor setups. This one comes with
+   some dt-bindings changes in order to allow the user to specify the
+   incoming GPIO RX ID and the output pin;
+ * operation mode override. This would allow toggling from the pin
+   configured mode (for example: pixel mode) to the other one (tunneling
+   mode). Also, vice versa is possible as well but the driver only
+   supports tunneling mode currently;
 
-s390x has a strong memory model, and the regular load and store
-instructions are atomic as long as operand addresses are aligned.
+On the frame synchronization bindings, I would need some advice on the
+property naming. Recently, I sent a RFC adding support for MAX96724
+deserializer chip, see [1], and I also added support for FSYNC for that
+chip. The max96724 property is also named "maxim,fsync-config" but,
+since the chip is a deserializer and it's the one actually sending the
+FSYNC signal, that property has an extra item: the fsync mode.
 
-IIUC the verifier already enforces this unless BPF_F_ANY_ALIGNMENT
-is set, in which case whoever loaded the program is responsible for the
-consequences: memory accesses that happen to be unaligned would
-not trigger an exception, but they would not be atomic either.
+My question is: would it be OK to have the same "maxim,fsync-config"
+property name for both or should we have different names?
 
-So I can implement the new instructions as normal loads/stores after
-this series is merged.
+[1] https://patchwork.linuxtv.org/project/linux-media/list/?series=14427
+
+Thanks,
+Laurentiu
+
+Laurentiu Palcu (5):
+  media/i2c: max96717: change internal regulator voltage
+  media/i2c: max96717: implement the .get_frame_desc() operation
+  dt-bindings: i2c: maxim,max96717: add new properties
+  media/i2c: max96717: add FSYNC support
+  media/i2c: max96717: allow user to override operation mode from DT
+
+ .../bindings/media/i2c/maxim,max96717.yaml    |  28 ++++
+ drivers/media/i2c/max96717.c                  | 137 +++++++++++++++++-
+ 2 files changed, 157 insertions(+), 8 deletions(-)
+
+-- 
+2.34.1
+
