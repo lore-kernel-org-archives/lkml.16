@@ -1,395 +1,379 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5677513D8A0;
-	Fri,  7 Feb 2025 01:50:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817942940B
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 01:51:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738893035; cv=none; b=fOA10jgRYNs8hzYE8M17yCK3GvfcJ3WPe6vDijWzts0DJXhYB6g4imADi9XAUNW0b0ttXSnVmv6C2EAHIQ3MA4rz5TGIRwpDxaWCSAp7ErfXHst9jfy3GwByvx7PUclPgvCFuj4nF2I6Di7yt8kjVXA18YZflS21IGKcQ4GXj6Q=
+	t=1738893072; cv=none; b=jZpkqLKYCBeB48UIx8yPHXlFZXXyd1GaXaCTTEW6rhIGM/Q6bOAO18HUsA8ontgeMevOLk3DthTwCBvBsgpQV1zk/7cuUvbOuNKJ1GjT6L67cF7LOWoyBDd7MkV7uMNsRxZ+5UuqSU7WcnTuke6nLb7z5NLXfOn/ggQ4SJuHG8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738893035; c=relaxed/simple;
-	bh=JDmpgwRPli0t+qRzeujnWjyH1fJYkoGdjKTTWPc4thw=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=DGTbZiHJe65Xkt2nKOd8E2FJ5QacoFSsfwKjG+bPLjzfPrxaDz5arH6wt3HyfqbHJJXHKR7A8k747Aruz7vmZqA/zOrgWvvyiAV4tx+ArBKZ2D8RTGCfINtJbgELff23DOvP4jqPc3R/eqXOyw5ukKns1oxFzIiTOScY9136MQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WbnEfEgt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738893072; c=relaxed/simple;
+	bh=qDPEUa+3VPipKqb2Khm5lOImg9eJn2DBhB7VMEdHmrI=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=rkrsyjchsec+wJYmtBMvZ7rFPE8JErooliMpU4TtkhaTcFg8syx8VATSX8s0Ib9FNA9qRgZpXZaeiarHj5W80RgJgW1qFbebfJFjxFcn37iJAxKT76dJqPXWJTPAn5pvbW/fSpU3LvPuaYGc3HZM0OAh2qYgxqAObWdQc5HIdgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6a8bq3R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WbnEfEgt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EB6DC4CEE0;
-	Fri,  7 Feb 2025 01:50:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6a8bq3R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 402E6C4CEDD;
+	Fri,  7 Feb 2025 01:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738893033;
-	bh=JDmpgwRPli0t+qRzeujnWjyH1fJYkoGdjKTTWPc4thw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WbnEfEgtWHhH4y0u/LeIV8foWZduR3LAbJz3eSz05hmDYP7swdRL45CI/nDicR+uh
-	 nZwhTTvAIsHn7tSp18FgyiepFRPG5xU2TuAi/DYt3Y6/XIb2neV7AE49UQY/l2i5Ff
-	 d3vpjULK9wyFhtAabMfF1uO6CyVTIy1txYlILGp0Fz8lG6luOrjWnGhUBJqxO55y2w
-	 yOVvzCvEv+Nnlo92CorLgsvoVKMkH2fn+JBV9094Y+kxr3+5zqdb4lYlSGBbj1x844
-	 a8ZIhGA+Qj5s8NEMQr6akjsBsSSJv53+QfzMtTsp/hlYCP6VrsoljfT1TdEfhbgqWd
-	 /aQYZ+4DR7mpg==
-Date: Fri, 7 Feb 2025 10:50:29 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 3/3] tracing: Show last module text symbols in the
- stacktrace
-Message-Id: <20250207105029.ae917bcd839deea88d0383fc@kernel.org>
-In-Reply-To: <20250206124631.7fe2ecfb@gandalf.local.home>
-References: <20250207015330.5c71ad55ed2f516da1410711@kernel.org>
-	<173886114516.496116.8314066678313037503.stgit@devnote2>
-	<20250206124631.7fe2ecfb@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1738893072;
+	bh=qDPEUa+3VPipKqb2Khm5lOImg9eJn2DBhB7VMEdHmrI=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=E6a8bq3RmaNKe5gpbXzGzVjBd3wLKJ4ObYGwk0s8E1z1tSL/Nn4yNOwmjW/Q6GcBQ
+	 g6YEAnC039psZlciKpXb/EKhA5PHtUZ3RJJlC+b9xj0BLjOLVYLOjIq5+oB4mI2gJB
+	 CCFFrM0GgplzUnGlNiBVs4rJpgYw8uPDLuV97picpgdGrTrCOeVcKCj0Dj2nY6hshJ
+	 lZytyuqZRIBAs5uNQcKbaT8rFPPa/LPhvGLWqsMmaBVl5zgp7pZnZSjTiGY1yyQVXk
+	 lsAhWZ3pUVAJAHcDAvlkTftihkmQcY96amK3rVxF6TKG5UAjmZsSoL4GSacUEFgWKH
+	 LdhBN07cprLpg==
+Message-ID: <1f8f1dca-101c-45ae-a2cd-0b83d6cbae66@kernel.org>
+Date: Fri, 7 Feb 2025 09:51:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH] f2fs: quota: fix to avoid warning in
+ dquot_writeback_dquots()
+To: Zhiguo Niu <niuzhiguo84@gmail.com>
+References: <20250206064451.3088028-1-chao@kernel.org>
+ <CAHJ8P3+4RVNN0xB48D8aQ54ox399O0wc51YX2_At1heXWQrt4A@mail.gmail.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <CAHJ8P3+4RVNN0xB48D8aQ54ox399O0wc51YX2_At1heXWQrt4A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 6 Feb 2025 12:46:31 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On 2/7/25 09:30, Zhiguo Niu wrote:
+> Chao Yu via Linux-f2fs-devel <linux-f2fs-devel@lists.sourceforge.net>
+> 于2025年2月6日周四 14:50写道：
+>>
+>> F2FS-fs (dm-59): checkpoint=enable has some unwritten data.
+>>
+>> ------------[ cut here ]------------
+>> WARNING: CPU: 6 PID: 8013 at fs/quota/dquot.c:691 dquot_writeback_dquots+0x2fc/0x308
+>> pc : dquot_writeback_dquots+0x2fc/0x308
+>> lr : f2fs_quota_sync+0xcc/0x1c4
+>> Call trace:
+>> dquot_writeback_dquots+0x2fc/0x308
+>> f2fs_quota_sync+0xcc/0x1c4
+>> f2fs_write_checkpoint+0x3d4/0x9b0
+>> f2fs_issue_checkpoint+0x1bc/0x2c0
+>> f2fs_sync_fs+0x54/0x150
+>> f2fs_do_sync_file+0x2f8/0x814
+>> __f2fs_ioctl+0x1960/0x3244
+>> f2fs_ioctl+0x54/0xe0
+>> __arm64_sys_ioctl+0xa8/0xe4
+>> invoke_syscall+0x58/0x114
+>>
+>> checkpoint and f2fs_remount may race as below, resulting triggering warning
+>> in dquot_writeback_dquots().
+>>
+>> atomic write                                    remount
+>>                                                 - do_remount
+>>                                                  - down_write(&sb->s_umount);
+>>                                                   - f2fs_remount
+>> - ioctl
+>>  - f2fs_do_sync_file
+>>   - f2fs_sync_fs
+>>    - f2fs_write_checkpoint
+>>     - block_operations
+>>      - locked = down_read_trylock(&sbi->sb->s_umount)
+>>        : fail to lock due to the write lock was held by remount
+>>                                                  - up_write(&sb->s_umount);
+>>      - f2fs_quota_sync
+>>       - dquot_writeback_dquots
+>>        - WARN_ON_ONCE(!rwsem_is_locked(&sb->s_umount))
+>>        : trigger warning because s_umount lock was unlocked by remount
+>>
+>> If checkpoint comes from mount/umount/remount/freeze/quotactl, caller of
+>> checkpoint has already held s_umount lock, calling dquot_writeback_dquots()
+>> in the context should be safe.
+>>
+>> So let's record task to sbi->umount_lock_holder, so that checkpoint can
+>> know whether the lock has held in the context or not by checking current
+>> w/ it.
+>>
+>> In addition, in order to misrepresent caller of checkpoint, we should not
+>> allow to trigger async checkpoint for those callers: mount/umount/remount/
+>> freeze/quotactl.
+>>
+>> Fixes: af033b2aa8a8 ("f2fs: guarantee journalled quota data by checkpoint")
+>> Signed-off-by: Chao Yu <chao@kernel.org>
+>> ---
+>>  fs/f2fs/checkpoint.c | 17 ++++++++-----
+>>  fs/f2fs/f2fs.h       |  3 ++-
+>>  fs/f2fs/super.c      | 59 +++++++++++++++++++++++++++++++++++---------
+>>  3 files changed, 60 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+>> index efda9a022981..baff639ac0c4 100644
+>> --- a/fs/f2fs/checkpoint.c
+>> +++ b/fs/f2fs/checkpoint.c
+>> @@ -1237,7 +1237,8 @@ static int block_operations(struct f2fs_sb_info *sbi)
+>>  retry_flush_quotas:
+>>         f2fs_lock_all(sbi);
+>>         if (__need_flush_quota(sbi)) {
+>> -               int locked;
+>> +               bool need_lock = sbi->umount_lock_holder != current;
+>> +               bool locked = false;
+>>
+>>                 if (++cnt > DEFAULT_RETRY_QUOTA_FLUSH_COUNT) {
+>>                         set_sbi_flag(sbi, SBI_QUOTA_SKIP_FLUSH);
+>> @@ -1246,10 +1247,13 @@ static int block_operations(struct f2fs_sb_info *sbi)
+>>                 }
+>>                 f2fs_unlock_all(sbi);
+>>
+>> -               /* only failed during mount/umount/freeze/quotactl */
+>> -               locked = down_read_trylock(&sbi->sb->s_umount);
+>> -               f2fs_quota_sync(sbi->sb, -1);
+>> -               if (locked)
+>> +               /* don't grab s_umount lock during mount/umount/remount/freeze/quotactl */
+>> +               if (need_lock && !down_read_trylock(&sbi->sb->s_umount)) {
+>> +                       cond_resched();
+>> +                       goto retry_flush_quotas;
+>> +               }
+>> +               f2fs_do_quota_sync(sbi->sb, -1);
+>> +               if (need_lock)
+>>                         up_read(&sbi->sb->s_umount);
+>>                 cond_resched();
+>>                 goto retry_flush_quotas;
+>> @@ -1867,7 +1871,8 @@ int f2fs_issue_checkpoint(struct f2fs_sb_info *sbi)
+>>         struct cp_control cpc;
+>>
+>>         cpc.reason = __get_cp_reason(sbi);
+>> -       if (!test_opt(sbi, MERGE_CHECKPOINT) || cpc.reason != CP_SYNC) {
+>> +       if (!test_opt(sbi, MERGE_CHECKPOINT) || cpc.reason != CP_SYNC ||
+>> +               sbi->umount_lock_holder == current) {
+>>                 int ret;
+>>
+>>                 f2fs_down_write(&sbi->gc_lock);
+>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>> index 62b7fed1514a..7174dea641e9 100644
+>> --- a/fs/f2fs/f2fs.h
+>> +++ b/fs/f2fs/f2fs.h
+>> @@ -1670,6 +1670,7 @@ struct f2fs_sb_info {
+>>
+>>         unsigned int nquota_files;              /* # of quota sysfile */
+>>         struct f2fs_rwsem quota_sem;            /* blocking cp for flags */
+>> +       struct task_struct *umount_lock_holder; /* s_umount lock holder */
+>>
+>>         /* # of pages, see count_type */
+>>         atomic_t nr_pages[NR_COUNT_TYPE];
+>> @@ -3652,7 +3653,7 @@ int f2fs_inode_dirtied(struct inode *inode, bool sync);
+>>  void f2fs_inode_synced(struct inode *inode);
+>>  int f2fs_dquot_initialize(struct inode *inode);
+>>  int f2fs_enable_quota_files(struct f2fs_sb_info *sbi, bool rdonly);
+>> -int f2fs_quota_sync(struct super_block *sb, int type);
+>> +int f2fs_do_quota_sync(struct super_block *sb, int type);
+>>  loff_t max_file_blocks(struct inode *inode);
+>>  void f2fs_quota_off_umount(struct super_block *sb);
+>>  void f2fs_save_errors(struct f2fs_sb_info *sbi, unsigned char flag);
+>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>> index ef639a6d82e5..cb9d7b6fa3ad 100644
+>> --- a/fs/f2fs/super.c
+>> +++ b/fs/f2fs/super.c
+>> @@ -1740,22 +1740,28 @@ int f2fs_sync_fs(struct super_block *sb, int sync)
+>>
+>>  static int f2fs_freeze(struct super_block *sb)
+>>  {
+>> +       struct f2fs_sb_info *sbi = F2FS_SB(sb);
+>> +
+>>         if (f2fs_readonly(sb))
+>>                 return 0;
+>>
+>>         /* IO error happened before */
+>> -       if (unlikely(f2fs_cp_error(F2FS_SB(sb))))
+>> +       if (unlikely(f2fs_cp_error(sbi)))
+>>                 return -EIO;
+>>
+>>         /* must be clean, since sync_filesystem() was already called */
+>> -       if (is_sbi_flag_set(F2FS_SB(sb), SBI_IS_DIRTY))
+>> +       if (is_sbi_flag_set(sbi, SBI_IS_DIRTY))
+>>                 return -EINVAL;
+>>
+>> +       sbi->umount_lock_holder = current;
+>> +
+>>         /* Let's flush checkpoints and stop the thread. */
+>> -       f2fs_flush_ckpt_thread(F2FS_SB(sb));
+>> +       f2fs_flush_ckpt_thread(sbi);
+>> +
+>> +       sbi->umount_lock_holder = NULL;
+>>
+>>         /* to avoid deadlock on f2fs_evict_inode->SB_FREEZE_FS */
+>> -       set_sbi_flag(F2FS_SB(sb), SBI_IS_FREEZING);
+>> +       set_sbi_flag(sbi, SBI_IS_FREEZING);
+>>         return 0;
+>>  }
+>>
+>> @@ -2332,6 +2338,8 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
+>>         org_mount_opt = sbi->mount_opt;
+>>         old_sb_flags = sb->s_flags;
+>>
+>> +       sbi->umount_lock_holder = current;
+>> +
+>>  #ifdef CONFIG_QUOTA
+>>         org_mount_opt.s_jquota_fmt = F2FS_OPTION(sbi).s_jquota_fmt;
+>>         for (i = 0; i < MAXQUOTAS; i++) {
+>> @@ -2555,6 +2563,8 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
+>>
+>>         limit_reserve_root(sbi);
+>>         *flags = (*flags & ~SB_LAZYTIME) | (sb->s_flags & SB_LAZYTIME);
+>> +
+>> +       sbi->umount_lock_holder = NULL;
+>>         return 0;
+>>  restore_checkpoint:
+>>         if (need_enable_checkpoint) {
+>> @@ -2595,6 +2605,8 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
+>>  #endif
+>>         sbi->mount_opt = org_mount_opt;
+>>         sb->s_flags = old_sb_flags;
+>> +
+>> +       sbi->umount_lock_holder = NULL;
+>>         return err;
+>>  }
+>>
+>> @@ -2911,7 +2923,7 @@ static int f2fs_quota_sync_file(struct f2fs_sb_info *sbi, int type)
+>>         return ret;
+>>  }
+>>
+>> -int f2fs_quota_sync(struct super_block *sb, int type)
+>> +int f2fs_do_quota_sync(struct super_block *sb, int type)
+>>  {
+>>         struct f2fs_sb_info *sbi = F2FS_SB(sb);
+>>         struct quota_info *dqopt = sb_dqopt(sb);
+>> @@ -2959,6 +2971,16 @@ int f2fs_quota_sync(struct super_block *sb, int type)
+>>         return ret;
+>>  }
+>>
+>> +static int f2fs_quota_sync(struct super_block *sb, int type)
+>> +{
+>> +       int ret;
+>> +
+>> +       F2FS_SB(sb)->umount_lock_holder = current;
+>> +       ret = f2fs_do_quota_sync(sb, type);
+>> +       F2FS_SB(sb)->umount_lock_holder = NULL;
+>> +       return ret;
+>> +}
+>> +
+>>  static int f2fs_quota_on(struct super_block *sb, int type, int format_id,
+>>                                                         const struct path *path)
+>>  {
+>> @@ -2974,30 +2996,33 @@ static int f2fs_quota_on(struct super_block *sb, int type, int format_id,
+>>         if (path->dentry->d_sb != sb)
+>>                 return -EXDEV;
+>>
+>> -       err = f2fs_quota_sync(sb, type);
+>> +       F2FS_SB(sb)->umount_lock_holder = current;
+>> +
+>> +       err = f2fs_do_quota_sync(sb, type);
+>>         if (err)
+>> -               return err;
+>> +               goto out;
+>>
+>>         inode = d_inode(path->dentry);
+>>
+>>         err = filemap_fdatawrite(inode->i_mapping);
+>>         if (err)
+>> -               return err;
+>> +               goto out;
+>>
+>>         err = filemap_fdatawait(inode->i_mapping);
+>>         if (err)
+>> -               return err;
+>> +               goto out;
+>>
+>>         err = dquot_quota_on(sb, type, format_id, path);
+>>         if (err)
+>> -               return err;
+>> +               goto out;
+>>
+>>         inode_lock(inode);
+>>         F2FS_I(inode)->i_flags |= F2FS_QUOTA_DEFAULT_FL;
+>>         f2fs_set_inode_flags(inode);
+>>         inode_unlock(inode);
+>>         f2fs_mark_inode_dirty_sync(inode, false);
+>> -
+>> +out:
+>> +       F2FS_SB(sb)->umount_lock_holder = NULL;
+>>         return 0;
+> Hi Chao,
+> Here should return err? and init err=0 in the beginning?
 
-> On Fri,  7 Feb 2025 01:59:05 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Since the previous boot trace buffer can include module text address in
-> > the stacktrace. As same as the kernel text address, convert the module
-> > text address using the module address information.
-> 
-> Note, this doesn't look like it depends on the first two patches, which I
-> don't think we want yet. As that assumes we never disable the buffer once
-> we start it, and may start it again. But that's a debate we can have later.
+Zhiguo,
 
-Yes, the first 2 patches are kind of optimization.
-
-> 
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  kernel/trace/trace.c        |   76 +++++++++++++++++++++++++++++++++++++++++--
-> >  kernel/trace/trace.h        |    4 ++
-> >  kernel/trace/trace_output.c |    3 +-
-> >  3 files changed, 78 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > index 5a064e712fd7..9d942b7c2651 100644
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> > @@ -49,6 +49,7 @@
-> >  #include <linux/fsnotify.h>
-> >  #include <linux/irq_work.h>
-> >  #include <linux/workqueue.h>
-> > +#include <linux/sort.h>
-> >  
-> >  #include <asm/setup.h> /* COMMAND_LINE_SIZE and kaslr_offset() */
-> >  
-> > @@ -6007,6 +6008,27 @@ struct trace_scratch {
-> >  
-> >  static DEFINE_MUTEX(scratch_mutex);
-> >  
-> > +unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
-> > +{
-> > +	struct trace_scratch *tscratch;
-> > +	int i;
-> > +
-> > +	/* If we don't have last boot delta, return the address */
-> > +	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
-> > +		return addr;
-> > +
-> > +	tscratch = tr->scratch;
-> > +	if (tscratch && tr->module_delta && tscratch->entries[0].mod_addr < addr) {
-> > +		/* Note that entries are sorted */
-> > +		for (i = 0; i < tr->nr_modules; i++)
-> > +			if (addr < tscratch->entries[i].mod_addr)
-> > +				break;
-> > +		return addr + tr->module_delta[i - 1];
-> > +	}
-> > +
-> > +	return addr + tr->text_delta;
-> > +}
-> > +
-> >  static int save_mod(struct module *mod, void *data)
-> >  {
-> >  	struct trace_array *tr = data;
-> > @@ -6068,6 +6090,9 @@ static void update_last_data(struct trace_array *tr)
-> >  
-> >  	/* Using current data now */
-> >  	tr->text_delta = 0;
-> > +	kfree(tr->module_delta);
-> > +	tr->module_delta = NULL;
-> > +	tr->nr_modules = 0;
-> >  
-> >  	if (!tr->scratch)
-> >  		return;
-> 
-> The above could probably go after the check for !tr->scratch.
-
-Indeed.
-
-So TRACE_ARRAY_FL_LAST_BOOT means the buffer is on a reserved memory and it
-still have the previous boot data. OTOH, `tr->scratch` means the buffer has
-scratch pad area. And currently last_boot_info related fields are used
-only if there is a scratch pad area. Currently the reserved memory based
-buffer must have the scratch pad, but you might expect there could be
-the previous boot data without scratch pad area in the future?
-
-> 
-> > @@ -9351,10 +9376,37 @@ static struct dentry *trace_instance_dir;
-> >  static void
-> >  init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer);
-> >  
-> > +static int make_mod_delta(struct module *mod, void *data)
-> > +{
-> > +	struct trace_scratch *tscratch;
-> > +	struct trace_mod_entry *entry;
-> > +	struct trace_array *tr = data;
-> > +	int i;
-> > +
-> > +	tscratch = tr->scratch;
-> > +	for (i = 0; i < tr->nr_modules; i++) {
-> > +		entry = &tscratch->entries[i];
-> > +		if (!strcmp(mod->name, entry->mod_name)) {
-> > +			tr->module_delta[i] = (unsigned long)mod->mem[MOD_TEXT].base - entry->mod_addr;
-> > +			return 1;
-> 
-> Returning 1 causes the module_loop to stop. That is, this will only process
-> the first module it finds and then no more after that.
-
-Ah, good catch! I must have been half asleep. :(
-
-> 
-> > +		}
-> > +	}
-> 
-> Doesn't this assume that we have the same modules loaded?
-
-Yes, I thought that was your idea to show the symbols if the same module
-is loaded. We can use 
-
-> 
-> Note, I do plan on adding another field in the trace_scratch structure that
-> has the uname, then only allow the ascii trace to use the current kallsyms
-> if the uname matches.
-
-Yeah, it is OK. I thought the build-id is useful, but uname is also good.
-
-> 
-> > +	return 0;
-> > +}
-> > +
-> > +static int mod_addr_comp(const void *a, const void *b, const void *data)
-> > +{
-> > +	const struct trace_mod_entry *e1 = a;
-> > +	const struct trace_mod_entry *e2 = b;
-> > +
-> > +	return e1->mod_addr - e2->mod_addr;
-> 
-> Hmm, could this possibly cause an overflow issue? If the two addresses are
-> more than 32 bits apart?
-
-I guess the modules are loaded in the same area (mostly in vmalloc) and
-maybe the area size is under 2GB. Anyway, we can shift down it by page size.
-
-> 
-> > +}
-> > +
-> >  static void setup_trace_scratch(struct trace_array *tr, void *scratch, unsigned int size)
-> >  {
-> >  	struct trace_scratch *tscratch = scratch;
-> >  	struct trace_mod_entry *entry;
-> > +	int i, nr_entries;
-> >  
-> >  	if (!scratch)
-> >  		return;
-> > @@ -9371,7 +9423,7 @@ static void setup_trace_scratch(struct trace_array *tr, void *scratch, unsigned
-> >  		goto reset;
-> >  
-> >  	/* Check if each module name is a valid string */
-> > -	for (int i = 0; i < tscratch->nr_entries; i++) {
-> > +	for (i = 0; i < tscratch->nr_entries; i++) {
-> >  		int n;
-> >  
-> >  		entry = &tscratch->entries[i];
-> > @@ -9385,6 +9437,20 @@ static void setup_trace_scratch(struct trace_array *tr, void *scratch, unsigned
-> >  		if (n == MODULE_NAME_LEN)
-> >  			goto reset;
-> >  	}
-> > +	nr_entries = i;
-> > +	/* Allocate module delta array */
-> > +	tr->module_delta = kcalloc(nr_entries, sizeof(long), GFP_KERNEL);
-> > +	if (!tr->module_delta)
-> 
-> I wonder if this should trigger a WARN_ON()?
-
-I think this module_delta is optionally decode the previous boot data.
-So maybe pr_info() is enough.
-
-> 
-> > +		goto reset;
-> > +	tr->nr_modules = nr_entries;
-> > +
-> > +	/* Sort module table by base address. */
-> > +	sort_r(tscratch->entries, nr_entries, sizeof(struct trace_mod_entry),
-> > +		mod_addr_comp, NULL, NULL);
-> > +
-> > +	/* Scan modules */
-> > +	module_for_each_mod(make_mod_delta, tr);
-> > +
-> >  	return;
-> >   reset:
-> >  	/* Invalid trace modules */
-> 
-> 
-> BTW, here's my removal patch:
-
-Thank you! and as I discussed above, I think we can postpone the module
-removal until the next module is loaded on the same address.
-(or, we can use the scratch pad as a log structured table, in this case
-we can set a removal flag and replace the oldest removed one. Something
-like LRU.)
+Oh, yes, let me fix this, thank you for the review.
 
 Thanks,
 
-> 
-> -- Steve
-> 
-> 
-> From 521bc0e5286c93eb4be981d22a6c05043a78b555 Mon Sep 17 00:00:00 2001
-> From: Steven Rostedt <rostedt@goodmis.org>
-> Date: Wed, 5 Feb 2025 11:55:51 -0500
-> Subject: [PATCH] tracing: Update modules to persistent instances when removed
-> 
-> When a module is removed, remove it from the list of saved modules in the
-> persistent memory to any persistent instance that is currently active.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace.c | 69 +++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 65 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 443f2bc5b856..13eeb8df8b8c 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -6001,6 +6001,7 @@ struct trace_mod_entry {
->  
->  struct trace_scratch {
->  	unsigned long		kaslr_addr;
-> +	unsigned long		first_free_slot;
->  	unsigned long		nr_entries;
->  	struct trace_mod_entry	entries[];
->  };
-> @@ -6012,6 +6013,7 @@ static int save_mod(struct module *mod, void *data)
->  	struct trace_array *tr = data;
->  	struct trace_scratch *tscratch;
->  	struct trace_mod_entry *entry;
-> +	unsigned int idx;
->  	unsigned int size;
->  
->  	guard(mutex)(&scratch_mutex);
-> @@ -6021,16 +6023,60 @@ static int save_mod(struct module *mod, void *data)
->  		return -1;
->  	size = tr->scratch_size;
->  
-> -	if (struct_size(tscratch, entries, tscratch->nr_entries + 1) > size)
-> -		return -1;
-> +	idx = tscratch->first_free_slot < tscratch->nr_entries ?
-> +		tscratch->first_free_slot : tscratch->nr_entries;
->  
-> -	entry = &tscratch->entries[tscratch->nr_entries];
-> +	if (struct_size(tscratch, entries, idx + 1) > size)
-> +		return -1;
->  
-> -	tscratch->nr_entries++;
-> +	entry = &tscratch->entries[idx];
->  
->  	entry->mod_addr = (unsigned long)mod->mem[MOD_TEXT].base;
->  	strscpy(entry->mod_name, mod->name);
->  
-> +	if (idx == tscratch->nr_entries)
-> +		tscratch->nr_entries++;
-> +
-> +	for (idx++; idx < tscratch->nr_entries; idx++) {
-> +		entry = &tscratch->entries[idx];
-> +		if (!entry->mod_addr)
-> +			break;
-> +	}
-> +
-> +	tscratch->first_free_slot = idx;
-> +
-> +	return 0;
-> +}
-> +
-> +static int remove_mod(struct module *mod, void *data)
-> +{
-> +	struct trace_array *tr = data;
-> +	struct trace_scratch *tscratch;
-> +	struct trace_mod_entry *entry;
-> +	unsigned int idx;
-> +	unsigned int size;
-> +
-> +	guard(mutex)(&scratch_mutex);
-> +
-> +	tscratch = tr->scratch;
-> +	if (!tscratch)
-> +		return -1;
-> +	size = tr->scratch_size;
-> +
-> +	for (idx = 0; idx < tscratch->nr_entries; idx++) {
-> +		entry = &tscratch->entries[idx];
-> +		if (entry->mod_addr == (unsigned long)mod->mem[MOD_TEXT].base)
-> +			break;
-> +	}
-> +	if (idx == tscratch->nr_entries)
-> +		return -1;
-> +
-> +	if (idx < tscratch->first_free_slot)
-> +		tscratch->first_free_slot = idx;
-> +
-> +	entry->mod_addr = 0;
-> +	entry->mod_name[0] = '\0';
-> +
->  	return 0;
->  }
->  
-> @@ -10112,6 +10158,20 @@ static void trace_module_record(struct module *mod)
->  	}
->  }
->  
-> +static void trace_module_delete(struct module *mod)
-> +{
-> +	struct trace_array *tr;
-> +
-> +	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-> +		/* Update any persistent trace array that has already been started */
-> +		if ((tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT)) ==
-> +		    TRACE_ARRAY_FL_BOOT) {
-> +			if (trace_array_active(tr))
-> +				remove_mod(mod, tr);
-> +		}
-> +	}
-> +}
-> +
->  static int trace_module_notify(struct notifier_block *self,
->  			       unsigned long val, void *data)
->  {
-> @@ -10124,6 +10184,7 @@ static int trace_module_notify(struct notifier_block *self,
->  		break;
->  	case MODULE_STATE_GOING:
->  		trace_module_remove_evals(mod);
-> +		trace_module_delete(mod);
->  		break;
->  	}
->  
-> -- 
-> 2.45.2
-> 
+> thanks！
+>>  }
+>>
+>> @@ -3009,7 +3034,7 @@ static int __f2fs_quota_off(struct super_block *sb, int type)
+>>         if (!inode || !igrab(inode))
+>>                 return dquot_quota_off(sb, type);
+>>
+>> -       err = f2fs_quota_sync(sb, type);
+>> +       err = f2fs_do_quota_sync(sb, type);
+>>         if (err)
+>>                 goto out_put;
+>>
+>> @@ -3032,6 +3057,8 @@ static int f2fs_quota_off(struct super_block *sb, int type)
+>>         struct f2fs_sb_info *sbi = F2FS_SB(sb);
+>>         int err;
+>>
+>> +       F2FS_SB(sb)->umount_lock_holder = current;
+>> +
+>>         err = __f2fs_quota_off(sb, type);
+>>
+>>         /*
+>> @@ -3041,6 +3068,9 @@ static int f2fs_quota_off(struct super_block *sb, int type)
+>>          */
+>>         if (is_journalled_quota(sbi))
+>>                 set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
+>> +
+>> +       F2FS_SB(sb)->umount_lock_holder = NULL;
+>> +
+>>         return err;
+>>  }
+>>
+>> @@ -4715,6 +4745,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>>         if (err)
+>>                 goto free_compress_inode;
+>>
+>> +       sbi->umount_lock_holder = current;
+>>  #ifdef CONFIG_QUOTA
+>>         /* Enable quota usage during mount */
+>>         if (f2fs_sb_has_quota_ino(sbi) && !f2fs_readonly(sb)) {
+>> @@ -4841,6 +4872,8 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>>         f2fs_update_time(sbi, CP_TIME);
+>>         f2fs_update_time(sbi, REQ_TIME);
+>>         clear_sbi_flag(sbi, SBI_CP_DISABLED_QUICK);
+>> +
+>> +       sbi->umount_lock_holder = NULL;
+>>         return 0;
+>>
+>>  sync_free_meta:
+>> @@ -4945,6 +4978,8 @@ static void kill_f2fs_super(struct super_block *sb)
+>>         struct f2fs_sb_info *sbi = F2FS_SB(sb);
+>>
+>>         if (sb->s_root) {
+>> +               sbi->umount_lock_holder = current;
+>> +
+>>                 set_sbi_flag(sbi, SBI_IS_CLOSE);
+>>                 f2fs_stop_gc_thread(sbi);
+>>                 f2fs_stop_discard_thread(sbi);
+>> --
+>> 2.48.1.502.g6dc24dfdaf-goog
+>>
+>>
+>>
+>> _______________________________________________
+>> Linux-f2fs-devel mailing list
+>> Linux-f2fs-devel@lists.sourceforge.net
+>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
