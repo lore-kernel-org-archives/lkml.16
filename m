@@ -1,184 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE45189B94;
-	Fri,  7 Feb 2025 16:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41EAB18DB0D;
+	Fri,  7 Feb 2025 16:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738945392; cv=none; b=T8iUTkmotH/GNuJ/IGlPSCsH6aeVzCRGCQLq4FQs1dpYqkXuR2hgkptHCMPvIGdqRfCDjxxiMiNwX5O2CuL9fCA4e5ooi4/nPxbnMo/2kJp06EY993oY/17araVOF3yfgbnhu4QB0I7kOYRBtbfK//B+rEOJ+XJImgNxjbJKhJY=
+	t=1738945403; cv=none; b=utTC+0f8wLh2lOl1OXjP+dRdSIYUvUUyVfkRoc8AwyiAOh1LLlIuBc2mx3BpJ14XhSK9/zqUkr3GRNbvcztvDP3fPEuRXh8JRqb3lhSCTyMp4/nxXs9BSchXo1MRdn5trhWAjvplHuzn+nk/UMYawLjOz9g6r4gDan9/q+h9kPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738945392; c=relaxed/simple;
-	bh=whCYzTnNytr7VcqUble5w8K5UFVk9Nv8AzFfMYiEqW4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=a9UNBL0s/+x7A3DzmZoUP1ipYjIBVT6BZTJtDsaJnr1yMvawN3XbWHGa6Lw89g+8LsRE5Vicij5jY1h+JvXxhoYRn37qULcpMQnOdvTd3YPW4KqjoC+Lc3YMOdQVALqmRvRL7PwWgqE08b74MkhI/tB9xKpHWSptLgsTNbPQJX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vhs65qZ2; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738945403; c=relaxed/simple;
+	bh=aztBnTzCPQ753+4bH4DC2UVXl8izsnBgtGLfLurb5C4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H+FR70RyxspUd2L9Hn0QfYv9zaNche0O60U2lFwJAAeD93Jf7qIDAVapxSUugB4PmlOw4+Ltcjcvc4R5ywpp2dC6CoRZ840X5Q0vIkjX1qyP8RpsUffWzZ0BVvVuY0tDOUSVuQe+sokIsglybBTjW9zS/JcCtvDMs2Jis9pKECg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SStneGhJ; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vhs65qZ2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738945391; x=1770481391;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=whCYzTnNytr7VcqUble5w8K5UFVk9Nv8AzFfMYiEqW4=;
-  b=Vhs65qZ251mGPIAPQolOmeFMNbfVMHtr8/jNAhcPi2c6IMmbGTCV0YEE
-   8SZaHwAClrC4NLnL9+NNJUvFou+PNcpw0kJ/qzwMkdC/NSX42oc92Baf5
-   tmwgvn1DMzHYB6evQXoOA7TUib5Qm4f2pSX9YKYFZWqS8xepuoTQxqv0w
-   4gxc8Q9AT7oajvnXZwrtCRhgdyTB8dT6javfpWD01BA2wc6jMGaxUuNUN
-   cBNZAWvWGK7OAxQ000AFehwkalTWd3oIrM6dMBP6j7qVJfyXgznvRAjrM
-   lTzqP1tQ7JYo1WNS6OtxcaoJ0oxva6iVHBYe5V7M75f5QJXTpIGHWgElD
-   Q==;
-X-CSE-ConnectionGUID: GV7feD1LRA6+oMzS9JXdOg==
-X-CSE-MsgGUID: zA10FSpeROCoCILlJ3tyRg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="38822160"
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="38822160"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 08:23:10 -0800
-X-CSE-ConnectionGUID: kigaWAt4SQKCSzyrh3bYVQ==
-X-CSE-MsgGUID: fOhFIS8dQqygyyCb/qvOxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="111483494"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.116])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 08:23:08 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 1/1] PCI: Cleanup dev->resource + resno to use pci_resource_n()
-Date: Fri,  7 Feb 2025 18:23:01 +0200
-Message-Id: <20250207162301.2842-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SStneGhJ"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43624b2d453so27429075e9.2;
+        Fri, 07 Feb 2025 08:23:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738945399; x=1739550199; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=244kmp+zUzlsCQhOo4YUMFoLrVMjk2D9KCw2SKaVoS4=;
+        b=SStneGhJjMx3PYbPNkFl095OtVOKevImcRuXODrRBgON8/gAQBURfIdwFrNhPUc3ne
+         9kzcbzqBG3hmxIq3k9i7VRnqiBAZMEqHITBEmQTJ11lTXtowLAcB2CJq2zMOpvv9HXIb
+         UV/XCI8dTiFNxaIKPQcePvFrU5b64z+69kQ2SnGoCGF9Yr6Hu26n7Uyj/7SYiDnKrxrg
+         xomCPa/nFSPstCevjtgAqiLX9atukHsNBJLxqq6lUY5PYPnxyMDmk3SAl+gmbyL67Jj8
+         fisKDkMi/O14XwkfZ/+O3f2E2LMHtE3/d8XfuLgwKODphXld6x6QpDu9WO5ZvJki63Xe
+         9DFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738945399; x=1739550199;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=244kmp+zUzlsCQhOo4YUMFoLrVMjk2D9KCw2SKaVoS4=;
+        b=gvhxDPIuYzM9rwBhKBe84ZpIlhhHMlGfq9b7rkjNc8dBBT/xXVjeUnYxg/C7finPGq
+         BRE9RAmNUZt/Ui2aiuJcBhientiV2tPSqanTOrngb6/HZa8OvS9KQSAMrFgxzf5SRmrF
+         XpL9EQH0X89cKWcc+4pvvgclRDGAoQ9R8TdO30sER0JPD8jDw/kymCg6Rn/4kmlrIQOc
+         AC5eAxVBMjIsD7p4sJ+yRH/Pqw9hCuJmouvHLPnZK4rMdZS7iU4m5XG8Oec6+LeG8/wd
+         8Fp4NIr4hE8Gi/NZnMgb/G7TrbZL3tEncKwbbVhj+u9SmerBzpnwPmvttqEYPcqi2Pup
+         KzDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUPaVFzUNdr0uLRo0OroQmS9c9tsPVOAmyXU24XiJxaHv31ceFeuIJKnWpabzSBerNnlL72dgaIVxGe5A==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9FWkshN20nDYd6ffUGDFRBlcKHMiHab4Be45CEJOiGEjm99Z1
+	PijMslBKG21kBg6+YWTiOS3VeEokpoccfpiO0jjYnsZo00ZreL0r
+X-Gm-Gg: ASbGncvyT0qEqS/hOHB0anZt+QB9Wkg2Po6Tmkaxp149k8H7HLNVdmsgcSZPKC7x215
+	2f9eI2bnLRoTwFnbtI+ed0zq70leRDOsw+kjdcxfDXPf7dxkQrx84eKj5ivTB0euxw3sWQfaZlo
+	ENgOeMXTQJ9jt6q9vW7a5+P/WDRva7jgCsKqTJMWA6mLBZCxaA+brhc62pqQ6s1tx+BvzeQdSgL
+	V1YbMd9S135Pxnop6MYM1Rjfcdf7D3HI8Xjpo2jKAd3Fgt39L31mb+aHTdsKIk9nn8izR54g2Bp
+	unz+OGLUw5yNMmrmUicB2IVvGdUsiXzfmei0J71+2W5Oj65gB+2xmQ==
+X-Google-Smtp-Source: AGHT+IGu7KsMLsyvby6jH7B5UD+lDpo9NWbHvE00AcX6RMM1KN9EerejjqgH+06hClEiApShaz1WZg==
+X-Received: by 2002:a05:600c:358b:b0:436:2238:97f6 with SMTP id 5b1f17b1804b1-4392497d4femr35808285e9.1.1738945399087;
+        Fri, 07 Feb 2025 08:23:19 -0800 (PST)
+Received: from playground.localdomain ([82.79.237.175])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391da9652bsm61260825e9.2.2025.02.07.08.23.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 08:23:18 -0800 (PST)
+From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+To: Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Iuliana Prodan <iuliana.prodan@nxp.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	imx@lists.linux.dev
+Subject: [PATCH v3 0/7] Refactor imx drivers and introduce support for imx95
+Date: Fri,  7 Feb 2025 11:22:39 -0500
+Message-Id: <20250207162246.3104-1-laurentiumihalcea111@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Replace pointer arithmentic in finding the correct resource entry with
-the pci_resource_n() helper.
+From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+A rather aggressive but arguably much needed refactorization of the SOF
+imx drivers. The refactorization is meant to address the code duplication
+in the imx drivers and decrease the coding effort required for introducing
+a new imx platform.
+
+After refactorization and imx95 introduction, only two drivers remain:
+imx8 (meant for the imx8 series: imx8 (imx8qm), imx8x (imx8qxp), imx8m,
+and imx8ulp) and imx9 (meant for the imx9 series: imx95 (for now)).
+
+The series also includes the introduction of the imx95 driver.
+
 ---
- drivers/pci/iov.c       |  2 +-
- drivers/pci/pci.c       |  2 +-
- drivers/pci/quirks.c    |  4 ++--
- drivers/pci/setup-res.c | 12 ++++++------
- 4 files changed, 10 insertions(+), 10 deletions(-)
+Changes in v3:
 
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index 9e4770cdd4d5..121540f57d4b 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -952,7 +952,7 @@ void pci_iov_remove(struct pci_dev *dev)
- void pci_iov_update_resource(struct pci_dev *dev, int resno)
- {
- 	struct pci_sriov *iov = dev->is_physfn ? dev->sriov : NULL;
--	struct resource *res = dev->resource + resno;
-+	struct resource *res = pci_resource_n(dev, resno);
- 	int vf_bar = resno - PCI_IOV_RESOURCES;
- 	struct pci_bus_region region;
- 	u16 cmd;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 869d204a70a3..c4f710f782f6 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1884,7 +1884,7 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
- 
- 		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
- 		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
--		res = pdev->resource + bar_idx;
-+		res = pci_resource_n(pdev, bar_idx);
- 		size = pci_rebar_bytes_to_size(resource_size(res));
- 		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
- 		ctrl |= FIELD_PREP(PCI_REBAR_CTRL_BAR_SIZE, size);
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index b84ff7bade82..5cc4610201b7 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -621,7 +621,7 @@ static void quirk_io(struct pci_dev *dev, int pos, unsigned int size,
- {
- 	u32 region;
- 	struct pci_bus_region bus_region;
--	struct resource *res = dev->resource + pos;
-+	struct resource *res = pci_resource_n(dev, pos);
- 	const char *res_name = pci_resource_name(dev, pos);
- 
- 	pci_read_config_dword(dev, PCI_BASE_ADDRESS_0 + (pos << 2), &region);
-@@ -671,7 +671,7 @@ static void quirk_io_region(struct pci_dev *dev, int port,
- {
- 	u16 region;
- 	struct pci_bus_region bus_region;
--	struct resource *res = dev->resource + nr;
-+	struct resource *res = pci_resource_n(dev, nr);
- 
- 	pci_read_config_word(dev, port, &region);
- 	region &= ~(size - 1);
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index ca14576bf2bf..ad6436007148 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -29,7 +29,7 @@ static void pci_std_update_resource(struct pci_dev *dev, int resno)
- 	u16 cmd;
- 	u32 new, check, mask;
- 	int reg;
--	struct resource *res = dev->resource + resno;
-+	struct resource *res = pci_resource_n(dev, resno);
- 	const char *res_name = pci_resource_name(dev, resno);
- 
- 	/* Per SR-IOV spec 3.4.1.11, VF BARs are RO zero */
-@@ -262,7 +262,7 @@ resource_size_t __weak pcibios_align_resource(void *data,
- static int __pci_assign_resource(struct pci_bus *bus, struct pci_dev *dev,
- 		int resno, resource_size_t size, resource_size_t align)
- {
--	struct resource *res = dev->resource + resno;
-+	struct resource *res = pci_resource_n(dev, resno);
- 	resource_size_t min;
- 	int ret;
- 
-@@ -325,7 +325,7 @@ static int _pci_assign_resource(struct pci_dev *dev, int resno,
- 
- int pci_assign_resource(struct pci_dev *dev, int resno)
- {
--	struct resource *res = dev->resource + resno;
-+	struct resource *res = pci_resource_n(dev, resno);
- 	const char *res_name = pci_resource_name(dev, resno);
- 	resource_size_t align, size;
- 	int ret;
-@@ -372,7 +372,7 @@ EXPORT_SYMBOL(pci_assign_resource);
- int pci_reassign_resource(struct pci_dev *dev, int resno,
- 			  resource_size_t addsize, resource_size_t min_align)
- {
--	struct resource *res = dev->resource + resno;
-+	struct resource *res = pci_resource_n(dev, resno);
- 	const char *res_name = pci_resource_name(dev, resno);
- 	unsigned long flags;
- 	resource_size_t new_size;
-@@ -411,7 +411,7 @@ int pci_reassign_resource(struct pci_dev *dev, int resno,
- 
- void pci_release_resource(struct pci_dev *dev, int resno)
- {
--	struct resource *res = dev->resource + resno;
-+	struct resource *res = pci_resource_n(dev, resno);
- 	const char *res_name = pci_resource_name(dev, resno);
- 
- 	pci_info(dev, "%s %pR: releasing\n", res_name, res);
-@@ -428,7 +428,7 @@ EXPORT_SYMBOL(pci_release_resource);
- 
- int pci_resize_resource(struct pci_dev *dev, int resno, int size)
- {
--	struct resource *res = dev->resource + resno;
-+	struct resource *res = pci_resource_n(dev, resno);
- 	struct pci_host_bridge *host;
- 	int old, ret;
- 	u32 sizes;
+- drop the patch that shuffles structure and function definitions
+in imx8.c
 
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+- drop comment regarding "clk_bulk_prepare_enable" having no
+effect if number of clocks is 0.
+
+- add Frank's R-b
+
+- link to v2: https://lore.kernel.org/lkml/20250205203022.2754-1-laurentiumihalcea111@gmail.com/
+
+Changes in v2:
+
+- fixed order of includes in "imx-common.c". They're now sorted
+alphabetically.
+
+- use reverse xmas tree ordering for variable declarations.
+
+- add missing call to "of_reserved_mem_device_release()"
+
+- add two new fields: "drv" and "num_drv" in "struct imx_chip_info"
+
+- drop previously obtained R-b's on patches affected by aforementioned
+changes.
+
+- link to v1: https://lore.kernel.org/imx/20250203171808.4108-10-laurentiumihalcea111@gmail.com/T/
+---
+
+Laurentiu Mihalcea (7):
+  ASoC: SOF: imx: introduce more common structures and functions
+  ASoC: SOF: imx8: use common imx chip interface
+  ASoC: SOF: imx8: use IMX_SOF_* macros
+  ASoC: SOF: imx8: drop unneeded/unused macros/header includes
+  ASoC: SOF: imx: merge imx8 and imx8m drivers
+  ASoC: SOF: imx: merge imx8 and imx8ulp drivers
+  ASoC: SOF: imx: add driver for the imx95 chip
+
+ sound/soc/sof/imx/Kconfig      |  17 +-
+ sound/soc/sof/imx/Makefile     |   6 +-
+ sound/soc/sof/imx/imx-common.c | 431 ++++++++++++++++++-
+ sound/soc/sof/imx/imx-common.h | 151 +++++++
+ sound/soc/sof/imx/imx8.c       | 753 ++++++++++++---------------------
+ sound/soc/sof/imx/imx8m.c      | 567 -------------------------
+ sound/soc/sof/imx/imx8ulp.c    | 520 -----------------------
+ sound/soc/sof/imx/imx9.c       | 137 ++++++
+ 8 files changed, 988 insertions(+), 1594 deletions(-)
+ delete mode 100644 sound/soc/sof/imx/imx8m.c
+ delete mode 100644 sound/soc/sof/imx/imx8ulp.c
+ create mode 100644 sound/soc/sof/imx/imx9.c
+
 -- 
-2.39.5
+2.34.1
 
