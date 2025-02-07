@@ -1,108 +1,91 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367021DE89A;
-	Fri,  7 Feb 2025 12:14:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CF51E261F;
+	Fri,  7 Feb 2025 12:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738930443; cv=none; b=BoAStyfuukijzEbk1rLAFiMrfv7gbGKj2qRWoeYhpPx9/PjIPbzinJiMQBN3klt2yl0mY+uJMamzpDBe/uVkGunkdCnu6hjfCr7AcGpBYCYhEuv4xXhaynLBxHABDyDHdcrQsWu5ZakXLWtAeOKStahq2EDBnOSVt+q0sD6/NoI=
+	t=1738930566; cv=none; b=iGyspParTZdXYdUEVLk/vfNGXfo26GPi5qhXU/t6aPekmprKn/Z87YqaOJjJ7GRVSVQjp52D5+t0O1jOnm9piJZuIzHZdWsAKfiGzCejKVwgoWVE5TmIh+Iu06L03nEp4uxhV+k6d3OIelcV0/IaQKx2E7182CayiEevXHh7JGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738930443; c=relaxed/simple;
-	bh=/W9c9p++17eMgUahRKE4oI34+Q3vrWjGJDtabku3InI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HV95zm60ca3/ZlShqVnqe/GrS9CDa3uNPm4KxJgv9bq+0tu4olN3PZ8pHrOTvCKUnZxHLTz5ungJuWUN09VslcjifTOS0G3ULM8P9OWYa7WkbNLBTd9XQDVTmnZkZfsB35fRLY/0RMcSCY14PCOep5n7u4V0+AlAo81s6cmlyjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HCGPztX/; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738930566; c=relaxed/simple;
+	bh=iy+Oa6QDbbqdL4VN+qctN+E8BgMC7GBKiyIRqBy5oDg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aK3z05RG2n5u9Ej9D/CV/awTQFMPka/6ipAIhWKKTm+reRdYQldk9hKpkK7aT/plkwZf0ow9sojOwuY+7T5+jTH4GWSfif+c/zDXWtukxMUY/3A7cRba4KTTD235k3htYCRNA3JEl3R32IG9gmtw15Ak8VTICbNUp2F0/BYSHdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QuuZYSxu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HCGPztX/"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ab6fb1851d4so403975266b.0;
-        Fri, 07 Feb 2025 04:14:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738930439; x=1739535239; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MF6gElV2cDQ91CKc9Ejq8GVQ8GLozgvPR2NnTRy0mAE=;
-        b=HCGPztX/4M3sm635Ol+QH2dLGwK+QtCo7bKR9JPm+nvtjwZ9iF/g+JaVPb8X0C79zj
-         GGeept7HST07ESbYq2vkIlQijmlNmLRICvCQauFM8LXvLL75X5e81hpZpU4ts/DbEv/W
-         7NJeobejZSEDy6uIhLFgIakV2kHL8+YQU49xL3mVR5y9MEXtuHn7m5PdoaiOMkf5AQxR
-         7odlSRT/cFChXK6VWZucgD4IovzbRNB/LUsqOASe4K415SAWTy0B/Z+4wEneDi8ZtrXx
-         YraLTJpKybMRHKMxQjhJzVpqOckiK/pUE7CHS4wn1lIYvxEtkJUIgipVeaH2m6CGVH2p
-         nZ2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738930439; x=1739535239;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MF6gElV2cDQ91CKc9Ejq8GVQ8GLozgvPR2NnTRy0mAE=;
-        b=iIZ3V19X6G7ypgdBSfek/RiXbKNBnpAP5bqIA2F84NhPbwqkaIsMgTtJxdPXf762IC
-         zn/ylyJoT0S3bjboWRdUo9qN8o/D6yVz4gAutZ9l+EOaluV3kZOi3kAa1T6aq2jf0i0W
-         SaNbM32xGB9Q58KTaODVlZHtc95dqMtywWisQM2e9AGIxz3UT9r71LOtCf/umlX789Kb
-         x7nDJJYdJCE/PpfKSZSdCZAHxezXB4sMZwpW8qPMtnnc1dW5TDnRorga5E3cZyZu9ONd
-         YmZNyFszAzaT4Rw/9AIJXzTvh+C7h1r6k6Q3oYUk3xkVWELU/WxYIjU8MgEO6rJ6V+sr
-         EKhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0v1onIj4YNEC7zrJrnIOWflIg/KP8V9BPkJw7wZWK8xAx9/cpAu9fQ6L2f29sIdKNozAXwB6iXiYU@vger.kernel.org, AJvYcCUUW0+X6oFRl+0XKRvC3J6se5kb/1Hlb5XHWtg7+ksGtJ30yd9OHg4KWttnRgRoYWjeBg9p5OMpx+ddAco=@vger.kernel.org, AJvYcCUbsyfgvCrXA8/gP4QF7g/t4szZwZqvZF7vwFirFrX+4eiTdcHYpY+4yaDQW83+EzkJciMc2cLkpTKP@vger.kernel.org, AJvYcCUkVvD+6+T2pgGb8mTCbL/UCM0jRmAUtk0s9uPt/CBCDAhNm0eVsh4dYwKF5AvIKHVM/7rOmR6B6AVJzXp1@vger.kernel.org, AJvYcCVDKIVv51i9gk3PRfhvUSIkwcBHFyHkn60nMTcIp7/FncXL/QYiyi7ncMbN68KiV45z6SEk4wClNz3u@vger.kernel.org, AJvYcCXtNz329S2emB6ibud/wAJKa2/VB+touivPQ481TjLHRMPgKcC3bq7F0CKMZv55UYaoL1KyeonR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0uLi8f3aHOOrtdnSIer6yeGbyTY86T6die/baBODtCA7dvPox
-	FaLYV7UHv0DBJJfAX2stfX94pFi6lu2Hp3bcia/yrSzuclMuEHQMm5sdQOkfE9qaXahAs/corUm
-	GiU1vYnR4bFqxSplXXSigSGaqpyM=
-X-Gm-Gg: ASbGncsT0DFTtRdfyZUoM/F26IRJXJioQ0S5pGhntI3dIpvg8dimhkzs/1DYewSYD2X
-	xoFatAa5tq1tXtbZFqDaU9ELd9RjdTdM2uABBYYuuwndovE9MkIoDAXxeb3haSk07SqRNS3hfJC
-	s=
-X-Google-Smtp-Source: AGHT+IEcQ5RnwktITKDyFNQPm/ZlJAT6Jq4e+AddpJ4slMbkkGXOrIfWiA+9GZp7vOfbRBsKaL82KDhPv8+MGVLOCTU=
-X-Received: by 2002:a17:907:2ce3:b0:ab6:f4eb:91aa with SMTP id
- a640c23a62f3a-ab76e896c0cmr758141266b.10.1738930439333; Fri, 07 Feb 2025
- 04:13:59 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QuuZYSxu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4A3FC4CED6;
+	Fri,  7 Feb 2025 12:16:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738930565;
+	bh=iy+Oa6QDbbqdL4VN+qctN+E8BgMC7GBKiyIRqBy5oDg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QuuZYSxuaLe7dYOZrWqV4Gr5Yy7mSbWGX6Wt7hZOCNqI1x2x41KLUIJHqrRSRBDd3
+	 4tYbuaCZ3fvzhiXfRLbveb9TbU5YP51445+Su8iR3UR8Nj+jYCljpC8j/IRSwBnkpO
+	 1C1v93/syjxPoBjApyv6JZ5T/9Zzyplm89rI7tk4=
+Date: Fri, 7 Feb 2025 13:16:01 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Lyude Paul <lyude@redhat.com>, rust-for-linux@vger.kernel.org,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] rust/kernel: Add faux device bindings
+Message-ID: <2025020715-subsonic-silenced-36c5@gregkh>
+References: <20250207004049.178049-1-lyude@redhat.com>
+ <CANiq72=bspqRga-hTTb3Vh9kD0ctyTehM9dvJdR=8biTE+iCQw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com> <20250206-gpio-set-array-helper-v2-6-1c5f048f79c3@baylibre.com>
-In-Reply-To: <20250206-gpio-set-array-helper-v2-6-1c5f048f79c3@baylibre.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 7 Feb 2025 14:13:23 +0200
-X-Gm-Features: AWEUYZnW5RxxBc3bDqX_OpBL8hmNResFkWKqXoGA9bw_WE1ro5fEYdWUTUuFnFw
-Message-ID: <CAHp75Vfb7EgHkHtqm4b0QnG=uWwszpWwFe8MLDPRSifKtQFAcA@mail.gmail.com>
-Subject: Re: [PATCH v2 06/13] iio: adc: ad7606: use gpiod_multi_set_value_cansleep
-To: David Lechner <dlechner@baylibre.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andy Shevchenko <andy@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, 
-	Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72=bspqRga-hTTb3Vh9kD0ctyTehM9dvJdR=8biTE+iCQw@mail.gmail.com>
 
-On Fri, Feb 7, 2025 at 12:48=E2=80=AFAM David Lechner <dlechner@baylibre.co=
-m> wrote:
->
-> Reduce verbosity by using gpiod_multi_set_value_cansleep() instead of
-> gpiod_set_array_value().
->
-> These are not called in an atomic context, so changing to the cansleep
-> variant is fine.
+On Fri, Feb 07, 2025 at 12:42:41PM +0100, Miguel Ojeda wrote:
+> On Fri, Feb 7, 2025 at 1:42 AM Lyude Paul <lyude@redhat.com> wrote:
+> >
+> > This introduces a crate for working with faux devices in rust, along with
+> 
+> s/crate/module
+> 
+> (also in the module description)
+> 
+> > +//! C header: [`include/linux/device/faux.h`]
+> > +use crate::{bindings, device, error::code::*, prelude::*};
+> 
+> Newline between.
+> 
+> > +        // SAFETY: self.0 is a valid registered faux_device via our type invariants.
+> 
+> Markdown.
+> 
+> > +// SAFETY: The faux device API is thread-safe
+> > +unsafe impl Send for Registration {}
+> > +
+> > +// SAFETY: The faux device API is thread-safe
+> > +unsafe impl Sync for Registration {}
+> 
+> Perhaps some extra notes here would be useful, e.g. is it documented
+> to be so? Especially since faux is being added now, it may make sense
+> to e.g. take the chance to work on mentioning this on the C side.
 
-...
+How can or should I mention this on the C side?
 
->         if (st->gpio_os) {
-> -               gpiod_set_array_value(st->gpio_os->ndescs,
-> -                                     st->gpio_os->desc, st->gpio_os->inf=
-o, os);
-> +               gpiod_multi_set_value_cansleep(st->gpio_os, os);
->         }
+thanks,
 
-Now I do not see any justification to leave {}.
-
---=20
-With Best Regards,
-Andy Shevchenko
+greg k-h
