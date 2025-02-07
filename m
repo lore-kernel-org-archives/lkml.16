@@ -1,65 +1,66 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5561A5B83
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1ECA1AB6D4
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738960885; cv=none; b=DIruRmx0JOGWc1q8wLRQHF7LynDleRDRC6NH8OuzUouMWrdsxto0qtNK8EAT9AzqBHtP/XP7oLFIiQEFLoYqIPTLjmqyagrmU8yeHumEY04kWH+1KyTDvOGpG5nic+OXEGC/h7SmjiEwnvvuzVHSiS2A4+LgNNXRY857zobRmxE=
+	t=1738960887; cv=none; b=otdcgScjQy7pox3C9r0JH6oOq++IytBR32kBaJw4d1t5kvuiSWry5ODLM7e99CvXC4GeYQYDObBv5mSnp832LrLW2Cg9BJcWwrrcAVGej2yIa7lSQfmPPvjjcO8hrzQKmjrCYulFgwyqbl/U1IGu87+aeB8Q84H39sNHnt79N5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738960885; c=relaxed/simple;
-	bh=qiQogY4nWHYMJ5BN+x5c7UGCpSpgl8ehDDro3OyQnYE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=M1PXwGwyNPx9Hy9+bIt0h7jaMtb2gUnPJOI/2uzXE/ZUECb+WGaLgb73g5tB6SuQoKUHdmVWN/AyIV7XhwWduxBhEmLKCfY4pPK+Bn/lI9d/oErbrSRrdSFee4rJyn1LOI9s6N8NZ8S8Yzrb2XXBcidp2XbLfZTgjZwuzcNAl1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=crUAExUj; arc=none smtp.client-ip=209.85.208.182
+	s=arc-20240116; t=1738960887; c=relaxed/simple;
+	bh=s14YKYID9PJaE3calGZbF8LnlKIvHymDbj6L+7VVrMI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=gpNkAAjM374qNRPBW9lyV03TfIcuPp+66apKkZJ1onNtb5vwKHV4qQwiuUKGPOyD6Z+7JNS4PEUS4JyrFyA42vd8dfTKVOl0azOnn4FzMXR6MZSzBjAzxz0Sk1xQ/9bomjYjDlLkopGkar54vA5YOrITDeK92n8oxaklZXSsSOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WzDKg+oS; arc=none smtp.client-ip=209.85.208.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="crUAExUj"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-308dc0878dfso3704861fa.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:41:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WzDKg+oS"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-308a559bdf7so10018161fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:41:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738960881; x=1739565681; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AxTbsKhJE4yee5eNW0RBl8yAXgK28pIKigb6T5Yer0o=;
-        b=crUAExUjEsoYfPXVt7lBlim9CkNitrIHAVnT5p/deBwfhReuOog4iAspBlhHaKbt0T
-         1ezO479E8oG1lIiOTho9+hvmCXZ05NUmBPCIkK8lTOExhAVTv69i6xEVzRZvh4j/StHG
-         dXdMtieRUekahPMsOD5IhfAC+fUvTvZp72G1vjeTKdyHbcXFrUiX+KkyCgHbu/AyVUv1
-         IJlj2arHnpZ/fKNrrmWWWmTl8ll80qBY1LL/FG3/WUh9eIhyhTk/1AUkoVmlEixOo1pi
-         mRLYgKJuDleW1YWaHBF6C84gn1A5DGI4FtOX6h+cD5wmqBHh55nmMYn9N+g7aJrRXsLX
-         ha1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738960881; x=1739565681;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1738960884; x=1739565684; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=AxTbsKhJE4yee5eNW0RBl8yAXgK28pIKigb6T5Yer0o=;
-        b=L3jYtFo3jlDdIu+tcUv9og3bmIeRue3EpVZm58KgE6FNGtQqoitRT2+Cjd3i3yKm9W
-         YhOt4hOqvjxrWVIIWuwChYm8YgLDbX/YO8fCmP+lDWUKcGuSmoGLfZ4M8CeU6LH6ZpaQ
-         Z9+FE5Qp2uO/aUJs4uedNdXU1c1HZHAavr69Dk/3eurYbsCq8nFoJyzeeFJPj4G/xA5s
-         21IYrjAHXP/sVdKx5H6S/1Y+lprwSME3HxvN+0V+LN5GJi28zSESVZRZ+QT4IghHQBrh
-         0S+9GzNraiD+CODBfC0DQqR2I80jg8r+tHEwovPeOYiVXONY8FjEAigZJMbAVDVwM5ro
-         OMZw==
-X-Forwarded-Encrypted: i=1; AJvYcCUVEivIjhqJlYk47qBZTEsdKJkC3dLrfMxTCXHbH6OgT1XHWXNiMdY8t3+hr8oxg3jT2ZmnOODtoU+m76Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywv2epAzNYepGEVgr+PhONu5LsfVxzOo6vO2LkqARd7JExS+5XW
-	cFbncytaSw5+9S8oUgXBOzvrobOs03SoiTQn95V6yj/03VeWPxWOf63rpc6FUKE=
-X-Gm-Gg: ASbGncveD9KlNtglaWEP8Nr1+OLumR+RUqDflULGc3k5t/Bt+DP8PLYKpyD54O/P3vg
-	oNgaL7zyJa17hi/7z1n9QOsWG4EHS/EvBexQOF6zirNp2BYM0jd5zufXz3tMqouIH8mDhPSFj+B
-	6AFHvwXvPbc/HZnycpZWgfBfFk6afM00IFSDCZZWpcWKRtIpT3yIIJWt6QxOGhTHrtoeAPDnPkG
-	LJr3AAoFw8qgVt6LEYELeCUEg8f0EOp/yEAMYZIeBessM+J7+sDI7C7BksNaJLkkfpVFVuuE7t7
-	Fed8AGZ788GJzTgKX2QLxx0=
-X-Google-Smtp-Source: AGHT+IFW7Wi+qx6pPTX7V3zT7yPLzOOq54XAmuBFxAdNvG6EcqWrudwijkyuNYxTfyXx/zQlqlOKCg==
-X-Received: by 2002:a05:651c:12c3:b0:304:9de0:7d9 with SMTP id 38308e7fff4ca-307e57fd306mr16769571fa.21.1738960881315;
-        Fri, 07 Feb 2025 12:41:21 -0800 (PST)
+        bh=HSlGgKqz38+k78ygp0mcUEOzYQKAs3hlnKXdF+3RtWk=;
+        b=WzDKg+oSTLe1MMSevZxVsh0JQRZ/ZbAhdwMQliFqLf+J6DNgbJ4iwZTGULujH/R2tm
+         yZrcgz/mnLQGm1n+2vVGPMC1eMTPcNogO/AQvjL2ZMlQXM1r65JaiylApApsajiu0GZT
+         QTZAJM0AwfH/kdI1DYZXl4oDd6uet9eTibIpOIzqnOOYcsdfFrqYAUaVYY2DvOO+9gyi
+         Nnb/V6pzzA4XdO4PvIx4vl3dKZPFWbdIZcMGjWG2Iay/jqr1oeVygFP+2yho6Tupjou8
+         NTDUWkpPPzfe3BZPwjV/UisuKrAROl+F5LDXIxTm4ANqfXgKnJBtgHMWWAhClXhznLBX
+         M/rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738960884; x=1739565684;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HSlGgKqz38+k78ygp0mcUEOzYQKAs3hlnKXdF+3RtWk=;
+        b=ooDEhNpgT6lhCYVsUjWMSdf3h5Ur88OUBDOHv1vcn98rv3W8uKFzSxjuI6ACeMuCoU
+         XOnQHAUIasj9nulY0rSPknXmDQcuHJM32RV5gwnY0cmvl+eSOs2X2ywBv1g2jKcFF6Xg
+         M0JZVM7u7C8QauyC2oaCfEDvI+wuz/tcHwW6+pAEowDqPZFtXhRFD8z52pFGFntIZcVv
+         c40dprgkvYYUVwB0stYusFXlpeDFv0VV0zuy3SrjhVP7T8EmTc2TCBXDKkdAHloTQ7iB
+         4oYauHnP/VKuh6LOGiw11SXM00SgQgpQ3PLgjD5VhWOK58I19Y0OwpNYMVS0wxYG3eoV
+         v37Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWoeu2ZUHG893F3w75JI+3sDffWgJ8tjrCBbItBynP7PieftlvbWh6VXAlWVxiPj3iF2rB8Zx6C5FenxVM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbDNNc7+FwHqR0BY/b6wJ2IzK1iDIs/zTD8pDTp416xMmFWwvw
+	7IXrOOfLj2qj/OvXXe/asj0lUKsgxuLnTWfjI2Ko8EYF1ukD9V2yiD49w7PaKLo=
+X-Gm-Gg: ASbGnctz06cJRk0qcjgouXfCoCYMdG6j1PwOvTkCiNeFuyaJo51eMfYi56hCQrOTSA3
+	JJFQr8f5DNuUXxSlnReUV/+WPvS+V+DMIJXs3XCS/DoZ0mzWdTkvbV/9u4fKNCmMV+FGy/bit1c
+	oUtZaA9yjZXpS9z/RY+iD1t8TJxvJL69EIgq5477RSZe3k0WFJPRAuvJDKRKGCDQzuvn854mkAY
+	ImQwXpl78ZrcaYfZOAgMuN3ZZIZFmAfDCNIfi8RQA1A6QEPwKoqO/hr137h1WiBsNB2mnfpRsHS
+	63ZbiSkV3dMVWwOsU0lUYZw=
+X-Google-Smtp-Source: AGHT+IHngABXa0RfWQvCOT+hZ5/tEP4wpFl7H3wFVT0JpPMz/eOAilEh8xFb5Y4ccK82JrxnO8CDlg==
+X-Received: by 2002:a2e:bccb:0:b0:306:1524:20e with SMTP id 38308e7fff4ca-307e581946dmr20024521fa.18.1738960883630;
+        Fri, 07 Feb 2025 12:41:23 -0800 (PST)
 Received: from umbar.lan ([192.130.178.90])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de178628sm5343811fa.10.2025.02.07.12.41.18
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de178628sm5343811fa.10.2025.02.07.12.41.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 12:41:20 -0800 (PST)
+        Fri, 07 Feb 2025 12:41:22 -0800 (PST)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: [PATCH v4 0/6] Bluetooth: qca: add Qualcomm WCN3950 BT/WiFi chip
- support
-Date: Fri, 07 Feb 2025 22:41:14 +0200
-Message-Id: <20250207-rb1-bt-v4-0-d810fc8c94a9@linaro.org>
+Date: Fri, 07 Feb 2025 22:41:15 +0200
+Subject: [PATCH v4 1/6] dt-bindings: net: bluetooth: qualcomm: document
+ WCN3950
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,11 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAOpvpmcC/23MTQrCMBCG4auUrI1kkrFpXHkPcZG/tgFpJClFK
- b27aRei1OU3zPPOJPsUfCbnaibJTyGHOJSBh4rYXg+dp8GVTTjjJ8YZ0GSAmpFab6UWgEqBI+X
- 5kXwbnlvoeiu7D3mM6bV1J1ivu8QElFHtG1VbVFy45nIPg07xGFNH1sbE/zteXOsQGYBEZczOi
- W/HP04UV0slNWItrXc/blmWN0yvH38NAQAA
-X-Change-ID: 20250201-rb1-bt-cec7a314991d
+Message-Id: <20250207-rb1-bt-v4-1-d810fc8c94a9@linaro.org>
+References: <20250207-rb1-bt-v4-0-d810fc8c94a9@linaro.org>
+In-Reply-To: <20250207-rb1-bt-v4-0-d810fc8c94a9@linaro.org>
 To: Marcel Holtmann <marcel@holtmann.org>, 
  Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -83,66 +82,51 @@ To: Marcel Holtmann <marcel@holtmann.org>,
  Konrad Dybcio <konradybcio@kernel.org>
 Cc: linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1944;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1268;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=qiQogY4nWHYMJ5BN+x5c7UGCpSpgl8ehDDro3OyQnYE=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnpm/tYXWlo4SnQJGUzZQ8nYM1MuZaf9S1YOcAj
- csbfBBW7GWJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ6Zv7QAKCRCLPIo+Aiko
- 1ahpB/40yzVZal2uwoGmtjui0KAWyW6I89DEeVMcNHyOrirx8Ff0ghNIjjw1VeABQLQpeS7XvVN
- xlIHUaRBg+cMxj7Jkc6lyLOzqBrVpcckcp1ir46nGXucNrQH3vGQmb5eXDejSCGmh/L9Vr5YmlM
- FVxquuEHz98oL68adwZaGjiKRn9WOA5vt3x7R9mk5PW+zCveBOvp3aMG5omVUZ5iUMtAnP6vjXA
- 3bfCWa7aEkibpngAMIEo6MLte9BoC/7nByW68KNrwUt6hG6aCLWRMiUq2p2J4Gq4ohJujhukHBg
- DB9Poye+ldSNB7YusTxFCrVPxE6Syl1nDvVLbXPCBCSUApmu
+ bh=s14YKYID9PJaE3calGZbF8LnlKIvHymDbj6L+7VVrMI=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnpm/ti0opbMT8jZ+Ob3h/ZXQZ/AbPR399emf52
+ uE20q302/yJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ6Zv7QAKCRCLPIo+Aiko
+ 1eGLB/9AaRKZTGVR5ln9tpeVIDGYjwzGp30+jHbKD8kNkknwOhjF/cwIoBbV3MIdBLKkPE8aAD4
+ 1P2AKiseT9gDvt/7CTosS4h9ZOx8VvvuBDZRXJfKv7FxtXXiLQr1BPvCg9jbeguSGVhqvtRlPKJ
+ 2y/fS6uc8pg8dxpCCp/eMMx8CDIBov7IdNWkF3GLs10tWH7yVmB1xs4VQTqD7108U6L7Vbt1ys1
+ GWQR8bSkdzA/VLv3xJueUDqCGSX6Z6bX2/dqdUIFbebtT55N+qnGUViIymzy3eEzXXHnAlrAtBX
+ 8R8Puv20Zs2+zIvMcQn0lH3tH6qe2BnZTBZ1tAQrRA+PQoEV
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Qualcomm Robotics RB1 platform uses a new member of the WCN39xx family
-of BT/WiFi chips. Add support for this member of the family and enable
-it to be used on the RB1 board.
+WCN3950 is another member of the WiFi/BT WCN39xx family of the chips. It
+requires different firmware, so document it as a new compat string.
 
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
-Changes in v4:
-- Added empty line before status property (Konrad)
-- Reword Bluetooth commit message to follow linux-firmware changes
-  (cmnv13t.bin and cmnv13s.bin were merged).
-- Link to v3: https://lore.kernel.org/r/20250202-rb1-bt-v3-0-6797a4467ced@linaro.org
+ Documentation/devicetree/bindings/net/bluetooth/qualcomm-bluetooth.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes in v3:
-- Mention new firmware files.
-- Link to v2: https://lore.kernel.org/r/20250201-rb1-bt-v2-0-fd44011749bb@linaro.org
+diff --git a/Documentation/devicetree/bindings/net/bluetooth/qualcomm-bluetooth.yaml b/Documentation/devicetree/bindings/net/bluetooth/qualcomm-bluetooth.yaml
+index a72152f7e29b490003114dae1e36df85cba384df..6353a336f382e4dd689d1f50a624079aa83b2ffa 100644
+--- a/Documentation/devicetree/bindings/net/bluetooth/qualcomm-bluetooth.yaml
++++ b/Documentation/devicetree/bindings/net/bluetooth/qualcomm-bluetooth.yaml
+@@ -19,6 +19,7 @@ properties:
+       - qcom,qca2066-bt
+       - qcom,qca6174-bt
+       - qcom,qca9377-bt
++      - qcom,wcn3950-bt
+       - qcom,wcn3988-bt
+       - qcom,wcn3990-bt
+       - qcom,wcn3991-bt
+@@ -138,6 +139,7 @@ allOf:
+         compatible:
+           contains:
+             enum:
++              - qcom,wcn3950-bt
+               - qcom,wcn3988-bt
+               - qcom,wcn3990-bt
+               - qcom,wcn3991-bt
 
-Changes in v2:
-- Corrected QUP interconnects (Konrad)
-- Added /delete-property/ interrupts and an empty line before status
-  (Konrad)
-- Enabled downloading of different NVMs as required for v1.3 of the chip.
-- Link to v1: https://lore.kernel.org/r/20250201-rb1-bt-v1-0-ae896c4923d8@linaro.org
-
----
-Dmitry Baryshkov (6):
-      dt-bindings: net: bluetooth: qualcomm: document WCN3950
-      Bluetooth: qca: simplify WCN399x NVM loading
-      Bluetooth: qca: add WCN3950 support
-      arm64: dts: qcom: qcm2290: fix (some) of QUP interconnects
-      arm64: dts: qcom: qcm2290: add UART3 device
-      arm64: dts: qcom: qrb2210-rb1: add Bluetooth support
-
- .../bindings/net/bluetooth/qualcomm-bluetooth.yaml |  2 +
- arch/arm64/boot/dts/qcom/qcm2290.dtsi              | 31 +++++---
- arch/arm64/boot/dts/qcom/qrb2210-rb1.dts           | 83 ++++++++++++++++++++++
- drivers/bluetooth/btqca.c                          | 27 +++++--
- drivers/bluetooth/btqca.h                          |  4 ++
- drivers/bluetooth/hci_qca.c                        | 25 +++++++
- 6 files changed, 157 insertions(+), 15 deletions(-)
----
-base-commit: a1d1e1f2fae5fcb5f2e43b81afa9596c606e683d
-change-id: 20250201-rb1-bt-cec7a314991d
-
-Best regards,
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+2.39.5
 
