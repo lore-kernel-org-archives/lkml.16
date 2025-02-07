@@ -1,180 +1,275 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A515E1E98F4;
-	Fri,  7 Feb 2025 13:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCB41F37C6;
+	Fri,  7 Feb 2025 13:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738935857; cv=none; b=X3m4acHs1YJ2p6jSL+O7EYtV2oFawZ+aSRe1uQWvPoan7rsexDhlbwCrHElCOr+beI26AkMiEvRtlt4CgOg8V8BUQQ9exr8VMuTO1ije0QfDljYJlzDkkavUNaT1VK0CG67YsjY0qvaUOp16nWkFeYIlt3mpfgldQ5Y/ZYoRHCM=
+	t=1738935892; cv=none; b=OqPLGJM/zNO/MbQcuw0qYAW8lQbdaSOMMJZhFsYusAZxG1pb9MfL3yB+V/6hCU03WOSi8mBtDhTlENNEp/VPtLbwxO6XLQqdGC+KoAXWof1aw3H6QkOm8gLSMiWyAaOnqUHy4tRcVvBg7Ro8Qkgn/hZf3AKPsAWhZdBO/2tmd2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738935857; c=relaxed/simple;
-	bh=yvDb/9al0b5cbGYGz+egPFvQ2z5zm9IAuwXMbV2aY9g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NCV45qB507VuFAcO3DYHJmiRvTwL3WFIiKhj6Z7pm5sLjIbEJWcvqQ+gub6HojVgQmYaWHam3uBqk3708hvHoloOzCOvYXZKdw045P4zDOlqbZz2WX36xY98glacjEwyhyhIYfkFSR93PylcrMoOTTRpN4HEyHRhYY1lnFDf9NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UJcrWYj8; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738935892; c=relaxed/simple;
+	bh=1zL7Fg4vCZS/oEqct4wtAyYB2ekpq1aQUl/RbG8Z+wg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=oGi04pNrifwxYuI7dQa4Q4itcW83+5gEu4w8fjrb1jMcXzyYi/Iph6+AcMmgMID6lIwosFfVzXRY+yieIK1+AtOI5eJH47q5f9AzEafgskGwfZ3LFTgk4EEr4J5lXYqtVAGSxdz4+dP5g0HaH0pFsLvaSOE+j74wfULksDKrazc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CysocBJC; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UJcrWYj8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CysocBJC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738935856; x=1770471856;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yvDb/9al0b5cbGYGz+egPFvQ2z5zm9IAuwXMbV2aY9g=;
-  b=UJcrWYj8vxwHNBuwzgZYTu4L3Gr4BSKf/1Tje0gr+JbAW655GQPLKk6A
-   ZIoZZ+q9WBlkNn7CULRyzZKdSbSWimV8jQ/AxbSVGamcWzO5UqHuc/S12
-   GTt/UuSimA5N+cGjxLo/9lJurXQv+vtCKqQ37/QIYruOceGxk5NuIbwWn
-   YNcj+gQYnHT2Htf1bki//aRd9giraY8q3WQE29lJtVxNwgjj2vWYFE4Dj
-   HP/iMhWXflyix+2Y+nWZf1naWby1IUzgIFUqGAYTZPuNH69bEcenZgvth
-   lsERRQBWqgx37XCBohXJr+zFzPZvlkFC9avTCZT4gW7SH3fnPcSEvLj2T
+  t=1738935890; x=1770471890;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=1zL7Fg4vCZS/oEqct4wtAyYB2ekpq1aQUl/RbG8Z+wg=;
+  b=CysocBJCrLv8dCnPXiHUklRZ8X3mnLun29d7zL5AIjAuv3IagP7Ag313
+   HOxQctwfQ5glvkgwk1vV6UGE3Tlpisjbf977LOjQU5tK/uGpWvAqBEwNf
+   WezMZ0t7lLNUhzcVC1kBGhOY5nBo3QdFaZ2IEFkSyseimXjQAK2rD45yF
+   UCB7KFCwa4as2n4W1fqhShrNfdZq93Nanw+H9JLQg1aUEMXMgXhh2VeGJ
+   pFYMLojuGCTSuHKOdvI1agZa948clok/qfy+F44KDHGb91+Zk33a+gpuW
+   PcSWN69DLaOSwt8mVEufgMXGx/5CzWOz6bC0kgxyEk60MyvMmIMYEs6sk
    w==;
-X-CSE-ConnectionGUID: 9xHJAJrXSgOU5j+m+aPSzQ==
-X-CSE-MsgGUID: pIfWsmu6TgaTzgdEglFd+Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39448796"
+X-CSE-ConnectionGUID: Klugmw40TGWIgjWi7nFVtw==
+X-CSE-MsgGUID: XRagqok/TPyOE605TDXb2A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="42417308"
 X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="39448796"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:44:15 -0800
-X-CSE-ConnectionGUID: YD3vx1NJSq2zirfoHgButQ==
-X-CSE-MsgGUID: ndUXSvlTQgKqyCDXne74cw==
+   d="scan'208";a="42417308"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:44:50 -0800
+X-CSE-ConnectionGUID: NZv3X7+xSBa3hvzjmpdOFA==
+X-CSE-MsgGUID: qpZyKO/IQaKqv2ruqstzCw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="116533405"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 07 Feb 2025 05:44:10 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tgOeN-000yPD-1L;
-	Fri, 07 Feb 2025 13:44:07 +0000
-Date: Fri, 7 Feb 2025 21:43:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Peter Zijlstra <peterz@infradead.org>,
-	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>,
-	Dohyun Kim <dohyunkim@google.com>,
-	linux-arm-kernel@lists.infradead.org, kernel-team@meta.com
-Subject: Re: [PATCH bpf-next v2 22/26] bpf: Introduce rqspinlock kfuncs
-Message-ID: <202502072155.DbOeX8Le-lkp@intel.com>
-References: <20250206105435.2159977-23-memxor@gmail.com>
+   d="scan'208";a="116575950"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.116])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:44:47 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 7 Feb 2025 15:44:44 +0200 (EET)
+To: Kurt Borja <kuurtb@gmail.com>
+cc: platform-driver-x86@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>, 
+    Mario Limonciello <mario.limonciello@amd.com>, 
+    Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 05/14] platform/x86: alienware-wmi: Refactor hdmi,
+ amplifier, deepslp methods
+In-Reply-To: <20250203182713.27446-6-kuurtb@gmail.com>
+Message-ID: <2a6d6549-6033-65f3-838c-8ac9332b0749@linux.intel.com>
+References: <20250203182713.27446-1-kuurtb@gmail.com> <20250203182713.27446-6-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206105435.2159977-23-memxor@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Kumar,
+On Mon, 3 Feb 2025, Kurt Borja wrote:
 
-kernel test robot noticed the following build errors:
+> Refactor show/store methods for hdmi, amplifier, deepslp sysfs groups to
+> use alienware_wmi_command() instead of alienware_wmax_command() which
+> uses deprecated WMI methods.
+> 
+> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+> ---
+>  drivers/platform/x86/dell/alienware-wmi.c | 80 +++++++++++++----------
+>  1 file changed, 45 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+> index 525d25a1fa6c..412caf0e3b84 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi.c
+> @@ -711,53 +711,57 @@ static acpi_status alienware_wmax_command(void *in_args, size_t in_size,
+>  static ssize_t cable_show(struct device *dev, struct device_attribute *attr,
+>  			  char *buf)
+>  {
+> +	struct alienfx_platdata *pdata = dev_get_platdata(dev);
+>  	struct wmax_basic_args in_args = {
+>  		.arg = 0,
+>  	};
+> -	acpi_status status;
+>  	u32 out_data;
+> +	int ret;
+> +
+> +	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_HDMI_CABLE,
+> +				    &in_args, sizeof(in_args), &out_data);
+>  
+> -	status =
+> -	    alienware_wmax_command(&in_args, sizeof(in_args),
+> -				   WMAX_METHOD_HDMI_CABLE, &out_data);
+> -	if (ACPI_SUCCESS(status)) {
+> +	if (!ret) {
+>  		if (out_data == 0)
+>  			return sysfs_emit(buf, "[unconnected] connected unknown\n");
+>  		else if (out_data == 1)
+>  			return sysfs_emit(buf, "unconnected [connected] unknown\n");
+>  	}
+> -	pr_err("alienware-wmi: unknown HDMI cable status: %d\n", status);
+> +
+> +	pr_err("alienware-wmi: unknown HDMI cable status: %d\n", ret);
+>  	return sysfs_emit(buf, "unconnected connected [unknown]\n");
+>  }
+>  
+>  static ssize_t source_show(struct device *dev, struct device_attribute *attr,
+>  			   char *buf)
+>  {
+> +	struct alienfx_platdata *pdata = dev_get_platdata(dev);
+>  	struct wmax_basic_args in_args = {
+>  		.arg = 0,
+>  	};
+> -	acpi_status status;
+>  	u32 out_data;
+> +	int ret;
+>  
+> -	status =
+> -	    alienware_wmax_command(&in_args, sizeof(in_args),
+> -				   WMAX_METHOD_HDMI_STATUS, &out_data);
+> +	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_HDMI_STATUS,
+> +				    &in_args, sizeof(in_args), &out_data);
+>  
+> -	if (ACPI_SUCCESS(status)) {
+> +	if (!ret) {
+>  		if (out_data == 1)
+>  			return sysfs_emit(buf, "[input] gpu unknown\n");
+>  		else if (out_data == 2)
+>  			return sysfs_emit(buf, "input [gpu] unknown\n");
+>  	}
+> -	pr_err("alienware-wmi: unknown HDMI source status: %u\n", status);
+> +
+> +	pr_err("alienware-wmi: unknown HDMI source status: %u\n", ret);
+>  	return sysfs_emit(buf, "input gpu [unknown]\n");
+>  }
+>  
+>  static ssize_t source_store(struct device *dev, struct device_attribute *attr,
+>  			    const char *buf, size_t count)
+>  {
+> +	struct alienfx_platdata *pdata = dev_get_platdata(dev);
+>  	struct wmax_basic_args args;
+> -	acpi_status status;
+> +	int ret;
+>  
+>  	if (strcmp(buf, "gpu\n") == 0)
+>  		args.arg = 1;
+> @@ -767,12 +771,12 @@ static ssize_t source_store(struct device *dev, struct device_attribute *attr,
+>  		args.arg = 3;
+>  	pr_debug("alienware-wmi: setting hdmi to %d : %s", args.arg, buf);
+>  
+> -	status = alienware_wmax_command(&args, sizeof(args),
+> -					WMAX_METHOD_HDMI_SOURCE, NULL);
+> +	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_HDMI_SOURCE, &args,
+> +				    sizeof(args), NULL);
+> +
+> +	if (ret < 0)
+> +		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n", ret);
+>  
+> -	if (ACPI_FAILURE(status))
+> -		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n",
+> -		       status);
+>  	return count;
+>  }
+>  
+> @@ -805,22 +809,24 @@ static const struct attribute_group hdmi_attribute_group = {
+>  static ssize_t status_show(struct device *dev, struct device_attribute *attr,
+>  			   char *buf)
+>  {
+> +	struct alienfx_platdata *pdata = dev_get_platdata(dev);
+>  	struct wmax_basic_args in_args = {
+>  		.arg = 0,
+>  	};
+> -	acpi_status status;
+>  	u32 out_data;
+> +	int ret;
+>  
+> -	status =
+> -	    alienware_wmax_command(&in_args, sizeof(in_args),
+> -				   WMAX_METHOD_AMPLIFIER_CABLE, &out_data);
+> -	if (ACPI_SUCCESS(status)) {
+> +	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_AMPLIFIER_CABLE,
+> +				    &in_args, sizeof(in_args), &out_data);
+> +
+> +	if (!ret) {
 
-[auto build test ERROR on 0abff462d802a352c87b7f5e71b442b09bf9cfff]
+Hi, I noticed one minor style problem while trying to apply these I'd 
+like to get addressed before I take them.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kumar-Kartikeya-Dwivedi/locking-Move-MCS-struct-definition-to-public-header/20250206-190258
-base:   0abff462d802a352c87b7f5e71b442b09bf9cfff
-patch link:    https://lore.kernel.org/r/20250206105435.2159977-23-memxor%40gmail.com
-patch subject: [PATCH bpf-next v2 22/26] bpf: Introduce rqspinlock kfuncs
-config: x86_64-buildonly-randconfig-004-20250207 (https://download.01.org/0day-ci/archive/20250207/202502072155.DbOeX8Le-lkp@intel.com/config)
-compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250207/202502072155.DbOeX8Le-lkp@intel.com/reproduce)
+Could you please remove the empty line in between the call and its error 
+handling for the calls you touch. There are a few such cases at least in 
+this patch.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502072155.DbOeX8Le-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from fs/timerfd.c:26:
-   In file included from include/linux/syscalls.h:94:
-   In file included from include/trace/syscall.h:7:
-   In file included from include/linux/trace_events.h:10:
-   In file included from include/linux/perf_event.h:62:
-   In file included from include/linux/security.h:35:
-   In file included from include/linux/bpf.h:33:
-   In file included from arch/x86/include/asm/rqspinlock.h:27:
->> include/asm-generic/rqspinlock.h:40:12: error: conflicting types for 'resilient_tas_spin_lock'
-      40 | extern int resilient_tas_spin_lock(rqspinlock_t *lock, u64 timeout);
-         |            ^
-   arch/x86/include/asm/rqspinlock.h:17:12: note: previous declaration is here
-      17 | extern int resilient_tas_spin_lock(struct qspinlock *lock, u64 timeout);
-         |            ^
-   1 error generated.
---
-   In file included from fs/splice.c:27:
-   include/linux/mm_inline.h:47:41: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-      47 |         __mod_lruvec_state(lruvec, NR_LRU_BASE + lru, nr_pages);
-         |                                    ~~~~~~~~~~~ ^ ~~~
-   include/linux/mm_inline.h:49:22: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-      49 |                                 NR_ZONE_LRU_BASE + lru, nr_pages);
-         |                                 ~~~~~~~~~~~~~~~~ ^ ~~~
-   In file included from fs/splice.c:31:
-   In file included from include/linux/syscalls.h:94:
-   In file included from include/trace/syscall.h:7:
-   In file included from include/linux/trace_events.h:10:
-   In file included from include/linux/perf_event.h:62:
-   In file included from include/linux/security.h:35:
-   In file included from include/linux/bpf.h:33:
-   In file included from arch/x86/include/asm/rqspinlock.h:27:
->> include/asm-generic/rqspinlock.h:40:12: error: conflicting types for 'resilient_tas_spin_lock'
-      40 | extern int resilient_tas_spin_lock(rqspinlock_t *lock, u64 timeout);
-         |            ^
-   arch/x86/include/asm/rqspinlock.h:17:12: note: previous declaration is here
-      17 | extern int resilient_tas_spin_lock(struct qspinlock *lock, u64 timeout);
-         |            ^
-   2 warnings and 1 error generated.
---
-   In file included from fs/aio.c:20:
-   In file included from include/linux/syscalls.h:94:
-   In file included from include/trace/syscall.h:7:
-   In file included from include/linux/trace_events.h:10:
-   In file included from include/linux/perf_event.h:62:
-   In file included from include/linux/security.h:35:
-   In file included from include/linux/bpf.h:33:
-   In file included from arch/x86/include/asm/rqspinlock.h:27:
->> include/asm-generic/rqspinlock.h:40:12: error: conflicting types for 'resilient_tas_spin_lock'
-      40 | extern int resilient_tas_spin_lock(rqspinlock_t *lock, u64 timeout);
-         |            ^
-   arch/x86/include/asm/rqspinlock.h:17:12: note: previous declaration is here
-      17 | extern int resilient_tas_spin_lock(struct qspinlock *lock, u64 timeout);
-         |            ^
-   In file included from fs/aio.c:29:
-   include/linux/mman.h:159:9: warning: division by zero is undefined [-Wdivision-by-zero]
-     159 |                _calc_vm_trans(flags, MAP_SYNC,       VM_SYNC      ) |
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/mman.h:137:21: note: expanded from macro '_calc_vm_trans'
-     137 |    : ((x) & (bit1)) / ((bit1) / (bit2))))
-         |                     ^ ~~~~~~~~~~~~~~~~~
-   include/linux/mman.h:160:9: warning: division by zero is undefined [-Wdivision-by-zero]
-     160 |                _calc_vm_trans(flags, MAP_STACK,      VM_NOHUGEPAGE) |
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/mman.h:137:21: note: expanded from macro '_calc_vm_trans'
-     137 |    : ((x) & (bit1)) / ((bit1) / (bit2))))
-         |                     ^ ~~~~~~~~~~~~~~~~~
-   2 warnings and 1 error generated.
-
-
-vim +/resilient_tas_spin_lock +40 include/asm-generic/rqspinlock.h
-
-c34e46edef2a89 Kumar Kartikeya Dwivedi 2025-02-06  39  
-7a9d3b27f7bf9c Kumar Kartikeya Dwivedi 2025-02-06 @40  extern int resilient_tas_spin_lock(rqspinlock_t *lock, u64 timeout);
-7a9d3b27f7bf9c Kumar Kartikeya Dwivedi 2025-02-06  41  #ifdef CONFIG_QUEUED_SPINLOCKS
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  42  extern int resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val, u64 timeout);
-7a9d3b27f7bf9c Kumar Kartikeya Dwivedi 2025-02-06  43  #endif
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  44  
+Thanks in advance.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+ i.
+
+>  		if (out_data == 0)
+>  			return sysfs_emit(buf, "[unconnected] connected unknown\n");
+>  		else if (out_data == 1)
+>  			return sysfs_emit(buf, "unconnected [connected] unknown\n");
+>  	}
+> -	pr_err("alienware-wmi: unknown amplifier cable status: %d\n", status);
+> +
+> +	pr_err("alienware-wmi: unknown amplifier cable status: %d\n", ret);
+>  	return sysfs_emit(buf, "unconnected connected [unknown]\n");
+>  }
+>  
+> @@ -850,15 +856,17 @@ static const struct attribute_group amplifier_attribute_group = {
+>  static ssize_t deepsleep_show(struct device *dev, struct device_attribute *attr,
+>  			      char *buf)
+>  {
+> +	struct alienfx_platdata *pdata = dev_get_platdata(dev);
+>  	struct wmax_basic_args in_args = {
+>  		.arg = 0,
+>  	};
+> -	acpi_status status;
+>  	u32 out_data;
+> +	int ret;
+>  
+> -	status = alienware_wmax_command(&in_args, sizeof(in_args),
+> -					WMAX_METHOD_DEEP_SLEEP_STATUS, &out_data);
+> -	if (ACPI_SUCCESS(status)) {
+> +	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_DEEP_SLEEP_STATUS,
+> +				    &in_args, sizeof(in_args), &out_data);
+> +
+> +	if (!ret) {
+>  		if (out_data == 0)
+>  			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
+>  		else if (out_data == 1)
+> @@ -866,15 +874,17 @@ static ssize_t deepsleep_show(struct device *dev, struct device_attribute *attr,
+>  		else if (out_data == 2)
+>  			return sysfs_emit(buf, "disabled s5 [s5_s4]\n");
+>  	}
+> -	pr_err("alienware-wmi: unknown deep sleep status: %d\n", status);
+> +
+> +	pr_err("alienware-wmi: unknown deep sleep status: %d\n", ret);
+>  	return sysfs_emit(buf, "disabled s5 s5_s4 [unknown]\n");
+>  }
+>  
+>  static ssize_t deepsleep_store(struct device *dev, struct device_attribute *attr,
+>  			       const char *buf, size_t count)
+>  {
+> +	struct alienfx_platdata *pdata = dev_get_platdata(dev);
+>  	struct wmax_basic_args args;
+> -	acpi_status status;
+> +	int ret;
+>  
+>  	if (strcmp(buf, "disabled\n") == 0)
+>  		args.arg = 0;
+> @@ -884,12 +894,12 @@ static ssize_t deepsleep_store(struct device *dev, struct device_attribute *attr
+>  		args.arg = 2;
+>  	pr_debug("alienware-wmi: setting deep sleep to %d : %s", args.arg, buf);
+>  
+> -	status = alienware_wmax_command(&args, sizeof(args),
+> -					WMAX_METHOD_DEEP_SLEEP_CONTROL, NULL);
+> +	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_DEEP_SLEEP_CONTROL,
+> +				    &args, sizeof(args), NULL);
+> +
+> +	if (!ret)
+> +		pr_err("alienware-wmi: deep sleep control failed: results: %u\n", ret);
+>  
+> -	if (ACPI_FAILURE(status))
+> -		pr_err("alienware-wmi: deep sleep control failed: results: %u\n",
+> -			status);
+>  	return count;
+>  }
+>  
+> 
