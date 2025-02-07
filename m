@@ -1,89 +1,89 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C0B23C8CB
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 19:47:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C468423C8CB;
+	Fri,  7 Feb 2025 19:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738957631; cv=none; b=KM3V8udfPiPTFxpDW6SqI4rk6wLhIDckO04HwHcZCdS9c5E/tSPLZ8gvX/n7Y0WMyJqPd7i15lgn0K/ZTY0ljywcuOmc4lA32ekx9VwteYzDbWNyweW1mtXVAQbHVJtJiCMoJm6fzi9rKR/U2IZ2smsQApn/5puz63uqpAzPnw8=
+	t=1738957692; cv=none; b=ohKwiYoMsktNSC+d6GiunWhosSXl0WBN3QneJ5oFp+U1qFiKs9O4EMYZDiVv1ZTD3CMk1S3J9XkpvpwN2YtAzmLIWfb5H5gRh8V9qtIbjMwqNpKTkUOtOWHdfX8faG5G/RfzK6Lx26gXFDfgNFRE+7naB0gS3GkIv2JsCWUCQTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738957631; c=relaxed/simple;
-	bh=NdYMsQ+8Re0UHYkj0YZzvvONYUYq6cy7MxaN7V7mDKM=;
+	s=arc-20240116; t=1738957692; c=relaxed/simple;
+	bh=CCnA9zjjCz0q7IrDviAdyHhoBFx0NDMm7KnhrMwXuUw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cdN3sHVxIL+Wvrd0IGAHravhqEEcJ0N/i+0Z6uftq3OlmRbyCC680Wob5zifiQeMGcM6JoDQUPzNlqWEdTD31o1c/C4eguEE0srqrgs6XhrGY7BOj1BEQAsxE9ESL1FQrmqmG9oW/RC/l3X2M2Qlf4uV2bJemXJYIa2sb8mZg5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CFQhp8Kc; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gs/IHlRUfBi26ibg4fdxK3d57Q2WjN2p49V6TmJ7SH5SEt4TbPpFp8xgDTk/MqXjPuwFOKsEX0dlmgLGnoPFu6YKllWtwL0YiiN1qxmSp9+2j9iC62yHw7w7ufYvu+NTTyWQc1enq0shgQ1e4griVPF97tWhK6juw/AK+UqOe1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=klMrNwXN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fjLuku+0; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=klMrNwXN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fjLuku+0; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CFQhp8Kc"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-544fe4f254eso826566e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 11:47:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738957626; x=1739562426; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Nnc+VLoNy3XrMrlSAm4S+smEOzp9c+gb/eHhOZ1VIc=;
-        b=CFQhp8KcwlAd3WJen2fjQHtjYWhl5FtOivpxg4I+vT2/wk8rDzFGq/Y/f0YsDr+FBh
-         lqukXbNiN0u+BVZV/w9ptH2+IOENI5ykO+Tn3ovwp2DCL3SSS9hQiLcN5vGdbmz9wZA9
-         dQxTPsVc2kvjAy4zmRxAbZyQlIe23RcqZfzSHHuPSGztgM3rv4rTIGkDy9+wj0j6Xfoe
-         tu8e82avPILHtkNhubcNTHzFPB7Cym8g/MAWxEcLQJ69VstEM1u70M1CKrwl4b/EwGl5
-         zFm2FKw6CkYEt00iVao+KsO/pRSb/UUwXQrcpMY8CX2RMgCpyP9vj4uHvHFwtw7sIO7O
-         xkiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738957626; x=1739562426;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4Nnc+VLoNy3XrMrlSAm4S+smEOzp9c+gb/eHhOZ1VIc=;
-        b=jUFRPUTCpyox9kg+bhEmGM4GLg4BG0UjGzVYKPSXYZcUQIV5QDox9Ro+7QIJ8FSo4S
-         iuAD1J4owXbk6P1nuHL3VR0jLrQpa4QMD0emo6mAxUWu7MWLbMJf42QcdO3QKyP0ZjLw
-         gO2bHEx3Jzsitj2WxMhbXK5NRih0a0D74dLNdatTPgCpyFS3gibETBpeqdrHryBW8scN
-         cN1AePDL4Vwb23w+1KYaVOrPhC/j6hVAQmXTy34w1Nb9ssssuOjZc/CgX8moPNzwZKdx
-         0scUfBq+Kr5DIsIbK4x076k3L8Kuem0QaW53qe9gBHG2278A0aU+r83gn5L517TVO1V5
-         NE3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWEZk2R04oPMaA/HMYZgRFPfEuU84uIVBmWQjfBsBxDPoabH5r4cWTZ9ZAzFh2uU5Wx4g9+yyI9NcVJDS4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzViCjl8hoG3tRlInLN5wlpalD6+TfunqIaGDPSdIxvFsPjotTY
-	doa/4jQnj9+lAef5cquPpBc+e7CLIZnT1GFIVMUiMXA093+lRFfpvNeFJAcZAmlvDqBKz1YnTJX
-	2TKM=
-X-Gm-Gg: ASbGncv3VeW+t+SgzLjsoPyJCMEhbUoJQj8hcH1X7zMVUXUmfS3YickKLrLCJYYEcYx
-	PIo98INu/GfVU3DcizzUYLtxN++9/8vNaIQelGLBw0PybwORyjDLNV4iyk/hK8Gb6/y12VInct/
-	uHEVDAhqMZ32tVmVxvsJyEdKoVNpI9KgNB51qSoxTqShkoifsP/oY63hn8y7IUwjGRtwDH60nDo
-	HkPet8ZsypCeTrlK7eEODyxh/RhAEBNC1geKx4uEdF1ioAQlWi2gpHAGubb+w+lBoF+/TPse6Pl
-	JYodtTfZ760jJy+SAerJB5NBT+0oMlunIOR9epkc0QXWREMQTqP6cLHM4mAPUWPRjDi9glo=
-X-Google-Smtp-Source: AGHT+IEX/wE6vKWAFwICx9CtlReQSMFmjn6yOfdCDmiizKZeJHyRie3LA+6lJskicwM/rhyEQV3BlQ==
-X-Received: by 2002:a05:6512:34c2:b0:542:91ac:3f78 with SMTP id 2adb3069b0e04-54414ab8364mr1217019e87.17.1738957626455;
-        Fri, 07 Feb 2025 11:47:06 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-544105bfd35sm545378e87.115.2025.02.07.11.47.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 11:47:05 -0800 (PST)
-Date: Fri, 7 Feb 2025 21:47:02 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, 
-	Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Paul Kocialkowski <contact@paulk.fr>, Maxime Ripard <mripard@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	=?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v6 09/26] drm/bridge: move devm_drm_of_get_bridge and
- drmm_of_get_bridge to drm_bridge.c
-Message-ID: <7tul5avfkrw7potqif4xbv57o2wp5suuiiqna2gzcd2z4wwyxg@c2qu7bigul67>
-References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
- <20250206-hotplug-drm-bridge-v6-9-9d6f2c9c3058@bootlin.com>
- <aayr7q6i3x34xw7ivvapnk6h6mgx67qhpv2rqk2gotejyjetwy@olb5lbwxd5e3>
- <20250207095421.07ca853f@booty>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="klMrNwXN";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fjLuku+0";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="klMrNwXN";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fjLuku+0"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C7A762116E;
+	Fri,  7 Feb 2025 19:48:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738957688;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KtpXowidEIrM6XOTHSfAW6hUtQEoRK0kPdHOE3Zz/WY=;
+	b=klMrNwXNyVt+UoUG2xsindrLrdJfWjRZX2D/8L51i9Tki5nMqgYJmkdvgO5brKgmQrU2b3
+	FmouNCGdIHn3WBi7mjUBkuFdDo70tQtNFCjKFb+2DNW7IWJWRsWcjak5FPUmerYdeZ4wYp
+	nFU0HjqKA1gN3jloBNFJyNsTyydires=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738957688;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KtpXowidEIrM6XOTHSfAW6hUtQEoRK0kPdHOE3Zz/WY=;
+	b=fjLuku+0YQQkQR3hpBLR7yJt+Mcrv/hfjWwVfCvumQGgpAroGoASgMIt41t5ekeBKYPdCT
+	wCMHoyQI5Io+gBDg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738957688;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KtpXowidEIrM6XOTHSfAW6hUtQEoRK0kPdHOE3Zz/WY=;
+	b=klMrNwXNyVt+UoUG2xsindrLrdJfWjRZX2D/8L51i9Tki5nMqgYJmkdvgO5brKgmQrU2b3
+	FmouNCGdIHn3WBi7mjUBkuFdDo70tQtNFCjKFb+2DNW7IWJWRsWcjak5FPUmerYdeZ4wYp
+	nFU0HjqKA1gN3jloBNFJyNsTyydires=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738957688;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KtpXowidEIrM6XOTHSfAW6hUtQEoRK0kPdHOE3Zz/WY=;
+	b=fjLuku+0YQQkQR3hpBLR7yJt+Mcrv/hfjWwVfCvumQGgpAroGoASgMIt41t5ekeBKYPdCT
+	wCMHoyQI5Io+gBDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ABA7B13694;
+	Fri,  7 Feb 2025 19:48:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id BOu3KXhjpmciGAAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Fri, 07 Feb 2025 19:48:08 +0000
+Date: Fri, 7 Feb 2025 20:48:03 +0100
+From: David Sterba <dsterba@suse.cz>
+To: David Sterba <dsterba@suse.cz>
+Cc: Daniel Vacek <neelx@suse.com>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Nick Terrell <terrelln@fb.com>, linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] btrfs: zstd: enable negative compression levels mount
+ option
+Message-ID: <20250207194803.GP5777@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20250130175821.1792279-1-neelx@suse.com>
+ <20250205181705.GL5777@twin.jikos.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,116 +92,81 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250207095421.07ca853f@booty>
+In-Reply-To: <20250205181705.GL5777@twin.jikos.cz>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Level: *
+X-Spamd-Result: default: False [1.00 / 50.00];
+	REPLYTO_EQ_TO_ADDR(5.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Score: 1.00
 
-On Fri, Feb 07, 2025 at 09:54:21AM +0100, Luca Ceresoli wrote:
-> On Fri, 7 Feb 2025 04:52:20 +0200
-> Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
-> 
-> > On Thu, Feb 06, 2025 at 07:14:24PM +0100, Luca Ceresoli wrote:
-> > > devm_drm_of_get_bridge() and drmm_of_get_bridge() do not have anything to
-> > > do with struct drm_panel anymore, they just manage bridges. So move them
-> > > from bridge/panel.c to drm_bridge.c.
-> > > 
-> > > Move also of_drm_find_bridge_by_endpoint() which is used only by
-> > > devm_drm_of_get_bridge() and drmm_of_get_bridge().
-> > > 
-> > > No code changes, only move functions to a different file within the same
-> > > module and add an #include as needed.
-> > > 
-> > > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> > > 
-> > > ---
-> > > 
-> > > This patch was added in v6.
-> > > ---
-> > >  drivers/gpu/drm/bridge/panel.c | 102 -----------------------------------------
-> > >  drivers/gpu/drm/drm_bridge.c   | 100 ++++++++++++++++++++++++++++++++++++++++
-> > >  2 files changed, 100 insertions(+), 102 deletions(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
-> > > index 6995de605e7317dd1eb153afd475746ced764712..1230ae50b2020e7a9306cac83009dd600dd61d26 100644
-> > > --- a/drivers/gpu/drm/bridge/panel.c
-> > > +++ b/drivers/gpu/drm/bridge/panel.c
-> > > @@ -418,49 +418,6 @@ int drm_of_find_panel_or_bridge(const struct device_node *np,
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(drm_of_find_panel_or_bridge);
-> > >  
-> > > -/**
-> > > - * of_drm_find_bridge_by_endpoint - return drm_bridge connected to an endpoint
-> > > - * @np: device tree node containing encoder output ports
-> > > - * @port: port in the device tree node
-> > > - * @endpoint: endpoint in the device tree node
-> > > - * @bridge: pointer to hold returned drm_bridge (must not be NULL)
-> > > - *
-> > > - * Given a DT node's port and endpoint number, find the connected node and
-> > > - * return the associated struct drm_bridge.
-> > > - *
-> > > - * Returns zero if successful, or one of the standard error codes if it fails.
-> > > - */
-> > > -static int of_drm_find_bridge_by_endpoint(const struct device_node *np,
-> > > -					  int port, int endpoint,
-> > > -					  struct drm_bridge **bridge)  
+On Wed, Feb 05, 2025 at 07:17:05PM +0100, David Sterba wrote:
+> On Thu, Jan 30, 2025 at 06:58:19PM +0100, Daniel Vacek wrote:
+> > This patch allows using the fast modes (negative compression levels) of zstd
+> > as a mount option.
 > > 
-> > I'd say make this function the main API instead (and name it drm_of
-> > rather than of_drm, this can happen in the previous patch).
+> > As per the results, the compression ratio is lower:
+> > 
+> > for level in {-15..-1} 1 2 3; \
+> > do printf "level %3d\n" $level; \
+> >   mount -o compress=zstd:$level /dev/sdb /mnt/test/; \
+> >   grep sdb /proc/mounts; \
+> >   cp -r /usr/bin       /mnt/test/; sync; compsize /mnt/test/bin; \
+> >   cp -r /usr/share/doc /mnt/test/; sync; compsize /mnt/test/doc; \
+> >   cp    enwik9         /mnt/test/; sync; compsize /mnt/test/enwik9; \
+> >   cp    linux-6.13.tar /mnt/test/; sync; compsize /mnt/test/linux-6.13.tar; \
+> >   rm -r /mnt/test/{bin,doc,enwik9,linux-6.13.tar}; \
+> >   umount /mnt/test/; \
+> > done |& tee results | \
+> > awk '/^level/{print}/^TOTAL/{print$3"\t"$2"  |"}' | paste - - - - -
+> > 
+> > 		266M	bin  |	45M	doc  |	953M	wiki |	1.4G	source
+> > =============================+===============+===============+===============+
+> > level -15	180M	67%  |	30M	68%  |	694M	72%  |	598M	40%  |
+> > level -14	180M	67%  |	30M	67%  |	683M	71%  |	581M	39%  |
+> > level -13	177M	66%  |	29M	66%  |	671M	70%  |	566M	38%  |
+> > level -12	174M	65%  |	29M	65%  |	658M	69%  |	548M	37%  |
+> > level -11	174M	65%  |	28M	64%  |	645M	67%  |	530M	35%  |
+> > level -10	171M	64%  |	28M	62%  |	631M	66%  |	512M	34%  |
+> > level  -9	165M	62%  |	27M	61%  |	615M	64%  |	493M	33%  |
+> > level  -8	161M	60%  |	27M	59%  |	598M	62%  |	475M	32%  |
+> > level  -7	155M	58%  |	26M	58%  |	582M	61%  |	457M	30%  |
+> > level  -6	151M	56%  |	25M	56%  |	565M	59%  |	437M	29%  |
+> > level  -5	145M	54%  |	24M	55%  |	545M	57%  |	417M	28%  |
+> > level  -4	139M	52%  |	23M	52%  |	520M	54%  |	391M	26%  |
+> > level  -3	135M	50%  |	22M	50%  |	495M	51%  |	369M	24%  |
+> > level  -2	127M	47%  |	22M	48%  |	470M	49%  |	349M	23%  |
+> > level  -1	120M	45%  |	21M	47%  |	452M	47%  |	332M	22%  |
+> > level   1	110M	41%  |	17M	39%  |	362M	38%  |	290M	19%  |
+> > level   2	106M	40%  |	17M	38%  |	349M	36%  |	288M	19%  |
+> > level   3	104M	39%  |	16M	37%  |	340M	35%  |	276M	18%  |
+> > 
+> > Signed-off-by: Daniel Vacek <neelx@suse.com>
+> > ---
+> > Changes in v4:
+> >  * Fix a bug with workspace lru_list.
+> >  * Keep the levels down to -15 as agreed.
 > 
-> I agree there should be a small number of APIs for the foreseeable
-> future (and any number of, hopefully decreasing-at-some-point,
-> deprecated ones).
-> 
-> And I agree this one ^ and the devm_drm_of_get_bridge() below are
-> equivalent, despite having different signatures, and so one should
-> disappear.
-> 
-> So, time to think about what APIs we want. Some thoughts of mine:
-> 
->  * I prefer "get" over "find", looks more intuitive as these functions
->    will drm_bridge_get()
->  * Is there a logic between of_drm_ and drm_of_? Just "the former is
->    old and deprecated"?
+> Thanks, I'll add the patch to for-next soon. The information about times
+> is only a changelog update so this can be done later once we have it.
 
-I don't know, it might be historical. Nevertheless, I think, having just
-drm_ prefix for all DRM-related symbols is a good idea.
-
->  * Since getting bridges via the endpoint is the preferred way, I'd
->    like this function to have a shorter name than its variants
->  * Returning a struct drm_bridge err_ptr looks better to me than
->    returning an error and the bridge via a ptr-to-ptr, especially as we
->    don't have anymore the case of returning a panel or a bridge from
->    the same function
-> 
-> So, bottom line, we'd have:
-> 
->  - struct drm_bridge *drm_of_get_bridge(np, port, endpoint)
->  - struct drm_bridge *drm_of_get_bridge_by_node(bridge_np)
-
-I think these two are fine, please go with them
-
->  - devm_ and drmm_ variants of the above
-
-These two are only necessary for the refcounted bridges. I'd say, skip
-them as a part of the panel / bridge patchset. Please don't
-overcomplicate it too much.
-
-> 
-> or a subset of these, in case some is not needed.
-> 
-> What are your opinions?
-> 
-> > > -struct drm_bridge *devm_drm_of_get_bridge(struct device *dev,
-> > > -					  struct device_node *np,
-> > > -					  u32 port, u32 endpoint)
-> 
-> ^ kept for reference
-> 
-> Luca
-> 
-> -- 
-> Luca Ceresoli, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
--- 
-With best wishes
-Dmitry
+Now added to for-next.
