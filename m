@@ -1,134 +1,157 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DCB1D618A;
-	Fri,  7 Feb 2025 09:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89641D7E21;
+	Fri,  7 Feb 2025 09:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738921292; cv=none; b=R5xpwuLiWanwirdgJBS75CItW4c/gjDN0DDR+GcKsBbTRlKcr1nkdrO6dG6HZbSplTJ4OzjhWDyKQ0UCO86Rnq1VQ4OrHguLHh0rZyaeUyiOJjp2nRKBsEPyOuLiQEYFxAEpjuKUOLDwveVbIVH6b4XzOby+whGG5aedBVLEbEI=
+	t=1738921318; cv=none; b=OCeen6XAOidc4u8yzbu79s4ZSmkcJMoZv5oRriZxAy5YbyRUkCWbCMJOPZoudkmFDFFRflnf4/qebD6pKZpvD8e9Ldp3LsLhxeSsDoNB3ZkMaOOJ7uaK6rFJ4Lft3qdN4iJdKV1f4HaPpPSUi/lpm+4SDryM6keNhNROHmIgiyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738921292; c=relaxed/simple;
-	bh=cP0kGHuvU3nRFuyuh7Kc7W3rfxUKkOVYL5Mob7ZUKgE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PCarXidu8hj5eSnJHmDq4tWEGyb96Om3WXSzR5PztI8C6agOthUcPVZLPizILccNtUwQ/QIcXX4t4O+Dp0y1PIHFsOMeUkwYt8vkTwQyGmVmdmCzI45eKmcTCwuhMgzWtYIVnMtge9HaFaQW8+3GX65/5nBdJ/pSKLhQ97sHiRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=W0PE77Qt; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738921318; c=relaxed/simple;
+	bh=hhnpORnNFDm++vxXeAvT3ViAqcibr/gkMJz681ofVAg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=oX55c278I112osxHXidmKs3bvn/xjp/tgwAoIjfxFaqXc8kzua2GDcWQeo+CfG6ayoCBxiPmJTXeB2sRvumuRF2wmWJ50rTq2wZ9miF4Gm26IUZEYuuGXDawEKupxd5YzRAETxms/AV0vxPo8+LFpOljzR2RRGbMCKK2w543ih0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st; spf=pass smtp.mailfrom=marcan.st; dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b=f7x/497T; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marcan.st
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W0PE77Qt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Y1gqRSqWYUoS/5b4bvazFO7Ddo/G+ehsqfGlUNrq33s=; b=W0PE77QtqF8+1sI/uGMrmKcTum
-	6MbjNVPlK/r7lq3fEtLxK7DIar/jgbEkq5rQMStZsn1YzeUUJJKrM0YOHEPiO5iiIVh1mTEPwgQsx
-	DLsFn4XV4xB7ZGONnwOvWFYljnOHWJKo6k8qiI2Edw07tcYIE9vvXks8Si9jjL5ky9QxjWmDTYYNV
-	XrH5mRb/iSXkukM7UaWenYruIzNnBX8U4NfxKUyL1wBBaeGmu2q/LldwyXpdkSopKUPaE0F4j+IJZ
-	EtrqvIJKdj/0oI+yCGbc5rT/PpXvw8DN3NsgSDQkT9PMk/9lpoeSUNHnZkmD1mQiBJFFcwKllgWeP
-	fE4idlew==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgKrR-0000000H9UC-0XlV;
-	Fri, 07 Feb 2025 09:41:21 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1A6313002F0; Fri,  7 Feb 2025 10:41:20 +0100 (CET)
-Date: Fri, 7 Feb 2025 10:41:20 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Marco Elver <elver@google.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, rcu@vger.kernel.org,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCH RFC 02/24] compiler-capability-analysis: Rename
- __cond_lock() to __cond_acquire()
-Message-ID: <20250207094120.GA7145@noisy.programming.kicks-ass.net>
-References: <20250206181711.1902989-1-elver@google.com>
- <20250206181711.1902989-3-elver@google.com>
- <20250207082832.GU7145@noisy.programming.kicks-ass.net>
- <Z6XTKTo_LMj9KmbY@elver.google.com>
+	dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b="f7x/497T"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: marcan@marcan.st)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id E3B5D4267F;
+	Fri,  7 Feb 2025 09:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
+	t=1738921307; bh=hhnpORnNFDm++vxXeAvT3ViAqcibr/gkMJz681ofVAg=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To;
+	b=f7x/497TTlA4J5xS7wcETrqljbIFDYnQPGz7GoXWbwqFSu9urdwpcvIrY+8o3XZcA
+	 TKfS1WhrKKEMfg1qLi3a6lO9cyEqRo+9achweDSe5w5Lo6bHCDeENj9825sXBESxxf
+	 cx15qwbuKNy0PvNPfAG1rI92kJuBoJDVgF5d1UdN673RwcUGRoVVuaoT7NJCdHJriX
+	 OjpETvSeS3LFTVSf9I1qM88ISy3JcYeJlpIpJ6KgGLOUB56St6xHaPWJ7uBhIV95Bd
+	 DdlNwPA58ACr4ylOhUfT4gaVFSUa3okurftv8s9W5VRoein3+Bg15fTiL2XpjL2s8/
+	 4idRRZn6TKG8Q==
+Message-ID: <4c143b85-063a-4413-a6ca-e9d80e26da96@marcan.st>
+Date: Fri, 7 Feb 2025 18:41:43 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6XTKTo_LMj9KmbY@elver.google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma
+ coherent allocator abstraction.)
+To: Simona Vetter <simona@ffwll.ch>
+References: <Z4D5a5NYrAbNxUL6@pollux> <Z4kG5AcVeQKegLnb@pollux>
+ <20250128092334.GA28548@lst.de>
+ <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
+ <20250130154646.GA2298732@nvidia.com> <2025013030-gummy-cosmic-7927@gregkh>
+ <20250130172437.GN5556@nvidia.com>
+ <2025013148-reversal-pessimism-1515@gregkh>
+ <20250131135421.GO5556@nvidia.com>
+ <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
+ <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local>
+From: Hector Martin <marcan@marcan.st>
+Content-Language: en-US
+Cc: Jason Gunthorpe <jgg@nvidia.com>, Greg KH <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, phasta@kernel.org,
+ Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
+ Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+ Abdiel Janulgue <abdiel.janulgue@gmail.com>, daniel.almeida@collabora.com,
+ aliceryhl@google.com, robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
+ Valentin Obst <kernel@valentinobst.de>,
+ open list <linux-kernel@vger.kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
+ "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
+ DRI Development <dri-devel@lists.freedesktop.org>
+In-Reply-To: <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 07, 2025 at 10:32:25AM +0100, Marco Elver wrote:
-> On Fri, Feb 07, 2025 at 09:28AM +0100, Peter Zijlstra wrote:
-> > On Thu, Feb 06, 2025 at 07:09:56PM +0100, Marco Elver wrote:
-> > > Just like the pairing of attribute __acquires() with a matching
-> > > function-like macro __acquire(), the attribute __cond_acquires() should
-> > > have a matching function-like macro __cond_acquire().
-> > > 
-> > > To be consistent, rename __cond_lock() to __cond_acquire().
-> > 
-> > So I hate this __cond_lock() thing we have with a passion. I think it is
-> > one of the very worst annotations possible since it makes a trainwreck
-> > of the trylock code.
-> > 
-> > It is a major reason why mutex is not annotated with this nonsense.
-> > 
-> > Also, I think very dim of sparse in general -- I don't think I've ever
-> > managed to get a useful warning from between all the noise it generates.
+On 2025/02/06 3:52, Simona Vetter wrote:
+> On Tue, Feb 04, 2025 at 03:46:14AM +0900, Hector Martin wrote:
+>> Adding Linus
+>>
+>> My 2c: If Linus doesn't pipe up with an authoritative answer to this
+>> thread, Miguel and the other Rust folks should just merge this series
+>> once it is reviewed and ready, ignoring Christoph's overt attempt at
+>> sabotaging the project. If Linus pulls it, what Christoph says doesn't
+>> matter. If Linus doesn't pull it, the R4L project is essentially dead
+>> until either Linus or Christoph make a move. Everything else is beating
+>> around the bush.
+>>
+>> Rust folks: Please don't waste your time and mental cycles on drama like
+>> this. It's not worth your time. Either Linus likes it, or he doesn't.
+>> Everything else is distractions orchestrated by a subset of saboteur
+>> maintainers who are trying to demoralize you until you give up, because
+>> they know they're going to be on the losing side of history sooner or
+>> later. No amount of sabotage from old entrenched maintainers is going to
+>> stop the world from moving forward towards memory-safe languages.
+>>
+>> FWIW, in my opinion, the "cancer" comment from Christoph would be enough
+>> to qualify for Code-of-Conduct action, but I doubt anything of the sort
+>> will happen.
 > 
-> Happy to reduce the use of __cond_lock(). :-)
-> Though one problem I found is it's still needed for those complex
-> statement-expression *_trylock that spinlock.h/rwlock.h has, where we
-> e.g. have (with my changes):
+> Yeah no.
 > 
-> 	#define raw_spin_trylock_irqsave(lock, flags)		\
-> 		__cond_acquire(lock, ({				\
-> 			local_irq_save(flags);			\
-> 			_raw_spin_trylock(lock) ?		\
-> 			1 : ({ local_irq_restore(flags); 0; }); \
-> 		}))
+> https://chaos.social/@sima/113942119012147959
 > 
-> Because there's an inner condition using _raw_spin_trylock() and the
-> result of _raw_spin_trylock() is no longer directly used in a branch
-> that also does the unlock, Clang becomes unhappy and complains. I.e.
-> annotating _raw_spin_trylock with __cond_acquires(1, lock) doesn't work
-> for this case because it's in a complex statement-expression. The only
-> way to make it work was to wrap it into a function that has attribute
-> __cond_acquires(1, lock) which is what I made __cond_lock/acquire do.
+> This was about you, because typing a proper answer takes a bit longer. It
+> was also about your toots on fedi, like this:
+> 
+> https://social.treehouse.systems/@marcan/113941468353031993
+> 
+> And "haha it's only a joke" does not work with your public profile and following.
+> 
+> I do understand the frustration and temptation to just burn it all to the
+> ground, head the call of the sirens, or maybe for me more pick up goat
+> farming in the Swiss Alps. But you can't have it both and expect to also
+> be part of and contribute to the same community. And personally I don't
+> appreciate getting drenched in gasoline while I'm trying to quench flames
+> on the ground.
+> 
+> And this isn't the first time or the second, by now it's a pretty clear
+> pattern over some years. And with the first I could explain why you react
+> like that and you had my full understanding, but eventually that runs a
+> bit thin as an excuse.  Now I'm left with the unlikely explanation that
+> you just like thundering in as the cavalry, fashionably late, maximally
+> destructive, because it entertains the masses on fedi or reddit or
+> wherever. I have no idea what you're trying to achieve here, I really
+> don't get it, but I am for sure fed up dealing with the fallout.
+> 
+> Cheers, Sima
 
-Does something like:
+Since we're into complaining about social media posts on the list now,
+I'm going to link one of yours:
 
-static inline bool
-_raw_spin_trylock_irqsave(raw_spinlock_t *lock, unsigned long *flags)
-	__cond_acquire(1, lock)
-{
-	local_irq_save(*flags);
-	if (_raw_spin_trylock(lock))
-		return true;
-	local_irq_restore(*flags);
-	return false;
-}
+https://chaos.social/@sima/113961496955043901
 
-#define raw_spin_trylock_irqsave(lock, flags) \
-	_raw_spin_trylock_irqsave((lock), &(flags))
+An R4L maintainer quit after multiple rounds of hostility, including
+some completely unacceptable public comments bordering on downright
+harassment from tytso, a situation which was widely publicized.
 
-work?
+If, according to you, that's "shockingly smooth" with "no outsized
+drama" other than "what I stirred up" (I guess you also missed the whole
+LWN post about this thread before I posted anything on Fedi? That's how
+I even found out about this), then I'm glad I'm disengaging with this
+community. The Stockholm syndrome and utter denial is palpable.
+
+I thought I could work with you on these issues; I don't know what
+happened over the past year since we last had a private conversation
+about this, but clearly you've changed your mind.
+
+Thus, as you kindly requested of me in social media,
+
+https://chaos.social/@sima/113961283260455876
+
+I will now proceed to fuck off. Good luck.
+
+- Hector
+
