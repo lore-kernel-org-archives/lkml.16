@@ -1,352 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9DD10F1;
-	Fri,  7 Feb 2025 16:15:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473073FB9C
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738944948; cv=none; b=YQTf06tzdCabOJb8iJsKLmZlPV/OQRnskIPbrbx8dkUIedwEA6iMr9lHVfWf5bVkoGokBZiAGOPuHmbkXnbul9ddHeWjYdOnXv/hciIVR9GV9qXKzoYlMCdijMfZV1kKuI/lN4FRNiyu1S301MjakYjDEZI9IB7AEbPbAa61yZQ=
+	t=1738944987; cv=none; b=Vhtm/3m+oQ+RFdiC7CyB+tM9+ZWj1pk39J0dmsnM7lVM9tNn7rKaKQ23F1evJ694ZH7ah7npmchDM6Nq3mOYlkAezciyEjDU9Q9j/AnjYEG/sgN+nXBeIpux2mugWDrhshEyc9bp9KK57ksDMG7moMUJCJuoY4QFEHRpKIJu4WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738944948; c=relaxed/simple;
-	bh=w0jy7r2yhYa1fCB+/gaqKE/eMIzOTefS7gNLVaptUrM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CM3bRRTFNAIySZcvfMPQAmOwWceCFPno7p1WFpkt6L4umxEf1Yflo8y1+F/uWX5+otqn+LlLBLbE5PhtLgiWGrY1zJRa58VMtRI1Sjickkqe5AGRiKltB1Q+zGWTe5XmOK0yBR9Jz9GLDkdU0LWsGtK0QmNSbYmyxsdO4dyBJoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KKxfScMf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738944987; c=relaxed/simple;
+	bh=hD+eCZVAmu9HYlJ66O10gtRu+u/xshw0dNIF0ppHeG4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T55wesq/i6ZTO4zy27e0O5niu5K3uuH+X0SSHlI/0d1gpph7k0EsXBE4ZuLdlnU57AbHIKM8nNa6qjzpOh0JVtIhFpkB2Z0a37uFsi4o2VI0mXsCh2SzDtdV8dY/d5rf9xtfihVPvztfB+RtG3VxmxMEn9JLGHDyEe4ibnhw01c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YuORY2oB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KKxfScMf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59881C4CED1;
-	Fri,  7 Feb 2025 16:15:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738944947;
-	bh=w0jy7r2yhYa1fCB+/gaqKE/eMIzOTefS7gNLVaptUrM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KKxfScMfPJY+HSVpkWpRNv2NEbh2fuHod9OfQat9d0QheyIL36P99sHJRB/urGSBO
-	 WqfS5eU0C35s2LjzmQjZn4R0Lm1QGH/6Hvg9O8VjRnNzrs9g48AyO7ey/oCotukXnR
-	 yhOIxAk7Q00AMMBPsCr+i19p2xg3lRBOe6AoDIex+0PWW/GMz4ut/VLCCNs/km60zk
-	 s4NOCVDWjpjZteHbs8kABHr1B0/ZrZuITWyX+PS8k+syj+IuebKbdI1xXmJWLcBtMi
-	 ZAIvpB7RbrZ5bzYagXvzwng2225GJdelI0m/AcGWcEU8cwSdApRzso7HYFa5pI/3S+
-	 Ay2h5lox4K4Zg==
-Message-ID: <e297cb9c-0fc9-4cfb-89c8-6bad5ca9c9e9@kernel.org>
-Date: Fri, 7 Feb 2025 10:15:46 -0600
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YuORY2oB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738944984;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hD+eCZVAmu9HYlJ66O10gtRu+u/xshw0dNIF0ppHeG4=;
+	b=YuORY2oBfCPOdTPGwf5EzqLLdAf/zylsM7/yufw/rTqoXFkFhWVRIbKCod4DmlFTuC2B72
+	OOpRygSdG5jX9cfqsIAJB7CtLrMcJwXH1t38ti9M4U0zYrW4nORRrTAa1MOcmZ0tTJOO3L
+	RJMpv9w1IKtXewdXpAksumqvh4/rUTk=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-650-Cev7emjJMSy-xWThLve1-w-1; Fri, 07 Feb 2025 11:16:23 -0500
+X-MC-Unique: Cev7emjJMSy-xWThLve1-w-1
+X-Mimecast-MFC-AGG-ID: Cev7emjJMSy-xWThLve1-w
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2f81a0d0a18so4833027a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:16:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738944982; x=1739549782;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hD+eCZVAmu9HYlJ66O10gtRu+u/xshw0dNIF0ppHeG4=;
+        b=HukXeyuhRlRkuwwfm0lWhG8b+yiC2HH0E+4Kp0dKUawhysC3J4o12nkPWlaA+S0+8F
+         JiwqwF6VAQSGPqN96s/TnfXuAf7UDGn91OEDTRsPdndSVfFx4vLJ3sPQRhOoOjhRkfun
+         g+eT/g6/KY+zmyLm4+wN1ULJadiDOTR1BwlK0EYLZ2LJsN1Ko4IT0ROXVuHja97vdNQI
+         xM4pdGA3KNuYIF2nroF5/mCFg9AwBQ4xk8iU4ziHZP58Hk6uBCgj5roQHYpqHeT93i1I
+         MG8A83frs0Y8TEoLGkvy/mP4Nf24ZKqfFD6gB8fNVk1oF3sIBRd5VWC6Bcel7xESR2eZ
+         wEGg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdjSGFWidptzeAoaRACF60SOsYZNT0kg2GVH1JebP2cSekb5g1/vGl367PSxY0pJ1kT8JnlnoJ4+ygIdQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK/teHU/3S7Fppr/U1WjRNLwWM6LsPI2bNSHHHwycoqo56pgXU
+	B41geo2UOG8UbkIjze+VGiuAsoDgEKX3MRDLVHAsMRL/RStexkJL6ZcD336dgmFUH9p4ZzxQnFw
+	IC6jC9IDuwmPnb/u0uLZ/eQWZHHC97eGhwbgyzaodfqAewtY8hR6r4kFhtWDOlJzbPxq9k4w2On
+	y/No2gCvbij4RtmlwiP6q/QG+KT2ayDiKVRZWe
+X-Gm-Gg: ASbGnctO/GD4njiGPHz4NS8XVmd6d8IlGaaVNC9oUwUDG13PtansFMpvZzoyJmh8EFM
+	ulCkwgdI4V31GWlYgYFj9OPK2neb24+3WS7eCLbexO49wAXN3khGsK9HhY8eImEr7
+X-Received: by 2002:a17:90b:1b44:b0:2f4:f7f8:fc8b with SMTP id 98e67ed59e1d1-2fa242e7602mr5367383a91.27.1738944981886;
+        Fri, 07 Feb 2025 08:16:21 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG9qQ6Ac9CdjS0hM2Fp5CTCftFgkMjfVYiNIpp2aFlk5UPLOL/FOPn2I3gKNt5IDhZaRA3QY4m6BBB8aMlIkFs=
+X-Received: by 2002:a17:90b:1b44:b0:2f4:f7f8:fc8b with SMTP id
+ 98e67ed59e1d1-2fa242e7602mr5367287a91.27.1738944981087; Fri, 07 Feb 2025
+ 08:16:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/14] cpufreq/amd-pstate: Drop min and max cached
- frequencies
-To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
- "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
- Perry Yuan <perry.yuan@amd.com>
-Cc: "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
- <linux-kernel@vger.kernel.org>,
- "open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250206215659.3350066-1-superm1@kernel.org>
- <20250206215659.3350066-3-superm1@kernel.org>
- <2dbded5a-b353-480c-a2ea-ed246f5c0b27@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <2dbded5a-b353-480c-a2ea-ed246f5c0b27@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
+ <bfae590045c7fc37b7ccef10b9cec318012979fd.1736488799.git-series.apopple@nvidia.com>
+ <Z6NhkR8ZEso4F-Wx@redhat.com> <67a3fde7da328_2d2c2942b@dwillia2-xfh.jf.intel.com.notmuch>
+ <Z6S7A-51SdPco_3Z@redhat.com> <20250206143032.GA400591@fedora>
+ <CADSE00+2o5Ma0W6FBLHwpUaKut9Tf74GKLCU-377qgxr08EeoQ@mail.gmail.com> <e1630046-8889-4452-9f8f-07695ba07772@redhat.com>
+In-Reply-To: <e1630046-8889-4452-9f8f-07695ba07772@redhat.com>
+From: Albert Esteve <aesteve@redhat.com>
+Date: Fri, 7 Feb 2025 17:16:09 +0100
+X-Gm-Features: AWEUYZnF6uEewR9F7JdT3B1cLzxz-kUGRVOwAxRfyR8MegKqDpoCLJWu8Fphkbs
+Message-ID: <CADSE00KUeTp_C_kZPS1U2JcLiWuN1s6Se72gtFiN71kXCZx4UA@mail.gmail.com>
+Subject: Re: [PATCH v6 01/26] fuse: Fix dax truncate/punch_hole fault path
+To: David Hildenbrand <david@redhat.com>
+Cc: Stefan Hajnoczi <stefanha@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org, 
+	linux-mm@kvack.org, alison.schofield@intel.com, lina@asahilina.net, 
+	zhang.lyra@gmail.com, gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com, 
+	dave.jiang@intel.com, logang@deltatee.com, bhelgaas@google.com, jack@suse.cz, 
+	jgg@ziepe.ca, catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au, 
+	npiggin@gmail.com, dave.hansen@linux.intel.com, ira.weiny@intel.com, 
+	willy@infradead.org, djwong@kernel.org, tytso@mit.edu, linmiaohe@huawei.com, 
+	peterx@redhat.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de, 
+	david@fromorbit.com, chenhuacai@kernel.org, kernel@xen0n.name, 
+	loongarch@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>, 
+	German Maglione <gmaglione@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/7/2025 04:44, Dhananjay Ugwekar wrote:
-> Hello Mario,
-> 
-> On 2/7/2025 3:26 AM, Mario Limonciello wrote:
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> Use the perf_to_freq helpers to calculate this on the fly.
-> 
-> I think there is a benefit to having the min/max_limit_freq values cached.
-> These values help us avoid unnecessary amd_pstate_update_min_max_limit() calls in
-> majority of cases (where the policy->min/max values didnt change).
-> 
-> For the cpudata->min/max_freq values, I think there is little value in caching them,
-> i.e. only used in amd_pstate_cpu_boost_update() and show_amd_pstate_max_freq(), which
-> are not supposed to be called very frequently.
-> 
-> So, I propose we keep the cpudata->min/max_limit_freq variables and remove the
-> cpudata->min/max_freq ones. Thoughts?
+On Thu, Feb 6, 2025 at 7:22=E2=80=AFPM David Hildenbrand <david@redhat.com>=
+ wrote:
+>
+> On 06.02.25 15:59, Albert Esteve wrote:
+> > Hi!
+> >
+> > On Thu, Feb 6, 2025 at 3:30=E2=80=AFPM Stefan Hajnoczi <stefanha@redhat=
+.com> wrote:
+> >>
+> >> On Thu, Feb 06, 2025 at 08:37:07AM -0500, Vivek Goyal wrote:
+> >>> And then there are challenges at QEMU level. virtiofsd needs addition=
+al
+> >>> vhost-user commands to implement DAX and these never went upstream in
+> >>> QEMU. I hope these challenges are sorted at some point of time.
+> >>
+> >> Albert Esteve has been working on QEMU support:
+> >> https://lore.kernel.org/qemu-devel/20240912145335.129447-1-aesteve@red=
+hat.com/
+> >>
+> >> He has a viable solution. I think the remaining issue is how to best
+> >> structure the memory regions. The reason for slow progress is not
+> >> because it can't be done, it's probably just because this is a
+> >> background task.
+> >
+> > It is partially that, indeed. But what has me blocked for now on postin=
+g the
+> > next version is that I was reworking a bit the MMAP strategy.
+> > Following David comments, I am relying more on RAMBlocks and
+> > subregions for mmaps. But this turned out more difficult than anticipat=
+ed.
+>
+> Yeah, if that turns out to be too painful, we could start with the
+> previous approach and work on that later. I also did not expect that to
+> become that complicated.
 
-Yeah I can see this argument making sense and worthwhile keeping the 
-caching.  I'll modify it for the next version.
+Thanks. I'd like to do it properly, so I think will try a bit more to get i=
+t
+to work. Maybe another week. If I do not manage, I may do
+what you suggested (I'll align with you first) to move the patch forward.
 
-> 
-> Thanks,
-> Dhananjay
-> 
->>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->>   drivers/cpufreq/amd-pstate-ut.c | 14 +++----
->>   drivers/cpufreq/amd-pstate.c    | 74 ++++++++++-----------------------
->>   drivers/cpufreq/amd-pstate.h    |  8 ----
->>   3 files changed, 29 insertions(+), 67 deletions(-)
->>
->> diff --git a/drivers/cpufreq/amd-pstate-ut.c b/drivers/cpufreq/amd-pstate-ut.c
->> index 3a0a380c3590c..445278cf40b61 100644
->> --- a/drivers/cpufreq/amd-pstate-ut.c
->> +++ b/drivers/cpufreq/amd-pstate-ut.c
->> @@ -214,14 +214,14 @@ static void amd_pstate_ut_check_freq(u32 index)
->>   			break;
->>   		cpudata = policy->driver_data;
->>   
->> -		if (!((cpudata->max_freq >= cpudata->nominal_freq) &&
->> +		if (!((policy->cpuinfo.max_freq >= cpudata->nominal_freq) &&
->>   			(cpudata->nominal_freq > cpudata->lowest_nonlinear_freq) &&
->> -			(cpudata->lowest_nonlinear_freq > cpudata->min_freq) &&
->> -			(cpudata->min_freq > 0))) {
->> +			(cpudata->lowest_nonlinear_freq > policy->cpuinfo.min_freq) &&
->> +			(policy->cpuinfo.min_freq > 0))) {
->>   			amd_pstate_ut_cases[index].result = AMD_PSTATE_UT_RESULT_FAIL;
->>   			pr_err("%s cpu%d max=%d >= nominal=%d > lowest_nonlinear=%d > min=%d > 0, the formula is incorrect!\n",
->> -				__func__, cpu, cpudata->max_freq, cpudata->nominal_freq,
->> -				cpudata->lowest_nonlinear_freq, cpudata->min_freq);
->> +				__func__, cpu, policy->cpuinfo.max_freq, cpudata->nominal_freq,
->> +				cpudata->lowest_nonlinear_freq, policy->cpuinfo.min_freq);
->>   			goto skip_test;
->>   		}
->>   
->> @@ -233,13 +233,13 @@ static void amd_pstate_ut_check_freq(u32 index)
->>   		}
->>   
->>   		if (cpudata->boost_supported) {
->> -			if ((policy->max == cpudata->max_freq) ||
->> +			if ((policy->max == policy->cpuinfo.max_freq) ||
->>   					(policy->max == cpudata->nominal_freq))
->>   				amd_pstate_ut_cases[index].result = AMD_PSTATE_UT_RESULT_PASS;
->>   			else {
->>   				amd_pstate_ut_cases[index].result = AMD_PSTATE_UT_RESULT_FAIL;
->>   				pr_err("%s cpu%d policy_max=%d should be equal cpu_max=%d or cpu_nominal=%d !\n",
->> -					__func__, cpu, policy->max, cpudata->max_freq,
->> +					__func__, cpu, policy->max, policy->cpuinfo.max_freq,
->>   					cpudata->nominal_freq);
->>   				goto skip_test;
->>   			}
->> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
->> index 573643654e8d6..668377f55b630 100644
->> --- a/drivers/cpufreq/amd-pstate.c
->> +++ b/drivers/cpufreq/amd-pstate.c
->> @@ -615,8 +615,6 @@ static int amd_pstate_update_min_max_limit(struct cpufreq_policy *policy)
->>   
->>   	WRITE_ONCE(cpudata->max_limit_perf, max_limit_perf);
->>   	WRITE_ONCE(cpudata->min_limit_perf, min_limit_perf);
->> -	WRITE_ONCE(cpudata->max_limit_freq, policy->max);
->> -	WRITE_ONCE(cpudata->min_limit_freq, policy->min);
->>   
->>   	return 0;
->>   }
->> @@ -628,8 +626,7 @@ static int amd_pstate_update_freq(struct cpufreq_policy *policy,
->>   	struct amd_cpudata *cpudata = policy->driver_data;
->>   	u8 des_perf;
->>   
->> -	if (policy->min != cpudata->min_limit_freq || policy->max != cpudata->max_limit_freq)
->> -		amd_pstate_update_min_max_limit(policy);
->> +	amd_pstate_update_min_max_limit(policy);
->>   
->>   	freqs.old = policy->cur;
->>   	freqs.new = target_freq;
->> @@ -684,8 +681,7 @@ static void amd_pstate_adjust_perf(unsigned int cpu,
->>   
->>   	cpudata = policy->driver_data;
->>   
->> -	if (policy->min != cpudata->min_limit_freq || policy->max != cpudata->max_limit_freq)
->> -		amd_pstate_update_min_max_limit(policy);
->> +	amd_pstate_update_min_max_limit(policy);
->>   
->>   	cap_perf = READ_ONCE(cpudata->highest_perf);
->>   	min_limit_perf = READ_ONCE(cpudata->min_limit_perf);
->> @@ -717,7 +713,7 @@ static int amd_pstate_cpu_boost_update(struct cpufreq_policy *policy, bool on)
->>   	int ret = 0;
->>   
->>   	nominal_freq = READ_ONCE(cpudata->nominal_freq);
->> -	max_freq = READ_ONCE(cpudata->max_freq);
->> +	max_freq = perf_to_freq(cpudata, READ_ONCE(cpudata->highest_perf));
->>   
->>   	if (on)
->>   		policy->cpuinfo.max_freq = max_freq;
->> @@ -901,35 +897,25 @@ static u32 amd_pstate_get_transition_latency(unsigned int cpu)
->>   static int amd_pstate_init_freq(struct amd_cpudata *cpudata)
->>   {
->>   	int ret;
->> -	u32 min_freq, max_freq;
->> -	u32 nominal_freq, lowest_nonlinear_freq;
->> +	u32 min_freq, nominal_freq, lowest_nonlinear_freq;
->>   	struct cppc_perf_caps cppc_perf;
->>   
->>   	ret = cppc_get_perf_caps(cpudata->cpu, &cppc_perf);
->>   	if (ret)
->>   		return ret;
->>   
->> -	if (quirks && quirks->lowest_freq)
->> -		min_freq = quirks->lowest_freq;
->> -	else
->> -		min_freq = cppc_perf.lowest_freq;
->> -
->>   	if (quirks && quirks->nominal_freq)
->>   		nominal_freq = quirks->nominal_freq;
->>   	else
->>   		nominal_freq = cppc_perf.nominal_freq;
->>   
->> -	min_freq *= 1000;
->>   	nominal_freq *= 1000;
->> -
->>   	WRITE_ONCE(cpudata->nominal_freq, nominal_freq);
->> -	WRITE_ONCE(cpudata->min_freq, min_freq);
->>   
->> -	max_freq = perf_to_freq(cpudata, cpudata->highest_perf);
->> -	lowest_nonlinear_freq = perf_to_freq(cpudata, cpudata->lowest_nonlinear_perf);
->> -
->> -	WRITE_ONCE(cpudata->lowest_nonlinear_freq, lowest_nonlinear_freq);
->> -	WRITE_ONCE(cpudata->max_freq, max_freq);
->> +	if (quirks && quirks->lowest_freq) {
->> +		min_freq = quirks->lowest_freq;
->> +	} else
->> +		min_freq = cppc_perf.lowest_freq;
->>   
->>   	/**
->>   	 * Below values need to be initialized correctly, otherwise driver will fail to load
->> @@ -937,12 +923,15 @@ static int amd_pstate_init_freq(struct amd_cpudata *cpudata)
->>   	 * lowest_nonlinear_freq is a value between [min_freq, nominal_freq]
->>   	 * Check _CPC in ACPI table objects if any values are incorrect
->>   	 */
->> -	if (min_freq <= 0 || max_freq <= 0 || nominal_freq <= 0 || min_freq > max_freq) {
->> -		pr_err("min_freq(%d) or max_freq(%d) or nominal_freq(%d) value is incorrect\n",
->> -			min_freq, max_freq, nominal_freq);
->> +	if (nominal_freq <= 0) {
->> +		pr_err("nominal_freq(%d) value is incorrect\n",
->> +			nominal_freq);
->>   		return -EINVAL;
->>   	}
->>   
->> +	lowest_nonlinear_freq = perf_to_freq(cpudata, cpudata->lowest_nonlinear_perf);
->> +	WRITE_ONCE(cpudata->lowest_nonlinear_freq, lowest_nonlinear_freq);
->> +
->>   	if (lowest_nonlinear_freq <= min_freq || lowest_nonlinear_freq > nominal_freq) {
->>   		pr_err("lowest_nonlinear_freq(%d) value is out of range [min_freq(%d), nominal_freq(%d)]\n",
->>   			lowest_nonlinear_freq, min_freq, nominal_freq);
->> @@ -954,9 +943,9 @@ static int amd_pstate_init_freq(struct amd_cpudata *cpudata)
->>   
->>   static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
->>   {
->> -	int min_freq, max_freq, ret;
->> -	struct device *dev;
->>   	struct amd_cpudata *cpudata;
->> +	struct device *dev;
->> +	int ret;
->>   
->>   	/*
->>   	 * Resetting PERF_CTL_MSR will put the CPU in P0 frequency,
->> @@ -987,17 +976,11 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
->>   	if (ret)
->>   		goto free_cpudata1;
->>   
->> -	min_freq = READ_ONCE(cpudata->min_freq);
->> -	max_freq = READ_ONCE(cpudata->max_freq);
->> -
->>   	policy->cpuinfo.transition_latency = amd_pstate_get_transition_latency(policy->cpu);
->>   	policy->transition_delay_us = amd_pstate_get_transition_delay_us(policy->cpu);
->>   
->> -	policy->min = min_freq;
->> -	policy->max = max_freq;
->> -
->> -	policy->cpuinfo.min_freq = min_freq;
->> -	policy->cpuinfo.max_freq = max_freq;
->> +	policy->cpuinfo.min_freq = policy->min = perf_to_freq(cpudata, cpudata->lowest_perf);
->> +	policy->cpuinfo.max_freq = policy->max = perf_to_freq(cpudata, cpudata->highest_perf);
->>   
->>   	policy->boost_enabled = READ_ONCE(cpudata->boost_supported);
->>   
->> @@ -1021,9 +1004,6 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
->>   		goto free_cpudata2;
->>   	}
->>   
->> -	cpudata->max_limit_freq = max_freq;
->> -	cpudata->min_limit_freq = min_freq;
->> -
->>   	policy->driver_data = cpudata;
->>   
->>   	if (!current_pstate_driver->adjust_perf)
->> @@ -1081,14 +1061,10 @@ static int amd_pstate_cpu_suspend(struct cpufreq_policy *policy)
->>   static ssize_t show_amd_pstate_max_freq(struct cpufreq_policy *policy,
->>   					char *buf)
->>   {
->> -	int max_freq;
->>   	struct amd_cpudata *cpudata = policy->driver_data;
->>   
->> -	max_freq = READ_ONCE(cpudata->max_freq);
->> -	if (max_freq < 0)
->> -		return max_freq;
->>   
->> -	return sysfs_emit(buf, "%u\n", max_freq);
->> +	return sysfs_emit(buf, "%u\n", perf_to_freq(cpudata, READ_ONCE(cpudata->highest_perf)));
->>   }
->>   
->>   static ssize_t show_amd_pstate_lowest_nonlinear_freq(struct cpufreq_policy *policy,
->> @@ -1446,10 +1422,10 @@ static bool amd_pstate_acpi_pm_profile_undefined(void)
->>   
->>   static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
->>   {
->> -	int min_freq, max_freq, ret;
->>   	struct amd_cpudata *cpudata;
->>   	struct device *dev;
->>   	u64 value;
->> +	int ret;
->>   
->>   	/*
->>   	 * Resetting PERF_CTL_MSR will put the CPU in P0 frequency,
->> @@ -1480,19 +1456,13 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
->>   	if (ret)
->>   		goto free_cpudata1;
->>   
->> -	min_freq = READ_ONCE(cpudata->min_freq);
->> -	max_freq = READ_ONCE(cpudata->max_freq);
->> -
->> -	policy->cpuinfo.min_freq = min_freq;
->> -	policy->cpuinfo.max_freq = max_freq;
->> +	policy->cpuinfo.min_freq = policy->min = perf_to_freq(cpudata, cpudata->lowest_perf);
->> +	policy->cpuinfo.max_freq = policy->max = perf_to_freq(cpudata, cpudata->highest_perf);
->>   	/* It will be updated by governor */
->>   	policy->cur = policy->cpuinfo.min_freq;
->>   
->>   	policy->driver_data = cpudata;
->>   
->> -	policy->min = policy->cpuinfo.min_freq;
->> -	policy->max = policy->cpuinfo.max_freq;
->> -
->>   	policy->boost_enabled = READ_ONCE(cpudata->boost_supported);
->>   
->>   	/*
->> diff --git a/drivers/cpufreq/amd-pstate.h b/drivers/cpufreq/amd-pstate.h
->> index 19d405c6d805e..472044a1de43b 100644
->> --- a/drivers/cpufreq/amd-pstate.h
->> +++ b/drivers/cpufreq/amd-pstate.h
->> @@ -44,10 +44,6 @@ struct amd_aperf_mperf {
->>    * 		  priority.
->>    * @min_limit_perf: Cached value of the performance corresponding to policy->min
->>    * @max_limit_perf: Cached value of the performance corresponding to policy->max
->> - * @min_limit_freq: Cached value of policy->min (in khz)
->> - * @max_limit_freq: Cached value of policy->max (in khz)
->> - * @max_freq: the frequency (in khz) that mapped to highest_perf
->> - * @min_freq: the frequency (in khz) that mapped to lowest_perf
->>    * @nominal_freq: the frequency (in khz) that mapped to nominal_perf
->>    * @lowest_nonlinear_freq: the frequency (in khz) that mapped to lowest_nonlinear_perf
->>    * @cur: Difference of Aperf/Mperf/tsc count between last and current sample
->> @@ -77,11 +73,7 @@ struct amd_cpudata {
->>   	u8	prefcore_ranking;
->>   	u8	min_limit_perf;
->>   	u8	max_limit_perf;
->> -	u32     min_limit_freq;
->> -	u32     max_limit_freq;
->>   
->> -	u32	max_freq;
->> -	u32	min_freq;
->>   	u32	nominal_freq;
->>   	u32	lowest_nonlinear_freq;
->>   
-> 
+That said, if I end up doing that, I will definitively revisit it later.
+
+BR,
+Albert.
+
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
 
