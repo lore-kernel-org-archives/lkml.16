@@ -1,191 +1,81 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A74323C8BA;
-	Fri,  7 Feb 2025 16:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A507723C8BA;
+	Fri,  7 Feb 2025 16:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738944289; cv=none; b=Y+9l9iJ6qdAtz/4091ef43P/oBFNIEs2TtqYUjrZmtTqWuRalcrkInOAG87QtAW8OyVUc2vHQsCfS/rAVTqzm185jDK8Corf+4PDjo5qwcWxbNOZ67vMZxj9F0QpRWC1ZHQeyBhylZhPNIsuu50z1xtJ2iRzhCSU3pzoQzp/oFI=
+	t=1738944383; cv=none; b=EGhU0rbyKE2qfVmNw3kou9q3srZcmkLeW3fKDcEXrfCWMwlssEgGbQxaKqavE14qanKZudXNBXgwRRkRG7NsL43jkbGfYBZvLUXakLp2TZV/eC4VmwhDepxkVtDvMoIUCAtGLYUjaqANjm5beBwDM1cWSnbv+RkgmbcBeIWb6UA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738944289; c=relaxed/simple;
-	bh=g+ioff1W9d9VIqgoyYiXcKhKmAiaZ+9IcYUPuV414Wo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=D5uz23VYhbE3in8pKCVq8bJQYcdxwTJJpBZZ/qerZs+JhV2XAFibYGCdbkrc8Sw7NtgTpDW8oUzm/2Po9lbJLyh23RxlALOAsNKRFrdNQkZsQ1BEs3cmFjJXMtu/2NPsqqGyOlEBtJszxyuUSTbM0e6nkZCgCdtuGucLB4NOxQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KH1oL2w5; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738944383; c=relaxed/simple;
+	bh=HnHgKw5S43ISE7VAWcFFXSGNAVbgSBW92k7zYjpnP+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FLhZaPk8k4yzmQWFufOStTcfxPQezC9ZoCFRG4Wyo/eY13UG2ENoQJKqYElxE/SK0bWkNu17txJ4cPhvNUTQsq9jbbyCcPqZSANbx5P8GVexmzBpcqP2e0HGtdTQLI/xoAGasnyc4hb3yrGMAPDuw3YINQ8pt+n3z0az1Fx6PwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RKRyN7DX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KH1oL2w5"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517EBqNR028628;
-	Fri, 7 Feb 2025 16:04:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=9XMr2A
-	CuOZ3DXn0CmvjvXygdp2UhUHb82FDmLJ1f7Mw=; b=KH1oL2w5rXOhVP8PvS7o4x
-	NSECp8u6spVG23L5twI5ZxV7NEsEiudzYaEB5J2CqN2aeWvjHJP0vPzVszUJzkLZ
-	RKmw86ycxoSTLEQLfAIiMFvx5x3C/8iIoQdQny1VOVTZb1vrUQH4poziNAoBnbYT
-	9/N9Z/znXUe7pKShVtt2aErXnwrpx2NT60nXBIwbPhmKrfrWzFPlaHOhqmX2lBzT
-	YaKiVqteD4SflRoTP92BniUECbDEA3hADe+egmSsg76pniIPLtF3KHcsps7v4ok3
-	+1RPyVNHptHuW3RpconkQ1A9dhGRBMbsQ8h5wmI3sPNIyJM4NMcC3mu6/RWvYDmg
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44n910bngf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 16:04:24 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 517CJfj6005266;
-	Fri, 7 Feb 2025 16:04:23 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j05kc1qu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 16:04:23 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 517G4MHB35127878
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Feb 2025 16:04:23 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A1FA558052;
-	Fri,  7 Feb 2025 16:04:22 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 97C6D5805E;
-	Fri,  7 Feb 2025 16:04:21 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.150.111])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  7 Feb 2025 16:04:21 +0000 (GMT)
-Message-ID: <aa75c604583ba982507dd2ad77668d0f2fb18962.camel@linux.ibm.com>
-Subject: Re: [PATCH v7 6/7] ima: make the kexec extra memory configurable
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com
-Date: Fri, 07 Feb 2025 11:04:21 -0500
-In-Reply-To: <20250203232033.64123-8-chenste@linux.microsoft.com>
-References: <20250203232033.64123-1-chenste@linux.microsoft.com>
-	 <20250203232033.64123-8-chenste@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RKRyN7DX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A347C4CED1;
+	Fri,  7 Feb 2025 16:06:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738944383;
+	bh=HnHgKw5S43ISE7VAWcFFXSGNAVbgSBW92k7zYjpnP+c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RKRyN7DXTTFGL2kajCIA3dkNOWGDeGB1cTDOn7RTq96CkOiMw9/nBJFQmyzjwgQX9
+	 BQ1zs7UdI0G+aitry/eU23E0tzlNe4zbUy1SOYF3iOo0Vb6ecfgymKljJ0feHTpk2j
+	 1OZVyuU3Ty7S3YMjSPGxFrA/8Kfjrl1xsykooUKzFOC2y7RmTQZC+ml/Z+QxrkJ3Ex
+	 jgFqzZ4sKikPY5jSve7yyqpcdfYiuvDey3QdKKstyme5vfTa0AZNL1H7E+Hc+v4QVG
+	 CMd5LT/EBiFvvkac1DgN0OJLrhdqYqaZP2Mu5hH99y3kYjb1eFGFk2s3dfEkY9QlLZ
+	 rH3uRlY5Mi3Vw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tgQsC-000000004Uq-21Bm;
+	Fri, 07 Feb 2025 17:06:32 +0100
+Date: Fri, 7 Feb 2025 17:06:32 +0100
+From: Johan Hovold <johan@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Linux PCI <linux-pci@vger.kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kevin Xie <kevin.xie@starfivetech.com>,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
+ parents and children
+Message-ID: <Z6YviAFD4Az3EIBa@hovoldconsulting.com>
+References: <12619233.O9o76ZdvQC@rjwysocki.net>
+ <1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com>
+ <Z6YPpbRF_U0TxAbf@hovoldconsulting.com>
+ <Z6YcjFBWAVVVANf2@hovoldconsulting.com>
+ <CAJZ5v0iHjkfoh2A+hAmMCTG9_nBcJrsRYFD0Hp4ZChYUo7bFEg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: UiSiqQgDhdjG_i3TiKAZ_xBBrQZHIQ7Q
-X-Proofpoint-GUID: UiSiqQgDhdjG_i3TiKAZ_xBBrQZHIQ7Q
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_07,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 spamscore=0 malwarescore=0 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502070121
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0iHjkfoh2A+hAmMCTG9_nBcJrsRYFD0Hp4ZChYUo7bFEg@mail.gmail.com>
 
-Hi Steven,
+On Fri, Feb 07, 2025 at 04:41:18PM +0100, Rafael J. Wysocki wrote:
+> On Fri, Feb 7, 2025 at 3:45 PM Johan Hovold <johan@kernel.org> wrote:
+> > On Fri, Feb 07, 2025 at 02:50:29PM +0100, Johan Hovold wrote:
 
-On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
-> The extra memory allocated for carrying the IMA measurement list across
-> kexec is hard-coded as half a PAGE.=C2=A0 Make it configurable.
->=20
-> Define a Kconfig option, IMA_KEXEC_EXTRA_MEMORY_KB, to configure the
-> extra memory (in kb) to be allocated for IMA measurements added during
-> kexec soft reboot.=C2=A0 Ensure the default value of the option is set su=
-ch
-> that extra half a page of memory for additional measurements is allocated
-> for the additional measurements.
->=20
-> Update ima_add_kexec_buffer() function to allocate memory based on the
-> Kconfig option value, rather than the currently hard-coded one.
->=20
-> From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> ---
-> =C2=A0security/integrity/ima/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0 | 10 +++++++=
-+++
-> =C2=A0security/integrity/ima/ima_kexec.c | 16 ++++++++++------
-> =C2=A02 files changed, 20 insertions(+), 6 deletions(-)
->=20
-> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kcon=
-fig
-> index 475c32615006..54b145ae6096 100644
-> --- a/security/integrity/ima/Kconfig
-> +++ b/security/integrity/ima/Kconfig
-> @@ -321,4 +321,14 @@ config IMA_DISABLE_HTABLE
-> =C2=A0	help
-> =C2=A0	=C2=A0=C2=A0 This option disables htable to allow measurement of d=
-uplicate records.
-> =C2=A0
-> +config IMA_KEXEC_EXTRA_MEMORY_KB
-> +	int "Extra memory for IMA measurements added during kexec soft reboot"
-> +	depends on IMA_KEXEC
-> +	default 0
-> +	help
-> +	=C2=A0 IMA_KEXEC_EXTRA_MEMORY_KB determines the extra memory to be
-> +	=C2=A0 allocated (in kb) for IMA measurements added during kexec soft r=
-eboot.
-> +	=C2=A0 If set to the default value, an extra half a page of memory for =
-those
-> +	=C2=A0 additional measurements will be allocated.
+> > Ok, so the driver data is never set and runtime PM is never enabled for
+> > this simple bus device, which uses pm_runtime_force_suspend() for system
+> > sleep.
+> 
+> This is kind of confusing.  Why use pm_runtime_force_suspend() if
+> runtime PM is never enabled and cannot really work?
 
--> If set to the default value of 0, an extra half page ...
+It's only done for some buses that this driver handles. The driver is
+buggy; I'm preparing a fix for it regardless of the correctness of the
+commit that now triggered this.
 
-> +
-> =C2=A0endif
-> diff --git a/security/integrity/ima/ima_kexec.c
-> b/security/integrity/ima/ima_kexec.c
-> index d5f004cfeaec..c9c916f69ca7 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -128,22 +128,26 @@ void ima_add_kexec_buffer(struct kimage *image)
-> =C2=A0				=C2=A0 .buf_min =3D 0, .buf_max =3D ULONG_MAX,
-> =C2=A0				=C2=A0 .top_down =3D true };
-> =C2=A0	unsigned long binary_runtime_size;
-> -
-> +	unsigned long extra_size;
-> =C2=A0	/* use more understandable variable names than defined in kbuf */
-> =C2=A0	void *kexec_buffer =3D NULL;
-> =C2=A0	size_t kexec_buffer_size =3D 0;
-> =C2=A0	int ret;
-> =C2=A0
-> =C2=A0	/*
-> -	 * Reserve an extra half page of memory for additional measurements
-> -	 * added during the kexec load.
-> +	 * Reserve extra memory for measurements added during kexec.
-> =C2=A0	 */
-
-Please rename the variable from "extra_size" to "extra_memory".
-
-thanks,
-
-Mimmi
-
-> -	binary_runtime_size =3D ima_get_binary_runtime_size();
-> +	if (CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB <=3D 0)
-> +		extra_size =3D PAGE_SIZE / 2;
-> +	else
-> +		extra_size =3D CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB * 1024;
-> +	binary_runtime_size =3D ima_get_binary_runtime_size() + extra_size;
-> +
-> =C2=A0	if (binary_runtime_size >=3D ULONG_MAX - PAGE_SIZE)
-> =C2=A0		kexec_segment_size =3D ULONG_MAX;
-> =C2=A0	else
-> -		kexec_segment_size =3D ALIGN(ima_get_binary_runtime_size() +
-> -					=C2=A0=C2=A0 PAGE_SIZE / 2, PAGE_SIZE);
-> +		kexec_segment_size =3D ALIGN(binary_runtime_size, PAGE_SIZE);
-> +
-> =C2=A0	if ((kexec_segment_size =3D=3D ULONG_MAX) ||
-> =C2=A0	=C2=A0=C2=A0=C2=A0 ((kexec_segment_size >> PAGE_SHIFT) > totalram_=
-pages() / 2)) {
-> =C2=A0		pr_err("Binary measurement list too large.\n");
-
+Johan
