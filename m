@@ -1,155 +1,230 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BCB218FDC9
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 19:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875EA10E5;
+	Fri,  7 Feb 2025 19:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738955409; cv=none; b=TGflu0KiyVbWTlUWIUigLgT2DQbNGpaUYMD6YGv10f8hcJfNTc13qFXv5UyTMnX5l3OHdd0ZgMve5Nv5jZUSNjJWsjvEUzFhe1nE91tXk3WY7Th1jZn9wOJprH7WSsls43MRehduBGJ+HcSMAm7m4uW3JTeo7uG7JpHPNItXpOY=
+	t=1738955469; cv=none; b=RTA1IZkvcu+vjJwtSs7/qMtKwsP7YvP2RAiLp+aMCwO+wBX2J6YmCmf1gqc9iwlqBpikj85Tqahf6UMmxLb4os9M1DVph9smvl2PGdyLAmq2CnSUdWLVXWjBCJOpIo/RrGpwOJQGGhNf0bhwmjPHxkkYckG+v776EYXjWtKNolY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738955409; c=relaxed/simple;
-	bh=L3hBF+iQrBKTRIa3wKiXJJ/OQyIh4KsyTMz0Xy+5S4A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sTe7Z7cuK+4KUHt3OESg7v/3lEGFHTRIdif3iEXtyZRZmceZL7kQzLT1KxhHz98NWQvXDniTbxjytoGUotSLHPlxWxC4s5eRLmrD9J7Me1Ow3nfFmGE+3kDpmPZQ9CYHZttWEF/0vyII8FP/hHhH7Emb+mBXSrzAqPA2AYs+SzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=GKim8lt4; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1738955469; c=relaxed/simple;
+	bh=DJuLtTjfrvQjqJ4tHfAAS2f216HEzMWW3ZHgrNo24Bw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FZoYdmIlIlm3KCIxs9tCMb9s+QQCyvOlRiMtKw5eUiop51PZvvlLkjyd8eW5MgsedsxHbH45KP1h9WxYSZApGmz9+zYD50d1blZWpK+CDytUfslRIsEYSYe4LZwNgvMtD7zuIgTevvKUYtBxj6iOpyX0TPZ/D/chShWOPunFU3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aX7z8Xh8; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="GKim8lt4"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6f9625c0fccso23789547b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 11:10:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1738955406; x=1739560206; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Om2VSE738EF+Gy11pRhlx9VqvfBmWOXzuPiTJvCwuz4=;
-        b=GKim8lt4SXP5kCoh/4cTxGCOS0NFKc37s/H8tESJs+gNOMv7ToQFj9aCC6gXDOyZFW
-         HLxSttUGftYuYAnyZLRg40Zjxvlf+AWJp8XZhkFbbWk1U2XHw2B6BMJCaOy4FE3fPdpW
-         Unfpfmv2KhLrQ0n6jpymXy/CUq2x15XKxIBQ0mhxWAURjkNVKfJwfsEDRlZ88+bThbLy
-         S7h6oS6qz2gkxd30lZv9rMUCNFRCH6fquC2+bZCWmiLNNARvDStxMgbCi1NfsA9chIbC
-         +jyROlyUVDutZjFEJL45IVc2NMcmVq07hYptArEUCcGxbrzeWHvGJD2J5f1lTQrXqPxp
-         7fhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738955406; x=1739560206;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Om2VSE738EF+Gy11pRhlx9VqvfBmWOXzuPiTJvCwuz4=;
-        b=VF4PDh9ynCwKj1BPJ6zPY6q+OAlQAam592eMvKwUzqUgIfvtHJ9J+FCCi4NPrqn3HS
-         v7/MaCC7XmXmIlWMjEsxcl0tAorJ90DArtNKK49/MG7AUVsSrpr/vvRhmQysiu3vtYJg
-         8ngtKZrIMfDN/d4Bl6+2LCw6KUD9akv5qk3hQHb0orEET5TxH/bgFdwGrT4KvYHZH/iK
-         2byTvecDQB/03UtM1w2xfLwqk4BtmncHKIP1J8M/zmtiYjEpG/1TDvIqrtIORQCljv4r
-         p8oHF+OLUB22iOqI8xKCqEsUPnvBuWyNDEMpzn/7Pighu/m4UPKM04BD0blOS5ckkfB4
-         iNvg==
-X-Forwarded-Encrypted: i=1; AJvYcCUtgYaGgpqPLDuW1W1myrPicQInyhQknlpxozJixoaH6P+akPlNMLprH+8SeiYFn2vm/4C4NfvbaHOrhEY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz478Aq//GCVYqq/9LPcZhLM0S6bQ4M/QwITiJfkR4GnvwnWi7G
-	S+6/qeaVot9yXt65paJq6NeIoOm2J0yFuBF6HfyaNDzDEWSgV1Rl9DacgPYyeXDt7WlsovtHeKk
-	+9jtlHOFzm3yQJsVr4svW/0wTpeILhu4to4gU
-X-Gm-Gg: ASbGncu/JtQ83A5GgNXJCMhPTwE2/FT1mqo5yDOoW0QjA2FYTfPMnUGkfdrEqL6cZYz
-	4Yz/WWvgkZ9TTCiZEKMWzD+lmzQN13giJH0vDJDGr2oI6e+qED9p60vZ2v6sbd6RWc+0ZMLk=
-X-Google-Smtp-Source: AGHT+IGK+1YaMF/yB5tZ88LHxwIuQM3/Gj8AOscWWTmOeYR+q9GoKPuGwr2TcabPJS4LqujSyvfXsbiPIUAyuUzPzSo=
-X-Received: by 2002:a05:690c:3804:b0:6f9:97bd:5a63 with SMTP id
- 00721157ae682-6f9b2844e3cmr39923927b3.4.1738955406214; Fri, 07 Feb 2025
- 11:10:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aX7z8Xh8"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517Hc8H6004422;
+	Fri, 7 Feb 2025 19:10:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=ZFrW49
+	+Epm/QRPQlGO4LNK3NBVsNDkvRNdGiTRRz3oo=; b=aX7z8Xh8Gae3wzDbqnDo9v
+	ivhvizxT73A7ioZ6QfW+BOmKp5h+iQ15bQo60qqsRgRcfCeaETCT7vVYn3+QOA38
+	Sph4SMrd3WtX32rfd4lv5jzLhRCoRwqeobX9D2AFeEnv01EMq5+v6z9wNgP8YsQ9
+	u1laprOsb+/1zGPM00bB+j1tLc1/Jkv8aooIW//DfWI8F7RwNOUTzG8fRlpjmrse
+	M/Zt7vDnC/aw9lEPh9NyHna4uwBpnFdEE2fDT6e1DeawTo5OMheoUs9IWwq3/cIO
+	yhMoUJg2PHgbjP4pqBoIfm2jHCYYf7O5MUIEmSmrSnwJe4U407shKQ26f6K0kwVg
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44nfn5jwns-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Feb 2025 19:10:36 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 517H0QAV021508;
+	Fri, 7 Feb 2025 19:10:35 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j0n1vqs5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Feb 2025 19:10:35 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 517JAZfD65077650
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Feb 2025 19:10:35 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1B8F15805D;
+	Fri,  7 Feb 2025 19:10:35 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E0F1858043;
+	Fri,  7 Feb 2025 19:10:32 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.80.253])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  7 Feb 2025 19:10:32 +0000 (GMT)
+Message-ID: <1a7e9cf84715386b7ac3dc2103fd38ba180dd216.camel@linux.ibm.com>
+Subject: Re: [PATCH v7 1/7] ima: define and call ima_alloc_kexec_file_buf
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com
+Date: Fri, 07 Feb 2025 14:10:32 -0500
+In-Reply-To: <20250203232033.64123-2-chenste@linux.microsoft.com>
+References: <20250203232033.64123-1-chenste@linux.microsoft.com>
+	 <20250203232033.64123-2-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207034040.3402438-1-neilb@suse.de> <20250207034040.3402438-2-neilb@suse.de>
-In-Reply-To: <20250207034040.3402438-2-neilb@suse.de>
-From: Paul Moore <paul@paul-moore.com>
-Date: Fri, 7 Feb 2025 14:09:55 -0500
-X-Gm-Features: AWEUYZl_WdQaatK919wx4Q8t6Nn6ccb6OCvCp4tV_BELcL0JYxwXteOCsEvAF2g
-Message-ID: <CAHC9VhTnVg-5C75qY8NkfKs4tjbVz62Vk=SVXS2mwH0f3ftLhQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
- user_path_locked_at() to never return negative dentry
-To: NeilBrown <neilb@suse.de>
-Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Namjae Jeon <linkinjeon@kernel.org>, Steve French <sfrench@samba.org>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Tom Talpey <tom@talpey.com>, 
-	Eric Paris <eparis@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, audit@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 7QGSpxPfaoZwyEkN0gvx2kdN2Zxuv-kP
+X-Proofpoint-GUID: 7QGSpxPfaoZwyEkN0gvx2kdN2Zxuv-kP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_09,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ suspectscore=0 mlxscore=0 adultscore=0 priorityscore=1501 bulkscore=0
+ mlxlogscore=999 clxscore=1015 spamscore=0 impostorscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502070142
 
-On Thu, Feb 6, 2025 at 10:41=E2=80=AFPM NeilBrown <neilb@suse.de> wrote:
->
-> No callers of kern_path_locked() or user_path_locked_at() want a
-> negative dentry.  So change them to return -ENOENT instead.  This
-> simplifies callers.
->
-> This results in a subtle change to bcachefs in that an ioctl will now
-> return -ENOENT in preference to -EXDEV.  I believe this restores the
-> behaviour to what it was prior to
->  Commit bbe6a7c899e7 ("bch2_ioctl_subvolume_destroy(): fix locking")
->
-> Signed-off-by: NeilBrown <neilb@suse.de>
+On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
+> Carrying the IMA measurement list across kexec requires allocating a
+> buffer and copying the measurement records.=C2=A0 Separate allocating the
+> buffer and copying the measurement records into separate functions in
+> order to allocate the buffer at kexec 'load' and copy the measurements
+> at kexec 'execute'.
+>=20
+> This patch includes the following changes:
+> =C2=A0- Refactor ima_dump_measurement_list() to move the memory allocatio=
+n
+> =C2=A0=C2=A0 to a separate function ima_alloc_kexec_file_buf() which allo=
+cates
+> =C2=A0=C2=A0 buffer of size 'kexec_segment_size' at kexec 'load'.
+> =C2=A0- Make the local variable ima_kexec_file in ima_dump_measurement_li=
+st()
+> =C2=A0=C2=A0 a local static to the file, so that it can be accessed from=
+=20
+> =C2=A0=C2=A0 ima_alloc_kexec_file_buf(). Compare actual memory required t=
+o ensure=20
+> =C2=A0=C2=A0 there is enough memory for the entire measurement record.
+> =C2=A0- Copy as many measurement events as possible.
+> =C2=A0- Make necessary changes to the function ima_add_kexec_buffer() to =
+call
+> =C2=A0=C2=A0 the above two functions.
+> =C2=A0- Compared the memory size allocated with memory size of the entire=
+=20
+> =C2=A0=C2=A0 measurement record. If there is not enough memory, it will c=
+opy as many
+> =C2=A0=C2=A0 IMA measurement records as possible, and this situation will=
+ result
+> =C2=A0=C2=A0 in a failure of remote attestation.
+>=20
+> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Signed-off-by: steven chen <chenste@linux.microsoft.com>
 > ---
->  drivers/base/devtmpfs.c | 65 +++++++++++++++++++----------------------
->  fs/bcachefs/fs-ioctl.c  |  4 ---
->  fs/namei.c              |  4 +++
->  kernel/audit_watch.c    | 12 ++++----
->  4 files changed, 40 insertions(+), 45 deletions(-)
-
-...
-
-> diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
-> index 7f358740e958..e3130675ee6b 100644
-> --- a/kernel/audit_watch.c
-> +++ b/kernel/audit_watch.c
-> @@ -350,11 +350,10 @@ static int audit_get_nd(struct audit_watch *watch, =
-struct path *parent)
->         struct dentry *d =3D kern_path_locked(watch->path, parent);
->         if (IS_ERR(d))
->                 return PTR_ERR(d);
-> -       if (d_is_positive(d)) {
-> -               /* update watch filter fields */
-> -               watch->dev =3D d->d_sb->s_dev;
-> -               watch->ino =3D d_backing_inode(d)->i_ino;
-> -       }
-> +       /* update watch filter fields */
-> +       watch->dev =3D d->d_sb->s_dev;
-> +       watch->ino =3D d_backing_inode(d)->i_ino;
+> =C2=A0security/integrity/ima/ima.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0=C2=A0 1 +
+> =C2=A0security/integrity/ima/ima_kexec.c | 105 +++++++++++++++++++++-----=
+---
+> =C2=A0security/integrity/ima/ima_queue.c |=C2=A0=C2=A0 4 +-
+> =C2=A03 files changed, 80 insertions(+), 30 deletions(-)
+>=20
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index 3c323ca213d4..447a6eb07c2d 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -274,6 +274,7 @@ bool ima_template_has_modsig(const struct ima_templat=
+e_desc
+> *ima_template);
+> =C2=A0int ima_restore_measurement_entry(struct ima_template_entry *entry)=
+;
+> =C2=A0int ima_restore_measurement_list(loff_t bufsize, void *buf);
+> =C2=A0int ima_measurements_show(struct seq_file *m, void *v);
+> +int ima_get_binary_runtime_entry_size(struct ima_template_entry *entry);
+> =C2=A0unsigned long ima_get_binary_runtime_size(void);
+> =C2=A0int ima_init_template(void);
+> =C2=A0void ima_init_template_list(void);
+> diff --git a/security/integrity/ima/ima_kexec.c
+> b/security/integrity/ima/ima_kexec.c
+> index 52e00332defe..b60a902460e2 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -15,62 +15,99 @@
+> =C2=A0#include "ima.h"
+> =C2=A0
+> =C2=A0#ifdef CONFIG_IMA_KEXEC
+> +static struct seq_file ima_kexec_file;
 > +
->         inode_unlock(d_backing_inode(parent->dentry));
->         dput(d);
->         return 0;
-> @@ -419,7 +418,7 @@ int audit_add_watch(struct audit_krule *krule, struct=
- list_head **list)
->         /* caller expects mutex locked */
->         mutex_lock(&audit_filter_mutex);
->
-> -       if (ret) {
-> +       if (ret && ret !=3D -ENOENT) {
->                 audit_put_watch(watch);
->                 return ret;
->         }
-> @@ -438,6 +437,7 @@ int audit_add_watch(struct audit_krule *krule, struct=
- list_head **list)
->
->         h =3D audit_hash_ino((u32)watch->ino);
->         *list =3D &audit_inode_hash[h];
-> +       ret =3D 0;
+> +static void ima_reset_kexec_file(struct seq_file *sf)
+> +{
+> +	sf->buf =3D NULL;
+> +	sf->size =3D 0;
+> +	sf->read_pos =3D 0;
+> +	sf->count =3D 0;
+> +}
+> +
+> +static void ima_free_kexec_file_buf(struct seq_file *sf)
+> +{
+> +	vfree(sf->buf);
+> +	ima_reset_kexec_file(sf);
+> +}
+> +
+> +static int ima_alloc_kexec_file_buf(size_t segment_size)
+> +{
+> +	/*
+> +	 * kexec 'load' may be called multiple times.
+> +	 * Free and realloc the buffer only if the segment_size is
+> +	 * changed from the previous kexec 'load' call.
+> +	 */
+> +	if (ima_kexec_file.buf &&
+> +		(ima_kexec_file.size =3D=3D segment_size)) {
+> +		goto out;
+> +	}
 
-If you have to respin this patch for any reason I'd prefer to move the
-'ret =3D 0' up to just after the if block you're modifying in the chunk
-above, but that's a trivial nitpick so please don't respin only for
-that.  Otherwise it looks fine to me from an audit perspective.
+Nice cleanup from v5.  The line doesn't doesn't need to be split.  Both the
+parenthesis and the brackets can be removed.
 
-Acked-by: Paul Moore <paul@paul-moore.com> (Audit)
+In the future, before posting patches, please use scripts/checkpatch.pl.
 
->  error:
->         path_put(&parent_path);
->         audit_put_watch(watch);
-> --
-> 2.47.1
+CHECK: Unnecessary parentheses around 'ima_kexec_file.size =3D=3D segment_s=
+ize'
+#82: FILE: security/integrity/ima/ima_kexec.c:41:
++	if (ima_kexec_file.buf &&
++		(ima_kexec_file.size =3D=3D segment_size)) {
 
---=20
-paul-moore.com
+CHECK: Alignment should match open parenthesis
+#83: FILE: security/integrity/ima/ima_kexec.c:42:
++	if (ima_kexec_file.buf &&
++		(ima_kexec_file.size =3D=3D segment_size)) {
+
+Or simply join the two lines.
+
+thanks,
+
+Mimi
+
+> +
+> +	ima_free_kexec_file_buf(&ima_kexec_file);
+> +
+> +	/* segment size can't change between kexec load and execute */
+> +	ima_kexec_file.buf =3D vmalloc(segment_size);
+> +	if (!ima_kexec_file.buf)
+> +		return -ENOMEM;
+> +
+> +	ima_kexec_file.size =3D segment_size;
+> +
+> +out:
+> +	ima_kexec_file.read_pos =3D 0;
+> +	ima_kexec_file.count =3D sizeof(struct ima_kexec_hdr);	/* reserved spac=
+e
+> */
+> +
+> +	return 0;
+> +}
+>=20
+
