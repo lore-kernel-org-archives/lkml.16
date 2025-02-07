@@ -1,88 +1,151 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5304E18E050;
-	Fri,  7 Feb 2025 17:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2806199EAD;
+	Fri,  7 Feb 2025 17:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738950678; cv=none; b=dVr5BSxuxNstNjPb1D9VXO260nuBEOqUDRCJksb6TNsfA0z0BCgR4R7lZaedzJ7FaRzhxPJ0Iz3JUu7Gzr7aXZF/FSrvNJRYTDF81Ywp0i6HATyDhPUvpXAy5kG5ZMpR2cWO4kj0MtiyR4TquxCacYzyA5lB19WZCY2alJbhUuo=
+	t=1738950707; cv=none; b=PCWW2eNs0kJq2LrpEIyspRs9ZqSS7EOmiUNDhcFYAQV3GeTazGSXgH0VnqyhiTFFLsUPXJD8f1X17Omi0Bug9Qe8Hqzdq1gUZFMod2MmISuxJKcLTIYRcy+xblovLKAvT4KugvAPr+oEG5hA/F68px9LU7hzzlpfVdx+EQfxq48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738950678; c=relaxed/simple;
-	bh=MPsbYwDUYNurUngqJp6G/NBnW5xTPrQhzn/NqyWKp/I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ju2hpJ/z5DsxS5jiSoD3QA78k1IhkPl6d6MmPAv1cF92wePu1Fgvzuwwg9LQekTOQEgd+vsQ8M4hI0oR7srBVnBtVFE71ygM0tXIB1MYv9wWr8oeCv93w576iIDTOcbKAS93gK98+hFTIzaU2F3F9W5cc2yKBzH4qJpFUH87vgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=4p0Wz68f; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="4p0Wz68f"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4YqM383gzPz6CmQyW;
-	Fri,  7 Feb 2025 17:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1738950670; x=1741542671; bh=arZC9itOZYPHb4htpROweMNR
-	ItRM9wRu6g3C03a4eNw=; b=4p0Wz68fs9rAFvaE6K+Pcnw03c8oypR+LYtDCAWe
-	4MZxuL392j8HAiu+d4K0EtwY9DMs53aDzTL6wxzRY3NyUkil8G5dQYZKq7kLKC1U
-	pPyZWAWLVj3TaOolA4lGnbv0TDRrhGqdL48OnDhVlE0985t/i7tnXF0rPUjBmX3Q
-	I5tLJbBxNzkjx5l1t/yag8XGTS7AYSHPBdYEHkvm4/dr1L382tLQKFwQB39JfhUD
-	AfvwTs2XQo8vLlBF7tYYWILOlcxdZqQRJVAfSMUnPb4vTKESzDckohXqZADMdYDB
-	yv/MtpqEPDvoqzF5zNuGuDz7+nsluGg9R3UO9woX1CLi2g==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id QRwso-HXEgj6; Fri,  7 Feb 2025 17:51:10 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4YqM2y6hzWz6CmR1W;
-	Fri,  7 Feb 2025 17:51:06 +0000 (UTC)
-Message-ID: <ad4bd008-8d0d-439b-879c-e9cf4c89ec56@acm.org>
-Date: Fri, 7 Feb 2025 09:51:05 -0800
+	s=arc-20240116; t=1738950707; c=relaxed/simple;
+	bh=rkkvhqtEzofwzaBkz7yI6KzMgFVV2iQuryfGF1GTSx4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dLR+DuJy1Aqny+cRu20rmAVp6uiqirH2VNo2l+k3h5+urRYj7N367uTJCRFZ//UDQMiRBTiB0bWuQugb4JdeWf9QJLOpT4/N0i6sYi6iJ92PztudP7v2qfx0iJI1LmL+dJQlQT4tDduMxUKwJXUR/UPXaw94NT+Oswpl5zOF4Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YqM0z14y4z6M4JK;
+	Sat,  8 Feb 2025 01:49:23 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1AF6B14034D;
+	Sat,  8 Feb 2025 01:51:42 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Feb
+ 2025 18:51:41 +0100
+Date: Fri, 7 Feb 2025 17:51:39 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Robert Richter <rrichter@amd.com>
+CC: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Davidlohr
+ Bueso" <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Gregory Price <gourry@gourry.net>, "Fabio M.
+ De Francesco" <fabio.m.de.francesco@linux.intel.com>, Terry Bowman
+	<terry.bowman@amd.com>
+Subject: Re: [PATCH v1 28/29] cxl/region: Show message on broken target list
+Message-ID: <20250207175139.00007ad6@huawei.com>
+In-Reply-To: <Z6UoXDqmh3ARH_10@rric.localdomain>
+References: <20250107141015.3367194-1-rrichter@amd.com>
+	<20250107141015.3367194-29-rrichter@amd.com>
+	<20250114111641.00001cf5@huawei.com>
+	<Z6UoXDqmh3ARH_10@rric.localdomain>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] scsi: Bypass certain SCSI commands on disks with
- "use_192_bytes_for_3f" attribute
-To: WangYuli <wangyuli@uniontech.com>, James.Bottomley@HansenPartnership.com,
- martin.petersen@oracle.com
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
- stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
- zhanjun@uniontech.com, guanwentao@uniontech.com, chenlinxuan@uniontech.com,
- Xinwei Zhou <zhouxinwei@uniontech.com>, Xu Rao <raoxu@uniontech.com>,
- Yujing Ming <mingyujing@uniontech.com>
-References: <5653B7D4FD7224D2+20250207091723.258095-1-wangyuli@uniontech.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <5653B7D4FD7224D2+20250207091723.258095-1-wangyuli@uniontech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 2/7/25 1:17 AM, WangYuli wrote:
-> +	/* Bofore we queue this comman, check attribute use_192_bytes_for_3f */
+On Thu, 6 Feb 2025 22:23:40 +0100
+Robert Richter <rrichter@amd.com> wrote:
 
-Please replace this source code comment with a comment that explains why 
-the code below is necessary. The above comment duplicates the code below
-rather than explaining something that cannot be derived from the code
-easily. Additionally, there are spelling errors in the above comment.
+> On 14.01.25 11:16:41, Jonathan Cameron wrote:
+> > On Tue, 7 Jan 2025 15:10:14 +0100
+> > Robert Richter <rrichter@amd.com> wrote:
+> >   
+> > > Broken target lists are hard to discover as the driver fails at a
+> > > later initialization stage. Add an error message for this.
+> > > 
+> > > Signed-off-by: Robert Richter <rrichter@amd.com>
+> > > ---
+> > >  drivers/cxl/core/region.c | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > > 
+> > > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > > index 775450a1a887..2af3b6c14f46 100644
+> > > --- a/drivers/cxl/core/region.c
+> > > +++ b/drivers/cxl/core/region.c
+> > > @@ -1870,6 +1870,13 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+> > >  	}
+> > >  	put_device(dev);
+> > >  
+> > > +	if (rc)
+> > > +		dev_err(port->uport_dev,
+> > > +			"failed to find %s:%s in target list of %s\n",
+> > > +			dev_name(&port->dev),
+> > > +			dev_name(port->parent_dport->dport_dev),
+> > > +			dev_name(&cxlsd->cxld.dev));
+> > > +
+> > >  	return rc;
+> > >  }  
+> > This function would benefit from some __free() magic dust.
+> > Then we could return in the good path in the loop and not need the if (rc)
+> > check here.  
+> 
+> That does not really simplify the code. It would just this one
+> indentation. On the other side there is a central exit for the code
+> and we just need only that one put_device(). Plus, I like to have the
+> 'success' code path returning at the end of block.
 
-> +	if (cmd->cmnd[0] == MODE_SENSE && sdev->use_192_bytes_for_3f == 1 &&
+Seems simpler to me to return early on finding a match.
 
-Please remove "== 1" because this part is redundant when using a single
-bit in a boolean "and" expression.
+static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+			     int *pos, int *ways)
+{
+	struct cxl_switch_decoder *cxlsd;
+	struct cxl_port *parent;
 
-> +		cmd->result = (DID_ABORT << 16);
+	parent = next_port(port);
+	if (!parent)
+		return -ENXIO;
 
-Please remove the superfluous parentheses from the above statement.
+	struct device *dev __free(device) =
+		device_find_child(&parent->dev, range,
+				  match_switch_decoder_by_range);
+	if (!dev) {
+		dev_err(port->uport_dev,
+			"failed to find decoder mapping %#llx-%#llx\n",
+			range->start, range->end);
+		return -ENODEV;
+	}
+	cxlsd = to_cxl_switch_decoder(dev);
+	*ways = cxlsd->cxld.interleave_ways;
 
-Thanks,
+	for (int i = 0; i < *ways; i++) {
+		if (cxlsd->target[i] == port->parent_dport) {
+			*pos = i;
+			return 0;
+		}
+	}
+	dev_err(port->uport_dev,
+		"failed to find %s:%s in target list of %s\n",
+		dev_name(&port->dev),
+		dev_name(port->parent_dport->dport_dev),
+		dev_name(&cxlsd->cxld.dev));
 
-Bart.
+	return -ENXIO;
+}
+
+I don't mind that much though.  I'd also suggest returning -ENXIO
+doesn't seem the right choice for failing to find something.
+
+
+> 
+> -Robert
+> 
+> > 
+> > Otherwise looks fine.
+> > 
+> > Jonathan
+> >   
+> > >    
+> >   
+> 
+
