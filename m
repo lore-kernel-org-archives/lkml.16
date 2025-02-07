@@ -1,473 +1,128 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763D418B47E
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B5A23C8C5;
+	Fri,  7 Feb 2025 16:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738945564; cv=none; b=BxZqdv1ucX8WfCFbfukgB1NVDa6GSIE1v0nX3onhpYeGE1OAyHfPJE2ra+j8DUXaDC9NBAeQv80gVNP17e4vjbXrQqai0DeyGGhl/+ww6lrIFFRiVAzy3i0pQ98nqOSCFMDu8pSlPneNH4DLq71ED2o3FckCD+uEqcPSmfluBtg=
+	t=1738945582; cv=none; b=hORszu2FEaduGf8U7ohBhiEq+ZrOhuJBsy74//PlKI46x4y5mrf6A4Uoe5vj87sNCQa1s8JOHKjDdrPBlHzSkrCiyFDjIXwVCG7FQaEJpOcBro+9MKALVaJOjfN6H9QW2/aAPK6KuQbQpfQLpJayAJ5e2xdLOw7zfFxk3QSTeD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738945564; c=relaxed/simple;
-	bh=NQjt0MzrF12nHV8ReYoFlt2rOITbjZoPTgZX2fmICdM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WC7YRMqLBfgpYcdT+oq1UgVYvNnotpZyaH/crJtONDl3UnZzopUSzDuECBxT6h/t8tPPs1UxoBef6m6c6FIkIIrwaF0XQcQNF9PTo4dXfcqf02UCpdk3mhHaubRxRQRmt3NIq8AFejwxrNF2GxJzchmzLkTd9ZB8/f5cD7WpyWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TdlVb8sr; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738945582; c=relaxed/simple;
+	bh=Z+23uYCPl3ES/TnEirPH6od61dFnbsbYONvlDb8AxhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BI/Z1UMGiKbbGaDjRjG8Sfwvza5qxHS+fKBVvHBWH/mU1cXiC/JpteyRcJu2b/hZTKgBouBd/UICnrDjx36j5yttvyRldoFM08d9XZgCeddECnukZwSEsHj2YFXPB6z8CUCNIw+WvLARBx5+LEjA23mtLslzOqwIgEXpgA0OJk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAdAD63Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TdlVb8sr"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738945560;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gtrrAUnVhr2/npIcNNgeOcdn36r2FvvJ+8p041cLvbU=;
-	b=TdlVb8srJ1IBtTLD8Mw013xldVQpZUb7Va0U4+UpH1tVlVo61rtubJenxx9zFX1boowCE2
-	9+oRBuywu9LzrJP0s+5jCNfEC++TPNfImThVOU9e2NNqFFe4o2H+M3GZoCDUQtvLM19hDI
-	cmjEXE+BTG2tamEI4GiM4WvSPkw15GA=
-From: Sean Anderson <sean.anderson@linux.dev>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR XILINX)
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Michal Simek <michal.simek@amd.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	linux-kernel@vger.kernel.org (open list),
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/ZYNQ ARCHITECTURE),
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH v2 2/2] drm: zynqmp_dp: Use scope-based mutex helpers
-Date: Fri,  7 Feb 2025 11:25:28 -0500
-Message-Id: <20250207162528.1651426-3-sean.anderson@linux.dev>
-In-Reply-To: <20250207162528.1651426-1-sean.anderson@linux.dev>
-References: <20250207162528.1651426-1-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAdAD63Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68F25C4CED1;
+	Fri,  7 Feb 2025 16:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738945581;
+	bh=Z+23uYCPl3ES/TnEirPH6od61dFnbsbYONvlDb8AxhI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lAdAD63QAj0slvJUgQanww6BNt31Ti49f1rHTmTdsTakP4eSnvcathTR60y93R/j/
+	 lLYbaRwIE3c39Bcq/BMEtFsHpoY121jDeyzqYcBUiKPX2CKc5ijJACpwrDfqPYuILz
+	 PaLbR9AXANWjCb/cOjMxfQC9m9VazW7drAMXZgub43MTqReEiizyeupMDRhzN2Ipfb
+	 r4/KIsd6TCRLLSOWxHoVeepMQbFlGWKXbLTOOYC5mkzxZe4kRzsrpAbK53FyvCTtqq
+	 r4mS7kwHSaTlMkocGM9mbZCDAWr9ZJywtazy8HEPCuZl8II6pkHAfRZFrT4fu3fHTl
+	 mgC4HoDGLcVbQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tgRBW-000000004oe-034F;
+	Fri, 07 Feb 2025 17:26:30 +0100
+Date: Fri, 7 Feb 2025 17:26:30 +0100
+From: Johan Hovold <johan@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Linux PCI <linux-pci@vger.kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kevin Xie <kevin.xie@starfivetech.com>,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
+ parents and children
+Message-ID: <Z6Y0NlW40yHTIlzm@hovoldconsulting.com>
+References: <12619233.O9o76ZdvQC@rjwysocki.net>
+ <1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com>
+ <Z6YPpbRF_U0TxAbf@hovoldconsulting.com>
+ <Z6YcjFBWAVVVANf2@hovoldconsulting.com>
+ <CAJZ5v0iHjkfoh2A+hAmMCTG9_nBcJrsRYFD0Hp4ZChYUo7bFEg@mail.gmail.com>
+ <Z6YviAFD4Az3EIBa@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <Z6YviAFD4Az3EIBa@hovoldconsulting.com>
 
-Convert most mutex_(un)lock calls to use (scoped_)guard instead. This
-generally reduces line count and prevents bugs like forgetting to unlock
-the mutex. I've left traditional calls in a few places where scoped
-helpers would be more verbose. This mostly happens where
-debugfs_file_put needs to be called regardless. I looked into defining a
-CLASS for debugfs_file, but it seems like more effort than it's worth
-since debugfs_file_get can fail.
+On Fri, Feb 07, 2025 at 05:06:32PM +0100, Johan Hovold wrote:
+> On Fri, Feb 07, 2025 at 04:41:18PM +0100, Rafael J. Wysocki wrote:
+> > On Fri, Feb 7, 2025 at 3:45 PM Johan Hovold <johan@kernel.org> wrote:
+> > > On Fri, Feb 07, 2025 at 02:50:29PM +0100, Johan Hovold wrote:
+> 
+> > > Ok, so the driver data is never set and runtime PM is never enabled for
+> > > this simple bus device, which uses pm_runtime_force_suspend() for system
+> > > sleep.
+> > 
+> > This is kind of confusing.  Why use pm_runtime_force_suspend() if
+> > runtime PM is never enabled and cannot really work?
+> 
+> It's only done for some buses that this driver handles. The driver is
+> buggy; I'm preparing a fix for it regardless of the correctness of the
+> commit that now triggered this.
 
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
----
+Hmm. The driver implementation is highly odd, but actually works as long
+as the runtime PM status is left at 'suspended' (as
+pm_runtime_force_resume() won't enable runtime PM unless it was enabled
+before suspend).
 
-Changes in v2:
-- Convert some conditional return statements to returns of ternary
-  expressions.
-- Remove unnecessary whitespace change
+So we'd strictly only need something like the below if we are going to
+keep the set_active propagation.
 
- drivers/gpu/drm/xlnx/zynqmp_dp.c | 147 +++++++++++--------------------
- 1 file changed, 50 insertions(+), 97 deletions(-)
+Johan
 
-diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-index 189a08cdc73c..63842f657836 100644
---- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
-+++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-@@ -1534,10 +1534,10 @@ zynqmp_dp_bridge_mode_valid(struct drm_bridge *bridge,
- 	}
- 
- 	/* Check with link rate and lane count */
--	mutex_lock(&dp->lock);
--	rate = zynqmp_dp_max_rate(dp->link_config.max_rate,
--				  dp->link_config.max_lanes, dp->config.bpp);
--	mutex_unlock(&dp->lock);
-+	scoped_guard(mutex, &dp->lock)
-+		rate = zynqmp_dp_max_rate(dp->link_config.max_rate,
-+					  dp->link_config.max_lanes,
-+					  dp->config.bpp);
- 	if (mode->clock > rate) {
- 		dev_dbg(dp->dev, "filtered mode %s for high pixel rate\n",
- 			mode->name);
-@@ -1722,13 +1722,9 @@ static enum drm_connector_status __zynqmp_dp_bridge_detect(struct zynqmp_dp *dp)
- static enum drm_connector_status zynqmp_dp_bridge_detect(struct drm_bridge *bridge)
- {
- 	struct zynqmp_dp *dp = bridge_to_dp(bridge);
--	enum drm_connector_status ret;
- 
--	mutex_lock(&dp->lock);
--	ret = __zynqmp_dp_bridge_detect(dp);
--	mutex_unlock(&dp->lock);
--
--	return ret;
-+	guard(mutex)(&dp->lock);
-+	return __zynqmp_dp_bridge_detect(dp);
- }
- 
- static const struct drm_edid *zynqmp_dp_bridge_edid_read(struct drm_bridge *bridge,
-@@ -1881,10 +1877,9 @@ static ssize_t zynqmp_dp_pattern_read(struct file *file, char __user *user_buf,
- 	if (unlikely(ret))
- 		return ret;
- 
--	mutex_lock(&dp->lock);
--	ret = snprintf(buf, sizeof(buf), "%s\n",
--		       test_pattern_str[dp->test.pattern]);
--	mutex_unlock(&dp->lock);
-+	scoped_guard(mutex, &dp->lock)
-+		ret = snprintf(buf, sizeof(buf), "%s\n",
-+			       test_pattern_str[dp->test.pattern]);
- 
- 	debugfs_file_put(dentry);
- 	return simple_read_from_buffer(user_buf, count, ppos, buf, ret);
-@@ -1939,24 +1934,18 @@ static int zynqmp_dp_enhanced_get(void *data, u64 *val)
- {
- 	struct zynqmp_dp *dp = data;
- 
--	mutex_lock(&dp->lock);
-+	guard(mutex)(&dp->lock);
- 	*val = dp->test.enhanced;
--	mutex_unlock(&dp->lock);
- 	return 0;
- }
- 
- static int zynqmp_dp_enhanced_set(void *data, u64 val)
- {
- 	struct zynqmp_dp *dp = data;
--	int ret = 0;
- 
--	mutex_lock(&dp->lock);
-+	guard(mutex)(&dp->lock);
- 	dp->test.enhanced = val;
--	if (dp->test.active)
--		ret = zynqmp_dp_test_setup(dp);
--	mutex_unlock(&dp->lock);
--
--	return ret;
-+	return dp->test.active ? zynqmp_dp_test_setup(dp) : 0;
- }
- 
- DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_enhanced, zynqmp_dp_enhanced_get,
-@@ -1966,24 +1955,19 @@ static int zynqmp_dp_downspread_get(void *data, u64 *val)
- {
- 	struct zynqmp_dp *dp = data;
- 
--	mutex_lock(&dp->lock);
-+	guard(mutex)(&dp->lock);
- 	*val = dp->test.downspread;
--	mutex_unlock(&dp->lock);
- 	return 0;
- }
- 
- static int zynqmp_dp_downspread_set(void *data, u64 val)
- {
- 	struct zynqmp_dp *dp = data;
--	int ret = 0;
- 
--	mutex_lock(&dp->lock);
-+	guard(mutex)(&dp->lock);
- 	dp->test.downspread = val;
--	if (dp->test.active)
--		ret = zynqmp_dp_test_setup(dp);
--	mutex_unlock(&dp->lock);
- 
--	return ret;
-+	return dp->test.active ? zynqmp_dp_test_setup(dp) : 0;
- }
- 
- DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_downspread, zynqmp_dp_downspread_get,
-@@ -1993,33 +1977,32 @@ static int zynqmp_dp_active_get(void *data, u64 *val)
- {
- 	struct zynqmp_dp *dp = data;
- 
--	mutex_lock(&dp->lock);
-+	guard(mutex)(&dp->lock);
- 	*val = dp->test.active;
--	mutex_unlock(&dp->lock);
- 	return 0;
- }
- 
- static int zynqmp_dp_active_set(void *data, u64 val)
- {
- 	struct zynqmp_dp *dp = data;
--	int ret = 0;
-+	int ret;
- 
--	mutex_lock(&dp->lock);
-+	guard(mutex)(&dp->lock);
- 	if (val) {
- 		if (val < 2) {
- 			ret = zynqmp_dp_test_setup(dp);
- 			if (ret)
--				goto out;
-+				return ret;
- 		}
- 
- 		ret = zynqmp_dp_set_test_pattern(dp, dp->test.pattern,
- 						 dp->test.custom);
- 		if (ret)
--			goto out;
-+			return ret;
- 
- 		ret = zynqmp_dp_update_vs_emph(dp, dp->test.train_set);
- 		if (ret)
--			goto out;
-+			return ret;
- 
- 		dp->test.active = true;
- 	} else {
-@@ -2032,10 +2015,8 @@ static int zynqmp_dp_active_set(void *data, u64 val)
- 				 err);
- 		zynqmp_dp_train_loop(dp);
- 	}
--out:
--	mutex_unlock(&dp->lock);
- 
--	return ret;
-+	return 0;
- }
- 
- DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_active, zynqmp_dp_active_get,
-@@ -2102,9 +2083,8 @@ static int zynqmp_dp_swing_get(void *data, u64 *val)
- 	struct zynqmp_dp_train_set_priv *priv = data;
- 	struct zynqmp_dp *dp = priv->dp;
- 
--	mutex_lock(&dp->lock);
-+	guard(mutex)(&dp->lock);
- 	*val = dp->test.train_set[priv->lane] & DP_TRAIN_VOLTAGE_SWING_MASK;
--	mutex_unlock(&dp->lock);
- 	return 0;
- }
- 
-@@ -2113,12 +2093,11 @@ static int zynqmp_dp_swing_set(void *data, u64 val)
- 	struct zynqmp_dp_train_set_priv *priv = data;
- 	struct zynqmp_dp *dp = priv->dp;
- 	u8 *train_set = &dp->test.train_set[priv->lane];
--	int ret = 0;
- 
- 	if (val > 3)
- 		return -EINVAL;
- 
--	mutex_lock(&dp->lock);
-+	guard(mutex)(&dp->lock);
- 	*train_set &= ~(DP_TRAIN_MAX_SWING_REACHED |
- 			DP_TRAIN_VOLTAGE_SWING_MASK);
- 	*train_set |= val;
-@@ -2126,10 +2105,9 @@ static int zynqmp_dp_swing_set(void *data, u64 val)
- 		*train_set |= DP_TRAIN_MAX_SWING_REACHED;
- 
- 	if (dp->test.active)
--		ret = zynqmp_dp_update_vs_emph(dp, dp->test.train_set);
--	mutex_unlock(&dp->lock);
-+		return zynqmp_dp_update_vs_emph(dp, dp->test.train_set);
- 
--	return ret;
-+	return 0;
- }
- 
- DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_swing, zynqmp_dp_swing_get,
-@@ -2140,10 +2118,9 @@ static int zynqmp_dp_preemphasis_get(void *data, u64 *val)
- 	struct zynqmp_dp_train_set_priv *priv = data;
- 	struct zynqmp_dp *dp = priv->dp;
- 
--	mutex_lock(&dp->lock);
-+	guard(mutex)(&dp->lock);
- 	*val = FIELD_GET(DP_TRAIN_PRE_EMPHASIS_MASK,
- 			 dp->test.train_set[priv->lane]);
--	mutex_unlock(&dp->lock);
- 	return 0;
- }
- 
-@@ -2152,12 +2129,11 @@ static int zynqmp_dp_preemphasis_set(void *data, u64 val)
- 	struct zynqmp_dp_train_set_priv *priv = data;
- 	struct zynqmp_dp *dp = priv->dp;
- 	u8 *train_set = &dp->test.train_set[priv->lane];
--	int ret = 0;
- 
- 	if (val > 2)
- 		return -EINVAL;
- 
--	mutex_lock(&dp->lock);
-+	guard(mutex)(&dp->lock);
- 	*train_set &= ~(DP_TRAIN_MAX_PRE_EMPHASIS_REACHED |
- 			DP_TRAIN_PRE_EMPHASIS_MASK);
- 	*train_set |= val;
-@@ -2165,10 +2141,9 @@ static int zynqmp_dp_preemphasis_set(void *data, u64 val)
- 		*train_set |= DP_TRAIN_MAX_PRE_EMPHASIS_REACHED;
- 
- 	if (dp->test.active)
--		ret = zynqmp_dp_update_vs_emph(dp, dp->test.train_set);
--	mutex_unlock(&dp->lock);
-+		return zynqmp_dp_update_vs_emph(dp, dp->test.train_set);
- 
--	return ret;
-+	return 0;
- }
- 
- DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_preemphasis, zynqmp_dp_preemphasis_get,
-@@ -2178,31 +2153,24 @@ static int zynqmp_dp_lanes_get(void *data, u64 *val)
- {
- 	struct zynqmp_dp *dp = data;
- 
--	mutex_lock(&dp->lock);
-+	guard(mutex)(&dp->lock);
- 	*val = dp->test.link_cnt;
--	mutex_unlock(&dp->lock);
- 	return 0;
- }
- 
- static int zynqmp_dp_lanes_set(void *data, u64 val)
- {
- 	struct zynqmp_dp *dp = data;
--	int ret = 0;
- 
- 	if (val > ZYNQMP_DP_MAX_LANES)
- 		return -EINVAL;
- 
--	mutex_lock(&dp->lock);
--	if (val > dp->num_lanes) {
--		ret = -EINVAL;
--	} else {
--		dp->test.link_cnt = val;
--		if (dp->test.active)
--			ret = zynqmp_dp_test_setup(dp);
--	}
--	mutex_unlock(&dp->lock);
-+	guard(mutex)(&dp->lock);
-+	if (val > dp->num_lanes)
-+		return -EINVAL;
- 
--	return ret;
-+	dp->test.link_cnt = val;
-+	return dp->test.active ? zynqmp_dp_test_setup(dp) : 0;
- }
- 
- DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_lanes, zynqmp_dp_lanes_get,
-@@ -2212,9 +2180,8 @@ static int zynqmp_dp_rate_get(void *data, u64 *val)
- {
- 	struct zynqmp_dp *dp = data;
- 
--	mutex_lock(&dp->lock);
-+	guard(mutex)(&dp->lock);
- 	*val = drm_dp_bw_code_to_link_rate(dp->test.bw_code) * 10000ULL;
--	mutex_unlock(&dp->lock);
- 	return 0;
- }
- 
-@@ -2222,7 +2189,6 @@ static int zynqmp_dp_rate_set(void *data, u64 val)
- {
- 	struct zynqmp_dp *dp = data;
- 	int link_rate;
--	int ret = 0;
- 	u8 bw_code;
- 
- 	if (do_div(val, 10000))
-@@ -2237,13 +2203,9 @@ static int zynqmp_dp_rate_set(void *data, u64 val)
- 	    bw_code != DP_LINK_BW_5_4)
- 		return -EINVAL;
- 
--	mutex_lock(&dp->lock);
-+	guard(mutex)(&dp->lock);
- 	dp->test.bw_code = bw_code;
--	if (dp->test.active)
--		ret = zynqmp_dp_test_setup(dp);
--	mutex_unlock(&dp->lock);
--
--	return ret;
-+	return dp->test.active ? zynqmp_dp_test_setup(dp) : 0;
- }
- 
- DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_rate, zynqmp_dp_rate_get,
-@@ -2253,9 +2215,8 @@ static int zynqmp_dp_ignore_aux_errors_get(void *data, u64 *val)
- {
- 	struct zynqmp_dp *dp = data;
- 
--	mutex_lock(&dp->aux.hw_mutex);
-+	guard(mutex)(&dp->lock);
- 	*val = dp->ignore_aux_errors;
--	mutex_unlock(&dp->aux.hw_mutex);
- 	return 0;
- }
- 
-@@ -2266,9 +2227,8 @@ static int zynqmp_dp_ignore_aux_errors_set(void *data, u64 val)
- 	if (val != !!val)
- 		return -EINVAL;
- 
--	mutex_lock(&dp->aux.hw_mutex);
-+	guard(mutex)(&dp->lock);
- 	dp->ignore_aux_errors = val;
--	mutex_unlock(&dp->aux.hw_mutex);
- 	return 0;
- }
- 
-@@ -2280,9 +2240,8 @@ static int zynqmp_dp_ignore_hpd_get(void *data, u64 *val)
- {
- 	struct zynqmp_dp *dp = data;
- 
--	mutex_lock(&dp->lock);
-+	guard(mutex)(&dp->lock);
- 	*val = dp->ignore_hpd;
--	mutex_unlock(&dp->lock);
- 	return 0;
- }
- 
-@@ -2293,9 +2252,8 @@ static int zynqmp_dp_ignore_hpd_set(void *data, u64 val)
- 	if (val != !!val)
- 		return -EINVAL;
- 
--	mutex_lock(&dp->lock);
-+	guard(mutex)(&dp->lock);
- 	dp->ignore_hpd = val;
--	mutex_unlock(&dp->lock);
- 	return 0;
- }
- 
-@@ -2391,14 +2349,12 @@ static void zynqmp_dp_hpd_work_func(struct work_struct *work)
- 	struct zynqmp_dp *dp = container_of(work, struct zynqmp_dp, hpd_work);
- 	enum drm_connector_status status;
- 
--	mutex_lock(&dp->lock);
--	if (dp->ignore_hpd) {
--		mutex_unlock(&dp->lock);
--		return;
--	}
-+	scoped_guard(mutex, &dp->lock) {
-+		if (dp->ignore_hpd)
-+			return;
- 
--	status = __zynqmp_dp_bridge_detect(dp);
--	mutex_unlock(&dp->lock);
-+		status = __zynqmp_dp_bridge_detect(dp);
-+	}
- 
- 	drm_bridge_hpd_notify(&dp->bridge, status);
- }
-@@ -2410,11 +2366,9 @@ static void zynqmp_dp_hpd_irq_work_func(struct work_struct *work)
- 	u8 status[DP_LINK_STATUS_SIZE + 2];
- 	int err;
- 
--	mutex_lock(&dp->lock);
--	if (dp->ignore_hpd) {
--		mutex_unlock(&dp->lock);
-+	guard(mutex)(&dp->lock);
-+	if (dp->ignore_hpd)
- 		return;
--	}
- 
- 	err = drm_dp_dpcd_read(&dp->aux, DP_SINK_COUNT, status,
- 			       DP_LINK_STATUS_SIZE + 2);
-@@ -2428,7 +2382,6 @@ static void zynqmp_dp_hpd_irq_work_func(struct work_struct *work)
- 			zynqmp_dp_train_loop(dp);
- 		}
- 	}
--	mutex_unlock(&dp->lock);
- }
- 
- static irqreturn_t zynqmp_dp_irq_handler(int irq, void *data)
--- 
-2.35.1.1320.gc452695387.dirty
 
+diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
+index 5dea31769f9a..d8e029e7e53f 100644
+--- a/drivers/bus/simple-pm-bus.c
++++ b/drivers/bus/simple-pm-bus.c
+@@ -109,9 +109,29 @@ static int simple_pm_bus_runtime_resume(struct device *dev)
+ 	return 0;
+ }
+ 
++static int simple_pm_bus_suspend(struct device *dev)
++{
++	struct simple_pm_bus *bus = dev_get_drvdata(dev);
++
++	if (!bus)
++		return 0;
++
++	return pm_runtime_force_suspend(dev);
++}
++
++static int simple_pm_bus_resume(struct device *dev)
++{
++	struct simple_pm_bus *bus = dev_get_drvdata(dev);
++
++	if (!bus)
++		return 0;
++
++	return pm_runtime_force_resume(dev);
++}
++
+ static const struct dev_pm_ops simple_pm_bus_pm_ops = {
+ 	RUNTIME_PM_OPS(simple_pm_bus_runtime_suspend, simple_pm_bus_runtime_resume, NULL)
+-	NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
++	NOIRQ_SYSTEM_SLEEP_PM_OPS(simple_pm_bus_suspend, simple_pm_bus_resume)
+ };
+ 
+ #define ONLY_BUS	((void *) 1) /* Match if the device is only a bus. */
