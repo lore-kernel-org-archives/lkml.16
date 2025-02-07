@@ -1,261 +1,144 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB192417EF;
-	Fri,  7 Feb 2025 01:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58712417EF;
+	Fri,  7 Feb 2025 01:28:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738891734; cv=none; b=nBmsq//HextpFyYGhzPIRdh/Dtb+IdYlS1/09zJQlBFTru+2I34ueyICkO4I2kVYECmCf9c9CaPvruY7j5iriDuOnm8KJ0c850vUP/nhokNtHerV8EfrzTbLHK0sSyhJV5LaIpQxsZ6rBrD+YCXbJ6OZClJgEuOnTkHFQCvFdhM=
+	t=1738891741; cv=none; b=QipYZxxEj7j9rAg7gcBUYTojVl2YfWSmUQfFCQyX2c4xGCGWrnW1HAxG/4FQbGChquQ29CHVzD5XH3ZtUeMbCm2a/kWQVXG0OvDurgU7lruvaQ/vQQWDW060ateq7f6/M5HXjYaujP0SB3RJyIopUyRttCOIhrHz3AMsHmrr4yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738891734; c=relaxed/simple;
-	bh=Ey5UTQgIuNSeHVOPVOqWRUOfs5NUVVEmfvVeZunpzk4=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=h18W1pQNTOCso3SMhiI92YP6M1BAoOGjahIcA372WiIn3rs5niT+DXctesRDUBnIH6fR+ephm//+lB8mV/OSdwbnGtWOgtaPaqaTsod6vnBkS4JRV+Dueky9vrCFRV9DyQKbR+9D3xthSD4RM6k7jbCS2t3BGP0UFQ3pTIpoLpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Pbr/Ebv6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=URtQ2pIJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Pbr/Ebv6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=URtQ2pIJ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1738891741; c=relaxed/simple;
+	bh=BzUxZTtxwumnukkI09CukCJOLgaE/TFFCrXxLItChB4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uuenX945DR+WUMU1CyVPUy06VWfyrBZwfearh7FmBB62b0whmpFg30fK8PO9D7Ka30QEqCMEpgHDPESxWjCptBsFu8ssYWNhFQpaN9p2XlCE3gVOyHhK6Ws8/gCHgR4SBDcqfV+4sbEhaGEm8UK5cU/EqQmTPozpTmiwwAYwAD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JxaxPLIX; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Pbr/Ebv6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="URtQ2pIJ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Pbr/Ebv6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="URtQ2pIJ"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4F72221163;
-	Fri,  7 Feb 2025 01:28:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738891730; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s2AsCPfAHkdj1ZuTyMgTvB/NeYaxqCP1+QJQCWZHIP0=;
-	b=Pbr/Ebv6U3up2NFWLh0u8SYLxl4W8tZHhB4/OsGbFgIDnsohaMa9ATUJJQGUk0EjNf7ezO
-	EhJJyZGjTIMCrT7no2FIU95wDgks5bkvz7QvpfxtspgjJtIQhuZ1NRv2MZRkX3F8Pur41U
-	3tfoGCnQn6Nmrn+bti+91PmencroXXs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738891730;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s2AsCPfAHkdj1ZuTyMgTvB/NeYaxqCP1+QJQCWZHIP0=;
-	b=URtQ2pIJdFBdKb+0LMB6TOdRYhkv6H4P41IUh62jNzA5+SQNZnZEDtOjvbNjrW+zu6m5+x
-	bGIsxIExu41J4WDA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="Pbr/Ebv6";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=URtQ2pIJ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738891730; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s2AsCPfAHkdj1ZuTyMgTvB/NeYaxqCP1+QJQCWZHIP0=;
-	b=Pbr/Ebv6U3up2NFWLh0u8SYLxl4W8tZHhB4/OsGbFgIDnsohaMa9ATUJJQGUk0EjNf7ezO
-	EhJJyZGjTIMCrT7no2FIU95wDgks5bkvz7QvpfxtspgjJtIQhuZ1NRv2MZRkX3F8Pur41U
-	3tfoGCnQn6Nmrn+bti+91PmencroXXs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738891730;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s2AsCPfAHkdj1ZuTyMgTvB/NeYaxqCP1+QJQCWZHIP0=;
-	b=URtQ2pIJdFBdKb+0LMB6TOdRYhkv6H4P41IUh62jNzA5+SQNZnZEDtOjvbNjrW+zu6m5+x
-	bGIsxIExu41J4WDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8BCCF13694;
-	Fri,  7 Feb 2025 01:28:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id GMTmD89hpWd6XQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 01:28:47 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JxaxPLIX"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5f2efbc31deso866494eaf.3;
+        Thu, 06 Feb 2025 17:28:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738891738; x=1739496538; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BzUxZTtxwumnukkI09CukCJOLgaE/TFFCrXxLItChB4=;
+        b=JxaxPLIXRyzEzaB4L5M6u1okSL9SEGgubhVA7QexHHnphXOMaJhNqYDx7MkOMA28Wy
+         pv16R4oYa2AhhNsj6mXL4bF1h4I3ZJc6xHcDhR7vehlz+hbzpgeI2DtLDMXKyH8uvkGm
+         bjssL0A/Q5VT2p83G0wChiOrU30tRIAocxAN7YwBv7sF24aLe+uU5dlVtx95zc8H1wn1
+         Kq/Yse/FsUO3zPYLJWX0jFNsOnjzlYZmZAz1KWpmngafGnRy4oVhR7KMbosPH7wQaRHe
+         VbAKQtQ3aH9Gq2CAGlTIXU+fuY6Bo/ERgy4u0jocDkCczit6p5tk+5gKDAZ9UZMx6RSz
+         hNiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738891738; x=1739496538;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BzUxZTtxwumnukkI09CukCJOLgaE/TFFCrXxLItChB4=;
+        b=buqKZrP5gMmHPu8ehcVd5avM5sIaojnQjEYIN0pF7t1X7aMm0aJnHIl7jgkkXpM8uO
+         gdlX6mQ8bq73CMszDz1MWPZzswBHoDrk7xQE5OgGygsg0BWxk1HL/62/Sk33SRAJS79Z
+         Xv6SCAV4rRCgTO2zlRgxEyml1sb79c5VepJdaDzalZRe3FNpvQaJcurvJ3BlZFM+2aNq
+         L2Xh+/YaqdtrYRyh+nrz85Okk5s4j7H5un0z6pCvHHHlDUOLHNgYIiVtkIFeezldq1CV
+         3/LDYuqNqAw/zvECXQCTApTqycTF/kOsqZJMjuGper4Y2uwhuZeIustx/RI8yK8NtLqG
+         hw2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU1K8o31TXR4Vhuw6pO7z45Gh2RksCU0icJ2pS3oi/WRyysHVakJPu71t2HypWBYM96+52FlXzZIJ3p6xM=@vger.kernel.org, AJvYcCVPJ0A1jAXpq+MnZBl9l4z7gp+ZBDEBh9MECIRuboSGrckKZHvt0EG41je8mxlDd4EqKgrX7V6L/zAQ@vger.kernel.org, AJvYcCW2Vcwp1hxoXhc/h6h7nfJVtdh6/dtGFvzL46re7M8SDZgJe3CTuVKFVHVhqhSTFm2CQyHxBe5I@vger.kernel.org
+X-Gm-Message-State: AOJu0Yymor1LP7PzLbd97vjSl/RO+eRMXp59P+O9B9Udp4sa1DfSwhWl
+	3dFIkU9KU5fdbWCj9RTNwNIcSbLDteqklA5uqK1Y/tS9i+tak0ZYKCgCtNG54VE5l/8swOGz9JH
+	tsxJ0/g2pjLC2v94fxsf2BXigU4mZMRdT
+X-Gm-Gg: ASbGncsqTWAKK9ioIx5Qa/6hIoTkz8qc7P5DzKzScF8pUHt3ts0Gk1+atz07p02fF8B
+	qKA5z+1m9hpFI8WFdLkZBvuyYDqxC+G7oyOpD3e+W71tRS3u4rMe4xj5VbXQeSsKNEq3p89Sq9F
+	E=
+X-Google-Smtp-Source: AGHT+IG75clZlllzy9XQTaP2FPNL3vTeI7H1p97304WfhcgG3hrPOEbxwJ9lS3cI9+5mGNmx9T8ZltQBWkifa8h/zZg=
+X-Received: by 2002:a05:6820:221d:b0:5fa:7e37:e42e with SMTP id
+ 006d021491bc7-5fc5e6fa396mr1210285eaf.3.1738891738547; Thu, 06 Feb 2025
+ 17:28:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Christian Brauner" <brauner@kernel.org>
-Cc: "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
- "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Jeff Layton" <jlayton@kernel.org>, "Dave Chinner" <david@fromorbit.com>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/19] VFS: introduce lookup_and_lock() and friends
-In-reply-to: <20250206-herde-zunutze-2ad5be3fea78@brauner>
-References: <>, <20250206-herde-zunutze-2ad5be3fea78@brauner>
-Date: Fri, 07 Feb 2025 12:28:44 +1100
-Message-id: <173889172414.22054.10997679254257474673@noble.neil.brown.name>
-X-Rspamd-Queue-Id: 4F72221163
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+References: <20250205053750.28251-1-ki.chiang65@gmail.com> <20250205053750.28251-2-ki.chiang65@gmail.com>
+ <c746c10a-d504-48bc-bc8d-ba65230d13f6@linux.intel.com>
+In-Reply-To: <c746c10a-d504-48bc-bc8d-ba65230d13f6@linux.intel.com>
+From: Kuangyi Chiang <ki.chiang65@gmail.com>
+Date: Fri, 7 Feb 2025 09:28:47 +0800
+X-Gm-Features: AWEUYZnJN_Wvl0daxZMU6pB3EC8o0lb2Btv437Eb_kWrAPCwh8givgTgB9zPZTs
+Message-ID: <CAHN5xi2Mfob2t9S6Tni=JAuXvnP7oYbyUNkONa8+oFuV9c=E-g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] xhci: Correctly handle last TRB of isoc TD on
+ Etron xHCI host
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: mathias.nyman@intel.com, gregkh@linuxfoundation.org, 
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 07 Feb 2025, Christian Brauner wrote:
-> On Thu, Feb 06, 2025 at 04:42:45PM +1100, NeilBrown wrote:
-> > lookup_and_lock() combines locking the directory and performing a lookup
-> > prior to a change to the directory.
-> > Abstracting this prepares for changing the locking requirements.
-> >=20
-> > done_lookup_and_lock() provides the inverse of putting the dentry and
-> > unlocking.
-> >=20
-> > For "silly_rename" we will need to lookup_and_lock() in a directory that
-> > is already locked.  For this purpose we add LOOKUP_PARENT_LOCKED.
-> >=20
-> > Like lookup_len_qstr(), lookup_and_lock() returns -ENOENT if
-> > LOOKUP_CREATE was NOT given and the name cannot be found,, and returns
-> > -EEXIST if LOOKUP_EXCL WAS given and the name CAN be found.
-> >=20
-> > These functions replace all uses of lookup_one_qstr() in namei.c
-> > except for those used for rename.
-> >=20
-> > The name might seem backwards as the lock happens before the lookup.
-> > A future patch will change this so that only a shared lock is taken
-> > before the lookup, and an exclusive lock on the dentry is taken after a
-> > successful lookup.  So the order "lookup" then "lock" will make sense.
-> >=20
-> > This functionality is exported as lookup_and_lock_one() which takes a
-> > name and len rather than a qstr.
-> >=20
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
-> >  fs/namei.c            | 102 ++++++++++++++++++++++++++++--------------
-> >  include/linux/namei.h |  15 ++++++-
-> >  2 files changed, 83 insertions(+), 34 deletions(-)
-> >=20
-> > diff --git a/fs/namei.c b/fs/namei.c
-> > index 69610047f6c6..3c0feca081a2 100644
-> > --- a/fs/namei.c
-> > +++ b/fs/namei.c
-> > @@ -1715,6 +1715,41 @@ struct dentry *lookup_one_qstr(const struct qstr *=
-name,
-> >  }
-> >  EXPORT_SYMBOL(lookup_one_qstr);
-> > =20
-> > +static struct dentry *lookup_and_lock_nested(const struct qstr *last,
-> > +					     struct dentry *base,
-> > +					     unsigned int lookup_flags,
-> > +					     unsigned int subclass)
-> > +{
-> > +	struct dentry *dentry;
-> > +
-> > +	if (!(lookup_flags & LOOKUP_PARENT_LOCKED))
-> > +		inode_lock_nested(base->d_inode, subclass);
-> > +
-> > +	dentry =3D lookup_one_qstr(last, base, lookup_flags);
-> > +	if (IS_ERR(dentry) && !(lookup_flags & LOOKUP_PARENT_LOCKED)) {
-> > +			inode_unlock(base->d_inode);
->=20
-> Nit: The indentation here is wrong and the {} aren't common practice.
+Hi,
 
-Thanks.
+Thank you for the review.
 
->=20
-> > +	}
-> > +	return dentry;
-> > +}
-> > +
-> > +static struct dentry *lookup_and_lock(const struct qstr *last,
-> > +				      struct dentry *base,
-> > +				      unsigned int lookup_flags)
-> > +{
-> > +	return lookup_and_lock_nested(last, base, lookup_flags,
-> > +				      I_MUTEX_PARENT);
-> > +}
-> > +
-> > +void done_lookup_and_lock(struct dentry *base, struct dentry *dentry,
-> > +			  unsigned int lookup_flags)
->=20
-> Did you mean done_lookup_and_unlock()?
+Mathias Nyman <mathias.nyman@linux.intel.com> =E6=96=BC 2025=E5=B9=B42=E6=
+=9C=885=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=8810:16=E5=AF=AB=E9=81=
+=93=EF=BC=9A
+>
+> On 5.2.2025 7.37, Kuangyi Chiang wrote:
+> > Unplugging a USB3.0 webcam while streaming results in errors like this:
+> >
+> > [ 132.646387] xhci_hcd 0000:03:00.0: ERROR Transfer event TRB DMA ptr n=
+ot part of current TD ep_index 18 comp_code 13
+> > [ 132.646446] xhci_hcd 0000:03:00.0: Looking for event-dma 000000002fdf=
+8630 trb-start 000000002fdf8640 trb-end 000000002fdf8650 seg-start 00000000=
+2fdf8000 seg-end 000000002fdf8ff0
+> > [ 132.646560] xhci_hcd 0000:03:00.0: ERROR Transfer event TRB DMA ptr n=
+ot part of current TD ep_index 18 comp_code 13
+> > [ 132.646568] xhci_hcd 0000:03:00.0: Looking for event-dma 000000002fdf=
+8660 trb-start 000000002fdf8670 trb-end 000000002fdf8670 seg-start 00000000=
+2fdf8000 seg-end 000000002fdf8ff0
+> >
+> > If an error is detected while processing the last TRB of an isoc TD,
+> > the Etron xHC generates two transfer events for the TRB where the
+> > error was detected. The first event can be any sort of error (like
+> > USB Transaction or Babble Detected, etc), and the final event is
+> > Success.
+> >
+> > The xHCI driver will handle the TD after the first event and remove it
+> > from its internal list, and then print an "Transfer event TRB DMA ptr
+> > not part of current TD" error message after the final event.
+> >
+> > Commit 5372c65e1311 ("xhci: process isoc TD properly when there was a
+> > transaction error mid TD.") is designed to address isoc transaction
+> > errors, but unfortunately it doesn't account for this scenario.
+> >
+> > To work around this by reusing the logic that handles isoc transaction
+> > errors, but continuing to wait for the final event when this condition
+> > occurs. Sometimes we see the Stopped event after an error mid TD, this
+> > is a normal event for a pending TD and we can think of it as the final
+> > event we are waiting for.
+>
+> Not giving back the TD when we get an event for the last TRB in the
+> TD sounds risky. With this change we assume all old and future ETRON host=
+s
+> will trigger this additional spurious success event.
+>
+> I think we could handle this more like the XHCI_SPURIOUS_SUCCESS case see=
+n
+> with short transfers, and just silence the error message.
 
-No.  The thing that we are done with is "lookup_and_lock()".
-This matches "done_path_create()" which doesn't create anything.
+Yes, this was my initial solution as well. See my patch v2 [1].
 
-On the other hand we have d_lookup_done() which puts _done at the end.
-Or end_name_hash().  ->write_end(), finish_automount()
+[1] https://lore.kernel.org/all/20241028025337.6372-6-ki.chiang65@gmail.com
 
-I guess I could accept done_lookup_and_unlock() if you prefer that.
+>
+> Are there any other issues besides the error message seen?
 
->=20
-> > +{
-> > +	d_lookup_done(dentry);
-> > +	dput(dentry);
-> > +	if (!(lookup_flags & LOOKUP_PARENT_LOCKED))
-> > +		inode_unlock(base->d_inode);
-> > +}
-> > +EXPORT_SYMBOL(done_lookup_and_lock);
-> > +
-> >  /**
-> >   * lookup_fast - do fast lockless (but racy) lookup of a dentry
-> >   * @nd: current nameidata
-> > @@ -2754,12 +2789,9 @@ static struct dentry *__kern_path_locked(int dfd, =
-struct filename *name, struct
-> >  		path_put(path);
-> >  		return ERR_PTR(-EINVAL);
-> >  	}
-> > -	inode_lock_nested(path->dentry->d_inode, I_MUTEX_PARENT);
-> > -	d =3D lookup_one_qstr(&last, path->dentry, 0);
-> > -	if (IS_ERR(d)) {
-> > -		inode_unlock(path->dentry->d_inode);
-> > +	d =3D lookup_and_lock(&last, path->dentry, 0);
-> > +	if (IS_ERR(d))
-> >  		path_put(path);
-> > -	}
-> >  	return d;
-> >  }
-> > =20
-> > @@ -3053,6 +3085,22 @@ struct dentry *lookup_positive_unlocked(const char=
- *name,
-> >  }
-> >  EXPORT_SYMBOL(lookup_positive_unlocked);
-> > =20
-> > +struct dentry *lookup_and_lock_one(struct mnt_idmap *idmap,
-> > +				   const char *name, int len, struct dentry *base,
-> > +				   unsigned int lookup_flags)
-> > +{
-> > +	struct qstr this;
-> > +	int err;
-> > +
-> > +	if (!idmap)
-> > +		idmap =3D &nop_mnt_idmap;
->=20
-> The callers should pass nop_mnt_idmap. That's how every function that
-> takes this argument works. This is a lot more explicit than magically
-> fixing this up in the function.
+There are no other issues.
 
-OK.
+>
+> Thanks
+> Mathias
+>
 
 Thanks,
-NeilBrown
+Kuangyi Chiang
