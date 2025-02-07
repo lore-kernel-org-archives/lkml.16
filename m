@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 323501ACEDF
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:20:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 341051E22E6
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:20:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738952445; cv=none; b=oz0rn08ppcJItbPirWQB9dk4QGqBpOPGLYnlj4gZb2oKEXsabObD8FHec6z0ZBPqplcZtMDN4dODPqg3OZtSuRVxAOrfuVQ3YIOc91y5VbaKtrJbEg3DL1hB7Cj24Mz7xKWAuwJwCrJJCbKLznOSRABYS5/xIe7eFCzl86IRLYA=
+	t=1738952453; cv=none; b=U5mdt/WwzSqnW8GsXQMo8QfyjmC3r9lNbdJu+YjkJeECYlElWtyu0DurfSd6L2sRMBhY5dFu0C6qFCKOPQ3WUqEHfS4FN+daAC0K7BfM8cAqoVT+fdQjM7xtG1Y+OlH/A1WG8I+UMNxNPPc4cIFcHi+wR9lVIRd/kRwHseWvtjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738952445; c=relaxed/simple;
-	bh=iY4qX0TWlCwy2SawK4wCfwGpPHl1IGh3+W5Jre7MmlI=;
+	s=arc-20240116; t=1738952453; c=relaxed/simple;
+	bh=G46HuEftAZhOLDDfV1jJo/iqw5g+TdeJu8pXMzrY/RY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Pc6V4+bzYq6p/dlS7kEoX461ZN8P5wGRLVv1BQkLX4qRltNdDll52gLVkj3zujVPShiIm1fuHCNZtDnfiMpeyW0b/wCQWsY+Z8zV7z08a1J1wvPUjlo6vsSJwhL2vqvS+fwDB0Ojw1D3kb//JNbrQ6E0AKyJqoDcEPXXxlxgIBs=
+	 MIME-Version; b=h3R/BT9z7S4LcmxwD9VPTtpiqYsWf5eqoxWgOMlb+4Lyptgd/FzTxcdcM68FJiRImNJdL82qSxK6t/whw/hSVNBBPFV0kdW6VVn+mkIM8/azreFt2gU1czD76Wfl/F6nK3L3r/aHYCO5bYcKmVaAWI3aAh0W7UU98rCv1TFG3kI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65C2412FC;
-	Fri,  7 Feb 2025 10:21:02 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8201C1EA6;
+	Fri,  7 Feb 2025 10:21:09 -0800 (PST)
 Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 470263F63F;
-	Fri,  7 Feb 2025 10:20:36 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 631643F63F;
+	Fri,  7 Feb 2025 10:20:43 -0800 (PST)
 From: James Morse <james.morse@arm.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -47,9 +47,9 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
 	Shanker Donthineni <sdonthineni@nvidia.com>,
 	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v6 33/42] x86/resctrl: resctrl_exit() teardown resctrl but leave the mount point
-Date: Fri,  7 Feb 2025 18:18:14 +0000
-Message-Id: <20250207181823.6378-34-james.morse@arm.com>
+Subject: [PATCH v6 35/42] x86/resctrl: Move is_mba_sc() out of core.c
+Date: Fri,  7 Feb 2025 18:18:16 +0000
+Message-Id: <20250207181823.6378-36-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20250207181823.6378-1-james.morse@arm.com>
 References: <20250207181823.6378-1-james.morse@arm.com>
@@ -61,24 +61,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-resctrl_exit() was intended for use when the 'resctrl' module was unloaded.
-resctrl can't be built as a module, and the kernfs helpers are not exported
-so this is unlikely to change. MPAM has an error interrupt which indicates
-the MPAM driver has gone haywire. Should this occur tasks could run with
-the wrong control values, leading to bad performance for important tasks.
-The MPAM driver needs a way to tell resctrl that no further configuration
-should be attempted.
+is_mba_sc() is defined in core.c, but has no callers there. It does
+not access any architecture private structures.
 
-Using resctrl_exit() for this leaves the system in a funny state as
-resctrl is still mounted, but cannot be un-mounted because the sysfs
-directory that is typically used has been removed. Dave Martin suggests
-this may cause systemd trouble in the future as not all filesystems
-can be unmounted.
-
-Add calls to remove all the files and directories in resctrl, and
-remove the sysfs_remove_mount_point() call that leaves the system
-in a funny state. When triggered, this causes all the resctrl files
-to disappear. resctrl can be unmounted, but not mounted again.
+Move this to rdtgroup.c where the majority of callers are. This makes
+the move of the filesystem code to /fs/ cleaner.
 
 Signed-off-by: James Morse <james.morse@arm.com>
 Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
@@ -86,46 +73,65 @@ Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
-Changes since v5:
- * Serialise rdtgroup_destroy_root() against umount().
- * Check rdtgroup_default.kn to protect against duplicate calls.
+Changes since v2:
+ * This patch is new.
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/resctrl/core.c     | 15 ---------------
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 15 +++++++++++++++
+ 2 files changed, 15 insertions(+), 15 deletions(-)
 
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 31558d7abe54..6303c0ee0ae2 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -166,21 +166,6 @@ static inline void cache_alloc_hsw_probe(void)
+ 	rdt_alloc_capable = true;
+ }
+ 
+-bool is_mba_sc(struct rdt_resource *r)
+-{
+-	if (!r)
+-		r = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
+-
+-	/*
+-	 * The software controller support is only applicable to MBA resource.
+-	 * Make sure to check for resource type.
+-	 */
+-	if (r->rid != RDT_RESOURCE_MBA)
+-		return false;
+-
+-	return r->membw.mba_sc;
+-}
+-
+ /*
+  * rdt_get_mb_table() - get a mapping of bandwidth(b/w) percentage values
+  * exposed to user interface and the h/w understandable delay values.
 diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 6e30283358d4..424622d2f959 100644
+index 2bf69bcfa47a..6832ae603db3 100644
 --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -4092,8 +4092,12 @@ static int rdtgroup_setup_root(struct rdt_fs_context *ctx)
- 
- static void rdtgroup_destroy_root(void)
- {
--	kernfs_destroy_root(rdt_root);
--	rdtgroup_default.kn = NULL;
-+	lockdep_assert_held(&rdtgroup_mutex);
-+
-+	if (rdtgroup_default.kn) {
-+		kernfs_destroy_root(rdt_root);
-+		rdtgroup_default.kn = NULL;
-+	}
+@@ -1520,6 +1520,21 @@ unsigned int rdtgroup_cbm_to_size(struct rdt_resource *r,
+ 	return size;
  }
  
- static void __init rdtgroup_setup_default(void)
-@@ -4371,9 +4375,12 @@ int __init resctrl_init(void)
- 
- void __exit resctrl_exit(void)
- {
-+	mutex_lock(&rdtgroup_mutex);
-+	rdtgroup_destroy_root();
-+	mutex_unlock(&rdtgroup_mutex);
++bool is_mba_sc(struct rdt_resource *r)
++{
++	if (!r)
++		r = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
 +
- 	debugfs_remove_recursive(debugfs_resctrl);
- 	unregister_filesystem(&rdt_fs_type);
--	sysfs_remove_mount_point(fs_kobj, "resctrl");
- 
- 	resctrl_mon_resource_exit();
- }
++	/*
++	 * The software controller support is only applicable to MBA resource.
++	 * Make sure to check for resource type.
++	 */
++	if (r->rid != RDT_RESOURCE_MBA)
++		return false;
++
++	return r->membw.mba_sc;
++}
++
+ /*
+  * rdtgroup_size_show - Display size in bytes of allocated regions
+  *
 -- 
 2.39.2
 
