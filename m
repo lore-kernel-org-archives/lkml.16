@@ -1,179 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1239502BE;
-	Fri,  7 Feb 2025 22:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94142502BE;
+	Fri,  7 Feb 2025 22:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738967438; cv=none; b=bgXcqW60EV05oBCCRz9zrNO/YbLPNhfIH9V9vS/eYxx9BIVl60vLln2dxQTYxqbnmJ/0hfZcpNtKzLZb2cfJBpQvqSLJv6nWXblI5MjBMdeJtkveJcLJbrFkW1bYODIbRGHL5tsdkWWpiX6BtdDa+0s50lKjV1O6Tuu8J6/UPso=
+	t=1738967600; cv=none; b=XWEqb/I6FbbGiMOJP4k6uUJM1jj8IOsWOubP6Ei2y2eJSuzqW4NBv3LmYX/EvapmPJKx73167SGYtFtmI944svHnXH6Y2+/XDxS2Y3040ZphMFxXW4fYtkc4a6YxCPNwy//0WBkF3E0KCRdc4FgoUBRGVxsu+IgIOg/8xFxaR4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738967438; c=relaxed/simple;
-	bh=QWhAu2OFt+EcyVIJFJNCIRag3WhrVrPecqNWFTdZByw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mc5+T/hlVwDlwhFqXbS/1scSppHoxA/U7R5muEyMdOx2Oyga9P3nG3VG8eX56uYZAaBJtRfFyOtLOOFETIf91p6Ry0ompT46fBde1HDrMmn2MDVAyf84SeDVN7pjHiSuCLYigPS5Y4Y1iRrMzY5l2qW1WCU0GhAuxPVztcjFl3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IKxJkumQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738967600; c=relaxed/simple;
+	bh=qIMgU1f3eLwSpIXeL1Ho9r+QLXtuhQNNVxwLkZa5DUg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SJo36wKIiuLwnq+H7usF3+GVojitKBRQZq0dV/WW3IbiFFaI81V4KYmRuccDUYcVjeCv3cwsIOyTFNMw9XhczrU4CSInRxb7i5MpJG6i0wDlsfkDiFF+CAnW4piWi2wYNYXELGrQSq2tPsEBiK7VgVB608pfyRUwcW942Zkhvos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R+Cj+1TQ; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IKxJkumQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 271F5C4CED1;
-	Fri,  7 Feb 2025 22:30:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738967438;
-	bh=QWhAu2OFt+EcyVIJFJNCIRag3WhrVrPecqNWFTdZByw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IKxJkumQhUPgGWAsqWW2kTJ27fp/W+zPCJeVYydLPw9ikhWoEtUHEYp9DznKWRQtC
-	 WWixNS13A5/Eg03mx4GriQ5fCkjMVxqkfs0FvReMn+DP9EDW0wIaKIfTLuHk2n3HI8
-	 PTL/U7V1HEMzoZ2SUSDh0jBuA2Y0egnfuqS0QKqt/VpAYSpzWHCuc+TWc2CBzKdNes
-	 gjYHOBAH28dTWYg6VuBms3HWgaARd9ZKwyZqSHXv9XrTD+3SCAqH6KKa5FeTIiycRc
-	 bBOYgxiyMo+CMVYfVE2GLhLScU6IyWd52+hjTx4E50QxqRsZYPPlAYQfYLstUoH7JE
-	 mF8xbAOUylJSA==
-Date: Fri, 7 Feb 2025 12:30:37 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, Ian May <ianm@nvidia.com>,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] sched_ext: idle: Per-node idle cpumasks
-Message-ID: <Z6aJjTFNJKjDfG77@slm.duckdns.org>
-References: <20250207211104.30009-1-arighi@nvidia.com>
- <20250207211104.30009-6-arighi@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+Cj+1TQ"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-467918c35easo43912311cf.2;
+        Fri, 07 Feb 2025 14:33:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738967597; x=1739572397; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w5zOxWcynUwFJHaEdhB+YgWemcxpqHtXs9MZEF9bkwI=;
+        b=R+Cj+1TQVwgL9FFVlcr42T5owb2Es0eFurLDJUPPcbu4a1yiXJEel2n+c4yEtIWjrx
+         3Jxn96yIOkHTmUET8GP1iVBDCjmSz3KFWTYlw3S94kpff/6l2lYNtMcpK3+mmK5NzNSw
+         dk1Ew/LyWmygrvCThVQ4O3WF7GOVxif7nDfmEgRQk2kTDEC9S96+KrPvLqLviN/R8LTI
+         Fyd/QXBu04h6YMQKt/Js0ePQVQDMm383O0D2g1cgwcrR4vDeBdkEYBQmmho51eSZHibS
+         8YrHa9gACJzQyXc4zWGPHQTcIOwIbIQ0tg8XWC68D4LKiU9S10qq0PnaFCdc+M7Y1EPF
+         lN2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738967597; x=1739572397;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w5zOxWcynUwFJHaEdhB+YgWemcxpqHtXs9MZEF9bkwI=;
+        b=bPh+/8UhQCeD0pcByTX3/NxC4Q9r2OMtv8OEAR4Y7VJEqAoFVNBJ2aiaOmw6lj+9p3
+         IANnzHGOjVrXXil4qV/vOPS/qKi1x4ivHdP9iMsFwlPXDKagoMyPRHPNMCpfElEVO5uk
+         QopdZAeFTkjsouJ303ouJ9Osq3pK1ex6Jq1hJDup9grLYE5mha9SsWxZSIIo6+rPa6lt
+         3b/0rLKB+jMjlSsNd73IU2cmykYfJQJwbURm8qivkSvnDJ0avxkbuP6O1i25up2U4tMH
+         c0eJc+LI/J0DM5ODRM4vexAkNqOb9ZhghTDHLP4HwwT59r8tKD9Z+q1+1oXWGFsNHEyN
+         QJag==
+X-Forwarded-Encrypted: i=1; AJvYcCXolvU/RtDpvRAZz1NH/T/ngV8JvENkajMNYUS3s78tKg4LwB/ZHchP6LEdstLAZRrU1Mbne3X3RANmBFzwh7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTe9tfZG3Ah1kqz9WnQK11weWrzZv0WTEjIZynIn0NFtGgSbhK
+	C5bx8Jt8jeo+bB/7V0LQId0SDlxn7ziNyr0gJaOlpReTab0bb+HD
+X-Gm-Gg: ASbGncvAA4Dzp0fYqCZ/38Vffmde+XuaUBMCdRTU/lXpPfZuJBwgEFVZyJD1c53yLnk
+	weRygcc96eHNB+0it2Mrv3AdWvreta51ecJ2A3+GIJMh2Rf7BM1yIHwKuCWI/HrgN+ojrMJF4Bw
+	OK5d0sVA8ayUe1asbj98WqITQ4KmNouhEbOwk0Q7dX8au8YfPdehXwkY1OUPJDgeHHzohju5y6f
+	UMAFirNiqaSlDu2OgbztfAucomBW0tjvF+THi1Y+vBr86E08oHXSSQw7vNK1tafzv5sQYqM368Z
+	ezUVj13OvoW4HC2XwDsGLY25YfAtc5Q/RZ98b/PlxFVm9NiBfQ==
+X-Google-Smtp-Source: AGHT+IHlPIZresTbo2ck+KzMJdQp1oGzBQLwQoWEWpxx6OCKsx5gFHllJTEG8P70iqIAIYOXls4FLg==
+X-Received: by 2002:a05:620a:2614:b0:7b6:ce6e:229c with SMTP id af79cd13be357-7c047c4e7afmr872462785a.55.1738967597324;
+        Fri, 07 Feb 2025 14:33:17 -0800 (PST)
+Received: from Tamirs-MacBook-Pro.local ([2600:4041:5be7:7c00:c58e:ed03:1b60:c56d])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041e9f965sm240638085a.86.2025.02.07.14.33.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 14:33:16 -0800 (PST)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH 0/2] lib/prime_numbers: convert self-test to KUnit
+Date: Fri, 07 Feb 2025 17:32:58 -0500
+Message-Id: <20250207-prime_numbers-kunit-convert-v1-0-6067f2b7c713@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207211104.30009-6-arighi@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABqKpmcC/x3MUQqDMAwA0KtIvhdo66RsVxlDtI0ahlFSFUF6d
+ 8s+38+7IJEyJXhXFygdnHiRAvuoIEydjIQci8EZ1xhnPK7KM7Wyzz1pwt8uvGFY5CDd0Nvw6ut
+ go41PKMOqNPD53z/fnG+Z6Up/bQAAAA==
+X-Change-ID: 20250207-prime_numbers-kunit-convert-71c9b3c1d1d4
+To: David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Luis Felipe Hernandez <luis.hernandez093@gmail.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-Hello,
+This is a clear example of a unit test.
 
-On Fri, Feb 07, 2025 at 09:40:52PM +0100, Andrea Righi wrote:
-> +/*
-> + * cpumasks to track idle CPUs within each NUMA node.
-> + *
-> + * If SCX_OPS_BUILTIN_IDLE_PER_NODE is not enabled, a single global cpumask
-> + * from is used to track all the idle CPUs in the system.
-> + */
-> +struct idle_cpus {
->  	cpumask_var_t cpu;
->  	cpumask_var_t smt;
-> -} idle_masks CL_ALIGNED_IF_ONSTACK;
-> +};
+I tested this using:
 
-Can you prefix the type name with scx_?
+$ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 math-prime_numbers
 
-Unrelated to this series but I wonder whether we can replace "smt" with
-"core" in the future to become more consistent with how the terms are used
-in the kernel:
+; KTAP version 1
+; 1..1
+;     KTAP version 1
+;     # Subtest: math-prime_numbers
+;     # module: prime_numbers_kunit
+;     1..1
+;     # prime_numbers_test: prime_numbers_test(65536) passed, last prime was 65521
+;     # prime_numbers_test: primes.{last=61, .sz=64, .primes[]=...x28208a20a08a28ac} = 2-3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61
+; 
+;     ok 1 prime_numbers_test
+; ok 1 math-prime_numbers
 
-  struct scx_idle_masks {
-          cpumask_var_t   cpus;
-          cpumask_var_t   cores;
-  };
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Tamir Duberstein (2):
+      lib/math: Hook up tests/Makefile
+      lib/prime_numbers: convert self-test to KUnit
 
-We expose "smt" name through kfuncs but we can rename that to "core" through
-compat macros later too.
+ lib/Kconfig.debug                            |  14 +++
+ lib/math/Makefile                            |   4 +-
+ lib/math/prime_numbers.c                     | 151 +--------------------------
+ lib/math/prime_numbers_private.h             |  64 ++++++++++++
+ lib/math/tests/Makefile                      |   1 +
+ lib/math/tests/prime_numbers_kunit.c         |  92 ++++++++++++++++
+ tools/testing/selftests/lib/config           |   1 -
+ tools/testing/selftests/lib/prime_numbers.sh |   4 -
+ 8 files changed, 175 insertions(+), 156 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250207-prime_numbers-kunit-convert-71c9b3c1d1d4
 
-> +/*
-> + * Find the best idle CPU in the system, relative to @node.
-> + */
-> +s32 scx_pick_idle_cpu(const struct cpumask *cpus_allowed, int node, u64 flags)
-> +{
-> +	nodemask_t unvisited = NODE_MASK_ALL;
-> +	s32 cpu = -EBUSY;
-> +
-> +	if (!static_branch_maybe(CONFIG_NUMA, &scx_builtin_idle_per_node))
-> +		return pick_idle_cpu_from_node(cpus_allowed, NUMA_NO_NODE, flags);
-> +
-> +	/*
-> +	 * If an initial node is not specified, start with the current
-> +	 * node.
-> +	 */
-> +	if (node == NUMA_NO_NODE)
-> +		node = numa_node_id();
-> +
-> +	/*
-> +	 * Traverse all nodes in order of increasing distance, starting
-> +	 * from @node.
-> +	 *
-> +	 * This loop is O(N^2), with N being the amount of NUMA nodes,
-> +	 * which might be quite expensive in large NUMA systems. However,
-> +	 * this complexity comes into play only when a scheduler enables
-> +	 * SCX_OPS_BUILTIN_IDLE_PER_NODE and it's requesting an idle CPU
-> +	 * without specifying a target NUMA node, so it shouldn't be a
-> +	 * bottleneck is most cases.
-> +	 *
-> +	 * As a future optimization we may want to cache the list of hop
-> +	 * nodes in a per-node array, instead of actually traversing them
-> +	 * every time.
-> +	 */
-> +	for_each_numa_node(node, unvisited, N_POSSIBLE) {
-> +		cpu = pick_idle_cpu_from_node(cpus_allowed, node, flags);
-
-Maybe rename pick_idle_cpu_in_node() to stay in sync with
-SCX_PICK_IDLE_IN_NODE? It's not like pick_idle_cpu_from_node() walks from
-the node, right? It just picks within the node.
-
-> @@ -460,38 +582,50 @@ s32 scx_select_cpu_dfl(struct task_struct *p, s32 prev_cpu, u64 wake_flags, bool
->  
->  void scx_idle_reset_masks(void)
->  {
-> +	int node;
-> +
-> +	if (!static_branch_maybe(CONFIG_NUMA, &scx_builtin_idle_per_node)) {
-> +		cpumask_copy(idle_cpumask(NUMA_NO_NODE)->cpu, cpu_online_mask);
-> +		cpumask_copy(idle_cpumask(NUMA_NO_NODE)->smt, cpu_online_mask);
-> +		return;
-> +	}
-> +
->  	/*
->  	 * Consider all online cpus idle. Should converge to the actual state
->  	 * quickly.
->  	 */
-> -	cpumask_copy(idle_masks.cpu, cpu_online_mask);
-> -	cpumask_copy(idle_masks.smt, cpu_online_mask);
-> -}
-> +	for_each_node(node) {
-> +		const struct cpumask *node_mask = cpumask_of_node(node);
-> +		struct cpumask *idle_cpus = idle_cpumask(node)->cpu;
-> +		struct cpumask *idle_smts = idle_cpumask(node)->smt;
-> -void scx_idle_init_masks(void)
-> -{
-> -	BUG_ON(!alloc_cpumask_var(&idle_masks.cpu, GFP_KERNEL));
-> -	BUG_ON(!alloc_cpumask_var(&idle_masks.smt, GFP_KERNEL));
-> +		cpumask_and(idle_cpus, cpu_online_mask, node_mask);
-> +		cpumask_copy(idle_smts, idle_cpus);
-> +	}
-
-nitpick: Maybe something like the following is more symmetric with the
-global case and easier to read?
-
-  for_each_node(node) {
-        const struct cpumask *node_mask = cpumask_of_node(node);
-        cpumask_and(idle_cpumask(node)->cpu, cpu_online_mask, node_mask);
-        cpumask_and(idle_cpumask(node)->smt, cpu_online_mask, node_mask);
-  }
-
->  }
->  
->  static void update_builtin_idle(int cpu, bool idle)
->  {
-> -	assign_cpu(cpu, idle_masks.cpu, idle);
-> +	int node = idle_cpu_to_node(cpu);
-
-minor: I wonder whether idle_cpu_to_node() name is a bit confusing - why
-does a CPU being idle have anything to do with its node mapping? If there is
-a better naming convention, great. If not, it is what it is.
-
-Thanks.
-
+Best regards,
 -- 
-tejun
+Tamir Duberstein <tamird@gmail.com>
+
