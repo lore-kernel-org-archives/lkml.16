@@ -1,167 +1,154 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A841B0420;
-	Fri,  7 Feb 2025 08:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE7E1B0404
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:55:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738918484; cv=none; b=uMvbG7RLtl9lYr8xfcoNCaNUds2SP2vHqWkbcLQ9EgToBwyxJsB0rSotW/0DxSpLiJdGdWf5Hst5XfiyxiFGMi3CW2wyTcV1v7e9LWZzRCu1rGl3PDobgVF/jsnWhunpyQKMIbR+IZQBsPk00PIClOOCo12O7ZeB3NXPWk4FTv4=
+	t=1738918504; cv=none; b=pJyB/62JyXWIeLGts8Saw8aGrhXc1Ant6qDfKQEblCpxX57hhf+RjOyHWVXThx1Xqn8V2NzRhmkkf2GWII4x01K6cGM6fPXd4ots6z7bc1KatDT5Qk8dXlA2n1wEp7jSXvmTyFn/K16DxJmAO7xkOgO4BA47kc2cVvcYdBjIdGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738918484; c=relaxed/simple;
-	bh=8AUVapBfJ+dKFt4S4I3xRiOQpU+SfNOYrHYg76dXSVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P2qFtTwb0OG11ZTHHU2/th9KedEMIb5nxSBJ0SQtiJqsSVN/rlYP/cVMwOg9SojE29NsHw8Gv7/XPdOkJgDeoaKfEH2yqkbGfS30wfVHs2NcXGu5YjpobN3ZHLvnNlNDVyUvHziJYB9Q5g2ztA6Zxcz27K7oWLRNXlIZbQov3k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IMbX3HWe; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1738918504; c=relaxed/simple;
+	bh=fqWb2OfdJWD3lslZIW4tyZKp6Rmxnzk5Iyy35cjg0DI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=cUAW9gCP5doysZ4/k5cPbaAgUoEHgbqK7NUXlkW+7uTDW89N/94IGhJJpVsh31jkOIyvcd1buYIJP8+uMcG5vJmwlikunJRX69pHLR6xAm3rLZtzicEUT+SoXbLErP0HnP++hRdvLRqhGX3KHrOtcC6jaBR+aRaSGF3i0ug+GZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=POvrKBBs; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IMbX3HWe"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D3C65443A5;
-	Fri,  7 Feb 2025 08:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738918474;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wn7hxWkM/cWBO7IgNnUs/y74YeSzIcIWM0x5ZDLkpdk=;
-	b=IMbX3HWevbzexCXvLrDPdCGV4DgqsZikJxEUhZloTqBXMrb7K5iBqUZzsswJsec98HBthn
-	tP4V8cASf0MG5GOAVmfB0so2WYFTXSwYTb6FfAQTNwgXqzUfqXTWdcjGuzIawsP2FaCedv
-	4rBDaTsXH9EYzmPHV21Zf0T6c1mC482iupiejkS0t+LLhdXxA0nmme0t7ZcMSCtahBBKCi
-	s4iX7aHyI+gTPDWBaJBWGJcVxPnFomj9RcbuSVw+ocSbDiiReNMvBiIWYkMMsotEZWnNd1
-	dFxmwaQRSxvzt/z1Hi/mtOcNnRYXPFxVWTv/HhjJn35KZSHb4QDNXAK9x3KJfw==
-Date: Fri, 7 Feb 2025 09:54:28 +0100
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, Jagan
- Teki <jagan@amarulasolutions.com>, Marek Szyprowski
- <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>,
- Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, Paul Kocialkowski
- <contact@paulk.fr>, Maxime Ripard <mripard@kernel.org>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, =?UTF-8?Q?Herv?=
- =?UTF-8?Q?=C3=A9?= Codina <herve.codina@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Paul Kocialkowski
- <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v6 08/26] drm/bridge: panel: add a panel_bridge to every
- panel
-Message-ID: <20250207095428.244f0f91@booty>
-In-Reply-To: <iucfx6tewwazxnonivajmdqqaexdfn6izwxwlv2l5t3256uwfy@sp4cm5eifdt3>
-References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
-	<20250206-hotplug-drm-bridge-v6-8-9d6f2c9c3058@bootlin.com>
-	<iucfx6tewwazxnonivajmdqqaexdfn6izwxwlv2l5t3256uwfy@sp4cm5eifdt3>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="POvrKBBs"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38da72cc47bso1340797f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 00:55:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738918501; x=1739523301; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4NA/X6pVv6MhxU2rOACQGZ3o3qUufdc5q7/UZzaZAT4=;
+        b=POvrKBBskfxhWd572+FKkeXUwkqW83D3Jkd4H7pJoE8zzpymXGjhvxTSf+c8BH5sjI
+         C48yp7lLoS05wtjEg5Hf9B+/uo2k8IKOGZmYoq4/rXZxjdoseVaLpmDGYWfS1roi3mNt
+         Nut25k7B3wce57hjd9Tj6UBo/o2WzQj7zxZuK5zNUtdGHyZgeXEuNe/ZECU87JDmDNMp
+         6KkIQNZ6r6KSXGvn8i9JsKQhDXrT80BkgAzSQGOIPYQUm0bzcYYBl6wdUbM0monGjwHE
+         eMycRy8T/ZuVhJrs9Y8MclKtEsD6+5xoEcVpc+BsAYXgNRbCm28IvhnfewCeG9QVSNLg
+         qZXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738918501; x=1739523301;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4NA/X6pVv6MhxU2rOACQGZ3o3qUufdc5q7/UZzaZAT4=;
+        b=ET5Z+fWF65D1KFZqOMyDAXjkaMVk6Yrl6ooGmy09XAmI3sg3Qo1vY7j6GakWQ9URPA
+         tyBsS1bJg2J4u7CZNe3ghuX6sUOLZ6K7M8n2EuPLZsGzlot1OZUe0OwS8iZMOKfh14e8
+         G7eZi9N8tcoHD4z5ZrruTWakszz8lim0j2WN+Durp7Pia8a21HQxZLL3c5fjBWHKe6ke
+         Tb1f64QNpYWN8mqaNVJb60P5zQub+tZ5ikP2bGhJqxbJKPCIEkyqpch9kduMF3vWiKQD
+         VMelVuNGFJiimyybA6pG5p4oeTEVZI315XT7V1wx+TsHUuyAGGkofP/z9SLzeqt9mGtz
+         Pp0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXGw3KGsHWgCnTRHmcCtpmrSaEz/OXLNQCjhTmjJuG7cqQu6qaIoRqaNEVXvrGq+00KBtF1ILcNp7DBHpU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMFSKzyfUqNLf7Liw4rPMhykNIG169a1024NgZbXxYGUn/XaFp
+	ucmf4Brk6UKSd/jdP3+MpAi82cAI8yhZiGndYxNJzv52OtbBgzVq7CyYZyCMV1U=
+X-Gm-Gg: ASbGncu5oYwmF5mNotxoSxJJMBOm1nTwgDXba6ShuoJ5pwGlH30o5egqwCb94Y2v0bH
+	MqagsJUyhoE/l30QjGxijS7AkXpy0Qpc8zcgsJGt21LTHzdjPeM4j8cXsZrJRO6TnmMXWtiVArD
+	afJ3H3lNbztqKJ6D4RlQah8emMXe6MBcaHzXvI6xVYomBJ7xWH15uew/TTA3vEQTL0p5tSdV6Ah
+	LK+zFCZwEUg5Ju24KlWQnML+J24LV9tWiu5MeuVOWwL7CtZX/5SKSAX4GGdbhmHzAs7biNS5oqx
+	1qbOFICp+x5hwl+L9A8qXTDPNnzy7QbFykagNdB554GFUCVA1D+9+2eYS+Y1gffDaBxN
+X-Google-Smtp-Source: AGHT+IH/4XDsyicpqDQ9Y3WcFD83TXmZ51RuwSfEt0UMQTshRCiwBSTUAjS4DsFc8GU0SU2TumjluQ==
+X-Received: by 2002:a05:6000:dd0:b0:386:37f5:99e7 with SMTP id ffacd0b85a97d-38dc91133aamr1353355f8f.33.1738918501273;
+        Fri, 07 Feb 2025 00:55:01 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:5b26:96be:712e:30cd? ([2a01:e0a:982:cbb0:5b26:96be:712e:30cd])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d94db77sm82525305e9.15.2025.02.07.00.55.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 00:55:00 -0800 (PST)
+Message-ID: <f6d7ffa0-6c08-45fb-9153-5e4aad1ca86a@linaro.org>
+Date: Fri, 7 Feb 2025 09:55:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH RFC v2] dt-bindings: mmc: mmc-slot: make compatible
+ property optional
+To: Dharma Balasubiramani <dharma.b@microchip.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250205-mmc-slot-v2-1-da3c5f30e2d9@microchip.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250205-mmc-slot-v2-1-da3c5f30e2d9@microchip.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeekgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeglefffefghefhtddvfeeufeeiveekgffgleekieduteekkeetvdehudekgfdvvdenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegtvgejvgemiegtgegvmeeitggtjeemleekgeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegtvgejvgemiegtgegvmeeitggtjeemleekgeejpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefjedprhgtphhtthhopegumhhithhrhidrsggrrhihshhhkhhovheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehinhhkihdruggrvgesshgrmhhsuhhnghdrt
- ghomhdprhgtphhtthhopehjrghgrghnsegrmhgrrhhulhgrshholhhuthhiohhnshdrtghomhdprhgtphhtthhopehmrdhsiiihphhrohifshhkihesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Fri, 7 Feb 2025 04:49:21 +0200
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
-
-> On Thu, Feb 06, 2025 at 07:14:23PM +0100, Luca Ceresoli wrote:
-> > Adding a panel does currently not add a panel_bridge wrapping it. Usually
-> > the panel_bridge creation happens when some other driver (e.g. the previous
-> > bridge or the encoder) calls *_of_get_bridge() and the following element in
-> > the pipeline is a panel.
-> > 
-> > This has some drawbacks:
-> > 
-> >  * the panel_bridge is not created in the context of the driver of the
-> >    underlying physical device (the panel driver), but of some other driver
-> >  * that "other driver" is not aware of whether the returned drm_bridge
-> >    pointer is a panel_bridge created on the fly, a pre-existing
-> >    panel_bridge or a non-panel bridge
-> >  * removal of a panel_bridge requires calling drm_panel_bridge_remove(),
-> >    but the "other driver" doesn't know whether this is needed because it
-> >    doesn't know whether it has created a panel_bridge or not
-> > 
-> > So far this approach has been working because devm and drmm ensure the
-> > panel bridge would be dealloacted at some later point. However with the
-> > upcoming implementation of dynamic bridge lifetime this will get more
-> > complicated.
-> > 
-> > Correct removal of a panel_bridge might possibly be obtained by adding more
-> > devm/drmm technology to have it freed correctly at all times. However this
-> > would add more complexity and not help making lifetime more understandable.
-> > 
-> > Use a different approach instead: always create a panel_bridge with a
-> > drm_panel, thus matching the lifetime of the drm_panel and the panel_bridge
-> > wrapping it. This makes lifetime much more straightforward to understand
-> > and to further develop on.
-> > 
-> > With the panel_bridge always created, the functions to get a bridge
-> > [devm_drm_of_get_bridge() and drmm_of_get_bridge()] become simpler because
-> > the bridge they are looking for exists already (if it can exist at all). In
-> > turn, this is implemented based on a variant of
-> > drm_of_find_panel_or_bridge() that only looks for panels:
-> > of_drm_find_bridge_by_endpoint(). In the future
-> > drm_of_find_panel_or_bridge() can be progressively removed because there
-> > will never be a panel not exposing a bridge.
-> > 
-> > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> > 
-> > ---
-> > 
-> > This patch was added in v6.
-> > ---
-> >  drivers/gpu/drm/bridge/panel.c | 74 +++++++++++++++++++++++++++++++++---------
-> >  include/drm/drm_panel.h        |  8 +++++
-> >  2 files changed, 66 insertions(+), 16 deletions(-)
-> >   
+On 05/02/2025 04:48, Dharma Balasubiramani wrote:
+> Remove the compatible property from the list of required properties and
+> mark it as optional.
 > 
-> LGTM, minor issue below.
+> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+> ---
+> Changes in v2:
+> - Instead of moving the compatible string to the other binding, just make it
+>    optional (remove from required list).
+> - Link to v1: https://lore.kernel.org/r/20241219-mmc-slot-v1-1-dfc747a3d3fb@microchip.com
+> ---
+>   Documentation/devicetree/bindings/mmc/mmc-slot.yaml | 1 -
+>   1 file changed, 1 deletion(-)
 > 
-> > @@ -1018,6 +1067,11 @@ struct drm_bridge *devm_drm_panel_bridge_add_typed(struct device *dev,
-> >  {
-> >  	struct drm_bridge **ptr, *bridge;
-> >  
-> > +	if (panel->bridge) {
-> > +		DRM_DEBUG("panel %s: returning existing bridge=%p", dev_name(dev), panel->bridge);
-> > +		return panel->bridge;
-> > +	}  
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc-slot.yaml b/Documentation/devicetree/bindings/mmc/mmc-slot.yaml
+> index 1f0667828063..ca3d0114bfc6 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc-slot.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/mmc-slot.yaml
+> @@ -29,7 +29,6 @@ properties:
+>       maxItems: 1
+>   
+>   required:
+> -  - compatible
+>     - reg
+
+If you remove it from here then it's still required in Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml
+so please add it.
+
+Thanks,
+Neil
+
+>   
+>   unevaluatedProperties: false
 > 
-> Shouldn't the rest of the function also be removed as you do in other
-> cases?
+> ---
+> base-commit: 40b8e93e17bff4a4e0cc129e04f9fdf5daa5397e
+> change-id: 20241219-mmc-slot-0574889daea3
+> 
+> Best regards,
 
-Indeed it should.
-
-And even more, I now realize drm_panel_bridge_add_typed() should also
-become a simple 'return panel->bridge', like its devm and drmm
-variants, and its code, implementing the actual creation of a panel
-bridge, move to an internal function. Otherwise this patch is a bug:
-existing drivers which do call drm_panel_bridge_add_typed() would end
-up in having two panel_bridges for the same panel.
-
-I must say the process of developing this patch together with the
-hotplug work was "convoluted" to say the least, which probably explains
-why this got unnoticed so far.
-
-Luca
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
