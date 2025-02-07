@@ -1,182 +1,261 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737722417EF;
-	Fri,  7 Feb 2025 01:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB192417EF;
+	Fri,  7 Feb 2025 01:28:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738891643; cv=none; b=ht266sSgG0BZQ8wGOcHo3RZOgw+97qNU0ggefycX3xhq0qwdqVpJgFQmWo3a3c1nnOPy+nswLs2NBt/cikUDPx+MgrWCy1YB4NVjA+tBw8vqkJuUesvGYMld4YN+PAjk6E2YFiuxZGMxeHiNYbyjlyqtwhFvl9j3iWJGhQ7dMZA=
+	t=1738891734; cv=none; b=nBmsq//HextpFyYGhzPIRdh/Dtb+IdYlS1/09zJQlBFTru+2I34ueyICkO4I2kVYECmCf9c9CaPvruY7j5iriDuOnm8KJ0c850vUP/nhokNtHerV8EfrzTbLHK0sSyhJV5LaIpQxsZ6rBrD+YCXbJ6OZClJgEuOnTkHFQCvFdhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738891643; c=relaxed/simple;
-	bh=oUTlD3kBS/om5yCh/K55XSfx4LuSQ2J3orL7bI3d4fA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Af6tvikJK0BJiDF1xnXaRnNYoWSMOQ9rWSDJzPymsoo3UNIljcBj/72T5ORQvkifYN4zzdmDHRIlj/QJ/29MbMg3JbEcivn3qkivPFtn2gdNse3fnzYZEtvhNYoELeg1Lxp2Q4yKhwJl0mdnr8tN4Y3DqLk5Lp7Slbob4s7jwiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G+wlvxod; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738891734; c=relaxed/simple;
+	bh=Ey5UTQgIuNSeHVOPVOqWRUOfs5NUVVEmfvVeZunpzk4=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=h18W1pQNTOCso3SMhiI92YP6M1BAoOGjahIcA372WiIn3rs5niT+DXctesRDUBnIH6fR+ephm//+lB8mV/OSdwbnGtWOgtaPaqaTsod6vnBkS4JRV+Dueky9vrCFRV9DyQKbR+9D3xthSD4RM6k7jbCS2t3BGP0UFQ3pTIpoLpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Pbr/Ebv6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=URtQ2pIJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Pbr/Ebv6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=URtQ2pIJ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G+wlvxod"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738891642; x=1770427642;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=oUTlD3kBS/om5yCh/K55XSfx4LuSQ2J3orL7bI3d4fA=;
-  b=G+wlvxodxqmbZ8YSqerzk4cLp8InoG3/+ut3lQ+93HjHxl2WrZ+gkdKk
-   L4MxoNJypzd8mUhwio+aQ7Gab5Dq1nkLXN7v8rtp7fz5cyB6KaEG4BrO5
-   HnXCOgUnsvJFYyatcaovhgF0ua7bX01H5OXA8fFoW69zLO2fzKFjAjf03
-   0u493xeCVisAv/0nqiHl2IcCkFxzLoADw6f6iL62yIaNjW1H274jWhEp7
-   t1Ign1vSkTy0E9i2B96wjXqyxwSA01xdSeDGdxy2+nc/AAQZD3L4X/uFB
-   qUGCszmQKNSWjqeym+xpPrLu/UpRzi7Yh9ZKlGizxGMNXam73mD3B7jsx
-   g==;
-X-CSE-ConnectionGUID: zzBE5cT0RWeKtrIUxKu+Yw==
-X-CSE-MsgGUID: y/q9QFdmTy+zVLRGUHPUhg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="64879768"
-X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="64879768"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 17:27:21 -0800
-X-CSE-ConnectionGUID: cwjFxGppQ/iOrh+wD8YrsQ==
-X-CSE-MsgGUID: RmvB7V7xTCWUIEencciG7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="142264979"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 17:27:17 -0800
-Message-ID: <5fb71690-06a4-4140-ace0-63e19c186139@linux.intel.com>
-Date: Fri, 7 Feb 2025 09:27:14 +0800
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Pbr/Ebv6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="URtQ2pIJ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Pbr/Ebv6";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="URtQ2pIJ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4F72221163;
+	Fri,  7 Feb 2025 01:28:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738891730; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s2AsCPfAHkdj1ZuTyMgTvB/NeYaxqCP1+QJQCWZHIP0=;
+	b=Pbr/Ebv6U3up2NFWLh0u8SYLxl4W8tZHhB4/OsGbFgIDnsohaMa9ATUJJQGUk0EjNf7ezO
+	EhJJyZGjTIMCrT7no2FIU95wDgks5bkvz7QvpfxtspgjJtIQhuZ1NRv2MZRkX3F8Pur41U
+	3tfoGCnQn6Nmrn+bti+91PmencroXXs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738891730;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s2AsCPfAHkdj1ZuTyMgTvB/NeYaxqCP1+QJQCWZHIP0=;
+	b=URtQ2pIJdFBdKb+0LMB6TOdRYhkv6H4P41IUh62jNzA5+SQNZnZEDtOjvbNjrW+zu6m5+x
+	bGIsxIExu41J4WDA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="Pbr/Ebv6";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=URtQ2pIJ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738891730; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s2AsCPfAHkdj1ZuTyMgTvB/NeYaxqCP1+QJQCWZHIP0=;
+	b=Pbr/Ebv6U3up2NFWLh0u8SYLxl4W8tZHhB4/OsGbFgIDnsohaMa9ATUJJQGUk0EjNf7ezO
+	EhJJyZGjTIMCrT7no2FIU95wDgks5bkvz7QvpfxtspgjJtIQhuZ1NRv2MZRkX3F8Pur41U
+	3tfoGCnQn6Nmrn+bti+91PmencroXXs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738891730;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s2AsCPfAHkdj1ZuTyMgTvB/NeYaxqCP1+QJQCWZHIP0=;
+	b=URtQ2pIJdFBdKb+0LMB6TOdRYhkv6H4P41IUh62jNzA5+SQNZnZEDtOjvbNjrW+zu6m5+x
+	bGIsxIExu41J4WDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8BCCF13694;
+	Fri,  7 Feb 2025 01:28:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id GMTmD89hpWd6XQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 01:28:47 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 11/20] perf/x86/intel: Setup PEBS constraints base on
- counter & pdist map
-To: "Liang, Kan" <kan.liang@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250123140721.2496639-1-dapeng1.mi@linux.intel.com>
- <20250123140721.2496639-12-dapeng1.mi@linux.intel.com>
- <f198c454-ff7c-42eb-80f8-45bc4b94210d@linux.intel.com>
- <1338dd77-e9c1-4eac-9d0f-195829acdd2a@linux.intel.com>
- <e123a3c7-098b-4caf-9f69-601a435bda70@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <e123a3c7-098b-4caf-9f69-601a435bda70@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: "NeilBrown" <neilb@suse.de>
+To: "Christian Brauner" <brauner@kernel.org>
+Cc: "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Jeff Layton" <jlayton@kernel.org>, "Dave Chinner" <david@fromorbit.com>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/19] VFS: introduce lookup_and_lock() and friends
+In-reply-to: <20250206-herde-zunutze-2ad5be3fea78@brauner>
+References: <>, <20250206-herde-zunutze-2ad5be3fea78@brauner>
+Date: Fri, 07 Feb 2025 12:28:44 +1100
+Message-id: <173889172414.22054.10997679254257474673@noble.neil.brown.name>
+X-Rspamd-Queue-Id: 4F72221163
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
+On Fri, 07 Feb 2025, Christian Brauner wrote:
+> On Thu, Feb 06, 2025 at 04:42:45PM +1100, NeilBrown wrote:
+> > lookup_and_lock() combines locking the directory and performing a lookup
+> > prior to a change to the directory.
+> > Abstracting this prepares for changing the locking requirements.
+> >=20
+> > done_lookup_and_lock() provides the inverse of putting the dentry and
+> > unlocking.
+> >=20
+> > For "silly_rename" we will need to lookup_and_lock() in a directory that
+> > is already locked.  For this purpose we add LOOKUP_PARENT_LOCKED.
+> >=20
+> > Like lookup_len_qstr(), lookup_and_lock() returns -ENOENT if
+> > LOOKUP_CREATE was NOT given and the name cannot be found,, and returns
+> > -EEXIST if LOOKUP_EXCL WAS given and the name CAN be found.
+> >=20
+> > These functions replace all uses of lookup_one_qstr() in namei.c
+> > except for those used for rename.
+> >=20
+> > The name might seem backwards as the lock happens before the lookup.
+> > A future patch will change this so that only a shared lock is taken
+> > before the lookup, and an exclusive lock on the dentry is taken after a
+> > successful lookup.  So the order "lookup" then "lock" will make sense.
+> >=20
+> > This functionality is exported as lookup_and_lock_one() which takes a
+> > name and len rather than a qstr.
+> >=20
+> > Signed-off-by: NeilBrown <neilb@suse.de>
+> > ---
+> >  fs/namei.c            | 102 ++++++++++++++++++++++++++++--------------
+> >  include/linux/namei.h |  15 ++++++-
+> >  2 files changed, 83 insertions(+), 34 deletions(-)
+> >=20
+> > diff --git a/fs/namei.c b/fs/namei.c
+> > index 69610047f6c6..3c0feca081a2 100644
+> > --- a/fs/namei.c
+> > +++ b/fs/namei.c
+> > @@ -1715,6 +1715,41 @@ struct dentry *lookup_one_qstr(const struct qstr *=
+name,
+> >  }
+> >  EXPORT_SYMBOL(lookup_one_qstr);
+> > =20
+> > +static struct dentry *lookup_and_lock_nested(const struct qstr *last,
+> > +					     struct dentry *base,
+> > +					     unsigned int lookup_flags,
+> > +					     unsigned int subclass)
+> > +{
+> > +	struct dentry *dentry;
+> > +
+> > +	if (!(lookup_flags & LOOKUP_PARENT_LOCKED))
+> > +		inode_lock_nested(base->d_inode, subclass);
+> > +
+> > +	dentry =3D lookup_one_qstr(last, base, lookup_flags);
+> > +	if (IS_ERR(dentry) && !(lookup_flags & LOOKUP_PARENT_LOCKED)) {
+> > +			inode_unlock(base->d_inode);
+>=20
+> Nit: The indentation here is wrong and the {} aren't common practice.
 
-On 2/6/2025 11:01 PM, Liang, Kan wrote:
->
-> On 2025-02-05 9:47 p.m., Mi, Dapeng wrote:
->> On 1/28/2025 12:07 AM, Liang, Kan wrote:
->>> On 2025-01-23 9:07 a.m., Dapeng Mi wrote:
->>>> arch-PEBS provides CPUIDs to enumerate which counters support PEBS
->>>> sampling and precise distribution PEBS sampling. Thus PEBS constraints
->>>> can be dynamically configured base on these counter and precise
->>>> distribution bitmap instead of defining them statically.
->>>>
->>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>>> ---
->>>>  arch/x86/events/intel/core.c | 20 ++++++++++++++++++++
->>>>  arch/x86/events/intel/ds.c   |  1 +
->>>>  2 files changed, 21 insertions(+)
->>>>
->>>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->>>> index 7775e1e1c1e9..0f1be36113fa 100644
->>>> --- a/arch/x86/events/intel/core.c
->>>> +++ b/arch/x86/events/intel/core.c
->>>> @@ -3728,6 +3728,7 @@ intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
->>>>  			    struct perf_event *event)
->>>>  {
->>>>  	struct event_constraint *c1, *c2;
->>>> +	struct pmu *pmu = event->pmu;
->>>>  
->>>>  	c1 = cpuc->event_constraint[idx];
->>>>  
->>>> @@ -3754,6 +3755,25 @@ intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
->>>>  		c2->weight = hweight64(c2->idxmsk64);
->>>>  	}
->>>>  
->>>> +	if (x86_pmu.arch_pebs && event->attr.precise_ip) {
->>>> +		u64 pebs_cntrs_mask;
->>>> +		u64 cntrs_mask;
->>>> +
->>>> +		if (event->attr.precise_ip >= 3)
->>>> +			pebs_cntrs_mask = hybrid(pmu, arch_pebs_cap).pdists;
->>>> +		else
->>>> +			pebs_cntrs_mask = hybrid(pmu, arch_pebs_cap).counters;
->>>> +
->>>> +		cntrs_mask = hybrid(pmu, fixed_cntr_mask64) << INTEL_PMC_IDX_FIXED |
->>>> +			     hybrid(pmu, cntr_mask64);
->>>> +
->>>> +		if (pebs_cntrs_mask != cntrs_mask) {
->>>> +			c2 = dyn_constraint(cpuc, c2, idx);
->>>> +			c2->idxmsk64 &= pebs_cntrs_mask;
->>>> +			c2->weight = hweight64(c2->idxmsk64);
->>>> +		}
->>>> +	}
->>> The pebs_cntrs_mask and cntrs_mask wouldn't be changed since the machine
->>> boot. I don't think it's efficient to calculate them every time.
->>>
->>> Maybe adding a local pebs_event_constraints_pdist[] and update both
->>> pebs_event_constraints[] and pebs_event_constraints_pdist[] with the
->>> enumerated mask at initialization time.
->>>
->>> Update the intel_pebs_constraints() to utilize the corresponding array
->>> according to the precise_ip.
->>>
->>> The above may be avoided.
->> Even we have these two arrays, we still need the dynamic constraint, right?
->> We can't predict what the event is, the event may be mapped to a quite
->> specific event constraint and we can know it in advance.
-> The dynamic constraint is not necessary, but two arrays seems not
-> enough. Because a PEBS event may fall back to the event_constraints as
-> well. Sigh.
-> Four arrays should be required. pebs_event_constraints[],
-> pebs_event_constraints_pdist[], event_constraints_for_pebs[],
-> event_constraints_for_pdist_pebs[].
-> But it seems too complicated. It may not be implemented now.
->
-> But, at least the pebs_cntrs_mask and cntrs_mask can be calculated in
-> the hw_config(), or even intel_pmu_init() once. It should not be
-> calculated every time in the critical path.
+Thanks.
 
-Yeah, these two counters mask are unnecessary to calculate at each call. It
-looks we can further optimize this base on your dynamic constraints
-optimization patch. Thanks.
+>=20
+> > +	}
+> > +	return dentry;
+> > +}
+> > +
+> > +static struct dentry *lookup_and_lock(const struct qstr *last,
+> > +				      struct dentry *base,
+> > +				      unsigned int lookup_flags)
+> > +{
+> > +	return lookup_and_lock_nested(last, base, lookup_flags,
+> > +				      I_MUTEX_PARENT);
+> > +}
+> > +
+> > +void done_lookup_and_lock(struct dentry *base, struct dentry *dentry,
+> > +			  unsigned int lookup_flags)
+>=20
+> Did you mean done_lookup_and_unlock()?
 
+No.  The thing that we are done with is "lookup_and_lock()".
+This matches "done_path_create()" which doesn't create anything.
 
->
-> Thanks,
-> Kan
->>
->>> Thanks,
->>> Kan
->>>
->>>> +
->>>>  	return c2;
->>>>  }
->>>>  
->>>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
->>>> index 2f2c6b7c801b..a573ce0e576a 100644
->>>> --- a/arch/x86/events/intel/ds.c
->>>> +++ b/arch/x86/events/intel/ds.c
->>>> @@ -2941,6 +2941,7 @@ static void __init intel_arch_pebs_init(void)
->>>>  	x86_pmu.pebs_buffer_size = PEBS_BUFFER_SIZE;
->>>>  	x86_pmu.drain_pebs = intel_pmu_drain_arch_pebs;
->>>>  	x86_pmu.pebs_capable = ~0ULL;
->>>> +	x86_pmu.flags |= PMU_FL_PEBS_ALL;
->>>>  }
->>>>  
->>>>  /*
->
+On the other hand we have d_lookup_done() which puts _done at the end.
+Or end_name_hash().  ->write_end(), finish_automount()
+
+I guess I could accept done_lookup_and_unlock() if you prefer that.
+
+>=20
+> > +{
+> > +	d_lookup_done(dentry);
+> > +	dput(dentry);
+> > +	if (!(lookup_flags & LOOKUP_PARENT_LOCKED))
+> > +		inode_unlock(base->d_inode);
+> > +}
+> > +EXPORT_SYMBOL(done_lookup_and_lock);
+> > +
+> >  /**
+> >   * lookup_fast - do fast lockless (but racy) lookup of a dentry
+> >   * @nd: current nameidata
+> > @@ -2754,12 +2789,9 @@ static struct dentry *__kern_path_locked(int dfd, =
+struct filename *name, struct
+> >  		path_put(path);
+> >  		return ERR_PTR(-EINVAL);
+> >  	}
+> > -	inode_lock_nested(path->dentry->d_inode, I_MUTEX_PARENT);
+> > -	d =3D lookup_one_qstr(&last, path->dentry, 0);
+> > -	if (IS_ERR(d)) {
+> > -		inode_unlock(path->dentry->d_inode);
+> > +	d =3D lookup_and_lock(&last, path->dentry, 0);
+> > +	if (IS_ERR(d))
+> >  		path_put(path);
+> > -	}
+> >  	return d;
+> >  }
+> > =20
+> > @@ -3053,6 +3085,22 @@ struct dentry *lookup_positive_unlocked(const char=
+ *name,
+> >  }
+> >  EXPORT_SYMBOL(lookup_positive_unlocked);
+> > =20
+> > +struct dentry *lookup_and_lock_one(struct mnt_idmap *idmap,
+> > +				   const char *name, int len, struct dentry *base,
+> > +				   unsigned int lookup_flags)
+> > +{
+> > +	struct qstr this;
+> > +	int err;
+> > +
+> > +	if (!idmap)
+> > +		idmap =3D &nop_mnt_idmap;
+>=20
+> The callers should pass nop_mnt_idmap. That's how every function that
+> takes this argument works. This is a lot more explicit than magically
+> fixing this up in the function.
+
+OK.
+
+Thanks,
+NeilBrown
