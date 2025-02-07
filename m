@@ -1,279 +1,202 @@
-Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B7223C8D6;
-	Fri,  7 Feb 2025 18:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.24
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738952308; cv=pass; b=S8lscZB4mHMjw4puV/hbmyGeiG1S+nHbDLxJlGS6plg1VymRdxlK+apddHkJmTni30vU6llVPUJ2v+U0cb7POwbLcGv2w2Mbw4xt/JXtl0BKqtVEbP1lSiyQqaEsWb0+26Y961qqPC+W26klc/Lzt7+6SkQVHobPGp5DCF4zcHw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738952308; c=relaxed/simple;
-	bh=d9ZwYPFgYgTL0l+JWyXZofQJ322MEjTvbvfGJVSOHjY=;
-	h=From:Subject:MIME-Version:Content-Type:Message-Id:To:Cc:Date; b=CaR+AUEDphgzT9KPuf0+v894ctFUHOQTQ4mac6TVGvJ8rxJ+cEmpC/WB6mE5UorwZEtDJCkYid+onKLLWyIkJFW9nAydPLKS9ISzsn4GtanPsaxmVmAVRo+k39WFFTr6NBw/Atn3FUGfmAPS8VrVe0BS9OtnX0vJaGa3ovxkVDU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai; spf=pass smtp.mailfrom=invicto.ai; dkim=fail (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b=MwIszzI+ reason="key not found in DNS"; arc=pass smtp.client-ip=23.83.218.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invicto.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invicto.ai
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=invicto.ai header.i=@invicto.ai header.b="MwIszzI+"
-X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id EED1032104E;
-	Fri,  7 Feb 2025 18:18:24 +0000 (UTC)
-Received: from uk-fast-smtpout10.hostinger.io (100-121-114-237.trex-nlb.outbound.svc.cluster.local [100.121.114.237])
-	(Authenticated sender: hostingeremail)
-	by relay.mailchannels.net (Postfix) with ESMTPA id EF58832117F;
-	Fri,  7 Feb 2025 18:18:21 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738952304; a=rsa-sha256;
-	cv=none;
-	b=Opdrw2fHHogsTU+pThofy5ylAqvu6d6sqPA/qITpCvHRdse2ExgBguxD2aJLn2OrBu5A1j
-	bOeTf8qfjofPe0vKOndD+4l74EgxPV2IeKnIbxpWEAabufxvySINrIWTkT1s72wmg5lQoK
-	c2rH2GYnnxqluzVPHDBRfp2hsqnWO2/qGqwjsGWFAbYuKDp2p2Wn0myaicn9mEtFR6lN5Y
-	67CoeYT8QwwbmgELbf6I8NfxFuMFtc0s/03haQFDydxODWm8fZqeCy8ql6V5HqGQQrLyZ8
-	HOj9jywv2y9VolvTgiSK4LLVDcYgR7BDVRT+LrM4dxQR0n2bKqSpdt61zAE/yw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1738952304;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
-	bh=SFzC92NuoYhAUt2IuoMJenAdtbmB93hU6W3PJhkmfW4=;
-	b=i8VSvpA3tjMrP+lHj7GqI1WhAuIUNRh3BBHJrlN4Va/DIwcFwbjkEp8yUkF3ADnwodzOfM
-	KE7nAndE3dXpdbN7i54GbkvyqADReD/q9zjfQlVHsUBmjCmaEl1qdDEboAb6bMj/QhRLn8
-	QPo/0GDLoPboTA/lqZqIAGQlx6q96RWEBDjm0jUk/HaEcuNP1usXePTC8Z/aLg07ctGG2S
-	2ipXR2KAw/tk/VCME9SCXoScTyCdOrGLsuqBpWhc+MmzXQysGNIsb0Qd/6y/bO5DJB7A6I
-	3zALCm1Q0F6TJAZODyaBBS1luChho9nchPfMxSYwMz0dQAExzIjbThQ6Kbsbhg==
-ARC-Authentication-Results: i=1;
-	rspamd-68c88d6cff-nll4r;
-	auth=pass smtp.auth=hostingeremail smtp.mailfrom=kurti@invicto.ai
-X-Sender-Id: hostingeremail|x-authuser|kurti@invicto.ai
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: hostingeremail|x-authuser|kurti@invicto.ai
-X-MailChannels-Auth-Id: hostingeremail
-X-Cure-Cooing: 1e554fa455af7171_1738952304693_1261355290
-X-MC-Loop-Signature: 1738952304693:1453879646
-X-MC-Ingress-Time: 1738952304693
-Received: from uk-fast-smtpout10.hostinger.io (uk-fast-smtpout10.hostinger.io
- [145.14.155.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.121.114.237 (trex/7.0.2);
-	Fri, 07 Feb 2025 18:18:24 +0000
-From: Alban Kurti <kurti@invicto.ai>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=invicto.ai;
-	s=hostingermail-a; t=1738952300;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=SFzC92NuoYhAUt2IuoMJenAdtbmB93hU6W3PJhkmfW4=;
-	b=MwIszzI+bD3gEyMmmyTF/FtQ6D9lcCRg4GY62q8n1sckhOLIFcrBFZsqOSKUoX4ECOHG+h
-	/fgaymaqHnPuEuhpCI6jnZNaFYZ2krhzRaujQwSEnQdnHXmhe2EUSsUhn+BnojwYpco3Ln
-	jovOmTUGz14VRWCjPiqgXjL1pg8mxCkbQob+XeM7pnfgebn/qP5zhGvuS83cOOiXEznkGs
-	duS/otXLtrzvyBs7SGK7imPmDTiXd9fZ9RyEJ+Z/OB2G2Xy5BwBEh3g/S49SuUcxEEhJwQ
-	ysjZJogYqXJlpQRiW7BZBjfXsdokRANTKOeMx4BahuvF5HerTqF0Jxl2OFSaOw==
-Subject: [PATCH v3] checkpatch: add warning for pr_* and dev_* macros
- without a trailing newline
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 918C0192B8A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738952321; cv=none; b=gkpSH5higDDoqnxRbje1SxnWWXolLRW0Oq7Bv8iSH/sDEA7Blc5Dkw6YB3fdq5pvO8bfXeHrIRaQBqiNPAyKHtvFPlmxw8In9GmljJAHh53cR5kzil01M1ffoS3LFFUhjdkiA3xWGc9ttf5EbBO4tHQYSXyMWS036WAfONTqEsA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738952321; c=relaxed/simple;
+	bh=Bw4bdI8vrMmafBO4WhlXi6hzTHCWzgSQj7ENt5D82qg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=J5b+u9qfSX6pO7z3uM0iWxlFEUl5ig9bRiq7441mkp69WIddydT60/w+8Gw9taIxR4Q0n3ECUAAob+NjFPTyFriP64hFcsNtjhkdDSKnsLyCuB44Pc+gnUnXuMK87xRzncwyomKlgQh4KIvl/xHJ6cvmvTxoITIWZYiPcLPH748=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56785113E;
+	Fri,  7 Feb 2025 10:19:00 -0800 (PST)
+Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BCEA3F63F;
+	Fri,  7 Feb 2025 10:18:34 -0800 (PST)
+From: James Morse <james.morse@arm.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Babu Moger <Babu.Moger@amd.com>,
+	James Morse <james.morse@arm.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com,
+	lcherian@marvell.com,
+	bobo.shaobowang@huawei.com,
+	tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>,
+	peternewman@google.com,
+	dfustini@baylibre.com,
+	amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>,
+	Dave Martin <dave.martin@arm.com>,
+	Koba Ko <kobak@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>
+Subject: [PATCH v6 00/42] x86/resctrl: Move the resctrl filesystem code to /fs/resctrl
+Date: Fri,  7 Feb 2025 18:17:41 +0000
+Message-Id: <20250207181823.6378-1-james.morse@arm.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-checkpatch-newline-v3-1-20d8774f16ea@invicto.ai>
-X-B4-Tracking: v=1; b=H4sIAGFOpmcC/x3MQQqAIBBA0avErBMmQ6SuEi3UphwKC40KwrsnL
- d/i/xcSRaYEffVCpIsT76GgrStw3oSFBE/FIFEqlKiF8+TWw5zOi0D3xoEEdlY1CrW2uoESHpF
- mfv7pMOb8Adv/ghdkAAAA
-X-Change-ID: 20250207-checkpatch-newline-09b515077b71
-To: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
- Dwaipayan Ray <dwaipayanray1@gmail.com>, 
- Lukas Bulwahn <lukas.bulwahn@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>
-Cc: Alban Kurti <kurti@invicto.ai>, linux-kernel@vger.kernel.org, 
- rust-for-linux@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738952298; l=6203;
- i=kurti@invicto.ai; s=20250206; h=from:subject:message-id;
- bh=d9ZwYPFgYgTL0l+JWyXZofQJ322MEjTvbvfGJVSOHjY=;
- b=/7lQr4wu/n7uJ2bP9BVzOS2n2QXQpERRRT999f7oXYLthyVAhJNHNdbQT+D1HnX8A1eqxcrzF
- 97f5Fmj1KNeDUCplrn09Qv3UkAVV33IeKpDhKoPBYI2N8N7yRRqUZmw
-X-Developer-Key: i=kurti@invicto.ai; a=ed25519;
- pk=D1lKs+JFapuEVI9zJ2QUTLSf5u4aT12tG0ny6vMMuOc=
-Date: Fri, 07 Feb 2025 18:18:18 +0000 (UTC)
-X-CM-Analysis: v=2.4 cv=H/GJwPYi c=1 sm=1 tr=0 ts=67a64e6c a=9/DLicljd4JGVkZ5BRdAJQ==:117 a=9/DLicljd4JGVkZ5BRdAJQ==:17 a=IkcTkHD0fZMA:10 a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8 a=IWu_P5eVJl3gcF7D5EkA:9 a=QEXdDO2ut3YA:10
-X-CM-Envelope: MS4xfGb/YfJJj8tPJ41yCSOy04L3i6wlP235wSdHNSjlbO8aoDscolgNs2n/4G3CAj6NdWGsHTExf4MXTxb/NfZAKrmu560pVgvh2yeMXxmSQzUwWWjH0pwC ma/8oHwrr6dek4pkaoM0AiR5Z0+AoC1n1k4UKsoJdtTY9nwumQYo1w/ISGjpv/owWdoM99n2RH1I+ApmrgAYKNcyhqVwDeYMAGV1r3OwxM+6lBD/uAB0gP+V x+ULYVa5zj1XRfM67/Q+xfUZJjax9AQoQHtYvH6hqfCY0II86yVDEUpotsVCxl1k+RipFuCaBeKppueAThRYD1HLoTx3W7GRqM3XM1A12Q0yls2Fu5VkUxQy ofK4qaiCEcacqUw9yQsf+JoWxHYOC2RlEfTZmNEBS81c+2MpRU6GGGqN4jiycSg6VI3GFQRkYI+TjIgxRbuJXgEAgBNomrx6Ak08UfpF/SRuYGmnhMmM+OSJ AjUyDQRyj1zS/RWJIfpO3m050g3IuIr+ojWGi5KpEUBzFojCsdT6sbB1+kPIqNpV9Lo6hxA4j5BhySuakLyqUKtC4/n4RSjCgAcwmYedds3ydau1CI5ENnZH I6nYzcUbHeJkthJZSjk4lJ0BEUEa7HW9qMLjn6u2EmmvxzwnnEHX7LtOhBcCY5YCQJKkd8/Q7ZgcBEkpZtIy2e6X
-X-AuthUser: kurti@invicto.ai
+Content-Transfer-Encoding: 8bit
 
-Add a new check in scripts/checkpatch.pl to detect usage of pr_(level)
-and dev_(level) macros (for both C and Rust) when the string literal
-does not end with '\n'. Missing trailing newlines can lead to incomplete
-log lines that do not appear properly in dmesg or in console output.
-To show an example of this working after applying the patch we can run
-the script on the commit that likely motivated this need/issue:
-  ./scripts/checkpatch.pl --strict -g "f431c5c581fa1"
+Changes since v5?:
+ * Allocate memory for kn->priv - MPAM can't repaint cache-ids anymore.
+ * Instead of describing the limit on the number of CLOSID, remove it.
+ * Fixed an off-by-one in the for_each walker.
+ * Kept the rdt_find_domain() argument used to insert to the list.
+ * Resource reset is now per-resource.
+ * thread_throttle_mode_init() went and came back again.
+ * Added support for throttle_mode on SMBA resources
+ * Serialised rdtgroup_destroy_root() and check for duplicate calls.
+ * Regex tweaking in the python script to cover more cases
 
-Also, the patch is able to handle correctly if there is a printing call
-without a newline which then has a newline printed via pr_cont for
-both Rust and C alike. If there is no newline printed and the patch
-ends or there is another pr_* call before a newline with pr_cont is
-printed it will show a warning. Not implemented for dev_cont because it
-is not clear to me if that is used at all.
+~
 
-One false warning that will be generated due to this change is in case
-we have a patch that modifies a `pr_* call without a newline` which has a
-pr_cont with a newline following it. In this case there will be a
-warning but because the patch does not include the following pr_cont it
-will warn there is nothing creating a newline. I have modified the
-warning to be softer due to this known problem.
+This is the final series that allows other architectures to implement resctrl.
+The final patch to move the code has been omitted, but can be generated using
+the python script at the end of the series.
+The final move is a bit of a monster. I don't expect that to get merged as part
+of this series - we should wait for it to make less impact on other series.
 
-I have tested with comments, whitespace, differen orders of pr_* calls
-and pr_cont and the only case that I suspect to be a problem is the one
-outlined above.
+Otherwise this series renames functions and moves code around. With the
+exception of invalid configurations for the configurable-events, there should
+be no changes in behaviour caused by this series. It is now possible for
+throttle_mode to report 'undefined', but no known platform will do this.
 
-Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-Closes: https://github.com/Rust-for-Linux/linux/issues/1140
-Signed-off-by: Alban Kurti <kurti@invicto.ai>
----
-Changes since v2:
-- Added pending_log functionality to account for pr_cont usage with a
-  newline
-- Better formatted cover and patch
-- Link to v2: https://lore.kernel.org/all/20250205120540.387447-1-kurti@invicto.ai/
----
- scripts/checkpatch.pl | 96 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 96 insertions(+)
+The driving pattern is to make things like struct rdtgroup private to resctrl.
+Features like pseudo-lock aren't going to work on arm64, the ability to disable
+it at compile time is added.
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 9eed3683ad76caffbbb2418e5dbea7551d374406..e7494920dea47986af0ba668145a19fcc21a3c9b 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -77,6 +77,8 @@ my ${CONFIG_} = "CONFIG_";
- 
- my %maybe_linker_symbol; # for externs in c exceptions, when seen in *vmlinux.lds.h
- 
-+my $pending_log = undef;
-+
- sub help {
- 	my ($exitcode) = @_;
- 
-@@ -3898,6 +3900,91 @@ sub process {
- # check we are in a valid source file C or perl if not then ignore this hunk
- 		next if ($realfile !~ /\.(h|c|pl|dtsi|dts)$/);
- 
-+# check for pr_* and dev_* logs without a newline for C and Rust files to avoid missing log messages
-+  my $pr_cont_pattern = qr{
-+      \b
-+      pr_cont!?
-+      \s*
-+      \(
-+      \s*
-+      "([^"]*)"
-+      [^)]*
-+      \)
-+  }x;
-+  my $log_macro_pattern = qr{
-+      \b
-+      (
-+          pr_(?:emerg|alert|crit|err|warn|notice|info|debug)
-+        | dev_(?:emerg|alert|crit|err|warn|notice|info|dbg)
-+      )
-+      (!?)
-+      \s*
-+      \(
-+      \s*
-+      "([^"]*)"
-+  }x;
-+
-+  if ($realfile =~ /\.(?:c|h|rs)$/) {
-+      if ($rawline =~ /^\+/) {
-+          my $cleanline = $rawline;
-+          $cleanline =~ s/^[+\s]+//;
-+          $cleanline =~ s/\r?$//;
-+          $cleanline =~ s{/\*.*?\*/}{}g;
-+          $cleanline =~ s{//.*}{}g;
-+
-+          if ($pending_log) {
-+              if ($cleanline =~ /$pr_cont_pattern/) {
-+                  my $cont_string_arg = $1;
-+                  if ($cont_string_arg =~ /\\n$/) {
-+                      $pending_log = undef;
-+                  }
-+              } elsif ($cleanline =~ /$log_macro_pattern/) {
-+                  WARN($pending_log->{lang} . "_LOG_NO_NEWLINE",
-+                       "Possible usage of $pending_log->{macro_call} without a trailing newline.\n" .
-+                       $pending_log->{herecurr});
-+
-+                  $pending_log = undef;
-+
-+                  my $macro_call  = $1;
-+                  my $maybe_excl  = $2;
-+                  my $string_arg  = $3;
-+                  $string_arg =~ s/\s+$//;
-+
-+                  if ($realfile =~ /\.rs$/ && $maybe_excl ne '!') {
-+                      return;
-+                  }
-+
-+                  if ($string_arg !~ /\\n$/ && $string_arg !~ /\n$/) {
-+                      $pending_log = {
-+                          macro_call => $macro_call,
-+                          herecurr => $herecurr,
-+                          lang => ($realfile =~ /\.rs$/) ? "Rust" : "C",
-+                      };
-+                  }
-+              }
-+          } else {
-+              if ($cleanline =~ /$log_macro_pattern/) {
-+                  my $macro_call = $1;
-+                  my $maybe_excl = $2;
-+                  my $string_arg = $3;
-+                  $string_arg =~ s/\s+$//;
-+
-+                  if ($realfile =~ /\.rs$/ && $maybe_excl ne '!') {
-+                      return;
-+                  }
-+
-+                  if ($string_arg !~ /\\n$/ && $string_arg !~ /\n$/) {
-+                      $pending_log = {
-+                          macro_call => $macro_call,
-+                          herecurr   => $herecurr,
-+                          lang       => ($realfile =~ /\.rs$/) ? "Rust" : "C",
-+                      };
-+                  }
-+              }
-+          }
-+      }
-+  }
-+
- # at the beginning of a line any tabs must come first and anything
- # more than $tabsize must use tabs.
- 		if ($rawline =~ /^\+\s* \t\s*\S/ ||
-@@ -7678,6 +7765,15 @@ sub process {
- 		}
- 	}
- 
-+# pending log means a pr_* without an ending newline has not
-+# been followed by a pr_cont call with a newline at the end
-+  if ($pending_log) {
-+    WARN($pending_log->{lang} . "_LOG_NO_NEWLINE",
-+      "Usage of $pending_log->{macro_call} without a trailing newline.\n" .
-+      $pending_log->{herecurr});
-+    $pending_log = undef;
-+  }
-+
- 	# If we have no input at all, then there is nothing to report on
- 	# so just keep quiet.
- 	if ($#rawlines == -1) {
+After this, I can start posting the MPAM driver to make use of resctrl on arm64.
+(What's MPAM? See the cover letter of the first series. [1])
 
----
-base-commit: ceff0757f5dafb5be5205988171809c877b1d3e3
-change-id: 20250207-checkpatch-newline-09b515077b71
+This series is based on v6.14-rc1 and can be retrieved from:
+https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git mpam/move_to_fs/v6
 
-Best regards,
+As ever - bugs welcome,
+Thanks,
+
+James
+
+[v5] https://lore.kernel.org/r/20241004180347.19985-1-james.morse@arm.com
+[v4] https://lore.kernel.org/all/20240802172853.22529-1-james.morse@arm.com/
+[v3] https://lore.kernel.org/r/20240614150033.10454-1-james.morse@arm.com
+[v2] https://lore.kernel.org/r/20240426150537.8094-1-Dave.Martin@arm.com
+[v1] https://lore.kernel.org/r/20240321165106.31602-1-james.morse@arm.com
+[1] https://lore.kernel.org/lkml/20201030161120.227225-1-james.morse@arm.com/
+
+
+Amit Singh Tomar (1):
+  x86/resctrl: Remove the limit on the number of CLOSID
+
+James Morse (41):
+  x86/resctrl: Fix allocation of cleanest CLOSID on platforms with no
+    monitors
+  x86/resctrl: Add a helper to avoid reaching into the arch code
+    resource list
+  x86/resctrl: Remove fflags from struct rdt_resource
+  x86/resctrl: Use schema type to determine how to parse schema values
+  x86/resctrl: Use schema type to determine the schema format string
+  x86/resctrl: Remove data_width and the tabular format
+  x86/resctrl: Add max_bw to struct resctrl_membw
+  x86/resctrl: Generate default_ctrl instead of sharing it
+  x86/resctrl: Add helper for setting CPU default properties
+  x86/resctrl: Remove rdtgroup from update_cpu_closid_rmid()
+  x86/resctrl: Expose resctrl fs's init function to the rest of the
+    kernel
+  x86/resctrl: Move rdt_find_domain() to be visible to arch and fs code
+  x86/resctrl: Move resctrl types to a separate header
+  x86/resctrl: Add an arch helper to reset one resource
+  x86/resctrl: Move monitor exit work to a resctrl exit call
+  x86/resctrl: Move monitor init work to a resctrl init call
+  x86/resctrl: Rewrite and move the for_each_*_rdt_resource() walkers
+  x86/resctrl: Move the is_mbm_*_enabled() helpers to asm/resctrl.h
+  x86/resctrl: Add resctrl_arch_is_evt_configurable() to abstract BMEC
+  x86/resctrl: Change mon_event_config_{read,write}() to be arch helpers
+  x86/resctrl: Move mba_mbps_default_event init to filesystem code
+  x86/resctrl: Move mbm_cfg_mask to struct rdt_resource
+  x86/resctrl: Add resctrl_arch_ prefix to pseudo lock functions
+  x86/resctrl: Allow an architecture to disable pseudo lock
+  x86/resctrl: Make prefetch_disable_bits belong to the arch code
+  x86/resctrl: Make resctrl_arch_pseudo_lock_fn() take a plr
+  x86/resctrl: Move RFTYPE flags to be managed by resctrl
+  x86/resctrl: Handle throttle_mode for SMBA resources
+  x86/resctrl: Move get_config_index() to a header
+  x86/resctrl: Claim get_{mon,ctrl}_domain_from_cpu() helpers for
+    resctrl
+  x86/resctrl: Rename resctrl_sched_in() to begin with "resctrl_arch_"
+  x86/resctrl: resctrl_exit() teardown resctrl but leave the mount point
+  x86/resctrl: Drop __init/__exit on assorted symbols
+  x86/resctrl: Move is_mba_sc() out of core.c
+  x86/resctrl: Add end-marker to the resctrl_event_id enum
+  x86/restrl: Expand the width of dom_id by replacing mon_data_bits
+  x86/resctrl: Remove a newline to avoid confusing the code move script
+  x86/resctrl: Split trace.h
+  fs/resctrl: Add boiler plate for external resctrl code
+  x86/resctrl: Move the filesystem bits to headers visible to fs/resctrl
+  x86/resctrl: Add python script to move resctrl code to /fs/resctrl
+
+ MAINTAINERS                                   |   2 +
+ arch/Kconfig                                  |   8 +
+ arch/x86/Kconfig                              |   6 +-
+ arch/x86/include/asm/resctrl.h                |  43 +-
+ arch/x86/kernel/cpu/resctrl/Makefile          |   8 +-
+ arch/x86/kernel/cpu/resctrl/core.c            | 206 ++---
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c     |  90 +-
+ arch/x86/kernel/cpu/resctrl/internal.h        | 251 ++----
+ arch/x86/kernel/cpu/resctrl/monitor.c         | 114 ++-
+ arch/x86/kernel/cpu/resctrl/monitor_trace.h   |  31 +
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c     |  59 +-
+ .../resctrl/{trace.h => pseudo_lock_trace.h}  |  24 +-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c        | 388 ++++++---
+ arch/x86/kernel/process_32.c                  |   2 +-
+ arch/x86/kernel/process_64.c                  |   2 +-
+ fs/Kconfig                                    |   1 +
+ fs/Makefile                                   |   1 +
+ fs/resctrl/Kconfig                            |  37 +
+ fs/resctrl/Makefile                           |   6 +
+ fs/resctrl/ctrlmondata.c                      |   0
+ fs/resctrl/internal.h                         |   0
+ fs/resctrl/monitor.c                          |   0
+ fs/resctrl/monitor_trace.h                    |   0
+ fs/resctrl/pseudo_lock.c                      |   0
+ fs/resctrl/pseudo_lock_trace.h                |   0
+ fs/resctrl/rdtgroup.c                         |   0
+ include/linux/resctrl.h                       | 273 +++++-
+ include/linux/resctrl_types.h                 |  59 ++
+ resctrl_copy_pasta.py                         | 812 ++++++++++++++++++
+ 29 files changed, 1821 insertions(+), 602 deletions(-)
+ create mode 100644 arch/x86/kernel/cpu/resctrl/monitor_trace.h
+ rename arch/x86/kernel/cpu/resctrl/{trace.h => pseudo_lock_trace.h} (56%)
+ create mode 100644 fs/resctrl/Kconfig
+ create mode 100644 fs/resctrl/Makefile
+ create mode 100644 fs/resctrl/ctrlmondata.c
+ create mode 100644 fs/resctrl/internal.h
+ create mode 100644 fs/resctrl/monitor.c
+ create mode 100644 fs/resctrl/monitor_trace.h
+ create mode 100644 fs/resctrl/pseudo_lock.c
+ create mode 100644 fs/resctrl/pseudo_lock_trace.h
+ create mode 100644 fs/resctrl/rdtgroup.c
+ create mode 100644 include/linux/resctrl_types.h
+ create mode 100644 resctrl_copy_pasta.py
+
 -- 
-Alban Kurti <kurti@invicto.ai>
+2.39.2
 
