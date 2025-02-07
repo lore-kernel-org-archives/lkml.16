@@ -1,95 +1,114 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3331E04AE;
-	Fri,  7 Feb 2025 12:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F0A7FD;
+	Fri,  7 Feb 2025 12:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738930760; cv=none; b=fa3T0YVzhVbZornjQ7TfyTCBlPFY8v8tLdp4UgM5239nu41c/5H0QhbLAgWzumS+D0vSvjW2qpy+peNPq26sjLP6IE30R2LSr7rjbnitX8gPktDhxysCRYiSE1ZT8uBB4J6J5ZqEvEKumsKJdNltFLuy4RKqY/fro6hk6sKcslM=
+	t=1738930856; cv=none; b=VBRXehH1hJyIgA4qfGn4FQBv0kl/5Pe9MC7JO42CoG68vVEzKEOw5MZLvGj6yBZUvMhgd+EadNWFfx/qh/zLARVGW1cDE44Sz0cT+UldD+xGluyTHlIP3BwAvnUL7VibGMaAlcb2N2cVUwu0aTcHpzhlMkGdmAkiPTYPjTFBvAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738930760; c=relaxed/simple;
-	bh=oDwmjypt8/G6DWzsb+Ic2fOcU6ddc9XqAgb0jGDaN50=;
+	s=arc-20240116; t=1738930856; c=relaxed/simple;
+	bh=a54mOet32eur3UH8ItkoAvMxfKNhEKaOIWBLSYbvLSw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hPghhj+/zqbXy1kQ00CHHIh3znqpi0W5feq14c5zkykRQxTHHeMOj+1P+zWqeT/d8gi5io4acwT8/j10+k6sCLcP9bBJISLNysGfEZzBz3ex2YACnBB4aBEQHsWNWpYL314cGqHw5WFad7gRc2AcPpIwbqMXLoL8tBMDoKw4OdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GOfuzZ5d; arc=none smtp.client-ip=209.85.216.54
+	 To:Cc:Content-Type; b=VriZtkutNIlYpxBSH4PORJQtgx6UkCFQNT40WRgni8byDVfrkTJiOrxrTiQ+meT4YYO5Boyu84w6bd8UvbbLtybGFy1hRSaGu7rVZ/ikO9DiDpgdSwhNcNQd8nyYCjZts51cUO9XloQx4ZH1XL4IvhfRXrjuu2vnmq917RLeGsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cl3GFrm9; arc=none smtp.client-ip=209.85.218.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GOfuzZ5d"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fa122f62b5so340376a91.3;
-        Fri, 07 Feb 2025 04:19:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cl3GFrm9"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aaf3c3c104fso366499866b.1;
+        Fri, 07 Feb 2025 04:20:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738930758; x=1739535558; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738930853; x=1739535653; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oDwmjypt8/G6DWzsb+Ic2fOcU6ddc9XqAgb0jGDaN50=;
-        b=GOfuzZ5d7mEUcWOx6bm2Y/YoZhPDsfVTwjS+pkEieitNzmFhuVuqch991NFrUIHHte
-         PXUBC4j1r78WliRIZHf0LfhRkaP0hmaRVIciWd+UIJymvXjpGGs6YvaYiODvebyeQFa0
-         rvyS/Hk9RHPVuCwSQO8VWAklwEJyfmE2b3u0KzIQzHlVcVozzy0d9NMVIqcbO0/kRUvR
-         onLiU8iupNezZhIU6zIF2cJK0GJRndWZ4KtAXJZOg9YpzUpvUH5a+RYhMZkS9wS3n+AH
-         l/2NE1Jn6P5siSVS9rVc//sCvOuSeEXEReaCY+5S0JaDgHoEsTKubBRcf/GM3ZT3GCmM
-         sv7Q==
+        bh=a54mOet32eur3UH8ItkoAvMxfKNhEKaOIWBLSYbvLSw=;
+        b=Cl3GFrm9deRMNBDmGo/v09OGvHDpg+1wcX0MGboK+FkV4lFSu7z48MTLgoKhGOFHiM
+         dPJM5LEYg451fHwIROmRgURV8s5BIFhk2N0bGi0i8KfGqC47G/zfjygBgxHDlHnvDcIQ
+         V1BRCn9jQBku72VR1DF/eItSf8ToxhAsFpCN18PD7nv5WhmaVBcyeNBTUqdaIv/FlSBJ
+         zTb+L0PXXAlX0gHIq65/gt79snbeO9iJBYIfETi5EpSW+7O+WvIiNdZ6KWcCpBoavOJO
+         yUK8C4csVVIpNbkCCavGsuWA0Kxxeyf5CZFPTFQDRKui3Ga7118XGK6+fn8sCiDI6qX5
+         y3GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738930758; x=1739535558;
+        d=1e100.net; s=20230601; t=1738930853; x=1739535653;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oDwmjypt8/G6DWzsb+Ic2fOcU6ddc9XqAgb0jGDaN50=;
-        b=XjjEYjkWFYRb53xJVcRd+gMjwgPJE9tjPj5wj97sjKeri2Lu7yxE+KSnlYf3RChHvE
-         It9zNH5Ji28nrRnoVSXlXCMPji6xb20HUoeLIq9SG6vWyO0txz3TXR3D6Rheb0eGR8ux
-         vA8RDPc0Ddu1zX+Er6FAhJPKzFDy4G0yYUTDSgLog5TwIBdgrKIsIvJBr8a3ziEtVdZy
-         zNU/iUjNNxi4QDzdaYHQh+LQLdc0GuZ5G6gOHX5pqBG+9wGJgh+scbsVEaWkkFrwUTXM
-         6l0crVVBz11hKTX9ey7L5jOvv44EFKCPSoxa50o2QlSYV7v8OqsqeFxja+Xg5nj6O/M/
-         hejw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4efwJpauv0B7VFQazmvailql7Yl6VLyxzdC1LkTER2W/IcJNrlLcWEYavl2S7MOpuW2tIKzLnZDsgjPIpNY4=@vger.kernel.org, AJvYcCVpdVBDC9z9njofsUvrNdx+5CzWT5DIIqmvEAyCtMpYUSfY6y+24SdBK26hotRcZOvwGstoLsnMDjiVGlk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywwo/LNyYeckjejnPQJlrYSzUpw6HO3VFui1MqqI9BfXUo7NlGn
-	JsldnyotlwzbI+Bwg4EfuWA8nH8kfYKwsRshYoBgDVwUN8ylfRjev2mE5Ow9d0Zjq63qlVzZ4Vc
-	kD3JNYSE+pURIQD/lJxoPuhy3v6k=
-X-Gm-Gg: ASbGncuMbvSipKmzWuUUOVeVMKf/G6Hd3aHOLeCgLtFx47e4b7jTAMZJXVOL921oQtJ
-	wD2OEAMpS4y5jPEuEe1pTuOLwVAD+5OF9XRQbB0+Xb4ok4fKbw7vyMTP0ezkbFxHZN0VqXiAn
-X-Google-Smtp-Source: AGHT+IFkNnQhokYL4R1tAFkCPTJBGfOs+kfO+CfhEhcWR3WujUHlCLaheoFzIor7FdQwpA8Wy95zSOkgf3PXLHL+4tA=
-X-Received: by 2002:a17:90b:3844:b0:2ee:6d73:7ae6 with SMTP id
- 98e67ed59e1d1-2fa2455914cmr1706312a91.7.1738930758009; Fri, 07 Feb 2025
- 04:19:18 -0800 (PST)
+        bh=a54mOet32eur3UH8ItkoAvMxfKNhEKaOIWBLSYbvLSw=;
+        b=dK5tcmj2PLrJoR6gW8+2v/1eT5IKLLEF6zpaX6VOoP2LhWOU51B/U0z0xKs3tg3nJv
+         9gwbpaRy5EbxIDHZwqAKefwdZX+0RiXIYK0H1WenocgRs0Z5q2jj/AO6Ji5JO6ky+ppn
+         LsJKiRQrIsRliZcTCjCop3f40wSVXvAEsQL0DxZN+POxFuBOlyv1TChTVqK437YdCe3Z
+         M0eY+FSgIAV3DJhzFFRcoLx+r6+nkagNApQMHPrbEE6UQEpQbP6IzXzQmS8qDwa6wkix
+         zlazN4/4VX/IYRQa+8kRybU+RDqhrnzJjZ2XTe2QwU2Jwb/x9FL2BvsQk1D3X73duy4r
+         cA8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUUAxAfM/T15pwJ/AtNcCw3yFLEKNB1MX15B9ZNvrJ1ecjNRwF0cfr8xIcLHyXboZnGYQ/4w39/nBr2aVQ=@vger.kernel.org, AJvYcCV0v63mPYiN9dI7SfpuFgXI5SLkhYOAiSf+H4h2dlSXYq35NOfpTXF4vflzKajA3Cgw8MM7rc5uJgpo+Buu@vger.kernel.org, AJvYcCX8PL0U55AEunDGKT8Rxv+KjgcqL4WH9PI2ZrPe52KtqqhNVhQtiMNmPswBNTmA5jVrcj+gE/8w@vger.kernel.org, AJvYcCXEsBPjK98wyq2FkGAwL9sv68z0sm3YkM2MMCh5d7bxWAjAQa5wJGGnASf4kcodUrjTi13Cu0eXOGH/@vger.kernel.org, AJvYcCXIWeAaw0ZOY6EKzvfcAsWc9/YkqnpmtMT4RRZ5YzxI6c6PcRj71B4ZmJI/P/OeF66hTL7bdRGZCJtB@vger.kernel.org, AJvYcCXKKEnUnoIhQph4qXY/3ciLO3L/eOlLiGYl/QZEKlRMO17eqUxksaMnjCG89YG9TJghuVf/Ke/pVV5C@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGT1huF2220tGmR5mVX53Eu3o9YdDzVR8DkvlJZ4ly/1nyxaK5
+	2bUoTBB/pQ74lFe8TYkHhdWMojLwS+sMykQkMFnUbq5ozs65oit4ytb9dhxdH/SMQynNzX0BLgn
+	svVK5P36Yvh9rIeBk2fTANfx3JXg=
+X-Gm-Gg: ASbGncu68I7wOkxElwGb6MQFPMEA0GTJdcx8VpYc0I0ICbehOBktFba6i9uq8/w5gpG
+	Zxit48dKaEBZyHP2yzRCqvj+avyYLtPqXtz8FMuTawWhM56JS6OsHz22W8cXCC4ywCCz2ajgiNU
+	M=
+X-Google-Smtp-Source: AGHT+IGoiY/D1TiKwL5GXSoLaYBfuEuXQzNiPDbnqOiNifB0jsQGA+mFrH+WWqi6hARBZNpJM2EqqyBf+cDjmszsmSM=
+X-Received: by 2002:a17:907:c1b:b0:ab6:36fd:942a with SMTP id
+ a640c23a62f3a-ab789c6cedbmr318216966b.50.1738930852678; Fri, 07 Feb 2025
+ 04:20:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206-aligned-alloc-v3-1-0cbc0ab0306d@gmail.com>
- <Z6UwCtaO-qVYEN2Z@cassiopeiae> <CAJ-ks9kvrBBLTnEmRPbrkoHYgg6wrXoTVXh8ecqYBSPTfpjx2g@mail.gmail.com>
-In-Reply-To: <CAJ-ks9kvrBBLTnEmRPbrkoHYgg6wrXoTVXh8ecqYBSPTfpjx2g@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 7 Feb 2025 13:19:04 +0100
-X-Gm-Features: AWEUYZlJUi-5tupzy-7IWx-TvdGH6k6ZORV0lBRzfg6ZrCg-hLR9RW2vOKIIxzw
-Message-ID: <CANiq72=P3O5Q=S4JBVGY0B0t5xSfMYGu3YbhT6SQmbVcAkEA8A@mail.gmail.com>
-Subject: Re: [PATCH v3] rust: allocator_test: use `posix_memalign`
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Alejandro Colomar <alx@kernel.org>
+References: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com>
+ <CAMRc=Mf9WQjVXvea7tHx0MJG2H8Yqxw=zGqvjp7dfD7+=huDKw@mail.gmail.com> <CAPDyKFoNuXpTEm1rLPvAgib+ugqr7XyETZhfrNr6ypOOKRwjXQ@mail.gmail.com>
+In-Reply-To: <CAPDyKFoNuXpTEm1rLPvAgib+ugqr7XyETZhfrNr6ypOOKRwjXQ@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 7 Feb 2025 14:20:16 +0200
+X-Gm-Features: AWEUYZlfwIvy7LIm9pIahL5l8siSqdVektaSns5lQfpSrtnfvAL7yjcR2ciezX0
+Message-ID: <CAHp75VdmN2wqwwnea0gtTQJ+Y5twQaJp6iEL2esEMCHDi8bvVg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/13] gpiolib: add gpiod_multi_set_value_cansleep
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, David Lechner <dlechner@baylibre.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 7, 2025 at 12:43=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
+On Fri, Feb 7, 2025 at 11:48=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.org=
+> wrote:
+> On Fri, 7 Feb 2025 at 08:49, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > On Thu, Feb 6, 2025 at 11:48=E2=80=AFPM David Lechner <dlechner@baylibr=
+e.com> wrote:
+
+...
+
+> > > Maintainers, if you prefer to have this go through the gpio tree, ple=
+ase
+> > > give your Acked-by:, otherwise I will resend what is left after the n=
+ext
+> > > kernel release.
+
+> > I can provide an immutable branch for the entire series for everyone
+> > to pull or I can apply patch one, provide an immutable branch and
+> > every subsystem can take their respective patches. What do you prefer?
 >
-> I'm happy to wait for clarification, I'm just not sure whose court the
-> ball is in.
+> The changes look small and trivial to me. I wouldn't mind if you take
+> them all (at least for mmc). An immutable branch would be good, if it
+> turns out that we need to pull them.
 
-Ideally Alejandro would clarify, who I Cc'd in the previous thread (he
-was not Cc'd here, by the way).
++1 here, the potential user for immutable branch/tag is IIO.
+The rest looks trivial and unlikely to have conflicts.
 
-Anyway, I agree with Danilo that we shouldn't overcomplicate just for
-this. Using the previous patch, but being clear about that we are
-using stricter requirements so that it works on macOS too, should be
-fine I think. But I trust Danilo to decide which approach is best for
-maintaining this.
-
-Cheers,
-Miguel
+--=20
+With Best Regards,
+Andy Shevchenko
