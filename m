@@ -1,66 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4785323F283;
-	Fri,  7 Feb 2025 14:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB553238D56
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738939754; cv=none; b=aPl1tqBJHa0+pie85kR8yDLZLvi2VDfXT/qgZJkV1tFw4L25QRSQFzh7lpgijzwiptJYgSCHY9LIa1iis6eeFqhPrt5+I2JQnRw95zW50wG1tuusx0M/RFNWTRzyWi3lMQbCugXlVsWjzHzGcf9K5AI5Dg82dBBv1UkN6+R1otY=
+	t=1738939818; cv=none; b=GkZvHLpR0GEU2bmJvVyrpzx2h/j68ZL8+XLABwf3fnPWyICPFoejdtG1m71pdXVoeoZ3NfikERD5Q/LWCVjFb8hlRkKTsNEGoEL2MtMRXi2SyeGONpK0NFz4l84Ejjv1ive3/5QPiAGfyIa/5O8oTwVoa7VDJm/AyxbFrUI7epE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738939754; c=relaxed/simple;
-	bh=GgVpNoYWo4l+sArYzDGk9YViRVxrJPBmugNmojWNYtU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=L/bCaenyOWmrTUpWH3dR6nEt05c36bOML6j4TmwDNKyadNeichVW7ihZp2gcaAYVJVkIGXt5ga+pIRYUHTjyiakwYP4aJWSFVu10WwDkj5twqhtYDAnXyI+PY3eY8AnjP3iiyZsTSzyylCK1ec6QFG6RiOy8unY6ToyAsLR8LDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkbGwmdI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738939818; c=relaxed/simple;
+	bh=VnYHwj/oQP6GF/XwgeRtTf5A5aUJOwwkPiVT8jBKEC8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UwjKDVciYSNItOnN2aSi0VmAqfvd/HBbtFVGI0tp+XSPzAFi5cg7xjkLDeuIrpQrTeCO/i94nLf3vZxusRyoVylowPADUxFj7jT1j6h166/L3M5BGbeIfa7d5Xwd1IBjx9Bv5o9KPOKc+yk4RuJzaxxtP7S+ECRlsBt6gCxV2c4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SZYLwAir; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkbGwmdI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C179C4CED1;
-	Fri,  7 Feb 2025 14:49:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738939753;
-	bh=GgVpNoYWo4l+sArYzDGk9YViRVxrJPBmugNmojWNYtU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=CkbGwmdIWr0s7uIaLsBX4XwKQhwoPO15TnLbVBgiLDDHZyMmiqLlBjqEmUQc0rXkj
-	 0CD7sU+038ALBEpFO3sfI7L+9DRC+EPMMVXMDEEF9L5dOOE2IdfzKZ+Drk55EgUoTi
-	 wSx43xtRBA+p9oX/IVhf3sJvMGzmH4jKI0YJPMRR4nCgnsZGjvJqkfs5kEoPBQpOrh
-	 9Rl9a3Gelxfg9NZiqLMMgE3su+x8btkar7VP71HKYTlqoBVcrauXrKhN5a5V/ySEns
-	 OlfjxXrsawAESfcLSMvIDXcuSTTW9mGfVAdI8kGoJNJkHf3P5FR0S4/uyia8r36enq
-	 X8NTjif5PkMIQ==
-Date: Fri, 7 Feb 2025 15:49:10 +0100 (CET)
-From: Jiri Kosina <jikos@kernel.org>
-To: Benjamin Tissoires <bentiss@kernel.org>
-cc: Peter Hutterer <peter.hutterer@who-t.net>, linux-kernel@vger.kernel.org, 
-    linux-input@vger.kernel.org, Werner Sembach <wse@tuxedocomputers.com>, 
-    Aki Van Ness <aki@lethalbit.net>
-Subject: Re: [PATCH 0/7] HID: bpf: sync with udev-hid-bpf
-In-Reply-To: <20250207-bpf-import-2025-02-07-v1-0-6048fdd5a206@kernel.org>
-Message-ID: <ns867291-64o8-p028-qs42-2377s21016q7@xreary.bet>
-References: <20250207-bpf-import-2025-02-07-v1-0-6048fdd5a206@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SZYLwAir"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4679b5c66d0so247311cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:50:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738939816; x=1739544616; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NRKA4B0QRywDECdhm0qngkV9qa48DT0PdcDzDfPKBaE=;
+        b=SZYLwAirXu4nBCt+odAPHxPt/FAZ9brPG3JKtPwhW9BDssiDlTkWTJKT70XQJ/FUDq
+         KqbKomQFdr34515a/RihgMttU/mYUAE6cJQGd2/SBnYuqpqx1iZlmX5icpkqz7ZMoA+b
+         BaDvNi6JGEdiHMiajXy63z5qZcz6me08SZFWrbILl8AABKVLzBKck/Y/spaEIiKHBvNa
+         pWRy/NySXl6gQPGwcMuqlfCkwDIoULRsStLy+eaSzqaYW9hkM0Wclk5N3EjeEYBVR6AH
+         cT1UCN8uZwx47akhHTyQOVTIH6/e2afEOBNJ6zpZIyUjCtsuo2027noMgHZXCynFHdxj
+         bhCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738939816; x=1739544616;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NRKA4B0QRywDECdhm0qngkV9qa48DT0PdcDzDfPKBaE=;
+        b=BvbZ047D5zz9TwJ8Albhw92a8obafsFc1WOtVfrTh6OlZWpwSSLkwImP9W3VvipPNh
+         8v458akTxOnHO6DSL2T12iDDgATlTwyCv3052kibDM5wTWykAMKKnKVMAYc3Dy3ce7xU
+         eYuEY28Ed/pH5/eV4PENgt0lakPmC7EPwVDDRGmK8YDWxU5Fn8BxrqysjDioWhS9YFrH
+         FFlAR7sw8HZR9Qpogd1xatM2QKKWUAnrEOplJfsTayRXdX/Yg7PKvoZeoWvsKxppQck+
+         uPGyp2SACNhiNVF286ZSrEj43CVjYOWgY6sZ/4SPR4zPuQJLo+dT66X2a5TR4GbXterK
+         BovQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3+BGn7kTZ1ugaOIp8rHuRA80jR+lKb9hSq9EYSUdd2+fiE8xWbuElQqL5czgdVjjIYpneqx07L38jAOM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpzeof/9/ZQadzyuNjLWbAnSQUTf3Iu2+Eon7KcvJ6v2AkKcn6
+	PNDlgLv4jhg0vSxUcv05UhXYDNCduaqVrUdb3wF50SBARXDNO7oxz/eKr55GiuvdzqpOozP5kGZ
+	v2xeDOnfq6dALfpggn8uNrx2oiONcIZrGT8TG
+X-Gm-Gg: ASbGncst7JxjQ4cbSW2JWq77dN6D6qT0KxdfJBEYsPr5omEC6Y7KCUOxc00sDGxdiTy
+	eI0ppTVmOp8Fjm1qaMUCqi0xupPjoZwuRnBLIJ/iJo9og7JiH8YA//A117O6ncdTg4bQFdojycQ
+	eWNVyWd2PW6NdWU6lnE4e056RMQaM=
+X-Google-Smtp-Source: AGHT+IEAEEFNWNC3YMS7vHR/Vyhhb/JRh9NfR76IzHXO0WhPYtv2TQGy1e9f08A2ZgjFJyV5vQBOkp3X9qqEndoNfto=
+X-Received: by 2002:a05:622a:1116:b0:466:975f:b219 with SMTP id
+ d75a77b69052e-4716848912dmr3745331cf.8.1738939813598; Fri, 07 Feb 2025
+ 06:50:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250206044346.3810242-1-riel@surriel.com> <20250206044346.3810242-4-riel@surriel.com>
+In-Reply-To: <20250206044346.3810242-4-riel@surriel.com>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Fri, 7 Feb 2025 15:50:02 +0100
+X-Gm-Features: AWEUYZkO4iB2Buw9lBqK7vSPHHLWafRCrJ_epfjdTjiqPQZ0YV42rJSUamkNClA
+Message-ID: <CA+i-1C2+Pva55qPEHHS9vc83_vmGJaUzUTPmoE2M3_qvCpcsUQ@mail.gmail.com>
+Subject: Re: [PATCH v9 03/12] x86/mm: consolidate full flush threshold decision
+To: Rik van Riel <riel@surriel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
+	peterz@infradead.org, dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com, 
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com, 
+	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com, 
+	mhklinux@outlook.com, andrew.cooper3@citrix.com, 
+	Dave Hansen <dave.hansen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 7 Feb 2025, Benjamin Tissoires wrote:
+On Thu, 6 Feb 2025 at 05:45, Rik van Riel <riel@surriel.com> wrote:
+> @@ -1276,7 +1282,7 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+>
+>         int cpu = get_cpu();
+>
+> -       info = get_flush_tlb_info(NULL, 0, TLB_FLUSH_ALL, 0, false,
+> +       info = get_flush_tlb_info(NULL, 0, TLB_FLUSH_ALL, PAGE_SHIFT, false,
+>                                   TLB_GENERATION_INVALID);
 
-> Here are a few hid-bpf device fixes from udev-hid-bpf.
-> We've got the usual XP-Pen and Huion plus one from TUXEDO.
-> 
-> Cheers,
-> Benjamin
-> 
-> Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
-
-FWIW
-
-	Acked-by: Jiri Kosina <jkosina@suse.com>
-
-for the series, thanks.
-
--- 
-Jiri Kosina
-SUSE Labs
-
+[Why] do we need this change? If it's necessary here, why isn't it
+needed everywhere else that does TLB_FLUSH_ALL too, like
+flush_tlb_mm()?
