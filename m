@@ -1,287 +1,209 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5BC8479;
-	Fri,  7 Feb 2025 23:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC391A314A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 23:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738971529; cv=none; b=abM/BRRI5Cot1XRyZhTWDkltNe5I7ldkaHWZBfuid1rSKDqQPdbPUtF+tb1zepaMOMx9Y9BDPaioyL2vzkBVxRBrZOpCCypQvgar2qxP9PMvhK8v5rPiQRd1mVSXBpzyfCKfxU76Pl5dpQDBiY2tauaec4haYA7HRfl2+gsi1So=
+	t=1738971634; cv=none; b=HS+7zH4CPijwsPcuqNVjb8KVA+BxeUlM9FqwuyscXLwb7WZxXus7LapFG6Sa0YbhTxoQOltsXq1NfmUec8voxzL5UFl21NazAwaKwMghGkAi936b8k/0HX4tm/Ny8zrEnfLgitq0HNwbmKKbenLqVr+7sY9zkTVSIXuY1l3WWRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738971529; c=relaxed/simple;
-	bh=BkTWJoWP2WfdeOTFjlr/lcL4ibVk6vt/UZhSO/XKCNE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=T32BPNyGoRJSCinOdUmIyRPdY6IUzONvOIYmxcHZe6DKGCKLzF4u1f1TPmEccVcV5zsJmL+pH6I9O6C7zVpCi5j+IiCt0f/+IIPZPEKbsD9c7k/B7JCLPjVhggkaiMiOy5AlknSvg8wqZ3161m0liEpNoh4ivPZeXFfcvv7mQMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C1RxTtLd; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738971634; c=relaxed/simple;
+	bh=k8zX/BJsd2gvIQvW3S6mUUj4yyBlqmPzoQA4ybErlIg=;
+	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
+	 MIME-Version:Content-Type; b=r7nou5o3XFowHOMuWoCRSy1TTLpWccWDXtcAXbwElc3uwuwWruYoNPNW/0CobYoE4ygp19+R2ku9VGL4mASn8yLHM4Bv2DY5GnOYHptKYJYKr91Bl35mvPjsCZqrreZ7/t+bdCTREFCC+7g3SydtuBTSUGh6ePJkoXso0Leo/II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=telus.net; spf=pass smtp.mailfrom=telus.net; dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b=JY53nUFb; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=telus.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=telus.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C1RxTtLd"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6d92e457230so26697926d6.1;
-        Fri, 07 Feb 2025 15:38:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="JY53nUFb"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2efe25558ddso3726854a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 15:40:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738971527; x=1739576327; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gNXBg4daHIABB/yTMDVoSJWD25P1rTtltrI8i7arR5c=;
-        b=C1RxTtLdnhlL7HmpabQgkk+natnOikyuv1Qu6MquCqeuDYVIS+Rz0LJGo03pPzHJ1W
-         qEclfHItyMtQ8540zC1USnqECDr2cz84tuIyie9vsIveTdBSxOeSgmSOR5ZRbzfjPkxy
-         6isTXqeJDuGXbnobc8Mj9iIsbdU8nyLkqRRjLwQ/iF4hUpj27+rjONex1T87d5kIppYR
-         8aooo36S98DPFncgyNZ6kCypN7ZtGMhPNcFIXc1nFx8erQExph2dva6eSeqlJ95PRs8O
-         jyFhWQ6Ow3/b8JIUKhWCnrra+gEYftOr1JujWL/XA646+RXVp3CVlnwuRuI2Q5CrtV+V
-         UMhw==
+        d=telus.net; s=google; t=1738971631; x=1739576431; darn=vger.kernel.org;
+        h=thread-index:content-language:content-transfer-encoding
+         :mime-version:message-id:date:subject:in-reply-to:references:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=seEvp+GNhFdvGe8jMoPlpr7+Tkkc7kXjrZ/2tiBBxX0=;
+        b=JY53nUFbTB0ZJESnms0rS7GhOLwCw9G+mIRBePiEMGH02mggnHKE87n85GdivXiDoz
+         Dc0cpW8Pg/qA3UaSKm3O3Z0UVvxgPWT/4CQnk26+8RWznNy5m4oOUHwh0pPGQ26Pu77V
+         zED3OiQgmkhV3toCgbT7xTdsk3Zhzy/9RRafasGNjOrZil6OkCxASxTa9icVun1jHZps
+         LQms0WBnU2uMFlDJSQ+sshtWf9hGNugk/V5qHJVmz+xnNUO3abD+jEGSyGaR0BtpBmz9
+         I90e42mGwVZMpkm3T3iqA1H0ham/TeEihFq8Fe5Wf/ssiG+SIGjxmpR8hY5R4gayz85F
+         c2XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738971527; x=1739576327;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gNXBg4daHIABB/yTMDVoSJWD25P1rTtltrI8i7arR5c=;
-        b=nQyVSCkvrXQsPzlFSWu1FEIEpg6c80G9SeAULMsobNdwQpHqbSFbLf2ICKzv3hUP+T
-         gQBYyAQEwiK0pdBlJiQBNTHjgLyM23HxnTOgn0R/iHDa+M6Na2YfbZpJTH0jVtKhxVPG
-         lxKR1+FFNItxgSWgp0xKJzj65B99gTLnpDY/haKWDIvHXXmto8UiCnCSIm9u/JqQLPyJ
-         WmV0d42Jc3cl43HIbLGQFPpU4qYHY5m1f81bt/cWf7z1aZQmL6sfwaHYssXe6FEcLgPH
-         gw+oQ3lq/vBvyiGd6xOuEBt2Lo3cFtj53UoHpJUPfC6uyxGd/tXMcSRpSEtIFUV3dqjA
-         QvbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVH/Ma5sePzcyGg0RNdNwyUMMyrVkAvZ5ic9eFtHDoWFK/6C34Ep4Em7nPbs/t+OdM0RuwLN9jSttXo3OUzxJo=@vger.kernel.org, AJvYcCW6S85uZ4pgvtOJVbPTWQSUUeTZq+mxVAR2sLNnPogqxDWCiJoN/E5CbzdIrzogYuydk42j6TKR@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGii0NCpvyVGPC9agpInF9rl8HYMrPoKD/Y4/7AHvtUdri4WvN
-	L9fv//2en58FPTAQgHzcgUMw3ZInXYKLUUXYDa5alF4i16VcsFJ4
-X-Gm-Gg: ASbGncsR5+f4YcIvErB9v94eKrhCaBhp4ZnFIHVcbRVtcrBsGAhBk3tHoPBVe5ZeidK
-	8B7cg10evkzjJ4HD2S1015a1egzhHNJ51QcrreiQvXsGilDUYV+XLFQTnD7YnibA6y/xxZiTLdc
-	a7aAUVyJAUj72r17RRoOOd7dReMZJAt9B3duXTPumjA4n32OJ3xDnTua4ngYqeZZRSppvDH8yMl
-	X1NpV2mLn7iUi5+MX1lvSNnNh7sFr9k1yBEZL9pO3LPjFsotjPTXUzYu7UxC8QMdxeXbGqXWNi5
-	shL3P3TjVpqYU1vW+k7fzJxPTqZCn33Y84ugxT3B9+9ZicPmmQ==
-X-Google-Smtp-Source: AGHT+IFgwe+y0rnFQIDXEowT8WZlxbeKXv4NpGTED5yOqbyNN1kdkaooufe+2Y2XJ+62b9eMKCK6CA==
-X-Received: by 2002:a05:6214:2125:b0:6d8:99cf:d2db with SMTP id 6a1803df08f44-6e4456e0c44mr73149906d6.38.1738971526687;
-        Fri, 07 Feb 2025 15:38:46 -0800 (PST)
-Received: from Tamirs-MacBook-Pro.local ([2600:4041:5be7:7c00:c58e:ed03:1b60:c56d])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43baacbbasm22006416d6.73.2025.02.07.15.38.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 15:38:45 -0800 (PST)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 07 Feb 2025 18:38:41 -0500
-Subject: [PATCH] blackhole_dev: convert self-test to KUnit
+        d=1e100.net; s=20230601; t=1738971631; x=1739576431;
+        h=thread-index:content-language:content-transfer-encoding
+         :mime-version:message-id:date:subject:in-reply-to:references:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=seEvp+GNhFdvGe8jMoPlpr7+Tkkc7kXjrZ/2tiBBxX0=;
+        b=vQDp8NN1m2beo3lFKd0u8IDEEkj6VXKdqtCxaMwHy0zUTWFqkxewPfrR/5GvHNdd6F
+         A0tyvRCMTX7kEN24GMi/gfyL357f2VoWXS2JRwUlPjJ3pfVRDSEA7fynMSYFHMW9w3Im
+         OI8mrHCk5awDVArdnFtytGL3PT0QuwoOgDVYdXJfKopePpFK0uf0Lj9SD049EiqC2EWB
+         1as89iuNqEA3ZqBTkQB+j40omhvf+4tf9tJOAuz4xpf5ZRPnrDBXqG7exKYCXfLczcNP
+         vU7MeO6ZPgCq8zi5hiS7WODdmX5635hV0IPhf/uc+cDmXXeYVltPZaG8lUX3fe9qHM1v
+         RJ1w==
+X-Gm-Message-State: AOJu0Yz8Elml3gfpxRh42pc1X6wX9/KDwVRyhHbmg96Wz169Q3lzPikf
+	b2DUlg7NGyQYF1zlBrwgKbCDsYAWffUeoVLCAlCEWiuiavqcS9U3gqH8WSbqQ2w=
+X-Gm-Gg: ASbGncukjlphfx/nFiBE6KSTWWXSS9ovgjiY3vQbKuOYWrHlEe9SIK0wtYXabLoVmgV
+	OtXl6L109pIDySEGoEm7za1dosR1QwDbuYQfLWvdmvzh2E7izH9LoLW0vUnTNjAdCgTlx0Mm945
+	GJdRByys8XU8U9M9DCUdfttZQdCOeaE+NRYUVo4Uyb38n1AzGdvTzkBRkNwO046o+pcrQhNQqro
+	07mRCWzm6YfyfL4kdsVM5Wpmpvbu2P/ipmR7HLbjtiaoYvPGOFOgkOBr9nli9nqPdJ02mO/eagk
+	tSXBNyZv8vQ/sxyly0zCP7OY3bzg8u7qWkt4xclILgqnwxgWE/3aG7Pt
+X-Google-Smtp-Source: AGHT+IGd/aH8cZtY2w6U1R+ABgYZBDXNUWIDkmN/brsK896wGEYTV7m/771TCsqR7M9rL9p4q3r7Kw==
+X-Received: by 2002:a17:90b:2317:b0:2fa:1029:f16a with SMTP id 98e67ed59e1d1-2fa243ee38cmr6982476a91.35.1738971631549;
+        Fri, 07 Feb 2025 15:40:31 -0800 (PST)
+Received: from DougS18 (s66-183-142-209.bc.hsia.telus.net. [66.183.142.209])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa09a72292sm3992338a91.27.2025.02.07.15.40.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Feb 2025 15:40:31 -0800 (PST)
+From: "Doug Smythies" <dsmythies@telus.net>
+To: "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+Cc: "'LKML'" <linux-kernel@vger.kernel.org>,
+	"'Daniel Lezcano'" <daniel.lezcano@linaro.org>,
+	"'Christian Loehle'" <christian.loehle@arm.com>,
+	"'Artem Bityutskiy'" <artem.bityutskiy@linux.intel.com>,
+	"'Aboorva Devarajan'" <aboorvad@linux.ibm.com>,
+	"Doug Smythies" <dsmythies@telus.net>,
+	"'Linux PM'" <linux-pm@vger.kernel.org>
+References: <12630185.O9o76ZdvQC@rjwysocki.net>
+In-Reply-To: <12630185.O9o76ZdvQC@rjwysocki.net>
+Subject: RE: [RFT][PATCH v1] cpuidle: teo: Avoid selecting deepest idle state over-eagerly
+Date: Fri, 7 Feb 2025 15:40:33 -0800
+Message-ID: <009d01db79b9$aecd1c70$0c675550$@telus.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-blackholedev-kunit-convert-v1-1-8ef0dc1ff881@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAICZpmcC/x3MQQqAIBBA0avErBuwiYi6SrQwm2ooNLQkkO6ex
- F+9zU8Q2AsH6IsEnqMEcTajKgswm7Yro8zZQIoaRarF6dBm39zBM0fcbysXGmcj+ws73ZCucqo
- myIPT8yLPPx/G9/0A2TrPEmwAAAA=
-X-Change-ID: 20250207-blackholedev-kunit-convert-9a52a1a1a032
-To: Andrew Morton <akpm@linux-foundation.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <ndesaulniers@google.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, llvm@lists.linux.dev, 
- Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-ca
+Thread-Index: AQLC2T+pvcOY0U2G0e8FLXneTSytVLFtfD6A
 
-Convert this very simple smoke test to a KUnit test.
+Hi Rafael,
 
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
-I tested this using:
+On 2025.02.04 12:58 Rafael J. Wysocki wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> It has been observed that the recent teo governor update which =
+concluded
+> with commit 16c8d7586c19 ("cpuidle: teo: Skip sleep length computation
+> for low latency constraints") caused the max-jOPS score of the SPECjbb
+> 2015 benchmark [1] on Intel Granite Rapids to decrease by around 1.4%.
+> While it may be argued that this is not a significant increase, the
+> previous score can be restored by tweaking the inequality used by teo
+> to decide whether or not to preselect the deepest enabled idle state.
+> That change also causes the critical-jOPS score of SPECjbb to increase
+> by around 2%.
+>
+> Namely, the likelihood of selecting the deepest enabled idle state in
+> teo on the platform in question has increased after commit =
+13ed5c4a6d9c
+> ("cpuidle: teo: Skip getting the sleep length if wakeups are very
+> frequent") because some timer wakeups were previously counted as non-
+> timer ones and they were effectively added to the left-hand side of =
+the
+> inequality deciding whether or not to preselect the deepest idle =
+state.
+>
+> Many of them are now (accurately) counted as timer wakeups, so the =
+left-
+> hand side of that inequality is now effectively smaller in some cases,
+> especially when timer wakeups often occur in the range below the =
+target
+> residency of the deepest enabled idle state and idle states with =
+target
+> residencies below CPUIDLE_FLAG_POLLING are often selected, but the
+> majority of recent idle intervals are still above that value most of
+> the time.  As a result, the deepest enabled idle state may be selected
+> more often than it used to be selected in some cases.
+>
+> To counter that effect, add the sum of the hits metric for all of the
+> idle states below the candidate one (which is the deepest enabled idle
+> state at that point) to the left-hand side of the inequality mentioned
+> above.  This will cause it to be more balanced because, in principle,
+> putting both timer and non-timer wakeups on both sides of it is more
+> consistent than only taking into account the timer wakeups in the =
+range
+> above the target residency of the deepest enabled idle state.
+>
+> Link: https://www.spec.org/jbb2015/
+> Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  drivers/cpuidle/governors/teo.c |    6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> --- a/drivers/cpuidle/governors/teo.c
+> +++ b/drivers/cpuidle/governors/teo.c
+> @@ -349,13 +349,13 @@
+>         }
+>
+>         /*
+> -        * If the sum of the intercepts metric for all of the idle =
+states
+> -        * shallower than the current candidate one (idx) is greater =
+than the
+> +        * If the sum of the intercepts and hits metric for all of the =
+idle
+> +        * states below the current candidate one (idx) is greater =
+than the
+>          * sum of the intercepts and hits metrics for the candidate =
+state and
+>          * all of the deeper states, a shallower idle state is likely =
+to be a
+>          * better choice.
+>          */
+> -       if (2 * idx_intercept_sum > cpu_data->total - idx_hit_sum) {
+> +       if (2 * (idx_intercept_sum + idx_hit_sum) > cpu_data->total) {
+>                 int first_suitable_idx =3D idx;
+>
+>                 /*
 
-$ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 --kconfig_add CONFIG_NET=y blackholedev
----
- lib/Kconfig.debug                                  | 20 +++++-----
- lib/Makefile                                       |  2 +-
- ...{test_blackhole_dev.c => blackhole_dev_kunit.c} | 45 ++++++++--------------
- tools/testing/selftests/net/Makefile               |  2 +-
- tools/testing/selftests/net/test_blackhole_dev.sh  | 11 ------
- 5 files changed, 28 insertions(+), 52 deletions(-)
+I have only just started testing the recent idle governor changes,
+and have not gotten very far yet.
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 1af972a92d06..238321830993 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2557,15 +2557,6 @@ config TEST_BPF
- 
- 	  If unsure, say N.
- 
--config TEST_BLACKHOLE_DEV
--	tristate "Test blackhole netdev functionality"
--	depends on m && NET
--	help
--	  This builds the "test_blackhole_dev" module that validates the
--	  data path through this blackhole netdev.
--
--	  If unsure, say N.
--
- config FIND_BIT_BENCHMARK
- 	tristate "Test find_bit functions"
- 	help
-@@ -2888,6 +2879,17 @@ config USERCOPY_KUNIT_TEST
- 	  on the copy_to/from_user infrastructure, making sure basic
- 	  user/kernel boundary testing is working.
- 
-+config BLACKHOLE_DEV_KUNIT_TEST
-+	tristate "Test blackhole netdev functionality" if !KUNIT_ALL_TESTS
-+	depends on NET
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  This builds the "blackhole_dev_kunit" module that validates the
-+	  data path through this blackhole netdev.
-+
-+	  If unsure, say N.
-+
- config TEST_UDELAY
- 	tristate "udelay test driver"
- 	help
-diff --git a/lib/Makefile b/lib/Makefile
-index d5cfc7afbbb8..19ff6993c2bc 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -102,7 +102,6 @@ obj-$(CONFIG_TEST_RUNTIME) += tests/
- obj-$(CONFIG_TEST_DEBUG_VIRTUAL) += test_debug_virtual.o
- obj-$(CONFIG_TEST_MEMCAT_P) += test_memcat_p.o
- obj-$(CONFIG_TEST_OBJAGG) += test_objagg.o
--obj-$(CONFIG_TEST_BLACKHOLE_DEV) += test_blackhole_dev.o
- obj-$(CONFIG_TEST_MEMINIT) += test_meminit.o
- obj-$(CONFIG_TEST_LOCKUP) += test_lockup.o
- obj-$(CONFIG_TEST_HMM) += test_hmm.o
-@@ -393,6 +392,7 @@ obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
- obj-$(CONFIG_CRC_KUNIT_TEST) += crc_kunit.o
- obj-$(CONFIG_SIPHASH_KUNIT_TEST) += siphash_kunit.o
- obj-$(CONFIG_USERCOPY_KUNIT_TEST) += usercopy_kunit.o
-+obj-$(CONFIG_BLACKHOLE_DEV_KUNIT_TEST) += blackhole_dev_kunit.o
- 
- obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
- 
-diff --git a/lib/test_blackhole_dev.c b/lib/blackhole_dev_kunit.c
-similarity index 70%
-rename from lib/test_blackhole_dev.c
-rename to lib/blackhole_dev_kunit.c
-index ec290ac2a0d9..f8f5184d5b43 100644
---- a/lib/test_blackhole_dev.c
-+++ b/lib/blackhole_dev_kunit.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * This module tests the blackhole_dev that is created during the
-+ * This tests the blackhole_dev that is created during the
-  * net subsystem initialization. The test this module performs is
-  * by injecting an skb into the stack with skb->dev as the
-  * blackhole_dev and expects kernel to behave in a sane manner
-@@ -9,9 +9,8 @@
-  * Copyright (c) 2018, Mahesh Bandewar <maheshb@google.com>
-  */
- 
--#include <linux/init.h>
-+#include <kunit/test.h>
- #include <linux/module.h>
--#include <linux/printk.h>
- #include <linux/skbuff.h>
- #include <linux/netdevice.h>
- #include <linux/udp.h>
-@@ -25,17 +24,15 @@
- 
- #define UDP_PORT 1234
- 
--static int __init test_blackholedev_init(void)
-+static void test_blackholedev(struct kunit *test)
- {
- 	struct ipv6hdr *ip6h;
- 	struct sk_buff *skb;
- 	struct udphdr *uh;
- 	int data_len;
--	int ret;
- 
- 	skb = alloc_skb(SKB_SIZE, GFP_KERNEL);
--	if (!skb)
--		return -ENOMEM;
-+	KUNIT_ASSERT_NOT_NULL(test, skb);
- 
- 	/* Reserve head-room for the headers */
- 	skb_reserve(skb, HEAD_SIZE);
-@@ -68,32 +65,20 @@ static int __init test_blackholedev_init(void)
- 	skb->dev = blackhole_netdev;
- 
- 	/* Now attempt to send the packet */
--	ret = dev_queue_xmit(skb);
--
--	switch (ret) {
--	case NET_XMIT_SUCCESS:
--		pr_warn("dev_queue_xmit() returned NET_XMIT_SUCCESS\n");
--		break;
--	case NET_XMIT_DROP:
--		pr_warn("dev_queue_xmit() returned NET_XMIT_DROP\n");
--		break;
--	case NET_XMIT_CN:
--		pr_warn("dev_queue_xmit() returned NET_XMIT_CN\n");
--		break;
--	default:
--		pr_err("dev_queue_xmit() returned UNKNOWN(%d)\n", ret);
--	}
--
--	return 0;
-+	KUNIT_EXPECT_EQ(test, dev_queue_xmit(skb), NET_XMIT_SUCCESS);
- }
- 
--static void __exit test_blackholedev_exit(void)
--{
--	pr_warn("test_blackholedev module terminating.\n");
--}
-+static struct kunit_case blackholedev_cases[] = {
-+	KUNIT_CASE(test_blackholedev),
-+	{},
-+};
-+
-+static struct kunit_suite blackholedev_suite = {
-+	.name = "blackholedev",
-+	.test_cases = blackholedev_cases,
-+};
- 
--module_init(test_blackholedev_init);
--module_exit(test_blackholedev_exit);
-+kunit_test_suite(blackholedev_suite);
- 
- MODULE_AUTHOR("Mahesh Bandewar <maheshb@google.com>");
- MODULE_DESCRIPTION("module test of the blackhole_dev");
-diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selftests/net/Makefile
-index 73ee88d6b043..afa4bcdc5833 100644
---- a/tools/testing/selftests/net/Makefile
-+++ b/tools/testing/selftests/net/Makefile
-@@ -7,7 +7,7 @@ CFLAGS += -I../../../../usr/include/ $(KHDR_INCLUDES)
- CFLAGS += -I../
- 
- TEST_PROGS := run_netsocktests run_afpackettests test_bpf.sh netdevice.sh \
--	      rtnetlink.sh xfrm_policy.sh test_blackhole_dev.sh
-+	      rtnetlink.sh xfrm_policy.sh
- TEST_PROGS += fib_tests.sh fib-onlink-tests.sh pmtu.sh udpgso.sh ip_defrag.sh
- TEST_PROGS += udpgso_bench.sh fib_rule_tests.sh msg_zerocopy.sh psock_snd.sh
- TEST_PROGS += udpgro_bench.sh udpgro.sh test_vxlan_under_vrf.sh reuseport_addr_any.sh
-diff --git a/tools/testing/selftests/net/test_blackhole_dev.sh b/tools/testing/selftests/net/test_blackhole_dev.sh
-deleted file mode 100755
-index 3119b80e711f..000000000000
---- a/tools/testing/selftests/net/test_blackhole_dev.sh
-+++ /dev/null
-@@ -1,11 +0,0 @@
--#!/bin/sh
--# SPDX-License-Identifier: GPL-2.0
--# Runs blackhole-dev test using blackhole-dev kernel module
--
--if /sbin/modprobe -q test_blackhole_dev ; then
--	/sbin/modprobe -q -r test_blackhole_dev;
--	echo "test_blackhole_dev: ok";
--else
--	echo "test_blackhole_dev: [FAIL]";
--	exit 1;
--fi
+There is a significant increase in processor package power during idle
+with this patch, about 5 times increase (400%).
 
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250207-blackholedev-kunit-convert-9a52a1a1a032
+My processor: Intel(R) Core(TM) i5-10600K CPU @ 4.10GHz
+Distro: Ubuntu 24.04.1, server, no desktop GUI.
+CPU frequency scaling driver: intel_pstate
+HWP: disabled.
+CPU frequency scaling governor: performance
 
-Best regards,
--- 
-Tamir Duberstein <tamird@gmail.com>
+Idle states:
+$ grep . /sys/devices/system/cpu/cpu0/cpuidle/state*/name
+/sys/devices/system/cpu/cpu0/cpuidle/state0/name:POLL
+/sys/devices/system/cpu/cpu0/cpuidle/state1/name:C1_ACPI
+/sys/devices/system/cpu/cpu0/cpuidle/state2/name:C2_ACPI
+/sys/devices/system/cpu/cpu0/cpuidle/state3/name:C3_ACPI
+
+Test durations were >=3D 45 minutes each.
+
+Kernel 6.14-rc1: Includes cpuidle: teo: Cleanups and very frequent =
+wakeups handling update
+Average Idle Power: teo governor: 2.199 watts (+25.51%)
+Average Idle power: menu governor: 1.873 watts (+6.91%)
+
+Kernel 6.14-rc1-p: Added this patch for teo and "cpuidle: menu: Avoid =
+discarding useful information when processing recent idle intervals" for =
+menu
+Average Idle Power: teo governor: 9.401 watts (+436.6%)
+Only 69.61% idle is in the deepest idle state. More typically it would =
+be 98% to 99%.
+28.6531% idle time is in state 1. More typically it would be 0.03%
+Average Idle Power: menu governor: 1.820 watts (+3.9%)
+
+Kernel 6.13: before "cpuidle: teo: Cleanups and very frequent wakeups =
+handling update"
+Average Idle Power: teo governor: 1.752 watts (reference: 0.0%)
+Average Idle power: menu governor: 1.909 watts (+9.0%)
+
+... Doug
+
 
