@@ -1,105 +1,120 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54BE15E5B8
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7318918E050
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738949668; cv=none; b=Wsmln/fcIlCMHSrY/FqZ9rIFcW6tdyFB93NJhSP25MrM4M4zAhD8mS8j18/joYR3Rbp9Gszb+fBkRZxG/d5UcWNeCoqy7Oa1NGSQk46I78mM/YIF5l/CWRFtCyyojPgE1vX0pVEAP2WR6PCkVlDLx/2fQ8hpe0hkGVG7YEpfNV4=
+	t=1738949742; cv=none; b=K75Q37SzDb+/4cb/1IYQXHBDoJFQtXSqEU/tYdcjWkVMT6Pv3zADpSSECoYjswCYdxS52B1cE9gJVPv9qRjhXgWBWdbSigCWQlovHzw2d9oYL2CsfW6uGrHVYgEu7zFJJpsT4c31GgxTBivqiZBdbyT0d44L8By1piaovWZjeJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738949668; c=relaxed/simple;
-	bh=iql8ByA/m1WXSEGKkfIomUCFpvj3f9cpEMqIrp5z/1Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ASmA2jh2QpvXmPhLgyKlYD/ANBWgkRqlDRCTRiIvLA6f8ldoSXiNpSmQeV2Nks3hMm8/jgAbtWJZZ1khkGeVH9yvGFUVEhOcR8mwR44e1ftmi1VmQ7PMjB6uCtrEZmCzwe0XAOD66svqMUC/Si3vK24ynZN69tGypXlWEmWaW4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A8hpSZ0T; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738949742; c=relaxed/simple;
+	bh=ZSeFJ5s7h9H4h1vWKcrHDe486NE/gA0glP6kRILFSiY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JofYEFPOuRyF7dGH/K5P8jK24b8oeVQlKmjT4gUofUdUR4rWLB/Ay2kg5pNGHepwcXR8ufWvAcMkOFlo6fFFDazrBFdtKpI9yBN3kdhKxV7+jFGy35MuJngQneo7JqYv7MAtgEQLFj/ZvPnIEs/FLX75yMwqd0qxBXHQ7FNFjag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hnHtEVv/; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A8hpSZ0T"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4679b5c66d0so307621cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:34:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738949664; x=1739554464; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wQE/r9oYQJeUmSQWFL/fUSETW6FOuhLgjtJx4q8CYEk=;
-        b=A8hpSZ0TklQv0y5jzF2Nzrt2yU9SRkV/sRPGL1YV9Da3OuTkuFGO3BdCbmkw7kvS4/
-         LxBvoT0YEGdwzGWhPWM3y5P9xCAW+QI8gbnJY4Jtuym9ULdBcGIuHvkpX0RIQEHQYAyl
-         Lp/jkHoOZaafwTj+/XGD+fcSVzScik9D0VfIZZSE7h7isyHdWjnwEqekpbfQZsbUhlWr
-         9REA5/orABBB6hR+3PxHRIlhEMn/8IR43x8ojJrDFp2i1mbDh5sv1axV5IavHbgIoRob
-         QGyqWWz3cRG6V7kZhvBQXLZp78LN6v/BWQSnBSizRxsVIFJQciMykuInrp2bhdZC2yap
-         4hDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738949664; x=1739554464;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wQE/r9oYQJeUmSQWFL/fUSETW6FOuhLgjtJx4q8CYEk=;
-        b=WTHFieRVdJ6y8p1JR+aKbt7xaXVPTpUsZsw3RiN6Eqyrd9b8Y+PsxJ3b7FQ8zcZ1oG
-         e7umQpBgQJwb066Vcm4z884GZCnZpXXGK+KFJUqQR7xTC79V6qYulkf/QDn3mtjpqsQ1
-         B6eHCkBHcjIgFRCntLWC3ywAVqQyrQ+qsgblWJgFgASO0b+bYsjAeNcPw00gm5d3Bp1V
-         66btlyyp0o7jNqPXhjsmyfrvr3HbcKlBGPTC5APHr4u3Zll1OTVrQ/fPC81KNxwk/WAm
-         5kqZ2Jn/GvN0GVzLFZI8IxtFnwSZgb89yWaQBw8SH2ADsNbzZ9Zd/NiWSyxYUruVWguT
-         a/hw==
-X-Forwarded-Encrypted: i=1; AJvYcCWAB+WYqSNk9BXYkG6TSOMqhq852aX4q0+92Ex2BK6xTN1bCYNB+XDMZ9QHCzUxGBs0EhUIHq1nNh4Gx50=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGG7AEQzWVWvV4eEDWT1XDK2ao7egAHoKOP3foI2m1q0KxEW8M
-	wpoSIftBw2RAsHAWToI0n8K4x5O4pjqeiLHuMhuA+qSJQI7qRJITdEwWq/0shaTSqVJZZc7wbpX
-	Gpd+F+IorytUuRdVujZikQt6A8GiTv9Qy5yq7
-X-Gm-Gg: ASbGncuXRCQDjC76oIQh/gE6t0V9PrgBk9Jnw22PlqiwsyM9G3iODTgD6gLBzpMDWJA
-	3TRK8wX1zwIMYUzczuicYCCJ7JsnxAlcYFz+HNV2sFTd3cuClkQdWlvltrs51hpweCdrspYclPg
-	ppItp3xdNZcDBCHVrEB234w3+tez4=
-X-Google-Smtp-Source: AGHT+IGP5xByBnMnsz1fxipvvMqkn0zzoEHD6jB1AzohT/QYEtRmmMdQi5qgtDbA3s87t+kZfrKGdzCQXcuR9RomnvU=
-X-Received: by 2002:a05:622a:5a05:b0:463:95e2:71f8 with SMTP id
- d75a77b69052e-47169c92487mr4136691cf.15.1738949663503; Fri, 07 Feb 2025
- 09:34:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hnHtEVv/"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9EC09440D9;
+	Fri,  7 Feb 2025 17:35:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738949732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=4ZUytWx1X90zILHzGvQK2F6yAceU2vb6VYDGKjKPPRs=;
+	b=hnHtEVv/UDBt3jbjcFlewBQru7TPTEOvfgKEho/fpfT+0YcLD8NxBaYSPR8RgUUB7sOCWD
+	xUZZriO0J65ey8PhHHWswIeWT2sjJqW5o1ChcY8RXS+bwaLQSMA1ih1rkONQostZdQLdVH
+	LW8CnA5lzULRutTXICWX+hP7nvOZBZDVlOo6wxOe1GNyXo4Lw9QqjzraDksKIyQ7R29Pkz
+	npXi1Iyfg3V8ENUTwiceVUT/rm+hCChdYtIzrE4WV/yJ07fPU03IQYP3xaXYFBv6gvyOEu
+	QZAB/hA/ftE8n3x2h5PrXpWTucgG5NUY3NlDy/A3yniktwpWJFr+XCZsvjWJ+w==
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Date: Fri, 07 Feb 2025 18:35:22 +0100
+Subject: [PATCH] drm: writeback: Fix kernel doc name
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206044346.3810242-1-riel@surriel.com> <20250206044346.3810242-5-riel@surriel.com>
- <CA+i-1C2NAFTrmZBFfBf8PFaji9YxQm68pV2qc7VbgHWFTji+Xw@mail.gmail.com>
-In-Reply-To: <CA+i-1C2NAFTrmZBFfBf8PFaji9YxQm68pV2qc7VbgHWFTji+Xw@mail.gmail.com>
-From: Brendan Jackman <jackmanb@google.com>
-Date: Fri, 7 Feb 2025 18:34:11 +0100
-X-Gm-Features: AWEUYZnHHj4McI-lzpCIOVXfXTGju6fU2JsdGSb5pzfNxaB1ZLb4jDphduY0gKc
-Message-ID: <CA+i-1C3EwgvO_tgEvReDK8K5FMWYGeQRuvCu6Xy31oiS6WgcNQ@mail.gmail.com>
-Subject: Re: [PATCH v9 04/12] x86/mm: get INVLPGB count max from CPUID
-To: Rik van Riel <riel@surriel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
-	peterz@infradead.org, dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com, 
-	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com, 
-	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com, 
-	mhklinux@outlook.com, andrew.cooper3@citrix.com, 
-	Manali Shukla <Manali.Shukla@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250207-b4-fix-warning-v1-1-b4964beb60a3@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAFlEpmcC/zWMwQ6CMBBEf6XZsxtLRZvwK4ZDKSvuoUV3q5IQ/
+ t1G4m3eTOatoCRMCp1ZQejNynOu0BwMxHvIEyGPlcFZd7bOehxavPGCnyCZ84TtqSEbvL34QFB
+ PD6E6/4TXfmeh56t6y17CEJQwzilx6cwoCRNrPP4DZloK9Nv2BSd9kieaAAAA
+X-Change-ID: 20250207-b4-fix-warning-431e0a7067ae
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: thomas.petazzoni@bootlin.com, dri-devel@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>, 
+ Louis Chauvet <louis.chauvet@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1542;
+ i=louis.chauvet@bootlin.com; h=from:subject:message-id;
+ bh=ZSeFJ5s7h9H4h1vWKcrHDe486NE/gA0glP6kRILFSiY=;
+ b=kA0DAAgBIK0uxlsQLOIByyZiAGemRGKjbMj3X7Wannq+Fl7bfXN77fGzJAJVdWt0UaANvNaiU
+ 4kCMwQAAQgAHRYhBE+PuD++eDwxDFBZBCCtLsZbECziBQJnpkRiAAoJECCtLsZbECzi9gkP/RK6
+ wb9QjbIg6RWy4wiN7Azfp8hSE7F6Q85cNVHoX7HJ2QFRZkwFfwPco2wjOA89Yhp6fTDYSzjT/Bw
+ Bd/0QGTm/B4Sn8h+/Hhm9Y4lbQp72H6c8mV6CVelwYa5Mc7kpp+NeCh03DpkARcnYHaOJa28Ufg
+ AKOwHL/VS4V9HhWXDw3ZJbI4mjG4usIYLI2fxYGZT7ziDVbUE8f/A1JkBHQCKVsAAB/DLWEmvsR
+ gOwQMcmixXyasEh8BYluea7DteGesJBuvRPhh4mwKHxIhlV8Y46Ps6DrNr2iKpwRgX4gqIwbdci
+ bZ0XmAvvc2J3mvXIgBnLqFho68Z4L5w1h/SxS6fkVcTYipx0H1lUcaWKQ8G1G33vyHM4Aw832tk
+ +XjnhaScH4tJTcnJINtjNFkT86ga/tzx5HSUS5xx0MZTdOWVEskI6+IC2x/cvM6t3ZzIJ/zXD/a
+ REHd3LWHfmWoO0B++wgT1esJoSLsESjjJ/7hrb6G+KD/YM8CL7Ldj6vpoKeHhGONkZcCHun14Ua
+ AKOpDcPLLJ0xAX4L7OI6zoCYV6rOf5MPOe+3pmSbIoqHmSLVi8AVyeU85AeT0KzwWqlbKml5XDE
+ t8aRvZ6G8+87jqbK39NbPkNWdXEhjh35CfOknMY6zfbc9VIkG/gOs3lf2IySuT9R3pYj5t5Qy3W
+ BLjvO
+X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
+ fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleeklecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtjeertdertdejnecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfehtdejkefhtdetfeetgfeiffevleeuvdeujeelveefveegvdejveehheffhefgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhfrhestggrnhgsrdgruhhughdrohhrghdrrghupdhrtghpthhtohepthhho
+ hhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhm
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-Oh, sorry
+During the creation of drmm_ variants for writeback connector, one
+function was renamed, but not the kernel doc.
 
-On Fri, 7 Feb 2025 at 16:10, Brendan Jackman <jackmanb@google.com> wrote:
->
-> On Thu, 6 Feb 2025 at 05:45, Rik van Riel <riel@surriel.com> wrote:
-> > diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> > index 17b6590748c0..f9b832e971c5 100644
-> > --- a/arch/x86/include/asm/cpufeatures.h
-> > +++ b/arch/x86/include/asm/cpufeatures.h
-> > @@ -338,6 +338,7 @@
-> >  #define X86_FEATURE_CLZERO             (13*32+ 0) /* "clzero" CLZERO instruction */
-> >  #define X86_FEATURE_IRPERF             (13*32+ 1) /* "irperf" Instructions Retired Count */
-> >  #define X86_FEATURE_XSAVEERPTR         (13*32+ 2) /* "xsaveerptr" Always save/restore FP error pointers */
-> > +#define X86_FEATURE_INVLPGB            (13*32+ 3) /* INVLPGB and TLBSYNC instruction supported. */
->
-> Why no "invlpgb" here? Seems like having this flag visible in cpuinfo
-> would be worthwhile.
->
-> If there's a reason to hide it maybe add a comment to explain the
-> reason? Sorry if this is a stupid question - I also can't see an
-> obvious rationale for why existing flags do or don't get a name at
-> runtime.
+To remove the warning, use the proper name in kernel doc.
 
-Oh, found it:
+Fixes: 135d8fc7af44 ("drm: writeback: Create an helper for drm_writeback_connector initialization")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Closes: https://lore.kernel.org/all/20250207142201.550ce870@canb.auug.org.au/
+Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+---
+Hi,
 
-https://lore.kernel.org/lkml/20250102120450.GNZ3aA4oVPnoJYRVUL@fat_crate.local/
+I don't know the process to merge fixes for commits in linux-next. If I
+should apply this patch, where should I it be? drm-misc-next-fixes and
+drm-fixes does not contains the problematic patch.
 
-Sorry for the noise, please ignore.
+Thanks,
+Louis Chauvet
+---
+ drivers/gpu/drm/drm_writeback.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeback.c
+index 3628fbef77524a7390b3929896a20f1c0a82117d..b14dafe765a148bbde70fcfd1a49cfea9baa9fea 100644
+--- a/drivers/gpu/drm/drm_writeback.c
++++ b/drivers/gpu/drm/drm_writeback.c
+@@ -213,7 +213,7 @@ static void delete_writeback_properties(struct drm_device *dev)
+ }
+ 
+ /**
+- * drm_writeback_connector_init_with_encoder - Initialize a writeback connector with
++ * __drm_writeback_connector_init - Initialize a writeback connector with
+  * a custom encoder
+  *
+  * @dev: DRM device
+
+---
+base-commit: 2eca617f12586abff62038db1c14cb3aa60a15aa
+change-id: 20250207-b4-fix-warning-431e0a7067ae
+
+Best regards,
+-- 
+Louis Chauvet <louis.chauvet@bootlin.com>
+
