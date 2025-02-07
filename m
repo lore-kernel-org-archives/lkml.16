@@ -1,352 +1,534 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF301442E8;
-	Fri,  7 Feb 2025 01:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E11D2417E9;
+	Fri,  7 Feb 2025 01:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738892695; cv=none; b=Hc2Vqch4NgNBqJj0YnP36vgRZjyMjHFw+wmd2ZwA4zhwhmGuAiO2JxKxRgsf9xQ9c3fYAsTAYLGVRhVDPeyVL9GQC0Ek+Ji8dcOeqAyPwp7+K8RwjORhs3RWqnklVoKVNSZu+3q0DrItBkEUuse6w1r+YI97pIXpa7gL9s+trfI=
+	t=1738892780; cv=none; b=r5Uynbup0qsuzLppF94RJn1tYn3YWHxwD3JF5rG5PBTWXrBk2OYfWSydRZ1+Km2B+oMl3pHfZwq0cvSqtgA9MOqPjOsHlyq40nyR0P0vvVNBpflF9IBiTsFvQ2H8sPvgNheijL1S3RvJ5TA5x5A5s2R7KjO9X2GqG55ixgiCxB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738892695; c=relaxed/simple;
-	bh=O4sHxhcO15PAPCihAs8/kH5SnW1MXT4s7gluuVq6hzY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aj0QgCXTQFhG1ieFqNUnsqi0nAN2e3pcFEd4+fG/pTJyKiO6hzOUvPhpF5RRmFWJqo52DvWqprwjHVi1svwSRSfVAA2szLyBiv3qm82qCKulouQ2PnwGy+X81hzXZ+Z67puwAYrtLHTrFmrCZxdVdrMcIJxtO9QhiaZDa3+xhAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=ZkvWfVAh; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1738892780; c=relaxed/simple;
+	bh=vyN6wip6nRIJlBebL11txQIz9eMZV3O17tBpyh4CJMc=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=K2QzGWlLurMosF6IoWlFJ5X640hXEYBqj76B4lhT9DQcAo4Fy5SPRyvSvuuOrrlnlAmHCWJL36b2aQ5TdOhYUh0+D4RaYAERauG2pDxN5pR26vYrSiooAHk2bGAMAuSWIPXv0Qxb2rYGKMnEKFqPIYk44x0WQbHxCmzf2QaNx3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=laV0WsM7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0jd/mmOe; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=laV0WsM7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0jd/mmOe; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZkvWfVAh"
-X-UUID: 1b72e76ee4f511efbd192953cf12861f-20250207
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=svOZaxnlaASohhDS3XSmTFkaoFSdzYryto7BxNGEFFo=;
-	b=ZkvWfVAhgZnZzjgTJXw6ePXoIuTEgRIXeWkWQWF5AtuU60HJ+eCuOQxaXBFcGiEuiXEHBp3Lloz3cJZzAUIDSIumIRZPhvd4uDLfDxGsB4NHz8ZLJRy5bCHg4Wy7I+GHBk/DzLWyYVO5A14F4cVh7LD3RtvycT9rYw8Ul5Ju0DY=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:f2833729-75d8-4d9a-9c55-e5a2b9439e04,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-50
-X-CID-META: VersionHash:60aa074,CLOUDID:278d45ff-c190-4cfe-938d-595d7f10e0dc,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:1,
-	IP:nil,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:
-	0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
-X-UUID: 1b72e76ee4f511efbd192953cf12861f-20250207
-Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
-	(envelope-from <crystal.guo@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 400064743; Fri, 07 Feb 2025 09:44:45 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 7 Feb 2025 09:44:43 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Fri, 7 Feb 2025 09:44:43 +0800
-From: Crystal Guo <crystal.guo@mediatek.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
-	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Crystal Guo
-	<crystal.guo@mediatek.com>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>, kernel test robot
-	<lkp@intel.com>
-Subject: [v2,1/2] memory/mediatek: Add an interface to get current DDR data rate
-Date: Fri, 7 Feb 2025 09:42:47 +0800
-Message-ID: <20250207014437.17920-2-crystal.guo@mediatek.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250207014437.17920-1-crystal.guo@mediatek.com>
-References: <20250207014437.17920-1-crystal.guo@mediatek.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="laV0WsM7";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0jd/mmOe";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="laV0WsM7";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0jd/mmOe"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3AD671F38D;
+	Fri,  7 Feb 2025 01:46:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738892774; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k6GvrIXCkvZhFMNZhMpwRWCpmsJvrlaPBg3GUv/AKQ8=;
+	b=laV0WsM7pVKFRvpFE6yLnNSPNTtLMGtwRoLVSpJIeQwYdqu8vV51zcD3ri3Dwecn9g/VTg
+	2+KSz6LF8lyhHrTMGgujKuEZUWWEnlwALIHnmnRNheL6F+Qqq9oFTIwGBVFU9LMWYTSD8v
+	cgDXRx1Jozs67kLzW3yOQX8HTPGYxeQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738892774;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k6GvrIXCkvZhFMNZhMpwRWCpmsJvrlaPBg3GUv/AKQ8=;
+	b=0jd/mmOeRgAZe0X6lQtbhuHqJIjMGKg8OcEuK10vOTSGUXvHBn0aj7p0QbdtlU+1mqVByh
+	HNzmAckKD9X8MyCA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=laV0WsM7;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="0jd/mmOe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738892774; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k6GvrIXCkvZhFMNZhMpwRWCpmsJvrlaPBg3GUv/AKQ8=;
+	b=laV0WsM7pVKFRvpFE6yLnNSPNTtLMGtwRoLVSpJIeQwYdqu8vV51zcD3ri3Dwecn9g/VTg
+	2+KSz6LF8lyhHrTMGgujKuEZUWWEnlwALIHnmnRNheL6F+Qqq9oFTIwGBVFU9LMWYTSD8v
+	cgDXRx1Jozs67kLzW3yOQX8HTPGYxeQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738892774;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k6GvrIXCkvZhFMNZhMpwRWCpmsJvrlaPBg3GUv/AKQ8=;
+	b=0jd/mmOeRgAZe0X6lQtbhuHqJIjMGKg8OcEuK10vOTSGUXvHBn0aj7p0QbdtlU+1mqVByh
+	HNzmAckKD9X8MyCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3059413694;
+	Fri,  7 Feb 2025 01:46:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id uOxiNeJlpWfCYQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 01:46:10 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+From: "NeilBrown" <neilb@suse.de>
+To: "Christian Brauner" <brauner@kernel.org>
+Cc: "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Jeff Layton" <jlayton@kernel.org>, "Dave Chinner" <david@fromorbit.com>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/19] VFS: add _async versions of the various directory
+ modifying inode_operations
+In-reply-to: <20250206-bestochen-zulauf-34ce94cc4cbc@brauner>
+References: <>, <20250206-bestochen-zulauf-34ce94cc4cbc@brauner>
+Date: Fri, 07 Feb 2025 12:46:04 +1100
+Message-id: <173889276405.22054.14269968343821905377@noble.neil.brown.name>
+X-Rspamd-Queue-Id: 3AD671F38D
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Add MediaTek DRAMC driver to provide an interface that can
-obtain current DDR data rate.
+On Fri, 07 Feb 2025, Christian Brauner wrote:
+> On Thu, Feb 06, 2025 at 04:42:46PM +1100, NeilBrown wrote:
+> > These "_async" versions of various inode operations are only guaranteed
+> > a shared lock on the directory but if the directory isn't exclusively
+> > locked then they are guaranteed an exclusive lock on the dentry within
+> > the directory (which will be implemented in a later patch).
+> >=20
+> > This will allow a graceful transition from exclusive to shared locking
+> > for directory updates, and even to async updates which can complete with
+> > no lock on the directory - only on the dentry.
+> >=20
+> > mkdir_async is a bit different as it optionally returns a new dentry
+> > for cases when the filesystem is not able to use the original dentry.
+> > This allows vfs_mkdir_return() to avoid the need for an extra lookup.
+> >=20
+> > Signed-off-by: NeilBrown <neilb@suse.de>
+> > ---
+> >  Documentation/filesystems/locking.rst |  51 ++++++++-
+> >  Documentation/filesystems/porting.rst |  10 ++
+> >  Documentation/filesystems/vfs.rst     |  24 +++++
+> >  fs/namei.c                            | 142 +++++++++++++++++++++-----
+> >  include/linux/fs.h                    |  24 +++++
+> >  5 files changed, 223 insertions(+), 28 deletions(-)
+> >=20
+> > diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesy=
+stems/locking.rst
+> > index d20a32b77b60..adeead366332 100644
+> > --- a/Documentation/filesystems/locking.rst
+> > +++ b/Documentation/filesystems/locking.rst
+> > @@ -62,15 +62,24 @@ inode_operations
+> >  prototypes::
+> > =20
+> >  	int (*create) (struct mnt_idmap *, struct inode *,struct dentry *,umode=
+_t, bool);
+> > +	int (*create_async) (struct mnt_idmap *, struct inode *,struct dentry *=
+,umode_t, bool, struct dirop_ret *);
+>=20
+> If we end up doing this then imho the correct thing to do would be to
+> extend the existing operations. Yes, that's more work I know as I've
+> done that multiple times myself and it's a bit more annoying churn but
+> we shouldn't just keep adding new methods without a good reason.
+>=20
+> I assume that you've done that mostly so that you wouldn't be held up by
+> menial work for the prototype. That's obviously fine. But for the final
+> thing we should just fixup everyone.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202412210955.FvO0Pee3-lkp@intel.
-com/
-Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
----
- drivers/memory/Kconfig              |   1 +
- drivers/memory/Makefile             |   1 +
- drivers/memory/mediatek/Kconfig     |  21 +++
- drivers/memory/mediatek/Makefile    |   2 +
- drivers/memory/mediatek/mtk-dramc.c | 196 ++++++++++++++++++++++++++++
- 5 files changed, 221 insertions(+)
- create mode 100644 drivers/memory/mediatek/Kconfig
- create mode 100644 drivers/memory/mediatek/Makefile
- create mode 100644 drivers/memory/mediatek/mtk-dramc.c
+I did it this way because it follows a pattern I've seen before.
+ readdir -> iterate -> iterate_shared
+ ioctl -> unlocked_ioctl
 
-diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
-index c82d8d8a16ea..b1698549ff81 100644
---- a/drivers/memory/Kconfig
-+++ b/drivers/memory/Kconfig
-@@ -227,5 +227,6 @@ config STM32_FMC2_EBI
- 
- source "drivers/memory/samsung/Kconfig"
- source "drivers/memory/tegra/Kconfig"
-+source "drivers/memory/mediatek/Kconfig"
- 
- endif
-diff --git a/drivers/memory/Makefile b/drivers/memory/Makefile
-index d2e6ca9abbe0..c0facf529803 100644
---- a/drivers/memory/Makefile
-+++ b/drivers/memory/Makefile
-@@ -27,6 +27,7 @@ obj-$(CONFIG_STM32_FMC2_EBI)	+= stm32-fmc2-ebi.o
- 
- obj-$(CONFIG_SAMSUNG_MC)	+= samsung/
- obj-$(CONFIG_TEGRA_MC)		+= tegra/
-+obj-$(CONFIG_MEDIATEK_MC)	+= mediatek/
- obj-$(CONFIG_TI_EMIF_SRAM)	+= ti-emif-sram.o
- obj-$(CONFIG_FPGA_DFL_EMIF)	+= dfl-emif.o
- 
-diff --git a/drivers/memory/mediatek/Kconfig b/drivers/memory/mediatek/Kconfig
-new file mode 100644
-index 000000000000..3f238e0d9647
---- /dev/null
-+++ b/drivers/memory/mediatek/Kconfig
-@@ -0,0 +1,21 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+config MEDIATEK_MC
-+	bool "MediaTek Memory Controller support"
-+	help
-+	  This option allows to enable MediaTek memory controller drivers,
-+	  which may include controllers for DRAM or others.
-+	  Select Y here if you need support for MediaTek memory controller.
-+	  If you don't need, select N.
-+
-+if MEDIATEK_MC
-+
-+config MTK_DRAMC
-+	tristate "MediaTek DRAMC driver"
-+	default y
-+	help
-+	  This option selects the MediaTek DRAMC driver, which provides
-+	  an interface for reporting the current data rate of DRAM.
-+	  Select Y here if you need support for the MediaTek DRAMC driver.
-+	  If you don't need, select N.
-+
-+endif
-diff --git a/drivers/memory/mediatek/Makefile b/drivers/memory/mediatek/Makefile
-new file mode 100644
-index 000000000000..a1395fc55b41
---- /dev/null
-+++ b/drivers/memory/mediatek/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_MTK_DRAMC)		+= mtk-dramc.o
-diff --git a/drivers/memory/mediatek/mtk-dramc.c b/drivers/memory/mediatek/mtk-dramc.c
-new file mode 100644
-index 000000000000..d452483a98ce
---- /dev/null
-+++ b/drivers/memory/mediatek/mtk-dramc.c
-@@ -0,0 +1,196 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2025 MediaTek Inc.
-+ */
-+#include <linux/bitops.h>
-+#include <linux/bitfield.h>
-+#include <linux/device.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/printk.h>
-+
-+#define POSDIV_PURIFY	BIT(2)
-+#define PREDIV		7
-+#define REF_FREQUENCY	26
-+#define SHUFFLE_OFFSET	0x700
-+
-+/*--------------------------------------------------------------------------*/
-+/* Register Offset                                                          */
-+/*--------------------------------------------------------------------------*/
-+#define DPHY_DVFS_STA		0x0e98
-+#define APHY_PHYPLL2		0x0908
-+#define APHY_CLRPLL2		0x0928
-+#define APHY_PHYPLL3		0x090c
-+#define APHY_CLRPLL3		0x092c
-+#define APHY_PHYPLL4		0x0910
-+#define APHY_ARPI0		0x0d94
-+#define APHY_CA_ARDLL1		0x0d08
-+#define APHY_B0_TX0		0x0dc4
-+
-+/*--------------------------------------------------------------------------*/
-+/* Register Mask                                                            */
-+/*--------------------------------------------------------------------------*/
-+#define DPHY_DVFS_SHU_LV	GENMASK(15, 14)
-+#define DPHY_DVFS_PLL_SEL	GENMASK(25, 25)
-+#define APHY_PLL2_SDMPCW	GENMASK(18, 3)
-+#define APHY_PLL3_POSDIV	GENMASK(13, 11)
-+#define APHY_PLL4_FBKSEL	GENMASK(6, 6)
-+#define APHY_ARPI0_SOPEN	GENMASK(26, 26)
-+#define APHY_ARDLL1_CK_EN	GENMASK(0, 0)
-+#define APHY_B0_TX0_SER_MODE	GENMASK(4, 3)
-+
-+static unsigned int read_reg_field(void __iomem *base, unsigned int offset, unsigned int mask)
-+{
-+	unsigned int val = readl(base + offset);
-+	unsigned int shift = __ffs(mask);
-+
-+	return (val & mask) >> shift;
-+}
-+
-+struct mtk_dramc_pdata {
-+	unsigned int fmeter_version;
-+};
-+
-+struct mtk_dramc_dev_t {
-+	void __iomem *anaphy_base;
-+	void __iomem *ddrphy_base;
-+	const struct mtk_dramc_pdata *pdata;
-+};
-+
-+static int mtk_dramc_probe(struct platform_device *pdev)
-+{
-+	struct mtk_dramc_dev_t *dramc;
-+	const struct mtk_dramc_pdata *pdata;
-+	int ret;
-+
-+	dramc = devm_kzalloc(&pdev->dev, sizeof(struct mtk_dramc_dev_t), GFP_KERNEL);
-+	if (!dramc)
-+		return dev_err_probe(&pdev->dev, -ENOMEM, "Failed to allocate memory\n");
-+
-+	pdata = of_device_get_match_data(&pdev->dev);
-+	if (!pdata)
-+		return dev_err_probe(&pdev->dev, -EINVAL, "No platform data available\n");
-+
-+	dramc->pdata = pdata;
-+
-+	dramc->anaphy_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(dramc->anaphy_base)) {
-+		ret = PTR_ERR(dramc->anaphy_base);
-+		return dev_err_probe(&pdev->dev, ret, "Unable to map DDRPHY NAO base\n");
-+	}
-+
-+	dramc->ddrphy_base = devm_platform_ioremap_resource(pdev, 1);
-+	if (IS_ERR(dramc->ddrphy_base)) {
-+		ret = PTR_ERR(dramc->ddrphy_base);
-+		return dev_err_probe(&pdev->dev, ret, "Unable to map DDRPHY AO base\n");
-+	}
-+
-+	platform_set_drvdata(pdev, dramc);
-+	return 0;
-+}
-+
-+static unsigned int mtk_fmeter_v1(struct mtk_dramc_dev_t *dramc)
-+{
-+	unsigned int shu_level, pll_sel, offset;
-+	unsigned int sdmpcw, posdiv, ckdiv4, fbksel, sopen, async_ca, ser_mode;
-+	unsigned int perdiv_freq, posdiv_freq, vco_freq;
-+	unsigned int final_rate;
-+
-+	shu_level = read_reg_field(dramc->ddrphy_base, DPHY_DVFS_STA, DPHY_DVFS_SHU_LV);
-+	pll_sel = read_reg_field(dramc->ddrphy_base, DPHY_DVFS_STA, DPHY_DVFS_PLL_SEL);
-+	offset = SHUFFLE_OFFSET * shu_level;
-+
-+	sdmpcw = read_reg_field(dramc->anaphy_base,
-+				((pll_sel == 0) ? APHY_PHYPLL2 : APHY_CLRPLL2) + offset,
-+				APHY_PLL2_SDMPCW);
-+	posdiv = read_reg_field(dramc->anaphy_base,
-+				((pll_sel == 0) ? APHY_PHYPLL3 : APHY_CLRPLL3) + offset,
-+				APHY_PLL3_POSDIV);
-+	fbksel = read_reg_field(dramc->anaphy_base, APHY_PHYPLL4 + offset, APHY_PLL4_FBKSEL);
-+	sopen = read_reg_field(dramc->anaphy_base, APHY_ARPI0 + offset, APHY_ARPI0_SOPEN);
-+	async_ca = read_reg_field(dramc->anaphy_base, APHY_CA_ARDLL1 + offset, APHY_ARDLL1_CK_EN);
-+	ser_mode = read_reg_field(dramc->anaphy_base, APHY_B0_TX0 + offset, APHY_B0_TX0_SER_MODE);
-+
-+	ckdiv4 = (ser_mode == 1) ? 1 : 0;
-+	posdiv &= ~(POSDIV_PURIFY);
-+
-+	perdiv_freq = REF_FREQUENCY * (sdmpcw >> PREDIV);
-+	posdiv_freq = (perdiv_freq >> posdiv) >> 1;
-+	vco_freq = posdiv_freq << fbksel;
-+	final_rate = vco_freq >> ckdiv4;
-+
-+	if (sopen == 1 && async_ca == 1)
-+		final_rate >>= 1;
-+
-+	return final_rate;
-+}
-+
-+/*
-+ * mtk_dramc_get_data_rate - calculate DRAM data rate
-+ *
-+ * Returns DRAM data rate (MB/s)
-+ */
-+static unsigned int mtk_dramc_get_data_rate(struct device *dev)
-+{
-+	struct mtk_dramc_dev_t *dramc_dev = dev_get_drvdata(dev);
-+
-+	if (!dramc_dev) {
-+		dev_err(dev, "DRAMC device data not found\n");
-+		return -EINVAL;
-+	}
-+
-+	if (dramc_dev->pdata) {
-+		if (dramc_dev->pdata->fmeter_version == 1)
-+			return mtk_fmeter_v1(dramc_dev);
-+
-+		dev_err(dev, "Unsupported fmeter version\n");
-+		return -EINVAL;
-+	}
-+	dev_err(dev, "DRAMC platform data not found\n");
-+	return -EINVAL;
-+}
-+
-+static ssize_t dram_data_rate_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	return snprintf(buf, PAGE_SIZE, "DRAM data rate = %u\n",
-+			mtk_dramc_get_data_rate(dev));
-+}
-+
-+static DEVICE_ATTR_RO(dram_data_rate);
-+
-+static struct attribute *mtk_dramc_attrs[] = {
-+	&dev_attr_dram_data_rate.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(mtk_dramc);
-+
-+static const struct mtk_dramc_pdata dramc_pdata_mt8196 = {
-+	.fmeter_version = 1
-+};
-+
-+static const struct of_device_id mtk_dramc_of_ids[] = {
-+	{ .compatible = "mediatek,mt8196-dramc", .data = &dramc_pdata_mt8196 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, mtk_dramc_of_ids);
-+
-+static struct platform_driver mtk_dramc_driver = {
-+	.probe = mtk_dramc_probe,
-+	.driver = {
-+		.name = "mtk_dramc_drv",
-+		.of_match_table = mtk_dramc_of_ids,
-+		.dev_groups = mtk_dramc_groups,
-+	},
-+};
-+
-+module_platform_driver(mtk_dramc_driver);
-+
-+MODULE_AUTHOR("Crystal Guo <crystal.guo@mediatek.com>");
-+MODULE_DESCRIPTION("MediaTek DRAM Controller Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.18.0
+There are three changes happening here:
 
+1/ add "struct dirop_ret *ret" to the end of each function.  That could
+  certainly be done across all filesystems in one patch
+2/ change mkdir to return a dentry.  The might be doable in a single
+  patch if NFS is the only filesystem affected.  The change is
+  sufficiently intrusive that maintainers would want to review it
+  carefully and might want to land it through their own tree.  But I
+  suspect there are other filesystems that would be affected and I think
+  it would be prohibitive to try to land this sort of change to multiple
+  filesystems in a single patch.
+3/ change these functions to work with only a shared lock on the
+   directory.  I could try to do something a bit like what Linus
+   did in
+     Commit 3e3271549670 ("vfs: get rid of old '->iterate' directory operatio=
+n")
+   but the circumstances are quite different and the excuses he used
+   there don't apply.  Also I would need to add an i_rwsem to every
+   inode which is unlikely to go down well with the maintainers.  I'm
+   sure the active ones would want to manage that change themselves.
+
+So while I hope we get to the point of discarding all the non-async
+operations in a little less than the 7 years that it took to get rid of
+->iterate, I don't see how to make the change without introducing new
+inode_operations.
+
+
+>=20
+> >  	struct dentry * (*lookup) (struct inode *,struct dentry *, unsigned int=
+);
+> >  	int (*link) (struct dentry *,struct inode *,struct dentry *);
+> > +	int (*link_async) (struct dentry *,struct inode *,struct dentry *, stru=
+ct dirop_ret *);
+> >  	int (*unlink) (struct inode *,struct dentry *);
+> > +	int (*unlink_async) (struct inode *,struct dentry *, struct dirop_ret *=
+);
+> >  	int (*symlink) (struct mnt_idmap *, struct inode *,struct dentry *,cons=
+t char *);
+> > +	int (*symlink_async) (struct mnt_idmap *, struct inode *,struct dentry =
+*,const char *m , struct dirop_ret *);
+> >  	int (*mkdir) (struct mnt_idmap *, struct inode *,struct dentry *,umode_=
+t);
+> > +	struct dentry * (*mkdir_async) (struct mnt_idmap *, struct inode *,stru=
+ct dentry *,umode_t, struct dirop_ret *);
+> >  	int (*rmdir) (struct inode *,struct dentry *);
+> > +	int (*rmdir_async) (struct inode *,struct dentry *, struct dirop_ret *);
+> >  	int (*mknod) (struct mnt_idmap *, struct inode *,struct dentry *,umode_=
+t,dev_t);
+> > +	int (*mknod_async) (struct mnt_idmap *, struct inode *,struct dentry *,=
+umode_t,dev_t, struct dirop_ret *);
+> >  	int (*rename) (struct mnt_idmap *, struct inode *, struct dentry *,
+> >  			struct inode *, struct dentry *, unsigned int);
+> > +	int (*rename_async) (struct mnt_idmap *, struct inode *, struct dentry =
+*,
+> > +			struct inode *, struct dentry *, unsigned int, struct dirop_ret *);
+> >  	int (*readlink) (struct dentry *, char __user *,int);
+> >  	const char *(*get_link) (struct dentry *, struct inode *, struct delaye=
+d_call *);
+> >  	void (*truncate) (struct inode *);
+> > @@ -84,6 +93,9 @@ prototypes::
+> >  	int (*atomic_open)(struct inode *, struct dentry *,
+> >  				struct file *, unsigned open_flag,
+> >  				umode_t create_mode);
+> > +	int (*atomic_open_async)(struct inode *, struct dentry *,
+> > +				struct file *, unsigned open_flag,
+> > +				umode_t create_mode, struct dirop_ret *);
+> >  	int (*tmpfile) (struct mnt_idmap *, struct inode *,
+> >  			struct file *, umode_t);
+> >  	int (*fileattr_set)(struct mnt_idmap *idmap,
+> > @@ -95,18 +107,33 @@ prototypes::
+> >  locking rules:
+> >  	all may block
+> > =20
+> > +All directory-modifying operations are called with an exclusive lock on
+> > +the target dentry or dentries using DCACHE_PAR_LOOKUP.  This allows the
+> > +shared lock on i_rwsem for the _async ops to be safe.  The lock on
+> > +i_rwsem may be dropped as soon as the op returns, though if it returns
+> > +-EINPROGRESS the lock using DCACHE_PAR_UPDATE will not be dropped until
+> > +the callback is called.
+> > +
+> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >  ops		i_rwsem(inode)
+> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >  lookup:		shared
+> >  create:		exclusive
+> > +create_async:	shared
+> >  link:		exclusive (both)
+> > +link_async:	exclusive on source, shared on target
+> >  mknod:		exclusive
+> > +mknod_async:	shared
+> >  symlink:	exclusive
+> > +symlink_async:	shared
+> >  mkdir:		exclusive
+> > +mkdir_async:	shared
+> >  unlink:		exclusive (both)
+> > +unlink_async:	exclusive on object, shared on directory/name
+> >  rmdir:		exclusive (both)(see below)
+> > +rmdir_async:	exclusive on object, shared on directory/name (see below)
+> >  rename:		exclusive (both parents, some children)	(see below)
+> > +rename_async:	shared (both parents) exclusive (some children)	(see below)
+> >  readlink:	no
+> >  get_link:	no
+> >  setattr:	exclusive
+> > @@ -118,6 +145,7 @@ listxattr:	no
+> >  fiemap:		no
+> >  update_time:	no
+> >  atomic_open:	shared (exclusive if O_CREAT is set in open flags)
+> > +atomic_open_async:	shared (if O_CREAT is not set, then may not have excl=
+usive lock on name)
+> >  tmpfile:	no
+> >  fileattr_get:	no or exclusive
+> >  fileattr_set:	exclusive
+> > @@ -125,8 +153,10 @@ get_offset_ctx  no
+> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D	=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > =20
+> > =20
+> > -	Additionally, ->rmdir(), ->unlink() and ->rename() have ->i_rwsem
+> > -	exclusive on victim.
+> > +	Additionally, ->rmdir(), ->unlink() and ->rename(), as well as _async
+> > +	versions, have ->i_rwsem exclusive on victim.  This exclusive lock
+> > +        may be dropped when the op completes even if the async operation=
+ is
+> > +        continuing.
+> >  	cross-directory ->rename() has (per-superblock) ->s_vfs_rename_sem.
+> >  	->unlink() and ->rename() have ->i_rwsem exclusive on all non-directori=
+es
+> >  	involved.
+> > @@ -135,6 +165,23 @@ get_offset_ctx  no
+> >  See Documentation/filesystems/directory-locking.rst for more detailed di=
+scussion
+> >  of the locking scheme for directory operations.
+> > =20
+> > +The _async operations will be passed a (non-NULL) struct dirop_ret point=
+er::
+> > +
+> > +	struct dirop_ret {
+> > +		union {
+> > +			int err;
+> > +			struct dentry *dentry;
+> > +		};
+> > +		void (*done_cb)(struct dirop_ret*);
+> > +	};
+> > +
+> > +They may return -EINPROGRESS (or ERR_PTR(-EINPROGRESS)) in which case
+> > +the op will continue asynchronously.  When it completes the result,
+> > +which must NOT be -EINPROGRESS, is stored in err or dentry (as
+> > +appropriate) and the done_cb() function is called.  Callers can only
+> > +make use of the asynchrony when they determine that no lock need be held
+> > +on i_rwsem.
+> > +
+> >  xattr_handler operations
+> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > =20
+> > diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesy=
+stems/porting.rst
+> > index 1639e78e3146..a736c9f30d9d 100644
+> > --- a/Documentation/filesystems/porting.rst
+> > +++ b/Documentation/filesystems/porting.rst
+> > @@ -1157,3 +1157,13 @@ in normal case it points into the pathname being l=
+ooked up.
+> >  NOTE: if you need something like full path from the root of filesystem,
+> >  you are still on your own - this assists with simple cases, but it's not
+> >  magic.
+> > +
+> > +---
+> > +
+> > +**recommended**
+> > +
+> > +create_async, link_async, unlink_async, rmdir_async, mknod_async,
+> > +rename_async, atomic_open_async can be provided instead of the
+> > +corresponding inode_operations with the "_async" suffix.  Multiple
+> > +_async operations can be performed in a given directory concurrently,
+> > +but never on the same name.
+> > diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystem=
+s/vfs.rst
+> > index 31eea688609a..e18655054e6c 100644
+> > --- a/Documentation/filesystems/vfs.rst
+> > +++ b/Documentation/filesystems/vfs.rst
+> > @@ -491,15 +491,24 @@ As of kernel 2.6.22, the following members are defi=
+ned:
+> > =20
+> >  	struct inode_operations {
+> >  		int (*create) (struct mnt_idmap *, struct inode *,struct dentry *, umo=
+de_t, bool);
+> > +		int (*create_async) (struct mnt_idmap *, struct inode *,struct dentry =
+*, umode_t, bool, struct dirop_ret *);
+> >  		struct dentry * (*lookup) (struct inode *,struct dentry *, unsigned in=
+t);
+> >  		int (*link) (struct dentry *,struct inode *,struct dentry *);
+> > +		int (*link_async) (struct dentry *,struct inode *,struct dentry *, str=
+uct dirop_ret *);
+> >  		int (*unlink) (struct inode *,struct dentry *);
+> > +		int (*unlink_async) (struct inode *,struct dentry *, struct dirop_ret =
+*);
+> >  		int (*symlink) (struct mnt_idmap *, struct inode *,struct dentry *,con=
+st char *);
+> > +		int (*symlink_async) (struct mnt_idmap *, struct inode *,struct dentry=
+ *,const char *, struct dirop_ret *);
+> >  		int (*mkdir) (struct mnt_idmap *, struct inode *,struct dentry *,umode=
+_t);
+> > +		struct dentry * (*mkdir_async) (struct mnt_idmap *, struct inode *,str=
+uct dentry *,umode_t, struct dirop_ret *);
+> >  		int (*rmdir) (struct inode *,struct dentry *);
+> > +		int (*rmdir_async) (struct inode *,struct dentry *, struct dirop_ret *=
+);
+> >  		int (*mknod) (struct mnt_idmap *, struct inode *,struct dentry *,umode=
+_t,dev_t);
+> > +		int (*mknod_async) (struct mnt_idmap *, struct inode *,struct dentry *=
+,umode_t,dev_t, struct dirop_ret *);
+> >  		int (*rename) (struct mnt_idmap *, struct inode *, struct dentry *,
+> >  			       struct inode *, struct dentry *, unsigned int);
+> > +		int (*rename_async) (struct mnt_idmap *, struct inode *, struct dentry=
+ *,
+> > +			       struct inode *, struct dentry *, unsigned int, struct dirop_re=
+t *);
+> >  		int (*readlink) (struct dentry *, char __user *,int);
+> >  		const char *(*get_link) (struct dentry *, struct inode *,
+> >  					 struct delayed_call *);
+> > @@ -511,6 +520,8 @@ As of kernel 2.6.22, the following members are define=
+d:
+> >  		void (*update_time)(struct inode *, struct timespec *, int);
+> >  		int (*atomic_open)(struct inode *, struct dentry *, struct file *,
+> >  				   unsigned open_flag, umode_t create_mode);
+> > +		int (*atomic_open_async)(struct inode *, struct dentry *, struct file =
+*,
+> > +				   unsigned open_flag, umode_t create_mode, struct dirop_ret *);
+> >  		int (*tmpfile) (struct mnt_idmap *, struct inode *, struct file *, umo=
+de_t);
+> >  		struct posix_acl * (*get_acl)(struct mnt_idmap *, struct dentry *, int=
+);
+> >  	        int (*set_acl)(struct mnt_idmap *, struct dentry *, struct posi=
+x_acl *, int);
+> > @@ -524,6 +535,7 @@ Again, all methods are called without any locks being=
+ held, unless
+> >  otherwise noted.
+> > =20
+> >  ``create``
+> > +``create_async``
+> >  	called by the open(2) and creat(2) system calls.  Only required
+> >  	if you want to support regular files.  The dentry you get should
+> >  	not have an inode (i.e. it should be a negative dentry).  Here
+> > @@ -546,29 +558,39 @@ otherwise noted.
+> >  	directory inode semaphore held
+> > =20
+> >  ``link``
+> > +``link_async``
+> >  	called by the link(2) system call.  Only required if you want to
+> >  	support hard links.  You will probably need to call
+> >  	d_instantiate() just as you would in the create() method
+> > =20
+> >  ``unlink``
+> > +``unlink_async``
+> >  	called by the unlink(2) system call.  Only required if you want
+> >  	to support deleting inodes
+> > =20
+> >  ``symlink``
+> > +``symlink_async``
+> >  	called by the symlink(2) system call.  Only required if you want
+> >  	to support symlinks.  You will probably need to call
+> >  	d_instantiate() just as you would in the create() method
+> > =20
+> >  ``mkdir``
+> > +``mkdir_async``
+> >  	called by the mkdir(2) system call.  Only required if you want
+> >  	to support creating subdirectories.  You will probably need to
+> >  	call d_instantiate() just as you would in the create() method
+> > =20
+> > +	mkdir_async can return an alternate dentry, much like lookup.
+> > +	In this case the original dentry will still be negative and will
+> > +	be unhashed.
+> > +
+> >  ``rmdir``
+> > +``rmdir_async``
+> >  	called by the rmdir(2) system call.  Only required if you want
+> >  	to support deleting subdirectories
+> > =20
+> >  ``mknod``
+> > +``mknod_async``
+> >  	called by the mknod(2) system call to create a device (char,
+> >  	block) inode or a named pipe (FIFO) or socket.  Only required if
+> >  	you want to support creating these types of inodes.  You will
+> > @@ -576,6 +598,7 @@ otherwise noted.
+> >  	create() method
+> > =20
+> >  ``rename``
+> > +``rename_async``
+> >  	called by the rename(2) system call to rename the object to have
+> >  	the parent and name given by the second inode and dentry.
+> > =20
+> > @@ -647,6 +670,7 @@ otherwise noted.
+> >  	itself and call mark_inode_dirty_sync.
+> > =20
+> >  ``atomic_open``
+> > +``atomic_open_async``
+> >  	called on the last component of an open.  Using this optional
+> >  	method the filesystem can look up, possibly create and open the
+> >  	file in one atomic operation.  If it wants to leave actual
+> > diff --git a/fs/namei.c b/fs/namei.c
+> > index 3c0feca081a2..eadde9de73bf 100644
+> > --- a/fs/namei.c
+> > +++ b/fs/namei.c
+> > @@ -123,6 +123,41 @@
+> >   * PATH_MAX includes the nul terminator --RR.
+> >   */
+> > =20
+> > +static void dirop_done_cb(struct dirop_ret *dret)
+> > +{
+> > +	wake_up_var(dret);
+> > +}
+> > +
+> > +#define DO_DIROP(dir, op, ...)						\
+> > +	({								\
+> > +		 struct dirop_ret dret;					\
+> > +		 int ret;						\
+> > +		 dret.err =3D -EINPROGRESS;				\
+> > +		 dret.done_cb =3D dirop_done_cb;				\
+> > +		 ret =3D (dir)->i_op->op(__VA_ARGS__, &dret);		\
+> > +		 if (ret =3D=3D -EINPROGRESS) {				\
+> > +			 wait_var_event(&dret,				\
+> > +					dret.err !=3D -EINPROGRESS);	\
+> > +			 ret =3D dret.err;				\
+> > +		 }							\
+> > +		 ret;							\
+> > +	})
+> > +
+> > +#define DO_DE_DIROP(dir, op, ...)					\
+> > +	({								\
+> > +		 struct dirop_ret dret;					\
+> > +		 struct dentry *ret;					\
+> > +		 dret.dentry =3D ERR_PTR(-EINPROGRESS);			\
+> > +		 dret.done_cb =3D dirop_done_cb;				\
+> > +		 ret =3D (dir)->i_op->op(__VA_ARGS__, &dret);		\
+> > +		 if (ret =3D=3D ERR_PTR(-EINPROGRESS)) {			\
+> > +			 wait_var_event(&dret,				\
+> > +					dret.dentry !=3D ERR_PTR(-EINPROGRESS));	\
+> > +			 ret =3D dret.dentry;				\
+> > +		 }							\
+> > +		 ret;							\
+> > +	})
+>=20
+> We should also try to avoid these ugly wrappers. That'll be easier if we
+> don't have multiple methods as well.
+
+I don't think that the multiple methods make a whole lot of difference
+here.  The same code would be in the function, it is just indented one
+more level when there are multiple functions.  But if you would prefer
+all the duplication of boiler-plate I can do it that way.
+
+Thanks,
+NeilBrown
