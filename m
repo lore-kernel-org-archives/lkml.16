@@ -1,195 +1,226 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408AF14658B;
-	Fri,  7 Feb 2025 03:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4311632F3
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 03:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738898243; cv=none; b=O8CESrz78gypTB6p9PCLsst1xNA4mQEQFY/Wme3gYx9GKobKKJHPGM4wXQiZT9XAodqWZW7Bb5T/yek5Hd6SgeqRuGcxn/a+k+fc5Od9Q+SnX/39IDKjdqVfs06FfQXYpWftUiLwROqWUeiBlsEx8GiXmc/lISm0CZM8kIqbl60=
+	t=1738898270; cv=none; b=g/6yIimflmhdpqwVo5bba622ZvCe2sVQp/CmYNdzAjCUZNiCt/RiAJZAgqt2EDS9W8kd+Bt/BLBqx9C2+14hUZWoYtg+gw8igLJaXJFz2RmpAwXLIYd0BQR5nXI3fynwEXns+gDK8rMT93naJLODEsV2Cbou5It+QYXIL6TD3wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738898243; c=relaxed/simple;
-	bh=SQveBs6I9QKwgjiPxa7XSzW6e/qfj0nmClmDPqbpSwE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ktv+oJJJ3l7bIrgKPTuX4mq79KhAUl0Kk9CcvLBI6RcxFsU+f1LjFLG+cer6BCJhMLG5gBaq79KPTBq3sYHTlchbMaPBfkOgB+70kzQs5p47TQgTISgZP9pPgN1gx6jiq7UN5GhdQh6QWX6s7sqtEWOpx25tqKWpUhINAg/h51Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eaZGx/y8; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738898270; c=relaxed/simple;
+	bh=uvivVCMiOcxUCIpgv+1nEhxOGPfz3p2u4mzomXHP6kw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I5MfSGLqd6wN5t8TOKd2B/uP25rh/W23toOJyllDk1MTe6TUBadQgnhzSlZrrrYlIv5KvKNrFKTY7oU7K7PQf/WP9eScXIaVoZusURRR1H5d8PWKYuqtwtl9r650vSRJ0k5wChpzHwtYbxm1veH2s4ekoXsTPqrMAk155cKhV9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=htv6afQ+; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eaZGx/y8"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6dcdf23b4edso14052006d6.0;
-        Thu, 06 Feb 2025 19:17:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="htv6afQ+"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54298ec925bso1952520e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 19:17:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738898241; x=1739503041; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WZlbDcy36pPkHq/elg7hFev/RYK+Oqb1WkHxloEn7vk=;
-        b=eaZGx/y8cgDNHx+9ZmCOPmjjaaOaXOtM68U/TAMgaL6jpgybmcQxUSY3/vM8+vTHEW
-         PHmm8aB7BfZEFrY9shDpYYITcbHYJfYfAN3g1BWM30xnc4SyI8kUmh5AIcp2WJ0SYaEM
-         7swJKo/f8RcjuWiAgDwtF0h4Kh/npZTAynAeU4Q7jkXRN4DDdVZZbeDMgtGa594AJs54
-         Baw+t2nFMfxsYBFMQkarA5RjH7HHQ1pmYNlCKpkr/GgKoQd5yoRu4aOl8RIpmDB5zL5e
-         8Ai3AufeCoe5+qtTzQ+dOF4phCRt4z20KifstOGN8LtN6l14iO6LXx0a9qoNi2CCWu/z
-         1LDw==
+        d=linaro.org; s=google; t=1738898266; x=1739503066; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=17pakd/Znr7AQ717iCmCdIgifIQxR3pgh2Z0bF8TxTs=;
+        b=htv6afQ+VCXeagoXWB34SIiHR9O/0vWp54CANcvCWPC0izYRRmoXMkKaaBBk6qN4eZ
+         oKZUaZF3+bI4XTF7gL9gIpBG5WJiZxarpPQ+uF2wkXRtjVW0FUbITCFwvKFO0uxTEt43
+         sICFr+gR+FgshgmPlkxdyf6PnESn7CnVcn2d0RIuH5YTcHjTdoovcG3UKV8ZXs4KeGfN
+         a+uKbEkF5xSV7Pa4Gdt+/IkVxaPQdxBT+aK8VUH7tJe2yPZYC/UVI9w1HZBMX/lqlRhm
+         Ye4L+v3dxU3yal14rZtH+U1yho8byk4qvJ/m5lBeObwLyYRibMsWatjToKcooOqZ410c
+         3VzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738898241; x=1739503041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WZlbDcy36pPkHq/elg7hFev/RYK+Oqb1WkHxloEn7vk=;
-        b=DYrJ44GAfVTh630TkZoAVdyqfmnUeHJqNxV1u4RsdRmfTfn4w0obf8IihHanf9oG5H
-         I6tqwRdI0IQi2oxd1XL5IsU5QjBw6tGJaZ0hQEb/ZddVEhPAHuoIFmlPaOE89MRiDdh/
-         MxnK4sLgyyH6KCUOLRG8SbSIp6KYS/xLo4z4ZPsyF6plo9O6dRkxj24ZA4v1BDP+kGQf
-         w/raGe0UBiBUbGo4qZxB7ZLP2VYVo3Xy74s3vVQ5EFUBE4+tWp2+oLiRT6qo5djNKoVk
-         s2y1Qt+oGzAgFvR820uMfho+ePp7ziXUngBqlcoiyNuKZv0HE4i+hoqsrrbPIV0cscYF
-         XvVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUt7fws2r1SvaTYeUQOolO8h8lLnjoToDbCqoXOtw5immJGorjuFgn6TxAH4qk/Y3L1VoeXjUKeafFTQTc=@vger.kernel.org, AJvYcCW77ONfTg3GDrNu4PiMU8oO4ByfRgzZbQwmvSunlbE0doHvpeAQWM6Hr+Ke2pMRCkzopcdxTsWe7FMpivHgUw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRAn9Va0rsNRsc1hMiLdAT3etqH3ZMKCJXWfKlO3YPxKsMve8z
-	yDABu5qsyQ8HVDhESlnYDRkrG1eI1BU5c2O1IA99LVMtyiNyYjg7CItV+PsotrvenMbohkIm54K
-	N5mMStMCPrYeop/Un7DQ93XAeKYs=
-X-Gm-Gg: ASbGncuXxJPfkPFmg028EFQbwTZzAx8BK4+pnFS0lkL93LXSEKAFNkeOCVQsTmEGjGA
-	+IDmZCjPPpmcL04fsUoJdylg82dWt8jG5eU9NYrddUg18bsOVTK8UV0Aes28XXTjPsgNsmFkhcR
-	Q=
-X-Google-Smtp-Source: AGHT+IHtIKEcTjSTQlWh5lwk9JOYeBQcpTOQQVX2RILLZ4vFU4GB2dTZQSCTgiGNSqAUrpgbdSCaWgTp03coCg6W+Zw=
-X-Received: by 2002:ad4:5f89:0:b0:6e4:3c52:d671 with SMTP id
- 6a1803df08f44-6e4455eda4cmr19801736d6.14.1738898241017; Thu, 06 Feb 2025
- 19:17:21 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738898266; x=1739503066;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=17pakd/Znr7AQ717iCmCdIgifIQxR3pgh2Z0bF8TxTs=;
+        b=A5iCxOKBPMUYV26YbrP32eFc5Pn9AgQDjoBbz8FcsA4WMGXLadcV4N0s4I4P7WPKGM
+         N/xplLBbQ0ttZaBoFnQCgF1zUOxJE3K9RiUjY9G/NBYgSCp4dE4b8vNVjzrsy7a/8r4f
+         xRtvIpLhwXLEALKdsoXgrtVjsf09SxRC62UXLIqQmceo4hCwoszEKPgeMPTDbimKWeEl
+         10jnIpfAbOcJD1ZAC21F9Y0N6skqoDENij1HV8Lhr3fAuUykg2I5Mv4CBJjTE5TrTTzO
+         rgLoXsAKbJX56CyA4g1/ddRiwQRbIRpku+QijlAL8jr8CmWGggDCwY3i4dnnO8lGiuHL
+         dJ9g==
+X-Forwarded-Encrypted: i=1; AJvYcCUFOSaeqQZRcJ8Nt4IGarKf5RPw7XaFQKPVlx+5IiV2DJlPpOJbMZ6uPQwuzLt3cbIY8n5NTGjk3w3vF1s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0l0Fj6Vd3ux+oSZeBhwxjRRSeiSyTw2WVXfHncbWLyypN+RLN
+	W6+RhT7DyGAsxrGWZ81KdL8ucrmpi3dgCySAjnS63xnkeYT8mismDKK659FcSAA=
+X-Gm-Gg: ASbGncs/HgJoYX28gXKiZ0o7lAHy9Q83OXIeYzN4AbKRTQkB6NzNyFjKOkumTEdQyWc
+	V0asQrkI4aLntIgpt4jCqL7Hs5HBl/8qlJgdvAQ+JG933ielgcrCVqNUW3xjVJr/8LYh0rlm1kn
+	ImMpm/rZGMoRjXuJ/sYM8A378NvpkTHmc9203DRz5NPRk8QR3mDiGeeqE5lrWzbBQskXsrKiWQB
+	CaKn6/5IcxQzg6SN9Qa2RoDwwvOWH4R3yapImABCOq6VKZxMkNvDZykhj/m1lTI7Jxm999bio92
+	r3YaBCdQjDug8EEmdLiJySnzlkWdC/UOpJXUGhV9bUt96DhSGrcuDz5TT40Vz3I/paXHNB0=
+X-Google-Smtp-Source: AGHT+IGFRWR3LZSENTzR1jrQjMzeY7hexf5uTv34xRfQ9DibP0IYIH3nm+4A52IVjL038EoBPPmYtg==
+X-Received: by 2002:a05:6512:2105:b0:53e:ca48:776e with SMTP id 2adb3069b0e04-54414b043d3mr248350e87.36.1738898266070;
+        Thu, 06 Feb 2025 19:17:46 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54410603876sm310371e87.211.2025.02.06.19.17.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 19:17:44 -0800 (PST)
+Date: Fri, 7 Feb 2025 05:17:43 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, 
+	Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Paul Kocialkowski <contact@paulk.fr>, Maxime Ripard <mripard@kernel.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	=?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v6 15/26] drm/bridge: devm_drm_of_get_bridge and
+ drmm_of_get_bridge: automatically put the bridge
+Message-ID: <w3qufv73ldzdcfuz6n3prx4di2dhoq2wfqmmvxvxkea6uqxkge@pjwmugvicsbt>
+References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
+ <20250206-hotplug-drm-bridge-v6-15-9d6f2c9c3058@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127063526.76687-1-laoar.shao@gmail.com> <20250127063526.76687-3-laoar.shao@gmail.com>
- <20250207023116.wx4i3n7ks3q2hfpu@jpoimboe>
-In-Reply-To: <20250207023116.wx4i3n7ks3q2hfpu@jpoimboe>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Fri, 7 Feb 2025 11:16:45 +0800
-X-Gm-Features: AWEUYZkBHU9QVMsn_rdgqikVxkvOfZf_63qXyhUzG8DpNgBaUUy5VdNNCvU6V2Q
-Message-ID: <CALOAHbB8j6RrpJAyRkzPx2U6YhjWEipRspoQQ_7cvQ+M0zgdXg@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] livepatch: Implement livepatch hybrid mode
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, 
-	joe.lawrence@redhat.com, live-patching@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206-hotplug-drm-bridge-v6-15-9d6f2c9c3058@bootlin.com>
 
-On Fri, Feb 7, 2025 at 10:31=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.org=
-> wrote:
->
-> On Mon, Jan 27, 2025 at 02:35:26PM +0800, Yafang Shao wrote:
-> > The atomic replace livepatch mechanism was introduced to handle scenari=
-os
-> > where we want to unload a specific livepatch without unloading others.
-> > However, its current implementation has significant shortcomings, makin=
-g
-> > it less than ideal in practice. Below are the key downsides:
-> >
-> > - It is expensive
-> >
-> >   During testing with frequent replacements of an old livepatch, random=
- RCU
-> >   warnings were observed:
-> >
-> >   [19578271.779605] rcu_tasks_wait_gp: rcu_tasks grace period 642409 is=
- 10024 jiffies old.
-> >   [19578390.073790] rcu_tasks_wait_gp: rcu_tasks grace period 642417 is=
- 10185 jiffies old.
-> >   [19578423.034065] rcu_tasks_wait_gp: rcu_tasks grace period 642421 is=
- 10150 jiffies old.
-> >   [19578564.144591] rcu_tasks_wait_gp: rcu_tasks grace period 642449 is=
- 10174 jiffies old.
-> >   [19578601.064614] rcu_tasks_wait_gp: rcu_tasks grace period 642453 is=
- 10168 jiffies old.
-> >   [19578663.920123] rcu_tasks_wait_gp: rcu_tasks grace period 642469 is=
- 10167 jiffies old.
-> >   [19578872.990496] rcu_tasks_wait_gp: rcu_tasks grace period 642529 is=
- 10215 jiffies old.
-> >   [19578903.190292] rcu_tasks_wait_gp: rcu_tasks grace period 642529 is=
- 40415 jiffies old.
-> >   [19579017.965500] rcu_tasks_wait_gp: rcu_tasks grace period 642577 is=
- 10174 jiffies old.
-> >   [19579033.981425] rcu_tasks_wait_gp: rcu_tasks grace period 642581 is=
- 10143 jiffies old.
-> >   [19579153.092599] rcu_tasks_wait_gp: rcu_tasks grace period 642625 is=
- 10188 jiffies old.
-> >
-> >   This indicates that atomic replacement can cause performance issues,
-> >   particularly with RCU synchronization under frequent use.
->
-> Why does this happen?
+On Thu, Feb 06, 2025 at 07:14:30PM +0100, Luca Ceresoli wrote:
+> Add a devm/drmm action to these functions so the bridge reference is
+> dropped automatically when the caller is removed.
 
-It occurs during the KLP transition. It seems like the KLP transition
-is taking too long.
+I think the get() should go to the underlying of_drm_bridge_find() function.
 
-[20329703.332453] livepatch: enabling patch 'livepatch_61_release6'
-[20329703.340417] livepatch: 'livepatch_61_release6': starting
-patching transition
-[20329715.314215] rcu_tasks_wait_gp: rcu_tasks grace period 1109765 is
-10166 jiffies old.
-[20329737.126207] rcu_tasks_wait_gp: rcu_tasks grace period 1109769 is
-10219 jiffies old.
-[20329752.018236] rcu_tasks_wait_gp: rcu_tasks grace period 1109773 is
-10199 jiffies old.
-[20329754.848036] livepatch: 'livepatch_61_release6': patching complete
+Also it really feels like it's an overkill to keep the wrappers. After
+getting bridge being handled by the panel code would it be possible to
+drop all of them? Then this patch might introduce one new devm_
+function? Or are drmm_ functions actually being used to store data in
+the drmm-managed memory?
 
->
-> > - Potential Risks During Replacement
-> >
-> >   One known issue involves replacing livepatched versions of critical
-> >   functions such as do_exit(). During the replacement process, a panic
-> >   might occur, as highlighted in [0]. Other potential risks may also ar=
-ise
-> >   due to inconsistencies or race conditions during transitions.
->
-> That needs to be fixed.
->
-> > - Temporary Loss of Patching
-> >
-> >   During the replacement process, the old patch is set to a NOP (no-ope=
-ration)
-> >   before the new patch is fully applied. This creates a window where th=
-e
-> >   function temporarily reverts to its original, unpatched state. If the=
- old
-> >   patch fixed a critical issue (e.g., one that prevented a system panic=
-), the
-> >   system could become vulnerable to that issue during the transition.
->
-> Are you saying that atomic replace is not atomic?  If so, this sounds
-> like another bug.
+> 
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> 
+> ---
+> 
+> This patch was added in v6.
+> ---
+>  drivers/gpu/drm/drm_bridge.c | 39 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> index f694b32ca59cb91c32846bc00b43360df41cc1ad..497ec06dfcb05ab5dee8ea5e8f1eafb9c2807612 100644
+> --- a/drivers/gpu/drm/drm_bridge.c
+> +++ b/drivers/gpu/drm/drm_bridge.c
+> @@ -33,6 +33,7 @@
+>  #include <drm/drm_edid.h>
+>  #include <drm/drm_encoder.h>
+>  #include <drm/drm_file.h>
+> +#include <drm/drm_managed.h>
+>  #include <drm/drm_of.h>
+>  #include <drm/drm_print.h>
+>  
+> @@ -1459,6 +1460,13 @@ static int of_drm_find_bridge_by_endpoint(const struct device_node *np,
+>  	return ret;
+>  }
+>  
+> +static void devm_drm_bridge_put_void(void *data)
+> +{
+> +	struct drm_bridge *bridge = (struct drm_bridge *)data;
+> +
+> +	drm_bridge_put(bridge);
+> +}
+> +
+>  /**
+>   * devm_drm_of_get_bridge - Return next bridge in the chain
+>   * @dev: device to tie the bridge lifetime to
+> @@ -1469,6 +1477,10 @@ static int of_drm_find_bridge_by_endpoint(const struct device_node *np,
+>   * Given a DT node's port and endpoint number, finds the connected node
+>   * and returns the associated bridge if any.
+>   *
+> + * The refcount of the returned bridge is incremented, but the caller does
+> + * not have to call drm_bridge_put() when done with the bridge. It will be
+> + * done by devres when @dev is removed.
+> + *
+>   * Returns a pointer to the bridge if successful, or an error pointer
+>   * otherwise.
+>   */
+> @@ -1483,6 +1495,10 @@ struct drm_bridge *devm_drm_of_get_bridge(struct device *dev,
+>  	if (ret)
+>  		return ERR_PTR(ret);
+>  
+> +	ret = devm_add_action_or_reset(dev, devm_drm_bridge_put_void, bridge);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+>  	return bridge;
+>  }
+>  EXPORT_SYMBOL(devm_drm_of_get_bridge);
+> @@ -1497,6 +1513,10 @@ EXPORT_SYMBOL(devm_drm_of_get_bridge);
+>   * graph link search is not enough, e.g. for drivers that need to support
+>   * panels described only as subnodes.
+>   *
+> + * The refcount of the returned bridge is incremented, but the caller does
+> + * not have to call drm_bridge_put() when done with the bridge. It will be
+> + * done by devres when @dev is removed.
+> + *
+>   * RETURNS:
+>   * A pointer to the bridge if successful, or an error pointer otherwise.
+>   */
+> @@ -1513,10 +1533,21 @@ struct drm_bridge *devm_drm_of_get_bridge_by_node(struct device *dev,
+>  	if (!bridge)
+>  		return ERR_PTR(-ENODEV);
+>  
+> +	ret = devm_add_action_or_reset(dev, devm_drm_bridge_put_void, bridge);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+>  	return bridge;
+>  }
+>  EXPORT_SYMBOL(devm_drm_of_get_bridge_by_node);
+>  
+> +static void drmm_bridge_put_void(struct drm_device *drm, void *ptr)
+> +{
+> +	struct drm_bridge *bridge = ptr;
+> +
+> +	drm_bridge_put(bridge);
+> +}
+> +
+>  /**
+>   * drmm_of_get_bridge - Return next bridge in the chain
+>   * @drm: device to tie the bridge lifetime to
+> @@ -1527,6 +1558,10 @@ EXPORT_SYMBOL(devm_drm_of_get_bridge_by_node);
+>   * Given a DT node's port and endpoint number, finds the connected node
+>   * and returns the associated bridge if any.
+>   *
+> + * The refcount of the returned bridge is incremented, but the caller does
+> + * not have to call drm_bridge_put() when done with the bridge. It will be
+> + * done by drmm when @dev is removed.
+> + *
+>   * Returns a drmm managed pointer to the bridge if successful, or an error
+>   * pointer otherwise.
+>   */
+> @@ -1541,6 +1576,10 @@ struct drm_bridge *drmm_of_get_bridge(struct drm_device *drm,
+>  	if (ret)
+>  		return ERR_PTR(ret);
+>  
+> +	ret = drmm_add_action_or_reset(drm, drmm_bridge_put_void, bridge);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+>  	return bridge;
+>  }
+>  EXPORT_SYMBOL(drmm_of_get_bridge);
+> 
+> -- 
+> 2.34.1
+> 
 
-From my understanding, there=E2=80=99s a window where the original function=
- is
-not patched.
-
-klp_enable_patch
-+ klp_init_patch
-   + if (patch->replace)
-          klp_add_nops(patch);  <<<< set all old patches to nop
-
-+ __klp_enable_patch
-   + klp_patch_object
-      + klp_patch_func
-         + ops =3D klp_find_ops(func->old_func);
-            + if (ops)
-                   // add the new patch to the func_stack list
-                   list_add_rcu(&func->stack_node, &ops->func_stack);
-
-
-klp_ftrace_handler
-+ func =3D list_first_or_null_rcu(&ops->func_stack, struct klp_func
-+ if (func->nop)
-       goto unlock;
-+ ftrace_regs_set_instruction_pointer(fregs, (unsigned long)func->new_func)=
-;
-
-Before the new atomic replace patch is added to the func_stack list,
-the old patch is already set to nop. If klp_ftrace_handler() is
-triggered at this point, it will effectively do nothing=E2=80=94in other
-words, it will execute the original function.
-I might be wrong.
-
---
-Regards
-Yafang
+-- 
+With best wishes
+Dmitry
