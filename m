@@ -1,193 +1,196 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734D31917D4
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C83E91B4F15
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738953070; cv=none; b=PlMMLU/ZyjZerHQ61YjX/yRtZPPwWrqL2RnASvW9hgkwCkYkTvUg0TLWU+nPgKdSTtY/BmIn0rq5LBztmVJmWigrFp5iamLNioJ9d6ti2kqrIkP9bfcTovU+vdqgDe6Vu169Go4zqCtpappWDMmoguJXGZQsAL3bX07ndptqvHc=
+	t=1738953083; cv=none; b=U4L8jvPp8uRzDP6pT6LhzsaMCRaGfZKwkuKf7xWevUFV8v3FaG1nzaJG37a9TXH26dr6APq2Ny8IWLCyjW7VXO3vx00vOk9vD+mxBEwlHQbu2RIPIsJQa1sre9z0D3RgdPhtr/b9IR/FLRsypx5zES38rsuPET6KJuVW9r9XnTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738953070; c=relaxed/simple;
-	bh=Na1GaVD2WleUIhZHv7ETYMCMGvK53tjoGJNuoSccjUM=;
+	s=arc-20240116; t=1738953083; c=relaxed/simple;
+	bh=YZi5gQTKYD9GWu8H5k4S5MxWI59dVjk84aCwTZZ4pbo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dlzuSVtl2A0tXKl7yh8Ssj9QzlyEi9TAq34v9S61FHIICnwWwSOolsNiHLS0o5dZCQp6++SISJo9P5H/XWJH8ss6s2LR6oK5H2txzVHuY4K5rh2G7yjKskz2hWRWkoNxRVhrT+tBFjkAm42eo1T0n6mh/Z0J0CiwWxzGTZfUpWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ItAped35; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=cBzv9K1WtsIRtnLsJe9pJ4JgtbZ9ZBJEgyP5wpZYC3dl+YUMmaGd7X2528bquvDPQGaulZK7BL24TKCowOjZc8PplIHrPZ/mLLFcXHY/Yx1czfQnSc8vmXXbHRKyCYzgNnNX+spMncTZPRqgZ8VJXahtHMEbDayMmmeFZ8blOLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8w0KP/S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ItAped35"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738953067;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BN2ZmR2Ydnk53bpnRhCB0qi5vI3BoI4kNFdAP4vjWMQ=;
-	b=ItAped35DM6/0QzYPKXbsVX/Fib1XNcJkEChIktwTo5q45hZiiGm7HJGOeSZRxIRMQGSrQ
-	7iAcagaaEDEBpr+6NNt2Kj7RxVwH244znGatfNNLTVkbRoOd/izvNzCCbQq+zB4J76BJWn
-	O6lrfx5i6e9BIm9p3Xa0v69zQrKOwlQ=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-614-26llnX1DNXOyRf79HTOb-Q-1; Fri, 07 Feb 2025 13:31:06 -0500
-X-MC-Unique: 26llnX1DNXOyRf79HTOb-Q-1
-X-Mimecast-MFC-AGG-ID: 26llnX1DNXOyRf79HTOb-Q
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6dd43b16631so24118266d6.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 10:31:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738953065; x=1739557865;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BN2ZmR2Ydnk53bpnRhCB0qi5vI3BoI4kNFdAP4vjWMQ=;
-        b=clGPttINI4X6ZAwvXxf90+R5VuLVzATry+1DcEQ+yXrmuSti/h9pwiJVwyauHxWS7q
-         1aPdVyJTzqWaJ5hiVYbPRULVTwHGPpctxDWuvAdGngujT3N9iz0i+FBGHIbTsT3ZbSFg
-         vY8PE3e9No9IZXjaWnGMDrcuvGvpIOaqtoaKPmHR+Gs978OW3H0HsWMMs1+hkYJcPIBI
-         w3pb0W777LgNor2cEAlis1sMoIVLjeUDYbW7u6P8wgpGBN1oDycbIJI+OF7QctOFTdGE
-         kM3qQiXbxA064VHaQ13K5gSuiJ88a/9Thu6K8xsF7BUcnshezbw9HuHcagr/3ed5WehE
-         1JDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpzE2VCBZK1AeFa71mn0/TPeREfpSz0YAOaOikE+pE6bEQr3c7uUEJXtO0ljBQqSRqeLAQGNAbJQlYdnU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0MhG+Rua9TTSoEZVZ01haAmiYBCgkW4z6ETGA/VbqMYSF5A3w
-	mJYTvXC3NPC1FQZt6y4zLNqWEqWmLHmOmY4GH/OZeaWg/IN5utxYuzAkwGOKH9e4E/8TswT6K73
-	QhqBC6Ym5ALOQ9uATP9hdyMvQ36oWZNJKJxv6D8zKPX4Oc7o5d9iCYgoHHNoRLw==
-X-Gm-Gg: ASbGncuhcWazpVK1EhXxD8pf1ZY9oXkrFZodsLMDd80L54jSHRyIWHbQW7Z7gMRjeti
-	/DZGWkk0P+YPh9RKB6WY9TLyzzVjlXVW96uJ/3VgzUbStvgIAkRkOtWOc5wl/Wg01MTYOsofFKJ
-	Cqxwcb3MA6wQUeNZJSQbdb1xyx9En80iL6CaThhWGsCM6dRBSiHpGG0XNLJIY1ByNG4r7OHC49y
-	L/XxBX+8x+1pAmF1/B4jpmjZWXYgkaxUISTqoFFyVbnTn1h0ff3Q3tPaexIF2vCR0e4kdtU2RGj
-	2NlMhsEVE8jzAmXe9rC8FKIFiWpO4Td0Gg==
-X-Received: by 2002:a05:6214:2688:b0:6d8:850a:4d77 with SMTP id 6a1803df08f44-6e4455c19a6mr64469766d6.7.1738953065292;
-        Fri, 07 Feb 2025 10:31:05 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEk4+CS8K2R5Bg2mrVOVObtVzytFfN1/LyTW9OYchrvGyzV5wA3IwTF+tEX4OmsXLElACR85Q==
-X-Received: by 2002:a05:6214:2688:b0:6d8:850a:4d77 with SMTP id 6a1803df08f44-6e4455c19a6mr64469426d6.7.1738953064964;
-        Fri, 07 Feb 2025 10:31:04 -0800 (PST)
-Received: from localhost (ip70-163-223-251.ph.ph.cox.net. [70.163.223.251])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e44e113e99sm4461126d6.98.2025.02.07.10.31.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 10:31:04 -0800 (PST)
-Date: Fri, 7 Feb 2025 11:31:03 -0700
-From: Jerry Snitselaar <jsnitsel@redhat.com>
-To: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Mike Seo <mikeseohyungjin@gmail.com>, kernel-dev@igalia.com, stable@vger.kernel.org
-Subject: Re: [PATCH v2] tpm: do not start chip while suspended
-Message-ID: <nounmgquiu46ii5kjsteg7r3qi5c6xmnuu4rlurxhk5mlsqq5m@w4lvevxc3eoa>
-References: <20250207-tpm-suspend-v2-1-b8cfb51d43ce@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8w0KP/S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 701ACC4CED1;
+	Fri,  7 Feb 2025 18:31:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738953083;
+	bh=YZi5gQTKYD9GWu8H5k4S5MxWI59dVjk84aCwTZZ4pbo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i8w0KP/Sfnk0l5lYm+7ZXKbrpG9GShgTURS0lRyDq59LB52ny1u9ME0Phws8bj4YS
+	 /SHJHrncNX33D+rfTfrT27+ecIYpzbJjwUWxqucEugQ07ZRkEUuwgaG4iheeRhgV0H
+	 +/ZoeqeUk4XO0rqwy/aRloCR9Fv1puwootJc8gavZxEuMQVqeDPRpjP/J4ID23F7k7
+	 lwxvSXM4PFOpSWxiyd83Gl2R8vdIjatbnfukNcnGbn/jtQGkLdkQOLwOs0FX1msgZb
+	 gWkB4FBVYZYy/dWCRYNP2kNXkRcUkeAI5dVrJhqyjvTi+7cybBXedf8/ZDELv8IDi+
+	 qJsvpXnSnAOyg==
+Date: Fri, 7 Feb 2025 18:31:18 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: ebiederm@xmission.com, oleg@redhat.com, brauner@kernel.org,
+	akpm@linux-foundation.org, Liam.Howlett@oracle.com,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v5 4/5] pid: perform free_pid() calls outside of
+ tasklist_lock
+Message-ID: <dfdae203-d057-41b1-a437-ba7c31961059@sirena.org.uk>
+References: <20250205200929.406568-1-mjguzik@gmail.com>
+ <20250205200929.406568-5-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="DR0vQQ/8trDze30N"
+Content-Disposition: inline
+In-Reply-To: <20250205200929.406568-5-mjguzik@gmail.com>
+X-Cookie: Tax and title extra.
+
+
+--DR0vQQ/8trDze30N
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250207-tpm-suspend-v2-1-b8cfb51d43ce@igalia.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 07, 2025 at 03:07:46PM -0300, Thadeu Lima de Souza Cascardo wrote:
-> Checking TPM_CHIP_FLAG_SUSPENDED after the call to tpm_find_get_ops() can
-> lead to a spurious tpm_chip_start() call:
-> 
-> [35985.503771] i2c i2c-1: Transfer while suspended
-> [35985.503796] WARNING: CPU: 0 PID: 74 at drivers/i2c/i2c-core.h:56 __i2c_transfer+0xbe/0x810
-> [35985.503802] Modules linked in:
-> [35985.503808] CPU: 0 UID: 0 PID: 74 Comm: hwrng Tainted: G        W          6.13.0-next-20250203-00005-gfa0cb5642941 #19 9c3d7f78192f2d38e32010ac9c90fdc71109ef6f
-> [35985.503814] Tainted: [W]=WARN
-> [35985.503817] Hardware name: Google Morphius/Morphius, BIOS Google_Morphius.13434.858.0 10/26/2023
-> [35985.503819] RIP: 0010:__i2c_transfer+0xbe/0x810
-> [35985.503825] Code: 30 01 00 00 4c 89 f7 e8 40 fe d8 ff 48 8b 93 80 01 00 00 48 85 d2 75 03 49 8b 16 48 c7 c7 0a fb 7c a7 48 89 c6 e8 32 ad b0 fe <0f> 0b b8 94 ff ff ff e9 33 04 00 00 be 02 00 00 00 83 fd 02 0f 5
-> [35985.503828] RSP: 0018:ffffa106c0333d30 EFLAGS: 00010246
-> [35985.503833] RAX: 074ba64aa20f7000 RBX: ffff8aa4c1167120 RCX: 0000000000000000
-> [35985.503836] RDX: 0000000000000000 RSI: ffffffffa77ab0e4 RDI: 0000000000000001
-> [35985.503838] RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
-> [35985.503841] R10: 0000000000000004 R11: 00000001000313d5 R12: ffff8aa4c10f1820
-> [35985.503843] R13: ffff8aa4c0e243c0 R14: ffff8aa4c1167250 R15: ffff8aa4c1167120
-> [35985.503846] FS:  0000000000000000(0000) GS:ffff8aa4eae00000(0000) knlGS:0000000000000000
-> [35985.503849] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [35985.503852] CR2: 00007fab0aaf1000 CR3: 0000000105328000 CR4: 00000000003506f0
-> [35985.503855] Call Trace:
-> [35985.503859]  <TASK>
-> [35985.503863]  ? __warn+0xd4/0x260
-> [35985.503868]  ? __i2c_transfer+0xbe/0x810
-> [35985.503874]  ? report_bug+0xf3/0x210
-> [35985.503882]  ? handle_bug+0x63/0xb0
-> [35985.503887]  ? exc_invalid_op+0x16/0x50
-> [35985.503892]  ? asm_exc_invalid_op+0x16/0x20
-> [35985.503904]  ? __i2c_transfer+0xbe/0x810
-> [35985.503913]  tpm_cr50_i2c_transfer_message+0x24/0xf0
-> [35985.503920]  tpm_cr50_i2c_read+0x8e/0x120
-> [35985.503928]  tpm_cr50_request_locality+0x75/0x170
-> [35985.503935]  tpm_chip_start+0x116/0x160
-> [35985.503942]  tpm_try_get_ops+0x57/0x90
-> [35985.503948]  tpm_find_get_ops+0x26/0xd0
-> [35985.503955]  tpm_get_random+0x2d/0x80
-> 
-> Don't move forward with tpm_chip_start() inside tpm_try_get_ops(), unless
-> TPM_CHIP_FLAG_SUSPENDED is not set. tpm_find_get_ops() will return NULL in
-> such a failure case.
-> 
-> Fixes: 9265fed6db60 ("tpm: Lock TPM chip in tpm_pm_suspend() first")
-> Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-> Cc: stable@vger.kernel.org
-> Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-> Cc: Mike Seo <mikeseohyungjin@gmail.com>
-> Cc: Jarkko Sakkinen <jarkko@kernel.org>
+On Wed, Feb 05, 2025 at 09:09:28PM +0100, Mateusz Guzik wrote:
+> As the clone side already executes pid allocation with only pidmap_lock
+> held, issuing free_pid() while still holding tasklist_lock exacerbates
+> total hold time of the latter.
+>=20
+> The pid array is smuggled through newly added release_task_post struct
+> so that any extra things want to get moved out have means to do it.
 
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+We are seeing failures in -next with the clone3 clone3_set_tid selftest
+on at least arm and arm64 systems which have been bisected to this
+commit, in -next as 88dec855ce117f52bcf88748ddcbb25b10f4f2fc (same
+bisect for both):
 
-> ---
-> Changes in v2:
-> - Improve commit message as suggested by Jarkko Sakkinen.
-> - Link to v1: https://lore.kernel.org/r/20250205-tpm-suspend-v1-1-fb89a29c0b69@igalia.com
-> ---
->  drivers/char/tpm/tpm-chip.c      | 5 +++++
->  drivers/char/tpm/tpm-interface.c | 7 -------
->  2 files changed, 5 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-> index 7df7abaf3e526bf7e85ac9dfbaa1087a51d2ab7e..6db864696a583bf59c534ec8714900a6be7b5156 100644
-> --- a/drivers/char/tpm/tpm-chip.c
-> +++ b/drivers/char/tpm/tpm-chip.c
-> @@ -168,6 +168,11 @@ int tpm_try_get_ops(struct tpm_chip *chip)
->  		goto out_ops;
->  
->  	mutex_lock(&chip->tpm_mutex);
-> +
-> +	/* tmp_chip_start may issue IO that is denied while suspended */
-> +	if (chip->flags & TPM_CHIP_FLAG_SUSPENDED)
-> +		goto out_lock;
-> +
->  	rc = tpm_chip_start(chip);
->  	if (rc)
->  		goto out_lock;
-> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-> index b1daa0d7b341b1a4c71a200115f0d29d2e87512d..f62f7871edbdb0181fad8af3367878308fa8a454 100644
-> --- a/drivers/char/tpm/tpm-interface.c
-> +++ b/drivers/char/tpm/tpm-interface.c
-> @@ -445,18 +445,11 @@ int tpm_get_random(struct tpm_chip *chip, u8 *out, size_t max)
->  	if (!chip)
->  		return -ENODEV;
->  
-> -	/* Give back zero bytes, as TPM chip has not yet fully resumed: */
-> -	if (chip->flags & TPM_CHIP_FLAG_SUSPENDED) {
-> -		rc = 0;
-> -		goto out;
-> -	}
-> -
->  	if (chip->flags & TPM_CHIP_FLAG_TPM2)
->  		rc = tpm2_get_random(chip, out, max);
->  	else
->  		rc = tpm1_get_random(chip, out, max);
->  
-> -out:
->  	tpm_put_ops(chip);
->  	return rc;
->  }
-> 
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250205-tpm-suspend-b22f745f3124
-> 
-> Best regards,
-> -- 
-> Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-> 
+For arm64 we're seeing a bunch of new failures including:
 
+# # [389] Trying clone3() with CLONE_SET_TID to 391 and 0x0
+# # File exists - Failed to create new process
+# # [389] clone3() with CLONE_SET_TID 391 says: -17 - expected 0
+# not ok 19 reallocate child TID with 1 TIDs and flags 0x0
+
+# # [389] Trying clone3() with CLONE_SET_TID to 1 and 0x20000000
+# # File exists - Failed to create new process
+# # [389] clone3() with CLONE_SET_TID 1 says: -17 - expected 0
+# not ok 21 create PID 1 in new NS with 2 TIDs and flags 0x20000000
+
+# # [1] Trying clone3() with CLONE_SET_TID to 43 and 0x0
+# # File exists - Failed to create new process
+# # [1] clone3() with CLONE_SET_TID 43 says: -17 - expected 0
+# not ok 24 check leak on invalid specific TID with 2 TIDs and flags 0x0
+
+but there's more, 32 bit only seems to see one new failure (at least on
+Beaglebone Black which is where I have that test running).
+
+Full log for a run on arm64:
+
+   https://lava.sirena.org.uk/scheduler/job/1102114
+
+and arm:
+
+   https://lava.sirena.org.uk/scheduler/job/1102088
+
+Bisect log, the start is my tooling feeding in test results it already
+has to hand in the commit range to seed the bisect:
+
+# bad: [ed58d103e6da15a442ff87567898768dc3a66987] Add linux-next specific f=
+iles for 20250207
+# good: [653cd79f296fc6fa592cb9fa2f7b8494d5573a43] Merge branch 'for-linux-=
+next-fixes' of https://gitlab.freedesktop.org/drm/misc/kernel.git
+# good: [4c7518062d638837cea915e0ffe30f846780639a] ASoC: SOF: ipc4: Add sup=
+port for split firmware releases
+# good: [0a7c85b516830c0bb088b0bdb2f2c50c76fc531a] regulator: ad5398: Fix i=
+ncorrect power down bit mask
+# good: [215705db51eb23052c73126d2efb6acbc2db0424] spi: Replace custom fsle=
+ep() implementation
+# good: [6603c5133daadbb3277fbd93be0d0d5b8ec928e8] ASoC: dt-bindings: atmel=
+,at91-ssc: Convert to YAML format
+# good: [25fac20edd09b60651eabcc57c187b1277f43d08] spi: gpio: Support a sin=
+gle always-selected device
+# good: [652ffad172d089acb1a20e5fde1b66e687832b06] spi: fsi: Batch TX opera=
+tions
+# good: [6eab7034579917f207ca6d8e3f4e11e85e0ab7d5] ASoC: soc-core: Stop usi=
+ng of_property_read_bool() for non-boolean properties
+# good: [f5aab0438ef17f01c5ecd25e61ae6a03f82a4586] regulator: pca9450: Fix =
+enable register for LDO5
+# good: [c1ac98492d1584d31f335d233a5cd7a4d4116e5a] spi: realtek-rtl-snand: =
+Drop unneeded assignment for cache_type
+# good: [5a6a461079decea452fdcae955bccecf92e07e97] regulator: ad5398: Add d=
+evice tree support
+# good: [995cf0e014b0144edf1125668a97c252c5ab775e] regmap: Reorder 'struct =
+regmap'
+# good: [89785306453ce6d949e783f6936821a0b7649ee2] spi: zynqmp-gqspi: Alway=
+s acknowledge interrupts
+# good: [0e11f2076e7fa3efa3e0a694bc4d30ef185f0f7d] Merge branch 'for-5.19/c=
+leanup' into for-next
+git bisect start 'ed58d103e6da15a442ff87567898768dc3a66987' '653cd79f296fc6=
+fa592cb9fa2f7b8494d5573a43' '4c7518062d638837cea915e0ffe30f846780639a' '0a7=
+c85b516830c0bb088b0bdb2f2c50c76fc531a' '215705db51eb23052c73126d2efb6acbc2d=
+b0424' '6603c5133daadbb3277fbd93be0d0d5b8ec928e8' '25fac20edd09b60651eabcc5=
+7c187b1277f43d08' '652ffad172d089acb1a20e5fde1b66e687832b06' '6eab703457991=
+7f207ca6d8e3f4e11e85e0ab7d5' 'f5aab0438ef17f01c5ecd25e61ae6a03f82a4586' 'c1=
+ac98492d1584d31f335d233a5cd7a4d4116e5a' '5a6a461079decea452fdcae955bccecf92=
+e07e97' '995cf0e014b0144edf1125668a97c252c5ab775e' '89785306453ce6d949e783f=
+6936821a0b7649ee2' '0e11f2076e7fa3efa3e0a694bc4d30ef185f0f7d'
+# bad: [ed58d103e6da15a442ff87567898768dc3a66987] Add linux-next specific f=
+iles for 20250207
+git bisect bad ed58d103e6da15a442ff87567898768dc3a66987
+# bad: [5a44f71c6ba5b0a7623c25047ac61ed852afbd84] Merge branch 'for-linux-n=
+ext' of git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git
+git bisect bad 5a44f71c6ba5b0a7623c25047ac61ed852afbd84
+# bad: [953e43d94b2048d260774e9ddbfd3f378aa2c256] Merge branch 'fs-next' of=
+ linux-next
+git bisect bad 953e43d94b2048d260774e9ddbfd3f378aa2c256
+# good: [2ab7baf7ebddff9faff6846648fd0753e5ee58c1] Merge branch 'for-next' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git
+git bisect good 2ab7baf7ebddff9faff6846648fd0753e5ee58c1
+# good: [09c7fd0d4465df7fd6cda5668bd32267884b6cbf] Merge branch '9p-next' o=
+f git://github.com/martinetd/linux
+git bisect good 09c7fd0d4465df7fd6cda5668bd32267884b6cbf
+# bad: [7a1f00b09c09aadbf33660a31f3f3d8ee6302c45] Merge branch 'vfs-6.15.io=
+map' into vfs.all
+git bisect bad 7a1f00b09c09aadbf33660a31f3f3d8ee6302c45
+# good: [9bc19073026d0dce6b7d17d22e74643c80283f8f] Merge branch 'vfs-6.15.m=
+ount' into vfs.all
+git bisect good 9bc19073026d0dce6b7d17d22e74643c80283f8f
+# bad: [ba734a751d30f59e3b10d6792a1e1b50e7b1fc0c] Merge branch 'kernel-6.15=
+=2Etasklist_lock' into vfs.all
+git bisect bad ba734a751d30f59e3b10d6792a1e1b50e7b1fc0c
+# good: [d7c340391cb0f0882bc8d5d9798ef32b577a89bc] Merge branch 'vfs-6.15.p=
+ipe' into vfs.all
+git bisect good d7c340391cb0f0882bc8d5d9798ef32b577a89bc
+# good: [e88fed94388f62a28acfef4954348abe79557d19] pid: sprinkle tasklist_l=
+ock asserts
+git bisect good e88fed94388f62a28acfef4954348abe79557d19
+# bad: [5ca27e0557d722dd648f949dde6e4997f6255f18] pid: drop irq disablement=
+ around pidmap_lock
+git bisect bad 5ca27e0557d722dd648f949dde6e4997f6255f18
+# bad: [88dec855ce117f52bcf88748ddcbb25b10f4f2fc] pid: perform free_pid() c=
+alls outside of tasklist_lock
+git bisect bad 88dec855ce117f52bcf88748ddcbb25b10f4f2fc
+# first bad commit: [88dec855ce117f52bcf88748ddcbb25b10f4f2fc] pid: perform=
+ free_pid() calls outside of tasklist_lock
+
+--DR0vQQ/8trDze30N
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmemUXUACgkQJNaLcl1U
+h9AVUQf/TwMMM9I/2o3EcZGaENuSC7WUjHJnfE5t126RUZ3Eik94tM6X41wotz2m
+fF8RxuiUEP81/Gpg10msBuvKsp5Ocl24FBD9ADAgcSHjfDYPfVJl0SlHENldAAsp
+WXVJ5yoZbKBsGtmlWtgxSHbSJ0tdQHHjYLMw/jZse0GaOmKmPcbMcZyQjgLpuUcL
+0VKZqLvwtkqgVsRn+WgiBcK5U0QOgZr1dL2Myw0qp/wuhxjFUF6oT8WEBZxJBsNN
+elP1Q+zLwr+UvEMg+3ZIIu2SLNMDnYcvrs6Nxwbmld2OQ9FSbgzo5XimqvfQoc9z
+NKbuthD5+vRgXrk+E/0Dkvxnz43AHQ==
+=GDjU
+-----END PGP SIGNATURE-----
+
+--DR0vQQ/8trDze30N--
