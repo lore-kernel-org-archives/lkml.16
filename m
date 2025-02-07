@@ -1,94 +1,78 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789226AA7
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 02:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8966AA7;
+	Fri,  7 Feb 2025 02:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738896653; cv=none; b=JmwNZPNghHHxUcsvdeWbzq6gpVOhpM50vEMtrMOFsr1gZofBfv6IBtbnZYeEqud43uqSX0LjvQ+wJx3jmi0IwYigP3WYTX3ZphkYKLrd1r9+iaMMY23+YrSgVh1vfP7bMmrKUyRG0A6TLE1foWqz+ZwyNOZxkj9PZDsUfp2Vm0I=
+	t=1738896690; cv=none; b=Xjz6w51pQKfFnh0MCCRWTSUByrg9JRNnnRw7iIkFz1gQ54oNUpvqikhpQvtKkrQgYTZ9Zb85+IU9jE1X7GgObgtY8BkGcPtmjJCi2xeafbO7dO5bmJY/9e6X+eqWHv8WrixBIgunV9wcFcsq+Tlyje2jmqYtqndeoBM5YoLWu2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738896653; c=relaxed/simple;
-	bh=1/3hMEZQXqwwD/qWm/PqtY2iFma3Cyp6l+SmVQ+V86Q=;
+	s=arc-20240116; t=1738896690; c=relaxed/simple;
+	bh=4S6PeHmwsE+ONoPMxvqDYFT9MsitLu/804rgTQaEzT4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ghc2TVtKCnefZKvqFuQQwllzQzsKXrofNFjlACxoesjCrx/vNB5UjNxSrWQpRkZ65Ar5r2ygeSVz3KmdmZ6/I7pLTnJdibFK+lqUWugQw3aW6ziZ15PzF/tf0f0dfaVM9S7dJ+hcrw3CtWbu4UwXe4HThUEjctKc/Mug+np//Rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RSvbH9Wp; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hc2+B+7Oi1dZnZbz7+Wzj9g/5vDlSmKfpFq2kis2ums2EOG92odgrXb8hk9cb9Q3GbfPJe07PkYIbOsEj75WDxje4C4tawYvoj1I+G5wa5X3lBK4kPU+5bZDEL+n5GmjYSSmsyEAIwQMBSQL/zZluBHeESzcOGJFOuUJs9HWJV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pwbp80kO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RSvbH9Wp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738896650;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lSgV3BL74gNbeFl9iKEmyG8+Z3L9756kZ4NrKNCbbCQ=;
-	b=RSvbH9WpJYZylSYx2SK23iqG4zVxW/1G6+IfEqmZoliOP1A5pHENdilUILIs4qKoFZt26s
-	vRQjefRZmbm/NVKIF6M/q425r2bhB5PYV1evpQiBpbxLFvY1/htMHgU6jvh6Xj6b0Rhkbn
-	bajXT3Jvmih9+NKxz89B5iRwA7Oxd/8=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-153-uIHSDNPlNPuaAtaJ3LBx8Q-1; Thu,
- 06 Feb 2025 21:50:46 -0500
-X-MC-Unique: uIHSDNPlNPuaAtaJ3LBx8Q-1
-X-Mimecast-MFC-AGG-ID: uIHSDNPlNPuaAtaJ3LBx8Q
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 479D31955DD0;
-	Fri,  7 Feb 2025 02:50:43 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.206])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DDB4D19560AE;
-	Fri,  7 Feb 2025 02:50:41 +0000 (UTC)
-Date: Fri, 7 Feb 2025 10:50:37 +0800
-From: Baoquan He <bhe@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, ryncsn@gmail.com,
-	chrisl@kernel.org
-Subject: [PATCH v2 06/12] mm/swapfile.c: update the code comment above
- swap_count_continued()
-Message-ID: <Z6V0/UvG1fvkQ4t/@fedora>
-References: <20250205092721.9395-1-bhe@redhat.com>
- <20250205092721.9395-7-bhe@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pwbp80kO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57C07C4CEDD;
+	Fri,  7 Feb 2025 02:51:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738896689;
+	bh=4S6PeHmwsE+ONoPMxvqDYFT9MsitLu/804rgTQaEzT4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pwbp80kOrtEUPN+DL2rCVCIWp/3zEONtQrGDiy3L9klYRVUsM4NVLSLfZaAMZZSZO
+	 +Gtp7V3tg/GEqJhoeC6vqCJkLR3cE9y7tjYSoUsng8hPIt5IXUXyXOYaI3odSfO13X
+	 SCsw8pMQhuXGlVPyYEH93Ga9DubRGUs6sULXKIAEq+Qv6RKcbEMy9vVlcTBHKSH8dt
+	 IYmvL+SXqT2dCAFBsC+6ryX8lHw5GQRULoVoJUI8uDiQxSnKWw+WxAZCpH/xigsuQi
+	 LgR0Q2DzNfjkbB2Yyi121feYDuM0vkIGGM+JDTJhpmsdjjFXLTVti+H4CvWmRh0QNZ
+	 8EhJInLy7DCFQ==
+Date: Thu, 6 Feb 2025 18:51:27 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Brendan Jackman <jackmanb@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] objtool: Add option to fail build on vmlinux
+ warnings
+Message-ID: <20250207025127.2sy74bhcu6wtbo6a@jpoimboe>
+References: <20250113-objtool-strict-v3-0-8b51f94957fb@google.com>
+ <20250114001440.cagqlvjfvw6ghsj7@jpoimboe>
+ <CA+i-1C0MFQCLOah56wWQhPhtk4p0ynhxh48eTmQ0-0x+pB6fvw@mail.gmail.com>
+ <20250130183042.GB3394637@ax162>
+ <CA+i-1C2rw6uNOpeY8fakco8T75udRhLJLxJ4CHgJNKBhbxGa_A@mail.gmail.com>
+ <20250131204920.GA1974131@ax162>
+ <CA+i-1C1A_0nkY6G+W3n=dYqEJHZGuEwNXK=xrWNwDh7561x_9A@mail.gmail.com>
+ <20250206171036.GF180182@ax162>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250205092721.9395-7-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+In-Reply-To: <20250206171036.GF180182@ax162>
 
-Now, swap_count_continued() has two callers, __swap_duplicate() and
-__swap_entry_free_locked(), the relevant code comment is stale.
-Update it to reflect the current situation.
+On Thu, Feb 06, 2025 at 10:10:36AM -0700, Nathan Chancellor wrote:
+> Right, I think gating on '!COMPILE_TEST' would not be a terrible way to
+> introduce it. We would definitely want to remove that dependency as
+> soon as possible because we want compile testers to be qble to find
+> these problems and have them be noticeable but it should make the
+> introduction of CONFIG_OBJTOOL_WERROR less disruptive.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
-v1->v2:
-- Update the code comment according to Kairui's comment.
+I want to get CONFIG_OBJTOOL_WERROR merged soon.  I'm working on some
+other patches to go along with it that will hopefully ease some of the
+pain.  I'll post those soon and then hopefully we can get it into
+linux-next.
 
- mm/swapfile.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I didn't quite follow the OBJTOOL_FLAGS idea.  We already have
+OBJTOOL_ARGS which allows adding arguments (though not removing them),
+was it mean to be something like that?
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index bf284ba16198..f6cc169f59d9 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -3789,8 +3789,8 @@ int add_swap_count_continuation(swp_entry_t entry, gfp_t gfp_mask)
-  * into, carry if so, or else fail until a new continuation page is allocated;
-  * when the original swap_map count is decremented from 0 with continuation,
-  * borrow from the continuation and report whether it still holds more.
-- * Called while __swap_duplicate() or swap_entry_free() holds swap or cluster
-- * lock.
-+ * Called while __swap_duplicate() or caller of __swap_entry_free_locked()
-+ * holds cluster lock.
-  */
- static bool swap_count_continued(struct swap_info_struct *si,
- 				 pgoff_t offset, unsigned char count)
+I agree we might want to ease into the pool with !COMPILE_TEST.
+
 -- 
-2.41.0
-
+Josh
