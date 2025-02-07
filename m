@@ -1,195 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3661A3151;
-	Fri,  7 Feb 2025 18:38:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4EA190679;
+	Fri,  7 Feb 2025 18:38:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738953481; cv=none; b=XZFp9K9j5bKoPMwtI4M2Wo+/+Ygtr5r76v4wXiemjgCbBeF+0Q7363lH35iRSzyjv/xhSDnYzP6JCNRAhgtInJ91iKh2zYpgF5KUTXHyzu+WRzYZwoXMsizddVb53ODckKn6n1JkOcWm1SECxQO539oO+P4Mb3X1Ur7CPy5BN6w=
+	t=1738953507; cv=none; b=kvs2m7bk6XK2I6HmJtzoq8XESz1XdmbkZVanh1IiHE3QbS5rnW+nEsIezs5BCO7gfhZLeLmIBlJYcN4kVOKgwwJwno57EkJBcBD/cMuarhz4yjmfYO/LQUvRifimUqc2QlcDdzOooEKi9HRyqyY7vozySCHrt0380oLAHOW63m8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738953481; c=relaxed/simple;
-	bh=nKtIeXe1WybNWDzZwu5Tk8fpz5emsmZs04c0W6ceGA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cNKK9BE6dJJ9kfoMlkKCYQ8z+S9zw5e1ZQcdq31v7aRWhz7Nlks5z2yoaVTAUeWZlqFzVzL3uCZIUzP69fhhtie0FMi+X1z/Y1Rx2qz3Qx+B214kspC7nP4U71oZ3qRFEBtttt5aj/CfLo8cqtmnUzBeAhQBHeR/fJi5ngS1m4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlQrJCsw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738953507; c=relaxed/simple;
+	bh=IuEkWS/NeyEzfm3i6D8opFH8M053JN7Jz2y2irFVkzY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qMfqH3KUGwiXKAHYHvk9d1t9CIfhO0G4xcYU1SwZbdLPI+DtAw5RxHhSsO3UVp9DzaCz5XjVxcQqu80vuQ4YXmrAmiGlFUDly0sYU0UUTnf+bvV7HFd1c95DBjNpAZnSOJigqLLZX0OAY/hgI030ivnqjrPsI0bPK+2HSdMSW2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OA0YeZM/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlQrJCsw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FB8C4CED1;
-	Fri,  7 Feb 2025 18:37:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OA0YeZM/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F752C4CED1;
+	Fri,  7 Feb 2025 18:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738953480;
-	bh=nKtIeXe1WybNWDzZwu5Tk8fpz5emsmZs04c0W6ceGA0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NlQrJCswb2tfBHdOL//Nqi1duhWdmo0hhnvyFyfXR+kDIctwxBbNZGMh0uVXpdrpn
-	 VtrsS32dlVeABXURIIGFmPTMZ88JEy/aky3D6z70pfkEKIebKtTmA3OIqxmZ3iDcEH
-	 trWQP7mjMuGosKO+a09FIi/HB1+rytKm2YepWGLYPhGRvhc49fQbsTVEVzSz1vy8KY
-	 6YWoxRaVR88tPNIw47TXvof69pWZuIN0NCuUntVn/ixzcMSAUzD+pD+us46BW7ocRi
-	 X6a7pzBJZI/SEPEJ2Eua3jvdWjb6R21icBFzIt4mEif2XISSYrHb7WAcNTWLbqa0Er
-	 f0yIWw7KhrZxA==
-Date: Fri, 7 Feb 2025 19:37:57 +0100
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	virtualization@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
-	xen-devel@lists.xenproject.org, kvm@vger.kernel.org,
-	linux-arch@vger.kernel.org, rcu@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
-	bcm-kernel-feedback-list@broadcom.com,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	Yair Podemsky <ypodemsk@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Kees Cook <kees@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Rong Xu <xur@google.com>,
-	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Jinghao Jia <jinghao7@illinois.edu>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v4 22/30] context_tracking: Exit CT_STATE_IDLE upon
- irq/nmi entry
-Message-ID: <Z6ZTBXUiEOLVcSKp@pavilion.home>
-References: <20250114175143.81438-1-vschneid@redhat.com>
- <20250114175143.81438-23-vschneid@redhat.com>
- <Z5A6NPqVGoZ32YsN@pavilion.home>
- <xhsmh5xm0pkuo.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <xhsmhbjvdk7kq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	s=k20201202; t=1738953507;
+	bh=IuEkWS/NeyEzfm3i6D8opFH8M053JN7Jz2y2irFVkzY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OA0YeZM/gCesGVQMq5OSI7dzXDnAk0M3rovFjYOuyL/hyjFGyvG50ZwhJsp38P/Uy
+	 zVGXs+cQ+a06nyAnNYBXHNuVY4S3AU3GSCwuPr2Ma1TMGpnX3dL1PjJtOIRBP16piH
+	 ZzA9SPl4Xdcz0r6T57miigab7WugY8M48s3IQcdnVIwjw+m0Hb6kGhI0XTqgoHtWRf
+	 oKaEydO7zmMO1beJUrVO8+X/6xoHGh8zPBv07EK5PhPwzsJT8YDHeMpj8/X2uj3VXJ
+	 5x3LCFef46qEXYCX0wSUJyJUnU3q/q3UDv/w7xvCfVNYsJ34cnY+ms1tQ9mK9xv9Rb
+	 G6zfL1m58aELQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tgTFA-001kXx-3e;
+	Fri, 07 Feb 2025 18:38:24 +0000
+Date: Fri, 07 Feb 2025 18:38:22 +0000
+Message-ID: <86bjvdtxb5.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: Eric Auger <eauger@redhat.com>,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+	kvmarm <kvmarm@lists.linux.dev>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	christoffer.dall@arm.com,
+	suzuki.poulose@arm.com,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	coltonlewis@google.com,
+	joey.gouly@arm.com,
+	yuzenghui@huawei.com,
+	darren@os.amperecomputing.com,
+	vishnu@os.amperecomputing.com
+Subject: Re: [PATCH] KVM: arm64: nv: Set ISTATUS for emulated timers, If timer expired
+In-Reply-To: <Z6ZMdv8jJUvYwQzT@linux.dev>
+References: <bcb4289b-507c-4ea1-afc7-6febd34d88db@redhat.com>
+	<86y10osr19.wl-maz@kernel.org>
+	<4d443db1-85b1-4071-acd5-3187deb9cb17@redhat.com>
+	<2f6b2cb1-3d32-480a-9801-9b993ae74e2d@os.amperecomputing.com>
+	<152d262e-641d-4bb1-9656-a13e049d62c4@redhat.com>
+	<86h661wje4.wl-maz@kernel.org>
+	<4a9fbdd9-ad23-44bc-8ba5-399f08068db4@redhat.com>
+	<86cygpwfy0.wl-maz@kernel.org>
+	<b22d5916-8b55-43bc-a256-2136d66ad25f@redhat.com>
+	<86frkptzr6.wl-maz@kernel.org>
+	<Z6ZMdv8jJUvYwQzT@linux.dev>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <xhsmhbjvdk7kq.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: oliver.upton@linux.dev, eauger@redhat.com, gankulkarni@os.amperecomputing.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, christoffer.dall@arm.com, suzuki.poulose@arm.com, will@kernel.org, catalin.marinas@arm.com, coltonlewis@google.com, joey.gouly@arm.com, yuzenghui@huawei.com, darren@os.amperecomputing.com, vishnu@os.amperecomputing.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Le Fri, Feb 07, 2025 at 06:06:45PM +0100, Valentin Schneider a écrit :
-> On 27/01/25 12:17, Valentin Schneider wrote:
-> > On 22/01/25 01:22, Frederic Weisbecker wrote:
-> >> And NMIs interrupting userspace don't call
-> >> enter_from_user_mode(). In fact they don't call irqentry_enter_from_user_mode()
-> >> like regular IRQs but irqentry_nmi_enter() instead. Well that's for archs
-> >> implementing common entry code, I can't speak for the others.
-> >>
-> >
-> > That I didn't realize, so thank you for pointing it out. Having another
-> > look now, I mistook DEFINE_IDTENTRY_RAW(exc_int3) for the general case
-> > when it really isn't :(
-> >
-> >> Unifying the behaviour between user and idle such that the IRQs/NMIs exit the
-> >> CT_STATE can be interesting but I fear this may not come for free. You would
-> >> need to save the old state on IRQ/NMI entry and restore it on exit.
-> >>
-> >
-> > That's what I tried to avoid, but it sounds like there's no nice way around it.
-> >
-> >> Do we really need it?
-> >>
-> >
-> > Well, my problem with not doing IDLE->KERNEL transitions on IRQ/NMI is that
-> > this leads the IPI deferral logic to observe a technically-out-of-sync sate
-> > for remote CPUs. Consider:
-> >
-> >   CPUx            CPUy
-> >                     state := CT_STATE_IDLE
-> >                     ...
-> >                     ~>IRQ
-> >                     ...
-> >                     ct_nmi_enter()
-> >                     [in the kernel proper by now]
-> >
-> >   text_poke_bp_batch()
-> >     ct_set_cpu_work(CPUy, CT_WORK_SYNC)
-> >       READ CPUy ct->state
-> >       `-> CT_IDLE_STATE
-> >       `-> defer IPI
-> >
-> >
-> > I thought this meant I would need to throw out the "defer IPIs if CPU is
-> > idle" part, but AIUI this also affects CT_STATE_USER and CT_STATE_GUEST,
-> > which is a bummer :(
+On Fri, 07 Feb 2025 18:09:58 +0000,
+Oliver Upton <oliver.upton@linux.dev> wrote:
 > 
-> Soooo I've been thinking...
+> Hey,
 > 
-> Isn't
+> On Fri, Feb 07, 2025 at 05:45:33PM +0000, Marc Zyngier wrote:
+> > I found at least one issue that could fail the migration. Before the
+> > VM starts running, we limit the feature set to the subset we actually
+> > support with NV.
+> > 
+> > By doing this, we also change the value of IDreg fields that are not
+> > writable, because they describe features that we don't support.
+> > Obviously, that fails on restore.
+> > 
+> > I need to have a think...
 > 
->   (context_tracking.state & CT_RCU_WATCHING)
+> We spoke about this a while ago (and I forgot til now), but I was
+> wondering if we could use vCPU feature flags to describe NV, including
+> the selection between FEAT_E2H0 and FEAT_VHE.
 > 
-> pretty much a proxy for knowing whether a CPU is executing in kernelspace,
-> including NMIs?
+> I think this might match userspace expectations a bit more closely where
+> the state of the ID registers after init gives the actual feature set
+> supported by the VM.
 
-You got it!
+I'm not sure that's enough. Let me give you an example:
 
-> 
-> NMI interrupts userspace/VM/idle -> ct_nmi_enter()   -> it becomes true
-> IRQ interrupts idle              -> ct_irq_enter()   -> it becomes true
-> IRQ interrupts userspace         -> __ct_user_exit() -> it becomes true
-> IRQ interrupts VM                -> __ct_user_exit() -> it becomes true
-> 
-> IOW, if I gate setting deferred work by checking for this instead of
-> explicitely CT_STATE_KERNEL, "it should work" and prevent the
-> aforementioned issue? Or should I be out drinking instead? :-)
+My host has FEAT_XNX, described in ID_AA64MMFR1_EL1.XNX. For whatever
+reason, we don't allow this field to be written to, even out of NV
+context. This is odd, because for an EL1 VM, this field means nothing
+at all.
 
-Exactly it should work! Now that doesn't mean you can't go out
-for a drink :-)
+However, we don't yet support FEAT_XNX with NV (it requires some extra
+surgery in the S2 walker, in the S2 shadowing code and in AT).
 
-Thanks.
+How would you manage this field if you had a vcpu flag saying E2H0 or
+not? I don't think it helps, at least not in that particular case. It
+may help for some things, but not all.
+
+It feels that we need to define the field limit (and what is writable
+or not) based on the NV/!NV support, and maybe E2H0/VHE as well.
+
+This is getting complicated...
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
