@@ -1,2105 +1,929 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532491A5BB6
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D2FA1B3937
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738952436; cv=none; b=lcLZF2qqCu4/GYlQHKCgu2pRmbbc+uzO/s8SV+jsotpMTuGyseBtFyiJeeArXE22KbfZRJEBPpvQyHMqOwIMqKk1qYEfwVcfNP0ZBPSQWNbwwUpnzVCKz3cVYF3knEaYMoFwPtpuQn/7QEzTtijVxmluiprnMs9TT7Lt0U4eETc=
+	t=1738952487; cv=none; b=ptkQ2SzVPMQeikx19XR107AVS9FMNHH86RBuqSKtx8TadAf/NXlVDzboPgDxK6Na1vuvOKCY8cvELz3ffQ90NlB3mqO0ulgJPA7j92y5gBNfZ8PXOgKZGGREV4iemhu5d28VuescITEf75yzj+zewH4LGHpvLJvW8kO7EBPuvN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738952436; c=relaxed/simple;
-	bh=z1rVGzn7pV3yrIANrTtiUlNy3fMq9Y1xIcLGjm92h/A=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=Ur1qZ4bkWOvy5BAMqX/99FtB+FuEigUNWGEmNPaJRNlnxMdP6EPaVH5f5ZdJdYnb7ZJfYdDdspTL0RpcgRGV5M7RBX3nhGlnHJDx8pP13bNUmwRCRGXKcthWSNNVV6B5mUCMDdf3z29ylEpTCtBVZpCW+GwmzkbigC3T2SyZjYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fDw1nS2I; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fDw1nS2I"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e572f6dee18so3310579276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 10:20:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738952427; x=1739557227; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fW4jPO3uHI4F0S8w4ELxWZzPDdCtfMVHn/uTXyBA8oc=;
-        b=fDw1nS2IBt2wEswdljDUBoSvKEoTz82agoev+fteKHcFDi9DDWXz0IRRXTPvnOd4Nm
-         F8yADo24LYWgGOBVpmVa5Ub85QFPbDp/9sMY0rF0KLDkCsEFpEOp3nVG6RPm6nx2Mv8O
-         3GyhPC44Kn/umZ43PE9gv0IcuAZi2JtWVvqxenAVrbPY99ZFhzcdYcEoNkIeemeznC+p
-         lWxW9Be+urNh4CU8h6jrlephpKdt9IGWj8SeMvOO1YztW8Fg/hESYFjeoeBLhfjadVYQ
-         RZhMa7CdOy7UBiivSo3MzMzkBgzscUA25IobKSW0W+Xsp+ok8nTcgfyce139bEzxdO2e
-         6CfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738952427; x=1739557227;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fW4jPO3uHI4F0S8w4ELxWZzPDdCtfMVHn/uTXyBA8oc=;
-        b=U1mVJDs06oQ7gZMrYhe0oHBQXewSvipYC1RjNFZDJVVBbjVrvc9WJFWeD8Nhcj+Jhb
-         5KTD3j64mMzQb6bPdNbNmcAUpjh64+jnXVKtc4Jma6DpwIo0MqKqitjRvLF7BntXyUad
-         Bb4b70u1jybfUOroE0H7hU45Jf2GuRtOEYv2o7CCs2R4EbSC3Q5Ts6be6H45WvNs+Cai
-         8gaJGws0P71jJhWnZqDU7tSqmqkhp2ArEswF1oTjcLJHo8RO66Bgqay+6ENSso/NOlBC
-         KerjH221e02Svg9fi05h/GEob/BFO9IZ8q+P6fZ89c1mWGAyB7Isq3uLBNLEq9qHkOa9
-         LLJg==
-X-Forwarded-Encrypted: i=1; AJvYcCV4ND83asKBv6uJ40j1W7GXlei/OPT9kbJUk1emkX7rv8kZYQlmQoUxL6WRo01nEQpQBrmMSMo/X5ThRkQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+DYR3SZ2jKGqbIgTKG/2RuqaLqCZVa9aUYTiHFDgAV27ZujyA
-	Qz1FzL2zm0fNC2UZdlLDSj80qXKbs+d7fLWPTFQQYgT4J/Yw/3LucL/osPxiQb/qEBmGfFtcjPu
-	Za/nk5A==
-X-Google-Smtp-Source: AGHT+IGVc2fgU87o74obXNOvMO2oANgs3xYaKuJMxPfr7SE4XlNgJGI7q/erg8PVIJFPeYYgz7GrNwLaj8g7
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:79e4:4a45:1e80:ace5])
- (user=irogers job=sendgmr) by 2002:a25:6644:0:b0:e5b:243e:5ff2 with SMTP id
- 3f1490d57ef6-e5b46286016mr37940276.6.1738952426900; Fri, 07 Feb 2025 10:20:26
- -0800 (PST)
-Date: Fri,  7 Feb 2025 10:19:44 -0800
-In-Reply-To: <20250207181959.799610-1-irogers@google.com>
-Message-Id: <20250207181959.799610-11-irogers@google.com>
+	s=arc-20240116; t=1738952487; c=relaxed/simple;
+	bh=dX+tOvmxiN4IDHYnj+MVhpNQcZlsJ3CFR6ilC6U0pBo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nAlJWUPTq4fxEmTZR1a1o4GXkfq34zOYY69wy2k0eL3SeAmiFVhRROtVZanFYmslxpwJsavF23ONdAktvKNYABJ7aW7bO4KJttTPEIDWUYJwtmyUglGRpUpL9MmYLtXw5ZenhmecJVDx42oxsz5QwA5rwVauvK5r6tr82Wk8KGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81D181FC7;
+	Fri,  7 Feb 2025 10:21:34 -0800 (PST)
+Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 467CF3F63F;
+	Fri,  7 Feb 2025 10:21:08 -0800 (PST)
+From: James Morse <james.morse@arm.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Babu Moger <Babu.Moger@amd.com>,
+	James Morse <james.morse@arm.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com,
+	lcherian@marvell.com,
+	bobo.shaobowang@huawei.com,
+	tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>,
+	peternewman@google.com,
+	dfustini@baylibre.com,
+	amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>,
+	Dave Martin <dave.martin@arm.com>,
+	Koba Ko <kobak@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v6 42/42] x86/resctrl: Add python script to move resctrl code to /fs/resctrl
+Date: Fri,  7 Feb 2025 18:18:23 +0000
+Message-Id: <20250207181823.6378-43-james.morse@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250207181823.6378-1-james.morse@arm.com>
+References: <20250207181823.6378-1-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250207181959.799610-1-irogers@google.com>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Subject: [PATCH v6 10/24] perf vendor events: Update GrandRidge events/metrics
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>, 
-	Michael Petlan <mpetlan@redhat.com>, Thomas Falcon <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Update events from v1.03 to v1.05.
-Update TMA metrics from 4.8 to 5.02.
+To support more than one architecture resctrl needs to move from arch/x86
+to live under fs. Moving all the code breaks any series on the mailing
+list, so needs scheduling carefully.
 
-Bring in the event updates v1.05:
-https://github.com/intel/perfmon/commit/3b2e3528fbfb5576f443607ac9d772de88a=
-ed72c
-https://github.com/intel/perfmon/commit/9bc1815536ff1f6fe73693a19a410b6a711=
-740c2
+Maintaining the patch that moves all this code has proved labour intensive.
+It's also near-impossible to review that no inadvertent changes have
+crept in.
 
-The TMA 5.02 update is from (with subsequent fixes):
-https://github.com/intel/perfmon/commit/1d72913b2d938781fb28f3cc3507aaec5c2=
-2d782
+To solve these problems, temporarily add a hacky python program that
+lists all the functions that should move, and those that should stay.
 
-Update uncore IIO events umask with the change:
-https://github.com/intel/perfmon/commit/d78e8a166537c9ceab4f2e901dc96c53667=
-a2174
-which should address an issue originally raised by Michael Petlan:
-Reported-by: Michael Petlan <mpetlan@redhat.com>
-Closes: https://lore.kernel.org/all/alpine.LRH.2.20.2401300733310.11354@Die=
-go/
+No attempt to parse C code is made, this thing tries to name 'blocks'
+based on hueristics about the kernel coding style. It's fragile, but
+good enough for its single use here.
 
-Co-developed-by: Caleb Biggers <caleb.biggers@intel.com>
-Signed-off-by: Caleb Biggers <caleb.biggers@intel.com>
-Acked-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
+This only exists to show I have nothing up my sleeve.
+I don't suggested this gets merged.
+
+The patch this script generaets has the following corner cases:
+* The original files are regenerated, which will add newlines that are
+  not present in the original file.
+* An trace-point header file the only contains boiler-plate is created
+  in the arch and filesystem code. The parser doesn't know how to remove
+  the includes for these - but its easy to 'keep' the file contents on
+  the correct side. A follow-up patch will remove these files and their
+  includes.
+* asm/cpu_device_id.h and a relative path for 'X86_CONFIG()' are kept
+  in the filesystem code to ensure x86 builds. A follow-up patch will
+  remove these.
+* This script doesn't know how to move the documentation, and update the
+  links in comments. A follow-up patch does this.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
- .../arch/x86/grandridge/grr-metrics.json      | 284 ++++++------------
- .../arch/x86/grandridge/pipeline.json         |   3 +-
- .../arch/x86/grandridge/uncore-cache.json     |   4 +-
- .../x86/grandridge/uncore-interconnect.json   |  60 ++++
- .../arch/x86/grandridge/uncore-io.json        | 214 ++++++-------
- .../arch/x86/grandridge/uncore-memory.json    |   2 +-
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   2 +-
- 7 files changed, 260 insertions(+), 309 deletions(-)
+Changes since v5:
+ * Regex twiddling to match surprise tabs.
+ * Added else case to avoid double output of #defines.
+---
+ resctrl_copy_pasta.py | 812 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 812 insertions(+)
+ create mode 100644 resctrl_copy_pasta.py
 
-diff --git a/tools/perf/pmu-events/arch/x86/grandridge/grr-metrics.json b/t=
-ools/perf/pmu-events/arch/x86/grandridge/grr-metrics.json
-index 07e542297e93..2f9959c61718 100644
---- a/tools/perf/pmu-events/arch/x86/grandridge/grr-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/grandridge/grr-metrics.json
-@@ -1,4 +1,11 @@
- [
-+    {
-+        "BriefDescription": "C10 residency percent per package",
-+        "MetricExpr": "cstate_pkg@c10\\-residency@ / TSC",
-+        "MetricGroup": "Power",
-+        "MetricName": "C10_Pkg_Residency",
-+        "ScaleUnit": "100%"
-+    },
-     {
-         "BriefDescription": "C1 residency percent per core",
-         "MetricExpr": "cstate_core@c1\\-residency@ / TSC",
-@@ -7,17 +14,24 @@
-         "ScaleUnit": "100%"
-     },
-     {
--        "BriefDescription": "C6 residency percent per core",
--        "MetricExpr": "cstate_core@c6\\-residency@ / TSC",
-+        "BriefDescription": "C2 residency percent per package",
-+        "MetricExpr": "cstate_pkg@c2\\-residency@ / TSC",
-         "MetricGroup": "Power",
--        "MetricName": "C6_Core_Residency",
-+        "MetricName": "C2_Pkg_Residency",
-         "ScaleUnit": "100%"
-     },
-     {
--        "BriefDescription": "C6 residency percent per module",
--        "MetricExpr": "cstate_module@c6\\-residency@ / TSC",
-+        "BriefDescription": "C3 residency percent per package",
-+        "MetricExpr": "cstate_pkg@c3\\-residency@ / TSC",
-         "MetricGroup": "Power",
--        "MetricName": "C6_Module_Residency",
-+        "MetricName": "C3_Pkg_Residency",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "BriefDescription": "C6 residency percent per core",
-+        "MetricExpr": "cstate_core@c6\\-residency@ / TSC",
-+        "MetricGroup": "Power",
-+        "MetricName": "C6_Core_Residency",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -28,7 +42,21 @@
-         "ScaleUnit": "100%"
-     },
-     {
--        "BriefDescription": "Cycles per instruction retired; indicating ho=
-w much time each executed instruction took; in units of cycles.",
-+        "BriefDescription": "C7 residency percent per core",
-+        "MetricExpr": "cstate_core@c7\\-residency@ / TSC",
-+        "MetricGroup": "Power",
-+        "MetricName": "C7_Core_Residency",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "BriefDescription": "C8 residency percent per package",
-+        "MetricExpr": "cstate_pkg@c8\\-residency@ / TSC",
-+        "MetricGroup": "Power",
-+        "MetricName": "C8_Pkg_Residency",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "BriefDescription": "Cycles per instruction retired; indicating ho=
-w much time each executed instruction took; in units of cycles",
-         "MetricExpr": "CPU_CLK_UNHALTED.THREAD / INST_RETIRED.ANY",
-         "MetricName": "cpi",
-         "ScaleUnit": "1per_instr"
-@@ -49,31 +77,31 @@
-         "BriefDescription": "Ratio of number of completed page walks (for =
-2 megabyte page sizes) caused by demand data loads to the total number of c=
-ompleted instructions",
-         "MetricExpr": "DTLB_LOAD_MISSES.WALK_COMPLETED_2M_4M / INST_RETIRE=
-D.ANY",
-         "MetricName": "dtlb_2nd_level_2mb_large_page_load_mpi",
--        "PublicDescription": "Ratio of number of completed page walks (for=
- 2 megabyte page sizes) caused by demand data loads to the total number of =
-completed instructions. This implies it missed in the Data Translation Look=
-aside Buffer (DTLB) and further levels of TLB.",
-+        "PublicDescription": "Ratio of number of completed page walks (for=
- 2 megabyte page sizes) caused by demand data loads to the total number of =
-completed instructions. This implies it missed in the Data Translation Look=
-aside Buffer (DTLB) and further levels of TLB",
-         "ScaleUnit": "1per_instr"
-     },
-     {
-         "BriefDescription": "Ratio of number of completed page walks (for =
-all page sizes) caused by demand data loads to the total number of complete=
-d instructions",
-         "MetricExpr": "DTLB_LOAD_MISSES.WALK_COMPLETED / INST_RETIRED.ANY"=
-,
-         "MetricName": "dtlb_2nd_level_load_mpi",
--        "PublicDescription": "Ratio of number of completed page walks (for=
- all page sizes) caused by demand data loads to the total number of complet=
-ed instructions. This implies it missed in the DTLB and further levels of T=
-LB.",
-+        "PublicDescription": "Ratio of number of completed page walks (for=
- all page sizes) caused by demand data loads to the total number of complet=
-ed instructions. This implies it missed in the DTLB and further levels of T=
-LB",
-         "ScaleUnit": "1per_instr"
-     },
-     {
-         "BriefDescription": "Ratio of number of completed page walks (for =
-all page sizes) caused by demand data stores to the total number of complet=
-ed instructions",
-         "MetricExpr": "DTLB_STORE_MISSES.WALK_COMPLETED / INST_RETIRED.ANY=
-",
-         "MetricName": "dtlb_2nd_level_store_mpi",
--        "PublicDescription": "Ratio of number of completed page walks (for=
- all page sizes) caused by demand data stores to the total number of comple=
-ted instructions. This implies it missed in the DTLB and further levels of =
-TLB.",
-+        "PublicDescription": "Ratio of number of completed page walks (for=
- all page sizes) caused by demand data stores to the total number of comple=
-ted instructions. This implies it missed in the DTLB and further levels of =
-TLB",
-         "ScaleUnit": "1per_instr"
-     },
-     {
--        "BriefDescription": "Bandwidth of IO reads that are initiated by e=
-nd device controllers that are requesting memory from the CPU.",
-+        "BriefDescription": "Bandwidth of IO reads that are initiated by e=
-nd device controllers that are requesting memory from the CPU",
-         "MetricExpr": "UNC_CHA_TOR_INSERTS.IO_PCIRDCUR * 64 / 1e6 / durati=
-on_time",
-         "MetricName": "io_bandwidth_read",
-         "ScaleUnit": "1MB/s"
-     },
-     {
--        "BriefDescription": "Bandwidth of IO writes that are initiated by =
-end device controllers that are writing memory to the CPU.",
-+        "BriefDescription": "Bandwidth of IO writes that are initiated by =
-end device controllers that are writing memory to the CPU",
-         "MetricExpr": "(UNC_CHA_TOR_INSERTS.IO_ITOM + UNC_CHA_TOR_INSERTS.=
-IO_ITOMCACHENEAR) * 64 / 1e6 / duration_time",
-         "MetricName": "io_bandwidth_write",
-         "ScaleUnit": "1MB/s"
-@@ -82,14 +110,14 @@
-         "BriefDescription": "Ratio of number of completed page walks (for =
-2 megabyte and 4 megabyte page sizes) caused by a code fetch to the total n=
-umber of completed instructions",
-         "MetricExpr": "ITLB_MISSES.WALK_COMPLETED_2M_4M / INST_RETIRED.ANY=
-",
-         "MetricName": "itlb_2nd_level_large_page_mpi",
--        "PublicDescription": "Ratio of number of completed page walks (for=
- 2 megabyte and 4 megabyte page sizes) caused by a code fetch to the total =
-number of completed instructions. This implies it missed in the Instruction=
- Translation Lookaside Buffer (ITLB) and further levels of TLB.",
-+        "PublicDescription": "Ratio of number of completed page walks (for=
- 2 megabyte and 4 megabyte page sizes) caused by a code fetch to the total =
-number of completed instructions. This implies it missed in the Instruction=
- Translation Lookaside Buffer (ITLB) and further levels of TLB",
-         "ScaleUnit": "1per_instr"
-     },
-     {
-         "BriefDescription": "Ratio of number of completed page walks (for =
-all page sizes) caused by a code fetch to the total number of completed ins=
-tructions",
-         "MetricExpr": "ITLB_MISSES.WALK_COMPLETED / INST_RETIRED.ANY",
-         "MetricName": "itlb_2nd_level_mpi",
--        "PublicDescription": "Ratio of number of completed page walks (for=
- all page sizes) caused by a code fetch to the total number of completed in=
-structions. This implies it missed in the ITLB (Instruction TLB) and furthe=
-r levels of TLB.",
-+        "PublicDescription": "Ratio of number of completed page walks (for=
- all page sizes) caused by a code fetch to the total number of completed in=
-structions. This implies it missed in the ITLB (Instruction TLB) and furthe=
-r levels of TLB",
-         "ScaleUnit": "1per_instr"
-     },
-     {
-@@ -188,17 +216,15 @@
-     {
-         "BriefDescription": "Counts the number of issue slots that were no=
-t consumed by the backend due to certain allocation restrictions",
-         "MetricExpr": "tma_core_bound",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_core_bound_group",
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_core_bound_group"=
-,
-         "MetricName": "tma_allocation_restriction",
--        "MetricThreshold": "tma_allocation_restriction > 0.1 & (tma_core_b=
-ound > 0.1 & tma_backend_bound > 0.1)",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Counts the total number of issue slots that w=
-ere not consumed by the backend due to backend stalls",
-         "MetricExpr": "TOPDOWN_BE_BOUND.ALL_P / (6 * CPU_CLK_UNHALTED.CORE=
-)",
--        "MetricGroup": "TopdownL1;tma_L1_group",
-+        "MetricGroup": "Slots;TopdownL1;tma_L1_group",
-         "MetricName": "tma_backend_bound",
--        "MetricThreshold": "tma_backend_bound > 0.1",
-         "MetricgroupNoGroup": "TopdownL1",
-         "PublicDescription": "Counts the total number of issue slots that =
-were not consumed by the backend due to backend stalls. Note that uops must=
- be available for consumption in order for this event to count. If a uop is=
- not available (IQ is empty), this event will not count",
-         "ScaleUnit": "100%"
-@@ -206,104 +232,92 @@
-     {
-         "BriefDescription": "Counts the total number of issue slots that w=
-ere not consumed by the backend because allocation is stalled due to a misp=
-redicted jump or a machine clear",
-         "MetricExpr": "TOPDOWN_BAD_SPECULATION.ALL_P / (6 * CPU_CLK_UNHALT=
-ED.CORE)",
--        "MetricGroup": "TopdownL1;tma_L1_group",
-+        "MetricGroup": "Slots;TopdownL1;tma_L1_group",
-         "MetricName": "tma_bad_speculation",
--        "MetricThreshold": "tma_bad_speculation > 0.15",
-         "MetricgroupNoGroup": "TopdownL1",
--        "PublicDescription": "Counts the total number of issue slots that =
-were not consumed by the backend because allocation is stalled due to a mis=
-predicted jump or a machine clear. Only issue slots wasted due to fast nuke=
-s such as memory ordering nukes are counted. Other nukes are not accounted =
-for. Counts all issue slots blocked during this recovery window including r=
-elevant microcode flows and while uops are not yet available in the instruc=
-tion queue (IQ). Also includes the issue slots that were consumed by the ba=
-ckend but were thrown away because they were younger than the mispredict or=
- machine clear.",
-+        "PublicDescription": "Counts the total number of issue slots that =
-were not consumed by the backend because allocation is stalled due to a mis=
-predicted jump or a machine clear. Only issue slots wasted due to fast nuke=
-s such as memory ordering nukes are counted. Other nukes are not accounted =
-for. Counts all issue slots blocked during this recovery window including r=
-elevant microcode flows and while uops are not yet available in the instruc=
-tion queue (IQ). Also includes the issue slots that were consumed by the ba=
-ckend but were thrown away because they were younger than the mispredict or=
- machine clear",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to BACLEARS, which occurs when the Branch T=
-arget Buffer (BTB) prediction or lack thereof, was corrected by a later bra=
-nch predictor in the frontend",
-         "MetricExpr": "TOPDOWN_FE_BOUND.BRANCH_DETECT / (6 * CPU_CLK_UNHAL=
-TED.CORE)",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_ifetch_latency_gr=
-oup",
-         "MetricName": "tma_branch_detect",
--        "MetricThreshold": "tma_branch_detect > 0.05 & (tma_ifetch_latency=
- > 0.15 & tma_frontend_bound > 0.2)",
--        "PublicDescription": "Counts the number of issue slots that were n=
-ot delivered by the frontend due to BACLEARS, which occurs when the Branch =
-Target Buffer (BTB) prediction or lack thereof, was corrected by a later br=
-anch predictor in the frontend. Includes BACLEARS due to all branch types i=
-ncluding conditional and unconditional jumps, returns, and indirect branche=
-s.",
-+        "PublicDescription": "Counts the number of issue slots that were n=
-ot delivered by the frontend due to BACLEARS, which occurs when the Branch =
-Target Buffer (BTB) prediction or lack thereof, was corrected by a later br=
-anch predictor in the frontend. Includes BACLEARS due to all branch types i=
-ncluding conditional and unconditional jumps, returns, and indirect branche=
-s",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Counts the number of issue slots that were no=
-t consumed by the backend due to branch mispredicts",
-         "MetricExpr": "TOPDOWN_BAD_SPECULATION.MISPREDICT / (6 * CPU_CLK_U=
-NHALTED.CORE)",
--        "MetricGroup": "TopdownL2;tma_L2_group;tma_bad_speculation_group",
-+        "MetricGroup": "Slots;TopdownL2;tma_L2_group;tma_bad_speculation_g=
-roup",
-         "MetricName": "tma_branch_mispredicts",
--        "MetricThreshold": "tma_branch_mispredicts > 0.05 & tma_bad_specul=
-ation > 0.15",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-     {
--        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to BTCLEARS, which occurs when the Branch T=
-arget Buffer (BTB) predicts a taken branch.",
-+        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to BTCLEARS, which occurs when the Branch T=
-arget Buffer (BTB) predicts a taken branch",
-         "MetricExpr": "TOPDOWN_FE_BOUND.BRANCH_RESTEER / (6 * CPU_CLK_UNHA=
-LTED.CORE)",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_ifetch_latency_gr=
-oup",
-         "MetricName": "tma_branch_resteer",
--        "MetricThreshold": "tma_branch_resteer > 0.05 & (tma_ifetch_latenc=
-y > 0.15 & tma_frontend_bound > 0.2)",
-         "ScaleUnit": "100%"
-     },
-     {
--        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to the microcode sequencer (MS).",
-+        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to the microcode sequencer (MS)",
-         "MetricExpr": "TOPDOWN_FE_BOUND.CISC / (6 * CPU_CLK_UNHALTED.CORE)=
-",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
-,
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_ifetch_bandwidth_=
-group",
-         "MetricName": "tma_cisc",
--        "MetricThreshold": "tma_cisc > 0.05 & (tma_ifetch_bandwidth > 0.1 =
-& tma_frontend_bound > 0.2)",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Counts the number of cycles due to backend bo=
-und stalls that are bounded by core restrictions and not attributed to an o=
-utstanding load or stores, or resource limitation",
-         "MetricExpr": "TOPDOWN_BE_BOUND.ALLOC_RESTRICTIONS / (6 * CPU_CLK_=
-UNHALTED.CORE)",
--        "MetricGroup": "TopdownL2;tma_L2_group;tma_backend_bound_group",
-+        "MetricGroup": "Slots;TopdownL2;tma_L2_group;tma_backend_bound_gro=
-up",
-         "MetricName": "tma_core_bound",
--        "MetricThreshold": "tma_core_bound > 0.1 & tma_backend_bound > 0.1=
-",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-     {
--        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to decode stalls.",
-+        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to decode stalls",
-         "MetricExpr": "TOPDOWN_FE_BOUND.DECODE / (6 * CPU_CLK_UNHALTED.COR=
-E)",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
-,
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_ifetch_bandwidth_=
-group",
-         "MetricName": "tma_decode",
--        "MetricThreshold": "tma_decode > 0.05 & (tma_ifetch_bandwidth > 0.=
-1 & tma_frontend_bound > 0.2)",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Counts the number of issue slots that were no=
-t consumed by the backend due to a machine clear that does not require the =
-use of microcode, classified as a fast nuke, due to memory ordering, memory=
- disambiguation and memory renaming",
-         "MetricExpr": "TOPDOWN_BAD_SPECULATION.FASTNUKE / (6 * CPU_CLK_UNH=
-ALTED.CORE)",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_machine_clears_group",
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_machine_clears_gr=
-oup",
-         "MetricName": "tma_fast_nuke",
--        "MetricThreshold": "tma_fast_nuke > 0.05 & (tma_machine_clears > 0=
-.05 & tma_bad_speculation > 0.15)",
-         "ScaleUnit": "100%"
-     },
-     {
--        "BriefDescription": "Counts the number of issue slots that were no=
-t consumed by the backend due to frontend stalls.",
-+        "BriefDescription": "Counts the number of issue slots that were no=
-t consumed by the backend due to frontend stalls",
-         "MetricExpr": "TOPDOWN_FE_BOUND.ALL_P / (6 * CPU_CLK_UNHALTED.CORE=
-)",
--        "MetricGroup": "TopdownL1;tma_L1_group",
-+        "MetricGroup": "Slots;TopdownL1;tma_L1_group",
-         "MetricName": "tma_frontend_bound",
--        "MetricThreshold": "tma_frontend_bound > 0.2",
-         "MetricgroupNoGroup": "TopdownL1",
-         "ScaleUnit": "100%"
-     },
-     {
--        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to instruction cache misses.",
-+        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to instruction cache misses",
-         "MetricExpr": "TOPDOWN_FE_BOUND.ICACHE / (6 * CPU_CLK_UNHALTED.COR=
-E)",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_ifetch_latency_gr=
-oup",
-         "MetricName": "tma_icache_misses",
--        "MetricThreshold": "tma_icache_misses > 0.05 & (tma_ifetch_latency=
- > 0.15 & tma_frontend_bound > 0.2)",
-         "ScaleUnit": "100%"
-     },
-     {
--        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to frontend bandwidth restrictions due to d=
-ecode, predecode, cisc, and other limitations.",
-+        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to frontend bandwidth restrictions due to d=
-ecode, predecode, cisc, and other limitations",
-         "MetricExpr": "TOPDOWN_FE_BOUND.FRONTEND_BANDWIDTH / (6 * CPU_CLK_=
-UNHALTED.CORE)",
--        "MetricGroup": "TopdownL2;tma_L2_group;tma_frontend_bound_group",
-+        "MetricGroup": "Slots;TopdownL2;tma_L2_group;tma_frontend_bound_gr=
-oup",
-         "MetricName": "tma_ifetch_bandwidth",
--        "MetricThreshold": "tma_ifetch_bandwidth > 0.1 & tma_frontend_boun=
-d > 0.2",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-     {
--        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to frontend latency restrictions due to ica=
-che misses, itlb misses, branch detection, and resteer limitations.",
-+        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to frontend latency restrictions due to ica=
-che misses, itlb misses, branch detection, and resteer limitations",
-         "MetricExpr": "TOPDOWN_FE_BOUND.FRONTEND_LATENCY / (6 * CPU_CLK_UN=
-HALTED.CORE)",
--        "MetricGroup": "TopdownL2;tma_L2_group;tma_frontend_bound_group",
-+        "MetricGroup": "Slots;TopdownL2;tma_L2_group;tma_frontend_bound_gr=
-oup",
-         "MetricName": "tma_ifetch_latency",
--        "MetricThreshold": "tma_ifetch_latency > 0.15 & tma_frontend_bound=
- > 0.2",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-@@ -331,32 +345,6 @@
-         "MetricGroup": "Flops",
-         "MetricName": "tma_info_arith_inst_mix_ipfparith_scalar_sp"
-     },
--    {
--        "BriefDescription": "Percentage of time that retirement is stalled=
- due to a first level data TLB miss",
--        "MetricExpr": "tma_info_bottleneck_dtlb_miss_bound_cycles",
--        "MetricName": "tma_info_bottleneck_%_dtlb_miss_bound_cycles"
--    },
--    {
--        "BriefDescription": "Percentage of time that allocation and retire=
-ment is stalled by the Frontend Cluster due to an Ifetch Miss, either Icach=
-e or ITLB Miss",
--        "MetricExpr": "tma_info_bottleneck_ifetch_miss_bound_cycles",
--        "MetricGroup": "Ifetch",
--        "MetricName": "tma_info_bottleneck_%_ifetch_miss_bound_cycles",
--        "PublicDescription": "Percentage of time that allocation and retir=
-ement is stalled by the Frontend Cluster due to an Ifetch Miss, either Icac=
-he or ITLB Miss. See Info.Ifetch_Bound"
--    },
--    {
--        "BriefDescription": "Percentage of time that retirement is stalled=
- due to an L1 miss",
--        "MetricExpr": "tma_info_bottleneck_load_miss_bound_cycles",
--        "MetricGroup": "Load_Store_Miss",
--        "MetricName": "tma_info_bottleneck_%_load_miss_bound_cycles",
--        "PublicDescription": "Percentage of time that retirement is stalle=
-d due to an L1 miss. See Info.Load_Miss_Bound"
--    },
--    {
--        "BriefDescription": "Percentage of time that retirement is stalled=
- by the Memory Cluster due to a pipeline stall",
--        "MetricExpr": "tma_info_bottleneck_mem_exec_bound_cycles",
--        "MetricGroup": "Mem_Exec",
--        "MetricName": "tma_info_bottleneck_%_mem_exec_bound_cycles",
--        "PublicDescription": "Percentage of time that retirement is stalle=
-d by the Memory Cluster due to a pipeline stall. See Info.Mem_Exec_Bound"
--    },
-     {
-         "BriefDescription": "Percentage of time that retirement is stalled=
- due to a first level data TLB miss",
-         "MetricExpr": "100 * (LD_HEAD.DTLB_MISS_AT_RET + LD_HEAD.PGWALK_AT=
-_RET) / CPU_CLK_UNHALTED.CORE",
-@@ -438,21 +426,6 @@
-         "MetricExpr": "BR_MISP_RETIRED.ALL_BRANCHES / BACLEARS.ANY",
-         "MetricName": "tma_info_br_mispredict_bound_branch_mispredict_to_u=
-nknown_branch_ratio"
-     },
--    {
--        "BriefDescription": "Percentage of time that allocation is stalled=
- due to load buffer full",
--        "MetricExpr": "tma_info_buffer_stalls_load_buffer_stall_cycles",
--        "MetricName": "tma_info_buffer_stalls_%_load_buffer_stall_cycles"
--    },
--    {
--        "BriefDescription": "Percentage of time that allocation is stalled=
- due to memory reservation stations full",
--        "MetricExpr": "tma_info_buffer_stalls_mem_rsv_stall_cycles",
--        "MetricName": "tma_info_buffer_stalls_%_mem_rsv_stall_cycles"
--    },
--    {
--        "BriefDescription": "Percentage of time that allocation is stalled=
- due to store buffer full",
--        "MetricExpr": "tma_info_buffer_stalls_store_buffer_stall_cycles",
--        "MetricName": "tma_info_buffer_stalls_%_store_buffer_stall_cycles"
--    },
-     {
-         "BriefDescription": "Percentage of time that allocation is stalled=
- due to load buffer full",
-         "MetricExpr": "100 * MEM_SCHEDULER_BLOCK.LD_BUF / CPU_CLK_UNHALTED=
-.CORE",
-@@ -474,7 +447,8 @@
-     {
-         "BriefDescription": "Cycles Per Instruction",
-         "MetricExpr": "CPU_CLK_UNHALTED.CORE / INST_RETIRED.ANY",
--        "MetricName": "tma_info_core_cpi"
-+        "MetricName": "tma_info_core_cpi",
-+        "ScaleUnit": "1per_instr"
-     },
-     {
-         "BriefDescription": "Floating Point Operations Per Cycle",
-@@ -492,21 +466,6 @@
-         "MetricExpr": "TOPDOWN_RETIRING.ALL_P / INST_RETIRED.ANY",
-         "MetricName": "tma_info_core_upi"
-     },
--    {
--        "BriefDescription": "Percentage of ifetch miss bound stalls, where=
- the ifetch miss hits in the L2",
--        "MetricExpr": "tma_info_ifetch_miss_bound_ifetchmissbound_with_l2h=
-it",
--        "MetricName": "tma_info_ifetch_miss_bound_%_ifetchmissbound_with_l=
-2hit"
--    },
--    {
--        "BriefDescription": "Percentage of ifetch miss bound stalls, where=
- the ifetch miss hits in the L3",
--        "MetricExpr": "tma_info_ifetch_miss_bound_ifetchmissbound_with_l3h=
-it",
--        "MetricName": "tma_info_ifetch_miss_bound_%_ifetchmissbound_with_l=
-3hit"
--    },
--    {
--        "BriefDescription": "Percentage of ifetch miss bound stalls, where=
- the ifetch miss subsequently misses in the L3",
--        "MetricExpr": "100 * MEM_BOUND_STALLS_IFETCH.LLC_MISS / MEM_BOUND_=
-STALLS_IFETCH.ALL",
--        "MetricName": "tma_info_ifetch_miss_bound_%_ifetchmissbound_with_l=
-3miss"
--    },
-     {
-         "BriefDescription": "Percentage of ifetch miss bound stalls, where=
- the ifetch miss hits in the L2",
-         "MetricExpr": "100 * MEM_BOUND_STALLS_IFETCH.L2_HIT / MEM_BOUND_ST=
-ALLS_IFETCH.ALL",
-@@ -519,24 +478,6 @@
-         "MetricName": "tma_info_ifetch_miss_bound_ifetchmissbound_with_l3h=
-it",
-         "ScaleUnit": "100%"
-     },
--    {
--        "BriefDescription": "Percentage of memory bound stalls where retir=
-ement is stalled due to an L1 miss that hit the L2",
--        "MetricExpr": "tma_info_load_miss_bound_loadmissbound_with_l2hit",
--        "MetricGroup": "load_store_bound",
--        "MetricName": "tma_info_load_miss_bound_%_loadmissbound_with_l2hit=
-"
--    },
--    {
--        "BriefDescription": "Percentage of memory bound stalls where retir=
-ement is stalled due to an L1 miss that hit the L3",
--        "MetricExpr": "tma_info_load_miss_bound_loadmissbound_with_l3hit",
--        "MetricGroup": "load_store_bound",
--        "MetricName": "tma_info_load_miss_bound_%_loadmissbound_with_l3hit=
-"
--    },
--    {
--        "BriefDescription": "Percentage of memory bound stalls where retir=
-ement is stalled due to an L1 miss that subsequently misses the L3",
--        "MetricExpr": "100 * MEM_BOUND_STALLS_LOAD.LLC_MISS / MEM_BOUND_ST=
-ALLS_LOAD.ALL",
--        "MetricGroup": "load_store_bound",
--        "MetricName": "tma_info_load_miss_bound_%_loadmissbound_with_l3mis=
-s"
--    },
-     {
-         "BriefDescription": "Percentage of memory bound stalls where retir=
-ement is stalled due to an L1 miss that hit the L2",
-         "MetricExpr": "100 * MEM_BOUND_STALLS_LOAD.L2_HIT / MEM_BOUND_STAL=
-LS_LOAD.ALL",
-@@ -584,16 +525,6 @@
-         "MetricExpr": "1e3 * MACHINE_CLEARS.SMC / INST_RETIRED.ANY",
-         "MetricName": "tma_info_machine_clear_bound_machine_clears_smc_pki=
-"
-     },
--    {
--        "BriefDescription": "Percentage of total non-speculative loads wit=
-h an address aliasing block",
--        "MetricExpr": "tma_info_mem_exec_blocks_loads_with_adressaliasing"=
-,
--        "MetricName": "tma_info_mem_exec_blocks_%_loads_with_adressaliasin=
-g"
--    },
--    {
--        "BriefDescription": "Percentage of total non-speculative loads wit=
-h a store forward or unknown store address block",
--        "MetricExpr": "tma_info_mem_exec_blocks_loads_with_storefwdblk",
--        "MetricName": "tma_info_mem_exec_blocks_%_loads_with_storefwdblk"
--    },
-     {
-         "BriefDescription": "Percentage of total non-speculative loads wit=
-h an address aliasing block",
-         "MetricExpr": "100 * LD_BLOCKS.ADDRESS_ALIAS / MEM_UOPS_RETIRED.AL=
-L_LOADS",
-@@ -606,31 +537,6 @@
-         "MetricName": "tma_info_mem_exec_blocks_loads_with_storefwdblk",
-         "ScaleUnit": "100%"
-     },
--    {
--        "BriefDescription": "Percentage of Memory Execution Bound due to a=
- first level data cache miss",
--        "MetricExpr": "tma_info_mem_exec_bound_loadhead_with_l1miss",
--        "MetricName": "tma_info_mem_exec_bound_%_loadhead_with_l1miss"
--    },
--    {
--        "BriefDescription": "Percentage of Memory Execution Bound due to o=
-ther block cases, such as pipeline conflicts, fences, etc",
--        "MetricExpr": "tma_info_mem_exec_bound_loadhead_with_otherpipeline=
-blks",
--        "MetricName": "tma_info_mem_exec_bound_%_loadhead_with_otherpipeli=
-neblks"
--    },
--    {
--        "BriefDescription": "Percentage of Memory Execution Bound due to a=
- pagewalk",
--        "MetricExpr": "tma_info_mem_exec_bound_loadhead_with_pagewalk",
--        "MetricName": "tma_info_mem_exec_bound_%_loadhead_with_pagewalk"
--    },
--    {
--        "BriefDescription": "Percentage of Memory Execution Bound due to a=
- second level TLB miss",
--        "MetricExpr": "tma_info_mem_exec_bound_loadhead_with_stlbhit",
--        "MetricName": "tma_info_mem_exec_bound_%_loadhead_with_stlbhit"
--    },
--    {
--        "BriefDescription": "Percentage of Memory Execution Bound due to a=
- store forward address match",
--        "MetricExpr": "tma_info_mem_exec_bound_loadhead_with_storefwding",
--        "MetricName": "tma_info_mem_exec_bound_%_loadhead_with_storefwding=
-"
--    },
-     {
-         "BriefDescription": "Percentage of Memory Execution Bound due to a=
- first level data cache miss",
-         "MetricExpr": "100 * LD_HEAD.L1_MISS_AT_RET / LD_HEAD.ANY_AT_RET",
-@@ -686,11 +592,6 @@
-         "MetricExpr": "1e3 * MEM_UOPS_RETIRED.ALL_LOADS / TOPDOWN_RETIRING=
-.ALL_P",
-         "MetricName": "tma_info_mem_mix_memload_ratio"
-     },
--    {
--        "BriefDescription": "Percentage of time that the core is stalled d=
-ue to a TPAUSE or UMWAIT instruction",
--        "MetricExpr": "tma_info_serialization_tpause_cycles",
--        "MetricName": "tma_info_serialization _%_tpause_cycles"
--    },
-     {
-         "BriefDescription": "Percentage of time that the core is stalled d=
-ue to a TPAUSE or UMWAIT instruction",
-         "MetricExpr": "100 * SERIALIZATION.C01_MS_SCB / (6 * CPU_CLK_UNHAL=
-TED.CORE)",
-@@ -711,14 +612,17 @@
-     },
-     {
-         "BriefDescription": "Fraction of cycles spent in Kernel mode",
--        "MetricExpr": "cpu@CPU_CLK_UNHALTED.CORE_P@k / CPU_CLK_UNHALTED.CO=
-RE",
--        "MetricGroup": "Summary",
-+        "MetricExpr": "CPU_CLK_UNHALTED.CORE_P:k / CPU_CLK_UNHALTED.CORE",
-         "MetricName": "tma_info_system_kernel_utilization"
-     },
-+    {
-+        "BriefDescription": "PerfMon Event Multiplexing accuracy indicator=
-",
-+        "MetricExpr": "CPU_CLK_UNHALTED.CORE_P / CPU_CLK_UNHALTED.CORE",
-+        "MetricName": "tma_info_system_mux"
-+    },
-     {
-         "BriefDescription": "Average Frequency Utilization relative nomina=
-l frequency",
-         "MetricExpr": "CPU_CLK_UNHALTED.CORE / CPU_CLK_UNHALTED.REF_TSC",
--        "MetricGroup": "Power",
-         "MetricName": "tma_info_system_turbo_utilization"
-     },
-     {
-@@ -742,102 +646,90 @@
-         "MetricName": "tma_info_uop_mix_x87_uop_ratio"
-     },
-     {
--        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to Instruction Table Lookaside Buffer (ITLB=
-) misses.",
-+        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to Instruction Table Lookaside Buffer (ITLB=
-) misses",
-         "MetricExpr": "TOPDOWN_FE_BOUND.ITLB_MISS / (6 * CPU_CLK_UNHALTED.=
-CORE)",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_ifetch_latency_gr=
-oup",
-         "MetricName": "tma_itlb_misses",
--        "MetricThreshold": "tma_itlb_misses > 0.05 & (tma_ifetch_latency >=
- 0.15 & tma_frontend_bound > 0.2)",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Counts the total number of issue slots that w=
-ere not consumed by the backend because allocation is stalled due to a mach=
-ine clear (nuke) of any kind including memory ordering and memory disambigu=
-ation",
-         "MetricExpr": "TOPDOWN_BAD_SPECULATION.MACHINE_CLEARS / (6 * CPU_C=
-LK_UNHALTED.CORE)",
--        "MetricGroup": "TopdownL2;tma_L2_group;tma_bad_speculation_group",
-+        "MetricGroup": "Slots;TopdownL2;tma_L2_group;tma_bad_speculation_g=
-roup",
-         "MetricName": "tma_machine_clears",
--        "MetricThreshold": "tma_machine_clears > 0.05 & tma_bad_speculatio=
-n > 0.15",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Counts the number of issue slots that were no=
-t consumed by the backend due to memory reservation stalls in which a sched=
-uler is not able to accept uops",
-         "MetricExpr": "TOPDOWN_BE_BOUND.MEM_SCHEDULER / (6 * CPU_CLK_UNHAL=
-TED.CORE)",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_resource_bound_gr=
-oup",
-         "MetricName": "tma_mem_scheduler",
--        "MetricThreshold": "tma_mem_scheduler > 0.1 & (tma_resource_bound =
-> 0.2 & tma_backend_bound > 0.1)",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Counts the number of issue slots that were no=
-t consumed by the backend due to IEC or FPC RAT stalls, which can be due to=
- FIQ or IEC reservation stalls in which the integer, floating point or SIMD=
- scheduler is not able to accept uops",
-         "MetricExpr": "TOPDOWN_BE_BOUND.NON_MEM_SCHEDULER / (6 * CPU_CLK_U=
-NHALTED.CORE)",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_resource_bound_gr=
-oup",
-         "MetricName": "tma_non_mem_scheduler",
--        "MetricThreshold": "tma_non_mem_scheduler > 0.1 & (tma_resource_bo=
-und > 0.2 & tma_backend_bound > 0.1)",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Counts the number of issue slots that were no=
-t consumed by the backend due to a machine clear that requires the use of m=
-icrocode (slow nuke)",
-         "MetricExpr": "TOPDOWN_BAD_SPECULATION.NUKE / (6 * CPU_CLK_UNHALTE=
-D.CORE)",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_machine_clears_group",
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_machine_clears_gr=
-oup",
-         "MetricName": "tma_nuke",
--        "MetricThreshold": "tma_nuke > 0.05 & (tma_machine_clears > 0.05 &=
- tma_bad_speculation > 0.15)",
-         "ScaleUnit": "100%"
-     },
-     {
--        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to other common frontend stalls not categor=
-ized.",
-+        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to other common frontend stalls not categor=
-ized",
-         "MetricExpr": "TOPDOWN_FE_BOUND.OTHER / (6 * CPU_CLK_UNHALTED.CORE=
-)",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
-,
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_ifetch_bandwidth_=
-group",
-         "MetricName": "tma_other_fb",
--        "MetricThreshold": "tma_other_fb > 0.05 & (tma_ifetch_bandwidth > =
-0.1 & tma_frontend_bound > 0.2)",
-         "ScaleUnit": "100%"
-     },
-     {
--        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to wrong predecodes.",
-+        "BriefDescription": "Counts the number of issue slots that were no=
-t delivered by the frontend due to wrong predecodes",
-         "MetricExpr": "TOPDOWN_FE_BOUND.PREDECODE / (6 * CPU_CLK_UNHALTED.=
-CORE)",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
-,
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_ifetch_bandwidth_=
-group",
-         "MetricName": "tma_predecode",
--        "MetricThreshold": "tma_predecode > 0.05 & (tma_ifetch_bandwidth >=
- 0.1 & tma_frontend_bound > 0.2)",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Counts the number of issue slots that were no=
-t consumed by the backend due to the physical register file unable to accep=
-t an entry (marble stalls)",
-         "MetricExpr": "TOPDOWN_BE_BOUND.REGISTER / (6 * CPU_CLK_UNHALTED.C=
-ORE)",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_resource_bound_gr=
-oup",
-         "MetricName": "tma_register",
--        "MetricThreshold": "tma_register > 0.1 & (tma_resource_bound > 0.2=
- & tma_backend_bound > 0.1)",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Counts the number of issue slots that were no=
-t consumed by the backend due to the reorder buffer being full (ROB stalls)=
-",
-         "MetricExpr": "TOPDOWN_BE_BOUND.REORDER_BUFFER / (6 * CPU_CLK_UNHA=
-LTED.CORE)",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_resource_bound_gr=
-oup",
-         "MetricName": "tma_reorder_buffer",
--        "MetricThreshold": "tma_reorder_buffer > 0.1 & (tma_resource_bound=
- > 0.2 & tma_backend_bound > 0.1)",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Counts the number of cycles the core is stall=
-ed due to a resource limitation",
-         "MetricExpr": "tma_backend_bound - tma_core_bound",
--        "MetricGroup": "TopdownL2;tma_L2_group;tma_backend_bound_group",
-+        "MetricGroup": "Slots;TopdownL2;tma_L2_group;tma_backend_bound_gro=
-up",
-         "MetricName": "tma_resource_bound",
--        "MetricThreshold": "tma_resource_bound > 0.2 & tma_backend_bound >=
- 0.1",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Counts the number of issue slots that result =
-in retirement slots",
-         "MetricExpr": "TOPDOWN_RETIRING.ALL_P / (6 * CPU_CLK_UNHALTED.CORE=
-)",
--        "MetricGroup": "TopdownL1;tma_L1_group",
-+        "MetricGroup": "Slots;TopdownL1;tma_L1_group",
-         "MetricName": "tma_retiring",
--        "MetricThreshold": "tma_retiring > 0.75",
-         "MetricgroupNoGroup": "TopdownL1",
-         "ScaleUnit": "100%"
-     },
-     {
-         "BriefDescription": "Counts the number of issue slots that were no=
-t consumed by the backend due to scoreboards from the instruction queue (IQ=
-), jump execution unit (JEU), or microcode sequencer (MS)",
-         "MetricExpr": "TOPDOWN_BE_BOUND.SERIALIZATION / (6 * CPU_CLK_UNHAL=
-TED.CORE)",
--        "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
-+        "MetricGroup": "Slots;TopdownL3;tma_L3_group;tma_resource_bound_gr=
-oup",
-         "MetricName": "tma_serialization",
--        "MetricThreshold": "tma_serialization > 0.1 & (tma_resource_bound =
-> 0.2 & tma_backend_bound > 0.1)",
-         "ScaleUnit": "100%"
-     },
-     {
-diff --git a/tools/perf/pmu-events/arch/x86/grandridge/pipeline.json b/tool=
-s/perf/pmu-events/arch/x86/grandridge/pipeline.json
-index b67c0c89054d..40fa4f5ae261 100644
---- a/tools/perf/pmu-events/arch/x86/grandridge/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/grandridge/pipeline.json
-@@ -1,6 +1,6 @@
- [
-     {
--        "BriefDescription": "Counts the number of cycles when any of the d=
-ividers are active.",
-+        "BriefDescription": "Counts the number of cycles when any of the f=
-loating point or integer dividers are active.",
-         "Counter": "0,1,2,3,4,5,6,7",
-         "CounterMask": "1",
-         "EventCode": "0xcd",
-@@ -185,7 +185,6 @@
-         "BriefDescription": "Fixed Counter: Counts the number of instructi=
-ons retired",
-         "Counter": "Fixed counter 0",
-         "EventName": "INST_RETIRED.ANY",
--        "PEBS": "1",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/grandridge/uncore-cache.json b/=
-tools/perf/pmu-events/arch/x86/grandridge/uncore-cache.json
-index 1eaf796601b1..6a80cf6cbd36 100644
---- a/tools/perf/pmu-events/arch/x86/grandridge/uncore-cache.json
-+++ b/tools/perf/pmu-events/arch/x86/grandridge/uncore-cache.json
-@@ -573,7 +573,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "Code read from local IA that miss the cache",
-+        "BriefDescription": "Code read from local IA",
-         "Counter": "0,1,2,3",
-         "EventCode": "0x35",
-         "EventName": "UNC_CHA_TOR_INSERTS.IA_CRD",
-@@ -593,7 +593,7 @@
-         "Unit": "CHA"
-     },
-     {
--        "BriefDescription": "Data read opt from local IA that miss the cac=
-he",
-+        "BriefDescription": "Data read opt from local IA",
-         "Counter": "0,1,2,3",
-         "EventCode": "0x35",
-         "EventName": "UNC_CHA_TOR_INSERTS.IA_DRD_OPT",
-diff --git a/tools/perf/pmu-events/arch/x86/grandridge/uncore-interconnect.=
-json b/tools/perf/pmu-events/arch/x86/grandridge/uncore-interconnect.json
-index 6aaca4039107..2c18767511f3 100644
---- a/tools/perf/pmu-events/arch/x86/grandridge/uncore-interconnect.json
-+++ b/tools/perf/pmu-events/arch/x86/grandridge/uncore-interconnect.json
-@@ -183,6 +183,26 @@
-         "PerPkg": "1",
-         "Unit": "IRP"
-     },
-+    {
-+        "BriefDescription": "Counts Timeouts - Set 0 : Fastpath Rejects",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x1E",
-+        "EventName": "UNC_I_MISC0.FAST_REJ",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "IRP"
-+    },
-+    {
-+        "BriefDescription": "Counts Timeouts - Set 0 : Fastpath Requests",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x1E",
-+        "EventName": "UNC_I_MISC0.FAST_REQ",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "IRP"
-+    },
-     {
-         "BriefDescription": "Misc Events - Set 1 : Lost Forward : Snoop pu=
-lled away ownership before a write was committed",
-         "Counter": "0,1,2,3",
-@@ -193,6 +213,46 @@
-         "UMask": "0x10",
-         "Unit": "IRP"
-     },
-+    {
-+        "BriefDescription": "Snoop Hit E/S responses",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x12",
-+        "EventName": "UNC_I_SNOOP_RESP.ALL_HIT_ES",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "UMask": "0x74",
-+        "Unit": "IRP"
-+    },
-+    {
-+        "BriefDescription": "Snoop Hit I responses",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x12",
-+        "EventName": "UNC_I_SNOOP_RESP.ALL_HIT_I",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "UMask": "0x72",
-+        "Unit": "IRP"
-+    },
-+    {
-+        "BriefDescription": "Snoop Hit M responses",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x12",
-+        "EventName": "UNC_I_SNOOP_RESP.ALL_HIT_M",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "UMask": "0x78",
-+        "Unit": "IRP"
-+    },
-+    {
-+        "BriefDescription": "Snoop miss responses",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x12",
-+        "EventName": "UNC_I_SNOOP_RESP.ALL_MISS",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "UMask": "0x71",
-+        "Unit": "IRP"
-+    },
-     {
-         "BriefDescription": "Inbound write (fast path) requests to coheren=
-t memory, received by the IRP resulting in write ownership requests issued =
-by IRP to the mesh.",
-         "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/grandridge/uncore-io.json b/too=
-ls/perf/pmu-events/arch/x86/grandridge/uncore-io.json
-index 33fc7b835abf..c5b05c71c56d 100644
---- a/tools/perf/pmu-events/arch/x86/grandridge/uncore-io.json
-+++ b/tools/perf/pmu-events/arch/x86/grandridge/uncore-io.json
-@@ -17,7 +17,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x0FF",
--        "UMask": "0x70ff004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -29,7 +29,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x001",
--        "UMask": "0x7001004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -41,7 +41,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x002",
--        "UMask": "0x7002004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -53,7 +53,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x004",
--        "UMask": "0x7004004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -65,7 +65,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x008",
--        "UMask": "0x7008004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -77,7 +77,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x010",
--        "UMask": "0x7010004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -89,7 +89,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x020",
--        "UMask": "0x7020004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -101,7 +101,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x040",
--        "UMask": "0x7040004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -113,7 +113,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x080",
--        "UMask": "0x7080004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -125,7 +125,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x0FF",
--        "UMask": "0x70ff0ff",
-+        "UMask": "0xff",
-         "Unit": "IIO"
-     },
-     {
-@@ -137,7 +137,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x001",
--        "UMask": "0x7001001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -149,7 +149,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x002",
--        "UMask": "0x7002002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -161,7 +161,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x004",
--        "UMask": "0x7004004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -173,7 +173,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x008",
--        "UMask": "0x7008008",
-+        "UMask": "0x8",
-         "Unit": "IIO"
-     },
-     {
-@@ -185,7 +185,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x010",
--        "UMask": "0x7010010",
-+        "UMask": "0x10",
-         "Unit": "IIO"
-     },
-     {
-@@ -197,7 +197,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x020",
--        "UMask": "0x7020020",
-+        "UMask": "0x20",
-         "Unit": "IIO"
-     },
-     {
-@@ -209,7 +209,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x040",
--        "UMask": "0x7040040",
-+        "UMask": "0x40",
-         "Unit": "IIO"
-     },
-     {
-@@ -221,7 +221,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x080",
--        "UMask": "0x7080080",
-+        "UMask": "0x80",
-         "Unit": "IIO"
-     },
-     {
-@@ -232,7 +232,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x0FF",
--        "UMask": "0x70ff004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -244,7 +244,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x001",
--        "UMask": "0x7001004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -256,7 +256,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x002",
--        "UMask": "0x7002004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -268,7 +268,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x004",
--        "UMask": "0x7004004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -280,7 +280,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x008",
--        "UMask": "0x7008004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -292,7 +292,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x010",
--        "UMask": "0x7010004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -304,7 +304,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x020",
--        "UMask": "0x7020004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -316,7 +316,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x040",
--        "UMask": "0x7040004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -328,7 +328,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x080",
--        "UMask": "0x7080004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -339,7 +339,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x0FF",
--        "UMask": "0x70ff001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -350,7 +350,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x001",
--        "UMask": "0x7001001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -361,7 +361,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x002",
--        "UMask": "0x7002001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -372,7 +372,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x004",
--        "UMask": "0x7004001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -383,7 +383,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x008",
--        "UMask": "0x7008001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -394,7 +394,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x010",
--        "UMask": "0x7010001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -405,7 +405,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x020",
--        "UMask": "0x7020001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -416,7 +416,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x040",
--        "UMask": "0x7040001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -427,7 +427,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x080",
--        "UMask": "0x7080001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -438,7 +438,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x001",
--        "UMask": "0x7001004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -449,7 +449,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x02",
--        "UMask": "0x7002004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -460,7 +460,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x04",
--        "UMask": "0x7004004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -471,7 +471,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x08",
--        "UMask": "0x7008004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -482,7 +482,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x10",
--        "UMask": "0x7010004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -493,7 +493,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x20",
--        "UMask": "0x7020004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -504,7 +504,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x40",
--        "UMask": "0x7040004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -515,7 +515,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x80",
--        "UMask": "0x7080004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -526,7 +526,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x001",
--        "UMask": "0x7001001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -537,7 +537,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x02",
--        "UMask": "0x7002001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -548,7 +548,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x04",
--        "UMask": "0x7004001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -559,7 +559,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x08",
--        "UMask": "0x7008001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -570,7 +570,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x10",
--        "UMask": "0x7010001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -581,7 +581,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x20",
--        "UMask": "0x7020001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -592,7 +592,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x40",
--        "UMask": "0x7040001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -603,7 +603,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x80",
--        "UMask": "0x7080001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -615,7 +615,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x001",
--        "UMask": "0x7001002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -627,7 +627,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x002",
--        "UMask": "0x7002002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -639,7 +639,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x004",
--        "UMask": "0x7004002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -651,7 +651,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x008",
--        "UMask": "0x7008002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -663,7 +663,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x010",
--        "UMask": "0x7010002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -675,7 +675,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x020",
--        "UMask": "0x7020002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -687,7 +687,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x040",
--        "UMask": "0x7040002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -699,7 +699,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x080",
--        "UMask": "0x7080002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -832,7 +832,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x0FF",
--        "UMask": "0x70ff080",
-+        "UMask": "0x80",
-         "Unit": "IIO"
-     },
-     {
-@@ -844,7 +844,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x0FF",
--        "UMask": "0x70ff040",
-+        "UMask": "0x40",
-         "Unit": "IIO"
-     },
-     {
-@@ -856,7 +856,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x0FF",
--        "UMask": "0x70ff020",
-+        "UMask": "0x20",
-         "Unit": "IIO"
-     },
-     {
-@@ -868,7 +868,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x0FF",
--        "UMask": "0x70ff002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -880,7 +880,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x0FF",
--        "UMask": "0x70ff008",
-+        "UMask": "0x8",
-         "Unit": "IIO"
-     },
-     {
-@@ -892,7 +892,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x0FF",
--        "UMask": "0x70ff001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -904,7 +904,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x0FF",
--        "UMask": "0x70ff004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -925,7 +925,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x001",
--        "UMask": "0x7001004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -936,7 +936,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x002",
--        "UMask": "0x7002004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -947,7 +947,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x004",
--        "UMask": "0x7004004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -958,7 +958,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x008",
--        "UMask": "0x7008004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -969,7 +969,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x010",
--        "UMask": "0x7010004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -980,7 +980,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x020",
--        "UMask": "0x7020004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -991,7 +991,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x040",
--        "UMask": "0x7040004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -1002,7 +1002,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x080",
--        "UMask": "0x7080004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -1013,7 +1013,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x001",
--        "UMask": "0x7001001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1024,7 +1024,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x002",
--        "UMask": "0x7002001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1035,7 +1035,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x004",
--        "UMask": "0x7004001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1046,7 +1046,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x008",
--        "UMask": "0x7008001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1057,7 +1057,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x010",
--        "UMask": "0x7010001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1068,7 +1068,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x020",
--        "UMask": "0x7020001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1079,7 +1079,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x040",
--        "UMask": "0x7040001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1090,7 +1090,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x080",
--        "UMask": "0x7080001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1101,7 +1101,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x001",
--        "UMask": "0x7001004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -1112,7 +1112,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x002",
--        "UMask": "0x7002004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -1123,7 +1123,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x004",
--        "UMask": "0x7004004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -1134,7 +1134,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x008",
--        "UMask": "0x7008004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -1145,7 +1145,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x010",
--        "UMask": "0x7010004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -1156,7 +1156,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x020",
--        "UMask": "0x7020004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -1167,7 +1167,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x040",
--        "UMask": "0x7040004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -1178,7 +1178,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x080",
--        "UMask": "0x7080004",
-+        "UMask": "0x4",
-         "Unit": "IIO"
-     },
-     {
-@@ -1189,7 +1189,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x001",
--        "UMask": "0x7001001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1200,7 +1200,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x002",
--        "UMask": "0x7002001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1211,7 +1211,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x004",
--        "UMask": "0x7004001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1222,7 +1222,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x008",
--        "UMask": "0x7008001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1233,7 +1233,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x010",
--        "UMask": "0x7010001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1244,7 +1244,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x020",
--        "UMask": "0x7020001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1255,7 +1255,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x040",
--        "UMask": "0x7040001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1266,7 +1266,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x080",
--        "UMask": "0x7080001",
-+        "UMask": "0x1",
-         "Unit": "IIO"
-     },
-     {
-@@ -1278,7 +1278,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x001",
--        "UMask": "0x7001002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -1290,7 +1290,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x002",
--        "UMask": "0x7002002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -1302,7 +1302,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x004",
--        "UMask": "0x7004002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -1314,7 +1314,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x008",
--        "UMask": "0x7008002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -1326,7 +1326,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x010",
--        "UMask": "0x7010002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -1338,7 +1338,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x020",
--        "UMask": "0x7020002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -1350,7 +1350,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x040",
--        "UMask": "0x7040002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     },
-     {
-@@ -1362,7 +1362,7 @@
-         "FCMask": "0x07",
-         "PerPkg": "1",
-         "PortMask": "0x080",
--        "UMask": "0x7080002",
-+        "UMask": "0x2",
-         "Unit": "IIO"
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/grandridge/uncore-memory.json b=
-/tools/perf/pmu-events/arch/x86/grandridge/uncore-memory.json
-index 7e6e6764f181..e75b3050ccd5 100644
---- a/tools/perf/pmu-events/arch/x86/grandridge/uncore-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/grandridge/uncore-memory.json
-@@ -169,7 +169,7 @@
-         "Unit": "IMC"
-     },
-     {
--        "BriefDescription": "Number of DRAM DCLK clock cycles while the ev=
-ent is enabled",
-+        "BriefDescription": "Number of DRAM DCLK clock cycles while the ev=
-ent is enabled.  DCLK is 1/4 of DRAM data rate.",
-         "Counter": "0,1,2,3",
-         "EventCode": "0x01",
-         "EventName": "UNC_M_CLOCKTICKS",
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index 7260a2ac133a..2cd9296f0f12 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -12,7 +12,7 @@ GenuineIntel-6-9[6C],v1.05,elkhartlake,core
- GenuineIntel-6-CF,v1.11,emeraldrapids,core
- GenuineIntel-6-5[CF],v13,goldmont,core
- GenuineIntel-6-7A,v1.01,goldmontplus,core
--GenuineIntel-6-B6,v1.03,grandridge,core
-+GenuineIntel-6-B6,v1.05,grandridge,core
- GenuineIntel-6-A[DE],v1.02,graniterapids,core
- GenuineIntel-6-(3C|45|46),v35,haswell,core
- GenuineIntel-6-3F,v28,haswellx,core
---=20
-2.48.1.502.g6dc24dfdaf-goog
+diff --git a/resctrl_copy_pasta.py b/resctrl_copy_pasta.py
+new file mode 100644
+index 000000000000..589eeeb7a9fd
+--- /dev/null
++++ b/resctrl_copy_pasta.py
+@@ -0,0 +1,812 @@
++#!/usr/bin/python
++import sys;
++import os;
++import re;
++
++############
++
++SRC_DIR = "arch/x86/kernel/cpu/resctrl";
++DST_DIR = "fs/resctrl";
++
++resctrl_files = [
++	"ctrlmondata.c",
++	"internal.h",
++	"monitor.c",
++	"pseudo_lock.c",
++	"rdtgroup.c",
++	"pseudo_lock_trace.h",
++	"monitor_trace.h",
++];
++
++functions_to_keep = [
++	# common
++	"pr_fmt",
++
++	# core.c
++	"domain_list_lock",
++	"resctrl_arch_late_init",
++	"resctrl_arch_exit",
++	"resctrl_cpu_detect",
++	"rdt_cpu_has",
++	"resctrl_arch_is_evt_configurable",
++	"get_mem_config",
++	"get_slow_mem_config",
++	"get_rdt_alloc_resources",
++	"get_rdt_mon_resources",
++	"__check_quirks_intel",
++	"check_quirks",
++	"get_rdt_resources",
++	"rdt_init_res_defs_intel",
++	"rdt_init_res_defs_amd",
++	"rdt_init_res_defs",
++	"resctrl_cpu_detect",
++	"resctrl_arch_late_init",
++	"resctrl_arch_exit",
++	"setup_default_ctrlval",
++	"domain_free",
++	"domain_setup_ctrlval",
++	"arch_domain_mbm_alloc",
++	"domain_add_cpu",
++	"domain_remove_cpu",
++	"clear_closid_rmid",
++	"resctrl_arch_online_cpu",
++	"resctrl_arch_offline_cpu",
++	"resctrl_arch_get_num_closid",
++	"rdt_ctrl_update",
++	"domain_init",
++	"resctrl_arch_get_resource",
++	"cache_alloc_hsw_probe",
++	"rdt_get_mb_table",
++	"__get_mem_config_intel",
++	"__rdt_get_mem_config_amd",
++	"rdt_get_cache_alloc_cfg",
++	"rdt_get_cdp_config",
++	"rdt_get_cdp_l3_config",
++	"rdt_get_cdp_l2_config",
++	"resctrl_arch_get_cdp_enabled",
++	"set_rdt_options",
++	"pqr_state",
++	"rdt_resources_all",
++	"delay_bw_map",
++	"rdt_options",
++	"cat_wrmsr",
++	"mba_wrmsr_amd",
++	"mba_wrmsr_intel",
++	"anonymous-enum",
++	"rdt_find_domain",
++	"rdt_alloc_capable",
++	"rdt_online",
++	"RDT_OPT",
++
++	# ctrlmon.c
++	"apply_config",
++	"resctrl_arch_update_one",
++	"resctrl_arch_update_domains",
++	"resctrl_arch_get_config",
++
++	# internal.h
++	"L3_QOS_CDP_ENABLE",
++	"L2_QOS_CDP_ENABLE",
++	"MBM_CNTR_WIDTH_BASE",
++	"MBA_IS_LINEAR",
++	"MBM_CNTR_WIDTH_OFFSET_AMD",
++	"RMID_VAL_ERROR",
++	"RMID_VAL_UNAVAIL",
++	"MBM_CNTR_WIDTH_OFFSET_MAX",
++	"arch_mbm_state",
++	"rdt_hw_ctrl_domain",
++	"rdt_hw_mon_domain",
++	"resctrl_to_arch_ctrl_dom",
++	"resctrl_to_arch_mon_dom",
++	"msr_param",
++	"rdt_hw_resource",
++	"resctrl_to_arch_res",
++	"rdt_resources_all",
++	"resctrl_inc",
++	"for_each_rdt_resource",
++	"for_each_capable_rdt_resource",
++	"for_each_alloc_capable_rdt_resource",
++	"for_each_mon_capable_rdt_resource",
++	"arch_mon_domain_online",
++	"cpuid_0x10_1_eax",
++	"cpuid_0x10_3_eax",
++	"cpuid_0x10_x_ecx",
++	"cpuid_0x10_x_edx",
++	"rdt_ctrl_update",
++	"rdt_get_mon_l3_config",
++	"rdt_cpu_has",
++	"intel_rdt_mbm_apply_quirk",
++	"rdt_domain_reconfigure_cdp",
++
++	# monitor.c
++	"rdt_mon_capable",
++	"rdt_mon_features",
++	"CF",
++	"snc_nodes_per_l3_cache",
++	"mbm_cf_table",
++	"mbm_cf_rmidthreshold",
++	"mbm_cf",
++	"logical_rmid_to_physical_rmid",
++	"__rmid_read_phys",
++	"get_corrected_mbm_count",
++	"__rmid_read",
++	"get_arch_mbm_state",
++	"resctrl_arch_reset_rmid",
++	"resctrl_arch_reset_rmid_all",
++	"mbm_overflow_count",
++	"resctrl_arch_rmid_read",
++	"snc_cpu_ids",
++	"snc_get_config",
++	"rdt_get_mon_l3_config",
++	"intel_rdt_mbm_apply_quirk",
++
++	# pseudo_lock.c
++	"prefetch_disable_bits",
++	"resctrl_arch_get_prefetch_disable_bits",
++	"resctrl_arch_pseudo_lock_fn",
++	"resctrl_arch_measure_cycles_lat_fn",
++	"perf_miss_attr",
++	"perf_hit_attr",
++	"residency_counts",
++	"measure_residency_fn",
++	"resctrl_arch_measure_l2_residency",
++	"resctrl_arch_measure_l3_residency",
++
++	# rdtgroup.c
++	"rdt_enable_key",
++	"rdt_mon_enable_key",
++	"rdt_alloc_enable_key",
++	"resctrl_arch_sync_cpu_closid_rmid",
++	"INVALID_CONFIG_INDEX",
++	"mon_event_config_index_get",
++	"resctrl_arch_mon_event_config_read",
++	"resctrl_arch_mon_event_config_write",
++	"l3_qos_cfg_update",
++	"l2_qos_cfg_update",
++	"set_cache_qos_cfg",
++	"rdt_domain_reconfigure_cdp",
++	"cdp_enable",
++	"cdp_disable",
++	"resctrl_arch_set_cdp_enabled",
++	"resctrl_arch_reset_all_ctrls",
++
++	# pseudo_lock_trace.h
++	"TRACE_SYSTEM",
++	"pseudo_lock_mem_latency",
++	"pseudo_lock_l2",
++	"pseudo_lock_l3",
++	"TRACE_INCLUDE_PATH",
++	"TRACE_INCLUDE_FILE",
++];
++
++functions_to_move = [
++	# common
++	"pr_fmt",
++
++	# ctrlmon.c
++	"rdt_parse_data",
++	"(ctrlval_parser_t)",
++	"bw_validate",
++	"parse_bw",
++	"cbm_validate",
++	"parse_cbm",
++	"get_parser",
++	"parse_line",
++	"rdtgroup_parse_resource",
++	"rdtgroup_schemata_write",
++	"show_doms",
++	"rdtgroup_schemata_show",
++	"smp_mon_event_count",
++	"rdtgroup_mba_mbps_event_write",
++	"rdtgroup_mba_mbps_event_show",
++	"mon_event_read",
++	"rdtgroup_mondata_show",
++
++	# internal.h
++	"MBM_OVERFLOW_INTERVAL",
++	"CQM_LIMBOCHECK_INTERVAL",
++	"cpumask_any_housekeeping",
++	"rdt_fs_context",
++	"rdt_fc2context",
++	"mon_evt",
++	"mon_data",
++	"rmid_read",
++	"resctrl_schema_all",
++	"resctrl_mounted",
++	"rdt_group_type",
++	"rdtgrp_mode",
++	"mongroup",
++	"rdtgroup",
++	"RDT_DELETED",
++	"RFTYPE_FLAGS_CPUS_LIST",
++	"RFTYPE_INFO",
++	"RFTYPE_BASE",
++	"RFTYPE_CTRL",
++	"RFTYPE_MON",
++	"RFTYPE_TOP",
++	"RFTYPE_RES_CACHE",
++	"RFTYPE_RES_MB",
++	"RFTYPE_DEBUG",
++	"RFTYPE_CTRL_INFO",
++	"RFTYPE_MON_INFO",
++	"RFTYPE_TOP_INFO",
++	"RFTYPE_CTRL_BASE",
++	"RFTYPE_MON_BASE",
++	"rdt_all_groups",
++	"rftype",
++	"mbm_state",
++	"is_mba_sc",
++
++	# monitor.c
++	"rmid_entry",
++	"rmid_free_lru",
++	"closid_num_dirty_rmid",
++	"rmid_limbo_count",
++	"rmid_ptrs",
++	"resctrl_rmid_realloc_threshold",
++	"resctrl_rmid_realloc_limit",
++	"__rmid_entry",
++	"limbo_release_entry",
++	"__check_limbo",
++	"has_busy_rmid",
++	"resctrl_find_free_rmid",
++	"resctrl_find_cleanest_closid",
++	"alloc_rmid",
++	"add_rmid_to_limbo",
++	"free_rmid",
++	"get_mbm_state",
++	"__mon_event_count",
++	"mbm_bw_count",
++	"mon_event_count",
++	"update_mba_bw",
++	"mbm_update_one_event",
++	"mbm_update",
++	"cqm_handle_limbo",
++	"cqm_setup_limbo_handler",
++	"mbm_handle_overflow",
++	"mbm_setup_overflow_handler",
++	"dom_data_init",
++	"dom_data_exit",
++	"llc_occupancy_event",
++	"mbm_total_event",
++	"mbm_local_event",
++	"l3_mon_evt_init",
++	"resctrl_mon_resource_init",
++	"resctrl_mon_resource_exit",
++
++	# pseudo_lock.c
++	"pseudo_lock_major",
++	"pseudo_lock_minor_avail",
++	"pseudo_lock_devnode",
++	"pseudo_lock_class",
++	"pseudo_lock_minor_get",
++	"pseudo_lock_minor_release",
++	"region_find_by_minor",
++	"pseudo_lock_pm_req",
++	"pseudo_lock_cstates_relax",
++	"pseudo_lock_cstates_constrain",
++	"pseudo_lock_region_clear",
++	"pseudo_lock_region_init",
++	"pseudo_lock_init",
++	"pseudo_lock_region_alloc",
++	"pseudo_lock_free",
++	"rdtgroup_monitor_in_progress",
++	"rdtgroup_locksetup_user_restrict",
++	"rdtgroup_locksetup_user_restore",
++	"rdtgroup_locksetup_enter",
++	"rdtgroup_locksetup_exit",
++	"rdtgroup_cbm_overlaps_pseudo_locked",
++	"rdtgroup_pseudo_locked_in_hierarchy",
++	"pseudo_lock_measure_cycles",
++	"pseudo_lock_measure_trigger",
++	"pseudo_measure_fops",
++	"rdtgroup_pseudo_lock_create",
++	"rdtgroup_pseudo_lock_remove",
++	"pseudo_lock_dev_open",
++	"pseudo_lock_dev_release",
++	"pseudo_lock_dev_mremap",
++	"pseudo_mmap_ops",
++	"pseudo_lock_dev_mmap",
++	"pseudo_lock_dev_fops",
++	"rdt_pseudo_lock_init",
++	"rdt_pseudo_lock_release",
++
++	# rdtgroup.c
++	"rdtgroup_mutex",
++	"rdt_root",
++	"rdtgroup_default",
++	"rdt_all_groups",
++	"resctrl_schema_all",
++	"resctrl_mounted",
++	"kn_info",
++	"kn_mongrp",
++	"kn_mondata",
++	"max_name_width",
++	"last_cmd_status",
++	"last_cmd_status_buf",
++	"rdtgroup_setup_root",
++	"rdtgroup_destroy_root",
++	"debugfs_resctrl",
++	"mba_mbps_default_event",
++	"resctrl_debug",
++	"rdt_last_cmd_clear",
++	"rdt_last_cmd_puts",
++	"rdt_last_cmd_printf",
++	"rdt_staged_configs_clear",
++	"resctrl_is_mbm_enabled",
++	"resctrl_is_mbm_event",
++	"closid_free_map",
++	"closid_free_map_len",
++	"closids_supported",
++	"closid_init",
++	"closid_exit",
++	"closid_alloc",
++	"closid_free",
++	"closid_allocated",
++	"rdtgroup_mode_by_closid",
++	"rdt_mode_str",
++	"rdtgroup_mode_str",
++	"rdtgroup_kn_set_ugid",
++	"rdtgroup_add_file",
++	"rdtgroup_seqfile_show",
++	"rdtgroup_file_write",
++	"rdtgroup_kf_single_ops",
++	"kf_mondata_ops",
++	"is_cpu_list",
++	"rdtgroup_cpus_show",
++	"update_closid_rmid",
++	"cpus_mon_write",
++	"cpumask_rdtgrp_clear",
++	"cpus_ctrl_write",
++	"rdtgroup_cpus_write",
++	"rdtgroup_remove",
++	"_update_task_closid_rmid",
++	"update_task_closid_rmid",
++	"task_in_rdtgroup",
++	"__rdtgroup_move_task",
++	"is_closid_match",
++	"is_rmid_match",
++	"rdtgroup_tasks_assigned",
++	"rdtgroup_task_write_permission",
++	"rdtgroup_move_task",
++	"rdtgroup_tasks_write",
++	"show_rdt_tasks",
++	"rdtgroup_tasks_show",
++	"rdtgroup_closid_show",
++	"rdtgroup_rmid_show",
++	"proc_resctrl_show",
++	"rdt_last_cmd_status_show",
++	"rdt_num_closids_show",
++	"rdt_default_ctrl_show",
++	"rdt_min_cbm_bits_show",
++	"rdt_shareable_bits_show",
++	"rdt_bit_usage_show",
++	"rdt_min_bw_show",
++	"rdt_num_rmids_show",
++	"rdt_mon_features_show",
++	"rdt_bw_gran_show",
++	"rdt_delay_linear_show",
++	"max_threshold_occ_show",
++	"rdt_thread_throttle_mode_show",
++	"max_threshold_occ_write",
++	"rdtgroup_mode_show",
++	"resctrl_peer_type",
++	"rdt_has_sparse_bitmasks_show",
++	"__rdtgroup_cbm_overlaps",
++	"rdtgroup_cbm_overlaps",
++	"rdtgroup_mode_test_exclusive",
++	"rdtgroup_mode_write",
++	"rdtgroup_cbm_to_size",
++	"rdtgroup_size_show",
++	"mondata_config_read",
++	"mbm_config_show",
++	"mbm_total_bytes_config_show",
++	"mbm_local_bytes_config_show",
++	"mbm_config_write_domain",
++	"mon_config_write",
++	"mbm_total_bytes_config_write",
++	"mbm_local_bytes_config_write",
++	"res_common_files",
++	"rdtgroup_add_files",
++	"rdtgroup_get_rftype_by_name",
++	"thread_throttle_mode_init",
++	"resctrl_file_fflags_init",
++	"rdtgroup_kn_mode_restrict",
++	"rdtgroup_kn_mode_restore",
++	"rdtgroup_mkdir_info_resdir",
++	"fflags_from_resource",
++	"rdtgroup_create_info_dir",
++	"mongroup_create_dir",
++	"is_mba_linear",
++	"mba_sc_domain_allocate",
++	"mba_sc_domain_destroy",
++	"supports_mba_mbps",
++	"set_mba_sc",
++	"kernfs_to_rdtgroup",
++	"rdtgroup_kn_get",
++	"rdtgroup_kn_put",
++	"rdtgroup_kn_lock_live",
++	"rdtgroup_kn_unlock",
++	"rdt_disable_ctx",
++	"rdt_enable_ctx",
++	"schemata_list_add",
++	"schemata_list_create",
++	"schemata_list_destroy",
++	"rdt_get_tree",
++	"rdt_param",
++	"rdt_fs_parameters",
++	"rdt_parse_param",
++	"rdt_fs_context_free",
++	"rdt_fs_context_ops",
++	"rdt_init_fs_context",
++	"rdt_move_group_tasks",
++	"free_all_child_rdtgrp",
++	"rmdir_all_sub",
++	"rdt_kill_sb",
++	"rdt_fs_type",
++	"mon_addfile",
++	"mon_rmdir_one_subdir",
++	"rmdir_mondata_subdir_allrdtgrp",
++	"mon_add_all_files",
++	"mkdir_mondata_subdir",
++	"mkdir_mondata_subdir_allrdtgrp",
++	"mkdir_mondata_subdir_alldom",
++	"mkdir_mondata_all",
++	"cbm_ensure_valid",
++	"__init_one_rdt_domain",
++	"rdtgroup_init_cat",
++	"rdtgroup_init_mba",
++	"rdtgroup_init_alloc",
++	"mkdir_rdt_prepare_rmid_alloc",
++	"mkdir_rdt_prepare_rmid_free",
++	"mkdir_rdt_prepare",
++	"mkdir_rdt_prepare_clean",
++	"rdtgroup_mkdir_mon",
++	"rdtgroup_mkdir_ctrl_mon",
++	"is_mon_groups",
++	"rdtgroup_mkdir",
++	"rdtgroup_rmdir_mon",
++	"rdtgroup_ctrl_remove",
++	"rdtgroup_rmdir_ctrl",
++	"rdtgroup_rmdir",
++	"mongrp_reparent",
++	"rdtgroup_rename",
++	"rdtgroup_show_options",
++	"rdtgroup_kf_syscall_ops",
++	"rdtgroup_setup_root",
++	"rdtgroup_destroy_root",
++	"rdtgroup_setup_default",
++	"domain_destroy_mon_state",
++	"resctrl_offline_ctrl_domain",
++	"resctrl_offline_mon_domain",
++	"domain_setup_mon_state",
++	"resctrl_online_ctrl_domain",
++	"resctrl_online_mon_domain",
++	"resctrl_online_cpu",
++	"clear_childcpus",
++	"resctrl_offline_cpu",
++	"resctrl_init",
++	"resctrl_exit",
++
++	# monitor_trace.h
++	"TRACE_SYSTEM",
++	"mon_llc_occupancy_limbo",
++	"TRACE_INCLUDE_PATH",
++	"TRACE_INCLUDE_FILE",
++];
++
++############
++
++builtin_non_functions = ["__setup", "__exitcall", "__printf"];
++builtin_one_arg_macros = ["LIST_HEAD", "DEFINE_MUTEX", "DEFINE_STATIC_KEY_FALSE"];
++types = ["bool",  "char", "int", "u32", "long", "u64"];
++
++def get_array_name(line):
++  tok = re.search(r'([^\s]+?)\[\]', line)
++  if (tok is None):
++    return None;
++  return tok.group(1);
++
++
++def get_struct_name(line):
++  tok = re.search(r'struct ([^\s]+?) {', line)
++  if (tok is None):
++    return None;
++  return tok.group(1);
++
++def get_enum_name(line):
++  tok = re.search(r'enum ([^\s]+?) {', line)
++  if (tok is None):
++    return None;
++  return tok.group(1);
++
++def get_union_name(line):
++  tok = re.search(r'union ([^\s]+?) {', line)
++  if (tok is None):
++    return None;
++  return tok.group(1);
++
++
++def get_macro_name(line):
++  # #define pr_fmt(fmt)     KBUILD_MODNAME ": " fmt
++  tok = re.search(r'#define[\s]+([^\s]+?)\(', line)
++  if (tok):
++    return tok.group(1);
++
++  # #define RFTYPE_CTRL_INFO          (RFTYPE_INFO | RFTYPE_CTRL)
++  tok = re.search(r'#define[\s]+([^\s]+?)[\s]+.+?\n', line)
++  if (tok):
++    return tok.group(1);
++
++  return None;
++
++
++def get_macro_target(line):
++  tok = re.search(r'[^\s]+?\(([^\s]+?)\);\n', line)
++  if (tok):
++    return tok.group(1);
++
++  return None;
++
++
++# Things like 'bool my_bool;'
++def get_object_name(line):
++  # remove things that don't change the meaning of the name
++  if line.startswith("static "):
++    line = line[len("static "):];
++  if line.startswith("extern "):
++    line = line[len("extern "):];
++  if line.startswith("unsigned "):
++    line = line[len("unsigned "):];
++
++  # Note the trailing semicolon..
++  tok = re.search(r'([^\s]+)\s[\*]*([^\s\[\],;]+)', line)
++  if tok:
++    if tok.group(1) in types:
++      return tok.group(2);
++
++  tok = re.search(r'struct\s[^\s]+\s[\*]*([^\s;]+)', line)
++  if tok:
++    return tok.group(1);
++
++  tok = re.search(r'enum\s[^\s]+\s([^\s;]+)', line)
++  if tok:
++    return tok.group(1);
++
++  return None;
++
++
++# Is there a name for this block of code?
++#
++# Function names are the token before '(' ... assuming there is only one '('.
++# This also handles structs and arrays,
++def get_block_name(line):
++  # remove things that don't change the meaning of the name
++  if (" __read_mostly" in line):
++    line = line.replace(" __read_mostly", "");
++  if (" __initconst" in line):
++    line = line.replace(" __initconst", "");
++
++  if line == "enum {\n":
++    return "anonymous-enum";
++  if (line.startswith("#define")):
++    return get_macro_name(line);
++
++  if ("=" in line):
++    tok = re.search(r'[\*]*([^\s\[\]]+?)[\s\[\]]*=', line)
++  else:
++    tok = re.search(r'[\*]*([^\s]+?)\(.+?', line)
++
++  if (tok is None):
++    if ("[]" in line):
++      return get_array_name(line);
++    if (line.startswith("struct") and line.endswith("{\n")):
++      return get_struct_name(line);
++    if (line.startswith("enum") and line.endswith("{\n")):
++      return get_enum_name(line);
++    if (line.startswith("union") and line.endswith("{\n")):
++      return get_union_name(line);
++    if (line.endswith(";\n") and '(' not in line):
++      return get_object_name(line);
++    if (line.endswith("= {\n") and '(' not in line):
++      return get_object_name(line);
++    return None;
++
++  func_name = tok.group(1);
++  if (func_name in builtin_one_arg_macros):
++    tok = re.search(r'[^\(]+\(([^\s]+?)\)', line)
++    if (tok is None):
++      return None;
++    return tok.group(1);
++  elif (func_name == "DEFINE_PER_CPU"):
++    tok = re.search(r'DEFINE_PER_CPU\(.+?, ([^\s]+?)\)', line)
++    if (tok is None):
++      return None;
++    return tok.group(1);
++  elif (func_name == "TRACE_EVENT"):
++    tok = re.search(r'TRACE_EVENT\((.+?),', line)
++    if (tok is None):
++      return None;
++    return tok.group(1);
++  elif (func_name == "late_initcall"):
++    return get_macro_target(line);
++  else:
++    return func_name;
++
++def output_function_body(body, file):
++  # Mandatory whitespace between blocks
++  if os.lseek(file.fileno(), 0, os.SEEK_CUR) > 0:
++    file.write("\n".encode());
++
++  for out_line in body:
++    file.write(out_line.encode());
++
++# Where should we put this block of code?
++def output_function(name, body, files):
++  output = False;
++  (new_src, new_dst) = files;
++
++  if (len(body)) == 0:
++    return;
++
++  # Output to both files
++  if (name is None):
++    output_function_body(body, new_src);
++    output_function_body(body, new_dst);
++    output = True;
++  if (name in functions_to_keep):
++    output_function_body(body, new_src);
++    output = True;
++  if (name in functions_to_move):
++    output_function_body(body, new_dst);
++    output = True;
++
++  if not output:
++    print("Missing function name: "+name);
++    #print(body);
++
++def reset_parser():
++  global function_name;
++  global define_name;
++  global function_body;
++  global in_define;
++
++  function_name = None;
++  define_name = None;
++  function_body = [];
++  in_define = False;
++
++############
++
++for file in resctrl_files:
++  function_name = None;
++  # function_names take priority over defines, this is only used when
++  # no function_name was found
++  define_name = None;
++  function_body = [];
++  # Nothing clever - this is just to detect newlines between functions
++  in_function = False;
++  in_define = False;
++
++  src_path = SRC_DIR + "/" + str(file);
++  if (not os.path.isfile(src_path)):
++    continue;
++  dst_path = DST_DIR + "/" + str(file);
++
++  orig_file = open(src_path, "r");
++  lines = orig_file.readlines();
++
++  # Now unlink the original file, so it can be re-created with new
++  # contents.
++  try:
++    os.unlink(src_path);
++  except Exception as err:
++    print("Failed to unlink source file: {err}");
++    sys.exit(1);
++
++  # non-buffering is so we can snoop the fd offset to avoid trailing newlines
++  new_src = open(src_path, "wb", buffering=0);
++  new_dst = open(dst_path, "wb", buffering=0);
++
++  for line in lines:
++    # Empty lines outside a function - reset the function tracking
++    if (line == "\n" and not in_function):
++      if function_name is None and define_name is not None:
++        function_name = define_name;
++      output_function(function_name, function_body, (new_src, new_dst));
++      reset_parser();
++
++    # Function prototypes are a funny C thing - reset the function tracking
++    elif (line[0].isspace() and not in_function and line.endswith(");\n")):
++      function_body += [line];
++      output_function(function_name, function_body, (new_src, new_dst));
++      reset_parser();
++
++    # Lines that begin with whitespace are part of the current function.
++    elif (line[0].isspace()):
++      function_body += [line];
++
++    # Next, try to find the kind of line that contains a function name
++
++    # Ignore lines with comment markers, braces
++    elif (line.startswith("/*")):
++      function_body += [line];
++    elif (line.startswith("*/")):
++      function_body += [line];
++    elif (line.startswith("//")):
++      function_body += [line];
++    elif (line == "{\n"):
++      function_body += [line];
++      in_function = True;
++    elif (line == "}\n"):
++      function_body += [line];
++      in_function = False;
++    elif (line == "};\n"):
++      function_body += [line];
++      in_function = False;
++
++    elif (line.startswith("#include")):
++      function_body += [line];
++    elif (line.startswith("#if ")):
++      function_body += [line];
++    elif (line.startswith("#ifdef ")):
++      function_body += [line];
++    elif (line.startswith("#ifndef ")):
++      function_body += [line];
++    elif (line.startswith("#else")):
++      function_body += [line];
++    elif (line.startswith("#endif")):
++      function_body += [line];
++    elif (line.startswith("#undef ")):
++      function_body += [line];
++    elif (line.startswith("#define")):
++      function_body += [line];
++      define_name = get_block_name(line);
++
++      # Multi-line define?
++      if line.endswith("\\\n"):
++        in_define = True;
++      else:
++        output_function(define_name, function_body, (new_src, new_dst));
++        reset_parser();
++    elif in_define and line.endswith("\\\n"):
++      function_body += [line];
++
++    # goto was always a crime
++    elif (' ' not in line and line.endswith(":\n")):
++      function_body += [line];
++
++    # Try and parse a function/array name
++
++    # Things like late_initcall() aren't function names, but belong to
++    # the previous function.
++    elif (get_block_name(line) in builtin_non_functions):
++      function_body += [line];
++
++    # Start a new block if we can get a block name for this line
++    elif (get_block_name(line) != None and function_name is None):
++      _name = get_block_name(line);
++
++      if (line.endswith("{\n")):
++        in_function = True;
++
++      # Is this a function prototype? Output it now
++      if (line.endswith(";\n")):
++        function_body += [line];
++        output_function(_name, function_body, (new_src, new_dst));
++        reset_parser();
++      else:
++        function_name = _name;
++        function_body += [line];
++
++    # Failed to parse a function name ... did it get split up?
++    elif (line.startswith("static")):
++      function_body += [line];
++
++    else:
++       print("Unknown: '" + line + "'");
++
++  # Output whatever is left in the buffer
++  output_function(function_name, function_body, (new_src, new_dst));
++
++  orig_file.close();
+-- 
+2.39.2
 
