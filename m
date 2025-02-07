@@ -1,128 +1,77 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pv50p00im-zteg10021401.me.com (pv50p00im-zteg10021401.me.com [17.58.6.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B51238D24
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CC5238D24
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738939856; cv=none; b=o/FIbEpADkecrB+FrOrykbQIn9ChQocTqzLHbsOeFbUi8JjXG9tUtcfc3TEQ2rIYIU+NStrozHS1E4naX3u2JryE4VSl1RvA/PBdFanSpq3YoNdMpS+PQk8gt1/VrmIDMjP2tyRTJnM0suoPYy/Sbuh9wh0/d355WiyXt2OA9Vg=
+	t=1738939897; cv=none; b=F9+jAvOU0py7uPxMBphDqqXyeimZ3qTmfwic9uvG0694vasxTCocVtubH7WLleD+hflA29cqQT6WN0DM71xq9P+KcHVrYjrRr5ZZBoLxoa4iLW4zJRIU4niPTVikwomPbwGPLxZfWCwORAzU2vYUCKkRc7JMpKRsCSrqncVnA7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738939856; c=relaxed/simple;
-	bh=EkoV6XO2IdvsJ5r6Q1RwGKklJsOq8qkQI8FxHVdj8BA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dmgoMVbtsZriF6PD2MLywYTS394ro4UiaIWLmMt61ReT40NL6pF27HURceeanua3NtSLZHlTLqEciHJZpxJeRLGXXASKKn+FWV0YWCE7hooPnQRnv6riDy7PX0FBzVbPvCddr+QP/4ybXLCZA4SwvPd6hCBQRvxSwAQLTR39BE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NiCCcssX; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738939897; c=relaxed/simple;
+	bh=QPTMGiauE0vFz3+ClYpVOEZsW0MdO4K8SJKrJbVAgxg=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=dcFqDlukWMAvANqfQlUm1Yk3LJQF+zwnriH+nOB3GqlOZ7kHL0dZ1scYiwHUi0y7NGFSb+54T2p1YKiyXmI77EdhMvslbuuNWVohHMfjlwTb0lUqv64Xj3vSvZxSAlR3Q1xoKBsoAj9GIDwEM9x1AYz1FAmzz6Yk0oZXHeXGQY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=Sery+jB1; arc=none smtp.client-ip=17.58.6.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NiCCcssX"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5dce3c28889so4680281a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:50:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738939852; x=1739544652; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DvijzunCYsTzspebXg0A+XtvUg5654eflXvQZ34ncgs=;
-        b=NiCCcssXB6qi0xGrSqPB+YJN9mvc573z8g4egOnAEN5EHgDBJQsxoySp1EHT+vuuvx
-         uWseLMF6bNkcpQ0m7Z0Xl8rFe5LFDizbyoLFqEH+D8t8ToD3ceOQxqQWPH3BGjVCYdC2
-         tKgXXgU7kLl+nKZA8A5G7fa6+9syySNi+dtBeT7jYK3ASMzhvUY5bWMZpkZVymM+1IgM
-         Tt5J8gHmo2Sr/w2tUggOp4zTN2ww8RBWF7D9gdqt8Ka344inV0j7bPBLcJmQzfj57ell
-         YGMTqyv5Obrwr0L/yDsnc9CpDRpKcAnX6mmJahcutwWalHJiFzUJEfKR53Yev18xBNFu
-         LYXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738939852; x=1739544652;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DvijzunCYsTzspebXg0A+XtvUg5654eflXvQZ34ncgs=;
-        b=gGA4yRiFW79dU252BU60hbyCIkYDxwK7CIiEDWufx6OXxIqjZv9t+sIgwwbBIPHaF6
-         DFtt8P7IF8G6H2OIHGvzjphZuai2C2LQ7pyPO8YZeMio8SYLVfj0ZurIoyX8yf+ajnr+
-         X/5p/hhr6oqe5/OnazqKme8kUSs6EanYD/YliNOsZT14GpxUPvmT0YW19s1Ge+ZBrFoE
-         MciMZsfe44TigGZIf+X6DKEjmjxnK0jTZtOHiIJa82L1X4vE8JpWAIIsuiP4NvFY+zjW
-         lCQ19KiA/Y+egmjM9S3XWv/3KHVIscYFjkgnbEWhCHb+xD71N2wRuUGv8q+ygCVxqLO1
-         GSSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXbsAjnIhTNY0uGHOP7B3EauHvM5AHYNKt7g/O2h0IsD2fi9cPHtsjUjeM8Nq+e8zq+6FXs8pbTfJ+jA2s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfqU+KqFMWpB2e2Zjy/yAqREHIBC0VLYX3CkIKqPhnhGlxEXIZ
-	nItkc7eUJVq5QyvBhOh63dnc/y9/QFqQhp1hQUUyfCf0e8proWC4R99RzTzDA+XG2tX4Xgvyd8Q
-	8e0IgShWDL6TW/qyKIjY3sBjoXHXopcxku4oEag==
-X-Gm-Gg: ASbGncsxmMxKOn53XH8LGgQ7Uf2jVFKoRRGNkniLfDqTzz3xr//Q3QYLukU2H/xzvC9
-	HqE6kqZlH2R9nLAxihAwyfMEU+nAgaFr+L8AS8AX3qvg/1PyTrd1/CqfRVid8962GrVFaQzXNTR
-	9UlIJtOHDD1/pUe0RxiNR2OeRp
-X-Google-Smtp-Source: AGHT+IEKtK4jukB7pZR1vr0IrSA/aM19OAdKTzD/pr7UxYPNIzgDAPQULcMmbOB0w0xmqHdUOnRS72SuJYC/PLJ+qsk=
-X-Received: by 2002:a05:6402:4588:b0:5db:731d:4456 with SMTP id
- 4fb4d7f45d1cf-5de45085cc7mr4091276a12.28.1738939851829; Fri, 07 Feb 2025
- 06:50:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Sery+jB1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=QPTMGiauE0vFz3+ClYpVOEZsW0MdO4K8SJKrJbVAgxg=;
+	h=Message-ID:Date:MIME-Version:To:Subject:From:Content-Type:x-icloud-hme;
+	b=Sery+jB1tpKn6/p0v5kGsHKtvNUJml2Z+cQc+O394YmX3/fDMheiCuZePhU8tVZ2u
+	 fFF2grS9Xr9plI7EvX8QXWNuFWgwCeArXVu3O0T0FD3LPJexcAohJryFnsXWQhukRU
+	 dnsXo/zMAmeXdIni5EULO5WxonTDsD1URD2LDfdVH1QDmaOAnublx+bpzx2Lc18h3n
+	 jNt8AFnrVeUcTD91BvO5ahTb4NTTaKDHppi4NexMR9XlsYmM9pfzN+k3kPgLUdwpM1
+	 OKKALgs9W06Erj0Jn3Ai5Et0tA+5ObzK3kYB5U2JL1XmKtyZDZAQFGBYfRUz8FsH+H
+	 RppbBGh04ldoA==
+Received: from [192.168.50.105] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-zteg10021401.me.com (Postfix) with ESMTPSA id EF22E8E0475;
+	Fri,  7 Feb 2025 14:51:30 +0000 (UTC)
+Message-ID: <ba6efae4-77d9-46aa-8f64-f8ffa119505f@icloud.com>
+Date: Fri, 7 Feb 2025 07:51:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250121030628.113497-1-15645113830zzh@gmail.com>
-In-Reply-To: <20250121030628.113497-1-15645113830zzh@gmail.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Fri, 7 Feb 2025 15:50:40 +0100
-X-Gm-Features: AWEUYZkhjGPPkBAbJkpGD4Q0JB3ARoVuUQD_k1bNgxJA56sK71BYflLkdKH0KUw
-Message-ID: <CAKfTPtBAxgBkH4f-c7sHQr1=E4oaFRnyY7+dh41_ONqi9MEKEQ@mail.gmail.com>
-Subject: Re: [PATCH V1] sched: Cancel the slice protection of the idle entity
-To: zihan zhou <15645113830zzh@gmail.com>
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: marcan@marcan.st
+Cc: arnd@arndb.de, asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ olof@lixom.net, soc@lists.linux.dev, torvalds@linux-foundation.org
+References: <20250207-rm-maint-v1-1-10f069a24f3d@marcan.st>
+Subject: Re: [PATCH] MAINTAINERS: Remove myself
+From: Evelyn Harthbrooke <evieluvsrainbows@icloud.com>
+Content-Language: en-US
+In-Reply-To: <20250207-rm-maint-v1-1-10f069a24f3d@marcan.st>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 2L1ymKElDkzzHQfI_irsKi6LBV4PZzzI
+X-Proofpoint-ORIG-GUID: 2L1ymKElDkzzHQfI_irsKi6LBV4PZzzI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_07,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ mlxlogscore=874 spamscore=0 adultscore=0 phishscore=0 suspectscore=0
+ clxscore=1011 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2502070113
 
-On Tue, 21 Jan 2025 at 04:07, zihan zhou <15645113830zzh@gmail.com> wrote:
+On Thu, Feb 6, 2025 at 1:31 PM Hector Martin <marcan@marcan.st> wrote:
 >
-> A wakeup non-idle entity should preempt idle entity at any time,
-> but because of the slice protection of the idle entity, the non-idle
-> entity has to wait, so just cancel it.
-
-Probably worth to add:
-Fixes: 63304558ba5d ("sched/eevdf: Curb wakeup-preemption")
-
+> I no longer have any faith left in the kernel development process or
+> community management approach.
 >
-> Signed-off-by: zihan zhou <15645113830zzh@gmail.com>
-
-I have been able to reproduce the problem with rt-app.
-
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Tested-by: Vincent Guittot <vincent.guittot@linaro.org>
-
-> ---
->  kernel/sched/fair.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+> Apple/ARM platform development will continue downstream. If I feel like
+> sending some patches upstream in the future myself for whatever subtree
+> I may, or I may not. Anyone who feels like fighting the upstreaming
+> fight themselves is welcome to do so.
 >
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 3e9ca38512de..7777d110d053 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -8851,8 +8851,19 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
->          * Preempt an idle entity in favor of a non-idle entity (and don't preempt
->          * in the inverse case).
->          */
-> -       if (cse_is_idle && !pse_is_idle)
-> +       if (cse_is_idle && !pse_is_idle) {
-> +
 
-remove blank line above
+This is disappointing to see; Apple/ARM support was progressing incredibly well and it's sad to see you resign as one of the subsystems' core maintainers. But based on what happened in the Rust/DMA thread, it was only a matter of time.
 
-> +               /*
-> +                * When non-idle entity preempt an idle entity,
-> +                * don't give idle entity slice protection.
-> +                */
-> +               if (se->vlag == se->deadline)
-> +                       se->vlag = se->deadline + 1;
-> +
->                 goto preempt;
-> +
+There are admittedly quite a few issues with the way the kernel development process works as well as how the community is managed, and I hope that it will improve with time. Hopefully your efforts will indeed continue downstream, and people will put in the effort to upstream your work with you having resigned.
 
-remove blank line above
+I also hope that you may decide to come back in the future, if things do indeed improve.
 
-> +       }
-> +
->         if (cse_is_idle != pse_is_idle)
->                 return;
->
-> --
-> 2.33.0
->
+Evelyn
