@@ -1,224 +1,167 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB14623497E;
-	Fri,  7 Feb 2025 09:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B631D6DB5
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:05:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738919146; cv=none; b=sUXAGZY2cnPafzqRTje6lrOZsyaNOdLD2y5nWh5jOq8XleDRaXCEQEUxGwqv9F5tAff9YKSuIbjiZ6WPxEDFQloofw2ovJwp7chbPRDFZjAdVibkY43hSY9hZiEiypLMX9PH3PieDirjx87L1/Ec3VZjij6FYaa0F1LBkHHReqw=
+	t=1738919158; cv=none; b=gFUk9RqDlenYyFjoViAodRBAYs+Yevj5Y3cnKj9VWTxfWh4+uRhIux+iZmLnZ7uHn5rYop50g1/hAQQcrX0HkOd1DBk1bD1T2Xxcw5DTLyiVfRA6ReN8jPjFJQmKywXR+GyhQBNoHoOpY7IRe89TqnJdpvjz9GHU+b8tCHQQNek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738919146; c=relaxed/simple;
-	bh=3dRjkGHiqCFJ8gaSi26v3o8D8Ct0u2v99KNMcksrZNE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GEO1ybAntrCPreaOYpI8DbVM7j8h2ZZVtb0lL6sI91qZt/dU8dexRcx9hLIXep1vWehYx/M0aU2DZB0tOmATEHCyOL6JkaVPcv93D4kUFTtdJWAGrlg9fR2Wlya96y4KLIqgmc3ebQjXtx4gPnBwypMP6DmHMFPHBy8ratr2nkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=YJ3w2CG9; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=rlBQXGe+ reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1738919158; c=relaxed/simple;
+	bh=Bf7NP5KLXoTsPBgeqjhyz/LCPYCYkQlCpcUXIngCj4c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D36Lkcc5KALSBj2m38jYkiR7FpNbcKmsTprLX87HxJwr8XKLo+bh8Cdg5wZSoyLpVZrOzXLiwmGb3VOy0AYwtaAy9LjNmYHmPb8dfo1bxuUF2BBUlRY+npVCr8V9rH66YxcXOrQse2IohDr0rii1Jof05x9Yxd5UWvfbnuVuE0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nfpnpu/8; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="YJ3w2CG9";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="rlBQXGe+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nfpnpu/8"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-436345cc17bso12854025e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 01:05:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1738919116; x=1770455116;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zBX8ExALcmiDF+/qEtJjMkDw2zlW64wywf43Ky2a6Ug=;
-  b=YJ3w2CG9vDxDLA+obhiyRgaELfGS9Tg12qxQm983jJnhIRUX6kwJ1v1Z
-   rPY8pUzwkJijCjh5ClAJN3JaVFU1HaQVozfjh+sogdDOLBJnc9yPjGHWa
-   NoNjzoRbn7Uh2tSxmu6fdX09mqXzA7fNacZFp9WVpdz67IU1oSiFsixOE
-   Eeci6dMY4BYMHSmymCrQMUFWOLaX0RJzUXRrhI/N4UzMzKanVn9xdZlHy
-   0H4mbRVxEku/wxKaw3uTxgbA6yZhr70CC78n9tKHbCA1lyzactW+/bnNM
-   Mdhy4hGxkvl0BStCc2qDrU3YwzNdnemBFlW+Ppoot2jTUnbHRpHvOEDhN
-   w==;
-X-CSE-ConnectionGUID: Xhk74j5JQbWAra0Mv6t0Pw==
-X-CSE-MsgGUID: 3Lct4PK2QXKQuQADTfdvpQ==
-X-IronPort-AV: E=Sophos;i="6.13,266,1732575600"; 
-   d="scan'208";a="41637080"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 07 Feb 2025 10:03:29 +0100
-X-CheckPoint: {67A5CC61-19-727D2C21-EE1B71AA}
-X-MAIL-CPID: 6157D79B86A1E4CE120E29C0B85C15C2_5
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 587D1166639;
-	Fri,  7 Feb 2025 10:03:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1738919005;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zBX8ExALcmiDF+/qEtJjMkDw2zlW64wywf43Ky2a6Ug=;
-	b=rlBQXGe+M/MvgnHi6cUhxMQ9Q35+XqdAYZ6WPwI+6SH+/1yaI5UzRqvNEufnNtPdreYPIy
-	cYC4s+MO36XQfo5ojoJ19NB53Wqn3A/K9SFJDJBWOC9SNwpkit5PAuL4DYj7RZqMRCnoB9
-	T6tbtpOpiMhLKmsPmD8QZDkHPvn4Ta5THB+5R6RYAFPjt50xX4za4NG7Vx4kZqqJ8HeKzz
-	Ci5R7i91781egwuqpkaGZP7IDRWkgerCmAyEb8FlsMTQBO/nLX/Y2bWWUmR7GAgvcgKSR/
-	Z5fyew18JBVWiLlT6qJ5G7DEI8Ybi5MNEXoTnSIesR2DNmOUo5cNBH0w2y4tdg==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: devicetree@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/10] arm64: dts: imx8mq: Add access-controller references
-Date: Fri, 07 Feb 2025 10:03:23 +0100
-Message-ID: <2568692.iZASKD2KPV@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20250207083616.1442887-11-alexander.stein@ew.tq-group.com>
-References: <20250207083616.1442887-1-alexander.stein@ew.tq-group.com> <20250207083616.1442887-11-alexander.stein@ew.tq-group.com>
+        d=google.com; s=20230601; t=1738919155; x=1739523955; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Iq7b25tIL8xaIsUgtb5pGAAYzp+vmpGNFUg3aI9reGw=;
+        b=Nfpnpu/8oAaktmOxP/Y6x3yEXoj293fSc7T3RSAl0/TvLqjs4CqOWGAPRztA6FQ4JD
+         4FuB+RLraT3UcYAsctr8D48A58XUJ91rkfQOOuf7QydDC3DofRkwryEEvToTT+xTLrJM
+         7GbLBbK52DPs5v8ItSa7+9VAQZ9nAkqouDAenlmqW2BJeY0CqHuVEuOCVP6afqWncDWn
+         wVipWwyIsxMCvjsm15cvX6a1C07PnoA22f+T/Hl/IFby3k3dNiF3c2LitN+EboAvOxmu
+         IeAV54evbqHoX21pTAKCOMI9/+SNo00GYLXgJz30f9X8UGqBymSWoVa1Owa24YEjT5nr
+         QKew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738919155; x=1739523955;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Iq7b25tIL8xaIsUgtb5pGAAYzp+vmpGNFUg3aI9reGw=;
+        b=IPQxPGpFC17kja5S4Gz/jch8NRwJQjh7kno/wvjhq3xdFsHM6Zju0cn2O4Uf7EKEF1
+         I9OYA0b34LBmr64CZW9M4j71SgfbjdIKWh8fjF18s4zwt7zyLlAA0x4qKFdUWmgzDrQJ
+         fdeoKZq4O8Ll/fNn35nA6LhuX9GYsQydndUWlhe56XiltaMUSe+ejnDvCpBX2C7zTEoI
+         k18ZepkefJmykzGFes3uSGp7vARCCb9KXsHnxfXPTFSU8drGM5ExricKoLYbeS8zkApK
+         lKpjgaZE5qtN2Shois1hOoskZEhb0bXz9/TugwI7ZbCZd4XKj1frzJsyYVBYtsNBSdiA
+         SUlg==
+X-Forwarded-Encrypted: i=1; AJvYcCWeNOS56JoqxHf2Vz2nhfwG1G7vAyi4ml8M1YQe9OOJOX0P+4gUzI1LIUnDU2mnMoLljquiy0BCKRTvwkw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJYEJa4ACLHzjjiXunm4Cx7213w6j5CnwYRUof3Ib70WOrDEgx
+	s3qJxeTLOoEl2gMLoZDcbA/Srbg/D2Dw1zklL9mymSYm01UpXjKFVLtsx7Pbug==
+X-Gm-Gg: ASbGnct2kBoyvt9kJdOoRRRAbXI5PrP6C9NoqAfAb6BRaoRprq3uwQNK8j67hKyNAVP
+	rWvp8HhXnLMt6ic++TbT6okR8cUjO7VyiedaNIZ6GpS4eHfKjZqu0tKcNUcBL2m21nXb+zIMsS8
+	mKvgLI7Ekwag+v19s6SbVteKahYjx18bT4Yy9hVlUs9oGhtE9owOPZNN3CKH/yelkO9i9L7OgkZ
+	BCkZcSzAkM9lgX9jITKIhiTGga4qjhOJT67KzmE60G5aYyxQHoKyu20tLH/tZa7GcVClEVm5vF2
+	gE1Y7TiF+U+XzTsM
+X-Google-Smtp-Source: AGHT+IH/l6ilaMZUOvNHQ9D0Lj0QVtowlI2c2qGJSp+o15wlnCV+KElNEwIXUyY+Ti6xytWfjmZwAg==
+X-Received: by 2002:a5d:6d07:0:b0:38c:5bfa:a93b with SMTP id ffacd0b85a97d-38dc90e27a3mr1422541f8f.2.1738919154531;
+        Fri, 07 Feb 2025 01:05:54 -0800 (PST)
+Received: from elver.google.com ([2a00:79e0:9c:201:fad3:ca37:9540:5c99])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390daf451fsm85323975e9.28.2025.02.07.01.05.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 01:05:53 -0800 (PST)
+Date: Fri, 7 Feb 2025 10:05:47 +0100
+From: Marco Elver <elver@google.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Bart Van Assche <bvanassche@acm.org>, Will Deacon <will@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>,
+	Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 00/33] Compile-time thread-safety checking
+Message-ID: <Z6XM6zjK3mtqYfan@elver.google.com>
+References: <20250206175114.1974171-1-bvanassche@acm.org>
+ <CANpmjNOsf1RnYJuZ7pmWVYNqVYMYe+eTL0vhDKU5sLihR9fN-g@mail.gmail.com>
+ <90c7a807-b0a0-4b42-866f-f74c5d1c62e5@acm.org>
+ <20250207084223.GX7145@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207084223.GX7145@noisy.programming.kicks-ass.net>
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-Am Freitag, 7. Februar 2025, 09:36:15 CET schrieb Alexander Stein:
-> Mark ocotp as a access-controller and add references on peripherals
-> which can be disabled (fused).
->=20
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/=
-dts/freescale/imx8mq.dtsi
-> index df8ba1d5391ae..95a40cccd46b9 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+On Fri, Feb 07, 2025 at 09:42AM +0100, Peter Zijlstra wrote:
+> On Thu, Feb 06, 2025 at 10:34:09AM -0800, Bart Van Assche wrote:
+> 
+> > I'm looking forward to the feedback from others about what their opinion
+> > is about how to enable thread-safety checking in the Linux kernel.
+> 
+> So Bart's patches are rather SHOUTING A LOT:-(, which I find really
+> jarring to look at.
+> 
+> Also, however much I despise the sparse thing, that is something we
+> already have some of, so we might as well adapt that.
+> 
+> But I should probably go read up on the whole clang feature first. 
+> 
+> I've seen both have a __guarded_by() variant for structure members, can
+> you stack those?
+> 
+> Eg. perf has locking where a structure has both a raw_spinlock_t and a
+> mutex and modification requires holding both, but holding either is
+> sufficient for reading.
 
-I just noticed, I missed #access-controller-cells =3D <2>; for ocotp node.
-Will add in next version.
+Yes, you can add multiple guarded_by. But it's just going to enforce
+that you need to hold both locks before you access the member. If you
+want the rules to be more complex, the best way to express that is with
+some helpers. E.g. something like this (tested on top my series)
 
-Best regards,
-Alexander
-
-> @@ -12,6 +12,7 @@
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/thermal/thermal.h>
->  #include <dt-bindings/interconnect/imx8mq.h>
-> +#include "imx8mq-ocotp.h"
->  #include "imx8mq-pinfunc.h"
-> =20
->  / {
-> @@ -1275,6 +1276,7 @@ mipi_dsi: dsi@30a00000 {
->  					 <&src IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N>,
->  					 <&src IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N>;
->  				reset-names =3D "byte", "dpi", "esc", "pclk";
-> +				access-controllers =3D <&ocotp IMX8MQ_OCOTP_MIPI_DSI_DISABLE>;
->  				status =3D "disabled";
-> =20
->  				ports {
-> @@ -1392,6 +1394,7 @@ mipi_csi1: csi@30a70000 {
->  				fsl,mipi-phy-gpr =3D <&iomuxc_gpr 0x88>;
->  				interconnects =3D <&noc IMX8MQ_ICM_CSI1 &noc IMX8MQ_ICS_DRAM>;
->  				interconnect-names =3D "dram";
-> +				access-controllers =3D <&ocotp IMX8MQ_OCOTP_MIPI_CSI1_DISABLE>;
->  				status =3D "disabled";
-> =20
->  				ports {
-> @@ -1414,6 +1417,7 @@ csi1: csi@30a90000 {
->  				interrupts =3D <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks =3D <&clk IMX8MQ_CLK_CSI1_ROOT>;
->  				clock-names =3D "mclk";
-> +				access-controllers =3D <&ocotp IMX8MQ_OCOTP_MIPI_CSI1_DISABLE>;
->  				status =3D "disabled";
-> =20
->  				port {
-> @@ -1444,6 +1448,7 @@ mipi_csi2: csi@30b60000 {
->  				fsl,mipi-phy-gpr =3D <&iomuxc_gpr 0xa4>;
->  				interconnects =3D <&noc IMX8MQ_ICM_CSI2 &noc IMX8MQ_ICS_DRAM>;
->  				interconnect-names =3D "dram";
-> +				access-controllers =3D <&ocotp IMX8MQ_OCOTP_MIPI_CSI2_DISABLE>;
->  				status =3D "disabled";
-> =20
->  				ports {
-> @@ -1466,6 +1471,7 @@ csi2: csi@30b80000 {
->  				interrupts =3D <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks =3D <&clk IMX8MQ_CLK_CSI2_ROOT>;
->  				clock-names =3D "mclk";
-> +				access-controllers =3D <&ocotp IMX8MQ_OCOTP_MIPI_CSI2_DISABLE>;
->  				status =3D "disabled";
-> =20
->  				port {
-> @@ -1566,6 +1572,7 @@ fec1: ethernet@30be0000 {
->  				nvmem-cells =3D <&fec_mac_address>;
->  				nvmem-cell-names =3D "mac-address";
->  				fsl,stop-mode =3D <&iomuxc_gpr 0x10 3>;
-> +				access-controllers =3D <&ocotp IMX8MQ_OCOTP_ENET_DISABLE>;
->  				status =3D "disabled";
->  			};
->  		};
-> @@ -1705,6 +1712,7 @@ gpu: gpu@38000000 {
->  			                         <&clk IMX8MQ_GPU_PLL>;
->  			assigned-clock-rates =3D <800000000>, <800000000>,
->  			                       <800000000>, <800000000>, <0>;
-> +			access-controllers =3D <&ocotp IMX8MQ_OCOTP_GPU_DISABLE>;
->  			power-domains =3D <&pgc_gpu>;
->  		};
-> =20
-> @@ -1725,6 +1733,7 @@ usb_dwc3_0: usb@38100000 {
->  			phy-names =3D "usb2-phy", "usb3-phy";
->  			power-domains =3D <&pgc_otg1>;
->  			snps,parkmode-disable-ss-quirk;
-> +			access-controllers =3D <&ocotp IMX8MQ_OCOTP_USB_OTG1_DISABLE>;
->  			status =3D "disabled";
->  		};
-> =20
-> @@ -1757,6 +1766,7 @@ usb_dwc3_1: usb@38200000 {
->  			phy-names =3D "usb2-phy", "usb3-phy";
->  			power-domains =3D <&pgc_otg2>;
->  			snps,parkmode-disable-ss-quirk;
-> +			access-controllers =3D <&ocotp IMX8MQ_OCOTP_USB_OTG2_DISABLE>;
->  			status =3D "disabled";
->  		};
-> =20
-> @@ -1778,6 +1788,7 @@ vpu_g1: video-codec@38300000 {
->  			interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks =3D <&clk IMX8MQ_CLK_VPU_G1_ROOT>;
->  			power-domains =3D <&vpu_blk_ctrl IMX8MQ_VPUBLK_PD_G1>;
-> +			access-controllers =3D <&ocotp IMX8MQ_OCOTP_VPU_DISABLE>;
->  		};
-> =20
->  		vpu_g2: video-codec@38310000 {
-> @@ -1786,6 +1797,7 @@ vpu_g2: video-codec@38310000 {
->  			interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks =3D <&clk IMX8MQ_CLK_VPU_G2_ROOT>;
->  			power-domains =3D <&vpu_blk_ctrl IMX8MQ_VPUBLK_PD_G2>;
-> +			access-controllers =3D <&ocotp IMX8MQ_OCOTP_VPU_DISABLE>;
->  		};
-> =20
->  		vpu_blk_ctrl: blk-ctrl@38320000 {
-> @@ -1839,6 +1851,7 @@ pcie0: pcie@33800000 {
->  			                         <&clk IMX8MQ_SYS1_PLL_80M>;
->  			assigned-clock-rates =3D <250000000>, <100000000>,
->  			                       <10000000>;
-> +			access-controllers =3D <&ocotp IMX8MQ_OCOTP_PCIE1_DISABLE>;
->  			status =3D "disabled";
->  		};
-> =20
-> @@ -1882,6 +1895,7 @@ pcie1: pcie@33c00000 {
->  			                         <&clk IMX8MQ_SYS1_PLL_80M>;
->  			assigned-clock-rates =3D <250000000>, <100000000>,
->  			                       <10000000>;
-> +			access-controllers =3D <&ocotp IMX8MQ_OCOTP_PCIE2_DISABLE>;
->  			status =3D "disabled";
->  		};
-> =20
-> @@ -1916,6 +1930,7 @@ pcie1_ep: pcie-ep@33c00000 {
->  					       <10000000>;
->  			num-ib-windows =3D <4>;
->  			num-ob-windows =3D <4>;
-> +			access-controllers =3D <&ocotp IMX8MQ_OCOTP_PCIE2_DISABLE>;
->  			status =3D "disabled";
->  		};
-> =20
->=20
-
-
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
-
+--- a/lib/test_capability-analysis.c
++++ b/lib/test_capability-analysis.c
+@@ -479,3 +479,53 @@ static void __used test_local_lock_guard(void)
+ 	{ guard(local_lock_irqsave)(&test_local_lock_data.lock); this_cpu_add(test_local_lock_data.counter, 1); }
+ 	{ guard(local_lock_nested_bh)(&test_local_lock_data.lock); this_cpu_add(test_local_lock_data.counter, 1); }
+ }
++
++struct some_data {
++	spinlock_t lock;
++	struct mutex mtx;
++	int counter __var_guarded_by(&lock) __var_guarded_by(&mtx);
++};
++
++static void some_data_read_lock_via_lock(struct some_data *d)
++	__acquires(&d->lock) __acquires_shared(&d->mtx)
++{
++	spin_lock(&d->lock);
++	__acquire_shared(&d->mtx);
++}
++
++static void some_data_read_unlock_via_lock(struct some_data *d)
++	__releases(&d->lock) __releases_shared(&d->mtx)
++{
++	__release_shared(&d->mtx);
++	spin_unlock(&d->lock);
++}
++
++static void some_data_read_lock_via_mtx(struct some_data *d)
++	__acquires(&d->mtx) __acquires_shared(&d->lock)
++{
++	mutex_lock(&d->mtx);
++	__acquire_shared(&d->lock);
++}
++
++static void some_data_read_unlock_via_mtx(struct some_data *d)
++	__releases(&d->mtx) __releases_shared(&d->lock)
++{
++	__release_shared(&d->lock);
++	mutex_unlock(&d->mtx);
++}
++
++static void __used foo_1(struct some_data *d)
++{
++	some_data_read_lock_via_lock(d);
++	(void)d->counter;
++	// d->counter++;  // error, because mtx only held shared
++	some_data_read_unlock_via_lock(d);
++}
++
++static void __used foo_2(struct some_data *d)
++{
++	some_data_read_lock_via_mtx(d);
++	(void)d->counter;
++	// d->counter++;  // error, because lock only held shared
++	some_data_read_unlock_via_mtx(d);
++}
