@@ -1,427 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0572206A0
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A216E23ED56
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738938405; cv=none; b=Y2sGssH9MXCxNR2suRZwLtOIM4XRJHtuz2AVb56XxHjeVGFz3Y4FvAST0BTbkvEHsNS1gtiMD5RWnLSeqts8NJq0G2g8ERzTh1ER47wKomhHdHW2+AY44yM0+0nLxHvBFAPIZRCm8c8I4G/GoA9sftvnJ+b7l3el9OlzRRLpQpU=
+	t=1738938437; cv=none; b=iZHv0rTPD+kEdXFZmtX1T+AijVliAiZXpnIaW0fMwhRcdoxLeRulpKFiurOwbEj4ccWqjQdVl2C9hwOFvWB/G14n6jK+2kDm8TccOqdhAXmlkFEU7AOgc4mYE70Soq/53EANEjNKVJO/Dlnoq2+X+jaUmvf3BALckvfZalvpOPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738938405; c=relaxed/simple;
-	bh=ElPVUMIlHSZz9mo9r9J2FeJMfpyI9f6RDFT6AJdcNmQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=X0AUttwCAEijOkOQUbUSRrQdGMsXK+WXY0hoOvw3FfIwFHFH5DwM4/44I0d8cSNtTeu1PNCjA5nA9vDCQNV3EEWnpmhHicHFeMbpFp9CmWOemV0CF0oKnAFVvQLLDdb/SoVxsZN+a2BjcQynLFijjXi1cPx3dI+zq7hvOyA8Sl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KMtm3aq+; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1738938437; c=relaxed/simple;
+	bh=o6BN+jhB83FXgQx0sjPW6xCk7t4A/VHNdAvjUSUvNlM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=axf/K1onQfmY2NetLrf0n8ILN+I1KbU90guJ66kXfGpxiZdGnl0mxgq9P9ioXuTDOLEtsr/NL6J4p/H8c6mpabYFViCqyGwplYWXtgfx1tZ0GcIuZbic8s2qWGArRvizrOiGty4iz4i2T9icycwgk2fQzG3R+RimLDLLPOyTTjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I8jeOTYq; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KMtm3aq+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I8jeOTYq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738938402;
+	s=mimecast20190719; t=1738938434;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WI37PJY6W4SjT4jRC/9YBD4cM6hytEycAvqoqUwuQE0=;
-	b=KMtm3aq+hDojgPzGxqe6mhp6TJ+HyT7HiPLW8hcuSgKBSdGAh58evOSNhoOp2d/TS9nvxm
-	StwhD75a7fPNvHsZ8nCK6AYms/9eZFXzmLNQ6vXnsVh8uIREVrTza4n8lWqVW3Xjdgd7nM
-	VAA3YUdrK79rIsHC14vDVIOkdFozwGY=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=SH1o+QthuKm+KhFtIEw5lEPiGz/yk5zmirl7sfBR7Ls=;
+	b=I8jeOTYqFz4B6XTEH/NcLvGolEqhNFy230a5xLLhteUJ9BB3TW0j/mcDxSisCB74WNVMZW
+	XwXoufrZC6PRIoPA6NhBJMzCywZ9MUSFUPnpvdKWQwGL/9sA3kp9bYUrUj4dqgBOw+Ayk1
+	/65DZMv398j9qtLu/fkGXjC3cB5UJWM=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-638-SRKuJXLHPnmq0mGZIMWjAA-1; Fri, 07 Feb 2025 09:26:41 -0500
-X-MC-Unique: SRKuJXLHPnmq0mGZIMWjAA-1
-X-Mimecast-MFC-AGG-ID: SRKuJXLHPnmq0mGZIMWjAA
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43621907030so18243075e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:26:41 -0800 (PST)
+ us-mta-83-pWbZ_m0vM2GuL3P5uCkvLg-1; Fri, 07 Feb 2025 09:27:12 -0500
+X-MC-Unique: pWbZ_m0vM2GuL3P5uCkvLg-1
+X-Mimecast-MFC-AGG-ID: pWbZ_m0vM2GuL3P5uCkvLg
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38dcd8ddc5eso409374f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:27:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738938400; x=1739543200;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WI37PJY6W4SjT4jRC/9YBD4cM6hytEycAvqoqUwuQE0=;
-        b=dygucBjEE4UewvtU7svSJIgHt0mWd8XfpxkMvR0s/s6Dc3RHp77MPjDKbxwb4RuG1T
-         5l6CqUutTlc5M6xE+o0zO24s+UgP8uj+JTQPKsa7ewtxd7Ftiqd41rTaj/2rWpTSvMsO
-         z2Hh3kRMb747DZn4YobA1PORz9kQEYn7rKupqtfILo1nBThMBjwlRLLu+Gso+Ul4Qvx9
-         7IreOmgddSBA19agdXnIl3hnvNH1kmwHNvIi2WW/NcK3jSwgtp6Tc5YAHqltaFA7eN6B
-         iWRjOIX4QlnOIyUwm2X2b5GK1TRO5nQ1fC7pBDsDwxHKD8LOaUqEtX2Ckx+pDFdqwqBz
-         fkPw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNY25PIR2ZRiwtiv8wHD3CI8E9hYxq8srNFOilD+yWU8WlI474yTtFnKb9LkESw2T4BilC4OatTL77jXw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3B9R7Oo+b+aUztXDYQFFTulN+xQU375sMNvW1XI3roMy8z2Fj
-	3DIhgXYTNwD8xuwHu+pljnF5yXXJcv5HwEclDDzc9miuGqloz9IZptUhL2gZBQuLioEcNLuerin
-	v59Su+rlGkQEuzsqRVjwnqrnRPw5ya5i6IhTltx2dWs3hbHrtTfJdnt0nAkXoaLAqnZAndw==
-X-Gm-Gg: ASbGncud3tP2Vh/rFAc8DPcJZUciYQ6LaUzNK2rJ8dzB7tRKnxjoLl4wgHraDU0SuOP
-	kJiLtcqlWh3dC/+5BB5fPWU2J2kTYUZgvzMcrXNLJDOjBFZ5m7bfukpC6Aayy4NNQdK/4VQgKOi
-	FgFESNx7Qhr6i6XoWR4EiitZkqyPVpZZfFxgHE1LxU9pDUJupGX487kzsqfumRCsEX6q0Zi3s5R
-	BtPuXQ8NTbLSs3uMRMh9CeQvAuCrpSKGGHLHPQO3gbPCYMLYV+1h6ToGZXy68m2m+IcSdVfeLB2
-	ZddcZXpBbhDyZXucIOsrZ6gRYIL7GNHylPLDJK54KHUF
-X-Received: by 2002:a05:600c:4f8e:b0:436:1baa:de1c with SMTP id 5b1f17b1804b1-43924990cdbmr37663015e9.13.1738938399600;
-        Fri, 07 Feb 2025 06:26:39 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFm3p0rosjbyax+gDDRtv5T4I5TGzOJoLbD3wNdOouEOGMa/3r9A0ACgt9OGGWj7t/zXMH1HA==
-X-Received: by 2002:a05:600c:4f8e:b0:436:1baa:de1c with SMTP id 5b1f17b1804b1-43924990cdbmr37662675e9.13.1738938399072;
-        Fri, 07 Feb 2025 06:26:39 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dc9ff10sm55889195e9.12.2025.02.07.06.26.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 06:26:38 -0800 (PST)
-Message-ID: <9a38c67c-ebd0-4ca7-82c8-6f29c807a85b@redhat.com>
-Date: Fri, 7 Feb 2025 15:26:36 +0100
+        d=1e100.net; s=20230601; t=1738938431; x=1739543231;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SH1o+QthuKm+KhFtIEw5lEPiGz/yk5zmirl7sfBR7Ls=;
+        b=OcEukX2AuwItZek+VomgCzhlHHJcKwdW3LWzsXaZErWRhSO3l7G/KF+gdmMUoVyfP/
+         Ul3x3jd8a0GF4v4O0bYNOM5iOWvJ4EPR8bbPZTZQ3OJPz1PtALMgaO1M66JXQjQpaXdA
+         iVWfpJ3sWhI5qOw5GmLOpdTQZ8WuKOgQMbqS1KEzGWj+0Um5uP/3MyF7GvYguVas4DjY
+         A0e6eNPsi3f4mB864jrGTy4HY2AvF9W+rd87Eld4mqtB1MiUw/03oYYw1yTjzKjzLLES
+         amiw4pqfPjxtg2iTnhfrvAkwvbvfW6r+vrElbJh6+QVd7v7BJLb1wGUwF28gMsn48KZd
+         g6dQ==
+X-Gm-Message-State: AOJu0YzFnyWwy8rOj+f8ymwzh8TfFdgHnkXgdkj1Qduwt6Fp7x7o+T5/
+	8jGqrxB2DKJpY3KC2F/idPOm8ATiLjv+rDWP/SZr6QfW+xOXXtzJTE9WRKHam3EdpX6pURqJWJc
+	/RKPQw1dRoR/jPhknSes4VBAMoTvQWJvSNqlwo1YRSOTCy6k2caOn/4ATj/myKA==
+X-Gm-Gg: ASbGncsF1n4itz0YRjQox/j9xvdZwsGGzWo5unuv2yhbd2QyiPhCPbXE6DhYhaKM7Wt
+	Y+VhjYrWgH04TPMJdkkKEgGVcMRq9ijr8CL0FWupvTeAwDlHCrwdsSgZ6b2CKJFbsT7ap47hxPy
+	Bp59Pkezxq8AymknYJCNkUPSj9ZOKhgkWRdIWriP7nFT90PS8ciRbUZbER3LxPrQe3VrhTPU8Kg
+	O6qX0AJ1qcS7Ez2Ba2ur8hYO7n720+ruwfG8S6oFDmspLXVwzSoF0W9PYpc2dxyMa5bekPYrocG
+	WFM57dz2didNd3ZZo6ihCrghlVaBUe9ssmue
+X-Received: by 2002:a05:6000:1865:b0:38d:c779:4d75 with SMTP id ffacd0b85a97d-38dc935bd55mr2516127f8f.45.1738938431345;
+        Fri, 07 Feb 2025 06:27:11 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFamBmDU9sldtKn3KhsqrmHnnObiks3DUVer0lNyyYTJiTdK6lOwaF2zwuT8fULoQeZ1rmkaA==
+X-Received: by 2002:a05:6000:1865:b0:38d:c779:4d75 with SMTP id ffacd0b85a97d-38dc935bd55mr2516105f8f.45.1738938430935;
+        Fri, 07 Feb 2025 06:27:10 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.128.176])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391da965a6sm56685805e9.6.2025.02.07.06.27.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 06:27:10 -0800 (PST)
+Date: Fri, 7 Feb 2025 15:27:08 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-trace-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>,
+	Clark Williams <williams@redhat.com>
+Subject: Re: [RFC PATCH 00/11] rv: Add scheduler specification monitors
+Message-ID: <Z6YYPAiM0itlIVAH@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250206080952.98478-1-gmonaco@redhat.com>
+ <czykavxpz46nwnelml6yorg3tvmyjvczqogeuqzji6qrfd2peu@qxr6wucv6mrj>
+ <847c962745ef5bce757b9ae257ae279913ac711c.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/mgag200: Added support for the new device G200eH5
-To: Thomas Zimmermann <tzimmermann@suse.de>,
- Gwenael Georgeault <ggeorgea@matrox.com>, Dave Airlie <airlied@redhat.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, mgi_lnx@matrox.com
-References: <alpine.LFD.2.00.2502070816590.23666@pluton.matrox.com>
- <0ec78bb6-bb1b-49b0-aaa3-9d9ecfdda586@suse.de>
-Content-Language: en-US, fr
-From: Jocelyn Falempe <jfalempe@redhat.com>
-In-Reply-To: <0ec78bb6-bb1b-49b0-aaa3-9d9ecfdda586@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <847c962745ef5bce757b9ae257ae279913ac711c.camel@redhat.com>
 
-On 07/02/2025 14:36, Thomas Zimmermann wrote:
-> Hi
+On 07/02/25 12:36, Gabriele Monaco wrote:
 > 
 > 
-> Am 07.02.25 um 14:21 schrieb Gwenael Georgeault:
->> - Added the new device ID
->> - Added new pll algorithm
->>
->> Signed-off-by: Gwenael Georgeault <ggeorgea@matrox.com>
->> Co-authored-by: Mamadou Insa Diop <mdiop@matrox.com>
+> On Fri, 2025-02-07 at 11:55 +0100, Juri Lelli wrote:
+> > Hi Gabriele,
+> > 
+> > On 06/02/25 09:09, Gabriele Monaco wrote:
+> > > This patchset starts including adapted scheduler specifications
+> > > from
+> > > Daniel's task model [1].
+> > 
+> > Thanks a lot for working on this. Apart from being cool stuff per-se,
+> > it
+> > means a lot personally to see Daniel's work continuing to be
+> > developed.
+> > 
+> > > As the model is fairly complicated, it is split in several
+> > > generators
+> > > and specifications. The tool used to create the model can output a
+> > > unified model, but that would be hardly readable (9k states).
+> > > 
+> > > RV allows monitors to run and react concurrently. Running the
+> > > cumulative
+> > > model is equivalent to running single components using the same
+> > > reactors, with the advantage that it's easier to point out which
+> > > specification failed in case of error.
+> > > 
+> > > We allow this by introducing nested monitors, in short, the sysfs
+> > > monitor folder will contain a monitor named sched, which is nothing
+> > > but
+> > > an empty container for other monitors. Controlling the sched
+> > > monitor
+> > > (enable, disable, set reactors) controls all nested monitors.
+> > > 
+> > > The task model proposed by Daniel includes 12 generators and 33
+> > > specifications. The generators are good for documentation but are
+> > > usually implied in some specifications.
+> > > Not all monitors work out of the box, mainly because of those
+> > > reasons:
+> > > * need to distinguish if preempt disable leads to schedule
+> > > * need to distinguish if irq disable comes from an actual irq
+> > > * assumptions not always true on SMP
+> > > 
+> > > The original task model was designed for PREEMPT_RT and this
+> > > patchset is
+> > > only tested on an upstream kernel with full preemption enabled.
+> > 
+> > I played with your additions a bit and I was able to enable/disable
+> > monitors, switch reactors, etc., w/o noticing any issue.
+> > 
 > 
-> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Thanks for trying it out!
 > 
-> There's a remark below, but it might not be an issue.
+> > I wonder if you also had ways to test that the monitors actually
+> > react
+> > properly in case of erroneous conditions (so that we can see a
+> > reactor
+> > actually react :).
+> > 
+> 
+> Well, in my understanding, reactors should fire if there is a problem
+> either in the kernel or in the model logic.
 
-With the "#include <limits.h>" changed to "#include <linux/limits.h>" 
-(see below):
-Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
-
-> 
->> ---
->>  drivers/gpu/drm/mgag200/Makefile          |   1 +
->>  drivers/gpu/drm/mgag200/mgag200_drv.c     |   4 +
->>  drivers/gpu/drm/mgag200/mgag200_drv.h     |   3 +
->>  drivers/gpu/drm/mgag200/mgag200_g200eh5.c | 205 ++++++++++++++++++++++
->>  4 files changed, 213 insertions(+)
->>  create mode 100644 drivers/gpu/drm/mgag200/mgag200_g200eh5.c
->>
->> diff --git a/drivers/gpu/drm/mgag200/Makefile b/drivers/gpu/drm/ 
->> mgag200/Makefile
->> index 5a02203fad12..94f063c8722a 100644
->> --- a/drivers/gpu/drm/mgag200/Makefile
->> +++ b/drivers/gpu/drm/mgag200/Makefile
->> @@ -6,6 +6,7 @@ mgag200-y := \
->>      mgag200_g200.o \
->>      mgag200_g200eh.o \
->>      mgag200_g200eh3.o \
->> +    mgag200_g200eh5.o \
->>      mgag200_g200er.o \
->>      mgag200_g200ev.o \
->>      mgag200_g200ew3.o \
->> diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.c b/drivers/gpu/drm/ 
->> mgag200/mgag200_drv.c
->> index 069fdd2dc8f6..32cd8ac018c0 100644
->> --- a/drivers/gpu/drm/mgag200/mgag200_drv.c
->> +++ b/drivers/gpu/drm/mgag200/mgag200_drv.c
->> @@ -214,6 +214,7 @@ static const struct pci_device_id 
->> mgag200_pciidlist[] = {
->>      { PCI_VENDOR_ID_MATROX, 0x534, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
->> G200_ER },
->>      { PCI_VENDOR_ID_MATROX, 0x536, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
->> G200_EW3 },
->>      { PCI_VENDOR_ID_MATROX, 0x538, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
->> G200_EH3 },
->> +    { PCI_VENDOR_ID_MATROX, 0x53a, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 
->> G200_EH5 },
->>      {0,}
->>  };
->>
->> @@ -256,6 +257,9 @@ mgag200_pci_probe(struct pci_dev *pdev, const 
->> struct pci_device_id *ent)
->>      case G200_EH3:
->>          mdev = mgag200_g200eh3_device_create(pdev, &mgag200_driver);
->>          break;
->> +    case G200_EH5:
->> +        mdev = mgag200_g200eh5_device_create(pdev, &mgag200_driver);
->> +        break;
->>      case G200_ER:
->>          mdev = mgag200_g200er_device_create(pdev, &mgag200_driver);
->>          break;
->> diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.h b/drivers/gpu/drm/ 
->> mgag200/mgag200_drv.h
->> index 0608fc63e588..819a7e9381e3 100644
->> --- a/drivers/gpu/drm/mgag200/mgag200_drv.h
->> +++ b/drivers/gpu/drm/mgag200/mgag200_drv.h
->> @@ -196,6 +196,7 @@ enum mga_type {
->>      G200_EV,
->>      G200_EH,
->>      G200_EH3,
->> +    G200_EH5,
->>      G200_ER,
->>      G200_EW3,
->>  };
->> @@ -334,6 +335,8 @@ struct mga_device 
->> *mgag200_g200eh_device_create(struct pci_dev *pdev,
->>                          const struct drm_driver *drv);
->>  struct mga_device *mgag200_g200eh3_device_create(struct pci_dev *pdev,
->>                           const struct drm_driver *drv);
->> +struct mga_device *mgag200_g200eh5_device_create(struct pci_dev *pdev,
->> +                         const struct drm_driver *drv);
->>  struct mga_device *mgag200_g200er_device_create(struct pci_dev *pdev,
->>                          const struct drm_driver *drv);
->>  struct mga_device *mgag200_g200ew3_device_create(struct pci_dev *pdev,
->> diff --git a/drivers/gpu/drm/mgag200/mgag200_g200eh5.c b/drivers/gpu/ 
->> drm/mgag200/mgag200_g200eh5.c
->> new file mode 100644
->> index 000000000000..2c4265293504
->> --- /dev/null
->> +++ b/drivers/gpu/drm/mgag200/mgag200_g200eh5.c
->> @@ -0,0 +1,205 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +
->> +#include <limits.h>
-> 
-> I'm skeptical of this line, as it looks like it pulls in a system 
-> header. But other drivers do the same, so it's OK, I guess.
-
-Good catch, most other drivers include <linux/limits.h>, which also have 
-ULLONG_MAX defined through include/vdso/limits.h:
-https://elixir.bootlin.com/linux/v6.13.1/source/include/linux/limits.h
-https://elixir.bootlin.com/linux/v6.13.1/source/include/vdso/limits.h
-
-Best regards,
-
-Jocelyn
-
-> 
-> Best regards
-> Thomas
-> 
->> +
->> +#include <linux/pci.h>
->> +#include <linux/units.h>
->> +
->> +#include <drm/drm_atomic.h>
->> +#include <drm/drm_atomic_helper.h>
->> +#include <drm/drm_drv.h>
->> +#include <drm/drm_gem_atomic_helper.h>
->> +#include <drm/drm_probe_helper.h>
->> +
->> +#include "mgag200_drv.h"
->> +
->> +/*
->> + * PIXPLLC
->> + */
->> +
->> +static int mgag200_g200eh5_pixpllc_atomic_check(struct drm_crtc *crtc,
->> +                        struct drm_atomic_state *new_state)
->> +{
->> +    const unsigned long long VCO_MAX = 10 * GIGA; // Hz
->> +    const unsigned long long VCO_MIN = 2500 * MEGA; // Hz
->> +    const unsigned long long PLL_FREQ_REF = 25 * MEGA; // Hz
->> +
->> +    struct drm_crtc_state *new_crtc_state = 
->> drm_atomic_get_new_crtc_state(new_state, crtc);
->> +    struct mgag200_crtc_state *new_mgag200_crtc_state = 
->> to_mgag200_crtc_state(new_crtc_state);
->> +    long clock = new_crtc_state->mode.clock;
->> +    struct mgag200_pll_values *pixpllc = &new_mgag200_crtc_state- 
->> >pixpllc;
->> +
->> +    unsigned long long fdelta = ULLONG_MAX;
->> +
->> +    u16 mult_max = (u16)(VCO_MAX / PLL_FREQ_REF); // 400 (0x190)
->> +    u16 mult_min = (u16)(VCO_MIN / PLL_FREQ_REF); // 100 (0x64)
->> +
->> +    u64 ftmp_delta;
->> +    u64 computed_fo;
->> +
->> +    u16 test_m;
->> +    u8 test_div_a;
->> +    u8 test_div_b;
->> +    u64 fo_hz;
->> +
->> +    u8 uc_m = 0;
->> +    u8 uc_n = 0;
->> +    u8 uc_p = 0;
->> +
->> +    fo_hz = (u64)clock * HZ_PER_KHZ;
->> +
->> +    for (test_m = mult_min; test_m <= mult_max; test_m++) { // This 
->> gives 100 <= M <= 400
->> +        for (test_div_a = 8; test_div_a > 0; test_div_a--) { // This 
->> gives 1 <= A <= 8
->> +            for (test_div_b = 1; test_div_b <= test_div_a; 
->> test_div_b++) {
->> +                // This gives 1 <= B <= A
->> +                computed_fo = (PLL_FREQ_REF * test_m) /
->> +                    (4 * test_div_a * test_div_b);
->> +
->> +                if (computed_fo > fo_hz)
->> +                    ftmp_delta = computed_fo - fo_hz;
->> +                else
->> +                    ftmp_delta = fo_hz - computed_fo;
->> +
->> +                if (ftmp_delta < fdelta) {
->> +                    fdelta = ftmp_delta;
->> +                    uc_m = (u8)(0xFF & test_m);
->> +                    uc_n = (u8)((0x7 & (test_div_a - 1))
->> +                        | (0x70 & (0x7 & (test_div_b - 1)) << 4));
->> +                    uc_p = (u8)(1 & (test_m >> 8));
->> +                }
->> +                if (fdelta == 0)
->> +                    break;
->> +            }
->> +            if (fdelta == 0)
->> +                break;
->> +        }
->> +        if (fdelta == 0)
->> +            break;
->> +    }
->> +
->> +    pixpllc->m = uc_m + 1;
->> +    pixpllc->n = uc_n + 1;
->> +    pixpllc->p = uc_p + 1;
->> +    pixpllc->s = 0;
->> +
->> +    return 0;
->> +    }
->> +
->> +/*
->> + * Mode-setting pipeline
->> + */
->> +
->> +static const struct drm_plane_helper_funcs 
->> mgag200_g200eh5_primary_plane_helper_funcs = {
->> +    MGAG200_PRIMARY_PLANE_HELPER_FUNCS,
->> +};
->> +
->> +static const struct drm_plane_funcs 
->> mgag200_g200eh5_primary_plane_funcs = {
->> +    MGAG200_PRIMARY_PLANE_FUNCS,
->> +};
->> +
->> +static const struct drm_crtc_helper_funcs 
->> mgag200_g200eh5_crtc_helper_funcs = {
->> +    MGAG200_CRTC_HELPER_FUNCS,
->> +};
->> +
->> +static const struct drm_crtc_funcs mgag200_g200eh5_crtc_funcs = {
->> +    MGAG200_CRTC_FUNCS,
->> +};
->> +
->> +static int mgag200_g200eh5_pipeline_init(struct mga_device *mdev)
->> +{
->> +    struct drm_device *dev = &mdev->base;
->> +    struct drm_plane *primary_plane = &mdev->primary_plane;
->> +    struct drm_crtc *crtc = &mdev->crtc;
->> +    int ret;
->> +
->> +    ret = drm_universal_plane_init(dev, primary_plane, 0,
->> +                       &mgag200_g200eh5_primary_plane_funcs,
->> +                       mgag200_primary_plane_formats,
->> +                       mgag200_primary_plane_formats_size,
->> +                       mgag200_primary_plane_fmtmods,
->> +                       DRM_PLANE_TYPE_PRIMARY, NULL);
->> +    if (ret) {
->> +        drm_err(dev, "drm_universal_plane_init() failed: %d\n", ret);
->> +        return ret;
->> +    }
->> +    drm_plane_helper_add(primary_plane, 
->> &mgag200_g200eh5_primary_plane_helper_funcs);
->> +    drm_plane_enable_fb_damage_clips(primary_plane);
->> +
->> +    ret = drm_crtc_init_with_planes(dev, crtc, primary_plane, NULL,
->> +                    &mgag200_g200eh5_crtc_funcs, NULL);
->> +    if (ret) {
->> +        drm_err(dev, "drm_crtc_init_with_planes() failed: %d\n", ret);
->> +        return ret;
->> +    }
->> +
->> +    drm_crtc_helper_add(crtc, &mgag200_g200eh5_crtc_helper_funcs);
->> +
->> +    /* FIXME: legacy gamma tables, but atomic gamma doesn't work 
->> without */
->> +    drm_mode_crtc_set_gamma_size(crtc, MGAG200_LUT_SIZE);
->> +    drm_crtc_enable_color_mgmt(crtc, 0, false, MGAG200_LUT_SIZE);
->> +    ret = mgag200_vga_bmc_output_init(mdev);
->> +
->> +    if (ret)
->> +        return ret;
->> +
->> +    return 0;
->> +}
->> +
->> +/*
->> + * DRM device
->> + */
->> +
->> +static const struct mgag200_device_info mgag200_g200eh5_device_info =
->> +    MGAG200_DEVICE_INFO_INIT(2048, 2048, 0, false, 1, 0, false);
->> +
->> +static const struct mgag200_device_funcs mgag200_g200eh5_device_funcs 
->> = {
->> +    .pixpllc_atomic_check = mgag200_g200eh5_pixpllc_atomic_check,
->> +    .pixpllc_atomic_update = mgag200_g200eh_pixpllc_atomic_update, // 
->> same as G200EH
->> +};
->> +
->> +struct mga_device *mgag200_g200eh5_device_create(struct pci_dev *pdev,
->> +                         const struct drm_driver *drv)
->> +{
->> +    struct mga_device *mdev;
->> +    struct drm_device *dev;
->> +    resource_size_t vram_available;
->> +    int ret;
->> +
->> +    mdev = devm_drm_dev_alloc(&pdev->dev, drv, struct mga_device, base);
->> +
->> +    if (IS_ERR(mdev))
->> +        return mdev;
->> +    dev = &mdev->base;
->> +
->> +    pci_set_drvdata(pdev, dev);
->> +
->> +    ret = mgag200_init_pci_options(pdev, 0x00000120, 0x0000b000);
->> +    if (ret)
->> +        return ERR_PTR(ret);
->> +
->> +    ret = mgag200_device_preinit(mdev);
->> +    if (ret)
->> +        return ERR_PTR(ret);
->> +
->> +    ret = mgag200_device_init(mdev, &mgag200_g200eh5_device_info,
->> +                  &mgag200_g200eh5_device_funcs);
->> +
->> +    if (ret)
->> +        return ERR_PTR(ret);
->> +
->> +    mgag200_g200eh_init_registers(mdev); // same as G200EH
->> +    vram_available = mgag200_device_probe_vram(mdev);
->> +
->> +    ret = mgag200_mode_config_init(mdev, vram_available);
->> +    if (ret)
->> +        return ERR_PTR(ret);
->> +
->> +    ret = mgag200_g200eh5_pipeline_init(mdev);
->> +    if (ret)
->> +        return ERR_PTR(ret);
->> +
->> +    drm_mode_config_reset(dev);
->> +    drm_kms_helper_poll_init(dev);
->> +
->> +    return mdev;
->> +}
-> 
+Right. I guess I wonder if we can find a way to inject kernel problems
+somehow, so that model(s) can be further tested explicitly thus making
+us confident that they will be able to identify real problems when they
+occur.
 
