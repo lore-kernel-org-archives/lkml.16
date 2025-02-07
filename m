@@ -1,93 +1,160 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D565F188907;
-	Fri,  7 Feb 2025 08:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906411632E6
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738917962; cv=none; b=VpZRfV3FCv2n04Vf3UYBDaGjfRKIF1XUCLho7iLzGCRo+qpbOQqd+U2CaELHPDS0Wi8Kyvw5pfBJhCHXpC1qEiaNiyfdpSgO3HrBD51pMhGDqDCUkO5BvBq1pG38KwtbbHUdqs4d1kMFXErDUtY/+CxVTPUuuE0uRPmdrU7r+6w=
+	t=1738918006; cv=none; b=G8Jm7aSxt6wGaTTm01nrBD69xHwmeBhGhisAtDmcb1qdmiZZWvoQI1qSqbnPgUt78v6rYcRZx4OeiHnYgmXbppakH3h1HEbczlo0QAsko7Ng4ihnq1BMiY4rt5Zgrf8MpERmA9KSMbS9D8n4W/vZDChtZTtzCXcGqPdnpwd3/pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738917962; c=relaxed/simple;
-	bh=tGH/LJHtSvltl/2wWnLMmTUYy7/N+jR8UJEBZDv1WmY=;
+	s=arc-20240116; t=1738918006; c=relaxed/simple;
+	bh=/PL3F+Odm8sDQkKZjBFX/dKsMg8zyOLm688XjDETz80=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yox0GqJsn9hdYapBgyur/zYFO6futkOjp24U+WZTmxQnkPZgd9wlXcs+su8lElGQxLjIiaSCLBgPf/I5LxfalrvAMB8EX/LLQwUZAFOH7ScmGdisjLye6iMhV0RtCDtvTHV9KspnBjcVIdFcUvgWKtPNCg/e1uIzozDuaSQ+gOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-866de72bb82so496551241.1;
-        Fri, 07 Feb 2025 00:45:59 -0800 (PST)
+	 To:Cc:Content-Type; b=nZF6z/mgan9b3qAEYGzOHNYLLmzvv2PxDQpBiL+Utndmyw2FtAdlgR+sxWVCGAQs/p4Ie8jhfUY7HIxnf0GbbYTMoaRVC/Ihn1OnH8br+BZIgme33eN2blrtknLjZ1w3BsO81jvtp+Y4bE8OqGWoZVSSvkc5fKQpFNgtuvwmSNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kkTkrQFC; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kkTkrQFC"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30613802a59so19950221fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 00:46:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738918003; x=1739522803; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QG4fsHlA6ZIYyL5J3zXb87BTeZ5glrN9fOoi7j2CduM=;
+        b=kkTkrQFCPWYLtgout9JHRJJC8tpVXpNXy5KCgtqd2KdXOjkQCEHTEeWfy+nhl6J2vQ
+         OHqF1QtsyWChcF11y3Ki5hEU9OJx5iej/alllh0QSj1i9+WwvPNUYcYt5mNiv98t6o+I
+         OY8XZdJ4H/r2A9pGz2dxDuXdiPqPtW3i43eK/FN6pvqHFuOV6u84XA0tYtRfB460efRj
+         ZrKDQVsPY2jccLgIjgPZf5tnwNKBvFnPjNDtP598v//vz1qYtEaucXYcdlSbchGDSugy
+         Rxolyh7eAZgQfDCJntEcODrwNCwJcD2pRf7H2p1m99aSArvjXOn+1dk73CsCDT0aHid8
+         pGUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738917958; x=1739522758;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PrfsSuBuxYDnwv4fDnJCi8TimNMLQ1Jpwnj01otBtek=;
-        b=EwtVRarLSt3eeaNB0xMGQe5KavEXqvNJjuJt20lweJsHXv47JAQBFdOJ5jl1QB5El2
-         HB+CWYYOWwzRiy5tF75NWTmjhP8HbOYnuZ67K0hevoyfitHmqm5jGOBN7VyeB291NIg5
-         aeVdVkdqsRUBlHY5JVVPK/a9k3UYQRajxceRiQKfet58jUcME2lgFbSXhRqH39tvuz2v
-         +DgLOUqom38SsEViw0dMjtHJGqpC8PrOXDHxClp2Qkdz6eppgbPqOAJEioKLk1Bf3KHQ
-         fJe8oHp77hLpCAIPahqwL8+ME9OUoaHkHkkHbIWrba5Q9JRNQ2eXe6UMIPqubbSlSHEZ
-         iVQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUkUeylctCNXOfb2YRcE7sJLDcxP9YIL0t0uWkDb3GjJ4/QECt0RPCeWqg9ESTdjOuoNMT6JXjrRDSqXgO9PiYEnAc=@vger.kernel.org, AJvYcCV9M38FJEdqgOv7A+s9zIgklGSF5COStrsSH6jY4zrkGzUtCAjQQRZV8Hta7F1VLAsIap14n3zqXeha@vger.kernel.org, AJvYcCVyPoLQ1m2pKmKIt7OccxaQCgvty3AxFjoXiggIGI3NN389Q9rSqH7HBheKatqVn/b1c96SxEzizYjCDdFJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywqch6S3ThJx2898QpuXP6dPBIZsWVEku4TEjRChzImpkp4PiA3
-	UqzUkq/XyelfjUkEizViCzvffHggPEEf1aqn/K8xwwsBUPExB3zyC9JfU4nF
-X-Gm-Gg: ASbGncsAKDwljW8tTvwIDxDYMOboLGvP1AIcXa1/qV6x1vtpPlOu0ex3Af9FNjH+8LJ
-	4aW+B+n2pe0mAGFH6CytYm/f67eP6ceUlvvnG8S3eTlQklcLVBNpItaUn01JDwkn57oJAnVVpwK
-	7zS2Fl815P1RFnmn7ox0OEZbaua2f2W5LQzrThpn3NbJuIEhyPcHdlhQjy+tSOIiFakcsfJNvZc
-	MSpAk6y9vAAkXqxSyn0OX7JKTcv6Q5NurJP37oUcKc+tFQne5F6OJeVhdkHoivxOjHTmnynPm43
-	0IGvgEAXuqhAADXk7uIsNlXksIUOTV7N2g0uWVPAjAYsydHbb5zX8Q==
-X-Google-Smtp-Source: AGHT+IGADgy4QmOQhKkQixBVY+Z7qJm2jORHkXbmNvjF7dVjQWSqdPOAFc0sCHaT27htkX8rLFEJZA==
-X-Received: by 2002:a05:6102:3907:b0:4b9:d227:a2e2 with SMTP id ada2fe7eead31-4ba85da60fdmr1182288137.3.1738917957714;
-        Fri, 07 Feb 2025 00:45:57 -0800 (PST)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ba77305d6csm555032137.29.2025.02.07.00.45.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 00:45:56 -0800 (PST)
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-866f771cd5bso389382241.0;
-        Fri, 07 Feb 2025 00:45:55 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU6x6ylH1ORKLR0v7KcKJ+r191xj1Wszb7IdHgcrJkK8mmo4xWxHvKC0HFC454cfQkKPRA5/STP/IWb@vger.kernel.org, AJvYcCVi4jgFjiGXRJMSvbz8b7KdKY1PigGA+6vKvjvrxjTsgQcoVTvErWGcJqh43u+IpmQkFCO7WyODAu37pp7exiLRMVw=@vger.kernel.org, AJvYcCXha5FIuaQl0wPu+/N8LwQfz0+QewQPOuHXph0wxYkg3bir7HqLw+zgc9YwrGFJD2Ia3LElkSpOIqWP+0Zq@vger.kernel.org
-X-Received: by 2002:a05:6102:158b:b0:4b1:2894:1048 with SMTP id
- ada2fe7eead31-4ba85e2de3fmr1311753137.10.1738917955556; Fri, 07 Feb 2025
- 00:45:55 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738918003; x=1739522803;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QG4fsHlA6ZIYyL5J3zXb87BTeZ5glrN9fOoi7j2CduM=;
+        b=AUgbZYDull2xoHkH2dfJ+2U4uXbX39fqGug9c6a7kU5eY1jnAXf9cJ0NGp5siXP1Ud
+         5oGUXlN0uGQa81lEPPbzH09gYRRnAqeYLQ+1bXr/u4YEFBDx9PBOSrZW7vaIOgDtTTBD
+         LIPsIum92H6ufw6q1XufeecS4rf5gRMhi/h84AVXoDDKTBG05ff5iHwFnSbU+gmUmvj3
+         FritCokvLoBN+7kZN0YQdwyL58PrGugE08gGJVPHDFH6wYcxUjC2dVCbk1GjZuakVd73
+         JDGBsdD1xwRuOgbP3AP3XaHikWJe4vt+xbxxj08tEYVB3GmuEFBpIYy4h8+oFJ1NbYmD
+         LG+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWDAMglds57yu4XCqj3ewylOFBVSS3fQrbzfBvgeJN9+PitC4C8l+Uk/CZH1UkPadyLG/WbXq2FwL502Ro=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfyVOwzwKTEDka5K1Wn9erKIx8qAI7gf6fk9+B1VJy7V3KB0E1
+	HFnq4AnsVPI9US1xnPJdd5eZknSqV6TQHG0mDvsbTBpvRZX0Bou6zmn9TvmfAdvNu6Kxtev46vj
+	r/j1tCZP6Z3KwO1V+VG+PMPKDblsmCa2JDl4DYw==
+X-Gm-Gg: ASbGncvLVorQFyCVQ32qaykHRnoi9FO/3eIHslHPXDfoE+2/hA1ZTRKoIncWu++T+n/
+	tvBjDpnbxzHZ0d6oBg9/kmYzL9VitdaEgsTOrxfKj0XbwKet9w7SPffQCHOnWKE7yHUZg0YOMEl
+	uZVFaycAgVLbhfQ3mfpztpy4xxT78=
+X-Google-Smtp-Source: AGHT+IEm0faBVdVl9PjoHwoJbVHYreUiIDgEOuDYoTNcEfQYuhaKkIrH8p9HKr5Sdn3D9dm5RKdAJZ4ezE2+znUjf1c=
+X-Received: by 2002:a2e:a10c:0:b0:302:3de5:b039 with SMTP id
+ 38308e7fff4ca-307e57bc6b9mr5403511fa.8.1738918002457; Fri, 07 Feb 2025
+ 00:46:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250131-myir-remi-pi-v3-0-2dda53e79291@collabora.com> <20250131-myir-remi-pi-v3-1-2dda53e79291@collabora.com>
-In-Reply-To: <20250131-myir-remi-pi-v3-1-2dda53e79291@collabora.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 7 Feb 2025 09:45:44 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX8wnzjUrEbo8+5z8SMw==doM4gy8OZ-vxzS3EbZ-0xyg@mail.gmail.com>
-X-Gm-Features: AWEUYZno8bC8Bv7xoq5IUzfC5Z36nN5bEmTAMbmgn4lpeJz3lTQwHEApyIY4Md4
-Message-ID: <CAMuHMdX8wnzjUrEbo8+5z8SMw==doM4gy8OZ-vxzS3EbZ-0xyg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: soc: renesas: Document MYIR Remi Pi board
-To: Julien Massot <julien.massot@collabora.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, kernel@collabora.com, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250204175659.150617-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250204175659.150617-1-andriy.shevchenko@linux.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 7 Feb 2025 09:46:31 +0100
+X-Gm-Features: AWEUYZkmBgMCpveGQvSr0D8McJ0InmKUA3IpAMEtZrdd4WfIVBN0a-0mnZDOhBQ
+Message-ID: <CAMRc=MeS1gCP2aNKs9xydqLQQnVbWHbVoSqTyLzVcENDFZYM=g@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Deduplicate some code in for_each_requested_gpio_in_range()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 31 Jan 2025 at 10:58, Julien Massot <julien.massot@collabora.com> wrote:
-> Document the MYIR Remi Pi" which is based on the Renesas
-> RZ/G2L ("R9A07G044L2") SoC.
+On Tue, Feb 4, 2025 at 6:57=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Julien Massot <julien.massot@collabora.com>
+> Refactor for_each_requested_gpio_in_range() to deduplicate some code
+> which is basically repeats the for_each_hwgpio(). In order to achieve
+> this, split the latter to two, for_each_hwgpio_in_range() and
+> for_each_hwgpio().
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  include/linux/gpio/driver.h | 21 +++++++++++----------
+>  1 file changed, 11 insertions(+), 10 deletions(-)
+>
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index a307d8ed9c51..24890ecfa0fb 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -549,20 +549,25 @@ DEFINE_CLASS(_gpiochip_for_each_data,
+>              const char **label, int *i)
+>
+>  /**
+> - * for_each_hwgpio - Iterates over all GPIOs for given chip.
+> + * for_each_hwgpio_in_range - Iterates over all GPIOs in a given range
+>   * @_chip: Chip to iterate over.
+>   * @_i: Loop counter.
+> + * @_base: First GPIO in the ranger.
+> + * @_size: Amount of GPIOs to check starting from @base.
+>   * @_label: Place to store the address of the label if the GPIO is reque=
+sted.
+>   *          Set to NULL for unused GPIOs.
+>   */
+> -#define for_each_hwgpio(_chip, _i, _label) \
+> +#define for_each_hwgpio_in_range(_chip, _i, _base, _size, _label)       =
+               \
+>         for (CLASS(_gpiochip_for_each_data, _data)(&_label, &_i); \
+> -            *_data.i < _chip->ngpio; \
+> +            *_data.i < _size;                                           =
+               \
+>              (*_data.i)++, kfree(*(_data.label)), *_data.label =3D NULL) =
+\
+>                 if (IS_ERR(*_data.label =3D \
+> -                       gpiochip_dup_line_label(_chip, *_data.i))) {} \
+> +                       gpiochip_dup_line_label(_chip, _base + *_data.i))=
+) {}           \
+>                 else
+>
 
-Thanks, will queue in renesas-devel for v6.15.
+Can you add a kerneldoc here as well, please?
 
-Gr{oetje,eeting}s,
+Bart
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> +#define for_each_hwgpio(_chip, _i, _label)                              =
+               \
+> +       for_each_hwgpio_in_range(_chip, _i, 0, _chip->ngpio, _label)
+> +
+>  /**
+>   * for_each_requested_gpio_in_range - iterates over requested GPIOs in a=
+ given range
+>   * @_chip:     the chip to query
+> @@ -572,12 +577,8 @@ DEFINE_CLASS(_gpiochip_for_each_data,
+>   * @_label:    label of current GPIO
+>   */
+>  #define for_each_requested_gpio_in_range(_chip, _i, _base, _size, _label=
+)              \
+> -       for (CLASS(_gpiochip_for_each_data, _data)(&_label, &_i);        =
+               \
+> -            *_data.i < _size;                                           =
+               \
+> -            (*_data.i)++, kfree(*(_data.label)), *_data.label =3D NULL) =
+                 \
+> -               if ((*_data.label =3D                                    =
+                 \
+> -                       gpiochip_dup_line_label(_chip, _base + *_data.i))=
+ =3D=3D NULL) {}   \
+> -               else if (IS_ERR(*_data.label)) {}                        =
+               \
+> +       for_each_hwgpio_in_range(_chip, _i, _base, _size, _label)        =
+               \
+> +               if (*_data.label =3D=3D NULL) {}                         =
+                   \
+>                 else
+>
+>  /* Iterates over all requested GPIO of the given @chip */
+> --
+> 2.43.0.rc1.1336.g36b5255a03ac
+>
