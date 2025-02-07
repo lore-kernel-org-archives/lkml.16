@@ -1,175 +1,169 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71951C1F12
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 10:01:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 981F01D31B8
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 10:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738922490; cv=none; b=QQvZD0nEMxaXSH6DThGsHT5IJzRCmrp6dqNClqTCos5ttw1vMd8iXboOyvgtMPTdf1HKIElSzpF7sO/xHmHkIEDhIpJxvkH/1W/mR9AxNRsmy/QtEeW9A4sh8K2V3Axm2//OACFCnQR8lPSP0omg1efDzZxlxjDcfKwYuBMVbBA=
+	t=1738922678; cv=none; b=rXAQKDx79PgZmNbxNHBtowpDJUP89qhYSG64Bhvc5tBeU+QNdeS1Vez1aBMkodTThChrEX/uB76litx3vh+5t/QdI58qtr+hUxF4zKKe9bYsFm1fbyQ/3y8O3QNb+f2D/D59oaV/IV4jgZzlsIfpi5L7+hPGYn/tMbZrIsWq7Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738922490; c=relaxed/simple;
-	bh=k4Iax+rVsxQ2OZILw0McvF0gD8dT6wLCmKggAsyIyjE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dURCHR66cxFb0rinbbVgnpJeQrJodoK+uFmxr/oW/9SMXIKsrx3+EMmadawXTIGiB51YwNRpKbWe02MiSnzCM6ae5DIdeSZvW5xv+1xWrVHG5aQgDzTrzltscnM+/29AiQPgfBExrN42fpDVSxolWS74DSA/H5QztiDv92SFVHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk; spf=pass smtp.mailfrom=rasmusvillemoes.dk; dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b=P+HaF7qw; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rasmusvillemoes.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="P+HaF7qw"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-544fee2f3d6so102726e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 02:01:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google; t=1738922487; x=1739527287; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:user-agent:message-id:date
-         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5bXaE9uM1wAIJE3wNAl6avT4onwqnNJr2t6nZiCghwI=;
-        b=P+HaF7qwGYWoKYLSZkZVnvvItwX/Dw2AX7A3G/DqcN/kGHwlrkCvFhdJLwHhwMm72z
-         uJ/C+L36E4Yw8B0yXOJZAMPq8Vmz2Pq+8KpiC/h64EdGo5GxQL3aQTf3TfsZQxdcstD+
-         ii54IRW6BlltPaKmwqhtO/s7DVuY+khxV6jUg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738922487; x=1739527287;
-        h=content-transfer-encoding:mime-version:user-agent:message-id:date
-         :references:in-reply-to:subject:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5bXaE9uM1wAIJE3wNAl6avT4onwqnNJr2t6nZiCghwI=;
-        b=OVkAORKl3I05iLFifV4Mm7oZc4Vk1yEOUr218BLRGGOSZy7rRwbzyLrUZLBGZi8gQU
-         b0KJC8c+vs3fZsuf1KqXCNteXU2I5rtxjc+gMPC6636qaXG6V+MTSgmqAaoe19J2oKPJ
-         EC3CdrSK896xia0J/OckZ4iXbJROcJsrJalT1bZlLHCUQdUS/5V2emh6aT/ShsMX4SFG
-         Z5/NiO4JtZ/C+6zb1rwiy5/V7TW9bdFPWCvHhFtrdKXIr5ffD5oZBxG5utgzUbMESOWO
-         EMTechq4Nf39x3z+QR5lrT1AIkTPNyRSvnHMGhReCNcqrz+6ShIP1hDTHrUymAzI0m9B
-         w/2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXYg9GSs5/Y+j8FN5abY2MuXZKTTKn3IyEqhvW9lzU/fNlQ9waWeSVq/+ZRVjcZ7XtSBqWS5ZcMJDKJMJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9KuHiwC4j/Z3zyiO2Sd9YRUDBr2cBPIa/nLJ0cy3nLT9tkAL4
-	z8xKs+90rMHa3oPtqOnruyJ5bMzxBvK5Xm5NjZYmwIv9AA5bdQth3adilZlT5URZPQohbNrNyut
-	Hxak=
-X-Gm-Gg: ASbGncv44ffHFozbnVmoiGGien9/dkn1+gg0I7WVBUHnnFBJYmqlMLsnx+3xbPNYgcX
-	facD4tVkVOJZE7nCV/oQOwr9RFfo5/E7GVHFUb7VfvPEtP2p8t5oGDrkbPiu6KgvTKWmQHusJZ3
-	FMUa9wfUe/762Ii98Gy/d/CUvFXu2Spva2cL3/c7Hclw2/k2AOXIoaNCTLk11gHcFIlyPkRVKrf
-	8ntCN0EXh4qD43L+1znJNWbtOLwyomftBA3s3qDF8tIb02oiyo9q9XpDXi+EmL+hmkBPNktktpF
-	xWaghyjFxu5QgmIn
-X-Google-Smtp-Source: AGHT+IFVC+fHVOR3o3VNmty7EZKqILMlaL5Bz5efSjdDmNBg7RVjDgnayqGUPxgvIQNjMG3MjFdD7g==
-X-Received: by 2002:ac2:5f6d:0:b0:53e:395c:688b with SMTP id 2adb3069b0e04-54414ae629dmr580950e87.47.1738922486685;
-        Fri, 07 Feb 2025 02:01:26 -0800 (PST)
-Received: from localhost ([81.216.59.226])
-        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-5441053ec2asm396233e87.49.2025.02.07.02.01.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 02:01:26 -0800 (PST)
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: David Gow <davidgow@google.com>,  Petr Mladek <pmladek@suse.com>,
-  Steven Rostedt <rostedt@goodmis.org>,  Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>,  Sergey Senozhatsky
- <senozhatsky@chromium.org>,  Andrew Morton <akpm@linux-foundation.org>,
-  Shuah Khan <shuah@kernel.org>,  linux-kernel@vger.kernel.org,
-  linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 0/2] printf: convert self-test to KUnit
-In-Reply-To: <CAJ-ks9kLmArqqPati8n0dwzhjccLmTuTHtkaSyf_F_1QXzCoRw@mail.gmail.com>
-	(Tamir Duberstein's message of "Thu, 6 Feb 2025 10:42:03 -0500")
-References: <20250204-printf-kunit-convert-v1-0-ecf1b846a4de@gmail.com>
-	<CAKwiHFi6SUCT7UjUTdKmLJ8kiAEqVg=d6ND60R05MJB85Eoj9w@mail.gmail.com>
-	<CAJ-ks9kLmArqqPati8n0dwzhjccLmTuTHtkaSyf_F_1QXzCoRw@mail.gmail.com>
-Date: Fri, 07 Feb 2025 11:01:25 +0100
-Message-ID: <87bjvers3u.fsf@prevas.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1738922678; c=relaxed/simple;
+	bh=1rXf4MmnOOia2nRJZ1m4OM7yvQpplpAVBWZo/sEV7dM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VhWpvNkMiDpWYqNfaR902BaGPJyoRDatk8DEcUDMx/nKgTPiuyglSeaioHENgr1m1PITsOtXN9ZU9LwnI4IK8ATnEnnu7zqi1J5EXcx6PeCruZ5PATECgpJSAr9tobT+X5kdYNfia3MsR96A+HU0V4RJ7TO8zuCbpUOvzr5VMko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABBE9106F;
+	Fri,  7 Feb 2025 02:04:58 -0800 (PST)
+Received: from [10.162.16.89] (a077893.blr.arm.com [10.162.16.89])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B212D3F63F;
+	Fri,  7 Feb 2025 02:04:30 -0800 (PST)
+Message-ID: <9a0d3009-18fc-4b53-941a-b6d830fce36a@arm.com>
+Date: Fri, 7 Feb 2025 15:34:27 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 12/16] arm64/mm: Support huge pte-mapped pages in vmap
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
+ <20250205151003.88959-13-ryan.roberts@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250205151003.88959-13-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 06 2025, Tamir Duberstein <tamird@gmail.com> wrote:
 
-> On Thu, Feb 6, 2025 at 4:27=E2=80=AFAM Rasmus Villemoes
-> <linux@rasmusvillemoes.dk> wrote:
->>
->> On Tue, 4 Feb 2025 at 20:36, Tamir Duberstein <tamird@gmail.com> wrote:
->> >
->> > This is one of just 3 remaining "Test Module" kselftests (the others
->> > being bitmap and scanf), the rest having been converted to KUnit.
->> >
->> > I tested this using:
->> >
->> > $ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=3D=
-1 printf
->> >
->> > I have also sent out a series converting scanf[0].
->> >
->> > Link: https://lore.kernel.org/all/20250204-scanf-kunit-convert-v3-0-38=
-6d7c3ee714@gmail.com/T/#u [0]
->> >
->>
->> Sorry, but NAK, not in this form.
->>
->> Please read the previous threads to understand what is wrong with this
->> mechanical approach. Not only is it wrong, it also actively makes the
->> test suite much less useful.
->>
->> https://lore.kernel.org/lkml/f408efbd-10f7-f1dd-9baa-0f1233cafffc@rasmus=
-villemoes.dk/
->> https://lore.kernel.org/lkml/876cc862-56f1-7330-f988-0248bec2fbad@rasmus=
-villemoes.dk/
->> https://lore.kernel.org/lkml/0ab618c7-8c5c-00ae-8e08-0c1b99f3bf5c@rasmus=
-villemoes.dk/
->>
->> I think the previous attempt was close to something acceptable (around
->> https://lore.kernel.org/lkml/57976ff4-7845-d721-ced1-1fe439000a9b@rasmus=
-villemoes.dk/),
->> but I don't know what happened to it.
->>
->> Rasmus
->
-> Thanks Rasmus, I wasn't aware of that prior effort. I've gone through
-> and adopted your comments - the result is a first patch that is much
-> smaller (104 insertions(+), 104 deletions(-)) and failure messages
-> that are quite close to what is emitted now. I've taken care to keep
-> all the control flow the same, as you requested. The previous
-> discussion concluded with a promise to send another patch which didn't
-> happen. May I send a v2 with these changes, or are there more
-> fundamental objections? I'll also cc Arpitha and Brendan. The new
-> failure output:
->
->     # ip4: EXPECTATION FAILED at lib/printf_kunit.c:95
-> vsnprintf(buf, 256, "%piS|%pIS", ...) wrote
-> '127.000.000.001|127.0.0.1', expected '127-000.000.001|127.0.0.1'
->     # ip4: EXPECTATION FAILED at lib/printf_kunit.c:95
-> vsnprintf(buf, 19, "%piS|%pIS", ...) wrote '127.000.000.001|12',
-> expected '127-000.000.001|12'
->     # ip4: EXPECTATION FAILED at lib/printf_kunit.c:131
-> kvasprintf(..., "%piS|%pIS", ...) returned
-> '127.000.000.001|127.0.0.1', expected '127-000.000.001|127.0.0.1'
 
-That certainly addresses one of my main objections; I really don't want to =
-see
-"memcmp(..., ...) =3D=3D 1, expected memcmp(..., ...) =3D=3D 0". And you sa=
-id
-you've kept the control flow/early returns the same, so that should also
-be ok.
+On 2/5/25 20:39, Ryan Roberts wrote:
+> Implement the required arch functions to enable use of contpte in the
+> vmap when VM_ALLOW_HUGE_VMAP is specified. This speeds up vmap
+> operations due to only having to issue a DSB and ISB per contpte block
+> instead of per pte. But it also means that the TLB pressure reduces due
+> to only needing a single TLB entry for the whole contpte block.
 
-I'll have to see the actual code, of course. In general, I find reading
-code using those KUNIT macros quite hard, because I'm not familiar with
-those macros and when I try to look up what they do they turn out to be
-defined in terms of other KUNIT macros 10 levels deep.
+Right.
 
-But that still leaves a few points. First, I really like that "388 test
-cases passed" tally or some other free-form summary (so that I can see
-that I properly hooked up, compiled, and ran a new testcase inside
-test_number(), so any kind of aggregation on those top-level test_* is
-too coarse).
+> 
+> Since vmap uses set_huge_pte_at() to set the contpte, that API is now
+> used for kernel mappings for the first time. Although in the vmap case
+> we never expect it to be called to modify a valid mapping so
+> clear_flush() should never be called, it's still wise to make it robust
+> for the kernel case, so amend the tlb flush function if the mm is for
+> kernel space.
 
-The other thing I want to know is if this would make it harder for me to
-finish up that "deterministic random testing" thing I wrote [*], but
-never got around to actually get it upstream. It seems like something
-that a framework like kunit could usefully provide out-of-the-box (which
-is why I attempted to get it into kselftest), but as long as I'd still
-be able to add in something like that, and get a "xxx failed, random
-seed used was 0xabcdef" line printed, and run the test again setting the
-seed explicitly to that 0xabcdef value, I'm good.
+Makes sense.
 
-[*] https://lore.kernel.org/lkml/20201025214842.5924-4-linux@rasmusvillemoe=
-s.dk/
+> 
+> Tested with vmalloc performance selftests:
+> 
+>   # kself/mm/test_vmalloc.sh \
+> 	run_test_mask=1
+> 	test_repeat_count=5
+> 	nr_pages=256
+> 	test_loop_count=100000
+> 	use_huge=1
+> 
+> Duration reduced from 1274243 usec to 1083553 usec on Apple M2 for 15%
+> reduction in time taken.
+> 
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+>  arch/arm64/include/asm/vmalloc.h | 40 ++++++++++++++++++++++++++++++++
+>  arch/arm64/mm/hugetlbpage.c      |  5 +++-
+>  2 files changed, 44 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/vmalloc.h b/arch/arm64/include/asm/vmalloc.h
+> index 38fafffe699f..fbdeb40f3857 100644
+> --- a/arch/arm64/include/asm/vmalloc.h
+> +++ b/arch/arm64/include/asm/vmalloc.h
+> @@ -23,6 +23,46 @@ static inline bool arch_vmap_pmd_supported(pgprot_t prot)
+>  	return !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
+>  }
+>  
+> +#define arch_vmap_pte_range_map_size arch_vmap_pte_range_map_size
+> +static inline unsigned long arch_vmap_pte_range_map_size(unsigned long addr,
+> +						unsigned long end, u64 pfn,
+> +						unsigned int max_page_shift)
+> +{
+> +	if (max_page_shift < CONT_PTE_SHIFT)
+> +		return PAGE_SIZE;
+> +
+> +	if (end - addr < CONT_PTE_SIZE)
+> +		return PAGE_SIZE;
+> +
+> +	if (!IS_ALIGNED(addr, CONT_PTE_SIZE))
+> +		return PAGE_SIZE;
+> +
+> +	if (!IS_ALIGNED(PFN_PHYS(pfn), CONT_PTE_SIZE))
+> +		return PAGE_SIZE;
+> +
+> +	return CONT_PTE_SIZE;
 
-Rasmus
+A small nit:
+
+Should the rationale behind picking CONT_PTE_SIZE be added here as an in code
+comment or something in the function - just to make things bit clear.
+
+> +}
+> +
+> +#define arch_vmap_pte_range_unmap_size arch_vmap_pte_range_unmap_size
+> +static inline unsigned long arch_vmap_pte_range_unmap_size(unsigned long addr,
+> +							   pte_t *ptep)
+> +{
+> +	/*
+> +	 * The caller handles alignment so it's sufficient just to check
+> +	 * PTE_CONT.
+> +	 */
+> +	return pte_valid_cont(__ptep_get(ptep)) ? CONT_PTE_SIZE : PAGE_SIZE;
+
+I guess it is safe to query the CONT_PTE from the mapped entry itself.
+
+> +}
+> +
+> +#define arch_vmap_pte_supported_shift arch_vmap_pte_supported_shift
+> +static inline int arch_vmap_pte_supported_shift(unsigned long size)
+> +{
+> +	if (size >= CONT_PTE_SIZE)
+> +		return CONT_PTE_SHIFT;
+> +
+> +	return PAGE_SHIFT;
+> +}
+> +
+>  #endif
+>  
+>  #define arch_vmap_pgprot_tagged arch_vmap_pgprot_tagged
+> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+> index 02afee31444e..a74e43101dad 100644
+> --- a/arch/arm64/mm/hugetlbpage.c
+> +++ b/arch/arm64/mm/hugetlbpage.c
+> @@ -217,7 +217,10 @@ static void clear_flush(struct mm_struct *mm,
+>  	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
+>  		___ptep_get_and_clear(mm, ptep, pgsize);
+>  
+> -	__flush_hugetlb_tlb_range(&vma, saddr, addr, pgsize, true);
+> +	if (mm == &init_mm)
+> +		flush_tlb_kernel_range(saddr, addr);
+> +	else
+> +		__flush_hugetlb_tlb_range(&vma, saddr, addr, pgsize, true);
+>  }
+>  
+>  void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+
+Otherwise LGTM.
+
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
