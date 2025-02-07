@@ -1,130 +1,107 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0F51EB194
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF49238D56;
+	Fri,  7 Feb 2025 15:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738941128; cv=none; b=h4B7zcJMUYnBeDpO9TWj3T6jy/mrvMyCAqZ+2sdk3gbG8OstV/WBc5v3VOsVNnw+AklhFbYAwcjKtG4QDr/YFdkkYCP92jAoj0R0Sc4r7K9SlwX3jruR49SqII4M3oNjp1rdgEliLxMF/cHd0fthtfC35vkO3/iici+F/jBGRvY=
+	t=1738941305; cv=none; b=j7dXGQrDkHyPDtV6lS6+DVB3ZvUf5Fdnr26cfwiMpj9a+XIjbZo7iG1NQgvFm7LEApRZtWxyQMn29oF5PW4OPiPYtZ0d8euQ8S4Hhw8jZS0i3Hpijr61JPQ3wPcJaiEHKf/iYfhNKVn7g2w0drlpAuvLP/QexMEq59xnqP4ZBOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738941128; c=relaxed/simple;
-	bh=7WeBIy2sejYk+BR4w9p25NFRkBTZIswmq3mry9An0iw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oRuDGPPSscO/EC9oIvC544wEvzI5X9j0f/s2BdoYNdoDo7w70i7tjbVqckbBXLQGR4tToVr23jHjDrQSvOXH6QC9VVmYFOPkGOW41quWsDaZwXKw0IgaarwSbWa8awAqKckG3TLLs1/vxBYI7OlxGIob2ky2TYCAQxNwwhUq8Mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M/Tk/r+P; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1738941305; c=relaxed/simple;
+	bh=4aQHZL17KzDSkEIgs4SxDbSylwmGyGTEP4iOI4qQiNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kwhA46/xzgYN9VlsD04Z+XpF5mOSaT/E1IBQgUfqHaIW4l29GdJBk9A14FZn1GVlRHI5Kaqc9Za4VmyULFkk9An8fmJNTyW1O5bWwaXYuVmWz4BbvNMkXiW392lTbsfKVYjFSkVdmExA0b/d9QfGATvwTANoPofkBdBwIBv4prE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=a00CFLc6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M/Tk/r+P"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fa166cf656so3249286a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 07:12:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738941126; x=1739545926; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LxVXEzr2oQzIGSnyax9BmL0hTrsx3WZN3f0e41uCa0k=;
-        b=M/Tk/r+PPIisRQBBW2/p+0l7LRkGjGwrCUiizFkYwTEZ2nC+Pwruubw8KKEke4lO6J
-         VzsJXYFOGxI4c89CzbMYIAdzaQ7EGNmkdV0K2kdIxBI3w9z96U/0SwhO5OrLe+w9NV7I
-         shq6baIghdCk5CkeRDALH4Fy6M7IZqkTbn6b/FjvJ6MWxRoU5ZzOUM5Rr63VrQ1lf/O9
-         xR+JuFTWuGCeqnHwgnU7ErAuqQvWWE1Nz0R9eUgLzMFs/FM19F8ty3VpWtrb5wZVTTn+
-         T3K+QJBDlfrOZh1r1uuY8KdpFSepD0abZWAmRoNxZr3+j8UPBoIjAuncs+VvGAlxouoC
-         A1Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738941126; x=1739545926;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LxVXEzr2oQzIGSnyax9BmL0hTrsx3WZN3f0e41uCa0k=;
-        b=C/UQqr+ti+IffiZMnfwL9+xuQMZ4t9owBALueAB6LV4g1g4TbrXTe5HQj45cgrcQsZ
-         OOXIcR8L+1D4+BSKiWh+Athzv1cvj94i80OCj2ZOuysEKse8OjoM7SJ3LlFyvdgvYoiI
-         y1FBBZpSZraYlX4MF4WcVvzJgmSovVvJY7oOX104evx4MIBUVlx/xOY5D62WwXK+vJ7A
-         +T4AclnDMJ9QYI8guX2u/AYh+7KSlcZdWhORwb7DCGlokndUsLoqyF1QddKkxB3XKl6L
-         +nq3Dq0cGsdkVGfkJsjQj5135wEU3B5J4Vl9YHTv8Vqd9ntX1XJ/jr3VlikiooxetvZJ
-         hr6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWuRwfou3Y+Qm/qzHbgnvBT6ls2LYofFtwrJTyauq6/2ThAjTIX+iEAmfHXnrY+YCrLre3Ir5XnoPU+7vU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyO1J2pQDghfrsRR11CVdYDCIeL+CscH9sHTes/QnfzTrikGTyq
-	LoWmSf6pu/zlk4fwOexYKA+Cn3/ypkc6Di8GhZWys89N8B/4gyBdf2Negl4HHO9lEXE5qiC+c7n
-	SLg==
-X-Google-Smtp-Source: AGHT+IFGLXHzNrNOdKG1czY4jTF73FsqIGqlSCN04qJ3RgdhuYV6jC13Lajj/ww4zk3yzh9N7Wq07gYnLLg=
-X-Received: from pjbee11.prod.google.com ([2002:a17:90a:fc4b:b0:2f2:e97a:e77f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1e41:b0:2ee:a583:e616
- with SMTP id 98e67ed59e1d1-2fa24064ed1mr5606353a91.9.1738941126259; Fri, 07
- Feb 2025 07:12:06 -0800 (PST)
-Date: Fri, 7 Feb 2025 07:12:04 -0800
-In-Reply-To: <20250207030931.1902-1-yan.y.zhao@intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="a00CFLc6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88C6FC4CED1;
+	Fri,  7 Feb 2025 15:15:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738941305;
+	bh=4aQHZL17KzDSkEIgs4SxDbSylwmGyGTEP4iOI4qQiNc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a00CFLc6+63VzLsCrBNcU53PO9PYnHW2NQdOPCX+M3szPPOvUJHMHu1KTeBogsbIg
+	 pAv5xKWw1FkT6KKa78sdMtVVGJe47rNZ+BWJkikb1dY2xP5uDnNgkWIj4Dc1ZGOgI6
+	 mYaALWiE5snTvQMunfN9V6nUylGydbOoGC0OWNI8=
+Date: Fri, 7 Feb 2025 16:15:01 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Lyude Paul <lyude@redhat.com>, rust-for-linux@vger.kernel.org,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] rust/kernel: Add faux device bindings
+Message-ID: <2025020721-squirt-jam-e7f9@gregkh>
+References: <20250207004049.178049-1-lyude@redhat.com>
+ <2025020702-garlic-kindly-8377@gregkh>
+ <Z6X56URWy8zSHV9i@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250207030640.1585-1-yan.y.zhao@intel.com> <20250207030931.1902-1-yan.y.zhao@intel.com>
-Message-ID: <Z6YixPh_j517vqcP@google.com>
-Subject: Re: [PATCH 4/4] KVM: x86/mmu: Free obsolete roots when pre-faulting SPTEs
-From: Sean Christopherson <seanjc@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: pbonzini@redhat.com, rick.p.edgecombe@intel.com, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6X56URWy8zSHV9i@pollux>
 
-On Fri, Feb 07, 2025, Yan Zhao wrote:
-> Always free obsolete roots when pre-faulting SPTEs in case it's called
-> after a root is invalidated (e.g., by memslot removal) but before any
-> vcpu_enter_guest() processing of KVM_REQ_MMU_FREE_OBSOLETE_ROOTS.
+On Fri, Feb 07, 2025 at 01:17:45PM +0100, Danilo Krummrich wrote:
+> On Fri, Feb 07, 2025 at 10:25:09AM +0100, Greg Kroah-Hartman wrote:
+> > On Thu, Feb 06, 2025 at 07:40:45PM -0500, Lyude Paul wrote:
+> > > +
+> > > +/// The registration of a faux device.
+> > > +///
+> > > +/// This type represents the registration of a [`struct faux_device`]. When an instance of this type
+> > > +/// is dropped, its respective faux device will be unregistered from the system.
+> > > +///
+> > > +/// # Invariants
+> > > +///
+> > > +/// `self.0` always holds a valid pointer to an initialized and registered [`struct faux_device`].
+> > > +///
+> > > +/// [`struct faux_device`]: srctree/include/linux/device/faux.h
+> > > +#[repr(transparent)]
+> > > +pub struct Registration(NonNull<bindings::faux_device>);
+> > > +
+> > > +impl Registration {
+> > > +    /// Create and register a new faux device with the given name.
+> > > +    pub fn new(name: &CStr) -> Result<Self> {
+> > > +        // SAFETY:
+> > > +        // - `name` is copied by this function into its own storage
+> > > +        // - `faux_ops` is safe to leave NULL according to the C API
+> > > +        let dev = unsafe { bindings::faux_device_create(name.as_char_ptr(), null()) };
+> > 
+> > I'm fine with null() here, but why wouldn't a rust binding want to allow
+> > this?  What's unique here that make it this way, or is it just that the
+> > current users you are thinking of don't care about it?
 > 
-> Lack of kvm_mmu_free_obsolete_roots() in this scenario can lead to
-> kvm_mmu_reload() failing to load a new root if the current root hpa is an
-> obsolete root (which is not INVALID_PAGE). Consequently,
-> kvm_arch_vcpu_pre_fault_memory() will retry infinitely due to the checking
-> of is_page_fault_stale().
+> This is what I meant when I mentioned allowing NULL for the faux_device_ops
+> allows us to simplify the Rust abstraction quite a bit.
 > 
-> It's safe to call kvm_mmu_free_obsolete_roots() even if there are no
-> obsolete roots or if it's called a second time when vcpu_enter_guest()
-> later processes KVM_REQ_MMU_FREE_OBSOLETE_ROOTS. This is because
-> kvm_mmu_free_obsolete_roots() sets an obsolete root to INVALID_PAGE and
-> will do nothing to an INVALID_PAGE.
-
-Why is userspace changing memslots while prefaulting?
-
+> Having probe() and remove() doesn't do a lot for us in this case in Rust other
+> than needing a separate faux::Driver trait with a corresponding faux::Adapter
+> implementation to handle those callbacks. It'd be an unnecessary indirection.
 > 
-> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 47fd3712afe6..72f68458049a 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -4740,7 +4740,12 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
->  	/*
->  	 * reload is efficient when called repeatedly, so we can do it on
->  	 * every iteration.
-> +	 * Before reload, free obsolete roots in case the prefault is called
-> +	 * after a root is invalidated (e.g., by memslot removal) but
-> +	 * before any vcpu_enter_guest() processing of
-> +	 * KVM_REQ_MMU_FREE_OBSOLETE_ROOTS.
->  	 */
-> +	kvm_mmu_free_obsolete_roots(vcpu);
->  	r = kvm_mmu_reload(vcpu);
->  	if (r)
->  		return r;
+> Do you see any advantage going through probe()?
 
-I would prefer to do check for obsolete roots in kvm_mmu_reload() itself, but
-keep the main kvm_check_request() so that the common case handles the resulting
-TLB flush without having to loop back around in vcpu_enter_guest().
+Only reason I implemented it was that we have a real user of it in the
+kernel that needed it, the regulator dummy driver.  Odds are we could
+rewrite the C code to not need it, but for now let's leave it.
 
-diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-index 050a0e229a4d..f2b36d32ef40 100644
---- a/arch/x86/kvm/mmu.h
-+++ b/arch/x86/kvm/mmu.h
-@@ -104,6 +104,9 @@ void kvm_mmu_track_write(struct kvm_vcpu *vcpu, gpa_t gpa, const u8 *new,
- 
- static inline int kvm_mmu_reload(struct kvm_vcpu *vcpu)
- {
-+       if (kvm_check_request(KVM_REQ_MMU_FREE_OBSOLETE_ROOTS, vcpu))
-+               kvm_mmu_free_obsolete_roots(vcpu);
-+
-        /*
-         * Checking root.hpa is sufficient even when KVM has mirror root.
-         * We can have either:
+If over time, no one else actually needs it, I'll refactor and remove
+the callbacks entirely after more of the tree is moved to the faux code.
 
+If you all don't need the callback, wonderful, I'll not complain :)
+
+thanks,
+
+greg k-h
