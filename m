@@ -1,195 +1,151 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C911DFE13;
-	Fri,  7 Feb 2025 11:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222A41DF260;
+	Fri,  7 Feb 2025 11:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738929258; cv=none; b=NDTmnDmIeLSvYCuFBL51FcsuYQVqzIqa5OoU/nKjrT4Y7xcJKQ5vZgPQBFS/a21QQj5uOoWgY/EGvxPqe25Uyq9c+yE2RioHZpQpj/C1vw8b4OuYXv1nux3MeRi9YWablXIRJlUL7JMeAY/gRBXIvKrR9ue3RhT6NO7m/MzyI5E=
+	t=1738929296; cv=none; b=ODLtM7nMufDGqojAdQFNZOFIHfLbNRaib7Fj5Wxtcbev6K2l2M56gtTJQ64riChUUNNX+FBK2KB6y7RYkVcJHHTGuZFMTquf0U4VzSD8vu8MEn8dgAZpl0zprlHeg77M0PxI1SfUkljCVPfLmXF1uYwup8hpGChq/ZZzU1+uOFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738929258; c=relaxed/simple;
-	bh=Pyd5SRnUMie88L9jistkzWSmfq632eo/gk+zpEzj8sA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NyokjEvJN9SGeqlgzF1y+JoIGEQSYvOfbL9NlLbCvTMbGA1d6O68TivhDZczZ4Igtdl98sGVjX1DAy3qi2r5I7O1ubEqJFdU85uV0z4vd5kqPFklVSc0UFgZBT+zoJAqX5dXpPuqXL/BzEdsd6RmZK0p++cYkAmHOS9xTgMwuOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=e96sY7yN; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="e96sY7yN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=qBgyeIjdQTZseichl9jEZRFND0lwQNXK1CbUo+ClCAs=; b=e96sY7yNrcMjl83QkNaI2XuE+v
-	6l06BTe+APtFmOkaSax+Cy5/7Trd0BDPm5XzBm2b0fImCKAQ3MUwa+4pKCNJAS0BaobsLxLRjpupk
-	9iugw+9MRbReEBEJmWRlnp9nuec+r7eJb2aKNY0+aN3q5Prv1+pHeVpIm/5U126iS4GcjDtVEfX7d
-	3gYJbif29jjZ5PEOgjN94xh7S4xTxWHC3enKCiv0Myoy8Dp46JmXm8SqduQrAj9L/NvbunZJUpRLB
-	BBtuAhGqC9DiCz5nb4TDZFqFPotcJ0XmEs5t2Fw4vBubGUcw4inuVg+y4INpUuMHJ8fkiRuNRo+1y
-	djBxDXHA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47734)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tgMvt-0005Vs-2p;
-	Fri, 07 Feb 2025 11:54:05 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tgMvr-0004QH-05;
-	Fri, 07 Feb 2025 11:54:03 +0000
-Date: Fri, 7 Feb 2025 11:54:02 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Byungho An <bh74.an@samsung.com>, Andrew Lunn <andrew@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v2 1/1] net: sxgbe: rework EEE handling based on
- PHY negotiation
-Message-ID: <Z6X0WsUaRw-P-QVt@shell.armlinux.org.uk>
-References: <20250207105610.1875327-1-o.rempel@pengutronix.de>
+	s=arc-20240116; t=1738929296; c=relaxed/simple;
+	bh=8SQg7TcF5hpBJJpgIKj3oXoAnUub+FtPN3W5PtDxUQA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TfuoR9D15IQB3L678DbTjJsQiZvGloWZFRrzwdol8zWQdcdcV/WdCCsNHTZFv+/jglc1U6jBrem08fAxEToFxispwo1sZlq0VvUUVcA98RbLwO/nNMaX5Z1JFLObJAy3J/lICd2K3lQ5XcVPU9t+NcclbrpT47zHtjq5UNWC3aI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EAB7C4CED1;
+	Fri,  7 Feb 2025 11:54:54 +0000 (UTC)
+Message-ID: <d22d2f35-bf04-4d0c-a94c-70dcc08a945e@xs4all.nl>
+Date: Fri, 7 Feb 2025 12:54:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207105610.1875327-1-o.rempel@pengutronix.de>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Media committers model postponed to 6.14 - Was: Re: [PATCH v3
+ 0/3] Document the new media-committer's model
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ workflows@vger.kernel.org
+References: <cover.1733131405.git.mchehab+huawei@kernel.org>
+ <b0843e80-c46c-4344-b9f1-1d3b57dd2bbe@xs4all.nl>
+ <20241203081958.6c186835@foz.lan>
+ <20241203112209.GR10736@pendragon.ideasonboard.com>
+ <20241203140712.57daa65f@foz.lan> <20241209091548.165e5152@foz.lan>
+Content-Language: en-US, nl
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ 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
+In-Reply-To: <20241209091548.165e5152@foz.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 09/12/2024 09:15, Mauro Carvalho Chehab wrote:
+> Em Tue, 3 Dec 2024 14:07:12 +0100
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+> 
+>>
+>> The idea is to gradually open media-committers to more people, as each
+>> phase succeeds, addressing infra, procedures, etc.
+>>
+>> My rough idea is to do:
+>>
+>> - Phase 0.99: beta testers;
+>> - Phase 1 is to invite people that regularly submit PRs;
+>> - Phase 2 is to invite other active maintainers;
+>> - Phase 3 (or 2?, TBD) to open for non-maintainers.
+>>
+>> We shouldn't rush it, as there are a lot to be done before opening it
+>> broadly. So, I would say that:
+>> - phase 0.99 would start in -rc2 (if things go well during this week); 
+>> - phase 1 may still happen on this merge window, but as there will be
+>>   only a few weeks between -rc2 and -rc6, and people usually get
+>>   holidays in Dec/Jan, it is more likely that it will start for
+>>   6.14-rc1, again if we didn't notice big issues on phase 0.99.
+>>
+>>   We should wait at least for a couple of releases on phase 1,
+>>   again to cleanup process and fine-tune infra. If things go well, 
+>>   we can move to phase 2.
+> 
+> After some discussions with Hans, we decided to postpone the
+> beta testers phase to the next kernel cycle. There are a couple of
+> reasons for that:
+> 
+> - This should give us more time to come up with a final version of 
+>   the media-committers documentation and agreement;
 
-A more in-depth review...
+Where are we with this? I haven't seen any updates since this post.
 
-On Fri, Feb 07, 2025 at 11:56:10AM +0100, Oleksij Rempel wrote:
-> @@ -228,7 +212,7 @@ static void sxgbe_get_ethtool_stats(struct net_device *dev,
->  	int i;
->  	char *p;
->  
-> -	if (priv->eee_enabled) {
-> +	if (dev->phydev->eee_active) {
->  		int val = phy_get_eee_err(dev->phydev);
->  
->  		if (val)
+Personally, I think the CI is ready for more committers, so it would be
+nice if we can get some experience with that.
 
-Why should the EEE error statistic be dependent on whether EEE has been
-negotiated? (I think a follow-up patch addressing this would be
-appropriate.)
+Regards,
 
-> diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-> index 12c8396b6942..8a385c92a6d1 100644
-> --- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-> +++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-> @@ -87,7 +87,7 @@ static void sxgbe_enable_eee_mode(const struct sxgbe_priv_data *priv)
->  		priv->hw->mac->set_eee_mode(priv->ioaddr);
->  }
->  
-> -void sxgbe_disable_eee_mode(struct sxgbe_priv_data * const priv)
-> +static void sxgbe_disable_eee_mode(struct sxgbe_priv_data * const priv)
->  {
->  	/* Exit and disable EEE in case of we are in LPI state. */
->  	priv->hw->mac->reset_eee_mode(priv->ioaddr);
+	Hans
 
-Looking at this function, I think it's buggy and needs fixing prior to
-this patch.
+> 
+> - This would also work better with regards to end of year's vacations,
+>   as they'll be affecting at least 2/3 -rc versions. Plus, we all have
+>   things to finish before such vacations. So, better to start fresh next
+>   year;
+> 
+> - Media CI still had issues with a patch series I submitted, as it picked
+>   the wrong baseline, causing CI to not test two patches that were
+>   applied on the top of media-committers/next branch. This was fixed
+>   by Ricardo, but it means that we may still need to polish CI before
+>   granting more people righs there.
+> 
+> With that, if we want to start the media committers for 6.14, we should
+> aim to close review this document by -rc6, or, at most, -rc7, getting 
+> the patches merged during the next merge window.
+> 
+> Regard
+> 
+> Thanks,
+> Mauro
+> 
 
-This function calls ->reset_eee_mode(), then synchronously deletes the
-timer.
-
-However, if the timer is running and fires after ->reset_eee_mode()
-has been called, and tx_path_in_lpi_mode is false, then
-sxgbe_eee_ctrl_timer() will execute, calling sxgbe_enable_eee_mode().
-This will then call set_eee_mode().
-
-In other words, this function is racy if not already called with
-tx_path_in_lpi_mode set true - and there are paths in this driver that
-does happen (just like in stmmac which I've been fixing - I suspect
-one or other driver copied the code since the structure and member
-names are identical.)
-
-I would suggest deleting the timer as the very first thing, much like
-what I did in:
-
-	net: stmmac: delete software timer before disabling LPI
-
-In fact, given the similarity with stmmac, it's probably worth looking
-through my stmmac EEE cleanup patch series, and deciding which of those
-changes also apply to sxgbe.
-
-... and given this, I ask again: should there be a generic
-software-timer EEE implementation so we're not having to patch multiple
-drivers for the same bug(s).
-
-> @@ -110,52 +110,25 @@ static void sxgbe_eee_ctrl_timer(struct timer_list *t)
->  	mod_timer(&priv->eee_ctrl_timer, SXGBE_LPI_TIMER(eee_timer));
->  }
->  
-> -/**
-> - * sxgbe_eee_init
-> - * @priv: private device pointer
-> - * Description:
-> - *  If the EEE support has been enabled while configuring the driver,
-> - *  if the GMAC actually supports the EEE (from the HW cap reg) and the
-> - *  phy can also manage EEE, so enable the LPI state and start the timer
-> - *  to verify if the tx path can enter in LPI state.
-> - */
-> -bool sxgbe_eee_init(struct sxgbe_priv_data * const priv)
-> +static void sxgbe_eee_adjust(struct sxgbe_priv_data *priv)
->  {
-> -	struct net_device *ndev = priv->dev;
-> -	bool ret = false;
-> +	struct phy_device *phydev = priv->dev->phydev;
->  
-> -	/* MAC core supports the EEE feature. */
-> -	if (priv->hw_cap.eee) {
-> -		/* Check if the PHY supports EEE */
-> -		if (phy_init_eee(ndev->phydev, true))
-> -			return false;
-> +	if (!priv->hw_cap.eee)
-> +		return;
->  
-> -		timer_setup(&priv->eee_ctrl_timer, sxgbe_eee_ctrl_timer, 0);
-> -		priv->eee_ctrl_timer.expires = SXGBE_LPI_TIMER(eee_timer);
-> +	if (phydev->enable_tx_lpi) {
->  		add_timer(&priv->eee_ctrl_timer);
-> -
->  		priv->hw->mac->set_eee_timer(priv->ioaddr,
->  					     SXGBE_DEFAULT_LPI_TIMER,
-> -					     priv->tx_lpi_timer);
-> -
-> -		pr_info("Energy-Efficient Ethernet initialized\n");
-> -
-> -		ret = true;
-> +					     phydev->eee_cfg.tx_lpi_timer);
-> +		priv->eee_enabled = true;
-> +	} else {
-> +		sxgbe_disable_eee_mode(priv);
-> +		priv->eee_enabled = false;
-
-Given what sxgbe_tx_all_clean() does, we need priv->eee_enabled set
-false and visible to sxgbe_tx_all_clean() before calling
-sxgbe_disable_eee_mode(), otherwise sxgbe_tx_all_clean() may race and
-add the eee_ctrl_timer back after sxgbe_disable_eee_mode() has
-removed it.
-
-> @@ -802,7 +785,7 @@ static void sxgbe_tx_all_clean(struct sxgbe_priv_data * const priv)
->  		sxgbe_tx_queue_clean(tqueue);
->  	}
->  
-> -	if ((priv->eee_enabled) && (!priv->tx_path_in_lpi_mode)) {
-> +	if (priv->eee_enabled && !priv->tx_path_in_lpi_mode) {
->  		sxgbe_enable_eee_mode(priv);
->  		mod_timer(&priv->eee_ctrl_timer, SXGBE_LPI_TIMER(eee_timer));
-
-As noted above, this can race with sxgbe_disable_eee_mode().
-
-Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
