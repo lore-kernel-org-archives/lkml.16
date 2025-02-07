@@ -1,44 +1,31 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA8417995E;
-	Fri,  7 Feb 2025 03:24:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.241.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7634EB51
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 03:25:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738898659; cv=none; b=ZWwDGdtozeW1aah7Urtapx2r8jjjYK9t2g7ywqlJqjG7kNaFRwxUjCYfzByO8gvCAwhLQwZLjW72AL+xo/dDirDKjSLiUwS2VtSx0/g+9nT0cmXELKEiGx7LQH/d+JMJNsTZmbf9KZ2VJHdVnkZvKvH8ZwDZKuobEXS/AziiT2c=
+	t=1738898749; cv=none; b=lVJSMCuP1rF/cOApvIBik0tDSs9roTkUIu3fAdWxlyspzzdN6GVJFOhUAnZ4t1b7A8TwMV6E83jlO6wVhVfQoEBQzk17f9RRfUQf/nInkUwTKzLqIS3JvZiggH+N1jR3td6v2JHup2EDKMik0O8OHlYf3AZkTTTv+ItggGjNAr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738898659; c=relaxed/simple;
-	bh=sAlLgDxhjRVjQ1K2sXr4ARtue1aL8XbbDctOT0sc1vc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kmFRA6qCKlreNHl3JJf4hQHKVQSj7+b5A4qBIdoliEDRxNQv3hz20jXSQKDv8wdHHIYdKmsNTp3FMg1rr3TCCdgAOjca5P8mh5h4ZH377mkETjcWDhMv1H14y5CuKKzxXOpEta2vv++vkxcp0c5zGzASiNf0PV5viJXhF5abcjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=ox98C2Rd; arc=none smtp.client-ip=159.100.241.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="ox98C2Rd"
-Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [151.80.165.199])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id 3CC3820063;
-	Fri,  7 Feb 2025 03:24:06 +0000 (UTC)
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay2.mymailcheap.com (Postfix) with ESMTPS id DAE983E885;
-	Fri,  7 Feb 2025 03:23:57 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id EF9A8400D6;
-	Fri,  7 Feb 2025 03:23:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1738898636; bh=sAlLgDxhjRVjQ1K2sXr4ARtue1aL8XbbDctOT0sc1vc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ox98C2RdkKuJIDs11ZRNK/0gQKBeNTxpg7CU/Fvh7KqpEXOazZSaQi30ZhaHo2Ge3
-	 xLsaP6BZBmJESPJlwDk9PJDF3VT4AKjoekuiKtd+hRZIXIpqq1ozSIgXdPewcy5mfk
-	 M28fjdW1ECPbEAZqD74rQ91C3ju473el0k4tKtDY=
-Received: from [172.29.0.1] (unknown [203.175.14.48])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 77A164389B;
-	Fri,  7 Feb 2025 03:23:51 +0000 (UTC)
-Message-ID: <0ca08039-73fb-4c4b-ad10-15be8129d1b7@aosc.io>
-Date: Fri, 7 Feb 2025 11:23:46 +0800
+	s=arc-20240116; t=1738898749; c=relaxed/simple;
+	bh=lCJMVTtmIqX2p+1zktT1pNigGpr+6RKOBcSXm0lUWAc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=lP/ZqWQrlt+/Dlx/L9ttKWz9lahBV8/Ves7aURPqdBCkWppUFDtwCaPNzO9QpsEgow2pjTpXg353ZZfIV0tCNfQ6HRNsptXFvWOFHQWKwjzYQMwP5/U7h+5rm8XjuT6xvKMOEExBoqYto8UBeOPEAIz+H8dQH1epOOuoivzpZWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Ypzm64pmnz1l0nQ;
+	Fri,  7 Feb 2025 11:21:58 +0800 (CST)
+Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8FE45180216;
+	Fri,  7 Feb 2025 11:25:37 +0800 (CST)
+Received: from [10.159.166.136] (10.159.166.136) by
+ kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Fri, 7 Feb 2025 11:25:36 +0800
+Message-ID: <0c856c5b-56e1-413d-bb2b-55ba0a2c9258@huawei.com>
+Date: Fri, 7 Feb 2025 11:25:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,277 +33,601 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] USB: core: Enable root_hub's remote wakeup for wakeup
- sources
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Huacai Chen
- <chenhuacai@loongson.cn>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Kexy Biscuit <kexybiscuit@aosc.io>
-References: <20250131100630.342995-1-chenhuacai@loongson.cn>
- <2f583e59-5322-4cac-aaaf-02163084c32c@rowland.harvard.edu>
- <CAAhV-H7Dt1bEo8qcwfVfcjTOgXSKW71D19k3+418J6CtV3pVsQ@mail.gmail.com>
- <fbe4a6c4-f8ba-4b5b-b20f-9a2598934c42@rowland.harvard.edu>
- <61fecc0b-d5ac-4fcb-aca7-aa84d8219493@rowland.harvard.edu>
- <2a8d65f4-6832-49c5-9d61-f8c0d0552ed4@aosc.io>
- <06c81c97-7e5f-412b-b6af-04368dd644c9@rowland.harvard.edu>
- <6838de5f-2984-4722-9ee5-c4c62d13911b@aosc.io>
- <6363c5ba-c576-42a8-8a09-31d55768618c@rowland.harvard.edu>
- <9f363d74-24ce-43fe-b0e3-7aef5000abb3@aosc.io>
- <425bf21b-8aa6-4de0-bbe4-c815b9df51a7@rowland.harvard.edu>
-Content-Language: en-US
-From: Mingcong Bai <jeffbai@aosc.io>
-In-Reply-To: <425bf21b-8aa6-4de0-bbe4-c815b9df51a7@rowland.harvard.edu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: EF9A8400D6
-X-Rspamd-Server: nf2.mymailcheap.com
-X-Spamd-Result: default: False [-0.10 / 10.00];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Action: no action
+Subject: Re: [PATCH v1 drm-dp 3/4] drm/hisilicon/hibmc: Add debugfs interface
+ to enable colorbar feature and get link status
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<kong.kongxinwei@hisilicon.com>, <liangjian010@huawei.com>,
+	<chenjianmin@huawei.com>, <lidongming5@huawei.com>, <libaihan@huawei.com>,
+	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+	<shiyongbang@huawei.com>
+References: <20250127032024.1542219-1-shiyongbang@huawei.com>
+ <20250127032024.1542219-4-shiyongbang@huawei.com>
+ <wvulxrhuyzcsy5dwe7oaipjklqfgsurlkb74szungtq3vsvgs3@73v2lesfdvee>
+ <4594feeb-abbd-4f73-b2e9-d375acf3d9c2@huawei.com>
+ <AF758F07-1121-4A3F-8A51-85DA530A8B57@linaro.org>
+From: Yongbang Shi <shiyongbang@huawei.com>
+In-Reply-To: <AF758F07-1121-4A3F-8A51-85DA530A8B57@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemd500013.china.huawei.com (7.221.188.12)
 
-Hi Alan,
-
-在 2025/2/7 05:20, Alan Stern 写道:
-> On Thu, Feb 06, 2025 at 11:49:49AM +0800, Mingcong Bai wrote:
->> On both unpatched and patched kernels, I have set power/control to "auto"
->> for both the root hub and the external hub and left the keyboard for 60
->> seconds. Regardless if I plug the keyboard into the chassis or the external
->> hub, the keyboard continues to work from the first key strike (no delay or
->> lost input).
-> 
-> It's not necessary to wait 60 seconds; 10 seconds would be enough.
-> 
-> For the case where the keyboard is plugged into the hub, it would be
-> best if you removed the r8152 device (network or wifi, I guess).
-> Leaving it plugged in will prevent the external hub from going into
-> runtime suspend unless the network interface is turned off.
-> 
-> You can check whether these devices have gone into runtime suspend by
-> looking at the contents of the .../power/runtime_status attribute
-> file.  There are a couple of ways you can do this without disturbing the
-> keyboard's status, such as by using ssh or by doing something like:
-> 
-> 	sleep 10 ; cat .../power/runtime_status
-> 
-> Or if you want to see the status of all your USB devices,
-> 
-> 	sleep 10 ; grep . /sys/bus/usb/devices/*/power/runtime_status
-> 
-
-Got it, thanks for the tip.
-
->>> This means there's something different between the way the keyboard
->>> sends its wakeup signal and the way the Genesys Logic hub sends its
->>> wakeup signal.
+> On 5 February 2025 10:18:00 EET, Yongbang Shi <shiyongbang@huawei.com> wrote:
+>>> On Mon, Jan 27, 2025 at 11:20:23AM +0800, Yongbang Shi wrote:
+>>>> From: Baihan Li <libaihan@huawei.com>
+>>>>
+>>>> Create 3 files in drm debugfs:
+>>> This definitely needs to be split.
+>> Hi Dmitry,
+>>
+>> Right, I got it. I will split any patch which has mutiple fileds changing blended together.
+>>
+>>
+>>>> colorbar-cfg: Get/Set colorbar cfg
+>>> What does that mean?
 >>>
->>> Can you post the output from "lsusb -t" for this system?
+>> It's a dp's color bar output, and we have a configuration that
+>> we can set color bar's color type and stripe movement.
+> What is a DP colour bar?
+
+Hi Dmitry,
+
+Thanks for your asking. Color bar displaying is our DP IP controller's feature. It can be used as a debug method which can check DP controller is working good.
+
+The colorbar displaying doesn't rely on other IPs work in the chip, like: GPU or DDR (vram), becuase colorbar diplaying data generated inside DP controller self.
+
+
 >>
->> Keyboard plugged into the chassis:
+>>>> hibmc-dp: Get dp link status
+>>>> hibmc-dp-edid: Print edid information
+>>> edid-decode /sys/class/drm/card0-DP-1/edid ?
+>> Yeah, we can directly use "cat" to print edid info by it. I will add comments and
+>> example in next series git log.
+> What is the benefit in having a nonstandard EDID decoder in the kernel if you can use cat to get hexdump from sysfs and then use any of the tools available for EDID deciding?
+
+Alright, I will delete the edid decoder part.
+
+Thanks,
+Baihan.
+
+
 >>
->> /:  Bus 001.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
->>      |__ Port 001: Dev 002, If 0, Class=Human Interface Device,
->> Driver=usbhid, 1.5M
->> /:  Bus 002.Port 001: Dev 001, Class=root_hub, Driver=ehci-pci/6p, 480M
->> /:  Bus 003.Port 001: Dev 001, Class=root_hub, Driver=ehci-pci/6p, 480M
->> /:  Bus 004.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
->> /:  Bus 005.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
->> /:  Bus 006.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
->> /:  Bus 007.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
->> /:  Bus 008.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
->>
->> Keyboard plugged into the hub:
->>
->> /:  Bus 001.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
->> /:  Bus 002.Port 001: Dev 001, Class=root_hub, Driver=ehci-pci/6p, 480M
->>      |__ Port 001: Dev 003, If 0, Class=Hub, Driver=hub/4p, 480M
->>          |__ Port 001: Dev 004, If 0, Class=Vendor Specific Class,
->> Driver=r8152, 480M
->>          |__ Port 004: Dev 005, If 0, Class=Human Interface Device,
->> Driver=usbhid, 1.5M
-> 
-> Ah, okay, there's an important difference.  The hub connects to an EHCI
-> controller whereas the keyboard by itself connects to UHCI.
-> 
-> Also the output from "grep . /sys/bus/usb/devices/*/serial"?
-> 
-> And the contents of /sys/kernel/debug/usb/uhci/0000:00:1d.0?
-> 
-
-The enumerated USB tree changed (now to a controller at 1a.0) so I have 
-reproduced a new set of outputs (also for the log you requested below).
-
-`lsusb -t`:
-
-/:  Bus 001.Port 001: Dev 001, Class=root_hub, Driver=ehci-pci/6p, 480M
-/:  Bus 002.Port 001: Dev 001, Class=root_hub, Driver=ehci-pci/6p, 480M
-/:  Bus 003.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
-     |__ Port 001: Dev 002, If 0, Class=Human Interface Device, 
-Driver=usbhid, 1.5M
-/:  Bus 004.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
-/:  Bus 005.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
-/:  Bus 006.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
-/:  Bus 007.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
-/:  Bus 008.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
-
-`grep . /sys/bus/usb/devices/*/serial`:
-
-/sys/bus/usb/devices/usb1/serial:0000:00:1a.7
-/sys/bus/usb/devices/usb2/serial:0000:00:1d.7
-/sys/bus/usb/devices/usb3/serial:0000:00:1a.0
-/sys/bus/usb/devices/usb4/serial:0000:00:1a.1
-/sys/bus/usb/devices/usb5/serial:0000:00:1a.2
-/sys/bus/usb/devices/usb6/serial:0000:00:1d.0
-/sys/bus/usb/devices/usb7/serial:0000:00:1d.1
-/sys/bus/usb/devices/usb8/serial:0000:00:1d.2
-
-`cat /sys/kernel/debug/usb/uhci/0000:00:1a.0`:
-Root-hub state: running   FSBR: 0
-HC status
-   usbcmd    =     00c1   Maxp64 CF RS
-   usbstat   =     0000
-   usbint    =     000f
-   usbfrnum  =   (1)c14
-   flbaseadd = 03147c14
-   sof       =       40
-   stat1     =     01a5   LowSpeed Enabled Connected
-   stat2     =     0080
-Most recent frame: 6fe6f (623)   Last ISO frame: 6fe6f (623)
-Periodic load table
-	0	0	0	0	118	0	0	0
-	0	0	0	0	118	0	0	0
-	0	0	0	0	118	0	0	0
-	0	0	0	0	118	0	0	0
-Total: 472, #INT: 1, #ISO: 0
-
->> /:  Bus 003.Port 001: Dev 001, Class=root_hub, Driver=ehci-pci/6p, 480M
->> /:  Bus 004.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
->> /:  Bus 005.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
->> /:  Bus 006.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
->> /:  Bus 007.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
->> /:  Bus 008.Port 001: Dev 001, Class=root_hub, Driver=uhci_hcd/2p, 12M
->>
+>>>> Signed-off-by: Baihan Li <libaihan@huawei.com>
+>>>> Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
+>>>> ---
+>>>>    drivers/gpu/drm/hisilicon/hibmc/Makefile      |   3 +-
+>>>>    drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h  |   3 +
+>>>>    drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    |  58 +++++
+>>>>    drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h    |  44 ++++
+>>>>    drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c  |  40 +++-
+>>>>    drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h   |   4 +-
+>>>>    .../drm/hisilicon/hibmc/hibmc_drm_debugfs.c   | 214 ++++++++++++++++++
+>>>>    .../gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c    |   2 +
+>>>>    .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   |   3 +
+>>>>    .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |   2 +
+>>>>    10 files changed, 363 insertions(+), 10 deletions(-)
+>>>>    create mode 100644 drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c
+>>>>
+>>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/Makefile b/drivers/gpu/drm/hisilicon/hibmc/Makefile
+>>>> index 35a74cc10c80..c14f5182c067 100644
+>>>> --- a/drivers/gpu/drm/hisilicon/hibmc/Makefile
+>>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/Makefile
+>>>> @@ -1,5 +1,6 @@
+>>>>    # SPDX-License-Identifier: GPL-2.0-only
+>>>>    hibmc-drm-y := hibmc_drm_drv.o hibmc_drm_de.o hibmc_drm_vdac.o hibmc_drm_i2c.o \
+>>>> -	       dp/dp_aux.o dp/dp_link.o dp/dp_hw.o dp/dp_phy.o hibmc_drm_dp.o
+>>>> +	       dp/dp_aux.o dp/dp_link.o dp/dp_hw.o dp/dp_phy.o hibmc_drm_dp.o \
+>>>> +	       hibmc_drm_debugfs.o
+>>>>      obj-$(CONFIG_DRM_HISI_HIBMC) += hibmc-drm.o
+>>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h
+>>>> index 7edcecd5a5f0..67f6c81a35ed 100644
+>>>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h
+>>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h
+>>>> @@ -26,6 +26,9 @@ struct hibmc_link_status {
+>>>>    struct hibmc_link_cap {
+>>>>    	u8 link_rate;
+>>>>    	u8 lanes;
+>>>> +	int rx_dpcd_revision;
+>>>> +	bool is_tps3;
+>>>> +	bool is_tps4;
+>>>>    };
+>>>>      struct hibmc_dp_link {
+>>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
+>>>> index 50050908606f..9c8b91ff0e3b 100644
+>>>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
+>>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
+>>>> @@ -226,3 +226,61 @@ int hibmc_dp_mode_set(struct hibmc_dp *dp, struct drm_display_mode *mode)
+>>>>      	return 0;
+>>>>    }
+>>>> +
+>>>> +u8 hibmc_dp_get_link_rate(struct hibmc_dp *dp)
+>>>> +{
+>>>> +	return dp->dp_dev->link.cap.link_rate;
+>>>> +}
+>>>> +
+>>>> +u8 hibmc_dp_get_lanes(struct hibmc_dp *dp)
+>>>> +{
+>>>> +	return dp->dp_dev->link.cap.lanes;
+>>>> +}
+>>>> +
+>>>> +int hibmc_dp_get_dpcd(struct hibmc_dp *dp)
+>>>> +{
+>>>> +	return dp->dp_dev->link.cap.rx_dpcd_revision;
+>>>> +}
+>>>> +
+>>>> +static const struct hibmc_dp_color_raw g_rgb_raw[] = {
+>>>> +	{CBAR_COLOR_BAR, 0x000, 0x000, 0x000},
+>>>> +	{CBAR_WHITE,     0xfff, 0xfff, 0xfff},
+>>>> +	{CBAR_RED,       0xfff, 0x000, 0x000},
+>>>> +	{CBAR_ORANGE,    0xfff, 0x800, 0x000},
+>>>> +	{CBAR_YELLOW,    0xfff, 0xfff, 0x000},
+>>>> +	{CBAR_GREEN,     0x000, 0xfff, 0x000},
+>>>> +	{CBAR_CYAN,      0x000, 0x800, 0x800},
+>>>> +	{CBAR_BLUE,      0x000, 0x000, 0xfff},
+>>>> +	{CBAR_PURPLE,    0x800, 0x000, 0x800},
+>>>> +	{CBAR_BLACK,     0x000, 0x000, 0x000},
+>>>> +};
+>>>> +
+>>>> +void hibmc_dp_set_cbar(struct hibmc_dp *dp, const struct hibmc_dp_cbar_cfg *cfg)
+>>>> +{
+>>>> +	struct hibmc_dp_dev *dp_dev = dp->dp_dev;
+>>>> +	struct hibmc_dp_color_raw raw_data;
+>>>> +
+>>>> +	if (cfg->enable) {
+>>>> +		hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(9),
+>>>> +					 cfg->self_timing);
+>>>> +		hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, GENMASK(8, 1),
+>>>> +					 cfg->dynamic_rate);
+>>>> +		if (cfg->pattern == CBAR_COLOR_BAR) {
+>>>> +			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(10), 0);
+>>>> +		} else {
+>>>> +			raw_data = g_rgb_raw[cfg->pattern];
+>>>> +			drm_dbg_dp(dp->drm_dev, "r:%x g:%x b:%x\n", raw_data.r_value,
+>>>> +				   raw_data.g_value, raw_data.b_value);
+>>>> +			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(10), 1);
+>>>> +			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, GENMASK(23, 12),
+>>>> +						 raw_data.r_value);
+>>>> +			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL1, GENMASK(23, 12),
+>>>> +						 raw_data.g_value);
+>>>> +			hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL1, GENMASK(11, 0),
+>>>> +						 raw_data.b_value);
+>>>> +		}
+>>>> +	}
+>>>> +
+>>>> +	hibmc_dp_reg_write_field(dp_dev, HIBMC_DP_COLOR_BAR_CTRL, BIT(0), cfg->enable);
+>>>> +	writel(HIBMC_DP_SYNC_EN_MASK, dp_dev->base + HIBMC_DP_TIMING_SYNC_CTRL);
+>>>> +}
+>>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
+>>>> index 53b6d0beecea..f2f59f2feb3c 100644
+>>>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
+>>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
+>>>> @@ -14,6 +14,44 @@
+>>>>      struct hibmc_dp_dev;
+>>>>    +enum hibmc_dp_cbar_pattern {
+>>>> +	CBAR_COLOR_BAR,
+>>>> +	CBAR_WHITE,
+>>>> +	CBAR_RED,
+>>>> +	CBAR_ORANGE,
+>>>> +	CBAR_YELLOW,
+>>>> +	CBAR_GREEN,
+>>>> +	CBAR_CYAN,
+>>>> +	CBAR_BLUE,
+>>>> +	CBAR_PURPLE,
+>>>> +	CBAR_BLACK,
+>>>> +};
+>>>> +
+>>>> +struct hibmc_dp_color_raw {
+>>>> +	enum hibmc_dp_cbar_pattern pattern;
+>>>> +	u32 r_value;
+>>>> +	u32 g_value;
+>>>> +	u32 b_value;
+>>>> +};
+>>>> +
+>>>> +struct hibmc_dp_cbar_cfg {
+>>>> +	bool enable;
+>>>> +	bool self_timing;
+>>>> +	u8 dynamic_rate; /* 0:static, 1-255(frame):dynamic */
+>>>> +	enum hibmc_dp_cbar_pattern pattern;
+>>>> +};
+>>>> +
+>>>> +enum hibmc_dp_hpd_status {
+>>>> +	HIBMC_DP_HPD_DETECTING,
+>>>> +	HIBMC_DP_HPD_IN,
+>>>> +	HIBMC_DP_HPD_OUT,
+>>>> +	HIBMC_DP_HPD_SHORT, /* Short hpd (irq_hpd) */
+>>>> +	HIBMC_DP_HPD_DET_FAIL,
+>>>> +	HIBMC_DP_HPD_IN_SIMULATE,
+>>>> +	HIBMC_DP_HPD_OUT_SIMULATE,
+>>>> +	HIBMC_DP_HPD_SHORT_SIMULATE,
+>>>> +};
+>>>> +
+>>>>    struct hibmc_dp {
+>>>>    	struct hibmc_dp_dev *dp_dev;
+>>>>    	struct drm_device *drm_dev;
+>>>> @@ -21,10 +59,16 @@ struct hibmc_dp {
+>>>>    	struct drm_connector connector;
+>>>>    	void __iomem *mmio;
+>>>>    	struct drm_dp_aux aux;
+>>>> +	struct hibmc_dp_cbar_cfg cfg;
+>>>> +	bool is_inited;
+>>>>    };
+>>>>      int hibmc_dp_hw_init(struct hibmc_dp *dp);
+>>>>    int hibmc_dp_mode_set(struct hibmc_dp *dp, struct drm_display_mode *mode);
+>>>>    void hibmc_dp_display_en(struct hibmc_dp *dp, bool enable);
+>>>> +int hibmc_dp_get_dpcd(struct hibmc_dp *dp);
+>>>> +u8 hibmc_dp_get_link_rate(struct hibmc_dp *dp);
+>>>> +u8 hibmc_dp_get_lanes(struct hibmc_dp *dp);
+>>>> +void hibmc_dp_set_cbar(struct hibmc_dp *dp, const struct hibmc_dp_cbar_cfg *cfg);
+>>>>      #endif
+>>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
+>>>> index 695cb9c0b643..20849f1ebd0c 100644
+>>>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
+>>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c
+>>>> @@ -4,9 +4,11 @@
+>>>>    #include <linux/delay.h>
+>>>>    #include <drm/drm_device.h>
+>>>>    #include <drm/drm_print.h>
+>>>> +
+>>>>    #include "dp_comm.h"
+>>>>    #include "dp_reg.h"
+>>>>    #include "dp_phy.h"
+>>>> +#include "dp_config.h"
+>>>>      #define HIBMC_EQ_MAX_RETRY 5
+>>>>    @@ -42,11 +44,7 @@ static int hibmc_dp_link_training_configure(struct hibmc_dp_dev *dp)
+>>>>    		return ret >= 0 ? -EIO : ret;
+>>>>    	}
+>>>>    -	ret = drm_dp_read_dpcd_caps(dp->aux, dp->dpcd);
+>>>> -	if (ret)
+>>>> -		drm_err(dp->dev, "dp aux read dpcd failed, ret: %d\n", ret);
+>>>> -
+>>>> -	return ret;
+>>>> +	return 0;
+>>>>    }
+>>>>      static int hibmc_dp_link_set_pattern(struct hibmc_dp_dev *dp, int pattern)
+>>>> @@ -189,15 +187,17 @@ static int hibmc_dp_link_training_cr(struct hibmc_dp_dev *dp)
+>>>>    	bool level_changed;
+>>>>    	u32 voltage_tries;
+>>>>    	u32 cr_tries;
+>>>> +	u32 max_cr;
+>>>>    	int ret;
+>>>>      	/*
+>>>>    	 * DP 1.4 spec define 10 for maxtries value, for pre DP 1.4 version set a limit of 80
+>>>>    	 * (4 voltage levels x 4 preemphasis levels x 5 identical voltage retries)
+>>>>    	 */
+>>>> +	 max_cr = dp->link.cap.rx_dpcd_revision >= DP_DPCD_REV_14 ? 10 : 80;
+>>>>      	voltage_tries = 1;
+>>>> -	for (cr_tries = 0; cr_tries < 80; cr_tries++) {
+>>>> +	for (cr_tries = 0; cr_tries < max_cr; cr_tries++) {
+>>>>    		drm_dp_link_train_clock_recovery_delay(dp->aux, dp->dpcd);
+>>>>      		ret = drm_dp_dpcd_read_link_status(dp->aux, lane_status);
+>>>> @@ -234,7 +234,7 @@ static int hibmc_dp_link_training_cr(struct hibmc_dp_dev *dp)
+>>>>    		voltage_tries = level_changed ? 1 : voltage_tries + 1;
+>>>>    	}
+>>>>    -	drm_err(dp->dev, "dp link training clock recovery 80 times failed\n");
+>>>> +	drm_err(dp->dev, "dp link training clock recovery %u times failed\n", max_cr);
+>>>>    	dp->link.status.clock_recovered = false;
+>>>>      	return 0;
+>>>> @@ -244,9 +244,17 @@ static int hibmc_dp_link_training_channel_eq(struct hibmc_dp_dev *dp)
+>>>>    {
+>>>>    	u8 lane_status[DP_LINK_STATUS_SIZE] = {0};
+>>>>    	u8 eq_tries;
+>>>> +	int tps;
+>>>>    	int ret;
+>>>>    -	ret = hibmc_dp_link_set_pattern(dp, DP_TRAINING_PATTERN_2);
+>>>> +	if (dp->link.cap.is_tps4)
+>>>> +		tps = DP_TRAINING_PATTERN_4;
+>>>> +	else if (dp->link.cap.is_tps3)
+>>>> +		tps = DP_TRAINING_PATTERN_3;
+>>>> +	else
+>>>> +		tps = DP_TRAINING_PATTERN_2;
+>>>> +
+>>>> +	ret = hibmc_dp_link_set_pattern(dp, tps);
+>>>>    	if (ret)
+>>>>    		return ret;
+>>>>    @@ -313,11 +321,27 @@ static int hibmc_dp_link_downgrade_training_eq(struct hibmc_dp_dev *dp)
+>>>>    	return hibmc_dp_link_reduce_rate(dp);
+>>>>    }
+>>>>    +static void hibmc_dp_update_caps(struct hibmc_dp_dev *dp)
+>>>> +{
+>>>> +	dp->link.cap.rx_dpcd_revision = dp->dpcd[DP_DPCD_REV];
+>>>> +
+>>>> +	dp->link.cap.is_tps3 = (dp->dpcd[DP_DPCD_REV] >= DP_DPCD_REV_13) &&
+>>>> +			       (dp->dpcd[DP_MAX_LANE_COUNT] & DP_TPS3_SUPPORTED);
+>>>> +	dp->link.cap.is_tps4 = (dp->dpcd[DP_DPCD_REV] >= DP_DPCD_REV_14) &&
+>>>> +			       (dp->dpcd[DP_MAX_DOWNSPREAD] & DP_TPS4_SUPPORTED);
+>>>> +}
+>>>> +
+>>>>    int hibmc_dp_link_training(struct hibmc_dp_dev *dp)
+>>>>    {
+>>>>    	struct hibmc_dp_link *link = &dp->link;
+>>>>    	int ret;
+>>>>    +	ret = drm_dp_read_dpcd_caps(dp->aux, dp->dpcd);
+>>>> +	if (ret)
+>>>> +		drm_err(dp->dev, "dp aux read dpcd failed, ret: %d\n", ret);
+>>>> +
+>>>> +	hibmc_dp_update_caps(dp);
+>>>> +
+>>>>    	while (true) {
+>>>>    		ret = hibmc_dp_link_training_cr_pre(dp);
+>>>>    		if (ret)
+>>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+>>>> index 99ba9c951c41..c43ad6b30c2c 100644
+>>>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+>>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+>>>> @@ -23,6 +23,8 @@
+>>>>    #define HIBMC_DP_VIDEO_MSA1			0x11c
+>>>>    #define HIBMC_DP_VIDEO_MSA2			0x120
+>>>>    #define HIBMC_DP_VIDEO_HORIZONTAL_SIZE		0X124
+>>>> +#define HIBMC_DP_COLOR_BAR_CTRL			0x260
+>>>> +#define HIBMC_DP_COLOR_BAR_CTRL1		0x264
+>>>>    #define HIBMC_DP_TIMING_GEN_CONFIG0		0x26c
+>>>>    #define HIBMC_DP_TIMING_GEN_CONFIG2		0x274
+>>>>    #define HIBMC_DP_TIMING_GEN_CONFIG3		0x278
+>>>> @@ -72,6 +74,6 @@
+>>>>    #define HIBMC_DP_CFG_STREAM_TU_SYMBOL_FRAC_SIZE	GENMASK(9, 6)
+>>>>    #define HIBMC_DP_CFG_STREAM_HTOTAL_SIZE		GENMASK(31, 16)
+>>>>    #define HIBMC_DP_CFG_STREAM_HBLANK_SIZE		GENMASK(15, 0)
+>>>> -#define HIBMC_DP_CFG_STREAM_SYNC_CALIBRATION GENMASK(31, 20)
+>>>> +#define HIBMC_DP_CFG_STREAM_SYNC_CALIBRATION	GENMASK(31, 20)
+>>>>      #endif
+>>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c
+>>>> new file mode 100644
+>>>> index 000000000000..f6885399c2b3
+>>>> --- /dev/null
+>>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c
+>>>> @@ -0,0 +1,214 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>>>> +// Copyright (c) 2024 Hisilicon Limited.
+>>>> +
+>>>> +#include <linux/debugfs.h>
+>>>> +#include <linux/device.h>
+>>>> +#include <linux/seq_file.h>
+>>>> +#include <linux/pci.h>
+>>>> +
+>>>> +#include <drm/drm_drv.h>
+>>>> +#include <drm/drm_file.h>
+>>>> +#include <drm/drm_debugfs.h>
+>>>> +#include <drm/drm_edid.h>
+>>>> +
+>>>> +#include "hibmc_drm_drv.h"
+>>>> +
+>>>> +static void hibmc_dump_edid(struct seq_file *m, const struct edid *edid)
+>>>> +{
+>>>> +	const struct detailed_pixel_timing *pixel_data;
+>>>> +	int i;
+>>>> +
+>>>> +	seq_puts(m, "EDID:\n");
+>>>> +	seq_printf(m, "\theader: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x\n",
+>>>> +		   edid->header[0], edid->header[1], edid->header[2], edid->header[3],
+>>>> +		   edid->header[4], edid->header[5], edid->header[6], edid->header[7]);
+>>>> +
+>>>> +	seq_puts(m, "Vendor & product info:\n");
+>>>> +	seq_printf(m, "\tmfg_id: 0x%02x 0x%02x\n", edid->mfg_id[0], edid->mfg_id[1]);
+>>>> +	seq_printf(m, "\tprod_code: 0x%02x 0x%02x\n", edid->prod_code[0], edid->prod_code[1]);
+>>>> +	seq_printf(m, "\tserial: 0x%08x\n", edid->serial);
+>>>> +	seq_printf(m, "\tmfg_week/year: 0x%02x 0x%02x\n", edid->mfg_week, edid->mfg_year);
+>>>> +
+>>>> +	seq_puts(m, "EDID version:\n");
+>>>> +	seq_printf(m, "\tversion: 0x%02x\n", edid->version);
+>>>> +	seq_printf(m, "\trevision: 0x%02x\n", edid->revision);
+>>>> +
+>>>> +	seq_puts(m, "Display info:\n");
+>>>> +	seq_printf(m, "\tinput: 0x%02x\n", edid->input);
+>>>> +	seq_printf(m, "\twidth_cm: 0x%02x\n", edid->width_cm);
+>>>> +	seq_printf(m, "\theight_cm: 0x%02x\n", edid->height_cm);
+>>>> +	seq_printf(m, "\tgamma: 0x%02x\n", edid->gamma);
+>>>> +	seq_printf(m, "\tfeatures: 0x%02x\n", edid->features);
+>>>> +
+>>>> +	seq_puts(m, "Color characteristics:\n");
+>>>> +	seq_printf(m, "\tred_green_lo: 0x%02x\n", edid->red_green_lo);
+>>>> +	seq_printf(m, "\tblue/black_white_lo: 0x%02x\n", *(&edid->red_green_lo) + 1);
+>>>> +	seq_printf(m, "\tred_x/y: 0x%02x 0x%02x\n", edid->red_x, edid->red_y);
+>>>> +	seq_printf(m, "\tgreen_x/y: 0x%02x 0x%02x\n", edid->green_x, edid->green_y);
+>>>> +	seq_printf(m, "\tblue_x/y: 0x%02x 0x%02x\n", edid->blue_x, edid->blue_y);
+>>>> +	seq_printf(m, "\twhite_x/y: 0x%02x 0x%02x\n", edid->white_x, edid->white_y);
+>>>> +
+>>>> +	seq_puts(m, "Est. timings and mfg rsvd timings:\n");
+>>>> +	seq_printf(m, "\test_timings_t1/2: 0x%02x 0x%02x\n",
+>>>> +		   edid->established_timings.t1, edid->established_timings.t2);
+>>>> +
+>>>> +	seq_puts(m, "Standard timings 1-8:\n");
+>>>> +	for (i = 0; i < ARRAY_SIZE(edid->standard_timings); i++) {
+>>>> +		seq_printf(m, "\tstandard_timings[%d] hsize/vfreq_aspect: 0x%02x 0x%02x\n",
+>>>> +			   i, edid->standard_timings[i].hsize,
+>>>> +			   edid->standard_timings[i].vfreq_aspect);
+>>>> +	}
+>>>> +
+>>>> +	seq_puts(m, "Detailing timings 1-4:\n");
+>>>> +	for (i = 0; i < ARRAY_SIZE(edid->detailed_timings); i++) {
+>>>> +		pixel_data = &edid->detailed_timings[i].data.pixel_data;
+>>>> +		seq_printf(m, "\tdetailed_timing[%d] pixel_clock: 0x%04x\n",
+>>>> +			   i, edid->detailed_timings[i].pixel_clock);
+>>>> +		seq_printf(m, "\tdetailed_timing[%d] hactive: %u\n", i,
+>>>> +			   (pixel_data->hactive_hblank_hi & 0xf0) << 4 | pixel_data->hactive_lo);
+>>>> +		seq_printf(m, "\tdetailed_timing[%d] vactive: %u\n", i,
+>>>> +			   (pixel_data->vactive_vblank_hi & 0xf0) << 4 | pixel_data->vactive_lo);
+>>>> +	}
+>>>> +
+>>>> +	seq_puts(m, "Others:\n");
+>>>> +	seq_printf(m, "\textensions: 0x%02x\n", edid->extensions);
+>>>> +	seq_printf(m, "\tchecksum: 0x%02x\n", edid->checksum);
+>>>> +}
+>>>> +
+>>>> +static int hibmc_dp_edid_show(struct seq_file *m, void *arg)
+>>>> +{
+>>>> +	struct drm_info_node *node = m->private;
+>>>> +	struct drm_device *dev = node->minor->dev;
+>>>> +	struct hibmc_drm_private *priv = to_hibmc_drm_private(dev);
+>>>> +	struct edid *edid;
+>>>> +	char name[20];
+>>>> +	int idx;
+>>>> +
+>>>> +	if (!drm_dev_enter(dev, &idx))
+>>>> +		return -ENODEV;
+>>>> +
+>>>> +	edid = drm_get_edid(&priv->dp.connector, &priv->dp.aux.ddc);
+>>>> +	if (edid) {
+>>>> +		drm_edid_get_monitor_name(edid, name, ARRAY_SIZE(name));
+>>>> +		seq_printf(m, "Monitor name: %s\n", name);
+>>>> +		hibmc_dump_edid(m, edid);
+>>>> +		kfree(edid);
+>>>> +	} else {
+>>>> +		seq_puts(m, "No connector available!\n");
+>>>> +	}
+>>>> +
+>>>> +	drm_dev_exit(idx);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static int hibmc_dp_show(struct seq_file *m, void *arg)
+>>>> +{
+>>>> +	struct drm_info_node *node = m->private;
+>>>> +	struct drm_device *dev = node->minor->dev;
+>>>> +	struct hibmc_drm_private *priv = to_hibmc_drm_private(dev);
+>>>> +	int idx;
+>>>> +
+>>>> +	if (!drm_dev_enter(dev, &idx))
+>>>> +		return -ENODEV;
+>>>> +
+>>>> +	seq_printf(m, "enable lanes: %u\n", hibmc_dp_get_lanes(&priv->dp));
+>>>> +	seq_printf(m, "link rate: %d\n", hibmc_dp_get_link_rate(&priv->dp) * 27);
+>>>> +	seq_printf(m, "vfresh: %d\n", drm_mode_vrefresh(&priv->crtc.mode));
+>>>> +	seq_printf(m, "dpcd version: 0x%x\n", hibmc_dp_get_dpcd(&priv->dp));
+>>>> +
+>>>> +	drm_dev_exit(idx);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static ssize_t hibmc_control_write(struct file *file, const char __user *user_buf,
+>>>> +				   size_t size, loff_t *ppos)
+>>>> +{
+>>>> +	struct hibmc_drm_private *priv = file_inode(file)->i_private;
+>>>> +	struct hibmc_dp_cbar_cfg *cfg = &priv->dp.cfg;
+>>>> +	u32 input = 0;
+>>>> +	int ret, idx;
+>>>> +	u8 val;
+>>>> +
+>>>> +	ret = kstrtou32_from_user(user_buf, size, 0, &input);
+>>>> +	if (ret)
+>>>> +		return ret;
+>>>> +
+>>>> +	val = FIELD_GET(GENMASK(13, 10), input);
+>>>> +	if (val > 9)
+>>>> +		return -EINVAL;
+>>>> +	cfg->pattern = val;
+>>>> +	cfg->enable = FIELD_GET(BIT(0), input);
+>>>> +	cfg->self_timing = FIELD_GET(BIT(1), input);
+>>>> +	cfg->dynamic_rate = FIELD_GET(GENMASK(9, 2), input);
+>>>> +
+>>>> +	ret = drm_dev_enter(&priv->dev, &idx);
+>>>> +	if (!ret)
+>>>> +		return -ENODEV;
+>>>> +
+>>>> +	hibmc_dp_set_cbar(&priv->dp, cfg);
+>>>> +
+>>>> +	drm_dev_exit(idx);
+>>>> +
+>>>> +	return size;
+>>>> +}
+>>>> +
+>>>> +static int hibmc_dp_dbgfs_show(struct seq_file *m, void *arg)
+>>>> +{
+>>>> +	struct hibmc_drm_private *priv = m->private;
+>>>> +	struct hibmc_dp_cbar_cfg *cfg = &priv->dp.cfg;
+>>>> +	u32 output = 0;
+>>>> +	int idx;
+>>>> +
+>>>> +	if (!drm_dev_enter(&priv->dev, &idx))
+>>>> +		return -ENODEV;
+>>>> +
+>>>> +	/* bit[0]: 0: enable colorbar, 1: disable colorbar
+>>>> +	 * bit[1]: 0: timing follows XDP, 1: internal self timing
+>>>> +	 * bit[2,9]: 0: static colorbar image,
+>>>> +	 *           1~255: right shifting a type of color per (1~255)frames
+>>>> +	 * bit[10,13]: 0~9: color bar, white, red, orange,
+>>>> +	 *             yellow, green, cyan, bule, pupper, black
+>>>> +	 */
+>>>> +	output = cfg->enable | (cfg->self_timing << 1) |
+>>>> +		 (cfg->dynamic_rate << 2) | (cfg->pattern << 10);
+>>>> +
+>>>> +	drm_dev_exit(idx);
+>>>> +
+>>>> +	seq_printf(m, "hibmc dp colorbar cfg: %u\n", output);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static int hibmc_open(struct inode *inode, struct file *filp)
+>>>> +{
+>>>> +	return single_open(filp, hibmc_dp_dbgfs_show, inode->i_private);
+>>>> +}
+>>>> +
+>>>> +static const struct file_operations hibmc_dbg_fops = {
+>>>> +	.owner   = THIS_MODULE,
+>>>> +	.write   = hibmc_control_write,
+>>>> +	.read    = seq_read,
+>>>> +	.open    = hibmc_open,
+>>>> +	.llseek  = seq_lseek,
+>>>> +	.release = single_release,
+>>>> +};
+>>>> +
+>>>> +static struct drm_info_list hibmc_debugfs_list[] = {
+>>>> +	{ "hibmc-dp", hibmc_dp_show },
+>>>> +	{ "hibmc-dp-edid", hibmc_dp_edid_show },
+>>>> +};
+>>>> +
+>>>> +void hibmc_debugfs_register(struct hibmc_drm_private *priv)
+>>>> +{
+>>>> +	struct drm_connector *dp_conn = &priv->dp.connector;
+>>>> +	struct drm_minor *minor = priv->dev.primary;
+>>>> +
+>>>> +	/* create the file in drm directory, so we don't need to remove manually */
+>>>> +	debugfs_create_file("colorbar-cfg", 0200,
+>>>> +			    dp_conn->debugfs_entry, priv, &hibmc_dbg_fops);
+>>>> +
+>>>> +	drm_debugfs_create_files(hibmc_debugfs_list, ARRAY_SIZE(hibmc_debugfs_list),
+>>>> +				 minor->debugfs_root, minor);
+>>>> +}
+>>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
+>>>> index fac8485a69d9..cc1f9ee0656f 100644
+>>>> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
+>>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
+>>>> @@ -146,5 +146,7 @@ int hibmc_dp_init(struct hibmc_drm_private *priv)
+>>>>      	drm_connector_attach_encoder(connector, encoder);
+>>>>    +	dp->is_inited = true;
+>>>> +
+>>>>    	return 0;
+>>>>    }
+>>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+>>>> index bade693d9730..3d4d5185c523 100644
+>>>> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+>>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+>>>> @@ -352,6 +352,9 @@ static int hibmc_pci_probe(struct pci_dev *pdev,
+>>>>    		goto err_unload;
+>>>>    	}
+>>>>    +	if (priv->dp.is_inited)
+>>>> +		hibmc_debugfs_register(priv);
+>>> Please use debugfs_init() callback for that
 >>>
->>> Also, can you enable dynamic debugging for usbcore by doing:
 >>>
->>> 	echo module usbcore =p >/sys/kernel/debug/dynamic_debug/control
->>>
->>> and then post the dmesg log for a suspend/resume cycle?
->>
->> Keyboard plugged into the chassis (does not wake up via the external
->> keyboard, needed to strike Fn on the internal keyboard):
-> 
-> These logs are pretty much what I would expect, except for one thing:
-> 
->> [  363.682633] ehci-pci 0000:00:1d.7: wakeup: 1
->> [  363.682714] uhci_hcd 0000:00:1d.2: wakeup: 1
->> [  363.682719] uhci_hcd 0000:00:1d.2: --> PCI D0
->> [  363.682757] uhci_hcd 0000:00:1d.1: wakeup: 1
->> [  363.682760] uhci_hcd 0000:00:1d.1: --> PCI D0
->> [  363.682796] uhci_hcd 0000:00:1d.0: wakeup: 1
->> [  363.682849] uhci_hcd 0000:00:1d.0: --> PCI D2
->> [  363.683087] ehci-pci 0000:00:1a.7: wakeup: 1
->> [  363.683153] uhci_hcd 0000:00:1a.2: wakeup: 1
->> [  363.683215] uhci_hcd 0000:00:1a.2: --> PCI D2
->> [  363.683254] uhci_hcd 0000:00:1a.1: wakeup: 1
->> [  363.683257] uhci_hcd 0000:00:1a.1: --> PCI D0
->> [  363.683293] uhci_hcd 0000:00:1a.0: wakeup: 1
->> [  363.683338] uhci_hcd 0000:00:1a.0: --> PCI D2
->> [  363.694561] ehci-pci 0000:00:1a.7: --> PCI D3hot
->> [  363.694597] ehci-pci 0000:00:1d.7: --> PCI D3hot
-> 
-> Why do the 1d.1, 1d.2, and 1a.1 UHCI controllers remain in D0 during
-> suspend, whereas the 1d.0, 1a.0, and 1a.2 controllers get put in D2?
-> That's odd.
-> 
-> Can you send the output from "lspci -vv -s 1d.0" and "lspci -vv -s 1d.1",
-> running as root?  It may explain this behavior.
-> 
-
-`lspci -vv -s 1d.0`:
-
-00:1a.0 USB controller: Intel Corporation 82801I (ICH9 Family) USB UHCI 
-Controller #4 (rev 03) (prog-if 00 [UHCI])
-	Subsystem: Lenovo ThinkPad T400
-	Control: I/O+ Mem- BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- 
-Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin A routed to IRQ 20
-	Region 4: I/O ports at 1860 [size=32]
-	Capabilities: [50] PCI Advanced Features
-		AFCap: TP+ FLR+
-		AFCtrl: FLR-
-		AFStatus: TP-
-	Kernel driver in use: uhci_hcd
-
-`lspci -vv -s 1d.1`:
-
-00:1a.1 USB controller: Intel Corporation 82801I (ICH9 Family) USB UHCI 
-Controller #5 (rev 03) (prog-if 00 [UHCI])
-	Subsystem: Lenovo ThinkPad T400
-	Control: I/O+ Mem- BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- 
-Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 0
-	Interrupt: pin B routed to IRQ 21
-	Region 4: I/O ports at 1880 [size=32]
-	Capabilities: [50] PCI Advanced Features
-		AFCap: TP+ FLR+
-		AFCtrl: FLR-
-		AFStatus: TP-
-	Kernel driver in use: uhci_hcd
-
-> Reading through the source code, I found a comment in the UHCI driver
-> (drivers/usb/host/uhci-hcd.c, line 328) which is highly relevant:
-> 
-> 	/*
-> 	 * UHCI doesn't distinguish between wakeup requests from downstream
-> 	 * devices and local connect/disconnect events.  There's no way to
-> 	 * enable one without the other; both are controlled by EGSM. Thus
-> 	 * if wakeups are disallowed then EGSM must be turned off -- in which
-> 	 * case remote wakeup requests from downstream during system sleep
-> 	 * will be lost.
-> 	 * ...
-> 
-> Most likely this explains what you are seeing.  In particular, it
-> explains why the keyboard (when plugged directly into the computer)
-> can't wake up the system unless wakeup is enabled on the root hub.  It
-> even explains why wakeup from runtime suspend works, because wakeup is
-> always enabled on all USB devices during runtime suspend regardless
-> of the setting in .../power/wakeup.
-> 
-> (UHCI was the first USB host controller technology to be developed;
-> the spec is from 1996.  It is very primitive compared to later
-> controllers, in many ways.  Perhaps it shouldn't be surprising that
-> UHCI controllers can't do all that we want them to.)
-> 
-
-This all makes sense. Since Huacai's patch was originally intended to 
-fix Loongson's OHCI implementation, I was beginning to suspect if it 
-exists for OHCI implementations found on older x86 platforms, say, AMD's 
-SB600/700 series south bridges. Also to see if this issue is shared 
-between OHCI and UHCI.
-
-I have purchased a motherboard to test this and will report back as soon 
-as I get my hands on it.
-
-> Alan Stern
-> 
-
-Best Regards,
-Mingcong Bai
+>>>> +
+>>>>    	drm_client_setup(dev, NULL);
+>>>>      	return 0;
+>>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+>>>> index 3ddd71aada66..ff61efb8a2ab 100644
+>>>> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+>>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+>>>> @@ -69,4 +69,6 @@ int hibmc_ddc_create(struct drm_device *drm_dev, struct hibmc_vdac *connector);
+>>>>      int hibmc_dp_init(struct hibmc_drm_private *priv);
+>>>>    +void hibmc_debugfs_register(struct hibmc_drm_private *priv);
+>>>> +
+>>>>    #endif
+>>>> -- 
+>>>> 2.33.0
+>>>>
