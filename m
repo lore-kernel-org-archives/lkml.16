@@ -1,170 +1,144 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665721A23BC
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89301ACECF;
+	Fri,  7 Feb 2025 08:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738918271; cv=none; b=CJYTJMnwwFGmHuPa141UnzK0S2S5GujJiUA4xzbdkjSx31AdFjzOI6jwYWDRbGWvETxwsn+f+4pSpAgvn6AVa+adxoxzguIN/2dhy5FbYe2h4EAHnDUTWbad3xaezvvbLrqnaO/SkGzmAcu5XpUhwp1SVlSaATeBDbtKWX1y+Do=
+	t=1738918409; cv=none; b=Aq5R0RvI/vcmlfAXEjZf0nbtdKh1v/G2PWUldqwCobUX8NeKOjel+54KZTAJN3BAAynkRYNiwzNKn7vT48dJjKBRUQsHXXYxKhQYeElE445jd74+soqJJoLqvnbRPj1NpkjBbfYiY3Dn27bFvt1v00xFkL9eHdiLQHytey7H7XU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738918271; c=relaxed/simple;
-	bh=JwObRK8+JZaLP9k38M1U14pOYZL6RhstCyR5Jyf5s1E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lqmi4+HLEp4prSr7FIdgG7RCJC6Au5YNuTSQlGtfqZrQ+G+9pfDp/lvSFihivvop4Uq6JEzctgKgcUDjYvbiZjM/1migg5LQF2tlnWRPxXMMyVeb4HIbW32s1xKUXnweD2RPvgJfljP5nQF+MJLJ4WjZ2h0kpuuuFAM3JjzI/UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xUhfNSgA; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1738918409; c=relaxed/simple;
+	bh=HG64Mii3r6zRp9CmIsjmwviU3LgNGTvZ+/LQPp+MEls=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eNAtJ/Wby0ww6kqPpI1t7F/tz1mxPXs6D6/u7BbbVi0aT3nUZ9Vz0Oj6o5humaniCQ/N5N2+TUQEmzGOdME8yNOmnoa/Wo9/TF+bvVrqD6G+LAKWXl2gIl0LAcXhj1aNCUnUNZ2secDgUE7XD71S4LE9qezCvyHja1H49MHxLnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Jt11DHRq; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xUhfNSgA"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1738918258; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=yZdjiVBUZ7mHPELUSaxgUg9mN8uVVkOic27ntckAPiU=;
-	b=xUhfNSgAcrhxrcZVW+ADDpB9tn1wN/BBOu7TA9jF3Uq/NUss249e5dpOynWE3QnHmQAA2STOtd/J3IKLgRhw4HVkQvPKA54hLx3biqYjG0qvqYbw7w7ugkdmiM6MfnRAKqExVqlalTxOXzr+S/2HK+QZffelQpPDaX19TtrzCbg=
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WOyyh9M_1738918257 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 07 Feb 2025 16:50:58 +0800
-From: Hongzhen Luo <hongzhen@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org,
-	Hongzhen Luo <hongzhen@linux.alibaba.com>
-Subject: [PATCH v3] erofs: use Z_EROFS_LCLUSTER_TYPE_MAX to simplify switches
-Date: Fri,  7 Feb 2025 16:50:56 +0800
-Message-ID: <20250207085056.2502010-1-hongzhen@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Jt11DHRq"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A9912442CE;
+	Fri,  7 Feb 2025 08:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738918404;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mKxj3pSD0UwzMwdxWit8kdJvq0oc5hRaBZzxFkTM46k=;
+	b=Jt11DHRqH/hXBBUEMf6EkKmyU63Y9/C8UFL/hQXT+cT/sBvJcPNHnTdb21tQMKpXIIaS8n
+	Tjy72dAH3yPLxX3dqKeROQm5keBVXaUjd58v3UNMxIspmoEGRvwT69peKmMTNn0e6daa3V
+	al+b+2v6RA3XNUzYrjh+Ey+kJLdoxAbWb8xNz01kb1g5TW7VMLqikmvXvt4uv+Fj1KkHc1
+	DzrZkzZzMjh0JRsawywnNJabEBCijVEZfARH8y0/h/S76bj5yLmPNv8qg/6yDyiExoH/JF
+	SR5yL1Mt/orv91qMJq3j0p//MLNZTzIkWXA7UVywXc+HYC491xHAPngeJJyqBA==
+Date: Fri, 7 Feb 2025 09:53:18 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, Jagan
+ Teki <jagan@amarulasolutions.com>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>,
+ Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Paul Kocialkowski
+ <contact@paulk.fr>, Maxime Ripard <mripard@kernel.org>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, =?UTF-8?Q?Herv?=
+ =?UTF-8?Q?=C3=A9?= Codina <herve.codina@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Paul Kocialkowski
+ <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v6 13/26] drm/encoder: add drm_encoder_cleanup_from()
+Message-ID: <20250207095318.2fc8d54e@booty>
+In-Reply-To: <spxzxwcs27uv2ttt5mh3r2767ihczvzzrtov6afdmex2ye7lam@r6kdqv5ocg5h>
+References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
+	<20250206-hotplug-drm-bridge-v6-13-9d6f2c9c3058@bootlin.com>
+	<spxzxwcs27uv2ttt5mh3r2767ihczvzzrtov6afdmex2ye7lam@r6kdqv5ocg5h>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeekgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeglefffefghefhtddvfeeufeeiveekgffgleekieduteekkeetvdehudekgfdvvdenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegtvgejvgemiegtgegvmeeitggtjeemleekgeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegtvgejvgemiegtgegvmeeitggtjeemleekgeejpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefjedprhgtphhtthhopegumhhithhrhidrsggrrhihshhhkhhovheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehinhhkihdruggrvgesshgrmhhsuhhnghdrt
+ ghomhdprhgtphhtthhopehjrghgrghnsegrmhgrrhhulhgrshholhhuthhiohhnshdrtghomhdprhgtphhtthhopehmrdhsiiihphhrohifshhkihesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-There's no need to enumerate each type.  No logic changes.
+On Fri, 7 Feb 2025 05:03:13 +0200
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
 
-Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
----
-v3: Code cleanup, remove logically inequivalent changes.
-v2: https://lore.kernel.org/all/20250207080829.2405528-1-hongzhen@linux.alibaba.com/
-v1: https://lore.kernel.org/all/20250207064135.2249529-1-hongzhen@linux.alibaba.com/
----
- fs/erofs/zmap.c | 60 +++++++++++++++++++------------------------------
- 1 file changed, 23 insertions(+), 37 deletions(-)
+> On Thu, Feb 06, 2025 at 07:14:28PM +0100, Luca Ceresoli wrote:
+> > Supporting hardware whose final part of the DRM pipeline can be physically
+> > removed requires the ability to detach all bridges from a given point to
+> > the end of the pipeline.
+> > 
+> > Introduce a variant of drm_encoder_cleanup() for this.
+> > 
+> > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> > 
+> > ---
+> > 
+> > Changes in v6: none
+> > Changes in v5: none
+> > Changes in v4: none
+> > Changes in v3: none
+> > 
+> > Changed in v2:
+> >  - fix a typo in a comment
+> > ---
+> >  drivers/gpu/drm/drm_encoder.c | 21 +++++++++++++++++++++
+> >  include/drm/drm_encoder.h     |  1 +
+> >  2 files changed, 22 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/drm_encoder.c b/drivers/gpu/drm/drm_encoder.c
+> > index 8f2bc6a28482229fd0b030a1958f87753ad7885f..472dfbefe2960924a4e83bec425af8c7ef5f5265 100644
+> > --- a/drivers/gpu/drm/drm_encoder.c
+> > +++ b/drivers/gpu/drm/drm_encoder.c
+> > @@ -207,6 +207,27 @@ void drm_encoder_cleanup(struct drm_encoder *encoder)
+> >  }
+> >  EXPORT_SYMBOL(drm_encoder_cleanup);
+> >  
+> > +/**
+> > + * drm_encoder_cleanup_from - remove a given bridge and all the following
+> > + * @encoder: encoder whole list of bridges shall be pruned
+> > + * @bridge: first bridge to remove
+> > + *
+> > + * Removes from an encoder all the bridges starting with a given bridge
+> > + * and until the end of the chain.
+> > + *
+> > + * This should not be used in "normal" DRM pipelines. It is only useful for
+> > + * devices whose final part of the DRM chain can be physically removed and
+> > + * later reconnected (possibly with different hardware).
+> > + */
+> > +void drm_encoder_cleanup_from(struct drm_encoder *encoder, struct drm_bridge *bridge)
+> > +{
+> > +	struct drm_bridge *next;
+> > +
+> > +	list_for_each_entry_safe_from(bridge, next, &encoder->bridge_chain, chain_node)
+> > +		drm_bridge_detach(bridge);
+> > +}
+> > +EXPORT_SYMBOL(drm_encoder_cleanup_from);  
+> 
+> Shouldn't drm_encoder_cleanup() also use this function?
 
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 689437e99a5a..7dba1573498b 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -265,23 +265,20 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
- 		if (err)
- 			return err;
- 
--		switch (m->type) {
--		case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
-+		if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
-+			erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
-+				  m->type, lcn, vi->nid);
-+			DBG_BUGON(1);
-+			return -EOPNOTSUPP;
-+		} else if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
- 			lookback_distance = m->delta[0];
- 			if (!lookback_distance)
- 				goto err_bogus;
- 			continue;
--		case Z_EROFS_LCLUSTER_TYPE_PLAIN:
--		case Z_EROFS_LCLUSTER_TYPE_HEAD1:
--		case Z_EROFS_LCLUSTER_TYPE_HEAD2:
-+		} else {
- 			m->headtype = m->type;
- 			m->map->m_la = (lcn << lclusterbits) | m->clusterofs;
- 			return 0;
--		default:
--			erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
--				  m->type, lcn, vi->nid);
--			DBG_BUGON(1);
--			return -EOPNOTSUPP;
- 		}
- 	}
- err_bogus:
-@@ -329,35 +326,28 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
- 	DBG_BUGON(lcn == initial_lcn &&
- 		  m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD);
- 
--	switch (m->type) {
--	case Z_EROFS_LCLUSTER_TYPE_PLAIN:
--	case Z_EROFS_LCLUSTER_TYPE_HEAD1:
--	case Z_EROFS_LCLUSTER_TYPE_HEAD2:
-+	if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
-+		if (m->delta[0] != 1) {
-+			erofs_err(sb, "bogus CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
-+			DBG_BUGON(1);
-+			return -EFSCORRUPTED;
-+		}
-+		if (m->compressedblks)
-+			goto out;
-+	} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
- 		/*
- 		 * if the 1st NONHEAD lcluster is actually PLAIN or HEAD type
- 		 * rather than CBLKCNT, it's a 1 block-sized pcluster.
- 		 */
- 		m->compressedblks = 1;
--		break;
--	case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
--		if (m->delta[0] != 1)
--			goto err_bonus_cblkcnt;
--		if (m->compressedblks)
--			break;
--		fallthrough;
--	default:
--		erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", lcn,
--			  vi->nid);
--		DBG_BUGON(1);
--		return -EFSCORRUPTED;
-+		goto out;
- 	}
-+	erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
-+	DBG_BUGON(1);
-+	return -EFSCORRUPTED;
- out:
- 	m->map->m_plen = erofs_pos(sb, m->compressedblks);
- 	return 0;
--err_bonus_cblkcnt:
--	erofs_err(sb, "bogus CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
--	DBG_BUGON(1);
--	return -EFSCORRUPTED;
- }
- 
- static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
-@@ -386,9 +376,7 @@ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
- 				m->delta[1] = 1;
- 				DBG_BUGON(1);
- 			}
--		} else if (m->type == Z_EROFS_LCLUSTER_TYPE_PLAIN ||
--			   m->type == Z_EROFS_LCLUSTER_TYPE_HEAD1 ||
--			   m->type == Z_EROFS_LCLUSTER_TYPE_HEAD2) {
-+		} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
- 			if (lcn != headlcn)
- 				break;	/* ends at the next HEAD lcluster */
- 			m->delta[1] = 1;
-@@ -452,8 +440,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 		}
- 		/* m.lcn should be >= 1 if endoff < m.clusterofs */
- 		if (!m.lcn) {
--			erofs_err(inode->i_sb,
--				  "invalid logical cluster 0 at nid %llu",
-+			erofs_err(inode->i_sb, "invalid logical cluster 0 at nid %llu",
- 				  vi->nid);
- 			err = -EFSCORRUPTED;
- 			goto unmap_out;
-@@ -469,8 +456,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 			goto unmap_out;
- 		break;
- 	default:
--		erofs_err(inode->i_sb,
--			  "unknown type %u @ offset %llu of nid %llu",
-+		erofs_err(inode->i_sb, "unknown type %u @ offset %llu of nid %llu",
- 			  m.type, ofs, vi->nid);
- 		err = -EOPNOTSUPP;
- 		goto unmap_out;
+Sure. I'll do it in v7.
+
+Luca
+
 -- 
-2.43.5
-
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
