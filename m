@@ -1,126 +1,129 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA9F1A4E70;
-	Fri,  7 Feb 2025 08:56:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826EF1C6FFC;
+	Fri,  7 Feb 2025 08:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738918621; cv=none; b=A72Ksd2qQuLwzG4nJKSn++5By+d2eLWStqZ8pffNOwIedCEdngWlA59acwVKhgHApMM9o/KZUiNGAn1SMR3+igAYfSAFJmb/j5KXgbKN3AJhYhnSWN0DmprNjPdx/hbc9t6m0+0+W2I0cCRS6w2kseOOU4xCTvJOKdo/V2+QGd8=
+	t=1738918624; cv=none; b=GMFSAqjdVa0LB0qOfexG4iS6XOdQ1kq7032Tw9K32Ind0H9ScRZxfTFstibw1v12QKtbMplO05jjjRFDQAxym08le2Z3/TbkzN9rsAin6XsJkIMhBeOKowL/MmZdOBt3nShYDThdliS4JD8AgeC062PAQJjUA1hi8jjtCgjVMy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738918621; c=relaxed/simple;
-	bh=qdT/29cyc7JB1ssT2HNf6SixytB1jtRpLJC5tR/8pH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q87Drw+7ai7qedwQHJO3rgAOC06BG0C0Nd92YrpvoVzOakModm30jJ8Qi+8nOFhW8G0K7U2e8NeuDuhJ8WmUz+RSbF+3heZZgn3b7BRcbtU9/A0UzO3X68PlL737ocyOrgooxnpKx3UQ30TGpYlqPGeLGpppGMi7oLlSAgGiuws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1738918624; c=relaxed/simple;
+	bh=ppiWtOfT2Ve7e1nS6/HMa2Ajq3jvgAbZc0pgN5Um54k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jeo+kMWZ2vkKFjqX7MzbiOfkw0Sw6jbANDOAaOrQqXCaRl/85ncLuIAHcludBt96UEl/8jTsxDAjA93+Yb+epxUEBNXgMb9jf3f9winxKIYlnF9TgcB3AkiQuGmSzMWOaKBTeP8k+R1DXIkXyCOYa+c9Cyl0o4Rtmusm/xexkyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BgZogeDW; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-867044e979dso295605241.3;
-        Fri, 07 Feb 2025 00:56:59 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BgZogeDW"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-219f8263ae0so35981785ad.0;
+        Fri, 07 Feb 2025 00:57:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738918621; x=1739523421; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Vx3ELvMf0qmQJJFnyKbMyptnWywqfF72JyrwcCPkjc=;
+        b=BgZogeDW2hCNZKD9eIhj73SBApNm6iYintwSB9Fij0+oL9AlfghgYlEPgjVRNcKZRW
+         rr9GBv9Hf0f7DhG7Faw6LcUiDWeE9MrtfxVuUz7FE/GY0Uih0yI050Ecb3nGOg2IInmT
+         mcpSd09ORA47aTHoY7xK5x+ZVWLy+HVg9ZhFrgGQMMPpW7z996ceMobnv1fujfB7etEc
+         QHUkSpx/X1le+iFxXHwkN4i/hHz+Bb0xXmSmn39afl4XkzoB6zGOuI/uoq/sgeT+b3pD
+         /ZaMnQwPeRqoGbqMXOpySXz9wWBDSFaYQ2Q8lvpU4k6VIMq/bghlJW+RWdxFqwCNpJ6l
+         x7gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738918617; x=1739523417;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=87zAwDqn4YRpNZcopP/g+d7cMXIfHWmwxzZ93OsCwSc=;
-        b=pzvGiWOfnr720wPqV4U5NpETG7oxigksU5Yzh44QuHbM+1ukY2HlPSY9Hdwpv6mx9r
-         FlAazpXLplGG7SMy+ZGOgwWa2VXN2+lFZkohzR44Lric44/snmevVOmARlXRc+yOCmBL
-         VMK+WtJhvRU4Yu7r+ohnvgTFbDxKsVmftj1S7QIFYrKBKMy3nJm/AL7a/FmziWen3fmx
-         jWqgvLbxMVRQeOn0D4bKVGMGY3T9y7tUO91I+BeU98HWFhK7uYFkNOfIUhLJyINzjkVZ
-         O2x1gLy8EcBKy2+tnoUfplDDdoIH78CxEVoYs9h9gFkBXdr3ckI2JrB+AzJcTUJlHdi6
-         SzGA==
-X-Forwarded-Encrypted: i=1; AJvYcCVAnnumOLMWFEU6c6aOKHYhBhovO8kXAcwhdWpQxiPH5YEO9N7WwnW2eC+t0wED8VV3zh5kQ6dL8qTAyjgtGGrl@vger.kernel.org, AJvYcCVNKsc78zsbKyF4purpPKdrNfJcvxvAsKYpml3uuj6QYGjT1wI64ZgX6dNfsvJQY5ZbuMEnkRAv5CviPtQr@vger.kernel.org, AJvYcCWnfQVYojzPMVLBE4REDQE1yBOkW71J8oTPt5xdOvHuwWgtl2CQmIHabN5vvtBEw16UkRKck6Y98qOj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvFmLs6H/mOPlXTQ1+aVl6TIV0275g2cwN/62VlJXu2zg4lVlp
-	GMM8dgO+nXK0cqckyDByPStWLqrBSGgBp3M53+IysVfIdhy2bBC0gqVrDz0D
-X-Gm-Gg: ASbGncvhf7s+mkgR2VqD9HtdR6mtS6ehGDPbuKfsBKDAocQNJu71bAsn0Yj0xjfyOp1
-	iyd7jRKibWoOd1kvTirniP3x9DzF0YH90jOm3zJqmXU3tbDOEheDb/CJ6PL1CREElyqY8pWszq4
-	A0k187bbATEsUR3P63wyiyDKvltfmxG5V2bdO1LFU3FMdigKLczHRk1rWXR/Az4xnz7j77UeKKx
-	VsxnoV2rQ6+nH+jAxqR/CMF1P9r5B3jrizYkkZED2Tp2kQNQJG7h9Ej04mX8fdzILWCtV+oO/LC
-	pyMbsgHoitvLjdeBX35trlH8kUzFt1nZbfFrxLA6LV6MciwecXrhpQ==
-X-Google-Smtp-Source: AGHT+IHYF1s3U6smqly/1sjDLk79FxMLI6Ytr+The15rXusrXwotkHkd4AFJB4m+1SxSnFuRdqJFHA==
-X-Received: by 2002:a05:6102:94e:b0:4af:98c6:bc97 with SMTP id ada2fe7eead31-4ba85f03c21mr1306012137.19.1738918617516;
-        Fri, 07 Feb 2025 00:56:57 -0800 (PST)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-866f97d9237sm514886241.26.2025.02.07.00.56.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 00:56:56 -0800 (PST)
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4ba791bcc06so568213137.0;
-        Fri, 07 Feb 2025 00:56:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU4w9jiFYDIbA9G13B9FmSl1fEkUt17hZEFCEAri/Bo4qZCCSbBvZDejeZwKllk93dvYZ+ogm/U0e0a@vger.kernel.org, AJvYcCVQVXN8dzvgOKuvVzTaydGt77IZppw+1vAg3cqxWy7xHMB3EjTTrj8Ifv6sMA8wnsPy20dYiIYuidldy6Dh@vger.kernel.org, AJvYcCXOsRg3xDM67NrS73zRjBWu5YHbJfVCvAl3zcfailkRqmR6ihmrDbEHV4TsEOVsUlnjQ6g5A31ASnSL9AiV5VZ/@vger.kernel.org
-X-Received: by 2002:a05:6102:5088:b0:4b2:cc94:1877 with SMTP id
- ada2fe7eead31-4ba85e4d571mr1335521137.13.1738918616642; Fri, 07 Feb 2025
- 00:56:56 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738918621; x=1739523421;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0Vx3ELvMf0qmQJJFnyKbMyptnWywqfF72JyrwcCPkjc=;
+        b=Wsv3J6LIblhV8qDbhhtnTZimhzrvsVh+sFlYPVKJbfSLNRpTG+9BIi+meoBixrJdqK
+         6P4bqBE0tTgRkidd/lh+EEaQIsg2dHF4fvHgiV+ll+gsxg49NpomMsqkv0K7jfT4Bjz7
+         H6Awasdf006P4HYe6mI4lGta+fo+efQchYCqJcitoOQaNsz/jLAb7PRPrpQupxTSILaJ
+         9woHnxVFhb0uJv4R945Ho2AdR7lStYW2wy/rEJhhHTTDSPspRxImTlSDvJHX5d1PhZNq
+         +IvTXFKBhVC2E92wsIBolNpATo4a+2WgXrTNABEinGb0Hg2yW86AB42zT1krcQmRcqkh
+         McBA==
+X-Forwarded-Encrypted: i=1; AJvYcCXBi9OELDOtchy/40m9uy2HsKm/DGikmstsKxBlVIIKrm3cJGah8sd4cUzfubJeaS29l7mw4hczHs4ZahE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHyPRlTJQH3GcVSy5ueL2P5npduqluIpqIEcsAFDC/NwOQNANN
+	WYcbtd+n7kEOe7cKzYaBBwI5j/I2923cS2CaaK1UA0yqYNlTGlxl5oM9Fg==
+X-Gm-Gg: ASbGncuBCTaE7SX/mQJjTGdi4bQKDKbOtFMe0npiMi+9Uis0zqMOEOd5V7mvFq7hx7C
+	OPPcpYQ9NMoieCExDWJm4mAIXELF46ld/umtfEzXf1RzL5otZY5gA41c4m6tIcIZ1CjRzgkbAQf
+	wRVP378L62E0Kpv8U/cd0jIDOt1JXysz4Bt/XOyWyQyscVo2aWqwESl0MckRbcVoWsZi1Pj0zvn
+	5h2rs/XC1Irrgwkd6P2jcIJDRsp5f6h/OEaisrbvVVpq5Xr7GGceDSNmHApJu9BJFpSQF/5UHXf
+	MJ52wlCDo9doWZ5t8WgeAhWHcAbf
+X-Google-Smtp-Source: AGHT+IFlNjPnbw667WtlBgeKpirAAyliI8fxFRqc6Br/oWFk5pHJMGbuj7/4JbGsPe3J/2mcAIkPMA==
+X-Received: by 2002:a17:903:19cc:b0:21f:35fd:1b6a with SMTP id d9443c01a7336-21f4e76cb06mr47882695ad.51.1738918621258;
+        Fri, 07 Feb 2025 00:57:01 -0800 (PST)
+Received: from localhost.localdomain ([129.146.253.192])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-2fa2716c1ecsm945042a91.25.2025.02.07.00.56.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 00:57:00 -0800 (PST)
+From: Furong Xu <0x1207@gmail.com>
+To: netdev@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	xfr@outlook.com,
+	Furong Xu <0x1207@gmail.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Brad Griffis <bgriffis@nvidia.com>,
+	Ido Schimmel <idosch@idosch.org>
+Subject: [PATCH net v1] net: stmmac: Apply new page pool parameters when SPH is enabled
+Date: Fri,  7 Feb 2025 16:56:39 +0800
+Message-Id: <20250207085639.13580-1-0x1207@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203121843.3183991-1-andriy.shevchenko@linux.intel.com>
- <20250203121843.3183991-2-andriy.shevchenko@linux.intel.com> <CAMRc=Mc+obxRPpMWNmSk5Tab6NmwM4gSzoHE8JtFf=k+u23QSA@mail.gmail.com>
-In-Reply-To: <CAMRc=Mc+obxRPpMWNmSk5Tab6NmwM4gSzoHE8JtFf=k+u23QSA@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 7 Feb 2025 09:56:45 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUHnRybYHyx2tOJkc86Bo=p3R9Z8MA1Z9zfqavAD2k4Gw@mail.gmail.com>
-X-Gm-Features: AWEUYZljf0IGGMytcBRCTOMEDxbwhlJ-40zK3OAP4RuiK1d2KIt4lu9Kk5amk40
-Message-ID: <CAMuHMdUHnRybYHyx2tOJkc86Bo=p3R9Z8MA1Z9zfqavAD2k4Gw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/7] gpio: 74x164: Remove unneeded dependency to OF_GPIO
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Bartosz,
+Commit df542f669307 ("net: stmmac: Switch to zero-copy in
+non-XDP RX path") makes DMA write received frame into buffer at offset
+of NET_SKB_PAD and sets page pool parameters to sync from offset of
+NET_SKB_PAD. But when Header Payload Split is enabled, the header is
+written at offset of NET_SKB_PAD, while the payload is written at
+offset of zero. Uncorrect offset parameter for the payload breaks dma
+coherence [1] since both CPU and DMA touch the page buffer from offset
+of zero which is not handled by the page pool sync parameter.
 
-On Fri, 7 Feb 2025 at 09:02, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> On Mon, Feb 3, 2025 at 1:18=E2=80=AFPM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > Remove unneeded dependency to OF_GPIO which driver does not use.
-> >
-> > Fixes: 3c7469514dbe ("gpio: 74x164: Make use of device properties")
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  drivers/gpio/Kconfig | 1 -
-> >  1 file changed, 1 deletion(-)
-> >
-> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > index add5ad29a673..56c1f30ac195 100644
-> > --- a/drivers/gpio/Kconfig
-> > +++ b/drivers/gpio/Kconfig
-> > @@ -1790,7 +1790,6 @@ menu "SPI GPIO expanders"
-> >
-> >  config GPIO_74X164
-> >         tristate "74x164 serial-in/parallel-out 8-bits shift register"
-> > -       depends on OF_GPIO
-> >         help
-> >           Driver for 74x164 compatible serial-in/parallel-out 8-outputs
-> >           shift registers. This driver can be used to provide access
+And in case the DMA cannot split the received frame, for example,
+a large L2 frame, pp_params.max_len should grow to match the tail
+of entire frame.
 
->
-> Geert: Just Cc'ing you here because you yelled at me last time I
-> removed all dependencies. This driver is under the SPI section so it
-> does have the CONFIG_SPI_MASTER dependency. I think it's fine to drop
-> OF_GPIO here but I just wanted to run it by you.
+[1] https://lore.kernel.org/netdev/d465f277-bac7-439f-be1d-9a47dfe2d951@nvidia.com/
 
-That's fine, as there is still the SPI_MASTER dependency, and the
-driver uses device properties.
+Reported-by: Jon Hunter <jonathanh@nvidia.com>
+Reported-by: Brad Griffis <bgriffis@nvidia.com>
+Suggested-by: Ido Schimmel <idosch@idosch.org>
+Fixes: df542f669307 ("net: stmmac: Switch to zero-copy in non-XDP RX path")
+Signed-off-by: Furong Xu <0x1207@gmail.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index b34ebb916b89..c0ae7db96f46 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2094,6 +2094,11 @@ static int __alloc_dma_rx_desc_resources(struct stmmac_priv *priv,
+ 	pp_params.offset = stmmac_rx_offset(priv);
+ 	pp_params.max_len = dma_conf->dma_buf_sz;
+ 
++	if (priv->sph) {
++		pp_params.offset = 0;
++		pp_params.max_len += stmmac_rx_offset(priv);
++	}
++
+ 	rx_q->page_pool = page_pool_create(&pp_params);
+ 	if (IS_ERR(rx_q->page_pool)) {
+ 		ret = PTR_ERR(rx_q->page_pool);
+-- 
+2.34.1
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
