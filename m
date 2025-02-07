@@ -1,106 +1,66 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313212A1D8;
-	Fri,  7 Feb 2025 20:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9A81A5B83;
+	Fri,  7 Feb 2025 20:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738960526; cv=none; b=d1RkwLpjnmrLhF6alho2Zs8uF+6AsklF6kZo/A0WPX95LBe46RkwYh3Jp3Mm1xEblrpjKsKwj4uVzUF+hY+OXKK37GsYKQsozVlUTvCQcvOWv2YsseFzF5rIDbUdvfCvaZzUbqSzG4lZO3xUoIYY+qko+DiRgWraZBhyLZX/rb0=
+	t=1738960550; cv=none; b=Aa6tmhvt747tDrESTolMA4Bt7DAwdjp9/wsPUNhSPkO39YjvZEjQeZx0Mz0GnXA63+1SSZVnqhfiZzk5C9qytsTD2pNaOo30N570X3fg7C/LeMhXMxwlPmI3aciG7AkhSzIzKGd0EKiRD8K+bfP4aM+peN0lihBmyjKfpAX7uTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738960526; c=relaxed/simple;
-	bh=G9KcKAxKFAC/b4YNcwkGrNqA43tbOQbPcTdCcV86QgE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SDSNSKUdz+iOXAioMhOZFtbSED93k9SIJy6J15hL2IEfDXMiniW6Dgbvo4mbm7MAbN7Rv30EdLyv3QC1W7VTpcTwWQ4wjSkrWNjhqZlOx6ZNr9Rp+/T2tbq9vEOsEuL8U8b2dWbG7libf+X2DNgfEibmEcpMUD+VzWsN73RH46Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XWoJ5sxD; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738960550; c=relaxed/simple;
+	bh=mo+imipptx01s01rZNm6rhTdY69IR/eBZ2I9W+Wnu+g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=guNluZGESfY8AUBsFlrNXoBX857D7N5b2214aZmjxQoRRzGWzx1Uv4wyi6CbxaaY3p9yxfTY6qYQeH8oSirvIotMVanQu6pO3foDUJ1UhdYWP/CSqnTul7hGF8yyPksoU16KCORcD6b6CH8LVZtMq0McRSFp1Gt47W513GVNslI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=aRoiBMZD; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XWoJ5sxD"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f0444b478so38055405ad.0;
-        Fri, 07 Feb 2025 12:35:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738960524; x=1739565324; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aAZ9nrSjSJku2v5zFd1KkRZ7GwKXoZZd93FIVjbym7I=;
-        b=XWoJ5sxDTwl5iY/ag6L3RPdumJlPxvFAwBClVkhYxMELNpyeIW/X113teris03wlBo
-         fimxjhW4xpWl6i0/WpOdURGN3toajrOq2EbpaLMupW2SstfjxQRUnKa7zbnJWwVC6DKp
-         p3ABI4gHbKesXrTye3fLYces5dQ5Yhjd6FWg+QygZND3GPvv/WwTaC86i/wMhKIH/Z+n
-         FH5l4qlTwOd9seyT8PbFtmudH1zdEBJrmNMoL6yS/DvEcZt2eKx3xf62xS8T27EiHzEO
-         wvAPgoKmDOhkV8wQI9ZT6kO0L/Ncq5hI2eMcX6jmKmv9NHCPVg1ZsTb4KxVYNtyFxRYe
-         3CDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738960524; x=1739565324;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aAZ9nrSjSJku2v5zFd1KkRZ7GwKXoZZd93FIVjbym7I=;
-        b=Cw4ZQE5elNtomqT6CKFengo/2xh33SNfIoFpjj5MUKmUEqmAQ/9c5V9QZWPRk9Y8EX
-         9r8ZpoqbRuJIdfmEhPYTGiNYNhS54n0dagf/eTWEyyE+nd3K6PPML0Uu6fKZ3yo/yHUp
-         R60PJeT20NkJRPGiHc75tWHG4AGAUG+RwrPfdM+bLVAzkKTHuu546x9ZK7+0X5pyig57
-         RcJhfM2ryN1Ls7UjoP7MLiE4JlbQV7Eukg0cVj1BYkiYrQPi26jbhD+XGkUdo0tuoxyr
-         QobmJxHU87jrxWjd+b52ms+KSv47T9XHyAW7n3cPlXSqf4HvBa/dlCeXKHEIfyU7FQJb
-         7DcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW72VfaXMY6alUaM5E2AlCUnxAAcSsFcFlauUPK029fRGEBob21t4qc8R6lRpdbNVcOiY6CiyXI1ffA@vger.kernel.org, AJvYcCWVhYPCh/gUbWeMRQKwTm1EMFAorlKW7CZk/HoSTDZXRYmx9XOs8srFJyKyzD0dYTgdEkjrkRZPkXXp7ss=@vger.kernel.org, AJvYcCWp4UFLpiKgtPLcZf8xnj/QZjtdlO1C5+OoletD6azV+UNHEavWXwbgHVDgJJAgJDf037ZOZ/sF@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFvlsACCGZ/zomltqMDr7mVshyjJ2q+MvNnzNcZ6NrUx5k/lpd
-	GzmDZCUP7kcPZme5eVG2GmYnhrjpxUgWcCM5GuYYcHrGAlVH4htc
-X-Gm-Gg: ASbGncv3khqF/1/aWQjC7xWiT2W7SPOPF5URIRa6rS3mBqHJgvwMlZRV8Rz67u6QVZ/
-	/nyBbo4k9DNAgcH4ygKGM4RqEGx9eazWu+PBNrR1TeAPJX7Jc0F2RgzwjUmlEeFWOidYtf7MzB8
-	yUuVCMDAe6Sn/HBh4UEmTZu5fvJ6NwXdJoUZvytbZGW0XmYVFJtVpr1XhuoGGI8v8N9k54x5GoP
-	6cAdXxPKWqNrmxDUQeWJFQWqXQu7f3ZBlha7XTUrqG729ia5R+eP8sN2uamegou2FrEr8gmIGuI
-	AeJNsQsmFX/SBkSe30e52JduWGHeGCwbNhkDFO3NCFs20wY2+I7DSTKA5xGI3oucAu6CpjSCtEe
-	BwV6OR8h+dQ==
-X-Google-Smtp-Source: AGHT+IE7rvYPX9KnzEau4iZ3QpadSEO3bvNsKSNP15c3qlj6VhH2iHV6Mpp5kNdpD8wQVhwdqcVUqg==
-X-Received: by 2002:a17:902:d2cc:b0:216:725c:a122 with SMTP id d9443c01a7336-21f4e6da67fmr79478085ad.19.1738960524340;
-        Fri, 07 Feb 2025 12:35:24 -0800 (PST)
-Received: from localhost.localdomain (c-73-98-126-133.hsd1.nm.comcast.net. [73.98.126.133])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368d2dc7sm35074555ad.251.2025.02.07.12.35.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 12:35:23 -0800 (PST)
-From: Jill Donahue <jilliandonahue58@gmail.com>
-To: gregkh@linuxfoundation.org,
-	linux-usb@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="aRoiBMZD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ktcsS1mIRmn+/53h/4If0SZ0KchgYx1oJMs+EwIN8po=; b=aRoiBMZD7EMP3Gl7L526OJ+g3q
+	H9RRZwxu1/Jh9SxEfHcMbCJPYzHDxircIezp3LN7dLgza7NnmqcfWuKfGdfCB4xuPRc8n7ExIrWI0
+	3mVv2HIm42cWmmOqJXeffgEg4j/PC+l7le13fzCnhUCEBO6f+8mVGc6El8gl+//DMAaH3lhfjWKw6
+	m8hlu1uHKJGPATLOF/CDnS/NYKLpLO4yDAxiTS5St5FSHVKuo426omXlzi2VER6F0ahM5QGCxfI2Y
+	/Wed6d76Z68c2nIFrBoDqujqWzxnCGZsBIDlhr3vgeVI7FnKvMXCrpsEQECitWcpj3ckzAj/HxYdi
+	5ASRcV5g==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tgV4k-00000006Z9j-1Der;
+	Fri, 07 Feb 2025 20:35:46 +0000
+Date: Fri, 7 Feb 2025 20:35:46 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Jill Donahue <jilliandonahue58@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v3] f_midi_complete to call tasklet_hi_schedule
-Date: Fri,  7 Feb 2025 13:34:41 -0700
-Message-Id: <20250207203441.945196-1-jilliandonahue58@gmail.com>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [PATCH 13/19] VFS: lock dentry for ->revalidate to avoid races
+ with rename etc
+Message-ID: <20250207203546.GJ1977892@ZenIV>
+References: <20250206054504.2950516-1-neilb@suse.de>
+ <20250206054504.2950516-14-neilb@suse.de>
+ <20250207202839.GI1977892@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207202839.GI1977892@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-When using USB MIDI, a lock is attempted to be acquired twice through a
-re-entrant call to f_midi_transmit, causing a deadlock.
+On Fri, Feb 07, 2025 at 08:28:39PM +0000, Al Viro wrote:
+> On Thu, Feb 06, 2025 at 04:42:50PM +1100, NeilBrown wrote:
+> 
+> > +	if (dentry->d_flags & LOOKUP_RCU) {
+> 
+> Really?
 
-Fix it by using tasklet_hi_schedule() to schedule the inner
-f_midi_transmit() via a tasklet from the completion handler.
-
-Link: https://lore.kernel.org/all/CAArt=LjxU0fUZOj06X+5tkeGT+6RbXzpWg1h4t4Fwa_KGVAX6g@mail.gmail.com/
-Fixes: d5daf49b58661 ("USB: gadget: midi: add midi function driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jill Donahue <jilliandonahue58@gmail.com>
----
- drivers/usb/gadget/function/f_midi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/function/f_midi.c b/drivers/usb/gadget/function/f_midi.c
-index 837fcdfa3840..37d438e5d451 100644
---- a/drivers/usb/gadget/function/f_midi.c
-+++ b/drivers/usb/gadget/function/f_midi.c
-@@ -283,7 +283,7 @@ f_midi_complete(struct usb_ep *ep, struct usb_request *req)
- 			/* Our transmit completed. See if there's more to go.
- 			 * f_midi_transmit eats req, don't queue it again. */
- 			req->length = 0;
--			f_midi_transmit(midi);
-+			tasklet_hi_schedule(&midi->tasklet);
- 			return;
- 		}
- 		break;
--- 
-2.25.1
-
+That aside, you are *NOT* passing the parent's name here - if you
+look at the callers, all of them have 'name' and 'last' arguments
+identicaly.  What is going on here?
