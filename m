@@ -1,169 +1,109 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E167F19F47E;
-	Fri,  7 Feb 2025 20:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E5114D43D;
+	Fri,  7 Feb 2025 20:07:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738958674; cv=none; b=nVjzz+jiq97lpVpdD8KdSQjRmnPkaR+cK+Z6qreLGnexoxcz3Qfen6dVry2Sak/3YcMvHCp37/HIBQzJl5iOicotCnn/uaBY44A0+gqfm7+udTDyt02/hnqf8+teelMxe5BkD0jPxVjOYFp5BbuXXa97fbcFkOET6lB0vSddXSA=
+	t=1738958831; cv=none; b=PfM0SWUnPsXhb1okdQ2GjhmWmNhnCh2WAt7t900t8YkhUd98N3dmNaEKnadN9MRwREObFSC8BKrGB+ua2dN/2QXO/WNab6GX5hyuTyIQsPP16WZVOfvWORfAUPFifAPNh2H5Yr6SVMFfCuVP+P85ipHasaErHCq+8eyzJWVCNPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738958674; c=relaxed/simple;
-	bh=c0HE3fhR5sqsIIunJnpVU2sofmoEc9yrKyaRzinguC8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=grBGPYP5L4ptu6S1luAtH6TR72Oh1g/nWRocd4i+nSq1D+ka96efmbnGgJvhQ39YmdE0V/TlepLySzFztaGpJPmQGS6uw4XsX+eSXKAVSL5Bfr+0JxIbnJAdkncTDBMdk6AOXsY9ORxk6mCvChcTwTIq2WUylU7IEb6EOjXek8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SAXBQJiy; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738958831; c=relaxed/simple;
+	bh=hilhNBJhm7gyU2xWT0l3rVwkEdmqyKYqu1PEl6FCbO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yjn/qHOFMX35E5G6VPxum9bmODJuVdmCGndBDCNA4Uldm/zaEId+6JF0w2sJ+IYc4xHpJljVwvbzgpqfvZNHkq5C6xuhOtKKufUj7WpohTq6nNln/7jNTWdrtPSYx9jpvZMsBN0ak2Loh+wTMphUi+HDLlGMFYOtpYHT7goNzPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LYE9jc1E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SAXBQJiy"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5de4c7720bcso1505588a12.0;
-        Fri, 07 Feb 2025 12:04:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738958671; x=1739563471; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=G2tTSDZ2XD8g2DNn6kyimdWtnPTRpKW0MbS5kEtAlX8=;
-        b=SAXBQJiymYy9Sbzdk6toeL64YqaicGu6DZtSrw4ip2ukGMFdd7no7pBXA2iZ0UzDlS
-         WCkMpk0A9Rxb0DSgly46vFJY0qXX/xWW0T5mjlr7BiyxlKT/14uYYRdj5KlQuLdFivD/
-         4OsKK33/NZMDHbXZSAUS/aV8Z1prc/+5PjpgSl5+V2WmbJ1k5tmH2VhdhfvcnfyoF35b
-         xRuCJZSuQQ++UGC5JVMECbX4vA1rLzUq2nL0fVWFRVNTPl1jFJEeu2yRgSiPS2h4g5j+
-         O9WsJN0V3NHr2iwkHkO6Fmmwvvj0qSAwQxxjoLi58dVAnjX4DEvpqfcaUgNY1MPBu0D8
-         8aKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738958671; x=1739563471;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=G2tTSDZ2XD8g2DNn6kyimdWtnPTRpKW0MbS5kEtAlX8=;
-        b=mpYd+7Tu7uT9DJnqLMT5kZekW6fWirdOMguttaxJBN+MzCyIwwP3gBNd9gfIG95aY7
-         wBGGdHwmvKoduPLV6yRGcE2MpMttpsGLwcCn2bW9affcaoTQUHKkYNLQQhQIHUW5nN87
-         yqiP/RfAznrRmjWq+9OhSZfz1Tb1v1ga25GOV5QgzY+UDX6elSHsaLcYaWEHnmTYg/yx
-         BeTeZWLA+66ZMJDIyInA9++MpI8gudEFlG1//K6zK7lt9WVubLSuTPaseNpHBicJCx74
-         UOLfM14/VCWJ2+lALVIgLg6lRbWHqDs68+OYrGWLl2NzhmMaNvgAxEpLuY4xM5u8qUVF
-         z5ng==
-X-Forwarded-Encrypted: i=1; AJvYcCU2iY+8/UWpoOWwF621dla/l0I8odqlmX4gL5VgG8/r5GMzQBl3b4FihurC+1YZZTQkhoOLphHuvlzxsM/VUw1M@vger.kernel.org, AJvYcCWnMamlCoNS4Yt4skDYM8nQdnbOb6Bbr7a/1av/Us3zxN4oGFlD0jPjoLEkwagztGomExDVBmpMva8fzBI=@vger.kernel.org, AJvYcCXN0JoZQLSnWb6TnbVq4istIVzBIu1BsiBKO1UC9lzD8zK4CeX0zVrzD2bw9ARA/gkyJRC1YXtx@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTiRwDlWBcLECEMFyEriVoM/FjqN7ryyRLjw8UCJLoIO8oMc8K
-	OOMF4ejNdRrbFzUgkHqzaRsyQ9RH6IIfvxIkY5TNWa+hDrtXX226
-X-Gm-Gg: ASbGnctT2jsEHFYh7wqRk8wylplwNMhTFrKFbfGkyHmcKQ1Ak1vnliP7ACREPFxZUnG
-	zuLHXmV0N0e9YviO8Z1qMX4hxojoPRIq8C1sd97e3HSh5GlIDdKZAJ0PbkAu65VBFLu+cXSbb7B
-	xghqyoWbYenFF/iEpi6d11ExhPVzayjBL3Svysip2gYWcB7tEwQ70sfBMj3ihIAnj/+qaFBguCV
-	V+7aAgnbAUlZafhxbxPhut8Ow+8eUIQhDIpuH/NXKgnO2SiF3j83d3PRWiUbOkL2Qvx7VqoDJPN
-	iwvaAnT22MF5V4yz9ifGNuk6hXPTH6GUnPzgHFstU3B1Z8qH+nbeehWxraHnWW0Q/77idgSRMVh
-	fhdF4ulERK6B7TcY6dtWYVCSRnFhlc7wMlK+/4zxU3EDSDR83lF9/J6gI8xtpIme+ZA==
-X-Google-Smtp-Source: AGHT+IFwhFFxWKhiLiV5wk2B71s8k88eNWyrwlatwlmZhNRtZGKXQn0gb2lgnlR7Mo2Je7BPaqOlyA==
-X-Received: by 2002:a05:6402:2383:b0:5dc:7fbe:7313 with SMTP id 4fb4d7f45d1cf-5de44feb7bfmr6015830a12.6.1738958670962;
-        Fri, 07 Feb 2025 12:04:30 -0800 (PST)
-Received: from ?IPV6:2001:1c00:20d:1300:1b1c:4449:176a:89ea? (2001-1c00-020d-1300-1b1c-4449-176a-89ea.cable.dynamic.v6.ziggo.nl. [2001:1c00:20d:1300:1b1c:4449:176a:89ea])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de39feff59sm2298672a12.77.2025.02.07.12.04.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 12:04:30 -0800 (PST)
-Message-ID: <78a30eab-cae6-4026-b701-7d7002fe3abb@gmail.com>
-Date: Fri, 7 Feb 2025 21:04:28 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LYE9jc1E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 035DDC4CED1;
+	Fri,  7 Feb 2025 20:07:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738958830;
+	bh=hilhNBJhm7gyU2xWT0l3rVwkEdmqyKYqu1PEl6FCbO4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LYE9jc1EsEHG8d3Is5YHp0nx/UhYWYRFgkfUk39bIcEpCx5ZBQ9+xWQ4BirLtIuAv
+	 8yZudPKcjgjJqOY0q3DgF68NLWd2vr84/vtOziN+Rr6/qcE9RFRqft8e3K/Kt5ETDv
+	 ZQs3gVpLsq4xZICVk7Pa6tFH79Mk/f/eLo6B8Du2YyxXN2hkbOD2womNlBKm5fqyz+
+	 DecDnRHIa4bOkiWCZxXnLzD24hXO3BUXY40Ev04J0n6Pg38N3kGnRa0Z369RIW/uux
+	 L7v83uJabvw4b4S5BG2sxMdQLeT7UdvoXlEGml0u0lseOPAYLna4mKfHcsTp4tdN/T
+	 muTG0T0MffppQ==
+Date: Fri, 7 Feb 2025 20:06:59 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Deepak Gupta <debug@rivosinc.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	alistair.francis@wdc.com, richard.henderson@linaro.org,
+	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
+	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
+	cleger@rivosinc.com, alexghiti@rivosinc.com,
+	samitolvanen@google.com, rick.p.edgecombe@intel.com
+Subject: Re: [PATCH v9 01/26] mm: helper `is_shadow_stack_vma` to check
+ shadow stack vma
+Message-ID: <5708c19d-240a-466a-b17a-d51b26ab95e6@sirena.org.uk>
+References: <20250204-v5_user_cfi_series-v9-0-b37a49c5205c@rivosinc.com>
+ <20250204-v5_user_cfi_series-v9-1-b37a49c5205c@rivosinc.com>
+ <6543c6b6-da86-4c10-9b8c-e5fe6f6f7da9@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 net-next 12/14] bridge: No DEV_PATH_BR_VLAN_UNTAG_HW
- for dsa foreign
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Pablo Neira Ayuso <pablo@netfilter.org>,
- Jozsef Kadlecsik <kadlec@netfilter.org>, Jiri Pirko <jiri@resnulli.us>,
- Ivan Vecera <ivecera@redhat.com>, Roopa Prabhu <roopa@nvidia.com>,
- Nikolay Aleksandrov <razor@blackwall.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Joe Damato <jdamato@fastly.com>,
- Alexander Lobakin <aleksander.lobakin@intel.com>,
- Frank Wunderlich <frank-w@public-files.de>,
- Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, bridge@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20250204194921.46692-1-ericwouds@gmail.com>
- <20250204194921.46692-13-ericwouds@gmail.com>
- <20250207150340.sxhsva7qz7bb7qjd@skbuf>
-From: Eric Woudstra <ericwouds@gmail.com>
-Content-Language: en-US
-In-Reply-To: <20250207150340.sxhsva7qz7bb7qjd@skbuf>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="dNozXZgwSNh15IF2"
+Content-Disposition: inline
+In-Reply-To: <6543c6b6-da86-4c10-9b8c-e5fe6f6f7da9@suse.cz>
+X-Cookie: MMM-MM!!  So THIS is BIO-NEBULATION!
 
 
+--dNozXZgwSNh15IF2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2/7/25 4:03 PM, Vladimir Oltean wrote:
-> On Tue, Feb 04, 2025 at 08:49:19PM +0100, Eric Woudstra wrote:
->> In network setup as below:
->>
->>              fastpath bypass
->>  .----------------------------------------.
->> /                                          \
->> |                        IP - forwarding    |
->> |                       /                \  v
->> |                      /                  wan ...
->> |                     /
->> |                     |
->> |                     |
->> |                   brlan.1
->> |                     |
->> |    +-------------------------------+
->> |    |           vlan 1              |
->> |    |                               |
->> |    |     brlan (vlan-filtering)    |
->> |    |               +---------------+
->> |    |               |  DSA-SWITCH   |
->> |    |    vlan 1     |               |
->> |    |      to       |               |
->> |    |   untagged    1     vlan 1    |
->> |    +---------------+---------------+
->> .         /                   \
->>  ----->wlan1                 lan0
->>        .                       .
->>        .                       ^
->>        ^                     vlan 1 tagged packets
->>      untagged packets
->>
->> br_vlan_fill_forward_path_mode() sets DEV_PATH_BR_VLAN_UNTAG_HW when
->> filling in from brlan.1 towards wlan1. But it should be set to
->> DEV_PATH_BR_VLAN_UNTAG in this case. Using BR_VLFLAG_ADDED_BY_SWITCHDEV
->> is not correct. The dsa switchdev adds it as a foreign port.
->>
->> The same problem for all foreignly added dsa vlans on the bridge.
->>
->> First add the vlan, trying only native devices.
->> If this fails, we know this may be a vlan from a foreign device.
->>
->> Use BR_VLFLAG_TAGGING_BY_SWITCHDEV to make sure DEV_PATH_BR_VLAN_UNTAG_HW
->> is set only when there if no foreign device involved.
->>
->> Signed-off-by: Eric Woudstra <ericwouds@gmail.com>
->> ---
-> 
-> Shouldn't mlxsw_sp_switchdev_vxlan_vlans_add() also respect the
-> SWITCHDEV_F_NO_FOREIGN flag? My (maybe incorrect) understanding of
-> bridging topologies with vxlan and mlxsw is that they are neighbor
-> bridge ports, and mlxsw doesn't (seem to) call
-> switchdev_bridge_port_offload() for the vxlan bridge port. This
-> technically makes vxlan a foreign bridge port to mlxsw, so it should
-> skip reacting on VLAN switchdev objects when that flag is set, just
-> for uniform behavior across the board.
-> 
-> (your patch repeats the notifier without the SWITCHDEV_F_NO_FOREIGN
-> flag anyway, so it only matters for flowtable offload).
+On Fri, Feb 07, 2025 at 10:27:10AM +0100, Vlastimil Babka wrote:
+> On 2/5/25 02:21, Deepak Gupta wrote:
+> > VM_SHADOW_STACK (alias to VM_HIGH_ARCH_5) is used to encode shadow stack
 
-Or should mlxsw_sp_switchdev_blocking_event() use
-switchdev_handle_port_obj_add_foreign() to add the vxlan
-foreign port?
+> I see that arm GCS uses VM_HIGH_ARCH_6.
 
-Then all foreign ports are added in a uniform manner and
-SWITCHDEV_F_NO_FOREIGN is respected.
+That'll be bitrot in the changelog, it was originally VM_HIGH_ARCH_5 on
+arm64 as well but we had to renumber due to the addition of
+VM_MTE_ALLOWED while the GCS series was on the list.  The changelog just
+shouldn't mention VM_HIGH_ARCH_x, it's not particularly relevant here.
 
-I do not have the hardware to test any changes in that code.
+--dNozXZgwSNh15IF2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmemZ+IACgkQJNaLcl1U
+h9DVuAf/dyasNesjmRVNnX4CSTWgbPesYoxwpqTQgKso+9joOZPYPyLvIggnLsC1
+o+R1+QnbfVTDXvm+EDZnKplHkrzc7OMlSyqoO0Jhcvho9xR9wHpNaqRTQEMg4vCm
+Zg5azVK9vR2hn74CXPkTi/0R39CY3f02oIwZqD8xp7OZ4hjW7cis7E1aXqnos5Xf
+ojdS0hRnNNwrxRfdgK6u2APvcBJajWPE2C2I1ogm4eZO6n3ZI2RTSez88i8bShDg
+9WGWK5ghGkwKB5tkeXRra2Vvbfs3Wu8RyAY8/X1LKU/8wE2Mrbbk5Cu8E9jbuqD6
+Wx+CXrnjrV+x09CkTFzkFq+DBsO2Gg==
+=DOc/
+-----END PGP SIGNATURE-----
+
+--dNozXZgwSNh15IF2--
