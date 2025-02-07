@@ -1,118 +1,144 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B9123C8A8;
-	Fri,  7 Feb 2025 15:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CE6123C8B3
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738943729; cv=none; b=TWXZcqciMslUkXpA4A3qR4sRfHN9H2CwO5kPeP9Fs3dkOx81TWSzIyRyQMCkoj28Q053RmngJ2wIYYRsr5gnCthG91g9yvYRxz+TpnsohlFIOJnnAR4iK/Ytv+vy47YVf8J5NaspCb/1fXqeNrOlPZcV7HqwIRl2x+w3Caf/IR4=
+	t=1738943762; cv=none; b=Y44WMabkkh0bqVQx97NHsVJMBadiKxHQZVB2TRAqhwSZIcKANUCmc4iNq0pyA8bmCtlk5mijK6JSkd3DlGXPWok9HITiQmuYGEKf8Uhdf5kjxjDaLA/Ki8yrXqZIeEChNIP7Mml+vWn9ZMTFy2VN5CnEp+bCV9pdNkDBTzhlQB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738943729; c=relaxed/simple;
-	bh=qx/r69FfMWfPcpZgztgDmNJpqMSLhbgIBlX5jUCHHrQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=I0MlWy5CfujJprCHH+s4G0sIcok3hf4meh1WjUSXFdXqYudnZSfNK07XCTygKAifiAhxnwXm8WKMVcWKTynk4UHBN9V7BtupLEeFfirQ8gNKIwJZ2124FqRhM7NsvAHYCczMURGTOZ9HOtsZ3HbBUq1CRFARogKTEKwLNrZwZuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GvqpfiB3; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GvqpfiB3"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5de4d3bbc76so1087040a12.3;
-        Fri, 07 Feb 2025 07:55:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738943726; x=1739548526; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:reply-to:from:subject:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qx/r69FfMWfPcpZgztgDmNJpqMSLhbgIBlX5jUCHHrQ=;
-        b=GvqpfiB3wCiW8jNHyeCcwv/Dumae/6X2Q7wREnIMkU00SJOO+VLxtnOYvnsaAfolul
-         z5L8povAi2CoPyfWKuDuLpGRO1qe+fthDpujSYlLnyUfviSozglDDs3Rlhn7rFJm8Rvh
-         QB7e3dedXkytin/rAqcbCvPXhAWbgWMZTB/30pyLsTTk9vh+kYFE2eC0zNhLp6FLcvPI
-         zs86X0729S2aC9SMtEtDTK11WXUsH/Cxu0u6ofPwRek9cSNojkJ7qCQW9W1VVM4mDsuB
-         lP7x2v1I8QKcIi2gftPnTujfFp/3+m3qayR+bKci8L8ydmlpVfT4qFPh6Mexl4WVusiA
-         Ju+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738943726; x=1739548526;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:reply-to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qx/r69FfMWfPcpZgztgDmNJpqMSLhbgIBlX5jUCHHrQ=;
-        b=bUNB9q/cCV7d5gTTa5eqNME66VM7EdbR2mj/ffm0CtGVKS6Hmbdkp4LbO0ZNxLWXh3
-         0URFEDUfaOe7pmBIgo2L9Fqzv+lY7uXWsoP8Ew8vfzrO7PxRU+FEmSmauDhlSOFTb7eC
-         SKEKIJNDc3seVnrsOyHXlqZyc0aJtAHuuRE7QXqN8TT8PbJsQ+ZGWXsIowc6fQ9BDuNl
-         vl2yjU+Aec3Msdh1TMZH3okX4ZsVIB78m910m2h+5dp7KwLmks+5C8ZPtZm3Dl+cN2T2
-         0tljd1qjSOmrv3hW4XqzUFGSgRmR8w6mymKJ+Vzgo4ke9TPnhLT14vqmR/F3m7uloCUp
-         Kpgw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGQ/WoZwmj6jLiLO9u5hsh8nqFh7yh365gXiGpUHGfVeWifL3hxY+B+OjmCfO6vkZQtxBVrCF8p6Q=@vger.kernel.org, AJvYcCWAL6I3bVliOaDsQ+jTXp6ziuYwGqiJiMjtt3OTQi7WQf151mGQuK0YqrXjB1ZbVKcRlB2wXnkRMTo=@vger.kernel.org, AJvYcCXP7DSBZgvYdswUWVbrkZHMMU2kxxkg9k6drvMoj/j6gLcsuKShfYTZ/sktbLdjEegqb7VMChfwNqxuMQ3s@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7ZYGBCef3Rn/tfjPw/n40gJvIrFK9OIJJtbAf49iUWyEEq1Nd
-	9hTLjeMjxG8uB2i+UZiizcLREg59ntqyYJKxO7f+qef95cuI8bNY
-X-Gm-Gg: ASbGnctHMCYTL3w/gFocmpPmlaOU7LGxb2s44pK3NK7JsfNE+x6kpOdavmRiFNML7eC
-	GKfPl6kfVydzVJAv5sFQzqWwAl2srtAb0tPWb3x9sYR5fZOhcoWfQTdqIjdSLGdfIIwkzQhdGig
-	iM5C39KfmYDQ4S2yODCCZi/Ckm0oyKLrn6UUZN740Mg7o7vzNZGO80yg3Lhz5bcG5HE9Iis0yLE
-	/paZgmZ7m9iEEGJXYNQ87QWANjI1wl3as6KbFIAXmOOKCSPMbo18af+LEa3Bdpos1fMAJd+xjgw
-	mGo+C2vFwgWucmAQyXZTyChDYBQg6xp1hMqSlj6xLpNLhw==
-X-Google-Smtp-Source: AGHT+IFhdnFhD1x+nif8vrnMuRN9dZ3Pt1Mf+cz8uFEARcf5qzMnlu6uMGAwxKCOk3KU8vTljkXbsA==
-X-Received: by 2002:a05:6402:2106:b0:5dc:ea80:bffb with SMTP id 4fb4d7f45d1cf-5de4508815emr4226974a12.29.1738943725484;
-        Fri, 07 Feb 2025 07:55:25 -0800 (PST)
-Received: from abityuts-desk1.ger.corp.intel.com ([134.191.196.181])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcf6c9f9b3sm2741593a12.59.2025.02.07.07.55.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 07:55:24 -0800 (PST)
-Message-ID: <6c258775cdf2f8f3c370c0cb81daf22dacf6aeed.camel@gmail.com>
-Subject: Re: [PATCH v2] intel_idle: introduce 'no_native' module parameter
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Reply-To: dedekind1@gmail.com
-To: David Arcari <darcari@redhat.com>, linux-pm@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>, Jacob Pan
- <jacob.jun.pan@linux.intel.com>,  Len Brown <lenb@kernel.org>, Prarit
- Bhargava <prarit@redhat.com>, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Date: Fri, 07 Feb 2025 17:55:22 +0200
-In-Reply-To: <20250206164009.816232-1-darcari@redhat.com>
-References: <20250128141139.2033088-1-darcari@redhat.com>
-	 <20250206164009.816232-1-darcari@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1738943762; c=relaxed/simple;
+	bh=kRXg5LkgUzZcBF1lrkYw0cvMSEC6hEXG+ngaxDmdiyo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z/Qz5Vxwg3NssmH1pJDgLboOiskdQZq3Z6LbCRvy7DOWz1w/JrjbD5ShzXgNduohfzUqhW2AZ2rOU+C1mx5+5UvtWRiV/0JQutZuxFuFOKKuPKl/ij/Ga22Tn8zagqr33XSDCsUR3IbLtSADZdGz9ptMQe9bFZAJOWHb4BqM7Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94ECB1E32;
+	Fri,  7 Feb 2025 07:56:22 -0800 (PST)
+Received: from [10.1.196.57] (eglon.cambridge.arm.com [10.1.196.57])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89F493F58B;
+	Fri,  7 Feb 2025 07:55:56 -0800 (PST)
+Message-ID: <3477e165-3ad7-4599-8641-10fd30a91b86@arm.com>
+Date: Fri, 7 Feb 2025 15:55:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 40/40] x86/resctrl: Add python script to move resctrl
+ code to /fs/resctrl
+To: Reinette Chatre <reinette.chatre@intel.com>,
+ Tony Luck <tony.luck@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+ Fenghua Yu <fenghua.yu@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+ shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+References: <20241004180347.19985-1-james.morse@arm.com>
+ <20241004180347.19985-41-james.morse@arm.com>
+ <ZwW7cWgXJmfW8AQP@agluck-desk3.sc.intel.com>
+ <a009c748-dff6-45ae-8a38-fef66561af22@intel.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <a009c748-dff6-45ae-8a38-fef66561af22@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi David,
+Hi Reinette, Tony,
 
-On Thu, 2025-02-06 at 11:40 -0500, David Arcari wrote:
-> +The ``no_acpi``, ``use_acpi`` and ``no_native`` module parameters are
-> +recognized by ``intel_idle`` if the kernel has been configured with ACPI
-> +support).
+On 24/10/2024 01:17, Reinette Chatre wrote:
+> On 10/8/24 4:08 PM, Tony Luck wrote:
+>> On Fri, Oct 04, 2024 at 06:03:47PM +0000, James Morse wrote:
+>>> +functions_to_move = [
+>>> +	# common
+>>> +	"pr_fmt",
+>>> +
+>>> +	# ctrlmon.c
+>>> +	"rdt_parse_data",
+>>> +	"(ctrlval_parser_t)",
+>>> +	"bw_validate",
+>>> +	"parse_bw",
+>>> +	"cbm_validate",
+>>> +	"parse_cbm",
+>>> +	"get_parser",
+>>> +	"parse_line",
+>>> +	"rdtgroup_parse_resource",
+>>> +	"rdtgroup_schemata_write",
+>>> +	"show_doms",
+>>> +	"rdtgroup_schemata_show",
+>>> +	"smp_mon_event_count",
+>>> +	"mon_event_read",
+>>> +	"rdtgroup_mondata_show",
+>>> +
+>>> +	# internal.h
+>>> +	"MBM_OVERFLOW_INTERVAL",
+>>> +	"CQM_LIMBOCHECK_INTERVAL",
+>>> +	"cpumask_any_housekeeping",
+>>> +	"rdt_fs_context",
+>>> +	"rdt_fc2context",
+>>> +	"mon_evt",
+>>> +	"mon_data_bits",
+>>> +	"rmid_read",
+>>> +	"resctrl_schema_all",
+>>> +	"resctrl_mounted",
+>>> +	"rdt_group_type",
+>>> +	"rdtgrp_mode",
+>>> +	"mongroup",
+>>> +	"rdtgroup",
+>>> +	"RFTYPE_FLAGS_CPUS_LIST",
+>>
+>> Something goes wrong with moving the RFTYPE_* defines. A new copy
+>> shows up in fs/resctrl/internal.h but the old copy isn't removed from
+>> arch/x86/kernel/cpu/resctrl/internal.h
+>>
+> There seems to be a few more duplicates: RMID_VAL_ERROR, RMID_VAL_UNAVAIL,
+> MBM_CNTR_WIDTH_OFFSET_MAX, RDT_DELETED.
 
-And if kernel was not configured with ACPI support, are these not recognize=
-d? Or
-they are just no-op basically?
+I had a follow-up patch to remove those[0] - but I've fixed it in the script now.
+These were mostly due to a missing else when spotting macro's that weren't multi-line.
 
-Looks like there is a stray ")" at the end.
+RDT_DELETED was a good laugh - that has a tab after the #define, not a space - I stared at
+that for a good while!
 
-> +
-> +``no_acpi`` - Do not use ACPI at all.=C2=A0 Only native mode is availabl=
-e, no
-> +ACPI mode.
-> +
-> +``use_acpi`` - No-op in ACPI mode; however, the driver will consult ACPI
-> +tables for C-states on/off status in native mode.
 
-I think "however" part is a bit confusing. Would you consider re-phrasing
-without "however" ?
+> Also please check the trace files after the move and related CFLAGS.
+> arch/x86/kernel/cpu/resctrl/monitor_trace.h is just empty and the
+> arch/x86/kernel/cpu/resctrl/Makefile still has the "CFLAGS_monitor.o = -I$(src)"
+> Also please check fs/resctrl/pseudo_lock_trace.h
 
-> +
-> +``no_native`` - Work only in ACPI mode, no native mode available (ignore
-> +all custom tables).
+I'm afraid this last one is expected. There is a follow-up patch to remove the harmless
+boiler plate that gets generated here:
+https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/commit/?h=mpam/snapshot/v6.12-rc1&id=02cd8d6facc3d3a8984b260203d71cba9d2e462c
 
-Other than these small nitpicks,
+I could hack in something to delete the files - but it'd need to know something about C in
+order to remove the #includes too - otherwise the result can't be built.
 
-Reviewed-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+If this is a problem, we can ask whoever generates the 'final' version of the patch to
+merge that follow-up in.
 
-(I tested it on an Intel Broadwell platform).
+I'll add a list of these corner cases to the 'commit message'. (we shouldn't commit this!)
 
-Thanks!
+
+The additional corner case is the includes for 'asm' or relative paths that would break
+the build on other architectures - but don't matter yet.
+
+I couldn't include those patches in this series as they don't apply without posting the
+generated patch ...
+
+
+Thanks,
+
+James
+
+[0]
+https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/commit/?h=mpam/snapshot/v6.12-rc1&id=2fada2eb99e2814984bbba9106a9695ef6d4b8b1
