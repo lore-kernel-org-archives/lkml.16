@@ -1,92 +1,135 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A525D18BC1D
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E1B1662EF;
+	Fri,  7 Feb 2025 08:33:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738917187; cv=none; b=NfhnsRoYcdRRwq4DwzmnyXG+tPdM1GUJ6wRtBhk6ofU86/dPnf/ZPY7b/QXX0/rGM6HNWcaHWKJY3NOJFLOJh+KSSwcK0+nEszm8pktb1w8khmox12TLTsQbHuauT4vWJKmJDqZ3wd1hneG2TtsJYJ1rcZZ1pz/96mU5J78EbqM=
+	t=1738917203; cv=none; b=eq7dTK2ind7EOaW8MEdo3ZZ6+HT9Ee2bzlqLzhXTdP3nZr/SujR4om0KBhCdizBNT029SxPFrpIPTlBPJqwxSvYrdiOpWSNBq3HCL1eyquCltDp3pS2C6ppqcAR+BACJEDV0+dLBhAUMGAGnJmlsv83qjCNcNhpqRwNZCMVjY5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738917187; c=relaxed/simple;
-	bh=FDZ31Nx3civlmwWIQQAP+ROKkOH2EWUR9BDacWGiMAk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DfTQDTSGcGj3z/TfzxLY/NOXFEEUZ7QArV7SF8SherxAvmFlh1yLCM7TRLp0ReCeEDgCBZdTloyTAsot/BL0LjriJ85ldSEyxyO+KwK151JfGomlFRxnqII5vi0yYuJE1q2IJ5GfqDEH4lnhplsGLnQbGZXqgjUY6VuWCOnLyyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SfoCiJ9V; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1738917203; c=relaxed/simple;
+	bh=GtxLgT3tyWGbWCvKml+HO1Ii/ozeWGs3xqKQ3m9rWkg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AgzXIT4PPpQ3+lUetyNuO/anXZSHtu11OuNx0pgsePfeczbpEM3UtqvtxEQp4rAfr1qtvtF1yfjppcTwrSUP3wRHKJd+xKKWCTsvYdYs1P2IZyEgPF3PAcxl76+/4BhNDTykeA/sL0UB323+3nW1ZNtbm2+EHc1+Y033HbdEr04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=x4VMvHw4; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SfoCiJ9V"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3061513d353so18968711fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 00:33:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738917184; x=1739521984; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FDZ31Nx3civlmwWIQQAP+ROKkOH2EWUR9BDacWGiMAk=;
-        b=SfoCiJ9V/vHiHRjbGyW+Y2lWJG8yPIm37fEdVB15NIJlb7S5tB/xw2kFDZZRJrQ2W3
-         EetzkglO9qerFRPG4XiUMExACleKkhO68Apr9m5hJAFSVeQDjV0Uv1KfxOdJTm36qtOx
-         GD1iBS4TP8FKwBt7gq3gnOyVVvb/G+o4LAV1BfFAlCjAHZj2+FD0i+G3edMoM8DC36eN
-         TiqaaOjfQIh773M25wfGlWWi3je1EMZ1SRMw+CwxMP97SzZVuvEEoLrp0wGETIPMmpfg
-         C81prLIxwYEpLdhXoBAuiaLTQ0nqqdUIAdo0CSgawvyVwGF6++P7n7Fh3bWGnRC/9VnO
-         lV7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738917184; x=1739521984;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FDZ31Nx3civlmwWIQQAP+ROKkOH2EWUR9BDacWGiMAk=;
-        b=A6DlLKXEQq3Q38NPinmrYK9DW7aoixmHnmzU8IBYola+LxBtc2V5XdrO1klv+kX0MA
-         N9B1gFM+cUPpQnXoKzm5I7xuIpGfmK1O1e8a/vr7J9AzoblrF5Ibdkh3FmPju5WQe/qR
-         vbRVEN8ZeCgiVkFuvR1V8XiADaJaEZbNO/K9KtVw+Bhq6wsBVy1562/d7Zl77yYAeloC
-         4VpgqVdseLk7YKEIaG3pAgGTROdGphKLXUL/Hrp5i4ChaqQdyRZ4Cwhcsa+7lXidiEDp
-         mKFt8XH5rk2KEixynfitZalbGm8zi78cpma5dBcGYtl3qq4hFYmWYpXSdmQJ0v0Ebu5+
-         v1mg==
-X-Forwarded-Encrypted: i=1; AJvYcCXdVyjAAAzeV+L/yVgzTCJnl9AdIsa3OE4tdZXB/Uv2u5t9pyXznDiDa/LLopRll7yt0JKaOYl+8tCnmGA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxhAp3s9KNVuwMgW8XgSCGuGaVsZFyuGxXi/aHr0kHGhI+39hM
-	+pUYghF0kMySiiIO12ZOf1TXtWIuBI10RJn3xwwF8sqYyQnzaQzL8TpUxKdtJ2Kbu83s8bVuv7B
-	C7hVqCFE9sogoTybTMHJf93IoqiZyT8aL43tAxA==
-X-Gm-Gg: ASbGncsusBFpv2dbQmwhQE1y2LEar0ksiaJ/9ITNbcRUT8LkJSmkh9yx7AZR8Ha7Q8a
-	S18R+VpLdk6N7/tN4mhV5b5dIfWJhG36gNyBmG1x5feOdiebf/Jtx3l4JD5n3N6X8gcHFzpf9wF
-	E9qZawMfX6gmGQeZtwgPHL1e2skq0=
-X-Google-Smtp-Source: AGHT+IHgWB89hNW9OJ6NJL1Rj2tEIBIMQOYDoOww7bCgZyhnauDXQruFNOqLsaUZ2hE+SG4ZneFMitUz5QVDxTih6yw=
-X-Received: by 2002:a05:6512:e84:b0:544:ebf:741c with SMTP id
- 2adb3069b0e04-54414aa880emr710177e87.31.1738917183753; Fri, 07 Feb 2025
- 00:33:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="x4VMvHw4"
+Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 26D131F9E1;
+	Fri,  7 Feb 2025 09:33:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1738917182;
+	bh=l/t7vCxJWdDph//099EQUA35oIJvQPYCB3Z9DffQy6g=;
+	h=Received:From:To:Subject;
+	b=x4VMvHw4NptAo6x5XBmAV+QyJzCjjYW92WHrhRpEQEeN4AiwlYBrOWnwuYnv3+xdS
+	 CduSirEGbfD2odtgGD8sqFJCJ9+32bW/KFtb9wnnB99Hlaajp0rtKbVovJRKUvjTwS
+	 fmgzuipXjkP5rYLWk5Ax29PDsHC8Xj3MDh9oJ8djV50HYbtY3AGPacKWJAjnE6ep5D
+	 LVunkSKdESz3ahRx38ffZQLEZFJsJ43tp2PVrE7wr4082EtgSqslloEUpzynX0LRwf
+	 xnBmNBPjniMBj60NSNgxR9nqm4JDWFodHRONrpK1BWXQCA/tTG9gHLO6alYXXkyt5X
+	 U3irvwSolkaAA==
+Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
+	id BACC07F926; Fri,  7 Feb 2025 09:33:01 +0100 (CET)
+Date: Fri, 7 Feb 2025 09:33:01 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Nishanth Menon <nm@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>
+Cc: Francesco Dolcini <francesco@dolcini.it>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] arm64: dts: ti: k3-am62p: Enable AUDIO_REFCLKx
+Message-ID: <Z6XFPYaj069fvW1h@gaggiata.pivistrello.it>
+References: <20250206153911.414702-1-francesco@dolcini.it>
+ <20250207014239.xzm6rfnusckql2uo@litigator>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207083146.17872-1-brgl@bgdev.pl>
-In-Reply-To: <20250207083146.17872-1-brgl@bgdev.pl>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 7 Feb 2025 09:32:53 +0100
-X-Gm-Features: AWEUYZmWklGhQOPVR4YjGZK1-XCvq6-AQnGa_lgtdadT-6hgqTW9nexvfLKNX_k
-Message-ID: <CAMRc=Mcxw+O+rW4zUwM3roLxj3vAGAkepnVssyd7ifMvuuO=OA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: don't build HTE code with CONFIG_HTE disabled
-To: Dipen Patel <dipenp@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	timestamp@lists.linux.dev, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207014239.xzm6rfnusckql2uo@litigator>
 
-On Fri, Feb 7, 2025 at 9:31=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Hardware timestamping is only used on tegra186 platforms but we include
-> the code and export the symbols everywhere. Shrink the binary a bit by
-> compiling the relevant functions conditionally.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
+Hello Nishanth,
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Thu, Feb 06, 2025 at 07:42:39PM -0600, Nishanth Menon wrote:
+> On 16:39-20250206, Francesco Dolcini wrote:
+> > From: Francesco Dolcini <francesco.dolcini@toradex.com>
+> > 
+> > On AM62P-based SoCs the AUDIO_REFCLKx clocks can be used as an input to
+> > external peripherals when configured through CTRL_MMR, so add the
+> > clock nodes.
+> > 
+> > Link: http://downloads.ti.com/tisci/esd/latest/5_soc_doc/am62px/clocks.html
+> > Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> > ---
+> >  arch/arm64/boot/dts/ti/k3-am62p-main.dtsi | 20 ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+> > index 420c77c8e9e5..4b47b0774330 100644
+> > --- a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+> > +++ b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+> > @@ -42,6 +42,26 @@ &inta_main_dmss {
+> >  	ti,interrupt-ranges = <5 69 35>;
+> >  };
+> >  
+> > +&main_conf {
+> 
+> 	Why not add it to main_conf section it self in the file?
 
-I missed Linus' tag.
+The reason is that main_conf is defined in k3-am62p-j722s-common-main.dtsi,
+that is shared between am62p and j722s.
 
-Bart
+On j722s the audio refclk is added in k3-j722s-main.dtsi the same way as I did
+here, so I cannot move this to k3-am62p-j722s-common-main.dtsi without updating
+also k3-j722s-main.dtsi.
+
+I looked into the differences of j722s and am62p, and from my understanding,
+from the audio refclk point of view, they are identical (same IP, same reg, same
+clocks and same IDs), so this should naturally be moved to
+k3-am62p-j722s-common-main.dtsi as you are suggesting.
+
+... however, for some reason I am not aware of, on k3-j722s-main.dtsi a different
+parent clock is used, and I cannot understand the reason. The actual parent clocks
+in this patch are just the same we already have everywhere apart on j722s. I tried
+to look at the history of this and it seems that on the TI downstream kernel branch
+this is defined in the board dts file (!) and this confused me even more.
+
+So, not wanting to break stuff I was not able to understand I came up with this
+proposal.
+
+An alternative could be to override the "unexpected" clocks from
+k3-j722s-main.dtsi to the board dts file, and have the "standard" clocks, as
+proposed in this patch and already used on all the other AM62 variants, in
+k3-am62p-j722s-common-main.dtsi.
+
++Jayesh that is the author of this specific change in k3-j722s-main.dtsi.
+
+Francesco
+
+> > +	audio_refclk0: clock-controller@82e0 {
+> > +		compatible = "ti,am62-audio-refclk";
+> > +		reg = <0x82e0 0x4>;
+> > +		clocks = <&k3_clks 157 0>;
+> > +		assigned-clocks = <&k3_clks 157 0>;
+> > +		assigned-clock-parents = <&k3_clks 157 16>;
+> > +		#clock-cells = <0>;
+> > +	};
+> > +
+> > +	audio_refclk1: clock-controller@82e4 {
+> > +		compatible = "ti,am62-audio-refclk";
+> > +		reg = <0x82e4 0x4>;
+> > +		clocks = <&k3_clks 157 18>;
+> > +		assigned-clocks = <&k3_clks 157 18>;
+> > +		assigned-clock-parents = <&k3_clks 157 34>;
+> > +		#clock-cells = <0>;
+> > +	};
+> > +};
+> > +
