@@ -1,63 +1,66 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
+Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0092A238D2C
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD78238D35
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738940084; cv=none; b=iMPWyn5TFZ1UOVIlz6ETLzAaUxzKUqQSNil0ZjBHZOVUQvqzVgv+GTpIfd86+zPo7Q8iUHXoEFzYfV8AddTCx9omOBuUM3jyjaMW59dnznbVSMtZ63s5lBLJZoUEq9NDaIk87ipuW+Fpbg9rdD4h8yMc5cE9qLr7S5zfYVfqyPU=
+	t=1738940087; cv=none; b=jMvmC6D77Wbm405uGuWoaxV4kyFqwNZDNgQA6ERUTkZi9AYEA28LupF+gsde30FU05A9+aSHqOYeBjw4Y4wSPle5UU4BIu0A2J66oy7vGfj5XKL615JvF83mbfR2NeS5mS7EVjP3bLZi4JqJ8/NIqbQBajL4AJ2mY2URlLhSzIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738940084; c=relaxed/simple;
-	bh=dhBxKIvdI6BiG9BZMMoSBVS3E3wXSa546KCeyQUs5Vs=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=f5zQuA++hoP9LWH1/vVlw1ndM8mRutWiacPQd1zPcI4CexVWFEFs2L/Uy2c89s/lPy8Knu5IMSxBki3QnzIm5OXblRbQDgo8kjOEnZzS4q0VneCwaSPKlpjH+vXPQURmtgnDSFVx7VKtvNFrTTVbv9JV+PXsZ02Hg8kl8OmXlug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LhM8f75R; arc=none smtp.client-ip=209.85.218.74
+	s=arc-20240116; t=1738940087; c=relaxed/simple;
+	bh=ZCRFTCY1hi3XMbgWbwzaOADq8bLynRa5HB5rf6QanHA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=fl0f5qgmVqdKggwZMya9k6GIOT88/J98eFzutmk6qckjMlpaewqlx526XHlpsBHYAFFYmpiZd9pzx/bQ2MAZDL7qZPxQjw4pYawDqiP6MLsMI9JbrhcRBX6igVkfOM5n3XTroCKLl53RbpsPC+1vz+4Bd/QtYA/kqDvZjZd1sEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XCWH+U6n; arc=none smtp.client-ip=209.85.208.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LhM8f75R"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-ab78d6ed6f8so111461566b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:54:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XCWH+U6n"
+Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5de573292e7so103773a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:54:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738940081; x=1739544881; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=JmM/iQkbvbBvv7fXX70IILA144cHjP/mqwSWag+vGNY=;
-        b=LhM8f75RfwOdTZ3o5kakPXcYicpBpVVlIeQ6SBK/GzSIuys+nmp02yFuDL8nOem1n6
-         8A5zaCGUusEf9Jn2VlhM7auV9AWxwT1MjyrhEX1KPGSkNsHlsYrB3NcsU60WuV4QgsUD
-         bRZ3X3Mmq2ZPNqVLQaiCokAye3dzQt449dHLuU2aOjA825Qq1P4S0XMc3k/KHkDyLObg
-         JlHUoimgsmt9089/Ev3VOOVxJQRsiGbphFO9Dg0Qdz1U9MquVXtuoR3BGLd3I+QSmvf7
-         H55rjCwFLH93cnQSAdz8ZIR2sR9WBIy9GXGl79zcB6zb9zWFL3OilMAsxS2C3KPyUPlM
-         GlCQ==
+        d=google.com; s=20230601; t=1738940083; x=1739544883; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QlxUuvHn55P4VJoa3VPKXet3o2roscTj71cLK/0XsCo=;
+        b=XCWH+U6nLMubKCsEzoQx7/nyy+x16f0+2kISo1G9QCXjSNOr8cMCswcANMxQBBxx1g
+         KqH9pwkngKuJPKDJP/jQOvLG/umj48pVnQ5uodt0ZIW3z4lZVIsclEyf9Ne3mWo58zgE
+         fLngrGq4svFcgY8Z/4rYJbkginJgQV9QQsMvkQUR6oNfwXcf0xduZXK2St+EUxSzCd3m
+         6rkIz1xogPFSp8GAYbxHY/sYlWkWRJuSz8vBrUuOlgIMJRACZ3bUAKQ+MwnjbbGs/TnO
+         cHRFcDp1m0R2h4t1Fc/ozdkdS0/k4vJgYmnoO9k4cdfSjrGgwt3ReZ15MLocnwlWTxu/
+         +vhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738940081; x=1739544881;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JmM/iQkbvbBvv7fXX70IILA144cHjP/mqwSWag+vGNY=;
-        b=fB1DdpYmvQuMSti0//JeZgYJmQ3cxwrvXxAJoF0dBtIhTMC7e5TIoQPQbxzVEyLkHm
-         R0+A3ZdD0JPUE2AggU9vTj1u9NYXT0petnIZwbn2geOm2j8JZh3MjRSn0tuEQjltxXA+
-         SlrLjDVLT6C/RlfKkWDfqwhSbFNidumjGazBsfD9SBd8AuIR2J3Zi/I8e79hfgYXjXkz
-         0Su5VWQgu2ZaxW//DKtGodEpLQwKdddOhkDkfdVJlUajkxAuw1W8FVaUj+DGIvD6hahr
-         cSpG+IW+i7yO2QfQItLaHsC7ichYHYV1Bgt6HN2XQJoVHrO4SlWg8NRXQPBWae9ECnBQ
-         +kZA==
-X-Forwarded-Encrypted: i=1; AJvYcCXfabX2h24AkcEIbKUT2igYXXzmFnkQLHs+flVaFbozBTSa8AkZqGFHtmSbEEzV7WDvTeOdjzix3ZAIv30=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOMkZdbVE9cn48k33R2bLD693tj6nGEYFEZ25amAtBOBbP/0C3
-	JZ95BrPvpy/bH1YHgcd+y8M7tt1/hFxGVSh4wNstNlNdyeO/GZgMvltzwJkzL+M3uBk05YPF0DH
-	aFrRzAw==
-X-Google-Smtp-Source: AGHT+IHcnN2p00NsIVJ/Tco7clKqry81fiAhoeHRLb1kPa5FchoYCPasviVPCLtY7RbBfUFKTgyinTclnwgX
-X-Received: from ejer10.prod.google.com ([2002:a17:906:9ca:b0:aa9:1d5b:da39])
- (user=qperret job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:9719:b0:aae:b259:ef63
- with SMTP id a640c23a62f3a-ab789b27dddmr445128366b.34.1738940081474; Fri, 07
- Feb 2025 06:54:41 -0800 (PST)
-Date: Fri,  7 Feb 2025 14:54:36 +0000
+        d=1e100.net; s=20230601; t=1738940083; x=1739544883;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QlxUuvHn55P4VJoa3VPKXet3o2roscTj71cLK/0XsCo=;
+        b=d/xkDVMNniJe049806jmTDW/OSJ92pNlyLXq9LYqi0EhUeeq1hV5uNC0u4cqNOxJH7
+         mc9zITSNQVmpL2k/nUPv1P5pGnqozLSVFuIIUIG0qMThoTbt7MmgNmPgphc/EZ8nBefy
+         bD1qHRQsL2QwDYD0emX2dYUN/1vN6g2U17j5CrxxWBpHUeHUtEr/ATlcF6Va1V+OyaVh
+         asZuv8Fl14+FhSJwVCd9jU/H1O5g4hyEXJIDb0p8VB/Dh8wpI+tEw9dzLB7XB+UNHpsS
+         4AX6IFXEWUjpWAHdWcB0VtRD5/cldOHAuGwiYs5fE9Wu4hDk/hbK165ZYaxB14nP8eHA
+         2z5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUMn+ZZ95CdMw2yuQKjuzqu2QhSL7eaOeMWExjX8ZX67qQ7oy3eGeDQLZ79/nVo05DCq8zyE/z4X5zK9fs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+pOC/pfKWKEAQoS/em+/WtkAO+LFqHtBUhXyN+ew3DE/LnBlA
+	7JgvYKN5bJP1Iq7Eyo6pCDgoCL+OJ1Z1UyZd1ixye48MRYmtfA5RVqg2gdK2GxvfCR7LDAwj9yl
+	0JtWuNA==
+X-Google-Smtp-Source: AGHT+IEuPMCv7YqXJlNHwKccMEWSYS/+UUaEr2aDY+SyLUIdyjbcKQ2U586hKi+BCjLaIqvUPKXUd5QYm4sG
+X-Received: from edax2.prod.google.com ([2002:a05:6402:4142:b0:5dc:110c:e5e2])
+ (user=qperret job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:2546:b0:5d9:f21a:aa26
+ with SMTP id 4fb4d7f45d1cf-5de450a9e4cmr3320543a12.24.1738940083729; Fri, 07
+ Feb 2025 06:54:43 -0800 (PST)
+Date: Fri,  7 Feb 2025 14:54:37 +0000
+In-Reply-To: <20250207145438.1333475-1-qperret@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250207145438.1333475-1-qperret@google.com>
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250207145438.1333475-1-qperret@google.com>
-Subject: [PATCH 0/2] Fixes for pKVM NP-guest support
+Message-ID: <20250207145438.1333475-2-qperret@google.com>
+Subject: [PATCH 1/2] KVM: arm64: Improve error handling from check_host_shared_guest()
 From: Quentin Perret <qperret@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -68,30 +71,35 @@ Cc: Fuad Tabba <tabba@google.com>, Vincent Donnefort <vdonnefort@google.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hi all,
+The check_host_shared_guest() path expects to find a last-level valid
+PTE in the guest's stage-2 page-table. However, it checks the PTE's
+level before its validity, which makes it hard for callers to figure out
+what went wrong.
 
-Here are two patches to deal with a race between the handling of
-permission faults and MMU notifiers with pKVM that I found by
-inspection. Specifically, pKVM gets thoroughly confused when it doesn't
-find a page mapped in its relax_perm path, while standard KVM deals
-with that trivially thanks to the -EAGAIN special case in
-user_mem_abort(). The second patch addresses the problem by simplifying
-the implementation of multiple pKVM hypercalls, which also has the nice
-side effect of improving locking by not taking the global host stage-2
-lock as much.
+To make error handling simpler, check the PTE's validity first.
 
-Patches based on 6.14-rc1, tested in qemu on on Google Pixel 6.
+Signed-off-by: Quentin Perret <qperret@google.com>
+---
+ arch/arm64/kvm/hyp/nvhe/mem_protect.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks!
-Quentin
-
-Quentin Perret (2):
-  KVM: arm64: Improve error handling from check_host_shared_guest()
-  KVM: arm64: Simplify np-guest hypercalls
-
- arch/arm64/kvm/hyp/nvhe/mem_protect.c | 73 +++++++++++++++------------
- 1 file changed, 40 insertions(+), 33 deletions(-)
-
+diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+index 7ad7b133b81a..41847c04b270 100644
+--- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
++++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+@@ -943,10 +943,10 @@ static int __check_host_shared_guest(struct pkvm_hyp_vm *vm, u64 *__phys, u64 ip
+ 	ret = kvm_pgtable_get_leaf(&vm->pgt, ipa, &pte, &level);
+ 	if (ret)
+ 		return ret;
+-	if (level != KVM_PGTABLE_LAST_LEVEL)
+-		return -E2BIG;
+ 	if (!kvm_pte_valid(pte))
+ 		return -ENOENT;
++	if (level != KVM_PGTABLE_LAST_LEVEL)
++		return -E2BIG;
+ 
+ 	state = guest_get_page_state(pte, ipa);
+ 	if (state != PKVM_PAGE_SHARED_BORROWED)
 -- 
 2.48.1.502.g6dc24dfdaf-goog
 
