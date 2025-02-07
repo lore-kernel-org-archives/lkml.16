@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92D42451E8;
-	Fri,  7 Feb 2025 14:45:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25D72475D6;
+	Fri,  7 Feb 2025 14:45:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738939545; cv=none; b=nyocY1hxV9PkC4oTvmo8vaneBgEIscYmMAdIvPQuD4AghoTjvweBA2Qv/q+cDZL5V2dnD8EXcynPHF47Ive2w6gquBb+Wn1JOyxjc6/o0AhQ4fVSzCwMGrl0F9gh80zt3pHrwUhqk7F21GfVWOSvdLcQxI1Kr0zrmkClpFPc7qU=
+	t=1738939551; cv=none; b=ZU9CVh5G/93A72ssC5bUT6gHvBepr+w4vbzi7fD6qOognA3oP6x9s2dCxC2w+WO/AP8atAnTlRm1bE21iUMoe5TUXgsMqX/0y2eBO3avH+RjLm94dqW7o4PJ2teVGOV05o+sfNaVTCxapYn1pnoN0mlXUJLyH2GWn48HBTtOpXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738939545; c=relaxed/simple;
-	bh=ZXcupFVehMkhSjJCiXZkklaU4BsGJNOTC98aLDtPFDw=;
+	s=arc-20240116; t=1738939551; c=relaxed/simple;
+	bh=JDhu3Dh40nM0VZXZmeMbWxBZXPlgky+9JVPTWJjwErA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fMV9RVVP6CKf+/N9F6ihW5WelR/diZTSwTwURfwwu4xsaA4GqYZRmyPlm6OTOuhx4HcFP/4Z7cJen66VMz3LkJjZF026i0D14KLBEyKYm4Q+e+y5p90i5/096Kc/hRUJkPchG1Vw7vDyEAM3PB9dVIcehp0iIQB4o3zpbwKK468=
+	 MIME-Version:Content-Type; b=gi+u7F2y0fP23KDTqR2NeUwINr+JQbtdeerk3VSEyj5xTwswKxoSKaU8ZGhMWpNuxCnoPn/WtkFwcugUeQzCR9R4Gy3b+YGTz2CztDQe+65nUpZbeoSOdnAuYAy7f/sNHWEd88aBXDjMwMXrkgEvL2O97nqqx0b/omjdpUIwh0o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YqGtL01zQz6H7dL;
-	Fri,  7 Feb 2025 22:43:22 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YqGvx3xtLz6HJbf;
+	Fri,  7 Feb 2025 22:44:45 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id AF9001400D8;
-	Fri,  7 Feb 2025 22:45:40 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id DC0851401F4;
+	Fri,  7 Feb 2025 22:45:46 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.126.173.5) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 7 Feb 2025 15:45:38 +0100
+ 15.1.2507.39; Fri, 7 Feb 2025 15:45:44 +0100
 From: <shiju.jose@huawei.com>
 To: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
 	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -44,9 +44,9 @@ CC: <linux-doc@vger.kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
 	<prime.zeng@hisilicon.com>, <roberto.sassu@huawei.com>,
 	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
 	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v19 06/15] ras: mem: Add memory ACPI RAS2 driver
-Date: Fri, 7 Feb 2025 14:44:35 +0000
-Message-ID: <20250207144445.1879-7-shiju.jose@huawei.com>
+Subject: [PATCH v19 08/15] cxl/memfeature: Add CXL memory device patrol scrub control feature
+Date: Fri, 7 Feb 2025 14:44:37 +0000
+Message-ID: <20250207144445.1879-9-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
 In-Reply-To: <20250207144445.1879-1-shiju.jose@huawei.com>
 References: <20250207144445.1879-1-shiju.jose@huawei.com>
@@ -63,530 +63,674 @@ X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-Memory ACPI RAS2 auxiliary driver binds to the auxiliary device
-add by the ACPI RAS2 table parser.
+CXL spec 3.1 section 8.2.9.9.11.1 describes the device patrol scrub control
+feature. The device patrol scrub proactively locates and makes corrections
+to errors in regular cycle.
 
-Driver uses a PCC subspace for communicating with the ACPI compliant
-platform.
+Allow specifying the number of hours within which the patrol scrub must be
+completed, subject to minimum and maximum limits reported by the device.
+Also allow disabling scrub allowing trade-off error rates against
+performance.
 
-Device with ACPI RAS2 scrub feature registers with EDAC device driver,
-which retrieves the scrub descriptor from EDAC scrub and exposes
-the scrub control attributes for RAS2 scrub instance to userspace in
-/sys/bus/edac/devices/acpi_ras_mem0/scrubX/.
+Add support for patrol scrub control on CXL memory devices.
+Register with the EDAC device driver, which retrieves the scrub attribute
+descriptors from EDAC scrub and exposes the sysfs scrub control attributes
+to userspace. For example, scrub control for the CXL memory device
+"cxl_mem0" is exposed in /sys/bus/edac/devices/cxl_mem0/scrubX/.
 
+Additionally, add support for region-based CXL memory patrol scrub control.
+CXL memory regions may be interleaved across one or more CXL memory
+devices. For example, region-based scrub control for "cxl_region1" is
+exposed in /sys/bus/edac/devices/cxl_region1/scrubX/.
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Tested-by: Daniel Ferguson <danielf@os.amperecomputing.com>
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- Documentation/edac/scrub.rst |  73 +++++++
- drivers/ras/Kconfig          |  10 +
- drivers/ras/Makefile         |   1 +
- drivers/ras/acpi_ras2.c      | 383 +++++++++++++++++++++++++++++++++++
- 4 files changed, 467 insertions(+)
- create mode 100644 drivers/ras/acpi_ras2.c
+ Documentation/edac/scrub.rst  |  59 +++++
+ drivers/cxl/Kconfig           |  16 ++
+ drivers/cxl/core/Makefile     |   1 +
+ drivers/cxl/core/memfeature.c | 474 ++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/region.c     |   5 +
+ drivers/cxl/cxlmem.h          |  10 +
+ drivers/cxl/mem.c             |   4 +
+ 7 files changed, 569 insertions(+)
+ create mode 100644 drivers/cxl/core/memfeature.c
 
 diff --git a/Documentation/edac/scrub.rst b/Documentation/edac/scrub.rst
-index 5f1ff2bf54b0..3fe46b788eb6 100644
+index 3fe46b788eb6..a803089b774e 100644
 --- a/Documentation/edac/scrub.rst
 +++ b/Documentation/edac/scrub.rst
-@@ -259,3 +259,76 @@ Sysfs files are documented in
- `Documentation/ABI/testing/sysfs-edac-scrub`
+@@ -332,3 +332,62 @@ Readback 'addr', non-zero - demand scrub is in progress, zero - scrub is finishe
+ 1.2.5. Start 'background scrubbing'.
  
- `Documentation/ABI/testing/sysfs-edac-ecs`
+ # echo 1 > /sys/bus/edac/devices/acpi_ras_mem0/scrub0/enable_background
 +
-+Examples
-+--------
++2. CXL memory device patrol scrubber
 +
-+The usage takes the form shown in these examples:
++2.1 Device based scrubbing
 +
-+1. ACPI RAS2
++2.1.1. Query what is device default/current scrub cycle setting.
 +
-+1.1 On demand scrubbing for a specific memory region.
++# cat /sys/bus/edac/devices/cxl_mem0/scrub0/current_cycle_duration
 +
-+1.1.1. Query what is device default/current scrub cycle setting.
++43200
 +
-+       Applicable to both on-demand and background scrubbing.
++2.1.2. Query the range of device supported scrub cycle.
 +
-+# cat /sys/bus/edac/devices/acpi_ras_mem0/scrub0/current_cycle_duration
-+
-+36000
-+
-+1.1.2 Query the range of device supported scrub cycle for a memory region.
-+
-+# cat /sys/bus/edac/devices/acpi_ras_mem0/scrub0/min_cycle_duration
++# cat /sys/bus/edac/devices/cxl_mem0/scrub0/min_cycle_duration
 +
 +3600
 +
-+# cat /sys/bus/edac/devices/acpi_ras_mem0/scrub0/max_cycle_duration
++# cat /sys/bus/edac/devices/cxl_mem0/scrub0/max_cycle_duration
++
++918000
++
++2.1.3. Program scrubbing for a device to repeat every 21600 seconds (quarter of a day).
++
++# echo 21600 > /sys/bus/edac/devices/cxl_mem0/scrub0/current_cycle_duration
++
++# echo 1 > /sys/bus/edac/devices/cxl_mem0/scrub0/enable_background
++
++2.2. Region based scrubbing
++
++CXL memory is exposed to memory management subsystem and ultimately userspace
++via CXL regions.  These can incorporate one or more parts of multiple CXL
++Type 3 devices with traffic interleaved across them. The user may want to
++control the scrub rate via this more abstract region instead of having to
++figure out the constituent devices and program them separately. The scrub
++rate for each device covers the whole device. Thus if multiple regions use
++parts of that device then requests for scrubbing of other regions may result
++in a higher scrub rate than requested for this specific region.
++
++2.2.1 Query what is device default/current scrub cycle setting for a CXL memory region.
++
++# cat /sys/bus/edac/devices/cxl_region0/scrub0/current_cycle_duration
 +
 +86400
 +
-+1.1.3. Program scrubbing for the memory region in RAS2 device to repeat every 43200 seconds (half a day).
++2.2.2 Query the range of device supported scrub cycle for a CXL memory region.
 +
-+# echo 43200 > /sys/bus/edac/devices/acpi_ras_mem0/scrub0/current_cycle_duration
++# cat /sys/bus/edac/devices/cxl_region0/scrub0/min_cycle_duration
 +
-+1.1.4. Program address and size of the memory region to scrub
++3600
 +
-+Readback 'addr', non-zero - demand scrub is in progress, zero - scrub is finished.
++# cat /sys/bus/edac/devices/cxl_region0/scrub0/max_cycle_duration
 +
-+# cat /sys/bus/edac/devices/acpi_ras_mem0/scrub0/addr
++918000
 +
-+0
++2.2.3 Program scrubbing for a region to repeat every 43200 seconds (half a day)
 +
-+Write 'size' of the memory region to scrub.
++# echo  43200 > /sys/bus/edac/devices/cxl_region0/scrub0/current_cycle_duration
 +
-+# echo 0x300000 > /sys/bus/edac/devices/acpi_ras_mem0/scrub0/size
-+
-+Write 'addr' starts demand scrubbing, please make sure other attributes are set prior to that.
-+
-+# echo 0x200000 > /sys/bus/edac/devices/acpi_ras_mem0/scrub0/addr
-+
-+Readback 'addr', non-zero - demand scrub is in progress, zero - scrub is finished.
-+
-+# cat /sys/bus/edac/devices/acpi_ras_mem0/scrub0/addr
-+
-+0x200000
-+
-+# cat /sys/bus/edac/devices/acpi_ras_mem0/scrub0/addr
-+
-+0
-+
-+1.2 Background scrubbing the entire memory
-+
-+1.2.3 Query the status of background scrubbing.
-+
-+# cat /sys/bus/edac/devices/acpi_ras_mem0/scrub0/enable_background
-+
-+0
-+
-+1.2.4. Program background scrubbing for RAS2 device to repeat in every 21600 seconds (quarter of a day).
-+
-+# echo 21600 > /sys/bus/edac/devices/acpi_ras_mem0/scrub0/current_cycle_duration
-+
-+1.2.5. Start 'background scrubbing'.
-+
-+# echo 1 > /sys/bus/edac/devices/acpi_ras_mem0/scrub0/enable_background
-diff --git a/drivers/ras/Kconfig b/drivers/ras/Kconfig
-index fc4f4bb94a4c..c907e44360c8 100644
---- a/drivers/ras/Kconfig
-+++ b/drivers/ras/Kconfig
-@@ -46,4 +46,14 @@ config RAS_FMPM
- 	  Memory will be retired during boot time and run time depending on
- 	  platform-specific policies.
++# echo 1 > /sys/bus/edac/devices/cxl_region0/scrub0/enable_background
+diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+index 6bb1ffc74956..ac5ad2dc5996 100644
+--- a/drivers/cxl/Kconfig
++++ b/drivers/cxl/Kconfig
+@@ -161,4 +161,20 @@ config CXL_REGION_INVALIDATION_TEST
+ 	  If unsure, or if this kernel is meant for production environments,
+ 	  say N.
  
-+config MEM_ACPI_RAS2
-+	tristate "Memory ACPI RAS2 driver"
-+	depends on ACPI_RAS2
++config CXL_RAS_FEATURES
++	tristate "CXL: Memory RAS features"
++	depends on CXL_MEM
 +	depends on EDAC_SCRUB
 +	help
-+	  The driver binds to the platform device added by the ACPI RAS2
-+	  table parser. Use a PCC channel subspace for communicating with
-+	  the ACPI compliant platform to provide control of memory scrub
-+	  parameters to the user via the EDAC scrub.
++	  The CXL memory RAS feature control is optional and allows host to
++	  control the RAS features configurations of CXL Type 3 devices.
++
++	  It registers with the EDAC device subsystem to expose control
++	  attributes of CXL memory device's RAS features to the user.
++	  It provides interface functions to support configuring the CXL
++	  memory device's RAS features.
++	  Say 'y/m' if you have an expert need to change default settings
++	  of a memory RAS feature established by the platform/device (eg.
++	  scrub rates for the patrol scrub feature). otherwise say 'n'.
 +
  endif
-diff --git a/drivers/ras/Makefile b/drivers/ras/Makefile
-index 11f95d59d397..a0e6e903d6b0 100644
---- a/drivers/ras/Makefile
-+++ b/drivers/ras/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_RAS)	+= ras.o
- obj-$(CONFIG_DEBUG_FS)	+= debugfs.o
- obj-$(CONFIG_RAS_CEC)	+= cec.o
-+obj-$(CONFIG_MEM_ACPI_RAS2)	+= acpi_ras2.o
- 
- obj-$(CONFIG_RAS_FMPM)	+= amd/fmpm.o
- obj-y			+= amd/atl/
-diff --git a/drivers/ras/acpi_ras2.c b/drivers/ras/acpi_ras2.c
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index 73b6348afd67..54baca513ecb 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -17,3 +17,4 @@ cxl_core-y += cdat.o
+ cxl_core-y += features.o
+ cxl_core-$(CONFIG_TRACING) += trace.o
+ cxl_core-$(CONFIG_CXL_REGION) += region.o
++cxl_core-$(CONFIG_CXL_RAS_FEATURES) += memfeature.o
+diff --git a/drivers/cxl/core/memfeature.c b/drivers/cxl/core/memfeature.c
 new file mode 100644
-index 000000000000..99cbe5f74b9d
+index 000000000000..c13b25a18e1a
 --- /dev/null
-+++ b/drivers/ras/acpi_ras2.c
-@@ -0,0 +1,383 @@
++++ b/drivers/cxl/core/memfeature.c
+@@ -0,0 +1,474 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * ACPI RAS2 memory driver
++ * CXL memory RAS feature driver.
 + *
 + * Copyright (c) 2024-2025 HiSilicon Limited.
 + *
++ *  - Supports functions to configure RAS features of the
++ *    CXL memory devices.
++ *  - Registers with the EDAC device subsystem driver to expose
++ *    the features sysfs attributes to the user for configuring
++ *    CXL memory RAS feature.
 + */
 +
-+#define pr_fmt(fmt)	"MEMORY ACPI RAS2: " fmt
-+
-+#include <linux/bitfield.h>
++#include <linux/cleanup.h>
 +#include <linux/edac.h>
-+#include <linux/platform_device.h>
-+#include <acpi/ras2_acpi.h>
++#include <linux/limits.h>
++#include <cxl/features.h>
++#include <cxl.h>
++#include <cxlmem.h>
++#include "core.h"
 +
-+#define RAS2_DEV_NUM_RAS_FEATURES	1
++#define CXL_DEV_NUM_RAS_FEATURES	1
++#define CXL_DEV_HOUR_IN_SECS	3600
 +
-+#define RAS2_SUPPORT_HW_PARTOL_SCRUB	BIT(0)
-+#define RAS2_TYPE_PATROL_SCRUB	0x0000
++#define CXL_DEV_NAME_LEN	128
 +
-+#define RAS2_GET_PATROL_PARAMETERS	0x01
-+#define	RAS2_START_PATROL_SCRUBBER	0x02
-+#define	RAS2_STOP_PATROL_SCRUBBER	0x03
++static int cxl_hold_region_and_dpa(void)
++{
++	int rc;
 +
-+#define RAS2_PATROL_SCRUB_SCHRS_IN_MASK	GENMASK(15, 8)
-+#define RAS2_PATROL_SCRUB_EN_BACKGROUND	BIT(0)
-+#define RAS2_PATROL_SCRUB_SCHRS_OUT_MASK	GENMASK(7, 0)
-+#define RAS2_PATROL_SCRUB_MIN_SCHRS_OUT_MASK	GENMASK(15, 8)
-+#define RAS2_PATROL_SCRUB_MAX_SCHRS_OUT_MASK	GENMASK(23, 16)
-+#define RAS2_PATROL_SCRUB_FLAG_SCRUBBER_RUNNING	BIT(0)
++	rc = down_read_interruptible(&cxl_region_rwsem);
++	if (rc)
++		return rc;
 +
-+#define RAS2_SCRUB_NAME_LEN      128
-+#define RAS2_HOUR_IN_SECS    3600
++	rc = down_read_interruptible(&cxl_dpa_rwsem);
++	if (rc) {
++		up_read(&cxl_region_rwsem);
++		return rc;
++	}
 +
-+struct acpi_ras2_ps_shared_mem {
-+	struct acpi_ras2_shared_memory common;
-+	struct acpi_ras2_patrol_scrub_parameter params;
++	return 0;
++}
++
++static void cxl_release_region_and_dpa(void)
++{
++	up_read(&cxl_dpa_rwsem);
++	up_read(&cxl_region_rwsem);
++}
++
++/*
++ * CXL memory patrol scrub control functions
++ */
++struct cxl_patrol_scrub_context {
++	u8 instance;
++	u16 get_feat_size;
++	u16 set_feat_size;
++	u8 get_version;
++	u8 set_version;
++	u16 effects;
++	struct cxl_memdev *cxlmd;
++	struct cxl_region *cxlr;
 +};
 +
-+static int ras2_is_patrol_scrub_support(struct ras2_mem_ctx *ras2_ctx)
-+{
-+	struct acpi_ras2_shared_memory __iomem *common =
-+		(void *)ras2_ctx->pcc_comm_addr;
-+
-+	guard(mutex)(&ras2_ctx->lock);
-+	common->set_capabilities[0] = 0;
-+
-+	return common->features[0] & RAS2_SUPPORT_HW_PARTOL_SCRUB;
-+}
-+
-+static int ras2_update_patrol_scrub_params_cache(struct ras2_mem_ctx *ras2_ctx)
-+{
-+	struct acpi_ras2_ps_shared_mem __iomem *ps_sm =
-+		(void *)ras2_ctx->pcc_comm_addr;
-+	int ret;
-+
-+	ps_sm->common.set_capabilities[0] = RAS2_SUPPORT_HW_PARTOL_SCRUB;
-+	ps_sm->params.patrol_scrub_command = RAS2_GET_PATROL_PARAMETERS;
-+
-+	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
-+	if (ret) {
-+		dev_err(ras2_ctx->dev, "failed to read parameters\n");
-+		return ret;
-+	}
-+
-+	ras2_ctx->min_scrub_cycle = FIELD_GET(RAS2_PATROL_SCRUB_MIN_SCHRS_OUT_MASK,
-+					      ps_sm->params.scrub_params_out);
-+	ras2_ctx->max_scrub_cycle = FIELD_GET(RAS2_PATROL_SCRUB_MAX_SCHRS_OUT_MASK,
-+					      ps_sm->params.scrub_params_out);
-+	if (!ras2_ctx->bg) {
-+		ras2_ctx->base = ps_sm->params.actual_address_range[0];
-+		ras2_ctx->size = ps_sm->params.actual_address_range[1];
-+	}
-+	ras2_ctx->scrub_cycle_hrs = FIELD_GET(RAS2_PATROL_SCRUB_SCHRS_OUT_MASK,
-+					      ps_sm->params.scrub_params_out);
-+
-+	return 0;
-+}
-+
-+/* Context - lock must be held */
-+static int ras2_get_patrol_scrub_running(struct ras2_mem_ctx *ras2_ctx,
-+					 bool *running)
-+{
-+	struct acpi_ras2_ps_shared_mem __iomem *ps_sm =
-+		(void *)ras2_ctx->pcc_comm_addr;
-+	int ret;
-+
-+	ps_sm->common.set_capabilities[0] = RAS2_SUPPORT_HW_PARTOL_SCRUB;
-+	ps_sm->params.patrol_scrub_command = RAS2_GET_PATROL_PARAMETERS;
-+
-+	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
-+	if (ret) {
-+		dev_err(ras2_ctx->dev, "failed to read parameters\n");
-+		return ret;
-+	}
-+
-+	*running = ps_sm->params.flags & RAS2_PATROL_SCRUB_FLAG_SCRUBBER_RUNNING;
-+
-+	return 0;
-+}
-+
-+static int ras2_hw_scrub_read_min_scrub_cycle(struct device *dev, void *drv_data,
-+					      u32 *min)
-+{
-+	struct ras2_mem_ctx *ras2_ctx = drv_data;
-+
-+	*min = ras2_ctx->min_scrub_cycle * RAS2_HOUR_IN_SECS;
-+
-+	return 0;
-+}
-+
-+static int ras2_hw_scrub_read_max_scrub_cycle(struct device *dev, void *drv_data,
-+					      u32 *max)
-+{
-+	struct ras2_mem_ctx *ras2_ctx = drv_data;
-+
-+	*max = ras2_ctx->max_scrub_cycle * RAS2_HOUR_IN_SECS;
-+
-+	return 0;
-+}
-+
-+static int ras2_hw_scrub_cycle_read(struct device *dev, void *drv_data,
-+				    u32 *scrub_cycle_secs)
-+{
-+	struct ras2_mem_ctx *ras2_ctx = drv_data;
-+
-+	*scrub_cycle_secs = ras2_ctx->scrub_cycle_hrs * RAS2_HOUR_IN_SECS;
-+
-+	return 0;
-+}
-+
-+static int ras2_hw_scrub_cycle_write(struct device *dev, void *drv_data,
-+				     u32 scrub_cycle_secs)
-+{
-+	u8 scrub_cycle_hrs = scrub_cycle_secs / RAS2_HOUR_IN_SECS;
-+	struct ras2_mem_ctx *ras2_ctx = drv_data;
-+	bool running;
-+	int ret;
-+
-+	guard(mutex)(&ras2_ctx->lock);
-+	ret = ras2_get_patrol_scrub_running(ras2_ctx, &running);
-+	if (ret)
-+		return ret;
-+
-+	if (running)
-+		return -EBUSY;
-+
-+	if (scrub_cycle_hrs < ras2_ctx->min_scrub_cycle ||
-+	    scrub_cycle_hrs > ras2_ctx->max_scrub_cycle)
-+		return -EINVAL;
-+
-+	ras2_ctx->scrub_cycle_hrs = scrub_cycle_hrs;
-+
-+	return 0;
-+}
-+
-+static int ras2_hw_scrub_read_addr(struct device *dev, void *drv_data, u64 *base)
-+{
-+	struct ras2_mem_ctx *ras2_ctx = drv_data;
-+	int ret;
-+
-+	/*
-+	 * When BG scrubbing is enabled the actual address range is not valid.
-+	 * Return -EBUSY now unless find out a method to retrieve actual full PA range.
-+	 */
-+	if (ras2_ctx->bg)
-+		return -EBUSY;
-+
-+	/*
-+	 * When demand scrubbing is finished firmware must reset actual
-+	 * address range to 0. Otherwise userspace assumes demand scrubbing
-+	 * is in progress.
-+	 */
-+	ret = ras2_update_patrol_scrub_params_cache(ras2_ctx);
-+	if (ret)
-+		return ret;
-+	*base = ras2_ctx->base;
-+
-+	return 0;
-+}
-+
-+static int ras2_hw_scrub_read_size(struct device *dev, void *drv_data, u64 *size)
-+{
-+	struct ras2_mem_ctx *ras2_ctx = drv_data;
-+	int ret;
-+
-+	if (ras2_ctx->bg)
-+		return -EBUSY;
-+
-+	ret = ras2_update_patrol_scrub_params_cache(ras2_ctx);
-+	if (ret)
-+		return ret;
-+	*size = ras2_ctx->size;
-+
-+	return 0;
-+}
-+
-+static int ras2_hw_scrub_write_addr(struct device *dev, void *drv_data, u64 base)
-+{
-+	struct ras2_mem_ctx *ras2_ctx = drv_data;
-+	struct acpi_ras2_ps_shared_mem __iomem *ps_sm =
-+		(void *)ras2_ctx->pcc_comm_addr;
-+	bool running;
-+	int ret;
-+
-+	guard(mutex)(&ras2_ctx->lock);
-+	ps_sm->common.set_capabilities[0] = RAS2_SUPPORT_HW_PARTOL_SCRUB;
-+	if (ras2_ctx->bg)
-+		return -EBUSY;
-+
-+	if (!base || !ras2_ctx->size) {
-+		dev_warn(ras2_ctx->dev,
-+			 "%s: Invalid address range, base=0x%llx "
-+			 "size=0x%llx\n", __func__,
-+			 base, ras2_ctx->size);
-+		return -ERANGE;
-+	}
-+
-+	ret = ras2_get_patrol_scrub_running(ras2_ctx, &running);
-+	if (ret)
-+		return ret;
-+
-+	if (running)
-+		return -EBUSY;
-+
-+	ps_sm->params.scrub_params_in &= ~RAS2_PATROL_SCRUB_SCHRS_IN_MASK;
-+	ps_sm->params.scrub_params_in |= FIELD_PREP(RAS2_PATROL_SCRUB_SCHRS_IN_MASK,
-+						    ras2_ctx->scrub_cycle_hrs);
-+	ps_sm->params.requested_address_range[0] = base;
-+	ps_sm->params.requested_address_range[1] = ras2_ctx->size;
-+	ps_sm->params.scrub_params_in &= ~RAS2_PATROL_SCRUB_EN_BACKGROUND;
-+	ps_sm->params.patrol_scrub_command = RAS2_START_PATROL_SCRUBBER;
-+
-+	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
-+	if (ret) {
-+		dev_err(ras2_ctx->dev, "Failed to start demand scrubbing\n");
-+		return ret;
-+	}
-+
-+	return ras2_update_patrol_scrub_params_cache(ras2_ctx);
-+}
-+
-+static int ras2_hw_scrub_write_size(struct device *dev, void *drv_data, u64 size)
-+{
-+	struct ras2_mem_ctx *ras2_ctx = drv_data;
-+	bool running;
-+	int ret;
-+
-+	guard(mutex)(&ras2_ctx->lock);
-+	ret = ras2_get_patrol_scrub_running(ras2_ctx, &running);
-+	if (ret)
-+		return ret;
-+
-+	if (running)
-+		return -EBUSY;
-+
-+	if (!size) {
-+		dev_warn(dev, "%s: Invalid address range size=0x%llx\n",
-+			 __func__, size);
-+		return -EINVAL;
-+	}
-+
-+	ras2_ctx->size = size;
-+
-+	return 0;
-+}
-+
-+static int ras2_hw_scrub_set_enabled_bg(struct device *dev, void *drv_data, bool enable)
-+{
-+	struct ras2_mem_ctx *ras2_ctx = drv_data;
-+	struct acpi_ras2_ps_shared_mem __iomem *ps_sm =
-+		(void *)ras2_ctx->pcc_comm_addr;
-+	bool running;
-+	int ret;
-+
-+	guard(mutex)(&ras2_ctx->lock);
-+	ps_sm->common.set_capabilities[0] = RAS2_SUPPORT_HW_PARTOL_SCRUB;
-+	ret = ras2_get_patrol_scrub_running(ras2_ctx, &running);
-+	if (ret)
-+		return ret;
-+	if (enable) {
-+		if (ras2_ctx->bg || running)
-+			return -EBUSY;
-+		ps_sm->params.requested_address_range[0] = 0;
-+		ps_sm->params.requested_address_range[1] = 0;
-+		ps_sm->params.scrub_params_in &= ~RAS2_PATROL_SCRUB_SCHRS_IN_MASK;
-+		ps_sm->params.scrub_params_in |= FIELD_PREP(RAS2_PATROL_SCRUB_SCHRS_IN_MASK,
-+							    ras2_ctx->scrub_cycle_hrs);
-+		ps_sm->params.patrol_scrub_command = RAS2_START_PATROL_SCRUBBER;
-+	} else {
-+		if (!ras2_ctx->bg)
-+			return -EPERM;
-+		ps_sm->params.patrol_scrub_command = RAS2_STOP_PATROL_SCRUBBER;
-+	}
-+	ps_sm->params.scrub_params_in &= ~RAS2_PATROL_SCRUB_EN_BACKGROUND;
-+	ps_sm->params.scrub_params_in |= FIELD_PREP(RAS2_PATROL_SCRUB_EN_BACKGROUND,
-+						    enable);
-+	ret = ras2_send_pcc_cmd(ras2_ctx, RAS2_PCC_CMD_EXEC);
-+	if (ret) {
-+		dev_err(ras2_ctx->dev, "Failed to %s background scrubbing\n",
-+			str_enable_disable(enable));
-+		return ret;
-+	}
-+	if (enable) {
-+		ras2_ctx->bg = true;
-+		/* Update the cache to account for rounding of supplied parameters and similar */
-+		ret = ras2_update_patrol_scrub_params_cache(ras2_ctx);
-+	} else {
-+		ret = ras2_update_patrol_scrub_params_cache(ras2_ctx);
-+		ras2_ctx->bg = false;
-+	}
-+
-+	return ret;
-+}
-+
-+static int ras2_hw_scrub_get_enabled_bg(struct device *dev, void *drv_data, bool *enabled)
-+{
-+	struct ras2_mem_ctx *ras2_ctx = drv_data;
-+
-+	*enabled = ras2_ctx->bg;
-+
-+	return 0;
-+}
-+
-+static const struct edac_scrub_ops ras2_scrub_ops = {
-+	.read_addr = ras2_hw_scrub_read_addr,
-+	.read_size = ras2_hw_scrub_read_size,
-+	.write_addr = ras2_hw_scrub_write_addr,
-+	.write_size = ras2_hw_scrub_write_size,
-+	.get_enabled_bg = ras2_hw_scrub_get_enabled_bg,
-+	.set_enabled_bg = ras2_hw_scrub_set_enabled_bg,
-+	.get_min_cycle = ras2_hw_scrub_read_min_scrub_cycle,
-+	.get_max_cycle = ras2_hw_scrub_read_max_scrub_cycle,
-+	.get_cycle_duration = ras2_hw_scrub_cycle_read,
-+	.set_cycle_duration = ras2_hw_scrub_cycle_write,
++/**
++ * struct cxl_memdev_ps_params - CXL memory patrol scrub parameter data structure.
++ * @enable:     [IN & OUT] enable(1)/disable(0) patrol scrub.
++ * @scrub_cycle_changeable: [OUT] scrub cycle attribute of patrol scrub is changeable.
++ * @scrub_cycle_hrs:    [IN] Requested patrol scrub cycle in hours.
++ *                      [OUT] Current patrol scrub cycle in hours.
++ * @min_scrub_cycle_hrs:[OUT] minimum patrol scrub cycle in hours supported.
++ */
++struct cxl_memdev_ps_params {
++	bool enable;
++	bool scrub_cycle_changeable;
++	u8 scrub_cycle_hrs;
++	u8 min_scrub_cycle_hrs;
 +};
 +
-+static int ras2_probe(struct auxiliary_device *auxdev,
-+		      const struct auxiliary_device_id *id)
++enum cxl_scrub_param {
++	CXL_PS_PARAM_ENABLE,
++	CXL_PS_PARAM_SCRUB_CYCLE,
++};
++
++#define CXL_MEMDEV_PS_SCRUB_CYCLE_CHANGE_CAP_MASK	BIT(0)
++#define	CXL_MEMDEV_PS_SCRUB_CYCLE_REALTIME_REPORT_CAP_MASK	BIT(1)
++#define	CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_MASK	GENMASK(7, 0)
++#define	CXL_MEMDEV_PS_MIN_SCRUB_CYCLE_MASK	GENMASK(15, 8)
++#define	CXL_MEMDEV_PS_FLAG_ENABLED_MASK	BIT(0)
++
++/*
++ * See CXL spec rev 3.1 @8.2.9.9.11.1 Table 8-207 Device Patrol Scrub Control
++ * Feature Readable Attributes.
++ */
++struct cxl_memdev_ps_rd_attrs {
++	u8 scrub_cycle_cap;
++	__le16 scrub_cycle_hrs;
++	u8 scrub_flags;
++}  __packed;
++
++/*
++ * See CXL spec rev 3.1 @8.2.9.9.11.1 Table 8-208 Device Patrol Scrub Control
++ * Feature Writable Attributes.
++ */
++struct cxl_memdev_ps_wr_attrs {
++	u8 scrub_cycle_hrs;
++	u8 scrub_flags;
++}  __packed;
++
++static int cxl_mem_ps_get_attrs(struct cxl_mailbox *cxl_mbox,
++				struct cxl_memdev_ps_params *params)
 +{
-+	struct ras2_mem_ctx *ras2_ctx = container_of(auxdev, struct ras2_mem_ctx, adev);
-+	struct edac_dev_feature ras_features[RAS2_DEV_NUM_RAS_FEATURES];
-+	char scrub_name[RAS2_SCRUB_NAME_LEN];
-+	int num_ras_features = 0;
++	size_t rd_data_size = sizeof(struct cxl_memdev_ps_rd_attrs);
++	u16 scrub_cycle_hrs;
++	size_t data_size;
++	struct cxl_memdev_ps_rd_attrs *rd_attrs __free(kfree) =
++		kzalloc(rd_data_size, GFP_KERNEL);
++	if (!rd_attrs)
++		return -ENOMEM;
++
++	data_size = cxl_get_feature(cxl_mbox, &CXL_FEAT_PATROL_SCRUB_UUID,
++				    CXL_GET_FEAT_SEL_CURRENT_VALUE,
++				    rd_attrs, rd_data_size, 0, NULL);
++	if (!data_size)
++		return -EIO;
++
++	params->scrub_cycle_changeable = FIELD_GET(CXL_MEMDEV_PS_SCRUB_CYCLE_CHANGE_CAP_MASK,
++						   rd_attrs->scrub_cycle_cap);
++	params->enable = FIELD_GET(CXL_MEMDEV_PS_FLAG_ENABLED_MASK,
++				   rd_attrs->scrub_flags);
++	scrub_cycle_hrs = le16_to_cpu(rd_attrs->scrub_cycle_hrs);
++	params->scrub_cycle_hrs = FIELD_GET(CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_MASK,
++					    scrub_cycle_hrs);
++	params->min_scrub_cycle_hrs = FIELD_GET(CXL_MEMDEV_PS_MIN_SCRUB_CYCLE_MASK,
++						scrub_cycle_hrs);
++
++	return 0;
++}
++
++static int cxl_ps_get_attrs(struct cxl_patrol_scrub_context *cxl_ps_ctx,
++			    struct cxl_memdev_ps_params *params)
++{
++	struct cxl_mailbox *cxl_mbox;
++	struct cxl_memdev *cxlmd;
++	u16 min_scrub_cycle = 0;
++	int i, ret;
++
++	if (cxl_ps_ctx->cxlr) {
++		struct cxl_region *cxlr = cxl_ps_ctx->cxlr;
++		struct cxl_region_params *p = &cxlr->params;
++
++		ret = cxl_hold_region_and_dpa();
++		if (ret)
++			return ret;
++		for (i = p->interleave_ways - 1; i >= 0; i--) {
++			struct cxl_endpoint_decoder *cxled = p->targets[i];
++
++			cxlmd = cxled_to_memdev(cxled);
++			cxl_mbox = &cxlmd->cxlds->cxl_mbox;
++			ret = cxl_mem_ps_get_attrs(cxl_mbox, params);
++			if (ret)
++				return ret;
++
++			if (params->min_scrub_cycle_hrs > min_scrub_cycle)
++				min_scrub_cycle = params->min_scrub_cycle_hrs;
++		}
++		cxl_release_region_and_dpa();
++
++		params->min_scrub_cycle_hrs = min_scrub_cycle;
++		return 0;
++	}
++	cxl_mbox = &cxl_ps_ctx->cxlmd->cxlds->cxl_mbox;
++
++	return cxl_mem_ps_get_attrs(cxl_mbox, params);
++}
++
++static int cxl_mem_ps_set_attrs(struct device *dev,
++				struct cxl_patrol_scrub_context *cxl_ps_ctx,
++				struct cxl_mailbox *cxl_mbox,
++				struct cxl_memdev_ps_params *params,
++				enum cxl_scrub_param param_type)
++{
++	struct cxl_memdev_ps_wr_attrs wr_attrs;
++	struct cxl_memdev_ps_params rd_params;
 +	int ret;
 +
-+	if (!ras2_is_patrol_scrub_support(ras2_ctx))
++	ret = cxl_mem_ps_get_attrs(cxl_mbox, &rd_params);
++	if (ret) {
++		dev_dbg(dev, "Get cxlmemdev patrol scrub params failed ret=%d\n", ret);
++		return ret;
++	}
++
++	switch (param_type) {
++	case CXL_PS_PARAM_ENABLE:
++		wr_attrs.scrub_flags = FIELD_PREP(CXL_MEMDEV_PS_FLAG_ENABLED_MASK,
++						  params->enable);
++		wr_attrs.scrub_cycle_hrs = FIELD_PREP(CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_MASK,
++						      rd_params.scrub_cycle_hrs);
++		break;
++	case CXL_PS_PARAM_SCRUB_CYCLE:
++		if (params->scrub_cycle_hrs < rd_params.min_scrub_cycle_hrs) {
++			dev_dbg(dev, "Invalid CXL patrol scrub cycle(%d) to set\n",
++				params->scrub_cycle_hrs);
++			dev_dbg(dev, "Minimum supported CXL patrol scrub cycle in hour %d\n",
++				rd_params.min_scrub_cycle_hrs);
++			return -EINVAL;
++		}
++		wr_attrs.scrub_cycle_hrs = FIELD_PREP(CXL_MEMDEV_PS_CUR_SCRUB_CYCLE_MASK,
++						      params->scrub_cycle_hrs);
++		wr_attrs.scrub_flags = FIELD_PREP(CXL_MEMDEV_PS_FLAG_ENABLED_MASK,
++						  rd_params.enable);
++		break;
++	}
++
++	ret = cxl_set_feature(cxl_mbox, &CXL_FEAT_PATROL_SCRUB_UUID,
++			      cxl_ps_ctx->set_version,
++			      &wr_attrs, sizeof(wr_attrs),
++			      CXL_SET_FEAT_FLAG_DATA_SAVED_ACROSS_RESET,
++			      0, NULL);
++	if (ret) {
++		dev_dbg(dev, "CXL patrol scrub set feature failed ret=%d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int cxl_ps_set_attrs(struct device *dev,
++			    struct cxl_patrol_scrub_context *cxl_ps_ctx,
++			    struct cxl_memdev_ps_params *params,
++			    enum cxl_scrub_param param_type)
++{
++	struct cxl_mailbox *cxl_mbox;
++	struct cxl_memdev *cxlmd;
++	int ret, i;
++
++	if (cxl_ps_ctx->cxlr) {
++		struct cxl_region *cxlr = cxl_ps_ctx->cxlr;
++		struct cxl_region_params *p = &cxlr->params;
++
++		ret = cxl_hold_region_and_dpa();
++		if (ret)
++			return ret;
++		for (i = p->interleave_ways - 1; i >= 0; i--) {
++			struct cxl_endpoint_decoder *cxled = p->targets[i];
++
++			cxlmd = cxled_to_memdev(cxled);
++			cxl_mbox = &cxlmd->cxlds->cxl_mbox;
++			ret = cxl_mem_ps_set_attrs(dev, cxl_ps_ctx, cxl_mbox,
++						   params, param_type);
++			if (ret)
++				return ret;
++		}
++		cxl_release_region_and_dpa();
++
++		return 0;
++	}
++	cxl_mbox = &cxl_ps_ctx->cxlmd->cxlds->cxl_mbox;
++
++	return cxl_mem_ps_set_attrs(dev, cxl_ps_ctx, cxl_mbox,
++				    params, param_type);
++}
++
++static int cxl_patrol_scrub_get_enabled_bg(struct device *dev, void *drv_data, bool *enabled)
++{
++	struct cxl_patrol_scrub_context *ctx = drv_data;
++	struct cxl_memdev_ps_params params;
++	int ret;
++
++	ret = cxl_ps_get_attrs(ctx, &params);
++	if (ret)
++		return ret;
++
++	*enabled = params.enable;
++
++	return 0;
++}
++
++static int cxl_patrol_scrub_set_enabled_bg(struct device *dev, void *drv_data, bool enable)
++{
++	struct cxl_patrol_scrub_context *ctx = drv_data;
++	struct cxl_memdev_ps_params params = {
++		.enable = enable,
++	};
++
++	return cxl_ps_set_attrs(dev, ctx, &params, CXL_PS_PARAM_ENABLE);
++}
++
++static int cxl_patrol_scrub_read_min_scrub_cycle(struct device *dev, void *drv_data,
++						 u32 *min)
++{
++	struct cxl_patrol_scrub_context *ctx = drv_data;
++	struct cxl_memdev_ps_params params;
++	int ret;
++
++	ret = cxl_ps_get_attrs(ctx, &params);
++	if (ret)
++		return ret;
++	*min = params.min_scrub_cycle_hrs * CXL_DEV_HOUR_IN_SECS;
++
++	return 0;
++}
++
++static int cxl_patrol_scrub_read_max_scrub_cycle(struct device *dev, void *drv_data,
++						 u32 *max)
++{
++	*max = U8_MAX * CXL_DEV_HOUR_IN_SECS; /* Max set by register size */
++
++	return 0;
++}
++
++static int cxl_patrol_scrub_read_scrub_cycle(struct device *dev, void *drv_data,
++					     u32 *scrub_cycle_secs)
++{
++	struct cxl_patrol_scrub_context *ctx = drv_data;
++	struct cxl_memdev_ps_params params;
++	int ret;
++
++	ret = cxl_ps_get_attrs(ctx, &params);
++	if (ret)
++		return ret;
++
++	*scrub_cycle_secs = params.scrub_cycle_hrs * CXL_DEV_HOUR_IN_SECS;
++
++	return 0;
++}
++
++static int cxl_patrol_scrub_write_scrub_cycle(struct device *dev, void *drv_data,
++					      u32 scrub_cycle_secs)
++{
++	struct cxl_patrol_scrub_context *ctx = drv_data;
++	struct cxl_memdev_ps_params params = {
++		.scrub_cycle_hrs = scrub_cycle_secs / CXL_DEV_HOUR_IN_SECS,
++	};
++
++	return cxl_ps_set_attrs(dev, ctx, &params, CXL_PS_PARAM_SCRUB_CYCLE);
++}
++
++static const struct edac_scrub_ops cxl_ps_scrub_ops = {
++	.get_enabled_bg = cxl_patrol_scrub_get_enabled_bg,
++	.set_enabled_bg = cxl_patrol_scrub_set_enabled_bg,
++	.get_min_cycle = cxl_patrol_scrub_read_min_scrub_cycle,
++	.get_max_cycle = cxl_patrol_scrub_read_max_scrub_cycle,
++	.get_cycle_duration = cxl_patrol_scrub_read_scrub_cycle,
++	.set_cycle_duration = cxl_patrol_scrub_write_scrub_cycle,
++};
++
++static int cxl_memdev_scrub_init(struct cxl_memdev *cxlmd,
++				 struct edac_dev_feature *ras_feature, u8 scrub_inst)
++{
++	struct cxl_patrol_scrub_context *cxl_ps_ctx;
++	struct cxl_feat_entry *feat_entry;
++
++	feat_entry = cxl_get_feature_entry(cxlmd, &CXL_FEAT_PATROL_SCRUB_UUID);
++	if (IS_ERR(feat_entry))
 +		return -EOPNOTSUPP;
 +
-+	ret = ras2_update_patrol_scrub_params_cache(ras2_ctx);
-+	if (ret)
-+		return ret;
++	if (!(le32_to_cpu(feat_entry->flags) & CXL_FEATURE_F_CHANGEABLE))
++		return -EOPNOTSUPP;
 +
-+	snprintf(scrub_name, sizeof(scrub_name), "acpi_ras_mem%d",
-+		 ras2_ctx->id);
++	cxl_ps_ctx = devm_kzalloc(&cxlmd->dev, sizeof(*cxl_ps_ctx), GFP_KERNEL);
++	if (!cxl_ps_ctx)
++		return -ENOMEM;
 +
-+	ras_features[num_ras_features].ft_type = RAS_FEAT_SCRUB;
-+	ras_features[num_ras_features].instance = ras2_ctx->instance;
-+	ras_features[num_ras_features].scrub_ops = &ras2_scrub_ops;
-+	ras_features[num_ras_features].ctx = ras2_ctx;
-+	num_ras_features++;
++	*cxl_ps_ctx = (struct cxl_patrol_scrub_context) {
++		.get_feat_size = le16_to_cpu(feat_entry->get_feat_size),
++		.set_feat_size = le16_to_cpu(feat_entry->set_feat_size),
++		.get_version = feat_entry->get_feat_ver,
++		.set_version = feat_entry->set_feat_ver,
++		.effects = le16_to_cpu(feat_entry->effects),
++		.instance = scrub_inst,
++		.cxlmd = cxlmd,
++	};
 +
-+	return edac_dev_register(&auxdev->dev, scrub_name, NULL,
-+				 num_ras_features, ras_features);
++	ras_feature->ft_type = RAS_FEAT_SCRUB;
++	ras_feature->instance = cxl_ps_ctx->instance;
++	ras_feature->scrub_ops = &cxl_ps_scrub_ops;
++	ras_feature->ctx = cxl_ps_ctx;
++
++	return 0;
 +}
 +
-+static const struct auxiliary_device_id ras2_mem_dev_id_table[] = {
-+	{ .name = RAS2_AUX_DEV_NAME "." RAS2_MEM_DEV_ID_NAME, },
-+	{ }
-+};
++static int cxl_region_scrub_init(struct cxl_region *cxlr,
++				 struct edac_dev_feature *ras_feature, u8 scrub_inst)
++{
++	struct cxl_patrol_scrub_context *cxl_ps_ctx;
++	struct cxl_region_params *p = &cxlr->params;
++	struct cxl_feat_entry *feat_entry;
++	struct cxl_memdev *cxlmd;
++	int i;
 +
-+MODULE_DEVICE_TABLE(auxiliary, ras2_mem_dev_id_table);
++	/*
++	 * The cxl_region_rwsem must be held if the code below is used in a context
++	 * other than when the region is in the probe state, as shown here.
++	 */
++	for (i = p->interleave_ways - 1; i >= 0; i--) {
++		struct cxl_endpoint_decoder *cxled = p->targets[i];
 +
-+static struct auxiliary_driver ras2_mem_driver = {
-+	.name = RAS2_MEM_DEV_ID_NAME,
-+	.probe = ras2_probe,
-+	.id_table = ras2_mem_dev_id_table,
-+};
-+module_auxiliary_driver(ras2_mem_driver);
++		cxlmd = cxled_to_memdev(cxled);
++		feat_entry = cxl_get_feature_entry(cxlmd, &CXL_FEAT_PATROL_SCRUB_UUID);
++		if (IS_ERR(feat_entry))
++			return -EOPNOTSUPP;
 +
-+MODULE_IMPORT_NS("ACPI_RAS2");
-+MODULE_DESCRIPTION("ACPI RAS2 memory driver");
-+MODULE_LICENSE("GPL");
++		if (!(le32_to_cpu(feat_entry->flags) & CXL_FEATURE_F_CHANGEABLE))
++			return -EOPNOTSUPP;
++	}
++
++	cxl_ps_ctx = devm_kzalloc(&cxlr->dev, sizeof(*cxl_ps_ctx), GFP_KERNEL);
++	if (!cxl_ps_ctx)
++		return -ENOMEM;
++
++	*cxl_ps_ctx = (struct cxl_patrol_scrub_context) {
++		.get_feat_size = le16_to_cpu(feat_entry->get_feat_size),
++		.set_feat_size = le16_to_cpu(feat_entry->set_feat_size),
++		.get_version = feat_entry->get_feat_ver,
++		.set_version = feat_entry->set_feat_ver,
++		.effects = le16_to_cpu(feat_entry->effects),
++		.instance = scrub_inst,
++		.cxlr = cxlr,
++	};
++
++	ras_feature->ft_type = RAS_FEAT_SCRUB;
++	ras_feature->instance = cxl_ps_ctx->instance;
++	ras_feature->scrub_ops = &cxl_ps_scrub_ops;
++	ras_feature->ctx = cxl_ps_ctx;
++
++	return 0;
++}
++
++int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
++{
++	struct edac_dev_feature ras_features[CXL_DEV_NUM_RAS_FEATURES];
++	char cxl_dev_name[CXL_DEV_NAME_LEN];
++	int num_ras_features = 0;
++	u8 scrub_inst = 0;
++	int rc;
++
++	rc = cxl_memdev_scrub_init(cxlmd, &ras_features[num_ras_features],
++				   scrub_inst);
++	if (rc < 0 && rc != -EOPNOTSUPP)
++		return rc;
++
++	if (rc != -EOPNOTSUPP)
++		num_ras_features++;
++
++	snprintf(cxl_dev_name, sizeof(cxl_dev_name), "%s_%s",
++		 "cxl", dev_name(&cxlmd->dev));
++
++	return edac_dev_register(&cxlmd->dev, cxl_dev_name, NULL,
++				 num_ras_features, ras_features);
++}
++EXPORT_SYMBOL_NS_GPL(devm_cxl_memdev_edac_register, "CXL");
++
++int devm_cxl_region_edac_register(struct cxl_region *cxlr)
++{
++	struct edac_dev_feature ras_features[CXL_DEV_NUM_RAS_FEATURES];
++	char cxl_dev_name[CXL_DEV_NAME_LEN];
++	int num_ras_features = 0;
++	u8 scrub_inst = 0;
++	int rc;
++
++	rc = cxl_region_scrub_init(cxlr, &ras_features[num_ras_features],
++				   scrub_inst);
++	if (rc < 0)
++		return rc;
++
++	num_ras_features++;
++
++	snprintf(cxl_dev_name, sizeof(cxl_dev_name), "%s_%s",
++		 "cxl", dev_name(&cxlr->dev));
++
++	return edac_dev_register(&cxlr->dev, cxl_dev_name, NULL,
++				 num_ras_features, ras_features);
++}
++EXPORT_SYMBOL_NS_GPL(devm_cxl_region_edac_register, "CXL");
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index e8d11a988fd9..5339237ced0f 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -3443,6 +3443,11 @@ static int cxl_region_probe(struct device *dev)
+ 	case CXL_DECODER_PMEM:
+ 		return devm_cxl_add_pmem_region(cxlr);
+ 	case CXL_DECODER_RAM:
++		rc = devm_cxl_region_edac_register(cxlr);
++		if (rc)
++			dev_dbg(&cxlr->dev, "CXL EDAC registration for region_id=%d failed\n",
++				cxlr->id);
++
+ 		/*
+ 		 * The region can not be manged by CXL if any portion of
+ 		 * it is already online as 'System RAM'
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 4a42cdb64b5c..cad0d41b98d0 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -802,6 +802,16 @@ int cxl_trigger_poison_list(struct cxl_memdev *cxlmd);
+ int cxl_inject_poison(struct cxl_memdev *cxlmd, u64 dpa);
+ int cxl_clear_poison(struct cxl_memdev *cxlmd, u64 dpa);
+ 
++#if IS_ENABLED(CONFIG_CXL_RAS_FEATURES)
++int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd);
++int devm_cxl_region_edac_register(struct cxl_region *cxlr);
++#else
++static inline int devm_cxl_memdev_edac_register(struct cxl_memdev *cxlmd)
++{ return 0; }
++static inline int devm_cxl_region_edac_register(struct cxl_region *cxlr)
++{ return 0; }
++#endif
++
+ #ifdef CONFIG_CXL_SUSPEND
+ void cxl_mem_active_inc(void);
+ void cxl_mem_active_dec(void);
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 47348a52bc05..349f01788778 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -185,6 +185,10 @@ static int cxl_mem_probe(struct device *dev)
+ 	if (rc)
+ 		dev_dbg(dev, "No CXL Features enumerated.\n");
+ 
++	rc = devm_cxl_memdev_edac_register(cxlmd);
++	if (rc)
++		dev_dbg(dev, "CXL memdev EDAC registration failed rc=%d\n", rc);
++
+ 	/*
+ 	 * The kernel may be operating out of CXL memory on this device,
+ 	 * there is no spec defined way to determine whether this device
 -- 
 2.43.0
 
