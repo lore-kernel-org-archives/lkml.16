@@ -1,35 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E3723AE80;
-	Fri,  7 Feb 2025 14:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3F01E5B80
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738936806; cv=none; b=ZHUTPE0Rmt2Qb1psyluJ9DiG8tG8zdmudgH1zGKbgiEd5A/vAp806CxEPBEE4RmUiYSryjOYPC7TtblHg5HD6g6MapkCMcYGoUDYcIsdEmChBopLl3B5uHqCeqCyENyC7jwF2wMGBZSwsed7ZI97sVAZIrpWpKEXKtSjCJ6/ISc=
+	t=1738936951; cv=none; b=RBvFIXuTdloY082iuyjW5NNmgYvxxa6E1qtZknv6xxjnhVr/96qMBzXsJWKsbtsv7HfIcVQtFbAlxOnRij4YPRh9919WAbdPkhZFzGDrjzw2jBpwBOupDljHNuGMfQ6fqPcQDZkqwptMugN8KKpZygmJub3ENAoe6ZV2EHqk4tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738936806; c=relaxed/simple;
-	bh=w68cYSg6WyAk3uTwltAFjwgiEcD8LUi2kgnY+OQEoTc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JJFo30btRtyRJ0U7qYdiW6c2QIOpflrvvRfZX1C4GowY7rlswcweDat7FiaW6f/uffjiM1RH9jYVyTV6sVb7leYGeO8hzz/D+d2yuXgPzinIMezykXXzqZxL1F8V9Y0u7eA532zCJeCcu52KD8BVYBanWmgu85mM4LNJJtpQ3U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aB+UAHNX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738936951; c=relaxed/simple;
+	bh=yHmpriYTThEulo6xT9RHvGEqSO7uKIIyE1xA3fKVsy8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Faadebtkc6LVuev6qzrCRefppcOM/HR5oKZoefGICJ4vDNAFgGwjfFxf7tNPVskITHy9Z1Lqly7jGUF5/t9bKegZiXwME/54iN/4i02vdnXw129mIxSp+nm9xj707HRdp9gb1Js12gBQkbdQ1LzRF3t4KHCKNbcUx2TMJmocDdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sfIF97fu; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aB+UAHNX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32454C4CED1;
-	Fri,  7 Feb 2025 14:00:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738936806;
-	bh=w68cYSg6WyAk3uTwltAFjwgiEcD8LUi2kgnY+OQEoTc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=aB+UAHNXjhRnMEUxsk/HIrXDa2P8wLRz7kFR5nH/UC/ELAvBxLMcm2BGxCWeGj1XX
-	 WIu0aiZtJyszmNC0o8s07kkBLh0hq9AMiwSIfNogXhg1k5uNsTYio7DQryfLEbMl+/
-	 KDRxqKqIHPiSGE9rgUxlbDpDX/0PYMMjHSKNie5a2CMhhSLXssRmHu+n0We1q3C+no
-	 uavJyOaJ1YmCKIjqkp4/P4OdgRDB97taygI+IWAnnvZZVFu7V5Vu253jdEeynjjOzS
-	 Lyiqs79moXlatoevDkpAbkxGFMjoDXeYYUHbIcajc29RD4Alrc9C9EEgBOZXjrbolS
-	 kxhzTYqxhWadQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 07 Feb 2025 14:59:33 +0100
-Subject: [PATCH net-next v3 15/15] mptcp: pm: add local parameter for
- set_flags
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sfIF97fu"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso14021595e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:02:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738936948; x=1739541748; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=InbuS/CYzZdN7pnMEKIr+CtCUcWjZ9PfYIqG/HLZbPg=;
+        b=sfIF97funTTsAERadwedtBVGEWq9WiFv6rITE9NciJsMv5gHRfvXVUs0jBfyl6ShNu
+         DRy4E+uFm/zyXA/NnlGw6ZIHH0GwJyaUsEMV4rXC1GCT/YYwQzTteyJXOrSy+zeqCna0
+         ZZi6Hslz3rR161INIzNnw8WWfoVjKpun7timZBFXEeFDTnXzb7Jy+72TmwVY7iCJnYpP
+         uEhOAZeykfp7s2NPGrSj0GBGBAspVff5HRAwfI/QDxG9w+icQ/TTsU3I/VrBCMuirzVu
+         2w9ko4PSf5gMR42XbANTFkIHvoNgKSSBqI68L04+pAG8WrExwuB0y0vyRX1p2C920K6b
+         m1jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738936948; x=1739541748;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=InbuS/CYzZdN7pnMEKIr+CtCUcWjZ9PfYIqG/HLZbPg=;
+        b=U2ND+YO5gD7sY+oIZ4gtQXzEX4IDrl/V60E3/UFl3QI+YxHwF+ctBiWrNKVsvHUqIo
+         J0lzhHAMdQKZBjRVRBenC45ni3lqlMekFkNauAkFoEXwWUQcC+D2Vz9p4bGUulse1vUr
+         pg9tUd5prRGjD+ZcIBvEIvYwVZMI25BB7dWzsV5OxTI/jacuM0n00dw24PXl3m0nsBO0
+         YBN8g57+YgZo+PSCRWOWBtnjjcY0HkE9Ie0ztIn6dpbxWdqqfjY50L3NSbjdgD3t5WlT
+         2DijfjV115yjIejA7pbeaPz65GWv3j2aTO728aN6q7+jVHzoKdpvi52g+qGH59QH24tE
+         1AMg==
+X-Forwarded-Encrypted: i=1; AJvYcCWBpDsnixLHUVrM2H89HZhnMewdyDvfVvayJwPYJrmBPSDl6BJ+o24OfjLUhsXX+kpQ3BQwR4bzE3tAGms=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzk2Z4zqg5g5TWmVnwXaRj74W1/0j5wMioilGxKgSP0vp9fNpi4
+	gfEen9uLsgLVNyoCyM1CKmzHgCu4wnRbD3u5bkCDrU4fiSrNNyOny9t2IW+xaYQ=
+X-Gm-Gg: ASbGncuAwwOj2bFMJgPJVeFCO1xRpDgfW0jsMkF7/S0T1nVN79k228PMEXbu5irUiHA
+	oQJhX68GgAObWAurpLhlAaYnmKh3URf2wHiljIBxvA+W6WmxTMg2GO0kHxW7Z7uw/I6JTLZdPMU
+	DmIzNtIMXnC1mOj9+wOSGW7/QTxmR3b79FXDhi3+Ygo9saHDtVDwaoXc8O/AYIOvZgZ+zUtXaKF
+	sILAvXbC/SevPUSbpi2OgA9BPUpZ2Wpmygsu4ao/8O/ccrgbQN2HTDahPJRMIpg8jE8ZnpCb8w5
+	5d1wZLf/oOIGNp1bM5h/N/feMlF8xzA20Os1
+X-Google-Smtp-Source: AGHT+IGixxfp2vVnu0wNY2WrQxScXmsEJRpI+NlNtNPSw4o2xKrKS7GRX+gjA8je7436JMFa8YwqLg==
+X-Received: by 2002:a05:600c:35cb:b0:436:a3a3:a70c with SMTP id 5b1f17b1804b1-439249b2cfbmr26167995e9.28.1738936948229;
+        Fri, 07 Feb 2025 06:02:28 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391da9652bsm57384605e9.2.2025.02.07.06.02.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 06:02:27 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [PATCH v2 0/2] dt-bindings: display: qcom,sm8[56]50-mdss: only
+ document the mdp0-mem interconnect path
+Date: Fri, 07 Feb 2025 15:02:24 +0100
+Message-Id: <20250207-topic-sm8x50-mdss-interconnect-bindings-fix-v2-0-f712b8df6020@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,241 +68,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-15-71753ed957de@kernel.org>
-References: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-0-71753ed957de@kernel.org>
-In-Reply-To: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-0-71753ed957de@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Geliang Tang <geliang@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAHASpmcC/52NQQ6CMBAAv0J6dk2pFtCT/zAcoF1gE92SbkMwh
+ L9beYLHmcPMpgQjoah7samICwkFzmBOhXJTxyMC+czKaGO10TWkMJMDeTer1fD2IkCcMLrAjC5
+ BT+yJR4GBVvD+VtvBmIvXVuXiHDHr4/ZsM08kKcTPMV/Kn/3vs5SgobGmL33VIV6rx4u4i+Ec4
+ qjafd+/kOYojOcAAAA=
+X-Change-ID: 20250207-topic-sm8x50-mdss-interconnect-bindings-fix-dd975f223d05
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7617; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=qj9m8m0a3wfgfUzgBFHqOovOUzvV2q/ybgg+jHEABjI=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnphG9msOuXbrLsJrdogTH566Shz1XOiMDFTvsi
- 4iP4ohxhCuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ6YRvQAKCRD2t4JPQmmg
- c8D5D/9TpPLISFDO3Jr63keIuvFWcSA/NJd4SvcW3vUcGQQYweBU2qkMarM3iUzUtvHEUMCoPgJ
- 9LbOrGE4px29l13A1Q7nMEiS/2/D4yro6tc/ZCQP5fU5lCGZyzq82R09oDxb0HNz1w2x8NCfy5M
- XtcAduO6EpFqPFpt1IT9Lp5FRJIBVvGLzvOGSwT+BOJDtMGOxmpY0x0rRTL0PlwuX61kZeZNu+L
- czE29qMaxDQ55/iZrOoat7VxVlxGxaSGaRG7fwhzrggHYKZzFbllXc5WvA8QCB4fYDlgmQpY7ft
- 8GpMowV2fpSm87Np0wERB6GUPiYNAz2RcqMpFOz3Czp00bou9dhW+yhq2Jp4Ws8fcbp1/D1CbGm
- abCJM4idzkdWUiwtuQcKXKTD0kVqSMTB72ykKnmzCEQBISIrfYuJOau3nKV+4C0JdIxkdwXtn1b
- MPFHgLDsMKYKEWEgI3f8yTn5y0qkrigHsY1uPnkqe63eIt+tYufSqw0H7BnuGsZds9XUG3EkI9/
- xfd12yPo7ireNI93KHAyjSGeZk9Wq8fMet+cGbylR9hE7RlZ0yiRkkjHjGVLbWbn5eyKe2YP7Te
- rjyeDxPjZnSCRUNHutnS2KarqoifGPeAQnMSP8Hhv7kygys5mOaDZppazvQ431wYBTKzV7YsB0a
- 78TQj23YzxV4lUQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1360;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=yHmpriYTThEulo6xT9RHvGEqSO7uKIIyE1xA3fKVsy8=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnphJx9MTyEErowqwBRaSGtJfWWc4eXnA12SCLXliH
+ XBvP4GqJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ6YScQAKCRB33NvayMhJ0SWjD/
+ 9nJtrSWVCNZt7y5dqdR0Pp4pdlGN62cvsLbDQWSdEqiWdpIB7X+az0j03zA9PESyf5A8z7+CuAaZ+l
+ tppmpfNoYnIGrvZsNphVxY7Zdah458L/B+ICXhMilgSpXwF/KoDHeGjYBa4lOFCEUQyyDID9WNqXCh
+ +W+YHPwCitfohGL6SyIK2JwxYWzCFSxryjK+dR4BHgl+lpR2mji2iYV0z4hvH/AuuqPnvo2xwKn5cB
+ 4Mh0+osbG8BOoefF9Tb1wCfDjq8SCd0lArr1xruGwVuu0W0teHygXaXl0Xq5MRCoWVjNFAe/spvwEX
+ dyWPE3Y0mEvROqrDVLvY1FGbqgDBeqwZS4etuoCpifaJXanako4XLpQRXpXJ35iUBceeYyzjJDy1K0
+ Fy7y+lY5B8aS4YTyDeC6BEPyr43i3MWKnI9V08Oh06oJXsMbb+cGo05GIzJ1dIl0X+tbhgEwvk0JXK
+ z1uPTbq1ExxCD3DQ/uWYo+OUWgKsiVCBVRmb0yKt7qECvNnyh62qysBjdxj7I5bfB6Bfa9ghfxX7Cl
+ n+keYwI1rafwusC0WCtHYvRTpKCAZgKWR0Eb/yYFgKA7S+UW+UWDcBL+KfEa9Gg1H0nB1RH5sYSlnE
+ wYimISrkGJEwa/A0ZUlwQvv2CkJFFPlYTi/L2Jk+EmwGfeXyGlB930r6HpVg==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+The mdp1-mem is not supported on the SM8550 & SM8650 SoCs, so only support a single
+mdp0-mem interconnect entry.
 
-This patch updates the interfaces set_flags to reduce repetitive
-code, adds a new parameter 'local' for them.
+This fixes the following errors:
+display-subsystem@ae00000: interconnects: [[200, 3, 7, 32, 1, 7]] is too short
+        from schema $id: http://devicetree.org/schemas/display/msm/qcom,sm8650-mdss.yaml#
+display-subsystem@ae00000: interconnect-names: ['mdp0-mem'] is too short
+        from schema $id: http://devicetree.org/schemas/display/msm/qcom,sm8650-mdss.yaml#
 
-The local address is parsed in public helper mptcp_pm_nl_set_flags_doit(),
-then pass it to mptcp_pm_nl_set_flags() and mptcp_userspace_pm_set_flags().
-
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- net/mptcp/pm.c           | 16 ++++++++++++++--
- net/mptcp/pm_netlink.c   | 35 +++++++++++++----------------------
- net/mptcp/pm_userspace.c | 19 +++++++------------
- net/mptcp/protocol.h     |  6 ++++--
- 4 files changed, 38 insertions(+), 38 deletions(-)
+Changes in v2:
+- fixed example in qcom,sm8550-mdss.yaml
+- Link to v1: https://lore.kernel.org/r/20250207-topic-sm8x50-mdss-interconnect-bindings-fix-v1-0-852b1d6aee46@linaro.org
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index c213f06bc70234ad3cb84d43971f6eb4aa6ff429..b1f36dc1a09113594324ef0547093a5447664181 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -506,9 +506,21 @@ int mptcp_pm_nl_get_addr_dumpit(struct sk_buff *msg,
- 
- static int mptcp_pm_set_flags(struct genl_info *info)
- {
-+	struct mptcp_pm_addr_entry loc = { .addr = { .family = AF_UNSPEC }, };
-+	struct nlattr *attr_loc;
-+	int ret = -EINVAL;
-+
-+	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR))
-+		return ret;
-+
-+	attr_loc = info->attrs[MPTCP_PM_ATTR_ADDR];
-+	ret = mptcp_pm_parse_entry(attr_loc, info, false, &loc);
-+	if (ret < 0)
-+		return ret;
-+
- 	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
--		return mptcp_userspace_pm_set_flags(info);
--	return mptcp_pm_nl_set_flags(info);
-+		return mptcp_userspace_pm_set_flags(&loc, info);
-+	return mptcp_pm_nl_set_flags(&loc, info);
- }
- 
- int mptcp_pm_nl_set_flags_doit(struct sk_buff *skb, struct genl_info *info)
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 172ddb04e3495348a62feb4b634ed2c32ad7dce2..99705a9c2238c6be96e320e8cd1d12bfa0e0e7f0 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1951,50 +1951,41 @@ static int mptcp_nl_set_flags(struct net *net,
- 	return ret;
- }
- 
--int mptcp_pm_nl_set_flags(struct genl_info *info)
-+int mptcp_pm_nl_set_flags(struct mptcp_pm_addr_entry *local,
-+			  struct genl_info *info)
- {
--	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, };
-+	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
- 	u8 changed, mask = MPTCP_PM_ADDR_FLAG_BACKUP |
- 			   MPTCP_PM_ADDR_FLAG_FULLMESH;
- 	struct net *net = genl_info_net(info);
- 	struct mptcp_pm_addr_entry *entry;
- 	struct pm_nl_pernet *pernet;
--	struct nlattr *attr;
- 	u8 lookup_by_id = 0;
- 	u8 bkup = 0;
--	int ret;
--
--	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR))
--		return -EINVAL;
- 
- 	pernet = pm_nl_get_pernet(net);
- 
--	attr = info->attrs[MPTCP_PM_ATTR_ADDR];
--	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
--	if (ret < 0)
--		return ret;
--
--	if (addr.addr.family == AF_UNSPEC) {
-+	if (local->addr.family == AF_UNSPEC) {
- 		lookup_by_id = 1;
--		if (!addr.addr.id) {
-+		if (!local->addr.id) {
- 			NL_SET_ERR_MSG_ATTR(info->extack, attr,
- 					    "missing address ID");
- 			return -EOPNOTSUPP;
- 		}
- 	}
- 
--	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-+	if (local->flags & MPTCP_PM_ADDR_FLAG_BACKUP)
- 		bkup = 1;
- 
- 	spin_lock_bh(&pernet->lock);
--	entry = lookup_by_id ? __lookup_addr_by_id(pernet, addr.addr.id) :
--			       __lookup_addr(pernet, &addr.addr);
-+	entry = lookup_by_id ? __lookup_addr_by_id(pernet, local->addr.id) :
-+			       __lookup_addr(pernet, &local->addr);
- 	if (!entry) {
- 		spin_unlock_bh(&pernet->lock);
- 		NL_SET_ERR_MSG_ATTR(info->extack, attr, "address not found");
- 		return -EINVAL;
- 	}
--	if ((addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
-+	if ((local->flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
- 	    (entry->flags & (MPTCP_PM_ADDR_FLAG_SIGNAL |
- 			     MPTCP_PM_ADDR_FLAG_IMPLICIT))) {
- 		spin_unlock_bh(&pernet->lock);
-@@ -2002,12 +1993,12 @@ int mptcp_pm_nl_set_flags(struct genl_info *info)
- 		return -EINVAL;
- 	}
- 
--	changed = (addr.flags ^ entry->flags) & mask;
--	entry->flags = (entry->flags & ~mask) | (addr.flags & mask);
--	addr = *entry;
-+	changed = (local->flags ^ entry->flags) & mask;
-+	entry->flags = (entry->flags & ~mask) | (local->flags & mask);
-+	*local = *entry;
- 	spin_unlock_bh(&pernet->lock);
- 
--	mptcp_nl_set_flags(net, &addr.addr, bkup, changed);
-+	mptcp_nl_set_flags(net, &local->addr, bkup, changed);
- 	return 0;
- }
- 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 1af70828c03c21d03a25f3747132014dcdc5c0e8..277cf092a87042a85623470237a8ef24d29e65e6 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -564,9 +564,9 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
- 	return err;
- }
- 
--int mptcp_userspace_pm_set_flags(struct genl_info *info)
-+int mptcp_userspace_pm_set_flags(struct mptcp_pm_addr_entry *local,
-+				 struct genl_info *info)
- {
--	struct mptcp_pm_addr_entry loc = { .addr = { .family = AF_UNSPEC }, };
- 	struct mptcp_addr_info rem = { .family = AF_UNSPEC, };
- 	struct mptcp_pm_addr_entry *entry;
- 	struct nlattr *attr, *attr_rem;
-@@ -575,8 +575,7 @@ int mptcp_userspace_pm_set_flags(struct genl_info *info)
- 	struct sock *sk;
- 	u8 bkup = 0;
- 
--	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR) ||
--	    GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR_REMOTE))
-+	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR_REMOTE))
- 		return ret;
- 
- 	msk = mptcp_userspace_pm_get_sock(info);
-@@ -586,11 +585,7 @@ int mptcp_userspace_pm_set_flags(struct genl_info *info)
- 	sk = (struct sock *)msk;
- 
- 	attr = info->attrs[MPTCP_PM_ATTR_ADDR];
--	ret = mptcp_pm_parse_entry(attr, info, false, &loc);
--	if (ret < 0)
--		goto set_flags_err;
--
--	if (loc.addr.family == AF_UNSPEC) {
-+	if (local->addr.family == AF_UNSPEC) {
- 		NL_SET_ERR_MSG_ATTR(info->extack, attr,
- 				    "invalid local address family");
- 		ret = -EINVAL;
-@@ -609,11 +604,11 @@ int mptcp_userspace_pm_set_flags(struct genl_info *info)
- 		goto set_flags_err;
- 	}
- 
--	if (loc.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-+	if (local->flags & MPTCP_PM_ADDR_FLAG_BACKUP)
- 		bkup = 1;
- 
- 	spin_lock_bh(&msk->pm.lock);
--	entry = mptcp_userspace_pm_lookup_addr(msk, &loc.addr);
-+	entry = mptcp_userspace_pm_lookup_addr(msk, &local->addr);
- 	if (entry) {
- 		if (bkup)
- 			entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
-@@ -623,7 +618,7 @@ int mptcp_userspace_pm_set_flags(struct genl_info *info)
- 	spin_unlock_bh(&msk->pm.lock);
- 
- 	lock_sock(sk);
--	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc.addr, &rem, bkup);
-+	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &local->addr, &rem, bkup);
- 	release_sock(sk);
- 
- 	/* mptcp_pm_nl_mp_prio_send_ack() only fails in one case */
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 6e7dc5375e291f9b6ec27bc8c632691401b91717..37226cdd9e3717c4f8cf0d4c879a0feaaa91d459 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1038,8 +1038,10 @@ bool mptcp_lookup_subflow_by_saddr(const struct list_head *list,
- 				   const struct mptcp_addr_info *saddr);
- bool mptcp_remove_anno_list_by_saddr(struct mptcp_sock *msk,
- 				     const struct mptcp_addr_info *addr);
--int mptcp_pm_nl_set_flags(struct genl_info *info);
--int mptcp_userspace_pm_set_flags(struct genl_info *info);
-+int mptcp_pm_nl_set_flags(struct mptcp_pm_addr_entry *local,
-+			  struct genl_info *info);
-+int mptcp_userspace_pm_set_flags(struct mptcp_pm_addr_entry *local,
-+				 struct genl_info *info);
- int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 			   const struct mptcp_addr_info *addr,
- 			   bool echo);
+---
+Neil Armstrong (2):
+      dt-bindings: display: qcom,sm8550-mdss: only document the mdp0-mem interconnect path
+      dt-bindings: display: qcom,sm8650-mdss: only document the mdp0-mem interconnect path
 
+ .../devicetree/bindings/display/msm/qcom,sm8550-mdss.yaml        | 9 ++++-----
+ .../devicetree/bindings/display/msm/qcom,sm8650-mdss.yaml        | 4 ++--
+ 2 files changed, 6 insertions(+), 7 deletions(-)
+---
+base-commit: 808eb958781e4ebb6e9c0962af2e856767e20f45
+change-id: 20250207-topic-sm8x50-mdss-interconnect-bindings-fix-dd975f223d05
+
+Best regards,
 -- 
-2.47.1
+Neil Armstrong <neil.armstrong@linaro.org>
 
