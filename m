@@ -1,114 +1,161 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F0A7FD;
-	Fri,  7 Feb 2025 12:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33C31DE8AE
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 12:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738930856; cv=none; b=VBRXehH1hJyIgA4qfGn4FQBv0kl/5Pe9MC7JO42CoG68vVEzKEOw5MZLvGj6yBZUvMhgd+EadNWFfx/qh/zLARVGW1cDE44Sz0cT+UldD+xGluyTHlIP3BwAvnUL7VibGMaAlcb2N2cVUwu0aTcHpzhlMkGdmAkiPTYPjTFBvAE=
+	t=1738930922; cv=none; b=mbUXJWsMcOMfw10m0uxYJOHjXm91bDJSljiLuoPNo+XLCueuC/nA5azKujyuPuMAnfSvDyWb+MgLTDq4yUp2auK38eOU3T/GStCHO4rP3qTind0+H/iwbdpsLtBKfOShY/z/aIDrBbaqmad+i812NiYOlKBxnrvgdFLMoccDw6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738930856; c=relaxed/simple;
-	bh=a54mOet32eur3UH8ItkoAvMxfKNhEKaOIWBLSYbvLSw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VriZtkutNIlYpxBSH4PORJQtgx6UkCFQNT40WRgni8byDVfrkTJiOrxrTiQ+meT4YYO5Boyu84w6bd8UvbbLtybGFy1hRSaGu7rVZ/ikO9DiDpgdSwhNcNQd8nyYCjZts51cUO9XloQx4ZH1XL4IvhfRXrjuu2vnmq917RLeGsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cl3GFrm9; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738930922; c=relaxed/simple;
+	bh=tR5fX/SrcwQMtyjLVBuBtWUiGsJAX7EJADfXcgVi8WU=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K8lQLFl90+1U9iwFJQ9jB4u84Mq/XyZqqVhk7qNp2sE1ised2fGPbS7/vQyX9WwMX9r+fk9b7ONUJ3FcmewGb8OcYJcxt1KIiLXSg/Wvut3gI6Vo9mPbQhZ8LvwRlzwvF2ngdzeRJmM6KCFnr3QyWB+d5weQEcVNGfY5bpmtw+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=aI1IA//7; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cl3GFrm9"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aaf3c3c104fso366499866b.1;
-        Fri, 07 Feb 2025 04:20:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738930853; x=1739535653; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a54mOet32eur3UH8ItkoAvMxfKNhEKaOIWBLSYbvLSw=;
-        b=Cl3GFrm9deRMNBDmGo/v09OGvHDpg+1wcX0MGboK+FkV4lFSu7z48MTLgoKhGOFHiM
-         dPJM5LEYg451fHwIROmRgURV8s5BIFhk2N0bGi0i8KfGqC47G/zfjygBgxHDlHnvDcIQ
-         V1BRCn9jQBku72VR1DF/eItSf8ToxhAsFpCN18PD7nv5WhmaVBcyeNBTUqdaIv/FlSBJ
-         zTb+L0PXXAlX0gHIq65/gt79snbeO9iJBYIfETi5EpSW+7O+WvIiNdZ6KWcCpBoavOJO
-         yUK8C4csVVIpNbkCCavGsuWA0Kxxeyf5CZFPTFQDRKui3Ga7118XGK6+fn8sCiDI6qX5
-         y3GA==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="aI1IA//7"
+Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com [209.85.167.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 922A63FE59
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 12:21:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1738930915;
+	bh=bLYbBkGBrBPKD0BA+zFMlOKFJsc5hMvXA5oz9aSTjyU=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=aI1IA//7pBo/FYAoSPXPE2XyU2iIbqSQjBCQY71OX+J3m1pQC3JIFSjAprHms9sbO
+	 bJ1tHvYjxjCwEc49BM10dOhbUCgI6ecJ00SZrtjhcuH6Y9B4M5frQdOLZnmUI5IIYG
+	 HaMdmR5fB9WhixmplYxSMzCIAhG8M/qiHKGETFryu6bxaiRtnX6cQoULoh+tCwuJia
+	 PoacAZX8jbVT6lGd5dmPqFAOlUEMZUkAkgdZ717JgD8IRRzWGuqMkBhZQbbBKNar8Y
+	 d+fbxR8Lg1jrCgrH7DcFx0q65ofs0SvgMMxMEUvOfeOv+39MzzbozLO3t5pJ53Q2B7
+	 /tYtTGkWJmgfA==
+Received: by mail-oi1-f198.google.com with SMTP id 5614622812f47-3eb97b1cc12so725638b6e.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 04:21:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738930853; x=1739535653;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a54mOet32eur3UH8ItkoAvMxfKNhEKaOIWBLSYbvLSw=;
-        b=dK5tcmj2PLrJoR6gW8+2v/1eT5IKLLEF6zpaX6VOoP2LhWOU51B/U0z0xKs3tg3nJv
-         9gwbpaRy5EbxIDHZwqAKefwdZX+0RiXIYK0H1WenocgRs0Z5q2jj/AO6Ji5JO6ky+ppn
-         LsJKiRQrIsRliZcTCjCop3f40wSVXvAEsQL0DxZN+POxFuBOlyv1TChTVqK437YdCe3Z
-         M0eY+FSgIAV3DJhzFFRcoLx+r6+nkagNApQMHPrbEE6UQEpQbP6IzXzQmS8qDwa6wkix
-         zlazN4/4VX/IYRQa+8kRybU+RDqhrnzJjZ2XTe2QwU2Jwb/x9FL2BvsQk1D3X73duy4r
-         cA8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUUAxAfM/T15pwJ/AtNcCw3yFLEKNB1MX15B9ZNvrJ1ecjNRwF0cfr8xIcLHyXboZnGYQ/4w39/nBr2aVQ=@vger.kernel.org, AJvYcCV0v63mPYiN9dI7SfpuFgXI5SLkhYOAiSf+H4h2dlSXYq35NOfpTXF4vflzKajA3Cgw8MM7rc5uJgpo+Buu@vger.kernel.org, AJvYcCX8PL0U55AEunDGKT8Rxv+KjgcqL4WH9PI2ZrPe52KtqqhNVhQtiMNmPswBNTmA5jVrcj+gE/8w@vger.kernel.org, AJvYcCXEsBPjK98wyq2FkGAwL9sv68z0sm3YkM2MMCh5d7bxWAjAQa5wJGGnASf4kcodUrjTi13Cu0eXOGH/@vger.kernel.org, AJvYcCXIWeAaw0ZOY6EKzvfcAsWc9/YkqnpmtMT4RRZ5YzxI6c6PcRj71B4ZmJI/P/OeF66hTL7bdRGZCJtB@vger.kernel.org, AJvYcCXKKEnUnoIhQph4qXY/3ciLO3L/eOlLiGYl/QZEKlRMO17eqUxksaMnjCG89YG9TJghuVf/Ke/pVV5C@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGT1huF2220tGmR5mVX53Eu3o9YdDzVR8DkvlJZ4ly/1nyxaK5
-	2bUoTBB/pQ74lFe8TYkHhdWMojLwS+sMykQkMFnUbq5ozs65oit4ytb9dhxdH/SMQynNzX0BLgn
-	svVK5P36Yvh9rIeBk2fTANfx3JXg=
-X-Gm-Gg: ASbGncu68I7wOkxElwGb6MQFPMEA0GTJdcx8VpYc0I0ICbehOBktFba6i9uq8/w5gpG
-	Zxit48dKaEBZyHP2yzRCqvj+avyYLtPqXtz8FMuTawWhM56JS6OsHz22W8cXCC4ywCCz2ajgiNU
-	M=
-X-Google-Smtp-Source: AGHT+IGoiY/D1TiKwL5GXSoLaYBfuEuXQzNiPDbnqOiNifB0jsQGA+mFrH+WWqi6hARBZNpJM2EqqyBf+cDjmszsmSM=
-X-Received: by 2002:a17:907:c1b:b0:ab6:36fd:942a with SMTP id
- a640c23a62f3a-ab789c6cedbmr318216966b.50.1738930852678; Fri, 07 Feb 2025
- 04:20:52 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738930914; x=1739535714;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bLYbBkGBrBPKD0BA+zFMlOKFJsc5hMvXA5oz9aSTjyU=;
+        b=KKa5gs6qlMX2i6h90kH1ujxw4hen2fa2TLkOzfnYC8C12RHnicdyVVE0vvkLj+Ak/u
+         2OPpthYDhWgganbdv9rKaDtEXow7IjqRH9Rtm6DUotvR0EHdT7snXNPwEjOfBpzcT1gC
+         KEhpLfwKvKFi8OZkjeoQjHfNKggfGQ52dQEfFPYMtaxlC33tK41AK9jwQEjoZL+UftuU
+         7Fv8T6lf81HBP62ONC7MLeMg5joe+CpnRNgeVHBwJFByM8BXhD4pcyC7SMcxKl+JKYrZ
+         eZhMnIucZbDH+fvH2dPO3mKV+KwLz2b+gxxd1WiuPLCjLS84VLCeqSw8veONfB1D7niy
+         F0fw==
+X-Gm-Message-State: AOJu0YwPoNfDZJz9BWXVOpZlQsJIrnGj4mYL0tsGTfBANocl3k1ttmkg
+	LyOtKpwfgZVfUr6lkc0gH6mt9vQQMTH7fk4NzOz0tqJdWYNQJ4Hx8sthvOvqZ7mQFdT1anJuC1k
+	Z1AgYWy+4UcZLjJtlLPM54dqt+g8YZnew508njD2hkhIBY+GXEPTENbm8wvOxXHpiZhY+HrV1LG
+	qH3XmPCLRYsvqoIkrbMeEVfmYZZaKK8BaE2rowiZZNJCNaLpAsUkVK
+X-Gm-Gg: ASbGncsF2yQ3POdvNcgE/3bXB9xUKhAAxBhnn152vgdINIs9zrFVHUL7qQCcDPho9eG
+	feEW8ZNfSi58jCLD8dtjwbKx3++RY0XgKfZKcYc4DD5fYV2LW71yYy5A0YQpTWA==
+X-Received: by 2002:a05:6808:1a22:b0:3e7:5b06:ff61 with SMTP id 5614622812f47-3f392324bbdmr2004972b6e.21.1738930914174;
+        Fri, 07 Feb 2025 04:21:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH0nrruP1KWAtV3Ixvpat5sYozBaFXe8iNBwq/tYngmUIbKou/lN0W5ZFA5kCc2px9kPN8lYrh9JqD5uo1u+aw=
+X-Received: by 2002:a05:6808:1a22:b0:3e7:5b06:ff61 with SMTP id
+ 5614622812f47-3f392324bbdmr2004957b6e.21.1738930913755; Fri, 07 Feb 2025
+ 04:21:53 -0800 (PST)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 7 Feb 2025 04:21:53 -0800
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 7 Feb 2025 04:21:53 -0800
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <981a3f30-c646-423a-a2dd-e19fef5c69e5@freeshell.de>
+References: <20250203013730.269558-1-e@freeshell.de> <20250203013730.269558-2-e@freeshell.de>
+ <CAJM55Z-M9MsJAtPi-t=_tNV3oG_kdDiS6H=H3koJwTEwB8GJ-Q@mail.gmail.com> <981a3f30-c646-423a-a2dd-e19fef5c69e5@freeshell.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com>
- <CAMRc=Mf9WQjVXvea7tHx0MJG2H8Yqxw=zGqvjp7dfD7+=huDKw@mail.gmail.com> <CAPDyKFoNuXpTEm1rLPvAgib+ugqr7XyETZhfrNr6ypOOKRwjXQ@mail.gmail.com>
-In-Reply-To: <CAPDyKFoNuXpTEm1rLPvAgib+ugqr7XyETZhfrNr6ypOOKRwjXQ@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 7 Feb 2025 14:20:16 +0200
-X-Gm-Features: AWEUYZlfwIvy7LIm9pIahL5l8siSqdVektaSns5lQfpSrtnfvAL7yjcR2ciezX0
-Message-ID: <CAHp75VdmN2wqwwnea0gtTQJ+Y5twQaJp6iEL2esEMCHDi8bvVg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/13] gpiolib: add gpiod_multi_set_value_cansleep
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, David Lechner <dlechner@baylibre.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
+Mime-Version: 1.0
+Date: Fri, 7 Feb 2025 04:21:53 -0800
+X-Gm-Features: AWEUYZlUXTw9uJtoXI-0CyJ4qca5NzN8JB2qd0nSma75DDzMHwSqSLFJSPEnyhI
+Message-ID: <CAJM55Z9HTLoE3ShMfyqN=-KeC+EY_kQ+JSvFpxpX1gumio1Brg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] riscv: dts: starfive: jh7110-common: replace
+ syscrg clock assignments
+To: E Shattow <e@freeshell.de>, 
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>, Conor Dooley <conor@kernel.org>, 
+	Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 7, 2025 at 11:48=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.org=
-> wrote:
-> On Fri, 7 Feb 2025 at 08:49, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > On Thu, Feb 6, 2025 at 11:48=E2=80=AFPM David Lechner <dlechner@baylibr=
-e.com> wrote:
-
-...
-
-> > > Maintainers, if you prefer to have this go through the gpio tree, ple=
-ase
-> > > give your Acked-by:, otherwise I will resend what is left after the n=
-ext
-> > > kernel release.
-
-> > I can provide an immutable branch for the entire series for everyone
-> > to pull or I can apply patch one, provide an immutable branch and
-> > every subsystem can take their respective patches. What do you prefer?
+E Shattow wrote:
 >
-> The changes look small and trivial to me. I wouldn't mind if you take
-> them all (at least for mmc). An immutable branch would be good, if it
-> turns out that we need to pull them.
+>
+> On 2/5/25 02:16, Emil Renner Berthing wrote:
+> > E Shattow wrote:
+> >> Replace syscrg assignments of clocks, clock parents, and rates with
+> >> default settings for compatibility with downstream boot loader SPL
+> >> secondary program loader.
+> >>
+> >> Signed-off-by: E Shattow <e@freeshell.de>
+> >> ---
+> >>  arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 11 ++++++++---
+> >>  1 file changed, 8 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> >> index 48fb5091b817..a5661b677687 100644
+> >> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> >> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> >> @@ -359,9 +359,14 @@ spi_dev0: spi@0 {
+> >>  };
+> >>
+> >>  &syscrg {
+> >> -	assigned-clocks = <&syscrg JH7110_SYSCLK_CPU_CORE>,
+> >> -			  <&pllclk JH7110_PLLCLK_PLL0_OUT>;
+> >> -	assigned-clock-rates = <500000000>, <1500000000>;
+> >> +	assigned-clocks = <&syscrg JH7110_SYSCLK_CPU_ROOT>,
+> >> +			  <&syscrg JH7110_SYSCLK_BUS_ROOT>,
+> >> +			  <&syscrg JH7110_SYSCLK_PERH_ROOT>,
+> >> +			  <&syscrg JH7110_SYSCLK_QSPI_REF>;
+> >> +	assigned-clock-parents = <&pllclk JH7110_PLLCLK_PLL0_OUT>,
+> >> +				 <&pllclk JH7110_PLLCLK_PLL2_OUT>,
+> >> +				 <&pllclk JH7110_PLLCLK_PLL2_OUT>,
+> >> +				 <&syscrg JH7110_SYSCLK_QSPI_REF_SRC>;
+> >
+> > I think Conor asked about this too, but you still don't write why it's ok to
+> > drop the 500MHz and 1,5GHz assignments to the cpu-core and pll0 clocks
+> > respectively. You should add this to the commit message itself.
+> >
+> > /Emil
+>
+> Is this a remedy for a bug in the JH7110 CPU? I'm not clear why tweaking
+> the frequencies and increasing core voltage was ever needed.
 
-+1 here, the potential user for immutable branch/tag is IIO.
-The rest looks trivial and unlikely to have conflicts.
+I think it's quite common for SoCs come out of reset in a safe slow clock
+configuration and then expect software to set clock speeds to what the chip is
+really capable of.
 
---=20
-With Best Regards,
-Andy Shevchenko
+> This goes back to series "clk: starfive: jh7110-sys: Fix lower rate of
+> CPUfreq by setting PLL0 rate to 1.5GHz" [1].
+>
+> Since [1] I have had problems with several passively cooled Milk-V Mars
+> CM Lite systems powering off due to thermal limits. My experience then
+> is that the specialized 1.5GHz operation is not appropriate for all
+> JH7110 CPU board layouts and applications.
+
+If that's the case then maybe only lower the clock speed on the Mars CM Lite
+boards.
+
+> Hal says I failed to get these assignments in Linux to work in U-Boot
+> because U-Boot doesn't have driver support to increase CPU voltage, and
+> Hal offering to add this to a driver in U-Boot... but that's the wrong
+> way around in my opinion, unless there's some defect in the JH7110 CPU
+> that it won't run reliably with hardware defaults.
+>
+> 1:
+> https://lore.kernel.org/all/20240603020607.25122-1-xingyu.wu@starfivetech.com/
+>
+> What is the correct thing to do here?
+
+I really don't think slowing down all the boards because of missing code in
+U-Boot is the right solution, but Hal also answered in the old thread.
+
+/Emil
