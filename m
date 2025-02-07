@@ -1,202 +1,125 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3C51EA7D7;
-	Fri,  7 Feb 2025 22:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4751D90DB;
+	Fri,  7 Feb 2025 22:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738967824; cv=none; b=N7IYCVbpd/f5PDjqQ/HzMW+4YqtyxY/DyJgUJKR9BVwdn+DsLhWQNaJ4oMlhaY+y6dVDOXyWDI/FLOdsv4wjXF8wxdN3Wng2uY4vk348Zgfk11Vm6vXc3wSOGfIh+Tt0dBBIgNGuiZkPuvhVvAGQXaiQsPDI/pbwUDxZXWUSb1I=
+	t=1738967833; cv=none; b=MoFg0qzxRKR1KoDYA78UfB/D2wFm1C1a7aPnkQgl6dqKessEEvbc/Dr+3Ik9eUxS3QolEOWNaMnlOEa2kpWcl0Ncs53/Lwyst2uTc0P5+9eyFHkWnuujHF8vPvOjD0TCMqrpBtevE9W63UQi66Sqc7WALPDNyPQsOfT3NKqJ974=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738967824; c=relaxed/simple;
-	bh=R7fHZ2/aol9wndAGd2tI1d1cUD+QFaTH8izRSPGvO44=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MLYSq0x95w7D8VbBrrvcDQ1gCP9Z5emF3Fut8QhwSFTGzMoqzdWmHJh/yf5NzkRVIVoI5OKXgzo3KCVCcITpI+p6WStioHiJQTgGVGylzn5HtzjuNJgnTEq0HG/AT13deePbpNwjeztIbrXvy5UGNinvKn/zQAbOwE5QlFVUtBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BNGDRvXh; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BNGDRvXh"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6F614204D7;
-	Fri,  7 Feb 2025 22:36:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738967821;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jtBEdDFyHM7TrJGYplmIDsTu3tggBHU0A+jgdykLjok=;
-	b=BNGDRvXhLX8GjXA70jATJ7Rw147bsli5TRUf62YEWJqL4zUjmi3M4tTJc1ijh0ldWZWMn3
-	iP1EGJEsE8YzM0q6CYKeMMhPTFN5M0L06NoAnfJWq7W0fz/Rvu5rEJH4q//AQ+scJHFf55
-	ArM8k9BGpOAE1P2F9bBbhW+nJgEIM+szkogMoeUm7jBMSq3FMKk/iUn3qiUgUttE3H++fx
-	tDBbUJtGzWytYZYBznc4iPLOtvAMRu3Cz7+SXyJrJZbC3bdka9XsX1N+RPZE+aNxQ5M0cJ
-	Ysodirva09ORQJVZgUwoQDgvZQHEGc3kxIBxsgzL9XN/uzCgX7vK/VBh/puXlg==
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
-	Simon Horman <horms@kernel.org>,
-	mwojtas@chromium.org,
-	Antoine Tenart <atenart@kernel.org>,
-	devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>
-Subject: [PATCH net-next 13/13] dt-bindings: net: Introduce the phy-port description
-Date: Fri,  7 Feb 2025 23:36:32 +0100
-Message-ID: <20250207223634.600218-14-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250207223634.600218-1-maxime.chevallier@bootlin.com>
-References: <20250207223634.600218-1-maxime.chevallier@bootlin.com>
+	s=arc-20240116; t=1738967833; c=relaxed/simple;
+	bh=S/tpQ3STB8+/87M4WfkqS1yWyucnvmjhKxobuJLNll0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c/InPVUarjcTNlAE6BD2eP2BFXPiH1Ev7U5GT5XAgVsLVUSSZs6xHHXs5Wc/h2snAkWl6txpLMXhwbe3S+wwxHCJQO0n8bBVNv6bRHduJ7WQkVOKbXdI7ogTOTQbw4vtsuSma+WpmyssiVzk/KNmTdApJ7zESPZt08b1di4pfS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [180.172.76.141])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 7A213342FDC;
+	Fri, 07 Feb 2025 22:37:10 +0000 (UTC)
+Date: Fri, 7 Feb 2025 22:37:05 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Alex Elder <elder@kernel.org>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH] pinctrl: spacemit: enable config option
+Message-ID: <20250207223705-GYA7567@gentoo>
+References: <20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org>
+ <20250207-promenade-hazily-d7900cbc127e@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdehtdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeulefgvddthfekkedugeeikeeuudekhfekgfehgfelkeekkeekhfejkefgvefhieenucffohhmrghinhepuggvvhhitggvthhrvggvrdhorhhgnecukfhppedvrgdtudemtggsudelmeekugegtgemlehftddtmegttgeftgemgeelfhegmeefieehheemsgehjeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugegtmeelfhdttdemtggtfegtmeeglehfgeemfeeiheehmegsheejgedphhgvlhhopehfvgguohhrrgdquddrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdelpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnr
- dgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207-promenade-hazily-d7900cbc127e@spud>
 
-The ability to describe the physical ports of Ethernet devices is useful
-to describe multi-port devices, as well as to remove any ambiguity with
-regard to the nature of the port.
+Hi Linus Walleij:
+ I think you won't mind if I take this patch through SpacemiT's SoC tree,
+as it's fairly SpacemiT specific, right? anyway I'd appreciate if you
+could give an ACK for this, thanks
 
-Moreover, describing ports allows for a better description of features
-that are tied to connectors, such as PoE through the PSE-PD devices.
+Hi Conor:
 
-Introduce a binding to allow describing the ports, for now with 2
-attributes :
+On 16:49 Fri 07 Feb     , Conor Dooley wrote:
+> On Fri, Feb 07, 2025 at 08:11:42PM +0800, Yixun Lan wrote:
+> > Pinctrl is an essential driver for SpacemiT's SoC,
+> > so let's enable it by default for this SoC.
+> > 
+> > The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
+> > 'make defconfig' to select kernel configuration options.
+> > This result in a broken uart driver where fail at probe()
+> > stage due to no pins found.
+> > 
+> > Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
+> > Reported-by: Alex Elder <elder@kernel.org>
+> > Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> > ---
+> > This should fix problem that CONFIG_PINCTRL_SPACEMIT_K1 is not enabled
+> > when using make defconfig, thus fail to initilize uart driver which requst
+> > pins during probe stage.
+> > ---
+> >  arch/riscv/Kconfig.socs          | 1 +
+> >  drivers/pinctrl/spacemit/Kconfig | 1 +
+> >  2 files changed, 2 insertions(+)
+> > 
+> > diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+> > index 1916cf7ba450ec9958265de2ca41dc504d4d2f7c..17606940bb5239d0fdfc6b5aefb50eeb982d14aa 100644
+> > --- a/arch/riscv/Kconfig.socs
+> > +++ b/arch/riscv/Kconfig.socs
+> > @@ -26,6 +26,7 @@ config ARCH_SOPHGO
+> >  
+> >  config ARCH_SPACEMIT
+> >  	bool "SpacemiT SoCs"
+> > +	select PINCTRL
+> >  	help
+> >  	  This enables support for SpacemiT SoC platform hardware.
+> >  
+> 
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> 
+thanks Conor
 
- - The number of lanes, which is a quite generic property that allows
-   differentating between multiple similar technologies such as BaseT1
-   and "regular" BaseT (which usually means BaseT4).
+> > diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/spacemit/Kconfig
+> > index 168f8a5ffbb952cbeae3e3401c11149558e0a84b..aa3dea535def87ed75d86bc555b2b90643adbdea 100644
+> > --- a/drivers/pinctrl/spacemit/Kconfig
+> > +++ b/drivers/pinctrl/spacemit/Kconfig
+> > @@ -7,6 +7,7 @@ config PINCTRL_SPACEMIT_K1
+> >  	tristate "SpacemiT K1 SoC Pinctrl driver"
+> >  	depends on ARCH_SPACEMIT || COMPILE_TEST
+> >  	depends on OF
+> > +	default ARCH_SPACEMIT
+> 
+> This is effectively just "default y", since ARCH_SPACEMIT is a
+> dependency.
+> 
+right, this is the plan, it make sense to bundle this config to ARCH_SPACEMIT
 
- - The media that can be used on that port, such as BaseT for Twisted
-   Copper, BaseC for coax copper, BaseS/L for Fiber, BaseK for backplane
-   ethernet, etc. This allows defining the nature of the port, and
-   therefore avoids the need for vendor-specific properties such as
-   "micrel,fiber-mode" or "ti,fiber-mode".
+> >  	select GENERIC_PINCTRL_GROUPS
+> >  	select GENERIC_PINMUX_FUNCTIONS
+> >  	select GENERIC_PINCONF
+> > 
+> > ---
+> > base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> > change-id: 20250207-k1-pinctrl-option-de5bdfd6b42e
+> > 
+> > Best regards,
+> > -- 
+> > Yixun Lan
+> > 
 
-The port description lives in its own file, as it is intended in the
-future to allow describing the ports for phy-less devices.
 
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
----
- .../devicetree/bindings/net/ethernet-phy.yaml | 18 +++++++
- .../bindings/net/ethernet-port.yaml           | 47 +++++++++++++++++++
- 2 files changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/ethernet-port.yaml
 
-diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-index 2c71454ae8e3..950fdacfd27d 100644
---- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-+++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
-@@ -261,6 +261,17 @@ properties:
- 
-     additionalProperties: false
- 
-+  mdi:
-+    type: object
-+
-+    patternProperties:
-+      '^port-[a-f0-9]+$':
-+        $ref: /schemas/net/ethernet-port.yaml#
-+
-+        unevaluatedProperties: false
-+
-+    additionalProperties: false
-+
- required:
-   - reg
- 
-@@ -297,5 +308,12 @@ examples:
-                     default-state = "keep";
-                 };
-             };
-+
-+            mdi {
-+              port-0 {
-+                lanes = <2>;
-+                media = "BaseT";
-+              };
-+            };
-         };
-     };
-diff --git a/Documentation/devicetree/bindings/net/ethernet-port.yaml b/Documentation/devicetree/bindings/net/ethernet-port.yaml
-new file mode 100644
-index 000000000000..bf0f64f1b0aa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/ethernet-port.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/ethernet-port.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Generic Ethernet Port
-+
-+maintainers:
-+  - Maxime Chevallier <maxime.chevallier@bootlin.com>
-+
-+description:
-+  An Ethernet port represents an output, such as a connector, of a network
-+  component such as a PHY, an Ethernet controller with no PHY, or an SFP module.
-+
-+properties:
-+
-+  lanes:
-+    description:
-+      Defines the number of lanes on the port, that is the number of physical
-+      channels used to convey the data with the link partner.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  media:
-+    description:
-+      The mediums, as defined in 802.3, that can be used on the port.
-+    items:
-+      enum:
-+        - BaseT
-+        - BaseK
-+        - BaseS
-+        - BaseC
-+        - BaseL
-+        - BaseD
-+        - BaseE
-+        - BaseF
-+        - BaseV
-+        - BaseMLD
-+        - BaseX
-+
-+required:
-+  - lanes
-+  - media
-+
-+additionalProperties: true
-+
-+...
 -- 
-2.48.1
-
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
