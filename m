@@ -1,158 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF657FD;
-	Fri,  7 Feb 2025 04:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D12715E5B8;
+	Fri,  7 Feb 2025 04:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738903953; cv=none; b=McdZMGd/6V7F0l9xWL2tS+mZY21ho3SJf1qj6PwQIHXSF/8vOFjhSD292R0/T1J6LcalXjSVRl92xPP8DxNdUecTo4FdatpW13UZlxx8haFsHAKZYKrS5qDywEdCHWIEBAQ+4U72LyOoFKsnO24EHo6kxjBWqXKXouaInCvsCuM=
+	t=1738904046; cv=none; b=TnZ3Vv3Xi6ohCLPkpoFunei2ZekyeAKMy7BZ2dfdzF2ZQsDUXTnQCW2C5/6PbqYhNylr2Kx9lzfjsIV7oodS7ZL3VxH/aLVcaLE5quJWeww8P0ysFJ8kEcy7rQZFd3gVafOHq96KTKUhQDYjNl3jxef8vwc74mGraF7YL4JB2tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738903953; c=relaxed/simple;
-	bh=DHjArMeAK3MeqFPs8ewPHAdYTmkFt/+F2+q7rMjVEsQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XE6cL20gdKOnT1Grn6e2wAAC71Ke/gq5PoTSVJkEwm0CPXBi5qyn30FuGUS8FZeBUAwz3vT7IAADe0J6yjQtD0hac0hA4oi77xJld9c+zaeWOEp3iMlBaBLUPOafrAz+QW3mBuFU3WXTDNuM8twpHgU9sNt1140ufDG+HMfaZVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J4hOTD94; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738904046; c=relaxed/simple;
+	bh=yvp5+iFGxsXXoz37obH+yIQkRZTLyzWtlf2GB/zxLgk=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=nggl66HD+BM3nxzlHns1NhLFfZl5AxVaxRKchzU962EKgb2fxcnBsPAYOzdLW7G277qr3ETZ/hW8TX0OTKlSPndd9qFBQJNl8urx5/P4rXVTwCH7XFvmiAHzKMMrNdNqB8SYl2eqTsnl03ioOfR2PDfmkGUKLYTzjaqvYsl1cSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zTcjZgn0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QwJ1xeQe; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TTi0Azu2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7GQFZErX; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J4hOTD94"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1AC9C4CED1;
-	Fri,  7 Feb 2025 04:52:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738903952;
-	bh=DHjArMeAK3MeqFPs8ewPHAdYTmkFt/+F2+q7rMjVEsQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J4hOTD940F1xlXDm0mc5K3mDWMF8PSxayTzbGZ7yFgncZQhreabSjsW/SPkrxvWyj
-	 nSL6ezpoAY094IRO9xVo7ABLzhV1eguxz++lt/TzXCZ8K45nVXR4iXLQO5O5OvWp0K
-	 ATK9xHVbtmFdnug59ERW+h66BXmzxYNeXv29CdAsmMdv00eYEe0sd6vVofADQf05te
-	 lT0NWx4WrW5hPsI8JfAq6/8JcdwZWb3xVM2NWlDEGMKosdaJAlWafYQrvED6iGX8qh
-	 kmzhADTz8zfNueFUjkLH68uqsQf0kpB9zw+24EnTrALzamINKTukN0O7a9JCGIPQDt
-	 St5IHezNhourg==
-Date: Thu, 6 Feb 2025 20:52:32 -0800
-From: Kees Cook <kees@kernel.org>
-To: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Brown <broonie@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Howells <dhowells@redhat.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Jann Horn <jannh@google.com>, Jeff Xu <jeffxu@chromium.org>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Lutomirski <luto@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pierre Langlois <pierre.langlois@arm.com>,
-	Quentin Perret <qperret@google.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-	x86@kernel.org
-Subject: Re: [RFC PATCH 8/8] mm: Add basic tests for kpkeys_hardened_cred
-Message-ID: <202502062024.BCB0DED1D5@keescook>
-References: <20250203102809.1223255-1-kevin.brodsky@arm.com>
- <20250203102809.1223255-9-kevin.brodsky@arm.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zTcjZgn0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QwJ1xeQe";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TTi0Azu2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7GQFZErX"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E2B081F38D;
+	Fri,  7 Feb 2025 04:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738904043; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1Crukq6TBlJWCL4x+GPIaCUtygA5TOMB9R80rZgQXvY=;
+	b=zTcjZgn0c04iSzTwtnpc/p+4Wxd7JBOLmD+oDkB0lc4FcIgSgzK5KrH+AuJTC/mx58oskZ
+	0vpyEHMMwYfWcColz116Hr2npgqd349KWp1LlKsqe6+emkuFTZsQ+eYs0bc3Jjg5gMnwA8
+	dTpMjKlFj5KKakACyV59qMgjNePzH1s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738904043;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1Crukq6TBlJWCL4x+GPIaCUtygA5TOMB9R80rZgQXvY=;
+	b=QwJ1xeQe0FvVpJkoOmRNUlEkuZrCWDJn3Mzjk7gNYqOadkXByPfbDkD9y1oFPgghQQze6g
+	5WQrtjhi46Pq17Dw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=TTi0Azu2;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=7GQFZErX
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738904042; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1Crukq6TBlJWCL4x+GPIaCUtygA5TOMB9R80rZgQXvY=;
+	b=TTi0Azu2Oiry3kv0MlS8nQlTPJUwsfqi18KWYdABCuKwydIOmDQQy81ggoZuOm/US1DQzV
+	ShNJy+UGBujQYYLlE4rCuoE5RzN2OWs2OiO3bNGw/FvLJYw1RAfdHCJ0+5qKMx1ZQsMj7C
+	toUDZuqp+ukljZxnQFj51jCKjo63xaY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738904042;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1Crukq6TBlJWCL4x+GPIaCUtygA5TOMB9R80rZgQXvY=;
+	b=7GQFZErXqXXtgh/r9UMbajeLd7p6Rgt+kZBRocxtMYsDfqgyIpu/Ah5Se9szVsLQVw0yWh
+	f/ytjAEIlRSjHCAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 22C1D13694;
+	Fri,  7 Feb 2025 04:53:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ClxbMeORpWciEQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 04:53:55 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203102809.1223255-9-kevin.brodsky@arm.com>
+From: "NeilBrown" <neilb@suse.de>
+To: "Kent Overstreet" <kent.overstreet@linux.dev>
+Cc: "Christian Brauner" <brauner@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Namjae Jeon" <linkinjeon@kernel.org>, "Steve French" <sfrench@samba.org>,
+ "Sergey Senozhatsky" <senozhatsky@chromium.org>,
+ "Tom Talpey" <tom@talpey.com>, "Paul Moore" <paul@paul-moore.com>,
+ "Eric Paris" <eparis@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, audit@vger.kernel.org
+Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
+ user_path_locked_at() to never return negative dentry
+In-reply-to: <6p2m4jqtl62cabb2xolxt76ycule5prukjzx4nxklvhk23g6qh@luj2tzicloph>
+References:
+ <>, <6p2m4jqtl62cabb2xolxt76ycule5prukjzx4nxklvhk23g6qh@luj2tzicloph>
+Date: Fri, 07 Feb 2025 15:53:52 +1100
+Message-id: <173890403265.22054.8267826472424760232@noble.neil.brown.name>
+X-Rspamd-Queue-Id: E2B081F38D
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-On Mon, Feb 03, 2025 at 10:28:09AM +0000, Kevin Brodsky wrote:
-> Add basic tests for the kpkeys_hardened_pgtables feature: try to
-> perform a direct write to current->{cred,real_cred} and ensure it
-> fails.
+On Fri, 07 Feb 2025, Kent Overstreet wrote:
+> On Fri, Feb 07, 2025 at 02:36:47PM +1100, NeilBrown wrote:
+> > No callers of kern_path_locked() or user_path_locked_at() want a
+> > negative dentry.  So change them to return -ENOENT instead.  This
+> > simplifies callers.
+> > 
+> > This results in a subtle change to bcachefs in that an ioctl will now
+> > return -ENOENT in preference to -EXDEV.  I believe this restores the
+> > behaviour to what it was prior to
 > 
-> Signed-off-by: Kevin Brodsky <kevin.brodsky@arm.com>
-> ---
->  mm/Makefile                    |  1 +
->  mm/kpkeys_hardened_cred_test.c | 42 ++++++++++++++++++++++++++++++++++
+> I'm not following how the code change matches the commit message?
 
-Current file naming convention[1] would be to name this as:
+Maybe it doesn't.  Let me checked.
 
-	mm/tests/kpkeys_hardened_cred_kunit.c
+Two of the possible error returns from bch2_ioctl_subvolume_destroy(),
+which implements the BCH_IOCTL_SUBVOLUME_DESTROY ioctl, are -ENOENT and
+-EXDEV.
 
->  security/Kconfig.hardening     | 11 +++++++++
->  3 files changed, 54 insertions(+)
->  create mode 100644 mm/kpkeys_hardened_cred_test.c
-> 
-> diff --git a/mm/Makefile b/mm/Makefile
-> index f7263b7f45b8..2024226902d4 100644
-> --- a/mm/Makefile
-> +++ b/mm/Makefile
-> @@ -149,3 +149,4 @@ obj-$(CONFIG_TMPFS_QUOTA) += shmem_quota.o
->  obj-$(CONFIG_PT_RECLAIM) += pt_reclaim.o
->  obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES) += kpkeys_hardened_pgtables.o
->  obj-$(CONFIG_KPKEYS_HARDENED_PGTABLES_TEST) += kpkeys_hardened_pgtables_test.o
-> +obj-$(CONFIG_KPKEYS_HARDENED_CRED_TEST) += kpkeys_hardened_cred_test.o
+-ENOENT is returned if the path named in arg.dst_ptr cannot be found.
+-EXDEV is returned if the filesystem on which that path exists is not
+ the one that the ioctl is called on.
 
-And for the Kconfig convention says[2] this should be:
+If the target filesystem is "/foo" and the path given is "/bar/baz" and
+/bar exists but /bar/baz does not, then user_path_locked_at or
+user_path_at will return a negative dentry corresponding to the
+(non-existent) name "baz" in /bar.
 
-	CONFIG_KPKEYS_HARDENED_CRED_KUNIT_TEST
+In this case the dentry exists so the filesystem on which it was found
+can be tested, but the dentry is negative.  So both -ENOENT and -EXDEV
+are credible return values.
 
-> diff --git a/mm/kpkeys_hardened_cred_test.c b/mm/kpkeys_hardened_cred_test.c
-> new file mode 100644
-> index 000000000000..46048098f99d
-> --- /dev/null
-> +++ b/mm/kpkeys_hardened_cred_test.c
-> @@ -0,0 +1,42 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +#include <kunit/test.h>
-> +#include <linux/sched.h>
-> +
-> +static void write_cred(struct kunit *test)
-> +{
-> +	long zero = 0;
-> +	int ret;
-> +
-> +	ret = copy_to_kernel_nofault((unsigned long *)current->cred, &zero, sizeof(zero));
-> +	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
-> +			    "Write to current->cred wasn't prevented");
-> +
-> +	ret = copy_to_kernel_nofault((unsigned long *)current->real_cred, &zero, sizeof(zero));
-> +	KUNIT_EXPECT_EQ_MSG(test, ret, -EFAULT,
-> +			    "Write to current->real_cred wasn't prevented");
 
-This is a good negative test. I would include a positive test as well.
-i.e. make sure you can run copy_from_kernel_nofault() to read it
-successfully. Otherwise you don't know if you're just getting a bad
-address -- we want to distinguish between them. (This is more true for
-the next suggestion, since current->cred being broken would be much more
-obvious.)
+- before bbe6a7c899e7 the -EXDEV is tested immediately after the call
+  to user_path_att() so there is no chance that ENOENT will be returned.
+  I cannot actually find where ENOENT could be returned ...  but that
+  doesn't really matter now.
 
-While current->cred is good and easy, I would like to see prepare_creds()
-exercised too to get a new cred and validate that it is equally directly
-readable and directly not writable, and then use the correct accessors
-to perform a successful write to the cred, read back the change,
-etc. (i.e. validate the expected behavior too.)
+- after that patch .... again the -EXDEV test comes first. That isn't
+  what I remember.  I must have misread it.
 
-> +}
-> +
-> +static int kpkeys_hardened_cred_suite_init(struct kunit_suite *suite)
-> +{
-> +	if (!arch_kpkeys_enabled()) {
-> +		pr_err("Cannot run kpkeys_hardened_cred tests: kpkeys are not supported\n");
-> +		return 1;
-> +	}
+- after my patch user_path_locked_at() will return -ENOENT if the whole
+  name cannot be found.  So now you get -ENOENT instead of -EXDEV.
 
-Instead of failing ("return 1") I think this should be a "skip" (it is
-expected to not work if there is no support) in each test instead:
+So with my patch, ENOENT always wins, and it was never like that before.
+Thanks for challenging me!
 
-	if (!arch_kpkeys_enabled())
-		kunit_skip(test, "kpkeys are not supported\n");
+Do you think there could be a problem with changing the error returned
+in this circumstance? i.e. if you try to destroy a subvolume with a
+non-existant name on a different filesystem could getting -ENOENT
+instead of -EXDEV be noticed?
 
-I'm very happy to see tests! :)
-
--Kees
-
-[1] https://docs.kernel.org/dev-tools/kunit/style.html#test-file-and-module-names
-[2] https://docs.kernel.org/dev-tools/kunit/style.html#test-kconfig-entries
-
--- 
-Kees Cook
+Thanks,
+NeilBrown
