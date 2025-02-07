@@ -1,78 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5AC23C8DE;
-	Fri,  7 Feb 2025 16:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4583718C011
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738946372; cv=none; b=DsozGRsGT/oIORsuO/YTr7Pr+LeL9w2Wsk9ioDSZZxLiWYH1XjhH5W1XlvWYoaNVk5UE/svmOVx6h0SKzFXOa7N/sUrwtXDZPNillWjawFuG6Oh7pkUaPFrOCs890qaBKuzQxbnZOqVTG635AT4wx+FlNULYrpDBal61Rypr7Wk=
+	t=1738946373; cv=none; b=gVDq0ZLHJUrDaHYFBHNFzFjvvT6VmD4TJ3G5QBEBQ5opUjD8oozrvyywJ5LKi470QV4xmq6sTsnQgb9pGR+jNkGGqPpIqme6Cn3am+3NMrq3XeOGjZusTHqf18/34MprQemdtMxsQy8uLMqC24UHYpg7qcpFbHErapzvf/2Lg/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738946372; c=relaxed/simple;
-	bh=C93Ar0OUMhlatbU/xgJriXUtaoW/woq7HZZVVyCc3Ow=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ig6sT6UcJPGuXv9irEYAEzsNmJE148pvi281Ty5QKVZmh+uL7mr9mMmmaTcNrgbz+ENsTJP+XCpD3RRSsa5m273/uypzwCzyC1kGPkp8DClvtt83+gKnY6tyMRvkPOWM3u+aQPmj5+oANCpO/WfVdJMO0/uNpa4YbBnwXQZO7sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFqaNwJx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738946373; c=relaxed/simple;
+	bh=jI4pO4b0XLAg1RZk0RsjsLHeusgbiZ97ogCgxPQ6DNc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=sKgkL6WmRHS9S302YUEJ7FGpxY1dUhrw+vkrVG35NdT1cpZHCIQHJFbBiJ6Rmsb5DNdTCnnB/IRaH0mFaAQUZbLdIoDG0yZDmfq1TjfbGT5RRbJFK84E7SAh+FLthFCyxErazDTTFRMszToYXhGtfnazIfUuOZI5FLniQ57Ei8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=LqUyBY1G; arc=none smtp.client-ip=91.218.175.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFqaNwJx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF961C4CEDF;
-	Fri,  7 Feb 2025 16:39:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738946371;
-	bh=C93Ar0OUMhlatbU/xgJriXUtaoW/woq7HZZVVyCc3Ow=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fFqaNwJxZrRRETkx1vIb0oePN93Fk/uDBq1Qe9ugWsOXIcQr1zu2g2ssN8sxxkm+x
-	 AP2XR9T4GHtWSn04bBkMomJx7Qe3GtEXoLgY2qmQYm+AZf3LL+cT4X8sE6o8NqjwZA
-	 +6Za0zvk5zYThrDycUTCMBZGQW5QSijfvcCSxr2626c3x2NlYNUhjrKdWBRk3JE+Lh
-	 ZqrKm3GoOVuwGOmNbGU7gVnRR4K52GoDPxWF3LcmYHKpplXdVWxmtGRjdbHbH6s6NL
-	 R4iM3Cxq/PcUUgDBtb8+5AfNaHXsrwNKg/gpYULsx6JqbAYFq6Iqgfe6eTceHOGn+O
-	 IfVkfTKlQMLsw==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5439a6179a7so2442445e87.1;
-        Fri, 07 Feb 2025 08:39:31 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVy6upZjYj288KGszBGYFH+Bbd+NvgzS2SWdrrS4zHPmgDxjOhkGD0bqv5XrrVmt5U4IqiLDf6GxWUWu060@vger.kernel.org, AJvYcCW6EvosZzS9zN0POYa6oogixqw/DnzrLdBzA57YUfJWr6NGP6D8LjI2itqhb4dVmZgBFQrr524e87p38Aj5EA==@vger.kernel.org, AJvYcCWF8ZB9wvguHWqqS3rJmTXha8aWZOemSGPSzBITXniu2Cvyx0k2U+sVnF/Bvax8F2WLoag9VNJeCh2o33Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yykezs9f0HKw9i36a7DIcCQ7+Z6mNDaZGZqeVQKZDCjd8Nz+K3q
-	peuAoyoibXJu/fmzy8jh5UAgtIPkiAG8x+UoCbPl4Gyvfs1LuEY6zXAhsmWd1mDz6GiUdi3vqzg
-	i2kUHZi2XJsP1s6dKaDeGmMVTN0o=
-X-Google-Smtp-Source: AGHT+IEJA0eBAzMswdnQXgXUE3WHYC1kVYv4aGKd+lz0n8pzxs4VJcx1cIbCfL243+Z+SQrtSRjOaMLX3kKvJBHoZJI=
-X-Received: by 2002:a05:6512:3484:b0:542:91a5:4df with SMTP id
- 2adb3069b0e04-54414a7f94cmr880865e87.5.1738946370614; Fri, 07 Feb 2025
- 08:39:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="LqUyBY1G"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20241202145946.108093528@infradead.org> <20241202150810.160972089@infradead.org>
-In-Reply-To: <20241202150810.160972089@infradead.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 8 Feb 2025 01:38:53 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQyuJSgm2gb36saoeyOJmFSMuT_qmz+HrsdQuiC4WF8Rg@mail.gmail.com>
-X-Gm-Features: AWEUYZluhka-8FcjcuL9y4PYkm8KRFSSAGbQPIL9MESBGPp5HRihV4V9n4Kmmak
-Message-ID: <CAK7LNAQyuJSgm2gb36saoeyOJmFSMuT_qmz+HrsdQuiC4WF8Rg@mail.gmail.com>
-Subject: Re: [PATCH -v2 2/7] module/modpost: Use for() loop
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mcgrof@kernel.org, x86@kernel.org, hpa@zytor.com, petr.pavlu@suse.com, 
-	samitolvanen@google.com, da.gomez@samsung.com, nathan@kernel.org, 
-	nicolas@fjasle.eu, linux-kernel@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	hch@infradead.org, gregkh@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1738946363;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X6ih/LrCB0TBhJJrYgx7AsyysXqX50UygCQ/toakb9A=;
+	b=LqUyBY1GbZn/An3WfS8y3xh5Eed+fv7L07ZKBn4XkHJSfqZbNbAEiDkMit04JGQEoIKN7+
+	HcOakv5YAULbtLNbwq1mt6BS7w/F4AQ3X1RwJZUls+7zraWc9wujHV+0SJ4Xo/HfJTdY3r
+	4D+xUs2OAjY5egJXL8IaakoOzVpSb/W2OncgFQB4A1/KFJ5UiUDzPupeaFO1l7vq/8aCHY
+	B7cQV431jJJZdRmkRzE+o79AdCyZ9mshz4yVlcXN5HjwtHztbysPQU89F17/RHPvmnyyKT
+	RjXi5cvLKjIHZNlz9CAr/07NGKZCRXqddwxnoqi/gObEdS2lDBh1gwPNler/lg==
+Content-Type: multipart/signed;
+ boundary=7028502f771c4dd1e1fb2bb3c0027617c3fbe8bf2f682fab29e1f35f7093;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
+Date: Fri, 07 Feb 2025 17:39:10 +0100
+Message-Id: <D7MD194WS7UL.FT324IUB9BIA@cknow.org>
+Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Heiko
+ Stuebner" <heiko@sntech.de>, "Maximilian Weigand" <mweigand@mweigand.net>,
+ "Marek Kraus" <gamiee@pine64.org>, <devicetree@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ "Diederik de Haas" <didi.debian@cknow.org>
+Subject: Re: [PATCH v1] arm64: dts: rockchip: add 'chassis-type' property on
+ PineNote
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Dragan Simic" <dsimic@manjaro.org>
+References: <20250207111157.297276-1-didi.debian@cknow.org>
+ <502523554b482a2e10d85d37761932a0@manjaro.org>
+In-Reply-To: <502523554b482a2e10d85d37761932a0@manjaro.org>
+X-Migadu-Flow: FLOW_OUT
+
+--7028502f771c4dd1e1fb2bb3c0027617c3fbe8bf2f682fab29e1f35f7093
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-The commit subject prefix should be "modpost: "
-instead of "module/modpost: "
+Hi Dragan,
 
-You are touching only modpost in this patch.
-
-
-On Tue, Dec 3, 2024 at 12:11=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
+On Fri Feb 7, 2025 at 4:01 PM CET, Dragan Simic wrote:
+> On 2025-02-07 12:11, Diederik de Haas wrote:
+>> Add the recommended chassis-type root node property so userspace can
+>> request the form factor and adjust their behavior accordingly.
+>>=20
+>> Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
+>> Link:=20
+>> https://github.com/devicetree-org/devicetree-specification/blob/main/sou=
+rce/chapter3-devicenodes.rst#root-node
 >
+> Maybe the Link tag should be converted into a "[1]" reference?
+> To me, this is more like a reference for this DT addition.
 >
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  scripts/mod/modpost.c |    7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
---
-Best Regards
-Masahiro Yamada
+> In general, references can also be placed closer to the contents
+> they back up, which isn't possible with Link tags, but of course
+> that doesn't matter much in this case.
+
+I generally use the "[1]" format when linking to specific claims, which
+I could've done wrt the "recommended". But I considered this a general
+background link and then I prefer to do it via a Link tag.
+
+If requested by a maintainer I'll change it ofc, but otherwise I prefer
+to keep it as is.
+
+>> ---
+>>  arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>=20
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi
+>> b/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi
+>> index 2d3ae1544822..3613661417b2 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi
+>> @@ -9,6 +9,8 @@
+>>  #include "rk3566.dtsi"
+>>=20
+>>  / {
+>> +	chassis-type =3D "tablet";
+>> +
+>>  	aliases {
+>>  		mmc0 =3D &sdhci;
+>>  	};
+>
+> The patch is obviously fine.  Thanks for the patch, and please feel
+> free to include, regardless of the note above, my:
+>
+> Reviewed-by: Dragan Simic <dsimic@manjaro.org>
+
+Thanks :)
+
+Cheers,
+  Diederik
+
+--7028502f771c4dd1e1fb2bb3c0027617c3fbe8bf2f682fab29e1f35f7093
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZ6Y3MwAKCRDXblvOeH7b
+bm7CAQDbpmFpX5ubvZP1t+qtuzyTR6mFwL+PSL0Ss0jlhqiaOwEAmNLs1E37i0+M
+8dsgxHWQRk9FxOK7KW6Wd0HRz+Ij1gQ=
+=yaBF
+-----END PGP SIGNATURE-----
+
+--7028502f771c4dd1e1fb2bb3c0027617c3fbe8bf2f682fab29e1f35f7093--
