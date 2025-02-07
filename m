@@ -1,98 +1,188 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568F623ED62
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC69E23ED6B;
+	Fri,  7 Feb 2025 14:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738938527; cv=none; b=hldnKotm0TsYjgWlmfbUlMLBR6IIxcVIoXsqAKpuRnC52O3OJRQll1BiYW8lLiS8C/6Y9b3WouBG7mi7Vf2Opzq6fvMOHr/aO/uhwKJKKlWmEgpXlSQntYt79+FzrjMx9TcWFz3Nqft0VEb/pGnQ2S/JKeKZiVpPwfeXYZ4PnbM=
+	t=1738938564; cv=none; b=feH7B6/WpBs00XK8NxqJBgdoRSvYVhVsaQNwn8eEXjKQI7n3wkrSB3w326b34bk2dJAsLmCvEB4jvRLTe9Fn6YuhzNgyxrtm+/wQuuvQQjfEW1kvlFUx86ZrA5GQNtMnRBnTEGlkOvnAcM4UUz2qYQBET2Ze5K1hRQ4KYogO7k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738938527; c=relaxed/simple;
-	bh=1rexS5WS3OHSZZeEo18X8h4yuoDBRbHA45XPuN3amY8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c1uGyV0Wy+cQsCqMseZ77vpsncSIPuuvNQS3nXkXhEHA079OTpo1skazzXF++ooA3jo+vcbM7M+GSXX2exD1ffrbp8ePoxJL9yjLQSWiUoCzmCMMCaU5AGRhLyE6CZ76Kh/UO8gDGLmWOuTJDEkDl7dLbJujhgLy5/76iOb9Uo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XpiX1YoT; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738938564; c=relaxed/simple;
+	bh=S/DygZOpDtNGqOx0aRmkAnkflZnVc56zxPTZ31tUjpg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h4ONRu/eRGwmdU7vNbe3ijRe3LSqncMy0dqzedEYEHAHDM3otAdsB/usv0O3RmOaFoLRSedH5Sb6O+x0K9FnRGWDf3v+8zt8yBCIyzjoA7wj8tzAx1M2bahCAQabzEGv86fJ/bzCypcmnrHGkDSREa7lPLqM+ihfjo9YeCp014I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com; spf=pass smtp.mailfrom=bsbernd.com; dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b=znQjY5yR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ImJmBvux; arc=none smtp.client-ip=202.12.124.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsbernd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XpiX1YoT"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-467896541e1so245231cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:28:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738938523; x=1739543323; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1rexS5WS3OHSZZeEo18X8h4yuoDBRbHA45XPuN3amY8=;
-        b=XpiX1YoToM+G9j2J2QS0Fb8XOwOGQguVyndtCxxXBd5T/75TwLr9cex/1XIL+6nNud
-         7Cz++lqVBldkbtX1E+gVi0nATS1tvPcG68rDXAoYzCTfXc4TOie1dOuUeODZOJu0drJG
-         c7dKv970cKW6mQgtEYpjpzhOUf9JMTaAQRhXZL6cLTeehy9joBJS6RyBE1bn+bnbvb8Z
-         XzkNqOHvOvRJpUvDgRJKADpCYuiRgswDHpwxmozChyLIgscQkzqFJqBg/T8tsQmPs4ua
-         tMZ2mr74mTj/7RE4QIKeY3vv/Bw4g+rISRUBA1Sr3ojjJfIVioF9CqaSiqXOq4h+9vzr
-         zvQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738938523; x=1739543323;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1rexS5WS3OHSZZeEo18X8h4yuoDBRbHA45XPuN3amY8=;
-        b=PpCaAz4UyRD0HC3POmTFua4S7AFEv4FSOP7S9eS4n8h6jF8yi+G90g9dDXGfC8ecG7
-         a1kTzAEVHszwrPXXKqU3lRDOhMZIviWFf/aDNEpG1wFqLMe3+PLK0wHKqvmlxmgToDCi
-         cqNAHM60wcU2Q81aDLlHd3H7nNtV21sblJ9f/vXqhPgdmdXBneGZHiG1rw1hFUs5iE8M
-         55WWxlpBUR5OVCrqRecG70s04gg1wxFAp+78Z22bxZL+RpASExpgSSk6XPF/55h+04aa
-         YugUlCVoFlk5OSct7fdAbvSJiPmuCQ5vDDTTAXiHxORHoJzX0BK6vccoCy+aZYPBHK72
-         EZKw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFjuHCFF9yktqKUB8crGxGoFYQcRcZZ5WXg4ci6ggJr1lkYfhJZKBA62Y5kY/VBjtx+WFN0Zudw3IlYrU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoMmlQSYWiBf3S6tk16Rzr7znUxliL1wrJTUlWjo7iTF4zU6UQ
-	dC/O/tinL7g+3A5C6TpchT7AAYvUtqwZvDZpv+QUU71JD4GUCGKpEw3Ylv04dpqSWgFHCHtxgAi
-	ZKVfERfInl+lv1LvWffm3ylB4GDMgY3zEVoU5
-X-Gm-Gg: ASbGnctcwsXTV/eFaAXkfym9ovZnN2iKBpFItZ0AKMBLcfmIl5qeSaJ6MqnK9xjTXEz
-	tnOU2S5y89m6NQr72L9hdU5GyQ5DSjXTJX3G74w/apdiE1I+cbijnHycBbE0ab8bzKzf0ioRs4i
-	gys6tKNAgROvOgr7t87QpLawCe0H8=
-X-Google-Smtp-Source: AGHT+IFIy/IxSZaxwoz/qDlgIY4R9UtPhyTgiGBPb3DyRDFkqE2ug+PU7LD+LVqbQubD7czlGvLtOu9vozxN4sdeTOU=
-X-Received: by 2002:ac8:5a15:0:b0:466:90dd:19f3 with SMTP id
- d75a77b69052e-47169c9b938mr2645491cf.7.1738938523070; Fri, 07 Feb 2025
- 06:28:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b="znQjY5yR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ImJmBvux"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.stl.internal (Postfix) with ESMTP id AFAAB11401B2;
+	Fri,  7 Feb 2025 09:29:16 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Fri, 07 Feb 2025 09:29:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bsbernd.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1738938556;
+	 x=1739024956; bh=3m3iqTfqwQmo5uXuOEtMpVp7gON0HdH2epgkHbk+nTs=; b=
+	znQjY5yRafAbGuiBuhG5TFYS2Qm/XJsgS6wicrG5b7LILkxBGLSWsoBDk46JQc7S
+	Mv8rZysq5Apz6ngZqIZXPxtmV8cPOa6hpYfM42dxULcaIPFPnC93Dq0sB6mFqa/w
+	CSpBcK3mAh7B1Pqhm79BmZP3Frb2cIuXpSZDFwRJ8/i/53sqyuupvqf+fbIXQ8BU
+	oQVs2PwBN+BKs2S630RpS1a5F4KhaSgAXAzo/bBtm0fe22Jq1iEyvAstnyhSfbRO
+	GchPUTjmkMuHGEE6Kx+sbkPYIJhCw5PREMqRdXlocGkHMGkDxpXSqTu8zIaqcg9N
+	r4Axa9BIZfg+YabXbW0Paw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738938556; x=
+	1739024956; bh=3m3iqTfqwQmo5uXuOEtMpVp7gON0HdH2epgkHbk+nTs=; b=I
+	mJmBvuxjAY474RI1qirGAwwlr7tHjCV50mU6lcrtdhLlXC6qrl1cULzEAlIj0FCd
+	Nzsqp7FysnttgW6q9M2gvIhWuDAInbdg0k1Wj1tYNpL3jgXPuNpzWkiJuCqWVY1a
+	SNjV4j+fBaQ6WBqafsaLBuIlrJk6cQKs3bcs8P0euRTRBETvxzWv3T+EhuZ+I0wz
+	kKbsy9EI154k9qDMtGlFZWXVcHULmCY6pQhdt7oO6O9YQFBgXo+2JqyQXWljuj+1
+	WvGTw5CxYspqPPWNDeD6LPNPfDT2XwbnRQSkf2qkxhEX/aP7qctCoJ1+3rnX8nib
+	5Iy97yTWyYdMVv04iR1vw==
+X-ME-Sender: <xms:uximZ1Z_ddCl05JBXx6Rahku3s340Dr_SN86yXhNLTP4NsAz4xy5Yw>
+    <xme:uximZ8aXrJF3C-79lttKncNu9Fy_VmhdCryX8cijR2QjaXjEyyYoAYqrDGuciV3Ja
+    I4qf7PO-CEiuzHF>
+X-ME-Received: <xmr:uximZ3_bwKyBC6DWQ1jNjfSJ2voC_WkpqM5hTnx5N3Numvw9dCTgzbQR80VnteC6RgApAPbDvC4bKd-NyD9kH09VsQlyGA6ZiT0esYOcF5L87CYithIZ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleehvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddv
+    jeenucfhrhhomhepuegvrhhnugcuufgthhhusggvrhhtuceosggvrhhnugessghssggvrh
+    hnugdrtghomheqnecuggftrfgrthhtvghrnhepjefgleejueffhefhueekvdduhfetteeh
+    tdehfeejhfevudethefhtdetvdekkeevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsvghr
+    nhgusegsshgsvghrnhgurdgtohhmpdhnsggprhgtphhtthhopeeipdhmohguvgepshhmth
+    hpohhuthdprhgtphhtthhopehluhhishesihhgrghlihgrrdgtohhmpdhrtghpthhtohep
+    mhhikhhlohhssehsiigvrhgvughirdhhuhdprhgtphhtthhopehlihhnuhigqdhfshguvg
+    hvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgv
+    rhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhhrghrvhgvhi
+    esjhhumhhpthhrrgguihhnghdrtghomhdprhgtphhtthhopegurghvihgusehfrhhomhho
+    rhgsihhtrdgtohhm
+X-ME-Proxy: <xmx:uximZzr7SJMjc5VMBEc5i5fobvwdWl7ndOuGiBKihdVIOHdk-O-RbA>
+    <xmx:uximZwrYhGl_MvuhqvfI7eekxyAv4tFz7bu9Nupo8N19iqm_m3APlQ>
+    <xmx:uximZ5SUx53l8tEkKGSc_3JnyP8FB7hJ35jwxPf7Qx0cgtfbDmTKBA>
+    <xmx:uximZ4rMhECAseuxVLRjp3If0UYzoZJVY5ciBV2tRsaIV8o6H-6RLA>
+    <xmx:vBimZxdmOXe2HGzBcEu6OwEHZGDpwh1DBjyzwaAegphGTyA8exdr6tpi>
+Feedback-ID: i5c2e48a5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 7 Feb 2025 09:29:14 -0500 (EST)
+Message-ID: <d3ee362c-accf-4ad9-99a6-5834b1c0b438@bsbernd.com>
+Date: Fri, 7 Feb 2025 15:29:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206044346.3810242-1-riel@surriel.com> <20250206044346.3810242-2-riel@surriel.com>
-In-Reply-To: <20250206044346.3810242-2-riel@surriel.com>
-From: Brendan Jackman <jackmanb@google.com>
-Date: Fri, 7 Feb 2025 15:28:31 +0100
-X-Gm-Features: AWEUYZnhjPFckHJVpbtURfI6azwiA7ZfQgaxMPfiq7TlWaGFfSzT8QTgqpVPz3I
-Message-ID: <CA+i-1C2QgSTq4gbGZqjyzGcuscsFZvymHvXnfJYuT-CNjPPuMQ@mail.gmail.com>
-Subject: Re: [PATCH v9 01/12] x86/mm: make MMU_GATHER_RCU_TABLE_FREE unconditional
-To: Rik van Riel <riel@surriel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
-	peterz@infradead.org, dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com, 
-	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com, 
-	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com, 
-	mhklinux@outlook.com, andrew.cooper3@citrix.com, 
-	Manali Shukla <Manali.Shukla@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] fuse: add new function to invalidate cache for all
+ inodes
+To: Luis Henriques <luis@igalia.com>, Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Matt Harvey <mharvey@jumptrading.com>, Dave Chinner <david@fromorbit.com>
+References: <20250115163253.8402-1-luis@igalia.com>
+From: Bernd Schubert <bernd@bsbernd.com>
+Content-Language: en-US, de-DE, fr
+In-Reply-To: <20250115163253.8402-1-luis@igalia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Rik,
 
-On Thu, 6 Feb 2025 at 05:45, Rik van Riel <riel@surriel.com> wrote:
-> This is done because some paravirt TLB flush implementations
-> handle the TLB flush in the hypervisor, and will do the flush
-> even when the target CPU has interrupts disabled.
->
-> Always handle page table freeing with MMU_GATHER_RCU_TABLE_FREE.
-> Using RCU synchronization between page table freeing and get_user_pages_fast()
-> allows bare metal to also do TLB flushing while interrupts are disabled.
->
-> Various places in the mm do still block IRQs or disable preemption
-> as an implicit way to block RCU frees.
->
-> That makes it safe to use INVLPGB on AMD CPUs.
 
-It would be nice to update the CONFIG_MMU_GATHER_RCU_TABLE_FREE
-comment in mm/mmu_gather.c to mention INVLPG alongside "Architectures
-that do not have this (PPC)" - and while that's being updated it would
-also be useful to note down the paravirt thing you explained above,
-IMO it's pretty helpful to have more examples of the concrete usecases
-for this logic.
+On 1/15/25 17:32, Luis Henriques wrote:
+> Currently userspace is able to notify the kernel to invalidate the cache
+> for an inode.  This means that, if all the inodes in a filesystem need to
+> be invalidated, then userspace needs to iterate through all of them and do
+> this kernel notification separately.
+> 
+> This patch adds a new option that allows userspace to invalidate all the
+> inodes with a single notification operation.  In addition to invalidate all
+> the inodes, it also shrinks the superblock dcache.
+> 
+> Signed-off-by: Luis Henriques <luis@igalia.com>
+> ---
+> Just an additional note that this patch could eventually be simplified if
+> Dave Chinner patch to iterate through the superblock inodes[1] is merged.
+> 
+> [1] https://lore.kernel.org/r/20241002014017.3801899-3-david@fromorbit.com
+> 
+>  fs/fuse/inode.c           | 53 +++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/fuse.h |  3 +++
+>  2 files changed, 56 insertions(+)
+> 
+> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> index 3ce4f4e81d09..1fd9a5f303da 100644
+> --- a/fs/fuse/inode.c
+> +++ b/fs/fuse/inode.c
+> @@ -546,6 +546,56 @@ struct inode *fuse_ilookup(struct fuse_conn *fc, u64 nodeid,
+>  	return NULL;
+>  }
+>  
+> +static int fuse_reverse_inval_all(struct fuse_conn *fc)
+> +{
+> +	struct fuse_mount *fm;
+> +	struct super_block *sb;
+> +	struct inode *inode, *old_inode = NULL;
+> +	struct fuse_inode *fi;
+> +
+> +	inode = fuse_ilookup(fc, FUSE_ROOT_ID, NULL);
+> +	if (!inode)
+> +		return -ENOENT;
+> +
+> +	fm = get_fuse_mount(inode);
+> +	iput(inode);
+> +	if (!fm)
+> +		return -ENOENT;
+> +	sb = fm->sb;
+> +
+> +	spin_lock(&sb->s_inode_list_lock);
+> +	list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
+> +		spin_lock(&inode->i_lock);
+> +		if ((inode->i_state & (I_FREEING|I_WILL_FREE|I_NEW)) ||
+> +		    !atomic_read(&inode->i_count)) {
+> +			spin_unlock(&inode->i_lock);
+> +			continue;
+> +		}
+> +
+> +		__iget(inode);
+> +		spin_unlock(&inode->i_lock);
+> +		spin_unlock(&sb->s_inode_list_lock);
+> +		iput(old_inode);
+> +
+> +		fi = get_fuse_inode(inode);
+> +		spin_lock(&fi->lock);
+> +		fi->attr_version = atomic64_inc_return(&fm->fc->attr_version);
+> +		spin_unlock(&fi->lock);
+> +		fuse_invalidate_attr(inode);
+> +		forget_all_cached_acls(inode);
+> +
+> +		old_inode = inode;
+> +		cond_resched();
+> +		spin_lock(&sb->s_inode_list_lock);
+> +	}
+> +	spin_unlock(&sb->s_inode_list_lock);
+> +	iput(old_inode);
+> +
+> +	shrink_dcache_sb(sb);
+> +
+> +	return 0;
+> +}
+
+Just a suggestion, assuming Daves patch gets merged, maybe you coud move
+the actual action into into a sub function? Makes it better visible
+what is actually does and would then make it easier to move the iteration
+part to the generic approach?
+Alternatively, maybe updates Daves patch and add fuse on top of it? Dave?
+
+
+Thanks,
+Bernd
+
+
