@@ -1,200 +1,164 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2042.outbound.protection.outlook.com [40.107.236.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12D615539D;
-	Fri,  7 Feb 2025 06:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738911422; cv=none; b=JWas6kVsd6R+WwMqtcpefHX21yhncD26OKx4hgj56XMSr0QIiXydapMv3PKdMMLy5tVMAlfs3HWSM9/kk8id3+M/Dl1zJZPb9wFqxUuWSRIt0Pwj3j2Q/3Z1Np7zm854DR4Og7SgQYTGUxCUCuGRUVZFNurwKBgvWv49GOog5sQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738911422; c=relaxed/simple;
-	bh=a+ZrqQ7/dxIQo/7BABs6hf+fQbkXeAcGoBpGTTHuav4=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=ApZeG3nxs7PnrQsnlGoRrlKL7n3gFh118rVsK4k4RgPWFgMiS4O3eGLlKIE+RmiZsOe++W8LPFHmwbhxRe5XaNTSZ7SqyBqXuUyOuUyDfJBZOws/sPhTXp7w80Jr5KN6PoSh5bwK4R3ZHAc+Dgz7cZ5TTa4krAAXy73rOQSeXtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=g/byUuNE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0AVtNEM4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=g/byUuNE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0AVtNEM4; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FCB15539D;
+	Fri,  7 Feb 2025 06:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738911544; cv=fail; b=cyDG8l2P8rZQxPFFts53tFIui8fYF67Hn72mtOZ7cLOTL/PK7NH+AkjTlWJPC5Q2C+e3ygY9pLWiu7qhKtb0Zlp5ndD7C+RIzpuNM7yOXKKQ7vOVMJYsCqbmSvl8nB9okT36nAceWmEvOgFCEo0PViD2faKpf2L3edTJpSDFZ8A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738911544; c=relaxed/simple;
+	bh=uf9/Q66aywUUVLAkd9aQnPL0fmFXUeUHqCsl67EjP+o=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t+TA0Z88VB6izc4vEpdICJekTA62qbKKigU3vz3xzPZw+7sK3dDb6LPJq8pUkegVdBpXAJKlbLiWfilbVnDxs/77gx46AcFacF/CVHZqfbti9CD1fXalx3RcbxyLIuIF15VfyqEgwd5Xr9WXD65tsoXBBsoXGShNYV7p4z4T8RY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zNgHyVHa; arc=fail smtp.client-ip=40.107.236.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="g/byUuNE";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0AVtNEM4";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="g/byUuNE";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0AVtNEM4"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B243C21163;
-	Fri,  7 Feb 2025 06:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738911418; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vVqNNwToD8mb5gmNkOobwURBO8YT/dTtWhgkGdmCTSY=;
-	b=g/byUuNEK43A+/ZMqs225i5G2gZ+L/vIkhPn+hKgPPfe/DyiBIqHQctF8jQWZGlok4onwm
-	GcRnx5OlAqiccDcRtxY0FGVzYRIz7rYtn0jd5grlpZbiisTkBqNOCq+3Jx5lTv/MsX09PU
-	hR4jbDGEJOAo+ZHPnZ37DdSctMZkiTo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738911418;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vVqNNwToD8mb5gmNkOobwURBO8YT/dTtWhgkGdmCTSY=;
-	b=0AVtNEM43RZt0RHtjPbb0ohoAtdWUQy5BGkLgSMZPjtq7ShseB2uMBmNjdK9dN7polsAA/
-	5es7VmQ1c05X+oAQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1738911418; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vVqNNwToD8mb5gmNkOobwURBO8YT/dTtWhgkGdmCTSY=;
-	b=g/byUuNEK43A+/ZMqs225i5G2gZ+L/vIkhPn+hKgPPfe/DyiBIqHQctF8jQWZGlok4onwm
-	GcRnx5OlAqiccDcRtxY0FGVzYRIz7rYtn0jd5grlpZbiisTkBqNOCq+3Jx5lTv/MsX09PU
-	hR4jbDGEJOAo+ZHPnZ37DdSctMZkiTo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1738911418;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vVqNNwToD8mb5gmNkOobwURBO8YT/dTtWhgkGdmCTSY=;
-	b=0AVtNEM43RZt0RHtjPbb0ohoAtdWUQy5BGkLgSMZPjtq7ShseB2uMBmNjdK9dN7polsAA/
-	5es7VmQ1c05X+oAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EE1CA13694;
-	Fri,  7 Feb 2025 06:56:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id nm3JJ7OupWdYMAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 06:56:51 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zNgHyVHa"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ckVRiDBMjIK92Z0ApXiv/JjFkuXcPXZ1Ztu+fHAddIGsS0mdn4r/GpVIi1SC5IQvKfsTN55rz2Rko5Ts4iq7VAkNsVVFInKaxGi66xYHl04kflAcGhrYQSPZZq7lN5wSJZRXsiPQpBdRjm5fIQ1I0qbBQYhh4oTDMm7O72IA3CQyli+D10ZFU/XO7iUdduk656CwsbCaTqUW4gihf1nwE6Y+5eMlt7bBH1xnNoqOS0W1SbeZvVXz4oshdb6kLjEkossJ9S6mwhHCx6Kux04l0XkFwTAsTxnE8Rb34hV2DRKOnjh/DS3SwQRuCx/rpimVZVcJY3O9vyU8RBHvT8RwkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cvkg6cy3l9FqkDe5IPByyUTW6OCeXeW10z+UJ2em9lY=;
+ b=MBNR+FHIOFGzRw0biiLgySBEiLUHs+7DYfPgwbJoAFT2Oa2O7ddWhfI9+WkCn5G1Yx82pwObRs12fnCfQveTx5yOAvCHJeStey2MtalB1PM7Da5kyya118w7am9VptLdKz2/7EGKQpgHwH+YWZumo/yOAvuXjjcNjT77uKk8JmXUvXVCZo/syW92IH4a0egU792S3CRb0c3kAKp7gXF7xNLHoKklHNFxBlFUDD5DlZgROQ3ZjZ8B1VZG8vUV61HzMCGIK9To4gJGNsuCGWXENjiOF3bK/tau1Z+Zai/Mj8uvcNR1RUq+j7YSPQ2GURSzo8ANSpflDyFjVVlLF79YPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cvkg6cy3l9FqkDe5IPByyUTW6OCeXeW10z+UJ2em9lY=;
+ b=zNgHyVHaGAvJEYjPRR2sYQHUMQoFIIod4+QpZDGxpfOAHymugdQy2hHxQ+ou1ZQIjLRWxlFpgPr5op6iKfqQTBD9cztRppXEVHhA0q6mJJXM86m+euqFz5jd6qyn5Q7nLIdGpAjMI6W8wBQDJm437AyUSfoWplVwYNmasGVEc8g=
+Received: from MW4PR04CA0168.namprd04.prod.outlook.com (2603:10b6:303:85::23)
+ by DM4PR12MB7501.namprd12.prod.outlook.com (2603:10b6:8:113::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Fri, 7 Feb
+ 2025 06:58:59 +0000
+Received: from CO1PEPF000042AD.namprd03.prod.outlook.com
+ (2603:10b6:303:85:cafe::68) by MW4PR04CA0168.outlook.office365.com
+ (2603:10b6:303:85::23) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.25 via Frontend Transport; Fri,
+ 7 Feb 2025 06:58:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000042AD.mail.protection.outlook.com (10.167.243.42) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8398.14 via Frontend Transport; Fri, 7 Feb 2025 06:58:59 +0000
+Received: from vijendar-X570-GAMING-X.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 7 Feb 2025 00:58:54 -0600
+From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+To: <vkoul@kernel.org>
+CC: <alsa-devel@alsa-project.org>, <yung-chuan.liao@linux.intel.com>,
+	<pierre-louis.bossart@linux.dev>, <sanyog.r.kale@intel.com>,
+	<Basavaraj.Hiregoudar@amd.com>, <Sunil-kumar.Dommati@amd.com>,
+	<venkataprasad.potturu@amd.com>, <Mario.Limonciello@amd.com>,
+	<linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Vijendar
+ Mukunda" <Vijendar.Mukunda@amd.com>
+Subject: [PATCH V4 0/6] soundwire: amd: code improvements and new platform support
+Date: Fri, 7 Feb 2025 12:28:35 +0530
+Message-ID: <20250207065841.4718-1-Vijendar.Mukunda@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Kent Overstreet" <kent.overstreet@linux.dev>
-Cc: "Christian Brauner" <brauner@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Namjae Jeon" <linkinjeon@kernel.org>, "Steve French" <sfrench@samba.org>,
- "Sergey Senozhatsky" <senozhatsky@chromium.org>,
- "Tom Talpey" <tom@talpey.com>, "Paul Moore" <paul@paul-moore.com>,
- "Eric Paris" <eparis@redhat.com>, linux-kernel@vger.kernel.org,
- linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, audit@vger.kernel.org
-Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
- user_path_locked_at() to never return negative dentry
-In-reply-to: <173890403265.22054.8267826472424760232@noble.neil.brown.name>
-References: <>,
- <6p2m4jqtl62cabb2xolxt76ycule5prukjzx4nxklvhk23g6qh@luj2tzicloph>,
- <173890403265.22054.8267826472424760232@noble.neil.brown.name>
-Date: Fri, 07 Feb 2025 17:53:43 +1100
-Message-id: <173891122321.22054.758548441508211924@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.996];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042AD:EE_|DM4PR12MB7501:EE_
+X-MS-Office365-Filtering-Correlation-Id: 049635e9-32ec-4a61-a5b6-08dd4744e59a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?1YjST1ykcrO2D4JRMwpHSaRSJ3kO/9HlKwLzndn8n3UZbq9bZW8khIwjA4tz?=
+ =?us-ascii?Q?/hv1i0mBGv2sMA2qaMz/IB0M/3tWJNJMQwpgfIkbRc0S3LnaN0/XNZJU5z2Y?=
+ =?us-ascii?Q?wGZSzzwqWd/R0m90iIfNIVk7YAkn3xEIxvHc+/DMNgVoGKUwbnSBp/1rDCSR?=
+ =?us-ascii?Q?c6EcxctrW1LujcxLzvNX1Bn8A/riXPvkeK5pgszatu71e46q9G5OdW+s+CKC?=
+ =?us-ascii?Q?eC5Q3yFQYmvdYUOufXlF4f0ViHK81SzPqcns+pcUaIYScgOyf42jr0s0C6rH?=
+ =?us-ascii?Q?byQ7lX0aacH8lPbwAxdxMiGd/tFUXMdrUJkZ0Pp3hi5BGN0W0rirLvCgoeNR?=
+ =?us-ascii?Q?l8q0Xxqcqt+C8PXnqPxffZ94b7U4Z3vweGf3rybCWQLoJu7qG5DdWE2ZSX1V?=
+ =?us-ascii?Q?Wns64NcLqFcH0qSb89QNYct4bUaQ8Rjml6cN5V2c0KBkEeWm1EPm/30CAwYG?=
+ =?us-ascii?Q?59ePUTlbBdiYAz0rrJmU9hr7O5kO/PBmM64YdBzZLDlRO8zXdwb02SbX1b+p?=
+ =?us-ascii?Q?Qs+aIEGyDhSrcFmVXM30naoxIl68uI+sroZvzFum9LiQAW+LtkGIkOIrsEBc?=
+ =?us-ascii?Q?9McSbtw4HHjBTHi8+kFM8vSCm24o8iJiYhm1jJ7Lv+FwdueGME2dGdEPEAd0?=
+ =?us-ascii?Q?bzVVTygj+kYX1YOJMEJ1+CWiJNEWBlLDLy0fCQBzhA/P/UkjOj43VeL7tDqn?=
+ =?us-ascii?Q?kK6OyLaDtiS5Sd7jpvL238VMORFedypDmA0Yjeo6lxqQ9SRLmow4rKvVsTYZ?=
+ =?us-ascii?Q?ivk2NTeCFkzRcv/vA5IcZTyN/5C8MLWkBr5CzDlzytMkxDUzqCXTRtibIkEa?=
+ =?us-ascii?Q?QXrsq6YkDXfwqZB/yYzEJkPWSwCg4y6buttMRLDG7zTxDMIDKu4dnQUF17Mf?=
+ =?us-ascii?Q?kqqIcuIRlFvUW+0mv3edhKks2kzZR9B6RGmTfAXaHmK5tLcRgizip6EVrE8n?=
+ =?us-ascii?Q?3i/A3jkgK97JYNRaMV9q1peugqU0bg6Dv1l9NhQXKXeiNVCEhk/MWAN7TpNr?=
+ =?us-ascii?Q?BR6vMp6GD/5IcnSgMZdw9vkL/lnRj0Qj8lLOrKddQFys59zHA0AJKkBLFAkm?=
+ =?us-ascii?Q?CwGfmcL/f3u3Dk4bdllpz43u/XyCnJPb0AAZ6pO17um4TPmX7BPHscD1dsiA?=
+ =?us-ascii?Q?BJVSi6n4g0Nr8OtNWJQ0AIT+x+Vqu345soym/Rwcs/xCeifi/NmVJcRg7sl+?=
+ =?us-ascii?Q?EFCcVa/NUcnSXXfril3+Z4dwU9kxLKn6rFInB8kvVSH6msgHjMLggYOP/1G4?=
+ =?us-ascii?Q?mTC7OcShnyR2F/udPXm9pbQDNJac4cQ/z4jJO50g9CvdttjuKlaoIUspKwNJ?=
+ =?us-ascii?Q?wOU60ySvXAD5Q6hKQNimA1Zdi7YF56H/GtR8GrD+upEvmBWg42ZIczcmcrZC?=
+ =?us-ascii?Q?xXQvBfldXnhGjcXKssluBs6cy3tPWh3E50OQ0Ty/kAV8mss04L/C/l2N6AMn?=
+ =?us-ascii?Q?pPd0vHjIsgEqJg/+eDboAK9mzIBABC94AybBnGsy6xqoXDaC4JfPVWmd1k+p?=
+ =?us-ascii?Q?vqzzUx4ExZi+AFU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 06:58:59.0537
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 049635e9-32ec-4a61-a5b6-08dd4744e59a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000042AD.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7501
 
-On Fri, 07 Feb 2025, NeilBrown wrote:
-> On Fri, 07 Feb 2025, Kent Overstreet wrote:
-> > On Fri, Feb 07, 2025 at 02:36:47PM +1100, NeilBrown wrote:
-> > > No callers of kern_path_locked() or user_path_locked_at() want a
-> > > negative dentry.  So change them to return -ENOENT instead.  This
-> > > simplifies callers.
-> > > 
-> > > This results in a subtle change to bcachefs in that an ioctl will now
-> > > return -ENOENT in preference to -EXDEV.  I believe this restores the
-> > > behaviour to what it was prior to
-> > 
-> > I'm not following how the code change matches the commit message?
-> 
-> Maybe it doesn't.  Let me checked.
-> 
-> Two of the possible error returns from bch2_ioctl_subvolume_destroy(),
-> which implements the BCH_IOCTL_SUBVOLUME_DESTROY ioctl, are -ENOENT and
-> -EXDEV.
-> 
-> -ENOENT is returned if the path named in arg.dst_ptr cannot be found.
-> -EXDEV is returned if the filesystem on which that path exists is not
->  the one that the ioctl is called on.
-> 
-> If the target filesystem is "/foo" and the path given is "/bar/baz" and
-> /bar exists but /bar/baz does not, then user_path_locked_at or
-> user_path_at will return a negative dentry corresponding to the
-> (non-existent) name "baz" in /bar.
-> 
-> In this case the dentry exists so the filesystem on which it was found
-> can be tested, but the dentry is negative.  So both -ENOENT and -EXDEV
-> are credible return values.
-> 
-> 
-> - before bbe6a7c899e7 the -EXDEV is tested immediately after the call
->   to user_path_at() so there is no chance that ENOENT will be returned.
->   I cannot actually find where ENOENT could be returned ...  but that
->   doesn't really matter now.
+This patch series consists of code improvements and new platform support
+for ACP7.0 & ACP7.1 platforms.
 
-No, that's not right.  user_path_at() never returns a negative dentry.
-It isn't documented and I tried reading the code instead of looking at
-callers.
+Changes since v3:
+- Remove extra white line in amd_sdw_manager_start() function.
 
-So before that commit it DID return ENOENT rather than -EXDEV where as
-after that commit it returns -EXDEV rather than -ENOENT.
+Changes since v2:
+- Rebase the patch series after dropping the patch which adds conditional
+  check for SoundWire manager device resume when wake event is asserted.
 
-So my patch IS restoring the old behaviour.  Are you *sure* you want
--EXDEV when given a non-existent path?
+Changes since v1:
+- Drop white line insertion in the code.
+- Add a conditional check for SoundWire manager device resume when wake
+  event is asserted.
+- Add new patch to set ACP_PME_EN during runtime suspend sequence
+- Split the existing implementation of host wake interrupt mask
+  enablement and setting device power state in to two separate patches
+  and refactor set device power state logic.
+- Drop PME status clear logic.
 
-Thanks,
-NeilBrown
+Vijendar Mukunda (6):
+  soundwire: amd: change the soundwire wake enable/disable sequence
+  soundwire: amd: add debug log for soundwire wake event
+  soundwire: amd: add support for ACP7.0 & ACP7.1 platforms
+  soundwire: amd: set device power state during suspend/resume sequence
+  soundwire: amd: set ACP_PME_EN during runtime suspend sequence
+  soundwire: amd: add soundwire host wake interrupt enable/disable
+    sequence
 
+ drivers/soundwire/amd_manager.c   | 149 +++++++++++++++++++++++++++++-
+ drivers/soundwire/amd_manager.h   |  26 ++++++
+ include/linux/soundwire/sdw_amd.h |   2 +
+ 3 files changed, 172 insertions(+), 5 deletions(-)
 
-> 
-> - after that patch .... again the -EXDEV test comes first. That isn't
->   what I remember.  I must have misread it.
-> 
-> - after my patch user_path_locked_at() will return -ENOENT if the whole
->   name cannot be found.  So now you get -ENOENT instead of -EXDEV.
-> 
-> So with my patch, ENOENT always wins, and it was never like that before.
-> Thanks for challenging me!
-> 
-> Do you think there could be a problem with changing the error returned
-> in this circumstance? i.e. if you try to destroy a subvolume with a
-> non-existant name on a different filesystem could getting -ENOENT
-> instead of -EXDEV be noticed?
-> 
-> Thanks,
-> NeilBrown
-> 
-> 
+-- 
+2.34.1
 
