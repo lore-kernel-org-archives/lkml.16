@@ -1,223 +1,236 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289701D6182;
-	Fri,  7 Feb 2025 09:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C951D7E41;
+	Fri,  7 Feb 2025 09:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738919107; cv=none; b=q42o4gszp9CtuJX8IutvbUcmLI0ioY7hfcTEiKUlCNnBFHWq141nGgL87XvixYV8tLaH/DBK0qH8Kfw8ejpNzslvjzWXt3vMklhmg3XmH9RTWIUjkoASLmc4NiZ1b5NKDTwGz7ZkqotgHcwW4RjYkC/y4V8O/5reEbpyvCNng38=
+	t=1738919128; cv=none; b=CgYv5Z7F9gc0GFYn64c/SWAut8n25WBjHqB4Sx7uciwZJjZs7CK0KdiUJhLGsYTMdUs13TvKOgjq8zCfKRbsaJtD6uSXuDNzgD5SLNBZgxM0Hfnhww9l2xuqZdYwYpEG4NAKRf99LeymR4thzr1L8qwZ3fsiSUOQDScbctGebVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738919107; c=relaxed/simple;
-	bh=Xq4IUYDYPuFhsZJOZ2TbIKYCuFY3yXT6+FgKFzMOfjI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f8V4kd/3CsJ50TknSWxNi3Mjy7IpD6lERrCs9DYxBdawYF4txvtPJm7ngv6lBXXGQAX54VrsRYhuAYQkUQRDV29/nWu76tFiQG14qx6w9/xP+uUFdmGtnp2kaMWpj8ifbOJTFu+rHQLtGm7S1VGzk7kuGzZQP6AtlPjY9jNw8rQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Tskzt1vX; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738919128; c=relaxed/simple;
+	bh=HDV2XgWZWGOLz7GUhH/TJiTek9PEyoDKgc7XS8kOcu0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PQLXN9bDxOgomECFv59OHqYWfD2abNcysjVsu5RvnFmSKVlz2XdCrZmNXwZMQ8xgAVEJpgMaz8jc0d07GXLveMSaqLk+FCbg1yYfjYHAGp5WLzUhDAsewLfd4JattU7KGDiSkH9lk4aw6pHGxxLocwBoGvSISAFSx2+waYn93UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=rWqnbIbx; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Tskzt1vX"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5175GfUq021026;
-	Fri, 7 Feb 2025 09:04:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8+nR6oZtPznohaOblupk8nGOAWfIBSw7TScj55v7ywM=; b=Tskzt1vXvCDLR+RZ
-	vGa4E5y8iK2zC2blrjwrTtrmFT5KdmFBSFqPzdP3GoDxCXSlI7hei7JUqZmk0SOs
-	BopGE3luiBg/QE9NKzSiByaWuRAVRJZfFrYfNhmlxWM3fdsAfBCd9jzgYaF7OVgh
-	JfYgCKQe80Pr1HsSTQTYqUfQOTsnHw3mUed+jAkFA8UTKWznwUxNzmOHpxZb+ml4
-	KmTHk7C2xtampkjrnJr9P4cRQUuD+HAVXKaRuWyu7e/RaCbmuFF148zlj+O3HbIS
-	VRbeSwNoZ/JEcQ/lCkHwtkzOr8f5SXXTDFOsaJqFl3gGMUQrJNi+R641L5WJd+0v
-	+nBSOA==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nbvurh6g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 09:04:57 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51794t4v011530
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 7 Feb 2025 09:04:55 GMT
-Received: from hu-vikramsa-hyd.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 7 Feb 2025 01:04:49 -0800
-From: Vikram Sharma <quic_vikramsa@quicinc.com>
-To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
-        <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <akapatra@quicinc.com>, <hariramp@quicinc.com>,
-        <andersson@kernel.org>, <konradybcio@kernel.org>,
-        <hverkuil-cisco@xs4all.nl>, <cros-qcom-dts-watchers@chromium.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <quic_vikramsa@quicinc.com>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>
-Subject: [PATCH v12 2/2] arm64: dts: qcom: qcs6490-rb3gen2-vision-mezzanine: Add vision mezzanine
-Date: Fri, 7 Feb 2025 14:34:22 +0530
-Message-ID: <20250207090422.1609260-3-quic_vikramsa@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250207090422.1609260-1-quic_vikramsa@quicinc.com>
-References: <20250207090422.1609260-1-quic_vikramsa@quicinc.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rWqnbIbx"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1ADAF2BA;
+	Fri,  7 Feb 2025 10:04:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1738919050;
+	bh=HDV2XgWZWGOLz7GUhH/TJiTek9PEyoDKgc7XS8kOcu0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rWqnbIbxXL9V47iBpD9vejgoCdnRi0MxEe7QGTvyQQY/zC4DHRW4Y+e/Ipoqh2K1U
+	 UCqtBTQvNZeLsr7R1uDEN7FuYQTUbsWJuJDNqX9a8MO7CbjAfPzAJ4id00JZSeB+wU
+	 QDu2NEN4YqiwZQi1C/3selmQkJce498ECtgQcMv4=
+Date: Fri, 7 Feb 2025 11:05:18 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Jonathan Corbet <corbet@lwn.net>, workflows@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v4] docs: clarify rules wrt tagging other people
+Message-ID: <20250207090518.GE24886@pendragon.ideasonboard.com>
+References: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 0LOPcEteKQdT3s0NhxQJDA_rcZHGPrky
-X-Proofpoint-ORIG-GUID: 0LOPcEteKQdT3s0NhxQJDA_rcZHGPrky
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_04,2025-02-07_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 impostorscore=0
- suspectscore=0 bulkscore=0 priorityscore=1501 clxscore=1011 mlxscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502070068
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
 
-The Vision Mezzanine for the RB3 ships with an imx577 camera sensor.
-Enable the IMX577 on the vision mezzanine.
+Hi Thorsten,
 
-An example media-ctl pipeline for the imx577 is:
+Thank you for the patch.
 
-media-ctl --reset
-media-ctl -v -V '"imx577 '17-001a'":0[fmt:SRGGB10/4056x3040 field:none]'
-media-ctl -V '"msm_csiphy3":0[fmt:SRGGB10/4056x3040]'
-media-ctl -V '"msm_csid0":0[fmt:SRGGB10/4056x3040]'
-media-ctl -V '"msm_vfe0_rdi0":0[fmt:SRGGB10/4056x3040]'
-media-ctl -l '"msm_csiphy3":1->"msm_csid0":0[1]'
-media-ctl -l '"msm_csid0":1->"msm_vfe0_rdi0":0[1]'
+On Thu, Feb 06, 2025 at 03:30:10PM +0100, Thorsten Leemhuis wrote:
+> Point out that explicit permission is usually needed to tag other people
+> in changes, but mention that implicit permission can be sufficient in
+> certain cases. This fixes slight inconsistencies between Reported-by:
+> and Suggested-by: and makes the usage more intuitive.
+> 
+> While at it, explicitly mention the dangers of our bugzilla instance, as
+> it makes it easy to forget that email addresses visible there are only
+> shown to logged-in users.
+> 
+> The latter is not a theoretical issue, as one maintainer mentioned that
+> his employer received a EU GDPR (general data protection regulation)
+> complaint after exposing a email address used in bugzilla through a tag
+> in a patch description.
+> 
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Simona Vetter <simona.vetter@ffwll.ch>
+> Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
+> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+> ---
+> 
+> Jonathan, what do you think of this? I felt somewhat unsure about this a
+> few weeks ago, but I guess I was overly careful. If you think this
+> change is fine and shouldn't cause any trouble for anyone, feel free to
+> merge this. And if not, please speak up.
+> 
+> Note: this triggers a few checkpatch.pl complaints that are irrelevant
+> when when to comes to changes like this.
+> 
+> v4:
+> - slight wording change to make a implicity aspect explicit, as pointed
+>   out by Mauro
+> - Add reviewed-bys from Mauro and Shuah
+> - The number of reviewed-bys is still smal, nevertheless drop the
+>   DONOTMERGE and hole that Jonathan will speak up if he thinks this is
+>   a stupid move.
+> 
+> v3: https://lore.kernel.org/all/c29ef5fa12e37c3a289e46d4442b069af94e5b05.1733127212.git.linux@leemhuis.info/
+> - try yet again from a slightly different angle which loosens the rules
+>   slightly. This from review feedback to earlier versions is apparently
+>   what other developers want and from their "no lawyer" perspective
+>   consider to be okay. As IANAL myself I don't feel totally comfortable
+>   with this and have no idea if this legally is sound, so tag patch with
+>   "DONOTMERGE" for now; will remove this for v4 if enough people add a
+>   "Reviewed-by". Otherwise the story of this patch might end here, unless
+>   someone else submits it for inclusion (you are free to do so!).
+> - remote patch adding Suggested-by: tag to 5.Posting and submit it
+>   separately
+> 
+> v2: https://lore.kernel.org/all/cover.1731749544.git.linux@leemhuis.info/
+> - Retry differently. This slightly hardens the rule for Reported-by:
+>   while slightly lessening it for Suggested-by:. Those in the end are
+>   quite similar, so it does not make much sense to apply different ones.
+>   I considered using an approach along the lines of "if you reported it
+>   in pubic by mail, implicit permission to use in a tag is granted"; but
+>   I abstained from it, as I assume there are good reasons for the
+>   existing approach regarding Suggested-by:.
+> - CC all the people that provided feedback on the text changes in v1
+> 
+> v1: https://lore.kernel.org/all/f5bc0639a20d6fac68062466d5e3dd0519588d08.1731486825.git.linux@leemhuis.info/
+> - initial version
+> ---
+>  Documentation/process/5.Posting.rst          | 13 +++++--
+>  Documentation/process/submitting-patches.rst | 39 ++++++++++++++------
+>  2 files changed, 36 insertions(+), 16 deletions(-)
+> 
+> diff --git a/Documentation/process/5.Posting.rst b/Documentation/process/5.Posting.rst
+> index dbb763a8de901d..22fa925353cf54 100644
+> --- a/Documentation/process/5.Posting.rst
+> +++ b/Documentation/process/5.Posting.rst
+> @@ -268,10 +268,15 @@ The tags in common use are:
+>   - Cc: the named person received a copy of the patch and had the
+>     opportunity to comment on it.
+>  
+> -Be careful in the addition of tags to your patches, as only Cc: is appropriate
+> -for addition without the explicit permission of the person named; using
+> -Reported-by: is fine most of the time as well, but ask for permission if
+> -the bug was reported in private.
+> +Be careful in the addition of the aforementioned tags to your patches, as all
+> +except for Cc:, Reported-by:, and Suggested-by: need explicit permission of the
+> +person named. For those three implicit permission is sufficient if the person
+> +contributed to the Linux kernel using that name and email address according
+> +to the lore archives or the commit history -- and in case of Reported-by:
+> +and Suggested-by: did the reporting or suggestion in public. Note,
+> +bugzilla.kernel.org is a public place in this sense, but email addresses
+> +used there are private; so do not expose them in tags, unless the person
+> +used them in earlier contributions.
 
-yavta -B capture-mplane -c -I -n 5 -f SRGGB10P -s 4056x3040 -F /dev/video0
+I like this text very much, it's concise and clear. My only possible
+concern is that "explicit permission" isn't defined. I assume that
+someone sendubg a Reviewed-by or Acked-by tag in a public mail thread
+counts as permission, but strictly speaking it's not explicit.
 
-Signed-off-by: Hariram Purushothaman <quic_hariramp@quicinc.com>
-Signed-off-by: Trishansh Bhardwaj <quic_tbhardwa@quicinc.com>
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
----
- arch/arm64/boot/dts/qcom/Makefile             |  4 +
- .../qcs6490-rb3gen2-vision-mezzanine.dtso     | 89 +++++++++++++++++++
- 2 files changed, 93 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
+Regardless of that, I think we can clarify what explicit permission
+means in a follow-up patch. If you would like to merge this one as-is,
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 140b0b2abfb5..213d941b1b79 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -116,6 +116,10 @@ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs615-ride.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2.dtb
-+
-+qcs6490-rb3gen2-vision-mezzanine-dtbs := qcs6490-rb3gen2.dtb qcs6490-rb3gen2-vision-mezzanine.dtbo
-+
-+dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2-vision-mezzanine.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs8300-ride.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs8550-aim300-aiot.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs9100-ride.dtb
-diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
-new file mode 100644
-index 000000000000..2a59d2f22eb8
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
-@@ -0,0 +1,89 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+/*
-+ * Camera Sensor overlay on top of rb3gen2 core kit.
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+#include <dt-bindings/clock/qcom,camcc-sc7280.h>
-+#include <dt-bindings/gpio/gpio.h>
-+
-+&camss {
-+	vdda-phy-supply = <&vreg_l10c_0p88>;
-+	vdda-pll-supply = <&vreg_l6b_1p2>;
-+
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* The port index denotes CSIPHY id i.e. csiphy3 */
-+		port@3 {
-+			reg = <3>;
-+
-+			csiphy3_ep: endpoint {
-+				clock-lanes = <7>;
-+				data-lanes = <0 1 2 3>;
-+				remote-endpoint = <&imx577_ep>;
-+			};
-+		};
-+	};
-+};
-+
-+&cci1 {
-+	status = "okay";
-+};
-+
-+&cci1_i2c1 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	camera@1a {
-+		compatible = "sony,imx577";
-+
-+		reg = <0x1a>;
-+
-+		reset-gpios = <&tlmm 78 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default", "suspend";
-+		pinctrl-0 = <&cam2_default>;
-+		pinctrl-1 = <&cam2_suspend>;
-+
-+		clocks = <&camcc CAM_CC_MCLK3_CLK>;
-+		assigned-clocks = <&camcc CAM_CC_MCLK3_CLK>;
-+		assigned-clock-rates = <24000000>;
-+
-+		dovdd-supply = <&vreg_l18b_1p8>;
-+		avdd-supply = <&vph_pwr>;
-+		dvdd-supply = <&vph_pwr>;
-+
-+		port {
-+			imx577_ep: endpoint {
-+				link-frequencies = /bits/ 64 <600000000>;
-+				data-lanes = <1 2 3 4>;
-+				remote-endpoint = <&csiphy3_ep>;
-+			};
-+		};
-+	};
-+};
-+
-+&tlmm {
-+	cam2_default: cam2-default-state {
-+		pins = "gpio67";
-+		function = "cam_mclk";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	cam2_suspend: cam2-suspend-state {
-+		pins = "gpio67";
-+		function = "cam_mclk";
-+		drive-strength = <2>;
-+		bias-pull-down;
-+	};
-+};
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+You have my explicit permission to include this tag in the commit :-D
+
+>  Sending the patch
+> diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
+> index 8fdc0ef3e604f4..72f6de419ccc4c 100644
+> --- a/Documentation/process/submitting-patches.rst
+> +++ b/Documentation/process/submitting-patches.rst
+> @@ -495,10 +495,10 @@ list archives.  A "# Suffix" may also be used in this case to clarify.
+>  
+>  If a person has had the opportunity to comment on a patch, but has not
+>  provided such comments, you may optionally add a ``Cc:`` tag to the patch.
+> -This is the only tag which might be added without an explicit action by the
+> -person it names - but it should indicate that this person was copied on the
+> -patch.  This tag documents that potentially interested parties
+> -have been included in the discussion.
+> +This tag documents that potentially interested parties have been included in
+> +the discussion. Note, this is one of only three tags you might be able to use
+> +without explicit permission of the person named (see 'Tagging people requires
+> +permission' below for details).
+>  
+>  Co-developed-by: states that the patch was co-created by multiple developers;
+>  it is used to give attribution to co-authors (in addition to the author
+> @@ -544,9 +544,9 @@ hopefully inspires them to help us again in the future. The tag is intended for
+>  bugs; please do not use it to credit feature requests. The tag should be
+>  followed by a Closes: tag pointing to the report, unless the report is not
+>  available on the web. The Link: tag can be used instead of Closes: if the patch
+> -fixes a part of the issue(s) being reported. Please note that if the bug was
+> -reported in private, then ask for permission first before using the Reported-by
+> -tag.
+> +fixes a part of the issue(s) being reported. Note, the Reported-by tag is one
+> +of only three tags you might be able to use without explicit permission of the
+> +person named (see 'Tagging people requires permission' below for details).
+>  
+>  A Tested-by: tag indicates that the patch has been successfully tested (in
+>  some environment) by the person named.  This tag informs maintainers that
+> @@ -596,11 +596,11 @@ Usually removal of someone's Tested-by or Reviewed-by tags should be mentioned
+>  in the patch changelog (after the '---' separator).
+>  
+>  A Suggested-by: tag indicates that the patch idea is suggested by the person
+> -named and ensures credit to the person for the idea. Please note that this
+> -tag should not be added without the reporter's permission, especially if the
+> -idea was not posted in a public forum. That said, if we diligently credit our
+> -idea reporters, they will, hopefully, be inspired to help us again in the
+> -future.
+> +named and ensures credit to the person for the idea: if we diligently credit
+> +our idea reporters, they will, hopefully, be inspired to help us again in the
+> +future. Note, this is one of only three tags you might be able to use without
+> +explicit permission of the person named (see 'Tagging people requires
+> +permission' below for details).
+>  
+>  A Fixes: tag indicates that the patch fixes an issue in a previous commit. It
+>  is used to make it easy to determine where a bug originated, which can help
+> @@ -618,6 +618,21 @@ Finally, while providing tags is welcome and typically very appreciated, please
+>  note that signers (i.e. submitters and maintainers) may use their discretion in
+>  applying offered tags.
+>  
+> +.. _tagging_people:
+> +
+> +Tagging people requires permission
+> +----------------------------------
+> +
+> +Be careful in the addition of the aforementioned tags to your patches, as all
+> +except for Cc:, Reported-by:, and Suggested-by: need explicit permission of the
+> +person named. For those three implicit permission is sufficient if the person
+> +contributed to the Linux kernel using that name and email address according
+> +to the lore archives or the commit history -- and in case of Reported-by:
+> +and Suggested-by: did the reporting or suggestion in public. Note,
+> +bugzilla.kernel.org is a public place in this sense, but email addresses
+> +used there are private; so do not expose them in tags, unless the person
+> +used them in earlier contributions.
+> +
+>  .. _the_canonical_patch_format:
+>  
+>  The canonical patch format
+> 
+> base-commit: e8bcda12176c47f2ce6c5104955845d028a640e8
+
 -- 
-2.25.1
+Regards,
 
+Laurent Pinchart
