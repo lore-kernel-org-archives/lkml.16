@@ -1,245 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21A01B87C8;
-	Fri,  7 Feb 2025 21:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D22D194C6A;
+	Fri,  7 Feb 2025 21:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738963241; cv=none; b=VTcxT11FeOopChUF9aa8W6SC7u9651Jcl6kGk2J7Wn8TW3U+5xu/OzX+szxkwaaKeMBQ//RB8ikMboGY5bsm0uiXZex2XwU2OUai9Zh5HqqGlptUx3zZi1JETafUc8eAnDZ6UQzz46tvVuvORsGybQewR9A1ozFj9WiubxYkS+E=
+	t=1738963300; cv=none; b=ThShfdl143m+5RJWOpoTSxMi0AaTR8d8P95Zhwcyly8G2lIBPsXCCQBxw9CrC/1Kp0sEcYh3OplF9EpLpmumHSqSCUBSEZ7QKrhd+sKaglSIuU+4D+yLLW5O97R583p3z4Jf67Y9O0oDOtmlbTKP6RXw9mCCC+IebOq1BpbBas4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738963241; c=relaxed/simple;
-	bh=fyST1HHL6q047gB18uKbWH4029DtMjp2p7R3Opvgd7A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gCsQj0sYVgOtDP/OOFW1ylkPEMfEHOfc9Afp3LoxtTbwNrJW9SG00vGVSsc7Gyd6DGSZ98J9lbAnhpx4kjgoPoa1WSe+EBl1lJBomtDIppfs+OO26eplOJOqgUnMZmp0H4F5yosiElLL9OWvxpljgpcy1oY3pk6nU6AUG1MaMUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fsdU3gjN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738963300; c=relaxed/simple;
+	bh=BontzDLjJ15h+ze4L5vRIqhgs689fkecvFqrORFNUmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OfIao5msGjqNdZF8dOS3/2ZucaiTtqeQJ8ZwRxy+HVmbitPLB0uM1GTogogD9TcbXOaPERqEgd1yqbvDqXVDnVJwWDl3io1e8DquBNcnlfQEHimx+IEIpcuvhAk8zPWHFVTQiA9On+RYpRjog3OwBBEEQRyFupLDko0wImf7TME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=sRirHqLu; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fsdU3gjN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4B9DC4CEE4;
-	Fri,  7 Feb 2025 21:20:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738963241;
-	bh=fyST1HHL6q047gB18uKbWH4029DtMjp2p7R3Opvgd7A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fsdU3gjNMTuUnmQTkW1xAAT5TFFwXAoonivQvChRLfq+mJd3OPoHqQzNm5fBtIriI
-	 iTVfvestb/Xi8dhUqc8z7FMr/r1QkgUzUzSYpu19+ZmlsgvIEYsTExs65tzSFrKZl9
-	 9bjYO2ZMXgaM0pmvOTHYHHVorxI6I5mowQSrhWPp8RacrQNqfWzQJOMmeZ4fpIObjv
-	 qKFPX9PYmbBPqAIWdJ0RU/QB4FJ3RYQAEngzGmiIjb3hfd7cljcRFbxhaUj79y2GJN
-	 X0U2soxDxFlnIXTIDyZ4KVpuivdhVUkYx8xtwE26faz03XyNC0Q14yKHywgwwbpbiH
-	 /HwVAArSqXyTg==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	Usama Arif <usamaarif642@gmail.com>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	stable@vger.kernel.org
-Subject: [PATCH 2/2] mm/damon: avoid applying DAMOS action to same entity multiple times
-Date: Fri,  7 Feb 2025 13:20:33 -0800
-Message-Id: <20250207212033.45269-3-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250207212033.45269-1-sj@kernel.org>
-References: <20250207212033.45269-1-sj@kernel.org>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="sRirHqLu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=EEjc3DEsH7APDdwZngZG2EOIvCVOnKqAX59Ln7CAbd0=; b=sRirHqLu97WmK9iC9PRJOVr1TK
+	473TN4H81011xT6522lJmfI4J9Gie7L025SpWri6JGZ5DilSp4KSq8xXu4EdVA5ijIW+yjugAszqU
+	D9nL8Yo2NLVgzRG3L8iivkWYb2fP39k44uVZGVLC25UtFRHzWMp529KdtDsLkum5Cw0gPZmwheCCk
+	xJcBW/mKWbYircQOZQKrb+PRg9pRs6ygPRgdnBVVpPkrL9z0jB0HWq2cNLARlZtbALB0cB8LQ/0jC
+	TgfLQwuzE3quWkA29LYtEuGUpMOND2fKYSSL1PVrBjQhOBCrsBXvTbrnl52zuVApNWK5RkrtuQkHL
+	YioaMVcQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tgVn5-00000006bhw-0rNI;
+	Fri, 07 Feb 2025 21:21:35 +0000
+Date: Fri, 7 Feb 2025 21:21:35 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 16/19] VFS: add lookup_and_lock_rename()
+Message-ID: <20250207212135.GL1977892@ZenIV>
+References: <20250206054504.2950516-1-neilb@suse.de>
+ <20250206054504.2950516-17-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206054504.2950516-17-neilb@suse.de>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-'paddr' DAMON operations set can apply a DAMOS scheme's action to a
-large folio multiple times in single DAMOS-regions-walk if the folio is
-laid on multiple DAMON regions.  Add a field for DAMOS scheme object
-that can be used by the underlying ops to know what was the last entity
-that the scheme's action has applied.  The core layer unsets the field
-when each DAMOS-regions-walk is done for the given scheme.  And update
-'paddr' ops to use the infrastructure to avoid the problem.
+On Thu, Feb 06, 2025 at 04:42:53PM +1100, NeilBrown wrote:
+> @@ -3451,8 +3451,14 @@ static struct dentry *lock_two_directories(struct dentry *p1, struct dentry *p2)
+>  {
+>  	struct dentry *p = p1, *q = p2, *r;
+>  
+> -	while ((r = p->d_parent) != p2 && r != p)
+> +	/* Ensure d_update_wait() tests are safe - one barrier for all */
+> +	smp_mb();
+> +
+> +	d_update_wait(p, I_MUTEX_NORMAL);
+> +	while ((r = p->d_parent) != p2 && r != p) {
+>  		p = r;
+> +		d_update_wait(p, I_MUTEX_NORMAL);
+> +	}
+>  	if (r == p2) {
+>  		// p is a child of p2 and an ancestor of p1 or p1 itself
+>  		inode_lock_nested(p2->d_inode, I_MUTEX_PARENT);
+> @@ -3461,8 +3467,11 @@ static struct dentry *lock_two_directories(struct dentry *p1, struct dentry *p2)
+>  	}
+>  	// p is the root of connected component that contains p1
+>  	// p2 does not occur on the path from p to p1
+> -	while ((r = q->d_parent) != p1 && r != p && r != q)
+> +	d_update_wait(q, I_MUTEX_NORMAL);
+> +	while ((r = q->d_parent) != p1 && r != p && r != q) {
+>  		q = r;
+> +		d_update_wait(q, I_MUTEX_NORMAL);
+> +	}
 
-Fixes: 57223ac29584 ("mm/damon/paddr: support the pageout scheme")
-Cc: <stable@vger.kernel.org>
-Reported-by: Usama Arif <usamaarif642@gmail.com>
-Closes: https://lore.kernel.org/20250203225604.44742-3-usamaarif642@gmail.com
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- include/linux/damon.h | 11 +++++++++++
- mm/damon/core.c       |  1 +
- mm/damon/paddr.c      | 39 +++++++++++++++++++++++++++------------
- 3 files changed, 39 insertions(+), 12 deletions(-)
-
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index af525252b853..a390af84cf0f 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -432,6 +432,7 @@ struct damos_access_pattern {
-  * @wmarks:		Watermarks for automated (in)activation of this scheme.
-  * @target_nid:		Destination node if @action is "migrate_{hot,cold}".
-  * @filters:		Additional set of &struct damos_filter for &action.
-+ * @last_applied:	Last @action applied ops-managing entity.
-  * @stat:		Statistics of this scheme.
-  * @list:		List head for siblings.
-  *
-@@ -454,6 +455,15 @@ struct damos_access_pattern {
-  * implementation could check pages of the region and skip &action to respect
-  * &filters
-  *
-+ * The minimum entity that @action can be applied depends on the underlying
-+ * &struct damon_operations.  Since it may not be aligned with the core layer
-+ * abstract, namely &struct damon_region, &struct damon_operations could apply
-+ * @action to same entity multiple times.  Large folios that underlying on
-+ * multiple &struct damon region objects could be such examples.  The &struct
-+ * damon_operations can use @last_applied to avoid that.  DAMOS core logic
-+ * unsets @last_applied when each regions walking for applying the scheme is
-+ * finished.
-+ *
-  * After applying the &action to each region, &stat_count and &stat_sz is
-  * updated to reflect the number of regions and total size of regions that the
-  * &action is applied.
-@@ -477,6 +487,7 @@ struct damos {
- 		int target_nid;
- 	};
- 	struct list_head filters;
-+	void *last_applied;
- 	struct damos_stat stat;
- 	struct list_head list;
- };
-diff --git a/mm/damon/core.c b/mm/damon/core.c
-index c7b981308862..1a4dd644949b 100644
---- a/mm/damon/core.c
-+++ b/mm/damon/core.c
-@@ -1851,6 +1851,7 @@ static void kdamond_apply_schemes(struct damon_ctx *c)
- 		s->next_apply_sis = c->passed_sample_intervals +
- 			(s->apply_interval_us ? s->apply_interval_us :
- 			 c->attrs.aggr_interval) / sample_interval;
-+		s->last_applied = NULL;
- 	}
- }
- 
-diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
-index 0fb61f6ddb8d..d64c6fe28667 100644
---- a/mm/damon/paddr.c
-+++ b/mm/damon/paddr.c
-@@ -243,6 +243,17 @@ static bool damos_pa_filter_out(struct damos *scheme, struct folio *folio)
- 	return false;
- }
- 
-+static bool damon_pa_invalid_damos_folio(struct folio *folio, struct damos *s)
-+{
-+	if (!folio)
-+		return true;
-+	if (folio == s->last_applied) {
-+		folio_put(folio);
-+		return true;
-+	}
-+	return false;
-+}
-+
- static unsigned long damon_pa_pageout(struct damon_region *r, struct damos *s,
- 		unsigned long *sz_filter_passed)
- {
-@@ -250,6 +261,7 @@ static unsigned long damon_pa_pageout(struct damon_region *r, struct damos *s,
- 	LIST_HEAD(folio_list);
- 	bool install_young_filter = true;
- 	struct damos_filter *filter;
-+	struct folio *folio;
- 
- 	/* check access in page level again by default */
- 	damos_for_each_filter(filter, s) {
-@@ -268,9 +280,8 @@ static unsigned long damon_pa_pageout(struct damon_region *r, struct damos *s,
- 
- 	addr = r->ar.start;
- 	while (addr < r->ar.end) {
--		struct folio *folio = damon_get_folio(PHYS_PFN(addr));
--
--		if (!folio) {
-+		folio = damon_get_folio(PHYS_PFN(addr));
-+		if (damon_pa_invalid_damos_folio(folio, s)) {
- 			addr += PAGE_SIZE;
- 			continue;
- 		}
-@@ -296,6 +307,7 @@ static unsigned long damon_pa_pageout(struct damon_region *r, struct damos *s,
- 		damos_destroy_filter(filter);
- 	applied = reclaim_pages(&folio_list);
- 	cond_resched();
-+	s->last_applied = folio;
- 	return applied * PAGE_SIZE;
- }
- 
-@@ -304,12 +316,12 @@ static inline unsigned long damon_pa_mark_accessed_or_deactivate(
- 		unsigned long *sz_filter_passed)
- {
- 	unsigned long addr, applied = 0;
-+	struct folio *folio;
- 
- 	addr = r->ar.start;
- 	while (addr < r->ar.end) {
--		struct folio *folio = damon_get_folio(PHYS_PFN(addr));
--
--		if (!folio) {
-+		folio = damon_get_folio(PHYS_PFN(addr));
-+		if (damon_pa_invalid_damos_folio(folio, s)) {
- 			addr += PAGE_SIZE;
- 			continue;
- 		}
-@@ -328,6 +340,7 @@ static inline unsigned long damon_pa_mark_accessed_or_deactivate(
- 		addr += folio_size(folio);
- 		folio_put(folio);
- 	}
-+	s->last_applied = folio;
- 	return applied * PAGE_SIZE;
- }
- 
-@@ -471,12 +484,12 @@ static unsigned long damon_pa_migrate(struct damon_region *r, struct damos *s,
- {
- 	unsigned long addr, applied;
- 	LIST_HEAD(folio_list);
-+	struct folio *folio;
- 
- 	addr = r->ar.start;
- 	while (addr < r->ar.end) {
--		struct folio *folio = damon_get_folio(PHYS_PFN(addr));
--
--		if (!folio) {
-+		folio = damon_get_folio(PHYS_PFN(addr));
-+		if (damon_pa_invalid_damos_folio(folio, s)) {
- 			addr += PAGE_SIZE;
- 			continue;
- 		}
-@@ -495,6 +508,7 @@ static unsigned long damon_pa_migrate(struct damon_region *r, struct damos *s,
- 	}
- 	applied = damon_pa_migrate_pages(&folio_list, s->target_nid);
- 	cond_resched();
-+	s->last_applied = folio;
- 	return applied * PAGE_SIZE;
- }
- 
-@@ -512,15 +526,15 @@ static unsigned long damon_pa_stat(struct damon_region *r, struct damos *s,
- {
- 	unsigned long addr;
- 	LIST_HEAD(folio_list);
-+	struct folio *folio;
- 
- 	if (!damon_pa_scheme_has_filter(s))
- 		return 0;
- 
- 	addr = r->ar.start;
- 	while (addr < r->ar.end) {
--		struct folio *folio = damon_get_folio(PHYS_PFN(addr));
--
--		if (!folio) {
-+		folio = damon_get_folio(PHYS_PFN(addr));
-+		if (damon_pa_invalid_damos_folio(folio, s)) {
- 			addr += PAGE_SIZE;
- 			continue;
- 		}
-@@ -530,6 +544,7 @@ static unsigned long damon_pa_stat(struct damon_region *r, struct damos *s,
- 		addr += folio_size(folio);
- 		folio_put(folio);
- 	}
-+	s->last_applied = folio;
- 	return 0;
- }
- 
--- 
-2.39.5
+That makes no sense whatsoever.  What are you waiting on here and _why_
+are you waiting on those sucker?  Especially since there's nothing
+to prevent the condition for which you wait from arising immediately
+afterwards.
