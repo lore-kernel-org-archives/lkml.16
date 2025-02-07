@@ -1,91 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8366C238D20
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09C2238D57;
+	Fri,  7 Feb 2025 15:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738940341; cv=none; b=WWxOA4YVhwlSaV9mpkJxlHvWWtk1ostD22Pk4PdVsRX7MnWpGRMASrYSLcPwdPdTL5sb9Db2AMsX/KzTAA0XHx2LrF/fgWf/dJsJxB7/NCxoUbC9o7RaxvGEdO0r75/Sgb58qtjOGeHU+ACjrJzZLFgJJJuxUnt7RJ2Qs5xU7jQ=
+	t=1738940425; cv=none; b=gq895nP4yuHAYU5qVlPxYoL+4EjebvBuamCCEorXXwrRoFvPRBrBynxiDMUqxuomoLS/03aj/A4H2bnqGcZ31PfNnizKFbFuEjheUJTPF3NwvumL9P7vNcWEX7cEDQzsrRG0EviiXeMESKCnA3E5T3YEJ/WrA1zCBLik8byKh8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738940341; c=relaxed/simple;
-	bh=i9CKeB+XfrWpQq7i8mHZmhwLBDP4pruyNo0uHrMgtbk=;
+	s=arc-20240116; t=1738940425; c=relaxed/simple;
+	bh=5qGls0MixSZlIRtKrJpy8L0OIUXKPKHSh0nzT6h7mbU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E40f0ScRv4xZvR/424k0lhXT7QD87Jk2XaJHG+FTzIUYnNG2NHTGnXtq7Apn+bxHwNTTC43fMSVa/vlvfqj1kb+iACxwd1P/5b/JBskeFRU5WyIMeme4HQXSOLA1qQAWMJ6ZwHW2X90jiedJ65AljE7T4apTxhEPKYb2icxrdO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ur0X6sr6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mylv8MBAjwI8mvkjMeRWwqw2LXwoeUovVzuN5ryoe8T6Yf+qundOS6DGGP/5hCrJ8/efIjiy4xXiPi75nN88OlAabcOyKPfVfCgm4ylQ277wgCmIZMJdOOhLZRbIiISc2StViU4yZDTlJDso67llfOlJZ8caZk720VD3hpdFDPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cumFyIH7; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ur0X6sr6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FF05C4CED1;
-	Fri,  7 Feb 2025 14:58:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738940341;
-	bh=i9CKeB+XfrWpQq7i8mHZmhwLBDP4pruyNo0uHrMgtbk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ur0X6sr6Et2Hi2aaNUIVFYQNjeC4cRof9bKRYSIE6vpmcvxVWWRXsQrjBaDFP6ef+
-	 lfK9WLYVVAbgXXjB/um4zEnwlrqdaCSfUXVj0UJqXdT6WVVB32c8TFjAYyGUsn8L5D
-	 QO+qsD1pHFHwgLhhrJMXR0T9IBO8fw7d8kdSMkDtyCBsLxJarwngv8E9PsqfRtxIMC
-	 0UtlIhrVhXkZ62hFvIrqej4KDAMXXuBfjyS2pDsk1k6GNbqgc+0WxjBiBKwvUBijA7
-	 Gjs/n6JCUUqP2Jd/nQPtUEE2WRKyuz7gJ3nLmFsCqOqBuphKJhiCT4NxSeeM+GUMvm
-	 urcdasQs5wVYA==
-Date: Fri, 7 Feb 2025 16:58:49 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Stephen Eta Zhou <stephen.eta.zhou@outlook.com>
-Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: optimize memblock_add_range() for improved
- performance
-Message-ID: <Z6YfqcOx5FACtvae@kernel.org>
-References: <BYAPR12MB32059CFEB36A5FC7D859B69FD5F72@BYAPR12MB3205.namprd12.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cumFyIH7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7zWbeTI0iVXnsJeV3Y+pOkoTDbxGkFIzjOKkyY+w2L8=; b=cumFyIH70i0rvsVq0RcTinTMou
+	MJnOFWpJEgd9qIDi1XRi4wAqhVp2ljm2hfbS4fORfJHcGFAuGL8/ahyM/Y5gvebNLVkd0uGhEfdWe
+	PWrg7IF44uMSMh7HGbCXNk+xYy0lVkNK6MYLHjC0Vza3XtdYRZCxCYwLzmMsrKzTs+APMW8ANUTHh
+	XiUCKn6NPWrvsiljf52kB9aeyMRgT6f3WE9E9O3jd27QNjpNGKrT0idMAXeI5QtaXFg2WKA549/vh
+	/RVvdWsgvJkRntgOn1bwea11C55MQFJK+c9uvNqeRhYN2b3AIleGekgr5P9N2a9xlN1BeB0J50xJg
+	573udtsA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tgPpz-000000083qW-47WG;
+	Fri, 07 Feb 2025 15:00:12 +0000
+Date: Fri, 7 Feb 2025 15:00:11 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Zi Yan <ziy@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Hugh Dickins <hughd@google.com>,
+	David Hildenbrand <david@redhat.com>,
+	Yang Shi <yang@os.amperecomputing.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Yu Zhao <yuzhao@google.com>, John Hubbard <jhubbard@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/7] Buddy allocator like (or non-uniform) folio split
+Message-ID: <Z6Yf-1YLgUK-K-uS@casper.infradead.org>
+References: <20250205031417.1771278-1-ziy@nvidia.com>
+ <20250206000111.6c54e67d1933f8bbc01a46cd@linux-foundation.org>
+ <019EB6CA-0F4B-496A-B2AE-A3A553585281@nvidia.com>
+ <Z6YX3RznGLUD07Ao@casper.infradead.org>
+ <E4287DB5-7D0D-41D7-BC0E-F5F404853931@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BYAPR12MB32059CFEB36A5FC7D859B69FD5F72@BYAPR12MB3205.namprd12.prod.outlook.com>
+In-Reply-To: <E4287DB5-7D0D-41D7-BC0E-F5F404853931@nvidia.com>
 
-Hi Stephen,
-
-On Wed, Feb 05, 2025 at 05:55:50AM +0000, Stephen Eta Zhou wrote:
-> Hi Mike Rapoport、Andrew Morton
-
-> I have recently been researching the mm subsystem of the Linux kernel,
-> and I came across the memblock_add_range function, which piqued my
-> interest. I found the implementation approach quite interesting, so I
-> analyzed it and identified some areas for optimization. Starting with
-> this part of the code:
->
-> if (type->cnt * 2 + 1 <= type->max)
->       insert = true;
-> The idea here is good, but it has a certain flaw. The condition is rather
-> restrictive, and it cannot be executed initially. Moreover, it is only
-> valid when the remaining space is (2/1) + 1. If there is enough memory,
-> but it does not satisfy (2/1) + 1, the insertion operation still needs to
-> be performed twice.
-
-The code in memblock_add_range() is very fragile, and many attempts to
-remove the second pass that looked correct at the first glance failed for
-some corner case.
-
-Unfortunately, it's impossible to capture all possible memory
-configurations and reservations in the memblock test suite, so even it it
-passes, there is a chance the kernel will fail to boot on an actual HW.
- 
-> - Before the patch:
->   - Average: 1.22%
->   - Max: 1.63%, Min: 0.93%
+On Fri, Feb 07, 2025 at 09:35:27AM -0500, Zi Yan wrote:
+> On 7 Feb 2025, at 9:25, Matthew Wilcox wrote:
+> > As part of your series, I'd like to remove that limitation, so we'd need
+> > to allocate log_64(n - m) [ok, more complex than that, but ykwim].  So
+> > it's not quite "only allocate one node", but it's allocate O(log(current
+> > number of nodes needed to be allocated)).
+> >
+> > Makes sense?
 > 
-> - After the patch:
->   - Average: 0.69%
->   - Max: 0.94%, Min: 0.50%
+> Yes.
 > 
+> To remove that order-12 limitation, do shmem_split_large_entry() and
+> __filemap_add_folio() need some change as well? Both call xas_split_alloc().
+> But I do not know if they will see splitting order-12 to order-(0 to 5).
 
-These numbers do not represent what's actually interesting: the boot time
-speedup.
+__filemap_add_folio() doesn't need to fracture like it currently does;
+it can do the same minimum split.  The situation is that we've got a
+shadow entry which covers 2^n slots, and now we want to add a folio
+which only covers 2^m slots with m < n.  Leaving n-m shadow entries in the tree
+with orders ranging from m to n-1 makes more sense than the eager split.
 
--- 
-Sincerely yours,
-Mike.
+shmem is the same, except that it's storing swap entries instead of
+shadow entries.
