@@ -1,157 +1,82 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36B418DB2E
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64D118FDAA;
+	Fri,  7 Feb 2025 16:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738946700; cv=none; b=GduSdyW90Jn6kF6+ag/GLGfLE+AbrGR1JlYL2qND7l4pDNUik/c7bomDF9uTdOZUCVwqJtpN06NsN0fC3hVPGo9L332dnKseARviLqrILy0C7AFINHc2NzQGvctXc131lO0BKkJVxRORzzas5Q4XUQiAMUQB5qVpja4vnSDrlco=
+	t=1738946710; cv=none; b=tjasqEphglv78tV/Qe7dg3FsmTwH31Ga7+c3dgWwa4l3N9iZsv4cHAH7FOXeso3BOFH07TBvU0zwKLj2/V8RfFgm+nat0iCK8wwOBtfIYg2lJ2qXXqFlVffZu5Krm894f7Zv5KgTNnrMZJaIZnIg8PngYwHbrejRtu3Z0aidS7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738946700; c=relaxed/simple;
-	bh=mTOQL42nAXKtizbXCMERyHLamG9SlVz4aP3wEhd3a18=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mqe4DTQrbr+t87mEUOm7BgihZjmABRioyVcitkQreRvuEndUxvJlhW+h9QMMKsFDmlYelPRPRYffW3ADRstxS1JLOphwPU2A9NaKfh1mp1oxAhp6r2a7dzWjUaAQOeWpzEkbvQj3Ka/F6sPSN+i5HiWRps56XIXnERj2EZHvkhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=BXZZ90ht; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738946710; c=relaxed/simple;
+	bh=vZhYNhVJlENcmP350wa8xjJ2Q4xsjVpRGiaD0AjrCik=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ViOp4TGbCY3eV1Zi6UYo5r4Mg/XUOeOQ+Uu/MV+nMGWVzarhGLVz9wv8Kre3CdubjFLw2JCcFBbXPK78kPiUG+yMA0wmZsPBvYVDWLAbRvwhcLqDr2AQaCRf8fRDvMmvmnrzTRGQMWjs86oyf1QPj5jyBXZa247GNWpNJiVUWk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Wx9CkIbZ; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="BXZZ90ht"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4364a37a1d7so22720585e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:44:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738946697; x=1739551497; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EZIYulAKvyE39mwEaJ29cg5h3kNH7aHvV9BF/VrZe24=;
-        b=BXZZ90htq3OJdJC3Sn1KTCOx5+L2CAvLK35xEckZnoqLZg9rtvW5mmN3wGxaFRSrIc
-         0MCYMaTzTg8LdlA7P/I6zPJXym8j+iML5hKUk3kg00m+ErX4tqvbesGuI/Gz1h4IFPkC
-         ZaWgFaKdgOCCYnjhy/8qaaah++WOJB9tDISA/f2ofpQS2uYa1Xmk79LrhJsUwk9qOnzy
-         JnUri708gg9HadtceTw8TQl3uODeBbRnHcHdB6kD4Y4rkKcSrly4b78sHx6CFeStivL0
-         UyGZLvhyHWTsJUM8t+GungjII+scHs6YyedjMDwl0eXlaDY8fGev2ONyRq1bRgpfY+s/
-         g5Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738946697; x=1739551497;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EZIYulAKvyE39mwEaJ29cg5h3kNH7aHvV9BF/VrZe24=;
-        b=eG4ZpFrwa4+WZ+NF/8mQzi9L6+5t4TO0wBI9ZpUfkG3pBYyWAnBQCpFEm404iToIAL
-         seTAuGv9Z0Guw40SuOf3yMS6EUVHs2KYBmw1GHlCzNcEAKCEhh9cAlre0uWzuVxkwJ00
-         MyrWSXKwrlIg26jEmUeDWh781e1C71tLnTq7J/1CeWjf4k5v2QzEK0kMfXGp4xTbIpVU
-         b0NB9NvdAYXmZCguQoXykimFpTbmRj7vmzlqOErGxJCwep50kTRxcWe24VTdB6EFcc2l
-         HamIekycyIrl0FWCiypqkWpRBEMRpU1cXME5irTQhbJKT+3q8yigBo8F++Tpz1nJDBZ3
-         Ubmw==
-X-Forwarded-Encrypted: i=1; AJvYcCXrbceojFpDICLLPFXQrFHSbhfeLU+wjcp8iMr09GIYoDA158EZP6Ka3QOCmn2ig6ZVKtgLoudHHNUZjPg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzJXcHWzCn7lyOUQOR3Veh2OYEAwqMW1Wbs8aOegy4wNiuLmA7
-	A2KplUG9IH3Pmy1eOyd6JeF6IhG4qzIyeuJ8slH+Vmq81Qb55TH02bgmJoseJov+v5wsOmnn4le
-	YBqo=
-X-Gm-Gg: ASbGncsNX43FLvn+Mg1YbOUmI6Y/i9wn0z+E9BBvqXZgoIY2cXbz9jp2gnNpGxzbgUN
-	BYStvQeZ5li+nP08eG/xBx43MEpZm30oLv/N9+6UHeInYLYZltuawN72Y+ZaGqmasQABRwwOlhj
-	FhtZrIRGNEQ3fQtW6FBNX0he9IeIKNVVUaF5fnqF9O+s06uIZ2ra6QM9EvxzKJ/PdJ2x0z5UQQE
-	yjvnOI6HR5+6bzI9/eLQPsnceKk+67Fc/qWYkdYUYF+484LcIwd+PMZBdW6F83UbpGCqiu6zgBR
-	xodVIKVhfjGwmirIyxIjYZFiuISZDkjloPx4apw5tn3aGaNu6TVUpUlkISWk
-X-Google-Smtp-Source: AGHT+IGQB1zu4BTh1IXtztuQ6/swkcvzjhEnqBbnVm3ESnobwl8EqdLDpJndofoHvNQtTE4qA8de7Q==
-X-Received: by 2002:a05:600c:5026:b0:434:e9ee:c2d with SMTP id 5b1f17b1804b1-439249c6eeamr30934385e9.26.1738946696980;
-        Fri, 07 Feb 2025 08:44:56 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dca004esm59185385e9.13.2025.02.07.08.44.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 08:44:56 -0800 (PST)
-Message-ID: <b69b46a8-a37f-4d1b-94fc-0838c6ca24a9@rivosinc.com>
-Date: Fri, 7 Feb 2025 17:44:55 +0100
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Wx9CkIbZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1738946707;
+	bh=vZhYNhVJlENcmP350wa8xjJ2Q4xsjVpRGiaD0AjrCik=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Wx9CkIbZGlkze2Fe2FqWzWFvdFku+27oX6MLedl5eDs6eQlhZnPfy6Seo9GhFbjh3
+	 j9ALab2XYraH7ZOd+AFrE0OCiVCWGY2giw2w+4w2c3kdpNILdhA2gJs46Y0JM0TWuo
+	 hDSgxCsrm/wIC0yd6lZkj/UGUjrJYnl8EAiudg73D/0UyoOSkBtBM91m6aAyJnwfAs
+	 iuBqusb9Y+vthwIFKJG8+ynYCjYqqs4mtYEQ3f7h8uyz2Q5cR0ehZ/W5GQTLse197z
+	 8N+HbZNdRAQIxzd9bVExTCt9uZrQDzkRxFWEHpOEbPDVBBHYi9EpiGv0uNEIUyNk+3
+	 3ggN5n5eEc1UA==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 85FA117E0239;
+	Fri,  7 Feb 2025 17:45:06 +0100 (CET)
+Date: Fri, 7 Feb 2025 17:44:56 +0100
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Su Hui <suhui@nfschina.com>, steven.price@arm.com, liviu.dudau@arm.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch, mary.guillemard@collabora.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] drm/panthor: avoid garbage value in
+ panthor_ioctl_dev_query()
+Message-ID: <20250207174456.04eeee9c@collabora.com>
+In-Reply-To: <01bf1bd2-2764-41a1-85aa-962f1197387f@stanley.mountain>
+References: <20250119025828.1168419-1-suhui@nfschina.com>
+	<01bf1bd2-2764-41a1-85aa-962f1197387f@stanley.mountain>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/9] riscv: Fix set up of cpu hotplug callbacks
-To: Andrew Jones <ajones@ventanamicro.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, charlie@rivosinc.com,
- Anup Patel <apatel@ventanamicro.com>
-References: <20250207161939.46139-11-ajones@ventanamicro.com>
- <20250207161939.46139-16-ajones@ventanamicro.com>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20250207161939.46139-16-ajones@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Mon, 20 Jan 2025 10:21:49 +0300
+Dan Carpenter <dan.carpenter@linaro.org> wrote:
 
-
-On 07/02/2025 17:19, Andrew Jones wrote:
-> CPU hotplug callbacks should be set up even if we detected all
-> current cpus emulate misaligned accesses, since we want to
-> ensure our expectations of all cpus emulating is maintained.
+> On Sun, Jan 19, 2025 at 10:58:29AM +0800, Su Hui wrote:
+> > 'priorities_info' is uninitialized, and the uninitialized value is copied
+> > to user object when calling PANTHOR_UOBJ_SET(). Using memset to initialize
+> > 'priorities_info' to avoid this garbage value problem.
+> > 
+> > Fixes: f70000ef2352 ("drm/panthor: Add DEV_QUERY_GROUP_PRIORITIES_INFO dev query")
+> > Signed-off-by: Su Hui <suhui@nfschina.com>  
 > 
-> Fixes: 6e5ce7f2eae3 ("riscv: Decouple emulated unaligned accesses from access speed")
-> Fixes: e7c9d66e313b ("RISC-V: Report vector unaligned access speed hwprobe")
-> Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
-> ---
->  arch/riscv/kernel/unaligned_access_speed.c | 27 +++++++++++-----------
->  1 file changed, 13 insertions(+), 14 deletions(-)
+> Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+
+Queued to drm-misc-fixes.
+
 > 
-> diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kernel/unaligned_access_speed.c
-> index 780f1c5f512a..c9d3237649bb 100644
-> --- a/arch/riscv/kernel/unaligned_access_speed.c
-> +++ b/arch/riscv/kernel/unaligned_access_speed.c
-> @@ -247,13 +247,6 @@ static void __init check_unaligned_access_speed_all_cpus(void)
->  	/* Check core 0. */
->  	smp_call_on_cpu(0, check_unaligned_access, bufs[0], true);
->  
-> -	/*
-> -	 * Setup hotplug callbacks for any new CPUs that come online or go
-> -	 * offline.
-> -	 */
-> -	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "riscv:online",
-> -				  riscv_online_cpu, riscv_offline_cpu);
-> -
->  out:
->  	for_each_cpu(cpu, cpu_online_mask) {
->  		if (bufs[cpu])
-> @@ -383,13 +376,6 @@ static int __init vec_check_unaligned_access_speed_all_cpus(void *unused __alway
->  {
->  	schedule_on_each_cpu(check_vector_unaligned_access);
->  
-> -	/*
-> -	 * Setup hotplug callbacks for any new CPUs that come online or go
-> -	 * offline.
-> -	 */
-> -	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "riscv:online",
-> -				  riscv_online_cpu_vec, NULL);
-> -
->  	return 0;
->  }
->  #else /* CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS */
-> @@ -415,6 +401,19 @@ static int __init check_unaligned_access_all_cpus(void)
->  			    NULL, "vec_check_unaligned_access_speed_all_cpus");
->  	}
->  
-> +	/*
-> +	 * Setup hotplug callbacks for any new CPUs that come online or go
-> +	 * offline.
-> +	 */
-> +#ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
-> +	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "riscv:online",
-> +				  riscv_online_cpu, riscv_offline_cpu);
-> +#endif
-> +#ifdef CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS
-> +	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "riscv:online",
-> +				  riscv_online_cpu_vec, NULL);
-> +#endif
-> +
->  	return 0;
->  }
->  
-
-Hi Andrew,
-
-Reviewed-by: Clément Léger <cleger@rivosinc.com>
-
-Thanks,
-
-Clément
+> How did you find this bug?
+> 
+> regards,
+> dan carpenter
+> 
 
