@@ -1,276 +1,164 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1EC1DE4CD
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 10:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98CDD1DEFCC;
+	Fri,  7 Feb 2025 10:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738925787; cv=none; b=Yol+oWz0XhpUTB1KfFUEAEY/MhcLza1gKfYQtRIRh4/jwLvyWdXnExKBPVDtV8e5EWUQfTiUHCHQY8llssVCXjEZziKXFfg35BSEklMtny116CBpo9r9CpWhGp8peAHzMLwi1HB6cbUpQE4ONjyH1bw2FOcFfjdoN5/PcS7Y06M=
+	t=1738925791; cv=none; b=KnwJ2k58wY92xuAcoZgrkNQJW2qj1u6QyKWMVLaPVE9P+Q6UtjzyPx2UwproJ59J7ALB7wVtQ76JE6b3tK2k4f66pluxg2SMn/Fh2XS/M4RXZaAUDBu2YSLjvobDpiFN+7pB1c+tfrZOBix4b89dpi6ZI0ucpYJw4bbJe8VZAI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738925787; c=relaxed/simple;
-	bh=bLLFVr6Bm8Tegrq2cqZjHRigcihHscrYl+BIeOaDFRc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HpmDwcq4PEhMbEGmb/w9wlTYjxwSNEfp2imF0/c6p6L/4x2tbSN6L9Xrs4V3fUmTx3yeXhtJIACowd5QFsvEvFKNjHndSVZuKmQDLKHNmlqqWw7i02WEsFpn1PuqXfRkqwb57QmLTl+aa9rUtz3jjeBhNh6Fnp/64H5r+drZEWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tgM1w-00054w-LI; Fri, 07 Feb 2025 11:56:16 +0100
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tgM1r-003xhc-2o;
-	Fri, 07 Feb 2025 11:56:11 +0100
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tgM1r-007rrW-2a;
-	Fri, 07 Feb 2025 11:56:11 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Byungho An <bh74.an@samsung.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Russell King <linux@armlinux.org.uk>
-Subject: [PATCH net-next v2 1/1] net: sxgbe: rework EEE handling based on PHY negotiation
-Date: Fri,  7 Feb 2025 11:56:10 +0100
-Message-Id: <20250207105610.1875327-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1738925791; c=relaxed/simple;
+	bh=Xcznz2lX3okQkW4/VUpMRZwtt4DZP48B241K95Ky2zw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VA7WDq52oA52DrAVkFrt90qtaeanKGURJE0LgXmNMpM+UDhRAk2AJ4OxmohYJOryhCP1DEuyksAyJRMTxOBz5s/gAIp8x1+GDqdK8huky3exeLJGdF6csxQWbRPaKfNsMNsrJ2Ocv2jUWPLj4YOSBRxzmCEx5eO0orl2iV+E4vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [180.172.76.141])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 73D1C340CC9;
+	Fri, 07 Feb 2025 10:56:28 +0000 (UTC)
+Date: Fri, 7 Feb 2025 10:56:17 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Yangyu Chen <cyy@cyyself.name>, Jisheng Zhang <jszhang@kernel.org>,
+	Jesse Taube <mr.bossman075@gmail.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+	Emil Renner Berthing <kernel@esmil.dk>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH v4 2/4] gpio: spacemit: add support for K1 SoC
+Message-ID: <20250207105617-GYC5367@gentoo>
+References: <20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org>
+ <20250121-03-k1-gpio-v4-2-4641c95c0194@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250121-03-k1-gpio-v4-2-4641c95c0194@gentoo.org>
 
-From: Andrew Lunn <andrew@lunn.ch>
+On 11:38 Tue 21 Jan     , Yixun Lan wrote:
+> Implement GPIO functionality which capable of setting pin as
+> input, output. Also, each pin can be used as interrupt which
+> support rising, failing, or both edge type trigger.
+> 
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> ---
+>  drivers/gpio/Kconfig            |   7 +
+>  drivers/gpio/Makefile           |   1 +
+>  drivers/gpio/gpio-spacemit-k1.c | 295 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 303 insertions(+)
+> 
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 56fee58e281e7cac7f287eb04e4c17a17f75ed04..c153f5439649da020ee42c38e88cb8df31a8e307 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -654,6 +654,13 @@ config GPIO_SNPS_CREG
+>  	  where only several fields in register belong to GPIO lines and
+>  	  each GPIO line owns a field with different length and on/off value.
+>  
+> +config GPIO_SPACEMIT_K1
+> +	bool "SPACEMIT K1 GPIO support"
+> +	depends on ARCH_SPACEMIT || COMPILE_TEST
+> +	select GPIOLIB_IRQCHIP
+> +	help
+> +	  Say yes here to support the SpacemiT's K1 GPIO device.
+> +
+>  config GPIO_SPEAR_SPICS
+>  	bool "ST SPEAr13xx SPI Chip Select as GPIO support"
+>  	depends on PLAT_SPEAR
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index af3ba4d81b583842893ea69e677fbe2abf31bc7b..6709ce511a0cf10310a94521c85a2d382dcfa696 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -156,6 +156,7 @@ obj-$(CONFIG_GPIO_SIOX)			+= gpio-siox.o
+>  obj-$(CONFIG_GPIO_SL28CPLD)		+= gpio-sl28cpld.o
+>  obj-$(CONFIG_GPIO_SLOPPY_LOGIC_ANALYZER) += gpio-sloppy-logic-analyzer.o
+>  obj-$(CONFIG_GPIO_SODAVILLE)		+= gpio-sodaville.o
+> +obj-$(CONFIG_GPIO_SPACEMIT_K1)		+= gpio-spacemit-k1.o
+>  obj-$(CONFIG_GPIO_SPEAR_SPICS)		+= gpio-spear-spics.o
+>  obj-$(CONFIG_GPIO_SPRD)			+= gpio-sprd.o
+>  obj-$(CONFIG_GPIO_STMPE)		+= gpio-stmpe.o
+> diff --git a/drivers/gpio/gpio-spacemit-k1.c b/drivers/gpio/gpio-spacemit-k1.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..de0491af494c10f528095efee9b3a140bdcc0b0d
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-spacemit-k1.c
+> @@ -0,0 +1,295 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR MIT
+> +/*
+> + * Copyright (C) 2023-2025 SpacemiT (Hangzhou) Technology Co. Ltd
+> + * Copyright (c) 2025 Yixun Lan <dlan@gentoo.org>
+> + */
+> +
+omit ..
+> +static int spacemit_gpio_get_ports(struct device *dev, struct spacemit_gpio *gpio,
+> +				   void __iomem *regs)
+> +{
+> +	struct spacemit_gpio_port *port;
+> +	u32 i = 0, offset;
+> +
+> +	gpio->nr_ports = device_get_child_node_count(dev);
+> +	if (gpio->nr_ports == 0)
+> +		return -ENODEV;
+> +
+> +	gpio->ports = devm_kcalloc(dev, gpio->nr_ports, sizeof(*gpio->ports), GFP_KERNEL);
+> +	if (!gpio->ports)
+> +		return -ENOMEM;
+> +
+> +	device_for_each_child_node_scoped(dev, fwnode)  {
+> +		port		= &gpio->ports[i];
+> +		port->fwnode	= fwnode;
+> +		port->index	= i++;
+> +
+> +		if (fwnode_property_read_u32(fwnode, "reg", &offset))
+> +			return -EINVAL;
+> +
+> +		port->base	= regs + offset;
+> +		port->irq	= fwnode_irq_get(fwnode, 0);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int spacemit_gpio_add_port(struct spacemit_gpio *gpio, int index)
+> +{
+> +	struct spacemit_gpio_port *port;
+> +	struct device *dev = gpio->dev;
+> +	struct gpio_irq_chip *girq;
+> +	void __iomem *dat, *set, *clr, *dirin, *dirout;
+> +	int ret;
+> +
+> +	port = &gpio->ports[index];
+> +	port->gpio = gpio;
+> +
+> +	dat	= port->base + GPLR;
+> +	set	= port->base + GPSR;
+> +	clr	= port->base + GPCR;
+> +	dirin	= port->base + GCDR;
+> +	dirout	= port->base + GSDR;
+> +
+> +	/* This registers 32 GPIO lines per port */
+> +	ret = bgpio_init(&port->gc, dev, 4, dat, set, clr, dirout, dirin,
+> +			 BGPIOF_UNREADABLE_REG_SET | BGPIOF_UNREADABLE_REG_DIR);
 
-Rework EEE handling to depend on PHY negotiation results. Enable EEE
-only after a valid link is established and allow proper LPI mode
-activation.
+Esmil point out bgpio_init() require a GPIO_GENERIC dependency, will fix it
 
-Previously, sxgbe_eee_init() was called in sxgbe_open() to invoke
-phy_init_eee() most probably before the PHY could complete
-auto-negotiation. Non-automotive PHYs typically take ~1 sec to
-establish a link, so EEE was rarely enabled.
-
-Now, EEE activation is deferred until after PHY negotiation.  The driver
-delegates EEE control to phylib via ethtool set/get calls. Timer values
-are taken from phydev->eee_cfg.tx_lpi_timer, and sxgbe_eee_adjust()
-configures EEE based on phydev->enable_tx_lpi and the PHY link status.
-
-This activation of LPI may reveal issues that were hidden when LPI was
-rarely active.
-
-WARNING: This patch is only compile tested.
-
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
-changes v2:
-- major rework with many changes
-- use phydev->eee_cfg.tx_lpi_timer where possible
-- drop sxgbe_eee_init() and rework sxgbe_eee_adjust()
----
- .../net/ethernet/samsung/sxgbe/sxgbe_common.h |  2 -
- .../ethernet/samsung/sxgbe/sxgbe_ethtool.c    | 22 +-----
- .../net/ethernet/samsung/sxgbe/sxgbe_main.c   | 69 +++++++------------
- 3 files changed, 26 insertions(+), 67 deletions(-)
-
-diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h b/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
-index 1458939c3bf5..a8eed188d110 100644
---- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
-+++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
-@@ -526,6 +526,4 @@ int sxgbe_restore(struct net_device *ndev);
- 
- const struct sxgbe_mtl_ops *sxgbe_get_mtl_ops(void);
- 
--void sxgbe_disable_eee_mode(struct sxgbe_priv_data * const priv);
--bool sxgbe_eee_init(struct sxgbe_priv_data * const priv);
- #endif /* __SXGBE_COMMON_H__ */
-diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c
-index 4a439b34114d..a13360962e47 100644
---- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c
-+++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c
-@@ -140,8 +140,6 @@ static int sxgbe_get_eee(struct net_device *dev,
- 	if (!priv->hw_cap.eee)
- 		return -EOPNOTSUPP;
- 
--	edata->tx_lpi_timer = priv->tx_lpi_timer;
--
- 	return phy_ethtool_get_eee(dev->phydev, edata);
- }
- 
-@@ -150,22 +148,8 @@ static int sxgbe_set_eee(struct net_device *dev,
- {
- 	struct sxgbe_priv_data *priv = netdev_priv(dev);
- 
--	priv->eee_enabled = edata->eee_enabled;
--
--	if (!priv->eee_enabled) {
--		sxgbe_disable_eee_mode(priv);
--	} else {
--		/* We are asking for enabling the EEE but it is safe
--		 * to verify all by invoking the eee_init function.
--		 * In case of failure it will return an error.
--		 */
--		priv->eee_enabled = sxgbe_eee_init(priv);
--		if (!priv->eee_enabled)
--			return -EOPNOTSUPP;
--
--		/* Do not change tx_lpi_timer in case of failure */
--		priv->tx_lpi_timer = edata->tx_lpi_timer;
--	}
-+	if (!priv->hw_cap.eee)
-+		return -EOPNOTSUPP;
- 
- 	return phy_ethtool_set_eee(dev->phydev, edata);
- }
-@@ -228,7 +212,7 @@ static void sxgbe_get_ethtool_stats(struct net_device *dev,
- 	int i;
- 	char *p;
- 
--	if (priv->eee_enabled) {
-+	if (dev->phydev->eee_active) {
- 		int val = phy_get_eee_err(dev->phydev);
- 
- 		if (val)
-diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-index 12c8396b6942..8a385c92a6d1 100644
---- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-+++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
-@@ -87,7 +87,7 @@ static void sxgbe_enable_eee_mode(const struct sxgbe_priv_data *priv)
- 		priv->hw->mac->set_eee_mode(priv->ioaddr);
- }
- 
--void sxgbe_disable_eee_mode(struct sxgbe_priv_data * const priv)
-+static void sxgbe_disable_eee_mode(struct sxgbe_priv_data * const priv)
- {
- 	/* Exit and disable EEE in case of we are in LPI state. */
- 	priv->hw->mac->reset_eee_mode(priv->ioaddr);
-@@ -110,52 +110,25 @@ static void sxgbe_eee_ctrl_timer(struct timer_list *t)
- 	mod_timer(&priv->eee_ctrl_timer, SXGBE_LPI_TIMER(eee_timer));
- }
- 
--/**
-- * sxgbe_eee_init
-- * @priv: private device pointer
-- * Description:
-- *  If the EEE support has been enabled while configuring the driver,
-- *  if the GMAC actually supports the EEE (from the HW cap reg) and the
-- *  phy can also manage EEE, so enable the LPI state and start the timer
-- *  to verify if the tx path can enter in LPI state.
-- */
--bool sxgbe_eee_init(struct sxgbe_priv_data * const priv)
-+static void sxgbe_eee_adjust(struct sxgbe_priv_data *priv)
- {
--	struct net_device *ndev = priv->dev;
--	bool ret = false;
-+	struct phy_device *phydev = priv->dev->phydev;
- 
--	/* MAC core supports the EEE feature. */
--	if (priv->hw_cap.eee) {
--		/* Check if the PHY supports EEE */
--		if (phy_init_eee(ndev->phydev, true))
--			return false;
-+	if (!priv->hw_cap.eee)
-+		return;
- 
--		timer_setup(&priv->eee_ctrl_timer, sxgbe_eee_ctrl_timer, 0);
--		priv->eee_ctrl_timer.expires = SXGBE_LPI_TIMER(eee_timer);
-+	if (phydev->enable_tx_lpi) {
- 		add_timer(&priv->eee_ctrl_timer);
--
- 		priv->hw->mac->set_eee_timer(priv->ioaddr,
- 					     SXGBE_DEFAULT_LPI_TIMER,
--					     priv->tx_lpi_timer);
--
--		pr_info("Energy-Efficient Ethernet initialized\n");
--
--		ret = true;
-+					     phydev->eee_cfg.tx_lpi_timer);
-+		priv->eee_enabled = true;
-+	} else {
-+		sxgbe_disable_eee_mode(priv);
-+		priv->eee_enabled = false;
- 	}
- 
--	return ret;
--}
--
--static void sxgbe_eee_adjust(const struct sxgbe_priv_data *priv)
--{
--	struct net_device *ndev = priv->dev;
--
--	/* When the EEE has been already initialised we have to
--	 * modify the PLS bit in the LPI ctrl & status reg according
--	 * to the PHY link status. For this reason.
--	 */
--	if (priv->eee_enabled)
--		priv->hw->mac->set_eee_pls(priv->ioaddr, ndev->phydev->link);
-+	priv->hw->mac->set_eee_pls(priv->ioaddr, phydev->link);
- }
- 
- /**
-@@ -301,6 +274,16 @@ static int sxgbe_init_phy(struct net_device *ndev)
- 		return -ENODEV;
- 	}
- 
-+	if (priv->hw_cap.eee) {
-+		phy_support_eee(phydev);
-+		phy_eee_rx_clock_stop(priv->dev->phydev, true);
-+		phydev->eee_cfg.tx_lpi_timer = SXGBE_DEFAULT_LPI_TIMER;
-+
-+		/* configure timer which will be used for LPI handling */
-+		timer_setup(&priv->eee_ctrl_timer, sxgbe_eee_ctrl_timer, 0);
-+		priv->eee_ctrl_timer.expires = SXGBE_LPI_TIMER(eee_timer);
-+	}
-+
- 	netdev_dbg(ndev, "%s: attached to PHY (UID 0x%x) Link = %d\n",
- 		   __func__, phydev->phy_id, phydev->link);
- 
-@@ -802,7 +785,7 @@ static void sxgbe_tx_all_clean(struct sxgbe_priv_data * const priv)
- 		sxgbe_tx_queue_clean(tqueue);
- 	}
- 
--	if ((priv->eee_enabled) && (!priv->tx_path_in_lpi_mode)) {
-+	if (priv->eee_enabled && !priv->tx_path_in_lpi_mode) {
- 		sxgbe_enable_eee_mode(priv);
- 		mod_timer(&priv->eee_ctrl_timer, SXGBE_LPI_TIMER(eee_timer));
- 	}
-@@ -1179,9 +1162,6 @@ static int sxgbe_open(struct net_device *dev)
- 		priv->hw->dma->rx_watchdog(priv->ioaddr, SXGBE_MAX_DMA_RIWT);
- 	}
- 
--	priv->tx_lpi_timer = SXGBE_DEFAULT_LPI_TIMER;
--	priv->eee_enabled = sxgbe_eee_init(priv);
--
- 	napi_enable(&priv->napi);
- 	netif_start_queue(dev);
- 
-@@ -1207,9 +1187,6 @@ static int sxgbe_release(struct net_device *dev)
- {
- 	struct sxgbe_priv_data *priv = netdev_priv(dev);
- 
--	if (priv->eee_enabled)
--		del_timer_sync(&priv->eee_ctrl_timer);
--
- 	/* Stop and disconnect the PHY */
- 	if (dev->phydev) {
- 		phy_stop(dev->phydev);
 -- 
-2.39.5
-
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
