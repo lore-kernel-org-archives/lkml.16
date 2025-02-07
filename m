@@ -1,1415 +1,364 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670EE1EB1A9;
-	Fri,  7 Feb 2025 15:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738941694; cv=none; b=MDXWgzqjhXGrS4wP504k2i5Os4MpblVmgmv9LOAjPzbzEcD+loaj5ueeXH8gsLLZdcStoSt6/ie+tg9pNg84TvfpPi+AONrZno9b3PGelA0fTPMti3QIQotFgTFCZFcC8EjFF9HvVP3wpbPQV8jW5kDpXDg4oPsW7KkDQ9aGEPw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738941694; c=relaxed/simple;
-	bh=mj0RF2nhB7SojgOQqUxKsct/kmckX3wRO55PiFDqnYs=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=bZYucUOLv+K8HbX4xJWhyZwqsufxef3WTKqnOMS1aDhFFx3Nq2q+n6pDo1kBfP/6Rhj5bS6VHntK3zFEkFJgRRdqugQcI7QRv4ruQdDt8yeYfWF2qucpJlqOpkrOWoyIYzj5bRP9eKKo8pwRdoQpat2no1lvAr7ndbrnCwSUz1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o5pkp1u0; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB0E1EB19B;
+	Fri,  7 Feb 2025 15:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738941747; cv=fail; b=kgf7QiqJGMbjeWZYLn4teqT4H4vaEEGBAKW3hOJfxaXrsnNAl2DiwdlxJZetS8ICV9i4LSaUI95rbf1luQcwg5yns06i16TmQh8698Yvv/klTn9RsFIx3PJu835XS17Wm1/JMth3jkq1vNf3pLtuGAN/4/FfSiJBf4AvEbAB2fA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738941747; c=relaxed/simple;
+	bh=1ATGdheDnHgfHRDftwaliRq7z6gUiSc0lv6mAtpIMpw=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=obA1amw2/X5OAwLD0PYjSauuIDTLhw3glu3ZF5dToLLLekPuPfGXX64hYl3QdfOlDvG7KOS0Asm4JE7X6hopDtv03ImVs/wONKE7GnMJlOcD4mQs1Wf0KOi7tFfp6szWUawh3oQ3GNPJPjKLxASWafFEPfV41rvU7by+3PhmZUM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gayKAZPk; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o5pkp1u0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D511C4CEDF;
-	Fri,  7 Feb 2025 15:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738941693;
-	bh=mj0RF2nhB7SojgOQqUxKsct/kmckX3wRO55PiFDqnYs=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=o5pkp1u0x2XiXI2HmhxdCxyQBK7GEt414yTRePv/2zVb4Fewdcs1ee4baISf8B5i7
-	 dtzuL5Dr7htQGpoPRqD6a2zIt3dbwn8++an9AeTt2lYgOh6ZnGV/DPkG7D67ZvQPgG
-	 cADj6hQb7Jk2mHI8VrQC7/+fGEvuRFogkNUfVNrl+Y4srEYUIVLf0/Z9AEJqrnmNOt
-	 iGgedPh5nCsM+L8eUrOgD5MgqCX3FodMbk47RV21AZc0BrEsHCE6D78nuzt4/SwbQH
-	 TQRSgsxiEHE8RRfJx07wOlDR9Rajcqezbse01d7E++rwAZCb6NStI1lw9p8n0G6cF/
-	 zgfbNEFTbl52A==
-Date: Fri, 07 Feb 2025 09:21:32 -0600
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gayKAZPk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738941746; x=1770477746;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=1ATGdheDnHgfHRDftwaliRq7z6gUiSc0lv6mAtpIMpw=;
+  b=gayKAZPkaiLyCfT6Od+zyl+tzdQR4gRuFtXtO6XUeqCluagDB/LKvQVI
+   mtOwRQL3tNsWr7FplBeNrkmBwfO3891WiBtbiakdhfOENme3IcghAJvdi
+   OYco+WZVPZDhFqJgBn6QKQ9wb6Smgd23qNFzXOwFQ29tZSR7K8BcTNs8+
+   vdsP/txiIw1z/IZy5kAciW2rjcb4Qp2J7vW4YStp2C8SB0/owRlPnDL9k
+   d5mSqN1YCFLJ/M4rR63Bgf07LmdXHUxpIo+e8/TlTIoUtlnlDY3+zSAb5
+   5RfIjQc7RQEKeZXiLTIXLg3CTxpyW2vog2OXmKMbYAXCQiUnq2e7wydiv
+   w==;
+X-CSE-ConnectionGUID: H0cPePMNQrmHJ1QHgkzAuA==
+X-CSE-MsgGUID: kap3XUoYRO2PE6s9MkVp+w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="64942443"
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="64942443"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 07:22:18 -0800
+X-CSE-ConnectionGUID: GizOZGd9TqyFuEY/xQKP/Q==
+X-CSE-MsgGUID: A3zXNgjDQqKJWRgTupqerw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="116754982"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Feb 2025 07:22:17 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Fri, 7 Feb 2025 07:22:15 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Fri, 7 Feb 2025 07:22:15 -0800
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.41) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 7 Feb 2025 07:22:15 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gr1j3cy06ZOntfOEey6vMqm4a0VQlpoLTGIswnodUrQSDVkPglJUk32sqIGQ/ggLt1AM4kEjCIBPk8kV+yuOkb6pS5qT7g6hNyBPL91leYz6e1QIkSf1lMib/FpfHjR89AS64Fsd0tDof2qlllegew9cKA5rRfI9GwxCPwqac8rc1ISh0XMABcw2gaUdajvcWqUK9M4IrUO5VeBSNm9Xp8Za/CXBF7dcr1ph8nfD3Xt0BtQqvH9clCfOAu67GrojuSvaT1YMbxAsmYTGTUwVY04hyAWhyWoloJ5+wv3ZE5jNwet4ddMZxk5BC0gUGb6fBxgte5MUxaw9wHIsTSHAfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fvGlAqiGhjFnrA7gj2lLv51Ag3kOomiuNUgRIX6w9nY=;
+ b=QsSM6oGuf3VgyjNqNL2bg9NgBrF+FrPeJ3SSTUw/b+UI+cvTxr0wpJnZ9xiEoxnNnkEP1qRN/vC7fShtLBG8UxlS23DKVfA2qRkw+/zbx49+qR8ZualiS8uuPFHOfDzlf+UC6rnk/8X36+a+6d/W7Ma3710YIokmR8Vo6Sc90ccbCZasQ0Ox5Nj+froOr+uzt4fYunVir7EcbQBQ7ka0b3njAuWq5gROOwKfK94X6M5ntcnRfgq/6vMgWQdsykHjg3I7DpLC0SV2rQn4rtmJXCj5VBOFW9lLE41aLE9q6kgK3wStXfGa7Ez4zrjpA4LfxNKED2fPPoNU0I2TGd4LBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
+ by SA1PR11MB8489.namprd11.prod.outlook.com (2603:10b6:806:3a9::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.14; Fri, 7 Feb
+ 2025 15:21:45 +0000
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::4b3b:9dbe:f68c:d808]) by DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::4b3b:9dbe:f68c:d808%6]) with mapi id 15.20.8398.021; Fri, 7 Feb 2025
+ 15:21:45 +0000
+Message-ID: <65176426-3ad0-455f-8afd-f53f48bbecb3@intel.com>
+Date: Fri, 7 Feb 2025 16:18:15 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 1/8] net: gro: decouple GRO from the NAPI
+ layer
+To: Eric Dumazet <edumazet@google.com>
+CC: Kees Cook <kees@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
+ S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, "Paolo
+ Abeni" <pabeni@redhat.com>, Lorenzo Bianconi <lorenzo@kernel.org>, Daniel Xu
+	<dxu@dxuuu.xyz>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+	<daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, John Fastabend
+	<john.fastabend@gmail.com>, =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?=
+	<toke@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, Martin KaFai Lau
+	<martin.lau@linux.dev>, <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?=
+	<toke@redhat.com>
+References: <20250205163609.3208829-1-aleksander.lobakin@intel.com>
+ <20250205163609.3208829-2-aleksander.lobakin@intel.com>
+ <CANn89iJjCOThDqwsK4v2O8LfcwAB55YohNZ8T2sR40uM2ZoX5w@mail.gmail.com>
+ <fe1b0def-89d1-4db3-bf98-7d6c61ff5361@intel.com>
+ <CANn89iJr1R4BGK2Qd+OEgsE7kEPi7X8tgyxjHnYoU7VOU_wgfA@mail.gmail.com>
+ <3decafb9-34fe-4fb7-9203-259b813f810c@intel.com>
+ <CANn89iJNq2VC55c-DcA6YC-2EHYZoyov7EUXTHKF2fYy8-wW+w@mail.gmail.com>
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+Content-Language: en-US
+In-Reply-To: <CANn89iJNq2VC55c-DcA6YC-2EHYZoyov7EUXTHKF2fYy8-wW+w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: DU6P191CA0037.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:10:53f::16) To DS0PR11MB8718.namprd11.prod.outlook.com
+ (2603:10b6:8:1b9::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-usb@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>, 
- linux-kernel@vger.kernel.org, Wesley Cheng <quic_wcheng@quicinc.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Vijayavardhan Vennapusa <quic_vvreddy@quicinc.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Jack Pham <quic_jackp@quicinc.com>, Conor Dooley <conor+dt@kernel.org>, 
- Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kernel@oss.qualcomm.com
-To: Akash Kumar <quic_akakum@quicinc.com>
-In-Reply-To: <20250206111543.17392-1-quic_akakum@quicinc.com>
-References: <20250206111543.17392-1-quic_akakum@quicinc.com>
-Message-Id: <173894150695.330871.12666874941049117797.robh@kernel.org>
-Subject: Re: [PATCH 00/18] Reserve high bandwidth for HS isoc eps
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|SA1PR11MB8489:EE_
+X-MS-Office365-Filtering-Correlation-Id: 428d16df-12f1-43b0-d8b8-08dd478b21fa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?OEZheFRWaHBqTFpQRmZYU1JzYTJ3VmFsSGVIMGtvcStKMXlDUDQzZ2Zmd2RU?=
+ =?utf-8?B?dHpFRTBNUjU5YXpwR001TkhMVnhPaWUybzVTZkV4VU1nbjJNcWZSSVBialBr?=
+ =?utf-8?B?MStRRGduUVM5RExlK1ZmK0ovb1VqczRSTmJiTlJsUDJ5b284bXRxWXRFcDRy?=
+ =?utf-8?B?ZFhLVGJJbGJUY2FyRGVLOE5WcjFFMDYyQmY5d0xBRkt2QlVZZERya0pHU0dr?=
+ =?utf-8?B?azVaYkx6dldRQlNLMWF5Umg2Zy9QUFkvMzlPTFJIN2F5cVBMN1BKWUxQbGo4?=
+ =?utf-8?B?ZjNNL2NrK1c3SVEwd1ZpWlhsRktCcGZlWjBFcGJMeS92Q3R1THNaNHJFM01C?=
+ =?utf-8?B?OWlFMDR6QWNUeXI2UkNLSWlPQ2tpN3k4bzZYYWh1a1JkbFlsOUUvdXE1NFor?=
+ =?utf-8?B?RDl5U3JhK3RTRXVhemZiajBnTmRVekE2ZjZJelAxKzhNRjlIb0dPVXRFOGtW?=
+ =?utf-8?B?S1c1NHFDWEs5RS9qalZ3Wmt0QzB5dkRMREN0TjZNeHJIcGRuaFZrNXBCK1Bn?=
+ =?utf-8?B?K0p3NG9MOW85NkFtYURCWlA1V2ZGT1JDMTNVUDlUTWNvQW9WSzc4Vm5CR29k?=
+ =?utf-8?B?L1RhTFd4NGdybE9KY0FMOXNnY29PSUdRWmpUUmdxb09JdTFUNm9nYWFUdzNE?=
+ =?utf-8?B?eWdnbkZ5RXR4ZDB4Tk5TKzFLc2toSmpaYUFtSmxDOWpZTzd3bzJXelpZNDBV?=
+ =?utf-8?B?VGJ0RW5pSFZQSlJpY3BDVG8ybk1vTkJqNXZMZldtOGxIQWdoaFhlekRsbFZ6?=
+ =?utf-8?B?RDQveVZwR0dSalA4NmNlQVowYUNMaDZ6N05MVFVIc0ZxNGFqV1BlNFo3SDY2?=
+ =?utf-8?B?N0tlVXM3bmQ3OWwwUkNHOFVNVllNR2F1ektZelA3aSs5WHlRRVpKWlVyN1Z6?=
+ =?utf-8?B?OG9QUHoycDdvQkUvYkd6K3EvWE9YMWkzWW9GYWFZaTNoZkRtYXlMWDdiQ29o?=
+ =?utf-8?B?cC9OWjdrZmlEa0F1MXZBOU5Jb1ZBLzlXcXp4SUhEb1JKUGo1T0xNbWsvNi94?=
+ =?utf-8?B?RDArbXhrck4xUUFWMjBGQ080VldFMk1KWUNuR2lhUS9sUmVuc09yaGJpUFNk?=
+ =?utf-8?B?T1diTW1qbzJFVE1ST3ppaVZNcys2b3ZvSHk0c1V2SjZHWTNWUGxZQ3RhV04w?=
+ =?utf-8?B?cVRDMktmekcxVUF3dTdwOUp0bHgvMUpjcjZBajBCOFcrSERmaVFWVVNGdGNW?=
+ =?utf-8?B?cWpoUk9OenpLaFpZbHdQMExvUTBnZGRsYVBTR01OWEZHT21SUkp6aXhQV2Vs?=
+ =?utf-8?B?UDEzMWhEV2xKcnJGZVY5aGlGSGZwOU1mWGxPanprZDYrRWdpamhULzVvNE5O?=
+ =?utf-8?B?YWVjbDJZd3F1WlVRKzJaSkVwQzFKS3pMOFhxclJrRjhJdjJ5cE51K09tdVRU?=
+ =?utf-8?B?OUplZjRZKys2KzhaY0tQQk1MSTZLRUE1ZmhFSDZtY3kxZjFGbEo2cWM5bloz?=
+ =?utf-8?B?UlF1WEx3UHRwZXdqbE1lUzBoUWFGYWI4bEtpN0h3T3RWOHdvY1NnMUhWNUEw?=
+ =?utf-8?B?L0NobjRCekJkcWpPNEVhWXJYK0xvN0FiQXFRME5TdG81Y09Ob3kyd2EyK1ZE?=
+ =?utf-8?B?VkJXOGNBQVJIWmJXbGhNL052aGovVHhRU204S0FUdFlTSnh5dGN4MC9DLzkz?=
+ =?utf-8?B?aTBkMW1CZ1VoRXQ0MktINVJGMEdHU3F6NFVBZTVLVUFGNG1sZ2JWWlVaUXB4?=
+ =?utf-8?B?TmVGMWNGR2tVZkUzZ3dLbFM5WHFpcXFOd0laSEZsVE0xUnBkL0FaUnMxdnFn?=
+ =?utf-8?B?cGx3cENLRmNaN0swdjU0Q25uN2pxcDFudFljMWhFQ1RXQnNLSXFFTUt2eHJv?=
+ =?utf-8?B?Q0xpam5SZ0JZUGFhT3pHZy9RK2NucDZSZTdwUHVPSXhneTRjQ2RGR1Z1WXJZ?=
+ =?utf-8?Q?74xtXzJMdz1tS?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ajlBZVdseXUzTEVHYWpwUHptQ3FaWC9LMlFrMmRMcjhCUmNWNkEvLzJLZGN5?=
+ =?utf-8?B?TUFVMXZKTEFVbFRybnhWTmZNYk8wNGpoanQxdDIzNDJOZGoyVG9WbG5ZbXAz?=
+ =?utf-8?B?SENianh2aDA3eDZFV2trN0pyWWFyTXZXZjdpOTY1M0VvZExkWGVRVUE5djVE?=
+ =?utf-8?B?RldIbk55cEJ4RlFGYkR1SHJrSVZDb0x6TjNvN0p2Q29DYmZ0cGVINElobW1T?=
+ =?utf-8?B?bkdjTHZZZjdYTGl0WUhWK1R0K0xESHg1Q0xwWFNpOFlOWEZvcmJWRmU3SUcy?=
+ =?utf-8?B?MHdLc1hiZFYvaCtzcmovMmRLMmlaMUJXakhwOUREWjhsRHZxaGFoSC9oRm1U?=
+ =?utf-8?B?WEQ1R2ZKa3NJMTZVOEp2SzY2b3RMcnFPSjNjVXVSc2ZxbVhxdHEzbWQ2ZVpH?=
+ =?utf-8?B?YlZmbnQ1L2EwL2lvS2tnZU9Ud25CeWVneVlyVG83UEgyM3hpNmFPQTRndVNt?=
+ =?utf-8?B?YlpUZ3JtLys3V2V1QU9GSGlZakxpOUVHN3JyVytZbEtBbGNraXJJOEJWNnRU?=
+ =?utf-8?B?bDlyMEIxdXcvTTZlaFFkZmExS3lRcXE1am1hTlhOWkRwUXI0ZVlJNlBPYVhr?=
+ =?utf-8?B?MGQrWDN6RDZQbWFjNXJzMEZzUmM0YWtnR3NlVytuMFBScXBvR2FyRSsrampB?=
+ =?utf-8?B?UmxDQ3VmbDdSa2RXT2t0Z05hcnUvME13WlBrdHlkTWlOWHJ0OStwTjRBdDBF?=
+ =?utf-8?B?N20rdjdyVFM0R1B0bzZSQkZ4b1ZPL0dIMjJaN29TcE5OSlU2SmNLMWlXOGtB?=
+ =?utf-8?B?ZVF4eWpkSldQZGRJdFBwTUxWZEF5Zm5yR1FDOEVaQTdUMGNiWWNxUkx3blZ5?=
+ =?utf-8?B?UzRRV0IvOEx5VzIvdkk1U2VGQXFWOGc1UFY5RExEeEg2LzRBY0lYT0YwSHow?=
+ =?utf-8?B?OVhhaWxIRG1CRVlsNkZtUkl3MWVodXhEV1lTbWZQY3BuOUgvbk91VHJ1WXJI?=
+ =?utf-8?B?dGZhODIyczJiQkhCZ01HZnNTTTd1ZXhaelozNk5jeVdvM1ZVWWpLQmk4UGNo?=
+ =?utf-8?B?TS92TC93QllNK0orcGlOMzF1WnpXMGtLVXNwQkdhaXZCRlIvSG55Y0srdjdC?=
+ =?utf-8?B?OGxDS2czbGZqZDZBb1htVDk2K0ZQNmFoU3ZLRkp0QzErOEhFVUIyWjFJTmh4?=
+ =?utf-8?B?a1ZnYi9rL2c1eUpIQ1plU0JZRHJCRWk3UERyb3VYVXdhdVRxQkpLMThKOVdB?=
+ =?utf-8?B?TnBlT2dwbDNIdlpUSzBXQ1F0SmtaR2tYYmJ6MWdRYW5XR2Y1d3BXeStTdTdN?=
+ =?utf-8?B?UHFDZjZPaDMwc3BNRG9DSUN6OXVhanE5SlIrQm9WWS9zcHFaMGZ6SXVoRXFz?=
+ =?utf-8?B?REpuSHpza3BQc1ZPL0IyUGMrdUpsN3hLOWJyMFBZUkdPQVZ6RDVsa2RnRDI2?=
+ =?utf-8?B?NWdtLzBTaEVBV0VZcDkrVHNrcHhMSmRmcS92UTZ1KytWbVVNR09acGhadnl3?=
+ =?utf-8?B?WnhjY0pwOGNydlZnUlREMHYzZEJJTEhHR3dLZnpwZ1lOVkVSaDkwd2NxcTB2?=
+ =?utf-8?B?V3BDbnNFSXRkNWFDWDZiZkxpcmZIQWNIMnBxM0x4UGRieElXM1Y2NGlGUG1y?=
+ =?utf-8?B?aWJWNU1QaTFrZ1drRUtkUTBXZ0Y4R0hUZUw4Y2FncHE5R2IybHlkSlQrbG44?=
+ =?utf-8?B?Mkx6TE1FdWdWMUtSZGZHZSt1MEkvY1orRjl1RU1VYXpsUjZ3aGIwRi9VeUdD?=
+ =?utf-8?B?c3R1N09PazRNVXlpREdabnAzalBMRzFHcHNHQnN1RGJGVWgrYzcwMExsTUR5?=
+ =?utf-8?B?emJDdXFTZW96OUdxdnA4Sm9OMlA2WkN6bFd6dTdWekh4TWxkblpnTWpyYU05?=
+ =?utf-8?B?T1lRY3cvejBRM21KemFyeEtsK1pzU0Y5dWRnZWdkVDBMZk1hdzkzdTN5MVdR?=
+ =?utf-8?B?NEhERHM5TStBZTVTZ2tUSnp5anc3YXN4WkE2cFEvcUFLK3BUYmtxbTd2aEZD?=
+ =?utf-8?B?SkxscDBOdms0b25PTzFmYk1UYmJCS1ZVeTVkR3dYTFV2OFZOeFdzZEEvRC9X?=
+ =?utf-8?B?ams0VE5jTWF1enlJbGppWWJ5RVM2R1VWeEkxTURsTUs1aXpWVEJuREl1amll?=
+ =?utf-8?B?K3VTNW9ycUZqUng5UmZJaEhGUk5mcjc0Ull5eDhWbnBZNnFnbTkxMWduV2pL?=
+ =?utf-8?B?dVRON0dzUzBLZ3J5eXJwdVM5L0JPWlFuK28wZHdPZStUenBZYS9Eb01GeDE3?=
+ =?utf-8?B?eXc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 428d16df-12f1-43b0-d8b8-08dd478b21fa
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 15:21:45.5745
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hG7ZIgyFNDNQw+m9SbWNtFahebNy4br9hyhNHgTHC6YIpxESjc4eSKQmy885YL0kxUvLY8P0sd+e4CmXJdzs9bfbQMI4Di8JHfyiBQinENw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8489
+X-OriginatorOrg: intel.com
 
+From: Eric Dumazet <edumazet@google.com>
+Date: Fri, 7 Feb 2025 15:55:35 +0100
 
-On Thu, 06 Feb 2025 16:45:25 +0530, Akash Kumar wrote:
-> It is observed while testing multiple audio devices over usb, a glitch is
-> observed during testing. As per dwc datasheet,By default, HC reserves 80%
-> of the bandwidth for periodic EPs which can be increased if needed.
+> On Fri, Feb 7, 2025 at 1:00 PM Alexander Lobakin
+> <aleksander.lobakin@intel.com> wrote:
+>>
+>> From: Eric Dumazet <edumazet@google.com>
+>> Date: Thu, 6 Feb 2025 19:35:50 +0100
+>>
+>>> On Thu, Feb 6, 2025 at 1:15 PM Alexander Lobakin
+>>> <aleksander.lobakin@intel.com> wrote:
+>>>>
+>>>> From: Eric Dumazet <edumazet@google.com>
+>>>> Date: Wed, 5 Feb 2025 18:48:50 +0100
+>>>>
+>>>>> On Wed, Feb 5, 2025 at 5:46 PM Alexander Lobakin
+>>>>> <aleksander.lobakin@intel.com> wrote:
+>>>>>>
+>>>>>> In fact, these two are not tied closely to each other. The only
+>>>>>> requirements to GRO are to use it in the BH context and have some
+>>>>>> sane limits on the packet batches, e.g. NAPI has a limit of its
+>>>>>> budget (64/8/etc.).
+>>>>>> Move purely GRO fields into a new tagged group, &gro_node. Embed it
+>>>>>> into &napi_struct and adjust all the references. napi_id doesn't
+>>>>>> really belong to GRO, but:
+>>>>>>
+>>>>>> 1. struct gro_node has a 4-byte padding at the end anyway. If you
+>>>>>>    leave napi_id outside, struct napi_struct takes additional 8 bytes
+>>>>>>    (u32 napi_id + another 4-byte padding).
+>>>>>> 2. gro_receive_skb() uses it to mark skbs. We don't want to split it
+>>>>>>    into two functions or add an `if`, as this would be less efficient,
+>>>>>>    but we need it to be NAPI-independent. The current approach doesn't
+>>>>>>    change anything for NAPI-backed GROs; for standalone ones (which
+>>>>>>    are less important currently), the embedded napi_id will be just
+>>>>>>    zero => no-op.
+>>>>>>
+>>>>>> Three Ethernet drivers use napi_gro_flush() not really meant to be
+>>>>>> exported, so move it to <net/gro.h> and add that include there.
+>>>>>> napi_gro_receive() is used in more than 100 drivers, keep it
+>>>>>> in <linux/netdevice.h>.
+>>>>>> This does not make GRO ready to use outside of the NAPI context
+>>>>>> yet.
+>>>>>>
+>>>>>> Tested-by: Daniel Xu <dxu@dxuuu.xyz>
+>>>>>> Acked-by: Jakub Kicinski <kuba@kernel.org>
+>>>>>> Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
+>>>>>> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+>>>>>> ---
+>>>>>>  include/linux/netdevice.h                  | 26 +++++---
+>>>>>>  include/net/busy_poll.h                    | 11 +++-
+>>>>>>  include/net/gro.h                          | 35 +++++++----
+>>>>>>  drivers/net/ethernet/brocade/bna/bnad.c    |  1 +
+>>>>>>  drivers/net/ethernet/cortina/gemini.c      |  1 +
+>>>>>>  drivers/net/wwan/t7xx/t7xx_hif_dpmaif_rx.c |  1 +
+>>>>>>  net/core/dev.c                             | 60 ++++++++-----------
+>>>>>>  net/core/gro.c                             | 69 +++++++++++-----------
+>>>>>>  8 files changed, 112 insertions(+), 92 deletions(-)
+>>>>>>
+>>>>>> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+>>>>>> index 2a59034a5fa2..d29b6ebde73f 100644
+>>>>>> --- a/include/linux/netdevice.h
+>>>>>> +++ b/include/linux/netdevice.h
+>>>>>> @@ -340,8 +340,8 @@ struct gro_list {
+>>>>>>  };
+>>>>>>
+>>>>>>  /*
+>>>>>> - * size of gro hash buckets, must less than bit number of
+>>>>>> - * napi_struct::gro_bitmask
+>>>>>> + * size of gro hash buckets, must be <= the number of bits in
+>>>>>> + * gro_node::bitmask
+>>>>>>   */
+>>>>>>  #define GRO_HASH_BUCKETS       8
+>>>>>>
+>>>>>> @@ -370,7 +370,6 @@ struct napi_struct {
+>>>>>>         unsigned long           state;
+>>>>>>         int                     weight;
+>>>>>>         u32                     defer_hard_irqs_count;
+>>>>>> -       unsigned long           gro_bitmask;
+>>>>>>         int                     (*poll)(struct napi_struct *, int);
+>>>>>>  #ifdef CONFIG_NETPOLL
+>>>>>>         /* CPU actively polling if netpoll is configured */
+>>>>>> @@ -379,11 +378,14 @@ struct napi_struct {
+>>>>>>         /* CPU on which NAPI has been scheduled for processing */
+>>>>>>         int                     list_owner;
+>>>>>>         struct net_device       *dev;
+>>>>>> -       struct gro_list         gro_hash[GRO_HASH_BUCKETS];
+>>>>>>         struct sk_buff          *skb;
+>>>>>> -       struct list_head        rx_list; /* Pending GRO_NORMAL skbs */
+>>>>>> -       int                     rx_count; /* length of rx_list */
+>>>>>> -       unsigned int            napi_id; /* protected by netdev_lock */
+>>>>>> +       struct_group_tagged(gro_node, gro,
+>>>>>> +               unsigned long           bitmask;
+>>>>>> +               struct gro_list         hash[GRO_HASH_BUCKETS];
+>>>>>> +               struct list_head        rx_list; /* Pending GRO_NORMAL skbs */
+>>>>>> +               int                     rx_count; /* length of rx_list */
+>>>>>> +               u32                     napi_id; /* protected by netdev_lock */
+>>>>>> +
+>>>>>
+>>>>> I am old school, I would prefer a proper/standalone old C construct.
+>>>>>
+>>>>> struct gro_node  {
+>>>>>                 unsigned long           bitmask;
+>>>>>                struct gro_list         hash[GRO_HASH_BUCKETS];
+>>>>>                struct list_head        rx_list; /* Pending GRO_NORMAL skbs */
+>>>>>                int                     rx_count; /* length of rx_list */
+>>>>>                u32                     napi_id; /* protected by netdev_lock */
+>>>>> };
+>>>>>
+>>>>> Really, what struct_group_tagged() can possibly bring here, other than
+>>>>> obfuscation ?
+>>>>
+>>>> You'd need to adjust every ->napi_id access, which is a lot.
+>>>> Plus, as I wrote previously, napi_id doesn't really belong here, but
+>>>> embedding it here eases life.
+>>>>
+>>>> I'm often an old school, too, but sometimes this helps a lot.
+>>>> Unless you have very strong preference on this.
+>>>>
+>>>
+>>> Is struct_group_tagged even supported by ctags ?
+>>>
+>>> In terms of maintenance, I am sorry to say this looks bad to me.
+>>>
+>>> Even without ctags, I find git grep -n "struct xxxx {" quite good.
+>>
+>> compile_commands.json (already supported natively by Kbuild) + clangd is
+>> not enough?
+>>
+>> Elixir correctly tags struct_group()s.
+>>
+>> napi->napi_id is used in a lot of core files and drivers, adjusting all
+>> the references is not what I wanted to do in the series which does
+>> completely different things.
 > 
-> Add quirk to set GUCTL register BIT 16 to accommodate higher bandwidth for
-> 2 isoc eps.
+> Leave napi_id in struct napi, it has nothing to do with gro.
+
+Do you read commit messages or reply just to reply?
+Have you read previous revisions' threads (links are in the cover
+letter, as always)?
+I recommend doing that, and then proposing a solution that will be as
+optimized as this one in terms of both performance and napi_struct layout.
+
 > 
-> If this bit is set, the bandwidth is relaxed to 85% to accommodate two high
-> speed, high bandwidth ISOC EPs. USB 2.0 required 80% bandwidth allocated
-> for ISOC traffic. If two High-bandwidth ISOC devices (HD Webcams) are
-> connected, and if each requires 1024-bytes X 3 packets per Micro-Frame,
-> then the bandwidth required is around 82%. If this bit is set, then it is
-> possible to connect two Webcams of 1024bytes X 3 paylod per Micro-Frame
-> each. Alternatively, you might need to lower the resolution of the
-> webcams. This bit is valid in Host and DRD configuration and is used in
-> host mode operation only.
+>>
+>> Page Pool uses tagged struct groups, as well a ton of other different
+>> files. Do you want to revert all this and adjust a couple thousand
+>> references only due to ctags and grep?
+>>
+>> (instead of just clicking on the references generated by clangd)
 > 
-> Set this bit for host mode uvc uac usecases where two isoc eps are used
-> and uvc flickers or audio glitch is observed.
-> 
-> Akash Kumar (18):
->   usb: dwc3: Reserve Higher Bandwidth for HS Periodic EPs
->   arm64: dts: qcom: sa8775p: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: sm8350: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: sm8450: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: sm8150: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: sm6125: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: sm8250: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: sm6350: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: sc7280: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: sdm630: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: sdm845: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: sdx75: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: qcs404: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: sc7180: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: x1e80100: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: sc8280xp: Enable high bandwidth for hs isoc eps
->   arm64: dts: qcom: sc8180x: Enable high bandwidth for hs isoc eps
-> 
->  arch/arm64/boot/dts/qcom/qcs404.dtsi   |  2 ++
->  arch/arm64/boot/dts/qcom/qdu1000.dtsi  |  1 +
->  arch/arm64/boot/dts/qcom/sa8775p.dtsi  |  3 +++
->  arch/arm64/boot/dts/qcom/sc7180.dtsi   |  1 +
->  arch/arm64/boot/dts/qcom/sc7280.dtsi   |  2 ++
->  arch/arm64/boot/dts/qcom/sc8180x.dtsi  |  3 +++
->  arch/arm64/boot/dts/qcom/sc8280xp.dtsi |  3 +++
->  arch/arm64/boot/dts/qcom/sdm630.dtsi   |  2 ++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi   |  2 ++
->  arch/arm64/boot/dts/qcom/sdx75.dtsi    |  1 +
->  arch/arm64/boot/dts/qcom/sm6125.dtsi   |  1 +
->  arch/arm64/boot/dts/qcom/sm6350.dtsi   |  1 +
->  arch/arm64/boot/dts/qcom/sm8150.dtsi   |  2 ++
->  arch/arm64/boot/dts/qcom/sm8250.dtsi   |  2 ++
->  arch/arm64/boot/dts/qcom/sm8350.dtsi   |  2 ++
->  arch/arm64/boot/dts/qcom/sm8450.dtsi   |  1 +
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi |  5 +++++
->  drivers/usb/dwc3/core.c                | 11 +++++++++++
->  drivers/usb/dwc3/core.h                |  4 ++++
->  19 files changed, 49 insertions(+)
-> 
-> --
-> 2.17.1
-> 
-> 
-> 
+> I obviously can not catch all netdev traffic.
 
+I didn't say you should. But I'm 100% sure it's not the first time you
+see struct_group() usage, so why complain only now? Esp. given that the
+whole series is reviewed in v1/v2/v3 and there were discussions
+regarding all those things you mentioned and I explained everything in
+details both there and in the commitmsgs / cover letters?
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250206111543.17392-1-quic_akakum@quicinc.com:
-
-arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm7125-xiaomi-curtana.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm7125-xiaomi-curtana.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm7125-xiaomi-curtana.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-r4.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-r4.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-r4.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm7325-nothing-spacewar.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm7325-nothing-spacewar.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm7325-nothing-spacewar.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-crd-pro.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-crd-pro.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-crd-pro.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel360-wifi.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel360-wifi.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel360-wifi.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-quackingstick-r0.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-quackingstick-r0.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-quackingstick-r0.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz-r1-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz-r1-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz-r1-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r3.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r3.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r3.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r3.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-lg-judyp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-lg-judyp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-lg-judyp.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dtb: usb@a0f8800: usb@a000000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dtb: usb@a0f8800: usb@a000000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dtb: usb@a000000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qrb5165-rb5.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qrb5165-rb5.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qrb5165-rb5.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qrb5165-rb5.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qrb5165-rb5.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qrb5165-rb5.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-wormdingler-rev1-inx.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-wormdingler-rev1-inx.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-wormdingler-rev1-inx.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-oneplus-fajita.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-oneplus-fajita.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-oneplus-fajita.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-discovery.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm660-xiaomi-lavender.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm660-xiaomi-lavender.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm660-xiaomi-lavender.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-nots-r4.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-nots-r4.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-nots-r4.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz-r1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz-r1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz-r1.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-microsoft-arcata.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-microsoft-arcata.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-microsoft-arcata.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-microsoft-arcata.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-microsoft-arcata.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-microsoft-arcata.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-microsoft-surface-duo2.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-microsoft-surface-duo2.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-microsoft-surface-duo2.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-microsoft-surface-duo2.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-microsoft-surface-duo2.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-microsoft-surface-duo2.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs404-evb-4000.dtb: usb@7678800: usb@7580000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs404-evb-4000.dtb: usb@7678800: usb@7580000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs404-evb-4000.dtb: usb@7580000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs404-evb-4000.dtb: usb@79b8800: usb@78c0000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs404-evb-4000.dtb: usb@79b8800: usb@78c0000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs404-evb-4000.dtb: usb@78c0000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-xiaomi-elish-csot.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-xiaomi-elish-csot.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-xiaomi-elish-csot.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-sony-xperia-tama-akari.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-sony-xperia-tama-akari.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-sony-xperia-tama-akari.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-mtp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-mtp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-mtp.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-mtp.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-mtp.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-mtp.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-xiaomi-elish-boe.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-xiaomi-elish-boe.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-xiaomi-elish-boe.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcm6490-idp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcm6490-idp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcm6490-idp.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride.dtb: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-nots-r9.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-nots-r9.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-nots-r9.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-sony-xperia-kumano-griffin.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-sony-xperia-kumano-griffin.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-sony-xperia-kumano-griffin.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e001de-devkit.dtb: usb@a0f8800: usb@a000000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e001de-devkit.dtb: usb@a0f8800: usb@a000000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e001de-devkit.dtb: usb@a000000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-crd.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-crd.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-crd.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e001de-devkit.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e001de-devkit.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e001de-devkit.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e001de-devkit.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e001de-devkit.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e001de-devkit.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dtb: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-lg-judyln.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-lg-judyln.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-lg-judyln.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-kb.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-kb.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3-kb.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-idp.dtb: usb@8cf8800: usb@8c00000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-idp.dtb: usb@8cf8800: usb@8c00000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-idp.dtb: usb@8c00000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-oneplus-enchilada.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-oneplus-enchilada.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-oneplus-enchilada.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-idp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-idp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-idp.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-evoker-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-evoker-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-evoker-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-xiaomi-pipa.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-xiaomi-pipa.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-xiaomi-pipa.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-mtp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-mtp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-mtp.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-idp2.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-idp2.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-idp2.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-homestar-r4.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-homestar-r4.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-homestar-r4.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-sony-xperia-tama-apollo.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-sony-xperia-tama-apollo.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-sony-xperia-tama-apollo.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-pioneer.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-r1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-r1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-r1.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdx75-idp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdx75-idp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdx75-idp.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-kingoftown.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-kingoftown.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-kingoftown.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-evoker.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-evoker.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-evoker.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-sony-xperia-sagami-pdx215.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-sony-xperia-sagami-pdx215.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-sony-xperia-sagami-pdx215.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r2-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r2-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r2-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs9100-ride-r3.dtb: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-mtp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-mtp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-mtp.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-mtp.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-mtp.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-mtp.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dtb: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel360-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel360-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel360-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-r9.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-r9.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-r9.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r3.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm630-sony-xperia-nile-voyager.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-shift-axolotl.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-shift-axolotl.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-shift-axolotl.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-herobrine-r1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-herobrine-r1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-herobrine-r1.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-hdk.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-hdk.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-hdk.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-hdk.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-hdk.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-hdk.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo-pdx203.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo-pdx203.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo-pdx203.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo-pdx206.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo-pdx206.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo-pdx206.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm7225-fairphone-fp4.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8450-qrd.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8450-qrd.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8450-qrd.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8155p-adp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8155p-adp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8155p-adp.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8155p-adp.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8155p-adp.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8155p-adp.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: usb@a0f8800: usb@a000000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: usb@a0f8800: usb@a000000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: usb@a000000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-qcp.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8450-hdk.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8450-hdk.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8450-hdk.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-kb.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-kb.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-kb.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie-nvme-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie-nvme-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie-nvme-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-homestar-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-homestar-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-homestar-r3.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-microsoft-surface-duo.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-microsoft-surface-duo.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-microsoft-surface-duo.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtb: usb@a2f8800: usb@a200000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtb: usb@a2f8800: usb@a200000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtb: usb@a200000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtb: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-idp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-idp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-idp.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-hdk.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-hdk.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-hdk.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-hdk.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-hdk.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-hdk.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-primus.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-primus.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-primus.dtb: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-primus.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-primus.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-primus.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-primus.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-primus.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8180x-primus.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qru1000-idp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qru1000-idp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qru1000-idp.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-r10.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-r10.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-r10.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie-nvme.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie-nvme.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-zombie-nvme.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus15.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus15.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus15.dtb: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus15.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus15.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus15.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus15.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus15.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus15.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-wormdingler-rev1-boe-rt5682s.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-wormdingler-rev1-boe-rt5682s.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-wormdingler-rev1-boe-rt5682s.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-kb.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-kb.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-kb.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel-parade.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel-parade.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel-parade.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-wormdingler-rev1-boe.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-wormdingler-rev1-boe.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-wormdingler-rev1-boe.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz-r3-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz-r3-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz-r3-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8775p-ride-r3.dtb: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel-ti.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel-ti.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel-ti.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcm6490-shift-otter.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcm6490-shift-otter.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcm6490-shift-otter.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-villager-r1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-villager-r1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-villager-r1.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dtb: usb@4ef8800: usb@4e00000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dtb: usb@4ef8800: usb@4e00000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dtb: usb@4e00000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r1-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r1-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r1-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-crd-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-crd-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-crd-r3.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-coachz-r3.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-sony-xperia-tama-akatsuki.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-sony-xperia-tama-akatsuki.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-sony-xperia-tama-akatsuki.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-r1-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-r1-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-r1-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-crd.dtb: usb@a0f8800: usb@a000000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-crd.dtb: usb@a0f8800: usb@a000000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-crd.dtb: usb@a000000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-crd.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-crd.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-crd.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-crd.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-crd.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-crd.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r9-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8295p-adp.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8295p-adp.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8295p-adp.dtb: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8295p-adp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8295p-adp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8295p-adp.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8295p-adp.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8295p-adp.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8295p-adp.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel-lte-ti.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel-lte-ti.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel-lte-ti.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r3.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-ebbg.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-ebbg.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-ebbg.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus13.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus13.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus13.dtb: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus13.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus13.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus13.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus13.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus13.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/x1e80100-microsoft-romulus13.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dtb: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sda660-inforce-ifc6560.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sda660-inforce-ifc6560.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sda660-inforce-ifc6560.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-huawei-gaokun3.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sda660-inforce-ifc6560.dtb: usb@c2f8800: usb@c200000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sda660-inforce-ifc6560.dtb: usb@c2f8800: usb@c200000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sda660-inforce-ifc6560.dtb: usb@c200000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm6350-sony-xperia-lena-pdx213.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm6350-sony-xperia-lena-pdx213.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm6350-sony-xperia-lena-pdx213.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r2.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r2.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r2.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel-lte-parade.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel-lte-parade.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pazquel-lte-parade.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-wormdingler-rev1-inx-rt5682s.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-wormdingler-rev1-inx-rt5682s.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-wormdingler-rev1-inx-rt5682s.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-sony-xperia-kumano-bahamut.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-sony-xperia-kumano-bahamut.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8150-sony-xperia-kumano-bahamut.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-homestar-r2.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-homestar-r2.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-homestar-r2.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-hdk.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-hdk.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-hdk.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-hdk.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-hdk.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8250-hdk.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dtb: usb@a4f8800: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dtb: usb@a400000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-microsoft-blackrock.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-crd.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-crd.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-crd.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-crd.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-crd.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc8280xp-crd.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm850-samsung-w737.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-nots-r5.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-nots-r5.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-nots-r5.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-kb.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-kb.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r10-kb.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r3-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r3-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r3-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-sony-xperia-sagami-pdx214.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-sony-xperia-sagami-pdx214.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-sony-xperia-sagami-pdx214.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qdu1000-idp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qdu1000-idp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qdu1000-idp.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-villager-r1-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-villager-r1-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-villager-r1-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8540p-ride.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8540p-ride.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sa8540p-ride.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-mtp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-mtp.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-mtp.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-mtp.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-mtp.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8350-mtp.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-db845c.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-db845c.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-db845c.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-db845c.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-db845c.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs404-evb-1000.dtb: usb@7678800: usb@7580000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs404-evb-1000.dtb: usb@7678800: usb@7580000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-db845c.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs404-evb-1000.dtb: usb@7580000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs404-evb-1000.dtb: usb@79b8800: usb@78c0000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs404-evb-1000.dtb: usb@79b8800: usb@78c0000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/qcs404-evb-1000.dtb: usb@78c0000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-pompom-r1.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm6125-sony-xperia-seine-pdx201.dtb: usb@4ef8800: usb@4e00000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm6125-sony-xperia-seine-pdx201.dtb: usb@4ef8800: usb@4e00000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm6125-sony-xperia-seine-pdx201.dtb: usb@4e00000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r1.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r1.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r1.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r1.dtb: usb@a8f8800: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-cheza-r1.dtb: usb@a800000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-villager-r0.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-villager-r0.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7280-herobrine-villager-r0.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-xiaomi-polaris.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-xiaomi-polaris.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-xiaomi-polaris.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm7125-xiaomi-joyeuse.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm7125-xiaomi-joyeuse.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm7125-xiaomi-joyeuse.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-tianma.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-tianma.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-tianma.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-nots-r10.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-nots-r10.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-limozeen-nots-r10.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8450-sony-xperia-nagara-pdx224.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8450-sony-xperia-nagara-pdx224.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8450-sony-xperia-nagara-pdx224.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8450-sony-xperia-nagara-pdx223.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8450-sony-xperia-nagara-pdx223.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sm8450-sony-xperia-nagara-pdx223.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-quackingstick-r0-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-quackingstick-r0-lte.dtb: usb@a6f8800: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
-arch/arm64/boot/dts/qcom/sc7180-trogdor-quackingstick-r0-lte.dtb: usb@a600000: Unevaluated properties are not allowed ('snps,dwc3_guctl_resbwhseps_quirk' was unexpected)
-	from schema $id: http://devicetree.org/schemas/usb/snps,dwc3.yaml#
-
-
-
-
-
+Thanks,
+Olek
