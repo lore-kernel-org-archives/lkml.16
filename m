@@ -1,124 +1,135 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5604E1D6182
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7561192D77;
+	Fri,  7 Feb 2025 09:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738919701; cv=none; b=uaRaor9krrkB7vtf0JP6e/KPkPu2Z4I5gP6Y3RKrbg81ASXKn+1QV2jzGPGq0cPANBXVZCnJDxxnrharY0lOCUPyAKOzXpIqgEaeBbPUu/0vwYmkyKtOGUEbJM+CZ5DFujeFmuRanEpKX6IEQKqo+MyLbrOpXEOedCgRjr+M9aU=
+	t=1738919710; cv=none; b=HdMBFpWA9wN3C0M5/lPP5MONUssyZqTQD9C7My/zL50DkNuDke+65Q1ARkryFvnpsalQah5E+TpSGgGmeWDun1lVhCf7DPmKszjwel3ckhBRi40vFwnpPaoG1flzb0f47RV85FCEsIOqE/NRDRlnHZMLozdN+G1SuUA7GIwrsFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738919701; c=relaxed/simple;
-	bh=BXKRTbd2uzqXbRAcMyCShqiujkULwYhVPrFqKzf2ceo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EMjHjXr2vYNhBo0SRf+GcD+yLczH7GVHwrgCMizkB1RGQnKGds/344U+9xg5biqr1f49WA1y38YKmWzxhB8xTMLL6Fmsy9oqS9HJZWNSzu24dZGhO1lIGe4aHf4PA1bGLZMp2OQJODIOChqyRQEDwo3nxKQsUSMyIrC1rwAlVWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E2DB1063;
-	Fri,  7 Feb 2025 01:15:21 -0800 (PST)
-Received: from [192.168.178.38] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F094B3F5A1;
-	Fri,  7 Feb 2025 01:14:55 -0800 (PST)
-Message-ID: <4a9cc5ab-c538-4427-8a7c-99cb317a283f@arm.com>
-Date: Fri, 7 Feb 2025 10:14:54 +0100
+	s=arc-20240116; t=1738919710; c=relaxed/simple;
+	bh=9AqNrbdvIP8oserBpCnBqRLo4RX/LKTDbq+VMX0h7GI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oShdIFUo9a1FqX/Dh7Z0JGVANldMIvi91FTEqNH8vGWb/jgHGe/WjPozq0colaT3c4dzdCqeGLQpQal9yASSWPdL5CRwl2wEuZn61pho/XwjVZdyaxf+/+f3UcNuwa5D9mAghijWnRvPdUkegV2fDRZZdTfl2Av5jqthIuEf7KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2mkBBXud; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2mkBBXud"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92DA8C4CED1;
+	Fri,  7 Feb 2025 09:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738919709;
+	bh=9AqNrbdvIP8oserBpCnBqRLo4RX/LKTDbq+VMX0h7GI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=2mkBBXudH+DzeMvbZMg1Ayl0THZVRIA7Xbqw7k/3P49FYhgN58Vrebem8tT4/achQ
+	 YOmQVIuK2MrwX8cbQPb+wFVv1X1aY/Lx0fZhxNaEvlLfUAyat7p6/kx4P/1y2ZO2yE
+	 gMj2adknK20ZqgLvKxcwH9Fz/+25ASFbcuMYO0fA=
+Date: Fri, 7 Feb 2025 10:15:05 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+	Mark Brown <broonie@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 1/8] driver core: add a faux bus for use when a simple
+ device/bus is needed
+Message-ID: <2025020742-overprice-december-f68e@gregkh>
+References: <2025020620-skedaddle-olympics-1735@gregkh>
+ <2025020623-chemo-amends-102a@gregkh>
+ <20250206185314-a69d5f40-abd9-4dce-863a-b85e0b4c6c82@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: BUG Report: Fork benchmark drop by 30% on aarch64
-To: Hagar Hemdan <hagarhem@amazon.com>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>
-Cc: wuchi <wuchi.zero@gmail.com>, linux-kernel@vger.kernel.org,
- Mohamed@amazon.com, Abuelfotoh@amazon.com, Hazem <abuehaze@amazon.com>
-References: <20250205151026.13061-1-hagarhem@amazon.com>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Language: en-US
-In-Reply-To: <20250205151026.13061-1-hagarhem@amazon.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250206185314-a69d5f40-abd9-4dce-863a-b85e0b4c6c82@linutronix.de>
 
-Hi Hagar,
+On Thu, Feb 06, 2025 at 07:08:18PM +0100, Thomas Weiﬂschuh wrote:
+> On Thu, Feb 06, 2025 at 06:38:15PM +0100, Greg Kroah-Hartman wrote:
+> > Many drivers abuse the platform driver/bus system as it provides a
+> > simple way to create and bind a device to a driver-specific set of
+> > probe/release functions.  Instead of doing that, and wasting all of the
+> > memory associated with a platform device, here is a "faux" bus that
+> > can be used instead.
+> > 
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+> > Reviewed-by: Lyude Paul <lyude@redhat.com>
+> 
+> Some tiny nitpicks below, but still:
+> 
+> Reviewed-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
 
-On 05/02/2025 16:10, Hagar Hemdan wrote:
-> Hi,
-> 
-> There is about a 30% drop in fork benchmark [1] on aarch64 and a 10%
-> drop on x86_64 using kernel v6.13.1.
-> 
-> Git bisect pointed to commit eff6c8ce8d4d ("sched/core: Reduce cost
-> of sched_move_task when config autogroup") which merged starting
-> v6.4-rc1.
-> 
-> The regression only happens when number of CPUs is equal to number
-> of threads [2] that fork test is creating which means it's only visible
-> under CPU contention.
-> 
-> I used m6g.xlarge AWS EC2 Instance with 4 vCPUs and 16 GiB RAM for ARM64
-> and m6a.xlarge with also 4 vCPUs and 16 GiB RAM for x86_64.
-> 
-> I noticed this regression exists only when autogroup config is enabled.
+Thanks!
 
-So '# CONFIG_SCHED_AUTOGROUP is not set' in .config so we have: 
+> > +#include <linux/err.h>
+> > +#include <linux/init.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/string.h>
+> > +#include <linux/container_of.h>
+> > +#include <linux/device/faux.h>
+> > +#include "base.h"
+> 
+> Weird order.
 
-static inline void sched_autogroup_exit_task(struct task_struct *p) { }
+I don't believe in any specific header file ordering, that's done by
+maintainers for other reasons to see if people are paying attention in
+reviews :)
 
-I.e. doing a 'echo 0 > /proc/sys/kernel/sched_autogroup_enabled' still
-shows this issue?
+> > +	struct device *dev;
+> > +	struct faux_object *faux_obj;
+> > +	struct faux_device *faux_dev;
+> > +	int name_size;
+> > +	int ret;
+> > +
+> > +	name_size = strlen(name);
+> > +	if (name_size > MAX_FAUX_NAME_SIZE)
+> > +		return NULL;
+> > +
+> > +	faux_obj = kzalloc(sizeof(*faux_obj) + name_size + 1, GFP_KERNEL);
+> 
+> The name is not actually stored in the object anymore.
 
-> 
-> Run the fork test with these combinations and autogroup is enabled:
-> 
-> Arch      | commit eff6c8ce8d4d | Fork Result (lps)  |  %Cpu(s)
-> ----------+---------------------+--------------------+------------------
-> aarch64   | without             | 28677.0            |  3.2 us, 96.7 sy
-> aarch64   | with                | 19860.7 (30% drop) |  2.7 us, 79.4 sy
-> x86_64    | without             | 27776.2            |  3.1 us, 96.9 sy
-> x86_64    | with                | 25020.6 (10% drop) |  4.1 us, 93.2 sy
-> ----------+---------------------+--------------------+------------------
+Ick, you are right, I'll go clean that up.
 
-Can you rerun with:
+> > diff --git a/include/linux/device/faux.h b/include/linux/device/faux.h
+> > new file mode 100644
+> > index 000000000000..2c8ae5bd7ae8
+> > --- /dev/null
+> > +++ b/include/linux/device/faux.h
+> > @@ -0,0 +1,31 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +/*
+> > + * Copyright (c) 2025 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > + * Copyright (c) 2025 The Linux Foundation
+> > + *
+> > + * A "simple" faux bus that allows devices to be created and added
+> > + * automatically to it.  This is to be used whenever you need to create a
+> > + * device that is not associated with any "real" system resources, and do
+> > + * not want to have to deal with a bus/driver binding logic.  It is
+> > + * intended to be very simple, with only a create and a destroy function
+> > + * available.
+> > + */
+> > +#ifndef _FAUX_DEVICE_H_
+> > +#define _FAUX_DEVICE_H_
+> > +
+> 
+> #include <linux/container_of.h>
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 3e5a6bf587f9..62cc50c79a78 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -9057,7 +9057,7 @@ void sched_move_task(struct task_struct *tsk)
-         * group changes.
-         */
-        group = sched_get_task_group(tsk);
--       if (group == tsk->sched_task_group)
-+       if ((group == tsk->sched_task_group) && !(tsk->flags & PF_EXITING))
-                return;
+This is the second time it's come up, I'll fix it up :)
 
-> 
-> It seems that the commit is capping the amount of CPU resources that can
-> be utilized leaving around 18% idle in case of aarch64 and 3% idle in
-> x86_64 case which is likely the main reason behind the reported fork
-> regression.
-> 
-> When autogroup is disabled:
-> 
-> Arch      | commit eff6c8ce8d4d | Fork Result (lps)  |  %Cpu(s)
-> ----------+---------------------+--------------------+------------------
-> aarch64   | without             | 19877.8            |  2.2 us, 80.1 sy  
-> aarch64   | with                | 20086.3 (~same)    |  1.9 us, 80.2 sy
-> x86_64    | without             | 24974.2            |  4.9 us, 92.5 sy 
-> x86_64    | with                | 24921.5 (~same)    |  4.9 us, 92.4 sy
-> ----------+---------------------+--------------------+------------------
-> 
-> So when autogroup disabled, I still see the amount of idle CPU resources 
-> 18%, 3% on aarch64 and x86_64 regardless of commit.
-> 
-> Is this performance drop an expected of this commit when autogroup is
-> enabled?
-> 
-> Thanks,
-> Hagar
-> 
-> [1] https://github.com/kdlucas/byte-unixbench/blob/master/UnixBench
-> [2] Used command: ./Run -c 4 spawn
-> 
+thanks again for the review,
 
+greg k-h
