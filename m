@@ -1,175 +1,104 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9530853A7
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 10:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73D3A1547F8;
+	Fri,  7 Feb 2025 10:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738924716; cv=none; b=QbO5qAHCUkoDjd4Q3t54AFwhmajtQZtka1BqbgOuUJP/YyiuWXzm6xWaJEhIUi5f9WY0dpMzusZttKBtmT9DVb71EM0ykd3XxOtNe/g6pGL0sBgrmCk5bzFgTbgA08gV0sk8cEE47QwOxXM+RBWzJrzGxNb6VBEvoaMX+2u9aXM=
+	t=1738924735; cv=none; b=Mvh1q47BpPEXhWia0OiwOQrfxhH3m/2Rjj84fZ/DJAZNL1d4hST7ecQLCmP4qwIwtVUkIyzZKTwVMtxlVK1oZJE3rcviw9hsOrUJciX4QYpYNddgWpvHEM/03fzzlneiXF/xeJj0dnwIP+6Lnbk81amrJb20lHMcAW7/EDIJXHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738924716; c=relaxed/simple;
-	bh=PhSQW8UFABUO2M4NUj9AWPJEzXSl153SRo8vMX0kyAM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kzGtwN8VSfXSTIuFIlDhC8s3GCib26a22DpfgvHpJRf/oN7aJwy6j4CA37TuwfUvDX3hByI1iXuN2pdrn0nM7BvnAGoJPSvua0efWEBGdE9bhtJ4okTpFLU/qc9CJgCksvAPTWIwNLWZY6jgThiuLT1mGLa7PzkVaFeSOBf9G40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FC44113E;
-	Fri,  7 Feb 2025 02:38:56 -0800 (PST)
-Received: from [10.57.81.111] (unknown [10.57.81.111])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4C1D3F63F;
-	Fri,  7 Feb 2025 02:38:30 -0800 (PST)
-Message-ID: <e0400886-d4bc-40f5-8375-fc3d515fd386@arm.com>
-Date: Fri, 7 Feb 2025 10:38:28 +0000
+	s=arc-20240116; t=1738924735; c=relaxed/simple;
+	bh=AjQmVnWtw8F5HofRM0sXBi7i5Mahhq6ucirVF6AS0rg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GSbFBKIurQD8w9or+spIuu4X8+p8gBhY8P49lookIM4G+Sc4ZTW5S6LKxbGbfqTW7ErlV4aA/7RDzfGLm4x/DA69NLMiE2OhA7yVRKLRqrb/UnMk6qpKo1Fm7+7HEsLF6KBTuLBNaNJpiefcGQBBsxfZQ7+ECVj8XxGMeMsI0y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=FjZdW4L/; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="FjZdW4L/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=XeFo3
+	i6QthcUbUcb1/Cr1T2tbBVsvF+gxHzd92ZIAMs=; b=FjZdW4L/fXB1Mn49dAyv7
+	KrpQTWcAbkdfi0rvIPb3cMvW/dEWMMxypso0t7spHhs+EieFOmc9utIIVuVqiO7q
+	F1atWgcx44qSbzeVoNM5NgCIkY5Eo3kSOucTGoHHZZnUF4VSc17LhQMfBGPKQCed
+	mRMV0VDYC3FdeK728whoIM=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wCHBVuI4qVn3ILoKA--.28738S2;
+	Fri, 07 Feb 2025 18:38:02 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org
+Cc: kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	bwawrzyn@cisco.com,
+	cassel@kernel.org,
+	wojciech.jasko-EXT@continental-corporation.com,
+	a-verma1@ti.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rockswang7@gmail.com,
+	Hans Zhang <18255117159@163.com>,
+	"hans . zhang" <hans.zhang@cixtech.com>
+Subject: [v2] PCI: cadence: Fix sending message with data or without data
+Date: Fri,  7 Feb 2025 18:37:57 +0800
+Message-Id: <20250207103757.31958-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 08/16] arm64/mm: Hoist barriers out of ___set_ptes()
- loop
-Content-Language: en-GB
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Muchun Song <muchun.song@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250205151003.88959-1-ryan.roberts@arm.com>
- <20250205151003.88959-9-ryan.roberts@arm.com>
- <858ecac5-9ba7-48da-8f34-ffda28d17609@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <858ecac5-9ba7-48da-8f34-ffda28d17609@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wCHBVuI4qVn3ILoKA--.28738S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJr13Cw1fJw45CF4rtw48tFb_yoW8CF1UpF
+	yUGrySy3WxXrWavan5Z3WDWF13JFn3tF9rJw4v934fuF17u34UGFy2yFyrGFW5GrWvqr17
+	uw1DtF9rGF4fA3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zE4E_JUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwrso2el4eYKdAAAsl
 
-On 07/02/2025 05:35, Anshuman Khandual wrote:
-> 
-> 
-> On 2/5/25 20:39, Ryan Roberts wrote:
->> ___set_ptes() previously called __set_pte() for each PTE in the range,
->> which would conditionally issue a DSB and ISB to make the new PTE value
->> immediately visible to the table walker if the new PTE was valid and for
->> kernel space.
->>
->> We can do better than this; let's hoist those barriers out of the loop
->> so that they are only issued once at the end of the loop. We then reduce
->> the cost by the number of PTEs in the range.
->>
->> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
->> ---
->>  arch/arm64/include/asm/pgtable.h | 14 ++++++++++----
->>  1 file changed, 10 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
->> index 3b55d9a15f05..1d428e9c0e5a 100644
->> --- a/arch/arm64/include/asm/pgtable.h
->> +++ b/arch/arm64/include/asm/pgtable.h
->> @@ -317,10 +317,8 @@ static inline void __set_pte_nosync(pte_t *ptep, pte_t pte)
->>  	WRITE_ONCE(*ptep, pte);
->>  }
->>  
->> -static inline void __set_pte(pte_t *ptep, pte_t pte)
->> +static inline void __set_pte_complete(pte_t pte)
->>  {
->> -	__set_pte_nosync(ptep, pte);
->> -
->>  	/*
->>  	 * Only if the new pte is valid and kernel, otherwise TLB maintenance
->>  	 * or update_mmu_cache() have the necessary barriers.
->> @@ -331,6 +329,12 @@ static inline void __set_pte(pte_t *ptep, pte_t pte)
->>  	}
->>  }
->>  
->> +static inline void __set_pte(pte_t *ptep, pte_t pte)
->> +{
->> +	__set_pte_nosync(ptep, pte);
->> +	__set_pte_complete(pte);
->> +}
->> +
->>  static inline pte_t __ptep_get(pte_t *ptep)
->>  {
->>  	return READ_ONCE(*ptep);
->> @@ -647,12 +651,14 @@ static inline void ___set_ptes(struct mm_struct *mm, pte_t *ptep, pte_t pte,
->>  
->>  	for (;;) {
->>  		__check_safe_pte_update(mm, ptep, pte);
->> -		__set_pte(ptep, pte);
->> +		__set_pte_nosync(ptep, pte);
->>  		if (--nr == 0)
->>  			break;
->>  		ptep++;
->>  		pte = pte_advance_pfn(pte, stride);
->>  	}
->> +
->> +	__set_pte_complete(pte);
-> 
-> Given that the loop now iterates over number of page table entries without corresponding
-> consecutive dsb/isb sync, could there be a situation where something else gets scheduled
-> on the cpu before __set_pte_complete() is called ? Hence leaving the entire page table
-> entries block without desired mapping effect. IOW how __set_pte_complete() is ensured to
-> execute once the loop above completes. Otherwise this change LGTM.
+View from cdns document cdn_pcie_gen4_hpa_axi_ips_ug_v1.04.pdf.
+In section 9.1.7.1 AXI Subordinate to PCIe Address Translation
+Registers below:
 
-I don't think this changes the model. Previously, __set_pte() was called, which
-writes the pte to the pgtable, then issues the barriers. So there is still a
-window where the thread could be unscheduled after the write but before the
-barriers. Yes, my change makese that window bigger, but if it is a bug now, it
-was a bug before.
+axi_s_awaddr bits 16 is 1 for MSG with data and 0 for MSG without data.
 
-Additionally, the spec for set_ptes() is:
+Signed-off-by: hans.zhang <hans.zhang@cixtech.com>
+---
+Changes since v1:
+- Change email number
+---
+ drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 +--
+ drivers/pci/controller/cadence/pcie-cadence.h    | 2 +-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-/**
- * set_ptes - Map consecutive pages to a contiguous range of addresses.
- * @mm: Address space to map the pages into.
- * @addr: Address to map the first page at.
- * @ptep: Page table pointer for the first entry.
- * @pte: Page table entry for the first page.
- * @nr: Number of pages to map.
- *
- * When nr==1, initial state of pte may be present or not present, and new state
- * may be present or not present. When nr>1, initial state of all ptes must be
- * not present, and new state must be present.
- *
- * May be overridden by the architecture, or the architecture can define
- * set_pte() and PFN_PTE_SHIFT.
- *
- * Context: The caller holds the page table lock.  The pages all belong
- * to the same folio.  The PTEs are all in the same PMD.
- */
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+index e0cc4560dfde..0bf4cde34f51 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+@@ -352,8 +352,7 @@ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
+ 	spin_unlock_irqrestore(&ep->lock, flags);
+ 
+ 	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(MSG_ROUTING_LOCAL) |
+-		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code) |
+-		 CDNS_PCIE_MSG_NO_DATA;
++		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code);
+ 	writel(0, ep->irq_cpu_addr + offset);
+ }
+ 
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index f5eeff834ec1..39ee9945c903 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -246,7 +246,7 @@ struct cdns_pcie_rp_ib_bar {
+ #define CDNS_PCIE_NORMAL_MSG_CODE_MASK		GENMASK(15, 8)
+ #define CDNS_PCIE_NORMAL_MSG_CODE(code) \
+ 	(((code) << 8) & CDNS_PCIE_NORMAL_MSG_CODE_MASK)
+-#define CDNS_PCIE_MSG_NO_DATA			BIT(16)
++#define CDNS_PCIE_MSG_DATA			BIT(16)
+ 
+ struct cdns_pcie;
+ 
 
-Note that the caller is required to hold the page table lock. That's a spin lock
-so should be non-preemptible at this point (perhaps not for RT?)
-
-Although actually, vmalloc doesn't hold a lock when calling these helpers; it
-has a lock when allocating the VA space, then drops it.
-
-So yes, I think there is a chance of preemption after writing the pgtable entry
-but before issuing the barriers.
-
-But in that case, we get saved by the DSB in the context switch path. There is
-no guarrantee of an ISB in that path (AFAIU). But the need for an ISB is a bit
-whooly anyway. My rough understanding is that the ISB is there to prevent
-previous speculation from determining that a given translation was invalid and
-"caching" that determination in the pipeline. That could still (theoretically)
-happen on remote CPUs I think, and we have the spurious fault handler to detect
-that. Anyway, once you context switch, the local CPU becomes remote and we don't
-have the ISB there, so what's the difference... There's a high chance I've
-misunderstood a bunch of this.
-
-
-In conclusion, I don't think I've made things any worse.
-
-Thanks,
-Ryan
-
-> 
->>  }
->>  
->>  static inline void __set_ptes(struct mm_struct *mm,
+base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
+-- 
+2.47.1
 
