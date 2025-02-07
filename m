@@ -1,97 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC59223ED69;
-	Fri,  7 Feb 2025 15:22:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79C923ED69
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738941768; cv=none; b=C5Yhrs/qKQN79P/7l1gE1m54CPm9piGLvlFgOrXF4BKp2A/+bdptCTnzQej4+sDO7eEdGTBc025cp92Z9ySOedGxszL3MiqWf21Rt4DGmiY5R1NrA3phJyTSBTWH39JgeGShIYaI4/M4dcGjRvOs8OtKY/saYibncuwXjMkyv+E=
+	t=1738941776; cv=none; b=lXzFskM6LEycjzsVJPfQiumRFY3KLufwfHRJBZBMZIBEMPffr1ST6qKMAN1gvmiBwu8d9nuF5uSludcg/InFbEhB4vHewtSN+ZVFzEaFFXzesGMqo1Vm7mdznTi4OPJOmS8HQ7h4PI/BkcRxAaf7XfHKg/66eCHUOEI6Ih+S1iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738941768; c=relaxed/simple;
-	bh=PR0tfB45jqB2uo/pROjozw09esVcNGC4hCN6ACw47j8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oQs4ohBhsvxYie4R2J+jPqjvvSDt1X4cv4Hrx6G2DPKeBsk1ZeQ0JWuwMhA87GLyCOYj5bcr/Sokk+j7EWIfqL7xRRgd7qQ/qMdBAadIgZ7+JdpAsss0FxaP10msi4kTm+CExnx8pclSb5cwevTzQQRHQwnle79swzA8+e9VP2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mODrNBza; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738941776; c=relaxed/simple;
+	bh=kcqXU0L80fJwg+01toXpktwYGd4IF+d2ulZzU+doSZc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=rjamQlCJh33cYUIYPKhHOHHawzA75DSCbmp3r4A/Qd87Ap12Px/lr/1FDr9w0cAm+Zj6zn8AT5A89okc339QoaV3ykroIePidnZQms/0Vgr0P4ytBMByCep7/5VXNlNu6JjcQ9h5TErTMIEtNknp42LTcXUfh8xtfHZtTY/lH5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Xliyxyo+; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mODrNBza"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73268C4CED1;
-	Fri,  7 Feb 2025 15:22:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738941768;
-	bh=PR0tfB45jqB2uo/pROjozw09esVcNGC4hCN6ACw47j8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mODrNBzaE3UW5T8CYw7qvdAnwa7CDeIf9RMKt6bm+SzG+yLWrAsVF/tRJAYO3MXyv
-	 O6FNL0vcUCT55oMPHTUcFib0G0IgpEVRlPZR9ekylwQOtcrmFAiCzyYVGmrQSLp5Vt
-	 jDywP04b0F7F+agXbm5LTnhsixf0qE45Z03oRoFE=
-Date: Fri, 7 Feb 2025 16:22:40 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Lyude Paul <lyude@redhat.com>, rust-for-linux@vger.kernel.org,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] rust/kernel: Add faux device bindings
-Message-ID: <2025020706-procurer-snowfield-b4ea@gregkh>
-References: <20250207004049.178049-1-lyude@redhat.com>
- <2025020702-garlic-kindly-8377@gregkh>
- <CAH5fLgixWd862P_mma0BObtT=gm9fTzQOZot62aet1qx4mai+g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xliyxyo+"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2f83e54432dso7115258a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 07:22:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738941774; x=1739546574; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kySEHqcfMZJGhyvftSCQ9iS/BRr0aycsLdTwptb27hg=;
+        b=Xliyxyo+WQKQ5TsP9skoZzTXrzYvw1tMbyle8W1Ifb6XImmS7vvCGG0YsNaSYglc+v
+         +pe/S9+EtzkMaT2CqXBAPqMV/UhtzZOlocDe38+SL1UQW5I7dIKlLmy2QMs28VN2Eudg
+         XygfmfdXCqfbfgW+KPjmVoXN12/y6rytx8ZtqM5fikyZ6NlvcVji2AOE049RRHuEtXB8
+         V3owWKEN36VbsoH1c5DJ3+yiLNWJOCL+YkuNRDkNdG4McPJpZWeo4PAPRJjxkuMi1UFx
+         mMopv13w/Mq0EQrs+g8PK8FsPQFl3F6dbfyN2P9xIPEXmuMLaJucxMiy9KA7q80FfJNv
+         AFRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738941774; x=1739546574;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kySEHqcfMZJGhyvftSCQ9iS/BRr0aycsLdTwptb27hg=;
+        b=sUkId2PH/SdFHJPS1ggf+fCSjA86PuUJ9kHomqmnW1nFfbynSR5SlbKGgQal/ugm1W
+         dv2rckofNfJulPQDODqaMAjJYpKfUYhTYbI5WceFJRGVGOcRtTO9cyYHdVnV3ulwGbGz
+         1jEHPJZ/RcO+U/QHNn0TiGW991riPe22eeDcnOsOLqAB5/5ku/U0NB5lPESOhqNaUYtO
+         eTto1619r9A2fIrCaeYORzqzYu4fcwh/MdKhsQ6dMU+Bq8VvES16Bfi63xiTdVkBCixF
+         9bHoq17ufgePkI3rQ2xb2E3doD9RFkuPhVzpvq99N8M8e0e2qhQ0SDCnOhPho+P4j3sm
+         +Iqw==
+X-Forwarded-Encrypted: i=1; AJvYcCUvBHX3aq68O0/mNbrLQzzg6SVmPYZP7DJrpWIJQfHmI+QMZTW70lW64HUD8Huehvu/j3QAVFiWSfNZflc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydFHD5z4SCXFFwEmihrbE5Ge4yvD66eBElnYlW1onJwYkex3HJ
+	sFNT6hpUrw9qJ6ea/b0cVSpxORG8zW/hkIgyOkuhf+k/cdbXALGjf4nmZ2QRxMAlKYbxMjxYuNb
+	MBg==
+X-Google-Smtp-Source: AGHT+IEU6jz6jlB8RaafTWWusxmACRAVwVTNLzOLEl4OKUDHMmuGMK2BqeIFN1+9CKAxpxYyavZXdA2p0Xg=
+X-Received: from pjbsc1.prod.google.com ([2002:a17:90b:5101:b0:2f9:d9fe:e723])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:19c3:b0:2ea:5054:6c49
+ with SMTP id 98e67ed59e1d1-2fa22b95ba5mr6440969a91.0.1738941774000; Fri, 07
+ Feb 2025 07:22:54 -0800 (PST)
+Date: Fri, 7 Feb 2025 07:22:52 -0800
+In-Reply-To: <20250206222714.1079059-2-vannapurve@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH5fLgixWd862P_mma0BObtT=gm9fTzQOZot62aet1qx4mai+g@mail.gmail.com>
+Mime-Version: 1.0
+References: <20250206222714.1079059-1-vannapurve@google.com> <20250206222714.1079059-2-vannapurve@google.com>
+Message-ID: <Z6YlTG3QV_Pv6nRo@google.com>
+Subject: Re: [PATCH V3 2/2] x86/tdx: Emit warning if IRQs are enabled during
+ HLT #VE handling
+From: Sean Christopherson <seanjc@google.com>
+To: Vishal Annapurve <vannapurve@google.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com, 
+	erdemaktas@google.com, ackerleytng@google.com, jxgao@google.com, 
+	sagis@google.com, oupton@google.com, pgonda@google.com, kirill@shutemov.name, 
+	dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, 
+	chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Feb 07, 2025 at 10:32:16AM +0100, Alice Ryhl wrote:
-> On Fri, Feb 7, 2025 at 10:25 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Feb 06, 2025 at 07:40:45PM -0500, Lyude Paul wrote:
-> > > This introduces a crate for working with faux devices in rust, along with
-> > > adding sample code to show how the API is used. Unlike other types of
-> > > devices, we don't provide any hooks for device probe/removal - since these
-> > > are optional for the faux API and are unnecessary in rust.
-> > >
-> > > Signed-off-by: Lyude Paul <lyude@redhat.com>
-> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Cc: Maíra Canal <mairacanal@riseup.net>
+On Thu, Feb 06, 2025, Vishal Annapurve wrote:
+> Direct HLT instruction execution causes #VEs for TDX VMs which is routed
+> to hypervisor via TDCALL. safe_halt() routines execute HLT in STI-shadow
+> so IRQs need to remain disabled until the TDCALL to ensure that pending
+> IRQs are correctly treated as wake events.
 > 
-> > > +impl AsRef<device::Device> for Registration {
-> > > +    fn as_ref(&self) -> &device::Device {
-> > > +        // SAFETY: The underlying `device` in `faux_device` is guaranteed by the C API to be
-> > > +        // a valid initialized `device`.
-> > > +        unsafe { device::Device::as_ref(addr_of_mut!((*self.as_raw()).dev)) }
-> >
-> > Just curious, this is returning an incremented "struct device" to the
-> > caller, right?  And then when it goes out of scope it will have the
-> > reference decremented?  And do you need a wrapper in C to get to ".dev"
-> > of the faux_device structure or are you ok doing it like this?
+> Emit warning and fail emulation if IRQs are enabled during HLT #VE handling
+> to avoid running into scenarios where IRQ wake events are lost resulting in
+> indefinite HLT execution times.
 > 
-> This uses the &_ pointer type which does not involve any refcount
-> increments or decrements. What you describe only happens if the
-> ARef<_> pointer type is used instead.
+> Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>@linux.intel.com>
+> Signed-off-by: Vishal Annapurve <vannapurve@google.com>
+> ---
+>  arch/x86/coco/tdx/tdx.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> Safety is ensured by the borrow checker that fails compilation if the
-> returned reference is used after the Registration object is destroyed
-> - i.e. it's assumed that the value is safe to access without refcount
-> increments as long as the Registration is still alive.
+> diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+> index 5e68758666a4..ed6738ea225c 100644
+> --- a/arch/x86/coco/tdx/tdx.c
+> +++ b/arch/x86/coco/tdx/tdx.c
+> @@ -393,6 +393,11 @@ static int handle_halt(struct ve_info *ve)
+>  {
+>  	const bool irq_disabled = irqs_disabled();
+>  
+> +	if (!irq_disabled) {
 
-Thanks for the explanation, my rust-foo is very very very basic, so
-much appreciated.
+Wrap the check with WARN_ONCE(), doing so adds an unlikely to the <drum roll>
+unlikely scenario.
 
-greg k-h
+> +		WARN_ONCE(1, "HLT instruction emulation unsafe with irqs enabled\n");
+
+Newline is redundant, the WARN does that for you.  IMO, it's also worth adding
+a comment, because this is like the fifth time "safe halt" has come up in the
+context of TDX.
+
+E.g.
+
+	/*
+	 * HLT with IRQs enabled is unsafe, as an IRQ that is intended to be a
+	 * wake event may be consumed before requesting HLT emulation, leaving
+	 * the vCPU blocking indefinitely.
+	 */
+	if (WARN_ONCE(!irq_disabled, "HLT emulation with IRQs enabled"))
+		return -EIO;
