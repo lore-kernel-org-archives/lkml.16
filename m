@@ -1,76 +1,217 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A941DDC20;
-	Fri,  7 Feb 2025 10:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E961DDC20;
+	Fri,  7 Feb 2025 10:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738922985; cv=none; b=rWWUcxlk/8B/SdCZ80zWDwNwU1mf9INLDU6ra6fJSCjZWBMoUUv5vzp9GRgwG+vhhgsj6GmVb3xI1q/xMESsUveyA25vlDUDI0JaoIXu7q4skwmFtvDLcuxtwhUcA1ieuJa0e8W4cc1J+piBfVGYIupVEX+F8hNiN7Patq4vfig=
+	t=1738923304; cv=none; b=I51nItyGDK0boxQhXMrjhd4qJgJeH0bx57oCAfcTAN5B0p5/MBqKgPFlxTxONx895OPz+rgPyAjvzzEuadYOrkoo++T4ZQStlf1aj8+LwEZwtGtnW5u+7P1QKIb92k4WzFaZHc+YGJzx2rnz2iQcdsD5DERHUtvM+wuVt7nsdXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738922985; c=relaxed/simple;
-	bh=hwhRjJw87qyD4MFy3So0GqSC9UWgvlgvdQdW0ES+O5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KcVXL2vVKE7IBnssb2Oi9XbaMOUSC6gZy/6rTMKFsa5cjexP2MNxYJAH0A3p5Z/9TZeXwI7amHMFYMLciZ3ZpteAq31YFTTUGyLIEPypyTtXY+6/nY8LV1lFz9TFZu8HtdNkNxrqXWviOY0TWJiTP/LvJ7ktapDYxWvQUgCS3wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HC0m6RRW; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HC0m6RRW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dMHfpWwATjyh6xtrvkOKRI4hxnZDh6spdHwQzBFQXGo=; b=HC0m6RRWD3ITB9UfMbsTkUC1Dm
-	ZwBKpqRiL6Dup71mNH6ckB8J/W4P6vwvMCd+xthNJtbynkaJhNeqk7DnZTYHNkHsbSFCZQo95wU+N
-	+QAUiJLv/02VxuvucxGxCXwUSJ1R3pZ0gbQkpFxIEWcAUhy4azxhvfrfMTwnW7VtHxQU/jOwZv9Jf
-	p/ZPF8dRwb6ZF2hbJUXdNpUCRkb0WmhBqFjAihJwMWjsb/FtNNx4KmCR2yOXHvuOAQps4IuuUzlHz
-	6t1Jz0fmA6UvgYjQBsQL5fzEoUtoOsUdlGNS50AaeNWn+nZdCSHUQ21FvHpLNX5l/6GH7jool4nCs
-	yf6EIPdQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgLId-0000000H9hJ-2rVX;
-	Fri, 07 Feb 2025 10:09:28 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3FC38300310; Fri,  7 Feb 2025 11:09:27 +0100 (CET)
-Date: Fri, 7 Feb 2025 11:09:27 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Haiyue Wang <haiyuewa@163.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Gabriel de Perthuis <g2p.code@gmail.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
- get_kernel_nofault()
-Message-ID: <20250207100927.GB7145@noisy.programming.kicks-ass.net>
-References: <173881156244.211648.1242168038709680511.stgit@devnote2>
- <20250206081225.GI7145@noisy.programming.kicks-ass.net>
- <20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
- <20250206121328.GN7145@noisy.programming.kicks-ass.net>
- <20250206123307.GO7145@noisy.programming.kicks-ass.net>
- <b4ef10d0-a1eb-4d9c-8ddc-d7815a2bb607@163.com>
+	s=arc-20240116; t=1738923304; c=relaxed/simple;
+	bh=Vas5Ja7/xbuXDFcYg6gSsVbvwhR4H4G6LbPrh3aaN3Q=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EIZoaqQom0g0RG1VftAx73EnMxtchqqRo0io3f00IuXe+t2jK1vcyWjCP3ckkhUvZPthu6U+QG+Lf0yS1O1ZpQpjQsUGwA0ZSPP4sSQYFuOYGnT6eWOXygaUG0L46+WTomZVQpFwmRcK73cRbZD1UGipeRbPv20aAd8VaGu6Un4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Fri, 7 Feb
+ 2025 18:14:58 +0800
+Received: from twmbx02.aspeed.com (192.168.10.10) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
+ Transport; Fri, 7 Feb 2025 18:14:58 +0800
+From: Jammy Huang <jammy_huang@aspeedtech.com>
+To: <eajames@linux.ibm.com>, <mchehab@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <joel@jms.id.au>,
+	<andrew@aj.id.au>, <linux-media@vger.kernel.org>, <openbmc@lists.ozlabs.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4] media: dt-bindings: aspeed,video-engine: Convert to json schema
+Date: Fri, 7 Feb 2025 18:14:58 +0800
+Message-ID: <20250207101458.3757723-1-jammy_huang@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4ef10d0-a1eb-4d9c-8ddc-d7815a2bb607@163.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Thu, Feb 06, 2025 at 09:25:37PM +0800, Haiyue Wang wrote:
-> > --- a/arch/x86/include/asm/ftrace.h
-> > +++ b/arch/x86/include/asm/ftrace.h
-> > @@ -2,6 +2,7 @@
-> >   #ifndef _ASM_X86_FTRACE_H
-> >   #define _ASM_X86_FTRACE_H
-> > +#include "asm/ibt.h"
+Convert aspeed-video.txt to yaml format.
+Update aspeed-video.txt to aspeed,video-engine.yaml in MAINTAINER file.
 
-Argh yes, I don't know where that came from. /me zaps
+Additional changes:
+- Two phandle properties, 'aspeed,scu' and 'aspeed,gfx', are added for
+  video engine to capture video from sources other than VGA.
+- Update examples and include appropriate file directives to resolve
+  errors identified by `dt_binding_check` and `dtbs_check`.
+
+Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
+---
+ v4:
+  - Keep | after phandle description to fix dt_binding_check error.
+
+ v3:
+  - Add Additional changes into comments.
+  - Remove | after phandle description
+
+ v2:
+  - Update patch subject
+  - Add NOTE for false positive warning
+---
+ .../bindings/media/aspeed,video-engine.yaml   | 84 +++++++++++++++++++
+ .../bindings/media/aspeed-video.txt           | 33 --------
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 85 insertions(+), 34 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
+ delete mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
+
+diff --git a/Documentation/devicetree/bindings/media/aspeed,video-engine.yaml b/Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
+new file mode 100644
+index 000000000000..4edfbeaa5dc9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/aspeed,video-engine.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ASPEED Video Engine
++
++maintainers:
++  - Eddie James <eajames@linux.ibm.com>
++
++description:
++  The Video Engine (VE) embedded in the ASPEED SOCs can be configured to
++  capture and compress video data from digital or analog sources.
++
++properties:
++  compatible:
++    enum:
++      - aspeed,ast2400-video-engine
++      - aspeed,ast2500-video-engine
++      - aspeed,ast2600-video-engine
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: vclk
++      - const: eclk
++
++  resets:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  memory-region:
++    maxItems: 1
++    description: |
++      Phandle to the reserved memory nodes to be associated with the
++      VE. VE will acquires memory space for 3 purposes:
++        1. JPEG header
++        2. Compressed result
++        3. Temporary transformed image data
++
++  aspeed,scu:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      Specifies the scu node that is needed if video wants to capture
++      from sources other than Host VGA.
++
++  aspeed,gfx:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      Specifies the Soc Display(gfx) node that needs to be queried to get
++      related information if video wants to use gfx as capture source.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/ast2600-clock.h>
++
++    video@1e700000 {
++        compatible = "aspeed,ast2600-video-engine";
++        reg = <0x1e700000 0x1000>;
++        clocks = <&syscon ASPEED_CLK_GATE_VCLK>,
++                 <&syscon ASPEED_CLK_GATE_ECLK>;
++        clock-names = "vclk", "eclk";
++        interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++        aspeed,scu = <&syscon>;
++        aspeed,gfx = <&gfx>;
++    };
+diff --git a/Documentation/devicetree/bindings/media/aspeed-video.txt b/Documentation/devicetree/bindings/media/aspeed-video.txt
+deleted file mode 100644
+index d2ca32512272..000000000000
+--- a/Documentation/devicetree/bindings/media/aspeed-video.txt
++++ /dev/null
+@@ -1,33 +0,0 @@
+-* Device tree bindings for Aspeed Video Engine
+-
+-The Video Engine (VE) embedded in the Aspeed AST2400/2500/2600 SOCs can
+-capture and compress video data from digital or analog sources.
+-
+-Required properties:
+- - compatible:		"aspeed,ast2400-video-engine" or
+-			"aspeed,ast2500-video-engine" or
+-			"aspeed,ast2600-video-engine"
+- - reg:			contains the offset and length of the VE memory region
+- - clocks:		clock specifiers for the syscon clocks associated with
+-			the VE (ordering must match the clock-names property)
+- - clock-names:		"vclk" and "eclk"
+- - resets:		reset specifier for the syscon reset associated with
+-			the VE
+- - interrupts:		the interrupt associated with the VE on this platform
+-
+-Optional properties:
+- - memory-region:
+-	phandle to a memory region to allocate from, as defined in
+-	Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+-
+-Example:
+-
+-video-engine@1e700000 {
+-    compatible = "aspeed,ast2500-video-engine";
+-    reg = <0x1e700000 0x20000>;
+-    clocks = <&syscon ASPEED_CLK_GATE_VCLK>, <&syscon ASPEED_CLK_GATE_ECLK>;
+-    clock-names = "vclk", "eclk";
+-    resets = <&syscon ASPEED_RESET_VIDEO>;
+-    interrupts = <7>;
+-    memory-region = <&video_engine_memory>;
+-};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 896a307fa065..7e59daa1e89d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3549,7 +3549,7 @@ M:	Eddie James <eajames@linux.ibm.com>
+ L:	linux-media@vger.kernel.org
+ L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/media/aspeed-video.txt
++F:	Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
+ F:	drivers/media/platform/aspeed/
+ 
+ ASUS EC HARDWARE MONITOR DRIVER
+
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+-- 
+2.25.1
+
