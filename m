@@ -1,187 +1,108 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E12718DB27
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A8F1802DD
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738947047; cv=none; b=QJVRNUua+D6EKO67n4rm1z4NaNxcD89RiQWW284owE7wYBX4v/TGl44iKZ+VEAXG8VgPjjO3VGhwzjVDEHv1QG946YKFzUWKW9mtMcV6RsE45EY0QEL6Mz08NJkzJNYY9+BxvevgLcMj9+1JfrnjsUVLwAF7fS9Kh6FxchUSyG8=
+	t=1738947143; cv=none; b=ug8hcFSdFDyzReX/EaDIQLz6lrTDSsuwnAC2L3GUXWQRy25yOiTgLgcJT2+tZ+g6Y5ybeuKNqmO3aU9Fr5l/MPRpD2HMeIJkvreBa3KAlKplwJdNValXCh9SDrGayWjzfeNMv7crflhBZ9gWyhZlluol/urL0+Z4X7oTHzXZt44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738947047; c=relaxed/simple;
-	bh=aPBkZDl/m4Qspl14MEY6KN0Fw6qRKdLc63tzwqiKBVM=;
+	s=arc-20240116; t=1738947143; c=relaxed/simple;
+	bh=lBczyWVcEwxF4Ttj3nziaoQ4DK0ZpgMsW5CwuhpOyMY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ID2WiNRbx+lAJsUK6CSjitLmjRWsZEkFzJyuThbFTHKeksCTFWf7kdM9bqy6sZGV5D4ioRJ4ZFBkBoF58nTNpkzUCmLVtJLZsUyPDim2J7Ua8ULyBbjkRFp/3qs9OnBBl5V276asGPgv6wuaz2SDvW6QZgsD+zbylEkPg/hxpKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qH1qA4gk; arc=none smtp.client-ip=209.85.208.54
+	 To:Cc:Content-Type; b=J6k2K0tdl4DS2spGfqUbEEILuEhlAI0vIJAS1fvr48IKYruUPKdAuhqnfzew5OADeYeXguIfOVTPjb11vvZMyZnQCwHh0O2YGWVOijZNKj5tWpK9hheb7PzwGcIG40ghHwR6Bn4D3Uth0CnUyUd2B/i+tC0vZEFkgVxdp+u0mZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v1onWQ2n; arc=none smtp.client-ip=209.85.166.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qH1qA4gk"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so12055a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:50:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v1onWQ2n"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d146357fb2so80085ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:52:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738947043; x=1739551843; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738947141; x=1739551941; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aPBkZDl/m4Qspl14MEY6KN0Fw6qRKdLc63tzwqiKBVM=;
-        b=qH1qA4gkY/CpOnT5oAPiRTR5tiqxMHvnqiUPVNtE6fVOAgm4z6HZxjUKoLFujQZVtb
-         aHu0ZE+flOC7tJve/ZF67alkV/6ISN2mX9BClB2TrokRiD9D/Zut/RbzZGZq8VOyWu2B
-         5T39ZTsx0aGKKqyUWQXpmwWEedfLoCG4eN2poODUs3N7rqF9F3CIMShBNldvFbm7wWrz
-         H74I9BU5q3hey8sSJb0EHSnQPfSdMFu/huzJUZPVedr93v8KuH/UR3/oLlYlQUeUMtp1
-         2FhPPb+ju249TqmGroFgiOIP31jAGam1Rm1xeIA4F43EVNwdX5kg41db6dggWGB42/3/
-         xf8w==
+        bh=xaQn6K7jyorHitw/wTj9hI+PJlPLgdCagiVogzW2LvQ=;
+        b=v1onWQ2n7gFHKO2n+7GHoyZNmEsJdd7nIhrBrpE7XqoeTaAg83PnbPCfUiPy5B+ovx
+         xfPYIcF4c56f/YBLELhAGJgWqE+ALTG+92kAytniHc8TFOy2G72E8BN5fbeKtK3Qi5Ao
+         eR9k7TuM7XeKHQ62bea+DfCuKjmgATNtjMPU2nsw5aHWqlx2Udx9YLum9VxW1EGUPDbp
+         5YnONKaG5AUbWHOu0fzXetCQI4eeG4C3isst/Z8IzxWT/VlYsil/11bSPRomBqX/bsxZ
+         zhHt0FeD/ADDIDDsZqd0KN1wn5iT8ezdVeeU67InZsBCqwkCSWcseWdB1ZZFs2juEzNt
+         6WDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738947043; x=1739551843;
+        d=1e100.net; s=20230601; t=1738947141; x=1739551941;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aPBkZDl/m4Qspl14MEY6KN0Fw6qRKdLc63tzwqiKBVM=;
-        b=pQnhyZPRwpXBCKLI/qJZGdngxX7ms1qCW7DBepqFolEDeq6qOZR/A3kZ/F2vTUN/yZ
-         nh2HO2XXqYB+i8/DM+zgkGYZd3YESHxXH/wDJI3UO3Edq4nCRp2nYr0adYQfnUkoI0cM
-         xWqSZVJ7+5I9W3LNmkhB0HhmWZjDyTSBCoLUoQiH4BeHYj4cIDZdiefXKOkE14ZJ5aRC
-         yJg9bLvJo/GgtE731Hbbz2PiQl8EbnkqGVzt3fLNt7JS0L29bQktH5mU0S+7fyAoFhql
-         2rE94BKzsxDsJ2rRfkkNZQyBTrk0FOTKBbB/5X9Xmb6Va3cwYWqRmQUhg2ZAsrZcvnzZ
-         tNIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUpqy2gBnFIFERis8lD+AZbC7fYVNFvlG5vNG7s6UE/hqmMbYxA+RxFTs15gA8Dlakkr3NTTtHsMgXdFc4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwE/1ONKGMEnnLSvgG1XYnNIX9+H5gkyI+SVyoy9cKNq2g513/A
-	gF9frrMh9VLn1bCYKDS0m4xfT0MJoYGHxkIAnzEV7BZ7LCWv1TmuCq5+XfOmeSQ8q9RF+GYarqn
-	L6UZzfqAffSN86R23f3EZzL3jmjpr3aea2fdB
-X-Gm-Gg: ASbGnctURVod0pTi/YEDDQ2nUFfZrVZy6T2rjFaW+ubKvcvJ+pLxTe6hYp4B02nXExC
-	u6vzteci3Qwpn5tVCCn01yUsvB2u38/nky83czOw1CeNUdVuhgGFInMEevvUf1ifxUAecwjp4qS
-	1HTcQcdlwRceWMI1t3Pe9RtWw=
-X-Google-Smtp-Source: AGHT+IEF6TMgHg91uuYvMyntZQJrsyMXP7NnVk9IAG0elRzcK8gPqLJatjsvPJxCYVqWs5mWaF1xWRYMHmsCfe0F4NQ=
-X-Received: by 2002:aa7:d441:0:b0:5de:38e7:c864 with SMTP id
- 4fb4d7f45d1cf-5de46900143mr124485a12.4.1738947043132; Fri, 07 Feb 2025
- 08:50:43 -0800 (PST)
+        bh=xaQn6K7jyorHitw/wTj9hI+PJlPLgdCagiVogzW2LvQ=;
+        b=nDEmn7XZ1nY+w2mLMhKcoamkOEjpvDaprD+qCnIEIfKRQ7V1gYve+FoMxsyFM5nQxk
+         FXE16oR3wi0Yz/T+4K6UX/CYrECo6/ZmI6vBZFGBoNOJZYRYeFELU2m1DOguExUgJMTt
+         8XfntZN4PLId5FCVpoYuv9krsS8yLOUBpvG3bQP/o0q4JIKDZIuwloeSGcZ5dpLU1bfz
+         WqbFxahifsfCCaEVWXW963PsLAQDZ7XXa1y+bAbheO30XJoCxiW8z/0m4Q6PAtbzPn8M
+         oQvoRX9PHY4Sfac0i27wmDBBX+asA/1bM1ClMVCOioUy3jFQ57ZhjdJJItWGcmVccogq
+         PGPg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPZ+Db4aOtDvxQTNxVcC8D2mshddRn4fnQHzVFFgqNuKMNl0hR7PU2T7BWCRlsqwHnU6OMj3ZCPbU7r9c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGBzF8/XBhyrDN3zpdppFa7xSqfSpzSyhhHx3J4EZnYta396u7
+	RJb0oR3QhgWtS9quPQAYiPrrGOzN0ZucW8F4ddDPjLVr3O6pimJv1fKi2Lz0tt7WuNKTeUzw+fe
+	lbCL+SJcgBRm1fHYdh+hhsfspX542apPDOpFk
+X-Gm-Gg: ASbGncsiZKZc4laZqSBrjSYLr51OLqqPJbln+eWu0SjfwIhNqHftnRpnrsnl5Ux2UjQ
+	L5/W01xlGZOhGjQKr7s9Ina1IB/Shg/hUbx2wbffS5wKbIaF3j4NG380Mm1/L23RDr93fHkX8zQ
+	==
+X-Google-Smtp-Source: AGHT+IH+eccZeVWVRooHatPRWms97tl2ixYWDBvCtisUhE2l0dgUs4cNDVp2DO8WirI/llb9F18uQzOyaVmYC+rKfN0=
+X-Received: by 2002:a05:6e02:1c8a:b0:3ce:3873:48d4 with SMTP id
+ e9e14a558f8ab-3d13def5cebmr4524575ab.4.1738947140907; Fri, 07 Feb 2025
+ 08:52:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250202162921.335813-1-eyal.birger@gmail.com>
- <CAG48ez1Pj6MT=RV-sogtNbw7WLLmCrC-3TkNfRjpcCif8iNGkA@mail.gmail.com> <CAHsH6GtiwCGJevfkE5=VzzuQcusKp-ugnRD+AD+5a+8kqOGyZA@mail.gmail.com>
-In-Reply-To: <CAHsH6GtiwCGJevfkE5=VzzuQcusKp-ugnRD+AD+5a+8kqOGyZA@mail.gmail.com>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 7 Feb 2025 17:50:06 +0100
-X-Gm-Features: AWEUYZmXc_6bGyGXPbhUQLG44CKNvo7X6skdH1pv_MYBSLuJ5OXxGW_nuazaMbM
-Message-ID: <CAG48ez0c-n1K=Ui-Awp+pGq-k6QvaWarjqz0znyKi5HO5R5P7A@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] seccomp: pass uretprobe system call through seccomp
-To: Eyal Birger <eyal.birger@gmail.com>
-Cc: jolsa@kernel.org, kees@kernel.org, luto@amacapital.net, wad@chromium.org, 
-	oleg@redhat.com, mhiramat@kernel.org, andrii@kernel.org, 
-	alexei.starovoitov@gmail.com, olsajiri@gmail.com, cyphar@cyphar.com, 
-	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com, 
-	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de, daniel@iogearbox.net, 
-	ast@kernel.org, andrii.nakryiko@gmail.com, rostedt@goodmis.org, rafi@rbk.io, 
-	shmulik.ladkani@gmail.com, bpf@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250207152844.302167-1-kan.liang@linux.intel.com>
+In-Reply-To: <20250207152844.302167-1-kan.liang@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 7 Feb 2025 08:52:08 -0800
+X-Gm-Features: AWEUYZlD4rHHScB2ecuCe1drW1pyGKqdAiE92k6K4hUGUg3ZtHT9u6XBaEP-kI4
+Message-ID: <CAP-5=fWoRhg6eY8OEhKA-TbWb42pOZiiDF1PENuu5dHPMp-dpg@mail.gmail.com>
+Subject: Re: [PATCH] perf tool_pmu: Add skip check in tool_pmu__event_to_str()
+To: kan.liang@linux.intel.com
+Cc: acme@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	thomas.falcon@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 7, 2025 at 5:20=E2=80=AFPM Eyal Birger <eyal.birger@gmail.com> =
-wrote:
-> On Fri, Feb 7, 2025 at 7:27=E2=80=AFAM Jann Horn <jannh@google.com> wrote=
-:
-> >
-> > On Sun, Feb 2, 2025 at 5:29=E2=80=AFPM Eyal Birger <eyal.birger@gmail.c=
-om> wrote:
-> > > uretprobe(2) is an performance enhancement system call added to impro=
-ve
-> > > uretprobes on x86_64.
-> > >
-> > > Confinement environments such as Docker are not aware of this new sys=
-tem
-> > > call and kill confined processes when uretprobes are attached to them=
-.
-> >
-> > FYI, you might have similar issues with Syscall User Dispatch
-> > (https://docs.kernel.org/admin-guide/syscall-user-dispatch.html) and
-> > potentially also with ptrace-based sandboxes, depending on what kinda
-> > processes you inject uprobes into. For Syscall User Dispatch, there is
-> > already precedent for a bypass based on instruction pointer (see
-> > syscall_user_dispatch()).
+On Fri, Feb 7, 2025 at 7:28=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
 >
-> Thanks. This is interesting.
+> From: Kan Liang <kan.liang@linux.intel.com>
 >
-> Do you know of confinement environments using this?
-
-Not for Syscall User Dispatch; I think that was mostly intended for
-stuff like emulating Windows syscalls in WINE. I'm not sure who
-actually uses it, I just know a bit about the kernel side of it.
-
-From what I know, ptrace sandboxing is a technique used by some
-configurations of gVisor
-(https://gvisor.dev/docs/architecture_guide/platforms/#ptrace), though
-now I see that that page says that this configuration is no longer
-supported. I am also not sure whether you'd ever have uprobes
-installed in files from which instructions are executed in this
-environment.
-
-> > > Since uretprobe is a "kernel implementation detail" system call which=
- is
-> > > not used by userspace application code directly, pass this system cal=
-l
-> > > through seccomp without forcing existing userspace confinement enviro=
-nments
-> > > to be changed.
-> >
-> > This makes me feel kinda uncomfortable. The purpose of seccomp() is
-> > that you can create a process that is as locked down as you want; you
-> > can use it for some light limits on what a process can do (like in
-> > Docker), or you can use it to make a process that has access to
-> > essentially nothing except read(), write() and exit_group(). Even
-> > stuff like restart_syscall() and rt_sigreturn() is not currently
-> > excepted from that.
+> Some topdown related metrics may fail on hybrid machines.
 >
-> Yes, this has been discussed at length in the threads mentioned
-> in the "Link" tags.
+>  $perf stat -M tma_frontend_bound
+>  Cannot resolve IDs for tma_frontend_bound:
+>  cpu_atom@TOPDOWN_FE_BOUND.ALL@ / (8 * cpu_atom@CPU_CLK_UNHALTED.CORE@)
 >
-> >
-> > I guess your usecase is a little special in that you were already
-> > calling from userspace into the kernel with SWBP before, which is also
-> > not subject to seccomp; and the syscall is essentially an
-> > arch-specific hack to make the SWBP a little faster.
+> In the find_tool_events(), the tool_pmu__event_to_str() is used to
+> compare the tool_events. It only checks the event name, no PMU or arch.
+> So the tool_events[TOOL_PMU__EVENT_SLOTS] is set to true, because the
+> p-core Topdown metrics has "slots" event.
+> The tool_events is shared. So when parsing the e-core metrics, the
+> "slots" is automatically added.
 >
-> Indeed. The uretprobe mechanism wasn't enforced by seccomp before
-> this syscall. This change preserves this.
+> The "slots" event as a tool event should only be available on arm64. It
+> has a different meaning on X86. The tool_pmu__skip_event() intends
+> handle the case. Apply it for tool_pmu__event_to_str() as well.
 >
-> >
-> > If we do this, we should at least ensure that there is absolutely no
-> > way for anything to happen in sys_uretprobe when no uretprobes are
-> > configured for the process - the first check in the syscall
-> > implementation almost does that, but the implementation could be a bit
-> > stricter. It checks for "regs->ip !=3D trampoline_check_ip()", but if n=
-o
-> > uprobe region exists for the process, trampoline_check_ip() returns
-> > `-1 + (uretprobe_syscall_check - uretprobe_trampoline_entry)`. So
-> > there is a userspace instruction pointer near the bottom of the
-> > address space that is allowed to call into the syscall if uretprobes
-> > are not set up. Though the mmap minimum address restrictions will
-> > typically prevent creating mappings there, and
-> > uprobe_handle_trampoline() will SIGILL us if we get that far without a
-> > valid uretprobe.
+> There is a lack of sanity check in the expr__get_id(). Add the check.
 >
-> I'm not sure I understand your point. If creating mappings in that
-> area is prevented, what is the issue?
+> Closes: https://lore.kernel.org/lkml/608077bc-4139-4a97-8dc4-7997177d95c4=
+@linux.intel.com/
+> Fixes: 069057239a67 ("perf tool_pmu: Move expr literals to tool_pmu")
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
-It is usually prevented, not always - root can do it depending on
-system configuration.
+Thanks Kan!
 
-Also, in a syscall like this that will be reachable in every sandbox,
-I think we should try to be more careful about edge cases and avoid
-things like this offset calculation on address -1.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-> also, this would be related to the
-> uretprobe syscall implementation in general, no?
-
-Yes. I just think it is relevant to the seccomp change because
-excepting a syscall from seccomp makes it more important that that
-syscall is robust and correct.
-
-> To me this seems unrelated to the seccomp change.
-> Jiri, do you have any input on this?
->
-> Thanks!
-> Eyal.
+Ian
