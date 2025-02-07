@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBAE1DD9A8
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 23:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6809D1DE2C0
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 23:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738970703; cv=none; b=EDQGSZJVw6yBq0UkOyM+Ad+zsqcrGDJK/AmtAaO7Hh9SI7LAx1TbV1LDWn7CotSlh84qjLuWv2aMkXDjbApVjdX1DDGWyxwtMqLfu/5DqDpeKBOQdo1i8t+ks5LPJuEFNgs5EJ3ugyMg2gZs5HtyJNpsuD8TNVLFG/6zj2UHWsE=
+	t=1738970706; cv=none; b=lo5Q41QmdsK237pXi7rtKS+e02hfAxvC4MiPpIsIB/5/kkyEX1zFNVNOjAJ97zt/Lj1DEFJoqX3jhuJA8nzRvrRF32+41EY8Dxuu1PzPYM0hWBaxKd2qiX1Kvt0Yv87DVyKSsu+G6JGwAsh2EwJ4S38aeiObHuG+JiRr3yKVMAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738970703; c=relaxed/simple;
-	bh=zYNGAkgMdd9XUiROyIWPJ+Mlzc02RJhIL7WMmuG/ANk=;
+	s=arc-20240116; t=1738970706; c=relaxed/simple;
+	bh=svnWEsdd0RH2EO1mazYA60VXYRHZD9wTFEGGdpTDYK8=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=hZqwBY2WGv5x1c9FIbMTMao9LQb3ekFcrp8ftKgU7MCXy8HDE2NGoPDrrlNbHxPVWqjKZDg47Z1Gg04SjC77X7zTH77Ok5hD9WaN1MKxt/V7pnyGnDGn46rwSJqmlzXQv/eVnZEaUmVYUDUzRcOVHVgDk/W9Lump3Zh0hHDhVbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YCH63TyX; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=DtR2pMjxt9Gmt3aF+oVmhhU99nC9DkxHQVmPimYdevzbbSsx6FvAf9ZFkGtfPdFuCb3sC4IkD0sq6PEJuv3WPxar4JsgBT/jU+EZrFLiMYlQG+cz5M3dNzOpo86P9iXdrIWqINQACzcyAwQxiBObBtQx7/TewqgDWdj66ZVUKAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c7uimYUq; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YCH63TyX"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6f2c7008c05so39238677b3.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 15:25:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c7uimYUq"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6f2793679ebso30029367b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 15:25:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738970701; x=1739575501; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1738970703; x=1739575503; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=SK5AV+lqqx4bn5Q1XZOeQFYE3IU1Rh1nSkTxsM9kwPs=;
-        b=YCH63TyXDwQb4STHaWAL+hUqUdTcrNhfKwB/o5vzjOUIhohBRztfM98IeRkAgI8f3P
-         xG6ZiXJywzOdS88kNfJ1dLlw72k9jZs9KSZZdyptKiaybvwMqoPYDO2z7VQCI7pGD4So
-         Ae9hLOyE+07dsXSbysyhcIWma8368O7apF+phCD/6edwa5qjRFCd53Vg2R9gG4cCVo6i
-         hQmqXh2faIIi1U/pClngYCA9h0gAb/q5zXC8J2mcpnkNO2Vz5oq8JGmcKFDkJWUNhwjc
-         7teFCT9ujYgvTflwda37iIIUa7f3LWFK/80VlCQ3TpTbe6iCONyIqktPnTC+Ze2yvzXX
-         zgGg==
+        bh=zThM502oWmZskuFWvBnh7q8yzaYbumd3GHoPECBIme8=;
+        b=c7uimYUqUz1SCg9xdE8CTixSK81zAcv+tZAPoX8kpdT3BpKTfRetHwsMev9GvNveaN
+         qvpo5+PN97Qr24SYRawoeiX3Ebrrq6jj7qKN1GUuoqf/T9ygz72PhMwHyGn8MzjRLZYk
+         74ZAUOj6Kpl021d1yNkoK8pkru3a6m28iTwKxDYJvJnh6DbTYQiUZH99D9sdjO3oOP+l
+         HEM9avxYmvRKHhskrmtcSzFWzNnSXcbds6APZcA6wJ0k0ADMUoeg40JxrpRKxXACdnfP
+         lBYwig11/A33xNBynwLQo8ekcnk4P3xbkWXL2NuRx2BWITzbR0Mt6CqvmFBoRX83pRhE
+         ozDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738970701; x=1739575501;
+        d=1e100.net; s=20230601; t=1738970703; x=1739575503;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SK5AV+lqqx4bn5Q1XZOeQFYE3IU1Rh1nSkTxsM9kwPs=;
-        b=Bf9ikVU8uc1NRQmGzQMRkSKiwVyLuCytKn89CPhcevXxf9bPOY4PB1wCNriAE5NEuc
-         O2hduTQ9Bcg3EVC1Cw+VHOgT2+spdp6pLn4R1DniB3q/34u85f9wlx9dyxsHEpi8XpBj
-         ZjkcF0Y4L+FayzUXqDSn0hPvXMwY3+31P8GVbeMGRGXAh5Q8J/K1zv9Xc7yBJtHRj3V3
-         1qCOdGpJIDFEFmVTxC4Us8GgQoyOGedQnshyoeLGerOiYGpDcNjtzMW/MkGaD2YWZFxZ
-         AXfndz+4YMSQypkCysCz9+ng7S+jYopAV0sCcEz8+Ur9QxqQCaDl5XXUhheRalLug/oT
-         EcwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXWVrbHGQChvQp1empoEUCzSPZwB2dl+8R8vB3oNvWLo0UeoJZjW2cBaHNVi4SEWFhFAs7Gy7AhC08M9zA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMa97ecqQDGVI5nB4VqbdjWWFgtNeJ5tHrhiq65/J5K7G5L9+5
-	QIL/1okBNPxC197uhwUp4zR6gVU2aa2X/GjkJRtNCuVZoLPzx9yrIcySCX8BtnK9DZxcR67OS6v
-	e/MzRSA==
-X-Google-Smtp-Source: AGHT+IGNMSvc4/dmPsVB5ZKRDbOu0NNtmtkE0ZYHFYRHCb/11YooZqZk50AbSjXlheuxley0tKZG/Im1zyjt
+        bh=zThM502oWmZskuFWvBnh7q8yzaYbumd3GHoPECBIme8=;
+        b=Ydvju0mtqzF++DOjIdCgOc/8AFkuli/86LgkDC9fiu1T21NK6a5/BeCzuxSFPkxL32
+         wFIx+gDBUEJl7gPT2MhFYjqvRMER3EggVYNoKr70n17tD3nJ01u1Luw5OBA0UI5phFU2
+         OX/0ssY3pITeYb7/X5+jMQrDYYkyQ+fgxUlNv0iJZPs7aQeYE0skg0J3hXvbVhtYmAHd
+         5X6hJvGymrPWeTfH/docNnpDxsYp8KhrPsY0xheqrOChVO+BmCJx5p/TPWtDZEmQlurh
+         uQkE4IJ0L1TQx18oCz7qnEJM1ClYiaIAoDvvDLpPi6iY8XuJjMwph7XYYBkiKkg1Mxis
+         IzBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXw+TuavqepAN+0huRYR04BCF3hicLkp9hcqb3Hn2abaNNkZlDpcDB/gPPT7iYTsyzPRIqCYRVvEs154r4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHLvcgVqiGtc0tCT+HKvsheVZwfUfZqB+K6SegnkNttYATvcw8
+	evojc+WeISM0fuAZKcgkeH1zlybJjJX7+zy+BEujkYKIgpFlyzrOLrEK0IiW7owcjcKv4jYZTNf
+	h4BQS6A==
+X-Google-Smtp-Source: AGHT+IFAhE/XkHhwi5uq3vCpmrpZE+Y0JWgUbIMBDiq2rNgMaOB6aOCcctu3WZpW4W+A+Y+gQnTMvb2kVcM0
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:79e4:4a45:1e80:ace5])
- (user=irogers job=sendgmr) by 2002:a05:690c:9315:b0:6f9:a402:ff3e with SMTP
- id 00721157ae682-6f9b2960936mr337647b3.5.1738970700926; Fri, 07 Feb 2025
- 15:25:00 -0800 (PST)
-Date: Fri,  7 Feb 2025 15:24:43 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:726:b0:e5b:4651:ad0c with SMTP id
+ 3f1490d57ef6-e5b4651adbamr47032276.3.1738970703232; Fri, 07 Feb 2025 15:25:03
+ -0800 (PST)
+Date: Fri,  7 Feb 2025 15:24:44 -0800
 In-Reply-To: <20250207232452.994822-1-irogers@google.com>
-Message-Id: <20250207232452.994822-3-irogers@google.com>
+Message-Id: <20250207232452.994822-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250207232452.994822-1-irogers@google.com>
 X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Subject: [PATCH v2 2/7] perf maps: Switch modules tree walk to io_dir__readdir
+Subject: [PATCH v2 3/7] perf pmu: Switch to io_dir__readdir
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -78,66 +78,225 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Compared to glibc's opendir/readdir this lowers the max RSS of perf
-record by 1.8MB on a Debian machine.
+Avoid DIR allocations when scanning sysfs by using io_dir for the
+readdir implementation, that allocates about 1kb on the stack.
 
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/machine.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ tools/perf/util/pmu.c  | 46 +++++++++++++++++-------------------------
+ tools/perf/util/pmus.c | 30 ++++++++++-----------------
+ 2 files changed, 30 insertions(+), 46 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 2d51badfbf2e..bdd7969533c6 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -37,6 +37,7 @@
- #include <internal/lib.h> // page_size
- #include "cgroup.h"
- #include "arm64-frame-pointer-unwind-support.h"
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index c2a15b0259cf..91ed909433cc 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -13,6 +13,7 @@
+ #include <dirent.h>
+ #include <api/fs/fs.h>
+ #include <api/io.h>
 +#include <api/io_dir.h>
- 
- #include <linux/ctype.h>
- #include <symbol/kallsyms.h>
-@@ -1354,25 +1355,21 @@ static int maps__set_module_path(struct maps *maps, const char *path, struct kmo
- 
- static int maps__set_modules_path_dir(struct maps *maps, const char *dir_name, int depth)
+ #include <locale.h>
+ #include <fnmatch.h>
+ #include <math.h>
+@@ -195,19 +196,17 @@ static void perf_pmu_format__load(const struct perf_pmu *pmu, struct perf_pmu_fo
+  */
+ static int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd, bool eager_load)
  {
--	struct dirent *dent;
--	DIR *dir = opendir(dir_name);
-+	struct io_dirent64 *dent;
-+	struct io_dir iod;
+-	struct dirent *evt_ent;
+-	DIR *format_dir;
++	struct io_dirent64 *evt_ent;
++	struct io_dir format_dir;
  	int ret = 0;
  
--	if (!dir) {
-+	io_dir__init(&iod, open(dir_name, O_CLOEXEC | O_DIRECTORY | O_RDONLY));
-+	if (iod.dirfd < 0) {
- 		pr_debug("%s: cannot open %s dir\n", __func__, dir_name);
- 		return -1;
+-	format_dir = fdopendir(dirfd);
+-	if (!format_dir)
+-		return -EINVAL;
++	io_dir__init(&format_dir, dirfd);
+ 
+-	while ((evt_ent = readdir(format_dir)) != NULL) {
++	while ((evt_ent = io_dir__readdir(&format_dir)) != NULL) {
+ 		struct perf_pmu_format *format;
+ 		char *name = evt_ent->d_name;
+ 
+-		if (!strcmp(name, ".") || !strcmp(name, ".."))
++		if (io_dir__is_dir(&format_dir, evt_ent))
+ 			continue;
+ 
+ 		format = perf_pmu__new_format(&pmu->format, name);
+@@ -234,7 +233,7 @@ static int perf_pmu__format_parse(struct perf_pmu *pmu, int dirfd, bool eager_lo
+ 		}
  	}
  
--	while ((dent = readdir(dir)) != NULL) {
-+	while ((dent = io_dir__readdir(&iod)) != NULL) {
- 		char path[PATH_MAX];
--		struct stat st;
- 
--		/*sshfs might return bad dent->d_type, so we have to stat*/
- 		path__join(path, sizeof(path), dir_name, dent->d_name);
--		if (stat(path, &st))
--			continue;
--
--		if (S_ISDIR(st.st_mode)) {
-+		if (io_dir__is_dir(&iod, dent)) {
- 			if (!strcmp(dent->d_name, ".") ||
- 			    !strcmp(dent->d_name, ".."))
- 				continue;
-@@ -1405,7 +1402,7 @@ static int maps__set_modules_path_dir(struct maps *maps, const char *dir_name, i
- 	}
- 
- out:
--	closedir(dir);
-+	close(iod.dirfd);
+-	closedir(format_dir);
++	close(format_dir.dirfd);
  	return ret;
+ }
+ 
+@@ -635,14 +634,12 @@ static inline bool pmu_alias_info_file(const char *name)
+  */
+ static int __pmu_aliases_parse(struct perf_pmu *pmu, int events_dir_fd)
+ {
+-	struct dirent *evt_ent;
+-	DIR *event_dir;
++	struct io_dirent64 *evt_ent;
++	struct io_dir event_dir;
+ 
+-	event_dir = fdopendir(events_dir_fd);
+-	if (!event_dir)
+-		return -EINVAL;
++	io_dir__init(&event_dir, events_dir_fd);
+ 
+-	while ((evt_ent = readdir(event_dir))) {
++	while ((evt_ent = io_dir__readdir(&event_dir))) {
+ 		char *name = evt_ent->d_name;
+ 		int fd;
+ 		FILE *file;
+@@ -674,7 +671,6 @@ static int __pmu_aliases_parse(struct perf_pmu *pmu, int events_dir_fd)
+ 		fclose(file);
+ 	}
+ 
+-	closedir(event_dir);
+ 	pmu->sysfs_aliases_loaded = true;
+ 	return 0;
+ }
+@@ -2221,10 +2217,9 @@ static void perf_pmu__del_caps(struct perf_pmu *pmu)
+  */
+ int perf_pmu__caps_parse(struct perf_pmu *pmu)
+ {
+-	struct stat st;
+ 	char caps_path[PATH_MAX];
+-	DIR *caps_dir;
+-	struct dirent *evt_ent;
++	struct io_dir caps_dir;
++	struct io_dirent64 *evt_ent;
+ 	int caps_fd;
+ 
+ 	if (pmu->caps_initialized)
+@@ -2235,24 +2230,21 @@ int perf_pmu__caps_parse(struct perf_pmu *pmu)
+ 	if (!perf_pmu__pathname_scnprintf(caps_path, sizeof(caps_path), pmu->name, "caps"))
+ 		return -1;
+ 
+-	if (stat(caps_path, &st) < 0) {
++	caps_fd = open(caps_path, O_CLOEXEC | O_DIRECTORY | O_RDONLY);
++	if (caps_fd == -1) {
+ 		pmu->caps_initialized = true;
+ 		return 0;	/* no error if caps does not exist */
+ 	}
+ 
+-	caps_dir = opendir(caps_path);
+-	if (!caps_dir)
+-		return -EINVAL;
+-
+-	caps_fd = dirfd(caps_dir);
++	io_dir__init(&caps_dir, caps_fd);
+ 
+-	while ((evt_ent = readdir(caps_dir)) != NULL) {
++	while ((evt_ent = io_dir__readdir(&caps_dir)) != NULL) {
+ 		char *name = evt_ent->d_name;
+ 		char value[128];
+ 		FILE *file;
+ 		int fd;
+ 
+-		if (!strcmp(name, ".") || !strcmp(name, ".."))
++		if (io_dir__is_dir(&caps_dir, evt_ent))
+ 			continue;
+ 
+ 		fd = openat(caps_fd, name, O_RDONLY);
+@@ -2274,7 +2266,7 @@ int perf_pmu__caps_parse(struct perf_pmu *pmu)
+ 		fclose(file);
+ 	}
+ 
+-	closedir(caps_dir);
++	close(caps_fd);
+ 
+ 	pmu->caps_initialized = true;
+ 	return pmu->nr_caps;
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index 8a0a919415d4..afd59d678fd0 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -3,10 +3,10 @@
+ #include <linux/list_sort.h>
+ #include <linux/string.h>
+ #include <linux/zalloc.h>
++#include <api/io_dir.h>
+ #include <subcmd/pager.h>
+ #include <sys/types.h>
+ #include <ctype.h>
+-#include <dirent.h>
+ #include <pthread.h>
+ #include <string.h>
+ #include <unistd.h>
+@@ -235,20 +235,16 @@ static void pmu_read_sysfs(unsigned int to_read_types)
+ 
+ 	if (to_read_types & (PERF_TOOL_PMU_TYPE_PE_CORE_MASK | PERF_TOOL_PMU_TYPE_PE_OTHER_MASK)) {
+ 		int fd = perf_pmu__event_source_devices_fd();
+-		DIR *dir;
+-		struct dirent *dent;
++		struct io_dir dir;
++		struct io_dirent64 *dent;
+ 		bool core_only = (to_read_types & PERF_TOOL_PMU_TYPE_PE_OTHER_MASK) == 0;
+ 
+ 		if (fd < 0)
+ 			goto skip_pe_pmus;
+ 
+-		dir = fdopendir(fd);
+-		if (!dir) {
+-			close(fd);
+-			goto skip_pe_pmus;
+-		}
++		io_dir__init(&dir, fd);
+ 
+-		while ((dent = readdir(dir))) {
++		while ((dent = io_dir__readdir(&dir)) != NULL) {
+ 			if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, ".."))
+ 				continue;
+ 			if (core_only && !is_pmu_core(dent->d_name))
+@@ -257,7 +253,7 @@ static void pmu_read_sysfs(unsigned int to_read_types)
+ 			perf_pmu__find2(fd, dent->d_name);
+ 		}
+ 
+-		closedir(dir);
++		close(fd);
+ 	}
+ skip_pe_pmus:
+ 	if ((to_read_types & PERF_TOOL_PMU_TYPE_PE_CORE_MASK) && list_empty(&core_pmus)) {
+@@ -721,8 +717,8 @@ bool perf_pmus__supports_extended_type(void)
+ char *perf_pmus__default_pmu_name(void)
+ {
+ 	int fd;
+-	DIR *dir;
+-	struct dirent *dent;
++	struct io_dir dir;
++	struct io_dirent64 *dent;
+ 	char *result = NULL;
+ 
+ 	if (!list_empty(&core_pmus))
+@@ -732,13 +728,9 @@ char *perf_pmus__default_pmu_name(void)
+ 	if (fd < 0)
+ 		return strdup("cpu");
+ 
+-	dir = fdopendir(fd);
+-	if (!dir) {
+-		close(fd);
+-		return strdup("cpu");
+-	}
++	io_dir__init(&dir, fd);
+ 
+-	while ((dent = readdir(dir))) {
++	while ((dent = io_dir__readdir(&dir)) != NULL) {
+ 		if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, ".."))
+ 			continue;
+ 		if (is_pmu_core(dent->d_name)) {
+@@ -747,7 +739,7 @@ char *perf_pmus__default_pmu_name(void)
+ 		}
+ 	}
+ 
+-	closedir(dir);
++	close(fd);
+ 	return result ?: strdup("cpu");
  }
  
 -- 
