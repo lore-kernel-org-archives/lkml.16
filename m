@@ -1,119 +1,101 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DFB197A76;
-	Fri,  7 Feb 2025 10:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906B91DE3C7
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 10:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738925053; cv=none; b=VW5r6seuv8Ptr4jdsF163356UInXe1cK6kit0G+mckKepsc1oqCSRoVl3tweYVMXb/fDXWyBclyGuY1MAXK73666UnIOe1KOJbcAmg4S/Hczd9UxUOwYvlvhBr/OBJmrh9g1/dYWCsRMiKztkdywweKWOpSxuw2v7FRCOV+7Zu0=
+	t=1738925069; cv=none; b=t4NVbtuYJPLJL90RbIr/EQuPK7D8CjqQJzqP8OAVnKY3IxWmu7Cg/iW/FdCWNAANuS8H6fVY/VKTbyrMogukUHqomoLJ+hLHWuNyx6gvl+MwOJ+u5XeNZ2pUbUxMfXN9OhEnuNIts1aVdIHV+sknA/aSZAgNcIP0GPJilDd7FVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738925053; c=relaxed/simple;
-	bh=+PnHJgJsHGVk93WnAIslGWw2a83XhmUqB5y6LpefQqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BcRXoi/hsSX+FqkdjZWQF3Eg9A4iI9sFcS9KVu4c8dw9WYbokmrQ5sJnAvB8i/6GbeEEsPF7lRwxPZogbPh6HpKjZJtgFkrU0yMVakvemOMALnR8vyfuhLNgx2E5Xl9DLKs0iD3QkUstWOFFTocb01dZ04hC+Ul1X0HTJGGIPDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HaNH6WWF; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HaNH6WWF"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CA82E4341E;
-	Fri,  7 Feb 2025 10:44:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738925046;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S2JN7acEOnnpYF6SorF298vSINNq+oWjlH4/5NBSfyY=;
-	b=HaNH6WWFViXuiG2j0REEdEA7Huzmr47PqsGfPagJxsHdJYbotxExCUATLn7KdciQ5z+OeE
-	SnVoCCuh7O0xu/LfCMmQJwrpdXU9wivbuYvqL3xNOv857o9Kt5lTkkd/BelPnyK0SK7oD/
-	eHx646DAA+sZUqiq3xhAMU2z4255Uq4y4P2sL2XLOKKoag0s8Ya0dVf5/s/GlGB2nSvmqr
-	xeP7XFChYhGVl+Fyfkg+QJUnP5VcHft/XlsrsoE4Ev0W+NRdxPZ0tXdKMHmDi53JWapH7P
-	gEIQuiMR/bsX0Qi+Z8oLFEQYHSjji99C06ryYEuNQMDD4P/dbggMiSEFEuBUOw==
-Date: Fri, 7 Feb 2025 11:44:01 +0100
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, Jagan
- Teki <jagan@amarulasolutions.com>, Marek Szyprowski
- <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>,
- Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, Paul Kocialkowski
- <contact@paulk.fr>, Maxime Ripard <mripard@kernel.org>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, =?UTF-8?Q?Herv?=
- =?UTF-8?Q?=C3=A9?= Codina <herve.codina@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Paul Kocialkowski
- <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v6 15/26] drm/bridge: devm_drm_of_get_bridge and
- drmm_of_get_bridge: automatically put the bridge
-Message-ID: <20250207114401.7869b422@booty>
-In-Reply-To: <w3qufv73ldzdcfuz6n3prx4di2dhoq2wfqmmvxvxkea6uqxkge@pjwmugvicsbt>
-References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
-	<20250206-hotplug-drm-bridge-v6-15-9d6f2c9c3058@bootlin.com>
-	<w3qufv73ldzdcfuz6n3prx4di2dhoq2wfqmmvxvxkea6uqxkge@pjwmugvicsbt>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738925069; c=relaxed/simple;
+	bh=lN4nrDYTRklXqmA7TsPRfUyGwSeYEUQrZUEulGtfDOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qByw7lfkX9x0NbqJT/wnQ6O6Lon1MFlnOelt8HQxdevDdW5k4GXFxw3zLHWnFk9Z55Ak0uFNURgSRbN3UdD8+rEktbqBpuklvJEFAYvKDMd/dqGrri2eNOJ/c1SFmzLg9ggzn3YnndDezVVM9WPTWiyzzAiGNDXo0ffLOum/bYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tgLq4-0003Ps-JG; Fri, 07 Feb 2025 11:44:00 +0100
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1tgLq0-003xey-2N;
+	Fri, 07 Feb 2025 11:43:56 +0100
+Received: from pengutronix.de (pd9e59fec.dip0.t-ipconnect.de [217.229.159.236])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 6E78C3BC0A1;
+	Fri, 07 Feb 2025 10:43:56 +0000 (UTC)
+Date: Fri, 7 Feb 2025 11:43:56 +0100
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Charles Han <hanchunchao@inspur.com>
+Cc: manivannan.sadhasivam@linaro.org, thomas.kopp@microchip.com, 
+	mailhol.vincent@wanadoo.fr, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	cem@kernel.org, djwong@kernel.org, corbet@lwn.net, linux-can@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Subject: Re: [v2] Documentation: Remove repeated word in docs
+Message-ID: <20250207-spectacular-rapid-ostrich-491b96-mkl@pengutronix.de>
+References: <20250207073433.23604-1-hanchunchao@inspur.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledtkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeglefffefghefhtddvfeeufeeiveekgffgleekieduteekkeetvdehudekgfdvvdenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegtvgejvgemiegtgegvmeeitggtjeemleekgeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegtvgejvgemiegtgegvmeeitggtjeemleekgeejpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefjedprhgtphhtthhopegumhhithhrhidrsggrrhihshhhkhhovheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehinhhkihdruggrvgesshgrmhhsuhhnghdrt
- ghomhdprhgtphhtthhopehjrghgrghnsegrmhgrrhhulhgrshholhhuthhiohhnshdrtghomhdprhgtphhtthhopehmrdhsiiihphhrohifshhkihesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="eakuq3ags2tfwyiu"
+Content-Disposition: inline
+In-Reply-To: <20250207073433.23604-1-hanchunchao@inspur.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Fri, 7 Feb 2025 05:17:43 +0200
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
 
-> On Thu, Feb 06, 2025 at 07:14:30PM +0100, Luca Ceresoli wrote:
-> > Add a devm/drmm action to these functions so the bridge reference is
-> > dropped automatically when the caller is removed.  
-> 
-> I think the get() should go to the underlying of_drm_bridge_find() function.
+--eakuq3ags2tfwyiu
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [v2] Documentation: Remove repeated word in docs
+MIME-Version: 1.0
 
-It is done in the following patch.
+On 07.02.2025 15:34:29, Charles Han wrote:
+> Remove the repeated word "to" docs.
+>=20
+> Signed-off-by: Charles Han <hanchunchao@inspur.com>
 
-Indeed I could swap patches 15 and 16 for clarity. Or I could squash
-together patches 14+15+16, as they are various parts or the refcounted
-bridge implementation, but I felt like keeping them separated would
-help reviewing.
+Feel free to mainline the patch.
 
-> Also it really feels like it's an overkill to keep the wrappers. After
-> getting bridge being handled by the panel code would it be possible to
-> drop all of them?
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
 
-Do you mean having only drm_of_get_bridge_by_node(), without any devm
-or drmm variant? I'm not sure it is a good idea. Most DRM code (well,
-all of it, technically) is currently unable of working with refcounted
-bridges, but if they use the devm variant they will put the ref when
-they disappear.
+Marc
 
-> Then this patch might introduce one new devm_
-> function? Or are drmm_ functions actually being used to store data in
-> the drmm-managed memory?
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
-Which devm function are you thinking about? Sorry, I'm not following
-here.
+--eakuq3ags2tfwyiu
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Luca
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmel4+kACgkQDHRl3/mQ
+kZzsswgArOJDaeMFtimp9FAJi4u7f1yqSNH2V3N70daGwc7m14oMljUaHbxbchjI
+kIWLJ3OBVjfIflan5CAdWm44bygePzPEBHrxsHN4E/SpXLt5lut4ODJrLNE0Rm8J
+4ijBusrMJzc4GzJGBFBLgXLG1Jft7ow6uNgs/7rjJqsCYs851lOa57ryozzu2uOr
+K1HQkSyJrHz4GTQfag0CKoSWdzB2S9M3a+cv27OO13/uxQzx+vHo7ykxKvv3Qneq
+aVZGQEe80nD/2iHjG3bcZI+cnXIcELH4aIE9g+bXRVnCTFYvMm/U9GBWkAgCELtt
+dY4oPH79wLk4pUbmgSOOh9TymIUV0w==
+=O1sQ
+-----END PGP SIGNATURE-----
+
+--eakuq3ags2tfwyiu--
