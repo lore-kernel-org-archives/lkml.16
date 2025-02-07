@@ -1,62 +1,62 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108F3238D57
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0443A238D49
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738940718; cv=none; b=cbVMyIlPQIxDb5AK2ftNYFJHG+kjFXCHKaPbRc8Omc2c9dfuB05V2BT96fJYwq2nJVOUai5x+VquqKFvxf3EweiZJPbbi8wim8zRCt+4TutZ3QKTpNNoeEbuIcQiqwDBJSJ2+pELV05CA8NPYwRflJoXNbGxxQrzJtzwnhe02Hk=
+	t=1738940743; cv=none; b=gAMVSHFok5qR8QR3aXHpls4kdkVcE/cd8kOhDpCoVsCEsEhj9LkB5lfO804xiNGIikY7HhhlRpkj/noYtrIc+9/tu2GGC+SiEe+Pyuzopr68oTBFE3uj+zHb+YA7sCd0mgib7mnnDRUl/kqdygqr7zHPvnr9Ul+a9Av5Kro5n3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738940718; c=relaxed/simple;
-	bh=JM75lUan+PgZjJreOeRDnaaV1XjVImBU+5Ipcn4UJkc=;
+	s=arc-20240116; t=1738940743; c=relaxed/simple;
+	bh=tpnl5paSFKhhqeqQuFY14M6+2w0Ab9dzNNVQZJyqExg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OFZVMnWQ/gZJb+zdN8crzqHCkQjhRLsCChlTW5jKq2ikgICpljqJltzn0dfqe1jnOBZxX6vD5GFk1vm5WnJT96ppNeNvUebHP5hpwuboqJtBOtp+iulahXYI9ejGrrIEud/Hqn1KkoX5uamekozu8eCX5IvZIS3Ss20SVpIQtmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jr+5KiKe; arc=none smtp.client-ip=209.85.214.176
+	 MIME-Version:Content-Type; b=fnHVukbbA5xbB85nuNnhfo1ZWLFUps5WEG/Yk5eWoT/Y36iXATkMEJBTZiGqM5ur2z/1A107N/wKZypHF/oLbJQ6brp4wia7maptOgVSvFmEu7+GiDjxVoFUa5rbuSijKkRQMTooKvhpo5xWwMj9IY4UDOJuqSNLY6JuTDuVHto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e0L9Pvq8; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jr+5KiKe"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f54143aeaso1708315ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 07:05:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0L9Pvq8"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2fa102a6106so392110a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 07:05:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738940716; x=1739545516; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738940741; x=1739545541; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1rZqqE3JGOQwe0uxvTrE9UiOzWIpwjT46qv4gIG869E=;
-        b=jr+5KiKewh5iliCaGeBHgiNFncY3uXgoW6ZOfJeZ3X6nJIhbWgTyPySCMYFw9c86Vw
-         BuFALpYqg675mYQkXlbtC7Z5Ftmj7/a9KWQ4W9HHxBzA3Hyo+vcE/+y85uxZMnsyhTT2
-         +mA3kNT3c8F5GNt5Jc/4gTH4kIr46cNpE7dKTxxSOeP71x+zXA4E4GA+bE9ResooOiv1
-         XlQeav5tpeiXldlvISFcapbhdp62s75XDc4zEeKjx9HzLSS9vzrVF6yBJFy0fX0XrsZ3
-         2xGNmP69dd+Ri/7QUtND05chR1ayh1xWhiUqfqfo3a+JEFqGkfK4CDm9YAY5TbMQpKQP
-         q+QQ==
+        bh=gSw42FRgNCjxmewimBSBZv8A2FxIaDRWKJvRBMe4boo=;
+        b=e0L9Pvq8jltP3SPR9kx0VNmLY34DJiBxbsZ7bm1yJUx876E6ZjrTsFdXGY2Olrr3RJ
+         ru13JILfIhpqSWYfRBi+dz0cgwOYC+n6Mq8xrRR9ByjZwmzjbBQhixrFYHCkTgGKXmJ2
+         lU5Ij/0DVNbqeiRqqN+9D3xxjTftzaDW2i8Orxii1EEXJ/w1DhvP+zoLlAT0x5LK5mf8
+         jj8Meq+W3mn4nKl36RmAjM3aomNSo0KQwiZCn5jz89Dp2jVyF1txBPLj/chtbceeV+is
+         ABAP3AEqUw8+3kxogLd1/7JuDKQw20DiZsVaGq6uHdvT7/zbjSJLojBzfhUf4HT+pNha
+         iFSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738940716; x=1739545516;
+        d=1e100.net; s=20230601; t=1738940741; x=1739545541;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1rZqqE3JGOQwe0uxvTrE9UiOzWIpwjT46qv4gIG869E=;
-        b=YiUgBIr4YPdM6sekP7DOdAlkgh3IGOmZrcvVBD8+N8eJ04/s7cQyWusdlXv20GN252
-         h15kjn4IwR7nm3DYaXE38btCJEFpexCPmEm8qZz8ZvrP5Ag1yB81B2jSj/YyKOVN+cuT
-         a5ij63MULhs+9TpCc0IRmrRFlpJfepzBBhMGhyaqO2yFuTJnRfJYrwDcrnn7k48qgoaG
-         IV3pseYfRNL8VvC4TL/lRimfyNXkcPP1SNBgNHKKES+sAueDQSPzc6W1Ylr2mJlwSrdd
-         La1082SPXGuUk557o/vrclBF0uwpahfXl3u7KbPtIqMSvs0A4F88VpdV2mttz4PQ9nW+
-         AG/g==
-X-Forwarded-Encrypted: i=1; AJvYcCXUc06LT64P7bLpM2HTh+gnbHOzk4FbOZxgGm+a3MSGW1D/Vl/8vHVsOAM/ZP3sVmdcL0dnXAIZw1MEjjs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkzURQMBpyX9gyRvxEOu3f6V50EJBlyC2r2jG1SQITSMasd4/H
-	Jk8VPq2CclKnaP2IrjLvAKmkgW7z43SUzOfIFL4VmgqAluRAxagb
-X-Gm-Gg: ASbGnctAqgM4J3E14THOpFLNPG+Fo8G1x1U41qRyisSMrZzlYiT6XIelAlS709t3Uji
-	L7a27/mwOVZ1otvtLY4nyB205QprTJbil+4++Wx/zioxU7uKZNMMFn6/iSZdY6N77wE0poAq2Cn
-	KgK/747epXqGlkeJ8UMlJN3t7wUMUKrJy1cD3vxCEo7ZItA9VJpY8Qor828COyBLERFlXRUtDcw
-	rOlnWf/8AC+l8oCCqwJN1+nha0MxTXnsqvFOFgtofYcaBLoQT23HoI4DghmC+KIdERDc4bGJQPY
-	XZSQwh9sWFNKne5Hed78brjRCvdk
-X-Google-Smtp-Source: AGHT+IGAOd3eG64EQ/+fz78StGhKZCLqlyg80K+huyKXP022AXPhWTWGkNChoIscgZ2sJe4N/sY6CA==
-X-Received: by 2002:a17:903:32c7:b0:215:b75f:a1d8 with SMTP id d9443c01a7336-21f4e1b1236mr20050945ad.2.1738940716290;
-        Fri, 07 Feb 2025 07:05:16 -0800 (PST)
+        bh=gSw42FRgNCjxmewimBSBZv8A2FxIaDRWKJvRBMe4boo=;
+        b=BSzb4/wkmqcf/pJZkc5agjxknXjW/9rfxGmaYFRjQrZ1fyn1EDDVUcf+BLBE9+MecG
+         7sI5fIaHUXO0b+IUWJpQzHd3MwNYZUSrf+o7pZDo+EFiGBvqmHnPWqs1f4KKNz3k3YVR
+         2A0psjmEUF7O+vyNfmpMGwZkBOdMmfFfRErzKYY88L9ouPNiwga8K9uVhQuosVBO93Xr
+         o1bfK3eJpCrb+3/uF74/sA14eMHPaOWjsIvXFh9K/3QYomUTyDj/0I/7fbBrqFHvH877
+         7MONyJazoHkZBKSKCSMYvs/8BrCoLz03c71884dOIUL9FBJ5B7Pdfj9RtD42asAronIp
+         +F8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVuMfiMNTTsSEUqJ7hByF+csTxoA58hevKPUwevpMaO8nm7qJzkHa/N+mrw3J6yHyK5XxjtaBl7Lu6vifs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxv9+JNyOnJvRbZ7M1zNtEeLPMN0abPR4N4HkK2vbIScvArSVI9
+	OlrgtV2QyuyT0CA633QoowDj7vYB6QNwYkss3RLG5YE0kzCbF4YQ1V9LZc88
+X-Gm-Gg: ASbGncshkcFiroR6XeM+mdue1eNxXQXZ5axdFLm/WX5hDzTpIgkVE4x0MIZvE3OyK8c
+	ZVuUZwKhtTyXVE9bpt7+BwNg62Yb2BxstGXtaR2Bpnu/wBCHcoF/fJWF4k9/2IRi4KIyPk+glef
+	7VB/O2G1IJlcfzvCVUnxTs2WP9amuHWLUSVWMYFfQd91p5+/33RTnHl4IIwwCC5BzQAVwuTCSwr
+	/BH/CraD6vartiwLmPz/Udy81MtBUOPjc72/P3EQfqjX1UXZRv3bXiROQ9+pP+h6pfPF9Gxk0rX
+	8l8xMHncNy0r3uul2OZcGloN9x2r
+X-Google-Smtp-Source: AGHT+IGNlS0T/GdMUhhWevTypVg2UM3SagditpbSAkAM1Hr29uViTN4tQepsg9ZLAW/QQ9Svc99U2A==
+X-Received: by 2002:a17:90b:4f90:b0:2ea:c2d3:a079 with SMTP id 98e67ed59e1d1-2fa2452c66fmr2112982a91.3.1738940741221;
+        Fri, 07 Feb 2025 07:05:41 -0800 (PST)
 Received: from localhost.localdomain ([2802:8012:30:9200:a83e:911f:eb3e:1cb7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653b143sm31855815ad.54.2025.02.07.07.05.12
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653b143sm31855815ad.54.2025.02.07.07.05.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 07:05:15 -0800 (PST)
+        Fri, 07 Feb 2025 07:05:40 -0800 (PST)
 From: Gaston Gonzalez <gascoar@gmail.com>
 To: linux-staging@lists.linux.dev
 Cc: dpenkler@gmail.com,
@@ -72,9 +72,9 @@ Cc: dpenkler@gmail.com,
 	skhan@linuxfoundation.org,
 	linux-kernel@vger.kernel.org,
 	gascoar@gmail.com
-Subject: [PATCH 1/5] staging: gpib: cb7210: remove unused variable
-Date: Fri,  7 Feb 2025 12:04:05 -0300
-Message-ID: <20250207150427.153982-3-gascoar@gmail.com>
+Subject: [PATCH 2/5] staging: gpib: eastwood: remove unused variable
+Date: Fri,  7 Feb 2025 12:04:07 -0300
+Message-ID: <20250207150427.153982-5-gascoar@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250207150427.153982-1-gascoar@gmail.com>
 References: <20250207150427.153982-1-gascoar@gmail.com>
@@ -87,7 +87,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Remove unused variable 'nec_priv' in function 'cb7210_line_status'.
+Remove unused variable 'nec_priv' in function 'fluke_line_status'.
 
 This change removes the following warning found compiling with W=1:
 
@@ -95,23 +95,23 @@ warning: variable ‘nec_priv’ set but not used [-Wunused-but-set-variable]
 
 Signed-off-by: Gaston Gonzalez <gascoar@gmail.com>
 ---
- drivers/staging/gpib/cb7210/cb7210.c | 2 --
+ drivers/staging/gpib/eastwood/fluke_gpib.c | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/drivers/staging/gpib/cb7210/cb7210.c b/drivers/staging/gpib/cb7210/cb7210.c
-index 381c508f62eb..5c2b2c382df3 100644
---- a/drivers/staging/gpib/cb7210/cb7210.c
-+++ b/drivers/staging/gpib/cb7210/cb7210.c
-@@ -383,10 +383,8 @@ static int cb7210_line_status(const gpib_board_t *board)
+diff --git a/drivers/staging/gpib/eastwood/fluke_gpib.c b/drivers/staging/gpib/eastwood/fluke_gpib.c
+index d5b1a03abf11..65bb79a8fd3c 100644
+--- a/drivers/staging/gpib/eastwood/fluke_gpib.c
++++ b/drivers/staging/gpib/eastwood/fluke_gpib.c
+@@ -194,10 +194,8 @@ static int fluke_line_status(const gpib_board_t *board)
  	int status = ValidALL;
  	int bsr_bits;
- 	struct cb7210_priv *cb_priv;
+ 	struct fluke_priv *e_priv;
 -	struct nec7210_priv *nec_priv;
  
- 	cb_priv = board->private_data;
--	nec_priv = &cb_priv->nec7210_priv;
+ 	e_priv = board->private_data;
+-	nec_priv = &e_priv->nec7210_priv;
  
- 	bsr_bits = cb7210_paged_read_byte(cb_priv, BUS_STATUS, BUS_STATUS_PAGE);
+ 	bsr_bits = fluke_paged_read_byte(e_priv, BUS_STATUS, BUS_STATUS_PAGE);
  
 -- 
 2.47.2
