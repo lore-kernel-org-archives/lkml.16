@@ -1,208 +1,204 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2079.outbound.protection.outlook.com [40.107.92.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE34623979E;
-	Fri,  7 Feb 2025 06:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738909848; cv=fail; b=E0L4hX7HrhaqyPAU5Td00+w6LHwfeSQX7sHF7iDujMZw0V+CcjihJd2/ufJ4q9BZOScN9M9RDNaHOcPI07O2XjOlkO2ogZ7JLACTzWaV++VKT6dGsy2s8mrHdPURc4oTwh4OJE9aQklzxoXM2rnW+DsbMH05+iDkLO5vI6hr4Hg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738909848; c=relaxed/simple;
-	bh=XvW7tQkxCfuBCH74QjqUQhH8LlOfRy5BQ7RLZ9UtxB4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uJBtwVdYI5HeMeUPojav+Oldkr/ho+AXd5aEKbIxO31I6KOrMFAtCkIYSPrDvZbP1bunoUCfz3LdB3dFg0mtNXziZDpKtooncW+cdy9j08nGrg/FCIvmi0/7kXszKL1dDWC1NcId/FxPso3RYcfndKht+elE9hv8wCHqdbdno5E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TyvpMSoJ; arc=fail smtp.client-ip=40.107.92.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB909155321;
+	Fri,  7 Feb 2025 06:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738910078; cv=none; b=Q0nzF316BTn0wVgF/lv1xSqTpi6NAteOy3N/Zj8oplhRl3IBDxVxv7N+NwtvA0bmwvbjmnfTkRsN2I/m1KLhpfiQxhPFG07B0q0rdU/mtHQdLhZj5ACIYubVBfJ4rqIXnpBG4LMzFz1PyPqbBB/y4Q3sJrx0my5IA3WII0VV2Pw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738910078; c=relaxed/simple;
+	bh=9zL1JCJ81HG6MYwMvRcPGSa34p9m+XY7JnkhgZLFcio=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=eeou4soX9L7IL2aLe79YiMCMP3JfCozzjMTyiJ+7PDp+Roq6E9TB6usKqxS//deaLOX76f7CFyFrM+2VNd2kZIys42XITvwHtz9uSM0T9q4SgFqFvdG1mojyfujpDBFN2s5eYdY7d/siXp7FHp/7mryz2PnLhKr3B6YIrZNksKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dm9gYeaX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PPTBMNbK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dm9gYeaX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PPTBMNbK; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TyvpMSoJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HZKBZ6rf4dNhb0600oXfdknBWJtlm2qBMTGKeGrl5tUv/WXiJdkAjIK6e0DZnc/X65RtKIvjb5m6vSR2P3g1T5h/ZQqpYjS3n5n+lnBkdKjRPkdPmhGxgyl6o/LVD+3Odo4AWyqrQU+fsxwWDsJ8+GfNDYJduOK8ozJxYSAXzFPzNFsmDW57BCEq1zEL+slJqkIJfu7hXu0/nNCZqSoGIPxZQZs31zVVUSEkdp8qB444c/Nggh/UlNEMDKw2Wl06uNNNkB8+F4+5sjhTcDuqtgcx/30A3eaDQOhaCE2xtPZUB2pBBsWFzPR3JHrKqYxtGspiIU1oNi8kd9bjPfn08g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xLjkj9S6yxnbSRqJYDjwdgIbZTMo5Nr3ixnZYGFgK9U=;
- b=qvm3+B9iTnykzL1ft5sQSNMb3R9SYX//Ep/NFeIlcdaEDO4V7IfLhO1diWELvpZ17Y1a6pgW99fSlSfsEB4BzM/uCm+IMJTEEvilo61/Q0FH4M6X3kebaODfvqUkLNSxfRkDZsRP2zRw3Oxw3+hBGzrcmlvUo03VwBLnXs7RBQdDppIr6H3ro69fX/JFpt8T2J9S4z+Etd+vt2/gLmWWAteRP+RB0v5DNZh263nm/pr5Q9mpxrRynZqp7Yx9bw0+dshxHF9Tvwxy9U6uBpD9XxAFFhb0Fpn8sKUImyalFGUGNaMTNfIqhyKN/6EQ5TRLAzV4MTfLFy9XI9cmd5yHHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xLjkj9S6yxnbSRqJYDjwdgIbZTMo5Nr3ixnZYGFgK9U=;
- b=TyvpMSoJGxXutSVBJUaNJRo2p9PNdEduzcnCVHBXM+yEjGkenqavJRx8CFTEamwwr59UaWUhUhBZ0zw8M//3wmK1aJtpCmZ7+ZHYnwKQBs1V5YCDi47wQDPgG6pWueTxJ94eKqFKktLslBsAQQviHOUayo4LQ92S/VtxBav+cgU=
-Received: from PH7P223CA0005.NAMP223.PROD.OUTLOOK.COM (2603:10b6:510:338::7)
- by DS7PR12MB8232.namprd12.prod.outlook.com (2603:10b6:8:e3::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Fri, 7 Feb
- 2025 06:30:43 +0000
-Received: from SJ1PEPF000023D3.namprd21.prod.outlook.com
- (2603:10b6:510:338:cafe::6c) by PH7P223CA0005.outlook.office365.com
- (2603:10b6:510:338::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.28 via Frontend Transport; Fri,
- 7 Feb 2025 06:30:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF000023D3.mail.protection.outlook.com (10.167.244.68) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8445.2 via Frontend Transport; Fri, 7 Feb 2025 06:30:43 +0000
-Received: from vijendar-X570-GAMING-X.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 7 Feb 2025 00:30:38 -0600
-From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-To: <broonie@kernel.org>, <alsa-devel@alsa-project.org>
-CC: <venkataprasad.potturu@amd.com>, <Basavaraj.Hiregoudar@amd.com>,
-	<Sunil-kumar.Dommati@amd.com>, <lgirdwood@gmail.com>, <perex@perex.cz>,
-	<tiwai@suse.com>, <linux-kernel@vger.kernel.org>,
-	<linux-sound@vger.kernel.org>, <Syed.SabaKareem@amd.com>,
-	<Mario.Limonciello@amd.com>, Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-Subject: [PATCH V3 25/25] ASoC: amd: amd_sdw: Add quirks for Dell SKU's
-Date: Fri, 7 Feb 2025 11:58:19 +0530
-Message-ID: <20250207062819.1527184-26-Vijendar.Mukunda@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250207062819.1527184-1-Vijendar.Mukunda@amd.com>
-References: <20250207062819.1527184-1-Vijendar.Mukunda@amd.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dm9gYeaX";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PPTBMNbK";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dm9gYeaX";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PPTBMNbK"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A72611F38D;
+	Fri,  7 Feb 2025 06:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738910073; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=46HnAIGhPyKnbml6GeZ1Ul4m30WJZV3aL7KJwlh5X/4=;
+	b=dm9gYeaX0sCzV0EI5zAqmyQo8+JOWiAwDQ/bzQ02e5ceVLPswc5u8YHt8ZqNipLBtvoTpX
+	r2SMopwQ+QowwAGyLeqmv9ZSvqpCjFGSjzLJrOQs+B9JMTt6mvGxAy8c5wkDVn94gKw465
+	ZRJiT9pxGaIw8a2ZpYLnZVTLrLBNDmM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738910073;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=46HnAIGhPyKnbml6GeZ1Ul4m30WJZV3aL7KJwlh5X/4=;
+	b=PPTBMNbKghjtLgepYoiJeLmPisaIzGT/PHP/1aAF86ndNZDrS30yuepNzqikcJiySCNQp8
+	ddPnemhxdv7KmZBA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=dm9gYeaX;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=PPTBMNbK
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738910073; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=46HnAIGhPyKnbml6GeZ1Ul4m30WJZV3aL7KJwlh5X/4=;
+	b=dm9gYeaX0sCzV0EI5zAqmyQo8+JOWiAwDQ/bzQ02e5ceVLPswc5u8YHt8ZqNipLBtvoTpX
+	r2SMopwQ+QowwAGyLeqmv9ZSvqpCjFGSjzLJrOQs+B9JMTt6mvGxAy8c5wkDVn94gKw465
+	ZRJiT9pxGaIw8a2ZpYLnZVTLrLBNDmM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738910073;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=46HnAIGhPyKnbml6GeZ1Ul4m30WJZV3aL7KJwlh5X/4=;
+	b=PPTBMNbKghjtLgepYoiJeLmPisaIzGT/PHP/1aAF86ndNZDrS30yuepNzqikcJiySCNQp8
+	ddPnemhxdv7KmZBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ED901139CB;
+	Fri,  7 Feb 2025 06:34:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id pJ8pJ3KppWdxKgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 06:34:26 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D3:EE_|DS7PR12MB8232:EE_
-X-MS-Office365-Filtering-Correlation-Id: e88505ee-862f-4778-722d-08dd4740f2d5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?u/gXDP8VSAF+hjoPj2pLhoOaZPu1elnihExDn+1o9dYPxh44hoth+6a0efuP?=
- =?us-ascii?Q?uOdAeOfjWcnTwI8gvzSwblm7Ne2piDaG7Iskmd/dXmCoV+zChaSMlgg3ExHZ?=
- =?us-ascii?Q?KU9FQlFuwe8cm5sBrAUo4MHZB59u3EQokCmF8/JVQkAr4jv7vtsotSkDbIWS?=
- =?us-ascii?Q?1oJJnDU4h59Ug1JIwnwYg7nwXRkk5l+oA2BjtrWIGiYJ6lFISshBPfgopqcw?=
- =?us-ascii?Q?tvyA5Uh4ubE9YnlrivZE/7XXssmnxZqV97EquEiAyb0kStDd7to9/RAh61vk?=
- =?us-ascii?Q?RQIjTB+F5OLgf6/ZsRwhFnaSH/bC+fjXPlXKC4RUXSgl3QbdcVY1UM+YMfLt?=
- =?us-ascii?Q?7U5OYrWSkoDQ1xhIwfJLC9l44n1mZMdzAd2WDQTjofDloDb2x91V+k7vqVyc?=
- =?us-ascii?Q?NLQYAmdYS8Hnkq4A4mmcZziJjD6UPERre0XkNbesBiLfM7mChHaYWpyLJdTZ?=
- =?us-ascii?Q?qlofgYfxdoPm42R1fAIn8G3w0wQO03fPLy1M166MuxycNE1bHHbjn0CZyYto?=
- =?us-ascii?Q?ijUBFVKdyQm4vj3RYIMn+L2UIGTV6z6pi2GGQEI7LNWAjZaEVc8tm6Qn8PFV?=
- =?us-ascii?Q?z8a54/BEj2bSQYncNCHwSfcIwSPDwce02fNCbW4DF/baiKLpyNRhWvJkDHnM?=
- =?us-ascii?Q?/3DQBqFKNL0NrVKiDA+hfu1icXSEYuo1E2OVr6SPBXj4pgX1KuEKb0HdKvhU?=
- =?us-ascii?Q?G0ISNz5HQydvAgF/g9ZgBxBODvA/VEB2TPkBrohEVrOgbqv/p5w+OYiXnTlZ?=
- =?us-ascii?Q?B/ey9CbVMkYKmHPh4sXFIKbD4zkvXxVKzj98/+R42tGFinav8xyESrJ0QKum?=
- =?us-ascii?Q?YDilxUM3vai9FPNL91TVlA84YD1/rNS9XDlsYeu2F+92Pcfg9WxnJl1PV8Ja?=
- =?us-ascii?Q?DqgYPTPNU5xAOagbOC8PUqBm7cUNAL/u17OJ5+koa+kO9CAU2YfWS0Bsv/NS?=
- =?us-ascii?Q?uwVf90x7YB/4mvO795fDpUI6tyxx3IRncTiosAhm44IZhAVCZGRrLZPxRF9W?=
- =?us-ascii?Q?KZzktQ837eoqCQjhqaezHDEnS9VfjVd1RK6yy6DLhE4AhqaHzm4f0Bm89bMC?=
- =?us-ascii?Q?P7YRh6vURnEV55pSnVHo3vXirdHFRC66JjAZ+f8GxdDq6RUqbhX0jjZgXrmy?=
- =?us-ascii?Q?ffd0dJiR1mffiYePYctb1nBf5SXdOiH5YG2J7YwMMa3YqvSHf/Y59E8KubGw?=
- =?us-ascii?Q?/i2n69NSaCe/5cfPtOCgQdkZRbfIYrNvZD1ONF2AUROHHqo2saFc/vTYubJc?=
- =?us-ascii?Q?MaxMwfZfCcHKMLRVQOcbOk6bILoF72yrISWSkGqzbXNqio97DnQhNMcFTwIY?=
- =?us-ascii?Q?sLBtHlW8T4p6z4DVsnB7CVYcMRbA+rytbaKvruw53IP85Bs6Y+T1CBmhtt1n?=
- =?us-ascii?Q?0zool+lswYlzLE2djgpU6SMV7+BoZXllakcmP9ooPvlmyxBRv9ZXWZJDck0T?=
- =?us-ascii?Q?93UG4mRzVBQfWdPvRM+ag4eFe0peqFta0sfnOY7AX1ttpyM0UXCWAcIFOrJn?=
- =?us-ascii?Q?QSGpNp/Ws04lo0U=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 06:30:43.2469
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e88505ee-862f-4778-722d-08dd4740f2d5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023D3.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8232
+From: "NeilBrown" <neilb@suse.de>
+To: "Kent Overstreet" <kent.overstreet@linux.dev>
+Cc: "Christian Brauner" <brauner@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Namjae Jeon" <linkinjeon@kernel.org>, "Steve French" <sfrench@samba.org>,
+ "Sergey Senozhatsky" <senozhatsky@chromium.org>,
+ "Tom Talpey" <tom@talpey.com>, "Paul Moore" <paul@paul-moore.com>,
+ "Eric Paris" <eparis@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, audit@vger.kernel.org
+Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
+ user_path_locked_at() to never return negative dentry
+In-reply-to: <7mxksfnkamzqromejfknfsat6cah4taggprj3wxdoputvvwc7f@qnjsm36bsrex>
+References:
+ <>, <7mxksfnkamzqromejfknfsat6cah4taggprj3wxdoputvvwc7f@qnjsm36bsrex>
+Date: Fri, 07 Feb 2025 17:34:23 +1100
+Message-id: <173891006340.22054.12479197204884946914@noble.neil.brown.name>
+X-Rspamd-Queue-Id: A72611F38D
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-This patch adds a quirk to include the codec amplifier function for Dell
-SKU's listed in quirk table.
+On Fri, 07 Feb 2025, Kent Overstreet wrote:
+> On Fri, Feb 07, 2025 at 03:53:52PM +1100, NeilBrown wrote:
+> > On Fri, 07 Feb 2025, Kent Overstreet wrote:
+> > > On Fri, Feb 07, 2025 at 02:36:47PM +1100, NeilBrown wrote:
+> > > > No callers of kern_path_locked() or user_path_locked_at() want a
+> > > > negative dentry.  So change them to return -ENOENT instead.  This
+> > > > simplifies callers.
+> > > > 
+> > > > This results in a subtle change to bcachefs in that an ioctl will now
+> > > > return -ENOENT in preference to -EXDEV.  I believe this restores the
+> > > > behaviour to what it was prior to
+> > > 
+> > > I'm not following how the code change matches the commit message?
+> > 
+> > Maybe it doesn't.  Let me checked.
+> > 
+> > Two of the possible error returns from bch2_ioctl_subvolume_destroy(),
+> > which implements the BCH_IOCTL_SUBVOLUME_DESTROY ioctl, are -ENOENT and
+> > -EXDEV.
+> > 
+> > -ENOENT is returned if the path named in arg.dst_ptr cannot be found.
+> > -EXDEV is returned if the filesystem on which that path exists is not
+> >  the one that the ioctl is called on.
+> > 
+> > If the target filesystem is "/foo" and the path given is "/bar/baz" and
+> > /bar exists but /bar/baz does not, then user_path_locked_at or
+> > user_path_at will return a negative dentry corresponding to the
+> > (non-existent) name "baz" in /bar.
+> > 
+> > In this case the dentry exists so the filesystem on which it was found
+> > can be tested, but the dentry is negative.  So both -ENOENT and -EXDEV
+> > are credible return values.
+> > 
+> > 
+> > - before bbe6a7c899e7 the -EXDEV is tested immediately after the call
+> >   to user_path_att() so there is no chance that ENOENT will be returned.
+> >   I cannot actually find where ENOENT could be returned ...  but that
+> >   doesn't really matter now.
+> > 
+> > - after that patch .... again the -EXDEV test comes first. That isn't
+> >   what I remember.  I must have misread it.
+> > 
+> > - after my patch user_path_locked_at() will return -ENOENT if the whole
+> >   name cannot be found.  So now you get -ENOENT instead of -EXDEV.
+> > 
+> > So with my patch, ENOENT always wins, and it was never like that before.
+> > Thanks for challenging me!
+> 
+> How do you always manage to be unfailingly polite? :)
 
-Note: In these SKU's, the RT722 codec amplifier is excluded, and an
-external amplifier is used instead.
+My dad impressed the value of politeness on me at an early age.  It is
+an effective way of manipulating people!
 
-Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
----
- sound/soc/amd/acp/acp-sdw-legacy-mach.c | 34 +++++++++++++++++++++++++
- sound/soc/amd/acp/soc_amd_sdw_common.h  |  1 +
- 2 files changed, 35 insertions(+)
+> 
+> > 
+> > Do you think there could be a problem with changing the error returned
+> > in this circumstance? i.e. if you try to destroy a subvolume with a
+> > non-existant name on a different filesystem could getting -ENOENT
+> > instead of -EXDEV be noticed?
+> 
+> -EXDEV is the standard error code for "we're crossing a filesystem
+> boundary and we can't or aren't supposed to be", so no, let's not change
+> that.
+> 
 
-diff --git a/sound/soc/amd/acp/acp-sdw-legacy-mach.c b/sound/soc/amd/acp/acp-sdw-legacy-mach.c
-index 00aeea70f04e..2020c5cfb3d5 100644
---- a/sound/soc/amd/acp/acp-sdw-legacy-mach.c
-+++ b/sound/soc/amd/acp/acp-sdw-legacy-mach.c
-@@ -28,6 +28,8 @@ static void log_quirks(struct device *dev)
- 			SOC_JACK_JDSRC(soc_sdw_quirk));
- 	if (soc_sdw_quirk & ASOC_SDW_ACP_DMIC)
- 		dev_dbg(dev, "quirk SOC_SDW_ACP_DMIC enabled\n");
-+	if (soc_sdw_quirk & ASOC_SDW_CODEC_SPKR)
-+		dev_dbg(dev, "quirk ASOC_SDW_CODEC_SPKR enabled\n");
- }
- 
- static int soc_sdw_quirk_cb(const struct dmi_system_id *id)
-@@ -45,6 +47,38 @@ static const struct dmi_system_id soc_sdw_quirk_table[] = {
- 		},
- 		.driver_data = (void *)RT711_JD2,
- 	},
-+	{
-+		.callback = soc_sdw_quirk_cb,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "0D80"),
-+		},
-+		.driver_data = (void *)(ASOC_SDW_CODEC_SPKR),
-+	},
-+	{
-+		.callback = soc_sdw_quirk_cb,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "0D81"),
-+		},
-+		.driver_data = (void *)(ASOC_SDW_CODEC_SPKR),
-+	},
-+	{
-+		.callback = soc_sdw_quirk_cb,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "0D82"),
-+		},
-+		.driver_data = (void *)(ASOC_SDW_CODEC_SPKR),
-+	},
-+	{
-+		.callback = soc_sdw_quirk_cb,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "0D83"),
-+		},
-+		.driver_data = (void *)(ASOC_SDW_CODEC_SPKR),
-+	},
- 	{}
- };
- 
-diff --git a/sound/soc/amd/acp/soc_amd_sdw_common.h b/sound/soc/amd/acp/soc_amd_sdw_common.h
-index 9bedccfe25a9..1f24e0e06487 100644
---- a/sound/soc/amd/acp/soc_amd_sdw_common.h
-+++ b/sound/soc/amd/acp/soc_amd_sdw_common.h
-@@ -24,6 +24,7 @@
- #define SOC_JACK_JDSRC(quirk)		((quirk) & GENMASK(3, 0))
- #define ASOC_SDW_FOUR_SPK		BIT(4)
- #define ASOC_SDW_ACP_DMIC		BIT(5)
-+#define ASOC_SDW_CODEC_SPKR		BIT(15)
- 
- #define AMD_SDW0	0
- #define AMD_SDW1	1
--- 
-2.34.1
+OK.  As bcachefs is the only user of user_path_locked_at() it shouldn't
+be too hard.
 
+Thanks,
+NeilBrown
