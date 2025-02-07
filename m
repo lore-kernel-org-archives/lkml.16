@@ -1,106 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60211946BC;
-	Fri,  7 Feb 2025 08:49:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CCF1A23BC;
+	Fri,  7 Feb 2025 08:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738918147; cv=none; b=XOdi39ixEpp59duCMpFXbBt0IiUUdnucrpKXc3BY1eBn2lgFDCRsM0Jvqp79IvdocnvBcGxAH7vu8DEOGZBKV75QVOebOdwvBiJlV4PCjFxwncYd6y9Qahpee/Kd71mEPpSrg4r52EXBF3PpJy/1qcEXfQGQiwzOjMGSd1S+TsQ=
+	t=1738918202; cv=none; b=qZl8SeS9AfeIV7zegByx1zLFuyWJzl7ArjnJl1fSi1hZ8+koC7MzoyNMbvdWUdhN1Qn/+RlhyxRu74MNas6m6aJMV6TsjduwqAiDCVGVS62dLTatQUFcp+V/EyQhTaMHL+DgjA2ESfQhCL5l8iOSC8mmgaD6G7SRPH2aWwRq8Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738918147; c=relaxed/simple;
-	bh=gOUk2fKwLtzXzYZsjeh6qV2PpFaqwwoQief/yTsP2hM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kAm9hZFptvui7F6f8K7UAh7Yq15FF18j7kQW8kpZaxwjQf5flrvPXiO/ilDIgpT+l1PX4DTkHp4eSxxItoGYFvAjHljzveMkYqFQb9klzD4DH4xTs6puJuyHxu9mK8EGukhjqSfEk7psg+8fPMf9VNwgxIP7QPWmv/VOxuHHyGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HC4i48kQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738918202; c=relaxed/simple;
+	bh=RvT7ceav2ulZoumLYX4OwfPhasbCecJb0uc/GuUMOrg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=S9Z5U6BGkW5/WrgaaQJBtwJCOUSSVEwjWoSlbLCvdyQlfah/YeW/4fDi3d3ZSlqnPQkBT9jq9Cf5hjeJRQMRvn54krXqKgcNYPo/3aqoRmbZm/4Msab27IJWErMq83nYJDqxmcRBhdpaIICi2/ElcOU4noMjpySoXDIkKoQ3DWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=cJi8w9l7; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HC4i48kQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5C39C4CED1;
-	Fri,  7 Feb 2025 08:49:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738918147;
-	bh=gOUk2fKwLtzXzYZsjeh6qV2PpFaqwwoQief/yTsP2hM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HC4i48kQ1OZz9lgya8wP949+Uq2tTnXQfj8aAOxVTjKT+ZE0hmjlaWnfHM6/Lgi8j
-	 VJj2jw19q59xRX+YZHZBj0RI+Isykh9V1Iwqpxudhh1rE8FvRQxvgc50qptdL25OLI
-	 87c0jGN6n5HoiX55/XpN8s8nyFh1ho0YHFUBTdj0LDampNyq4EmVsXyP7O4Ov19Wmj
-	 fXUTBjogTWGG/6LbupcYyl60bXiJA3qntCtU7/ksYz9aiRFoV7uTddDxTAbC+ULIPy
-	 pgWU6mmPi93epWf+mpl4mas6+YPbDsDB7xmSrYCdOK+AqEauleIDm79THQ4ZvaCJbx
-	 zqmNGJTyPtsJQ==
-Date: Fri, 7 Feb 2025 09:49:04 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] pwm: tiehrpwm: ensures that state.enabled is
- synchronized in .probe()
-Message-ID: <uw4ans5zzvo65voerbaxvj2erethpuh2jfm2iu7ekqyvgg62nx@lglwyjcpa5aw>
-References: <20250206031347.63700-1-rafael.v.volkmer@gmail.com>
- <20250206031852.64853-1-rafael.v.volkmer@gmail.com>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="cJi8w9l7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1738918167;
+	bh=Lyjfzo43hCAvlzwr0teZPXFO+ZX/A/SuD8AQPlwn05c=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=cJi8w9l787+1xqnhmOIhjQxajz/MNmFfjPCG+BiuK4z1P1SuXjvmg3OU+dr7p5H1w
+	 ICzuwmNT8VwW/6O4k9Uee4ldBD58uKA6cX8AqqrA0yM6fujKxgvP2JGuChwqzCJ4EH
+	 +qLOC9+GfGy5YwqeKLvv8J/iTzioh/yZsuUV0KMk=
+X-QQ-mid: bizesmtpip2t1738918123tw48m81
+X-QQ-Originating-IP: N5s+X+DLJ3KmALzUkgFeLnEHeLXAFOMpykKZVnwzkvE=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 07 Feb 2025 16:48:41 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 13814370064081462953
+From: WangYuli <wangyuli@uniontech.com>
+To: alexs@kernel.org,
+	si.yanteng@linux.dev,
+	corbet@lwn.net,
+	wangyuli@uniontech.com,
+	dzm91@hust.edu.cn
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	horms@kernel.org,
+	zhanjun@uniontech.com,
+	guanwentao@uniontech.com,
+	chenlinxuan@uniontech.com
+Subject: [PATCH v3] docs/zh_CN: Update the translation of dev-tools/ubsan to v6.14-rc1
+Date: Fri,  7 Feb 2025 16:48:20 +0800
+Message-ID: <2B33A00C9F5BECC7+20250207084821.251531-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4vpgkyftoyl3ja3j"
-Content-Disposition: inline
-In-Reply-To: <20250206031852.64853-1-rafael.v.volkmer@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: Mbko2vceDzPNyxRtgX2+YpyJ3k9b2AS3SKjOoRv5xbewraptVQOxjPSD
+	qwn4viLz07GB9AhL30YdDSgMlgTt17Tn5qxxjUy3NQLGGhPtFwOa5CukD7GU2dm9K/FI2Zr
+	DmKYBHkijhmN20lh3b9iYLYUhqEs7GSARmhP9kKTBLLJGR9eMbOxEB2YJGKUjTH4zuBL4qQ
+	oOxjWdi85MLSPkfQDvSyXPKrmoEJcljAc0njpKRBQezaeDcYfARmmEwmwXsg0ltqJqpyaub
+	Z7WmoWMXZ+ZMSOzsqzF2zN39IGNAc2uPHqhajOvEiiYxc0dItCF2TwEsCfwMGMI+BmL7vWd
+	eCEdfXNEQhBaWrBcTay0yNiiN2AiOWeQXedA5hlloY8y6s7Mp695gSppRCVIpQQZ5YXKZnr
+	Y9bNODOJW4QQ4SkJo7mTBXkxJkmlYJw3nimEA9WMT7/T2VHUpVqzC1hQdrJjlrp/xZxtz+v
+	8FGzZqy9BPBbMiwUEC9dyucgVbR0hUkTceRu9oINitKlgmTXblwQanU1YZtWDMipkpL868G
+	j88vOVPH5P/DjFjvrRSdP9HQ+AicILiO+Y+260VJk0IxhnAe4EIQec20XnQcQrZqSjitVO+
+	GMP0qkVHHCVAQcFizYEPlGT2sq2Z+KH9pntQ0aP1v3vfuoSZuQ0/iU7OjDAMx+heJoJs8ys
+	zq6RzgxKo9FYL7Klx5XoBw5JqQaooFsC97wd+T69UyDK0ucp67V2XRZJh6Ob5BdXnx2s7va
+	I/aL6Hp44dnSrzUPAedU4mR4C6Ig0HiqAhCeOuT9Xiz8AHx2Wu+ulhAhdXLLebpk6YdjGE3
+	9FwCWjIF9wJ5ko+3mMkm3GH12YGmr+Zp1mIJ8VZDx/0+uSQLZSjTIBDvfG3cy6q6gUS6b+P
+	0gc1IFZHGg2HjbatzyKE6yN2rxQDfLF+9GwxKfnnaRiq6PmLTnwxthoqXZG57hnw957lfVd
+	A7n3HMMAw2hKf281ztWdjgt7umMKk0dZ4u4lOWGgaCgNUSOCHQds6FTDapx20KbR+9X+S3s
+	5FfnoelccyX5msjTG0
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
 
+Commit 918327e9b7ff ("ubsan: Remove CONFIG_UBSAN_SANITIZE_ALL")
+removed the CONFIG_UBSAN_SANITIZE_ALL configuration option. Update
+the Chinese documentation accordingly and revise the document format
+by the way.
 
---4vpgkyftoyl3ja3j
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/1] pwm: tiehrpwm: ensures that state.enabled is
- synchronized in .probe()
-MIME-Version: 1.0
+Link: https://lore.kernel.org/all/6F05157E5E157493+20250123043258.149643-1-wangyuli@uniontech.com/
+Link: https://lore.kernel.org/all/fb3c5ec4-eabc-48c0-bf0b-d20cad978b4f@linux.dev/
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+Changelog:
+ *v1->v2: Update commit title to v6.14-rc1 and add Dongliang Mu's Chinese name.
+  v2->v3: Remove the ".. _cn_ubsan:" tag.
+---
+ .../translations/zh_CN/dev-tools/ubsan.rst    | 33 +++++++++----------
+ 1 file changed, 15 insertions(+), 18 deletions(-)
 
-Hello Rafael,
+diff --git a/Documentation/translations/zh_CN/dev-tools/ubsan.rst b/Documentation/translations/zh_CN/dev-tools/ubsan.rst
+index 2487696b3772..81ef6f77caeb 100644
+--- a/Documentation/translations/zh_CN/dev-tools/ubsan.rst
++++ b/Documentation/translations/zh_CN/dev-tools/ubsan.rst
+@@ -3,7 +3,14 @@
+ .. include:: ../disclaimer-zh_CN.rst
+ 
+ :Original: Documentation/dev-tools/ubsan.rst
+-:Translator: Dongliang Mu <dzm91@hust.edu.cn>
++
++:翻译:
++
++ 慕冬亮 Dongliang Mu <dzm91@hust.edu.cn>
++
++:校译:
++
++ 王昱力 WangYuli <wangyuli@uniontech.com>
+ 
+ 未定义行为消毒剂 - UBSAN
+ ====================================
+@@ -55,30 +62,20 @@ GCC自4.9.x [1_] （详见 ``-fsanitize=undefined`` 选项及其子选项）版
+ 
+ 使用如下内核配置启用UBSAN::
+ 
+-	CONFIG_UBSAN=y
+-
+-使用如下内核配置检查整个内核::
+-
+-        CONFIG_UBSAN_SANITIZE_ALL=y
+-
+-为了在特定文件或目录启动代码插桩，需要在相应的内核Makefile中添加一行类似内容:
++  CONFIG_UBSAN=y
+ 
+-- 单文件（如main.o）::
+-
+-    UBSAN_SANITIZE_main.o := y
+-
+-- 一个目录中的所有文件::
+-
+-    UBSAN_SANITIZE := y
+-
+-即使设置了``CONFIG_UBSAN_SANITIZE_ALL=y``，为了避免文件被插桩，可使用::
++排除要被检测的文件::
+ 
+   UBSAN_SANITIZE_main.o := n
+ 
+-与::
++排除一个目录中的所有文件::
+ 
+   UBSAN_SANITIZE := n
+ 
++当全部文件都被禁用，可通过如下方式为特定文件启用::
++
++  UBSAN_SANITIZE_main.o := y
++
+ 未对齐的内存访问检测可通过开启独立选项 - CONFIG_UBSAN_ALIGNMENT 检测。
+ 该选项在支持未对齐访问的架构上(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS=y)
+ 默认为关闭。该选项仍可通过内核配置启用，但它将产生大量的UBSAN报告。
+-- 
+2.47.2
 
-On Thu, Feb 06, 2025 at 12:18:52AM -0300, Rafael V. Volkmer wrote:
-> If the hardware is already active during probe, it's not asserted
-> that the clock is enabled. To address this, added ehrpwm_get_state()
-> to verify the enable bit and update the pwm_state struct with the
-> correct hardware parameters.
->=20
-> In ehrpwm_pwm_probe(), the function checks if the enable bit is set
-> and calls clk_enable() and pm_runtime_get_sync() if needed.
->=20
-> Additionally, ehrpwm_get_state() was integrated as .get_state in
-> the ehrpwm_pwm_ops struct, incorporating it into the driver's pwm_ops
-> for consistent state management.
-
-No in depth review here. One thing I just noticed when skimming your
-patch: There are still whitespace style issues (that checkpatch might
-not notice), please only use only a single space after =3D. Also please
-split the patch in two: One to introduce .get_state() and the other to
-fix clock enable accounting.
-
-I would also consider inlining ehrpwm_read_period(),
-ehrpwm_read_duty_cycle() and ehrpwm_read_polarity() into
-ehrpwm_get_state() to not have to jump around to understand the register
-usage.
-
-For a more detailed review I have to ask for your patience. There are
-still some more driver reviews in my list, but I come to your driver
-eventually.
-
-Best regards
-Uwe
-
---4vpgkyftoyl3ja3j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmelyP4ACgkQj4D7WH0S
-/k6d7Qf/cA3RY5/ZO7HZOShB/GBCw8qpR0/rUo//77izqky0VxyxWb2o7pp/VLla
-EBBvE1BbWLfKr+vojJPw4mK8L7+aAqhT82wBtsohjaXMnDZcnEOMDCpm4JizoAGo
-OzeCaIuDIogTwOjBWi/Kd7p5arApwZ7HGQjVHYqzqU1KzctZWPeGx/n0E7raOJ4v
-NKwBXiPzyJdzYUR4ZjkHjchb7w9XltbtqF5RCnxiKrsQIOuXG0nHVAdD1HWnjLWj
-5WpjGTJIH+Kx4tN/QXPFWIBGcg+j8wvvMxOHvTS9dUrXyFQDIc+M+XhdXrubPww6
-kTC9pNpCZKHerGdPQYnBGHysuAhbBg==
-=zcTK
------END PGP SIGNATURE-----
-
---4vpgkyftoyl3ja3j--
