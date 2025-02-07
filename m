@@ -1,443 +1,228 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013006.outbound.protection.outlook.com [40.107.159.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F7F187332;
-	Fri,  7 Feb 2025 07:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.6
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738914235; cv=fail; b=T3c3Bz7kXS/KhRJasAh1HJElMorWQrp0A2BdK5sRZ9GL3w4mhG7fcueZUgwNhF2Su1615CiBEhERiPtAR6fqi0spl6YBFjC4qfwIp0T67OrloAQhYJS8weCt1+8OnDM8LV8zBP/VZiGBfznDw45tieeV2oS5i0gMAFL8/fqnjHE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738914235; c=relaxed/simple;
-	bh=o9808LCEjzDC62NTGF1vjLU1Cra9PDWsL9IJWAyvgIk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=VuLXvdSvqmCBeAIADXqjnjqb0m9wGCRa93AJ4259QonXxcAkCd5TtgWwlY8Kk5Kb770MCyjR5hBQ8ZtVlQ0Bayq5KMEnI29Ei6TVWE2DXUhzcPmDKMHbk92feNaBjdk1HiZ9zylK22EZV46FUNPThgJtMLV3m8fMTDyyLEy5IOU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=WyytjkMx; arc=fail smtp.client-ip=40.107.159.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F82A187325;
+	Fri,  7 Feb 2025 07:45:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738914319; cv=none; b=icy95fscP+oJrBCrv/oBuJNajiRgUzh0Gy2PT0CrEgBRXYP8SOHjeg8PFwGrswtxZvbv9jDYpxrYbYfYwy3Yz0KBblxCOOISkt/Qynx+VQ95LUmE7cSS7pnxikw7uQnIlji2J3GKOz9aiZDUguEIRTWaUD5bs88FF3roCQdi2ZA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738914319; c=relaxed/simple;
+	bh=7yewH+Ph/fKik20DIhNiMQildp/ywL3DXzfmCb0HCh8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AQTLvIxo43T1/LZLsK6nATSVbTQQB39tClAJwzzg/hGthZRYfG+p2UImNltC+hOAVl9CYe2EWrQoMHyr3EUhk1of7bgpk3toTzLg1EKalBAAoBjw1zRHaJm3g3PHAuVE4Xak25dLafUJVNkOP0sG9qAgfy1r3eHOx/d2nunZubU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aArF3xsj; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="WyytjkMx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vrhpGmaMg5AjhSD1+ZgmGYkmvz07bLD45tih2BB/cwXCnAz6egLiRgUpKoLprEXiUvnrwK/93bzhTN/WOMzmMb2SaJ9Voa2t/9DiaRIDiPdspPhLrXSHlO4mHbMOr/trUg7AJbAYieUn1g9pA9o+Q35chgutk4DHL401mGWxlVMResjti+XK3i2yQ+ymhKWHO6JVdZnmw7nkjzc6FzjQzOPawYFUvJt3ktKj+o+YIWEzwvRrkn59O7K6mteCjSmCYY0PVt/m6mrJbYHq4SuLUrICf/TvcMIqCCn+ofVbBpUAb9xD9wqKeMlKO1jim8o9OKTb7bmk4zSmyJDIHVM9Ww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=L8VYEpUHvPsdqRGF7bsy9JEv2vHQzJZyDHn87EpywJ8=;
- b=ktfOfrZ4kSvyaajbXaMAyTR6YMkhL7imhx8ECy9BMT1LSIynLouFcJ4fQgpy6ERgYMjKc3qewDVxdceykQZJCJ+CNQ2W8jC4ui0XMx5iHOR9uQ9saB6sHxCvElHuyO8ITK9o1eFM+vIonEFzcORGfht+yBMnCrst/yqe0bvIL6FFEz8J6ZpFjBvAcEq+GsD9bwKbQjJrZlPLxY7rpVokSbK1/g9mAwEKovFJTsf7twNCRkWBce5UZxg7vzTi9s44plC4DryFY48rkCCIw1SlGEGbQDegLSJcETzTlls9Bc/Nkyabm0N5fOjXscbj1CSjkwjIbJLwHIEzuGwQ2fhrRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L8VYEpUHvPsdqRGF7bsy9JEv2vHQzJZyDHn87EpywJ8=;
- b=WyytjkMxpI3P7mdBOSkrSMy6ceT04qYt5VYX2cAj1bAsnClVyDPS2n5gHkj+piwv9EMy8rKJWAK4WSXe+WWW0EA3FkZsKdJwUo6f3bRgQv/3wrPRlC7ROYfrAQvcUvPSaPpPtNWXwHdH2GS5Iuc0dhSsWRxdzVvfGM2hYG7+9sB9qMAuVjzVPsFEyaNhpw4gQ7cTetVcQLxfA4HBJ7ddY9R+ngv4ywRxJxGIkJZuOFWKzwMicXVluLgEVg0QfEUjV2GShGLmi4R7lp94jDKIIIi2f+uSkzseSDUB3EGXpvKmv8OD9VVfB68/ccoDZ1UyzcXHe+3B4eImHBytOiGdbQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
- by DB8PR04MB7161.eurprd04.prod.outlook.com (2603:10a6:10:124::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.14; Fri, 7 Feb
- 2025 07:43:48 +0000
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90%3]) with mapi id 15.20.8422.010; Fri, 7 Feb 2025
- 07:43:48 +0000
-Message-ID: <544243dc-9511-45b0-9fe5-8633621269e7@nxp.com>
-Date: Fri, 7 Feb 2025 15:44:44 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 0/7] Add ITE IT6263 LVDS to HDMI converter support
-To: Maxime Ripard <mripard@kernel.org>
-Cc: imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
- shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
- festevam@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org,
- abelvesa@kernel.org, peng.fan@nxp.com, mturquette@baylibre.com,
- sboyd@kernel.org, andrzej.hajda@intel.com, neil.armstrong@linaro.org,
- rfoss@kernel.org, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
- jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
- tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
- quic_bjorande@quicinc.com, geert+renesas@glider.be,
- dmitry.baryshkov@linaro.org, arnd@arndb.de, nfraprado@collabora.com,
- marex@denx.de
-References: <20241114065759.3341908-1-victor.liu@nxp.com>
- <20241217-uppish-sapphire-dinosaur-4c40a2@houat>
- <aba80c42-1b48-426f-b29d-88bf18473602@nxp.com>
- <64eaq2n3pfcxxxcw5n3cqpx3ie3vyqo6v6akc5g72anoazendf@5vrlafr3q676>
-From: Liu Ying <victor.liu@nxp.com>
-Content-Language: en-US
-In-Reply-To: <64eaq2n3pfcxxxcw5n3cqpx3ie3vyqo6v6akc5g72anoazendf@5vrlafr3q676>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR06CA0018.apcprd06.prod.outlook.com
- (2603:1096:4:186::8) To AM7PR04MB7046.eurprd04.prod.outlook.com
- (2603:10a6:20b:113::22)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aArF3xsj"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2f42992f608so2727660a91.0;
+        Thu, 06 Feb 2025 23:45:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738914317; x=1739519117; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IXq7bA9nrEM8sFBBA4j2i1q1vyFikCSKnfdeGxzVAnQ=;
+        b=aArF3xsjtfEJBXPcfmgW7AVJIwdnpHYJh76am0+Y3NY7XHUBcHSJbqxT6FjncCNmLG
+         FMYOU0bKFkSueFtpLdIxSHlfC3LRm5iottD4QwM7nlHLfX69UpQb7To2H8DfowW7h7Y1
+         IL87eAyXQmkXkxGmCzdpnsAHDMgkERKuNYN3ZQpAS88VbV6ZDyAqMlOqRJmnqlosNttD
+         vQjG5q3g8R4rMZ18nL5NJFndN/Sc7p1lIbPTZzDfERjkEViUqe7sFXUQCoqq2sxFIlVI
+         MIcABjtRdzsZ4DczpHPx9Y8NZ63grhBm5ZXmQlpNEh+/4F6rEgBLnmiJVfZuqinvqERg
+         11Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738914317; x=1739519117;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IXq7bA9nrEM8sFBBA4j2i1q1vyFikCSKnfdeGxzVAnQ=;
+        b=r5xbIdc33y0dqvW9eErDAQ8kddrIlZwZ7lWX2rtvdv/FgwvmCXLUO2EHKH2/G3N/n1
+         1MPBkxhe15C2uUw2Wdlwedz8kMKiLescwYgRl4ODkIit6GnqsrlVJzlfLu22sr4Nw3vq
+         ssZU6hZ59Jgf0QjDMv57acg0tThp7Awq7l7REOFb+qyHuy4TUUm2MmioMnjWewzSjcZP
+         uoudQWhMQElgTYOhauQV9vagL+z6OI6xYZmtNujKsrBLU4uRyODQHfDbh0KzdeZV1dRB
+         GMK4SEDtpyjLR0/D7NnInilujtIVqZMESefXj+bFt5V6aRkKJxRvb3IFedFM5HJOot07
+         6k5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUHdQ25BYo6hMIOAEyLmRqNaxZheHMOo991GeuxEoJfnAEwDD1W41E3MMDLJTZGbqaI1HqKUuuxgYglzw==@vger.kernel.org, AJvYcCUQF6RBJZJOIVbr0ezPBPtxZcWEsBybkr8Y/4528BmDlLJI0n3q5LubLozPXiPIwSq/eUdu23UqYbmN@vger.kernel.org, AJvYcCWD6Bgh6xCCZ1reoJjW87GqLfZ90c8lapE/mm2zvnjjCqADfFTvScbGI43PMTd8pmeBHUYhTXi9l0j3KiJOzXo=@vger.kernel.org, AJvYcCWe/q7Y8sQsM4tqT6XnCu8mLXRqYfW471Uv9xzFEHI6UthOs70nv2TplD7OLMntutUoe+2hJutQTj7+@vger.kernel.org, AJvYcCWfQSwYdyaL3E/j9K7lEdTVBwtbDQhSdvbqHzPhbaMs+iD/5uomUh61CS5ZHq+sbM7oc2j4v1jV@vger.kernel.org, AJvYcCX5sByiPD0pcmDF2rT8Tiv2ijcwhveBMpQDaD9DjjwwzjkbKoxzZEJclfgES0ibYPFl/1rlFUyu83w=@vger.kernel.org, AJvYcCXb+38whYyy8i0RiRDwGNMpidWszM+8gwAIWOxdpqueVQ4gX0xCm1q7JODvCO/w7g+O+Utl02w4pA+7@vger.kernel.org, AJvYcCXbJejI83axt7Pp/SNUqA8tHXkFYbOahGzWoKpci5MMSqMJZFWAXUMPEXXYizOit5RO+w2CwlNPx9/UHWI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOqrXbCw6ByJcKE+ctRjbxbtFxFgRMfCdBxpSmWO5HO/DJxWUY
+	99qCiPwhQLJ72NAdad2Focxuuhc5N/V89zm3hCAfq71lo/P8gg2/
+X-Gm-Gg: ASbGncsKSWJn06cnDHHApgNe+yfrHVjL91lRW/VwP01w+moW7c4aQcEHU7UYF6J3UKT
+	8Epn+A7hinwKUTADCI/poJAKK3uv3nHd6ay96lJTVStSX2fJY8z53WZt+bZgpFXKGImR+nphMkX
+	W3EHynLOFzej8gsxx4h8rqnLR7bs4DQW4GOQHu3GT5YWO7NiBVdBDlclqznHjv2mZ6xBqtLqw/X
+	nkpkzObrFqRI2QXsCwjudKnUKbQRcyePlTDuun4nq0whcnDq5f9kqCuoEAXBA72ftwmeicVePqF
+	038RgNpTP+CZxgNcmHILpLll7dFG8FQICSjJjnj3brU3bGiWMIKiYjx/0LI=
+X-Google-Smtp-Source: AGHT+IFK0+kXoUFknP6ajJTI4xAI0At7EZc7EQLGoWqqZdyS9jCQs1X2/UIvyGGwu8rSGyAdsci4GA==
+X-Received: by 2002:a17:90b:4cd1:b0:2f9:d9fe:e72e with SMTP id 98e67ed59e1d1-2fa24166e90mr3900570a91.16.1738914316585;
+        Thu, 06 Feb 2025 23:45:16 -0800 (PST)
+Received: from hcdev-d520mt2.. (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f9e1d5f8d6sm4967367a91.7.2025.02.06.23.45.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 23:45:16 -0800 (PST)
+From: Ming Yu <a0282524688@gmail.com>
+To: tmyu0@nuvoton.com,
+	lee@kernel.org,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	andi.shyti@kernel.org,
+	mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	wim@linux-watchdog.org,
+	linux@roeck-us.net,
+	jdelvare@suse.com,
+	alexandre.belloni@bootlin.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	Ming Yu <a0282524688@gmail.com>
+Subject: [PATCH v7 0/7] Add Nuvoton NCT6694 MFD drivers
+Date: Fri,  7 Feb 2025 15:44:55 +0800
+Message-Id: <20250207074502.1055111-1-a0282524688@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|DB8PR04MB7161:EE_
-X-MS-Office365-Filtering-Correlation-Id: de7f9adc-13c8-4e8c-4816-08dd474b27f9
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?V3E0NERPVk4yMUxvNEFQeEhTNzhGV2oyNCs3VXpCKzdTSWJJQWRKR2IxOGNQ?=
- =?utf-8?B?RWE2UXFJM1pDSURVRmFHaWNCZWxnekx2QWNXT05zRHFGRFJNbC85NjQ2ZGsx?=
- =?utf-8?B?RlFrWmR5OE4xWG9aUWd1Y2VGSWt3OHpmZjkwRFI2STFMSUE4VTB5QkE1emQ0?=
- =?utf-8?B?SXI5YWR6bjUrWU1mdGNZdTdxeXZoNFpiQTE2akU1NEdHNlZ6MlZ5K0h3Yi9r?=
- =?utf-8?B?Nkp0anRaYTVBdlBkTmdaNlB5V2x0NjZ2TFAwWm0wTiszZ0tjTlFvdTE0bCtt?=
- =?utf-8?B?OUtGYnFheXJUVnJaR09sdlZicTNhT0xUYzJqendkdEtNTmtKQ0xIWnBLdE14?=
- =?utf-8?B?SWhxdFhXOHBCR2E2VXk5ODZuRm5QMjMrQUxwOGNETS9lV2xqNTYrTmxJRUVL?=
- =?utf-8?B?WVhmNnJ2a2VFaEJ3bE5WaHlvbjBiZFhzR1ZvQXFjaEhwdHNPOEY0MzgwTzRa?=
- =?utf-8?B?aE1SZm1XS294R2UwQ2hpN1B5RlFuc21yWjMyeXEyNlFpNUpSMTBnakNMYUk2?=
- =?utf-8?B?MFQ0My9CT0w1bXNLK2RqY1dlck1GdUg2Wk5PN2NXaGJVVmFqU1grRy9FeGF4?=
- =?utf-8?B?bjJndkNzbUxQVmVMWEVURnBHcTZTbHEzbkh6OU9ZL1IxM3p3dFNPNXJqOU9W?=
- =?utf-8?B?TTlFejVjN01uT2I0a1ZXeGd6MGc0TmI3QU4rRkZha3c2dktNdE55TDQ2a2RE?=
- =?utf-8?B?NWtBeFYwbE9QWUx2VkRHY05Qd256c1RKcVM4aHAxaVJGMm1tOGhyTXlqSUhK?=
- =?utf-8?B?Z1gxRlpsMk9iVDhSdWhSR2lEN01UNFdLZDJwbVBVU0htL2tzdlk5eVFRTGJh?=
- =?utf-8?B?WncrdUIyR2E1WnUySzlRN0U1RWtPU2FQR3VGeFVTWEkwMmhNYkpNcTlXUXBJ?=
- =?utf-8?B?TjZwOC9OTTQweVp2RTNKVzRNcStMdWFXeWtjRi8vSVoxN1U2WStrdFN6NjhX?=
- =?utf-8?B?UWtxdVkzZ2Q3UmFqRFhHNVJjYm5wNnJXSjdLOENoSzNQYjEzZW1iTkczdkpi?=
- =?utf-8?B?UnUvUkZmTTRrNkJlOUQ3Yk5RdmdJQjBINGhlSmJDWFFBeUhZWGJJeXRGTXUr?=
- =?utf-8?B?U2NUc05MQjlFMGl6WHI0SUx0TE94Nm5zajRGWmN5OXBZZTloYkViQ3JGbXhI?=
- =?utf-8?B?eklKU1lBTW4ySUJYa0dRL05ISE9ObjFlWHBUVE9WcDBoYWVsQ25ZemJWQXUr?=
- =?utf-8?B?em9UUlJGSVFPL3FJSit5dmtDbjNJek9QUDNmYlFFM2JjQ0FCZEs1amZ5NUFv?=
- =?utf-8?B?cDdiQ3dBSmJ3UlJ3Q0lnV1REc21RcFdNMjVaMFFpWFA5SjAveG93dElHSVR0?=
- =?utf-8?B?WkdYTnBISXNMS0dmSDMzbDZ4dDkwcnlvaGxvaWxjTEtaSVhPWEdXdklIY2ZM?=
- =?utf-8?B?cUlYV216cGRVWUxVSDNnalN3RVd6d08rQ0h3ZVJyakw3aFpWUkIrWk1GNEda?=
- =?utf-8?B?WDhVV0JLdEFRSzA1TnM5K0t0VmdSZmFXMUlvK2xkYTJ6bXl6Z3ZIbGU5dlNG?=
- =?utf-8?B?QTBXNXI2cnJ0MEh0bXNDMWtjVnl4TDN1cUFYUXpmdVE4SW01Q1krYy95ejNQ?=
- =?utf-8?B?eWxTOElwTlJsakdvUFhETEE2MmRKaGFzekxWekpoQ3JiMFNTNnRxTUtzdmpG?=
- =?utf-8?B?Zk5mekhKU2hTeFFpSTZLeGlNc0REaWlCVnRUZUlWcmdybU5IbUNqWUhVYS9l?=
- =?utf-8?B?dFRHYldsWHhHOTViRkg3aUUvbzd3T0Y3Um1qeGR0cE9ISVB2eGVyRFAwK0dT?=
- =?utf-8?B?a0lVazFDV3FhRXRzUWJLSW1FRWJ2ZGx3UWRLTmIreGVsaDd4dWR5emJIQ2Ur?=
- =?utf-8?B?OHJCQkc1Qy9PZjE4VTE2UT09?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?NWV2dnNNSFJiSXFOa1MvSDE4aEh1NHVnTUU2VUoxdWJzTERybE5odmx2QXdm?=
- =?utf-8?B?cGJXUlhUeTNRYUpzZ3hpMnNsMjBpMzA1bERPUno2Vk15bXJJRk5LNWROQnEy?=
- =?utf-8?B?TVJ5akcxQlBDU1FNcDNDR0dETkp0aFdtZXNxWWxkSWRpTEhmcng5MVNwVElB?=
- =?utf-8?B?eVYrQUVzLzkvSEg5czF5ZjQxNUtBeW1NZFNIc2tIazdGWHcyemp2N2d4Zm4w?=
- =?utf-8?B?eFU3LytROHlBeUh2TXQvQkVSdHlMZjNjeDFscWtWY3Z2L0pKY1YzRzVsVkRX?=
- =?utf-8?B?T2ZpblNkaFZuN3dJK0JITDNrNHFkenFvR25TZFFlUm1Ba2xNaFNGcndaa3V5?=
- =?utf-8?B?SGlvamIvenVOL3JkRlBhYm5sTlg1VHVzVEZ4aFM3RXovdVk3VHVvanB0bk1R?=
- =?utf-8?B?OGpnRDMzeWpYZDdDM0RCWmVNM2d6emJpLzBySWMyUEtZTVZ1c2xPSHE3MmRo?=
- =?utf-8?B?UnV5YnhYZzgrVVZ6b0R5VlNBUGozS0hBdTdGbUJLWUp5YzZiZzJ6OFZMcjVQ?=
- =?utf-8?B?NCtuTHRLQzNTRkxXTWM1d2N5RXJOM0htNTBnelI0OHpQU0RKSzBJNStGeWt6?=
- =?utf-8?B?ZTRLemdQMkJjUmpYQWRJL3VzTHlhUDlUYUhvRnVxRlk1UCtQbnpzaG11SWN6?=
- =?utf-8?B?TUlkVE5zK1VUNFpSVjMxR0xXL1huRDZlb1FyY1kwdUZsclpqbnBBZXh3V2R0?=
- =?utf-8?B?eHFmQ2Q4bnpzV3MxK2JDU0lkSjZKMnlxVXo4UW1PdlZub0Y2WG1JOG5tUTRL?=
- =?utf-8?B?WTRGangyazA5VVN6cFdIMXp3MDRWNmNmYzdsazBleHhFbDF6b3pXQXZVSVpR?=
- =?utf-8?B?WHB4ZXFnTzY0enQ2VWY2QjZDaXhaSGdUUzVrcGhIZW5nN05jMlhrUkVDWEI3?=
- =?utf-8?B?Wk9IRzVLSXhQb0tEZ1hLSTJFQWFqU2hVbnEvOENxanJjakJtZTMybHRRb0xV?=
- =?utf-8?B?VHdNSDRWdTJTeVpUenpkLy9XUng2TjlVc25RTUw3MFdxYjN2ZzVOVGs5S3My?=
- =?utf-8?B?SExuT3Irc1Q2QXNkQWZSck9IV2N4UzlXY0hsVmZqbjRjMlY1TW9hU1RBdG9l?=
- =?utf-8?B?dEJ5c2VBd0xhZmpJaFJkOWtNUFFJZHJyeThncWszcW9KZXp2dE43ME1ZWXg1?=
- =?utf-8?B?ZWFhYy9lM29WR0J3MVBuL2JQMVkvUzhQeFl0ZmtDWUhyVWdiUmpqRkdTelBD?=
- =?utf-8?B?NDVCTzE3VmxRVHdLY1N1QXBScjVyaEZVUWxpWmlXT0x5R1N2Wmk3VjlKMS9s?=
- =?utf-8?B?K2dqY0tqZDc2RzhhaFMyd3hhWStuSjJPcEZFY2NtTHdJSHZoQThZNFhRb2U4?=
- =?utf-8?B?OGFsSTB0OTh0QUhmdzBIS3VmdFZHZHd0YkZxeSsrUUlERjhySzJlOE1WS001?=
- =?utf-8?B?NnkyVWdYbm14eHNUSGhkQUNwenJZNGZESFRIT0htQnk0anZzOVIyVUFTbzF4?=
- =?utf-8?B?amQyM29ndWltazExbkxTa2xxQng2bTlwTTlDL1U4aEFLc2tBU1MyVThPSGJD?=
- =?utf-8?B?ZWkraEc0cml1SElqbDVxa01FajB2NUpBd21HOElNQkhRN2NGVnNwQ0NBR0lF?=
- =?utf-8?B?MG1UN2RDbXd6T1pGT3AwR21yL25YK1drcW45RENoMGJ5TVFrVkFLSDhCMW1E?=
- =?utf-8?B?ZjhDRVR6T2hIbnlTZGM5TEZWbUd0SFpiRHpNOXo3Y09TUzhzVkMzU0piYVl4?=
- =?utf-8?B?akhEOEhXZWdKRnZ0SXZuNWdacC9GSlIzZklMZE9JSHg1RVA1ZlVteVV5d1E1?=
- =?utf-8?B?dHBoamoxVVdJN0hrVngvT2plQlhpNVJTZS9vME1nMkpBN1M5UmxsR2VheHZQ?=
- =?utf-8?B?VnpnYmhJQ0tkWGh1TzMwWjJJWlZ0MTM1R3ZkRnBLZU5HYXEvVjRGckJac0ww?=
- =?utf-8?B?R0hYbWkvR0djQ3ZpZHZmMEQ3SS84UnYyZTl4THFHMCtkYmMvV2kxNWxOdlZ3?=
- =?utf-8?B?eGR1bmNRcklJUVMzRmFIZitSNm5mRGhpVHNFZTVUOVI4dUowTzhiZ1l4UXcw?=
- =?utf-8?B?Q0ZOeHR2V1ZXbG9CQzlrWFZMNTViWkU2aDlVSExZM1QzYVZuekplb0tDN3Y5?=
- =?utf-8?B?RW5YK1QzRDBjYTJDN3Z5QVFhNFptTXZxSlNyMDZoaTBXVGVSdk9hc2lvdUVz?=
- =?utf-8?Q?QbsrOlFWRD+WwvbliCgfKqXCY?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: de7f9adc-13c8-4e8c-4816-08dd474b27f9
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 07:43:47.9811
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zYo/8LUBF2pFhMasKMGlLBAc9ERW0iDj5MvGsOAMzEL6+OzmihPc5i605WdSD5rFufWQJLa2b4ycKze+x64BjA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7161
+Content-Transfer-Encoding: 8bit
 
-On 01/28/2025, Maxime Ripard wrote:
-> On Wed, Dec 18, 2024 at 02:02:18PM +0800, Liu Ying wrote:
->> On 12/17/2024, Maxime Ripard wrote:
->>> On Thu, Nov 14, 2024 at 02:57:52PM +0800, Liu Ying wrote:
->>>> This patch series aims to add ITE IT6263 LVDS to HDMI converter on
->>>> i.MX8MP EVK.
->>>>
->>>> Since IT6263 DT binding and driver were picked up from v5 and landed
->>>> in drm-misc, this patch series contains patches almost all i.MX8MP
->>>> SoC/platform specific.
->>>>
->>>> Patch 1 is a preparation patch to allow display mode of an existing
->>>> panel to pass the added mode validation logic in patch 3.
->>>>
->>>> Patch 2 is a preparation patch to drop CLK_SET_RATE_PARENT flag for
->>>> media_disp{1,2}_pix clocks.  Patch 5 depends on patch 2.
->>>>
->>>> Patch 3 allows i.MX8MP LVDS Display Bridge(LDB) bridge driver to find
->>>> the next non-panel bridge, that is the IT6263 in this case.
->>>>
->>>> Patch 4 adds mode validation logic to i.MX8MP LDB bridge driver against
->>>> "ldb" clock so that it can filter out unsupported display modes read
->>>> from EDID.
->>>>
->>>> Patch 5 adds mode validation logic to i.MX8MP LDB bridge driver against
->>>> "pix" clock so that it can filter out display modes which are not
->>>> supported by pixel clock tree.
->>>>
->>>> Patch 6 adds DT overlays to support NXP adapter cards[1][2] with IT6263
->>>> populated.
->>>>
->>>> Patch 7 enables the IT6263 bridge driver in defconfig.
->>>>
->>>> Note that patch 3 and 4 depend on patch[3] in shawnguo/imx/fixes.
->>>>
->>>> Since this patch series is related to another one[4] authored by Marek,
->>>> Maxime asked for a proper description[5] about the exact problem.
->>>>
->>>> Admittedly, it's a bit complicated.  Here, I'm trying to do so and explain
->>>> a bit more.
->>>>
->>>> [ Description ]
->>>> It's a clock problem about shared i.MX8MP video PLL between MIPI DSI and
->>>> LVDS display pipelines.  The pipelines are driven by separate DRM driver
->>>> instances, hence there is no way to negotiate a dynamically changeable
->>>> PLL rate to satisfy both of them.  The only solution is to assign a
->>>> sensible/unchangeable clock rate for the PLL in DT.
->>>>
->>>> Admittedly, sys_pll3_out can be another clock source to derive pixel clock
->>>> for i.MX8MP MIPI DSI display pipeline if a particalur i.MX8MP platform
->>>> doesn't use audio(sys_pll3_out is supposed to derive audio AXI clock running
->>>> at nominal 600MHz).  However, for i.MX8MP platforms with audio features,
->>>> the shared video PLL case has to be handled and it determines that the above
->>>> solution(unchangeable PLL rate assigned in DT) has to be used no matter
->>>> sys_pll3_out is for display or audio, because the separate DRM driver
->>>> instances really don't know if they are sharing the video PLL or not.
->>>>
->>>> [[ i.MX8MP Display Hardware ]]
->>>> i.MX8MP SoC supports three display pipelines:
->>>>
->>>>  -----------------------------           ------------------------
->>>> | imx8mp_media_disp_pix_sels  |         | imx8mp_media_ldb_sels  |
->>>>  -----------------------------           ------------------------
->>>> |  osc_24m (fixed 24MHz)      |         |  osc_24m (fixed 24MHz) |
->>>> |*-video_pll1_out (video)     |         |  sys_pll2_333m (sys)   |
->>>> |  audio_pll2_out (audio)     |         |  sys_pll2_100m (sys)   |
->>>> |  audio_pll1_out (audio)     |         | -sys_pll1_800m (sys)   |
->>>> | -sys_pll1_800m (sys)        |         | -sys_pll2_1000m (sys)  |
->>>> | -sys_pll2_1000m (sys)       |         |  clk_ext2 (external)   |
->>>> |  sys_pll3_out (audio ?)     |         |  audio_pll2_out (audio)|
->>>> |  clk_ext4 (external)        |         |*-video_pll1_out (video)|
->>>>  -----------------------------           ------------------------
->>>>              ||                                     |
->>>>  -----------------------------           ------------------------
->>>> |   media_disp{1,2}_pix       |         |        media_ldb       |
->>>>  ----------------------------- mux+div   ------------------------ mux+div
->>>>              ||                                     |
->>>>  -----------------------------           ------------------------
->>>> | media_disp{1,2}_pix_root_clk|         |   media_ldb_root_clk   |
->>>>  ----------------------------- gate      ------------------------ gate
->>>>              ||                                     | (LVDS serial clock)
->>>>              ||                                     V
->>>> 	     || (Disp2 Pclk)  --------      ------------------
->>>> 	     | ------------> | LCDIF2 | -> |       LDB        | -> panel/bridge
->>>> 	     |                --------      ------------------
->>>> 	     |  (Disp1 Pclk)  --------      ------------------
->>>> 	      -------------> | LCDIF1 | -> | Samsung MIPI DSI | -> panel/bridge
->>>> 	                      --------      ------------------
->>>>                               --------      ------------------      ----------
->>>>                              | LCDIF3 | -> | Synopsys HDMI TX | -> | HDMI PHY |
->>>>                               --------      ------------------     |     +    |
->>>>                                  ^                                 |    PLL   |
->>>>                                  |                                  ----------
->>>>                                  | (Disp3 pclk)                         | |
->>>>                                   --------------------------------------  |
->>>>                                                                           V
->>>>                                                                     panel/bridge
->>>>
->>>> * video_pll1_out is supposed to be used by video outputs.
->>>>
->>>> - LCDIF2 + LDB can only use the *same* video_pll1_out, sys_pll1_800m or
->>>>   sys_pll2_1000m.
->>>>
->>>> [[ i.MX8MP Display Drivers ]]
->>>> LCDIF: drivers/gpu/drm/mxsfb/lcdif_*.c
->>>> Three LCDIFv3 display controllers are driven by three imx-lcdif DRM instances
->>>> separately.
->>>>
->>>> LDB: drivers/gpu/drm/bridge/fsl-ldb.c
->>>>
->>>> Samsung MIPI DSI: drivers/gpu/drm/bridge/samsung-dsim.c
->>>>
->>>> Synopsys HDMI TX: drivers/gpu/drm/bridge/imx/imx8mp-hdmi-tx.c
->>>>
->>>> [[ Problem - Shared Video PLL Between Samsung MIPI DSI and LDB ]]
->>>> osc_24m, audio_pll*, sys_pll* and clk_ext* are not for video outputs,
->>>> because:
->>>> a. Aparently, osc_24m runs at fixed 24MHz which is too low for most displays.
->>>> b. Audio subsystem may consume all audio_pll*.
->>>> c. sys_pll* are system clocks which are supposed to run at fixed typical
->>>>    rates, e.g., sys_pll2_1000m runs at 1000MHz.
->>>> d. sys_pll3_out is supposed to derive audio AXI clock running at nominal
->>>>    600MHz(i.MX8MP data sheet specifies the rate), see NXP downstream kernel:
->>>>    https://github.com/nxp-imx/linux-imx/blob/lf-6.6.y/arch/arm64/boot/dts/freescale/imx8mp-evk-ndm.dts#L19
->>>>    https://github.com/nxp-imx/linux-imx/blob/lf-6.6.y/arch/arm64/boot/dts/freescale/imx8mp-ddr4-evk.dts#L25
->>>
->>> Is there any downside to using any of these clocks, aside from the fact
->>> that their rate must not change?
->>
->> osc_24m and sys_pll* don't support spread spectrum while audio_pll* and
->> video_pll1_out support it. Other than that, I don't see any downside to
->> use any of these clocks, if their clock rates happen to meet the clock
->> rate requirements of the MIPI DSI and LDB display pipelines.
->>
->>>
->>> Also, if they can't change their rate, why do they have
->>> CLK_SET_RATE_PARENT (sys_pll* in particular) ?
->>
->> If media_disp{1,2}_pix and media_ldb clocks have no CLK_SET_RATE_PARENT,
->> it doesn't mattter whether their parent clocks(these clocks) have it or not.
->> Note that patch 2 drops CLK_SET_RATE_PARENT for media_disp{1,2}_pix clocks.
->>
->> Anyway, why have sys_pll* clocks got CLK_SET_RATE_PARENT? The reason I can
->> think of is that it makes some potential i.MX8MP platforms possible to set
->> the sys_pll* rates with the parent clock rates(sys_pll1/2/3) updated
->> accordingly, e.g., if sys_pll2_1000m is the only active child of sys_pll2_out,
->> sys_pll2_1000m's rate can be assigned to 800MHz(not typical 1000MHz) in DT.
->> Or, maybe, the sys_pll* rates can be assigned to some particular values to
->> support nominal/overdrive modes of various i.MX8MP clock roots(some are
->> derived from the sys_pll* clocks).
->>
->>>
->>>> e. clk_ext* are external clocks without known capabilities.
->>>>
->>>> So, the only eligible video_pll1_out is supposed to be shared between LDB
->>>> and Samsung MIPI DSI in the two separate display pipelines if sys_pll3_out
->>>> is already used to derive the audio AXI clock.
->>>>
->>>> With the shared video_pll1_out, drivers for the two display pipelines cannot
->>>> change the PLL clock rate in runtime, since the pipelines are driven by two
->>>> DRM driver instances.
->>>
->>> What is the typicall frequency on those pipelines? Could setting the PLL
->>
->> For MIPI DSI to HDMI(ADV7535) and LVDS to HDMI(IT6263), the typical pixel
->> rates are 148.5MHz(1080p60Hz) and 74.25MHz(720p60Hz) and the typical LDB
->> clock rate is 519.75MHz.
->>
->> For MIPI DSI panel and LVDS panel, there no typical pixel rates. It depends
->> on individual panels. However, it's possible to override panel's pixel clock
->> rate in DT to use a fixed PLL clock rate if the pixel clock rate deviation
->> is still acceptable by the panel.
->>
->>> high enough that any frequency required by any of these pipelines can be
->>> accomodated through a divider work?
->>
->> Yes, that's why media_blk_ctrl node in imx8mp.dtsi assigns video_pll1 clock
->> rate to 1.0395GHz. That rate supports the typical 148.5MHz and 74.25MHz
->> pixel clock rates. With this patch series applied, i.MX8MP EVK would use
->> this fixed 1.0395GHz video_pll1 clock to drive both MIPI DSI to HDMI and
->> LVDS to HDMI simultaneously.
->>
->>>
->>> Something like you run the PLL at 594MHz, and then most HDMI frequencies
->>> can be reached by a 1, 2 or 4 divider.
->>
->> PLL running at 594MHz does support the typical pixel clock rates for MIPI
->> DSI to HDMI, but not for LVDS to HDMI due to the 7x(single-LVDS link) or
->> 3.5x(dual-LVDS link) folder between LDB clock rate and pixel clock rate.
->> PLL running at 1.0395GHz is the one chosen to support both MIPI DSI to
->> HDMI and LVDS to HDMI, e.g., with dual-LVDS link, 148.5MHz pixel clock rate
->> = 1.0395GHz / 7 and 519.75MHz LDB clock rate(148.5MHz * 3.5) = 1.0395GHz / 2.
->>
->>>
->>>> [[ Solution ]]
->>>> Assign the PLL clock source(s) and the PLL clock rate(s) in DT.  Disallow
->>>> display drivers to change the PLL clock source(s) or rate(s) in runtime
->>>> including LCDIF driver and bridge drivers.  With sensible PLL clock rate(s),
->>>> typical display modes like 1920x1080@60 can be supported if external HDMI
->>>> bridges are connected, and panel display modes can be too.  Also the unneeded
->>>> CLK_SET_RATE_PARENT flag can be dropped for media_disp{1,2}_pix clocks.
->>>> If needed, bridge drivers just call clk_round_rate() to validate clocks so
->>>> that unsupported display modes can be filtered out.  Although the
->>>> unchangeable PLL clock rate disallows more potential display modes, the
->>>> solution works for single/dual/triple display pipelines(OFC, hardware designers
->>>> should pick panel/bridge display devices carefully first by considering clock
->>>> resources).
->>>
->>> I think it's a reasonable idea, if not for the hardcode-it it DT stuff.
->>> If we can manage to have a fixed setup work ok for all display use
->>> cases, why would it be in DT? The clock driver seems like a much better
->>> choice to me.
->>
->> Different i.MX8MP platforms may have different display devices(panel(s)
->> and/or bridge(s)). It's flexible to allow each platform to assign the PLL
->> rate(s) in DT. It doesn't look doable with clock driver, does it?
-> 
-> Why not? Plenty of platforms are doing it. If anything, it's more
+This patch series introduces support for Nuvoton NCT6694, a peripheral
+expander based on USB interface. It models the chip as an MFD driver
+(1/7), GPIO driver(2/7), I2C Adapter driver(3/7), CANfd driver(4/7),
+WDT driver(5/7), HWMON driver(6/7), and RTC driver(7/7).
 
-Keep CLK_SET_RATE_PARENT flag for IMX8MP_CLK_MEDIA_DISP{1,2}_PIX clocks, check
-compatible machines and call clk_set_rate_exclusive() in imx8mp_clocks_probe()
-like the below snippet ?  This is the only way I can think of to fix the
-video_pll1 clock rate in the clock driver.
+The MFD driver implements USB device functionality to issue
+custom-define USB bulk pipe packets for NCT6694. Each child device can
+use the USB functions nct6694_read_msg() and nct6694_write_msg() to issue
+a command. They can also request interrupt that will be called when the
+USB device receives its interrupt pipe.
 
--8<-
-if (of_machine_is_compatible("fsl,imx8mp-evk")) {
-	err = clk_set_rate_exclusive(hws[IMX8MP_VIDEO_PLL1]->clk, 1039500000);
-	if (err < 0) {
-		dev_err(dev, "failed to set exclusive rate for video_pll1: %d\n", err);
-			return err;
- 	}
-}
--8<-
+The following introduces the custom-define USB transactions:
+        nct6694_read_msg - Send bulk-out pipe to write request packet
+                           Receive bulk-in pipe to read response packet
+                           Receive bulk-in pipe to read data packet
 
-However, it's not as flexible as assigning the video_pll1 clock rate in DT,
-because the i.MX8MP EVK board exposes it's MIPI DSI and LVDS connectors through
-MINI-SAS connectors(find MINI-SAS connectors in the board image at
-https://www.nxp.com/design/design-center/development-boards-and-designs/8MPLUSLPD4-EVK)
-and people may connect various sensible MIPI DSI/LVDS panels or bridges with
-MIPI DSI/LVDS input interfaces as they want(not necessarily the panels and
-bridges provided by NXP).  Hardcoding the PLL clock rate in the
-clk_set_rate_exclusive() function call is really not flexible.  Instead, people
-may flexibly assign a sensible PLL clock rate according to the actual connected
-display devices.
+        nct6694_write_msg - Send bulk-out pipe to write request packet
+                            Send bulk-out pipe to write data packet
+                            Receive bulk-in pipe to read response packet
+                            Receive bulk-in pipe to read data packet
 
-> flexible to deal with it in the clock driver, because then you don't
-> have to filter out modes that aren't compatible with the frequency that
-> got assigned in the DT.
+Changes since version 6:
+- Fix nct6694_can_handle_state_change() in nct6694_canfd.c
+- Fix warnings in nct6694_canfd.c
+- Move the nct6694_can_priv's bec to the end in nct6694_canfd.c
+- Fix warning in nct6694_wdt.c
+- Fix temp_hyst's data type to signed variable in nct6694-hwmon.c
 
-I still need to filter out unsupported modes(due to clock constraints) in DRM
-driver even if I use the above snippet in imx8mp_clocks_probe(), e.g., the below
-two modes with 27MHz pixel clock rate need to be filtered out for IT6263 LVDS to
-HDMI bridge with dual LVDS links because the 1.0395GHz PLL rate cannot satisfy
-the 27MHZ pixel clock rate.
+Changes since version 5:
+- Modify the module name and the driver name consistently
+- Fix mfd_cell to MFD_CELL_NAME() and MFD_CELL_BASIC()
+- Drop unnecessary macros in nct6694.c
+- Update private data and drop mutex in nct6694_canfd.c
+- Fix nct6694_can_handle_state_change() in nct6694_canfd.c
 
-#7 720x576 50.00 720 732 796 864 576 581 586 625 27000 flags: nhsync, nvsync; type: driver
-#8 720x480 59.94 720 736 798 858 480 489 495 525 27000 flags: nhsync, nvsync; type: driver
+Changes since version 4:
+- Modify arguments in read/write function to a pointer to cmd_header
+- Modify all callers that call the read/write function
+- Move the nct6694_canfd.c to drivers/net/can/usb/
+- Fix the missing rx offload function in nct6694_canfd.c
+- Fix warngings in nct6694-hwmon.c
 
-> 
-> Also, it's more robust since that frequency isn't guaranteed to be
-> constant across the system life.
+Changes since version 3:
+- Modify array buffer to structure for each drivers
+- Fix defines and comments for each drivers
+- Add header <linux/bits.h> and use BIT macro in nct6694.c and
+  gpio-nct6694.c
+- Modify mutex_init() to devm_mutex_init()
+- Add rx-offload helper in nct6694_canfd.c
+- Drop watchdog_init_timeout() in nct6694_wdt.c
+- Modify the division method to DIV_ROUND_CLOSEST() in nct6694-hwmon.c
+- Drop private mutex and use rtc core lock in rtc-nct6694.c
+- Modify device_set_wakeup_capable() to device_init_wakeup() in
+  rtc-nct6694.c
 
-If we drop CLK_SET_RATE_PARENT flag for IMX8MP_CLK_MEDIA_DISP{1,2}_PIX clocks
-and assign the PLL rate(s) in DT, I don't think the PLL rate(s) would change
-across the system life.
+Changes since version 2:
+- Add MODULE_ALIAS() for each child driver
+- Modify gpio line names be a local variable in gpio-nct6694.c
+- Drop unnecessary platform_get_drvdata() in gpio-nct6694.c
+- Rename each command in nct6694_canfd.c
+- Modify each function name consistently in nct6694_canfd.c
+- Modify the pretimeout validation procedure in nct6694_wdt.c
+- Fix warnings in nct6694-hwmon.c
 
-> 
-> Maxime
+Changes since version 1:
+- Implement IRQ domain to handle IRQ demux in nct6694.c
+- Modify USB_DEVICE to USB_DEVICE_AND_INTERFACE_INFO API in nct6694.c
+- Add each driver's command structure
+- Fix USB functions in nct6694.c
+- Fix platform driver registration in each child driver
+- Sort each driver's header files alphabetically
+- Drop unnecessary header in gpio-nct6694.c
+- Add gpio line names in gpio-nct6694.c
+- Fix errors and warnings in nct6694_canfd.c
+- Fix TX-flow control in nct6694_canfd.c
+- Fix warnings in nct6694_wdt.c
+- Drop unnecessary logs in nct6694_wdt.c
+- Modify start() function to setup device in nct6694_wdt.c
+- Add voltage sensors functionality in nct6694-hwmon.c
+- Add temperature sensors functionality in nct6694-hwmon.c
+- Fix overwrite error return values in nct6694-hwmon.c
+- Add write value limitation for each write() function in nct6694-hwmon.c
+- Drop unnecessary logs in rtc-nct6694.c
+- Fix overwrite error return values in rtc-nct6694.c
+- Modify to use dev_err_probe API in rtc-nct6694.c
+
+
+Ming Yu (7):
+  mfd: Add core driver for Nuvoton NCT6694
+  gpio: Add Nuvoton NCT6694 GPIO support
+  i2c: Add Nuvoton NCT6694 I2C support
+  can: Add Nuvoton NCT6694 CANFD support
+  watchdog: Add Nuvoton NCT6694 WDT support
+  hwmon: Add Nuvoton NCT6694 HWMON support
+  rtc: Add Nuvoton NCT6694 RTC support
+
+ MAINTAINERS                         |  13 +
+ drivers/gpio/Kconfig                |  12 +
+ drivers/gpio/Makefile               |   1 +
+ drivers/gpio/gpio-nct6694.c         | 458 ++++++++++++++
+ drivers/hwmon/Kconfig               |  10 +
+ drivers/hwmon/Makefile              |   1 +
+ drivers/hwmon/nct6694-hwmon.c       | 947 ++++++++++++++++++++++++++++
+ drivers/i2c/busses/Kconfig          |  10 +
+ drivers/i2c/busses/Makefile         |   1 +
+ drivers/i2c/busses/i2c-nct6694.c    | 152 +++++
+ drivers/mfd/Kconfig                 |  18 +
+ drivers/mfd/Makefile                |   2 +
+ drivers/mfd/nct6694.c               | 373 +++++++++++
+ drivers/net/can/usb/Kconfig         |  11 +
+ drivers/net/can/usb/Makefile        |   1 +
+ drivers/net/can/usb/nct6694_canfd.c | 809 ++++++++++++++++++++++++
+ drivers/rtc/Kconfig                 |  10 +
+ drivers/rtc/Makefile                |   1 +
+ drivers/rtc/rtc-nct6694.c           | 286 +++++++++
+ drivers/watchdog/Kconfig            |  11 +
+ drivers/watchdog/Makefile           |   1 +
+ drivers/watchdog/nct6694_wdt.c      | 295 +++++++++
+ include/linux/mfd/nct6694.h         | 102 +++
+ 23 files changed, 3525 insertions(+)
+ create mode 100644 drivers/gpio/gpio-nct6694.c
+ create mode 100644 drivers/hwmon/nct6694-hwmon.c
+ create mode 100644 drivers/i2c/busses/i2c-nct6694.c
+ create mode 100644 drivers/mfd/nct6694.c
+ create mode 100644 drivers/net/can/usb/nct6694_canfd.c
+ create mode 100644 drivers/rtc/rtc-nct6694.c
+ create mode 100644 drivers/watchdog/nct6694_wdt.c
+ create mode 100644 include/linux/mfd/nct6694.h
 
 -- 
-Regards,
-Liu Ying
+2.34.1
+
