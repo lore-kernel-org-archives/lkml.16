@@ -1,92 +1,119 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415A922094;
-	Fri,  7 Feb 2025 08:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F313422094
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738916924; cv=none; b=rWiGjhDqR+9xpcJYhQzqJYD/8oQX4WWvFwQ40BdXlzc5Z7DnTfwxMpgAz5GMPgvc/4UK1AQvqTmKpds3/w8VhRT1fT8cZ/KYMckPkvPwk/EFr+N4sLOBsLiT9jlVjmxCqD3eHWE8OgCdqskvki2Hw2+LZvAN1BGkM2/eso/KrWY=
+	t=1738916993; cv=none; b=KLO2TcCFcbaKAvZDUI0k81U3aIKYS9AX9wshRzx1QrrrN5VmIKlVXRHHMySqCQMGk7eFIljRFLFwbYBDQO7WZhMczUqjFoCsPLj+xDaAkOBTYgpY9AL9us3/mMDLLfihM1SQgh/ss8DtQZfhZOdE5IxGKBRVignE46cSBGyX1ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738916924; c=relaxed/simple;
-	bh=eOB27PjHevtyLexKfADRWQNAyfxI2DsXB5XW6/MWs00=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X6CgPeiDyH/SQL3nV5qZslDL3AlTDCxTQQdsYTyu6a51soPkdBFGwK+i2MAFLcj1iXvAm9GVjX4uyGOrHYFc4A3N6plUTowHiN08GzlHedxqEEPoofSiDCyVXeo+EXNp1s5f6CwM2FJlPSTtee+Y2hedf/b72NUl2lJ04zopFuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GWu+vxi0; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738916993; c=relaxed/simple;
+	bh=HSy2JwpD+BRqJIXapsG2+ToTnoxywnKVVRbALfYh9Lc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=knKwoQ1daeAFmqXdnEGpMYs0/lLyu0kXifbXIzDIU01BX8GMyFAj8gOYXZGh45nivgDumTPJ8AQXCTAscOJ+VbIKqgtkWisa+Qg3c2nQeugxeCJa3U/O7JqrAhIdBHXlK5Upv8QilW7gVcX7AlEhzGoSpNVG5dBu+LEs5fwHBBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xEzmipLV; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GWu+vxi0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=wzocH2UaJwexS/hhrxFs84p2uFTxUKaRksQr1v8H/HM=; b=GWu+vxi013sXsuiJtLeG4xT7Qg
-	rdTiToLjwN31hgOXNlevz9aEIVtr/Y7GRkDGln5AziOWYjM2MES5QmBW6PFTNEgc6dKOb57qkcqW4
-	Hp/WyjYV7zrEGAoexKGtIY44WFHWBC5Zl39z0QkF9Us1La8Kush6Qe9bfjoCIL1FA7dYOj/Oly+N2
-	MX2q4mTqzYvlb0cW7uG4Mn8k6OlBG8MgsZAAzKK+BkcXfOMEj78ZxlHMOP66faI2EcrdEHkQ3plBH
-	velJWDyAtySwRmzBFTDOkn1uCiIUEd/EfZ1Gfxf8jRvzIxrT8OhMZYqnwAjYfMRZ43bqsaHeWSW+F
-	qSeEhDxQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgJiz-00000007U1P-0j34;
-	Fri, 07 Feb 2025 08:28:33 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 451BC300310; Fri,  7 Feb 2025 09:28:32 +0100 (CET)
-Date: Fri, 7 Feb 2025 09:28:32 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Marco Elver <elver@google.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, rcu@vger.kernel.org,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCH RFC 02/24] compiler-capability-analysis: Rename
- __cond_lock() to __cond_acquire()
-Message-ID: <20250207082832.GU7145@noisy.programming.kicks-ass.net>
-References: <20250206181711.1902989-1-elver@google.com>
- <20250206181711.1902989-3-elver@google.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xEzmipLV"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1738916986; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=+jh2igr9cD/8DYXSIO6GjGLquskOAstJHjX1kJ7AduE=;
+	b=xEzmipLVCNb+3Kxtfd9bepjKfIo6gtqdrodcR/yJYpiJZUxwleVU8fQk7mdhgMJdzbtYeXYWd9biQDRnaXiFtl97Mk92dcAH/M34rj9Vv0Kj6ns468n4hDJ4HuqvSdmiEHEM1KSst4NwjoxScOWyf9pS/NWLaVDwvH4Y6z7vwic=
+Received: from 30.74.129.145(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WOymIew_1738916985 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 07 Feb 2025 16:29:45 +0800
+Message-ID: <f4319592-df8f-4468-b8fb-7fcbc51804c6@linux.alibaba.com>
+Date: Fri, 7 Feb 2025 16:29:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206181711.1902989-3-elver@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] erofs: use Z_EROFS_LCLUSTER_TYPE_MAX to simplify
+ switches
+To: Hongzhen Luo <hongzhen@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250207080829.2405528-1-hongzhen@linux.alibaba.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250207080829.2405528-1-hongzhen@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 06, 2025 at 07:09:56PM +0100, Marco Elver wrote:
-> Just like the pairing of attribute __acquires() with a matching
-> function-like macro __acquire(), the attribute __cond_acquires() should
-> have a matching function-like macro __cond_acquire().
+
+
+On 2025/2/7 16:08, Hongzhen Luo wrote:
+> There's no need to enumerate each type.  No logic changes.
 > 
-> To be consistent, rename __cond_lock() to __cond_acquire().
+> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+> ---
+> Changes since v1: Put the exception branch at the beginning.
+> 
+> v1: https://lore.kernel.org/all/20250207064135.2249529-1-hongzhen@linux.alibaba.com/
+> ---
+>   fs/erofs/zmap.c | 65 +++++++++++++++++++++----------------------------
+>   1 file changed, 28 insertions(+), 37 deletions(-)
+> 
+> diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+> index 689437e99a5a..f65c76991e02 100644
+> --- a/fs/erofs/zmap.c
+> +++ b/fs/erofs/zmap.c
+> @@ -265,23 +265,22 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
+>   		if (err)
+>   			return err;
+>   
+> -		switch (m->type) {
+> -		case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
+> +		if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
+> +			erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
+> +				  m->type, lcn, vi->nid);
+> +			DBG_BUGON(1);
+> +			return -EOPNOTSUPP;
+> +		}
+> +
+> +		if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
+>   			lookback_distance = m->delta[0];
+>   			if (!lookback_distance)
+>   				goto err_bogus;
+>   			continue;
+> -		case Z_EROFS_LCLUSTER_TYPE_PLAIN:
+> -		case Z_EROFS_LCLUSTER_TYPE_HEAD1:
+> -		case Z_EROFS_LCLUSTER_TYPE_HEAD2:
+> +		} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
 
-So I hate this __cond_lock() thing we have with a passion. I think it is
-one of the very worst annotations possible since it makes a trainwreck
-of the trylock code.
 
-It is a major reason why mutex is not annotated with this nonsense.
+Just `} else {` here?
 
-Also, I think very dim of sparse in general -- I don't think I've ever
-managed to get a useful warning from between all the noise it generates.
+>   			m->headtype = m->type;
+>   			m->map->m_la = (lcn << lclusterbits) | m->clusterofs;
+>   			return 0;
+> -		default:
+> -			erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
+> -				  m->type, lcn, vi->nid);
+> -			DBG_BUGON(1);
+> -			return -EOPNOTSUPP;
+>   		}
+>   	}
+>   err_bogus:
+> @@ -329,35 +328,31 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
+>   	DBG_BUGON(lcn == initial_lcn &&
+>   		  m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD);
+>   
+> -	switch (m->type) {
+> -	case Z_EROFS_LCLUSTER_TYPE_PLAIN:
+> -	case Z_EROFS_LCLUSTER_TYPE_HEAD1:
+> -	case Z_EROFS_LCLUSTER_TYPE_HEAD2:
+> +	if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
+> +		erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
+> +		DBG_BUGON(1);
+> +		return -EFSCORRUPTED;
+> +	}
+
+No, I don't think it's equivalent, please use
+the previous version for this part instead.
+
+Thanks,
+Gao Xiang
