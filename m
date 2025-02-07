@@ -1,85 +1,72 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D0661F7069;
-	Fri,  7 Feb 2025 15:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66B4123FC71;
+	Fri,  7 Feb 2025 15:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738941852; cv=none; b=gDdfEvGRJwiYfMEotTf6q2iK78awF5oiMd/70bO+iK+UH2MqM5iLTXq5TqfveNWii6MLvZuc+1D8caGavlqQA1NmD4+VoNkJGW617xmjgZnbJoo7Xx11fWnS8kwKYvTPuUiDmQjRwaXdkGxd5ZGZbf5O4CpKjOB0HaBXFBnPrzo=
+	t=1738941856; cv=none; b=bU79n2BKkewQWX8y+uSRRF8aKl4/8h8ju8RiKzMxJvUy+xtMAovhKxoU11dSPxmV0Qrn1s3qESoUY5FJzitNmiEMpJISBwy12e2oxYBHYoWa8QPXyH/efWASt8GXVoedPSA+2sxZwp0a/x4VPnIl+L+BnDtLCUP3EAhFcK2ED4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738941852; c=relaxed/simple;
-	bh=L0mpe55eMmldTcY+TI4GJoQofUNmY83l2376LcHT7M8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OJftgfbLd9PL4nUt8vWGIE2d9WMmfNRzmIGjJUTDoQWpGBYlLNNNNB/ug6i5w3NvckRt3y706YeKJAtES+aw3TDyUE2WITLSouXLPWDdsGo6JR7kWpn/5oKs0WX5q6kjzwjuYjBsm21wSyncPjtJr/BmjbKsjESeGAcj8PyKvps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=OTIUAY90; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="OTIUAY90"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=D1450
-	5eoFP/0xHq7p3qPv0wbvi5mxm7mCJIYN+BDc8k=; b=OTIUAY90DLyBjvAVzKodo
-	dxCxwtWyJpZFyWNEBuo6XmogqRDXXqHcNRa2bhLhzNqTcnky4xuS0rgcPXbYl1f6
-	ZMN6lsIVDdxV7Ks8QNXMM0WDrpTXFZSn05emJCa1eUtVf6KHHBzapSGauP1J5ZYl
-	WL4gfdNR2xTvM0LYCZJhVo=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgDnzyuAJaZngv75Bg--.43623S2;
-	Fri, 07 Feb 2025 23:23:45 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org
-Cc: kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	s-vadapalli@ti.com,
-	thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rockswang7@gmail.com,
-	"Hans Zhang" <18255117159@163.com>
-Subject: [PATCH] PCI: cadence: Fix runtime atomic count underflow.
-Date: Fri,  7 Feb 2025 23:23:43 +0800
-Message-Id: <20250207152343.37448-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1738941856; c=relaxed/simple;
+	bh=0O9wDWsp53GJ+J1jYjCa4uftsqXMS1U0OT2s84FdpHg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TPczjUTRDHU1H68JHUnt8TOvmxXGvHC/454yTxpl/W2gztlw5wwKOj0JTNRHl8hII8cJJ+39NRPZc6FriQMjqbM8/ttPH01ANEHoIX7//J9Ym8EgLZmF1bYTwO9WKaWXJddU36y7VSxmmBCBZZljW8itHMcNfHsjnTu4gnmdE7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67D18113E;
+	Fri,  7 Feb 2025 07:24:35 -0800 (PST)
+Received: from [10.1.25.32] (e127648.arm.com [10.1.25.32])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54C753F58B;
+	Fri,  7 Feb 2025 07:24:11 -0800 (PST)
+Message-ID: <29daaf17-7711-44b1-baad-86dadcf01666@arm.com>
+Date: Fri, 7 Feb 2025 15:24:09 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFT][PATCH v1 0/5] cpuidle: menu: Avoid discarding useful
+ information when processing recent idle intervals
+To: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+ "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Aboorva Devarajan <aboorvad@linux.ibm.com>
+References: <1916668.tdWV9SEqCh@rjwysocki.net>
+ <4917ca35e5e0c7035f09c02d5080a69ed3e88c44.camel@linux.intel.com>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <4917ca35e5e0c7035f09c02d5080a69ed3e88c44.camel@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgDnzyuAJaZngv75Bg--.43623S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7GFyfKF4kJryfuF4fZFyxXwb_yoWDWFc_u3
-	ZYvF4IyFs0gr9Ikayay3WrXryDZa4jqw4jgan3tF43AF1xtw1DW3WkZF98ZF1kG3Z8JFyj
-	yw1qv3ZrCF9rAjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRZNVkUUUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwDso2emHzxZYgABsY
 
-From: "Hans Zhang" <18255117159@163.com>
+On 2/7/25 14:48, Artem Bityutskiy wrote:
+> Hi,
+> 
+> thanks for the patches!
+> 
+> On Thu, 2025-02-06 at 15:21 +0100, Rafael J. Wysocki wrote:
+>> Hi Everyone,
+>>
+>> This work had been triggered by a report that commit 0611a640e60a ("eventpoll:
+>> prefer kfree_rcu() in __ep_remove()") had caused the critical-jOPS metric of
+>> the SPECjbb 2015 benchmark [1] to drop by around 50% even though it generally
+>> reduced kernel overhead.  Indeed, it was found during further investigation
+>> that the total interrupt rate while running the SPECjbb workload had fallen as
+>> a result of that commit by 55% and the local timer interrupt rate had fallen
+>> by
+>> almost 80%.
+> 
+> I ran SPECjbb2015 with and it doubles critical-jOPS and basically makes it
+> "normal" again. Thanks!
+> 
+> Reported-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+> Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+> 
 
-If the pci_host_probe fails to be executed and run one time
-pm_runtime_put_sync. Run pm_runtime_put_sync or pm_runtime_put again in
-cdns_plat_pcie_probe or j721e_pcie_probe. Finally, it will print log
-"runtime PM usage count underflow!".
-
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/pci/controller/cadence/pcie-cadence-host.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 8af95e9da7ce..fe0b8d76005e 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -576,8 +576,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 
- 	return 0;
- 
-- err_init:
--	pm_runtime_put_sync(dev);
--
-+err_init:
- 	return ret;
- }
-
-base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
--- 
-2.47.1
-
+I'll go take a look in-depth, honestly the statistical test of
+get_typical_interval() is somewhat black magic to me before and after
+4/5, so if that actually works better fine with me.
+I'll run some tests, too.
