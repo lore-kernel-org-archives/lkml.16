@@ -1,140 +1,251 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7421E1A3029
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36DB81B4F1F
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738952381; cv=none; b=b/NTqOSf0WCwj/LDfGE5YNrnDaKZ7ZU38sCHxDsUykWZp0jimrhB6wcHNX08m2b/xOnHZs89fpRlhNdruWQj9MeD0P9VTXR5yC0eJAme58GyBTqriO1wC9kBQj3u1IhY/ury7NmlRcewiqWkcAl6CsLI8BlHvUX7jOP610wJPMI=
+	t=1738952382; cv=none; b=iTD+GOzuwLZfsVT52685IraBSfuzZaLfMWmotc8bT+Cac2uCT1A44f7oXxGQlIRdUHB9vlsLzP24obBXmZwpC50fefAGwz3TbfPX9GglplI8sUCAWplbxfbt0BT7bGPkHurOBXrOKFekuBTDypmEc9fbQ/SfAahyl9iE837L0Hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738952381; c=relaxed/simple;
-	bh=C89ZWnTNzTZNoe/uDJ536PwYsKPB5iOZBV+ONxqmA4E=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ruIm9ROGlN7iw9zECqbjKkMeYDU4vQF9ayphPchh6uP+JxyrJcZwLLyNdyj8hqjE6zDur/lnJk44yc0qGs/+LrzgG2h+yKnma3BxWgvAwjpY1Ci78icBCZcUKN4F4XiVWw64C/RUQgciO+8bD7bgXvFone2re6d10ULdS0sRxN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=Nn8+QuAS; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="Nn8+QuAS"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id DCFA7240103
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 19:19:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1738952375; bh=C89ZWnTNzTZNoe/uDJ536PwYsKPB5iOZBV+ONxqmA4E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 From;
-	b=Nn8+QuASZ1EO12EjBGopIn6h8EPqlO0lxErmbt5dw/801/zRKlMhXt7j4aCYULuNZ
-	 IvtqCkiq2K4ceW5bN6vAFxQ6g/lQn+C00/vEqlv2VoT/yD4sx6apNRZiHYJ2ehk3To
-	 ltgSKTcHWldw19S/8Gje51k3Vf/9Oatblo55m535GKIzQ8tMCDvqV6KJDh4zKXziT5
-	 vH8iH3sE6dV5F/lSZKsFXf/HKmauSj+QGwV/RfIAIwtia5Uo2gFNuOSxJi8w70SFXq
-	 lxqQzh2+nlpTXRKhGVzN/9GEi71J3PuvD+DCAbakZHVNePRMEo2PUW5D7KzSY8KwMf
-	 /ZsOh6JOf6veA==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4YqMgp1FsPz9rxD;
-	Fri,  7 Feb 2025 19:19:33 +0100 (CET)
-From: Charalampos Mitrodimas <charmitro@posteo.net>
-To: Alban Kurti <kurti@invicto.ai>
-Cc: Joe Perches <joe@perches.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  Mugel Ojeda <ojeda@kernel.org>,
-  linux-kernel@vger.kernel.org,  rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v2 RESEND 1/1] checkpatch: add warning for pr_* and
- dev_* macros without a trailing newline
-In-Reply-To: <20250206120911.175884-1-kurti@invicto.ai> (Alban Kurti's message
-	of "Thu, 06 Feb 2025 12:09:12 +0000 (UTC)")
-References: <20250206120911.175884-1-kurti@invicto.ai>
-Date: Fri, 07 Feb 2025 18:19:33 +0000
-Message-ID: <m25xllr51m.fsf@posteo.net>
+	s=arc-20240116; t=1738952382; c=relaxed/simple;
+	bh=OECc3AlAFJHSLkueMsmvisVPVS5Sda+N+rTeMBNfqzs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UtiUQK4/BnLsP2LO0B/hFafL2R9oQ8GE2T+vs1pDgr8CXxSQzojTNlJzI3mVKCgzojROgLn5gvxzMmBQJLgvY02yG3+IYxyaXUlmcvO17bKQmklF03juYxkNPOLpYTKwW/5d0LtgjENbRKM9vHJXIaSFuyZWxr3eiGKhm9HnuQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8EF7F113E;
+	Fri,  7 Feb 2025 10:20:02 -0800 (PST)
+Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56EE23F63F;
+	Fri,  7 Feb 2025 10:19:36 -0800 (PST)
+From: James Morse <james.morse@arm.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Babu Moger <Babu.Moger@amd.com>,
+	James Morse <james.morse@arm.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com,
+	lcherian@marvell.com,
+	bobo.shaobowang@huawei.com,
+	tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>,
+	peternewman@google.com,
+	dfustini@baylibre.com,
+	amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>,
+	Dave Martin <dave.martin@arm.com>,
+	Koba Ko <kobak@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v6 16/42] x86/resctrl: Move monitor init work to a resctrl init call
+Date: Fri,  7 Feb 2025 18:17:57 +0000
+Message-Id: <20250207181823.6378-17-james.morse@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250207181823.6378-1-james.morse@arm.com>
+References: <20250207181823.6378-1-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Alban Kurti <kurti@invicto.ai> writes:
+rdt_get_mon_l3_config() is called from the architecture's
+resctrl_arch_late_init(), and initialises both architecture specific
+fields, such as hw_res->mon_scale and resctrl filesystem fields
+by calling dom_data_init().
 
-> Add a new check in scripts/checkpatch.pl to detect usage of pr_(level)
-> and dev_(level) macros (for both C and Rust) when the string literal
-> does not end with '\n'. Missing trailing newlines can lead to incomplete
-> log lines that do not appear properly in dmesg or in console output.
-> To show an example of this working after applying the patch we can run
-> the script on the commit that likely motivated this need/issue:
->   ./scripts/checkpatch.pl --strict -g f431c5c581fa176f608ba3fdebb3c1051bad5774
->
-> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-> Closes: https://github.com/Rust-for-Linux/linux/issues/1140
-> Signed-off-by: Alban Kurti <kurti@invicto.ai>
-> ---
-> Changelog since v1:
->  - Strip comments before matching to avoid false positives.
->  - Refactored the macro patterns for clarity.
->
->  scripts/checkpatch.pl | 46 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 9eed3683ad76..3256b5f31835 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -3888,6 +3888,52 @@ sub process {
->  			}
->  		}
->  
-> +# check for pr_* and dev_* logs without a newline for C and Rust files to avoid missing log messages
-> +    my $log_macro_pattern = qr{
-> +        \b
-> +        (
-> +            pr_(?:emerg|alert|crit|err|warn|notice|info|debug)
-> +          | dev_(?:emerg|alert|crit|err|warn|notice|info|dbg)
-> +        )
-> +        (!?)
-> +        \s*
-> +        \(
-> +        \s*
-> +        "([^"]*)"
-> +    }x;
-> +
-> +    if ($realfile =~ /\.(?:c|h|rs)$/) {
-> +        if ($rawline =~ /^\+/) {
-> +            my $cleanline = $rawline;
-> +
-> +            $cleanline =~ s/^[+\s]+//;
-> +            $cleanline =~ s/\r?$//;
-> +
-> +            $cleanline =~ s{/\*.*?\*/}{}g;
-> +            $cleanline =~ s{//.*}{}g;
-> +
-> +            if ($cleanline =~ /$log_macro_pattern/) {
-> +                my $macro_call = $1;
-> +                my $maybe_excl  = $2;
-> +                my $string_arg  = $3;
-> +
-> +                $string_arg =~ s/\s+$//;
-> +                if ($realfile =~ /\.rs$/ && $maybe_excl ne '!') {
-> +                    return;
-> +                }
-> +
-> +                if ($string_arg !~ /\\n$/ && $string_arg !~ /\n$/) {
-> +                    my $lang = ($realfile =~ /\.rs$/) ? "Rust" : "C";
-> +                    WARN("${lang}_LOG_NO_NEWLINE",
-> +                         "Usage of $macro_call without a trailing newline. Consider adding '\\n'.\n" .
-> +                         $herecurr);
-> +                }
-> +            }
-> +        }
-> +    }
-> +
-> +
->  # check for .L prefix local symbols in .S files
->  		if ($realfile =~ /\.S$/ &&
->  		    $line =~ /^\+\s*(?:[A-Z]+_)?SYM_[A-Z]+_(?:START|END)(?:_[A-Z_]+)?\s*\(\s*\.L/) {
+To separate the filesystem and architecture parts of resctrl, this
+function needs splitting up.
 
-I couldn't apply this to my tree (with rust-next base), but manually
-adding the changes to scripts/checkpatch.pl works as expected.
+Add resctrl_mon_resource_init() to do the filesystem specific work,
+and call it from resctrl_init(). This runs later, but is still before
+the filesystem is mounted and the rmid_ptrs[] array can be used.
 
-Alban, can you try resetting your tree to rust-next and apply this
-patch? I believe (not sure) there are some indentation issues with the
-code.
+Signed-off-by: James Morse <james.morse@arm.com>
+Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
+Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+---
+Changes since v4:
+ * Removed __exit markers
 
-C. Mitrodimas
+Changes since v3:
+ * Added a comment over resctrl_mon_resource_init().
+ * Added a comment over domain_setup_mon_state() to warn of cpuhp ordering.
+ * Added __init to resctrl_mon_resource_init().
+
+Changes since v2:
+ * Added error handling for the case sysfs files can't be created.
+---
+ arch/x86/kernel/cpu/resctrl/internal.h |  3 +-
+ arch/x86/kernel/cpu/resctrl/monitor.c  | 40 ++++++++++++++++++++------
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 22 +++++++++++++-
+ 3 files changed, 54 insertions(+), 11 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 73005ca2dda1..70fbb902e85e 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -586,13 +586,14 @@ void closid_free(int closid);
+ int alloc_rmid(u32 closid);
+ void free_rmid(u32 closid, u32 rmid);
+ int rdt_get_mon_l3_config(struct rdt_resource *r);
+-void __exit resctrl_mon_resource_exit(void);
++void resctrl_mon_resource_exit(void);
+ bool __init rdt_cpu_has(int flag);
+ void mon_event_count(void *info);
+ int rdtgroup_mondata_show(struct seq_file *m, void *arg);
+ void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
+ 		    struct rdt_mon_domain *d, struct rdtgroup *rdtgrp,
+ 		    cpumask_t *cpumask, int evtid, int first);
++int __init resctrl_mon_resource_init(void);
+ void mbm_setup_overflow_handler(struct rdt_mon_domain *dom,
+ 				unsigned long delay_ms,
+ 				int exclude_cpu);
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index 15e8c0190bfc..1730ba814834 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -1040,7 +1040,7 @@ static int dom_data_init(struct rdt_resource *r)
+ 	return err;
+ }
+ 
+-static void __exit dom_data_exit(struct rdt_resource *r)
++static void dom_data_exit(struct rdt_resource *r)
+ {
+ 	mutex_lock(&rdtgroup_mutex);
+ 
+@@ -1176,12 +1176,40 @@ static __init int snc_get_config(void)
+ 	return ret;
+ }
+ 
++/**
++ * resctrl_mon_resource_init() - Initialise global monitoring structures.
++ *
++ * Allocate and initialise global monitor resources that do not belong to a
++ * specific domain. i.e. the rmid_ptrs[] used for the limbo and free lists.
++ * Called once during boot after the struct rdt_resource's have been configured
++ * but before the filesystem is mounted.
++ * Resctrl's cpuhp callbacks may be called before this point to bring a domain
++ * online.
++ *
++ * Returns 0 for success, or -ENOMEM.
++ */
++int __init resctrl_mon_resource_init(void)
++{
++	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
++	int ret;
++
++	if (!r->mon_capable)
++		return 0;
++
++	ret = dom_data_init(r);
++	if (ret)
++		return ret;
++
++	l3_mon_evt_init(r);
++
++	return 0;
++}
++
+ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
+ {
+ 	unsigned int mbm_offset = boot_cpu_data.x86_cache_mbm_width_offset;
+ 	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
+ 	unsigned int threshold;
+-	int ret;
+ 
+ 	snc_nodes_per_l3_cache = snc_get_config();
+ 
+@@ -1211,10 +1239,6 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
+ 	 */
+ 	resctrl_rmid_realloc_threshold = resctrl_arch_round_mon_val(threshold);
+ 
+-	ret = dom_data_init(r);
+-	if (ret)
+-		return ret;
+-
+ 	if (rdt_cpu_has(X86_FEATURE_BMEC)) {
+ 		u32 eax, ebx, ecx, edx;
+ 
+@@ -1234,14 +1258,12 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
+ 		}
+ 	}
+ 
+-	l3_mon_evt_init(r);
+-
+ 	r->mon_capable = true;
+ 
+ 	return 0;
+ }
+ 
+-void __exit resctrl_mon_resource_exit(void)
++void resctrl_mon_resource_exit(void)
+ {
+ 	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
+ 
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 42c48e79364d..badac3f5da72 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -4102,6 +4102,19 @@ void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d
+ 	mutex_unlock(&rdtgroup_mutex);
+ }
+ 
++/**
++ * domain_setup_mon_state() -  Initialise domain monitoring structures.
++ * @r:	The resource for the newly online domain.
++ * @d:	The newly online domain.
++ *
++ * Allocate monitor resources that belong to this domain.
++ * Called when the first CPU of a domain comes online, regardless of whether
++ * the filesystem is mounted.
++ * During boot this may be called before global allocations have been made by
++ * resctrl_mon_resource_init().
++ *
++ * Returns 0 for success, or -ENOMEM.
++ */
+ static int domain_setup_mon_state(struct rdt_resource *r, struct rdt_mon_domain *d)
+ {
+ 	u32 idx_limit = resctrl_arch_system_num_rmid_idx();
+@@ -4252,9 +4265,15 @@ int __init resctrl_init(void)
+ 
+ 	rdtgroup_setup_default();
+ 
++	ret = resctrl_mon_resource_init();
++	if (ret)
++		return ret;
++
+ 	ret = sysfs_create_mount_point(fs_kobj, "resctrl");
+-	if (ret)
++	if (ret) {
++		resctrl_mon_resource_exit();
+ 		return ret;
++	}
+ 
+ 	ret = register_filesystem(&rdt_fs_type);
+ 	if (ret)
+@@ -4287,6 +4306,7 @@ int __init resctrl_init(void)
+ 
+ cleanup_mountpoint:
+ 	sysfs_remove_mount_point(fs_kobj, "resctrl");
++	resctrl_mon_resource_exit();
+ 
+ 	return ret;
+ }
+-- 
+2.39.2
+
