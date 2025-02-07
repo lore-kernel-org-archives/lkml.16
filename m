@@ -1,33 +1,48 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8C82417C7;
-	Fri,  7 Feb 2025 12:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAFD02417C7;
+	Fri,  7 Feb 2025 12:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738929738; cv=none; b=ikMIKJpN6B7tI405rcjqeOzkn1nyicRO7aTGINYiTzIaLHicrLTtYuZyeVsmKIABIOmpyLT4TAoE/0IAHiddv9O3uqBkrDZAQoQLM7sCgzHvxmNcrHypS1pfyV288/6ovtaUgKgVD2QILnVHhXNMMFCTvqfH/fym1T+8zv5djCM=
+	t=1738929840; cv=none; b=HGz2HUvm/mGL/HSc29aKHi4BC3BtBdcQ7YRacqbtdRLxbRDdIB3SVT/wIC3SdjJ02nh0ZQjpqoK7advkiP9vqkcUCELDjmcO6OWPz2QpG7VF+8+MV50gXCNCgdnCPOsKp5/APUArqMWUjTJ/nMFX98Ip8yOtkW+PGg5hFjvOmwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738929738; c=relaxed/simple;
-	bh=1gbqzvtIyhZ2LOlMJiVsOC0kg7QFg2HRd5SIYjSn6Hc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J1/swxvr6DiWIxhd6det5wUMl5Zi0+rBPsZk4Ff4ODxTX4+0hjTnoqRlKzSP6QsJU9ooSz6e6FpA6SOaokuZ/DojIudt+1Wh6alE3FAKSn7c89oMUgQKraG2aM8z1XNgb2lF9df6N3+SmsrMdBLveUObRosff56gFrnIhiqgPwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=AW5e00tc; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1738929840; c=relaxed/simple;
+	bh=vSe2aqlxgdYJkzNq04vgzJKNQSxYHU5xnjh0uAfSsco=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=MHql9cIteNaAr5zVfL7MG/OiCJZzKxkmsk86gTYogYpuY4X9GXoczdn7Sb9BJsqT17Yj6227axHIguENhRHw/TP4fK6+v6TgAUHiGnNr3n3/+hJnggPB+3zGyVURdFLLV2w0r/Qbf2qJOtApzvTzb9i6lzIDCb0s0IhmtuRXFW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SPLTILhM; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="AW5e00tc"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E8A26F0C;
-	Fri,  7 Feb 2025 13:00:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1738929654;
-	bh=1gbqzvtIyhZ2LOlMJiVsOC0kg7QFg2HRd5SIYjSn6Hc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AW5e00tczGFBIY8ZeewWJss6JBPOsjlbjoedObCb2LHKtNfI9HJ/AKysiFvvWEVFr
-	 oBQazn93Ov7pBSpDbW9528lzlqs5B3vNwUVUreO8AGGSDtHl4ZrKTkul0Wv+dlZljG
-	 +2HFMWI3FKOC9t7tP1pdTECIFCpk+2qpAULLeEYY=
-Message-ID: <8b0f0743-03d6-4b2a-a2c2-37b05b854fb8@ideasonboard.com>
-Date: Fri, 7 Feb 2025 14:02:04 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SPLTILhM"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517BNkpv032714;
+	Fri, 7 Feb 2025 12:03:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	KB5ry0822fOnZO8OHnNGA51DXxbTzPAyb6lNTnpm0SY=; b=SPLTILhMnRumfKXc
+	DGZsN/ISYCLQrAPXO68P1RE7OC18H/Viu1uakQ2AjWAAcoHRc4M9KM7A9SUDEUdf
+	dat4r1wREUiO/Pw66Dtns+9us8eKgmi01fLf21xlXcqzMUHQL/esbTdrQpl1V7Xm
+	37qbM4a/uuIwOHc/VzBQpTa0wuo5rHIcoZlZ7myWb4T3lQ55Lyepn8E7scp0BfOs
+	kkoyntBxBQH1FJqdSjXkkNKgXpuUD4Vgmkn51yoI1nC/u8dLy4o9ESuipBZBea8Q
+	64Sq247MN05QS0iIn3t8NHyNwJHgOgPoZy6p7pPHa/FsgjMS6CT7jWQ8HCKdEQRy
+	0YCSCA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nh8ur31c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Feb 2025 12:03:50 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 517C3np7018892
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 7 Feb 2025 12:03:49 GMT
+Received: from [10.216.49.103] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 7 Feb 2025
+ 04:03:46 -0800
+Message-ID: <f643c57e-de01-4372-a1b1-7ebde319d0a4@quicinc.com>
+Date: Fri, 7 Feb 2025 17:33:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,184 +50,194 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 0/9] misc: Support TI FPC202 dual-port controller
-To: Romain Gantois <romain.gantois@bootlin.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>, Andi Shyti
- <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>,
- Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Kory Maincent <kory.maincent@bootlin.com>, linux-i2c@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-media@vger.kernel.org, linux-gpio@vger.kernel.org,
- Conor Dooley <conor.dooley@microchip.com>,
- Cosmin Tanislav <demonsingur@gmail.com>
-References: <20250204-fpc202-v7-0-78b4b8a35cf1@bootlin.com>
+Subject: Re: [PATCH v1 1/3] dt-bindings: i3c: Add Qualcomm I3C master
+ controller bindings
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, <alexandre.belloni@bootlin.com>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <jarkko.nikula@linux.intel.com>, <linux-i3c@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250205143109.2955321-1-quic_msavaliy@quicinc.com>
+ <20250205143109.2955321-2-quic_msavaliy@quicinc.com>
+ <248000f5-63db-492c-884d-ac72db337493@kernel.org>
+ <0ae3f754-edcb-4b22-9d49-b20ef264554b@quicinc.com>
 Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250204-fpc202-v7-0-78b4b8a35cf1@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <0ae3f754-edcb-4b22-9d49-b20ef264554b@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: vkhAe4T5TKsvZ_7DZJX4KB0oPC5tPaJN
+X-Proofpoint-ORIG-GUID: vkhAe4T5TKsvZ_7DZJX4KB0oPC5tPaJN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_05,2025-02-07_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ mlxscore=0 bulkscore=0 adultscore=0 clxscore=1015 phishscore=0
+ lowpriorityscore=0 malwarescore=0 mlxlogscore=999 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502070093
 
-Hi,
+Hi Krzysztof,
 
-On 04/02/2025 11:29, Romain Gantois wrote:
-> Hello everyone,
+On 2/6/2025 7:13 PM, Mukesh Kumar Savaliya wrote:
+> Hi Krzysztof,  Thanks !
 > 
-> This is version seven of my series which adds support for the TI FPC202
-> dual-port controller. This is an unusual kind of device which is used as a
-> low-speed signal aggregator for various types of SFP-like hardware ports.
+> On 2/5/2025 8:12 PM, Krzysztof Kozlowski wrote:
+>> On 05/02/2025 15:31, Mukesh Kumar Savaliya wrote:
+>>> Add device tree bindings for the Qualcomm I3C master controller. This
+>>> includes the necessary documentation and properties required to describe
+>>> the hardware in the device tree.
+>>
+>> A nit, subject: drop second/last, redundant "bindings". The
+>> "dt-bindings" prefix is already stating that these are bindings.
+> Sure
+>> See also:
+>> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/ 
+>> devicetree/bindings/submitting-patches.rst#L18
+>>
+>> Use modern terminology, which means:
+>> s/master/whatever else or even nothing/
+>> See other recent bindings and discussions.
+>>
+> Sure
+>>
+>>>
+>>> Signed-off-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+>>> ---
+>>>   .../bindings/i3c/qcom,i3c-master.yaml         | 57 +++++++++++++++++++
+>>>   1 file changed, 57 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/i3c/qcom,i3c- 
+>>> master.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/i3c/qcom,i3c- 
+>>> master.yaml b/Documentation/devicetree/bindings/i3c/qcom,i3c-master.yaml
+>>> new file mode 100644
+>>> index 000000000000..ad63ea779fd6
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/i3c/qcom,i3c-master.yaml
+>>
+>> Filename matching compatible.
+>>
+> Changed compatible to "qcom,i3c-master"
+>>> @@ -0,0 +1,57 @@
+>>> +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/i3c/qcom,i3c-master.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Qualcomm I3C master controller
+>>> +
+>>> +maintainers:
+>>> +  - Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+>>> +
+>>> +allOf:
+>>> +  - $ref: i3c.yaml#
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    const: qcom,geni-i3c
+>>
+>> No SoC? So to be sure: you claim all future SoCs will be using exactly
+>> the same interface. No new compatibles, no new properties will be added.
+>>
+> I think i should remove const. kept it for now as no other compatible to 
+> be added as of now.
 > 
-> The FPC202 exposes an I2C, or SPI (not supported in this series) control
-> interface, which can be used to access two downstream I2C busses, along
-> with a set of low-speed GPIO signals for each port. It also has I2C address
-> translation (ATR) features, which allow multiple I2C devices with the same
-> address (e.g. SFP EEPROMs at address 0x50) to be accessed from the upstream
-> control interface on different addresses.
+> let me remove const.
 > 
-> I've chosen to add this driver to the misc subsystem, as it doesn't
-> strictly belong in either the i2c or gpio sybsystem, and as far as I know
-> it is the first device of its kind to be added to the kernel.
+> SoC name is not required, as this compatible is generic to all the SOCs.
+>>> +
+>>> +  reg:
+>>> +    minItems: 1
+>>
+>> Drop
+>>
+> Not required ? I see other bindings are using it, so please confirm if i 
+> can remove this.
+>>> +    maxItems: 2
+>>
+>> Drop and instead list and describe items
+>>
+> Okay, i can remove maxItems if not mandatory. Taken cdns,i3c-master.yaml 
+> and added these.
 > 
-> Along with the FPC202 driver itself, this series also adds support for
-> dynamic address translation to the i2c-atr module. This allows I2C address
-> translators to update their translation table on-the-fly when they receive
-> transactions to unmapped clients. This feature is needed by the FPC202
-> driver to access up to three logical I2C devices per-port, given that the
-> FPC202 address translation table only has two address slots.
-> 
-> Best Regards,
-> 
-> Romain
+>>
+>>> +
+>>> +  clocks:
+>>> +    minItems: 1
+>>
+>> Look at other bindings. There is never code like this.
+>>
+> cdns,i3c-master.yaml taken as reference.
+>>> +
+>>> +  clock-names:
+>>> +    items:
+>>> +      - const: se-clk
+>>
+>> Drop clock-names
+> Sure, took reference from cdns,i3c-master.yaml.
+>>
+>>> +
+>>> +  interrupts-extended:
+>>> +    minItems: 1
+>>> +    maxItems: 3
+>>
+>> As well - there is never an interrupts-extended property. Just 
+>> interrupts.
+>>
+> No, i see this property many places. Do you mean to say interrupts- 
+> extended  can be there in examples but not only add "interrupts" 
+> property here ?
+> e.g timer/riscv,timer.yaml +41 lists it in yaml also.
+>> Also drop constraints and list items.
+>>
+> I will remove minItems and MaxItems, will list Items with description.
+>>
+Wanted to check if below way is fine ? Because some of the ask to drop 
+constraints are already present in other i3c yaml files.
 
-I tested this series on my ds90ub960 setup (with plenty of patches on 
-top of mainline to get full multi-streaming), and it works fine for me. So:
+if not, could you please help share example removing constraints and 
+listing item ?
 
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+== Sample ==
+properties:
+   compatible:
+     enum:
+       - qcom,i3c-controller
 
-This series does conflict with the ub960 changes I've sent resently. 
-Nothing difficult, but just something to be aware of.
+   reg:
+     type: array
+     minItems: 1
+     maxItems: 1
+     items:
+       type: integer
+     description: Base address and size of the I3C controller registers.
 
-I'll try to do an actual review next week.
+   interrupts:
+     type: array
+     minItems: 1
+     maxItems: 1
+     items:
+       type: integer
+     description: Interrupt number for the I3C controller.
 
-We also still have the GMSL i2c-atr questions to sort out. Cosmin 
-recently sent out this series to add a few patches which help on GMSL:
+   clocks:
+     type: array
+     minItems: 1
+     maxItems: 1
+     items:
+       type: object
+     description: Clock specifier for the I3C controller.
+===
 
-https://lore.kernel.org/all/20250203121629.2027871-1-demonsingur%40gmail.com/
-
-  Tomi
-
+>>
+>> Best regards,
+>> Krzysztof
 > 
-> Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
-> ---
-> Changes in v7:
-> - Removed a superfluous log message
-> - Link to v6: https://lore.kernel.org/r/20250115-fpc202-v6-0-d47a34820753@bootlin.com
 > 
-> Changes in v6:
-> - Replaced spaces with tabs in misc Makefile
-> - Link to v5: https://lore.kernel.org/r/20250108-fpc202-v5-0-a439ab999d5a@bootlin.com
-> 
-> Changes in v5:
-> - Used mutex guards in ub960 and fpc202 drivers
-> - Changed wording of some i2c-atr logs
-> - Link to v4: https://lore.kernel.org/r/20241230-fpc202-v4-0-761b297dc697@bootlin.com
-> 
-> Changes in v4:
-> - Fixed unbalanced refcounting in FPC202 port probing path
-> - Fixed KASAN bug by setting alias_pool "shared" flag properly
-> - Dropped requirement for both FPC202 ports to be described in the DT
-> - Enabled dynamic translation by default, dropped support for non dynamic translation
-> - Used aliased_addrs list instead of insufficient bitmap in ub960 driver
-> - Added i2c_atr_destroy_c2a() function matching i2c_atr_create_c2a()
-> - Fixed list corruption bug in dynamic address translation
-> - Indented Kconfig entry with tabs instead of spaces
-> - Link to v3: https://lore.kernel.org/r/20241125-fpc202-v3-0-34e86bcb5b56@bootlin.com
-> 
-> Changes in v3:
-> - Described the "reg" property of downstream ports in the FPC202 bindings
-> - Link to v2: https://lore.kernel.org/r/20241118-fpc202-v2-0-744e4f192a2d@bootlin.com
-> 
-> Changes in v2:
-> - Renamed port nodes to match i2c adapter bindings.
-> - Declared atr ops struct as static const.
-> - Free downstream ports during FPC202 removal.
-> - Link to v1: https://lore.kernel.org/r/20241108-fpc202-v1-0-fe42c698bc92@bootlin.com
-> 
-> ---
-> Romain Gantois (9):
->        dt-bindings: misc: Describe TI FPC202 dual port controller
->        media: i2c: ds90ub960: Replace aliased clients list with address list
->        media: i2c: ds90ub960: Protect alias_use_mask with a mutex
->        i2c: use client addresses directly in ATR interface
->        i2c: move ATR alias pool to a separate struct
->        i2c: rename field 'alias_list' of struct i2c_atr_chan to 'alias_pairs'
->        i2c: support per-channel ATR alias pools
->        i2c: Support dynamic address translation
->        misc: add FPC202 dual port controller driver
-> 
->   .../devicetree/bindings/misc/ti,fpc202.yaml        |  94 ++++
->   MAINTAINERS                                        |   7 +
->   drivers/i2c/i2c-atr.c                              | 483 ++++++++++++++-------
->   drivers/media/i2c/ds90ub913.c                      |   9 +-
->   drivers/media/i2c/ds90ub953.c                      |   9 +-
->   drivers/media/i2c/ds90ub960.c                      |  49 ++-
->   drivers/misc/Kconfig                               |  11 +
->   drivers/misc/Makefile                              |   1 +
->   drivers/misc/ti_fpc202.c                           | 438 +++++++++++++++++++
->   include/linux/i2c-atr.h                            |  54 ++-
->   10 files changed, 964 insertions(+), 191 deletions(-)
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20241017-fpc202-6f0b739c2078
-> 
-> Best regards,
 
