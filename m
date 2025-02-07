@@ -1,195 +1,234 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837C01DC04A
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 23:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C541E1CEAC8
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 23:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738970715; cv=none; b=Hu2mgyCyk3nBq8MwhMa88IvZ0lh//j7HKTkjKGbh8H4s1jwArYHiIcF59UoB5px0FGvkdqXpl/59P7f2HpBkS7RxZL6usDGcfkityhMXTVNWmXRWgnkAnxgI2Wo9sEVFXSsMVgnORwHZMxNUjnczwdUq1hkat365kkM7oiFmd1U=
+	t=1738970738; cv=none; b=EPMvsdD91jDtv/nkb+U25jKpr7R1ZUYIA4HQPPBVJtbbq4wEAid9YmPSSW/dIsSjpOSRNkNvTa+6duvXHfp++k57JgDQeOm3cnZclSrDQljK6bTfeo28ouI9mKUXZgh5sattdSVp9BqinfmjMZpqu9uE5SRpr+CMTs8qKxbx3Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738970715; c=relaxed/simple;
-	bh=t65Qte1hMK2K/SqGXWL6WDwX51wRPkkWC4a83KGD0zg=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=sFxkP021UK4EV6+cjZQNawGJRaRn1jBfhieITXI8abk2Ke2gzWira+hRkk8yresGcFMMFYztTkPeEm2JW50t07c5Qpc+ZsgOdnF40j7/RklXz8taSOa92QX7x4kyiyQIccECO31Joz4yeHgtsMa20lICEVTbMnEHtQ/PpEsW2L8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FQb5SPO/; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1738970738; c=relaxed/simple;
+	bh=Y+nBP1ws7F9BAb3YRV7arhbrJpPcf71k0EpDEmHvPdg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=afP6JKcYrvmmqUoemKQ0nzH2rCVkce+YXNR5W1P/CWjVwkcYjUhzlPgQz7DjT9xrc9M3+mLvitDK+JSWF4JmzURYRksvIFqRsnsastrGe9zmh7rxsLFNH/2v1/3gsqtycXEhgMhshYk2aGJd0tlFbgBhImnV52mpsuTBZzRDm94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=jx6Uu/3Q; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FQb5SPO/"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6f2c7746509so39380457b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 15:25:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="jx6Uu/3Q"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f5268cf50so18396815ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 15:25:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738970712; x=1739575512; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dEq/K8vKiseEoA2QFSLjXeZ/dhyahLOHi8u2z0uKAPQ=;
-        b=FQb5SPO/VOvDXGF0luobyyUEuHnJ8VICJg8mrqkN+5ywN4Kg4RrGt1L2EwR4rJ3+Gf
-         FlCjARZ0WmhJHdeHNXJoxWYpaYaaYkQzbTkIYpox+cXJrghUOxI6oa488gfD4ze9eESj
-         6FvfQC9MzfTFDuATBIIcZM8Ba7A101qUMHgpUNa6rnTnrNpoR7b5PV65jg3cUsyaFr7w
-         Wo7CyNbSKLqMMbmVo4Q9t/GZsUoqAJvyKIv53Ls2tbn4pC3Ihzz97yMoATk2/eQKd0o1
-         A6QnCVK2F4uOffQfTzhg1vJ+jdZs5GCqBGEQALB6kCRHHchA0hALD+7qTd+KgM4rFp24
-         nAFg==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738970735; x=1739575535; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=NNlAmhG4r3/Civ4C+1dYrzk4uNPcGHra0U2geeoELN8=;
+        b=jx6Uu/3Q/Jgc79KW5z1e/L5NKYSUouoGuqhRY3YbDkaQkJhsdqeEASUci74bcXg7f6
+         BdkeT0cy5Q4nUYNboOcWvtLChdjmVSC1t5qRDGJ31dC9SPngVs5UQOwpP+gJLO/fOdzk
+         rgXfZWehqwN1igebvRU5ILBxMdJvNrdnt4M+XnY/T0JfGlG/9VNJoa/ithaL6NUx+PYW
+         HYG535PmyRlIWBCYPonJ+8AG/DHNqZfsmy3L/ru9B2KWlEAzmh6MqRa4RkESwjcb7aMl
+         gNOonjsg0UxOMw/iCW0G651xiDtsaxRX2jR1W6dpRfveHZhe00jb7Sc7FQE5Cj+X7YHN
+         18WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738970712; x=1739575512;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+        d=1e100.net; s=20230601; t=1738970735; x=1739575535;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dEq/K8vKiseEoA2QFSLjXeZ/dhyahLOHi8u2z0uKAPQ=;
-        b=lhdrR6F8BIX+Eu28H5/2dlq6IipfnA3FDmaPe7k/4RIIkRW5vMSGLmYQaidwMWct0w
-         iHN8skVfF3bs+AhadlIrmQOh4+MfDfgit2hqHTDS8zMjcHRsyBNk9mfQwidWMdt0WaWj
-         rxyzRSa9SqEfYn/iCPxPly2J+wJMCpyZnkEu7fYu91IY0Xgo6naXO7dWQP5UVDlhUUPc
-         42uoiRNTe1SlkUsYFGNRWHJ3O6ADSlpQu/swJrWgX5CKDZRAm/S0QceTEFG5vXNaRA8d
-         bFInuRzweOECE6l7mi7EoY/RzJkgXEOICrh4bnTy+dhCMWYe1lzIwal2ZsaCwgU8/KO+
-         +rsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpTkN+QjOOGzaGlxcioRcV0fPVFWzAtq5eUbNerU9Bqb+UeaqHVFPkEZstB0xYU3in6AxYRJABcYbE7tE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtuDGWXIFmHCztXKBF5YCFEP1bKT7T8KjILKvEEkuozPcbqQys
-	JkKwNRTdzIoQQzWjQjkKgaiqb89EeTMygznlPrD9D52pdphhN5V8njJfgYKqVLQmB4heXmTjI8d
-	cBJYB6A==
-X-Google-Smtp-Source: AGHT+IFnOnokinwj7W6d66xeycuW5pfirx4gJhlEr4QKRDn9npVQrsFBWLER1GrO5dxcUrZ3qNKDmQLXh2ul
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:79e4:4a45:1e80:ace5])
- (user=irogers job=sendgmr) by 2002:a05:690c:9315:b0:6f9:7447:79a1 with SMTP
- id 00721157ae682-6f9b29584bdmr340987b3.6.1738970712533; Fri, 07 Feb 2025
- 15:25:12 -0800 (PST)
-Date: Fri,  7 Feb 2025 15:24:48 -0800
-In-Reply-To: <20250207232452.994822-1-irogers@google.com>
-Message-Id: <20250207232452.994822-8-irogers@google.com>
+        bh=NNlAmhG4r3/Civ4C+1dYrzk4uNPcGHra0U2geeoELN8=;
+        b=j2D1pSGfIVg4T5kQ0SUxqohg+VmFBcOEsztRauO5jADkRmHfDln6lSdUWCbFXa3C5h
+         WacWClGYZq/EDIge8vFuhmSRcP6XILi+UMCuXFewTC0a4oxaGualUdiSVlx6B6Vdd5XJ
+         i+nvYw/6XhKzUdrdjddwsXJRSgFCVyQW2/AVb2cMBLhdFBnQJ+Y8VIrjVMAPUHXVNECj
+         tndNC80BBiZmd2RNfEUgJk607j49Asvf0WlbcJkruL0EhljV3T8gUkSh2LJsoUTQymIO
+         gM0NZPJ+ahFwgb7vAakcgABn+U9HYtneXofOXSu8Ci8CUDyD5SvTuG/pTu0rninfKrNq
+         c1GA==
+X-Forwarded-Encrypted: i=1; AJvYcCXdtpvKveq8JoKR4p6tRQRpiH91dPE0SdC56+E89xnyaOLuKM8Ukn35YKSR/EEq09M5QddubW4dwL4siN0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGu8lnmgx7zicIdfjtaDUnT6sOetSdltIWMGElSXlqgsxeQslN
+	zkHxdNyWP2jgr8Dg5JIGpSCpGFbNjIx6v6KKj/Z/Z1mpR4+toxbv/WgHGBi88NE=
+X-Gm-Gg: ASbGnctFvgTEMSa2IgTt5Pm9NBtiBj/QY/Q0Ew7d9u0zf8W6cxorzvsez2gQSUzPJnC
+	sNDzZzxfHy5z7iOGtN1IzDup55dlXe2ae2/MfN2cIQr3jpcmAOuBYcUPh5N5lFG6bU280a+ephk
+	RVRBa1pA2bWpiTEZtXp1Wf/5NRXXVQrtxiznHtIu5gOEZ0Q+KpFLBVlePy11SFz65KoWZX2Sccy
+	B2w6VJzWJ/h8F2PgxVKltm5LNzDNOHNhVBky8p7i7/7PRRRU2/l+2Vx0dMwlSeMKl7iotaDZltp
+	3zesjGIJ2iSLDFtG5v9brID9TQ==
+X-Google-Smtp-Source: AGHT+IE4XMWCRo3zMaE+9a8gR9bTeN800JXvztmc6v9Xr7sz0lD3zlNhQ59QeV7lPxe5ncZAuS2TtQ==
+X-Received: by 2002:a17:902:c942:b0:216:4c88:d939 with SMTP id d9443c01a7336-21f4e746803mr74840445ad.38.1738970735073;
+        Fri, 07 Feb 2025 15:25:35 -0800 (PST)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683db30sm36005905ad.138.2025.02.07.15.25.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 15:25:34 -0800 (PST)
+Date: Fri, 7 Feb 2025 15:25:31 -0800
+From: Deepak Gupta <debug@rivosinc.com>
+To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	alistair.francis@wdc.com, richard.henderson@linaro.org,
+	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
+	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
+	alexghiti@rivosinc.com, samitolvanen@google.com, broonie@kernel.org,
+	rick.p.edgecombe@intel.com
+Subject: Re: [PATCH v9 03/26] riscv: zicfiss / zicfilp enumeration
+Message-ID: <Z6aWa+gt/WafPxbu@debug.ba.rivosinc.com>
+References: <20250204-v5_user_cfi_series-v9-0-b37a49c5205c@rivosinc.com>
+ <20250204-v5_user_cfi_series-v9-3-b37a49c5205c@rivosinc.com>
+ <782ef14c-e7c4-435e-adc6-9559ce3cc06d@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250207232452.994822-1-irogers@google.com>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Subject: [PATCH v2 7/7] perf hwmon_pmu: Switch event discovery to io_dir__readdir
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Sam James <sam@gentoo.org>, 
-	Jesper Juhl <jesperjuhl76@gmail.com>, James Clark <james.clark@linaro.org>, 
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Michael Petlan <mpetlan@redhat.com>, 
-	Veronika Molnarova <vmolnaro@redhat.com>, Anne Macedo <retpolanne@posteo.net>, 
-	Dominique Martinet <asmadeus@codewreck.org>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <782ef14c-e7c4-435e-adc6-9559ce3cc06d@rivosinc.com>
 
-Avoid DIR allocations when scanning sysfs by using io_dir for the
-readdir implementation, that allocates about 1kb on the stack.
+On Thu, Feb 06, 2025 at 02:50:29PM +0100, Clément Léger wrote:
+>
+>
+>On 05/02/2025 02:21, Deepak Gupta wrote:
+>> This patch adds support for detecting zicfiss and zicfilp. zicfiss and
+>> zicfilp stands for unprivleged integer spec extension for shadow stack
+>> and branch tracking on indirect branches, respectively.
+>>
+>> This patch looks for zicfiss and zicfilp in device tree and accordinlgy
+>> lights up bit in cpu feature bitmap. Furthermore this patch adds detection
+>> utility functions to return whether shadow stack or landing pads are
+>> supported by cpu.
+>>
+>> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+>> ---
+>>  arch/riscv/include/asm/cpufeature.h | 13 +++++++++++++
+>>  arch/riscv/include/asm/hwcap.h      |  2 ++
+>>  arch/riscv/include/asm/processor.h  |  1 +
+>>  arch/riscv/kernel/cpufeature.c      |  2 ++
+>>  4 files changed, 18 insertions(+)
+>>
+>> diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
+>> index 569140d6e639..69007b8100ca 100644
+>> --- a/arch/riscv/include/asm/cpufeature.h
+>> +++ b/arch/riscv/include/asm/cpufeature.h
+>> @@ -12,6 +12,7 @@
+>>  #include <linux/kconfig.h>
+>>  #include <linux/percpu-defs.h>
+>>  #include <linux/threads.h>
+>> +#include <linux/smp.h>
+>>  #include <asm/hwcap.h>
+>>  #include <asm/cpufeature-macros.h>
+>>
+>> @@ -137,4 +138,16 @@ static __always_inline bool riscv_cpu_has_extension_unlikely(int cpu, const unsi
+>>  	return __riscv_isa_extension_available(hart_isa[cpu].isa, ext);
+>>  }
+>>
+>> +static inline bool cpu_supports_shadow_stack(void)
+>> +{
+>> +	return (IS_ENABLED(CONFIG_RISCV_USER_CFI) &&
+>> +		riscv_cpu_has_extension_unlikely(smp_processor_id(), RISCV_ISA_EXT_ZICFISS));
+>> +}
+>> +
+>> +static inline bool cpu_supports_indirect_br_lp_instr(void)
+>> +{
+>> +	return (IS_ENABLED(CONFIG_RISCV_USER_CFI) &&
+>> +		riscv_cpu_has_extension_unlikely(smp_processor_id(), RISCV_ISA_EXT_ZICFILP));
+>> +}
+>> +
+>>  #endif
+>> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+>> index 869da082252a..2dc4232bdb3e 100644
+>> --- a/arch/riscv/include/asm/hwcap.h
+>> +++ b/arch/riscv/include/asm/hwcap.h
+>> @@ -100,6 +100,8 @@
+>>  #define RISCV_ISA_EXT_ZICCRSE		91
+>>  #define RISCV_ISA_EXT_SVADE		92
+>>  #define RISCV_ISA_EXT_SVADU		93
+>> +#define RISCV_ISA_EXT_ZICFILP		94
+>> +#define RISCV_ISA_EXT_ZICFISS		95
+>>
+>>  #define RISCV_ISA_EXT_XLINUXENVCFG	127
+>>
+>> diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
+>> index 5f56eb9d114a..e3aba3336e63 100644
+>> --- a/arch/riscv/include/asm/processor.h
+>> +++ b/arch/riscv/include/asm/processor.h
+>> @@ -13,6 +13,7 @@
+>>  #include <vdso/processor.h>
+>>
+>>  #include <asm/ptrace.h>
+>> +#include <asm/hwcap.h>
+>>
+>>  #define arch_get_mmap_end(addr, len, flags)			\
+>>  ({								\
+>> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+>> index c6ba750536c3..e72de12e5b99 100644
+>> --- a/arch/riscv/kernel/cpufeature.c
+>> +++ b/arch/riscv/kernel/cpufeature.c
+>> @@ -333,6 +333,8 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+>>  	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zicboz, RISCV_ISA_EXT_ZICBOZ, riscv_xlinuxenvcfg_exts,
+>>  					  riscv_ext_zicboz_validate),
+>>  	__RISCV_ISA_EXT_DATA(ziccrse, RISCV_ISA_EXT_ZICCRSE),
+>> +	__RISCV_ISA_EXT_SUPERSET(zicfilp, RISCV_ISA_EXT_ZICFILP, riscv_xlinuxenvcfg_exts),
+>> +	__RISCV_ISA_EXT_SUPERSET(zicfiss, RISCV_ISA_EXT_ZICFISS, riscv_xlinuxenvcfg_exts),
+>
+>Hey Deepak,
+>
+>I think these definitions can benefit from using a validation callback:
+>
+>static int riscv_cfi_validate(const struct riscv_isa_ext_data *data,
+>				  const unsigned long *isa_bitmap)
+>{
+>	if (!IS_ENABLED(CONFIG_RISCV_USER_CFI)
+>		return -EINVAL;
+>		
+>	return 0;
+>}
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/hwmon_pmu.c | 42 +++++++++++++++----------------------
- 1 file changed, 17 insertions(+), 25 deletions(-)
+Yes this is a good idea.
+I'll add that.
 
-diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
-index acd889b2462f..3cce77fc8004 100644
---- a/tools/perf/util/hwmon_pmu.c
-+++ b/tools/perf/util/hwmon_pmu.c
-@@ -11,13 +11,13 @@
- #include <sys/types.h>
- #include <assert.h>
- #include <ctype.h>
--#include <dirent.h>
- #include <fcntl.h>
- #include <stddef.h>
- #include <stdlib.h>
- #include <string.h>
- #include <api/fs/fs.h>
- #include <api/io.h>
-+#include <api/io_dir.h>
- #include <linux/kernel.h>
- #include <linux/string.h>
- #include <linux/zalloc.h>
-@@ -235,31 +235,22 @@ static void fix_name(char *p)
- 
- static int hwmon_pmu__read_events(struct hwmon_pmu *pmu)
- {
--	DIR *dir;
--	struct dirent *ent;
--	int dup_fd, err = 0;
-+	int err = 0;
- 	struct hashmap_entry *cur, *tmp;
- 	size_t bkt;
-+	struct io_dirent64 *ent;
-+	struct io_dir dir;
- 
- 	if (pmu->pmu.sysfs_aliases_loaded)
- 		return 0;
- 
--	/*
--	 * Use a dup-ed fd as closedir will close it. Use openat so that the
--	 * directory contents are refreshed.
--	 */
--	dup_fd = openat(pmu->hwmon_dir_fd, ".", O_DIRECTORY);
-+	/* Use openat so that the directory contents are refreshed. */
-+	io_dir__init(&dir, openat(pmu->hwmon_dir_fd, ".", O_CLOEXEC | O_DIRECTORY | O_RDONLY));
- 
--	if (dup_fd == -1)
--		return -ENOMEM;
-+	if (dir.dirfd < 0)
-+		return -ENOENT;
- 
--	dir = fdopendir(dup_fd);
--	if (!dir) {
--		close(dup_fd);
--		return -ENOMEM;
--	}
--
--	while ((ent = readdir(dir)) != NULL) {
-+	while ((ent = io_dir__readdir(&dir)) != NULL) {
- 		enum hwmon_type type;
- 		int number;
- 		enum hwmon_item item;
-@@ -347,7 +338,7 @@ static int hwmon_pmu__read_events(struct hwmon_pmu *pmu)
- 	pmu->pmu.sysfs_aliases_loaded = true;
- 
- err_out:
--	closedir(dir);
-+	close(dir.dirfd);
- 	return err;
- }
- 
-@@ -702,8 +693,8 @@ int hwmon_pmu__check_alias(struct parse_events_terms *terms, struct perf_pmu_inf
- int perf_pmus__read_hwmon_pmus(struct list_head *pmus)
- {
- 	char *line = NULL;
--	DIR *class_hwmon_dir;
--	struct dirent *class_hwmon_ent;
-+	struct io_dirent64 *class_hwmon_ent;
-+	struct io_dir class_hwmon_dir;
- 	char buf[PATH_MAX];
- 	const char *sysfs = sysfs__mountpoint();
- 
-@@ -711,11 +702,12 @@ int perf_pmus__read_hwmon_pmus(struct list_head *pmus)
- 		return 0;
- 
- 	scnprintf(buf, sizeof(buf), "%s/class/hwmon/", sysfs);
--	class_hwmon_dir = opendir(buf);
--	if (!class_hwmon_dir)
-+	io_dir__init(&class_hwmon_dir, open(buf, O_CLOEXEC | O_DIRECTORY | O_RDONLY));
-+
-+	if (class_hwmon_dir.dirfd < 0)
- 		return 0;
- 
--	while ((class_hwmon_ent = readdir(class_hwmon_dir)) != NULL) {
-+	while ((class_hwmon_ent = io_dir__readdir(&class_hwmon_dir)) != NULL) {
- 		size_t line_len;
- 		int hwmon_dir, name_fd;
- 		struct io io;
-@@ -745,7 +737,7 @@ int perf_pmus__read_hwmon_pmus(struct list_head *pmus)
- 		close(name_fd);
- 	}
- 	free(line);
--	closedir(class_hwmon_dir);
-+	close(class_hwmon_dir.dirfd);
- 	return 0;
- }
- 
--- 
-2.48.1.502.g6dc24dfdaf-goog
+>
+>__RISCV_ISA_EXT_SUPERSET_VALIDATE(zicfilp, RISCV_ISA_EXT_ZICFILP,
+>riscv_xlinuxenvcfg_exts, riscv_cfi_validate),
+>__RISCV_ISA_EXT_SUPERSET_VALIDATE(zicfiss, RISCV_ISA_EXT_ZICFISS,
+>riscv_xlinuxenvcfg_exts, riscv_cfi_validate),
+>
+>That way, ZICFISS/ZICFILP wont be enable if the kernel does not have
+>builtin support for them. Additionally, this solve a bug you have with
+>your hwprobe patch (19/26) that exposes ZICFILP/ZICFISS unconditionally
+>(ie, even if the kernel does not have CONFIG_RISCV_USER_CFI).
+>
 
+Yes good catch.
+
+>BTW, patch 23/26 introduce CONFIG_RISCV_USER_CFI but it is used in that
+>patch.
+>Thanks,
+>
+>Clément
+>
+>>  	__RISCV_ISA_EXT_DATA(zicntr, RISCV_ISA_EXT_ZICNTR),
+>>  	__RISCV_ISA_EXT_DATA(zicond, RISCV_ISA_EXT_ZICOND),
+>>  	__RISCV_ISA_EXT_DATA(zicsr, RISCV_ISA_EXT_ZICSR),
+>>
+>
