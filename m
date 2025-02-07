@@ -1,138 +1,85 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF682175D5D
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D18823C8D8;
+	Fri,  7 Feb 2025 18:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738951229; cv=none; b=SG+Op218XyRVMFR7/b2r51I6jUNEPCk8naN5pLhrm0UMpiGC5PgVzfuK1MP8nNvqMhijLA/vgiKhKe2HfRuPRZEfjSvhHBG7YtOweMRrubbDAFy4/ZTyTn9+5WAKEIDV/1Btq5rejbmrAkrZIa4R0OgQuzV6gzvEMWGntAxE79M=
+	t=1738951262; cv=none; b=S45i8mhk4F8F3KnBigogpLrmso2FhFZurNey+LZGzbB/Ps/fFqxVkTq6qX7OumVfFGgdW/flqOdoY0QWnqOxyrrn6OVQwr6L6aA+64GAWDHs8cE8i63nhuNVsS08gRCk7RZYvZhUcPLOL9bV4otc67RqL7IoHqqd56IU8PqEF/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738951229; c=relaxed/simple;
-	bh=ebmbm1SA2evPzgRYp3musNvOVbJxxqYQ6sgiHGaC1e0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AdhbJWrfdqbICFiy3GzuLwo2fux6IbjO+VZ2LYHRwmTB85esKrc2WCNr+iejzz76mCsjHF33a0646AJ7f13B30bEg26cEHU3xrJimQ4PGOiJiq9OFoY4jgmNtp8eIQFh34/dLVszOjL2Fx2+30EaRptGjZNA74NXIoxflJwVpTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=O4Y/n+QO; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1738951262; c=relaxed/simple;
+	bh=XVe2YdCRlLJADw3tp9Pe9D/PsFgUIabOOWwS99KZzBU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y20xKbyV5ZhBJ8dprH4euIrFLGNAizzv5jD3gow0fmUGftWZQL3u3v93aBDAWrXqI4ZfNW86SQspg4W2dt7s/0cs2ZO1OpsnxfRp6B8i7Tg6sVqV1buK2JQC3yVCJ1fO7zAn6LyOeo3wRpjuFF6YeD6u+6wEG5rep/UMdhVLnII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=dXPrzqj+; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="O4Y/n+QO"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3d14811cabfso1659995ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 10:00:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1738951227; x=1739556027; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xMNhNJkx3fFqX0U1Zs6VO58/T6R6XQxl18p8Q1ICoic=;
-        b=O4Y/n+QOBNRrBk7QTzoyn3uMRTV8tRHVcn9JcG3GqXb1MCqHwxixasu8tUQzDuGM6+
-         8PSTVkJqx1AXtPSvnla5KJH/G0s+T2ZtGcl2CRPrVcGJ7bxc9fH0Elbuigips209+a0W
-         tMq8HfS29LAvWg5OlMC+0Hr5O3YF0ENRAQowl+LcYWyyMXjXcB578vCE9VQMCX/1mSe4
-         B3R2ux4TGQD9ZNHNsN3nSvB4kJBFn0l/Fy0VO4Z2xmj06qzckgpvU68dJWtyjCNWwsUW
-         +pCDF3+BnIq6bZ1U3GHsYUxSS414ZWxNSFrxWUUcW80pQ2IwHdpTwdvHp0HVPOqDZGmk
-         0N+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738951227; x=1739556027;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xMNhNJkx3fFqX0U1Zs6VO58/T6R6XQxl18p8Q1ICoic=;
-        b=BDQePlDOehIKDTawWsavJ2VuLrbaQ+HTCOyvhnbo6DG+mFUYL9xyVKQFCCsK3t881e
-         A1/KmInjKNatxJJ9IVVAOj9zZsIyI/DJ5KQ6nIX3EDiqL012GjyJIo6j65PLh6PcYefB
-         f2iH0ZIzeSie+gQECmtDc2FE/PmxSqWvcxY3owj85URXEVqKD/lWh4RTKniNggufYxq4
-         YX0cst+LJouG73vt3Mp8S8Nu1RPDR5DMp7bDsu/xced+TVEUM2NSTYSbTrkbpg0OCbY0
-         3SB3g5YE8cFXsPIBSf/i2NykcvDfdqMpoJKP/bpmqZbj26zNsMRfUaIM5rdRAfFqFveJ
-         CmxA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNLH+q+5C6LrWSJSmOx3bzeS7CslEIaQGXBoJtZ0FujeGe389EggCf6kk1NimJ8IAdBhsCx2MeWlC1ss0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWnWEOVjDel1gTDQ05RDQtbqKspeGgxkOnxIRJ0Sq/3RLfsU2o
-	Nu8DsbICmiGz9XknGxJvGexnRomdiBCUWEm95RMFgCk1puGSvrlDqa6lkecAiqQ=
-X-Gm-Gg: ASbGncuDnCNxLBCehBuD6xjCWg3Pk3UiIrXG0wSXrcNTLzDS9tzVFX3hiMiZPoeWgKP
-	qR52PSzfQB3I3iR2VDNHC4DsORpw0WXIvM6yPjMYVugLcyvGFsLVVon8s0YWicgH+ma3mh8WLAU
-	RckuuMB43pVpriPTzjfqQuNgpGG1B/Hien439Wi1MSaB0a40ekBctXcexrPqW+PU4nIipqOIzPh
-	JcpBdizu0AZieSlji6VaRQcHK61XWgk5EZg1MdkthYOg+17Ie7vXg8kEYLnNAotyGYJE1j77V4C
-	/ix54RFNU86lawOjJXiR0/ESPLeMqUccARS2Rz05slGm2mT2BD7dUTM=
-X-Google-Smtp-Source: AGHT+IGt1SBRGKsD6WpAiEsXocNvoOHnb4Bn+U0x/Qz/EiAOgMhIEF8/efAO7K9USdddQwvdoBY1EA==
-X-Received: by 2002:a05:6e02:20c9:b0:3ce:4b12:fa17 with SMTP id e9e14a558f8ab-3d13df1d891mr32114905ab.19.1738951226514;
-        Fri, 07 Feb 2025 10:00:26 -0800 (PST)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d05e9a0e52sm8627095ab.61.2025.02.07.10.00.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 10:00:26 -0800 (PST)
-Message-ID: <8c43a1ac-ae57-4e90-a791-3f1eb61b6c70@riscstar.com>
-Date: Fri, 7 Feb 2025 12:00:24 -0600
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="dXPrzqj+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=LFjhYwqZspDo7xweE6XX+LKwYAcbn/jfNbT6P6FVPW8=; b=dXPrzqj+rgFVpP6r
+	PivxLFufm3m2fT6MbN7FMd4hsDmmYRRuhSYj6sX3bwlgWRbQSZu804XdEimLJZQyt8NU/p1Lvj8yE
+	nGvPl7rnzxYQSz/Z8wwk/VHMunmsA+CD/ofmUnfWu33nkQHPlMNv07QwFcOWdas28TumAR/uQpMvH
+	LPaxvyYSKFKmgKwU6Kv/k6YBeqTRHToDQPXyZ4fONrSNmXSsrrEX14pILJSLh8sG7AVXj1+PfPKxH
+	R2BzhB4Oe/boQam3oJ7zuuwVCnaTNMraI0c5bzlDB7DEnJu+j9rfLRpfQgkN1wwWUF6DRRs0/3Lc+
+	nBA2bWCO1qIboqIKhQ==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1tgSew-00EKE5-0F;
+	Fri, 07 Feb 2025 18:00:58 +0000
+Date: Fri, 7 Feb 2025 18:00:58 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bus: mhi: Remove unused functions
+Message-ID: <Z6ZKWltJcyf6euZy@gallifrey>
+References: <20250127215859.261105-1-linux@treblig.org>
+ <20250201160721.bgfyi3cwilvibl74@thinkpad>
+ <Z55eWunU1NRkV2QP@gallifrey>
+ <20250207174353.rxsxblcrnkieise3@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: spacemit: enable config option
-To: Yixun Lan <dlan@gentoo.org>, Linus Walleij <linus.walleij@linaro.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Alex Elder <elder@kernel.org>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- spacemit@lists.linux.dev
-References: <20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250207174353.rxsxblcrnkieise3@thinkpad>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 18:00:47 up 275 days,  5:14,  1 user,  load average: 0.02, 0.01,
+ 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On 2/7/25 6:11 AM, Yixun Lan wrote:
-> Pinctrl is an essential driver for SpacemiT's SoC,
-> so let's enable it by default for this SoC.
+* Manivannan Sadhasivam (manivannan.sadhasivam@linaro.org) wrote:
+> On Sat, Feb 01, 2025 at 05:48:10PM +0000, Dr. David Alan Gilbert wrote:
+> > * Manivannan Sadhasivam (manivannan.sadhasivam@linaro.org) wrote:
+> > > On Mon, Jan 27, 2025 at 09:58:59PM +0000, linux@treblig.org wrote:
+> > > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> > > > 
+> > > 
+> > > Subject prefix should be:
+> > > 
+> > > 'bus: mhi: host:"
+> > 
+> > Ah, do you need me to post a v2 for that?
 > 
-> The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
-> 'make defconfig' to select kernel configuration options.
-> This result in a broken uart driver where fail at probe()
-> stage due to no pins found.
-> 
-> Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
-> Reported-by: Alex Elder <elder@kernel.org>
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> ---
-> This should fix problem that CONFIG_PINCTRL_SPACEMIT_K1 is not enabled
-> when using make defconfig, thus fail to initilize uart driver which requst
-> pins during probe stage.
+> No need. I will ammend it while applying.
 
-Thanks Yixun.
+Thanks!
 
-Tested-by: Alex Elder <elder@riscstar.com>
+Dave
 
-> ---
->   arch/riscv/Kconfig.socs          | 1 +
->   drivers/pinctrl/spacemit/Kconfig | 1 +
->   2 files changed, 2 insertions(+)
+> - Mani
 > 
-> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-> index 1916cf7ba450ec9958265de2ca41dc504d4d2f7c..17606940bb5239d0fdfc6b5aefb50eeb982d14aa 100644
-> --- a/arch/riscv/Kconfig.socs
-> +++ b/arch/riscv/Kconfig.socs
-> @@ -26,6 +26,7 @@ config ARCH_SOPHGO
->   
->   config ARCH_SPACEMIT
->   	bool "SpacemiT SoCs"
-> +	select PINCTRL
->   	help
->   	  This enables support for SpacemiT SoC platform hardware.
->   
-> diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/spacemit/Kconfig
-> index 168f8a5ffbb952cbeae3e3401c11149558e0a84b..aa3dea535def87ed75d86bc555b2b90643adbdea 100644
-> --- a/drivers/pinctrl/spacemit/Kconfig
-> +++ b/drivers/pinctrl/spacemit/Kconfig
-> @@ -7,6 +7,7 @@ config PINCTRL_SPACEMIT_K1
->   	tristate "SpacemiT K1 SoC Pinctrl driver"
->   	depends on ARCH_SPACEMIT || COMPILE_TEST
->   	depends on OF
-> +	default ARCH_SPACEMIT
->   	select GENERIC_PINCTRL_GROUPS
->   	select GENERIC_PINMUX_FUNCTIONS
->   	select GENERIC_PINCONF
-> 
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250207-k1-pinctrl-option-de5bdfd6b42e
-> 
-> Best regards,
-
+> -- 
+> மணிவண்ணன் சதாசிவம்
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
