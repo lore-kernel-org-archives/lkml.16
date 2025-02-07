@@ -1,62 +1,62 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718F51D5ADA
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 21:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F261D63DB
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 21:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738963873; cv=none; b=s0IsExRVRIcwDWbpO2tPEQluNZ9hlN6M4iar6Nt8jYAxPhd1rr4LrROu5ng87041NjN98/fVa7lNzDJaF8Ou0QB+JGES/zR40R87zpqYxpe3uOUjanhoJ2XmJ7izzv9YhnfHVJyyNMREojj0mo8UIC3XyaxluYqB7qtIXn/cRwI=
+	t=1738963874; cv=none; b=hOivjB2qQ/BJZp2E438GqQ+DeXnCYkj/ROrr5sBxqWYBfyeP07FX1cyG9DGYHxS8ZvaeTO9a2B/7v8vqlF9uISHbdD/RlnbKnjqjuzSAgZWTeTwJIINvtyJqfiQvjcb6wae92pGhDno5eOuOHOi++oR3YYq3Nk3MCTIfLvdMUZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738963873; c=relaxed/simple;
-	bh=VtQ1ljfmYtyXEA61aEiaZEeKdDz/H5SMisehIOwJ9No=;
+	s=arc-20240116; t=1738963874; c=relaxed/simple;
+	bh=6A227ZHcLwmH34Uyd7dFlW31JXsgCCsAPJaGw3Nto3o=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lYWBxkJ1ZJ0waxv2EWOaJPRw/PJZijhydoqAeCT0ogwYKz0zWH/mipmcx/PXqi+gt8jmSY8471FZGFSEq9GWFT7WgE9DyWYZSZi87ToIpfP+rWT3JArcfS+K2+XXuSfNmUWYX4p5Z3YGDMQx2btM8Rh4JTO1Du4piJPTxMSftn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XkxFHFuK; arc=none smtp.client-ip=209.85.218.53
+	 MIME-Version; b=Eoa9uf9ZDUweNmgIBbV3AF98gw4VN6etZuz9YTEmC4c9BOdgjIctmvn+uwHvmXjXCZ3K8ikCEy/t2UGgGejKbUH0gUxP87og1Wk8EsfJWsQZMxWw1DlldIUuW+3VHxpvWS2Vzy3bIDEYbjWG6qCp+el8teYSt6VucpvBFDkHWaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=akxOe2Yy; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XkxFHFuK"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aaec111762bso608614166b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 13:31:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="akxOe2Yy"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5dccc90a4f1so5321948a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 13:31:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738963868; x=1739568668; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1738963870; x=1739568670; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rB9s9VPJvR605hRqbfbYWWEdTsjP5s3VD85/JJVm1e8=;
-        b=XkxFHFuK/l9LvD5agP4n1Phkw4F9H+705BDsnlnkkZ/uslBVQPQtOxSDJbvlUEHlaU
-         6AX5slyctm5J8ss92Qf2Puw427wTeAbihj4rFscP5I13rwsPLuv4iNakQQ0yXoY/Zog2
-         PIHkQc/CUCILKbdma5Tfrb62k4qEbFtacTJqGrIlYWULrShf0dxZiMWaWebfGOK1CRsA
-         x2SePYs6LyaYxlGm7JlcYGT2Auf/sTMck9amecpWg1t2a9P0FKD3NtGF0Jzv6KH7lzA3
-         Qn7mPufNVBBB1ES2zaNgM8PCXFU3IK4yEGEfs7BVNsHVr0iXBiqCoH2G8E6bGidwwt6f
-         fwDg==
+        bh=2FlX2bXYTfLPxWNvFOZ2OVVRCbqnN5Q4yt/8rIDVkFQ=;
+        b=akxOe2Yyq1JtGh5VxMvlsR+ntcOQ9QXTOUGCRcom1rd3zvb9tUHl9tlYciimNSq/bw
+         dtjADaiqD8i5NEwEf3bMCAwpX4qTlk/TvW48yd2D03d3S+LqDiHbABG4e5COkNu28apd
+         Iu+02NGVd2v1AFvHGPqwYjo1x8QWZz14AbnFFO1iCdWyOf3IMxBOz/G7sL2F0jFEkjxv
+         /GMB2lw3HHyoY3ReqvBq3LrRWtkazXzQZNsQ66Th13XJ2Bg84QrOG2i3pThRzO0TdV34
+         XkJ0+4dj0w6M7Lx7Nadp88ueYGh31YfgWoagPhjnfTtGNj02mi7z9oJtdOnMK2/bTB7t
+         QUHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738963868; x=1739568668;
+        d=1e100.net; s=20230601; t=1738963870; x=1739568670;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rB9s9VPJvR605hRqbfbYWWEdTsjP5s3VD85/JJVm1e8=;
-        b=M/OMFDo31kPNyiLuG82HJbZsXgG/P0Ac4l1VrvqxSWK30Ias+MH6F9f7oOgAYDVD4h
-         gJbanjkeClc7E5r1CoEeETWEYkDjw3H7QgX07OV1K+ewdLOR2m1L9EE/Finwc7nsqqJM
-         Gq0vyqFNr3t/YDaKrsEtRfBLMFcm3T37U/kiYpceM4eXsspWyFswlyjMGsAm4xFOioMa
-         yxrdygoBO/iCm+qDjLjZteQFvqYp5qs6Aztr7Xmaq8n3LuNNN0KAg3PwLvNtuTOFhyYG
-         +YmrW/u3C8LrQS1QV9cMJYyHIUDMgEfULRzkuRkKdacHbWlrfJ7VYEzAE6NKczuY6Z8x
-         kNOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTSkq4NMzW6t4e9wsYdkBPpNyAhhGzlobxF2daXwkfJukhhMn+Ap8406Ah1y7tU/dsp0Jnoe+mG85gWMg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywjr6MrBhtNNTRdv+L9FgHh+BKLTjWrT1doOyrOGqSKbvQTvQ6Y
-	23V1a0YlhW7NB1c8G/RnWIwc8S9EIF9b11lgr/IiC3IVgdBIFpwBpg4DZNfR1QY=
-X-Gm-Gg: ASbGnctwkUVUDuno2mzn0qgf53gyq4ONUKIru3LoaNkWmR/koeYWNpyyEV6K1juwjm9
-	/SjSCJ1PIFp3HALE5FsqLFvZPDqvhwT/jACYrJKPyIJhHq7f9f25zLxQgp3KSR+eIz4VK28PaaB
-	anynImrtmT8k04c11FNE6Rt3DjtL5fitvi4R/NVkT8g0VbN9Th/92e94/nTEVRIsULuRm4B1aeK
-	yMLZvnXA/Wml/RsDDPx6dx3Xytwv84mhulNJu0gbnXFBsJEFPPSIrChbHOcuhnzh+xGYt7vdNlx
-	UoBMkJ3gjQEGz4qILpjhtQCZdj+BMmEhZj15ZfCQGAOHG8KGQIPNA+BkzW8=
-X-Google-Smtp-Source: AGHT+IFnue8aM5uMyuzX6JhUGUVfjNquFfLUAy682QmcZWe7J/NUbnpi5Rbddmy7cdrZqcN/Fq3qvA==
-X-Received: by 2002:a17:906:f5a4:b0:ab7:b08:dab2 with SMTP id a640c23a62f3a-ab789b39591mr578677566b.22.1738963868593;
-        Fri, 07 Feb 2025 13:31:08 -0800 (PST)
+        bh=2FlX2bXYTfLPxWNvFOZ2OVVRCbqnN5Q4yt/8rIDVkFQ=;
+        b=oZphu1OI9MWE4W/GbqBhbTwXuIRAArZ6zvKVrrJFue9uaD4fwbNhktfl9Ks8XCRFS8
+         9N6q5YmyMK/AwqpgJFYEOo6dyTU42BS6Hhka/hgZ51i0BkWCK4ttMKiZiyCPnKli99f2
+         sX1lfUlt2cNYjb7DeS44Xh1Pu08bs290b5AIVCYkbkIBsdVG/wijvt8bDh2bJTr3Pzge
+         OIkQJKK53M4v60+ASLgsiZOT5VvJ2Bt16wNMsIDRE1Ieczh+MYCVfv1W3YqNbmmKC1gu
+         3M6ebwtegvE8Y7Ia1V/6sl53fIo00IpStJjsYxksU2AVOHx5AA0hZEq7sS82oyVbTlfg
+         vnyA==
+X-Forwarded-Encrypted: i=1; AJvYcCWFZ4Vwq5hFqL3e4igIs3wQfELNTcn4Cjp8wR2qg276rzssulG3E41vNe45D70Hyxg05d03syXjSMUJf48=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVmjPDpOySnSVqy1ekk1QitVpEB0pybTOuDZ00tMMLdcIb0YMi
+	vjExJqJCXPNJoaGtJHclPLNx3XIYlaVAfKHnAHjSRHttJy7SMQpjk4NglSTOkNo=
+X-Gm-Gg: ASbGncvP8a+fGbFP7K8dWSTSZ6hlDLYIa7/raxut+/NU/eJSnqylEy3egZzlLLXOapl
+	W8T5enQMYmFI8fbiiCqVD1YZ0ecz8vvM/znmnk1Dt9bTnHnvvpoMyhFdEoxtAabPazsnp1Tg7J4
+	wPC05tsqswSmOaeergYbublMbFBgvSyEPykhS0j4evshoRgVSxbUmKwoi9RhioG7JPhoZbL/51e
+	NT6D9LrtzOIDYRxqDyWhct1bLlLUoEpuw5pg8Z3eTwBAtFJOeOV4yBR9xffVzys1dLzcQyikH6J
+	2DOWypEsmKKmMcz8c7hlJpnMgDwL/YDJJOIacAw6eHOD8b4rjtWnQWZNSgM=
+X-Google-Smtp-Source: AGHT+IGqkLo0lI36PtNVD5Cy94zl3v7p9AH5vVE/OdrL5N+bHa3ei/O+q+8oK4gR/8Gmpzk1d7rM+w==
+X-Received: by 2002:a05:6402:5290:b0:5d9:a62:32b with SMTP id 4fb4d7f45d1cf-5de4503ff1emr5658453a12.7.1738963869994;
+        Fri, 07 Feb 2025 13:31:09 -0800 (PST)
 Received: from localhost (host-79-41-239-37.retail.telecomitalia.it. [79.41.239.37])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f485dfsm333069866b.28.2025.02.07.13.31.07
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de51768762sm970455a12.61.2025.02.07.13.31.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 13:31:07 -0800 (PST)
+        Fri, 07 Feb 2025 13:31:09 -0800 (PST)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Andrea della Porta <andrea.porta@suse.com>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -92,9 +92,9 @@ To: Andrea della Porta <andrea.porta@suse.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v7 09/11] arm64: dts: bcm2712: Add external clock for RP1 chipset on Rpi5
-Date: Fri,  7 Feb 2025 22:31:49 +0100
-Message-ID: <d77f34885b21a1953a5a498d397432ef377bd6e6.1738963156.git.andrea.porta@suse.com>
+Subject: [PATCH v7 10/11] arm64: defconfig: Enable RP1 misc/clock/gpio drivers
+Date: Fri,  7 Feb 2025 22:31:50 +0100
+Message-ID: <4a84775f3dbdc0d66882563598b837eaf6328d9f.1738963156.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1738963156.git.andrea.porta@suse.com>
 References: <cover.1738963156.git.andrea.porta@suse.com>
@@ -106,33 +106,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The RP1 found on Raspberry Pi 5 board needs an external crystal at 50MHz.
-Add clk_rp1_xosc node to provide that.
+Select the RP1 drivers needed to operate the PCI endpoint containing
+several peripherals such as Ethernet and USB Controller. This chip is
+present on RaspberryPi 5.
 
 Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
 ---
- arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/configs/defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-index fbc56309660f..1850a575e708 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-@@ -16,6 +16,13 @@ chosen: chosen {
- 		stdout-path = "serial10:115200n8";
- 	};
- 
-+	clk_rp1_xosc: clock-50000000 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-output-names = "rp1-xosc";
-+		clock-frequency = <50000000>;
-+	};
-+
- 	/* Will be filled by the bootloader */
- 	memory@0 {
- 		device_type = "memory";
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index cb7da4415599..cc70793e97ef 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -618,6 +618,7 @@ CONFIG_PINCTRL_QCS615=y
+ CONFIG_PINCTRL_QCS8300=y
+ CONFIG_PINCTRL_QDF2XXX=y
+ CONFIG_PINCTRL_QDU1000=y
++CONFIG_PINCTRL_RP1=m
+ CONFIG_PINCTRL_SA8775P=y
+ CONFIG_PINCTRL_SC7180=y
+ CONFIG_PINCTRL_SC7280=y
+@@ -700,6 +701,7 @@ CONFIG_SENSORS_RASPBERRYPI_HWMON=m
+ CONFIG_SENSORS_SL28CPLD=m
+ CONFIG_SENSORS_INA2XX=m
+ CONFIG_SENSORS_INA3221=m
++CONFIG_MISC_RP1=m
+ CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
+ CONFIG_CPU_THERMAL=y
+ CONFIG_DEVFREQ_THERMAL=y
+@@ -1289,6 +1291,7 @@ CONFIG_COMMON_CLK_CS2000_CP=y
+ CONFIG_COMMON_CLK_FSL_SAI=y
+ CONFIG_COMMON_CLK_S2MPS11=y
+ CONFIG_COMMON_CLK_PWM=y
++CONFIG_COMMON_CLK_RP1=m
+ CONFIG_COMMON_CLK_RS9_PCIE=y
+ CONFIG_COMMON_CLK_VC3=y
+ CONFIG_COMMON_CLK_VC5=y
 -- 
 2.35.3
 
