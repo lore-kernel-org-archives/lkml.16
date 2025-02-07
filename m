@@ -1,251 +1,104 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205D11DC184
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D612481B6;
+	Fri,  7 Feb 2025 09:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738920531; cv=none; b=jf2ouAmmje/CRx7lxqQfET8qlFHTymRmodJjGwHOb2zH1CEew7M3w64hFVrQYBg5a+wIMGKATjby0jXt1rDDZe7jLDujjiaTGaB1C2j3p5ZoaP/oxOLkbWVmZIvdgbtzTrO0TfxPfJ9HGtfdzKRjYYlcM71onDoHNzAOa72xcCY=
+	t=1738920571; cv=none; b=pa7Q28b0edbfp8fOnc5Pc3qh2ZHwAxWGzzvlGQvs541QttttzKxsh1DpkO//Q/BrM0rJ41Asb5JCqEguXA5FN2vTkLQa5651DRYK8K4QDe9ci/AHWhX5Fx5K6auXsXCbvymfv8OfXZGge4ZvFG3UH5Uzmy9KltF5B9Mx7d7hPQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738920531; c=relaxed/simple;
-	bh=eIHTE8qRxDWKcq6Qy29TlpDPdetAC+KeKbRIcSkyUKQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OeROS1Ci2vzqY74/DipYAaiALqHMetXcls74EZHhcU9pZ26ddZdcLv2zDVkcwbEmlK16am2qu63s2XW5GU6hxzd0WbE9eVjTdqhwD/6bsTUCmyH3ZqqQWwYD3bKjQPmmYZeBqkCi3iKErpM4Ys709LPh9yS5K85kIdgYZ/Unt5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ntYJUBZB; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738920571; c=relaxed/simple;
+	bh=IYiaoxs2qX405DwEdIK1fruiV+WtOb/Zvj2bo3yxUZ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QPRDQMkzj2eMjQBcUgw7FkOKe/To0Z0/bwcLi2DYWXYxe2UqdZgycGTM1kifmRjmqEPICzhOyapdO2Czx6tun1Cs1WldQadFu5wNlVMJKbv8NYP8bkq0L6XnGkWBLtr+yv6mqJa2hrOv9ZTJnL7Oh2/fEfkLPp25UvXsPxfDd8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eSET2Yxt; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ntYJUBZB"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51756QsQ023632
-	for <linux-kernel@vger.kernel.org>; Fri, 7 Feb 2025 09:28:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8NqxrxK3xet8+h8NdpIJWE0d4FKW87vOgxxpkOISpEs=; b=ntYJUBZBAEroMqow
-	mnj8ab2Di391eqecP8vTQu5LJSa060xRl0VQGhxs+O6xRd8uaUSJcUl29fpAz5s8
-	2Y7lmBlyW5/iTaKCBmCtVO0hdf70ViVbw6VLCz8b7EuYNLNDCC4d+n0VVdyY+dLK
-	+ri611+AnFNBPJEOMvwwdmAZKgNr5umdwvs1JsTDbR4KQhHMuqDBTmXb8FjJ5yuo
-	1DXxrMMZHK4fRBqVT2QeJAAv3QE3tu8s/0sTJ4A9ocWa1Or58+SYk06IetzoZ8BR
-	7yo3+PU8POBIFbMzo13M1wkehrdCbZgd3uScAKcZRrdF+wAStF/uzYK2m0c3sR7i
-	M9dsAQ==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nbr40m4v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:28:49 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-21f1919a7beso39639065ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 01:28:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSET2Yxt"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21f5268cf50so6736415ad.1;
+        Fri, 07 Feb 2025 01:29:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738920569; x=1739525369; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HtfAb+rS0GAdgCngxEid4x/Qai1tJ56U7SdmAfXpqj8=;
+        b=eSET2Yxtxst9m8MlrjpS3KoGrXdSn9MGmITXCGLwyDbRWiDUH5RdycIUmmcn+Mi+9h
+         +krRAS4ZSjGzEHDl/wV47tqOtRD0OAsnf4G3h+9oXHKrwtbWh/Nt1VQm67bRcw3d261q
+         wu2KxHd3pvGsAk7uH08d2CFRtyrB9nBpCbyLCQcA2Jud6sR2CUhz2oocbCibiyM6M45t
+         RJxZfVbZhpNmdFVO27KQGSsZj9TuIe6Y0vUnLWixA2rzpCEBi5XQW33wjalXWzeTlEP8
+         V912MhEbnorFKUnkbd55xM2SKtmFAJcWPMyeYzHP5AbsSfAui5fspnXgacSZpowbT3vo
+         caGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738920528; x=1739525328;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8NqxrxK3xet8+h8NdpIJWE0d4FKW87vOgxxpkOISpEs=;
-        b=AWf0XoUYUur3spWcfRsXcjz9urUap248cWDiatGgWQ2cPxKl2RCDIoTvL4kPF4HZLQ
-         MzUoAlCinY+qZvmzDPTU0my83I4agpRgvpz4lZi7E0qNUlGpBEK4NohYYCau3VvGWZOg
-         RM13pOVDLSMEBi2DAAjt+soZYVVfDbj+KCuvabTnUmg0C8ESxdHwvtKMtrN6dgk6silG
-         iDxy6Y9rNekp0PnnIXs0UzLDUzT0wgRgyp8N7IJgBNX5x9SgdBWYMGqvpVz+Mqm41v2x
-         t3w9Pvhk1xrcsjbRgV1vqLJncrntdOA2s4ed70u5F+6CxxIppr/yB6mfH0MsnKBNUCi2
-         Klug==
-X-Forwarded-Encrypted: i=1; AJvYcCWQMKi3j0k4y6hPRZNUlgL5Z2JYQKVB0zD3nZYbchIsqUSoHpLdXGkgkN7zlAduB82StwprX+bLTpIqWRc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/euyWrEqfkrpbOq/IpMr3gTHjmm/A/tDSSGdPzTKUQV+ADOyT
-	TGwwhvny3x+H5CSgD9u8ZhAAAmAqI+bu/R5LZm/NlwaaJlm7Ojw2+l3wMPES6UVnrybidQ0Ozd4
-	O7itRulab2EmEyNSnN/9EYJXUjoDuNfOCO3I1K6rybhekR7hd3RcdFQWlZ7xNirI=
-X-Gm-Gg: ASbGncveg3nIYUjx/OD36hA8WXaYQzNC7ozDxO0z8u0C5ExER1G7jBdc1N27mticaAG
-	591gc4eRPdgVotJ9hECnFDOzj1pXjHWCfR5phHJjCRk9aqY9Gyvzhsq7BzLOy7g7C8d/dBF0Y8b
-	VZKLaud1xVP2oZ7iY3KedrB9uxJOJzDaq5INXvsxjRCEuRYyoWEDfHGhwspkq0fTdX8sLS1PLWQ
-	2VDlfFMgW120jVmIJt6B5dKjcR6z+vB6bfxnvgQvdMD4/ogkjj0JVn+qCsEg13kTRwYiFpD5ZoN
-	XTDNA85h1lx8XKusxzpeyRUsbyLeIK9JtnjiD+G44ZvnvJAM21dR30tdQk6t5Vw=
-X-Received: by 2002:a17:902:fc4f:b0:21a:8769:302e with SMTP id d9443c01a7336-21f4e6ad349mr47724645ad.14.1738920527991;
-        Fri, 07 Feb 2025 01:28:47 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHdITSY3Xbsq3qeExulM7OKAMdr3dJ0xmAXSbW0AXp7CYFXVCNY98Q+WzzN9OaitkXgQXgptQ==
-X-Received: by 2002:a17:902:fc4f:b0:21a:8769:302e with SMTP id d9443c01a7336-21f4e6ad349mr47724115ad.14.1738920527391;
-        Fri, 07 Feb 2025 01:28:47 -0800 (PST)
-Received: from [10.133.33.7] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f36896b86sm26147275ad.212.2025.02.07.01.28.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 01:28:46 -0800 (PST)
-Message-ID: <61045cc3-d030-4c63-8a1b-103ff8c374f3@oss.qualcomm.com>
-Date: Fri, 7 Feb 2025 17:28:34 +0800
+        d=1e100.net; s=20230601; t=1738920569; x=1739525369;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HtfAb+rS0GAdgCngxEid4x/Qai1tJ56U7SdmAfXpqj8=;
+        b=KoeF/nFTnGqj8amkd0ZMqtmNDBbVVNwXXoSKvmJgyhJurVcjM+LW8oEbAi6lT+bI9j
+         ayA/Wftnn73iQrSe1awT3uF2GM6hVtheVPk4THU9FZ29hppZHYJ/x4B1yj4opccfFg9Q
+         v00xJQKPKvxge716gllO1x92oentHF3hvqaq45nZMZwS/jpKqXC0CSL0obJuAGwGrQWR
+         xhvqj3ytjOZgne/M6i0P9h2mXTyfRqlx/fgdSb8MFhEn0oB34r15rz1V6OwQ9hy66aiH
+         avk4t/gteQm5miEChGu6Fdc8YG9QNl59STS/AZM1XBH94zLYfmDOzVaK0aWy9DdOGYlx
+         7zpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpzkTj/tpER56v8hXyO6uSLQnC+q6Ej/hdR0Kg4KVEu0Hs5k4IbaQUilKbkuT1prZEymcLPTEfoni03jw=@vger.kernel.org, AJvYcCWhp4Boz7XHPrdsKDATGmrHbuZqt51UnRe/cFSHf7iFSQbT6zwaSKNSqNcIEhFKtzF6fqxBec/QDnGYyC0vgPpH@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVUvEVad+BedTgJA9601NwGut7UfFvPUNXpbOCKFhXVdbOM0tY
+	CtrNeut3UNRjL+C92//g01qHMm1SY36vR+2Dsn73qrKTktoRcLWrC5K33+Y7e9o=
+X-Gm-Gg: ASbGncusmCyPcAxBqCnKqvusWl/Nm7oRrGgQaDPceB+LDnM3aapJKZ4O7mbWYtiqQj1
+	zGXowB03rCWZyJ2k9oZqz+mXyHrl+wUzVd70ERrc0fJTc+Yxl7oWjaDf5gugga3HH96Dw7bqu29
+	1N2v2JEKUCYSyH0SgAgzSbhxfDrM+NZswp20rQKxEimT9I6FSbOWnj/ZNAUAyMZQ3iZ923pqN9B
+	WK4G8MR9E2Hba6F80ShlMop+6HAtcFqR/6k8L0jkqat/Oz1avv9stpdTp8UsBfrwfESVOogYRDS
+	4HUEhTqDY8+bip3ZbrOXjUz2ivhDW9RS0jE=
+X-Google-Smtp-Source: AGHT+IHi3a0j+tMm6fRh+W+6twQQqlb4uCRebdXT42txjYpAY+R1tpaojvghV7BVeaWDYKlf51pqkQ==
+X-Received: by 2002:a05:6a00:189f:b0:729:cc5:fa42 with SMTP id d2e1a72fcca58-7305d516f36mr5186020b3a.20.1738920569273;
+        Fri, 07 Feb 2025 01:29:29 -0800 (PST)
+Received: from fedora.dns.podman ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048ae7f84sm2591586b3a.80.2025.02.07.01.29.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 01:29:28 -0800 (PST)
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Jay Vosburgh <jv@jvosburgh.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@kernel.org>,
+	Jianbo Liu <jianbol@nvidia.com>,
+	Boris Pismenny <borisp@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hangbin Liu <liuhangbin@gmail.com>
+Subject: [PATCHv3 net 0/2] bonding: fix incorrect mac address setting
+Date: Fri,  7 Feb 2025 09:29:18 +0000
+Message-ID: <20250207092920.543458-1-liuhangbin@gmail.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 2/2] arm64: dts: qcom:
- qcs6490-rb3gen2-vision-mezzanine: Add vision mezzanine
-To: Vikram Sharma <quic_vikramsa@quicinc.com>, rfoss@kernel.org,
-        todor.too@gmail.com, bryan.odonoghue@linaro.org, mchehab@kernel.org,
-        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-        akapatra@quicinc.com, hariramp@quicinc.com, andersson@kernel.org,
-        konradybcio@kernel.org, hverkuil-cisco@xs4all.nl,
-        cros-qcom-dts-watchers@chromium.org, catalin.marinas@arm.com,
-        will@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@linaro.org>
-References: <20250207090422.1609260-1-quic_vikramsa@quicinc.com>
- <20250207090422.1609260-3-quic_vikramsa@quicinc.com>
-Content-Language: en-US
-From: Jie Gan <jie.gan@oss.qualcomm.com>
-In-Reply-To: <20250207090422.1609260-3-quic_vikramsa@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: Dlc2GxAUJrzSrwzIJHkH3QBozulNwUeC
-X-Proofpoint-ORIG-GUID: Dlc2GxAUJrzSrwzIJHkH3QBozulNwUeC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_04,2025-02-07_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 malwarescore=0 bulkscore=0 suspectscore=0 mlxscore=0
- adultscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502070072
+Content-Transfer-Encoding: 8bit
 
+The mac address on backup slave should be convert from Solicited-Node
+Multicast address, not from bonding unicast target address.
 
+v3: also fix the mac setting for slave_set_ns_maddr. (Jay)
+    Add function description for slave_set_ns_maddr/slave_set_ns_maddrs (Jay)
+v2: fix patch 01's subject
 
-On 2/7/2025 5:04 PM, Vikram Sharma wrote:
-> The Vision Mezzanine for the RB3 ships with an imx577 camera sensor.
-> Enable the IMX577 on the vision mezzanine.
-> 
-> An example media-ctl pipeline for the imx577 is:
-> 
-> media-ctl --reset
-> media-ctl -v -V '"imx577 '17-001a'":0[fmt:SRGGB10/4056x3040 field:none]'
-> media-ctl -V '"msm_csiphy3":0[fmt:SRGGB10/4056x3040]'
-> media-ctl -V '"msm_csid0":0[fmt:SRGGB10/4056x3040]'
-> media-ctl -V '"msm_vfe0_rdi0":0[fmt:SRGGB10/4056x3040]'
-> media-ctl -l '"msm_csiphy3":1->"msm_csid0":0[1]'
-> media-ctl -l '"msm_csid0":1->"msm_vfe0_rdi0":0[1]'
-> 
-> yavta -B capture-mplane -c -I -n 5 -f SRGGB10P -s 4056x3040 -F /dev/video0
-> 
-> Signed-off-by: Hariram Purushothaman <quic_hariramp@quicinc.com>
-> Signed-off-by: Trishansh Bhardwaj <quic_tbhardwa@quicinc.com>
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
-> ---
->   arch/arm64/boot/dts/qcom/Makefile             |  4 +
->   .../qcs6490-rb3gen2-vision-mezzanine.dtso     | 89 +++++++++++++++++++
->   2 files changed, 93 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 140b0b2abfb5..213d941b1b79 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -116,6 +116,10 @@ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
->   dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
->   dtb-$(CONFIG_ARCH_QCOM)	+= qcs615-ride.dtb
->   dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2.dtb
-> +
-> +qcs6490-rb3gen2-vision-mezzanine-dtbs := qcs6490-rb3gen2.dtb qcs6490-rb3gen2-vision-mezzanine.dtbo
-> +
-> +dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2-vision-mezzanine.dtb
->   dtb-$(CONFIG_ARCH_QCOM)	+= qcs8300-ride.dtb
->   dtb-$(CONFIG_ARCH_QCOM)	+= qcs8550-aim300-aiot.dtb
->   dtb-$(CONFIG_ARCH_QCOM)	+= qcs9100-ride.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
-> new file mode 100644
-> index 000000000000..2a59d2f22eb8
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
-> @@ -0,0 +1,89 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
-It's 2025 now, it should be 2024-2025.
+Hangbin Liu (2):
+  bonding: fix incorrect MAC address setting to receive NS messages
+  selftests: bonding: fix incorrect mac address
 
-Thanks,
-Jie
+ drivers/net/bonding/bond_options.c            | 55 ++++++++++++++++---
+ .../drivers/net/bonding/bond_options.sh       |  4 +-
+ 2 files changed, 49 insertions(+), 10 deletions(-)
 
-> + */
-> +
-> +/*
-> + * Camera Sensor overlay on top of rb3gen2 core kit.
-> + */
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +#include <dt-bindings/clock/qcom,camcc-sc7280.h>
-> +#include <dt-bindings/gpio/gpio.h>
-> +
-> +&camss {
-> +	vdda-phy-supply = <&vreg_l10c_0p88>;
-> +	vdda-pll-supply = <&vreg_l6b_1p2>;
-> +
-> +	status = "okay";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		/* The port index denotes CSIPHY id i.e. csiphy3 */
-> +		port@3 {
-> +			reg = <3>;
-> +
-> +			csiphy3_ep: endpoint {
-> +				clock-lanes = <7>;
-> +				data-lanes = <0 1 2 3>;
-> +				remote-endpoint = <&imx577_ep>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&cci1 {
-> +	status = "okay";
-> +};
-> +
-> +&cci1_i2c1 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	camera@1a {
-> +		compatible = "sony,imx577";
-> +
-> +		reg = <0x1a>;
-> +
-> +		reset-gpios = <&tlmm 78 GPIO_ACTIVE_LOW>;
-> +		pinctrl-names = "default", "suspend";
-> +		pinctrl-0 = <&cam2_default>;
-> +		pinctrl-1 = <&cam2_suspend>;
-> +
-> +		clocks = <&camcc CAM_CC_MCLK3_CLK>;
-> +		assigned-clocks = <&camcc CAM_CC_MCLK3_CLK>;
-> +		assigned-clock-rates = <24000000>;
-> +
-> +		dovdd-supply = <&vreg_l18b_1p8>;
-> +		avdd-supply = <&vph_pwr>;
-> +		dvdd-supply = <&vph_pwr>;
-> +
-> +		port {
-> +			imx577_ep: endpoint {
-> +				link-frequencies = /bits/ 64 <600000000>;
-> +				data-lanes = <1 2 3 4>;
-> +				remote-endpoint = <&csiphy3_ep>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&tlmm {
-> +	cam2_default: cam2-default-state {
-> +		pins = "gpio67";
-> +		function = "cam_mclk";
-> +		drive-strength = <2>;
-> +		bias-disable;
-> +	};
-> +
-> +	cam2_suspend: cam2-suspend-state {
-> +		pins = "gpio67";
-> +		function = "cam_mclk";
-> +		drive-strength = <2>;
-> +		bias-pull-down;
-> +	};
-> +};
+-- 
+2.46.0
 
