@@ -1,125 +1,214 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F7318E351
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E6C23C8B5;
+	Fri,  7 Feb 2025 15:57:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738943813; cv=none; b=Tyk9e6qOYE4FSDWYT5l9/EQqVDNoOX+YqIi6tA7o8sUMfV7fpnQNiWUaSBcGFFvMNLf4X66aLwavu5dOcj8dN1T9l47/G9m3rdxC88Z5dpiQpXCApN9XXLZQlS3aa5181FKN1MVjvYG40pM/JftG0wKWg1Gmctwl00jeLqLdfUg=
+	t=1738943828; cv=none; b=kPHj0RA08wGNiu/U6Jd/8VxUCvpSzzjVH2dpzqge0qIv92uDZhJVTMtcdG8jSGRoYrZBO/PVc0OUUPBs1frHzUhkiTWqrFa13f1lDF6u4YEu95CW5FqgmcY2cq9dzJ0yffSV2qdoIEEhWwYuHbKu1LKuFZ8c1pMq7+2h64FtYxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738943813; c=relaxed/simple;
-	bh=LqA0TnpriX6BG6wFMMTRQwjG15Mb4xWdLzul4jT3ckw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=k7xVvehNadhAScQI9H6wqJ/gln9Q0x0BD8upFj6KSK3vi/6NjjnXyAl/BY+bvzQTlrtnw1IzV7CWczBUFgMBesCxsWekbtl8LiunJkcEE6kmQyKMGZQwx0/XQxqqrNXX18dzqpwzPsFCro7nbkGb1LP3xMF/gO/cYAPMgk6wmcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l5gIOqbg; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738943828; c=relaxed/simple;
+	bh=WFF0cBRxgst0P75V77ol0AWB9Sg1VPMwXKPzyDFmpZ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gGmsHpfrnfBYGbaDWBsWTSE1XfOG+XPgfPU9mC4X/24bjfX0bVSVIAf9n7IHYLvX+jaVq5o2+6r3NZuFiUAZ92p+0QQjmJ45sght5zgaUQHn0lEqKc9lUuMjUChrXQY+lmcRNs6Vy6Rugq+w943wNK0H4enZv8JscotyMGhlWgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nzcorFtU; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l5gIOqbg"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38dc627eba6so993946f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 07:56:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738943809; x=1739548609; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z3dWOoof3Xw/2OHGbRzCfoAg04gz2ejhFyHKSGYevMQ=;
-        b=l5gIOqbgTayffTKPLM73X3/pubPi7dP9/lqBtshxn/FtF9r5n4U+yiGCgZXB9jbZ4L
-         ej3OwBcyXr/K3gcNoSafoOGUJ/zFfva/PdGy/X2jPB2wfshmZpgCI7kHWglZyTl7QqvF
-         4ZW7iqVRWGDHRq6qJQMwnnnfvdru3xzMe8AUuGNgcnyD/hg7XRSACwdicmz4WZ5z9u/Q
-         Kz1uPxJwYs7ojZjV8BeFtgDARMJiNFkb7uHuZlYrXyHofct2MWQqVWjgMyGnkWqqghTc
-         OYfm4cL7Xjq+05OXLJYIqN/euuXu4xDzCclVq5F+Z1iSidnMxuzYekiXDD4GcuHT/G6s
-         jFPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738943809; x=1739548609;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z3dWOoof3Xw/2OHGbRzCfoAg04gz2ejhFyHKSGYevMQ=;
-        b=uQ240TI1FTTNh3l90M2UWVZZiFi0dtBPSytI+Og0ERsQds57Jmx7+9HXZ6Mg2GKz63
-         Qi/yrGIpMLrTNnL0bXPCMsc1ncXE7Lnp4p/Q2n5/WrZO1/lgPMzRexYw7hOYiyrqVE/1
-         QwQxyOrqdMYIOGYpzvVzsXO/BzkUQQX9OQukT648uJlA5wqGM7FHL5+nOtgvmwfzvqgK
-         GP9PDKLbUN6DxVBdouNcENz1a8MyNtUt+TsKPsPvSDVATMDamrtovbJ2xv+NI+ITpCCd
-         bchka+WIkQ+a6FNgq7ut9x3DkWtr0d84+9FJeHK1IHtJgxLxfE0Xl1MRPO0/X85nVR47
-         GrDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUKLfAojDSj2nR37M9GARa91E2OqN84RtQeYYhqNSzcJhM4n3fWamnyiN/kiJEfRe95fIf41P4XZfuwJh0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOh7juUe1oQ+HRBejm+yD5arEdwF2BT93xXKsgLy42djoCZSVG
-	LEhDakcW1VjdxNDyWCSeZcq7+y/h0bxnlthaigfnaqsiZdZcHAvVXnDdTkwSWN4=
-X-Gm-Gg: ASbGncu1DwDZgzQUwQSXo/fVEeJrDQBlDi8Zsz5+L/DXYm5Ife/HKUzhrCUwOk/aVZB
-	Uv+NiF3joZ2dV7m9JKpdipFPcVJOQcXRYe3+utF/O6Jug4tRTem/yPf8kkXcp7aiiSAdVjTyQNj
-	7BXg7X3HAoj/Ts/tfxvAPFLDrGoLm0TaTCSHdt0EC11Ji+B8f8xCcxVlgT4DQ2SROmCxw1Zkc03
-	kVCMAAATrRwjoAwKfajB5yS3VbECYHcyvAts4hnaGDocgRqRKltJiVJ7k0JYaMxgVvEa+ZX4e0R
-	paq4tp/uXfsnN1Cwj6LBIS+U+AulhZNTUnVbsM+WyNhKoQ2XlGXZiE3ZBElgga44UE+JvP4=
-X-Google-Smtp-Source: AGHT+IHi7d+qk0bKlKvNvtjux0Ae8ZnowO4Boe9Bx+bhD4ZewXY1Ic6zG9Cm+U7d/qkhyLu5UCqFyg==
-X-Received: by 2002:a5d:6c66:0:b0:38c:2745:2dd8 with SMTP id ffacd0b85a97d-38dc9138771mr2372188f8f.37.1738943807901;
-        Fri, 07 Feb 2025 07:56:47 -0800 (PST)
-Received: from ta2.c.googlers.com (169.178.77.34.bc.googleusercontent.com. [34.77.178.169])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc09fc2d9sm4197507f8f.6.2025.02.07.07.56.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 07:56:47 -0800 (PST)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-Date: Fri, 07 Feb 2025 15:56:45 +0000
-Subject: [PATCH v4 3/4] arm64: dts: exynos: gs101: add ACPM protocol node
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nzcorFtU"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 517Fuwv13030315
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Feb 2025 09:56:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738943819;
+	bh=LshTTg7rs/CWUs5QRsTb+R10VEhXLnv8hJc6hzk7bx0=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=nzcorFtUyqjQcAVRJSOSktqBEI8g7TYqdULE2yefIxNbtSOfQ0tNpqMX4V/ERNpci
+	 9IGvMEFW1Zaag7QxsLHmmLGYd5gHimRgpXGOR7If3QGlC/WplQTg3ZG+5XWIFmP2qK
+	 +EhK1BypHV0WCZbeUG27NVrabkwDB9obe/SZCvfM=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 517Fuwix000435
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 7 Feb 2025 09:56:58 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 7
+ Feb 2025 09:56:58 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 7 Feb 2025 09:56:58 -0600
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 517FuvdQ030041;
+	Fri, 7 Feb 2025 09:56:58 -0600
+Message-ID: <9572caa4-fc17-4531-be68-8466753b70bc@ti.com>
+Date: Fri, 7 Feb 2025 09:56:57 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/9] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
+ remote processors
+To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Hari Nagalla
+	<hnagalla@ti.com>
+References: <20250206235200.3128163-1-jm@ti.com>
+ <20250206235200.3128163-6-jm@ti.com>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20250206235200.3128163-6-jm@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-gs101-acpm-dt-v4-3-230ba8663a2d@linaro.org>
-References: <20250207-gs101-acpm-dt-v4-0-230ba8663a2d@linaro.org>
-In-Reply-To: <20250207-gs101-acpm-dt-v4-0-230ba8663a2d@linaro.org>
-To: Peter Griffin <peter.griffin@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- andre.draszik@linaro.org, kernel-team@android.com, willmcvicker@google.com, 
- peter.griffin@linaro.org, daniel.lezcano@linaro.org, 
- vincent.guittot@linaro.org, ulf.hansson@linaro.org, arnd@arndb.de, 
- Jassi Brar <jassisinghbrar@gmail.com>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738943805; l=954;
- i=tudor.ambarus@linaro.org; s=20241212; h=from:subject:message-id;
- bh=LqA0TnpriX6BG6wFMMTRQwjG15Mb4xWdLzul4jT3ckw=;
- b=DWBaLZg5xR+Gle2U+lAVVq/Oxzacpni3Vbk3bF4m1w4g94PpWCXFJwkjJtFjtSG95lUHggbvy
- nnlqQIL2mvZBPYsiLt7N1rZwTwLCF/sYW5PVuaCUUv14pSHoqCEgTg3
-X-Developer-Key: i=tudor.ambarus@linaro.org; a=ed25519;
- pk=uQzE0NXo3dIjeowMTOPCpIiPHEz12IA/MbyzrZVh9WI=
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Add the ACPM protocol node. ACPM protocol provides interface for all
-the client drivers making use of the features offered by the
-Active Power Management (APM) module.
+On 2/6/25 5:51 PM, Judith Mendez wrote:
+> From: Devarsh Thakkar <devarsht@ti.com>
+> 
+> For each remote proc, reserve memory for IPC and bind the mailbox
+> assignments. Two memory regions are reserved for each remote processor.
+> The first region of 1MB of memory is used for Vring shared buffers
+> and the second region is used as external memory to the remote processor
+> for the resource table and for tracebuffer allocations.
+> 
+> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+> Signed-off-by: Judith Mendez <jm@ti.com>
+> ---
+> Changes since v3:
+> - No change
+> ---
+>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 90 +++++++++++++++++++++++--
+>   1 file changed, 84 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> index a6f0d87a50d8a..eaffbab093cc1 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+> @@ -49,6 +49,42 @@ linux,cma {
+>   			linux,cma-default;
+>   		};
+>   
+> +		c7x_0_dma_memory_region: c7x-dma-memory@99800000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0x99800000 0x00 0x100000>;
+> +			no-map;
+> +		};
+> +
+> +		c7x_0_memory_region: c7x-memory@99900000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0x99900000 0x00 0xf00000>;
+> +			no-map;
+> +		};
+> +
+> +		mcu_r5fss0_core0_dma_memory_region: r5f-dma-memory@9b800000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0x9b800000 0x00 0x100000>;
+> +			no-map;
+> +		};
+> +
+> +		mcu_r5fss0_core0_memory_region: r5f-dma-memory@9b900000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0x9b900000 0x00 0xf00000>;
+> +			no-map;
+> +		};
+> +
+> +		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c800000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0x9c800000 0x00 0x100000>;
+> +			no-map;
+> +		};
+> +
+> +		wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00 0x9c900000 0x00 0x1e00000>;
+> +			no-map;
+> +		};
+> +
+>   		secure_tfa_ddr: tfa@9e780000 {
+>   			reg = <0x00 0x9e780000 0x00 0x80000>;
+>   			alignment = <0x1000>;
+> @@ -60,12 +96,6 @@ secure_ddr: optee@9e800000 {
+>   			alignment = <0x1000>;
+>   			no-map;
+>   		};
+> -
+> -		wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
+> -			compatible = "shared-dma-pool";
+> -			reg = <0x00 0x9c900000 0x00 0x01e00000>;
+> -			no-map;
+> -		};
+>   	};
+>   
+>   	opp-table {
+> @@ -737,3 +767,51 @@ dpi1_out: endpoint {
+>   		};
+>   	};
+>   };
+> +
+> +&mailbox0_cluster0 {
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
- arch/arm64/boot/dts/exynos/google/gs101.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Odd, these mailboxes should have been disabled by default as
+they are incomplete without this extra board-level info below.
 
-diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-index 25ba262e3b3c..cc97c08fa9b2 100644
---- a/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-+++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
-@@ -277,6 +277,14 @@ apm_sram: sram@2039000 {
- 		ranges = <0x0 0x0 0x2039000 0x40000>;
- 	};
- 
-+	firmware {
-+		acpm_ipc: power-management {
-+			compatible = "google,gs101-acpm-ipc";
-+			mboxes = <&ap2apm_mailbox>;
-+			shmem = <&apm_sram>;
-+		};
-+	};
-+
- 	soc: soc@0 {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
+I'll have to fix that later. For now, could you add
+status = "okay"; here. That way they are already here and
+I don't have to modify this DT file later (which could
+cause a conflict if I do it this cycle).
 
--- 
-2.48.1.502.g6dc24dfdaf-goog
+Andrew
 
+> +	mbox_r5_0: mbox-r5-0 {
+> +		ti,mbox-rx = <0 0 0>;
+> +		ti,mbox-tx = <1 0 0>;
+> +	};
+> +};
+> +
+> +&mailbox0_cluster1 {
+> +	mbox_c7x_0: mbox-c7x-0 {
+> +		ti,mbox-rx = <0 0 0>;
+> +		ti,mbox-tx = <1 0 0>;
+> +	};
+> +};
+> +
+> +&mailbox0_cluster2 {
+> +	mbox_mcu_r5_0: mbox-mcu-r5-0 {
+> +		ti,mbox-rx = <0 0 0>;
+> +		ti,mbox-tx = <1 0 0>;
+> +	};
+> +};
+> +
+> +&wkup_r5fss0 {
+> +	status = "okay";
+> +};
+> +
+> +&wkup_r5fss0_core0 {
+> +	mboxes = <&mailbox0_cluster0>, <&mbox_r5_0>;
+> +	memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
+> +			<&wkup_r5fss0_core0_memory_region>;
+> +};
+> +
+> +&mcu_r5fss0 {
+> +	status = "okay";
+> +};
+> +
+> +&mcu_r5fss0_core0 {
+> +	mboxes = <&mailbox0_cluster2>, <&mbox_mcu_r5_0>;
+> +	memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
+> +			<&mcu_r5fss0_core0_memory_region>;
+> +};
+> +
+> +&c7x_0 {
+> +	mboxes = <&mailbox0_cluster1>, <&mbox_c7x_0>;
+> +	memory-region = <&c7x_0_dma_memory_region>,
+> +			<&c7x_0_memory_region>;
+> +	status = "okay";
+> +};
