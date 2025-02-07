@@ -1,156 +1,268 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9AD717C224
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:18:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E79F156F3A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738948714; cv=none; b=GbmVfqJP0uY2VELSXsCjzQAu+LnNX8CtyU/gO7FETmwJxgSEtDj0/U8PzUi22wb08SW8RyUuDGEfKOczUcxQO/HtjfmYXXmfcqD09hVgf6nlcBxZml2d4rXkvGaxvMd/Ajm6zVW5X/+vu14ZtvolAu07Xb/NiZWKGKIMdZehRiM=
+	t=1738948744; cv=none; b=Zl+nOWvXAgncK1q+MKb5Tt54HU8baUa+TU2+sqjvrCMk+1FYP46IrkwEokzf8hULopolbHUkKIiblF4kPqhX21F//6NvKE59N8phg19jUPmO8G9v3ZJGka0spAIvD3d9zw0e9V3JGXdl8fa/6mBkMOJ/PcrAgTHyiLVRWrRsNzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738948714; c=relaxed/simple;
-	bh=Jj1eNDqFpZhRI+fdFmpIJJSPmlSkB+1ee36V8K05VyI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VOo+V5Y+yZbIjlKnlpICMY7DAjG+j1ip0eScCe4qMizdeZDr3TiV9IHvUHolya9Q/yzpf8VhB+e1uW/0WKwrTcwzoTRUhPaWTp39c1yV88KkmwiToKAuvxt2Bmfp8+AAnjRsd0jAEojQN8D/TFLD1TF3rRCY92f1DJoirSIE7Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PFWGXhgc; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1738948744; c=relaxed/simple;
+	bh=bCyLI4LdJFH3HYJ+mp58RKBb7vU+yOgcEAiFrzYDgxQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LfuED6aZOO5VhrN/QMj3uOEizpSjZ2/ZJTvrYAtvYiafcjadhtSpJqM4VMD0BYs3VoJrqrGNNWCm7OvtzNae0QChS7xNdwUzP0tj7IpjpVTSmWwtN5CsIo6m07wTgihoBwix4WsXFw0z4YR2/uq7H1Da5MQ0HGWDf6q9zCwsZjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=m9h8IScZ; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PFWGXhgc"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2f46b7851fcso6721395a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:18:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="m9h8IScZ"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5fa3714d4bbso1076757eaf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:19:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738948712; x=1739553512; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CSuOpbzcTju6tkFfxzl4KaN2A0Hnpur6HDpACNjX4wo=;
-        b=PFWGXhgcZPGDuCOJCTXAde/QfQEvYaSj1JUN0UHL1N/sszgbv1eaYg2J+QYd/DYM5K
-         vQgWGlD2JFVGKyGegTqvK9czIXVkw553pxzRtVYjiWE1a4Hxw2dU26xoFd0/yyM2fCd7
-         jVytFI9Ny10CAmFp/MBo9dFGFmsQj0PwlPm16wJSk77EMpjaKTg4Q3fEOOxMFVkle/0s
-         28wnyxgNATtt0WLqlml8seLSg8MiUm6xuYXtGzm7YP2EJB8fWv6cgAkLmuYkAT7iDKq4
-         yGQq5YjTDpYLHhChnZnUGA28jjn44xCGO2zeVj1h0zR2lxMyNaZcEVdeFXA2OcoWIL1v
-         ydqw==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738948741; x=1739553541; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ur5RSQfj/6q4nsk1ykW3bsaGkSYhTmlbRHhJKO1AJt4=;
+        b=m9h8IScZ9/MusYk77DltC9SySE5u6Uy+jNNGobYeoT6U6sCY4UnYbObe0hsdnXuNn0
+         0eofyT7rCRQaiAt8tSFeStzaZGnFj+3yZ2O8G9OsyDrBgeCVWSKzvbuGsIof95dSlhyM
+         BAILhNj2GvviHz+2/PElo7QYCcAEDFVVIsIyGLtVWjNTMlTAj978CHYRYkIGQ7KZ/Zir
+         ZubWwFU4JDPIkdz6PssfOGocm4XAb22qBSZ+diFZVfoI6/8wtm9LvbYE8matoOmUHO7t
+         H1RMNBZjTvWm+VnA9Me4rpYp/4NlDfE4iCpyRBZ1hnm9OSXDoBFom2VJby4gBCBMxNJL
+         SXbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738948712; x=1739553512;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=CSuOpbzcTju6tkFfxzl4KaN2A0Hnpur6HDpACNjX4wo=;
-        b=NpCUxZ4tUb9pExjWQVUvKLLnvTbKVPyt4W4jsmjZTGywJrnbWWZ4dLP+LuOB69xrdI
-         +slyaOK76NpRULJMag5Ss3TH59xPd25fZuk2o285miO7R+fzkGhW70ZDqm0Z0UszbkEW
-         OI4Zo3Hfxgzt1ynENasnJeot2Nqyh1lyvX9BTwVot9k+az2bIPs1Y4qT0YFpZSEgbCge
-         wJ00pGUd+IBTDS6E+s6vrB4ndYax1tORBvQhJ7vR5p0HFL5bD/l2i6n3KEPmZEDcVuJV
-         8PTsLlMWFqnBHI6Pf/FugTSVtLf1KVH46n7xMKY5DNzIJ2Aa3SpYuEIYlt/63VcHWZk1
-         9o6w==
-X-Forwarded-Encrypted: i=1; AJvYcCX4khf5hSch3gVT5rUCm8Kzn5bCYplyDsdlPcw/nWIoJrf7CVSSdrY2cTSXPwWw0ruur+2LzsFap9ynhmw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyM941BLojgrE51nHQmXN+bzM3V/ZTHSofkxrNmE+lcLYnetYQ2
-	wuPChHO2FRtzaZStK4EAoEzakjDkKc5ieJ0me3cWwDTRGcb4OW0T2hMUXiAH650MVoPXSi3lH4C
-	cMQ==
-X-Google-Smtp-Source: AGHT+IGrayEP+/fD2zZXo2PSrKnXUC+O+jff+DjKCRUzSnky46KAfPmw7R7/FHXa4l1bRE8ZgLc4lf1t8Hs=
-X-Received: from pjbsn12.prod.google.com ([2002:a17:90b:2e8c:b0:2fa:e9b:33b7])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:ec86:b0:2fa:13ce:bf16
- with SMTP id 98e67ed59e1d1-2fa24068f50mr6276946a91.11.1738948712214; Fri, 07
- Feb 2025 09:18:32 -0800 (PST)
-Date: Fri, 7 Feb 2025 09:18:30 -0800
-In-Reply-To: <4410f771de905b8df18f7fc87fe5a034d1a57a7b.camel@infradead.org>
+        d=1e100.net; s=20230601; t=1738948741; x=1739553541;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ur5RSQfj/6q4nsk1ykW3bsaGkSYhTmlbRHhJKO1AJt4=;
+        b=hjk1RCTIBPf/n2YoyMudLGYN+czCatlIXW9aYlET7DOR7pddstwhklqIqUb7i2iYhb
+         0ngcp9nebLU64XzRiq8lQESwrCNKgGsMEt0mtXaN278CkqSiPHgKf+/B5GQAR5awo9T3
+         geMKEddu9h4BcuZgTGycUTmN1sQJAQ1bCXN+dQEGD333P/rwyBEiqe2HrFbQMd19c9p7
+         RhFfDJp9Mzso2jOvmEJ3lulyo90cDQQZ8sP1Y4PT6eGQ+l/RoVmOHhgUsKt7T8XlvMTi
+         kc8hYvdi12Pn+NNZzaq6pO3DzDzQdlU/q7xgjz392uKOJDhheC9Xu7YEeetFjKquPqQX
+         teUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUomkEi9Y7TCb4WBHp3+utkceelbHm6CPTINw7SMiXaA6B9j5KGgXVVp6GxYvXYfZFRxsSzACYHu4boYTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQ2SppO7WMf//coQVjRgHjjmyXWE+3yNenMOJEjjSjMs4xDBvd
+	sUcm98AJoFbOIdImTSlcpo1DoE2ZkQQBgCaBbPZYfgCVzCXORtjxy/NOs2zzW+5cf/8Th7Nvb9L
+	UKXM/E54gCdH2azJo+DDYL93xsyLVUl5Tv0trwg==
+X-Gm-Gg: ASbGnctJgs/BlwS0duMLl115WJacqYOTGMpwt4+8NXbp0Pm0LJmFLYuYuCQJV23Nyv1
+	5MZZCbZT6MKzPHn6WdPGn6qf+Q8RKFNJl/wM6KU8jERxo/z805iu4BqvW7hlNeGm5XbzNhNyxZw
+	==
+X-Google-Smtp-Source: AGHT+IHsi/ZbRUCDTbGa+S4gwnuDQ0P9Att1TuOKE8XNTpFBKDDvlXJ7rYRr+HChTgTlCLe9hSF0zVph0a2miEpRufY=
+X-Received: by 2002:a05:6820:1803:b0:5f8:89bd:b99b with SMTP id
+ 006d021491bc7-5fc5e746f98mr2746002eaf.8.1738948740668; Fri, 07 Feb 2025
+ 09:19:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250201011400.669483-1-seanjc@google.com> <20250201011400.669483-2-seanjc@google.com>
- <43f702b383fb99d435f2cdb8ef35cc1449fe6c23.camel@infradead.org>
- <Z6N-kn1-p6nIWHeP@google.com> <cd3fb8dd79d7766f383748ec472de3943021eb39.camel@infradead.org>
- <Z6OI5VMDlgLbqytM@google.com> <48FAD370-09F1-47AA-8892-8BE29DC8A949@infradead.org>
- <85f8aaea4cb5918cef92309c8c1c26fc7fd113b8.camel@infradead.org>
- <Z6O6Evrdl9pPM3hX@google.com> <4410f771de905b8df18f7fc87fe5a034d1a57a7b.camel@infradead.org>
-Message-ID: <Z6ZAZjBj9jv-VKgS@google.com>
-Subject: Re: [PATCH 1/5] KVM: x86/xen: Restrict hypercall MSR to unofficial
- synthetic range
-From: Sean Christopherson <seanjc@google.com>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Paul Durrant <paul@xen.org>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	syzbot+cdeaeec70992eca2d920@syzkaller.appspotmail.com, 
-	Joao Martins <joao.m.martins@oracle.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <Z5qjwRG5jX9zAGtf@google.com> <CAHBxVyHL4CO1xGpzkNfvxk71gUYdVyrXZkqZHZ+ZV2VxeGFf8w@mail.gmail.com>
+ <Z51RxQslsfSrW2ub@google.com> <CAP-5=fWzzWqNAgmrDHav63Z+HMnSP0RZJ3Q7PQpuzP7Tf_HP7g@mail.gmail.com>
+ <Z6FcHJFYGc7HzSna@google.com> <CAP-5=fW9f2mxuTV2FGCdhKm7M9g8v6VsLJJXTPTLRr5tUv9rOA@mail.gmail.com>
+ <Z6LFp5jiED7_-weN@google.com> <CAP-5=fU6WSOK_N0NoLcMSSdaWAkdC2DUBwLqsLn_KA7m6dJyeQ@mail.gmail.com>
+ <Z6RD7NuT9IPhOkIV@google.com> <CAP-5=fV8rRMQyMDuy1vcxyEX9Gf8x0QJdVEP-K5krBec_A7mpA@mail.gmail.com>
+ <Z6WPmYCJcc6pPKDA@google.com> <CAP-5=fU0263rZx+i_dpeBWVUiKHuNNp4ER7WhDe2zHPUsq=wmw@mail.gmail.com>
+In-Reply-To: <CAP-5=fU0263rZx+i_dpeBWVUiKHuNNp4ER7WhDe2zHPUsq=wmw@mail.gmail.com>
+From: Atish Kumar Patra <atishp@rivosinc.com>
+Date: Fri, 7 Feb 2025 09:18:49 -0800
+X-Gm-Features: AWEUYZk70S5T78s7X_Ye6HV7heVIayUb8TmEoaV5jzwQHEtQtI3ikzbJKW6UgUg
+Message-ID: <CAHBxVyH1q5CRW3emWTZu1oLZEfTWWVRH6B0OVggFxt-0NRzvwQ@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>, 
+	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 06, 2025, David Woodhouse wrote:
-> On Wed, 2025-02-05 at 11:20 -0800, Sean Christopherson wrote:
-> > On Wed, Feb 05, 2025, David Woodhouse wrote:
-> > > On Wed, 2025-02-05 at 16:18 +0000, David Woodhouse wrote:
-> > > >=20
-> > > > > Oh!=C2=A0 It doesn't help KVM avoid breaking userspace, but a way=
- for QEMU to avoid a
-> > > > > future collision would be to have QEMU start at 0x40000200 when H=
-yper-V is enabled,
-> > > > > but then use KVM_GET_MSR_INDEX_LIST to detect a collision with KV=
-M Hyper-V, e.g.
-> > > > > increment the index until an available index is found (with sanit=
-y checks and whatnot).
-> > > >=20
-> > > > Makes sense. I think that's a third separate patch, yes?
-> > >=20
-> > > To be clear, I think I mean a third patch which further restricts
-> > > kvm_xen_hvm_config() to disallow indices for which
-> > > kvm_is_advertised_msr() returns true?
-> > >=20
-> > > We could roll that into your original patch instead, if you prefer.
-> >=20
-> > Nah, I like the idea of separate patch.
->=20
-> Helpfully, kvm_is_advertised_msr() doesn't actually return true for
-> MSR_IA32_XSS. Is that a bug?
+On Thu, Feb 6, 2025 at 10:15=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Thu, Feb 6, 2025 at 8:44=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+> > On Wed, Feb 05, 2025 at 11:44:57PM -0800, Ian Rogers wrote:
+> > > Why was adding a PMU to an event name, working around ARM's PMU bug,
+> > > such an unsurmontable problem that the original change was reverted?
+> > > Because 1 person didn't want to have to write a PMU prefix and
+> > > considered it a monumental regression having to do so.
+> >
+> > Because it's a legacy event 'cycles' and he didn't expect the wildcard
+> > behavior?
+>
+> And someone who say with perf v6.14 can type `perf stat -e data_read
+> ...` and then with your proposal now has to type `perf stat -e
+> uncore_imc_free_running/data_read/ ...` because data_read isn't a core
+> event, this is expected behavior because the error message mentions
+> perf list?
+>
+> > > > 1. RISC-V is working on a solution with the current status and it's=
+ not
+> > > >    absoluted needed to change the current behavior.
+> > >
+> > > They said to you directly it was what they wanted, that's why I
+> > > reposted this change and it is, has always been, in the cover letter.
+> > > They've then followed up expressing their desire for this behavior bu=
+t
+> > > having to have a plan b as the original change was reverted and you
+> > > are blocking this change landing.
+> >
+> > So they have the plan B.  But still prefer overriding legacy with JSON?
+>
+> Yes.
+>
+Even though the driver encoding was envisioned as plan B, I think we
+have to keep that irrespective of
+legacy overriding with json is available or not due to the reasons I
+iterated earlier
+(e.g direct legacy event usage and hypervisor) and some renewed
+interest in standardizing event encodings in RISC-V[1]
 
-Technically, no.  KVM doesn't support a non-zero XSS, yet, and so there's n=
-othing
-for userspace to save/restore.  But the word "yet"...
+If the overriding legacy with JSON is available, each future vendor
+may just provide the json file instead of modifying the driver.
+However, it will be a matter of convenience and clutter free future
+rather than a necessity at this point.
 
-> And kvm_vcpu_reset() attempts to set MSR_IA32_XSS even if the guest
-> doesn't have X86_FEATURE_XSAVES. Is that a bug?
+[1] https://lists.riscv.org/g/sig-perf-analysis/topic/110906276#msg458
 
-Ugh, sort of.  Functionally, it's fine.  Though it's quite the mess.  The w=
-rite
-can be straight up deleted, as the vCPU structure is zero-allocated and the=
- CPUID
-side effects that using __kvm_set_msr() is intended to deal with are irrele=
-vant
-because the CPUID array can't yet exist.
-
-The code came about due to an SDM bug and racing patches, and we missed tha=
-t the
-__kvm_set_msr() would be pointless.
-
-The SDM had a bug that said XSS was cleared to '0' on INIT, and then KVM ha=
-d a
-bug in its emulation of the buggy INIT logic where KVM open coded clearing =
-ia32_xss,
-which led to stale CPUID information (XSTATE sizes weren't updated).
-
-While the patch[1] that became commit 05a9e065059e ("KVM: x86: Sync the sta=
-tes
-size with the XCR0/IA32_XSS at, any time") was in flight, Xiayoao reported =
-the
-SDM bug and sent a fix[2].
-
-I merged the two changes, but overlooked that at RESET, the CPUID array is
-guaranteed to be null/empty, and so calling into kvm_update_cpuid_runtime()=
- is
-technically pointless.  And because guest CPUID is empty, the vCPU can't
-possibly have X86_FEATURE_XSAVES, so gating the write on XSAVES would be ev=
-en
-weirder and more confusing.
-
-I'm not sure what the best answer is.  I'm leaning towards simply deleting =
-the
-write.  I'd love to have a better MSR framework in KVM, e.g. to document wh=
-ich
-MSRs are modified by INIT, but at this point I think writing '0' to an MSR =
-during
-RESET (a.k.a. vCPU creation) does more harm than good.
-
-[1] https://lore.kernel.org/all/20220117082631.86143-1-likexu@tencent.com
-[2] https://lore.kernel.org/all/20220126034750.2495371-1-xiaoyao.li@intel.c=
-om
+> > > > 2. Apple-M is fixed already.
+> > >
+> > > No, James tried to repro the bug on a Juno board, not an Apple M, and
+> > > didn't succeed. I don't know what kernel he tried. I was told by Mark
+> > > Rutland (at LPC) that the tool fix was absolutely necessary and the
+> > > PMU driver wouldn't be fixed, hence the series flipping behavior that
+> > > I thought Intel would most likely block and wasn't keen to do in the
+> > > 1st place (not least wade through all the test behavior changes and
+> > > the bug tail). All of this was premised on a threat of reverting all
+> > > of the hybrid support so that Apple M could be made to work again, an=
+d
+> > > I was trying to do a less worse alternative.
+> > > https://lore.kernel.org/r/20231123042922.834425-1-irogers@google.com
+> >
+> > Sorry, it's not clear to me what's the problem exactly.  Can you give m=
+e
+> > an example command line?
+>
+> What broke: when arm PMUs were recognized as core and not uncore PMUs,
+> as part of fixing hybrid, we encoded legacy events on them. So
+> arm_blah/cycles/ became a type 0 config 0 event, no extended type as
+> PMU support for that is tested first. A type 0 config 0 event is
+> broken on the Apple-M PMUs, an event that doesn't count or something
+> like that. Because they had a sysfs event of arm_blah/cycles/ before
+> the change the broken legacy encoding on the PMU was never used, the
+> legacy event broke things.
+>
+> Because they had this problem the Apple-M users were used to using
+> arm_blah/cycles/ rather than cycles to avoid legacy events. This
+> change, not your proposal, is making it so that without a PMU they
+> also don't get legacy events because in no uncertain terms it was
+> expressed they weren't going to work. There was a lot of advocating
+> for removing all hybrid support from the tool.
+>
+> > > I don't understand what you are trying to say. I'm saying the behavio=
+r
+> > > of perf list in its output is arbitrary. We use the same printing cod=
+e
+> > > for every kind of event. An aesthetic decision to put things on a lin=
+e
+> > > does not imply that it is more valid to use or not use a PMU, it just
+> > > happens to be what the tool does. Did I break perf list as if you loo=
+k
+> > > in old perf list you see:
+> > > ```
+> > > $ perf list
+> > > List of pre-defined events (to be used in -e or -M):
+> > >
+> > >  duration_time                                      [Tool event]
+> > > ...
+> > > ```
+> > > while now you see:
+> > > ```
+> > > $ perf list
+> > > List of pre-defined events (to be used in -e or -M):
+> > > ...
+> > > tool:
+> > >  duration_time
+> > >       [Wall clock interval time in nanoseconds. Unit: tool]
+> > > ...
+> > > ```
+> > > I'm hoping people find it useful to have the unit documented.
+> >
+> > The most important information I think is the name of the event
+> > (duration_time).  It'd be appropriate if you could call it
+> > 'tool/duration_time/' but I'm not sure if it's acceptable cause
+> > tool events are not real PMU events.  If so, maybe
+> >
+> >  duration_time or tool/duration_time/
+> >
+> > ?
+>
+> I don't mind showing a PMU and not showing a PMU. duration_time isn't
+> a core event, does it also get allowed no PMU prefix in your new
+> scheme? My point isn't to discuss duration_time it is to point out
+> that `perf list` output isn't sacred and says different things over
+> time. Those things may or may not include a PMU as there has never
+> been any rigor, it is a mush of strings that are printed.
+>
+> In the perf list code we have an event and an alias. In my opinion if
+> something is an alias of something else then it implies having the
+> same perf_event_attr encoding. In your proposal this wouldn't be true
+> for legacy events as it isn't true today. Which has always been my
+> point about wanting to get this fixed.
+>
+> > I think people should use a PMU prefix before wildcard is enabled.
+>
+> I don't understand. You want to break uncore events without a PMU and
+> disable wild carding, then enable wildcarding again. Like I say I
+> think it is better you work on this behavior under a non `-e` command
+> line option.
+>
+> > > > > What happens if an event is both in sysfs and json? Well the sysf=
+s event
+> > > > > will get the description from the json and then I believe it won'=
+t
+> > > > > behave as you show. Did the event get broken, as perf list no lon=
+ger
+> > > > > shows it with a PMU, by having a json description written? I thin=
+k not
+> > > > > and I think having descriptions with events is a good thing.
+> > > >
+> > > > That's bad.  Probably we should fix it takes only one of the source=
+s and
+> > > > change the JSON event not to clash with sysfs.
+> > >
+> > > No, you are talking about breaking everything already, let's not brea=
+k
+> > > it yet further - not least as we lack a reasonable way to test it. I
+> > > think if you are serious about having such breaking changes then it i=
+s
+> > > best you add a new command line option, like with libpfm events.
+> >
+> > I don't want to break things.  What's the intended behavior in that cas=
+e?
+>
+> The behavior is in pmu's update_event, but basically we prefer the
+> json data over the sysfs data:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/=
+tree/tools/perf/util/pmu.c?h=3Dperf-tools-next#n506
+> This allows the json/tool data to correct the sysfs data - as well as
+> to add information like descriptions and topic.
+> But my point isn't that I support your let's have two events instead
+> of updating events. I have maintained this behavior as it has always
+> been the behavior and I care about not breaking everything. Something
+> that I assumed was taken for granted hence making `perf top` behave in
+> a way where it is showing samples for processes that have terminated
+> by default.
+>
+> Thanks,
+> Ian
