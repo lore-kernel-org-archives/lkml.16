@@ -1,108 +1,199 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831308479;
-	Fri,  7 Feb 2025 22:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97DB8479;
+	Fri,  7 Feb 2025 22:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738966931; cv=none; b=uL03/ByX9eKI2pgerhBHKRlu73aKaoFv7qKPmiqXtke8Dj0nQxF60hcU1vmCxbq9DlE6z69WMIPLP5mtPz698vhyBMFD1rSpFGeS9CX5DkcYiKtaPhxoo1tvanXjvtpg5A1DZ1dBPX7aUIYqJQd3GE7ngWifsfNQChTpVwJ/4KY=
+	t=1738967035; cv=none; b=PCFgaHTusueo19rmMEVYf1hVHMffJxBZHoREQwMtkEjYi3MJNYF4mHkhGxl1QtXY0U0RPha9st9r88ddhdoC6YgMEFdvC9sMEXa4m9OI6e5/yQj12R6RKBfsR4hqK3GwSIWx5vfVNjiJC7OF/wPoDSSyKVCzfvMpXgSPEuPlg9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738966931; c=relaxed/simple;
-	bh=4IoCEk/tAjd8JEMqSopgO2Y7+eRV8cqL0jxI6XMXQvs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PDnRUgRxRYTcbUAPMRKFvqvS8saFNMdxxC8a8Klk0ynCxxuEagU9X2yXontkZxq2TlCpXjN6qym/0PvoL5bnT/mwfV//wnRwOLrmZu44hcG0jjXaI55jrK1xCnM4q/+lH4ogQOgezSy8D+AZsaVBgxTl08sPXsM3ikBiFqG8Hyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LR0KJWkG; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738967035; c=relaxed/simple;
+	bh=z71GRjU5YMVA5314bHpHU5tEWi/e4K22CBTyU7kCNuA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=liUzWu8b9RYFcBmGd3Ad2GQG0Mn7fgA3+KEkwMBejbTSuq8SG4BZR8jzMspRnNkeYVR61Hq5GDO+JQ+HUEZHZHZPWGZiok0JigHBOyTPhKNcnkAFDVSDo+1TbU0F5BhTGVMWYLTUaJmV7q8e/fiO3zyELZd7GmzZfHk3lepjoZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K21oY5fk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LR0KJWkG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738966929; x=1770502929;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4IoCEk/tAjd8JEMqSopgO2Y7+eRV8cqL0jxI6XMXQvs=;
-  b=LR0KJWkG/taAK1HyQs0k74oQ1NhK+lbSmx2DTsMQ98acW2Z3hLp5jKSa
-   EZt2wulFW8ta7ihT2Z5IE4wlDzHU9fFo14vzSZ4e7FS1Czhtagjd7XbyR
-   VJqlQzyBfDrmRXEaKQtN4XKScFpcb10YZ8L0LWs8DKsLjyx0sjpBANiBf
-   zw7KkRUy8POOKevPWMA8aDrDo56mnQdZfghUqTSbgF6FqkGwXE2npvd9+
-   1+27pPgb42wm5IUX8SxOvqE2FLDGflsAE3ImLhDOMx1FkZUMS570cuKGW
-   hktthWWUrTNT173BBVb02ysRDZar4Cy/cpxFYhk42WTdsuqCM8rJfYYao
-   A==;
-X-CSE-ConnectionGUID: Gbu9IdBvRVmtVYWmoT+Scg==
-X-CSE-MsgGUID: 4/OX13T6RS2sQ3mS4g9h3A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="42462550"
-X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="42462550"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 14:22:08 -0800
-X-CSE-ConnectionGUID: 5dvWo4bCQTW+52ds4wUF3A==
-X-CSE-MsgGUID: W3F1OP9GQJyiWjnCKPCYTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="111414811"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.111.82])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 14:22:08 -0800
-Date: Fri, 7 Feb 2025 14:22:06 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Robert Richter <rrichter@amd.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 13/18] cxl/region: Add function to find a port's
- switch decoder by range
-Message-ID: <Z6aHjiROdVotsZt5@aschofie-mobl2.lan>
-References: <20250207153753.418849-1-rrichter@amd.com>
- <20250207153753.418849-14-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K21oY5fk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16F5FC4CED1;
+	Fri,  7 Feb 2025 22:23:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738967034;
+	bh=z71GRjU5YMVA5314bHpHU5tEWi/e4K22CBTyU7kCNuA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=K21oY5fkU528S+VLZVhJgko2LHzRdTXdDQkGlomm0nJ/cgPJNEkIyAUV9cb4gCPJz
+	 L1+yv/l+D6tUFbvC3fnI2AnYov9fd5joAVQn6u9AtmIugiDUHRLw60wA/j5CMRqmYq
+	 qpwxH1z1cIfL9pOUoNXSkduFgm2kvtHymMftfpXja00KqgUqa1+r8vjKjCpDteDBmo
+	 TTixmrunnEdH5/BKZaH6E47n6vmd0KLXUP1rlVZ3WJ8xwQp8SEmxQaRBVc2SH4cJqa
+	 +KvZPGC8wghAxgNOjjhAVMBsEEAoBA6l5IofpB74qFWXIEgek6T0cNBVdIoc0YUVyw
+	 retM3YX9JI8QQ==
+Date: Fri, 7 Feb 2025 16:23:52 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+Cc: Jan Beulich <jbeulich@suse.com>, Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	xen-devel <xen-devel@lists.xenproject.org>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Deren Wu <Deren.Wu@mediatek.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Shayne Chen <Shayne.Chen@mediatek.com>,
+	Sean Wang <Sean.Wang@mediatek.com>,
+	Leon Yen <Leon.Yen@mediatek.com>,
+	linux-mediatek@lists.infradead.org
+Subject: Re: Config space access to Mediatek MT7922 doesn't work after device
+ reset in Xen PV dom0 (regression, Linux 6.12)
+Message-ID: <20250207222352.GA949665@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250207153753.418849-14-rrichter@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z6PiuRDjml0UNWd_@mail-itl>
 
-On Fri, Feb 07, 2025 at 04:37:48PM +0100, Robert Richter wrote:
-> Factor out code to find the switch decoder of a port for a specific
-> address range. Reuse the code to search a root decoder, create the
-> function cxl_port_find_switch_decoder() and rework
-> match_root_decoder_by_range() to be usable for switch decoders too.
-> 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> ---
->  drivers/cxl/core/region.c | 46 +++++++++++++++++++++++----------------
->  1 file changed, 27 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index cfcd235f311e..15286acdf6d1 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
+[+cc Alex, Mediatek folks, thread at https://lore.kernel.org/r/Z4pHll_6GX7OUBzQ@mail-itl]
 
-snip
+On Wed, Feb 05, 2025 at 11:14:17PM +0100, Marek Marczykowski-Górecki wrote:
+> On Thu, Jan 30, 2025 at 03:31:23PM -0600, Bjorn Helgaas wrote:
+> > On Thu, Jan 30, 2025 at 10:30:33AM +0100, Jan Beulich wrote:
+> > > On 30.01.2025 05:55, Marek Marczykowski-Górecki wrote:
+> > > > I've added logging of all config read/write to this device. Full log at
+> > > > [1].
+> > > ...
+
+> ...  Generally it looks like this device has broken FLR, and the
+> reset works due to the fallback to the secondary bus reset on
+> timeout.
+
+> I repeated the test with my additional "&& !PCI_POSSIBLE_ERROR(id)"
+> and I got this:
+> https://gist.github.com/marmarek/db0808702131b69ea2f66f339a55d71b
+
+I'm having a really hard time piecing this all together.  I'm trying
+to recap the current theory:
+
+  - https://github.com/QubesOS/qubes-issues/issues/9689 reports
+    Mediatek MT7922 wifi (device/vendor [14c3:0616]) broke when
+    running v6.12 on Xen.
+
+  - Marek reproduced this and bisected to d591f6804e7e ("PCI: Wait for
+    device readiness with Configuration RRS"), which appeared in
+    v6.12.
+
+  - We do FLR on the device, either via sysfs or the xen-pciback
+    driver, e.g., pcistub_reset_device_state().
+
+  - We theorize that FLR is unreliable on this device, and it may
+    never respond successfully again.  All reads, either to
+    PCI_COMMAND (before d591f6804e7e) or PCI_VENDOR_ID (after
+    d591f6804e7e) get ~0.
+
+  - Prior to d591f6804e7e, e.g., in v6.11, pci_dev_wait() times out
+    because polling PCI_COMMAND always returns ~0, and returns
+    -ENOTTY.
+
+    Since -ENOTTY was returned, we try another reset method.  A
+    Secondary Bus Reset (SBR) works, and the device works again.
+
+    [3] seems to show this scenario ("NO BUG (kernel rollback 6.11)").
+    We waited ~345 seconds before giving up.
+
+  - After d591f6804e7e, e.g., in v6.12, pci_dev_wait() polls
+    PCI_VENDOR_ID looking for anything other than 0x0001.  We
+    immediately get 0xffff and exit the loop.  We assume the device is
+    ready, but it's actually not.
+
+    If pci_dbg were enabled (CONFIG_DYNAMIC_DEBUG=y and booted with
+    dyndbg="file drivers/pci/* +p"), we should see "ready %dms after
+    FLR" with a very small time.
+
+    We mistakenly think the device is ready, so we restore config
+    space, which the device ignores because it's not ready.  The
+    device doesn't work at all, perhaps because its config space has
+    not been restored.
+
+  - After including the debug patch below, pci_dev_wait() polls
+    PCI_VENDOR_ID for something other than either 0x0001 or 0xffff.
+
+    This "works" the same as before d591f6804e7e: We always get ~0,
+    eventually time out, return -ENOTTY, fall back to SBR, and the
+    device works again.  Because of the timeout, it takes about 70
+    seconds in both the Xen and the native logs in [4].
+
+  - The initial report said this works on v6.12 after a warm reboot
+    from v6.11, but fails after a cold boot [3].  Followup says this
+    works on v6.12 running natively, but it fails when running on
+    Xen [5].
+
+    I can't explain why this works in some cases but not others.
+
+  - It seems that even in v6.11, FLR didn't work for this device.  The
+    device did eventually become usable, but only because we waited
+    70+ seconds after FLR, timed out, and fell back to SBR.
+
+    The quirk patch below should avoid use of FLR completely.  The
+    mt7921 driver supports several other devices, maybe more should be
+    added.
+
+    Searches for mediatek "not ready" "after FLR" find many similar
+    reports from the web: [6], [7] (suspicious in that holding power
+    button 60 seconds seems to fix something, maybe similar to the
+    warm/cold reboot thing), [8] (works, then fails after
+    suspend/resume), [9], [10].
+
+[3] https://github.com/QubesOS/qubes-issues/issues/9689#issuecomment-2582927149
+[4] https://gist.github.com/marmarek/db0808702131b69ea2f66f339a55d71b
+[5] https://lore.kernel.org/r/Z4pHll_6GX7OUBzQ@mail-itl
+[6] https://community.frame.work/t/responded-yet-more-mediatek-issues-on-amd-linux/50039
+[7] https://www.linux.org/threads/solved-wifi-adaptator-not-found-mediatek-wi-fi-6-mt7921-wireless-lan-card.37699/page-2
+[8] https://forum.manjaro.org/t/mediatek-mt7922-wifi-not-working-after-waking-up/160664
+[9] https://forum.manjaro.org/t/mediatek-mt7921e-fails-in-kernel-6-6-and-later-through-6-10/164217
+[10] https://www.reddit.com/r/archlinux/comments/188ccib/wifi_disabled_after_disconnected_power/
+
+Debug patch:
+
+  @@ -1297,7 +1297,8 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+                  if (root && root->config_rrs_sv) {
+                          pci_read_config_dword(dev, PCI_VENDOR_ID, &id);
+  -                     if (!pci_bus_rrs_vendor_id(id))
+  +                     if (!pci_bus_rrs_vendor_id(id) &&
+  +                         !PCI_POSSIBLE_ERROR(id))
+                                  break;
 
 
-> @@ -3218,9 +3234,8 @@ cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
->  	if (!iter)
->  		return NULL;
->  
-> -	cxlrd_dev = device_find_child(&iter->dev, hpa,
-> -				      match_root_decoder_by_range);
-> -	if (!cxlrd_dev) {
-> +	cxld = cxl_port_find_switch_decoder(iter, hpa);
-> +	if (!cxld) {
->  		dev_err(cxlmd->dev.parent,
->  			"%s:%s no CXL window for range %#llx:%#llx\n",
->  			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
+commit 70197d3ec778 ("PCI: Avoid FLR for Mediatek MT7922 WiFi")
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Fri Feb 7 14:50:42 2025 -0600
 
-The dev_err() needs cleanup to align with !cxld.
-As it is now, fails w NULL ptr dereference.
+    PCI: Avoid FLR for Mediatek MT7922 WiFi
+    
 
---snip
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index b84ff7bade82..82b21e34c545 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5522,7 +5522,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
+  * AMD Matisse USB 3.0 Host Controller 0x149c
+  * Intel 82579LM Gigabit Ethernet Controller 0x1502
+  * Intel 82579V Gigabit Ethernet Controller 0x1503
+- *
++ * Mediatek MT7922 802.11ax PCI Express Wireless Network Adapter
+  */
+ static void quirk_no_flr(struct pci_dev *dev)
+ {
+@@ -5534,6 +5534,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x7901, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_MEDIATEK, 0x0616, quirk_no_flr);
+ 
+ /* FLR may cause the SolidRun SNET DPU (rev 0x1) to hang */
+ static void quirk_no_flr_snet(struct pci_dev *dev)
