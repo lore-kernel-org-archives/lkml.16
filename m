@@ -1,123 +1,168 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D993E1EB19B;
-	Fri,  7 Feb 2025 15:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7769E1EB1AF;
+	Fri,  7 Feb 2025 15:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738941690; cv=none; b=NuPdapiq3a5UzH4JDw+JEkRgSftAfkbHyn5FGElHxv7JLYNC25WhyQiyqnn1ZjoU9YJa3holIwGouSZvs7REXQJGuHq+ZbWyeBDy+mi0SwKbOomKCiBwsDQiSynFvpTE/WR1UJ9oyrWz4Df98Ws5MIPGr89R4bJhCTXtL9Jiun0=
+	t=1738941692; cv=none; b=bNqwbi9If+zLvH+FXCWe4g/vbT0frqM20KuT0Herrv6D7CCZgowjPRC1kK3WHAzgbXI/OuCpqejQVdE61G+eXwAvOE789W/svOkrOtljUNA+mNkWaafW3WeJ/YK5LoHgvSZD4N9FZIfwjJoQ3S3cKItWhdkDAnjf9WI1sr8cIkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738941690; c=relaxed/simple;
-	bh=6xSu6yqLwW31sE1dgN0w1jhIDjrnggzQLcHIvx6aJY4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=KR0CLuveXvGp5O9b57bnMAx++73vUqPzGrESlyxzwzWquf/Ra8pPt6s6a8RNiiFUZ9UTwPw5ilfviskFzFYks+fKPj5lZMWdTxRu0KhXJU+1J3vO5GHGxCvkHs+/GwNi+76koaP5Zubdk3IC4fWNJl88DdZgbC7iaB/PtQlyEJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PmKz3ggB; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738941692; c=relaxed/simple;
+	bh=yCywyCvmmAZbWHiGvWpcFa1ywJvGn1bqilunL8XHMqM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=ZeItYxDz5EG2h/xg3rsNQrhv+bewqSw6KCmv5C+K7ldAfSUb8I6iYte7HI8enwcmqodd7s1Tmoj22i25yDtcp/4FOVqw4+8msy5A/xFfydU4Q4vec9A81TIT/5cDcqVu3eBXnAUCAadGIjRGsznI0lhaZdD9deXFogvQYrMwmRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A800cHhp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmKz3ggB"
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-866de72bb82so595128241.1;
-        Fri, 07 Feb 2025 07:21:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738941688; x=1739546488; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B8o/GhPihbNO9n7sVY3uJzY0pqAnywK5EAV3nB+mum0=;
-        b=PmKz3ggBh65lBiTpYhTtPqTf+c0ngM5XX/BHbw7EEnOJicFZ/TYtAAjcwBlpai/KT2
-         UTTRz7LmXoKLSrlIYYbwkACy8UMx9a7jYGam6xsEgk48Kqam19aFoRhBFHOfAba1zxi6
-         mPQRKrF/Juzfm5lr5ryri0A+MGN7/WPhr6UHn+bf4TeRdMg3Sf8OSSPXGP4GZb0jHhXB
-         2IrG42elUwYkSECM9CHPoVfSmlyA7pRNxQmPI+O4Iegur5tjNNJDmJNh83Vke9+AnOQk
-         +6ltdbEXK+Mkie0qnGrPY/LhIgpNUzfXXb9+qp215dc5Rll3aUNm1/orvJQTRBwYCGzM
-         5gaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738941688; x=1739546488;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=B8o/GhPihbNO9n7sVY3uJzY0pqAnywK5EAV3nB+mum0=;
-        b=PXs7Z1rwJfeIugI7TktfvuIo0R7sFYarlBTPPmE53vAaN3Lh+A//AcCWVwKzB3KM5R
-         OjBjsB1SCP5T9WT794H+H+cNmOq2mrFowz6yv+vnT3EvqvSxxbfILmi6AQUQX8tZa5oY
-         4NDe+gRXgQx2RsZ2JtT74WbpvevWAhdWQcHRU+YI02D0aNrP2puJCXxqLdZc7Euhq0T0
-         q7H1NKw5xBuyHIzZQGuBqtxOFUsSYimw7itmbUjYsbOXyqd76BJPFKq7qLdnb2Z7a7rF
-         Do9YmJLtv/Vg5tNq0AugagoJ1+d36pI4PpCncIH+IC8fk1y26Z4DG4+EEhUdWXVzHIel
-         1d8w==
-X-Forwarded-Encrypted: i=1; AJvYcCU7uKl55+w8r27SkFRfYNEdT873e1+4yxqa5y0dHvn31HYVyqW0rZqeQQfAKLLs6xEB4NFBwKyE6Rnrg3E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRcD4Q9f54uatWTE75448F8v01OK/fvIuZ64CW+/pn/1ZTiVNL
-	C7BWMBAg2bDfI7tZPvVqw+Mc9ahmKujMV9OKXLgEYelmjYC0ImSv
-X-Gm-Gg: ASbGnctM6FUs6Ku5Elrm5QlifjC+W8DehvxdCMG6k6Fop6BJGmA0BxhEQ/HUZZrBQgb
-	2KhHFcax4C/NUIi8PVnHdOPBD1Wc9lhz3frxyvupqFbMVZ6UVnzS7EMHEnu/vLRs3EXIj0bjhCx
-	KUjT6MIFvz4EIPiOKmZt3ggY/gXlH37B71P9gHBnTIbfZQrOU5AjluZiK2CXxtNRT6AXbLnVY5F
-	SypkEb8tojRIF8ZLVB131xgVzboLabF3t51SGEKBgXfmumdeyZ48W2c80cWHdkYPUyiY/4KSS4D
-	6O6P7zg=
-X-Google-Smtp-Source: AGHT+IH4HSLNswnaBV+62T9qy945S5J+DA4t49k1tTtj0C2j6pL0p1EbbH3BUqbk6oRJea2LtqwlQw==
-X-Received: by 2002:a05:6122:2191:b0:518:6286:87a4 with SMTP id 71dfb90a1353d-51f2e0f7e02mr2796332e0c.4.1738941687215;
-        Fri, 07 Feb 2025 07:21:27 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51f2295a7fcsm531558e0c.46.2025.02.07.07.21.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 07:21:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A800cHhp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1FF2C4CEDF;
+	Fri,  7 Feb 2025 15:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738941692;
+	bh=yCywyCvmmAZbWHiGvWpcFa1ywJvGn1bqilunL8XHMqM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=A800cHhpOmGzb0NkAxQm5wuE8IJ+Qgmm5pX3QYF9ACwfZUs8xnR9wCHSGlq9P4hAi
+	 n2jXNmLF4y5K5sPyUc02ORy2DEMs6M9B92C5gsyLVp3cZSBKRmJbK7WYkSN6xmRR4j
+	 DQC3Lmf81Y4aUw4TvF+qruS2MaH1y4atrYAimL22ja0G4iDkp2uMryoMzKx6DHQvGa
+	 HKFiFI5s9GwyZujRsJcNIfHZC3GpsmI7btMRIiHiG3BikwdYoWRrvEzFalVdQje/68
+	 AQO94MuvgcLXBndNMXvgIVrvYRnN/Sj05rxp+kOAxkGt+81RM28j6I85PmhOGy+uch
+	 jXoU/G3bEd2qg==
+Date: Fri, 07 Feb 2025 09:21:30 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 07 Feb 2025 10:21:24 -0500
-Message-Id: <D7MBDPIDK7XS.3DONIQK22EIBH@gmail.com>
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: <platform-driver-x86@vger.kernel.org>, "Armin Wolf" <W_Armin@gmx.de>,
- "Mario Limonciello" <mario.limonciello@amd.com>, "Hans de Goede"
- <hdegoede@redhat.com>, <Dell.Client.Kernel@dell.com>, "LKML"
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 11/14] platform/x86: Split the alienware-wmi driver
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250207140743.16822-1-kuurtb@gmail.com>
- <20250207140743.16822-12-kuurtb@gmail.com>
- <85e378b4-a434-efe1-fd16-416fc3ce3691@linux.intel.com>
-In-Reply-To: <85e378b4-a434-efe1-fd16-416fc3ce3691@linux.intel.com>
+MIME-Version: 1.0
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ alim.akhtar@samsung.com, krzk@kernel.org, 
+ linux-arm-kernel@lists.infradead.org
+To: Denzeel Oliva <wachiturroxd150@gmail.com>
+In-Reply-To: <20250205222223.613-1-wachiturroxd150@gmail.com>
+References: <20250205222223.613-1-wachiturroxd150@gmail.com>
+Message-Id: <173894150599.330679.9502300326719327262.robh@kernel.org>
+Subject: Re: [PATCH v1 0/9] Add PERIC0/1 support for Exynos 990
 
-On Fri Feb 7, 2025 at 10:05 AM -05, Ilpo J=C3=A4rvinen wrote:
-> On Fri, 7 Feb 2025, Kurt Borja wrote:
->
->> Split alienware-wmi WMI drivers into different files. This is done
->> seamlessly by copying and pasting, however some blocks are reordered.
->>=20
->> Reviewed-by: Armin Wolf <W_Armin@gmx.de>
->> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
->> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
->
-> Hi,
->
-> Can you please check there's no error in driver_data assignments as the=
-=20
-> numbers in removed & added lines do not match:
 
-Hi Ilpo,
+On Wed, 05 Feb 2025 22:22:14 +0000, Denzeel Oliva wrote:
+> This patch series introduces support for
+> the PERIC0 and PERIC1 blocks in the Exynos 990 SoC.
+> It includes devicetree bindings, clock definitions,
+> and driver support for the following components:
+> 
+> - Universal Serial Interface (USI):
+>   - Adds samsung,exynos990-usi compatible
+>     for defining USI nodes in PERIC0/1.
+>   - Supports UART, SPI, and I2C modes.
+>   - Defines all 18 USI nodes in the Exynos 990 device tree.
+> 
+> - SPI (Serial Peripheral Interface):
+>   - Adds `samsung,exynos990-spi` compatible.
+>   - Implements SPI port configuration data.
+>   - Some controllers (SPI 8, 9, and 10) use a 256 bytes FIFO depth
+>     instead of the usual 64 bytes.
+> 
+> - HSI2C (High-Speed I2C):
+>   - Adds `samsung,exynos990-hsi2c` compatible for Exynos 990.
+> 
+> - Clock Management Unit (CMU) for PERIC0/1:
+>   - Adds clock definitions for USI and I2C peripherals.
+>   - CMU_PERIC0/1 clocks are not marked as critical.
+> 
+> This has been tested on the Samsung Galaxy S20 FE (r8s),
+> where USI and SPI interfaces are confirmed to be functional.
+> 
+> Denzeel Oliva (9):
+>   dt-bindings: clock: samsung,exynos990-clock: add PERIC0 / 1 clock
+>     management unit
+>   dt-bindings: i2c: exynos5: add samsung,exynos990-hsi2c compatible
+>   dt-bindings: serial: samsung: add Exynos990 compatible
+>   dt-bindings: samsung: usi: add exynos990-usi compatible
+>   spi: dt-bindings: samsung: add samsung,exynos990-spi compatible
+>   dt-bindings: soc: samsung: exynos-sysreg: add compatibles peric0/1
+>     sysreg for Exynos990
+>   clk: samsung: exynos990: add support for CMU_PERIC0/1
+>   spi: s3c64xx: add support exynos990-spi to new port config data
+>   arm64: dts: exynos990: define all PERIC USI nodes
+> 
+>  .../clock/samsung,exynos990-clock.yaml        |   24 +
+>  .../devicetree/bindings/i2c/i2c-exynos5.yaml  |    1 +
+>  .../bindings/serial/samsung_uart.yaml         |    6 +
+>  .../bindings/soc/samsung/exynos-usi.yaml      |    1 +
+>  .../soc/samsung/samsung,exynos-sysreg.yaml    |    2 +
+>  .../devicetree/bindings/spi/samsung,spi.yaml  |    1 +
+>  arch/arm64/boot/dts/exynos/exynos990.dtsi     | 1711 +++++++++++++++++
+>  drivers/clk/samsung/clk-exynos990.c           | 1079 +++++++++++
+>  drivers/spi/spi-s3c64xx.c                     |   16 +
+>  include/dt-bindings/clock/samsung,exynos990.h |  178 +-
+>  10 files changed, 3018 insertions(+), 1 deletion(-)
+> 
+> --
+> 2.47.1
+> 
+> 
+> 
 
-There was indeed a wrong assignment to Alienware m16 r1 AMD, I'm not
-really sure how it happened but it's fixed now!
 
-I'll send a v10. I apologize for the noise.
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
->
-> $ git diff-tree -p 73224c076cf2fa2968d61584c62937f6180c8e71 | grep driver=
-_data | rev | sort | rev | uniq -c
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
-Thanks for this amazing trick btw.
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
 
-~ Kurt
+  pip3 install dtschema --upgrade
 
->       1 +               awcc =3D id->driver_data;
->       1 -               awcc =3D id->driver_data;
->       4 +               .driver_data =3D &generic_quirks,
->       5 -               .driver_data =3D &generic_quirks,
->       7 +               .driver_data =3D &g_series_quirks,
->       6 -               .driver_data =3D &g_series_quirks,
->
-> (That commit id is from my staging tree, not available to you but it's=20
-> this patch.)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/exynos/' for 20250205222223.613-1-wachiturroxd150@gmail.com:
+
+Error: arch/arm64/boot/dts/exynos/exynos990.dtsi:225.20-21 syntax error
+FATAL ERROR: Unable to parse input tree
+make[3]: *** [scripts/Makefile.dtbs:131: arch/arm64/boot/dts/exynos/exynos990-x1slte.dtb] Error 1
+make[2]: *** [scripts/Makefile.build:465: arch/arm64/boot/dts/exynos] Error 2
+make[2]: Target 'arch/arm64/boot/dts/exynos/exynos990-x1slte.dtb' not remade because of errors.
+make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1464: exynos/exynos990-x1slte.dtb] Error 2
+Error: arch/arm64/boot/dts/exynos/exynos990.dtsi:225.20-21 syntax error
+FATAL ERROR: Unable to parse input tree
+make[3]: *** [scripts/Makefile.dtbs:131: arch/arm64/boot/dts/exynos/exynos990-r8s.dtb] Error 1
+make[2]: *** [scripts/Makefile.build:465: arch/arm64/boot/dts/exynos] Error 2
+make[2]: Target 'arch/arm64/boot/dts/exynos/exynos990-r8s.dtb' not remade because of errors.
+make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1464: exynos/exynos990-r8s.dtb] Error 2
+Error: arch/arm64/boot/dts/exynos/exynos990.dtsi:225.20-21 syntax error
+FATAL ERROR: Unable to parse input tree
+make[3]: *** [scripts/Makefile.dtbs:131: arch/arm64/boot/dts/exynos/exynos990-c1s.dtb] Error 1
+make[2]: *** [scripts/Makefile.build:465: arch/arm64/boot/dts/exynos] Error 2
+make[2]: Target 'arch/arm64/boot/dts/exynos/exynos990-c1s.dtb' not remade because of errors.
+make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1464: exynos/exynos990-c1s.dtb] Error 2
+Error: arch/arm64/boot/dts/exynos/exynos990.dtsi:225.20-21 syntax error
+FATAL ERROR: Unable to parse input tree
+make[3]: *** [scripts/Makefile.dtbs:131: arch/arm64/boot/dts/exynos/exynos990-x1s.dtb] Error 1
+make[2]: *** [scripts/Makefile.build:465: arch/arm64/boot/dts/exynos] Error 2
+make[2]: Target 'arch/arm64/boot/dts/exynos/exynos990-x1s.dtb' not remade because of errors.
+make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1464: exynos/exynos990-x1s.dtb] Error 2
+make: *** [Makefile:251: __sub-make] Error 2
+make: Target 'exynos/exynos8895-dreamlte.dtb' not remade because of errors.
+make: Target 'exynos/exynos850-e850-96.dtb' not remade because of errors.
+make: Target 'exynos/exynos7885-jackpotlte.dtb' not remade because of errors.
+make: Target 'exynos/exynos990-x1slte.dtb' not remade because of errors.
+make: Target 'exynos/exynos5433-tm2.dtb' not remade because of errors.
+make: Target 'exynos/exynos990-r8s.dtb' not remade because of errors.
+make: Target 'exynos/exynos7-espresso.dtb' not remade because of errors.
+make: Target 'exynos/google/gs101-oriole.dtb' not remade because of errors.
+make: Target 'exynos/exynosautov920-sadk.dtb' not remade because of errors.
+make: Target 'exynos/exynosautov9-sadk.dtb' not remade because of errors.
+make: Target 'exynos/exynos990-c1s.dtb' not remade because of errors.
+make: Target 'exynos/exynos9810-starlte.dtb' not remade because of errors.
+make: Target 'exynos/exynos990-x1s.dtb' not remade because of errors.
+make: Target 'exynos/exynos5433-tm2e.dtb' not remade because of errors.
+
+
+
+
 
