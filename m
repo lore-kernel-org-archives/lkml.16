@@ -1,111 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2949C8479;
-	Fri,  7 Feb 2025 18:05:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6F48479;
+	Fri,  7 Feb 2025 18:05:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738951501; cv=none; b=ugRtIWnBn6FiSo3k3idy8c3NXIqSS83AgsoaOVtUt134XkQINLJzpcB9yLzzp3H3THFq4m+fX/Mm6RX7EW2qopn6YBJZvIW1ngIYsDWQwpEO90FBZPuIDYiw2owCgRad4aNI3/Kq4PkQCLquxhKuz2OlOTursO6XdUpZm93XuQk=
+	t=1738951508; cv=none; b=RG6zOW/VQhe8To9ZQc1FrP4u46o7tUEyH+4UZ3hSWgRGB7h8EZ3F3QRJXvQKsRgicAAUlsAiZN4MsD73Agg8PlX9nj6lHSmf8akisGcb/y4DJSbdjvAi2XYR21BZsD95ipBBpfAa7hmqfMpI8MBjZV7c36jb8ZnDGpSAiahAIz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738951501; c=relaxed/simple;
-	bh=vxDcpZboLVW/aH0FGJw+5R5kXjImOV5NYrtw1W4ikYo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YoKf34VGU0OKRgPEEsujQcjfd0E/SlE4RvT/HOKhp9F2Nz1atVDCNBN+3TaTdpjIrktJzYE4NjV65zqhJtHgOjs8+OGB4b4Al98suSVVjBsKu1ZKyoV5kbQLJBbH0ER9SFg5rekygDvGAjvZvt0Ho66jvfD401x8pTciIggpmEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h9N80+iQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738951508; c=relaxed/simple;
+	bh=xaPsIZ/jqQ4lPwTrTDxAKUdh93uKhOu173yramQTkcM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DZ2wmMwoSB6fDDrh23rSZG8uyetbViWwWMMpwid2GIIEM0ip9okNrMA9kPED5o5fy1PejAEfj1CWkMCvrFwbiTL9QZ+WdSrnNWOJh1dY7sxdqMC3ehdz6gPryN1sMjzYljNOhG6rg60eWpzn7mLFhlX1f+drNmm4iqBaUQ8b/+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a3KVzgPr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h9N80+iQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 942B1C4CEEA;
-	Fri,  7 Feb 2025 18:05:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a3KVzgPr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F93FC4CED1;
+	Fri,  7 Feb 2025 18:05:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738951500;
-	bh=vxDcpZboLVW/aH0FGJw+5R5kXjImOV5NYrtw1W4ikYo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=h9N80+iQ9hvYUc99nM2KSz9WvHhYld548a5ArDMqsjM4IWnryFGyYcrvRQQ2l66Cx
-	 V8bUn9+tzGv3AjbkFse/Zdzz4g/nzwKezrmdxzZ/PL4dizkiL/nJSeCldLXCT6zd/L
-	 DxtozOXBY0LjUG/2Qvupi+lQNNmoSUaTDFN+XxkDVUJIyKgw9yUtNRU0Z6o/UKMFvT
-	 UmSGuKWlLv9IIv/jm8iWJk38FYdHZpvNh5HHpNTAZkkjr5mHbqZUn80jUjV0taYsmV
-	 I1656viedNYHNuvYVSXI5VHofNdBfkap0x9YsGsPWcmfiWK1SIzo1++kQMA5AnOKt8
-	 scxVrjw5ectPw==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-307d9a13782so20035891fa.2;
-        Fri, 07 Feb 2025 10:05:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV5GDv95ruPlePj+qxmcnwwMTIThL25AuU5ZPc82Ke5jU51PbS+jsmKrwXFxudBv0p3GArQblPZhSuEcLc=@vger.kernel.org, AJvYcCWI9IP9l/mjnA4BH7gDD4bk28rpgsbCAF5sQgSnfKPGzc1jw+ZPJgE3Uth4bhedVan1mJJ1QDD+H12KvX9FTQ==@vger.kernel.org, AJvYcCWINEMG9QfRBWUH2SRe4L4Sq5mjBuaCgDtcTZDcT1DPczka+M1JRJ3A+65h1HEYeE29epwbpbyCWR/h5hGp@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFXKR7svrlLTCIjjGU/HhFgOAvDz/3CZ15NxzBKUof7OAFfeez
-	1DxBmOW00FluKLrjWxz3vUaWzNi9dzlYyxnVjmnTRTsd1aeUgKuy1HlqGxYJkYWkPamRL/ZJAE6
-	K65q6ucxJHPY1ZzC4Ac22cVuMln0=
-X-Google-Smtp-Source: AGHT+IGpzSCLB/QU2+zSrtrGOd8GdXT3cFDNWrYeQ7bjyP5WsPJnOun3jPwxSosCSJWhsVGaSjDB5XOcPa3bu89bM44=
-X-Received: by 2002:a05:6512:3b9c:b0:544:e8c:2964 with SMTP id
- 2adb3069b0e04-54414ae0a95mr1408764e87.35.1738951499099; Fri, 07 Feb 2025
- 10:04:59 -0800 (PST)
+	s=k20201202; t=1738951507;
+	bh=xaPsIZ/jqQ4lPwTrTDxAKUdh93uKhOu173yramQTkcM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a3KVzgPrUUgeDACHsdI0ZtODv2yrbcgQt6T8M8ttEcma2paCoa5KXeJ8MbyDZG/uX
+	 xUFkpNVcZxHGqcvnjWSxb6hLZkDy881N0mAAauf/Bfg8Fnhei0QqSwTzpo2PNmUt9+
+	 Xw9WqtoVhheBLuzTxKF6m9cBpSdH31AHj9NAhtkRanSnkozHIbeSyyOgmqyzzixZ1u
+	 Gz6ZnBQi8ipKeohb5IRlZSFF4zvgeVbViKnF6EPeKuRs8+2HioyVWpUIFia/MLGloA
+	 KWs668DjTBxa2r0vEPZUPqX/CcUIUWKqzHGEmhjD+hy+PmsIKpY+rk8ZvVaaHtzzzQ
+	 L/YFTFwnOIi3Q==
+Date: Fri, 7 Feb 2025 10:05:05 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Weinan Liu <wnliu@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev,
+	Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>,
+	linux-toolchains@vger.kernel.org, linux-kernel@vger.kernel.org,
+	live-patching@vger.kernel.org, joe.lawrence@redhat.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/8] unwind: add sframe v2 header
+Message-ID: <20250207180505.iultkshvazootxfy@jpoimboe>
+References: <20250127213310.2496133-1-wnliu@google.com>
+ <20250127213310.2496133-4-wnliu@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241202145946.108093528@infradead.org> <94bf84a7-13a3-4701-807e-fc0f10d4dc88@suse.com>
- <b35737df-01ed-46a2-ae67-e56547d6c824@suse.com>
-In-Reply-To: <b35737df-01ed-46a2-ae67-e56547d6c824@suse.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 8 Feb 2025 03:04:20 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQjGy+Cbt9wBsmQhn-EB8VKt_K53GJAGbk3g_qh6iorcA@mail.gmail.com>
-X-Gm-Features: AWEUYZl1OkVtosDDBRfvCl8j1mOTD88uevQ5simYOtOi9cMlkBjK5qlG72ivY7w
-Message-ID: <CAK7LNAQjGy+Cbt9wBsmQhn-EB8VKt_K53GJAGbk3g_qh6iorcA@mail.gmail.com>
-Subject: Re: [PATCH -v2 0/7] module: Strict per-modname namespaces
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, mcgrof@kernel.org, x86@kernel.org, hpa@zytor.com, 
-	samitolvanen@google.com, da.gomez@samsung.com, nathan@kernel.org, 
-	nicolas@fjasle.eu, linux-kernel@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	hch@infradead.org, gregkh@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250127213310.2496133-4-wnliu@google.com>
 
-On Wed, Feb 5, 2025 at 7:14=E2=80=AFPM Petr Pavlu <petr.pavlu@suse.com> wro=
-te:
->
-> On 12/16/24 17:43, Petr Pavlu wrote:
-> > On 12/2/24 15:59, Peter Zijlstra wrote:
-> >> Hi!
-> >>
-> >> Implement a means for exports to be available only to an explicit list=
- of named
-> >> modules. By explicitly limiting the usage of certain exports, the abus=
-e
-> >> potential/risk is greatly reduced.
-> >>
-> >> The first 'patch' is an awk scripts that cleans up the existing module
-> >> namespace code along the same lines of commit 33def8498fdd ("treewide:=
- Convert
-> >> macro and uses of __section(foo) to __section("foo")") and for the sam=
-e reason,
-> >> it is not desired for the namespace argument to be a macro expansion i=
-tself.
-> >>
-> >> The remainder of the patches introduce the special "MODULE_<modname-li=
-st>"
-> >> namespace, which shall be forbidden from being explicitly imported. A =
-module
-> >> that matches the simple modname-list will get an implicit import.
-> >
-> > @Masahiro, I'd like to take this on the modules tree for 6.14. Can I ge=
-t
-> > an Acked-by you for the changes?
->
-> Ping, this still applies mostly cleanly. I plan to take the series on
-> modules-next, or let me know if you prefer for this to go through the
-> kbuild tree.
+On Mon, Jan 27, 2025 at 09:33:05PM +0000, Weinan Liu wrote:
+> Add sframe header so that we know how to access the sframe section
+> generated by compilers.
+> 
+> This is the sframe header file borrowed from the patchset [1]
+> Josh Poimboeuf according to sframe v2 spec [2].
+> 
+> [1]: https://lore.kernel.org/lkml/42c0a99236af65c09c8182e260af7bcf5aa1e158.1730150953.git.jpoimboe@kernel.org/
+> [2]: https://sourceware.org/binutils/docs/sframe-spec.html
 
+FWIW, my v4 patchset has a more streamlined version of this file.
 
-I do not think this patch set is in a mature state yet.
-He did not provide proper documentation or commit description.
+  https://lore.kernel.org/f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org
 
-It would be nice if he takes some time to add documentation to
-Documentation/core-api/symbol-namespaces.rst
-since this is a new feature of the module namespace.
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+-- 
+Josh
