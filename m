@@ -1,84 +1,119 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CAA1DE3AA
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 10:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DFB197A76;
+	Fri,  7 Feb 2025 10:44:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738925004; cv=none; b=PEHeqwFTtW35QTVOCPr8o4wRPLF20jkJeadO3qZUIipFvDlZwBSJHZdEc2GfIMPa/DFBZ0uQJU6hd4JQBV6A83FvNnYGOUyQLNT0wqJGblaYOIgS3Y7P5l6a0b+paFfVuftlfI8jGf4FY3BXY59fwaU7X868P2hjW49eAj38Qoo=
+	t=1738925053; cv=none; b=VW5r6seuv8Ptr4jdsF163356UInXe1cK6kit0G+mckKepsc1oqCSRoVl3tweYVMXb/fDXWyBclyGuY1MAXK73666UnIOe1KOJbcAmg4S/Hczd9UxUOwYvlvhBr/OBJmrh9g1/dYWCsRMiKztkdywweKWOpSxuw2v7FRCOV+7Zu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738925004; c=relaxed/simple;
-	bh=Owr0YKtHdkqN7+hjoDD8i2kaaYELxg9xOxfJ6jW9Nv4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lhteeB8KjRNuULhIzyhFaKZPNhgS3truyqbh9ZYy24waP9YqaEdh8YQm9SqWHNxDG7KrKn84YkUXDMFmwTPwpIXBnlYFtNmVGwHD7UvmMh73YvKT3arn3MMIw9/Yp3s0LixZLYVOcSQg8gi0aBp98lqG/RQfdGwnzRKnt3KAJEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=n7fZoZqD; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1738925053; c=relaxed/simple;
+	bh=+PnHJgJsHGVk93WnAIslGWw2a83XhmUqB5y6LpefQqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BcRXoi/hsSX+FqkdjZWQF3Eg9A4iI9sFcS9KVu4c8dw9WYbokmrQ5sJnAvB8i/6GbeEEsPF7lRwxPZogbPh6HpKjZJtgFkrU0yMVakvemOMALnR8vyfuhLNgx2E5Xl9DLKs0iD3QkUstWOFFTocb01dZ04hC+Ul1X0HTJGGIPDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HaNH6WWF; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="n7fZoZqD"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-467918c35easo33023971cf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 02:43:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1738925001; x=1739529801; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Owr0YKtHdkqN7+hjoDD8i2kaaYELxg9xOxfJ6jW9Nv4=;
-        b=n7fZoZqDT4vk+0bdMrtxd/YI7dimv8kuM/grOemUcOVHkYMX0UpaO9EqD9YfsVmdyL
-         FC7iG983FWjBUWh8Y1zA9gBM7qzwDNoTq6cbBzbpPqwFPgEFi7PGGJhnNvPmlwlA3vRN
-         I4FHJFVQ6SfWOagLUSCAmaWejnU3QIVCudSZw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738925001; x=1739529801;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Owr0YKtHdkqN7+hjoDD8i2kaaYELxg9xOxfJ6jW9Nv4=;
-        b=GJzGTH6S0h5wJ86EobxLyU+b/NDhunXt8fhoTu2Ag6JADkQcAPQNs6GwhbcrEI1Jqq
-         1Uj7omhdM2xb4sbF79cEiuscYOktUM8AmVxTLFfNKZ/I8qnZwL+a0Vv7U6L49TOooTmH
-         MTSWJo8DHuCb4KS6OtjfPACu1fQw9036BsPckMtp5edG3LrMvfIEtV9alEJ+LmT+1C00
-         F2L0KEER4uB5S2+2klnLYmvEO1F9KhV98gZUoVEczNwWlRx6rOXt2mu7zEAf/D2EJqbr
-         ZEbSQElDu/q0uviWB9aUbyRl1PoO5+4x22nLhQg8rZQ6YVA8bwDYvSpo8UVpM6Zu5zgq
-         H9mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUK3zMW7yCluxkSzeKYPpUDHUKPuFirQLpcNdZjFLBYjQBW7ZoEftQvDB03Fbe+W5oK44hohwZZShJ+wPI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9Pa1uWttBDeF37D3r37bJRe4jl19lwf79w3rXslz748hRMvke
-	wJwSadmmMwMqk3+L+OUWLGJKWQZuF8NXs8YlbmPKLPeLrk3opVzPF4Zn91n/6J19scjqMNtEDic
-	AoK/fhuCOAf0XGm/9tCkkVh1gRbJ6SaUR3LadXw==
-X-Gm-Gg: ASbGncs4e/yj52LyNj024FCKf2qgsoxKRHHSxEo1TKlK9U0i0pFRi8ACwdmQNqkDTWw
-	JwNoeFIuagN23MDudqeTY1zc9iH9nnsS9FB0wu/VZM9ql2Z7Ar6LnpUzM2YDOkt9a7GEaNA==
-X-Google-Smtp-Source: AGHT+IGkFRBaRLP1f7W9gqHW6Q2AKQLytp/hmZC95VfJ6xO6/ON3OM06vkit9Bhnsvf31fWFt29Royhe6fq1H0cZIa8=
-X-Received: by 2002:a05:622a:4887:b0:467:6486:beea with SMTP id
- d75a77b69052e-47167ae4440mr41388981cf.38.1738925001678; Fri, 07 Feb 2025
- 02:43:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HaNH6WWF"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CA82E4341E;
+	Fri,  7 Feb 2025 10:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738925046;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S2JN7acEOnnpYF6SorF298vSINNq+oWjlH4/5NBSfyY=;
+	b=HaNH6WWFViXuiG2j0REEdEA7Huzmr47PqsGfPagJxsHdJYbotxExCUATLn7KdciQ5z+OeE
+	SnVoCCuh7O0xu/LfCMmQJwrpdXU9wivbuYvqL3xNOv857o9Kt5lTkkd/BelPnyK0SK7oD/
+	eHx646DAA+sZUqiq3xhAMU2z4255Uq4y4P2sL2XLOKKoag0s8Ya0dVf5/s/GlGB2nSvmqr
+	xeP7XFChYhGVl+Fyfkg+QJUnP5VcHft/XlsrsoE4Ev0W+NRdxPZ0tXdKMHmDi53JWapH7P
+	gEIQuiMR/bsX0Qi+Z8oLFEQYHSjji99C06ryYEuNQMDD4P/dbggMiSEFEuBUOw==
+Date: Fri, 7 Feb 2025 11:44:01 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, Jagan
+ Teki <jagan@amarulasolutions.com>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>,
+ Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Paul Kocialkowski
+ <contact@paulk.fr>, Maxime Ripard <mripard@kernel.org>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, =?UTF-8?Q?Herv?=
+ =?UTF-8?Q?=C3=A9?= Codina <herve.codina@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Paul Kocialkowski
+ <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v6 15/26] drm/bridge: devm_drm_of_get_bridge and
+ drmm_of_get_bridge: automatically put the bridge
+Message-ID: <20250207114401.7869b422@booty>
+In-Reply-To: <w3qufv73ldzdcfuz6n3prx4di2dhoq2wfqmmvxvxkea6uqxkge@pjwmugvicsbt>
+References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
+	<20250206-hotplug-drm-bridge-v6-15-9d6f2c9c3058@bootlin.com>
+	<w3qufv73ldzdcfuz6n3prx4di2dhoq2wfqmmvxvxkea6uqxkge@pjwmugvicsbt>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu>
- <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
- <Z6XWVU6ZTCIl3jnc@casper.infradead.org> <03eb13ad-03a2-4982-9545-0a5506e043d0@suse.cz>
-In-Reply-To: <03eb13ad-03a2-4982-9545-0a5506e043d0@suse.cz>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Fri, 7 Feb 2025 11:43:11 +0100
-X-Gm-Features: AWEUYZlIBtfn2RHJWB88UL-DRtlyctc8WdFktH0eXJTCByl5CkmXjOsWS504hvk
-Message-ID: <CAJfpegtvy0N8dNK-jY1W-LX=TyGQxQTxHkgNJjFbWADUmzb6xA@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
- related applications since v6.13
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Matthew Wilcox <willy@infradead.org>, Christian Heusel <christian@heusel.eu>, 
-	Josef Bacik <josef@toxicpanda.com>, Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Joanne Koong <joannelkoong@gmail.com>, linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvledtkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeglefffefghefhtddvfeeufeeiveekgffgleekieduteekkeetvdehudekgfdvvdenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegtvgejvgemiegtgegvmeeitggtjeemleekgeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegtvgejvgemiegtgegvmeeitggtjeemleekgeejpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefjedprhgtphhtthhopegumhhithhrhidrsggrrhihshhhkhhovheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehinhhkihdruggrvgesshgrmhhsuhhnghdrt
+ ghomhdprhgtphhtthhopehjrghgrghnsegrmhgrrhhulhgrshholhhuthhiohhnshdrtghomhdprhgtphhtthhopehmrdhsiiihphhrohifshhkihesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Fri, 7 Feb 2025 at 11:25, Vlastimil Babka <vbabka@suse.cz> wrote:
+On Fri, 7 Feb 2025 05:17:43 +0200
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
 
-> Could be a use-after free of the page, which sets PG_lru again. The list
-> corruptions in __rmqueue_pcplist also suggest some page manipulation after
-> free. The -1 refcount suggests somebody was using the page while it was
-> freed due to refcount dropping to 0 and then did a put_page()?
+> On Thu, Feb 06, 2025 at 07:14:30PM +0100, Luca Ceresoli wrote:
+> > Add a devm/drmm action to these functions so the bridge reference is
+> > dropped automatically when the caller is removed.  
+> 
+> I think the get() should go to the underlying of_drm_bridge_find() function.
 
-Can you suggest any debug options that could help pinpoint the offender?
+It is done in the following patch.
 
-Thanks,
-Miklos
+Indeed I could swap patches 15 and 16 for clarity. Or I could squash
+together patches 14+15+16, as they are various parts or the refcounted
+bridge implementation, but I felt like keeping them separated would
+help reviewing.
+
+> Also it really feels like it's an overkill to keep the wrappers. After
+> getting bridge being handled by the panel code would it be possible to
+> drop all of them?
+
+Do you mean having only drm_of_get_bridge_by_node(), without any devm
+or drmm variant? I'm not sure it is a good idea. Most DRM code (well,
+all of it, technically) is currently unable of working with refcounted
+bridges, but if they use the devm variant they will put the ref when
+they disappear.
+
+> Then this patch might introduce one new devm_
+> function? Or are drmm_ functions actually being used to store data in
+> the drmm-managed memory?
+
+Which devm function are you thinking about? Sorry, I'm not following
+here.
+
+Luca
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
