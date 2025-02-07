@@ -1,125 +1,128 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CBC1DC9B4;
-	Fri,  7 Feb 2025 11:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F17B1D8DFE
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 11:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738926494; cv=none; b=Qp8sgZxuaUH3XE5Ax2BSKO252KOxD4CW2fPh+ErZ+/R9ElzUPy7REt4DvYz36wyxtOka7U9oFGeeryNZk/As74n9KpLUp1zt+WcyFErKD8KKBm6ZWg+J++EBFe+/ta2I92AIzn2EwflQqkCTbrU6Zdn1GlfDvJMA9btZzVqkbxs=
+	t=1738926538; cv=none; b=u91RsZ5Fgl1rOZiu4DwM7UQ/Kkr8ATRZp7+73O0ktSKOC/YX9ilcppJCH0l7dF6DX2xFuOE2coGC0GWxNGhuHavDLpUfx4wp3sOu370IxNrlV+YFNJCSPqgYiVyPjtzspT35tO3RM138QzImQkft1JKTcOyl27KJa9ZFZ2HoxB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738926494; c=relaxed/simple;
-	bh=FXr2YRk6o0W+K1SCzkVuQ0zPA5u33Pz/k+U6e+ZtLAw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=OgqT7u1VglyfHpH8v7fp4UjvnxsKiq8z0nWz/nqAOMYLMaKvN3PA2OyMjXPCuBdh/200GkUx8Nth26Vfo893REKuX/XHMr0jwg0oFQUqtnUsfPOhIX4HxUrksiiyHHcpyk9iq+Wb3cki0YUyCWq4LavYf75aylMooJbeNwD7YWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaec111762bso460109666b.2;
-        Fri, 07 Feb 2025 03:08:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738926491; x=1739531291;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RsRq64kyAjVQMzOmw5odn/YZS4WeBKPCs8/U4hV6uus=;
-        b=mxg2bak1AxC01BMKNyZ6GBkZswbSHVk0RTZPLxubzNlUU3bpFvsfUxHMIE/t0ln3gA
-         V1omY03iwUIO6w6kQAbYynGINUFkvER9wa1HTEtPtTWAJH9ybIo2uUNuwHZghn7F1220
-         QHotgtsQqmpF58GEf+7oicVD6G+p43xE71/KCb7ZlnhJ1soeAzKWKEI3eB1OBdrHTrcd
-         NIitE9LSkG50AqcL7MuUDCHpzPR71TPW5tnVlDhs/NourLwtmJYNEH843X/aI4RZin+k
-         OBUafd9rGsI2AgOdOzoB5/3sr9zjYCH5VqLdYm44XmNtI4c21k0zUVh8F35I/R41VSJM
-         HKUw==
-X-Forwarded-Encrypted: i=1; AJvYcCW828JxGzGDUg4wum2FGfBGG+66IfK2qIttsFLPtnvLHYqk/9lMNmNG/bdCdlEEyi8l7Ck+puXBrocHitQ=@vger.kernel.org, AJvYcCWlQpY51UJflz1XgXwyHC0HVS821YqWvwgzfNObWe6d8okA7vz4LOy9Z3aru64zmgJeAHlqXHexYlUEV6hp+FM9@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ2soaP4bpjLVDp2Dqg9e6c7f9lEXTSYDSd2NwsCpbo1QwRk5J
-	f/vg9MKSynuPzLUmOkutBrQYbAx8L1+S30LvsU/vspH0k8b6BiVg
-X-Gm-Gg: ASbGncvVDGvaj1iJFwQCbqolbeweaseOiRslmem6h/7SpCUbfPnc7mm4C2hIBtKhF6E
-	4S3lhsXjO9W9Hj0CYryly9Df6uLcYBMit0xRxh4E459G4JMzZU3RawGk9FapAdYdlXTfPp6Se+o
-	+/j68ixzkUzKQZUzgkbwRrSyQSVMt4nKZO9xhKi95K1DQaKiF0hEufnfaAGFYM3acFkpc/cmyHV
-	b1gUd4yo9k1VCs++W9oO4hTB7nV0MZouIth1XN7EvrdVK836ElFIu1jHHiEpu50mrB2XTbqYcoh
-	wvB0QcU=
-X-Google-Smtp-Source: AGHT+IHcITL5To976uUv3g6/PFxfYoR5rQZeHW9vC+BYgEFLYDJUHScldAXv4hpMHHGpz7GOQsUrGQ==
-X-Received: by 2002:a17:907:d08d:b0:ab7:992:7f42 with SMTP id a640c23a62f3a-ab789ba47famr300315966b.34.1738926490752;
-        Fri, 07 Feb 2025 03:08:10 -0800 (PST)
-Received: from localhost ([2a03:2880:30ff:71::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab79298641asm24762766b.90.2025.02.07.03.08.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 03:08:10 -0800 (PST)
-From: Breno Leitao <leitao@debian.org>
-Date: Fri, 07 Feb 2025 03:06:42 -0800
-Subject: [PATCH] kselftest/arm64: Fix uninitialized variable warning in
- FPMR test
+	s=arc-20240116; t=1738926538; c=relaxed/simple;
+	bh=Bp9oSq69NUXXLysWLLuF+UCdKtXJ9kpwt6EDZMcz600=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=t0tHe9gcbrPqjaPi6pVy+BcPFYScIIoI3x6R1vKHaU5Pl/A2MxD3AaNhNQGjcxNqhVT0K3iBf+PSG952SJzyVSQm33NENDqLQmeKC8Fj6zr5OhIrc9bvtCzicLLa6oB1nbvqin+tG0pZtPIeNvL4L0T6N7b3YEc+nuWGtWliHHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LgXc9nY5; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LgXc9nY5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738926537; x=1770462537;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=Bp9oSq69NUXXLysWLLuF+UCdKtXJ9kpwt6EDZMcz600=;
+  b=LgXc9nY57oe15JrtLkvIKllpDPnlz9y86h8LqkthssHUiuKVTLpk288a
+   JGGGdWKaEsUmEdINx/98KMHWUYund52AqbX1Dp680MIPeurnZpJ7bfY+N
+   Uvx167UNSfimR+AcfprcOJ4iarj7akDpQz28iYHKM+uFOjc92zb8i9HUJ
+   AWb800Q6+yHjZBPOx9MC+J7Cf01vezvog3J2Jrx6fIz7vuIYvpZfn3qO/
+   Kx8r2RzTsHmVIaq0gIguheW0sr+plsN4sLn8EVKb7vtHRo2CoDNkrfNKa
+   hNe4Re8+FTZdQ+hBbnLzoAPy1nYCcWcaWJXf+AaigRKCl6rS5b0x6wkMq
+   g==;
+X-CSE-ConnectionGUID: D5D4h8vxRoiQzfEGnzt27A==
+X-CSE-MsgGUID: b2IMv3AfQ2WjWUlOFjtjVg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="42404038"
+X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
+   d="scan'208";a="42404038"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 03:08:56 -0800
+X-CSE-ConnectionGUID: QPUCymEVRcGg3bcFpcLy4g==
+X-CSE-MsgGUID: M41jxu7rRtaq6kx/KMXT/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
+   d="scan'208";a="111705089"
+Received: from unknown (HELO ubik) ([10.237.72.184])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 03:08:49 -0800
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Nam Cao <namcao@linutronix.de>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
+ <frederic@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Nam Cao <namcao@linutronix.de>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Martin K. Petersen"
+ <martin.petersen@oracle.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel
+ <sre@kernel.org>, Will Deacon <will@kernel.org>, Jon Mason
+ <jdmason@kudzu.us>, Jaehoon Chung <jh80.chung@samsung.com>, Hans Verkuil
+ <hverkuil-cisco@xs4all.nl>, Jassi Brar <jassisinghbrar@gmail.com>, Pavel
+ Machek <pavel@ucw.cz>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Jonathan Cameron <jic23@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>, Jani Nikula
+ <jani.nikula@linux.intel.com>, Rob Clark <robdclark@gmail.com>, Lucas De
+ Marchi <lucas.demarchi@intel.com>, Zack Rusin <zack.rusin@broadcom.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>, Uwe
+ =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Takashi Iwai
+ <tiwai@suse.com>,
+ alexander.shishkin@linux.intel.com
+Subject: Re: [PATCH v2 00/45] Consolidate hrtimer initialization - Part 4
+In-Reply-To: <87tt97m3u3.ffs@tglx>
+References: <cover.1738746904.git.namcao@linutronix.de>
+ <87ldujz9a7.fsf@ubik.fi.intel.com> <87tt97m3u3.ffs@tglx>
+Date: Fri, 07 Feb 2025 13:08:47 +0200
+Message-ID: <87ikpmypts.fsf@ubik.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250207-arm_fix_selftest-v1-1-0d6eeb04299e@debian.org>
-X-B4-Tracking: v=1; b=H4sIAELppWcC/x3MUQqDMBAFwKss79tAjNjSXKUUifrSLlRbsiKCe
- HfBOcDsMBalIcqOwlVNfzOi1JVg+KT5TacjoiD40Prg7y6Vqcu6dcZvXmiLI8Nj7IemSf6GSvA
- vzLpd5fN1HCfBGjmnYgAAAA==
-X-Change-ID: 20250207-arm_fix_selftest-ee29dbc33a06
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, broonie@kernel.org, 
- Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1680; i=leitao@debian.org;
- h=from:subject:message-id; bh=FXr2YRk6o0W+K1SCzkVuQ0zPA5u33Pz/k+U6e+ZtLAw=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBnpemZuPdqekyA08fFjtglkBR14jqQw3Uj6Uk0V
- EAK6v/62DqJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ6XpmQAKCRA1o5Of/Hh3
- bX/WD/4rUdj3lsA1jPbgX6PH+CiNh71KZM+IKE24sNk32JMUs0ekeLZIqNltEL+R9Vt33IPTvjs
- 5EWNTIH0TnOI3gDcfbUYRqdBgGivRJ6sYdUYDHMqUhR5/7V+Q4/9uKwsludJfdhkIKvA/CpmGzV
- L+9NUd8J6KOQ2nlgOYGxCKSJrkvdB6CnnA5sHNCzv103BMpU8E+OlKCIWsZANEo9gEOr/0BhHTg
- WoZ79a7/0lFzdMWTrSiTlbboRvuuedd0tQdRqUGkIXtexuz8pQ0KK6ePj9BhZqOYnDkVsDbMppC
- dYcC62SFQRmj++AsQ1KUSJFQAjzBP5Y/GgG1PX+0iFFp792oiAeMxloI03+V/2VdY9iyHA3WmIj
- I8qUVxtvyZR5Wdc4V1VBPHwtJpcGwh6aJIOg9azqse2usQP1At+Wb+LuQCO8GOy6QtOVb6RX9Rw
- pLIio064AMoa4Fe8J4IEbNtqv+gqPIKfBLI7vQ7tEf0kNw5RQm6P32Z6q1ipgOfsfuHO41srbTQ
- ZlYpIogzy7ClYAN4ka6zqpqX35RyKi4FI76SZ56LXT386ReWB/l/O/zKb+JrjdeZ/+AJ0JRScDx
- VZAWI+tTR5dqYaDwPOUbSoHfZY8oHnrxXayVAc9IWftE3fhOjWQEp8HAo29XsN4dThRBfPniJR6
- zLrtjTZlKFbZN7g==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+Content-Type: text/plain
 
-Fix compiler warning about potentially uninitialized orig_fpmr variable:
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-	testcases/fpmr_siginfo.c: In function ‘fpmr_present’:
-	testcases/fpmr_siginfo.c:68:25: warning: ‘orig_fpmr’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-	                         fprintf(stderr, "FPMR in frame is %llx, was %llx\n",
-	                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	                                 fpmr_ctx->fpmr, orig_fpmr);
-	                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~
+> On Thu, Feb 06 2025 at 11:56, Alexander Shishkin wrote:
+>> Nam Cao <namcao@linutronix.de> writes:
+>>
+>>> hrtimers is initialized with hrtimer_init(), and after that the timer's
+>>> callback function is setup separately. This separate initialization is
+>>> error prone and awkward to use.
+>>>
+>>> hrtimer_setup() combines the initialization and is simpler to use.
+>>>
+>>> Switch to use the new setup function. Most conversions were done with
+>>> Coccinelle, see the sematic patch below.
+>>>
+>>> This series is intended to be applied to the tip tree
+>>>
+>>> v1 -> v2 https://lore.kernel.org/lkml/cover.1729865485.git.namcao@linutronix.de
+>>>   - rebase onto v6.14-rc1
+>>
+>> Link to v2 of part 1 is missing. It's also somehow not in my notmuch
+>> datadase (looked for "hrtimers: Switch to new hrtimer interface
+>> functions" -- took a guess based on v1) and is not googleable. It's kind
+>> of important for reviewing this one. v1 did have the links to the other
+>> parts, at least.
+>
+> It's archived and searchable on lore:
+>
+>   https://lore.kernel.org/all/?q=hrtimers%3A+Consolidate+hrtimer+initialization+-+Part+1
+>
+> and the third google result points to:
+>
+> https://patchwork.kernel.org/project/linux-wireless/patch/20241031-hrtimer_setup_p1_v2-v2-0-23400656575a@linutronix.de/
 
-Initialize orig_fpmr to 0 to resolve the warning.
+In the only other version that I was CC'd on, Part 1's subject line was:
+"hrtimers: Switch to new hrtimer interface functions", hence the
+confusion.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- tools/testing/selftests/arm64/signal/testcases/fpmr_siginfo.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> That part 1 series has been applied and is in mainline already.
 
-diff --git a/tools/testing/selftests/arm64/signal/testcases/fpmr_siginfo.c b/tools/testing/selftests/arm64/signal/testcases/fpmr_siginfo.c
-index e9d24685e74194fc4ed1aebdcfd4c6edd3488e1b..26818860b223d367955d96e12d423fadc304700b 100644
---- a/tools/testing/selftests/arm64/signal/testcases/fpmr_siginfo.c
-+++ b/tools/testing/selftests/arm64/signal/testcases/fpmr_siginfo.c
-@@ -40,10 +40,10 @@ int fpmr_present(struct tdescr *td, siginfo_t *si, ucontext_t *uc)
- {
- 	struct _aarch64_ctx *head = GET_BUF_RESV_HEAD(context);
- 	struct fpmr_context *fpmr_ctx;
-+	__u64 orig_fpmr = 0;
- 	size_t offset;
- 	bool in_sigframe;
- 	bool have_fpmr;
--	__u64 orig_fpmr;
- 
- 	have_fpmr = getauxval(AT_HWCAP2) & HWCAP2_FPMR;
- 	if (have_fpmr)
+Yes, I was grepping for the function that got removed. Low caffeine
+level in the bloodstream or something.
 
----
-base-commit: 0d5248724ed8bc68c867c4c65dda625277f68fbc
-change-id: 20250207-arm_fix_selftest-ee29dbc33a06
+But now that it's in mainline, I can pick up the patch intended for me
+or just ack it. Any preferences?
 
-Best regards,
--- 
-Breno Leitao <leitao@debian.org>
-
+Thanks,
+--
+Alex
