@@ -1,115 +1,99 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1E4233D90
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 06:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D88815B102
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 06:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738908807; cv=none; b=buEQ+l+4T8jgTUrZ5mVMSxb2UAkNtjVuJ1QKmimGZjZDxuz3ytGJ/OtuiDjJgNvxXiCz7NjHPoyfOQF3uiA6id97VNNA2kBqPAbicLqSZIZ5VUVxEIcP95EFlVeHlabeg3ULL3yp6XJSKzRMSb6NOvwyI0MzmfZePzQjlekF2Ew=
+	t=1738908824; cv=none; b=Z6gX07O9aZyOLFkdMDM3lfYR15BtigDag1bHu5ilRgmj9453ndiJdujVNQSoSQ7tj7v1gTgLZBM7zYNZ2sehYSaegYJNEaiSkuNYFKMkVmWEASKPh9oczvuxn1r9sWEUCrScEpidgAyrK6aZjc0BPmWdBFCTaMdMnNp6eceH4Z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738908807; c=relaxed/simple;
-	bh=Y06M5hCOP0MaetwKFX4R2tbficSbU9BmACGKYWMJz24=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BH85XjnRS8XyBJgfp8gngWskDSjhsQLrAgFd18V90Doc3VVGsHJ/Pi8ENDsUVePfo+D3wYlZINRCW0Tfx6TU+e2yXyFzOzzDHYeE5AeuuzT7WNdSrDwqkPue559bl2MaL9mYatT91unAEtiP67MbtV3tXYFadjHTwc1velPilPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jFlX92+O; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738908824; c=relaxed/simple;
+	bh=dpaZXi6Uy/hcH7ftkBr+q4yRqWSwSq17UhJiP9K/hvw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KTNuGjsTlI74n5x7I8sZsqzSRfEXZVH7fj7uYox9tmipBDLdKQFE3T+DqA/vVYWnABRxhm6AmzgPd+00xAQqUVpXV6HvRJZm57ouPNLkJ/yX7TzVQkLyjzM+staswuZmR43klRUKfJkBKtzxyhI/Gg+0jWbC5+unxilwKs7HwcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CywcktCi; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jFlX92+O"
-Date: Fri, 7 Feb 2025 01:13:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738908788;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Vp/7w+5+gHtLzNMyTTGU+CF/tisriG9HJKcgsxxRakM=;
-	b=jFlX92+OnE8ydenzK+ydzPLb2u1I4HqC5s95spytTfGnNCMvKP0vIUChpgrFUlEkEKY6ch
-	1gy8ha+LqcX1vRvEwZHpCbeGrOnBxrPmWqX0vLRUp4kG5KDNYr/kaA2AHfDl2xxXA8xEFU
-	Neb7kDfKR6Kbtwq39lPVcy/uwj/6D8M=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: NeilBrown <neilb@suse.de>
-Cc: Christian Brauner <brauner@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Steve French <sfrench@samba.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Tom Talpey <tom@talpey.com>, Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>, 
-	linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, audit@vger.kernel.org
-Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
- user_path_locked_at() to never return negative dentry
-Message-ID: <7mxksfnkamzqromejfknfsat6cah4taggprj3wxdoputvvwc7f@qnjsm36bsrex>
-References: <>
- <6p2m4jqtl62cabb2xolxt76ycule5prukjzx4nxklvhk23g6qh@luj2tzicloph>
- <173890403265.22054.8267826472424760232@noble.neil.brown.name>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CywcktCi"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21f53ad05a0so3540755ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 22:13:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738908823; x=1739513623; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dpaZXi6Uy/hcH7ftkBr+q4yRqWSwSq17UhJiP9K/hvw=;
+        b=CywcktCinJrrSZ8RfhE/ZusQeLoEdxcDEDp8E0SoDqo3VZ49FvKlycxZ5Bfwcd8bFN
+         DULTEAdMYNl9EICVVG9kFVep/HciTr4WDOeisiSfW34gw36o3TsA+hfBBBUoOMBsnhpY
+         46JEYKiXk5Fb4bef7jpRhCd2rr5zSa2I+3ruwTmCAxa8wd9ctziLYcvSle4eJM8Tr01b
+         aX4mbe60hoforfwP6IDu0Il/hBi6GDUhQ6Utt39aA82ceFq4ijuxUJVB1Y0hgsTZ9BnJ
+         IpCGDGj25JeD+6YgPnpKkTXEo2kxBIpsdv6UhwH6SY6ZAOMSEIRACoeD3fMyG/fq3yLb
+         9yJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738908823; x=1739513623;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dpaZXi6Uy/hcH7ftkBr+q4yRqWSwSq17UhJiP9K/hvw=;
+        b=EfXmCLB+TFMhfNOAAmL61u+CnZETf9lTBZ7Q43zIuJg4DeScH6lOPiIf1KaZFC5Xlm
+         S0ZwZrz1qAjHOQAI1/g/Hfu2nzBMUgpUwigM4j4DgwTRpJnGn1P3huLl35Pn7MMu5Mk8
+         E+pA5+V+N0XQ6Que7dn3b+tAh7SCNhh4FX4aXFzPpMtyDXcUY1BTFcMaF8NcqiWURP8Y
+         vPdNbqlfanQWrtuo9PG4O5v1RDoFHY/hexQeJHiYj1k7KOIe7Q3EkS4L9FwQxph/95yj
+         Gr+oUaxNQfGKTDTAYNgYD9rAQgNJLj0xlhGLYgHUVzNS/X9Y+lJpi/bxHUEjkiWYO247
+         t90A==
+X-Gm-Message-State: AOJu0YyKYQpVRT/dTlDVXEzwDRGkvHIlwuET9+MRyNDrYnG7ac72eGmi
+	7SNHbxmGcZ4yTFB3BnbbwBbeJjI/yz/RVk2o86D/HfpDNjzbNsR0
+X-Gm-Gg: ASbGncuLxIlAt6Qnm2pFrxTHs68Pza2yEqg9NLa7Fs+zVSq5JjkmJIs8qeJySjkz02Z
+	BDMoyla1yDrIMenrk+Kt2IbqiYb0DXcOH5HoLEtICtxNUf1FB8nSdYwiSYlq6R3jcb4oo17dN1M
+	TuI+AHbedmWdWJT5TVRw4hfLJE+gcclYgsKjLmY9c7sqac0zgqiPkPgObvcFTzPIWyBXC2W7uiU
+	SZ5/e5dDZiVkJSEpXg7BG2eG3w5P5xUKDyw0NE3PDBe8wBZpJkgQPg/XvwU4RLPvNO/PGvdam/M
+	bLyNBqD/e3X0BhsQKnxeN9yTJlbmA3k=
+X-Google-Smtp-Source: AGHT+IF4EkR2ivum3VmCCnQST1j5wS2JtDBDxrrrHIhvikkKNyJhNf7xmvHNcQK8Y7WFxmLFlh6IAg==
+X-Received: by 2002:a05:6a21:170f:b0:1e0:c56f:7daf with SMTP id adf61e73a8af0-1ee03a21dddmr4313077637.6.1738908822661;
+        Thu, 06 Feb 2025 22:13:42 -0800 (PST)
+Received: from [172.20.10.11] ([49.130.99.55])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048bf13absm2255060b3a.114.2025.02.06.22.13.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 22:13:42 -0800 (PST)
+Message-ID: <f48c3c74-5693-40b9-a869-577e2fbb5069@gmail.com>
+Date: Fri, 7 Feb 2025 14:13:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173890403265.22054.8267826472424760232@noble.neil.brown.name>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: Remove myself
+To: Hector Martin <marcan@marcan.st>, Arnd Bergmann <arnd@arndb.de>,
+ Olof Johansson <olof@lixom.net>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, asahi@lists.linux.dev, soc@lists.linux.dev
+References: <20250207-rm-maint-v1-1-10f069a24f3d@marcan.st>
+Content-Language: en-US
+From: Nick Chan <towinchenmi@gmail.com>
+In-Reply-To: <20250207-rm-maint-v1-1-10f069a24f3d@marcan.st>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 07, 2025 at 03:53:52PM +1100, NeilBrown wrote:
-> On Fri, 07 Feb 2025, Kent Overstreet wrote:
-> > On Fri, Feb 07, 2025 at 02:36:47PM +1100, NeilBrown wrote:
-> > > No callers of kern_path_locked() or user_path_locked_at() want a
-> > > negative dentry.  So change them to return -ENOENT instead.  This
-> > > simplifies callers.
-> > > 
-> > > This results in a subtle change to bcachefs in that an ioctl will now
-> > > return -ENOENT in preference to -EXDEV.  I believe this restores the
-> > > behaviour to what it was prior to
-> > 
-> > I'm not following how the code change matches the commit message?
-> 
-> Maybe it doesn't.  Let me checked.
-> 
-> Two of the possible error returns from bch2_ioctl_subvolume_destroy(),
-> which implements the BCH_IOCTL_SUBVOLUME_DESTROY ioctl, are -ENOENT and
-> -EXDEV.
-> 
-> -ENOENT is returned if the path named in arg.dst_ptr cannot be found.
-> -EXDEV is returned if the filesystem on which that path exists is not
->  the one that the ioctl is called on.
-> 
-> If the target filesystem is "/foo" and the path given is "/bar/baz" and
-> /bar exists but /bar/baz does not, then user_path_locked_at or
-> user_path_at will return a negative dentry corresponding to the
-> (non-existent) name "baz" in /bar.
-> 
-> In this case the dentry exists so the filesystem on which it was found
-> can be tested, but the dentry is negative.  So both -ENOENT and -EXDEV
-> are credible return values.
-> 
-> 
-> - before bbe6a7c899e7 the -EXDEV is tested immediately after the call
->   to user_path_att() so there is no chance that ENOENT will be returned.
->   I cannot actually find where ENOENT could be returned ...  but that
->   doesn't really matter now.
-> 
-> - after that patch .... again the -EXDEV test comes first. That isn't
->   what I remember.  I must have misread it.
-> 
-> - after my patch user_path_locked_at() will return -ENOENT if the whole
->   name cannot be found.  So now you get -ENOENT instead of -EXDEV.
-> 
-> So with my patch, ENOENT always wins, and it was never like that before.
-> Thanks for challenging me!
+Hector Martin 於 2025/2/7 凌晨2:21 寫道:
 
-How do you always manage to be unfailingly polite? :)
+> I no longer have any faith left in the kernel development process or
+> community management approach.
+>
+> Apple/ARM platform development will continue downstream. If I feel like
+> sending some patches upstream in the future myself for whatever subtree
+> I may, or I may not. Anyone who feels like fighting the upstreaming
+> fight themselves is welcome to do so.
 
-> 
-> Do you think there could be a problem with changing the error returned
-> in this circumstance? i.e. if you try to destroy a subvolume with a
-> non-existant name on a different filesystem could getting -ENOENT
-> instead of -EXDEV be noticed?
+Hi marcan,
 
--EXDEV is the standard error code for "we're crossing a filesystem
-boundary and we can't or aren't supposed to be", so no, let's not change
-that.
+It is sad to see you go, I believe there are issues in the kernel development process as well.
+Aside from Apple Silicon Macs, your work has greatly simplified the work
+required for booting Linux on iPhones and iPads. However, Sven Peter is still listed as
+maintainer, so for upstream purposes, will the https://github.com/asahilinux/linux tree be used
+in the future,  or perhaps the tree should be removed from the MAINTAINERS file as well?
+
+Nick Chan
+
