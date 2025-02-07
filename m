@@ -1,87 +1,151 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2394F1F75A9
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 13:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2F71F8AE8;
+	Fri,  7 Feb 2025 13:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738936754; cv=none; b=R3vEL9FA9YH48FLQ5czqDGoQgozlPKyKUpEAgtdd389hvQcvUmdTXIuVNRrjyEAz3FYDjHpDvqQtOiDrH2/cnFPtyCeUIAMCC5+nlugKD7MH8tmkBH+zJSRnoGCzvImU3Uzz86e1HRt1ewqNVRVehw3iGIsyxVWrvxAdpvvF8Qw=
+	t=1738936769; cv=none; b=g/Z6zFzAFV57ZbPEPCvP4iNftStF3ZfU6786/o4iNYYKefLRUGbvI9YyW/MkNr9bmQnAkGdwc86OrQ5Trc7iqUV/iOwQxIOkjI5MXKsmmY6x/ysJw4QgXEuIDq7AS9Fde46k1LXU3pqJCnW1Hwp8NtpbEV1PU8n4LqqEmSBjTh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738936754; c=relaxed/simple;
-	bh=0l8kweRthgYGr7UBlp1dQcOEiAVowRzgn/fvw39kwak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B5Nh5H0EvSStUMnx4pmscN4clCrootcDR3VKR+pKEK4Sja/4ZyLcjMa51EGo91woz55607RcR0MYFQ/8zSJGGiGTcYQgQ1CwlU4KlML1QIvviCYeIQ5yrmlT1If5kGat1IDIaODH9UWUMVBlmC3FYPKVeHWR3l4lGdnN1UeQj/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dp1t04UJ; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738936769; c=relaxed/simple;
+	bh=1Z1+NL8yeZN9e9Y7PheCaIDo410qxsv0w5WsGMG7jd0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=raBKmKGl5VwRGk/tLKnNNGou6PwcE9PozQtqqlqQM7ggdph6tSRad5IUfcTptP0CLjJva+ZvbQesv9IZTrpLaGTEPwy7AclRQ/0BdKr+3gkUmS+cge6zWC1PLXlLXm0ftDgk5p6edDZ/LlxO5sCrl5zA/Il4dfswE/sygjXBwMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mzb3v+O1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dp1t04UJ"
-Date: Fri, 7 Feb 2025 08:58:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738936744;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oH61fgoorFlv6J6tutTmJBpTb7/hGMeEYiEOFwLSzq0=;
-	b=dp1t04UJay0KUgcxxmbjZ/1v44d1PCMZxanYmUV2FiMyhwYw94fCXzK683+T3r+ZkffIw8
-	4HYsJPnYJRdvakJ01ddjqVCjPj6KKsgwHly2FXKMIkuFM1QZsf5ph1i0l4zqMq4NUZwD0R
-	uFboieL8sYwXG3tuOYARGiV6hwwEj20=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Kees Cook <kees@kernel.org>
-Cc: Suren Baghdasaryan <surenb@google.com>, 
-	Andy Shevchenko <andy@kernel.org>, Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Philipp Reisner <philipp.reisner@linbit.com>, Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH 2/3] compiler.h: Introduce __must_be_char_array()
-Message-ID: <b3quyvbfszsimhotsooftcssesjc7zi5hci3o4oasz4bnktfzn@l5qpvyt4rj6n>
-References: <20250206175216.work.225-kees@kernel.org>
- <20250206181133.3450635-2-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mzb3v+O1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FFEBC4CED1;
+	Fri,  7 Feb 2025 13:59:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738936769;
+	bh=1Z1+NL8yeZN9e9Y7PheCaIDo410qxsv0w5WsGMG7jd0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Mzb3v+O1yft7lyMAZukW4IvRF/4p4M+QvJmVnThgZ0WEbmtS6NyFmRepo0k8BLIJa
+	 Xkwsjs1Zlm6akochNdwETzOFJ2kdNMxDEvMuze1HS29qaBl0WOkbkETMszAMGQLjHP
+	 NyZpCNIypjPvr1aDrKC7lIqpWAvjLOmN38eJq/nhIxxcBQIt6Shp3+b5L7lTMafTTz
+	 AajnQzKZDCfTviUQAtbllGiERkWHj8kS6Ydv0V1bjcsvqM7LNAHfXpBlfLQl6bCLyz
+	 6JyRR4jb5Gocd51o9/qEdw0qn7wpCXQdkWS3Ixag5XHvgQQL6tv6xhzaJzPCVWpXAm
+	 waopiT4KtXTPw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next v3 00/15] mptcp: pm: misc cleanups, part 2
+Date: Fri, 07 Feb 2025 14:59:18 +0100
+Message-Id: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-0-71753ed957de@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206181133.3450635-2-kees@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALYRpmcC/43NTQrDIBAF4KsE152i5qfSVe9RukjMmEgTI2olJ
+ eTuFaHQ7rKYxeMx39uIR6fRk2uxEYdRe72YFMpTQeTYmgFB9ykTTnlNGWvAYEi3BphtkBbsDLP
+ 2EuSErXlZ4NBRVVNUSlBRkcRYh0qveeJOvt/kkZpR+7C4d96OLPfHZyIDCpJ2VamYUEib2xOdw
+ em8uCHrkf+KlwMiT2LD+ipptWhQ/In7vn8Aa58GOy0BAAA=
+X-Change-ID: 20250116-net-next-mptcp-pm-misc-cleanup-2-b0f50eff8084
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3259; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=1Z1+NL8yeZN9e9Y7PheCaIDo410qxsv0w5WsGMG7jd0=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnphG9lRnBPv0YSIvaVRrtU+I7VLFpBVrB9xAAl
+ BLUnk2aJPuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ6YRvQAKCRD2t4JPQmmg
+ c/EhEACZCiM5ZIeuwZ+3CHKHFdEgVVN2YnO5FlDtlHlI1q5As9P+6yDHuGyRCMaT555HwYVV9pv
+ 7dNJEJeDtvLZlMwEjVHrpOWw4lbIgfxKnIQgq3cf1ULy2gnuRVBz5A6W9Yvyp4x8dYdjgsLG02y
+ Y//9IIs4dbGGzuSksVISmpVnbJLWz3XfDKadjLVIIDPYkl9gA10G4LAcvhJeKDfWhYpWWS240t4
+ fPXHsSkpf6o3GiKSsBMd7DXXOv+qvVT0Fpx+7XYr9UZGlzaR9eHuY+hhRasX4OrFoGbWsaWp2Ll
+ XzBhhCsdQHuAIezCLxPB0y/lEbj+5ywZ+4nnX0qmxKTCReCQ3egNBBHdTYdFzKZwStDPOQzjYhY
+ mEYj8s4xsIxIJDnZ9hDwgQdnKoFhvZMxoM06S+dkiWiya7Ult6w4RSEuilv6SMzjIjirO2ItVoL
+ IdTvStg1hnABUOU4qFnJgPnzkTJ8/lU1x/tPg3a9sNh66Ygpbq5Jno8ka6eP+fcM3yokKFpjys6
+ oHYYeYCUWE1H72c95YSN5VJm7UmqXli4aWD36tKw3KnTXDs25OLegJdAUCOapD5q5WsQYMlPdcK
+ 7LbNAcv4vMjBwyF5PpiWK3Oq0j0ahHeH7Fh/im83ZvFFvNAGgQ2045wKAL5klR1PnmfyArDtZu4
+ asCpKIDh8g/MQCQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Thu, Feb 06, 2025 at 10:11:29AM -0800, Kees Cook wrote:
-> In preparation for adding stricter type checking to the str/mem*()
-> helpers, provide a way to check that a variable is a character array
-> via __must_be_char_array().
-> 
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
->  include/linux/compiler.h | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-> index 7af999a131cb..a577fe0b1f8a 100644
-> --- a/include/linux/compiler.h
-> +++ b/include/linux/compiler.h
-> @@ -221,7 +221,13 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
->  #endif /* __CHECKER__ */
->  
->  /* &a[0] degrades to a pointer: a different type from an array */
-> -#define __must_be_array(a)	__BUILD_BUG_ON_ZERO_MSG(__same_type((a), &(a)[0]), "must be array")
-> +#define __is_array(a)		(!__same_type((a), &(a)[0]))
-> +#define __must_be_array(a)	__BUILD_BUG_ON_ZERO_MSG(!__is_array(a), \
-> +							"must be array")
-> +
-> +#define __is_char_array(a)	(__is_array(a) && sizeof((a)[0]) == 1)
-> +#define __must_be_char_array(a)	__BUILD_BUG_ON_ZERO_MSG(!__is_char_array(a), \
-> +							"must be byte array")
->  
->  /* Require C Strings (i.e. NUL-terminated) lack the "nonstring" attribute. */
->  #define __must_be_cstr(p) \
-> -- 
-> 2.34.1
-> 
+These cleanups lead the way to the unification of the path-manager
+interfaces, and allow future extensions. The following patches are not
+all linked to each others, but are all related to the path-managers.
 
-Why not just use a combination of ARRAY_SIZE() and a function call
-(to verify that it's a character array) for the typechecking?
+- Patch 1: drop unneeded parameter in a function helper.
+
+- Patch 2: clearer NL error message when an NL attribute is missing.
+
+- Patch 3: more precise NL messages by avoiding 'this or that is NOK'.
+
+- Patch 4: improve too vague or missing NL err messages.
+
+- Patch 5: use GENL_REQ_ATTR_CHECK to look for mandatory NL attributes.
+
+- Patch 6: avoid overriding the error message.
+
+- Patch 7: check all mandatory NL attributes with GENL_REQ_ATTR_CHECK.
+
+- Patch 8: use NL_SET_ERR_MSG_ATTR instead of GENL_SET_ERR_MSG
+
+- Patch 9: move doit callbacks used for both PM to pm.c.
+
+- Patch 10: drop another unneeded parameter in a function helper.
+
+- Patch 11: share the ID parsing code for the 'get_addr' callback.
+
+- Patch 12: share sending NL code for the 'get_addr' callback.
+
+- Patch 13: drop yet another unneeded parameter in a function helper.
+
+- Patch 14: pick the usual structure type for the remote address.
+
+- Patch 15: share the local addr parsing code for the 'set_flags' cb.
+
+The behaviour when there are no errors should then not be modified.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v3:
+- Patch 11: a variable was no longer assigned in pm_userspace.c, but
+  still used in this patch (and no longer in the next one). (Geliang)
+- Rebased on top of the latest net-next.
+- Link to v2: https://lore.kernel.org/r/20250117-net-next-mptcp-pm-misc-cleanup-2-v2-0-61d4fe0586e8@kernel.org
+
+Changes in v2:
+- Patch 11: a variable was no longer assigned in pm_netlink.c, but still
+  used in this patch (and no longer in the next one). (Simon)
+- Link to v1: https://lore.kernel.org/r/20250116-net-next-mptcp-pm-misc-cleanup-2-v1-0-c0b43f18fe06@kernel.org
+
+---
+Geliang Tang (9):
+      mptcp: pm: drop info of userspace_pm_remove_id_zero_address
+      mptcp: pm: userspace: use GENL_REQ_ATTR_CHECK
+      mptcp: pm: make three pm wrappers static
+      mptcp: pm: drop skb parameter of get_addr
+      mptcp: pm: add id parameter for get_addr
+      mptcp: pm: reuse sending nlmsg code in get_addr
+      mptcp: pm: drop skb parameter of set_flags
+      mptcp: pm: change rem type of set_flags
+      mptcp: pm: add local parameter for set_flags
+
+Matthieu Baerts (NGI0) (6):
+      mptcp: pm: userspace: flags: clearer msg if no remote addr
+      mptcp: pm: more precise error messages
+      mptcp: pm: improve error messages
+      mptcp: pm: remove duplicated error messages
+      mptcp: pm: mark missing address attributes
+      mptcp: pm: use NL_SET_ERR_MSG_ATTR when possible
+
+ net/mptcp/pm.c           |  86 +++++++++++++++++--
+ net/mptcp/pm_netlink.c   | 129 ++++++++++-------------------
+ net/mptcp/pm_userspace.c | 209 +++++++++++++++++++++--------------------------
+ net/mptcp/protocol.h     |  14 ++--
+ 4 files changed, 225 insertions(+), 213 deletions(-)
+---
+base-commit: 26db4dbb747813b5946aff31485873f071a10332
+change-id: 20250116-net-next-mptcp-pm-misc-cleanup-2-b0f50eff8084
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
