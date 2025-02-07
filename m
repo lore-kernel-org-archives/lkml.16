@@ -1,67 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6711E0B67;
-	Fri,  7 Feb 2025 18:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA2518DB21
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738953793; cv=none; b=Wea1LSPTnHqjP67PasoEyqEYoANHH4e0pVgy8SpBE4ZOEyQsH5sAf9WGEYxpyw7hmRTEGVt1t2WltnytPYrRpwbxGt51fbdigQM/ay7nZUAwPZ0rC20hA8dvHpfm+c9aaGUjmW9nlLO/h+hRc9Sr7Y4d1Z/uDy/dLS6pRLtTiWo=
+	t=1738953841; cv=none; b=aV3lsBWV7zDbZSrO+E7uzDkK2W/AvNCEtasZHWZzzcmf78fw9rF9UeWW/ZyS1xtsfH4OVP8Hq7cVDVOsSr59SYr+r8Aw4NVyY5pQ3GxDr//ye9d4jV8tAuHGmT3Q60um/Rd/0XIgXMeN5RIXzXs+ZADjfoU571lwS+FRnE61POU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738953793; c=relaxed/simple;
-	bh=uQ3hGuuf3OdVGwEjm4mb3pArFZK2tH7SsHoP0wcX/YA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uUeezEEowPTmWr/wyrrBOMYdNxPNgoF1V2cHvtbMVKePE9VQGEKzdEKTezWZSI95BvR+1WrXl9YXGWmfqoXuPQf3xtYmaIR6z3N/PpkDXgfsCckMHFVag8vYwOWlBYq+AMRx7bggK2bm0eF2YUTVUMIsFfUMOHyu3B0tI47X5l4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y4rlCoh/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738953841; c=relaxed/simple;
+	bh=xw9ohBuPP1PHhzXIhvS4ajE+J30QQt9YlU3w3geOk/A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=Gm1fWCbXFPB7bl+gy6fJ+kBAmGBeljZsWNmjlTZ4L9JImUx4uktFnH/lHoOPw8qLph5BmadwpehZvO8hpXkVDvCSCxV5zpzvBQan3xggFNDz2mLf0r8SfU/4H4m2mW0KbvA8hN9B9/nnsXb3RHPcnTnI1X+C7x6ZJ0vDB5GjVqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RIxfjyIQ; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y4rlCoh/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ECB1C4CEE2;
-	Fri,  7 Feb 2025 18:43:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738953792;
-	bh=uQ3hGuuf3OdVGwEjm4mb3pArFZK2tH7SsHoP0wcX/YA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Y4rlCoh/aFPXcw6HrYxD9G2WKbjQ9jgl5HJ4Dj3c9mJsQyV9CifBmE8gXCABtIzGI
-	 Nd3auIDwraIPlN3kdFPZWv96yrT+mM0V+o4hvorodpKGyZKN33loCxIIBDsfrL6f15
-	 o1MzmcyYMBJH8OHygyNvrDBZTnFVPtuVCTikACqTtMKyBUkzZHhfTaZPurLm+Fd3Q8
-	 fKcH2FdJzioer/rILpjUuQyjyZpLc7tclo9Nm7wkXExK0B5Bp/BKUfO0bEVp9KEpew
-	 kPmTEy+r+0RvsWdvg+o9Vku4HbhspfrSM83H+yACU3kPdg872bgwjjN/ZtDFcqwTHs
-	 qPR370nT2IE6w==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH] kconfig: remove unnecessary cast in sym_get_string()
-Date: Sat,  8 Feb 2025 03:42:48 +0900
-Message-ID: <20250207184251.497856-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RIxfjyIQ"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d146357fb2so15115ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 10:43:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738953839; x=1739558639; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6mDqitGlbkpJDuH2VQz6cbRcchYfLHIJ0XpphkGi3Js=;
+        b=RIxfjyIQEE6tmOlc76GtiQ9Fop2slikiU6BhLmis+E2Z8c0HKxcbX1SyuPUkqGh1pQ
+         O9okYgULkl1TadIQUiUV24+vBcMNFjC9Xk0XvZglrpXdXvJ+g0d5j9mBYhDLmKruag1J
+         bM9ayE1O+fjyKH8wzXXCiPWWfGoZDaIo5TM+ZQaSgFlSVS+IdoJa28PNG8jCV8NIexnC
+         wRsfBavlZJQ0+OvRuvvbEi9AdDE+F7nh5iWvBa2cuhM6IJnzaIhOELrwxmRZ4/Apgq7N
+         uk3RmEQENd0VNqrM7u7gF1jRqLu2CwDuyEWhjGiLoYCg0M6goOgOa6Uyh2wkuKDr3B9U
+         M01g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738953839; x=1739558639;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6mDqitGlbkpJDuH2VQz6cbRcchYfLHIJ0XpphkGi3Js=;
+        b=YivMkTPRlGBjWhLhBpjs4UXhtAMGp0qoonpSdd9I47PuO/HJEhzwIh/pPuJThlM7UM
+         tgzel9dx0frc4vmBtYAKn6nWm0pNKK0QIizJaC5FrG4MJS8p2h3B1UdE2H1AyO+DZsWP
+         MokA2MOZ2ewGSXJmO5IurVarkI/zjfm+gMRQvus4cd1vB6cicEOp5F8Fi5h7Pyz55uZf
+         hMJhBHMhseriD8u0NpWkpiHNFR4tg8nA5HjC6M+ueQXXsRLi3uJC610/toi1/kfHP9DL
+         6o9JTnejEIq5J71lL7JhG1P8JHRkiAPjzpUncG2Q8phMHGE4EglHYzI7QNNNOJA9ohAf
+         en7g==
+X-Forwarded-Encrypted: i=1; AJvYcCVw4FusehfZLYMOMuI7SuznJbe0yIox9IbNfD9ZUG104z/L7J1bBBDhY70xh+LdeBPrda/FLs1c/c26hp0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzV2BvumpU8fXCwrb4Bev1Gj0wqB91+xrNgmOL12GyNDwNqmQUi
+	LUAlutihiBXngpALr6C1YXXY9Q2C2BacCJQUKE340cfB3zm2S/E6tH8agqSPXHgzQHypYhcz3zb
+	dLOB8xExhLMcKYCRVc7aDfNLmRxFjmTOT4gjD
+X-Gm-Gg: ASbGncsj6GUv7Vghxbu4yMZofc2gpOJO45OtnZxHMeKOGPlfx0RO1IviGkW/8+7IKjK
+	8F3OKopf956qgwVT0XL3Khcz1ttThFOPMfUIXa6iP/qq53GRAl4BjHyoiUi2EI4pMYWir24yUrA
+	==
+X-Google-Smtp-Source: AGHT+IGtx+KhQ0Wp6EnPXlhGbxviAiV0er36lH83UOAXDy+Sv0GePUrKiEEeXyEc3GpCohWzxjIF2aL+e7w3TombAck=
+X-Received: by 2002:a05:6e02:b43:b0:3a7:a468:69df with SMTP id
+ e9e14a558f8ab-3d13f1a450bmr3027925ab.3.1738953838625; Fri, 07 Feb 2025
+ 10:43:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250207181959.799610-1-irogers@google.com>
+In-Reply-To: <20250207181959.799610-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 7 Feb 2025 10:43:47 -0800
+X-Gm-Features: AWEUYZnga4RiZjiKLQPC3fg6oFt8l1tDjda97Q4LcvzQqzhyY6N9r3ifhBfozA8
+Message-ID: <CAP-5=fWEvr+r39Yw46W6uNbKWoxxPoJ=_xNqZkJSFUEpVc2Wug@mail.gmail.com>
+Subject: Re: [PATCH v6 00/24] Intel vendor events and TMA 5.02 metrics
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>, 
+	Michael Petlan <mpetlan@redhat.com>, Thomas Falcon <thomas.falcon@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The explicit casting from (char *) to (const char *) is unneeded.
+On Fri, Feb 7, 2025 at 10:20=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Update the Intel vendor events to the latest.
+> Update the metrics to TMA 5.02.
+> Add Arrowlake and Clearwaterforest support.
+> Add metrics for LNL and GNR.
+> Address IIO uncore issue spotted on EMR, GRR, GNR, SPR and SRF.
+>
+> The perf json was generated using the script:
+> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+> with the generated json being in:
+> https://github.com/intel/perfmon/tree/main/scripts/perf
+>
+> Thanks to Perry Taylor <perry.taylor@intel.com>, Caleb Biggers
+> <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>,
+> Weilin Wang <weilin.wang@intel.com>, Kan Liang
+> <kan.liang@linux.intel.com> and Thomas Falcon
+> <thomas.falcon@intel.com> for helping get this patch series together.
+>
+> v6: Add Default metric groups for new models (Kan). Fix TSC and
+>     C-State metrics (Tom).
+> v5: Remove Valkyrie metrics mistakenly added on atom. Ensure "perf all
+>     metrics test" doesn't skip for missing events.
+> v4: Fix TSC events on hybrid mistakenly specifying the core PMU
+>     inhibiting the use of the msr PMU.
+> v3: Fixes for hybrid metrics that were missing PMU. Update to the
+>     latest events.
+> v2: Fix hybrid and Co-authored-by tag issues reported by
+>     Arnaldo. Updates to Lunarlake and Meteorlake events. Addition of
+>     Clearwaterforest.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+I've spotted that ARL, LNL and MTL are missing the Default metric
+group for TopdownL1 on atom cores in this patch set. Sorry for the
+noise, there will be a v7.
 
- scripts/kconfig/symbol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
-index 7beb59dec5a0..d57f8cbba291 100644
---- a/scripts/kconfig/symbol.c
-+++ b/scripts/kconfig/symbol.c
-@@ -879,7 +879,7 @@ const char *sym_get_string_value(struct symbol *sym)
- 	default:
- 		;
- 	}
--	return (const char *)sym->curr.val;
-+	return sym->curr.val;
- }
- 
- bool sym_is_changeable(const struct symbol *sym)
--- 
-2.43.0
-
+Thanks,
+Ian
