@@ -1,78 +1,101 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165D12206A0
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6E813BAE4;
+	Fri,  7 Feb 2025 14:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738939317; cv=none; b=rB4MittTFH3XqL1aeoE1viLN8WYF4jODoiP2AzD9qy7guzO6xZj15DB6CkmOQvJcr3cTouaOwpXxJenASnLN62qvFcm9yi/6+4Lr6u3oQPzb10SAOsQtsmc8cFrTSeO/mjzRYka8jWLsCcONOI7VnsrFU7mvZqMoF8byQUfXrE4=
+	t=1738939382; cv=none; b=SxJpRox7+OpxnVXscU6H+OFjePQj+uMP+XixD8GOIZ19NT3FpB8S+1Nkk3fH3vQsM2Wh+LfpcH3yFn5Ujuayb10jY5ENw1o42t2JlJlLgzAH4NMPoz9yvHZT9+GVZvWS0Ulqiw0bJsK0yGKPfU+JjmFQpqc/lkl2YeRiqQxx670=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738939317; c=relaxed/simple;
-	bh=Xw5LjzfhjaQii1Qy1nV7yusM+UcRAZ3+6y3iLh6xEkQ=;
+	s=arc-20240116; t=1738939382; c=relaxed/simple;
+	bh=GaRceLLlogc4o9OjwuUlKdf9YKZMOrqTjM3515LS+Rw=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=H5xZhse8qLzXS60m7o3TSK7MDjy699qWw64LkrbDMp+KG1pXnUYtaO8iNYPP6SryC7DH/qRK7Nmzw8rmwJ3iFGM+orOFBG4EFfLOWuL62JyDt0tqHG9THszyuRMBBhgZfiZIg0/FN5hi5VpyBccbQG+1KmV666zOZ7HzU3kytLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=l7Ah+102; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	 MIME-Version:Content-Type; b=mAxw5YXUSR3vrSBdVTLe5jfhaQfOjX4yMeGWowgNlbzX4lLAaemjGwBpNfdami6/f7Z1uhTtH9xMtsdPJnJzsRmqFQGPG/pfwepfSbgH78LjMOpqFwlStFJ1GIgghyjqJorXXzyiYuSqlfkSAxl16s9ifuhN2htaxVXUKLAP5xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uwqW32XE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jtOnsBd2; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="l7Ah+102"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F287B4432C;
-	Fri,  7 Feb 2025 14:41:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738939313;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uwqW32XE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jtOnsBd2"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738939374;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Xw5LjzfhjaQii1Qy1nV7yusM+UcRAZ3+6y3iLh6xEkQ=;
-	b=l7Ah+102SX+DPU9iK6kWo9mBvTrHy9XlCzlq9tTyLw51+akOb82lPcKYnJ5SgC1xqBaje1
-	itxODv10n/X/cfCDi5OcShipqQAbQhBykOwFF1QrPcjk5DSMLfG1a+dfPnKd7Fglp9heZz
-	WRrhlm5zmmJAZHFVD+RGOdsuvGOZfhr51S3qB2DHJXlnI75yoInx+RG4av2Usc5CYd95kI
-	2JrmVO11J655bBRJuskQL2NNXwzun/cWqDCtlu///GHlcZX9pJ+wuq1VvEqaZhxxA+IOx2
-	Q5SJ6BZnStrq27db8wWIkyJyBttncchUwtRmcNmg4vFb1VMIm27/hxGylu7bXw==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Martin Kurbanov <mmkurbanov@salutedevices.com>
-Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
- <vigneshr@ti.com>,  Ezra Buehler <ezra.buehler@husqvarnagroup.com>,  Cheng
- Ming Lin <chengminglin@mxic.com.tw>,  Pratyush Yadav
- <pratyush@kernel.org>,  Daniel Golle <daniel@makrotopia.org>,  Frieder
- Schrempf <frieder.schrempf@kontron.de>,  Alexey Romanov
- <avromanov@salutedevices.com>,  <linux-kernel@vger.kernel.org>,
-  <linux-mtd@lists.infradead.org>,  <kernel@salutedevices.com>
-Subject: Re: [PATCH v4 0/6] mtd: spinand: add OTP support
-In-Reply-To: <20250127153848.199526-1-mmkurbanov@salutedevices.com> (Martin
-	Kurbanov's message of "Mon, 27 Jan 2025 18:38:18 +0300")
-References: <20250127153848.199526-1-mmkurbanov@salutedevices.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 07 Feb 2025 15:41:51 +0100
-Message-ID: <87jza124wg.fsf@bootlin.com>
+	bh=CkeDqYa1HLfts95iCxAWRO24Np4zPeA8eWDtJpHaVXY=;
+	b=uwqW32XETTfe2u7CGshYrBNeAd+It/c+WnC1sALbfdPFvSaCtEi7ErbTUgR20g6mvbu/M/
+	uyvL6Ru9wTI1Y0k9fNu8yDrlaUV2ObuZoPfcTi3xIleR68BXK9QKXuoRiyttaV7PTP0ToX
+	CpdmTtj8Gh+78L3eD8joO+se52SZdPVUImCVceOqlT5aSIJjg7ajcZi5g8reOqVnNJNWNN
+	y7uOinjdrR/DeMZQnvZ9J7QX7HY7bNnhgHbtN0EbdUw7g+C+tHDuSX7687DWMztvSYlAP6
+	l5zNYX6/GNhCbR0TZkryf+LybkBfHCcigSqJQzRD/JXEeIOJP7CRm15wLJa+FQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738939374;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CkeDqYa1HLfts95iCxAWRO24Np4zPeA8eWDtJpHaVXY=;
+	b=jtOnsBd24wYOO8DUY4nJeuOxusWoOJiTGUPwTktLczqPvXUzX1fViIYAMoXBFt08EuQf8G
+	aOJ7fsBoWZzxXVBg==
+To: Jason Gunthorpe <jgg@nvidia.com>, Nicolin Chen <nicolinc@nvidia.com>,
+ robin.murphy@arm.com, maz@kernel.org
+Cc: will@kernel.org, kevin.tian@intel.com, alex.williamson@redhat.com,
+ joro@8bytes.org, shuah@kernel.org, reinette.chatre@intel.com,
+ eric.auger@redhat.com, yebin10@huawei.com, apatel@ventanamicro.com,
+ shivamurthy.shastri@linutronix.de, bhelgaas@google.com,
+ anna-maria@linutronix.de, yury.norov@gmail.com, nipun.gupta@amd.com,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+ jean-philippe@linaro.org, mdf@kernel.org, mshavit@google.com,
+ shameerali.kolothum.thodi@huawei.com, smostafa@google.com,
+ ddutile@redhat.com
+Subject: Re: [PATCH RFCv2 00/13] iommu: Add MSI mapping support with nested
+ SMMU
+In-Reply-To: <20250207143402.GA3651395@nvidia.com>
+References: <cover.1736550979.git.nicolinc@nvidia.com>
+ <20250207143402.GA3651395@nvidia.com>
+Date: Fri, 07 Feb 2025 15:42:54 +0100
+Message-ID: <87lduhlssx.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleehgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtohepmhhmkhhurhgsrghnohhvsehsrghluhhtvgguvghvihgtvghsrdgtohhmpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopegviihrrgdrsghuvghhlhgvrheshhhushhqvhgrrhhnrghgrhhouhhprdgtohhmpdhrtghpthhtoheptghhvghnghhmihhnghhlihhnsehmgihitgdrtghomhdrt
- hifpdhrtghpthhtohepphhrrghthihushhhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhesmhgrkhhrohhtohhpihgrrdhorhhgpdhrtghpthhtohepfhhrihgvuggvrhdrshgthhhrvghmphhfsehkohhnthhrohhnrdguvg
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain
 
-Hello Martin,
+On Fri, Feb 07 2025 at 10:34, Jason Gunthorpe wrote:
+> On Fri, Jan 10, 2025 at 07:32:16PM -0800, Nicolin Chen wrote:
+>> Though these two approaches feel very different on the surface, they can
+>> share some underlying common infrastructure. Currently, only one pair of
+>> sw_msi functions (prepare/compose) are provided by dma-iommu for irqchip
+>> drivers to directly use. There could be different versions of functions
+>> from different domain owners: for existing VFIO passthrough cases and in-
+>> kernel DMA domain cases, reuse the existing dma-iommu's version of sw_msi
+>> functions; for nested translation use cases, there can be another version
+>> of sw_msi functions to handle mapping and msi_msg(s) differently.
+>> 
+>> To support both approaches, in this series
+>>  - Get rid of the duplication in the "compose" function
+>>  - Introduce a function pointer for the previously "prepare" function
+>>  - Allow different domain owners to set their own "sw_msi" implementations
+>>  - Implement an iommufd_sw_msi function to additionally support a nested
+>>    translation use case using the approach (2), i.e. the RMR solution
+>>  - Add a pair of IOMMUFD options for a SW_MSI window for kernel and VMM to
+>>    agree on (for approach 1)
+>>  - Add a new VFIO ioctl to set the MSI(x) vector(s) for iommufd_sw_msi()
+>>    to update the msi_desc structure accordingly (for approach 2)
+>
+> Thomas/Marc/Robin, are we comfortable with this general approach?
+> Nicolin can send something non-RFC for a proper review.
+>
+> I like it, it solves many of the problems iommufd had here and it
+> seems logical from the irq side.
 
-On 27/01/2025 at 18:38:18 +03, Martin Kurbanov <mmkurbanov@salutedevices.co=
-m> wrote:
-
-> This patchset implements the SPI-NAND OTP functions to allow access to
-> the SPI-NAND OTP data.
-> Specific support is added for Micron MT29F2G01ABAGD and ESMT F50L1G41LB/
-> F50D1G41LB flash chips.
-
-The series is ready for me, but it looks like you aren't based on the
-latest -rc1 which produces conflicts while applying. Can you please send
-a rebased version? (conflicts should be easy to handle).
+I haven't seen anything horrible. My main concern of having a proper
+cached and writeable message is addressed.
 
 Thanks,
-Miqu=C3=A8l
+
+        tglx
