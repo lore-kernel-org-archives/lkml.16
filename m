@@ -1,109 +1,182 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F46A80BFF;
-	Fri,  7 Feb 2025 10:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719BA80BFF;
+	Fri,  7 Feb 2025 10:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738923875; cv=none; b=lfWVU4UIAtAfcd2M1TZ9SSHdkiR0FBhrQ6nFDfEkeKohn2IuEQCK24qWq1sCDaVZQMl1LHgBFK7CPv3KxJU62+pLhUwbdb+ed1HEVsJqI5nK4qhAlbu/GnOSrVK9xOfgDqm+F8kkm75+kURpyPHQmK6VMrt7Q495CmUn3T9sJt0=
+	t=1738923956; cv=none; b=sznSd+J9folzB9Wi2XSlp33WOh+0vazQTa0TvSC8DLynMjOIVZ3ueBR+HLmid6scVSKoqcBWXFiFv/t09JY8aDmHRaYfRxOo1fHZ+jJY2bgV6waAVOZFHqPyvyjzJT/d7GcZqH6aIg3mdRJKS6Fj/lI44gA/4HO2Onfa/D/eRbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738923875; c=relaxed/simple;
-	bh=FN7MfmtdvXq1POuExLAk+7+wSvYvFRPnOI7xvfhHDB0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WYUgGJv5d7RVhYT+VlkIuXDQBmp4U5NctQZK99u4yx7EjA2Ecq4PO6UMvicjAhWNOkS7MK/qkVvD8fihNPguL95eiFUYmBT/Ns9oCuWs2S71oxFj1f2QY39i8Y14GQzjcCri9fPIAVJnR7u8BbCU1gA/4eWTVTaw9tH63omC9l4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=MQxr0Ge0; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1738923956; c=relaxed/simple;
+	bh=C3yZNhdQLr150OHj7m4T/ffxAPLe/FGRnyvM3fsCSoQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qfJxY1lg2nOO6egYWnY4OTZNHElKNdBJDxvLr7yurkhZASwfz/V0VKY2NLZsCgftM71lRW8vMhG0vnZBYOs75HDHyWCjqin/qNEaJlkmequGjwKJhdjyJb5+RTvOa3mPLBcXyuN4Omd0YCDzryOh6729Z8UcEuPIkBe6kxQ3fIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ti6rnxIW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y2fvq+82; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ti6rnxIW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y2fvq+82; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="MQxr0Ge0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=dG6q0eUvla25R2FN1Jt5744C+rNB8H4vL7BzPhRVw7I=; b=MQxr0Ge02yi1anyweNjp+NJip3
-	3nVH1uovjLmlZ/gZe3oJ2HvpBY1jQG3NNHL6LLCrsaF23RUIraLIvQQXPtioryDs6/fK3MOzX7neN
-	FOSPOVYmbdDfavI867F2i56PdPt5vkrrewQnsAbquB5+BC4HQhXHLoIBh1/j5C7gcZyhTz1VoExNx
-	6fh6JTajV8FU6e0CBq7D+NDZWxvx4kIcOp4lFG1LkMWD1d1h4KuDLHU49vW0WtJHOohA1S4SX82Mz
-	I0AdlAS4/PHvZnuIiegSHoYyenVQuzdpeN+jtu2tMJymaWI+eC+diWxdVhoYjCL9uLHwFim3dxFs8
-	vrCqjECQ==;
-Received: from i53875bc0.versanet.de ([83.135.91.192] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tgLWX-0004HP-Ru; Fri, 07 Feb 2025 11:23:49 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@cherry.de>,
- Detlev Casanova <detlev.casanova@collabora.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Alexey Charkov <alchark@gmail.com>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Dragan Simic <dsimic@manjaro.org>, Jianfeng Liu <liujianfeng1994@gmail.com>,
- Niklas Cassel <cassel@kernel.org>, FUKAUMI Naoki <naoki@radxa.com>,
- Kever Yang <kever.yang@rock-chips.com>, Johan Jonker <jbx6244@gmail.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Algea Cao <algea.cao@rock-chips.com>, Chen-Yu Tsai <wens@csie.org>,
- Sugar Zhang <sugar.zhang@rock-chips.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- dri-devel@lists.freedesktop.org, kernel@collabora.com
-Subject:
- Re: [PATCH v5 2/3] arm64: dts: rockchip: Add HDMI0 audio output for rk3588
- SoC
-Date: Fri, 07 Feb 2025 11:23:48 +0100
-Message-ID: <11286959.nUPlyArG6x@diego>
-In-Reply-To: <2781606.mvXUDI8C0e@earth>
-References:
- <20250203171925.126309-1-detlev.casanova@collabora.com>
- <bfe9cb98-12ba-484c-95af-e5842edaab76@cherry.de> <2781606.mvXUDI8C0e@earth>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ti6rnxIW";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y2fvq+82";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ti6rnxIW";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y2fvq+82"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C54DA21161;
+	Fri,  7 Feb 2025 10:25:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738923946; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f4PcZmgG4NDKgXQ9ax0vEC5xMEC26xGqBmksg3k/Yng=;
+	b=ti6rnxIWRJ1nov7ayMX9xq+I3tE4k/Vw/TJ0Cayy9Y4Nl7fngepsfvkiRfsgF0RvBEA24C
+	coem/XYMHlCYZsb+rEz1+67BvsM8Xxu7EbEkavyRJbru1ZV9r7v0xlF3uGfr0iF9j/IBWU
+	1K+RVjG5QntnZfy2oA59+8Psdeky8Lg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738923946;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f4PcZmgG4NDKgXQ9ax0vEC5xMEC26xGqBmksg3k/Yng=;
+	b=Y2fvq+82EAXGOwkXuJIcpHmhBTdEIJytTHko3ByToSLDahHgUkbh7rypd7fwchBekWRyXa
+	krUbd1P9TfgeZfDg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=ti6rnxIW;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Y2fvq+82
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1738923946; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f4PcZmgG4NDKgXQ9ax0vEC5xMEC26xGqBmksg3k/Yng=;
+	b=ti6rnxIWRJ1nov7ayMX9xq+I3tE4k/Vw/TJ0Cayy9Y4Nl7fngepsfvkiRfsgF0RvBEA24C
+	coem/XYMHlCYZsb+rEz1+67BvsM8Xxu7EbEkavyRJbru1ZV9r7v0xlF3uGfr0iF9j/IBWU
+	1K+RVjG5QntnZfy2oA59+8Psdeky8Lg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1738923946;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f4PcZmgG4NDKgXQ9ax0vEC5xMEC26xGqBmksg3k/Yng=;
+	b=Y2fvq+82EAXGOwkXuJIcpHmhBTdEIJytTHko3ByToSLDahHgUkbh7rypd7fwchBekWRyXa
+	krUbd1P9TfgeZfDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AD558139CB;
+	Fri,  7 Feb 2025 10:25:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id dxPpKarfpWcQcAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 07 Feb 2025 10:25:46 +0000
+Message-ID: <03eb13ad-03a2-4982-9545-0a5506e043d0@suse.cz>
+Date: Fri, 7 Feb 2025 11:25:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
+ related applications since v6.13
+Content-Language: en-US
+To: Matthew Wilcox <willy@infradead.org>, Miklos Szeredi <miklos@szeredi.hu>
+Cc: Christian Heusel <christian@heusel.eu>, Josef Bacik
+ <josef@toxicpanda.com>, Miklos Szeredi <mszeredi@redhat.com>,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, Joanne Koong <joannelkoong@gmail.com>,
+ linux-mm <linux-mm@kvack.org>
+References: <2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu>
+ <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
+ <Z6XWVU6ZTCIl3jnc@casper.infradead.org>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <Z6XWVU6ZTCIl3jnc@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: C54DA21161
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[heusel.eu,toxicpanda.com,redhat.com,lists.linux.dev,vger.kernel.org,gmail.com,kvack.org];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-Hi Detlev,
-
-Am Donnerstag, 6. Februar 2025, 18:17:51 MEZ schrieb Detlev Casanova:
-> On Tuesday, 4 February 2025 05:14:37 EST Quentin Schulz wrote:
-> > This is an address/bus-less device, so I believe it needs to be put
-> > among other address/bus-less devices, which for Rockchip SoCs is at the
-> > top of the DT? c.f.
-> > https://www.kernel.org/doc/html/latest/devicetree/bindings/dts-coding-style.
-> > html
-> > 
-> > **I** would put it between the firmware and the pmu-a55 nodes.
+On 2/7/25 10:45, Matthew Wilcox wrote:
+> On Fri, Feb 07, 2025 at 10:34:52AM +0100, Miklos Szeredi wrote:
+>> Seems like page allocation gets an inconsistent page (mapcount != -1)
+>> in the report below.
 > 
-> I wasn't sure about this. It makes sense to move it with address-less devices, 
-> but the rk3399 device tree has it above the hdmi node, so I wanted to stay 
-> consistent with that.
+> I think you're misreading the report.  _mapcount is -1.  Which means
+> mapcount is 0.
+> 
+>> > Feb 06 08:54:47 archvm kernel: BUG: Bad page state in process rnote  pfn:67587
+>> > Feb 06 08:54:47 archvm kernel: page: refcount:-1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x67587
 
-the general "rule" is to
-- sort by address (the part after the @)
-- if that's not present, alphabetically by node-name (not phandle)
-  and have address-less things more to the top
-- &phandle {} references are sorted alphabetically
+refcount of -1 doesn't look healthy too, should be 0 at this point?
 
-And yes in the past there were more creative variants ... like keeping
-hdmi-stuff together sounds really great [also to me in the past ;-) ],
-but then you end up with a huge list of exceptions.  [0]
+>> > Feb 06 08:54:47 archvm kernel: flags: 0xfffffc8000020(lru|node=0|zone=1|lastcpupid=0x1fffff)
+>> > Feb 06 08:54:47 archvm kernel: raw: 000fffffc8000020 dead000000000100 dead000000000122 0000000000000000
+> 
+> flags lru.next lru.prev mapping
+> 
+>> > Feb 06 08:54:47 archvm kernel: raw: 0000000000000000 0000000000000000 ffffffffffffffff 0000000000000000
+> 
+> index private mapcount:refcount memcg_data
+> 
+>> > Feb 06 08:54:47 archvm kernel: page dumped because: PAGE_FLAGS_CHECK_AT_PREP flag(s) set
+> 
+> So the problem is the lru flag is set.
+> 
+>> > Feb 06 08:54:47 archvm kernel:  dump_stack_lvl+0x5d/0x80
+>> > Feb 06 08:54:47 archvm kernel:  bad_page.cold+0x7a/0x91
+>> > Feb 06 08:54:47 archvm kernel:  __rmqueue_pcplist+0x200/0xc50
+>> > Feb 06 08:54:47 archvm kernel:  get_page_from_freelist+0x2ae/0x1740
+>> > Feb 06 08:54:47 archvm kernel:  __alloc_frozen_pages_noprof+0x184/0x330
+>> > Feb 06 08:54:47 archvm kernel:  alloc_pages_mpol+0x7d/0x160
+>> > Feb 06 08:54:47 archvm kernel:  folio_alloc_mpol_noprof+0x14/0x40
+>> > Feb 06 08:54:47 archvm kernel:  vma_alloc_folio_noprof+0x69/0xb0
+>> > Feb 06 08:54:47 archvm kernel:  do_anonymous_page+0x32a/0x8b0
+> 
+> It's very weird, because PG_lru is also in PAGE_FLAGS_CHECK_AT_FREE.
+> So it should already have been checked and not be set.  I'm on holiday
 
-So just following the generic sorting thing causes way less confusion,
-hence we go that way for new stuff.
+Could be a use-after free of the page, which sets PG_lru again. The list
+corruptions in __rmqueue_pcplist also suggest some page manipulation after
+free. The -1 refcount suggests somebody was using the page while it was
+freed due to refcount dropping to 0 and then did a put_page()?
 
+> until Monday, so I'm not going to dive into this any further.
 
-Heiko
 
 
