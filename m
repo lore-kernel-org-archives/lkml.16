@@ -1,221 +1,162 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95C81991B2;
-	Fri,  7 Feb 2025 17:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A1D192590
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738950562; cv=none; b=sfvJ2B6G1UIf/gImzdhfUIjJJzzaWH4kqeKIGGsnLjEuvM3tWI/fN4jomixKE3JTgTv762+Qr99eBE4wodJ6h/YPG2m4HrR/wezdbFRAZG+1HwYe/nIYSxCNVQd8KzY8i2z1P9RZyLkR83Y8tyZ1+D5DpqVufFM30pDmm394wL4=
+	t=1738950591; cv=none; b=C+s+lpPV6AA0S6E2fKOATmEh1xWVdzVDySBIM63H6gqCMOtAif+bgq4Yq9KNR0k/gBWQiwwAUNrsv5NTXFwGi/TiGFb2eN0locaSd63uDpflXcj9nVH52ecFbqrS3N+5ZHPh0BKPZVrKt5vMZWnzz2/CtjdeXbeNQQUBaYdZ500=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738950562; c=relaxed/simple;
-	bh=jVPVyHRjrxgyQm/AnC921euASXtVzjyArNK4SSMJVUk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rVFo13K6r4DaHlOd0N8GKMupDVhUwRPjZ7KegNsT54r/20TYRsqHRr2VMG7oWBe657nen0Xc9/muXDfj9lWODFZFYG27p0eMBLE922gnoRiDZ1e1O30N3GVfknDDd+joFN07rPXKypZUx3GPUat4gbn1jOXBfHMXSPHLAKTFm00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lrynlRbh; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738950591; c=relaxed/simple;
+	bh=OjHf0/La6zmx4FAbdAnxgighWHZDuLFxwPxDymnae2w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FoFqmvmMhFi/Ollp1QU4FPs2oAzZhdc2VAo+fMFYkac3AYkRR8CqA5nJKCDiygfDyr5sQXzbtxijbiKM7R3FanNAxIp3QNZqjNALkfYF12Ihs+mU6NKeyXUIQ0uVZ+9UQseiDLGTLxrJyTyzjQQSc2QBvDfNykL3CNpvYgt6PCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=etM+490N; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lrynlRbh"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517FdtiN030918;
-	Fri, 7 Feb 2025 17:48:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=p0rgAV
-	nGq97I5rtxVD8SA+5WhymNp91voigoE2yiu0Q=; b=lrynlRbh8DWxzwWrBPfTQP
-	BGOyX33jv9CqszgCq0+CrID3MYrJADTlsh8LCjVReZ8Wjg850Dyd0wuQ9he9GnwM
-	uT4CZ0RyhLLDGAC7ARK5CXi6oKWF/gH3N9JnxlBnvl1r1fHM3OB0x2KUe2PpFMTM
-	MjC/aT102HjvvnlWFLQkeuck6LRf1jV9kcgA5QCmUIKKvlVRXD3EwyNVdy/8NcZl
-	o9Teu2WluWJ/QcYMkNOdLoVWXvISdDTZeuxSyO+X9OLBv/L9TheVohAvDUE++lh7
-	nVfWhXCFhpFsqNlf6goaIXjWCyCO1EV4MEtgib03J2x6A3Nsal3a59CLRwBa6syA
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44nn0tgp2q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 17:48:55 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 517G0oOm024461;
-	Fri, 7 Feb 2025 17:48:54 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxxnmpxr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 17:48:54 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 517HmrvS23069312
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Feb 2025 17:48:54 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B001058043;
-	Fri,  7 Feb 2025 17:48:53 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CA60858055;
-	Fri,  7 Feb 2025 17:48:52 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  7 Feb 2025 17:48:52 +0000 (GMT)
-Message-ID: <8ca0bdd9-7cae-4adf-b4c0-eebf057d4c5b@linux.ibm.com>
-Date: Fri, 7 Feb 2025 12:48:52 -0500
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="etM+490N"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21f4500a5c3so39859245ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:49:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738950589; x=1739555389; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7ueL8uhdRjf52HSBhlGadO+O+QftLnA6FgREnqVSmz0=;
+        b=etM+490NN9p12nFXzw29ymoF8JE8Y9ga99SBrjuc+HxWrBjTdXgU/BsjShDJp84shc
+         BIMWmjJXva7ruuH478MI7cTkj6bv3E7h0n5e2kvbfwcTonEAn2QvwWOjNsMvoTVTvxgB
+         w+HHHBySYTz61U2sRPnhtaSp25AJXNtQkpZ2Yvgr0h8IJejP0yXLpXYiVYCS+plIlHKi
+         PUZcVGI819TxTEpjdwJld0ciq/8wyhuiCIP8GpI2aYEklghJSm46QeQEOijYAxWQFOKe
+         w6Ykmbvfr5MDQMHDjNVtkGrNPSiQKyeldLSojG67HoSJN8uvJfMY6t+GcPxfJ2HsSsJ2
+         OAsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738950589; x=1739555389;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7ueL8uhdRjf52HSBhlGadO+O+QftLnA6FgREnqVSmz0=;
+        b=wTDMZ/egLPmCcs1mlewTD424YMkDR9C3FtzGbHtj0P+WPbRUTI9CIKjoghG2FQ5skw
+         JRXmN/Suez1xUEmOiRB1JpD/4Yf74vcOLYD0Rh6Qf8E2dZ3wa8c156DGg6fHZoKg2L3Z
+         NXstyrmSiq0LIS0qaLyTSDGCu6VCLCnRuB9EHUCqqsLu1Va8DEM0Xdq0Mvat1tsGj9Xc
+         HJwjnCpzXrrwT/W+9vxQWNHOV7N8txd0E0jylCUZRrlbNM8HaCv143Lt4z8UJY9aUYEH
+         RMXApmwit7T+dLX0NaKru4zSX4R3RhE/oZs86RLb4hCTTVDAJF5wDNJ6ji1Gd0wnp5xc
+         Zz1w==
+X-Forwarded-Encrypted: i=1; AJvYcCWTgjmHt5fpq1b9wSautMAPltu45+vukzhIng9CqIFtXEIkR23c9R5SN6KXe36uOFV2d9ILakAsJc58ViA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpISd5ji3XwLnf6UFCxkf9aoVDcAN10xlaTajF3bmOFqaJoJga
+	dT5N03cuzzcBuapYlWaSvo8sKN0j1WvYnjx+Ffv9F9X68WsxotOu7hJOGQJhLA==
+X-Gm-Gg: ASbGncs1d7WGC6sJvhvzLypTbKX0s97kdgkTH5df7VyF0ZoszSFUAC7BSixeqBDu398
+	YQVioifFS2t2WAgMb7d1ZR0aGDU2Cm6dF1ZfbR0J2781Gw7KsUH9OoLIKefD3qnjKWGgP1fNItz
+	5lYnWzRFYNZ+hMlhT9w9+szNS7jmnIfYlhv86xSp23E2yKQOpuF+UK+OwaqUKZd0rnMsC8DA6rg
+	W+aSY17savx+BibjW5ZX7lD7gY396xF6rnw6p+eTzFTPTW3tSuTmu9UAfDZ8KrXk6/5/TpUGc7t
+	rBeGcTQq3q/o2uj7C+pn4bTjpA==
+X-Google-Smtp-Source: AGHT+IE6OgQOwi69kOmyTP+cvlnuvv/NziCa4NqzRul258V7kLWTeAlJ+6B/WB+eU+A9dOCwtErZPw==
+X-Received: by 2002:a17:902:e74a:b0:216:4064:53ad with SMTP id d9443c01a7336-21f4e7ed222mr70009195ad.48.1738950587991;
+        Fri, 07 Feb 2025 09:49:47 -0800 (PST)
+Received: from thinkpad ([120.60.76.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f36541c36sm33757455ad.63.2025.02.07.09.49.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 09:49:47 -0800 (PST)
+Date: Fri, 7 Feb 2025 23:19:39 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Chen Wang <unicorn_wang@outlook.com>, Chen Wang <unicornxw@gmail.com>,
+	kw@linux.com, u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu,
+	arnd@arndb.de, bhelgaas@google.com, conor+dt@kernel.org,
+	guoren@kernel.org, inochiama@outlook.com, krzk+dt@kernel.org,
+	lee@kernel.org, lpieralisi@kernel.org, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, pbrobinson@gmail.com, robh@kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
+	chao.wei@sophgo.com, xiaoguang.xing@sophgo.com,
+	fengchun.li@sophgo.com, helgaas@kernel.org
+Subject: Re: [PATCH v3 2/5] PCI: sg2042: Add Sophgo SG2042 PCIe driver
+Message-ID: <20250207174939.w2e2bdvvcmqojlse@thinkpad>
+References: <cover.1736923025.git.unicorn_wang@outlook.com>
+ <ddedd8f76f83fea2c6d3887132d2fe6f2a6a02c1.1736923025.git.unicorn_wang@outlook.com>
+ <20250119122353.v3tzitthmu5tu3dg@thinkpad>
+ <BM1PR01MB254540560C1281CE9898A5A0FEE12@BM1PR01MB2545.INDPRD01.PROD.OUTLOOK.COM>
+ <20250122173451.5c7pdchnyee7iy6t@thinkpad>
+ <86msfhviek.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 7/7] ima: measure kexec load and exec events as
- critical data
-To: Mimi Zohar <zohar@linux.ibm.com>,
-        steven chen <chenste@linux.microsoft.com>,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com
-References: <20250203232033.64123-1-chenste@linux.microsoft.com>
- <20250203232033.64123-9-chenste@linux.microsoft.com>
- <3a4053664cde06622e1f9a9d8e3a5aab80b9beb7.camel@linux.ibm.com>
- <b2b3fa5d3d20284f790ce74bb97da2b9795a0e0e.camel@linux.ibm.com>
-Content-Language: en-US
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <b2b3fa5d3d20284f790ce74bb97da2b9795a0e0e.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: WTwdbUUSl3JllWiJc8BOgTZbTaDWaax5
-X-Proofpoint-ORIG-GUID: WTwdbUUSl3JllWiJc8BOgTZbTaDWaax5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_08,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0 impostorscore=0
- bulkscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502070130
+In-Reply-To: <86msfhviek.wl-maz@kernel.org>
 
-
-
-On 2/7/25 12:06 PM, Mimi Zohar wrote:
-> On Fri, 2025-02-07 at 10:16 -0500, Mimi Zohar wrote:
->> On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
->>> The amount of memory allocated at kexec load, even with the extra memory
->>> allocated, might not be large enough for the entire measurement list.  The
->>> indeterminate interval between kexec 'load' and 'execute' could exacerbate
->>> this problem.
->>>
->>> Define two new IMA events, 'kexec_load' and 'kexec_execute', to be
->>> measured as critical data at kexec 'load' and 'execute' respectively.
->>> Report the allocated kexec segment size, IMA binary log size and the
->>> runtime measurements count as part of those events.
->>>
->>> These events, and the values reported through them, serve as markers in
->>> the IMA log to verify the IMA events are captured during kexec soft
->>> reboot.  The presence of a 'kexec_load' event in between the last two
->>> 'boot_aggregate' events in the IMA log implies this is a kexec soft
->>> reboot, and not a cold-boot. And the absence of 'kexec_execute' event
->>> after kexec soft reboot implies missing events in that window which
->>> results in inconsistency with TPM PCR quotes, necessitating a cold boot
->>> for a successful remote attestation.
->>
->> As a reminder, please include directions for verifying the buffer data hash against
->> the buffer data.  The directions would be similar to those in commit 6b4da8c0e7f
->> ("IMA: Define a new template field buf").
->>
->>>
->>> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
->>> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->>> Signed-off-by: steven chen <chenste@linux.microsoft.com>
->>> ---
->>>   security/integrity/ima/ima_kexec.c | 23 +++++++++++++++++++++++
->>>   1 file changed, 23 insertions(+)
->>>
->>> diff --git a/security/integrity/ima/ima_kexec.c
->>> b/security/integrity/ima/ima_kexec.c
->>> index c9c916f69ca7..0342ddfa9342 100644
->>> --- a/security/integrity/ima/ima_kexec.c
->>> +++ b/security/integrity/ima/ima_kexec.c
->>> @@ -17,6 +17,8 @@
->>>   #include "ima.h"
->>>   
->>>   #ifdef CONFIG_IMA_KEXEC
->>> +#define IMA_KEXEC_EVENT_LEN 256
->>> +
->>>   static struct seq_file ima_kexec_file;
->>>   static void *ima_kexec_buffer;
->>>   static size_t kexec_segment_size;
->>> @@ -36,6 +38,24 @@ static void ima_free_kexec_file_buf(struct seq_file *sf)
->>>   	ima_reset_kexec_file(sf);
->>>   }
->>>   
->>> +static void ima_measure_kexec_event(const char *event_name)
->>> +{
->>> +	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
->>> +	size_t buf_size = 0;
->>> +	long len;
->>> +
->>> +	buf_size = ima_get_binary_runtime_size();
->>> +	len = atomic_long_read(&ima_htable.len);
->>> +
->>> +	scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
->>> +			"kexec_segment_size=%lu;ima_binary_runtime_size=%lu;"
->>> +			"ima_runtime_measurements_count=%ld;",
->>> +				kexec_segment_size, buf_size, len);
->>
->>  From scripts/checkpatch.pl, "Alignment should match open parenthesis".
->>
->>> +
->>> +	ima_measure_critical_data("ima_kexec", event_name, ima_kexec_event,
->>> +					strlen(ima_kexec_event), false, NULL,
->>> 0);
->>
->>  From the kernel-doc scnprintf(), returns the number of bytes.  There should be no
->> need to calculate it using strlen().
->>
->>> +}
->>> +
->>>   static int ima_alloc_kexec_file_buf(size_t segment_size)
->>>   {
->>>   	/*
->>> @@ -60,6 +80,7 @@ static int ima_alloc_kexec_file_buf(size_t segment_size)
->>>   out:
->>>   	ima_kexec_file.read_pos = 0;
->>>   	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved
->>> space
->>> */
->>> +	ima_measure_kexec_event("kexec_load");
->>>   
->>>   	return 0;
->>>   }
->>> @@ -201,6 +222,8 @@ static int ima_update_kexec_buffer(struct notifier_block
->>> *self,
->>>   		return ret;
->>>   	}
->>>   
->>> +	ima_measure_kexec_event("kexec_execute");
->>> +
->>>   	ret = ima_dump_measurement_list(&buf_size, &buf,
->>>   					kexec_segment_size);
->>>   
->>
->> After fixing up and applying this patch set to 6.14.0-rc1, I'm not seeing the
->> "kexec_execute".  Even after changing the default extra memory, I'm still not
->> seeing
->> the measurement.
+On Thu, Jan 23, 2025 at 12:12:03PM +0000, Marc Zyngier wrote:
+> On Wed, 22 Jan 2025 17:34:51 +0000,
+> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
+> > 
+> > + Marc (for the IRQCHIP implementation review)
+> > 
+> > On Wed, Jan 22, 2025 at 09:28:12PM +0800, Chen Wang wrote:
+> > > 
+> > > > > +static int sg2042_pcie_setup_msi(struct sg2042_pcie *pcie,
+> > > > > +				 struct device_node *msi_node)
+> > > > > +{
+> > > > > +	struct device *dev = pcie->cdns_pcie->dev;
+> > > > > +	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
+> > > > > +	struct irq_domain *parent_domain;
+> > > > > +	int ret = 0;
+> > > > > +
+> > > > > +	if (!of_property_read_bool(msi_node, "msi-controller"))
+> > > > > +		return -ENODEV;
+> > > > > +
+> > > > > +	ret = of_irq_get_byname(msi_node, "msi");
+> > > > > +	if (ret <= 0) {
+> > > > > +		dev_err(dev, "%pOF: failed to get MSI irq\n", msi_node);
+> > > > > +		return ret;
+> > > > > +	}
+> > > > > +	pcie->msi_irq = ret;
+> > > > > +
+> > > > > +	irq_set_chained_handler_and_data(pcie->msi_irq,
+> > > > > +					 sg2042_pcie_msi_chained_isr, pcie);
+> > > > > +
+> > > > > +	parent_domain = irq_domain_create_linear(fwnode, MSI_DEF_NUM_VECTORS,
+> > > > > +						 &sg2042_pcie_msi_domain_ops, pcie);
+> > > > > +	if (!parent_domain) {
+> > > > > +		dev_err(dev, "%pfw: Failed to create IRQ domain\n", fwnode);
+> > > > > +		return -ENOMEM;
+> > > > > +	}
+> > > > > +	irq_domain_update_bus_token(parent_domain, DOMAIN_BUS_NEXUS);
+> > > > > +
+> > > > The MSI controller is wired to PLIC isn't it? If so, why can't you use
+> > > > hierarchial MSI domain implementation as like other controller drivers?
+> > > 
+> > > The method used here is somewhat similar to dw_pcie_allocate_domains() in
+> > > drivers/pci/controller/dwc/pcie-designware-host.c. This MSI controller is
+> > > about Method A, the PCIe controller implements an MSI interrupt controller
+> > > inside, and connect to PLIC upward through only ONE interrupt line. Because
+> > > MSI to PLIC is multiple to one, I use linear mode here and use chained ISR
+> > > to handle the interrupts.
+> > > 
+> > 
+> > Hmm, ok. I'm not an IRQCHIP expert, but I'll defer to Marc to review the IRQCHIP
+> > implementation part.
 > 
-> FYI, after reverting commit 254ef9541d68 ("ima: Suspend PCR extends and log appends
-> when rebooting"), I'm seeing the "kexec_execute" measurement.
-
-I would try sth. like this:
-static int ima_reboot_notifier(struct notifier_block *nb,
-			       unsigned long action,
-			       void *data)
-{
-	if (action == SYS_RESTART && data && !strcmp(data, "kexec reboot"))
-		ima_measure_kexec_event("kexec_execute");
+> I don't offer this service anymore, I'm afraid.
 > 
-> Mimi
+> As for the "I create my own non-hierarchical IRQ domain", this is
+> something that happens for all completely mis-designed interrupt
+> controllers, MSI or not, that multiplex interrupts.
 > 
+> These implementations are stuck in the previous century, and seeing
+> this on modern designs, for a "server SoC", is really pathetic.
+> 
+> maybe you now understand why I don't offer this sort of reviewing
+> service anymore.
 > 
 
+Ok, I can understand your pain as a maintainer. I'll try my best to review these
+implementations as I have no other choice :)
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
