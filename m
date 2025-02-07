@@ -1,120 +1,104 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 578C01CDFD4
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 11:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA421DED58
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 11:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738926050; cv=none; b=k8EsHna2X+HLxyzLcze+L593ByhK6/Mkz6rxvfzxfWDzQ2j87sXAXxzp9RSYHsb+GAYitm9eync0g19hLQ4ehrzPBCEcY9U2WZEZsE6sneGxkGCZ0hSZaVrI98YrfWoYjaiMPEH/XDFiAk/J/XR5/3bLGw7ewVN2b3geDvivkrY=
+	t=1738926058; cv=none; b=VKZorzzwdhunlMigDxMJ8L5MQItqSBRCWJV8BhBRBCNEM4kg7HAamknF21wSGWmcrHYWFfS92WmeuxxwTHFqADDKscvmdHL3mNabUyQ4zbye3jJDM3Xj8vuAjExTGkT269ijT5J7aq8o0ntuosDnpfIwd34n5llv1m3BxANCvko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738926050; c=relaxed/simple;
-	bh=ElkCd0VSmZ1y7aJo1xSkdXaYuOZ//Q71DJVBY+TzsMI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dyrckIyoHZyn8ihElC/Fod0gSKBPxHPOTsY1EWp/lPjxvwAGaCsU7tFr+Zsbb5m0ppaUPDp6t97ibwj4/RSFjD35iInNlJjdSrCefqRF1EfErH8sTP0BSEtRYvXprR2jWzPwqCiuiT34V1SDu1fIxBiU9qBnuAls06NBSSRDkoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v0fiYgzR; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738926058; c=relaxed/simple;
+	bh=ND6hyoxlDXntD4lr9CxXkDZB0S8XhihlSQSUomBwZ8o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YjpFtv9H+fCf1Nz/42pWJoy8r48wg7ION8F1nsW7eMg4ybicBUObe6OnxpGoJiSWn2XinF/qhN1TaZk3pG4/147OQgUZSEvamwiXKL4b+mOabl0pikt2AduIcEW2QiARvWu6tFsDqalYGAVLcCiVQd2o5yGV62os9QNgyp0oLZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f2LYInOT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RaqhgcBu; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v0fiYgzR"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5d442f9d285so5827a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 03:00:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738926046; x=1739530846; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PPNEh3d8SXd4UyVBzDYe+DWkKrqBsXALhs4HDck1znw=;
-        b=v0fiYgzR3YU7cPppw9/J+DWXjC3a22NO3H+m0Dxy4+K1O5YZJdp6f6rVKIwUzVr5cU
-         4iwvJH9Hgkm7e5TDT5ABeIpZ/PEqd39XJExp6BEuKNwHqyWXO0jRaPTrYASv9Oye2A0T
-         gJGrpaTH6cfdzBzersaOGgIhDDtzJIhGCMyau063Mih95d6b8OXUecD8cfXpbsmba6vh
-         5Osm++ilG1cm02U6vR0j0PHPyFsMalNPhW+ikrPVnf5zGhhzE6BkgehoxxH1S0NhBf10
-         Q/5B5XoSCnmHCEH3QSJaHxQ4X8545dPNrPhk6iZtNxhDuNkbmzZTjzeGH1JrXTO3o9wi
-         5SQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738926046; x=1739530846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PPNEh3d8SXd4UyVBzDYe+DWkKrqBsXALhs4HDck1znw=;
-        b=BFMIsIztqC7qzQpBHGL3ed217/nO4i73MMJj1jEMSmbby4ZWHQ1oQg7+ip247E42CU
-         MC23ceC3YJ24c7t5qYUah67TMfMWbpKMtyKOWZ31mUHP61pj5lziG20EQk1L5q5pQWzB
-         S4UoIA4RzY8Ns+gaccZ9JAx6BGk6Kwdi1j9qoauxS7H4+cB3p439UYyGske2Qf9UkbCa
-         n91pBoH4v3cyvwFCzSJDIu3cCA/YhxAK/0vJYAnU5IgR9c40ZZEzVIS6UVdZOLgwm4ci
-         //fVUFAliXpbg/665Rwa5PJQGpxANALt2Qd3oiNHpVhC4zunE+3o0EJ3VIb0cqODpI01
-         xFXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUokD+6KoCWyzp4jpyBODaGbKfXJdevt/zbCpm2j1VXtOVRuV0RPuB/ksrK/IKlhsIFJ+14YIGStxelqx4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy47WyLpflqWzxJomn3WCDlVEslFHLrMit5gyYG0cyliTRwQKzK
-	KIQW2f4W6G0P3Tdjt/PWuly/ECdzya+xbpoO2/q99MBtWsTL0wmjCDCr56aAaCD/PmFHJpdraZv
-	bSqnmfCsn0+n45/GTZS3vSHB950fC0VM2hVyb
-X-Gm-Gg: ASbGncsfnYAdj147+gAA56oSlSGNHZBHkX4T02cQeWXlicf8KL4xf5vQ33t9TN1p8Kl
-	CZ2xUqRk12jd/+IQUdPY0oTZUxNnit5K3tU5PRkJAt74Q311A0pPzeAoZnpK0lljg603PPOmWhR
-	FOpWpLPOEkI3oroN/uxFJUKEok
-X-Google-Smtp-Source: AGHT+IGKGJth5652Acd+gw45CCa0RFZ/zp8RtL4d3FGKWPR2wRFDG4a+498kMReRGmDCy02tEid8QT1Lvxxfgod8Vaw=
-X-Received: by 2002:a05:6402:299:b0:5dc:59ca:8f3b with SMTP id
- 4fb4d7f45d1cf-5de47d9504fmr74611a12.3.1738926046475; Fri, 07 Feb 2025
- 03:00:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f2LYInOT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RaqhgcBu"
+Date: Fri, 7 Feb 2025 12:00:50 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738926052;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vfsUlhtHiJhl83lKMUrwmrR3sEtm/wa5PfIaal738eA=;
+	b=f2LYInOTB6R3wqsY6FyVjt0McjVzSZ+yWUffvyYWQtNNeW7rX0KCBm4i7oLJvJ6UAm4adM
+	musuInJiae5FkiIxmd+YLvkhl8enAqFvKuFaZLpJ5hdz7MltuVcnoWyZmAFX2GuZCt6GeQ
+	csD0sEDPr+CKCyyNk2VjyTG2dMxljpdX7/ZTLbdLc4wYkdGsKiHeHsp5J1J/NPoaZslrKc
+	8GQWnbU8YZJS2bnD/nXs6kt/ojqwygUJedz999IT+RF0MmPsFrb1fZbtX1xAJVPmph53Vn
+	VMp1P14b12hIa91BoHwlDRs6QaDkp/api74D8F565LlF58XAXp+hmVchNhTDpA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738926052;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vfsUlhtHiJhl83lKMUrwmrR3sEtm/wa5PfIaal738eA=;
+	b=RaqhgcBuIMKrPI9h/hTz3YEKeTwItGQ4SobbA0GHw/p4N2hR4HngXRKO7ALXpJcBtWT4fz
+	BLkCOlg2x6ll9QBw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Juri Lelli <juri.lelli@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v8 03/15] futex: Add basic infrastructure for local task
+ local hash.
+Message-ID: <20250207110050.stt_l7KT@linutronix.de>
+References: <20250203135935.440018-1-bigeasy@linutronix.de>
+ <20250203135935.440018-4-bigeasy@linutronix.de>
+ <20250203142743.GI7145@noisy.programming.kicks-ass.net>
+ <20250203155114.YVGnCHUT@linutronix.de>
+ <20250204103447.GU7145@noisy.programming.kicks-ass.net>
+ <20250205083926.etxnZAoP@linutronix.de>
+ <Z6XVLqexaKZr0cy1@jlelli-thinkpadt14gen4.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250117145145.3093352-6-guanyulin@google.com> <20250206011324.4729b548@foxbook>
-In-Reply-To: <20250206011324.4729b548@foxbook>
-From: Guan-Yu Lin <guanyulin@google.com>
-Date: Fri, 7 Feb 2025 19:00:00 +0800
-X-Gm-Features: AWEUYZnVEvD7t_Dz9KkFhfaKqY6-yN5VtxdJYuumvbaB5-jEOXHVpXFPVyLQTDM
-Message-ID: <CAOuDEK2c-F8dEyR894c5=OVYTJiLX6y1e1vd1RKoxusNa5PFig@mail.gmail.com>
-Subject: Re: [PATCH v9 5/5] usb: host: enable USB offload during system sleep
-To: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>
-Cc: Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, kekrby@gmail.com, 
-	lijiayi@kylinos.cn, linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
-	linux-usb@vger.kernel.org, mathias.nyman@intel.com, oneukum@suse.com, 
-	perex@perex.cz, quic_jjohnson@quicinc.com, ricardo@marliere.net, 
-	stern@rowland.harvard.edu, sumit.garg@linaro.org, tiwai@suse.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z6XVLqexaKZr0cy1@jlelli-thinkpadt14gen4.remote.csb>
 
-On Thu, Feb 6, 2025 at 8:13=E2=80=AFAM Micha=C5=82 Pecio <michal.pecio@gmai=
-l.com> wrote:
->
+On 2025-02-07 10:41:02 [+0100], Juri Lelli wrote:
 > Hi,
->
-> > - not flushing the endpoints of actively offloaded USB devices. Given
-> >   that the USB devices is used by another entity, unilaterally flush
-> >   the endpoint might lead to unexpected behavior on another entity.
->
-> This doesn't seem right, because flushing applies to URBs managed by
-> the kernel, so it should have no effect on offloaded endpoints.
->
-> As far as I understand from your earlier discussion with Alan Stern,
-> the real reason is that it disrupted operation of class drivers, in
-> particular causing kernel-managed interrupt endpoints not to be polled
-> during suspend and some events were being lost.
->
-> Or maybe the real problem was that if the INT IN endpoint isn't being
-> polled, device events don't trigger xHCI IRQs that wake up the CPU?
->
+> 
+> On 05/02/25 09:39, Sebastian Andrzej Siewior wrote:
+> > On 2025-02-04 11:34:47 [+0100], Peter Zijlstra wrote:
+> 
+> ...
+> 
+> > > Anyway, none of this solves anything when a process has both an active
+> > > RT part and an active !RT part (which isn't uncommon AFAICT).
+> > > 
+> > > Then the RT bits will still get interference from the !RT bits. Do we
+> > > want to complicate things and consider that?
+> > 
+> > I don't think so. The active and inactive are common but it is still the
+> > same process so you can expect it. The ugly part is when it is an
+> > entirely different task and it is random which one it is.
+> 
+> Not entirely sure we are thinking about the same situation, but it looks
+> like we have cases of RT tasks that are affected by the underlying issue
+> this set is about because they make use of libraries. So, in this case
+> we have a cross-process (RT/!RT) situation that I am not sure we can
+> address sanely. What do you think?
 
-The main reason is as you described above. Without polling the INT IN
-endpoint, some functions (e.g. hid, hub) failed during system suspend.
+I wouldn't advice to use "unknown" code in a RT application and even
+threads. Audit libs before using them and not just collect them.
+A lock without PI in your RT thread is not good. A lot of locks, not
+knowing the "locked" time, also not good. Things that work most of the
+time due to the fastpath and only break from time to time.
+Also, a thread does fork() once during start up and things may continue
+to be good but may catch up eventually.
 
->
-> And by the way, usb_hcd_flush_endpoint() doc states that no new URBs
-> may be submitted during this call. I wonder if this can be guaranteed
-> if the interface has not been suspended first? Perhaps this alone is
-> good reason not to flush.
->
-> Regards,
-> Michal
+> Thanks,
+> Juri
 
-To my understanding if the interface creates another URB, then the
-interface might be able to submit it. Is there a reason to not
-flushing all endpoints on a USB device when we have offloaded transfer
-happening during system suspend? If there is, we'll identify what kinds
-of endpoints are influenced and not flush them independently.
-Otherwise, not flushing all of them might maintain a simpler code
-logic.
-
-Regards,
-Guan-Yu
+Sebastian
