@@ -1,82 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6EE9454;
-	Fri,  7 Feb 2025 13:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869779454;
+	Fri,  7 Feb 2025 13:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738934329; cv=none; b=A5Ch+GtWpjUq29XLDZ14KvgYqtELLcpblGO8063g0143DMX9wA1ai/Km0bdJjop0ti0KNzWu9j//ycu9iOa37PnlGoQ/bePMGC+PvUhxAG2BwtiovQtfMiaVUibxytyv6jKly5BiPY1Nvz6kZ/L46Rutqxyp+p2AxwggQsPhamk=
+	t=1738934387; cv=none; b=WYSCJqacY3RsrS/GIWKmDYP85GMnNlbdzJ551SKcmFc7H2lUOeibdkEsSdFi195o4sOEjrNZHmFeLeVGHw4McWQV/peRr3W94sjwSV9gwgCOJe0HKYGkHKm6jdml63gsk7z3edmEFZ5qvhYnVtEFpKTRu6BF3p0TmJx0PEte1jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738934329; c=relaxed/simple;
-	bh=eFIZAVuxn5LNa4zpyntsKVLMFZa8gU8T5EHqVMiE4xw=;
+	s=arc-20240116; t=1738934387; c=relaxed/simple;
+	bh=jRrB2qmo7JrU98XWap5HuVTNK8sJMFUVIUhbRBVGh3o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m1o/UQQthTWVY9OWrZx1fQnj0paF/x/DUy1//k/DAOWgRhX8dpHKcyPDfEjw2jzyZoSxlt7I3QZZUuWlWIBEfVwyuy7vknV57QIJv7EBkLHU91deX0f9nz8+oZEbxaHxVUfNh+gOhygLaRpvv2C5ZOW69De5wOZfHOAxreMS+fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ekP5Lsbi; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=B1wSvA/oHF6zJnObv2h2qrdosNddahrzGxKDrlGgWlx/e48ifl29/JPMW2Ricur6U2P7KpCxaJhCludLbIQl9QPjue14+NiRXZ6A+6x7vac41mV6BDrGxz2dIyYP6djRK6UOUb+4wDgK4CdsqYYiBLzvbnLUUL1V1pxa75aeXIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=dkXz39eB; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ekP5Lsbi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5D19C4CED1;
-	Fri,  7 Feb 2025 13:18:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738934329;
-	bh=eFIZAVuxn5LNa4zpyntsKVLMFZa8gU8T5EHqVMiE4xw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ekP5Lsbih4Qrni6R8KYuVNRJ8WRlBAeWg+Hu0ONFhF6aBh51clA7BNtyaooC8i1e0
-	 IAmVPKamC8BBigHoQMzjldd/m/rlgckmQaV/RVU6z+QVnnJzcGmj7vjTX65HuDyNfJ
-	 YgAfkv1OvdxhFW7kqg/U5JTZ8gUSB2NCVKdKdqcVQSH2AKxOYDSrp1M54LwJiAskUn
-	 9kCEd6/QBw5cHMhu6/8FfvO+11p74OOWW5bdWQbT2bi88J5mbBg2JDNDtJr+CL0GVy
-	 aA0e2KK0z8LJurpjLJQ8FTZ9WOH6efVoCPlAYlX5B4E2Ih/aQxD8jQao5S8TpcFIOH
-	 ptCuv/sgMmehg==
-Date: Fri, 7 Feb 2025 13:18:45 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>
-Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Subject: Re: [PATCH for-6.14 v3 3/4] spi: atmel-quadspi: Use
- `devm_dma_request_chan()`
-Message-ID: <175b903c-59c9-40d6-baff-d5b8dc996318@sirena.org.uk>
-References: <20250207124802.165408-1-csokas.bence@prolan.hu>
- <20250207124802.165408-4-csokas.bence@prolan.hu>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="dkXz39eB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=6IvWTedbFSZ2DZf9hRcDWc+nGLgLBJV4pd4iba6oTfA=; b=dkXz39eBc1Jhhf2RLEJnoSB5IC
+	dyQlxKs8BCdsVI/ibsWTME3NpJoftbO7Y82uL4umSlJq8yaO3Scd+XcjCxvmMGu2sVgcu21gNc/ZN
+	F4TIPUKFCP6aFNW/IaHnKHhDS0XUNU0FCKcdsgipYs15Dyo11z8KVrRr173WmH54XuGs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tgOGZ-00Bqmp-R0; Fri, 07 Feb 2025 14:19:31 +0100
+Date: Fri, 7 Feb 2025 14:19:31 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	Byungho An <bh74.an@samsung.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH net-next v2 1/1] net: sxgbe: rework EEE handling based on
+ PHY negotiation
+Message-ID: <0d3ba7a5-0e24-4cb5-be52-74a7096a11eb@lunn.ch>
+References: <20250207105610.1875327-1-o.rempel@pengutronix.de>
+ <Z6X0WsUaRw-P-QVt@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yBiLvRP78GmtPzGu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250207124802.165408-4-csokas.bence@prolan.hu>
-X-Cookie: MMM-MM!!  So THIS is BIO-NEBULATION!
+In-Reply-To: <Z6X0WsUaRw-P-QVt@shell.armlinux.org.uk>
 
+> ... and given this, I ask again: should there be a generic
+> software-timer EEE implementation so we're not having to patch multiple
+> drivers for the same bug(s).
 
---yBiLvRP78GmtPzGu
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Probably there should be. But given how little resources we have, i'm
+not sure it will ever get done.
 
-On Fri, Feb 07, 2025 at 01:47:58PM +0100, Bence Cs=F3k=E1s wrote:
-> Leave releasing of DMA channels up to the devm
-> facilities. This way we can eliminate the rest
-> of the "goto ladder".
+Is there anything special in the stmmac code? Workarounds for stmmac
+peculiarities? Could it be pulled out? Given you have looked at it,
+and fixed it up, it seems like the obvious candidate for code
+donation.
 
-This is just a code cleanup, it's not suitable for a bug fix.
+Maybe we need to ask the next developer who submits a MAC driver with
+a software-timer EEE implementation to build the library?
 
---yBiLvRP78GmtPzGu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmemCDQACgkQJNaLcl1U
-h9BPmgf+PzP0hQysLpvxFfaX3oeQdksaEVIPruNAjK9B1f8EI048STKEjrQuZdrA
-bvp2WDGRMPu20hr9XeavQTfF0nfNt6fmjdD6ZOolH+pGJg6roepiZfRl9ALIdjQp
-3Wve+bFF3/nYUJqj0jlG/H+Pyx//sJTaBFKTHGe+dTkCGw6sJ/Nd7poI5DE9dMbX
-zPyuUVFqLEXAueYDdDb1pzaAwcNip3eAfcAtj+EtO42lWRIPL03cr5Ap+i/f0DX2
-X0+OUpNFy77gmoMauGmQAZ0HuFOwKizFq+mTkbSRUQBtSF/z6RqKZ9W3bwlUAYqS
-aG9u9rdrdC3/wcxaJNW+c1A0suIVUw==
-=82/r
------END PGP SIGNATURE-----
-
---yBiLvRP78GmtPzGu--
+	Andrew
