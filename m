@@ -1,50 +1,25 @@
-Received: from out1.mail.ruhr-uni-bochum.de (out1.mail.ruhr-uni-bochum.de [134.147.53.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E6623C8A6;
-	Fri,  7 Feb 2025 15:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.147.53.149
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA12A23C8A1
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738943594; cv=none; b=tq0Ek98u9zJeBf2rGTOfs6+VBLfJBP7MP0FMDa2ya02Z/48b1hphYmbrp8HCYntPft+GzdGtqGrLlqWjsCg3S7NTqqjDGwqDzLrzA84+8yHDX8LjyAjyYGP3kxCEj4bNTc5yMk1wpwkT3rfcWOEVO9CFidh6zFSpIhW0QVrGQOk=
+	t=1738943670; cv=none; b=Z15cpoQjXxtlT6V0zBgsTon8V6otcalGBPeGxTibSIqx/x5RNl4qnuU8aEMyk7cQQ6yqV6y18xYBPGuovn2s+VpoqaXSD7IF7+u2yOgoyN6GW0BilBeQ7MV98hjWEStfdhe8+tzzvDKv+n4Ckh+jZwLI/lbfTTfajHy0m5H05O8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738943594; c=relaxed/simple;
-	bh=FaroOrq9VEaU3/0VRYA4vw35+utAAbLCIqzzlAS/eKw=;
+	s=arc-20240116; t=1738943670; c=relaxed/simple;
+	bh=WAF93G7dZWyhoQxf2JKBt1LR/kuLXYKYX0VD4C+PGmk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JTgqGhVIoD1SYoL996w7OUmp5oUByL9+v3eJC5cqNhb89UTR5OmlGQLLNpdQ+i34GjeWCftr8TYb+oSuCd/LGerEbCdDAqQVpVLABS5LnBHNaf6/FnIhjtRRgL6P2b1j7ox8vsC230/2T9mnEGd13dBNgNNjsUPN3loi8ux8FpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rub.de; spf=pass smtp.mailfrom=rub.de; dkim=pass (2048-bit key) header.d=rub.de header.i=@rub.de header.b=L6vWV9NB; arc=none smtp.client-ip=134.147.53.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rub.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rub.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rub.de header.i=@rub.de header.b="L6vWV9NB"
-Received: from mx1.mail.ruhr-uni-bochum.de (localhost [127.0.0.1])
-	by out1.mail.ruhr-uni-bochum.de (Postfix mo-ext) with ESMTP id 4YqJCT3Sr6z8Sdk;
-	Fri, 07 Feb 2025 16:43:17 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rub.de; s=mail-2024;
-	t=1738942997; bh=FaroOrq9VEaU3/0VRYA4vw35+utAAbLCIqzzlAS/eKw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=L6vWV9NB/HkTIGDlUP2UTpRrPgw4J5f3DF0NGHNJWPaChCMapAdpdPyTLyF/kBJPS
-	 ocXEvMdDLe3K5SSgLw5Jh4DRTwfyfVgMmY6NwPwIDIzPPKx4TwMUdzRMMBo308F8UX
-	 bupSg8vn0J/9rdijxJ4WBNTpFVUIWeqxuSfk3b4iDjWkkCHViK8xF8bUPse9SYHgHg
-	 Odf/XBKvFXDmSVNQFSkJXUcMqSL1qZtWIqeqqTeR6gtyj+cZvQ18qKyNRo/WpDXqaw
-	 lu3OqvqHvR9eKpcvO73VDm+7X+1QpOV8moLzSsrtAFx/7NLdfuHxi8D5+NEyu/xbwF
-	 zgN9YTnudRZHA==
-Received: from out1.mail.ruhr-uni-bochum.de (localhost [127.0.0.1])
-	by mx1.mail.ruhr-uni-bochum.de (Postfix idis) with ESMTP id 4YqJCT24lXz8Sf0;
-	Fri, 07 Feb 2025 16:43:17 +0100 (CET)
-X-Envelope-Sender: <thorsten.berger@rub.de>
-X-RUB-Notes: Internal origin=134.147.42.236
-Received: from mail2.mail.ruhr-uni-bochum.de (mail2.mail.ruhr-uni-bochum.de [134.147.42.236])
-	by out1.mail.ruhr-uni-bochum.de (Postfix mi-int) with ESMTPS id 4YqJCS3PZvz8SdM;
-	Fri, 07 Feb 2025 16:43:16 +0100 (CET)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 1.0.7 at mx1.mail.ruhr-uni-bochum.de
-Received: from [IPV6:2a05:3e00:a:500f::a96:4204] (dyn-402469a000000000f005a000.ig09.ipv6.ruhr-uni-bochum.de [IPv6:2a05:3e00:a:500f::a96:4204])
-	by mail2.mail.ruhr-uni-bochum.de (Postfix) with ESMTPSA id 4YqJCR6683zDgyX;
-	Fri, 07 Feb 2025 16:43:15 +0100 (CET)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 1.4.1 at mail2.mail.ruhr-uni-bochum.de
-Message-ID: <bd4d6c71-c7b7-4986-a215-fcffa1534953@rub.de>
-Date: Fri, 7 Feb 2025 16:43:15 +0100
+	 In-Reply-To:Content-Type; b=vCI9rREnhBGxl3t3XatN9h0JRuRb+A259F1Dm9H7K82NFSzJYU70B6zolk221Z/kdJxe4gJgaZemEt0Zr1B0E9X2iXaAhwfNfEsdR31zJwedNTbGLQkbORQufcM2xdhzfkSbuS+4WOtFwPSjOPf+BgUdxduFTcQ62N2vjPigWZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00CEF113E;
+	Fri,  7 Feb 2025 07:54:51 -0800 (PST)
+Received: from [10.1.196.57] (eglon.cambridge.arm.com [10.1.196.57])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3C663F58B;
+	Fri,  7 Feb 2025 07:54:22 -0800 (PST)
+Message-ID: <f2ecb501-bc65-49a9-903d-80ba1737845f@arm.com>
+Date: Fri, 7 Feb 2025 15:54:21 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,62 +27,129 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 01/11] kconfig: Add PicoSAT interface
-Content-Language: en-US
-To: Brendan Jackman <jackmanb@google.com>,
- Luis Chamberlain <mcgrof@kernel.org>
-Cc: ole0811sch@gmail.com, deltaone@debian.org, jan.sollmann@rub.de,
- jude.gyimah@rub.de, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, masahiroy@kernel.org, nathan@kernel.org,
- nicolas@fjasle.eu
-References: <20241028034949.95322-1-ole0811sch@gmail.com>
- <20250109132817.1426138-1-jackmanb@google.com>
- <Z4FxyuF-Lnqa4Wl_@bombadil.infradead.org>
- <CA+i-1C0HUE2+TmMMthRv1MCSQg4SX-+oZao9-4M3rKg71oA-5A@mail.gmail.com>
-From: Thorsten Berger <thorsten.berger@rub.de>
-In-Reply-To: <CA+i-1C0HUE2+TmMMthRv1MCSQg4SX-+oZao9-4M3rKg71oA-5A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v5 32/40] x86/resctrl: resctrl_exit() teardown resctrl but
+ leave the mount point
+To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Fenghua Yu <fenghua.yu@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+ shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+References: <20241004180347.19985-1-james.morse@arm.com>
+ <20241004180347.19985-33-james.morse@arm.com>
+ <93fe977c-e5c4-407e-ad84-dec7f81e6b87@intel.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <93fe977c-e5c4-407e-ad84-dec7f81e6b87@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Brendan,
+Hi Reinette,
 
-Yes, that's a great idea. It reminds me about the eCos configurator 
-configtool developed by the Cygnus Solutions developers, which had such 
-a capability. One could manually create a partial specification and ask 
-it to complete the configuration. We should be able to create such a 
-support soon.
+On 24/10/2024 00:50, Reinette Chatre wrote:
+> On 10/4/24 11:03 AM, James Morse wrote:
+>> resctrl_exit() was intended for use when the 'resctrl' module was unloaded.
+>> resctrl can't be built as a module, and the kernfs helpers are not exported
+>> so this is unlikely to change. MPAM has an error interrupt which indicates
+>> the MPAM driver has gone haywire. Should this occur tasks could run with
+>> the wrong control values, leading to bad performance for important tasks.
+>> The MPAM driver needs a way to tell resctrl that no further configuration
+>> should be attempted.
+>>
+>> Using resctrl_exit() for this leaves the system in a funny state as
+>> resctrl is still mounted, but cannot be un-mounted because the sysfs
+>> directory that is typically used has been removed. Dave Martin suggests
+>> this may cause systemd trouble in the future as not all filesystems
+>> can be unmounted.
+>>
+>> Add calls to remove all the files and directories in resctrl, and
+>> remove the sysfs_remove_mount_point() call that leaves the system
+>> in a funny state. When triggered, this causes all the resctrl files
+>> to disappear. resctrl can be unmounted, but not mounted again.
 
-We've just created the final set of patches, with the requested changes 
-(also some small naming change in the fix generation to avoid 
-confusion). Ole is sending them in.
+>> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> index f77fab859c35..bb5aadaf99b6 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> @@ -4319,9 +4319,9 @@ int __init resctrl_init(void)
+>>  
+>>  void __exit resctrl_exit(void)
+>>  {
+>> +	rdtgroup_destroy_root();
+> 
+> If I understand correctly, rdtgroup_destroy_root() can now be called
+> twice, first during the error interrupt and then on unmount. Would the
+> second call be safe?
 
-Best, Thorsten
+Hmmm, I thought the mount point would be holding a reference, but this is undoing the work
+done at mount time, not init time. Yes, its not safe.
 
+As there is no caller of resctrl_exit() until the MPAM driver, I had another piece left
+until later - which covers what happens if the error triggers when resctrl is not mounted:
 
+https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/commit/?h=mpam/snapshot/v6.12-rc1&id=44bb27404b4ce6744fdd4058d1fc07ed2f8d1a9f
 
-On 13/01/2025 17:29, Brendan Jackman wrote:
-> On Fri, 10 Jan 2025 at 20:15, Luis Chamberlain <mcgrof@kernel.org> wrote:
->> On Thu, Jan 09, 2025 at 01:28:17PM +0000, Brendan Jackman wrote:
->>> Would it be easy enough to provide this support as a standalone binary that can
->>> be called from scripts/config too?
->> I suspect this begs more the question of how could this be useful
->> outside of xconfig.
-> I was thinking of something like like this:
->
-> $ scripts/sat_config --interactive --enable KVM_AMD
->
-> This would then prompt the user with a range of solutions for getting
-> KVM_AMD enabled.
->
-> Then there might be an "I'm feeling lucky" variant like:
->
-> $ scripts/sat_config --first-solution --enable KVM_AMD
->
-> Where instead of prompting the user it just picks some arbitrary or
-> "minimal" set of changes that leads to KVM_AMD being enabled.
->
->> But one step at a time, this can be done *after*
->> this initial patch set gets merged,
-> Totally, please consider this a "yes, and" not a "but".
+(which also covers serialising this against umount if the caller is really unlucky)
 
 
+> I am not familiar with this code but  I
+> see kernfs_destroy_root() and __kernfs_remove() dereferencing pointers
+> without checks. I wonder if this needs to be made safer with a:
+
+
+> 	rdtgroup_destroy_root()
+> 	{
+> 		if (rdtgroup_default.kn) {
+> 			kernfs_destroy_root();
+> 			rdtgroup_default.kn = NULL;
+> 		}
+> 	}
+
+My version checked rdt_root - but nothing actually nobbles that. Your version is a lot
+better. Thanks!
+
+If there was a helper to reverse kernfs_root_to_node(), it'd be possible to remove
+rdt_root completely - but its contents are private to kernfs.
+
+
+
+>>  	debugfs_remove_recursive(debugfs_resctrl);
+>>  	unregister_filesystem(&rdt_fs_type);
+>> -	sysfs_remove_mount_point(fs_kobj, "resctrl");
+
+
+> This breaks symmetry with resctrl_init(). The changelog describes the
+> motivation clearly but once this line is removed it will be difficult to
+> get back to this motivation. Could this function get a comment to explain
+> why the mount point is not removed? This will be helpful to anybody following
+> this work that may attempt to "fix" the asymmetry by cleaning up the
+> mount point created during init.
+
+Sure. I've added some kdoc to explain where/when this is called, and what it does at a
+high level:
+| /**
+|  * resctrl_exit() - Remove the resctrl filesystem and free resources.
+|  *
+|  * Called by the architecture code in response to a fatal error.
+|  * Resctrl files and structures are removed from kernfs to prevent further
+|  * configuration.
+|  */
+
+Then specifically:
+|	/*
+| 	 * The sysfs mount point added by resctrl_init() is not removed so that
+|	 * it can be used to umount resctrl.
+|	 */
+
+
+Thanks,
+
+James
