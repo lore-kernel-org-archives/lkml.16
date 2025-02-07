@@ -1,89 +1,125 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F301EB1BA
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A35D1EB1BA;
+	Fri,  7 Feb 2025 15:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738942100; cv=none; b=qF+xmZzZXLRDZYg+JFiXypLFd40Lxu38cqUzYJz/I1gingwDTrZ+5fWpleCpFn3lRJVlRhYONfaRsPKVZ+BA3WXdNxDJfzZ+z22NYMk2OczTc5AiaUYExIOifzx34fULo1wOwBpSoXSiqy193N5z2De3gZuZ8PKJDK2cVl3HVSI=
+	t=1738942110; cv=none; b=mBbd9wc4TebJL0WTQAKuOqSKqCd3SvL1yJ8Q2aSt1aMWs2Dm/iuo5nKNGp8IDPym+i8IGhATeZUXsqVnbylr4AIk/q/vq8kSw2qTNmDfj0uQesHYOLC7hOlfkrkrVYLK7MS4g3M+zFKr9yoSvC4wvHdA5UxdhyL4LfSjTxjBmnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738942100; c=relaxed/simple;
-	bh=krlZM7WEVuD1Rck1O8fOMRV2mE41lX6qDmNoAXLHpNU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WGdTGWb2GIySPbTGBxkAO0rXKdXO+ndF3w8041mlg/1aQ1tbkUtLouys88+MucED1YanrW5zFUlRPGhczJEZgyXXY4ynpLwy/Ckib9+4uiHqhNGCILixy3qh0DfhH7xEwIxdRIGwt2hnjiuXL4r0Jle1GY5cKpj1VYlJD4oZXsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a292tHDX; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738942110; c=relaxed/simple;
+	bh=GDvYfrwJg6xhYEviS7QdZmI6UsPNPpB1aJnYGm6S3sc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WmJl2WFG86+ii3Ky3TueHhIviwOcLhxaYpAb4RM84uU6A8IO0Kk9hBTuFn87y7+lSZaQeDQm/ZCvfv20cG2gG4kXKvCvoFke4e8ca/e5DOVb0bNFgvEdTfQGu35IDEu4YUeP1HjLccb/9lW+1wAVujTMVvBLTdNe80RnQTf2Ges=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B6wSvLaD; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a292tHDX"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5de38c3d2acso2576126a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 07:28:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738942097; x=1739546897; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=krlZM7WEVuD1Rck1O8fOMRV2mE41lX6qDmNoAXLHpNU=;
-        b=a292tHDXqnhsrm6EPVJtp3T2Q8qkC6vNp+RAiAoWuM5Staj8rdEJPo8zRsbFH8B0KQ
-         lQASh0uiPV+16Ld2OaHR14tvnM3X26o0GBWgTxFl+r19tlHu/njATRR7RxgTPOLx/bQS
-         pyQsbLAWfGwxZQLq3YLaI25Znc+P9GiohiG5rnMc0lrjHiHwItukaWUvU3Ri731KsTFD
-         XyGg87jI2nXShDKugMYYGY2SynsZ/RbSWW6D+Q7mGUR8KFJ72aecVoOCP2rvUD5l7sHY
-         9N8p6NKtN62IxVXhfi6D5RJiUSIsXVEsID/zUQjKgMxv7oQPLu486zhUtdoGUrDbcI2O
-         MhUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738942097; x=1739546897;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=krlZM7WEVuD1Rck1O8fOMRV2mE41lX6qDmNoAXLHpNU=;
-        b=YWKzrsOp81dU090pyPeUiJBFqg+fzQk5cpkrDHt2K4CwklWJRxHSF7SzW1bqNxqcSU
-         vKHmwrzuJPhXxWxSE8Xv3B/VB7tD8lF9M2v/8SvffhOXx3VD+VVvE45doDR/YqLA1/5L
-         N/nXWwb+gmvFYUexudCFva9SHnEUbJQLqv3SEYgIWUcu/fky+FUlca2gq1cK1HERNeQG
-         tn8/hGWjulAMeViAvU0ix1BtsWcHGhluQOnQGHm65hdz+gNj0lX7aqZIpGJWdQ8ehUmV
-         nV5fpv9+8DK/3SnObwHSjlqCZz8sLdU8LO3yQiZSDlvQ8k8Qhewpuqd6zcfuIsKtQ2sm
-         UQWg==
-X-Forwarded-Encrypted: i=1; AJvYcCWLRuMYb090LXDlIXoaug+ivHjqMx3CH/0RVzkJh8vFLgKzf3j6F1RX8Tsjjz6TJRCp+fLQQm42H/h7IQ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUeCSpHHAjITTsLtxRRy9p9QQy7ojOTOdo6t0zQL9LrDKQ3oFd
-	SvU2SH378G/SgFmwdLW748yQ5t8wM3CSdtxIGyemZNSX1tWddybPHIiJW0GoDIAYRl7/mWQdwn4
-	xQLs+yrLluRgg/+GBHDLE24dq5lzYiPqG/Bs/
-X-Gm-Gg: ASbGncu8AsJdK88gTDcrjfPJzaPbrqUbjtOxGAIRlbygEmI5Ao+bqTGdS6GfSuRsK2u
-	DvH0dyrXy9VWfG7Iecy7cQoPN0lmEFLxOVqhWNrZfeJ4pHtuh3xS/WV1g2kM0WS/lAKH3RmzO
-X-Google-Smtp-Source: AGHT+IE//mumNZfAaLH5hUakbKIL5BA5jChE96AZXcEh4kFSeTENEmFPALARuih/LJ5yjpf3By63/X8zTcAzq1yHpAE=
-X-Received: by 2002:a05:6402:2087:b0:5dc:7fbe:72ff with SMTP id
- 4fb4d7f45d1cf-5de44fe9d7cmr3666294a12.2.1738942096810; Fri, 07 Feb 2025
- 07:28:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B6wSvLaD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738942109; x=1770478109;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GDvYfrwJg6xhYEviS7QdZmI6UsPNPpB1aJnYGm6S3sc=;
+  b=B6wSvLaDl4vOq/OJuF1RpvQNL0hcSWMRb7kOp02FwbYxG2yDGQ296uFH
+   CXyThFZ8+/JiM+VL1bFOxdB5ms5Vt/bUz6YaZxon3s38/fXlMeJvSjnOA
+   WzNHiEezGMeBn1OA1klLCWqndIkM/nSF8etifrylHexQw6ny9lYyr1FDZ
+   vzpduAGu/a3U9wvL2h93AqDOazOHVtb1pHDPK8NY+fTmIaNEqy5mrDqP1
+   ljiJ9HqMUo49lFkr4I2lLUk74rV8BstB8IiJhLkcxDGeEaZDBELJvvokG
+   jOI6OtLQE6Ywejg1JzQFUadxffWtgWFTV6IK/8X38InQi/b8643PvFgrX
+   w==;
+X-CSE-ConnectionGUID: MmMshfyETbKEfVC/MTxN/g==
+X-CSE-MsgGUID: yq9l2Mm9QVW/WyUGuKPhQQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="39702315"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="39702315"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 07:28:28 -0800
+X-CSE-ConnectionGUID: EASXZdtFScKmoBX9hvwXow==
+X-CSE-MsgGUID: f+zV0DLaQsa/hRDw6RXbpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="116161825"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa005.fm.intel.com with ESMTP; 07 Feb 2025 07:28:28 -0800
+From: kan.liang@linux.intel.com
+To: acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	thomas.falcon@intel.com,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH] perf tool_pmu: Add skip check in tool_pmu__event_to_str()
+Date: Fri,  7 Feb 2025 07:28:44 -0800
+Message-Id: <20250207152844.302167-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205163609.3208829-1-aleksander.lobakin@intel.com>
- <20250205163609.3208829-2-aleksander.lobakin@intel.com> <CANn89iJjCOThDqwsK4v2O8LfcwAB55YohNZ8T2sR40uM2ZoX5w@mail.gmail.com>
- <fe1b0def-89d1-4db3-bf98-7d6c61ff5361@intel.com> <CANn89iJr1R4BGK2Qd+OEgsE7kEPi7X8tgyxjHnYoU7VOU_wgfA@mail.gmail.com>
- <3decafb9-34fe-4fb7-9203-259b813f810c@intel.com> <CANn89iJNq2VC55c-DcA6YC-2EHYZoyov7EUXTHKF2fYy8-wW+w@mail.gmail.com>
- <65176426-3ad0-455f-8afd-f53f48bbecb3@intel.com>
-In-Reply-To: <65176426-3ad0-455f-8afd-f53f48bbecb3@intel.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 7 Feb 2025 16:28:05 +0100
-X-Gm-Features: AWEUYZka9zi2U3F8lUw5I93K5sPS_lYHG0i2Woj0HFXH1KjADuP5qrbUahONMo8
-Message-ID: <CANn89iKSw2QOeOzP8dke0X7cHheKdx=T9aQ7q7d8OemMNN8u7g@mail.gmail.com>
-Subject: Re: [PATCH net-next v4 1/8] net: gro: decouple GRO from the NAPI layer
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: Kees Cook <kees@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@kernel.org>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, netdev@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	=?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 7, 2025 at 4:22=E2=80=AFPM Alexander Lobakin
-<aleksander.lobakin@intel.com> wrote:
->
-> Do you read commit messages or reply just to reply?
+From: Kan Liang <kan.liang@linux.intel.com>
 
-OK, it seems there is not much to say.
+Some topdown related metrics may fail on hybrid machines.
+
+ $perf stat -M tma_frontend_bound
+ Cannot resolve IDs for tma_frontend_bound:
+ cpu_atom@TOPDOWN_FE_BOUND.ALL@ / (8 * cpu_atom@CPU_CLK_UNHALTED.CORE@)
+
+In the find_tool_events(), the tool_pmu__event_to_str() is used to
+compare the tool_events. It only checks the event name, no PMU or arch.
+So the tool_events[TOOL_PMU__EVENT_SLOTS] is set to true, because the
+p-core Topdown metrics has "slots" event.
+The tool_events is shared. So when parsing the e-core metrics, the
+"slots" is automatically added.
+
+The "slots" event as a tool event should only be available on arm64. It
+has a different meaning on X86. The tool_pmu__skip_event() intends
+handle the case. Apply it for tool_pmu__event_to_str() as well.
+
+There is a lack of sanity check in the expr__get_id(). Add the check.
+
+Closes: https://lore.kernel.org/lkml/608077bc-4139-4a97-8dc4-7997177d95c4@linux.intel.com/
+Fixes: 069057239a67 ("perf tool_pmu: Move expr literals to tool_pmu")
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ tools/perf/util/expr.c     | 2 ++
+ tools/perf/util/tool_pmu.c | 3 ++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index c221dcce6666..6413537442aa 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -215,6 +215,8 @@ int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
+ int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
+ 		 struct expr_id_data **data)
+ {
++	if (!ctx || !id)
++		return -1;
+ 	return hashmap__find(ctx->ids, id, data) ? 0 : -1;
+ }
+ 
+diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
+index 4fb097578479..3a68debe7143 100644
+--- a/tools/perf/util/tool_pmu.c
++++ b/tools/perf/util/tool_pmu.c
+@@ -62,7 +62,8 @@ int tool_pmu__num_skip_events(void)
+ 
+ const char *tool_pmu__event_to_str(enum tool_pmu_event ev)
+ {
+-	if (ev > TOOL_PMU__EVENT_NONE && ev < TOOL_PMU__EVENT_MAX)
++	if ((ev > TOOL_PMU__EVENT_NONE && ev < TOOL_PMU__EVENT_MAX) &&
++	    !tool_pmu__skip_event(tool_pmu__event_names[ev]))
+ 		return tool_pmu__event_names[ev];
+ 
+ 	return NULL;
+-- 
+2.38.1
+
