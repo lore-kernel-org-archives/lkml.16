@@ -1,1681 +1,209 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2047.outbound.protection.outlook.com [40.107.101.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689AF1A2C04
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738954328; cv=none; b=Nxfc5TD8qYUPk+20xa6ufdLnFf/khljwRV8qKwZFIaAdwn3MXHvKTYbqR7fevdJuxIfAWUuq1QSvHlZxLHMhjysabzytppW4XTl8F5m7JnAOZfpWeLV7hBPXNlOJInv2niDhNpIepGY0weXk5s9TUvJyPH7K/qyMQgSENAYEuHU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738954328; c=relaxed/simple;
-	bh=x8n214d/vM2v/9WRi7VLmwRPbhDMf4drjRF/kqQBNj4=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=RzuhXH9h73pJU9FWn6nLg29VBMXfKVvmND24xAdoA/rMAYc8TWYxLIBFj6r4ygDuN+VC8RPX8jRkgKdwXOsUiUZ9GYhd4sr0t8BeU9Ejt84P8Dj6qVMdUYTW0wpgedSNo5a7FbNFpr/OEvLuvImdCi9Er5APq7RiHYhedGyrBcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wplHL9UG; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619EF1A5BB6;
+	Fri,  7 Feb 2025 18:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738954346; cv=fail; b=kzTPnHEpCMIO5W0JztibSOB+3+RBm8P9fpdNkL1LvNUtgxneQwcE8HKg4ytRPT2nCAZPkqPax1gKXLtMUJr8qd8J9blJioDRA24AkGRfYQty3lZeP4urmY9CB9fmUGo2ZjYSvS6gT3A+m+WqXCRnAJE6i5L4ibAUuxX6SlIPYTs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738954346; c=relaxed/simple;
+	bh=7FV9XQD/y1TNUsmNvSkr2FcYrcXDv/vOlIGltm/gMYI=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=VshGzbJsI8oFeuFulvAXP09pURACAZIqtgA6sDcWi5csasbQLtoFc8KjyRWdO7BCET5/ifIfOVdc/TPH8H2Sf4/XlXIB8u5xjpLtCe4WIzmYP3LzejAl6xS7nqf7DZqinPRyTjKDaLp3pUTeLWUlioXCC5ph2HbtcNAMcVANIX4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2PVItWUm; arc=fail smtp.client-ip=40.107.101.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wplHL9UG"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6f79c1cf49dso29619627b3.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 10:52:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738954323; x=1739559123; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ztrECcxLVq/ZXKvo6IgeWR1g+Ty1r5uN83n/OJOxPDM=;
-        b=wplHL9UGI2j5TDNCONaKBF9wl61PgXe6GSmSy9QIiI9OjW5VP1+xiwNKAMbJ3ukAwl
-         m9lZIemftAcvJqFwSc+U6ZXjFSZgPPshLybBi+82yLM27r9zTAjT0Jf7iuFt2f9dtokp
-         Fd6xL9dcnht/xzuDfxVQfifwHFyUj7LqZtf/7BTy0L7+UEV79WHXoBbIVpqFJJnLJ4iJ
-         BKw5mwsCjLwwULdLmstOIxHBbNATidDrz/IJ19Z1ppZkohzuvaLLRxmoNkICpP+H7JB3
-         d/T3KOS720YmeMvwmP/fbOhg8RJMzXn5qMd1Uz36FM0lP1Z15fjrjKoe72Bqb63sZqpM
-         uQ6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738954323; x=1739559123;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ztrECcxLVq/ZXKvo6IgeWR1g+Ty1r5uN83n/OJOxPDM=;
-        b=pHnCCzFu+OILNI2vwWmpE4vIixoyA8FuZdGicUGmWNGeXwwu3DWjl6RHm2t6lGRwGy
-         YyPPfR8a32ieOktKP4n7xRdHuj/h/j36znB1lJ+34dYphFAk0gDMthFtq+ApBsA9J1/r
-         M6ULtSf/okgtbJZhjHBntU662yk1Dp//CcTq6UQre+4WrEQ/4aSmfiir1XvH0XLJSi8h
-         hmQSngcY1GAp0U7tJ0DueVvWMKMtDXXu6hex8uVPyIxv/OlI8oHt0jpPXlIVdYl8+J1o
-         IqeMiwWGxs6b/OCAK6a+s+ypiWIPMVYbz4YwnTBkjGF0lVKLc58Uz6TMQf8WXRCriYOe
-         zw2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW5G24tWV/K0RDhlDnHsdCfFZaxJdQJWh+FPeMQ+BAZZd5Mr/6uhNrc0hrbIAk6EYoSoK10AIoL9YbmZRU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ9DZmEmRYeIWvqdJP7fFUZ1sujzDJbHR+4LUZx43lRkbywgYT
-	104ndXOjcYmGvDRDz6TilpP4SJtA2pkjTuIQmM1oLoWv2wXtvL+f+5gcfeWH46ysDSMxLZuAgDb
-	V1vYkQA==
-X-Google-Smtp-Source: AGHT+IHyvgZSTOAGGTvZ5fBGwpkpRA5kmhoIP8RqyqK8mDO2UDE1pjwFQqDRue5UKJ4SYZID+NJEWRJkgEzy
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:79e4:4a45:1e80:ace5])
- (user=irogers job=sendgmr) by 2002:a05:690c:5c0b:b0:6f9:42d3:f8db with SMTP
- id 00721157ae682-6f9b297a7b9mr313947b3.6.1738954323310; Fri, 07 Feb 2025
- 10:52:03 -0800 (PST)
-Date: Fri,  7 Feb 2025 10:51:31 -0800
-In-Reply-To: <20250207185154.824433-1-irogers@google.com>
-Message-Id: <20250207185154.824433-3-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2PVItWUm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=T/8ZiC9yJ27NixYRG708iBtS3GS28V3J4C06T4EBZiQuKrP2nmwMi1yc8M3hCy/sRh3uMsyTaSOIytRgH5pCIEJ9fGqEiQ9lTFmjt3oFdXVKkrw+6dNoHpZqxbJs07UekfFXqyIngfeiDShEr5NBxpi6aN3RvXn91p4HyT5GnNBYki4MBB2B5UCumEQher+o2qYbj9brJ7ULOjo9I0icfz6KCFaVUXICGvRjBtf7tCvIPrknVzGs8Bs/Pkx+aLEP9t1D1WWhOWNQ9shjWPD9sgHsdxed3EoMYek9Jm09o602wu7Ipj8N9O0q3W6SYpSfcgj9/2dCl4NIcLhDaoP4Sg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sW/rHxY9LmEZmiF0PWQ35fEFTLVHSBREM0Smp7NHIWY=;
+ b=rTDe2e/vCj7jfJfFcYwmB+TWGsyk8DYhpdiqf0J/i7RmHTGQ+4pzaQ89ZEDYP8344cYQ6CjA4hz+ZeN2UmuVZ81zDejVK5XwLxEY5o1TRlZ4OoruZvwJ7S+pdVrdzWIO4MasdhATRKz3/rRXK6/iGeSZf6qUdGNyXJBL2Cs8VhW//Qec8/+XJ8cu0kt9Qi/PpuKFUV2uLQvmXuD0qjJVig68hpx98HpodOZbXwv17Nw4gLAjlG7qZAvrDdXQ0kTQ8vL24Zeg4BJCRKL+7uW/7H6xOxdFYf86aGouNBbP5rm6+snZWvRoTB903cAk1nBlMtmyoJrNOVyjm96wN3v1XA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sW/rHxY9LmEZmiF0PWQ35fEFTLVHSBREM0Smp7NHIWY=;
+ b=2PVItWUmP9jklJ/Q/8FNP/A23wOBwM+wtEkpyIUWD+G2UCpeg5CjTyHyLd4lpC0GbtZG/E7Q9pI67FMaBz/51XMK9PbtkUmlJo6tnYvNzi+9TZoZr2zknog9soWsRD1ihkRmXo/O4+ljtIVMXFVVr66DO+W8Ct1y7uo84Q9NGx8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
+ by CY5PR12MB6297.namprd12.prod.outlook.com (2603:10b6:930:22::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.23; Fri, 7 Feb
+ 2025 18:52:20 +0000
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87%4]) with mapi id 15.20.8422.010; Fri, 7 Feb 2025
+ 18:52:20 +0000
+Message-ID: <11da060c-fb57-486f-bb8d-4ef830a2addb@amd.com>
+Date: Fri, 7 Feb 2025 12:52:15 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 08/23] x86/resctrl: Introduce interface to display
+ number of monitoring counters
+From: "Moger, Babu" <bmoger@amd.com>
+To: Reinette Chatre <reinette.chatre@intel.com>,
+ Babu Moger <babu.moger@amd.com>, corbet@lwn.net, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+ tony.luck@intel.com, peternewman@google.com
+Cc: x86@kernel.org, hpa@zytor.com, paulmck@kernel.org,
+ akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
+ xiongwei.song@windriver.com, pawan.kumar.gupta@linux.intel.com,
+ daniel.sneddon@linux.intel.com, jpoimboe@kernel.org, perry.yuan@amd.com,
+ sandipan.das@amd.com, kai.huang@intel.com, xiaoyao.li@intel.com,
+ seanjc@google.com, xin3.li@intel.com, andrew.cooper3@citrix.com,
+ ebiggers@google.com, mario.limonciello@amd.com, james.morse@arm.com,
+ tan.shaopeng@fujitsu.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
+ eranian@google.com
+References: <cover.1737577229.git.babu.moger@amd.com>
+ <80457612b98078bd7786c73f83775e4de86c699e.1737577229.git.babu.moger@amd.com>
+ <6376ea35-4ce7-4ac1-967b-97f2728228e3@intel.com>
+ <a6120ad5-c9fc-48cd-b2a6-cfb7ac33100a@amd.com>
+Content-Language: en-US
+In-Reply-To: <a6120ad5-c9fc-48cd-b2a6-cfb7ac33100a@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA1P222CA0137.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:3c2::6) To MW3PR12MB4553.namprd12.prod.outlook.com
+ (2603:10b6:303:2c::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250207185154.824433-1-irogers@google.com>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Subject: [PATCH v7 02/24] perf vendor events: Update AlderlakeN events/metrics
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>, 
-	Michael Petlan <mpetlan@redhat.com>, Thomas Falcon <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|CY5PR12MB6297:EE_
+X-MS-Office365-Filtering-Correlation-Id: e63f975a-f642-472f-2921-08dd47a88d0e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZTVDeUo5ZjFnQ29HSlBndXRNQXpKVGgxN0o2cEoza21aOXNNaUF4Z09SZ1hu?=
+ =?utf-8?B?d1kxYjZjbXI3NlhPdWtIdWswYjFHMkJSSVUzek5GZ0QrS0NFOUFZc3U0M3dI?=
+ =?utf-8?B?dzg4bVBvZzFiSWNBRk00WTlIWlF2bHBzN3FWdzFFN3E2R25IR0JjekZNUy9h?=
+ =?utf-8?B?bWZtc01MZUpnUU1JbFNHWi9ncGpMZThBeTVMbllNMW5WZERuR1pUbnl6bVFq?=
+ =?utf-8?B?SzZBWU54Mmp0UVJiRlN1S1VtbFF2S2cwQXdNM1pib1oweDJqQnhuRHpmaDgz?=
+ =?utf-8?B?TUJPbmNGYTNlM0pzenlGU0lQSkFRbVpyc2JnT29wUEY2WlliTEJaSTdBdjFN?=
+ =?utf-8?B?STE4L0szdUl1d25qd2luQUJ0U3hHUUpWMUlrQTVPZHlsY2VyVDlJSjd3SUxp?=
+ =?utf-8?B?UTh2NWNTR0ZFOGMyV2pCVStJL1lrckZKb3dZT0VNekg4UHc0M0l0VU1oNUo4?=
+ =?utf-8?B?T3JtbnhzeVVranBwajBXTFZZL2xpdEhKdXpVS1ZRd1REY3VEU1pBVXNmWGZq?=
+ =?utf-8?B?aFcvdm43NjRkaXcxRlU3VTdUSDVRUjFZMll0U0tCaVJKOFUrV3Frb1RZakhB?=
+ =?utf-8?B?bCtNeXZuNWw2MUNXVGpUOFBBcHpBRG14ZzlEZVZrTElNTTd5Rlc2RkMydjlo?=
+ =?utf-8?B?WmxkZDFGR1VoZEpRY05WV25sSVRGNHdXWXFDR291bWtmOVVVTGpFUi9OcllP?=
+ =?utf-8?B?Y1BEVFhaUmpZRDhFcEdWcTNpWFJKbzhwQkc1RHRvcUw2TmJkOHpWakhkZHdO?=
+ =?utf-8?B?dVdOL2NBZGtGQTVHZ3JxR3RxRWFOVUk5SkFNTTVGNHlVRmNKNUhNQlgrd0h0?=
+ =?utf-8?B?clZaYmJlZjdSUVFJWk1LbVg0S2FBYlVsbCs3cmdpeDlOLzAya2xSOTBhSE5B?=
+ =?utf-8?B?OHhVSmN2S0gyVTVRcWJmZmRSUjJFM0xLMTM0K3VwbmhFK0NHdTlnbjM5L0R3?=
+ =?utf-8?B?M3d4QmlJb2k5eGFybmw4SDBwak1nUW5XbFFoRkJ5Q0ZPRE5rKzlyRSt4OGdq?=
+ =?utf-8?B?VzZMSFZzVnRNemt4QXRGSDc4N2JTM2x2dDhDTER0SjVEU1YyOVVnRU1EZjRs?=
+ =?utf-8?B?NC9aSEFPbFJlRFpvOHA1V3VjVjROMUtnL3N6ZitXSU16NjBLMkVobHN2VTk1?=
+ =?utf-8?B?cnBYWUVrejFtUmJqUHpsSW1GWWVLRWVSNjlGUmY1Z0gzWmoxS1NRalBnZVF6?=
+ =?utf-8?B?MWVVRTRMNFhubXJPRko4MmF3K3YrWjVCMVAxQml1V2FTQnNGM3NqSXZQZUhM?=
+ =?utf-8?B?ZkZaUnBUd3pNZkF5ck9peDVpM293eXJDMnVZajF3NUNTTXVCZnBMMDZ1Wnpi?=
+ =?utf-8?B?QjJYY2FJRS9ERXh2SHdhWThud3RLMUFXeDFjSlFVV1l0T3V5RUtPK0xkcmhX?=
+ =?utf-8?B?NERVT2VvZlp0Vy9ONStNRmpHc0pMODA3TENnaFNrZnJoR3RvNW4zWDF4bDd1?=
+ =?utf-8?B?dEJkWXpkRTdlMzcyVVIxT2pzaWxqVW9PMmhqYlZlKzVpT1o4b2FWVzJ1Wk5n?=
+ =?utf-8?B?cnFGOVJiREEyMHo0d2NXV2c3VlBzZG5mUlQ0RmUwVUZNRnFaMjQrMzUxb2Vl?=
+ =?utf-8?B?Q2tBVllEWDBFOUt6OFZVTmlRZTdLRmRDUnZpQ0RpTzd3QncwMFNXbFlDRUZ2?=
+ =?utf-8?B?SXJjSUlhUmRUdEpWSnZSdU5HNXpDMVpQSWpCK0k1Wnp3SzBaRmFTbEo1TFpy?=
+ =?utf-8?B?ODlPU1kwUWdkQWVQdndqeXFoek9IenJyVGt2R2hZa0xkL2xuK2Urb2dOUzVz?=
+ =?utf-8?B?OTM2Z0hKUnZ2QzREU2FIMmQxR2hSL3BPZFJlTWZ4emxGcDgxRXQxWDVXMXdR?=
+ =?utf-8?B?VFZJSUZueXlTZ3hyL1ZSN0plQXRWQ3hzeFlvVU9sb2JZNVJvN3VGV005TTA3?=
+ =?utf-8?Q?3VF1hlCEyYw/Y?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QmE4Zi9tVGV4aSsrVElYVWJIQ1ltQUZuVXE0aWNLWS9Pa2lvOFI4V1JtZU5F?=
+ =?utf-8?B?RnQwZlpwcWRxVE5kM2wwRER4ZGE4UjE4OWYxZWFaa0RSSzFWVndCVzlEYU83?=
+ =?utf-8?B?MTMvU3dJaDVERC83c2dtMnVZSWVrcmVOTzIvTWdZcTJCNHpxYktWUE02WndP?=
+ =?utf-8?B?Rmd4Njd0K2N5ai9FRHJXRktsUkhtZktlLzYrSU93dDVVVDRhTDd4SzJDc0Q3?=
+ =?utf-8?B?Z0FFdXVWMkNFNVA1ZHFFdGMyMHRQR0QwYmpCSForbXpDZjdqWVJPSisrUlFS?=
+ =?utf-8?B?c1JvU1NEdzhGTm9PcDY1L2poKy9qMG9VSmpEWnhPdTJydGsrRzFBSXh6YmxV?=
+ =?utf-8?B?K1hpMFRKTjZHMUhsWlRTbUROaVh5eUxZYnBqKy92M0FTQVI1MHFjNGhud0Ro?=
+ =?utf-8?B?MGZXTjJwK0h4ZGtDeTV5S096ZXRWbjRacHJoNTBYem53T2dpMmdqb1Vxb1BG?=
+ =?utf-8?B?cFVSVnZCVS9Gc0JtYnplQURpK2RkeG1mOE5WL0xsRHhmYnozRzlPVnpSM2NY?=
+ =?utf-8?B?dW52TXdNRVFPdzVIMU9TcmFtL2dGaFpaNFlCMmdWUzVkaXhIRVZIQXNqbDhM?=
+ =?utf-8?B?aitHSUttTFRGSWNlcDFaMnZabjFqZ3R0WWhCcmIxR3JTK3VudlBNUklKT0Za?=
+ =?utf-8?B?aCtyNDFyUW1LVllvZU5jM3h3a0ZFd0VOV2xWT3NxYi9qaFVHS3d0NG41cWJQ?=
+ =?utf-8?B?K1lsaVBuM1lFdlppbW5WdUVyYlpHdktrRTduT1VXZGdLV0ozalVXZE42OThy?=
+ =?utf-8?B?c2NqZVp2dksza3BIRGN2OEs0QVd1SUJjNFh0eUtBejVENW05YlFEczROZzds?=
+ =?utf-8?B?MVFWN3hyQjluYWZkYnZWWC9hYUY5MGpUbjRSRUNSNzZEa0Q0UUJVUGt4Zkw5?=
+ =?utf-8?B?MHl0M2tpc0tTQThPc0I2SjhRQUY5SVhUcUxHMERGT1RxTzEwRVExNlREWUl3?=
+ =?utf-8?B?eWFIbWFERkE0cnN2b0ZUMWhsSmVaclJvQU9RSHJsQnc4eDNwM0I0ODhraEUz?=
+ =?utf-8?B?SnZxdTM5WXdRYWtYN3dTQzR0dXVVNjRRSC80UTg0YkxleEIwV0JrRUZtL3pi?=
+ =?utf-8?B?TUFLUVlVeE11aXpETDQ1K05iS3VzNmwvQVorc3Q0Qit6VUJiU1VEVW9tNWxo?=
+ =?utf-8?B?RDN6K3dvdkliOWwzVHFMVWJFSzRlWmFOU1dUdkx5dmVNV0JHVE9DT0E4dHg5?=
+ =?utf-8?B?OWdaL1h1TWV0eE1scmR4UmhQa2FhaUhEdk84ZkxtTTlxSGlzd0Q4UEJCb3E5?=
+ =?utf-8?B?K1FDRW9rMlRQVDhnSzAxTk9Eclo3NW5WNGVCalZRNEw3S0ZRUzdScmYwU3h1?=
+ =?utf-8?B?NHpmd1B0NW1yVmZHY2R5S1ovcXVPeHhEVWo5WDFQLzJoakNBMk5Db2dZbHRR?=
+ =?utf-8?B?OG5NaFdtN3dSbXprSXBxc1FwTzl3TkhVaHBySG8wcmdHVTAvazZSeVFnSnF5?=
+ =?utf-8?B?UW1HV0tlZmp4MFFRRzRaVzVIdUZZT0luODhjQVZka3JaZ3JVTVZtMkFicGpU?=
+ =?utf-8?B?VFpIMWNvVWUycHMrMTU0dlN1eDdUQVJHK3RMdWRMWnNGdHprdzVQcFhhZEN3?=
+ =?utf-8?B?SzhQb0xQSUV0ZHRaVUlTOWFyd2oxYzlhaWgzdDk2ME5Obld1bUtzakR0Z25q?=
+ =?utf-8?B?NEJUVklLYnBKRTZGNS8yMll1Um9iWjhoZEZwT2d1NjhJMjNvU21md0R5cWdO?=
+ =?utf-8?B?WitjVkVKOG83TnBTdXU2MWVNMVBVa3VSbVNXQ01FZ3V0bER0MDJON2Z3c0px?=
+ =?utf-8?B?Z25vR1YxOFFqMG1heHNobWZaMGFkbk1PMGd6dXVvVFY1Y0x6c1lhVXRHZHp1?=
+ =?utf-8?B?aDA0VnJ6ajRRQ21jU2tlWXF2V0h2TXFLWlRybUhldksxMWgzRlJrdURZWVBJ?=
+ =?utf-8?B?SkttaGx5ckhzYVdMWFJVcXhwQUtWYVg0b2VQcFFGcE9xK3hZOVVWY1duUGs1?=
+ =?utf-8?B?UnhjTy9ZQlNRcXZvQVFIMHVHdk1KN2Q5SnBSWWdlWURSdm9qcmc3NFZ0cmdS?=
+ =?utf-8?B?cXltNkc2SVpMUDZ6d3UyT0ZIRXJLR3l5Q0JVcGJ3YjF3UWF2WHVFYlNLMDJo?=
+ =?utf-8?B?Vm9wVkdmTnp6SHRCWFE1TnZxdzBaSU9pMXBJYXB6UHE2bzNtTUxjM0RjMXFa?=
+ =?utf-8?Q?7BzK25i9+CXfJpgA2brT/El5L?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e63f975a-f642-472f-2921-08dd47a88d0e
+X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 18:52:20.4523
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3o2CJq50GPd1DmCvJjCy3B0n6XRtIgG9m0d1EWDGWA8xRG6Bgh1Lpz7tt1Unly48
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6297
 
-Update events from v1.27 to v1.28.
-Update TMA metrics from 4.8 to 5.02.
+Hi Reinette,
 
-Bring in the event updates v1.28:
-https://github.com/intel/perfmon/commit/801f43f22ec6bd23fbb5d18860f395d61e7=
-f4081
+On 2/7/2025 11:18 AM, Moger, Babu wrote:
+> Does this look ok? Just added domain in the text.
+> 
+> "The number of monitoring counters available in each domain for 
+> assignment when the system supports mbm_cntr_assign mode.
+> ::
+>    # cat /sys/fs/resctrl/info/L3_MON/num_mbm_cntrs
+>    32
+> 
+> The resctrl file system supports tracking up to two memory bandwidth
+> events per monitoring group: mbm_total_bytes and/or mbm_local_bytes.
+> Up to two counters can be assigned per monitoring group, one for each
+> memory bandwidth event in each domain. More monitoring groups can be 
+> tracked by assigning one counter per monitoring group. However, doing so 
+> limits memory bandwidth tracking to a single memory bandwidth event per
+> monitoring group."
 
-The TMA 5.02 update is from (with subsequent fixes):
-https://github.com/intel/perfmon/commit/1d72913b2d938781fb28f3cc3507aaec5c2=
-2d782
+Revised again:
 
-Co-developed-by: Caleb Biggers <caleb.biggers@intel.com>
-Signed-off-by: Caleb Biggers <caleb.biggers@intel.com>
-Acked-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../arch/x86/alderlaken/adln-metrics.json     |  83 ++++---
- .../pmu-events/arch/x86/alderlaken/cache.json | 227 ++++++++++++++++--
- .../arch/x86/alderlaken/floating-point.json   |  17 +-
- .../arch/x86/alderlaken/memory.json           |  20 ++
- .../pmu-events/arch/x86/alderlaken/other.json |  81 ++++++-
- .../arch/x86/alderlaken/pipeline.json         |  97 +++++---
- .../arch/x86/alderlaken/virtual-memory.json   |  30 +++
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   2 +-
- 8 files changed, 458 insertions(+), 99 deletions(-)
+"The number of monitoring counters available in each domain for 
+assignment when the system supports mbm_cntr_assign mode. For example, 
+on a system with 32 monitoring counters:
+::
+   # cat /sys/fs/resctrl/info/L3_MON/num_mbm_cntrs
+   32
 
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/adln-metrics.json b/=
-tools/perf/pmu-events/arch/x86/alderlaken/adln-metrics.json
-index 447596f924ab..141562def5c4 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/adln-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/adln-metrics.json
-@@ -48,13 +48,6 @@
-         "MetricName": "C7_Core_Residency",
-         "ScaleUnit": "100%"
-     },
--    {
--        "BriefDescription": "C7 residency percent per package",
--        "MetricExpr": "cstate_pkg@c7\\-residency@ / TSC",
--        "MetricGroup": "Power",
--        "MetricName": "C7_Pkg_Residency",
--        "ScaleUnit": "100%"
--    },
-     {
-         "BriefDescription": "C8 residency percent per package",
-         "MetricExpr": "cstate_pkg@c8\\-residency@ / TSC",
-@@ -62,13 +55,6 @@
-         "MetricName": "C8_Pkg_Residency",
-         "ScaleUnit": "100%"
-     },
--    {
--        "BriefDescription": "C9 residency percent per package",
--        "MetricExpr": "cstate_pkg@c9\\-residency@ / TSC",
--        "MetricGroup": "Power",
--        "MetricName": "C9_Pkg_Residency",
--        "ScaleUnit": "100%"
--    },
-     {
-         "BriefDescription": "Percentage of cycles spent in System Manageme=
-nt Interrupts.",
-         "MetricExpr": "((msr@aperf@ - cycles) / msr@aperf@ if msr@smi@ > 0=
- else 0)",
-@@ -89,7 +75,7 @@
-         "MetricExpr": "tma_core_bound",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_core_bound_group",
-         "MetricName": "tma_allocation_restriction",
--        "MetricThreshold": "tma_allocation_restriction > 0.1 & (tma_core_b=
-ound > 0.1 & tma_backend_bound > 0.1)",
-+        "MetricThreshold": "(tma_allocation_restriction >0.10) & ((tma_cor=
-e_bound >0.10) & ((tma_backend_bound >0.10)))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -98,7 +84,7 @@
-         "MetricExpr": "TOPDOWN_BE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE)"=
-,
-         "MetricGroup": "Default;TopdownL1;tma_L1_group",
-         "MetricName": "tma_backend_bound",
--        "MetricThreshold": "tma_backend_bound > 0.1",
-+        "MetricThreshold": "(tma_backend_bound >0.10)",
-         "MetricgroupNoGroup": "TopdownL1;Default",
-         "PublicDescription": "Counts the total number of issue slots that =
-were not consumed by the backend due to backend stalls. Note that uops must=
- be available for consumption in order for this event to count. If a uop is=
- not available (IQ is empty), this event will not count",
-         "ScaleUnit": "100%"
-@@ -109,7 +95,7 @@
-         "MetricExpr": "(5 * CPU_CLK_UNHALTED.CORE - (TOPDOWN_FE_BOUND.ALL =
-+ TOPDOWN_BE_BOUND.ALL + TOPDOWN_RETIRING.ALL)) / (5 * CPU_CLK_UNHALTED.COR=
-E)",
-         "MetricGroup": "Default;TopdownL1;tma_L1_group",
-         "MetricName": "tma_bad_speculation",
--        "MetricThreshold": "tma_bad_speculation > 0.15",
-+        "MetricThreshold": "(tma_bad_speculation >0.15)",
-         "MetricgroupNoGroup": "TopdownL1;Default",
-         "PublicDescription": "Counts the total number of issue slots that =
-were not consumed by the backend because allocation is stalled due to a mis=
-predicted jump or a machine clear. Only issue slots wasted due to fast nuke=
-s such as memory ordering nukes are counted. Other nukes are not accounted =
-for. Counts all issue slots blocked during this recovery window including r=
-elevant microcode flows and while uops are not yet available in the instruc=
-tion queue (IQ). Also includes the issue slots that were consumed by the ba=
-ckend but were thrown away because they were younger than the mispredict or=
- machine clear.",
-         "ScaleUnit": "100%"
-@@ -119,7 +105,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.BRANCH_DETECT / (5 * CPU_CLK_UNHAL=
-TED.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
-         "MetricName": "tma_branch_detect",
--        "MetricThreshold": "tma_branch_detect > 0.05 & (tma_ifetch_latency=
- > 0.15 & tma_frontend_bound > 0.2)",
-+        "MetricThreshold": "(tma_branch_detect >0.05) & ((tma_ifetch_laten=
-cy >0.15) & ((tma_frontend_bound >0.20)))",
-         "PublicDescription": "Counts the number of issue slots that were n=
-ot delivered by the frontend due to BACLEARS, which occurs when the Branch =
-Target Buffer (BTB) prediction or lack thereof, was corrected by a later br=
-anch predictor in the frontend. Includes BACLEARS due to all branch types i=
-ncluding conditional and unconditional jumps, returns, and indirect branche=
-s.",
-         "ScaleUnit": "100%"
-     },
-@@ -128,7 +114,7 @@
-         "MetricExpr": "TOPDOWN_BAD_SPECULATION.MISPREDICT / (5 * CPU_CLK_U=
-NHALTED.CORE)",
-         "MetricGroup": "TopdownL2;tma_L2_group;tma_bad_speculation_group",
-         "MetricName": "tma_branch_mispredicts",
--        "MetricThreshold": "tma_branch_mispredicts > 0.05 & tma_bad_specul=
-ation > 0.15",
-+        "MetricThreshold": "(tma_branch_mispredicts >0.05) & ((tma_bad_spe=
-culation >0.15))",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-@@ -137,7 +123,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.BRANCH_RESTEER / (5 * CPU_CLK_UNHA=
-LTED.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
-         "MetricName": "tma_branch_resteer",
--        "MetricThreshold": "tma_branch_resteer > 0.05 & (tma_ifetch_latenc=
-y > 0.15 & tma_frontend_bound > 0.2)",
-+        "MetricThreshold": "(tma_branch_resteer >0.05) & ((tma_ifetch_late=
-ncy >0.15) & ((tma_frontend_bound >0.20)))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -145,7 +131,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.CISC / (5 * CPU_CLK_UNHALTED.CORE)=
-",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
-,
-         "MetricName": "tma_cisc",
--        "MetricThreshold": "tma_cisc > 0.05 & (tma_ifetch_bandwidth > 0.1 =
-& tma_frontend_bound > 0.2)",
-+        "MetricThreshold": "(tma_cisc >0.05) & ((tma_ifetch_bandwidth >0.1=
-0) & ((tma_frontend_bound >0.20)))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -153,7 +139,7 @@
-         "MetricExpr": "TOPDOWN_BE_BOUND.ALLOC_RESTRICTIONS / (5 * CPU_CLK_=
-UNHALTED.CORE)",
-         "MetricGroup": "TopdownL2;tma_L2_group;tma_backend_bound_group",
-         "MetricName": "tma_core_bound",
--        "MetricThreshold": "tma_core_bound > 0.1 & tma_backend_bound > 0.1=
-",
-+        "MetricThreshold": "(tma_core_bound >0.10) & ((tma_backend_bound >=
-0.10))",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-@@ -162,7 +148,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.DECODE / (5 * CPU_CLK_UNHALTED.COR=
-E)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
-,
-         "MetricName": "tma_decode",
--        "MetricThreshold": "tma_decode > 0.05 & (tma_ifetch_bandwidth > 0.=
-1 & tma_frontend_bound > 0.2)",
-+        "MetricThreshold": "(tma_decode >0.05) & ((tma_ifetch_bandwidth >0=
-.10) & ((tma_frontend_bound >0.20)))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -170,7 +156,7 @@
-         "MetricExpr": "TOPDOWN_BAD_SPECULATION.FASTNUKE / (5 * CPU_CLK_UNH=
-ALTED.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_machine_clears_group",
-         "MetricName": "tma_fast_nuke",
--        "MetricThreshold": "tma_fast_nuke > 0.05 & (tma_machine_clears > 0=
-.05 & tma_bad_speculation > 0.15)",
-+        "MetricThreshold": "(tma_fast_nuke >0.05) & ((tma_machine_clears >=
-0.05) & ((tma_bad_speculation >0.15)))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -179,7 +165,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.ALL / (5 * CPU_CLK_UNHALTED.CORE)"=
-,
-         "MetricGroup": "Default;TopdownL1;tma_L1_group",
-         "MetricName": "tma_frontend_bound",
--        "MetricThreshold": "tma_frontend_bound > 0.2",
-+        "MetricThreshold": "(tma_frontend_bound >0.20)",
-         "MetricgroupNoGroup": "TopdownL1;Default",
-         "ScaleUnit": "100%"
-     },
-@@ -188,7 +174,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.ICACHE / (5 * CPU_CLK_UNHALTED.COR=
-E)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
-         "MetricName": "tma_icache_misses",
--        "MetricThreshold": "tma_icache_misses > 0.05 & (tma_ifetch_latency=
- > 0.15 & tma_frontend_bound > 0.2)",
-+        "MetricThreshold": "(tma_icache_misses >0.05) & ((tma_ifetch_laten=
-cy >0.15) & ((tma_frontend_bound >0.20)))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -196,7 +182,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.FRONTEND_BANDWIDTH / (5 * CPU_CLK_=
-UNHALTED.CORE)",
-         "MetricGroup": "TopdownL2;tma_L2_group;tma_frontend_bound_group",
-         "MetricName": "tma_ifetch_bandwidth",
--        "MetricThreshold": "tma_ifetch_bandwidth > 0.1 & tma_frontend_boun=
-d > 0.2",
-+        "MetricThreshold": "(tma_ifetch_bandwidth >0.10) & ((tma_frontend_=
-bound >0.20))",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-@@ -205,7 +191,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.FRONTEND_LATENCY / (5 * CPU_CLK_UN=
-HALTED.CORE)",
-         "MetricGroup": "TopdownL2;tma_L2_group;tma_frontend_bound_group",
-         "MetricName": "tma_ifetch_latency",
--        "MetricThreshold": "tma_ifetch_latency > 0.15 & tma_frontend_bound=
- > 0.2",
-+        "MetricThreshold": "(tma_ifetch_latency >0.15) & ((tma_frontend_bo=
-und >0.20))",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-@@ -320,6 +306,11 @@
-         "MetricExpr": "100 * MEM_BOUND_STALLS.IFETCH_L2_HIT / MEM_BOUND_ST=
-ALLS.IFETCH",
-         "MetricName": "tma_info_ifetch_miss_bound_%_ifetchmissbound_with_l=
-2hit"
-     },
-+    {
-+        "BriefDescription": "Percentage of ifetch miss bound stalls, where=
- the ifetch miss doesn't hit in the L2",
-+        "MetricExpr": "100 * (MEM_BOUND_STALLS.IFETCH_LLC_HIT + MEM_BOUND_=
-STALLS.IFETCH_DRAM_HIT) / MEM_BOUND_STALLS.IFETCH",
-+        "MetricName": "tma_info_ifetch_miss_bound_%_ifetchmissbound_with_l=
-2miss"
-+    },
-     {
-         "BriefDescription": "Percentage of ifetch miss bound stalls, where=
- the ifetch miss hits in the L3",
-         "MetricExpr": "100 * MEM_BOUND_STALLS.IFETCH_LLC_HIT / MEM_BOUND_S=
-TALLS.IFETCH",
-@@ -336,6 +327,12 @@
-         "MetricGroup": "load_store_bound",
-         "MetricName": "tma_info_load_miss_bound_%_loadmissbound_with_l2hit=
-"
-     },
-+    {
-+        "BriefDescription": "Percentage of memory bound stalls where retir=
-ement is stalled due to an L1 miss that subsequently misses in the L2",
-+        "MetricExpr": "100 * (MEM_BOUND_STALLS.LOAD_LLC_HIT + MEM_BOUND_ST=
-ALLS.LOAD_DRAM_HIT) / MEM_BOUND_STALLS.LOAD",
-+        "MetricGroup": "load_store_bound",
-+        "MetricName": "tma_info_load_miss_bound_%_loadmissbound_with_l2mis=
-s"
-+    },
-     {
-         "BriefDescription": "Percentage of memory bound stalls where retir=
-ement is stalled due to an L1 miss that hit the L3",
-         "MetricExpr": "100 * MEM_BOUND_STALLS.LOAD_LLC_HIT / MEM_BOUND_STA=
-LLS.LOAD",
-@@ -472,6 +469,12 @@
-         "MetricGroup": "Summary",
-         "MetricName": "tma_info_system_kernel_utilization"
-     },
-+    {
-+        "BriefDescription": "PerfMon Event Multiplexing accuracy indicator=
-",
-+        "MetricExpr": "CPU_CLK_UNHALTED.CORE_P / CPU_CLK_UNHALTED.CORE",
-+        "MetricName": "tma_info_system_mux",
-+        "MetricThreshold": "((tma_info_system_mux > 1.1)|(tma_info_system_=
-mux < 0.9))"
-+    },
-     {
-         "BriefDescription": "Average Frequency Utilization relative nomina=
-l frequency",
-         "MetricExpr": "CPU_CLK_UNHALTED.CORE / CPU_CLK_UNHALTED.REF_TSC",
-@@ -503,7 +506,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.ITLB / (5 * CPU_CLK_UNHALTED.CORE)=
-",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_latency_group",
-         "MetricName": "tma_itlb_misses",
--        "MetricThreshold": "tma_itlb_misses > 0.05 & (tma_ifetch_latency >=
- 0.15 & tma_frontend_bound > 0.2)",
-+        "MetricThreshold": "(tma_itlb_misses >0.05) & ((tma_ifetch_latency=
- >0.15) & ((tma_frontend_bound >0.20)))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -511,7 +514,7 @@
-         "MetricExpr": "TOPDOWN_BAD_SPECULATION.MACHINE_CLEARS / (5 * CPU_C=
-LK_UNHALTED.CORE)",
-         "MetricGroup": "TopdownL2;tma_L2_group;tma_bad_speculation_group",
-         "MetricName": "tma_machine_clears",
--        "MetricThreshold": "tma_machine_clears > 0.05 & tma_bad_speculatio=
-n > 0.15",
-+        "MetricThreshold": "(tma_machine_clears >0.05) & ((tma_bad_specula=
-tion >0.15))",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-@@ -520,7 +523,7 @@
-         "MetricExpr": "TOPDOWN_BE_BOUND.MEM_SCHEDULER / (5 * CPU_CLK_UNHAL=
-TED.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
-         "MetricName": "tma_mem_scheduler",
--        "MetricThreshold": "tma_mem_scheduler > 0.1 & (tma_resource_bound =
-> 0.2 & tma_backend_bound > 0.1)",
-+        "MetricThreshold": "(tma_mem_scheduler >0.10) & ((tma_resource_bou=
-nd >0.20) & ((tma_backend_bound >0.10)))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -528,7 +531,7 @@
-         "MetricExpr": "TOPDOWN_BE_BOUND.NON_MEM_SCHEDULER / (5 * CPU_CLK_U=
-NHALTED.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
-         "MetricName": "tma_non_mem_scheduler",
--        "MetricThreshold": "tma_non_mem_scheduler > 0.1 & (tma_resource_bo=
-und > 0.2 & tma_backend_bound > 0.1)",
-+        "MetricThreshold": "(tma_non_mem_scheduler >0.10) & ((tma_resource=
-_bound >0.20) & ((tma_backend_bound >0.10)))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -536,7 +539,7 @@
-         "MetricExpr": "TOPDOWN_BAD_SPECULATION.NUKE / (5 * CPU_CLK_UNHALTE=
-D.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_machine_clears_group",
-         "MetricName": "tma_nuke",
--        "MetricThreshold": "tma_nuke > 0.05 & (tma_machine_clears > 0.05 &=
- tma_bad_speculation > 0.15)",
-+        "MetricThreshold": "(tma_nuke >0.05) & ((tma_machine_clears >0.05)=
- & ((tma_bad_speculation >0.15)))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -544,7 +547,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.OTHER / (5 * CPU_CLK_UNHALTED.CORE=
-)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
-,
-         "MetricName": "tma_other_fb",
--        "MetricThreshold": "tma_other_fb > 0.05 & (tma_ifetch_bandwidth > =
-0.1 & tma_frontend_bound > 0.2)",
-+        "MetricThreshold": "(tma_other_fb >0.05) & ((tma_ifetch_bandwidth =
->0.10) & ((tma_frontend_bound >0.20)))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -552,7 +555,7 @@
-         "MetricExpr": "TOPDOWN_FE_BOUND.PREDECODE / (5 * CPU_CLK_UNHALTED.=
-CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_ifetch_bandwidth_group"=
-,
-         "MetricName": "tma_predecode",
--        "MetricThreshold": "tma_predecode > 0.05 & (tma_ifetch_bandwidth >=
- 0.1 & tma_frontend_bound > 0.2)",
-+        "MetricThreshold": "(tma_predecode >0.05) & ((tma_ifetch_bandwidth=
- >0.10) & ((tma_frontend_bound >0.20)))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -560,7 +563,7 @@
-         "MetricExpr": "TOPDOWN_BE_BOUND.REGISTER / (5 * CPU_CLK_UNHALTED.C=
-ORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
-         "MetricName": "tma_register",
--        "MetricThreshold": "tma_register > 0.1 & (tma_resource_bound > 0.2=
- & tma_backend_bound > 0.1)",
-+        "MetricThreshold": "(tma_register >0.10) & ((tma_resource_bound >0=
-.20) & ((tma_backend_bound >0.10)))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -568,7 +571,7 @@
-         "MetricExpr": "TOPDOWN_BE_BOUND.REORDER_BUFFER / (5 * CPU_CLK_UNHA=
-LTED.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
-         "MetricName": "tma_reorder_buffer",
--        "MetricThreshold": "tma_reorder_buffer > 0.1 & (tma_resource_bound=
- > 0.2 & tma_backend_bound > 0.1)",
-+        "MetricThreshold": "(tma_reorder_buffer >0.10) & ((tma_resource_bo=
-und >0.20) & ((tma_backend_bound >0.10)))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -576,7 +579,7 @@
-         "MetricExpr": "tma_backend_bound - tma_core_bound",
-         "MetricGroup": "TopdownL2;tma_L2_group;tma_backend_bound_group",
-         "MetricName": "tma_resource_bound",
--        "MetricThreshold": "tma_resource_bound > 0.2 & tma_backend_bound >=
- 0.1",
-+        "MetricThreshold": "(tma_resource_bound >0.20) & ((tma_backend_bou=
-nd >0.10))",
-         "MetricgroupNoGroup": "TopdownL2",
-         "ScaleUnit": "100%"
-     },
-@@ -586,7 +589,7 @@
-         "MetricExpr": "TOPDOWN_RETIRING.ALL / (5 * CPU_CLK_UNHALTED.CORE)"=
-,
-         "MetricGroup": "Default;TopdownL1;tma_L1_group",
-         "MetricName": "tma_retiring",
--        "MetricThreshold": "tma_retiring > 0.75",
-+        "MetricThreshold": "(tma_retiring >0.75)",
-         "MetricgroupNoGroup": "TopdownL1;Default",
-         "ScaleUnit": "100%"
-     },
-@@ -595,7 +598,7 @@
-         "MetricExpr": "TOPDOWN_BE_BOUND.SERIALIZATION / (5 * CPU_CLK_UNHAL=
-TED.CORE)",
-         "MetricGroup": "TopdownL3;tma_L3_group;tma_resource_bound_group",
-         "MetricName": "tma_serialization",
--        "MetricThreshold": "tma_serialization > 0.1 & (tma_resource_bound =
-> 0.2 & tma_backend_bound > 0.1)",
-+        "MetricThreshold": "(tma_serialization >0.10) & ((tma_resource_bou=
-nd >0.20) & ((tma_backend_bound >0.10)))",
-         "ScaleUnit": "100%"
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json b/tools/p=
-erf/pmu-events/arch/x86/alderlaken/cache.json
-index 1500033ee19f..fd9ed58c2f90 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/cache.json
-@@ -1,4 +1,30 @@
- [
-+    {
-+        "BriefDescription": "Counts the total number of L2 Cache accesses.=
- Counts on a per core basis.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0x24",
-+        "EventName": "L2_REQUEST.ALL",
-+        "PublicDescription": "Counts the total number of L2 Cache Accesses=
-, includes hits, misses, rejects  front door requests for CRd/DRd/RFO/ItoM/=
-L2 Prefetches only.  Counts on a per core basis.",
-+        "SampleAfterValue": "200003"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of L2 Cache accesses that r=
-esulted in a hit. Counts on a per core basis.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0x24",
-+        "EventName": "L2_REQUEST.HIT",
-+        "PublicDescription": "Counts the number of L2 Cache accesses that =
-resulted in a hit from a front door request only (does not include rejects =
-or recycles), Counts on a per core basis.",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of L2 Cache accesses that r=
-esulted in a miss. Counts on a per core basis.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0x24",
-+        "EventName": "L2_REQUEST.MISS",
-+        "PublicDescription": "Counts the number of L2 Cache accesses that =
-resulted in a miss from a front door request only (does not include rejects=
- or recycles). Counts on a per core basis.",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts the number of cacheable memory request=
-s that miss in the LLC. Counts on a per core basis.",
-         "Counter": "0,1,2,3,4,5",
-@@ -92,30 +118,81 @@
-         "Data_LA": "1",
-         "EventCode": "0xd1",
-         "EventName": "MEM_LOAD_UOPS_RETIRED.DRAM_HIT",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0x80"
-     },
-+    {
-+        "BriefDescription": "Counts the number of load uops retired that h=
-it in the L3 cache, in which a snoop was required and modified data was for=
-warded from another core or module.",
-+        "Counter": "0,1,2,3,4,5",
-+        "Data_LA": "1",
-+        "EventCode": "0xd1",
-+        "EventName": "MEM_LOAD_UOPS_RETIRED.HITM",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x20"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of load uops retired that h=
-it in the L1 data cache.",
-+        "Counter": "0,1,2,3,4,5",
-+        "Data_LA": "1",
-+        "EventCode": "0xd1",
-+        "EventName": "MEM_LOAD_UOPS_RETIRED.L1_HIT",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of load uops retired that m=
-iss in the L1 data cache.",
-+        "Counter": "0,1,2,3,4,5",
-+        "Data_LA": "1",
-+        "EventCode": "0xd1",
-+        "EventName": "MEM_LOAD_UOPS_RETIRED.L1_MISS",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x8"
-+    },
-     {
-         "BriefDescription": "Counts the number of load uops retired that h=
-it in the L2 cache.",
-         "Counter": "0,1,2,3,4,5",
-         "Data_LA": "1",
-         "EventCode": "0xd1",
-         "EventName": "MEM_LOAD_UOPS_RETIRED.L2_HIT",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0x2"
-     },
-+    {
-+        "BriefDescription": "Counts the number of load uops retired that m=
-iss in the L2 cache.",
-+        "Counter": "0,1,2,3,4,5",
-+        "Data_LA": "1",
-+        "EventCode": "0xd1",
-+        "EventName": "MEM_LOAD_UOPS_RETIRED.L2_MISS",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x10"
-+    },
-     {
-         "BriefDescription": "Counts the number of load uops retired that h=
-it in the L3 cache.",
-         "Counter": "0,1,2,3,4,5",
-         "Data_LA": "1",
-         "EventCode": "0xd1",
-         "EventName": "MEM_LOAD_UOPS_RETIRED.L3_HIT",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0x4"
-     },
-+    {
-+        "BriefDescription": "Counts the number of load uops retired that h=
-it in the L3 cache, in which a snoop was required, and non-modified data wa=
-s forwarded.",
-+        "Counter": "0,1,2,3,4,5",
-+        "Data_LA": "1",
-+        "EventCode": "0xd2",
-+        "EventName": "MEM_LOAD_UOPS_RETIRED_MISC.HIT_E_F",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x40"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of load uops retired that m=
-iss in the L3 cache.",
-+        "Counter": "0,1,2,3,4,5",
-+        "Data_LA": "1",
-+        "EventCode": "0xd2",
-+        "EventName": "MEM_LOAD_UOPS_RETIRED_MISC.L3_MISS",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x20"
-+    },
-     {
-         "BriefDescription": "Counts the number of cycles that uops are blo=
-cked for any of the following reasons:  load buffer, store buffer or RSV fu=
-ll.",
-         "Counter": "0,1,2,3,4,5",
-@@ -154,7 +231,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.ALL_LOADS",
--        "PEBS": "1",
-         "PublicDescription": "Counts the total number of load uops retired=
-.",
-         "SampleAfterValue": "200003",
-         "UMask": "0x81"
-@@ -165,7 +241,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.ALL_STORES",
--        "PEBS": "1",
-         "PublicDescription": "Counts the total number of store uops retire=
-d.",
-         "SampleAfterValue": "200003",
-         "UMask": "0x82"
-@@ -178,7 +253,6 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x80",
--        "PEBS": "2",
-         "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 128 cycles as def=
-ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
- If a PEBS record is generated, will populate the PEBS Latency and PEBS Dat=
-a Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-@@ -191,7 +265,6 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x10",
--        "PEBS": "2",
-         "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 16 cycles as defi=
-ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. =
-If a PEBS record is generated, will populate the PEBS Latency and PEBS Data=
- Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-@@ -204,7 +277,6 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x100",
--        "PEBS": "2",
-         "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 256 cycles as def=
-ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
- If a PEBS record is generated, will populate the PEBS Latency and PEBS Dat=
-a Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-@@ -217,7 +289,6 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x20",
--        "PEBS": "2",
-         "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 32 cycles as defi=
-ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. =
-If a PEBS record is generated, will populate the PEBS Latency and PEBS Data=
- Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-@@ -230,7 +301,6 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x4",
--        "PEBS": "2",
-         "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 4 cycles as defin=
-ed in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. I=
-f a PEBS record is generated, will populate the PEBS Latency and PEBS Data =
-Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-@@ -243,7 +313,6 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x200",
--        "PEBS": "2",
-         "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 512 cycles as def=
-ined in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled.=
- If a PEBS record is generated, will populate the PEBS Latency and PEBS Dat=
-a Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-@@ -256,7 +325,6 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x40",
--        "PEBS": "2",
-         "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 64 cycles as defi=
-ned in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. =
-If a PEBS record is generated, will populate the PEBS Latency and PEBS Data=
- Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-@@ -269,7 +337,6 @@
-         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
-         "MSRIndex": "0x3F6",
-         "MSRValue": "0x8",
--        "PEBS": "2",
-         "PublicDescription": "Counts the number of tagged loads with an in=
-struction latency that exceeds or equals the threshold of 8 cycles as defin=
-ed in MEC_CR_PEBS_LD_LAT_THRESHOLD (3F6H). Only counts with PEBS enabled. I=
-f a PEBS record is generated, will populate the PEBS Latency and PEBS Data =
-Source fields accordingly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x5"
-@@ -280,7 +347,6 @@
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.LOCK_LOADS",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0x21"
-     },
-@@ -290,28 +356,93 @@
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.SPLIT_LOADS",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0x41"
-     },
-+    {
-+        "BriefDescription": "Counts the total number of load and store uop=
-s retired that missed in the second level TLB.",
-+        "Counter": "0,1,2,3,4,5",
-+        "Data_LA": "1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.STLB_MISS",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x13"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of load ops retired that mi=
-ss in the second Level TLB.",
-+        "Counter": "0,1,2,3,4,5",
-+        "Data_LA": "1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.STLB_MISS_LOADS",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x11"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of store ops retired that m=
-iss in the second level TLB.",
-+        "Counter": "0,1,2,3,4,5",
-+        "Data_LA": "1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.STLB_MISS_STORES",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x12"
-+    },
-     {
-         "BriefDescription": "Counts the number of stores uops retired. Cou=
-nts with or without PEBS enabled.",
-         "Counter": "0,1,2,3,4,5",
-         "Data_LA": "1",
-         "EventCode": "0xd0",
-         "EventName": "MEM_UOPS_RETIRED.STORE_LATENCY",
--        "PEBS": "2",
-         "PublicDescription": "Counts the number of stores uops retired. Co=
-unts with or without PEBS enabled. If PEBS is enabled and a PEBS record is =
-generated, will populate PEBS Latency and PEBS Data Source fields according=
-ly.",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x6"
-     },
-+    {
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were supplied by the L3 cache.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x1F803C0004",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were supplied by the L3 cache where a snoop w=
-as sent, the snoop hit, and modified data was forwarded.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT.SNOOP_HITM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10003C0004",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were supplied by the L3 cache where a snoop w=
-as sent, the snoop hit, but no data was forwarded.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT.SNOOP_HIT_NO_FWD",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x4003C0004",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were supplied by the L3 cache where a snoop w=
-as sent, the snoop hit, and non-modified data was forwarded.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_CODE_RD.L3_HIT.SNOOP_HIT_WITH_FWD",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x8003C0004",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand data reads that were supplied b=
-y the L3 cache.",
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xB7",
-         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT",
-         "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3F803C0001",
-+        "MSRValue": "0x1F803C0001",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-@@ -351,7 +482,7 @@
-         "EventCode": "0xB7",
-         "EventName": "OCR.DEMAND_RFO.L3_HIT",
-         "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x3F803C0002",
-+        "MSRValue": "0x1F803C0002",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-@@ -365,6 +496,66 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
-y the L3 cache where a snoop was sent, the snoop hit, but no data was forwa=
-rded.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_HIT_NO_FWD",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x4003C0002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
-y the L3 cache where a snoop was sent, the snoop hit, and non-modified data=
- was forwarded.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_HIT_WITH_FWD",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x8003C0002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts L1 data cache software prefetches whic=
-h include T0/T1/T2 and NTA (except PREFETCHW) that were supplied by the L3 =
-cache.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.SWPF_RD.L3_HIT",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x1F803C4000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts L1 data cache software prefetches whic=
-h include T0/T1/T2 and NTA (except PREFETCHW) that were supplied by the L3 =
-cache where a snoop was sent, the snoop hit, and modified data was forwarde=
-d.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.SWPF_RD.L3_HIT.SNOOP_HITM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10003C4000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts L1 data cache software prefetches whic=
-h include T0/T1/T2 and NTA (except PREFETCHW) that were supplied by the L3 =
-cache where a snoop was sent, the snoop hit, but no data was forwarded.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.SWPF_RD.L3_HIT.SNOOP_HIT_NO_FWD",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x4003C4000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts L1 data cache software prefetches whic=
-h include T0/T1/T2 and NTA (except PREFETCHW) that were supplied by the L3 =
-cache where a snoop was sent, the snoop hit, and non-modified data was forw=
-arded.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.SWPF_RD.L3_HIT.SNOOP_HIT_WITH_FWD",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x8003C4000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts the number of issue slots every cycle =
-that were not delivered by the frontend due to instruction cache misses.",
-         "Counter": "0,1,2,3,4,5",
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.json =
-b/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.json
-index 484d8b3167f0..ed963fcb6485 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/floating-point.json
-@@ -1,4 +1,20 @@
- [
-+    {
-+        "BriefDescription": "Counts the number of cycles the floating poin=
-t divider is in the loop stage.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xcd",
-+        "EventName": "ARITH.FPDIV_ACTIVE",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of floating point divider u=
-ops executed per cycle.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xcd",
-+        "EventName": "ARITH.FPDIV_UOPS",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x8"
-+    },
-     {
-         "BriefDescription": "Counts the number of floating point operation=
-s retired that required microcode assist.",
-         "Counter": "0,1,2,3,4,5",
-@@ -13,7 +29,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc2",
-         "EventName": "UOPS_RETIRED.FPDIV",
--        "PEBS": "1",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x8"
-     }
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/memory.json b/tools/=
-perf/pmu-events/arch/x86/alderlaken/memory.json
-index 619488d42a4a..3b46b048dfb2 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/memory.json
-@@ -56,6 +56,16 @@
-         "SampleAfterValue": "20003",
-         "UMask": "0x2"
-     },
-+    {
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were not supplied by the L3 cache.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_CODE_RD.L3_MISS",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x3F84400004",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand data reads that were not suppli=
-ed by the L3 cache.",
-         "Counter": "0,1,2,3,4,5",
-@@ -95,5 +105,15 @@
-         "MSRValue": "0x3F84400002",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts L1 data cache software prefetches whic=
-h include T0/T1/T2 and NTA (except PREFETCHW) that were not supplied by the=
- L3 cache.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.SWPF_RD.L3_MISS",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x3F84404000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/other.json b/tools/p=
-erf/pmu-events/arch/x86/alderlaken/other.json
-index 54ddbe2b3b9b..f8c21b7f8f40 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/other.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/other.json
-@@ -5,7 +5,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xe4",
-         "EventName": "LBR_INSERTS.ANY",
--        "PEBS": "1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x1"
-     },
-@@ -19,6 +18,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that have any type of response.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_CODE_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10004",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that were supplied by DRAM.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_CODE_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x784000004",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand data reads that have any type o=
-f response.",
-         "Counter": "0,1,2,3,4,5",
-@@ -29,6 +48,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand data reads that were supplied b=
-y DRAM.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x784000001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that have any type o=
-f response.",
-         "Counter": "0,1,2,3,4,5",
-@@ -39,6 +68,36 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
-y DRAM.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_RFO.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x784000002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts streaming stores which modify a full 6=
-4 byte cacheline that have any type of response.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.FULL_STREAMING_WR.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x800000010000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts streaming stores which modify only par=
-t of a 64 byte cacheline that have any type of response.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.PARTIAL_STREAMING_WR.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x400000010000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts streaming stores that have any type of=
- response.",
-         "Counter": "0,1,2,3,4,5",
-@@ -49,6 +108,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts L1 data cache software prefetches whic=
-h include T0/T1/T2 and NTA (except PREFETCHW) that have any type of respons=
-e.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.SWPF_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x14000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts L1 data cache software prefetches whic=
-h include T0/T1/T2 and NTA (except PREFETCHW) that were supplied by DRAM.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.SWPF_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x784004000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts the number of issue slots in a UMWAIT =
-or TPAUSE instruction where no uop issues due to the instruction putting th=
-e CPU into the C0.1 activity state. For Tremont, UMWAIT and TPAUSE will onl=
-y put the CPU into C0.1 activity state (not C0.2 activity state)",
-         "Counter": "0,1,2,3,4,5",
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json b/tool=
-s/perf/pmu-events/arch/x86/alderlaken/pipeline.json
-index f05db45578ff..713ebc21cec0 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/pipeline.json
-@@ -1,10 +1,59 @@
- [
-+    {
-+        "BriefDescription": "Counts the number of cycles when any of the f=
-loating point or integer dividers are active.",
-+        "Counter": "0,1,2,3,4,5",
-+        "CounterMask": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "ARITH.DIV_ACTIVE",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x3"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of active floating point an=
-d integer dividers per cycle.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xcd",
-+        "EventName": "ARITH.DIV_OCCUPANCY",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x3"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of floating point and integ=
-er divider uops executed per cycle.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xcd",
-+        "EventName": "ARITH.DIV_UOPS",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0xc"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of cycles any of the two in=
-teger dividers are active.",
-+        "Counter": "0,1,2,3,4,5",
-+        "CounterMask": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "ARITH.IDIV_ACTIVE",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of active integer dividers =
-per cycle.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xcd",
-+        "EventName": "ARITH.IDIV_OCCUPANCY",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of integer divider uops exe=
-cuted per cycle.",
-+        "Counter": "0,1,2,3,4,5",
-+        "EventCode": "0xcd",
-+        "EventName": "ARITH.IDIV_UOPS",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x4"
-+    },
-     {
-         "BriefDescription": "Counts the total number of branch instruction=
-s retired for all branch types.",
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
--        "PEBS": "1",
-         "PublicDescription": "Counts the total number of instructions in w=
-hich the instruction pointer (IP) of the processor is resteered due to a br=
-anch instruction and the branch instruction successfully retires.  All bran=
-ch type instructions are accounted for.",
-         "SampleAfterValue": "200003"
-     },
-@@ -14,7 +63,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.CALL",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xf9"
-     },
-@@ -23,7 +71,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.COND",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0x7e"
-     },
-@@ -32,7 +79,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.COND_TAKEN",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfe"
-     },
-@@ -41,7 +87,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.FAR_BRANCH",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xbf"
-     },
-@@ -50,7 +95,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.INDIRECT",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xeb"
-     },
-@@ -59,7 +103,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.INDIRECT_CALL",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfb"
-     },
-@@ -69,7 +112,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.IND_CALL",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfb"
-     },
-@@ -79,7 +121,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.JCC",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0x7e"
-     },
-@@ -88,7 +129,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.NEAR_CALL",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xf9"
-     },
-@@ -97,7 +137,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.NEAR_RETURN",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xf7"
-     },
-@@ -106,7 +145,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.NEAR_TAKEN",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xc0"
-     },
-@@ -116,7 +154,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.NON_RETURN_IND",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xeb"
-     },
-@@ -125,7 +162,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.REL_CALL",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfd"
-     },
-@@ -135,7 +171,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.RETURN",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xf7"
-     },
-@@ -145,7 +180,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc4",
-         "EventName": "BR_INST_RETIRED.TAKEN_JCC",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfe"
-     },
-@@ -154,7 +188,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
--        "PEBS": "1",
-         "PublicDescription": "Counts the total number of mispredicted bran=
-ch instructions retired.  All branch type instructions are accounted for.  =
-Prediction of the branch target address enables the processor to begin exec=
-uting instructions before the non-speculative execution path is known. The =
-branch prediction unit (BPU) predicts the target address based on the instr=
-uction pointer (IP) of the branch and on the execution path through which e=
-xecution reached this IP.    A branch misprediction occurs when the predict=
-ion is wrong, and results in discarding all instructions executed in the sp=
-eculative path and re-fetching from the correct path.",
-         "SampleAfterValue": "200003"
-     },
-@@ -163,7 +196,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.COND",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0x7e"
-     },
-@@ -172,7 +204,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.COND_TAKEN",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfe"
-     },
-@@ -181,7 +212,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.INDIRECT",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xeb"
-     },
-@@ -190,7 +220,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.INDIRECT_CALL",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfb"
-     },
-@@ -200,7 +229,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.IND_CALL",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfb"
-     },
-@@ -210,7 +238,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.JCC",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0x7e"
-     },
-@@ -219,7 +246,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.NEAR_TAKEN",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0x80"
-     },
-@@ -229,7 +255,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.NON_RETURN_IND",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xeb"
-     },
-@@ -238,7 +263,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.RETURN",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xf7"
-     },
-@@ -248,7 +272,6 @@
-         "Deprecated": "1",
-         "EventCode": "0xc5",
-         "EventName": "BR_MISP_RETIRED.TAKEN_JCC",
--        "PEBS": "1",
-         "SampleAfterValue": "200003",
-         "UMask": "0xfe"
-     },
-@@ -268,6 +291,15 @@
-         "PublicDescription": "Counts the number of core cycles while the c=
-ore is not in a halt state. The core enters the halt state when it is runni=
-ng the HLT instruction. The core frequency may change from time to time. Fo=
-r this reason this event may have a changing ratio with regards to time. Th=
-is event uses a programmable general purpose performance counter.",
-         "SampleAfterValue": "2000003"
-     },
-+    {
-+        "BriefDescription": "This event is deprecated. Refer to new event =
-CPU_CLK_UNHALTED.REF_TSC_P",
-+        "Counter": "0,1,2,3,4,5",
-+        "Deprecated": "1",
-+        "EventCode": "0x3c",
-+        "EventName": "CPU_CLK_UNHALTED.REF",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts the number of unhalted reference clock=
- cycles at TSC frequency. (Fixed event)",
-         "Counter": "Fixed counter 2",
-@@ -305,7 +337,6 @@
-         "BriefDescription": "Counts the total number of instructions retir=
-ed. (Fixed event)",
-         "Counter": "Fixed counter 0",
-         "EventName": "INST_RETIRED.ANY",
--        "PEBS": "1",
-         "PublicDescription": "Counts the total number of instructions that=
- retired. For instructions that consist of multiple uops, this event counts=
- the retirement of the last uop of the instruction. This event continues co=
-unting during hardware interrupts, traps, and inside interrupt handlers. Th=
-is event uses fixed counter 0.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-@@ -315,7 +346,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc0",
-         "EventName": "INST_RETIRED.ANY_P",
--        "PEBS": "1",
-         "PublicDescription": "Counts the total number of instructions that=
- retired. For instructions that consist of multiple uops, this event counts=
- the retirement of the last uop of the instruction. This event continues co=
-unting during hardware interrupts, traps, and inside interrupt handlers. Th=
-is event uses a programmable general purpose performance counter.",
-         "SampleAfterValue": "2000003"
-     },
-@@ -325,7 +355,6 @@
-         "Deprecated": "1",
-         "EventCode": "0x03",
-         "EventName": "LD_BLOCKS.4K_ALIAS",
--        "PEBS": "1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x4"
-     },
-@@ -334,7 +363,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0x03",
-         "EventName": "LD_BLOCKS.ADDRESS_ALIAS",
--        "PEBS": "1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x4"
-     },
-@@ -343,7 +371,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0x03",
-         "EventName": "LD_BLOCKS.DATA_UNKNOWN",
--        "PEBS": "1",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x1"
-     },
-@@ -392,7 +419,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xe4",
-         "EventName": "MISC_RETIRED.LBR_INSERTS",
--        "PEBS": "1",
-         "PublicDescription": "Counts the number of LBR entries recorded. R=
-equires LBRs to be enabled in IA32_LBR_CTL. This event is PDIR on GP0 and N=
-PEBS on all other GPs [This event is alias to LBR_INSERTS.ANY]",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x1"
-@@ -588,7 +614,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc2",
-         "EventName": "TOPDOWN_RETIRING.ALL",
--        "PEBS": "1",
-         "SampleAfterValue": "1000003"
-     },
-     {
-@@ -604,7 +629,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc2",
-         "EventName": "UOPS_RETIRED.ALL",
--        "PEBS": "1",
-         "SampleAfterValue": "2000003"
-     },
-     {
-@@ -612,7 +636,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc2",
-         "EventName": "UOPS_RETIRED.IDIV",
--        "PEBS": "1",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x10"
-     },
-@@ -621,7 +644,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc2",
-         "EventName": "UOPS_RETIRED.MS",
--        "PEBS": "1",
-         "PublicDescription": "Counts the number of uops that are from comp=
-lex flows issued by the Microcode Sequencer (MS). This includes uops from f=
-lows due to complex instructions, faults, assists, and inserted flows.",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x1"
-@@ -631,7 +653,6 @@
-         "Counter": "0,1,2,3,4,5",
-         "EventCode": "0xc2",
-         "EventName": "UOPS_RETIRED.X87",
--        "PEBS": "1",
-         "SampleAfterValue": "2000003",
-         "UMask": "0x2"
-     }
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.json =
-b/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.json
-index ad2b1349bab4..d9c737a17df0 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/virtual-memory.json
-@@ -49,5 +49,35 @@
-         "EventName": "LD_HEAD.DTLB_MISS_AT_RET",
-         "SampleAfterValue": "1000003",
-         "UMask": "0x90"
-+    },
-+    {
-+        "BriefDescription": "This event is deprecated. Refer to new event =
-MEM_UOPS_RETIRED.STLB_MISS",
-+        "Counter": "0,1,2,3,4,5",
-+        "Data_LA": "1",
-+        "Deprecated": "1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.DTLB_MISS",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x13"
-+    },
-+    {
-+        "BriefDescription": "This event is deprecated. Refer to new event =
-MEM_UOPS_RETIRED.STLB_MISS_LOADS",
-+        "Counter": "0,1,2,3,4,5",
-+        "Data_LA": "1",
-+        "Deprecated": "1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.DTLB_MISS_LOADS",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x11"
-+    },
-+    {
-+        "BriefDescription": "This event is deprecated. Refer to new event =
-MEM_UOPS_RETIRED.STLB_MISS_STORES",
-+        "Counter": "0,1,2,3,4,5",
-+        "Data_LA": "1",
-+        "Deprecated": "1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_UOPS_RETIRED.DTLB_MISS_STORES",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0x12"
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index d9538723927b..2fa5529ee585 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -1,6 +1,6 @@
- Family-model,Version,Filename,EventType
- GenuineIntel-6-(97|9A|B7|BA|BF),v1.28,alderlake,core
--GenuineIntel-6-BE,v1.27,alderlaken,core
-+GenuineIntel-6-BE,v1.28,alderlaken,core
- GenuineIntel-6-(1C|26|27|35|36),v5,bonnell,core
- GenuineIntel-6-(3D|47),v29,broadwell,core
- GenuineIntel-6-56,v11,broadwellde,core
---=20
-2.48.1.502.g6dc24dfdaf-goog
+The resctrl file system supports tracking up to two memory bandwidth
+events per monitoring group: mbm_total_bytes and/or mbm_local_bytes.
+Up to two counters can be assigned per monitoring group, one for each
+memory bandwidth event in each domain. More monitoring groups can be 
+tracked by assigning one counter per monitoring group. However, doing so 
+limits memory bandwidth tracking to a single memory bandwidth event per
+monitoring group."
 
+Thanks
+Babu
