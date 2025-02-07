@@ -1,50 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4A5BA50;
-	Fri,  7 Feb 2025 01:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D4F200CD;
+	Fri,  7 Feb 2025 01:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738890735; cv=none; b=okyk6kwaWVB35Gk5f36hr27Drhu2lHBm1dW/Erjl2SEGMSQd2pmM+QqnWiXDG15pZaRGe5/uuaMWatWfqsc4NMO53iwXtsU1XnKAZspjMFD5pmCOYQPXnFfKOZDeRL1oQE203BvjQiKqgLk6RxWIKhN4rVRh82z+omRv8ero1bQ=
+	t=1738890754; cv=none; b=fu4Uu/GLksmZeL+lBDapXHBx0o7MAc4XAnjRyCs4qEMsTKQOi8sB4oHepry4gRd4aC19Fxj9zs/BfFpeSfdCPMyxtNo4hdOarDx7ZOZfG3QRNyfiDQJ1Y6Y+tewZJ7H3lDC1ppmTlQZqV248iKJ7sCtbKdrfMSwK9/ky9jaXGzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738890735; c=relaxed/simple;
-	bh=UqiFmU/V/6S8lGc+eVaVfWQj7ul+mmeIvAIUPr3ZCc0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X4Z53vSzMXTNUSYjJ6CLEuWtYv21I0m4O0YOB2nW+wo0G05Mjp5oz2XLLphOQ2S2MXVIG4q54ZcDWs4C3V+0FbaVU9yXTgGXzRCyDjtGVdSg7PaQLB5E81HjLIy/OcRmzp49LkTwBXhBD6hFzXscHlbaJ0kqT5t7EBrBCKOF5Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gEDgf0oI; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738890754; c=relaxed/simple;
+	bh=OWqx7Yem4Mf1wBjdnIaqZYk3M6OS56CbNCMS3ZUw3SY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=MkA2s1PZJ5SL//v7a4cMXPYt3fAA9BQR5Aw2mYhJ5ewbtgPbPZ70q8yWNA4SLi+bW74/KXpUoqAVM0l70Wan7xK7OhfRrYiHmjsM9XS8PuiD6vGY6NKyr6PZZ0iDHoj9Ko5M7pFguLE+C50AD1F8cdKp2c0ZAwz6Mo21Vl2RSqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MSToNk/0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gEDgf0oI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738890733; x=1770426733;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=UqiFmU/V/6S8lGc+eVaVfWQj7ul+mmeIvAIUPr3ZCc0=;
-  b=gEDgf0oIpbGZgyflpnZr7Ui0fmKUvl/V2dETaM9qI30ZS3o7xwykov0Z
-   mzeTd+PTl2Vjp8xI9URv0/JnvVKKeDfKzxvd4XTHh+tfdM9vATiIXOaZZ
-   Vp3FIZT+OPRgim14bzSoKkW8NHhcSAp1VkeFjkQovMaaFS9iEb0p9niRC
-   DGnOXgjwK/TuwGyaJbf6vmxe6uir4UjUcTVHqmT0byyxbaZ0COiuapkzu
-   mr9S6RaPtLLolTsBOmV+6zRs0d4IAe9VYpkl02+oCjeJPQZTuCEZEFZoE
-   LoJr7MQpl0sDOpBFFCf0KprvQClsY+Ylpz8ZGYIz4ew6lpkNK0+F1Tx3r
-   w==;
-X-CSE-ConnectionGUID: W8RNtC6cSdaSlKStV07jiA==
-X-CSE-MsgGUID: ixAPGPd9Q1+2h9FKB8DK6g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="39639110"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="39639110"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 17:12:12 -0800
-X-CSE-ConnectionGUID: DlYusnUQQWiJz/ajOvdieA==
-X-CSE-MsgGUID: 7lvlRg6BT8eO3PHITFbO/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
-   d="scan'208";a="116412567"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.111.17]) ([10.125.111.17])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 17:12:09 -0800
-Message-ID: <b4f08d43-c421-4e8d-9bbb-c954c4472f8a@intel.com>
-Date: Thu, 6 Feb 2025 17:12:11 -0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MSToNk/0"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5170DuSq000330;
+	Fri, 7 Feb 2025 01:12:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	lE2yEMmOtEjyIM6MRG6Oh2+ovg8fRfWPp5lJJMMrntg=; b=MSToNk/0jToURp6Y
+	VQEHp46ClWcr8/iH6ArUCLrDp5ezEB7Q3GacaK3hHfN1UhJtxuVFiC8/Z0rD1jEv
+	/d3RUXVa6hZnxBr2Typ2x0aJjIFRZxsD0xjh+08ioz6eE+vUEA57dT7KMVDVc9Ik
+	hcqkpxsxi78DHIBPEwXLtwMLspWlxnppzi6fvzoePEMcGTtx1js7+kDPmQEHEVCY
+	q2dKAOyD+s420fF13eQF6rnalvKgF4FFWXIMbI4Uu0sJU8rMIJExCIAMuu2Ej9dQ
+	/wzbmPpnYiEyn2vXu+xXKS3sb6eJFI6UAlHPWgX4lbOrbpXSVvAFeAcKF3DK8LSB
+	Bj0e2g==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44n7et038v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Feb 2025 01:12:24 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5171CNSN021634
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 7 Feb 2025 01:12:23 GMT
+Received: from [10.134.70.212] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Feb 2025
+ 17:12:23 -0800
+Message-ID: <db2ec4cb-9769-4d76-a8a3-308c83d77602@quicinc.com>
+Date: Thu, 6 Feb 2025 17:12:22 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,101 +50,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/10] x86/tdx: Mark message.str as nonstring
-To: Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev,
- Sathya Prakash <sathya.prakash@broadcom.com>,
- Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
- Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
- Kashyap Desai <kashyap.desai@broadcom.com>,
- Sumit Saxena <sumit.saxena@broadcom.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Nilesh Javali <njavali@marvell.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Alexey Dobriyan <adobriyan@gmail.com>, Sven Eckelmann <sven@narfation.org>,
- Tadeusz Struk <tadeusz.struk@linaro.org>, kernel test robot <lkp@intel.com>,
- Erick Archer <erick.archer@outlook.com>, Dmitry Antipov
- <dmantipov@yandex.ru>, Ryusuke Konishi <konishi.ryusuke@gmail.com>,
- Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
- linux-kernel@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
- linux-scsi@vger.kernel.org, mpi3mr-linuxdrv.pdl@broadcom.com,
- GR-QLogic-Storage-Upstream@marvell.com, linux-hardening@vger.kernel.org,
- linux-nilfs@vger.kernel.org
-References: <20250207005832.work.324-kees@kernel.org>
- <20250207010022.749952-6-kees@kernel.org>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v5 02/15] drm/msm/dpu: Do not fix number of DSC
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250207010022.749952-6-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+To: Jun Nie <jun.nie@linaro.org>, Rob Clark <robdclark@gmail.com>,
+        "Abhinav
+ Kumar" <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, "Simona
+ Vetter" <simona@ffwll.ch>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250118-sm8650-v6-13-hmd-deckard-mdss-quad-upstream-33-v5-0-9701a16340da@linaro.org>
+ <20250118-sm8650-v6-13-hmd-deckard-mdss-quad-upstream-33-v5-2-9701a16340da@linaro.org>
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20250118-sm8650-v6-13-hmd-deckard-mdss-quad-upstream-33-v5-2-9701a16340da@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: XUMyrgYLEGu86sMivONuV1FqxgQYhqPM
+X-Proofpoint-GUID: XUMyrgYLEGu86sMivONuV1FqxgQYhqPM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_01,2025-02-05_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ lowpriorityscore=0 impostorscore=0 adultscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=999 spamscore=0 bulkscore=0 phishscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502070007
 
-On 2/6/25 17:00, Kees Cook wrote:
-> +++ b/arch/x86/coco/tdx/tdx.c
-> @@ -170,7 +170,7 @@ static void __noreturn tdx_panic(const char *msg)
->  		/* Define register order according to the GHCI */
->  		struct { u64 r14, r15, rbx, rdi, rsi, r8, r9, rdx; };
->  
-> -		char str[64];
-> +		char str[64] __nonstring;
->  	} message;
 
-So, the patch itself makes sense. But it does end up looking kinda
-funky. We call it a "str"ing and then annotate it as not a string.
 
-It doesn't have to be done in this patch, but it does seem like we
-should probably not be using 'char' and also shouldn't call it anything
-close to "string". Maybe:
+On 1/17/2025 8:00 AM, Jun Nie wrote:
+> Currently, if DSC is enabled, only 2 DSC engines are supported so far.
+> More usage cases will be added, such as 4 DSC in 4:4:2 topology. So
+> get the real number of DSCs to decide whether DSC merging is needed.
+> 
+> Signed-off-by: Jun Nie <jun.nie@linaro.org>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-	u8 message[64] __nonstring;
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
 
-In any case, feel free to carry the annotation in your tree:
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> index eaac172141ede..c734d2c5790d2 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> @@ -164,6 +164,7 @@ enum dpu_enc_rc_states {
+>    *				clks and resources after IDLE_TIMEOUT time.
+>    * @topology:                   topology of the display
+>    * @idle_timeout:		idle timeout duration in milliseconds
+> + * @num_dscs:			Number of DSCs in use
+>    * @wide_bus_en:		wide bus is enabled on this interface
+>    * @dsc:			drm_dsc_config pointer, for DSC-enabled encoders
+>    */
+> @@ -204,6 +205,7 @@ struct dpu_encoder_virt {
+>   	struct msm_display_topology topology;
+>   
+>   	u32 idle_timeout;
+> +	u32 num_dscs;
+>   
+>   	bool wide_bus_en;
+>   
+> @@ -622,9 +624,8 @@ bool dpu_encoder_use_dsc_merge(struct drm_encoder *drm_enc)
+>   		if (dpu_enc->phys_encs[i])
+>   			intf_count++;
+>   
+> -	/* See dpu_encoder_get_topology, we only support 2:2:1 topology */
+>   	if (dpu_enc->dsc)
+> -		num_dsc = 2;
+> +		num_dsc = dpu_enc->num_dscs;
+>   
+>   	return (num_dsc > 0) && (num_dsc > intf_count);
+>   }
+> @@ -1261,6 +1262,7 @@ static void dpu_encoder_virt_atomic_mode_set(struct drm_encoder *drm_enc,
+>   		dsc_mask |= BIT(dpu_enc->hw_dsc[i]->idx - DSC_0);
+>   	}
+>   
+> +	dpu_enc->num_dscs = num_dsc;
+>   	dpu_enc->dsc_mask = dsc_mask;
+>   
+>   	if ((dpu_enc->disp_info.intf_type == INTF_WB && conn_state->writeback_job) ||
+> 
+> -- 
+> 2.34.1
+> 
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
