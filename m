@@ -1,232 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7DB15534E;
-	Fri,  7 Feb 2025 02:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E111474A7
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 02:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738894836; cv=none; b=Q8DgrzxRdU9EUWpMS+K9Mrb8KzCQsaF2+DC0mGCJpSB0SeMbMuWLvSX1RjQHAVo+DD2D5qByVDuUWtmyI/GEawEHqUHt3NGSef7kR5KeDmdjOA22Cc1aAYcyt4GCRX2FUUQf0VYPF+SxEvCSRqMcPqnuab1zh/l+pefUq3tmti4=
+	t=1738894848; cv=none; b=FBdG36bCBgtItjpV2tpJ5WcOWlHQNDQIAvhJ9T0Mz3KsBGXW6FcJLvzbNXxMwrLOU8pevwmOa/ho1WLrsagttZK1QgnmQn+l4fikJAvAmbg7n654xxZ8zq2CyadNoeqjrxd1SQzqer+4z21DQx8fOSquxqopnt57NA1BrVV35Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738894836; c=relaxed/simple;
-	bh=Z3OIrwsUmYtJjqFW5lrZWuTp/tPSpI1Ry+5T/TtxFZ8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oUr5lmEtqDU3YBJ63CRZFq3Io5ay1NKbc9SQYJL4wcEvQJQmXxm6J5UcAyRJkPVkD8ki5tMrPHplM8MYpOKNIPr6NC7bLzsteePkGpw5DWXMJevehnHHQL66LNcjYShVQgKMqkhYQw9LkeUAVaUpF5a8+b3fXwd0kqb6754EeDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K1utQbk0; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K1utQbk0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738894835; x=1770430835;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Z3OIrwsUmYtJjqFW5lrZWuTp/tPSpI1Ry+5T/TtxFZ8=;
-  b=K1utQbk0ia+WcPrEzyk59hZx+XDxKR+mPF9WwA0mkeRoQIapv2w9b4T5
-   WBjrKPwabmB6nkMtIrPApbWMNNo//t5Z3+TWz7+WKMZ3PtLKFXhKtyYoV
-   sYdkeIcGtYnsO42XQpVSOJdQiKLlogzbRP23Hx1peG4pRjkojL6nEB0ow
-   Ddus2C7Vpv9b/tI40kyayyv1EjkPZlZLLaNos0DoyGkPaOTsNqz9f0QJk
-   cndGaw4S1er9JW0tik8wKtZTKS4vaLzSINF3rO3cUP5vARa7mzlYs+CNf
-   RAdWmKTADd34o1Z5NKHMBEAyYgnf8A9DM2Ts2WlsIybmrl3zUp9skEnG+
-   A==;
-X-CSE-ConnectionGUID: Uj/HoZnlQiaX6eGGO+elhQ==
-X-CSE-MsgGUID: U1Fk5hwKQbid5HbhzHE35g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50917640"
-X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
-   d="scan'208";a="50917640"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 18:20:34 -0800
-X-CSE-ConnectionGUID: UMgVbdHjS0iyenMGjFH58A==
-X-CSE-MsgGUID: SwTZnvy6Q/OPkajO5qz9HA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="148615572"
-Received: from p12ill20yoongsia.png.intel.com ([10.88.227.38])
-  by orviesa001.jf.intel.com with ESMTP; 06 Feb 2025 18:20:21 -0800
-From: Song Yoong Siang <yoong.siang.song@intel.com>
-To: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Willem de Bruijn <willemb@google.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Bjorn Topel <bjorn@kernel.org>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Joe Damato <jdamato@fastly.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Daniel Jurgens <danielj@nvidia.com>,
-	Song Yoong Siang <yoong.siang.song@intel.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Bouska Zdenek <zdenek.bouska@siemens.com>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	intel-wired-lan@lists.osuosl.org,
-	xdp-hints@xdp-project.net
-Subject: [PATCH bpf-next v10 3/5] net: stmmac: Add launch time support to XDP ZC
-Date: Fri,  7 Feb 2025 10:19:41 +0800
-Message-Id: <20250207021943.814768-4-yoong.siang.song@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250207021943.814768-1-yoong.siang.song@intel.com>
-References: <20250207021943.814768-1-yoong.siang.song@intel.com>
+	s=arc-20240116; t=1738894848; c=relaxed/simple;
+	bh=Ps6x4fYlzS4Xc+Of8fZpvjUMtFx8CH2m2GgPV5L0GDQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=RErGpAvKFM3dak9JPT/cTBdWJiqdRDyuHK9B4FuWwn/xNNCyAnkM0YrruWGp9oQWlKPLR+MA2Fciie7VFBnN4Pv0N6sTwGatrVd/f09oVzE+UrhGSmyqgNaDnWvHfC41Hqu4AEHZUKzcSyPj8j4kM46lgYVDMp5t8DgMztIAwMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d05063cc0fso11256305ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 18:20:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738894844; x=1739499644;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=STqwlLXRhP7Q2EH3aoEynnmuPNiQOLMkRCTMgz7H7iA=;
+        b=HsQ39tOLwmyA3wEdinT31pZHROqbhEZNgTsjK70KOMLnF+qBpguETlbSozKjQ/cHso
+         EKxGypoK7sogXn1rgQxyWlvIHT6zK5Gpth8MjjYN5n+joxuvrDIBqAp7g9ZRkamSgPyE
+         fXY/x8Ifvjt6/BmXbNP7bckVT2ApL3MvMK9qDLHVnvImIcEETOOkfWIpcAad5ISiuTo6
+         qfQUe3Wn8bBR155PKlAB9I0jQ1YIxqNtSncbhFmrF/6dD+oGabfaik5/xAKiM6xtoL2q
+         gI4Ph4ZanQ4DtwqYu8BLxRJ+KSnxNyR9tu75/kNVtMAunjQjYmAGivXLxQeoOn2ojFFR
+         AhJA==
+X-Gm-Message-State: AOJu0YzZ/9E7jHBYQhg58htGZMhmQeD9D/YWyxIS1gb5w+0xu77j+S1u
+	x4W0dPeK87NnPYfPqJpcZh8BMzuzhyPGclxJBuvXD1OOZ3YQX+hVABVT807Z6rsIOuCR0KIq32K
+	exVc2FyX7bfK40778tYcLnpLvoAchMb19bKR1+D2IrQQyi8UlADUbqlY=
+X-Google-Smtp-Source: AGHT+IFU7HaLD+amfSxuMt0RX/VAoT2beJWpeb6ZYaxWOGH7v0BYn5tlABs34e4AAY+QJOpGDq2e6nfeU2r/Kc2CTBDBJkPAZluL
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:348c:b0:3d0:f2ca:65aa with SMTP id
+ e9e14a558f8ab-3d13e1ad5c5mr12410305ab.4.1738894844640; Thu, 06 Feb 2025
+ 18:20:44 -0800 (PST)
+Date: Thu, 06 Feb 2025 18:20:44 -0800
+In-Reply-To: <67a4b4c3.050a0220.264083.0005.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a56dfc.050a0220.2b1e6.0006.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [bluetooth?] BUG: corrupted list in
+ hci_chan_del (2)
+From: syzbot <syzbot+10bd8fe6741eedd2be2e@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Enable launch time (Time-Based Scheduling) support for XDP zero copy via
-the XDP Tx metadata framework.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-This patch has been tested with tools/testing/selftests/bpf/xdp_hw_metadata
-on Intel Tiger Lake platform. Below are the test steps and result.
+***
 
-Test 1: Send a single packet with the launch time set to 1 s in the future.
+Subject: Re: [syzbot] [bluetooth?] BUG: corrupted list in hci_chan_del (2)
+Author: lizhi.xu@windriver.com
 
-Test steps:
-1. On the DUT, start the xdp_hw_metadata selftest application:
-   $ sudo ./xdp_hw_metadata enp0s30f4 -l 1000000000 -L 1
+old logical will make get/put unbalance in l2cap_recv_acldata.
+so remote get/put conn.
 
-2. On the Link Partner, send a UDP packet with VLAN priority 1 to port 9091
-   of the DUT.
+#syz test
 
-Result:
-When the launch time is set to 1 s in the future, the delta between the
-launch time and the transmit hardware timestamp is 16.963 us, as shown in
-printout of the xdp_hw_metadata application below.
-  0x55b5864717a8: rx_desc[4]->addr=88100 addr=88100 comp_addr=88100 EoP
-  No rx_hash, err=-95
-  HW RX-time:   1734579065767717328 (sec:1734579065.7677)
-                delta to User RX-time sec:0.0004 (375.624 usec)
-  XDP RX-time:   1734579065768004454 (sec:1734579065.7680)
-                 delta to User RX-time sec:0.0001 (88.498 usec)
-  No rx_vlan_tci or rx_vlan_proto, err=-95
-  0x55b5864717a8: ping-pong with csum=5619 (want 0000)
-                  csum_start=34 csum_offset=6
-  HW RX-time:   1734579065767717328 (sec:1734579065.7677)
-                delta to HW Launch-time sec:1.0000 (1000000.000 usec)
-  0x55b5864717a8: complete tx idx=4 addr=4018
-  HW Launch-time:   1734579066767717328 (sec:1734579066.7677)
-                    delta to HW TX-complete-time sec:0.0000 (16.963 usec)
-  HW TX-complete-time:   1734579066767734291 (sec:1734579066.7677)
-                         delta to User TX-complete-time sec:0.0001
-                         (130.408 usec)
-  XDP RX-time:   1734579065768004454 (sec:1734579065.7680)
-                 delta to User TX-complete-time sec:0.9999
-                (999860.245 usec)
-  HW RX-time:   1734579065767717328 (sec:1734579065.7677)
-                delta to HW TX-complete-time sec:1.0000 (1000016.963 usec)
-  0x55b5864717a8: complete rx idx=132 addr=88100
-
-Test 2: Send 1000 packets with a 10 ms interval and the launch time set to
-        500 us in the future.
-
-Test steps:
-1. On the DUT, start the xdp_hw_metadata selftest application:
-   $ sudo chrt -f 99 ./xdp_hw_metadata enp0s30f4 -l 500000 -L 1 > \
-     /dev/shm/result.log
-
-2. On the Link Partner, send 1000 UDP packets with a 10 ms interval and
-   VLAN priority 1 to port 9091 of the DUT.
-
-Result:
-When the launch time is set to 500 us in the future, the average delta
-between the launch time and the transmit hardware timestamp is 13.854 us,
-as shown in the analysis of /dev/shm/result.log below. The XDP launch time
-works correctly in sending 1000 packets continuously.
-  Min delta: 08.410 us
-  Avr delta: 13.854 us
-  Max delta: 17.076 us
-  Total packets forwarded: 1000
-
-Reviewed-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac.h      |  2 ++
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 13 +++++++++++++
- 2 files changed, 15 insertions(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-index f05cae103d83..925d8b97a42b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-@@ -106,6 +106,8 @@ struct stmmac_metadata_request {
- 	struct stmmac_priv *priv;
- 	struct dma_desc *tx_desc;
- 	bool *set_ic;
-+	struct dma_edesc *edesc;
-+	int tbs;
- };
+diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
+index adb8c33ac595..503626f70be5 100644
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -7497,8 +7497,6 @@ void l2cap_recv_acldata(struct hci_conn *hcon, struct sk_buff *skb, u16 flags)
+ 	if (!conn)
+ 		conn = l2cap_conn_add(hcon);
  
- struct stmmac_xsk_tx_complete {
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index d04543e5697b..ff67dc4ecf72 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2514,9 +2514,20 @@ static u64 stmmac_xsk_fill_timestamp(void *_priv)
- 	return 0;
+-	conn = l2cap_conn_hold_unless_zero(conn);
+-
+ 	hci_dev_unlock(hcon->hdev);
+ 
+ 	if (!conn)
+@@ -7592,8 +7590,6 @@ void l2cap_recv_acldata(struct hci_conn *hcon, struct sk_buff *skb, u16 flags)
+ 		break;
+ 	}
+ 
+-	l2cap_conn_put(conn);
+-
+ drop:
+ 	kfree_skb(skb);
  }
- 
-+static void stmmac_xsk_request_launch_time(u64 launch_time, void *_priv)
-+{
-+	struct timespec64 ts = ns_to_timespec64(launch_time);
-+	struct stmmac_metadata_request *meta_req = _priv;
-+
-+	if (meta_req->tbs & STMMAC_TBS_EN)
-+		stmmac_set_desc_tbs(meta_req->priv, meta_req->edesc, ts.tv_sec,
-+				    ts.tv_nsec);
-+}
-+
- static const struct xsk_tx_metadata_ops stmmac_xsk_tx_metadata_ops = {
- 	.tmo_request_timestamp		= stmmac_xsk_request_timestamp,
- 	.tmo_fill_timestamp		= stmmac_xsk_fill_timestamp,
-+	.tmo_request_launch_time	= stmmac_xsk_request_launch_time,
- };
- 
- static bool stmmac_xdp_xmit_zc(struct stmmac_priv *priv, u32 queue, u32 budget)
-@@ -2600,6 +2611,8 @@ static bool stmmac_xdp_xmit_zc(struct stmmac_priv *priv, u32 queue, u32 budget)
- 		meta_req.priv = priv;
- 		meta_req.tx_desc = tx_desc;
- 		meta_req.set_ic = &set_ic;
-+		meta_req.tbs = tx_q->tbs;
-+		meta_req.edesc = &tx_q->dma_entx[entry];
- 		xsk_tx_metadata_request(meta, &stmmac_xsk_tx_metadata_ops,
- 					&meta_req);
- 		if (set_ic) {
--- 
-2.34.1
-
