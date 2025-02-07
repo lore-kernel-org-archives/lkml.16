@@ -1,62 +1,62 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE2B222561;
-	Fri,  7 Feb 2025 14:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CE8221DA6;
+	Fri,  7 Feb 2025 14:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738937298; cv=none; b=ROTff79nABWsxVqACBlHgPkE15J0qKbl4pcu0mrkUYE5BCWZurN1CQY+j5WSzGr4s5eZwjxbTW0rNTDsy4gQwgnCau31Z9TrGu+FJsqOqFcvE8c2565oAx6SQZYwGf5BqmUGQhKmW+tZAeJyn8JURC6nEvwqTMvIR6J8aimWjlk=
+	t=1738937301; cv=none; b=GjdP2S2uEtqsZFFQjsUWwOSZ2O+BIChA44WfL3+IigBeFdqiG5a5N8FHaqx8o31INHMH4Kqm9nPehuQ4MCrdDulMDG+irqiOn+CzROwCzW/7N+Tszz0vJJcvv1gTpfH4eAxhNC/VFDGHUnfAIZ2uNPlRyM8Az/tFKQQMlYhmIoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738937298; c=relaxed/simple;
-	bh=TpImHDyw13v88DYqCWjn7O634fBAq+Jz7uz+a4wm1hk=;
+	s=arc-20240116; t=1738937301; c=relaxed/simple;
+	bh=iLplJqGOUWH2yC/l1CaxhcXFjVrg8V0rQaqfGwOIqnk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PDu4NpdyAJpUhTeuW9Pq4qF+GeGmZaL848xcI1vuIH3h1sBJC6DorpB4YWcsYYoaeUAfUDP6l0Qmn7sqsjtieDAplZ7P1MDCjEtSPNVn1KdYPLwy7iz4QKIrl8H7W0euzSnRnXno2zjQl9on0EoDTCKgy9NBqbgSxnw2I19DUxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dZyVu7hD; arc=none smtp.client-ip=209.85.128.175
+	 MIME-Version; b=l5UlU306OobalDSlGO69DTySfXiGtLsYJ5IWGw3O60L57wgoRhb9d0m2SpClmrcABpYUzuhqgcqD6LiFZa/hO8R5yNmPR2QeWvOIgvDHZoLoJEr/NHAp450s5bRJFTQRLn4UjSSmfMy39RFNDaB18ou1ZMbUclTIU+MUEnIfECs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gPZYXgA9; arc=none smtp.client-ip=209.85.128.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZyVu7hD"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6efe4324f96so18970517b3.1;
-        Fri, 07 Feb 2025 06:08:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gPZYXgA9"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6efe4324f96so18970987b3.1;
+        Fri, 07 Feb 2025 06:08:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738937295; x=1739542095; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738937298; x=1739542098; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aT5BPDOOXltaw9HQr5o8Si+JPli8HqWhNbfpXgv/A8c=;
-        b=dZyVu7hDAVFaQoHmrHPbXeGH+8Vq9d7Yy0QIM/8Y5E9bHlSaZnFV7cXx3Lk8RViMvM
-         OXY+jzlyj10cwR57+5UEy8mPyGctwTNn+pwjscPP6iEbYFRYlH8P3cBSreRQa5P2Kmz5
-         8263yLad+613ojouS//TmAUMJMNO5SjgVV2cV71Zr1vPBdgrsnYrdLlP4om6opwCfJYw
-         piTdEaU0dKb9iHFwI+w8McJQ0715CW1TgSKVOBLWmgAv67TZDUuUnIGda0ImefZAHOvc
-         s5rB5GQYbt8NNTVLg9LG030V/8qcQDi5A3gg8Blwt43zP8qnlqs9Vil30FTutYH3d7B8
-         Ikhw==
+        bh=MwdRGSFgj7FqI1tYvmFFNT3wx7x6pU35t6rwqkf283A=;
+        b=gPZYXgA9QnlHceXTM87GqX2503l1FeU8a9czRt27pj64L9YF4QMdYc41Qgws0JUtoF
+         WQVaSivxlo+xf6iQR2+/WJzFvd3YWPIXmEGGYXPvgKtNiDcZRB7TPOyWuvWdI+wxWNGg
+         aDizgR1YX/gqNVP/Y3LNTsn6f/EDMnjH2QzxBblsIvl5onGbv5Fz8gNolbm3ZvDXJLcf
+         VjAdJEUuzaoU8dQJ8vMPsEiYWjV8ycm9+Gv1e2CBR5hqtWsP9hUO989zCXrV1ITsSSPe
+         1m/icUOSdWU+R6NI9p8DqopALoQbs5KLQf/ga2c5qSohy22u4XkQTi5AyM1KYYFAITPC
+         Q5gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738937295; x=1739542095;
+        d=1e100.net; s=20230601; t=1738937298; x=1739542098;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aT5BPDOOXltaw9HQr5o8Si+JPli8HqWhNbfpXgv/A8c=;
-        b=tVQTV1brDRw7aIaFsOEaCmFmOc12v7nem+oPHIQf3ip+Hb6Gf1YCafmeJMIyX3UfBY
-         aNmI9bwEwZBDJl9gcQ1t9pLxPGSS2q9GaLWGc5r1y30sEBjota67UAvVQbSXiyISLkRs
-         znc6VI0jNJ3qUqxK1Bn/igmZAMSAn94HsZrh1lGZo14E51dEmV6zgCkBzBWhMHWAeEcx
-         jeRdyMFx/3785ADM8W2/W1pBljSB05iy3h5Z8FVEoIRsFLhP5B0aES23t638VxWWJh/I
-         SmeNMypD/xTBtDaO0mzQvEadSMpTdu+u+TsB0xJwsz/jUEe6R51EhZSSGgFSIRkf4eRv
-         vuPw==
-X-Forwarded-Encrypted: i=1; AJvYcCXIqBMbggsDgOzoNTc38/yD3tzolp+Aph0/5O0AFzGOtd6xc3Uq8YJYiw75o/TsM6DgJxlmMQZtwAASBLg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtADlOokqLtK3caIkQfLCpRPiiIGQw/xFkSAc3PyNEe9Z6UPeR
-	uNX+yMz43eb0Qe0O0VVYpOZq2oaJhXPkkMyngIQZFsxJIzE35gkQGaSi7g==
-X-Gm-Gg: ASbGncstNRbolXPR3QM0VoJ5jGVAvf2sknB10P431PZEIvPZuQQkBepOFulquZeKJ47
-	pgjydJ875mOeQeaU97idVrA43lXrCOMEo25oTFd8yKnMIaEdYaxn5hDvgE0IbmOQVsXjPtCLfr5
-	u1d+uoKa+xK4j9pPkAg1XrMUpZ1tAYi8P9qRpXnoN64Tq8LDtazdeVpxpEUhRz0MpclTWja7fg9
-	/Dm4rvBxUEyi9SzM8S7Rbcm861BbNoWXG+3itEcwDZDQsHrCm0JqcV6x8wVgEzuc104gQCE/IlZ
-	fnuF5iva216RzILYyfCnxqo=
-X-Google-Smtp-Source: AGHT+IFMia48ZKw+yJcvxn7ASAFZ5gyJG5qj2eE+DWVZwXk3yRd8yXwQgF9RBmqbscVTXZlzxuXBcQ==
-X-Received: by 2002:a05:690c:b15:b0:6f9:75b6:bef3 with SMTP id 00721157ae682-6f9b2a081ffmr31460067b3.35.1738937295507;
-        Fri, 07 Feb 2025 06:08:15 -0800 (PST)
+        bh=MwdRGSFgj7FqI1tYvmFFNT3wx7x6pU35t6rwqkf283A=;
+        b=BcOCamLgSE/hBqHMJBmcfMSzBSd4qGOAzvw4n3YADzcZafw687U+FZnN13WRZ4fd+r
+         2N6n4P8ri5DkiwsCJVYnSBoj6AwZRxVYN1AfW9139sQm07a3GJxqCt6ji9EqlnRLdSrT
+         zQnc9APm7jhxrIIM8TE2DnE/IvAXyA26IlV1DCsja43qo4zTKmtNpiDusFM5RG+OLSNR
+         uk7u0Yms8gI/RH4zKyHjexDDEDtuQFIJVL+IvRrZ0zPmL3o13XbbGLzN70rvr60ZVxgo
+         opm1Xh1KZf+7oVhW6YbOY3O1p/S8pAwG43EgEM5b44fNcMIxkFyqrQzKiPc1kx9rpqNh
+         39Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWPU17jJnEbagoDOFpBzle33KSevwrwVJMh30+P/9eTrG4bjPgiyCIRfPhBfUVKYjzNdF2a7ZYTg9bBBw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxruIzl07khuU/VojGT/tHJ5g+iBL8r4cpsQtMuQzDc2iYF4xic
+	CuJWe6zT3i1zqr2s5w3mjAVXpOoUt2wGLRxGXrDQEw/HQm/HV+QUR5jqHw==
+X-Gm-Gg: ASbGncuhE5a8yx2BfIosi3JnvlVo/dejah6XVguMuA6KzuxFEu2Se7LX5f3bn2ffqJo
+	1nZdzwjGpP5Fcw7awvVnTuuli7Ci3a47r9TFqOLamW0sBk4TTQEwQiubYxA8kuXJFkBe9koasNB
+	GMqWHmubqwJ9+bhuB7jTi2O6Wts34H2JHi5JWoL+FzITesvvCVtfXCZHfI2dtW+L18YUMlLYCKt
+	Aal1FY9lWS0y4336f2sEyZ3DRFKGhTtwGssiFBgCuUeYzEim2jl1O+YVua2Tio9fiBj6upBbPbR
+	DGa2EHhOq807JzKYHhAD/ko=
+X-Google-Smtp-Source: AGHT+IH5YbJY1m9zEGhFMc3bfFRYAnCBEYDz+OxdTb48LcMqYo/S0s8dQdg5NCj39OA0hGX+/rIAZA==
+X-Received: by 2002:a05:690c:4986:b0:6f9:4bb6:eb4e with SMTP id 00721157ae682-6f9b29ead87mr31468997b3.31.1738937297044;
+        Fri, 07 Feb 2025 06:08:17 -0800 (PST)
 Received: from localhost.localdomain ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f9a000f577sm5525607b3.118.2025.02.07.06.08.14
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f9a000f577sm5525607b3.118.2025.02.07.06.08.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 06:08:15 -0800 (PST)
+        Fri, 07 Feb 2025 06:08:16 -0800 (PST)
 From: Kurt Borja <kuurtb@gmail.com>
 To: platform-driver-x86@vger.kernel.org
 Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
@@ -66,9 +66,9 @@ Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Dell.Client.Kernel@dell.com,
 	linux-kernel@vger.kernel.org,
 	"Kurt Borja" <kuurtb@gmail.com>
-Subject: [PATCH v9 05/14] platform/x86: alienware-wmi: Refactor hdmi, amplifier, deepslp methods
-Date: Fri,  7 Feb 2025 09:07:34 -0500
-Message-ID: <20250207140743.16822-6-kuurtb@gmail.com>
+Subject: [PATCH v9 06/14] platform/x86: alienware-wmi: Refactor thermal control methods
+Date: Fri,  7 Feb 2025 09:07:35 -0500
+Message-ID: <20250207140743.16822-7-kuurtb@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250207140743.16822-1-kuurtb@gmail.com>
 References: <20250207140743.16822-1-kuurtb@gmail.com>
@@ -80,195 +80,208 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Refactor show/store methods for hdmi, amplifier, deepslp sysfs groups to
-use alienware_wmi_command() instead of alienware_wmax_command() which
-uses deprecated WMI methods.
+Refactor thermal control methods to use alienware_wmi_command() instead
+of alienware_wmax_command().
+
+Drop alienware_wmax_command() as there is no more users left.
 
 Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
- drivers/platform/x86/dell/alienware-wmi.c | 76 ++++++++++++-----------
- 1 file changed, 40 insertions(+), 36 deletions(-)
+ drivers/platform/x86/dell/alienware-wmi.c | 88 ++++++++---------------
+ 1 file changed, 30 insertions(+), 58 deletions(-)
 
 diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
-index 525d25a1fa6c..6e12164132a6 100644
+index 6e12164132a6..04c526f95c2f 100644
 --- a/drivers/platform/x86/dell/alienware-wmi.c
 +++ b/drivers/platform/x86/dell/alienware-wmi.c
-@@ -711,53 +711,55 @@ static acpi_status alienware_wmax_command(void *in_args, size_t in_size,
- static ssize_t cable_show(struct device *dev, struct device_attribute *attr,
- 			  char *buf)
- {
-+	struct alienfx_platdata *pdata = dev_get_platdata(dev);
- 	struct wmax_basic_args in_args = {
- 		.arg = 0,
- 	};
--	acpi_status status;
- 	u32 out_data;
-+	int ret;
- 
--	status =
--	    alienware_wmax_command(&in_args, sizeof(in_args),
--				   WMAX_METHOD_HDMI_CABLE, &out_data);
--	if (ACPI_SUCCESS(status)) {
-+	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_HDMI_CABLE,
-+				    &in_args, sizeof(in_args), &out_data);
-+	if (!ret) {
- 		if (out_data == 0)
- 			return sysfs_emit(buf, "[unconnected] connected unknown\n");
- 		else if (out_data == 1)
- 			return sysfs_emit(buf, "unconnected [connected] unknown\n");
- 	}
--	pr_err("alienware-wmi: unknown HDMI cable status: %d\n", status);
-+
-+	pr_err("alienware-wmi: unknown HDMI cable status: %d\n", ret);
- 	return sysfs_emit(buf, "unconnected connected [unknown]\n");
+@@ -676,34 +676,6 @@ static enum led_brightness global_led_get(struct led_classdev *led_cdev)
+ 	return priv->global_brightness;
  }
  
- static ssize_t source_show(struct device *dev, struct device_attribute *attr,
- 			   char *buf)
- {
-+	struct alienfx_platdata *pdata = dev_get_platdata(dev);
- 	struct wmax_basic_args in_args = {
- 		.arg = 0,
- 	};
+-static acpi_status alienware_wmax_command(void *in_args, size_t in_size,
+-					  u32 command, u32 *out_data)
+-{
 -	acpi_status status;
- 	u32 out_data;
-+	int ret;
- 
--	status =
--	    alienware_wmax_command(&in_args, sizeof(in_args),
--				   WMAX_METHOD_HDMI_STATUS, &out_data);
+-	union acpi_object *obj;
+-	struct acpi_buffer input;
+-	struct acpi_buffer output;
 -
--	if (ACPI_SUCCESS(status)) {
-+	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_HDMI_STATUS,
-+				    &in_args, sizeof(in_args), &out_data);
-+	if (!ret) {
- 		if (out_data == 1)
- 			return sysfs_emit(buf, "[input] gpu unknown\n");
- 		else if (out_data == 2)
- 			return sysfs_emit(buf, "input [gpu] unknown\n");
- 	}
--	pr_err("alienware-wmi: unknown HDMI source status: %u\n", status);
-+
-+	pr_err("alienware-wmi: unknown HDMI source status: %u\n", ret);
- 	return sysfs_emit(buf, "input gpu [unknown]\n");
+-	input.length = in_size;
+-	input.pointer = in_args;
+-	if (out_data) {
+-		output.length = ACPI_ALLOCATE_BUFFER;
+-		output.pointer = NULL;
+-		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
+-					     command, &input, &output);
+-		if (ACPI_SUCCESS(status)) {
+-			obj = (union acpi_object *)output.pointer;
+-			if (obj && obj->type == ACPI_TYPE_INTEGER)
+-				*out_data = (u32)obj->integer.value;
+-		}
+-		kfree(output.pointer);
+-	} else {
+-		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 0,
+-					     command, &input, NULL);
+-	}
+-	return status;
+-}
+-
+ /*
+  *	The HDMI mux sysfs node indicates the status of the HDMI input mux.
+  *	It can toggle between standard system GPU output and HDMI input.
+@@ -943,7 +915,8 @@ static bool is_wmax_thermal_code(u32 code)
+ 	return false;
  }
  
- static ssize_t source_store(struct device *dev, struct device_attribute *attr,
- 			    const char *buf, size_t count)
+-static int wmax_thermal_information(u8 operation, u8 arg, u32 *out_data)
++static int wmax_thermal_information(struct wmi_device *wdev, u8 operation,
++				    u8 arg, u32 *out_data)
  {
-+	struct alienfx_platdata *pdata = dev_get_platdata(dev);
- 	struct wmax_basic_args args;
+ 	struct wmax_u32_args in_args = {
+ 		.operation = operation,
+@@ -951,14 +924,12 @@ static int wmax_thermal_information(u8 operation, u8 arg, u32 *out_data)
+ 		.arg2 = 0,
+ 		.arg3 = 0,
+ 	};
 -	acpi_status status;
+-
+-	status = alienware_wmax_command(&in_args, sizeof(in_args),
+-					WMAX_METHOD_THERMAL_INFORMATION,
+-					out_data);
 +	int ret;
- 
- 	if (strcmp(buf, "gpu\n") == 0)
- 		args.arg = 1;
-@@ -767,12 +769,11 @@ static ssize_t source_store(struct device *dev, struct device_attribute *attr,
- 		args.arg = 3;
- 	pr_debug("alienware-wmi: setting hdmi to %d : %s", args.arg, buf);
- 
--	status = alienware_wmax_command(&args, sizeof(args),
--					WMAX_METHOD_HDMI_SOURCE, NULL);
-+	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_HDMI_SOURCE, &args,
-+				    sizeof(args), NULL);
-+	if (ret < 0)
-+		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n", ret);
  
 -	if (ACPI_FAILURE(status))
--		pr_err("alienware-wmi: HDMI toggle failed: results: %u\n",
--		       status);
- 	return count;
+-		return -EIO;
++	ret = alienware_wmi_command(wdev, WMAX_METHOD_THERMAL_INFORMATION,
++				    &in_args, sizeof(in_args), out_data);
++	if (ret < 0)
++		return ret;
+ 
+ 	if (*out_data == WMAX_FAILURE_CODE)
+ 		return -EBADRQC;
+@@ -966,7 +937,7 @@ static int wmax_thermal_information(u8 operation, u8 arg, u32 *out_data)
+ 	return 0;
  }
  
-@@ -805,22 +806,23 @@ static const struct attribute_group hdmi_attribute_group = {
- static ssize_t status_show(struct device *dev, struct device_attribute *attr,
- 			   char *buf)
+-static int wmax_thermal_control(u8 profile)
++static int wmax_thermal_control(struct wmi_device *wdev, u8 profile)
  {
-+	struct alienfx_platdata *pdata = dev_get_platdata(dev);
- 	struct wmax_basic_args in_args = {
- 		.arg = 0,
- 	};
--	acpi_status status;
- 	u32 out_data;
-+	int ret;
- 
--	status =
--	    alienware_wmax_command(&in_args, sizeof(in_args),
--				   WMAX_METHOD_AMPLIFIER_CABLE, &out_data);
--	if (ACPI_SUCCESS(status)) {
-+	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_AMPLIFIER_CABLE,
-+				    &in_args, sizeof(in_args), &out_data);
-+	if (!ret) {
- 		if (out_data == 0)
- 			return sysfs_emit(buf, "[unconnected] connected unknown\n");
- 		else if (out_data == 1)
- 			return sysfs_emit(buf, "unconnected [connected] unknown\n");
- 	}
--	pr_err("alienware-wmi: unknown amplifier cable status: %d\n", status);
-+
-+	pr_err("alienware-wmi: unknown amplifier cable status: %d\n", ret);
- 	return sysfs_emit(buf, "unconnected connected [unknown]\n");
- }
- 
-@@ -850,15 +852,16 @@ static const struct attribute_group amplifier_attribute_group = {
- static ssize_t deepsleep_show(struct device *dev, struct device_attribute *attr,
- 			      char *buf)
- {
-+	struct alienfx_platdata *pdata = dev_get_platdata(dev);
- 	struct wmax_basic_args in_args = {
- 		.arg = 0,
+ 	struct wmax_u32_args in_args = {
+ 		.operation = WMAX_OPERATION_ACTIVATE_PROFILE,
+@@ -974,15 +945,13 @@ static int wmax_thermal_control(u8 profile)
+ 		.arg2 = 0,
+ 		.arg3 = 0,
  	};
 -	acpi_status status;
  	u32 out_data;
 +	int ret;
  
 -	status = alienware_wmax_command(&in_args, sizeof(in_args),
--					WMAX_METHOD_DEEP_SLEEP_STATUS, &out_data);
--	if (ACPI_SUCCESS(status)) {
-+	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_DEEP_SLEEP_STATUS,
+-					WMAX_METHOD_THERMAL_CONTROL,
+-					&out_data);
+-
+-	if (ACPI_FAILURE(status))
+-		return -EIO;
++	ret = alienware_wmi_command(wdev, WMAX_METHOD_THERMAL_CONTROL,
 +				    &in_args, sizeof(in_args), &out_data);
-+	if (!ret) {
- 		if (out_data == 0)
- 			return sysfs_emit(buf, "[disabled] s5 s5_s4\n");
- 		else if (out_data == 1)
-@@ -866,15 +869,17 @@ static ssize_t deepsleep_show(struct device *dev, struct device_attribute *attr,
- 		else if (out_data == 2)
- 			return sysfs_emit(buf, "disabled s5 [s5_s4]\n");
- 	}
--	pr_err("alienware-wmi: unknown deep sleep status: %d\n", status);
-+
-+	pr_err("alienware-wmi: unknown deep sleep status: %d\n", ret);
- 	return sysfs_emit(buf, "disabled s5 s5_s4 [unknown]\n");
++	if (ret)
++		return ret;
+ 
+ 	if (out_data == WMAX_FAILURE_CODE)
+ 		return -EBADRQC;
+@@ -990,7 +959,8 @@ static int wmax_thermal_control(u8 profile)
+ 	return 0;
  }
  
- static ssize_t deepsleep_store(struct device *dev, struct device_attribute *attr,
- 			       const char *buf, size_t count)
+-static int wmax_game_shift_status(u8 operation, u32 *out_data)
++static int wmax_game_shift_status(struct wmi_device *wdev, u8 operation,
++				  u32 *out_data)
  {
-+	struct alienfx_platdata *pdata = dev_get_platdata(dev);
- 	struct wmax_basic_args args;
+ 	struct wmax_u32_args in_args = {
+ 		.operation = operation,
+@@ -998,14 +968,12 @@ static int wmax_game_shift_status(u8 operation, u32 *out_data)
+ 		.arg2 = 0,
+ 		.arg3 = 0,
+ 	};
 -	acpi_status status;
+-
+-	status = alienware_wmax_command(&in_args, sizeof(in_args),
+-					WMAX_METHOD_GAME_SHIFT_STATUS,
+-					out_data);
 +	int ret;
  
- 	if (strcmp(buf, "disabled\n") == 0)
- 		args.arg = 0;
-@@ -884,12 +889,11 @@ static ssize_t deepsleep_store(struct device *dev, struct device_attribute *attr
- 		args.arg = 2;
- 	pr_debug("alienware-wmi: setting deep sleep to %d : %s", args.arg, buf);
- 
--	status = alienware_wmax_command(&args, sizeof(args),
--					WMAX_METHOD_DEEP_SLEEP_CONTROL, NULL);
-+	ret = alienware_wmi_command(pdata->wdev, WMAX_METHOD_DEEP_SLEEP_CONTROL,
-+				    &args, sizeof(args), NULL);
-+	if (!ret)
-+		pr_err("alienware-wmi: deep sleep control failed: results: %u\n", ret);
- 
 -	if (ACPI_FAILURE(status))
--		pr_err("alienware-wmi: deep sleep control failed: results: %u\n",
--			status);
- 	return count;
+-		return -EIO;
++	ret = alienware_wmi_command(wdev, WMAX_METHOD_GAME_SHIFT_STATUS,
++				    &in_args, sizeof(in_args), out_data);
++	if (ret < 0)
++		return ret;
+ 
+ 	if (*out_data == WMAX_FAILURE_CODE)
+ 		return -EOPNOTSUPP;
+@@ -1016,10 +984,11 @@ static int wmax_game_shift_status(u8 operation, u32 *out_data)
+ static int thermal_profile_get(struct device *dev,
+ 			       enum platform_profile_option *profile)
+ {
++	struct awcc_priv *priv = dev_get_drvdata(dev);
+ 	u32 out_data;
+ 	int ret;
+ 
+-	ret = wmax_thermal_information(WMAX_OPERATION_CURRENT_PROFILE,
++	ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_CURRENT_PROFILE,
+ 				       0, &out_data);
+ 
+ 	if (ret < 0)
+@@ -1048,7 +1017,8 @@ static int thermal_profile_set(struct device *dev,
+ 		u32 gmode_status;
+ 		int ret;
+ 
+-		ret = wmax_game_shift_status(WMAX_OPERATION_GET_GAME_SHIFT_STATUS,
++		ret = wmax_game_shift_status(priv->wdev,
++					     WMAX_OPERATION_GET_GAME_SHIFT_STATUS,
+ 					     &gmode_status);
+ 
+ 		if (ret < 0)
+@@ -1056,7 +1026,8 @@ static int thermal_profile_set(struct device *dev,
+ 
+ 		if ((profile == PLATFORM_PROFILE_PERFORMANCE && !gmode_status) ||
+ 		    (profile != PLATFORM_PROFILE_PERFORMANCE && gmode_status)) {
+-			ret = wmax_game_shift_status(WMAX_OPERATION_TOGGLE_GAME_SHIFT,
++			ret = wmax_game_shift_status(priv->wdev,
++						     WMAX_OPERATION_TOGGLE_GAME_SHIFT,
+ 						     &gmode_status);
+ 
+ 			if (ret < 0)
+@@ -1064,7 +1035,8 @@ static int thermal_profile_set(struct device *dev,
+ 		}
+ 	}
+ 
+-	return wmax_thermal_control(priv->supported_thermal_profiles[profile]);
++	return wmax_thermal_control(priv->wdev,
++				    priv->supported_thermal_profiles[profile]);
  }
  
+ static int thermal_profile_probe(void *drvdata, unsigned long *choices)
+@@ -1077,7 +1049,7 @@ static int thermal_profile_probe(void *drvdata, unsigned long *choices)
+ 	u32 out_data;
+ 	int ret;
+ 
+-	ret = wmax_thermal_information(WMAX_OPERATION_SYS_DESCRIPTION,
++	ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_SYS_DESCRIPTION,
+ 				       0, (u32 *) &sys_desc);
+ 	if (ret < 0)
+ 		return ret;
+@@ -1085,7 +1057,7 @@ static int thermal_profile_probe(void *drvdata, unsigned long *choices)
+ 	first_mode = sys_desc[0] + sys_desc[1];
+ 
+ 	for (u32 i = 0; i < sys_desc[3]; i++) {
+-		ret = wmax_thermal_information(WMAX_OPERATION_LIST_IDS,
++		ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_LIST_IDS,
+ 					       i + first_mode, &out_data);
+ 
+ 		if (ret == -EIO)
 -- 
 2.48.1
 
