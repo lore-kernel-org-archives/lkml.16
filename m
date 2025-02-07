@@ -1,104 +1,112 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A333D1DEFC5;
-	Fri,  7 Feb 2025 21:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09471195962;
+	Fri,  7 Feb 2025 21:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738964193; cv=none; b=YLPCjTOofcGLSNomglTKTv7uUE384+oLotBPwPwtbdUbUbSHan9eCCmziHnQGibnGEgm+oBSfb5Gebce839sMgyj4V55RrE6gMAQsXr0t6NyBUDiDxj+SNX2vrviMjSWeHMaxTjVi4G24ydsDnHJxCSpegcHcrENu78G7BTl5QQ=
+	t=1738964297; cv=none; b=EzcHQtlf4FP1y5ufGEFEHUU3bYLmJv/N69UmuaxS/BDbdAHI10yhfXqUh5eqFX5O6hhXKFaGMDqNeUXSrF8uO9KpuXCgT8JI3aZLwhSiSE4mQk/FrnylxJ4hw0ABk/YDJBNt6AZ8nvi5cPE0UmAWDESTzequICRAb31YIdephoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738964193; c=relaxed/simple;
-	bh=kBk5n7e7YJCpfbGRhK9SaKPheVXPph07wJ/EAM2JhEE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=pD0evOmTwX37HfjDE3/6pbdnIQw9zhCzPglsG8fZdSfVW5Mj5m9w65RUWa3uxk8+kNRRfHTav0zR3/EBUHHfih0mrvvr9W82sy8lqvvSYWMyRnwwZDYVPDTGuitUogcfQp7ib9cs8T6kZhZ4M5vFqz7oNEHp10Kh/f17aCY38E0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=qMFRJrRt; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1738964297; c=relaxed/simple;
+	bh=7xVwhwDjoai8YSxFqqwGSBjxwD2KZy4EIiDqNHKYu+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gwQVzc2zClN2p2sv64Y9f00fcSYjMfBshaaQgUaW99OruACNVJrehh4VQICo3uTUPDYlyqFRkNgyifIMW4sxqWcQS69y0A6UhGbv7PVXsmjhOvYurV+2XSR8cUlo2vI9FO3GYF5wEqoeY1ds3lIcy3UctmDv0Qsp2lySXrkxjIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lfyiv5cu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="qMFRJrRt"
-Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id 51F60210730A; Fri,  7 Feb 2025 13:36:31 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 51F60210730A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-	s=default; t=1738964191;
-	bh=S2tBTsh8o3n5q7814riIx8uxj6+JAvTpQ4Ij2rHolYE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qMFRJrRtSTypiO6DnFUMFLldt9lp0LJN/QwtwebqRQTQWXP1YRsy93vmMx73/OKzp
-	 jc8cqd9vV4/JQmtSZ0LQy3R/KLrzQ7Mm1rbXXOvFKmnPSx2SQE3gXDlGRVFz4yuyp1
-	 ms+Q/QR1ftsnbPcmMhtq16vkFVDEnFuVMdSMxsUo=
-From: longli@linuxonhyperv.com
-To: Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Ajay Sharma <sharmaajay@microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	Long Li <longli@microsoft.com>
-Subject: [Patch v2 3/3] IB/core: Add default IP when a slave is unlinked
-Date: Fri,  7 Feb 2025 13:36:18 -0800
-Message-Id: <1738964178-18836-4-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1738964178-18836-1-git-send-email-longli@linuxonhyperv.com>
-References: <1738964178-18836-1-git-send-email-longli@linuxonhyperv.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lfyiv5cu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1DF4C4CED1;
+	Fri,  7 Feb 2025 21:38:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738964295;
+	bh=7xVwhwDjoai8YSxFqqwGSBjxwD2KZy4EIiDqNHKYu+k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lfyiv5cuS/GU2byBNx1/HS6vFu4XgUVKiwxJxFKa4f3ofnDnF5InCMn2/xpuWS58N
+	 4QtqPZCaUgmr79HJ9xmM78pXb89BQLwgxXvc33Lh+3EQeafVlBrVppNrK8XOQUw5H8
+	 UJR9X0noZ/1FbX4W1ZBZAMhUYy9BgxOGEd9MwMZFlu4BmJKNV6MQRgPREDIoJFchfh
+	 vkIpTE9C01BimsoJ3MqyEWHAtinnUWxUS8B374bKNWOXDU9Asd0dSh8FiOORDf92iW
+	 aQPWNpap/IIavA7B9QLaDyt/3GM8gUFwZBNJqf8kGVt3NewUlFLL83a8JTzoH0ByF2
+	 gYO4ujWIo0Hvw==
+Date: Fri, 7 Feb 2025 21:38:05 +0000
+From: Mark Brown <broonie@kernel.org>
+To: j.ne@posteo.net
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 00/12] YAML conversion of several Freescale/PowerPC DT
+ bindings
+Message-ID: <611e47da-ba87-4c21-a6b7-cf051dc88158@sirena.org.uk>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Yv3YhmJAoxj+QMAv"
+Content-Disposition: inline
+In-Reply-To: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+X-Cookie: MMM-MM!!  So THIS is BIO-NEBULATION!
 
-From: Long Li <longli@microsoft.com>
 
-When a bonded slave is unlinked, the current code doesn't add a default
-GID for the new unlinked netdev.
+--Yv3YhmJAoxj+QMAv
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Add a default GID for the netdev.
+On Fri, Feb 07, 2025 at 10:30:17PM +0100, J. Neusch=E4fer via B4 Relay wrot=
+e:
 
-Signed-off-by: Long Li <longli@microsoft.com>
----
- drivers/infiniband/core/roce_gid_mgmt.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+> This is a spin-off of the series titled
+> "powerpc: MPC83xx cleanup and LANCOM NWAPP2 board".
 
-diff --git a/drivers/infiniband/core/roce_gid_mgmt.c b/drivers/infiniband/core/roce_gid_mgmt.c
-index 827a50dbd308..3fa2740fa0d2 100644
---- a/drivers/infiniband/core/roce_gid_mgmt.c
-+++ b/drivers/infiniband/core/roce_gid_mgmt.c
-@@ -692,6 +692,11 @@ static const struct netdev_event_work_cmd add_cmd_upper_ips = {
- 	.filter = upper_device_filter
- };
- 
-+static const struct netdev_event_work_cmd add_default_gid_cmd = {
-+	.cb	= add_default_gids,
-+	.filter	= is_ndev_for_default_gid_filter,
-+};
-+
- static void
- ndev_event_unlink(struct netdev_notifier_changeupper_info *changeupper_info,
- 		  struct netdev_event_work_cmd *cmds)
-@@ -704,7 +709,8 @@ ndev_event_unlink(struct netdev_notifier_changeupper_info *changeupper_info,
- 
- 	cmds[0] = upper_ips_del_cmd;
- 	cmds[0].ndev = changeupper_info->upper_dev;
--	cmds[1] = add_cmd;
-+	cmds[1] = add_default_gid_cmd;
-+	cmds[2] = add_cmd;
- }
- 
- static const struct netdev_event_work_cmd bonding_default_add_cmd = {
-@@ -751,11 +757,6 @@ static void netdevice_event_changeupper(struct net_device *event_ndev,
- 		ndev_event_unlink(changeupper_info, cmds);
- }
- 
--static const struct netdev_event_work_cmd add_default_gid_cmd = {
--	.cb	= add_default_gids,
--	.filter	= is_ndev_for_default_gid_filter,
--};
--
- static int netdevice_event(struct notifier_block *this, unsigned long event,
- 			   void *ptr)
- {
--- 
-2.34.1
+> During the development of that series, it became clear that many
+> devicetree bindings for Freescale MPC8xxx platforms are still in the old
+> plain-text format, or don't exist at all, and in any case don't mention
+> all valid compatible strings.
 
+What's the story with dependencies here - why is all this stuff in one
+series?  Normally I'd expect bindings conversions to be standalone.
+
+--Yv3YhmJAoxj+QMAv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmemfT0ACgkQJNaLcl1U
+h9Dq1Af/eChCpyVx52hhPj2Ppke4XqgRYwHfMx1ZD4zg9Fv5cLy+pNBr/CAHHckC
+zFU84oMRCqn0Y8VcKQo6h/qnhsFnmdYxFgRmYg1kXZIm+jfrFUtTHfRH4I/8b95Z
+G2JrWA/AN9rNXn2n7I0gL2mBLfXBlTl2GlESRinIHR9eESMM/hJAQmkkw2xpgeCM
+lc0xNSEPmuS3M0+rYNtypbnc1bbGXU6zVOEz+5Ennz6bHPi6q6Amjz6HBLyoln3X
+3F9zfSERvGPIA442jE6Qm6cFH4S7Vv/L4urjeIvSe7le626ajH99YJZl1BSFaPLR
+qcOQY87d6Kjx7kPP+wMJG/Lfhrmprg==
+=9fhs
+-----END PGP SIGNATURE-----
+
+--Yv3YhmJAoxj+QMAv--
