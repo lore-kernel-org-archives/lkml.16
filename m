@@ -1,101 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6351EDA3A
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 13:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91D271E1A33;
+	Fri,  7 Feb 2025 13:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738934013; cv=none; b=bqFR8wVbpbEqzzGBH+2eoysmYBlL42eFXOxXrUkTr5MVOosCderCeIYRSFQ6BEVP8rDd4R02m8vaKQa3qrqZvDH+scypBOD7ha1k85EWBi2/T14ekVaXqJ6md7HBGIC8PaRPIRUm9qy0CDQmfOpi8K0gtyU5YQAp5JsmL3s23lg=
+	t=1738934095; cv=none; b=XzQtAyGTotTVvDlI9jyNM0L/0Dook+pI9C70mxOyVHdwhi7Idt/i45hCvYvQmwGnLOYNTzIudPjw2r5mh1hrvgc/9Kgyzrn8KAq1lVdkm4yFwne2mj+H2kp5wjzNLut2BKC8R0QYwn7qlVPxoSMoegT6CXF1HiDNztPyjxBs/5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738934013; c=relaxed/simple;
-	bh=ZNAl2lbm1tHIFcCjkRB+ijvuo9ULxuvzExsotKCpHvk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ts/L9J/F5qsBdykxTVjbl/LqTV5D6rDLE38h44Lsz3kxPxeIIOTM9b0Gpph3Qz3KFG8/kOPiJveA97bEQHuOPvFCLKdfalxEuY08/Z5PLBGZMOTsCq26amF7klkwA1n/OckSFGgm4Gwl+rwxCR6AzndRG0i4e+YGtuxahwmwJ34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DlfzNKfU; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DlfzNKfU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738934012; x=1770470012;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=ZNAl2lbm1tHIFcCjkRB+ijvuo9ULxuvzExsotKCpHvk=;
-  b=DlfzNKfUw1YRI2P8dvlxLlvHrqDk3kpaLqmnih+Kr/tPkq2yD//Ou2py
-   ftZPqosKjGe3ZJxDLBpVfLJo+0UJwdMcEVvY5n75rnLMQqbjP8pqwnHke
-   VKw309WSQkW7ZiWoLscyQ9iAgRGqWCLDOS1jjsGygWMBGLYqKC78alSSz
-   KMvgui4kd/z3aCbkjBlnrKV1WMswwMpD1ys6J3a14aLLzOV58pk03uhDc
-   i9Nv4HwYasA/T+Xxi0TgiVp4nnif40mxFeHHLm7lVuQUs1a3F+sjU15py
-   hixAO9BrZkmYPS39FQsLpwLTSF6hNwaFPX7izZ5ZeruMa8PG1olgbYv18
-   Q==;
-X-CSE-ConnectionGUID: oHf6OnZ9TdCXJVDllLwQug==
-X-CSE-MsgGUID: BbMrOWvXR0Szc6vz4gze/g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="49815691"
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="49815691"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:13:31 -0800
-X-CSE-ConnectionGUID: SyLZ7crXRtuOigKoy+q0BA==
-X-CSE-MsgGUID: 8zlVlKuaQx+UrHGx6E1oSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="111486886"
-Received: from unknown (HELO ubik) ([10.237.72.184])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:13:24 -0800
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Nam Cao <namcao@linutronix.de>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
- <frederic@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Martin K. Petersen"
- <martin.petersen@oracle.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel
- <sre@kernel.org>, Will Deacon <will@kernel.org>, Jon Mason
- <jdmason@kudzu.us>, Jaehoon Chung <jh80.chung@samsung.com>, Hans Verkuil
- <hverkuil-cisco@xs4all.nl>, Jassi Brar <jassisinghbrar@gmail.com>, Pavel
- Machek <pavel@ucw.cz>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Jonathan Cameron <jic23@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Alex Deucher <alexander.deucher@amd.com>, Jani Nikula
- <jani.nikula@linux.intel.com>, Rob Clark <robdclark@gmail.com>, Lucas De
- Marchi <lucas.demarchi@intel.com>, Zack Rusin <zack.rusin@broadcom.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>, Uwe
- =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Takashi Iwai
- <tiwai@suse.com>,
- alexander.shishkin@linux.intel.com
-Subject: Re: [PATCH v2 00/45] Consolidate hrtimer initialization - Part 4
-In-Reply-To: <87bjvdnc74.ffs@tglx>
-References: <cover.1738746904.git.namcao@linutronix.de>
- <87ldujz9a7.fsf@ubik.fi.intel.com> <87tt97m3u3.ffs@tglx>
- <87ikpmypts.fsf@ubik.fi.intel.com> <87bjvdnc74.ffs@tglx>
-Date: Fri, 07 Feb 2025 15:13:21 +0200
-Message-ID: <87frkpzymm.fsf@ubik.fi.intel.com>
+	s=arc-20240116; t=1738934095; c=relaxed/simple;
+	bh=OW7OP/NQ49fQv/lKJd6pSJwjF7WpKW61USJQD2CXCbw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fU0rzIEQMzjKA/liA8WBmureVKtkXo7cGXnK2nFcB/oY+H4BlWPeLZ7xdbonGSlmfLujWQyeCFYMvksfY4g2XkKv/l9air5I0b0s14w3I/Huj5i+kX8q51XB0/ZlrUhsIHKu575OyUSwj6kKyoD4mjYoELDY46exyiMckWJzrZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3F50113E;
+	Fri,  7 Feb 2025 05:15:15 -0800 (PST)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7FE453F63F;
+	Fri,  7 Feb 2025 05:14:49 -0800 (PST)
+Date: Fri, 7 Feb 2025 13:14:46 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Peng Fan <peng.fan@nxp.com>,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Abel Vesa <abelvesa@kernel.org>,
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"arm-scmi@vger.kernel.org" <arm-scmi@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: Re: [PATCH v2 3/4] clk: imx: pll14xx: support spread spectrum clock
+ generation
+Message-ID: <Z6YHRlxJG4V56wrZ@bogus>
+References: <20250205-clk-ssc-v2-0-fa73083caa92@nxp.com>
+ <20250205-clk-ssc-v2-3-fa73083caa92@nxp.com>
+ <CABGWkvqXf0ZmJKofrbahB5N5uer6ye6Q4s_PXz_Z61vG2pMu=g@mail.gmail.com>
+ <PAXPR04MB8459F1CE0E8049355ADC9F3C88F62@PAXPR04MB8459.eurprd04.prod.outlook.com>
+ <CABGWkvrKe6az5XR=MvdMwBOfeXqd5yPoF4Yf4pqyyGPD4Kpvpg@mail.gmail.com>
+ <Z6TgesTZklGvmI56@bogus>
+ <20250207112622.GB14860@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207112622.GB14860@localhost.localdomain>
 
-Thomas Gleixner <tglx@linutronix.de> writes:
-
-> On Fri, Feb 07 2025 at 13:08, Alexander Shishkin wrote:
->> Thomas Gleixner <tglx@linutronix.de> writes:
->>> That part 1 series has been applied and is in mainline already.
->>
->> Yes, I was grepping for the function that got removed. Low caffeine
->> level in the bloodstream or something.
->>
->> But now that it's in mainline, I can pick up the patch intended for me
->> or just ack it. Any preferences?
+On Fri, Feb 07, 2025 at 07:26:22PM +0800, Peng Fan wrote:
+> Hi Sudeep,
 >
-> Just pick it up through your tree. I'm only going to collect the
-> leftovers.
+> V2 is actually 2 weeks after V1. So after addressing the comments
+> from Stephen and Dan, also updated clk-scmi.c to use a non-vendor
+> changes, I posted out V2.
+>
 
-Wilco.
+Sure, but as I said you posted on the very first day of the merge window.
+So 2 weeks just cover the end of merge window.
 
-Thanks,
+> 2 days, this is just after got Cristian's comments. Then I posted V2.
+> I try to follow your working style on handling scmi patches, but seems you are
+> not active, so I mainly count on Cristian's comments and update patches.
+>
+
+Yes, his comments were for more discussions internally and externally.
+Not to churn up another patch set.
+
+> The i.MX pll patches in V2 is orthogonal to clk scmi, I did not expect
+> complains. But ...
+>
+
+Sorry if I overlooked, but with not all the platform specific
+knowledge it is just too much info to consume at once. Again it is
+fine if you don't make it hard but churning newer versions. So please
+give time.
+
+> In my view, maintainers have patchwork to maintain patches. patches send
+> out in merge window will not be reviewed in short time or surely not
+> picked up, I understand this. patches could just be marked new in patchwork.
+> If new version is out, old version just marked as not apply.
+
+Though I don't use patchwork(probably I should not your problem).
+However, sometimes I see all versions to understand the changes and
+evolution sometimes. And it just gets hard if there are too many
+versions in short duration.
+
+> And I use b4 to manage patchset, and each revision has changelog.
+>
+
+Good.
+
+> Indeed I not track merge window since I am not maintainer role. I was
+> not aware this would introduce complain (: I will track the cycle
+> in following days.
+>
+
+I don't say it is a must. But good if you manage to.
+
+I will look at all the pending patches from you soon, give me until
+middle of next week.
+
 --
-Alex
+Regards,
+Sudeep
