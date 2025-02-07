@@ -1,199 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97DB8479;
-	Fri,  7 Feb 2025 22:23:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F2E8479;
+	Fri,  7 Feb 2025 22:25:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738967035; cv=none; b=PCFgaHTusueo19rmMEVYf1hVHMffJxBZHoREQwMtkEjYi3MJNYF4mHkhGxl1QtXY0U0RPha9st9r88ddhdoC6YgMEFdvC9sMEXa4m9OI6e5/yQj12R6RKBfsR4hqK3GwSIWx5vfVNjiJC7OF/wPoDSSyKVCzfvMpXgSPEuPlg9Q=
+	t=1738967126; cv=none; b=pZIUiemfeRSmjBowUyr6y0HQ1exo9wF+RQ2baa0w9BBFUvp6hLNowE0YPaEQJF161ScNf3klplencr2hF8wZu0b4WZi8ESmI6GkQ9OjvZQHDULKn//YU612IX4Iyi27BqZ4OUSEObI3Z74Jks86ppQyWSnKN73mynJh5ArGiS50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738967035; c=relaxed/simple;
-	bh=z71GRjU5YMVA5314bHpHU5tEWi/e4K22CBTyU7kCNuA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=liUzWu8b9RYFcBmGd3Ad2GQG0Mn7fgA3+KEkwMBejbTSuq8SG4BZR8jzMspRnNkeYVR61Hq5GDO+JQ+HUEZHZHZPWGZiok0JigHBOyTPhKNcnkAFDVSDo+1TbU0F5BhTGVMWYLTUaJmV7q8e/fiO3zyELZd7GmzZfHk3lepjoZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K21oY5fk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738967126; c=relaxed/simple;
+	bh=EmXGiKJEIoO+qHojiG3dKSYpWbKio0puEzSvAHBKCMA=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=IxlnevSQQjpHlaiIuyhmncpm8Vzpmom/ReInKGtqZNXvjp/I2O5L0As3yWKLeRy010T/0lhosieodH3u3iyvYptudQv9kf31Y+/Nnb14Lp7ObcoA0HxydPisV4Mq79UQt67FzJo0h9W6MfaduvJWgKV+iE4Gmn45+4K3zjVbM2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F2GijfG8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K21oY5fk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16F5FC4CED1;
-	Fri,  7 Feb 2025 22:23:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F2GijfG8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2CF7C4CED1;
+	Fri,  7 Feb 2025 22:25:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738967034;
-	bh=z71GRjU5YMVA5314bHpHU5tEWi/e4K22CBTyU7kCNuA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=K21oY5fkU528S+VLZVhJgko2LHzRdTXdDQkGlomm0nJ/cgPJNEkIyAUV9cb4gCPJz
-	 L1+yv/l+D6tUFbvC3fnI2AnYov9fd5joAVQn6u9AtmIugiDUHRLw60wA/j5CMRqmYq
-	 qpwxH1z1cIfL9pOUoNXSkduFgm2kvtHymMftfpXja00KqgUqa1+r8vjKjCpDteDBmo
-	 TTixmrunnEdH5/BKZaH6E47n6vmd0KLXUP1rlVZ3WJ8xwQp8SEmxQaRBVc2SH4cJqa
-	 +KvZPGC8wghAxgNOjjhAVMBsEEAoBA6l5IofpB74qFWXIEgek6T0cNBVdIoc0YUVyw
-	 retM3YX9JI8QQ==
-Date: Fri, 7 Feb 2025 16:23:52 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-Cc: Jan Beulich <jbeulich@suse.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	xen-devel <xen-devel@lists.xenproject.org>,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Deren Wu <Deren.Wu@mediatek.com>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Shayne Chen <Shayne.Chen@mediatek.com>,
-	Sean Wang <Sean.Wang@mediatek.com>,
-	Leon Yen <Leon.Yen@mediatek.com>,
-	linux-mediatek@lists.infradead.org
-Subject: Re: Config space access to Mediatek MT7922 doesn't work after device
- reset in Xen PV dom0 (regression, Linux 6.12)
-Message-ID: <20250207222352.GA949665@bhelgaas>
+	s=k20201202; t=1738967126;
+	bh=EmXGiKJEIoO+qHojiG3dKSYpWbKio0puEzSvAHBKCMA=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=F2GijfG8XATGwdf9Hx/k9DnJjWC8jFM1W03GOKvKiBtSBUic6TXIIEw1uDBBSrCQ2
+	 Ex8nx5eVWcd6GebdVA8oMhR/fD6Bz+DxT7NS5ulHV/Y72REUnkhgJx8c6ZInNuSOLc
+	 KPTqM/YeWhjVX6raKZkK/ffegDuWaajE13utJS3n6qRr1UIwJeABViPnqoWFziM78F
+	 7RCou/ppH5dgpXwmTgPM3kEqyc/Obd5vhgBTqO8GopBiCfezx9cUmhM18kpDN0MfKi
+	 nVw+az8UONlwHRLVfRFIa71pA3aeKbMhtA2xywS7mSgOk3SvidPP6WKeyhvEchw9K4
+	 GMRBfEWj4/rQA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33DC0380AAEB;
+	Fri,  7 Feb 2025 22:25:55 +0000 (UTC)
+Subject: Re: Re: [GIT PULL] bcachefs fixes for 6.14-rc2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <usxj7gse2c53ow2a3fxpoi3ygsvu6shpo3huvecih577iaq3a7@os7sfywxj2vw>
+References: <z2eszznjel6knkkvckjxvkp5feo5jhnwvls3rtk7mbt47znvcr@kvo6dhimlghe>
+ <6491ceb6-e48b-442b-ac61-7b2b65252d7a@gmail.com> <usxj7gse2c53ow2a3fxpoi3ygsvu6shpo3huvecih577iaq3a7@os7sfywxj2vw>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <usxj7gse2c53ow2a3fxpoi3ygsvu6shpo3huvecih577iaq3a7@os7sfywxj2vw>
+X-PR-Tracked-Remote: git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-02-06.2
+X-PR-Tracked-Commit-Id: 4be214c26936813b636eed2fac906f585ddbf0f9
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 94b481f7671f412b571e4ee5e3b24f33a889812d
+Message-Id: <173896715389.2405435.11154971440726329932.pr-tracker-bot@kernel.org>
+Date: Fri, 07 Feb 2025 22:25:53 +0000
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Akira Yokosawa <akiyks@gmail.com>, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z6PiuRDjml0UNWd_@mail-itl>
 
-[+cc Alex, Mediatek folks, thread at https://lore.kernel.org/r/Z4pHll_6GX7OUBzQ@mail-itl]
+The pull request you sent on Thu, 6 Feb 2025 22:41:47 -0500:
 
-On Wed, Feb 05, 2025 at 11:14:17PM +0100, Marek Marczykowski-Górecki wrote:
-> On Thu, Jan 30, 2025 at 03:31:23PM -0600, Bjorn Helgaas wrote:
-> > On Thu, Jan 30, 2025 at 10:30:33AM +0100, Jan Beulich wrote:
-> > > On 30.01.2025 05:55, Marek Marczykowski-Górecki wrote:
-> > > > I've added logging of all config read/write to this device. Full log at
-> > > > [1].
-> > > ...
+> git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-02-06.2
 
-> ...  Generally it looks like this device has broken FLR, and the
-> reset works due to the fallback to the secondary bus reset on
-> timeout.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/94b481f7671f412b571e4ee5e3b24f33a889812d
 
-> I repeated the test with my additional "&& !PCI_POSSIBLE_ERROR(id)"
-> and I got this:
-> https://gist.github.com/marmarek/db0808702131b69ea2f66f339a55d71b
+Thank you!
 
-I'm having a really hard time piecing this all together.  I'm trying
-to recap the current theory:
-
-  - https://github.com/QubesOS/qubes-issues/issues/9689 reports
-    Mediatek MT7922 wifi (device/vendor [14c3:0616]) broke when
-    running v6.12 on Xen.
-
-  - Marek reproduced this and bisected to d591f6804e7e ("PCI: Wait for
-    device readiness with Configuration RRS"), which appeared in
-    v6.12.
-
-  - We do FLR on the device, either via sysfs or the xen-pciback
-    driver, e.g., pcistub_reset_device_state().
-
-  - We theorize that FLR is unreliable on this device, and it may
-    never respond successfully again.  All reads, either to
-    PCI_COMMAND (before d591f6804e7e) or PCI_VENDOR_ID (after
-    d591f6804e7e) get ~0.
-
-  - Prior to d591f6804e7e, e.g., in v6.11, pci_dev_wait() times out
-    because polling PCI_COMMAND always returns ~0, and returns
-    -ENOTTY.
-
-    Since -ENOTTY was returned, we try another reset method.  A
-    Secondary Bus Reset (SBR) works, and the device works again.
-
-    [3] seems to show this scenario ("NO BUG (kernel rollback 6.11)").
-    We waited ~345 seconds before giving up.
-
-  - After d591f6804e7e, e.g., in v6.12, pci_dev_wait() polls
-    PCI_VENDOR_ID looking for anything other than 0x0001.  We
-    immediately get 0xffff and exit the loop.  We assume the device is
-    ready, but it's actually not.
-
-    If pci_dbg were enabled (CONFIG_DYNAMIC_DEBUG=y and booted with
-    dyndbg="file drivers/pci/* +p"), we should see "ready %dms after
-    FLR" with a very small time.
-
-    We mistakenly think the device is ready, so we restore config
-    space, which the device ignores because it's not ready.  The
-    device doesn't work at all, perhaps because its config space has
-    not been restored.
-
-  - After including the debug patch below, pci_dev_wait() polls
-    PCI_VENDOR_ID for something other than either 0x0001 or 0xffff.
-
-    This "works" the same as before d591f6804e7e: We always get ~0,
-    eventually time out, return -ENOTTY, fall back to SBR, and the
-    device works again.  Because of the timeout, it takes about 70
-    seconds in both the Xen and the native logs in [4].
-
-  - The initial report said this works on v6.12 after a warm reboot
-    from v6.11, but fails after a cold boot [3].  Followup says this
-    works on v6.12 running natively, but it fails when running on
-    Xen [5].
-
-    I can't explain why this works in some cases but not others.
-
-  - It seems that even in v6.11, FLR didn't work for this device.  The
-    device did eventually become usable, but only because we waited
-    70+ seconds after FLR, timed out, and fell back to SBR.
-
-    The quirk patch below should avoid use of FLR completely.  The
-    mt7921 driver supports several other devices, maybe more should be
-    added.
-
-    Searches for mediatek "not ready" "after FLR" find many similar
-    reports from the web: [6], [7] (suspicious in that holding power
-    button 60 seconds seems to fix something, maybe similar to the
-    warm/cold reboot thing), [8] (works, then fails after
-    suspend/resume), [9], [10].
-
-[3] https://github.com/QubesOS/qubes-issues/issues/9689#issuecomment-2582927149
-[4] https://gist.github.com/marmarek/db0808702131b69ea2f66f339a55d71b
-[5] https://lore.kernel.org/r/Z4pHll_6GX7OUBzQ@mail-itl
-[6] https://community.frame.work/t/responded-yet-more-mediatek-issues-on-amd-linux/50039
-[7] https://www.linux.org/threads/solved-wifi-adaptator-not-found-mediatek-wi-fi-6-mt7921-wireless-lan-card.37699/page-2
-[8] https://forum.manjaro.org/t/mediatek-mt7922-wifi-not-working-after-waking-up/160664
-[9] https://forum.manjaro.org/t/mediatek-mt7921e-fails-in-kernel-6-6-and-later-through-6-10/164217
-[10] https://www.reddit.com/r/archlinux/comments/188ccib/wifi_disabled_after_disconnected_power/
-
-Debug patch:
-
-  @@ -1297,7 +1297,8 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
-                  if (root && root->config_rrs_sv) {
-                          pci_read_config_dword(dev, PCI_VENDOR_ID, &id);
-  -                     if (!pci_bus_rrs_vendor_id(id))
-  +                     if (!pci_bus_rrs_vendor_id(id) &&
-  +                         !PCI_POSSIBLE_ERROR(id))
-                                  break;
-
-
-commit 70197d3ec778 ("PCI: Avoid FLR for Mediatek MT7922 WiFi")
-Author: Bjorn Helgaas <bhelgaas@google.com>
-Date:   Fri Feb 7 14:50:42 2025 -0600
-
-    PCI: Avoid FLR for Mediatek MT7922 WiFi
-    
-
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index b84ff7bade82..82b21e34c545 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5522,7 +5522,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
-  * AMD Matisse USB 3.0 Host Controller 0x149c
-  * Intel 82579LM Gigabit Ethernet Controller 0x1502
-  * Intel 82579V Gigabit Ethernet Controller 0x1503
-- *
-+ * Mediatek MT7922 802.11ax PCI Express Wireless Network Adapter
-  */
- static void quirk_no_flr(struct pci_dev *dev)
- {
-@@ -5534,6 +5534,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x7901, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_MEDIATEK, 0x0616, quirk_no_flr);
- 
- /* FLR may cause the SolidRun SNET DPU (rev 0x1) to hang */
- static void quirk_no_flr_snet(struct pci_dev *dev)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
