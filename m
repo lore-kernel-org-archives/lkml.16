@@ -1,146 +1,130 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB785185B5F
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D751A23A9
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738921857; cv=none; b=PrkWuNTsHxvASrsXFYoAG8xClbRFAZ+/miZMOs/wP3ZrmJMp6Q5Fhy+tOSS6JAkvcvGPOsI6Lvx/ENZvNINVNYSAZq2W7ImtXcQ6KBeFqBzfhB9xo+AljB1DjnEZ6Ul+vfMkRbK+d552j8dfRlTe51WQsH1owOw4a5yD4TmBKH8=
+	t=1738921882; cv=none; b=RLXXg4FIbPpuZmW49YBwPEF/5YqyMJsTbg7Bj9txDUTvJ3VzNnScCjhfQtT0z5WQ+bcgBOTqHy1zs9ad7qdXgjAeeghyYTG0TGGN6vHd4A9uBOo/vgSBST/1wlqlxVlJkAqPZz33jdxtC+YsV03njNoy0pP02OeT1BDbwTdsHd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738921857; c=relaxed/simple;
-	bh=DcZStX43QWkfR5u3HFZ/BzIYCBxV2cty6MbV4E+zA/g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CsodBWOmloHekpmFgK14pCYN+ia31YntSq9QFhw/j5Tqk4c2fGI6omab+6LrdcJuOxnqSKbDc3H1lX5aToLkxgWnSsdoWbPqHrn/5J6WqTPchbiA8GzKRG6rf/moDNTfaGh1SbDhfDxNxp6yO8vQkHY/+OEQyDesmhbsIn++I/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lTGP3NnY; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738921882; c=relaxed/simple;
+	bh=ngJO7QmaDQrn23uZgS2xweCgDp91dFI3t0Q8eN71yoQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SNPaqm++SXRveEuoB04YTMCIAN5MsDWtDzHksX86L9UcW2DtXhTIDg/Z6KoVf4VT1QBxWAwGt2HQ/bAHoKsNt+egQvPMmNXijEM+/Z4nedVoLV4orMOLyVHQTTpe+SpwsomMSOzLaMYC57bvnzbhhJBLGQ/qUd4Nc4iI2dMwX7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NUS6vtz6; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lTGP3NnY"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f464b9a27so23318215ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 01:50:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738921855; x=1739526655; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RDirK3mhBkbwPEuL8B+oV7JCR8taE0i7p+xewXa9S2U=;
-        b=lTGP3NnYuuqaAxiLtQDjoKfAbvg98mgVdUITWFyDI88GBqlfX8+gE+6RAHV2B35hEu
-         xr5cHPOnaeZZ4+c2Z0KZBMP1X4dg0M7HWk+3g8V2teZW2o77USlgwULjrXXVzUniEjUV
-         /yofknAVvs2XPfmp83Mq3JbkXAAF8vn7+VqANSkLaCtjwH/RcDdIia+ymnob16Gsn/Rh
-         WR2zFYAPKYWs6lbh6aBN+JzO8of9xevS/+mRAgPtKZHNx5w1Jmiv0IRbTsfRfVgkraVc
-         bS/1xAtbf9zppZDh1ymzLJEKE+d5i81r6+o6K1z4hEjRoEpcZ7xeVgNBxBALpXO5/HeM
-         okKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738921855; x=1739526655;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RDirK3mhBkbwPEuL8B+oV7JCR8taE0i7p+xewXa9S2U=;
-        b=DUCGKGeqb/q1xQwixa4+oDA+iDOwdCapHGX5YTKtDGT2LzvNc4CQ39hRADLRIlITPE
-         DTnRHyyvJx3TQFqKXfdtNS0dMeeL2PBSLPoWDePCTnrn6oaKf6OvNjmHh8Cx6fpWYvhV
-         M6RbxoVscVsGHAOa3Em3pj5b2UWFKZW2yhQturblKnlwpJTAWm20nikMMKgs2RxifDrj
-         HEaujfBdJYpkZpkfcVsvFxvDlu8pvzJ9EN5wHh4krnewVqSnax1qi/reGg3BvUou00MK
-         Xb3mPKmxgljurW4iylljzoOUw1++agpRTw45QpU8d9/m3ympgc2GYcppZdTkJNsAMh38
-         yp8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUlRDjotQHyWHmel50CIVIwma1RUxJN+OtJdy2Wur1fVo+iV8QnYTGHWcDevpksoDod+3Qj2A29gAeU8D0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwD6y7Q5EfGKzaBBUaFm80THfTZHK+a0xjqdL0D0xxH42pV2SH1
-	56pkAX9rpsx6xrFcGcVNQynZILmgqNqOwCaN7Ur/+KDjruZX0g0JvwFUq149D9rbsX/CZrCwfQd
-	JZlrHPJdfS5ghqbOx9bIktX6lzbSR1MzPp+jd
-X-Gm-Gg: ASbGncsj8xFCUNzAwv4aygTEH+oiDvbrF8W2ziQzerElORmGVKHQ32GiYrZ+L1LRtut
-	SfwFiyLXIuB2NxGwZ1fUOnEW9UHzS5v/nWeyW/oRgTBD0XpxUiwiElYAN1HMrocfrpD2sdf/Iec
-	7qStfJdas18g7mUYwvvCbgwpWazk0=
-X-Google-Smtp-Source: AGHT+IGtpI60RL6U4oqQIl1xCkyZiOpePhlEFI1F9M8a5wczlR73MReXjWLUiW2MgPhSx2R8ZYzw5o/wmDVYUO+I2GU=
-X-Received: by 2002:a17:902:e547:b0:215:5935:7eef with SMTP id
- d9443c01a7336-21f4e6b1204mr47269625ad.22.1738921854968; Fri, 07 Feb 2025
- 01:50:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NUS6vtz6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=I3zHKIIrHLZPRQJg9EPbWWtt+Jc1QDKf1pOOHmPfCvA=; b=NUS6vtz6BBZ7OxDmYuLHAQtwWX
+	HUruHEv4y0/38vsTBSGHox8V14WNq1koNkFg5pmNys8ITSq+N0vUPrbkypcit4YZVtWInswyqP0Tp
+	dZNShe9iI9poWZp8S1lFD2iqYxG8P05Q4WcU38mSz4wcN5iD54UnOtpJRDPoVbZO8JlsK5ny+hMXH
+	aP119/cCCAqI3efFIw+gCwSHgZYjQLlto0GwmQIHiZ8g11qIvGKim+94IMhBiMgh+R4Uupk5wAsDO
+	3rilYisiS29euEPQS4MgLYJbB2Suhr3H/IFCiZb8t7Ukex5srCcqcMhRL9m+9Gp7B4HRMMftRKvmk
+	hGGKlz+w==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tgL0h-00000007aqf-3vaR;
+	Fri, 07 Feb 2025 09:50:55 +0000
+Date: Fri, 7 Feb 2025 09:50:55 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Bharata B Rao <bharata@amd.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Raghavendra K T <raghavendra.kt@amd.com>, linux-mm@kvack.org,
+	akpm@linux-foundation.org, lsf-pc@lists.linux-foundation.org,
+	gourry@gourry.net, nehagholkar@meta.com, abhishekd@meta.com,
+	ying.huang@linux.alibaba.com, nphamcs@gmail.com, hannes@cmpxchg.org,
+	feng.tang@intel.com, kbusch@meta.com, Hasan.Maruf@amd.com,
+	sj@kernel.org, david@redhat.com, k.shutemov@gmail.com,
+	mgorman@techsingularity.net, vbabka@suse.cz, hughd@google.com,
+	rientjes@google.com, shy828301@gmail.com, liam.howlett@oracle.com,
+	peterz@infradead.org, mingo@redhat.com, nadav.amit@gmail.com,
+	shivankg@amd.com, ziy@nvidia.com, jhubbard@nvidia.com,
+	AneeshKumar.KizhakeVeetil@arm.com, linux-kernel@vger.kernel.org,
+	jon.grimm@amd.com, santosh.shukla@amd.com, Michael.Day@amd.com,
+	riel@surriel.com, weixugc@google.com, leesuyeon0506@gmail.com,
+	honggyu.kim@sk.com, leillc@google.com, kmanaouil.dev@gmail.com,
+	rppt@kernel.org, dave.hansen@intel.com
+Subject: Re: [LSF/MM/BPF TOPIC] Unifying sources of page temperature
+ information - what info is actually wanted?
+Message-ID: <Z6XXf5OaLe9ZaN02@casper.infradead.org>
+References: <20250123105721.424117-1-raghavendra.kt@amd.com>
+ <20250131122803.000031aa@huawei.com>
+ <20250131130901.00000dd1@huawei.com>
+ <de31971e-98fc-4baf-8f4f-09d153902e2e@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206181711.1902989-1-elver@google.com> <20250206181711.1902989-3-elver@google.com>
- <20250207082832.GU7145@noisy.programming.kicks-ass.net> <Z6XTKTo_LMj9KmbY@elver.google.com>
- <20250207094120.GA7145@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250207094120.GA7145@noisy.programming.kicks-ass.net>
-From: Marco Elver <elver@google.com>
-Date: Fri, 7 Feb 2025 10:50:18 +0100
-X-Gm-Features: AWEUYZnQWDpp3VDaOjksp9Zo0oytYCkyAdjXISUfV_jPXxvw0lspyJEb-bEMFNQ
-Message-ID: <CANpmjNPfFXjwb1-ou3M6s38w=uXgHioK1d=mMSB3_HjHjV2waw@mail.gmail.com>
-Subject: Re: [PATCH RFC 02/24] compiler-capability-analysis: Rename
- __cond_lock() to __cond_acquire()
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, Alexander Potapenko <glider@google.com>, 
-	Bart Van Assche <bvanassche@acm.org>, Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Frederic Weisbecker <frederic@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, 
-	Jann Horn <jannh@google.com>, Joel Fernandes <joel@joelfernandes.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Josh Triplett <josh@joshtriplett.org>, 
-	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Uladzislau Rezki <urezki@gmail.com>, Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>, 
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, rcu@vger.kernel.org, linux-crypto@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <de31971e-98fc-4baf-8f4f-09d153902e2e@amd.com>
 
-On Fri, 7 Feb 2025 at 10:41, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Feb 07, 2025 at 10:32:25AM +0100, Marco Elver wrote:
-> > On Fri, Feb 07, 2025 at 09:28AM +0100, Peter Zijlstra wrote:
-> > > On Thu, Feb 06, 2025 at 07:09:56PM +0100, Marco Elver wrote:
-> > > > Just like the pairing of attribute __acquires() with a matching
-> > > > function-like macro __acquire(), the attribute __cond_acquires() should
-> > > > have a matching function-like macro __cond_acquire().
-> > > >
-> > > > To be consistent, rename __cond_lock() to __cond_acquire().
-> > >
-> > > So I hate this __cond_lock() thing we have with a passion. I think it is
-> > > one of the very worst annotations possible since it makes a trainwreck
-> > > of the trylock code.
-> > >
-> > > It is a major reason why mutex is not annotated with this nonsense.
-> > >
-> > > Also, I think very dim of sparse in general -- I don't think I've ever
-> > > managed to get a useful warning from between all the noise it generates.
-> >
-> > Happy to reduce the use of __cond_lock(). :-)
-> > Though one problem I found is it's still needed for those complex
-> > statement-expression *_trylock that spinlock.h/rwlock.h has, where we
-> > e.g. have (with my changes):
-> >
-> >       #define raw_spin_trylock_irqsave(lock, flags)           \
-> >               __cond_acquire(lock, ({                         \
-> >                       local_irq_save(flags);                  \
-> >                       _raw_spin_trylock(lock) ?               \
-> >                       1 : ({ local_irq_restore(flags); 0; }); \
-> >               }))
-> >
-> > Because there's an inner condition using _raw_spin_trylock() and the
-> > result of _raw_spin_trylock() is no longer directly used in a branch
-> > that also does the unlock, Clang becomes unhappy and complains. I.e.
-> > annotating _raw_spin_trylock with __cond_acquires(1, lock) doesn't work
-> > for this case because it's in a complex statement-expression. The only
-> > way to make it work was to wrap it into a function that has attribute
-> > __cond_acquires(1, lock) which is what I made __cond_lock/acquire do.
->
-> Does something like:
->
-> static inline bool
-> _raw_spin_trylock_irqsave(raw_spinlock_t *lock, unsigned long *flags)
->         __cond_acquire(1, lock)
-> {
->         local_irq_save(*flags);
->         if (_raw_spin_trylock(lock))
->                 return true;
->         local_irq_restore(*flags);
->         return false;
-> }
->
-> #define raw_spin_trylock_irqsave(lock, flags) \
->         _raw_spin_trylock_irqsave((lock), &(flags))
->
-> work?
+On Wed, Feb 05, 2025 at 11:54:05AM +0530, Bharata B Rao wrote:
+> Here is a compilation of available temperature sources and how the
+> hot/access data is consumed by different subsystems:
+> 
+> PA-Physical address available
+> VA-Virtual address available
+> AA-Access time available
+> NA-accessing Node info available
+> 
+> I have left the slot blank for those which I am not sure about.
+> ==================================================
+> Temperature		PA	VA	AA	NA
+> source
+> ==================================================
+> PROT_NONE faults	Y	Y	Y	Y
+> --------------------------------------------------
+> folio_mark_accessed()	Y		Y	Y
+> --------------------------------------------------
+> PTE A bit		Y	Y	N	N
+> --------------------------------------------------
+> Platform hints		Y	Y	Y	Y
+> (AMD IBS)
+> --------------------------------------------------
+> Device hints		Y
+> (CXL HMU)
+> ==================================================
+> 
+> And here is an attempt to compile how different subsystems
+> use the above data:
+> ==============================================================
+> Source			Subsystem		Consumption
+> ==============================================================
+> PROT_NONE faults	NUMAB		NUMAB=1 locality based
+> via process pgtable			balancing
+> walk					NUMAB=2 hot page
+> 					promotion
+> ==============================================================
+> folio_mark_accessed()	FS/filemap/GUP	LRU list activation
+> ==============================================================
+> PTE A bit via		Reclaim:LRU	LRU list activation,	
+> rmap walk				deactivation/demotion
+> ==============================================================
+> PTE A bit via		Reclaim:MGLRU	LRU list activation,	
+> rmap walk and process			deactivation/demotion
+> pgtable walk
+> ==============================================================
+> PTE A bit via		DAMON		LRU activation,
+> rmap walk				hot page promotion,
+> 					demotion etc
+> ==============================================================
+> Platform hints		NUMAB		NUMAB=1 Locality based
+> (AMD IBS)				balancing and
+> 					NUMAB=2 hot page
+> 					promotion
+> ==============================================================
+> Device hints		NUMAB		NUMAB=2 hot page
+> 					promotion
+> ==============================================================
+> The last two are listed as possibilities.
+> 
+> Feel free to correct/clarify and add more.
 
-Yup it does (tested). Ok, so getting rid of __cond_lock should be doable. :-)
+There's PG_young / PG_idle as well.
