@@ -1,97 +1,135 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8A2175D5D;
-	Fri,  7 Feb 2025 17:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FB6175D5D;
+	Fri,  7 Feb 2025 17:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738950883; cv=none; b=TzEmcqR0iEPYuQjE1yiCp7QcE484kjV/61YtvCmrphImom9zs8AFRSmqgx+fvAOZKHSiquIbybDfhZfxlMUNBX6paT/KVqE6fftdI9gCFzGzT+J9a20pk4pXmX3roiiahoCHCIM9K7zj7+edSOr7CqV22kfjYVKKM/mR6kiOuSc=
+	t=1738951020; cv=none; b=UlMCQ5Hd3s7cVz2ZDxOr+JIkFjC42irJe3uxiq+qoXBpHMVEaRKjs/01Vfdzu8ayb/zVbf7mv3K6/oFNQxgdWnuCmgnJ3p1DmkuRMoHddAwP4EwwK+WCaVrLolJ8Rk37YViYOU0y5fWjz131AhJbRsDSIAa8Ci6SYPybvkueVfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738950883; c=relaxed/simple;
-	bh=+ZlAUDYXjVATgKZDHxmYjkw0Po2FvBcmpeCykALulDk=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hT7uhmwdyUhc2okT8mmWvyfavkPiLCEoV+uYZ38JfuvS1Ukm25U8DUDNHBt98hFEEIdfrBEahyZetjiW75JBNB5n7kuTfx5IitR8VaCvniK3TQofZuc4g1bcbU/Kn3oX4ZZaotr0dhxYCeR0kbiBztto/4aZWKzNBfTHDIgkS00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YqM5r2gYFz6JB2n;
-	Sat,  8 Feb 2025 01:53:36 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 13C13140A30;
-	Sat,  8 Feb 2025 01:54:38 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 7 Feb
- 2025 18:54:37 +0100
-Date: Fri, 7 Feb 2025 17:54:36 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Gregory Price <gourry@gourry.net>
-CC: Terry Bowman <terry.bowman@amd.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<nifan.cxl@gmail.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <mahesh@linux.ibm.com>,
-	<ira.weiny@intel.com>, <oohall@gmail.com>, <Benjamin.Cheatham@amd.com>,
-	<rrichter@amd.com>, <nathan.fontenot@amd.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <lukas@wunner.de>,
-	<ming.li@zohomail.com>, <PradeepVineshReddy.Kodamati@amd.com>,
-	<alucerop@amd.com>
-Subject: Re: [PATCH v5 05/16] PCI/AER: Add CXL PCIe Port correctable error
- support in AER service driver
-Message-ID: <20250207175436.0000666b@huawei.com>
-In-Reply-To: <Z6UAk_L22eqiWCix@gourry-fedora-PF4VCD3F>
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
-	<20250107143852.3692571-6-terry.bowman@amd.com>
-	<Z6UAk_L22eqiWCix@gourry-fedora-PF4VCD3F>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1738951020; c=relaxed/simple;
+	bh=/CRmU47qBUXyWSoahHnGiQo1Gh5hufSUGDC76WwudzE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jztN0/ajabi9BjVLYiGJFRWP99ONnXdM6ugVLV6qmoCINtsIUZlIi8jf5F3gF3y6I+zupqlci+pTeKiJk/H/o1bhPDveLqQRrr9qh3jKw15lQDw51LVWKpLhBVVXftpoOQl1QO3o2LoonMVYb5b0YJ10L4gFgNEZI87tonQsueU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icKPAsOr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icKPAsOr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D20FCC4CEE7;
+	Fri,  7 Feb 2025 17:56:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738951019;
+	bh=/CRmU47qBUXyWSoahHnGiQo1Gh5hufSUGDC76WwudzE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=icKPAsOryE5yUn1OdcnElBDtixzasxxfRyZxl5K4pbf7ipD0Ea8QDnwM9EegS+ECG
+	 SXv4DRcBN4fXLyxY0uvRKVRisinIuqw0McHUsPYjGS34esdmeohTqPr8YsVajQeFRw
+	 IYNqlns6rYh7Y/QqfCgXa75U+I8NDdW7i3TSsD9f/rFMKfcoN06ZzzodVzW6dinR5G
+	 TY0MwxDB5/l2IX3u6eFR54EkYFg8rM0+y6B3fTQRz1NR4sNkQm2SuNHtnIjf7Wzt5B
+	 JI6zu7gCUhKyJhVckn7l5M0w1rTzE96XmUt1pVXvITCMFXtBy5TqQQBFjVHnkx0sNk
+	 U0ury35OO3fKw==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5439e331cceso2756276e87.1;
+        Fri, 07 Feb 2025 09:56:59 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUTVftUPYFjFLWua4FkGJHuVen7e0oid6L3KHljI09A+dd6eo0UOLNQ2fkXsbto91T1L46jgZ/s5Lc9fKs=@vger.kernel.org, AJvYcCWG0P8yd4zoidGQ5QxVtz02YrWNQVtmNKX8m8Ma3iG1RCpZK4Y+0AcdsMczVJDP2XfWLnJ2RURIB72CO/qY@vger.kernel.org, AJvYcCWLNsL7hbSfKYuNFTAhqfzOKsQ8uIYnTPp51IKQ00TCTnN/CYzARcuZQaOuvinIZDoUSexSLr0VqeQSnxI9JA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQWtuy8zZOFcl8G54C9F3cHGnjYUGMK3iAhuNVOHWopjxwF9WP
+	qej4gEb+tgt3clwF1C0CQE6yw66/DBjprM1Dtdyfg5e6yQ5buNKGlpzN3O9mMGLrDAs9ZvB5Hsv
+	/ucnsXHFKcuojOffz4mtQRH/ZRuY=
+X-Google-Smtp-Source: AGHT+IHwjdwtFZ+zisuBvM13DLarDF6ZcKsOicNPr/5NRq0RpmjPPZ+MC0Q5FJl5Quf/K9jXHq68OLsQA/TrjJaaMV4=
+X-Received: by 2002:a05:6512:745:b0:540:2201:57d2 with SMTP id
+ 2adb3069b0e04-54414ae6406mr1132896e87.49.1738951018503; Fri, 07 Feb 2025
+ 09:56:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <20241202145946.108093528@infradead.org> <20241202150810.270511329@infradead.org>
+In-Reply-To: <20241202150810.270511329@infradead.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 8 Feb 2025 02:56:20 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ3gG61cyP0cRKXbCogcu9JwuNPHWcYvRQhJDQbx-PyUg@mail.gmail.com>
+X-Gm-Features: AWEUYZkdnXJ8vXWq0iGmffzxhPa06o4t_vek2BGUPhIQQ7X-0n-QgZSyDJZhqyI
+Message-ID: <CAK7LNAQ3gG61cyP0cRKXbCogcu9JwuNPHWcYvRQhJDQbx-PyUg@mail.gmail.com>
+Subject: Re: [PATCH -v2 3/7] module/modpost: Add basename helper
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mcgrof@kernel.org, x86@kernel.org, hpa@zytor.com, petr.pavlu@suse.com, 
+	samitolvanen@google.com, da.gomez@samsung.com, nathan@kernel.org, 
+	nicolas@fjasle.eu, linux-kernel@vger.kernel.org, 
+	linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	hch@infradead.org, gregkh@linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 6 Feb 2025 13:33:55 -0500
-Gregory Price <gourry@gourry.net> wrote:
-
-> On Tue, Jan 07, 2025 at 08:38:41AM -0600, Terry Bowman wrote:
-> > The AER service driver supports handling Downstream Port Protocol Errors in
-> > Restricted CXL host (RCH) mode also known as CXL1.1. It needs the same
-> > functionality for CXL PCIe Ports operating in Virtual Hierarchy (VH)
-> > mode.[1]
-> > 
-> > CXL and PCIe Protocol Error handling have different requirements that
-> > necessitate a separate handling path. The AER service driver may try to
-> > recover PCIe uncorrectable non-fatal errors (UCE). The same recovery is not
-> > suitable for CXL PCIe Port devices because of potential for system memory
-> > corruption. Instead, CXL Protocol Error handling must use a kernel panic
-> > in the case of a fatal or non-fatal UCE. The AER driver's PCIe Protocol
-> > Error handling does not panic the kernel in response to a UCE.
-> >  
-> 
-> Naive question: is a panic actually required if the memory is a userland
-> resource?
-
-It's a protocol error, not a contained memory issue.
-You'd need to find everything using that memory and kill it.
-
-Maybe longer term if it's DAX and we know whole device is allocated
-to only a few apps can resolve more smoothly.
+On Tue, Dec 3, 2024 at 12:11=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
 
 
-> 
-> The code in arch/x86/kernel/cpu/mce/core.c suggests we may not panic
-> if an uncorrectable error occurs in this fashion, but simply a SIGBUS.
-> 
-> Unless this is down the wrong pipe - in which case disregard.
-> 
-> I'm still digging through background on this patch set so I may be
-> barking up the wrong tree.
-> 
-> ~Gregory
+I do not think you need this helper (at least in your purpose).
 
+You will use this helper in the 4/7 patch.
+Then, you will immediately revert it in the 5/7 patch.
+
+If you look at the final result, you did not need to add
+mod_basename() in the first place.
+(There is just one call site, which does not save any
+duplicated code).
+
+I suggest adding verify_module_namespace() in the 4/7 patch
+instead of using the helper.
+
+
+BTW, I think this helper is useful for cleaning up the current code,
+but you are not even aware that this common pattern appears multiple times.
+
+https://lore.kernel.org/all/20250207175024.412054-1-masahiroy@kernel.org/T/=
+#u
+
+
+
+>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  scripts/mod/modpost.c |   16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
+>
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -1553,6 +1553,16 @@ static void mod_set_crcs(struct module *
+>         free(buf);
+>  }
+>
+> +static const char *mod_basename(const char *modname)
+> +{
+> +       const char *basename =3D strrchr(modname, '/');
+> +       if (basename)
+> +               basename++;
+> +       else
+> +               basename =3D modname;
+> +       return basename;
+> +}
+> +
+>  static void read_symbols(const char *modname)
+>  {
+>         const char *symname;
+> @@ -1697,11 +1707,7 @@ static void check_exports(struct module
+>                 s->crc_valid =3D exp->crc_valid;
+>                 s->crc =3D exp->crc;
+>
+> -               basename =3D strrchr(mod->name, '/');
+> -               if (basename)
+> -                       basename++;
+> -               else
+> -                       basename =3D mod->name;
+> +               basename =3D mod_basename(mod->name);
+>
+>                 if (!contains_namespace(&mod->imported_namespaces, exp->n=
+amespace)) {
+>                         modpost_log(!allow_missing_ns_imports,
+>
+>
+
+
+--
+Best Regards
+
+
+Masahiro Yamada
