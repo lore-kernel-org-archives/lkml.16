@@ -1,116 +1,119 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DDC1E1023
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 12:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D951E0DE5
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 12:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738931131; cv=none; b=tnmQQe9T+tqpTFXlccmkr98ZrtWyFQ2S4hUKoVTrI0hTi+cuxoGc38pc8iImKPT2cT1P35jO+rhxtHPnKeFcdrMh9cnhWT7NpbcuS1cioy6RoeKg6TJoqjAIt2n67Xqx6wW2erFO1jWe62IXmWzMMTxFMq5N2hSzgckv5ieWW44=
+	t=1738931313; cv=none; b=MQse8PekR2LOTI1DPWex66t+uZZ6zOkC1k60/btF9YYFAM91xU3eYpfidAPlOBbQ4+vx1i+nbAh6kxt2NlL78pTdcnF0M+RRt1ZLjpuoYEhoXTyK1rR7YZSW7k2kWtpGGZm3wHAVyGht+UFuJmR+NQGQcR5gHuOkBOqRQvfpnfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738931131; c=relaxed/simple;
-	bh=/OTWA3NQpJyYtscxurp+YWx8AXPjN/31ZTP1WNlca2A=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=lUOfhev+UyTJPDQwyKzaiuKBPjBvOK/WiRPz91d9w419HPUKQ8KUmCKk51a4QOxlOmHJi7VE+qMeAVByXdKU1EImJ6F2ZcloTkHg8wD0iTD2lQCFJZdmFAP474inPd9jE8rcldpoGCjaGPtsDLZLK5CdqLoOjmgxx45qrBHiJfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d00fe9f7b3so32583155ab.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 04:25:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738931129; x=1739535929;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KoWvzWp6kyKQ0prHOOLvrFtt8oUbgZhqaz1NmpJHtuc=;
-        b=B1cr6pW3YRN/leO504FqCgyaLiB2j5EHmQjZRNYmOPm6XsLgl5i7X94u2BzWRZnZyu
-         R6DqSimkOqs6HMXFellegVnXa5pwNl/zAELmAJnz5nPi0hXQak6rmFcO6f98WpZCaUOh
-         2DXSdcj+IvM8Ludd9xk9C1TZcP1anDyWhUtCNYjXCak/JvjIx9DsQWPcUF0JYeOyxen4
-         6iOgXh9+5mbTUatpZhJPANM6tOUMaK4nSXMUtMr9Hzx/rp8BGyclBJ7ERV8BZ924oA7U
-         cBLamo9RoMkc2dBLHx7ojbj8sYJpKB6nNiwxAfwYVMj6M5yAuq3VWzsqcEXceOe/Q4zk
-         E4hw==
-X-Gm-Message-State: AOJu0Yxu635QcnM71zPfcfO7OPAVhWD36yrj0a0G4MELRgbIvsnqm7zi
-	FqjOoO0e1qh4j1D07BkJWll3428Mrj4OAuxnJndyTafC1aUp9+Wl4fv3di1NuZZFJuBifok8w4n
-	H+Y7UFUFVc4EWFE1bQdXIVQAfm6hUsJwqbVcZKHUYgL2Se7KZfVEKHx8=
-X-Google-Smtp-Source: AGHT+IF1HWCdNwykGCf0PWe+4Fq0/nmPEa7xnuNvwpD0rGoWO65qFZO0qEs0bFUQFRrJDTBHIj8hjEN9QTMnTh9fr4vL2taqZB2E
+	s=arc-20240116; t=1738931313; c=relaxed/simple;
+	bh=6Q1bNawOVx4uNLkKUtLr5ZKzVL0qJcYQRtjgWlkEBLo=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=L9Y+QAerGHs8U3yzyZ41CNnhHs5SiO/9tRfOtCcQ7a3IhBxYvWDo1dZpdslWLlvR4B6YhaC2U34aYqS91KK/Edlh0AF9eJ4chr1aTA4qAcmJzTXEmOpIICOuy4Kr0h2E2oMRT8qMNfZNMmpJkJLuAkrD71CGJ/2aP4xh5UUpgQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MrzKa/jY; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MrzKa/jY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To;
+	bh=8YwrG2M1NyVkR8ph2MYJ1NCP71F6/4x9C2wwGwvDUvk=; b=MrzKa/jYlpQsyAYsJzfAdOJ/qC
+	Ri9HhwVgXMNWyh2ZRFO8wnzJZL4lAfoHGnsWI3EVJHYIl6nqIHcKZhmqP+vxOZLMgEMZmTWK9TMGg
+	3Mcrf+Jj0/4Ptl10QNeCIF6W0zYHbPPaFFrii4j4KljgzX5yNRgB3tpzJJcFl43NXzJBau9jgLxh5
+	cpcZgl519PtkFewpmt9ymhUPdR1zrn0IWEVJePj4MQX+X31pYn71vdzuUP0FJoFI3L/cO1tSUfsq+
+	BSEzerLdY7NotinxayWPSRde5NXxPeqU5PB6GmrKWz5/W8/4huYlMoqdRInaZhW6VYNM/sfZh0CVU
+	hwcAM3RA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tgNT8-0000000HAec-3FsO;
+	Fri, 07 Feb 2025 12:28:27 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
+	id 328C130088D; Fri,  7 Feb 2025 13:28:25 +0100 (CET)
+Message-ID: <20250207122546.509520369@infradead.org>
+User-Agent: quilt/0.66
+Date: Fri, 07 Feb 2025 13:15:34 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+ peterz@infradead.org,
+ alyssa.milburn@intel.com,
+ scott.d.constable@intel.com,
+ joao@overdrivepizza.com,
+ andrew.cooper3@citrix.com,
+ jpoimboe@kernel.org,
+ jose.marchesi@oracle.com,
+ hjl.tools@gmail.com,
+ ndesaulniers@google.com,
+ samitolvanen@google.com,
+ nathan@kernel.org,
+ ojeda@kernel.org,
+ kees@kernel.org,
+ alexei.starovoitov@gmail.com,
+ mhiramat@kernel.org
+Subject: [PATCH 05/11] x86/boot: Mark start_secondary() with __noendbr
+References: <20250207121529.222723073@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a23:b0:3d0:25d0:8507 with SMTP id
- e9e14a558f8ab-3d13dd23621mr21115055ab.6.1738931129252; Fri, 07 Feb 2025
- 04:25:29 -0800 (PST)
-Date: Fri, 07 Feb 2025 04:25:29 -0800
-In-Reply-To: <67a4b4c3.050a0220.264083.0005.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a5fbb9.050a0220.2b1e6.001f.GAE@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [bluetooth?] BUG: corrupted list in
- hci_chan_del (2)
-From: syzbot <syzbot+10bd8fe6741eedd2be2e@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+The handoff between the boot stubs and start_secondary() are before IBT is
+enabled and is definitely not subject to kCFI. As such, suppress all that for
+this function.
 
-***
+Notably when the ENDBR poison would become fatal (ud1 instead of nop) this will
+trigger a tripple fault because we haven't set up the IDT to handle #UD yet.
 
-Subject: Re: [syzbot] [bluetooth?] BUG: corrupted list in hci_chan_del (2)
-Author: lizhi.xu@windriver.com
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/kernel/smpboot.c |    3 ++-
+ include/linux/objtool.h   |    4 +++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-old logical will make get/put unbalance in l2cap_recv_acldata.
-so remote get/put conn.
-protect conn refcnt under hci dev lock.
-
-#syz test
-
-diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-index adb8c33ac595..503626f70be5 100644
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -7497,8 +7497,6 @@ void l2cap_recv_acldata(struct hci_conn *hcon, struct sk_buff *skb, u16 flags)
- 	if (!conn)
- 		conn = l2cap_conn_add(hcon);
- 
--	conn = l2cap_conn_hold_unless_zero(conn);
--
- 	hci_dev_unlock(hcon->hdev);
- 
- 	if (!conn)
-@@ -7592,8 +7590,6 @@ void l2cap_recv_acldata(struct hci_conn *hcon, struct sk_buff *skb, u16 flags)
- 		break;
- 	}
- 
--	l2cap_conn_put(conn);
--
- drop:
- 	kfree_skb(skb);
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -229,7 +229,7 @@ static void ap_calibrate_delay(void)
+ /*
+  * Activate a secondary processor.
+  */
+-static void notrace start_secondary(void *unused)
++static void notrace __noendbr start_secondary(void *unused)
+ {
+ 	/*
+ 	 * Don't put *anything* except direct CPU state initialization
+@@ -314,6 +314,7 @@ static void notrace start_secondary(void
+ 	wmb();
+ 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
  }
-diff --git a/net/bluetooth/l2cap_sock.c b/net/bluetooth/l2cap_sock.c
-index 46ea0bee2259..2a99394925a5 100644
---- a/net/bluetooth/l2cap_sock.c
-+++ b/net/bluetooth/l2cap_sock.c
-@@ -1359,10 +1359,12 @@ static int l2cap_sock_shutdown(struct socket *sock, int how)
++ANNOTATE_NOENDBR_SYM(start_secondary);
  
- 	l2cap_chan_lock(chan);
- 	conn = chan->conn;
--	if (conn)
-+	l2cap_chan_unlock(chan);
-+	if (conn) {
-+		hci_dev_lock(conn->hcon->hdev);
- 		/* prevent conn structure from being freed */
- 		l2cap_conn_get(conn);
--	l2cap_chan_unlock(chan);
-+	}
- 
- 	if (conn)
- 		/* mutex lock must be taken before l2cap_chan_lock() */
-@@ -1375,6 +1377,7 @@ static int l2cap_sock_shutdown(struct socket *sock, int how)
- 	if (conn) {
- 		mutex_unlock(&conn->chan_lock);
- 		l2cap_conn_put(conn);
-+		hci_dev_unlock(conn->hcon->hdev);
- 	}
- 
- 	lock_sock(sk);
+ /*
+  * The bootstrap kernel entry code has set these up. Save them for
+--- a/include/linux/objtool.h
++++ b/include/linux/objtool.h
+@@ -128,7 +128,7 @@
+ #define UNWIND_HINT(type, sp_reg, sp_offset, signal) "\n\t"
+ #define STACK_FRAME_NON_STANDARD(func)
+ #define STACK_FRAME_NON_STANDARD_FP(func)
+-#define __ASM_ANNOTATE(label, type)
++#define __ASM_ANNOTATE(label, type) ""
+ #define ASM_ANNOTATE(type)
+ #else
+ .macro UNWIND_HINT type:req sp_reg=0 sp_offset=0 signal=0
+@@ -147,6 +147,8 @@
+  * these relocations will never be used for indirect calls.
+  */
+ #define ANNOTATE_NOENDBR		ASM_ANNOTATE(ANNOTYPE_NOENDBR)
++#define ANNOTATE_NOENDBR_SYM(sym)	asm(__ASM_ANNOTATE(sym, ANNOTYPE_NOENDBR))
++
+ /*
+  * This should be used immediately before an indirect jump/call. It tells
+  * objtool the subsequent indirect jump/call is vouched safe for retpoline
+
+
