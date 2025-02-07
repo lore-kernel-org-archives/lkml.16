@@ -1,254 +1,124 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF954133987;
-	Fri,  7 Feb 2025 01:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF306133987;
+	Fri,  7 Feb 2025 01:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738892547; cv=none; b=FaX2pU6SvikUKcv1/OF7AuDMwxnQ/RIxly61Pl6SZaxBOMHg5dvu1XCLojNLJ3kgPRYNCmqiF9PybpEO+O4Lh4xM6nTyCFWT4+MsyWhl23M4c+7dJnRSqN4py39Ozg2rVabDkxvVAxCNa5eHqQqyaESVJzCKjOrNKSvbhOeSu8M=
+	t=1738892579; cv=none; b=BH4u1psOaB6+PssYcY3tqevu2UCCr+mFi9hvB4TEtejRyE2UaM8CxjtnMXzdzt6LEq+2y5pJhYHXVjH1P2QSoQ3c8P4miDw7eju10gtQRqiukhLn8wIsPjUkGMlpOg7RMnDOgjH0qT/PEUGxzsLJ6VFMT1dtK9PfII7E1Zgnp5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738892547; c=relaxed/simple;
-	bh=k43Z5zQYXMDziBkOvYiUcPMfe3Io+6ARNvUn9Kruakk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TwidWx4J/B1ZCYiftiEXXDSfvqBR6pTfqEpYEBS97t3EB97upqO3f4PYPu9mdgJA1IxDYjisy0CebWNvE0lIXBF31ZAdzezRvGJ0d4iPT1n43UZXlNXMpT0L2Yw8WP/HqanM2mVM7Fr+WPCRSNqJiKXaSg5Bq42N6efoRDdSAPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QaJZkbZr; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738892579; c=relaxed/simple;
+	bh=bV+VETLIvHm0HeOjf+9+/XgiUHfPISVbDALV+wvdT7A=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P63ghVk5Y1ok45OU6cX2GPLfs20yvKcpsSA2PaRjxTL0ejj13+UowO1VQ+ebDl1p9+dcq5r+VCz3ES1OXwZ0t4IgSOfrNSifmaIORmdERDVz6hTGk/pzMq1XhHm9Hoj6ZyJqgF7wHaehIXEzgjJ6JEW7onMKuJ7RIk62PEgMmZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=yGkUlGwi; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QaJZkbZr"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21f20666e72so33047935ad.1;
-        Thu, 06 Feb 2025 17:42:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738892545; x=1739497345; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iCB+UDvr+o1SyUgsR9HsOtoX0gQumnxAJYb/vLwqtqw=;
-        b=QaJZkbZrWZqcleMZ05KJLzLSfRGjWW1p1NWICgR+A5pln6XzhPk5wW770fMrg5oRvD
-         R1e5AopGSeoTwTFi0OrjlLVBRY2qZ6zPHxzt81TgjFxfG2+KR4t2ucsGIZvit8R6qHcs
-         KVM0HBZy1jg9MpTXWhpne/JqUrTHL0+C14ybT4a9IEEkdjq81i4KGQ8kvvtF6q4UlVXB
-         ar5lDtGGV/dXxZ5rTAa8NUvQbR09sp5/iZHI0Hqr/n6aHAqxFYIiMqn0HBzv+KsSInrW
-         kOssjS+vpos2mavOf4UJW1TPVoqUx5pZniiyvYTeO+XrtgdbaSPvhdSTAXjXfCaAsQSk
-         1/jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738892545; x=1739497345;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iCB+UDvr+o1SyUgsR9HsOtoX0gQumnxAJYb/vLwqtqw=;
-        b=p5N88bveOtOiFK1QmMrOB9pXV3Jl+OP73s5zox+zCXjnRAe9D+FyWOEz54IdPJhq5b
-         Yjg7W06/bwGBeFugQKJyy1jKTHzFkzaqrRvxWRX0Nfaky82Vi72Sz5LHT4zjQ/1CpnyR
-         q59UcvpEubrAcBA1W2CGvRlzPoHtB9kZzQBxPOYIwUwy0OQ/rskBgNCUvVogHIJyMBQL
-         bPrNsfs8dJTzznwBT5lwwiCtH3xvv1aPVAHxBNEq4xFBHH5HSfN2g5C01Uw47xJvv6aN
-         fdBZyICiHj2FK+xzj+fwxPAdEPem8XTw1bzKkBGeRRvyw4lH0VQ6/vLJVW791ZXqTihN
-         vQAw==
-X-Forwarded-Encrypted: i=1; AJvYcCW5YGrdw4Oc4bK9AUNFdDowb3GNZzm2qu+/soTY2Hx0laoL2Mb7XLkTH7LYQKlewZuiF0opwIqsM3xH0j/e@vger.kernel.org, AJvYcCWLu8D42Fz+njxZ/IlHZrE37+mjbAXpJl0Q9ecSZidM+MC1+Zp7XgPzdYYxOYuZIozBQdkC9cqJ3rE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQY0BRgJAf4arV6XahuNAx5GIUIfTZWvTgywXSSd98cIHusWp3
-	pw8Z8EjBBDyH6PrZsy2+iGzWIEx4M64tU01bnOHqf+DoHTLcJG90
-X-Gm-Gg: ASbGncsV/UH6F6LUkQSWJr551K9bPzwGTw7unR/nbK9xR+3l+h2Oc2aYoLNTThlHSq2
-	cLqYzQBiIR7uViO+e8pX7gTm51vo8HalGEUYlIGSKyJNO8LDBsUMWpDlwXz4fx0mEKkvdEMY82D
-	FmTsfzOFZfc5PmDRyG8Em0B8a67FG0+yXGJ7K4UCWhUxnOthwf7f6Fkhxbn00m8vOepwzW+F5BA
-	Z1sq2jp0hGXtHIv2wi81/Kju5HrO8kc8H6spAD8Ww1Rss3KSmFbFYUqJIhHLxMeHozW4iYvAWKc
-	6u7gREj/c3L9g1o=
-X-Google-Smtp-Source: AGHT+IF3V6aRkJmvBMUyGn28OZdzyd9mfmHLPCK5NSACkkmLi9GELXLragQ10mugsV/1WBn6R3f45A==
-X-Received: by 2002:a05:6a00:1a93:b0:728:9d19:d2ea with SMTP id d2e1a72fcca58-7305d4adb54mr2015174b3a.13.1738892544911;
-        Thu, 06 Feb 2025 17:42:24 -0800 (PST)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51af78034sm1698885a12.67.2025.02.06.17.42.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 17:42:23 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id A30A04208FB2; Fri, 07 Feb 2025 08:42:19 +0700 (WIB)
-Date: Fri, 7 Feb 2025 08:42:19 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Thorsten Leemhuis <linux@leemhuis.info>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v4] docs: clarify rules wrt tagging other people
-Message-ID: <Z6Vk-7OgDB3DM7Yb@archie.me>
-References: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yGkUlGwi"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5171geKL3735092
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 6 Feb 2025 19:42:40 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738892560;
+	bh=2qbcY8LfMeC70utkdYzDbp4vKmOxEokKzG/s6jdwbe0=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=yGkUlGwiltG3sTc6kk+urLbxITx9zlEzty9BG3fnNt4HQn5xEnsVxQfhouh82mehx
+	 nrQF80lsPHGLKCGeoh+N5gGY5p47ISkZXYfCuoaFeV3l3i+wanYmlgDjmD9DOvRRuM
+	 ena8MsMlB3wsVjiCyqyvpLkWcG1aQR5ADiQvSLK0=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5171geCa006289
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 6 Feb 2025 19:42:40 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 6
+ Feb 2025 19:42:39 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 6 Feb 2025 19:42:39 -0600
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5171gdQR001088;
+	Thu, 6 Feb 2025 19:42:39 -0600
+Date: Thu, 6 Feb 2025 19:42:39 -0600
+From: Nishanth Menon <nm@ti.com>
+To: Francesco Dolcini <francesco@dolcini.it>
+CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Francesco Dolcini
+	<francesco.dolcini@toradex.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] arm64: dts: ti: k3-am62p: Enable AUDIO_REFCLKx
+Message-ID: <20250207014239.xzm6rfnusckql2uo@litigator>
+References: <20250206153911.414702-1-francesco@dolcini.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="C6onUu6KEVPlj5WK"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
+In-Reply-To: <20250206153911.414702-1-francesco@dolcini.it>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+On 16:39-20250206, Francesco Dolcini wrote:
+> From: Francesco Dolcini <francesco.dolcini@toradex.com>
+> 
+> On AM62P-based SoCs the AUDIO_REFCLKx clocks can be used as an input to
+> external peripherals when configured through CTRL_MMR, so add the
+> clock nodes.
+> 
+> Link: http://downloads.ti.com/tisci/esd/latest/5_soc_doc/am62px/clocks.html
+> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> ---
+>  arch/arm64/boot/dts/ti/k3-am62p-main.dtsi | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+> index 420c77c8e9e5..4b47b0774330 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+> @@ -42,6 +42,26 @@ &inta_main_dmss {
+>  	ti,interrupt-ranges = <5 69 35>;
+>  };
+>  
+> +&main_conf {
 
---C6onUu6KEVPlj5WK
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+	Why not add it to main_conf section it self in the file?
 
-On Thu, Feb 06, 2025 at 03:30:10PM +0100, Thorsten Leemhuis wrote:
-> diff --git a/Documentation/process/5.Posting.rst b/Documentation/process/=
-5.Posting.rst
-> index dbb763a8de901d..22fa925353cf54 100644
-> --- a/Documentation/process/5.Posting.rst
-> +++ b/Documentation/process/5.Posting.rst
-> @@ -268,10 +268,15 @@ The tags in common use are:
->   - Cc: the named person received a copy of the patch and had the
->     opportunity to comment on it.
-> =20
-> -Be careful in the addition of tags to your patches, as only Cc: is appro=
-priate
-> -for addition without the explicit permission of the person named; using
-> -Reported-by: is fine most of the time as well, but ask for permission if
-> -the bug was reported in private.
-> +Be careful in the addition of the aforementioned tags to your patches, a=
-s all
-> +except for Cc:, Reported-by:, and Suggested-by: need explicit permission=
- of the
-> +person named. For those three implicit permission is sufficient if the p=
-erson
-> +contributed to the Linux kernel using that name and email address accord=
-ing
-> +to the lore archives or the commit history -- and in case of Reported-by:
-> +and Suggested-by: did the reporting or suggestion in public. Note,
-> +bugzilla.kernel.org is a public place in this sense, but email addresses
-> +used there are private; so do not expose them in tags, unless the person
-> +used them in earlier contributions.
-
-So for example I can only include Tested-by: when a contributor who tested
-my patch explicitly offer the tag by replying to it i.e. with the tag, righ=
-t?
-
-> =20
-> =20
->  Sending the patch
-> diff --git a/Documentation/process/submitting-patches.rst b/Documentation=
-/process/submitting-patches.rst
-> index 8fdc0ef3e604f4..72f6de419ccc4c 100644
-> --- a/Documentation/process/submitting-patches.rst
-> +++ b/Documentation/process/submitting-patches.rst
-> @@ -495,10 +495,10 @@ list archives.  A "# Suffix" may also be used in th=
-is case to clarify.
-> =20
->  If a person has had the opportunity to comment on a patch, but has not
->  provided such comments, you may optionally add a ``Cc:`` tag to the patc=
-h.
-> -This is the only tag which might be added without an explicit action by =
-the
-> -person it names - but it should indicate that this person was copied on =
-the
-> -patch.  This tag documents that potentially interested parties
-> -have been included in the discussion.
-> +This tag documents that potentially interested parties have been include=
-d in
-> +the discussion. Note, this is one of only three tags you might be able t=
-o use
-> +without explicit permission of the person named (see 'Tagging people req=
-uires
-> +permission' below for details).
-> =20
->  Co-developed-by: states that the patch was co-created by multiple develo=
-pers;
->  it is used to give attribution to co-authors (in addition to the author
-> @@ -544,9 +544,9 @@ hopefully inspires them to help us again in the futur=
-e. The tag is intended for
->  bugs; please do not use it to credit feature requests. The tag should be
->  followed by a Closes: tag pointing to the report, unless the report is n=
-ot
->  available on the web. The Link: tag can be used instead of Closes: if th=
-e patch
-> -fixes a part of the issue(s) being reported. Please note that if the bug=
- was
-> -reported in private, then ask for permission first before using the Repo=
-rted-by
-> -tag.
-> +fixes a part of the issue(s) being reported. Note, the Reported-by tag i=
-s one
-> +of only three tags you might be able to use without explicit permission =
-of the
-> +person named (see 'Tagging people requires permission' below for details=
-).
-> =20
->  A Tested-by: tag indicates that the patch has been successfully tested (=
-in
->  some environment) by the person named.  This tag informs maintainers that
-> @@ -596,11 +596,11 @@ Usually removal of someone's Tested-by or Reviewed-=
-by tags should be mentioned
->  in the patch changelog (after the '---' separator).
-> =20
->  A Suggested-by: tag indicates that the patch idea is suggested by the pe=
-rson
-> -named and ensures credit to the person for the idea. Please note that th=
-is
-> -tag should not be added without the reporter's permission, especially if=
- the
-> -idea was not posted in a public forum. That said, if we diligently credi=
-t our
-> -idea reporters, they will, hopefully, be inspired to help us again in the
-> -future.
-> +named and ensures credit to the person for the idea: if we diligently cr=
-edit
-> +our idea reporters, they will, hopefully, be inspired to help us again i=
-n the
-> +future. Note, this is one of only three tags you might be able to use wi=
-thout
-> +explicit permission of the person named (see 'Tagging people requires
-> +permission' below for details).
-> =20
->  A Fixes: tag indicates that the patch fixes an issue in a previous commi=
-t. It
->  is used to make it easy to determine where a bug originated, which can h=
-elp
-> @@ -618,6 +618,21 @@ Finally, while providing tags is welcome and typical=
-ly very appreciated, please
->  note that signers (i.e. submitters and maintainers) may use their discre=
-tion in
->  applying offered tags.
-> =20
-> +.. _tagging_people:
+> +	audio_refclk0: clock-controller@82e0 {
+> +		compatible = "ti,am62-audio-refclk";
+> +		reg = <0x82e0 0x4>;
+> +		clocks = <&k3_clks 157 0>;
+> +		assigned-clocks = <&k3_clks 157 0>;
+> +		assigned-clock-parents = <&k3_clks 157 16>;
+> +		#clock-cells = <0>;
+> +	};
 > +
-> +Tagging people requires permission
-> +----------------------------------
+> +	audio_refclk1: clock-controller@82e4 {
+> +		compatible = "ti,am62-audio-refclk";
+> +		reg = <0x82e4 0x4>;
+> +		clocks = <&k3_clks 157 18>;
+> +		assigned-clocks = <&k3_clks 157 18>;
+> +		assigned-clock-parents = <&k3_clks 157 34>;
+> +		#clock-cells = <0>;
+> +	};
+> +};
 > +
-> +Be careful in the addition of the aforementioned tags to your patches, a=
-s all
-> +except for Cc:, Reported-by:, and Suggested-by: need explicit permission=
- of the
-> +person named. For those three implicit permission is sufficient if the p=
-erson
-> +contributed to the Linux kernel using that name and email address accord=
-ing
-> +to the lore archives or the commit history -- and in case of Reported-by:
-> +and Suggested-by: did the reporting or suggestion in public. Note,
-> +bugzilla.kernel.org is a public place in this sense, but email addresses
-> +used there are private; so do not expose them in tags, unless the person
-> +used them in earlier contributions.
-> +
->  .. _the_canonical_patch_format:
-> =20
->  The canonical patch format
->=20
-> base-commit: e8bcda12176c47f2ce6c5104955845d028a640e8
+>  &main_pmx0 {
+>  	pinctrl-single,gpio-range =
+>  		<&main_pmx0_range 0 32 PIN_GPIO_RANGE_IOPAD>,
+> -- 
+> 2.39.5
+> 
 
-The wording looks OK.
-
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---C6onUu6KEVPlj5WK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ6Vk+wAKCRD2uYlJVVFO
-o5glAP44+tawF8z7wtEt+DIrZa5CIvAEEOKGpIiDllIt9liccAEAxYfTO/Zl3U98
-Y11LKwZ1AOgDaQdN7XXWB6DqGApB6wc=
-=Xisa
------END PGP SIGNATURE-----
-
---C6onUu6KEVPlj5WK--
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
