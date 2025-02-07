@@ -1,73 +1,103 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2EC1B4239;
-	Fri,  7 Feb 2025 21:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4813F1A254C
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 21:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738963863; cv=none; b=uA/T6uSTczGH+TMSkokkcTalM5Au5IpMTX6JhV64P6n13GDKkxfmfXkumm3xAZf7DLTenHaYcMLDAQOOYT615jJ+W4+6E1dWiEPq/tiHvMCsqMXMoxkEHuZPqZ6Ufn5czoWMuRcodej+G9Z3DL/ejxG19THr9O4/o6cSUgwx/DY=
+	t=1738963864; cv=none; b=sl1jxCpLP19n738D+UEq8+7q+QlD+VIctJvL4EHShuo86wDFuN+X0wxeKh6fjELt0ks3r/stZm8D9yij7Edo3+HpgdqJRQBCkmwXKFjsIkoe7pslpbrQ4LhwIHKOFKlOphmKnBe3TVbF5+xYTp4KcarmjdTwwpe7594CwUt/bIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738963863; c=relaxed/simple;
-	bh=BXQFxnvsuU4LQPV7c9DJhV8HVRtjQhLi4kkYYPr8Lpg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CgETk0lIhMSCXAoiN84Htcx1YQ2fm0H4944X700Y5X6Q1W9ofvRxqo1bvjSa/j/Jp39A3uTjdVNgaWmMkTxB6gWWfcwGpSlYJRBhti88dPZWubUVGd60V/Cth6CSY2He/cGXcYHPB025w4mg68Ygapr8GpbmWqcDYAErto2Wi70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gxJLIngt; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738963864; c=relaxed/simple;
+	bh=Vqxs+kVJieo41BNTbOy151OA7a/+v8UhSPwA2cgLeBc=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=vEstxbIxl0m1Mis3IHiqAByn3znV+LiGA8hPnICAuwXgPu95ZcDTe66l4ZEQFWDfcVQPJHAYGvau4zhPtrZCONoxJStfdUhlNkgKFVbf5vVBmDGgX3nzN4YRO6EUYjWbeZC6ssulZy+Kv4UlwscMEuB0ovSuRCiJbkxStZ63lR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=E2I+Mjbd; arc=none smtp.client-ip=209.85.218.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxJLIngt"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21f4a4fbb35so28326445ad.0;
-        Fri, 07 Feb 2025 13:31:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="E2I+Mjbd"
+Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-ab2b29dfc65so406227466b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 13:31:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738963860; x=1739568660; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1738963860; x=1739568660; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r08o33ipA5MWxiDyUsWZrYJbXTEaBXzVTqjJSzQg9iU=;
-        b=gxJLIngtdzlQWZ4yNdXsDTr/hUoDMA6V1Of6bELl3AReG1Zh6Z2zJw2RbsETcWupX1
-         XlMo5A8J11XjKk5hoOV31vdj17UBSghNt1P0nE3M547UaP2fIQbMPB1b4lXpGWSqdU0O
-         k6G1CSl6A6dBauhyUwCw21BH1VHC9t6ry4miqk3Qb6ZCBghcdezk6wsuNs9r3SbN6bHm
-         tR/B2/o/5bgH4vGojEnpkmGPGVyXdHo/10Vs+b5Bn2odZ6lUVlvJvsKqY0CgBwf68Fbh
-         BlCvfG1gZRBokfHBdABboYhZbfeYmIP1+cp6VKGacbUEp0XyIjSisvaxdeNORLflHoEn
-         IIEA==
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rsdeUn09NQu1XAwKNFzWW9JkORXiQHI3/S6RPw7u+/c=;
+        b=E2I+Mjbdf003hBpMrLq3+7v9iwKtf6YNePzJS972aosEZfbwTngNaJke1Wfaqq+qUr
+         OraSd3G6COHOX7SlLefjuhEsYblyZNS3yCtUREzGg2yABl6JXg7UWrLKQDPKoRbCfcUM
+         HTncV+YsK7JdFyFwf1LsSiEyYl49+gdTe1HjLYU/NDDx2V9mjPSRMRffAIkXQunDYzVq
+         DRCuUwlAUnFEHK8RnjWMJdcbLlCAicwlHHu2m2IDY+GLg3WdlB5ZsEGHttiKBRndwU+q
+         NheCVRuc2gnObnDingmi0awhDCAIZM15PPmVxbG/X4/1GmkBG3krtnZiOdr3s2K5mIFa
+         fiXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1738963860; x=1739568660;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=r08o33ipA5MWxiDyUsWZrYJbXTEaBXzVTqjJSzQg9iU=;
-        b=dzw6xrED2vuAE2bcrHfu0RSeABxzdcv8pVzTlyz239DQLeP3VGuHZeDTSa05iZnVOv
-         eYy66mvGoX9Y02cF6P17SS8fEa9PEH5D3ulOUeI57gRH60LA1wvxy5BwrZ0Q6bKOWBD3
-         0Mb7K2akcqzZ+V9IT/1P/kbOPIjeJiqAdKpy0z3EuLPAkKzp3j8aGcjRtFEs1khTI3mp
-         /LkWgK9a0cyyPSGL2pvpWIQHVvi7415D/G3a/EZStfLnjglSBq5yDZ3ZuvFMRcLN3q3C
-         omoSMwKPPmtjZdECVJLX0xRtLc7Qj63JxsWz55WGIJz9452hn0vBRAq18fWiyTeVthVs
-         dKNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWLIVdceL3UC0YA6oNAfCIEuaKfv5nQwwWvOl/idIYvuqIScDv16cJcGrbhzC/31XtgDABKp1g78xg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb5ezgDZY/TdZXNlGG0A8lzjkbJbAca8ORCGAzIdH1ix9xWM03
-	ZL0h+W/Ai5IJC5iZPikSevQn4L813cZ8W+rDLADuuPTAfz+vVgRp2SWsibla
-X-Gm-Gg: ASbGncuUGWoMdwZRLr7jxWY/6a/Gk382H6ZW1Aq7vXMwCKjq9aP0ZpJD5r4lqoyGAWw
-	s0YRMmAuxcBzbi6zeWEVCWB0LGrttte+lO/Ea0l0gjYhuCCw+7xPqQcQ/fNuMgqnfOjKTBMU6KN
-	UrE0F968cW2BmKes6K11HkVfyzpHaYukyc0zP4LyBmIkH90lqqIV2knDaLHpN9/XnjCIY5aOejw
-	NfjGbo2pQObm3cjNo0P5FDmenMEyleUO+EyIxm2TEjAenZsW2ACDtk6YdEYpogRiSSK7qUzWo2K
-	Kxk4drtRZQR1W2fC/JbzaOzIbUogSLGbaekS
-X-Google-Smtp-Source: AGHT+IHn/Sqx5UTattoHfMQZVuvqP4SjkP7AIUoPZrjTtvEDi6s0xiyeVV7amDsrzhgZo8xXMjEHwQ==
-X-Received: by 2002:a17:903:1a0c:b0:215:a303:24e9 with SMTP id d9443c01a7336-21f4f0efcb1mr77119635ad.3.1738963859889;
-        Fri, 07 Feb 2025 13:30:59 -0800 (PST)
-Received: from localhost.localdomain ([181.192.80.27])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687c79esm35406485ad.175.2025.02.07.13.30.58
+        bh=rsdeUn09NQu1XAwKNFzWW9JkORXiQHI3/S6RPw7u+/c=;
+        b=fYlH2n3i1B8u/FIAmv0btvs3QiO49EK1CWanJT+Xx+4O8EUNBqcRVJy7EAhwr54q6+
+         oHHWMGlxB45W7M5+4AIcq4Y/TfY8IcMyZuOOyCTJwGNwlspMTIOjbfBsEazBTRHy3RLd
+         oGrXnARyz8TULCGI2sR9q2ddcLsXLsSqbKmA4TgzyzqTQG9XjOhNIkfE8sEl6HC1k0HJ
+         N43DMBPbwGCQACTrd3mFMJBm2McPx4s4ZzIlnMmQiuyaxHDvsuz8OVrprpziAG8CqePD
+         PZrxrOmq3+gnrgSC2WX7QDJSzNAc0uBtQsRNeCHcXlEiDfEFtZv6Hg+hZKly1rYLcvvS
+         IX8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUfhLieH5uULy+WU8icuEKFoUW5VOMnpSF+BrCQ3g8G3UQ5AopdtzGjZIZ3b7Tda95/xq0JCm0wdi2Kc2E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKS9IB0ZoqvLpeMsUZ31W+bhKB2q0Pj6zlBttPAxo7ZL+ZWDZo
+	NdEGfTaFUGWJHQd5MhNlnRApuQbZvQWTcIOranevSzMKS/Va+MzBRsuH5kWUSs8=
+X-Gm-Gg: ASbGncsQAn+yFdwkvj+zcCD8b/PF7wGf+0B2fYhjH2P/lgp6OJNPzc9fvBnSm8n8QyN
+	7Sh8oTJzps2fSznRbdncxBpOhW4fa6ZnqgX06/sHuSA68jNNqtmVoze8REZ0wA2AI9WPb4ieXK4
+	2n1O7ivFPvKM72GBD31nEYNGbMSnpNxdemh+KMX+PHeDRfh9pwFt46T9K4NsKq6YePUQ1bmFYsA
+	9NBYoUXAdjOe0k9UxB85QDy7jhHNRPMMAFLUcxfg2kR+91QS0ucFfSa1u74i4eQdXhnrcMV1n8K
+	BGVgpjkBgKkJvsLCq0K8++ky34ItUoyzqYiVXf45curRxY3nRW1C+hbXCoo=
+X-Google-Smtp-Source: AGHT+IGMX5NVZzU8MUKeI0fjcjMv6fPf4JZi6tiL/AaJTBGa/B1TUhbWJvYJKAyCpuBEQJ9WjWWDMw==
+X-Received: by 2002:a17:906:ef0b:b0:ab2:d8e7:682c with SMTP id a640c23a62f3a-ab789c630c2mr614943366b.38.1738963860387;
+        Fri, 07 Feb 2025 13:31:00 -0800 (PST)
+Received: from localhost (host-79-41-239-37.retail.telecomitalia.it. [79.41.239.37])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab79668f32esm69327666b.176.2025.02.07.13.30.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 13:30:59 -0800 (PST)
-From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-To: ukleinek@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	rafael.v.volkmer@gmail.com
-Subject: [PATCH v3 1/3] pwm: tiehrpwm: replace manual bit definitions with bitfield.h macros
-Date: Fri,  7 Feb 2025 18:29:54 -0300
-Message-Id: <20250207212954.934-1-rafael.v.volkmer@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <uw4ans5zzvo65voerbaxvj2erethpuh2jfm2iu7ekqyvgg62nx@lglwyjcpa5aw>
-References: <uw4ans5zzvo65voerbaxvj2erethpuh2jfm2iu7ekqyvgg62nx@lglwyjcpa5aw>
+        Fri, 07 Feb 2025 13:31:00 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v7 03/11] dt-bindings: pci: Add common schema for devices accessible through PCI BARs
+Date: Fri,  7 Feb 2025 22:31:43 +0100
+Message-ID: <c0acc51a7210fb30cae7b26f4ad1f0449beed95e.1738963156.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1738963156.git.andrea.porta@suse.com>
+References: <cover.1738963156.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,262 +106,98 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Simplify bit manipulation by replacing manual BIT(x) definitions with
-GENMASK() and FIELD_PREP() from <linux/bitfield.h>. This improves
-readability, consistency, and aligns with modern kernel practices
-while preserving existing functionality.
+Common YAML schema for devices that exports internal peripherals through
+PCI BARs. The BARs are exposed as simple-buses through which the
+peripherals can be accessed.
 
-Additionally, update set_prescale_div() to use FIELD_PREP() for
-TBCTL_CLKDIV_MASK and TBCTL_HSPCLKDIV_MASK instead of manually
-shifting bits. This makes the code more maintainable and avoids
-potential errors in bit field assignments.
+This is not intended to be used as a standalone binding, but should be
+included by device specific bindings.
 
-Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
+Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
- drivers/pwm/pwm-tiehrpwm.c | 222 ++++++++++++++++++++++++-------------
- 1 file changed, 142 insertions(+), 80 deletions(-)
+ .../devicetree/bindings/pci/pci-ep-bus.yaml   | 58 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
 
-diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-index 0125e73b98df..50516f46ab04 100644
---- a/drivers/pwm/pwm-tiehrpwm.c
-+++ b/drivers/pwm/pwm-tiehrpwm.c
-@@ -13,85 +13,147 @@
- #include <linux/clk.h>
- #include <linux/pm_runtime.h>
- #include <linux/of.h>
-+#include <linux/bitfield.h>
- 
--/* EHRPWM registers and bits definitions */
--
--/* Time base module registers */
--#define TBCTL			0x00
--#define TBPRD			0x0A
--
--#define TBCTL_PRDLD_MASK	BIT(3)
--#define TBCTL_PRDLD_SHDW	0
--#define TBCTL_PRDLD_IMDT	BIT(3)
--#define TBCTL_CLKDIV_MASK	(BIT(12) | BIT(11) | BIT(10) | BIT(9) | \
--				BIT(8) | BIT(7))
--#define TBCTL_CTRMODE_MASK	(BIT(1) | BIT(0))
--#define TBCTL_CTRMODE_UP	0
--#define TBCTL_CTRMODE_DOWN	BIT(0)
--#define TBCTL_CTRMODE_UPDOWN	BIT(1)
--#define TBCTL_CTRMODE_FREEZE	(BIT(1) | BIT(0))
--
--#define TBCTL_HSPCLKDIV_SHIFT	7
--#define TBCTL_CLKDIV_SHIFT	10
--
--#define CLKDIV_MAX		7
--#define HSPCLKDIV_MAX		7
--#define PERIOD_MAX		0xFFFF
--
--/* compare module registers */
--#define CMPA			0x12
--#define CMPB			0x14
--
--/* Action qualifier module registers */
--#define AQCTLA			0x16
--#define AQCTLB			0x18
--#define AQSFRC			0x1A
--#define AQCSFRC			0x1C
--
--#define AQCTL_CBU_MASK		(BIT(9) | BIT(8))
--#define AQCTL_CBU_FRCLOW	BIT(8)
--#define AQCTL_CBU_FRCHIGH	BIT(9)
--#define AQCTL_CBU_FRCTOGGLE	(BIT(9) | BIT(8))
--#define AQCTL_CAU_MASK		(BIT(5) | BIT(4))
--#define AQCTL_CAU_FRCLOW	BIT(4)
--#define AQCTL_CAU_FRCHIGH	BIT(5)
--#define AQCTL_CAU_FRCTOGGLE	(BIT(5) | BIT(4))
--#define AQCTL_PRD_MASK		(BIT(3) | BIT(2))
--#define AQCTL_PRD_FRCLOW	BIT(2)
--#define AQCTL_PRD_FRCHIGH	BIT(3)
--#define AQCTL_PRD_FRCTOGGLE	(BIT(3) | BIT(2))
--#define AQCTL_ZRO_MASK		(BIT(1) | BIT(0))
--#define AQCTL_ZRO_FRCLOW	BIT(0)
--#define AQCTL_ZRO_FRCHIGH	BIT(1)
--#define AQCTL_ZRO_FRCTOGGLE	(BIT(1) | BIT(0))
--
--#define AQCTL_CHANA_POLNORMAL	(AQCTL_CAU_FRCLOW | AQCTL_PRD_FRCHIGH | \
--				AQCTL_ZRO_FRCHIGH)
--#define AQCTL_CHANA_POLINVERSED	(AQCTL_CAU_FRCHIGH | AQCTL_PRD_FRCLOW | \
--				AQCTL_ZRO_FRCLOW)
--#define AQCTL_CHANB_POLNORMAL	(AQCTL_CBU_FRCLOW | AQCTL_PRD_FRCHIGH | \
--				AQCTL_ZRO_FRCHIGH)
--#define AQCTL_CHANB_POLINVERSED	(AQCTL_CBU_FRCHIGH | AQCTL_PRD_FRCLOW | \
--				AQCTL_ZRO_FRCLOW)
--
--#define AQSFRC_RLDCSF_MASK	(BIT(7) | BIT(6))
--#define AQSFRC_RLDCSF_ZRO	0
--#define AQSFRC_RLDCSF_PRD	BIT(6)
--#define AQSFRC_RLDCSF_ZROPRD	BIT(7)
--#define AQSFRC_RLDCSF_IMDT	(BIT(7) | BIT(6))
--
--#define AQCSFRC_CSFB_MASK	(BIT(3) | BIT(2))
--#define AQCSFRC_CSFB_FRCDIS	0
--#define AQCSFRC_CSFB_FRCLOW	BIT(2)
--#define AQCSFRC_CSFB_FRCHIGH	BIT(3)
--#define AQCSFRC_CSFB_DISSWFRC	(BIT(3) | BIT(2))
--#define AQCSFRC_CSFA_MASK	(BIT(1) | BIT(0))
--#define AQCSFRC_CSFA_FRCDIS	0
--#define AQCSFRC_CSFA_FRCLOW	BIT(0)
--#define AQCSFRC_CSFA_FRCHIGH	BIT(1)
--#define AQCSFRC_CSFA_DISSWFRC	(BIT(1) | BIT(0))
--
--#define NUM_PWM_CHANNEL		2	/* EHRPWM channels */
-+/*
-+ * --------------------------------------
-+ * Time base module registers
-+ * --------------------------------------
-+ */
-+#define TBCTL					0x00
-+#define TBPRD					0x0A
+diff --git a/Documentation/devicetree/bindings/pci/pci-ep-bus.yaml b/Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+new file mode 100644
+index 000000000000..33479a5b40c6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+@@ -0,0 +1,58 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/pci-ep-bus.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+/* TBCTL: CTRMODE field (bits [1:0]) */
-+#define TBCTL_CTRMODE_MASK		GENMASK(1, 0)
++title: Common Properties for PCI MFD EP with Peripherals Addressable from BARs
 +
-+/* The possible values for that field */
-+#define TBCTL_CTRMODE_UP		FIELD_PREP(TBCTL_CTRMODE_MASK, 0U)
-+#define TBCTL_CTRMODE_DOWN		FIELD_PREP(TBCTL_CTRMODE_MASK, 1U)
-+#define TBCTL_CTRMODE_UPDOWN	FIELD_PREP(TBCTL_CTRMODE_MASK, 2U)
-+#define TBCTL_CTRMODE_FREEZE	FIELD_PREP(TBCTL_CTRMODE_MASK, 3U)
++maintainers:
++  - Andrea della Porta  <andrea.porta@suse.com>
 +
-+/* TBCTL: PRDLD bit (bit [3]) */
-+#define TBCTL_PRDLD_MASK		GENMASK(3, 3)
++description:
++  Define a generic node representing a PCI endpoint which contains several sub-
++  peripherals. The peripherals can be accessed through one or more BARs.
++  This common schema is intended to be referenced from device tree bindings, and
++  does not represent a device tree binding by itself.
 +
-+/* Possible values for PRDLD */
-+#define TBCTL_PRDLD_SHDW		FIELD_PREP(TBCTL_PRDLD_MASK, 0U) /* 0 => shadow */
-+#define TBCTL_PRDLD_IMDT		FIELD_PREP(TBCTL_PRDLD_MASK, 1U) /* 1 => immediate */
++properties:
++  '#address-cells':
++    const: 3
 +
-+/* TBCTL: Combined bits [12:7] actually split into two subfields:
-+ *    - TBCTL_HSPCLKDIV => bits [9:7]
-+ *    - TBCTL_CLKDIV    => bits [12:10]
-+ */
-+#define TBCTL_HSPCLKDIV_MASK	GENMASK(9, 7)
-+#define TBCTL_CLKDIV_MASK		GENMASK(12, 10)
++  '#size-cells':
++    const: 2
 +
-+/* Max values if needed: */
-+#define CLKDIV_MAX				7U
-+#define HSPCLKDIV_MAX			7U
-+#define PERIOD_MAX				0xFFFF
++  ranges:
++    minItems: 1
++    maxItems: 6
++    items:
++      maxItems: 8
++      additionalItems: true
++      items:
++        - maximum: 5  # The BAR number
++        - const: 0
++        - const: 0
 +
-+/*
-+ * --------------------------------------
-+ * Compare module registers
-+ * --------------------------------------
-+ */
-+#define CMPA					0x12
-+#define CMPB					0x14
++patternProperties:
++  '^pci-ep-bus@[0-5]$':
++    type: object
++    description:
++      One node for each BAR used by peripherals contained in the PCI endpoint.
++      Each node represent a bus on which peripherals are connected.
++      This allows for some segmentation, e.g. one peripheral is accessible
++      through BAR0 and another through BAR1, and you don't want the two
++      peripherals to be able to act on the other BAR. Alternatively, when
++      different peripherals need to share BARs, you can define only one node
++      and use 'ranges' property to map all the used BARs.
 +
-+/*
-+ * --------------------------------------
-+ * Action qualifier (AQ) module registers
-+ * --------------------------------------
-+ */
-+#define AQCTLA					0x16
-+#define AQCTLB					0x18
-+#define AQSFRC					0x1A
-+#define AQCSFRC					0x1C
++    additionalProperties: true
 +
-+/*
-+ * AQCTLA and AQCTLB share similar 2-bit fields for
-+ * various events (ZRO, PRD, CAU, CBU, etc.).
-+ *
-+ * For instance, bits [1:0] => ZRO,
-+ *               bits [3:2] => PRD,
-+ *               bits [5:4] => CAU,
-+ *               bits [9:8] => CBU, etc.
-+ */
-+#define AQCTL_ZRO_MASK			GENMASK(1, 0)
-+#define AQCTL_PRD_MASK			GENMASK(3, 2)
-+#define AQCTL_CAU_MASK			GENMASK(5, 4)
-+#define AQCTL_CBU_MASK			GENMASK(9, 8)
++    properties:
++      compatible:
++        const: simple-bus
 +
-+/*
-+ * FORCE LOW	=> 0b01
-+ * FORCE HIGH	=> 0b01
-+ * FORCE TOGGLE	=> 0b01
-+ */
-+#define AQCTL_FRCLOW			1U
-+#define AQCTL_FRCHIGH			2U
-+#define AQCTL_FRCTOGGLE			3U
++    required:
++      - compatible
 +
-+/* These values in CAU: */
-+#define AQCTL_CAU_FRCLOW		FIELD_PREP(AQCTL_CAU_MASK, AQCTL_FRCLOW)
-+#define AQCTL_CAU_FRCHIGH		FIELD_PREP(AQCTL_CAU_MASK, AQCTL_FRCHIGH)
-+#define AQCTL_CAU_FRCTOGGLE	FIELD_PREP(AQCTL_CAU_MASK, AQCTL_FRCTOGGLE)
-+
-+/* These values in PRD: */
-+#define AQCTL_PRD_FRCLOW		FIELD_PREP(AQCTL_PRD_MASK, AQCTL_FRCLOW)
-+#define AQCTL_PRD_FRCHIGH		FIELD_PREP(AQCTL_PRD_MASK, AQCTL_FRCHIGH)
-+#define AQCTL_PRD_FRCTOGGLE		FIELD_PREP(AQCTL_PRD_MASK, AQCTL_FRCTOGGLE)
-+
-+/* These values in ZRO: */
-+#define AQCTL_ZRO_FRCLOW		FIELD_PREP(AQCTL_ZRO_MASK, AQCTL_FRCLOW)
-+#define AQCTL_ZRO_FRCHIGH		FIELD_PREP(AQCTL_ZRO_MASK, AQCTL_FRCHIGH)
-+#define AQCTL_ZRO_FRCTOGGLE		FIELD_PREP(AQCTL_ZRO_MASK, AQCTL_FRCTOGGLE)
-+
-+/* These values in CBU: */
-+#define AQCTL_CBU_FRCLOW		FIELD_PREP(AQCTL_CBU_MASK, AQCTL_FRCLOW)
-+#define AQCTL_CBU_FRCHIGH		FIELD_PREP(AQCTL_CBU_MASK, AQCTL_FRCHIGH)
-+#define AQCTL_CBU_FRCTOGGLE		FIELD_PREP(AQCTL_CBU_MASK, AQCTL_FRCTOGGLE)
-+
-+/* Predefined combinations for channel polarity */
-+#define AQCTL_CHANA_POLNORMAL	\
-+	(AQCTL_CAU_FRCLOW  | AQCTL_PRD_FRCHIGH | AQCTL_ZRO_FRCHIGH)
-+#define AQCTL_CHANA_POLINVERSED	\
-+	(AQCTL_CAU_FRCHIGH | AQCTL_PRD_FRCLOW  | AQCTL_ZRO_FRCLOW)
-+#define AQCTL_CHANB_POLNORMAL	\
-+	(AQCTL_CBU_FRCLOW  | AQCTL_PRD_FRCHIGH | AQCTL_ZRO_FRCHIGH)
-+#define AQCTL_CHANB_POLINVERSED	\
-+	(AQCTL_CBU_FRCHIGH | AQCTL_PRD_FRCLOW  | AQCTL_ZRO_FRCLOW)
-+
-+/* AQSFRC: RLDCSF => bits [7:6] */
-+#define AQSFRC_RLDCSF_MASK		GENMASK(7, 6)
-+
-+#define AQSFRC_RLDCSF_ZRO		FIELD_PREP(AQSFRC_RLDCSF_MASK, 0U)
-+#define AQSFRC_RLDCSF_PRD		FIELD_PREP(AQSFRC_RLDCSF_MASK, 1U)
-+#define AQSFRC_RLDCSF_ZROPRD	FIELD_PREP(AQSFRC_RLDCSF_MASK, 2U)
-+#define AQSFRC_RLDCSF_IMDT		FIELD_PREP(AQSFRC_RLDCSF_MASK, 3U)
-+
-+/* AQCSFRC: CSFB => bits [3:2], CSFA => bits [1:0] */
-+#define AQCSFRC_CSFB_MASK		GENMASK(3, 2)
-+#define AQCSFRC_CSFA_MASK		GENMASK(1, 0)
-+
-+/* The possible 2-bit values for CSFB or CSFA fields */
-+#define AQCSFRC_FRCDIS			0U
-+#define AQCSFRC_FRCLOW			1U
-+#define AQCSFRC_FRCHIGH			2U
-+#define AQCSFRC_DISSWFRC		3U
-+
-+/* These values in CSFB: */
-+#define AQCSFRC_CSFB_FRCDIS		FIELD_PREP(AQCSFRC_CSFB_MASK, AQCSFRC_FRCDIS)
-+#define AQCSFRC_CSFB_FRCLOW		FIELD_PREP(AQCSFRC_CSFB_MASK, AQCSFRC_FRCLOW)
-+#define AQCSFRC_CSFB_FRCHIGH	FIELD_PREP(AQCSFRC_CSFB_MASK, AQCSFRC_FRCHIGH)
-+#define AQCSFRC_CSFB_DISSWFRC	FIELD_PREP(AQCSFRC_CSFB_MASK, AQCSFRC_DISSWFRC)
-+
-+/* These values in CSFA: */
-+#define AQCSFRC_CSFA_FRCDIS		FIELD_PREP(AQCSFRC_CSFA_MASK, AQCSFRC_FRCDIS)
-+#define AQCSFRC_CSFA_FRCLOW		FIELD_PREP(AQCSFRC_CSFA_MASK, AQCSFRC_FRCLOW)
-+#define AQCSFRC_CSFA_FRCHIGH	FIELD_PREP(AQCSFRC_CSFA_MASK, AQCSFRC_FRCHIGH)
-+#define AQCSFRC_CSFA_DISSWFRC	FIELD_PREP(AQCSFRC_CSFA_MASK, AQCSFRC_DISSWFRC)
-+
-+/* EHRPWM channels */
-+#define NUM_PWM_CHANNEL			2U
- 
- struct ehrpwm_context {
- 	u16 tbctl;
-@@ -167,8 +229,8 @@ static int set_prescale_div(unsigned long rqst_prescaler, u16 *prescale_div,
- 			*prescale_div = (1 << clkdiv) *
- 					(hspclkdiv ? (hspclkdiv * 2) : 1);
- 			if (*prescale_div > rqst_prescaler) {
--				*tb_clk_div = (clkdiv << TBCTL_CLKDIV_SHIFT) |
--					(hspclkdiv << TBCTL_HSPCLKDIV_SHIFT);
-+				*tb_clk_div = FIELD_PREP(TBCTL_CLKDIV_MASK, clkdiv) |
-+								FIELD_PREP(TBCTL_HSPCLKDIV_MASK, hspclkdiv);
- 				return 0;
- 			}
- 		}
++additionalProperties: true
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d45c88955072..af2e4652bf3b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19752,6 +19752,7 @@ RASPBERRY PI RP1 PCI DRIVER
+ M:	Andrea della Porta <andrea.porta@suse.com>
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
++F:	Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+ F:	Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+ F:	include/dt-bindings/clock/rp1.h
+ F:	include/dt-bindings/misc/rp1.h
 -- 
-2.25.1
+2.35.3
 
