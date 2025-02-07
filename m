@@ -1,65 +1,66 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C11D2B9B9
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 10:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA3E1DED70
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 10:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738925446; cv=none; b=Rh6+hfoEPOEOdSi1tjMOV5MXjxc2uiWPXbi5+mVsCZVWn8zOT8/P4mltwnJNt+39v8wdlvfPZsJNqTH82ZV1fDZ6enGk24XkMcsuW8nFSBrvmiwQ+mE4gF93uTAdT02ZGPCb49nVK3vnfLzVstrlSzOVsOeJDKiMpSc2Bu3abRE=
+	t=1738925447; cv=none; b=W3lZ7ick21LHz2nS+ls+KSlFZHAEA3B3qMGzxIEZQYSZh1i/D7G7ugYqM0XLwUxXCxfPGQBn5nEcgEsrJGLnSypTXzasgOikl2XEItP+rj37gRsxDDHFSWXPoBFQDkKmxA3HcQEGeOTSdj4AWT8Fm/vgWxm0RKqQnwzSAg0JUGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738925446; c=relaxed/simple;
-	bh=dSRoyjk/LLc0wZ5pRJ9GYPfexVGSK5yA1Y3qknTE2Ls=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nt3xo6hqLNfP6IPnUB2JTcV15jenuFsvvOwvU981AfR3iAYnudKZvLpVLjEThYVnSj/gpRXWF+CPu/cQVFlNhPRRoTzqvXDvYt/8p/ka2bk/2cyeP1DFwNBlByqoZcTj4tpmwdAb1d/D6SMa+1nX9G7vx/e3oRMrAlW00bvNPZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VkaV3EXz; arc=none smtp.client-ip=209.85.221.52
+	s=arc-20240116; t=1738925447; c=relaxed/simple;
+	bh=lZqVKRzTEdObAW6fXjwuLR5X8ri06xq7SpagYA8tR3A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=QXO4tgQWBAffxrP8Av/Pfd313Kg9VsPZ3YPeVONCRuqeVP20xBABXKU98YiQ+BODlrY8Cnfshy0STXxPxxAqJxlIz/bt3nCb8+Ojxu/uFVoEw+9UwgeJwDDRZk4Q9HBTxdqDss+mrcJ4RGZBE1q4V8KeCqyibr3SN0x+zqZTL4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Yz21a/aN; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VkaV3EXz"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38dcb7122c1so356615f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 02:50:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yz21a/aN"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38dd006a4e1so29460f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 02:50:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738925442; x=1739530242; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/IumZi2mO95I/VuFFDFwokd0aVkiJwKGF91Pl5x5axc=;
-        b=VkaV3EXz7tWE+QyMB9jA1g4UM9dDM7SvQXUdcmz0+SUXyB2yaXEq8dW0Gt8Foe920c
-         4B9MNU1rSVQrPJ7VWh69CD/wWtJtX/vpH0r+lj/xYE3n/it/M29lcCs7+pQOJ24NIzTg
-         EFECwAett4iQBnda1kLjOdOCf4WVx2R3lmnjRLbNJ8rI0YxZHElRe4M23xa1sd+TbFc9
-         QKoqV3JQLnvbKLcAdPYU+RpmEJU4DaGHTxLBn7WfDqgkANg32jIN2WrYq7unoXTnLgIC
-         tywjO/kCvDIvdnXTuRFNP9BMi7EHmOdePwaXszcDmxIAjF7dQAcNJJDsasQ1wXU8qLaV
-         31zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738925442; x=1739530242;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1738925444; x=1739530244; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/IumZi2mO95I/VuFFDFwokd0aVkiJwKGF91Pl5x5axc=;
-        b=EcJ1SeHpGMwDvaMHh3B9r4Ep9UZmaQIIoEy1FHPm8yW8RkSlHlZsRpOK2nyVh8ktqv
-         aFbZiFNBNM+TtK433bp64W2GxvT5OYdXVXkei1szAc19lilYLN05bvtVXP9n9sH8gZV6
-         tM6S5vSnbOLSlUjRpT8LHQZGmsSP1y6xrOdlF2V0Z62E6Al5i/YiJdtempx17W8JjLv/
-         Y4uo+K41BtNFk6Y+coQPksn35JMX2Lyjjdup4F2J2jXKx7OScYfGFUs2OdlRrEiQpSWj
-         92xtsUD+gd8frfKAKhlDd+zudg2a8/f3eIth39a9EH/9vDkrp0ehCDDMa0F2gpwPh10S
-         PgbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVVdu5pJhEASeCJoVhPnW2VFnI1wq6QqnD1p0h3/n6Srpd2AVXf1iajZEcgwG/c6msK8wATgcLMkeAP8PM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIHYfPi5vVfIckNAgDFQsoc1HR1RyYEPY2Ty32NPSEW8efPKUu
-	UFbClr54LiS2LQVmBMmd30fOV83BhzHKKMhyS0liAZDmmpjsWz9PvDj9GJ4RTMU=
-X-Gm-Gg: ASbGncsSHcfFh8IY72AQmkkbjuM9NiCpnhHciqtelM1Iph34b1rQQ/W2yHGg3Udq6tj
-	xFqzv0dwE2P/sDy8dLtmIeS0R5jrF/aZFms5SSj021jvPnRkQolqLfkuTz457+Y51SMUc1z8vPz
-	+gzMnDpM/Xv1j68pqOYrLIDK7BNtdVt0J6L3vQhd15b8LvHkdfhzVRNSQLSCdVEHhdsjj0WFcmA
-	cW1tQ6DqubwhiNn/FnGRoXAjZN5Ywh6BUKwjwdoI5M9prmttIZYwZKrvuu/y4UJuMaTDYb2qVeP
-	07d9JxJ4ffWFiU6qJ6AFcYZK3wTQQIQWgx6C
-X-Google-Smtp-Source: AGHT+IGzmf7u8lOV91tQ2bUO6AOqOzShvP6P0N0+WwarOOa/wfspqpwZ4Rf3iZg3JHMLcnGdfnkCsQ==
-X-Received: by 2002:a05:6000:1a8a:b0:38d:b2a1:244e with SMTP id ffacd0b85a97d-38dc935f87bmr1688184f8f.41.1738925441775;
-        Fri, 07 Feb 2025 02:50:41 -0800 (PST)
+        bh=va1zoX8mtnqXVu53ncI+bFuzSEXb1z3Cq8WHUrR/Cog=;
+        b=Yz21a/aN4ypqZ5ASdOUGTV951rF7V1tmZ8GoGRs/2MKCnIj+jKzPZogI8gg9daUFfz
+         rhOVIBIfoCyaSO+VVIapIvPlWAl/69wmmgMC1M6yoj6oj3ByYnqZ+//uN+w9zoTbyDKe
+         /ajw02PGdL9eBWGgaxW9C536fc6D2kwhOT4oegXV/cVTOpw4gRK0crDejnFxIg+sa++W
+         SDR0rbC1mPBtGPBR7G9Cj62woi0Jvs0fu9YnGWkUjn1mKOTf/DDYeogWLOIUTUjFFYTT
+         CHinGw8CiznPopEa0e6p46AO6Zm6IMN43xVBaEOZ7zkS1P/RsMN9tBhZWQS/1GPS2u5l
+         QxzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738925444; x=1739530244;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=va1zoX8mtnqXVu53ncI+bFuzSEXb1z3Cq8WHUrR/Cog=;
+        b=IAtW2HVhvYUSlLLpLkEKIRs9KZdjRLgUT68MN7IxlNQLqjru9seH6ad3r5rSMRTUCx
+         SH2+5Vu59BOYDNojsBuwWh8Lxu0jYVlSedLbEYRo77rZfTNTRMS+lsA6nDOrTVs964Wi
+         2I0jcWg5yaa41ZDnyV/YhZECAkL6+nASqeU3DM911ZeLUl0BcZNLeRpEevaZkD5VwGww
+         +cC0UhCTM6AiReHQQqQaCKqgTOi8NG/M+GoH2uDMhrEf22w9JL8X0ihHoKVe5gtCHwqw
+         jwHD+LmTwejnWG+zbeMZk/KD2QNDjzvO6DQ5JnA0euTj1RS+dWNRM/GgwBArA4On9H0b
+         u8kA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWJI5y1e9VpK4xIjFszIsau+cpPk5cF9lTNOitgIytolgE+TfWmk6/yhPklZSd+lktxcX0kBF5HQK+wKI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxkr0M81owc8bxuO81pciIfjTXf2zxGZTSqHsMGXtzebtMPnMpl
+	/aWKy6lCPI7Kp1X/GEo9xXq0oFE9qWtoKpluxqPB3RJhWE8JVFlCKwC8JqrtXYc=
+X-Gm-Gg: ASbGnctY3o7l+IdO1txFUf8/5TRQFFZQ3vrzkt9zlaXf85GBLLlMirl54386lBqM4fF
+	U40irx1eQGy6qK5ibzEOyqwfujPkyFAkoiOF9K7WBwVXqKvM2sY4G1YdeuX//Wph5wWznvXjUz2
+	WafcPnOWscf5BbeondyFGA/dA9P6wKYioFZe5iG1uil5BEq3w39bSdsk4DI0Ya7nsgoCH+XnR+5
+	8Pmz2k9kssiVon124K34IBMwJGos84ldmQxx6KjoBhSLn6ASAYsg6+ns8qmvDmDoagYBMqhVER2
+	sU4QTGcRgLTXI3LiabpMn046j2rKTYfZLggQ
+X-Google-Smtp-Source: AGHT+IH0nDMeXu8DQFB/6kIi0idKBW0FDxI3OK8PYJEXcr3iUgCGEvXoxJDBPA0VnCXYsvIwIKwvTw==
+X-Received: by 2002:a5d:64c4:0:b0:38d:c56e:f1fd with SMTP id ffacd0b85a97d-38dc8db1e7cmr1979122f8f.15.1738925444107;
+        Fri, 07 Feb 2025 02:50:44 -0800 (PST)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390daf4480sm85968635e9.27.2025.02.07.02.50.40
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390daf4480sm85968635e9.27.2025.02.07.02.50.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 02:50:41 -0800 (PST)
+        Fri, 07 Feb 2025 02:50:43 -0800 (PST)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: [PATCH 0/2] dt-bindings: display: qcom,sm8[56]50-mdss: only
- document the mdp0-mem interconnect path
-Date: Fri, 07 Feb 2025 11:50:36 +0100
-Message-Id: <20250207-topic-sm8x50-mdss-interconnect-bindings-fix-v1-0-852b1d6aee46@linaro.org>
+Date: Fri, 07 Feb 2025 11:50:38 +0100
+Subject: [PATCH 2/2] dt-bindings: display: qcom,sm8650-mdss: only document
+ the mdp0-mem interconnect path
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,10 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAHzlpWcC/x2NQQrCQAwAv1JyNhAjS9WviAfdpDWHZstmkULp3
- 108zhxmdgitpgH3YYeqXwsr3uF8GiB/Xj4rmnQGJk7ENGIrq2WM5bolwkUi0LxpzcVdc8O3uZj
- PgZNtKHIb08R8EUrQi2vVrv+3x/M4fto8a9V9AAAA
-X-Change-ID: 20250207-topic-sm8x50-mdss-interconnect-bindings-fix-dd975f223d05
+Message-Id: <20250207-topic-sm8x50-mdss-interconnect-bindings-fix-v1-2-852b1d6aee46@linaro.org>
+References: <20250207-topic-sm8x50-mdss-interconnect-bindings-fix-v1-0-852b1d6aee46@linaro.org>
+In-Reply-To: <20250207-topic-sm8x50-mdss-interconnect-bindings-fix-v1-0-852b1d6aee46@linaro.org>
 To: Rob Clark <robdclark@gmail.com>, 
  Abhinav Kumar <quic_abhinavk@quicinc.com>, 
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
@@ -85,46 +85,49 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
  freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1173;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=951;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=dSRoyjk/LLc0wZ5pRJ9GYPfexVGSK5yA1Y3qknTE2Ls=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnpeV/K8vJ2pQ56PUAoz+0XinHG2mP2E+oDhZ8jXi0
- f85TrEGJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ6XlfwAKCRB33NvayMhJ0QiyD/
- 9iUH3Rp2L1QCaj45OJfAnmUngLFmc0VQHV59TFpjfXaPfqfOMTWtHJ/4ZP8wFQJCsxl7yaAzDm6UO4
- zlFHFM9MoND+vjxn1msUPfMmIkYL08fg8GmtAgRwVGTgyQaW8Y/cTxi8Wc7mmQWo8tmZM/GxCbOT72
- yRqCu59o14WNCgkx5ASS/VtMlXALTzIiciepqqKKHRaIT+MSnzgAjKhLjH5PX/9/SqvBXScWAJlpXU
- AmIcI2S82HdjSf1xRZRmTZGZkp1KC14BVM7I/jkA03nzrDEezN284/oo0+Al5ddVMrGc52p4n9uZZ6
- GOTlUdiIwt8wzAwlbzgM+vE1wFAKpOK/wC04wgk74CNTrF8VP/lhsFAeL5HX1iJyNptRe5CE31/okI
- VeUnjknXAFfnNURGiEikQSEpC9EI8JdCRCwVkcbK2mgzR6AnYVGz0KnFaWPOYBN5CNGuU4F6Yyu2bX
- u6rD+sxyXTRD3FkOFPmrpuhSt4RRUjjLgKJe0837rtReagRU8hTueZfih8sf0Y0Gdst+PQPRd81ojD
- fzeJP1Spg3tCntBFFLFK2UhQ9vXwWoeq4/g/+KPaCGAuCSaMLYn67TJhu0VKBtXrUTEEOnr5Wem1n0
- yvkD6ast+usxuP7baNqyx2YBbDnjuPvDxdsDgqGXrk9Vu7ulA2eIXLS8P9wA==
+ bh=lZqVKRzTEdObAW6fXjwuLR5X8ri06xq7SpagYA8tR3A=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnpeWAdfoAyR2ZBdAem7bRneP4BOUAPpgFn20p6tVp
+ fmlUIOKJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ6XlgAAKCRB33NvayMhJ0eDxEA
+ CxBWsrpVjDnUs2AYfGWNgmI+G9lezzka4e/yYhivAyaGnNxzF6tO1nX5o1EhVwXLRc9a3VjGVhe7Q6
+ pUF0EFjB2YpohqMsPnb9HxnalBbTGSoFfwuhFu/5rb/pkAJPI20yrQfBSRoDoM7suMjaLgWu1RS85h
+ SsNe+ODsPDjzhGV1Vg1zqHZM1HnUAis5WlzTSXJ6jelCvwK61n2aN6xCa2uQ3FNmcLhQ2EOXy82Wus
+ x7gqiQyy818Cbr+DoOzI4HC+YFO1Q2VpHVVGWSBfLgukz/BVb3XbF/MLZxHYVK2vp0V1q2euohvPWr
+ RE/5VWoBzftcloZf1EiHuMekyZzT5OmXYl9jjNaTckFZ7x6j2SZT1L+BaMH9tYcEzxppxWJB1TUwNR
+ KJIT3wjjZPrVTVUzz8t0/a87Ut6ifB8CvIDf1imLap/RiEVGBwBmrNrUpPKs76itGqODmmocm2h5FO
+ 7hqwXP+N9uqnC1yMTkSsaK6xbfGuI0iav9r/0puk64xggFMNoWmQgxnkgHXwyi5rWc4Dp9UbxIw2QS
+ 1cIl4o+LHfEQmdXEl5i2MuIxc7MDa/G/Co4jz4ITFeJ7hX5vLXJho+R4nZn11r2HrpWa1W/GHrT+Eo
+ PVPYwtZPVxFBbCvPqxyjmbh3axyz2Qg0DF1PH1IpdQDODFySKwZ0f7lkSoyg==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-The mdp1-mem is not supported on the SM8550 & SM8650 SoCs, so only support a single
+The mdp1-mem is not supported on the SM8650 SoCs, so only support a single
 mdp0-mem interconnect entry.
-
-This fixes the following errors:
-display-subsystem@ae00000: interconnects: [[200, 3, 7, 32, 1, 7]] is too short
-        from schema $id: http://devicetree.org/schemas/display/msm/qcom,sm8650-mdss.yaml#
-display-subsystem@ae00000: interconnect-names: ['mdp0-mem'] is too short
-        from schema $id: http://devicetree.org/schemas/display/msm/qcom,sm8650-mdss.yaml#
 
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
-Neil Armstrong (2):
-      dt-bindings: display: qcom,sm8550-mdss: only document the mdp0-mem interconnect path
-      dt-bindings: display: qcom,sm8650-mdss: only document the mdp0-mem interconnect path
-
- Documentation/devicetree/bindings/display/msm/qcom,sm8550-mdss.yaml | 4 ++--
  Documentation/devicetree/bindings/display/msm/qcom,sm8650-mdss.yaml | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
----
-base-commit: 808eb958781e4ebb6e9c0962af2e856767e20f45
-change-id: 20250207-topic-sm8x50-mdss-interconnect-bindings-fix-dd975f223d05
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Best regards,
+diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sm8650-mdss.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sm8650-mdss.yaml
+index 24cece1e888bd35f169dc3764966685de4b6da1d..cee581513c519924712c7e0fc055099f886d0a99 100644
+--- a/Documentation/devicetree/bindings/display/msm/qcom,sm8650-mdss.yaml
++++ b/Documentation/devicetree/bindings/display/msm/qcom,sm8650-mdss.yaml
+@@ -29,10 +29,10 @@ properties:
+     maxItems: 1
+ 
+   interconnects:
+-    maxItems: 2
++    maxItems: 1
+ 
+   interconnect-names:
+-    maxItems: 2
++    maxItems: 1
+ 
+ patternProperties:
+   "^display-controller@[0-9a-f]+$":
+
 -- 
-Neil Armstrong <neil.armstrong@linaro.org>
+2.34.1
 
