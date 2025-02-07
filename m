@@ -1,141 +1,354 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA0B32475CA
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C3D240619;
+	Fri,  7 Feb 2025 15:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738943214; cv=none; b=kmUnesi1krfuvTrzagiwShLmoytkFuoEm701DnaR6V+jyCBl9UwuUv96bzzMBM+k5ZUtaAxZIYXqbXulS45bcuW185hrWIaapcwJdC8p4hdAwSW0Rwprly2BNLTGnpArIXczbz/R5cXxzyxSR4kkreUkHzlqE4TXZoUGy3Iur4o=
+	t=1738943211; cv=none; b=NEpaDv3zPIh6b6GKiHKFhpnuiFymEYM9oRPEslaqEiKTgHKGdnbkrKKA3sdJzA64H6sFqa8WqHfy2NFyNCFuVBV3j3Ygi5lN+2rSzHYm4Drjt/kfp3uiVvmaVz6gLZzRIwrrHtJbMAgYq4BUMY8aMHW/qHxul2BT6h+n1HqgfkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738943214; c=relaxed/simple;
-	bh=aLacViqaUc3354guPSu4Icas4R1pfzpcrIiTi/v8GCw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tq1YtWNQkx0vs9fPd123TspY6GmQIVya3l0HzgaD1jXJf+SSKqVOZu3RR66PVnhEZczFxWZmEw+sUj7e71LB6ufbheB0XW4pRojQ9w/zKCFI4oeEM4a10npeyPZ+M5Y50UEcTB6d3kNNvompOfeaIdUcgWbYlTnoBSkzqziVHno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF6C81EA6;
-	Fri,  7 Feb 2025 07:47:14 -0800 (PST)
-Received: from [10.1.196.57] (eglon.cambridge.arm.com [10.1.196.57])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E69A3F58B;
-	Fri,  7 Feb 2025 07:46:49 -0800 (PST)
-Message-ID: <787e55a2-71a6-4333-b808-7b5f36b1300b@arm.com>
-Date: Fri, 7 Feb 2025 15:46:47 +0000
+	s=arc-20240116; t=1738943211; c=relaxed/simple;
+	bh=49eKxDqQtP3po1mBGZJU1bNO+vDFpnsz8KG9NigI21E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Epvh7NcPbaTXc8k+YI/ID1O/h7/+2p+jtVay3RlIK+qDfrTujGeZDmMug54xQqLf/QiKVcmGTkUEYRq3wCZvr8NigBr+unlqzjNT7ILLAMdHD7JBtakEpaN/7P1Q+x/UfNx/crD00zIA5Z++4RsjAP7jPFoVs9Bh0LiunxM468I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b+fL+OOn; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b+fL+OOn"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-46fa734a0b8so20840111cf.1;
+        Fri, 07 Feb 2025 07:46:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738943208; x=1739548008; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=78jUbb12GWv+OJbtaS4vNafGBdENBEI5UTnuBg/ppNE=;
+        b=b+fL+OOnNtp7f7OW3GLTflGKevlcjTdoWGsNfkB+TYZVSK2OpcxSBWHOXyTKlSrsPv
+         uHHW+TyQ6d4CKACFmKnZ6q9YUp5anQsRabfSjj7CN2aEEWPC7nAOfe0OkTlASgYiqsr7
+         MA25DGvdLuXFug15+ZJ8bvmnDOebV0YlPJMe2pMuHUcthLKNjIWbG7AGvBSYrLuxzQtB
+         nNbDeplPQQIAvdjcTwiac99M9jshjfyTrjKk+Hiu1IsEHiX/WYJOgq9aoUJUyzlGKywG
+         rkqJBTB28jVUzvONdHLEm44/30oiUC6j4uvVdDO93OOy7LDiesb301M1ZxDO6BCtR7Et
+         aUEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738943208; x=1739548008;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=78jUbb12GWv+OJbtaS4vNafGBdENBEI5UTnuBg/ppNE=;
+        b=lYjbCc9h2Xh8xSK65bVVbTwDPShIgobMetNYBt9NlUsy88MEg5hSiFBupBIRx8VqhS
+         czQw4h8OTABSzSj9k5VMZcyLzNhkL6W1yT18UA1Nz5VGfuzKdWYtB7SF4K8U2ZeK3jZ6
+         v0u3WGM+TouCX7TiDnBQxxFhb7hEdGq+BPmrNmqJPLSxeR6tVbNX2kHcIfoAHXI0RZKR
+         /xSONwmv+TLijNp6NNQm7gpZs0LwuurV2QVdNDWhqF2+yQiIRNTUf5DQ1MlwFtjrxYY7
+         YGhdkx0oC4Y3d79vV8tPUn0D+R/WugMIPRdyo1RrwR79SmaGv7hCm/idaRHNR7W9szbI
+         aECA==
+X-Forwarded-Encrypted: i=1; AJvYcCXOI1n9HVCnD4rZsF0RlqWJR3zpmwdjZ2o33o698DllW1Jo5n+54IIRN/puJb4OAXHylCEVIMqxSsssiHY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyO+jH3q7TzfnnOftHM/G2l8kZJWsIzJkAgxI47Sm0cYv17Bkf6
+	uqVqCV/4u9MeAtXLldCeWyiwH4E/CwmJetF3uGQRN3bNwYzXzC9G8A3Stw==
+X-Gm-Gg: ASbGncvFMkuLixoXSq687Ip+1cZL0oMDTnj0AnD3n905+aCYoXAa6XNWVmLpug/GBfp
+	tsTolVNqRi/A5x1sTPcFyAOD7rxyiVVFczQK6PCsvF2kKU7Djh9w9/eD79KXYvTjR8VfAOXI51B
+	Mh+JPeXB4NC3faS70JXv81piyRIjAfcDItdH+qnCkjwf5G0zY4YzGs9o4xSdMv5PzdHqJvvUJOG
+	bjS2sDQGZ7RgLqtRbJ5V59ByACg2YlYC+9f02IVSpFnW/C/I7pdFerrnzlL3tvzPjV7+L7l+mlQ
+	LimJf+0WvD5a+OJS/fScVs8=
+X-Google-Smtp-Source: AGHT+IESDhgOXyUBZI+XXH+RMub8qO+GEhXatYpSD1773R3+eKigH0srpYm6YIeMFCZgsMg78pMciA==
+X-Received: by 2002:a05:622a:cd:b0:467:54b3:2704 with SMTP id d75a77b69052e-471679dbf8emr46594621cf.16.1738943208545;
+        Fri, 07 Feb 2025 07:46:48 -0800 (PST)
+Received: from localhost.localdomain ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ba76cb8e44sm768456137.0.2025.02.07.07.46.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 07:46:47 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+To: platform-driver-x86@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Armin Wolf" <W_Armin@gmx.de>,
+	"Mario Limonciello" <mario.limonciello@amd.com>,
+	"Hans de Goede" <hdegoede@redhat.com>,
+	Dell.Client.Kernel@dell.com,
+	linux-kernel@vger.kernel.org,
+	"Kurt Borja" <kuurtb@gmail.com>
+Subject: [PATCH v10 01/14] platform/x86: alienware-wmi: Add a state container for LED control feature
+Date: Fri,  7 Feb 2025 10:45:57 -0500
+Message-ID: <20250207154610.13675-2-kuurtb@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250207154610.13675-1-kuurtb@gmail.com>
+References: <20250207154610.13675-1-kuurtb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 30/40] x86/resctrl: Describe resctrl's bitmap size
- assumptions
-To: Tony Luck <tony.luck@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
- Fenghua Yu <fenghua.yu@intel.com>,
- Reinette Chatre <reinette.chatre@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
- dfustini@baylibre.com, amitsinght@marvell.com,
- David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
- Dave Martin <dave.martin@arm.com>, Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-References: <20241004180347.19985-1-james.morse@arm.com>
- <20241004180347.19985-31-james.morse@arm.com>
- <ZwV_B-4gz9tUaF67@agluck-desk3.sc.intel.com>
-Content-Language: en-GB
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <ZwV_B-4gz9tUaF67@agluck-desk3.sc.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Tony,
+Add a state container for the "alienware-wmi" platform device and
+initialize it on the new alienfx_probe(). Migrate all LED control functions
+to use this state container to support upcoming file split.
 
-On 08/10/2024 19:50, Tony Luck wrote:
-> On Fri, Oct 04, 2024 at 06:03:37PM +0000, James Morse wrote:
->> resctrl operates on configuration bitmaps and a bitmap of allocated
->> CLOSID, both are stored in a u32.
->>
->> MPAM supports configuration/portion bitmaps and PARTIDs larger
->> than will fit in a u32.
->>
->> Add some preprocessor values that make it clear why MPAM clamps
->> some of these values. This will make it easier to find code related
->> to these values if this resctrl behaviour ever changes.
-> 
-> ...
-> 
->> +#define RESCTRL_MAX_CLOSID		32
-> 
-> Do you really need to do this? Intel x86 architecture allows for more than
-> 32 CLOSIDs, it's just expensive in h/w to get past 16 ... so I picked
-> that trivial bitmap allocator in ages past. But if ARM can have more,
-> then why would you need to clamp the value?
+Additionally move the led_classdev registration to the platform driver
+probe and make it device managed.
 
-Just to avoid touching this code now! For feature-parity - no-one can argue they have a
-33-CLOSID use-case that works on x86, but not on arm64. My cunning plan was to flush out
-the people who cared ...
+Drop alienware_zone_init() and alienware_zone_exit() because they are no
+longer needed and mimic the `quirks->num_zone > 0` check by failing the
+platform device probe.
 
+Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+---
+ drivers/platform/x86/dell/alienware-wmi.c | 125 ++++++++++++----------
+ 1 file changed, 68 insertions(+), 57 deletions(-)
 
-> File system code could ask
-> architecture code to allocate a CLOSID. On x86 that will fail when there
-> are no more CLOSIDs, so filesystem will fail the mkdir(2).
+diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+index e252e0cf47ef..ab86deb1adb9 100644
+--- a/drivers/platform/x86/dell/alienware-wmi.c
++++ b/drivers/platform/x86/dell/alienware-wmi.c
+@@ -413,13 +413,18 @@ struct wmax_u32_args {
+ 	u8 arg3;
+ };
+ 
++struct alienfx_priv {
++	struct platform_device *pdev;
++	struct led_classdev global_led;
++	struct color_platform colors[4];
++	u8 global_brightness;
++	u8 lighting_control_state;
++};
++
+ static struct platform_device *platform_device;
+-static struct color_platform colors[4];
+ static enum wmax_thermal_mode supported_thermal_profiles[PLATFORM_PROFILE_LAST];
+ 
+ static u8 interface;
+-static u8 lighting_control_state;
+-static u8 global_brightness;
+ 
+ /*
+  * Helpers used for zone control
+@@ -451,7 +456,7 @@ static int parse_rgb(const char *buf, struct color_platform *colors)
+ /*
+  * Individual RGB zone control
+  */
+-static int alienware_update_led(u8 location)
++static int alienware_update_led(struct alienfx_priv *priv, u8 location)
+ {
+ 	int method_id;
+ 	acpi_status status;
+@@ -461,21 +466,21 @@ static int alienware_update_led(u8 location)
+ 	struct wmax_led_args wmax_basic_args;
+ 	if (interface == WMAX) {
+ 		wmax_basic_args.led_mask = 1 << location;
+-		wmax_basic_args.colors = colors[location];
+-		wmax_basic_args.state = lighting_control_state;
++		wmax_basic_args.colors = priv->colors[location];
++		wmax_basic_args.state = priv->lighting_control_state;
+ 		guid = WMAX_CONTROL_GUID;
+ 		method_id = WMAX_METHOD_ZONE_CONTROL;
+ 
+ 		input.length = sizeof(wmax_basic_args);
+ 		input.pointer = &wmax_basic_args;
+ 	} else {
+-		legacy_args.colors = colors[location];
+-		legacy_args.brightness = global_brightness;
++		legacy_args.colors = priv->colors[location];
++		legacy_args.brightness = priv->global_brightness;
+ 		legacy_args.state = 0;
+-		if (lighting_control_state == LEGACY_BOOTING ||
+-		    lighting_control_state == LEGACY_SUSPEND) {
++		if (priv->lighting_control_state == LEGACY_BOOTING ||
++		    priv->lighting_control_state == LEGACY_SUSPEND) {
+ 			guid = LEGACY_POWER_CONTROL_GUID;
+-			legacy_args.state = lighting_control_state;
++			legacy_args.state = priv->lighting_control_state;
+ 		} else
+ 			guid = LEGACY_CONTROL_GUID;
+ 		method_id = location + 1;
+@@ -494,22 +499,26 @@ static int alienware_update_led(u8 location)
+ static ssize_t zone_show(struct device *dev, struct device_attribute *attr,
+ 			 char *buf, u8 location)
+ {
++	struct alienfx_priv *priv = dev_get_drvdata(dev);
++	struct color_platform *colors = &priv->colors[location];
++
+ 	return sprintf(buf, "red: %d, green: %d, blue: %d\n",
+-		       colors[location].red, colors[location].green,
+-		       colors[location].blue);
++		       colors->red, colors->green, colors->blue);
+ 
+ }
+ 
+ static ssize_t zone_store(struct device *dev, struct device_attribute *attr,
+ 			  const char *buf, size_t count, u8 location)
+ {
++	struct alienfx_priv *priv = dev_get_drvdata(dev);
++	struct color_platform *colors = &priv->colors[location];
+ 	int ret;
+ 
+-	ret = parse_rgb(buf, &colors[location]);
++	ret = parse_rgb(buf, colors);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = alienware_update_led(location);
++	ret = alienware_update_led(priv, location);
+ 
+ 	return ret ? ret : count;
+ }
+@@ -577,9 +586,11 @@ static ssize_t lighting_control_state_show(struct device *dev,
+ 					   struct device_attribute *attr,
+ 					   char *buf)
+ {
+-	if (lighting_control_state == LEGACY_BOOTING)
++	struct alienfx_priv *priv = dev_get_drvdata(dev);
++
++	if (priv->lighting_control_state == LEGACY_BOOTING)
+ 		return sysfs_emit(buf, "[booting] running suspend\n");
+-	else if (lighting_control_state == LEGACY_SUSPEND)
++	else if (priv->lighting_control_state == LEGACY_SUSPEND)
+ 		return sysfs_emit(buf, "booting running [suspend]\n");
+ 
+ 	return sysfs_emit(buf, "booting [running] suspend\n");
+@@ -589,6 +600,7 @@ static ssize_t lighting_control_state_store(struct device *dev,
+ 					    struct device_attribute *attr,
+ 					    const char *buf, size_t count)
+ {
++	struct alienfx_priv *priv = dev_get_drvdata(dev);
+ 	u8 val;
+ 
+ 	if (strcmp(buf, "booting\n") == 0)
+@@ -600,9 +612,9 @@ static ssize_t lighting_control_state_store(struct device *dev,
+ 	else
+ 		val = WMAX_RUNNING;
+ 
+-	lighting_control_state = val;
++	priv->lighting_control_state = val;
+ 	pr_debug("alienware-wmi: updated control state to %d\n",
+-		 lighting_control_state);
++		 priv->lighting_control_state);
+ 
+ 	return count;
+ }
+@@ -662,46 +674,26 @@ static int wmax_brightness(int brightness)
+ static void global_led_set(struct led_classdev *led_cdev,
+ 			   enum led_brightness brightness)
+ {
++	struct alienfx_priv *priv = container_of(led_cdev, struct alienfx_priv,
++						 global_led);
+ 	int ret;
+-	global_brightness = brightness;
++
++	priv->global_brightness = brightness;
++
+ 	if (interface == WMAX)
+ 		ret = wmax_brightness(brightness);
+ 	else
+-		ret = alienware_update_led(0);
++		ret = alienware_update_led(priv, 0);
+ 	if (ret)
+ 		pr_err("LED brightness update failed\n");
+ }
+ 
+ static enum led_brightness global_led_get(struct led_classdev *led_cdev)
+ {
+-	return global_brightness;
+-}
+-
+-static struct led_classdev global_led = {
+-	.brightness_set = global_led_set,
+-	.brightness_get = global_led_get,
+-	.name = "alienware::global_brightness",
+-};
++	struct alienfx_priv *priv = container_of(led_cdev, struct alienfx_priv,
++						 global_led);
+ 
+-static int alienware_zone_init(struct platform_device *dev)
+-{
+-	if (interface == WMAX) {
+-		lighting_control_state = WMAX_RUNNING;
+-	} else if (interface == LEGACY) {
+-		lighting_control_state = LEGACY_RUNNING;
+-	}
+-	global_led.max_brightness = 0x0F;
+-	global_brightness = global_led.max_brightness;
+-
+-	return led_classdev_register(&dev->dev, &global_led);
+-}
+-
+-static void alienware_zone_exit(struct platform_device *dev)
+-{
+-	if (!quirks->num_zones)
+-		return;
+-
+-	led_classdev_unregister(&global_led);
++	return priv->global_brightness;
+ }
+ 
+ static acpi_status alienware_wmax_command(void *in_args, size_t in_size,
+@@ -1157,6 +1149,33 @@ static int create_thermal_profile(struct platform_device *platform_device)
+ /*
+  * Platform Driver
+  */
++static int alienfx_probe(struct platform_device *pdev)
++{
++	struct alienfx_priv *priv;
++
++	if (!quirks->num_zones)
++		return -ENODEV;
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	if (interface == WMAX)
++		priv->lighting_control_state = WMAX_RUNNING;
++	else
++		priv->lighting_control_state = LEGACY_RUNNING;
++
++	priv->pdev = pdev;
++	priv->global_led.name = "alienware::global_brightness";
++	priv->global_led.brightness_set = global_led_set;
++	priv->global_led.brightness_get = global_led_get;
++	priv->global_led.max_brightness = 0x0F;
++	priv->global_brightness = priv->global_led.max_brightness;
++	platform_set_drvdata(pdev, priv);
++
++	return devm_led_classdev_register(&pdev->dev, &priv->global_led);
++}
++
+ static const struct attribute_group *alienfx_groups[] = {
+ 	&zone_attribute_group,
+ 	&hdmi_attribute_group,
+@@ -1170,6 +1189,7 @@ static struct platform_driver platform_driver = {
+ 		.name = "alienware-wmi",
+ 		.dev_groups = alienfx_groups,
+ 	},
++	.probe = alienfx_probe,
+ };
+ 
+ static int __init alienware_wmi_init(void)
+@@ -1217,16 +1237,8 @@ static int __init alienware_wmi_init(void)
+ 			goto fail_prep_thermal_profile;
+ 	}
+ 
+-	if (quirks->num_zones > 0) {
+-		ret = alienware_zone_init(platform_device);
+-		if (ret)
+-			goto fail_prep_zones;
+-	}
+-
+ 	return 0;
+ 
+-fail_prep_zones:
+-	alienware_zone_exit(platform_device);
+ fail_prep_thermal_profile:
+ 	platform_device_del(platform_device);
+ fail_platform_device2:
+@@ -1241,7 +1253,6 @@ module_init(alienware_wmi_init);
+ 
+ static void __exit alienware_wmi_exit(void)
+ {
+-	alienware_zone_exit(platform_device);
+ 	platform_device_unregister(platform_device);
+ 	platform_driver_unregister(&platform_driver);
+ }
+-- 
+2.48.1
 
-I didn't have a strong reason to pull the allocator out to be arch-specific, so just left
-it where it was. That avoided having to think about abstracting the limbo thread.
-
-
-> Or, since you put closid_alloc() into the filesystem code you could
-> change the closid_free_map to u64.
-
-Marvell sent a patch doing exactly that - so they must have a platform with more than 32
-PARTID. The version I'm carrying around removes the limit:
-https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/commit/?h=mpam/snapshot/v6.12-rc1&id=61e646352b8286b869f8ee0627cec81f01009e3e
-
-(I did think it would be more invasive)
-
-As the existing limit is not important I'll swap this patch with the one linked above that
-removes the CLOSID limit into this series.
-
-(The MAX_CBM bitmap size can be inferred from things like struct resctrl_staged_config's
-new_ctrl u32)
-
-
-> If you really do want to have this #define ... maybe you should use it
-> in place of the hard coded 32 here:
-> 
-> static void closid_init(void)
-> {
->         struct resctrl_schema *s;
->         u32 rdt_min_closid = 32;
-> }
-
-Oops - I'd missed that.
-
-
->> +#define RESCTRL_MAX_CBM		32
-> 
-> Intel x86 could plausibly expand the cache bitmap size (the MSRs
-> that store them currenly have bits 63:32 reserved, but that could be
-> changed).
-
-> The only 32-bit limits are the CPUID field that enumerates
-> CBM_LEN and the CPUID field that enumerates the shared bitmap. The
-> length has space for expansion, the share bitfiled does not. So if
-> Intel did go to more than 32-bits we'd be stuck making sure any shared
-> bits were in the lower 32-bits.
-
-Thanks for looking those up - I thought these limits were hard-and-fast!
-
-MPAMs limit for the control values for the cache bitmaps is 4K - I suggest we ignore this!
-MPAM can't describe a shared bitmap, if someone ever needed that, it would have to be
-done by a firmware table. The CPU's max CLOSID limit is 2^16.
-
-
-Thanks,
-
-James
