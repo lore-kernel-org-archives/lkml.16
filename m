@@ -1,180 +1,93 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF9A198A32;
-	Fri,  7 Feb 2025 07:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FDFA1A2C0B;
+	Fri,  7 Feb 2025 07:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738913743; cv=none; b=PHGSMBnZSthY+vUZ5T9No8GOXmH7HGqGDtf8bualxJD2+XlgXe9tONmaJwC/8UikqUcgJY2t98FU2vJk9KZayVFIkfSlVd6rsBBY8BGRY0TPohOc0a6XOBU4MYiAbDrqYwB3dpfNoQASQiUXbHnACOaFVr4/BHdttzAJdt/hkyc=
+	t=1738913770; cv=none; b=iWrvLgfmCklD69UHfV5cX4SNB56akciEwm/vCEEfWKBlaXXpz+mPU9Lsn+9EAiNYTGQ2UfMHtliIp8YtQR99SePNiNyLLZaWfCspSbfILLZ2M8lCqMm6ZfbecIZx9+/4xIHzEk/LfF5Kw1psLCrQG9Y8VfGNZnlEuYwplzXzfDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738913743; c=relaxed/simple;
-	bh=3qtlZUpkljhlwXCzjKXTxq/EfyYT6h7RYLWB5MlNTbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m6vJuKV0A7kYZxINs42FYci1XqHCWWqdIh3vm22ujy6OTDhDmFwiGlKi1i0KXCUkFlHYDQrdqlsd/N9JQ2TvGuZOZRRioPstFkAoG6TGffkGGDnICzbkgRdzB9tUvBZ4dcNj6OCoJJosUxe9ZZMKM60Ar35Ht14fYWKyTr8v2WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=XvlTym/+; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="XvlTym/+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1738913729;
-	bh=3qtlZUpkljhlwXCzjKXTxq/EfyYT6h7RYLWB5MlNTbE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XvlTym/+4lFBs9M6lla/muHeMDVjvx/S1iHz9ISboiWyEB0t72/TE0wW4dn2QcKr4
-	 /3yBOpwwNN/sjJKaozTwTnhyLzTpUcEy5uvdvV9JjX7LK8epznPEx+ht7+l85m6iho
-	 sZgw6fqcKBtZ5v+QiSW8HfN7d0eNbzRANEdJXMIg=
-Date: Fri, 7 Feb 2025 08:35:28 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Shyam Saini <shyamsaini@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, 
-	code@tyhicks.com, linux@rasmusvillemoes.dk, christophe.leroy@csgroup.eu, 
-	hch@infradead.org, mcgrof@kernel.org, frkaya@linux.microsoft.com, 
-	vijayb@linux.microsoft.com, petr.pavlu@suse.com, samitolvanen@google.com, 
-	da.gomez@samsung.com, gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org
-Subject: Re: [v2 2/3] kernel: refactor and globalize
- lookup_or_create_module_kobject()
-Message-ID: <307ec0eb-df8e-4031-9bfa-227b1cd2fcb7@t-8ch.de>
-References: <20250207054538.1110340-1-shyamsaini@linux.microsoft.com>
- <20250207054538.1110340-3-shyamsaini@linux.microsoft.com>
+	s=arc-20240116; t=1738913770; c=relaxed/simple;
+	bh=KP0xPlJQnncOfGBLdKus6e0ffsRrhdP0K7kpQJEhrmk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EnO9dCmmhiwM167qlyJiz9kUicDTAIl7pobJ4JEX38sdB65W/VYpuXLlq5bm5s/2kbZjlO5hK+3+qM0QyGcVJ5wAW+twYGBcZyQ74MCAo4h+LSeUGulPOiCTR3lrfpv74ETBF8u+oruGKrqavCEtQ4xqLB86Wzw/wOfGUuS1Wlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from unicom145.biz-email.net
+        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id EZP00148;
+        Fri, 07 Feb 2025 15:34:48 +0800
+Received: from jtjnmail201607.home.langchao.com (10.100.2.7) by
+ jtjnmail201609.home.langchao.com (10.100.2.9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 7 Feb 2025 15:34:47 +0800
+Received: from locahost.localdomain (10.94.12.190) by
+ jtjnmail201607.home.langchao.com (10.100.2.7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 7 Feb 2025 15:34:47 +0800
+From: Charles Han <hanchunchao@inspur.com>
+To: <mkl@pengutronix.de>, <manivannan.sadhasivam@linaro.org>,
+	<thomas.kopp@microchip.com>, <mailhol.vincent@wanadoo.fr>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <cem@kernel.org>,
+	<djwong@kernel.org>, <corbet@lwn.net>
+CC: <linux-can@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, Charles Han <hanchunchao@inspur.com>
+Subject: [v2] Documentation: Remove repeated word in docs
+Date: Fri, 7 Feb 2025 15:34:29 +0800
+Message-ID: <20250207073433.23604-1-hanchunchao@inspur.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207054538.1110340-3-shyamsaini@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: Jtjnmail201617.home.langchao.com (10.100.2.17) To
+ jtjnmail201607.home.langchao.com (10.100.2.7)
+tUid: 20252071534487ca61296d0d4a6ca2047d9cd90f405c0
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-On 2025-02-06 21:45:37-0800, Shyam Saini wrote:
-> lookup_or_create_module_kobject() is static and marked as __init,
-> this is not ideal for global usage.
+Remove the repeated word "to" docs.
 
-FYI missing "PATCH" in patch subject.
+Signed-off-by: Charles Han <hanchunchao@inspur.com>
+---
+ .../devicetree/bindings/net/can/microchip,mcp251xfd.yaml      | 2 +-
+ Documentation/filesystems/xfs/xfs-online-fsck-design.rst      | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-> Fix this limitation by refactoring and declaring this as global:
->  - Refactor it by removing BUG_ON() and 'if else' construct by returning
->    early
+diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml b/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
+index 2a98b26630cb..c155c9c6db39 100644
+--- a/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
++++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
+@@ -40,7 +40,7 @@ properties:
+ 
+   microchip,rx-int-gpios:
+     description:
+-      GPIO phandle of GPIO connected to to INT1 pin of the MCP251XFD, which
++      GPIO phandle of GPIO connected to INT1 pin of the MCP251XFD, which
+       signals a pending RX interrupt.
+     maxItems: 1
+ 
+diff --git a/Documentation/filesystems/xfs/xfs-online-fsck-design.rst b/Documentation/filesystems/xfs/xfs-online-fsck-design.rst
+index 12aa63840830..e231d127cd40 100644
+--- a/Documentation/filesystems/xfs/xfs-online-fsck-design.rst
++++ b/Documentation/filesystems/xfs/xfs-online-fsck-design.rst
+@@ -4521,8 +4521,8 @@ Both online and offline repair can use this strategy.
+ | For this second effort, the ondisk parent pointer format as originally   |
+ | proposed was ``(parent_inum, parent_gen, dirent_pos) → (dirent_name)``.  |
+ | The format was changed during development to eliminate the requirement   |
+-| of repair tools needing to to ensure that the ``dirent_pos`` field       |
+-| always matched when reconstructing a directory.                          |
++| of repair tools needing to ensure that the ``dirent_pos`` field always   |
++| matched when reconstructing a directory.                                 |
+ |                                                                          |
+ | There were a few other ways to have solved that problem:                 |
+ |                                                                          |
+-- 
+2.43.0
 
-This does look like an unrelated change, could be in its own patch.
-
->  - Remove static and __init markers from the function and add its
->    declaration in module.h
->  - Mark this function as "__modinit". To facilitate this, move the
->    __modinit macro construct to module.h
-> 
-> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Signed-off-by: Shyam Saini <shyamsaini@linux.microsoft.com>
-> ---
->  include/linux/module.h |  8 +++++++
->  kernel/params.c        | 48 ++++++++++++++++++------------------------
->  2 files changed, 29 insertions(+), 27 deletions(-)
-> 
-> diff --git a/include/linux/module.h b/include/linux/module.h
-> index 12f8a7d4fc1c..57d09b4e4385 100644
-> --- a/include/linux/module.h
-> +++ b/include/linux/module.h
-> @@ -162,6 +162,14 @@ extern void cleanup_module(void);
->  #define __INITRODATA_OR_MODULE __INITRODATA
->  #endif /*CONFIG_MODULES*/
->  
-> +#ifdef CONFIG_MODULES
-> +#define __modinit
-> +#else
-> +#define __modinit __init
-> +#endif
-> +
-> +struct module_kobject __modinit * lookup_or_create_module_kobject(const char *name);
-
-__init / __modinit is not necessary on the declaration.
-You can remove it here and keep the #define private.
-
-> +
->  /* Generic info of form tag = "info" */
->  #define MODULE_INFO(tag, info) __MODULE_INFO(tag, tag, info)
->  
-> diff --git a/kernel/params.c b/kernel/params.c
-> index 4b43baaf7c83..5d16696b1daa 100644
-> --- a/kernel/params.c
-> +++ b/kernel/params.c
-> @@ -595,12 +595,6 @@ static ssize_t param_attr_store(const struct module_attribute *mattr,
->  }
->  #endif
->  
-> -#ifdef CONFIG_MODULES
-> -#define __modinit
-> -#else
-> -#define __modinit __init
-> -#endif
-> -
->  #ifdef CONFIG_SYSFS
->  void kernel_param_lock(struct module *mod)
->  {
-> @@ -763,38 +757,38 @@ void destroy_params(const struct kernel_param *params, unsigned num)
->  			params[i].ops->free(params[i].arg);
->  }
->  
-> -static struct module_kobject * __init lookup_or_create_module_kobject(const char *name)
-> +struct module_kobject __modinit * lookup_or_create_module_kobject(const char *name)
->  {
->  	struct module_kobject *mk;
->  	struct kobject *kobj;
->  	int err;
->  
->  	kobj = kset_find_obj(module_kset, name);
-> -	if (kobj) {
-> -		mk = to_module_kobject(kobj);
-> -	} else {
-> -		mk = kzalloc(sizeof(struct module_kobject), GFP_KERNEL);
-> -		BUG_ON(!mk);
-> -
-> -		mk->mod = THIS_MODULE;
-> -		mk->kobj.kset = module_kset;
-> -		err = kobject_init_and_add(&mk->kobj, &module_ktype, NULL,
-> +	if (kobj)
-> +		return to_module_kobject(kobj);
-> +
-> +	mk = kzalloc(sizeof(struct module_kobject), GFP_KERNEL);
-> +	if (!mk)
-> +		return NULL;
-> +
-> +	mk->mod = THIS_MODULE;
-> +	mk->kobj.kset = module_kset;
-> +	err = kobject_init_and_add(&mk->kobj, &module_ktype, NULL,
->  					   "%s", name);
->  #ifdef CONFIG_MODULES
-
-As you are cleaning this up anyways: The #ifdef above should become
-
-if (IS_ENABLED(CONFIG_MODULES))
-
-> -		if (!err)
-> -			err = sysfs_create_file(&mk->kobj, &module_uevent.attr);
-> +	if (!err)
-> +		err = sysfs_create_file(&mk->kobj, &module_uevent.attr);
->  #endif
-> -		if (err) {
-> -			kobject_put(&mk->kobj);
-> -			pr_crit("Adding module '%s' to sysfs failed (%d), the system may be unstable.\n",
-> -				name, err);
-> -			return NULL;
-> -		}
-> -
-> -		/* So that we hold reference in both cases. */
-> -		kobject_get(&mk->kobj);
-> +	if (err) {
-> +		kobject_put(&mk->kobj);
-> +		pr_crit("Adding module '%s' to sysfs failed (%d), the system may be unstable.\n",
-> +			name, err);
-> +		return NULL;
->  	}
->  
-> +	/* So that we hold reference in both cases. */
-> +	kobject_get(&mk->kobj);
-> +
->  	return mk;
->  }
->  
-> -- 
-> 2.34.1
-> 
