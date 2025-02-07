@@ -1,89 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178CF2417F6;
-	Fri,  7 Feb 2025 01:00:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176C013D8A0;
+	Fri,  7 Feb 2025 01:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738890060; cv=none; b=csbgbv6sAkH3xHLwNIJcqiuQjA+/4K2Y1TthZ5bT+1DXDQQzSXbgLimCGYSx3Cq11v/fqFN/Um/IWb7algRtpUgS9g4P2NuMk6znyNDEhAwPUrDcfJUPUqV+boCBaJpYtSotHxUNVfPzDyAxBjwIB8AEdoJYVDKoYDB60F8hBXU=
+	t=1738890116; cv=none; b=nRmMm1K+e7+GNYoDNy0muUurdE7cQGx8Eu3xPn9RAaRfjsX3d9q66VFQDHz6M/8N3dFtmuVA2j1oEVZZRCJlMdqGMPegl7S6NtA+IVuqhi1jRnHMCmsQbuqsob+PHEbTc5vAbrEIw2QYpqN5+J7hFmZqHWM37CQLPVIS3z6Olds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738890060; c=relaxed/simple;
-	bh=2zlBRXFp285eW8jH670CREg2IMoxrfPKqqFCyMt7Vx4=;
+	s=arc-20240116; t=1738890116; c=relaxed/simple;
+	bh=8tAIi6RL1Kebq35UJ0GWYTKAnkLhfTKQxXx4V889VM0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aOLyLfv5KkjepM4b6UfSI01rPDRmkq3diswO4lhlY6H+NrP141lfIWUP0hJA93oKrNfwGXdfJhXkplGvezwJ+Px7VEvBrO/woiXOa5s4Bs6sncZFwAguY8a0cTJyKNtVTSY8+yH8XMCLMJMz1z7WL/GEYyQ+i9ihZeeMb4NvmA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOCjwLbg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lA1Iq3woUVsB4as/hNoc49Ich/RT8MutVVxwopeSFraLe1IUYq+RpcCjO+lVPfBLHmLLU5ojyxqMBWARA7Hwq+7P4cide2SSrCN2dzl1SzDxPBio/D7LRgDAJu2WF1NRX6oTLf3r4BlbCUYaTrilSy6oZXZ58ZQaZG9np9+/XiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nj5AEXhC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOCjwLbg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CD95C4CEDD;
-	Fri,  7 Feb 2025 01:00:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nj5AEXhC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE76DC4CEE3;
+	Fri,  7 Feb 2025 01:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738890059;
-	bh=2zlBRXFp285eW8jH670CREg2IMoxrfPKqqFCyMt7Vx4=;
+	s=k20201202; t=1738890115;
+	bh=8tAIi6RL1Kebq35UJ0GWYTKAnkLhfTKQxXx4V889VM0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eOCjwLbgj36OdK+znGM+w3lQld2L0iwXrGCKtXo1KOEnl3iB37J7ZwpJp4heUohD1
-	 VeVqi0EDPI5guj4r5PGVpk6bSCYOpN55tpiV8oBChfmkzcTkOSSpW8FyqC4o+Y2aHM
-	 B0Hb2AkRmbbC2FDNZCmM/HCRQACaNucikEOFVCzxN/cMdaVAAhrhHDa9+chh+vken9
-	 tuZbVSH5tQpPpJo7yaRDRdMYZgNCAW7bOSXaDTJZDWX36d8ZddBhYinsBjhrdmkp6r
-	 gr9kEyK7oerD73avSIPqMeW8rtCndt+klnezRdKwbeYSNScy+rEzst99AljGjwhgCm
-	 0D4eSvZRGcOCA==
-Date: Thu, 6 Feb 2025 17:00:59 -0800
+	b=nj5AEXhCd/RVc/RXQpEz509PF2lHtW0FU/Iy4fo8KlM7q/h05ZmTQgqqspSB1QJa5
+	 oVHXez7qc/LQJQv8+0p8H4lDt/+yDdu0C7B0v1Xp5aXufKbN3NhSeqjxUPaUBB8+jp
+	 LdWBZvo3i4iTpxQXq+A0uSxn8RxCEPa/3vPO9zXjmeCiqO2AIiUUTmS1gZQ6DKmJEA
+	 hCyd4jJXlFckCZ+K3zRVuLfVx4nB1hNnjM6Pytc9WvmFeL1n9v0DZx35n8GShbde0+
+	 o0G+lz8XQa0BWofCHhcgsUWDSktBQu3aEwj17pgviaqvBxBLJPaUTgxdyw3yuiQ2H4
+	 LXFIf1YbVid0g==
+Date: Thu, 6 Feb 2025 17:01:55 -0800
 From: Kees Cook <kees@kernel.org>
-To: Balbir Singh <balbirs@nvidia.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	apopple@nvidia.com, jhubbard@nvidia.com, jgg@nvidia.com,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2] x86/kaslr: Revisit entropy when CONFIG_PCI_P2PDMA is
- enabled
-Message-ID: <202502061700.5C52C6D453@keescook>
-References: <20250206234234.1912585-1-balbirs@nvidia.com>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: kernel test robot <lkp@intel.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>, nathan@kernel.org,
+	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Philipp Reisner <philipp.reisner@linbit.com>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 3/3] string.h: Use ARRAY_SIZE() for
+ memtostr*()/strtomem*()
+Message-ID: <202502061701.187F080@keescook>
+References: <20250206213532.it.087-kees@kernel.org>
+ <20250206214014.3567372-3-kees@kernel.org>
+ <CAJuCfpEDdtC-NmYu1-RNC8R=Spuc1iQoqy44O8ML92fztF=1bw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250206234234.1912585-1-balbirs@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJuCfpEDdtC-NmYu1-RNC8R=Spuc1iQoqy44O8ML92fztF=1bw@mail.gmail.com>
 
-On Fri, Feb 07, 2025 at 10:42:34AM +1100, Balbir Singh wrote:
-> When CONFIG_PCI_P2PDMA is enabled, it maps the PFN's via a
-> ZONE_DEVICE mapping using devm_memremap_pages(). The mapped
-> virtual address range corresponds to the pci_resource_start()
-> of the BAR address and size corresponding to the BAR length.
+On Thu, Feb 06, 2025 at 03:59:53PM -0800, Suren Baghdasaryan wrote:
+> On Thu, Feb 6, 2025 at 1:40 PM Kees Cook <kees@kernel.org> wrote:
+> >
+> > The destination argument of memtostr*() and strtomem*() must be a
+> > fixed-size char array at compile time, so there is no need to use
+> > __builtin_object_size() (which is useful for when an argument is
+> > either a pointer or unknown). Instead use ARRAY_SIZE(), which has the
+> > benefit of working around a bug in Clang (fixed[1] in 15+) that got
+> > __builtin_object_size() wrong sometimes.
+> >
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202501310832.kiAeOt2z-lkp@intel.com/
+> > Suggested-by: Kent Overstreet <kent.overstreet@linux.dev>
+> > Link: https://github.com/llvm/llvm-project/commit/d8e0a6d5e9dd2311641f9a8a5d2bf90829951ddc [1]
+> > Signed-off-by: Kees Cook <kees@kernel.org>
 > 
-> When KASLR is enabled, the direct map range of the kernel is
-> reduced to the size of physical memory plus additional padding.
-> If the BAR address is beyond this limit, PCI peer to peer DMA
-> mappings fail.
+> Tested-by: Suren Baghdasaryan <surenb@google.com>
 > 
-> Fix this by not shrinking the size of direct map when CONFIG_PCI_P2PDMA
-> is enabled. This reduces the total available entropy, but it's
-> better than the current work around of having to disable KASLR
-> completely.
+> Thanks Kees!
+> CC'ing Andrew Morton since mm-unstable contains my workaround patch
+> [1] for the issue fixed by this patchset. I'm not sure which tree will
+> be taking these fixes but once they are in we should drop [1]. Or
+> maybe we just drop it now from mm-unstable? Seems like only testbot
+> was the only one who complained...
 > 
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Kees Cook <kees@kernel.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Link: https://lore.kernel.org/lkml/20250206023201.1481957-1-balbirs@nvidia.com/
-> 
-> Signed-off-by: Balbir Singh <balbirs@nvidia.com>
+> [1] 0e91345e75b2 ("alloc_tag: work around clang-14 build issue with
+> __builtin_object_size()")
 
-Thanks for the update!
+Yeah, that should be dropped. I intend to send this fix series to Linus
+tomorrow or Saturday before rc2.
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+-Kees
+
+> 
+> > ---
+> > Cc: Suren Baghdasaryan <surenb@google.com>
+> > Cc: nathan@kernel.org
+> > Cc: Andy Shevchenko <andy@kernel.org>
+> > Cc: linux-hardening@vger.kernel.org
+> > ---
+> >  include/linux/string.h | 12 ++++++++----
+> >  1 file changed, 8 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/include/linux/string.h b/include/linux/string.h
+> > index 493ac4862c77..fc5ae145bd78 100644
+> > --- a/include/linux/string.h
+> > +++ b/include/linux/string.h
+> > @@ -411,7 +411,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+> >   * must be discoverable by the compiler.
+> >   */
+> >  #define strtomem_pad(dest, src, pad)   do {                            \
+> > -       const size_t _dest_len = __builtin_object_size(dest, 1);        \
+> > +       const size_t _dest_len = __must_be_byte_array(dest) +           \
+> > +                                ARRAY_SIZE(dest);                      \
+> >         const size_t _src_len = __builtin_object_size(src, 1);          \
+> >                                                                         \
+> >         BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||                \
+> > @@ -434,7 +435,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+> >   * must be discoverable by the compiler.
+> >   */
+> >  #define strtomem(dest, src)    do {                                    \
+> > -       const size_t _dest_len = __builtin_object_size(dest, 1);        \
+> > +       const size_t _dest_len = __must_be_byte_array(dest) +           \
+> > +                                ARRAY_SIZE(dest);                      \
+> >         const size_t _src_len = __builtin_object_size(src, 1);          \
+> >                                                                         \
+> >         BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||                \
+> > @@ -453,7 +455,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+> >   * Note that sizes of @dest and @src must be known at compile-time.
+> >   */
+> >  #define memtostr(dest, src)    do {                                    \
+> > -       const size_t _dest_len = __builtin_object_size(dest, 1);        \
+> > +       const size_t _dest_len = __must_be_byte_array(dest) +           \
+> > +                                ARRAY_SIZE(dest);                      \
+> >         const size_t _src_len = __builtin_object_size(src, 1);          \
+> >         const size_t _src_chars = strnlen(src, _src_len);               \
+> >         const size_t _copy_len = min(_dest_len - 1, _src_chars);        \
+> > @@ -478,7 +481,8 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+> >   * Note that sizes of @dest and @src must be known at compile-time.
+> >   */
+> >  #define memtostr_pad(dest, src)                do {                            \
+> > -       const size_t _dest_len = __builtin_object_size(dest, 1);        \
+> > +       const size_t _dest_len = __must_be_byte_array(dest) +           \
+> > +                                ARRAY_SIZE(dest);                      \
+> >         const size_t _src_len = __builtin_object_size(src, 1);          \
+> >         const size_t _src_chars = strnlen(src, _src_len);               \
+> >         const size_t _copy_len = min(_dest_len - 1, _src_chars);        \
+> > --
+> > 2.34.1
+> >
 
 -- 
 Kees Cook
