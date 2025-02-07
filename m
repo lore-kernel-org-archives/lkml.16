@@ -1,313 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC881D5CE3
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7621D5AD8;
+	Fri,  7 Feb 2025 09:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738919800; cv=none; b=HA34GytON/p9Zi41sN1vYFTSP8kfHIRzBAgzPsISTLRj6X5HoDsVXGGfmkPYG9Pob0Nu428SE5GN56JamOcFNbv7ihmgRyj4ghE74ZNhlddMPDXHT/xcTZMXzpO1fYbNO/tJL8NG7QX4hpQb95nSke8zf9PxPdkQlrNH1hNarfw=
+	t=1738919840; cv=none; b=C6gAQLfzR8sVOnmNE9ynzbRVuEoohS6IGxjpUdx+WlnKs1PvVaJTZoWWH/VVc2rF224k1gS5naHO3kB2mq/B6NEnrj4MjSVKuJgTH3o94MEkzAn1EymUboS7aK9ry1tb43gS9WocBfid47RQdZa/beGeoljCEnVW2mgm1U5J5x8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738919800; c=relaxed/simple;
-	bh=5F/aIOtw2kA9q/iBfmLwbVWdZWN0pxGTJ/C69NEa3Kg=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ZrkUs9llLlOuRD25BJcVLSnDwWl6N8ifB4biEJjjgLZL3MEEAICHyu3yfCdlIjPgRscliXxJmnHUrzb8yP9EPd/Wb5XghGTicMVaFigPfE0d2xnJBalWtcyh0qzwtHn4rDJ0p7iRPQFHOU8heSMBitbgaAUGtTwc3moit9hkPcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lz+nboNs; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lz+nboNs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738919798; x=1770455798;
-  h=date:from:to:cc:subject:message-id;
-  bh=5F/aIOtw2kA9q/iBfmLwbVWdZWN0pxGTJ/C69NEa3Kg=;
-  b=lz+nboNsjphWQG6tiRvSf+FLFtROQLH3sSffbarFt+2j2mrG1UOGgWiG
-   wUFo6yR3UaQkJSaJsJHEvKxO9P3Ksl7Dt2E79qdh1mN9BOkzJhFzbdfn1
-   GHlJQTmsmm8BvY2jemDk/axTwDmLJbBv/jusxJ1d11YERaMSipJNX2AEu
-   4i5pz687sPmG5ArZ6Y7ojRlPzvnpEgFyt0dGljHacUpN4tPgVR/5+tVrk
-   8VKKWom6mERMnoBRZdxMxtcbEVLriGG8wbendUYJDuc4qHqbJQ8Rg5RDt
-   eFqi8Oe/vWygcNU6fU06me76U0JMxih2MvbASry6zdwTIDoiqOUcN1YaC
-   Q==;
-X-CSE-ConnectionGUID: sWHtwPxdRDmGwJTmw0qOgg==
-X-CSE-MsgGUID: 7dT1K3/ZRkizJotRnJOjCw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39582626"
-X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
-   d="scan'208";a="39582626"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 01:16:37 -0800
-X-CSE-ConnectionGUID: fp0fc6q+RhOSRAm+whTCHA==
-X-CSE-MsgGUID: XX3isyn2T7O/R8kY6MkKFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
-   d="scan'208";a="111674025"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 07 Feb 2025 01:16:36 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tgKTS-000y2l-1V;
-	Fri, 07 Feb 2025 09:16:34 +0000
-Date: Fri, 07 Feb 2025 17:16:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/wfamnae-next20250203] BUILD REGRESSION
- c8a61127eedf61fcbf8d3f34301d29a782b9eeb0
-Message-ID: <202502071758.EJe3fFDb-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1738919840; c=relaxed/simple;
+	bh=gZaXz7XL6hd/UGWpNon4f9PYF3b0mzV4TxHZOcz4Sak=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QZ3plTTDndS84yz4CkwbScFetHCdaKSff+AsZXIPJuQyQIYxO1zrkfenOELMSEe5oSyLYdVk5tLnaqqX9wz10xjtUKhrYeoeShFXxvhl0TCPcehBc0KuB5HQGeYt/nztfgC2bkSDLzHJNH2ERbkyuA2/W4eDkPB8zMxcwC1ZTKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3ce873818a3so15935775ab.1;
+        Fri, 07 Feb 2025 01:17:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738919837; x=1739524637;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o4kJhOPtCECyINUZkXDqpO81cp9u410vUEkFnMeAGRE=;
+        b=psVmUxRbc7tPvjHIlZY9iE1kQfF2KVBfNj1bHv+Dw5tbAlmHLIPUpXEwJjoYdxllNG
+         mhQU/KiKPAzqtPmVhHjUDWcEIxVMlE0Yp3qnNyGTE92DrnzlT4/3jWCN4PtSTWQaWmG1
+         7uuGsr3ZHJfL3d8livOkBfu8KxH8VqxxfTJqkLxQOTaNI4wnSrIk7QVVxFnNFUZdmIwI
+         RQdoaoGgMPlZqERuQgJRjwWpbOeyKJYUha+uKUJzpRUIPygCJLKPoe2TD8TquRGoS2ZS
+         n69qg9p4NY0uz8aekY83rPacoBlI+kfq5ekbKgFJhJndH08WzILBi3JvRwi+EtY+wHmu
+         TTvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7aV51ddKRCrXKtzObRnPgOlCuoWEPKfzLw12VWkuXUP3Z0o5Zm3VVn6ymOLB/vuiIUVjMELGcavsL@vger.kernel.org, AJvYcCVtjtVaaFLkRoQPdcGaoloBn2RbxGtgKYfNMzQDxFn026UwUhXZ3oXBoCrJCwdjw3ut2Hsp7N4WxWrMRKrt@vger.kernel.org, AJvYcCVwHuRta5+BpcmmbUyqmnIYLF4BlcfLEYR/jQJIfYKuTqnyD+Nlbvwg1kiqqZTYmySx3W5LrW4XJa3Y@vger.kernel.org, AJvYcCX+vy/T2iO+hOeWf3pSYXepiPluQ4x1zp2Sj1tGhPJy1KhJplXrWeASZNgH6cAVieg1vwIeqicS7Lfz@vger.kernel.org, AJvYcCXdTZAW8YRE7pv9dsNbSqyf22zW/F/RN460WObUCULaAeF2oWP673EkDB95EclwPLpXh0na/SGcVKniil4=@vger.kernel.org, AJvYcCXwxOj8zyWmWutsyWjU5VgFrekoEgFVA7nPQU4I3ZOY0Zs3tLIE+Z54cV1ccHv7RzMd13GESPF/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwE5ubkR5bOmMhuK4aEcs0gxBnNnkFpEL8Obb2ukt0OcSJuX/Q6
+	whpiZcshV1uZy3ezOSrLrODGqOcHntfBnj/15q/ldBU+kcmEE3/dgxcPexBC
+X-Gm-Gg: ASbGnct6GMwQzXLSjcBjT3RR2fW1DaZxkCSajpGuDAbIcGKwOwDsoihfs4KPmXmMlF6
+	dywMSH2WcNqHJYP/c/FlWVdU1oeiutdBRgmC5Wr6F8kWCC+2FKwxVS5blKk7Km0YLFDUZXtNXTG
+	1EqyoBsZeTBAqjzgBwj1/GbAn1ntQpxDYJ5GX8upGdC+PaOC+sM8+F5SguwtQwp+ep2D+Q7/VSR
+	Kt516lK2DhsuU1G7MXxpfkTjdfDSJmC6ob3fpwpTU0QRC06R/dMigB322zl9jhFYDPiPhwIf5s9
+	AnrIJGpDV6oay9GKvKyNI1zXby5icsijzjhM8X3i08imWdmWWIo3qg==
+X-Google-Smtp-Source: AGHT+IG043XEt5V/lr+jQskxWxCFLSi7BiNG4a20ljNVDAJMmu20cN9bDvLVgzdiBOpI7glFiTGhAA==
+X-Received: by 2002:a05:6e02:160d:b0:3d0:618c:1b17 with SMTP id e9e14a558f8ab-3d13dd38108mr20902755ab.7.1738919837393;
+        Fri, 07 Feb 2025 01:17:17 -0800 (PST)
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com. [209.85.166.53])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4eccfacfee0sm673185173.82.2025.02.07.01.17.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 01:17:16 -0800 (PST)
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-844e9b8b0b9so143334439f.0;
+        Fri, 07 Feb 2025 01:17:16 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUEIPycsT2k50iQZgTDK8nsrVcE5vEIWJ2pL81Gp5Kghr9N/cSIPopfbQXUbqSqFxXk09irH9SST5v5@vger.kernel.org, AJvYcCUGjMfKX6bUWXjrzz8lMsj2LZZvsoqowBjF5bOSTDhppNIiw56OdEGNoDGQ8n00g/EloPUy1O0/7f3FabGu@vger.kernel.org, AJvYcCUUM/0e52LemMCo1O20BgFnDAn5IFEb6ot2DY8JxmnHHypZQk+MaA35gaPEGlZHnFfnmvaEgt8F3LSt@vger.kernel.org, AJvYcCUy8XA7RemWYcsi0p6GovRiCNH4UoRAZtgQR46Dprpcnv5ySWnewZml++KbhroXXiaE7XwqJ9ij@vger.kernel.org, AJvYcCW/SY1G7CH3gKqRSLlrWlK4UYw0QHETlMKBrP4ZjVmOLe7K1drfonFbQPcr477IYKHjVBHiQ1hjKOXh/Dg=@vger.kernel.org, AJvYcCWNUFvyaRae7OB0+yS/NL3qf2aZYIRftmwqPZBiCwoGKMXv3aRtDhS7fjSVtHvlgpeq0gwqKf8dFVVb@vger.kernel.org
+X-Received: by 2002:a05:6102:41a0:b0:4b2:5d63:ff72 with SMTP id
+ ada2fe7eead31-4ba85e7d7e5mr1354232137.13.1738919445022; Fri, 07 Feb 2025
+ 01:10:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com> <20250206-gpio-set-array-helper-v2-1-1c5f048f79c3@baylibre.com>
+In-Reply-To: <20250206-gpio-set-array-helper-v2-1-1c5f048f79c3@baylibre.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 7 Feb 2025 10:10:33 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU5tt5_t2SfYO3OUsHenu_0PhpKeLHktNdCx-W6zCEymw@mail.gmail.com>
+X-Gm-Features: AWEUYZmj9DYQSOmgGzGXyOkOE57CQ_wkxVouudAJc-ubVAUCMSn97Ipr2XIc-m4
+Message-ID: <CAMuHMdU5tt5_t2SfYO3OUsHenu_0PhpKeLHktNdCx-W6zCEymw@mail.gmail.com>
+Subject: Re: [PATCH v2 01/13] gpiolib: add gpiod_multi_set_value_cansleep()
+To: David Lechner <dlechner@baylibre.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250203
-branch HEAD: c8a61127eedf61fcbf8d3f34301d29a782b9eeb0  net/mlx5: Avoid a couple hundred -Wflex-array-member-not-at-end warnings
+Hi David,
 
-Error/Warning (recently discovered and may have been fixed):
+On Thu, 6 Feb 2025 at 23:48, David Lechner <dlechner@baylibre.com> wrote:
+> Add a new gpiod_multi_set_value_cansleep() helper function with fewer
+> parameters than gpiod_set_array_value_cansleep().
+>
+> Calling gpiod_set_array_value_cansleep() can get quite verbose. In many
+> cases, the first arguments all come from the same struct gpio_descs, so
+> having a separate function where we can just pass that cuts down on the
+> boilerplate.
+>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 
-    https://lore.kernel.org/oe-kbuild-all/202502070233.NyU0027S-lkp@intel.com
-    https://lore.kernel.org/oe-kbuild-all/202502070257.jcD8sqxT-lkp@intel.com
+Thanks for your patch!
 
-    drivers/net/ethernet/mellanox/mlx5/core/diag/rsc_dump.c:71:10: error: offsetof of incomplete type 'struct mlx5_ifc_menu_resource_dump_response_bits'
-    drivers/net/ethernet/mellanox/mlx5/core/diag/rsc_dump.c:72:36: error: incomplete definition of type 'struct mlx5_ifc_resource_dump_menu_segment_bits'
-    drivers/net/ethernet/mellanox/mlx5/core/diag/rsc_dump.c:72:36: error: offsetof of incomplete type 'struct mlx5_ifc_resource_dump_menu_segment_bits'
-    drivers/net/ethernet/mellanox/mlx5/core/diag/rsc_dump.c:74:10: error: invalid application of 'sizeof' to an incomplete type 'struct mlx5_ifc_resource_dump_command_segment_bits'
-    drivers/net/ethernet/mellanox/mlx5/core/diag/rsc_dump.c:74:10: error: invalid application of 'sizeof' to an incomplete type 'struct mlx5_ifc_resource_dump_info_segment_bits'
-    drivers/net/ethernet/mellanox/mlx5/core/diag/rsc_dump.c:74:10: error: invalid application of 'sizeof' to an incomplete type 'struct mlx5_ifc_resource_dump_menu_segment_bits'
-    include/linux/mlx5/device.h:51:57: error: invalid use of undefined type 'struct mlx5_ifc_resource_dump_menu_segment_bits'
-    include/linux/mlx5/device.h:65:39: error: invalid application of 'sizeof' to incomplete type 'struct mlx5_ifc_resource_dump_command_segment_bits'
-    include/linux/mlx5/device.h:65:39: error: invalid application of 'sizeof' to incomplete type 'struct mlx5_ifc_resource_dump_info_segment_bits'
-    include/linux/mlx5/device.h:65:39: error: invalid application of 'sizeof' to incomplete type 'struct mlx5_ifc_resource_dump_menu_segment_bits'
-    include/linux/stddef.h:16:33: error: invalid use of undefined type 'struct mlx5_ifc_menu_resource_dump_response_bits'
-    include/linux/stddef.h:16:33: error: invalid use of undefined type 'struct mlx5_ifc_resource_dump_menu_segment_bits'
+> --- a/include/linux/gpio/consumer.h
+> +++ b/include/linux/gpio/consumer.h
+> @@ -655,4 +655,11 @@ static inline void gpiod_unexport(struct gpio_desc *desc)
+>
+>  #endif /* CONFIG_GPIOLIB && CONFIG_GPIO_SYSFS */
+>
+> +static inline int gpiod_multi_set_value_cansleep(struct gpio_descs *descs,
+> +                                                unsigned long *value_bitmap)
+> +{
+> +       return gpiod_set_array_value_cansleep(descs->ndescs, descs->desc,
+> +                                             descs->info, value_bitmap);
 
-Error/Warning ids grouped by kconfigs:
+I am wondering whether this needs a check for !IS_ERR_OR_NULL(descs),
+to handle the !CONFIG_GPIOLIB and gpiod_get_array_optional() cases?
 
-recent_errors
-|-- arc-allmodconfig
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|-- arc-allyesconfig
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|-- arm-allmodconfig
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|-- arm-allyesconfig
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|-- arm64-allmodconfig
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:incomplete-definition-of-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:invalid-application-of-sizeof-to-an-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:invalid-application-of-sizeof-to-an-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:invalid-application-of-sizeof-to-an-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:offsetof-of-incomplete-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-|   `-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:offsetof-of-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|-- loongarch-allmodconfig
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|-- loongarch-allyesconfig
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|-- mips-allyesconfig
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|-- openrisc-allyesconfig
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|-- parisc-allmodconfig
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|-- parisc-allyesconfig
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|-- powerpc-allmodconfig
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|-- powerpc-allyesconfig
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:incomplete-definition-of-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:invalid-application-of-sizeof-to-an-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:invalid-application-of-sizeof-to-an-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:invalid-application-of-sizeof-to-an-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:offsetof-of-incomplete-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-|   `-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:offsetof-of-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|-- s390-allyesconfig
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-mlx5-device.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-|   `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|-- x86_64-allyesconfig
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:incomplete-definition-of-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:invalid-application-of-sizeof-to-an-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:invalid-application-of-sizeof-to-an-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:invalid-application-of-sizeof-to-an-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:offsetof-of-incomplete-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-|   `-- drivers-net-ethernet-mellanox-mlx5-core-diag-rsc_dump.c:error:offsetof-of-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-`-- xtensa-allyesconfig
-    |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_command_segment_bits
-    |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_info_segment_bits
-    |-- include-linux-mlx5-device.h:error:invalid-application-of-sizeof-to-incomplete-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-    |-- include-linux-mlx5-device.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
-    |-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_menu_resource_dump_response_bits
-    `-- include-linux-stddef.h:error:invalid-use-of-undefined-type-struct-mlx5_ifc_resource_dump_menu_segment_bits
+Slightly related: shouldn't gpiod_put_array() (both the implementation
+and the !CONFIG_GPIOLIB dummy) allow the caller to pass NULL, to
+streamline the gpiod_get_array_optional() case?
 
-elapsed time: 1454m
+> +}
+> +
+>  #endif
 
-configs tested: 105
-configs skipped: 2
+Gr{oetje,eeting}s,
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250206    gcc-13.2.0
-arc                   randconfig-002-20250206    gcc-13.2.0
-arm                              alldefconfig    gcc-14.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                         mv78xx0_defconfig    clang-21
-arm                       netwinder_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250206    clang-21
-arm                   randconfig-002-20250206    clang-19
-arm                   randconfig-003-20250206    clang-21
-arm                   randconfig-004-20250206    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250206    clang-21
-arm64                 randconfig-002-20250206    clang-21
-arm64                 randconfig-003-20250206    clang-15
-arm64                 randconfig-004-20250206    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250206    gcc-14.2.0
-csky                  randconfig-002-20250206    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250206    clang-21
-hexagon               randconfig-002-20250206    clang-18
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250206    clang-19
-i386        buildonly-randconfig-002-20250206    gcc-12
-i386        buildonly-randconfig-003-20250206    clang-19
-i386        buildonly-randconfig-004-20250206    clang-19
-i386        buildonly-randconfig-005-20250206    clang-19
-i386        buildonly-randconfig-006-20250206    gcc-12
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250206    gcc-14.2.0
-loongarch             randconfig-002-20250206    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                          hp300_defconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                          ath79_defconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250206    gcc-14.2.0
-nios2                 randconfig-002-20250206    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250206    gcc-14.2.0
-parisc                randconfig-002-20250206    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc               randconfig-001-20250206    clang-21
-powerpc               randconfig-002-20250206    clang-19
-powerpc               randconfig-003-20250206    clang-21
-powerpc64             randconfig-001-20250206    clang-15
-powerpc64             randconfig-002-20250206    clang-17
-powerpc64             randconfig-003-20250206    clang-19
-riscv                 randconfig-001-20250206    clang-19
-riscv                 randconfig-002-20250206    clang-17
-s390                             allmodconfig    clang-19
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250206    clang-21
-s390                  randconfig-002-20250206    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250206    gcc-14.2.0
-sh                    randconfig-002-20250206    gcc-14.2.0
-sh                          rsk7264_defconfig    gcc-14.2.0
-sh                     sh7710voipgw_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250206    gcc-14.2.0
-sparc                 randconfig-002-20250206    gcc-14.2.0
-sparc                       sparc32_defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250206    gcc-14.2.0
-sparc64               randconfig-002-20250206    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250206    clang-15
-um                    randconfig-002-20250206    gcc-12
-x86_64                           alldefconfig    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250206    clang-19
-x86_64      buildonly-randconfig-002-20250206    clang-19
-x86_64      buildonly-randconfig-003-20250206    clang-19
-x86_64      buildonly-randconfig-004-20250206    clang-19
-x86_64      buildonly-randconfig-005-20250206    clang-19
-x86_64      buildonly-randconfig-006-20250206    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250206    gcc-14.2.0
-xtensa                randconfig-002-20250206    gcc-14.2.0
+                        Geert
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
