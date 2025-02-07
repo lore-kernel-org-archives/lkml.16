@@ -1,216 +1,199 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A5842069;
-	Fri,  7 Feb 2025 22:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8316F1B3953
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 22:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738965929; cv=none; b=qlEV4qtZKOEZQxAUhyjLzar/uy3K3x0OrmW8ekXV8RjUDanYVp0cZDsTPJVSTW82Vly0Z8j4TfTQOFVDqLlxIPDDmKF2eMVWEEQYVQWId7+TXKbG8XvMrI5lBH73wI7qZtRC85qdsU/ITMVLhrpjkuoizjHyAoc/8Stc3ZZ3S/w=
+	t=1738966046; cv=none; b=F4OWLGHFWOqrdqNVvB4C96U4K9710kKU//p83bWZ792r4nUDfQvB6zy6IimLwbrLASG/wOW5Kc/2AqJUoz4BP5Uny5cKlnth93UGr72iW19oT8MTFi5AxIKawlo1BAb1kioPi7+NmERvE9oDfartGNumx57WddPCTtL/7uQDI88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738965929; c=relaxed/simple;
-	bh=noCMxStiakN0VyBS5zWrDco99N7Gbin/4ZaMg06pSgE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=r79hd11qBNAuxSg0RnMyHniSKtIhgfC6r1mGCcLMFuLX8c/UhYtx+JxTeR1groW2DWdZjliGC/XZGBWz6mp6xNhH+XmVMCTPHSdHLLAACJuGvP50R+3Ye57GLj4iOuOyuq4TN4HMiiIS6k95B9JR4wh1PEuLDSjlfO+1tQl26KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YfF0snKa; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738966046; c=relaxed/simple;
+	bh=z0v3zJzDDZ2Asx9sfZ0vO8sd6bsZfsIZX6g7L73kCwc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Llm0SbWsdrTZlGiXzKpnNe5xEpzDShnOie+49yhUZmSMXl6j1A0R4InhyG5Kn7cENi4rKrDExBrtO7lKQP9boZGpNUGXZmgaHsjJ80p5uxFUG2Hkj1ifuV8s3WfV/fgngHDkMD+p1Oc5uwqg650jKcrJEwEWl/WOAYjCm2yxESU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JiEZOBhR; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YfF0snKa"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517FdUt9029897;
-	Fri, 7 Feb 2025 22:05:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=S+yx0P
-	KLCHX7ghsngB4M87SmCTkzPwKH4q8E+/RKfbc=; b=YfF0snKav/2GnofvO7hGXP
-	JZzvqQci38Ka9CwM36KxxYdmdKmdUNblYF+XWQWMmW72FJHtMNP8U8rzmDGRiYFu
-	AmFV2YqRhzSL207x7JJRcFxoQSXlo7EBlFyMs0O9ukFxj3LbwkCxbNJoqUkd4izB
-	ki0ODChEH6ZsMD90p5o0VtB5FFncXfPfoDZsbjP9eM2mEeUAWjKQ+IsnH1EQJ20P
-	xOUwNckq7+4OQ6eED3qe7UFzbBxkOt7Sy20wNp7ZhdTHQzOHGFBkhIR2RdbaA6Jh
-	0OEpv7Ga2ke9Uoe3QiKoS+Dv85sw4xmd0f051ypsLmvbcBTlWJs0x6yXCJVBaKew
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44nn0thrff-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 22:05:04 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 517J62JW006535;
-	Fri, 7 Feb 2025 22:05:04 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hyekwjbf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 22:05:04 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 517M52Yw31785486
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Feb 2025 22:05:02 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F387258059;
-	Fri,  7 Feb 2025 22:05:02 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D50E158058;
-	Fri,  7 Feb 2025 22:04:59 +0000 (GMT)
-Received: from [9.171.74.207] (unknown [9.171.74.207])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  7 Feb 2025 22:04:59 +0000 (GMT)
-Message-ID: <8380fe8052c9b972a8350394cb6655f6a9683d29.camel@linux.ibm.com>
-Subject: Re: [PATCH v4 2/4] s390/pci: store DMA offset in bus_dma_region
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Matthew Rosato <mjrosato@linux.ibm.com>, joro@8bytes.org, will@kernel.org,
-        robin.murphy@arm.com, gerald.schaefer@linux.ibm.com
-Cc: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, borntraeger@linux.ibm.com, farman@linux.ibm.com,
-        clegoate@redhat.com, jgg@nvidia.com, iommu@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Halil Pasic
-	 <pasic@linux.ibm.com>
-Date: Fri, 07 Feb 2025 23:04:59 +0100
-In-Reply-To: <20250207205335.473946-3-mjrosato@linux.ibm.com>
-References: <20250207205335.473946-1-mjrosato@linux.ibm.com>
-	 <20250207205335.473946-3-mjrosato@linux.ibm.com>
-Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JiEZOBhR"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54412a7d75cso2084645e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 14:07:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738966042; x=1739570842; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YoGtyAadAajUTvrSofPsqaE92yf53brkzxQxe3NpqEE=;
+        b=JiEZOBhRFYIdd0A5bj9U+/dKJobZ6IFC8HalML/bVZAZA4tmcwPaxu2rzWreGBo9Jk
+         L+NdHFkZn4YOdleF4reGUajIuwsaufHHj6c9PAo/Si2fLrc0CbLzAM9jEaKL9l1iUCsy
+         mf4F1/cxs+IxzDR3Mn6mKStt535pNQdeBEFcMyt7vAtGkM2O1Jib9VlsZVjHxEorvz1x
+         z9Ju687k4bdKYh8xiCdllEkXZfIpm6uUF9V/SdUVXvTdVgXQJynUwj1/zLEkYVQh0dBQ
+         RcNQ1HqxSshy0LLv/+a4FRLq3tEfJ42PoXnwu/QHW/qttoT1HSzPnYyMV9MAEYfA4dKL
+         tV+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738966042; x=1739570842;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YoGtyAadAajUTvrSofPsqaE92yf53brkzxQxe3NpqEE=;
+        b=snmvvJTjhagd9SPoBlcs+WMzduyBMakvGO0PCmhderOgq4asmG6QUY23j7RvHDwMJk
+         /Bp/Kpxhr6i4ZJagJ1yMBrPQS1EvgJ2Sbx7eZImQoyG/AWh6nVH8sOybkt0REt4aicIs
+         jQBtQ+LfnLAgdAvohaHEzeGS4JAZ2RbINxxWsCfnDYlMWFejCs5yldDYPGhDBlYNoyGK
+         aAnYQh/ZnnC4RVHOZ6Vzb/BmqUgqO+u4j8/VBMuGZcFEkA2KWMJNSjUs5+v0jeYTbZ8C
+         sSsMslZaXK7VTOK6a4i0BuAgpEW4rucFaC8HN0OJSTDkWMh9VVRJLh7KveRpGVAh+NA9
+         2wsA==
+X-Forwarded-Encrypted: i=1; AJvYcCXAoOaPappMKskQt5IxudOdBPBBkxgiaJ6eyYAp5mhxTBYF7v1G4Pfkj7CkEP9noah2oz3nI3J5/Rk0AX0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQZnYOvz+Rrp4OhpEvuOrcK1YU7MnuvAKJPwNJey5VW5XhRpHK
+	UcfTybZeNZWUdp8FygtcedohzxhrJQTQ9xyMu3rI/fkR5+gUa+RYQCO8W0MvFRs=
+X-Gm-Gg: ASbGncu7lxzcLEbY9oyGUNp9w+crIn9drsAZicmStW9svJIP/JKdWaOu6vIpPZR1jhA
+	JQuE61tDWcWZm1XEJcI2a1y565YJGYQYsIrqKUxE58Z4ccolyxMNBpUZZSh/TMjA4iWkfugmpGf
+	KqHZ2HYTBVUFiU6nwaEXhpQsp66BM9JLCi1KQtlXpaEkxde2yCJsSKIgU69qme9QEcLN/EDoPmO
+	CxxbTTeusJ6bnVE28u2E47+SExiHWc4npiZb/nbHL81XUhXpr5V6GWBMFVne0S69qLRI2k/2NxI
+	rWDd4PXdMwwQ5rpRSi+CIaJUWFE4dNxCtGI7WaAGZVtuhX98Ki0KwbnnkExVVIHwxC2RF04=
+X-Google-Smtp-Source: AGHT+IGlt4YgbVKf+phNyM/DE8c8iLjkn4RIMGk5ksuzhbALB5C0dL4KrNR9p1aZlABR8XoI6jqj+A==
+X-Received: by 2002:a05:6512:3ba8:b0:540:1d37:e6e with SMTP id 2adb3069b0e04-54414ae1357mr1765761e87.33.1738966041556;
+        Fri, 07 Feb 2025 14:07:21 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-544105f3182sm565650e87.192.2025.02.07.14.07.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 14:07:21 -0800 (PST)
+Date: Sat, 8 Feb 2025 00:07:18 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Simona Vetter <simona@ffwll.ch>, 
+	Simona Vetter <simona.vetter@ffwll.ch>, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/7] drm/msm/hdmi: program HDMI timings during
+ atomic_pre_enable
+Message-ID: <d6lavujlmk5teri2sf4tp2tlvbkvw54azykvsqymyeyedmndb6@czsdg66h3esq>
+References: <20250124-bridge-hdmi-connector-v6-0-1592632327f7@linaro.org>
+ <20250124-bridge-hdmi-connector-v6-2-1592632327f7@linaro.org>
+ <7fbfc7d5-f6bb-4f99-914a-f91bb7d153fd@quicinc.com>
+ <na7jgb5leqbugi6a6xkfz3nl6mp7li4oevfevhjmo5y4v7eot6@fsmfv52u2rtz>
+ <1b98265e-8766-4504-b374-f7af8203c926@quicinc.com>
+ <fgzcd4gm4uriqbpslh7arfyxjvzyxrck3f2uuv4mhkvcbkdmvm@b2pz5vmmqs3l>
+ <b7561a2c-653b-4c56-8bef-3ae76a729d7c@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: u_mgvbHt67wdvLe84CQHZAL8gHTHFhtD
-X-Proofpoint-ORIG-GUID: u_mgvbHt67wdvLe84CQHZAL8gHTHFhtD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_10,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0 impostorscore=0
- bulkscore=0 adultscore=0 malwarescore=0 mlxlogscore=872 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502070165
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b7561a2c-653b-4c56-8bef-3ae76a729d7c@quicinc.com>
 
-On Fri, 2025-02-07 at 15:53 -0500, Matthew Rosato wrote:
-> PCI devices on s390 have a DMA offset that is reported via CLP.  In
-> preparation for allowing identity domains, setup the bus_dma_region
-> for all PCI devices using the reported CLP value.
->=20
-> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> ---
->  arch/s390/pci/pci_bus.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->=20
-> diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
-> index 857afbc4828f..b5c35b8e47a4 100644
-> --- a/arch/s390/pci/pci_bus.c
-> +++ b/arch/s390/pci/pci_bus.c
-> @@ -19,6 +19,7 @@
->  #include <linux/jump_label.h>
->  #include <linux/pci.h>
->  #include <linux/printk.h>
-> +#include <linux/dma-direct.h>
-> =20
->  #include <asm/pci_clp.h>
->  #include <asm/pci_dma.h>
-> @@ -283,10 +284,27 @@ static struct zpci_bus *zpci_bus_alloc(int topo, bo=
-ol topo_is_tid)
->  	return zbus;
->  }
-> =20
-> +static void pci_dma_range_setup(struct pci_dev *pdev)
-> +{
-> +	struct zpci_dev *zdev =3D to_zpci(pdev);
-> +	struct bus_dma_region *map;
-> +
-> +	map =3D kzalloc(sizeof(*map), GFP_KERNEL);
-> +	if (!map)
-> +		return;
-> +
-> +	map->cpu_start =3D 0;
-> +	map->dma_start =3D PAGE_ALIGN(zdev->start_dma);
-> +	map->size =3D max(PAGE_ALIGN_DOWN(zdev->end_dma + 1) - map->dma_start, =
-0);
+On Fri, Feb 07, 2025 at 12:11:55PM -0800, Abhinav Kumar wrote:
+> 
+> 
+> On 2/6/2025 5:19 PM, Dmitry Baryshkov wrote:
+> > On Thu, Feb 06, 2025 at 12:41:30PM -0800, Abhinav Kumar wrote:
+> > > 
+> > > 
+> > > On 2/3/2025 4:59 PM, Dmitry Baryshkov wrote:
+> > > > On Mon, Feb 03, 2025 at 11:34:00AM -0800, Abhinav Kumar wrote:
+> > > > > 
+> > > > > 
+> > > > > On 1/24/2025 1:47 PM, Dmitry Baryshkov wrote:
+> > > > > > The mode_set callback is deprecated, it doesn't get the
+> > > > > > drm_bridge_state, just mode-related argumetns. Also Abhinav pointed out
+> > > > > > that HDMI timings should be programmed after setting up HDMI PHY and
+> > > > > > PLL. Rework the code to program HDMI timings at the end of
+> > > > > > atomic_pre_enable().
+> > > > > > 
+> > > > > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > > > > > ---
+> > > > > >     drivers/gpu/drm/msm/hdmi/hdmi_bridge.c | 23 +++++++++++++++--------
+> > > > > >     1 file changed, 15 insertions(+), 8 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+> > > > > > index d839c71091dcdc3b020fcbba8d698d58ee7fc749..d5ab1f74c0e6f47dc59872c016104e9a84d85e9e 100644
+> > > > > > --- a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+> > > > > > +++ b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+> > > > > > @@ -126,15 +126,26 @@ static void msm_hdmi_config_avi_infoframe(struct hdmi *hdmi)
+> > > > > >     	hdmi_write(hdmi, REG_HDMI_INFOFRAME_CTRL1, val);
+> > > > > >     }
+> > > > > > +static void msm_hdmi_bridge_atomic_set_timings(struct hdmi *hdmi,
+> > > > > > +					       const struct drm_display_mode *mode);
+> > > > > >     static void msm_hdmi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
+> > > > > >     					      struct drm_bridge_state *old_bridge_state)
+> > > > > >     {
+> > > > > > +	struct drm_atomic_state *state = old_bridge_state->base.state;
+> > > > > >     	struct hdmi_bridge *hdmi_bridge = to_hdmi_bridge(bridge);
+> > > > > >     	struct hdmi *hdmi = hdmi_bridge->hdmi;
+> > > > > >     	struct hdmi_phy *phy = hdmi->phy;
+> > > > > > +	struct drm_encoder *encoder = bridge->encoder;
+> > > > > > +	struct drm_connector *connector;
+> > > > > > +	struct drm_connector_state *conn_state;
+> > > > > > +	struct drm_crtc_state *crtc_state;
+> > > > > >     	DBG("power up");
+> > > > > > +	connector = drm_atomic_get_new_connector_for_encoder(state, encoder);
+> > > > > > +	conn_state = drm_atomic_get_new_connector_state(state, connector);
+> > > > > > +	crtc_state = drm_atomic_get_new_crtc_state(state, conn_state->crtc);
+> > > > > > +
+> > > > > >     	if (!hdmi->power_on) {
+> > > > > >     		msm_hdmi_phy_resource_enable(phy);
+> > > > > >     		msm_hdmi_power_on(bridge);
+> > > > > > @@ -151,6 +162,8 @@ static void msm_hdmi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
+> > > > > >     	if (hdmi->hdcp_ctrl)
+> > > > > >     		msm_hdmi_hdcp_on(hdmi->hdcp_ctrl);
+> > > > > > +
+> > > > > > +	msm_hdmi_bridge_atomic_set_timings(hdmi, &crtc_state->adjusted_mode);
+> > > > > >     }
+> > > > > 
+> > > > > This addresses my comment about setting up the HDMI timing registers before
+> > > > > setting up the timing engine registers.
+> > > > > 
+> > > > > But prior to this change, mode_set was doing the same thing as
+> > > > > msm_hdmi_bridge_atomic_set_timings() which means
+> > > > > msm_hdmi_bridge_atomic_set_timings() should be called at the beginning of
+> > > > > pre_enable()?
+> > > > > 
+> > > > > The controller is enabled in msm_hdmi_set_mode(). So this should be done
+> > > > > before that.
+> > > > 
+> > > > In [1] you provided the following order:
+> > > > 
+> > > > 1) setup HDMI PHY and PLL
+> > > > 2) setup HDMI video path correctly (HDMI timing registers)
+> > > > 3) setup timing generator to match the HDMI video in (2)
+> > > > 4) Enable timing engine
+> > > > 
+> > > > This means htat msm_hdmi_bridge_atomic_set_timings() should come at the
+> > > > end of msm_hdmi_bridge_atomic_pre_enable(), not in the beginning /
+> > > > middle of it.
+> > > > 
+> > > > [1] https://lore.kernel.org/dri-devel/8dd4a43e-d83c-1f36-21ff-61e13ff751e7@quicinc.com/
+> > > > 
+> > > 
+> > > Sequence given is correct and is exactly what is given in the docs. What is
+> > > somewhat not clear in the docs is the location of the enable of the HDMI
+> > > controller. This is not there in the above 4 steps. I am referring to the
+> > > enable bit being programmed in msm_hdmi_set_mode(). Ideally till we enable
+> > > the timing engine, it should be okay but what I wanted to do was to keep the
+> > > msm_hdmi_set_mode() as the last call in this function that way we program
+> > > everything and then enable the controller.
+> > > 
+> > > This can be done in either way, move it to the beginning of the function or
+> > > move it right before msm_hdmi_set_mode(). I had suggested beginning because
+> > > thats how it was when things were still in mode_set.
+> > 
+> > Well.. following your description it might be better to put it after PHY
+> > init. What do you think?
+> > 
+> 
+> Are you referring to after msm_hdmi_phy_powerup()? Yes, thats fine too.
 
-Ugh, this is my fault as I suggested it, but this max() doesn't work
-here. The zdev->end_dma is unsigned and so is map->dma_start so if the
-former is smaller underflow will occur and the max() won't save us.
-It's largely a theoretical issue since zdev->end_dma + 1 should always
-be larger than zdev->start_dma, but now the max() looks like we thought
-of that, but then it doesn't work.
+After doing several tests, this doesn't result in a stable enough
+behaviour. I'll follow your recommendataion and call
+msm_hdmi_bridge_atomic_set_timings() in the beginning of
+msm_hdmi_bridge_atomic_pre_enable().
 
-If we handle it maybe just go with:
-
-aligned_end =3D PAGE_ALIGN_DOWN(zdev->end_dma + 1);
-if (aligned_end >=3D map->dma_start)
-     map->size =3D aligned_end - map->dma_start;
-else
-     map->size =3D 0;
-
-
-> +	pdev->dev.dma_range_map =3D map;
-> +}
-> +
->  void pcibios_bus_add_device(struct pci_dev *pdev)
->  {
->  	struct zpci_dev *zdev =3D to_zpci(pdev);
-> =20
-> +	pci_dma_range_setup(pdev);
-> +
->  	/*
->  	 * With pdev->no_vf_scan the common PCI probing code does not
->  	 * perform PF/VF linking.
-
+-- 
+With best wishes
+Dmitry
