@@ -1,157 +1,146 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A4E1A23A9
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB785185B5F
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738921797; cv=none; b=G53YnJDu85xYfiSnwpp8GFUmOMoFWbcGSbg6ows8PrKJCh0UF35CxV/NCyl34dq24VvRjbk3rVYFB0rieQ66pzeX8qrfILCV7q3ao4i8My7R3GyN/PcMyU/wl4DlpRngz18/ufFVClscI6q1VrB4StmgR17TeWSChyjDuX4fdvU=
+	t=1738921857; cv=none; b=PrkWuNTsHxvASrsXFYoAG8xClbRFAZ+/miZMOs/wP3ZrmJMp6Q5Fhy+tOSS6JAkvcvGPOsI6Lvx/ENZvNINVNYSAZq2W7ImtXcQ6KBeFqBzfhB9xo+AljB1DjnEZ6Ul+vfMkRbK+d552j8dfRlTe51WQsH1owOw4a5yD4TmBKH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738921797; c=relaxed/simple;
-	bh=S4p6LLSLOPSpJE9g1forZYx4llbSsosHafGdaXkcLks=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N/glBzeC437TaaepTbXnLj3B22EXk1bE9Al8djJHfLgROiUaRR60nSlB2Uo3KkuNqPKfCHWhslQWVpm970Fq70T1Qp5AV7nJiQzs9Ij2Fs8G/UImdp576Wx0uUB0A8+MToiapvbku/Q9r9hdJzZIjXLh/Va6/Rbm4xDqMf8/S/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=R0QQ6qqk; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1738921857; c=relaxed/simple;
+	bh=DcZStX43QWkfR5u3HFZ/BzIYCBxV2cty6MbV4E+zA/g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CsodBWOmloHekpmFgK14pCYN+ia31YntSq9QFhw/j5Tqk4c2fGI6omab+6LrdcJuOxnqSKbDc3H1lX5aToLkxgWnSsdoWbPqHrn/5J6WqTPchbiA8GzKRG6rf/moDNTfaGh1SbDhfDxNxp6yO8vQkHY/+OEQyDesmhbsIn++I/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lTGP3NnY; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="R0QQ6qqk"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5dcef33eeceso3318347a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 01:49:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lTGP3NnY"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f464b9a27so23318215ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 01:50:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738921794; x=1739526594; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hHxN1cJYA/N06QjEqFReiwPXLdQZSTCuNsi3b9gHzjE=;
-        b=R0QQ6qqkuCHyh/Lspg5x220NQrmp3N6wdbNGoWH7PyXNdhvxz4Jbe7NchDCCV30XOR
-         4UrnQQ0BAftdo0xjDtYM/BhzjoxDNhCnK34Yghwjgj4YH3Z24bCg8BkDMUE3cBgRNqoW
-         IN/BOoMUZKikliYvQvrQhGKp5soXPZt7bLmqMnjeOaoYU/2tpjpLxYXKJbjHw7zOiTqT
-         Jb0g9NZP4p3/v2EQoEOMoMl4ILwB4ZGwXP6h8dqQJOw5YWwV47WyQt2MnRb6xO1swpGW
-         M+TB33esmktLN3zuHbZ6n5BvKOB6V9Gwuspyo58dC6FTQjuOuV/zfe3lbKR/zWYucP9I
-         CxeQ==
+        d=google.com; s=20230601; t=1738921855; x=1739526655; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=RDirK3mhBkbwPEuL8B+oV7JCR8taE0i7p+xewXa9S2U=;
+        b=lTGP3NnYuuqaAxiLtQDjoKfAbvg98mgVdUITWFyDI88GBqlfX8+gE+6RAHV2B35hEu
+         xr5cHPOnaeZZ4+c2Z0KZBMP1X4dg0M7HWk+3g8V2teZW2o77USlgwULjrXXVzUniEjUV
+         /yofknAVvs2XPfmp83Mq3JbkXAAF8vn7+VqANSkLaCtjwH/RcDdIia+ymnob16Gsn/Rh
+         WR2zFYAPKYWs6lbh6aBN+JzO8of9xevS/+mRAgPtKZHNx5w1Jmiv0IRbTsfRfVgkraVc
+         bS/1xAtbf9zppZDh1ymzLJEKE+d5i81r6+o6K1z4hEjRoEpcZ7xeVgNBxBALpXO5/HeM
+         okKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738921794; x=1739526594;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hHxN1cJYA/N06QjEqFReiwPXLdQZSTCuNsi3b9gHzjE=;
-        b=jKKjioX4b5v/RLotb1/X75rU7gvC4/DkDigArZoei5FNbqjXUmT7DnDwSvV22lyCH+
-         nGwbAdFrXZLNi2fLHJmUxW3Oc2qnFPnTbbHQG72MoDYYYrksLiENCgjvCLjfT7N66DGk
-         bi1lHsKae/pChfiytdcD7qdBtnHc58qEpbVHeX3ZwTG9rchMW24J7Utc+AUxnUcRJJUK
-         1TOPoi5ySeV4y+ZB9/yXqk/RhNUAxtSXj/BCzKSgHRyLphbECErGlMUp6ElwnXgTiLCS
-         31Fg/tOE6ewFL8vHljs9Eb6HE97fTyWyYQewkWfuZW6xBl0bL/dKt7fjT7aEURKBNrWz
-         d5RA==
-X-Forwarded-Encrypted: i=1; AJvYcCWg4giavs3aSTF43oIzzCglLBnRI8Ddzo5cIkq+4b1aTaYjxk8NW3S0rvSQctRKNPpSZLQqs6Zuvc22GMw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywB1cUQPviNA3WvApXWT3AOgiCGkQFukLqwfe42S8cqciaYtW/
-	MjAFcjDvlwj4tarxx6GgBPcFMarTJYIjtb7E7C63OlCKbZgOoKFHg4DY1Bn/YgM=
-X-Gm-Gg: ASbGncuDWrnaVDMfEcjpuBXSB/qhBzihLNetigGNM4cPS/K1fPafp01fosPvDQm9b5j
-	4jF9VFwaQgAgi0ZLqyI4VdDF4IUB+FxLStY3zMoF0aGOp5X+CQT+tCDLxeSICmG3REIlLuAQh0Q
-	0ztCaWElwFe6ldX5fEeGsi9kcqoQQufHuF+0oZg+6+YamLBPbq+3qYVeiMA9jU/LzshZDVX2zgk
-	YzrzsvF+kIvBuzApmUy3kz6NxmnyQDyV5qKJsTMVXsTpzh3ddfIGRE9DFNuI7KNqdPFTZvKoNaA
-	yFWaGM1Z4y8FlM/EKC9jcvBnmMmacKPeddw6nUFgoA+KObua/o64JwzjT54=
-X-Google-Smtp-Source: AGHT+IHCzEFvSIhfMGLJjDLN8sAOhYITMeHBywqkNc2QJXqBWAThFj4V/KSvjovgix5IZ8ADaCm//w==
-X-Received: by 2002:a17:907:1b27:b0:ab2:f8e9:723c with SMTP id a640c23a62f3a-ab789a9ed0amr257773366b.5.1738921793776;
-        Fri, 07 Feb 2025 01:49:53 -0800 (PST)
-Received: from localhost (host-79-41-239-37.retail.telecomitalia.it. [79.41.239.37])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772fd6ba1sm235401366b.79.2025.02.07.01.49.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 01:49:53 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Fri, 7 Feb 2025 10:50:52 +0100
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v6 05/10] clk: rp1: Add support for clocks provided by RP1
-Message-ID: <Z6XXfL1-ER2dLmZI@apocalypse>
-References: <b12caa1c8c674a56afa7b2de780d9ae5423159a3.1736776658.git.andrea.porta@suse.com>
- <20250203234443.GA810409@bhelgaas>
+        d=1e100.net; s=20230601; t=1738921855; x=1739526655;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RDirK3mhBkbwPEuL8B+oV7JCR8taE0i7p+xewXa9S2U=;
+        b=DUCGKGeqb/q1xQwixa4+oDA+iDOwdCapHGX5YTKtDGT2LzvNc4CQ39hRADLRIlITPE
+         DTnRHyyvJx3TQFqKXfdtNS0dMeeL2PBSLPoWDePCTnrn6oaKf6OvNjmHh8Cx6fpWYvhV
+         M6RbxoVscVsGHAOa3Em3pj5b2UWFKZW2yhQturblKnlwpJTAWm20nikMMKgs2RxifDrj
+         HEaujfBdJYpkZpkfcVsvFxvDlu8pvzJ9EN5wHh4krnewVqSnax1qi/reGg3BvUou00MK
+         Xb3mPKmxgljurW4iylljzoOUw1++agpRTw45QpU8d9/m3ympgc2GYcppZdTkJNsAMh38
+         yp8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUlRDjotQHyWHmel50CIVIwma1RUxJN+OtJdy2Wur1fVo+iV8QnYTGHWcDevpksoDod+3Qj2A29gAeU8D0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwD6y7Q5EfGKzaBBUaFm80THfTZHK+a0xjqdL0D0xxH42pV2SH1
+	56pkAX9rpsx6xrFcGcVNQynZILmgqNqOwCaN7Ur/+KDjruZX0g0JvwFUq149D9rbsX/CZrCwfQd
+	JZlrHPJdfS5ghqbOx9bIktX6lzbSR1MzPp+jd
+X-Gm-Gg: ASbGncsj8xFCUNzAwv4aygTEH+oiDvbrF8W2ziQzerElORmGVKHQ32GiYrZ+L1LRtut
+	SfwFiyLXIuB2NxGwZ1fUOnEW9UHzS5v/nWeyW/oRgTBD0XpxUiwiElYAN1HMrocfrpD2sdf/Iec
+	7qStfJdas18g7mUYwvvCbgwpWazk0=
+X-Google-Smtp-Source: AGHT+IGtpI60RL6U4oqQIl1xCkyZiOpePhlEFI1F9M8a5wczlR73MReXjWLUiW2MgPhSx2R8ZYzw5o/wmDVYUO+I2GU=
+X-Received: by 2002:a17:902:e547:b0:215:5935:7eef with SMTP id
+ d9443c01a7336-21f4e6b1204mr47269625ad.22.1738921854968; Fri, 07 Feb 2025
+ 01:50:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203234443.GA810409@bhelgaas>
+References: <20250206181711.1902989-1-elver@google.com> <20250206181711.1902989-3-elver@google.com>
+ <20250207082832.GU7145@noisy.programming.kicks-ass.net> <Z6XTKTo_LMj9KmbY@elver.google.com>
+ <20250207094120.GA7145@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250207094120.GA7145@noisy.programming.kicks-ass.net>
+From: Marco Elver <elver@google.com>
+Date: Fri, 7 Feb 2025 10:50:18 +0100
+X-Gm-Features: AWEUYZnQWDpp3VDaOjksp9Zo0oytYCkyAdjXISUfV_jPXxvw0lspyJEb-bEMFNQ
+Message-ID: <CANpmjNPfFXjwb1-ou3M6s38w=uXgHioK1d=mMSB3_HjHjV2waw@mail.gmail.com>
+Subject: Re: [PATCH RFC 02/24] compiler-capability-analysis: Rename
+ __cond_lock() to __cond_acquire()
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, Alexander Potapenko <glider@google.com>, 
+	Bart Van Assche <bvanassche@acm.org>, Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Frederic Weisbecker <frederic@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, 
+	Jann Horn <jannh@google.com>, Joel Fernandes <joel@joelfernandes.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Josh Triplett <josh@joshtriplett.org>, 
+	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Uladzislau Rezki <urezki@gmail.com>, Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>, 
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, rcu@vger.kernel.org, linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Bjorn,
+On Fri, 7 Feb 2025 at 10:41, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Feb 07, 2025 at 10:32:25AM +0100, Marco Elver wrote:
+> > On Fri, Feb 07, 2025 at 09:28AM +0100, Peter Zijlstra wrote:
+> > > On Thu, Feb 06, 2025 at 07:09:56PM +0100, Marco Elver wrote:
+> > > > Just like the pairing of attribute __acquires() with a matching
+> > > > function-like macro __acquire(), the attribute __cond_acquires() should
+> > > > have a matching function-like macro __cond_acquire().
+> > > >
+> > > > To be consistent, rename __cond_lock() to __cond_acquire().
+> > >
+> > > So I hate this __cond_lock() thing we have with a passion. I think it is
+> > > one of the very worst annotations possible since it makes a trainwreck
+> > > of the trylock code.
+> > >
+> > > It is a major reason why mutex is not annotated with this nonsense.
+> > >
+> > > Also, I think very dim of sparse in general -- I don't think I've ever
+> > > managed to get a useful warning from between all the noise it generates.
+> >
+> > Happy to reduce the use of __cond_lock(). :-)
+> > Though one problem I found is it's still needed for those complex
+> > statement-expression *_trylock that spinlock.h/rwlock.h has, where we
+> > e.g. have (with my changes):
+> >
+> >       #define raw_spin_trylock_irqsave(lock, flags)           \
+> >               __cond_acquire(lock, ({                         \
+> >                       local_irq_save(flags);                  \
+> >                       _raw_spin_trylock(lock) ?               \
+> >                       1 : ({ local_irq_restore(flags); 0; }); \
+> >               }))
+> >
+> > Because there's an inner condition using _raw_spin_trylock() and the
+> > result of _raw_spin_trylock() is no longer directly used in a branch
+> > that also does the unlock, Clang becomes unhappy and complains. I.e.
+> > annotating _raw_spin_trylock with __cond_acquires(1, lock) doesn't work
+> > for this case because it's in a complex statement-expression. The only
+> > way to make it work was to wrap it into a function that has attribute
+> > __cond_acquires(1, lock) which is what I made __cond_lock/acquire do.
+>
+> Does something like:
+>
+> static inline bool
+> _raw_spin_trylock_irqsave(raw_spinlock_t *lock, unsigned long *flags)
+>         __cond_acquire(1, lock)
+> {
+>         local_irq_save(*flags);
+>         if (_raw_spin_trylock(lock))
+>                 return true;
+>         local_irq_restore(*flags);
+>         return false;
+> }
+>
+> #define raw_spin_trylock_irqsave(lock, flags) \
+>         _raw_spin_trylock_irqsave((lock), &(flags))
+>
+> work?
 
-On 17:44 Mon 03 Feb     , Bjorn Helgaas wrote:
-> On Mon, Jan 13, 2025 at 03:58:04PM +0100, Andrea della Porta wrote:
-> > RaspberryPi RP1 is an MFD providing, among other peripherals, several
-> > clock generators and PLLs that drives the sub-peripherals.
-> > Add the driver to support the clock providers.
-> 
-> > +#define PLL_PRIM_DIV1_SHIFT		16
-> > +#define PLL_PRIM_DIV1_WIDTH		3
-> > +#define PLL_PRIM_DIV1_MASK		GENMASK(PLL_PRIM_DIV1_SHIFT + \
-> > +						PLL_PRIM_DIV1_WIDTH - 1, \
-> > +						PLL_PRIM_DIV1_SHIFT)
-> > +
-> > +#define PLL_PRIM_DIV2_SHIFT          12
-> > +#define PLL_PRIM_DIV2_WIDTH          3
-> > +#define PLL_PRIM_DIV2_MASK           GENMASK(PLL_PRIM_DIV2_SHIFT + \
-> > +                                             PLL_PRIM_DIV2_WIDTH - 1, \
-> > +                                             PLL_PRIM_DIV2_SHIFT)
-> 
-> Maybe this is standard drivers/clk style, but this seems like overkill
-> to me.  I think this would be sufficient and easier to read:
-> 
->   #define PLL_PRIM_DIV1_MASK   GENMASK(18, 16)
->   #define PLL_PRIM_DIV2_MASK   GENMASK(14, 12)
-
-Ack.
-
-> 
-> > +static unsigned long rp1_pll_recalc_rate(struct clk_hw *hw,
-> > +					 unsigned long parent_rate)
-> > +{
-> > +	struct rp1_clk_desc *pll = container_of(hw, struct rp1_clk_desc, hw);
-> > +	struct rp1_clockman *clockman = pll->clockman;
-> > +	const struct rp1_pll_data *data = pll->data;
-> > +	u32 prim, prim_div1, prim_div2;
-> > +
-> > +	prim = clockman_read(clockman, data->ctrl_reg);
-> > +	prim_div1 = (prim & PLL_PRIM_DIV1_MASK) >> PLL_PRIM_DIV1_SHIFT;
-> > +	prim_div2 = (prim & PLL_PRIM_DIV2_MASK) >> PLL_PRIM_DIV2_SHIFT;
-> 
-> And then here, I think you can just use FIELD_GET():
-> 
->   prim_div1 = FIELD_GET(PLL_PRIM_DIV1_MASK, prim);
->   prim_div2 = FIELD_GET(PLL_PRIM_DIV2_MASK, prim);
-> 
-> It looks like the same could be done for PLL_SEC_DIV_MASK,
-> PLL_CS_REFDIV_SHIFT, PLL_PH_PHASE_SHIFT, CLK_CTRL_AUXSRC_MASK, etc.
-
-Ack.
-
-Regards,
-Andrea
+Yup it does (tested). Ok, so getting rid of __cond_lock should be doable. :-)
