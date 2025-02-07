@@ -1,166 +1,128 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2042.outbound.protection.outlook.com [40.107.21.42])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35981DE4CC;
-	Fri,  7 Feb 2025 10:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738925735; cv=fail; b=gNBxITFSaBIu79tEWZL4cXh1Yu1bkMeiw8Y/YUvFPmGU+1/k4atEicOZ1Wo/0uNeuwxAmff0bDDbDAHx4ysbz27rdLtkUKzvFFlZM9dTBmoZxB8BgZUaQAaDlonuF0nytdZcoybJWXOcM7MsJcvAXzLi1TTYBK5btypTLMLToRA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738925735; c=relaxed/simple;
-	bh=e+dlZmBds7IMMH8MCWM/JAZW0AVILdXiS60CxPArWOI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=CQs4tmNrkoM8O4qfThEJ6jXCDRoMLBZDvnKRUZNjYpZXV3aP9b/XU06JHzoV2lmeq+aNHdwsF/HUmoWkqOsnj/cAYEUCFEi0uUYtmgijJSfgZmV9YU2AVI/49BsGnVABsO+siOhkezKfxE2ILg7B0VQChS2ZBvQpCGxWoEhan7Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=tLRl9A2r; arc=fail smtp.client-ip=40.107.21.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9081E1DE8B7
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 10:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738925755; cv=none; b=QbXEqUDs8Gz4N5GivaFzFmaU5HH5kQ2T6lmYzaIkp0PMxT3s8KaPM6p0a9/7tUPjwKInsksR/sB5w8/9YS7Mxhd464avPqF05PQi3B7Z2UwTauNVNYNMzWuz7xReYFDOk/IDNNxZMJZ6sU6QI2Fy4iq77MSYWunl0K+yGjUYsG0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738925755; c=relaxed/simple;
+	bh=ehXyueAFki8jwecE85SxuxxW2eG13J2pRWWxP6G8NT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GjVFByDaSroAoAKebHiMsIklzkNA5/RMXjsk2GxIXTcNvwZGW3LyXGIodMfcE3nvQnYubj0UfrJg5YLXzw89K0PmBkd9BPkrN7mZ4BAGoteUtaJGNtRhDbKUNQm/IACPcls1axWHJJNqfjDl+arskQEbH2KwRNfvImR0IXv4Edo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NsqTyD2f; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="tLRl9A2r"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XQIMSQ369ZO6TjQCjF8325US4eIuFTQqWLf1LQpBp/q8I6vXwB52oEjAijGpQw13XczRPZsBE8nCOP0q5Yy0xB83UxCIoBxkxZkBMZSPNCxFNj1qtSWZizetv0WwaFw5KO+cqwAzGByZaO2I4ZOrkx4qIdHTcKeVPbAZST1wsza3SqtLjrVykRjJ7u/hl15FVXmXH36X4gB3oZxdeASgE0XZwSQ09rJjMrS116hnO43NKb2cb1GwtbwIOUUA9FjTVe9zniS9zo1YL+Lx4RHELQnReYK2mdtsuNHH5H9DWriWtGpl7qYZSoZJ5tNL84bccTybf2q+evQudov9ijN5tA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IvoDKjHgj8jSifn+b0gSfKRSg2LbD13n1777iRgM6qo=;
- b=I+gMqM73XWedTVXI5AxtjLi4ScQzf/L3Lfx2Z2VwqoPDFnBo9InWv8aPSw2UGf4jrHr7OyqrCWZem9KAuOot9rH5HQoESGvmjG7dvQbuoA5LzosAxgIlSp23JQKfFW4DSt3V1bLKUjKn9tt+uv8cfIEEPWHuo5muxMR83US3MOdw/YOz+UqqWrGjWA2P7EfqDVHUAImjSaaKFXQB2btoYpLqmr/oDGNNhVG8MHelto4i059yJjHATX/RYRbFbUzb5nYC1lB/pdi8oqU3PM4bFT4L+9EKl+AMUh37KM6ulV2WrXyd0pk4EBKX8cDPDTWL9pmh7oQVZDuMjPAUcDhOrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IvoDKjHgj8jSifn+b0gSfKRSg2LbD13n1777iRgM6qo=;
- b=tLRl9A2reBgobtLuBfp+71xO23m7Z2aACKecFP2swZNsk+2vu27JIMDveIFFUue0V9Xo3GwgHqeQ9IS1v83oOvuIn+sBDH/8b+WxQquFkFfj7h5gvqSwjgLg3pzeHDbfK4GsW+pQ7XMiq6zYiNoccJHpBqx3+QaqHjpc2VT7s52kqRfOE310xFbpGWdvYBdokJ/lm2mH3MQHB0rd2BPiZbmvNbVBxyWfM3OsJOCs/UQAc03JiEpT/grNkqYFOtf+/Mg2+RDTiPiKwHZIOQ8YJ7H26yzPFTx/sIhPF3k6x8SCtOTeyEoccSZYPQ42RpihaS6OeDFrC9Lcl2ScMk9xbQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by VI1PR04MB9786.eurprd04.prod.outlook.com (2603:10a6:800:1e1::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.14; Fri, 7 Feb
- 2025 10:55:29 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%3]) with mapi id 15.20.8422.012; Fri, 7 Feb 2025
- 10:55:29 +0000
-Date: Fri, 7 Feb 2025 20:02:13 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 04/10] arm64: dts: imx8mn: Add access-controller
- references
-Message-ID: <20250207120213.GD14860@localhost.localdomain>
-References: <20250207083616.1442887-1-alexander.stein@ew.tq-group.com>
- <20250207083616.1442887-5-alexander.stein@ew.tq-group.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207083616.1442887-5-alexander.stein@ew.tq-group.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SI2PR02CA0002.apcprd02.prod.outlook.com
- (2603:1096:4:194::22) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NsqTyD2f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738925751;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bk8HYGDotJpHAOYNSGDnghbePbc88+YfjSADOoDlOec=;
+	b=NsqTyD2fdTJBtpnb43X3qKH9nc+s2e1b4usOa8s/6krCFYVj0DA7nXioscY5lieSFzzYTj
+	Zfapt+teDCnAZYtPFkouuAIaDjenrG6nL8ORvbmPoJJuPtG6qkEvKEPvzw/IM6I8J5Wl6e
+	wNkBKEOhGOmQUQjako7E3V6QFqBbFKo=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-59-_9jn02_GNoqIwsapsIrD7A-1; Fri, 07 Feb 2025 05:55:49 -0500
+X-MC-Unique: _9jn02_GNoqIwsapsIrD7A-1
+X-Mimecast-MFC-AGG-ID: _9jn02_GNoqIwsapsIrD7A
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38dc6aad9f8so482635f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 02:55:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738925748; x=1739530548;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bk8HYGDotJpHAOYNSGDnghbePbc88+YfjSADOoDlOec=;
+        b=uj/4rI30RS5YftYBSw8WhsFpLhl75SDUbco6XTzEZqhB02NsIyTgBM36TdE23e6AmS
+         d/WisPuuo/UapmQ+pXT0T/bh2sKL8I008JFeO6w+i1SfUMEBJlGIRXe54iElyhal71KB
+         rZUEdrPtHMXjUBU/9jzMAyLMn/KVcrs8VQFIb1L+H1Qj8au3/C0XNT3/eI89lEsp6mWS
+         BE12oV/nsb7qBgB/0yhBEM+1M83O+1w3odOuOjeWVG4xe22UwM923M4qaNVKCj7eGEVy
+         yspE1kmDBchQtkEe7quWf8G7OKITreHc1lj5gHAsPCxkKYTZKN7to6KYNKjy94n3j+oP
+         UOIQ==
+X-Gm-Message-State: AOJu0YwgFjnGz3PI3rPL9yJ+bhwgdqXvSCT4Evk8UyVuEQyz91Y82xT+
+	fMxAiAavNZq4cZLVSvFS/ZgFIuKHcqrmsif0dR5KUko8o6H457MoyDiC+U+ukKuZASze+fi7/8L
+	iX4jaSFwMNB7U8rSfymHeRmOZahGrx1r4szFHCJl6pilehiaBX4kBuIKPbMOWgw==
+X-Gm-Gg: ASbGnctjbDV+N5fBm07rhCds0rOstOS7dRNdPi37jSCDfSS73/NIi5wX/2sLj8LMe36
+	Dd6bDqNdr/pY0N6SQH8ONn0DXUJjbg8XYJygvOHTZJYFTQXi1HhhZa4hdFlkFKlF3otSY0qwQFN
+	EsjK+Bzuor4pGwUnuOWVtUVNF8CPhK06wS68/jn3VZ6Y5PGyArOcogOZz9xXH4IybL9Lac0OXBs
+	nBcU3Xu+N8Kr7nsNbz6KEQBKB8QT+7mwdcAXC/c2P+YnZwR3D6QaOsQZXY+zo49UeDIm/Z6YQai
+	McWbpBz4BksX0k1HnvddQmjS3b19DfNDmBPL
+X-Received: by 2002:a05:6000:402b:b0:38d:afc8:954e with SMTP id ffacd0b85a97d-38dbb251e08mr6092698f8f.11.1738925747991;
+        Fri, 07 Feb 2025 02:55:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IESzdNKp6zRUwMogCn//lKykey9oFJeFZgS6oz5DUJn7qbjka4YyR98B1rDBiQT4tA/U/OomQ==
+X-Received: by 2002:a05:6000:402b:b0:38d:afc8:954e with SMTP id ffacd0b85a97d-38dbb251e08mr6092675f8f.11.1738925747580;
+        Fri, 07 Feb 2025 02:55:47 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.128.176])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc627fecesm2469143f8f.77.2025.02.07.02.55.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 02:55:46 -0800 (PST)
+Date: Fri, 7 Feb 2025 11:55:44 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	linux-trace-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>, 
+	Clark Williams <williams@redhat.com>
+Subject: Re: [RFC PATCH 00/11] rv: Add scheduler specification monitors
+Message-ID: <czykavxpz46nwnelml6yorg3tvmyjvczqogeuqzji6qrfd2peu@qxr6wucv6mrj>
+References: <20250206080952.98478-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|VI1PR04MB9786:EE_
-X-MS-Office365-Filtering-Correlation-Id: 22039275-f7bb-4b68-d13f-08dd4765ef80
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|52116014|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ldDL+kB0p85i4F488B1SLvnq4+4Oxw31ku9kYx3uM/XPlhp2JR8rAleVV21r?=
- =?us-ascii?Q?HhYwGLb1jaMyBTqK4Q6pdmYDkn3DaY/97UVlzuBsgIwa6dqUDu8pqV1IjdFs?=
- =?us-ascii?Q?LjFSWpKUhJhHZ3cCApSzHqKpanRHP31I1rM52TsnFlvh5Puhdcbh1Baukzdv?=
- =?us-ascii?Q?pxCfM/eKCzM7OeNKndvCBlL9wm2fxXyaMEYxS4Mh/d61c1IWhiiaetXq8bib?=
- =?us-ascii?Q?jmSUGlQ0ihswb98nqJbgGpoKII0XMYKJg3kECp0nKxoZ/zefNprRqycP5Ci/?=
- =?us-ascii?Q?qlUYQSsDzHPKovVAJgp3L8j7I2uiHaxUmvaKm5qqdkLjO5fOru3FqipYsq5p?=
- =?us-ascii?Q?djv8+ECrVKM1Td49kQ9gehfainjWQwszEhanSrLNCIMVyfwQmt3Kkes1LwrR?=
- =?us-ascii?Q?MJl0HOK8gzZQ2j2VKq7qwHIGvWcgT3TT1faC8Yn5cxKdVCr1FyczJHuR1nXU?=
- =?us-ascii?Q?YxemRO4GnincH6JvMrprz+2oG7jE85tocAaQ9bU93j2pv0dKcBJWsEjHYM8J?=
- =?us-ascii?Q?qtMAec6iTEJrhKAXOzjyOMSyFefDN7ISRrbRvyjgQK6cpMO6bpHm0xUvGdfw?=
- =?us-ascii?Q?4ACa9MnGOw02uBPxhGJAm7sFV0OYiyEs+J3wx2QZLlPplF6eebg89M/MezLw?=
- =?us-ascii?Q?uu92PyVnLLoPBqIP6YhW6PjtH7x2alqLndPfobEjPMwAeYSi7hbXxDwulRuu?=
- =?us-ascii?Q?hCaM2PKJYOzzUj/arRy/2HSl+JCYAAwvYFuP/i1B5B4W/6O/sggvnIa89qia?=
- =?us-ascii?Q?xfypTCtKxNMWkj/7w0h36OBeMdv1apxUwcIqlXSsCCUzMvd+JOI0yZ/i+v1l?=
- =?us-ascii?Q?4Ac3y82Mgv3jwt4mFUgvNgQJnIg6JmAW6LwPeg/qlPeDpO7UGNIwFj9c7gcD?=
- =?us-ascii?Q?5H8cjK/1YeqZBhWHKMs4+HqVP4AkxhxtF1CKBrPeRtmRhNqCTB+y+ngVOghZ?=
- =?us-ascii?Q?Eo3zUzcJrsT3ObqEHujzyHP8RdH4I7YXTeislNWrMhC2NUw+z4arLOe01z6m?=
- =?us-ascii?Q?aRZBW0JdwzsL2oIH6rUzo5f7/SpKI6p72ewWR+rfhKG+dq/LKFg2QTHa0YRo?=
- =?us-ascii?Q?KgOY6yqra/zsu2yXrfJPUhRxjLM+VbxCcpRk8/keXPA8EXM3zw56AV/EZ80a?=
- =?us-ascii?Q?wOKN/urFVykW5j3d7HLI8aUFZ1G9T+52cNsy0BoaCkKdiTmwixea+WcFpZKW?=
- =?us-ascii?Q?nHqZS8k21isYAV92R2V5g/Ii233FQESjZIDV0eC7RbFvfqkKjxWrtHEHpRWv?=
- =?us-ascii?Q?wSmzuu1ZIe133zOckcAxinfWq3a3uHi2rPtgRdhO/uM8NXfhCELirrJSBu5A?=
- =?us-ascii?Q?zm7dl7H9vdwQN6jv2GU4VGjaJAlOSNDim90gpzyDJiHisLUyp/6ESI+eXPy2?=
- =?us-ascii?Q?9Ie8jHo6BeZ12N8ELQQJGcEnT1/pvx0KybtorwAbW/3X5aDSZerYk/658dPr?=
- =?us-ascii?Q?ScjfbRwn+EKx2c6JuGiD1mBYita+v6BW?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?LtU/mlqM9qOOAVE2E32XA9+3pgKiCZKvleDbQwKwe+5byBd8xDsENQj9JM5j?=
- =?us-ascii?Q?zdMQERcHzYwN7+oQYDKSNPYTqr7dcfV1onpomSeXXQrN3SBREQut5p66J0x+?=
- =?us-ascii?Q?CUDM0dQzrVeBcqwlyPy37OfNXw6WZwCq1lvigqb25DbNRt1XSK3CYdi5ITDs?=
- =?us-ascii?Q?yCRyJLdmp2dVnA6SReBkFb53qyt7x6pvqJmwaCGXYpHZbnUcCw6pdMmKmzBB?=
- =?us-ascii?Q?2K0WBRy0V05Wz1uOfFAUhSiTuNVyB2C4O3IuVVbCWRc8W+oSvJj80J02WSD9?=
- =?us-ascii?Q?FF/WLZSrr0a2O0ADebRg+0myViPW29f4WuB5tmxnqojSSX/SWhZUH82TUoHt?=
- =?us-ascii?Q?uKlo+fLDAn1Nn5bdZCLc3JJ5S3QPBM+2rnM9ds1krPlliUiPi2aXlbHEjVKd?=
- =?us-ascii?Q?sQC2w/mTV4ZpYIc118dIg1HyNGXXsCw+g+5wNC/hoPYb1WmDa/8aLtApif4s?=
- =?us-ascii?Q?7PEwbhwkR5YhiRsGewYr9q/Eb6wlmpj2rSEheigMjSQgCBPbwCjJyQ2ZptKE?=
- =?us-ascii?Q?xFnRTlsB5X1+7ublAxhEG2WKNnpjiCO9sfyGThFkfXTOfJk9MF1nXXTTa4/J?=
- =?us-ascii?Q?mzgAyfjl3stwpT0vZSOFkxw9qY68OlrN0V8I7CYA3ONRBlYMBVZJ0CX8JD9O?=
- =?us-ascii?Q?kkNrjWCraylL6w7astsfc/lcHbICgHwSW2gbA7oaA848K0/XeUnewO7pUqjR?=
- =?us-ascii?Q?MQShjZsaZuFX5qqBmkQZVvAc4XmPOxi1Bnpxwpcg56+BRywNZb5VV+9vM+gh?=
- =?us-ascii?Q?W1uAe5UMY74DgZ17xsI3CSKTPwAuXYFlUg2UJo2UaadNNxmMopkiUvW7TL+Q?=
- =?us-ascii?Q?P/E6lJX9ybS+zttRtiAVdSqmnC6WOtsxUsqo0nhxBjkGZiXz8CHuf0QHfzn9?=
- =?us-ascii?Q?fE+Um6ARIBgD/J9yaKPRJftuUuuwzsHVKGujbT/h9xmscS/lj5WeygsQIfIF?=
- =?us-ascii?Q?GTbBrmcOcjYgcHZeEYeHviPlRBlj5BrId7ngOsJLKoHfCCoAAG+lb8aIpdQM?=
- =?us-ascii?Q?ecrAck0N3FsRhvEFgctl+IaIBzJpsaleDCqg/0z9sfC7gGx2wqvz4I88hC5w?=
- =?us-ascii?Q?rSs63Sl/tk7raycrMZFwAF1POSVI+z+WJFNH86tQR1BbwUqPEgtRsBbxM65P?=
- =?us-ascii?Q?PuBmRK2nfA0uZY7NiUbYP8sA4+UZSfwQh7ZRh3egGQso5DmuN4iWngOF37F9?=
- =?us-ascii?Q?dOI/Zbza9teip1XGULSGCJoChljDq8whlUffXDqTiiC6/NOH5IoEeYrQHwYv?=
- =?us-ascii?Q?2C0zDb55i0juQGwpcu/IMedgAZNZv18Na3ccetgQuXfoRClb5Du4gUdWth7+?=
- =?us-ascii?Q?qptfPcdkJOistBBoKIomtnSYwfm79XgOARAyXWxqvUaCpkS48mLfpavGcHnR?=
- =?us-ascii?Q?v5BK3nCxtf1KjABLo9+ShpTZdjVVFvi4xsPNFaCWW9SpaJZeAtDQQU84j44I?=
- =?us-ascii?Q?d/jRV9mDG9Oxp9fPIf7fXsKJwII++eIFbmG0bKHgq75l2qBdfpUmPBysC1GB?=
- =?us-ascii?Q?CEzqOxNbzrn5CIUO5Vb+J+8p9mIXwVEgJDkL+vUweFGnrdflT5Rs1hRuN8uU?=
- =?us-ascii?Q?+BKsMDFXhEFTHKA72XzrRLaJ4Th6VFx4UBTkYBKn?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22039275-f7bb-4b68-d13f-08dd4765ef80
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 10:55:29.3366
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3zLYNUkahFS1p7vRliNhQq6pfTjRjwIGWr7CLeVea33On6SZruFJ8qis2PfBDrJzqQrn7IBEsP2IdClZ7tVvDw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB9786
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206080952.98478-1-gmonaco@redhat.com>
 
-On Fri, Feb 07, 2025 at 09:36:09AM +0100, Alexander Stein wrote:
->Mark ocotp as a access-controller and add references on peripherals
->which can be disabled (fused).
+Hi Gabriele,
 
-I am not sure whether gpcv2 changes should be included in this patchset
-or not. Just add access-controller for fused IP will not work.
+On 06/02/25 09:09, Gabriele Monaco wrote:
+> This patchset starts including adapted scheduler specifications from
+> Daniel's task model [1].
 
-i.MX8M BLK-CTRL/GPC will hang if the related power domain is still touched
-by kernel. The pgc can't power up/down because clock is gated. 
+Thanks a lot for working on this. Apart from being cool stuff per-se, it
+means a lot personally to see Daniel's work continuing to be developed.
 
-This comment also apply to i.MX8MM/P.
+> As the model is fairly complicated, it is split in several generators
+> and specifications. The tool used to create the model can output a
+> unified model, but that would be hardly readable (9k states).
+> 
+> RV allows monitors to run and react concurrently. Running the cumulative
+> model is equivalent to running single components using the same
+> reactors, with the advantage that it's easier to point out which
+> specification failed in case of error.
+> 
+> We allow this by introducing nested monitors, in short, the sysfs
+> monitor folder will contain a monitor named sched, which is nothing but
+> an empty container for other monitors. Controlling the sched monitor
+> (enable, disable, set reactors) controls all nested monitors.
+> 
+> The task model proposed by Daniel includes 12 generators and 33
+> specifications. The generators are good for documentation but are
+> usually implied in some specifications.
+> Not all monitors work out of the box, mainly because of those reasons:
+> * need to distinguish if preempt disable leads to schedule
+> * need to distinguish if irq disable comes from an actual irq
+> * assumptions not always true on SMP
+> 
+> The original task model was designed for PREEMPT_RT and this patchset is
+> only tested on an upstream kernel with full preemption enabled.
 
-Regards
-Peng
+I played with your additions a bit and I was able to enable/disable
+monitors, switch reactors, etc., w/o noticing any issue.
+
+I wonder if you also had ways to test that the monitors actually react
+properly in case of erroneous conditions (so that we can see a reactor
+actually react :).
+
+Thanks,
+Juri
 
