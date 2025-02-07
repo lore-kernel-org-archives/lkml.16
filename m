@@ -1,254 +1,254 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2055.outbound.protection.outlook.com [40.107.244.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18EEF1494DD;
-	Fri,  7 Feb 2025 01:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738892512; cv=fail; b=RDsE5SPzr1wunVxIDc8r71PsYlq2CabM/UcvqNDXgyt3y9NvyBtsWLxl8pRfC8GtEQqSxauxBoY4WrlkpevtCKNjV4oaW8tDBjTt1GSw/Wt1gsOD80xD0SnvZUVgN6S9EopB1QNzi6KWxqoqhsl8JVJMdR96cBLrkoYdpW8K7xM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738892512; c=relaxed/simple;
-	bh=8nLhjbyX1Kk4EQZsZAyqayCQW7E95njme622+VuORTc=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=k9EdSKtyQEkjdwkdX/v1CulnBi27jPZnTZUFk4QACVeEaZPhBRcas3hE4nkKcfjxJJFJdK+AetdfHGa4JnPP/qgNOowk5KUsppgubnYiDOGuUIGKDaaIBiYg5+tEeVQB2dDgcranpxEslVayYZ9kMjWFa/aivV8kx+xpIW77wA8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=a22klQwP; arc=fail smtp.client-ip=40.107.244.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF954133987;
+	Fri,  7 Feb 2025 01:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738892547; cv=none; b=FaX2pU6SvikUKcv1/OF7AuDMwxnQ/RIxly61Pl6SZaxBOMHg5dvu1XCLojNLJ3kgPRYNCmqiF9PybpEO+O4Lh4xM6nTyCFWT4+MsyWhl23M4c+7dJnRSqN4py39Ozg2rVabDkxvVAxCNa5eHqQqyaESVJzCKjOrNKSvbhOeSu8M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738892547; c=relaxed/simple;
+	bh=k43Z5zQYXMDziBkOvYiUcPMfe3Io+6ARNvUn9Kruakk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TwidWx4J/B1ZCYiftiEXXDSfvqBR6pTfqEpYEBS97t3EB97upqO3f4PYPu9mdgJA1IxDYjisy0CebWNvE0lIXBF31ZAdzezRvGJ0d4iPT1n43UZXlNXMpT0L2Yw8WP/HqanM2mVM7Fr+WPCRSNqJiKXaSg5Bq42N6efoRDdSAPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QaJZkbZr; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="a22klQwP"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DkAs9oVIRsjSaFIBfa7xhgZHMs8sZ6D60edEtXVEg+E3DKk3YwYHT0v+qFYHTm3UgSPh0klMTE1lRWKPCUqW+rGkf6WkxOz6kXtQMLABQjHm0jRa1LFi0qcQe5aDD5wTlJVh+nVfksP7K/kA3h/W7yFDuGG4z7up3oLmXBvOSo0QuQgLvw7MRJuQ3YD6U0LGNI6igZ4Mfi8MiygQDtYg19JVrPilm+3yRfjTa6ebz/IUkeATYpWGRI83M1JcRpjNj6TMNs3ulja69OexJWDYmSo2PG12FfBdiBlEeM1TO3ya/2DVS+REI2tGeUnKm37zB1H2qa6TKBnfWqQjfwAjVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wq02bO8jmC+HI3ONoOuzPLrlHQ0gUCc02uzCqs2+lAs=;
- b=sIO7jeisBXbDKBARwHDvPGTSD1XMb7oSYURGSRBzyW9oHzC3/+OeNLC8Hf0kWEUiqs57ztXpisbW4IcPTaulCKAKGuqvaAQnjfc/uqA7wVqmIsM7sdDhyxiZwzaTnmkV6NCeBkW/VvvWJ0MEwo/Q12UgUWoIpVuFeynkdNeybxTXnlRWq1jiUGRah4Gl4mXn6KhUG5OO3vL1P5YijhFx+lrsKA6TRVxLoXMwloqb3iK7dg5UFEor+WTPao2qTDwkG1jOHisJM8P9QUyWrKOnU5LY58hExSFbytHvoNKJ8p/vcxgdxCWrKbnnZI40kIUsK/+ToKsS7t6mlQ5PoupNGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wq02bO8jmC+HI3ONoOuzPLrlHQ0gUCc02uzCqs2+lAs=;
- b=a22klQwPWrPtfYfOzFX9kuHque5McdC996CfNuwafwJnBO53vyx16/Toa1Jcr4f7g3VpP2SUzaplBW0NYrYK/6YfuQRW0DytZzzQh9e1HfCrm4OSnsqNT+UyJglPL7g6+cYmn8oNCRdlCMh8XPFHMOF8THDNgchCU+Rf20JgNZyRlU5hI/pn7XGh5seGUsOAltJep4CEVeWzfomUqxgaVBqRGmcBvegSpNz3icG74V10Xjn1owrJIoREzKjcPAlhhBgCmZlEKdpkd74emiHMMxcfgTQj06HC+js+Po+yOSBHSqCj/yhHH2gY5abVRwGwhcinpcduFsudIODRmENTpg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by MN6PR12MB8514.namprd12.prod.outlook.com (2603:10b6:208:474::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Fri, 7 Feb
- 2025 01:41:48 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8422.010; Fri, 7 Feb 2025
- 01:41:48 +0000
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 07 Feb 2025 10:41:37 +0900
-Message-Id: <D7LTY1FIUOTR.3E6MZ8BD0HW7E@nvidia.com>
-Cc: "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
- <simona@ffwll.ch>, "corbet@lwn.net" <corbet@lwn.net>,
- "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
- "mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
- <tzimmermann@suse.de>, "ajanulgu@redhat.com" <ajanulgu@redhat.com>,
- "lyude@redhat.com" <lyude@redhat.com>, "pstanner@redhat.com"
- <pstanner@redhat.com>, "Zhi Wang" <zhiw@nvidia.com>, "Neo Jia"
- <cjia@nvidia.com>, "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs"
- <bskeggs@nvidia.com>, "Andy Currid" <ACurrid@nvidia.com>,
- "ojeda@kernel.org" <ojeda@kernel.org>, "alex.gaynor@gmail.com"
- <alex.gaynor@gmail.com>, "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
- "gary@garyguo.net" <gary@garyguo.net>, "bjorn3_gh@protonmail.com"
- <bjorn3_gh@protonmail.com>, "benno.lossin@proton.me"
- <benno.lossin@proton.me>, "a.hindborg@kernel.org" <a.hindborg@kernel.org>,
- "aliceryhl@google.com" <aliceryhl@google.com>, "tmgross@umich.edu"
- <tmgross@umich.edu>, "dri-devel@lists.freedesktop.org"
- <dri-devel@lists.freedesktop.org>, "linux-doc@vger.kernel.org"
- <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "nouveau@lists.freedesktop.org"
- <nouveau@lists.freedesktop.org>, "rust-for-linux@vger.kernel.org"
- <rust-for-linux@vger.kernel.org>, "Nouveau"
- <nouveau-bounces@lists.freedesktop.org>
-Subject: Re: [PATCH v2 1/2] gpu: nova-core: add initial driver stub
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Danilo Krummrich" <dakr@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Thread-Topic: [PATCH v2 1/2] gpu: nova-core: add initial driver stub
-Thread-Index: AQHbeKA2ayaXKTc/F0i8CkcmmtmVjrM6W02AgAFD1gA=
-References: <20250204190400.2550-1-dakr@kernel.org>
- <D7LF554L2J0N.JRPHDUCHVKP3@nvidia.com> <Z6TL5a5SCZoVq8Zt@cassiopeiae>
-In-Reply-To: <Z6TL5a5SCZoVq8Zt@cassiopeiae>
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-x-ms-exchange-imapappendstamp: CH2PR12MB3990.namprd12.prod.outlook.com
- (15.20.8422.008)
-Content-ID: <2947EFEEE55F0C4186127BBC1C0D0604@NVIDIA.onmicrosoft.com>
-X-ClientProxiedBy: TY2PR0101CA0004.apcprd01.prod.exchangelabs.com
- (2603:1096:404:92::16) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QaJZkbZr"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21f20666e72so33047935ad.1;
+        Thu, 06 Feb 2025 17:42:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738892545; x=1739497345; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iCB+UDvr+o1SyUgsR9HsOtoX0gQumnxAJYb/vLwqtqw=;
+        b=QaJZkbZrWZqcleMZ05KJLzLSfRGjWW1p1NWICgR+A5pln6XzhPk5wW770fMrg5oRvD
+         R1e5AopGSeoTwTFi0OrjlLVBRY2qZ6zPHxzt81TgjFxfG2+KR4t2ucsGIZvit8R6qHcs
+         KVM0HBZy1jg9MpTXWhpne/JqUrTHL0+C14ybT4a9IEEkdjq81i4KGQ8kvvtF6q4UlVXB
+         ar5lDtGGV/dXxZ5rTAa8NUvQbR09sp5/iZHI0Hqr/n6aHAqxFYIiMqn0HBzv+KsSInrW
+         kOssjS+vpos2mavOf4UJW1TPVoqUx5pZniiyvYTeO+XrtgdbaSPvhdSTAXjXfCaAsQSk
+         1/jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738892545; x=1739497345;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iCB+UDvr+o1SyUgsR9HsOtoX0gQumnxAJYb/vLwqtqw=;
+        b=p5N88bveOtOiFK1QmMrOB9pXV3Jl+OP73s5zox+zCXjnRAe9D+FyWOEz54IdPJhq5b
+         Yjg7W06/bwGBeFugQKJyy1jKTHzFkzaqrRvxWRX0Nfaky82Vi72Sz5LHT4zjQ/1CpnyR
+         q59UcvpEubrAcBA1W2CGvRlzPoHtB9kZzQBxPOYIwUwy0OQ/rskBgNCUvVogHIJyMBQL
+         bPrNsfs8dJTzznwBT5lwwiCtH3xvv1aPVAHxBNEq4xFBHH5HSfN2g5C01Uw47xJvv6aN
+         fdBZyICiHj2FK+xzj+fwxPAdEPem8XTw1bzKkBGeRRvyw4lH0VQ6/vLJVW791ZXqTihN
+         vQAw==
+X-Forwarded-Encrypted: i=1; AJvYcCW5YGrdw4Oc4bK9AUNFdDowb3GNZzm2qu+/soTY2Hx0laoL2Mb7XLkTH7LYQKlewZuiF0opwIqsM3xH0j/e@vger.kernel.org, AJvYcCWLu8D42Fz+njxZ/IlHZrE37+mjbAXpJl0Q9ecSZidM+MC1+Zp7XgPzdYYxOYuZIozBQdkC9cqJ3rE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQY0BRgJAf4arV6XahuNAx5GIUIfTZWvTgywXSSd98cIHusWp3
+	pw8Z8EjBBDyH6PrZsy2+iGzWIEx4M64tU01bnOHqf+DoHTLcJG90
+X-Gm-Gg: ASbGncsV/UH6F6LUkQSWJr551K9bPzwGTw7unR/nbK9xR+3l+h2Oc2aYoLNTThlHSq2
+	cLqYzQBiIR7uViO+e8pX7gTm51vo8HalGEUYlIGSKyJNO8LDBsUMWpDlwXz4fx0mEKkvdEMY82D
+	FmTsfzOFZfc5PmDRyG8Em0B8a67FG0+yXGJ7K4UCWhUxnOthwf7f6Fkhxbn00m8vOepwzW+F5BA
+	Z1sq2jp0hGXtHIv2wi81/Kju5HrO8kc8H6spAD8Ww1Rss3KSmFbFYUqJIhHLxMeHozW4iYvAWKc
+	6u7gREj/c3L9g1o=
+X-Google-Smtp-Source: AGHT+IF3V6aRkJmvBMUyGn28OZdzyd9mfmHLPCK5NSACkkmLi9GELXLragQ10mugsV/1WBn6R3f45A==
+X-Received: by 2002:a05:6a00:1a93:b0:728:9d19:d2ea with SMTP id d2e1a72fcca58-7305d4adb54mr2015174b3a.13.1738892544911;
+        Thu, 06 Feb 2025 17:42:24 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51af78034sm1698885a12.67.2025.02.06.17.42.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 17:42:23 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id A30A04208FB2; Fri, 07 Feb 2025 08:42:19 +0700 (WIB)
+Date: Fri, 7 Feb 2025 08:42:19 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Thorsten Leemhuis <linux@leemhuis.info>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v4] docs: clarify rules wrt tagging other people
+Message-ID: <Z6Vk-7OgDB3DM7Yb@archie.me>
+References: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|MN6PR12MB8514:EE_
-X-MS-Office365-Filtering-Correlation-Id: b3870b26-8c59-4fc8-2ed3-08dd471895f8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Qm5LUEhrQnNXL1lTVThoNFN6bVY2Rmg0TWxJeWNSTVRpL1cvTHRQelB2bkF1?=
- =?utf-8?B?SGdYWTlvYkI1K1VXWCt1TG5EQk92UjZkRzJoVVhIUUpzckp1Mmk3YjY4TWZj?=
- =?utf-8?B?UnlXVmpMVWdkemdZV0VEMkxiLzVHWU9QOGhONUp3Z2UvUlZ1VzhwNHhTK2o5?=
- =?utf-8?B?SU4vSkFlYlYyZDJYMHROY1pHUDhWQzV3VDF1UGxiRzF4WEJvK0JNaEt0UUpB?=
- =?utf-8?B?UUJRZ0dFQ0FBRjlsWWl5ZVU4bm8wYkYzOXVobDBpM2VDTkhrSVV3dHdOaXI5?=
- =?utf-8?B?aW5vWTBiMFVJNUE3dDFZK1A4MUNDZzAvclpLNzJud2tCOHFxNWJraFFQQ0Na?=
- =?utf-8?B?UEtrR2s3TlF1aVZBTE5Hd1VWbzdFald1aGhjdXlETElOQnU2TDZKMTExamps?=
- =?utf-8?B?cC9Tb1ZoSzMyK3JuUWNnT1FicWlkRjJMZ0d6clBXcU5pNTN3dHVpeGNLSnRl?=
- =?utf-8?B?eTdGc0tKQmpac1J0aGM3WUhZeDErcG0yZ09CUnBiV0R5U1lLR1ZiYkN1SmZy?=
- =?utf-8?B?bWpvRnFGZzdSTjVkcjVSU2EwSzhpd2NzSEQ4TXg4eGdwd2tZRnlZNXBKdHV6?=
- =?utf-8?B?dERpbU5Tc2xBU29aSlNMK2tPZDVLSDlqZFZubTBEUFJMWEMrR3NZQVVyY3Nv?=
- =?utf-8?B?WUF0aWRnWDlvUjV5eHpEajQ3cGRhT0FBVmVRTk50akppSEFjM29iWlNpZWhx?=
- =?utf-8?B?MVVyNk1TMG9YOTh0Z0xkUEQwcmgyVlBRL296NXdmR0JrVDh5Nkx5ZEsrRGZm?=
- =?utf-8?B?SmZEaHpPTVF5dDFYMXZsRk5RK2JKUXpjMGpTRUd5M3d4MXA1VEEvQ3huTGNB?=
- =?utf-8?B?M2wxa3BvUGQxY29HdFRnWUxwYkZ3b0ZpTzZqemxybFZTOHFBTHFlT2RGeWN3?=
- =?utf-8?B?dmNOMUlZN3lKdThwblZqMUxIMWpDMDF5N0huRGZuM3IralJsR0VpWFJHZTRS?=
- =?utf-8?B?ZzE2QjVXOHRIQXIyZmdkZ1hqUGN3d3paRjNhaSswOEROYktZRzNXSUt3QUo2?=
- =?utf-8?B?Ry9ycnRrS0dWdytqbWViK3g4NWJYN0J4bUVQUEd2U0N1SVU4NFNkNmVsK0hj?=
- =?utf-8?B?OU9pRkdQOUI3Qy9vMHF2SzFwbHgvdEphZ0trU0NEbFMwTUxrRENpR2diRjha?=
- =?utf-8?B?U290NjdNUnBGdGVvZWxUQTEyNWoxdVc4TlNDYXAxOWpiV04waUJjTlJLOTN5?=
- =?utf-8?B?R1pyTHhYMFVpWkc3QjkvaTVMMzg5MGI3bDBMOGtNeTdqL25rTW0wMFFsb1pX?=
- =?utf-8?B?MGp2RmVTdUJzSlUrVmhOcnpkcTk3NzlaWW5nQnN2MmdvdUhsaDZxQUw3UXdN?=
- =?utf-8?B?dlorcDVHSUVZWG0rbWxwT3BLKzRYcXc5dnAxYjdqdnhEY2h5TWNRVXp1S2xx?=
- =?utf-8?B?ZW1TNnNGcTVJRllvdlBMU2RJNVBtVWdGempEcWtkUERzeElFbGs3L1YraHdO?=
- =?utf-8?B?dzJTV0J3c1NGSXhoMVI0aVhTOEN4RFUwNmVybUJ6RTdKVncxaGxKek9DYmh1?=
- =?utf-8?B?eVlRZmpDR0FVTU5GcHNDUUlQbktGZ2lia3R0MmY2akpsUUlleENkeVBsV3V5?=
- =?utf-8?B?VlNUSjNLMEllZjVKWDlGeHduM0UzN2p2R3cvZ0tiRjBWbE5ObzM1bFh4NDMx?=
- =?utf-8?B?b1hjWUdDTXpIbVhuSE1KK3h4WnVSWGs2VWJsVHV0WGIzUjJLaXVUY2l5b0gr?=
- =?utf-8?B?cFpwNHovRnNQU1dqZEFMZG5VTHZzQVpnV0dGRldxUjhvS3A3VEJvUVpNUjVJ?=
- =?utf-8?B?UG84QndaMk9FOWpGMlRaVTd0THV2dlVwWUVXOG5tRVJlSVhLOW9NNnAvejZ2?=
- =?utf-8?B?THJrbFh5b0NIZXg2YklKWXdiUzdIcUVQUzVhUnBHUXMwK0V4NjBQZm9TbnR4?=
- =?utf-8?Q?X0nx5QGcZ7ZnK?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?c3MxcWhBWlEwb3BudVUvSHJTazVPMU4vS2xBNGt4eEw2ZXZxV202djlpR2kw?=
- =?utf-8?B?M0NsWWdpU21yYit6emxySmFSaWY4V2x5c0tNR1drdVRFbWZQZVBiMnFyYTY5?=
- =?utf-8?B?VHNvVFVOTzJTcjc4S1JCaERlVHhWTlZCUnFjOGhDM2Uwb201VjYraittYm5X?=
- =?utf-8?B?UG8rdjRMSEI5S2g4QmEweDR1R2tIL2llY0NWZ1dQVit5YUUrNG9zS1JmY05r?=
- =?utf-8?B?dmwvTzZTeUFJK3A4ZWpWeVozQUJjMWJSek1TdkdQR0NBUkFWMStIOXQ3YWxk?=
- =?utf-8?B?emJQVjNiTjBRZlpHa3dXcXJobHVGVGh4KzhYRjNla2NsdjBRMGdnUUpRaHZQ?=
- =?utf-8?B?SER0TURxVjIxZ1cvaVJTRklFWlpKWFZFVFdoVDJVUE45VURqOXFLNllQdjQ0?=
- =?utf-8?B?dUVvN1hMNWVYOGVyVTJDbUVYa3BudktvVGtBWG4yK1ltN3FjUE5pYVl2d3gv?=
- =?utf-8?B?bDVDTy9aS21Ubkcxc0dRN1IybXFTZFhCUEtYME9aNGNSaTFBcDRxeThNLzRV?=
- =?utf-8?B?Z1hQTlBKb2RFckdvaTZvUWdLMXhhdTJEa0xydWZPTEphZHgzOFpOOUlNWGZ1?=
- =?utf-8?B?V1VBRXJHVXZLc0Y2RTFac0tTTlJDQ2hVck5kOUpZV001TExkbzVkbEFPQjly?=
- =?utf-8?B?NkREeGlzNERjbjBnMjJXZk9obmdUUnNTRjNmY3YwcTRvWUxpNDFKVFBjRXF6?=
- =?utf-8?B?OGlmaVNjUlNnMGhqVi9qY2IyZVlHbHpiTU5NTXJnS0V5S3ZWTEJNMTkzaW1h?=
- =?utf-8?B?WlZNbVFRYkpHR3NtNWwzdVUwL2dWNXJwVE9ZQXZORlVwd0lIaWJxQXlxd3Vo?=
- =?utf-8?B?MllGcCtRV2NKS3p5UE9IYTRoamtzQUZZWng2elQzbHpZOWFGOGpOcVl5S3BZ?=
- =?utf-8?B?clE3dVptK25xU3lvdWNxLzhoOHk1M0l0OVN6NTY3cXljUk9XT3dEUHN5b2Js?=
- =?utf-8?B?Tk9FalllUm42L3FwTE94aTlKMWZ5RlVWYjlJRFFSMFMvVlVFN3ZOYU1EeTYr?=
- =?utf-8?B?Z0tQUktYa1RVdlBxL01VUUJJb3pxR0lzZnFKeDlVMEJpYnE0dHcxL3Y2bGUz?=
- =?utf-8?B?NnpXK1l5eEVHVGtkNndhd095VWdqV2RubGNLdGkrUHBVdUtkYVVmOVd3b3VY?=
- =?utf-8?B?UHptZDNaQkNMZGNoeUpEaTU2enBiNk9vOFM0UTNjSXVBRXE3TTN3alBjU2ta?=
- =?utf-8?B?VzRFUFFnWTJQNjlLQ2dXcUFxSitxNlF1QVBXVVFrNHA1dXVDNG9XaGRUMzlV?=
- =?utf-8?B?c0VwZ1RDWXBJYXZ6NGNLRVM2Vy9LK09hVkNoc3lDcGlzcGtjV2MyK0xBL05G?=
- =?utf-8?B?Ri9nRlBNVkFYQXdVZm9QZ2ZVNTVJMGMweUFNbjg0NlhuOWlVQ1BzMjhoNlJD?=
- =?utf-8?B?SHp3S2lVMHN6QUtuNTM3b010M3h3OXV3bzBLMGMzenkwTzY4eFM0UUxFelN4?=
- =?utf-8?B?Q0NWZlFTUlloaDRPTEpyekF0TUxOa0l4cHQzRWhYa2k5Wk1hY0xsK1ZuZkV2?=
- =?utf-8?B?cWtNU0FrMzJOZ1lyaElYcXc2Nk93bE5xbUFXNUIrYTJJVnlnbm1QQ0FTdnJm?=
- =?utf-8?B?aElsTFJVNzNsUmFlbTAwaWtkbE9LZ3dWUmwva3RTc3FVZ2Ftd0ozbHpnWWJ6?=
- =?utf-8?B?dDJWd1FuRVAySWljTzAxNXR5ZTJWNXNFalhKTWlQMWFrcnhYVlZDc2p0SXUw?=
- =?utf-8?B?dHF4VXVOUmlNMzFKbXNTNmNGNEtiSm5RbGorYzljbHluL01vODhvSmh2NUJK?=
- =?utf-8?B?bnd3dFVtSUdaN1h5cld1cE9JZWpOM2J5dHRkZ3YvdVJmK2VyZ2FzVjc2OHp4?=
- =?utf-8?B?NEFRRUtmR1RRdzExdHluY2hKNmludnN1eWxxL0hEWHgxZmhLR1hpeCt6b1lI?=
- =?utf-8?B?TUtUNFB1UEcyd1ZyNDJVdDhFSmUrY2hWcUgvMXI0bjZPbE5uckhGRFlHOERq?=
- =?utf-8?B?UDlDRk1QeEFQWHA0L3N1K3hXMXlxZUx2R1FlKzJPVDEwZ3kxK3VXc1VlcGV2?=
- =?utf-8?B?NGdIUml6dG5iY0M4TGxCZHZTZDFLSEdmZkRmVHczb1BWYWVNSHplamtkdlVG?=
- =?utf-8?B?cXM5Qis5bkM4UFh3Tm5ueDNqM0hWRGlyNG82dFdEK1hyMDdONm1FYlUrZmNo?=
- =?utf-8?Q?fSjjqZTj0jlRKYUNiZsPdbA5D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3870b26-8c59-4fc8-2ed3-08dd471895f8
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 01:41:48.0185
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PnE1Iwv4x4uViSYrze8s26EwWMrs6+bap7X/ZVnwa4+2/jRO9G8u7kVZ1I3FUbAFnlSNqfdKbhO1oFUcGT+CAQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR12MB8514
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="C6onUu6KEVPlj5WK"
+Content-Disposition: inline
+In-Reply-To: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
 
-Hi Danilo,
 
-On Thu Feb 6, 2025 at 11:49 PM JST, Danilo Krummrich wrote:
->> > +impl Spec {
->> > +    fn new(bar: &Devres<Bar0>) -> Result<Spec> {
->> > +        let bar =3D bar.try_access().ok_or(ENXIO)?;
->> > +        let boot0 =3D regs::Boot0::read(&bar);
->> > +
->> > +        let Some(chipset) =3D Chipset::from_u32(boot0.chipset()) else=
- {
->> > +            return Err(ENODEV);
->> > +        };
->> > +
->> > +        let Some(arch) =3D Architecture::from_u32(boot0.arch()) else =
-{
->> > +            return Err(ENODEV);
->> > +        };
->>
->> Technically the Architecture is already known if the Chipset has been
->> built successfully, so there should be no need to build it again (and
->> test for a failure that cannot happen at this point).
->>
->> Since the architecture information is already embedded in Chipset, maybe
->> we can have an arch() method there?
->>
->> Something like:
->>
->>     impl Chipset {
->>         pub(crate) fn arch(self) -> Architecture {
->>             match self as u32 & !0xf {
->>                 0x160 =3D> Architecture::Turing,
->>                 0x170 =3D> Architecture::Ampere,
->>                 0x190 =3D> Architecture::Ada,
->>                 _ =3D> unreachable!(),
->>             }
->>         }
->>     }
->
-> I thought about this, which is also why the comment above says: "consider=
- to
-> store within Chipset, if arbitrary_enum_discriminant becomes stable".
->
-> I did not go with what you suggest because it leaves us with either
-> Chipset::arch() returning a Result, which is annoying, or with Chipset::a=
-rch()
-> being able to panic the kernel, which I'd dislike even more.
->
-> There's also a third option, which would be to have some kind of unknown
-> architecture, which we could catch later on, but that's just a worse vari=
-ation
-> of returning a Result.
->
-> Another reason was that I did not want to encode register specific masks =
-into
-> the Chipset type.
+--C6onUu6KEVPlj5WK
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Agreed, none of these solutions are completely satisfying. From the
-point that we have successfully built a Chipset, we should be able to
-get its architecture without any runtime error or failure path. So I
-guess this leaves matching all the variants. It's a bit verbose, but
-hopefully later we can gather all the static information about chipsets
-in a single place, and generate these implementations (including a
-Display implementation - ideally the debug one would also print the hex
-representation of the chipset to be more useful for troubleshooting)
-using macros.
+On Thu, Feb 06, 2025 at 03:30:10PM +0100, Thorsten Leemhuis wrote:
+> diff --git a/Documentation/process/5.Posting.rst b/Documentation/process/=
+5.Posting.rst
+> index dbb763a8de901d..22fa925353cf54 100644
+> --- a/Documentation/process/5.Posting.rst
+> +++ b/Documentation/process/5.Posting.rst
+> @@ -268,10 +268,15 @@ The tags in common use are:
+>   - Cc: the named person received a copy of the patch and had the
+>     opportunity to comment on it.
+> =20
+> -Be careful in the addition of tags to your patches, as only Cc: is appro=
+priate
+> -for addition without the explicit permission of the person named; using
+> -Reported-by: is fine most of the time as well, but ask for permission if
+> -the bug was reported in private.
+> +Be careful in the addition of the aforementioned tags to your patches, a=
+s all
+> +except for Cc:, Reported-by:, and Suggested-by: need explicit permission=
+ of the
+> +person named. For those three implicit permission is sufficient if the p=
+erson
+> +contributed to the Linux kernel using that name and email address accord=
+ing
+> +to the lore archives or the commit history -- and in case of Reported-by:
+> +and Suggested-by: did the reporting or suggestion in public. Note,
+> +bugzilla.kernel.org is a public place in this sense, but email addresses
+> +used there are private; so do not expose them in tags, unless the person
+> +used them in earlier contributions.
 
-Cheers,
-Alex.
+So for example I can only include Tested-by: when a contributor who tested
+my patch explicitly offer the tag by replying to it i.e. with the tag, righ=
+t?
 
+> =20
+> =20
+>  Sending the patch
+> diff --git a/Documentation/process/submitting-patches.rst b/Documentation=
+/process/submitting-patches.rst
+> index 8fdc0ef3e604f4..72f6de419ccc4c 100644
+> --- a/Documentation/process/submitting-patches.rst
+> +++ b/Documentation/process/submitting-patches.rst
+> @@ -495,10 +495,10 @@ list archives.  A "# Suffix" may also be used in th=
+is case to clarify.
+> =20
+>  If a person has had the opportunity to comment on a patch, but has not
+>  provided such comments, you may optionally add a ``Cc:`` tag to the patc=
+h.
+> -This is the only tag which might be added without an explicit action by =
+the
+> -person it names - but it should indicate that this person was copied on =
+the
+> -patch.  This tag documents that potentially interested parties
+> -have been included in the discussion.
+> +This tag documents that potentially interested parties have been include=
+d in
+> +the discussion. Note, this is one of only three tags you might be able t=
+o use
+> +without explicit permission of the person named (see 'Tagging people req=
+uires
+> +permission' below for details).
+> =20
+>  Co-developed-by: states that the patch was co-created by multiple develo=
+pers;
+>  it is used to give attribution to co-authors (in addition to the author
+> @@ -544,9 +544,9 @@ hopefully inspires them to help us again in the futur=
+e. The tag is intended for
+>  bugs; please do not use it to credit feature requests. The tag should be
+>  followed by a Closes: tag pointing to the report, unless the report is n=
+ot
+>  available on the web. The Link: tag can be used instead of Closes: if th=
+e patch
+> -fixes a part of the issue(s) being reported. Please note that if the bug=
+ was
+> -reported in private, then ask for permission first before using the Repo=
+rted-by
+> -tag.
+> +fixes a part of the issue(s) being reported. Note, the Reported-by tag i=
+s one
+> +of only three tags you might be able to use without explicit permission =
+of the
+> +person named (see 'Tagging people requires permission' below for details=
+).
+> =20
+>  A Tested-by: tag indicates that the patch has been successfully tested (=
+in
+>  some environment) by the person named.  This tag informs maintainers that
+> @@ -596,11 +596,11 @@ Usually removal of someone's Tested-by or Reviewed-=
+by tags should be mentioned
+>  in the patch changelog (after the '---' separator).
+> =20
+>  A Suggested-by: tag indicates that the patch idea is suggested by the pe=
+rson
+> -named and ensures credit to the person for the idea. Please note that th=
+is
+> -tag should not be added without the reporter's permission, especially if=
+ the
+> -idea was not posted in a public forum. That said, if we diligently credi=
+t our
+> -idea reporters, they will, hopefully, be inspired to help us again in the
+> -future.
+> +named and ensures credit to the person for the idea: if we diligently cr=
+edit
+> +our idea reporters, they will, hopefully, be inspired to help us again i=
+n the
+> +future. Note, this is one of only three tags you might be able to use wi=
+thout
+> +explicit permission of the person named (see 'Tagging people requires
+> +permission' below for details).
+> =20
+>  A Fixes: tag indicates that the patch fixes an issue in a previous commi=
+t. It
+>  is used to make it easy to determine where a bug originated, which can h=
+elp
+> @@ -618,6 +618,21 @@ Finally, while providing tags is welcome and typical=
+ly very appreciated, please
+>  note that signers (i.e. submitters and maintainers) may use their discre=
+tion in
+>  applying offered tags.
+> =20
+> +.. _tagging_people:
+> +
+> +Tagging people requires permission
+> +----------------------------------
+> +
+> +Be careful in the addition of the aforementioned tags to your patches, a=
+s all
+> +except for Cc:, Reported-by:, and Suggested-by: need explicit permission=
+ of the
+> +person named. For those three implicit permission is sufficient if the p=
+erson
+> +contributed to the Linux kernel using that name and email address accord=
+ing
+> +to the lore archives or the commit history -- and in case of Reported-by:
+> +and Suggested-by: did the reporting or suggestion in public. Note,
+> +bugzilla.kernel.org is a public place in this sense, but email addresses
+> +used there are private; so do not expose them in tags, unless the person
+> +used them in earlier contributions.
+> +
+>  .. _the_canonical_patch_format:
+> =20
+>  The canonical patch format
+>=20
+> base-commit: e8bcda12176c47f2ce6c5104955845d028a640e8
+
+The wording looks OK.
+
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--C6onUu6KEVPlj5WK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ6Vk+wAKCRD2uYlJVVFO
+o5glAP44+tawF8z7wtEt+DIrZa5CIvAEEOKGpIiDllIt9liccAEAxYfTO/Zl3U98
+Y11LKwZ1AOgDaQdN7XXWB6DqGApB6wc=
+=Xisa
+-----END PGP SIGNATURE-----
+
+--C6onUu6KEVPlj5WK--
