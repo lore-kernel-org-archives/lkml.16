@@ -1,117 +1,148 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDEC2A1D8;
-	Fri,  7 Feb 2025 20:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5561A5B83
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738960868; cv=none; b=MchWPbZ0l2pxtTq3IUUIKcy1Of+XhUJp0E4YWTyfMMCvCYtAwHJdDnb1aMfHZnYa/cofS8Z7YA4bWw13v8CoSzXNFquJ4O85LBA3xeTTiScgp2EPxuJjJZbdxiXvegb020Yr9jVUnuOh7BBNz35jlQt1008rfTy2yvfUx8tqqVw=
+	t=1738960885; cv=none; b=DIruRmx0JOGWc1q8wLRQHF7LynDleRDRC6NH8OuzUouMWrdsxto0qtNK8EAT9AzqBHtP/XP7oLFIiQEFLoYqIPTLjmqyagrmU8yeHumEY04kWH+1KyTDvOGpG5nic+OXEGC/h7SmjiEwnvvuzVHSiS2A4+LgNNXRY857zobRmxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738960868; c=relaxed/simple;
-	bh=ZLeto5lenWWsfYShCWoRxmCdwddxKRoDvQEetKlAioQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uaCN3N0M/B9Ofh4iUdeVHHtwhHeQaCixxJfonLIzUli7t05cL71CZSbVAWYo2Mx2LPIos/XkRhSEDmVVMNtLICk9DF8rMx/1+t57aPxCwvfOUJF0r3KCdWs3KGHcWMU+WFqKePTXXtR6ra7EKi8aJNolb8zgnqxmOYpNI9qJyf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SSP0scUk; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738960885; c=relaxed/simple;
+	bh=qiQogY4nWHYMJ5BN+x5c7UGCpSpgl8ehDDro3OyQnYE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=M1PXwGwyNPx9Hy9+bIt0h7jaMtb2gUnPJOI/2uzXE/ZUECb+WGaLgb73g5tB6SuQoKUHdmVWN/AyIV7XhwWduxBhEmLKCfY4pPK+Bn/lI9d/oErbrSRrdSFee4rJyn1LOI9s6N8NZ8S8Yzrb2XXBcidp2XbLfZTgjZwuzcNAl1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=crUAExUj; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SSP0scUk"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5dcd09af4f9so5186820a12.0;
-        Fri, 07 Feb 2025 12:41:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="crUAExUj"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-308dc0878dfso3704861fa.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:41:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738960865; x=1739565665; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZLeto5lenWWsfYShCWoRxmCdwddxKRoDvQEetKlAioQ=;
-        b=SSP0scUkiYkmPFjWbM0p0DnMbbTjAJRtREvJE5PRkR2mDFTvbapbUjU0yL85H/AYEA
-         83VfMWqDomKfV3NhesDIoXJ+x9JwLGFB2SPn+nrKw4wPOM7FTD4W1JXyKCDaxDz7jyR2
-         +e+Vx3fbm06I+Y2JdK3CvNTIMFzvzJbxLZ6ym4Rz1yVIEKFypuiS0eE9dkmMdpZtxI+r
-         sPds/a97HCk8TGSRr+/tCWbN7YDOIqw8zNaOEQ/Clt+0Md+/5K/V3JBu/LMVZylQX5QF
-         14n/2mT7JYviF8tMkNBmEIUKQv2o//oqMRUvcybNN4TSW7qZ9dTiEtdsOn22ua+DOEPu
-         UOyQ==
+        d=linaro.org; s=google; t=1738960881; x=1739565681; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AxTbsKhJE4yee5eNW0RBl8yAXgK28pIKigb6T5Yer0o=;
+        b=crUAExUjEsoYfPXVt7lBlim9CkNitrIHAVnT5p/deBwfhReuOog4iAspBlhHaKbt0T
+         1ezO479E8oG1lIiOTho9+hvmCXZ05NUmBPCIkK8lTOExhAVTv69i6xEVzRZvh4j/StHG
+         dXdMtieRUekahPMsOD5IhfAC+fUvTvZp72G1vjeTKdyHbcXFrUiX+KkyCgHbu/AyVUv1
+         IJlj2arHnpZ/fKNrrmWWWmTl8ll80qBY1LL/FG3/WUh9eIhyhTk/1AUkoVmlEixOo1pi
+         mRLYgKJuDleW1YWaHBF6C84gn1A5DGI4FtOX6h+cD5wmqBHh55nmMYn9N+g7aJrRXsLX
+         ha1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738960865; x=1739565665;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZLeto5lenWWsfYShCWoRxmCdwddxKRoDvQEetKlAioQ=;
-        b=qZesn6PeBpQqs2J3G2USzdQkqGv/lrUtLPhjArlJrHHeiDEf1UmfJObATBWFoAwka8
-         J2MBybWIdTX71wYY0/o9hSfYm8n5hX6IqByVGNBpaZD0dCce7Ee29Wm23hxxPjR9iP6D
-         GbMSrzHaclK2IBL4AdJsnGOzPsMhp/hdUjieiEZGIAqh9N8HL5zZgaefz1ADgZVUvgf2
-         zwLRPoQDyO/zI0jwYOMBVBhg0oRh7+3vj6YS6UoYG42tYD8+cP3Q/CSjQUW1HNAcfmt0
-         /mxFMFmX8vKZ7+sEnfTwQEsnIrbqqvyVszagGAqGfPZ2Vp935OaL0zBi+fyPJd/uih7i
-         D+yw==
-X-Forwarded-Encrypted: i=1; AJvYcCXNkMZJ4TTmVr5RIPR0GO1OyaGJzhr54MnVDFyWrgr0Attum4gQP2pY6vbDxLW6xf23QmDTCanUWwdW@vger.kernel.org, AJvYcCXn7K44MkPFPgzhTgMtra88yNdvKqm5Frjkc+cfAEIJw5tYbZZRMjDg/myl+17k+gAWeJR1LjSXGC8+7fOd@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQe9NZZhQ7lMUqF4OlJFFj96gRhixXKH21ebvbRnTl7daclAjq
-	M1/w9rkiPOIkA3rIpQrXIiStLbIOAAm5R1TyG0ElxUTuSKRwmuNlAwvTWtDkSTO0y7aIucrOfc5
-	2AD/mXwFEtjUZhfpWlj5t223+pkM=
-X-Gm-Gg: ASbGncseOFDKodqs5RoyLhL/ko2yhmgyJockYAwdlx4HykO8wI5aCf9umw0uhKHEaB7
-	Fj9trcCAIguMm38dtBUxGJLwZ1TSDXHwY82BOtEaIS6Q85BydLCOayWAvVt/JzUKeiF/OzHBj
-X-Google-Smtp-Source: AGHT+IHTBXjU2mEuopccCel//ymz7vVggMYDhLgH7VKHD/w9kNEbmuNmoD4XoI5BlFQ6YqLmRGPMNfjy/JJx7cuemkw=
-X-Received: by 2002:a05:6402:550c:b0:5dc:5e4b:3e21 with SMTP id
- 4fb4d7f45d1cf-5de45003a18mr4956485a12.9.1738960864724; Fri, 07 Feb 2025
- 12:41:04 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738960881; x=1739565681;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AxTbsKhJE4yee5eNW0RBl8yAXgK28pIKigb6T5Yer0o=;
+        b=L3jYtFo3jlDdIu+tcUv9og3bmIeRue3EpVZm58KgE6FNGtQqoitRT2+Cjd3i3yKm9W
+         YhOt4hOqvjxrWVIIWuwChYm8YgLDbX/YO8fCmP+lDWUKcGuSmoGLfZ4M8CeU6LH6ZpaQ
+         Z9+FE5Qp2uO/aUJs4uedNdXU1c1HZHAavr69Dk/3eurYbsCq8nFoJyzeeFJPj4G/xA5s
+         21IYrjAHXP/sVdKx5H6S/1Y+lprwSME3HxvN+0V+LN5GJi28zSESVZRZ+QT4IghHQBrh
+         0S+9GzNraiD+CODBfC0DQqR2I80jg8r+tHEwovPeOYiVXONY8FjEAigZJMbAVDVwM5ro
+         OMZw==
+X-Forwarded-Encrypted: i=1; AJvYcCUVEivIjhqJlYk47qBZTEsdKJkC3dLrfMxTCXHbH6OgT1XHWXNiMdY8t3+hr8oxg3jT2ZmnOODtoU+m76Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv2epAzNYepGEVgr+PhONu5LsfVxzOo6vO2LkqARd7JExS+5XW
+	cFbncytaSw5+9S8oUgXBOzvrobOs03SoiTQn95V6yj/03VeWPxWOf63rpc6FUKE=
+X-Gm-Gg: ASbGncveD9KlNtglaWEP8Nr1+OLumR+RUqDflULGc3k5t/Bt+DP8PLYKpyD54O/P3vg
+	oNgaL7zyJa17hi/7z1n9QOsWG4EHS/EvBexQOF6zirNp2BYM0jd5zufXz3tMqouIH8mDhPSFj+B
+	6AFHvwXvPbc/HZnycpZWgfBfFk6afM00IFSDCZZWpcWKRtIpT3yIIJWt6QxOGhTHrtoeAPDnPkG
+	LJr3AAoFw8qgVt6LEYELeCUEg8f0EOp/yEAMYZIeBessM+J7+sDI7C7BksNaJLkkfpVFVuuE7t7
+	Fed8AGZ788GJzTgKX2QLxx0=
+X-Google-Smtp-Source: AGHT+IFW7Wi+qx6pPTX7V3zT7yPLzOOq54XAmuBFxAdNvG6EcqWrudwijkyuNYxTfyXx/zQlqlOKCg==
+X-Received: by 2002:a05:651c:12c3:b0:304:9de0:7d9 with SMTP id 38308e7fff4ca-307e57fd306mr16769571fa.21.1738960881315;
+        Fri, 07 Feb 2025 12:41:21 -0800 (PST)
+Received: from umbar.lan ([192.130.178.90])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de178628sm5343811fa.10.2025.02.07.12.41.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 12:41:20 -0800 (PST)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH v4 0/6] Bluetooth: qca: add Qualcomm WCN3950 BT/WiFi chip
+ support
+Date: Fri, 07 Feb 2025 22:41:14 +0200
+Message-Id: <20250207-rb1-bt-v4-0-d810fc8c94a9@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122120504.1279790-1-mastichi@gmail.com> <CACRpkdbtjS54+g-K1azE2hHeTsiyzA_gFa2NBX6QZZ3D_H5Ryg@mail.gmail.com>
-In-Reply-To: <CACRpkdbtjS54+g-K1azE2hHeTsiyzA_gFa2NBX6QZZ3D_H5Ryg@mail.gmail.com>
-From: Dmitry Mastykin <mastichi@gmail.com>
-Date: Fri, 7 Feb 2025 23:40:53 +0300
-X-Gm-Features: AWEUYZk-DfzfkvP29lAJ84QYUJQNGMy1jGNY5rel3GTLhoY5cfrgZWeBmPWo6v0
-Message-ID: <CALieaef39VdmjF=e+65bqF6_dkq7sT1-ps1X3gAnq-Gy6Huodg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mcp23s08: Get rid of spurious level interrupts
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Sebastian Reichel <sre@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, e.shatokhin@yadro.com, 
-	arturas.moskvinas@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOpvpmcC/23MTQrCMBCG4auUrI1kkrFpXHkPcZG/tgFpJClFK
+ b27aRei1OU3zPPOJPsUfCbnaibJTyGHOJSBh4rYXg+dp8GVTTjjJ8YZ0GSAmpFab6UWgEqBI+X
+ 5kXwbnlvoeiu7D3mM6bV1J1ivu8QElFHtG1VbVFy45nIPg07xGFNH1sbE/zteXOsQGYBEZczOi
+ W/HP04UV0slNWItrXc/blmWN0yvH38NAQAA
+X-Change-ID: 20250201-rb1-bt-cec7a314991d
+To: Marcel Holtmann <marcel@holtmann.org>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, 
+ Rocky Liao <quic_rjliao@quicinc.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1944;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=qiQogY4nWHYMJ5BN+x5c7UGCpSpgl8ehDDro3OyQnYE=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnpm/tYXWlo4SnQJGUzZQ8nYM1MuZaf9S1YOcAj
+ csbfBBW7GWJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ6Zv7QAKCRCLPIo+Aiko
+ 1ahpB/40yzVZal2uwoGmtjui0KAWyW6I89DEeVMcNHyOrirx8Ff0ghNIjjw1VeABQLQpeS7XvVN
+ xlIHUaRBg+cMxj7Jkc6lyLOzqBrVpcckcp1ir46nGXucNrQH3vGQmb5eXDejSCGmh/L9Vr5YmlM
+ FVxquuEHz98oL68adwZaGjiKRn9WOA5vt3x7R9mk5PW+zCveBOvp3aMG5omVUZ5iUMtAnP6vjXA
+ 3bfCWa7aEkibpngAMIEo6MLte9BoC/7nByW68KNrwUt6hG6aCLWRMiUq2p2J4Gq4ohJujhukHBg
+ DB9Poye+ldSNB7YusTxFCrVPxE6Syl1nDvVLbXPCBCSUApmu
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Hi Linus,
-thank you for the answer.
-I made more tests and think that this patch shouldn't be applied.
-It removes duplicated interrupts, but sometimes they increase the performan=
-ce:
-a new interrupt may come during handling a spurious one, and a
-spurious one will become valid (resulting in a kind of polling). I see
-the number of my touchscreen interrupts reduced from 200 to 130 per
-second with this patch. It may be a bigger problem for users, than
-duplicated interrupts. Sorry.
+Qualcomm Robotics RB1 platform uses a new member of the WCN39xx family
+of BT/WiFi chips. Add support for this member of the family and enable
+it to be used on the RB1 board.
 
-Kind regards,
-Dmitry
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+Changes in v4:
+- Added empty line before status property (Konrad)
+- Reword Bluetooth commit message to follow linux-firmware changes
+  (cmnv13t.bin and cmnv13s.bin were merged).
+- Link to v3: https://lore.kernel.org/r/20250202-rb1-bt-v3-0-6797a4467ced@linaro.org
 
-On Thu, Feb 6, 2025 at 12:26=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Wed, Jan 22, 2025 at 1:05=E2=80=AFPM Dmitry Mastykin <mastichi@gmail.c=
-om> wrote:
->
-> > irq_mask()/irq_unmask() are not called for nested interrupts. So level
-> > interrupts are never masked, chip's interrupt output is not cleared on
-> > INTCAP or GPIO read, the irq handler is uselessly called again. Nested
-> > irq handler is not called again, because interrupt reason is cleared by
-> > its first call.
-> > /proc/interrupts shows that number of chip's irqs is greater than
-> > number of nested irqs.
-> >
-> > This patch adds masking and unmasking level interrupts inside irq handl=
-er.
-> >
-> > Signed-off-by: Dmitry Mastykin <mastichi@gmail.com>
->
-> Patch tentatively applied as non-urgent fix.
->
-> If this is urgent, I need a Fixes: tags and we should also tag it
-> for stable, is this a big problem for users? I don't have the big picture
-> here.
->
-> Adding Sebastian, if he's still using this expander.
->
-> Yours,
-> Linus Walleij
+Changes in v3:
+- Mention new firmware files.
+- Link to v2: https://lore.kernel.org/r/20250201-rb1-bt-v2-0-fd44011749bb@linaro.org
+
+Changes in v2:
+- Corrected QUP interconnects (Konrad)
+- Added /delete-property/ interrupts and an empty line before status
+  (Konrad)
+- Enabled downloading of different NVMs as required for v1.3 of the chip.
+- Link to v1: https://lore.kernel.org/r/20250201-rb1-bt-v1-0-ae896c4923d8@linaro.org
+
+---
+Dmitry Baryshkov (6):
+      dt-bindings: net: bluetooth: qualcomm: document WCN3950
+      Bluetooth: qca: simplify WCN399x NVM loading
+      Bluetooth: qca: add WCN3950 support
+      arm64: dts: qcom: qcm2290: fix (some) of QUP interconnects
+      arm64: dts: qcom: qcm2290: add UART3 device
+      arm64: dts: qcom: qrb2210-rb1: add Bluetooth support
+
+ .../bindings/net/bluetooth/qualcomm-bluetooth.yaml |  2 +
+ arch/arm64/boot/dts/qcom/qcm2290.dtsi              | 31 +++++---
+ arch/arm64/boot/dts/qcom/qrb2210-rb1.dts           | 83 ++++++++++++++++++++++
+ drivers/bluetooth/btqca.c                          | 27 +++++--
+ drivers/bluetooth/btqca.h                          |  4 ++
+ drivers/bluetooth/hci_qca.c                        | 25 +++++++
+ 6 files changed, 157 insertions(+), 15 deletions(-)
+---
+base-commit: a1d1e1f2fae5fcb5f2e43b81afa9596c606e683d
+change-id: 20250201-rb1-bt-cec7a314991d
+
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+
