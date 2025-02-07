@@ -1,94 +1,97 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117961DE2BF
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FA51DD88D;
+	Fri,  7 Feb 2025 09:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738920997; cv=none; b=td7XBA7mSBuTmobgb3MwiPkQYYua11aWlqughJll+yk/jGv54qqR+XvdvzqEPTMY3wU/5gQzgm52f4EqdYMl+85+95lO1L7MB7latC1YFtn1VV7j8xx09aYVfYOymIjQPb7bujdkVHdIV6oq7car8QSlkJIqvZnUxBB00+OPaSc=
+	t=1738921024; cv=none; b=MV+k33HOA+NW4AOJoYMdcoT+cOg1oaHRP+o1vkXfRe9v6RDQp5oqDua4fE71A7FSxyO/9Zm6P2TOJb7ZToHs/kWxiOR3wR/wb23a16QlZ+/G++0Lj4AZ7DG3GJ+an+OB7cKAp52BUqAmy1OGcYidLHqs8g315XnWiyvYfDA2whw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738920997; c=relaxed/simple;
-	bh=UxAd+wsP4rNmPqXX/KMWm806ndMuANqheCq3j79eOZM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OBoOFgoOSZQqCinzvCNRxii9Aytan+ZbqGHHBPrX3/GbETKJn6DD8LOMZj9O+7FtTH0+/BD2prMuRKKBljXEMK6+s+ye67YWEtFRDMjWy/PPocqReBBuP8DSiu+TvpJ7iWtGPFsfOj0zahoCS4kfeyVFUVzn8CP5L0Gk4COz0BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B4nPrz1n; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738921024; c=relaxed/simple;
+	bh=f8S5Z26MQ4v00FiRKizfZIrEOYaW+rK3aHSMP+4o0HY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eYPygVfulTvRIBL5wSYQ2a4wdXZoJIBu6lpBJ+w5P2+vDJXL4YCcQu4zC+HPm5UMsrxcbY1G6rMM1FTxjBofiQLOsTQ39pcgRBu7sTRfmvc43A7GQbKHyUGzuAX+XLSVlLZsQ/H5GjNAVQm0rhsbRPeO7zVqm7JwamB3OLnLlmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h+CqAoLq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B4nPrz1n"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-307e00d6b09so12283361fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 01:36:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738920994; x=1739525794; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UxAd+wsP4rNmPqXX/KMWm806ndMuANqheCq3j79eOZM=;
-        b=B4nPrz1njGXIr6NNKYnp0nKvnosDuoC2dVYeesemowDOjcKJ/TCsH3Dp5fNN6d7Bfs
-         Z18lMaQQDzB4Mr+l74mN3AJobWJibMWbngKfzrxPwwA19uBVXyk2h/fjw4TdbSGr5tdk
-         8f1R1J4mtr1BX590uumFLmjvvX7n/K/Dozlo74H6NKkugr7NsVaFVhEbP+bZuPFURvIf
-         dKhs61vEvpRfCF/PgiGLiQ4DCcCgfZ3HYJcgljDPkOXOcYpYo2DBuI0hnmFAEdZGYxnE
-         oCN/F7LDbe3rU45aLOmNw9J+PAvjkUXRD77fhMiymOenh10+fDpP/Vdv9cqJ4Fc6AP7S
-         NqWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738920994; x=1739525794;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UxAd+wsP4rNmPqXX/KMWm806ndMuANqheCq3j79eOZM=;
-        b=s+U3jQ7TISb77cycWq03UgX1n9d5gk7V9sAD72XYaQVdPNd5WGuARkzwAw6CU2YeB4
-         yTcLEHd1RmAgHW3D/4QLzrNZ+7toHE81yuqXMvcEoF9BXMYrOjUDqvaiTQCNjCWtGvHQ
-         G/g7WU4kDNejuKvatq+kYAHQqDeOsTMrldUHWXoK5u+KyMjnOjsC4zhD9xCqN/laYtCx
-         sCncsp7rSO+douCVrjq/+HLls9IhN0rN1MIagxciZnJNPLnz2opk8bQBjZvxbQai6kkn
-         KwbSpdxmEN7OsCoTR/H+G3K4imcNRxcxCvbQi0hvpfcIv1TyMhDN58rsBvXxV/5K4+Tq
-         qFCQ==
-X-Gm-Message-State: AOJu0YxBHXe41JQcT9B24ah26LUlLKbpR4laDKViw/hWg3P1tzjvkKMt
-	RkZoeCscsrNGsOEI+XbWSs1ZJDvzwpLJ8gxF1PvltQNYQJMj6315j2WttGIlxUjt13GzI/VXv18
-	5oX6RVtxv9IIasMo7chC7nMaaTec=
-X-Gm-Gg: ASbGncs+CkyRN+wc66sQihWGR0vF7YpcB3t0z433jt6nwXr+NuyYBecreqp2TFlOrdU
-	9lOX8fGlMWESSgxftnUkfn76J9tyGOzve4II2v326HrJgA0wL2GstFzizk5ComcOYF5ossegU
-X-Google-Smtp-Source: AGHT+IGo/uJ1hF9uUEbIAH1y5DexuYdoUSh7yPXUBhYk0+92mVrHuJvz1uOfIidNZqWw+LMTSJQC55ZwNl2POIXDQz8=
-X-Received: by 2002:a05:651c:b29:b0:2fb:5f9d:c284 with SMTP id
- 38308e7fff4ca-307e57f1261mr5951821fa.16.1738920993771; Fri, 07 Feb 2025
- 01:36:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h+CqAoLq"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BAAE2C4CED1;
+	Fri,  7 Feb 2025 09:37:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738921023;
+	bh=f8S5Z26MQ4v00FiRKizfZIrEOYaW+rK3aHSMP+4o0HY=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=h+CqAoLqfWodIlcT3E1goZycS0fH2ARZzvspuepmfVQRN8e/4R6ZmXXwAD/CeceZP
+	 3LKwJJISJuBYojRQZ+WFiesGfqF9yix1uiYWixcywfkcVG8PvwU9xrw13mbc8SAeBY
+	 4uTGNEP62Nw3Blil+RiPt9GWTAR1ZHU6Czpp7irFkEtlBHDKiS56Gkm8+4d/Cf9FgU
+	 1xv6jS/D+an01o2ehJWb40AICepUBq+rmhCsl48v4MAzxFr03bhg7qFwv5v3iW1alW
+	 qHJpB6pNayqXKm3Dk1Yl2MHib/THDE0eSGTVxTKOXmev/RAhQc6xnnhqC/Zd1oC7FQ
+	 uRHhvFiC02bfQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE96BC02196;
+	Fri,  7 Feb 2025 09:37:03 +0000 (UTC)
+From: Chuan Liu via B4 Relay <devnull+chuan.liu.amlogic.com@kernel.org>
+Date: Fri, 07 Feb 2025 17:36:10 +0800
+Subject: [PATCH] clk: Correct the data types of the variables in
+ clk_calc_new_rates
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205092721.9395-1-bhe@redhat.com>
-In-Reply-To: <20250205092721.9395-1-bhe@redhat.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Fri, 7 Feb 2025 17:36:17 +0800
-X-Gm-Features: AWEUYZn0JchtBZ8RpZTIzLjInmmvLD0sspPwMPXYQhMeK7CoUUz74RS9cnxhyDk
-Message-ID: <CAMgjq7C_93Z8abbBb7Jfjd3iMAAs8EeLBmPOeXrR96NaVgz8cg@mail.gmail.com>
-Subject: Re: [PATCH 00/12] Tiny cleanup and improvements about SWAP code
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	akpm@linux-foundation.org, chrisl@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250207-correct_data_types-v1-1-f22bc7ea220d@amlogic.com>
+X-B4-Tracking: v=1; b=H4sIAAnUpWcC/x3MTQqAIBBA4avErBNM+oGuEhGTTjUbi1GiEO+et
+ PwW7yUIJEwBxiqB0M2BT1/Q1BXYA/1Oil0xGG06bfSg7ClCNi4OIy7xvSioDR0SYtuveoASXkI
+ bP/90mnP+AOo8U/tkAAAA
+To: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Chuan Liu <chuan.liu@amlogic.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738921022; l=877;
+ i=chuan.liu@amlogic.com; s=20240902; h=from:subject:message-id;
+ bh=kAjBoWOCJ4Ktd9GA2YrUkGuLwEKid48PkvX+9Mpiwa0=;
+ b=bOGjHFE86GTkOgfuiMiFJ2HgIDxYB+nL6hQ5zLfsBT3io0i9+CYMt0vF2wV3Q9XTRoJola1oj
+ HpJMjHnIE+UA0Xg1yf8L4IHfXfd+Lh0V4FU+6TNriHw4gihEglu4w+i
+X-Developer-Key: i=chuan.liu@amlogic.com; a=ed25519;
+ pk=fnKDB+81SoWGKW2GJNFkKy/ULvsDmJZRGBE7pR5Xcpo=
+X-Endpoint-Received: by B4 Relay for chuan.liu@amlogic.com/20240902 with
+ auth_id=203
+X-Original-From: Chuan Liu <chuan.liu@amlogic.com>
+Reply-To: chuan.liu@amlogic.com
 
-On Wed, Feb 5, 2025 at 5:27=E2=80=AFPM Baoquan He <bhe@redhat.com> wrote:
->
-> These are all made during reviewing and learning below patchset from
-> Kairui.
+From: Chuan Liu <chuan.liu@amlogic.com>
 
-Thanks, I've noticed some obsolete comments and code, currently
-refactoring many parts so some of the functions would be just gone
-someday.
-But this surely cleans things up and is good to have, refactoring will
-take much longer time to happen.
+In clk_calc_new_rates, the "ret" is only used to store the return value
+of clk_core_determine_round_nolock, and the data type of the return
+value of clk_core_determine_round_nolock is int.
 
-With the V2 update of "mm/swapfile.c: update the code comment above
-swap_count_continued()":
+Signed-off-by: Chuan Liu <chuan.liu@amlogic.com>
+---
+ drivers/clk/clk.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Kairui Song <kasong@tencent.com>
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 9b45fa005030..e153d1901a60 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -2283,7 +2283,7 @@ static struct clk_core *clk_calc_new_rates(struct clk_core *core,
+ 	unsigned long min_rate;
+ 	unsigned long max_rate;
+ 	int p_index = 0;
+-	long ret;
++	int ret;
+ 
+ 	/* sanity */
+ 	if (IS_ERR_OR_NULL(core))
 
-> [PATCH v3 00/13] mm, swap: rework of swap allocator locks
+---
+base-commit: 1e1fd26ed4ca05cc1f0e5857918da4dd54967f7d
+change-id: 20250207-correct_data_types-fadaeaa46b07
 
-BTW, I noticed most patches here are patching legacy code, and not
-directly related to that series.
-Just to clarify, so people won't need to worry about missing "Fixes:"
-or things like that :)
+Best regards,
+-- 
+Chuan Liu <chuan.liu@amlogic.com>
+
+
