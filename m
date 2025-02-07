@@ -1,129 +1,136 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826EF1C6FFC;
-	Fri,  7 Feb 2025 08:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889A9233D90
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738918624; cv=none; b=GMFSAqjdVa0LB0qOfexG4iS6XOdQ1kq7032Tw9K32Ind0H9ScRZxfTFstibw1v12QKtbMplO05jjjRFDQAxym08le2Z3/TbkzN9rsAin6XsJkIMhBeOKowL/MmZdOBt3nShYDThdliS4JD8AgeC062PAQJjUA1hi8jjtCgjVMy0=
+	t=1738918629; cv=none; b=lCl6ojiBpXMlo78ubqheFiCd2rRwUDv1jnFWBpJjpzZ06P5GA7TQPr7nhXoZJaeB661zOjYFYJLjb3NeVcLmcUjNfGrJE7tv0llgUhJeMMOf0rU1ZF5Y7DJ6VTrw802pPVEHyBIT9oEbuWNCx/lnMKt/4+O6u2MQvoBCiTEA9xM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738918624; c=relaxed/simple;
-	bh=ppiWtOfT2Ve7e1nS6/HMa2Ajq3jvgAbZc0pgN5Um54k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jeo+kMWZ2vkKFjqX7MzbiOfkw0Sw6jbANDOAaOrQqXCaRl/85ncLuIAHcludBt96UEl/8jTsxDAjA93+Yb+epxUEBNXgMb9jf3f9winxKIYlnF9TgcB3AkiQuGmSzMWOaKBTeP8k+R1DXIkXyCOYa+c9Cyl0o4Rtmusm/xexkyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BgZogeDW; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BgZogeDW"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-219f8263ae0so35981785ad.0;
-        Fri, 07 Feb 2025 00:57:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738918621; x=1739523421; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Vx3ELvMf0qmQJJFnyKbMyptnWywqfF72JyrwcCPkjc=;
-        b=BgZogeDW2hCNZKD9eIhj73SBApNm6iYintwSB9Fij0+oL9AlfghgYlEPgjVRNcKZRW
-         rr9GBv9Hf0f7DhG7Faw6LcUiDWeE9MrtfxVuUz7FE/GY0Uih0yI050Ecb3nGOg2IInmT
-         mcpSd09ORA47aTHoY7xK5x+ZVWLy+HVg9ZhFrgGQMMPpW7z996ceMobnv1fujfB7etEc
-         QHUkSpx/X1le+iFxXHwkN4i/hHz+Bb0xXmSmn39afl4XkzoB6zGOuI/uoq/sgeT+b3pD
-         /ZaMnQwPeRqoGbqMXOpySXz9wWBDSFaYQ2Q8lvpU4k6VIMq/bghlJW+RWdxFqwCNpJ6l
-         x7gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738918621; x=1739523421;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0Vx3ELvMf0qmQJJFnyKbMyptnWywqfF72JyrwcCPkjc=;
-        b=Wsv3J6LIblhV8qDbhhtnTZimhzrvsVh+sFlYPVKJbfSLNRpTG+9BIi+meoBixrJdqK
-         6P4bqBE0tTgRkidd/lh+EEaQIsg2dHF4fvHgiV+ll+gsxg49NpomMsqkv0K7jfT4Bjz7
-         H6Awasdf006P4HYe6mI4lGta+fo+efQchYCqJcitoOQaNsz/jLAb7PRPrpQupxTSILaJ
-         9woHnxVFhb0uJv4R945Ho2AdR7lStYW2wy/rEJhhHTTDSPspRxImTlSDvJHX5d1PhZNq
-         +IvTXFKBhVC2E92wsIBolNpATo4a+2WgXrTNABEinGb0Hg2yW86AB42zT1krcQmRcqkh
-         McBA==
-X-Forwarded-Encrypted: i=1; AJvYcCXBi9OELDOtchy/40m9uy2HsKm/DGikmstsKxBlVIIKrm3cJGah8sd4cUzfubJeaS29l7mw4hczHs4ZahE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHyPRlTJQH3GcVSy5ueL2P5npduqluIpqIEcsAFDC/NwOQNANN
-	WYcbtd+n7kEOe7cKzYaBBwI5j/I2923cS2CaaK1UA0yqYNlTGlxl5oM9Fg==
-X-Gm-Gg: ASbGncuBCTaE7SX/mQJjTGdi4bQKDKbOtFMe0npiMi+9Uis0zqMOEOd5V7mvFq7hx7C
-	OPPcpYQ9NMoieCExDWJm4mAIXELF46ld/umtfEzXf1RzL5otZY5gA41c4m6tIcIZ1CjRzgkbAQf
-	wRVP378L62E0Kpv8U/cd0jIDOt1JXysz4Bt/XOyWyQyscVo2aWqwESl0MckRbcVoWsZi1Pj0zvn
-	5h2rs/XC1Irrgwkd6P2jcIJDRsp5f6h/OEaisrbvVVpq5Xr7GGceDSNmHApJu9BJFpSQF/5UHXf
-	MJ52wlCDo9doWZ5t8WgeAhWHcAbf
-X-Google-Smtp-Source: AGHT+IFlNjPnbw667WtlBgeKpirAAyliI8fxFRqc6Br/oWFk5pHJMGbuj7/4JbGsPe3J/2mcAIkPMA==
-X-Received: by 2002:a17:903:19cc:b0:21f:35fd:1b6a with SMTP id d9443c01a7336-21f4e76cb06mr47882695ad.51.1738918621258;
-        Fri, 07 Feb 2025 00:57:01 -0800 (PST)
-Received: from localhost.localdomain ([129.146.253.192])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-2fa2716c1ecsm945042a91.25.2025.02.07.00.56.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 00:57:00 -0800 (PST)
-From: Furong Xu <0x1207@gmail.com>
-To: netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	xfr@outlook.com,
-	Furong Xu <0x1207@gmail.com>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Brad Griffis <bgriffis@nvidia.com>,
-	Ido Schimmel <idosch@idosch.org>
-Subject: [PATCH net v1] net: stmmac: Apply new page pool parameters when SPH is enabled
-Date: Fri,  7 Feb 2025 16:56:39 +0800
-Message-Id: <20250207085639.13580-1-0x1207@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1738918629; c=relaxed/simple;
+	bh=MSy7wxDIY5tOmBerca1Muxh5iPDeSkNud0/pmiyIhqw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=EMRoxIjaqiS2sCC7BF1iw9nv+dicbl3k4i11kEOl9SjoXzSUfDfkiBGeoGcmuclXB6XdPGh6GqkjRflI36s5VIV1yaoM3ptW5dHRYznyRnYpjVIvQZ/Md/UgSh6HCzkC+9Xkv+mtl99XTVnuPpKCYrPo3RSyPjzbY55fA2cTG0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Yq75k1MmVz1W5D8;
+	Fri,  7 Feb 2025 16:52:42 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9BB7A140257;
+	Fri,  7 Feb 2025 16:57:02 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 7 Feb 2025 16:57:02 +0800
+Message-ID: <10e648ae-7e0b-4560-a73d-b728efbc9e15@huawei.com>
+Date: Fri, 7 Feb 2025 16:57:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] erofs: use Z_EROFS_LCLUSTER_TYPE_MAX to simplify
+ switches
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, Hongzhen Luo
+	<hongzhen@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>
+CC: <linux-kernel@vger.kernel.org>
+References: <20250207080829.2405528-1-hongzhen@linux.alibaba.com>
+ <f4319592-df8f-4468-b8fb-7fcbc51804c6@linux.alibaba.com>
+Content-Language: en-US
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <f4319592-df8f-4468-b8fb-7fcbc51804c6@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
 
-Commit df542f669307 ("net: stmmac: Switch to zero-copy in
-non-XDP RX path") makes DMA write received frame into buffer at offset
-of NET_SKB_PAD and sets page pool parameters to sync from offset of
-NET_SKB_PAD. But when Header Payload Split is enabled, the header is
-written at offset of NET_SKB_PAD, while the payload is written at
-offset of zero. Uncorrect offset parameter for the payload breaks dma
-coherence [1] since both CPU and DMA touch the page buffer from offset
-of zero which is not handled by the page pool sync parameter.
 
-And in case the DMA cannot split the received frame, for example,
-a large L2 frame, pp_params.max_len should grow to match the tail
-of entire frame.
 
-[1] https://lore.kernel.org/netdev/d465f277-bac7-439f-be1d-9a47dfe2d951@nvidia.com/
+On 2025/2/7 16:29, Gao Xiang wrote:
+> 
+> 
+> On 2025/2/7 16:08, Hongzhen Luo wrote:
+>> There's no need to enumerate each type.  No logic changes.
+>>
+>> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+>> ---
+>> Changes since v1: Put the exception branch at the beginning.
+>>
+>> v1: 
+>> https://lore.kernel.org/all/20250207064135.2249529-1-hongzhen@linux.alibaba.com/
+>> ---
+>>   fs/erofs/zmap.c | 65 +++++++++++++++++++++----------------------------
+>>   1 file changed, 28 insertions(+), 37 deletions(-)
+>>
+>> diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+>> index 689437e99a5a..f65c76991e02 100644
+>> --- a/fs/erofs/zmap.c
+>> +++ b/fs/erofs/zmap.c
+>> @@ -265,23 +265,22 @@ static int z_erofs_extent_lookback(struct 
+>> z_erofs_maprecorder *m,
+>>           if (err)
+>>               return err;
+>> -        switch (m->type) {
+>> -        case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
+>> +        if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
+>> +            erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
+>> +                  m->type, lcn, vi->nid);
+>> +            DBG_BUGON(1);
+>> +            return -EOPNOTSUPP;
+>> +        }
+>> +
+>> +        if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
+>>               lookback_distance = m->delta[0];
+>>               if (!lookback_distance)
+>>                   goto err_bogus;
+>>               continue;
+>> -        case Z_EROFS_LCLUSTER_TYPE_PLAIN:
+>> -        case Z_EROFS_LCLUSTER_TYPE_HEAD1:
+>> -        case Z_EROFS_LCLUSTER_TYPE_HEAD2:
+>> +        } else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
+> 
+> 
+> Just `} else {` here?
+> 
+>>               m->headtype = m->type;
+>>               m->map->m_la = (lcn << lclusterbits) | m->clusterofs;
+>>               return 0;
+>> -        default:
+>> -            erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
+>> -                  m->type, lcn, vi->nid);
+>> -            DBG_BUGON(1);
+>> -            return -EOPNOTSUPP;
+>>           }
+>>       }
+>>   err_bogus:
+>> @@ -329,35 +328,31 @@ static int 
+>> z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
+>>       DBG_BUGON(lcn == initial_lcn &&
+>>             m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD);
+>> -    switch (m->type) {
+>> -    case Z_EROFS_LCLUSTER_TYPE_PLAIN:
+>> -    case Z_EROFS_LCLUSTER_TYPE_HEAD1:
+>> -    case Z_EROFS_LCLUSTER_TYPE_HEAD2:
+>> +    if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
+>> +        erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", 
+>> lcn, vi->nid);
+>> +        DBG_BUGON(1);
+>> +        return -EFSCORRUPTED;
+>> +    }
+> 
+> No, I don't think it's equivalent, please use
+> the previous version for this part instead.
 
-Reported-by: Jon Hunter <jonathanh@nvidia.com>
-Reported-by: Brad Griffis <bgriffis@nvidia.com>
-Suggested-by: Ido Schimmel <idosch@idosch.org>
-Fixes: df542f669307 ("net: stmmac: Switch to zero-copy in non-XDP RX path")
-Signed-off-by: Furong Xu <0x1207@gmail.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 5 +++++
- 1 file changed, 5 insertions(+)
+I think this version doesn't consider the fallthrough case. May be just 
+use the goto statement can keep equivalent.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index b34ebb916b89..c0ae7db96f46 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2094,6 +2094,11 @@ static int __alloc_dma_rx_desc_resources(struct stmmac_priv *priv,
- 	pp_params.offset = stmmac_rx_offset(priv);
- 	pp_params.max_len = dma_conf->dma_buf_sz;
- 
-+	if (priv->sph) {
-+		pp_params.offset = 0;
-+		pp_params.max_len += stmmac_rx_offset(priv);
-+	}
-+
- 	rx_q->page_pool = page_pool_create(&pp_params);
- 	if (IS_ERR(rx_q->page_pool)) {
- 		ret = PTR_ERR(rx_q->page_pool);
--- 
-2.34.1
+Thanks,
+Hongbo
 
+> 
+> Thanks,
+> Gao Xiang
