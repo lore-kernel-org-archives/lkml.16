@@ -1,93 +1,437 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD25D22069A;
-	Fri,  7 Feb 2025 14:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7061D22069A;
+	Fri,  7 Feb 2025 14:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738939078; cv=none; b=aAUQX4r0FHWQyjV4jgzyrssFGynKIiQofLViOKZvl2a90ssMKvjZV3UggiUIRpfI6Au5kHuXTyi+P0Y3zCLqH/niGFleKxY+MwBo0L+U/uAZqQiFrVAZheOj6PYroY7jPst/m4uvkVprKjxabKMbm/2kp7jnqjHlN6+MY9wtNsk=
+	t=1738939083; cv=none; b=NWEr1dmluKkULMjShNcO3Rp5RMSflUoc5RSQtc/6L6HPSdK+rRrGbZBnl+snufe91Py019l0KsDYWq12ouMK4Y3jmkc3NIUnOHAl0edYN0prZ4Hj1paJs7Oh6+h7Nw4utYiBHSpdqi/wOT8XrTH3ETSIWyjhlhxaKCcqvZMDpZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738939078; c=relaxed/simple;
-	bh=jqowGkYZ4pmesdH31UEgUiregsf3ZvUnQhKbvZq1sgE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VCNzE1qxfnDKBEwBK13p7/egEtexWvhU1ZTofwzNolpnaS91O6l5TudLkoVInzqdvmfXYhpLYHMfPVmOEhI41lnPmqoLdORzwpF3VrBNIoCPqTZ4rPTkPQHwcw+//8AuUSzkMFAX/xzuc/pfIJtShryPeFexmEepfHFJtF5ohhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kzh4tRAN; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738939083; c=relaxed/simple;
+	bh=l4/rMm8twDUDq6TnCd4W8D7z+S0XRd5IU3rNZkqWUwg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=B0Ocap/CRTwAShJgQVCFrIpvB4smRoWqWAhS5zUU8cbbFE3j9hxlqfhqpRv1eiHW0Y4KajN8Yodd9MjRpaINcWjzb4Erw0484zONcyfktYTaBZ8YhobHdAaPEWb5ktncY2+lMw/DEiHXx4Z73+aNnaHybgs6myZrgPYttXmk43c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ns1Cb7AO; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kzh4tRAN"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3061f1e534bso20624771fa.1;
-        Fri, 07 Feb 2025 06:37:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738939075; x=1739543875; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jqowGkYZ4pmesdH31UEgUiregsf3ZvUnQhKbvZq1sgE=;
-        b=kzh4tRANjnXcT+EcLbxA1kR9/zdPBCMLuynIzxuOh6i/DH2P9ISJwp4gpKb4E7v/x1
-         PhybTFhPkY1mUMDPzxmrosRI1wYrU/O5xFaXOGmYMQpPWw28Av1uFA3qO7S8CIh+VWTZ
-         d3AWnmcSPTTlai95ep/ysHaNkLD9HHXq8DgpbA9pChFwkE3JFr3CihFkOCZWjaw/isn+
-         ApIYpCdVOfd1tjSMPlK61GFzgCU+XQmcozpTdZuVIN/oUAa0PjV6TkWTCkrz5BUb2bd6
-         ztvc+NI9IJR1TwKjk3JAVCLVMl1qE4XOUfCxADsLha6nqrn5m8U4SBpmymwX4R5JJ9Ws
-         BPMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738939075; x=1739543875;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jqowGkYZ4pmesdH31UEgUiregsf3ZvUnQhKbvZq1sgE=;
-        b=L7QhI8kcZSDDQ2l5TNHjtwn+zaJ+Ps62IQVipJ30ZZSXHrZryKBOqqRyrMdT99D9cO
-         j+pBsBhiua0P15kreeHXWavysS35z4nixfwjWGZ1BpmAK9Pd+7jI2cliSlaJKQTAGMGa
-         WWhHnxS2FmM6DrKle83wq/Ms1JnMsHdJXvVGrBt/eL5yFtomS7jDT9Pk/nUZhFqbKO4O
-         C4c4cQ3TZ2uzXCiS/62+gNK5YN3Mol7IKWztrMdsdqrbnx8Dd4OtLchGbDIs4qk4woWx
-         RwMOQgasU+X3gTGhaEj+K7I3OXnx8CklqjmhY9033sSRslicWzbuE6eLrQQ10pRdGfB7
-         Nnzg==
-X-Forwarded-Encrypted: i=1; AJvYcCW1mmwVgTR0nVCFsBDRc+SHF1z+vxILfe71tGfQUbFyTDysCdPZSb6oLhShDFy1uM/HJmFsIMXPfHVLKWCBMuw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc5k2M4Rtq63DWj9rR3xa+wQWPQxYDz9E8Kp3JOczJbf6sV8+e
-	k3iotCsR10OkVvSXEsqQe1+F1lWWJb4XpkCa6eKy34NunNxx1vQO95NEge3hQJuOQ4cVMg4KFp4
-	eVjSXt792c60qDNGgwJGbsc2tX7A=
-X-Gm-Gg: ASbGnctl2g78c4qHfSGxCx6YNtaOyyseM96PJe8mfUtHTbIbP9mlI2sZ463ybtptcja
-	DxN6Ov3r5NlOSuocA2C8QakiVKHJcsJNouHsYA3kgoYYWct4AjJw8pHSk4dWKidcfBB0ULnqkIH
-	e1EQE1slbhT3iSD/7aLmsJpaG0Cchk
-X-Google-Smtp-Source: AGHT+IE/7s3ZRdv2RJ8mB73L0hZdZLCobg6+u7fVU3XDEg1fbPGQuUj9F3JzqSSxhsjeZb1AeDeBWwUNzMVlDjizq7c=
-X-Received: by 2002:a2e:bd14:0:b0:307:dc28:750b with SMTP id
- 38308e7fff4ca-307e5801f81mr11890231fa.13.1738939074559; Fri, 07 Feb 2025
- 06:37:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ns1Cb7AO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738939082; x=1770475082;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=l4/rMm8twDUDq6TnCd4W8D7z+S0XRd5IU3rNZkqWUwg=;
+  b=Ns1Cb7AOFXbSKSlUUkGxFE3h/1/d5QldYvmOTZCeyAkpt2n5PpWTpf8o
+   QHQXmSF2GrqX6xkK5h+vgWLsNxNSWSmOLODYQeoeXCF8z8t+2JSuOTE1p
+   RjT3mqDHQ+KDxKi6RLx/PKdjm5P5qcMAK+Zg5M+U4OOoWl8jSctub6liA
+   mR1UiNj+Rvr0YR9Oxl/NXmSbBvmgaxdEI9lK8R1dKA1J4y4gTxn6dHEJK
+   w4yI4r/UTH4d9mHsmeYlT6i4N5/0u25OrLFF1Ujk7KkEPMejPNWGX+ECb
+   hnt+vT0m4D7prIvOyzBBmkCLlhJADgdpCensP23sIocXQrcGCKLUdzjj5
+   g==;
+X-CSE-ConnectionGUID: /guOBKCXSYKCtWO5WHS2jA==
+X-CSE-MsgGUID: DQmQSJ5BSri0z3NlzVZWAQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="49823594"
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="49823594"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 06:38:01 -0800
+X-CSE-ConnectionGUID: 2+z0PdkNRziarHiEhq7rPA==
+X-CSE-MsgGUID: 8a2YwncrQ8WQ5kOjjjdTmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="111389851"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.116])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 06:37:58 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 7 Feb 2025 16:37:54 +0200 (EET)
+To: Xi Pardee <xi.pardee@linux.intel.com>
+cc: rajvi0912@gmail.com, irenic.rajneesh@gmail.com, 
+    david.e.box@linux.intel.com, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pm@vger.kernel.org
+Subject: Re: [PATCH v5 4/5] platform/x86/intel/pmc: Remove simple init
+ functions
+In-Reply-To: <20250205001601.689782-5-xi.pardee@linux.intel.com>
+Message-ID: <5f100129-5675-bcf4-3998-a34b68d3eb88@linux.intel.com>
+References: <20250205001601.689782-1-xi.pardee@linux.intel.com> <20250205001601.689782-5-xi.pardee@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207-printf-kunit-convert-v2-0-057b23860823@gmail.com> <20250207-printf-kunit-convert-v2-1-057b23860823@gmail.com>
-In-Reply-To: <20250207-printf-kunit-convert-v2-1-057b23860823@gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 7 Feb 2025 09:37:18 -0500
-X-Gm-Features: AWEUYZkqfV5zxM9Td4ZiPEVb-zfO0045lbfUGjZpcPCuzZw5gd9-N83XvwJrkDM
-Message-ID: <CAJ-ks9n+EyV8USyxqbKbTVv8RkNEe+F2DHHk0d1-Rv-osmgUng@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] printf: convert self-test to KUnit
-To: Arpitha Raghunandan <98.arpi@gmail.com>, David Gow <davidgow@google.com>, 
-	Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Feb 7, 2025 at 6:30=E2=80=AFAM Tamir Duberstein <tamird@gmail.com> =
-wrote:
->
-> Convert the printf() self-test to a KUnit test.
->
-> In the interest of keeping the patch reasonably-sized this doesn't
-> refactor the tests into proper parameterized tests - it's all one big
-> test case.
+On Tue, 4 Feb 2025, Xi Pardee wrote:
 
-Apologies for the version churn, I'll have to send one more which
-removes spurious trailing newlines (not necessary in kunit) and
-converts logging macros like pr_info to kunit_info.
+> Remove simple init functions to avoid duplicate code. Store
+> init function performing architecture specific action in the
+> corresponding pmc_dev_info structure. Replace init function
+> with pmc_dev_info structure in X86_MATCH_VFM() of core.c.
+> 
+> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/adl.c  |  7 +--
+>  drivers/platform/x86/intel/pmc/arl.c  |  7 +--
+>  drivers/platform/x86/intel/pmc/cnp.c  |  6 +--
+>  drivers/platform/x86/intel/pmc/core.c | 61 +++++++++++++++------------
+>  drivers/platform/x86/intel/pmc/core.h | 26 ++++++++----
+>  drivers/platform/x86/intel/pmc/icl.c  |  7 +--
+>  drivers/platform/x86/intel/pmc/lnl.c  |  7 +--
+>  drivers/platform/x86/intel/pmc/mtl.c  |  7 +--
+>  drivers/platform/x86/intel/pmc/spt.c  |  7 +--
+>  drivers/platform/x86/intel/pmc/tgl.c  | 19 +++------
+>  10 files changed, 72 insertions(+), 82 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/adl.c b/drivers/platform/x86/intel/pmc/adl.c
+> index ac37f4ece9c70..de361a316d51d 100644
+> --- a/drivers/platform/x86/intel/pmc/adl.c
+> +++ b/drivers/platform/x86/intel/pmc/adl.c
+> @@ -311,13 +311,8 @@ const struct pmc_reg_map adl_reg_map = {
+>  	.pson_residency_counter_step = TGL_PSON_RES_COUNTER_STEP,
+>  };
+>  
+> -static struct pmc_dev_info adl_pmc_dev = {
+> +struct pmc_dev_info adl_pmc_dev = {
+>  	.map = &adl_reg_map,
+>  	.suspend = cnl_suspend,
+>  	.resume = cnl_resume,
+>  };
+> -
+> -int adl_core_init(struct pmc_dev *pmcdev)
+> -{
+> -	return generic_core_init(pmcdev, &adl_pmc_dev);
+> -}
+> diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
+> index 91f8e9ab1c2e6..2e604f934f068 100644
+> --- a/drivers/platform/x86/intel/pmc/arl.c
+> +++ b/drivers/platform/x86/intel/pmc/arl.c
+> @@ -691,17 +691,18 @@ static int arl_resume(struct pmc_dev *pmcdev)
+>  	return cnl_resume(pmcdev);
+>  }
+>  
+> -static struct pmc_dev_info arl_pmc_dev = {
+> +struct pmc_dev_info arl_pmc_dev = {
+>  	.pci_func = 0,
+>  	.dmu_guid = ARL_PMT_DMU_GUID,
+>  	.regmap_list = arl_pmc_info_list,
+>  	.map = &arl_socs_reg_map,
+>  	.suspend = cnl_suspend,
+>  	.resume = arl_resume,
+> +	.init = arl_core_init,
+>  };
+>  
+> -int arl_core_init(struct pmc_dev *pmcdev)
+> +int arl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+>  {
+>  	arl_d3_fixup();
+> -	return generic_core_init(pmcdev, &arl_pmc_dev);
+> +	return generic_core_init(pmcdev, pmc_dev_info);
+>  }
+> diff --git a/drivers/platform/x86/intel/pmc/cnp.c b/drivers/platform/x86/intel/pmc/cnp.c
+> index 6d268058e40b9..f147ec51c7fd0 100644
+> --- a/drivers/platform/x86/intel/pmc/cnp.c
+> +++ b/drivers/platform/x86/intel/pmc/cnp.c
+> @@ -274,13 +274,9 @@ int cnl_resume(struct pmc_dev *pmcdev)
+>  	return pmc_core_resume_common(pmcdev);
+>  }
+>  
+> -static struct pmc_dev_info cnp_pmc_dev = {
+> +struct pmc_dev_info cnp_pmc_dev = {
+>  	.map = &cnp_reg_map,
+>  	.suspend = cnl_suspend,
+>  	.resume = cnl_resume,
+>  };
+>  
+> -int cnp_core_init(struct pmc_dev *pmcdev)
+> -{
+> -	return generic_core_init(pmcdev, &cnp_pmc_dev);
+> -}
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index d1cbf49ce5bc9..628cb22221fbc 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -1388,29 +1388,29 @@ int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+>  }
+>  
+>  static const struct x86_cpu_id intel_pmc_core_ids[] = {
+> -	X86_MATCH_VFM(INTEL_SKYLAKE_L,		spt_core_init),
+> -	X86_MATCH_VFM(INTEL_SKYLAKE,		spt_core_init),
+> -	X86_MATCH_VFM(INTEL_KABYLAKE_L,		spt_core_init),
+> -	X86_MATCH_VFM(INTEL_KABYLAKE,		spt_core_init),
+> -	X86_MATCH_VFM(INTEL_CANNONLAKE_L,	cnp_core_init),
+> -	X86_MATCH_VFM(INTEL_ICELAKE_L,		icl_core_init),
+> -	X86_MATCH_VFM(INTEL_ICELAKE_NNPI,	icl_core_init),
+> -	X86_MATCH_VFM(INTEL_COMETLAKE,		cnp_core_init),
+> -	X86_MATCH_VFM(INTEL_COMETLAKE_L,	cnp_core_init),
+> -	X86_MATCH_VFM(INTEL_TIGERLAKE_L,	tgl_l_core_init),
+> -	X86_MATCH_VFM(INTEL_TIGERLAKE,		tgl_core_init),
+> -	X86_MATCH_VFM(INTEL_ATOM_TREMONT,	tgl_l_core_init),
+> -	X86_MATCH_VFM(INTEL_ATOM_TREMONT_L,	icl_core_init),
+> -	X86_MATCH_VFM(INTEL_ROCKETLAKE,		tgl_core_init),
+> -	X86_MATCH_VFM(INTEL_ALDERLAKE_L,	tgl_l_core_init),
+> -	X86_MATCH_VFM(INTEL_ATOM_GRACEMONT,	tgl_l_core_init),
+> -	X86_MATCH_VFM(INTEL_ALDERLAKE,		adl_core_init),
+> -	X86_MATCH_VFM(INTEL_RAPTORLAKE_P,	tgl_l_core_init),
+> -	X86_MATCH_VFM(INTEL_RAPTORLAKE,		adl_core_init),
+> -	X86_MATCH_VFM(INTEL_RAPTORLAKE_S,	adl_core_init),
+> -	X86_MATCH_VFM(INTEL_METEORLAKE_L,	mtl_core_init),
+> -	X86_MATCH_VFM(INTEL_ARROWLAKE,		arl_core_init),
+> -	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	lnl_core_init),
+> +	X86_MATCH_VFM(INTEL_SKYLAKE_L,		&spt_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_SKYLAKE,		&spt_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_KABYLAKE_L,		&spt_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_KABYLAKE,		&spt_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_CANNONLAKE_L,	&cnp_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_ICELAKE_L,		&icl_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_ICELAKE_NNPI,	&icl_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_COMETLAKE,		&cnp_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_COMETLAKE_L,	&cnp_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_TIGERLAKE_L,	&tgl_l_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_TIGERLAKE,		&tgl_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_ATOM_TREMONT,	&tgl_l_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_ATOM_TREMONT_L,	&icl_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_ROCKETLAKE,		&tgl_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_ALDERLAKE_L,	&tgl_l_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_ATOM_GRACEMONT,	&tgl_l_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_ALDERLAKE,		&adl_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_RAPTORLAKE_P,	&tgl_l_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_RAPTORLAKE,		&adl_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_RAPTORLAKE_S,	&adl_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_METEORLAKE_L,	&mtl_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_ARROWLAKE,		&arl_pmc_dev),
+> +	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&lnl_pmc_dev),
+>  	{}
+>  };
+>  
+> @@ -1494,7 +1494,7 @@ static int pmc_core_probe(struct platform_device *pdev)
+>  	static bool device_initialized;
+>  	struct pmc_dev *pmcdev;
+>  	const struct x86_cpu_id *cpu_id;
+> -	int (*core_init)(struct pmc_dev *pmcdev);
+> +	struct pmc_dev_info *pmc_dev_info;
+>  	struct pmc *primary_pmc;
+>  	int ret;
+>  
+> @@ -1514,7 +1514,7 @@ static int pmc_core_probe(struct platform_device *pdev)
+>  	if (!cpu_id)
+>  		return -ENODEV;
+>  
+> -	core_init = (int (*)(struct pmc_dev *))cpu_id->driver_data;
+> +	pmc_dev_info = (struct pmc_dev_info *)cpu_id->driver_data;
+>  
+>  	/* Primary PMC */
+>  	primary_pmc = devm_kzalloc(&pdev->dev, sizeof(*primary_pmc), GFP_KERNEL);
+> @@ -1536,11 +1536,16 @@ static int pmc_core_probe(struct platform_device *pdev)
+>  	 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
+>  	 * in this case.
+>  	 */
+> -	if (core_init == spt_core_init && !pci_dev_present(pmc_pci_ids))
+> -		core_init = cnp_core_init;
+> +	if (pmc_dev_info == &spt_pmc_dev && !pci_dev_present(pmc_pci_ids))
+> +		pmc_dev_info = &cnp_pmc_dev;
 
-I'll wait a few days in case folks have other comments.
+Could you make one extra patch out of this which moves this quirk and its 
+comment into .init function in spt.c.
+
+>  	mutex_init(&pmcdev->lock);
+> -	ret = core_init(pmcdev);
+> +
+> +	if (pmc_dev_info->init)
+> +		ret = pmc_dev_info->init(pmcdev, pmc_dev_info);
+> +	else
+> +		ret = generic_core_init(pmcdev, pmc_dev_info);
+> +
+>  	if (ret) {
+>  		pmc_core_clean_structure(pdev);
+>  		return ret;
+> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+> index 7c9e999ee6318..94039930422b3 100644
+> --- a/drivers/platform/x86/intel/pmc/core.h
+> +++ b/drivers/platform/x86/intel/pmc/core.h
+> @@ -446,6 +446,7 @@ enum pmc_index {
+>   *			specific attributes of the primary PMC
+>   * @suspend:		Function to perform platform specific suspend
+>   * @resume:		Function to perform platform specific resume
+> + * @init:		Function to perform platform specific init action
+>   */
+>  struct pmc_dev_info {
+>  	u8 pci_func;
+> @@ -454,6 +455,7 @@ struct pmc_dev_info {
+>  	const struct pmc_reg_map *map;
+>  	void (*suspend)(struct pmc_dev *pmcdev);
+>  	int (*resume)(struct pmc_dev *pmcdev);
+> +	int (*init)(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
+>  };
+>  
+>  extern const struct pmc_bit_map msr_map[];
+> @@ -613,15 +615,21 @@ extern void pmc_core_set_device_d3(unsigned int device);
+>  extern int pmc_core_ssram_init(struct pmc_dev *pmcdev, int func);
+>  
+>  int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
+> -int spt_core_init(struct pmc_dev *pmcdev);
+> -int cnp_core_init(struct pmc_dev *pmcdev);
+> -int icl_core_init(struct pmc_dev *pmcdev);
+> -int tgl_core_init(struct pmc_dev *pmcdev);
+> -int tgl_l_core_init(struct pmc_dev *pmcdev);
+> -int adl_core_init(struct pmc_dev *pmcdev);
+> -int mtl_core_init(struct pmc_dev *pmcdev);
+> -int arl_core_init(struct pmc_dev *pmcdev);
+> -int lnl_core_init(struct pmc_dev *pmcdev);
+> +
+> +extern struct pmc_dev_info spt_pmc_dev;
+> +extern struct pmc_dev_info cnp_pmc_dev;
+> +extern struct pmc_dev_info icl_pmc_dev;
+> +extern struct pmc_dev_info tgl_l_pmc_dev;
+> +extern struct pmc_dev_info tgl_pmc_dev;
+> +extern struct pmc_dev_info adl_pmc_dev;
+> +extern struct pmc_dev_info mtl_pmc_dev;
+> +extern struct pmc_dev_info arl_pmc_dev;
+> +extern struct pmc_dev_info lnl_pmc_dev;
+> +
+> +int arl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
+> +int mtl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
+> +int lnl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
+> +int tgl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info);
+
+These 4 function doesn't look like they need to be put into a header.
+Instead, reorganize the struct and init function within each file so you 
+can put assign it into .init.
+
+>  void cnl_suspend(struct pmc_dev *pmcdev);
+>  int cnl_resume(struct pmc_dev *pmcdev);
+> diff --git a/drivers/platform/x86/intel/pmc/icl.c b/drivers/platform/x86/intel/pmc/icl.c
+> index 0e4565dea0452..6952c8ef58a01 100644
+> --- a/drivers/platform/x86/intel/pmc/icl.c
+> +++ b/drivers/platform/x86/intel/pmc/icl.c
+> @@ -50,11 +50,6 @@ const struct pmc_reg_map icl_reg_map = {
+>  	.etr3_offset = ETR3_OFFSET,
+>  };
+>  
+> -static struct pmc_dev_info icl_pmc_dev = {
+> +struct pmc_dev_info icl_pmc_dev = {
+>  	.map = &icl_reg_map,
+>  };
+> -
+> -int icl_core_init(struct pmc_dev *pmcdev)
+> -{
+> -	return generic_core_init(pmcdev, &icl_pmc_dev);
+> -}
+> diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
+> index 1142e65225be7..519b4b0e325e1 100644
+> --- a/drivers/platform/x86/intel/pmc/lnl.c
+> +++ b/drivers/platform/x86/intel/pmc/lnl.c
+> @@ -550,14 +550,15 @@ static int lnl_resume(struct pmc_dev *pmcdev)
+>  	return cnl_resume(pmcdev);
+>  }
+>  
+> -static struct pmc_dev_info lnl_pmc_dev = {
+> +struct pmc_dev_info lnl_pmc_dev = {
+>  	.map = &lnl_socm_reg_map,
+>  	.suspend = cnl_suspend,
+>  	.resume = lnl_resume,
+> +	.init = lnl_core_init,
+>  };
+>  
+> -int lnl_core_init(struct pmc_dev *pmcdev)
+> +int lnl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+>  {
+>  	lnl_d3_fixup();
+> -	return generic_core_init(pmcdev, &lnl_pmc_dev);
+> +	return generic_core_init(pmcdev, pmc_dev_info);
+>  }
+> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+> index 28ea8fe8a493f..0678df8fb5e3c 100644
+> --- a/drivers/platform/x86/intel/pmc/mtl.c
+> +++ b/drivers/platform/x86/intel/pmc/mtl.c
+> @@ -990,17 +990,18 @@ static int mtl_resume(struct pmc_dev *pmcdev)
+>  	return cnl_resume(pmcdev);
+>  }
+>  
+> -static struct pmc_dev_info mtl_pmc_dev = {
+> +struct pmc_dev_info mtl_pmc_dev = {
+>  	.pci_func = 2,
+>  	.dmu_guid = MTL_PMT_DMU_GUID,
+>  	.regmap_list = mtl_pmc_info_list,
+>  	.map = &mtl_socm_reg_map,
+>  	.suspend = cnl_suspend,
+>  	.resume = mtl_resume,
+> +	.init = mtl_core_init,
+>  };
+>  
+> -int mtl_core_init(struct pmc_dev *pmcdev)
+> +int mtl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+>  {
+>  	mtl_d3_fixup();
+> -	return generic_core_init(pmcdev, &mtl_pmc_dev);
+> +	return generic_core_init(pmcdev, pmc_dev_info);
+>  }
+> diff --git a/drivers/platform/x86/intel/pmc/spt.c b/drivers/platform/x86/intel/pmc/spt.c
+> index ab5f66fcb0c30..956b2ec1c7510 100644
+> --- a/drivers/platform/x86/intel/pmc/spt.c
+> +++ b/drivers/platform/x86/intel/pmc/spt.c
+> @@ -134,11 +134,6 @@ const struct pmc_reg_map spt_reg_map = {
+>  	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
+>  };
+>  
+> -static struct pmc_dev_info spt_pmc_dev = {
+> +struct pmc_dev_info spt_pmc_dev = {
+>  	.map = &spt_reg_map,
+>  };
+> -
+> -int spt_core_init(struct pmc_dev *pmcdev)
+> -{
+> -	return generic_core_init(pmcdev, &spt_pmc_dev);
+> -}
+> diff --git a/drivers/platform/x86/intel/pmc/tgl.c b/drivers/platform/x86/intel/pmc/tgl.c
+> index bc3cb949c672e..9f210d4095bd9 100644
+> --- a/drivers/platform/x86/intel/pmc/tgl.c
+> +++ b/drivers/platform/x86/intel/pmc/tgl.c
+> @@ -285,19 +285,21 @@ void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev)
+>  	ACPI_FREE(out_obj);
+>  }
+>  
+> -static struct pmc_dev_info tgl_l_pmc_dev = {
+> +struct pmc_dev_info tgl_l_pmc_dev = {
+>  	.map = &tgl_reg_map,
+>  	.suspend = cnl_suspend,
+>  	.resume = cnl_resume,
+> +	.init = tgl_core_init,
+>  };
+>  
+> -static struct pmc_dev_info tgl_pmc_dev = {
+> +struct pmc_dev_info tgl_pmc_dev = {
+>  	.map = &tgl_h_reg_map,
+>  	.suspend = cnl_suspend,
+>  	.resume = cnl_resume,
+> +	.init = tgl_core_init,
+>  };
+>  
+> -static int tgl_core_generic_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+> +int tgl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+>  {
+>  	int ret;
+>  
+> @@ -306,15 +308,6 @@ static int tgl_core_generic_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pm
+>  		return ret;
+>  
+>  	pmc_core_get_tgl_lpm_reqs(pmcdev->pdev);
+> -	return 0;
+> -}
+>  
+> -int tgl_l_core_init(struct pmc_dev *pmcdev)
+> -{
+> -	return tgl_core_generic_init(pmcdev, &tgl_l_pmc_dev);
+> -}
+> -
+> -int tgl_core_init(struct pmc_dev *pmcdev)
+> -{
+> -	return tgl_core_generic_init(pmcdev, &tgl_pmc_dev);
+> +	return 0;
+>  }
+> 
+
+-- 
+ i.
+
