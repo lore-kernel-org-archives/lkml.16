@@ -1,178 +1,280 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2040.outbound.protection.outlook.com [40.107.237.40])
+Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53BA220694;
-	Fri,  7 Feb 2025 14:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738938849; cv=fail; b=ACZcvVXiX0MROiOFls5/MCScRMF9Dfm7cBVyz94CczSR0S5m+f8J//Mq6x+8cMqYVLiaE+lt0BUg9tO/xk1es5qh631LBDouqpdIqYc7VuN74MWXntH/1fAmG8lk9Fymxofr1+bnkRSdLqjA9/UBR5i2gdSB39fiv8iNSR3vrcI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738938849; c=relaxed/simple;
-	bh=+kbgJC017g2ILK40V3elfCSDbWR50I2bVJXyRtU8dMw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Q0QmdhqpJ168auJbyU/RFm3YE6Ff3Tz+UdMsCDEm6j5B5kLolr7XSrOGaOZoSRx5Vap1WvcYVZL7Xhkl8kJ30df0hXUTWxv4nlejUPYQGOkwm0udtIVmRd6kn3tfOluaEZVepJMeyO0dhAPwwcMbya+EpTQzd9LeL/1QUXnvkJE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Z6WGl80F; arc=fail smtp.client-ip=40.107.237.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E5C23ED64
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738938850; cv=none; b=MPYjB9PdRJztCqNva4TVbD+j5Ac9VsValS0lk0Yjzjb3K2M7JSBQQrB8xVtmhhssm94q7A0kUnrYZCBUn0fVV0ik4eZKwxP8yRsny6grRFXsrIz2A5cWcLPpnPsQSguUQA8+tD3Gw3p/d/4MyvVqQ5dbjcs2RUN2Q31PjfTVvgM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738938850; c=relaxed/simple;
+	bh=OphVupRpdQvDbobZO1Cze3UnAcO67dyQhr+EMD1USEM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ndtR3bLYlcJemFGS+KwKWD1BV+dCkbeu2D27BP71VuPbURcNluz6Cu8seedx2MiQrWcFpONAT0bsXd2uzFwvmaxzKMo+tn2uxCshpXCBS5FmFD/fRkEhoeVhfujT2PMw74pLJHs/wfyWHh2elzgYqRjF3zevPJQRrUl2LgyHKUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V0/Vu16A; arc=none smtp.client-ip=95.215.58.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Z6WGl80F"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=g94vFdS4G3LbBsFHBrctWKj5CXGrEHDWzBLvMksq5QpNs62S5xLfVR/avOyI5AFO9rWhbjgHjmGS3AesdDWIko3BbKY6g1UK6sCVR/iYQamq8SHoph12suhSGtq5M+ypXTrUcACFKMZ1kXp88zOThUU7+rRqWNw1TNNUypy6z1C9N5smkOLkJoS1ru1/Xa7Vo6exck+4rsC0D9dFjOw6zj8+yHm51eanoYcTc3rdPyfDdE4+gRsY/CFzJK0nkwiz9TxJlLEIWtx9rEXyXBKpV3m7j6FaFK4s92q3s1FZ+TMZtYl7Bugcy5D236suYVV9oAwlgep9lSXe1SHcg60K9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vhUFLifbDhPyaK5qxkCezVvTgghT9R402V/MKr7OpGc=;
- b=rCmQGrsFgDD703bwOuZKKZmelRtTzc2sWSOWtG8cSqliRpAoB9mZwMJ0575zXA33TIenHx3lGESLaFFwMhY0VVUDuApAMutemzcUciGu5wFmF0H2IDY4rEN1Za3YITK4vYB65vL80SAhi1tycGn7eoNsdJbG2TBZ1Yi0kBihHHTb0IlnV0O+Crg3PMSekNuJrcAaihvLOsT7cVIwW8FCWQSju50FrVun/RnDE5zvPijd5a/zooblygp/9sSQAx2UPXgoCdAvVxecKblNaI1OIcLNipJZDMLRHgW3MY4R7dX6THY+2DKvzd3A1FYO6No9rR6L60fTdrqJb1/qrgvseA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vhUFLifbDhPyaK5qxkCezVvTgghT9R402V/MKr7OpGc=;
- b=Z6WGl80FhDhkBbBZJGHmY4T3qDfdOGECTU/vIpi/FlulJ/Vy6vpUP+tlRTAHyTj70IMGov3eXBcHlJpKJbHj11MezSmNGqFsb8YxzBRDQOB4LyzJCPAU5S2QMUSisvEXlcR5+kdpnhKUPosIU3SBH6HsjKah1BZzkwfIZSiLmb5pFTvoXWbYKzrT6qLDYO+rjPbi3gqATGO1HhGu2sFrsM9hBhYPJuaqZw5G0BksSdZZfODV4iGSDaf2MEnczZsvnKWngJbdUEONrRdmTlh9i/zgTtoSQNlaNbX/DTiV0k+0u/vC9JGYwKazIK6fy6862Ej8y7Sa0hpOiAweDknR/A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by LV8PR12MB9420.namprd12.prod.outlook.com (2603:10b6:408:200::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.14; Fri, 7 Feb
- 2025 14:34:04 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8422.011; Fri, 7 Feb 2025
- 14:34:04 +0000
-Date: Fri, 7 Feb 2025 10:34:02 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>, tglx@linutronix.de,
-	robin.murphy@arm.com, maz@kernel.org
-Cc: will@kernel.org, kevin.tian@intel.com, alex.williamson@redhat.com,
-	joro@8bytes.org, shuah@kernel.org, reinette.chatre@intel.com,
-	eric.auger@redhat.com, yebin10@huawei.com, apatel@ventanamicro.com,
-	shivamurthy.shastri@linutronix.de, bhelgaas@google.com,
-	anna-maria@linutronix.de, yury.norov@gmail.com, nipun.gupta@amd.com,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	jean-philippe@linaro.org, mdf@kernel.org, mshavit@google.com,
-	shameerali.kolothum.thodi@huawei.com, smostafa@google.com,
-	ddutile@redhat.com
-Subject: Re: [PATCH RFCv2 00/13] iommu: Add MSI mapping support with nested
- SMMU
-Message-ID: <20250207143402.GA3651395@nvidia.com>
-References: <cover.1736550979.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1736550979.git.nicolinc@nvidia.com>
-X-ClientProxiedBy: BN9PR03CA0628.namprd03.prod.outlook.com
- (2603:10b6:408:106::33) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V0/Vu16A"
+Message-ID: <ee76a5e5-1817-4ff5-8d00-ebc21a7ae6a4@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738938833;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fvEEIW3VWGj6n/v/DtIx2EsXu27pra6OzAXx1kJuAGU=;
+	b=V0/Vu16AnQkUHmIVZ7JlRJn4bJduclDSbd1dAe+jQa/d3wwHzbTHb7LucEmliFn9Oiwt1B
+	by/sN9+IECboLnPmPlu4BFlk40qVhKk+uAOlIciHqLn+udaAAXNxcVQHpkquM6rUWIiCRI
+	qdzQnGFUGMxhZxgPbCV446vGJ/9uRN8=
+Date: Fri, 7 Feb 2025 15:33:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|LV8PR12MB9420:EE_
-X-MS-Office365-Filtering-Correlation-Id: 23c67f63-06ca-4f88-516b-08dd4784788d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?AWbRW6+YrIbBZzuTYwg05pV2v2H8Q1N86Y94WAeYvR0gQ/KtVcD8AJ1kYAhp?=
- =?us-ascii?Q?ckSgP6kCRrA6tqmwGnlRYFrBUeoTn3B6bWXwueF3Av1V1IRvzIWeKB9NfskZ?=
- =?us-ascii?Q?5kyejuFhbNhzhi4bO+KJNOWp/TRTFfYLZpoWWYiO1HulkJ6qZg/GhGGCNdg0?=
- =?us-ascii?Q?glHJ9QN8QY+4mpoD3/xIJBM+luSF0lbD0VvR/0QV3IxxjxXZFAVX5nVI+J6d?=
- =?us-ascii?Q?g8p43U4YFmPVyYjMcZa7ySnTsbHyyU1MvzG3RgMKRJpW0NhK+9GYGDQwHQmz?=
- =?us-ascii?Q?ACvbaFT2iWzWf+ZaV/JFkknQP8r+C4MFtZOE1bIlQnzoN3jq9XA0c8Nl6UO+?=
- =?us-ascii?Q?SnM6LzX7udgMDtv3CaYGwQnsirsBQjogGw1P6IozDSYJTdpaeDkvw5VKoFzA?=
- =?us-ascii?Q?ZPUt0sycxU3UOesP2SeoClpsS+9uVkerWWuH9DYY9QXR+DvuwcADeQIUs3Oe?=
- =?us-ascii?Q?J2oP4TmuC869BE254jY51zuP8B0wor3Ro1wKVya0BpExpBbUnWZWqevo5jxq?=
- =?us-ascii?Q?SnOQ9soJHoa4Yrym1J1r5AkhYouBGKlS8eNiU/JPGvygWIZAizU0iLzC/xdI?=
- =?us-ascii?Q?IG6xa2YfhSPYNjYy6FJHdqiGCk3gs+amIo4buUiSYAeAqUBD1y+5Oqa5vD8R?=
- =?us-ascii?Q?kj5DooyHgBebCD7cxEwRaI4Pp0nxYfXyJpRUFL2USQ+VhQOCvqjo2b6U8yc3?=
- =?us-ascii?Q?tlO0HAYIviEgQlVIohSNQaqgbHNw1jUycZbAm8yD8M/8XtlcJ58EF/04D4DR?=
- =?us-ascii?Q?Qy/wLRhJMnB6Wlf+HsRa+6/bSVIW3jlJrrTBv8S3J+ua6CqA6Xj9KstZpjpK?=
- =?us-ascii?Q?B13wUYb5WkVFkgHTRvAsKB3ys/JtlaTnNf9mpqJUMpuN8vABIsszenKUvf/N?=
- =?us-ascii?Q?brJph6J5Eg3TktcomPdXeppHcifFYrlhiojtnhLNN1o/GPE5U6DN2QXGhFPe?=
- =?us-ascii?Q?u0fmLzx+x+rydL8VZnrdLwLNhrUxDV8ex9ntaOgaDL4uowQ2uJM9LL/cNHxn?=
- =?us-ascii?Q?+6oPZPQOxCd7rghwwUrwOr2JMpPrqqAJdVnQIAcHLIBAZzzRU7ZINkU/eII0?=
- =?us-ascii?Q?2XYABOnKdyzFZnrCQ8zppgdft3vekJ+txzYM9V3Mq2yzBXYx+PNakVOVmg/P?=
- =?us-ascii?Q?48wqQz8hf6T04iMzuvqT1zvahLAuVuwj8Fu6F8m+WV8KkUSUre80XhsiAu7n?=
- =?us-ascii?Q?B0K+PvydQGjb7Cs1B63fjlQn2INe6L38kHz8qaikFZ5RD6oEpc02sO17Dw4/?=
- =?us-ascii?Q?MslhXyWh6g3uo50549CxUV3WYFftjOTJ95taU0DywIG/EUNyERS8UYbxUKP3?=
- =?us-ascii?Q?WqxsfD0Ri8RUDAW8Rve2Z03oGB4OsOSq12i4v3JVrRNUo8RwwYwkYabZjWiC?=
- =?us-ascii?Q?hMW6OlEd1ZDktrry1RfAqa7SkZTj?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?T9UGiyZ+k45SaI9YAVT+rXQcoo1g6SOlnhQ93bikOTYB8JcX6oNB/4/a+7L7?=
- =?us-ascii?Q?3oglH/pG7E2L+QQ0sVsBoIAd60ciEtifnAfHRMw188Ghxy3BsbaPimlDzZHF?=
- =?us-ascii?Q?cK3phJnZKkfvDh/amCawQfgIKy0+bxO/ldobQvnONe7BrjrXokb/shthEgPF?=
- =?us-ascii?Q?OWv20gCo0BMymDlTxHb3jowMB/RSCMYDEYWUQSVRgq4xcvHJZVTXCeHEAZyp?=
- =?us-ascii?Q?RtwvVgRkhZFPIwLW9eyZy/y+tQ5MSSg1KDbUsgwhfLgyxBxsruW9troH2bkl?=
- =?us-ascii?Q?wlNofGqNMqVIkBhUIgd2r8f6QEKNGs1T778f1HVgvJVQn3TUanel5DdT/kgS?=
- =?us-ascii?Q?Xqbri1md5WqvAKWHLqwMvOIGU8g6OK6RZKZFEE9PDLrLyPttx1/dvRL776FL?=
- =?us-ascii?Q?vADmpWksbTKXRXMa28b3aAyM03hpiNtCqq179i+pGnhU3Emkacyai/BWmA/Y?=
- =?us-ascii?Q?9YM7wmSW31kZ15T+dEBR8VKUAeRq7HVau38c8Jt8gQV+qlS00hq3LcC0xsve?=
- =?us-ascii?Q?hDK5lOC3sOIxwIqDSxwIv7bQ8dBbWLl9vyOL41eDjiU8kzHOQJBi9BS+pawo?=
- =?us-ascii?Q?SvHImmYDrIDOVP6KSeKrVgPQyA+A/VerMeoGXlSaVP+vi7VBNiPeXnWqUpJe?=
- =?us-ascii?Q?sfBXheizXZkIAt3fCNvCB3nf5osbAHy2W9AJVvgJ5iujJ2Khs/r2dQ6M1Hih?=
- =?us-ascii?Q?8NBd8yxEg081d/63Pv0bjcNU5jcudwWRri1qtaQz4bwst0Lhv5WUM5hohMvX?=
- =?us-ascii?Q?bFG3+H8q3pjD3f+OflHwtCyx55c1r+E4Z/Hpe3Mr4Fz3cShIIkKAcx3hOJgX?=
- =?us-ascii?Q?ip75hhHSAZBiU1Gkc0z98uAADvfL6JzzpuCnqkflHhFq5k7pUWWjr1eXSr5u?=
- =?us-ascii?Q?o7N4+X/9hqSy7uAxI2UvopyP56H050Qeg15Kzh3M4tGi+XbbS/hQzYXEGhe+?=
- =?us-ascii?Q?9Ut6rInW/yiWeyT3y76EmalPbXvBof45PWs8CIoDDUFhnSfUIwzfU+krBnj7?=
- =?us-ascii?Q?lRYZqStj8TzhVVrimxZf4eTBxbDLIq6Ku8PLmbxveNJkoQ+EFJ9kflbn7iwo?=
- =?us-ascii?Q?/Mnpnv2xTMrhHCXJKuvj6ZUvFVRrUhSLCG3i51Mgc45WxrWqF+bKR6sxgMcl?=
- =?us-ascii?Q?e3Z/9VT0gu5zRK22YCMlWnHZ/qH41MOFGWRWrgsvCJ1ZF8IvLJjUBZ2Y9ShQ?=
- =?us-ascii?Q?1ZI+RaRrBtI9F+aE4FuLbNMZf5OfV8ee9vdXktLDxHkFU6hGsJr+TMz1IXOE?=
- =?us-ascii?Q?7Qi7XlFYmok3cRyIdSQsbSeLev4ecgKJLJQ7CSS4IyI34EQb8upFge4IaYoF?=
- =?us-ascii?Q?AngSz+15INYQcuB5nWfp0WhZx0kHIeYLK1i3pZKAYqoUQW5coNyrbk9DVU3g?=
- =?us-ascii?Q?TP2b524zL+tlMomY/eTsBm5zjU1omY1j54AN29/1Kbk35XE1OolXbDePbBwN?=
- =?us-ascii?Q?XadgGFhZv5hcfrp4YsrMlcz3rs+C4Nzb9ceePt5PmKHaIa6pbL/M8cxsFqsO?=
- =?us-ascii?Q?mUOc5Lj/TVvPhqWQ8cVFyDzBnzLJgsepqKP+0SEecEu0b97jYQg4+t2o1XdN?=
- =?us-ascii?Q?5xCmppzaNl1LTqipH7RZQuNgg1jRhsicO9n4g1UV?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 23c67f63-06ca-4f88-516b-08dd4784788d
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 14:34:04.2806
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: z2nUEYB2ZlQodiU6+mRXrf+NkNM/+wAOz9ZwOBpkMkBw1TTpdkqmPGLJ3hrOd7Xl
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9420
+Subject: Re: [PATCH v2] RDMA/rxe: switch to using the crc32 library
+To: Eric Biggers <ebiggers@kernel.org>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ linux-rdma@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250207032316.53941-1-ebiggers@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20250207032316.53941-1-ebiggers@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Jan 10, 2025 at 07:32:16PM -0800, Nicolin Chen wrote:
-> Though these two approaches feel very different on the surface, they can
-> share some underlying common infrastructure. Currently, only one pair of
-> sw_msi functions (prepare/compose) are provided by dma-iommu for irqchip
-> drivers to directly use. There could be different versions of functions
-> from different domain owners: for existing VFIO passthrough cases and in-
-> kernel DMA domain cases, reuse the existing dma-iommu's version of sw_msi
-> functions; for nested translation use cases, there can be another version
-> of sw_msi functions to handle mapping and msi_msg(s) differently.
+On 07.02.25 04:23, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
 > 
-> To support both approaches, in this series
->  - Get rid of the duplication in the "compose" function
->  - Introduce a function pointer for the previously "prepare" function
->  - Allow different domain owners to set their own "sw_msi" implementations
->  - Implement an iommufd_sw_msi function to additionally support a nested
->    translation use case using the approach (2), i.e. the RMR solution
->  - Add a pair of IOMMUFD options for a SW_MSI window for kernel and VMM to
->    agree on (for approach 1)
->  - Add a new VFIO ioctl to set the MSI(x) vector(s) for iommufd_sw_msi()
->    to update the msi_desc structure accordingly (for approach 2)
+> Now that the crc32_le() library function takes advantage of
+> architecture-specific optimizations, it is unnecessary to go through the
+> crypto API.  Just use crc32_le().  This is much simpler, and it improves
+> performance due to eliminating the crypto API overhead.
+> 
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+> 
+> v2: Just do a minimal conversion to crc32_le().
 
-Thomas/Marc/Robin, are we comfortable with this general approach?
-Nicolin can send something non-RFC for a proper review.
+Hi, Eric
 
-I like it, it solves many of the problems iommufd had here and it
-seems logical from the irq side.
+Thanks a lot for your commit.
+
+I have made tests with this commit. After this patch is applied,
+the following scenarios can work well via rping.
+
+RXE <---> RXE
+
+crc32_le RXE <---> RXE with original icrc
+
+RXE <---> MLX5
+
+Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
 
 Thanks,
-Jason
+Zhu Yanjun
+
+> 
+>   drivers/infiniband/sw/rxe/Kconfig     |  3 +-
+>   drivers/infiniband/sw/rxe/rxe.c       |  3 --
+>   drivers/infiniband/sw/rxe/rxe.h       |  1 -
+>   drivers/infiniband/sw/rxe/rxe_icrc.c  | 40 +--------------------------
+>   drivers/infiniband/sw/rxe/rxe_loc.h   |  1 -
+>   drivers/infiniband/sw/rxe/rxe_req.c   |  1 -
+>   drivers/infiniband/sw/rxe/rxe_verbs.c |  4 ---
+>   drivers/infiniband/sw/rxe/rxe_verbs.h |  1 -
+>   8 files changed, 2 insertions(+), 52 deletions(-)
+> 
+> diff --git a/drivers/infiniband/sw/rxe/Kconfig b/drivers/infiniband/sw/rxe/Kconfig
+> index 06b8dc5093f77..c180e7ebcfc5b 100644
+> --- a/drivers/infiniband/sw/rxe/Kconfig
+> +++ b/drivers/infiniband/sw/rxe/Kconfig
+> @@ -2,12 +2,11 @@
+>   config RDMA_RXE
+>   	tristate "Software RDMA over Ethernet (RoCE) driver"
+>   	depends on INET && PCI && INFINIBAND
+>   	depends on INFINIBAND_VIRT_DMA
+>   	select NET_UDP_TUNNEL
+> -	select CRYPTO
+> -	select CRYPTO_CRC32
+> +	select CRC32
+>   	help
+>   	This driver implements the InfiniBand RDMA transport over
+>   	the Linux network stack. It enables a system with a
+>   	standard Ethernet adapter to interoperate with a RoCE
+>   	adapter or with another system running the RXE driver.
+> diff --git a/drivers/infiniband/sw/rxe/rxe.c b/drivers/infiniband/sw/rxe/rxe.c
+> index 1ba4a0c8726ae..f8ac79ef70143 100644
+> --- a/drivers/infiniband/sw/rxe/rxe.c
+> +++ b/drivers/infiniband/sw/rxe/rxe.c
+> @@ -29,13 +29,10 @@ void rxe_dealloc(struct ib_device *ib_dev)
+>   	rxe_pool_cleanup(&rxe->mr_pool);
+>   	rxe_pool_cleanup(&rxe->mw_pool);
+>   
+>   	WARN_ON(!RB_EMPTY_ROOT(&rxe->mcg_tree));
+>   
+> -	if (rxe->tfm)
+> -		crypto_free_shash(rxe->tfm);
+> -
+>   	mutex_destroy(&rxe->usdev_lock);
+>   }
+>   
+>   /* initialize rxe device parameters */
+>   static void rxe_init_device_param(struct rxe_dev *rxe)
+> diff --git a/drivers/infiniband/sw/rxe/rxe.h b/drivers/infiniband/sw/rxe/rxe.h
+> index fe7f970667325..8db65731499d0 100644
+> --- a/drivers/infiniband/sw/rxe/rxe.h
+> +++ b/drivers/infiniband/sw/rxe/rxe.h
+> @@ -19,11 +19,10 @@
+>   #include <rdma/ib_pack.h>
+>   #include <rdma/ib_smi.h>
+>   #include <rdma/ib_umem.h>
+>   #include <rdma/ib_cache.h>
+>   #include <rdma/ib_addr.h>
+> -#include <crypto/hash.h>
+>   
+>   #include "rxe_net.h"
+>   #include "rxe_opcode.h"
+>   #include "rxe_hdr.h"
+>   #include "rxe_param.h"
+> diff --git a/drivers/infiniband/sw/rxe/rxe_icrc.c b/drivers/infiniband/sw/rxe/rxe_icrc.c
+> index fdf5f08cd8f17..76d760fbe7ea5 100644
+> --- a/drivers/infiniband/sw/rxe/rxe_icrc.c
+> +++ b/drivers/infiniband/sw/rxe/rxe_icrc.c
+> @@ -7,32 +7,10 @@
+>   #include <linux/crc32.h>
+>   
+>   #include "rxe.h"
+>   #include "rxe_loc.h"
+>   
+> -/**
+> - * rxe_icrc_init() - Initialize crypto function for computing crc32
+> - * @rxe: rdma_rxe device object
+> - *
+> - * Return: 0 on success else an error
+> - */
+> -int rxe_icrc_init(struct rxe_dev *rxe)
+> -{
+> -	struct crypto_shash *tfm;
+> -
+> -	tfm = crypto_alloc_shash("crc32", 0, 0);
+> -	if (IS_ERR(tfm)) {
+> -		rxe_dbg_dev(rxe, "failed to init crc32 algorithm err: %ld\n",
+> -			       PTR_ERR(tfm));
+> -		return PTR_ERR(tfm);
+> -	}
+> -
+> -	rxe->tfm = tfm;
+> -
+> -	return 0;
+> -}
+> -
+>   /**
+>    * rxe_crc32() - Compute cumulative crc32 for a contiguous segment
+>    * @rxe: rdma_rxe device object
+>    * @crc: starting crc32 value from previous segments
+>    * @next: starting address of current segment
+> @@ -40,27 +18,11 @@ int rxe_icrc_init(struct rxe_dev *rxe)
+>    *
+>    * Return: the cumulative crc32 checksum
+>    */
+>   static __be32 rxe_crc32(struct rxe_dev *rxe, __be32 crc, void *next, size_t len)
+>   {
+> -	__be32 icrc;
+> -	int err;
+> -
+> -	SHASH_DESC_ON_STACK(shash, rxe->tfm);
+> -
+> -	shash->tfm = rxe->tfm;
+> -	*(__be32 *)shash_desc_ctx(shash) = crc;
+> -	err = crypto_shash_update(shash, next, len);
+> -	if (unlikely(err)) {
+> -		rxe_dbg_dev(rxe, "failed crc calculation, err: %d\n", err);
+> -		return (__force __be32)crc32_le((__force u32)crc, next, len);
+> -	}
+> -
+> -	icrc = *(__be32 *)shash_desc_ctx(shash);
+> -	barrier_data(shash_desc_ctx(shash));
+> -
+> -	return icrc;
+> +	return (__force __be32)crc32_le((__force u32)crc, next, len);
+>   }
+>   
+>   /**
+>    * rxe_icrc_hdr() - Compute the partial ICRC for the network and transport
+>    *		  headers of a packet.
+> diff --git a/drivers/infiniband/sw/rxe/rxe_loc.h b/drivers/infiniband/sw/rxe/rxe_loc.h
+> index ded46119151bb..c57ab8975c5d1 100644
+> --- a/drivers/infiniband/sw/rxe/rxe_loc.h
+> +++ b/drivers/infiniband/sw/rxe/rxe_loc.h
+> @@ -166,11 +166,10 @@ int rxe_completer(struct rxe_qp *qp);
+>   int rxe_requester(struct rxe_qp *qp);
+>   int rxe_sender(struct rxe_qp *qp);
+>   int rxe_receiver(struct rxe_qp *qp);
+>   
+>   /* rxe_icrc.c */
+> -int rxe_icrc_init(struct rxe_dev *rxe);
+>   int rxe_icrc_check(struct sk_buff *skb, struct rxe_pkt_info *pkt);
+>   void rxe_icrc_generate(struct sk_buff *skb, struct rxe_pkt_info *pkt);
+>   
+>   void rxe_resp_queue_pkt(struct rxe_qp *qp, struct sk_buff *skb);
+>   
+> diff --git a/drivers/infiniband/sw/rxe/rxe_req.c b/drivers/infiniband/sw/rxe/rxe_req.c
+> index 87a02f0deb000..9d0392df8a92f 100644
+> --- a/drivers/infiniband/sw/rxe/rxe_req.c
+> +++ b/drivers/infiniband/sw/rxe/rxe_req.c
+> @@ -3,11 +3,10 @@
+>    * Copyright (c) 2016 Mellanox Technologies Ltd. All rights reserved.
+>    * Copyright (c) 2015 System Fabric Works, Inc. All rights reserved.
+>    */
+>   
+>   #include <linux/skbuff.h>
+> -#include <crypto/hash.h>
+>   
+>   #include "rxe.h"
+>   #include "rxe_loc.h"
+>   #include "rxe_queue.h"
+>   
+> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.c b/drivers/infiniband/sw/rxe/rxe_verbs.c
+> index 6152a0fdfc8ca..c05379f8b4f57 100644
+> --- a/drivers/infiniband/sw/rxe/rxe_verbs.c
+> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.c
+> @@ -1531,14 +1531,10 @@ int rxe_register_device(struct rxe_dev *rxe, const char *ibdev_name,
+>   	ib_set_device_ops(dev, &rxe_dev_ops);
+>   	err = ib_device_set_netdev(&rxe->ib_dev, ndev, 1);
+>   	if (err)
+>   		return err;
+>   
+> -	err = rxe_icrc_init(rxe);
+> -	if (err)
+> -		return err;
+> -
+>   	err = ib_register_device(dev, ibdev_name, NULL);
+>   	if (err)
+>   		rxe_dbg_dev(rxe, "failed with error %d\n", err);
+>   
+>   	/*
+> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
+> index 6573ceec0ef58..6e31134a5fa5b 100644
+> --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
+> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
+> @@ -400,11 +400,10 @@ struct rxe_dev {
+>   	u64			mmap_offset;
+>   
+>   	atomic64_t		stats_counters[RXE_NUM_OF_COUNTERS];
+>   
+>   	struct rxe_port		port;
+> -	struct crypto_shash	*tfm;
+>   };
+>   
+>   static inline struct net_device *rxe_ib_device_get_netdev(struct ib_device *dev)
+>   {
+>   	return ib_device_get_netdev(dev, RXE_PORT);
+> 
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+
