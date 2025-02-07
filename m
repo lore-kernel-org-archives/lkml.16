@@ -1,149 +1,111 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A89231CAE
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 04:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43084194A67
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 04:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738901560; cv=none; b=KV/SHz66dyhMfSyHgpyjMJhb6bAkN6N2tDxmCU+v9cQR/19UcfhkQbARSyEom2jUeEBsAZUhMNn17Re+Gn3owYVrzzqFdKIUB1VyC5Et3VssZzKocHF02glFxAg7KFfyPhfrcXZ4ObjI46PizwUlm78c2DPnbfBdof2ZHvcSi70=
+	t=1738901819; cv=none; b=cyh48RPz1ibNRWKOOAgx6o+KXkRMT9Sz9XXtqbFWnQd1QtbC3f6sKMNCZZPUvhBy8dTQBcvT92Bq3uk2usLCsmerGm3+uhfu4OXKXfgPsYRicCm4ApQE++rGtCYJuYVnwqAQwYditLg2qmz0yUQL/nQ5MIuLmLZDrt0iiL3tuLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738901560; c=relaxed/simple;
-	bh=ljH7Na1CjKFmZ9WKQeQ3cW1kEi3W80vBZcOQYMb3Cug=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gghoKRqoGB6SQxkzT6mP/54oVVMWO3D1pPJ5piRLsQeH+v0HNWUJHX2d63xvvixaNfI03856zDCbDk1L0b1sM5sQ+jTgodgZPwTv5SJVDjshm9fkvIPDKbtA6OFQrRGaKL6PzXeOCu4yOeT6wsk4KX2PZKBjOJ3sk6YIFJV5iJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=WWadQTTu; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	s=arc-20240116; t=1738901819; c=relaxed/simple;
+	bh=tJr/h/82XdaXhwtSYvOC9IfBxa/rDwuLDiIbbM4xvQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fZEJfl3yD2YMLM84R9jw0jFRWT6dOFzKm2hHeQBBcq3ri9QEWs5eD+iFMnBaoNm6aTjY6g4k1z2Y3O9+khgOF9KKSvs8Z84IdALfYVqm/h86I/J/MxlI3q9ovfzWAyWKKTxR4Yg38ZfsAwss0cy7PV22MPBSSxMlA91/ZzIgLjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xA6j1h3H; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="WWadQTTu"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab7814aa2adso116820566b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 20:12:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xA6j1h3H"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2166f1e589cso41714765ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 20:16:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1738901556; x=1739506356; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PfKeNd5YsT4IdLY3wC4IJkumtp1al9zTd0Fhjp7u0qk=;
-        b=WWadQTTuWKonMg+YWigynolMhGVCClf0b8wXsAavP85s6hzYphW+UPRcyhU1QFLUgq
-         2StENoPcal6yBlLhv8brdcj2ek2esQM68qizNaRQYoh4eeGgF4MULInBx4mTbLJgy4lG
-         R9pVQkIqSzvvvHjocTH2fhsyNKyldq1FwI9vwIZHqZPnPpaHDDMATfPa6lgMr+jkqC8r
-         OkYpr7ia0zXExGujWOV9J+OwE32TF+Op8hLZfxV8fV+sqAzoOqdOkGuN0JWrQN2/1oVD
-         Luj4HP2PxwcUDoEUDeqUBihNUjtAa3k5uamvuNSwv59UW29nE/jWgU7qPbR8JvTXQvIJ
-         3FvQ==
+        d=linaro.org; s=google; t=1738901817; x=1739506617; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/PGwJeZbBL1as/rhK6k6WMBCNMpCiV74c6vEaEy0GrI=;
+        b=xA6j1h3H/httufssY6b4/X1F+Qpk5vIUBon0ZkL3IWRQyGy/D9eZqsVCOzkoOoyter
+         w07qSgDW4QavsH9MR8Suh7sxC2yU+RGRFd3tbOma8NvMbqTJ2y5k4UM+1j9ZyRHChZoN
+         UNob+yBh/APsoeV9SULkwEv6er8d6PChTZrktOUkzcbEpfGlSk9nUruzUduUrk/wMNl1
+         kfTV5fVfboukqWWmeE1iRRBUbZ7T/X3tjmfPBbz/6Cr3z8nZOg7C7kX/FqUdQ3jHKC2C
+         cebLnRx6aubrLxmfJu24uV5EudeRw3yw1AkR+/DfM1MSen5S+XTiPfZh6JyMfVgYzopG
+         YzDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738901556; x=1739506356;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PfKeNd5YsT4IdLY3wC4IJkumtp1al9zTd0Fhjp7u0qk=;
-        b=Fi5IamYypXDC5iRQtGMNf1ejMMUjpIi+pg7gGi42zlXmuqT6ziw7IP29L4cEwtdNau
-         i2V9nx/DxKs65Z7i7/JDkfxjy3YIyzzPMO/Dtbk5KeAmtn4UQpbMukhH3Qkw4eYXJ2v/
-         jl0x3ttK2u/90rMKbHHsvWf6P+S1x2XqTmJRgQffhdIgnFnu/n3+EKkgSDK38mK+HyTy
-         oPEH5/hb960z3cTMhEVMl8qdy5QnMDqo9MjCquXja1BDGsFh5kR85OjiK+w+sjZVwWwN
-         Eb/qgR+f3YVYYALhy4TCElFwfwzWhYm3k/XMWwx4puC7uUTids9Ptcx5/kQVJ8CCbZ2U
-         GZiA==
-X-Forwarded-Encrypted: i=1; AJvYcCUyLGFdk3cdsWBxC2lyryQplLzuy2UuFeefONU8etWUid0jar2Nl92ibH4wM/vvPYhix9uq1+OZ0gCAJWA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywxb02PIuicQ8GBo7Y2fra/RAQ+FR5z3MNPkny50C71Gsx2E23D
-	e5zsPcBZO/EG4P2bitzHUF/F3MBWMmf/Fp8NVhGiGZy+uG2qAZBF8HkslMJYNzLcGs0QaJO4ElV
-	G9nkGFBvnu4435yafKPTEZkJllRAdDFSIyX3M1g==
-X-Gm-Gg: ASbGncvkNbhp+qbkxv5oDOi0qaKj/AfuNbEn8zkrcCa8Jm4aBCo/B32SKhVcyvHjxdu
-	Wf4BXz2szHVozkRriG/gFSI7A+f2RbLTtPkk0QbhmCk5oPS7zrqmFCvqKpG8HmKw+QCfn2gooEQ
-	orMIxHCO5xAxDGKEA=
-X-Google-Smtp-Source: AGHT+IF+Dr5Nq2mH34Odbm2J6M0KJZHkh2UhWnVHf00IT85KBVmDwpzVa2YALsjOafjhhAQObIf2PDcukGPveI5Ezxg=
-X-Received: by 2002:a05:6402:208a:b0:5dc:5a51:cbfa with SMTP id
- 4fb4d7f45d1cf-5de44fe949emr4939486a12.6.1738901556568; Thu, 06 Feb 2025
- 20:12:36 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738901817; x=1739506617;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/PGwJeZbBL1as/rhK6k6WMBCNMpCiV74c6vEaEy0GrI=;
+        b=A4CNmzrf5JudEWMD3jtEJmnzA3LqXOq1RPBAX3oIe2m2x9N2CKgUG8RNkUxbyttpe1
+         jYhixR38RXmjuaYJN3x6gJ0IKZcgGprIWbU5Wx06J/bukrCdhGYMgSoooOQq97aIyY3y
+         RkUXcCYeQfCp/KqnX3Xk2L0DZu22+ZtVlDbRkglN85yeiffAYt/eEyaONpH2TzVLP6Na
+         uaB6HsGvQSiXiwBuxb/AJqM5lwmqF1tMkmCIS8EX1035YKopURujne0WnEiKnvk01U7n
+         ak5BUSfai4WWZbi+XxeHBxOfuyAmB1Ih71SakANdzkr3rpB1DiJLpwyDTyG+kBg5qGAJ
+         fBWg==
+X-Forwarded-Encrypted: i=1; AJvYcCWP7NoQD0TzT12p2SQBi1qYkI9cZbQe2TgreH2W6YsHXxvSCpsiPfGlnrE27XLixGsNgitykDsrK67Nd68=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNzu3q8kIElOEhv6EA/Y5Lv1RCokMQNZU8s5KoA7yS11njNHCC
+	Z25VvC4XDWOvQ+aJpQInkTTAf5YOmlS4mVFEUTWUZAJrlbnpa6mVCCHGWTpPQz0=
+X-Gm-Gg: ASbGncsviK0fUkgWaXL94t8j58KNe3PnaFKTArTEZOQ4cepBNTIABosLvhXSA9DNeaj
+	9lmffrzwg9/NqewSw837ZU9CuZMxBvu2+zdyRxA7iJvNsYlSqfPvhfbKM7BHfStXr65MKrxhhIn
+	+XwWSeWXKwulz8UbuvqSpX5MXxJ1dXayH9NWjZ4+Qvz5DSX/6NQJwtFjzgLWyQaDrKXzqpbr1c0
+	WdfR1V2luiefixf3VZ1cG+6Y+ZnC6xFPQrdqZd1cKjY30JyOCb2jN8uPEQyyPbh5v5w5pNuv910
+	sEhWUdtnrk+SHC4IpA==
+X-Google-Smtp-Source: AGHT+IEaLCJ/CIOckb+5DvHUOnJDGJC8wnrzMC5q0EsvjDFp+53jkrTnbvgOr5BU0EJtP7/tyv+yvQ==
+X-Received: by 2002:a17:903:2987:b0:216:2e6d:babd with SMTP id d9443c01a7336-21f4e6a99acmr27767115ad.15.1738901817366;
+        Thu, 06 Feb 2025 20:16:57 -0800 (PST)
+Received: from localhost ([122.172.84.139])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51aecd846sm1791664a12.30.2025.02.06.20.16.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 20:16:56 -0800 (PST)
+Date: Fri, 7 Feb 2025 09:46:54 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Lifeng Zheng <zhenglifeng1@huawei.com>
+Cc: rafael@kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linuxarm@huawei.com,
+	jonathan.cameron@huawei.com, zhanjie9@hisilicon.com,
+	lihuisong@huawei.com, fanghao11@huawei.com
+Subject: Re: [PATCH] cpufreq: Use str_enable_disable() helper
+Message-ID: <20250207041654.62xollzzkehl6rjk@vireshk-i7>
+References: <20250207035953.2420053-1-zhenglifeng1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z6OYbS4WqQnmzi2z@debian.debian> <5f6610a1-3cd0-764e-0f49-91af1004ea50@huaweicloud.com>
- <CAO3-PbrGR-U0+TxgeUUZHSwvNw2Dx=o6_EYf60ND7BLiLA-xWQ@mail.gmail.com>
-In-Reply-To: <CAO3-PbrGR-U0+TxgeUUZHSwvNw2Dx=o6_EYf60ND7BLiLA-xWQ@mail.gmail.com>
-From: Yan Zhai <yan@cloudflare.com>
-Date: Thu, 6 Feb 2025 22:12:25 -0600
-X-Gm-Features: AWEUYZkk5n3m-qzxQp53kd6ix3x2ANE2POQRC5vHVyak4SJ0fxlTXB7Q5H7kjkk
-Message-ID: <CAO3-PbqOFMMzcy9VBLaTtvihnuCJ2u38RMPnYNPckjF8BzdDkQ@mail.gmail.com>
-Subject: Re: [PATCH bpf] bpf: skip non existing key in generic_map_lookup_batch
-To: Hou Tao <houtao@huaweicloud.com>
-Cc: bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, Brian Vazquez <brianvv@google.com>, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kernel-team@cloudflare.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207035953.2420053-1-zhenglifeng1@huawei.com>
 
-On Thu, Feb 6, 2025 at 2:20=E2=80=AFAM Yan Zhai <yan@cloudflare.com> wrote:
->
-> On Thu, Feb 6, 2025 at 12:40=E2=80=AFAM Hou Tao <houtao@huaweicloud.com> =
-wrote:
-> >
-> >
-> >
-> > Yes, the retry logic doesn't change the previous key. Thanks for the
-> > clarifying.
-> > > And by "skipping to the next key", it's simply
-> > >
-> > >   if (err =3D=3D -ENOENT)
-> > >        goto next_key;
-> > >
-> > > Note the "next_key" label was not in the current codebase. It is only
-> > > in my posted patch. I don't think this would break lpm_trie unless I
-> > > missed something.
-> >
-> > I was trying to say that the proposed patch may break the lookup_batch
-> > operation for lpm_trie, and let me explain step by step:
-> >
-> > For LPM trie map:
-> > (1) ->map_get_next_key(map, prev_key, key) returns a valid key
-> >
-> > (2) bpf_map_copy_value() return -ENOMENT
-> > It means the key must be deleted concurrently.
-> >
->
-> I see what you mean now, thanks for the detailed explanation!
->
-> So for lpm_trie, if an element is deleted between get_next_key and
-> copy_value, then retry would still proceed to its next tree node. But
-> with or without retry, I think we cannot prevent the key from cycling
-> back to the beginning: an element can be deleted after copy_value, so
-> the key becomes invalid. After swap with prev_key and call
-> bpf_get_next_key, it cycles back to the leftmost. Similar can happen
-> if during retry the prev_key also gets invalidated. IIUC the rcu
-> locking in lookup really cannot prevent the tree structure from
-> changes.
->
-> On the other hand, bpf_map_get_next_key manual already specifies "If a
-> key is not found, the operation returns zero and sets the next_key
-> pointer to the key of the first element.". IMHO it probably makes more
-> sense that, regardless of normal or batch lookup, it is ultimately the
-> user's responsibility to properly synchronize, or deduplicate what is
-> returned from the kernel. I intend to keep the "skip to next" to save
-> the unnecessary complexity here, unless there are strong objections
-> that I should not.
+On 07-02-25, 11:59, Lifeng Zheng wrote:
+> Commit f994c1cb6c43 ("cpufreq: Use str_enable_disable()-like helpers") has
+> already introduced helpers from string_choices.h and replaced ternary
+> syntax with it. Use str_enable_disable() helper in this line to stay
+> consistent.
+> 
+> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+> ---
+>  drivers/cpufreq/cpufreq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 30ffbddc7ece..a12e1da89163 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -1578,7 +1578,7 @@ static int cpufreq_online(unsigned int cpu)
+>  		if (ret) {
+>  			/* If the set_boost fails, the online operation is not affected */
+>  			pr_info("%s: CPU%d: Cannot %s BOOST\n", __func__, policy->cpu,
+> -				policy->boost_enabled ? "enable" : "disable");
+> +				str_enable_disable(policy->boost_enabled));
+>  			policy->boost_enabled = !policy->boost_enabled;
+>  		}
+>  	}
 
-Thought about this again. It is interesting that hashmap batch lookup
-actually guarantees no duplicate in output today. If we want to
-achieve the same for lpm_trie, it should have its own batch lookup
-routine, which could properly lock the trie against mutation. For the
-generic batch, it is still better to be simple. Let me put this in the
-V2 patchset for discussion.
+Applied, thanks.
 
-best
-Yan
+Rafael, I have picked this since I am carrying other boost related
+changes via my series. Please let me know if you want to pick it up
+for rc.
 
->
-> > (3) goto next_key
-> > It swaps the prev_key and key
-> >
-> > (4) ->map_get_next_key(map, prev_key, key) again
-> > prev_key points to a non-existing key, for LPM trie it will treat just
-> > like prev_key=3DNULL case, the returned key will be duplicated.
-> >
+-- 
+viresh
