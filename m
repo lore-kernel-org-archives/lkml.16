@@ -1,92 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3685642069;
-	Fri,  7 Feb 2025 22:02:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3447642069;
+	Fri,  7 Feb 2025 22:02:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738965734; cv=none; b=N571KOAGHJmvZ60qBIXDfg+U2UCmIGkMEiuTI76Pp8LYCPmdn1x+dQ1kJiLMbtCUe/pQsynLnFrWz/ACQ/FlPJ2qtdvoz4wty2AFajgBcuJIiP2dcNunZjAW0ePTwmVm++CtERAy5YuSOb7Sk3WEUoVgqJJewwTwaG8xQNJ5cJM=
+	t=1738965762; cv=none; b=Lf1y8vNx3RtSq/obI+WiTH0fHpvvC3NXtN9QCuE2aGBlpkMqQgcFPup5b1yM+MYRAjRRr+cddgJWsslgkqXZEk4Ek8Ji2W70hs0adyy2A6Hx2eduq8OtVdOa0KOVzOlREAteLTusSsYiiKjRSqNxVFOORaWJbNaXDdwTFaGWSkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738965734; c=relaxed/simple;
-	bh=n6ZD6l7XI6hRa+Q+z/5+617dISpHOlUMQKHaC43F/CE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hkD4oJfDiXiV6UrdiiGUVBjT8sMQ7zzGPJdIcTy+eYMpsUCVhe6YXXwXmF84CZrgf7gKyQGlEE0HcjqgJgpqElrSe0pOIz4YQdCKAKBEX1ejvLR9O3KSyuiItDZrqE3ff2wTOTCC/JNeo/I2hAqX46mmRvDYEvvVpztVHl1Ci6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kusyv6WJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738965762; c=relaxed/simple;
+	bh=OHXYqRG5reKAlWt/SSkCGeCCohW0zKwzj+nrrIhVr5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J5P7q7rBczEEKdvKerWTUQ1wumIpEfmEnCVxz8aoSifm/O10LmeS3GEeTRdXoJcRZn/H92PHlBXaH/Dbu+xLI3vRbGqNF7McCeqDjGWjDRFrgnxGW3OdtRW7Bhi7cfycZWDTQfJwLJr42OTuBhJaMD0geAtFN5Oh7vJcgn4DNxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H5HUA4Gl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kusyv6WJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCC8FC4CED1;
-	Fri,  7 Feb 2025 22:02:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H5HUA4Gl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 895EAC4CED1;
+	Fri,  7 Feb 2025 22:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738965734;
-	bh=n6ZD6l7XI6hRa+Q+z/5+617dISpHOlUMQKHaC43F/CE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=kusyv6WJvA1OqDdMimapUaxoTL/taTGALPPaZGF5T4XM9J5aRcbdgUebBp0Wvd0RX
-	 8XGmfqg9Zsq6T3Yhytf92oXhV45ccWM+uidUy6l9JKEjfbladY65Qq9j2TQ+a5SJl6
-	 wQqb38/5R4FNzXg63d5DgDYeaU5Zhu5HjlYz8zffsHRzDiWxeFTh4Lc8xxdhsZj64S
-	 I+ncK8/gQH6yaddDnY0JL26OA25YhqqgHZN6dFQjxi+4oWLO2tIb4dnNj1IiEu1l9U
-	 PF6gVdBGwS0OVM4lvGAZkHsI8kTaht3jyBF+YtTY8zDf3AkugqDXZOYkTgbixOc75Z
-	 EZKM5N66z/LDA==
-From: SeongJae Park <sj@kernel.org>
-To: damon@lists.linux.dev
-Cc: SeongJae Park <sj@kernel.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: DAMON Beer/Coffee/Tea chat reminder for the week of 2025-01-27
-Date: Fri,  7 Feb 2025 14:02:10 -0800
-Message-Id: <20250207220210.45603-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1738965760;
+	bh=OHXYqRG5reKAlWt/SSkCGeCCohW0zKwzj+nrrIhVr5U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H5HUA4GltF31TufGVlzTZdHCdD/JCvp+bffwKSBgKSOc0X5JDyc9SlgnPRvQHKTFF
+	 xkqmDlVpNQifxRBUoS7Qrl2WDwmlWsrjetq0F4mxWoN4ivO94DAPnj8wb4LdcM8jCs
+	 pQZbZEajCCUMTtu21ivvD8UWsoDnvk2XVR56WjVrqzFMBGuT4UMHgwvTmEAixuEtFd
+	 FMAEwLX7MYz0QDj94SiXVwh7tsV0WZLEybhhGK6hdz7Mc41kmmhgwsfvhoTVj296As
+	 SRfoEJcOLk6f4yIAe2RY0IkevEWXua+bjKoVYL0ti6f289ZhCFpAnbYRnfGkyY2L9c
+	 TmHOQVgCM88fg==
+Date: Fri, 7 Feb 2025 12:02:39 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Andrea Righi <arighi@nvidia.com>
+Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>, Ian May <ianm@nvidia.com>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] sched_ext: idle: introduce SCX_PICK_IDLE_IN_NODE
+Message-ID: <Z6aC_7xnfC21Vkcf@slm.duckdns.org>
+References: <20250207211104.30009-1-arighi@nvidia.com>
+ <20250207211104.30009-5-arighi@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207211104.30009-5-arighi@nvidia.com>
 
-Hello,
+On Fri, Feb 07, 2025 at 09:40:51PM +0100, Andrea Righi wrote:
+> Introduce a new flag to restrict the selection of an idle CPU to a
+> single specific NUMA node.
+> 
+> Signed-off-by: Andrea Righi <arighi@nvidia.com>
+> ---
+>  kernel/sched/ext.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+> index 0063a646124bc..8dbe22167c158 100644
+> --- a/kernel/sched/ext.c
+> +++ b/kernel/sched/ext.c
+> @@ -775,6 +775,7 @@ enum scx_deq_flags {
+>  
+>  enum scx_pick_idle_cpu_flags {
+>  	SCX_PICK_IDLE_CORE	= 1LLU << 0,	/* pick a CPU whose SMT siblings are also idle */
+> +	SCX_PICK_IDLE_IN_NODE	= 1LLU << 1,	/* pick a CPU in the same target NUMA node */
+>  };
 
+Please merge this into the patch which actually uses the flag.
 
-This is yet another reminder of upcoming DAMON Beer/Coffee/Tea chats
-(https://docs.google.com/document/d/1v43Kcj3ly4CYqmAkMaZzLiM2GEnWfgdGbZAH3mi2vpM/edit?usp=sharing)
-for the week of 2025-02-10.
+Thanks.
 
-We will have the two meetings in the week as usual.
-
-Any-topic discussions
----------------------
-
-Next three time slots for any topic (no reservation is required) are scheduled
-as below:
-
-- 2025-02-10 (Mon) 18:00 PT (https://meet.google.com/ndx-evoc-gbu)
-- 2025-02-26 (Wed) 09:30 PT (https://meet.google.com/ndx-evoc-gbu)
-- 2025-03-10 (Mon) 18:00 PT (https://meet.google.com/ndx-evoc-gbu)
-
-Dedicated-topic discussions
----------------------------
-
-Next three time slots that I reserved in advance for possible future dedicated
-topic discussions are as below.
-
-- 2025-02-12 (Wed) 09:30 PT (not yet reserved)
-- 2025-02-24 (Mon) 18:00 PT (not yet reserved)
-- 2025-03-12 (Wed) 09:30 PT (not yet reserved)
-
-Please reach out to me (sj@kernel.org or whatever) to reserve the
-not-yet-reserved time slots for your topics.  The reservation is made in a
-First-Come First-Served way, and I will send a Google Meet link to
-reservation-confirmed attendees.
-
-Please note that other time slots are also available on demands.
-
-Shared Calendar
----------------
-
-You can get the schedule via this shared Google Calendar:
-https://calendar.google.com/calendar/u/0?cid=ZDIwOTA4YTMxNjc2MDQ3NTIyMmUzYTM5ZmQyM2U4NDA0ZGIwZjBiYmJlZGQxNDM0MmY4ZTRjOTE0NjdhZDRiY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t
-
-You can also get the past and upcoming schedules via
-https://docs.google.com/document/d/1v43Kcj3ly4CYqmAkMaZzLiM2GEnWfgdGbZAH3mi2vpM/edit?usp=sharing
-
-
-Thanks,
-SJ
+-- 
+tejun
