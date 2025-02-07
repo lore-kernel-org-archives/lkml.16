@@ -1,126 +1,92 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0E91E5B80
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 13:38:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 955FC1D61AC;
+	Fri,  7 Feb 2025 13:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738935507; cv=none; b=lTpHoUnOhFSQNYQJZWsuCRyVFCj3I/c63UEDLAN0MO/t5hY4GxEEejOh3f7Jp0Cd5+7ZXvNx2THSQ9DdxX4lP29bBv2U97YIJ3QdRUKnuZzD8KPJqnRImO9MTK/L4cFkNt6NFbqEPiriFm/BhwmrtoAHRHSTG08901WDYKAb1Ok=
+	t=1738935531; cv=none; b=n6f4GyqkGLg9vDjy1KDkkASBiGNE3UYHT2wWgFjVdtI/sDmyuGyJ3ow0mcBXytThGjU540CvQuFSZnYkF32CDYSiqnm/O4rSwKFoPdN9+uXD+orREeyUAz62PHPXRgdFbkbHQkuqkHXw9V6yEyrs9f0S4yWQCyIFiZrUDOLgViA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738935507; c=relaxed/simple;
-	bh=7w/VYo91XaWPlrqMfBfdFW53J2iX/Ick6Q62makHB8o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F81V0wwR37CYL1zd3jIMRRb1nFd8EYUeo53a8+eUFYcJlf6Swmkuyf8TeoESEpJpuuzLT8rav/9lrQarOZGbkkX6UglPN0/LtK4b4Jvhsswzcbu3pcMSdhjWaMy8uPx1B3skCJQQOrBfZ+y2d+RvsiQvC+1kkQM64M9q8q/N+pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ab7800d3939so239364466b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 05:38:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738935504; x=1739540304;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G0X8gVoDe7vIzF+gIW8hQnlqRHQXAuaBqjbVYkejeMI=;
-        b=jmu99AApxG27QGLgJ8H/r7w29MRIQg46vR4FOmnOOPX8M6zr51pZ2gX6DA1VgECoWH
-         ikvY/faK9j8887BwbU4G6F1k4WQJEJ//xsHgJYItvPt3EHrDYAOHuFXjeiAAGyMWZgYS
-         sZO1nevpw4NhO26mUCMgUk/Z+mESsxM14Zwg/MYoI/y8qa3u8bDWvktTrWSwjGWwV6s1
-         7fJUeXgge1amxxDeoVQi8Lel/Kk/DoYPf18SnIlD/ypUFlg/3015qtgYwoq5TmY9bllI
-         0w92e/HqWdqZBFH52Uv+rol4nUE3bH4DimrJDN+rSmjt5nMym3tj5QD3xi8P/NS9X6jl
-         DKtg==
-X-Forwarded-Encrypted: i=1; AJvYcCVLbb7I6iVqLDBqCPH5SO9pJVa/dahIxSGwEAShSOxAMnXCE/V+IfPDfBOqZ4Sm2+OewlRfQV3msipRly4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxebLsgbEJVssi8Q0atPb9lt3b6p6NBCW1KxvRvT96/i4u88eIo
-	rhPiH4nkT5Wkn/2dg+g5mK6Ev5ADSf0ghxuiMQJNdQb3Uzqye/5E
-X-Gm-Gg: ASbGnctD81twgVUMv9QGKh21DVLaS4sRgwYCtztq0rnYXuWisysAdICBiYXYvx2R5ew
-	0F+PFo/vUVriraury781gHaBfriMzQx7i6z6q9pa6fgudYX+iB34vZ+yAEO4Be5if/JJgCtQ5yq
-	UXj8hIAMjs3aSMCWVMRW025x+tCOfzsTToukofZmidO8GR/HIJiX7ZbGLqsdIWoCm72UePc4G7t
-	uGHXzZ6ROJ2no3xp4aN92PNcDwjpbt3tvcA4sbwf8VwEnJ6l8yVh6rgvsQ5fWHkKCbZ94Xqnq3h
-	VulEIzo=
-X-Google-Smtp-Source: AGHT+IEdE5/8O4dXlE06WxX4TZ0D6F7HzCbiOIyWPvUz9f9czdsHfjs/CXklXvMq2tGOHvBZ1Q0CoA==
-X-Received: by 2002:a17:906:c146:b0:aa6:acd6:b30d with SMTP id a640c23a62f3a-ab789c4da99mr260995366b.48.1738935504141;
-        Fri, 07 Feb 2025 05:38:24 -0800 (PST)
-Received: from gmail.com ([2a03:2880:30ff:72::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab77efe3111sm209129866b.51.2025.02.07.05.38.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 05:38:22 -0800 (PST)
-Date: Fri, 7 Feb 2025 05:38:20 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@kernel.org, vincent.guittot@linaro.org,
-	linux-kernel@vger.kernel.org, juri.lelli@redhat.com,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, corbet@lwn.net,
-	qyousef@layalina.io, chris.hyser@oracle.com,
-	patrick.bellasi@matbug.net, pjt@google.com, pavel@ucw.cz,
-	qperret@google.com, tim.c.chen@linux.intel.com, joshdon@google.com,
-	timj@gnu.org, kprateek.nayak@amd.com, yu.c.chen@intel.com,
-	youssefesmat@chromium.org, joel@joelfernandes.org, efault@gmx.de,
-	tglx@linutronix.de, kernel-team@meta.com
-Subject: Re: [PATCH 03/15] sched/fair: Add lag based placement
-Message-ID: <20250207-economic-complex-rottweiler-ccc45f@leitao>
-References: <20230531115839.089944915@infradead.org>
- <20230531124603.794929315@infradead.org>
- <20250207-petite-eminent-husky-7d1704@leitao>
- <20250207111141.GD7145@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1738935531; c=relaxed/simple;
+	bh=XJvMJJCogQp4DN24ILgJgRndFwG6PAFvsTUtdxvnnGo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mATTo8809/c2YIRP8Zriu8+RWAUIlv/i1XhE8IZyvgGwtnFw9Dc2iQxU/i86Wu+20DXDEfCdDYuDFD9zODoswdvf0hjZaeXapkOaPZscTEGwFyS0YILXWg2aytXlMqPfmfl0fZIgUa0LiVg4q6mnxqMQUWK/Vt7UferYYKjbY7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54106113E;
+	Fri,  7 Feb 2025 05:39:12 -0800 (PST)
+Received: from [192.168.178.38] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56D923F63F;
+	Fri,  7 Feb 2025 05:38:44 -0800 (PST)
+Message-ID: <5a36a2e8-bd78-4875-9b9e-814468ca6692@arm.com>
+Date: Fri, 7 Feb 2025 14:38:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207111141.GD7145@noisy.programming.kicks-ass.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
+ for hotplug
+To: Jon Hunter <jonathanh@nvidia.com>, Juri Lelli <juri.lelli@redhat.com>
+Cc: Thierry Reding <treding@nvidia.com>, Waiman Long <longman@redhat.com>,
+ Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+ Suleiman Souhlal <suleiman@google.com>, Aashish Sharma <shraash@google.com>,
+ Shin Kawamura <kawasin@google.com>,
+ Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+ linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+ "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <Z4TdofljoDdyq9Vb@jlelli-thinkpadt14gen4.remote.csb>
+ <e9f527c0-4530-42ad-8cc9-cb04aa3d94b7@nvidia.com>
+ <Z4ZuaeGssJ-9RQA2@jlelli-thinkpadt14gen4.remote.csb>
+ <Z4fd_6M2vhSMSR0i@jlelli-thinkpadt14gen4.remote.csb>
+ <aebb2c29-2224-4d14-94e0-7a495923b401@nvidia.com>
+ <Z4kr7xq7tysrKGoR@jlelli-thinkpadt14gen4.remote.csb>
+ <cfcea236-5b4c-4037-a6f5-267c4c04ad3c@nvidia.com>
+ <Z6MLAX_TKowbmdS1@jlelli-thinkpadt14gen4.remote.csb>
+ <Z6M5fQB9P1_bDF7A@jlelli-thinkpadt14gen4.remote.csb>
+ <8572b3bc-46ec-4180-ba55-aa6b9ab7502b@nvidia.com>
+ <Z6SA-1Eyr1zDTZDZ@jlelli-thinkpadt14gen4.remote.csb>
+ <a305f53d-44d4-4d7a-8909-6a63ec18a04b@nvidia.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Language: en-US
+In-Reply-To: <a305f53d-44d4-4d7a-8909-6a63ec18a04b@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 07, 2025 at 12:11:41PM +0100, Peter Zijlstra wrote:
-> On Fri, Feb 07, 2025 at 02:07:18AM -0800, Breno Leitao wrote:
-> > Hello Peter,
-> > 
-> > On Wed, May 31, 2023 at 01:58:42PM +0200, Peter Zijlstra wrote:
-> > >
-> > >  place_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int initial)
-> > >  {
-> > <snip>
-> > > -		vruntime -= thresh;
-> > > +		lag *= load + se->load.weight;
-> > > +		if (WARN_ON_ONCE(!load))
-> > 
-> > I have 6.13 running on some hosts, and in some cases, where the system
-> > is getting some OOMs, I see the following stack:
-> > 
-> >           WARNING: CPU: 29 PID: 593474 at kernel/sched/fair.c:5250 place_entity+0x199/0x1b0
-> > 
-> >            Call Trace:
-> >             <TASK>
-> >             ? place_entity+0x199/0x1b0
-> >             reweight_entity+0x188/0x200
-> >             enqueue_task_fair.llvm.15448040313737105663+0x28c/0x560
-> >             enqueue_task+0x30/0x120
-> >             ttwu_do_activate+0x99/0x230
-> >             try_to_wake_up+0x25a/0x4a0
-> >             ? hrtimer_dummy_timeout+0x10/0x10
-> >             hrtimer_wakeup+0x25/0x30
-> >             __hrtimer_run_queues+0xf1/0x250
-> >             hrtimer_interrupt+0xfb/0x220
-> >             __sysvec_apic_timer_interrupt+0x47/0x140
-> >             sysvec_apic_timer_interrupt+0x35/0x80
-> >             asm_sysvec_apic_timer_interrupt+0x16/0x20
-> > 
-> > I am sorry for not decoding the stack, but I am having a hard time
-> > decoding the stack properly. The values I got was misleading, and I am
-> > working to understand what is happening.
-> > 
-> > Anyway, I don't have a reproducer and this problem doesn't happen
-> > frequent enough. I have 1K hosts with 6.13 and I saw it 5 times in the
-> > last week.
+On 07/02/2025 11:38, Jon Hunter wrote:
 > 
-> Weird. Would you mind trying with the below patch on top?
+> On 06/02/2025 09:29, Juri Lelli wrote:
+>> On 05/02/25 16:56, Jon Hunter wrote:
+>>
+>> ...
+>>
+>>> Thanks! That did make it easier :-)
+>>>
+>>> Here is what I see ...
+>>
+>> Thanks!
+>>
+>> Still different from what I can repro over here, so, unfortunately, I
+>> had to add additional debug printks. Pushed to the same branch/repo.
+>>
+>> Could I ask for another run with it? Please also share the complete
+>> dmesg from boot, as I would need to check debug output when CPUs are
+>> first onlined.
 
-I tried to get this patch on top of latest 6.13 stable (6.13.1), and it
-seems it misses some dependencies in stable. Field cfs_rq->nr_queued
-don't exist in 6.13, it was added/renamed later by 736c55a02c477a
-("sched/fair: Rename cfs_rq.nr_running into nr_queued").
+So you have a system with 2 big and 4 LITTLE CPUs (Denver0 Denver1 A57_0
+A57_1 A57_2 A57_3) in one MC sched domain and (Denver1 and A57_0) are
+isol CPUs?
 
-Is it safe to just s/nr_queued/nr_running in our patch?
+This should be easy to set up for me on my Juno-r0 [A53 A57 A57 A53 A53 A53]
 
-Thanks
+[...]
