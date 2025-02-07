@@ -1,122 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C4523ED54;
-	Fri,  7 Feb 2025 15:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64368240608;
+	Fri,  7 Feb 2025 15:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738942891; cv=none; b=Q/hzuDA68O/EntIOL7CWZZAQX7h9gyW1BYbgJYFyX8/ZFoKs5lHxWmcchP5fzhwApXoO3AIQrnvWNUNZNmORKw5SgYNgEZONj3cCLDLgRYuEbBSDiEqPGvNrRrf5osnA4B1r9w49RngiqNMWvzhHy0XXf5YUpYIWcH5zpDzp5q8=
+	t=1738942922; cv=none; b=P5i1xxdktThTNrPqFx6fjRkkgGYgOAeEFC+uH+/pQ3qqzvFnzLhsCOuAotxF8J1m20+32Gr7TqXAz7MiroHxsf/+me8ZYBQos4zcX5xYXphg/7gBonAQaT7CSZnxr7nhgmpyIQqBSZWKIejbNyP25SUhZfRQJ9U1X5nrTzLzzJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738942891; c=relaxed/simple;
-	bh=jzgqfcfeVfqZ1cK1I9LiYNgPFCDeHdC1YoXIE4x9p2c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IsUxy0BiPW0TjTWS810wP0Ly1NJ5kzN++2uaZz6PoGXVC/wExoYHs8oGBhz4SW1bvZbQPans2dydkhukSb81AFX2wbDRTqgxgb1rNxReA6ekEBOiSew+ruQd+8MWemX4PMS0Uiyi3TlHhYGkY4qRrFlGu89mbwl8R57rvJrgnhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kC0cMsnT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738942922; c=relaxed/simple;
+	bh=Qmxv67eREN21KV5OW8q8rkXUpoIPDOwrcmbL8HtjZCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kVkGxUTHqqrLB02LLyh2oamKWlRBBWZgimRl5qHa2xPwsWgUAbugxjVM7qpi2LcUN7iBd9NdnmIrshfBPTMK03BT7By2QFF8KidKdpqt2KuIx/BQq5LEBH4WZ7LRw4ry72XASunEaPesh9OvbqP4hTzY+pDu/OILiEFKP/ti5xM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mCSfuuV+; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kC0cMsnT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EC4AC4CEE5;
-	Fri,  7 Feb 2025 15:41:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738942891;
-	bh=jzgqfcfeVfqZ1cK1I9LiYNgPFCDeHdC1YoXIE4x9p2c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kC0cMsnTUtVbSWWYcACwwGbdl/ghpLFSCsJ7DX1s+GDVC8plF3RdmeCXVtYr1lzqa
-	 yWC3t2k4cPPf+COuubqWb5Hekfz94SaHElCxL53sLikgRUsc2nGldbx/XIE/Ww2VlV
-	 QS0ihTkdl6jXKVb4cggMgUcTBhXUig25CiBzIjiJSKXZHOC8Az+KxJ3lksgqpCYyFJ
-	 i2SZti1Pc7/xYrbRm2OqOcZFL7DuG1gBVNe2GjSeKQ2NjgOsXj/t/97iR0usbK5nIf
-	 HgxZYfzE1pCsl2IDLEDfWSPW9WYFjlr5PhrvdGVHkQeO9h0/hYkGBNaUGm3ivifcvf
-	 4YegQFPFOsAzA==
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5fc13355a5bso1083737eaf.3;
-        Fri, 07 Feb 2025 07:41:31 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCURf+HziPrvGUC4m44O13NYJq6Afb2MNJa2mGlyoFljNJkuYKEPtWjpQ+RxQ1aqEaXkldUaHuv/ISE=@vger.kernel.org, AJvYcCWE5dqeFn7Txn3WRf7X1Zv3IzyhYiRUru8FWFZ+Ugqu84QHa3bSiogeZ3KeJkxMI0xs9i1O1RZNx+eYqpc=@vger.kernel.org, AJvYcCWrUZNAjjHWEvbSmGyK6t2t0N0jiIAgJ1yG4rItCzBelWtzPDu+cZ+sfeJSNd4jmYWD8VUDia14TR6q@vger.kernel.org, AJvYcCX5IZe9W9MWgYAXVAVK0KvUFwi1SfLvLfYvxHbHpVBwHoZIcNONUZJivF+0wAZi7s1/89zqoOb0aG+SS+8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjblNpRC8RxkytVrfmmrYZw3/2k0H1lD+BC+M6g51oGB2y0L6b
-	/riDJn/MWhm4uxpQQBU0L+LoNFKZDCm0BhG5FjYVuY24nI6USnK55HsmgW2TjjXGSmhGPazbHNB
-	nxjR1fDD2PHUVXCc4CTdvQXPPUoE=
-X-Google-Smtp-Source: AGHT+IHRPRSDsBVMNZCUnzemgyz6Ifv/tX6iSe9DNiPMSojBjrx3KJlGvRl+GltgwRdZ8YxnwL+URQBCycC9eq3UgJE=
-X-Received: by 2002:a05:6820:54b:b0:5fa:61b9:3e99 with SMTP id
- 006d021491bc7-5fc5e6a6675mr2632457eaf.3.1738942890477; Fri, 07 Feb 2025
- 07:41:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mCSfuuV+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738942920; x=1770478920;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Qmxv67eREN21KV5OW8q8rkXUpoIPDOwrcmbL8HtjZCA=;
+  b=mCSfuuV+kybuMLSyHW2UMHfhwTqx7Ph2/hn6lF1sJvUzXa2S8vs3yQFj
+   cwKucLreqm/VyVypbJyoYLKl67ze5GgymWu+YU6/eHuCsf9MSGBXPbyN/
+   THhKg/nA9xqX9+C2/E2MnPgrg09kUmnc5HTtgIB3T5WmHHB2SZODg65zL
+   79hiXv/ZZg3BLs2sM7qCI8T+x19+aEExs27QTcgjzFnrNgZA4rmeYAmsy
+   fiVxvGQWeo7NeuhE7pP8rUL+Lijnof4QPuXkeYm3VxbXjAPXoIzxTuAaJ
+   MSFqtU+DjX4FV2/AwiBzAQb9v3nZezyhWm7VlUax4YUZQjGSdmIYzbp7c
+   Q==;
+X-CSE-ConnectionGUID: +OWNxkbaSSujXgUsWHgc0Q==
+X-CSE-MsgGUID: WQcgdRobTLaO/FYvZgTgCQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39741206"
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="39741206"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 07:41:59 -0800
+X-CSE-ConnectionGUID: ZhS+pbrvT9GgGnZOX0yjjQ==
+X-CSE-MsgGUID: 1VST0mTQSKK6DG9t5oBWrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="111474064"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 07:41:58 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tgQUN-000000097lB-23ai;
+	Fri, 07 Feb 2025 17:41:55 +0200
+Date: Fri, 7 Feb 2025 17:41:55 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v2 7/7] gpio: 74x164: Utilise temporary variable for
+ struct device
+Message-ID: <Z6Ypww-xXAvoCCq1@smile.fi.intel.com>
+References: <20250207151825.2122419-1-andriy.shevchenko@linux.intel.com>
+ <20250207151825.2122419-8-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <12619233.O9o76ZdvQC@rjwysocki.net> <1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com>
- <Z6YPpbRF_U0TxAbf@hovoldconsulting.com> <Z6YcjFBWAVVVANf2@hovoldconsulting.com>
-In-Reply-To: <Z6YcjFBWAVVVANf2@hovoldconsulting.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 7 Feb 2025 16:41:18 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0iHjkfoh2A+hAmMCTG9_nBcJrsRYFD0Hp4ZChYUo7bFEg@mail.gmail.com>
-X-Gm-Features: AWEUYZlwEPYlis9YnTvZYbPq5_yCDEI_6ZrnvegCI4YdcJhruAg5Z-3Cw5n-I5w
-Message-ID: <CAJZ5v0iHjkfoh2A+hAmMCTG9_nBcJrsRYFD0Hp4ZChYUo7bFEg@mail.gmail.com>
-Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
- parents and children
-To: Johan Hovold <johan@kernel.org>
-Cc: Jon Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Linux PCI <linux-pci@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Xie <kevin.xie@starfivetech.com>, 
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250207151825.2122419-8-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Feb 7, 2025 at 3:45=E2=80=AFPM Johan Hovold <johan@kernel.org> wrot=
-e:
->
-> On Fri, Feb 07, 2025 at 02:50:29PM +0100, Johan Hovold wrote:
->
-> > Yeah, I hit something like this yesterday as well and did confirm that
-> > reverting this commit makes the problem go away. Haven't had time to di=
-g
-> > much further.
-> >
-> > [  110.522368] Unable to handle kernel NULL pointer dereference at virt=
-ual address 0000000000000000
->
-> > [  110.855238] Call trace:
-> > [  110.857861]  simple_pm_bus_runtime_suspend+0x14/0x48 (P)
-> > [  110.863425]  pm_generic_runtime_suspend+0x2c/0x44
-> > [  110.868362]  pm_runtime_force_suspend+0x54/0x100
-> > [  110.873217]  dpm_run_callback+0xb4/0x228
-> > [  110.877347]  device_suspend_noirq+0x70/0x2a8
-> > [  110.881844]  dpm_noirq_suspend_devices+0xe0/0x230
-> > [  110.886778]  dpm_suspend_noirq+0x24/0x98
-> > [  110.890904]  suspend_devices_and_enter+0x368/0x678
-> > [  110.895941]  pm_suspend+0x1b4/0x348
-> > [  110.899627]  state_store+0x8c/0xfc
-> > [  110.903228]  kobj_attr_store+0x18/0x2c
-> > [  110.907195]  sysfs_kf_write+0x4c/0x78
-> > [  110.911074]  kernfs_fop_write_iter+0x120/0x1b4
-> > [  110.915735]  vfs_write+0x2ac/0x358
-> > [  110.919352]  ksys_write+0x68/0xfc
-> > [  110.922873]  __arm64_sys_write+0x1c/0x28
-> > [  110.927002]  invoke_syscall+0x48/0x110
-> > [  110.930969]  el0_svc_common.constprop.0+0x40/0xe0
-> > [  110.935907]  do_el0_svc+0x1c/0x28
-> > [  110.939427]  el0_svc+0x48/0x114
-> > [  110.942769]  el0t_64_sync_handler+0xc8/0xcc
-> > [  110.947180]  el0t_64_sync+0x198/0x19c
-> > [  110.951059] Code: a9be7bfd 910003fd a90153f3 f9403c00 (f9400014)
-> > [  110.957428] ---[ end trace 0000000000000000 ]---
->
-> Ok, so the driver data is never set and runtime PM is never enabled for
-> this simple bus device, which uses pm_runtime_force_suspend() for system
-> sleep.
+On Fri, Feb 07, 2025 at 05:17:14PM +0200, Andy Shevchenko wrote:
+> We have a temporary variable to keep a pointer to struct device.
+> Utilise it where it makes sense.
 
-This is kind of confusing.  Why use pm_runtime_force_suspend() if
-runtime PM is never enabled and cannot really work?
+Urgh, this seems incomplete...
+There are more lines to convert, however they do not affect ± statistics.
 
-> This used to work as the runtime PM state was left at 'suspended', which
-> makes pm_runtime_force_suspend() return early, but now we can end up
-> with a call to the driver runtime PM ops that dereference the NULL
-> driver data.
+Tell me if I need to send full v3 or just this patch.
 
-Thanks for the info!
+-- 
+With Best Regards,
+Andy Shevchenko
 
-pm_runtime_force_suspend() is a known weak point, but I had assumed
-that it wouldn't be involved in dependency chains starting at devices
-with DPM_FLAG_SMART_SUSPEND set.
 
-Well, more work ...
