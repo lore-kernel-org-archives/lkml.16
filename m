@@ -1,371 +1,227 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54AA51EEA2C
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 13:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B554EB51
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 13:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738934892; cv=none; b=OjRh3No+V7w2BKPbtVHOD5aIBzULWZ8xT6Gn9iacgQJwOoBs3Vht/oqLDfBQI1GGjjCY9E/zTdM2oQsT0pilySN/OBjInlO8nttdxy8K9vEEQO/bCkzcJalK/QYE0J1h8OX5E0JooPJEJZiIR1zvf1k/O3JJJeoofLYjNyPIy+o=
+	t=1738934907; cv=none; b=lUuu5nk8nrG/ZFjrodDRC9Fe3xV5x9xXckayJutyBZk6cayK3iq55IJ00IEb2+GzRKjKJmEo1cNBYsANzpWBQHooLhJItD19v6Q6Um0RXxdhGpbH2OB/PV+E/YVfMEZdPl8Dggfj2WohNoG5433UzF6UfBF/C/kIcFSWYZCSeyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738934892; c=relaxed/simple;
-	bh=6L+nvDqOKHipKDklchE5gvYs7yrF4MnPXIblT4Xz2kU=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=hQpvVYIrDAqw7gBnkPND+6fG3xWN5WJ8BukNuyw1vBpHQQolYtzgi9aL3836Y8Ur08vrDMEgpzvRANZSLDXKG4yV8WVWrGUHtRT599j2ZoRIvBRifK1i6n9Vn06E4kQOEkC8uw9FsArb++Jx2IukleZfxJy9Io5wB9/BhE803t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=oEBsrlUq; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1738934907; c=relaxed/simple;
+	bh=LZasnWhFJJV34mvD6UVizSKN3QCXMXim04UIqmOaNRo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HHaIA5bQ5M6W0xwfawEMPJTd4xcXqk5oYe+ckWWJXgxROSBjTQHcA49PpIyObXJDBEEriYgYbLm8FoJxOR1pdM4mteMT04PMrxGhiNeN04mi7ogz+EsTiCz6vRBJs9pO/Np0WRiC4GeflmCXsEGX7B1HHEAOsN7MT4dy6KfgnY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=A4ESNtjX; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oEBsrlUq"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250207132808epoutp0499929978143094a52246971ecbff6611~h8BFFIq8r3164431644epoutp04P
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 13:28:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250207132808epoutp0499929978143094a52246971ecbff6611~h8BFFIq8r3164431644epoutp04P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1738934888;
-	bh=GDXBQ3YjlyKVtpnmdKwmtp6KHF6POFf/d36tshBTNEE=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=oEBsrlUq5Hu5eQiI4EMlECD9sSrZkgC81wHP3VrYtpPcwgm0fU78S5H7CIiic7RD+
-	 XoEo3y9yl/ijeVkNhoRr63dp7gemY3xr8f0MrQHGkuGbPjZSlu6d+9GqLXP9GYLBhz
-	 746KSoz2NDxCdGKHoG0SvXNoKsBWwaUxeeNe+kVc=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20250207132806epcas5p4b4f54c279da9003fdb3f63c06d791798~h8BDkNQ_j2256922569epcas5p4K;
-	Fri,  7 Feb 2025 13:28:06 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.177]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4YqFCT1ny0z4x9Pq; Fri,  7 Feb
-	2025 13:28:05 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	40.D8.19710.56A06A76; Fri,  7 Feb 2025 22:28:05 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250207122130epcas5p1857043fa03e7356dc8783f43a95716ef~h7G5v_e2G2035920359epcas5p1S;
-	Fri,  7 Feb 2025 12:21:30 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250207122130epsmtrp2971b42370dd5d292e9f31c79b272da6c~h7G5uh7qS0761607616epsmtrp2F;
-	Fri,  7 Feb 2025 12:21:30 +0000 (GMT)
-X-AuditID: b6c32a44-36bdd70000004cfe-1d-67a60a654420
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	47.01.23488.9CAF5A76; Fri,  7 Feb 2025 21:21:30 +0900 (KST)
-Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250207122125epsmtip10738e7a8f8d8a553c0e5ef9b385df5a0~h7G1jRiUZ3169031690epsmtip1f;
-	Fri,  7 Feb 2025 12:21:25 +0000 (GMT)
-From: Swathi K S <swathi.ks@samsung.com>
-To: krzk@kernel.org, robh@kernel.org, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	conor+dt@kernel.org, richardcochran@gmail.com, treding@nvidia.com,
-	Jisheng.Zhang@synaptics.com, ajayg@nvidia.com, Joao.Pinto@synopsys.com,
-	mcoquelin.stm32@gmail.com, andrew@lunn.ch, linux-fsd@tesla.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-	alexandre.torgue@foss.st.com, peppe.cavallaro@st.com, joabreu@synopsys.com,
-	swathi.ks@samsung.com, ssiddha@tesla.com, xiaolei.wang@windriver.co,
-	si.yanteng@linux.dev, fancer.lancer@gmail.com, halaney@redhat.com,
-	pankaj.dubey@samsung.com, ravi.patel@samsung.com, gost.dev@samsung.com
-Subject: [PATCH] net: stmmac: refactor clock management in EQoS driver
-Date: Fri,  7 Feb 2025 17:48:49 +0530
-Message-Id: <20250207121849.55815-1-swathi.ks@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VTa0xTZxjO19PTUzCQE2DbJ4yM1S0REGzH7SuCEmHuZDLDNhccC2NNOWsb
-	Stv1IoNkWQPopFEYOi7TjttkTG4iUqBAEYtiRKQoFyVY5booOJiDMRwB1lLY/j3f87zP+7x5
-	v7xszC2H8GRLZGpaKRNIOSxnZnO3r28A7fyLiDtmwdFg9xoLvXxWCJDFasZQramfgfSWbCYq
-	vdGPo5meSQI1nNLjaLTLyEC103kYKhytYqLHFfM4Wpm8iSGLpYFAA825OGqcGsHRxGw8GmzT
-	s1CxpZOBdCPTOCpZq8NRT9mraPnOc4AqDEsE2pgzADTxRweBbvQ9xdBGRyuBRld6MFQxXoaj
-	pSujBBpbdUX562YQ9SbVdGmUQc3kGQjKeN5KUGWNGqqxOodFlWsLMOrqxW8pY+sigzqTNc+i
-	FjqHWVRuUzWgrnfyqJkVE0adHerHqKZri4Baz/yJiHNLSIkQ04JkWulDy4TyZIlMFMk5/HFS
-	dFJIKJcXwOOjMI6PTJBKR3JiYuMCDkmkttVxfI4LpBobFSdQqTh790co5Ro17SOWq9SRHFqR
-	LFUEKwJVglSVRiYKlNHqcB6X+06IrfCLFPGteiOuuBf+tW6tlKkFQ1wdcGJDMhgWjuuADjiz
-	3ch2AB+t32baBTfyTwBb7kkdwjKAneYqYtuhe1aMOQQTgF1WM+54LAFomexj2atY5G744NcW
-	wi54kDcZ8EHtyKYFIxcwqM8pwOxV7uQhaHzYi9sxk3wbniuoBHbsQobD0zN3mY68N2BNQ9em
-	GZItTvDHqSuYQ4iBk09+ZzmwO5y91bQ1oCdcnDdt8UmwJnd4q5EYWv/J3+IPwK4hvY1n2yby
-	hZfb9jpob1jQW8+wY4x0hWdWpxkO3gW2lmzjXXBtbmSr5U7YXLmwFUvBauPPLMfyEuFv1834
-	98D7/P8JZQBUg520QpUqooUhCp6MTvvvq4Ty1EaweRN+Ma3gYel6oBkw2MAMIBvjeLj8UHtR
-	5OaSLEjPoJXyJKVGSqvMIMS2s3zM8xWh3HZUMnUSL5jPDQ4NDQ3mB4XyOK+5ZBmzRW6kSKCm
-	U2haQSu3fQy2k6eW0XbEq9+//cOarPfbK+s+AUJ9fZ6GSOw0ZSrLxCfuu8/E3xnQxAcYJK4Z
-	fpcy9vhzpTsOTu/7/Kx2R9PR4yOL4+IvT1ZEvuc5ZS0fGFjmzwmrolrLe5nMy8OMHIniq/Ai
-	eXp20AfqngXZoNfrSc3pB70j/vq0Nu8p/wUz0n2/bjVKGFhWsHpVRb4UPf/uwNjhk7u9/E/k
-	L3TMNxa8dcrb+iKvfvbd3nlRzDcXGgXR3COGcoX2sW/IZOuh2eiiMM3903ztSEdiWoIk7W6V
-	uo5+VGJ6MtStu3bsKDPT3SNMX+E1umEsDbrw0We3/z4XG7TrWF9CnHVfrtJQXLRHUTE9EWuF
-	Eg5TJRbw/DClSvAvF6sVgJwEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKIsWRmVeSWpSXmKPExsWy7bCSnO6pX0vTDV61MltcPvyXzeLny2mM
-	FufvHmK2WLP3HJPFnPMtLBbzj5xjtXh67BG7xYaOOawWNw/sZLJY86Sf2WLazeUsFvcWvWO1
-	+PHoKLPF+fMb2C0ubOtjtdj0+BqrxcNX4RaXd81hs5hxfh+TRde1J6wW8/6uZbU4tkDM4tvp
-	N4wWi7Z+Ybf4/3oro8XDD3vYLY6cecFs8X/PDnaLmz+OMVsserCA1eLLxpvsFrd/81lM/HeI
-	0UHRY8vKm0weT/u3snvsnHWX3WPBplKPTas62TwWNkxl9ti8pN5j547PTB69ze/YPN7vu8rm
-	0bdlFaPHwX2GHk9/7GX2mHTlHLPHlv2fGT3+Nc1lDxCK4rJJSc3JLEst0rdL4Mo4vm4na8FF
-	q4quv/NZGhivGHQxcnJICJhIdL2cwdzFyMUhJLCbUeL9zL8sEAlJiU/NU1khbGGJlf+es0MU
-	fWKUmPyqhREkwSagIXF9xXawhIjATSaJ9737wEYxC7SySFx/sQysXVjATWLnjVNgNouAqsTk
-	qUvBunkFrCR6np6FWicvsXrDAeYJjDwLGBlWMUqmFhTnpucmGxYY5qWW6xUn5haX5qXrJefn
-	bmIEx6yWxg7Gd9+a9A8xMnEwHmKU4GBWEuGdsmZJuhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHe
-	lYYR6UIC6YklqdmpqQWpRTBZJg5OqQam8vYE0VcX/vm9tM3YIfd6PU/WCu/1r4xjODWjKxkn
-	KlbU11RsW3fOeVrSfJcwrkRl6f3ZfBEPHVYaL3TX9xL8dVNmsux05oIXjokPDV4yGV2ovOl9
-	X8vB49YbLtbbZTftZNrY68XVGOUj5oQGM9wxkPjB+oSx61e6nq238k4LXx37o1GT359OrJYX
-	2hrjlzbbN2dDcsiz2BX+Ng9Pm/XtCe9rzDL8bfHpt9nWs3N4/Lesvfg56tWFOQ1MS32lOk59
-	fX78ZtjuTe9PCh5cmtjx211z0qzZ1VZ5W1nMvZK3XPRoSnzZePdjTbD9hS0b9mofXPXod1n6
-	rz1ll7r6NHeYuIo/EA/mDqpRtVgzc5oSS3FGoqEWc1FxIgD//YYLSAMAAA==
-X-CMS-MailID: 20250207122130epcas5p1857043fa03e7356dc8783f43a95716ef
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250207122130epcas5p1857043fa03e7356dc8783f43a95716ef
-References: <CGME20250207122130epcas5p1857043fa03e7356dc8783f43a95716ef@epcas5p1.samsung.com>
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="A4ESNtjX"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4368a293339so22384325e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 05:28:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=9elements.com; s=google; t=1738934902; x=1739539702; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ckZTEVvJkEaNZVoLWSjwZxia7bZkBvQAhD0vyw7gDKU=;
+        b=A4ESNtjXE7iog4h6b3QAjrVU1HOkyUvh/hgkYTEkkCpajZWj9Bg3CjqN4LWoj1qwtl
+         MYb1UN9gINQvZNmiEfJoUdO7y/TviGfif71nhrn5be6zQn6m10uOtVTvIDxBFSySPtMZ
+         /8tCRMvrG7Zm9lB+VS+fqTRy5JU7xkNYUgNec+0qxnFvXa1SoD2mRmt/LzSuHfoAC4DG
+         AO68Z3m0BQXOR2XRFgLcnjzz7Q/A+D/NofCKOXosAhWH7TyAE0mWU5npuwz5/G9IXQRa
+         zRvYYJU8U2/kz9WNnUnefd6knqXsNtnIzgljpRCQ09cLHIaxj+nHHDdSSgY0eD4+o21z
+         9IEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738934902; x=1739539702;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ckZTEVvJkEaNZVoLWSjwZxia7bZkBvQAhD0vyw7gDKU=;
+        b=Kh1in4tJXji/1kNN9NCmwtZvhlOWi1/LwvPKLipZFTMG94dUYkOMvKJpDl7mem/jCb
+         vbk1v1xSLzLdzEiNDvb76AfoFwdbzP09LfCfPc3fBstG9S3wYB55PiIn5yb8GcFewg68
+         +mtjUwVZsJVyLc3PRoP1hgadFKpVE2lfI6QuY4fW611maysLX7Pr0x/kxptt5maWI3Po
+         qT33OIMhp3lj5xZHsDcj2+16TMx39/UqDuoM4QWX9Wuj+0mlII4VLcCy7R4NSRH1C46t
+         9K6lBWirHgp+ylZBXgC1VbPYaUOFnDtpqKqHD9pkNHzntOf2SmQhrb+18X+UFhLMVxGz
+         uHqw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMoIHPiPz+kl6U6pDi1kybgNF3evx/0208euHipJoTpWEu8DHqYn3QHpEHW6ACiWJ4r5d4YMN+VPujnOQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjUlaFWKqNDfjON9eufsVLn/oU0emFXgNNMp6c4PFE6mhdz1aE
+	ggre9VzcddorFHPZA6ouHpMSwn0fNoJKjs7x9bipA/+nYVf12niWD+F3oPLAcrc=
+X-Gm-Gg: ASbGncs8x+pLyXB3bP6mXitEoc4uAILm60+cpNWYX7SHg5HTlzrV/9m73NDMRHf11as
+	Tv5grc4fYPpiVzkY+GuE7OyNo/6PN80GNmEwKPvgxaJcikWGGqjFUoaXCnFdOzksS0ftxdB7pem
+	USw7jwk30eY8Awb8n/X9d8Vmy1lDCCa2A8tRGpEa9ElcmAzQXg42ypAKJ7ND83dIkxvumXQZSbg
+	rUCkulqJfq9twCta9aUQlTfDP4wK9I/w7dysxH5jHTZhDBEauKf769ml2bpK7YHrGdXe8sRFo10
+	DY+ve8uPMQYCINMINKIHjsZ74hCFIah69tsyf34VblpgEpma7fNvkgBIbNItV6Fk6R9WaMrgKEO
+	bpLkHLkEooW0=
+X-Google-Smtp-Source: AGHT+IHGBSOeWsge7tK4CsQPKzL+OUxWSXZltyhfvpxwSC8WexQZT3cddURN1LChbx/tbT0l7rnAJg==
+X-Received: by 2002:a05:600c:1c9f:b0:434:a802:43d with SMTP id 5b1f17b1804b1-439249c02acmr25919505e9.27.1738934902117;
+        Fri, 07 Feb 2025 05:28:22 -0800 (PST)
+Received: from stroh80.lab.9e.network (ip-078-094-000-050.um19.pools.vodafone-ip.de. [78.94.0.50])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc6b89ef5sm2641562f8f.31.2025.02.07.05.28.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 05:28:21 -0800 (PST)
+From: Naresh Solanki <naresh.solanki@9elements.com>
+To: Guenter Roeck <linux@roeck-us.net>,
+	broonie@kernel.org,
+	conor@kernel.org,
+	Jean Delvare <jdelvare@suse.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Patrick Rudolph <patrick.rudolph@9elements.com>,
+	Naresh Solanki <Naresh.Solanki@9elements.com>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: linux-hwmon@vger.kernel.org,
+	Naresh Solanki <naresh.solanki@9elements.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: hwmon: ir38060: Move & update dt binding
+Date: Fri,  7 Feb 2025 18:58:03 +0530
+Message-ID: <20250207132806.3113268-1-naresh.solanki@9elements.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Refactor clock management in EQoS driver for code reuse and to avoid
-redundancy. This way, only minimal changes are required when a new platform
-is added.
+Move dt binding under hwmon/pmbus & align accordingly.
 
-Suggested-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Swathi K S <swathi.ks@samsung.com>
+Previously the DT binding was invalid & wouldn't work with pmbus driver.
+Pmbus driver expects a regulator node & hence added the same.
+
+Fixes: 1d333cd641fb ("ARM: dts: aspeed: sbp1: IBM sbp1 BMC board")
+Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
 ---
-The changes are not tested in tegra and snps platforms. Requesting the
-maintainers to perform the checks on their platforms.
+Changes in V2:
+1. Update commit message
+2. Add Fixes tags
+---
+ .../hwmon/pmbus/infineon,ir38060.yaml         | 61 +++++++++++++++++++
+ .../bindings/regulator/infineon,ir38060.yaml  | 45 --------------
+ 2 files changed, 61 insertions(+), 45 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir38060.yaml
+ delete mode 100644 Documentation/devicetree/bindings/regulator/infineon,ir38060.yaml
 
-This refactoring was suggested in the following patch as part of FSD
-upstreaming activity:
-https://patchwork.kernel.org/project/linux-arm-kernel/patch/20250128102558.22459-3-swathi.ks@samsung.com/
+diff --git a/Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir38060.yaml b/Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir38060.yaml
+new file mode 100644
+index 000000000000..e1f683846a54
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir38060.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/hwmon/pmbus/infineon,ir38060.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Infineon Buck Regulators with PMBUS interfaces
++
++maintainers:
++  - Not Me.
++
++properties:
++  compatible:
++    enum:
++      - infineon,ir38060
++      - infineon,ir38064
++      - infineon,ir38164
++      - infineon,ir38263
++
++  reg:
++    maxItems: 1
++
++  regulators:
++    type: object
++    description:
++      list of regulators provided by this controller.
++
++    properties:
++      vout:
++        $ref: /schemas/regulator/regulator.yaml#
++        type: object
++
++        unevaluatedProperties: false
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        regulator@34 {
++            compatible = "infineon,ir38060";
++            reg = <0x34>;
++
++            regulators {
++                vout {
++                    regulator-name = "p5v_aux";
++                    regulator-min-microvolt = <437500>;
++                    regulator-max-microvolt = <1387500>;
++                };
++            };
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/regulator/infineon,ir38060.yaml b/Documentation/devicetree/bindings/regulator/infineon,ir38060.yaml
+deleted file mode 100644
+index e6ffbc2a2298..000000000000
+--- a/Documentation/devicetree/bindings/regulator/infineon,ir38060.yaml
++++ /dev/null
+@@ -1,45 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+-%YAML 1.2
+----
+-$id: http://devicetree.org/schemas/regulator/infineon,ir38060.yaml#
+-$schema: http://devicetree.org/meta-schemas/core.yaml#
+-
+-title: Infineon Buck Regulators with PMBUS interfaces
+-
+-maintainers:
+-  - Not Me.
+-
+-allOf:
+-  - $ref: regulator.yaml#
+-
+-properties:
+-  compatible:
+-    enum:
+-      - infineon,ir38060
+-      - infineon,ir38064
+-      - infineon,ir38164
+-      - infineon,ir38263
+-
+-  reg:
+-    maxItems: 1
+-
+-required:
+-  - compatible
+-  - reg
+-
+-unevaluatedProperties: false
+-
+-examples:
+-  - |
+-    i2c {
+-      #address-cells = <1>;
+-      #size-cells = <0>;
+-
+-      regulator@34 {
+-        compatible = "infineon,ir38060";
+-        reg = <0x34>;
+-
+-        regulator-min-microvolt = <437500>;
+-        regulator-max-microvolt = <1387500>;
+-      };
+-    };
 
- .../stmicro/stmmac/dwmac-dwc-qos-eth.c        | 131 +++++-------------
- include/linux/stmmac.h                        |   2 +
- 2 files changed, 34 insertions(+), 99 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
-index bd4eb187f8c6..1fadb8ba1d2f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
-@@ -29,10 +29,8 @@ struct tegra_eqos {
- 	void __iomem *regs;
- 
- 	struct reset_control *rst;
--	struct clk *clk_master;
- 	struct clk *clk_slave;
- 	struct clk *clk_tx;
--	struct clk *clk_rx;
- 
- 	struct gpio_desc *reset;
- };
-@@ -123,49 +121,14 @@ static int dwc_qos_probe(struct platform_device *pdev,
- 			 struct plat_stmmacenet_data *plat_dat,
- 			 struct stmmac_resources *stmmac_res)
- {
--	int err;
--
--	plat_dat->stmmac_clk = devm_clk_get(&pdev->dev, "apb_pclk");
--	if (IS_ERR(plat_dat->stmmac_clk)) {
--		dev_err(&pdev->dev, "apb_pclk clock not found.\n");
--		return PTR_ERR(plat_dat->stmmac_clk);
--	}
--
--	err = clk_prepare_enable(plat_dat->stmmac_clk);
--	if (err < 0) {
--		dev_err(&pdev->dev, "failed to enable apb_pclk clock: %d\n",
--			err);
--		return err;
--	}
--
--	plat_dat->pclk = devm_clk_get(&pdev->dev, "phy_ref_clk");
--	if (IS_ERR(plat_dat->pclk)) {
--		dev_err(&pdev->dev, "phy_ref_clk clock not found.\n");
--		err = PTR_ERR(plat_dat->pclk);
--		goto disable;
--	}
--
--	err = clk_prepare_enable(plat_dat->pclk);
--	if (err < 0) {
--		dev_err(&pdev->dev, "failed to enable phy_ref clock: %d\n",
--			err);
--		goto disable;
-+	for (int i = 0; i < plat_dat->num_clks; i++) {
-+		if (strcmp(plat_dat->clks[i].id, "apb_pclk") == 0)
-+			plat_dat->stmmac_clk = plat_dat->clks[i].clk;
-+		else if (strcmp(plat_dat->clks[i].id, "phy_ref_clk") == 0)
-+			plat_dat->pclk = plat_dat->clks[i].clk;
- 	}
- 
- 	return 0;
--
--disable:
--	clk_disable_unprepare(plat_dat->stmmac_clk);
--	return err;
--}
--
--static void dwc_qos_remove(struct platform_device *pdev)
--{
--	struct net_device *ndev = platform_get_drvdata(pdev);
--	struct stmmac_priv *priv = netdev_priv(ndev);
--
--	clk_disable_unprepare(priv->plat->pclk);
--	clk_disable_unprepare(priv->plat->stmmac_clk);
- }
- 
- #define SDMEMCOMPPADCTRL 0x8800
-@@ -278,52 +241,19 @@ static int tegra_eqos_probe(struct platform_device *pdev,
- 	if (!is_of_node(dev->fwnode))
- 		goto bypass_clk_reset_gpio;
- 
--	eqos->clk_master = devm_clk_get(&pdev->dev, "master_bus");
--	if (IS_ERR(eqos->clk_master)) {
--		err = PTR_ERR(eqos->clk_master);
--		goto error;
--	}
--
--	err = clk_prepare_enable(eqos->clk_master);
--	if (err < 0)
--		goto error;
--
--	eqos->clk_slave = devm_clk_get(&pdev->dev, "slave_bus");
--	if (IS_ERR(eqos->clk_slave)) {
--		err = PTR_ERR(eqos->clk_slave);
--		goto disable_master;
--	}
--
--	data->stmmac_clk = eqos->clk_slave;
--
--	err = clk_prepare_enable(eqos->clk_slave);
--	if (err < 0)
--		goto disable_master;
--
--	eqos->clk_rx = devm_clk_get(&pdev->dev, "rx");
--	if (IS_ERR(eqos->clk_rx)) {
--		err = PTR_ERR(eqos->clk_rx);
--		goto disable_slave;
--	}
--
--	err = clk_prepare_enable(eqos->clk_rx);
--	if (err < 0)
--		goto disable_slave;
--
--	eqos->clk_tx = devm_clk_get(&pdev->dev, "tx");
--	if (IS_ERR(eqos->clk_tx)) {
--		err = PTR_ERR(eqos->clk_tx);
--		goto disable_rx;
-+	for (int i = 0; i < data->num_clks; i++) {
-+		if (strcmp(data->clks[i].id, "slave_bus") == 0) {
-+			eqos->clk_slave = data->clks[i].clk;
-+			data->stmmac_clk = eqos->clk_slave;
-+		} else if (strcmp(data->clks[i].id, "tx") == 0) {
-+			eqos->clk_tx = data->clks[i].clk;
-+		}
- 	}
- 
--	err = clk_prepare_enable(eqos->clk_tx);
--	if (err < 0)
--		goto disable_rx;
--
- 	eqos->reset = devm_gpiod_get(&pdev->dev, "phy-reset", GPIOD_OUT_HIGH);
- 	if (IS_ERR(eqos->reset)) {
- 		err = PTR_ERR(eqos->reset);
--		goto disable_tx;
-+		return err;
- 	}
- 
- 	usleep_range(2000, 4000);
-@@ -365,15 +295,7 @@ static int tegra_eqos_probe(struct platform_device *pdev,
- 	reset_control_assert(eqos->rst);
- reset_phy:
- 	gpiod_set_value(eqos->reset, 1);
--disable_tx:
--	clk_disable_unprepare(eqos->clk_tx);
--disable_rx:
--	clk_disable_unprepare(eqos->clk_rx);
--disable_slave:
--	clk_disable_unprepare(eqos->clk_slave);
--disable_master:
--	clk_disable_unprepare(eqos->clk_master);
--error:
-+
- 	return err;
- }
- 
-@@ -383,10 +305,6 @@ static void tegra_eqos_remove(struct platform_device *pdev)
- 
- 	reset_control_assert(eqos->rst);
- 	gpiod_set_value(eqos->reset, 1);
--	clk_disable_unprepare(eqos->clk_tx);
--	clk_disable_unprepare(eqos->clk_rx);
--	clk_disable_unprepare(eqos->clk_slave);
--	clk_disable_unprepare(eqos->clk_master);
- }
- 
- struct dwc_eth_dwmac_data {
-@@ -398,7 +316,6 @@ struct dwc_eth_dwmac_data {
- 
- static const struct dwc_eth_dwmac_data dwc_qos_data = {
- 	.probe = dwc_qos_probe,
--	.remove = dwc_qos_remove,
- };
- 
- static const struct dwc_eth_dwmac_data tegra_eqos_data = {
-@@ -434,9 +351,19 @@ static int dwc_eth_dwmac_probe(struct platform_device *pdev)
- 	if (IS_ERR(plat_dat))
- 		return PTR_ERR(plat_dat);
- 
-+	ret = devm_clk_bulk_get_all(&pdev->dev, &plat_dat->clks);
-+	if (ret < 0)
-+		return dev_err_probe(&pdev->dev, ret, "Failed to retrieve all required clocks\n");
-+	plat_dat->num_clks = ret;
-+
-+	ret = clk_bulk_prepare_enable(plat_dat->num_clks, plat_dat->clks);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "Failed to enable clocks\n");
-+
- 	ret = data->probe(pdev, plat_dat, &stmmac_res);
- 	if (ret < 0) {
- 		dev_err_probe(&pdev->dev, ret, "failed to probe subdriver\n");
-+		clk_bulk_disable_unprepare(plat_dat->num_clks, plat_dat->clks);
- 		return ret;
- 	}
- 
-@@ -451,7 +378,8 @@ static int dwc_eth_dwmac_probe(struct platform_device *pdev)
- 	return ret;
- 
- remove:
--	data->remove(pdev);
-+	if (data->remove)
-+		data->remove(pdev);
- 
- 	return ret;
- }
-@@ -459,10 +387,15 @@ static int dwc_eth_dwmac_probe(struct platform_device *pdev)
- static void dwc_eth_dwmac_remove(struct platform_device *pdev)
- {
- 	const struct dwc_eth_dwmac_data *data = device_get_match_data(&pdev->dev);
-+	struct plat_stmmacenet_data *plat_data = dev_get_platdata(&pdev->dev);
- 
- 	stmmac_dvr_remove(&pdev->dev);
- 
--	data->remove(pdev);
-+	if (data->remove)
-+		data->remove(pdev);
-+
-+	if (plat_data)
-+		clk_bulk_disable_unprepare(plat_data->num_clks, plat_data->clks);
- }
- 
- static const struct of_device_id dwc_eth_dwmac_match[] = {
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index c9878a612e53..24422ac4e417 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -254,6 +254,8 @@ struct plat_stmmacenet_data {
- 	struct clk *clk_ptp_ref;
- 	unsigned long clk_ptp_rate;
- 	unsigned long clk_ref_rate;
-+	struct clk_bulk_data *clks;
-+	int num_clks;
- 	unsigned int mult_fact_100ns;
- 	s32 ptp_max_adj;
- 	u32 cdc_error_adj;
+base-commit: bfbb730c4255e1965d202f48e7aa71baa9a7c65b
 -- 
-2.17.1
+2.42.0
 
