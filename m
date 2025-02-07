@@ -1,113 +1,126 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC561898F8;
-	Fri,  7 Feb 2025 07:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BFF1A3056
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 07:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738913190; cv=none; b=R2dMyjBEStCfL5n6kSO7ukhZYA0KEoClIjntZ+jXVU54pQaJelBv5+mSE8ObuR+5bO+xg2gRMCy7YGkIZZUHXgSGL+IJ6jPEx0aia4Z5sODvAXVIugM8yg6Zuo9wFcDshpU8MmfKt67WL/nbjfjFw59sTb0Y37OSFHMk4XCaLy4=
+	t=1738913307; cv=none; b=VNlr77aqUjs+YmPvn7aIfbrbyv9Lkx+POHCOxg7xJaaXzNJyK0vJJta7qIOa50eEpYd2EcW5WqidyX+wBUHZfxhgYWKR5ncDo/0nF83+bkzJB8zyWuhIkCkiGl9BdK7N2XBIJSdAwtAhPsj0NjwlwjiFU1f/QZgIWBLAQo/tbaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738913190; c=relaxed/simple;
-	bh=GNBx8Hs4Tvp0WSNd2XqLEnLKn2B42fVjP3eTGupS1QM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ApI1qM/qcsuX1R4UWFPfjZAxvH6vPAv+/Dbr+1u7IY+TUr9vVXZVletN7TeTt3aCADbXZuk0+0tzSfSFto/jgfu3uSOLhlC+EnnNWg188y5Qyg4vr3lgNLGnMCuNQLVb7/afhpCEDATqMg8i1jlPgqc3MXCR4B5kPr9UFxBzPEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=none smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=m18ev+Aq; arc=none smtp.client-ip=54.254.200.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="m18ev+Aq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1738912157;
-	bh=vExr/k4izXnEyMj5vAQFu6YLcOSxk2Bumi57aU79gNE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=m18ev+AqvzZXZl4UENn3SzRCHefmGlFdsVDMGfwFxpqHeImW16QtBscRGbWa+oVnO
-	 7q+pC7Rw1GEFZourfYIkeqg2nVDDYvu6QJ7fmZFQWk4K4X+vlq3IO2AmjFuX7/njnP
-	 m/woygW2gn2zYzyc1GIBaDxvLeQ3+K0dW63jJp8U=
-X-QQ-mid: bizesmtpip2t1738912146t0d05bp
-X-QQ-Originating-IP: KbPEmLI51H/AqPiTH2dKHqAitYt0x2kqm+pvVRQkeTg=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 07 Feb 2025 15:09:03 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 14445604798787441459
-From: WangYuli <wangyuli@uniontech.com>
-To: masahiroy@kernel.org,
-	nathan@kernel.org,
-	nicolas@fjasle.eu,
-	jeffbai@aosc.io
-Cc: linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	revy@deepin.org,
-	zhanjun@uniontech.com,
-	guanwentao@uniontech.com,
-	chenlinxuan@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>
-Subject: [PATCH] scripts: install-extmod-build: add missing quotation marks for CC variable
-Date: Fri,  7 Feb 2025 15:08:55 +0800
-Message-ID: <43AE9F470D835AD1+20250207070855.227283-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+	s=arc-20240116; t=1738913307; c=relaxed/simple;
+	bh=PuFYJXnwk4/BXSpalbP5VBzjOGVv/QoW3u+WP5yzF90=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Ka9Zc1i+7j+izoOcBz9XTDiOvlTWMx2ZezioS7fGjqGyug0cg6td+vWdrE38PhpcdZNlTjar+ufytXSKTUKcNUq9QrltlbyeRt9RnKeBVDoggNZ/U7jQoya/OCIJaH4jIozR5jytLF2ntZfkxbJ1nnT3UHTbUjhNnp6G++ZNk5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3ce7a0ec1easo12452725ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 23:28:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738913304; x=1739518104;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ksq+vmV4D99f2reoufSLwNhXWJqZYH64AqJSgNxiiM4=;
+        b=T7Dz6NYfEjMRQSxe+hSor9ngsFT00BF0AKynFW0BA55XVGiYInJHGyunclZiYtmoI1
+         PwJeLLo8V5YyBnYspy3umEkxgm90ASkPzto7Lu4J9GmNEaiGfoGDcBbULSeTPzKy4V1Q
+         r6QetBHm632Q5RLufVQNBaKq9xbirq6WSl5Dj2dErwn+eA3libpwC26inoY0m48ZszIA
+         1lfQLdxN+USKnpw7RDHwuYsbby8Wtq5ykIR3CApot5kXltJ3Wx/ILKvKazXKpNNbIxXH
+         Oimbc6XTUfkfbdup4xKJjRInNLatfcNaeOfiNRSDGzotk/xUnTXDD95bWvPlgpy3HWtk
+         Wb1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV54RFIPi/OEE6ql88WmKphVtv+9M5rmLJP5dfzvYcB/ue9p4Pa4YnX3OkXeOhGbUD05m2bZMNUK3BWy4M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAbrAqb1wOxVYUK10fEKl6+II/z+mVMOT+tF9KavMBGH04HcVB
+	OUkcn18p8d/dgLMbaQ34M60vK/rYizEBLbm7zTuEFigIWPaNFQI74o7udeVKuwYNDUX7f9O+XoJ
+	jCgaov1sJGoO93aSL1NsQzpIv19mvFgpV81Zrvz0YXp+EDA2XF90umbA=
+X-Google-Smtp-Source: AGHT+IFKuxQyRDqSTVSzxp/M3gY501azWw9ihUH26cCP0PiGyErXyzrZpYEuTk0lOO/9Gi51yQORwCbOd1y2RC4Gs2Vv/VJ7GHaA
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OMHTpzRlrft84jDKd48MkmOX6UG88xjq1eQb82+B+SWFgZ1RrijioPNu
-	mwk3VGFDekorQZwOXGUIzEeAdGynA0PCs01wdVLTorqo6YMTi2a4QWqUnw6L62NEBmAlFNU
-	7696gIn/aaweauy3HuJKqePE8mHkgF2E23SheLzweMR6wtwHu7d9MG8CWov30kh2T6+7F1w
-	r2Hpmb/+4B4nIOuvlKTji6bZsy0+WYiG/ZufL3F9iCc5hvZElx3PRTU4uyVG7TfKEe3bCzS
-	KRKvV0ubQZuprK7JZ81ly5eOj7kl6oBQUtumzlK0NGfz0pvrOVNzhbhSJmlvcYUtKI3CbRw
-	b+Nk5vmXpKJN3UCTFCeiiPzziV5yi3tsdcbp4gxYEdF90B58dDfBnZ4SqTXVz7oLLnIEI0n
-	McytGQ5eQTynxZSbHgIcwy7jmSaPpoxXkyD2iimPGjFlbhFAzZo63716NUDCPIGC4VD6rrx
-	h/kSpmrDL7N8ynSr13wo6HCJQaY56vTFcqN6TSpGQyRGEZvfXwcMwz9JZgIpnejw1lZ/yDJ
-	Mr5QtlQSCvSwihpD9tz2W2U0bJ6c2zfRVL9NSvhGVMXRGnu4jCHqe8PmN1BUL/0QtSv5ugA
-	sAn4s+I4oj3kmB6GKLuImcos0Q9Zxu0g0lNFj0L3CkWu+Vj3dvwZBMj1EgIA9BWFNRJIepS
-	ZXqfAsCP74q3Sz52l4+zNU6T8OTTJLA+1nT7J2EAWRkbvfHi93Fxth+5+9A6CB3vyXSJILR
-	kERuzy+1aya7zxw6evjHhLqcDbf0idZY7RoJYrFs0xe3TEVuDSWDVrVWsHFx90UhwqPzVnS
-	DCOjyPooqcrvpDQP2x+QcyyFDH5gpYGli2cAcssNBxX8ciQZv6r/4DZ8/OEQRJPf/hana1s
-	HGMnwE+qjSzH9mQQL8UJHp+YANZXW4pl29QG9iklUV04f0qVKiqM52vLxGahDLm0Abxmxvt
-	D4IBzv+ipkncKuTh8IrMekpHfTPrQ2kYytYw1agXiGKP224/lTxM5CZ/vnrbX3pzUtY/8i2
-	+Ww4BxJ0EuLFsjMB2F
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+X-Received: by 2002:a05:6e02:2163:b0:3d0:2331:f809 with SMTP id
+ e9e14a558f8ab-3d13dcde9e4mr18978195ab.2.1738913304700; Thu, 06 Feb 2025
+ 23:28:24 -0800 (PST)
+Date: Thu, 06 Feb 2025 23:28:24 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a5b618.050a0220.2b1e6.0018.GAE@google.com>
+Subject: [syzbot] [nilfs?] WARNING in nilfs_segctor_abort_construction (2)
+From: syzbot <syzbot+86e5da039cef3ad11c6e@syzkaller.appspotmail.com>
+To: konishi.ryusuke@gmail.com, linux-kernel@vger.kernel.org, 
+	linux-nilfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-While attempting to build a Debian packages with CC="ccache gcc", I
-saw the following error as builddeb builds linux-headers-$KERNELVERSION:
+Hello,
 
-  make HOSTCC=ccache gcc VPATH= srcroot=. -f ./scripts/Makefile.build obj=debian/linux-headers-6.14.0-rc1/usr/src/linux-headers-6.14.0-rc1/scripts
-  make[6]: *** No rule to make target 'gcc'.  Stop.
+syzbot found the following issue on:
 
-Upon investigation, it seems that one instance of $(CC) variable reference
-in ./scripts/package/install-extmod-build was missing quotation marks,
-causing the above error.
+HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=127db5f8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
+dashboard link: https://syzkaller.appspot.com/bug?extid=86e5da039cef3ad11c6e
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Add the missing quotation marks around $(CC) to fix build.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Fixes: 5f73e7d0386d ("kbuild: refactor cross-compiling linux-headers package")
-Co-developed-by: Mingcong Bai <jeffbai@aosc.io>
-Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
-Tested-by: WangYuli <wangyuli@uniontech.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/0c358838d66a/disk-69e858e0.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/29a6852a21ee/vmlinux-69e858e0.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/fb214c6e7c43/bzImage-69e858e0.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+86e5da039cef3ad11c6e@syzkaller.appspotmail.com
+
+segctord: attempt to access beyond end of device
+loop4: rw=0, sector=80, nr_sectors = 2 limit=0
+NILFS (loop4): I/O error reading meta-data file (ino=5, block-offset=0)
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 6772 at fs/nilfs2/segment.c:1507 nilfs_cancel_segusage fs/nilfs2/segment.c:1507 [inline]
+WARNING: CPU: 1 PID: 6772 at fs/nilfs2/segment.c:1507 nilfs_segctor_abort_construction+0xe51/0xec0 fs/nilfs2/segment.c:1873
+Modules linked in:
+CPU: 1 UID: 0 PID: 6772 Comm: segctord Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+RIP: 0010:nilfs_cancel_segusage fs/nilfs2/segment.c:1507 [inline]
+RIP: 0010:nilfs_segctor_abort_construction+0xe51/0xec0 fs/nilfs2/segment.c:1873
+Code: 8b 04 25 28 00 00 00 48 3b 84 24 a0 00 00 00 75 74 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d e9 d0 38 6d fd e8 80 64 1c fe 90 <0f> 0b 90 e9 ea f9 ff ff e8 72 64 1c fe 90 0f 0b 90 e9 93 fb ff ff
+RSP: 0018:ffffc90003adf5e0 EFLAGS: 00010293
+RAX: ffffffff83a30840 RBX: 00000000fffffffb RCX: ffff888025700000
+RDX: 0000000000000000 RSI: 00000000fffffffb RDI: 0000000000000000
+RBP: ffffc90003adf6d0 R08: ffffffff83a30226 R09: 1ffff1100457f180
+R10: dffffc0000000000 R11: ffffed100457f181 R12: 000000000000002f
+R13: 0000000000000000 R14: ffff888057ef0008 R15: ffff888055c9a138
+FS:  0000000000000000(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f579116b440 CR3: 000000000e738000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ nilfs_segctor_do_construct+0x6615/0x6ea0 fs/nilfs2/segment.c:2186
+ nilfs_segctor_construct+0x181/0x6b0 fs/nilfs2/segment.c:2478
+ nilfs_segctor_thread_construct fs/nilfs2/segment.c:2586 [inline]
+ nilfs_segctor_thread+0x69e/0xe80 fs/nilfs2/segment.c:2700
+ kthread+0x7ab/0x920 kernel/kthread.c:464
+ ret_from_fork+0x4d/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+
 ---
- scripts/package/install-extmod-build | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/scripts/package/install-extmod-build b/scripts/package/install-extmod-build
-index bb6e23c1174e..b724626ea0ca 100755
---- a/scripts/package/install-extmod-build
-+++ b/scripts/package/install-extmod-build
-@@ -63,7 +63,7 @@ if [ "${CC}" != "${HOSTCC}" ]; then
- 	# Clear VPATH and srcroot because the source files reside in the output
- 	# directory.
- 	# shellcheck disable=SC2016 # $(MAKE), $(CC), and $(build) will be expanded by Make
--	"${MAKE}" run-command KBUILD_RUN_COMMAND='+$(MAKE) HOSTCC=$(CC) VPATH= srcroot=. $(build)='"${destdir}"/scripts
-+	"${MAKE}" run-command KBUILD_RUN_COMMAND='+$(MAKE) HOSTCC="$(CC)" VPATH= srcroot=. $(build)='"${destdir}"/scripts
- 
- 	rm -f "${destdir}/scripts/Kbuild"
- fi
--- 
-2.47.2
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
