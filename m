@@ -1,107 +1,260 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2118.outbound.protection.outlook.com [40.107.93.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1302417ED;
-	Fri,  7 Feb 2025 11:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738928058; cv=none; b=Zjhr6ZkOhRAppouoPZZvjvWTFtRNUBPTtu/BIuBQYkRFhoGRb0KT0fgqkP6eLYa0+GJ+VXkdQ1YlYXp6DV1xZyKEqiH87oIIHGIRZfgenrvyJTDUVReJ+RxdDoppWT9rUGbXWM9oMieGv7HGSwTifE45vV//0Qt4nkfCkx0xWxM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738928058; c=relaxed/simple;
-	bh=1wh2cpQUxPLEuY0IQg/F5m/jGKR7k88MMsXZiFFmCBM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ry2byU886Xpav6S7AKH25ohHPuh4YHZjqMxfSXtdiW0fxCo9vGayjrjLv18188GVG1ff8w6WAQZNX/9ceSYt33/fFTq+ezBegMFs175A96x9nrZHxfu7KYEcrEjAgFrzFMnpXYlmU1d6qysoCzp2NHHUcVzeVCn13fyBeTwlEeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lK9kloha; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775F61DEFF7;
+	Fri,  7 Feb 2025 11:34:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.118
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738928063; cv=fail; b=BkHEn2JNbu485hxUAkeifQtd+Zntqg5k1vvZpEFqos3MX/n4HMC5dBmbrvZpmFVI67LdH2XpGa65eX4w2DQsmdGHka1BcNKEDarhpUA/Sesu8ERyO7yaml3ukQMHc9tTU9wUACf4u/F7EAO1GSxrcNxdJJ0/NfwNAn+YDiTaTSM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738928063; c=relaxed/simple;
+	bh=m9ZbU5cxFzY0iY0eSOLeEeI3YMAohgntyfHlzgSfVtw=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=EVwwqwZWkM7TNQQt0BOSid+AOkPvJsPnJrSULoutH5fS56GNZ24w2vulgpfiaUtNpVwZ8jMIQq1LErLgcpBvVq0IumweJjAqEVmX3qw+E8IsbY9426aoQWvSEw1mgM8/5k1j9ERu1X92JX7EWMYrASbGtlVPEe/P3p1VyPwymZI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inmusicbrands.com; spf=pass smtp.mailfrom=inmusicbrands.com; dkim=pass (1024-bit key) header.d=inmusicbrands.com header.i=@inmusicbrands.com header.b=oJbX1CvT; arc=fail smtp.client-ip=40.107.93.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inmusicbrands.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inmusicbrands.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lK9kloha"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dcd3454922so4062212a12.1;
-        Fri, 07 Feb 2025 03:34:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738928055; x=1739532855; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1wh2cpQUxPLEuY0IQg/F5m/jGKR7k88MMsXZiFFmCBM=;
-        b=lK9klohaHZlwxpE4VavEtix3oVxbRRpg5zG12Ybf1/6YwbtQ2xmo3oCuu5v2xGtWD3
-         79JI7B0RZcyXsQpQvGG1dPNNu68oXIPC0/H6OyrQ1pvowZA5vYJIzy8few7VRwQKxyda
-         EyRdtiE/FNH/i3f+ftalyydPNpXMZRgUvPgUDh/LXpQJuMnja8MkOgsHBqdyEddJYvuJ
-         pCgG6Pfs4FFSIFOvxHbU6l2nHUdBTetA/xdX/o2NP81om+E/Tm2rj9aPUizFX9TqdmzC
-         n0ZxUe5Kja/i4TBadSYxXOqCH7R1ANCorD75p4b+0u3oUvztGk9jsEfDO/75fGmjAcG6
-         4XSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738928055; x=1739532855;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1wh2cpQUxPLEuY0IQg/F5m/jGKR7k88MMsXZiFFmCBM=;
-        b=FPbualtZHACwcvtsqZuUuEfgH/UexFm0WDbgK7nG9OlYlNndwr2TvYsPN8acsqKjsL
-         3kmOVlhKyzPH+UijumAk+kWy1Dg6tLTSnyGAhCsdBmjsvzuxrgqGVpO559G+IOFo1Lmy
-         iR9qiV1/c7KeVhDAqy7ocu1y7RIhJVZLRLfYjR+RGEd4NSaUvgWwUvzi57ciLPWRRGD4
-         OX82K1lcTtLxRChVm5pwwQN9a9nRjZ+GMNC2Zwqe9m3Fy1hd8qLqdzSyYcGkJhIqNKlo
-         0Nr3zGOeEBE8qvsbHF7eGISTKTDKoXZrN/2318zWuMLSW/RXfmpPQfwvom+gTAfz4Tkm
-         KYHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXrT0sdDpIJobLXdP0L35oKk+PeqOiBtix9RPp9o4b0GIEDEr68i9EReIrkMnFBG4ZrOKnSlVesSGbY+lw@vger.kernel.org, AJvYcCUZYzotP2H2Ksnvw/TG4cN7mcp/zOP7jfNadDuz50JZmKcZQPlZNP8YLW9rSft6tyKwAnUQzs8hGV/uDLMX@vger.kernel.org
-X-Gm-Message-State: AOJu0YweeVPV4h1yAE1vVRHFsdHpNNWQSB1/XYAbHqB/kJvtwnKTHJ9D
-	1Ogl8oNOxluhDeX+dxfUUqv9hjE25U+uFSkzl7j4zMTNYZdsYe1Y0IyOZ5knxnVLx8qWJ+6X9il
-	v8kuGE6YU1BsqJN4FVZcyK4GhFbg=
-X-Gm-Gg: ASbGncsCoJQIih4uVC0oBOdt634qGQD6mzVmMsnrgMhGXiQyYwJV3kv+WL1iK1ZsKz6
-	+ZK78I+w3Tt3V4A////IAmVguz8fd3m5X8r2oTVRECAoRk5kNNwGNYUId/i7ygCLxfm0ONDYm
-X-Google-Smtp-Source: AGHT+IHyRv3J+H1efaMv2+jprVJQ5kvQHBMSEBpkJMRhuptG38yMhxproOUF8W1NeehsICmuMFItcl1nZXdLw/P/+DA=
-X-Received: by 2002:a05:6402:2189:b0:5dc:7fbe:72f2 with SMTP id
- 4fb4d7f45d1cf-5de44fea964mr3336334a12.3.1738928054659; Fri, 07 Feb 2025
- 03:34:14 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=inmusicbrands.com header.i=@inmusicbrands.com header.b="oJbX1CvT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=e/pkX6yPzfStyFo7bcTqJy2fo1/5gO/3q+XlTB6xs4rYu+pUTircpIqnC6rgKSajQXQrfhc8CAUJSQd/8Aq10mq/EoYcWA99ECbpdyXPcrlFKoVFkwOISpECIuu+uOaID/ICFTJDbuzPneCVwKhmiSqY+HzN7SPnhjxoGc7HL4Fpi94c89XBggekf0Iv6YleiAFEVrRR6nQhMG+xHN/bz9sZszfBliYXRId82cVXgewsVdn1fHM61hzhjCjOq95x0bTwgmV05VBpN/h7nPJCuz5qZfuRlB9qfbBNCmsvXw41jxJuqod86/rciIoDo8RVO4hME/qQ525ZGDfbUKWEng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Y2loUqnZZ1jDKSUlz6AUKddMN2STNvOYtwwnT/DtKzw=;
+ b=GXEBuCVV4pAwhwnU2Ku0GO3dbafnJevl1lEsn9SCftA5V2ylMdnY69TkLPu1ZNCbtU0FN/fcp4MwFz8R/gHn4VRLQfdRd2rExrC3cZZKdcSY7hWorigXkcV3B9+dTK1rs756Rg2SMWc7Lc8JQ7hoz2FrOKzPV8O+NSVU7r2+7CmCqH1CDhZxaJdCETKTX0ljWq88wcoCv6fg8w5af5PTwXAvv7BUkbCtLgY/BmwbZAT9hPRewQQdApUMBXEhpiWsDajCyUxZ0WbiyWTcyHH/KP/znzv87SdNL169W2/rY+cnvpVDaTx+NOLSlfutjITlNvVlne7gOaDwTR0FnMKTQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=inmusicbrands.com; dmarc=pass action=none
+ header.from=inmusicbrands.com; dkim=pass header.d=inmusicbrands.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inmusicbrands.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y2loUqnZZ1jDKSUlz6AUKddMN2STNvOYtwwnT/DtKzw=;
+ b=oJbX1CvTZIQxVnadqFjUIti0/RQboAAfwOK7QxR3aLRvm8UJCZqAUzPHc0i1sfKjnq2x8avykB7qBUb9Z9nSaMIPBYXaGUo4NvzHWKC7IbCPfqmjm8VTK+UwUm9brcBxFLizV10f16u64s4V9tGK16C7XiZuuqO0uu6UYLmRAnI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=inmusicbrands.com;
+Received: from MW4PR08MB8282.namprd08.prod.outlook.com (2603:10b6:303:1bd::18)
+ by SJ0PR08MB8409.namprd08.prod.outlook.com (2603:10b6:a03:4e4::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Fri, 7 Feb
+ 2025 11:34:18 +0000
+Received: from MW4PR08MB8282.namprd08.prod.outlook.com
+ ([fe80::55b3:31f1:11c0:4401]) by MW4PR08MB8282.namprd08.prod.outlook.com
+ ([fe80::55b3:31f1:11c0:4401%3]) with mapi id 15.20.8422.010; Fri, 7 Feb 2025
+ 11:34:18 +0000
+From: John Keeping <jkeeping@inmusicbrands.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: John Keeping <jkeeping@inmusicbrands.com>,
+	stable@vger.kernel.org,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Sunil V L <sunilvl@ventanamicro.com>,
+	Petr Mladek <pmladek@suse.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	John Ogness <john.ogness@linutronix.de>,
+	Ferry Toth <ftoth@exalondelft.nl>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: [PATCH v2] serial: 8250: Fix fifo underflow on flush
+Date: Fri,  7 Feb 2025 11:26:05 +0000
+Message-ID: <20250207112608.693947-1-jkeeping@inmusicbrands.com>
+X-Mailer: git-send-email 2.48.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO3P123CA0003.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:ba::8) To MW4PR08MB8282.namprd08.prod.outlook.com
+ (2603:10b6:303:1bd::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202502051546.fca7cd-lkp@intel.com> <CAHk-=whSncSTE_Q0as-d989L_niJ6=ViwaDoOK6gTcWHNPkp7w@mail.gmail.com>
-In-Reply-To: <CAHk-=whSncSTE_Q0as-d989L_niJ6=ViwaDoOK6gTcWHNPkp7w@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 7 Feb 2025 12:34:03 +0100
-X-Gm-Features: AWEUYZlfBZ7ZGHwIFt2AGR4hspLGRP5IPR0R2ajHRmpRBd1zmnHtetwWqx-EEJU
-Message-ID: <CAOQ4uxgC_Uaa2XA8vyuDvsio1ysr__9kF6RK3pKcD=Xa1ps8Mg@mail.gmail.com>
-Subject: Re: [linus:master] [fsnotify] a94204f4d4: stress-ng.timerfd.ops_per_sec
- 7.0% improvement
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
-	linux-kernel@vger.kernel.org, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
-	Christian Brauner <brauner@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR08MB8282:EE_|SJ0PR08MB8409:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8c5914eb-dfcd-4e05-db18-08dd476b5b82
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|52116014|366016|376014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?AP2bE4ssYBhz5zUw6/QJ59XaL+wjw9IXkuVoPZwF/8I+wi8B0u6RmqbwmJnE?=
+ =?us-ascii?Q?tNS4ej66BXCaYeM/uZx2cRLCh/7PPgHW2sPYubpIko4R3Y+X8uzgYGrSd33+?=
+ =?us-ascii?Q?vwD0+EK32psYQsvpzCmkBp5THRuSTHR5AmWMEMjrCMxzeK8g3Z/568NtDeN8?=
+ =?us-ascii?Q?O2h6cM6Yf7h8NhereQUhmJiyindHAKOFLme4UXALkrRhvKRZmOBS4Ma2qhmy?=
+ =?us-ascii?Q?yHjTixwGoSQnhsZkRh6n+cV6wl6VOYgAiBJKLbaIXPHa6TuGR18aEvl3dpgg?=
+ =?us-ascii?Q?qiURgAgHgVa42YxanphyR9InlZZzgzFZFaYKUQup81k8AE9BauEiz9mLfWZT?=
+ =?us-ascii?Q?+on+DT2GyNqGAfnrqsp41xWG78g2FG7VGhb4btqAn0804HP9wgk7YCbjC9yC?=
+ =?us-ascii?Q?lclRYIJvIZBmjN4Vw1y/jZVaiAcUTa2wBmXqgW8QlT6q9itnXw5tR0b0zGQj?=
+ =?us-ascii?Q?91/dxIfALKmL2HF2f8yZkLXwmmwIquqN8FQYeLJ8L+5vqJHo3BCIGAqeFh59?=
+ =?us-ascii?Q?RaXCy7m4zFii/j/ht30mUlIBxctNv+5D7RYPTXXftQTc10kG8o+fz9btMIHN?=
+ =?us-ascii?Q?+2ebb+z4flzhl2PI93TlyU3dX3q90jihHAsKbNIjRNyseCtQcJXNffyAQx56?=
+ =?us-ascii?Q?KFZzr0pBoMKVnf97G++lZgSooQq8Ci+UAQDxeX/34SS6u7OZJkWJiXo3Vj2y?=
+ =?us-ascii?Q?5UEHnFt7abWyojUtaaGZ6CJ7XAvpOrAalp6Kp0qpNxQjOGUgyX+W7ze3+Rcd?=
+ =?us-ascii?Q?owvAXzNjlwbw2br3AeKwqLek441BKp2SvuB/y9w3bIs8GjzkGv0CsX+u2a8k?=
+ =?us-ascii?Q?fZh+IywA9JYiGW8uLVxcVO/XSFA/e+voxSwEL8dtEEuwqd6WObACGBXauyLt?=
+ =?us-ascii?Q?eEo+Ljsf2B6jrxJFERAoQBYVDEYMH/9lwrvwHzZsz3YclKq8yNc5ak0Yw920?=
+ =?us-ascii?Q?YQUyCmyWQ5AB6rpba5V9WMhRzEKKLXMPlOLscZPMUBOTAJfsb7oZsmiKOOwM?=
+ =?us-ascii?Q?gZuOE/lS7Pt9BdIsDmdYxFp+h/6JWeJW3a3rDvQ2nwKpBa7jsURpBvABWOEh?=
+ =?us-ascii?Q?ojA830XQXOptTlzOWXMWOrYWBz1XgK5dLmfspNmNgpY5koYCCqyjM84y2PaP?=
+ =?us-ascii?Q?Zj+OjimNDzaZWs7ZPfMjfAQE17Wdkaj+bRifS8/lynAeMEs4HvOk46fo4DDR?=
+ =?us-ascii?Q?4BgR0FsJMbmGlrflYA0ydPLkwjrnLJC8823sKmAcwVjw8Hy0VI2RDapasuQD?=
+ =?us-ascii?Q?33QZJvNe+FTj7kmeToi73XQ5yYd31dKgDV7rBFxjfacgO5BeLZ+9KA7nFC/K?=
+ =?us-ascii?Q?mGXIR7EjqkQpLewn5HeeNyrZcK16wEVpvC2Kv1C3+b7YXA6//NADUX9wOAcr?=
+ =?us-ascii?Q?OBxIRBOOwr+IJPC54ub9eDUfsBLn2BvYst06qHdXHtrkqRhRl+DUEYnH9e1P?=
+ =?us-ascii?Q?bYyOjb+2u8YWKGC7LaNxpG1gJOlDXf9g?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR08MB8282.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(366016)(376014)(1800799024)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?0B8sofLVbvYJVdEtpvRr86SrHt5G8uhXwaIskoRF7uKORld2YC54fgGlTS3E?=
+ =?us-ascii?Q?Cf/ilngIjynPXsGwPb/SYMtnZPrtTurdt7b/aqa0xrFiZFF6Okf0Zi1VfOy8?=
+ =?us-ascii?Q?fdYjfC7gG4BCjO3sSLEn6xC5u5EAze5sc9wp5RVaNobwqx/ut+s50ll1UIfB?=
+ =?us-ascii?Q?JAkMNF4Gm2zOYliQLB+bd1hiCYTKDxPsHMf+dnDGL3waGeZ7CcsL2cnL0//n?=
+ =?us-ascii?Q?X9syXIVO5CIDlK4WE6aFCSc4BA4I+GWiLKV2HnVNqbQ7HlXGaiYdCm+wREkm?=
+ =?us-ascii?Q?ULDEg2En0QLln+ukam/oJfnrSnuIuYCguv2GI57S2sha10W8PSOvuB2jPxep?=
+ =?us-ascii?Q?z5p13wKb/Qr7NuuneFgUrDSGfr8BuWpD/ZvVdK+I1LLSjjAu0FYsENH7YwHK?=
+ =?us-ascii?Q?v8s7CyWIY/K2SPE1NtGcBkXWjNtTW2bb3xqorYoSF8fTF12fineFjwGfTJ7W?=
+ =?us-ascii?Q?eIrlrsEp40ecocE4Nsx+uwQ18pIiVkRdn2FdrI708kUteCq7hvjYk/KMMNol?=
+ =?us-ascii?Q?8Lq3v39givsXKT5iGidJ1F+zUFepPE+upZSPt4usiGYou4bDh312yJv3IIhr?=
+ =?us-ascii?Q?PEa7t2UBEdd/mSQ3Btm7PQQ9/gE4JmP/F+IXqB+wdeELvbLOvVIrPVIL3Jzs?=
+ =?us-ascii?Q?83UetlKf3jXlTs0C7gf3aU1RQvGoi2SegQsq08VsgqGUhXIwGc17qsiCWWGs?=
+ =?us-ascii?Q?tTrlSMtsexy2Gj/1jOrcU7QDXwxnfjQhPSblGpVUmyRlmL8gXaXwRRe2Gee9?=
+ =?us-ascii?Q?jHPlVCDzPhjrkIQjysvJTkM2sD8jDkGI84HQyMQN6bSbvhV6GiTJQ0YAtHSp?=
+ =?us-ascii?Q?q5YlG7UWaUuExkX8BxEIW49HHH/E7PSuWrzAb/imp6DO0c+gg3efYJ66iDiV?=
+ =?us-ascii?Q?Sko7qWEhm5LudEZveEeCXel8FQwMElpt+zHiOlZN5DeJvr6dgYvto48VMMf9?=
+ =?us-ascii?Q?J0YLdegyuwWs6zvekutqWkOJYDbPwuqmAiZDnCO7xgn2wtB/WfnxbvqIC6Vu?=
+ =?us-ascii?Q?JlrQaffgzyOpTbFvvx+LPFAxSAjMs9oS47F19HEbgMb3dLpWxktDRMVVPGCG?=
+ =?us-ascii?Q?iOuBHcnTHrDIYGQ85YbZIegONBXq3Kx9qpTh+QzB/sMVjzUt26xFkp/0esog?=
+ =?us-ascii?Q?Vun40DotCaOE7M0Ld0JNc2d2G+easiSaJmHxEANVwp29QYkZ3TfW7cL2iPNf?=
+ =?us-ascii?Q?+EKzRLXZo7V/Ghp3PHzedRUJiRw2wW/Y5u/nAURbmhadCpMjeo8wvBEg65S5?=
+ =?us-ascii?Q?Qf2QmDAMYiw4KNX4ZiuNlApp3CSUen1QVLZJTVkykTC1xcr7ZrY3ZP5oV+ef?=
+ =?us-ascii?Q?+jjTWIGTw/Xq3QIOMirmU1D3VsMxjYpn19NphCSFpJ7LcKOiJdQ0l5zAbZRy?=
+ =?us-ascii?Q?aKIyQq5gT/XtKpqeunnMpIRO54NoFXhHPwNRE/jBa0al0SE9OKYHgFPrg3zn?=
+ =?us-ascii?Q?0GdNL/c3IURBPHrOqPaTnreZLPc340g5hNAxpT7MgqBR6/JtllQoX3/u/cIe?=
+ =?us-ascii?Q?PtpFfpo2HlVm36mlmHa0b/KJM3oO4hOp3hME/QwUuBgiWhyE4tJRVI1tmavc?=
+ =?us-ascii?Q?ygzmAql6NouMdXKLE/vaKUqCf3aYwrNHS6/4w5xnLDg9Ytb/nDI+YYvpPRis?=
+ =?us-ascii?Q?Rw=3D=3D?=
+X-OriginatorOrg: inmusicbrands.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c5914eb-dfcd-4e05-db18-08dd476b5b82
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR08MB8282.namprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 11:34:18.0033
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 24507e43-fb7c-4b60-ab03-f78fafaf0a65
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +O8oFtPHKX5PpxPZHcEPz9XbhdqvZBmyaBpPxIB4xiQ9vqzJ439F9dCVWUVjlc2KwTjOv49+oq6ooy16EkDvwr0TqZ/fgnkV6dDyXvMTUDk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR08MB8409
 
-On Thu, Feb 6, 2025 at 9:45=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Wed, 5 Feb 2025 at 00:09, kernel test robot <oliver.sang@intel.com> wr=
-ote:
-> >
-> > kernel test robot noticed a 7.0% improvement of stress-ng.timerfd.ops_p=
-er_sec on:
->
-> I have no idea what the heck that benchmark does, but I am happy to
-> see that this whole patch series did actually end up improving on the
-> whole fsnotify cost that I was ranting about in the original
-> submission.
->
-> Obviously this load doesn't actually do the new pre-event hooks, so it
-> seems to be all just about how fsnotify_file_area_perm() (or some
-> other fsnotify hook in the normal read() path) now isn't the
-> unconditional pig that it used to be.
+When flushing the serial port's buffer, uart_flush_buffer() calls
+kfifo_reset() but if there is an outstanding DMA transfer then the
+completion function will consume data from the kfifo via
+uart_xmit_advance(), underflowing and leading to ongoing DMA as the
+driver tries to transmit another 2^32 bytes.
 
-Right.
-We got this win by slightly modifying semantics of FAN_ACCESS_PERM
-events, but I cannot imagine that anyone will care (famous last words).
+This is readily reproduced with serial-generic and amidi sending even
+short messages as closing the device on exit will wait for the fifo to
+drain and in the underflow case amidi hangs for 30 seconds on exit in
+tty_wait_until_sent().  A trace of that gives:
 
-It's all about the fact that
->
-> I don't see how that would be worth 7%, but I'll happily take it.
->
+     kworker/1:1-84    [001]    51.769423: bprint:               serial8250_tx_dma: tx_size=3 fifo_len=3
+           amidi-763   [001]    51.769460: bprint:               uart_flush_buffer: resetting fifo
+ irq/21-fe530000-76    [000]    51.769474: bprint:               __dma_tx_complete: tx_size=3
+ irq/21-fe530000-76    [000]    51.769479: bprint:               serial8250_tx_dma: tx_size=4096 fifo_len=4294967293
+ irq/21-fe530000-76    [000]    51.781295: bprint:               __dma_tx_complete: tx_size=4096
+ irq/21-fe530000-76    [000]    51.781301: bprint:               serial8250_tx_dma: tx_size=4096 fifo_len=4294963197
+ irq/21-fe530000-76    [000]    51.793131: bprint:               __dma_tx_complete: tx_size=4096
+ irq/21-fe530000-76    [000]    51.793135: bprint:               serial8250_tx_dma: tx_size=4096 fifo_len=4294959101
+ irq/21-fe530000-76    [000]    51.804949: bprint:               __dma_tx_complete: tx_size=4096
 
-Yeh, I was happy to see that as well :)
+Since the port lock is held in when the kfifo is reset in
+uart_flush_buffer() and in __dma_tx_complete(), adding a flush_buffer
+hook to adjust the outstanding DMA byte count is sufficient to avoid the
+kfifo underflow.
 
-Thanks,
-Amir.
+Fixes: 9ee4b83e51f74 ("serial: 8250: Add support for dmaengine")
+Cc: stable@vger.kernel.org
+Signed-off-by: John Keeping <jkeeping@inmusicbrands.com>
+---
+Changes in v2:
+- Add Fixes: tag
+- Return early to reduce indentation in serial8250_tx_dma_flush()
+
+ drivers/tty/serial/8250/8250.h      |  1 +
+ drivers/tty/serial/8250/8250_dma.c  | 16 ++++++++++++++++
+ drivers/tty/serial/8250/8250_port.c |  9 +++++++++
+ 3 files changed, 26 insertions(+)
+
+diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
+index 11e05aa014e54..8ef45622e4363 100644
+--- a/drivers/tty/serial/8250/8250.h
++++ b/drivers/tty/serial/8250/8250.h
+@@ -374,6 +374,7 @@ static inline int is_omap1510_8250(struct uart_8250_port *pt)
+ 
+ #ifdef CONFIG_SERIAL_8250_DMA
+ extern int serial8250_tx_dma(struct uart_8250_port *);
++extern void serial8250_tx_dma_flush(struct uart_8250_port *);
+ extern int serial8250_rx_dma(struct uart_8250_port *);
+ extern void serial8250_rx_dma_flush(struct uart_8250_port *);
+ extern int serial8250_request_dma(struct uart_8250_port *);
+diff --git a/drivers/tty/serial/8250/8250_dma.c b/drivers/tty/serial/8250/8250_dma.c
+index d215c494ee24c..f245a84f4a508 100644
+--- a/drivers/tty/serial/8250/8250_dma.c
++++ b/drivers/tty/serial/8250/8250_dma.c
+@@ -149,6 +149,22 @@ int serial8250_tx_dma(struct uart_8250_port *p)
+ 	return ret;
+ }
+ 
++void serial8250_tx_dma_flush(struct uart_8250_port *p)
++{
++	struct uart_8250_dma *dma = p->dma;
++
++	if (!dma->tx_running)
++		return;
++
++	/*
++	 * kfifo_reset() has been called by the serial core, avoid
++	 * advancing and underflowing in __dma_tx_complete().
++	 */
++	dma->tx_size = 0;
++
++	dmaengine_terminate_async(dma->rxchan);
++}
++
+ int serial8250_rx_dma(struct uart_8250_port *p)
+ {
+ 	struct uart_8250_dma		*dma = p->dma;
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index d7976a21cca9c..442967a6cd52d 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -2555,6 +2555,14 @@ static void serial8250_shutdown(struct uart_port *port)
+ 		serial8250_do_shutdown(port);
+ }
+ 
++static void serial8250_flush_buffer(struct uart_port *port)
++{
++	struct uart_8250_port *up = up_to_u8250p(port);
++
++	if (up->dma)
++		serial8250_tx_dma_flush(up);
++}
++
+ static unsigned int serial8250_do_get_divisor(struct uart_port *port,
+ 					      unsigned int baud,
+ 					      unsigned int *frac)
+@@ -3244,6 +3252,7 @@ static const struct uart_ops serial8250_pops = {
+ 	.break_ctl	= serial8250_break_ctl,
+ 	.startup	= serial8250_startup,
+ 	.shutdown	= serial8250_shutdown,
++	.flush_buffer	= serial8250_flush_buffer,
+ 	.set_termios	= serial8250_set_termios,
+ 	.set_ldisc	= serial8250_set_ldisc,
+ 	.pm		= serial8250_pm,
+-- 
+2.48.1
+
