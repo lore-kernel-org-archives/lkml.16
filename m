@@ -1,132 +1,110 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D26E236A8A;
-	Fri,  7 Feb 2025 08:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEBD236A90
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738917452; cv=none; b=WM0wWamItUzRXh4yIJzNDEKJDjQbUU4wXTIDjqEDb4i5PFZCt6X8J0OCEEmRGkfyfCv0BTeXAcLSAcPIOWEGsuolLQBEvzYUQGZpi/xUQDPfUPqq8y2hZdH1NaMXswiSBnPtSf4P10Df0kbDsuo5IYcrI/IesZIZHUsZg3W0bNk=
+	t=1738917452; cv=none; b=B8S3il4Y14VJ4851BlNQkpvavglf7GTi5/cdSJGTpW0wJ4ucc14OlAqhshwvLsqGjOp4i+rY6JWrbTnPR68+x7O7GYcpzMagCXhHbkKDf7Y/QGqNOW/aFtBiRe0jgD0kNwqDfBbFdRQeLUcTvLu0hxE/iCZbeStHqyfydtnq2Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738917452; c=relaxed/simple;
-	bh=epKjLi69BVTeU228sYLbDxc9Gb/CXKXnDmdzd8h1hXA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mBAc1QCz1MFdtad5GKYsIZGszK0W5evrdIgAXz0Sz+GuBmWntzY59f+lJkt9AjteyR9a2itWWTHbdkYTaVvQs7NvcxufxZRugTTLQwMvb98AOyneUZa2sAk64hva0hDTYDdwcepvaTXiX1SCkjvrdTcDH9ZiadIEzrfeCK5ndkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=gJ7sSNr6; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=B6UFfvxg reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	bh=JG/JfQ6Ey33pIAzxKhXFXOl44LIAvMi9PQm6hnox7Fo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Hx7/cDxk9r4lIr1KzEjRHNCtxm0M0XXkK2yf66jkGqVntMthCqR8pjpvBmqBI6ufn5srAFwYDxYpF+FErTdRKcYmXaxD+j2Q58RTTTLYv2Kn2umjxuJthJHCKESGq7MQzSRHhkkANE3e4Am1DFyBLqW0m6CKderGN/TvUfYIh2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hdIb4+HL; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="gJ7sSNr6";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="B6UFfvxg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1738917451; x=1770453451;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=VU2LURvpuWlLE+ZwmrPv4Em3qMpL5cubt9yeIQOASOs=;
-  b=gJ7sSNr68N/v1OzNi+lp4pZRAtMGml5530YmismIPum913BDblVghB2j
-   a/27uuapvE+B2BFBJsP3+usX3VrmHgAwmIahyWN1TNrOTNBUAuN6Wo5pJ
-   ptptXODAx5U5edXMh/J2y17/LFjmn+i/N6Ll1tlJr6Rt45aDcVN3cOwXG
-   N5M216hfZ3RRCEwAotGr1NZw93b74acpgKhXuTxvrkDbfmNg6+ROj4Kjf
-   dY1R8Xdce68vGUy4eqC92f/G0T6y+tzzHO7MKnuTgNrNeruyqzf0syHau
-   PCskgoidJ9SA3F3TnQ+GwowC3XvmMUG+61dtidQCbaqjID3AxkZT23xhx
-   Q==;
-X-CSE-ConnectionGUID: zhYXy1pMQMaw6xj8EE0t+w==
-X-CSE-MsgGUID: qpsPfg0xSFC1EqN34PCUPQ==
-X-IronPort-AV: E=Sophos;i="6.13,266,1732575600"; 
-   d="scan'208";a="41636110"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 07 Feb 2025 09:37:07 +0100
-X-CheckPoint: {67A5C632-1F-727D2C21-EE1B71AA}
-X-MAIL-CPID: 085FFC876C4E2B2C688DB0CCF2FD4F60_5
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B26AE168340;
-	Fri,  7 Feb 2025 09:37:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1738917422;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hdIb4+HL"
+Message-ID: <fb3c5ec4-eabc-48c0-bf0b-d20cad978b4f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738917433;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VU2LURvpuWlLE+ZwmrPv4Em3qMpL5cubt9yeIQOASOs=;
-	b=B6UFfvxgpjxaOWt4ibeMzpDJYTFrDEZsULVwacDBAc+fxFfOab2dnCHxhGdfzHF869KLmd
-	dKM7OOIrGcC5QTip0wbtBWy6hmW2d2/oJebTigXEC5Js5P/SvTCXywbi/7+6Bs/O6ykUXU
-	1noXifBhWs4nAvMvd8eIase8vIZ6VWBSosCmpzhHEjEWZb/9+ICO67vyEcqBKwML0++K5Z
-	Swi8J4kvjAkfK92x5F6Qav057rTkqqVQVmTxQ0th18JUk4S8t7lY148MbW3xxLOPoS82PV
-	8oS5CdHuJG+/iej8ofv6qf+z5udSJi8/HnFoBFRa2zrsRQvOUUl21j4zcQY4HA==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 07/10] arm64: dts: imx8mm: Add i.MX8M Mini OCOTP disable fuse definitions
-Date: Fri,  7 Feb 2025 09:36:12 +0100
-Message-Id: <20250207083616.1442887-8-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250207083616.1442887-1-alexander.stein@ew.tq-group.com>
-References: <20250207083616.1442887-1-alexander.stein@ew.tq-group.com>
+	bh=xOcHUCtKAqBWxKDTM/pms9igA0mTe68HyzY0zMevu1I=;
+	b=hdIb4+HLWbZxDsR+1Ci38PrPgwaPvOq9Bd7uQeYYcr5tFHNQgnhv5oQ0u2spMAKwJopTNy
+	Gk+7LK9IXBKebYyXMtlFeB72SDMDw7wKH7zNWQQEcpQ8odu/61CMrkxrCUTkjemEEMfnUD
+	4hrc1tQPh/ETbcTjT45JX54+E+BKdX8=
+Date: Fri, 7 Feb 2025 16:37:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH v2] docs/zh_CN: Update the translation of dev-tools/ubsan
+ to v6.14-rc1
+To: WangYuli <wangyuli@uniontech.com>, alexs@kernel.org, corbet@lwn.net,
+ dzm91@hust.edu.cn
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ horms@kernel.org, zhanjun@uniontech.com, guanwentao@uniontech.com,
+ chenlinxuan@uniontech.com
+References: <EE89209B6353C426+20250207031812.15023-1-wangyuli@uniontech.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <EE89209B6353C426+20250207031812.15023-1-wangyuli@uniontech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+X-Migadu-Flow: FLOW_OUT
 
-These definitions define the location of corresponding disable bits
-in OCOTP peripheral.
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- arch/arm64/boot/dts/freescale/imx8mm-ocotp.h | 31 ++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-ocotp.h
+在 2/7/25 11:18 AM, WangYuli 写道:
+> Commit 918327e9b7ff ("ubsan: Remove CONFIG_UBSAN_SANITIZE_ALL")
+> removed the CONFIG_UBSAN_SANITIZE_ALL configuration option. Update
+> the Chinese documentation accordingly and revise the document format
+> by the way.
+>
+> Link: https://lore.kernel.org/all/6F05157E5E157493+20250123043258.149643-1-wangyuli@uniontech.com/
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+> ---
+> Changelog:
+>   *v1->v2: Update commit title to v6.14-rc1 and add Dongliang Mu's Chinese name.
+> ---
+>   .../translations/zh_CN/dev-tools/ubsan.rst    | 35 +++++++++----------
+>   1 file changed, 17 insertions(+), 18 deletions(-)
+>
+> diff --git a/Documentation/translations/zh_CN/dev-tools/ubsan.rst b/Documentation/translations/zh_CN/dev-tools/ubsan.rst
+> index 2487696b3772..a4d4d4c6d157 100644
+> --- a/Documentation/translations/zh_CN/dev-tools/ubsan.rst
+> +++ b/Documentation/translations/zh_CN/dev-tools/ubsan.rst
+> @@ -3,7 +3,16 @@
+>   .. include:: ../disclaimer-zh_CN.rst
+>   
+>   :Original: Documentation/dev-tools/ubsan.rst
+> -:Translator: Dongliang Mu <dzm91@hust.edu.cn>
+> +
+> +:翻译:
+> +
+> + 慕冬亮 Dongliang Mu <dzm91@hust.edu.cn>
+> +
+> +:校译:
+> +
+> + 王昱力 WangYuli <wangyuli@uniontech.com>
+> +
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-ocotp.h b/arch/arm64/boot/dts/freescale/imx8mm-ocotp.h
-new file mode 100644
-index 0000000000000..87698e7619262
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-ocotp.h
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR MIT)
-+/*
-+ * Copyright (c) 2025 TQ-Systems GmbH <linux@ew.tq-group.com>,
-+ * D-82229 Seefeld, Germany.
-+ * Author: Alexander Stein
-+ */
-+
-+#ifndef __DTS_IMX8MM_OCOTP_H
-+#define __DTS_IMX8MM_OCOTP_H
-+
-+/*
-+ * The OCOTP is a tuple of
-+ * <fuse_addr fuse_bit_offset>
-+ */
-+
-+#define IMX8MM_OCOTP_M4_DISABLE		20 8
-+#define IMX8MM_OCOTP_M4_MPU_DISABLE	20 9
-+#define IMX8MM_OCOTP_M4_FPU_DISABLE	20 10
-+#define IMX8MM_OCOTP_USB_OTG1_DISABLE	20 11
-+#define IMX8MM_OCOTP_USB_OTG2_DISABLE	20 12
-+#define IMX8MM_OCOTP_G1_DISABLE		20 18
-+#define IMX8MM_OCOTP_G2_DISABLE		20 19
-+#define IMX8MM_OCOTP_H1_DISABLE		20 20
-+#define IMX8MM_OCOTP_GPU2D_DISABLE	20 21
-+#define IMX8MM_OCOTP_PCIE1_DISABLE	20 22
-+#define IMX8MM_OCOTP_GPU3D_DISABLE	20 24
-+#define IMX8MM_OCOTP_MIPI_DSI_DISABLE	20 28
-+#define IMX8MM_OCOTP_ENET_DISABLE	20 29
-+#define IMX8MM_OCOTP_MIPI_CSI_DISABLE	20 30
-+
-+#endif /* __DTS_IMX8MM_OCOTP_H */
--- 
-2.34.1
+> +.. _cn_ubsan:
+we don't need the tag.
+>   
+>   未定义行为消毒剂 - UBSAN
+>   ====================================
+> @@ -55,30 +64,20 @@ GCC自4.9.x [1_] （详见 ``-fsanitize=undefined`` 选项及其子选项）版
+>   
+>   使用如下内核配置启用UBSAN::
+>   
+> -	CONFIG_UBSAN=y
+> -
+> -使用如下内核配置检查整个内核::
+> -
+
+> -        CONFIG_UBSAN_SANITIZE_ALL=y
+> +  CONFIG_UBSAN=y
+
+Please keep the indentation length consistent with the original one.
+
+Thanks,
+
+Yanteng
 
