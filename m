@@ -1,115 +1,140 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4CA19992C
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A2F23C8C7;
+	Fri,  7 Feb 2025 20:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738959840; cv=none; b=dGL5zEGGLmBVGICDkm57DAs5JDXfPX/07bHUNuWRyJeuxPXli7zKr6nbThsVEHFNiAYX9da/fRvB+wlm9mviqAsQ7ifh/CJoE7YREJC7oj5eeb3hM7LLlGZarndtIuWZMZJohv9xybF8an4P/6Q2iL2jZaxkE+9SofgXDovO7Nc=
+	t=1738959909; cv=none; b=B9L2+2Z0idjqeRbZI0W+3bijUCHDRASZBqUDBdZVEGCCFK2n2bBSE4TTdybx9AJIQv9QuHRbiZWt5uibr7QTpETBvFGfiJPSrkVTzfR1dOM1u/HVL5xkLJmcp8g0gthH6JHuLLkz+K2H+hHkWI9J4hWqrkDYK1HidDi7GS7du1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738959840; c=relaxed/simple;
-	bh=egjQMllB3+k3lOaECmT4kWE4WQJMawVgWsZwDrLBuOY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W+X6Geju4FSd/7zrbfCicuzwiy9SMbYpIxHbOce6w++QnPVasehwYFhONEt1Epp8BPqbxAKq6wk6W87qd8q3/X3+ZCZptAbFox8WOj+jfhlqOkGo05fVpJBDRQ2L+Cr9BOxeNTWog/ED81TU8aMe0Yv/iHoSU3bYUrpwgFOoz64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mh1ZZVQp; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738959909; c=relaxed/simple;
+	bh=KAppddcGy75M1GijtWeVnHspaf0hv7YTbaO7eU7CW+A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AFz8RvFD4nE9GG+1qxDRFDXN1PVRjddbSBNI6mCf6dJ5C1fj0LIW99Umke3lUWF2gjpJXFEur1RMjFH+/08FjfKRmVEKuQ08QgJVxDuFAHvZVCzaUwaelZKsbDrCLCDi9sQU6mHw8GqHZd+jRb9SxCZvz9leWvT7yHL4oXRs8fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kSF3MG1O; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mh1ZZVQp"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517CYmGh007704
-	for <linux-kernel@vger.kernel.org>; Fri, 7 Feb 2025 20:23:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	lFMK36cFjt7AxMSjvYc/ux9LOfI5AxxB9bO9exg5uBU=; b=mh1ZZVQpfLQawCWo
-	0W0/kSZLgXyZXhWCjofe6iQRdZxiC3wMigL8rI7qWgvwkXXUKHq6qxkZR6lr/x0h
-	yKKZdLzLdU/TakklVjQEZXIW0fvdrQyOHfBRz1ZBv9psxDQVP7xmsniKxpbA2dxX
-	eAlkuL3qbcKuMvbHy/fqapaJVSnIwc1Yr+NyKlkRPFoaPRLO7yaYMNvOocbF/OAS
-	wnJWYUsI3EBXJO+9BijhbiOcwWhDH7d0yqrQ3SYyTbwDVJLFLPwe2NBOTMPIJ+Hf
-	gDX+WwNE+GJQPzvoTFzBtVeYNkjZMjSGO32F5Ai0M7WBvujTjGxRXXWAll4nZtZw
-	DpNW7w==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nja3s3pr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 20:23:58 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e42556eab0so5208936d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:23:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738959837; x=1739564637;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lFMK36cFjt7AxMSjvYc/ux9LOfI5AxxB9bO9exg5uBU=;
-        b=MUqupGce4VCfuKWhyaBqUX8sze3tJWakXFIdtFSuvhJNgQYODPjy/SR/672d8KiDCj
-         FydDOyH4ORIEicEyr8/T6ai+e8ia4dN7ewOPF7wheUBhZA/dMhKd8QXvnRkcg9e3d06p
-         qNWo7pdv35CAlagz342Y2Svc0tR9HxMotixLw96f77ym2TtzvFPEZq/mL8f+3MC8bBsJ
-         nVAhrbHdktwzVoKw4G65x9jZ4N1fa3qxBzmncvWgfbJUPQPFnFyKlz69ZDc1BWzJRAk8
-         yiw9WCFckrKavEu2ravSHGgWwQ4n9pDb0WY1W8xkGEmNftbapekGwIPOELBN7+jju28F
-         xUSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXJCeYvZhDjCEsjeCTOhS8VBhEzUXPnzrC/nbQzoyF/ZK20V0Nu/oaINKahIGq76Zj53IWlnz/7tfttiMg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKpxxMxeX1vMOzXPn/UrG1NlF2JMs1jBDmUAc94+UevyUyGLeE
-	RDWXQc5ofbO0f8xI+rrNXbz3kE/liGthc3V3Lqzyfmz9BgTJ/+TCvyGh8egyczSK4leZFWIRT3L
-	r1hJ3HhEFOzUtVArPQgE2zGY6IfOn5IfGaXAN3SLzu2oN7p620GXSN7evkP+V0Qs=
-X-Gm-Gg: ASbGncuYGB8aQs2d0QUpy5jjKWGzy0vGNqq3MoGTy19pKuvlZM6mCiqkXlbq9Do5ku1
-	UkoiH4BC9UkSvCRmJlf/Bf6CN5bDG1WUq6P1Bo5Kc/s8y6SJdylthSEyqlkN1ZCm0PCx8hMaPmy
-	s/2aOm5oPqgIiIxQg9VHdsOcofg7t5+6feuvS0Dm4pDRaXFDzaNAduIGn51MdperecehWN7zsj+
-	liYGMhXFHOziS7VSu2t2i6YTlghhKw41tzttx8aIo7z9on81jzcPSXQ0Lh/z4qpaArW/9EHe/OQ
-	QvmQ300eG46rtqIUfxIZuVDglsoOFillSzAPPbzRY8LwUqH1oy+MnS5R7T0=
-X-Received: by 2002:a05:622a:64c:b0:461:3cd2:390 with SMTP id d75a77b69052e-47167acb69fmr25559741cf.12.1738959837122;
-        Fri, 07 Feb 2025 12:23:57 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHfOKXoFApMhJ6QtE2PUWZAh1oiPCmRbIWwSd3IcovCPv/+UAtw2bYxLPW51FpPfoCUUAk0GQ==
-X-Received: by 2002:a05:622a:64c:b0:461:3cd2:390 with SMTP id d75a77b69052e-47167acb69fmr25559581cf.12.1738959836679;
-        Fri, 07 Feb 2025 12:23:56 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab78b9b09b3sm175323866b.99.2025.02.07.12.23.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 12:23:56 -0800 (PST)
-Message-ID: <efcc2cee-1d8b-45d1-aa9a-4e7afc19d857@oss.qualcomm.com>
-Date: Fri, 7 Feb 2025 21:23:54 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kSF3MG1O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738959908; x=1770495908;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KAppddcGy75M1GijtWeVnHspaf0hv7YTbaO7eU7CW+A=;
+  b=kSF3MG1OlXU4ZC9g2nzwujJQsHOUEnCoR/Ht/k/p2/oIzLhu3LU0kySU
+   dWCgYAr2BLkGtyDTREKANpbbYkzGrXKcuaaBZWUTxbLDe4C1UhSVVNS1y
+   tphGQdAW9F7hYEsOi+TaLypr1mXSt74NCSldrZ09EOFWQ9ZiIdWBjPk1F
+   gfJu7i3zy6NsD8OfZ8a/aNeoGewqXYSPQ7OA3KeZm6lR32UYVK1/nXcqW
+   /7XVtwtg2hOm1S6rh+KUH5KLzD4G+KHDhYSw8eov5t6hPjHJ21bgFUhgz
+   DO0twCUFM0j+4Um/APiuu3SaVr/O+twjy1UPkwktyD7OMgTgy9/unn59Q
+   Q==;
+X-CSE-ConnectionGUID: G1goy+6vSNa706YyZrOzLw==
+X-CSE-MsgGUID: 9V+puwXVS3mi3FUWU1VDpg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="27219096"
+X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
+   d="scan'208";a="27219096"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 12:25:07 -0800
+X-CSE-ConnectionGUID: d18eyhYiScW1fPYwWK7LnQ==
+X-CSE-MsgGUID: 1551tkwPTYCfUn66SQBp4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
+   d="scan'208";a="111392184"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 07 Feb 2025 12:25:04 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tgUuL-000z07-2H;
+	Fri, 07 Feb 2025 20:25:01 +0000
+Date: Sat, 8 Feb 2025 04:24:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Dipen Patel <dipenp@nvidia.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	timestamp@lists.linux.dev,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2] gpiolib: don't build HTE code with CONFIG_HTE disabled
+Message-ID: <202502080425.N7HVOOJr-lkp@intel.com>
+References: <20250207083146.17872-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: sm8650: switch to interrupt-cells 4
- to add PPI partitions
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250207-topic-sm8650-pmu-ppi-partition-v1-0-dd3ba17b3eea@linaro.org>
- <20250207-topic-sm8650-pmu-ppi-partition-v1-1-dd3ba17b3eea@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250207-topic-sm8650-pmu-ppi-partition-v1-1-dd3ba17b3eea@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: FStkadflSjyQC1GnZrzqeL3Oms-DokEG
-X-Proofpoint-ORIG-GUID: FStkadflSjyQC1GnZrzqeL3Oms-DokEG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_09,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- clxscore=1015 priorityscore=1501 bulkscore=0 spamscore=0 mlxscore=0
- impostorscore=0 mlxlogscore=763 malwarescore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502070152
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207083146.17872-1-brgl@bgdev.pl>
 
-On 7.02.2025 11:31 AM, Neil Armstrong wrote:
-> The ARM PMUs shares the same per-cpu (PPI) interrupt, so we need to switch
-> to interrupt-cells = <4> in the GIC node to allow adding an interrupt
-> partition map phandle as the 4th cell value for GIC_PPI interrupts.
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
+Hi Bartosz,
 
-If I'm reading the core right, we can leave the fourth cell
-uninitialized where it makes no sense
+kernel test robot noticed the following build errors:
 
-Konrad
+[auto build test ERROR on brgl/gpio/for-next]
+[also build test ERROR on linus/master v6.14-rc1 next-20250207]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpiolib-don-t-build-HTE-code-with-CONFIG_HTE-disabled/20250207-163408
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+patch link:    https://lore.kernel.org/r/20250207083146.17872-1-brgl%40bgdev.pl
+patch subject: [PATCH v2] gpiolib: don't build HTE code with CONFIG_HTE disabled
+config: i386-buildonly-randconfig-002-20250208 (https://download.01.org/0day-ci/archive/20250208/202502080425.N7HVOOJr-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502080425.N7HVOOJr-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502080425.N7HVOOJr-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/power/supply/max8903_charger.c:9:
+   include/linux/gpio/consumer.h:557:3: error: call to undeclared function 'WARN_ON'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     557 |                 WARN_ON(desc);
+         |                 ^
+>> include/linux/gpio/consumer.h:559:10: error: use of undeclared identifier 'ENOSYS'
+     559 |         return -ENOSYS;
+         |                 ^
+   include/linux/gpio/consumer.h:565:3: error: call to undeclared function 'WARN_ON'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     565 |                 WARN_ON(desc);
+         |                 ^
+   include/linux/gpio/consumer.h:567:10: error: use of undeclared identifier 'ENOSYS'
+     567 |         return -ENOSYS;
+         |                 ^
+   4 errors generated.
+
+
+vim +/ENOSYS +559 include/linux/gpio/consumer.h
+
+   548	
+   549	#if IS_ENABLED(CONFIG_GPIOLIB) && IS_ENABLED(CONFIG_HTE)
+   550	int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
+   551	int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
+   552	#else
+   553	static inline int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc,
+   554						       unsigned long flags)
+   555	{
+   556		if (!IS_ENABLED(CONFIG_GPIOLIB))
+   557			WARN_ON(desc);
+   558	
+ > 559		return -ENOSYS;
+   560	}
+   561	static inline int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc,
+   562							unsigned long flags)
+   563	{
+   564		if (!IS_ENABLED(CONFIG_GPIOLIB))
+   565			WARN_ON(desc);
+   566	
+   567		return -ENOSYS;
+   568	}
+   569	#endif /* CONFIG_GPIOLIB && CONFIG_HTE */
+   570	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
