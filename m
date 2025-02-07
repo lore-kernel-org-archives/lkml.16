@@ -1,71 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821D21DE3BF;
-	Fri,  7 Feb 2025 03:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59EC15445D;
+	Fri,  7 Feb 2025 03:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738900672; cv=none; b=a7W4xAw4NDN9b3W4aIsob+qkS7RUok39JFa6DZDcb8X3ernnTwgEul3sWK8iunRoFSfTM0UhzM9YXIO/sNiYIpQo/kU/xb/5VXgds+vUg+ZDVevbgP9HSJzNyT9mFlZW1ryY1pxS3BLgIjM39YwISHlvkd/xDUNYfvGQ3SToUho=
+	t=1738900800; cv=none; b=oltgsjl/1mSQ7d4qH3afXM232ZNMyXO34DJ3KiiLE4Hv42tDuDZOQQcoMHxwYi+VgGu/1qHIqyAziJZsAAW2GZyDRtJrvdnk7H7whC90JSL5yKnLJzAyboGMiCpI11V/sh8qsRriNc+XvaU6L87Qjrv3GzadIFpz0xbNaoj2c4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738900672; c=relaxed/simple;
-	bh=zKMDSSJVgP7r5dDFgUpPRcJMAjIK6Y3ObMNUxWdzdmU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d1oPQz1uxrQP69pQhocPJFBHFpu815sVwlPbw/4nW7WeI2IITuybr/C0fqrk+BEBIAhTfvprfb3Nbkt7QBXK7MPkxxA8LWNR/27lzM2d70zBIdVZ9t6EFrFy/wsrHCqu/KtaUXHDrgX3DX07uW0EBuorUi+B3uKqeqaf2asqCWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VxZCAg9W; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VxZCAg9W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD9C2C4CED1;
-	Fri,  7 Feb 2025 03:57:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738900672;
-	bh=zKMDSSJVgP7r5dDFgUpPRcJMAjIK6Y3ObMNUxWdzdmU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VxZCAg9WKRNOuuuQwZ0dBZ+tHxOYH4/TRjLiDlGY5IEyD3PpIbl/5oduKomnDECqa
-	 Xm45m63+/ewVemPN6ndAQaKDaDc5yg6s1LRKRfnT4qwk+lhKmvQXe6/33tpq68D3YD
-	 60fLSzHaaB3FBZ1f+waDv3xpl0uh2Euo0hNVkMZiwVDh5H8k2qq/NDnXUvA6nHmtbt
-	 jX7ViH5b/Ytx3uUKo0sfgeg6PzmphWu2xlD9yOkLV/vJXQ9aTedq+vsHZLtyGCHY/1
-	 /27p2dYiZDsTIyjW6foitrVL9MQdcxQy0H74IGsAwEdJBNk1JoDtv/0OD6c2g18zZx
-	 8jIKRLpv7FHLw==
-Date: Thu, 6 Feb 2025 19:57:50 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: Mustafa Ismail <mustafa.ismail@intel.com>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	linux-rdma@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] RDMA/irdma: switch to using the crc32c library
-Message-ID: <20250207035750.GA43210@sol.localdomain>
-References: <20250207033643.59904-1-ebiggers@kernel.org>
+	s=arc-20240116; t=1738900800; c=relaxed/simple;
+	bh=xfEJh4u+WX9uN/15nbOGQboQ20mTsV2Z+FQUCm7exow=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JkMusSj2qOJdvaAeChvyu3oid/qunZkMbEhflZ6TJ82S7fxC6CPHJHY8UqhwhP6+0iAXDjX/beW6buU+g3X2VAvHOofNowzz+Y+7sgufraBM6mkCgJWDeIkbQaW8kLjdrgRS37xUo/3twlRsvon7Yp/CQcOKOszdLTi4qow05r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Yq0Vt3GcLz1W5D7;
+	Fri,  7 Feb 2025 11:55:34 +0800 (CST)
+Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9C7A21800DB;
+	Fri,  7 Feb 2025 11:59:54 +0800 (CST)
+Received: from localhost.huawei.com (10.50.165.33) by
+ kwepemh100008.china.huawei.com (7.202.181.93) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 7 Feb 2025 11:59:53 +0800
+From: Lifeng Zheng <zhenglifeng1@huawei.com>
+To: <rafael@kernel.org>, <viresh.kumar@linaro.org>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
+	<zhanjie9@hisilicon.com>, <lihuisong@huawei.com>, <zhenglifeng1@huawei.com>,
+	<fanghao11@huawei.com>
+Subject: [PATCH] cpufreq: Use str_enable_disable() helper
+Date: Fri, 7 Feb 2025 11:59:53 +0800
+Message-ID: <20250207035953.2420053-1-zhenglifeng1@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207033643.59904-1-ebiggers@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemh100008.china.huawei.com (7.202.181.93)
 
-On Thu, Feb 06, 2025 at 07:36:43PM -0800, Eric Biggers wrote:
-> +int irdma_ieq_check_mpacrc(const void *addr, u32 len, u32 val)
->  {
-> -	u32 crc = 0;
-> -
-> -	crypto_shash_digest(desc, addr, len, (u8 *)&crc);
-> -	if (crc != val)
-> +	if (~crc32c(~0, addr, len) != val)
->  		return -EINVAL;
->  
->  	return 0;
->  }
+Commit f994c1cb6c43 ("cpufreq: Use str_enable_disable()-like helpers") has
+already introduced helpers from string_choices.h and replaced ternary
+syntax with it. Use str_enable_disable() helper in this line to stay
+consistent.
 
-Sorry, I just realized this isn't actually equivalent on big endian CPUs, since
-the byte array produced by crypto_shash_digest() used little endian byte order,
-whereas crc32c() just returns a CPU endian value.
+Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
+---
+ drivers/cpufreq/cpufreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-And of course this broken subsystem uses u32 for the little endian values
-instead of __le32 like the result of the kernel.
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 30ffbddc7ece..a12e1da89163 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -1578,7 +1578,7 @@ static int cpufreq_online(unsigned int cpu)
+ 		if (ret) {
+ 			/* If the set_boost fails, the online operation is not affected */
+ 			pr_info("%s: CPU%d: Cannot %s BOOST\n", __func__, policy->cpu,
+-				policy->boost_enabled ? "enable" : "disable");
++				str_enable_disable(policy->boost_enabled));
+ 			policy->boost_enabled = !policy->boost_enabled;
+ 		}
+ 	}
+-- 
+2.33.0
 
-Not sure it's worth my time to continue to try to fix this subsystem properly.
-
-- Eric
