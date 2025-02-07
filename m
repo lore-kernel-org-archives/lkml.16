@@ -1,93 +1,83 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEC01DE3B1
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D1C1D7E21
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:42:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738921345; cv=none; b=K6EbzQ4yI/Ol0UTGjc/ovxvIrAKlMEdDoSR+WATyBuhZslKntdgP+nd52Z5Quv5GipU4H/RqpXTBpiDzUyTkTqOHaDGcImlSgXv16h+CBqJIA+ni5Ose6BD2ihgpEvttbY1I5asAMBo0OMBgugFllQUbT7J3qcpw3+8bOStlXnY=
+	t=1738921379; cv=none; b=HQuiYpWD2ABUWJrEAtmJo5XcLCgEBPVMWpcNcm0XdpYyJid6Q81CWCwC0Mytf62BDYTZhG6hrh+LOsMpmEdfLFz/c821PrG1+X4nzF1qHuIEA+YsCyo6hi+p88gVOQ92X31t860G18AqGblRnXPIiohw4UdKWX+SNsTph8rZkqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738921345; c=relaxed/simple;
-	bh=ofFTj1TCyaZo+iCF/kD699zoLnBmPF0uKOAMou48smo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D7oVs6HvvdaaJNjocSkKKK7oPyK9QWY1RgbQSPJDeUjJOYHP7mg3Q6xmwfjddEscvgzFTCXHKpt9Ia9Qi4l10fwo65AsrYIGu5QcPL8JrSA02qvIHIo7xDPNJYzM8aXbN9raSZt86wBw5zmvziga3W2ZJWb43FQq/e+AVdv1PDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lvaxwmt8; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738921379; c=relaxed/simple;
+	bh=6uoHY0ASJcAa+0FoFTs2yHCTNuCmEz+NR6nwsNVVugI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N34BmYd4lYPwktCcKVV1bLbimt3wyD7oUa9Z9aoQO0euPmYHxgZbtrMumFHDvT4Mh1ZLvsb8iUyTsTxvghjz01uBkewErKJpYq523VrBnhJ7M4bTm1jWMyDp6ZmXgqXLsC717WLxwI+kTe9cBupFSi+llis0Wc91CUA/+oJCZPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QQn00pZE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lvaxwmt8"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2f9d5f8a4b9so2950562a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 01:42:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738921343; x=1739526143; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ofFTj1TCyaZo+iCF/kD699zoLnBmPF0uKOAMou48smo=;
-        b=lvaxwmt8sbPUYDJu+InC/np7gRgchdJlu3bdSNbeG/44enAw7lOkK3NKMuJq1g5nP5
-         6ifhul5uyD73nCfaHAB++DotE9bkKOAVWay6t+fvuhGfVTw54GKF6hUweuLE8u7FY8LU
-         NQ0nNoPqcZk7Hg8iRKGG+7HMj8cYZWxdojAAzHRjem69mDEkJfxorCPPEb5Z50T+Br4u
-         AhbDdgtc1g74bmU0uR4KOo0LWQG28dhZHwSCUb3A5RGpCUA4YFZ2jofXjNLZS0Cd5WVE
-         G4bvT/Onq/RGV/9hVSnD52LrskiddR0R0XHE1mdicBv88KVKE8rmAYq44XxjN7Bqo1w9
-         a/OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738921343; x=1739526143;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ofFTj1TCyaZo+iCF/kD699zoLnBmPF0uKOAMou48smo=;
-        b=elEtrZjtDO5yEIhXmjUHmnb1nawkCM/Y0hYu7AUQygNKdDjo+XUHvmnFyTfkRcZqb7
-         CF10rdo1MC/D6sphjqp4WgRz18r0T5e5TDIVD/Tx8PIwsRqo5U4TSuvgw5Qziq0No+9t
-         obK1S85yOhqVp01VxJH1xKE+zb0pAk5iJO0JDDULcDhB6zB+zeEvUTKqAKB6VHJ0EAC+
-         RAsTLGAGVn7pBJPEMZRKQPKuoGQ7egL6lQToqA+nx9o4Y6eXa0/hu3g7JfdGhLuUqQ9u
-         iFmf0fd0Nj8YJLhwSswKcLC3AFiZI5mirgqPk8W8/SfM5JegcTjEbw1tDdJLJ1rNr9QO
-         mgvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUAJnPerMr6t2jF6oMuiBBfC3ynKVJXsfMfja9Vdub33anprdp7ZJzRgA6AbIE6SJTxRxUKqDHAQ+0QNCM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUdBlhirc92/OQ/uA0fzfA7O0uqhG8T/+C2xv3NMaPrikmkCQn
-	jWcp7hJStqDj3LUBhpn0i76Z+/yLgD9Q8X6xg4mL4mBkzpsY9KiHaJ3j7ukSWTBYoUrdFIOt6gJ
-	bu2Up+YVQXkhVw1NpafWWTWq9SJb/tUsRnzF0
-X-Gm-Gg: ASbGnctjZfQdNqh/fPcq7eLbkuRSkfgnK9Tvr7ajgabNAb7kUpY9S1L47n+uYWDzsUy
-	ui+MIIxYUBYSNd3PzEGb3InOZbJbZMkfOPNQaMLOv4SOVXJ7S+KLLwdkTQ337JmWw+9cK/Nx9/T
-	KC8QvFdecqzS6ak4JXlYyDT89VyxuK
-X-Google-Smtp-Source: AGHT+IG4ZY4IqMmaYiHGhuhfQn/5+xCxjBM+K68OROGK7+Yzk74KuOTCA8zbxSoW+j9bpj4TSCIuaHZf3rRZy50Wr64=
-X-Received: by 2002:a17:90b:3143:b0:2ee:f22a:61dd with SMTP id
- 98e67ed59e1d1-2fa243eef9bmr3628490a91.32.1738921343365; Fri, 07 Feb 2025
- 01:42:23 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QQn00pZE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738921376;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sJMs9eHI1p3jh7oPNQ4LZ+vZadu23Vk4jaAwPoDFICE=;
+	b=QQn00pZEySo3YOHjN/6/gpkL0s3HOJd6ROwUyOokG6XB1jCSN7+bV73SrJ6PuFfRIQCQrG
+	zXzhbxMJd8IZ5zNZfedQ72F4X9ZICndnhP+B5T3dGT2beg05Z2EzmKakhZabZnSgqRxcuI
+	megsxXhrKX1AcXJhfSJ7QXYwkFNNqmQ=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-284--kLIjBwTPnum2nKzrVycrw-1; Fri,
+ 07 Feb 2025 04:42:54 -0500
+X-MC-Unique: -kLIjBwTPnum2nKzrVycrw-1
+X-Mimecast-MFC-AGG-ID: -kLIjBwTPnum2nKzrVycrw
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 03446180036F;
+	Fri,  7 Feb 2025 09:42:53 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.136])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 38EF4180056F;
+	Fri,  7 Feb 2025 09:42:49 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri,  7 Feb 2025 10:42:26 +0100 (CET)
+Date: Fri, 7 Feb 2025 10:42:22 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Mateusz Guzik <mjguzik@gmail.com>, akpm@linux-foundation.org,
+	Liam.Howlett@oracle.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, ebiederm@xmission.com
+Subject: Re: [PATCH v6 0/5] reduce tasklist_lock hold time on exit and do
+ some pid cleanup
+Message-ID: <20250207094221.GD5112@redhat.com>
+References: <20250206164415.450051-1-mjguzik@gmail.com>
+ <20250207-wettkampf-binden-648f00063d8f@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206175114.1974171-1-bvanassche@acm.org> <CANpmjNOsf1RnYJuZ7pmWVYNqVYMYe+eTL0vhDKU5sLihR9fN-g@mail.gmail.com>
- <90c7a807-b0a0-4b42-866f-f74c5d1c62e5@acm.org> <20250207084223.GX7145@noisy.programming.kicks-ass.net>
- <Z6XM6zjK3mtqYfan@elver.google.com> <20250207090827.GZ7145@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250207090827.GZ7145@noisy.programming.kicks-ass.net>
-From: Marco Elver <elver@google.com>
-Date: Fri, 7 Feb 2025 10:41:47 +0100
-X-Gm-Features: AWEUYZlZ64s_-iiKP6W_6Jm5GgDCkTGb1MAvFK0wIx2GPboEISjek7OYIKFBvdE
-Message-ID: <CANpmjNPoFMacBc8YhsN0hcw_npCbfixQq44JkXPFdb0uPaNUVA@mail.gmail.com>
-Subject: Re: [PATCH RFC 00/33] Compile-time thread-safety checking
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Bart Van Assche <bvanassche@acm.org>, Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207-wettkampf-binden-648f00063d8f@brauner>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Fri, 7 Feb 2025 at 10:08, Peter Zijlstra <peterz@infradead.org> wrote:
+On 02/07, Christian Brauner wrote:
 >
-> On Fri, Feb 07, 2025 at 10:05:47AM +0100, Marco Elver wrote:
->
-> > Yes, you can add multiple guarded_by. But it's just going to enforce
-> > that you need to hold both locks before you access the member. If you
-> > want the rules to be more complex, the best way to express that is with
-> > some helpers. E.g. something like this (tested on top my series)
->
-> Oh gawd, this is going to be a pain, isn't it :/
+> Applied to the kernel-6.15.tasklist_lock branch of the vfs/vfs.git tree.
 
-For complex locking patterns, yes. :-/
+Great.
 
-Which is why I'm proposing it to be opt-in but relatively complete
-(most primitives supported), so that either we have time to work out
-how to deal with more complex patterns, or just leave some things
-opted-out.
+Then perhaps you can also take the related
+
+	[PATCH v2 0/2] exit: change the release_task() paths to call flush_sigqueue() lockless
+	https://lore.kernel.org/all/20250206152244.GA14609@redhat.com/
+
+changes?
+
+Oleg.
+
