@@ -1,160 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68671D618E;
-	Fri,  7 Feb 2025 09:13:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29EA71D6DB5;
+	Fri,  7 Feb 2025 09:13:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738919616; cv=none; b=ODCN0hZSfy1+2hyykOK3NimSN3quZzACPaHvhCF2AdgT/+KrlQMjdAIXespkhoboSCSqm7fHBYo1aZqnfwhgIO7XPnbsNHERcMTlW2bYtMX2mFa71Hc9ZaFwPpGY7PXgEwAg2qb5WA/toxi6W39Kme4cRTMlnMiVedfvjiT/2lU=
+	t=1738919624; cv=none; b=jJzSa4SQHWyDSERBriNCUrGZMK3BiDOZjK1qS6hyBac4sR9dg7iICtZVLdJn9hOhUbFXa/x1GdPhqsENFmEEUFJUyEbnOgxsDz6um5V9LWt9ozAP0R+j+/9NM/1gaqLhqbcU23U2uZvaWTnqXUZ2ldYwVqwR7zeMJF1qaviMFwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738919616; c=relaxed/simple;
-	bh=FR17TxotLW0QQw+3bvyS+jwauiNif/8A88Dzr0glndw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lXyCrd99IlxblujgoliSLCmPOxsS2Etx/Bw24IML4ib2OXoHQ6iFNKfLIFT9+gx7LemQzZw4paYe2Ctrzp0NV24lmOS3twoGO8UBHdS8aAelXyS1YKcEmM8WeB7F2tUhXzMe87PaknsTudE3FoYTxXjCuNLo+AQau3vsF5eoGBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTGXTo58; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738919624; c=relaxed/simple;
+	bh=9PvSG4zdzbcGhJAC7UkL/ZDLIQi3DrjcxfU8idWQ4js=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o5ZWVvIfwkb7NBiMCQPd3EqQiIfsSPLbxIxh4vbMEXCQRznwo0bVOUrPpq8+Uw3jFlaX60zCQfmQCjA0fQKC7Z2DxfCimq83PlXZliA2aAH7cjCal455kaEO/sPxMcXfp403qT/GCdVd/Ek9C/PN8ml3/TNOsOkWMhWRyKn6U/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=iuQCqS0x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTGXTo58"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21FECC4CEE2;
-	Fri,  7 Feb 2025 09:13:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738919616;
-	bh=FR17TxotLW0QQw+3bvyS+jwauiNif/8A88Dzr0glndw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RTGXTo58yrhWc7IfXlgn9D9EMNwv6l4w8GDzX68v80U/GsgVs5CYRxCuFcEHoqzpo
-	 EaLXJW6lsqJVy9a+NWIfUuw/XjcpboFxfAsFmeMBIRKzLBi0l5xOEUOCnwN0tsqQNX
-	 gBBvcFuBIdAAU5LGyMYlJJUPIS7eBAySJkuaAXTrnAiPi3OyjWLkLlnzmE7ue7ETje
-	 luPA9KOGEWs3U4CqMp0W2U0CLbI0i2T20nZash5OkYLhhm3Mv/hwU2018FQO23VEwx
-	 NZdlfPcF8v7lPJ0xNfZdjnm4MSOseCCnIMUWrq7fn33eJbneTNEhdp+4qVJSpjnQJO
-	 C+f4PCZjYv1Jw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tgKQX-001Yrn-Hk;
-	Fri, 07 Feb 2025 09:13:33 +0000
-Date: Fri, 07 Feb 2025 09:13:32 +0000
-Message-ID: <86mseyt8w3.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,	Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>,	linux-pci@vger.kernel.org,	Rob Herring
- <robh@kernel.org>,	Lorenzo Pieralisi <lpieralisi@kernel.org>,	Krzysztof
- =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,	Bjorn Helgaas
- <bhelgaas@google.com>,	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: dwc: Use level-triggered handler for MSI IRQs
-In-Reply-To: <Z6UWK6EvOLRrtRDH@google.com>
-References: <20250205151635.v2.1.Id60295bee6aacf44aa3664e702012cb4710529c3@changeid>
-	<87ed0btpfj.wl-maz@kernel.org>
-	<Z6UWK6EvOLRrtRDH@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="iuQCqS0x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFDC7C4CED1;
+	Fri,  7 Feb 2025 09:13:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738919623;
+	bh=9PvSG4zdzbcGhJAC7UkL/ZDLIQi3DrjcxfU8idWQ4js=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iuQCqS0xKAXw/friBRMWhGTIQOy7X0g4pYAYNlJAFXmuMtPKn+FcjSHf/dLkq9hHH
+	 8N4lfp2+KbCMOWiGPHdgL3X1t+Kqt4MIMGwzxqRyAnCpJRSKt+b2LeWwHRITEcH4YE
+	 gDdWS0r9nHZW+gubSRFIg/ZgEXCjByawnXmb02w8=
+Date: Fri, 7 Feb 2025 10:13:40 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Lyude Paul <lyude@redhat.com>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	linux-kernel@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+	Mark Brown <broonie@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 1/8] driver core: add a faux bus for use when a simple
+ device/bus is needed
+Message-ID: <2025020748-savings-porthole-9e27@gregkh>
+References: <2025020620-skedaddle-olympics-1735@gregkh>
+ <2025020623-chemo-amends-102a@gregkh>
+ <20250206185314-a69d5f40-abd9-4dce-863a-b85e0b4c6c82@linutronix.de>
+ <53d57b821c484c3e229686b4643fbf9486e1e150.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: briannorris@chromium.org, jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org, linux-pci@vger.kernel.org, robh@kernel.org, lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <53d57b821c484c3e229686b4643fbf9486e1e150.camel@redhat.com>
 
-On Thu, 06 Feb 2025 20:06:03 +0000,
-Brian Norris <briannorris@chromium.org> wrote:
-> 
-> Hi Marc,
-> 
-> First off, thanks for reviewing. I'm a bit unsure about some of this
-> area, which is one reason I sent this patch. Maybe it could have been
-> "RFC".
-
-RFC means nothing to me. Or rather, RFC is a sure indication that a
-patch can safely be ignored! ;-) My advise on this front is to either
-post patches as you have done, or not post it at all.
-
-> 
-> (See also v1: https://lore.kernel.org/all/Z3ho7eJMWvAy3HHC@google.com/
-> 
-> I'm dealing with HW bugs that cause me to have to configure the output
-> signal -- msi_ctrl_int -- as EDGE-triggered on my GIC. This is adjacent
-> to that problem, but doesn't really solve it.)
-
-Configuring a level-triggered signal as edge is another recipe for
-disaster (a sure way to miss interrupts), but short of a description
-of your particular issue, I can't help on that.
-
-> 
-> On Thu, Feb 06, 2025 at 09:04:00AM +0000, Marc Zyngier wrote:
-> > On Wed, 05 Feb 2025 23:16:36 +0000,
-> > Brian Norris <briannorris@chromium.org> wrote:
-> > > 
-> > > From: Brian Norris <briannorris@google.com>
-> > > 
-> > > Per Synopsis's documentation [1], the msi_ctrl_int signal is
-> > > level-triggered, not edge-triggered.
-> > > 
-> > > The use of handle_edge_trigger() was chosen in commit 7c5925afbc58
-> > > ("PCI: dwc: Move MSI IRQs allocation to IRQ domains hierarchical API"),
-> > > which actually dropped preexisting use of handle_level_trigger().
-> > > Looking at the patch history, this change was only made by request:
-> > > 
-> > >   Subject: Re: [PATCH v6 1/9] PCI: dwc: Add IRQ chained API support
-> > >   https://lore.kernel.org/all/04d3d5b6-9199-218d-476f-c77d04b8d2e7@arm.com/
-> > > 
-> > >   "Are you sure about this "handle_level_irq"? MSIs are definitely edge
-> > >    triggered, not level."
-> > > 
-> > > However, while the underlying MSI protocol is edge-triggered in a sense,
-> > > the DesignWare IP is actually level-triggered.
+On Thu, Feb 06, 2025 at 03:07:59PM -0500, Lyude Paul wrote:
+> On Thu, 2025-02-06 at 19:08 +0100, Thomas Weißschuh wrote:
+> > > +
+> > > +	device_initialize(dev);
+> > > +	dev->release = faux_device_release;
+> > > +	dev->parent = &faux_bus_root;
 > > 
-> > You are confusing two things:
-> > 
-> > - MSIs are edge triggered. No ifs, no buts. That's because you can't
-> >   "unwrite" something. Even the so-called level-triggered MSIs are
-> >   build on a pair of edges (one up, one down).
-> > 
-> > - The DisgustWare IP multiplexes MSIs onto a single interrupt, and
-> >   *latches* them, presenting a level sensitive signal *for the
-> >   latch*. Not for the MSIs themselves.
+> > I guess nobody will want to hang these off a different parent.
 > 
-> Indeed, I probably was a little confused, and distracted by my
-> aforementioned HW bug, which can be at least partially mitigated by
-> masking (which this patch does). I also didn't understand the original
-> choices in various DW-based PCIe drivers, since their choice of
-> handle_level_irq vs handle_edge_irq seemed a bit arbitrary.
-> 
-> ...
-> 
-> > It also breaks the semantics of
-> > interrupt being made pending while we were handling them (retrigger
-> > being one).
-> 
-> What do you mean here? Are you referring to SW state (a la
-> IRQS_PENDING), or HW state? For HW state, MSIs are accumulated in the
-> STATUS register even when we're masked, so they'll "retrigger" when
-> we're done handling. But I'm less clear about some of the IRQ framework
-> semantics here.
+> Oh - this is a good point that slipped my mind, how would we want to handle
+> this case? The reason I ask is since we have things like
+> drivers/gpu/drm/display/drm_dp_aux_dev.c which currently use the virtual
+> device API but iirc do actually assign the DRM device owning the aux device as
+> the parent.
 
-IRQS_PENDING is indeed what indicates the SW-driven retrigger state,
-by which any part of the kernel can decide to reinject an *edge*
-interrupt if, for any reason, it needs to.
+Having a parent is fine, I just hadn't found any users of that yet.
+I'll go add that option for v4.
 
-This is actually how lazy masking is implemented, by not masking the
-interrupt, taking it (which is a "consume" operation), realising we
-were logically masked, masking it for good and marking it as
-SW-pending for later processing. Hence the while{} loop in
-handle_edge_irq().
+thanks,
 
-Switching to level triggered removes most of that processing, since by
-definition, a level is not consumed when acking the interrupt. You
-need to talk to the end-point for the level to drop, so simply masking
-the interrupt is enough to get it back when unmasking it.
-
-HTH,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+greg k-h
