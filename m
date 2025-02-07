@@ -1,48 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE7317E4;
-	Fri,  7 Feb 2025 00:47:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A2A17E4;
+	Fri,  7 Feb 2025 00:54:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738889273; cv=none; b=stKRIgY03B68BOJfgPk2pM49IzEWEh613VRv/yXGHwqmObuin0qqht4m69gzTI4OO17cNjSwyd7ligYcdhT1xSuS3/1v7j53w92TcC799I1pdaIQv0HtPw5mlMRKvTywNhIop5+aU2hPt3NyyYcJ2eANPtpi8g9sH0n3EIY2g9U=
+	t=1738889646; cv=none; b=JHd/zrRdf8mqoJFGHAt08Xv+kXq7i+RXY5fIqo4DHb4B3Sm4ud6oUDyq/3CpcgDFokmgn3BAVbsxY9P9+f6TtkvX2jqxHJtroqmvHNachM2tGlcHl1tfdOqFS8r8//tJ3mARGuZ2gCy4h7EkKTqY+HodhbO8hBqXwd8I2+c4Pbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738889273; c=relaxed/simple;
-	bh=w8UjyACvoFHxPDNReEpOPs72erNDTwxnFeiTpkJNDOM=;
+	s=arc-20240116; t=1738889646; c=relaxed/simple;
+	bh=ZKlTFKBvV5jUD9tVHqZ6N0mpAeuGrS5gLLeh5evbldI=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=nvAmMY5xL25Wq2ECNGvqDFA04v7xz4FCWFjxBob3iBlUbtN4yY50uMwY+FdcinJjhKYm1I1jCfR2IkcFkqT0e4QvSPClRDcmRdCq7KBFop2u3GKV8WR0pkTKlcsqHhwVrXAKYTCiEL3yAR9b2InLPZZ9BOt6O+AkHleDSYpPbyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plFuOlOH; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=IDRMyGBHSCz0nJ4C1UuaIEsYNCJW20pYa57TyETpbxxF05g3K7KnqFulxAK5Avz08+cqb3VrXguxoWlQsssa6l5EpZRm7i85/70R2/aeDJ/NMQ62osPT/+xF7Dapmn8Eu4rJvJdYSpqh+eZcDklVcPVNbTARdkwKsL2kHp4hdjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UvAVLyV/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plFuOlOH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84D10C4CEDD;
-	Fri,  7 Feb 2025 00:47:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738889272;
-	bh=w8UjyACvoFHxPDNReEpOPs72erNDTwxnFeiTpkJNDOM=;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UvAVLyV/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B05EC4CEDD;
+	Fri,  7 Feb 2025 00:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1738889645;
+	bh=ZKlTFKBvV5jUD9tVHqZ6N0mpAeuGrS5gLLeh5evbldI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=plFuOlOH+8EsQce3Z5ZSCuhg0flkt9ay4pb6MF0UVOxNPv0+8xhGBk4+sUnCUmo/m
-	 7XBR8tmFCin3YyjY7miPfkLkVTSNmRpeW3U0xy9mMzZBHIOCv1bz5hOr2PKt0jCniD
-	 /8hEM3f0ZtSso8kpya+jb02ZrNEkxp6JkFVq2GbLEuTFQ6N4EOJezvSiO2+GVDxbjY
-	 s4hE3y2YkE3nnNPJOvaBQc536ZOb1rDvpAI1lGt6DL1jfmY25a+HRCJit8RRBwHTTM
-	 hTxdG4vG6mVpZdJUZiCvp3e/VyKWugLrRjEJv6D1pnobT6phSXmENJlJtH8wyJNKlN
-	 IQq4Dy2rx6Rlw==
-Date: Fri, 7 Feb 2025 09:47:49 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 8/8] tracing: Update modules to persistent instances
- when loaded
-Message-Id: <20250207094749.a325cb0eb15b2431fbb7271a@kernel.org>
-In-Reply-To: <20250206121820.1ebf3c98@gandalf.local.home>
-References: <20250205225031.799739376@goodmis.org>
-	<20250205225104.264333506@goodmis.org>
-	<20250206190124.1518c3bf070e862da7993d9e@kernel.org>
-	<20250206103612.355a4be9@gandalf.local.home>
-	<20250207015330.5c71ad55ed2f516da1410711@kernel.org>
-	<20250206121820.1ebf3c98@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	b=UvAVLyV/r5UuNhnPza1lTCInH+QqEjrwZcD6aIE4c2ycWO6NJAvj9ouCEYIi6ojcR
+	 IgraYoOmZ+jl9Q0iQqy232Ho9KPur2oUom5G5BbpfSMBn0ajLt68yiufd0VHqxE/kF
+	 t7+ViKF+03GiD8bweqOUnWlIKNEQEqA8m8CveNJ4=
+Date: Thu, 6 Feb 2025 16:54:04 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: syzbot <syzbot+7229071b47908b19d5b7@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ syzkaller-bugs@googlegroups.com, linux-fsdevel@vger.kernel.org, Jens Axboe
+ <axboe@kernel.dk>, Amir Goldstein <amir73il@gmail.com>
+Subject: Re: [syzbot] [mm?] WARNING in fsnotify_file_area_perm
+Message-Id: <20250206165404.495fd127b4dc32a62574841a@linux-foundation.org>
+In-Reply-To: <67a487f7.050a0220.19061f.05fc.GAE@google.com>
+References: <67a487f7.050a0220.19061f.05fc.GAE@google.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,82 +43,120 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 6 Feb 2025 12:18:20 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Fri, 7 Feb 2025 01:53:30 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > On Thu, 6 Feb 2025 10:36:12 -0500
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > 
-> > > On Thu, 6 Feb 2025 19:01:24 +0900
-> > > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> > >   
-> > > > > +static void trace_module_record(struct module *mod)
-> > > > > +{
-> > > > > +	struct trace_array *tr;
-> > > > > +
-> > > > > +	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-> > > > > +		/* Update any persistent trace array that has already been started */
-> > > > > +		if ((tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT)) ==
-> > > > > +		    TRACE_ARRAY_FL_BOOT) {
-> > > > > +			/* Only update if the trace array is active */
-> > > > > +			if (trace_array_active(tr))    
-> > > > 
-> > > > Do we really need this check? It seems that we can just save_mod() if the
-> > > > above condition is true.  
-> > > 
-> > > It gets a little more  complicated if we need to add and remove modules.  
-> > 
-> > Yeah, but for converting the module address, we don't want to see other
-> > module information.
-> 
-> But we want to see the module information for modules that were loaded
-> during the trace. If a module is removed and suddenly the system crashed,
-> we just lost that information. Hence why I reset the module information
-> when the tracing starts.
-
-Then, what about removing module info if the address is recycled for
-new module? We can keep it until the same address range is used by other
-module(s).
-
-> 
-> 
-> > > If we want to have events for modules that were removed. Note, the ring
-> > > buffer is cleared if any module event was ever enabled and then the module
-> > > is removed, as how to print it is removed too. But we could disable that
-> > > for the persistent ring buffers as they should not be using the default
-> > > trace event print format anyway.  
-> > 
-> > Yeah, if the event is on the module the buffer is cleared.
-> > But the module address can be in the stacktrace. In that case, the event
-> > in the module is not enabled, but other events like sched_switch can
-> > take stacktrace which can include the module address. In that case, the
-> > buffer is also cleared when the module is removed?
-> 
-> No. The buffer is only cleared if one of its events were ever enabled. If
-> no event within the module was enabled, then the buffer is not cleared.
-> 
-> > 
-> > > As for stack traces, we still want the module it was for when the stack
-> > > trace happens. A common bug we see is when a module is removed, it can
-> > > cause other bugs. We want to know about modules that were removed. Keeping
-> > > that information about removed modules will allow us to see what functions
-> > > were called by a stack trace for a module that was removed.  
-> > 
-> > Hmm, but that should be covered by module load/unload events?
-> 
-> If we have them enabled.
-
-Yes, and current module load event does not cover the address. I think
-we can add a new event to log it.
-
-Thank you,
-
-> 
-> -- Steve
+Thanks.  Let me cc linux-fsdevel and a few others who might help with
+this.
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Thu, 06 Feb 2025 01:59:19 -0800 syzbot <syzbot+7229071b47908b19d5b7@syzkaller.appspotmail.com> wrote:
+
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=135c1724580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d033b14aeef39158
+> dashboard link: https://syzkaller.appspot.com/bug?extid=7229071b47908b19d5b7
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-69e858e0.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/a53b888c1f3f/vmlinux-69e858e0.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/6b5e17edafc0/bzImage-69e858e0.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+7229071b47908b19d5b7@syzkaller.appspotmail.com
+> 
+> loop0: detected capacity change from 0 to 32768
+> XFS: ikeep mount option is deprecated.
+> XFS (loop0): Mounting V5 Filesystem a2f82aab-77f8-4286-afd4-a8f747a74bab
+> XFS (loop0): Ending clean mount
+> XFS (loop0): Quotacheck needed: Please wait.
+> XFS (loop0): Quotacheck: Done.
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 5321 at ./include/linux/fsnotify.h:145 fsnotify_file_area_perm+0x1e5/0x250 include/linux/fsnotify.h:145
+> Modules linked in:
+> CPU: 0 UID: 0 PID: 5321 Comm: syz.0.0 Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+> RIP: 0010:fsnotify_file_area_perm+0x1e5/0x250 include/linux/fsnotify.h:145
+> Code: c3 cc cc cc cc e8 fb 8f c6 ff 49 83 ec 80 4c 89 e7 48 83 c4 08 5b 41 5c 41 5d 41 5e 41 5f 5d e9 01 9f 00 00 e8 dc 8f c6 ff 90 <0f> 0b 90 e9 0a ff ff ff 48 c7 c1 10 73 1b 90 80 e1 07 80 c1 03 38
+> RSP: 0018:ffffc9000d416320 EFLAGS: 00010283
+> RAX: ffffffff81f8dce4 RBX: 0000000000000001 RCX: 0000000000100000
+> RDX: ffffc9000e5c2000 RSI: 00000000000008fa RDI: 00000000000008fb
+> RBP: 0000000000008000 R08: ffffffff81f8dbdc R09: 1ffff110087dca2e
+> R10: dffffc0000000000 R11: ffffed10087dca2f R12: ffff888033d4b1c0
+> R13: 0000000000000010 R14: dffffc0000000000 R15: ffffc9000d416460
+> FS:  00007f5bca7346c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000100 CR3: 0000000033fd2000 CR4: 0000000000352ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  filemap_fault+0x14a9/0x16c0 mm/filemap.c:3509
+>  __do_fault+0x135/0x390 mm/memory.c:4977
+>  do_read_fault mm/memory.c:5392 [inline]
+>  do_fault mm/memory.c:5526 [inline]
+>  do_pte_missing mm/memory.c:4047 [inline]
+>  handle_pte_fault mm/memory.c:5889 [inline]
+>  __handle_mm_fault+0x4c44/0x70f0 mm/memory.c:6032
+>  handle_mm_fault+0x3e5/0x8d0 mm/memory.c:6201
+>  faultin_page mm/gup.c:1196 [inline]
+>  __get_user_pages+0x1a92/0x4140 mm/gup.c:1491
+>  __get_user_pages_locked mm/gup.c:1757 [inline]
+>  __gup_longterm_locked+0xe64/0x17f0 mm/gup.c:2529
+>  gup_fast_fallback+0x2266/0x29c0 mm/gup.c:3430
+>  pin_user_pages_fast+0xcc/0x160 mm/gup.c:3536
+>  iov_iter_extract_user_pages lib/iov_iter.c:1844 [inline]
+>  iov_iter_extract_pages+0x3bb/0x5c0 lib/iov_iter.c:1907
+>  __bio_iov_iter_get_pages block/bio.c:1181 [inline]
+>  bio_iov_iter_get_pages+0x4f1/0x1460 block/bio.c:1263
+>  iomap_dio_bio_iter+0xc9c/0x1740 fs/iomap/direct-io.c:406
+>  __iomap_dio_rw+0x13b7/0x25b0 fs/iomap/direct-io.c:703
+>  iomap_dio_rw+0x46/0xa0 fs/iomap/direct-io.c:792
+>  xfs_file_dio_write_unaligned+0x2ef/0x6f0 fs/xfs/xfs_file.c:692
+>  xfs_file_dio_write fs/xfs/xfs_file.c:725 [inline]
+>  xfs_file_write_iter+0x5c6/0x720 fs/xfs/xfs_file.c:876
+>  do_iter_readv_writev+0x71a/0x9d0
+>  vfs_writev+0x38b/0xbc0 fs/read_write.c:1050
+>  do_pwritev fs/read_write.c:1146 [inline]
+>  __do_sys_pwritev2 fs/read_write.c:1204 [inline]
+>  __se_sys_pwritev2+0x196/0x2b0 fs/read_write.c:1195
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f5bc998cda9
+> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007f5bca734038 EFLAGS: 00000246 ORIG_RAX: 0000000000000148
+> RAX: ffffffffffffffda RBX: 00007f5bc9ba5fa0 RCX: 00007f5bc998cda9
+> RDX: 0000000000000001 RSI: 0000000020000240 RDI: 0000000000000007
+> RBP: 00007f5bc9a0e2a0 R08: 0000000000000000 R09: 0000000000000003
+> R10: 0000000000007c00 R11: 0000000000000246 R12: 0000000000000000
+> R13: 0000000000000000 R14: 00007f5bc9ba5fa0 R15: 00007fff90caf808
+>  </TASK>
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+> 
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+> 
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+> 
+> If you want to undo deduplication, reply with:
+> #syz undup
