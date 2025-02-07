@@ -1,221 +1,93 @@
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C7D1D63EF;
-	Fri,  7 Feb 2025 09:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75451D63EF
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738920094; cv=none; b=qf50SOZCMJPR4jKT0EtH1bO1LlYq0iJc3Bj3yUfdN1lTiLrJNWZmYKdKxcXUYclAdlbVSR9sCNpBm6F2Q7Rk5FQ1jFS051GDqULD08mwgKL4/56OfHlyoG0yYW8kPBzRD2GLzuhygTVJF1fITnUcmBvD9jsprsAr/auPqVELOAU=
+	t=1738920099; cv=none; b=tESKRJw1lQc/AU15D97QmLp6qUtZa0X7nN3/Ou6mRlDZVKFk8DAJfDa1mPi9T7s+Sjwe2VoxuDPVcr62YOlU4QDQSIkjKdy2zONnR4sauMbxqQFm+Xn6hiHtS/JtT2teW/BohjAbw77nczoMD9xF56e3eudYfafMuhfunXx1Tig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738920094; c=relaxed/simple;
-	bh=OZbAfdAzT1pgnrWR6QQkcPuQ7j4taA+zUxln6AiGv4U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eChpGSwtACY8cbK6huFogWEdp6XXdF6f4XpsDn3AVhkpLOIvvmbdLDK7XUSMGwM6ASVGlQ8yQBs9UE61zP8Ovi71lgQAZ3LaOb46avtRyE5oC0PVrXAoIF8Gre9ppJZn97W3fomK6CB492jt9MhffKsZb2M3D6d01rvB2O6Lb88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=m5nPhCBV; arc=none smtp.client-ip=54.207.19.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1738920099; c=relaxed/simple;
+	bh=K9u7VXX60c6GNKepv7e2/TezpJ7Bd+MQ0QzhSDCsw5Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Tcs78kmuAm9OphcqcUmRhMU0UpAs+/4Iv0/OtUFoRNvXqyClXuup2Qr5izRX9If+RRdf+CmZSZlEjLxgrwrtQyscE4U7yjIGCWpws8zfdh+g9CAS2DoYx6w1d53eGYIj/D4w1cNZyCxv9oSI9MwzN70URYAssQjnAJd/WvRqmIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YuqNFAtH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="m5nPhCBV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1738919997;
-	bh=MyfJ5AP2FePfQFNb2yM8/ID2t6C2wR0sTmO1BbSPUQ0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=m5nPhCBVl3I87suGc1x76wutcGZ3TdnRhlAH5qL+E0jJbn4IIc0EO6uS1u3+pl/N4
-	 rUjyPlvCnPESNURiBiDZCkM1VTq5YRzh1k17FhoD9tataL6eWjt9L1T7lBZElgJiY6
-	 oIdF5ifF3SBWxqhvRISX1wYhGjg+pxuGuPuXl2dI=
-X-QQ-mid: bizesmtpip3t1738919932t05cg50
-X-QQ-Originating-IP: ML8aL6dJHwjZeUdgLh+Auv0oFDLmgbyW0XJXJZ51+us=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 07 Feb 2025 17:18:50 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 7466596518117641448
-From: WangYuli <wangyuli@uniontech.com>
-To: James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com
-Cc: linux-scsi@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YuqNFAtH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 515B7C4CED6;
+	Fri,  7 Feb 2025 09:21:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738920099;
+	bh=K9u7VXX60c6GNKepv7e2/TezpJ7Bd+MQ0QzhSDCsw5Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YuqNFAtH5J4Nu2plJ9bSXPRN8mRa+NYob8JEz4wtpP23jeJ3HgwMBQiBt8raSzXgL
+	 woOvin6lLuV+ogWHCoFnaSntV+vkgdie+FZqK8XNrs0ZW61d6CkdekyQaE4q67qkJs
+	 C5RE9lL8ff7sqZn/zD7tmoppXRsLPbss0ByOcOUWmK4+qonOQJVoR2H+sZ0bkQCBhH
+	 OXLAbsvKzNeFJZABByydbgk5UvU0gqvhNC5e4AoW2976+At+1eUW1DTSb2luWEby/a
+	 plFdV35pxaH2eAqppPYUJGIdo5VmcA8eqwYE29GVkhhMjXquOSn7FyPa0CGzDwtTWH
+	 cpebNUaxc2C4w==
+From: Christian Brauner <brauner@kernel.org>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	akpm@linux-foundation.org,
+	Liam.Howlett@oracle.com,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	stern@rowland.harvard.edu,
-	gregkh@linuxfoundation.org,
-	zhanjun@uniontech.com,
-	guanwentao@uniontech.com,
-	chenlinxuan@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>,
-	Xinwei Zhou <zhouxinwei@uniontech.com>,
-	Xu Rao <raoxu@uniontech.com>,
-	Yujing Ming <mingyujing@uniontech.com>
-Subject: [PATCH v2] scsi: Bypass certain SCSI commands on disks with "use_192_bytes_for_3f" attribute
-Date: Fri,  7 Feb 2025 17:17:23 +0800
-Message-ID: <5653B7D4FD7224D2+20250207091723.258095-1-wangyuli@uniontech.com>
+	ebiederm@xmission.com,
+	oleg@redhat.com
+Subject: Re: [PATCH v6 0/5] reduce tasklist_lock hold time on exit and do some pid cleanup
+Date: Fri,  7 Feb 2025 10:18:22 +0100
+Message-ID: <20250207-wettkampf-binden-648f00063d8f@brauner>
 X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250206164415.450051-1-mjguzik@gmail.com>
+References: <20250206164415.450051-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1583; i=brauner@kernel.org; h=from:subject:message-id; bh=K9u7VXX60c6GNKepv7e2/TezpJ7Bd+MQ0QzhSDCsw5Q=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQvvdDl9LlSN45V8ayVwY+5M27lzq+6ol/PXmvgL3RGa e3SvInJHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABPpfMbwT+WZjopvqi2jktD6 vTu/qB++/33qETHH5W/XnX5zSLRDQJDhn9kXuS3O15efmvpe8slHnhuOrRrbdZ+v8o8QnGFjG7+ glRMA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MbY7GcL85SkKZ9QOy0ifnYMHqIVRDnSQrlMK9b6j7uHYBYyP/sRPrTYs
-	Q0aP/DC0c0CBch10Ela1pAR0DxBvpQ1u5oFahgka3r5C643fKpsQNu1bCD7MmSMtjK93VIY
-	YXBOFk3U2G5c/k6ympWdwQJbAcg7pCwGlEmuEVQjUE6/Zdy5bZHZ2xEYcAvb2SBKyZGSSiT
-	mcyBWGKRtEIXpdYR1jv5IMYl8ARFLPrdhaBs0r4yFgYqkgjoIVFlnma0UGOvt2Cd2OOVDzo
-	dFryKpeFUroZLPMLgM7ymEaDgPtKKPzElFBXS/jBLoZeljqutu5shpDpHMDkUbtT+9a2UvY
-	1lO0NXvY7NGw/QmMsWyzu+v8q/wOmoDSFsPPEovLy/BDU6thbOMvvFHSHMIG2/IBnAd32nO
-	JsmH4M1MBWgW8eC78F1qeStzH+npwv51fH4L4gTadFKPg0BSmCqTomeCUI2/GEX/aJU7VKn
-	RUCULJ0cM0cStrZROfFq/EasRGTB3X4NB8Urw3s26vePMkScRGjwkBfx36nSBADdTefTaCT
-	mV4WGrHWo/BgNEaSHJqwKxw1yb4PTkrXDtYwEHQJfaF8OhGKRI0dAVqhMWcu+ZQUQT19jFm
-	wpmeFZvlC5GXO3+ZZ9iJ2DcOL2rRO2XPTm78x9cUggs/bXfs78LsDDBNTuryRL0kIiuS7//
-	KrRbLBfiuMmPp5ltZkTTE/RWzd+Zog/azIurljJuqDc8+RBBTGwnV0O/iL4WGnUqeWxTv3T
-	1wbnOthjJ6qss8LfBb1q6pG+aTZ6sU1GHiJckZc55zesxmmzgdUKiQD+o+u7FSUzwPYWyxJ
-	sjjeaNi6yQJ9qduLdToGw1zeVuunfjLscjRjC4jYoXkNelZ9bRNKFr6nVlX5l8S31jtfhsx
-	Uv+CzHDL3x3sPGQ8LiJyZ2iHDDTKw5GUOBiAT14AZeBtToM9DX5FRED0oLNDsZMm0FcT5Dx
-	yDY7sQVEEOgnCr4JhMm14oCgpQp/G1HVu5R8kNndChj8oHpN6KAWbvHBi6Ilk5vg56wgj29
-	+hS3/H+SWzMbRxefsDPREOebZ+DRrYYKyHpuRpzOeIIg5WFNGPfw6NRmVF52mlYYspxnRom
-	22MxTz1+xVVgHw/LvY8m0eZ2BHe/+gvvOrYaU14UhA8
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
 
-On some external USB hard drives, mounting can fail if "lshw" is
-executed during the process.
+On Thu, 06 Feb 2025 17:44:09 +0100, Mateusz Guzik wrote:
+> I fixed fat-fingering and touchedup some commit messages. git diff
+> between the old and new branch does not show any code changes.
+> 
+> hopefully we will be done here after this iteration 8->
+> 
+> old cover letter:
+> 
+> [...]
 
-This occurs because data sent to the device's output endpoint in
-certain abnormal scenarios does not receive a response, leading to
-a mount timeout.
+This is great!
 
-[ Description of "use_192_bytes_for_3f" in the kernel code: ]
-  /*
-   * Many disks only accept MODE SENSE transfer lengths of
-   * 192 bytes (that's what Windows uses).
-   */
-   sdev->use_192_bytes_for_3f = 1;
-
-The kernel's SCSI driver, when handling devices with this attribute,
-sends commands with a length of 192 bytes like this:
-  if (sdp->use_192_bytes_for_3f)
-  	res = sd_do_mode_sense(sdp, 0, 0x3F, buffer, 192, &data, NULL);
-
-However, "lshw" disregards the "use_192_bytes_for_3f" attribute and
-transmits data with a length of 0xff bytes via ioctl, which can cause
-some hard drives to hang and become unusable.
-
-To resolve this issue, prevent commands with a length of 0xff bytes
-from being queued via ioctl when it detects the "use_192_bytes_for_3f"
-attribute on the device.
-
-The hard drive device identified with the issue is Lenovo USB 17ef:4531.
-Tested on HONOR NBLK-WAX9X (C234) Notebook with AMD Ryzen 7 3700U.
-
-[ Kernel logs: ]
-  2024-10-31 13:36:11 localhost kernel: [   25.770091] usb 2-2: new SuperSpeed Gen 1 USB device number 2 using xhci_hcd
-  2024-10-31 13:36:11 localhost kernel: [   25.798558] usb 2-2: New USB device found, idVendor=17ef, idProduct=4531, bcdDevice= 5.12
-  2024-10-31 13:36:11 localhost kernel: [   25.798562] usb 2-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-  2024-10-31 13:36:11 localhost kernel: [   25.798564] usb 2-2: Product: Lenovo Portable HDD
-  2024-10-31 13:36:11 localhost kernel: [   25.798566] usb 2-2: Manufacturer: Lenovo
-  2024-10-31 13:36:11 localhost kernel: [   25.798567] usb 2-2: SerialNumber: 000000001E4C
-  2024-10-31 13:36:11 localhost kernel: [   25.820244] usb-storage 2-2:1.0: USB Mass Storage device detected
-  2024-10-31 13:36:11 localhost kernel: [   25.820457] scsi host0: usb-storage 2-2:1.0
-  2024-10-31 13:36:11 localhost kernel: [   25.820633] usbcore: registered new interface driver usb-storage
-  2024-10-31 13:36:11 localhost kernel: [   25.825598] usbcore: registered new interface driver uas
-  2024-10-31 13:36:14 localhost kernel: [   28.852179] scsi 0:0:0:0: Direct-Access     Lenovo   USB Hard Drive   0006 PQ: 0 ANSI: 2
-  2024-10-31 13:36:14 localhost kernel: [   28.852961] sd 0:0:0:0: Attached scsi generic sg0 type 0
-  2024-10-31 13:36:14 localhost kernel: [   28.891218] sd 0:0:0:0: [sda] 976773164 512-byte logical blocks: (500 GB/466 GiB)
-  2024-10-31 13:36:14 localhost kernel: [   28.906892] sd 0:0:0:0: [sda] Write Protect is off
-  2024-10-31 13:36:14 localhost kernel: [   28.906896] sd 0:0:0:0: [sda] Mode Sense: 03 00 00 00
-  2024-10-31 13:36:14 localhost kernel: [   28.922606] sd 0:0:0:0: [sda] No Caching mode page found
-  2024-10-31 13:36:14 localhost kernel: [   28.922612] sd 0:0:0:0: [sda] Assuming drive cache: write through
-  2024-10-31 13:36:14 localhost kernel: [   29.007816]  sda: sda1
-  2024-10-31 13:36:15 localhost kernel: [   30.180380] sd 0:0:0:0: [sda] Attached SCSI disk
-  2024-10-31 13:36:16 localhost kernel: [   30.722863] snd_hda_codec_realtek hdaudioC1D0: hda_codec_setup_stream: NID=0x3, stream=0x5, channel=0, format=0x4011
-  2024-10-31 13:36:16 localhost kernel: [   30.734139] snd_hda_codec_realtek hdaudioC1D0: hda_codec_setup_stream: NID=0x2, stream=0x5, channel=0, format=0x4011
-  2024-10-31 13:36:17 localhost kernel: [   31.396011] start_addr=(0x20000), end_addr=(0x40000), buffer_size=(0x20000), smp_number_max=(16384)
-  2024-10-31 13:36:18 localhost kernel: [   32.933537] snd_hda_codec_realtek hdaudioC1D0: hda_codec_cleanup_stream: NID=0x3
-  2024-10-31 13:36:18 localhost kernel: [   32.933541] snd_hda_codec_realtek hdaudioC1D0: hda_codec_cleanup_stream: NID=0x2
-  2024-10-31 13:36:39 localhost kernel: [   54.242220] usb 2-2: reset SuperSpeed Gen 1 USB device number 2 using xhci_hcd
-  2024-10-31 13:36:50 localhost kernel: [   64.408879] start_addr=(0x20000), end_addr=(0x40000), buffer_size=(0x20000), smp_number_max=(16384)
-  2024-10-31 13:37:11 localhost kernel: [   85.466479] usb 2-2: reset SuperSpeed Gen 1 USB device number 2 using xhci_hcd
-  2024-10-31 13:37:11 localhost kernel: [   85.490248] sd 0:0:0:0: [sda] tag#0 FAILED Result: hostbyte=DID_TIME_OUT driverbyte=DRIVER_OK
-  2024-10-31 13:37:11 localhost kernel: [   85.490255] sd 0:0:0:0: [sda] tag#0 CDB: Read(10) 28 00 00 00 00 20 00 00 08 00
-  2024-10-31 13:37:11 localhost kernel: [   85.490258] print_req_error: I/O error, dev sda, sector 32
-  2024-10-31 13:37:33 localhost kernel: [  107.432186] start_addr=(0x20000), end_addr=(0x40000), buffer_size=(0x20000), smp_number_max=(16384)
-  2024-10-31 13:37:41 localhost kernel: [  116.194201] usb 2-2: reset SuperSpeed Gen 1 USB device number 2 using xhci_hcd
-  2024-10-31 13:37:49 localhost kernel: [  123.555484] dolphin[7271]: segfault at 10 ip 00007fcccc0d7f76 sp 00007ffe8004b860 error 4 in libKF5CoreAddons.so.5.102.0[7fcccc0a5000+83000]
-  2024-10-31 13:37:49 localhost kernel: [  123.555502] Code: d6 90 66 90 41 54 41 89 d4 55 48 89 fd 53 48 89 f3 e8 8e 94 01 00 ba 04 00 00 00 48 89 de 48 89 c7 e8 4e 8f 01 00 84 c0 75 2a <48> 8b 7d 10 48 85 ff 74 21 45 89 e1 48 89 da 48 89 ee 5b 41 b8 01
-  2024-10-31 13:38:11 localhost kernel: [  146.229510] usb 2-2: USB disconnect, device number 2
-  2024-10-31 13:38:11 localhost kernel: [  146.237993] scsi 0:0:0:0: rejecting I/O to dead device
-  2024-10-31 13:38:11 localhost kernel: [  146.238003] print_req_error: I/O error, dev sda, sector 32
-  2024-10-31 13:38:11 localhost kernel: [  146.238009] Buffer I/O error on dev sda, logical block 8, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238029] scsi 0:0:0:0: rejecting I/O to dead device
-  2024-10-31 13:38:11 localhost kernel: [  146.238030] print_req_error: I/O error, dev sda, sector 36
-  2024-10-31 13:38:11 localhost kernel: [  146.238032] Buffer I/O error on dev sda, logical block 9, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238045] scsi 0:0:0:0: rejecting I/O to dead device
-  2024-10-31 13:38:11 localhost kernel: [  146.238047] print_req_error: I/O error, dev sda, sector 6291480
-  2024-10-31 13:38:11 localhost kernel: [  146.238062] Buffer I/O error on dev sda1, logical block 786431, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238168] Buffer I/O error on dev sda, logical block 8, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238170] Buffer I/O error on dev sda, logical block 9, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238175] Buffer I/O error on dev sda, logical block 8, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238176] Buffer I/O error on dev sda, logical block 9, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238184] Buffer I/O error on dev sda, logical block 8, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238185] Buffer I/O error on dev sda, logical block 9, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238199] Buffer I/O error on dev sda, logical block 40, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238201] Buffer I/O error on dev sda, logical block 41, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238205] Buffer I/O error on dev sda, logical block 8, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238206] Buffer I/O error on dev sda, logical block 9, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238210] Buffer I/O error on dev sda, logical block 8, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238211] Buffer I/O error on dev sda, logical block 9, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238215] Buffer I/O error on dev sda, logical block 8, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238217] Buffer I/O error on dev sda, logical block 9, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238220] Buffer I/O error on dev sda, logical block 8, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238221] Buffer I/O error on dev sda, logical block 9, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238224] Buffer I/O error on dev sda, logical block 8, async page read
-  2024-10-31 13:38:11 localhost kernel: [  146.238226] Buffer I/O error on dev sda, logical block 9, async page read
-  2024-10-31 13:38:12 localhost kernel: [  146.482007] snd_hda_codec_realtek hdaudioC1D0: hda_codec_setup_stream: NID=0x3, stream=0x5, channel=0, format=0x4011
-  2024-10-31 13:38:12 localhost kernel: [  146.494064] snd_hda_codec_realtek hdaudioC1D0: hda_codec_setup_stream: NID=0x2, stream=0x5, channel=0, format=0x4011
-  2024-10-31 13:38:15 localhost kernel: [  150.065848] snd_hda_codec_realtek hdaudioC1D0: hda_codec_cleanup_stream: NID=0x3
-  2024-10-31 13:38:15 localhost kernel: [  150.065852] snd_hda_codec_realtek hdaudioC1D0: hda_codec_cleanup_stream: NID=0x2
-  2024-10-31 13:38:26 localhost kernel: [  160.433037] start_addr=(0x20000), end_addr=(0x40000), buffer_size=(0x20000), smp_number_max=(16384)
-  2024-10-31 13:39:29 localhost kernel: [  223.444589] start_addr=(0x20000), end_addr=(0x40000), buffer_size=(0x20000), smp_number_max=(16384)
-
-Link: https://linux-hardware.org/?id=usb:17ef-4531
-Reported-by: Xinwei Zhou <zhouxinwei@uniontech.com>
-Co-developed-by: Xu Rao <raoxu@uniontech.com>
-Signed-off-by: Xu Rao <raoxu@uniontech.com>
-Tested-by: Yujing Ming <mingyujing@uniontech.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
 ---
-Changelog:
- *v1->v2: Move the bugfix to the SCSI layer.
----
- drivers/scsi/scsi_lib.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index d776f13cd160..356bec70b7b8 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -1560,6 +1560,7 @@ static void scsi_complete(struct request *rq)
- static int scsi_dispatch_cmd(struct scsi_cmnd *cmd)
- {
- 	struct Scsi_Host *host = cmd->device->host;
-+	struct scsi_device *sdev = cmd->device;
- 	int rtn = 0;
- 
- 	atomic_inc(&cmd->device->iorequest_cnt);
-@@ -1608,6 +1609,13 @@ static int scsi_dispatch_cmd(struct scsi_cmnd *cmd)
- 		goto done;
- 	}
- 
-+	/* Bofore we queue this comman, check attribute use_192_bytes_for_3f */
-+	if (cmd->cmnd[0] == MODE_SENSE && sdev->use_192_bytes_for_3f == 1 &&
-+		cmd->cmnd[2] == 0x3f && cmd->cmnd[4] != 192) {
-+		cmd->result = (DID_ABORT << 16);
-+		goto done;
-+	}
-+
- 	if (unlikely(host->shost_state == SHOST_DEL)) {
- 		cmd->result = (DID_NO_CONNECT << 16);
- 		goto done;
--- 
-2.47.2
+Applied to the kernel-6.15.tasklist_lock branch of the vfs/vfs.git tree.
+Patches in the kernel-6.15.tasklist_lock branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: kernel-6.15.tasklist_lock
+
+[1/5] exit: perform add_device_randomness() without tasklist_lock
+      https://git.kernel.org/vfs/vfs/c/c8be3764feff
+[2/5] exit: hoist get_pid() in release_task() outside of tasklist_lock
+      https://git.kernel.org/vfs/vfs/c/9ee2997cbf14
+[3/5] pid: sprinkle tasklist_lock asserts
+      https://git.kernel.org/vfs/vfs/c/7d0030e1660c
+[4/5] pid: perform free_pid() calls outside of tasklist_lock
+      https://git.kernel.org/vfs/vfs/c/7b15589a575f
+[5/5] pid: drop irq disablement around pidmap_lock
+      https://git.kernel.org/vfs/vfs/c/07e518c464e8
