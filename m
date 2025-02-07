@@ -1,288 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44EB11C3BE7;
-	Fri,  7 Feb 2025 08:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9532C1A9B23
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738917753; cv=none; b=DN7TTBfLisI4pDswzWQTyHQ6Avtxq//bW4x5gkbbS5aahot5qCfCto94OsdADr0m4gH+8ZKl8XZ8VhHPXq6ihVPoT3tUOMd3V7nyeKIBPWU/bYlD8TtJyfxP/xtKs94p6k7nZ2QwK9YgUj/S8VuhorHFpnqcpbdgg0Ppt0M04O8=
+	t=1738917822; cv=none; b=fRa5Le5yvxX+gtpdejkdrU1dA26/6gIwfI6T6MTnwAPzjbjLZD7aTP8+UC9cYSq+BhduItKDoPyggJdp3bSMAPn/vquGJGfIzzvLeH6Ei3woNSXswILgqhNaLNcmq8B+PxYNAK6cWijwZA0xdeT7DujQw+fHWSrIUaInjfGCx6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738917753; c=relaxed/simple;
-	bh=AuPrUvdSWitPRAE+h+ANddMSDsAvNkv1nRO3Efw0aro=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oYMY/qadHiWGDmWfB1l3vqYRrSjm7UBI7IE8nYHpffhjI5H9Rmh21+CEyR4+B5/5jg/Fv7jwETtXek1wsAvxO154soadAvcg/Y3lnG1fG0InpFfHhRxHgLGdTUHCbSMVAM8GNr693f6pebv1Ie8b01U67VLqgaKjJc2MRGSxrkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6fHfOkh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738917822; c=relaxed/simple;
+	bh=YIBEhofxjPTUn+Oq6AQXg6MiuyagERd6Hg7YHL0SJiI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e1QU94UvGVfI9EBroHFG/qJ7Po0+xnpczIu7GKom0NC/cdgb/3yEMYXdU6a7NwWSVWm52KjJHxc7vxqfEEMpHpFfW6TgkmOfhqkzl6AqVk0/jL/vvPrIsGvySkB0/NwYO3S3jDn5W6X99FBiYgKdI8fjHvL85Uw15ubwaY4b2ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UTXXTxyB; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6fHfOkh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2A38C4CEEA;
-	Fri,  7 Feb 2025 08:42:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738917752;
-	bh=AuPrUvdSWitPRAE+h+ANddMSDsAvNkv1nRO3Efw0aro=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=B6fHfOkhQhjkrB03aMQNFjHnARa1vt3eEVnD7kMHhO1yzOY5Uuh25gcijhy0ibi4r
-	 NCZe27212J/G2LRJsW/CkLYtKpZ8CCTaNH18oJruKXOFSJl/QyR8B1qLiYeJXkNvxD
-	 LqTfezgNMM10h71IpfjeWYu1iie8oHXc8YoOqIMyFoMEq9ffp1KemCTX85yikFgQRo
-	 Z6x4qoZUi4zLpHXjAKio4gy3pI6dwYTH0LH6UWRf7T8CSTTY/7DYHkrhiMhK+2OAUp
-	 lZrKs2lC0ahlzheet6hlwbGcmBVdR7F5AAHyYLtku2UASaNpVZYrn+0t13+/3i3fw9
-	 P4lccnKsz4jnw==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5426fcb3c69so1644501e87.3;
-        Fri, 07 Feb 2025 00:42:32 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVnwd4awy6v7wTo9hTueNLeNZcZHhZywnrMuXt/rx1tEsjyN1CpoWSDMUaMKycF4BJKUVIDkbl3HgD3CqLT1Q==@vger.kernel.org, AJvYcCWpFq2qw3I+55/voabaMaqYszW/fIOKX9YE+K8PnShYVvVAstck4WNToszAIYsIA0M7MKUMcQjSE4wBgs0=@vger.kernel.org, AJvYcCXltYCC5+4BDiii6+f9q8HHKarg7KF6zWrr7vfjCwnSzWAttWktGctFyDy/TcsWIwmewEgWTU9ClQPIU+JU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5TkLUmZirJMRMqqoNpV8utRiWXNaaNG7BsgmDOo8MJ8YtLRFt
-	jkPyx6NGsu/cQZ6v+Y95Fyu5LLpqkaXsQ8IUMELw2Ue04FmBcoAZBd3ExtPm6sODEebCn63S9O0
-	Z2wtbR2tYlLSKBQAVzfWYz5ex62s=
-X-Google-Smtp-Source: AGHT+IFrtXV92ziCCN4dQc69VOWMn2dNXBrvH5C769LoLaeXFbUH0bEIcIdff/o2p9hAE8nM4JNZlic8CyuGvzyzuG8=
-X-Received: by 2002:a05:6512:2355:b0:540:2da2:f282 with SMTP id
- 2adb3069b0e04-54414ae0c64mr608756e87.42.1738917751296; Fri, 07 Feb 2025
- 00:42:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UTXXTxyB"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab78bcb4b19so85005566b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 00:43:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738917819; x=1739522619; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ipzi2jibs7foQeLu4B8qNjjz2VAtT5g93gnFmfdZ7qw=;
+        b=UTXXTxyB7uT1JZhER4npHFjdqYQRg9C3gNkZcve23Su4worc0qkL+7fXGHX/tkyKbx
+         cUB8oKdTJoIfHLSGF1E7XXGi7ycmPEfCUEcBMaxn28O1MvABAPE8vFV1CuleoKLxlJ+8
+         sqo0OFZIOxG7t1OOJfLaXAcJHrGpsbGdW2V4736hBwpcTXBoLlIv2HqZswL5TQD/ODM7
+         9bvPm0g+Fmbw4AdiR/4V+/M/JAhJs/9mdbqW1jT4Y26dzFPze6LRw3Cjr3vIqC4dYklu
+         66ittgabk+KZGBRKN5WqQ3PY57GgJynIfEy9F8yM+ZuFvZXO8WwP5OYYc+TdSR1El0id
+         AjPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738917819; x=1739522619;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ipzi2jibs7foQeLu4B8qNjjz2VAtT5g93gnFmfdZ7qw=;
+        b=nR0SQL9wsB+mip0lltZqczgrAKXLYmP7aDovloWubz1Ev5RlflDhVo35GbC1KYUnfj
+         deEJGJTVgPzM+t9CDEHG8QBc1g2dB7vWY3i/y+2gAQSDMfB+B6goyHrF3eJFBjg9i4zz
+         cePUK4WtAEKBYYskYkEFcZWs1oGkFJ0iiTMUi8l3LWirujNLXtnMt1YoNon9cPkZ8/ly
+         Jj4JHs6kkSIef1kmqT9v+B4ayyCbZyDtAoptN+rLaaEoO0q4UfdDyg0glRttKhxmFbxX
+         raTtVsRdyPvF5ymR1Vzp1T+Lpy39MQDiesRyjkbMRjbSkchOc0MXfGuspZWKIoBTg8U5
+         4Ouw==
+X-Forwarded-Encrypted: i=1; AJvYcCWkZkk/qryHCqTczw2SkrGc5O4jniZYW2BvDFP1u3Mw2F7GuDcpYUY05lLcvE1FKY/kPTYZUpgNqbtwxHc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGZzWv3J+g5X4ca1nRwl32u/5ab5wptM1jRIVH8C+oVa9IrI+3
+	cKyBb8rHkw8aEC/emkpx5NeWEWoPcRaZrkQ8I8SGuuUB1eF+5HsZSE66Aajaon8=
+X-Gm-Gg: ASbGncsWGXaATjzPzPDcDDtC+irDv88AFVdu7LNG+zIv+0gAbduoJiXHAwXxYAZwwOQ
+	Iyhppq/jVaIJjMUmoLTOqYv39kMFjFAqwEihWU+qT+e9N1v987NKvxCWMb8G9V25sXFaZ/Rpu+Y
+	x97dzW00E0q3ipDsuHiss5bqgOUpZ/AGfYlJY+UOYOicN9bQ0sZT01fXGVGgxElJBpTYOGF3iS0
+	tIcg+1czVYwF5C9sBrnZ2wrtFcAMNHHObF92q1A9itSDKcSzK99++w3q61C6AQjU9WfYv52R5FK
+	0FOAJ4zwTn/SruAxVCW4ulVY
+X-Google-Smtp-Source: AGHT+IHv3cra1E8iRWLEr2rfyznvTIzUFVPqQMOPw/+8Fybs+K5tsjgq8x8NGSqaDxiiGMRBPVYUGw==
+X-Received: by 2002:a17:907:96a9:b0:aa6:873b:ed8a with SMTP id a640c23a62f3a-ab789c739c4mr276480566b.47.1738917818657;
+        Fri, 07 Feb 2025 00:43:38 -0800 (PST)
+Received: from [192.168.0.14] ([79.115.63.251])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f842a5sm229093066b.43.2025.02.07.00.43.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 00:43:37 -0800 (PST)
+Message-ID: <41c4d4ac-5f71-40b1-86b9-ae8ee33db538@linaro.org>
+Date: Fri, 7 Feb 2025 08:43:36 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241202145946.108093528@infradead.org> <20241202150810.496784892@infradead.org>
-In-Reply-To: <20241202150810.496784892@infradead.org>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 7 Feb 2025 17:41:54 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASVq=2K25vy8o=Lni2PGoHpyYogwt6E5CeNSnxXFpeduA@mail.gmail.com>
-X-Gm-Features: AWEUYZlo5sGUrFExV3ZUCu1O31RzYjEFrwi3VsZ7k737-eDfWY6D9h0VSx77xyU
-Message-ID: <CAK7LNASVq=2K25vy8o=Lni2PGoHpyYogwt6E5CeNSnxXFpeduA@mail.gmail.com>
-Subject: Re: [PATCH -v2 5/7] module: Extend the MODULE_ namespace parsing
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mcgrof@kernel.org, x86@kernel.org, hpa@zytor.com, petr.pavlu@suse.com, 
-	samitolvanen@google.com, da.gomez@samsung.com, nathan@kernel.org, 
-	nicolas@fjasle.eu, linux-kernel@vger.kernel.org, 
-	linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	hch@infradead.org, gregkh@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Dec 3, 2024 at 12:11=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> Instead of only accepting "MODULE_${name}", extend it with a comma
-> separated list of module names and add tail glob support.
->
-> That is, something like: "MODULE_foo-*,bar" is now possible.
->
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  kernel/module/main.c  |   39 ++++++++++++++++++++++++++++++++++-----
->  scripts/mod/modpost.c |   40 ++++++++++++++++++++++++++++++++++------
->  2 files changed, 68 insertions(+), 11 deletions(-)
->
-> --- a/kernel/module/main.c
-> +++ b/kernel/module/main.c
-> @@ -1061,6 +1061,38 @@ static char *get_modinfo(const struct lo
->         return get_next_modinfo(info, tag, NULL);
->  }
->
-> +/*
-> + * @namespace ~=3D "MODULE_foo-*,bar", match @modname to 'foo-*' or 'bar=
-'
-
-Please add a proper kdoc style comment block.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mtd: spi-nor: macronix: Add support for Macronix NOR
+ Flash
+To: Cheng Ming Lin <linchengming884@gmail.com>, pratyush@kernel.org,
+ mwalle@kernel.org, miquel.raynal@bootlin.com, richard@nod.at,
+ vigneshr@ti.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: alvinzhou@mxic.com.tw, leoyu@mxic.com.tw,
+ Cheng Ming Lin <chengminglin@mxic.com.tw>
+References: <20250207081846.362919-1-linchengming884@gmail.com>
+ <20250207081846.362919-3-linchengming884@gmail.com>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20250207081846.362919-3-linchengming884@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
 
+On 2/7/25 8:18 AM, Cheng Ming Lin wrote:
+> From: Cheng Ming Lin <chengminglin@mxic.com.tw>
+> 
+> Due to incorrect values in the 4-BAIT table for these two flash IDs,
+> it is necessary to add these two flash IDs with fixups.
+> 
+> Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
 
-Rather than an underscore, I prefer a colon, which rarely appears in file n=
-ames.
-
-How about "module:foo-*,bar"  instead of  "MODULE_foo-*,bar"  ?
-
-
-
-
-
-
-
-> + */
-> +static bool verify_module_namespace(const char *namespace, const char *m=
-odname)
-> +{
-> +       size_t len, modlen =3D strlen(modname);
-> +       const char *sep;
-> +       bool glob;
-> +
-> +       if (strncmp(namespace, "MODULE_", 7) !=3D 0)
-> +               return false;
-> +
-> +       for (namespace +=3D 7; *namespace; namespace =3D sep) {
-> +               sep =3D strchrnul(namespace, ',');
-> +               len =3D sep - namespace;
-> +
-> +               glob =3D false;
-> +               if (sep[-1] =3D=3D '*') {
-> +                       len--;
-> +                       glob =3D true;
-> +               }
-
-
-Why only limited to the trailing wildcard?
-
-Did you consider using glob_match()?
-
-
-
-> +
-> +               if (*sep)
-> +                       sep++;
-> +
-> +               if (strncmp(namespace, modname, len) =3D=3D 0 && (glob ||=
- len =3D=3D modlen))
-> +                       return true;
-> +       }
-> +
-> +       return false;
-> +}
-> +
->  static int verify_namespace_is_imported(const struct load_info *info,
->                                         const struct kernel_symbol *sym,
->                                         struct module *mod)
-> @@ -1070,11 +1102,8 @@ static int verify_namespace_is_imported(
->
->         namespace =3D kernel_symbol_namespace(sym);
->         if (namespace && namespace[0]) {
-> -               /*
-> -                * Implicitly import MODULE_${mod->name} namespace.
-> -                */
-> -               if (strncmp(namespace, "MODULE_", 7) =3D=3D 0 &&
-> -                   strcmp(namespace+7, mod->name) =3D=3D 0)
-> +
-> +               if (verify_module_namespace(namespace, mod->name))
->                         return 0;
->
->                 for_each_modinfo_entry(imported_namespace, info, "import_=
-ns") {
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -1565,7 +1565,6 @@ static const char *mod_basename(const ch
->
->  static void read_symbols(const char *modname)
->  {
-> -       char module_namespace[MODULE_NAME_LEN + 8];
->         const char *symname;
->         char *version;
->         char *license;
-> @@ -1601,10 +1600,6 @@ static void read_symbols(const char *mod
->                      namespace =3D get_next_modinfo(&info, "import_ns", n=
-amespace))
->                         add_namespace(&mod->imported_namespaces, namespac=
-e);
->
-> -               snprintf(module_namespace, sizeof(module_namespace), "MOD=
-ULE_%s",
-> -                        mod_basename(mod->name));
-> -               add_namespace(&mod->imported_namespaces, module_namespace=
-);
-> -
->                 if (extra_warn && !get_modinfo(&info, "description"))
->                         warn("missing MODULE_DESCRIPTION() in %s\n", modn=
-ame);
->         }
-> @@ -1687,6 +1682,38 @@ void buf_write(struct buffer *buf, const
->         buf->pos +=3D len;
->  }
->
-> +/*
-> + * @namespace ~=3D "MODULE_foo-*,bar", match @modname to 'foo-*' or 'bar=
-'
-
-Same comment as in kernel/module/main.c
-
-
-> + */
-> +static bool module_namespace(const char *namespace, const char *modname)
-> +{
-> +       size_t len, modlen =3D strlen(modname);
-> +       const char *sep;
-> +       bool glob;
-> +
-> +       if (strncmp(namespace, "MODULE_", 7) !=3D 0)
-> +               return false;
-
-
-If you see the existing code closely, strstarts() helper is used everywhere=
-.
-
-I would write like this:
-
-         static const char *prefix =3D "module:";
-
-          if (!strstarts(namespace, prefix))
-                        return false;
-
-
-
-
-> +
-> +       for (namespace +=3D 7; *namespace; namespace =3D sep) {
-
-
-I tend to avoid the magic number, 7.
-
-Just like this:
-https://github.com/torvalds/linux/blob/v6.14-rc1/scripts/mod/file2alias.c#L=
-1494
-
-
-
-
-
-> +               sep =3D strchrnul(namespace, ',');
-> +               len =3D sep - namespace;
-> +
-> +               glob =3D false;
-> +               if (sep[-1] =3D=3D '*') {
-> +                       len--;
-> +                       glob =3D true;
-> +               }
-> +
-> +               if (*sep)
-> +                       sep++;
-> +
-> +               if (strncmp(namespace, modname, len) =3D=3D 0 && (glob ||=
- len =3D=3D modlen))
-> +                       return true;
-> +       }
-
-Same as kernel/module/main.c.
-
-If you see around line 700 in this file,
-you will find fnmatch() is already used for glob matching.
-
-
-
-
-
-
-> +
-> +       return false;
-> +}
-> +
->  static void check_exports(struct module *mod)
->  {
->         struct symbol *s, *exp;
-> @@ -1714,7 +1741,8 @@ static void check_exports(struct module
->
->                 basename =3D mod_basename(mod->name);
->
-> -               if (!contains_namespace(&mod->imported_namespaces, exp->n=
-amespace)) {
-> +               if (!module_namespace(exp->namespace, basename) &&
-> +                   !contains_namespace(&mod->imported_namespaces, exp->n=
-amespace)) {
->                         modpost_log(!allow_missing_ns_imports,
->                                     "module %s uses symbol %s from namesp=
-ace %s, but does not import it.\n",
->                                     basename, exp->name, exp->namespace);
->
->
-
-
---
-Best Regards
-Masahiro Yamada
+Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
