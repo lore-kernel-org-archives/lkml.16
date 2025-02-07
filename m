@@ -1,245 +1,195 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2050.outbound.protection.outlook.com [40.107.237.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F94A1420A8;
-	Fri,  7 Feb 2025 03:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738898204; cv=fail; b=s84c+kJ0n017H00WV0htRj42HDSxj4/gwy6Pq/mLIK8Rur8HZBPG2+qWOGwoWmGa9NLHt186ihl21ILtzeJEUKy8QWLfEIZyh7rAQkAzQEBzoOO6PDaNK9ovJLRt/kpTNJq3+57bASqCRHcZmjJpX+5t+8i+OqCiSA8dqv7RG98=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738898204; c=relaxed/simple;
-	bh=HF8auZivKlnwuIsiB/wrWB2SfdrcWP/V7EQNg+zgqw0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LXvDzgm6w+6uo6YcQDNUQHJMYJAcjJzY5Oo8F2Rk+rV8NJJVe1YjL33NFKDO9H60aVLl74KZjZRtV7ZOvqWuTFU16vqz6Mq3pXl9MA2enVb4RZ/NQAVZtj0Uw+GrESmzqDo4LmjBMDy+DBfoI36frWVW9CZlWse5P4w0WP6MgsE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=oXn10Ton; arc=fail smtp.client-ip=40.107.237.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408AF14658B;
+	Fri,  7 Feb 2025 03:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738898243; cv=none; b=O8CESrz78gypTB6p9PCLsst1xNA4mQEQFY/Wme3gYx9GKobKKJHPGM4wXQiZT9XAodqWZW7Bb5T/yek5Hd6SgeqRuGcxn/a+k+fc5Od9Q+SnX/39IDKjdqVfs06FfQXYpWftUiLwROqWUeiBlsEx8GiXmc/lISm0CZM8kIqbl60=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738898243; c=relaxed/simple;
+	bh=SQveBs6I9QKwgjiPxa7XSzW6e/qfj0nmClmDPqbpSwE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ktv+oJJJ3l7bIrgKPTuX4mq79KhAUl0Kk9CcvLBI6RcxFsU+f1LjFLG+cer6BCJhMLG5gBaq79KPTBq3sYHTlchbMaPBfkOgB+70kzQs5p47TQgTISgZP9pPgN1gx6jiq7UN5GhdQh6QWX6s7sqtEWOpx25tqKWpUhINAg/h51Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eaZGx/y8; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="oXn10Ton"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QIDXoCQSWOAc30eFS4LjHNa/OFOnbmzRMWbYAElL8LyLi97yCEDgvUvU93zKIEXd1MuC3HuQ8qYIfkGp4h2aFDYnOa8OOSdlLuUIdz6CSDe08/QyFWWG8rn+qerJynoPY7no/vMtry05t3XJOlZFtWuppEALDAxAUF1URSHPRzwm8YKjP6UUtoNu/tHlfabpk6l0jArCDGlgUk0WYNN2MRZ6PYER1o1R1BjPjVQe+YcWBEcMG+9uWCKpAM+OdCZvAEkpHcPj+P0FveKjYc0MqFMlhEeGFyFY0IgujlRo5YZsYj38Rk2CamKf2lv3BlxIPxU8HtxEHRRS2QHdnETcEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Rs8Kwgjo9KO/wv3P2udf9m+IMvtjpRL9DbRC523S3z8=;
- b=LL8oyLd12xD3c2elM1e4EjHQcI0EBEL4UsxA3CVDZoKzlbgRdSywb87Tr08zW3Oo7DCUzJMQlOSKMGM7RJVupo7ZnhHkfoEgGL2A7H3HBr29loqigLKMaDy2PPylsv6rC87PsEPIlnmJuGwNH/ETxzD9Si4+drYSkounD2AxUJ72q7vqPZbOpT1avdyBjVetL74VVgzocFcLLH15DpPB67SipynrBB5pVDpW7BzQfDGSnL/2hOFwQGy9onuy9+3E1tm+iOJTxpCxPK8OviLPSupGdkmjbk5M+GYmQIYncU8UnrL5T+8ePieXbw42sEaNB+JLsX4wIS4eWs0/Ug03Ow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rs8Kwgjo9KO/wv3P2udf9m+IMvtjpRL9DbRC523S3z8=;
- b=oXn10Tonu+HE5x1dmLmnbXGh7xjs+6DTeFlKyliVcU/OEfdHnFdBx3iM+IJu+QBN//N6TdxwGRDjLUM43CAeLAX3gazhybZ35BAa4T9Ho4drekiuXLUYo7hwjksbr30P2a9e7Xo4gMTsLkWYKywEEnn2wStaJEJzoMH4IJSRrAg=
-Received: from CY8PR12CA0007.namprd12.prod.outlook.com (2603:10b6:930:4e::9)
- by SA3PR12MB8000.namprd12.prod.outlook.com (2603:10b6:806:31f::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.10; Fri, 7 Feb
- 2025 03:16:38 +0000
-Received: from CY4PEPF0000FCC1.namprd03.prod.outlook.com
- (2603:10b6:930:4e:cafe::a5) by CY8PR12CA0007.outlook.office365.com
- (2603:10b6:930:4e::9) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.29 via Frontend Transport; Fri,
- 7 Feb 2025 03:16:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- CY4PEPF0000FCC1.mail.protection.outlook.com (10.167.242.103) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Fri, 7 Feb 2025 03:16:38 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 6 Feb
- 2025 21:16:26 -0600
-Received: from [172.19.74.139] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Thu, 6 Feb 2025 21:16:26 -0600
-Message-ID: <7b9bd24f-8f89-4d6c-a079-47c4c0b88a35@amd.com>
-Date: Thu, 6 Feb 2025 19:16:25 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eaZGx/y8"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6dcdf23b4edso14052006d6.0;
+        Thu, 06 Feb 2025 19:17:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738898241; x=1739503041; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WZlbDcy36pPkHq/elg7hFev/RYK+Oqb1WkHxloEn7vk=;
+        b=eaZGx/y8cgDNHx+9ZmCOPmjjaaOaXOtM68U/TAMgaL6jpgybmcQxUSY3/vM8+vTHEW
+         PHmm8aB7BfZEFrY9shDpYYITcbHYJfYfAN3g1BWM30xnc4SyI8kUmh5AIcp2WJ0SYaEM
+         7swJKo/f8RcjuWiAgDwtF0h4Kh/npZTAynAeU4Q7jkXRN4DDdVZZbeDMgtGa594AJs54
+         Baw+t2nFMfxsYBFMQkarA5RjH7HHQ1pmYNlCKpkr/GgKoQd5yoRu4aOl8RIpmDB5zL5e
+         8Ai3AufeCoe5+qtTzQ+dOF4phCRt4z20KifstOGN8LtN6l14iO6LXx0a9qoNi2CCWu/z
+         1LDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738898241; x=1739503041;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WZlbDcy36pPkHq/elg7hFev/RYK+Oqb1WkHxloEn7vk=;
+        b=DYrJ44GAfVTh630TkZoAVdyqfmnUeHJqNxV1u4RsdRmfTfn4w0obf8IihHanf9oG5H
+         I6tqwRdI0IQi2oxd1XL5IsU5QjBw6tGJaZ0hQEb/ZddVEhPAHuoIFmlPaOE89MRiDdh/
+         MxnK4sLgyyH6KCUOLRG8SbSIp6KYS/xLo4z4ZPsyF6plo9O6dRkxj24ZA4v1BDP+kGQf
+         w/raGe0UBiBUbGo4qZxB7ZLP2VYVo3Xy74s3vVQ5EFUBE4+tWp2+oLiRT6qo5djNKoVk
+         s2y1Qt+oGzAgFvR820uMfho+ePp7ziXUngBqlcoiyNuKZv0HE4i+hoqsrrbPIV0cscYF
+         XvVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUt7fws2r1SvaTYeUQOolO8h8lLnjoToDbCqoXOtw5immJGorjuFgn6TxAH4qk/Y3L1VoeXjUKeafFTQTc=@vger.kernel.org, AJvYcCW77ONfTg3GDrNu4PiMU8oO4ByfRgzZbQwmvSunlbE0doHvpeAQWM6Hr+Ke2pMRCkzopcdxTsWe7FMpivHgUw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRAn9Va0rsNRsc1hMiLdAT3etqH3ZMKCJXWfKlO3YPxKsMve8z
+	yDABu5qsyQ8HVDhESlnYDRkrG1eI1BU5c2O1IA99LVMtyiNyYjg7CItV+PsotrvenMbohkIm54K
+	N5mMStMCPrYeop/Un7DQ93XAeKYs=
+X-Gm-Gg: ASbGncuXxJPfkPFmg028EFQbwTZzAx8BK4+pnFS0lkL93LXSEKAFNkeOCVQsTmEGjGA
+	+IDmZCjPPpmcL04fsUoJdylg82dWt8jG5eU9NYrddUg18bsOVTK8UV0Aes28XXTjPsgNsmFkhcR
+	Q=
+X-Google-Smtp-Source: AGHT+IHtIKEcTjSTQlWh5lwk9JOYeBQcpTOQQVX2RILLZ4vFU4GB2dTZQSCTgiGNSqAUrpgbdSCaWgTp03coCg6W+Zw=
+X-Received: by 2002:ad4:5f89:0:b0:6e4:3c52:d671 with SMTP id
+ 6a1803df08f44-6e4455eda4cmr19801736d6.14.1738898241017; Thu, 06 Feb 2025
+ 19:17:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 1/4] drivers/fpga/amd: Add new driver amd versal-pci
-To: Xu Yilun <yilun.xu@linux.intel.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-fpga@vger.kernel.org>,
-	<mdf@kernel.org>, <hao.wu@intel.com>, <yilun.xu@intel.com>,
-	<lizhi.hou@amd.com>, DMG Karthik <Karthik.DMG@amd.com>, Nishad Saraf
-	<nishads@amd.com>, Prapul Krishnamurthy <prapulk@amd.com>, Hayden Laccabue
-	<hayden.laccabue@amd.com>
-References: <20241210183734.30803-1-yidong.zhang@amd.com>
- <20241210183734.30803-2-yidong.zhang@amd.com>
- <Z5YPWHVmL29zuQNm@yilunxu-OptiPlex-7050>
- <3b520bab-d948-470a-b06f-5494243ebc1a@amd.com>
- <Z6Q3W2mUw/ZbtnWV@yilunxu-OptiPlex-7050>
- <796e2826-a423-4d0c-977a-105ed236e067@amd.com>
- <Z6Vtz/Bb8wsIH0pG@yilunxu-OptiPlex-7050>
-Content-Language: en-US
-From: Yidong Zhang <yidong.zhang@amd.com>
-In-Reply-To: <Z6Vtz/Bb8wsIH0pG@yilunxu-OptiPlex-7050>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Received-SPF: None (SATLEXMB03.amd.com: yidong.zhang@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC1:EE_|SA3PR12MB8000:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4117e93b-8e3d-4bfd-1e2f-08dd4725d5e9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eERFVlFmZXZVZm9TeElGb216eXlnZVVrcW84RjA3SlJHMXlRWm1QRVFGUE9U?=
- =?utf-8?B?OXI4NnBNNGlCNlEwQ2N1L3NCREIvK2RTMGh0dHFPV0EvMmhYVUtmTVBaZS9v?=
- =?utf-8?B?eHlpOHJ5bzI4UWsxL2c3ME5Nbm9wODNkZFI3c3d0RnlvcmtXdHFVbUMyMHRV?=
- =?utf-8?B?aUx4TWtNTDZHU0h2dDJnM0FoQVZmam50SzVqWXVwa21TV0ZZUkxoejR1b2NV?=
- =?utf-8?B?UzUvZU5rODQzQlFqUDNTWlh6MitwczRCRFg2a3M0b2haZFV3dERDMnZkVU5O?=
- =?utf-8?B?SXY0MS9QZVBjUnYwcmJFdTlrajdBVHdSbHEycFlMMmFKclhTSHJOa2ZIYUJO?=
- =?utf-8?B?R2tOYVI1UGpUd0dDTjIvdGNCSjlxRGFSQUJ6d0gxalYySnlybGFpSDZuZTRu?=
- =?utf-8?B?V2ZIdldJait1UDhzTGdVcW8xVGJCelllTmpOdkdVSytwWDhlT25sdS9HM2RC?=
- =?utf-8?B?dW9oQUdweVFBSzhhMWRhT0FsWWdOcVFJWXhNWlp0TmNaUjRMcEQ4UkRkRWE4?=
- =?utf-8?B?YVRyV2UxaEZWR2NGa2RWYjRQU0RCbU1ZYTNnOFk1enN4bzFGSDY3VnVkRnlI?=
- =?utf-8?B?TmYrY2FQNTZyRFo3aXl1YkRiUFNXeitBTDFRVXBKNnpiWnpjbE5xNG0rcEcr?=
- =?utf-8?B?RGkwSmNMTmh2c3V0NnYrcTBzYWFBa3FIb3lzdlhKbmxTK0xiUTZycW5DMjEz?=
- =?utf-8?B?bXdlRjlHakIwakFuamw3YnZqVkxyUE9teXBWVFR1MVlyR0d1SmpQWHMyT0pG?=
- =?utf-8?B?cHhCYWZGdXlTSWNoU0hNT2VxTjBsL2NpbFdDc2FqK256MlZDSWNsUHhSRGc3?=
- =?utf-8?B?ZzI1SEgzSkVwRXpqMlNtSVVmQUE4MXZxclJ1M1hjVVltM3RrMmtMSGM5Qkt0?=
- =?utf-8?B?TkpqZitHeWM1Uko5b2hJL0dtdTdkNnVJcHNTTVd4Wms4K1Y4b0s1SVd3UURT?=
- =?utf-8?B?M1JkQzdGdkxtS2R5UWV1YzNrYk5kcjE3dEhReTFpUy9EbVhFVWVoMXN2YzRD?=
- =?utf-8?B?bk52L1VaUWNTVTBPMklZSkNYUzY4YmtSNWJUbU10akZIdlRpZDZLYWVBYmNk?=
- =?utf-8?B?dDltK29IL2oweDMzbkNOLytKOTdQRllUWDUwY1B2NnE0UGpoV2lRTXduN0V3?=
- =?utf-8?B?dHdmWU1YZUsxOU5wN2tvZDRpOUM5Qk1aSlc2S2hvMHVwbzkxMzF3YzlTektF?=
- =?utf-8?B?VkMyVFRHT2NwVTFaSEZQZTA5TkRYODlrUzdoSnhCSzVlejdqZ0NRTHUwQlFN?=
- =?utf-8?B?eFpOUUNBcGpZMllrVWhPb2RMY1JnL3g2YnE4MGJBS1ZTNGt2SUJvR0tVZDFm?=
- =?utf-8?B?K2xQRlEwNVp0a0h3TVZjTlVSNWRsMC8xU3dldUxKUUpkRXMyRlJLdjdmNENi?=
- =?utf-8?B?VzRtWGRvSkgwUzBITmI2OXNlYjR5YTRSSnJiSjlQZXkyUzZlWDV4K2xpb1Uy?=
- =?utf-8?B?dmlZS0FKRktvdmpWNnlQdFhqcFR2VWxKVE9hZHFnNEtnNnZ2Z1plKzZ3Y2JM?=
- =?utf-8?B?MU9zWStkWTI0Z0NhdGFEMmVyVmJtdUF1elhwNDJQM1RRT29zYVNycnFRcDhW?=
- =?utf-8?B?Ujk4VDZ4Sy9tY0lqZFphMGVDSkhpT2cwb2l5Z0ZWR3FmNFk2YmFicUhPeFYz?=
- =?utf-8?B?MGV5R3ZRV1grQTZUZVdHdkZrbi9KbmxZanlBSDkzVkp5SHJ0UkpueVdYeElV?=
- =?utf-8?B?b0d2cWk3VE8yd3lYei9YYi9xRHFob2Eyei96NWZhOVI1SHAzWFR3aGlPKzFu?=
- =?utf-8?B?SnR1Ykc3UWg1M3dsTnd1S09uUzU4anBnVlRTUkFjNjJwQU4vaVBQNE8zNnVh?=
- =?utf-8?B?Nks5cU0xQi9xZ2k3bzlnUXA0RXpoSVcralhwclBiTzQ0Ky9IUmllbEZOMFlt?=
- =?utf-8?B?MnZIY1JGSU1IT1NPQ3VyUDZOeE9PNXhkalpyZ2FIQUoydFdFZzFtRURXN3JZ?=
- =?utf-8?B?OEtIRVJoQzQwcjE2ZFp0YmFEQ0QrTHBRVXJNUWlodzU2bzZQSFFTRTI0eGpy?=
- =?utf-8?Q?2q17XMYrRLyRrA/8McmczVzJKwUQZQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 03:16:38.3102
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4117e93b-8e3d-4bfd-1e2f-08dd4725d5e9
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000FCC1.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8000
+References: <20250127063526.76687-1-laoar.shao@gmail.com> <20250127063526.76687-3-laoar.shao@gmail.com>
+ <20250207023116.wx4i3n7ks3q2hfpu@jpoimboe>
+In-Reply-To: <20250207023116.wx4i3n7ks3q2hfpu@jpoimboe>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Fri, 7 Feb 2025 11:16:45 +0800
+X-Gm-Features: AWEUYZkBHU9QVMsn_rdgqikVxkvOfZf_63qXyhUzG8DpNgBaUUy5VdNNCvU6V2Q
+Message-ID: <CALOAHbB8j6RrpJAyRkzPx2U6YhjWEipRspoQQ_7cvQ+M0zgdXg@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] livepatch: Implement livepatch hybrid mode
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com, 
+	joe.lawrence@redhat.com, live-patching@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Feb 7, 2025 at 10:31=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.org=
+> wrote:
+>
+> On Mon, Jan 27, 2025 at 02:35:26PM +0800, Yafang Shao wrote:
+> > The atomic replace livepatch mechanism was introduced to handle scenari=
+os
+> > where we want to unload a specific livepatch without unloading others.
+> > However, its current implementation has significant shortcomings, makin=
+g
+> > it less than ideal in practice. Below are the key downsides:
+> >
+> > - It is expensive
+> >
+> >   During testing with frequent replacements of an old livepatch, random=
+ RCU
+> >   warnings were observed:
+> >
+> >   [19578271.779605] rcu_tasks_wait_gp: rcu_tasks grace period 642409 is=
+ 10024 jiffies old.
+> >   [19578390.073790] rcu_tasks_wait_gp: rcu_tasks grace period 642417 is=
+ 10185 jiffies old.
+> >   [19578423.034065] rcu_tasks_wait_gp: rcu_tasks grace period 642421 is=
+ 10150 jiffies old.
+> >   [19578564.144591] rcu_tasks_wait_gp: rcu_tasks grace period 642449 is=
+ 10174 jiffies old.
+> >   [19578601.064614] rcu_tasks_wait_gp: rcu_tasks grace period 642453 is=
+ 10168 jiffies old.
+> >   [19578663.920123] rcu_tasks_wait_gp: rcu_tasks grace period 642469 is=
+ 10167 jiffies old.
+> >   [19578872.990496] rcu_tasks_wait_gp: rcu_tasks grace period 642529 is=
+ 10215 jiffies old.
+> >   [19578903.190292] rcu_tasks_wait_gp: rcu_tasks grace period 642529 is=
+ 40415 jiffies old.
+> >   [19579017.965500] rcu_tasks_wait_gp: rcu_tasks grace period 642577 is=
+ 10174 jiffies old.
+> >   [19579033.981425] rcu_tasks_wait_gp: rcu_tasks grace period 642581 is=
+ 10143 jiffies old.
+> >   [19579153.092599] rcu_tasks_wait_gp: rcu_tasks grace period 642625 is=
+ 10188 jiffies old.
+> >
+> >   This indicates that atomic replacement can cause performance issues,
+> >   particularly with RCU synchronization under frequent use.
+>
+> Why does this happen?
+
+It occurs during the KLP transition. It seems like the KLP transition
+is taking too long.
+
+[20329703.332453] livepatch: enabling patch 'livepatch_61_release6'
+[20329703.340417] livepatch: 'livepatch_61_release6': starting
+patching transition
+[20329715.314215] rcu_tasks_wait_gp: rcu_tasks grace period 1109765 is
+10166 jiffies old.
+[20329737.126207] rcu_tasks_wait_gp: rcu_tasks grace period 1109769 is
+10219 jiffies old.
+[20329752.018236] rcu_tasks_wait_gp: rcu_tasks grace period 1109773 is
+10199 jiffies old.
+[20329754.848036] livepatch: 'livepatch_61_release6': patching complete
+
+>
+> > - Potential Risks During Replacement
+> >
+> >   One known issue involves replacing livepatched versions of critical
+> >   functions such as do_exit(). During the replacement process, a panic
+> >   might occur, as highlighted in [0]. Other potential risks may also ar=
+ise
+> >   due to inconsistencies or race conditions during transitions.
+>
+> That needs to be fixed.
+>
+> > - Temporary Loss of Patching
+> >
+> >   During the replacement process, the old patch is set to a NOP (no-ope=
+ration)
+> >   before the new patch is fully applied. This creates a window where th=
+e
+> >   function temporarily reverts to its original, unpatched state. If the=
+ old
+> >   patch fixed a critical issue (e.g., one that prevented a system panic=
+), the
+> >   system could become vulnerable to that issue during the transition.
+>
+> Are you saying that atomic replace is not atomic?  If so, this sounds
+> like another bug.
+
+From my understanding, there=E2=80=99s a window where the original function=
+ is
+not patched.
+
+klp_enable_patch
++ klp_init_patch
+   + if (patch->replace)
+          klp_add_nops(patch);  <<<< set all old patches to nop
+
++ __klp_enable_patch
+   + klp_patch_object
+      + klp_patch_func
+         + ops =3D klp_find_ops(func->old_func);
+            + if (ops)
+                   // add the new patch to the func_stack list
+                   list_add_rcu(&func->stack_node, &ops->func_stack);
 
 
+klp_ftrace_handler
++ func =3D list_first_or_null_rcu(&ops->func_stack, struct klp_func
++ if (func->nop)
+       goto unlock;
++ ftrace_regs_set_instruction_pointer(fregs, (unsigned long)func->new_func)=
+;
 
-On 2/6/25 18:19, Xu Yilun wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
-> 
-> 
->>> No need to detach a specific driver, remove all devices in the
->>> fpga-region. I imagine this could also be a generic flow for all PCI/e
->>> based FPGA cards.
->>
->> I see your point. Is there an existing example in current fpga driver for
->> PCI/e based cards?
-> 
-> No. The fpga-region re-enumeration arch is still WIP, so no existing
-> implementation.
+Before the new atomic replace patch is added to the func_stack list,
+the old patch is already set to nop. If klp_ftrace_handler() is
+triggered at this point, it will effectively do nothing=E2=80=94in other
+words, it will execute the original function.
+I might be wrong.
 
-Got you. I can also help to test or provide feedback.
-Actually, I had sent Nava my protype of using configfs for the non-OF 
-driver. He should have the updated patch soon.
-
-> 
->>
->> We will need to talk to our management team and re-design our driver.
->> I think we have 2 approaches:
->> 1) Align with linux fpga, having one driver for both userPF and mgmtPF; or
-> 
-> Don't get you. Linux FPGA doesn't require one driver for both PFs.
-
-I assume when you said "generic flow for removing all devices in 
-fpga-region" means that there is a single driver which use the 
-fpga-region callbacks to remove all devices and then re-progream the FPGA.
-
-On AMD V70 hardware, the userPF has different deviceid than the mgmtPF.
-Thus, our current design is having 2 separate pcie drivers for each 
-different deviceid.
-
-Thus, in our current design, the fpga-region should be in the userPF 
-driver which has callbacks to remove all devices. But in mgmtPF, it is 
-more like a utility which only handles request from the userPF but it 
-has the management privilege. Usually, cloud vendors require the mgmtPF 
-deployed in their secured domain (can be a separate physical machine).
-
-We can keep 2 drivers, one for userPF, one for mgmtPF. The userPF and 
-mgmtPF communicate each other via the communication channel because they 
-can be physically on different machine.
-
-Are you looking for us to upstream both of them together?
-If yes, I still think that the fpga-region should be in the userPF 
-driver. The mgmtPF driver is still a utility driver.
-
-Please correct me if I am wrong.:)
-
-> 
->> 2) find a different location (maybe driver/misc) for the version-pci driver,
->> because it is an utility driver, not need to be tied with fpga framework.
-> 
-> I'm not the misc maintainer, but I assume in-tree utility driver +
-> out-of-tree client driver is not generally welcomed.
-
-Great info! Thanks! I will have to discuss this with my team too.
-
-My understanding, so far based on your comments above, the drivers/fpga 
-prefer to use fpga-region ops to handle FPGA re-program changes.
-
-The current versal-pci driver is a utility driver.
-The fpga-region should be within the userPF driver.
-
-We can try to make our userPF driver in-tree as well. But the current 
-plan is to do it later.
-
-If you prefer we do both of them together. I can talk to my team.
-
-Thanks,
-David
-> 
-> Thanks,
-> Yilun
-> 
->>
->> Please let me know you thoughts. Which way is acceptable by you.
->>
->> Thanks,
->> David
->>>
->>> Thanks,
->>> Yilun
->>>
->>>> driver and allow the userPF driver re-enumerate all to match the new
->>>> hardware.
->>>>
->>>> I think my understanding is correct, it is doable.
->>>>
->>>> As long as we can keep our userPF driver as separate driver, the code change
->>>> won't be too big.
->>>>
->>>>>
->>>>> Thanks,
->>>>> Yilun
+--
+Regards
+Yafang
