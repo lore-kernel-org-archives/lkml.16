@@ -1,155 +1,116 @@
-Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D6DB1E6DC5;
-	Fri,  7 Feb 2025 12:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602C41E0DEA;
+	Fri,  7 Feb 2025 12:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738930674; cv=none; b=HF7idT+1v7rdqZXb4S2gxTfr0SKLIaUKW39+Za1jDOdNTV7HNBLy90ws3gXGyoaYdJglEhnrC6mIniuCKSOm31nUU1Saha/hM5/qLKEMLSYWmGsekIaKAuRAC4vxanUV2T6PFYknFOmnK3DIFu/tKCO8dVxsX2RA1aKxOpsXjh8=
+	t=1738930709; cv=none; b=oqMlNz9gCYFE4csB4Qo6NDjUR7JZIOTOicxZR7wsYVwJE7wVsWFb15aWpBoDQtEoBVTcpG9FbA/7koOUQx6Ytm+TH+81tMsVKxt2FJzw0W7SeXbImGfoaK9Mh+Dk7gal7AuYBgSsNqUqTTv2uyfbG+whFX5l3cIGzfyUVrMeNGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738930674; c=relaxed/simple;
-	bh=Diwc8kaOpiUiKonF5IYBToi/IYCdpwMOdLIk8dSBMf8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JyXm/vK18fBaTUy9CD2LTzfBjL9DMxMB3qUnlE4L4krmbMxlloM6GrahxCkzAEKFvvERnrv+FSGv4RiX7LHXElk1il+5U/x98tc1x2FHvB5P8V8XifODp9INqcFhEALiJ3IK4BFoy6UGHJ9MiO56pUHAj4ixjv9ntPHIAQ6YD4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 517CGfoY007959;
-	Fri, 7 Feb 2025 06:16:41 -0600
-Received: (from greg@localhost)
-	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 517CGcXR007958;
-	Fri, 7 Feb 2025 06:16:38 -0600
-Date: Fri, 7 Feb 2025 06:16:38 -0600
-From: "Dr. Greg" <greg@enjellic.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Hector Martin <marcan@marcan.st>, Dave Airlie <airlied@gmail.com>,
-        Jason Gunthorpe <jgg@nvidia.com>, Greg KH <gregkh@linuxfoundation.org>,
-        phasta@kernel.org, Christoph Hellwig <hch@lst.de>,
-        Danilo Krummrich <dakr@kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-        daniel.almeida@collabora.com, aliceryhl@google.com,
-        robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
-        Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-        Bj??rn Roy Baron <bjorn3_gh@protonmail.com>,
-        Benno Lossin <benno.lossin@proton.me>,
-        Andreas Hindborg <a.hindborg@kernel.org>,
-        Trevor Gross <tmgross@umich.edu>,
-        Valentin Obst <kernel@valentinobst.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.)
-Message-ID: <20250207121638.GA7356@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20250130154646.GA2298732@nvidia.com> <2025013030-gummy-cosmic-7927@gregkh> <20250130172437.GN5556@nvidia.com> <2025013148-reversal-pessimism-1515@gregkh> <20250131135421.GO5556@nvidia.com> <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st> <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local> <CAPM=9tzPR9wd=3Wbjnp-T0W8-dDfGah-H3Ny52G85B+2Ev9ksA@mail.gmail.com> <208e1fc3-cfc3-4a26-98c3-a48ab35bb9db@marcan.st> <CAHk-=wi=ZmP2=TmHsFSUGq8vUZAOWWSK1vrJarMaOhReDRQRYQ@mail.gmail.com>
+	s=arc-20240116; t=1738930709; c=relaxed/simple;
+	bh=gq6zzef9mN8VOP/B8pyInYMmzd2Gmkc2yEJH/o9LvxU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DXWTgTpsB4TMFXzAyyH5u25wtizZ2pwMU1mszK7WBRAexi2MrJiqvT6geQQCpVV1+TGN4EmlfkImJgTnlLxxw6kd/IJPABN16R2I4KvDQSmno59XqPyZtQIy67gX9whusqqL/phi0bNQbPCxK13NjQ6CqcqMoVim1ruzP3v9o3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vh1+POEC; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vh1+POEC"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab7157cf352so602818766b.0;
+        Fri, 07 Feb 2025 04:18:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738930706; x=1739535506; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9AnS6zB1IqaiTJ947vhQew0524hQrc2UQ2tC8yNLWiQ=;
+        b=Vh1+POECCSJFUpcHO5CVu7ONdQH24wUHOq5Gg6+oHKBQifbTxcMKQ4dFQYh4oZQ1xV
+         zl86Fbwk4W3l4ekGBh5l3oBjtsAlf/wlg96GypRke/3OQvbVrrkrCDxuDQQk/ZNTLt4r
+         fZ3pSNuOfw5K8MK754dalxmlXV1umz7eyxXHYyooCupnt8uNs6Rby2acfvws5ABUgvn6
+         bw64a4Eon29b/olyBl+AkFz7if1f79D43haxQCd2Hu6qOyg9Li6a/w+c6BY+An28r5oK
+         IBJuUsEXGCvHYPbQfRDIHybGYo9C+M3iN17gsixYnrJ1kyiMjj8wu2n7bq3SzTHU/gir
+         Sb1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738930706; x=1739535506;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9AnS6zB1IqaiTJ947vhQew0524hQrc2UQ2tC8yNLWiQ=;
+        b=vo+XKRxIyZmZmXWi+v+18C2DMqKYZhh9JrIB5BV0g/280l4dvVhw3mWwD/dpv6lIUF
+         6vhQI1vLM7hKdRqi04W4en15gb2PD/v4bPd/D+VIjcg3E+U1uM4WaxjmC+CGNOGvs/qz
+         bt+gL+6MFrapsySilxOkVgUceHxPpOKe6zk/S7FcSlh+M18sjzQUDy6xBy+Y6py2ktNN
+         PgCXG4XYY4/DFKoFdYA9oTeun3u0DLurTNSNUw7GugeZ/Q6VUVpEBF1DQJKBFW2MGZ9h
+         sI+FtOzPbYpv3D3YGXFHLMMR7j2vdjCb73RJn/Q8997R1fnHTkj/wG2HgJBUjEfR/Pu4
+         HJXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbDnazlTZwKvLePK0R5xaK2oy2eeLYZeoqf6wJ1EtG3rSYkr/xvpAb+sfLxsgQCGTF4lnb9GDVfaNyWvSg@vger.kernel.org, AJvYcCVs9MMUgPq5EWF6nOQkjqVXNS8l1cfLyukBAbj5jdgY/y8gX7VCznpzKJ5BwnKSCLQ73e9VAA0Y@vger.kernel.org, AJvYcCW/KtSt298qM3AndR3RRgq+Iypww5WH0sHugUPVkUAxioQaRKNCQ807u1gkwxMgpFcGm76jVlYQqkBJ@vger.kernel.org, AJvYcCWH3dzJz2IXwwEOt5JGf6OChfJFkWi/A4QzPhx4A7beDalL22ybBcjHKScrnI4OnoQdJKG2Y5IhUE2p@vger.kernel.org, AJvYcCXBslRLkZ2BzVNXcbJEXn8wX+V5wpw0CBEU4MwMGoyksb4CHkG05Vj+QJYeeeNlRRvATTfTP+Jjy3Xqtqw=@vger.kernel.org, AJvYcCXoMvEAGaZX/tPDRhZ4C8S2fZkPfSsIiofNP4b9n58vP+RwHJKqhuYrjLi4nPhB2mYGjvvA4mIvtNL0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/QDr/ZzUqxXMdddLl8NOHIOXQllS1tlDvTRUtZgW7jFG/Gngl
+	0RRPJGeM6/A4IR4jr9fPUNyhLtT1yDPXY3BjRyvbC/aLkV1V1b/meEEe6Kjn+jGLnp2Bs0RcnlU
+	0BRtsTdhCS8vixJ6fwLNZbGS+K3E=
+X-Gm-Gg: ASbGncuaypk84wAVujQnSDuCaDxgoKsimEyUset/XF+7Upek00IbVUMuK6iMWcNF0x5
+	9pJcdjTqu/PFqizYwbtJTGKouhhXbnzF7Brl4ZPtcvMhDbx9SHk4UJujAthSjF5fdaSwenYCRnc
+	o=
+X-Google-Smtp-Source: AGHT+IGlS0cVAd0st91xU2D48nCL2gCa3SCGAKqVvd3cM5wglhTfa7vJ1XBkyOj94B8CwdZQN+GSKTNE0VwWA7/YmEo=
+X-Received: by 2002:a17:907:7e97:b0:ab7:63fa:e4ae with SMTP id
+ a640c23a62f3a-ab789a9a583mr278038666b.4.1738930705331; Fri, 07 Feb 2025
+ 04:18:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wi=ZmP2=TmHsFSUGq8vUZAOWWSK1vrJarMaOhReDRQRYQ@mail.gmail.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Fri, 07 Feb 2025 06:16:41 -0600 (CST)
+MIME-Version: 1.0
+References: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com>
+ <20250206-gpio-set-array-helper-v2-4-1c5f048f79c3@baylibre.com> <CAHp75Vf+3pc84vV-900Ls64hM1M7Ji6Dmy8FPwL=n0=sJFSuVA@mail.gmail.com>
+In-Reply-To: <CAHp75Vf+3pc84vV-900Ls64hM1M7Ji6Dmy8FPwL=n0=sJFSuVA@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 7 Feb 2025 14:17:49 +0200
+X-Gm-Features: AWEUYZkSs8v-7WJQOys6Nw0fuSh0Pf6jrpjU3caLBhYNMllzG2w7Y5BACdTLgxs
+Message-ID: <CAHp75Vdt5EU83mJrB7Sb_pgRNbhvCQ=F2Lyq7mQLAvV-w6cqEA@mail.gmail.com>
+Subject: Re: [PATCH v2 04/13] bus: ts-nbus: use gpiod_multi_set_value_cansleep
+To: David Lechner <dlechner@baylibre.com>, Yury Norov <yury.norov@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andy@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, 
+	Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 06, 2025 at 09:58:36AM -0800, Linus Torvalds wrote:
++Yury.
 
-Good morning to everyone.
+On Fri, Feb 7, 2025 at 2:15=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Fri, Feb 7, 2025 at 12:48=E2=80=AFAM David Lechner <dlechner@baylibre.=
+com> wrote:
 
-> On Thu, 6 Feb 2025 at 01:19, Hector Martin <marcan@marcan.st> wrote:
+...
+
+> >  static void ts_nbus_write_byte(struct ts_nbus *ts_nbus, u8 byte)
+> >  {
+> > -       struct gpio_descs *gpios =3D ts_nbus->data;
+> >         DECLARE_BITMAP(values, 8);
 > >
-> > If shaming on social media does not work, then tell me what does,
-> > because I'm out of ideas.
-
-> Because if we have issues in the kernel development model, then
-> social media sure as hell isn't the solution. The same way it sure
-> as hell wasn't the solution to politics.
+> >         values[0] =3D byte;
+> >
+> > -       gpiod_set_array_value_cansleep(8, gpios->desc, gpios->info, val=
+ues);
+> > +       gpiod_multi_set_value_cansleep(ts_nbus->data, values);
 >
-> Technical patches and discussions matter. Social media brigading - no
-> thank you.
+> As I said before, this is buggy code on BE64. Needs to be fixed.
 
-I truely wish that technical patches and discussions were the currency
-that matter but I believe we are struggling with that, at least in
-some venues in the kernel development process.
+Or isn't? Do we have a test case in bitmap for such a case?
 
-No one should construe that statement as an endorsement of berating
-people on social media as the 'fix'.
+> >  }
 
-I come at this from the perspective of having worked on Linux since
-around December of 1991.  I first met you and Tove in 1995 at the Free
-Software Conference at MIT that Stallman sponsored.  When we first
-met, I told you that cancer patients in North Dakota were enjoying
-more time with their families because of what we were able to do with
-Linux and optimizing medical processes at our Cancer Center.
 
-RedHat paid me to speak at a number of conferences in the 90's talking
-about how Linux was going to dominate enterprise computing, given that
-it was about technology people doing the 'right' technology thing.
-
-I'm seeing things that make me regret those words.
-
-Probably the last technical contribution of my career is leading an
-initiative to provide the Linux community a generic security modeling
-architecture.  Not to supplant or replace anything currently being
-done, but to provide a flexible alternative to the development of
-alternate and/or customized workload models, particularly in this era
-of machine learning and modeling.
-
-Four patch series over two years, as of yesterday, not a single line
-of code ever reviewed.
-
-For a contribution that touches nothing outside of its own directory
-and does nothing unless people choose to execute a workload under its
-control.
-
-We were meticulous in our submissions to avoid wasting maintainers
-time.  We even waited two months without hearing a word before we sent
-an inquiry as to the status of one of the submissions.  We were told,
-rather curtly, that anything we sent would likely be ignored if we
-ever inquired about them.
-
-We tried to engage, perhaps to excess, in technical discussions
-attempting to explain why and how we chose to implement what we were
-proposing.  Including input from advisors who are running production
-IT systems that feel that there needs to be better approaches to
-addressing their security needs.
-
-There were never any relevant technical exchanges.  The discussion
-consisted of, we have decided to do things a certain way, no
-discussion, if you don't like that you should really consider doing
-something other than submitting to upstream Linux.
-
-The all powerful sub-system maintainer model works well if the big
-technology companies can employ omniscient individuals in these roles,
-but those types are a bit hard to come by.  Lacking that, there is the
-tangible risk of stifling innovation and Linux is the only place that
-innovation can occur in the operating system space.
-
-Not sure what the fix is, from a project management perspective the
-technology industry has never faced a challenge like this.  The fork
-model, which was the classic protection in open-source, doesn't work
-at this scale.
-
-We have a Code Of Conduct that we can't scream or hurl four letter
-words and insults at one another.  Maybe it already exists but a Code
-Of Standards for maintainers would seem to be an imperative if we are
-going to move forward productively.  Jim are you listening?
-
-Obviously respect and open-mindedness to new ideas appears to be the
-grease that makes all of this run smoothly.  Unfortunately that seems
-to be about as rare a commodity as omniscience in our industry.
-
->                  Linus
-
-Linus, best wishes to you and your family, it has been a fascinating
-ride and thing to watch.
-
-As always,
-Dr. Greg
-
-The Quixote Project - Flailing at the Travails of Cybersecurity
-              https://github.com/Quixote-Project
+--=20
+With Best Regards,
+Andy Shevchenko
