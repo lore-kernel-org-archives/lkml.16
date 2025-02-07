@@ -1,62 +1,62 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A914189520
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9265A18DB04
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738945189; cv=none; b=Z3Sh6JIrYH4x7ZtICe4AbL+sxhGvNNhs/dQQRoFEuHPt0UHnVxZW+i5J7GIOf2/uSfS7lnyfm9xqcExYva26XqbccY3mNTvrNNZ+YDLBREp7rvD53S+X8CUmoT9n8Ql8Cae3bZrZPkyBvuRdmXgOF9VLwwHuH7eI84hjCZqVCfs=
+	t=1738945193; cv=none; b=KUh9eeoRnKG/rIk2fN9IWYHRxHxSJx5EglZliMRRJfAWluTAxNx27PuPSlr9aFeBCKYq7uS2VrI4zy0wyKIRh2bp9h5WpqETlTo5AF9n7JnI/YXd48C9wtSX4T3y8kbC5Z/QX5K/QnKXsxlPgJ63ahevPq8pAkXOmFEJVWJ+liY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738945189; c=relaxed/simple;
-	bh=GF0Hn09KPD012xYnrHRyG4xf0X9wQ9KlAHjX6egHn0Q=;
+	s=arc-20240116; t=1738945193; c=relaxed/simple;
+	bh=c9+jGsuHaZ58BvCwmZlEGmua3y5mogvp457gXg6onTM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OEX5QTypT938s8lOzibxDrlBH1Q4gVdkZvy+pVu7fxwj8O8bDY4Uu50JLCEpeXi1xl9t9MaHfwA3zwjJLQ3px/VU7drPLQ6RHZfYbSfqMJdRVj824q97FqbtnRjHj5NvAcpMuB+9riFyVVzZBMv8rKDJvolcm69kktToncLOPOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Fc23NXLD; arc=none smtp.client-ip=209.85.128.54
+	 MIME-Version; b=UlJWwfC7OaWnEEVpURdeCJMreBrlcMHH/W9Y/D65GuJeGDiir5uFz94Uksfb267O+CDgAb+LRGi5OO0aSaZMsxA4lx00sRMS/ptj1+QEWE31ZQ9KFKE9/m+yYFUfkM2Cr89gqtGwmVMeJEr0dQwCWfLg9UbUSvUXEChTxPj0W/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=bcK40DDS; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Fc23NXLD"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-435f8f29f8aso16283925e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:19:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="bcK40DDS"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-436a39e4891so15775495e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:19:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1738945186; x=1739549986; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1738945190; x=1739549990; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IuJMR1N/b1qpsKDKcoeIqZx9TZLHFvG76FujKxOxlNs=;
-        b=Fc23NXLDEBHIucN065QbvTqtWkcpOLHFSxTTqTfxBfCti6gsOvFFPZ5FPIUfEzis6B
-         FiNGxoGY1GEc67rTyakbMrofh3Ed6/KQeTT8rhdPDUCzdP2mNAOYwBQ1p3D2h/6Tv/gf
-         AhKmMGi6JIVPjGZ/NkJvwNuewo+cuvj7F+wOWfFu66Wvr+IGtN2/Qu10KrL5lqR612mD
-         he1SGLFdVSQO+A6ZIgfYWZqFGFUOkyte+dit8uYnd5sszYwAuwTA8BI+qQb5ZRNyE/dJ
-         movWztGzVEcDwjCKlaYKa++UbHdueBuY+7qhMxxK2xHZIInLFVFZ+brlT6xw6I0AUyGG
-         HnmQ==
+        bh=voJ+wA65lTYRPtl00Mu/vMvJWZVBpxfrm7iohsFL00w=;
+        b=bcK40DDSH4de9kkQ6GdKs1gzGf9R3llcem2KmMmEZClk67SWjqvcQDvYN7NepuywEa
+         iygDJyvyPv/QXU7ujBIlIRF5UEQT5fPdBwLJUVnnX5ql1welT+clZzHofyKhQxyYnEla
+         XQYgNRy9xuV6wBUj0WsBP2T/J0HZxJAGMivjFuvI0CIJuMIwZmCo0yjvm8XRMKsk1eOw
+         /6/DY3WQmWld0MR5U+OXvxsDSOymxDR9L2rVX96XmKFb+lgSv+k6gAOaFUA1wt2MKhrI
+         5WYT0xGmF71oicb1ozP2stHOTPPOX1U4UtEyK5k3wzjGSEEBciL79Quthd1Tex9p6WVO
+         K9LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738945186; x=1739549986;
+        d=1e100.net; s=20230601; t=1738945190; x=1739549990;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IuJMR1N/b1qpsKDKcoeIqZx9TZLHFvG76FujKxOxlNs=;
-        b=N5wbeR20+jCzbZR04S30L7tpk5GZzSJOWX6AxIvtrTO8XXX64UeZojbMYvoQ1aNRWX
-         gTEw1RjSm5XPwkCxBCjMxDsv+F+/wcSL5oGKnrrWgFTYUpJK+kb+rgTBS4j9ngZQgKwB
-         07jwjIx/4bf1sGiRKv1YKJCd0Lo8x/TcGbMa2We9lVcp9W0EzI7H0fjA/ZDwDVQ1jEvb
-         S2aUru8M5eKaY8OpLttdsZdYlyataMMVpEFOttld3NzYUsb/PopN2X8UKYXwpMgeB1Ez
-         /tMyRqQ+6szh+jd4Mr3cDpnh30Fja/BFclzjZ44VwiGPnDjPm2LXK9r1h3fnLhwzU90K
-         2Byg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTOX+FNjXZwsuerLzOii1qpzT3FtaMhY2fns5D23ZIlsILBYvrz2Fo21dSNGvaN5VTLTMTOlTUkoP+NL8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyl4skUdXoNV1PpukiM+d3ZRTUbP4W4hkPZ7Zt6XKAlZ5AMiWi1
-	u6kcI95CVj/kEwCYN7a/ZnEqcgJ49cCbwOhnk7Z3rRSKQmDmCRJgaW/Vy6Ib630=
-X-Gm-Gg: ASbGnctkg6P1u3wCx8XSDqICG9HJV4PUmdOGP/XmxXcg9huyywKVD2oppQ2h/4p+/rw
-	BTCOVfFjxASXQ0rNglP55pAmrRkqkqO3JMAJllHWozhiN+6k5a/i6ujTa5nMxa3ogVTQYSQRQmm
-	k334rKJeome0JP9ulziQtVTtjnNcwu5rCan2eXSrFzjCm8OptJAlvNQpEAgpifmhJSrRyIa1MnF
-	bZBTE12+sECZeUCpo67pdL7Rug2apL0Usv+aQEbPKutFyTeT5gde+3NWr6I4GzVTFKmHrWUxFsm
-	9uw0soVt5HOD0/enazQzPgJolMLm3DXZTjZbRjCjRB420C4ZVgijKb+L1w==
-X-Google-Smtp-Source: AGHT+IF2QBiK/6fJgHT5gF+3avImUBiADzRKV6TlV+pcR6wlIV7GNBKNVzGepoKdRql8iUw7eoyotg==
-X-Received: by 2002:a05:6000:1787:b0:38d:a876:845a with SMTP id ffacd0b85a97d-38dc959fab9mr2553003f8f.47.1738945185782;
-        Fri, 07 Feb 2025 08:19:45 -0800 (PST)
+        bh=voJ+wA65lTYRPtl00Mu/vMvJWZVBpxfrm7iohsFL00w=;
+        b=CSs+QVbfLCpYLUXZT831JEjEeTFX9dODNY1VxgfdMFh4VTOKhy8O0t5WBfjSOT/2c5
+         3B41Dhs9IzEWb8l6BrWaHNKkPZClbhlY3dtK01HdZZPJA8kWDjOBHlsovtjncqIBFm8J
+         p2QINoakk83u0TjYN5ef1B7UFRfkB0FNcgg1Txql0nNdt0CK+m+BIAjMeC7taervRMRV
+         058rym8OvjS4gqausdou0DjyDJ1TvqE0pXXIg99DICnj9Md4+ZcvTUByHuYRW/cg8PZH
+         MnViWoyl5vXSwujgf8rvSTusFfuiae3grmFMw9o89GJGrTd8EghBFLA5G2BDYMfT8aNq
+         vGeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUaqf1XUriGvQtB4Ly35bTJ5BmYJS1mG0EuzAYvEAOEOZ00dTGBI88WgUdUI1gjp1pyxkQwgRiQiUu0Log=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznSCzqgdAx81gAYA3ph3iJsH/DV69ElGzbi4wH/VqxWmI3ymum
+	urDMP11JxtP4SRt5tzHD/BQ3/yMn4XAVFS3sjbiLz/RkpxasQWFGO++lVrlxoLM=
+X-Gm-Gg: ASbGnct4PjE9mMMVHHiUF0qFxVBSfsqMYhEzpZRn8tGqJExU8MYYiprrIp15heR7c0k
+	nzYaDeuHC9hkFgBwSJbbkoHA4vybRTRh/M/8rM6lbPO5P0mJfTwRZLV+LOuxtY8LNTBwK28jyQg
+	g2t63BqREctjztd4Il3GsPWMzIjFjCwoNwgNPfDj6BGMkRvP95h6G9/IoVRniaIL7Iga+OCZpMJ
+	aIj0ZpVK0CL9WLDrQp4zkPZy6sYyxUFzog6AXwV+FxqqaB11IC8Awb4K++frDu5l5ich8j0ItEd
+	LUWDj1+y0LjsFgMsGt7mjIh7ajaOB0/g7IsRr7WhrwUaZfgTkH64xcVeIw==
+X-Google-Smtp-Source: AGHT+IGx7QtVfT1JWtMIVcFCuUhUKogTMnYDmeTHogDn6k+cWvy1lOJNfmJ1oXM4MfFvDJRwJ1K8fg==
+X-Received: by 2002:a05:600c:4687:b0:430:563a:b20a with SMTP id 5b1f17b1804b1-4392498b3b5mr43554075e9.11.1738945189904;
+        Fri, 07 Feb 2025 08:19:49 -0800 (PST)
 Received: from localhost (089144193052.atnat0002.highway.a1.net. [89.144.193.52])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc6c80df2sm3037899f8f.18.2025.02.07.08.19.44
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d94db77sm94595135e9.15.2025.02.07.08.19.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 08:19:45 -0800 (PST)
+        Fri, 07 Feb 2025 08:19:49 -0800 (PST)
 From: Andrew Jones <ajones@ventanamicro.com>
 To: linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org
@@ -65,9 +65,9 @@ Cc: paul.walmsley@sifive.com,
 	charlie@rivosinc.com,
 	jesse@rivosinc.com,
 	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH 1/9] riscv: Annotate unaligned access init functions
-Date: Fri,  7 Feb 2025 17:19:41 +0100
-Message-ID: <20250207161939.46139-12-ajones@ventanamicro.com>
+Subject: [PATCH 2/9] riscv: Fix riscv_online_cpu_vec
+Date: Fri,  7 Feb 2025 17:19:42 +0100
+Message-ID: <20250207161939.46139-13-ajones@ventanamicro.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250207161939.46139-11-ajones@ventanamicro.com>
 References: <20250207161939.46139-11-ajones@ventanamicro.com>
@@ -79,144 +79,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Several functions used in unaligned access probing are only run at
-init time. Annotate them appropriately.
+We shouldn't probe when we already know vector is unsupported and
+we should probe when we see we don't yet know whether it's supported.
+Furthermore, we should ensure we've set the access type to
+unsupported when we don't have vector at all.
 
-Fixes: f413aae96cda ("riscv: Set unaligned access speed at compile time")
+Fixes: e7c9d66e313b ("RISC-V: Report vector unaligned access speed hwprobe")
 Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
 ---
- arch/riscv/include/asm/cpufeature.h        |  4 ++--
- arch/riscv/kernel/traps_misaligned.c       |  8 ++++----
- arch/riscv/kernel/unaligned_access_speed.c | 14 +++++++-------
- 3 files changed, 13 insertions(+), 13 deletions(-)
+ arch/riscv/kernel/unaligned_access_speed.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
-index 569140d6e639..19defdc2002d 100644
---- a/arch/riscv/include/asm/cpufeature.h
-+++ b/arch/riscv/include/asm/cpufeature.h
-@@ -63,7 +63,7 @@ void __init riscv_user_isa_enable(void);
- #define __RISCV_ISA_EXT_SUPERSET_VALIDATE(_name, _id, _sub_exts, _validate) \
- 	_RISCV_ISA_EXT_DATA(_name, _id, _sub_exts, ARRAY_SIZE(_sub_exts), _validate)
- 
--bool check_unaligned_access_emulated_all_cpus(void);
-+bool __init check_unaligned_access_emulated_all_cpus(void);
- #if defined(CONFIG_RISCV_SCALAR_MISALIGNED)
- void check_unaligned_access_emulated(struct work_struct *work __always_unused);
- void unaligned_emulation_finish(void);
-@@ -76,7 +76,7 @@ static inline bool unaligned_ctl_available(void)
- }
- #endif
- 
--bool check_vector_unaligned_access_emulated_all_cpus(void);
-+bool __init check_vector_unaligned_access_emulated_all_cpus(void);
- #if defined(CONFIG_RISCV_VECTOR_MISALIGNED)
- void check_vector_unaligned_access_emulated(struct work_struct *work __always_unused);
- DECLARE_PER_CPU(long, vector_misaligned_access);
-diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
-index 7cc108aed74e..aacbd9d7196e 100644
---- a/arch/riscv/kernel/traps_misaligned.c
-+++ b/arch/riscv/kernel/traps_misaligned.c
-@@ -605,7 +605,7 @@ void check_vector_unaligned_access_emulated(struct work_struct *work __always_un
- 	kernel_vector_end();
- }
- 
--bool check_vector_unaligned_access_emulated_all_cpus(void)
-+bool __init check_vector_unaligned_access_emulated_all_cpus(void)
- {
- 	int cpu;
- 
-@@ -625,7 +625,7 @@ bool check_vector_unaligned_access_emulated_all_cpus(void)
- 	return true;
- }
- #else
--bool check_vector_unaligned_access_emulated_all_cpus(void)
-+bool __init check_vector_unaligned_access_emulated_all_cpus(void)
- {
- 	return false;
- }
-@@ -659,7 +659,7 @@ void check_unaligned_access_emulated(struct work_struct *work __always_unused)
- 	}
- }
- 
--bool check_unaligned_access_emulated_all_cpus(void)
-+bool __init check_unaligned_access_emulated_all_cpus(void)
- {
- 	int cpu;
- 
-@@ -684,7 +684,7 @@ bool unaligned_ctl_available(void)
- 	return unaligned_ctl;
- }
- #else
--bool check_unaligned_access_emulated_all_cpus(void)
-+bool __init check_unaligned_access_emulated_all_cpus(void)
- {
- 	return false;
- }
 diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kernel/unaligned_access_speed.c
-index 91f189cf1611..b7a8ff7ba6df 100644
+index b7a8ff7ba6df..161964cf2abc 100644
 --- a/arch/riscv/kernel/unaligned_access_speed.c
 +++ b/arch/riscv/kernel/unaligned_access_speed.c
-@@ -121,7 +121,7 @@ static int check_unaligned_access(void *param)
- 	return 0;
- }
+@@ -367,10 +367,12 @@ static void check_vector_unaligned_access(struct work_struct *work __always_unus
  
--static void check_unaligned_access_nonboot_cpu(void *param)
-+static void __init check_unaligned_access_nonboot_cpu(void *param)
+ static int riscv_online_cpu_vec(unsigned int cpu)
  {
- 	unsigned int cpu = smp_processor_id();
- 	struct page **pages = param;
-@@ -175,7 +175,7 @@ static void set_unaligned_access_static_branches(void)
- 	modify_unaligned_access_branches(&fast_and_online, num_online_cpus());
- }
+-	if (!has_vector())
++	if (!has_vector()) {
++		per_cpu(vector_misaligned_access, cpu) = RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED;
+ 		return 0;
++	}
  
--static int lock_and_set_unaligned_access_static_branch(void)
-+static int __init lock_and_set_unaligned_access_static_branch(void)
- {
- 	cpus_read_lock();
- 	set_unaligned_access_static_branches();
-@@ -218,7 +218,7 @@ static int riscv_offline_cpu(unsigned int cpu)
- }
+-	if (per_cpu(vector_misaligned_access, cpu) != RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED)
++	if (per_cpu(vector_misaligned_access, cpu) != RISCV_HWPROBE_MISALIGNED_VECTOR_UNKNOWN)
+ 		return 0;
  
- /* Measure unaligned access speed on all CPUs present at boot in parallel. */
--static int check_unaligned_access_speed_all_cpus(void)
-+static int __init check_unaligned_access_speed_all_cpus(void)
- {
- 	unsigned int cpu;
- 	unsigned int cpu_count = num_possible_cpus();
-@@ -264,7 +264,7 @@ static int check_unaligned_access_speed_all_cpus(void)
- 	return 0;
- }
- #else /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
--static int check_unaligned_access_speed_all_cpus(void)
-+static int __init check_unaligned_access_speed_all_cpus(void)
- {
- 	return 0;
- }
-@@ -379,7 +379,7 @@ static int riscv_online_cpu_vec(unsigned int cpu)
- }
- 
- /* Measure unaligned access speed on all CPUs present at boot in parallel. */
--static int vec_check_unaligned_access_speed_all_cpus(void *unused __always_unused)
-+static int __init vec_check_unaligned_access_speed_all_cpus(void *unused __always_unused)
- {
- 	schedule_on_each_cpu(check_vector_unaligned_access);
- 
-@@ -393,13 +393,13 @@ static int vec_check_unaligned_access_speed_all_cpus(void *unused __always_unuse
- 	return 0;
- }
- #else /* CONFIG_RISCV_PROBE_VECTOR_UNALIGNED_ACCESS */
--static int vec_check_unaligned_access_speed_all_cpus(void *unused __always_unused)
-+static int __init vec_check_unaligned_access_speed_all_cpus(void *unused __always_unused)
- {
- 	return 0;
- }
- #endif
- 
--static int check_unaligned_access_all_cpus(void)
-+static int __init check_unaligned_access_all_cpus(void)
- {
- 	bool all_cpus_emulated, all_cpus_vec_unsupported;
- 
+ 	check_vector_unaligned_access_emulated(NULL);
 -- 
 2.48.1
 
