@@ -1,65 +1,65 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128CA1DF26A
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B631DF75C
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738958997; cv=none; b=op+A5K6V3l8nq6GXkNWRiN3kZ8lwHE8uq4+orh9na7r5NU/0Utih36hjuR8FlTawNirMQXDI/MyiKqxqRR3HR3doSAn7GmtHieGCjF9vnwfxQQC5Hh0Qo+uClhPUQHljw+iZUwR2QAoLFKsFBzE4bSPzVPM1K149YgBlC4YAvK0=
+	t=1738958998; cv=none; b=BgpKyN+BhMSGjrL72Ypw9txzmoIZQ8tbR1zlgpsPqcmFcpsyW8CeC2/i0k08iJEy+/Wxzki196KXT7o3h0NCwH+XklE5817fzr0HgV3LXDouPxNR5z9uEVe6y9s2WTSOofuO14tBcwvO4RreLFA2wffUQq8e63Cda7iKV/rHGNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738958997; c=relaxed/simple;
-	bh=DhX51StZjS6ZG3+/IYLjnj3db6LuckpDYDUdYX9k1yk=;
+	s=arc-20240116; t=1738958998; c=relaxed/simple;
+	bh=SMPmN8r0eR+8HY2Jj8x2xcYlPFmCLQlrLCIyeBHoKlc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ragHqbLS2lnyx4E12kir1JDIoqnOObdA1QqIPDWhAdPHDF2mD5jSFTsiZtbhKmm9yb+hQszBFP2pbsDSVx3StSipYtYX3m5hQ/UivxOhhI1Pn1onJA7MsM0mSd97RGlomSvUfLJfKQQg9DgdUQlwfGfc8JtJpcySmHbg34rJGHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=UIusOfQF; arc=none smtp.client-ip=209.85.161.44
+	 In-Reply-To:To:Cc; b=fZ0elaKDOQIxYVeyfhf770yPFZrInnM10wKRFPRLw/p+SsenpJE4pQ35ho7OLL18HQ7cbr3w0RF34KxzsPhvUhvFqrYZEDzamLtYHaul7QA8lXgm/kGFddm8P7Lu/xJLObjerNcdPvbIZZjxdtGIwltPKUdamijnDvBRiYUhUYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=LDYYMqJO; arc=none smtp.client-ip=209.85.161.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="UIusOfQF"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5f6b65c89c4so630875eaf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:09:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="LDYYMqJO"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5f88a93dceeso800557eaf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:09:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738958994; x=1739563794; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738958996; x=1739563796; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3uXVd6FnRPX1W8Wg/eWBdOZEvpGo7dHFBW2WCW32Bdw=;
-        b=UIusOfQFpbY0NZvz5tAJ9fg8VlI6XO5rYeDpZsnIEI1hMh/11Fnm2tAsTds3HbjQWt
-         m25ljZfwm3dwa1Ak8jrt/ywVI+R0kCULi1DBT5+T04Jx9wGklL1g4FIlHUbnpnBeFhVO
-         EPXFfVOpQtIqPI7hFU/Mzcz+rLRUTHGVfTMs6UT+C2tsuiS/ymBIFtSA3ZwBCj3YOFNX
-         q2nzi7fspti4uM7BnoJqUluIeJ6gnQB/5xg5H9sU5lLuLG430EEvx5Ln6YbjPHicFd0k
-         dD3VRZAGH4dXbxjywOhHWWrxPQLxBs1imrTA16DJoDO0z9OAY4MEziEaHHftWV2E7Bv4
-         hb1Q==
+        bh=bhv4ANzzEFKwoR1NSwNAajicR1HfyMZAyaDEFtvhtoA=;
+        b=LDYYMqJOG7yg/xQ2ScnUuEAtiJxxuA/BCwvVLZTh9szN1X+FEF13a++vkakF8Z1L1e
+         hKdRoQKb7RX+GuP/u/kqGLz6kzrZh3kuxxKyReu9h3ItazMmdYlYVpOWUhuMVav4rMe2
+         jqBKNj/Kgf7ch0gKKKWpQCvGBgSl8YORxjTSxbrd3XE3/5XPKfrKAP386xUyWg9mvzSc
+         fTn8PNlaHmb15kZi2OE1ZWMTnQbVkxUOIWrIQbOt0AdM2PzMeSuIHkDbCVAitlOvK5YO
+         YAkv+94v+Ip05KcXfTgeTsKpcr6vpboJk7UotgL04vQEercKlBwsj4WdX8aT/UwqN4r2
+         W14A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738958994; x=1739563794;
+        d=1e100.net; s=20230601; t=1738958996; x=1739563796;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3uXVd6FnRPX1W8Wg/eWBdOZEvpGo7dHFBW2WCW32Bdw=;
-        b=Jr0lZ7kr1GoUgV+e4rMiZbMDQSR3LJt1Ljdf/5SzbEqCg4sUnZvBH1Z3QqnhkWxfMo
-         McSVlqHXtmjOBLd9FlNUprcjJenCVAXayyZYtxnk/Ubzb3ptZ4qdi08HSSCCnPS3hgRF
-         fzKcXSPjquNl/kOdchhs1abNPEiGzZWyBD87Z7nLupwezGeO8jPSLoOzZuoSsDwgvTIE
-         hopxR+dr3d+sDXtTfIOauTyuVByq0qb6+9iCigbTjR48vW98VaF6cLqYKy6M4WxAk1NX
-         9nK5YdtqKqZsp2rfezbpYJ8VDBJFmocSl6tDkzKEaKoHlcEmk8VkL6nSoI5bvn0ebPDD
-         yhyA==
-X-Forwarded-Encrypted: i=1; AJvYcCXV4Unx36o24NLfjPEdept+uaTczHKUibyoDMNZlRrM5bm+ktNKd6zPBqs5xiLNDh/JN4is5zzIHOpsmLk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQcz8bxB0TubXrkXGgR9Am9xU0GiS/eRvR1BKESlikI2YXmUuK
-	DRlAxfVXqr47wyLPhosyXCprPGZzfW5WfoCmYsZ7QBrCyOuNCvgXJG/iNZgbzhk=
-X-Gm-Gg: ASbGncvylQero1U+ti8a4AJKALmKUGuhlIsznO1PF9pPAMl7jjTlT0TFl4jfB74zBEi
-	tqzajY+US/9ZO8azYvT62kt7zJb2TnHiwsu+5Z6Aur+Z2588yDXx/Wsp0ORvZlYieQT974Pp+XD
-	AUO4w86rPRqKwBQT8yzSui//J0NGSksabOgZ8Uo7SiHcHrR6FOmRA5KlA5H4ATn4yOditYfiLhF
-	Pv/XIy4dqdaFl7nJFK+4SUsNfkCpSdgnPrbCgp92JKKOB5RTKqzqBCYSpVmkznfxW3oO7dT8LWS
-	2qsW4oENA/51BPeSh+DqzO8mtkjyAs79mNxB0kVzH+BLNaM=
-X-Google-Smtp-Source: AGHT+IHBvhoA/1vsHrBvSb8E+WSGvN4wz1yxpemeyG9bRp8GQ1qD6XCZmUkIVAeGNsD1uexoiKGc/Q==
-X-Received: by 2002:a05:6820:80c:b0:5f3:4175:1d7f with SMTP id 006d021491bc7-5fc5e75e777mr2414422eaf.8.1738958994116;
-        Fri, 07 Feb 2025 12:09:54 -0800 (PST)
+        bh=bhv4ANzzEFKwoR1NSwNAajicR1HfyMZAyaDEFtvhtoA=;
+        b=FSx67TjyaI6JAZBHaAdw5iFeYzbYwk4onoOSuu6xj0Us1XxHBRw2etQ0ouAuktAnch
+         xGMV/ZXAJg82Wvj942fISg8Bk0KZqyjoX4qCDggEODW5AWN60hdXpgRbZKaTqroy7yVU
+         VY8scraHprA0Uv2Q0wD+L51MpujvioikMpaThIhvEYpontpkndN5lBpohYnUCYhJ5qGY
+         TaC4CuWtbm7x6R3R8budgo1e1VTmbzpndBXv4NxZEb6HKoW9CoGaEiu3sbMfEmjbrmYk
+         1ZHLVUqdxBGU5UA9N4LeETD1wqAW/aQXRC8HTi2kERa0kb9PyJ6Nco9VInqS9A1ll9j0
+         fWIA==
+X-Forwarded-Encrypted: i=1; AJvYcCWfawhdjMN2txxghdAVmdCuXGsv7F5KGe8Vbeq1xPwJ+efCWL4Qq3J5YLZoSKbVaRr6lSJtyWBR4Rs+f3c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrGVBYlvidq34pMLfHb1FDK33pWDziAHBZ0uLggE04dtoPxqSB
+	KO3h/s3YnMcyxocv3azXil5pnWTT9yUrzFNNQPx6bKjU34LgL296uGZN7Wk6j54=
+X-Gm-Gg: ASbGncv3HKxdn5PL+B+w8rCTlTFw+vEhxCOneGzWg90MtUsbMHja92Qdc1GVck73q5D
+	Y5G+UVbwCCn1mfkJq5sG6IlQ2/1W0UyzGjtvAJnJeB0E86+ytA3KG72cKwN1+Ok/GmpQlSEph0A
+	gZLb1chZsu2G8aKxZ/CE5bYItFZgjNNyxLTdDgbAPA+9/x4NZRdYaRAP2JEJzyX8EuTmZbs7nwm
+	mi/VMrAUOZENgb7tzGYiykAdWZ0nfmBb/hA2yAGJQWElbyaj+yWFKWUugbKZ1czV8iziitVvEaZ
+	V0moFSfTx9BZxNjNDTgmB8K7j61GFQ4ntqDBK3Nwj056kdA=
+X-Google-Smtp-Source: AGHT+IEqV/I6/z7/jDgPXn8cMBQ3jLjBLYlnGZUzifVpoGCFn9izQNeuUTDoXrR00+qnRlk+dTe7Pw==
+X-Received: by 2002:a05:6820:605:b0:5f9:4f8c:868e with SMTP id 006d021491bc7-5fc5e6001ffmr3171575eaf.2.1738958996002;
+        Fri, 07 Feb 2025 12:09:56 -0800 (PST)
 Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc544b08d4sm930387eaf.2.2025.02.07.12.09.52
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc544b08d4sm930387eaf.2.2025.02.07.12.09.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 12:09:53 -0800 (PST)
+        Fri, 07 Feb 2025 12:09:54 -0800 (PST)
 From: David Lechner <dlechner@baylibre.com>
-Date: Fri, 07 Feb 2025 14:09:12 -0600
-Subject: [PATCH v8 15/17] doc: iio: ad4695: add SPI offload support
+Date: Fri, 07 Feb 2025 14:09:13 -0600
+Subject: [PATCH v8 16/17] iio: dac: ad5791: sort include directives
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-dlech-mainline-spi-engine-offload-2-v8-15-e48a489be48c@baylibre.com>
+Message-Id: <20250207-dlech-mainline-spi-engine-offload-2-v8-16-e48a489be48c@baylibre.com>
 References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
 In-Reply-To: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
 To: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
@@ -83,112 +83,53 @@ Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
  linux-iio@vger.kernel.org, David Lechner <dlechner@baylibre.com>
 X-Mailer: b4 0.14.2
 
-Document SPI offload support for the ad4695 driver.
+Sort includes alphabetically before we add more in a later patch.
 
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
 
 v7 changes: none
 
-v6 changes:
-* Fixed double "all"
-* Don't abbreviate "sampling_frequency" attribute names for clarity.
-
-v5 changes: new patch in v5
+v6 changes: new patch in v6
 ---
- Documentation/iio/ad4695.rst | 68 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+ drivers/iio/dac/ad5791.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/iio/ad4695.rst b/Documentation/iio/ad4695.rst
-index 9ec8bf466c15bf94cbae2ebdb61875f66af1264f..ead0faadff4b5aede2a34bac52e103e375da6f21 100644
---- a/Documentation/iio/ad4695.rst
-+++ b/Documentation/iio/ad4695.rst
-@@ -47,6 +47,36 @@ In this mode, CNV and CS are tied together and there is a single SDO line.
- To use this mode, in the device tree, omit the ``cnv-gpios`` and
- ``spi-rx-bus-width`` properties.
+diff --git a/drivers/iio/dac/ad5791.c b/drivers/iio/dac/ad5791.c
+index 034228a7c059f136cdecfb4683228d0be4c37477..4f28f49071c244bfcd21c7553aa3e39e9751490a 100644
+--- a/drivers/iio/dac/ad5791.c
++++ b/drivers/iio/dac/ad5791.c
+@@ -6,21 +6,21 @@
+  * Copyright 2011 Analog Devices Inc.
+  */
  
-+SPI offload wiring
-+^^^^^^^^^^^^^^^^^^
-+
-+When used with a SPI offload, the supported wiring configuration is:
-+
-+.. code-block::
-+
-+    +-------------+         +-------------+
-+    |    GP0/BUSY |-------->| TRIGGER     |
-+    |          CS |<--------| CS          |
-+    |             |         |             |
-+    |     ADC     |         |     SPI     |
-+    |             |         |             |
-+    |         SDI |<--------| SDO         |
-+    |         SDO |-------->| SDI         |
-+    |        SCLK |<--------| SCLK        |
-+    |             |         |             |
-+    |             |         +-------------+
-+    |         CNV |<-----+--| PWM         |
-+    |             |      +--| GPIO        |
-+    +-------------+         +-------------+
-+
-+In this case, both the ``cnv-gpios`` and  ``pwms`` properties are required.
-+The ``#trigger-source-cells = <2>`` property is also required to connect back
-+to the SPI offload. The SPI offload will have ``trigger-sources`` property
-+with cells to indicate the busy signal and which GPx pin is used, e.g
-+``<&ad4695 AD4695_TRIGGER_EVENT_BUSY AD4695_TRIGGER_PIN_GP0>``.
-+
-+.. seealso:: `SPI offload support`_
-+
- Channel configuration
- ---------------------
+-#include <linux/interrupt.h>
+-#include <linux/fs.h>
+-#include <linux/device.h>
++#include <linux/bitops.h>
+ #include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/fs.h>
++#include <linux/interrupt.h>
+ #include <linux/kernel.h>
+-#include <linux/spi/spi.h>
++#include <linux/module.h>
++#include <linux/regulator/consumer.h>
+ #include <linux/slab.h>
++#include <linux/spi/spi.h>
+ #include <linux/sysfs.h>
+-#include <linux/regulator/consumer.h>
+-#include <linux/module.h>
+-#include <linux/bitops.h>
  
-@@ -158,6 +188,27 @@ Unimplemented features
- - GPIO support
- - CRC support
++#include <linux/iio/dac/ad5791.h>
+ #include <linux/iio/iio.h>
+ #include <linux/iio/sysfs.h>
+-#include <linux/iio/dac/ad5791.h>
  
-+SPI offload support
-+===================
-+
-+To be able to achieve the maximum sample rate, the driver can be used with the
-+`AXI SPI Engine`_ to provide SPI offload support.
-+
-+.. _AXI SPI Engine: http://analogdevicesinc.github.io/hdl/projects/ad469x_fmc/index.html
-+
-+.. seealso:: `SPI offload wiring`_
-+
-+When SPI offload is being used, some attributes will be different.
-+
-+* ``trigger`` directory is removed.
-+* ``in_voltage0_sampling_frequency`` attributes are added for setting the sample
-+  rate.
-+* ``in_voltage0_sampling_frequency_available`` attributes are added for querying
-+  the max sample rate.
-+* ``timestamp`` channel is removed.
-+* Buffer data format may be different compared to when offload is not used,
-+  e.g. the ``buffer0/in_voltage0_type`` attribute.
-+
- Device buffers
- ==============
+ #define AD5791_DAC_MASK			GENMASK(19, 0)
  
-@@ -165,3 +216,20 @@ This driver supports hardware triggered buffers. This uses the "advanced
- sequencer" feature of the chip to trigger a burst of conversions.
- 
- Also see :doc:`iio_devbuf` for more general information.
-+
-+Effective sample rate for buffered reads
-+----------------------------------------
-+
-+When SPI offload is not used, the sample rate is determined by the trigger that
-+is manually configured in userspace. All enabled channels will be read in a
-+burst when the trigger is received.
-+
-+When SPI offload is used, the sample rate is configured per channel. All
-+channels will have the same rate, so only one ``in_voltageY_sampling_frequency``
-+attribute needs to be set. Since this rate determines the delay between each
-+individual conversion, the effective sample rate for each sample is actually
-+the sum of the periods of each enabled channel in a buffered read. In other
-+words, it is the value of the ``in_voltageY_sampling_frequency`` attribute
-+divided by the number of enabled channels. So if 4 channels are enabled, with
-+the ``in_voltageY_sampling_frequency`` attributes set to 1 MHz, the effective
-+sample rate is 250 kHz.
 
 -- 
 2.43.0
