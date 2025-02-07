@@ -1,101 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DC1238D29;
-	Fri,  7 Feb 2025 15:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD01238D2A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738941031; cv=none; b=Kd+KtKosn5sboYDeup07QY9KaSPvLNgxGl9PhKhGNfFnv9tarbSdWSLxREmEk1VVwturVW3U2LWLEwN4yZ/jArglC8mxUUNJjIFwbC4cjVARndnGnclFNcAzJwb8aI42T979l2vmXCJK8G66onmWmQIjg3PdvgFR20mwv+mFXHc=
+	t=1738941065; cv=none; b=tTTP8wJp6qKxa1Tw5szY0FYyBYiikHmMe5z21DYFXTJKNdOxeSL2Y6jfozZRj/PpGQsOSH+5iRzHWrHqcT5UcDwxHXifob09BtIKkmgEapBgrZSJlgiqc5+VYI3c/88GjSDgeH+sRScWY6MemSnZ2jCyI7cYDbOI5BBnE6FtyWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738941031; c=relaxed/simple;
-	bh=82Hn5Vv9+moRLz5/ytKgYhAzHehuPFQCaFbwqbElOfc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=knXherULmu8c65GKT70UEOwx070mDra83KAURVac/u6ytJQmbfgB7iwbZtisWlkfptae1tB6Du2QnFazAzf7578nkFLMBTfbntmMmI9NxxdjJ7gs2aavSWti28ouDGBrXVMofKcuWsxm74lVnPiQMKU3kH4hOvHD7KmC4gXi8CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MrEzHuiC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738941065; c=relaxed/simple;
+	bh=Ycg0I/IGH8EdGqoRvfBDsJwusK5/zPucQSLakORXxFw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L6MPdvjMuwjZ19qTZdAwJDpMZ9xAySg0n03zX2B/Mx51oQXD345YNXZYwg3vwwsjjnXAUWOVYoA1FFB/Df1Hha0P8OtxDzO94jqGfRXIw4jg1wTLSw33y/8P9DRzp+pFBCtFLxOuN9gOAK3nAKpgS5QDnWVuDuOvLc7Wxg0JHDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=07GcgjFD; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MrEzHuiC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4F34C4CED1;
-	Fri,  7 Feb 2025 15:10:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738941031;
-	bh=82Hn5Vv9+moRLz5/ytKgYhAzHehuPFQCaFbwqbElOfc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MrEzHuiC4XmPMEX/55C6UUY4OkcAhWwVpv5qLHhib5L9zeyBbxOzDdvY+Er82ur7g
-	 jf22Qfq+bVq2eXWI7cWN5ZchyR2BAQqgKzigs85G9ERMwMEwC1VTIwAvntoDAJFAiD
-	 fkw7oXWRkIP3wP99CE1JBt4ZGXK/xS3ASiNNYC1E=
-Date: Fri, 7 Feb 2025 16:10:28 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: rafael@kernel.org, "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: queue-5.10: Panic on shutdown at platform_shutdown+0x9
-Message-ID: <2025020722-joyfully-viewless-4b03@gregkh>
-References: <231c0362-f03e-4cef-8045-0787bca05d25@oracle.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="07GcgjFD"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4679b5c66d0so255631cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 07:11:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738941063; x=1739545863; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=mOI0Xr28dC45rJb2BCYhdZJmAWpUY5gWtBmNeq91+Ak=;
+        b=07GcgjFDDuELLPOFN6krVdD2YtDtrEfHEztItpTAD+r8wHvY8UDzxgLRs19Rau9VMB
+         LGHCFG02Plx2DId8ztkU5xZzTGrqMLhtC+Voz5yImPGH/nxFc3mHEXYdslNzawcc5QKE
+         jReRVJ4Q79QChh3PiggXCU0KbgRoJ1Ug7nNJEpGtiKNrd/9Gi1Rk63mccGDVeCGz7Gbz
+         zhykqM51ioflSKRcsrx12AjHobyTMLLMR5exT/lV5kwd3rEpqLUADxfQW9ecuwHFdjTN
+         X650HlQ+Z/De/ptgaGB8S2fKaP7CeRTEZ5wM5I//3pwE89xwMws1elSUxvcKw5Fvykid
+         b6tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738941063; x=1739545863;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mOI0Xr28dC45rJb2BCYhdZJmAWpUY5gWtBmNeq91+Ak=;
+        b=FXfaqRe4nyigZ7lXbaRCac2Q57azNgLLWvvQTDTNsDVix9rxvOzaMn4wo4qnms4z8J
+         LXULaiVqOaP3rS3M3t/vfBhRHOSESsK0OGXdmIfpMp2yRcPE02JrmxbSTwIWnrWjRmsz
+         QTAhAaKuGM21SNI+SXtlus5mDhF1kqRoJNENmqbIsU9qNAHny+6QeBB3rupAk3p0xCif
+         rupOviwBZP2Rfrg6qQVtslMYF+/k+RkoADPiic3KwX2MiomOrsUTHOZ8bcPVT6jz6dHb
+         nNv/Jp/q85DwU/vAQ4SSapBJJokeoXxAVo5Ku6ob+y5+ANikuBSXCdU3OcAHCRbtUeQB
+         PSFg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPVE0RokyZtSw2FI2yet8xJ6hD7luhtvgez4b5i4/E6tyw5xlFmp9bRP9ydkov1BeaJLdonkVi0xyiDFI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVWdvBeqUXSYjI3ANIsozO6JMrfPAPYwepNZ2k6zhy+KB9mqWv
+	vn7PZ2N/kMaGrPbqwXqvuQ+fHXHoZ5GvDeOmZINvXTBAlbNi8zAgU1zt1zt53pgSFPifGeoG3Wp
+	bh7JU1Ab441wYaC4S+uYG1iGVkifxMU1auqrC
+X-Gm-Gg: ASbGncsqCH5W0EVOnbdk67gAhoARCAKkN0ZdQL4/BW1C7+xsGZUDcfqZ0tceAv57h0J
+	459/7PNrmYb19PkK6/7n4sUjpVZpQB3YHEsXnODw1GxBGiB1MrM8P41lmluAFWhJT4x2i+gudu2
+	IfCYcZZamoypKG/ilsJWeg5KQIMRQ=
+X-Google-Smtp-Source: AGHT+IF/nJGpEi9xq5E9CylW+Z8B2gDg5xgGCl6lUjy7uExSa7txt20qsNhXGypcQPbWVJbTbWF5PKZZZAvb9UVcaW4=
+X-Received: by 2002:a05:622a:1890:b0:46e:1ded:e31f with SMTP id
+ d75a77b69052e-47168488f6cmr3517401cf.4.1738941062862; Fri, 07 Feb 2025
+ 07:11:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <231c0362-f03e-4cef-8045-0787bca05d25@oracle.com>
+References: <20250206044346.3810242-1-riel@surriel.com> <20250206044346.3810242-5-riel@surriel.com>
+In-Reply-To: <20250206044346.3810242-5-riel@surriel.com>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Fri, 7 Feb 2025 16:10:51 +0100
+X-Gm-Features: AWEUYZko8Tepey1C9O-kaFhzHCNOILtT4NNbtqj2Ew_kIzYbNfBDcLDOYu8rd6o
+Message-ID: <CA+i-1C2NAFTrmZBFfBf8PFaji9YxQm68pV2qc7VbgHWFTji+Xw@mail.gmail.com>
+Subject: Re: [PATCH v9 04/12] x86/mm: get INVLPGB count max from CPUID
+To: Rik van Riel <riel@surriel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
+	peterz@infradead.org, dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com, 
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com, 
+	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com, 
+	mhklinux@outlook.com, andrew.cooper3@citrix.com, 
+	Manali Shukla <Manali.Shukla@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Feb 06, 2025 at 01:31:42PM -0500, Chuck Lever wrote:
-> Hi -
-> 
-> For the past 3-4 days, NFSD CI runs on queue-5.10.y have been failing. I
-> looked into it today, and the test guest fails to reboot because it
-> panics during a reboot shutdown:
-> 
-> [  146.793087] BUG: unable to handle page fault for address:
-> ffffffffffffffe8
-> [  146.793918] #PF: supervisor read access in kernel mode
-> [  146.794544] #PF: error_code(0x0000) - not-present page
-> [  146.795172] PGD 3d5c14067 P4D 3d5c15067 PUD 3d5c17067 PMD 0
-> [  146.795865] Oops: 0000 [#1] SMP NOPTI
-> [  146.796326] CPU: 3 PID: 1 Comm: systemd-shutdow Not tainted
-> 5.10.234-g99349f441fe1 #1
-> [  146.797256] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
-> 1.16.3-2.fc40 04/01/2014
-> [  146.798267] RIP: 0010:platform_shutdown+0x9/0x20
-> [  146.798838] Code: b7 46 08 c3 cc cc cc cc 31 c0 83 bf a8 02 00 00 ff
-> 75 ec c3 cc cc cc cc 66 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 8b 47
-> 68 <48> 8b 40 e8 48 85 c0 74 09 48 83 ef 10 ff e0 0f 1f 00 c3 cc cc cc
-> [  146.801012] RSP: 0018:ff7f86f440013de0 EFLAGS: 00010246
-> [  146.801651] RAX: 0000000000000000 RBX: ff4f0637469df418 RCX:
-> 0000000000000000
-> [  146.802500] RDX: 0000000000000001 RSI: ff4f0637469df418 RDI:
-> ff4f0637469df410
-> [  146.803350] RBP: ffffffffb2e79220 R08: ff4f0637469dd808 R09:
-> ffffffffb2c5c698
-> [  146.804203] R10: 0000000000000000 R11: 0000000000000000 R12:
-> ff4f0637469df410
-> [  146.805059] R13: ff4f0637469df490 R14: 00000000fee1dead R15:
-> 0000000000000000
-> [  146.805909] FS:  00007f4e7ecc6b80(0000) GS:ff4f063aafd80000(0000)
-> knlGS:0000000000000000
-> [  146.806866] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  146.807558] CR2: ffffffffffffffe8 CR3: 000000010ecb2001 CR4:
-> 0000000000771ee0
-> [  146.808412] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [  146.809262] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> 0000000000000400
-> [  146.810109] PKRU: 55555554
-> [  146.810460] Call Trace:
-> [  146.810791]  ? __die_body.cold+0x1a/0x1f
-> [  146.811282]  ? no_context.constprop.0+0xf8/0x2f0
-> [  146.811854]  ? exc_page_fault+0xc5/0x150
-> [  146.812342]  ? asm_exc_page_fault+0x1e/0x30
-> [  146.812862]  ? platform_shutdown+0x9/0x20
-> [  146.813362]  device_shutdown+0x158/0x1c0
-> [  146.813853]  __do_sys_reboot.cold+0x2f/0x5b
-> [  146.814370]  ? vfs_writev+0x9b/0x110
-> [  146.814824]  ? do_writev+0x57/0xf0
-> [  146.815254]  do_syscall_64+0x30/0x40
-> [  146.815708]  entry_SYSCALL_64_after_hwframe+0x67/0xd1
-> 
-> Let me know how to further assist.
+On Thu, 6 Feb 2025 at 05:45, Rik van Riel <riel@surriel.com> wrote:
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index 17b6590748c0..f9b832e971c5 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -338,6 +338,7 @@
+>  #define X86_FEATURE_CLZERO             (13*32+ 0) /* "clzero" CLZERO instruction */
+>  #define X86_FEATURE_IRPERF             (13*32+ 1) /* "irperf" Instructions Retired Count */
+>  #define X86_FEATURE_XSAVEERPTR         (13*32+ 2) /* "xsaveerptr" Always save/restore FP error pointers */
+> +#define X86_FEATURE_INVLPGB            (13*32+ 3) /* INVLPGB and TLBSYNC instruction supported. */
 
-Bisect?
+Why no "invlpgb" here? Seems like having this flag visible in cpuinfo
+would be worthwhile.
+
+If there's a reason to hide it maybe add a comment to explain the
+reason? Sorry if this is a stupid question - I also can't see an
+obvious rationale for why existing flags do or don't get a name at
+runtime.
