@@ -1,103 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7702E1EB1A4;
-	Fri,  7 Feb 2025 15:11:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0F51EB194
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738941118; cv=none; b=AsOCtexF6L3ys1l5NgGzsJ3CQXD3DJzFiJFxUtS3Jg5TyBnE4H1xOVysR7vU/Xpsw+OeBDRu+6mU3IasBYoGVrVKa//wTHSftXsifiOTeMeSTbCnfbhuJFqpm/eY62XxftM1xa0rtG0l9lpARDDgXsspKBVIBqL8txX3uCef8A8=
+	t=1738941128; cv=none; b=h4B7zcJMUYnBeDpO9TWj3T6jy/mrvMyCAqZ+2sdk3gbG8OstV/WBc5v3VOsVNnw+AklhFbYAwcjKtG4QDr/YFdkkYCP92jAoj0R0Sc4r7K9SlwX3jruR49SqII4M3oNjp1rdgEliLxMF/cHd0fthtfC35vkO3/iici+F/jBGRvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738941118; c=relaxed/simple;
-	bh=MJujtC3ZW+VSXyU6bigjgtlw84B4aNtIkZUpkniiuy4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h6s4BK1ymM8qpAlyq5NvZBtj0DJKOolpJw1GZo5PKEjmiwW4mH65dufFRS2/NSpb87HqR82OlsQs0RIrV11B3EBsQVjxrqKrhci2MMEfa9V1wAk/3XMIW8Ae6e0k8fwH7iAz5BEGZkz2xArJEjhj36xrkbANwEAXO9xQ2WmHpfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EosEbuOH; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738941128; c=relaxed/simple;
+	bh=7WeBIy2sejYk+BR4w9p25NFRkBTZIswmq3mry9An0iw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=oRuDGPPSscO/EC9oIvC544wEvzI5X9j0f/s2BdoYNdoDo7w70i7tjbVqckbBXLQGR4tToVr23jHjDrQSvOXH6QC9VVmYFOPkGOW41quWsDaZwXKw0IgaarwSbWa8awAqKckG3TLLs1/vxBYI7OlxGIob2ky2TYCAQxNwwhUq8Mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M/Tk/r+P; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EosEbuOH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738941116; x=1770477116;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=MJujtC3ZW+VSXyU6bigjgtlw84B4aNtIkZUpkniiuy4=;
-  b=EosEbuOHb/GqzRpKTlCe34aHcfoT3zQfl6/1wXvqiaRMO//E+sVHXlq7
-   Dy8cbxKs1514Ro3CiqIbRt1BObncG/2HteJgo8H8XuD9dC6UL1IJwJBJE
-   tFdbCrk/SYTWpM6Mhevbas0uIq7NFUZj8jOtAK93kRPf9QrXGMS2wajId
-   1yjjvQHwkreFgCe8WwsfOYjl1GoQpBiEcJQ3772mOM1uC6udjpC5sg7NW
-   p5YpKLB5kLnS+pO1QO1nTfauiIZ7HZ+vL9emHku22DuUWzNz6TiS/vwNQ
-   t+6aSO4i45Q8GMCYuqfGCPQhQkEo6Dvf3tfK+kwomClVqHWXzGlVi5oJL
-   w==;
-X-CSE-ConnectionGUID: DCq4+78gQ5yufGligIL+sA==
-X-CSE-MsgGUID: U4/1qoPcTiqLT0bbrZBGKA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="57120807"
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="57120807"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 07:11:53 -0800
-X-CSE-ConnectionGUID: RLZdE5Y9Rfepa10I7zZ9yA==
-X-CSE-MsgGUID: ubym+9i3SFCE7/IQLaZHbg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="111511667"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP; 07 Feb 2025 07:11:52 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 38DB938D; Fri, 07 Feb 2025 17:11:50 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 2/3] gpiolib: Simplify implementation of for_each_hwgpio_in_range()
-Date: Fri,  7 Feb 2025 17:07:35 +0200
-Message-ID: <20250207151149.2119765-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20250207151149.2119765-1-andriy.shevchenko@linux.intel.com>
-References: <20250207151149.2119765-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M/Tk/r+P"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fa166cf656so3249286a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 07:12:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738941126; x=1739545926; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LxVXEzr2oQzIGSnyax9BmL0hTrsx3WZN3f0e41uCa0k=;
+        b=M/Tk/r+PPIisRQBBW2/p+0l7LRkGjGwrCUiizFkYwTEZ2nC+Pwruubw8KKEke4lO6J
+         VzsJXYFOGxI4c89CzbMYIAdzaQ7EGNmkdV0K2kdIxBI3w9z96U/0SwhO5OrLe+w9NV7I
+         shq6baIghdCk5CkeRDALH4Fy6M7IZqkTbn6b/FjvJ6MWxRoU5ZzOUM5Rr63VrQ1lf/O9
+         xR+JuFTWuGCeqnHwgnU7ErAuqQvWWE1Nz0R9eUgLzMFs/FM19F8ty3VpWtrb5wZVTTn+
+         T3K+QJBDlfrOZh1r1uuY8KdpFSepD0abZWAmRoNxZr3+j8UPBoIjAuncs+VvGAlxouoC
+         A1Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738941126; x=1739545926;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LxVXEzr2oQzIGSnyax9BmL0hTrsx3WZN3f0e41uCa0k=;
+        b=C/UQqr+ti+IffiZMnfwL9+xuQMZ4t9owBALueAB6LV4g1g4TbrXTe5HQj45cgrcQsZ
+         OOXIcR8L+1D4+BSKiWh+Athzv1cvj94i80OCj2ZOuysEKse8OjoM7SJ3LlFyvdgvYoiI
+         y1FBBZpSZraYlX4MF4WcVvzJgmSovVvJY7oOX104evx4MIBUVlx/xOY5D62WwXK+vJ7A
+         +T4AclnDMJ9QYI8guX2u/AYh+7KSlcZdWhORwb7DCGlokndUsLoqyF1QddKkxB3XKl6L
+         +nq3Dq0cGsdkVGfkJsjQj5135wEU3B5J4Vl9YHTv8Vqd9ntX1XJ/jr3VlikiooxetvZJ
+         hr6w==
+X-Forwarded-Encrypted: i=1; AJvYcCWuRwfou3Y+Qm/qzHbgnvBT6ls2LYofFtwrJTyauq6/2ThAjTIX+iEAmfHXnrY+YCrLre3Ir5XnoPU+7vU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyO1J2pQDghfrsRR11CVdYDCIeL+CscH9sHTes/QnfzTrikGTyq
+	LoWmSf6pu/zlk4fwOexYKA+Cn3/ypkc6Di8GhZWys89N8B/4gyBdf2Negl4HHO9lEXE5qiC+c7n
+	SLg==
+X-Google-Smtp-Source: AGHT+IFGLXHzNrNOdKG1czY4jTF73FsqIGqlSCN04qJ3RgdhuYV6jC13Lajj/ww4zk3yzh9N7Wq07gYnLLg=
+X-Received: from pjbee11.prod.google.com ([2002:a17:90a:fc4b:b0:2f2:e97a:e77f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1e41:b0:2ee:a583:e616
+ with SMTP id 98e67ed59e1d1-2fa24064ed1mr5606353a91.9.1738941126259; Fri, 07
+ Feb 2025 07:12:06 -0800 (PST)
+Date: Fri, 7 Feb 2025 07:12:04 -0800
+In-Reply-To: <20250207030931.1902-1-yan.y.zhao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250207030640.1585-1-yan.y.zhao@intel.com> <20250207030931.1902-1-yan.y.zhao@intel.com>
+Message-ID: <Z6YixPh_j517vqcP@google.com>
+Subject: Re: [PATCH 4/4] KVM: x86/mmu: Free obsolete roots when pre-faulting SPTEs
+From: Sean Christopherson <seanjc@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: pbonzini@redhat.com, rick.p.edgecombe@intel.com, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-The whole purpose of the custom CLASS() is to have possibility
-to initialise the counter variable _i to 0. This can't be done
-with simple __free() macro as it will be not allowed by C language.
-OTOH, the CLASS() operates with the pointers and explicit usage of
-the scoped variable _data is not needed, since the pointers are kept
-the same over the iterations. Simplify the implementation of
-for_each_hwgpio_in_range().
+On Fri, Feb 07, 2025, Yan Zhao wrote:
+> Always free obsolete roots when pre-faulting SPTEs in case it's called
+> after a root is invalidated (e.g., by memslot removal) but before any
+> vcpu_enter_guest() processing of KVM_REQ_MMU_FREE_OBSOLETE_ROOTS.
+> 
+> Lack of kvm_mmu_free_obsolete_roots() in this scenario can lead to
+> kvm_mmu_reload() failing to load a new root if the current root hpa is an
+> obsolete root (which is not INVALID_PAGE). Consequently,
+> kvm_arch_vcpu_pre_fault_memory() will retry infinitely due to the checking
+> of is_page_fault_stale().
+> 
+> It's safe to call kvm_mmu_free_obsolete_roots() even if there are no
+> obsolete roots or if it's called a second time when vcpu_enter_guest()
+> later processes KVM_REQ_MMU_FREE_OBSOLETE_ROOTS. This is because
+> kvm_mmu_free_obsolete_roots() sets an obsolete root to INVALID_PAGE and
+> will do nothing to an INVALID_PAGE.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/gpio/driver.h | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Why is userspace changing memslots while prefaulting?
 
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 024112ef5a78..ae93f75170f2 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -559,11 +559,9 @@ DEFINE_CLASS(_gpiochip_for_each_data,
-  */
- #define for_each_hwgpio_in_range(_chip, _i, _base, _size, _label)			\
- 	for (CLASS(_gpiochip_for_each_data, _data)(&_label, &_i);			\
--	     *_data.i < _size;								\
--	     (*_data.i)++, kfree(*(_data.label)), *_data.label = NULL)			\
--		if (IS_ERR(*_data.label =						\
--			gpiochip_dup_line_label(_chip, _base + *_data.i))) {}		\
--		else
-+	     _i < _size;								\
-+	     _i++, kfree(_label), _label = NULL)					\
-+		if (IS_ERR(_label = gpiochip_dup_line_label(_chip, _base + _i))) {} else
+> 
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> ---
+>  arch/x86/kvm/mmu/mmu.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 47fd3712afe6..72f68458049a 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4740,7 +4740,12 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
+>  	/*
+>  	 * reload is efficient when called repeatedly, so we can do it on
+>  	 * every iteration.
+> +	 * Before reload, free obsolete roots in case the prefault is called
+> +	 * after a root is invalidated (e.g., by memslot removal) but
+> +	 * before any vcpu_enter_guest() processing of
+> +	 * KVM_REQ_MMU_FREE_OBSOLETE_ROOTS.
+>  	 */
+> +	kvm_mmu_free_obsolete_roots(vcpu);
+>  	r = kvm_mmu_reload(vcpu);
+>  	if (r)
+>  		return r;
+
+I would prefer to do check for obsolete roots in kvm_mmu_reload() itself, but
+keep the main kvm_check_request() so that the common case handles the resulting
+TLB flush without having to loop back around in vcpu_enter_guest().
+
+diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
+index 050a0e229a4d..f2b36d32ef40 100644
+--- a/arch/x86/kvm/mmu.h
++++ b/arch/x86/kvm/mmu.h
+@@ -104,6 +104,9 @@ void kvm_mmu_track_write(struct kvm_vcpu *vcpu, gpa_t gpa, const u8 *new,
  
- /**
-  * for_each_hwgpio - Iterates over all GPIOs for given chip.
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+ static inline int kvm_mmu_reload(struct kvm_vcpu *vcpu)
+ {
++       if (kvm_check_request(KVM_REQ_MMU_FREE_OBSOLETE_ROOTS, vcpu))
++               kvm_mmu_free_obsolete_roots(vcpu);
++
+        /*
+         * Checking root.hpa is sufficient even when KVM has mirror root.
+         * We can have either:
 
