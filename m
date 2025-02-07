@@ -1,213 +1,217 @@
-Received: from sdore.me (unknown [95.165.1.78])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2075.outbound.protection.outlook.com [40.107.100.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5B1195FEF
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 21:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.165.1.78
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738962010; cv=none; b=GQJOm9FbaUpsVYwshRM9cAgYIlP+11EzxFJsjI8sBOo66qz1B8+EOMISyw6aW90+jX8P0U8fDxVy0j4av1lTofa/a3fO6LPwu2n+4Es6RbyZBSCCaV5DnsfdEqY/4xOPFtpuJ+uhZuiVc/MmDZ+WlISJK0vMTG8OPdilyxwhuDc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738962010; c=relaxed/simple;
-	bh=ksvD8NEcd6TaYE9uOjAbzkgggV4qq6CKb54BE6GcwkM=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=NHquNzfE8sDyGz4eFVVALvBjbSePMDUHF9cSYYd09UX36A5SzudgNQBslS1aGBPzjbblBXwG//yzW6KehX9DGRgGuHVtNjVBGefUL62zOkHVPHC+gDAXF/nFreHfEU1RDsSoJ2eIeejX1EbCD6CsRNlfqL51LmeEEMGOhWRLTmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sdore.me; spf=pass smtp.mailfrom=sdore.me; dkim=pass (1024-bit key) header.d=sdore.me header.i=@sdore.me header.b=iudWUhZv; arc=none smtp.client-ip=95.165.1.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sdore.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sdore.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD7D195FE5;
+	Fri,  7 Feb 2025 21:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738962270; cv=fail; b=pnMYpWMfTO95ejOqGZtdrHDF2nfowjlXVsaxvLTo7vtYDXQ1UXTQOik03LhFdu7N51sezWQIA9meq8hKWDOy0G1Pf1bKXn0elCcBD9MoEwFPI2EWf8tpk1xasglCjEDBgl5oy6EbApKz5AhBjkUjORv99J9V9Rc8yIrinzYC8U4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738962270; c=relaxed/simple;
+	bh=lDVIdvXI+B9MJasjbYMk1Sncdu+9x2OpwUPyurxXzfY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=gINTCi2lZwVVqXVBxaGgpu+8CjqUwXjdEaaQRTgcD/nzlJmwEZqo1N6VD6MZ0eCozdjP7R7Ro29dPTIBBsvcvFQGlsTTo5nwujRggSfP00TlDyUpOPoUD9s2rwN61s+aHajtzLLUd7El1DTgKHQa5flABfANSQHke0pS2UDLi/8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mtX9LPGw; arc=fail smtp.client-ip=40.107.100.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=sdore.me header.i=@sdore.me header.b="iudWUhZv"
-Received: from [192.168.1.2] (beast.lan [192.168.1.2])
-	by sdore.me (Postfix) with ESMTPSA id EF497EDE71D96;
-	Sat, 08 Feb 2025 00:00:03 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sdore.me; s=SERV;
-	t=1738962004; bh=ksvD8NEcd6TaYE9uOjAbzkgggV4qq6CKb54BE6GcwkM=;
-	h=Subject:From:Reply-To:To:Cc:Date;
-	b=iudWUhZvjMXAIc9nnklkFgZyK88TJbJOU76WRR7dYpWHdgnHLffDZHh7ZXcPaEBB8
-	 Uz4xXQmbCPq20RVPoURIi4REv93q/MMTMdEKhsNZLg0P4nnH+uEjhqZ/Alkd1QzT8y
-	 ax9UOKTZeTc0M1bpF/9JIdqYgV4m15a7ryBdg+EM=
-Message-ID: <e60254ec3544d37367c9917bc0e1cd5fdb95248d.camel@sdore.me>
-Subject: [PATCH RESEND] drm/edid: Implement DisplayID Type IX & X timing
- blocks parsing
-From: Egor Vorontsov <sdoregor@sdore.me>
-Reply-To: sdoregor@sdore.me
-To: linux-kernel@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org, Maarten Lankhorst
-	 <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, Egor Vorontsov <sdoregor@sdore.me>
-Date: Sat, 08 Feb 2025 00:00:03 +0300
-Autocrypt: addr=sdoregor@sdore.me; prefer-encrypt=mutual;
- keydata=mQINBGDSFnMBEADfvtLiuRL6CHdMzETKrux7sNHWG+eJ2+pgRZ3Nc9pH/YWqjoed8OpFx
- OLeUxr9YSQ3uMD//JEe3+Sgte29Z3PAAHVkCwKBIucCnhHpXbcQZgC9xYMCd6GWR5+DpXN9szOIyb
- kvnEtuqTddz6Q7fYsaFDs0pH3jUUWmSAyCn2JCIRfT22XgO44B/yoqnM3JXHAayeHbEAQOzMe81q3
- deauI9W7SC9ScRT6VkgLuc+SxqH99el/OkiKTe/QpO6I6cVS8leesqnOGffkRPos/o2eRonqgDu0e
- Mw4YTu0x5iNr8Lbr4TefU2W1l6M3MNwOsLmI+58+3fK1vh0QqZ70NC4eyD9UEXk3mJyV7epfNU6fY
- 0mFJbAhGV1TXomcy2MlOD1rDixw85zdK5uUwp0tfEkpxqKtihJmrTdApOTTVed303CLzgDsMokTIe
- aUOPqVZoWFDkvOzq6IppBkApJHBf1lcLlgwEn3cLQlGpYRSSi5NY3+UYtcOEZLDbF3TO6ncY8W2h3
- yQH/sAcSllfKKvkhdqEz4/Mha3GbZQXWgjrLy9BcISsQFj+DBN54I6a6kLm2n5wXH99sOp7s3jMeN
- zSU6PtuxZq4Gkt2K5JGT8yrIdfJfOH7yRUVm+8JqKNKqd6oczlDKV+lzRk9M/kjb8VQivaNSNwTo9
- 3NxEuft0+tZgwARAQABtCJFZ29yIFZvcm9udHNvdiA8c2RvcmVnb3JAc2RvcmUubWU+iQJOBBMBCA
- A4FiEEXlTCjXwaPBiJP3U33a9iH2xv60MFAmDSFnMCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4A
- ACgkQ3a9iH2xv60OquRAAgbgenXi+Ud0tYoAz6giuFKYqzuEYuoSVkjxYvZq90ODrzbu7EdvMVuKA
- qNqYjs3VRBPBMHXhJKEftKbX4bZwCoC2o2wB5oV5O13jVN083r49FTLCxmOoufCkaqscBBxi/X2T6
- +i0n5Nqx5NLBL0kE4NMTk1jxEEyuEjv7bBMs196G/d3EpNJT3YGkLXBUibpaSaVjE6zBr3UygieLD
- 2QXNkRJubx2d0FoD8TezSt5hsHWg9FOElsW6ZImRI+5q+ptL39K3cpjxHMKyhmo7xypD5XNWdmsmV
- 1+STnK7R+id18xs7JUDxHBtG7Z/3K6txgF5CPbPvtaEi9fB3K/uS03BnIzsY2/cY3r9UHHrHa/sP6
- DhDwj9dr2xIFG5w6ZNh4mUTHEJoWKEEsYKwXy2eJCB3XvP7GURAm8fXdIapONbHDYj7XX49Mj+LBr
- s4PNBuKaZTFgGQ6RSc7LpAR56xaEDR93m7zNy84mQtpab/owaox1A+BEujzKK/vEDvj9f8EWlWZRa
- DH2auNNAxdr2ACR8RzkojcFDCErAgc5sFQrgVUlvNmMdn3VL0CWmndzEQxsOdgVk9SwoHHYpHf4Cg
- gtchq3pTQ5XSRaP/wxOtQpzqJWq5uFERBTLU8WRXYv3mM3KMdvtTJadF8+P+KSSnn+/yHahR0HKVx
- PtHSH7Px/vI=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.2 
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mtX9LPGw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UySH8ZukdvETNmbNGTeCKFQhJSMCMYYWWi6r8Q7vuNKP3Z/NHFT5qzczMlBt6xhEOSyfMT7E+02ovjbf8GX2g8XK4S9VZhGop48QcYkbX9x7vxsOOI3EbPyXAtRoOqRR2CSQhUSiSXfuFIpcYbDAAtiLosKIExT2lpK1GJUkzWNjC/JzMVnR25z+VjtgKiHF5EFLM8rBWJQ222v7ReU4qUS6zmCOCIWC4Mb06rtDPjYUCR1v1B9wiHM3OHWjHvNULCIHoiNQH6ABwvD1Nrr6s757UEQu9I78j177kdueBPq467Rwd2ZQ37wpTmXQkmuVRLVInKdPixxAqDgxo/mS2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XCufUTFTLGT56dPsg5AyWQUaKWXvNrToCVufuiACCEs=;
+ b=BkKey9GTdCiEJohzpiUsnEpRclnPD65B7OWfuSOOtwquITrSzQIul+BACBic90WCfDRIHN5SB1HS1ou2AUNIbQvW5A7BvyZnpsycrTXtzBs/R0G5vcsQdzgOvgrBjAbd/W2LtRrVExcP0SG0XV45HjVOLPqWFCqGeOlG469bvPxr4Mfbsk11fM6gLUVwgGAI0icBssvpyOH2BIjGESNxBfv9z3n2H2gHQWQUQyo51RJpJhTD2nU3lD9BjPzY/LuagaakP0WCTW/4agqzEkHjWlPokj/6aEpaBLziNtxhjNUS4hwfPPZxL/lAMgYYw64iTQRHm6b26AL5xB112/hOng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XCufUTFTLGT56dPsg5AyWQUaKWXvNrToCVufuiACCEs=;
+ b=mtX9LPGwHznX1oewLqZnogjA5W40SJugG2r1y2DkoqjQLC4NzlTmyoMXLnR/H97jxjV6Gbss+Vqb8Ee9nMoplOwFR7pZuMmsLijkJybZfSLUe3gHZorwH09KFAzKCieepzaVBPud48GTCAxDEfi/tu2JJiRwSZ1Jon+zuju6Z/A=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ SJ0PR12MB5636.namprd12.prod.outlook.com (2603:10b6:a03:42b::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Fri, 7 Feb
+ 2025 21:04:24 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%3]) with mapi id 15.20.8422.010; Fri, 7 Feb 2025
+ 21:04:24 +0000
+Message-ID: <dca3416c-4827-4dd5-93f2-023a05037e5f@amd.com>
+Date: Fri, 7 Feb 2025 15:04:20 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 13/16] cxl/pci: Add error handler for CXL PCIe Port RAS
+ errors
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+ rrichter@amd.com, nathan.fontenot@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+ ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com, alucerop@amd.com
+References: <20250107143852.3692571-1-terry.bowman@amd.com>
+ <20250107143852.3692571-14-terry.bowman@amd.com>
+ <Z6W92JUQQt4Lf6Ip@gourry-fedora-PF4VCD3F>
+ <5df5c06a-b1fe-4b79-a313-2b4c5b088f83@amd.com>
+ <Z6Zh0faJrwxsVBLD@gourry-fedora-PF4VCD3F>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <Z6Zh0faJrwxsVBLD@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN1PR12CA0065.namprd12.prod.outlook.com
+ (2603:10b6:802:20::36) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|SJ0PR12MB5636:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9ca70139-2c50-4d43-74e9-08dd47bafff6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OGhnUmhCcGIxYnBBejY4bzJxL2xwcFBhVkRXSlFDS0cyYWFRaEtLMmxXOFhT?=
+ =?utf-8?B?R0J5UzlPbmJyVE80WVlmVmM0TU1pVTlwdGNuYklLME0yVHJLQjEyVXJPTlNX?=
+ =?utf-8?B?cW5FMUJxY0N4a3VLanFuTFZqYTdubWlNSTkrdWRPODBTTzZjV2s4ajl5ZTg0?=
+ =?utf-8?B?eUZHem1xaWc4UWNreitueWtwM1VVNDhoQUx6UFIvalo2NmFzN0hkQUllK3dL?=
+ =?utf-8?B?NEc0dHpMeDEvdjhVSzAxK3hHWFcvVHY0citHVWtaajluajl4S1phaHVjTHBI?=
+ =?utf-8?B?emxUMHN6MVNjM1ZXeXJJL0JCdXdUcmVDZlI5NU5ZYllKSysyOWV5MEZkTllV?=
+ =?utf-8?B?N3BCNDJlYUtjTEUvWkhCUWlpbnNEdWRScTRreWhtb25QVkRSQXJieXc0dEE1?=
+ =?utf-8?B?TFM3WGFDSGZweXBvTGNpb01UbkRaZFdhTWY0bjQ0Q3I2cUd4L3d0TEJZeUlD?=
+ =?utf-8?B?a25BQW1PV1pHakJuMDBHckNrK29SaWo0eUVGWldIWXcvOStGME9yMHBoR0VC?=
+ =?utf-8?B?Q0VvSUV5VE90c1ROWGlzZXVFZmdONzM0bUVhYmdqN0VUTXpWK1krb2ZycERo?=
+ =?utf-8?B?Y0JKdEI5MUhDdHRrd1Zic0ZvSkV0MnBoNjRUZS85SDVSMnAzSC9FaWduOHov?=
+ =?utf-8?B?TG8yQVdOOURCenJwSXNXQlJOT01NVnJZa0hVdHRPYTlUeW5OUUhPYkdESE1Y?=
+ =?utf-8?B?c2M0OFRJNisrejlMOVQ4ZXY1SzMrRHZCcnFRN0hsMklOWm9KQzlvNEtzVmZO?=
+ =?utf-8?B?eDd1VklsNlZDN2ZacVV6aU9FMjd5K2VxV0g4bVVKWkJHTm9zQUtIekp1QUln?=
+ =?utf-8?B?TTdMa1F0d05aU2U0T3RXRGMxVFFZS3ZKUWVqS3RtdVd2eTNOSEJwbVhRbHh1?=
+ =?utf-8?B?RGZZOVFBUmFSOTEwcmE5OXpvQkhodnRpYzd0K0ZIRytvMmtnWU5yNDVqSDRY?=
+ =?utf-8?B?VTFrTjEwOGIxa2pEUHlTL2pNMnhCN2tsaCs4cXEyNU1vN1lPd3VMb2E3ZnJY?=
+ =?utf-8?B?ZzAwZGhhTytkWVkzOG1xM3J4OTAxdlBtTklkTnhEZzJmUjVJcDFLYmcyZjY3?=
+ =?utf-8?B?T2sxczR6SC9uVERtNEFMUE5ITk41SWcwYXovOG5FMDZGc3pMWjB5aFU0emtt?=
+ =?utf-8?B?SFJvN05aZ1M3dlVENXI3bFV5V0JXM3NNSWNkNU5aMlhjSHRqNFpYWE9ZdnlT?=
+ =?utf-8?B?OWZHVHM4ait2VEY3bTYzak5PemgzcDZMcGdSbWoxQTYzQk1lb2t3ekdVMVY3?=
+ =?utf-8?B?dkhxWUc4ZlEwMnBUd1M1akxHbVp3T21FdFRXYmQ1cHZtNU1RYzNERlNkcEVD?=
+ =?utf-8?B?Z1d1ekk2U0RUQVViYzhPVVVnZDhuZktOUi93cHNFVVE4U0ZGMG9ISzR1NHl0?=
+ =?utf-8?B?czRuOFpGcVd3WVRzRmxlT2xBb25uWlVGWFA2bDhEWXR4Um5LaTdwK1ViR245?=
+ =?utf-8?B?RGJLQnpSVEswMUdkVWE3Y255UHNaYXlQUEJ2M0NsOVRCYmJFTGN1Ym9JM0xV?=
+ =?utf-8?B?aVZUNGtUa0dnby9jM1p3OWk2eDYvUnhpcWNkbjYvUjl1Z1pyK2RYelJLa3Nt?=
+ =?utf-8?B?WnB3ZU16STlpL0dHOTZmZm1jcE1RM240Y09UQ0lFbFFTaVdVTC81RWozVkcx?=
+ =?utf-8?B?L2dUaUk3MU01czVQRlM0eUE4UTNiMFlDeGRmYmU3M0hMSWpRdXFlMDArK1M2?=
+ =?utf-8?B?SDdZeHpTa0FMSFNHcEVHUkd5RVV6R3RXSi95NDRxSm9QSU1PdEp0MmcxQmsx?=
+ =?utf-8?B?VWZWaEVTOXRSeUhsRm9WZmo3N0VFa3c4K25RSGhWNEJ5NjRSb3RoT2Via0FV?=
+ =?utf-8?B?bjJrWnpWSGRZcU9pSDNlWldCcW93ajBUaG8wUWRRbjZHOUtCRXZodG13R1ZD?=
+ =?utf-8?Q?ZRCvl2rvTOyL1?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OGJCRCtYUkludnJKbmQybGIrcUFXWmNWcVR5MnV5bDVCM21sRTBRNFRhMm5s?=
+ =?utf-8?B?YXd4Wlh4UCtmYjVqcHF2ZGZ3OEp0RVJhT3ZFWExtUHZLdE8rbk5mL3RNaHJF?=
+ =?utf-8?B?SlRPeGRZN1k2N1Z3b2VIRWVwN2NRMUdsekthbEFRMkJSNnlaUi9MaEE0eDl0?=
+ =?utf-8?B?K2RJSjhNK2xQMVZVcXdvN1R2OWNoOVlkdHhvamszeXlXS2JXei8xWlFFSTNE?=
+ =?utf-8?B?WmdmQ0VsM3BOK1BOTDVZMWxIUWpaMm9OUVJKalZvaWdaSFM3NlI2SERKakY0?=
+ =?utf-8?B?RTFQVzBDa3hwRUVnU0lIVzZ4WXVTdTFoQk9pUjdTTUp6OU9lNWJPaDNPUlJU?=
+ =?utf-8?B?Zkp3VDg5NkhnNDc3Q2tEcUpuTTZ1WGtUNHhhSW5Ea2tQcERCZjE1R01oTTFl?=
+ =?utf-8?B?b2REUkttMUZ5QmxjOUsxZ3UxVVprKy9rVTVweGpCSGpqZjArVjVoSkgwc3Vy?=
+ =?utf-8?B?TTd5WmFCOE95cE5qTXh2U0lTU1RHN2hiVmFUeSttNG5lM2pzSDZQWGZQNmhQ?=
+ =?utf-8?B?RTBVbGN5eHdwb2QwSkRHOFVqYy9XQXlmWXA0UUtRYlJYckpNRnY5dUx0aDMx?=
+ =?utf-8?B?YlU2cm9LTGRQQ2xHMlpMUm0zZUdlWnJmU1BjNE1USnBDZFpmU0NjZUUraEk5?=
+ =?utf-8?B?Qm1VeCtVc21yUjkwWkdreGdaZUc3d29wWmxrV3BIdnZWYisxaHNZVFo2RExU?=
+ =?utf-8?B?ZEhRdTZBb3B0c2g4dWpERXpTK3BWQWpSL2VBaDBLNXUrdmhMdWhKY2F2TU1V?=
+ =?utf-8?B?ZGNaOUdLMmdVWFpKUUJSUExJR0ozSXZpUUNWa2lxZ0hkSzZRZWp6aExoOGJq?=
+ =?utf-8?B?QjRUK0RqeWY3bGNjOEdyN2FkRjR0anhhMDlnNlNEQUh5dGhoNzVGdlU0RzMw?=
+ =?utf-8?B?Wi9GL24xSWlvRHovelY4OVZRZnNiOW5wbnlWUXQ3RU90RTFFcGtXKzVUK1pS?=
+ =?utf-8?B?SUthUVY0YXplV2dldTNmSHQ4cmR0Z01ua1YwT2Q2K3dxa2VCSGxiM0s0RVYz?=
+ =?utf-8?B?Qmx2M1VmdW56d0owUHhxdHFpMzRibkJpdGNlMVJWZ0VQdWowM1ZWaDlmaU9t?=
+ =?utf-8?B?TG9aTTdyNE9RN1V1UDYrTFl1NkkvVnAzcEFTaXB6N1NWdHF2ODRFQXFXQ2ZX?=
+ =?utf-8?B?RnNuaWtLVDY4SjNpMTlDY0R5dkdhNEFVS1BMV3lpa20zYlloeEtzdkt2Mldw?=
+ =?utf-8?B?dlYxMDBaTUVIODdhRzB2RWpVMmxNNGF6eElSV0JnQzVTS2llZm5PbFlYdzc2?=
+ =?utf-8?B?eDRKaG1kVFdtdkhyMUs3OXRrVUY2U1o2ZEFDMlhRckFOQkNKM1BhZE55bStX?=
+ =?utf-8?B?dS9CYjBVMmtvaEhxSDVKdEpBZjl5UTlSSDdnR1NLUVg5NmZMSmVwcGU4ZEE0?=
+ =?utf-8?B?Y1NSRC93YytPdjYxUGRkVTBqK01ibXFUSDRUcjJ5MlIydUxXK0dUb1lOdjFh?=
+ =?utf-8?B?QncwWmtaRnhQNHZJYndvUlBnV2pnQ3ZFdWVua2dRTmdKc2MrNGI0dUcvaFUx?=
+ =?utf-8?B?SEtNMW9GNEpRZDRHUjhNQlg2RG1RRFhYci9BZG4xeE5kRUxEL3Vac0JnSzFV?=
+ =?utf-8?B?V1FkVDdUZVZFZUN4dUpGNC9FWGs0ZFc0cnpQMXhvTU8reERUYmY3V1pGRmky?=
+ =?utf-8?B?a21iLzcyOGpYSk9NR0UzTEhLMFNYbERBOE5hcFR3ekN0UjdDZ1ltV1VGMG9T?=
+ =?utf-8?B?QVpNQklrTlYrVlU3b09QemxPVkMrc1FQQnE3RWZ4WkZIREM4cS9MR2xQV2Ix?=
+ =?utf-8?B?anRRTDNrWWlXdGFSNjQwMWJBbTF5TEVIQ1VXWituUVh4bGR4MUJnNEJyMi9B?=
+ =?utf-8?B?VDhoOGU2bDRqQWE1SGRTNzRCUGZHU1BSUy80Q2RzbS9EQmpRbUxPMnhaNEpE?=
+ =?utf-8?B?YzhjbVQ2Uk9XM1liMzZwWldaNU5DUTNZZGtUWFdjMzd5bmo4Vk1aZzNHWExm?=
+ =?utf-8?B?eXBnMGdpU0kyd0dDbE41eW1jbUg1K01LRXV6REt5RWx2UmZrZnlQNVpoR1hD?=
+ =?utf-8?B?MktBcURIUElJZmptTFFxbFRiQ1RlMEx6Z0s0cmlxWEtxai9jMDU0aWJLaldl?=
+ =?utf-8?B?ZVFwTjhUemJnWXJYazFFdEkrbldjYTJGTnFqcEZ0QU5IWXIrQ25sMno2aGFq?=
+ =?utf-8?Q?VXg9rOKXMbB98D3Ze89ZIK9Xt?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ca70139-2c50-4d43-74e9-08dd47bafff6
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 21:04:24.2249
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: D2dw1xV4SZv3wbpRu/DM2VEawz9RBRS6SoZxFPim5f0DTBOMhDgnThXSF83WA7DmpNn6hIHkJCDecLk8M8d+cw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5636
 
-Some newer high refresh rate consumer monitors (including those by Samsung)
-make use of DisplayID 2.1 timing blocks in their EDID data, notably for
-their highest refresh rate modes. Such modes won't be available as of now.
 
-Implement partial support for such blocks in order to enable native
-support of HRR modes of most such monitors for users without having to rely
-on EDID patching/override (or need thereof).
 
-Link: https://gitlab.freedesktop.org/drm/misc/kernel/-/issues/55
-Suggested-by: Maximilian Bo=C3=9Fe <max@bosse.io>
-Signed-off-by: Egor Vorontsov <sdoregor@sdore.me>
+On 2/7/2025 1:41 PM, Gregory Price wrote:
+> On Fri, Feb 07, 2025 at 01:23:06PM -0600, Bowman, Terry wrote:
+>>
+>> On 2/7/2025 2:01 AM, Gregory Price wrote:
+>>> On Tue, Jan 07, 2025 at 08:38:49AM -0600, Terry Bowman wrote:
+>>>> +static void __iomem *cxl_pci_port_ras(struct pci_dev *pdev)
+>>>> +{
+>>>> +	struct cxl_port *port;
+>>>> +
+>>>> +	if (!pdev)
+>>>> +		return NULL;
+>>>> +
+>>>> +	if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT) ||
+>>>> +	    (pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM)) {
+>>>> +		struct cxl_dport *dport;
+>>>> +		void __iomem *ras_base;
+>>>> +
+>>>> +		port = find_cxl_port(&pdev->dev, &dport);
+>>>> +		ras_base = dport ? dport->regs.ras : NULL;
+>>> I'm fairly certain dport can come back here uninitialized, you
+>>> probably want to put this inside the `if (port)` block and 
+>>> pre-initialize dport to NULL.
+>> Right, it can. NULL dport check here covers this, no?:
+>>
+>> 		ras_base = dport ? dport->regs.ras : NULL;
+> dport can be garbage (whatever is on the stack) at this check because
+> nothing ever intializes it to NULL.
 
----
+Got it. Thanks.
+>> Terry
+>>
+>>>> +		if (port)
+>>>> +			put_device(&port->dev);
+>>>> +		return ras_base;
+>>> You can probably even simplify this down to something like
+>>>
+>>> 		struct_cxl_dport *dport = NULL;
+>>>
+>>> 		port = find_cxl_port(&pdev->dev, &dport);
+>>> 		if (port)
+>>> 			put_device(&port->dev);
+>>>
+>>> 		return dport ? dport->regs.ras : NULL;
+>>>
+>>>
+>>> ~Gregory
 
-The formatting was taken from the neighboring code for consistency,
-thus some warnings.
-
-[Resent due to some Spamhaus issues that are now resolved.]
-
- drivers/gpu/drm/drm_displayid_internal.h | 13 +++++
- drivers/gpu/drm/drm_edid.c               | 61 ++++++++++++++++++++++++
- 2 files changed, 74 insertions(+)
-
-diff --git a/drivers/gpu/drm/drm_displayid_internal.h b/drivers/gpu/drm/drm=
-_displayid_internal.h
-index aee1b86a73c1..a75d0f637b72 100644
---- a/drivers/gpu/drm/drm_displayid_internal.h
-+++ b/drivers/gpu/drm/drm_displayid_internal.h
-@@ -66,6 +66,7 @@ struct drm_edid;
- #define DATA_BLOCK_2_STEREO_DISPLAY_INTERFACE	0x27
- #define DATA_BLOCK_2_TILED_DISPLAY_TOPOLOGY	0x28
- #define DATA_BLOCK_2_CONTAINER_ID		0x29
-+#define DATA_BLOCK_2_TYPE_10_FORMULA_TIMING	0x2a
- #define DATA_BLOCK_2_VENDOR_SPECIFIC		0x7e
- #define DATA_BLOCK_2_CTA_DISPLAY_ID		0x81
-=20
-@@ -129,6 +130,18 @@ struct displayid_detailed_timing_block {
- 	struct displayid_detailed_timings_1 timings[];
- };
-=20
-+struct displayid_formula_timings_9 {
-+	u8 flags;
-+	u8 hactive[2];
-+	u8 vactive[2];
-+	u8 refresh;
-+} __packed;
-+
-+struct displayid_formula_timing_block {
-+	struct displayid_block base;
-+	struct displayid_formula_timings_9 timings[];
-+};
-+
- #define DISPLAYID_VESA_MSO_OVERLAP	GENMASK(3, 0)
- #define DISPLAYID_VESA_MSO_MODE		GENMASK(6, 5)
-=20
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index 13bc4c290b17..8a4dec1d781c 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -6833,6 +6833,64 @@ static int add_displayid_detailed_1_modes(struct drm=
-_connector *connector,
- 	return num_modes;
- }
-=20
-+static struct drm_display_mode *drm_mode_displayid_formula(struct drm_devi=
-ce *dev,
-+							   struct displayid_formula_timings_9 *timings,
-+							   bool type_10)
-+{
-+	struct drm_display_mode *mode;
-+	unsigned hactive =3D (timings->hactive[0] | timings->hactive[1] << 8) + 1=
-;
-+	unsigned vactive =3D (timings->vactive[0] | timings->vactive[1] << 8) + 1=
-;
-+	u8 rb =3D timings->flags & 0b111;
-+	/* TODO: support RB-v2 & RB-v3 */
-+	if (rb > 1)
-+		return NULL;
-+
-+	mode =3D drm_cvt_mode(dev, hactive, vactive, timings->refresh, rb =3D=3D =
-1, false, false);
-+	if (!mode)
-+		return NULL;
-+
-+	/* TODO: interpret S3D flags */
-+
-+	mode->type =3D DRM_MODE_TYPE_DRIVER;
-+
-+	if (timings->flags & 0x80)
-+		mode->type |=3D DRM_MODE_TYPE_PREFERRED;
-+	drm_mode_set_name(mode);
-+
-+	return mode;
-+}
-+
-+static int add_displayid_formula_modes(struct drm_connector *connector,
-+				       const struct displayid_block *block)
-+{
-+	struct displayid_formula_timing_block *fb =3D (struct displayid_formula_t=
-iming_block *)block;
-+	int num_timings;
-+	struct drm_display_mode *newmode;
-+	int num_modes =3D 0;
-+	bool type_10 =3D block->tag =3D=3D DATA_BLOCK_2_TYPE_10_FORMULA_TIMING;
-+	u8 timing_size =3D 6 + ((fb->base.rev & 0x70) >> 4);
-+	/* extended blocks are not supported yet */
-+	if (timing_size !=3D 6)
-+		return 0;
-+
-+	if (block->num_bytes % timing_size)
-+		return 0;
-+
-+	num_timings =3D block->num_bytes / timing_size;
-+	for (int i =3D 0; i < num_timings; i++) {
-+		struct displayid_formula_timings_9 *timings =3D \
-+			(struct displayid_formula_timings_9 *)&((u8 *)fb->timings)[i * timing_s=
-ize];
-+
-+		newmode =3D drm_mode_displayid_formula(connector->dev, timings, type_10)=
-;
-+		if (!newmode)
-+			continue;
-+
-+		drm_mode_probed_add(connector, newmode);
-+		num_modes++;
-+	}
-+	return num_modes;
-+}
-+
- static int add_displayid_detailed_modes(struct drm_connector *connector,
- 					const struct drm_edid *drm_edid)
- {
-@@ -6845,6 +6903,9 @@ static int add_displayid_detailed_modes(struct drm_co=
-nnector *connector,
- 		if (block->tag =3D=3D DATA_BLOCK_TYPE_1_DETAILED_TIMING ||
- 		    block->tag =3D=3D DATA_BLOCK_2_TYPE_7_DETAILED_TIMING)
- 			num_modes +=3D add_displayid_detailed_1_modes(connector, block);
-+		else if (block->tag =3D=3D DATA_BLOCK_2_TYPE_9_FORMULA_TIMING ||
-+			 block->tag =3D=3D DATA_BLOCK_2_TYPE_10_FORMULA_TIMING)
-+			num_modes +=3D add_displayid_formula_modes(connector, block);
- 	}
- 	displayid_iter_end(&iter);
-=20
---=20
-2.48.0
