@@ -1,49 +1,25 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC30023C8DB;
-	Fri,  7 Feb 2025 17:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37A7A23C8DB;
+	Fri,  7 Feb 2025 17:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738947797; cv=none; b=h/0+Vu2U+9+4d4en6EuJu3kxWD+GwMpEETUZVkKLtDXlCZlhh/KH+wPX0oSMjy2yfxMAUEoNaSirEM6FqvoARAOxYg4gNDeAnTN4l6Vpaqc3jRBDEEHqSDksOdtxCmb66hC9OZdN/4XRo/JvuFjLeEhkut3XlUpoVoJ8MM83kKE=
+	t=1738947899; cv=none; b=S8gpg07rnS4GQH1O0DDMSBp+XcyNg0qRxNEz/O9+7+riZKazDi3DfPdhBVzmackWKp+KnG9MDYTlWi3nFEX31UE+K6GEziIonukMsGYpHGFgu/OP1d/Jmnm0ATWYMsZap7PT2HEJdsnCfVmPk9zhGew0bovVI/eCGZUyrP4LKzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738947797; c=relaxed/simple;
-	bh=oNUYLYJ3cBbS2gYJzUrPZKysiTn8zeg+2VOsqprROM8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cEcLurwf4uy0/mQXj9EmsgjpX2VSsLs7ho3Eq5moroBrJGnu5Kc29mrWAJOOiu4XsxN/fZVCBPZM5QSM1TZnpEDQEXzpaoQGvHdCuh1cwTbrQ3sVYE730n7/Y7kZZRVDHXtj8NrcRbIVYax3CZL9rOj0YuuxL+Fa/CuX1+rNqCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NKtv0DZX; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NKtv0DZX"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 517H2qbu3039421
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Feb 2025 11:02:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738947772;
-	bh=oNUYLYJ3cBbS2gYJzUrPZKysiTn8zeg+2VOsqprROM8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=NKtv0DZXtokLgalUpTO60zr4Cf092BJfxuhfrDpxAUoUfsROwTrh3/q9n5mXPkjbH
-	 YgRW3VjP4wISo23vbD+PR4PjwilQoT/OWyZdPDmrWqWUHlttRLYxn+LPNKbd4OM5xL
-	 HF8yee3ax0+YOWrbnW163mVqy7vQzwiCiPmxPLqw=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 517H2qI7040519
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 7 Feb 2025 11:02:52 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 7
- Feb 2025 11:02:52 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 7 Feb 2025 11:02:52 -0600
-Received: from [10.247.30.175] (lt5cd3040qtn.dhcp.ti.com [10.247.30.175])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 517H2qv4105448;
-	Fri, 7 Feb 2025 11:02:52 -0600
-Message-ID: <0c5f962b-3264-49c8-a1c5-893b8eb41b63@ti.com>
-Date: Fri, 7 Feb 2025 11:02:52 -0600
+	s=arc-20240116; t=1738947899; c=relaxed/simple;
+	bh=32Sb1iSbflEzaLzZ3eY24dRpm8vfRuffGR5PJQt9ks4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t63rB48AOY23Ic+lJWnEOvlZeQzTH7AuAf+uspiU3re7jJgpgrQLi4HILYzNNPQH94cAt+bOdENxRIz3mkG2RAU6FMddDsHE6Ok+gxKHB0+DvfNi0lALcgMs4CarCpkgp0ddoP2TLFZ2dEMG7fV04K6KXGT25Tl+/qdA4A3pFD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 17653113E;
+	Fri,  7 Feb 2025 09:05:18 -0800 (PST)
+Received: from [10.1.26.24] (e122027.cambridge.arm.com [10.1.26.24])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD7CB3F63F;
+	Fri,  7 Feb 2025 09:04:50 -0800 (PST)
+Message-ID: <f4411830-067e-448e-b43b-1418bb264e11@arm.com>
+Date: Fri, 7 Feb 2025 17:04:48 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,43 +27,182 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/3] Add TI TPS65215 PMIC GPIO Support
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
-        <rogerq@kernel.org>, <tony@atomide.com>, <linus.walleij@linaro.org>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <m-leonard@ti.com>, <praneeth@ti.com>,
-        <christophe.jaillet@wanadoo.fr>
-References: <20250113225530.124213-1-s-ramamoorthy@ti.com>
- <CAMRc=Meqjy+cqfueM_dQE8uP32zS0ib41qE+OPPWFkhoVTGc2w@mail.gmail.com>
-Content-Language: en-US
-From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-In-Reply-To: <CAMRc=Meqjy+cqfueM_dQE8uP32zS0ib41qE+OPPWFkhoVTGc2w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v6 20/43] arm64: RME: Runtime faulting of memory
+To: Gavin Shan <gshan@redhat.com>, kvm@vger.kernel.org, kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20241212155610.76522-1-steven.price@arm.com>
+ <20241212155610.76522-21-steven.price@arm.com>
+ <3f0caace-ee05-4ddf-ae75-2157e77aa57c@redhat.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <3f0caace-ee05-4ddf-ae75-2157e77aa57c@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi,
+On 30/01/2025 05:22, Gavin Shan wrote:
+> On 12/13/24 1:55 AM, Steven Price wrote:
+[...]
+>> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+>> index d4561e368cd5..146ef598a581 100644
+>> --- a/arch/arm64/kvm/rme.c
+>> +++ b/arch/arm64/kvm/rme.c
+>> @@ -602,6 +602,162 @@ static int fold_rtt(struct realm *realm,
+>> unsigned long addr, int level)
+>>       return 0;
+>>   }
+>>   +int realm_map_protected(struct realm *realm,
+>> +            unsigned long ipa,
+>> +            kvm_pfn_t pfn,
+>> +            unsigned long map_size,
+>> +            struct kvm_mmu_memory_cache *memcache)
+>> +{
+>> +    phys_addr_t phys = __pfn_to_phys(pfn);
+>> +    phys_addr_t rd = virt_to_phys(realm->rd);
+>> +    unsigned long base_ipa = ipa;
+>> +    unsigned long size;
+>> +    int map_level;
+>> +    int ret = 0;
+>> +
+>> +    if (WARN_ON(!IS_ALIGNED(ipa, map_size)))
+>> +        return -EINVAL;
+>> +
+>> +    switch (map_size) {
+>> +    case PAGE_SIZE:
+>> +        map_level = 3;
+>> +        break;
+>> +    case RMM_L2_BLOCK_SIZE:
+>> +        map_level = 2;
+>> +        break;
+>> +    default:
+>> +        return -EINVAL;
+>> +    }
+>> +
+> 
+> The same block of code, to return the RTT level according to the map
+> size, has been
+> used for multiple times. It would be nice to introduce a helper for this.
 
-On 2/7/2025 2:53 AM, Bartosz Golaszewski wrote:
-> On Mon, Jan 13, 2025 at 11:55 PM Shree Ramamoorthy <s-ramamoorthy@ti.com> wrote:
->> TPS65215 is a Power Management Integrated Circuit (PMIC) that has
->> significant register map overlap with TPS65219. The series introduces
->> TPS65215 and restructures the existing driver to support multiple devices.
->>
->> This follow-up series is dependent on:
->> Commit f84464ec8190 ("regulator: dt-bindings: Add TI TPS65215 PMIC bindings")
->> Commit 8206c20f4c82 ("mfd: tps65215: Add support for TI TPS65215 PMIC")
->> Commit 0e0b7f00c111 ("mfd: tps65215: Remove regmap_read check")
->>
-> Did these go into v6.14?
->
-> Bart
+I have some changes to support larger host (and guest) page sizes which
+rework this code which should help clean this up.
 
-These didn't. I figured with the dependency feedback, it was easier to combine the series for TPS65215 and TPS65214 into 1 series.
+>> +    if (map_level < RMM_RTT_MAX_LEVEL) {
+>> +        /*
+>> +         * A temporary RTT is needed during the map, precreate it,
+>> +         * however if there is an error (e.g. missing parent tables)
+>> +         * this will be handled below.
+>> +         */
+>> +        realm_create_rtt_levels(realm, ipa, map_level,
+>> +                    RMM_RTT_MAX_LEVEL, memcache);
+>> +    }
+>> +
+> 
+> This block of code could be dropped. If the RTTs have been existing,
+> realm_create_rtt_levels()
+> doesn't nothing, but several RMI calls are issued. RMI calls aren't
+> cheap and it can cause
+> performance lost.
 
-I submitted the combined mfd + dt-binding series [0] first, and once that was ACK'd, I will follow up with the gpio series for both devices.
-Let me know if there's a different approach you would recommend!
+As mentioned in the patch 19 this is to prevent the first call to
+rmi_data_create_unknown() failing when we know we're going to need to
+create the RTTs. So this should generally reduce the number of RMIs
+calls not increase.
 
-[0]: https://lore.kernel.org/all/20250206173725.386720-1-s-ramamoorthy@ti.com/
+>> +    for (size = 0; size < map_size; size += PAGE_SIZE) {
+>> +        if (rmi_granule_delegate(phys)) {
+>> +            /*
+>> +             * It's likely we raced with another VCPU on the same
+>> +             * fault. Assume the other VCPU has handled the fault
+>> +             * and return to the guest.
+>> +             */
+>> +            return 0;
+>> +        }
+> 
+> We probably can't bail immediately when error is returned from
+> rmi_granule_delegate()
+> because we intend to map a region whose size is 'map_size'. So a
+> 'continue' instead
+> of 'return 0' seems correct to me.
+
+The logic here is that two (or more) vCPUs have faulted on the same
+region. So if we get a failure here it means that we're the second vCPU
+to hit the fault. While we could continue, it's highly likely that the
+other vCPU will be faulting in the later parts of the region so we
+expect to hit more delegation failures.
+
+Returning to the guest and letting the guest retry the access means:
+a) The access might now continue because the other vCPU has completed
+(enough of) the mapping, or
+b) We fault a second time, but give the other vCPU some more time to
+progress in creating the mapping (and prevent the other vCPU being
+tripped up by continued attempts by this vCPU from delegating the pages).
+
+"continue" would work, but it's likely to waste CPU time with the two
+vCPUs fighting each other to complete the mapping.
+
+>> +
+>> +        ret = rmi_data_create_unknown(rd, phys, ipa);
+>> +
+>> +        if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
+>> +            /* Create missing RTTs and retry */
+>> +            int level = RMI_RETURN_INDEX(ret);
+>> +
+>> +            ret = realm_create_rtt_levels(realm, ipa, level,
+>> +                              RMM_RTT_MAX_LEVEL,
+>> +                              memcache);
+>> +            WARN_ON(ret);
+>> +            if (ret)
+>> +                goto err_undelegate;
+> 
+>             if (WARN_ON(ret))
+
+ack
+
+>> +
+>> +            ret = rmi_data_create_unknown(rd, phys, ipa);
+>> +        }
+>> +        WARN_ON(ret);
+>> +
+>> +        if (ret)
+>> +            goto err_undelegate;
+> 
+>         if (WARN_ON(ret))
+
+ack
+
+>> +
+>> +        phys += PAGE_SIZE;
+>> +        ipa += PAGE_SIZE;
+>> +    }
+>> +
+>> +    if (map_size == RMM_L2_BLOCK_SIZE)
+>> +        ret = fold_rtt(realm, base_ipa, map_level);
+>> +    if (WARN_ON(ret))
+>> +        goto err;
+>> +
+> 
+> The nested if statements are needed here because the WARN_ON() only
+> take effect on the return value from fold_rtt().
+> 
+>     if (map_size == RMM_L2_BLOCK_SIZE) {
+>         ret = fold_rtt(realm, base_ipa, map_level);
+>         if (WARN_ON(ret))
+>             goto err;
+>     }
+
+Technically to get here then ret==0 so there's no need to nest like
+this. But I agree it makes the intent much clearer so I'll update.
+
+Thanks,
+Steve
 
