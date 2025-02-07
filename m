@@ -1,40 +1,40 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630E61DE2D7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314411E102A
 	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 12:28:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738931314; cv=none; b=GL9lPhZn8+G1lkzLp70ZUOiG+7X6AUdLkL6o0AuNa39RIJRqEE+HioOUyXkPrQ9VaImtmyy6jWxZoCpvqohqyAl+jHyrN93c6axnKrJfdCdFzhs82SbUO/CevIu63cLT9u9+/KRl+/6IPsu+M4L+rxAAc1+zQHsBEfrsQ0H2E3Q=
+	t=1738931314; cv=none; b=mBbDJlsPzh+bAllvOKfxA28o3+ybape8sYmszucUi7iejuvm/cfOUFSWJSt/Dn8hMmidcmrrMePHdxSArDkN0ekdQvehAJ+yL43GoOUj5CY7sojeNMgd3GW8H8HQcI9XIHGcIbZvUHsY7YYV+GodgrpeMfpXDD2JjQ9ugn4z5D8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738931314; c=relaxed/simple;
-	bh=JBcZXkMbHaasTgMYbtpZTIxIdpc2x4ruCpuijKxhm7g=;
+	bh=1yhsFTAJC0fyLfAlQ7ZXicMfYzFRyVFlwOSBTX9grv4=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=BtTfSyBk1YYq3SrAmhpKtaZmKqcZc3a/Rwg9XsupKwSnl3yvpxfXieJ2AgXVSnA+jgqd5W0OvVyskQSnTfQGIxPq6CoZ8kqdZdb86K+sz3/Z2WiQrJ04LgA27wfOceyPsgl9fHLnLo7uXWSUAk9VR9Wh7vjTr8+f31iFTEMZ9UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fb3aQVHn; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type; b=bFfnHFLIaON35XKIXGhB8hLADTzPdOCGNmpSDGL9imnBKEEx6HgqLuAaN0hzUAbPyCWDVi0krAf/VJMYS+2IVIX1tj3XOO5KqlKTHn7TT+5Rt41jn0juVdkXKTiJrr+WaCAoGQhLY7RtyxGYIzneaq+2Daksj0BjAr8xlo4IfL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NgHZNCmp; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fb3aQVHn"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NgHZNCmp"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=ZUv5K/NDjIg1Db+z6YMSwmMOaXtAc4RYuDDWykJP/1A=; b=fb3aQVHnfYISsMPkNXTGWM3ZlS
-	A9Os6rOW61SdozXfENBRgd6SaJJ4JndgenFbhFk9/cWG0tV+I3PNfTWSpTE0b73SCiRQqoHcB7bnI
-	CSUede+7rMHo5Ip6nGycLvHz7TK3aD9FhcZV9yH60scebs0Cb68gekScMk4fxsI5jnFvExJH9Xpr6
-	6aoTFngEQhiS2oJMkwI19eN6PVO3g3lPDiUKqpbJh0LWkjsRNRbJVOteTl6mQQ/xUMC9JkVWsnh9g
-	cyCtQA0PP2IeEDb2dKJ8ZZoi1HGrjHua3SUz5ual7jG+yQWzi8r1RggtIa+4C7Go2XEsEcfnrfP7d
-	uv2TJM4w==;
+	bh=L+COfsvQhb7CX9P6B6i2gM9H/qGrRRtoSf00jF2EqEI=; b=NgHZNCmpKTbr5/IWPtwlj1MSl6
+	jObMLasIj8dwRPBNZxwS6Foc8uao49b2oJb0ucdUhorePEcNeiQSwCfsHFE792Y2hrjzYnoL5M8++
+	t5vtsVFCNuugvpwUw+eNYsEeCICJG9hXD2C2aONBJuxM29tJC7X+lJuFC6qPZorWCXYVfkSq0CZni
+	nuNpIyGxN/BDVmj0sHHt/MDDVMGOqe4gxXslM3yM69/X5eaN6ajVP/wMmazr1iSl+IfO1eKNys4du
+	M+V7VcRhST1CUgN37hZIHHuFRGYiNja/UUtbT8imADM/lTuBIh9eCvVrAmsmU/SfrlGXRZZ/AtLSu
+	XQtFHiMA==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgNT8-00000007nBg-0L0Y;
-	Fri, 07 Feb 2025 12:28:26 +0000
+	id 1tgNTA-00000007nBy-2kTv;
+	Fri, 07 Feb 2025 12:28:28 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id 2B8783006C0; Fri,  7 Feb 2025 13:28:25 +0100 (CET)
-Message-ID: <20250207122546.302679189@infradead.org>
+	id 499A530619B; Fri,  7 Feb 2025 13:28:25 +0100 (CET)
+Message-ID: <20250207122547.124276834@infradead.org>
 User-Agent: quilt/0.66
-Date: Fri, 07 Feb 2025 13:15:32 +0100
+Date: Fri, 07 Feb 2025 13:15:40 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -53,7 +53,7 @@ Cc: linux-kernel@vger.kernel.org,
  kees@kernel.org,
  alexei.starovoitov@gmail.com,
  mhiramat@kernel.org
-Subject: [PATCH 03/11] x86,kcfi: Fix EXPORT_SYMBOL vs kCFI
+Subject: [PATCH 11/11] x86/fineibt: Add FineIBT+BHI mitigation
 References: <20250207121529.222723073@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -63,355 +63,404 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-The expectation is that all EXPORT'ed symbols are free to have their
-address taken and called indirectly. The majority of the assembly
-defined functions currently violate this expectation.
+Due to FineIBT weakness, add an additional mitigation for BHI.
 
-Make then all use SYM_TYPED_FUNC_START() in order to emit the proper
-kCFI preamble.
+Relies on clang-cfi to emit an additional piece of magic in the kCFI
+pre-amble:
+
+  https://github.com/llvm/llvm-project/commit/e223485c9b38a5579991b8cebb6a200153eee245
+
+Which encodes the number of argument registers in the target register:
+
+	movl	0x12345678, %reg	// CFI hash
+
+
+XXX get Scott to write a blurb about how this works to mitigate BHI
+
+
+  FineIBT				FineIBT+BHI
+
+  __cfi_foo:				__cfi_foo:
+     endbr64				   endbr64
+     subl $0x12345678, %r10d               subl $0x12345678, %r10d
+     jz	  1f                               call __bhi_args[\reg]
+     ud2
+  1: nop
+  foo:                                  foo:
+     osp nop3				   osp nop3
+     ...                                   ...
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/crypto/camellia-aesni-avx-asm_64.S  |    7 ++++---
- arch/x86/crypto/camellia-aesni-avx2-asm_64.S |    1 +
- arch/x86/crypto/camellia-x86_64-asm_64.S     |    9 +++++----
- arch/x86/crypto/serpent-avx-x86_64-asm_64.S  |    7 ++++---
- arch/x86/crypto/twofish-x86_64-asm_64-3way.S |    5 +++--
- arch/x86/crypto/twofish-x86_64-asm_64.S      |    5 +++--
- arch/x86/entry/entry.S                       |    3 ++-
- arch/x86/entry/entry_64.S                    |    5 +++--
- arch/x86/lib/clear_page_64.S                 |    9 +++++----
- arch/x86/lib/copy_page_64.S                  |    3 ++-
- arch/x86/lib/copy_user_64.S                  |    3 ++-
- arch/x86/lib/copy_user_uncached_64.S         |    3 ++-
- arch/x86/lib/getuser.S                       |   17 +++++++++--------
- arch/x86/lib/hweight.S                       |    5 +++--
- arch/x86/lib/memmove_64.S                    |    3 ++-
- arch/x86/lib/memset_64.S                     |    3 ++-
- arch/x86/lib/msr-reg.S                       |    3 ++-
- arch/x86/lib/putuser.S                       |   17 +++++++++--------
- 18 files changed, 63 insertions(+), 45 deletions(-)
+ Makefile                      |    3 ++
+ arch/x86/Kconfig              |    8 +++++
+ arch/x86/include/asm/cfi.h    |    9 +++++-
+ arch/x86/kernel/alternative.c |   60 +++++++++++++++++++++++++++++++++++-------
+ arch/x86/net/bpf_jit_comp.c   |   32 +++++++++++++++-------
+ kernel/bpf/core.c             |    4 +-
+ 6 files changed, 94 insertions(+), 22 deletions(-)
 
-Index: linux-2.6/arch/x86/crypto/camellia-aesni-avx-asm_64.S
-===================================================================
---- linux-2.6.orig/arch/x86/crypto/camellia-aesni-avx-asm_64.S
-+++ linux-2.6/arch/x86/crypto/camellia-aesni-avx-asm_64.S
-@@ -16,6 +16,7 @@
+--- a/Makefile
++++ b/Makefile
+@@ -1014,6 +1014,9 @@ CC_FLAGS_CFI	:= -fsanitize=kcfi
+ ifdef CONFIG_CFI_ICALL_NORMALIZE_INTEGERS
+ 	CC_FLAGS_CFI	+= -fsanitize-cfi-icall-experimental-normalize-integers
+ endif
++ifdef CONFIG_FINEIBT_BHI
++	CC_FLAGS_CFI    += -fsanitize-kcfi-arity
++endif
+ ifdef CONFIG_RUST
+ 	# Always pass -Zsanitizer-cfi-normalize-integers as CONFIG_RUST selects
+ 	# CONFIG_CFI_ICALL_NORMALIZE_INTEGERS.
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2473,6 +2473,10 @@ config CC_HAS_RETURN_THUNK
+ config CC_HAS_ENTRY_PADDING
+ 	def_bool $(cc-option,-fpatchable-function-entry=16,16)
+ 
++config CC_HAS_KCFI_ARITY
++	def_bool $(cc-option,-fsanitize=kcfi -fsanitize-kcfi-arity)
++	depends on CC_IS_CLANG && !RUST
++
+ config FUNCTION_PADDING_CFI
+ 	int
+ 	default 59 if FUNCTION_ALIGNMENT_64B
+@@ -2498,6 +2502,10 @@ config FINEIBT
+ 	depends on X86_KERNEL_IBT && CFI_CLANG && MITIGATION_RETPOLINE
+ 	select CALL_PADDING
+ 
++config FINEIBT_BHI
++	def_bool y
++	depends on FINEIBT && CC_HAS_KCFI_ARITY
++
+ config HAVE_CALL_THUNKS
+ 	def_bool y
+ 	depends on CC_HAS_ENTRY_PADDING && MITIGATION_RETHUNK && OBJTOOL
+--- a/arch/x86/include/asm/cfi.h
++++ b/arch/x86/include/asm/cfi.h
+@@ -72,7 +72,7 @@
+  * __cfi_foo:
+  *   endbr64
+  *   subl 0x12345678, %r10d
+- *   jz   foo
++ *   jz   foo			# call __bhi_args[\reg] when CONFIG_FINEIBT_BHI
+  *   ud2
+  *   nop
+  * foo:
+@@ -97,6 +97,7 @@ enum cfi_mode {
+ 	CFI_OFF,	/* Taditional / IBT depending on .config */
+ 	CFI_KCFI,	/* Optionally CALL_PADDING, IBT, RETPOLINE */
+ 	CFI_FINEIBT,	/* see arch/x86/kernel/alternative.c */
++	CFI_FINEIBT_BHI,
+ };
+ 
+ extern enum cfi_mode cfi_mode;
+@@ -116,6 +117,7 @@ static inline int cfi_get_offset(void)
+ {
+ 	switch (cfi_mode) {
+ 	case CFI_FINEIBT:
++	case CFI_FINEIBT_BHI:
+ 		return 16;
+ 	case CFI_KCFI:
+ 		if (IS_ENABLED(CONFIG_CALL_PADDING))
+@@ -128,6 +130,7 @@ static inline int cfi_get_offset(void)
+ #define cfi_get_offset cfi_get_offset
+ 
+ extern u32 cfi_get_func_hash(void *func);
++extern int cfi_get_func_arity(void *func);
+ 
+ #else
+ static inline enum bug_trap_type handle_cfi_failure(struct pt_regs *regs)
+@@ -140,6 +143,10 @@ static inline u32 cfi_get_func_hash(void
+ {
+ 	return 0;
+ }
++static inline int cfi_get_func_arity(void *func)
++{
++	return 0;
++}
+ #endif /* CONFIG_CFI_CLANG */
+ 
+ #if HAS_KERNEL_IBT == 1
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -962,6 +962,7 @@ u32 cfi_get_func_hash(void *func)
+ 	func -= cfi_get_offset();
+ 	switch (cfi_mode) {
+ 	case CFI_FINEIBT:
++	case CFI_FINEIBT_BHI:
+ 		func += 7;
+ 		break;
+ 	case CFI_KCFI:
+@@ -976,6 +977,21 @@ u32 cfi_get_func_hash(void *func)
+ 
+ 	return hash;
+ }
++
++int cfi_get_func_arity(void *func)
++{
++	bhi_thunk *target;
++	s32 disp;
++
++	if (cfi_mode != CFI_FINEIBT_BHI)
++		return 0;
++
++	if (get_kernel_nofault(disp, func-4))
++		return 0;
++
++	target = func + disp;
++	return target - __bhi_args;
++}
+ #endif
+ 
+ #ifdef CONFIG_FINEIBT
+@@ -1020,6 +1036,8 @@ static __init int cfi_parse_cmdline(char
+ 			cfi_mode = CFI_KCFI;
+ 		} else if (!strcmp(str, "fineibt")) {
+ 			cfi_mode = CFI_FINEIBT;
++		} else if (IS_ENABLED(CONFIG_FINEIBT_BHI) && !strcmp(str, "fineibt+bhi")) {
++			cfi_mode = CFI_FINEIBT_BHI;
+ 		} else if (!strcmp(str, "norand")) {
+ 			cfi_rand = false;
+ 		} else {
+@@ -1064,6 +1082,7 @@ asm(	".pushsection .rodata			\n"
+ 	"fineibt_preamble_start:		\n"
+ 	"	endbr64				\n"
+ 	"	subl	$0x12345678, %r10d	\n"
++	"fineibt_preamble_bhi_call:		\n"
+ 	"	je	fineibt_preamble_end	\n"
+ 	"	ud2				\n"
+ 	"	nop				\n"
+@@ -1072,10 +1091,12 @@ asm(	".pushsection .rodata			\n"
+ );
+ 
+ extern u8 fineibt_preamble_start[];
++extern u8 fineibt_preamble_bhi_call[];
+ extern u8 fineibt_preamble_end[];
+ 
+ #define fineibt_preamble_size (fineibt_preamble_end - fineibt_preamble_start)
+ #define fineibt_preamble_hash 7
++#define fineibt_preamble_bhi  (fineibt_preamble_bhi_call - fineibt_preamble_start)
+ 
+ asm(	".pushsection .rodata			\n"
+ 	"fineibt_caller_start:			\n"
+@@ -1094,13 +1115,16 @@ extern u8 fineibt_caller_end[];
+ 
+ #define fineibt_caller_jmp (fineibt_caller_size - 2)
+ 
+-static u32 decode_preamble_hash(void *addr)
++static u32 decode_preamble_hash(void *addr, int *reg)
+ {
+ 	u8 *p = addr;
+ 
+-	/* b8 78 56 34 12          mov    $0x12345678,%eax */
+-	if (p[0] == 0xb8)
++	/* b8+reg 78 56 34 12      movl    $0x12345678,\reg */
++	if (p[0] >= 0xb8 && p[0] < 0xc0) {
++		if (reg)
++			*reg = p[0] - 0xb8;
+ 		return *(u32 *)(addr + 1);
++	}
+ 
+ 	return 0; /* invalid hash value */
+ }
+@@ -1109,7 +1133,7 @@ static u32 decode_caller_hash(void *addr
+ {
+ 	u8 *p = addr;
+ 
+-	/* 41 ba 78 56 34 12       mov    $0x12345678,%r10d */
++	/* 41 ba 78 56 34 12       movl    $(-0x12345678),%r10d */
+ 	if (p[0] == 0x41 && p[1] == 0xba)
+ 		return -*(u32 *)(addr + 2);
+ 
+@@ -1178,7 +1202,7 @@ static int cfi_rand_preamble(s32 *start,
+ 		void *addr = (void *)s + *s;
+ 		u32 hash;
+ 
+-		hash = decode_preamble_hash(addr);
++		hash = decode_preamble_hash(addr, NULL);
+ 		if (WARN(!hash, "no CFI hash found at: %pS %px %*ph\n",
+ 			 addr, addr, 5, addr))
+ 			return -EINVAL;
+@@ -1197,6 +1221,7 @@ static int cfi_rewrite_preamble(s32 *sta
+ 	for (s = start; s < end; s++) {
+ 		void *addr = (void *)s + *s;
+ 		u32 hash;
++		int reg;
+ 
+ 		/*
+ 		 * When the function doesn't start with ENDBR the compiler will
+@@ -1206,7 +1231,7 @@ static int cfi_rewrite_preamble(s32 *sta
+ 		if (!is_endbr(addr + 16))
+ 			continue;
+ 
+-		hash = decode_preamble_hash(addr);
++		hash = decode_preamble_hash(addr, &reg);
+ 		if (WARN(!hash, "no CFI hash found at: %pS %px %*ph\n",
+ 			 addr, addr, 5, addr))
+ 			return -EINVAL;
+@@ -1214,6 +1239,19 @@ static int cfi_rewrite_preamble(s32 *sta
+ 		text_poke_early(addr, fineibt_preamble_start, fineibt_preamble_size);
+ 		WARN_ON(*(u32 *)(addr + fineibt_preamble_hash) != 0x12345678);
+ 		text_poke_early(addr + fineibt_preamble_hash, &hash, 4);
++
++		WARN_ONCE(!IS_ENABLED(CONFIG_FINEIBT_BHI) && reg,
++			  "kCFI preamble has wrong register at: %pS %px %*ph\n",
++			  addr, addr, 5, addr);
++
++		if (cfi_mode != CFI_FINEIBT_BHI || !reg)
++			continue;
++
++		text_poke_early(addr + fineibt_preamble_bhi,
++				text_gen_insn(CALL_INSN_OPCODE,
++					      addr + fineibt_preamble_bhi,
++					      __bhi_args[reg]),
++				CALL_INSN_SIZE);
+ 	}
+ 
+ 	return 0;
+@@ -1330,6 +1368,7 @@ static void __apply_fineibt(s32 *start_r
+ 		return;
+ 
+ 	case CFI_FINEIBT:
++	case CFI_FINEIBT_BHI:
+ 		/* place the FineIBT preamble at func()-16 */
+ 		ret = cfi_rewrite_preamble(start_cfi, end_cfi);
+ 		if (ret)
+@@ -1343,8 +1382,10 @@ static void __apply_fineibt(s32 *start_r
+ 		/* now that nobody targets func()+0, remove ENDBR there */
+ 		cfi_rewrite_endbr(start_cfi, end_cfi);
+ 
+-		if (builtin)
+-			pr_info("Using FineIBT CFI\n");
++		if (builtin) {
++			pr_info("Using FineIBT%s CFI\n",
++				cfi_mode == CFI_FINEIBT_BHI ? "+BHI" : "");
++		}
+ 		return;
+ 
+ 	default:
+@@ -1372,6 +1413,7 @@ static void poison_cfi(void *addr)
+ 	 */
+ 	switch (cfi_mode) {
+ 	case CFI_FINEIBT:
++	case CFI_FINEIBT_BHI:
+ 		/*
+ 		 * FineIBT prefix should start with an ENDBR.
+ 		 */
+@@ -1394,7 +1436,7 @@ static void poison_cfi(void *addr)
+ 		/*
+ 		 * kCFI prefix should start with a valid hash.
+ 		 */
+-		if (!decode_preamble_hash(addr))
++		if (!decode_preamble_hash(addr, NULL))
+ 			break;
+ 
+ 		/*
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -410,16 +410,21 @@ static void emit_nops(u8 **pprog, int le
+  * Emit the various CFI preambles, see asm/cfi.h and the comments about FineIBT
+  * in arch/x86/kernel/alternative.c
   */
++static int emit_call(u8 **pprog, void *func, void *ip);
  
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <asm/frame.h>
+-static void emit_fineibt(u8 **pprog, u32 hash)
++static void emit_fineibt(u8 **pprog, u8 *ip, u32 hash, int reg)
+ {
+ 	u8 *prog = *pprog;
  
- #define CAMELLIA_TABLE_BYTE_LEN 272
-@@ -882,7 +883,7 @@ SYM_FUNC_START_LOCAL(__camellia_dec_blk1
- 	jmp .Ldec_max24;
- SYM_FUNC_END(__camellia_dec_blk16)
+ 	EMIT_ENDBR();
+ 	EMIT3_off32(0x41, 0x81, 0xea, hash);		/* subl $hash, %r10d	*/
+-	EMIT2(0x74, 0x07);				/* jz.d8 +7		*/
+-	EMIT2(0x0f, 0x0b);				/* ud2			*/
+-	EMIT1(0x90);					/* nop			*/
++	if (cfi_mode == CFI_FINEIBT_BHI && reg) {
++		emit_call(&prog, __bhi_args[reg], ip);
++	} else {
++		EMIT2(0x74, 0x02);			/* jz.d8 +2		*/
++		EMIT2(0x0f, 0x0b);			/* ud2			*/
++		EMIT1(0x90);				/* nop			*/
++	}
+ 	EMIT_ENDBR_POISON();
  
--SYM_FUNC_START(camellia_ecb_enc_16way)
-+SYM_TYPED_FUNC_START(camellia_ecb_enc_16way)
- 	/* input:
- 	 *	%rdi: ctx, CTX
- 	 *	%rsi: dst (16 blocks)
-@@ -907,7 +908,7 @@ SYM_FUNC_START(camellia_ecb_enc_16way)
- 	RET;
- SYM_FUNC_END(camellia_ecb_enc_16way)
+ 	*pprog = prog;
+@@ -448,13 +453,14 @@ static void emit_kcfi(u8 **pprog, u32 ha
+ 	*pprog = prog;
+ }
  
--SYM_FUNC_START(camellia_ecb_dec_16way)
-+SYM_TYPED_FUNC_START(camellia_ecb_dec_16way)
- 	/* input:
- 	 *	%rdi: ctx, CTX
- 	 *	%rsi: dst (16 blocks)
-@@ -937,7 +938,7 @@ SYM_FUNC_START(camellia_ecb_dec_16way)
- 	RET;
- SYM_FUNC_END(camellia_ecb_dec_16way)
+-static void emit_cfi(u8 **pprog, u32 hash)
++static void emit_cfi(u8 **pprog, u8 *ip, u32 hash, int reg)
+ {
+ 	u8 *prog = *pprog;
  
--SYM_FUNC_START(camellia_cbc_dec_16way)
-+SYM_TYPED_FUNC_START(camellia_cbc_dec_16way)
- 	/* input:
- 	 *	%rdi: ctx, CTX
- 	 *	%rsi: dst (16 blocks)
-Index: linux-2.6/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
-===================================================================
---- linux-2.6.orig/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
-+++ linux-2.6/arch/x86/crypto/camellia-aesni-avx2-asm_64.S
-@@ -6,6 +6,7 @@
+ 	switch (cfi_mode) {
+ 	case CFI_FINEIBT:
+-		emit_fineibt(&prog, hash);
++	case CFI_FINEIBT_BHI:
++		emit_fineibt(&prog, ip, hash, reg);
+ 		break;
+ 
+ 	case CFI_KCFI:
+@@ -505,13 +511,17 @@ static void emit_prologue_tail_call(u8 *
+  * bpf_tail_call helper will skip the first X86_TAIL_CALL_OFFSET bytes
+  * while jumping to another program
   */
+-static void emit_prologue(u8 **pprog, u32 stack_depth, bool ebpf_from_cbpf,
++static void emit_prologue(u8 **pprog, u8 *ip, u32 stack_depth, bool ebpf_from_cbpf,
+ 			  bool tail_call_reachable, bool is_subprog,
+ 			  bool is_exception_cb)
+ {
+ 	u8 *prog = *pprog;
  
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <asm/frame.h>
+-	emit_cfi(&prog, is_subprog ? cfi_bpf_subprog_hash : cfi_bpf_hash);
++	if (is_subprog) {
++		emit_cfi(&prog, ip, cfi_bpf_subprog_hash, 5);
++	} else {
++		emit_cfi(&prog, ip, cfi_bpf_hash, 1);
++	}
+ 	/* BPF trampoline can be made to work without these nops,
+ 	 * but let's waste 5 bytes for now and optimize later
+ 	 */
+@@ -1480,7 +1490,7 @@ static int do_jit(struct bpf_prog *bpf_p
  
- #define CAMELLIA_TABLE_BYTE_LEN 272
-Index: linux-2.6/arch/x86/crypto/camellia-x86_64-asm_64.S
-===================================================================
---- linux-2.6.orig/arch/x86/crypto/camellia-x86_64-asm_64.S
-+++ linux-2.6/arch/x86/crypto/camellia-x86_64-asm_64.S
-@@ -6,6 +6,7 @@
-  */
+ 	detect_reg_usage(insn, insn_cnt, callee_regs_used);
  
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
+-	emit_prologue(&prog, stack_depth,
++	emit_prologue(&prog, image, stack_depth,
+ 		      bpf_prog_was_classic(bpf_prog), tail_call_reachable,
+ 		      bpf_is_subprog(bpf_prog), bpf_prog->aux->exception_cb);
+ 	/* Exception callback will clobber callee regs for its own use, and
+@@ -3047,7 +3057,9 @@ static int __arch_prepare_bpf_trampoline
+ 		/*
+ 		 * Indirect call for bpf_struct_ops
+ 		 */
+-		emit_cfi(&prog, cfi_get_func_hash(func_addr));
++		emit_cfi(&prog, image,
++			 cfi_get_func_hash(func_addr),
++			 cfi_get_func_arity(func_addr));
+ 	} else {
+ 		/*
+ 		 * Direct-call fentry stub, as such it needs accounting for the
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -707,7 +707,7 @@ void bpf_prog_kallsyms_add(struct bpf_pr
+ 	 * When FineIBT, code in the __cfi_foo() symbols can get executed
+ 	 * and hence unwinder needs help.
+ 	 */
+-	if (cfi_mode != CFI_FINEIBT)
++	if (cfi_mode != CFI_FINEIBT && cfi_mode != CFI_FINEIBT_BHI)
+ 		return;
  
- .file "camellia-x86_64-asm_64.S"
- .text
-@@ -177,7 +178,7 @@
- 	bswapq				RAB0; \
- 	movq RAB0,			4*2(RIO);
+ 	snprintf(fp->aux->ksym_prefix.name, KSYM_NAME_LEN,
+@@ -727,7 +727,7 @@ void bpf_prog_kallsyms_del(struct bpf_pr
  
--SYM_FUNC_START(__camellia_enc_blk)
-+SYM_TYPED_FUNC_START(__camellia_enc_blk)
- 	/* input:
- 	 *	%rdi: ctx, CTX
- 	 *	%rsi: dst
-@@ -224,7 +225,7 @@ SYM_FUNC_START(__camellia_enc_blk)
- 	RET;
- SYM_FUNC_END(__camellia_enc_blk)
- 
--SYM_FUNC_START(camellia_dec_blk)
-+SYM_TYPED_FUNC_START(camellia_dec_blk)
- 	/* input:
- 	 *	%rdi: ctx, CTX
- 	 *	%rsi: dst
-@@ -411,7 +412,7 @@ SYM_FUNC_END(camellia_dec_blk)
- 		bswapq				RAB1; \
- 		movq RAB1,			12*2(RIO);
- 
--SYM_FUNC_START(__camellia_enc_blk_2way)
-+SYM_TYPED_FUNC_START(__camellia_enc_blk_2way)
- 	/* input:
- 	 *	%rdi: ctx, CTX
- 	 *	%rsi: dst
-@@ -460,7 +461,7 @@ SYM_FUNC_START(__camellia_enc_blk_2way)
- 	RET;
- SYM_FUNC_END(__camellia_enc_blk_2way)
- 
--SYM_FUNC_START(camellia_dec_blk_2way)
-+SYM_TYPED_FUNC_START(camellia_dec_blk_2way)
- 	/* input:
- 	 *	%rdi: ctx, CTX
- 	 *	%rsi: dst
-Index: linux-2.6/arch/x86/crypto/serpent-avx-x86_64-asm_64.S
-===================================================================
---- linux-2.6.orig/arch/x86/crypto/serpent-avx-x86_64-asm_64.S
-+++ linux-2.6/arch/x86/crypto/serpent-avx-x86_64-asm_64.S
-@@ -9,6 +9,7 @@
-  */
- 
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <asm/frame.h>
- #include "glue_helper-asm-avx.S"
- 
-@@ -656,7 +657,7 @@ SYM_FUNC_START_LOCAL(__serpent_dec_blk8_
- 	RET;
- SYM_FUNC_END(__serpent_dec_blk8_avx)
- 
--SYM_FUNC_START(serpent_ecb_enc_8way_avx)
-+SYM_TYPED_FUNC_START(serpent_ecb_enc_8way_avx)
- 	/* input:
- 	 *	%rdi: ctx, CTX
- 	 *	%rsi: dst
-@@ -674,7 +675,7 @@ SYM_FUNC_START(serpent_ecb_enc_8way_avx)
- 	RET;
- SYM_FUNC_END(serpent_ecb_enc_8way_avx)
- 
--SYM_FUNC_START(serpent_ecb_dec_8way_avx)
-+SYM_TYPED_FUNC_START(serpent_ecb_dec_8way_avx)
- 	/* input:
- 	 *	%rdi: ctx, CTX
- 	 *	%rsi: dst
-@@ -692,7 +693,7 @@ SYM_FUNC_START(serpent_ecb_dec_8way_avx)
- 	RET;
- SYM_FUNC_END(serpent_ecb_dec_8way_avx)
- 
--SYM_FUNC_START(serpent_cbc_dec_8way_avx)
-+SYM_TYPED_FUNC_START(serpent_cbc_dec_8way_avx)
- 	/* input:
- 	 *	%rdi: ctx, CTX
- 	 *	%rsi: dst
-Index: linux-2.6/arch/x86/crypto/twofish-x86_64-asm_64-3way.S
-===================================================================
---- linux-2.6.orig/arch/x86/crypto/twofish-x86_64-asm_64-3way.S
-+++ linux-2.6/arch/x86/crypto/twofish-x86_64-asm_64-3way.S
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- 
- .file "twofish-x86_64-asm-3way.S"
- .text
-@@ -220,7 +221,7 @@
- 	rorq $32,			RAB2; \
- 	outunpack3(mov, RIO, 2, RAB, 2);
- 
--SYM_FUNC_START(__twofish_enc_blk_3way)
-+SYM_TYPED_FUNC_START(__twofish_enc_blk_3way)
- 	/* input:
- 	 *	%rdi: ctx, CTX
- 	 *	%rsi: dst
-@@ -269,7 +270,7 @@ SYM_FUNC_START(__twofish_enc_blk_3way)
- 	RET;
- SYM_FUNC_END(__twofish_enc_blk_3way)
- 
--SYM_FUNC_START(twofish_dec_blk_3way)
-+SYM_TYPED_FUNC_START(twofish_dec_blk_3way)
- 	/* input:
- 	 *	%rdi: ctx, CTX
- 	 *	%rsi: dst
-Index: linux-2.6/arch/x86/crypto/twofish-x86_64-asm_64.S
-===================================================================
---- linux-2.6.orig/arch/x86/crypto/twofish-x86_64-asm_64.S
-+++ linux-2.6/arch/x86/crypto/twofish-x86_64-asm_64.S
-@@ -8,6 +8,7 @@
- .text
- 
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <asm/asm-offsets.h>
- 
- #define a_offset	0
-@@ -202,7 +203,7 @@
- 	xor	%r8d,		d ## D;\
- 	ror	$1,		d ## D;
- 
--SYM_FUNC_START(twofish_enc_blk)
-+SYM_TYPED_FUNC_START(twofish_enc_blk)
- 	pushq    R1
- 
- 	/* %rdi contains the ctx address */
-@@ -255,7 +256,7 @@ SYM_FUNC_START(twofish_enc_blk)
- 	RET
- SYM_FUNC_END(twofish_enc_blk)
- 
--SYM_FUNC_START(twofish_dec_blk)
-+SYM_TYPED_FUNC_START(twofish_dec_blk)
- 	pushq    R1
- 
- 	/* %rdi contains the ctx address */
-Index: linux-2.6/arch/x86/lib/clear_page_64.S
-===================================================================
---- linux-2.6.orig/arch/x86/lib/clear_page_64.S
-+++ linux-2.6/arch/x86/lib/clear_page_64.S
-@@ -1,6 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- #include <linux/export.h>
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <asm/asm.h>
- 
- /*
-@@ -14,7 +15,7 @@
-  * Zero a page.
-  * %rdi	- page
-  */
--SYM_FUNC_START(clear_page_rep)
-+SYM_TYPED_FUNC_START(clear_page_rep)
- 	movl $4096/8,%ecx
- 	xorl %eax,%eax
- 	rep stosq
-@@ -22,7 +23,7 @@ SYM_FUNC_START(clear_page_rep)
- SYM_FUNC_END(clear_page_rep)
- EXPORT_SYMBOL_GPL(clear_page_rep)
- 
--SYM_FUNC_START(clear_page_orig)
-+SYM_TYPED_FUNC_START(clear_page_orig)
- 	xorl   %eax,%eax
- 	movl   $4096/64,%ecx
- 	.p2align 4
-@@ -44,7 +45,7 @@ SYM_FUNC_START(clear_page_orig)
- SYM_FUNC_END(clear_page_orig)
- EXPORT_SYMBOL_GPL(clear_page_orig)
- 
--SYM_FUNC_START(clear_page_erms)
-+SYM_TYPED_FUNC_START(clear_page_erms)
- 	movl $4096,%ecx
- 	xorl %eax,%eax
- 	rep stosb
-Index: linux-2.6/arch/x86/lib/copy_page_64.S
-===================================================================
---- linux-2.6.orig/arch/x86/lib/copy_page_64.S
-+++ linux-2.6/arch/x86/lib/copy_page_64.S
-@@ -3,6 +3,7 @@
- 
- #include <linux/export.h>
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <asm/cpufeatures.h>
- #include <asm/alternative.h>
- 
-@@ -13,7 +14,7 @@
-  * prefetch distance based on SMP/UP.
-  */
- 	ALIGN
--SYM_FUNC_START(copy_page)
-+SYM_TYPED_FUNC_START(copy_page)
- 	ALTERNATIVE "jmp copy_page_regs", "", X86_FEATURE_REP_GOOD
- 	movl	$4096/8, %ecx
- 	rep	movsq
-Index: linux-2.6/arch/x86/lib/memmove_64.S
-===================================================================
---- linux-2.6.orig/arch/x86/lib/memmove_64.S
-+++ linux-2.6/arch/x86/lib/memmove_64.S
-@@ -8,6 +8,7 @@
-  */
- #include <linux/export.h>
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <asm/cpufeatures.h>
- #include <asm/alternative.h>
- 
-@@ -26,7 +27,7 @@
-  * Output:
-  * rax: dest
-  */
--SYM_FUNC_START(__memmove)
-+SYM_TYPED_FUNC_START(__memmove)
- 
- 	mov %rdi, %rax
- 
-Index: linux-2.6/arch/x86/lib/memset_64.S
-===================================================================
---- linux-2.6.orig/arch/x86/lib/memset_64.S
-+++ linux-2.6/arch/x86/lib/memset_64.S
-@@ -3,6 +3,7 @@
- 
- #include <linux/export.h>
- #include <linux/linkage.h>
-+#include <linux/cfi_types.h>
- #include <asm/cpufeatures.h>
- #include <asm/alternative.h>
- 
-@@ -28,7 +29,7 @@
-  * only for the return value that is the same as the source input,
-  * which the compiler could/should do much better anyway.
-  */
--SYM_FUNC_START(__memset)
-+SYM_TYPED_FUNC_START(__memset)
- 	ALTERNATIVE "jmp memset_orig", "", X86_FEATURE_FSRS
- 
- 	movq %rdi,%r9
-Index: linux-2.6/arch/x86/lib/msr-reg.S
-===================================================================
---- linux-2.6.orig/arch/x86/lib/msr-reg.S
-+++ linux-2.6/arch/x86/lib/msr-reg.S
-@@ -1,6 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #include <linux/linkage.h>
- #include <linux/errno.h>
-+#include <linux/cfi_types.h>
- #include <asm/asm.h>
- #include <asm/msr.h>
- 
-@@ -12,7 +13,7 @@
-  *
-  */
- .macro op_safe_regs op
--SYM_FUNC_START(\op\()_safe_regs)
-+SYM_TYPED_FUNC_START(\op\()_safe_regs)
- 	pushq %rbx
- 	pushq %r12
- 	movq	%rdi, %r10	/* Save pointer */
+ 	bpf_ksym_del(&fp->aux->ksym);
+ #ifdef CONFIG_FINEIBT
+-	if (cfi_mode != CFI_FINEIBT)
++	if (cfi_mode != CFI_FINEIBT && cfi_mode != CFI_FINEIBT_BHI)
+ 		return;
+ 	bpf_ksym_del(&fp->aux->ksym_prefix);
+ #endif
 
 
