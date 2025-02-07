@@ -1,65 +1,50 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9D432C8B
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7079319ABBB;
+	Fri,  7 Feb 2025 09:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738922000; cv=none; b=IeFqq6oCbwNvEKb730YzIim01VNKAzgSdX0LYmmRawhU9+SGM+X2dl14uw2o93BMg9FADpAp76VtJ2HkTAO3+JuqyaiPWFsURRNkyRRjC272z6IQ0zvarCJIubADevLRiJGP1/d7V5SezVmSshlqBRnKMtdumgb6buN8O+uLSxo=
+	t=1738922031; cv=none; b=CDhZccQ03eVJ25tsBVzN4vgAS1nmrmpMbsvkp9YRQTLYuaQhVdSH5f3s0bYLht54uJezyZQRrg8srdoaDei51UHfMqgGO8vjZI+lsdtQ2PreZOkOehkgAjdkN4aM7bzhE81Xl0bEnsQsvCxmgKCKRZJ+M0LcPeVzyLTXP2cSxiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738922000; c=relaxed/simple;
-	bh=vcIfYXXJS1n936ujwYTpp+exHAdEBoRDeNDuYzB9ueM=;
+	s=arc-20240116; t=1738922031; c=relaxed/simple;
+	bh=hlTuVm1xxYrUR9UPnzCM2Z9PktNqKKSfUmGDWh3FPCs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iIew89DOWym2hAcxMWoaphiBMcnIcaxMzd6Id5O0S7GN9Blu/yCB2Zo0nHWZjAnfKUbNrE+H8IVe3oxldztkjFtTgyH+zJFzNNOWpRSBtITtN9kk6TWzkDIzD61S6W7AG330IP7Ms/vxyQKTfFNx6sSPFksPJKd70N7E4bfNPek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uSGOCFQV; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=Ios/txeJns5KD6ZSXq8vl2D3gygdEfHicoXC5c+0AWWRO+95iwuxFrJHq9rPoz23dxD9E+u6tSF2mfmP40FNFTw6F7x5Id607WDwGef9rfer7UmxZLw6nre8KEUsIFQA5MrOv77lejwRZVYl/FMpePoRgpAkZq7WlgrTzm417KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U0q7ywoP; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uSGOCFQV"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43624b2d453so21335805e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 01:53:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738921997; x=1739526797; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HI5le2m9MtRic21XlVw4VlPIjEEeUg5523fwZbcDp5A=;
-        b=uSGOCFQVjcmxMKQkSOSAAijs2X1DkoembVfxjfcrwEAbxR0+vzpor1oXQEe4BN0rQY
-         /tTK3JSijWEhLuRieI6DnFWWEzr4B8QRSHGVIP0qRwyHN9n13zQ3wyo4D775JDsHid0/
-         EM+Rdbix6u0sqGaiZ3aZE9y1eLhVUE3c/KKMyFYNdS7gx1wHlv1SJXUT4jRBHuR0dWY9
-         UZOq0KKVxkO/TBhbs2/1WX4mX2DYYAffpj7fSKScC7/f7fX0vbiXPBL0zn5dz0Yjk2Mq
-         jU4Afv35/Np/bOU3UKdNXeENY5aPp/AFndFYkYU/pmnMdp4PADjW5A4GHond6p8YQr8y
-         tbsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738921997; x=1739526797;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HI5le2m9MtRic21XlVw4VlPIjEEeUg5523fwZbcDp5A=;
-        b=iULLig0q0JOM9M3Lh6x1DMtOYnFjLqAupsaq4wsVQHR5LGntouAivrd0WX9qwiBbkk
-         MYfpuvtnytewC6Rn129TKkpmZBr+0Yn3yOJcwnXYU3P/k+MZeYvvwv9iT7g5hADbuGB+
-         FaWNcjd+Iw529h8+g6htbQztVCDoXjO38ctzgXHSWys0YKMba8yTo2SBDtVeg/gOCOpX
-         KIWjIHY93VHDzDWUxPwBhSaq0+5mg3XiIOAupR3Id0ivG40uf9lxRJy6TKijQut1AfWN
-         6DAlNOPtAP3cTXQupj1XAvJEgqMrJE4+tfeA19YdiedCFxXrOIRi/J1HnGYUmqsCF4sT
-         j28w==
-X-Forwarded-Encrypted: i=1; AJvYcCVFPYGST+TyYliLWAZXfjlc4XPXDXZN6+wdc/90a0zoOxW5HHPxMDbS+XFEEV3pDz+1+tNblqZPat/E2kE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzVoeRKKd5vTMvKoagTAztd+C00rvnoLK0WOzyvLBsoLtT3XZ4
-	s//GeZUvrQpjNXK6nBv+ZKmBavnw+r/N5L0nOklkxOaquH4YNGU5J1aqMG3ER6JLyXNIsZ/lnF3
-	c
-X-Gm-Gg: ASbGnctQkL7aseLuIi8oby6Pii2cc8DMXEvIBP71F61M/6YwSaVXDERc5TNVhvbsdKZ
-	ZoCMc2K4IFYK272EzVkBcad9fzQ9zlqLaAoqORGL5MVtZqpNlzZTh/6AKcEDhp2Q1e1TY+TZkE7
-	76L8Xdb8vX4Ptxo0YPj65pfGJnHa7ICv4xtFAFdvAe2iZpCsR00K0YVhSL8OIy8td5LFWsn/vlv
-	DmWeMEJESz50fOPa6riL9R6TwLbMrWXEJm2fQBdHwHIZAh5wz9AQIv4d3ZNnbe6EQPdhZLeManK
-	VAIabKjGkFBoBiPETZ8AXLkr
-X-Google-Smtp-Source: AGHT+IF/jd4MqZAtMmh1k6zAEYsukyGyHjp1fzUdIn8Rugzvkd2nBmHJEjdc1jWM+2m1hRsz4VyZjg==
-X-Received: by 2002:a05:600c:384c:b0:434:fddf:5c0c with SMTP id 5b1f17b1804b1-4392497d1d9mr24860505e9.4.1738921996824;
-        Fri, 07 Feb 2025 01:53:16 -0800 (PST)
-Received: from [192.168.0.14] ([79.115.63.251])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390daf4592sm83239435e9.32.2025.02.07.01.53.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 01:53:15 -0800 (PST)
-Message-ID: <9f8cefc7-12e9-4c1f-9e4d-e810a3eaecd1@linaro.org>
-Date: Fri, 7 Feb 2025 09:53:13 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U0q7ywoP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738922030; x=1770458030;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hlTuVm1xxYrUR9UPnzCM2Z9PktNqKKSfUmGDWh3FPCs=;
+  b=U0q7ywoPl7UkHnU5SHIrNGTuuyjot8QwmEW+P83FLrfgoxmlzDZprbXu
+   u6jW+3SKTlcOZcPGk03QXXWgiSEyZNDNOGObrg8j+ybsd2zcMT4ADuC8D
+   4jRA60OjONF4EEK03YBOdXw3/BMdMAqV/b9F2ghtQDbh7vOB3Ddvse3T0
+   zAYHXtBTPgDt9fzznkzVcir0mB3XwSwbXCH1otgRp1UJ3f+fzBxpt0nSb
+   F/vWiNHOufncPZf2Cvnc+SLgnUIig1djT7Oaj/6g7ewLTv4a1br3xL4Gh
+   ciTk7W1D9JABZw7Z91e7gfkU4Z/ikr9wQieMx8R7mTE+Rcq13g8GNPi21
+   Q==;
+X-CSE-ConnectionGUID: QtkVWnLmR/GPFnc1qpU1NA==
+X-CSE-MsgGUID: PyWjkGqXSgydnupqnKieVQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="49800804"
+X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
+   d="scan'208";a="49800804"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 01:53:49 -0800
+X-CSE-ConnectionGUID: WwnCJ8nBS7qhQMAwq3M/2g==
+X-CSE-MsgGUID: wUf5a5DCSSSsebhSBlTGRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="112379199"
+Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.39.73]) ([10.247.39.73])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 01:53:40 -0800
+Message-ID: <ceb6cee6-9cfb-4363-9d23-dfd21f78d486@linux.intel.com>
+Date: Fri, 7 Feb 2025 17:53:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,41 +52,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mtd: spi-nor: macronix: Add support for Macronix NOR
- Flash
-To: Michael Walle <mwalle@kernel.org>
-Cc: Cheng Ming Lin <linchengming884@gmail.com>, pratyush@kernel.org,
- miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
- linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
- alvinzhou@mxic.com.tw, leoyu@mxic.com.tw,
- Cheng Ming Lin <chengminglin@mxic.com.tw>
-References: <20250207081846.362919-1-linchengming884@gmail.com>
- <20250207081846.362919-3-linchengming884@gmail.com>
- <41c4d4ac-5f71-40b1-86b9-ae8ee33db538@linaro.org>
- <23d2dd5b30cf25090ef947f9bb984d95@kernel.org>
+Subject: Re: [PATCH net-next v7 4/7] stmmac: intel: configure SerDes according
+ to the interface mode
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
+ Jose Abreu <Jose.Abreu@synopsys.com>,
+ David E Box <david.e.box@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+ David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
+ Mengyuan Lou <mengyuanlou@net-swift.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Hans de Goede <hdegoede@redhat.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>,
+ platform-driver-x86@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
+ <20250206131859.2960543-5-yong.liang.choong@linux.intel.com>
+ <c15078bf-b6f3-5b4b-82ca-668d47168ce0@linux.intel.com>
 Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <23d2dd5b30cf25090ef947f9bb984d95@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+In-Reply-To: <c15078bf-b6f3-5b4b-82ca-668d47168ce0@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-On 2/7/25 9:23 AM, Michael Walle wrote:
-> Hi,
+On 6/2/2025 9:31 pm, Ilpo Järvinen wrote:
+>> +static int intel_tsn_lane_is_available(struct net_device *ndev,
+>> +				       struct intel_priv_data *intel_priv)
+>> +{
+>> +	struct stmmac_priv *priv = netdev_priv(ndev);
+>> +	struct pmc_ipc_cmd tmp = {};
+>> +	u32 rbuf[4] = {};
+>> +	int ret = 0, i, j;
+>> +	const int max_fia_regs = 5;
+>> +
+>> +	tmp.cmd = IPC_SOC_REGISTER_ACCESS;
+>> +	tmp.sub_cmd = IPC_SOC_SUB_CMD_READ;
+>> +
+>> +	for (i = 0; i < max_fia_regs; i++) {
 > 
->> On 2/7/25 8:18 AM, Cheng Ming Lin wrote:
->>> From: Cheng Ming Lin <chengminglin@mxic.com.tw>
->>>
->>> Due to incorrect values in the 4-BAIT table for these two flash IDs,
->>> it is necessary to add these two flash IDs with fixups.
->>>
->>> Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
->>
->> Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> Usually, defines are used for true consts.
 > 
-> It would be nice to have some kind of references of the part
-> numbers in the commit message/subject ;)
-> 
+Hi Ilpo,
+Thank you for your feedback. I used const int max_fia_regs = 5; to leverage 
+type safety and scope control in modern C. However, I understand that 
+#define is a common practice. Please let me know if you prefer I switch to 
+#define for consistency.
 
-Yes, I agree. Cheng can update when sending v2 and still keep my R-b.
+>> +static int intel_mac_finish(struct net_device *ndev,
+>> +			    void *intel_data,
+>> +			    unsigned int mode,
+>> +			    phy_interface_t interface)
+>> +{
+>> +	struct intel_priv_data *intel_priv = intel_data;
+>> +	struct stmmac_priv *priv = netdev_priv(ndev);
+>> +	const struct pmc_serdes_regs *regs;
+>> +	int max_regs = 0;
+>> +	int ret = 0;
+>> +
+>> +	ret = intel_tsn_lane_is_available(ndev, intel_priv);
+>> +	if (ret < 0) {
+>> +		netdev_info(priv->dev, "No TSN lane available to set the registers.\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	if (interface == PHY_INTERFACE_MODE_2500BASEX) {
+>> +		regs = intel_priv->pid_2p5g.regs;
+>> +		max_regs = intel_priv->pid_2p5g.num_regs;
+>> +	} else {
+>> +		regs = intel_priv->pid_1g.regs;
+>> +		max_regs = intel_priv->pid_1g.num_regs;
+>> +	}
+>> +
+>> +	ret = intel_set_reg_access(regs, max_regs);
+>> +	if (ret < 0)
+>> +		return ret;
+> 
+> This looks much cleaner now, thanks the update.
+> 
+> However, the intel_priv fields you introduced are not setup until patch
+> 6/7? Will this cause NULL ptr deref issues in between the two changes? By
+> introducing the reg arrays in this patch but only use them after patch 6,
+> you'll also get unused variable warnings out of them in between the
+> changes which is unacceptable.
+> 
+Thank you for pointing out the potential issues with the intel_priv fields. 
+I will move the changes from patch 6 into this patch to avoid NULL pointer 
+de-reference issues and unused variable warnings. This will ensure 
+everything is properly set up and used within the same patch.
