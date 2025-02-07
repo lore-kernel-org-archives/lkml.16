@@ -1,86 +1,97 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BBB184E
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 12:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1944733EC;
+	Fri,  7 Feb 2025 12:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738931787; cv=none; b=rdYWSwBIwuErZbs2937aFJnX16bqIVszc187LBkYyBpkhz2pDiYm6PQG5h/m9AS/BDUcoot6XW37T664HElAi3aLCN1q+n0AtHJHhi+5Eze+CVO3xV4LadVs10XR3HPwHqqvmJjM450jfi0AAr0/bYApf07HuBeBrzv/KdVgin0=
+	t=1738931828; cv=none; b=fr1i4pVbfpzmuY4vdwXxEHxNeDDtAU0WHZZdZ/kiKgMe+9OOBXDUzLkgS4QIqv+k+0E01BTfbKAP+ePOts0sk3fhUlM8kx5Q6Vczn7wJhLj6YC6kYb62IA+ARYvdOJui1xkd0Brc/u9/0KM/d7bytzGjgitvH1xuSWZ2QtZDdKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738931787; c=relaxed/simple;
-	bh=5P7RkzOc/3WZiML4LzACxc3KNo3hazioPLHDmVShYx4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uHQx9p3ihcCxCUvgXVweK3kWnHx3AIFoqf+1rDgq8e1xg7nEGvuToZTM2340vx1df+FLHFqaaArHX0AqZH0OfFbAGv9dPfnq2fnIZ7Q3u99SOPlse+xCDDpmRvc+WnZCwE5YCoYLar3EBzesg7y+qzF3i4nATkjhJgLx6ISQbx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RxcqDhNg; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738931828; c=relaxed/simple;
+	bh=2bKyeP9zqVLSt/2JmFzcqHN0fT/i7oHIwjweK2UhX+8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JJMSmPVPa29v3k2OKdbT9/EVODjXXjn8PD//2e5j1mt5hjj9XnfBbhRkJDThKEtAwC3B+p+9+nyKM/GIGrJPvbWrWfiJ9F5Z9BDjyMMf4o2vlLFUGh2L86KlRZMT9/w7RJCZ4/D4CqUNs53XzfWDH69rEpO2N5lFC4AYkaMPSXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXxaq+Zh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RxcqDhNg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=vfuQoWD9QTH0pA9BiG5tl1rwta+YR9EYbDQUHEfE0mc=; b=RxcqDhNghXjEHZCaYtrgzimoh6
-	nLgt1ErIhvjCjdHeKQxt75sGXUZpc6lFTwDden4HRS/VvGbPW0p9vUwTBUlp/D4EQoetaGbLkkxr4
-	AHxf0jshVvQBGvvuCdk1mbNZqLGaPv3QgiZrtun2hXj1ugTVRrYmi7tjAkyeJvpvlfCwoeLp3abfL
-	8XYds0EEZkHVcMjFcU27iGifbl/MGrF1uqGSRazjAW0QhdbVfibzNxcmiZQWN1/G+GCTWZ9EI9lwB
-	XUQwiqUsZNyxP7ecY8H0iIhXSwIUmdqJCDPtfEUi25x9JyQ3lqxdqmMlqyDPBSRMdtD8A1pYKHh24
-	fsb5X4Jw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgNan-0000000HAkJ-0ql4;
-	Fri, 07 Feb 2025 12:36:21 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CBED3300310; Fri,  7 Feb 2025 13:36:20 +0100 (CET)
-Date: Fri, 7 Feb 2025 13:36:20 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: zihan zhou <15645113830zzh@gmail.com>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V1] sched: Cancel the slice protection of the idle entity
-Message-ID: <20250207123620.GA10324@noisy.programming.kicks-ass.net>
-References: <20250121030628.113497-1-15645113830zzh@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXxaq+Zh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BAF0C4CED1;
+	Fri,  7 Feb 2025 12:37:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738931827;
+	bh=2bKyeP9zqVLSt/2JmFzcqHN0fT/i7oHIwjweK2UhX+8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WXxaq+ZhGmi7hvXDV36OvJO4i4ekNHYRQg7jepLn9lJqijd3q6UJAiumv4qIHbkdY
+	 wAsQ5w90FjWC/mx7uQTvlzAZjzUJAPOvLU6tRYj2nGzKvA8CFf7owLZJ84oYxyM8AF
+	 0O+oMnD0fY9q3MnuCHnXFQMRrAFi3dSkQ8t/XOQT8cAJjdNse+YZnla98xSdA6UBPU
+	 pA93nCG05ZPiUKdFmIVNzPb7NnaaJNGAGozHNKkcpquyZZaDV4523IrJUpsdCo+nXH
+	 3qHtJ9wLCdnTXfnWUoUcL730shutKuGnX4VFBFCLXRYm2osrlXeFNjLGNxZErQm96J
+	 gi9+kDSM6YVLg==
+From: Philipp Stanner <phasta@kernel.org>
+To: Matthew Brost <matthew.brost@intel.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Philipp Stanner <phasta@kernel.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org
+Subject: [PATCH v3 0/3] drm/sched: Documentation and refcount improvements
+Date: Fri,  7 Feb 2025 13:36:50 +0100
+Message-ID: <20250207123652.27677-2-phasta@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250121030628.113497-1-15645113830zzh@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 21, 2025 at 11:06:29AM +0800, zihan zhou wrote:
-> A wakeup non-idle entity should preempt idle entity at any time,
-> but because of the slice protection of the idle entity, the non-idle
-> entity has to wait, so just cancel it.
-> 
-> Signed-off-by: zihan zhou <15645113830zzh@gmail.com>
-> ---
->  kernel/sched/fair.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 3e9ca38512de..7777d110d053 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -8851,8 +8851,19 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
->  	 * Preempt an idle entity in favor of a non-idle entity (and don't preempt
->  	 * in the inverse case).
->  	 */
-> -	if (cse_is_idle && !pse_is_idle)
-> +	if (cse_is_idle && !pse_is_idle) {
-> +
-> +		/*
-> +		 * When non-idle entity preempt an idle entity,
-> +		 * don't give idle entity slice protection.
-> +		 */
-> +		if (se->vlag == se->deadline)
-> +			se->vlag = se->deadline + 1;
-> +
->  		goto preempt;
-> +
-> +	}
+Changes in v3:
+  - timedout_job(): various docu wording improvements. (Danilo)
+  - Use the term "ring" consistently. (Danilo)
+  - Add fully fledged docu for enum drm_gpu_sched_stat. (Danilo)
 
-Yes, I suppose we can do this.
+Changes in v2:
+  - Document what run_job() is allowed to return. (Tvrtko)
+  - Delete confusing comment about putting the fence. (Danilo)
+  - Apply Danilo's RB to patch 1.
+  - Delete info about job recovery for entities in patch 3. (Danilo, me)
+  - Set the term "ring" as fix term for both HW rings and FW rings. A
+    ring shall always be the thingy on the CPU ;) (Danilo)
+  - Many (all) other comments improvements in patch 3. (Danilo)
+
+This is as series succeeding my previous patch [1].
+
+I recognized that we are still referring to a non-existing function and
+a deprecated one in the callback docu. We should probably also point out
+the important distinction between hardware and firmware schedulers more
+cleanly.
+
+Please give me feedback, especially on the RFC comments in patch3.
+
+(This series still fires docu-build-warnings. I want to gather feedback
+on the opion questions first and will solve them in v2.)
+
+Thank you,
+Philipp
+
+[1] https://lore.kernel.org/all/20241220124515.93169-2-phasta@kernel.org/
+
+Philipp Stanner (3):
+  drm/sched: Document run_job() refcount hazard
+  drm/sched: Adjust outdated docu for run_job()
+  drm/sched: Update timedout_job()'s documentation
+
+ drivers/gpu/drm/scheduler/sched_main.c |   5 +-
+ include/drm/gpu_scheduler.h            | 109 ++++++++++++++++---------
+ 2 files changed, 74 insertions(+), 40 deletions(-)
+
+-- 
+2.47.1
+
