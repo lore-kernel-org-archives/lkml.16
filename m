@@ -1,143 +1,161 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2050.outbound.protection.outlook.com [40.107.223.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36AEC1B040E;
-	Fri,  7 Feb 2025 22:59:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738969179; cv=none; b=kzkfekgbgguUKVj2YDuP1yTfCtyDvM6HT6O+zwVFSXdMNMh2KKkkNISvYAVc6YUvSbMHWraPgydNxV6TDlgDDEfyJok+QCaQMOf7L6jwjwXaUwwQvLu+8cv9HOSoemDT1mVJASLpnzV/iJWb46eZfGekt6u4BBAxcgytmJ7t33M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738969179; c=relaxed/simple;
-	bh=93b6lC0yEmmEbAchcr/tIBghqBwznr766ANAtWatFjw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Wnf44m/0CBKcne7SptP2Wo1XUytoc0pEJoHsnPISjsKjaSWRGc0Nz3ij6p7564QO4ubXkVT9L3D6tKitvIvMX9JDh6GQxZ75bs4aMCZFK9xn6x0jb2w9xFPNAWiHFNuLAZLcrVSbLKXL3HVTqRQJ1bCc+GpTWrYD4HcZykrG5pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lcoxVyw2; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2C11C68A6
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 23:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738969207; cv=fail; b=UaC/Ctc0NvNfMJkKbCJFaWdaZwplxx+qe7nSSsPzSZV9T6+7Epuzutyfdw4SXU1z/xNp+J62lvPOmsxc6zzb//25MPEUw9Er6zMglF6aN9VtlXAw0eRyNgd/tzxCeeBt41jv6VUUh37XHpYjE14qoMcJbIW01WYJ/WraIBw1LAs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738969207; c=relaxed/simple;
+	bh=Mz0M4PbChKFL5TKveLH+xFsTAWTGhc6KRwDP2OCszjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=oN3iQI7D/GK+mSlF6PteYyqlWHh6fJxyq58sl6x2uz5/UUIQC7Hlj9yMROresk1tjJqW+oK4lA+H2ZWnuZ9DaU9IUx39lu5qamZRpwQnUorvxytR19IiMNppjQySah3J2LaWDp3xVP05d3FOiGsBamNhmfknhRTsuZZzf56naLU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ie6jygoO; arc=fail smtp.client-ip=40.107.223.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lcoxVyw2"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517GuNDj003589;
-	Fri, 7 Feb 2025 22:59:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3dWjBlFpK6iG/l0ZpfT4pfKMeRYTyR+opXdSefY3fa0=; b=lcoxVyw2MRej/dxH
-	dnzD8h2zfnmLjBFNMdiSXujT4QI4m/u9oI8hmL7z6Tc+DVmen5T8bcPD5jrKNDqa
-	l3OGFMb6KRaiRhdjIr2RXl/Qd2j0H/btExSuRhUQ16D1VwBp8OVbGRJRQhTgs1RO
-	dgFba/dT9VB94i125jVvjhEr3jqRrF78X5rxsfFORfEMmDqO9TOqPzdJWFqG8Kfs
-	BnolmlN4IYYdCiErI2frab5ivInL6CRQqc9/IoTOxObdyDpR6GUhpPYW6ZstNYKL
-	oJEBJdxrYoBASWEUhAdkzC4dLXDH/dHqyO6gAXjVO10HoCraaQMCbvNvLxwGUo+1
-	rFxf2Q==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44np4w0rue-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 22:59:16 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 517MxGW0008737
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 7 Feb 2025 22:59:16 GMT
-Received: from [10.110.94.65] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 7 Feb 2025
- 14:59:15 -0800
-Message-ID: <1d4ce981-d91d-4dfd-b92b-7046494ef1cc@quicinc.com>
-Date: Fri, 7 Feb 2025 14:59:14 -0800
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ie6jygoO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=McNTR3i3dn/cv9DktJMWB+nACnks8rrZAto+mSfn/pTpVgwMspzBInPYug1wyuRMR0h+NeVR+joOIn6JkWTcNKHDf9g6wRiee5T2TuB1AvHVI4eSJ3W7MOCk9X3Mq35vVaIQGN0oeGrpnwFVwskYtgLe8jEbRbQdx0Z5p0LCF/vbZ5DFqm08zD54irFE/NM12FdSheTs2iR3iXv3Cy55OJvmlII45YUCPyQ/oh6jc/UF//ozeX7l9+I1NCKhkmmUXNF0oAsXXXFLP7xo/xOhHglaVqjV02dNgPr7LxdIlNcfMp/w+BQCHmDELEBpJS3XS2d1xo7VgG0yFiGz3auBwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3Jg56Pe5mrBNSy1HB/yfGmvCXsvSP1sCudpAGlpUtoI=;
+ b=ZJuS445U6XgRXWKWzNi+w9hs/GIqrWzi9S/t3q0BLqkWaqdSGIYn837TZ1IWxgHq/2P5Xc+wxMfJcGcElKINGyp+pbtUdN27AgOgLzKUECcSZ+gTMgXQ6BQ9F7krnLuxkjrc/5FtMadUkv8wlFumfT9l6GAmIAoRHXGWMgwaSu7Dol5fI1M+7Oc3IsFIw3a+nBo4+5+VD0A8dRmMutQZ0iDc+MJWv43n3kfX5UfRlqACgSz/EFBDArW/Nk9ZqsRSsHbSTHMbE9fl25EpeYl8f9Jt0NlNTxOu8IivIyM0eAHvXcBVrECtQG/F2whse3fXr4diOcaNanjQyWzHUuknZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3Jg56Pe5mrBNSy1HB/yfGmvCXsvSP1sCudpAGlpUtoI=;
+ b=ie6jygoOJy4sB0QpJXFiU0S9Y/MxAdaoK0aECc4AhfKrKE5f44P2Zdd5UIOh2OlQRq+eO6b5UIsbeljSInKRi4ob8HOGXw2g+w8jO0Oj1vaTbPyVqxkIGYcbWO35XASBMjzqONvdzbq2mDDj1zTShpFfCwz+gZgpalWhSo4shewAaJ8y93M7TkarU/uEQ8k/EolADeD+NtXHwKouBcp0VFD+vN8W8yrYDJixDpKMabgDg5Z6tbVENn7gMJYT/SLVn/bnboPB8OPT2hjCJyEfcBhE5HdmWnDzW5SHAGEXAcvaWMd2DVrSp7WjMwYu9P0VwZiSi9CteJslpFtzxrq0sA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
+ by DS0PR12MB7827.namprd12.prod.outlook.com (2603:10b6:8:146::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Fri, 7 Feb
+ 2025 23:00:00 +0000
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5%7]) with mapi id 15.20.8422.010; Fri, 7 Feb 2025
+ 23:00:00 +0000
+Date: Fri, 7 Feb 2025 23:59:56 +0100
+From: Andrea Righi <arighi@nvidia.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	linux-kernel@vger.kernel.org, sched-ext@meta.com
+Subject: Re: [PATCH sched_ext/for-6.14-fixes 1/2] sched_ext: Implement auto
+ local dispatching of migration disabled tasks
+Message-ID: <Z6aQbFDeYADDlJJu@gpd3>
+References: <Z6Zz79AUub1YuHwD@slm.duckdns.org>
+ <Z6aK2J4F7fnzugxs@gpd3>
+ <Z6aMtxceyZsi5PfC@slm.duckdns.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6aMtxceyZsi5PfC@slm.duckdns.org>
+X-ClientProxiedBy: FR4P281CA0170.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:b7::11) To CY5PR12MB6405.namprd12.prod.outlook.com
+ (2603:10b6:930:3e::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] arm64: cputype: Add comments about Qualcomm Kryo
- 5XX and 6XX cores
-To: Douglas Anderson <dianders@chromium.org>,
-        Catalin Marinas
-	<catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>
-CC: Jeffrey Hugo <quic_jhugo@quicinc.com>,
-        Roxana Bradescu
-	<roxabee@google.com>,
-        <bjorn.andersson@oss.qualcomm.com>,
-        Julius Werner
-	<jwerner@chromium.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        Anshuman Khandual
-	<anshuman.khandual@arm.com>,
-        Besar Wicaksono <bwicaksono@nvidia.com>,
-        "D
- Scott Phillips" <scott@os.amperecomputing.com>,
-        Easwar Hariharan
-	<eahariha@linux.microsoft.com>,
-        Oliver Upton <oliver.upton@linux.dev>, <linux-kernel@vger.kernel.org>
-References: <20241219211131.2389091-1-dianders@chromium.org>
- <20241219131107.v3.2.I520dfa10ad9f598581c2591d631aa6e9e26f7603@changeid>
-Content-Language: en-US
-From: Trilok Soni <quic_tsoni@quicinc.com>
-In-Reply-To: <20241219131107.v3.2.I520dfa10ad9f598581c2591d631aa6e9e26f7603@changeid>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Mjt4Rn6SgZRmwYi9hY3EskWLAEoWKbEY
-X-Proofpoint-GUID: Mjt4Rn6SgZRmwYi9hY3EskWLAEoWKbEY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_11,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- phishscore=0 adultscore=0 lowpriorityscore=0 clxscore=1011
- priorityscore=1501 bulkscore=0 suspectscore=0 impostorscore=0
- malwarescore=0 mlxlogscore=955 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502070173
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|DS0PR12MB7827:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4c3b537d-300f-496f-1e9b-08dd47cb2628
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?wfutcotEnhyy45PzW8LXLTMfKbYAs3ekDP8r21Qy74CO4sFTJh/xQRj3WCb0?=
+ =?us-ascii?Q?GQFy5c+XGALGvKIPoi/0na5Q8ydxpw4Nd9y/rrrVKR46gD+5nH7EypKia2Ic?=
+ =?us-ascii?Q?UNaU4l+vyvdHgtSvavVfmQAezSWyYR+0wxx7ncEdRgInWk34ft6BTPls4/Zd?=
+ =?us-ascii?Q?2p6H5/tqKEgvjkZOkn24LW9Ig8q6ptrRpo4PPNXZtyErWO6b0Lwez2fpJpsi?=
+ =?us-ascii?Q?SqZ95PGr5fbPxwIxKebpSlvPcM08tCkoqzz3zWl2jqP24Hzc6f2zsuIdLzFo?=
+ =?us-ascii?Q?5UkDc33bExHv91SQ9lN0xkrQdtXAftKhX/IX00IEoVCzM6ZoE/7rIxhDjoQU?=
+ =?us-ascii?Q?9OI4hOGfsRF0aL7Zx6KBC0o453X1QgZ9thxjTFfwJhAOr0VkuOKaBzIdQLxZ?=
+ =?us-ascii?Q?FkpdcISrQDyoMsvU7WIy+npBF+tJTMFprREDxXwl1wucXXxTq5ekwuZbHW8t?=
+ =?us-ascii?Q?SkAuqvISEaEDFKnixFNqRaiHDCAHRsXENByqcUOTH3AbuY++LSjB1t076Z1G?=
+ =?us-ascii?Q?TpcaWavxmIZh8Ct0+0JnYgEoYXRW75ORLwjEPjcb9OHGRlTAQQ92oAFn3kn5?=
+ =?us-ascii?Q?miq8oIZS/qMGQaRo1wMAtuzrzGM/DShg55TPgCzGWWx/IMV5Jb3ZdDrQaT/g?=
+ =?us-ascii?Q?8vqDD3VP93f8UjC4OYb8TcF+WyBTuhZ3gQzXgANMZXbkJUqFvXV7bM+ZO6kz?=
+ =?us-ascii?Q?ZrxT/Vj6c2fw5NX+bVQEppx0VJ736Y6lstbY8makoKYYs+SsPmc0WuGJy1oa?=
+ =?us-ascii?Q?MgWW1ScR2Wmsk5ZcSZFZUM3ZSMLi4Yyue/H81jC9tQeIfEAZrRhKGPKMEdal?=
+ =?us-ascii?Q?eBTOX82hZn5l5RVm9njGVYMSxmsl9aT1YUXUiVBq1PZG9eou9wuSz3z+zyQJ?=
+ =?us-ascii?Q?Bez/QD10B5qv+j1ryOsGCH39v7R63Bnxva7nZ3z2BBLJ/jpGnYTESwhsYkID?=
+ =?us-ascii?Q?xYOVIJgPpnPrl4+oWwPWfFyIfsw8b53oYUVdy4GvBxpCSS9ZkpviUEnplkq6?=
+ =?us-ascii?Q?FBnvg89q5h16w/d5fyT0GbwAw1RyaU4yok0HZOR8mxVBk6JozXKo1Qpam8KJ?=
+ =?us-ascii?Q?FlYTqoIfYsO0U9O/JY95QrTTs21r8IT006grxbdL6KgloGt59gTnqfKkM9Cb?=
+ =?us-ascii?Q?3RJ6UWa4vw7SzcnPsRlhILMZ5J68LOidmhuDDe5N0BI+Fpunto9R+hpCyyFT?=
+ =?us-ascii?Q?10g4F+qJ3ZaLpkvldYhcWpH7vDVA1b+ar9fBZTIpyMi+2GaLbhFFYY27m4fl?=
+ =?us-ascii?Q?GKKLPKYl/tDd9ePFJKvXh+DIG2pqotf0VPelYnUUltpVCCMUpLwkankrDal9?=
+ =?us-ascii?Q?1vOZgGAKHnEBeLRqDahI19dM4MeN4ZWNP/b327tIU0i3P8jZRo5zpfI9tA3N?=
+ =?us-ascii?Q?Di9aWucx26NyU+8BLIUynvK99cLC?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?vx9p0PUT6s/13IoruqbO5e9oo/oBSaDLQfNFucYZunSykaWroxlmK1sjy8RL?=
+ =?us-ascii?Q?Lc6hwgwfiXu/03XOHNbluSmr+MGALmqna3KVHJ36h0N86wD+9UVuUjVqHa4G?=
+ =?us-ascii?Q?7z74XBSy6x06I+vdxr2RETwsY+oAaV7z2uBxnpPLHDNhPj+FJJah2iTB1vko?=
+ =?us-ascii?Q?0RWST8LE0zcoLWN32k8zLs6ORMR+g3uecfrjLMMLSiLoZmtgoioFqJcQYUk6?=
+ =?us-ascii?Q?S8J9HbZM54mQdLBgiVnb+MYE/NmdW2EVHrIs6eclTZqz8uJNu/vOQyusTjQD?=
+ =?us-ascii?Q?8mbNsL3LPLjKR1E94Sz5j7U7pxx1dQU1sShBKBco76QA7QnJMT46An18xQMM?=
+ =?us-ascii?Q?lM8OfDi5XfIynVFQqdoe7UT+6ZvPiG7EHwRmF5xl1w3uYsURtZP6hmIo7kOi?=
+ =?us-ascii?Q?p/HNbI55vRa36yJzPf4kk9zKtUXPQV+POCaoxCD91I79sP/Z66Notn2+R1Ud?=
+ =?us-ascii?Q?I90dy5CZnmcmJLBVkqlDKUjpkzqG42d6zFd8EVmGK//u5q41O1wn/Ek8+DEy?=
+ =?us-ascii?Q?5/p6IUtppvX+BBlgBcwmMZ9+odCYdpt7Hi80+SHbDf19+DaetPUsG6wWF+1k?=
+ =?us-ascii?Q?HD+ntNPKQQ7hP61244p8jl7Gpx35/tevigDUQnm0hMBixzugvanfbBb2Eulg?=
+ =?us-ascii?Q?SWOxFeC6+qiswoZIP1FsqEg8+qr4L/5l6X4WKZNsB1kzmtFK2bCZpzANKX+/?=
+ =?us-ascii?Q?WpBB3ezLTj1fJYUbUG252SPJKZaKBYAu/GUpy/W9vS//zLOaG/lWUpeGEpdm?=
+ =?us-ascii?Q?Zd0Tlf46oXhAmb5+Tvzg/2knyrI8xJ2YA4nAxTe0++p4Y3CbT5PQQndQwEHv?=
+ =?us-ascii?Q?y636xFRAxJB/q+tPCJhxvBrksZkYC5n7sJZSDfxp3X3N1eiTcJUSycMoBOzx?=
+ =?us-ascii?Q?/k+bCDbehNBTrKe/vUd3NzpCF/IwKZQeHIOdGgjVYhW0ClQz7XqXAI5t9BP5?=
+ =?us-ascii?Q?uO5mRYHVg7HvmeOCzlGflbka1TIBx3P8HmkDLLjOaejFgdxV9sCgLF+cYo9b?=
+ =?us-ascii?Q?oC7wMGKeddACf3A5EDbCIOzZZpmsHz56kQBzNgWbiymg1k9IbZSzYq5B7miL?=
+ =?us-ascii?Q?08jcGhPQbvMMzVdZJRDpdIjLuotGggs1IaBh6gu3KyK1+r+IawbrB3eqFSBl?=
+ =?us-ascii?Q?idvO/U6525cgGKdFeP2tj3m+bYF9xU20LWRqOFtldeorgGWcRuGS4g+BvCyv?=
+ =?us-ascii?Q?0XkNBBCwQCKbE0dvVn+u8F4kDRk5N0brmP9+CLKXS0H96Tdnb1BVf1t7FeGu?=
+ =?us-ascii?Q?mIk9RNOwLMyhJArgvB+S17jfvjjQ2wxluxNqeThrwuPPl1ZkIv6uYui8QveQ?=
+ =?us-ascii?Q?PxugtmGymeCzuuGMWjkIEPa6xhgNzunsMbTb7ZjzGMX2Pur1dk8jAh/mQCQP?=
+ =?us-ascii?Q?zmd7lKii/5mWrN74OJ27r+H7urS+AsUI8NV/QWPeYPH+j/pYQD/UW/nRfBtc?=
+ =?us-ascii?Q?hHBtQtWTDg9ji3o7ujoVFo1SLzgdYPOheIdu2oCLj5ILbIJtFKLCgsrrEBtX?=
+ =?us-ascii?Q?G35eJc3m7eOZfFKJdkmdzhp0nnuCQoFRkLR34NGrKOkQO77HwZcmUVyCVMzA?=
+ =?us-ascii?Q?aCgnAbWqpqsmvk4Hme1aTnwkTMZCZQVdPCAOFzwN?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c3b537d-300f-496f-1e9b-08dd47cb2628
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 23:00:00.1767
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Gm8v/qW04rMJWBQUohAG4xpbcU1FAP5Vt2woh/OfP8MKxdLEupiinJMt2DK0Yj6T477aYDxAIyfgfNhDoujPIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7827
 
-On 12/19/2024 1:11 PM, Douglas Anderson wrote:
-> As tested on one example of a Qualcomm Kryo 5XX CPU [1] and one
-> example of a Qualcomm Kryo 6XX CPU [2], we don't need any extra MIDR
-> definitions for the cores in those processors. Add comments to make it
-> clear that these IDs weren't forgotten and just aren't needed.
+On Fri, Feb 07, 2025 at 12:44:07PM -1000, Tejun Heo wrote:
+...
+> > I'm also a bit conflicted if the default should be on or off, we're
+> > changing the previous behavior, but OTOH this is going to prevent some
+> > potential breakage (due to the nr_cpus_allowed mismatch) and server
+> > workload is going to benefit from this, so it seems that there are more
+> > pros than cons at dispatching migration_disabled tasks directly by default.
 > 
-> [1] https://lore.kernel.org/r/l5rqbbxn6hktlcxooolkvi5n3arkht6zzhrvdjf6kis322nsup@5hsrak4cgteq/
-> [2] https://lore.kernel.org/r/tx7vtur7yea6ruefrkpkccqptahgmxnsrudwdz5uzcfxnng25b@afrr5bmdk2xa/
-> 
-> 
-> Suggested-by: Julius Werner <jwerner@chromium.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
-> Changes in v3:
-> - New
-> 
->  arch/arm64/include/asm/cputype.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
-> index c8058f91a5bd..8782d4721f81 100644
-> --- a/arch/arm64/include/asm/cputype.h
-> +++ b/arch/arm64/include/asm/cputype.h
-> @@ -200,6 +200,16 @@
->  #define MIDR_QCOM_KRYO_3XX_SILVER MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_3XX_SILVER)
->  #define MIDR_QCOM_KRYO_4XX_GOLD MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_4XX_GOLD)
->  #define MIDR_QCOM_KRYO_4XX_SILVER MIDR_CPU_MODEL(ARM_CPU_IMP_QCOM, QCOM_CPU_PART_KRYO_4XX_SILVER)
-> +
-> +/*
-> + * NOTES:
-> + * - Qualcomm Kryo 5XX Prime / Gold ID themselves as MIDR_CORTEX_A77
-> + * - Qualcomm Kryo 5XX Silver IDs itself as MIDR_QCOM_KRYO_4XX_SILVER
-> + * - Qualcomm Kryo 6XX Prime IDs itself as MIDR_CORTEX_X1
-> + * - Qualcomm Kryo 6XX Gold IDs itself as ARM_CPU_PART_CORTEX_A78
-> + * - Qualcomm Kryo 6XX Silver IDs itself as MIDR_CORTEX_A55
-> + */
-> +
->  #define MIDR_NVIDIA_DENVER MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_DENVER)
->  #define MIDR_NVIDIA_CARMEL MIDR_CPU_MODEL(ARM_CPU_IMP_NVIDIA, NVIDIA_CPU_PART_CARMEL)
->  #define MIDR_FUJITSU_A64FX MIDR_CPU_MODEL(ARM_CPU_IMP_FUJITSU, FUJITSU_CPU_PART_A64FX)
+> Hmm.. I didn't see a lot of migrate_disable() while testing with stress-ng
+> and migrate_disable() isn't used that much in the kernel to begin with. Do
+> you happen to know where migrate_disable() was coming from when you saw them
+> with bpfland?
 
-Acked-by: Trilok Soni <quic_tsoni@quicinc.com>
+I also don't see a lot of migrate_disable() invocations, but if I do the
+usual benchmark, measuring the fps while building the kernel, with the
+migration_disabled tasks dispatched directly I see a significant
+performance drop in the fps and the kernel build is faster, so it seems
+something related to the IO? I'll investigate a bit...
 
--- 
----Trilok Soni
+-Andrea
