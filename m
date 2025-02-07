@@ -1,902 +1,172 @@
-Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2087.outbound.protection.outlook.com [40.107.243.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30B7226198;
-	Fri,  7 Feb 2025 14:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738936985; cv=none; b=p9gQT4n2JHom+Vh2hN4zxxA/hOGpo9hOX94bUxZDnCD2FNPb3gS6v0lc59dmhDjhGD/Zz6hbaeq0mgh9HJBAYna0039Y5gOhbZ1FwjtLPeLVThZ0N7aWJvtQ9BRaPrWbMF73Csb5sIok/J/+42ZdWfo3PvNBtn+CF34+EpGlSd4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738936985; c=relaxed/simple;
-	bh=QSpzMBCIiH7HGQWLT2zzCYyRKsWpv7LsStbHuNI9Few=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FJuKTS1xsG4dkPlIrDWQD/rZk8dyg0oTwK54kMfeNR3EXSA7cQd0EyTO8fXbdyYztKa6KTFDkGZA9A6/O2Zzk17HlvZC3JGtZLo7E17HDjFtAo2Gb9n6hhaf9jmHV20IVpKDwl27SLqxsf0wqiMbOfoO6VCFDXB+w3lRAdcEOJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=ghrDFjIX; arc=none smtp.client-ip=134.0.28.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419C1227593;
+	Fri,  7 Feb 2025 14:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738936987; cv=fail; b=UWPeEXafz3m0WBBarYxvPKdMd8b0Ne9ajrH648zwIMUWWw8GCxPKC7lfMz85Zk8fUtfi0SRXiDDlZZ7qY3cOBwQsXXk7U1dAVF50oN3c5NSIfboPwME8RZFXihM1own42/5pzYaj9nsKcn7+sjW8CiEzvJ7JzMiR6A0VTD+a7vA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738936987; c=relaxed/simple;
+	bh=BBzGmhBp6kW5xER5LyPPRiPoQxaSEbmFACb1zaxcj1o=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=IitOKYBMty0u+rrskOBpnmo9myCNlLNEBAUs5FgULjTGcRwyKDypwsB1rkcoI8g83FH09rK69QeDzsyBLS8jYFZKhaHdxSpfMZYaGo4nOLBj+0wv7+OOGEjP57EJKDlUed/z3/w8MSvvWwMHVTOWB6muTUyUJqYwg+FbRllUbB8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=p3SG8RV+; arc=fail smtp.client-ip=40.107.243.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="ghrDFjIX"
-Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-	by mxout4.routing.net (Postfix) with ESMTP id F0F5F100901;
-	Fri,  7 Feb 2025 13:55:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1738936516;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=wCTfjr+f1FafIc1yYmGfv3Kx0C4OjTm44rD+bxKZn5Q=;
-	b=ghrDFjIX48psAkBcd6Y88E++Na1OEarqQ/AzlreK1r8oK7UWtxLys6BMoiQjeoExuiQZ5s
-	tn+lY+GtEQowoZ3/WDJkYPE1nfkjsOKvF9gqc4002smsB//vmPW+fbizLlcpWIxiBUKw6F
-	cBnVmVdYxNLLKWAZ2mw4Aj1hfDGBubs=
-Received: from frank-u24.. (fttx-pool-217.61.148.125.bambit.de [217.61.148.125])
-	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 2EE5810010F;
-	Fri,  7 Feb 2025 13:55:15 +0000 (UTC)
-From: Frank Wunderlich <linux@fw-web.de>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH] arm64: dts: mediatek: mt7988a-bpi-r4: allow hw variants of bpi-r4
-Date: Fri,  7 Feb 2025 14:54:59 +0100
-Message-ID: <20250207135501.30741-1-linux@fw-web.de>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="p3SG8RV+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Q6SZnhFsmFfNN+i6viqhxw+otAhtkcFqh28ih1w4A7pcv/dg95o2vgZU59hsBs9qtBzFD7kxgybZMi0UhyA2REddS1WpLm4oRdP/vlAMbI3Q7MPQ6XkF0UdUngme22xx7TEmoUn2zIiP6fuX/IOfVclnJfDdhoCNGgrltYRqJBn33W7ryr1RZt/Sz1mHNm9xjJFcaYvjkP2BJTSCM5MTxqXfVr9jmoevQayG0x6v8399JNVsnXx6qbol/yY8K0wYrtR0Y9iNHX3c6iIUJfpqh3uyrAwhBfn7g5T6bHpfWhfZF/kPzpSN7D5YTM7XFPChjs+IG6xQ6tG42Anrs8PIZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=28FX88uT8Ma7M/z4Nkg9kw/AfHt/u8cRlyBUwe0VIWI=;
+ b=orCqeQQTghCERgXakzPMs57ALVDHcPdk+hBC6rU7VTameHx5nzypKgUvSdF/aYWihYFHbCJta0PfiC2PTMxztSI+iM3sxXp62RInDMhK03j9+6pI/EapAzDWHfll4ak9c9I4eaHfOQeIMFAZYVVnTxiUZkRefBHO9w7XAh15Mp3zDcGs/cTy93vWOAG1EymY7QfM02lkxVepgwt+ipLmHVW5yBmUN/R4x74BYqWbacuPUmJRJiGiwAmuYYHU7Yo4RKmaexp+fMWKdzXiH1HEfco7jTcEBk9MqM/vJjSQkRNSAv0i3jaikaBTF/E9un4+LIsV3I6XFG0efkIuALe/zg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=28FX88uT8Ma7M/z4Nkg9kw/AfHt/u8cRlyBUwe0VIWI=;
+ b=p3SG8RV+55MHxZncYUI5Uz3Yt48jSsIH74EKypCiEGA5pSMBRHr8cxwC7pX+sVuPB6D2nhX9EzsRK/sbDtRQ+1LGZoPPv/rauIUzK4sqLupuiCEHZ+WPMnEVJlc6d5ZtleCZNFOBDbG78TZxNYwIq7zAPqbHckJvEdoh3eZSLYA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4123.namprd12.prod.outlook.com (2603:10b6:5:21f::23)
+ by DS0PR12MB7802.namprd12.prod.outlook.com (2603:10b6:8:145::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Fri, 7 Feb
+ 2025 14:03:03 +0000
+Received: from DM6PR12MB4123.namprd12.prod.outlook.com
+ ([fe80::512d:6caa:552a:7ebf]) by DM6PR12MB4123.namprd12.prod.outlook.com
+ ([fe80::512d:6caa:552a:7ebf%3]) with mapi id 15.20.8422.010; Fri, 7 Feb 2025
+ 14:03:03 +0000
+Message-ID: <55a89842-35f3-4dcb-a23f-c07f43124861@amd.com>
+Date: Fri, 7 Feb 2025 19:32:54 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 16/25] ASoC: amd: ps: add soundwire dma interrupts
+ handling for ACP7.0 platform
+Content-Language: en-US
+To: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org, venkataprasad.potturu@amd.com,
+ Basavaraj.Hiregoudar@amd.com, Sunil-kumar.Dommati@amd.com,
+ lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+ linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
+ Syed.SabaKareem@amd.com, Mario.Limonciello@amd.com
+References: <20250207062819.1527184-1-Vijendar.Mukunda@amd.com>
+ <20250207062819.1527184-17-Vijendar.Mukunda@amd.com>
+ <a799e6fa-5ef7-4e1b-993e-52555a73f2a8@sirena.org.uk>
+From: "Mukunda,Vijendar" <vijendar.mukunda@amd.com>
+In-Reply-To: <a799e6fa-5ef7-4e1b-993e-52555a73f2a8@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0136.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:6::21) To DM6PR12MB4123.namprd12.prod.outlook.com
+ (2603:10b6:5:21f::23)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mail-ID: 50e4dac5-3d8a-4e0c-87d8-2e55e4fd535c
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4123:EE_|DS0PR12MB7802:EE_
+X-MS-Office365-Filtering-Correlation-Id: 16c4ac3e-aa68-4aa6-57cf-08dd4780235f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?b1RCUFBpVjROODI4dC9TOEh6dnJBR212bk15SDRSL290eHdCd1hHSHNDME44?=
+ =?utf-8?B?aUJ2L1EvcFhhZmk2bm5GVG9TSFJOZXVRMVV4NVJZUWFhRzBMa25IdWdmMEww?=
+ =?utf-8?B?UTRMUWpnYjcvRnZ4QlVmeERRTTA3Ky85OFYxelo5TXUrVnMyYWgySnBWaU5G?=
+ =?utf-8?B?T0JBSmJsVExETFozSFVqOU9DYXkrYmkxcHRmRDI2YXRQS3F6ZWRxWFRJdmN1?=
+ =?utf-8?B?c25tT21mNDUwRE5jcXRyN2Vxby9DbnYxU2crZE41aFAyK3JTYlJPZTRYZThR?=
+ =?utf-8?B?aXpBNmVVTFNFU2VJUGRoNGZNYUFjdnNSV3loTjdXUlJaMFNGUDJ0ZnB1d3Bk?=
+ =?utf-8?B?UHBsakZBMUZqejlDZkNHcUJGM2paY3diNmE0M1BlWFovT1h1RWpkZG1ma2Iz?=
+ =?utf-8?B?azNCUDVaeit2aTVXZkJqZ3NHWDEwMWtvYVp6aFdFYUs3UHYzYi95ck1UK2VI?=
+ =?utf-8?B?anJUcmJ3bDBObGV2U2dYS2dYUmtPUjhEd3J1dmwvRmpZek5EczZPYS9PRzUw?=
+ =?utf-8?B?ZnM3aU80bzNGMnV6cG41WDQyY3kxVzdicjg4cWRuNlltVjJFR3V0Z044TU95?=
+ =?utf-8?B?cDVZT1BhMWFlQ3IxT2cvMS9ZZThaQXkrSVZMdDV5cjdTejNGYjdwbVFOZWJS?=
+ =?utf-8?B?TVdQb2ZXN3ZrZ09MMTh4UEV4Y0VGMGgyT0U3K1piUlZ0SVBnMEwwK1pzdWdv?=
+ =?utf-8?B?NW5paDVJQlh5YzZqd1NVSGpNRXVaUEVLWWFYcjBnaTA3Y0x3WFRNZHQ3NzFB?=
+ =?utf-8?B?UE9KY3VjMk41c1dNcDJ5K2pISEVyOXQrbXhPNElNditqdkpVRE1RQUlldmV6?=
+ =?utf-8?B?MjFtT1RyMHZEL2l6T0J1M2p3MytWdzJYZlFhU05uQ1E5dzN5Qkc3WVUybkp4?=
+ =?utf-8?B?bDd2Z0RUNE04QVlJK3YxNnNET1VWTi8zNnNuMkFRY3E3QWsrWVVzc0RzMGFr?=
+ =?utf-8?B?Ui9YQi9IcmFEb2ZyNURZTWVsZ3hua0V5N0RkRGJvKzhLbDRhelhZSTRRVGox?=
+ =?utf-8?B?bjNGV0hGZGdpMTJ0MndGbVM1TVNFU3liVHJzUWtYd1p6RmkvWkR4TCtjT0Uz?=
+ =?utf-8?B?K05aUE4yazV5Ymp6ZnZVL3ZnYXFtZDVtZ2xZVDZTelhzdnliZGlLQmFCdVFJ?=
+ =?utf-8?B?NUM3d2E4SmtDbWNYd1lzbjhQaHRMSTdOSnc1RGg2QzAzcEkxK0YwbVUwSytv?=
+ =?utf-8?B?dGNTWlRSUHZTeGNaT3FjMXZMd0pxZUh4VUhscGNWK3FoNUJsc1hyQVJmNGhy?=
+ =?utf-8?B?RGRmLzZQejRoOXBHYW5rTmRrWk82TzFkL3g4TWNEdkdaQ3VWQWgrNGExUmhx?=
+ =?utf-8?B?WTZkZW9YTldiU0o2RGsrVFNtc1dQWWY5T1VqUHA2MVJkT2JYVzd5cTVJVlpv?=
+ =?utf-8?B?Vjk4MDhzUElMZkxjeDVSODZqdnYxWlpPK1IrWVVMR1Fwd0o2NCsvVTlZSFlF?=
+ =?utf-8?B?dkdkN1REUEl2THFqdW5RNlVpQjZEWmovU2Q1a0lxT0h6cFdUZjJKYTJET3dp?=
+ =?utf-8?B?VmpGR3RqUXBKV0x0a0tiY0E2REZvRzMvY3JSVnJPMWN1bU84U1BxbnVlM0xN?=
+ =?utf-8?B?a0lnbm1vdlUrV2Rram9VYS9McUswU0pvMkNyc3FZV0hEV2FkN0xSYmhmd0dF?=
+ =?utf-8?B?bUdRM210b0RrUDRiSWNQUEJHZzljaHRHTjRSc2dYVGVlVFg0dXM1QXF2d2RD?=
+ =?utf-8?B?S2F6U2FCenR5WCt2RTFYWFQ4VlJucFJ5c1JFNUwvNkNmZk1KMUtjN1hyZXAy?=
+ =?utf-8?B?TVV3L0NqeFUxQzgrRmdUWENGenJMVGhwekVIV1dDVS9iR2hsV2o4OElyZmE1?=
+ =?utf-8?B?VkQzV0FKT2w3aGl1c2Y0a0xSNkRyeWIwM2oxWFhpSmQ2dEdUZzdtN2drcjdz?=
+ =?utf-8?Q?GO3a4ZpVzEYDe?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4123.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?d0VxVks0R3VLL3Q5YnNRVkVLOFZLL0ZZU3RiY3J6a0lySG5lZjdiTUFtVGha?=
+ =?utf-8?B?SnRVaEhoNlAzNW1McFFJbFJnbnJ1SEJ6ZGFuV3pMRjlFd3hsVGM5QnhDWDU3?=
+ =?utf-8?B?VC9VQk15MVBoS0dxckw5RlFrY25UQlEzSmM4bzE0eXdUWlROMUx3N2xSRHpv?=
+ =?utf-8?B?aXN1TFFvSktGbTVuNVFCVkZkbVJQdjBUMlN3cXFBUEFYa0wrelloME9QL1F4?=
+ =?utf-8?B?K3FBNW1FWHJaai84RE1DVTI4eDF0eVBCTExSb3RaaWNuVjkwT0tuV0htNlhu?=
+ =?utf-8?B?eFVTSzNsazBTSWJwMENYekZvZ0p6UTlCZFpWblAxOWdYcXNVOVNUb1d0ZHZW?=
+ =?utf-8?B?NFlrcUZCcmQ4QWh3RUhabnR2T1J2M0VNTTJrdVFhZ1FBaTVHcU9sWTlLRFN1?=
+ =?utf-8?B?cWlaZktsRGIzYjhjWFFGdTA4dVBNeTV4NjRLY3UzUUtVbzdMSlBoRmExeUlI?=
+ =?utf-8?B?Mkc1bGhzSmRvTStNSllzNStMeHJtUHZoOXQyRlhaS2QyazNwMytqQkM4WFc1?=
+ =?utf-8?B?MUV3OXVNcFNTVVRFVDdMZkJiYUsvU2Vnd2h3bmxPbGd2U1o1SUFRL3dmUnlv?=
+ =?utf-8?B?aUEvUmxxMWFtbHF4S0U4NjVCVzBiMkJqL0RFYVk5NFo0SE52Uzlva09zNzNj?=
+ =?utf-8?B?ZytsYXZtckJBbmQ2NHUzUnNaTThvMUVzS1FhUnZlMjZFa3RzUWtVaDVkQnhm?=
+ =?utf-8?B?dEIvU2V2YWNSSndPdTMvQklwdkYrWkxnK01McmlndzBQRTFLZzJTam56blE2?=
+ =?utf-8?B?dkNONmVlekhFUmZ1UndSY20vUW1KL1NSZ0NZdzZFWGVJK3FoWHNuTTFSNGRv?=
+ =?utf-8?B?RVNiZlByVHFMd3VQdWRhQmFNM3YzemFTSXU1MnJkbm1VY3V5MFhabFJwbXE4?=
+ =?utf-8?B?Q1dGTFZlVVVtcnhtVGdnYnJXOVdmVDlHRmJSSS9RdldHeGY0Ym9Cb3dOUDJZ?=
+ =?utf-8?B?UllvOXNzVTIzVGI5TW9XWlMwTk5WdVdDUHlVTkx4TkNZNDRyRVNPRDd5RldQ?=
+ =?utf-8?B?L2NxVkdXOWtScDFnZVJNVUVQMHJlRVBPYWppMGdWYVM2ejlHb2NkMjdhMUJi?=
+ =?utf-8?B?ZnpBSTJDNUdOVmttTTNmazh1OUxNcitxbFJIblU1MWIzd3BsQ0hFRzVyb2xq?=
+ =?utf-8?B?OGk5QXR6RDRkOXhxdGc2aStWZmJWRXFZQzhIa1l3WElMbDZOQjhpSGl2WWFi?=
+ =?utf-8?B?aEk5dXFIeG9UNklrUit5clA4RXIySEZoaVlOTk1kTGFIRTRNS1J2aUp1cksx?=
+ =?utf-8?B?QTdvejZPQ2ZBbkRHa0ZTWWpBV3pKSHdBV2o0TFZQdGZqdEdZSlN3MzlhMklt?=
+ =?utf-8?B?eUd3clh6U2gyaGVlTkIwYVpBL1QxazBJakFwZTJxT3FjQmg5ZE1MRlNJaGVq?=
+ =?utf-8?B?NVArSzdzajUwaFpJanZOTmVvbkFGWU8zRm1GMEFJWkF3Mm9CbWpqeXcwZkZV?=
+ =?utf-8?B?WVp6Rm9HOVdSKy9lNFk4NG9wWmdvWGdDNitTN044ME1mY1hlczlQK2lOYS8y?=
+ =?utf-8?B?VU52TndUTGtsWXFkY1dNUjZXWXZFbE1Qa2F5czBEaEFZa3B0SmZrZExvMVRP?=
+ =?utf-8?B?RndaZHA5bEFVYzF2bUtqOHhIODl4TmFQMHN6TDJDUUE4UEV0cjhtTlA1cmo2?=
+ =?utf-8?B?UWZIMVV4cHlsYzBvQnJKSDZTTU1Gd0FpM3NnWHlOSitDbGlXM3czeDR5S0tE?=
+ =?utf-8?B?WkJJd3MrS3hRby9Db1p2UzdiSnMvYUxtNXhCamgxMmQ1NHFnS2RhWmlJUG5X?=
+ =?utf-8?B?czFwSEZxa3EwamhzS1lTdTJkWURMR29BbjVmRjNkbjQwcTlXbjl2a20xTnpv?=
+ =?utf-8?B?ZGhQTVord0RPUG1lK251NXFpV0pmekdrUlQzRVhkWEJpVzFNQ3FWVHhnYXM1?=
+ =?utf-8?B?Si9Mb3Y3ZjZtTmxJeHVTVUdyWWRnd3F5WjJYcW9WcjBXaSs3OCs3RzBGbnA1?=
+ =?utf-8?B?UGViclNVYUcvTHVIN1VaV0lQRlM5VHAyYkt2cTVmY21jY0VnRVZuWEZteXZJ?=
+ =?utf-8?B?VGtXd1NpV1FwTUVuOVc1bFlKSjdVUEZuNjMzWmRCcytNSTBJT3BQdXdNUXdE?=
+ =?utf-8?B?T0gzeUJyVlJhT3dPQXhBa1FsWWU0c0JJRVdqNk9qQ2pTUXJsSzlJYXdyYmlO?=
+ =?utf-8?Q?S75yxhGhLRIZcG6j3JxecxVXm?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 16c4ac3e-aa68-4aa6-57cf-08dd4780235f
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4123.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 14:03:03.7173
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VWPegqAcSEf4Ksdl/hFwPS6cL/5AxlhcXo6W4un0xipojJFIl68/2RVZ1USaxtGN3rah9F8tVDC/mjmpjQ+VUg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7802
 
-From: Frank Wunderlich <frank-w@public-files.de>
-
-Sinovoip has released other variants of Bananapi-R4 board.
-The known changes affecting only the LAN SFP+ slot which is replaced
-by a 2.5G phy with optional PoE.
-
-As the SFP-Ports are not upstreamed yet this patch simply renames the
-current board dts to dtsi, creating new dts for the board including
-the new dtsi and move i2c-mux channel for sfp lan to board dts.
-
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
- .../dts/mediatek/mt7988a-bananapi-bpi-r4.dts  | 404 +-----------------
- .../dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi | 403 +++++++++++++++++
- 2 files changed, 407 insertions(+), 400 deletions(-)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-index 6623112c24c7..431bf066fffb 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dts
-@@ -2,408 +2,12 @@
- 
- /dts-v1/;
- 
--#include <dt-bindings/gpio/gpio.h>
--#include <dt-bindings/regulator/richtek,rt5190a-regulator.h>
-+#include "mt7988a-bananapi-bpi-r4.dtsi"
- 
--#include "mt7988a.dtsi"
--
--/ {
--	compatible = "bananapi,bpi-r4", "mediatek,mt7988a";
--	model = "Banana Pi BPI-R4";
--	chassis-type = "embedded";
--
--	chosen {
--		stdout-path = "serial0:115200n8";
--	};
--
--	reg_1p8v: regulator-1p8v {
--		compatible = "regulator-fixed";
--		regulator-name = "fixed-1.8V";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--		regulator-boot-on;
--		regulator-always-on;
--	};
--
--	reg_3p3v: regulator-3p3v {
--		compatible = "regulator-fixed";
--		regulator-name = "fixed-3.3V";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--		regulator-boot-on;
--		regulator-always-on;
--	};
--};
--
--&cpu0 {
--	proc-supply = <&rt5190_buck3>;
--};
--
--&cpu1 {
--	proc-supply = <&rt5190_buck3>;
--};
--
--&cpu2 {
--	proc-supply = <&rt5190_buck3>;
--};
--
--&cpu3 {
--	proc-supply = <&rt5190_buck3>;
--};
--
--&cpu_thermal {
--	trips {
--		cpu_trip_hot: hot {
--			temperature = <120000>;
--			hysteresis = <2000>;
--			type = "hot";
--		};
--
--		cpu_trip_active_high: active-high {
--			temperature = <115000>;
--			hysteresis = <2000>;
--			type = "active";
--		};
--
--		cpu_trip_active_med: active-med {
--			temperature = <85000>;
--			hysteresis = <2000>;
--			type = "active";
--		};
--
--		cpu_trip_active_low: active-low {
--			temperature = <40000>;
--			hysteresis = <2000>;
--			type = "active";
--		};
--	};
--};
--
--&i2c0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c0_pins>;
--	status = "okay";
--
--	rt5190a_64: rt5190a@64 {
--		compatible = "richtek,rt5190a";
--		reg = <0x64>;
--		vin2-supply = <&rt5190_buck1>;
--		vin3-supply = <&rt5190_buck1>;
--		vin4-supply = <&rt5190_buck1>;
--
--		regulators {
--			rt5190_buck1: buck1 {
--				regulator-name = "rt5190a-buck1";
--				regulator-min-microvolt = <5090000>;
--				regulator-max-microvolt = <5090000>;
--				regulator-allowed-modes =
--				<RT5190A_OPMODE_AUTO>, <RT5190A_OPMODE_FPWM>;
--				regulator-boot-on;
--				regulator-always-on;
--			};
--			buck2 {
--				regulator-name = "vcore";
--				regulator-min-microvolt = <600000>;
--				regulator-max-microvolt = <1400000>;
--				regulator-boot-on;
--				regulator-always-on;
--			};
--			rt5190_buck3: buck3 {
--				regulator-name = "vproc";
--				regulator-min-microvolt = <600000>;
--				regulator-max-microvolt = <1400000>;
--				regulator-boot-on;
--			};
--			buck4 {
--				regulator-name = "rt5190a-buck4";
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <1800000>;
--				regulator-allowed-modes =
--				<RT5190A_OPMODE_AUTO>, <RT5190A_OPMODE_FPWM>;
--				regulator-boot-on;
--				regulator-always-on;
--			};
--			ldo {
--				regulator-name = "rt5190a-ldo";
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <1800000>;
--				regulator-boot-on;
--				regulator-always-on;
--			};
--		};
--	};
--};
--
--&i2c2 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c2_1_pins>;
--	status = "okay";
--
--	pca9545: i2c-mux@70 {
--		compatible = "nxp,pca9545";
--		reg = <0x70>;
--		reset-gpios = <&pio 5 GPIO_ACTIVE_LOW>;
-+&pca9545 {
-+	i2c_sfp2: i2c@2 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--
--		i2c@0 {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			reg = <0>;
--
--			pcf8563: rtc@51 {
--				compatible = "nxp,pcf8563";
--				reg = <0x51>;
--				#clock-cells = <0>;
--			};
--
--			eeprom@57 {
--				compatible = "atmel,24c02";
--				reg = <0x57>;
--				size = <256>;
--			};
--
--		};
--
--		i2c_sfp1: i2c@1 {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			reg = <1>;
--		};
--
--		i2c_sfp2: i2c@2 {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			reg = <2>;
--		};
-+		reg = <2>;
- 	};
- };
--
--/* mPCIe SIM2 */
--&pcie0 {
--	status = "okay";
--};
--
--/* mPCIe SIM3 */
--&pcie1 {
--	status = "okay";
--};
--
--/* M.2 key-B SIM1 */
--&pcie2 {
--	status = "okay";
--};
--
--/* M.2 key-M SSD */
--&pcie3 {
--	status = "okay";
--};
--
--&pio {
--	mdio0_pins: mdio0-pins {
--		mux {
--			function = "eth";
--			groups = "mdc_mdio0";
--		};
--
--		conf {
--			pins = "SMI_0_MDC", "SMI_0_MDIO";
--			drive-strength = <8>;
--		};
--	};
--
--	i2c0_pins: i2c0-g0-pins {
--		mux {
--			function = "i2c";
--			groups = "i2c0_1";
--		};
--	};
--
--	i2c1_pins: i2c1-g0-pins {
--		mux {
--			function = "i2c";
--			groups = "i2c1_0";
--		};
--	};
--
--	i2c1_sfp_pins: i2c1-sfp-g0-pins {
--		mux {
--			function = "i2c";
--			groups = "i2c1_sfp";
--		};
--	};
--
--	i2c2_0_pins: i2c2-g0-pins {
--		mux {
--			function = "i2c";
--			groups = "i2c2_0";
--		};
--	};
--
--	i2c2_1_pins: i2c2-g1-pins {
--		mux {
--			function = "i2c";
--			groups = "i2c2_1";
--		};
--	};
--
--	gbe0_led0_pins: gbe0-led0-pins {
--		mux {
--			function = "led";
--			groups = "gbe0_led0";
--		};
--	};
--
--	gbe1_led0_pins: gbe1-led0-pins {
--		mux {
--			function = "led";
--			groups = "gbe1_led0";
--		};
--	};
--
--	gbe2_led0_pins: gbe2-led0-pins {
--		mux {
--			function = "led";
--			groups = "gbe2_led0";
--		};
--	};
--
--	gbe3_led0_pins: gbe3-led0-pins {
--		mux {
--			function = "led";
--			groups = "gbe3_led0";
--		};
--	};
--
--	gbe0_led1_pins: gbe0-led1-pins {
--		mux {
--			function = "led";
--			groups = "gbe0_led1";
--		};
--	};
--
--	gbe1_led1_pins: gbe1-led1-pins {
--		mux {
--			function = "led";
--			groups = "gbe1_led1";
--		};
--	};
--
--	gbe2_led1_pins: gbe2-led1-pins {
--		mux {
--			function = "led";
--			groups = "gbe2_led1";
--		};
--	};
--
--	gbe3_led1_pins: gbe3-led1-pins {
--		mux {
--			function = "led";
--			groups = "gbe3_led1";
--		};
--	};
--
--	i2p5gbe_led0_pins: 2p5gbe-led0-pins {
--		mux {
--			function = "led";
--			groups = "2p5gbe_led0";
--		};
--	};
--
--	i2p5gbe_led1_pins: 2p5gbe-led1-pins {
--		mux {
--			function = "led";
--			groups = "2p5gbe_led1";
--		};
--	};
--
--	mmc0_pins_emmc_45: mmc0-emmc-45-pins {
--		mux {
--			function = "flash";
--			groups = "emmc_45";
--		};
--	};
--
--	mmc0_pins_emmc_51: mmc0-emmc-51-pins {
--		mux {
--			function = "flash";
--			groups = "emmc_51";
--		};
--	};
--
--	mmc0_pins_sdcard: mmc0-sdcard-pins {
--		mux {
--			function = "flash";
--			groups = "sdcard";
--		};
--	};
--
--	uart0_pins: uart0-pins {
--		mux {
--			function = "uart";
--			groups =  "uart0";
--		};
--	};
--
--	snfi_pins: snfi-pins {
--		mux {
--			function = "flash";
--			groups = "snfi";
--		};
--	};
--
--	spi0_pins: spi0-pins {
--		mux {
--			function = "spi";
--			groups = "spi0";
--		};
--	};
--
--	spi0_flash_pins: spi0-flash-pins {
--		mux {
--			function = "spi";
--			groups = "spi0", "spi0_wp_hold";
--		};
--	};
--
--	spi1_pins: spi1-pins {
--		mux {
--			function = "spi";
--			groups = "spi1";
--		};
--	};
--
--	spi2_pins: spi2-pins {
--		mux {
--			function = "spi";
--			groups = "spi2";
--		};
--	};
--
--	spi2_flash_pins: spi2-flash-pins {
--		mux {
--			function = "spi";
--			groups = "spi2", "spi2_wp_hold";
--		};
--	};
--};
--
--&pwm {
--	status = "okay";
--};
--
--&serial0 {
--	status = "okay";
--};
--
--&ssusb1 {
--	status = "okay";
--};
--
--&tphy {
--	status = "okay";
--};
--
--&watchdog {
--	status = "okay";
--};
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-new file mode 100644
-index 000000000000..1ab09ed2f151
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
-@@ -0,0 +1,403 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/regulator/richtek,rt5190a-regulator.h>
-+
-+#include "mt7988a.dtsi"
-+
-+/ {
-+	compatible = "bananapi,bpi-r4", "mediatek,mt7988a";
-+	model = "Banana Pi BPI-R4";
-+	chassis-type = "embedded";
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	reg_1p8v: regulator-1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-1.8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-3.3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+};
-+
-+&cpu0 {
-+	proc-supply = <&rt5190_buck3>;
-+};
-+
-+&cpu1 {
-+	proc-supply = <&rt5190_buck3>;
-+};
-+
-+&cpu2 {
-+	proc-supply = <&rt5190_buck3>;
-+};
-+
-+&cpu3 {
-+	proc-supply = <&rt5190_buck3>;
-+};
-+
-+&cpu_thermal {
-+	trips {
-+		cpu_trip_hot: hot {
-+			temperature = <120000>;
-+			hysteresis = <2000>;
-+			type = "hot";
-+		};
-+
-+		cpu_trip_active_high: active-high {
-+			temperature = <115000>;
-+			hysteresis = <2000>;
-+			type = "active";
-+		};
-+
-+		cpu_trip_active_med: active-med {
-+			temperature = <85000>;
-+			hysteresis = <2000>;
-+			type = "active";
-+		};
-+
-+		cpu_trip_active_low: active-low {
-+			temperature = <40000>;
-+			hysteresis = <2000>;
-+			type = "active";
-+		};
-+	};
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins>;
-+	status = "okay";
-+
-+	rt5190a_64: rt5190a@64 {
-+		compatible = "richtek,rt5190a";
-+		reg = <0x64>;
-+		vin2-supply = <&rt5190_buck1>;
-+		vin3-supply = <&rt5190_buck1>;
-+		vin4-supply = <&rt5190_buck1>;
-+
-+		regulators {
-+			rt5190_buck1: buck1 {
-+				regulator-name = "rt5190a-buck1";
-+				regulator-min-microvolt = <5090000>;
-+				regulator-max-microvolt = <5090000>;
-+				regulator-allowed-modes =
-+				<RT5190A_OPMODE_AUTO>, <RT5190A_OPMODE_FPWM>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+			buck2 {
-+				regulator-name = "vcore";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <1400000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+			rt5190_buck3: buck3 {
-+				regulator-name = "vproc";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <1400000>;
-+				regulator-boot-on;
-+			};
-+			buck4 {
-+				regulator-name = "rt5190a-buck4";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-allowed-modes =
-+				<RT5190A_OPMODE_AUTO>, <RT5190A_OPMODE_FPWM>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+			ldo {
-+				regulator-name = "rt5190a-ldo";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_1_pins>;
-+	status = "okay";
-+
-+	pca9545: i2c-mux@70 {
-+		compatible = "nxp,pca9545";
-+		reg = <0x70>;
-+		reset-gpios = <&pio 5 GPIO_ACTIVE_LOW>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			pcf8563: rtc@51 {
-+				compatible = "nxp,pcf8563";
-+				reg = <0x51>;
-+				#clock-cells = <0>;
-+			};
-+
-+			eeprom@57 {
-+				compatible = "atmel,24c02";
-+				reg = <0x57>;
-+				size = <256>;
-+			};
-+
-+		};
-+
-+		i2c_sfp1: i2c@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+		};
-+	};
-+};
-+
-+/* mPCIe SIM2 */
-+&pcie0 {
-+	status = "okay";
-+};
-+
-+/* mPCIe SIM3 */
-+&pcie1 {
-+	status = "okay";
-+};
-+
-+/* M.2 key-B SIM1 */
-+&pcie2 {
-+	status = "okay";
-+};
-+
-+/* M.2 key-M SSD */
-+&pcie3 {
-+	status = "okay";
-+};
-+
-+&pio {
-+	mdio0_pins: mdio0-pins {
-+		mux {
-+			function = "eth";
-+			groups = "mdc_mdio0";
-+		};
-+
-+		conf {
-+			pins = "SMI_0_MDC", "SMI_0_MDIO";
-+			drive-strength = <8>;
-+		};
-+	};
-+
-+	i2c0_pins: i2c0-g0-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c0_1";
-+		};
-+	};
-+
-+	i2c1_pins: i2c1-g0-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c1_0";
-+		};
-+	};
-+
-+	i2c1_sfp_pins: i2c1-sfp-g0-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c1_sfp";
-+		};
-+	};
-+
-+	i2c2_0_pins: i2c2-g0-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c2_0";
-+		};
-+	};
-+
-+	i2c2_1_pins: i2c2-g1-pins {
-+		mux {
-+			function = "i2c";
-+			groups = "i2c2_1";
-+		};
-+	};
-+
-+	gbe0_led0_pins: gbe0-led0-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe0_led0";
-+		};
-+	};
-+
-+	gbe1_led0_pins: gbe1-led0-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe1_led0";
-+		};
-+	};
-+
-+	gbe2_led0_pins: gbe2-led0-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe2_led0";
-+		};
-+	};
-+
-+	gbe3_led0_pins: gbe3-led0-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe3_led0";
-+		};
-+	};
-+
-+	gbe0_led1_pins: gbe0-led1-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe0_led1";
-+		};
-+	};
-+
-+	gbe1_led1_pins: gbe1-led1-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe1_led1";
-+		};
-+	};
-+
-+	gbe2_led1_pins: gbe2-led1-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe2_led1";
-+		};
-+	};
-+
-+	gbe3_led1_pins: gbe3-led1-pins {
-+		mux {
-+			function = "led";
-+			groups = "gbe3_led1";
-+		};
-+	};
-+
-+	i2p5gbe_led0_pins: 2p5gbe-led0-pins {
-+		mux {
-+			function = "led";
-+			groups = "2p5gbe_led0";
-+		};
-+	};
-+
-+	i2p5gbe_led1_pins: 2p5gbe-led1-pins {
-+		mux {
-+			function = "led";
-+			groups = "2p5gbe_led1";
-+		};
-+	};
-+
-+	mmc0_pins_emmc_45: mmc0-emmc-45-pins {
-+		mux {
-+			function = "flash";
-+			groups = "emmc_45";
-+		};
-+	};
-+
-+	mmc0_pins_emmc_51: mmc0-emmc-51-pins {
-+		mux {
-+			function = "flash";
-+			groups = "emmc_51";
-+		};
-+	};
-+
-+	mmc0_pins_sdcard: mmc0-sdcard-pins {
-+		mux {
-+			function = "flash";
-+			groups = "sdcard";
-+		};
-+	};
-+
-+	uart0_pins: uart0-pins {
-+		mux {
-+			function = "uart";
-+			groups =  "uart0";
-+		};
-+	};
-+
-+	snfi_pins: snfi-pins {
-+		mux {
-+			function = "flash";
-+			groups = "snfi";
-+		};
-+	};
-+
-+	spi0_pins: spi0-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi0";
-+		};
-+	};
-+
-+	spi0_flash_pins: spi0-flash-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi0", "spi0_wp_hold";
-+		};
-+	};
-+
-+	spi1_pins: spi1-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi1";
-+		};
-+	};
-+
-+	spi2_pins: spi2-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi2";
-+		};
-+	};
-+
-+	spi2_flash_pins: spi2-flash-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spi2", "spi2_wp_hold";
-+		};
-+	};
-+};
-+
-+&pwm {
-+	status = "okay";
-+};
-+
-+&serial0 {
-+	status = "okay";
-+};
-+
-+&ssusb1 {
-+	status = "okay";
-+};
-+
-+&tphy {
-+	status = "okay";
-+};
-+
-+&watchdog {
-+	status = "okay";
-+};
--- 
-2.43.0
-
+On 07/02/25 19:02, Mark Brown wrote:
+> On Fri, Feb 07, 2025 at 11:58:10AM +0530, Vijendar Mukunda wrote:
+>
+>> +	if (adata->acp_rev == ACP63_PCI_REV) {
+>> +	} else  {
+> Unless I find something major in the rest of the series I'll apply this
+> but it's much better to write these as case statements, that way if you
+> get additional types to handle it's easier to extend the code sensibly.
+> Please update this incrementally.
+Will push it as an incremental patch.
