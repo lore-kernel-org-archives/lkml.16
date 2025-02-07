@@ -1,128 +1,79 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEC327735
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 00:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F8F17BBF;
+	Fri,  7 Feb 2025 00:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738888693; cv=none; b=Y5sMV80pbFuOSAvafqCTtR9eYNZM5P1FtKAfsUPMxZT7QPdPbePTXqwZ8K2DvpRA0uWZZpUkQjQU6NX6N/+KQMEcgCJAuz1zSHd/J1GcveEkQxCMdYmd/Y5c7P2GhNYNMbkmOVws3/R1aldpsCa3E2WTA7d9GcAqi+4JIm/XMOk=
+	t=1738888807; cv=none; b=WB0UFBN1Nx+LaBnJVK7pSeZObE2TdgWxUj2ZQH5vTtAWAcfNVHqlGXX6fgXs/7DnXin/siWfj1F0fD/RnlfkcvB+lzDXQoskAVRcQB9hEHOYySWtUtpQ5nRGQH3a3bpDlZ+Bc2EIN4VCAz4ME0IvrdOXYMm5IAV884dVzD4XOZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738888693; c=relaxed/simple;
-	bh=tsK0DeGVamryPJ/JSqZ9Cigp16FvKJ1MpwCnDMfV1Jo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ii0RDGVDljYSxwm3PZijaxeQ7xpW2ct2GuxxU9nf1f6vk/n6nBz3qDKyiUy1zPRj8mn0lsQFLpPZsLNc09273iFctPkTOrWLs3ZjrbTT59TkTtVWi0SxVhFzFSQNk6U3bmsXMUSP3nFFLneyJbaHXnwCrNj8qwDvPFkKfVHsxfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p7tMf3hJ; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738888807; c=relaxed/simple;
+	bh=MPTrX/pGnmLsi85CgZUN8PpdQ4oomrsyAoZFgar388w=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=bwVfNHM3NkE8L2+W1WF/Vs/KS5Nzo24vBtAmUFYq2KiUpTqtZ0m5hHOh+5e1mpzmyNAJsoOKUEfavCt8zm683b7ktxgAoeIvvwKb01P9IfvqSlhIWT0WemU1Z5KHL3O3CiASn0e8EQ9vq5eLKsA9jo4YDIouqIE7n6BRKtDUWdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YIlhB6yd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p7tMf3hJ"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6f4b266d333so12742587b3.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 16:38:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738888689; x=1739493489; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4fOjNPhoAv4TZXdI14RVbI9uZnpqRZziWgyzdagdA8k=;
-        b=p7tMf3hJLlz+s7nC6RAfdbS47AEeYoDZuQkKBqYUB2kHnNhifFl9zPZCLlhEqK8vKV
-         T8jSIBnE5AQpXV/++ZczuFaLajhZduJCgTYMtAQiTu4SW9sekZFcSUALYdvDBCUFbtG/
-         YmzP5aX9XQ4G84l2G72SmBTBgHWpjM3JgXdSRe2V/+ocbe6pQq4LVuv3KkJBmoQtEowK
-         BZ3eQyZURQ7zjnxNabUUUo3DEO7k3Vs8YEY8XWIS34KQjHImXj6J8hId0Tt2tSZCF195
-         DI8HDKn2udKLgezWfb3ndRSruWFF4Snzgzst4Mx2lb4+avxJRu4XiitiAKAwQTdIRaT9
-         vADQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738888689; x=1739493489;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4fOjNPhoAv4TZXdI14RVbI9uZnpqRZziWgyzdagdA8k=;
-        b=iB6boeUl52Zrr2qXG/LBHFa9NhslfRK9Hgnb6Bm28KDWwa87bZL7YQlU+SZgBePw8u
-         30H8isHRTPUK2VTMvV3GzZcOxJkOhJZH93Z8EE66yHmnYiuEWFZbonqMi+ghNQoTZS2P
-         uaxQp9qcFRrwGaJXXSSTB96eDNibWfkASGcRAzhdO8O02d279eeljpaVp/v5sKWuj0HM
-         RBXgOF2cc//Ca0rd8xVv2jn51DwEx2sbZSMAuuaHbYW2XbKnnltH+0q1O2ffxakKKIer
-         ZxMQbrSS5cxNTgfVmYsy1C9qE7BV6orcJDwwzl+7Ki/AKAWzv85KWrSuc2uunzz+Yu7F
-         ZUtA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2m6pGRcoeC3f7ksHS3je/g2qu4i4MhdDXglMeF2kXbdBDGqd9kTX59oxlLxHYja+hhlyEb1CAU/OXv5Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzu7q7OJVMcOC3v0xNfdtVLhgaNXC0Uq5JV8oeHG4EGLwsZfXrr
-	aLmny4zNt6rJpns6oqHICmSxYAxWlDdZiRphfZnixKvtGAC50FDI9YJli3ujjr/PiFp5zmmmSH/
-	Lpk+lLrBIfSOngUIamioXPfTepruCjC7rkVwyGLTNn0zMNlZ0+Bk=
-X-Gm-Gg: ASbGncvO2UMa7wIivFGIQ/KtagzCmggnYH58eowGkRbX6O/5iY/R5zlGZ3I9jJtb/Qd
-	/TikNBLyw9F0QQZiTSUPLrA3jzW1SpdwvuRRj6MiDhWUfJoFE6brwUYm2MW0mhLuTf/QmZ6Y=
-X-Google-Smtp-Source: AGHT+IH8g4An/jcF5yd1TIqzwdYLykZ/8ukwVsv00Vdp1yg6lQkOh3D5OGlQ4HAbwDEUCbXqReuchnm2zfmN09mQsR0=
-X-Received: by 2002:a05:690c:4c13:b0:6ef:9e74:c0b8 with SMTP id
- 00721157ae682-6f9b2879d3bmr11778117b3.17.1738888689024; Thu, 06 Feb 2025
- 16:38:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YIlhB6yd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEF2EC4CEDD;
+	Fri,  7 Feb 2025 00:40:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738888806;
+	bh=MPTrX/pGnmLsi85CgZUN8PpdQ4oomrsyAoZFgar388w=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=YIlhB6ydzcttB5rfxkNjxseW1u+hRA1ud4jYcm3Asu9xsBOyj0EmWPu+AnU5kqQu6
+	 8agWo1H7zU7QnPorvTcMg9JLhjashGUR+q+q3WzYRO5ELotF76uihODAfTc8sqONfq
+	 GgTyqvRAAGzze2glkw6x0IN7KO342T985AvrZRmcVJz7lQvRW0ewVbhBllVh5naYyW
+	 HyMeIOfi5GcfEcZUe4PQ2YoHMNVxHGTx5kwp/zf/HHZbvv7C6ujRGq4RxaK1pqjHaL
+	 8QvUdj8EUASvKoaiQxe6MPk/OzhwAnDJtGcPv4ZCngVvsY5xBRNVDMpDsCsGPopy3R
+	 UgzQBoQt8FURQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE2D4380AADE;
+	Fri,  7 Feb 2025 00:40:35 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206184327.16308-1-boddah8794@gmail.com> <20250206184327.16308-2-boddah8794@gmail.com>
-In-Reply-To: <20250206184327.16308-2-boddah8794@gmail.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 7 Feb 2025 02:38:03 +0200
-X-Gm-Features: AWEUYZka4EeRX_3WwZYOEw2blnT_RRdK95iguJ8tA2s-wMBnpOtfTb9QZXUAavQ
-Message-ID: <CAA8EJpr=SBQ29m8_iCigUKMHzrdbTFRSpTHv4Aapo55hMVOcaw@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/2] acpi: typec: ucsi: Introduce a ->poll_cci method
-To: Fedor Pchelkin <boddah8794@gmail.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, "Christian A. Ehrhardt" <lk@c--e.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Benson Leung <bleung@chromium.org>, 
-	Jameson Thies <jthies@google.com>, Saranya Gopal <saranya.gopal@intel.com>, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Mark Pearson <mpearson@squebb.ca>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2] net: ethtool: tsconfig: Fix netlink type of hwtstamp
+ flags
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173888883452.1715572.8579419338327846660.git-patchwork-notify@kernel.org>
+Date: Fri, 07 Feb 2025 00:40:34 +0000
+References: <20250205110304.375086-1-kory.maincent@bootlin.com>
+In-Reply-To: <20250205110304.375086-1-kory.maincent@bootlin.com>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, donald.hunter@gmail.com, kuba@kernel.org,
+ edumazet@google.com, pabeni@redhat.com, horms@kernel.org
 
-On Thu, 6 Feb 2025 at 20:43, Fedor Pchelkin <boddah8794@gmail.com> wrote:
->
-> From: "Christian A. Ehrhardt" <lk@c--e.de>
->
-> For the ACPI backend of UCSI the UCSI "registers" are just a memory copy
-> of the register values in an opregion. The ACPI implementation in the
-> BIOS ensures that the opregion contents are synced to the embedded
-> controller and it ensures that the registers (in particular CCI) are
-> synced back to the opregion on notifications. While there is an ACPI call
-> that syncs the actual registers to the opregion there is rarely a need to
-> do this and on some ACPI implementations it actually breaks in various
-> interesting ways.
->
-> The only reason to force a sync from the embedded controller is to poll
-> CCI while notifications are disabled. Only the ucsi core knows if this
-> is the case and guessing based on the current command is suboptimal, i.e.
-> leading to the following spurious assertion splat:
->
-> WARNING: CPU: 3 PID: 76 at drivers/usb/typec/ucsi/ucsi.c:1388 ucsi_reset_ppm+0x1b4/0x1c0 [typec_ucsi]
-> CPU: 3 UID: 0 PID: 76 Comm: kworker/3:0 Not tainted 6.12.11-200.fc41.x86_64 #1
-> Hardware name: LENOVO 21D0/LNVNB161216, BIOS J6CN45WW 03/17/2023
-> Workqueue: events_long ucsi_init_work [typec_ucsi]
-> RIP: 0010:ucsi_reset_ppm+0x1b4/0x1c0 [typec_ucsi]
-> Call Trace:
->  <TASK>
->  ucsi_init_work+0x3c/0xac0 [typec_ucsi]
->  process_one_work+0x179/0x330
->  worker_thread+0x252/0x390
->  kthread+0xd2/0x100
->  ret_from_fork+0x34/0x50
->  ret_from_fork_asm+0x1a/0x30
->  </TASK>
->
-> Thus introduce a ->poll_cci() method that works like ->read_cci() with an
-> additional forced sync and document that this should be used when polling
-> with notifications disabled. For all other backends that presumably don't
-> have this issue use the same implementation for both methods.
+Hello:
 
-Should the ucsi_init() also use ->poll_cci instead of ->read_cci?
-Although it's executed with notifications enabled, it looks as if it
-might need the additional resync.
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
->
-> Fixes: fa48d7e81624 ("usb: typec: ucsi: Do not call ACPI _DSM method for UCSI read operations")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Christian A. Ehrhardt <lk@c--e.de>
-> Tested-by: Fedor Pchelkin <boddah8794@gmail.com>
-> Signed-off-by: Fedor Pchelkin <boddah8794@gmail.com>
-> ---
+On Wed,  5 Feb 2025 12:03:01 +0100 you wrote:
+> Fix the netlink type for hardware timestamp flags, which are represented
+> as a bitset of flags. Although only one flag is supported currently, the
+> correct netlink bitset type should be used instead of u32 to keep
+> consistency with other fields. Address this by adding a new named string
+> set description for the hwtstamp flag structure.
+> 
+> The code has been introduced in the current release so the uAPI change is
+> still okay.
+> 
+> [...]
 
+Here is the summary with links:
+  - [net,v2] net: ethtool: tsconfig: Fix netlink type of hwtstamp flags
+    https://git.kernel.org/netdev/net/c/6a774228e890
 
-
+You are awesome, thank you!
 -- 
-With best wishes
-Dmitry
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
