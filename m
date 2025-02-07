@@ -1,198 +1,172 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2055.outbound.protection.outlook.com [40.107.237.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E348194A67;
-	Fri,  7 Feb 2025 04:26:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738902384; cv=fail; b=J/+sz++aeJV2cPgi7D5r99inal2kiHLbk0c7aGjMCunGWc19Pu5Ec8NGjhTK4LywBc8uVAmS1nDcdy/EsK1lDr+DC5a1boKTM5MGmR/xG0XPbOhHn9xDDO26ZpMo4gon/Tb4/I0Q+ULGN/EJsCIBtnrvLFSN5z/hdjWOCQClehc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738902384; c=relaxed/simple;
-	bh=faJlU4/mCVBiLdu1nLn5ptUxPUNfKKEIYmcHZDfdPdY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SzZYvYYolQj5Ag7MVstFDK+BLK+V/CJXU+WZLf0xpTi37SZ0NpHHt1spa3POq7MJKlXYZd0Dvy8GKxt4Q90QdDYevr/ZepAPvhcrb32PESF4m+z+3wftDEbft8rovfCCHOkgKQFpfsm3znxZdLBjLABZDbkRZsJnMaG+XOZrX/g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=c6E6KI+M; arc=fail smtp.client-ip=40.107.237.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7064B23314C;
+	Fri,  7 Feb 2025 04:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738902398; cv=none; b=hIPnKEpxGpX4XeaXrtOineST+SgpoTnvsygdluFkBdrF5poGUME6a2rMlpx7QLB7SJv+rHdPOZy5i9rhyj/1z9lflO0HkyWVA/F0va2zjpOwj3vxuNBareClfxofosSTkOuYcEh+vPVJYJZFRJUwEFuSlQqQyy9+N3/dwLFZWn8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738902398; c=relaxed/simple;
+	bh=bvUTrvucvs5c6M56j9ZGAdxIOpEL2m1FSJrsxdyZvQY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jwjvBQVKgeeT5m8Vi/Gc7+95Z/TWgp4Wnsy/USDQSSxzw4RdQLp1zDDQYDwnSbX76zZ4DrGILeMiTOYsqvU+l0oRYETDX5xMdK8Ey9Y3xxheQU6LGf2kvNJSO4mAN0GXTO8v2cXp55g970Umokppk7VOIKpPX2air8ydWe0Hidk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aLc9Q8XW; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="c6E6KI+M"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VeRs5443EXdvZXmBaitEsKhsyMwBZ1aGox23xoNHd37V0Pgk1nMHyHxl0wIxyMiribS7IpB5hHtAAQV5d3zzbIIxEF+CWqK+t40C2KvTguESFhtYApqKW5/gA76Dx7HNT/JPAlNuAnsgQJTFRKwFaW8+qERnq5590h3G+rLHONsW/6T0ZRF6N9kdDxdOMdOKoiPqkiyn5+YbMlBPtTK+oTekA+McqKi3GDr/hIOWFNAsUDFC7xJdM0e17/w6L8qGtd+hjoS9u4s4WOuLEQmtGCYEQPNjFKXqsvJFZxz9vHeRYvrAv/9cUKZ4OYniNgDTjPKJ/xO+juzMEKIFSNmhtQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GICI1sVU7IE8LAc/pkl7rX92QdFp4Ol0mjoCyVP0FmQ=;
- b=jElpXMvpbpuYrELE/r0hv0/lNKhGN+Y+Z/qGEFYKaLJBrowd29Sz3crSUboaFdfuxMnVl9yqkE8ZGDWPn6Bf4AgTs4gwpe2OPBB5CzQ1IWXK+dNPdyyVhJeZAf/rAoahnjA0XUHWoDSkRQQk6zD8zWvsKP4XvigHajPfaLAk35Dwo0UKEttoKzCNERlkJr6z7iWDtgiJpqPSHSRwcn1i+s6DpIz3Msx7prqrcwkNyevhaBOSpgx4rLFiabVLU/rtxdewTFIFAOqupTu8H2tni3fHl1prQ+C/hqlOA3P9kTqOVCTXiutKtktrwSe7e+P9HwEW+paSPJ9yI1WkPQ/vxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=huawei.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GICI1sVU7IE8LAc/pkl7rX92QdFp4Ol0mjoCyVP0FmQ=;
- b=c6E6KI+MCFTLppEboTI9tiNvn5NPrPwr6A/oNWphRrfG7hrOI+4KgSYpmP8sFT1bm4q7y5E2zSocV7th0UW3tVf56oTwDHXHamSi5IAXZJ2aSURvE9oruUckDKd75zkTXAU8bUAAWA4Xhu9EGsN3Q1IqVcjRQ09iE+cx+v2moei8m6rfSqSDR3T0l6Aeg5U3u+yFfvXzst/93k+sXKwAa7pJ2o0WzYPSvIgvJUX2+rpnZd8Pi7Zy91R4+fAxg6aCsy1/T+XF8WyZuv8tIpiKb3gIBbH6mzkxXc9Cd3BY9RoS7Jzv5x9+0Ogr0tKOFLtpgQrzXLtqhGYhwjo+8RxS0w==
-Received: from CH0PR07CA0010.namprd07.prod.outlook.com (2603:10b6:610:32::15)
- by MN2PR12MB4360.namprd12.prod.outlook.com (2603:10b6:208:266::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.13; Fri, 7 Feb
- 2025 04:26:18 +0000
-Received: from CH1PEPF0000AD7F.namprd04.prod.outlook.com
- (2603:10b6:610:32:cafe::28) by CH0PR07CA0010.outlook.office365.com
- (2603:10b6:610:32::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.28 via Frontend Transport; Fri,
- 7 Feb 2025 04:26:18 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CH1PEPF0000AD7F.mail.protection.outlook.com (10.167.244.88) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8398.14 via Frontend Transport; Fri, 7 Feb 2025 04:26:18 +0000
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 6 Feb 2025
- 20:26:08 -0800
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail202.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 6 Feb
- 2025 20:26:08 -0800
-Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.7)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Thu, 6 Feb 2025 20:26:06 -0800
-Date: Thu, 6 Feb 2025 20:26:05 -0800
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: Eric Auger <eric.auger@redhat.com>, <will@kernel.org>,
-	<robin.murphy@arm.com>, <kevin.tian@intel.com>, <tglx@linutronix.de>,
-	<maz@kernel.org>, <alex.williamson@redhat.com>, <joro@8bytes.org>,
-	<shuah@kernel.org>, <reinette.chatre@intel.com>, <yebin10@huawei.com>,
-	<apatel@ventanamicro.com>, <shivamurthy.shastri@linutronix.de>,
-	<bhelgaas@google.com>, <anna-maria@linutronix.de>, <yury.norov@gmail.com>,
-	<nipun.gupta@amd.com>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<kvm@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<patches@lists.linux.dev>, <jean-philippe@linaro.org>, <mdf@kernel.org>,
-	<mshavit@google.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<smostafa@google.com>, <ddutile@redhat.com>
-Subject: Re: [PATCH RFCv2 09/13] iommufd: Add IOMMU_OPTION_SW_MSI_START/SIZE
- ioctls
-Message-ID: <Z6WLXTiYVzuN368E@Asurada-Nvidia>
-References: <cover.1736550979.git.nicolinc@nvidia.com>
- <d3cb1694e07be0e214dc44dcb2cb74f014606560.1736550979.git.nicolinc@nvidia.com>
- <0521187e-c511-4ab1-9ffa-be2be8eacd04@redhat.com>
- <20250129145800.GG5556@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aLc9Q8XW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738902397; x=1770438397;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=bvUTrvucvs5c6M56j9ZGAdxIOpEL2m1FSJrsxdyZvQY=;
+  b=aLc9Q8XW750LWM8YEyNoLaGEw+JquPXHN/FgYTT1kdDx69uOw4KHPWUE
+   c2/Ucw9q9VBY/3IWcawR+dMpWiDhDsZAqbIY2i9Jt9gy5o1nCWNZB4mVT
+   8ndJ0xN4BLS+HwGDA0WL9AcYnbx0MI4k1ksSL7s2EAF82Y7+jJh5d9K+2
+   54Q9BQamShAyuJ0T9hW5ZWXXDlCeXC3fNTXR0GFsbCeg3yaR6JVVwPlyT
+   EXf43rEbhCWltDYsmcti3T7XDQn3x9bTwrHXULjtAC1SUZUgV0lzKi4CP
+   kjwBJ3icFzLD8eSvFFMyyrtDK1zU805HrLTaYZoJ+Y1SKP07zZ1r8Slaa
+   Q==;
+X-CSE-ConnectionGUID: ZnWcwr34T4y9hzCzCRyVEw==
+X-CSE-MsgGUID: FM3HTGU+Tdyuqh+WkSm/EQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="64890418"
+X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
+   d="scan'208";a="64890418"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 20:26:36 -0800
+X-CSE-ConnectionGUID: mVrsykd+TE+M291dW6o8BA==
+X-CSE-MsgGUID: ImXfyL7TT7ORswdEbiQVRA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="111271026"
+Received: from sramkris-mobl1.amr.corp.intel.com (HELO [10.124.220.221]) ([10.124.220.221])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 20:26:34 -0800
+Message-ID: <11a01c9b-5e52-46b8-ab13-e68ae79083ff@linux.intel.com>
+Date: Thu, 6 Feb 2025 20:26:13 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250129145800.GG5556@nvidia.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD7F:EE_|MN2PR12MB4360:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e0af187-81e5-476b-5b07-08dd472f913a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|36860700013|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ex/3JWcd9yNeGPIWOnzBt1AUDePtoXZJTpKlQpe+OoEdOZSSWmPJTjWrl4e6?=
- =?us-ascii?Q?XVsXfKYya8q+28VNjwLwHYw/JlAD1LmrP5h2HrerJzZhERHlWAjx8ulifb1f?=
- =?us-ascii?Q?d9hH3SSqPMDCz/0btU2P7KobKuLYSMHByM3BB1junu94PFSTSSRYU4yQOPoX?=
- =?us-ascii?Q?BgnBKSJdwazHE81gCXYGhpGcTKTI68H4wE1+qVcbiK7yYH5ElYPGokdonyPP?=
- =?us-ascii?Q?2iJMF8qsGHvF62yGmmg5SvWSpeHmmotg6jHixDTR8D1NL5o6mUQcG8XUBUE7?=
- =?us-ascii?Q?a7e5JeAlQrx7moUDrydcVLyNiVKdN8A6AA90tGGCndFAsJ98bO7jnfZ/dW26?=
- =?us-ascii?Q?QbhS9YFuC4zYwCRFUK9kxmeEOZIJOXtfyZsg8y3/Hhdi5P5PxAWbn3KNmW7b?=
- =?us-ascii?Q?6XvCDN+NJZYYz+85cNIUszInj76WNdd1frJpQOzHy64mhwxfJ/wZjZPTet1x?=
- =?us-ascii?Q?uo9QzXoSrpMoAdAaRtqDmfvC1ffW1/FsfaYeGZKzyWD+LYhXtzxUfI5TrpcK?=
- =?us-ascii?Q?DMF5EcztyDfzybgaFlW83LJWvtzCxC1mbT4fcfxwVTO/wGpDUEp7Xiquh50X?=
- =?us-ascii?Q?ygiat8iuqNuk67dNjmsxtmWi80q8gLqjncGB2ONBetX4T2m4EQXQO03CG1jQ?=
- =?us-ascii?Q?1k76Bd75XZQuQBBA/3q+Mj1Hn9yA9+ypdAmSUH+phT2oaHXWEIHpvxrzNfqT?=
- =?us-ascii?Q?RW70rZo81cQL49nu/2Y1l43mza1oVXJsklGzScGSUKawlcxStoaKYYZ6Slt1?=
- =?us-ascii?Q?BPnCV6U+ZaDXuBUojuCFKw0JnhayIeKmQNBdAci/1GtVAcg+Uw+0pQjxOsYU?=
- =?us-ascii?Q?6n5tqR/ezPVNLDguA6THoyDyJS+X7nf6uElbx9OphmVrkJL8+ELDVQx1rypf?=
- =?us-ascii?Q?XitbPM/BXT2e5nZSyjFYEKEkVH15pHM8qCsQ+OMuZnjWQIJtctpB8lXFVMPb?=
- =?us-ascii?Q?uIHifcmh59L31HA4l8FK+1Eb/HYKpwkwFYCmr1vS0NT9AdX8BValYDRlgjR/?=
- =?us-ascii?Q?MO2vVSHlYFLMP4I6hdvrfCSnvaZDZDytaCg2FAoCK2BOF9U39accw6Fr6aJz?=
- =?us-ascii?Q?9HkJgqUTlfc3CQWPhQam1Y2xJcSgl19B8QNopw0obS6bvzT3r6vgCyd++HQ7?=
- =?us-ascii?Q?PgkWzmhLSeDt1+i9PUkJigYMVHKMLtCMNXLDt/Awi3jun23+gc+Is7FJWMv4?=
- =?us-ascii?Q?POdP6a3dmcuG3h73KeFpYJ4PZaXxkepOOFZT6oUsPNJnroifvRsPQd1dt8Yu?=
- =?us-ascii?Q?DkTX/Nf19BxIuay1QWEKNaCkSTSQXiDTTyH+c4fCxSVmrhlR0Fh6vsvDfCo1?=
- =?us-ascii?Q?+c+9V4KE+DAE/kIozEs0WlFUKIf1OFQSgv38KT/7Fq1Di90tmsqNqAamW4/4?=
- =?us-ascii?Q?kUc9WqsMc7G73T4C56m/sXbXXLS27GyRhVPdHiI21yqh6DnCLThWV8Zeu+P4?=
- =?us-ascii?Q?rvWiJODDbbqqrT0LBfn1ObOHidQ4aHgOGzbWPeGCngDK8L08AHpvP56t8E+L?=
- =?us-ascii?Q?U9zq487oueJA6WI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 04:26:18.0627
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e0af187-81e5-476b-5b07-08dd472f913a
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD7F.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4360
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] PCI/portdrv: Add necessary delay for disabling
+ hotplug events
+To: Feng Tang <feng.tang@linux.alibaba.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+ Jonathan Cameron <Jonthan.Cameron@huawei.com>,
+ ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
+ <7e5e9bad-b66b-4a7f-8868-af5f1ab2fda1@linux.intel.com>
+ <Z6QqGRNQ0UQZSKBB@U-2FWC9VHC-2323.local>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <Z6QqGRNQ0UQZSKBB@U-2FWC9VHC-2323.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 29, 2025 at 10:58:00AM -0400, Jason Gunthorpe wrote:
-> On Wed, Jan 29, 2025 at 02:44:12PM +0100, Eric Auger wrote:
-> > On 1/11/25 4:32 AM, Nicolin Chen wrote:
-> > > For systems that require MSI pages to be mapped into the IOMMU translation
-> > > the IOMMU driver provides an IOMMU_RESV_SW_MSI range, which is the default
-> > > recommended IOVA window to place these mappings. However, there is nothing
-> > > special about this address. And to support the RMR trick in VMM for nested
-> > well at least it shall not overlap VMM's RAM. So it was not random either.
-> > > translation, the VMM needs to know what sw_msi window the kernel is using.
-> > > As there is no particular reason to force VMM to adopt the kernel default,
-> > > provide a simple IOMMU_OPTION_SW_MSI_START/SIZE ioctl that the VMM can use
-> > > to directly specify the sw_msi window that it wants to use, which replaces
-> > > and disables the default IOMMU_RESV_SW_MSI from the driver to avoid having
-> > > to build an API to discover the default IOMMU_RESV_SW_MSI.
-> > IIUC the MSI window will then be different when using legacy VFIO
-> > assignment and iommufd backend.
-> 
-> ? They use the same, iommufd can have userspace override it. Then it
-> will ignore the reserved region.
-> 
-> > MSI reserved regions are exposed in
-> > /sys/kernel/iommu_groups/<n>/reserved_regions
-> > 0x0000000008000000 0x00000000080fffff msi
->  
-> > Is that configurability reflected accordingly?
-> 
-> ?
-> 
-> Nothing using iommufd should parse that sysfs file.
->  
-> > How do you make sure it does not collide with other resv regions? I
-> > don't see any check here.
-> 
-> Yes this does need to be checked, it does look missing. It still needs
-> to create a reserved region in the ioas when attaching to keep the
-> areas safe and it has to intersect with the incoming reserved
-> regions from the driver.
 
-Yea, I found iopt_reserve_iova() is actually missed entirely...
+On 2/5/25 7:18 PM, Feng Tang wrote:
+> Hi Sathyanarayanan,
+>
+> On Wed, Feb 05, 2025 at 10:26:59AM -0800, Sathyanarayanan Kuppuswamy wrote:
+>> On 2/3/25 9:37 PM, Feng Tang wrote:
+>>> According to PCIe 6.1 spec, section 6.7.3.2, software need to wait at
+>>> least 1 second for the command-complete event, before resending the cmd
+>>> or sending a new cmd.
+>>>
+>>> Currently get_port_device_capability() sends slot control cmd to disable
+>>> PCIe hotplug interrupts without waiting for its completion and there was
+>>> real problem reported for the lack of waiting.
+>> Can you include the error log associated with this issue? What is the
+>> actual issue you are seeing and in which hardware?
+> For this one, we don't have specific log, as it was raised by firmware
+> developer, as in https://lore.kernel.org/lkml/Z6LRAozZm1UfgjqT@U-2FWC9VHC-2323.local/
+>
+> When handling PCI hotplug problem, they hit issue and found their state
+> machine corrupted , and back traced to OS. They didn't expect to receive
+> 2 link control commands at almost the same time, which doesn't comply to
 
-While fixing this, I see a way to turn the OPTIONs back to per-
-idev, if you still prefer them to be per-idev(?). Then, we can
-check a given input in the set_option() against the device's
-reserved region list from the driver, prior to device attaching
-to any HWPT.
+Which 2 commands from OS? Did you identify both commands?
 
-Otherwise, we just rely on iopt_enforce_device_reserve_region()
-during an attach, keeping the option global to simplify VMMs.
+> pcie spec, and normally the handling of one command will take some time
+> in BIOS, though not as long as 1 second. The HW is an ARM server.
+>
+> I will try to add these info to commit log in next version.
 
-Thanks
-Nicolin
+Ok. Please include it.
+
+>
+>>> Add the necessary wait to comply with PCIe spec. The waiting logic refers
+>>> existing pcie_poll_cmd().
+>>>
+>>> Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+>>> ---
+>>>    drivers/pci/pci.h          |  2 ++
+>>>    drivers/pci/pcie/portdrv.c | 33 +++++++++++++++++++++++++++++++--
+>>>    2 files changed, 33 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>>> index 01e51db8d285..c1e234d1b81d 100644
+>>> --- a/drivers/pci/pci.h
+>>> +++ b/drivers/pci/pci.h
+>>> @@ -759,12 +759,14 @@ static inline void pcie_ecrc_get_policy(char *str) { }
+>>>    #ifdef CONFIG_PCIEPORTBUS
+>>>    void pcie_reset_lbms_count(struct pci_dev *port);
+>>>    int pcie_lbms_count(struct pci_dev *port, unsigned long *val);
+>>> +void pcie_disable_hp_interrupts_early(struct pci_dev *dev);
+>>>    #else
+>>>    static inline void pcie_reset_lbms_count(struct pci_dev *port) {}
+>>>    static inline int pcie_lbms_count(struct pci_dev *port, unsigned long *val)
+>>>    {
+>>>    	return -EOPNOTSUPP;
+>>>    }
+>>> +static inline void pcie_disable_hp_interrupts_early(struct pci_dev *dev) {}
+>>>    #endif
+>>>    struct pci_dev_reset_methods {
+>>> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+>>> index 02e73099bad0..16010973bfe2 100644
+>>> --- a/drivers/pci/pcie/portdrv.c
+>>> +++ b/drivers/pci/pcie/portdrv.c
+>>> @@ -18,6 +18,7 @@
+>>>    #include <linux/string.h>
+>>>    #include <linux/slab.h>
+>>>    #include <linux/aer.h>
+>>> +#include <linux/delay.h>
+>>>    #include "../pci.h"
+>>>    #include "portdrv.h"
+>>> @@ -205,6 +206,35 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+>>>    	return 0;
+>>>    }
+>>> +static int pcie_wait_sltctl_cmd_raw(struct pci_dev *pdev)
+>>> +{
+>>> +	u16 slot_status;
+>>> +	/* 1000 ms, according toPCIe spec 6.1, section 6.7.3.2 */
+>>> +	int timeout = 1000;
+>>> +
+>>> +	do {
+>>> +		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+>>> +		if (slot_status & PCI_EXP_SLTSTA_CC) {
+>>> +			pcie_capability_write_word(pdev, PCI_EXP_SLTSTA,
+>>> +						   PCI_EXP_SLTSTA_CC);
+>>> +			return 0;
+>>> +		}
+>>> +		msleep(10);
+>>> +		timeout -= 10;
+>>> +	} while (timeout);
+>>> +
+>>> +	/* Timeout */
+>>> +	return  -1;
+>>> +}
+>> May be this logic can be simplified using readl_poll_timeout()?
+> Seems this is what exactly I needed :) Many thanks for the suggestion!
+>
+> - Feng
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
