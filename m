@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 796F11A3146
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:20:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F34B1DE4D4
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:20:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738952417; cv=none; b=nEJ9fPHY3AFdUNAaKHex/FFI8ryLhCP1vik4n5yJNbNzaFHb9Gcc7AyH/JeYOdbeK5yADyCuwjFiffCWe+9uORNU0RdGB41NYj73RdvbEtwtsRYagGHn6eDCi5ItwdF63L2UY2N8Fb+d+JZ1wSzATNArmLdoSGX/JlaDycgWNx0=
+	t=1738952421; cv=none; b=tkRt59xJGB2ns9B1MjZHvnLaCZAeMkxuq4Ap1Fl+wlWaaPn2AQ2psDtOlWl/8n1EVcEqgzF269DfW1R0F3sl/HEptWTiDb8YtLHcp2qGTPJiy8X32HKMtaCEAInQKlREve88bfHy0wACpeAz7FPacB5vt7LqylctewzUB4X+Hi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738952417; c=relaxed/simple;
-	bh=bDAl9fVdq6Is2ea27NiJxNvcsxJzo+zOaynhIw2pRw0=;
+	s=arc-20240116; t=1738952421; c=relaxed/simple;
+	bh=bmciXJaZV9HHK4Q9ivAqMxBoZlpxNrpk/8Wd+W2iqaQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SQss6XZh5ffHPIFMshMEX7XvH89o+YfkEKr4qfDWrAeC5NP/LWHfdl68KZ/BNymDu3TDVsc0roLWzA8jO0BZuv19DMR2xdCYlOF6Tmub8Bn2uYZVk8ZV0bjxG4Cs5ZlMMu1NTdLNrISG0aG+ecWfGb4OlAXp8ID3N1chuMv/s+8=
+	 MIME-Version; b=EObZn/e+oGePkdHZMdciZD9btxPUDjiiixtVi1VEmvUDerrAhawpHJSujYVQ6xQno5Tjma1qR0q0ft3XivSrbQAIONqCW+YAZDxIajTspje4uAY5FBexegXojkk1P0Pm2RfzcGyDH5CcCukaFqMoVXL4O2AjkInbqDzHV3eeQsg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E426512FC;
-	Fri,  7 Feb 2025 10:20:30 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D1271EA6;
+	Fri,  7 Feb 2025 10:20:41 -0800 (PST)
 Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C68C53F63F;
-	Fri,  7 Feb 2025 10:20:04 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 749EE3F63F;
+	Fri,  7 Feb 2025 10:20:15 -0800 (PST)
 From: James Morse <james.morse@arm.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -44,12 +44,10 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
 	Rex Nie <rex.nie@jaguarmicro.com>,
 	Dave Martin <dave.martin@arm.com>,
 	Koba Ko <kobak@nvidia.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>,
-	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v6 24/42] x86/resctrl: Allow an architecture to disable pseudo lock
-Date: Fri,  7 Feb 2025 18:18:05 +0000
-Message-Id: <20250207181823.6378-25-james.morse@arm.com>
+	Shanker Donthineni <sdonthineni@nvidia.com>
+Subject: [PATCH v6 27/42] x86/resctrl: Move RFTYPE flags to be managed by resctrl
+Date: Fri,  7 Feb 2025 18:18:08 +0000
+Message-Id: <20250207181823.6378-28-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20250207181823.6378-1-james.morse@arm.com>
 References: <20250207181823.6378-1-james.morse@arm.com>
@@ -61,158 +59,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Pseudo-lock relies on knowledge of the micro-architecture to disable
-prefetchers etc.
+resctrl_file_fflags_init() is called from the architecture specific code
+to make the 'thread_throttle_mode' file visible. The architecture specific
+code has already set the membw.throttle_mode in the rdt_resource.
 
-On arm64 these controls are typically secure only, meaning linux can't
-access them. Arm's cache-lockdown feature works in a very different
-way. Resctrl's pseudo-lock isn't going to be used on arm64 platforms.
+This forces the RFTYPE flags used by resctrl to be exposed to the
+architecture specific code.
 
-Add a Kconfig symbol that can be selected by the architecture. This
-enables or disables building of the pseudo_lock.c file, and replaces
-the functions with stubs. An additional IS_ENABLED() check is needed
-in rdtgroup_mode_write() so that attempting to enable pseudo-lock
-reports an "Unknown or unsupported mode" to user-space via the
-last_cmd_status file.
+This doesn't need to be specific to the architecture, the throttle_mode
+can be used by resctrl to determine if the 'thread_throttle_mode' file
+should be visible. This allows the RFTYPE flags to be private to resctrl.
+
+Add thread_throttle_mode_init(), and use it to call
+resctrl_file_fflags_init()  from resctrl_setup(). This avoids
+publishing an extra function between the architecture and filesystem
+code.
 
 Signed-off-by: James Morse <james.morse@arm.com>
-Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
-Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
-Changes since v4:
- * "last_cmd file" -> "last_cmd_status file"
-
-Changes since v2:
- * Clarified the commit message as to where the error string is printed.
-
-Changes since v1:
- * [Commit message only] Typo fix:
-   s/psuedo/pseudo/g
+Changes since v5:
+ * Added checking for SMBA.
+ * Added printing of undefined to rdt_thread_throttle_mode_show().
+ * Major juggling around commit 2937f9c361f7 ("x86/resctrl: Introduce resctrl_file_fflags_init() to initialize fflags")
+ * Dropped tags, split patch
 ---
- arch/x86/Kconfig                       |  7 ++++
- arch/x86/kernel/cpu/resctrl/Makefile   |  5 +--
- arch/x86/kernel/cpu/resctrl/internal.h | 49 +++++++++++++++++++++-----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c |  3 +-
- 4 files changed, 53 insertions(+), 11 deletions(-)
+ arch/x86/kernel/cpu/resctrl/core.c     |  3 ---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 12 ++++++++++++
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 87198d957e2f..41dda57c4953 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -505,6 +505,7 @@ config X86_CPU_RESCTRL
- 	depends on X86 && (CPU_SUP_INTEL || CPU_SUP_AMD)
- 	select KERNFS
- 	select PROC_CPU_RESCTRL		if PROC_FS
-+	select RESCTRL_FS_PSEUDO_LOCK
- 	help
- 	  Enable x86 CPU resource control support.
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 1fb4eb4e0ea9..e4b676879227 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -229,9 +229,6 @@ static __init bool __get_mem_config_intel(struct rdt_resource *r)
+ 	else
+ 		r->membw.throttle_mode = THREAD_THROTTLE_MAX;
  
-@@ -521,6 +522,12 @@ config X86_CPU_RESCTRL
+-	resctrl_file_fflags_init("thread_throttle_mode",
+-				 RFTYPE_CTRL_INFO | RFTYPE_RES_MB);
+-
+ 	r->alloc_capable = true;
  
- 	  Say N if unsure.
- 
-+config RESCTRL_FS_PSEUDO_LOCK
-+	bool
-+	help
-+	  Software mechanism to pin data in a cache portion using
-+	  micro-architecture specific knowledge.
-+
- config X86_FRED
- 	bool "Flexible Return and Event Delivery"
- 	depends on X86_64
-diff --git a/arch/x86/kernel/cpu/resctrl/Makefile b/arch/x86/kernel/cpu/resctrl/Makefile
-index 4a06c37b9cf1..0c13b0befd8a 100644
---- a/arch/x86/kernel/cpu/resctrl/Makefile
-+++ b/arch/x86/kernel/cpu/resctrl/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--obj-$(CONFIG_X86_CPU_RESCTRL)	+= core.o rdtgroup.o monitor.o
--obj-$(CONFIG_X86_CPU_RESCTRL)	+= ctrlmondata.o pseudo_lock.o
-+obj-$(CONFIG_X86_CPU_RESCTRL)		+= core.o rdtgroup.o monitor.o
-+obj-$(CONFIG_X86_CPU_RESCTRL)		+= ctrlmondata.o
-+obj-$(CONFIG_RESCTRL_FS_PSEUDO_LOCK)	+= pseudo_lock.o
- CFLAGS_pseudo_lock.o = -I$(src)
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 725f223ea07b..8d35bb423aad 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -512,14 +512,6 @@ unsigned int rdtgroup_cbm_to_size(struct rdt_resource *r, struct rdt_ctrl_domain
- 				  unsigned long cbm);
- enum rdtgrp_mode rdtgroup_mode_by_closid(int closid);
- int rdtgroup_tasks_assigned(struct rdtgroup *r);
--int rdtgroup_locksetup_enter(struct rdtgroup *rdtgrp);
--int rdtgroup_locksetup_exit(struct rdtgroup *rdtgrp);
--bool rdtgroup_cbm_overlaps_pseudo_locked(struct rdt_ctrl_domain *d, unsigned long cbm);
--bool rdtgroup_pseudo_locked_in_hierarchy(struct rdt_ctrl_domain *d);
--int rdt_pseudo_lock_init(void);
--void rdt_pseudo_lock_release(void);
--int rdtgroup_pseudo_lock_create(struct rdtgroup *rdtgrp);
--void rdtgroup_pseudo_lock_remove(struct rdtgroup *rdtgrp);
- struct rdt_ctrl_domain *get_ctrl_domain_from_cpu(int cpu, struct rdt_resource *r);
- struct rdt_mon_domain *get_mon_domain_from_cpu(int cpu, struct rdt_resource *r);
- int closids_supported(void);
-@@ -551,4 +543,45 @@ void resctrl_file_fflags_init(const char *config, unsigned long fflags);
- void rdt_staged_configs_clear(void);
- bool closid_allocated(unsigned int closid);
- int resctrl_find_cleanest_closid(void);
-+
-+#ifdef CONFIG_RESCTRL_FS_PSEUDO_LOCK
-+int rdtgroup_locksetup_enter(struct rdtgroup *rdtgrp);
-+int rdtgroup_locksetup_exit(struct rdtgroup *rdtgrp);
-+bool rdtgroup_cbm_overlaps_pseudo_locked(struct rdt_ctrl_domain *d, unsigned long cbm);
-+bool rdtgroup_pseudo_locked_in_hierarchy(struct rdt_ctrl_domain *d);
-+int rdt_pseudo_lock_init(void);
-+void rdt_pseudo_lock_release(void);
-+int rdtgroup_pseudo_lock_create(struct rdtgroup *rdtgrp);
-+void rdtgroup_pseudo_lock_remove(struct rdtgroup *rdtgrp);
-+#else
-+static inline int rdtgroup_locksetup_enter(struct rdtgroup *rdtgrp)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static inline int rdtgroup_locksetup_exit(struct rdtgroup *rdtgrp)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static inline bool rdtgroup_cbm_overlaps_pseudo_locked(struct rdt_ctrl_domain *d, unsigned long cbm)
-+{
-+	return false;
-+}
-+
-+static inline bool rdtgroup_pseudo_locked_in_hierarchy(struct rdt_ctrl_domain *d)
-+{
-+	return false;
-+}
-+
-+static inline int rdt_pseudo_lock_init(void) { return 0; }
-+static inline void rdt_pseudo_lock_release(void) { }
-+static inline int rdtgroup_pseudo_lock_create(struct rdtgroup *rdtgrp)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static inline void rdtgroup_pseudo_lock_remove(struct rdtgroup *rdtgrp) { }
-+#endif /* CONFIG_RESCTRL_FS_PSEUDO_LOCK */
-+
- #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
+ 	return true;
 diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index a388ef66ef4c..e59271515a46 100644
+index e59271515a46..58feba3feefd 100644
 --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1453,7 +1453,8 @@ static ssize_t rdtgroup_mode_write(struct kernfs_open_file *of,
- 				goto out;
- 		}
- 		rdtgrp->mode = RDT_MODE_EXCLUSIVE;
--	} else if (!strcmp(buf, "pseudo-locksetup")) {
-+	} else if (IS_ENABLED(CONFIG_RESCTRL_FS_PSEUDO_LOCK) &&
-+		   !strcmp(buf, "pseudo-locksetup")) {
- 		ret = rdtgroup_locksetup_enter(rdtgrp);
- 		if (ret)
- 			goto out;
+@@ -2064,6 +2064,16 @@ static struct rftype *rdtgroup_get_rftype_by_name(const char *name)
+ 	return NULL;
+ }
+ 
++static void thread_throttle_mode_init(void)
++{
++	struct rdt_resource *r_mba;
++
++	r_mba = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
++	if (r_mba->membw.throttle_mode != THREAD_THROTTLE_UNDEFINED)
++		resctrl_file_fflags_init("thread_throttle_mode",
++					 RFTYPE_CTRL_INFO | RFTYPE_RES_MB);
++}
++
+ void resctrl_file_fflags_init(const char *config, unsigned long fflags)
+ {
+ 	struct rftype *rft;
+@@ -4277,6 +4287,8 @@ int __init resctrl_init(void)
+ 
+ 	rdtgroup_setup_default();
+ 
++	thread_throttle_mode_init();
++
+ 	ret = resctrl_mon_resource_init();
+ 	if (ret)
+ 		return ret;
 -- 
 2.39.2
 
