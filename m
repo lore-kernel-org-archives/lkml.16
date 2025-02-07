@@ -1,75 +1,49 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F2D154C05
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 06:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1E4233D90
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 06:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738908787; cv=none; b=ij1/76GUPCfYWJxrnHg1phxGGKut8MM4i+LQiup0XK0H1vMspW508h7vEAdySzQugF0B7q3bein50E9lnkQIaKoHiLIJrc7lTHgZta8s33LYsNVmSFIFX2KGuYwVyI36Kpf1yeRseZ/f61PNoxLr9dQQepocrQQEIj/0RFzb11U=
+	t=1738908807; cv=none; b=buEQ+l+4T8jgTUrZ5mVMSxb2UAkNtjVuJ1QKmimGZjZDxuz3ytGJ/OtuiDjJgNvxXiCz7NjHPoyfOQF3uiA6id97VNNA2kBqPAbicLqSZIZ5VUVxEIcP95EFlVeHlabeg3ULL3yp6XJSKzRMSb6NOvwyI0MzmfZePzQjlekF2Ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738908787; c=relaxed/simple;
-	bh=vPndlmynpoWcaId0O2M8HKAa+MKh/nIXthv8x/uy+xM=;
+	s=arc-20240116; t=1738908807; c=relaxed/simple;
+	bh=Y06M5hCOP0MaetwKFX4R2tbficSbU9BmACGKYWMJz24=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c2W41UPBz+Cy/snGTRMuae6rBrLNKrag/vcBGSKwFzJeCXMdYb23Mx+EZ3w5IfOMONAhMkOL+2kMZ6E/GULLYodtOP8dlJJirNeQZsKD7QmXkqW8AqaTDjHn1bdnNE1Am7asUdreKL35FlEi14/QIZuYvJFe5aOV3mYAIrmVLFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=iy8GlqKE; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=BH85XjnRS8XyBJgfp8gngWskDSjhsQLrAgFd18V90Doc3VVGsHJ/Pi8ENDsUVePfo+D3wYlZINRCW0Tfx6TU+e2yXyFzOzzDHYeE5AeuuzT7WNdSrDwqkPue559bl2MaL9mYatT91unAEtiP67MbtV3tXYFadjHTwc1velPilPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jFlX92+O; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iy8GlqKE"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f2339dcfdso26992575ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 22:13:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738908785; x=1739513585; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nbpgu7G4waRbMTZ8SCs1eO+mbMfqiFXDYAZSWlhLh8A=;
-        b=iy8GlqKEwFNaee+AgqCgDUVyxXbeCpKxhfKuRCK9LBsJhyrJnuzikbZJEV482xkb4I
-         itjwcP4PuDdhOSX76aSQGct5U8MZ++FU1jlWPgtniMZL4Sm9gcSeK6eXzzqB9FVDMhyc
-         fzN7OYZW7bdf4y2Qs92ByptMLgqLYF6eUDFlY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738908785; x=1739513585;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nbpgu7G4waRbMTZ8SCs1eO+mbMfqiFXDYAZSWlhLh8A=;
-        b=UJbrUAhM8oLMEHJ6ZMqy4teedg+7GxRneiuD52bs+K5LMHQrfy6QKUJ84F1Nu6GRvJ
-         a3ygXm9L6Q6GNyNy41YXGlfTd2weqkD+LOnoOxNoTOjY5WI8u6wZsmjAguaajll39MnC
-         mrYQceukjTi7ERPn1D59pFM2Z09nhCwbV5EGLuHx+H8kaGLbdpGHQ61WbcNH3OMYbKRV
-         7Yax6RaN13vr0qv1ab/8MgQWX0w/D+Nd2rLBy8+ffqyVYLPQ5Hi5F3XzFTJCZSj+8ysT
-         NA20COXtxPvEs/pXo17XWjhgBw9+jS2sU9sAmek0nD3UzRx4ap9o+AECqb9UhZwkH4sC
-         xJOA==
-X-Forwarded-Encrypted: i=1; AJvYcCXV7bVYdisi6UR+hCh+I+FvYNzh+qS3Oc7tymN/rwU3dnzLka1ZU+38B4UV9dknS3AWKJYtxQXMX3PX7h8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnWiS1b5qwVf69tzpn6+oJsdarjZVUq4lYkf2WUBWNNAFyrJvR
-	LbWWQwkB9WmmBa75sByA+67PWtcZ+bM1dcOGUmyMzS6z483aTLN8DHan23AXfQTjRltUCl7VoGY
-	=
-X-Gm-Gg: ASbGncvOPz/GxG7fBRiWdPul/GFKGEedJH7/r4biXrYIJW3RYXjHJzRVycGfUHjzHIs
-	4G27fjUFVrmBBsQ/hq+dTFbJECG0Uhe+llLdTJq5TYmq6jaBa1HCAxqurmDU813Oob6z/Q1irXf
-	FGNfYmPbZQbVx21p4a3gcDsCNGPwDClmiRX6IYy+IKdz/3SIPXq23T7i7Hkd+2KOKqbCquuNaIt
-	hlPWvXiyU8R8pwFtRIO/7SoDBNgQ3tsdihAOsDU/7uJtx29LCIjUGhwT6BW4uKwRamUhnW7aaEw
-	y5QpIoVgk0wXf0XANw8=
-X-Google-Smtp-Source: AGHT+IGy7yTB9iK9HdDcKvVjGOD/W1ScK3E/K0xremHJT47ssRDDtg5qjD5vk+9oVudqqsZWrB5Szw==
-X-Received: by 2002:a17:903:2b0c:b0:215:7287:67bb with SMTP id d9443c01a7336-21f4eff38cdmr37129805ad.0.1738908785391;
-        Thu, 06 Feb 2025 22:13:05 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:ed81:aca8:eee2:aa0b])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d8ffsm22636775ad.150.2025.02.06.22.13.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 22:13:04 -0800 (PST)
-Date: Fri, 7 Feb 2025 15:12:59 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Kairui Song <ryncsn@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCHv4 02/17] zram: do not use per-CPU compression streams
-Message-ID: <u2o6c2zgtsol4uc53tnvi6xeksmhjjgo7xwrs4vg4wade52mbk@3iss25tlosau>
-References: <20250131090658.3386285-1-senozhatsky@chromium.org>
- <20250131090658.3386285-3-senozhatsky@chromium.org>
- <CAMgjq7BFUrUY5Xq5Eks4ibqbWgJcca1vqB4kq=otQVyG=23FRw@mail.gmail.com>
- <ryc3rgu567q44d3ck4un5itf77i2os4rqx3ruohivaqscn3rrt@ms5xoipyi72q>
- <CAMgjq7DKveiCJVb4ACSaLFV0Q1_Yd+sbL_X2dgXz6QGYwuNRTw@mail.gmail.com>
- <ysqyikz2jhnvjkhmkgwekbmz6dykvjssut6n3t746tpsscursu@zc6rg5xgk6sp>
- <Z6TgSaYIf1DnOszP@google.com>
- <n3k4c6qurl7vuqenxhmtxtitkeszohrcpauobwxxc4cpgbfujg@jxrinduvof6p>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jFlX92+O"
+Date: Fri, 7 Feb 2025 01:13:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738908788;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Vp/7w+5+gHtLzNMyTTGU+CF/tisriG9HJKcgsxxRakM=;
+	b=jFlX92+OnE8ydenzK+ydzPLb2u1I4HqC5s95spytTfGnNCMvKP0vIUChpgrFUlEkEKY6ch
+	1gy8ha+LqcX1vRvEwZHpCbeGrOnBxrPmWqX0vLRUp4kG5KDNYr/kaA2AHfDl2xxXA8xEFU
+	Neb7kDfKR6Kbtwq39lPVcy/uwj/6D8M=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
+	Anna Schumaker <anna@kernel.org>, Namjae Jeon <linkinjeon@kernel.org>, 
+	Steve French <sfrench@samba.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Tom Talpey <tom@talpey.com>, Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>, 
+	linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, audit@vger.kernel.org
+Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
+ user_path_locked_at() to never return negative dentry
+Message-ID: <7mxksfnkamzqromejfknfsat6cah4taggprj3wxdoputvvwc7f@qnjsm36bsrex>
+References: <>
+ <6p2m4jqtl62cabb2xolxt76ycule5prukjzx4nxklvhk23g6qh@luj2tzicloph>
+ <173890403265.22054.8267826472424760232@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,54 +52,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <n3k4c6qurl7vuqenxhmtxtitkeszohrcpauobwxxc4cpgbfujg@jxrinduvof6p>
+In-Reply-To: <173890403265.22054.8267826472424760232@noble.neil.brown.name>
+X-Migadu-Flow: FLOW_OUT
 
-On (25/02/07 11:56), Sergey Senozhatsky wrote:
-> struct zcomp_strm *zcomp_stream_get(struct zcomp *comp)
-> {
->         for (;;) {
->                 struct zcomp_strm *zstrm = raw_cpu_ptr(comp->stream);
+On Fri, Feb 07, 2025 at 03:53:52PM +1100, NeilBrown wrote:
+> On Fri, 07 Feb 2025, Kent Overstreet wrote:
+> > On Fri, Feb 07, 2025 at 02:36:47PM +1100, NeilBrown wrote:
+> > > No callers of kern_path_locked() or user_path_locked_at() want a
+> > > negative dentry.  So change them to return -ENOENT instead.  This
+> > > simplifies callers.
+> > > 
+> > > This results in a subtle change to bcachefs in that an ioctl will now
+> > > return -ENOENT in preference to -EXDEV.  I believe this restores the
+> > > behaviour to what it was prior to
+> > 
+> > I'm not following how the code change matches the commit message?
 > 
->                 /*
->                  * Inspired by zswap
->                  *
->                  * stream is returned with ->mutex locked which prevents
->                  * cpu_dead() from releasing this stream under us, however
->                  * there is still a race window between raw_cpu_ptr() and
->                  * mutex_lock(), during which we could have been migrated
->                  * to a CPU that has already destroyed its stream.  If so
->                  * then unlock and re-try on the current CPU.
->                  */
->                 mutex_lock(&zstrm->lock);
->                 if (likely(zstrm->buffer))
->                         return zstrm;
->                 mutex_unlock(&zstrm->lock);
->         }
-> }
+> Maybe it doesn't.  Let me checked.
 > 
-> void zcomp_stream_put(struct zcomp_strm *zstrm)
-> {
->         mutex_unlock(&zstrm->lock);
-> }
+> Two of the possible error returns from bch2_ioctl_subvolume_destroy(),
+> which implements the BCH_IOCTL_SUBVOLUME_DESTROY ioctl, are -ENOENT and
+> -EXDEV.
 > 
-> int zcomp_cpu_dead(unsigned int cpu, struct hlist_node *node)
-> {
->         struct zcomp *comp = hlist_entry(node, struct zcomp, node);
->         struct zcomp_strm *zstrm = per_cpu_ptr(comp->stream, cpu);
+> -ENOENT is returned if the path named in arg.dst_ptr cannot be found.
+> -EXDEV is returned if the filesystem on which that path exists is not
+>  the one that the ioctl is called on.
 > 
->         mutex_lock(&zstrm->lock);
->         zcomp_strm_free(comp, zstrm);
->         mutex_unlock(&zstrm->lock);
->         return 0;
-> }
+> If the target filesystem is "/foo" and the path given is "/bar/baz" and
+> /bar exists but /bar/baz does not, then user_path_locked_at or
+> user_path_at will return a negative dentry corresponding to the
+> (non-existent) name "baz" in /bar.
+> 
+> In this case the dentry exists so the filesystem on which it was found
+> can be tested, but the dentry is negative.  So both -ENOENT and -EXDEV
+> are credible return values.
+> 
+> 
+> - before bbe6a7c899e7 the -EXDEV is tested immediately after the call
+>   to user_path_att() so there is no chance that ENOENT will be returned.
+>   I cannot actually find where ENOENT could be returned ...  but that
+>   doesn't really matter now.
+> 
+> - after that patch .... again the -EXDEV test comes first. That isn't
+>   what I remember.  I must have misread it.
+> 
+> - after my patch user_path_locked_at() will return -ENOENT if the whole
+>   name cannot be found.  So now you get -ENOENT instead of -EXDEV.
+> 
+> So with my patch, ENOENT always wins, and it was never like that before.
+> Thanks for challenging me!
 
-One downside of this is that this adds mutex to the locking graph and
-limits what zram can do.  In particular we cannot do GFP_NOIO zsmalloc
-handle allocations, because NOIO still does reclaim (doesn't reach the
-block layer) which grabs some locks internally and this looks a bit
-problematics:
-	zram strm mutex -> zsmalloc GFP_NOIO -> reclaim
-vs
-	reclaim -> zram strm mutex -> zsmalloc
+How do you always manage to be unfailingly polite? :)
 
-GFP_NOWAIT allocation has lower success chances.
+> 
+> Do you think there could be a problem with changing the error returned
+> in this circumstance? i.e. if you try to destroy a subvolume with a
+> non-existant name on a different filesystem could getting -ENOENT
+> instead of -EXDEV be noticed?
+
+-EXDEV is the standard error code for "we're crossing a filesystem
+boundary and we can't or aren't supposed to be", so no, let's not change
+that.
