@@ -1,117 +1,113 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007E818DB01
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98E223C8DE;
+	Fri,  7 Feb 2025 16:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738946583; cv=none; b=MYMGfkp5UXq8OAx6TMHQY1OBcIHTNQTxrMNPMHnw+AaY8IsRmD9kGoK4SEEkUoNiWIbXKddvWM1A9LqznArmoUz+P/RexXBoyYteWvGweDdplkXgyNp96zskVVhumbyzwiCDSL18m0qbesU4+frWC2fs2sO6Tcrh0sdZoTK9gp4=
+	t=1738946648; cv=none; b=kehyrXJLcsqH5/LXMMU3UiYqrFDXLpe7q0TzJ2DDwkqwjo6FNFK+bG/51G1FEgfB52hLu/HAV9u5kIEULURDT8pmBWeCSTZmz6H72xE1t655PhFyFVt+fMZWdB+mjBvmKBln5HzHRPfyI8OaOGeQjY5Aj95330MP8rjb2BhYjpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738946583; c=relaxed/simple;
-	bh=rr0QmYvWEvOXfJauXEKOF5Ddo4waTvSOTRXAoEYEHKw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PLF3spa0hmMHR+PFlSkd5YVc1i1WNygQkK17c4DjcWq3E0KMTJ3XcCeVm76iPVOdDNZFO74DJPSt6K7zdnxlLI7SvN0CpKN55fIbt73k9taAwOAG3dubLzXmfL1wZMxBQkYCerHCuL8SWYs/az1AJCnm68Kco8F8Td9t/TGMP8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a5cGHjMZ; arc=none smtp.client-ip=209.85.128.53
+	s=arc-20240116; t=1738946648; c=relaxed/simple;
+	bh=2x8YH7UX2qAhD4V59FweuHIOMl/p+Qb21KQFd3jGD9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=itg8ycXEjBjJjAJOi2zBvlHPdRjiolIcPpdCOy5KOPa91TSl1iEN6KkOeZqoIhjP3F6dS2wwaZZxHGnu6et5Pq7n9dnoIZK/HV6OjR5GKxiuh3l/dxCkfwrinh8hzNX2GkIbICMm6mvU/IGpLgLWIV31lRQBJ7vvLcJQC+7LJLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GgL7g8p2; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a5cGHjMZ"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-436341f575fso27842395e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:43:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GgL7g8p2"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5de459b79ddso212867a12.0;
+        Fri, 07 Feb 2025 08:44:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738946580; x=1739551380; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=94n+NEgKc+2cWG3iry0+X20P0PdLxq4qF+vg5cgjhT0=;
-        b=a5cGHjMZwVvKslLibP/8ba38IaL9CgKGWUEepFC5zLtgw6qPVamvbV9J2h+Te/n3mZ
-         hOZ/UVXFEQruZU5isSF4JbSL/+nw8a61T5iwHUd3MUFxqHAXWMUEMP9fgpum6XTWLU35
-         q9CNTN0FYSaLE9AxKS9mG8BT6j54hmOAB/yRuE/SXF7nZmpTuBKMg69XjD0xRsL4QzNy
-         Gv8Q/jYqyv9o3LNB7XDRg287tentClDsHisc40cnsZ6w/H1/vPSiW/efl9m8obNlv9Ea
-         cUJL9RUwN3JOOAiFJ7/rxRhPHwtVXv4pRSHm+F61ivq+5v7cJYx2Ctx/IOJT3V9Ks/oL
-         lDGw==
+        d=gmail.com; s=20230601; t=1738946645; x=1739551445; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eYt9zEq2uTN42PpE2KerymI/xM/Tffg4zFTM6kV6KmM=;
+        b=GgL7g8p27qZZkUQfa38U5vVPfeNfqw7zWYIYEkmBxPa1NiEz4Nh/W2kOYjbx+mekBh
+         /LNS5YcdAXhWiPbOkSyZKD9jFmvnnnVqilVm/b0hBMwuBClVvu6Rxd1jAyYIjvErU/6S
+         CH7PBP/zRot8Z7psU+zvbCopzD9j0gdyWNuDqT0huSVo0dlewGerH6vtva5XhXQ7ZTvZ
+         m2u1cvEO7tcJj+itMctbDbUZMfuVVsr9grVbqsLECiKzYGc5i7uHZZ0NJOVCfCn6HHrf
+         oZFry6vKyN2W8ho56wzdLwQamwE+Kq2BGWBtRSuQK/1CXmEL0x9RQ4tpKsWmWkA7yn5L
+         rERQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738946580; x=1739551380;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=94n+NEgKc+2cWG3iry0+X20P0PdLxq4qF+vg5cgjhT0=;
-        b=D2BhRkbmF2JAJ1iKQgnGL+MK2yY/aJpqTl/bjbgbF7LTOG1D/qirDxHM4OxsWHEGTM
-         FlOBUFo1m5gVCPTin70QU/mTx/EUowBLh1K7Vja6/xUsGKAE3F5SlBZug1+CvUvvx15T
-         ivPrWWJy0izeW25Cl6brindAxiw/ZDlDZHzbynPSkVE+Ww/WLfI+WnrsNk92I4TL0KxC
-         y4ACTpXthuawbua+jooJWYSHlD5Ld9quqjFrMAop+Uc0UEFfCQH+PURDK84twUarT8Vl
-         93ms+PkEw9s1jtaUb9uabIs/OjxvTtqOhI63DabonECGmlPc4wcPAKN48LkHjolYBbsk
-         gxdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ8BXaitUXgSjilcMi6CBZKU43DBIzVuY1SACHjswG7u3+W5BxedG5v7yizx0b4OB0nzyDsT2h8HM8Dlo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynDWZl5pncv28n+n8ppqG1Ktzui9vUra1J9sZOV+BukPpFjVc+
-	J0wuysI+gtWs0CSQVTC6OIG+vfbJBCowDJohPrU+dn+p+lfmHMTT
-X-Gm-Gg: ASbGncvplKhhXfDmUzpVwItQA708SLZN3BxUXFUx8GwNWp+MtcHDqL6njBfvppWZb3N
-	UPvZJtVA0kYWrIusTGNswhhBuLP5W0dzP7r35Tb8Ucl6C9uy8jXosx1cFw28G4JYfdgV+l4mOMB
-	4BmaoFDI2/N7afobfYbi+kA/CKOeeMRQPPbAR6Fa0X2GEEeCmPDTx99CfzuEN0I7XwThmJqevVW
-	1Un3OCHfcM49opplbKQv6VjNIxkVQxCsMbbnF8Nn2hJb1Au26Rkh/0gMZPwkjUOTZevhkbtG+r4
-	4giQ0vft7LrRarax
-X-Google-Smtp-Source: AGHT+IHNhdm8c/BnROBfa2eHYtjKUZM/v7sCi7EcfywJOh+0XskgQ2qUwxdeFBqrvcawI+IYSek5bA==
-X-Received: by 2002:a05:600c:1c1c:b0:434:a1d3:a321 with SMTP id 5b1f17b1804b1-4392497e6d5mr46165605e9.3.1738946580006;
-        Fri, 07 Feb 2025 08:43:00 -0800 (PST)
-Received: from qasdev.Home ([2a02:c7c:6696:8300:92bc:4d3e:76a7:a3cd])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390db10b2fsm94615785e9.33.2025.02.07.08.42.59
+        d=1e100.net; s=20230601; t=1738946645; x=1739551445;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eYt9zEq2uTN42PpE2KerymI/xM/Tffg4zFTM6kV6KmM=;
+        b=wqFvJlrAFr6sEtPfUIa9WOvkXZi35TwMLvw3/fA3bpgPSd6q2+CLPHM05/GgGx8FNn
+         HJag3mmgT6yibfzH2e4grqqwwM/yzFQZ3mx16jw4vkcAaByPA8iBXz9bH9/zqyEwWD2E
+         NIWaUq1tVhSTScUAnF6uqmYMvfokP4pa629+8QcsoKTO7BfS+scrEUMQ/camfsoi+aTO
+         ld4ZEQ22LCibjbyxo9emsKAvgL4zMFY38oaqfnzfqot4g4tEhcoORliIfv2nMU3/EDl2
+         oowE7s54UF99xJ09Frum/2i1qVEYMoeeLaJWmuQVFBeYx8sGUbudWxJ+57RESs/fkXA9
+         Xp7A==
+X-Forwarded-Encrypted: i=1; AJvYcCV/CWWrrComW3oTYhZGK/UBZKryt12fX47/e4a65VBJlrte+abtwjb1qZCjLvOh1EMJ/MbdiLMfArdterg=@vger.kernel.org, AJvYcCXwBDz6AX+A7mxWG6rK6u2XeEnJSoQxsKenXQpP1s4VkyWFZnN3gg72pEphXtFQx/ISagDZbmwI@vger.kernel.org
+X-Gm-Message-State: AOJu0YyC4zFQFC1GpW3qen2qUtZwc9+oaSWgAWcF/ZGno9CInOzwuaWp
+	u3K4YQy0+AKYR0l8U+G6OrjQDe6y0PARPl+6wJDKakaSVp8cgWta
+X-Gm-Gg: ASbGncsxxrF56eMIE9ChrumZmtC8FbGYieVEKhAKrVGN12+/pVDrWzV7JBV1hlr6oRn
+	Wuik30JRUJpSNXuU82P2H9gxlEYGOB5kZcnu5jWohzzK9IDCh4Y2kbi8i6HDHo8QdhH88KxgpRS
+	+p00zs9cynfDuxF6t2RSu6WQYniagMGbU5dvCp4d0X6rXjg0srC73/Puqg0a3ArbFNPhD85mQ4i
+	YIUC7yCTghISCmTHjAmp44m8bVPv38BkR2qZ4Xf87bqKzKIDUCXhY3T9lIStYtsR1ykXtsnnSJJ
+	C/I=
+X-Google-Smtp-Source: AGHT+IEGw2Il/V7x/MJTsaTutvOMVEPAejMjGCruncfxQtoi6CZFpQMmX5c2XSv6GXZocDlpfjv4pA==
+X-Received: by 2002:a05:6402:34c8:b0:5dc:882f:74b1 with SMTP id 4fb4d7f45d1cf-5de45046dd9mr1634028a12.3.1738946644941;
+        Fri, 07 Feb 2025 08:44:04 -0800 (PST)
+Received: from skbuf ([86.127.124.81])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcf1b85a4dsm2807030a12.47.2025.02.07.08.44.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 08:42:59 -0800 (PST)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: dave.hansen@linux.intel.com,
-	luto@kernel.org,
-	peterz@infradead.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	hpa@zytor.com
-Cc: x86@kernel.org,
+        Fri, 07 Feb 2025 08:44:04 -0800 (PST)
+Date: Fri, 7 Feb 2025 18:44:00 +0200
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Kyle Hendry <kylehendrydev@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/mm: Replace manual bounding with clamp()
-Date: Fri,  7 Feb 2025 16:42:18 +0000
-Message-Id: <20250207164218.8247-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+Subject: Re: [PATCH 0/4] net: dsa: b53: Enable internal GPHY on BCM63268
+Message-ID: <20250207164400.x2fobtcblr7g3dil@skbuf>
+References: <20250206043055.177004-1-kylehendrydev@gmail.com>
+ <1317d50b-8302-4936-b56c-7a9f5b3970b9@broadcom.com>
+ <9bd9c1e4-2401-46bd-937f-996e97d750c5@lunn.ch>
+ <a804e0a4-2275-41c3-be3b-7dd79c2418cd@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a804e0a4-2275-41c3-be3b-7dd79c2418cd@gmail.com>
 
-Rather than manually bounding gap between gap_min and gap_max,
-use the clamp() macro to make the code more concise.
+On Thu, Feb 06, 2025 at 05:41:19PM -0800, Kyle Hendry wrote:
+> On 2025-02-06 12:17, Andrew Lunn wrote:
+> > On Thu, Feb 06, 2025 at 10:15:50AM -0800, Florian Fainelli wrote:
+> > > Hi Kyle,
+> > > 
+> > > On 2/5/25 20:30, Kyle Hendry wrote:
+> > > > Some BCM63268 bootloaders do not enable the internal PHYs by default.
+> > > > This patch series adds functionality for the switch driver to
+> > > > configure the gigabit ethernet PHY.
+> > > > 
+> > > > Signed-off-by: Kyle Hendry <kylehendrydev@gmail.com>
+> > > So the register address you are manipulating logically belongs in the GPIO
+> > > block (GPIO_GPHY_CTRL) which has become quite a bit of a sundry here. I
+> > > don't have a strong objection about the approach picked up here but we will
+> > > need a Device Tree binding update describing the second (and optional)
+> > > register range.
+> > Despite this being internal, is this actually a GPIO? Should it be
+> > modelled as a GPIO line connected to a reset input on the PHY? It
+> > would then nicely fit in the existing phylib handling of a PHY with a
+> > GPIO reset line?
+> > 
+> > 	Andrew
+> The main reason I took this approach is because a SF2 register has
+> similar bits and I wanted to be consistent with that driver. If it
+> makes more sense to treat these bits as GPIOs/clocks/resets then it
+> would make the implementation simpler.
 
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
----
- arch/x86/mm/mmap.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/arch/x86/mm/mmap.c b/arch/x86/mm/mmap.c
-index b8a6ffffb451..5ed2109211da 100644
---- a/arch/x86/mm/mmap.c
-+++ b/arch/x86/mm/mmap.c
-@@ -84,7 +84,6 @@ static unsigned long mmap_base(unsigned long rnd, unsigned long task_size,
- {
- 	unsigned long gap = rlim_stack->rlim_cur;
- 	unsigned long pad = stack_maxrandom_size(task_size) + stack_guard_gap;
--	unsigned long gap_min, gap_max;
- 
- 	/* Values close to RLIM_INFINITY can overflow. */
- 	if (gap + pad > gap)
-@@ -94,13 +93,7 @@ static unsigned long mmap_base(unsigned long rnd, unsigned long task_size,
- 	 * Top of mmap area (just below the process stack).
- 	 * Leave an at least ~128 MB hole with possible stack randomization.
- 	 */
--	gap_min = SIZE_128M;
--	gap_max = (task_size / 6) * 5;
--
--	if (gap < gap_min)
--		gap = gap_min;
--	else if (gap > gap_max)
--		gap = gap_max;
-+	gap = clamp(gap, SIZE_128M, (task_size / 6) * 5);
- 
- 	return PAGE_ALIGN(task_size - gap - rnd);
- }
--- 
-2.39.5
-
+This has not always been clear, but we prefer handling components
+unrelated to Ethernet switching outside of DSA, if at all possible.
