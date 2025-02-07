@@ -1,150 +1,191 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B59A199254
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078DA2417F5
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738916048; cv=none; b=hxuJcLuE/iG83JN4sLH5UX/Tnx5i0hNAJ1GpnJpltNYVnJxkYbck3DX5b4SnG12qB9S+DTelYBxr+CkIpcZF9mg87vSdACWEmTWx63cuMsPguf4v2s93WXvpCduz/eM5awu0rxWE7KDyTIHIPxJVFUT5USTROuyca7Z34yg+4to=
+	t=1738916203; cv=none; b=XfdmB+HCBE1SwW2LoJmVhhycsc/RxEy9ySdbk+7/bMnPF5TnPIwQk1ePjdvQoJxWjc+EtHRCUpT3Q5lVtUG0e1UHD83iJV/S/72ondW1KTkAUIne5I1xaeHmR7LChMSB7XPgvriAdMULI72SbQ7+/raMWBkPmXd5d3cbR21ZM14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738916048; c=relaxed/simple;
-	bh=h7ENOft2SY09K8gYYNgwcT/3gUzWbpo8/Oe79D/1UmY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qLUbNrWSxMlVM6N82u8wyzbQRieFs/TlKdrq6kLns2FLqbRLQX0kG3W08kbAK/XTi+HgppZazIcsD0Ctd+enPLrW7iRvo4/06uRHMKgCopOa704Mu7lTBSmKHAGQzjG/NfwCCs6fGyPLEEHqxVXTeIkd6XtYUl1fCefJwAjQILE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RLObjaHV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738916203; c=relaxed/simple;
+	bh=fLb9khQwGE8+zL8151VSKfNXsibt5HIsk7Aq5cONrsE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lk5T/MWpPK5dJH+VkkaTMaBRxiMyrHQuKoAuybFM3R4Uh3fGDX3EwEaCWa8pRo1v495OUqKdBahk9ZejWAZnLfNTkLH3mHLpV0zN7wkHNpNtSE08N3sIL4UyqNC5979XwD7cFsbSfvMtoIxjd/iM5TunF99Mz0jlIXCHYhuKGvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mdOrCQ82; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RLObjaHV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738916044;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B+vuW6U48iDvPQRM7yyRLxHLzZYL+ucqowEQ4SiSdz8=;
-	b=RLObjaHVZXgmnlqXvHFSYeXW3fIJpIHP8nfKXaDYHruHG0Hjerp037paB9BIqSyyiJ9/iE
-	Mj+wY58WqxkBjJhK/HKQqQKPbYH/EE/Ev7+E4XBL1ayhSAduE8ayvKKYvtC8fgqWDq49UF
-	8xQFwtAq2rn8solJZG9EZ9e5NqXxPV8=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-632-yjIuPE0UO8umdut7PvOqxw-1; Fri, 07 Feb 2025 03:14:03 -0500
-X-MC-Unique: yjIuPE0UO8umdut7PvOqxw-1
-X-Mimecast-MFC-AGG-ID: yjIuPE0UO8umdut7PvOqxw
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-21f49f0bd8fso16401835ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 00:14:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mdOrCQ82"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-307e4e72ef3so7087611fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 00:16:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738916200; x=1739521000; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=LGw4nnlMoBqh1tMqxVCn4U2ppLWRUSnglhWch/zqRJg=;
+        b=mdOrCQ82Ks4n5yAsVYMtAH9mG+XDV0/B6MU982WWghlOi3yjBlbvAoeCQKjHh7t5jw
+         HrqtaeCk9w2I6xCxTo6/BxzkIJ8IB5/4eLiGarMVy0rkBXzlbsrhFEGqvMU/p49vmJwh
+         VeNNthA3T0cnT+Yagiu43j3NihTRgS+LEv3PaopgOrEFdTb3VJj7hDVyNcvAIpEt8ftL
+         fW6oK1JxcC2zBNBCmKdvSD3oT9yE7vTFa1kaQHj5HPKKrd4u49isz9N4Loa7RYXgUjoi
+         N//jkqzb2Htp0klHsjVDR3Rn5/kJKUGgxx/zLPCopgEhxzpw9E7BVfhOnzK88V21zn5/
+         n9Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738916042; x=1739520842;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B+vuW6U48iDvPQRM7yyRLxHLzZYL+ucqowEQ4SiSdz8=;
-        b=xDc73f7NePIXQnaVGPxxCKq4xGn5+RCTCF/jDoALliRgwlJ5OTSOXGnGXDyfsiiDZ0
-         150dPzq9yaTZLb1DKXoyVihxbriPz/ATaA+u9i8Eb9EHCDdDIbjP0fd597tED/oceS+r
-         1qAbYaknJmk0jlFD8pLhSnZSExrPwmD9XsFi+soymSLzm8fnbJ64vWR+e9O+ZyjI1Mii
-         38nfYhQE/TSfVO3luGkAFczWBgieMLqcj8Wc+MZEiO9iuEiirzzFfbcvoKeIOD5yy5/e
-         YtF0VbDD6vYQIqYFlZtr7BvPlz+uqSxlUmlDp6DbdvaVy+wUbK7ksKJdUGGTPu/ZwzA+
-         uS4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXilIH2t0YrEHNG1b1cCqddfeZT9ZXORlfa7+l8emep4TU0tSiWXX6+D9KxRNoJL0p+wS1B3zTduHmTLc0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyZLyY5QwAeVLcT+Ogxl8geCCwEJSQmV7UphzORu5OE2L88e+X
-	OB1//q9ASwTyCVIMtFvjdN/JQpvK8lhbK4W5TA/T187s7qnWmIos81rYlhV4HQztIrPvyiBcKNP
-	WpNGVIcNx4amflAt5nwcxSHmzZ8rx7plhShoW/ti1fHgTI7E6i57Zqs2TrEKI7g==
-X-Gm-Gg: ASbGncuRw+38f08IeHwNqymr6WxZBDcWQESEjiE7ihZdwXTJlFFnRpjnCl5op2/7F/A
-	CYLK7VLAAOj+oDYDcFP54khuob6YDnbFBHAwMlerRu0rlzCt2w3BS32ov5kOnkZqr7/iUlU1Nud
-	sx1Zw6DA0cvYEqrOKAtwHSrS/ejUHh6dZV6kRpBbv8UHSXJoQdDJFdmicnZyq5OUXGP2W7PIzsX
-	uGk5tEr41vHvHaTtmu1cHm61WMC94P/uKgJ9zG6rWcRNt9qGYdjBUSsdQDzHn1vXVtFeiUo
-X-Received: by 2002:a17:903:2309:b0:215:a04a:89d5 with SMTP id d9443c01a7336-21f4e1cf038mr40201335ad.2.1738916042446;
-        Fri, 07 Feb 2025 00:14:02 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEgk9M0daWYVa2Ek7u8oS/CFLYtRBIoNw24mfM3TS73uCeiCwSamNzyIev1riImUKcHHz726g==
-X-Received: by 2002:a17:903:2309:b0:215:a04a:89d5 with SMTP id d9443c01a7336-21f4e1cf038mr40201145ad.2.1738916042195;
-        Fri, 07 Feb 2025 00:14:02 -0800 (PST)
-Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d8bdsm24540065ad.151.2025.02.07.00.14.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 00:14:01 -0800 (PST)
-From: Coiby Xu <coxu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	=?UTF-8?q?Daniel=20P=20=2E=20Berrang=C3=A9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Pingfan Liu <kernelfans@gmail.com>,
-	Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v8 7/7] x86/crash: make the page that stores the dm crypt keys inaccessible
-Date: Fri,  7 Feb 2025 16:13:58 +0800
-Message-ID: <20250207081358.129794-1-coxu@redhat.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250207080818.129165-1-coxu@redhat.com>
-References: <20250207080818.129165-1-coxu@redhat.com>
+        d=1e100.net; s=20230601; t=1738916200; x=1739521000;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LGw4nnlMoBqh1tMqxVCn4U2ppLWRUSnglhWch/zqRJg=;
+        b=Iyef6C1GRNfIdIjGSfmw0v766u2AUeLHWNT0vN6+JBd18u66LWJdV/nmd+WQYt6ZJA
+         0t9o471QsFe9gfCUXRrdt/+FRDajL5IvrPt4F5NE2C4BpQ2tyJ3ZgqZ4lQ3sUKhpJ3Kz
+         oFNKhjC0egAuAKaCGSWWKXjvwUQ6A+QsKSsaKdGbIZLwuVUopAcahHfh2yG1yDAp5tUk
+         30GS0rBCSaKzklAYIMEpf1LfyeJ7Hp7rDBPramTLFO/DPBuvg+lY4ZRnBqNU66MAwPQ0
+         CiAhYmoYGUXAOSp1o8kLLQNoMPpD1HJHr6Np35NhEcZhgfv/4VH+OlPn/jxF5wMf2DVl
+         o1Gg==
+X-Forwarded-Encrypted: i=1; AJvYcCV45J1Z296fmDwVFK56jbYqo396CJNQ4C5zlS7m865ApQNbx8PCQPrJjHF/hvUhI/Ht1FdWXbibDlXC69M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyx9woEmCTPCgNfKjBR01n8I/m12/QX+gv3ulQrn65lpd5tyoRF
+	RYh5uFQxo2xFHVJg0sm39PAecvTt2WPk14ciOecGxVaVIk8TxRtVEKQ6fZvrySUViNT5Lu8UBXc
+	yW0PHUkJ5MoOsZJ+ZaO3M2AFmukbdCOxlPVt0
+X-Gm-Gg: ASbGnctVIzw88oLgLRisaAoK9Jip6+9MDqrOqPjS/pvzL3KKdew4wJbUhULenK3SIlb
+	fZ2Wh6HWTPM9ZitefogBbNuY8xBOVZAkvpqb4oaAdtgugWHfDgZpVErpujpdq/s3mB8KOaGK8+6
+	rGRxx2E0ESvLUyvdjzblfUcthEQsg=
+X-Google-Smtp-Source: AGHT+IE0UV5pVv79c7iEWeIcAn71d1qGowlugGz2XOcYzcozNgATdkOwflSlk0EFyY+0plEBfab0/tOZDdjTit22ut4=
+X-Received: by 2002:a2e:b8c3:0:b0:307:8fe0:f336 with SMTP id
+ 38308e7fff4ca-307e580c4b5mr5861911fa.15.1738916199866; Fri, 07 Feb 2025
+ 00:16:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1738772628.git.dvyukov@google.com> <87ldujkjsi.fsf@linux.intel.com>
+In-Reply-To: <87ldujkjsi.fsf@linux.intel.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Fri, 7 Feb 2025 09:16:28 +0100
+X-Gm-Features: AWEUYZnNemwiE1h3hWO3Y647F4u1Ba9x8XM_uOnfP5YXQZcfHD4UyBOc8rdzRYg
+Message-ID: <CACT4Y+awFXT2j+HMeAy2RKnoBzb--+heFzJUoBZWp9iJevy1Dw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/8] perf report: Add latency and parallelism profiling
+To: Andi Kleen <ak@linux.intel.com>
+Cc: namhyung@kernel.org, irogers@google.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-This adds an addition layer of protection for the saved copy of dm
-crypt key. Trying to access the saved copy will cause page fault.
+On Thu, 6 Feb 2025 at 19:30, Andi Kleen <ak@linux.intel.com> wrote:
+>
+> Dmitry Vyukov <dvyukov@google.com> writes:
+>
+> > There are two notions of time: wall-clock time and CPU time.
+> > For a single-threaded program, or a program running on a single-core
+> > machine, these notions are the same. However, for a multi-threaded/
+> > multi-process program running on a multi-core machine, these notions are
+> > significantly different. Each second of wall-clock time we have
+> > number-of-cores seconds of CPU time.
+>
+> I'm curious how does this interact with the time / --time-quantum sort key?
+>
+> I assume it just works, but might be worth checking.
 
-Suggested-by: Pingfan Liu <kernelfans@gmail.com>
-Signed-off-by: Coiby Xu <coxu@redhat.com>
----
- arch/x86/kernel/machine_kexec_64.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Yes, it seems to just work as one would assume. Things just combine as intended.
 
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index a68f5a0a9f37..f615fcb6d35d 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -598,13 +598,35 @@ static void kexec_mark_crashkres(bool protect)
- 	kexec_mark_range(control, crashk_res.end, protect);
- }
- 
-+/* make the memory storing dm crypt keys in/accessible */
-+static void kexec_mark_dm_crypt_keys(bool protect)
-+{
-+	unsigned long start_paddr, end_paddr;
-+	unsigned int nr_pages;
-+
-+	if (kexec_crash_image->dm_crypt_keys_addr) {
-+		start_paddr = kexec_crash_image->dm_crypt_keys_addr;
-+		end_paddr = start_paddr + kexec_crash_image->dm_crypt_keys_sz - 1;
-+		nr_pages = (PAGE_ALIGN(end_paddr) - PAGE_ALIGN_DOWN(start_paddr))/PAGE_SIZE;
-+		if (protect)
-+			set_memory_np((unsigned long)phys_to_virt(start_paddr), nr_pages);
-+		else
-+			__set_memory_prot(
-+				(unsigned long)phys_to_virt(start_paddr),
-+				nr_pages,
-+				__pgprot(_PAGE_PRESENT | _PAGE_NX | _PAGE_RW));
-+	}
-+}
-+
- void arch_kexec_protect_crashkres(void)
- {
- 	kexec_mark_crashkres(true);
-+	kexec_mark_dm_crypt_keys(true);
- }
- 
- void arch_kexec_unprotect_crashkres(void)
- {
-+	kexec_mark_dm_crypt_keys(false);
- 	kexec_mark_crashkres(false);
- }
- #endif
--- 
-2.48.1
+> It was intended to address some of these issues too.
 
+What issue? Latency profiling? I wonder what approach you had in mind?
+
+> > Optimizing CPU overhead is useful to improve 'throughput', while
+> > optimizing wall-clock overhead is useful to improve 'latency'.
+> > These profiles are complementary and are not interchangeable.
+> > Examples of where latency profile is needed:
+> >  - optimzing build latency
+> >  - optimizing server request latency
+> >  - optimizing ML training/inference latency
+> >  - optimizing running time of any command line program
+> >
+> > CPU profile is useless for these use cases at best (if a user understands
+> > the difference), or misleading at worst (if a user tries to use a wrong
+> > profile for a job).
+>
+> I would agree in the general case, but not if the time sort key
+> is chosen with a suitable quantum. You can see how the parallelism
+> changes over time then which is often a good enough proxy.
+
+That's an interesting feature, but I don't see how it helps with latency.
+
+How do you infer parallelism for slices? It looks like it just gives
+the same wrong CPU profile, but multiple times (for each slice).
+
+Also (1) user still needs to understand the default profile is wrong,
+(2) be proficient with perf features, (3) manually aggregate lots of
+data (time slicing increases amount of data in the profile X times),
+(4) deal with inaccuracy caused by edge effects (e.g. slice is 1s, but
+program phase changed mid-second).
+
+But it does open some interesting capabilities in combination with a
+latency profile, e.g. the following shows how parallelism was changing
+over time.
+
+for perf make profile:
+
+perf report -F time,latency,parallelism --time-quantum=1s
+
+# Time           Latency  Parallelism
+# ............  ........  ...........
+#
+  1795957.0000     1.42%            1
+  1795957.0000     0.07%            2
+  1795957.0000     0.01%            3
+  1795957.0000     0.00%            4
+
+  1795958.0000     4.82%            1
+  1795958.0000     0.11%            2
+  1795958.0000     0.00%            3
+...
+  1795964.0000     1.76%            2
+  1795964.0000     0.58%            4
+  1795964.0000     0.45%            1
+  1795964.0000     0.23%           10
+  1795964.0000     0.21%            6
+
+/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\
+
+Here it finally started running on more than 1 CPU.
+
+
+
+
+
+
+> > We still default to the CPU profile, so it's up to users to learn
+> > about the second profiling mode and use it when appropriate.
+>
+> You should add it to tips.txt then
+>
+> >  .../callchain-overhead-calculation.txt        |   5 +-
+> >  .../cpu-and-latency-overheads.txt             |  85 ++++++++++++++
+> >  tools/perf/Documentation/perf-record.txt      |   4 +
+> >  tools/perf/Documentation/perf-report.txt      |  54 ++++++---
+> >  tools/perf/Documentation/tips.txt             |   3 +
+> >  tools/perf/builtin-record.c                   |  20 ++++
+> >  tools/perf/builtin-report.c                   |  39 +++++++
+> >  tools/perf/ui/browsers/hists.c                |  27 +++--
+> >  tools/perf/ui/hist.c                          | 104 ++++++++++++------
+> >  tools/perf/util/addr_location.c               |   1 +
+> >  tools/perf/util/addr_location.h               |   7 +-
+> >  tools/perf/util/event.c                       |  11 ++
+> >  tools/perf/util/events_stats.h                |   2 +
+> >  tools/perf/util/hist.c                        |  90 ++++++++++++---
+> >  tools/perf/util/hist.h                        |  32 +++++-
+> >  tools/perf/util/machine.c                     |   7 ++
+> >  tools/perf/util/machine.h                     |   6 +
+> >  tools/perf/util/sample.h                      |   2 +-
+> >  tools/perf/util/session.c                     |  12 ++
+> >  tools/perf/util/session.h                     |   1 +
+> >  tools/perf/util/sort.c                        |  69 +++++++++++-
+> >  tools/perf/util/sort.h                        |   3 +-
+> >  tools/perf/util/symbol.c                      |  34 ++++++
+> >  tools/perf/util/symbol_conf.h                 |   8 +-
+>
+> We traditionally didn't do it, but in general test coverage
+> of perf report is too low, so I would recommend to add some simple
+> test case in the perf test scripts.
+>
+> -Andi
