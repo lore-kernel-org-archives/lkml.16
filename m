@@ -1,275 +1,102 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from poldevia.fieldses.org (poldevia.fieldses.org [172.234.196.227])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221EC3398B
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFB11F7914;
+	Fri,  7 Feb 2025 14:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=172.234.196.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738937212; cv=none; b=oCztMEI2+afB7NBdgfQ/iS2ZJj4Joee8MIhDz0ocGLLnTksUP2tBYDsNZHrUFR3O1VbxUW7CCMDmHsT4cAg+TxKbIv586OOUq103rHjRULFs+Q4yAls1gXZrd51SYJbv/jKuZVzvr8wfm5bO5Qes+kII6r1GHVR4rLWmo90JW3c=
+	t=1738937249; cv=none; b=jffh7vGq9Tgviza0rEnPq9iVgZzlHcIwTXRX2e+/O+Pnw3ZdDbyXISGz47Iv9+J+3W5YLIHSVjO0B1nJth3nWGv4fg8bnI33jrQc/g/LxGCbjJj7JMntifNbMMJRqRl5FS2XXtAZXMSas8C0Z7fMwsCaHOC42FI9ga8Uml2TWWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738937212; c=relaxed/simple;
-	bh=/+atRYGkzWkrF11+aBXVPjX2iSt27l26vrl53ByHtpY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VlkMxtIudCP8AuMRu84enWwwiPpqGYGG7merad/C6mlSkwB6Svug+ssxdF2NfUpe4K75d/eQYzvKjgMPh1QmI74V/Un5rTqRPxBqmHWiMzQdEJFT9nWzYxx6jcEDdbVq0x/zTaIyJ1iXSSrRuXKxmhzG8ur3N3nIUM5egoaPOzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=yd5rOPDA; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1738937249; c=relaxed/simple;
+	bh=+IAAGwClnERFLDactmwuM/xrTWIyOyX4Kev7UB83HsI=;
+	h=Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To:From; b=kPZvGiOjBVwghca4rnpINMfO4mlnV19TzfLwi83iFGWStKgFzWt+tQkoaDQ2MvXSdipA514FRIlY8Ylmq2R1RB+QMWSLguDk2G7ViwJM+vAQ8SzWsoPUYhWXn4B9hzXRG8KD6L+igxvrB6MP13VZ7a9irOrW3aeXKuUWktqVos4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fieldses.org; spf=pass smtp.mailfrom=fieldses.org; dkim=pass (1024-bit key) header.d=fieldses.org header.i=@fieldses.org header.b=am9iFQxZ; arc=none smtp.client-ip=172.234.196.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fieldses.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fieldses.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="yd5rOPDA"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-436ce2ab251so14137585e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:06:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738937208; x=1739542008; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bi8V3nc67FAR7arKY4Dyfn3J3o7Kox2zEvzSP3nrKFA=;
-        b=yd5rOPDAWrKTjXx43qDEndgKZDX2YTpGEUInhURzFrXxvr29Km82uJ7Ijqk6EjjwTE
-         VBZhvM5xkRq7icKW80apNyrqoWQX3HmJNwe9Ve5uKSiIK0B2a3g4NfWbJB8lqp41ex0h
-         9BZatQqtm7sZVmKndl0RT44kUitV7QGQXvKwdybk6k0M6DNj5pz+bwpRfLDWadk4LCA0
-         abjJzSbKSY2mpgC3y8Pv5ndcE+TJ1gTfbxaaq/Djvr4catvyXtDXG2yMFa3BWah7pcp0
-         0kwP1k7qs0mrDOwAvaDPquT1YWkLYcM3YMP5qoxtO8UvmNJwdewJx6p+QkTAoRcKXhYn
-         WjGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738937208; x=1739542008;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bi8V3nc67FAR7arKY4Dyfn3J3o7Kox2zEvzSP3nrKFA=;
-        b=XZF45EgiSc2ciTwkhTUzmwCq611jgkNFXJDHUxZOjqDAyk5gLQ/QOLrBloPHqVzDHA
-         UTfxrKooUqiSKRIAQclj5kMZvoEcJTgmaXx3R/QD17FXprKPVTnM/EQC70tVPuGVs1df
-         rwUgh0pXahCao07pjNzScspV85uIGqLc2uWXOAnpFhrcDx5Q17V0m0b6DjCPZYT51Gun
-         RQdX6oEg/9w23IIWV+XSZQKbSCgFr2L+mDbDqV5M2csSVAmtMZi5NN4bKVRR9fOSLU1d
-         BQHRCUwqgeBWsi/MlrnZz6VqOJ5kgutEWDg3Njv/JEmj7lNPCcNCUraSHS43gh7tW+OF
-         6EDg==
-X-Forwarded-Encrypted: i=1; AJvYcCVeArRuUmFkn6/1Be7onmEkEWrB+P9ogeeaX1PrRiQGC+NVnc6btycW2Be0ZXjHw9b0Q4JLREUbBcH/1Cs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCL3zj6PZNJ3Bd7oE+kblQzY4TyNnBTDShWIwzbMOV/5XV85vd
-	GBLvM8dmRlRLmWs4mHiGCP7i9TCOYLfs411A1MQBcMyUbcEUg4yERQrKSjDpi/w=
-X-Gm-Gg: ASbGncsTTkK8aceSPqCI7cZT5FJAkE1IgzpQuKdZgNazSohsn2zzeAZIcQ7BLacI7+9
-	Y5nkTpzTdCL20ZoF0gngltFwWeBQLH/ENv382PXkc3rBVT/sNBDW8tFX/j54+ogXkERU/gFy6qK
-	NPnuMzdrqxXwUOxp85QsqDzVlypmMGUEj5dORLG2FXJ7zZS5xjoZ3gkTm4m/uLg4qLTNACigYOi
-	2bDNvX0uVUn4md0t5iH7CPP5Ex0RoSc8F8LHWug4YvWp0zkXU9mrBX6/ZT0rUaz9mCHtdAm8VT/
-	Hk+ES516nYpE5A==
-X-Google-Smtp-Source: AGHT+IFT6StL9+cv/Mca8lE2/6nU79pNpRJLnSbz9dglzFGJiRnXiiZ+PtRCuOc05D0NEBFYZctDkw==
-X-Received: by 2002:a5d:47cc:0:b0:38a:888c:676f with SMTP id ffacd0b85a97d-38dc8ddd8e8mr2054569f8f.15.1738937208274;
-        Fri, 07 Feb 2025 06:06:48 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:ae69:c28e:8e23:dca])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dca0b4237sm2033950f8f.85.2025.02.07.06.06.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 06:06:47 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	David Lechner <dlechner@baylibre.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	stable@vger.kernel.org
-Subject: [PATCH] gpiolib: protect gpio_chip with SRCU in array_info paths in multi get/set
-Date: Fri,  7 Feb 2025 15:06:40 +0100
-Message-ID: <20250207140640.57664-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (1024-bit key) header.d=fieldses.org header.i=@fieldses.org header.b="am9iFQxZ"
+Received: by poldevia.fieldses.org (Postfix, from userid 2815)
+	id A409DFA10E; Fri, 07 Feb 2025 08:58:50 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 poldevia.fieldses.org A409DFA10E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+	s=default; t=1738936730;
+	bh=TpGFHD+NJwxSsEEuezuighN82YN15D/friuYOSoEx3g=;
+	h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+	b=am9iFQxZKKQwKjjOxJYpesovzG8lB5I8UTr25cTWDZ25z5Ygwn0sFfzwLzyXQV+mJ
+	 /ym9ni/20U+xAW3eOWbjMiDORehI7e70+ir4Awt3zuOTLvWP3wpy5VSu48bP+6eZrD
+	 ntDdfFRtTjAjCC8cvbteHf2MiNLxdFsOcaL2g3ik=
+Date: Fri, 7 Feb 2025 08:58:50 -0500
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/2] nfsd: CB_SEQUENCE error handling fixes and
+ cleanups
+Message-ID: <Z6YRmqBSZLbfvowi@poldevia.fieldses.org>
+References: <20250207-nfsd-6-14-v4-0-1aa42c407265@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207-nfsd-6-14-v4-0-1aa42c407265@kernel.org>
+From: "J. Bruce Fields" <bfields@fieldses.org>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Feb 07, 2025 at 08:45:02AM -0500, Jeff Layton wrote:
+> I think this rework makes sense, and I've run these against pynfs,
+> fstests, and nfstest, but I'm not sure how well that stresses the
+> backchannel error handling.
 
-During the locking rework in GPIOLIB, we omitted one important use-case,
-namely: setting and getting values for GPIO descriptor arrays with
-array_info present.
+Very little to none at all, unfortunately, I'd guess.
 
-This patch does two things: first it makes struct gpio_array store the
-address of the underlying GPIO device and not chip. Next: it protects
-the chip with SRCU from removal in gpiod_get_array_value_complex() and
-gpiod_set_array_value_complex().
+pynfs/nfs4.1/server41tests/st_trunking.py had some ideas for some simple
+tests, maybe that'd be one starting point.  Or maybe
+server41tests/st_delegation.py
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-David Lechner's series made me realize that we don't use SRCU to protect
-the GPIO chip in case where array_info is available in multiple get/set
-routines. This addresses it. The changes here could potentially be split
-into two separate commits but I want to easily backport it and it works
-together as well.
+--b.
 
- drivers/gpio/gpiolib.c | 48 +++++++++++++++++++++++++++++-------------
- drivers/gpio/gpiolib.h |  4 ++--
- 2 files changed, 35 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 679ed764cb14..6e630680be52 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3129,6 +3129,8 @@ static int gpiod_get_raw_value_commit(const struct gpio_desc *desc)
- static int gpio_chip_get_multiple(struct gpio_chip *gc,
- 				  unsigned long *mask, unsigned long *bits)
- {
-+	lockdep_assert_held(&gc->gpiodev->srcu);
-+
- 	if (gc->get_multiple)
- 		return gc->get_multiple(gc, mask, bits);
- 	if (gc->get) {
-@@ -3159,6 +3161,7 @@ int gpiod_get_array_value_complex(bool raw, bool can_sleep,
- 				  struct gpio_array *array_info,
- 				  unsigned long *value_bitmap)
- {
-+	struct gpio_chip *gc;
- 	int ret, i = 0;
- 
- 	/*
-@@ -3170,10 +3173,15 @@ int gpiod_get_array_value_complex(bool raw, bool can_sleep,
- 	    array_size <= array_info->size &&
- 	    (void *)array_info == desc_array + array_info->size) {
- 		if (!can_sleep)
--			WARN_ON(array_info->chip->can_sleep);
-+			WARN_ON(array_info->gdev->can_sleep);
- 
--		ret = gpio_chip_get_multiple(array_info->chip,
--					     array_info->get_mask,
-+		guard(srcu)(&array_info->gdev->srcu);
-+		gc = srcu_dereference(array_info->gdev->chip,
-+				      &array_info->gdev->srcu);
-+		if (!gc)
-+			return -ENODEV;
-+
-+		ret = gpio_chip_get_multiple(gc, array_info->get_mask,
- 					     value_bitmap);
- 		if (ret)
- 			return ret;
-@@ -3454,6 +3462,8 @@ static void gpiod_set_raw_value_commit(struct gpio_desc *desc, bool value)
- static void gpio_chip_set_multiple(struct gpio_chip *gc,
- 				   unsigned long *mask, unsigned long *bits)
- {
-+	lockdep_assert_held(&gc->gpiodev->srcu);
-+
- 	if (gc->set_multiple) {
- 		gc->set_multiple(gc, mask, bits);
- 	} else {
-@@ -3471,6 +3481,7 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
- 				  struct gpio_array *array_info,
- 				  unsigned long *value_bitmap)
- {
-+	struct gpio_chip *gc;
- 	int i = 0;
- 
- 	/*
-@@ -3482,14 +3493,19 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
- 	    array_size <= array_info->size &&
- 	    (void *)array_info == desc_array + array_info->size) {
- 		if (!can_sleep)
--			WARN_ON(array_info->chip->can_sleep);
-+			WARN_ON(array_info->gdev->can_sleep);
-+
-+		guard(srcu)(&array_info->gdev->srcu);
-+		gc = srcu_dereference(array_info->gdev->chip,
-+				      &array_info->gdev->srcu);
-+		if (!gc)
-+			return -ENODEV;
- 
- 		if (!raw && !bitmap_empty(array_info->invert_mask, array_size))
- 			bitmap_xor(value_bitmap, value_bitmap,
- 				   array_info->invert_mask, array_size);
- 
--		gpio_chip_set_multiple(array_info->chip, array_info->set_mask,
--				       value_bitmap);
-+		gpio_chip_set_multiple(gc, array_info->set_mask, value_bitmap);
- 
- 		i = find_first_zero_bit(array_info->set_mask, array_size);
- 		if (i == array_size)
-@@ -4751,8 +4767,8 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
- {
- 	struct gpio_desc *desc;
- 	struct gpio_descs *descs;
-+	struct gpio_device *gdev;
- 	struct gpio_array *array_info = NULL;
--	struct gpio_chip *gc;
- 	int count, bitmap_size;
- 	size_t descs_size;
- 
-@@ -4774,7 +4790,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
- 
- 		descs->desc[descs->ndescs] = desc;
- 
--		gc = gpiod_to_chip(desc);
-+		gdev = gpiod_to_gpio_device(desc);
- 		/*
- 		 * If pin hardware number of array member 0 is also 0, select
- 		 * its chip as a candidate for fast bitmap processing path.
-@@ -4782,8 +4798,8 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
- 		if (descs->ndescs == 0 && gpio_chip_hwgpio(desc) == 0) {
- 			struct gpio_descs *array;
- 
--			bitmap_size = BITS_TO_LONGS(gc->ngpio > count ?
--						    gc->ngpio : count);
-+			bitmap_size = BITS_TO_LONGS(gdev->ngpio > count ?
-+						    gdev->ngpio : count);
- 
- 			array = krealloc(descs, descs_size +
- 					 struct_size(array_info, invert_mask, 3 * bitmap_size),
-@@ -4803,7 +4819,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
- 
- 			array_info->desc = descs->desc;
- 			array_info->size = count;
--			array_info->chip = gc;
-+			array_info->gdev = gdev;
- 			bitmap_set(array_info->get_mask, descs->ndescs,
- 				   count - descs->ndescs);
- 			bitmap_set(array_info->set_mask, descs->ndescs,
-@@ -4816,7 +4832,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
- 			continue;
- 
- 		/* Unmark array members which don't belong to the 'fast' chip */
--		if (array_info->chip != gc) {
-+		if (array_info->gdev != gdev) {
- 			__clear_bit(descs->ndescs, array_info->get_mask);
- 			__clear_bit(descs->ndescs, array_info->set_mask);
- 		}
-@@ -4840,8 +4856,10 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
- 			}
- 		} else {
- 			/* Exclude open drain or open source from fast output */
--			if (gpiochip_line_is_open_drain(gc, descs->ndescs) ||
--			    gpiochip_line_is_open_source(gc, descs->ndescs))
-+			if (gpiochip_line_is_open_drain(gdev->chip,
-+							descs->ndescs) ||
-+			    gpiochip_line_is_open_source(gdev->chip,
-+							 descs->ndescs))
- 				__clear_bit(descs->ndescs,
- 					    array_info->set_mask);
- 			/* Identify 'fast' pins which require invertion */
-@@ -4853,7 +4871,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
- 	if (array_info)
- 		dev_dbg(dev,
- 			"GPIO array info: chip=%s, size=%d, get_mask=%lx, set_mask=%lx, invert_mask=%lx\n",
--			array_info->chip->label, array_info->size,
-+			array_info->gdev->label, array_info->size,
- 			*array_info->get_mask, *array_info->set_mask,
- 			*array_info->invert_mask);
- 	return descs;
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index 83690f72f7e5..147156ec502b 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -114,7 +114,7 @@ extern const char *const gpio_suffixes[];
-  *
-  * @desc:		Array of pointers to the GPIO descriptors
-  * @size:		Number of elements in desc
-- * @chip:		Parent GPIO chip
-+ * @gdev:		Parent GPIO device
-  * @get_mask:		Get mask used in fastpath
-  * @set_mask:		Set mask used in fastpath
-  * @invert_mask:	Invert mask used in fastpath
-@@ -126,7 +126,7 @@ extern const char *const gpio_suffixes[];
- struct gpio_array {
- 	struct gpio_desc	**desc;
- 	unsigned int		size;
--	struct gpio_chip	*chip;
-+	struct gpio_device	*gdev;
- 	unsigned long		*get_mask;
- 	unsigned long		*set_mask;
- 	unsigned long		invert_mask[];
--- 
-2.45.2
-
+> I'd like to put this into linux-next for now
+> and see if any problems arise.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> Changes in v4:
+> - Hold back on session refcounting changes for now and just send CB_SEQUENCE
+>   error handling rework.
+> - Link to v3: https://lore.kernel.org/r/20250129-nfsd-6-14-v3-0-506e71e39e6b@kernel.org
+> 
+> Changes in v3:
+> - rename cb_session_changed to nfsd4_cb_session_changed
+> - rename restart_callback to requeue_callback, and rename need_restart:
+>   label to requeue:
+> - don't increment seq_nr on -ESERVERFAULT
+> - comment cleanups
+> - drop client-side rpc patch (will send separately)
+> - Link to v2: https://lore.kernel.org/r/20250129-nfsd-6-14-v2-0-2700c92f3e44@kernel.org
+> 
+> Changes in v2:
+> - make nfsd4_session be RCU-freed
+> - change code to keep reference to session over callback RPCs
+> - rework error handling in nfsd4_cb_sequence_done()
+> - move NFSv4.0 handling out of nfsd4_cb_sequence_done()
+> - Link to v1: https://lore.kernel.org/r/20250123-nfsd-6-14-v1-0-c1137a4fa2ae@kernel.org
+> 
+> ---
+> Jeff Layton (2):
+>       nfsd: overhaul CB_SEQUENCE error handling
+>       nfsd: lift NFSv4.0 handling out of nfsd4_cb_sequence_done()
+> 
+>  fs/nfsd/nfs4callback.c | 107 ++++++++++++++++++++++++++++++-------------------
+>  1 file changed, 66 insertions(+), 41 deletions(-)
+> ---
+> base-commit: 50934b1a613cabba2b917879c3e722882b72f628
+> change-id: 20250123-nfsd-6-14-b0797e385dc0
+> 
+> Best regards,
+> -- 
+> Jeff Layton <jlayton@kernel.org>
