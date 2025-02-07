@@ -1,109 +1,207 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB1823C8CB;
-	Fri,  7 Feb 2025 19:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDB323C8CB
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 19:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738957520; cv=none; b=OtLCkBToSYpY/w8prgmg90cJFu9r+kgp9S3rDoO3lEPr++GRq+oJqzpmH75kS5n9H7Ce4EuIBjUq5LhPfDcoNArvdgvVTVeuRNE+hpKhLEw19WOlqiTs5D/ZG7mv05vxa6O3k1aPs+8tg9kMH3uWDk2H9lb2SlxSKMyxeBmt2k8=
+	t=1738957534; cv=none; b=Z54iasZWIid6patB19B58YXQhvRkZklg3sIXl8UNjqtAD+4SkIfyrWSUMredefI3XPmsVlzqX3ibEcAuw7yt1flvusmKUwiIzYVoAStDgOz9DXl5S53gDGkRp9lwNQE0o1My4M1o2gF+w6hqXqceAu7USTR1RtoDpj/Kn3f3vsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738957520; c=relaxed/simple;
-	bh=mQMp2Q4K9qMcm2adb9zu4siRw7YphIPITTmEykH+ZIs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eD2pHHrEE9gatxJX0R1/6lLV0R3twzqGgfaklhevwvvtdQYNQIerzpAcsJZPQ2QBjrPII5Yr79khlx97hkPyZJAif3dSD7734Ag4HsgqkdDcw/v3r1qpTPBHrUnR2WQYV+WrvwDdH70czwNtECvA6BHl1QDi0VMIi9JM03FGQpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JQsftHSk; arc=none smtp.client-ip=209.85.221.50
+	s=arc-20240116; t=1738957534; c=relaxed/simple;
+	bh=IjeKMSBBJD9koKjRi7MsUk+uV50uG+IpoD6V1cSt+Ik=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E0rl9TRwQxZs9xQEEGf7SscnoJsAx9uhIqqJgF1FiwswpmHCERy6UlgkDj7tzCIqXJ+xUwxwILgbQNtF8aW3LatTfynKsGW6hy0SwM6TS+FhZ8SaQhDhO9uYWJA2QuAhTih+WW2VBVxTJt000ociOgHAQq2equkIiZ0lq/namGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f123uI2W; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQsftHSk"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38dd0dc2226so339232f8f.2;
-        Fri, 07 Feb 2025 11:45:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f123uI2W"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5de51a735acso1242373a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 11:45:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738957517; x=1739562317; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/3TFXYa/aO92AWFEhX81Q70LQNPuijI5G6HSoxTBVD8=;
-        b=JQsftHSko3f8vqPK2clwP368jyer8/1T2nzIJA7o/MYW1LDYcP2NxyF4Q2EB22ncAb
-         NLHg8zwO3Mg+kBx4oI+5Dp8H3V/sjM35O0U6qVRKfG9E6O0aE8XSatGdPB5hjn9Hm6dn
-         6UPE8xyGnYMe6z/Lq2xOd3+myfZ1JegmXsNXJ+24kB97uB9EB16rLp1WHFZlMgEY1JIE
-         0QsAVM0K/1ZgoC1lxcqSS67+JJ0eqPAVwSFZVOWpVD0ks3+6qkPdcRWkQLv0sb/Zohvp
-         +GcEowEuuCk/PJ1G8ueiGHHTpcrPRea6ziQu8rDyn5CPLAv0qt9EbK3CJdIHaUwgnWYo
-         oqDw==
+        d=gmail.com; s=20230601; t=1738957531; x=1739562331; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dl+o0D2PPAJNSWAMlZvIeA5j8rLr9zSA+Ym2y6pe7mo=;
+        b=f123uI2W3/LcWpp+uh/n8+PDqAQeWRIz3TegeEXUJKqsPZEZE2nCUtGShwAoUCDTGY
+         e9kbgDJX479a6WXKI6KJA8G7mAS0favuzUiOhOULv8wBqWCgv7Z8bHFRjXTHpniVx6KV
+         mlH36tet74ZPib/LbiW/Yfg/4refvfsij/qvWVkdiTUctTsgE0b27yOSo7ka/96dJG87
+         Q0hfWKYJw1iqrnEGTVAjTpYBKy0xH8mDCaquNVrWtjg/gSOYQvBEVHqooEZHdMBDgG4w
+         XNQjDc/RU2toGEQT+q56SuSw+edp4xFF0XV4hib4t3abvmiBcsvMddY6iifH3zpQzDrU
+         JO+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738957517; x=1739562317;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/3TFXYa/aO92AWFEhX81Q70LQNPuijI5G6HSoxTBVD8=;
-        b=eBXdzZYDtBld9SERe2WZs/uhVg+7VGGDb9dhOYCvpfm0g3Y9IXB51thAc0oHZCDY2O
-         izVmsH4yEG8B+a/s24SYqL1BUP97pyd7intAxnpxBtodIGjkEzpmONlMRXdOVCQMBWKw
-         BBvjmBhjM+3BGQCFPwIByAPghf2ccOytgT361pq1mt4HNzozAt6hkNuym9VW80+y1AhW
-         CNWqnn8O03ju4NF7lI6mepa1t2tykVLsgiUzjtV/FJRdYuXrBONwyRgvbjhet/GwCKsc
-         FD9EXCceZUKv9a80wqdrmK62wgrVdRAFDO6aHZBhw4T4PPd90GLhaWP1MZP1qU3FM3Nz
-         8LXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUrVJ29rC5P+6gq7wgvDDZy7gT+4sfDVhTpOYNuI6zt4cznrLC3RBYjIX/CSpHhFixbaHmKi+9Rto0=@vger.kernel.org, AJvYcCVZTEkIKS0RM7USBfAgXAmvtVBtAtdnD9GiC7mPVgeidctiK52GFD/XgtlwQUrbX0r2kvFTI1lJTrm5xOo2@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyXhndPHe+qofRzoH28OdJULroO8CBZEtgjCodQOV+lQT4PFGf
-	1Ro7AkJaaoAUQOcQPSI59zXeNlhcevOFq2UJsRTKOekX3T74nex99WAXUScV
-X-Gm-Gg: ASbGnctfImDK1FHF1fE09u88eFXYsIyTxIedG6YJ0QH16vg9/aeTyJbIFH+0QDpjVVS
-	oMhlNTz/yMjg0c/gkOO4pfVHBlcii7+GQG2bIuU7EUPxjoi5fc0TPwKgGehWq8jxbXe5+266Ocp
-	NlGXSreO5bG/t18ya/PcovZ2+ixzYPGtmSfZ61WDQSk532XwFUFIXTgGJNapkquJcT0syeQIGhe
-	7MxDNoVZYzyyH7o2FwWwNX1YGWkhJNwQNstLjNjNU6V2GDYUi9VyzDI8PGYJF/Iuubjcp60zZUw
-	Bzugro50BVViddo+fLi/gfxjX2AJ+iKELMgxe5Gk80L6xQ/FqiGlmSgb5ek21g==
-X-Google-Smtp-Source: AGHT+IHfVO3TmcFE6wwThceqlTu7GIBKI3hiMo4CU69DJ4VtkgliD/l6s9beMA7RTDnWO94SX6B5rg==
-X-Received: by 2002:a5d:64ad:0:b0:38d:c5c7:4f07 with SMTP id ffacd0b85a97d-38dc8dd07bemr4034237f8f.16.1738957516438;
-        Fri, 07 Feb 2025 11:45:16 -0800 (PST)
-Received: from ?IPv6:2a02:168:6806:0:865e:8fbc:80e7:2e03? ([2a02:168:6806:0:865e:8fbc:80e7:2e03])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dfd7d7asm63183025e9.36.2025.02.07.11.45.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 11:45:15 -0800 (PST)
-Message-ID: <cb8175c2755557dd6532ee71d1064241a1412ce2.camel@gmail.com>
-Subject: Re: [PATCH v2] ata: libahci_platform: support non-consecutive port
- numbers
-From: Klaus Kudielka <klaus.kudielka@gmail.com>
-To: Josua Mayer <josua@solid-run.com>, Damien Le Moal <dlemoal@kernel.org>, 
- Niklas Cassel <cassel@kernel.org>, Hans de Goede <hdegoede@redhat.com>
-Cc: Jon Nettleton <jon@solid-run.com>, Mikhail Anikin	
- <mikhail.anikin@solid-run.com>, Yazan Shhady <yazan.shhady@solid-run.com>, 
- Rabeeh Khoury <rabeeh@solid-run.com>, "linux-ide@vger.kernel.org"
- <linux-ide@vger.kernel.org>,  "linux-kernel@vger.kernel.org"	
- <linux-kernel@vger.kernel.org>
-Date: Fri, 07 Feb 2025 20:45:15 +0100
-In-Reply-To: <08981396-59d9-4be6-91c7-83421706931a@solid-run.com>
-References: 
-	<20250101-ahci-nonconsecutive-ports-v2-1-38a48f357321@solid-run.com>
-	 <bcfa145c3227b13e7b9d8bb3b0f92c678464cfdc.camel@gmail.com>
-	 <fa54a148-6016-429b-b494-490041564e51@kernel.org>
-	 <016bbf83fec9a0a7c7697462ce0970b94572f50c.camel@gmail.com>
-	 <08981396-59d9-4be6-91c7-83421706931a@solid-run.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3-2 
+        d=1e100.net; s=20230601; t=1738957531; x=1739562331;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dl+o0D2PPAJNSWAMlZvIeA5j8rLr9zSA+Ym2y6pe7mo=;
+        b=Wu+WyIynHR/IF8f6XUMSTi3SAYNqRwzo1MBXuOd+lu2zT1E9tY+YJdjIrHE5vEMC8Z
+         mcDBzFC8vr9EDn7Pw9AKRl3i8gjWBorOmUCzT1aZrGFAnO1mICrgsANA7aU+ka62P/O4
+         nrH1uuyvizga0ooTOBRVviaybk0eAUDYFeB1q3ZfnLRV2ykSprUix9MLCPFdUchvIAbA
+         mzaD6jILsY03MVD+6TKJk4qwUAcdXVo9HX0+ncbL0dwY31a/iE0ZNxNNwwD5nHtjPJqL
+         1kbZ9b1VuEkNn9Bu9ckcPasRcp22OklbYZz6ITzKTh/rq7TokrmcksBWnfW60vvWOeCg
+         DEjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHAb0l+lBt/UTfDxmsDhVRn6iOv+Ocn0NEU4eH2ETQ+buNmeJcLYYIutklQXS3LGEIrWXg5EqjB5KfN9A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9oi0RTLxndNIzpUO9+MtZeJOEpAEcGECOmtd8Dei6VYYSoxNQ
+	gSH4FLA9lzCJeNqeGziHlmu9D/6StLEN75V9nzx9KzikINqkpETCmsuDytjy5Ej5hh/xHkkUOmZ
+	L3UYlw7Qpim7Ksw343+GK+adsHBE=
+X-Gm-Gg: ASbGncsMFThTiyLgl2ZTZJxfnLQ7/17ZqrO1lwwxwNqmzS5jQ9Bi+4+of6+CRVWGCrI
+	dCTLiIDbsIsiOOk1HdApDWD4+I2gZE3/8uidDKwVmI70O5Ge6mehfYtXERSZUGXhu3SrIhm3+
+X-Google-Smtp-Source: AGHT+IGuvBL/HjmUagbLIPO90yptaPxRPD4VPEF+pqH2y9a3gQRqckD0bwL6fdbznTHex/lq/1WQ2djPRMHuVuaCdPE=
+X-Received: by 2002:a05:6402:13c5:b0:5db:e7eb:1b4a with SMTP id
+ 4fb4d7f45d1cf-5de45005a3bmr5409817a12.10.1738957530567; Fri, 07 Feb 2025
+ 11:45:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250205200929.406568-1-mjguzik@gmail.com> <20250205200929.406568-5-mjguzik@gmail.com>
+ <dfdae203-d057-41b1-a437-ba7c31961059@sirena.org.uk>
+In-Reply-To: <dfdae203-d057-41b1-a437-ba7c31961059@sirena.org.uk>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Fri, 7 Feb 2025 20:45:18 +0100
+X-Gm-Features: AWEUYZnp44jxQbuZ3GApkGfY582alad7VLfkZ6hcruNUjjq172_UjAeCGAYHqP0
+Message-ID: <CAGudoHEfhxJmJQ688CE_2rR92BtoU7JRzr78cEcx4r02POCk6w@mail.gmail.com>
+Subject: Re: [PATCH v5 4/5] pid: perform free_pid() calls outside of tasklist_lock
+To: Mark Brown <broonie@kernel.org>
+Cc: ebiederm@xmission.com, oleg@redhat.com, brauner@kernel.org, 
+	akpm@linux-foundation.org, Liam.Howlett@oracle.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Aishwarya.TCV@arm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2025-02-07 at 11:22 +0000, Josua Mayer wrote:
->=20
-> Can you confirm the physical number of sata ports on your board?
->=20
+thanks for the report, i'll prod it over the weekend
 
-The second port indeed seems not wired on Turris Omnia.
-If the "masking port_map 0x3 -> 0x1" kernel warning had not suddenly appear=
-ed, I would not have noticed this at all.
+On Fri, Feb 7, 2025 at 7:31=E2=80=AFPM Mark Brown <broonie@kernel.org> wrot=
+e:
+>
+> On Wed, Feb 05, 2025 at 09:09:28PM +0100, Mateusz Guzik wrote:
+> > As the clone side already executes pid allocation with only pidmap_lock
+> > held, issuing free_pid() while still holding tasklist_lock exacerbates
+> > total hold time of the latter.
+> >
+> > The pid array is smuggled through newly added release_task_post struct
+> > so that any extra things want to get moved out have means to do it.
+>
+> We are seeing failures in -next with the clone3 clone3_set_tid selftest
+> on at least arm and arm64 systems which have been bisected to this
+> commit, in -next as 88dec855ce117f52bcf88748ddcbb25b10f4f2fc (same
+> bisect for both):
+>
+> For arm64 we're seeing a bunch of new failures including:
+>
+> # # [389] Trying clone3() with CLONE_SET_TID to 391 and 0x0
+> # # File exists - Failed to create new process
+> # # [389] clone3() with CLONE_SET_TID 391 says: -17 - expected 0
+> # not ok 19 reallocate child TID with 1 TIDs and flags 0x0
+>
+> # # [389] Trying clone3() with CLONE_SET_TID to 1 and 0x20000000
+> # # File exists - Failed to create new process
+> # # [389] clone3() with CLONE_SET_TID 1 says: -17 - expected 0
+> # not ok 21 create PID 1 in new NS with 2 TIDs and flags 0x20000000
+>
+> # # [1] Trying clone3() with CLONE_SET_TID to 43 and 0x0
+> # # File exists - Failed to create new process
+> # # [1] clone3() with CLONE_SET_TID 43 says: -17 - expected 0
+> # not ok 24 check leak on invalid specific TID with 2 TIDs and flags 0x0
+>
+> but there's more, 32 bit only seems to see one new failure (at least on
+> Beaglebone Black which is where I have that test running).
+>
+> Full log for a run on arm64:
+>
+>    https://lava.sirena.org.uk/scheduler/job/1102114
+>
+> and arm:
+>
+>    https://lava.sirena.org.uk/scheduler/job/1102088
+>
+> Bisect log, the start is my tooling feeding in test results it already
+> has to hand in the commit range to seed the bisect:
+>
+> # bad: [ed58d103e6da15a442ff87567898768dc3a66987] Add linux-next specific=
+ files for 20250207
+> # good: [653cd79f296fc6fa592cb9fa2f7b8494d5573a43] Merge branch 'for-linu=
+x-next-fixes' of https://gitlab.freedesktop.org/drm/misc/kernel.git
+> # good: [4c7518062d638837cea915e0ffe30f846780639a] ASoC: SOF: ipc4: Add s=
+upport for split firmware releases
+> # good: [0a7c85b516830c0bb088b0bdb2f2c50c76fc531a] regulator: ad5398: Fix=
+ incorrect power down bit mask
+> # good: [215705db51eb23052c73126d2efb6acbc2db0424] spi: Replace custom fs=
+leep() implementation
+> # good: [6603c5133daadbb3277fbd93be0d0d5b8ec928e8] ASoC: dt-bindings: atm=
+el,at91-ssc: Convert to YAML format
+> # good: [25fac20edd09b60651eabcc57c187b1277f43d08] spi: gpio: Support a s=
+ingle always-selected device
+> # good: [652ffad172d089acb1a20e5fde1b66e687832b06] spi: fsi: Batch TX ope=
+rations
+> # good: [6eab7034579917f207ca6d8e3f4e11e85e0ab7d5] ASoC: soc-core: Stop u=
+sing of_property_read_bool() for non-boolean properties
+> # good: [f5aab0438ef17f01c5ecd25e61ae6a03f82a4586] regulator: pca9450: Fi=
+x enable register for LDO5
+> # good: [c1ac98492d1584d31f335d233a5cd7a4d4116e5a] spi: realtek-rtl-snand=
+: Drop unneeded assignment for cache_type
+> # good: [5a6a461079decea452fdcae955bccecf92e07e97] regulator: ad5398: Add=
+ device tree support
+> # good: [995cf0e014b0144edf1125668a97c252c5ab775e] regmap: Reorder 'struc=
+t regmap'
+> # good: [89785306453ce6d949e783f6936821a0b7649ee2] spi: zynqmp-gqspi: Alw=
+ays acknowledge interrupts
+> # good: [0e11f2076e7fa3efa3e0a694bc4d30ef185f0f7d] Merge branch 'for-5.19=
+/cleanup' into for-next
+> git bisect start 'ed58d103e6da15a442ff87567898768dc3a66987' '653cd79f296f=
+c6fa592cb9fa2f7b8494d5573a43' '4c7518062d638837cea915e0ffe30f846780639a' '0=
+a7c85b516830c0bb088b0bdb2f2c50c76fc531a' '215705db51eb23052c73126d2efb6acbc=
+2db0424' '6603c5133daadbb3277fbd93be0d0d5b8ec928e8' '25fac20edd09b60651eabc=
+c57c187b1277f43d08' '652ffad172d089acb1a20e5fde1b66e687832b06' '6eab7034579=
+917f207ca6d8e3f4e11e85e0ab7d5' 'f5aab0438ef17f01c5ecd25e61ae6a03f82a4586' '=
+c1ac98492d1584d31f335d233a5cd7a4d4116e5a' '5a6a461079decea452fdcae955bccecf=
+92e07e97' '995cf0e014b0144edf1125668a97c252c5ab775e' '89785306453ce6d949e78=
+3f6936821a0b7649ee2' '0e11f2076e7fa3efa3e0a694bc4d30ef185f0f7d'
+> # bad: [ed58d103e6da15a442ff87567898768dc3a66987] Add linux-next specific=
+ files for 20250207
+> git bisect bad ed58d103e6da15a442ff87567898768dc3a66987
+> # bad: [5a44f71c6ba5b0a7623c25047ac61ed852afbd84] Merge branch 'for-linux=
+-next' of git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.=
+git
+> git bisect bad 5a44f71c6ba5b0a7623c25047ac61ed852afbd84
+> # bad: [953e43d94b2048d260774e9ddbfd3f378aa2c256] Merge branch 'fs-next' =
+of linux-next
+> git bisect bad 953e43d94b2048d260774e9ddbfd3f378aa2c256
+> # good: [2ab7baf7ebddff9faff6846648fd0753e5ee58c1] Merge branch 'for-next=
+' of git://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git
+> git bisect good 2ab7baf7ebddff9faff6846648fd0753e5ee58c1
+> # good: [09c7fd0d4465df7fd6cda5668bd32267884b6cbf] Merge branch '9p-next'=
+ of git://github.com/martinetd/linux
+> git bisect good 09c7fd0d4465df7fd6cda5668bd32267884b6cbf
+> # bad: [7a1f00b09c09aadbf33660a31f3f3d8ee6302c45] Merge branch 'vfs-6.15.=
+iomap' into vfs.all
+> git bisect bad 7a1f00b09c09aadbf33660a31f3f3d8ee6302c45
+> # good: [9bc19073026d0dce6b7d17d22e74643c80283f8f] Merge branch 'vfs-6.15=
+.mount' into vfs.all
+> git bisect good 9bc19073026d0dce6b7d17d22e74643c80283f8f
+> # bad: [ba734a751d30f59e3b10d6792a1e1b50e7b1fc0c] Merge branch 'kernel-6.=
+15.tasklist_lock' into vfs.all
+> git bisect bad ba734a751d30f59e3b10d6792a1e1b50e7b1fc0c
+> # good: [d7c340391cb0f0882bc8d5d9798ef32b577a89bc] Merge branch 'vfs-6.15=
+.pipe' into vfs.all
+> git bisect good d7c340391cb0f0882bc8d5d9798ef32b577a89bc
+> # good: [e88fed94388f62a28acfef4954348abe79557d19] pid: sprinkle tasklist=
+_lock asserts
+> git bisect good e88fed94388f62a28acfef4954348abe79557d19
+> # bad: [5ca27e0557d722dd648f949dde6e4997f6255f18] pid: drop irq disableme=
+nt around pidmap_lock
+> git bisect bad 5ca27e0557d722dd648f949dde6e4997f6255f18
+> # bad: [88dec855ce117f52bcf88748ddcbb25b10f4f2fc] pid: perform free_pid()=
+ calls outside of tasklist_lock
+> git bisect bad 88dec855ce117f52bcf88748ddcbb25b10f4f2fc
+> # first bad commit: [88dec855ce117f52bcf88748ddcbb25b10f4f2fc] pid: perfo=
+rm free_pid() calls outside of tasklist_lock
 
-> I would be curious whether in another board that has two ports physically=
-,
-> whether both of them were functional before my patch.
 
-I don't have such a board, but to me it seems the existing code was made ex=
-actly for that case.
 
-For reference, my board later reports
-  ata2: SATA link down (SStatus 0 SControl 300)
-  ata1: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-
-Best regards, Klaus
+--=20
+Mateusz Guzik <mjguzik gmail.com>
