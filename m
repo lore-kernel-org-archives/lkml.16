@@ -1,64 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8929D42069;
-	Fri,  7 Feb 2025 23:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB7442069;
+	Fri,  7 Feb 2025 23:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738969696; cv=none; b=NvBpHF+LFYw3tDU1oaS3mW2byDeDHqu0DkJMnwnH9a0j087RzUoEux1fj9a4hfUUhE0veaR4PvK4aZo92iG6E/8xwy8YjJmtVs+OfPOCc4CsLtlkaAdaLXlfJFyrQ7d9BF5C8+pJLXdZJYnZ+0/aBkTcOS6LWOuCGaTxMtPEYK4=
+	t=1738969799; cv=none; b=TOrGAbMsnE3tRtKPhuWd6Getnst7wJZVavDOuvRCAP72jHlfuESCaO1/Yg2cuRgEWYbEvzMST16OAAlUFqCO/6NkdBeEs+Pt5uyEjRFLHcZzcMAZPfe+ktKowZWYgyVnUhlez6LH+Aq2Vuhxstx9WQ25xuyEDUn+wHl6mDoMoT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738969696; c=relaxed/simple;
-	bh=Oc7RiMoWI7yb2Dpzra2Br0c8/SWdMxeBDwF0F1BCyb8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d5SJjWlvcQjK/henby6uktvjtI78h78ZgwV1GwPZJZsPRJLDl/XcCn+YBv03XVW5rNpNpVksgrhDrgsIKVVd0/rDue7eXhbUVPLRA3XEMmiIwYi+smt7iRXObvFdgG8uF+ctFxi6ctPu2WC0jGNGpt9ggM4mni8pR1OleD/g814=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IubVekm8; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738969799; c=relaxed/simple;
+	bh=/Yp7ZJpGPQmp4bEwda1sB9l/+PqFgbJYDa39eFAXlVo=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OCInZ+2G4VOPcE60JbPAJoL0vS/g3GSQsnyRoiaWtZCGvx6M1kTdGmdSIA+n2iKN8XXaIIGRRd4od1xwhpJXB6VdKk8Y3Wv5x2x7FlLfYpWpE8rfAku0XOEopwk2c6Yt+TMg0Kp9FlWZkz9fbkufYxjqOkws1iWudQ6R8QlETyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HKnGVuOC; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IubVekm8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738969694; x=1770505694;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Oc7RiMoWI7yb2Dpzra2Br0c8/SWdMxeBDwF0F1BCyb8=;
-  b=IubVekm82EAycqEJUEGOt0lZKB4PXE9JQgS0WuOiQF8uJg473jv1H8F7
-   aEqW9Bv2niU+hTbFN8zwlLCesJ2eBXpnYuvlOQQhaqJHS+hxX9RUTnd+D
-   BVcPEVbpahLyfWn50pLiwS+fytE5ab4WoRq+sDGMKwmUOx8ircGefnq5+
-   XDwjj24T8lgO3rKMz7UZRv1K9UOGBJCwXfyQR8DEw3CUfsJwcULDw2BWa
-   kKY2cpM4KvY0a3v433wdIAQdfKSef5G8/nnN4nuD8jBBmeV/9PAmlyGCK
-   UbLc3r7kn+QrSSbAd2/Q/RE9WBVqO2+kdNcrsw4sbi2h/UNWRDLSQYFEn
-   A==;
-X-CSE-ConnectionGUID: U6lJF+J/TuyDIQsh0/JPuA==
-X-CSE-MsgGUID: BtUWdYXRQO2sXTb4i04frQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="57041247"
-X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="57041247"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 15:08:13 -0800
-X-CSE-ConnectionGUID: Ticm+k70TgqMdmnjmXTvSA==
-X-CSE-MsgGUID: 4mLKRo8+S1+cdz+jELcYUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116862702"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.111.82])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 15:08:13 -0800
-Date: Fri, 7 Feb 2025 15:08:11 -0800
-From: Alison Schofield <alison.schofield@intel.com>
-To: Robert Richter <rrichter@amd.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 05/18] cxl: Introduce parent_port_of() helper
-Message-ID: <Z6aSW8N4yULozrDE@aschofie-mobl2.lan>
-References: <20250207153753.418849-1-rrichter@amd.com>
- <20250207153753.418849-6-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HKnGVuOC"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21f62cc4088so12096605ad.3;
+        Fri, 07 Feb 2025 15:09:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738969797; x=1739574597; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=MhO99/eteMaPIVe6GI+++EyOVf+2+1bV62N2Jw9ys84=;
+        b=HKnGVuOC0lLqiitSXtufoyprVmc29gQb6In1WjHgmbi4PPU2Mf1fixei/G6NPp5ciT
+         1Dn+LQLmv9aCjJ7qwkaMu64kWw0zMjIBdEu43mX9NdiOp8z0Pks+/WrlthQJ3hfKrjpX
+         n/7pVke8NlizLI6jETbT9EAofv9krloh56ljBFHiSjJRv9ijnET0xEI/dr5ctq8rIVJ2
+         Qq731Piib5Z9Zva7vbCy5dyODlA2yaez8kfOwrV/olWtf+3AEoTftDul8hjDqIoG5GJq
+         JR4m1zG95khlBNo3knVEYQoyPqreQvywDqH3U5VregjMCVPghYkassU64F3CDrLyAv/8
+         fD2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738969797; x=1739574597;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MhO99/eteMaPIVe6GI+++EyOVf+2+1bV62N2Jw9ys84=;
+        b=c8i30KkAsna6CZ7WDQ+QmJ9UjjuSPDdCuxhdnS2ebI8nCC0wF1ALzGuCXdWCtfkmm8
+         Vd5nnlVAjRjTqmcxD343iqz5F0chv7000AA+DnmM2Rl71fHRUxaFcaXbYg/Z26nLkVlX
+         bUo2eGJEPAFSc5kEPGhL+qSJP/h8SgXd5p8s0zPDp4XcZzO4F9TZLmAQiM2vK4kfqMN7
+         WoZ5nje8Vce+Ebn51Tk7pHM1+Vtt1q6c54rqoaVBBcc1GJHiR8m9LRDz6vVglAu6NTGx
+         /L64dmnZHS+ED/i+srMJaDBmlT6ppupAykvOTjY1c17rC0hEoM58t1vPCB5eixAsL/Zw
+         h2Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCWChqUzUNjWTJLKPJplsevC4vpmxH+OsbilzoSUUuw3cU2A4QZ5c+TNDFoeDZonjNa/yRPXKmJORZZJNzqA@vger.kernel.org, AJvYcCWkfZu8GzW9f7HXPI6oo5Y3h0OIJWlDIAP6XXI4IQF13fFNlnE/tto8lu6KQmuTelKCL5BuOgOLKcJ+qq6EW64=@vger.kernel.org, AJvYcCWm8IgK7nei5X1TqT2vR6ucZuOsRIUFWovv0m9Okl0pXt3FVHNK3cSax6yVLuGr6w54gDgeLvKQ4pyOIw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YySXFhmYsvNOnGlk7LN2G9Wrr0HgNheAmmpbLGGxRtWG4bQYICE
+	olLhF5JNuBnY/lU9nBmSaK7sUxJS1fqeZdDQ7ouYoybDCaQ7Di7d
+X-Gm-Gg: ASbGncuTp46zAc02SrSx1t8cI2VBAKCGkA5b7/8I1x5YhObz3JDr/fYdMGyVZ6ukAcT
+	M/XScgUlLXwwjL+cGxNfu8hM8YQdAIUSra9/m37HR8/Mabo6EPJScQUEPYd6rrJz/7P67zuMFe9
+	Hqrp0w63WG5QQ7TypNv8EN6Do6d9Q6/mTn9GBimNA1yKwR69aFUKY73nxw+YL48kTA5YGa8NZE1
+	Eo9AMlpomrQGkQFdu1VKir+odrZTe0WI7M0VYynjk9lN168vHoAAVPF35Q9SjJ2Re1Pk5UQm/Up
+	ibRTHTw3jj771HO0Tejth5YYgaYLzrYuAF7BDW6MwCvi1fNqjg==
+X-Google-Smtp-Source: AGHT+IGbDFlwC8N9VIVqNQfx3apRhN3KFYWk764cgpokFTV4t2pm1BwPud+R0YDG6Ie3Vh4P96rU7Q==
+X-Received: by 2002:a05:6a21:a342:b0:1ed:e7f0:312d with SMTP id adf61e73a8af0-1ee03b605a5mr9932598637.35.1738969796976;
+        Fri, 07 Feb 2025 15:09:56 -0800 (PST)
+Received: from Cyndaquil. (203.sub-174-224-192.myvzw.com. [174.224.192.203])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048ae7f84sm3548355b3a.80.2025.02.07.15.09.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 15:09:56 -0800 (PST)
+Message-ID: <67a692c4.a70a0220.387922.d940@mx.google.com>
+X-Google-Original-Message-ID: <Z6aSwnyUNDG85sNB@Cyndaquil.>
+Date: Fri, 7 Feb 2025 15:09:54 -0800
+From: Mitchell Levy <levymitchell0@gmail.com>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] rust: lockdep: Use Pin for all LockClassKey usages
+References: <20250205-rust-lockdep-v3-0-5313e83a0bef@gmail.com>
+ <20250205-rust-lockdep-v3-2-5313e83a0bef@gmail.com>
+ <19dfbe36-237c-4da8-acfb-1d14069a8d1c@proton.me>
+ <Z6UpNpefdxyvYBPe@boqun-archlinux>
+ <7bc31b4e-cfe2-40ff-9a00-a73bff64df1c@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,111 +82,93 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250207153753.418849-6-rrichter@amd.com>
+In-Reply-To: <7bc31b4e-cfe2-40ff-9a00-a73bff64df1c@proton.me>
 
-On Fri, Feb 07, 2025 at 04:37:40PM +0100, Robert Richter wrote:
-> Often a parent port must be determined. Introduce the parent_port_of()
-> helper function for this.
-
-Would this be simpler with less touchpoints:
-
-Make next_port() available to the port driver by moving it from
-region.c to port.c. Note that simply exporting from the region
-driver is not an option since region driver is not guaranteed
-to be configured.
-
-(Basically I'm suggesting keep the name and touch region.c less)
-
+On Fri, Feb 07, 2025 at 12:22:19AM +0000, Benno Lossin wrote:
+> On 06.02.25 22:27, Boqun Feng wrote:
+> > On Wed, Feb 05, 2025 at 08:30:50PM +0000, Benno Lossin wrote:
+> >> On 05.02.25 20:59, Mitchell Levy wrote:
+> >>> diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
+> >>> index 41dcddac69e2..119e5f569bdb 100644
+> >>> --- a/rust/kernel/sync/lock.rs
+> >>> +++ b/rust/kernel/sync/lock.rs
+> >>> @@ -7,12 +7,9 @@
+> >>>
+> >>>  use super::LockClassKey;
+> >>>  use crate::{
+> >>> -    init::PinInit,
+> >>> -    pin_init,
+> >>> -    str::CStr,
+> >>> -    types::{NotThreadSafe, Opaque, ScopeGuard},
+> >>> +    init::PinInit, pin_init, str::CStr, types::NotThreadSafe, types::Opaque, types::ScopeGuard,
+> >>>  };
+> >>> -use core::{cell::UnsafeCell, marker::PhantomPinned};
+> >>> +use core::{cell::UnsafeCell, marker::PhantomPinned, pin::Pin};
+> >>>  use macros::pin_data;
+> >>>
+> >>>  pub mod mutex;
+> >>> @@ -121,7 +118,7 @@ unsafe impl<T: ?Sized + Send, B: Backend> Sync for Lock<T, B> {}
+> >>>
+> >>>  impl<T, B: Backend> Lock<T, B> {
+> >>>      /// Constructs a new lock initialiser.
+> >>> -    pub fn new(t: T, name: &'static CStr, key: &'static LockClassKey) -> impl PinInit<Self> {
+> >>> +    pub fn new(t: T, name: &'static CStr, key: Pin<&'static LockClassKey>) -> impl PinInit<Self> {
+> >>
+> >> Static references do not need `Pin`, since `Pin::static_ref` [1] exists,
+> >> so you can just as well not add the `Pin` here and the other places
+> >> where you have `Pin<&'static T>`.
+> >>
+> > 
+> > You're right about `Pin` not needed for 'static. However, the
+> > `Pin<&'static LockClassKey>` signature is the intermediate state, and
+> > eventually we will need to support initializing a lock (and others) with
+> > a dynamically allocated `LockClassKey`, and when that is available, the
+> > type of `key` will become `Pin<&'a LockClassKey>`, so `Pin` is needed.
+> > 
+> > So I would like to keep this patch as it is. Works for you?
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Makes sense and fine by me. It would be nice if it was also mentioned in
+> the commit message. Thanks!
+
+This makes sense and is a good point. Will resend with a fixed commit
+message.
+
+Thanks,
+Mitchell
+
 > ---
->  drivers/cxl/core/port.c   | 15 +++++++++------
->  drivers/cxl/core/region.c | 11 ++---------
->  drivers/cxl/cxl.h         |  1 +
->  3 files changed, 12 insertions(+), 15 deletions(-)
+> Cheers,
+> Benno
 > 
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index f9501a16b390..d19930c009ce 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -606,17 +606,20 @@ struct cxl_port *to_cxl_port(const struct device *dev)
->  }
->  EXPORT_SYMBOL_NS_GPL(to_cxl_port, "CXL");
->  
-> +struct cxl_port *parent_port_of(struct cxl_port *port)
-> +{
-> +	if (!port || !port->parent_dport)
-> +		return NULL;
-> +	return port->parent_dport->port;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(parent_port_of, "CXL");
-> +
->  static void unregister_port(void *_port)
->  {
->  	struct cxl_port *port = _port;
-> -	struct cxl_port *parent;
-> +	struct cxl_port *parent = parent_port_of(port);
->  	struct device *lock_dev;
->  
-> -	if (is_cxl_root(port))
-> -		parent = NULL;
-> -	else
-> -		parent = to_cxl_port(port->dev.parent);
-> -
->  	/*
->  	 * CXL root port's and the first level of ports are unregistered
->  	 * under the platform firmware device lock, all other ports are
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 5d252dfae138..54afdb0fa61c 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1734,13 +1734,6 @@ static int cmp_interleave_pos(const void *a, const void *b)
->  	return cxled_a->pos - cxled_b->pos;
->
-}
->  
-> -static struct cxl_port *next_port(struct cxl_port *port)
-> -{
-> -	if (!port->parent_dport)
-> -		return NULL;
-> -	return port->parent_dport->port;
-> -}
-> -
->  static int match_switch_decoder_by_range(struct device *dev,
->  					 const void *data)
->  {
-> @@ -1767,7 +1760,7 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
->  	struct device *dev;
->  	int rc = -ENXIO;
->  
-> -	parent = next_port(port);
-> +	parent = parent_port_of(port);
->  	if (!parent)
->  		return rc;
->  
-> @@ -1847,7 +1840,7 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled)
->  	 */
->  
->  	/* Iterate from endpoint to root_port refining the position */
-> -	for (iter = port; iter; iter = next_port(iter)) {
-> +	for (iter = port; iter; iter = parent_port_of(iter)) {
->  		if (is_cxl_root(iter))
->  			break;
->  
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 6baec4ba9141..0d7aff8b97b3 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -721,6 +721,7 @@ static inline bool is_cxl_root(struct cxl_port *port)
->  int cxl_num_decoders_committed(struct cxl_port *port);
->  bool is_cxl_port(const struct device *dev);
->  struct cxl_port *to_cxl_port(const struct device *dev);
-> +struct cxl_port *parent_port_of(struct cxl_port *port);
->  void cxl_port_commit_reap(struct cxl_decoder *cxld);
->  struct pci_bus;
->  int devm_cxl_register_pci_bus(struct device *host, struct device *uport_dev,
-> -- 
-> 2.39.5
+> > 
+> > Regards,
+> > Boqun
+> > 
+> >> The reasoning is that since the data lives for `'static` at that
+> >> location, it will never move (since it is borrowed for `'static` after
+> >> all).
+> >>
+> >> [1]: https://doc.rust-lang.org/std/pin/struct.Pin.html#method.static_ref
+> >>
+> >> ---
+> >> Cheers,
+> >> Benno
+> >>
+> >>>          pin_init!(Self {
+> >>>              data: UnsafeCell::new(t),
+> >>>              _pin: PhantomPinned,
+> >>> diff --git a/rust/kernel/sync/lock/global.rs b/rust/kernel/sync/lock/global.rs
+> >>> index 480ee724e3cc..d65f94b5caf2 100644
+> >>> --- a/rust/kernel/sync/lock/global.rs
+> >>> +++ b/rust/kernel/sync/lock/global.rs
+> >>> @@ -13,6 +13,7 @@
+> >>>  use core::{
+> >>>      cell::UnsafeCell,
+> >>>      marker::{PhantomData, PhantomPinned},
+> >>> +    pin::Pin,
+> >>>  };
+> >>>
+> >>>  /// Trait implemented for marker types for global locks.
+> >>
+> >>
 > 
