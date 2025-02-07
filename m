@@ -1,127 +1,141 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23E923F274;
-	Fri,  7 Feb 2025 15:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA0B32475CA
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738943209; cv=none; b=Avia7SjAdvZuSUfN4mXUa7p+lRN2Ac8AEDHojgSquT7irJKOYApsw+cLnNIuXKCuv8HVY4x+Gka4GBjxS/sUEUaY/tdiwFuny+4z9ULt1+zndnH6Sn/IS5HQK4mxw9axX/ucCZMJNlmLxlPuU32QJ0bV0QWcNJuLYPrYmLW7D5E=
+	t=1738943214; cv=none; b=kmUnesi1krfuvTrzagiwShLmoytkFuoEm701DnaR6V+jyCBl9UwuUv96bzzMBM+k5ZUtaAxZIYXqbXulS45bcuW185hrWIaapcwJdC8p4hdAwSW0Rwprly2BNLTGnpArIXczbz/R5cXxzyxSR4kkreUkHzlqE4TXZoUGy3Iur4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738943209; c=relaxed/simple;
-	bh=r26Dfk4pIcjqXrs15ojOrUuhmcD2JhPNJuuQ8V5RiLY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s3WWQ9Kd3X4XsNIwGJ1QaJ03V5jAdcIEp0QsnWAAH8SIqwU+yVNmUXoHcGu7MDJBvCklmfZQJWCbvfdWddme9fqNQ9bLsSfzcnYWhRUuY96BZdwlVwS5PhWSnntK5H+NGf5GvFwgqqaouQyQDRHm5BIJzDLrEIjYBecbWBDWJ30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7C6NAll; arc=none smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7C6NAll"
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4b6398d477fso617315137.0;
-        Fri, 07 Feb 2025 07:46:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738943206; x=1739548006; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eLsBRDyk6qd68kI3ESmjd0DlEYqGWVuzIkKvy/jh8NA=;
-        b=W7C6NAllJ9R7zDKY30ov2M2NGs18EfD0aSVGG/wOfs8Bs10fUsV1D3fCdmHCJz/0CK
-         BGRwwI9mOf1QFt20/+r+kkuK9jRTJxE5Rd2z+0tvCmAh9N8Utsf2pugTS1TaEpzjE89a
-         R5WmxNvd/WHPxEQ0XgNxFR9/BW3oT4r9hPzAJsqRi60r9DyroOJv166L7K5xKwAM+6LN
-         E9mrIgiqecDBUXo2i/ShOh09ghLDx+kvyAdVjUUC4Ao8mMLoDTHjOJ3VTz4PmWlmJ7x0
-         al2Ztrur5EDVSQX68FJCBOmYQqaMkEZbZhjIq04pf4h7YPC8NXWQDOhA3gpnIjNLk7c+
-         hkGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738943206; x=1739548006;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eLsBRDyk6qd68kI3ESmjd0DlEYqGWVuzIkKvy/jh8NA=;
-        b=TQWd5siQlBUQUNQFlIOXhvdCVFAje8/uhDLG5QKjwWWL81sGXUWWOtqapX7/8g2vq+
-         TlUFUMRYaMSxuoUSIDVjB8o+ZJ2Z5mlkGhMF+eubRJ8VRII5cDlEUK+VwQUy0nADz9ip
-         GPkAKF9ycjTPDruzzsUEZ37l3EoK9xfsdb721OtNDAFkxyMrzSlU0kYgmBFeQlpCbhq1
-         47eSTpQM8Kh6KvJIbMf4M7hXYAv03UOC8qCXDDT/FZ8slWpIaxrvkyUz0yPFDurpQaVd
-         OzbY4mvLWnmBRssUTBoGjsUjKMo+Zfqzo60YO+wpV0hl+TOTVnqQm31BRiSq7DBhjUho
-         WIsw==
-X-Forwarded-Encrypted: i=1; AJvYcCWLxyYsnJyq9zC+9DpSPYEENB1LkEBsd0VOKgtCePVQz9JdWgOeCmqv5qhrANAiBzaUQQMFYjhwr50LxeE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyf3Mpw8MxZ/knpRW6tCXNWJS+7hv/PIfUXnWJw5UxyZ5iwn+vW
-	XRxzqLBov9gnHZEBOK10fIi+/5h9eXWrvQpVVHb12cOEtjdl+HT2x+QFdw==
-X-Gm-Gg: ASbGncvspL7njg+F0pw7qyBpPhUwiL5t+I/gg3n0/OHyFKxlK7nBuSzwRoNqjnalOP0
-	Fx6+Sua2S7LFupv34A/3pBfBx/vmR6sZ7Yr5sn1PdWAvg+Y0XF0hr94aW+KQE/e1LlFWnxI6wCG
-	XpVaQzuWZtF5oHOgudxrIslsrIxrxn9KCqpp3zJrPYLU2ZUpADonnA8H3QIaQmAacvHlDL206am
-	EHu1eq7dv8odnCbBbI0AvBW9rpkWgJiIWdZNsdgE7qTii+NrvHfHzYIwZUc1NP9FQs7KhDiLjCw
-	c3osEM5Sqhn/DfLmSkWS19Q=
-X-Google-Smtp-Source: AGHT+IHL49dhcDF9F0FsF56G23+ZkINi+toeOQyajQvu7B6a3hvZHuclYXGlf/fqcaNfPeplUGcfcA==
-X-Received: by 2002:a05:6102:2b92:b0:4b6:15fa:566a with SMTP id ada2fe7eead31-4ba85da669cmr2945996137.2.1738943206108;
-        Fri, 07 Feb 2025 07:46:46 -0800 (PST)
-Received: from localhost.localdomain ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ba76cb8e44sm768456137.0.2025.02.07.07.46.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 07:46:45 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-To: platform-driver-x86@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Armin Wolf" <W_Armin@gmx.de>,
-	"Mario Limonciello" <mario.limonciello@amd.com>,
-	"Hans de Goede" <hdegoede@redhat.com>,
-	Dell.Client.Kernel@dell.com,
-	linux-kernel@vger.kernel.org,
-	"Kurt Borja" <kuurtb@gmail.com>
-Subject: [PATCH v10 00/14] platform/x86: alienware-wmi driver rework
-Date: Fri,  7 Feb 2025 10:45:56 -0500
-Message-ID: <20250207154610.13675-1-kuurtb@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1738943214; c=relaxed/simple;
+	bh=aLacViqaUc3354guPSu4Icas4R1pfzpcrIiTi/v8GCw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Tq1YtWNQkx0vs9fPd123TspY6GmQIVya3l0HzgaD1jXJf+SSKqVOZu3RR66PVnhEZczFxWZmEw+sUj7e71LB6ufbheB0XW4pRojQ9w/zKCFI4oeEM4a10npeyPZ+M5Y50UEcTB6d3kNNvompOfeaIdUcgWbYlTnoBSkzqziVHno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF6C81EA6;
+	Fri,  7 Feb 2025 07:47:14 -0800 (PST)
+Received: from [10.1.196.57] (eglon.cambridge.arm.com [10.1.196.57])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E69A3F58B;
+	Fri,  7 Feb 2025 07:46:49 -0800 (PST)
+Message-ID: <787e55a2-71a6-4333-b808-7b5f36b1300b@arm.com>
+Date: Fri, 7 Feb 2025 15:46:47 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 30/40] x86/resctrl: Describe resctrl's bitmap size
+ assumptions
+To: Tony Luck <tony.luck@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+ Fenghua Yu <fenghua.yu@intel.com>,
+ Reinette Chatre <reinette.chatre@intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+References: <20241004180347.19985-1-james.morse@arm.com>
+ <20241004180347.19985-31-james.morse@arm.com>
+ <ZwV_B-4gz9tUaF67@agluck-desk3.sc.intel.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <ZwV_B-4gz9tUaF67@agluck-desk3.sc.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+Hi Tony,
 
-One more correction. I apologize for the noise!
+On 08/10/2024 19:50, Tony Luck wrote:
+> On Fri, Oct 04, 2024 at 06:03:37PM +0000, James Morse wrote:
+>> resctrl operates on configuration bitmaps and a bitmap of allocated
+>> CLOSID, both are stored in a u32.
+>>
+>> MPAM supports configuration/portion bitmaps and PARTIDs larger
+>> than will fit in a u32.
+>>
+>> Add some preprocessor values that make it clear why MPAM clamps
+>> some of these values. This will make it easier to find code related
+>> to these values if this resctrl behaviour ever changes.
+> 
+> ...
+> 
+>> +#define RESCTRL_MAX_CLOSID		32
+> 
+> Do you really need to do this? Intel x86 architecture allows for more than
+> 32 CLOSIDs, it's just expensive in h/w to get past 16 ... so I picked
+> that trivial bitmap allocator in ages past. But if ARM can have more,
+> then why would you need to clamp the value?
 
-~ Kurt
----
-[11/14]
-  - Fix .driver_data of Alienware m16 R1 AMD
-
-v9: https://lore.kernel.org/platform-driver-x86/20250207140743.16822-1-kuurtb@gmail.com/
-
-Kurt Borja (14):
-  platform/x86: alienware-wmi: Add a state container for LED control
-    feature
-  platform/x86: alienware-wmi: Add WMI Drivers
-  platform/x86: alienware-wmi: Add a state container for thermal control
-    methods
-  platform/x86: alienware-wmi: Refactor LED control methods
-  platform/x86: alienware-wmi: Refactor hdmi, amplifier, deepslp methods
-  platform/x86: alienware-wmi: Refactor thermal control methods
-  platform/x86: alienware-wmi: Split DMI table
-  MAINTAINERS: Update ALIENWARE WMI DRIVER entry
-  platform/x86: Rename alienware-wmi.c
-  platform/x86: Add alienware-wmi.h
-  platform/x86: Split the alienware-wmi driver
-  platform/x86: dell: Modify Makefile alignment
-  platform/x86: Update alienware-wmi config entries
-  platform/x86: alienware-wmi: Update header and module information
-
- MAINTAINERS                                   |    4 +-
- drivers/platform/x86/dell/Kconfig             |   30 +-
- drivers/platform/x86/dell/Makefile            |   45 +-
- .../platform/x86/dell/alienware-wmi-base.c    |  491 +++++++
- .../platform/x86/dell/alienware-wmi-legacy.c  |   95 ++
- .../platform/x86/dell/alienware-wmi-wmax.c    |  768 ++++++++++
- drivers/platform/x86/dell/alienware-wmi.c     | 1249 -----------------
- drivers/platform/x86/dell/alienware-wmi.h     |  117 ++
- 8 files changed, 1523 insertions(+), 1276 deletions(-)
- create mode 100644 drivers/platform/x86/dell/alienware-wmi-base.c
- create mode 100644 drivers/platform/x86/dell/alienware-wmi-legacy.c
- create mode 100644 drivers/platform/x86/dell/alienware-wmi-wmax.c
- delete mode 100644 drivers/platform/x86/dell/alienware-wmi.c
- create mode 100644 drivers/platform/x86/dell/alienware-wmi.h
+Just to avoid touching this code now! For feature-parity - no-one can argue they have a
+33-CLOSID use-case that works on x86, but not on arm64. My cunning plan was to flush out
+the people who cared ...
 
 
-base-commit: e75394bbf4838857f57b6c5d00f1e56c46cd6c11
--- 
-2.48.1
+> File system code could ask
+> architecture code to allocate a CLOSID. On x86 that will fail when there
+> are no more CLOSIDs, so filesystem will fail the mkdir(2).
 
+I didn't have a strong reason to pull the allocator out to be arch-specific, so just left
+it where it was. That avoided having to think about abstracting the limbo thread.
+
+
+> Or, since you put closid_alloc() into the filesystem code you could
+> change the closid_free_map to u64.
+
+Marvell sent a patch doing exactly that - so they must have a platform with more than 32
+PARTID. The version I'm carrying around removes the limit:
+https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/commit/?h=mpam/snapshot/v6.12-rc1&id=61e646352b8286b869f8ee0627cec81f01009e3e
+
+(I did think it would be more invasive)
+
+As the existing limit is not important I'll swap this patch with the one linked above that
+removes the CLOSID limit into this series.
+
+(The MAX_CBM bitmap size can be inferred from things like struct resctrl_staged_config's
+new_ctrl u32)
+
+
+> If you really do want to have this #define ... maybe you should use it
+> in place of the hard coded 32 here:
+> 
+> static void closid_init(void)
+> {
+>         struct resctrl_schema *s;
+>         u32 rdt_min_closid = 32;
+> }
+
+Oops - I'd missed that.
+
+
+>> +#define RESCTRL_MAX_CBM		32
+> 
+> Intel x86 could plausibly expand the cache bitmap size (the MSRs
+> that store them currenly have bits 63:32 reserved, but that could be
+> changed).
+
+> The only 32-bit limits are the CPUID field that enumerates
+> CBM_LEN and the CPUID field that enumerates the shared bitmap. The
+> length has space for expansion, the share bitfiled does not. So if
+> Intel did go to more than 32-bits we'd be stuck making sure any shared
+> bits were in the lower 32-bits.
+
+Thanks for looking those up - I thought these limits were hard-and-fast!
+
+MPAMs limit for the control values for the cache bitmaps is 4K - I suggest we ignore this!
+MPAM can't describe a shared bitmap, if someone ever needed that, it would have to be
+done by a firmware table. The CPU's max CLOSID limit is 2^16.
+
+
+Thanks,
+
+James
