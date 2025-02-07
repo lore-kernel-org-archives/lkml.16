@@ -1,114 +1,132 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB7C2417ED;
-	Fri,  7 Feb 2025 11:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DA31A83F5;
+	Fri,  7 Feb 2025 11:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738928322; cv=none; b=fAmbgghF8PauWohUBlT0QSjhy7mA+8u+9KdLtoXp20OAX0xFvwIw4paQSOf84llakBDFlzT+zRlrG35QYcj2Rkmf0VzNO3y174iQ3bfAQ934cGXqm69UZxV3VGhcKoJLbZjYvAdDXNxiF4AJRrjp2F+KACU0SYJdRJCGzS59KWI=
+	t=1738928463; cv=none; b=bNCCMwe1A72NwymtWQbe11shwXJom0/lWs4w2n5KU6EeATZBEWmlngNW4zgDjdCyNk591MxZpUt+MAADF7eqv74X/cue+bTxt45koaKdAUEyTs7aFnqdkT6zHnK03iqS5+HOPUeSjx6Lq+ppNSXUk4wTl4bEj0u4PHywRL2601I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738928322; c=relaxed/simple;
-	bh=uK+Wrw7Kt+Edw+QNCibD61gviMhefqSZIojqb+0kTgU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WdiIwxL7wPCJJzZSAhVHlFy10nwnV9g1t14TJ0Asw9tZQdUjKVktmppaPkemkRI/VlxmZkDl1sFm6n5EY9QwSc6GNo61lkyzndrDjHPKgMAgr55ldz1NdAJmLGgI7n8tY8ct0AqmrsfwU7HZ2oSrHs1sfcGVY0ZO9+FYqVog6AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dRza2sMl; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738928463; c=relaxed/simple;
+	bh=Kr3VE9NUyZO8hS9QqWqW3tBkPoYkI+NxTJxvWVkvBkA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=At1e8l77Um540pNmXO/N7Cmqouy3khTM+ruvgy8iCGnWXpX/MNmAFw2SeMzK0FO6uF7O5qYh4hVQ3IjtKG1PPZmmKp8I+ovCdXeQmpkukspqxnFD9vy9FX5Ra0a44It/6RITWcAIpkGFU8DPS0/Ilsfz2eiwKpcCyAO/2B2abAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E+3Ktxd6; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRza2sMl"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-3078fb1fa28so18243911fa.3;
-        Fri, 07 Feb 2025 03:38:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738928318; x=1739533118; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uK+Wrw7Kt+Edw+QNCibD61gviMhefqSZIojqb+0kTgU=;
-        b=dRza2sMlJGvXkkEMRWX4K0hdj3Apc12X3K3zTiivG8yCz9cKdMgfOjVasjAxcH4jZr
-         fhXX+AQFTDfRrGEaeu86A/scT4yc8t9LnogMdBnM1v+4HDPmXSIXdEeXpAA22tLzLE0Z
-         ULc6PMfNstgHDfi2eUYXK1/FwPiL61PiJfdeP4MInx4pSAwsTF7dp9nSZ+MhQ+iVeWSc
-         QLc9N7Kyv+gIKDzIYc3TkMo+ai8xaWX4zuuDw5Oe8FRzR2DuXc4z81RM01/c6tQYVXkP
-         HZSAB90KFfgp7xn1IjYYlHT+M9HXGuNLKZNKc7z70kYyRemlXIvNT2NKTm+4Ql9FacTK
-         4RlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738928318; x=1739533118;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uK+Wrw7Kt+Edw+QNCibD61gviMhefqSZIojqb+0kTgU=;
-        b=JpKUJHwOgj06qpIgfuzeElbyqpjHxqZP4yIo+7eTuyU/nQyFsdCDTYzAyLDDKqpAEX
-         JmVkTkyAPGEAoYX1/f2h67U/Emteq44mzdWviqyuKssbDG0JmPwFQV8eq4rX2cKOJFrm
-         RZQ80BnZ9DNMqA0flFGUy3J5jl7SlM3ZDkzjNJjCslR1qdyJVA+PC8ngHENTBiHM2dI3
-         V5a6MKsf5MzvyCtvXfdlR8F0nEGTfpKT+KeE/0tM+0G9rmgGyv70vk6lRbyLFt6HZt2O
-         kbtDj7awlGE/OAL9InUI2BcoezWhkRGPnM8vTVSXXZccZv29WaxxLrusX6oypyfV0gHQ
-         YnWA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+rkIOoV9h92dKBd+tzzrhdvsDr+UDNHNIkpLjShawMVAiXfawXaPBhKr/PQV2g5Skp0agMLxgZiUjrf8=@vger.kernel.org, AJvYcCWZ3AuAkjEOGGZqurFA4Ce//YM4ZOO+QnteeupvmwaSNg+29l+B+RHuw4LosRKMGm5ui2/YkmlDlUO4MuNl12x/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfV4aKEuk+ll00KjBQXplk3aq/lgusuwJcUo/yvV8itymp0mHK
-	6ewzPSQLR36AK1zAMeYO6184qICs9ZxPWL9veJR7cqb85Nl3qbBCgyKEmcRzlgsfjx/6Z4w6OQm
-	jYJznCaBlkJVe8SVlz/hWsaEB4Jk=
-X-Gm-Gg: ASbGncvBVZKBbd2FiwivDXilh9H/VYZliyxb7MmReDEBTfSa7obUN7kzyxR1nXlU/bX
-	5jI1fgOzjDgqOl/mWLdm5uVJZFx3Mh5OzzNMyrCiW7NYGn5iiQdUmmCai+8wqbvsh+Q7eQsBYXT
-	gQVx6+hOI1QAfAli0FRGPrZ5X2DLkB
-X-Google-Smtp-Source: AGHT+IH6Afm+9ysOOQCB3cBJnqE+ToWAhtF6R57UHO0C8PSY8eX0HV8s7qo9jlZmNIFtQdiD2KyUgvhNU8pMPZxe6vM=
-X-Received: by 2002:a05:651c:893:b0:300:7f87:a4f with SMTP id
- 38308e7fff4ca-307e57ff0fcmr10591031fa.19.1738928318142; Fri, 07 Feb 2025
- 03:38:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E+3Ktxd6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738928462; x=1770464462;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Kr3VE9NUyZO8hS9QqWqW3tBkPoYkI+NxTJxvWVkvBkA=;
+  b=E+3Ktxd6ld7bk0PZqL1XlsaV/l1FDW/wJDBjvjip+lY7m4mjNZ4TQL8B
+   Cytb2XuwFlUqkMrPS35M9H8fngyL5cNNew2EonMHjeCzfBtsmtqz56kwe
+   JFakJ5Nl2OH4aK/Fz4lfz0iC6w+LWnw5PtHMdL3xZOPn00V3w0yYqoj7z
+   rauFCMQ3UdWUcmpf51GcJKG4XsxX16z4tDZCrdI8h3yiFDodBCM15EXxS
+   d5M61J02J+jbenrBJssgW3cbrF8GgOHsbYO6AkUkpaSs63918KQrYpd5V
+   T7S/4U85c7PJJ9jEFd3J6CPGrcpoD6Xr6wSkhSpkiHk+/WVmjRQZL5Zss
+   A==;
+X-CSE-ConnectionGUID: a5Z5cfmsQSCal/R5udKozw==
+X-CSE-MsgGUID: Jef3ZS/KQCK3lujza3IRSQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50204716"
+X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
+   d="scan'208";a="50204716"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 03:41:01 -0800
+X-CSE-ConnectionGUID: KPH5yCU9QtuhzEinvrTVsw==
+X-CSE-MsgGUID: LxkwO1UyTTKjfONVxwkKqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
+   d="scan'208";a="111290324"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 07 Feb 2025 03:40:56 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tgMj6-000yF9-36;
+	Fri, 07 Feb 2025 11:40:52 +0000
+Date: Fri, 7 Feb 2025 19:40:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Suman Ghosh <sumang@marvell.com>, horms@kernel.org,
+	sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
+	hkelam@marvell.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lcherian@marvell.com,
+	jerinj@marvell.com, john.fastabend@gmail.com, bbhushan2@marvell.com,
+	hawk@kernel.org, andrew+netdev@lunn.ch, ast@kernel.org,
+	daniel@iogearbox.net, bpf@vger.kernel.org, larysa.zaremba@intel.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Suman Ghosh <sumang@marvell.com>
+Subject: Re: [net-next PATCH v5 6/6] octeontx2-pf: AF_XDP zero copy transmit
+ support
+Message-ID: <202502071925.3T93J9MM-lkp@intel.com>
+References: <20250206085034.1978172-7-sumang@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204-scanf-kunit-convert-v3-0-386d7c3ee714@gmail.com> <CABVgOSkZRage0UhVV97j=4XEV=Rg0rAAwkt_Qa=ie_K3_E6KhA@mail.gmail.com>
-In-Reply-To: <CABVgOSkZRage0UhVV97j=4XEV=Rg0rAAwkt_Qa=ie_K3_E6KhA@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 7 Feb 2025 06:38:02 -0500
-X-Gm-Features: AWEUYZlSA2fXU3EBIiGZs9nLflx77-YLJctvSKmc572LaktTdm7JWSX8dKJtFBQ
-Message-ID: <CAJ-ks9mNTyK9Ry_ko7EJvjiXYAzMMc_RoYoYPYROnZ4YFofHsg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] scanf: convert self-test to KUnit
-To: David Gow <davidgow@google.com>
-Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206085034.1978172-7-sumang@marvell.com>
 
-On Fri, Feb 7, 2025 at 2:33=E2=80=AFAM David Gow <davidgow@google.com> wrot=
-e:
->
-> Thanks very much for doing this. I'm happy with these changes from a KUni=
-t POV.
->
-> Two things I think we need to be careful about:
-> - This and the printf test are both changing the m68k configs. This is
-> fine, but could lead to a (harmless) merge conflict, so we should make
-> that clear and try to avoid having them go up in separate trees. (And,
-> if one gets merged first, rebase the other.)
-> - There has been some pushback on some kselftest->kunit conversions in
-> the past, especially if the test is being used to debug live systems
-> (which typically don't have CONFIG_KUNIT enabled). I can't personally
-> imagine that as an issue with scanf (though my imagination isn't
-> perfect), so I'd doubt it's a problem.
->
-> I'm assuming that, as mentioned in v2, these will go in via printk,
-> not ksefltest/kunit. Either would work for me (but, as mentioned
-> above, I think this and the printf tests should go in via the same
-> tree).
->
-> This series is:
-> Reviewed-by: David Gow <davidgow@google.com>
->
-> Cheers,
-> -- David
+Hi Suman,
 
-Thanks for the review David. Given the discussion on the printf series
-I applied the same scrutiny to this series; I reduced the churn, and
-kept the original control flow and failure messages.
+kernel test robot noticed the following build warnings:
 
-I'll pick up your Reviewed-by and send v4 shortly.
+[auto build test WARNING on net-next/main]
 
-Cheers.
-Tamir
+url:    https://github.com/intel-lab-lkp/linux/commits/Suman-Ghosh/octeontx2-pf-use-xdp_return_frame-to-free-xdp-buffers/20250206-165634
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20250206085034.1978172-7-sumang%40marvell.com
+patch subject: [net-next PATCH v5 6/6] octeontx2-pf: AF_XDP zero copy transmit support
+config: x86_64-buildonly-randconfig-006-20250207 (https://download.01.org/0day-ci/archive/20250207/202502071925.3T93J9MM-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250207/202502071925.3T93J9MM-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502071925.3T93J9MM-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c:112:6: warning: variable 'iova' set but not used [-Wunused-but-set-variable]
+     112 |         u64 iova;
+         |             ^
+   1 warning generated.
+
+
+vim +/iova +112 drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
+
+   104	
+   105	static void otx2_xdp_snd_pkt_handler(struct otx2_nic *pfvf,
+   106					     struct otx2_snd_queue *sq,
+   107					     struct nix_cqe_tx_s *cqe,
+   108					     int *xsk_frames)
+   109	{
+   110		struct nix_send_comp_s *snd_comp = &cqe->comp;
+   111		struct sg_list *sg;
+ > 112		u64 iova;
+   113	
+   114		sg = &sq->sg[snd_comp->sqe_id];
+   115	
+   116		if (sg->flags & OTX2_AF_XDP_FRAME) {
+   117			(*xsk_frames)++;
+   118			return;
+   119		}
+   120	
+   121		iova = sg->dma_addr[0];
+   122		if (sg->flags & OTX2_XDP_REDIRECT)
+   123			otx2_dma_unmap_page(pfvf, sg->dma_addr[0], sg->size[0], DMA_TO_DEVICE);
+   124		xdp_return_frame((struct xdp_frame *)sg->skb);
+   125		sg->skb = (u64)NULL;
+   126	}
+   127	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
