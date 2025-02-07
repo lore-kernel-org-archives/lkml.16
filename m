@@ -1,106 +1,124 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 169BB7DA8C
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F9E165F01
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738917692; cv=none; b=QFIEcEOvsm9j7xZyUo1Fae34v0OABYJsOwNT0bg1p2S4GSlDq8+F2df4mCByXw9CVFePmEXdBJz1BzByzkrhERiUltEMJj+pwCdOy/UXtH54hbChUceFjGRJmjjNbg6jYwptAis+x31Pyrir1NsRBH7ZwwnYoOMIzvpTbqi/kiE=
+	t=1738917737; cv=none; b=ZY7mqTIt2MBubnZruYRFxIcBG3BsTyEcRX+i/No4HRANSZLaVSPoORturHqIBRe5pOR+QM2jWHCWlFvMaq8JCAPdHgryR/kqRb5K6jbpO0HmbcC6IIZxasqtpne8sdXkTVYoU+Rq8u+2D8MNdLxpZJjqp2FNS5YefKVxHWAcw0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738917692; c=relaxed/simple;
-	bh=rA/hJ9ZH5vUSfyk8MgnRZZLD+mKzVmJhBoAsz26oAC4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ohd1HwAxMZaff7b0YKtbWYGPpMufAWObrchaURMNpfMZA98tX2TWKGJ5Txc7eBmVtzijzoyVb7cp0/XdSiBzOlVQlMTfXdQpD24tDESzAtf8cfULB2I9GK+ls6DNIM/mR/rlWWxw4AOgD8ZDxJChiYfFDmxou/xe4AVJj5ER+9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 602831063;
-	Fri,  7 Feb 2025 00:41:52 -0800 (PST)
-Received: from [10.162.16.89] (a077893.blr.arm.com [10.162.16.89])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 68CBC3F5A1;
-	Fri,  7 Feb 2025 00:41:24 -0800 (PST)
-Message-ID: <3bbae070-1ae3-4f5d-86ab-b3221425a1cb@arm.com>
-Date: Fri, 7 Feb 2025 14:11:21 +0530
+	s=arc-20240116; t=1738917737; c=relaxed/simple;
+	bh=ZX8n7LuVn5k6x5twX1Hoq4Vhle7NZg+4Zf7HsTeEAWE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LhzadcrwwvDQnynbN8Q5Q2xpa06kto79iHPapqQ1f0U6Lin6XtvhnQFvl8o9pktd0g+i8ZSx/wXbmTmG3iAgsnzECOusRV4WbfTJN1Ox37WdmDYloLItbMTJuE4pbFFGQY86Uux62Dnj/EYsrrx2Yn84BO9pL0wWHJYfnic1x3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=HgR19E+l; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="HgR19E+l"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43635796b48so10587705e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 00:42:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738917734; x=1739522534; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gFwnqBFWgDM8SO4w0yhAcF1pXvEQEwNsk7HECA68mAc=;
+        b=HgR19E+lzC0rSpLHWzj7OSsjS+GcabLpw0ZQv2+p8QkBSFkSGJa2XRvX2dCmWupioR
+         nV4uC/GIdMvy8TunLGe6NTqNsugWZe7iFnc2AcbBPtet+XM73NytdPZabcF8dbubPtUc
+         sE5DafUufrdvv3e4RomhT5RgcH+fdimzkZvXkAuX2mgRiTgWRlOfjOEAc4QznRA/8rb0
+         H5EdyIHtM8qH2gqbHRE+VUeagYFMyeNngY9S/uMy5wb7ltL2atK9E2CQmMWBLh5Ink9+
+         tHo5h7Jcb3EuZCLgzKSTLN8tRvYyC7LgQ0UwRVewfyFZbZDvIzqCl7qJe7BXP0u7GKeH
+         RabA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738917734; x=1739522534;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gFwnqBFWgDM8SO4w0yhAcF1pXvEQEwNsk7HECA68mAc=;
+        b=IYaZosCrQn8/ObVVrVEIRdTOHHuFjjh2eetP2NuFI3g0AlWHxVsA2WwBzcuVd8KfXe
+         VphRR+gBWL5wJES0Tl64HalFJcwRT9Iou916NeyDAihGHEDLQ3UdCGSSlYx8wypmGnxD
+         DPinOAeHaQhE3aN8+OZsACAz7CBbPpWqA9PH5fu05SkxXUfoYqUIgAGECVSa4LuyQNQR
+         fiWByo01AheH05LpOwIj5ylq46QNUBBh/dkuIToYdDXoHydxt98nmRSzjAn+oSSSGqOC
+         SIS/iwIegs99ZJtlzzTnKUxi5EokFDpX9l7iZPuVEvuV8+NcJaknLUoEfRptwNBogzrs
+         LKNA==
+X-Forwarded-Encrypted: i=1; AJvYcCXANB5CW+JlR0qJmyObK+dLt44+cn9mfSGnzzBXetpjW+1kwMdAcuY0K+n+qUAU9JuoeSNHreA38CNVMpQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUwq/zebmBpkTv7/dIajn251xzzphFfn5oBbBwlkf7JBYCd+n3
+	xHs0P9VNeqQ+swsnuhhbBZiHqwd70Jm3sTGmIGkP4G6b0urnjkBW/0b1/gsfEfk=
+X-Gm-Gg: ASbGnctIWnLJC1AkUs6tQc838BFdFfTf6a8XmeepVrPHwz+efbpK34LL/+/Apu1gpPj
+	KzCcLTZduCUNHUFP81yuvlewcXBGyGPpK3TtNs7eKsl5NRexPRu2yQcRWjObupntDp19qZYspoR
+	5I8rxSb7UXjSSKmhdNL8UbprE0O/Zn+0iTVEskMGg0aHU8GwKD8UJhz+QGlzz4g4derykWEcB3r
+	Kuyb+Bj4cRUNBixA11tdK+dQmjIUUJNSJ6zZ8noNJLW1fwRAExtGIK3+e/mv8jjgUmQg5lhFD07
+	DUH3z2Vw896C+Q==
+X-Google-Smtp-Source: AGHT+IGhVY3Tt3MMVCmyWfF7lOSCfftHwRPlkoWYLa4lhF+bK+VaxojI/dVskS55Z71J90dOQs1S0A==
+X-Received: by 2002:a05:600c:c7:b0:434:e65e:457b with SMTP id 5b1f17b1804b1-43912d0f1eemr48321615e9.3.1738917734389;
+        Fri, 07 Feb 2025 00:42:14 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:ae69:c28e:8e23:dca])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390daf7dbcsm83964035e9.30.2025.02.07.00.42.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 00:42:14 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio fixes for v6.14-rc2
+Date: Fri,  7 Feb 2025 09:42:11 +0100
+Message-ID: <20250207084211.35316-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 10/16] mm/vmalloc: Warn on improper use of
- vunmap_range()
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Muchun Song <muchun.song@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250205151003.88959-1-ryan.roberts@arm.com>
- <20250205151003.88959-11-ryan.roberts@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250205151003.88959-11-ryan.roberts@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/5/25 20:39, Ryan Roberts wrote:
-> A call to vmalloc_huge() may cause memory blocks to be mapped at pmd or
-> pud level. But it is possible to subsquently call vunmap_range() on a
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-s/subsquently/subsequently
+Linus,
 
-> sub-range of the mapped memory, which partially overlaps a pmd or pud.
-> In this case, vmalloc unmaps the entire pmd or pud so that the
-> no-overlapping portion is also unmapped. Clearly that would have a bad
-> outcome, but it's not something that any callers do today as far as I
-> can tell. So I guess it's jsut expected that callers will not do this.
+Please pull the following set of driver and Kconfig changes for the next
+RC.
 
-s/jsut/just
+Thanks,
+Bartosz
 
-> 
-> However, it would be useful to know if this happened in future; let's
-> add a warning to cover the eventuality.
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
 
-This is a reasonable check to prevent bad outcomes later.
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
 
-> 
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> ---
->  mm/vmalloc.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index a6e7acebe9ad..fcdf67d5177a 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -374,8 +374,10 @@ static void vunmap_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
->  		if (cleared || pmd_bad(*pmd))
->  			*mask |= PGTBL_PMD_MODIFIED;
->  
-> -		if (cleared)
-> +		if (cleared) {
-> +			WARN_ON(next - addr < PMD_SIZE);
->  			continue;
-> +		}
->  		if (pmd_none_or_clear_bad(pmd))
->  			continue;
->  		vunmap_pte_range(pmd, addr, next, mask);
-> @@ -399,8 +401,10 @@ static void vunmap_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
->  		if (cleared || pud_bad(*pud))
->  			*mask |= PGTBL_PUD_MODIFIED;
->  
-> -		if (cleared)
-> +		if (cleared) {
-> +			WARN_ON(next - addr < PUD_SIZE);
->  			continue;
-> +		}
->  		if (pud_none_or_clear_bad(pud))
->  			continue;
->  		vunmap_pmd_range(pud, addr, next, mask);
-Why not also include such checks in vunmap_p4d_range() and __vunmap_range_noflush()
-for corresponding P4D and PGD levels as well ?
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc2
+
+for you to fetch changes up to 59ff2040f0a58923c787fdba5999100667338230:
+
+  MAINTAINERS: Use my kernel.org address for ACPI GPIO work (2025-02-05 14:38:33 +0100)
+
+----------------------------------------------------------------
+gpio fixes for v6.14-rc2
+
+- fix interrupt support in gpio-pca953x
+- fix configfs attribute locking in gpio-sim
+- limit the visibility of the GPIO_GRGPIO Kconfig symbol to OF systems
+  only
+- update MAINTAINERS
+
+----------------------------------------------------------------
+Bartosz Golaszewski (1):
+      gpio: sim: lock hog configfs items if present
+
+Geert Uytterhoeven (1):
+      gpio: GPIO_GRGPIO should depend on OF
+
+Mark Tomlinson (1):
+      gpio: pca953x: Improve interrupt support
+
+Mika Westerberg (1):
+      MAINTAINERS: Use my kernel.org address for ACPI GPIO work
+
+ MAINTAINERS                 |  2 +-
+ drivers/gpio/Kconfig        |  1 +
+ drivers/gpio/gpio-pca953x.c | 19 -------------------
+ drivers/gpio/gpio-sim.c     | 13 ++++++++-----
+ 4 files changed, 10 insertions(+), 25 deletions(-)
