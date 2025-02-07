@@ -1,128 +1,137 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4583718C011
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B579A18C011
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738946373; cv=none; b=gVDq0ZLHJUrDaHYFBHNFzFjvvT6VmD4TJ3G5QBEBQ5opUjD8oozrvyywJ5LKi470QV4xmq6sTsnQgb9pGR+jNkGGqPpIqme6Cn3am+3NMrq3XeOGjZusTHqf18/34MprQemdtMxsQy8uLMqC24UHYpg7qcpFbHErapzvf/2Lg/A=
+	t=1738946405; cv=none; b=LlfrdypwN6Ku0giRhWyXVonuRpAIugnzpZNBnnSbnhM78Elq4iaTQO8gD4miPIHD2+XkrGBLX2sQLs89G2pQHa0njkJ5SuZITYEDy4f9xFOUfDASqaMh7x5aCDnqHzjBFqA/jVlHeEoWe/kDX49V8lB/k3xhm/+/tQEEkhqpJyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738946373; c=relaxed/simple;
-	bh=jI4pO4b0XLAg1RZk0RsjsLHeusgbiZ97ogCgxPQ6DNc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=sKgkL6WmRHS9S302YUEJ7FGpxY1dUhrw+vkrVG35NdT1cpZHCIQHJFbBiJ6Rmsb5DNdTCnnB/IRaH0mFaAQUZbLdIoDG0yZDmfq1TjfbGT5RRbJFK84E7SAh+FLthFCyxErazDTTFRMszToYXhGtfnazIfUuOZI5FLniQ57Ei8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=LqUyBY1G; arc=none smtp.client-ip=91.218.175.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="LqUyBY1G"
+	s=arc-20240116; t=1738946405; c=relaxed/simple;
+	bh=GgSEJHGGGIfYbQ0OCpKOCPSraSQvdK/GUcFscUDT7M4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=NVrTqRz0uDtqzPlUrGuk2SC/cXmtrctMLYTvk5MxHMOf8CocmYzPJ1HOq5547jfNVTz9V1ykVGNdP1zfuq2XypmAJymGWssKbtHMxjbLq/JonG6/3puAqLG8XfO7eIgectMNbvwyRvjCaxhIMM/J51aTUKvNSDGqjIwXoJFUfoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d14a235594so1664785ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:40:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738946403; x=1739551203;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TPm30AHbJ/jUX1sW2k2palonDiWn2ruCia9urkwrC/U=;
+        b=fzm/7hceD0190nS7BTTCMqeK+KXJPaEfsoXCOXsmKdboB068PwlMgMN1loZ5ZN6dPU
+         bgX/7zOan5aPVmjwaoPt+FDKi1W2O1BGeOc4whTo8lx7mRsPwFT0JT2D3PxZeo94jy+G
+         u2A7+E3ZkkpKLGhhXQvPSF4RpR8pI9LfD/T/kTqUODoWftEw0lccQWwZUu/AuWyWdXAB
+         liop29P3bh+sPbCELycdKp+E6Ru9P9vwufI9UGaVx3nFQqiySc45yxJr5uejpwsWlkdr
+         FqHC+uKn/bml2TCdCl0+SuXATnbIdiOem2KQ1U93lQUKTddzuEIxN+rPpD5FgUFX+0Z0
+         IsEg==
+X-Gm-Message-State: AOJu0YxRDkHhuLT10i07StKkLVpIqI8waTpghAOMjxs/nON93A28G06D
+	p9/LIOeoETdB/SncYiUlyKJrA23cqpp29P00TwJdaigClwk2mefjvwhATJ+xX56eRUfBo8JNQE8
+	NO7mHXRLZHBPUROKzs+73OmrNOeZ6Bb0Rmlpp1X3LbzhoLtMeBMu+x7Y=
+X-Google-Smtp-Source: AGHT+IEwTRY2ZMvxgMPhnF3p0pgqYrKClQh8mBwnfEcgJPHc203cf6/LpQdPKQ1o6AuRj/iHQoHslq7sLF0EQsu9vkzleSEAplai
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1738946363;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X6ih/LrCB0TBhJJrYgx7AsyysXqX50UygCQ/toakb9A=;
-	b=LqUyBY1GbZn/An3WfS8y3xh5Eed+fv7L07ZKBn4XkHJSfqZbNbAEiDkMit04JGQEoIKN7+
-	HcOakv5YAULbtLNbwq1mt6BS7w/F4AQ3X1RwJZUls+7zraWc9wujHV+0SJ4Xo/HfJTdY3r
-	4D+xUs2OAjY5egJXL8IaakoOzVpSb/W2OncgFQB4A1/KFJ5UiUDzPupeaFO1l7vq/8aCHY
-	B7cQV431jJJZdRmkRzE+o79AdCyZ9mshz4yVlcXN5HjwtHztbysPQU89F17/RHPvmnyyKT
-	RjXi5cvLKjIHZNlz9CAr/07NGKZCRXqddwxnoqi/gObEdS2lDBh1gwPNler/lg==
-Content-Type: multipart/signed;
- boundary=7028502f771c4dd1e1fb2bb3c0027617c3fbe8bf2f682fab29e1f35f7093;
- micalg=pgp-sha256; protocol="application/pgp-signature"
-Date: Fri, 07 Feb 2025 17:39:10 +0100
-Message-Id: <D7MD194WS7UL.FT324IUB9BIA@cknow.org>
-Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Heiko
- Stuebner" <heiko@sntech.de>, "Maximilian Weigand" <mweigand@mweigand.net>,
- "Marek Kraus" <gamiee@pine64.org>, <devicetree@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>,
- <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- "Diederik de Haas" <didi.debian@cknow.org>
-Subject: Re: [PATCH v1] arm64: dts: rockchip: add 'chassis-type' property on
- PineNote
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Dragan Simic" <dsimic@manjaro.org>
-References: <20250207111157.297276-1-didi.debian@cknow.org>
- <502523554b482a2e10d85d37761932a0@manjaro.org>
-In-Reply-To: <502523554b482a2e10d85d37761932a0@manjaro.org>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:20e8:b0:3ce:7a41:d885 with SMTP id
+ e9e14a558f8ab-3d05a540706mr70875465ab.1.1738946402805; Fri, 07 Feb 2025
+ 08:40:02 -0800 (PST)
+Date: Fri, 07 Feb 2025 08:40:02 -0800
+In-Reply-To: <CABBYNZKiusks5ggjr_ZjidreAt=f89zNcpACjEhw-D_zBPUHVg@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a63762.050a0220.f64af.0000.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] BUG: corrupted list in hci_chan_del (2)
+From: syzbot <syzbot+10bd8fe6741eedd2be2e@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
---7028502f771c4dd1e1fb2bb3c0027617c3fbe8bf2f682fab29e1f35f7093
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+Hello,
 
-Hi Dragan,
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+BUG: corrupted list in hci_chan_del
 
-On Fri Feb 7, 2025 at 4:01 PM CET, Dragan Simic wrote:
-> On 2025-02-07 12:11, Diederik de Haas wrote:
->> Add the recommended chassis-type root node property so userspace can
->> request the form factor and adjust their behavior accordingly.
->>=20
->> Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
->> Link:=20
->> https://github.com/devicetree-org/devicetree-specification/blob/main/sou=
-rce/chapter3-devicenodes.rst#root-node
->
-> Maybe the Link tag should be converted into a "[1]" reference?
-> To me, this is more like a reference for this DT addition.
->
-> In general, references can also be placed closer to the contents
-> they back up, which isn't possible with Link tags, but of course
-> that doesn't matter much in this case.
+ non-paged memory
+list_del corruption, ffff88801251b500->prev is LIST_POISON2 (dead000000000122)
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:61!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
+CPU: 0 UID: 0 PID: 6801 Comm: syz.0.32 Not tainted 6.14.0-rc1-next-20250207-syzkaller-02219-ged58d103e6da-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+RIP: 0010:__list_del_entry_valid_or_report+0x12c/0x190 lib/list_debug.c:59
+Code: 8c 4c 89 fe 48 89 da e8 a2 63 36 fc 90 0f 0b 48 89 df e8 27 e0 13 fd 48 c7 c7 a0 ce 60 8c 4c 89 fe 48 89 da e8 85 63 36 fc 90 <0f> 0b 4c 89 e7 e8 0a e0 13 fd 42 80 3c 2b 00 74 08 4c 89 e7 e8 db
+RSP: 0018:ffffc900033b7878 EFLAGS: 00010246
+RAX: 000000000000004e RBX: dead000000000122 RCX: 3b04728f07e88400
+RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+RBP: dffffc0000000000 R08: ffffffff819f3f6c R09: fffffbfff1cfa5b8
+R10: dffffc0000000000 R11: fffffbfff1cfa5b8 R12: dead000000000122
+R13: dffffc0000000000 R14: ffff8880285d88d8 R15: ffff88801251b500
+FS:  00007fe19c9ff6c0(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fe19c9ddf98 CR3: 00000000673a2000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __list_del_entry_valid include/linux/list.h:124 [inline]
+ __list_del_entry include/linux/list.h:215 [inline]
+ list_del_rcu include/linux/rculist.h:168 [inline]
+ hci_chan_del+0x70/0x1b0 net/bluetooth/hci_conn.c:2858
+ l2cap_conn_free net/bluetooth/l2cap_core.c:1805 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ l2cap_conn_put+0x70/0xe0 net/bluetooth/l2cap_core.c:1819
+ l2cap_sock_shutdown+0xa6d/0x1070 net/bluetooth/l2cap_sock.c:1376
+ l2cap_sock_release+0x79/0x1d0 net/bluetooth/l2cap_sock.c:1415
+ __sock_release net/socket.c:647 [inline]
+ sock_close+0xbc/0x240 net/socket.c:1398
+ __fput+0x3e9/0x9f0 fs/file_table.c:464
+ task_work_run+0x24f/0x310 kernel/task_work.c:227
+ get_signal+0x15f7/0x1750 kernel/signal.c:2809
+ arch_do_signal_or_restart+0x96/0x860 arch/x86/kernel/signal.c:337
+ exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0xce/0x340 kernel/entry/common.c:218
+ do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fe19bb8cda9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fe19c9ff038 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: fffffffffffffffc RBX: 00007fe19bda5fa0 RCX: 00007fe19bb8cda9
+RDX: 000000000000000e RSI: 0000000020000100 RDI: 0000000000000004
+RBP: 00007fe19bc0e2a0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fe19bda5fa0 R15: 00007ffdbd7c9148
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:__list_del_entry_valid_or_report+0x12c/0x190 lib/list_debug.c:59
+Code: 8c 4c 89 fe 48 89 da e8 a2 63 36 fc 90 0f 0b 48 89 df e8 27 e0 13 fd 48 c7 c7 a0 ce 60 8c 4c 89 fe 48 89 da e8 85 63 36 fc 90 <0f> 0b 4c 89 e7 e8 0a e0 13 fd 42 80 3c 2b 00 74 08 4c 89 e7 e8 db
+RSP: 0018:ffffc900033b7878 EFLAGS: 00010246
+RAX: 000000000000004e RBX: dead000000000122 RCX: 3b04728f07e88400
+RDX: 0000000000000000 RSI: 0000000080000000 RDI: 0000000000000000
+RBP: dffffc0000000000 R08: ffffffff819f3f6c R09: fffffbfff1cfa5b8
+R10: dffffc0000000000 R11: fffffbfff1cfa5b8 R12: dead000000000122
+R13: dffffc0000000000 R14: ffff8880285d88d8 R15: ffff88801251b500
+FS:  00007fe19c9ff6c0(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fe19c9ddf98 CR3: 00000000673a2000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-I generally use the "[1]" format when linking to specific claims, which
-I could've done wrt the "recommended". But I considered this a general
-background link and then I prefer to do it via a Link tag.
 
-If requested by a maintainer I'll change it ofc, but otherwise I prefer
-to keep it as is.
+Tested on:
 
->> ---
->>  arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi | 2 ++
->>  1 file changed, 2 insertions(+)
->>=20
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi
->> b/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi
->> index 2d3ae1544822..3613661417b2 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3566-pinenote.dtsi
->> @@ -9,6 +9,8 @@
->>  #include "rk3566.dtsi"
->>=20
->>  / {
->> +	chassis-type =3D "tablet";
->> +
->>  	aliases {
->>  		mmc0 =3D &sdhci;
->>  	};
->
-> The patch is obviously fine.  Thanks for the patch, and please feel
-> free to include, regardless of the note above, my:
->
-> Reviewed-by: Dragan Simic <dsimic@manjaro.org>
+commit:         ed58d103 Add linux-next specific files for 20250207
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=14509df8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=244a34ec1429746
+dashboard link: https://syzkaller.appspot.com/bug?extid=10bd8fe6741eedd2be2e
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15ff1df8580000
 
-Thanks :)
-
-Cheers,
-  Diederik
-
---7028502f771c4dd1e1fb2bb3c0027617c3fbe8bf2f682fab29e1f35f7093
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZ6Y3MwAKCRDXblvOeH7b
-bm7CAQDbpmFpX5ubvZP1t+qtuzyTR6mFwL+PSL0Ss0jlhqiaOwEAmNLs1E37i0+M
-8dsgxHWQRk9FxOK7KW6Wd0HRz+Ij1gQ=
-=yaBF
------END PGP SIGNATURE-----
-
---7028502f771c4dd1e1fb2bb3c0027617c3fbe8bf2f682fab29e1f35f7093--
