@@ -1,209 +1,132 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1604A1A;
-	Fri,  7 Feb 2025 15:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB78238D58;
+	Fri,  7 Feb 2025 15:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738941404; cv=none; b=qOInvlyjKBzYdmuE/CKn2jRXd7ZFmTiilSiieCD0jPyCYi09tl2VP+QsTBKyqkk62+9NATAF3gkPV/ZVi0om208O1CpG/bqf4ow1JDTzotj/YKwxO6kFk/zWz3k5S5fi0zFKOKW3yHZyIASo9SDS16cWHfImOixBVIz5DA76Wvw=
+	t=1738941512; cv=none; b=WJxKocXaMC1JEu+FFc6pmeYTmxmPNn/Ll3MvCkmw8i7FyNZCz4Ir2snDbOpEy0qEE6Cne4EQuiqbefrm6FmEq3k3XuNDpntPfMI0RabkFJ3KTe78VeiAiBLsw0TnARORMODNGByJSMQ626dYMwXVtCQO9xhn/Qow2v8x48iqVVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738941404; c=relaxed/simple;
-	bh=STVLK4/uc5Q8B1kLKI4AT+0I2EICiAVb6GGS+j2/+0I=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tF98RHg5LO+vzeELo6x6aU1sD3vCrcAOaWtu6EYIMmS0x6S7odh6S/UyGY7PcQw924SvX7rW6/VvJQR0gJ4SNIkgaTHe4XJlsUCwRtDI37NbMWz0Oi36dOFgCndLYlb64x9c5wymB3i5h6YYbIyVofHmsG68VR7OPyU93+mLRVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cDnX4KEZ; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738941512; c=relaxed/simple;
+	bh=MprMiMuV+6PSWzh5qcNiBjouyTdWbepTzVpCMiEoexc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FksCTGLUDqzs5BJ8t6XrANgCPfWEQ5b/6C7tKJJxZOZRs+DL6T+wI7/X4dnelTcvzEp6D4Mkbr4BuP4P0NfeP2diKMv1Rb2CpCpi9P1Gy7NeLgccBTvXCl8pe6kvoRfKm1tVPouCAxUrFNjBy2346io5s33WzPX0JInhgKwC16A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HPVUQb9i; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cDnX4KEZ"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517ECPua027772;
-	Fri, 7 Feb 2025 15:16:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=bvv+C2
-	S+HfCmRHdGBlwkwlon1bQ1BEA6avgMHj66Kyg=; b=cDnX4KEZrEz8gtWyLF7EZG
-	J1lE9pQhuZFO6qmKgfD8jVdktkiXGsIALMIuVd4aXW/ToVvxy2R0Pl0apHjo2Edm
-	QKS0iDbFi35Mutiz91RI7CUN+KckzxLL0MkMqAFP4gTbFqyjrRn5KhQ1X2Hw480D
-	GdKGA3bAmOpAJB/xl2yeLMyQ1YOwEXTbIHpriGpljU6R5oXZSuFt2M01ZUkCNrrB
-	fwGtNbjw/1mSbWc2uodlqv5FN2gEiqnr0FLXgtvLPaR+0MWUsLO5wWt7a9ccWdae
-	xO3t50glTkRHXhKEXFfR8FG/Gam+aaXvi9JCtH0MyChPblGX2lfQJbnL2sx14YCQ
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44n910bcej-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 15:16:14 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 517BPNBL024635;
-	Fri, 7 Feb 2025 15:16:13 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxxnm429-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 15:16:13 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 517FGDCR18744016
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Feb 2025 15:16:13 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1DD6C58056;
-	Fri,  7 Feb 2025 15:16:13 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3077F58063;
-	Fri,  7 Feb 2025 15:16:12 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.150.111])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  7 Feb 2025 15:16:12 +0000 (GMT)
-Message-ID: <3a4053664cde06622e1f9a9d8e3a5aab80b9beb7.camel@linux.ibm.com>
-Subject: Re: [PATCH v7 7/7] ima: measure kexec load and exec events as
- critical data
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com
-Date: Fri, 07 Feb 2025 10:16:11 -0500
-In-Reply-To: <20250203232033.64123-9-chenste@linux.microsoft.com>
-References: <20250203232033.64123-1-chenste@linux.microsoft.com>
-	 <20250203232033.64123-9-chenste@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HPVUQb9i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738941511; x=1770477511;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=MprMiMuV+6PSWzh5qcNiBjouyTdWbepTzVpCMiEoexc=;
+  b=HPVUQb9iyebAe94yXz6yhRqyPqgk75KgnZx6BwcFsAhVJTpe7yA9W0Ep
+   8AFygC4SI1N6Kr1F9MFsqWkfE73CPt1YYZfJ/cEcQU0XWjwBsItIG9i1X
+   SmUO6E6U9dYqL+H/RFB3+/vM5xY87X2CiMEmodHgvUFLyYdvyqsg0JCcK
+   PyF+FrzCQGo2Z7pMgdOk1RPsqcZumVPAjiBTE8tsb2E7Nl5E/bCa+crSA
+   ACi78WiYJLUBnMM6DCPuAnCI3wQhtVHmcoNA0CbEmd+TGH8rHqcDXXuYS
+   x0pl33CRUBJPzG9vTMMLLlXldkdXKI+vVgDEOnku5xCuUa0NMlzDeC/ee
+   A==;
+X-CSE-ConnectionGUID: Fh7RfJLuS96ejanzLUZU6A==
+X-CSE-MsgGUID: d7E1tk1oRwOGY0yaKfeUsQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="38815609"
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="38815609"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 07:18:30 -0800
+X-CSE-ConnectionGUID: nkcY8q7tR4alKYqFWIgdIQ==
+X-CSE-MsgGUID: SofFb9WSQj6+qh13Aet7QA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="116599312"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa004.fm.intel.com with ESMTP; 07 Feb 2025 07:18:28 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id A286F428; Fri, 07 Feb 2025 17:18:26 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH v2 3/7] gpio: 74x164: Annotate buffer with __counted_by()
+Date: Fri,  7 Feb 2025 17:17:10 +0200
+Message-ID: <20250207151825.2122419-4-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20250207151825.2122419-1-andriy.shevchenko@linux.intel.com>
+References: <20250207151825.2122419-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: bvWS2oA6QncdRQC_jDFMQVZrnEdHSfxp
-X-Proofpoint-GUID: bvWS2oA6QncdRQC_jDFMQVZrnEdHSfxp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_07,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 spamscore=0 malwarescore=0 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502070114
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
-> The amount of memory allocated at kexec load, even with the extra memory
-> allocated, might not be large enough for the entire measurement list.=C2=
-=A0 The
-> indeterminate interval between kexec 'load' and 'execute' could exacerbat=
-e
-> this problem.
->=20
-> Define two new IMA events, 'kexec_load' and 'kexec_execute', to be=20
-> measured as critical data at kexec 'load' and 'execute' respectively.
-> Report the allocated kexec segment size, IMA binary log size and the
-> runtime measurements count as part of those events.
->=20
-> These events, and the values reported through them, serve as markers in
-> the IMA log to verify the IMA events are captured during kexec soft
-> reboot.=C2=A0 The presence of a 'kexec_load' event in between the last tw=
-o
-> 'boot_aggregate' events in the IMA log implies this is a kexec soft
-> reboot, and not a cold-boot. And the absence of 'kexec_execute' event
-> after kexec soft reboot implies missing events in that window which
-> results in inconsistency with TPM PCR quotes, necessitating a cold boot
-> for a successful remote attestation.
+Add the __counted_by() compiler attribute to the flexible array member
+volumes to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+CONFIG_FORTIFY_SOURCE.
 
-As a reminder, please include directions for verifying the buffer data hash=
- against
-the buffer data.  The directions would be similar to those in commit 6b4da8=
-c0e7f
-("IMA: Define a new template field buf").
+Use struct_size() instead of manually calculating the number of bytes to
+allocate the private structure with a buffer.
 
->=20
-> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> ---
-> =C2=A0security/integrity/ima/ima_kexec.c | 23 +++++++++++++++++++++++
-> =C2=A01 file changed, 23 insertions(+)
->=20
-> diff --git a/security/integrity/ima/ima_kexec.c
-> b/security/integrity/ima/ima_kexec.c
-> index c9c916f69ca7..0342ddfa9342 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -17,6 +17,8 @@
-> =C2=A0#include "ima.h"
-> =C2=A0
-> =C2=A0#ifdef CONFIG_IMA_KEXEC
-> +#define IMA_KEXEC_EVENT_LEN 256
-> +
-> =C2=A0static struct seq_file ima_kexec_file;
-> =C2=A0static void *ima_kexec_buffer;
-> =C2=A0static size_t kexec_segment_size;
-> @@ -36,6 +38,24 @@ static void ima_free_kexec_file_buf(struct seq_file *s=
-f)
-> =C2=A0	ima_reset_kexec_file(sf);
-> =C2=A0}
-> =C2=A0
-> +static void ima_measure_kexec_event(const char *event_name)
-> +{
-> +	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
-> +	size_t buf_size =3D 0;
-> +	long len;
-> +
-> +	buf_size =3D ima_get_binary_runtime_size();
-> +	len =3D atomic_long_read(&ima_htable.len);
-> +
-> +	scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
-> +			"kexec_segment_size=3D%lu;ima_binary_runtime_size=3D%lu;"
-> +			"ima_runtime_measurements_count=3D%ld;",
-> +				kexec_segment_size, buf_size, len);
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpio-74x164.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-From scripts/checkpatch.pl, "Alignment should match open parenthesis".=20
-
-> +
-> +	ima_measure_critical_data("ima_kexec", event_name, ima_kexec_event,
-> +					strlen(ima_kexec_event), false, NULL, 0);
-
-From the kernel-doc scnprintf(), returns the number of bytes.  There should=
- be no
-need to calculate it using strlen().
-
-> +}
-> +
-> =C2=A0static int ima_alloc_kexec_file_buf(size_t segment_size)
-> =C2=A0{
-> =C2=A0	/*
-> @@ -60,6 +80,7 @@ static int ima_alloc_kexec_file_buf(size_t segment_size=
-)
-> =C2=A0out:
-> =C2=A0	ima_kexec_file.read_pos =3D 0;
-> =C2=A0	ima_kexec_file.count =3D sizeof(struct ima_kexec_hdr);	/* reserved=
- space
-> */
-> +	ima_measure_kexec_event("kexec_load");
-> =C2=A0
-> =C2=A0	return 0;
-> =C2=A0}
-> @@ -201,6 +222,8 @@ static int ima_update_kexec_buffer(struct notifier_bl=
-ock *self,
-> =C2=A0		return ret;
-> =C2=A0	}
-> =C2=A0
-> +	ima_measure_kexec_event("kexec_execute");
-> +
-> =C2=A0	ret =3D ima_dump_measurement_list(&buf_size, &buf,
-> =C2=A0					kexec_segment_size);
-> =C2=A0
-
-After fixing up and applying this patch set to 6.14.0-rc1, I'm not seeing t=
-he
-"kexec_execute".  Even after changing the default extra memory, I'm still n=
-ot seeing
-the measurement.
-
-Mimi
-
+diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
+index 70c662bbca7b..7844f8a58834 100644
+--- a/drivers/gpio/gpio-74x164.c
++++ b/drivers/gpio/gpio-74x164.c
+@@ -30,7 +30,7 @@ struct gen_74x164_chip {
+ 	 * register at the end of the transfer. So, to have a logical
+ 	 * numbering, store the bytes in reverse order.
+ 	 */
+-	u8			buffer[];
++	u8			buffer[] __counted_by(registers);
+ };
+ 
+ static int __gen_74x164_write_config(struct gen_74x164_chip *chip)
+@@ -97,6 +97,7 @@ static int gen_74x164_direction_output(struct gpio_chip *gc,
+ 
+ static int gen_74x164_probe(struct spi_device *spi)
+ {
++	struct device *dev = &spi->dev;
+ 	struct gen_74x164_chip *chip;
+ 	u32 nregs;
+ 	int ret;
+@@ -116,10 +117,12 @@ static int gen_74x164_probe(struct spi_device *spi)
+ 		return -EINVAL;
+ 	}
+ 
+-	chip = devm_kzalloc(&spi->dev, sizeof(*chip) + nregs, GFP_KERNEL);
++	chip = devm_kzalloc(dev, struct_size(chip, buffer, nregs), GFP_KERNEL);
+ 	if (!chip)
+ 		return -ENOMEM;
+ 
++	chip->registers = nregs;
++
+ 	chip->gpiod_oe = devm_gpiod_get_optional(&spi->dev, "enable",
+ 						 GPIOD_OUT_LOW);
+ 	if (IS_ERR(chip->gpiod_oe))
+@@ -133,10 +136,7 @@ static int gen_74x164_probe(struct spi_device *spi)
+ 	chip->gpio_chip.set = gen_74x164_set_value;
+ 	chip->gpio_chip.set_multiple = gen_74x164_set_multiple;
+ 	chip->gpio_chip.base = -1;
+-
+-	chip->registers = nregs;
+ 	chip->gpio_chip.ngpio = GEN_74X164_NUMBER_GPIOS * chip->registers;
+-
+ 	chip->gpio_chip.can_sleep = true;
+ 	chip->gpio_chip.parent = &spi->dev;
+ 	chip->gpio_chip.owner = THIS_MODULE;
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
