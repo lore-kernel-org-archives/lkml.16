@@ -1,197 +1,145 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFC5199238
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 19:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF7E23C8CB;
+	Fri,  7 Feb 2025 19:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738958054; cv=none; b=neKphfBZrqyQ9InEgUPeWvSU+j3qxW+7e2PgIWUqL53t3DfcGy3Cs6m9/aUW/TEHERxLydne4jm5kcx66p/vxm9y2ghGEhnBKVaDP1atQmBm56AqZKhdGZrXw4yOykxfop97sjQBMXHG0IteEtN60jLdi6eR56mat/RrQ4+p8ho=
+	t=1738958132; cv=none; b=R7qo3U4ewzYGUwFkbO3eSl4EjW2As6rEP4lxcUF0abtzdPjrEc0KbPj6JD/g/G69Fm6PaX8TYJqEMaWdcztTwssL/u8IHvC3kZ+A67yOw3BSXRWfXs6g4QBfEX5Z6A/ol9FYpI+FSEn7pcBYxUYU7cnswsb/l5aHuAQaTelHXDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738958054; c=relaxed/simple;
-	bh=sbZnWinPgG2IfHiADHdxLn+Xj3t/OLzgEcxzGapBJKo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HSYzsokgozXKjZ8C8TJ7+pMwl2FtXUSei+jmklN3NuF9mtPhhX96egn7MEghg3bkz0o0amFrN071ETqm03lSEkm+XcteECRKNfm5QOKGGcW6LvbtYDpGMNZISrG5hFgjqk9HKrX1C7OGakQnGR4hRKrkPHozm1KO3WWmWc5Q2Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ifP2YiaI; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738958132; c=relaxed/simple;
+	bh=MJUdRTHVYHlorYQ/LVArysmz4Q5MD3lRzm3b4c75gzo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pNJ7b2pmWMV8n0mV+EwuBMr1iabEqdBOII6GtlDHretbAtIBHXY8IIsvmEEJ2QUChekUuBHfdAHOo3oD5gSGIXrl5bVHwY6qmXnu0SS3lPc6ro6krBnywQQfQo8z3Gi/PLNQpWHFdZKXnXvl2qivtqbJ2Idr1jKiaoud5i8FbOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eSMOFm2g; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ifP2YiaI"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5401e6efffcso2517286e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 11:54:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSMOFm2g"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-436202dd730so17041475e9.2;
+        Fri, 07 Feb 2025 11:55:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738958051; x=1739562851; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6ru1wvh36CbOfubIqIyD+5sQyMz21Y8aZYTgm/d3+5o=;
-        b=ifP2YiaIwH+DTPI6Nu4wabswd4PZpLcdLm+6dzSPZtxatJGGld/9W5SMgMddgHzih8
-         zbIcp4bmFw8wFGhn4+udgY6VTjabmsOzUZLwuzM40QbIuNAdhpfy3frEm3Xc7p/Oi4kB
-         Xs6y0a9ccZwTYavch0IJDeEKImhEHMVFOWL0MSOrcEiSUuQh/9ssQ3YAxGOydkEStGUa
-         ZvwzR0j9LCk/VzoX10XtgODRVzIs6A1WhVSIWykCsodkYbGO3tlYT+UhVjl11JS/dW2d
-         oVwugHqDTtNbglz1TcX6oKyyN7bGkG6CLUfIRumCB/1AjBqZFJxZ41A/7fUgzbDygz+D
-         GkSA==
+        d=gmail.com; s=20230601; t=1738958129; x=1739562929; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5rGwJnk6onGTN6F+Q+8uNYESaMmK0c3tfH4f76Zn9gg=;
+        b=eSMOFm2gqLCQbmAO0eHj665C/Cp7X8lpterbkyHbKlLdk/7T8eh2RB0+tet3CzgA3A
+         2NJ+5yIjXuO30rHGQVo2hnocfDWwCh0ttFxhcuxN2LgdfR/Yhmbc+yZSIOntX2zP/74b
+         AiJ5nZPQFnGhkd07RHiQFt+2UZuW6fauK4FEGvg/LwGn38be/NASZN4Q/nO8KJJKfQDR
+         p+BFHv+1aSeAQjfMvSYAtsCltLRrpZNbzBT4qJ/m9bRgwAHSQJsffu/GfdmiFi5zlZR4
+         urVCzXxIQDaTAseYm/UnwnXUws93i1IBhQJhoUQSaeO8zGxVjLuNHMO2dfxRcC9snBFr
+         3MwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738958051; x=1739562851;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6ru1wvh36CbOfubIqIyD+5sQyMz21Y8aZYTgm/d3+5o=;
-        b=ggD68rezQgFOIPSBmCQH3EvuiWb9rNn8jNEoIS4D4XoWQ6PuPrDyXbZGyTpiiuBJMm
-         wwlTFhJNFM7K9vtiseJZBWh1O+EuJrpoZiBJUd5s42BkPNBsWFguwMTmZKtMFpO0SrKW
-         ID+CYRA8POsFiX/ojD5il8j2ToRxfX7vQOwb71PcVupngaMntKmIT3EArc/DUBeBEmbm
-         vbGsgB0+YeXCXlDHfuFYhalpMSwZsrjZJq7JAKvhc4QHfU+QRQTV+ZHwz3O4g/WYzsZ6
-         uRA+SS+hgkUBO+LEFRTwCiAX7aD1/0EGrtTDyIet7hsAkKgeiUdvppsn/wkbyzOGmD+/
-         uD2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVLPNHOLaWnzXltaBykPJLav1bXNquOddhvME3LbA9Av/K8mqgTnkR/MacLzH954wJkFYAkROr2T0QFbjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDLXgpcz01plL76L+dZpANU0EQT9JXwPAnWhh1RD7jJP1tVrIU
-	2zaREN/GtDCAlfsHWm7noCJ+eMvqiFt8Xl08MS1PFGQ1oDo5c2nhq/BVqNxSqcU=
-X-Gm-Gg: ASbGnctlcCnlAYEyXvI0r1Gd2jyCnKb33r4KQJWl0w9oZGSxCcjIa+KBJa3vrxE+nXF
-	1wgryEwAu2DVfhdevCsUOFU8qOzqcipL6dBlnBq9OvwYgkiOnofmizgOIcppo0Es12RoTT/UpyJ
-	VhE4bwDk9k9A0O37a3Dq1ZG+ya4rNdruqabt05TCe2hSxDy3D8J/XP6xy/R9gWSq+cexBFvpoqy
-	S2n0hRig7IQFlan/UKn1tQmmHCb8XQX9N4yE0j9ffpC7WpuVnKwRtsKsGn94mqgzi6XlBH8/vUQ
-	58qP2bOlGF07vCnH1ngGlnNs4/9jd1oB6VVaRhEqoGOV3dZdIRa8nLg0XWnT+OyBVHJAqgs=
-X-Google-Smtp-Source: AGHT+IFAea/MRPW5NqZuydSkxXmqLttpsbttAcYS0zhETRXM+wh1dfpRWMrPcOicMETtA2XEcZqpWg==
-X-Received: by 2002:a05:6512:108d:b0:540:2a92:7da9 with SMTP id 2adb3069b0e04-54414ab5605mr1626033e87.21.1738958050673;
-        Fri, 07 Feb 2025 11:54:10 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54502a4efa2sm58959e87.195.2025.02.07.11.54.08
+        d=1e100.net; s=20230601; t=1738958129; x=1739562929;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5rGwJnk6onGTN6F+Q+8uNYESaMmK0c3tfH4f76Zn9gg=;
+        b=iLdn8fsEadn8juNvyX3r3l4Clj091LG/Gd1BqZFukrT8LvAOmHbAcWTRSrO6YjvzK8
+         4Y73niRxnjPlR/xxHLzQa4pSWvoyCwnFeinaUhbDvIoebz9h2PamM3aujGtl8E1GsO/e
+         EfJxhcVDmV+5gRvhfY93/SkSlJAMsAHMNdUeH6G6z/tj68rCY8ZNP4sphx7VabapsIVI
+         B+Gc4JM4KL8qa2BQAiwYjlRQQ/bcInv+28XNt1Bn7wbdUTSVEhgwZKa2a4r1FBtsSsse
+         MFf3BPzmbCCJSuAvN2ToK0KES1L8wMboFLjK2F4UHWJkCR1zkTIvJN3aoM4wAzQ/0i4+
+         fwwA==
+X-Forwarded-Encrypted: i=1; AJvYcCUfFhen5Hz9I4Pya1RkH1Axb4KpvTfcwqVa7V9zKShrut84GubvE+DVrTZEciQ1O4kpxbwFzOtJR2/aNGJq@vger.kernel.org, AJvYcCVs+KCgfMHM200cSAgAjmTKOxGtH8/e6Kq0dzFGuIcDSY9SJL1ktp3A/tAdKdiKYjXUjXfVZmWaa5OmD+6B@vger.kernel.org, AJvYcCW8URw8Qs9N1FD+7EhR+CyGLGYWO/+s6jCS/QL2YCnpSypKSz9f5a1FQuOaYaJso0VmiKaulgpX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/TFRq4maceSfXNHp4l/PpXaiSNwySKzPZ0672oRqnvvKhRPZS
+	7I9pB/eAzRpo/MtVfM2WExpohqSueZXualUmBvg+RYMkaKHHhKKh
+X-Gm-Gg: ASbGncuGqvgCUCdNktHM0f0XkGnN2koVMK00+QuHGoc2o4jowUSoVklMWEcGuV071ui
+	P9qN8xnHunS/23dFuCFB52GxxX8eHodNLoIp6B0jKxqF8w5hWo486E8F//bAKHekNViap9Q/uRR
+	oPSluBsocRTknEt7UL6DuQWHkNGBeA7EsGZH230EswcPnL4i1KGeEX8u57ZVxA0jixxQvUKJQmx
+	lpMtSaIIDcp6gxrksjqXQzRgfflVLUva648vsdkvUy+IVlM14k393oGmZSbcvMoNrfMQcxUF8uw
+	dvraRpCbdEyRI6CDh3w47zqO7OM7aXT4AchGkAyVdkdLv2QiLz/9/MMJHJRZ
+X-Google-Smtp-Source: AGHT+IFkCndvhHRme8MUTVSNUm2JXoXYopJcvTKMek4MPe31gk8TP668VFJiyH5pPNKNipL4QhYt0w==
+X-Received: by 2002:a05:600c:1c9f:b0:436:1c0c:bfb6 with SMTP id 5b1f17b1804b1-439249c0324mr35381965e9.27.1738958128528;
+        Fri, 07 Feb 2025 11:55:28 -0800 (PST)
+Received: from localhost.localdomain (93-34-91-161.ip49.fastwebnet.it. [93.34.91.161])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4390d933523sm102280335e9.1.2025.02.07.11.55.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 11:54:09 -0800 (PST)
-Date: Fri, 7 Feb 2025 21:54:06 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, 
-	Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Paul Kocialkowski <contact@paulk.fr>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, =?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v6 14/26] drm/bridge: add support for refcounted DRM
- bridges
-Message-ID: <ucttjaf3trkgtpvhnsj7xfsybhnoi4qqow5ucwghlggivbagy7@gngjhbtu73lb>
-References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
- <20250206-hotplug-drm-bridge-v6-14-9d6f2c9c3058@bootlin.com>
- <20250207-ingenious-daffodil-dugong-51be57@houat>
+        Fri, 07 Feb 2025 11:55:27 -0800 (PST)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Md Sadre Alam <quic_mdalam@quicinc.com>,
+	linux-mtd@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Christian Marangi <ansuelsmth@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] mtd: rawnand: qcom: fix broken config in qcom_param_page_type_exec
+Date: Fri,  7 Feb 2025 20:54:33 +0100
+Message-ID: <20250207195442.19157-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207-ingenious-daffodil-dugong-51be57@houat>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 07, 2025 at 12:47:51PM +0100, Maxime Ripard wrote:
-> Hi,
-> 
-> On Thu, Feb 06, 2025 at 07:14:29PM +0100, Luca Ceresoli wrote:
-> > DRM bridges are currently considered as a fixed element of a DRM card, and
-> > thus their lifetime is assumed to extend for as long as the card
-> > exists. New use cases, such as hot-pluggable hardware with video bridges,
-> > require DRM bridges to be added and removed to a DRM card without tearing
-> > the card down. This is possible for connectors already (used by DP MST), so
-> > add this possibility to DRM bridges as well.
-> > 
-> > Implementation is based on drm_connector_init() as far as it makes sense,
-> > and differs when it doesn't. A difference is that bridges are not exposed
-> > to userspace, hence struct drm_bridge does not embed a struct
-> > drm_mode_object which would provide the refcount. Instead we add to struct
-> > drm_bridge a refcount field (we don't need other struct drm_mode_object
-> > fields here) and instead of using the drm_mode_object_*() functions we
-> > reimplement from those functions the few lines that drm_bridge needs for
-> > refcounting.
-> > 
-> > Also add a new devm_drm_bridge_alloc() macro to allocate a new refcounted
-> > bridge.
-> > 
-> > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> 
-> So, a couple of general comments:
-> 
-> - I've said it a couple of times already, but I really think you're
->   making it harder than necessary for you here. This (and only this!)
->   should be the very first series you should be pushing. The rest can
->   only ever work if that work goes through, and it's already hard enough
->   as it is. So, split that patch into a series of its own, get that
->   merged, and then we will be able to deal with panels conversion and
->   whatever. That's even more true with panels since there's ongoing work
->   that will make it easier for you too. So the best thing here is
->   probably to wait.
+Fix broken config in qcom_param_page_type_exec caused by copy-paste error
+from commit 0c08080fd71c ("mtd: rawnand: qcom: use FIELD_PREP and GENMASK")
 
-Luca and I had a quick chat on this during FOSDEM. I really think that
-panel (part of the) series can go in first as it fixes a very well known
-bug _and_ allows a pretty good cleanup to a whole set of drivers. With
-all those panel / bridge wrappers gone we should be able to see a
-clearer picture of what individual drivers are doing. In other words,
-which memory and which code actually hosts and uses internal
-'next_bridge' reference.
+In qcom_param_page_type_exec the value needs to be set to
+nandc->regs->cfg0 instead of host->cfg0. This wrong configuration caused
+the Qcom NANDC driver to malfunction on any device that makes use of it
+(IPQ806x, IPQ40xx, IPQ807x, IPQ60xx) with the following error:
 
-> - This patch really needs to be split into several patches, something
->   along the lines of:
-> 
->   + Creating devm_drm_bridge_alloc()
->   + Adding refcounting
->   + Taking the references in all the needed places
->   + Converting a bunch of drivers
+[    0.885369] nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xaa
+[    0.885909] nand: Micron NAND 256MiB 1,8V 8-bit
+[    0.892499] nand: 256 MiB, SLC, erase size: 128 KiB, page size: 2048, OOB size: 64
+[    0.896823] nand: ECC (step, strength) = (512, 8) does not fit in OOB
+[    0.896836] qcom-nandc 79b0000.nand-controller: No valid ECC settings possible
+[    0.910996] bam-dma-engine 7984000.dma-controller: Cannot free busy channel
+[    0.918070] qcom-nandc: probe of 79b0000.nand-controller failed with error -28
 
-The last two parts seem troublematic to me, but, I must admit, I didn't
-spend so much time reviewing all drm_bridge usage patterns.
+Restore original configuration fix the problem and makes the driver work
+again.
 
-> 
-> > Changes in v6:
-> >  - use drm_warn, not WARN_ON (Jani Nikula)
-> >  - Add devm_drm_bridge_alloc() to replace drm_bridge_init() (similar to
-> >    drmm_encoder_alloc)
-> >  - Remove .destroy func: deallocation is done via the struct offset
-> >    computed by the devm_drm_bridge_alloc() macro
-> >  - use fixed free callback, as the same callback is used in all cases
-> >    anyway (remove free_cb, add bool is_refcounted)
-> >  - add drm_bridge_get/put() to drm_bridge_attach/detach() (add the bridge
-> >    to a list)
-> >  - make some DRM_DEBUG() strings more informative
-> > 
-> > This patch was added in v5.
-> > ---
-> >  drivers/gpu/drm/drm_bridge.c |  76 ++++++++++++++++++++++++++--
-> >  include/drm/drm_bridge.h     | 117 +++++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 189 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> > index 1955a231378050abf1071d74a145831b425c47c5..f694b32ca59cb91c32846bc00b43360df41cc1ad 100644
-> > --- a/drivers/gpu/drm/drm_bridge.c
-> > +++ b/drivers/gpu/drm/drm_bridge.c
-> > @@ -200,6 +200,57 @@
-> >  DEFINE_MUTEX(bridge_lock);
-> >  LIST_HEAD(bridge_list);
-> >  
-> > +/* Internal function (for refcounted bridges) */
-> > +void __drm_bridge_free(struct kref *kref)
-> > +{
-> > +	struct drm_bridge *bridge = container_of(kref, struct drm_bridge, refcount);
-> > +	void *container = ((void *)bridge) - bridge->container_offset;
-> > +
-> > +	DRM_DEBUG("bridge=%p, container=%p FREE\n", bridge, container);
-> 
-> Pointers are not really useful to track here, since they are obfuscated
-> most of the time. Using the bridge device name would probably be better
-> (or removing the SHOUTING DEBUG entirely :))
+Cc: stable@vger.kernel.org
+Fixes: 0c08080fd71c ("mtd: rawnand: qcom: use FIELD_PREP and GENMASK")
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+---
+ drivers/mtd/nand/raw/qcom_nandc.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-bridge device name or bridge funcs (I opted for the latter for the
-debugfs file)
-
-
+diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
+index d2d2aeee42a7..4e3a3e049d9d 100644
+--- a/drivers/mtd/nand/raw/qcom_nandc.c
++++ b/drivers/mtd/nand/raw/qcom_nandc.c
+@@ -1881,18 +1881,18 @@ static int qcom_param_page_type_exec(struct nand_chip *chip,  const struct nand_
+ 	nandc->regs->addr0 = 0;
+ 	nandc->regs->addr1 = 0;
+ 
+-	host->cfg0 = FIELD_PREP(CW_PER_PAGE_MASK, 0) |
+-		     FIELD_PREP(UD_SIZE_BYTES_MASK, 512) |
+-		     FIELD_PREP(NUM_ADDR_CYCLES_MASK, 5) |
+-		     FIELD_PREP(SPARE_SIZE_BYTES_MASK, 0);
+-
+-	host->cfg1 = FIELD_PREP(NAND_RECOVERY_CYCLES_MASK, 7) |
+-		     FIELD_PREP(BAD_BLOCK_BYTE_NUM_MASK, 17) |
+-		     FIELD_PREP(CS_ACTIVE_BSY, 0) |
+-		     FIELD_PREP(BAD_BLOCK_IN_SPARE_AREA, 1) |
+-		     FIELD_PREP(WR_RD_BSY_GAP_MASK, 2) |
+-		     FIELD_PREP(WIDE_FLASH, 0) |
+-		     FIELD_PREP(DEV0_CFG1_ECC_DISABLE, 1);
++	nandc->regs->cfg0 = FIELD_PREP(CW_PER_PAGE_MASK, 0) |
++			    FIELD_PREP(UD_SIZE_BYTES_MASK, 512) |
++			    FIELD_PREP(NUM_ADDR_CYCLES_MASK, 5) |
++			    FIELD_PREP(SPARE_SIZE_BYTES_MASK, 0);
++
++	nandc->regs->cfg1 = FIELD_PREP(NAND_RECOVERY_CYCLES_MASK, 7) |
++			    FIELD_PREP(BAD_BLOCK_BYTE_NUM_MASK, 17) |
++			    FIELD_PREP(CS_ACTIVE_BSY, 0) |
++			    FIELD_PREP(BAD_BLOCK_IN_SPARE_AREA, 1) |
++			    FIELD_PREP(WR_RD_BSY_GAP_MASK, 2) |
++			    FIELD_PREP(WIDE_FLASH, 0) |
++			    FIELD_PREP(DEV0_CFG1_ECC_DISABLE, 1);
+ 
+ 	if (!nandc->props->qpic_version2)
+ 		nandc->regs->ecc_buf_cfg = cpu_to_le32(ECC_CFG_ECC_DISABLE);
 -- 
-With best wishes
-Dmitry
+2.47.1
+
