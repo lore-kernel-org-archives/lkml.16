@@ -1,398 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F391547F8;
-	Fri,  7 Feb 2025 02:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084612940B
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 02:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738894823; cv=none; b=RSaxPlwmOff9XSlLDn4Y5/Mg0/6Iqy2uHdyZdVkLNHjeegc7CYDIf/ggefBeYmKuZeYGdRE6VfV2GDf6RgzzvM7Os4hH5GvF7IZBQGJI3/LSDplN1DeFFUUULNjS2ZsNxIsLncmf14c2zCyqS3GqB1PqaJCyY/PAyKRse5xpoVo=
+	t=1738894836; cv=none; b=HGrKpoZlea/PiU/4tu7Zrg/de1xlfMnho6JQVUFk+F6y+CZjvFJQ+zMDpxXVbLZv8z33HlEE5TmUceNLmEqZqa6YJQOz71zarIVDAGDRqE2+F4fyJPI1aM0dKv5NOfSFjAhpU+1X59tSlJJPystdYnOETbcBcm5cUWGnyC4iG1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738894823; c=relaxed/simple;
-	bh=sbNM0qXlJYtyA0p7JoxNuvONp0rOcwnq9/VX87sPnHo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YMCel5w8D58e0PEiI3MGuyWWgGIrc8um+AVuTRvAHC7I2LzlaipQiHHjpoowty+rq7Ma9rldB/WHuECzUHeT4sRpuPIHvRxaJvzEGdBuWlrt3u1BXa/HfHSgyOQn0P8sv7+r3KHpAQXZY2iN4m6CGQ5/cSg3m/g03EdC3a5HBGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EXrqB+ha; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738894836; c=relaxed/simple;
+	bh=/qjNMy3fr7XuhlxXcW8LsjCb5CUjcoySJdmCymTEiM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=NQeGSanqyJJPtaQJexBbN5KJzHmv8ceUKNe1mYDx1V66Pmj8+rePREGHoC6IheH3aXZkhf2VqQhgwt2VbppLx4K7CsB6C904IM6KLyHduuJ2lLtMgzKjhwLCBxRRt3ebX966d83N5QNv5WgXAw6TbOptjcc2xQJP5erG0YYH2KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=paAZRdml; arc=none smtp.client-ip=91.218.175.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EXrqB+ha"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738894822; x=1770430822;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=sbNM0qXlJYtyA0p7JoxNuvONp0rOcwnq9/VX87sPnHo=;
-  b=EXrqB+haGU9O2SpOwdLOMTvcPgKOv2pyO3RShn+LNF5q+tPaRvg8fZhG
-   E0gjGRbZdmr8DSBvi29Ff4SNRPI1EtzfVMqHakvfJdZyRCZS/p0mmG1mY
-   mF0HwiZYHg9pEJVwnXRi4yJiCup91tMm0WaP7MkpcL/sYSqboX/bEHYBA
-   mvvuyLn+ceHBAOSTClimmL74coJ0gwU1JOqQTjUUuVDyoBVFLX5KEZ3T7
-   aYA7IaTIN4T0ZVu+b/A3wHo4W4I9rkWhsHDE0wpNy8pPzltt4uRcoXU8t
-   sBhiI5iKFdnJllD6s2HQ/ubRfqQk7y4yd2xnUZ6XhSEzZv0wcLM9NaWfZ
-   g==;
-X-CSE-ConnectionGUID: zGDF/zd8Qx29OZtVBNvZ3A==
-X-CSE-MsgGUID: 2Vy7yqCsQTKSNYzdeuGtww==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50917587"
-X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
-   d="scan'208";a="50917587"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 18:20:21 -0800
-X-CSE-ConnectionGUID: nFA1PNj4Tniq1havyD1ooQ==
-X-CSE-MsgGUID: eQsMPwprQISN+qsStbtx/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="148615526"
-Received: from p12ill20yoongsia.png.intel.com ([10.88.227.38])
-  by orviesa001.jf.intel.com with ESMTP; 06 Feb 2025 18:20:08 -0800
-From: Song Yoong Siang <yoong.siang.song@intel.com>
-To: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Willem de Bruijn <willemb@google.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Bjorn Topel <bjorn@kernel.org>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Jonathan Lemon <jonathan.lemon@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Joe Damato <jdamato@fastly.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Daniel Jurgens <danielj@nvidia.com>,
-	Song Yoong Siang <yoong.siang.song@intel.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Bouska Zdenek <zdenek.bouska@siemens.com>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	intel-wired-lan@lists.osuosl.org,
-	xdp-hints@xdp-project.net
-Subject: [PATCH bpf-next v10 2/5] selftests/bpf: Add launch time request to xdp_hw_metadata
-Date: Fri,  7 Feb 2025 10:19:40 +0800
-Message-Id: <20250207021943.814768-3-yoong.siang.song@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250207021943.814768-1-yoong.siang.song@intel.com>
-References: <20250207021943.814768-1-yoong.siang.song@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="paAZRdml"
+Date: Thu, 6 Feb 2025 21:20:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1738894827;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=fYzg4hGuEqL0tGkP/p0EcOQZjOlU4CNbCwCV0BxXbeg=;
+	b=paAZRdml1C+HBnVTIMd9UWRr1mO8Vm+8iEuQSKWPQV7BHwZAK7hfpuvoP2YDhBwYsru4zx
+	zVdNzWzw7zPF0rnvrpmz+Ej7FId3MBWlN070fZ81zQGoNlt/ghSnkO4vPqNXRPGqds+wlp
+	hEOihYb9MOqG5NooIyBhoX4gwXzpyf0=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] bcachefs fixes for 6.14-rc2
+Message-ID: <z2eszznjel6knkkvckjxvkp5feo5jhnwvls3rtk7mbt47znvcr@kvo6dhimlghe>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Migadu-Flow: FLOW_OUT
 
-Add launch time hardware offload request to xdp_hw_metadata. Users can
-configure the delta of launch time relative to HW RX-time using the "-l"
-argument. By default, the delta is set to 0 ns, which means the launch time
-is disabled. By setting the delta to a non-zero value, the launch time
-hardware offload feature will be enabled and requested. Additionally, users
-can configure the Tx Queue to be enabled with the launch time hardware
-offload using the "-L" argument. By default, Tx Queue 0 will be used.
+Nothing major, things continue to be fairly quiet over here.
 
-Acked-by: Stanislav Fomichev <sdf@fomichev.me>
-Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
----
- tools/testing/selftests/bpf/xdp_hw_metadata.c | 168 +++++++++++++++++-
- 1 file changed, 163 insertions(+), 5 deletions(-)
+Tracking some bugs that show up on nix build servers; would like someone
+to confirm or deny that these are or are not still happening on 6.14,
+and if you've got an environment where this is reproducing and can work
+with me to debug that would save me some trouble...
 
-diff --git a/tools/testing/selftests/bpf/xdp_hw_metadata.c b/tools/testing/selftests/bpf/xdp_hw_metadata.c
-index 6f7b15d6c6ed..3d8de0d4c96a 100644
---- a/tools/testing/selftests/bpf/xdp_hw_metadata.c
-+++ b/tools/testing/selftests/bpf/xdp_hw_metadata.c
-@@ -13,6 +13,7 @@
-  * - UDP 9091 packets trigger TX reply
-  * - TX HW timestamp is requested and reported back upon completion
-  * - TX checksum is requested
-+ * - TX launch time HW offload is requested for transmission
-  */
- 
- #include <test_progs.h>
-@@ -37,6 +38,15 @@
- #include <time.h>
- #include <unistd.h>
- #include <libgen.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/ioctl.h>
-+#include <linux/pkt_sched.h>
-+#include <linux/pkt_cls.h>
-+#include <linux/ethtool.h>
-+#include <sys/socket.h>
-+#include <arpa/inet.h>
- 
- #include "xdp_metadata.h"
- 
-@@ -64,6 +74,18 @@ int rxq;
- bool skip_tx;
- __u64 last_hw_rx_timestamp;
- __u64 last_xdp_rx_timestamp;
-+__u64 last_launch_time;
-+__u64 launch_time_delta_to_hw_rx_timestamp;
-+int launch_time_queue;
-+
-+#define run_command(cmd, ...)					\
-+({								\
-+	char command[1024];					\
-+	memset(command, 0, sizeof(command));			\
-+	snprintf(command, sizeof(command), cmd, ##__VA_ARGS__);	\
-+	fprintf(stderr, "Running: %s\n", command);		\
-+	system(command);					\
-+})
- 
- void test__fail(void) { /* for network_helpers.c */ }
- 
-@@ -298,6 +320,12 @@ static bool complete_tx(struct xsk *xsk, clockid_t clock_id)
- 	if (meta->completion.tx_timestamp) {
- 		__u64 ref_tstamp = gettime(clock_id);
- 
-+		if (launch_time_delta_to_hw_rx_timestamp) {
-+			print_tstamp_delta("HW Launch-time",
-+					   "HW TX-complete-time",
-+					   last_launch_time,
-+					   meta->completion.tx_timestamp);
-+		}
- 		print_tstamp_delta("HW TX-complete-time", "User TX-complete-time",
- 				   meta->completion.tx_timestamp, ref_tstamp);
- 		print_tstamp_delta("XDP RX-time", "User TX-complete-time",
-@@ -395,6 +423,17 @@ static void ping_pong(struct xsk *xsk, void *rx_packet, clockid_t clock_id)
- 	       xsk, ntohs(udph->check), ntohs(want_csum),
- 	       meta->request.csum_start, meta->request.csum_offset);
- 
-+	/* Set the value of launch time */
-+	if (launch_time_delta_to_hw_rx_timestamp) {
-+		meta->flags |= XDP_TXMD_FLAGS_LAUNCH_TIME;
-+		meta->request.launch_time = last_hw_rx_timestamp +
-+					    launch_time_delta_to_hw_rx_timestamp;
-+		last_launch_time = meta->request.launch_time;
-+		print_tstamp_delta("HW RX-time", "HW Launch-time",
-+				   last_hw_rx_timestamp,
-+				   meta->request.launch_time);
-+	}
-+
- 	memcpy(data, rx_packet, len); /* don't share umem chunk for simplicity */
- 	tx_desc->options |= XDP_TX_METADATA;
- 	tx_desc->len = len;
-@@ -407,6 +446,7 @@ static int verify_metadata(struct xsk *rx_xsk, int rxq, int server_fd, clockid_t
- 	const struct xdp_desc *rx_desc;
- 	struct pollfd fds[rxq + 1];
- 	__u64 comp_addr;
-+	__u64 deadline;
- 	__u64 addr;
- 	__u32 idx = 0;
- 	int ret;
-@@ -477,9 +517,15 @@ static int verify_metadata(struct xsk *rx_xsk, int rxq, int server_fd, clockid_t
- 					if (ret)
- 						printf("kick_tx ret=%d\n", ret);
- 
--					for (int j = 0; j < 500; j++) {
-+					/* wait 1 second + cover launch time */
-+					deadline = gettime(clock_id) +
-+						   NANOSEC_PER_SEC +
-+						   launch_time_delta_to_hw_rx_timestamp;
-+					while (true) {
- 						if (complete_tx(xsk, clock_id))
- 							break;
-+						if (gettime(clock_id) >= deadline)
-+							break;
- 						usleep(10);
- 					}
- 				}
-@@ -608,6 +654,10 @@ static void print_usage(void)
- 		"  -h    Display this help and exit\n\n"
- 		"  -m    Enable multi-buffer XDP for larger MTU\n"
- 		"  -r    Don't generate AF_XDP reply (rx metadata only)\n"
-+		"  -l    Delta of launch time relative to HW RX-time in ns\n"
-+		"        default: 0 ns (launch time request is disabled)\n"
-+		"  -L    Tx Queue to be enabled with launch time offload\n"
-+		"        default: 0 (Tx Queue 0)\n"
- 		"Generate test packets on the other machine with:\n"
- 		"  echo -n xdp | nc -u -q1 <dst_ip> 9091\n";
- 
-@@ -618,7 +668,7 @@ static void read_args(int argc, char *argv[])
- {
- 	int opt;
- 
--	while ((opt = getopt(argc, argv, "chmr")) != -1) {
-+	while ((opt = getopt(argc, argv, "chmrl:L:")) != -1) {
- 		switch (opt) {
- 		case 'c':
- 			bind_flags &= ~XDP_USE_NEED_WAKEUP;
-@@ -634,6 +684,12 @@ static void read_args(int argc, char *argv[])
- 		case 'r':
- 			skip_tx = true;
- 			break;
-+		case 'l':
-+			launch_time_delta_to_hw_rx_timestamp = atoll(optarg);
-+			break;
-+		case 'L':
-+			launch_time_queue = atoll(optarg);
-+			break;
- 		case '?':
- 			if (isprint(optopt))
- 				fprintf(stderr, "Unknown option: -%c\n", optopt);
-@@ -657,23 +713,118 @@ static void read_args(int argc, char *argv[])
- 		error(-1, errno, "Invalid interface name");
- }
- 
-+void clean_existing_configurations(void)
-+{
-+	/* Check and delete root qdisc if exists */
-+	if (run_command("sudo tc qdisc show dev %s | grep -q 'qdisc mqprio 8001:'", ifname) == 0)
-+		run_command("sudo tc qdisc del dev %s root", ifname);
-+
-+	/* Check and delete ingress qdisc if exists */
-+	if (run_command("sudo tc qdisc show dev %s | grep -q 'qdisc ingress ffff:'", ifname) == 0)
-+		run_command("sudo tc qdisc del dev %s ingress", ifname);
-+
-+	/* Check and delete ethtool filters if any exist */
-+	if (run_command("sudo ethtool -n %s | grep -q 'Filter:'", ifname) == 0) {
-+		run_command("sudo ethtool -n %s | grep 'Filter:' | awk '{print $2}' | xargs -n1 sudo ethtool -N %s delete >&2",
-+			    ifname, ifname);
-+	}
-+}
-+
-+#define MAX_TC 16
-+
- int main(int argc, char *argv[])
- {
- 	clockid_t clock_id = CLOCK_TAI;
-+	struct bpf_program *prog;
- 	int server_fd = -1;
-+	size_t map_len = 0;
-+	size_t que_len = 0;
-+	char *buf = NULL;
-+	char *map = NULL;
-+	char *que = NULL;
-+	char *tmp = NULL;
-+	int tc = 0;
- 	int ret;
- 	int i;
- 
--	struct bpf_program *prog;
--
- 	read_args(argc, argv);
- 
- 	rxq = rxq_num(ifname);
--
- 	printf("rxq: %d\n", rxq);
- 
-+	if (launch_time_queue >= rxq || launch_time_queue < 0)
-+		error(1, 0, "Invalid launch_time_queue.");
-+
-+	clean_existing_configurations();
-+	sleep(1);
-+
-+	/* Enable tx and rx hardware timestamping */
- 	hwtstamp_enable(ifname);
- 
-+	/* Prepare priority to traffic class map for tc-mqprio */
-+	for (i = 0; i < MAX_TC; i++) {
-+		if (i < rxq)
-+			tc = i;
-+
-+		if (asprintf(&buf, "%d ", tc) == -1) {
-+			printf("Failed to malloc buf for tc map.\n");
-+			goto free_mem;
-+		}
-+
-+		map_len += strlen(buf);
-+		tmp = realloc(map, map_len + 1);
-+		if (!tmp) {
-+			printf("Failed to realloc tc map.\n");
-+			goto free_mem;
-+		}
-+		map = tmp;
-+		strcat(map, buf);
-+		free(buf);
-+		buf = NULL;
-+	}
-+
-+	/* Prepare traffic class to hardware queue map for tc-mqprio */
-+	for (i = 0; i <= tc; i++) {
-+		if (asprintf(&buf, "1@%d ", i) == -1) {
-+			printf("Failed to malloc buf for tc queues.\n");
-+			goto free_mem;
-+		}
-+
-+		que_len += strlen(buf);
-+		tmp = realloc(que, que_len + 1);
-+		if (!tmp) {
-+			printf("Failed to realloc tc queues.\n");
-+			goto free_mem;
-+		}
-+		que = tmp;
-+		strcat(que, buf);
-+		free(buf);
-+		buf = NULL;
-+	}
-+
-+	/* Add mqprio qdisc */
-+	run_command("sudo tc qdisc add dev %s handle 8001: parent root mqprio num_tc %d map %squeues %shw 0",
-+		    ifname, tc + 1, map, que);
-+
-+	/* To test launch time, send UDP packet with VLAN priority 1 to port 9091 */
-+	if (launch_time_delta_to_hw_rx_timestamp) {
-+		/* Enable launch time hardware offload on launch_time_queue */
-+		run_command("sudo tc qdisc replace dev %s parent 8001:%d etf offload clockid CLOCK_TAI delta 500000",
-+			    ifname, launch_time_queue + 1);
-+		sleep(1);
-+
-+		/* Route incoming packet with VLAN priority 1 into launch_time_queue */
-+		if (run_command("sudo ethtool -N %s flow-type ether vlan 0x2000 vlan-mask 0x1FFF action %d",
-+				ifname, launch_time_queue)) {
-+			run_command("sudo tc qdisc add dev %s ingress", ifname);
-+			run_command("sudo tc filter add dev %s parent ffff: protocol 802.1Q flower vlan_prio 1 hw_tc %d",
-+				    ifname, launch_time_queue);
-+		}
-+
-+		/* Enable VLAN tag stripping offload */
-+		run_command("sudo ethtool -K %s rxvlan on", ifname);
-+	}
-+
- 	rx_xsk = malloc(sizeof(struct xsk) * rxq);
- 	if (!rx_xsk)
- 		error(1, ENOMEM, "malloc");
-@@ -733,4 +884,11 @@ int main(int argc, char *argv[])
- 	cleanup();
- 	if (ret)
- 		error(1, -ret, "verify_metadata");
-+
-+	clean_existing_configurations();
-+
-+free_mem:
-+	free(buf);
-+	free(map);
-+	free(que);
- }
--- 
-2.34.1
+Also, another bug report is implicating hibernate, please let me know if
+you have any data on that, still trying to piece together what's going
+on there.
 
+And as usual, be noisy if you're seeing a serious bug that's not getting
+resolved.
+
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+
+are available in the Git repository at:
+
+  git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-02-06
+
+for you to fetch changes up to 44a7bfed6f352b4bae4fd244d0fcd32aa25d0deb:
+
+  bcachefs: bch2_bkey_sectors_need_rebalance() now only depends on bch_extent_rebalance (2025-02-05 19:56:24 -0500)
+
+----------------------------------------------------------------
+bcachefs fixes for 6.14-rc2
+
+- add a SubmittingPatches to clarify that patches submitted for bcachefs
+  do, in fact, need to be tested
+- discard path now correctly issues journal flushes when needed, this
+  fixes performance issues when the filesystem is nearly full and we're
+  bottlenecked on copygc
+- fix a bug that could cause the pending rebalance work accounting to be
+  off when devices are being onlined/offlined; users should report if
+  they are still seeing this
+- and a few more trivial ones
+
+----------------------------------------------------------------
+Jeongjun Park (2):
+      bcachefs: fix incorrect pointer check in __bch2_subvolume_delete()
+      bcachefs: fix deadlock in journal_entry_open()
+
+Kent Overstreet (4):
+      bcachefs docs: SubmittingPatches.rst
+      bcachefs: Fix discard path journal flushing
+      bcachefs: Fix rcu imbalance in bch2_fs_btree_key_cache_exit()
+      bcachefs: bch2_bkey_sectors_need_rebalance() now only depends on bch_extent_rebalance
+
+ .../filesystems/bcachefs/SubmittingPatches.rst     | 98 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ fs/bcachefs/alloc_background.c                     | 47 ++++++-----
+ fs/bcachefs/alloc_foreground.c                     | 10 ++-
+ fs/bcachefs/alloc_types.h                          |  1 +
+ fs/bcachefs/btree_key_cache.c                      |  1 -
+ fs/bcachefs/buckets_waiting_for_journal.c          | 12 ++-
+ fs/bcachefs/buckets_waiting_for_journal.h          |  4 +-
+ fs/bcachefs/inode.h                                |  4 +-
+ fs/bcachefs/journal.c                              | 18 +++-
+ fs/bcachefs/journal.h                              |  1 +
+ fs/bcachefs/journal_types.h                        |  1 +
+ fs/bcachefs/opts.h                                 | 14 ----
+ fs/bcachefs/rebalance.c                            |  8 +-
+ fs/bcachefs/rebalance.h                            | 20 +++++
+ fs/bcachefs/subvolume.c                            |  7 +-
+ fs/bcachefs/super.c                                | 11 +++
+ fs/bcachefs/super.h                                |  1 +
+ fs/bcachefs/trace.h                                | 14 +++-
+ 19 files changed, 214 insertions(+), 59 deletions(-)
+ create mode 100644 Documentation/filesystems/bcachefs/SubmittingPatches.rst
