@@ -1,95 +1,114 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A191165F01
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:54:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED5B1ACECF;
+	Fri,  7 Feb 2025 08:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738918450; cv=none; b=o0zCQg8qXyi8q/elH2asDUgY4h8pehQWTfxlLU0Y/YxSJTMPsQBSNzEbjK3tY60j5NbqhRhDZejXooO+TW6IW55IZRkhPQsJyrpEajrQkK3zzPrFZscbBOIHwyJ7572Vx1n6U9/nZoTZ72ThmKbPygjvhEdRTAnA1x/3OGutJXc=
+	t=1738918470; cv=none; b=G3+wY28zX0+U2EnTlevTH7vZLt+0vyT6A169Cn9rDpMvQNOsscXTAPX5y6AOXCBB4CBDmhaxgWGB5Gg9amHFGjIr/W9Jv/FFIo7EZGIDxqCgXdlZleljPF/CEPwPU6HmdtmNj6LxhrjnwDoYv+HB2EK1t9f38OikLgwcVP4mcj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738918450; c=relaxed/simple;
-	bh=9YpRgDpXU7I7owpZmRmyzaYa/6nDtjaGWuZ2d3DUa7Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fa1gwr6KJf8V5w1leeylfVAkF702izPEJ2rNTSI5DW/TiNxeXzCdAY1QNJLkvE4FiQsjdA/1UMxL27yMe36CTcoUDCeN+Oh1ySiRAZiIO+YE5Z9RNdIo1rhHbrvvn/ljpK5qph5Px9Or9I5ecmiA9u/vQEGXNvfv+umFPQvqaRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=JxyHj+mR; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1738918470; c=relaxed/simple;
+	bh=VvVtv+HEUmE14dLKRk9XDGe384qIN1pMD+VqSdr40nE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iEL3xbKmWcIAVSOw1d1ZNXiFwvM825OnMn6m5BDhvu5r+xZStv4jC5FhLP4Pkt39S9CtwmNYl8R1cfWFMsy2v5Obg4moSf5rAPJFmJHUNAF0/7EuY++0rsqMHDO0wp5MFWBiqGxEK8eyJGKPSszal5M7Lwp6eSf0IVrYEzP9St0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bRuyJMiT; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="JxyHj+mR"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30761be8fa7so16986601fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 00:54:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738918447; x=1739523247; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9YpRgDpXU7I7owpZmRmyzaYa/6nDtjaGWuZ2d3DUa7Q=;
-        b=JxyHj+mRgzITlPG8rh+s9KeYHq9Kqq43I7VRIYkhrAm27BkxHjM1HgR6SWP11tP/nx
-         cjbu3Hz05x+FYTFMx5w6YUJ+W+rO1IP8FFil86UYwBQ+B00gAh1nYkNVItEzwtBG2FcA
-         NYyb+g9srRfxRkjkmhPjLFDTnAe1fpcI602FT5EdUafcv6IKLd2PxUgodqgP6i9ziP7w
-         jSUcilml/Zm4wTl368lti0134QsT6uOL53laFt3Mhim9UT3gxx1aN7ymc58mht7zqSCW
-         vQqQX9HOLdIsuAblTAERx405xttawK6cXLPUaku+w/karePkV3uc+69iMFK6YuK+hPFu
-         TOqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738918447; x=1739523247;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9YpRgDpXU7I7owpZmRmyzaYa/6nDtjaGWuZ2d3DUa7Q=;
-        b=qO47fjoRN+/d21JUP2vOIsOAd9EHbArR4RrySV/pQC3m3/S5KtYhYA7X0w/7VIKgi7
-         VXqfsn0u09xVszZHFDrmfyGvv2OTatDmRupCf+GDy7MSTtSYAtMa/eU38GWFGyehYTLI
-         3WfMpUjtwzDqk5OmkTyB1abFTaxZJBk8Sp6/eu+nXvMeJW4xV/9KzypSPHvjCH3fK8VV
-         Vwd4pPvT2RbxYT/Noz/KjSPkANNxmUIXpz+mUJkuJ3taCfsxyIPSm+R7hrXxT/kVyns4
-         q4WvvoTJgzgf1AvJaxOWJbt1fICkQWMNZjcMkS3wy9XIbXod27vVjSwDeSpdh3n2SqAB
-         LplQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrmkgt8RWb4onyMm0JIXTta9ocNlBqbDYyRDP4Ts4hX219WCPwm1l7lya8r9J82ex+g49RDV1pX42wG0A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZuG27b4ECmOogtpWwlEYzNPKiO3AYaMPHnDiiN0x+6n0fFeyo
-	tNueFWQLUmlWJkUC5MTsMxZhmR2uATO8aq2368HUKAPgFqbO+vb5ROz5WyTBcPR+BR/9xGCA7PX
-	1etaOYHYDU3ofFFB/ls6vs/irQ3iHG27L60MMZg==
-X-Gm-Gg: ASbGncsAKCb798EMZAID8CNfPa13PKBVW46Bmi+WCb2GvnCLocN0vZ3EbEr2E9gEgBO
-	Fj5ALFOAEQ2odcG3NFrclY+zDkiUg+utSVAHrYSNRD7uCFcdcU+U4ChTA2b1uNzh6E8GLfrwFNa
-	K1SkEBAuQi7Aid8pVUKmYmBE5y1NU=
-X-Google-Smtp-Source: AGHT+IFsHFJNNKLdEXxQ9RmJCfueArNgIRv8RA8F15dLwBa+jex6lO4HgAmkMuAZ7uzNIjHQrLjlpHUd8vXUHrS8TPM=
-X-Received: by 2002:a2e:a58d:0:b0:300:33b1:f0cb with SMTP id
- 38308e7fff4ca-307e57fd423mr7386291fa.13.1738918447302; Fri, 07 Feb 2025
- 00:54:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bRuyJMiT"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5221143421;
+	Fri,  7 Feb 2025 08:54:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738918460;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bIOirByBUe+Z/pgSS0CP2M68HwFVjUFI3KKx8O+0aLM=;
+	b=bRuyJMiTRrELEebdfdiA9B0NSk7cW0ACh8i8N6hUx8PLACKgule/KvdQcnqB9lKe7dUNw1
+	eD/BJlPRZFmDTaRa7bHHHXSO8ZtdQM9m5MgYCIMgoSMbVe4hSsFx+z3IfTeLJ5aT11v9Sa
+	AeUA2lH1hS9QJBP74PsqnxaNtwXAS/z2oEGU+Eyaz9Cb/rOSAwRUJ3CcwSBuWByv3RsfME
+	JSywNs/Mf/VjZNRgr9KyPKVoZxB/20BvhgAifmEsMu9OcuxHfasWSbrIde0nqYZFEYp74s
+	anr4OLGDP60vxZHT5o9+YQIWqgetIyGW7qMCZmOM2XnxIjC1YYPNsS7hEMd5KQ==
+Date: Fri, 7 Feb 2025 09:54:17 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, Jagan
+ Teki <jagan@amarulasolutions.com>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>,
+ Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Paul Kocialkowski
+ <contact@paulk.fr>, Maxime Ripard <mripard@kernel.org>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, =?UTF-8?Q?Herv?=
+ =?UTF-8?Q?=C3=A9?= Codina <herve.codina@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Paul Kocialkowski
+ <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v6 05/26] drm/debugfs: add top-level 'bridges' file
+ showing all added bridges
+Message-ID: <20250207095417.4328d05e@booty>
+In-Reply-To: <vnmkwcqv74y6qxbgmq7s5fkodjxiaow3hbob7xacfw2n6tyuth@ldddeoshkqdp>
+References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
+	<20250206-hotplug-drm-bridge-v6-5-9d6f2c9c3058@bootlin.com>
+	<vnmkwcqv74y6qxbgmq7s5fkodjxiaow3hbob7xacfw2n6tyuth@ldddeoshkqdp>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250113225530.124213-1-s-ramamoorthy@ti.com>
-In-Reply-To: <20250113225530.124213-1-s-ramamoorthy@ti.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 7 Feb 2025 09:53:56 +0100
-X-Gm-Features: AWEUYZmOl7wUQPy_ROOuSzKSygvKItMb-rBgZEqVwt35XGP1BYQLd0FbfBe00Ew
-Message-ID: <CAMRc=Meqjy+cqfueM_dQE8uP32zS0ib41qE+OPPWFkhoVTGc2w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Add TI TPS65215 PMIC GPIO Support
-To: Shree Ramamoorthy <s-ramamoorthy@ti.com>
-Cc: aaro.koskinen@iki.fi, andreas@kemnade.info, khilman@baylibre.com, 
-	rogerq@kernel.org, tony@atomide.com, linus.walleij@linaro.org, 
-	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, m-leonard@ti.com, praneeth@ti.com, 
-	christophe.jaillet@wanadoo.fr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeekgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeglefffefghefhtddvfeeufeeiveekgffgleekieduteekkeetvdehudekgfdvvdenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegtvgejvgemiegtgegvmeeitggtjeemleekgeejnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegtvgejvgemiegtgegvmeeitggtjeemleekgeejpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefjedprhgtphhtthhopegumhhithhrhidrsggrrhihshhhkhhovheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehinhhkihdruggrvgesshgrmhhsuhhnghdrt
+ ghomhdprhgtphhtthhopehjrghgrghnsegrmhgrrhhulhgrshholhhuthhiohhnshdrtghomhdprhgtphhtthhopehmrdhsiiihphhrohifshhkihesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Mon, Jan 13, 2025 at 11:55=E2=80=AFPM Shree Ramamoorthy <s-ramamoorthy@t=
-i.com> wrote:
->
-> TPS65215 is a Power Management Integrated Circuit (PMIC) that has
-> significant register map overlap with TPS65219. The series introduces
-> TPS65215 and restructures the existing driver to support multiple devices=
-.
->
-> This follow-up series is dependent on:
-> Commit f84464ec8190 ("regulator: dt-bindings: Add TI TPS65215 PMIC bindin=
-gs")
-> Commit 8206c20f4c82 ("mfd: tps65215: Add support for TI TPS65215 PMIC")
-> Commit 0e0b7f00c111 ("mfd: tps65215: Remove regmap_read check")
->
+Hi Dmitry,
 
-Did these go into v6.14?
+On Fri, 7 Feb 2025 04:41:12 +0200
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
 
-Bart
+> On Thu, Feb 06, 2025 at 07:14:20PM +0100, Luca Ceresoli wrote:
+> > The global bridges_list holding all the bridges between drm_bridge_add()
+> > and drm_bridge_remove() cannot be inspected via debugfs. Add a file showing
+> > it.
+> > 
+> > To avoid code duplication, move the code printing a bridge info to a common
+> > function.
+> > 
+> > Note: this change requires exporting bridge_list and the mutex protecting
+> > it.
+> > 
+> > Also add a comment about bridge_lock to make checkpatch happy.  
+> 
+> I think, exporting mutex _and_ a list is a bad idea (especially since
+> they don't have a proper prefix). It might be better to make the
+> bridge_print() function a more public one (and name it
+> drm_bridge_print()) and move allbridges attribute definition to
+> drm_bridge.c
+
+I was also not happy with exporting these two symbols, and agree
+exporting a print function from drm_bridge.c is cleaner. I'll rearrange
+this for v7.
+
+Luca
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
