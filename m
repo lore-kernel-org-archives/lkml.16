@@ -1,128 +1,115 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D462E33EC;
-	Fri,  7 Feb 2025 12:43:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A96944E
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 12:46:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738932185; cv=none; b=c4l5g2D7Sjpds1qRxbAeBWSNrbBDS2TAFkPUe9wALROgziQ1/4riu3U29tEQasTlH5J55/fMC833SVc8JrMaKfQxYyOy+2j87qpehoYWS6OiRa/OEgJ59EzM5ELRhhQovJxpZdEvU27/wgq2XyjpAtLKmbJBxd2mGDCUw4b4A/w=
+	t=1738932373; cv=none; b=G3M/uqTxxZotRnMegCF6BfdSxkZ9NUJY/yvxxKzzL0SZoP7NN25keTWna8wr9kXpmWeDUR0PfvFXcKTvMyp+PUdaxW5vK8pfEwtI1o8GsUYpaL50ENnMleqkilZZWIub/UIMcebO3tfogaAgsctdXcMHldYh4GNtveLP3UWi6L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738932185; c=relaxed/simple;
-	bh=38tSRy4fRQiipDnsgL/EF8+UqAgq3Eq1W62StGRNVdg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RSrx5Gl5BEkpz5/v39tY0WrdZCUHJF3AnbwHnhIArriGd72e3zEOoCZv9rupUItmvf9dLrwo9by51UX7g7hhi9rkyIV5H5Kck6WEMfcsbprySCSdIqVcBFlbipEFqIaA3tUE8bD0P+/cyySjXm0/OYSQ6sdVcbq9tM9RFMp5TkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nl+7elUu; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738932373; c=relaxed/simple;
+	bh=fjwoDgTcd0sBN1WicHu/k9TRQMUS1W81Ig5M2xU9l7o=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Content-Type; b=jn+chQsNpyjbWnIL5xWDT0e13ZUKMP6RZv1esyA02xIwg9EuGxlXcKHe3Tgqn3TBO6OReHIgkCw9YdN3yH5XdpcGMFOyR9g2c/fVEy+The4f5XzKNhQm36QBcIeFQtEijHZBYwuz8YkCmhm0/MHwcwP0sS2988tnwXD1G3/iy78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=fCFBhiQk; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nl+7elUu"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5dccc90a52eso3642752a12.0;
-        Fri, 07 Feb 2025 04:43:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738932182; x=1739536982; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N5MpLNXY1jdZ+14PgNd+lIcj0SSU8kZcNto+dfv/YKI=;
-        b=nl+7elUuKyapbLY8G4pVyTMipmQDvIINYRtaSu1cxtG9SVpVINQYgKSeRgGgTKz3pf
-         n7CVqR84vEdY2NEEsKzT5JxQVDFOdUvg7QDcEJcimgTQl/KJu3DYTjKBSCyBxtngZAVC
-         Z92390NcwWZ1GmF9xZD+upUf0lvDZYkvVT75TYkHpNJKO2rT29vpgxn2tEhIj7jp4sxM
-         iXRKXM0eB9cjvh8+iUWou8Gsr7BQBxm9IWHKcaelFi2h+ncNr9W6LuNfyBpFwMBjG8no
-         I4QmvlRy+dRH4Fn+xTQ2Slf78ogomQEgch8zdNFJx9nTOj8qnJN9xmTt7lQq6+UaVqib
-         nbNg==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="fCFBhiQk"
+Received: from mail-oa1-f69.google.com (mail-oa1-f69.google.com [209.85.160.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 53A173FE64
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 12:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1738932369;
+	bh=2ZwUPJofjuVtYyvUvViroJ51go9pRIvg6aRbC/noSgE=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Content-Type;
+	b=fCFBhiQk+dHfmA7QV8FRDm0NxYcENWEy8owF+Qx3L97DxHt+ja3t0WLIrNqQAEVlR
+	 9G36wUWbs/COxtP3On5TRLEQ+4UwjKtXWTVnMHc6L44Jyh+WmmSsFMZhy+k+1JXnKE
+	 5YWzJvYv13uDqk6WqAPc+vt65QV7DXk5jl2/H41upg7JIKT+CsuzaL4aF3QNtSgY0f
+	 LINK9TN+ScCIGBXh8egbIMYPBtmgt85V4+q4ty+7LIeOqw1IJTq96UoSaH6vKCpOuv
+	 cQqGPY6JA+J+Rsz+CGhbGUy+/8A7gL4brhwQWjUzfHURe0rViivjauw1dHjpNjHDmv
+	 6850BtUfNGtAg==
+Received: by mail-oa1-f69.google.com with SMTP id 586e51a60fabf-2b7f8307574so1986916fac.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 04:46:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738932182; x=1739536982;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N5MpLNXY1jdZ+14PgNd+lIcj0SSU8kZcNto+dfv/YKI=;
-        b=j0EC22Y2AG4bHiI2YDpmc+dGp52AwV3Jyllti2f++J2/rk09H2uSvoBcnVklBNraXS
-         N8LtpA1eJ4+TY/mx4rAkW7AZvVjHN3ofFAnDTNtZ0NhfRNt9lG+3UVLgKaujHtNtNUjG
-         /umdNKecyA+BYsjWIo7pbSlFE0oSjbyssOyhKkb6N8cFOEg5W6nKC7JC8biUxXFCQOS/
-         H2Lp+lk61Gw6qFR9DZ+BXXBCqFf88vc91NRAfqu/JZv06KOPB1SXfV465wgbhDRtKBBP
-         /7RpUcyDfgSol2SbvBkMX0PExL/32saO8Da5BRxJjOziesOTf4BNaAC2C4NDTmBhLqvO
-         GQlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBHS9xBaHR7xEBsPAux/aV6OUlp13RhiMjNQ6YmlnqTj3blnWj+CAippWkXl8DgUroihxw1wZpF9cGJKEZdw==@vger.kernel.org, AJvYcCW+1Je6pmWBVJsMP7snIUSg+LhrRmqNxBTPFBTgNgq03+wvTBYnk0DBCnhqdt+5mXetUIxGVjPcxdyJaj4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzW/rwu4ajtJU1vKdGhYSQpJ7GSqFRB2gOAhuJZPk3POLWHKR+j
-	8VY+HwxGhwCiqTz27PXNwOYniDao+XbsrkYs020APXByY7Ax4hdqVFT29p0otEaVAeQ8tLlvBaf
-	r/c53jtLUA+cgsegdew7ePjIHLRlmokze2a4=
-X-Gm-Gg: ASbGnctcd1yIe9puxX3r4B3YGyWtYXdNQ9cb1SEQeTgrfwfhGxMQo4CjVFnN1qsutV6
-	ahMRPv7htjytOnLHADKTZ5S9M8/2n4fY9mFOfj8OAkG7H2nXFCwx3vVM8QjwkqN2qD+BmttC/
-X-Google-Smtp-Source: AGHT+IGCGqefCaVKRZV7p1mWm1uoT21o/i34NQFCe3WKmB0S/0YZzEe6ikT7KrGeJBTO8zm1MojcBtJVP9B3dVu8U1I=
-X-Received: by 2002:a05:6402:3907:b0:5dc:7823:e7e4 with SMTP id
- 4fb4d7f45d1cf-5de450479f9mr3567295a12.12.1738932181365; Fri, 07 Feb 2025
- 04:43:01 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738932368; x=1739537168;
+        h=to:subject:message-id:date:mime-version:references:in-reply-to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ZwUPJofjuVtYyvUvViroJ51go9pRIvg6aRbC/noSgE=;
+        b=YMTmTCAx7PVim8cx+B1FzYAzja6lbrx8X1N63NwmyrKjHsq9/JOM88FPCGmeBPUIl5
+         JNcywRqBrhK/0fXakVrA7sqeh9k7kDyc4QVg+3z9ga0SDVY4+h+60SIR8emrWFI5I5n7
+         nVPy4PlfZQMu6nCq65Hz7hBzNxA4gGatRfdK7S+v/w+f6mCzwdSDizaXxVNv5PtNzgeK
+         DE0D1R1x4m0lzpdyPuzDj1m4KJQq9Ya4akX9KK0HXecSJuq8Jt+dOw6Q3rwwS2kw7s6R
+         zEPRYE6ghEsCuTtGxReN6C0fwKJUdg/QQk4gEOfogA7NVtBAFp4upAtRAXiQcxAhxAw+
+         dgPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUY/CX6vSztx4oOFsLnXO83rZ09aYbfn5Ha+pKu7nVGd2jrGbM2wssRv3V5yVkabY0xLukJ0ADXJmg/m4w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5zmJ9VRNK0d1wHXVzsUn99mty4/+1q6bIn95kf56eEG7uQDfb
+	nINt/JDrACwUzaN9YyS7DuaAU67geTEcQwODCEuP9H91HB+I+9RBJprS/FC0tiamTStyKlYl/sl
+	A2kIllEgHCIlZGLgRSOnUV60nuFrDTmhMgv88KvL/XkitMMXNSvVIMwM3N0QUzCip8dpxHr5B13
+	M0i6fx1q1NphRajEZoFwoeu+jj6MoXvO5GqkCgOj+PAo6rFKm68fmG
+X-Gm-Gg: ASbGnctA/uII2s+LzEv2UGZvxU6WQpJIhYTdXhNWO3Il1W9TE7qlVZ5dJIQs4qjUVLN
+	aCxnZVXKD7qC+cmyXEqFx0CG8pvsqEXbe3ZkUgg8gr5bNwB5jkSWeJIuV6LqPZg==
+X-Received: by 2002:a05:6870:c4f:b0:29e:354e:5fdb with SMTP id 586e51a60fabf-2b83ef92ce2mr1639813fac.37.1738932368242;
+        Fri, 07 Feb 2025 04:46:08 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH8717iINw6GQLmXUMzAsQEraXJmnomHeDq/9rOE8N8dSrNmc1FXULqlUBnU6Vyo0eCApuqsrLIMq5Hi2dty7Y=
+X-Received: by 2002:a05:6870:c4f:b0:29e:354e:5fdb with SMTP id
+ 586e51a60fabf-2b83ef92ce2mr1639799fac.37.1738932368012; Fri, 07 Feb 2025
+ 04:46:08 -0800 (PST)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 7 Feb 2025 04:46:07 -0800
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Fri, 7 Feb 2025 04:46:07 -0800
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <TYCPR01MB8437F6FCD14E116B6CBBA09098F72@TYCPR01MB8437.jpnprd01.prod.outlook.com>
+References: <TYCPR01MB8437F6FCD14E116B6CBBA09098F72@TYCPR01MB8437.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <67a4b9e8.050a0220.d6d27.0000.GAE@google.com> <20250207071331.550952-1-lizhi.xu@windriver.com>
-In-Reply-To: <20250207071331.550952-1-lizhi.xu@windriver.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 7 Feb 2025 13:42:50 +0100
-X-Gm-Features: AWEUYZl03iIgguZlVJzBazKJ1hWzXyGxcWGIpdhoLWhYvvdqjH-0u9Y8l57C74Q
-Message-ID: <CAOQ4uxhAB4=kp4NSw=hs0S1HyPFcL3FTGkMgoTuxRSa8eu1n+g@mail.gmail.com>
-Subject: Re: [PATCH] fs: prevent access to ns if it is not mounted
-To: Lizhi Xu <lizhi.xu@windriver.com>
-Cc: syzbot+62dfea789a2cedac1298@syzkaller.appspotmail.com, 
-	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	miklos@szeredi.hu, syzkaller-bugs@googlegroups.com, 
-	Christian Brauner <brauner@kernel.org>
+Mime-Version: 1.0
+Date: Fri, 7 Feb 2025 04:46:07 -0800
+X-Gm-Features: AWEUYZmHbacGaT6tTq_P7xegNAmTpSpPwRhBA5Opynsjcw0ztqQPHtv9Yj0u9dM
+Message-ID: <CAJM55Z_zuaXSchVFwdiCzJJ3j2fHKg-w6j4GP+sqKB3AgvipxQ@mail.gmail.com>
+Subject: Re: [PATCH v1] riscv: dts: starfive: Unify regulator naming scheme
+To: Shengyu Qu <wiagn233@outlook.com>, conor@kernel.org, kernel@esmil.dk, 
+	robh@kernel.org, krzk+dt@kernel.org, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 7, 2025 at 8:13=E2=80=AFAM Lizhi Xu <lizhi.xu@windriver.com> wr=
-ote:
+Shengyu Qu wrote:
+> Currently, there are 3 regulators defined in JH7110's common device tree,
+> but regulator names are mixed with "-" and "_". So unify them to "_",
+> which is more often to be seen in other dts files.
 >
-> syzbot reported a null ptr deref in clone_private_mount. [1]
->
-> The mnt_ns member should be accessed after confirming that it has been mo=
-unted.
->
-> [1]
-> KASAN: null-ptr-deref in range [0x0000000000000048-0x000000000000004f]
-> CPU: 0 UID: 0 PID: 5834 Comm: syz-executor772 Not tainted 6.14.0-rc1-next=
--20250206-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
-oogle 12/27/2024
-> RIP: 0010:is_anon_ns fs/mount.h:159 [inline]
-> RIP: 0010:clone_private_mount+0x184/0x3e0 fs/namespace.c:2425
+> Signed-off-by: Shengyu Qu <wiagn233@outlook.com>
 
-The splat beyond this point is mainly noise I think and referencing [1] is =
-also
-a bit weird in the context of this short message
+Thanks!
 
-> Reported-by: syzbot+62dfea789a2cedac1298@syzkaller.appspotmail.com
+Acked-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 
-Missing:
-Fixes: ae63304102ecd ("fs: allow detached mounts in clone_private_mount()")
-
-> Closes: https://syzkaller.appspot.com/bug?extid=3D62dfea789a2cedac1298
-> Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
 > ---
->  fs/namespace.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index 1314f11ed961..8e2ff3dbab58 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -2421,6 +2421,9 @@ struct vfsmount *clone_private_mount(const struct p=
-ath *path)
->                 if (!check_mnt(old_mnt))
->                         return ERR_PTR(-EINVAL);
->         } else {
-> +               if (!is_mounted(&old_mnt->mnt))
-> +                       return ERR_PTR(-EINVAL);
-> +
->                 /* Make sure this isn't something purely kernel internal.=
- */
->                 if (!is_anon_ns(old_mnt->mnt_ns))
->                         return ERR_PTR(-EINVAL);
-
-Do we still need the second check if we have the first one?
-
-Thanks,
-Amir.
+> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> index 48fb5091b8176..dd2eefc295e5c 100644
+> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+> @@ -233,7 +233,7 @@ vdd_cpu: dcdc2 {
+>  				regulator-always-on;
+>  				regulator-min-microvolt = <500000>;
+>  				regulator-max-microvolt = <1540000>;
+> -				regulator-name = "vdd-cpu";
+> +				regulator-name = "vdd_cpu";
+>  			};
+>
+>  			emmc_vdd: aldo4 {
+> --
+> 2.48.1
+>
