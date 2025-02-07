@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523F31D0F5A;
-	Fri,  7 Feb 2025 21:30:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9751DE4F9;
+	Fri,  7 Feb 2025 21:30:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738963836; cv=none; b=ZEiRbdbOF0HrcMqmHS9BWB6nq0XE7ECdOM58pMjPX/adI3SmbrBSw7Z6iy4Z72h6gMslOGkTFr1cp/fKAU0f+6eqGSaYkfQtCOudOH3WJyq1wPAbp6JCDNZX1d24za0vgkpROT35228y4Gk9CO1VuXx+I+od60i21h186qmaHA8=
+	t=1738963837; cv=none; b=mnWrv6Dl8xQmSZa9oyawgwIzZmoh3Ozl/jODwsSwg40P76pJm+GiU/5IkWC8A3pILiPt3dItMfT+ve13w76rb/8aa68aJN7WkEl2iBBRJXuHBKOF7hQKrw+olP9CjQ75RcutsU9R1xxHfne7nVmNKb16S35TvThdfAYf3/a5/3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738963836; c=relaxed/simple;
-	bh=fqvAh3iKxOl03ArBCkYTvP/GeGQRKw1fc2EwMT7Iylc=;
+	s=arc-20240116; t=1738963837; c=relaxed/simple;
+	bh=RuAkLHcNPzAoRdo6BpE9kwkQgXaZNQeVgfwDORycGBA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eL96fDy1DESYccwdc7KMbdZt/t4nfjZAtuEM1DJS5YiRa56nTcFhHV+RI1d7WKC9k1hFM8H5fzwZAnuwLRnZ+4TmMccyHp8L4vzCV3aDY8XDgh+bzXzpSujeVBJlA7k2WURpcj0PnM0/J0Cndgx9CfFUzZ+k3qOzRWd/q/adC/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P7kYzEbF; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Y0oMitLFIx4LleRNcHye6HeT1AvU8FXL1iH0gvVZpJjhBoJTPuLJewhw2vz3wFrqNLcA5N3ANumKKWdQc11bSv3EiEnyvRDGztzQq59hwe/lm8wW1U1ES86eDTEb0y6q1FaOrExF+HdgAvOt0TCNHxocb0ER4FLicpRhoxpo3xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=htVJpOej; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P7kYzEbF"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AE809C116B1;
-	Fri,  7 Feb 2025 21:30:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="htVJpOej"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2EB13C4AF10;
+	Fri,  7 Feb 2025 21:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738963835;
-	bh=fqvAh3iKxOl03ArBCkYTvP/GeGQRKw1fc2EwMT7Iylc=;
+	s=k20201202; t=1738963836;
+	bh=RuAkLHcNPzAoRdo6BpE9kwkQgXaZNQeVgfwDORycGBA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=P7kYzEbFv5XvnqA9e0Aw2hN/mJRZM27jQPH1NC1dLXOY023QXk/rORY52thAt4Mdz
-	 IETcYpeRUiFbFi5nhNx5iYFzW6OsssSlEVnUg8NOz6WheSOyOrSQH4fRPJgwKwW/nJ
-	 GUnAOxEjOCkKarOkpR4/dMMD9MKp/kyyu15l201GH1QFIgYUSLUeCuylliv+tyBS76
-	 PZ3bBRkl3Jlf0aq/SQ22KHDfHe+UFncODbI+oH+5KAH+98cKh8mAVq9OAWv0I8QQuM
-	 6d0sdji7khwUHKrFpdHXbdH+OXkYla7EFI9+U0yF4/dv1NRZ7/g9q/udgu16gysYi+
-	 567gwgWihYFdQ==
+	b=htVJpOejbXQWhe8jHGJAWKpyPz60TBThljZn9O7eII5mG/tHuyQw3AAVP6bnG4OBW
+	 N7TMJID2KXI6LpFSP3IOheld8gdP+cAzxN/XCJ6c+ALuWgdHzgNleFP2YUE1dT1eoc
+	 7id0urMFXjBD61eQ69fa76RFvE7fLaWi4yiRrCqThGrExM9L/uUwwkouMtWLK13KGs
+	 jTL+0qXLrrjfiuuGUF3zoU85mGpItVNANt7iMIxv2cO0DIbVvBOmg+F2bL+5ZMPlaQ
+	 JWxJwyTqiSLNKjeJhfZq3/gkFx1sUQJn2HOeZkOCEyfPXtKecp8jpkvfmR2fVEU+u8
+	 kmHpjT/ZN1Umg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 908A2C0219D;
-	Fri,  7 Feb 2025 21:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC49C0219E;
+	Fri,  7 Feb 2025 21:30:36 +0000 (UTC)
 From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Fri, 07 Feb 2025 22:30:23 +0100
-Subject: [PATCH v2 06/12] dt-bindings: pci: Convert fsl,mpc83xx-pcie to
- YAML
+Date: Fri, 07 Feb 2025 22:30:27 +0100
+Subject: [PATCH v2 10/12] dt-bindings: memory-controllers: Add
+ fsl,elbc-gpcm-uio
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250207-ppcyaml-v2-6-8137b0c42526@posteo.net>
+Message-Id: <20250207-ppcyaml-v2-10-8137b0c42526@posteo.net>
 References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
 In-Reply-To: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
 To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
@@ -70,11 +70,11 @@ Cc: imx@lists.linux.dev, Scott Wood <oss@buserror.net>,
  linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
  =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738963832; l=5802;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738963832; l=2327;
  i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=jBiH9+MQmhRrwEmLTkNNDzkIkSq8VyyQ3zetJ06KX9U=;
- b=sEBW0totelYgL1en7cVmNkknyNI5Sj/Sspm1mJTetH6lj+iSulPd72CfWDp7mXxTwMSsXTvC8
- CcPFFfl4jGrD9Ji4ICjmccGslMxPc79Ljlsx1zaFK/lzwD1MvefNj68
+ bh=LkemF+iJaT/609rtTCAj5OV7UUDgDJnkAiLlT9aG8EE=;
+ b=IGiyO3zCvC30tHqbSQpswM01pqy9M52ANeFq4lodtrLUuOkaxDX7czh8YTYt1oGe4ku3Ffnah
+ NTVhcN7NU36DyvvlburD8XDK2p3cgpWfPmuP85hC3kYOHiKRAnrQG3g
 X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
  pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
 X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
@@ -84,178 +84,86 @@ Reply-To: j.ne@posteo.net
 
 From: "J. Neuschäfer" <j.ne@posteo.net>
 
-Formalise the binding for the PCI controllers in the Freescale MPC8xxx
-chip family. Information about PCI-X-specific properties was taken from
-fsl,pci.txt. The examples were taken from mpc8315erdb.dts and
-xpedite5200_xmon.dts.
+Formalize the binding already supported by the uio_fsl_elbc_gpcm.c
+driver.
 
 Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 ---
 
 V2:
-- merge fsl,pci.txt into fsl,mpc8xxx-pci.yaml
-- regroup compatible strings, list single-item values in one enum
-- trim subject line (remove "binding")
-- fix property order to comply with dts coding style
+- split out from fsl,elbc patch
+- add description
+- remove "device_type" property
+- move to bindings/memory-controllers
 ---
- .../devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml   | 115 +++++++++++++++++++++
- Documentation/devicetree/bindings/pci/fsl,pci.txt  |  27 -----
- 2 files changed, 115 insertions(+), 27 deletions(-)
+ .../memory-controllers/fsl,elbc-gpcm-uio.yaml      | 59 ++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml b/Documentation/devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml
+diff --git a/Documentation/devicetree/bindings/memory-controllers/fsl,elbc-gpcm-uio.yaml b/Documentation/devicetree/bindings/memory-controllers/fsl,elbc-gpcm-uio.yaml
 new file mode 100644
-index 0000000000000000000000000000000000000000..57c5503cec47e6e90ed2b09835bfad10309db927
+index 0000000000000000000000000000000000000000..381584b400a0ad98c6d9e0b38f2877d44603ed84
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml
-@@ -0,0 +1,115 @@
++++ b/Documentation/devicetree/bindings/memory-controllers/fsl,elbc-gpcm-uio.yaml
+@@ -0,0 +1,59 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+
-+$id: http://devicetree.org/schemas/pci/fsl,mpc8xxx-pci.yaml#
++$id: http://devicetree.org/schemas/memory-controllers/fsl,elbc-gpcm-uio.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Freescale MPC83xx PCI/PCI-X/PCIe controllers
++title: Userspace I/O interface for Freescale eLBC devices
 +
-+description: |
-+  Binding for the PCI/PCI-X/PCIe host bridges on MPC8xxx SoCs.
-+  See also: Documentation/devicetree/bindings/pci/fsl,pci.txt
++description:
++  The Freescale Enhanced Local Bus controller (eLBC) supports flexible access
++  to memory devices, through the General-Purpose Chip-select Machine (GPCM).
++  The purpose of this binding is to designate devices attached to eLBC/GPMC for
++  use by userspace.
 +
 +maintainers:
-+  - J. Neuschäfer <j.neuschaefer@gmx.net>
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
++  - J. Neuschäfer <j.ne@posteo.net>
 +
 +properties:
 +  compatible:
-+    oneOf:
-+      - enum:
-+          - fsl,mpc8314-pcie
-+          - fsl,mpc8349-pci
-+          - fsl,mpc8540-pci
-+          - fsl,mpc8548-pcie
-+          - fsl,mpc8641-pcie
-+      - items:
-+          - enum:
-+              - fsl,mpc8308-pcie
-+              - fsl,mpc8315-pcie
-+              - fsl,mpc8377-pcie
-+              - fsl,mpc8378-pcie
-+          - const: fsl,mpc8314-pcie
-+      - items:
-+          - const: fsl,mpc8360-pci
-+          - const: fsl,mpc8349-pci
-+      - items:
-+          - const: fsl,mpc8540-pcix
-+          - const: fsl,mpc8540-pci
++    const: fsl,elbc-gpcm-uio
 +
 +  reg:
-+    minItems: 1
-+    items:
-+      - description: internal registers
-+      - description: config space access registers
++    maxItems: 1
 +
-+  clock-frequency: true
++  elbc-gpcm-br:
++    description: Base Register (BR) value to set
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++  elbc-gpcm-or:
++    description: Option Register (OR) value to set
++    $ref: /schemas/types.yaml#/definitions/uint32
 +
 +  interrupts:
-+    items:
-+      - description: Consolidated PCI interrupt
++    maxItems: 1
 +
-+  fsl,pci-agent-force-enum:
-+    type: boolean
-+    description:
-+      Typically any Freescale PCI-X bridge hardware strapped into Agent mode is
-+      prevented from enumerating the bus. The PrPMC form-factor requires all
-+      mezzanines to be PCI-X Agents, but one per system may still enumerate the
-+      bus.
-+
-+      This property allows a PCI-X bridge to be used for bus enumeration
-+      despite being strapped into Agent mode.
++  uio_name:
++    $ref: /schemas/types.yaml#/definitions/string
 +
 +required:
-+  - reg
 +  - compatible
++  - reg
++  - elbc-gpcm-br
++  - elbc-gpcm-or
 +
-+unevaluatedProperties: false
++additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
++    localbus {
++        #address-cells = <2>;
++        #size-cells = <1>;
 +
-+    pcie@e0009000 {
-+        compatible = "fsl,mpc8315-pcie", "fsl,mpc8314-pcie";
-+        reg = <0xe0009000 0x00001000>;
-+        ranges = <0x02000000 0 0xa0000000 0xa0000000 0 0x10000000
-+                  0x01000000 0 0x00000000 0xb1000000 0 0x00800000>;
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        #interrupt-cells = <1>;
-+        device_type = "pci";
-+        bus-range = <0 255>;
-+        interrupt-map-mask = <0xf800 0 0 7>;
-+        interrupt-map = <0 0 0 1 &ipic 1 IRQ_TYPE_LEVEL_LOW
-+                         0 0 0 2 &ipic 1 IRQ_TYPE_LEVEL_LOW
-+                         0 0 0 3 &ipic 1 IRQ_TYPE_LEVEL_LOW
-+                         0 0 0 4 &ipic 1 IRQ_TYPE_LEVEL_LOW>;
-+        clock-frequency = <0>;
++        simple-periph@2,0 {
++            compatible = "fsl,elbc-gpcm-uio";
++            reg = <0x2 0x0 0x10000>;
++            elbc-gpcm-br = <0xfd810800>;
++            elbc-gpcm-or = <0xffff09f7>;
++        };
 +    };
-+
-+  - |
-+    pci@ef008000 {
-+        compatible = "fsl,mpc8540-pcix", "fsl,mpc8540-pci";
-+        reg = <0xef008000 0x1000>;
-+        ranges = <0x02000000 0 0x80000000 0x80000000 0 0x20000000
-+                  0x01000000 0 0x00000000 0xd0000000 0 0x01000000>;
-+        #interrupt-cells = <1>;
-+        #size-cells = <2>;
-+        #address-cells = <3>;
-+        device_type = "pci";
-+        clock-frequency = <33333333>;
-+        interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-+        interrupt-map = </* IDSEL */
-+                         0xe000 0 0 1 &mpic 2 1
-+                         0xe000 0 0 2 &mpic 3 1>;
-+        interrupts-extended = <&mpic 24 2>;
-+        bus-range = <0 0>;
-+        fsl,pci-agent-force-enum;
-+    };
-+
-+
-+...
-diff --git a/Documentation/devicetree/bindings/pci/fsl,pci.txt b/Documentation/devicetree/bindings/pci/fsl,pci.txt
-deleted file mode 100644
-index d8ac4a768e7e65b465f83308cc918ec471309dcf..0000000000000000000000000000000000000000
---- a/Documentation/devicetree/bindings/pci/fsl,pci.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--* Bus Enumeration by Freescale PCI-X Agent
--
--Typically any Freescale PCI-X bridge hardware strapped into Agent mode
--is prevented from enumerating the bus. The PrPMC form-factor requires
--all mezzanines to be PCI-X Agents, but one per system may still
--enumerate the bus.
--
--The property defined below will allow a PCI-X bridge to be used for bus
--enumeration despite being strapped into Agent mode.
--
--Required properties:
--- fsl,pci-agent-force-enum : There is no value associated with this
--  property. The property itself is treated as a boolean.
--
--Example:
--
--	/* PCI-X bridge known to be PrPMC Monarch */
--	pci0: pci@ef008000 {
--		fsl,pci-agent-force-enum;
--		#interrupt-cells = <1>;
--		#size-cells = <2>;
--		#address-cells = <3>;
--		compatible = "fsl,mpc8540-pcix", "fsl,mpc8540-pci";
--		device_type = "pci";
--		...
--		...
--	};
 
 -- 
 2.48.0.rc1.219.gb6b6757d772
