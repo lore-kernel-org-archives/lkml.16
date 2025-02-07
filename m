@@ -1,86 +1,124 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABFB518FC7B;
-	Fri,  7 Feb 2025 21:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877B51B3953;
+	Fri,  7 Feb 2025 21:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738965217; cv=none; b=ofkN3RbCoYUyhjt5ehdkkbIQcesZlDkAH/iu4t1aQbdszV8gvgZSv8PYVVr6Pzrs94F/sZhMzuLoHrBXfxP0V01KOz1tCR88uYtDWc5Q2vy/hbnHpnJjTM4Eat9icZ7w/Miq2RHs6p9PqOkk8Slyb2RkPfVdiRDDHi5roubTDPE=
+	t=1738965250; cv=none; b=e1eG4nYW4yNsZW8YiZ1FuCh5wsIElueFOIfrU+A9fUivZdCoYcx7bjq8xH+YJwKtsPj1I5z7Y9il+mY+PWyTQWVmZ2Ic8JcQzvhJ+C400oVbhyU5g5rKqhuQV1pytM6xEkWmGRu6moltRew5pb9yfVPPYV/+Qi3O5C+e5g9vFNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738965217; c=relaxed/simple;
-	bh=x4Z6WRtu5lkf0X2Z+obuDWDRP253TsBa4Ew3V/418fI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G6TrQxDaFj8DErSJVvORecZPiGSJvtGGPxbaAspbU3EMLMoudu7UlqKdlNDeRknzOEoOIjpx9DzJSYvuySVUJzBJw9nghgfLxSomID9gvOrrsibf2ONVslJI4DTlkf0ZE7girKbPhpH+unwtjvCv9RLAdEgRwdAbO0KhqDds5sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BRYwDEQI; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1738965250; c=relaxed/simple;
+	bh=8QX0PGPdSwxlfa0eKSWx+B63/sE8b0OHupVIwvXqpkg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Lj4aRquW9+2raNoimFtR4FDFwczqI2J42SnUpFcu06tkWcpy7Iz/lKgFSslpEtTfknYzHNlSRX9kEt8yndYufZcG6m/qOYAmNamdrS12xzmMNudL5364Ty6CUg/6m4yx02HywxY1hD+uMNhV6JvJqy4+MXsa71MYdzlTiqjHU5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jeivBvLd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BRYwDEQI"
-Received: from hm-sls2 (unknown [142.114.216.132])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 3D7FB2107308;
-	Fri,  7 Feb 2025 13:53:33 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3D7FB2107308
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1738965214;
-	bh=EWelTE8BT8WAHtbmQhEVDbdCq7fJfmLfrnbaZGFFKek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BRYwDEQITWAB1GpXwrZu3QTnzFr0/lLsXDKJb9fa3QjbPyHGHBEaknwt5Wktgdnyp
-	 TpDffaxfN5hW7EZ5BcbH5OkTGWZvmUFgpRUEWU23pcUeuEXcPVaERhDTz93kz89/kz
-	 15JPCWxZpP/c4cEIOdWDLnPGIcYkjfdZAeyFxHHQ=
-Date: Fri, 7 Feb 2025 16:53:21 -0500
-From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-To: Paul Moore <paul@paul-moore.com>
-Cc: linux-kernel@vger.kernel.org, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>, Jens Axboe <axboe@kernel.dk>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>,
-	Bram =?utf-8?B?Qm9ubsOp?= <brambonne@google.com>,
-	=?utf-8?B?VGhpw6liYXVk?= Weksteen <tweek@google.com>,
-	Christian =?utf-8?B?R8O2dHRzY2hl?= <cgzones@googlemail.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	linux-security-module@vger.kernel.org, io-uring@vger.kernel.org,
-	selinux@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] lsm,io_uring: add LSM hooks for io_uring_setup()
-Message-ID: <Z6aA0cWte6rZQSbo@hm-sls2>
-References: <20250127155723.67711-2-hamzamahfooz@linux.microsoft.com>
- <a4541fab007858c599aed1d1e3e98883@paul-moore.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jeivBvLd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28027C4CED1;
+	Fri,  7 Feb 2025 21:54:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738965250;
+	bh=8QX0PGPdSwxlfa0eKSWx+B63/sE8b0OHupVIwvXqpkg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=jeivBvLdIOd6jY4aSGurPm7wQX7ljeAnHqvZJXPTSKmGNG5+vQ4NVMx2KzertDqvI
+	 h+549x1Hkj0zoIs7ZCSd5Mo1ICu4aGmZgocbZkfS9ZmYVyR1TNuQVe+tyvfyPFIXR/
+	 G6UJYDELtO7MOV6y3Wu2QmjA/Zsdr2PD7mRRmpwJ1f7Pd3En3qGiZlNVrmv5URiu21
+	 QnvIRiimbgvb+HLWKv7IR1MXfpFJb3WtPW7cIs1E9JCsk1PTioHPviep1r2RCtOBAy
+	 4+eIzgOv/epWI0vHPYALiuqNsbqAh0HT0BsdDxAIUSM2dkuEQHgQTFARiPd06XpauA
+	 B8iqL7NpKfHMQ==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v5 0/7] nfsd: CB_SEQUENCE error handling fixes and cleanups
+Date: Fri, 07 Feb 2025 16:53:47 -0500
+Message-Id: <20250207-nfsd-6-14-v5-0-f3b54fb60dc0@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a4541fab007858c599aed1d1e3e98883@paul-moore.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOuApmcC/3XMQQ6CMBCF4auQrq2ZTlsqrryHcVHKAI0GTGuIh
+ nB3Cxsx6PJN5vtHFil4iuyYjSzQ4KPvuzT0LmOutV1D3FdpMwTUIFDyro4Vz7lQvARTGJIHXTl
+ g6f8eqPbPpXW+pN36+OjDa0kPYr7+qgyCA3dCSGNVbdHS6Uqho9u+Dw2bMwOuabGmmCgaAFdgL
+ UmpDZV/qUxUQ05GkCwoLzdUfSiCWVOVqLBWoVNgMNdfdJqmNxN6Uq5UAQAA
+X-Change-ID: 20250123-nfsd-6-14-b0797e385dc0
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2394; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=8QX0PGPdSwxlfa0eKSWx+B63/sE8b0OHupVIwvXqpkg=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnpoD26+/gG2N5KLyQSo9WWHpKJ+FLS4OudZabY
+ robPwKujReJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6aA9gAKCRAADmhBGVaC
+ FdilD/4ll8LFjU4KL7LHtXoYrLrDXu4MxMXQ6uVVZzH+e61tYUBBZR1l9Dd5FAKhXsOPxtzgCXt
+ RAdBVseF5K3vuL+HAQgkxyU2W0DUSaw8cdqxVDKyY9+AUO7Zzz4gTy60AtyUar7jCdI4HyqKq2u
+ Rlztw4hsnchRLc6sT8YkhkxIeOVu23lnT9dhp3Gx+ZD6zSQmDW/8jW7dInO2l3CMQsR3uN7ZD3u
+ C8UVbNw4CRw7BP3NTmRZNbchY6uWpvKt+6Y43vQt6Uew3SMpiO2lnjU+aZIUgZlP7uhUD8nEmyv
+ nEGz1j7s/u1vIT3Ync35TN56JwbCNYudWSmMFKCExxzWq6p874PA2KZUKQP5VRks/kBqESUfid7
+ e0D2AtgUmDvm/y0Gq5vOlUZSefgzedtgaEGMPO0k4RTHfTzbr+7pPJcKXi92rf9lzdZ5zh8KW0I
+ 3sQFBaVqHj8iG3nPJWaLfeP6S1uxf72sBYVhfW1mSFceesK/HVdAXdgy6jvaHHVr8hbExiklPar
+ +ydNmqlV/++MbFfzr+NziYnt50PtBt7dyhyDpzQZSq/QwVcL5dzZHPs0+lOzxdk9nKlIoHJFwRc
+ ceE1xYaboRTVvcFqvFkZEu6vyYsBPGWtDTfE07RO3vfwj8LaBOTTwJ/X7fiqpEsAQGCjYJYRNBH
+ MfF9OYfMX5hxhfQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Fri, Feb 07, 2025 at 04:42:57PM -0500, Paul Moore wrote:
-> On Jan 27, 2025 Hamza Mahfooz <hamzamahfooz@linux.microsoft.com> wrote:
-> > 
-> > It is desirable to allow LSM to configure accessibility to io_uring
-> > because it is a coarse yet very simple way to restrict access to it. So,
-> > add an LSM for io_uring_allowed() to guard access to io_uring.
-> > 
-> > Cc: Paul Moore <paul@paul-moore.com>
-> > Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-> > ---
-> >  include/linux/lsm_hook_defs.h       |  1 +
-> >  include/linux/security.h            |  5 +++++
-> >  io_uring/io_uring.c                 |  2 +-
-> >  security/security.c                 | 12 ++++++++++++
-> >  security/selinux/hooks.c            | 14 ++++++++++++++
-> >  security/selinux/include/classmap.h |  2 +-
-> >  6 files changed, 34 insertions(+), 2 deletions(-)
-> 
-> Thanks Hamza, this looks good to me, but we need to wait until we get an
-> ACK from Jens on path 1/2; he's pretty responsive so I don't think we'll
-> have to wait too long.
-> 
-> As far as the return/label issue in patch 1/2, as long as there are no
-> other issues, and you are okay with the change, I can fix that up when
-> merging your patches.
+This patch is mostly the same as the v4 series, but with the first
+patch broken up into multiple changes (as Chuck suggested), and a few
+changes to the comments.
 
-Ya, that sounds good to me, thanks!
+Another minor difference here is that I didn't change the code to ignore
+the return value of rpc_restart_call() and rpc_restart_call_prepare().
+These could end up being backported to kernels that have to handle those
+cases.
 
-> 
-> --
-> paul-moore.com
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v5:
+- don't ignore return of rpc_restart_call() and rpc_restart_call_prepare()
+- Break up the nfsd4_cb_sequence_done() error handling changes into multiple patches
+- Link to v4: https://lore.kernel.org/r/20250207-nfsd-6-14-v4-0-1aa42c407265@kernel.org
+
+Changes in v4:
+- Hold back on session refcounting changes for now and just send CB_SEQUENCE
+  error handling rework.
+- Link to v3: https://lore.kernel.org/r/20250129-nfsd-6-14-v3-0-506e71e39e6b@kernel.org
+
+Changes in v3:
+- rename cb_session_changed to nfsd4_cb_session_changed
+- rename restart_callback to requeue_callback, and rename need_restart:
+  label to requeue:
+- don't increment seq_nr on -ESERVERFAULT
+- comment cleanups
+- drop client-side rpc patch (will send separately)
+- Link to v2: https://lore.kernel.org/r/20250129-nfsd-6-14-v2-0-2700c92f3e44@kernel.org
+
+Changes in v2:
+- make nfsd4_session be RCU-freed
+- change code to keep reference to session over callback RPCs
+- rework error handling in nfsd4_cb_sequence_done()
+- move NFSv4.0 handling out of nfsd4_cb_sequence_done()
+- Link to v1: https://lore.kernel.org/r/20250123-nfsd-6-14-v1-0-c1137a4fa2ae@kernel.org
+
+---
+Jeff Layton (7):
+      nfsd: prepare nfsd4_cb_sequence_done() for error handling rework
+      nfsd: always release slot when requeueing callback
+      nfsd: only check RPC_SIGNALLED() when restarting rpc_task
+      nfsd: when CB_SEQUENCE gets ESERVERFAULT don't increment seq_nr
+      nfsd: handle CB_SEQUENCE NFS4ERR_BADSLOT better
+      nfsd: handle CB_SEQUENCE NFS4ERR_SEQ_MISORDERED error better
+      nfsd: lift NFSv4.0 handling out of nfsd4_cb_sequence_done()
+
+ fs/nfsd/nfs4callback.c | 102 +++++++++++++++++++++++++++++--------------------
+ 1 file changed, 61 insertions(+), 41 deletions(-)
+---
+base-commit: 50934b1a613cabba2b917879c3e722882b72f628
+change-id: 20250123-nfsd-6-14-b0797e385dc0
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
