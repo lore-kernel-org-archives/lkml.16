@@ -1,148 +1,88 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCE21A5BB1;
-	Fri,  7 Feb 2025 13:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E927D9454;
+	Fri,  7 Feb 2025 13:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738934201; cv=none; b=Isw715xtyYqVPowKFM2KVxqnM2ev4R8Mlq1g9QOyaLvtJE6dNfpc7K1iCKEwD2uTiDXLnkNTjGCPiNmkA5ZsDqA8Guiwoz5tItcnJl1gKDzZTUnFPlsTTgaKb1TGQnL0eYWNiM6iNMpyo/2NV+ADQV8tgUSkYg766BOc9hLH8/w=
+	t=1738934274; cv=none; b=Vfl8iKXWs/NvjGN2WWzmev8k5XMrfDJ7ffCPh5SbY9JYIL3fnjoBYaOqo8+oDvu9LSRvZnap+DyOmkjgOavB6pJrGiNUC+4p5EVujwMeWIs+CFFRXfYxP2Uo6iR96BkNvCa5B87qCr5C0M2bQGN7b5DBa5GTFl5m6UXA0ft7qEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738934201; c=relaxed/simple;
-	bh=5nTaQUvFxlMWygqAXJ5NTc4zhQFO1lwOJ/HjdO/0CC0=;
+	s=arc-20240116; t=1738934274; c=relaxed/simple;
+	bh=IkN+91g2ry7/izxkr090QMoaPLLE7yTdLaQvubsVUeA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vs5MUD8Oq+dMwEhUuP4AkcLrP9pgbnlaIk2qBS4KwnokWcokKLiJ7pXc4agGBeEzZ6oAIzL/DP6qQrzbJvA1EaOBgAqSGsJDFB6VFFgqvSkrG7D1+XUbyhrrzjblxqh4PZylrEo4NFafYxyuMEEk/OATCAjhJ//k9Whwjw3++jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=sAaW5P+r; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=TbZBfjYH; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=sAaW5P+r; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=TbZBfjYH; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=W3wcqcqf7W3qt+vh3FmyyzOPNtwBFsXUoohBrS/UCtDFypx7OZNEfqnd04U0eVhKWMVZi1ZGbA4wMUD7kLPKlbafTaejBO7IVPDLPOv5a6lqob1jtjVp+/DhdcOrxyTADAikpG2JYqMYqrVuKtwolQkTQneS+DJo9wYbyhPc0V4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LXRnylWy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="sAaW5P+r";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="TbZBfjYH";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="sAaW5P+r";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="TbZBfjYH"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id AFB8521167;
-	Fri,  7 Feb 2025 13:16:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738934197; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j+G7u8G4dZW1Z7wAr5j88Hm7ApvHhPGjX6mT8B9kPE4=;
-	b=sAaW5P+rdsnMBfaocUynOEJClSpVBAZF14OCOs0p9KntgkF0/aj1Zkqx/Va2P2qbQd+yDw
-	epk3KeKijRXbDBvEz0CoZRsUiueWWKsZFfPOTa+BUObmjdRxfx1Gjq7AYGC9PEJqD4+FBw
-	B50vYSHV9gCYSMPTMZ74RIjxsh9KmLA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738934197;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j+G7u8G4dZW1Z7wAr5j88Hm7ApvHhPGjX6mT8B9kPE4=;
-	b=TbZBfjYHaUZQneyt5fRzHF7KUvHeRcABwqR7ilAMqC3kZCU8LlEuVufnObgiXzCNxvuHND
-	XyJsuE475YwBy5AA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738934197; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j+G7u8G4dZW1Z7wAr5j88Hm7ApvHhPGjX6mT8B9kPE4=;
-	b=sAaW5P+rdsnMBfaocUynOEJClSpVBAZF14OCOs0p9KntgkF0/aj1Zkqx/Va2P2qbQd+yDw
-	epk3KeKijRXbDBvEz0CoZRsUiueWWKsZFfPOTa+BUObmjdRxfx1Gjq7AYGC9PEJqD4+FBw
-	B50vYSHV9gCYSMPTMZ74RIjxsh9KmLA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738934197;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j+G7u8G4dZW1Z7wAr5j88Hm7ApvHhPGjX6mT8B9kPE4=;
-	b=TbZBfjYHaUZQneyt5fRzHF7KUvHeRcABwqR7ilAMqC3kZCU8LlEuVufnObgiXzCNxvuHND
-	XyJsuE475YwBy5AA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9B00E13694;
-	Fri,  7 Feb 2025 13:16:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id /0HZJbUHpmfSJQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 07 Feb 2025 13:16:37 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 4FD89A28E7; Fri,  7 Feb 2025 14:16:37 +0100 (CET)
-Date: Fri, 7 Feb 2025 14:16:37 +0100
-From: Jan Kara <jack@suse.cz>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] vfs: catch invalid modes in may_open()
-Message-ID: <wve6u2kei6lfycbg7sogkjogd76tqoixfydop4dnhisgdcueep@uipa6akqgmuh>
-References: <20250206170307.451403-1-mjguzik@gmail.com>
- <20250206170307.451403-3-mjguzik@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LXRnylWy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CA9DC4CED1;
+	Fri,  7 Feb 2025 13:17:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738934273;
+	bh=IkN+91g2ry7/izxkr090QMoaPLLE7yTdLaQvubsVUeA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LXRnylWyhvFxk5XU/P0YRWezrAu+XaZzF4i5/Ca9GakNTqAStcaxowAAxrbLYxslV
+	 UwnunStOpd9y9+OwHqyqBNmM+yFZhlPaUOBPBMVSeU40ALmkhGG7Am2DmuWt2C2X4f
+	 2tp4C4hKc4ReBB2uAN0HPEk78oLh825TtTTtTBDEqUXFKrHA423xvVPqG1BY2cYxN7
+	 x3PD2BlNBL1EnTipjMxPMo8sEUKB4e4G3miCoowJbaUD4iaB+pWnY0rv96K7MJC3Rw
+	 l8UQYRPKIL2lDJQn3q/JARtbLiX7qPaq7FCZhSz6/Grxc5xQ+8QeK6EBoJWk9qjpo7
+	 Y+utI/Ogi0oGQ==
+Date: Fri, 7 Feb 2025 13:17:48 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>
+Cc: Varshini Rajendran <varshini.rajendran@microchip.com>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>, linux-spi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Durai Manickam KR <durai.manickamkr@microchip.com>,
+	Alexander Dahl <ada@thorsis.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH resubmit2] spi: atmel-quadspi: remove references to
+ runtime PM on error path
+Message-ID: <6aaa852e-9a7b-45c4-a5d2-20ebd8f848f9@sirena.org.uk>
+References: <20250207122145.162183-2-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="N8auyasM2SC+L5Gh"
 Content-Disposition: inline
-In-Reply-To: <20250206170307.451403-3-mjguzik@gmail.com>
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-0.998];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.com:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <20250207122145.162183-2-csokas.bence@prolan.hu>
+X-Cookie: MMM-MM!!  So THIS is BIO-NEBULATION!
 
-On Thu 06-02-25 18:03:06, Mateusz Guzik wrote:
-> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
 
-Looks good. Feel free to add:
+--N8auyasM2SC+L5Gh
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+On Fri, Feb 07, 2025 at 01:21:45PM +0100, Bence Cs=F3k=E1s wrote:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
+>=20
+> There is no need to call runtime PM put APIs on error path of
+> `atmel_qspi_sama7g5_transfer()` as the caller (`atmel_qspi_exec_op()`)
+> of it will take care of this if needed.
 
-								Honza
-> ---
->  fs/namei.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 3ab9440c5b93..21630a0f8e30 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -3415,6 +3415,8 @@ static int may_open(struct mnt_idmap *idmap, const struct path *path,
->  		if ((acc_mode & MAY_EXEC) && path_noexec(path))
->  			return -EACCES;
->  		break;
-> +	default:
-> +		VFS_BUG_ON_INODE(1, inode);
->  	}
->  
->  	error = inode_permission(idmap, inode, MAY_OPEN | acc_mode);
-> -- 
-> 2.43.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Please stop sending this out so often, this is the second resend in just
+a couple of weeks.  Allow some time for review, having multiple copies
+on the list makes it harder to keep track of any reviews that do happen.
+
+--N8auyasM2SC+L5Gh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmemB/sACgkQJNaLcl1U
+h9D7Wwf+M4ufdPA1DyzrOM/eDkbJJwzeNBiT4EENEGbaWFN3iNZZDY0apuK38f65
+ATrs1UHVLOyubSTpifTtz5he9gGCtr5QxN5fwYWH4nSo6PmmoV4twtadyjUTsGt1
+2D8Qa4tRD6Xwrda28O5tNjdouFD93jfMvhKlbOwucFGbjRXeL9ntYMV4hNqofixi
+t9wrmuekt3pEASBcfr9gI86Ff5jQ6/BvOzIhpmr0RWk5F2jKQt+V6tM2AvtKnxzO
+/oyV7gQAOSEhKMHGwWjW4bBrjaCEXQg9VIUOzGKXBqjaLChgX1s89T8dUcqhQtdY
+rk1bz3zqBTYoiMHBeMGyfJRL4PH7RQ==
+=QtKZ
+-----END PGP SIGNATURE-----
+
+--N8auyasM2SC+L5Gh--
