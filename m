@@ -1,80 +1,41 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BAC18DF86
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 07:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF9A198A32;
+	Fri,  7 Feb 2025 07:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738913708; cv=none; b=QnaXaZO6FwAoUqWFRTDSbCZ6eEkW3U5oENipFCm8HI/S0W2wOtXuqEur1p1logM4SSMfVWxFZgd08puuA3yOg8EwhgDB5nd/V90xYLCpP1wXYs6dgvK/3oHlnV870gzJykSUnDXyPCP5BiLIhGT9ady9wxMrJRO6spedaBF/URw=
+	t=1738913743; cv=none; b=PHGSMBnZSthY+vUZ5T9No8GOXmH7HGqGDtf8bualxJD2+XlgXe9tONmaJwC/8UikqUcgJY2t98FU2vJk9KZayVFIkfSlVd6rsBBY8BGRY0TPohOc0a6XOBU4MYiAbDrqYwB3dpfNoQASQiUXbHnACOaFVr4/BHdttzAJdt/hkyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738913708; c=relaxed/simple;
-	bh=SoKfZsMWM++7qSwG9M+ObHWZT0yu/xHXf31AK8qwgbw=;
+	s=arc-20240116; t=1738913743; c=relaxed/simple;
+	bh=3qtlZUpkljhlwXCzjKXTxq/EfyYT6h7RYLWB5MlNTbE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f5jIiMIzZgmLLHCijSPFfPhEUZdhgkF71ElMDUkezd5jyUO0+ogx+vVDpqKilEkB7ENU2d7DWAv03Oi/V2EbHuvlqXA80YlT1yduW3nQVG/tLaAz/PYwqNmh15Cp8i5ESryo8gVhpivWZWZWhDeTBKVnSaHJTaY+cr884+ZjDcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=QCfHLlsN; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=m6vJuKV0A7kYZxINs42FYci1XqHCWWqdIh3vm22ujy6OTDhDmFwiGlKi1i0KXCUkFlHYDQrdqlsd/N9JQ2TvGuZOZRRioPstFkAoG6TGffkGGDnICzbkgRdzB9tUvBZ4dcNj6OCoJJosUxe9ZZMKM60Ar35Ht14fYWKyTr8v2WA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=XvlTym/+; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="QCfHLlsN"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7b7041273ddso159455585a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 23:35:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738913705; x=1739518505; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=S985nb84gx3fKGG3CziKlQ8YyE/d/ai620mo1qQAcd4=;
-        b=QCfHLlsNS44BCvA/g6cLK2H5qdHS+yYeSdTeIZi/Y9TILkmnJWw2AMDSt5bZ+Ur38j
-         l5D7UK4DLD7dAUK0tiDHckeGtHwtMA3bm/EYGqI5nN1Bmre7BcsdydApo8snh67D9A1u
-         XVI/b0r869E0B5qzXdczopOsNMZ1a/yhhtwJUy1nOzpSuLJhulwtpW7kJ0y8ocFi30PX
-         F/J92ZnOsjIIfuSKa5kHRaWen+bxPvwMH7oeacQc5i3M+lPCK7d2hjUkIg8dZsygAZZv
-         8n3cOzcLSE3jZp6lrB5IXvC9KXlk3krgeS0aVmiqiZuziTr9GrzEN95J+ORZYWTh8Ay8
-         lntQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738913705; x=1739518505;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S985nb84gx3fKGG3CziKlQ8YyE/d/ai620mo1qQAcd4=;
-        b=JHXOjSFSLnlbRNf40IulTbQDACbjohh5WFpU8FDQA6w7BOksNtM0k2ab19CkjhOA+k
-         PIUE6EO641i528f+A+zC3luGL10sZ647+oq6JPZbZL9Nj0p4hX5lZlAqBLNUvFkxKkdf
-         OH0TbXseVRVSwjbZAebLOvWcy4GjZ4jxQb1o1XY6vC6tLR+UqE7FIpffnWohc2lbFlIp
-         29cFnEEA8/7kXutcReQO3vVYsaiJjoLbiUzPKRwU4jbwBhpiEaq9Ywr5296uVC8xo7RL
-         cBnyY/u66R4eSpXVT4NJU+oppxBwSwyEOVRInQuhmJop/RurvREMghAuZIraNYatii8j
-         6oSA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1U5l3LeSm4QWxbSOGQRAWI0GCtEG+nkTNHsZuDxwCXg1x3sWR6iZJOcim5AbeuQ2levGaimQ31H2IJ4s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHJmsqddUVKU94q0NMhvM6zieRFttWpliHxEiBJPkm3zBzeS69
-	a/YHKtWl4IKhZgq3+shLuaOCIvrqQBX+gCDBjtshY+IKJylHAl/OP85YiCw4Kvg=
-X-Gm-Gg: ASbGncvtDS6anbfDVX5k7yvZLt8Wfp9jDwiomFeccW+NhBhmuk+MjAMAj5XBoiW90RJ
-	rfsyuifTGx5JGSqSpXumjRfwzuMuGQ2z7L0ydKR6f1U6jLusngeXOtEPbAw6O/oaxP8Ng9zpNrG
-	wu5oIqEfvkNkwet68Ma0mmEGUk0sHsNiu+rvK9zu3hZmUeaNtkKfvaizHLjmTVcj7kKYcpDl8y0
-	Hzvzaalxza/w+3fELN3zAzDqVRxugE3sTZU7C19uUrLhY5lQCsGRii+qVDIjP4Y5InZgaKcMH8p
-	nalZV+OUK8w7plrgTn3kE3fUh0ACLJPSVNfS2NDhN/ztIwwg7d4jlI9wWkSR3LplhS/eUsERkA=
-	=
-X-Google-Smtp-Source: AGHT+IHR2VWtK5UoYrz7dJOeFMRcEgTDUb47l42Cs0Jrr9jUdPON+1TgDBAhn04WkWpQ6sv6zHS7uw==
-X-Received: by 2002:a05:620a:4b45:b0:7b6:f03e:6c0e with SMTP id af79cd13be357-7c047bc6debmr252927585a.31.1738913705408;
-        Thu, 06 Feb 2025 23:35:05 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041dec129sm157964185a.18.2025.02.06.23.35.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 23:35:05 -0800 (PST)
-Date: Fri, 7 Feb 2025 02:35:03 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
-	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
-	rrichter@amd.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
-	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com,
-	alucerop@amd.com
-Subject: Re: [PATCH v5 09/16] cxl/pci: Map CXL PCIe Upstream Switch Port RAS
- registers
-Message-ID: <Z6W3p1h9ghcBF_R6@gourry-fedora-PF4VCD3F>
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
- <20250107143852.3692571-10-terry.bowman@amd.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="XvlTym/+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1738913729;
+	bh=3qtlZUpkljhlwXCzjKXTxq/EfyYT6h7RYLWB5MlNTbE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XvlTym/+4lFBs9M6lla/muHeMDVjvx/S1iHz9ISboiWyEB0t72/TE0wW4dn2QcKr4
+	 /3yBOpwwNN/sjJKaozTwTnhyLzTpUcEy5uvdvV9JjX7LK8epznPEx+ht7+l85m6iho
+	 sZgw6fqcKBtZ5v+QiSW8HfN7d0eNbzRANEdJXMIg=
+Date: Fri, 7 Feb 2025 08:35:28 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Shyam Saini <shyamsaini@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, 
+	code@tyhicks.com, linux@rasmusvillemoes.dk, christophe.leroy@csgroup.eu, 
+	hch@infradead.org, mcgrof@kernel.org, frkaya@linux.microsoft.com, 
+	vijayb@linux.microsoft.com, petr.pavlu@suse.com, samitolvanen@google.com, 
+	da.gomez@samsung.com, gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org
+Subject: Re: [v2 2/3] kernel: refactor and globalize
+ lookup_or_create_module_kobject()
+Message-ID: <307ec0eb-df8e-4031-9bfa-227b1cd2fcb7@t-8ch.de>
+References: <20250207054538.1110340-1-shyamsaini@linux.microsoft.com>
+ <20250207054538.1110340-3-shyamsaini@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,22 +44,137 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250107143852.3692571-10-terry.bowman@amd.com>
+In-Reply-To: <20250207054538.1110340-3-shyamsaini@linux.microsoft.com>
 
-On Tue, Jan 07, 2025 at 08:38:45AM -0600, Terry Bowman wrote:
-> Add logic to map CXL PCIe Upstream Switch Port (USP) RAS registers.
-> 
-> Introduce 'struct cxl_regs' member into 'struct cxl_port' to cache a
-> pointer to the CXL Upstream Port's mapped RAS registers.
-> 
-> Also, introduce cxl_uport_init_ras_reporting() to perform the USP RAS
-> register mapping. This is similar to the existing
-> cxl_dport_init_ras_reporting() but for USP devices.
-> 
-> The USP may have multiple downstream endpoints. Before mapping AER
-> registers check if the registers are already mapped.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+On 2025-02-06 21:45:37-0800, Shyam Saini wrote:
+> lookup_or_create_module_kobject() is static and marked as __init,
+> this is not ideal for global usage.
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+FYI missing "PATCH" in patch subject.
 
+> Fix this limitation by refactoring and declaring this as global:
+>  - Refactor it by removing BUG_ON() and 'if else' construct by returning
+>    early
+
+This does look like an unrelated change, could be in its own patch.
+
+>  - Remove static and __init markers from the function and add its
+>    declaration in module.h
+>  - Mark this function as "__modinit". To facilitate this, move the
+>    __modinit macro construct to module.h
+> 
+> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Signed-off-by: Shyam Saini <shyamsaini@linux.microsoft.com>
+> ---
+>  include/linux/module.h |  8 +++++++
+>  kernel/params.c        | 48 ++++++++++++++++++------------------------
+>  2 files changed, 29 insertions(+), 27 deletions(-)
+> 
+> diff --git a/include/linux/module.h b/include/linux/module.h
+> index 12f8a7d4fc1c..57d09b4e4385 100644
+> --- a/include/linux/module.h
+> +++ b/include/linux/module.h
+> @@ -162,6 +162,14 @@ extern void cleanup_module(void);
+>  #define __INITRODATA_OR_MODULE __INITRODATA
+>  #endif /*CONFIG_MODULES*/
+>  
+> +#ifdef CONFIG_MODULES
+> +#define __modinit
+> +#else
+> +#define __modinit __init
+> +#endif
+> +
+> +struct module_kobject __modinit * lookup_or_create_module_kobject(const char *name);
+
+__init / __modinit is not necessary on the declaration.
+You can remove it here and keep the #define private.
+
+> +
+>  /* Generic info of form tag = "info" */
+>  #define MODULE_INFO(tag, info) __MODULE_INFO(tag, tag, info)
+>  
+> diff --git a/kernel/params.c b/kernel/params.c
+> index 4b43baaf7c83..5d16696b1daa 100644
+> --- a/kernel/params.c
+> +++ b/kernel/params.c
+> @@ -595,12 +595,6 @@ static ssize_t param_attr_store(const struct module_attribute *mattr,
+>  }
+>  #endif
+>  
+> -#ifdef CONFIG_MODULES
+> -#define __modinit
+> -#else
+> -#define __modinit __init
+> -#endif
+> -
+>  #ifdef CONFIG_SYSFS
+>  void kernel_param_lock(struct module *mod)
+>  {
+> @@ -763,38 +757,38 @@ void destroy_params(const struct kernel_param *params, unsigned num)
+>  			params[i].ops->free(params[i].arg);
+>  }
+>  
+> -static struct module_kobject * __init lookup_or_create_module_kobject(const char *name)
+> +struct module_kobject __modinit * lookup_or_create_module_kobject(const char *name)
+>  {
+>  	struct module_kobject *mk;
+>  	struct kobject *kobj;
+>  	int err;
+>  
+>  	kobj = kset_find_obj(module_kset, name);
+> -	if (kobj) {
+> -		mk = to_module_kobject(kobj);
+> -	} else {
+> -		mk = kzalloc(sizeof(struct module_kobject), GFP_KERNEL);
+> -		BUG_ON(!mk);
+> -
+> -		mk->mod = THIS_MODULE;
+> -		mk->kobj.kset = module_kset;
+> -		err = kobject_init_and_add(&mk->kobj, &module_ktype, NULL,
+> +	if (kobj)
+> +		return to_module_kobject(kobj);
+> +
+> +	mk = kzalloc(sizeof(struct module_kobject), GFP_KERNEL);
+> +	if (!mk)
+> +		return NULL;
+> +
+> +	mk->mod = THIS_MODULE;
+> +	mk->kobj.kset = module_kset;
+> +	err = kobject_init_and_add(&mk->kobj, &module_ktype, NULL,
+>  					   "%s", name);
+>  #ifdef CONFIG_MODULES
+
+As you are cleaning this up anyways: The #ifdef above should become
+
+if (IS_ENABLED(CONFIG_MODULES))
+
+> -		if (!err)
+> -			err = sysfs_create_file(&mk->kobj, &module_uevent.attr);
+> +	if (!err)
+> +		err = sysfs_create_file(&mk->kobj, &module_uevent.attr);
+>  #endif
+> -		if (err) {
+> -			kobject_put(&mk->kobj);
+> -			pr_crit("Adding module '%s' to sysfs failed (%d), the system may be unstable.\n",
+> -				name, err);
+> -			return NULL;
+> -		}
+> -
+> -		/* So that we hold reference in both cases. */
+> -		kobject_get(&mk->kobj);
+> +	if (err) {
+> +		kobject_put(&mk->kobj);
+> +		pr_crit("Adding module '%s' to sysfs failed (%d), the system may be unstable.\n",
+> +			name, err);
+> +		return NULL;
+>  	}
+>  
+> +	/* So that we hold reference in both cases. */
+> +	kobject_get(&mk->kobj);
+> +
+>  	return mk;
+>  }
+>  
+> -- 
+> 2.34.1
+> 
