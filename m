@@ -1,146 +1,123 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBC61A5B99;
-	Fri,  7 Feb 2025 08:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6DAA1A5B99;
+	Fri,  7 Feb 2025 08:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738916708; cv=none; b=bXlaaGrL9Z+aNA7xUnnUsdIwtZ29z2oArMbt3Tw1FQlDqB6a523B80l3rOOKixpb533RBtQdJSfnrHCUmxasH5EuVMiMYVWN/cYx/ACvwe7Ozt1EFiF1ws9iyR8yY+l0IIPKSzUsJLDkEqDS7zvsU5fAb9qgx8FMRAXcmEr9+78=
+	t=1738916724; cv=none; b=oT0O/5Z2QPgqVneu0LQ6/uun2UtnoqOE+GHx+Gz486f45qfW3eWsNb58bJrAE9nTTFUamckmKfrHVccbtiv1uq1xHFqon8lQHbqjUsIUg2BYpr/b8MW7ipiO/Dm0PmisTTjbPj+gWKPr0+mOpYwaMV2T3YdFVJVvsh0iaQDcHq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738916708; c=relaxed/simple;
-	bh=hJLVXqvjKTcx4i+0lAyUvFrmQTS/nX702Oo1KTBKN5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iKgVGUEKDLWw21DrUGASr3tOfYcRuFPs2w3lOZ860OnM/MNuEEyUq7JVwldcKTBscRbz/ZhY+WjZubqaiL9MNYQVAY+FmGoshZgez2PNwT/oVnWL8PAvPblPGcBhywfpJNHzDGDueaPGbK4STRHdwE3bc9QvQDkRudX2IhdjRHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=F9eSYVKQ; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1738916724; c=relaxed/simple;
+	bh=vasLdR5xzPmHQhWCRdllH7ov1hK5Cv9xjkARl1JuHHs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=kcqG6Vx8rZsY/TuK2T3XCQg0c1v/cOlYqVny2OH1jH0HS0P5UeFMD9nmhLcTg3t8GRMFBqAzPkZ7YpX4MkM7mddU0opapyAp+PEIdURLZRoM13RXSmFSl4YqsadRNtrQ0OKe9tkTpVCIzKgP/y+3YAEW+W52EQ6kGs2wRSKoJ4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OqaDJMPg; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="F9eSYVKQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=bZo4JzV3biBnI57yFwGhIjJMsOzxqtbKpf+oi6zDBxo=; t=1738916706;
-	x=1739348706; b=F9eSYVKQ7TPhnfHdqi7G9fjSNeL6k9i67VPfgD92x0TGNVdKq63cJEFU58gJ4
-	ExEDVuCpwHNi8YjMDpY38G1ER8H7u/bS3PZcTFP3xLR4+rHSgcJtbx3HZLC3556LCXChrE6dOpT68
-	aZF0jfzEtxOJS48iTiDyu7ufRpA3/LdsgNu4r3ulOR0cKkKnKT0lniMOE38pLgyz0la2/qm37cDHp
-	mK3XO+Vfwx/F4+Q/QjHSeJQY7jqCJL/VOj+SQtkpe1tSdoeSWfKXf7oZFM9kVQIPemUGTS7KFClI4
-	ELwql2wp5imDR2JJLUAYXcy6PK0EpMUiRd0bRGX2yQBB929OYQ==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1tgJfY-00A7NV-18;
-	Fri, 07 Feb 2025 09:25:00 +0100
-Message-ID: <559e84cc-4da3-45a5-9ff0-2283d2c53d0a@leemhuis.info>
-Date: Fri, 7 Feb 2025 09:24:56 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OqaDJMPg"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5176WWM1008285;
+	Fri, 7 Feb 2025 08:25:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	sB1WwGIB0/DXu7ay8qZ+cxTOrlJa03yPeewfM/F811w=; b=OqaDJMPgyRskZdnv
+	LH9SL6CGzbkoLpgfl8C0WmNDpzwZBAqpPMHlXcO9ADSJ2KcBvo/UaADbJbnSARFt
+	QPRaq2LMnVum7s0nAUnZxpzT+n1lSZzeeAom2qpRrLIIvO+zz/Q3yhKtLavw7fe5
+	O6ZQpEn9NQT8v1SnpCcBnmt9+mlu2t/irPyAnKxIiw8ITQFS9gjHkyWefe0cEymv
+	n1nrFffv9JBF3WpcHtjuZHQgde5YQ7qIz4TQxWCmvp7XIyyI/YnLkB2HbGtu0m25
+	36WsrkyulYe7F0nU2Jq9SaoExr60K3Cd2TD+ybg4MdatwgfAUGSMynt9YRyjeAQ6
+	6W+Vvw==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nd0f0970-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Feb 2025 08:25:17 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5178PGY1003180
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 7 Feb 2025 08:25:16 GMT
+Received: from hu-vgarodia-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 7 Feb 2025 00:25:12 -0800
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+Date: Fri, 7 Feb 2025 13:54:49 +0530
+Subject: [PATCH v4 1/4] media: venus: hfi_parser: add check to avoid out of
+ bound access
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] docs: clarify rules wrt tagging other people
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Simona Vetter <simona.vetter@ffwll.ch>,
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
- <Z6Vk-7OgDB3DM7Yb@archie.me>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: de-DE, en-US
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <Z6Vk-7OgDB3DM7Yb@archie.me>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1738916706;e136261b;
-X-HE-SMSGID: 1tgJfY-00A7NV-18
+Message-ID: <20250207-venus_oob_2-v4-1-522da0b68b22@quicinc.com>
+References: <20250207-venus_oob_2-v4-0-522da0b68b22@quicinc.com>
+In-Reply-To: <20250207-venus_oob_2-v4-0-522da0b68b22@quicinc.com>
+To: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+        Bryan O'Donoghue
+	<bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>
+CC: Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab
+	<mchehab+samsung@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>, <stable@vger.kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738916708; l=1268;
+ i=quic_vgarodia@quicinc.com; s=20241104; h=from:subject:message-id;
+ bh=vasLdR5xzPmHQhWCRdllH7ov1hK5Cv9xjkARl1JuHHs=;
+ b=5suPcq1T4ITpXNNte6uRqpDMZH3XTJ2lcGE7IjVkndSN07OskHEYo2/PecHjlWvfczbJ7o634
+ ZC+8AdMfUruB7zG3LDhXTZ+S53WdzrZiG6pfcG6L5ajph3oOTIEdIi0
+X-Developer-Key: i=quic_vgarodia@quicinc.com; a=ed25519;
+ pk=LY9Eqp4KiHWxzGNKGHbwRFEJOfRCSzG/rxQNmvZvaKE=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: B8H16JErPRgGq8YYvERaChyDUY0IGGh0
+X-Proofpoint-GUID: B8H16JErPRgGq8YYvERaChyDUY0IGGh0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_04,2025-02-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
+ lowpriorityscore=0 spamscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
+ adultscore=0 malwarescore=0 phishscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502070063
 
-On 07.02.25 02:42, Bagas Sanjaya wrote:
-> On Thu, Feb 06, 2025 at 03:30:10PM +0100, Thorsten Leemhuis wrote:
->> diff --git a/Documentation/process/5.Posting.rst b/Documentation/process/5.Posting.rst
->> index dbb763a8de901d..22fa925353cf54 100644
->> --- a/Documentation/process/5.Posting.rst
->> +++ b/Documentation/process/5.Posting.rst
->> @@ -268,10 +268,15 @@ The tags in common use are:
->>   - Cc: the named person received a copy of the patch and had the
->>     opportunity to comment on it.
->>  
->> -Be careful in the addition of tags to your patches, as only Cc: is appropriate
->> -for addition without the explicit permission of the person named; using
->> -Reported-by: is fine most of the time as well, but ask for permission if
->> -the bug was reported in private.
->> +Be careful in the addition of the aforementioned tags to your patches, as all
->> +except for Cc:, Reported-by:, and Suggested-by: need explicit permission of the
->> +person named. For those three implicit permission is sufficient if the person
->> +contributed to the Linux kernel using that name and email address according
->> +to the lore archives or the commit history -- and in case of Reported-by:
->> +and Suggested-by: did the reporting or suggestion in public. Note,
->> +bugzilla.kernel.org is a public place in this sense, but email addresses
->> +used there are private; so do not expose them in tags, unless the person
->> +used them in earlier contributions.
-> 
-> So for example I can only include Tested-by: when a contributor who tested
-> my patch explicitly offer the tag by replying to it i.e. with the tag, right?
+There is a possibility that init_codecs is invoked multiple times during
+manipulated payload from video firmware. In such case, if codecs_count
+can get incremented to value more than MAX_CODEC_NUM, there can be OOB
+access. Reset the count so that it always starts from beginning.
 
-At some point a text must leave the interpretation up to the reader. I
-would say a "yes, that's okay" to the question "is it okay to add a
-'tested-by' tag in the patch description; note, your name and email
-address will then end up in the commit history and can not be removed
-there" is sufficient "permission" as well.
+Cc: stable@vger.kernel.org
+Fixes: 1a73374a04e5 ("media: venus: hfi_parser: add common capability parser")
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+---
+ drivers/media/platform/qcom/venus/hfi_parser.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> The wording looks OK.
-> 
-> Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+diff --git a/drivers/media/platform/qcom/venus/hfi_parser.c b/drivers/media/platform/qcom/venus/hfi_parser.c
+index 3df241dc3a118bcdeb2c28a6ffdb907b644d5653..1cc17f3dc8948160ea6c3015d2c03e475b8aa29e 100644
+--- a/drivers/media/platform/qcom/venus/hfi_parser.c
++++ b/drivers/media/platform/qcom/venus/hfi_parser.c
+@@ -17,6 +17,7 @@ typedef void (*func)(struct hfi_plat_caps *cap, const void *data,
+ static void init_codecs(struct venus_core *core)
+ {
+ 	struct hfi_plat_caps *caps = core->caps, *cap;
++	core->codecs_count = 0;
+ 	unsigned long bit;
+ 
+ 	if (hweight_long(core->dec_codecs) + hweight_long(core->enc_codecs) > MAX_CODEC_NUM)
 
-Thx!
-
-Ciao, Thorsten
-
+-- 
+2.34.1
 
