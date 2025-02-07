@@ -1,67 +1,67 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67CB199E8D
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B004175D5D
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738951173; cv=none; b=lNCAhJMvd1a0elii6ja4OWMQAq4kVN0vSoM1x7tQXJHg2WGoXrr5P3RHU4QqfIV9B5rHy9HDuRQ68Sij6gQjmskAucDdjddTLiAHNTKy5IniTEm2Zbn3FrGh30UNxYEqLtNYliZ/zaNVWjYQ4jC01GO0AfHVqPeRGRwOyj/aUfk=
+	t=1738951188; cv=none; b=Jl9QGMM5BNXyaSa0ztU19+Lp7npazJHr2/jNCUpi4sUPFNMeC6GN627ZaZVWX4VYUur4s4Mxhg2Krtjq9F7GPkDwowtEqjXqgYlCOH8eBHrYc7e5/p4oPw40ALMT7i2Mhv9//A3j6BLpxXoS7N3DxVduInA2e3kfIekZv5wIijw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738951173; c=relaxed/simple;
-	bh=HzEQLP02Z2hiN4v9+HR7+/Ah5QElILgZPt/vrg4XGEs=;
+	s=arc-20240116; t=1738951188; c=relaxed/simple;
+	bh=qsTJIapezLhW06qmRT26gxTR963xvPSpeajLEAGo7zU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=epB/gkdMITI8Mq+PQ4OmUqY9I+bFiHu67GVq9b0sEBJ8gsxjupkZVVNjZxdzwfmEqrQW6pFH3O6R77yL2JcQHs734wZXxrFEMgdRBHVBX9p7ljCFEv79DoH3zelQViGIjBAgVl7M23FfyrNQUkhBrwGujpqDU31WJjNHT9Jag1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HzJYLmJB; arc=none smtp.client-ip=209.85.167.42
+	 To:Cc:Content-Type; b=owJI9hLsQzvlOMVEuVsmDrZS65Fj8DeisoZAf+EE0FI9lT8KH1JrJIdMuPC1Y2uuy3iCwCrT6O/SBIwShlK9h5XmiWVMkSckPz3Mrw737G66IYONDtRvbjXnZYuq8pzeSr0rup/a+ti1KHK7Yuu7nuLETPmDAiYUS4v4OD/C2q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=manKdVlA; arc=none smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HzJYLmJB"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5440efe97baso2629783e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:59:31 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="manKdVlA"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-307de8f18d6so17021881fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:59:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738951167; x=1739555967; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1738951184; x=1739555984; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UAyA9k3gE8c5Mnrd0sbdTuF+3Mk11ZW10JEKEegQbhc=;
-        b=HzJYLmJBCFIjdzFiGMIg1kr1hr49lS/cW4DxNXTfuK6zfbXjb0PVZz8BrnxBJiPU3k
-         Glliqnvma7nyXl1eXqgKliUVIJeGzqujAcfrBk1gx+HKaTzBB1rOEfnDfrzVAc5D4t5J
-         CN0FLNqjUj4RWo0k1q7YQfiw4yyIW5TMp3kcs=
+        bh=7PwmuaIBJ/10qYXXlbzfefJdtGyrGJpw93xkGEeBXLI=;
+        b=manKdVlAEr21pgIoeTb/dwp8ulbOv2UqgP1EM9KyJx9Lvz660bhwrC8ToeF0SazzLA
+         Ef1AQMFfQBN3G6imEWAAXvEunzuxgg/i0jOalxqZY1FPMLpJA5BfMSNCkRsCvr4M6+d/
+         E6uCGFkDzl8D58Y3jLe2CqtwBOz7QLgN1bhhA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738951167; x=1739555967;
+        d=1e100.net; s=20230601; t=1738951184; x=1739555984;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UAyA9k3gE8c5Mnrd0sbdTuF+3Mk11ZW10JEKEegQbhc=;
-        b=N2EzWM/CX27Hs5fouMalr/O1jVj4+hJ8aE2gZ5uPzbDf/5f5rlUY8szIIxOw5aS+4V
-         eXXbWAuX771wf7opCFffs33B6TQ28vkuUCezLERuSMgBJf01y6rauCl/OmwyLFnlp9WX
-         FSF9Y4IvgFXgWXLEZUDyzRIiHWxge6AMo/NGO5La5Fsjaqexb3E06w41QK/hosjmEHNz
-         UptDmobKotn6BB8cLIrdJ2JvJII3UbGGMM2SoZul3WXIwPX2nddpzXzhMpoTYDXUnrno
-         NoDbjOQXclMUBPj+LV6doGXHAoBilCCf40H6Iqx9FbUJHLjUF86FHDz8dgUfE63snRlH
-         EpEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVfL5ZXGBkmum/j7ovz/TTkAM42KemNnGSzxeJrIclFCGsuU8+4ItJRolAfbRKOJEPulXlEraGTGLFnS64=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9jnakU/jER+Pq147O2Utfq+2zW7CA75LgTcX2p6e9PKj6mVA+
-	/5AU0vqHxyn4SreIscDt4DQLaCoQk7jqA8rCY/66jkZSdExV8PypaNLxQDOq/PvFARM7RbrEQYP
-	atJQ7
-X-Gm-Gg: ASbGncuNMJotkqRZuhjZHGGWXQjY19jmsWPK+O0QZqOhbFX0g0vZ1To1Cjdhs9/2jGe
-	0kWL8xtMYyBivojjo885LFRf1Hf5hXHdpTN36lqfU+dTZiIFyUlAqCHj49sBMGxNa9n9iPAKzx8
-	kzbwYb0tFYNLva9YO5q65Z1h0d96RhtugAtvm66DKjcjusjPwf0/4CCiHTs6o8Mita76ahT6xV2
-	VgmiXgHmAoCjvXf9Hr0sbEREMertJvA5DKRkK7gnPMrZVfXtbTyHh0y3aJkrbY6HbLHALM5zyQj
-	ZbuG3l6B689qC76k4Jc25iKZ5uXlsObqq0Tt44+5xaIAvyiZalIA6Xs=
-X-Google-Smtp-Source: AGHT+IEuA/tGGc8yDQcpwmyiuU86u+w8z9pHxWvo0vAh1oJETaqwId2ERomQwLWJmzUAfyqCxJMOAQ==
-X-Received: by 2002:a05:6512:5c8:b0:542:8da7:242f with SMTP id 2adb3069b0e04-54414a9619cmr1131815e87.10.1738951167034;
-        Fri, 07 Feb 2025 09:59:27 -0800 (PST)
+        bh=7PwmuaIBJ/10qYXXlbzfefJdtGyrGJpw93xkGEeBXLI=;
+        b=uk6BauKuju+XfLvnmsRwssIduiFXe7lkivIVnAbdJ+dTS1/4vln1fPMwjCB1G7YVAE
+         H51zvlWmhCR9AKgvAskQ2j41r4iNuGFx3VHfNbL6g7yBN5+4rOE17v4QUIy65a6mGxOI
+         n/U/IiUMlBZrz1AS5SjF09fBW29mJPaQ0tI+6hppjUt2zoZbkqGBJMz0UccXiZOw3i0n
+         IIDBp1WaOGO00mFzRX1gnVfT7sKxjMmzggM7jCbWY+5G5ZN8DQP5l10lzwOhqD6RNSf+
+         M5FuPNa0EiAiu47CwQ6igBxvgIfNo3Dt1BwPrIUZfHrP4Y8jrb89kvRyaB2p+CjpChpx
+         iYww==
+X-Forwarded-Encrypted: i=1; AJvYcCU+y49SvObp0go2a2Cj2SivmJz+cw0LUPGnEOsgasU3u2GxvYmxLOFuJozBrT+TCEGjUc2Xh9MSun0LFq4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyS2g3JS2dlVzLbAttZZQ8f986MbMuD6hSbxn9gtNU0CXwtVRxm
+	8EWZkbAzj0Ucb4xethqcNhXaSs/N52FPD+kd0J+W4UnnZsF+7O5py4U63C2nDDyLR8erX7zVgRH
+	eGLDo
+X-Gm-Gg: ASbGncuG246zdTlvmexef/cdY4QVX5qmB6L+sVQ9922AXjw0oofTG/Ib3KWlw95rrrN
+	Sr5KXMmB4l2PgIhMtFxMcbQh2B2HkOUYku6J3B4ZQy66+fKMI1MWIPsC1u48ioJT1h0+hcvoh6b
+	6tq95TLsDyvx9gEXyDBrkncyCFZQC1xzG2UiZElV178aq7daGUWUkgffnqfRhL/qLwGOg00TJyA
+	COBvW4DGHZawU7rqTvKUP6EN8M+z4aHoKYx4ji+mzW9Shsl5LC0kWMWH15aHTLCuFDA2TrpLdEt
+	jmaGYQMwQGx3mKq1/O8iibwCXa3BC+RkXUUkLgAsk6kqj+X5laBWOlE=
+X-Google-Smtp-Source: AGHT+IGN8Zg8gCYPOB74R3lO/Q4mqJe2zJioN6QW4A7FuETifGGJGb2t6vyZbEPtACufvn41+AbadQ==
+X-Received: by 2002:a05:651c:b29:b0:2fb:5f9d:c284 with SMTP id 38308e7fff4ca-307e57f1261mr11961511fa.16.1738951183633;
+        Fri, 07 Feb 2025 09:59:43 -0800 (PST)
 Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5441055579asm519810e87.94.2025.02.07.09.59.25
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de1a6549sm5386891fa.44.2025.02.07.09.59.42
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 09:59:26 -0800 (PST)
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-543e47e93a3so2562257e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:59:25 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUoYPrrx5DY78E6Tuv/4SuKiRGdeqQnKIkv5LvGJT/Z/0AWFXmtS4GMQycIPx0/Ivbd6yqLmr+RdmWc1/0=@vger.kernel.org
-X-Received: by 2002:a05:6512:4023:b0:542:98bb:5670 with SMTP id
- 2adb3069b0e04-54414aa709dmr1057707e87.25.1738951165202; Fri, 07 Feb 2025
- 09:59:25 -0800 (PST)
+        Fri, 07 Feb 2025 09:59:42 -0800 (PST)
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54410d769f7so2272949e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:59:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXTwIZSXJ5Ipfsv9VYgxpgP7B7uf4zeuX5ujLRGg8q3utRB0t03Dfm4nNKF0U0DzXrY71xVjSpwAxg/GJs=@vger.kernel.org
+X-Received: by 2002:a05:6512:b8a:b0:542:6105:bb72 with SMTP id
+ 2adb3069b0e04-54414a9cbc3mr1362214e87.19.1738951182378; Fri, 07 Feb 2025
+ 09:59:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,20 +69,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250206131300.1295111-1-yelangyan@huaqin.corp-partner.google.com>
- <20250206131300.1295111-3-yelangyan@huaqin.corp-partner.google.com> <20250206-uselessly-riverbank-14c097e62ae2@spud>
-In-Reply-To: <20250206-uselessly-riverbank-14c097e62ae2@spud>
+ <20250206131300.1295111-4-yelangyan@huaqin.corp-partner.google.com>
+In-Reply-To: <20250206131300.1295111-4-yelangyan@huaqin.corp-partner.google.com>
 From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 7 Feb 2025 09:59:13 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UybUjCSqtk0-QvYc4GLY-J1=hLep9eCoPwB73psw4BeQ@mail.gmail.com>
-X-Gm-Features: AWEUYZk_zCmx3_FAd9S6oDwQX9ETkP9z4pnHHk7HPMygPYUX8J-m_i6ND9efCG0
-Message-ID: <CAD=FV=UybUjCSqtk0-QvYc4GLY-J1=hLep9eCoPwB73psw4BeQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: display: panel: Add compatible for
- CSOT PNA957QT1-1
-To: Conor Dooley <conor@kernel.org>
-Cc: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>, neil.armstrong@linaro.org, 
-	quic_jesszhan@quicinc.com, airlied@gmail.com, simona@ffwll.ch, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+Date: Fri, 7 Feb 2025 09:59:30 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=Xe90b6x4JF716=O==U3US-vONovcvDm0yfOconkFRPcg@mail.gmail.com>
+X-Gm-Features: AWEUYZnN1bml-NA4ebUvH8W9aveGL3aSVmaC8yx15fMw7Kdh-ZCSTxHkG5ADkjk
+Message-ID: <CAD=FV=Xe90b6x4JF716=O==U3US-vONovcvDm0yfOconkFRPcg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] drm/panel: panel-himax-hx83102: support for
+ csot-pna957qt1-1 MIPI-DSI panel
+To: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
+Cc: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, airlied@gmail.com, 
+	simona@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
+	tzimmermann@suse.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
 	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -90,18 +89,20 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Thu, Feb 6, 2025 at 10:14=E2=80=AFAM Conor Dooley <conor@kernel.org> wro=
-te:
+On Thu, Feb 6, 2025 at 5:13=E2=80=AFAM Langyan Ye
+<yelangyan@huaqin.corp-partner.google.com> wrote:
 >
-> On Thu, Feb 06, 2025 at 09:12:59PM +0800, Langyan Ye wrote:
-> > Add a new compatible for the panel CSOT PNA957QT1-1. This panel uses
-> > HX83102 IC, so add the compatible to the hx83102 binding files.
-> >
-> > Signed-off-by: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
+> The csot-pna957qt1-1 is a 10.95" TFT panel. The MIPI controller on this
+> panel is the same as the other panels here, so add this panel to this
+> driver.
 >
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Signed-off-by: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
+> ---
+>  drivers/gpu/drm/panel/panel-himax-hx83102.c | 123 ++++++++++++++++++++
+>  1 file changed, 123 insertions(+)
 
-Pushed to drm-misc-next with Conor's Ack:
+Pushed to drm-misc-next:
 
-[2/3] dt-bindings: display: panel: Add compatible for CSOT PNA957QT1-1
-      commit: 36947218ca90c1f560f43c88c438124f8df884d4
+[3/3] drm/panel: panel-himax-hx83102: support for csot-pna957qt1-1
+MIPI-DSI panel
+      commit: 05345cea4ff5a857612df3f10144dec685c07e6d
