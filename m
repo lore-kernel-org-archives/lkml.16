@@ -1,169 +1,125 @@
-Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB75D154C05
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 11:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CBC1DC9B4;
+	Fri,  7 Feb 2025 11:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738926481; cv=none; b=K+FQNRIfa8yyMZxkUpRRSq44aOKTKvrcCJR2730XtvJigzrnd3V6pMZkMntowk0eEZXtxG6/v/Ju/eZkcYXojRY+Otj/SziicoGHvE+gUiUYKEVspFCz+zno1lo94Oynspm90lvVbsBmZ/g7YOQxRkvPa6UkqVgDVEmcfAVLzlg=
+	t=1738926494; cv=none; b=Qp8sgZxuaUH3XE5Ax2BSKO252KOxD4CW2fPh+ErZ+/R9ElzUPy7REt4DvYz36wyxtOka7U9oFGeeryNZk/As74n9KpLUp1zt+WcyFErKD8KKBm6ZWg+J++EBFe+/ta2I92AIzn2EwflQqkCTbrU6Zdn1GlfDvJMA9btZzVqkbxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738926481; c=relaxed/simple;
-	bh=em5mp7iyPLUIHDvYOriyT+XJN+lR6gsNheRrOLO0lJ8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cwQ5h6G/bS6wR78JtxHO2JGaHGk6p5XSXYgImxPxq6IV7ORRdbd6rN6gDAGsX5xPzVLEaGllC+D/5t5P+AYpx0CrvM+uO20XyT3kbp/0fCdPJjUBhrl6BVgmLI1MzV9194WlNisYeqM6uK24/2iHhhYZUt+dcC9WTpmyyetGxGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=YJFrON5r; arc=none smtp.client-ip=99.78.197.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YJFrON5r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1738926480; x=1770462480;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FDrX47E7AMkaBaTAt1fatsRSKDGJpLJ0U230EiOyUUM=;
-  b=YJFrON5rS7K4WpHbcjYmVpgj3wcTXyiMZevnLXAmJrngT4+ouJjWkV8K
-   Shafv8vUyMYsHQmTRbuaUDGzVra0ZoDnSHPUI8ofz38yWJyHJT+YE7W/r
-   FdjwxLLNK/mK2SnXGEwQyqW2KeFEIF/kDfx6gxHGz6gdPCD3txEI5oAPH
-   Y=;
-X-IronPort-AV: E=Sophos;i="6.13,266,1732579200"; 
-   d="scan'208";a="375317767"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 11:07:58 +0000
-Received: from EX19MTAEUC002.ant.amazon.com [10.0.17.79:6083]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.35.94:2525] with esmtp (Farcaster)
- id 88b37125-b983-4a49-973a-a4edda4b7003; Fri, 7 Feb 2025 11:07:56 +0000 (UTC)
-X-Farcaster-Flow-ID: 88b37125-b983-4a49-973a-a4edda4b7003
-Received: from EX19D018EUA002.ant.amazon.com (10.252.50.146) by
- EX19MTAEUC002.ant.amazon.com (10.252.51.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Fri, 7 Feb 2025 11:07:56 +0000
-Received: from EX19MTAUEC001.ant.amazon.com (10.252.135.222) by
- EX19D018EUA002.ant.amazon.com (10.252.50.146) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Fri, 7 Feb 2025 11:07:56 +0000
-Received: from email-imr-corp-prod-pdx-1box-2b-ecca39fb.us-west-2.amazon.com
- (10.43.8.6) by mail-relay.amazon.com (10.252.135.200) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1258.39 via Frontend Transport; Fri, 7 Feb 2025 11:07:56 +0000
-Received: from dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com (dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com [10.253.65.58])
-	by email-imr-corp-prod-pdx-1box-2b-ecca39fb.us-west-2.amazon.com (Postfix) with ESMTP id 48FEE8014E;
-	Fri,  7 Feb 2025 11:07:55 +0000 (UTC)
-Received: by dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com (Postfix, from userid 23002382)
-	id D1F7E20DAA; Fri,  7 Feb 2025 11:07:54 +0000 (UTC)
-Date: Fri, 7 Feb 2025 11:07:54 +0000
-From: Hagar Hemdan <hagarhem@amazon.com>
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-CC: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, wuchi <wuchi.zero@gmail.com>,
-	<linux-kernel@vger.kernel.org>, <Mohamed@amazon.com>,
-	<Abuelfotoh@amazon.com>, Hazem <abuehaze@amazon.com>
-Subject: Re: BUG Report: Fork benchmark drop by 30% on aarch64
-Message-ID: <20250207110754.GA10452@amazon.com>
-References: <20250205151026.13061-1-hagarhem@amazon.com>
- <4a9cc5ab-c538-4427-8a7c-99cb317a283f@arm.com>
+	s=arc-20240116; t=1738926494; c=relaxed/simple;
+	bh=FXr2YRk6o0W+K1SCzkVuQ0zPA5u33Pz/k+U6e+ZtLAw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=OgqT7u1VglyfHpH8v7fp4UjvnxsKiq8z0nWz/nqAOMYLMaKvN3PA2OyMjXPCuBdh/200GkUx8Nth26Vfo893REKuX/XHMr0jwg0oFQUqtnUsfPOhIX4HxUrksiiyHHcpyk9iq+Wb3cki0YUyCWq4LavYf75aylMooJbeNwD7YWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaec111762bso460109666b.2;
+        Fri, 07 Feb 2025 03:08:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738926491; x=1739531291;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RsRq64kyAjVQMzOmw5odn/YZS4WeBKPCs8/U4hV6uus=;
+        b=mxg2bak1AxC01BMKNyZ6GBkZswbSHVk0RTZPLxubzNlUU3bpFvsfUxHMIE/t0ln3gA
+         V1omY03iwUIO6w6kQAbYynGINUFkvER9wa1HTEtPtTWAJH9ybIo2uUNuwHZghn7F1220
+         QHotgtsQqmpF58GEf+7oicVD6G+p43xE71/KCb7ZlnhJ1soeAzKWKEI3eB1OBdrHTrcd
+         NIitE9LSkG50AqcL7MuUDCHpzPR71TPW5tnVlDhs/NourLwtmJYNEH843X/aI4RZin+k
+         OBUafd9rGsI2AgOdOzoB5/3sr9zjYCH5VqLdYm44XmNtI4c21k0zUVh8F35I/R41VSJM
+         HKUw==
+X-Forwarded-Encrypted: i=1; AJvYcCW828JxGzGDUg4wum2FGfBGG+66IfK2qIttsFLPtnvLHYqk/9lMNmNG/bdCdlEEyi8l7Ck+puXBrocHitQ=@vger.kernel.org, AJvYcCWlQpY51UJflz1XgXwyHC0HVS821YqWvwgzfNObWe6d8okA7vz4LOy9Z3aru64zmgJeAHlqXHexYlUEV6hp+FM9@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQ2soaP4bpjLVDp2Dqg9e6c7f9lEXTSYDSd2NwsCpbo1QwRk5J
+	f/vg9MKSynuPzLUmOkutBrQYbAx8L1+S30LvsU/vspH0k8b6BiVg
+X-Gm-Gg: ASbGncvVDGvaj1iJFwQCbqolbeweaseOiRslmem6h/7SpCUbfPnc7mm4C2hIBtKhF6E
+	4S3lhsXjO9W9Hj0CYryly9Df6uLcYBMit0xRxh4E459G4JMzZU3RawGk9FapAdYdlXTfPp6Se+o
+	+/j68ixzkUzKQZUzgkbwRrSyQSVMt4nKZO9xhKi95K1DQaKiF0hEufnfaAGFYM3acFkpc/cmyHV
+	b1gUd4yo9k1VCs++W9oO4hTB7nV0MZouIth1XN7EvrdVK836ElFIu1jHHiEpu50mrB2XTbqYcoh
+	wvB0QcU=
+X-Google-Smtp-Source: AGHT+IHcITL5To976uUv3g6/PFxfYoR5rQZeHW9vC+BYgEFLYDJUHScldAXv4hpMHHGpz7GOQsUrGQ==
+X-Received: by 2002:a17:907:d08d:b0:ab7:992:7f42 with SMTP id a640c23a62f3a-ab789ba47famr300315966b.34.1738926490752;
+        Fri, 07 Feb 2025 03:08:10 -0800 (PST)
+Received: from localhost ([2a03:2880:30ff:71::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab79298641asm24762766b.90.2025.02.07.03.08.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 03:08:10 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+Date: Fri, 07 Feb 2025 03:06:42 -0800
+Subject: [PATCH] kselftest/arm64: Fix uninitialized variable warning in
+ FPMR test
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <4a9cc5ab-c538-4427-8a7c-99cb317a283f@arm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250207-arm_fix_selftest-v1-1-0d6eeb04299e@debian.org>
+X-B4-Tracking: v=1; b=H4sIAELppWcC/x3MUQqDMBAFwKss79tAjNjSXKUUifrSLlRbsiKCe
+ HfBOcDsMBalIcqOwlVNfzOi1JVg+KT5TacjoiD40Prg7y6Vqcu6dcZvXmiLI8Nj7IemSf6GSvA
+ vzLpd5fN1HCfBGjmnYgAAAA==
+X-Change-ID: 20250207-arm_fix_selftest-ee29dbc33a06
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, broonie@kernel.org, 
+ Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1680; i=leitao@debian.org;
+ h=from:subject:message-id; bh=FXr2YRk6o0W+K1SCzkVuQ0zPA5u33Pz/k+U6e+ZtLAw=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBnpemZuPdqekyA08fFjtglkBR14jqQw3Uj6Uk0V
+ EAK6v/62DqJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ6XpmQAKCRA1o5Of/Hh3
+ bX/WD/4rUdj3lsA1jPbgX6PH+CiNh71KZM+IKE24sNk32JMUs0ekeLZIqNltEL+R9Vt33IPTvjs
+ 5EWNTIH0TnOI3gDcfbUYRqdBgGivRJ6sYdUYDHMqUhR5/7V+Q4/9uKwsludJfdhkIKvA/CpmGzV
+ L+9NUd8J6KOQ2nlgOYGxCKSJrkvdB6CnnA5sHNCzv103BMpU8E+OlKCIWsZANEo9gEOr/0BhHTg
+ WoZ79a7/0lFzdMWTrSiTlbboRvuuedd0tQdRqUGkIXtexuz8pQ0KK6ePj9BhZqOYnDkVsDbMppC
+ dYcC62SFQRmj++AsQ1KUSJFQAjzBP5Y/GgG1PX+0iFFp792oiAeMxloI03+V/2VdY9iyHA3WmIj
+ I8qUVxtvyZR5Wdc4V1VBPHwtJpcGwh6aJIOg9azqse2usQP1At+Wb+LuQCO8GOy6QtOVb6RX9Rw
+ pLIio064AMoa4Fe8J4IEbNtqv+gqPIKfBLI7vQ7tEf0kNw5RQm6P32Z6q1ipgOfsfuHO41srbTQ
+ ZlYpIogzy7ClYAN4ka6zqpqX35RyKi4FI76SZ56LXT386ReWB/l/O/zKb+JrjdeZ/+AJ0JRScDx
+ VZAWI+tTR5dqYaDwPOUbSoHfZY8oHnrxXayVAc9IWftE3fhOjWQEp8HAo29XsN4dThRBfPniJR6
+ zLrtjTZlKFbZN7g==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-On Fri, Feb 07, 2025 at 10:14:54AM +0100, Dietmar Eggemann wrote:
-> Hi Hagar,
-> 
-> On 05/02/2025 16:10, Hagar Hemdan wrote:
-> > Hi,
-> > 
-> > There is about a 30% drop in fork benchmark [1] on aarch64 and a 10%
-> > drop on x86_64 using kernel v6.13.1.
-> > 
-> > Git bisect pointed to commit eff6c8ce8d4d ("sched/core: Reduce cost
-> > of sched_move_task when config autogroup") which merged starting
-> > v6.4-rc1.
-> > 
-> > The regression only happens when number of CPUs is equal to number
-> > of threads [2] that fork test is creating which means it's only visible
-> > under CPU contention.
-> > 
-> > I used m6g.xlarge AWS EC2 Instance with 4 vCPUs and 16 GiB RAM for ARM64
-> > and m6a.xlarge with also 4 vCPUs and 16 GiB RAM for x86_64.
-> > 
-> > I noticed this regression exists only when autogroup config is enabled.
-> 
-> So '# CONFIG_SCHED_AUTOGROUP is not set' in .config so we have: 
-> 
-> static inline void sched_autogroup_exit_task(struct task_struct *p) { }
-> 
-> I.e. doing a 'echo 0 > /proc/sys/kernel/sched_autogroup_enabled' still
-> shows this issue?
-yes, when I do 'echo 0 | sudo tee /proc/sys/kernel/sched_autogroup_enabled',
-It behaves like the disable 'CONFIG_SCHED_AUTOGROUP'.
-> 
-> > 
-> > Run the fork test with these combinations and autogroup is enabled:
-> > 
-> > Arch      | commit eff6c8ce8d4d | Fork Result (lps)  |  %Cpu(s)
-> > ----------+---------------------+--------------------+------------------
-> > aarch64   | without             | 28677.0            |  3.2 us, 96.7 sy
-> > aarch64   | with                | 19860.7 (30% drop) |  2.7 us, 79.4 sy
-> > x86_64    | without             | 27776.2            |  3.1 us, 96.9 sy
-> > x86_64    | with                | 25020.6 (10% drop) |  4.1 us, 93.2 sy
-> > ----------+---------------------+--------------------+------------------
-> 
-> Can you rerun with:
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 3e5a6bf587f9..62cc50c79a78 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -9057,7 +9057,7 @@ void sched_move_task(struct task_struct *tsk)
->          * group changes.
->          */
->         group = sched_get_task_group(tsk);
-> -       if (group == tsk->sched_task_group)
-> +       if ((group == tsk->sched_task_group) && !(tsk->flags & PF_EXITING))
->                 return;
-I tried that and I see it fixed the regression and the cpu utilization
-is 100% with it.
+Fix compiler warning about potentially uninitialized orig_fpmr variable:
 
-I'd like to ask if this like reverting the patch in case of exit path
-and also means the enqueue/dequeue are needed in case of task exiting,
-right?
+	testcases/fpmr_siginfo.c: In function ‘fpmr_present’:
+	testcases/fpmr_siginfo.c:68:25: warning: ‘orig_fpmr’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+	                         fprintf(stderr, "FPMR in frame is %llx, was %llx\n",
+	                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	                                 fpmr_ctx->fpmr, orig_fpmr);
+	                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Thanks for replying :)
-> 
-> > 
-> > It seems that the commit is capping the amount of CPU resources that can
-> > be utilized leaving around 18% idle in case of aarch64 and 3% idle in
-> > x86_64 case which is likely the main reason behind the reported fork
-> > regression.
-> > 
-> > When autogroup is disabled:
-> > 
-> > Arch      | commit eff6c8ce8d4d | Fork Result (lps)  |  %Cpu(s)
-> > ----------+---------------------+--------------------+------------------
-> > aarch64   | without             | 19877.8            |  2.2 us, 80.1 sy  
-> > aarch64   | with                | 20086.3 (~same)    |  1.9 us, 80.2 sy
-> > x86_64    | without             | 24974.2            |  4.9 us, 92.5 sy 
-> > x86_64    | with                | 24921.5 (~same)    |  4.9 us, 92.4 sy
-> > ----------+---------------------+--------------------+------------------
-> > 
-> > So when autogroup disabled, I still see the amount of idle CPU resources 
-> > 18%, 3% on aarch64 and x86_64 regardless of commit.
-> > 
-> > Is this performance drop an expected of this commit when autogroup is
-> > enabled?
-> > 
-> > Thanks,
-> > Hagar
-> > 
-> > [1] https://github.com/kdlucas/byte-unixbench/blob/master/UnixBench
-> > [2] Used command: ./Run -c 4 spawn
-> > 
-> 
+Initialize orig_fpmr to 0 to resolve the warning.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ tools/testing/selftests/arm64/signal/testcases/fpmr_siginfo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/arm64/signal/testcases/fpmr_siginfo.c b/tools/testing/selftests/arm64/signal/testcases/fpmr_siginfo.c
+index e9d24685e74194fc4ed1aebdcfd4c6edd3488e1b..26818860b223d367955d96e12d423fadc304700b 100644
+--- a/tools/testing/selftests/arm64/signal/testcases/fpmr_siginfo.c
++++ b/tools/testing/selftests/arm64/signal/testcases/fpmr_siginfo.c
+@@ -40,10 +40,10 @@ int fpmr_present(struct tdescr *td, siginfo_t *si, ucontext_t *uc)
+ {
+ 	struct _aarch64_ctx *head = GET_BUF_RESV_HEAD(context);
+ 	struct fpmr_context *fpmr_ctx;
++	__u64 orig_fpmr = 0;
+ 	size_t offset;
+ 	bool in_sigframe;
+ 	bool have_fpmr;
+-	__u64 orig_fpmr;
+ 
+ 	have_fpmr = getauxval(AT_HWCAP2) & HWCAP2_FPMR;
+ 	if (have_fpmr)
+
+---
+base-commit: 0d5248724ed8bc68c867c4c65dda625277f68fbc
+change-id: 20250207-arm_fix_selftest-ee29dbc33a06
+
+Best regards,
+-- 
+Breno Leitao <leitao@debian.org>
+
