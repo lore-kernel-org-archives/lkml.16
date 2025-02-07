@@ -1,98 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D02238D56;
-	Fri,  7 Feb 2025 14:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4785323F283;
+	Fri,  7 Feb 2025 14:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738939723; cv=none; b=ttp7uhJoGH+shfo3HxXqddmU9rGpcZtvHfz5mA1Y/Wzq1UbSGhm1nzPIesiAKf7319kPX/iy5V0CKZRIN44CmKQ8t92dPoZ2GkJBo6jbQ51omv3WL5k6VZckJ8+Cqg/fpOzB0uTbknBgDnbut1s8pHBad2GeVx2hhZLINWhfDxQ=
+	t=1738939754; cv=none; b=aPl1tqBJHa0+pie85kR8yDLZLvi2VDfXT/qgZJkV1tFw4L25QRSQFzh7lpgijzwiptJYgSCHY9LIa1iis6eeFqhPrt5+I2JQnRw95zW50wG1tuusx0M/RFNWTRzyWi3lMQbCugXlVsWjzHzGcf9K5AI5Dg82dBBv1UkN6+R1otY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738939723; c=relaxed/simple;
-	bh=5XIlGZsiLQw2hQ6a1oSKBh7M9NzM4ngrTEXTXgaUFr0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mINKGWPh/VZPcg6QE0qHBdn/WagQNh3u5hH3O2qbCQsI8TJcwXMbwI/z6SpTvIxDbpQNm/RSuILYOKDRLvJY6TmqwrCWkHzPkYX8nNTY14k2Egdiuh97Tx2FOUzHYwKyeYzpR8lo6z8PEeE9EdW3EewXHOhSNpEKE4IQTh+pu8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UaI62Dec; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738939754; c=relaxed/simple;
+	bh=GgVpNoYWo4l+sArYzDGk9YViRVxrJPBmugNmojWNYtU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=L/bCaenyOWmrTUpWH3dR6nEt05c36bOML6j4TmwDNKyadNeichVW7ihZp2gcaAYVJVkIGXt5ga+pIRYUHTjyiakwYP4aJWSFVu10WwDkj5twqhtYDAnXyI+PY3eY8AnjP3iiyZsTSzyylCK1ec6QFG6RiOy8unY6ToyAsLR8LDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkbGwmdI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UaI62Dec"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738939722; x=1770475722;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=5XIlGZsiLQw2hQ6a1oSKBh7M9NzM4ngrTEXTXgaUFr0=;
-  b=UaI62DecYncQ9pUWSqS9fWd9WXQjMj4yax8lx1MBOzLkp8RMG7MKOt5O
-   2pQG2HQX0UAus4xBpzX3/Mb4B+HKYx2VcPiA3GcubXQVHHfTglrpQmZnx
-   zWQfRzPaekFRSfN595rb9P+un5vlm/1bxy5b6MEcryiZ/o/vhkyL0no3n
-   guffdbB8E7r9x8Qawvu2mfB0ojKMrK4lj8YcF+HCSfrFTP/W3M9aOSjow
-   DArOSjFBvoqp9OcyhT4odd6iFXsruncMMklkpV1UPq//NBflV56rCXYSJ
-   ENMvz+si3OwPGj2J7UrKDoB8anD0zFEhlFvJXQK0M3f4HCAY6MJUsUNkl
-   Q==;
-X-CSE-ConnectionGUID: WgKSAi6CRwW5Cn822uCI4w==
-X-CSE-MsgGUID: CtYN7sAPQmyfHitXNazW7w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39274297"
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="39274297"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 06:48:41 -0800
-X-CSE-ConnectionGUID: 7Z+7UNi+QQe9rL9NzE4/cg==
-X-CSE-MsgGUID: DflmxkABT/WG7ezG8AN8Ww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="142415230"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 06:48:41 -0800
-Received: from abityuts-desk1.ger.corp.intel.com (abityuts-desk1.fi.intel.com [10.237.68.150])
-	by linux.intel.com (Postfix) with ESMTP id BB49D20B5713;
-	Fri,  7 Feb 2025 06:48:38 -0800 (PST)
-Message-ID: <4917ca35e5e0c7035f09c02d5080a69ed3e88c44.camel@linux.intel.com>
-Subject: Re: [RFT][PATCH v1 0/5] cpuidle: menu: Avoid discarding useful
- information when processing recent idle intervals
-From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
- <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Daniel Lezcano
-	 <daniel.lezcano@linaro.org>, Christian Loehle <christian.loehle@arm.com>, 
- Aboorva Devarajan <aboorvad@linux.ibm.com>
-Date: Fri, 07 Feb 2025 16:48:37 +0200
-In-Reply-To: <1916668.tdWV9SEqCh@rjwysocki.net>
-References: <1916668.tdWV9SEqCh@rjwysocki.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkbGwmdI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C179C4CED1;
+	Fri,  7 Feb 2025 14:49:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738939753;
+	bh=GgVpNoYWo4l+sArYzDGk9YViRVxrJPBmugNmojWNYtU=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=CkbGwmdIWr0s7uIaLsBX4XwKQhwoPO15TnLbVBgiLDDHZyMmiqLlBjqEmUQc0rXkj
+	 0CD7sU+038ALBEpFO3sfI7L+9DRC+EPMMVXMDEEF9L5dOOE2IdfzKZ+Drk55EgUoTi
+	 wSx43xtRBA+p9oX/IVhf3sJvMGzmH4jKI0YJPMRR4nCgnsZGjvJqkfs5kEoPBQpOrh
+	 9Rl9a3Gelxfg9NZiqLMMgE3su+x8btkar7VP71HKYTlqoBVcrauXrKhN5a5V/ySEns
+	 OlfjxXrsawAESfcLSMvIDXcuSTTW9mGfVAdI8kGoJNJkHf3P5FR0S4/uyia8r36enq
+	 X8NTjif5PkMIQ==
+Date: Fri, 7 Feb 2025 15:49:10 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: Benjamin Tissoires <bentiss@kernel.org>
+cc: Peter Hutterer <peter.hutterer@who-t.net>, linux-kernel@vger.kernel.org, 
+    linux-input@vger.kernel.org, Werner Sembach <wse@tuxedocomputers.com>, 
+    Aki Van Ness <aki@lethalbit.net>
+Subject: Re: [PATCH 0/7] HID: bpf: sync with udev-hid-bpf
+In-Reply-To: <20250207-bpf-import-2025-02-07-v1-0-6048fdd5a206@kernel.org>
+Message-ID: <ns867291-64o8-p028-qs42-2377s21016q7@xreary.bet>
+References: <20250207-bpf-import-2025-02-07-v1-0-6048fdd5a206@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-Hi,
+On Fri, 7 Feb 2025, Benjamin Tissoires wrote:
 
-thanks for the patches!
+> Here are a few hid-bpf device fixes from udev-hid-bpf.
+> We've got the usual XP-Pen and Huion plus one from TUXEDO.
+> 
+> Cheers,
+> Benjamin
+> 
+> Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
 
-On Thu, 2025-02-06 at 15:21 +0100, Rafael J. Wysocki wrote:
-> Hi Everyone,
->=20
-> This work had been triggered by a report that commit 0611a640e60a ("event=
-poll:
-> prefer kfree_rcu() in __ep_remove()") had caused the critical-jOPS metric=
- of
-> the SPECjbb 2015 benchmark [1] to drop by around 50% even though it gener=
-ally
-> reduced kernel overhead.=C2=A0 Indeed, it was found during further invest=
-igation
-> that the total interrupt rate while running the SPECjbb workload had fall=
-en as
-> a result of that commit by 55% and the local timer interrupt rate had fal=
-len
-> by
-> almost 80%.
+FWIW
 
-I ran SPECjbb2015 with and it doubles critical-jOPS and basically makes it
-"normal" again. Thanks!
+	Acked-by: Jiri Kosina <jkosina@suse.com>
 
-Reported-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+for the series, thanks.
+
+-- 
+Jiri Kosina
+SUSE Labs
 
