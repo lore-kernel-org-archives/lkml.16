@@ -1,104 +1,60 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F8A1A0B15
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3D623C8D9;
+	Fri,  7 Feb 2025 20:28:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738959932; cv=none; b=enojlXG4aCuS2P46q8inHZ8KyEZmxTWcIM71wx/WGbhHlTnXGAAzA8P50/X2GfyLHzkGlCUUj1iw0hqbUlJfYcn/AU40zBLqeLcTUUMjocdnbE/wYV+jCRYREkGDRPX6JXxpyLlBW1Buf7A0J+t8YQ4cS5yJB7F/+De0VuJGVUo=
+	t=1738960123; cv=none; b=t5SyakdAALd/1wLnlJTIZQp1YBkcpeQCRWAQ81NhPaeIqyTI/xAUOyUGSh+Apxj+niEI0KDZuNnL0sV1bfzBixPpG0Dn7lBR27ou1T+JxMAr5JQLBpFddNIU1btnW6MMKOVZajMp/T8ok/8y+c4PwD4O6Nc8zoFDcjVUBpLN6YY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738959932; c=relaxed/simple;
-	bh=8H3oUI38gT0E/FmzHgQQz9q+YLFArPKEnJ+c6VZ2230=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=h+KHsDMNlS13W4wZzNeFq8MJ6n+pPJ8ER1MpmOqn+eNd7EBOeY/8Eqj9dV02clpfAn5oSdOZeBDJWtR1/fBAKaHle89kyYILSywCOoJzAyw+sjOtbtusJh4DxNy/TxKA5ztC8p7Cf5EP0f+gf5wJEl6Je3pdT9Bz22qdsqgmick=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1tgUsN-000000002mj-3qSR;
-	Fri, 07 Feb 2025 15:22:59 -0500
-Message-ID: <1edea8a714fd1df0734f7fe15bb690e4c3a556dc.camel@surriel.com>
-Subject: Re: [PATCH v9 03/12] x86/mm: consolidate full flush threshold
- decision
-From: Rik van Riel <riel@surriel.com>
-To: Brendan Jackman <jackmanb@google.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
-	peterz@infradead.org, dave.hansen@linux.intel.com,
- zhengqi.arch@bytedance.com, 	nadav.amit@gmail.com, thomas.lendacky@amd.com,
- kernel-team@meta.com, 	linux-mm@kvack.org, akpm@linux-foundation.org,
- jannh@google.com, 	mhklinux@outlook.com, andrew.cooper3@citrix.com, Dave
- Hansen	 <dave.hansen@intel.com>
-Date: Fri, 07 Feb 2025 15:22:59 -0500
-In-Reply-To: <CA+i-1C2+Pva55qPEHHS9vc83_vmGJaUzUTPmoE2M3_qvCpcsUQ@mail.gmail.com>
-References: <20250206044346.3810242-1-riel@surriel.com>
-	 <20250206044346.3810242-4-riel@surriel.com>
-	 <CA+i-1C2+Pva55qPEHHS9vc83_vmGJaUzUTPmoE2M3_qvCpcsUQ@mail.gmail.com>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.1 (3.54.1-1.fc41) 
+	s=arc-20240116; t=1738960123; c=relaxed/simple;
+	bh=NQPJ6Xw2FmXRPyTd9Iz6WTK2CqyRPnr1wlHCflc8Yz8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EUwMw0mwItNebKhwGZeyL3iuZGw/u+i+W9gn5j31pwZl59x2eERDql9iHSG2jwvX2JbmlbWwzv4hlToXfBhuuWSrgYn2snjVgMcFFsuokQ1kQE5GYhMMNvOdEBO5EO6kualvEP4KnfbJUxvF11/Thi49oAx3+1BxhN7RwBGDEYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=XPqQTXCb; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="XPqQTXCb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=RQScnJ6ROIj15+1bl0fDPE1w/8lc99rQdupUtYs2ct4=; b=XPqQTXCbS1tcVILoMa5Kgkqktt
+	H/xkJvrkiuSxQamyd4x/jNpbx+eIEZm1b68bLcCG5wBc2Dm7ceFoaBhhxWabJyccr1CPF7l94awrm
+	+Pu7TK1OpMK77pfkyReLESH+NlNhoDYdE6S1yjLJRNOF5ZPaLrvIpn51areWS6CDLrKAwdKTYlhGl
+	bGNb+8dO/IGW7en9/WZ17Ah/oNUg9x8U9oXbyMnAbDfYH/e52dl9Ul2pbSVXP372MArHXjJFAnG+q
+	aPU+yMU+ImlicRPHM7zx0aaTHTqDRf7a1ltW/0EItLGOiPtsTp8BO1YBg9xNfg0m25l/BXqWroWeg
+	+0snNoGQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tgUxr-00000006Yhe-2J7n;
+	Fri, 07 Feb 2025 20:28:39 +0000
+Date: Fri, 7 Feb 2025 20:28:39 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/19] VFS: lock dentry for ->revalidate to avoid races
+ with rename etc
+Message-ID: <20250207202839.GI1977892@ZenIV>
+References: <20250206054504.2950516-1-neilb@suse.de>
+ <20250206054504.2950516-14-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206054504.2950516-14-neilb@suse.de>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Fri, 2025-02-07 at 15:50 +0100, Brendan Jackman wrote:
-> On Thu, 6 Feb 2025 at 05:45, Rik van Riel <riel@surriel.com> wrote:
-> > @@ -1276,7 +1282,7 @@ void arch_tlbbatch_flush(struct
-> > arch_tlbflush_unmap_batch *batch)
-> >=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int cpu =3D get_cpu();
-> >=20
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 info =3D get_flush_tlb_info(NULL,=
- 0, TLB_FLUSH_ALL, 0, false,
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 info =3D get_flush_tlb_info(NULL,=
- 0, TLB_FLUSH_ALL,
-> > PAGE_SHIFT, false,
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 TLB_GENERATION_INVAL=
-ID);
->=20
-> [Why] do we need this change? If it's necessary here, why isn't it
-> needed everywhere else that does TLB_FLUSH_ALL too, like
-> flush_tlb_mm()?
->=20
-flush_tlb_mm() calls flush_tlb_mm_range(), which
-does also use get_flush_tlb_info().
+On Thu, Feb 06, 2025 at 04:42:50PM +1100, NeilBrown wrote:
 
-We pass in PAGE_SHIFT here to ensure that the
-stride shift is specified correctly to the
-INVLPGB instruction later on.
+> +	if (dentry->d_flags & LOOKUP_RCU) {
 
-
---=20
-All Rights Reversed.
+Really?
