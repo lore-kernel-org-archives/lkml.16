@@ -1,66 +1,66 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543F01D63CE
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A1F1A314F
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738958984; cv=none; b=YUwBUTz3fufru2Hub1JBHhD7rBZjBQrWbpXnIjHkq6GYouREq6wYtT9jTLcYzkl0kjZwGJdoknJjYtLlX//fm2xN6XKGKC+iQleOIXj4KaKCXA760pmtspkIODA0FToGFSqInuIjWXOJg0wkukUd1Z1Yk6GDFTIrtsJtonGa0ks=
+	t=1738958987; cv=none; b=JqnduiV4xzerigQnhymCQNh536mMiKZNAYH1xATF+RhwEPhfSTy10Xs5a+y8zKmObNCFkL5JrL8ElIFL9AEAQe52t4Uy5NWCjrQ7zOhl0Ip9jjdi+bOutfy8UDH+6nESpNvpCmoHyA3/rWCMSDHfMFm/3Qe0asfHzUuHQS4kUHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738958984; c=relaxed/simple;
-	bh=dzCJ6ZEQTNY+z2WK8kNiO9rUSbrCIMXdjhs/EOFJ84k=;
+	s=arc-20240116; t=1738958987; c=relaxed/simple;
+	bh=5/ZCGTFk8qr5Qpjjmv0qoJEV9Q10DfHDZbzjSTo2suU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sWZMOzm1xznWC5FVnlddyPRycYvy9WIvvEBnr95nFG6RFFOcGlmuN5OMncUR3yuyO9/AsaR9ULXeI1ZfmTGXzgV81EO5HJfx1sGNfSYguNTKwA2Cj1sOoCtzGF3uqGB5Uya6xoxEIU2rkGY+l7+dYwCfVKkpY4Npxgg2Dse6yOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DI6HWuea; arc=none smtp.client-ip=209.85.210.52
+	 In-Reply-To:To:Cc; b=OcmGHpheWMPwNY77OgaJdqxPRHUI5Bq+E/VxDoup8Z5ivkKeZOMb2fTMmiLoGvmOPMwwNtZhCSpI+CCnCiobqJwOuklTt0PRTjdEQ3snWhQ7x+Njro3/s82zKrekDf6ILuDyO7lJ+q0LtR4rZfDGoZ6OmjTVJerXkznJmto0BP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=em3eQmMW; arc=none smtp.client-ip=209.85.161.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DI6HWuea"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-71e157a79c8so738561a34.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:09:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="em3eQmMW"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5f4c111991bso1314346eaf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:09:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738958981; x=1739563781; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738958984; x=1739563784; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=NxYYb5ciTauJBruXQRFcV6o6UAzHMKHqZuEnooTWOkc=;
-        b=DI6HWueadtJhGR5uJi9e9KVYO1+A5PR+jFKrX2fKL6yrbH0xI3CTA3i4DKhg17hVxw
-         FzKbCk4Xm9qSM0Wxq8OHel0A3SLoj1EhG2nMOC8nPwYzm4TpZf8pD9KNrmN5oITEpnf3
-         IeRPpytQHtSPIvmZEMcZUEB5g+gZexgD54P8eVFD8jxmcRoxS+9G4eKiYEZTUU2j2eg4
-         Fika9spuMefO/ET7BUTU5lg61Mq0m3+FY02jkv36vFIa0vBoFAh7Wizdr6pEeSAINlvV
-         dunDB6wZl+guyngpq5cKk/qfsnkkuZziBFcCSnYKrFxHMxqtj5BYmPc+EIWS4lqTVkZS
-         02LQ==
+        bh=qltVAB3O9f/S/slNVDINiHvuxo8d2MRRS1EWEiDjZ8w=;
+        b=em3eQmMWh57izLwo6bnPibzw9MboUcNCJsSyAsTD/E68XI8sEcc1ZP4UxeTKcW5+Wl
+         a4b1Y9dHPLM4nGkQTzh19hravRkaChGwZRlDVNATYcDFZWvNvBmNSTfl2QCnZEPu5sF0
+         31QdW7QdqVISLn/FDwsnaNJhMPQjwKiiVEG4NEAW1IPcy3m70k6zQNw8zJv+FlGi4QMF
+         78QgZ/ezxBT01kB+8PJBcHY4gfhhtdPnPg0Qo38qNuZ3ae5dvKqO0OPvC3492mAhxpKh
+         FUVNkkariWu1cCkOnjh1SmQUgGPI9Yy5cXp6p2aFu0lKHnXAJKznw1w2k6/gmOm+y5Bw
+         fG2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738958981; x=1739563781;
+        d=1e100.net; s=20230601; t=1738958984; x=1739563784;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NxYYb5ciTauJBruXQRFcV6o6UAzHMKHqZuEnooTWOkc=;
-        b=PAhmVO4Kn55aZnHsiuufvua4tcTvs8O1MV7lj0XnAb5gEXMPwK9n1fDrWfKYKs0fUR
-         Qx3WXSr7//UJ+8N4QhnU1Hizsir/IgrFHS9mU4mLg/LOFak8u+iIF74Sp9ELCcJnGw2z
-         9UbMmOcFxiceHCQIijB2S7AXsPA0r9G6/fT4CypnoDV0rImcGn3noqgsn2p+yix9ZSul
-         ku1LqiUUUplYsvim54HFlCZ7d/Vmwiwjf/YT8IV5MI5Ud9s/kcctp3FAet3wSDGL441A
-         /DpZbmcT+PKA0d14JPK/ZkSDPujHVGe9qPnKD4VtI6KBx07oVIqxNamWYtSYpXngURwJ
-         Z0eg==
-X-Forwarded-Encrypted: i=1; AJvYcCXnom9G4l0ul1wsCuv5Iy4eZC6sc0GbDvMZ4nSv8+EViha5qRC5zTQsb4N7ADrf/iE0p++akKRHVuWoVOM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBYFYfHNMIflnZp4FJ1fHDw7Y7sya6qtUIhiou4VzpEkpi+Cnd
-	Zf5Ksl+/D8wqZ8j9IDODOtDWC9tTwl8NUMSx0weAW7o6+OpBlN1m22KCvnvvkYU=
-X-Gm-Gg: ASbGncsktX4Ox0ToFqviyrAyChs+fC2TKkblZLJDISmKkaM6ycm0AwW6GN+xVPwTzxL
-	EderFKiDnsfh8wnNkInDW2PPfl1qXLgPIEgFKfEtwSuejzhDZAPtjdoqXSJxSxGJoOmjVvt5Tce
-	KDqSGKI24eQRhwqcWba3raTiAoJ6L742Hd+zKjqU6D+ZAVLc533wCFGXOzLwSIST6Y4bH1fyvrj
-	LWUuq/wgiVxgjnnNdsZeDjTXDdtWusPDeIMztM+VbxodDCAyL0otzwo4rwzYm17Sw+6IO1laFlI
-	+NQ2utzh/hHah9wSg/qqO53x02k2U6U5OgOfcrbKHiSjaxI=
-X-Google-Smtp-Source: AGHT+IGK4xYaEcxApiz7m2CUhej55WwAoBbiU+s2jpWUeCLtHUqStHqG/Dhk5gCjtlNGdzV0gWWPyQ==
-X-Received: by 2002:a05:6830:4701:b0:71e:1392:80b5 with SMTP id 46e09a7af769-726b889856cmr3814221a34.24.1738958981445;
-        Fri, 07 Feb 2025 12:09:41 -0800 (PST)
+        bh=qltVAB3O9f/S/slNVDINiHvuxo8d2MRRS1EWEiDjZ8w=;
+        b=CTFSrKv3dlxcS2ab2gUuOPbIZ5h2YYUUWRoMSkuXBFhqDKyIjGX24Tipqtfyj87SZF
+         6UAfIGk4vrKCBeSICh0iyo1XnpthNifDCFivw+uzmI172ubcwsKgfJ6uUpWwL5AUxwpT
+         W2mC7e5eHqRvGnUy4Z5r7/RQZySsmOpOcPD+o+g5d+DJQSoJQeYy6WJgeoaS8Q0zioIp
+         z8y/Xqamrwvn+RBus9lwvJE63+S4gSyNpU4V0M6MOjZ7aD5DlgniUSPd626tei8cnKzB
+         cIGbLlmJpiBaof6V4xqSVtkK4tRcPEAEgl1BvIj3ewmafbckf8G1CkyicfaLSot7ffh9
+         6U4w==
+X-Forwarded-Encrypted: i=1; AJvYcCXa9kJ+txR8jP3d1sOeBlmz4DjpAgrT1OaOUiUsyjryXfGXHN2KDilXhzfYPajLLhdE44qo2r1+VCny51U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6LpguKg8II1HK4/e7b69rCfPU20jKhrNXuYk38zjradIib8hk
+	Froq9QSG8IHnGul2nhF41tQuqDgNKZ7X2VBh6XK2rVf9Vn/NBAOcOLC0ydVf91w=
+X-Gm-Gg: ASbGncvZmGYDIOXAjz1wLKaQQf/Q53W0SewFtGnG/kNBs/pbgxznSmeJbeafOKR96lm
+	6MXLJrmF7eu0Lc6O/gr1xJ3ZcEffRD3DSPESS2nzp2pJ8TC9O+mlgYvDhun8skx94mfsQTdaQ6x
+	A1xI44aF+8aDSSrpDpa1qtXO8dMHeAs7xaKQ3VL0hLpWtPc+BZxR4WVnmd1W0PbeSJpKHl6YyuX
+	4+Bk5GTyDjC9pskqX7NxHQL/OyxnPjlovuD+YWw8n3f74uADwhBcQ/7JVfYBB0AU0COkjp0wMwi
+	czE9TsrPzI1vyMN7/p4KaTWObPkbyufPVNYjnbZxlvt/NmU=
+X-Google-Smtp-Source: AGHT+IHIDAGX3BhQWlqRFA1YpXfP5CHdNbSk4wUH4SYQ9UZGnd9dymzKZTDir+HrZG6DMWiSrEhmTg==
+X-Received: by 2002:a05:6820:491a:b0:5f2:c0df:7ed5 with SMTP id 006d021491bc7-5fc51f8763dmr5806165eaf.3.1738958984295;
+        Fri, 07 Feb 2025 12:09:44 -0800 (PST)
 Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc544b08d4sm930387eaf.2.2025.02.07.12.09.39
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc544b08d4sm930387eaf.2.2025.02.07.12.09.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 12:09:41 -0800 (PST)
+        Fri, 07 Feb 2025 12:09:43 -0800 (PST)
 From: David Lechner <dlechner@baylibre.com>
-Date: Fri, 07 Feb 2025 14:09:06 -0600
-Subject: [PATCH v8 09/17] iio: buffer-dmaengine: add
- devm_iio_dmaengine_buffer_setup_with_handle()
+Date: Fri, 07 Feb 2025 14:09:07 -0600
+Subject: [PATCH v8 10/17] iio: adc: ad7944: don't use storagebits for
+ sizing
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-dlech-mainline-spi-engine-offload-2-v8-9-e48a489be48c@baylibre.com>
+Message-Id: <20250207-dlech-mainline-spi-engine-offload-2-v8-10-e48a489be48c@baylibre.com>
 References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
 In-Reply-To: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
 To: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
@@ -85,103 +85,99 @@ Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
  David Lechner <dlechner@baylibre.com>
 X-Mailer: b4 0.14.2
 
-Add a new devm_iio_dmaengine_buffer_setup_with_handle() function to
-handle cases where the DMA channel is managed by the caller rather than
-being requested and released by the iio_dmaengine module.
+Replace use of storagebits with realbits for determining the number of
+bytes needed for SPI transfers.
+
+When adding SPI offload support, storagebits will always be 32 rather
+than 16 for 16-bit 16-bit chips so we can no longer rely on storagebits
+being the correct size expected by the SPI framework (it always uses
+4 bytes for > 16-bit xfers and 2 bytes for > 8-bit xfers). Instead,
+derive the correct size from realbits since it will always be correct
+even when SPI offloading is used.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+Reviewed-vy: Nuno Sa <nuno.sa@analog.com>
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
 
-v7 changes: none
+v7 changes:
+* Make commit message more specific about numbers.
 
-v6 changes:
-* Rename from devm_iio_dmaengine_buffer_setup_ext2()
-* This patch now just adds the new function - prep work was split out
-  to a separate patch
+v6 changes: none
 
 v5 changes: none
 
-v4 changes:
-* This replaces "iio: buffer-dmaengine: generalize requesting DMA channel"
+v4 changes: new patch in v4
 ---
- drivers/iio/buffer/industrialio-buffer-dmaengine.c | 38 ++++++++++++++++++++++
- include/linux/iio/buffer-dmaengine.h               |  5 +++
- 2 files changed, 43 insertions(+)
+ drivers/iio/adc/ad7944.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-index 02847d3962fcbb43ec76167db6482ab951f20942..e9d9a7d39fe191c2b6e8c196a08cdd26cd3a8d4b 100644
---- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-+++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-@@ -380,6 +380,44 @@ int devm_iio_dmaengine_buffer_setup_ext(struct device *dev,
- }
- EXPORT_SYMBOL_NS_GPL(devm_iio_dmaengine_buffer_setup_ext, "IIO_DMAENGINE_BUFFER");
+diff --git a/drivers/iio/adc/ad7944.c b/drivers/iio/adc/ad7944.c
+index 0ec9cda10f5f8f61727581b152fb921f2e0b4bff..abfababcea10152fe1faa8afc2ec1ea2dc40ae52 100644
+--- a/drivers/iio/adc/ad7944.c
++++ b/drivers/iio/adc/ad7944.c
+@@ -98,6 +98,9 @@ struct ad7944_chip_info {
+ 	const struct iio_chan_spec channels[2];
+ };
  
-+static void devm_iio_dmaengine_buffer_free(void *buffer)
-+{
-+	iio_dmaengine_buffer_free(buffer);
-+}
++/* get number of bytes for SPI xfer */
++#define AD7944_SPI_BYTES(scan_type) ((scan_type).realbits > 16 ? 4 : 2)
 +
-+/**
-+ * devm_iio_dmaengine_buffer_setup_with_handle() - Setup a DMA buffer for an
-+ *						   IIO device
-+ * @dev: Device for devm ownership
-+ * @indio_dev: IIO device to which to attach this buffer.
-+ * @chan: DMA channel
-+ * @dir: Direction of buffer (in or out)
-+ *
-+ * This allocates a new IIO buffer with devm_iio_dmaengine_buffer_alloc()
-+ * and attaches it to an IIO device with iio_device_attach_buffer().
-+ * It also appends the INDIO_BUFFER_HARDWARE mode to the supported modes of the
-+ * IIO device.
-+ *
-+ * This is the same as devm_iio_dmaengine_buffer_setup_ext() except that the
-+ * caller manages requesting and releasing the DMA channel handle.
-+ */
-+int devm_iio_dmaengine_buffer_setup_with_handle(struct device *dev,
-+						struct iio_dev *indio_dev,
-+						struct dma_chan *chan,
-+						enum iio_buffer_direction dir)
-+{
-+	struct iio_buffer *buffer;
-+
-+	buffer = __iio_dmaengine_buffer_setup_ext(indio_dev, chan, dir);
-+	if (IS_ERR(buffer))
-+		return PTR_ERR(buffer);
-+
-+	return devm_add_action_or_reset(dev, devm_iio_dmaengine_buffer_free,
-+					buffer);
-+}
-+EXPORT_SYMBOL_NS_GPL(devm_iio_dmaengine_buffer_setup_with_handle,
-+		     "IIO_DMAENGINE_BUFFER");
-+
- MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
- MODULE_DESCRIPTION("DMA buffer for the IIO framework");
- MODULE_LICENSE("GPL");
-diff --git a/include/linux/iio/buffer-dmaengine.h b/include/linux/iio/buffer-dmaengine.h
-index 72a2e3fd8a5bf5e8f27ee226ddd92979d233754b..37f27545f69f761c3327c307cc6311b02a751096 100644
---- a/include/linux/iio/buffer-dmaengine.h
-+++ b/include/linux/iio/buffer-dmaengine.h
-@@ -11,6 +11,7 @@
+ /*
+  * AD7944_DEFINE_CHIP_INFO - Define a chip info structure for a specific chip
+  * @_name: The name of the chip
+@@ -164,7 +167,7 @@ static int ad7944_3wire_cs_mode_init_msg(struct device *dev, struct ad7944_adc *
  
- struct iio_dev;
- struct device;
-+struct dma_chan;
+ 	/* Then we can read the data during the acquisition phase */
+ 	xfers[2].rx_buf = &adc->sample.raw;
+-	xfers[2].len = BITS_TO_BYTES(chan->scan_type.storagebits);
++	xfers[2].len = AD7944_SPI_BYTES(chan->scan_type);
+ 	xfers[2].bits_per_word = chan->scan_type.realbits;
  
- void iio_dmaengine_buffer_teardown(struct iio_buffer *buffer);
- struct iio_buffer *iio_dmaengine_buffer_setup_ext(struct device *dev,
-@@ -26,6 +27,10 @@ int devm_iio_dmaengine_buffer_setup_ext(struct device *dev,
- 					struct iio_dev *indio_dev,
- 					const char *channel,
- 					enum iio_buffer_direction dir);
-+int devm_iio_dmaengine_buffer_setup_with_handle(struct device *dev,
-+						struct iio_dev *indio_dev,
-+						struct dma_chan *chan,
-+						enum iio_buffer_direction dir);
+ 	spi_message_init_with_transfers(&adc->msg, xfers, 3);
+@@ -193,7 +196,7 @@ static int ad7944_4wire_mode_init_msg(struct device *dev, struct ad7944_adc *adc
+ 	xfers[0].delay.unit = SPI_DELAY_UNIT_NSECS;
  
- #define devm_iio_dmaengine_buffer_setup(dev, indio_dev, channel)	\
- 	devm_iio_dmaengine_buffer_setup_ext(dev, indio_dev, channel,	\
+ 	xfers[1].rx_buf = &adc->sample.raw;
+-	xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits);
++	xfers[1].len = AD7944_SPI_BYTES(chan->scan_type);
+ 	xfers[1].bits_per_word = chan->scan_type.realbits;
+ 
+ 	spi_message_init_with_transfers(&adc->msg, xfers, 2);
+@@ -228,7 +231,7 @@ static int ad7944_chain_mode_init_msg(struct device *dev, struct ad7944_adc *adc
+ 	xfers[0].delay.unit = SPI_DELAY_UNIT_NSECS;
+ 
+ 	xfers[1].rx_buf = adc->chain_mode_buf;
+-	xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits) * n_chain_dev;
++	xfers[1].len = AD7944_SPI_BYTES(chan->scan_type) * n_chain_dev;
+ 	xfers[1].bits_per_word = chan->scan_type.realbits;
+ 
+ 	spi_message_init_with_transfers(&adc->msg, xfers, 2);
+@@ -274,12 +277,12 @@ static int ad7944_single_conversion(struct ad7944_adc *adc,
+ 		return ret;
+ 
+ 	if (adc->spi_mode == AD7944_SPI_MODE_CHAIN) {
+-		if (chan->scan_type.storagebits > 16)
++		if (chan->scan_type.realbits > 16)
+ 			*val = ((u32 *)adc->chain_mode_buf)[chan->scan_index];
+ 		else
+ 			*val = ((u16 *)adc->chain_mode_buf)[chan->scan_index];
+ 	} else {
+-		if (chan->scan_type.storagebits > 16)
++		if (chan->scan_type.realbits > 16)
+ 			*val = adc->sample.raw.u32;
+ 		else
+ 			*val = adc->sample.raw.u16;
+@@ -409,8 +412,7 @@ static int ad7944_chain_mode_alloc(struct device *dev,
+ 	/* 1 word for each voltage channel + aligned u64 for timestamp */
+ 
+ 	chain_mode_buf_size = ALIGN(n_chain_dev *
+-		BITS_TO_BYTES(chan[0].scan_type.storagebits), sizeof(u64))
+-		+ sizeof(u64);
++		AD7944_SPI_BYTES(chan[0].scan_type), sizeof(u64)) + sizeof(u64);
+ 	buf = devm_kzalloc(dev, chain_mode_buf_size, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
 
 -- 
 2.43.0
