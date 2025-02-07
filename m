@@ -1,124 +1,196 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2055.outbound.protection.outlook.com [40.107.244.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291B5176AC8
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 02:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738896290; cv=none; b=UIYLnXSuUQJo+QNkbVUdUw4ZdT617FmQunZe/72jGtZee6Jn13fkrct2HNT392n18U0UtAfuVBZu8GayaDRlNuzurHk4ywoVctmE/zoPgbMa9WRpZg2ME0ZEizc0HQB54YBGaihUK3T6RfG3Jq0fLcea1wOnQ5uwOZfykuUCI2s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738896290; c=relaxed/simple;
-	bh=njpUqwl/r4pQN1u7M/lKGAXXUSRWblXXzfDwGSSvc0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C1p7Z4K+zuYoFMilivk6KwyaqXoTaEf+Mt1p3IB0Zeeni2GTjEji86VxhoVp+wml6oeqb3H1wvMHFZM6wnpy8KA5knlUiBZ59KbvQbpEi3j5yQ0qnYeZDzi/BdxQcmmjSknwHKN/XgdhmC7Bnkwl1OG4Ut0qJKfCPU4ITIJcSH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f08RbSE2; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F403810E9;
+	Fri,  7 Feb 2025 02:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738896379; cv=fail; b=GEsw49S0aVrLFqPZ6mBwjjaoDegHCJt6oSDjUWnzh8tOKM2+nxmPBUqyedl/REHBcth9gVuRMbBjbVnZUSV+qd5RuKOUESH1o0bLXvc/uvpMClzytwOLb7TZvpG/Fv9MSdTzUjXSJmMoYeY10v+Q5KEGYkuV/iLmlFJ/czglQ9c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738896379; c=relaxed/simple;
+	bh=nzYKaBtZwfaTuI9ENMQvRvVK3rKEvMI7bcAk9h1GKx4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=W0fK36hx9m3LRSNKjsGo8pwyGjMwFlhUZX64hUrus3CK8ettrKlrZJLrm4CEUIOLjh0d8JVb3JKnt0EcnusqD6J65knYiumYbgeqjkDQ+qd9GSDnoe+Xi4TqSrgU2Sw60oimy0ajVf6M8Gxq7QbTQU/Sn6YJ8bjVM58CYyAg8Kg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HQF3MW2y; arc=fail smtp.client-ip=40.107.244.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f08RbSE2"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5401e6efffcso1647539e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 18:44:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738896286; x=1739501086; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MQReq9xQ99y9zIKRJOryjTQFC2bFCDp3B7MQU03SZE4=;
-        b=f08RbSE2MuL30HmuCmv0TXbRZl+m0C+o48eYS/tW/HmSH2rU1WNUmA28WjaDVSUz/h
-         ZrI0kKhfoFsgJgiXB9a0KQckJVNrY8hBoSj0ySOG3HrAcDEx34A6HaAN4Szv96Sd9sF5
-         Tx22zmlqrRuF6VdJMsiT6G09+J80VgqeFGDNZi3fwTAaicgUvXzowpW6HyhJea1lZNKZ
-         llDmM3ENMIDyftS3suZTmmDd0WUGRcFgyEEzVn4e/pULXnmZDp4x4Yp2aKLwCC3rSGdg
-         x8YG/R4iiBFEy5VXo/KPrp8nWh4749NCWeF+8jkTxWsZFOGFk+vwU4zK9Fn2NEKzBHtU
-         QFHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738896286; x=1739501086;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MQReq9xQ99y9zIKRJOryjTQFC2bFCDp3B7MQU03SZE4=;
-        b=ohRzPGMrp2PIUlZpKNr/DdxsCcGpp8g4A8kz788cGPXEXAMjq3x6ITcPcLHVxsdhpp
-         0qoha5z7kN4C/IoTCuz5Qodg6boxYrrf+IJWrW7lz4HE1FEhT5lZMVz6hBqeEQKy6hYE
-         0s0MlLsgCrg4W2ISwjgZK1gFZl8NQys0NBjtcF91ADQLxPW3FBmoDY4f4W2DETw3dryU
-         0QdZFC9ziuahRPsPWb4T4lEbaYwV3rIWZRyK1dnYf3+LLbxAFp7JDEXsEquutojaHwlh
-         O0tlJ/8A21x/ybHwCtT/3cCWAwvG80bva1U0JzkPLm6ENNbZrpjPfmwycGkTvMgpjWSC
-         zH/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVoRBLWEU4ykMBZ1AerD1acA4UZXIqIM3fqt0fYtNNWWsUwoXM6b87/6IKNyahZ1yxYV0XjXexcWS179So=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYTWpc+a5M8bfsKI00c3i7qqH0Hdzsn8CbQRd1kmvrOw1ptHTa
-	dvXsKR8QOr3xDdoRz0VYQO/3h3aNXrblYKhtT3NIVY49swFK/Oa4673i8CmTtBY=
-X-Gm-Gg: ASbGnct2i4ggf6GiNM9PT0T7IgsStFwDyFw7fxuANV+bsz1aaEDu2nlShD3lqRZ/wR1
-	m9tTWcTzZ1I9pg440oeL2CmROODmMMLNDj2WGPhO0L6ZPbRjIR6tNFhQe3j3K1ezYXg1846xcOq
-	j3caRrvrH4bHNQ49KN783Rs036nxpjXA7Lt5C0efZMb65I/+yg8VV7RPRKJK0LwgXs6yYts/7gO
-	XpSb60ghS5G8+sPfahNBPoRlAul5Fa0Ck9B3x3MijMZct4QhGLF0ZJedEdW62E8jNIJAGEi+GC/
-	kMx91WU5wwxfgXc2OuRzVaPLY5D0TqgOMdIlmNPct8r/v9gL4g3L4CeITRpk/grOZCcTYDw=
-X-Google-Smtp-Source: AGHT+IEMdrg6IaKfrHTFSkbGGZM6z3+o/AOEBo27rSaLzMBVYmx9IKsUOm6sC7QIz9laKpK7sx9QjQ==
-X-Received: by 2002:a05:6512:5d3:b0:540:fb1a:af1f with SMTP id 2adb3069b0e04-54414af5721mr284630e87.39.1738896286187;
-        Thu, 06 Feb 2025 18:44:46 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-544105bf58esm296912e87.107.2025.02.06.18.44.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 18:44:45 -0800 (PST)
-Date: Fri, 7 Feb 2025 04:44:43 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, 
-	Jagan Teki <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Paul Kocialkowski <contact@paulk.fr>, Maxime Ripard <mripard@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	=?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v6 07/26] drm/bridge: panel: forbid initializing a panel
- with unknown connector type
-Message-ID: <cii3ko3pejzmvz3cft2saw3biyx6yipcsemd3mzihzy7tyhsdg@zpmqujujwcie>
-References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
- <20250206-hotplug-drm-bridge-v6-7-9d6f2c9c3058@bootlin.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HQF3MW2y"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XW5HRBUdkuGQ6bZMMddaK6rUTcGtE0+8PC/PyrCYUJUybmFlj6sGJJnYzHVOYbhlQn3fC2EeFfGlrKQroi7sUym3UPRWPPOIBjIxpTPiEjzyHbz8NcClJEthp5KazWo56BRHc+jXDDYVatloOsxjW3HhYhfYmDiGssMnUwSZbpVMR2lV+dOfVXSpPNEpvLDK91BRcwMsoXEVLlRCXjlUyp43cdQvKP0//9YBFKDtovS4yZojCd6w/Twer3KUQ2/zFDQ7Ueltjg6Uve8L1mYlYY5orXjrganOgJtFQHPrvPHvvAQ6rN9V0i1F7MXYqNm1GhjO7nHF7ptLH3k5qr3Kgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RlOAwRYql73yOJxV44zhv4TCNTw6b6+KL4b+CDvy7m4=;
+ b=Tfy8/MagzqKm40tSn7JVVfIwh+V9bKLC4yY/1KkMGWgSx72ruoSb3J/AVTF4DLo+oUlavcZU1WoYW9caYJ1yr9xHQHaKsjeg2YFF270EKBEDlIFggYxTGpmNFV1DmOHFvLiMXqMgbtBnPQJ0wzvJNPCXucA7BwTlSsYDjbEtxiPkZcpHuZA/6VuIoKbKZaLfCkCD1anrRj5bDXnhs1EOOPBLjIScmjHbXmENo08Viq596407BinQUAZCZDbZ4AUCaaXJgeJ3bgkWOgrqRrDQQcynld12TpVPXPhFBXaEV4V7V9bpUQD+fDGPSF7SEVGO2DaoTbe79pjHFi6C3zuDEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RlOAwRYql73yOJxV44zhv4TCNTw6b6+KL4b+CDvy7m4=;
+ b=HQF3MW2yVWj4G1+zwhr7kPLoZuZuDghjvAp3gHNcRaoBeFR6B59PKi2ba2HgNjReJNtEXhpyiyS0jz/uS7wOQ6uwCt5LXf9hU94RIVDUm/K5j5+6b+UUOfdhB5/U12uRb9nhZXJB7f0ZX3jXkGI6//KjcTPJKrjAry5C3KNbc5E=
+Received: from CYZPR12CA0001.namprd12.prod.outlook.com (2603:10b6:930:8b::8)
+ by CY8PR12MB8363.namprd12.prod.outlook.com (2603:10b6:930:7a::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Fri, 7 Feb
+ 2025 02:46:12 +0000
+Received: from CY4PEPF0000EE3C.namprd03.prod.outlook.com
+ (2603:10b6:930:8b:cafe::dc) by CYZPR12CA0001.outlook.office365.com
+ (2603:10b6:930:8b::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.29 via Frontend Transport; Fri,
+ 7 Feb 2025 02:46:12 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000EE3C.mail.protection.outlook.com (10.167.242.13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8398.14 via Frontend Transport; Fri, 7 Feb 2025 02:46:12 +0000
+Received: from [10.136.39.79] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 6 Feb
+ 2025 20:44:39 -0600
+Message-ID: <6d436d56-20f7-4106-bedc-e9d146427fa9@amd.com>
+Date: Fri, 7 Feb 2025 08:14:10 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206-hotplug-drm-bridge-v6-7-9d6f2c9c3058@bootlin.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] sched/topology: Enable topology_span_sane check only
+ for debug builds
+To: Valentin Schneider <vschneid@redhat.com>, Peter Zijlstra
+	<peterz@infradead.org>
+CC: Naman Jain <namjain@linux.microsoft.com>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
+ Gorman <mgorman@suse.de>, <stable@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Steve Wahl <steve.wahl@hpe.com>, Saurabh
+ Singh Sengar <ssengar@linux.microsoft.com>, <srivatsa@csail.mit.edu>, Michael
+ Kelley <mhklinux@outlook.com>
+References: <20250203114738.3109-1-namjain@linux.microsoft.com>
+ <f6bf04e8-3007-4a44-86d8-2cc671c85247@amd.com>
+ <20250205095506.GB7145@noisy.programming.kicks-ass.net>
+ <0835864f-6dc5-430d-91c0-b5605007d9d2@amd.com>
+ <20250205101600.GC7145@noisy.programming.kicks-ass.net>
+ <e0774ea1-27ac-4aa1-9a96-5e27aa8328e6@amd.com>
+ <xhsmhed0bjdum.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <xhsmhed0bjdum.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE3C:EE_|CY8PR12MB8363:EE_
+X-MS-Office365-Filtering-Correlation-Id: 937fa5b9-db48-4650-ab51-08dd472195b7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|7416014|36860700013|32650700017;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Z0Q4STdOMGc2bnRuR2VIalRFb2ZraXduVmcvbmoxUSsrTDBLNkhXNDZsNWRR?=
+ =?utf-8?B?Mmhhd3QxNXQ0WmlmSmdxMWkzbk5VN1crZjRHQ2tOUS9lMFp6WGZ4bVdKNCtO?=
+ =?utf-8?B?VEJHQWpvV3AxMzRpVk40ZjQ4RzNNaVltK1VqZS90cVNDMGRWNmswR2FlMVZI?=
+ =?utf-8?B?a2ZwTjdXRjQ0UENaYURrSFlrUUtNUXFHcFYxaHpQYUV5N2YvWXBuT2h1d1BU?=
+ =?utf-8?B?TEpuN3ppa29xd0ZJMWxqVDRXSEorRmxZREIvNHIreXZTNUhkaWZ4TkZaSldP?=
+ =?utf-8?B?TDd5ZFcrQTlNWVp4dHBucGlNckV6S0JVNXhLMW9VV1pUek9NRWNqZmdKNjBk?=
+ =?utf-8?B?bTYrbFVYVEhYTTBkbzRScDBYNmlJR2tNSjM3QUtZZE90SkJRdmhZVkZVaWVN?=
+ =?utf-8?B?cDZ3RVB0YTNZUGR5RnFEL0t4S1RsRlR5OTlXcGtMOFg4bmRQbU1DSVBiOGxM?=
+ =?utf-8?B?em9wdnlRSks4bTNOWUNsaVRPZnNxTVM3VFZKbFZMZjVNZ0d1ajQyRTVaR3V2?=
+ =?utf-8?B?cDg5KzlFb2xTWTJqY2h5YVBuT3E2UzZXVjhIS0cwZE01MkhpTXU0Y0N1ZVNK?=
+ =?utf-8?B?U1VDUHoxZldBRk5WSDZPeHpLZEIwOS9IV0RGODJvMnNIWFJFYXgzZ0p2Rllh?=
+ =?utf-8?B?bXNSQnoxN1JITDR5Y3JhVlFyM2hqb1NVbHhSN0FqdFBaV0tPOXR4L2Jtd2Z2?=
+ =?utf-8?B?VEU3a3dMc1pIbXdMQjFyN1BCOWwzeklCMlBQZjNhS3p5Q29MSEtrZ0NMeElS?=
+ =?utf-8?B?VjlSMW1oRTJ4K0JNSzhDa0N1VHZYN0Vqb2pldnowbE05MUJkdW15TnU1RHBO?=
+ =?utf-8?B?a1RaWmZkRE9HRC82MzhnRVBtT0tlTWhuakJWMks1a0dNakJyNDVhK1QrSEsx?=
+ =?utf-8?B?b01jWXNqQWUyZm9wNUdqbzVGSTJseUlHaURhMk5GNFNybUZQYVRYMlEvZkV0?=
+ =?utf-8?B?WEVvZDE5N0w1S1I5ekY4dmRLbEk4dlZzR1htckpwU1JSbHJtbytEMWxUSnQ1?=
+ =?utf-8?B?RFRoTXcwMUFrZHpvelg1RFhzOE9KTSt6V1pXYVdQLy96V3JLQzlUdEVBNWhG?=
+ =?utf-8?B?OGFOek45Q3FkcVpER00rU3JBK2gxN1lNU1kyV1ROK0taYkh1K2ZLZzJQZXFG?=
+ =?utf-8?B?Kzl1cXNMS2xWQUorb2lQRlVhaGtpNDRlZXd1NDhiNG5CZkkyK2J1U1F4YmY1?=
+ =?utf-8?B?eWtrajVqbXBrYWFrekozN2hWT0dYK2NIVGhFYnhIMVcyd2R5Q3lneXBTZE0r?=
+ =?utf-8?B?ZWE0TTZvY3NiaXhWVjBkcnNmSEp2L3dIellqT3BkSlErSktCeEdWZGo1RzFp?=
+ =?utf-8?B?dG1ScEFuS3FybzJFTTZBNnJMYW5XVkRBdUF3T1BWbWt4Zmh4ZHppdThxZU1Z?=
+ =?utf-8?B?MVBEdlVLcGZPa3BKNGUwZyszWGMvQkxGUUUxbzBDY2N4VTFoTnVubzFscENa?=
+ =?utf-8?B?MXN5ek0rTndyKzJ0N0ZoWnl4WCtvOTFhaDVaRVYyTWpZdVdsRTh4N0RBZnI2?=
+ =?utf-8?B?dzljVnFUd0xnQklZNmpiU3l1WDRTcDNrQ0ZWQ3d3RWtKQWRqOG9MblhLb2Zt?=
+ =?utf-8?B?ZEdqcGltMnBCK09WdFNuUFJ4VDU0VnVQZDMrVWpPSmRzSzFqdmxpSkREd1p0?=
+ =?utf-8?B?YTdDbXM0UW51NHFHWC9WN211eHg2ano2ek1IS1cxWWZsM3dDbkJDYmJha0pk?=
+ =?utf-8?B?OUxVTmluSHJybzludXJkMlF5TVBLVDF1RVQwcUcwbS9DOEpPdzRjOWwrbHFm?=
+ =?utf-8?B?WHRJRG1IRUc3VldXWnZ2c0RNTDg4UjNFODNFc2ZPZVcwSzlvTDBtS2RJWnkr?=
+ =?utf-8?B?bytvbG9xSFp2YU1xUnJReVJaT3J5WDF0a093ZVdlZU85dHZPcWFtcGh2cFJI?=
+ =?utf-8?B?SWY1a0ZmcFNnelV1b05GbS9JQW42WkIvQWZuTEJRa1JDckFyT2NYNTlGTVYr?=
+ =?utf-8?B?UW1yREVuY0lNY0p0NFBKUUZPdjlValp4UWlyMi80Q0pvLzhtbDgzWGl5ZDM3?=
+ =?utf-8?B?d0RZc291eUNnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(7416014)(36860700013)(32650700017);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 02:46:12.6407
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 937fa5b9-db48-4650-ab51-08dd472195b7
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE3C.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8363
 
-On Thu, Feb 06, 2025 at 07:14:22PM +0100, Luca Ceresoli wrote:
-> Having an DRM_MODE_CONNECTOR_Unknown connector type is consuidered bad, and
+Hello Valentin,
 
-considered
+On 2/6/2025 8:54 PM, Valentin Schneider wrote:
+> [..snip..]
+>> So circling back to my original question around "SDTL_ARCH_VERIFIED",
+>> would folks be okay to an early bailout from topology_span_sane() on:
+>>
+>>       if (!sched_debug() && (tl->flags & SDTL_ARCH_VERIFIED))
+>>        return;
+>>
+>> and more importantly, do folks care enough about topology_span_sane()
+>> to have it run on other architectures and not just have it guarded
+>> behind just "sched_debug()" which starts off as false by default?
+>>
+> 
+> If/when possible I prefer to have sanity checks run unconditionally, as
+> long as they don't noticeably impact runtime. Unfortunately this does show
+> up in the boot time, though Steve had a promising improvement for that.
+> 
+> Anyway, if someone gets one of those hangs on a
+> 
+>    do { } while (group != sd->groups)
+> 
+> they'll quickly turn on sched_verbose (or be told to) and the sanity check
+> will holler at them, so I'm not entirely against it.
 
-> drm_panel_bridge_add_typed() and derivatives are deprecated for this.
-> 
-> drm_panel_init() won't prevent initializing a panel with a
-> DRM_MODE_CONNECTOR_Unknown connector type. Luckily there are no in-tree
-> users doing it, so take this as an opportinuty to document a valid
-> connector type must be passed.
-> 
-> Returning an error if this rule is violated is not possible because
-> drm_panel_init() is a void function. Add at least a warning to make any
-> violations noticeable, especially to non-upstream drivers.
-> 
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> 
-> ---
-> 
-> This patch was added in v6.
-> ---
->  drivers/gpu/drm/bridge/panel.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
+If you're game, I'm too!
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+I just put it out there in case folks had any strong feelings against
+this on other arch but that doesn't seem to be the case and we all love
+a simple solution :)
+
+> 
+>> (Sorry for the long answer explaining my thought process.)
+>>
+>>>
+>>> That I can't remember, sorry :/
+>>
+>> --
+>> Thanks and Regards,
+>> Prateek
+> 
 
 -- 
-With best wishes
-Dmitry
+Thanks and Regards,
+Prateek
+
