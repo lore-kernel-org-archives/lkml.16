@@ -1,157 +1,169 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085961DED64;
-	Fri,  7 Feb 2025 11:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB75D154C05
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 11:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738926451; cv=none; b=jISeG3tUhw8mUSuZNYetO9N4ixx8GJX7uyiN0w/L8yYgPb/SK9XlYPpWGml8eTQuGd7/c2FesN7ob37vH5C2X40pt5/ir+rQpgETVDQQ0HitAbPnry7AFtWiS4CPZ/x9l16FN9gHv8UzrlqLEo5+Xw+EPG6qkDvYqk2Tjq6uQDI=
+	t=1738926481; cv=none; b=K+FQNRIfa8yyMZxkUpRRSq44aOKTKvrcCJR2730XtvJigzrnd3V6pMZkMntowk0eEZXtxG6/v/Ju/eZkcYXojRY+Otj/SziicoGHvE+gUiUYKEVspFCz+zno1lo94Oynspm90lvVbsBmZ/g7YOQxRkvPa6UkqVgDVEmcfAVLzlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738926451; c=relaxed/simple;
-	bh=tX2VhS1SeREZEEWfKhsYfi87lp8g4mnQweSe4p8Ykfo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AUpllPH95WWz8zl1uuQqzTrbqePOCZaqC07Am8G5bJJD0g+lUdJBnW5WlPQF57ziNj2/aRd1cSuD2iHkwDiX7KyL8TbNFOYcv1ciwn/auHaM1VoaFom5A4Zfz8sn2RsbKE5dzcJqIuUZz6Q8auXxpIA/ibGayxL8vZj9LfZfeQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O5Wz4xXk; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738926481; c=relaxed/simple;
+	bh=em5mp7iyPLUIHDvYOriyT+XJN+lR6gsNheRrOLO0lJ8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cwQ5h6G/bS6wR78JtxHO2JGaHGk6p5XSXYgImxPxq6IV7ORRdbd6rN6gDAGsX5xPzVLEaGllC+D/5t5P+AYpx0CrvM+uO20XyT3kbp/0fCdPJjUBhrl6BVgmLI1MzV9194WlNisYeqM6uK24/2iHhhYZUt+dcC9WTpmyyetGxGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=YJFrON5r; arc=none smtp.client-ip=99.78.197.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5Wz4xXk"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2f74e6c6cbcso446302a91.2;
-        Fri, 07 Feb 2025 03:07:29 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YJFrON5r"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738926449; x=1739531249; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mX3UWjqcmjhwdy78xAQGr+U0/dUkqStaWJmr9P/RfFg=;
-        b=O5Wz4xXk8syOtmtz7Y5fEScSZEfY/Yc9Hqlpi26kEML6CERHwaNQyLfYE6emw3lT7a
-         UGfMrxn8s23j+hWnaCOXrfxN8ucDooibi3kcDWeIkOQSFDTOcBC0DMZjdBvRorDf2aum
-         36khANTspF0hvAejbGYapyfPEdjoFmUEZ7v+z/uK6fQT0jhpFequyKfai9pZDM0pNRzc
-         +laQ/d8fYa3fUBCPfUzTfr+VqAS6Hz/fSMh/+RiguQhXXAVnT7uyHMAfcOfPx46r7gtE
-         vOskpPnCvxz4YR7IwwsDL/cMh3SCt6bE8WPENER5ciWCPRnnhNu4yA3XRZtUZOr5nnVk
-         sySA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738926449; x=1739531249;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mX3UWjqcmjhwdy78xAQGr+U0/dUkqStaWJmr9P/RfFg=;
-        b=EvnzIvBhBR9joyM39IcvVHCUmCGFxcGXM5U47YwnngiYBoQFdstkIQ2eFUo+w1delK
-         8KhMtQNfTbjdXXNQmOVuhzpz6yQwZRhgKBkLZfKjE2P5blSMxo4KxZyOyOkZuCndnouA
-         3+Aa4o8bdXpD+BiLhjepWeHa7uFyD73ntWuGMgqpnmtRiUXLCnzUzyHzOroO6R2sSaBz
-         fy6iYN0HM2ao27kDalnaJoOt+bLMVGBrL0TTncQ587YbFP19hd6/AvmX824KKNGwLQxx
-         KRIXiItevf67UEFTaSD8b6EmWj5ybj7m8JWcoOynhvud+s72KThhEv6UZLFFG5HFK4W+
-         pgwg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9bizb3e671ENmJyqKLiHpS1AAKJv65ivr9+STyrTKn2DBH35vNSxough7zwbCN6lFUmz8YzJsQjZHuqkP@vger.kernel.org, AJvYcCVQydHdexinyMh2AzYCrDpPL7YrQRJBMmOfa9RC+xNIlzw+dUBdXtwXisK6JjdoChdDv/OSS7vELopEN5hOGm4=@vger.kernel.org, AJvYcCXgXvA3FqNCdIVR3xnJF69xICv+9Tpict2cT3vX80edXtjAxH3AILqQPS6mUnkaIfz+8448ygNzfGA=@vger.kernel.org, AJvYcCXuPRCIrJvvXRqQAd81BiAO1Q3kPEVvE9SnBLG23SGpQSmx4PwstntHsw9GNpMilH5KDo2A/8aXiik=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6m6LkqGoq7UhFyYU4ApzmbHXw8MlQ5Dg8WQNTvIDE7cFjSWGg
-	9TbYahPqCYcuKvkCbvUaxkfXIHL3CWrlei3W+rq6sEz5A7FqFCln2mlPbim1RUGqq9fvO1osGQc
-	ivMgkbISTuKe3xRA2keNoCr1D1kQ=
-X-Gm-Gg: ASbGncu6WMPS+7e1Ru0Jnpz1lXudBoB/PbJus2k3TxELs4rpXWM6djzqinq2fJQjjiA
-	XvXNU+9oDRggSRzHAmtXgR2QpC3kDJLSLV8dIDn+R1sCVGhgpHxsQduMBIq4MAWhc/XJZ6D6C
-X-Google-Smtp-Source: AGHT+IE/3gWtecB4TuXpei0yuNOQwHNbelMV9DCjald55tyxQFeC6FoGlBVQILPWu4B8zeWlzZ2N/WpKVfFEjQUhemA=
-X-Received: by 2002:a17:90b:3903:b0:2ea:5e0c:2844 with SMTP id
- 98e67ed59e1d1-2fa243ed977mr1750269a91.5.1738926449145; Fri, 07 Feb 2025
- 03:07:29 -0800 (PST)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1738926480; x=1770462480;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FDrX47E7AMkaBaTAt1fatsRSKDGJpLJ0U230EiOyUUM=;
+  b=YJFrON5rS7K4WpHbcjYmVpgj3wcTXyiMZevnLXAmJrngT4+ouJjWkV8K
+   Shafv8vUyMYsHQmTRbuaUDGzVra0ZoDnSHPUI8ofz38yWJyHJT+YE7W/r
+   FdjwxLLNK/mK2SnXGEwQyqW2KeFEIF/kDfx6gxHGz6gdPCD3txEI5oAPH
+   Y=;
+X-IronPort-AV: E=Sophos;i="6.13,266,1732579200"; 
+   d="scan'208";a="375317767"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 11:07:58 +0000
+Received: from EX19MTAEUC002.ant.amazon.com [10.0.17.79:6083]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.35.94:2525] with esmtp (Farcaster)
+ id 88b37125-b983-4a49-973a-a4edda4b7003; Fri, 7 Feb 2025 11:07:56 +0000 (UTC)
+X-Farcaster-Flow-ID: 88b37125-b983-4a49-973a-a4edda4b7003
+Received: from EX19D018EUA002.ant.amazon.com (10.252.50.146) by
+ EX19MTAEUC002.ant.amazon.com (10.252.51.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Fri, 7 Feb 2025 11:07:56 +0000
+Received: from EX19MTAUEC001.ant.amazon.com (10.252.135.222) by
+ EX19D018EUA002.ant.amazon.com (10.252.50.146) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Fri, 7 Feb 2025 11:07:56 +0000
+Received: from email-imr-corp-prod-pdx-1box-2b-ecca39fb.us-west-2.amazon.com
+ (10.43.8.6) by mail-relay.amazon.com (10.252.135.200) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
+ 15.2.1258.39 via Frontend Transport; Fri, 7 Feb 2025 11:07:56 +0000
+Received: from dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com (dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com [10.253.65.58])
+	by email-imr-corp-prod-pdx-1box-2b-ecca39fb.us-west-2.amazon.com (Postfix) with ESMTP id 48FEE8014E;
+	Fri,  7 Feb 2025 11:07:55 +0000 (UTC)
+Received: by dev-dsk-hagarhem-1b-b868d8d5.eu-west-1.amazon.com (Postfix, from userid 23002382)
+	id D1F7E20DAA; Fri,  7 Feb 2025 11:07:54 +0000 (UTC)
+Date: Fri, 7 Feb 2025 11:07:54 +0000
+From: Hagar Hemdan <hagarhem@amazon.com>
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>
+CC: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, wuchi <wuchi.zero@gmail.com>,
+	<linux-kernel@vger.kernel.org>, <Mohamed@amazon.com>,
+	<Abuelfotoh@amazon.com>, Hazem <abuehaze@amazon.com>
+Subject: Re: BUG Report: Fork benchmark drop by 30% on aarch64
+Message-ID: <20250207110754.GA10452@amazon.com>
+References: <20250205151026.13061-1-hagarhem@amazon.com>
+ <4a9cc5ab-c538-4427-8a7c-99cb317a283f@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738832118.git.viresh.kumar@linaro.org> <Z6Sgwbgfp-9SCr8Y@pollux>
- <20250207071538.xjxauatta2jsedz4@vireshk-i7>
-In-Reply-To: <20250207071538.xjxauatta2jsedz4@vireshk-i7>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 7 Feb 2025 12:07:14 +0100
-X-Gm-Features: AWEUYZms7tganxn6t-nVTSipJtfvYNnMyzk79dgVfbWiEhhyHiIvoGcdoMyxUWw
-Message-ID: <CANiq72k4N_bD3_QxFKveyjGsSeXJX7y6fKU4EVt0hBOcq9q7tA@mail.gmail.com>
-Subject: Re: [PATCH V8 00/14] Rust bindings for cpufreq and OPP core + sample driver
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@redhat.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Benno Lossin <benno.lossin@proton.me>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	Michael Turquette <mturquette@baylibre.com>, Miguel Ojeda <ojeda@kernel.org>, Nishanth Menon <nm@ti.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Stephen Boyd <sboyd@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Trevor Gross <tmgross@umich.edu>, 
-	Viresh Kumar <vireshk@kernel.org>, Yury Norov <yury.norov@gmail.com>, linux-pm@vger.kernel.org, 
-	Vincent Guittot <vincent.guittot@linaro.org>, rust-for-linux@vger.kernel.org, 
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, Erik Schilling <erik.schilling@linaro.org>, 
-	=?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>, 
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Anisse Astier <anisse@astier.eu>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <4a9cc5ab-c538-4427-8a7c-99cb317a283f@arm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Fri, Feb 7, 2025 at 8:15=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.or=
-g> wrote:
->
-> If I move the code as suggested here, then I get warning about not
-> adding a SAFETY comment for unsafe code (which looks to be a tool
-> specific bug).
+On Fri, Feb 07, 2025 at 10:14:54AM +0100, Dietmar Eggemann wrote:
+> Hi Hagar,
+> 
+> On 05/02/2025 16:10, Hagar Hemdan wrote:
+> > Hi,
+> > 
+> > There is about a 30% drop in fork benchmark [1] on aarch64 and a 10%
+> > drop on x86_64 using kernel v6.13.1.
+> > 
+> > Git bisect pointed to commit eff6c8ce8d4d ("sched/core: Reduce cost
+> > of sched_move_task when config autogroup") which merged starting
+> > v6.4-rc1.
+> > 
+> > The regression only happens when number of CPUs is equal to number
+> > of threads [2] that fork test is creating which means it's only visible
+> > under CPU contention.
+> > 
+> > I used m6g.xlarge AWS EC2 Instance with 4 vCPUs and 16 GiB RAM for ARM64
+> > and m6a.xlarge with also 4 vCPUs and 16 GiB RAM for x86_64.
+> > 
+> > I noticed this regression exists only when autogroup config is enabled.
+> 
+> So '# CONFIG_SCHED_AUTOGROUP is not set' in .config so we have: 
+> 
+> static inline void sched_autogroup_exit_task(struct task_struct *p) { }
+> 
+> I.e. doing a 'echo 0 > /proc/sys/kernel/sched_autogroup_enabled' still
+> shows this issue?
+yes, when I do 'echo 0 | sudo tee /proc/sys/kernel/sched_autogroup_enabled',
+It behaves like the disable 'CONFIG_SCHED_AUTOGROUP'.
+> 
+> > 
+> > Run the fork test with these combinations and autogroup is enabled:
+> > 
+> > Arch      | commit eff6c8ce8d4d | Fork Result (lps)  |  %Cpu(s)
+> > ----------+---------------------+--------------------+------------------
+> > aarch64   | without             | 28677.0            |  3.2 us, 96.7 sy
+> > aarch64   | with                | 19860.7 (30% drop) |  2.7 us, 79.4 sy
+> > x86_64    | without             | 27776.2            |  3.1 us, 96.9 sy
+> > x86_64    | with                | 25020.6 (10% drop) |  4.1 us, 93.2 sy
+> > ----------+---------------------+--------------------+------------------
+> 
+> Can you rerun with:
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 3e5a6bf587f9..62cc50c79a78 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -9057,7 +9057,7 @@ void sched_move_task(struct task_struct *tsk)
+>          * group changes.
+>          */
+>         group = sched_get_task_group(tsk);
+> -       if (group == tsk->sched_task_group)
+> +       if ((group == tsk->sched_task_group) && !(tsk->flags & PF_EXITING))
+>                 return;
+I tried that and I see it fixed the regression and the cpu utilization
+is 100% with it.
 
-The warning is there even if you don't run `rustfmt`, and it does not
-look like a bug to me -- what Clippy is complaining about is that you
-don't actually need the `unsafe` block to begin with:
+I'd like to ask if this like reverting the patch in case of exit path
+and also means the enqueue/dequeue are needed in case of task exiting,
+right?
 
-    error: unnecessary `unsafe` block
-    --> rust/kernel/cpufreq.rs:631:22
-        |
-    631 |         attr[next] =3D unsafe {
-        |                      ^^^^^^ unnecessary `unsafe` block
-        |
-        =3D note: `-D unused-unsafe` implied by `-D warnings`
-        =3D help: to override `-D warnings` add `#[allow(unused_unsafe)]`
-
-since those operations are safe. Or am I missing something?
-
-Then, when you remove it, Clippy will complain that there should not
-be a SAFETY comment:
-
-    error: statement has unnecessary safety comment
-    --> rust/kernel/cpufreq.rs:625:9
-        |
-    625 |         attr[next] =3D
-addr_of_mut!(bindings::cpufreq_freq_attr_scaling_available_freqs) as
-*mut _;
-        |
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^=
-^^^^^^^^^^^^^^
-        |
-    help: consider removing the safety comment
-    --> rust/kernel/cpufreq.rs:623:9
-        |
-    623 |         // SAFETY: The C code returns a valid pointer here,
-which is again passed to the C code in
-        |
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^=
-^^^^^^^^^^^^^^^
-        =3D help: for further information visit
-https://rust-lang.github.io/rust-clippy/master/index.html#unnecessary_safet=
-y_comment
-        =3D note: `-D clippy::unnecessary-safety-comment` implied by `-D wa=
-rnings`
-        =3D help: to override `-D warnings` add
-`#[allow(clippy::unnecessary_safety_comment)]`
-
-And `rustfmt` will put things in a single line, since now they fit.
-
-I would suggest reviewing all the SAFETY comments around this code,
-i.e. something may be wrong, since these were not needed, and thus you
-may have wanted to describe them elsewhere.
-
-In any case, passing `rustfmtcheck` is a requirement. So in the worst
-case, if you do find such a bug in e.g. Clippy, you may always
-`expect` or `allow` the lint or disable `rustfmt` in that region of
-code. But that should be really rare, and in such a case it should be
-reported upstream.
-
-I also found other build issues in the branch you mention in your
-cover letter, so please double-check everything looks good before
-adding it to linux-next. Please also make it Clippy-clean.
-
-I hope that helps!
-
-Cheers,
-Miguel
+Thanks for replying :)
+> 
+> > 
+> > It seems that the commit is capping the amount of CPU resources that can
+> > be utilized leaving around 18% idle in case of aarch64 and 3% idle in
+> > x86_64 case which is likely the main reason behind the reported fork
+> > regression.
+> > 
+> > When autogroup is disabled:
+> > 
+> > Arch      | commit eff6c8ce8d4d | Fork Result (lps)  |  %Cpu(s)
+> > ----------+---------------------+--------------------+------------------
+> > aarch64   | without             | 19877.8            |  2.2 us, 80.1 sy  
+> > aarch64   | with                | 20086.3 (~same)    |  1.9 us, 80.2 sy
+> > x86_64    | without             | 24974.2            |  4.9 us, 92.5 sy 
+> > x86_64    | with                | 24921.5 (~same)    |  4.9 us, 92.4 sy
+> > ----------+---------------------+--------------------+------------------
+> > 
+> > So when autogroup disabled, I still see the amount of idle CPU resources 
+> > 18%, 3% on aarch64 and x86_64 regardless of commit.
+> > 
+> > Is this performance drop an expected of this commit when autogroup is
+> > enabled?
+> > 
+> > Thanks,
+> > Hagar
+> > 
+> > [1] https://github.com/kdlucas/byte-unixbench/blob/master/UnixBench
+> > [2] Used command: ./Run -c 4 spawn
+> > 
+> 
