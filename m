@@ -1,379 +1,247 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817942940B
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 01:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE03149E13;
+	Fri,  7 Feb 2025 01:51:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738893072; cv=none; b=jZpkqLKYCBeB48UIx8yPHXlFZXXyd1GaXaCTTEW6rhIGM/Q6bOAO18HUsA8ontgeMevOLk3DthTwCBvBsgpQV1zk/7cuUvbOuNKJ1GjT6L67cF7LOWoyBDd7MkV7uMNsRxZ+5UuqSU7WcnTuke6nLb7z5NLXfOn/ggQ4SJuHG8Y=
+	t=1738893075; cv=none; b=qH3CQYz+TuDWXilRVaZyqmyFu/dRHBRO041qd8kVafzUGGScssd7T6wmoS+cZ/a6Vc/Af694kO1Mf26QjVRaOKTYG74JP6AOS5/Vr1yGt2+o8CX+vPuV1YVi+fHoECYVzBRSlzAGvx+5wPcbdYVBjcE1UueeqzYW6GXFYxiEMks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738893072; c=relaxed/simple;
-	bh=qDPEUa+3VPipKqb2Khm5lOImg9eJn2DBhB7VMEdHmrI=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=rkrsyjchsec+wJYmtBMvZ7rFPE8JErooliMpU4TtkhaTcFg8syx8VATSX8s0Ib9FNA9qRgZpXZaeiarHj5W80RgJgW1qFbebfJFjxFcn37iJAxKT76dJqPXWJTPAn5pvbW/fSpU3LvPuaYGc3HZM0OAh2qYgxqAObWdQc5HIdgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6a8bq3R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738893075; c=relaxed/simple;
+	bh=+xSqLf5FPzReA3wi9zmrKE/+PcuSUctW01f8cSqCoQE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=RptfbQKjM9LM4hczgO563jw1oVYjHwhjXaThIb5CA4ks8Vqmr7+QptpowykuKYZtlFVv4zq7rk6UW2c1YvnwYqorBCU9QRUhDSIdDsAt/MA/YbAJgK0nc7gdtLXoyQRsAziuFDmQVBnpnGTiE6kV6b9zxslAEhbGU3SSguosOBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYsMGn8Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6a8bq3R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 402E6C4CEDD;
-	Fri,  7 Feb 2025 01:51:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYsMGn8Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72A42C4CEE3;
+	Fri,  7 Feb 2025 01:51:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738893072;
-	bh=qDPEUa+3VPipKqb2Khm5lOImg9eJn2DBhB7VMEdHmrI=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=E6a8bq3RmaNKe5gpbXzGzVjBd3wLKJ4ObYGwk0s8E1z1tSL/Nn4yNOwmjW/Q6GcBQ
-	 g6YEAnC039psZlciKpXb/EKhA5PHtUZ3RJJlC+b9xj0BLjOLVYLOjIq5+oB4mI2gJB
-	 CCFFrM0GgplzUnGlNiBVs4rJpgYw8uPDLuV97picpgdGrTrCOeVcKCj0Dj2nY6hshJ
-	 lZytyuqZRIBAs5uNQcKbaT8rFPPa/LPhvGLWqsMmaBVl5zgp7pZnZSjTiGY1yyQVXk
-	 lsAhWZ3pUVAJAHcDAvlkTftihkmQcY96amK3rVxF6TKG5UAjmZsSoL4GSacUEFgWKH
-	 LdhBN07cprLpg==
-Message-ID: <1f8f1dca-101c-45ae-a2cd-0b83d6cbae66@kernel.org>
-Date: Fri, 7 Feb 2025 09:51:09 +0800
+	s=k20201202; t=1738893075;
+	bh=+xSqLf5FPzReA3wi9zmrKE/+PcuSUctW01f8cSqCoQE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gYsMGn8Z+9VlpRJI6eSQtl95yrk1+bx8Y0QucWBbLSHTatu3F60BJp7w7DC/U/e0a
+	 2GoidCrmkFFXeQrK3Ren4kf0+/snQR1XWgcMgzwpyi3eg8Drvcl8F8Fq48o+uLrFk4
+	 TShJFULBX38wkpOTVJFz/EEjLbf5WJkpR0ajpzW8s+FoR7Pe+HrCuLynTwTotHQ6I/
+	 z0XcQc/L+vu4ffVusE1oDN+ZFacdAIZOkhpySnvjdJHvS8086Dl6YIrIFbFwxfmH70
+	 oT+BPCCGn7Sd83evoLQGanXUMBbRqrqwtHnoOydKmw4ZdcQ6eirWQzCuvc+AXB5EyZ
+	 Jn9tQZceBsSNQ==
+Date: Fri, 7 Feb 2025 10:51:11 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH 7/8] tracing: Show module names and addresses of last
+ boot
+Message-Id: <20250207105111.1067fc1421bf682818e488c1@kernel.org>
+In-Reply-To: <20250205225104.096389081@goodmis.org>
+References: <20250205225031.799739376@goodmis.org>
+	<20250205225104.096389081@goodmis.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH] f2fs: quota: fix to avoid warning in
- dquot_writeback_dquots()
-To: Zhiguo Niu <niuzhiguo84@gmail.com>
-References: <20250206064451.3088028-1-chao@kernel.org>
- <CAHJ8P3+4RVNN0xB48D8aQ54ox399O0wc51YX2_At1heXWQrt4A@mail.gmail.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <CAHJ8P3+4RVNN0xB48D8aQ54ox399O0wc51YX2_At1heXWQrt4A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2/7/25 09:30, Zhiguo Niu wrote:
-> Chao Yu via Linux-f2fs-devel <linux-f2fs-devel@lists.sourceforge.net>
-> 于2025年2月6日周四 14:50写道：
->>
->> F2FS-fs (dm-59): checkpoint=enable has some unwritten data.
->>
->> ------------[ cut here ]------------
->> WARNING: CPU: 6 PID: 8013 at fs/quota/dquot.c:691 dquot_writeback_dquots+0x2fc/0x308
->> pc : dquot_writeback_dquots+0x2fc/0x308
->> lr : f2fs_quota_sync+0xcc/0x1c4
->> Call trace:
->> dquot_writeback_dquots+0x2fc/0x308
->> f2fs_quota_sync+0xcc/0x1c4
->> f2fs_write_checkpoint+0x3d4/0x9b0
->> f2fs_issue_checkpoint+0x1bc/0x2c0
->> f2fs_sync_fs+0x54/0x150
->> f2fs_do_sync_file+0x2f8/0x814
->> __f2fs_ioctl+0x1960/0x3244
->> f2fs_ioctl+0x54/0xe0
->> __arm64_sys_ioctl+0xa8/0xe4
->> invoke_syscall+0x58/0x114
->>
->> checkpoint and f2fs_remount may race as below, resulting triggering warning
->> in dquot_writeback_dquots().
->>
->> atomic write                                    remount
->>                                                 - do_remount
->>                                                  - down_write(&sb->s_umount);
->>                                                   - f2fs_remount
->> - ioctl
->>  - f2fs_do_sync_file
->>   - f2fs_sync_fs
->>    - f2fs_write_checkpoint
->>     - block_operations
->>      - locked = down_read_trylock(&sbi->sb->s_umount)
->>        : fail to lock due to the write lock was held by remount
->>                                                  - up_write(&sb->s_umount);
->>      - f2fs_quota_sync
->>       - dquot_writeback_dquots
->>        - WARN_ON_ONCE(!rwsem_is_locked(&sb->s_umount))
->>        : trigger warning because s_umount lock was unlocked by remount
->>
->> If checkpoint comes from mount/umount/remount/freeze/quotactl, caller of
->> checkpoint has already held s_umount lock, calling dquot_writeback_dquots()
->> in the context should be safe.
->>
->> So let's record task to sbi->umount_lock_holder, so that checkpoint can
->> know whether the lock has held in the context or not by checking current
->> w/ it.
->>
->> In addition, in order to misrepresent caller of checkpoint, we should not
->> allow to trigger async checkpoint for those callers: mount/umount/remount/
->> freeze/quotactl.
->>
->> Fixes: af033b2aa8a8 ("f2fs: guarantee journalled quota data by checkpoint")
->> Signed-off-by: Chao Yu <chao@kernel.org>
->> ---
->>  fs/f2fs/checkpoint.c | 17 ++++++++-----
->>  fs/f2fs/f2fs.h       |  3 ++-
->>  fs/f2fs/super.c      | 59 +++++++++++++++++++++++++++++++++++---------
->>  3 files changed, 60 insertions(+), 19 deletions(-)
->>
->> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
->> index efda9a022981..baff639ac0c4 100644
->> --- a/fs/f2fs/checkpoint.c
->> +++ b/fs/f2fs/checkpoint.c
->> @@ -1237,7 +1237,8 @@ static int block_operations(struct f2fs_sb_info *sbi)
->>  retry_flush_quotas:
->>         f2fs_lock_all(sbi);
->>         if (__need_flush_quota(sbi)) {
->> -               int locked;
->> +               bool need_lock = sbi->umount_lock_holder != current;
->> +               bool locked = false;
->>
->>                 if (++cnt > DEFAULT_RETRY_QUOTA_FLUSH_COUNT) {
->>                         set_sbi_flag(sbi, SBI_QUOTA_SKIP_FLUSH);
->> @@ -1246,10 +1247,13 @@ static int block_operations(struct f2fs_sb_info *sbi)
->>                 }
->>                 f2fs_unlock_all(sbi);
->>
->> -               /* only failed during mount/umount/freeze/quotactl */
->> -               locked = down_read_trylock(&sbi->sb->s_umount);
->> -               f2fs_quota_sync(sbi->sb, -1);
->> -               if (locked)
->> +               /* don't grab s_umount lock during mount/umount/remount/freeze/quotactl */
->> +               if (need_lock && !down_read_trylock(&sbi->sb->s_umount)) {
->> +                       cond_resched();
->> +                       goto retry_flush_quotas;
->> +               }
->> +               f2fs_do_quota_sync(sbi->sb, -1);
->> +               if (need_lock)
->>                         up_read(&sbi->sb->s_umount);
->>                 cond_resched();
->>                 goto retry_flush_quotas;
->> @@ -1867,7 +1871,8 @@ int f2fs_issue_checkpoint(struct f2fs_sb_info *sbi)
->>         struct cp_control cpc;
->>
->>         cpc.reason = __get_cp_reason(sbi);
->> -       if (!test_opt(sbi, MERGE_CHECKPOINT) || cpc.reason != CP_SYNC) {
->> +       if (!test_opt(sbi, MERGE_CHECKPOINT) || cpc.reason != CP_SYNC ||
->> +               sbi->umount_lock_holder == current) {
->>                 int ret;
->>
->>                 f2fs_down_write(&sbi->gc_lock);
->> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->> index 62b7fed1514a..7174dea641e9 100644
->> --- a/fs/f2fs/f2fs.h
->> +++ b/fs/f2fs/f2fs.h
->> @@ -1670,6 +1670,7 @@ struct f2fs_sb_info {
->>
->>         unsigned int nquota_files;              /* # of quota sysfile */
->>         struct f2fs_rwsem quota_sem;            /* blocking cp for flags */
->> +       struct task_struct *umount_lock_holder; /* s_umount lock holder */
->>
->>         /* # of pages, see count_type */
->>         atomic_t nr_pages[NR_COUNT_TYPE];
->> @@ -3652,7 +3653,7 @@ int f2fs_inode_dirtied(struct inode *inode, bool sync);
->>  void f2fs_inode_synced(struct inode *inode);
->>  int f2fs_dquot_initialize(struct inode *inode);
->>  int f2fs_enable_quota_files(struct f2fs_sb_info *sbi, bool rdonly);
->> -int f2fs_quota_sync(struct super_block *sb, int type);
->> +int f2fs_do_quota_sync(struct super_block *sb, int type);
->>  loff_t max_file_blocks(struct inode *inode);
->>  void f2fs_quota_off_umount(struct super_block *sb);
->>  void f2fs_save_errors(struct f2fs_sb_info *sbi, unsigned char flag);
->> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
->> index ef639a6d82e5..cb9d7b6fa3ad 100644
->> --- a/fs/f2fs/super.c
->> +++ b/fs/f2fs/super.c
->> @@ -1740,22 +1740,28 @@ int f2fs_sync_fs(struct super_block *sb, int sync)
->>
->>  static int f2fs_freeze(struct super_block *sb)
->>  {
->> +       struct f2fs_sb_info *sbi = F2FS_SB(sb);
->> +
->>         if (f2fs_readonly(sb))
->>                 return 0;
->>
->>         /* IO error happened before */
->> -       if (unlikely(f2fs_cp_error(F2FS_SB(sb))))
->> +       if (unlikely(f2fs_cp_error(sbi)))
->>                 return -EIO;
->>
->>         /* must be clean, since sync_filesystem() was already called */
->> -       if (is_sbi_flag_set(F2FS_SB(sb), SBI_IS_DIRTY))
->> +       if (is_sbi_flag_set(sbi, SBI_IS_DIRTY))
->>                 return -EINVAL;
->>
->> +       sbi->umount_lock_holder = current;
->> +
->>         /* Let's flush checkpoints and stop the thread. */
->> -       f2fs_flush_ckpt_thread(F2FS_SB(sb));
->> +       f2fs_flush_ckpt_thread(sbi);
->> +
->> +       sbi->umount_lock_holder = NULL;
->>
->>         /* to avoid deadlock on f2fs_evict_inode->SB_FREEZE_FS */
->> -       set_sbi_flag(F2FS_SB(sb), SBI_IS_FREEZING);
->> +       set_sbi_flag(sbi, SBI_IS_FREEZING);
->>         return 0;
->>  }
->>
->> @@ -2332,6 +2338,8 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
->>         org_mount_opt = sbi->mount_opt;
->>         old_sb_flags = sb->s_flags;
->>
->> +       sbi->umount_lock_holder = current;
->> +
->>  #ifdef CONFIG_QUOTA
->>         org_mount_opt.s_jquota_fmt = F2FS_OPTION(sbi).s_jquota_fmt;
->>         for (i = 0; i < MAXQUOTAS; i++) {
->> @@ -2555,6 +2563,8 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
->>
->>         limit_reserve_root(sbi);
->>         *flags = (*flags & ~SB_LAZYTIME) | (sb->s_flags & SB_LAZYTIME);
->> +
->> +       sbi->umount_lock_holder = NULL;
->>         return 0;
->>  restore_checkpoint:
->>         if (need_enable_checkpoint) {
->> @@ -2595,6 +2605,8 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
->>  #endif
->>         sbi->mount_opt = org_mount_opt;
->>         sb->s_flags = old_sb_flags;
->> +
->> +       sbi->umount_lock_holder = NULL;
->>         return err;
->>  }
->>
->> @@ -2911,7 +2923,7 @@ static int f2fs_quota_sync_file(struct f2fs_sb_info *sbi, int type)
->>         return ret;
->>  }
->>
->> -int f2fs_quota_sync(struct super_block *sb, int type)
->> +int f2fs_do_quota_sync(struct super_block *sb, int type)
->>  {
->>         struct f2fs_sb_info *sbi = F2FS_SB(sb);
->>         struct quota_info *dqopt = sb_dqopt(sb);
->> @@ -2959,6 +2971,16 @@ int f2fs_quota_sync(struct super_block *sb, int type)
->>         return ret;
->>  }
->>
->> +static int f2fs_quota_sync(struct super_block *sb, int type)
->> +{
->> +       int ret;
->> +
->> +       F2FS_SB(sb)->umount_lock_holder = current;
->> +       ret = f2fs_do_quota_sync(sb, type);
->> +       F2FS_SB(sb)->umount_lock_holder = NULL;
->> +       return ret;
->> +}
->> +
->>  static int f2fs_quota_on(struct super_block *sb, int type, int format_id,
->>                                                         const struct path *path)
->>  {
->> @@ -2974,30 +2996,33 @@ static int f2fs_quota_on(struct super_block *sb, int type, int format_id,
->>         if (path->dentry->d_sb != sb)
->>                 return -EXDEV;
->>
->> -       err = f2fs_quota_sync(sb, type);
->> +       F2FS_SB(sb)->umount_lock_holder = current;
->> +
->> +       err = f2fs_do_quota_sync(sb, type);
->>         if (err)
->> -               return err;
->> +               goto out;
->>
->>         inode = d_inode(path->dentry);
->>
->>         err = filemap_fdatawrite(inode->i_mapping);
->>         if (err)
->> -               return err;
->> +               goto out;
->>
->>         err = filemap_fdatawait(inode->i_mapping);
->>         if (err)
->> -               return err;
->> +               goto out;
->>
->>         err = dquot_quota_on(sb, type, format_id, path);
->>         if (err)
->> -               return err;
->> +               goto out;
->>
->>         inode_lock(inode);
->>         F2FS_I(inode)->i_flags |= F2FS_QUOTA_DEFAULT_FL;
->>         f2fs_set_inode_flags(inode);
->>         inode_unlock(inode);
->>         f2fs_mark_inode_dirty_sync(inode, false);
->> -
->> +out:
->> +       F2FS_SB(sb)->umount_lock_holder = NULL;
->>         return 0;
-> Hi Chao,
-> Here should return err? and init err=0 in the beginning?
+On Wed, 05 Feb 2025 17:50:38 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Zhiguo,
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> Add the last boot module's names and addresses to the last_boot_info file.
+> This only shows the module information from a previous boot. If the buffer
+> is started and is recording the current boot, this file still will only
+> show "current".
+> 
+>   # cat instances/boot_mapped/last_boot_info
+>   Offset: 10c00000
+>   ffffffffc00ca000 usb_serial_simple
+>   ffffffffc00ae000 usbserial
+>   ffffffffc008b000 bfq
 
-Oh, yes, let me fix this, thank you for the review.
+This is just a suggestion, what about using the same format for all
+lines? For example,
 
-Thanks,
+# cat instances/boot_mapped/last_boot_info
+10c00000         [kernel]
+ffffffffc00ca000 usb_serial_simple
+ffffffffc00ae000 usbserial
+ffffffffc008b000 bfq
 
-> thanks！
->>  }
->>
->> @@ -3009,7 +3034,7 @@ static int __f2fs_quota_off(struct super_block *sb, int type)
->>         if (!inode || !igrab(inode))
->>                 return dquot_quota_off(sb, type);
->>
->> -       err = f2fs_quota_sync(sb, type);
->> +       err = f2fs_do_quota_sync(sb, type);
->>         if (err)
->>                 goto out_put;
->>
->> @@ -3032,6 +3057,8 @@ static int f2fs_quota_off(struct super_block *sb, int type)
->>         struct f2fs_sb_info *sbi = F2FS_SB(sb);
->>         int err;
->>
->> +       F2FS_SB(sb)->umount_lock_holder = current;
->> +
->>         err = __f2fs_quota_off(sb, type);
->>
->>         /*
->> @@ -3041,6 +3068,9 @@ static int f2fs_quota_off(struct super_block *sb, int type)
->>          */
->>         if (is_journalled_quota(sbi))
->>                 set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
->> +
->> +       F2FS_SB(sb)->umount_lock_holder = NULL;
->> +
->>         return err;
->>  }
->>
->> @@ -4715,6 +4745,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
->>         if (err)
->>                 goto free_compress_inode;
->>
->> +       sbi->umount_lock_holder = current;
->>  #ifdef CONFIG_QUOTA
->>         /* Enable quota usage during mount */
->>         if (f2fs_sb_has_quota_ino(sbi) && !f2fs_readonly(sb)) {
->> @@ -4841,6 +4872,8 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
->>         f2fs_update_time(sbi, CP_TIME);
->>         f2fs_update_time(sbi, REQ_TIME);
->>         clear_sbi_flag(sbi, SBI_CP_DISABLED_QUICK);
->> +
->> +       sbi->umount_lock_holder = NULL;
->>         return 0;
->>
->>  sync_free_meta:
->> @@ -4945,6 +4978,8 @@ static void kill_f2fs_super(struct super_block *sb)
->>         struct f2fs_sb_info *sbi = F2FS_SB(sb);
->>
->>         if (sb->s_root) {
->> +               sbi->umount_lock_holder = current;
->> +
->>                 set_sbi_flag(sbi, SBI_IS_CLOSE);
->>                 f2fs_stop_gc_thread(sbi);
->>                 f2fs_stop_discard_thread(sbi);
->> --
->> 2.48.1.502.g6dc24dfdaf-goog
->>
->>
->>
->> _______________________________________________
->> Linux-f2fs-devel mailing list
->> Linux-f2fs-devel@lists.sourceforge.net
->> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> 
+>   # echo function > instances/boot_mapped/current_tracer
+>   # cat instances/boot_mapped/last_boot_info
+>   Offset: current
 
+And this one is empty if it is already for the current.
+(because last boot information is cleared)
+
+Thank you,
+
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace.c | 103 +++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 90 insertions(+), 13 deletions(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index a8e5f7ac2193..7b4027804cd4 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -6005,6 +6005,8 @@ struct trace_scratch {
+>  	struct trace_mod_entry	entries[];
+>  };
+>  
+> +static DEFINE_MUTEX(scratch_mutex);
+> +
+>  static int save_mod(struct module *mod, void *data)
+>  {
+>  	struct trace_array *tr = data;
+> @@ -6012,6 +6014,8 @@ static int save_mod(struct module *mod, void *data)
+>  	struct trace_mod_entry *entry;
+>  	unsigned int size;
+>  
+> +	guard(mutex)(&scratch_mutex);
+> +
+>  	tscratch = tr->scratch;
+>  	if (!tscratch)
+>  		return -1;
+> @@ -6882,15 +6886,47 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
+>  	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
+>  }
+>  
+> -static ssize_t
+> -tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
+> +#define LAST_BOOT_HEADER ((void *)1)
+> +
+> +static void *l_next(struct seq_file *m, void *v, loff_t *pos)
+>  {
+> -	struct trace_array *tr = filp->private_data;
+> +	struct trace_array *tr = m->private;
+>  	struct trace_scratch *tscratch = tr->scratch;
+> -	struct seq_buf seq;
+> -	char buf[64];
+> +	unsigned int index = *pos;
+> +
+> +	(*pos)++;
+> +
+> +	if (*pos == 1)
+> +		return LAST_BOOT_HEADER;
+> +
+> +	/* Only show offsets of the last boot data */
+> +	if (!tscratch || !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
+> +		return NULL;
+> +
+> +	/* *pos 0 is for the header, 1 is for the first module */
+> +	index--;
+> +
+> +	if (index >= tscratch->nr_entries)
+> +		return NULL;
+>  
+> -	seq_buf_init(&seq, buf, 64);
+> +	return &tscratch->entries[index];
+> +}
+> +
+> +static void *l_start(struct seq_file *m, loff_t *pos)
+> +{
+> +	mutex_lock(&scratch_mutex);
+> +
+> +	return l_next(m, NULL, pos);
+> +}
+> +
+> +static void l_stop(struct seq_file *m, void *p)
+> +{
+> +	mutex_unlock(&scratch_mutex);
+> +}
+> +
+> +static void show_last_boot_header(struct seq_file *m, struct trace_array *tr)
+> +{
+> +	struct trace_scratch *tscratch = tr->scratch;
+>  
+>  	/*
+>  	 * Do not leak KASLR address. This only shows the KASLR address of
+> @@ -6900,11 +6936,52 @@ tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t
+>  	 * should not be the same as the current boot.
+>  	 */
+>  	if (!tscratch || !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
+> -		seq_buf_puts(&seq, "Offset: current\n");
+> +		seq_puts(m, "Offset: current\n");
+>  	else
+> -		seq_buf_printf(&seq, "Offset: %lx\n", tscratch->kaslr_addr);
+> +		seq_printf(m, "Offset: %lx\n", tscratch->kaslr_addr);
+> +}
+>  
+> -	return simple_read_from_buffer(ubuf, cnt, ppos, buf, seq_buf_used(&seq));
+> +static int l_show(struct seq_file *m, void *v)
+> +{
+> +	struct trace_array *tr = m->private;
+> +	struct trace_mod_entry *entry = v;
+> +
+> +	if (v == LAST_BOOT_HEADER) {
+> +		show_last_boot_header(m, tr);
+> +		return 0;
+> +	}
+> +
+> +	seq_printf(m, "%lx %s\n", entry->mod_addr, entry->mod_name);
+> +	return 0;
+> +}
+> +
+> +static const struct seq_operations last_boot_seq_ops = {
+> +	.start		= l_start,
+> +	.next		= l_next,
+> +	.stop		= l_stop,
+> +	.show		= l_show,
+> +};
+> +
+> +static int tracing_last_boot_open(struct inode *inode, struct file *file)
+> +{
+> +	struct trace_array *tr = inode->i_private;
+> +	struct seq_file *m;
+> +	int ret;
+> +
+> +	ret = tracing_check_open_get_tr(tr);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = seq_open(file, &last_boot_seq_ops);
+> +	if (ret) {
+> +		trace_array_put(tr);
+> +		return ret;
+> +	}
+> +
+> +	m = file->private_data;
+> +	m->private = tr;
+> +
+> +	return 0;
+>  }
+>  
+>  static int tracing_buffer_meta_open(struct inode *inode, struct file *filp)
+> @@ -7533,10 +7610,10 @@ static const struct file_operations trace_time_stamp_mode_fops = {
+>  };
+>  
+>  static const struct file_operations last_boot_fops = {
+> -	.open		= tracing_open_generic_tr,
+> -	.read		= tracing_last_boot_read,
+> -	.llseek		= generic_file_llseek,
+> -	.release	= tracing_release_generic_tr,
+> +	.open		= tracing_last_boot_open,
+> +	.read		= seq_read,
+> +	.llseek		= seq_lseek,
+> +	.release	= tracing_seq_release,
+>  };
+>  
+>  #ifdef CONFIG_TRACER_SNAPSHOT
+> -- 
+> 2.45.2
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
