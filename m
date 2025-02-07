@@ -1,162 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9423D1DED6F;
-	Fri,  7 Feb 2025 21:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC701B3953
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 21:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738965258; cv=none; b=sELe3x0HEve1YtDb3s9sauVZUFp8BhnNYfdGjQek0RTUHYdT2fAcLxqVheoVrQWZDoIBi31o1H1Xc7VKaayJWcJ51TgUXKob61kpbWpSKyxBrkuMGB9xbI9Bl3YDgdb08a9I+RYQTJ8sO4JAgITceVD+vs6c8Cr9hQf8wb4GPDw=
+	t=1738965302; cv=none; b=gfsxa8+jWXbZei5FFGnbIIQpi6zwMdnLnsFnz6laSBoiN6JHYHIFmi3jB8SXzoxpkqmecE41ZgeY6kn5APDXntOwzGgnateXK2JlTra1CeAgVonXqA+6Fn8/SR3LaLHk1lSjyfqIZSvV8Lit+LkMcFN7BNcAzAevLAmjRFJMqR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738965258; c=relaxed/simple;
-	bh=sw3t4UEP7cS6Upg9M0jFnw3ef2OfnvBcdxBl8UpLg2c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=j734m3CWAC6xjVAEKvtyO69G8hc7LWJey1yNBwUzAvepVmZdE3JiB/ba0Yp+18DddfIL4zKKZP1x3grZaCOx9DFuFss+HpuV7GH1lFvW4rKQ6hCnyfVaKKp9kAzJqyzC/NmEhCbK4JHgCUYkWS2gD0dffWzNO4Y2Tdw/KnQ/k4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NnR0K361; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738965302; c=relaxed/simple;
+	bh=1gd0yH30pcxmkVpUUSXoevvZ1wIpN/0PdpaN6tVQ7vM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f0wq/jEVe2DdaEBIE8ZeV6X2yJV3jvS94xt9emnGwR1V29AbdcCaj9W1AkHH8eW95q0vUPobbN39r9sphNXjuKRolkkOEqcsdP2PhhhVvpCzRjwrwY5C6WB8bsBnqzF1ANwyT9d53nvk8pjOhEOV3L/G0uLXMVcqwLTBE/DKcyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=bOUR29+4; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NnR0K361"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B7A7C4CEE2;
-	Fri,  7 Feb 2025 21:54:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738965257;
-	bh=sw3t4UEP7cS6Upg9M0jFnw3ef2OfnvBcdxBl8UpLg2c=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=NnR0K361Fpl1TJaDSbJGq4CrwKgS5t5a40pDaGnH+z3gczCjtbmVHcUYDJGH1F7zO
-	 A937Cf6YHHj7EJvhbdy+jaTW24Trxdf9CkVFUA8Py0KtwDQ5W3k1d9HyPvy4q8QBK8
-	 xqaTT4yQlqcLVwZR7dg4V46IaVGrbv89v6csEewmpoHdAEPIhowjqoDz4ryXTkwzBo
-	 ZxUhh09m13RiaBu8rxt7fEpS7JMpSeWkmafoeJpuyFd6EQ+H/JHyMn0dbjId+WfMDB
-	 EUqIHXqTz55TA1EWbOtk1Yf7EQLBs5cSxUBStWYObB1tJE4AMq1rYLKLyrrEIx55kp
-	 oxNYBMTSFZuvA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 07 Feb 2025 16:53:54 -0500
-Subject: [PATCH v5 7/7] nfsd: lift NFSv4.0 handling out of
- nfsd4_cb_sequence_done()
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="bOUR29+4"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-844d555491eso75952539f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 13:54:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1738965298; x=1739570098; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5IBqtH4R3jDvL4rKWTD+iWS0bbTvtCiS0BwL590tGJ8=;
+        b=bOUR29+4mFYUIO2dUBGytCdkMQbvdNnM3m52dq7b1tfsmzMKvLZBf2aBmNnWfgXbI/
+         LyOFDSdXnB9jVjdaBVKkjlcfxrFyy+S7c2fzBEcfNJSBKqBdczx/jkkqTZ5zjwXsJrjd
+         VI2tGyDOcD+EZB6FraiWIQrDm0fFnhivbnQUF9VpotAZzJz57IZhz1y901FecGm1T5jz
+         NJRXTjKHACHO3YX7M+i3WMZrHSHH1SE5Fdg1YC5H/SwY7IimQxR5RewKW+X+tkY8gDGD
+         AR/9R5WwHdgzir8850P8HJacX0qZJ+VUkrSOX9X8gaXTC7c2t0AoGFQ94DD5xXaEiCii
+         NSNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738965298; x=1739570098;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5IBqtH4R3jDvL4rKWTD+iWS0bbTvtCiS0BwL590tGJ8=;
+        b=H63qhHfIUQoL0uE9ybpqRXMnpSMG91wafj53vzI5IvuaDCsY+zp2li6XF9H+cFw3LY
+         LOdE1FNLrk0IGPLz5lAvB39ahhqmMouBWfpsYRAOes8Ngn18hitWC0F3PqtH5lELedXF
+         r4s1D0fUOO2pny/7qGaVQ3d9dcnMMKzsvdVU+DT1MiYNEEDM5ZeagsbCwivHyHmNZqGu
+         MmKC8DetDA5aBFw24flWoqVnz7QwY7PUCs7vsUytyZ6x9H3oc5BStsQemQKj086lG6cV
+         FAlA/3M7ZFTTF5lmkO+qmknzrjnaH9HZGgs4Cr/n3fZKyKEQDnH3wOT589EJM5GXI3m7
+         tz+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUGyp3gRFUFP/WeAkSEAFlZPWc3hJEGhIIpC9N9LS2tdwgy9WV3h/VAPqbr1fFEZNUsH7dV+rcbp0NPKh0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvsPVMTHmd+u2m7mtuu9HWGYJ1GikBPzfw/boaPcJoxrXqqXYX
+	FmqIsdeBTpaL/zuWt47N0WGE+mRm7aZv52cxr8c0IkL2sepEXccdRDgmB6/pOYY=
+X-Gm-Gg: ASbGncuHKSHw7AnY7Hv1EnjyzTqVENxdyGpsg2jQ11JCT/+Urn9SwF9qRo3AR3GxkUP
+	ZfvEDuxoWgQfMIlYs9cdXkvAlDaMxJIm5L/5VsBCWpzk5NQhOteDLw83Ul8rXpoGsGBgAV4sY1Y
+	XAlv4186BoeLgCKLGlmMV3eFyBF2V8OMNZFjBjDZhVzz9zgIIu4VU/1yiKokRYiY+0IS9ZE9aTU
+	GumPPyMXWA0g7Bcddw/x9bRf8hT2iQHyJgOfA9BTsqBnuUu7XY+zO/6ssRMElh8CnvsVdWLehgU
+	/wB+JmyB6q8=
+X-Google-Smtp-Source: AGHT+IHtZu3iwfSrRceCWPHMvjUaJ4b5MixZUsAk664E4N5LXxNLDuIGyZG7eeJAsl3IlpSL0Ym+fw==
+X-Received: by 2002:a05:6602:3946:b0:84a:5201:41ff with SMTP id ca18e2360f4ac-854fd886d54mr481503739f.3.1738965298354;
+        Fri, 07 Feb 2025 13:54:58 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-854f67b90b7sm87271439f.40.2025.02.07.13.54.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 13:54:57 -0800 (PST)
+Message-ID: <f4efd956-ebe9-4a02-8b98-b80e16db95af@kernel.dk>
+Date: Fri, 7 Feb 2025 14:54:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] io_uring: refactor io_uring_allowed()
+To: Paul Moore <paul@paul-moore.com>,
+ Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+Cc: James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ Pavel Begunkov <asml.silence@gmail.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>, =?UTF-8?Q?Thi=C3=A9baud_Weksteen?=
+ <tweek@google.com>, =?UTF-8?Q?Christian_G=C3=B6ttsche?=
+ <cgzones@googlemail.com>, =?UTF-8?Q?Bram_Bonn=C3=A9?=
+ <brambonne@google.com>, Masahiro Yamada <masahiroy@kernel.org>,
+ linux-security-module@vger.kernel.org, io-uring@vger.kernel.org,
+ selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250127155723.67711-1-hamzamahfooz@linux.microsoft.com>
+ <8743aa5049b129982f7784ad24b2ec48@paul-moore.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <8743aa5049b129982f7784ad24b2ec48@paul-moore.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-nfsd-6-14-v5-7-f3b54fb60dc0@kernel.org>
-References: <20250207-nfsd-6-14-v5-0-f3b54fb60dc0@kernel.org>
-In-Reply-To: <20250207-nfsd-6-14-v5-0-f3b54fb60dc0@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3143; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=sw3t4UEP7cS6Upg9M0jFnw3ef2OfnvBcdxBl8UpLg2c=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnpoEAjCKIMrbArNfq0hu5S+vxyt8rkgIcUPuaW
- 0K+BBXv3zuJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6aBAAAKCRAADmhBGVaC
- FR0mD/wOdfIUVs6Eg7jAxtHDAXJAFKS6/DT+Uuz8DcwwE5xLW41YbqUkq29i3ahJufRcV6hI4QV
- LdAyoeVrBJZell/EEYNn26PaLzA0u2Dm6DIPSz5Q4WycxXwCjRRJt3RTThHBmBBdXO++9r7eut/
- UmX8pmjFEmVxmVRjTDre0KacvXaq1VeaeAzvb3P+N3h7+B4hk5pDHOhhgTx1IaK/e0bqb4LIUlr
- 4GpPhaBHwVHv+gSd33vZIXPrxDfZtkl9dQ5ylGr4AeFYRq0HRrx8q9/dEcaEG3dTvCYWUUIXqx1
- C32bxJyEpwo/7i8BkFBIponsgP+BF0BSZI4t5nevbfU92fT42EaZjpBTDIgKHaaB3H+KCf/GWqr
- orKcYZglWBZMbyXM9Pc9/x73tut4aI2ADRDBWduK65W2SqvZ89yZevy4eUl1uQe20CauTZwPFXt
- pJwNb17kDoikx6HdCJgzkkdAk+kM4R7m1q2v+Ck0TODvWahjuRdXcmu5PoADO4uTc0sMMSGHUPE
- q1MykCG5Gngc2QJ4ZlNJbG5t0XmMxqsGUwieD16gXPsIbSjZsLcyW1AZrMmAC058bluQClLXZ9g
- A2rF6ZLaH/Fanr5Xs9FhqsC1JKgKuE1DwxCB6u2RYMQGVk3DmmZHZkuifcFQY2hgq1DFZ17R1DD
- bkuOPZan30BA83A==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-It's a bit strange to call nfsd4_cb_sequence_done() on a callback with no
-CB_SEQUENCE. Lift the handling of restarting a call into a new helper,
-and move the handling of NFSv4.0 into nfsd4_cb_done().
+On 2/7/25 2:42 PM, Paul Moore wrote:
+> On Jan 27, 2025 Hamza Mahfooz <hamzamahfooz@linux.microsoft.com> wrote:
+>>
+>> Have io_uring_allowed() return an error code directly instead of
+>> true/false. This is needed for follow-up work to guard io_uring_setup()
+>> with LSM.
+>>
+>> Cc: Jens Axboe <axboe@kernel.dk>
+>> Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+>> ---
+>>  io_uring/io_uring.c | 21 ++++++++++++++-------
+>>  1 file changed, 14 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+>> index 7bfbc7c22367..c2d8bd4c2cfc 100644
+>> --- a/io_uring/io_uring.c
+>> +++ b/io_uring/io_uring.c
+>> @@ -3789,29 +3789,36 @@ static long io_uring_setup(u32 entries, struct io_uring_params __user *params)
+>>  	return io_uring_create(entries, &p, params);
+>>  }
+>>  
+>> -static inline bool io_uring_allowed(void)
+>> +static inline int io_uring_allowed(void)
+>>  {
+>>  	int disabled = READ_ONCE(sysctl_io_uring_disabled);
+>>  	kgid_t io_uring_group;
+>>  
+>>  	if (disabled == 2)
+>> -		return false;
+>> +		return -EPERM;
+>>  
+>>  	if (disabled == 0 || capable(CAP_SYS_ADMIN))
+>> -		return true;
+>> +		goto allowed_lsm;
+> 
+> I'd probably just 'return 0;' here as the "allowed_lsm" goto label
+> doesn't make a lot of sense until patch 2/2, but otherwise this
+> looks okay to me.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4callback.c | 53 ++++++++++++++++++++++++++------------------------
- 1 file changed, 28 insertions(+), 25 deletions(-)
+Agree, get rid of this unnecessary goto.
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index d6e3e8bb2efabadda9f922318880e12e1cb2c23f..a4427e2f6182415755b646dba1a1ef4acddc0709 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1328,28 +1328,23 @@ static void nfsd4_cb_prepare(struct rpc_task *task, void *calldata)
- 	rpc_call_start(task);
- }
- 
--/* Returns true if CB_COMPOUND processing should continue */
--static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback *cb)
-+static void requeue_callback(struct rpc_task *task, struct nfsd4_callback *cb)
- {
- 	struct nfs4_client *clp = cb->cb_clp;
--	struct nfsd4_session *session = clp->cl_cb_session;
--	bool ret = false;
--
--	if (!clp->cl_minorversion) {
--		/*
--		 * If the backchannel connection was shut down while this
--		 * task was queued, we need to resubmit it after setting up
--		 * a new backchannel connection.
--		 *
--		 * Note that if we lost our callback connection permanently
--		 * the submission code will error out, so we don't need to
--		 * handle that case here.
--		 */
--		if (RPC_SIGNALLED(task))
--			goto requeue;
- 
--		return true;
-+	nfsd41_cb_release_slot(cb);
-+	if (!test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags)) {
-+		trace_nfsd_cb_restart(clp, cb);
-+		task->tk_status = 0;
-+		cb->cb_need_restart = true;
- 	}
-+}
-+
-+/* Returns true if CB_COMPOUND processing should continue */
-+static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback *cb)
-+{
-+	struct nfsd4_session *session = cb->cb_clp->cl_cb_session;
-+	bool ret = false;
- 
- 	if (cb->cb_held_slot < 0)
- 		goto requeue;
-@@ -1429,12 +1424,7 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
- 			return false;
- 	}
- requeue:
--	nfsd41_cb_release_slot(cb);
--	if (!test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags)) {
--		trace_nfsd_cb_restart(clp, cb);
--		task->tk_status = 0;
--		cb->cb_need_restart = true;
--	}
-+	requeue_callback(task, cb);
- 	return false;
- }
- 
-@@ -1445,8 +1435,21 @@ static void nfsd4_cb_done(struct rpc_task *task, void *calldata)
- 
- 	trace_nfsd_cb_rpc_done(clp);
- 
--	if (!nfsd4_cb_sequence_done(task, cb))
-+	if (!clp->cl_minorversion) {
-+		/*
-+		 * If the backchannel connection was shut down while this
-+		 * task was queued, we need to resubmit it after setting up
-+		 * a new backchannel connection.
-+		 *
-+		 * Note that if we lost our callback connection permanently
-+		 * the submission code will error out, so we don't need to
-+		 * handle that case here.
-+		 */
-+		if (RPC_SIGNALLED(task))
-+			requeue_callback(task, cb);
-+	} else if (!nfsd4_cb_sequence_done(task, cb)) {
- 		return;
-+	}
- 
- 	if (cb->cb_status) {
- 		WARN_ONCE(task->tk_status,
+> Jens, are you okay with this patch?  If yes, can we get an ACK from you?
+
+With that change, yep I'm fine with both of these and you can add my
+acked-by to them.
 
 -- 
-2.48.1
-
+Jens Axboe
