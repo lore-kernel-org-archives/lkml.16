@@ -1,204 +1,105 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5041922E0
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54BE15E5B8
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738949630; cv=none; b=gt1xzEcC3bD16mxfp/8oGLeimfYCIp7m7K0F48gDb32dGgHVldOduVfWucpZx1RuzPdfPt7OQBvyWOVE8aWfvILq7i4N1/jOT7d5Y1tDPsk7pWIuuhvqjIpmzcMM0wD2FBfGFPS+yV12/mOzTOZxf0jMsyUKpEWPVt/+daencb4=
+	t=1738949668; cv=none; b=Wsmln/fcIlCMHSrY/FqZ9rIFcW6tdyFB93NJhSP25MrM4M4zAhD8mS8j18/joYR3Rbp9Gszb+fBkRZxG/d5UcWNeCoqy7Oa1NGSQk46I78mM/YIF5l/CWRFtCyyojPgE1vX0pVEAP2WR6PCkVlDLx/2fQ8hpe0hkGVG7YEpfNV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738949630; c=relaxed/simple;
-	bh=heKwUZUbcmyVtVPlyLMpMkb+c7yJ6iwb4h2qAwrn0GM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YspDJradkV08bCPQqvC3kgVO7YL4HtnaZnSlO3anpTkts3OStTmFiphoiwoCJWbUnbuviAwt4jhJphkMv4ST9NRfkKH7N1VMxFIw7ChdoUfXXK5vStS9kyzgNniPxo/ZBz+WoU0G53qAf5FrqNYXYtCY6E2BLD4sdZ+QMMca2IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DbpT7yJY; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738949668; c=relaxed/simple;
+	bh=iql8ByA/m1WXSEGKkfIomUCFpvj3f9cpEMqIrp5z/1Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ASmA2jh2QpvXmPhLgyKlYD/ANBWgkRqlDRCTRiIvLA6f8ldoSXiNpSmQeV2Nks3hMm8/jgAbtWJZZ1khkGeVH9yvGFUVEhOcR8mwR44e1ftmi1VmQ7PMjB6uCtrEZmCzwe0XAOD66svqMUC/Si3vK24ynZN69tGypXlWEmWaW4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A8hpSZ0T; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DbpT7yJY"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f6022c2c3so7869755ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:33:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A8hpSZ0T"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4679b5c66d0so307621cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:34:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738949627; x=1739554427; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=b6DSgMi12Y1DTWXSxB1u+L8gWNg8zLGbTo3gPZs3j0U=;
-        b=DbpT7yJYRz9SQNTxCL+wl8s+6SLB6Y1380v4uJ74Fyci/v2Dd7M1XOm/gm66OWIwFt
-         Zdax0CP873T/CyZmTFBO7+cotKmoU6PHjRNSjw700LXUMk3p09VAFdI1eYVNoWM8AB6+
-         rK7SGJFf+u8nc1+zpEHf/g9+dhratuH5qqpjtM0IDxWuOx83YQu33Ew0whbUc2BP94n6
-         m7VzkS/zA/Y48CnVmrgQAKboLsMjyN/8ATNMf5hGbt1H1fEzF8MQrU4V+31pLrWPxVEE
-         bi1NmvGRJ8LlOStXgh0AbHBZhZ8urdlheTk6Fkq1kfcp+GhqGuCj7SSiCgjFABHmMj+K
-         cWPA==
+        d=google.com; s=20230601; t=1738949664; x=1739554464; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wQE/r9oYQJeUmSQWFL/fUSETW6FOuhLgjtJx4q8CYEk=;
+        b=A8hpSZ0TklQv0y5jzF2Nzrt2yU9SRkV/sRPGL1YV9Da3OuTkuFGO3BdCbmkw7kvS4/
+         LxBvoT0YEGdwzGWhPWM3y5P9xCAW+QI8gbnJY4Jtuym9ULdBcGIuHvkpX0RIQEHQYAyl
+         Lp/jkHoOZaafwTj+/XGD+fcSVzScik9D0VfIZZSE7h7isyHdWjnwEqekpbfQZsbUhlWr
+         9REA5/orABBB6hR+3PxHRIlhEMn/8IR43x8ojJrDFp2i1mbDh5sv1axV5IavHbgIoRob
+         QGyqWWz3cRG6V7kZhvBQXLZp78LN6v/BWQSnBSizRxsVIFJQciMykuInrp2bhdZC2yap
+         4hDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738949627; x=1739554427;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=b6DSgMi12Y1DTWXSxB1u+L8gWNg8zLGbTo3gPZs3j0U=;
-        b=rAxR4LiOxaJTz1GcmggkX6HhDObdxKqRr8/LThyzmQUA7XSn5G9U0i68Xxg8inh7Xg
-         MH3Anu177rZt8yu0BhCj7ULnHx0Yc70McbZDbULHBLdnxmIe/rObz1kxeMJvW69jzxI+
-         TZjSlabRLVlj0xct8qElnr54B3QuNimrpx9eqXBK22YiTdAYotd2MrXgxzHGqN1gd4Em
-         3Jk279TA0cyik9euw6+DcRAvG8+ZFS8kHaIuDPOBQgT8IYAKGlKLrsnldB2EMe/iaEhe
-         9u6JJkhnzBm2/j9nFtldp11jbGiFJyWk28WDhked67KoT16OsHTUHmDAiwnMmZHukLne
-         XovQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXbeHL21VHB/q4x/NBtIXh0krnBJaeT0zqX1SWXVFgEIjq3LB6QHrqb+ldqxm2NVbQonch5G/T1aNyX5a4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweGwxdQuS3wBYLaFo+K4wGL/axlsAAkszZBwCbZDMXZU1kmyha
-	1WXcalxfKvVgpXesWpNmSjgPax/hIqoyDrsaw9LqAaphrLk8zgqlPtPTb1tD5Q==
-X-Gm-Gg: ASbGncvozT/r6TMxz0sRHSe9Ds/uKGxCqPACmShfV7+eEVDUayfIutZ61dhrJk1lR4k
-	Rt1geoWy7X28MoEFoQ4gtTAWoKPezbvDBvhgj3pXPttLd2CEW1mrlz65OVFFqK2FueWLRKUheyL
-	9lIFilYbC071E/0dxmUs8tp1mv70vEuzUdPu1yPCyFLi7bIkejeveXvBeR4sgq9XLwpsb7JSavz
-	SO1IYx67ZPmSbeK6Dwr7iYFUYlJAzqZC86UQZeLzfjj6efrJK4gshhaC5YQD/DOyLXpc6u64t2o
-	ZK4VKm/GWYtGQxCZ1tdVFzauZA==
-X-Google-Smtp-Source: AGHT+IF/6HJMivCoSnQWmuUQfnYzeYmJJ18uAMqp9K/Rr+W3BGx4zE82YztHxZQyN+t5mKrGChZ44g==
-X-Received: by 2002:a05:6a20:2d07:b0:1e1:b105:158f with SMTP id adf61e73a8af0-1edf36f3822mr13144747637.19.1738949627535;
-        Fri, 07 Feb 2025 09:33:47 -0800 (PST)
-Received: from thinkpad ([120.60.76.168])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51aee5bb1sm3342184a12.38.2025.02.07.09.33.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 09:33:46 -0800 (PST)
-Date: Fri, 7 Feb 2025 23:03:41 +0530
-From: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
-To: Wilson Ding <dingwei@marvell.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Sanghoon Lee <salee@marvell.com>
-Subject: Re: [PATCH 1/1] PCI: armada8k: Disable LTSSM on link down interrupts
-Message-ID: <20250207173341.anqw7ybp7vn6md4s@thinkpad>
-References: <20241112064241.749493-1-jpatel2@marvell.com>
- <20241112214337.GA1861873@bhelgaas>
- <BY3PR18MB4673E2698A6F465FEB56B5A2A7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
- <BY3PR18MB467343D941D2F7706FD88FCBA7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
+        d=1e100.net; s=20230601; t=1738949664; x=1739554464;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wQE/r9oYQJeUmSQWFL/fUSETW6FOuhLgjtJx4q8CYEk=;
+        b=WTHFieRVdJ6y8p1JR+aKbt7xaXVPTpUsZsw3RiN6Eqyrd9b8Y+PsxJ3b7FQ8zcZ1oG
+         e7umQpBgQJwb066Vcm4z884GZCnZpXXGK+KFJUqQR7xTC79V6qYulkf/QDn3mtjpqsQ1
+         B6eHCkBHcjIgFRCntLWC3ywAVqQyrQ+qsgblWJgFgASO0b+bYsjAeNcPw00gm5d3Bp1V
+         66btlyyp0o7jNqPXhjsmyfrvr3HbcKlBGPTC5APHr4u3Zll1OTVrQ/fPC81KNxwk/WAm
+         5kqZ2Jn/GvN0GVzLFZI8IxtFnwSZgb89yWaQBw8SH2ADsNbzZ9Zd/NiWSyxYUruVWguT
+         a/hw==
+X-Forwarded-Encrypted: i=1; AJvYcCWAB+WYqSNk9BXYkG6TSOMqhq852aX4q0+92Ex2BK6xTN1bCYNB+XDMZ9QHCzUxGBs0EhUIHq1nNh4Gx50=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGG7AEQzWVWvV4eEDWT1XDK2ao7egAHoKOP3foI2m1q0KxEW8M
+	wpoSIftBw2RAsHAWToI0n8K4x5O4pjqeiLHuMhuA+qSJQI7qRJITdEwWq/0shaTSqVJZZc7wbpX
+	Gpd+F+IorytUuRdVujZikQt6A8GiTv9Qy5yq7
+X-Gm-Gg: ASbGncuXRCQDjC76oIQh/gE6t0V9PrgBk9Jnw22PlqiwsyM9G3iODTgD6gLBzpMDWJA
+	3TRK8wX1zwIMYUzczuicYCCJ7JsnxAlcYFz+HNV2sFTd3cuClkQdWlvltrs51hpweCdrspYclPg
+	ppItp3xdNZcDBCHVrEB234w3+tez4=
+X-Google-Smtp-Source: AGHT+IGP5xByBnMnsz1fxipvvMqkn0zzoEHD6jB1AzohT/QYEtRmmMdQi5qgtDbA3s87t+kZfrKGdzCQXcuR9RomnvU=
+X-Received: by 2002:a05:622a:5a05:b0:463:95e2:71f8 with SMTP id
+ d75a77b69052e-47169c92487mr4136691cf.15.1738949663503; Fri, 07 Feb 2025
+ 09:34:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BY3PR18MB467343D941D2F7706FD88FCBA7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
+References: <20250206044346.3810242-1-riel@surriel.com> <20250206044346.3810242-5-riel@surriel.com>
+ <CA+i-1C2NAFTrmZBFfBf8PFaji9YxQm68pV2qc7VbgHWFTji+Xw@mail.gmail.com>
+In-Reply-To: <CA+i-1C2NAFTrmZBFfBf8PFaji9YxQm68pV2qc7VbgHWFTji+Xw@mail.gmail.com>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Fri, 7 Feb 2025 18:34:11 +0100
+X-Gm-Features: AWEUYZnHHj4McI-lzpCIOVXfXTGju6fU2JsdGSb5pzfNxaB1ZLb4jDphduY0gKc
+Message-ID: <CA+i-1C3EwgvO_tgEvReDK8K5FMWYGeQRuvCu6Xy31oiS6WgcNQ@mail.gmail.com>
+Subject: Re: [PATCH v9 04/12] x86/mm: get INVLPGB count max from CPUID
+To: Rik van Riel <riel@surriel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
+	peterz@infradead.org, dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com, 
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com, 
+	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com, 
+	mhklinux@outlook.com, andrew.cooper3@citrix.com, 
+	Manali Shukla <Manali.Shukla@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Feb 01, 2025 at 12:57:56AM +0000, Wilson Ding wrote:
-> I am writing to follow up on this serious of PCIe patches submitted by Jenish.
-> Unfortunately, he has since left the company, and some comments on these
->  patches were not addressed in a timely manner. I apologize for the delay
-> and any inconvenience this may have caused. I have reviewed the feedback
-> provided and am now taking over this work. I appreciate the time and effort
-> you have put into reviewing the patch and providing valuable comments.
-> I will ensure that the necessary changes are made and resubmit the patch
-> in the proper manner, as it was not initially submitted as a series.
-> 
-> > > When a PCI link down condition is detected, the link training state
-> > > machine must be disabled immediately.
-> > 
-> > Why?
-> > 
-> > "Immediately" has no meaning here.  Arbitrary delays are possible and must
-> > not break anything.
-> 
-> Yes, I agree. A delay cannot be avoided. The issue we encountered is that
-> the RC may not be aware of the link down when it happens. In this case,
-> any access to the PCI config space may hang up PCI bus. The only thing we
-> can do is to rely on this link down interrupt. By disabling APP_LTSSM_EN,
-> RC will bypass all device accesses with returning all ones (for read).
-> 
+Oh, sorry
 
-Ok. One comment below.
+On Fri, 7 Feb 2025 at 16:10, Brendan Jackman <jackmanb@google.com> wrote:
+>
+> On Thu, 6 Feb 2025 at 05:45, Rik van Riel <riel@surriel.com> wrote:
+> > diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> > index 17b6590748c0..f9b832e971c5 100644
+> > --- a/arch/x86/include/asm/cpufeatures.h
+> > +++ b/arch/x86/include/asm/cpufeatures.h
+> > @@ -338,6 +338,7 @@
+> >  #define X86_FEATURE_CLZERO             (13*32+ 0) /* "clzero" CLZERO instruction */
+> >  #define X86_FEATURE_IRPERF             (13*32+ 1) /* "irperf" Instructions Retired Count */
+> >  #define X86_FEATURE_XSAVEERPTR         (13*32+ 2) /* "xsaveerptr" Always save/restore FP error pointers */
+> > +#define X86_FEATURE_INVLPGB            (13*32+ 3) /* INVLPGB and TLBSYNC instruction supported. */
+>
+> Why no "invlpgb" here? Seems like having this flag visible in cpuinfo
+> would be worthwhile.
+>
+> If there's a reason to hide it maybe add a comment to explain the
+> reason? Sorry if this is a stupid question - I also can't see an
+> obvious rationale for why existing flags do or don't get a name at
+> runtime.
 
-> > > Signed-off-by: Jenishkumar Maheshbhai Patel
-> > > <mailto:jpatel2@marvell.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-armada8k.c | 38
-> > > ++++++++++++++++++++++
-> > >  1 file changed, 38 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c
-> > > b/drivers/pci/controller/dwc/pcie-armada8k.c
-> > > index b5c599ccaacf..07775539b321 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-armada8k.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-armada8k.c
-> > > @@ -53,6 +53,10 @@ struct armada8k_pcie {
-> > >  #define PCIE_INT_C_ASSERT_MASK		BIT(11)
-> > >  #define PCIE_INT_D_ASSERT_MASK		BIT(12)
-> > >
-> > > +#define PCIE_GLOBAL_INT_CAUSE2_REG	(PCIE_VENDOR_REGS_OFFSET
-> > + 0x24)
-> > > +#define PCIE_GLOBAL_INT_MASK2_REG	(PCIE_VENDOR_REGS_OFFSET
-> > + 0x28)
-> > > +#define PCIE_INT2_PHY_RST_LINK_DOWN	BIT(1)
-> > > +
-> > >  #define PCIE_ARCACHE_TRC_REG		(PCIE_VENDOR_REGS_OFFSET
-> > + 0x50)
-> > >  #define PCIE_AWCACHE_TRC_REG		(PCIE_VENDOR_REGS_OFFSET
-> > + 0x54)
-> > >  #define PCIE_ARUSER_REG			(PCIE_VENDOR_REGS_OFFSET
-> > + 0x5C)
-> > > @@ -204,6 +208,11 @@ static int armada8k_pcie_host_init(struct
-> > dw_pcie_rp *pp)
-> > >  	       PCIE_INT_C_ASSERT_MASK | PCIE_INT_D_ASSERT_MASK;
-> > >  	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK1_REG, reg);
-> > >
-> > > +	/* Also enable link down interrupts */
-> > > +	reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG);
-> > > +	reg |= PCIE_INT2_PHY_RST_LINK_DOWN;
-> > > +	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG, reg);
-> > > +
-> > >  	return 0;
-> > >  }
-> > >
-> > > @@ -221,6 +230,35 @@ static irqreturn_t armada8k_pcie_irq_handler(int
-> > irq, void *arg)
-> > >  	val = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_CAUSE1_REG);
-> > >  	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_CAUSE1_REG, val);
-> > >
-> > > +	val = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_CAUSE2_REG);
-> > > +
-> > > +	if (PCIE_INT2_PHY_RST_LINK_DOWN & val) {
-> > > +		u32 ctrl_reg = dw_pcie_readl_dbi(pci,
-> > PCIE_GLOBAL_CONTROL_REG);
-> > 
-> > Add blank line.
-> > 
-> > > +		/*
-> > > +		 * The link went down. Disable LTSSM immediately. This
-> > > +		 * unlocks the root complex config registers. Downstream
-> > > +		 * device accesses will return all-Fs
-> > > +		 */
-> > > +		ctrl_reg &= ~(PCIE_APP_LTSSM_EN);
-> > > +		dw_pcie_writel_dbi(pci, PCIE_GLOBAL_CONTROL_REG,
-> > ctrl_reg);
-> > 
-> > And here.
-> > 
-> > > +		/*
-> > > +		 * Mask link down interrupts. They can be re-enabled once
-> > > +		 * the link is retrained.
-> > > +		 */
-> > > +		ctrl_reg = dw_pcie_readl_dbi(pci,
-> > PCIE_GLOBAL_INT_MASK2_REG);
-> > > +		ctrl_reg &= ~PCIE_INT2_PHY_RST_LINK_DOWN;
-> > > +		dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG,
-> > ctrl_reg);
-> > 
-> > And here.  Follow existing coding style in this file.
-> > 
-> > > +		/*
-> > > +		 * At this point a worker thread can be triggered to
-> > > +		 * initiate a link retrain. If link retrains were
-> > > +		 * possible, that is.
-> > > +		 */
+Oh, found it:
 
-Who is supposed to retrain the link? Where is the worker thread?
+https://lore.kernel.org/lkml/20250102120450.GNZ3aA4oVPnoJYRVUL@fat_crate.local/
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Sorry for the noise, please ignore.
