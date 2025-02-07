@@ -1,77 +1,86 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B631D6DB5
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:05:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65A91D5AB7
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738919158; cv=none; b=gFUk9RqDlenYyFjoViAodRBAYs+Yevj5Y3cnKj9VWTxfWh4+uRhIux+iZmLnZ7uHn5rYop50g1/hAQQcrX0HkOd1DBk1bD1T2Xxcw5DTLyiVfRA6ReN8jPjFJQmKywXR+GyhQBNoHoOpY7IRe89TqnJdpvjz9GHU+b8tCHQQNek=
+	t=1738919209; cv=none; b=lHjiR8I9E1U75wXUMbc+fcoBKUOD2LoXoGPrq9v9erFAZy83Mbsm8QfYJecBKBJKd0bNyI38fZ+DgpNFODH0OPWpEnKmz+oDvXyojDpUwOUOt2lOygQLeilA2fWCikEvVPsf1WmPZx6rbFX/Vu8+CICEXduscCMDvyFiFenLmMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738919158; c=relaxed/simple;
-	bh=Bf7NP5KLXoTsPBgeqjhyz/LCPYCYkQlCpcUXIngCj4c=;
+	s=arc-20240116; t=1738919209; c=relaxed/simple;
+	bh=+woGmxCMu2JzyJ0YCPBlHL3Y4fLfMfw0zcAOzy24UFw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D36Lkcc5KALSBj2m38jYkiR7FpNbcKmsTprLX87HxJwr8XKLo+bh8Cdg5wZSoyLpVZrOzXLiwmGb3VOy0AYwtaAy9LjNmYHmPb8dfo1bxuUF2BBUlRY+npVCr8V9rH66YxcXOrQse2IohDr0rii1Jof05x9Yxd5UWvfbnuVuE0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nfpnpu/8; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jfdwdZDgE5Xl2oxSezr5opRHjbP9m7f4SFEMexKZxA72uJqbVLMoGp3GQTGO3QMYkmEMML2nfmE/XmeF7+EU3eTU3AVld5P8LP58T1mdpaUFtWvk4Wb5BuUovx55LZtRXSxNIZZV4xiKhGJDDQ8eOq9nLBE+kHkCZ0wObYOKZcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=JCmxkFc6; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nfpnpu/8"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-436345cc17bso12854025e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 01:05:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="JCmxkFc6"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7b6f7d7e128so290399485a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 01:06:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738919155; x=1739523955; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Iq7b25tIL8xaIsUgtb5pGAAYzp+vmpGNFUg3aI9reGw=;
-        b=Nfpnpu/8oAaktmOxP/Y6x3yEXoj293fSc7T3RSAl0/TvLqjs4CqOWGAPRztA6FQ4JD
-         4FuB+RLraT3UcYAsctr8D48A58XUJ91rkfQOOuf7QydDC3DofRkwryEEvToTT+xTLrJM
-         7GbLBbK52DPs5v8ItSa7+9VAQZ9nAkqouDAenlmqW2BJeY0CqHuVEuOCVP6afqWncDWn
-         wVipWwyIsxMCvjsm15cvX6a1C07PnoA22f+T/Hl/IFby3k3dNiF3c2LitN+EboAvOxmu
-         IeAV54evbqHoX21pTAKCOMI9/+SNo00GYLXgJz30f9X8UGqBymSWoVa1Owa24YEjT5nr
-         QKew==
+        d=gourry.net; s=google; t=1738919206; x=1739524006; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KlsCGWDYgEMFIAxn5ZNnnG9gpMSYaXAreXaY6lgyHOI=;
+        b=JCmxkFc6uPS2abEWD3dIr+ZpHS0Ao8l6xX5LBWYMfkKvh0ZqegTfDiDeNz3UFhDKcw
+         xxQNfEPD+54bcfZ0XLQFzRI2sgThRUeWc9x1Gg37912KVQoW3q9PqMaSPxE4WxH8LBPO
+         AQW1kfxd5Mg9xbNrjxHSHc68MXUb/vO86DEUk2Fp0Bia+oMMlrWy7nX5c0/RMiIJRVNh
+         S8SqlpHjzMgAodoBfxLInmylziYZbbMNfhGeq1NaqRZYO05NZW8x0Ghp5z1gmn+Yvhi8
+         XMI7FYcoq7rI16rQ/q58G5yV9B72opVHXVoyGVzI0gu0V8x+AEC1DaVtyWfZ/l67tKkk
+         fFEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738919155; x=1739523955;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Iq7b25tIL8xaIsUgtb5pGAAYzp+vmpGNFUg3aI9reGw=;
-        b=IPQxPGpFC17kja5S4Gz/jch8NRwJQjh7kno/wvjhq3xdFsHM6Zju0cn2O4Uf7EKEF1
-         I9OYA0b34LBmr64CZW9M4j71SgfbjdIKWh8fjF18s4zwt7zyLlAA0x4qKFdUWmgzDrQJ
-         fdeoKZq4O8Ll/fNn35nA6LhuX9GYsQydndUWlhe56XiltaMUSe+ejnDvCpBX2C7zTEoI
-         k18ZepkefJmykzGFes3uSGp7vARCCb9KXsHnxfXPTFSU8drGM5ExricKoLYbeS8zkApK
-         lKpjgaZE5qtN2Shois1hOoskZEhb0bXz9/TugwI7ZbCZd4XKj1frzJsyYVBYtsNBSdiA
-         SUlg==
-X-Forwarded-Encrypted: i=1; AJvYcCWeNOS56JoqxHf2Vz2nhfwG1G7vAyi4ml8M1YQe9OOJOX0P+4gUzI1LIUnDU2mnMoLljquiy0BCKRTvwkw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJYEJa4ACLHzjjiXunm4Cx7213w6j5CnwYRUof3Ib70WOrDEgx
-	s3qJxeTLOoEl2gMLoZDcbA/Srbg/D2Dw1zklL9mymSYm01UpXjKFVLtsx7Pbug==
-X-Gm-Gg: ASbGnct2kBoyvt9kJdOoRRRAbXI5PrP6C9NoqAfAb6BRaoRprq3uwQNK8j67hKyNAVP
-	rWvp8HhXnLMt6ic++TbT6okR8cUjO7VyiedaNIZ6GpS4eHfKjZqu0tKcNUcBL2m21nXb+zIMsS8
-	mKvgLI7Ekwag+v19s6SbVteKahYjx18bT4Yy9hVlUs9oGhtE9owOPZNN3CKH/yelkO9i9L7OgkZ
-	BCkZcSzAkM9lgX9jITKIhiTGga4qjhOJT67KzmE60G5aYyxQHoKyu20tLH/tZa7GcVClEVm5vF2
-	gE1Y7TiF+U+XzTsM
-X-Google-Smtp-Source: AGHT+IH/l6ilaMZUOvNHQ9D0Lj0QVtowlI2c2qGJSp+o15wlnCV+KElNEwIXUyY+Ti6xytWfjmZwAg==
-X-Received: by 2002:a5d:6d07:0:b0:38c:5bfa:a93b with SMTP id ffacd0b85a97d-38dc90e27a3mr1422541f8f.2.1738919154531;
-        Fri, 07 Feb 2025 01:05:54 -0800 (PST)
-Received: from elver.google.com ([2a00:79e0:9c:201:fad3:ca37:9540:5c99])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390daf451fsm85323975e9.28.2025.02.07.01.05.52
+        d=1e100.net; s=20230601; t=1738919206; x=1739524006;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KlsCGWDYgEMFIAxn5ZNnnG9gpMSYaXAreXaY6lgyHOI=;
+        b=wi4OMH/9uJORZ3hy1chHsO8DUp09ys/FItJr05TL35cRNEir1eGdGaOFQiA4CCyxRu
+         dLLqM1USxZd4SpuIhYeBQBJng69WiiPKiys0X1/G3ztM1bWsNjmWjSwG1quOVTNmJjfv
+         vm+TDN5T7iGeBfrrZGEvJ17OaiYxczPKz4n8rOsOB+7X+pLSHgcvunvPuhvybtXBZ+aP
+         YG9XHeLNGZ32IEyQxSBbXq8UijoLYD6KZlcxU41EWtwhJkLrwWTRQH2lIfuJ7c8iJV0D
+         G2RIr6HsAOl9BJj/XijbylugMtnz/UlZJTB+PDpK/hXEGcYFLVbNNcEZl6FOSMWUwZoX
+         j/yA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/woNAaD9WnPOL5xzAwjjsB23UsfsTxJzVhPTFd5ffHjJ21HLDximRkMyZmI3Rf50Dp1ileJs/lqjtxFk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzE+yv8IVS+tmEc6aIGMPz6qfYu9TdgNcaanXZEiIakc70D6+IZ
+	3loEtlJojHOIaWSWrETc9EpfGPdt1sZWz/py1EsYX40nEBMY4La+nA7bqIitOWA=
+X-Gm-Gg: ASbGnctwsocFesbJnFfc6t+AHrmDzDF06poV2W8FQ8iPjLaI3umFBk42YZKzeSnLm+h
+	puMlPGyRVD89iZ5ZUf6X82+yFDVNiH4P0CuLxqxXuCoQJennh+G7gUBcpqWlM4qy2uhURugFtsX
+	YAlI/dEQEaKwxDuqRecv/JporN9TP87o0L+1ZwwCuDZ18wVMUL8cyCxcMXKkBUCqP7g88rqCBVb
+	8O5EvplUTUXICSYDZmoNsJeHNJBP2qLwulg/Hv/7wcwaG90fPGvuZmNdGz4S99Ho5MDe/NglyYC
+	NOAtyJi0qPhTKAh1UvlyfmF3TadwZeVfznNOZ1c0cPGl6RjNYNF3VYs17WoHXbxZrdc+KXHBPw=
+	=
+X-Google-Smtp-Source: AGHT+IFix9/6/WikxUXpr4E81NDyDlXxaQWFzjmD160fcdkrmvnCsAAyMkgJA4E3sG1vrdNPNKoSjA==
+X-Received: by 2002:a05:6214:d68:b0:6e4:47b0:8b53 with SMTP id 6a1803df08f44-6e447b08f9fmr22904806d6.9.1738919206428;
+        Fri, 07 Feb 2025 01:06:46 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43ba368a9sm14778966d6.29.2025.02.07.01.06.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 01:05:53 -0800 (PST)
-Date: Fri, 7 Feb 2025 10:05:47 +0100
-From: Marco Elver <elver@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Bart Van Assche <bvanassche@acm.org>, Will Deacon <will@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>,
-	Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 00/33] Compile-time thread-safety checking
-Message-ID: <Z6XM6zjK3mtqYfan@elver.google.com>
-References: <20250206175114.1974171-1-bvanassche@acm.org>
- <CANpmjNOsf1RnYJuZ7pmWVYNqVYMYe+eTL0vhDKU5sLihR9fN-g@mail.gmail.com>
- <90c7a807-b0a0-4b42-866f-f74c5d1c62e5@acm.org>
- <20250207084223.GX7145@noisy.programming.kicks-ass.net>
+        Fri, 07 Feb 2025 01:06:45 -0800 (PST)
+Date: Fri, 7 Feb 2025 04:06:42 -0500
+From: Gregory Price <gourry@gourry.net>
+To: "Huang, Ying" <ying.huang@linux.alibaba.com>
+Cc: SeongJae Park <sj@kernel.org>, Bharata B Rao <bharata@amd.com>,
+	Raghavendra K T <raghavendra.kt@amd.com>, linux-mm@kvack.org,
+	akpm@linux-foundation.org, lsf-pc@lists.linux-foundation.org,
+	nehagholkar@meta.com, abhishekd@meta.com, nphamcs@gmail.com,
+	hannes@cmpxchg.org, feng.tang@intel.com, kbusch@meta.com,
+	Hasan.Maruf@amd.com, david@redhat.com, willy@infradead.org,
+	k.shutemov@gmail.com, mgorman@techsingularity.net, vbabka@suse.cz,
+	hughd@google.com, rientjes@google.com, shy828301@gmail.com,
+	liam.howlett@oracle.com, peterz@infradead.org, mingo@redhat.com,
+	nadav.amit@gmail.com, shivankg@amd.com, ziy@nvidia.com,
+	jhubbard@nvidia.com, AneeshKumar.KizhakeVeetil@arm.com,
+	linux-kernel@vger.kernel.org, jon.grimm@amd.com,
+	santosh.shukla@amd.com, Michael.Day@amd.com, riel@surriel.com,
+	weixugc@google.com, leesuyeon0506@gmail.com, honggyu.kim@sk.com,
+	leillc@google.com, kmanaouil.dev@gmail.com, rppt@kernel.org,
+	dave.hansen@intel.com
+Subject: Re: [LSF/MM/BPF TOPIC] Overhauling hot page detection and promotion
+ based on PTE A bit scanning
+Message-ID: <Z6XNIuVbYvZMYJs2@gourry-fedora-PF4VCD3F>
+References: <20250127183403.67757-1-sj@kernel.org>
+ <87ikpmgooo.fsf@DESKTOP-5N7EMDA>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,88 +89,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250207084223.GX7145@noisy.programming.kicks-ass.net>
-User-Agent: Mutt/2.2.12 (2023-09-09)
+In-Reply-To: <87ikpmgooo.fsf@DESKTOP-5N7EMDA>
 
-On Fri, Feb 07, 2025 at 09:42AM +0100, Peter Zijlstra wrote:
-> On Thu, Feb 06, 2025 at 10:34:09AM -0800, Bart Van Assche wrote:
+On Fri, Feb 07, 2025 at 04:10:47PM +0800, Huang, Ying wrote:
+> SeongJae Park <sj@kernel.org> writes:
+> >
+> > I agree the fairness is a thing that we need to aware of.  But IMHO, it is
+> > something that the async approach can further be advanced for, not a strict
+> > blocker for now.
 > 
-> > I'm looking forward to the feedback from others about what their opinion
-> > is about how to enable thread-safety checking in the Linux kernel.
+> Personally, I have no objection to async operations in general.
+> However, we may need to find some way to control these async operations
+> instead of adding more and more background kthreads blindly.  How to
+> charge and constrain the resources used by these async operations is
+> important too.  For example, some users may want to bind some async
+> operations on some CPUs.
 > 
-> So Bart's patches are rather SHOUTING A LOT:-(, which I find really
-> jarring to look at.
-> 
-> Also, however much I despise the sparse thing, that is something we
-> already have some of, so we might as well adapt that.
-> 
-> But I should probably go read up on the whole clang feature first. 
-> 
-> I've seen both have a __guarded_by() variant for structure members, can
-> you stack those?
-> 
-> Eg. perf has locking where a structure has both a raw_spinlock_t and a
-> mutex and modification requires holding both, but holding either is
-> sufficient for reading.
+> IMHO, we should think about the requirements and possible solutions
+> instead of ignoring the issues.
+>
 
-Yes, you can add multiple guarded_by. But it's just going to enforce
-that you need to hold both locks before you access the member. If you
-want the rules to be more complex, the best way to express that is with
-some helpers. E.g. something like this (tested on top my series)
+It also concerns me that most every proposal on async promotion ignores
+the promotion-node selection problem as if it's a secondary issue.
 
---- a/lib/test_capability-analysis.c
-+++ b/lib/test_capability-analysis.c
-@@ -479,3 +479,53 @@ static void __used test_local_lock_guard(void)
- 	{ guard(local_lock_irqsave)(&test_local_lock_data.lock); this_cpu_add(test_local_lock_data.counter, 1); }
- 	{ guard(local_lock_nested_bh)(&test_local_lock_data.lock); this_cpu_add(test_local_lock_data.counter, 1); }
- }
-+
-+struct some_data {
-+	spinlock_t lock;
-+	struct mutex mtx;
-+	int counter __var_guarded_by(&lock) __var_guarded_by(&mtx);
-+};
-+
-+static void some_data_read_lock_via_lock(struct some_data *d)
-+	__acquires(&d->lock) __acquires_shared(&d->mtx)
-+{
-+	spin_lock(&d->lock);
-+	__acquire_shared(&d->mtx);
-+}
-+
-+static void some_data_read_unlock_via_lock(struct some_data *d)
-+	__releases(&d->lock) __releases_shared(&d->mtx)
-+{
-+	__release_shared(&d->mtx);
-+	spin_unlock(&d->lock);
-+}
-+
-+static void some_data_read_lock_via_mtx(struct some_data *d)
-+	__acquires(&d->mtx) __acquires_shared(&d->lock)
-+{
-+	mutex_lock(&d->mtx);
-+	__acquire_shared(&d->lock);
-+}
-+
-+static void some_data_read_unlock_via_mtx(struct some_data *d)
-+	__releases(&d->mtx) __releases_shared(&d->lock)
-+{
-+	__release_shared(&d->lock);
-+	mutex_unlock(&d->mtx);
-+}
-+
-+static void __used foo_1(struct some_data *d)
-+{
-+	some_data_read_lock_via_lock(d);
-+	(void)d->counter;
-+	// d->counter++;  // error, because mtx only held shared
-+	some_data_read_unlock_via_lock(d);
-+}
-+
-+static void __used foo_2(struct some_data *d)
-+{
-+	some_data_read_lock_via_mtx(d);
-+	(void)d->counter;
-+	// d->counter++;  // error, because lock only held shared
-+	some_data_read_unlock_via_mtx(d);
-+}
+Async systems fundamentally lack accessor-locality information unless it
+is recorded - and recording this information is expensive and/or
+heuristically imprecise for memory shared across tasks (two threads in
+the same process schedule across sockets).
+
+If we can't agree on a solution to this problem, it undercuts many of
+these RFCs which often simply hard-code the target node to "0" because
+it's too hard or too expensive to consider the multi-socket scenario.
+
+~Gregory
