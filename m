@@ -1,111 +1,382 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0534A1E5B8D
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 272551E9B14
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738952474; cv=none; b=FGiAKommTeg6c7WnQYRhpZnNXSRMEc06qF06bhR2SeO6zNvm/w5BPzr6nqNm3IM3pjVQDMxxoQrpQmIRLDLGKvq078U3Zpg0aO2UNE7TThqvi30XkI1188ZAoPhksRsG/34ZIM0wk1kaz3XgCkcDLoo7ce9oEEs5t6H2qFktX1g=
+	t=1738952476; cv=none; b=Ehm2K6Eds4NJh9GebHfY56wMcHJYbZAhxB4xCWERVNoPqq7BdbFf72iw8GatXzNoVuRztVeyzHBexTs+6O4HRTRH5/jom7bT4CZ+AN1PDx8lMUyJdAYlf9KoFCOfoUCTh542em51BO7jut/C0vdJpyxPn6gLVfb/phIDuxaeAdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738952474; c=relaxed/simple;
-	bh=BFPUfUPV9C28sQ+5++oI/Mt7czcCX79RjU67ZXHg4wc=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=MP03VF6qWplOhFuWYt/vTO6Dr3m+ZquVS9bkcH+A+oz8RvzoF+0E6k83wIGIBff8bLenQiZpO2MtsEfbmlnEx1wdqpi44T8zSPo/Scxxy7j4DwVjF2i1rSw97paVVD2NQzQU7YrgrQVZQsT24JCgJCb3zJO1Vlrd3dS66rWQ8Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1lHGLNkT; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1lHGLNkT"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e5af19d9746so4458770276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 10:21:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738952462; x=1739557262; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GJ1B/xiMtyqfDg8YY7mV/zwkOmMpFHIKV2LiJJcfRRg=;
-        b=1lHGLNkTlFfs0RKU0oMmU1f1mYihB82iE5UsB9F88z7oJMExu6zc9zehwtX2MDT1L5
-         JSMzybt3KmviOvLztALE6tSogZbKkX+xj4/4MYRG1iYUfr3N5m0fThcozYVHDVdRyYqP
-         zjyYt9w2gQAuRpHgNnZmWAcoW05OsrJxP4Kt+11T5w7IL+0l/pjU7Oel5olyx+TDKU8g
-         UjllTZ6gWEtHfvOXg+1bp/oa80U/jTPJgLQR9fw9JAxZYROHpFquDOjAenCP9cgbeTyE
-         ed/P210RB8X00SEVTnG5w+9QAa/vhhlrHnDq0K78wo8ePZzqbTmRINfY2sGi4yZPMsZg
-         tbtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738952462; x=1739557262;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GJ1B/xiMtyqfDg8YY7mV/zwkOmMpFHIKV2LiJJcfRRg=;
-        b=fJpQT07nPltDgXXFgGv0Hss5ZbnW9ANypLkahNlnEcihB5a3MC28QLAaxqxkipDKMW
-         HYZz027WghZKA9PDEWmE1kUa2Oge88MuKhuwl5//3/9zJHevZn6jQA6PPUwGS7mHGo1+
-         ddrenX+xMyef4PFXoU0H6fipA+GGpCQ8I37XFCag408rxdMYa9OjAEkHK23tiqjXxOnP
-         GYz3QSnHkcK4XChAdN4Li6eUMxXGOUl7XFu1z8j7syFGoFtITmGos2BIUf81NRZhoKrz
-         8E0boKAi1f0mKieht5zTJYXSN3CPpZeyZP2ZGCWSxFDybXVbyNEVi7PMtNcKxq0h081r
-         T5FA==
-X-Forwarded-Encrypted: i=1; AJvYcCVRFwLGrNayMWDhd+htqtStjDKxj973460upit6wBI8dBf2DSG1gtCYsB+sw9PtjG6bn5BudX+KQ25d+Sg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7LMMlJOdk+8rYEjOrAot2uWubEtlkjiHrJQO2FyJpsI7nJwoY
-	rlmuhsNGFStiLHZSLgVEIRIu7leUN71T28iXs91CknErKtrtyaBbgk3Ap23TppGxZGAYmpK9A7d
-	P+Uxspw==
-X-Google-Smtp-Source: AGHT+IE9nQpJYQAPqABDSpxfPZLeiGhu7pUsYj71K+2YZn/FOwykQoduIPN2YQ2O5PvMZXOpJnpFdfgF8pTZ
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:79e4:4a45:1e80:ace5])
- (user=irogers job=sendgmr) by 2002:a25:d890:0:b0:e5b:33d1:cbf7 with SMTP id
- 3f1490d57ef6-e5b354f6044mr89852276.4.1738952461878; Fri, 07 Feb 2025 10:21:01
- -0800 (PST)
-Date: Fri,  7 Feb 2025 10:19:58 -0800
-In-Reply-To: <20250207181959.799610-1-irogers@google.com>
-Message-Id: <20250207181959.799610-25-irogers@google.com>
+	s=arc-20240116; t=1738952476; c=relaxed/simple;
+	bh=uVOqBuBDboV5Fr5RfUb55eay9hgkAZ0be617JMXMmU4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NWQTRjx+pgGLIKsc06v3RAMRX2o+kHqIHTMzwDv35/OatfOrvr2x53FcfVfTV0JBWTBOfHJBqT3WKAsfHTtQkQnxlXHGQWhma1EOCVMTAxjrcx7PkyaR8jbbyS+75YDAgo9eR10fLQ0DGxhWGUo1Og8CHYH/br/j5FIkVQpuLpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 306DE1F91;
+	Fri,  7 Feb 2025 10:21:27 -0800 (PST)
+Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB95F3F63F;
+	Fri,  7 Feb 2025 10:21:00 -0800 (PST)
+From: James Morse <james.morse@arm.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Babu Moger <Babu.Moger@amd.com>,
+	James Morse <james.morse@arm.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com,
+	lcherian@marvell.com,
+	bobo.shaobowang@huawei.com,
+	tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>,
+	peternewman@google.com,
+	dfustini@baylibre.com,
+	amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>,
+	Dave Martin <dave.martin@arm.com>,
+	Koba Ko <kobak@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v6 40/42] fs/resctrl: Add boiler plate for external resctrl code
+Date: Fri,  7 Feb 2025 18:18:21 +0000
+Message-Id: <20250207181823.6378-41-james.morse@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250207181823.6378-1-james.morse@arm.com>
+References: <20250207181823.6378-1-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250207181959.799610-1-irogers@google.com>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Subject: [PATCH v6 24/24] perf test stat_all_metrics: Ensure missing events
- fail test
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>, 
-	Michael Petlan <mpetlan@redhat.com>, Thomas Falcon <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Issue reported by Thomas Falcon and diagnosed by Kan Liang here:
-https://lore.kernel.org/lkml/d44036481022c27d83ce0faf8c7f77042baedb34.camel@intel.com/
-Metrics with missing events can be erroneously skipped if they contain
-FP, AMX or PMM events.
+Add Makefile and Kconfig for fs/resctrl. Add ARCH_HAS_CPU_RESCTRL
+for the common parts of the resctrl interface and make X86_CPU_RESCTRL
+select this.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Adding an include of asm/resctrl.h to linux/resctrl.h allows the
+/fs/resctrl files to switch over to using this header instead.
+
+Co-developed-by: Dave Martin <Dave.Martin@arm.com>
+Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
+Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
- tools/perf/tests/shell/stat_all_metrics.sh | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Changes since v5:
+ * Removed double include.
+ * Removed duplicate pseudo lock Kconfig define
+ * Grammar fix and closid capitalisation change.
 
-diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
-index 73e9347e88a9..ee817c66da06 100755
---- a/tools/perf/tests/shell/stat_all_metrics.sh
-+++ b/tools/perf/tests/shell/stat_all_metrics.sh
-@@ -20,7 +20,13 @@ for m in $(perf list --raw-dump metrics); do
-   result_err=$?
-   if [[ $result_err -gt 0 ]]
-   then
--    if [[ "$result" =~ \
-+    if [[ "$result" =~ "Cannot resolve IDs for" ]]
-+    then
-+      echo "Metric contains missing events"
-+      echo $result
-+      err=1 # Fail
-+      continue
-+    elif [[ "$result" =~ \
-           "Access to performance monitoring and observability operations is limited" ]]
-     then
-       echo "Permission failure"
+Changes since v4:
+ * Tweaking of the commit message.
+
+Changes since v3:
+ * Reworded 'if unsure say N' from the Kconfig text, the user doesn't have
+   the choice anyway at this point.
+ * Added PWD to monitor.o's CFLAGS for the ftrace rube-goldberg build machine.
+ * Added split trace files.
+
+Changes since v2:
+ * Dropped KERNFS dependency from arch side Kconfig.
+ * Added empty trace.h file.
+ * Merged asm->linux includes from Dave's patch to decouple those
+   patches from this series.
+
+Changes since v1:
+ * Rename new file psuedo_lock.c to pseudo_lock.c, to match the name
+   of the original file (and to be less surprising).
+
+ * [Whitespace only] Under RESCTRL_FS in fs/resctrl/Kconfig, delete
+   alignment space in orphaned select ... if (which has nothing to line
+   up with any more).
+
+ * [Whitespace only] Reflow and re-tab Kconfig additions.
+---
+ MAINTAINERS                               |  1 +
+ arch/Kconfig                              |  8 +++++
+ arch/x86/Kconfig                          | 11 ++-----
+ arch/x86/kernel/cpu/resctrl/internal.h    |  2 --
+ arch/x86/kernel/cpu/resctrl/monitor.c     |  2 +-
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c |  2 +-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c    |  2 +-
+ fs/Kconfig                                |  1 +
+ fs/Makefile                               |  1 +
+ fs/resctrl/Kconfig                        | 37 +++++++++++++++++++++++
+ fs/resctrl/Makefile                       |  6 ++++
+ fs/resctrl/ctrlmondata.c                  |  0
+ fs/resctrl/internal.h                     |  0
+ fs/resctrl/monitor.c                      |  0
+ fs/resctrl/monitor_trace.h                |  0
+ fs/resctrl/pseudo_lock.c                  |  0
+ fs/resctrl/pseudo_lock_trace.h            |  0
+ fs/resctrl/rdtgroup.c                     |  0
+ include/linux/resctrl.h                   |  4 +++
+ 19 files changed, 64 insertions(+), 13 deletions(-)
+ create mode 100644 fs/resctrl/Kconfig
+ create mode 100644 fs/resctrl/Makefile
+ create mode 100644 fs/resctrl/ctrlmondata.c
+ create mode 100644 fs/resctrl/internal.h
+ create mode 100644 fs/resctrl/monitor.c
+ create mode 100644 fs/resctrl/monitor_trace.h
+ create mode 100644 fs/resctrl/pseudo_lock.c
+ create mode 100644 fs/resctrl/pseudo_lock_trace.h
+ create mode 100644 fs/resctrl/rdtgroup.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 314b9a2ebe20..437d6e05f286 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19836,6 +19836,7 @@ S:	Supported
+ F:	Documentation/arch/x86/resctrl*
+ F:	arch/x86/include/asm/resctrl.h
+ F:	arch/x86/kernel/cpu/resctrl/
++F:	fs/resctrl/
+ F:	include/linux/resctrl*.h
+ F:	tools/testing/selftests/resctrl/
+ 
+diff --git a/arch/Kconfig b/arch/Kconfig
+index b8a4ff365582..2778a7859c11 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -1518,6 +1518,14 @@ config STRICT_MODULE_RWX
+ config ARCH_HAS_PHYS_TO_DMA
+ 	bool
+ 
++config ARCH_HAS_CPU_RESCTRL
++	bool
++	help
++	  An architecture selects this option to indicate that the necessary
++	  hooks are provided to support the common memory system usage
++	  monitoring and control interfaces provided by the 'resctrl'
++	  filesystem (see RESCTRL_FS).
++
+ config HAVE_ARCH_COMPILER_H
+ 	bool
+ 	help
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 41dda57c4953..d88eb8c3c838 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -503,8 +503,9 @@ config X86_MPPARSE
+ config X86_CPU_RESCTRL
+ 	bool "x86 CPU resource control support"
+ 	depends on X86 && (CPU_SUP_INTEL || CPU_SUP_AMD)
+-	select KERNFS
+-	select PROC_CPU_RESCTRL		if PROC_FS
++	depends on MISC_FILESYSTEMS
++	select ARCH_HAS_CPU_RESCTRL
++	select RESCTRL_FS
+ 	select RESCTRL_FS_PSEUDO_LOCK
+ 	help
+ 	  Enable x86 CPU resource control support.
+@@ -522,12 +523,6 @@ config X86_CPU_RESCTRL
+ 
+ 	  Say N if unsure.
+ 
+-config RESCTRL_FS_PSEUDO_LOCK
+-	bool
+-	help
+-	  Software mechanism to pin data in a cache portion using
+-	  micro-architecture specific knowledge.
+-
+ config X86_FRED
+ 	bool "Flexible Return and Event Delivery"
+ 	depends on X86_64
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 16c1a391d012..ee50b7375717 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -9,8 +9,6 @@
+ #include <linux/jump_label.h>
+ #include <linux/tick.h>
+ 
+-#include <asm/resctrl.h>
+-
+ #define L3_QOS_CDP_ENABLE		0x01ULL
+ 
+ #define L2_QOS_CDP_ENABLE		0x01ULL
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index 6acfbd3ad007..8e3fbfa10f52 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -19,11 +19,11 @@
+ 
+ #include <linux/cpu.h>
+ #include <linux/module.h>
++#include <linux/resctrl.h>
+ #include <linux/sizes.h>
+ #include <linux/slab.h>
+ 
+ #include <asm/cpu_device_id.h>
+-#include <asm/resctrl.h>
+ 
+ #include "internal.h"
+ 
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index 9eda0abbd29d..56b7faceebd4 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -18,12 +18,12 @@
+ #include <linux/mman.h>
+ #include <linux/perf_event.h>
+ #include <linux/pm_qos.h>
++#include <linux/resctrl.h>
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/cpu_device_id.h>
+-#include <asm/resctrl.h>
+ #include <asm/perf_event.h>
+ 
+ #include "../../events/perf_event.h" /* For X86_CONFIG() */
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index ebf17bcbd095..eaf933b823fa 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -18,6 +18,7 @@
+ #include <linux/fs_parser.h>
+ #include <linux/sysfs.h>
+ #include <linux/kernfs.h>
++#include <linux/resctrl.h>
+ #include <linux/seq_buf.h>
+ #include <linux/seq_file.h>
+ #include <linux/sched/signal.h>
+@@ -28,7 +29,6 @@
+ 
+ #include <uapi/linux/magic.h>
+ 
+-#include <asm/resctrl.h>
+ #include "internal.h"
+ 
+ DEFINE_STATIC_KEY_FALSE(rdt_enable_key);
+diff --git a/fs/Kconfig b/fs/Kconfig
+index 64d420e3c475..709e4d6656e2 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -334,6 +334,7 @@ source "fs/omfs/Kconfig"
+ source "fs/hpfs/Kconfig"
+ source "fs/qnx4/Kconfig"
+ source "fs/qnx6/Kconfig"
++source "fs/resctrl/Kconfig"
+ source "fs/romfs/Kconfig"
+ source "fs/pstore/Kconfig"
+ source "fs/sysv/Kconfig"
+diff --git a/fs/Makefile b/fs/Makefile
+index 15df0a923d3a..73512f13e969 100644
+--- a/fs/Makefile
++++ b/fs/Makefile
+@@ -129,3 +129,4 @@ obj-$(CONFIG_EROFS_FS)		+= erofs/
+ obj-$(CONFIG_VBOXSF_FS)		+= vboxsf/
+ obj-$(CONFIG_ZONEFS_FS)		+= zonefs/
+ obj-$(CONFIG_BPF_LSM)		+= bpf_fs_kfuncs.o
++obj-$(CONFIG_RESCTRL_FS)	+= resctrl/
+diff --git a/fs/resctrl/Kconfig b/fs/resctrl/Kconfig
+new file mode 100644
+index 000000000000..229ca71a8258
+--- /dev/null
++++ b/fs/resctrl/Kconfig
+@@ -0,0 +1,37 @@
++config RESCTRL_FS
++	bool "CPU Resource Control Filesystem (resctrl)"
++	depends on ARCH_HAS_CPU_RESCTRL
++	select KERNFS
++	select PROC_CPU_RESCTRL if PROC_FS
++	help
++	  Some architectures provide hardware facilities to group tasks and
++	  monitor and control their usage of memory system resources such as
++	  caches and memory bandwidth.  Examples of such facilities include
++	  Intel's Resource Director Technology (Intel(R) RDT) and AMD's
++	  Platform Quality of Service (AMD QoS).
++
++	  If your system has the necessary support and you want to be able to
++	  assign tasks to groups and manipulate the associated resource
++	  monitors and controls from userspace, say Y here to get a mountable
++	  'resctrl' filesystem that lets you do just that.
++
++	  If nothing mounts or prods the 'resctrl' filesystem, resource
++	  controls and monitors are left in a quiescent, permissive state.
++
++	  On architectures where this can be disabled independently, it is
++	  safe to say N.
++
++	  See <file:Documentation/arch/x86/resctrl.rst> for more information.
++
++config RESCTRL_FS_PSEUDO_LOCK
++	bool
++	help
++	  Software mechanism to pin data in a cache portion using
++	  micro-architecture specific knowledge.
++
++config RESCTRL_RMID_DEPENDS_ON_CLOSID
++	bool
++	help
++	  Enabled by the architecture when the RMID values depend on the CLOSID.
++	  This causes the CLOSID allocator to search for CLOSID with clean
++	  RMID.
+diff --git a/fs/resctrl/Makefile b/fs/resctrl/Makefile
+new file mode 100644
+index 000000000000..e67f34d2236a
+--- /dev/null
++++ b/fs/resctrl/Makefile
+@@ -0,0 +1,6 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_RESCTRL_FS)		+= rdtgroup.o ctrlmondata.o monitor.o
++obj-$(CONFIG_RESCTRL_FS_PSEUDO_LOCK)	+= pseudo_lock.o
++
++# To allow define_trace.h's recursive include:
++CFLAGS_monitor.o = -I$(src)
+diff --git a/fs/resctrl/ctrlmondata.c b/fs/resctrl/ctrlmondata.c
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/fs/resctrl/internal.h b/fs/resctrl/internal.h
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/fs/resctrl/monitor_trace.h b/fs/resctrl/monitor_trace.h
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/fs/resctrl/pseudo_lock.c b/fs/resctrl/pseudo_lock.c
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/fs/resctrl/pseudo_lock_trace.h b/fs/resctrl/pseudo_lock_trace.h
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index a8ff2cdba2c6..ef0802cd5c45 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -9,6 +9,10 @@
+ #include <linux/pid.h>
+ #include <linux/resctrl_types.h>
+ 
++#ifdef CONFIG_ARCH_HAS_CPU_RESCTRL
++#include <asm/resctrl.h>
++#endif
++
+ /* CLOSID, RMID value used by the default control group */
+ #define RESCTRL_RESERVED_CLOSID		0
+ #define RESCTRL_RESERVED_RMID		0
 -- 
-2.48.1.502.g6dc24dfdaf-goog
+2.39.2
 
