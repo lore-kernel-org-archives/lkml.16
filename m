@@ -1,148 +1,183 @@
-Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A021DF240
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 12:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846EE2417C7;
+	Fri,  7 Feb 2025 12:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738930254; cv=none; b=V7y0qANP71C73iWshtsqEriQzbMNiRf7sZ3HsXosVodMKR0LNhX/P8sirWO/w/XJmo/fErvyZUiffqN+2+hn8DBdp/01FD3jo0JYirNOGgo9nqT2RkCVYHpxx0R7FqWBrZFFN0IIiKS5gBU4enkGlIGgRSSloVmfJWZNUQzp8es=
+	t=1738930318; cv=none; b=YdvDfiBP91Vfr4sdINB7ok56Uyi3cZADqp4NCg2B6DL3ht2iQj2nscX83cPdluyKjLRgLAgdTtqItzjLLAvWtKV8oGVaF9nfjdQK6zHF7YbFjza9Wm3bNMn8tSSnGkKmqvgaKXZDdVvvohhh1CgOVVoM6iK8b5LbF0J/r/qcQf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738930254; c=relaxed/simple;
-	bh=DraMcqhk0V2aBlpbUNKw1IkWnzS273i56h89io0FOpQ=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=VBuZCYwpkw8IDjxO8Oo2NgGtxSA+gQEXz3hUQhN0UvgPvgCpeAXOTNgCkZb3sURqXnfzag8D1ekyEJZY95eRmUXdMg3ynbHeVdxuMTOC5noxsguKfXp8OLAwFPCnqwdY5KjzJA//PUe6h1neuQ9KfTuvgJIwKadO9V26/XyuHog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=tNVdUkOF; arc=none smtp.client-ip=203.205.221.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="tNVdUkOF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1738930239; bh=/SuM0t3Yz3v//0L2DnNqQL9QSC/hyP6Sx1JioaDOAuU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=tNVdUkOFNgAB8Eqm5pEbucppsFzipDCqnmryaSCXWFxIDCKw8dqHbTXyzrt5SqSjI
-	 O60oiG5RlqxIp3dY96AEUPM45aKYqK43COjWS1z7yfXCgu/SeFod0rdAfJdE3Ap8Yh
-	 +7YinvA+9vl5pZPluBhE54bnML8GYGbgHFodDiIA=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id 2A42D683; Fri, 07 Feb 2025 20:10:36 +0800
-X-QQ-mid: xmsmtpt1738930236tazn4ekvh
-Message-ID: <tencent_78F778176466C7F364036D096B03A8E44F05@qq.com>
-X-QQ-XMAILINFO: NG7xP+P+sy64Rxdf3hjZq+tdjfkQ6DqJoY/6brevMb9kcfAegM5CYXlETUePjd
-	 jI1RT+FnZxuX5+qRaShp9TjnxuE6C0ZZzvCKn1Ak2lIWYWAIwgLtmbKxaqzwCZIrlqIvvtjJA5kQ
-	 0zzZ0pDLJh6UcxqC2NfhhKJREPzO4o+vKEJOg+aYiH0tuvUAB4yVRt5wYXIeBvl5InL2WTT59uZA
-	 aP2YsAlPGeBdIZ36A8r8YpXW9Lb8IHx4ng6lZuKKR8AuvLzJF0pzqbNa/vA02303Z7XLbWo273zH
-	 CUb7Iq5Dw8LOMHutkEm3luotGojkwWgKWY7EjBnMo55FHiixrRWzshV42FuOjaPQOoEs1ikVVrbA
-	 u9pAKuYTEjQ+BmDRp0NTLUUFZAyIFWD0w9p9ygeW/tvyu2NOVTsvhFezS5Cfu6KWltwtmc016fDL
-	 H2wTDYLMILji3qVjYDfg5eflqMoBloRJbSH3QYZEv/NjN1LZTxSTs5gO8xR/YsUc+QL2KdFwD/e5
-	 mK9H+RZXCCCL2rizQsFhz0f4STNBhQKXgN3ihkSqj5wM6JcWPvHjKlvhdB8gsdm1Lz9KIquiJFGz
-	 ZTggmDLLKjNLVQxZrdohHPJ4E0jJ+FjOmQqc6Pp5nRqjk/7wwi+Fd54ak7jkfHmJzjG49L/OlPNT
-	 mmSNpdSaehqsVkJ3pXvaKaMHeFmbvyKez5Ros/zAHkSCrM4KSaJj49ossAIxfsKtOjGVmyVyvUR4
-	 UKmdZaA9LUTo52KS3VyPlhndj1U9vmBghMwPSJKFxy4F+x7J80ffNC/QMz45z049xMBqrD3gm7ST
-	 MX6cGXmm8ZKMmc9ZYvjxLYrtuR/BTRBZY105gipfz8/07txN78FTPEasNiPgT2x7eaNuomPWxttP
-	 8J8Jk6j+GdLNIy0jf9iGQgaZqpQQ/BBqEzoKciSg4eSApbdngkrEI=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Edward Adam Davis <eadavis@qq.com>
-To: miquel.raynal@bootlin.com
-Cc: eadavis@qq.com,
-	linux-kernel@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	richard@nod.at,
-	syzkaller-bugs@googlegroups.com,
-	vigneshr@ti.com
-Subject: [PATCH V2] mtd: capture device name setting failure when adding mtd
-Date: Fri,  7 Feb 2025 20:10:35 +0800
-X-OQ-MSGID: <20250207121034.538582-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <87ikpn57sy.fsf@bootlin.com>
-References: <87ikpn57sy.fsf@bootlin.com>
+	s=arc-20240116; t=1738930318; c=relaxed/simple;
+	bh=Ll3dxUML4y6ZQQh2Iv6OscNZv5RDJ+EQkHjfe/iByKM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=k0Zgh2JIhoH2fW72+N4nPUG85BopAuHVl/s4vQOw+SxkCRAyK0F6zHR2pWAMmkJCBgxcs6Y7M3C+EIfYrDNWABjhueAxcsLp7M2o6h+JKqOozKlCGvA34I/Tf/iEFa50jEm+KiL2LZIMPDJQvvyvpOWwhgN9Z6bp0gcIATdcwlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aaeef97ff02so348603766b.1;
+        Fri, 07 Feb 2025 04:11:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738930315; x=1739535115;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FsxP7EqkW7P33SSUxO3dtpPHBiQBsrqgjhAIX/9EzSE=;
+        b=JKhLcwHuWoyfMObFvVPzQJBsYvoeDNB9H/iNmayyD0bbCigf4SrgiZnNwxKCPFMf7m
+         2zB9fYpPsV5ixi0DcQQ1ZR4VkuY+pcytvxKncsTMP1HN2cQO82zyCELYLQOlqmv5eatH
+         od6c+aPI/cSFFuLZKK/Eo4NIZLTKQ22c/HcavgFzEYjwEM9x25qppmjANCHQhBc7S8xo
+         aPYj5FbiPfMZ4Exdu+umAmSBZWKROmu1DtbXgsCQgRzG0SLeJIRmnYbUwQnO8qach34E
+         aPk3ystH+sPxZGBym6BBzIHAjH2WiqVDsuhGn9Xumte3zkFzi9TkfZeCFEKtZPWbUm1u
+         quVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVAeojqGg7MgIuWL4nXvVZbPaa0zXfIeCS2o26OoXWiLkxBhjmCIbeCi4lrQ3JBnW5sf1zFPjI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yybsj9ad6X4+A4fA65rqhqNiEmhdxuaj9z83fSvL020PIqqmDDi
+	lfUVptDihqUAFas5eVB/gSi9ZrtTbe8FC1Gc51xcmOdxI/ZAkH3O
+X-Gm-Gg: ASbGncv/gaiKkXd7XX9B2JtPD3Tm71UW3jZEInd7fBJqFKIZRhrpQPa5PbmLucbd0BO
+	TdBZjObTsbiUEHuqPGSYmhzavMytrM2BFArvId1bgXhT6b/Fd1RKulfqPcdJwH+ik6DlfEERRt1
+	Tu2XEZzq53cqcWSHm9tnYVIlPXwx8NFo6CGr3KvUoYUvqeVkNvuOM4AfsXqcnskWiyoKFpfUs4b
+	qFhS9dCLJtECwlXkmV9zSgXRk5eEQ1MneaqsD9s17cY3Pgd7En5fIqxSgvXBojyp07WPrN8FACI
+	wS8y4w==
+X-Google-Smtp-Source: AGHT+IGyMvm4QZSm5TwWC03zC7HkVHovRxMnBlWjI3qW3nbEII4YZeP6KXA8u5PoBBhGkYMHQbENPw==
+X-Received: by 2002:a17:907:c285:b0:ab2:c1da:b725 with SMTP id a640c23a62f3a-ab789b22c86mr314357066b.30.1738930314423;
+        Fri, 07 Feb 2025 04:11:54 -0800 (PST)
+Received: from localhost ([2a03:2880:30ff:8::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab773339349sm256408266b.146.2025.02.07.04.11.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 04:11:53 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+Date: Fri, 07 Feb 2025 04:11:34 -0800
+Subject: [PATCH RFC net-next] net: Add dev_getbyhwaddr_rtnl() helper
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250207-arm_fix_selftest-v1-1-487518d2fd1c@debian.org>
+X-B4-Tracking: v=1; b=H4sIAHX4pWcC/3WN0QqCMBhGX2X81y62WYZeBUEP0G2ITPepP9SMb
+ YghvnvkfbeHwzkrRQRGpEqsFDBz5MlTJXQmqButHyDZUSXIKHNSRp2lDa+m56WJePYJMUnAlK7
+ t8tyqgjJB74Celz35oPvt+mMeSXosiepM0MgxTeGzL2e9a//rs5ZaKlcArTqassTFoWXrD1MYq
+ N627Qv+PS2rwgAAAA==
+X-Change-ID: 20250207-arm_fix_selftest-ee29dbc33a06
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ kernel-team@meta.com, kuniyu@amazon.com, ushankar@purestorage.com, 
+ Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2975; i=leitao@debian.org;
+ h=from:subject:message-id; bh=Ll3dxUML4y6ZQQh2Iv6OscNZv5RDJ+EQkHjfe/iByKM=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBnpfiI69v/HRwhpN0AMwEJZerttK0/+ReZL4Q2u
+ ZDknJTcXNGJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ6X4iAAKCRA1o5Of/Hh3
+ bf1AD/9wZX9vQauQG+h2D83v98qMs/1n0I1k/5sd8AVcpjAjitRLt+hHA060Sn7Rf01HyZCzcBG
+ D73BMG8JFA9Qa3oy+CcHTbsq89hZtyMogbw7npLr5N8Of/SnkI2sZ/yh09w9HARol6r3aXbKmAE
+ 3QK7vXQUYdeveASRcaAJwWCAowzzI/1JmMpnh+bgEoD0ZCbw64q7pb4j6ZkbJo3foR5RXp4mH1E
+ rCZw45zCMk65Lnn+jFTn/kPC2cpFzsLxJwVX0N3CTv1yfzyEfe1sI3Wubxg5r2tvHX/s6HNPegZ
+ UpE7jos07Deq7VVp9g+tRYMGesjD1nn1i4l6lSWFruY+OgvxLeqMs8mrQtze8lofSKm+LKnthi0
+ mx2Bp9wRMKywBbSWIRSvs4DhnJseT1iIqLgqQnqzGvjnH5/qB8zlFQCz6ulu4o9q0lCVqG3Ld2m
+ FeOYmgP2tlGgA03eGIitv9JoZya9/CusjVoE/68OcLEQOXOONcu+5HzOqx6Afh3fOZssxTDz0nK
+ 5XY5+RpMbo6ZbhnPifBaOPDed06E8Wy7cnLOr4mGSLnjqczJ+upblOiy98biik3MoQ5SRhfo1bW
+ 9CB/TJAIaeomU8/A0T0JZ72pzw1MkllhP5T6ivh6EWwQq8Y8iY3YNYpXk0PQt6r+OWUJCGoIdvo
+ f1O133/JJDNTo+g==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-syzbot reported a WARNING in release_mtd_partition. [1]
+Add dedicated helper for finding devices by hardware address when
+holding RTNL, similar to existing dev_getbyhwaddr_rcu(). This prevents
+PROVE_LOCKING warnings when RTNL is held but RCU read lock is not.
 
-The reproducer uses "/proc/thread-self/fail-nth" to trigger the failure
-of memory allocation when executing dev_set_name() in add_mtd_device(),
-which eventually causes device_register() to fail because the device name
-is not set, and finally triggers a warning in put_device().
+Extract common address comparison logic into dev_comp_addr().
 
-[1]
-WARNING: CPU: 0 PID: 5826 at drivers/mtd/mtdpart.c:37 release_mtd_partition+0x71/0x90 drivers/mtd/mtdpart.c:37
-Modules linked in:
-CPU: 0 UID: 0 PID: 5826 Comm: syz-executor397 Not tainted 6.13.0-syzkaller-09734-g2a9f04bde07a #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-RIP: 0010:release_mtd_partition+0x71/0x90 drivers/mtd/mtdpart.c:37
-Code: 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 75 1e 48 8b 7b 38 e8 ef 84 cd fb 48 89 df 5b 5d e9 e5 84 cd fb e8 70 4a 75 fb 90 <0f> 0b 90 eb c2 e8 a5 29 d8 fb eb db 48 89 ef e8 9b 29 d8 fb eb a5
-RSP: 0018:ffffc90003e1f828 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffff88802c1d1000 RCX: ffffffff8b417995
-RDX: ffff8880310c3c00 RSI: ffffffff86439150 RDI: ffff88802c1d1000
-RBP: ffff88802c1d1648 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000000000004 R11: ffffffff81000130 R12: 0000000000000000
-R13: dffffc0000000000 R14: 0000000000000000 R15: 0000000000000000
-FS:  000055558b9cd480(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000008 CR3: 0000000034aca000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- mtd_release+0xa0/0xd0 drivers/mtd/mtdcore.c:101
- device_release+0xa1/0x240 drivers/base/core.c:2567
- kobject_cleanup lib/kobject.c:689 [inline]
- kobject_release lib/kobject.c:720 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x1e4/0x5a0 lib/kobject.c:737
- put_device+0x1f/0x30 drivers/base/core.c:3773
- add_mtd_device+0xbb3/0x1700 drivers/mtd/mtdcore.c:750
- mtd_add_partition+0x300/0x650 drivers/mtd/mtdpart.c:279
- mtdchar_blkpg_ioctl+0x20d/0x250 drivers/mtd/mtdchar.c:562
- mtdchar_ioctl+0xbbe/0x2050 drivers/mtd/mtdchar.c:1216
- mtdchar_unlocked_ioctl+0xb0/0xf0 drivers/mtd/mtdchar.c:1239
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+The context about this change could be found in the following
+discussion:
 
-Reported-by: syzbot+074732af3fc6c528f8a0@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=074732af3fc6c528f8a0
-Tested-by: syzbot+074732af3fc6c528f8a0@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+Link: https://lore.kernel.org/all/20250206-scarlet-ermine-of-improvement-1fcac5@leitao/
+
+Cc: kuniyu@amazon.com
+Cc: ushankar@purestorage.com
+Suggested-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
-V1 -> V2: adjust "common pattern for error checking"
+ net/core/dev.c | 39 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 36 insertions(+), 3 deletions(-)
 
- drivers/mtd/mtdcore.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+diff --git a/net/core/dev.c b/net/core/dev.c
+index c41d1e1cbf62e0c5778c472cdb947b6f140f6064..75f0c533ff10e7188aa55345cd8140b88a7d09ca 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -1121,6 +1121,16 @@ int netdev_get_name(struct net *net, char *name, int ifindex)
+ 	return ret;
+ }
+ 
++static bool dev_comp_addr(struct net_device *dev,
++			  unsigned short type,
++			  const char *ha)
++{
++	if (dev->type == type && !memcmp(dev->dev_addr, ha, dev->addr_len))
++		return true;
++
++	return false;
++}
++
+ /**
+  *	dev_getbyhwaddr_rcu - find a device by its hardware address
+  *	@net: the applicable net namespace
+@@ -1129,7 +1139,7 @@ int netdev_get_name(struct net *net, char *name, int ifindex)
+  *
+  *	Search for an interface by MAC address. Returns NULL if the device
+  *	is not found or a pointer to the device.
+- *	The caller must hold RCU or RTNL.
++ *	The caller must hold RCU.
+  *	The returned device has not had its ref count increased
+  *	and the caller must therefore be careful about locking
+  *
+@@ -1141,14 +1151,37 @@ struct net_device *dev_getbyhwaddr_rcu(struct net *net, unsigned short type,
+ 	struct net_device *dev;
+ 
+ 	for_each_netdev_rcu(net, dev)
+-		if (dev->type == type &&
+-		    !memcmp(dev->dev_addr, ha, dev->addr_len))
++		if (dev_comp_addr(dev, type, ha))
+ 			return dev;
+ 
+ 	return NULL;
+ }
+ EXPORT_SYMBOL(dev_getbyhwaddr_rcu);
+ 
++/**
++ *	dev_getbyhwaddr_rtnl - find a device by its hardware address
++ *	@net: the applicable net namespace
++ *	@type: media type of device
++ *	@ha: hardware address
++ *
++ *	Similar to dev_getbyhwaddr_rcu(), but, the owner needs to hold
++ *	RTNL.
++ *
++ */
++struct net_device *dev_getbyhwaddr_rtnl(struct net *net, unsigned short type,
++					const char *ha)
++{
++	struct net_device *dev;
++
++	ASSERT_RTNL();
++	for_each_netdev(net, dev)
++		if (dev_comp_addr(dev, type, ha))
++			return dev;
++
++	return NULL;
++}
++EXPORT_SYMBOL(dev_getbyhwaddr_rtnl);
++
+ struct net_device *dev_getfirstbyhwtype(struct net *net, unsigned short type)
+ {
+ 	struct net_device *dev, *ret = NULL;
 
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index 724f917f91ba..b80d5098d276 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -741,7 +741,9 @@ int add_mtd_device(struct mtd_info *mtd)
- 	mtd->dev.type = &mtd_devtype;
- 	mtd->dev.class = &mtd_class;
- 	mtd->dev.devt = MTD_DEVT(i);
--	dev_set_name(&mtd->dev, "mtd%d", i);
-+	error = dev_set_name(&mtd->dev, "mtd%d", i);
-+	if (error)
-+		goto fail_devname;
- 	dev_set_drvdata(&mtd->dev, mtd);
- 	mtd_check_of_node(mtd);
- 	of_node_get(mtd_get_of_node(mtd));
-@@ -790,6 +792,7 @@ int add_mtd_device(struct mtd_info *mtd)
- 	device_unregister(&mtd->dev);
- fail_added:
- 	of_node_put(mtd_get_of_node(mtd));
-+fail_devname:
- 	idr_remove(&mtd_idr, i);
- fail_locked:
- 	mutex_unlock(&mtd_table_mutex);
+---
+base-commit: 0d5248724ed8bc68c867c4c65dda625277f68fbc
+change-id: 20250207-arm_fix_selftest-ee29dbc33a06
+
+Best regards,
 -- 
-2.43.0
+Breno Leitao <leitao@debian.org>
 
