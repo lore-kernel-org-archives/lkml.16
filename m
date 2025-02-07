@@ -1,89 +1,122 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25ED1F4183
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C4523ED54;
+	Fri,  7 Feb 2025 15:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738942874; cv=none; b=JKSZLy9qbcwsZjW5PpKv1RUlbSoi4jmDPqWfXG8B9+RxG80/Yuy+k/nniuq3PNhorTcfitwZxCOPt08hKVY133e4IsUzSKrv2qC6drg5kNTtGIfIvc2qwMOQuEgWbHkeqlXQEjm1g6rtYS00vQMfQaTVIDcqDQuslx5JYc6vTrU=
+	t=1738942891; cv=none; b=Q/hzuDA68O/EntIOL7CWZZAQX7h9gyW1BYbgJYFyX8/ZFoKs5lHxWmcchP5fzhwApXoO3AIQrnvWNUNZNmORKw5SgYNgEZONj3cCLDLgRYuEbBSDiEqPGvNrRrf5osnA4B1r9w49RngiqNMWvzhHy0XXf5YUpYIWcH5zpDzp5q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738942874; c=relaxed/simple;
-	bh=jmHlCqKNq2WHT2cZbCuD2XZc2TyCvZE1BO63HZmYygg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o7hHqb6EKQGipExGXOTDYBo43ivF+oSRKMkFuAcseUIaIGQoPNd52zfOh0R244F2USF6NNaN2EpWJM4LL76BQxXFoeJ9Y2N0g+e0fVSgFIYVn7eHQp/yaNoO6nUFxmKgxGn3eR6xHjD7jX5aWvW6R18mgEqlFnXF3aDDiwLGLEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=UkJoBaRz; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1738942891; c=relaxed/simple;
+	bh=jzgqfcfeVfqZ1cK1I9LiYNgPFCDeHdC1YoXIE4x9p2c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IsUxy0BiPW0TjTWS810wP0Ly1NJ5kzN++2uaZz6PoGXVC/wExoYHs8oGBhz4SW1bvZbQPans2dydkhukSb81AFX2wbDRTqgxgb1rNxReA6ekEBOiSew+ruQd+8MWemX4PMS0Uiyi3TlHhYGkY4qRrFlGu89mbwl8R57rvJrgnhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kC0cMsnT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="UkJoBaRz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=RmqmaHjfOHDWMG8YNPufVL+CETwYqVo6tGEj5rdHEwk=; b=UkJoBaRzHvAAMvRp
-	6xTXBoEIFEKBWyK0Hpup9iwxSuine12Ns80l/qRPVKxt0KC7FrB/h+tvz0vf6uVv7oq41gCAAiSZy
-	uIICuoy9jOszoO3ybLy7KYxcOOKvndsGqG7/ylDsva08VK2P4NgfPU9qfGABN0twcxXR8mZRQLhDy
-	uL7A7MeVJFhAp0/5oCcBxlEWDHrbAo2wJohavwRFIvOwPm/z5ykMKG1AfEVacdmUDRdBEqEL3ajcR
-	7g8znGXX8bh+V+48l3K3CMts+hGRMrS5t1QbQyRLAkVdhvmbLzkSinDhuZJHlagYaZsuUYl8Q3CWO
-	piArc1E5iS6aV0u2bQ==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1tgQTX-00EHvA-2b;
-	Fri, 07 Feb 2025 15:41:03 +0000
-Date: Fri, 7 Feb 2025 15:41:03 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Lee Jones <lee@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: max8997 cleanup bug?
-Message-ID: <Z6Ypj8Uob6kt23zF@gallifrey>
-References: <Z6KxrcQz0JsQJ9nP@gallifrey>
- <20250207085807.GE7593@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kC0cMsnT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EC4AC4CEE5;
+	Fri,  7 Feb 2025 15:41:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738942891;
+	bh=jzgqfcfeVfqZ1cK1I9LiYNgPFCDeHdC1YoXIE4x9p2c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=kC0cMsnTUtVbSWWYcACwwGbdl/ghpLFSCsJ7DX1s+GDVC8plF3RdmeCXVtYr1lzqa
+	 yWC3t2k4cPPf+COuubqWb5Hekfz94SaHElCxL53sLikgRUsc2nGldbx/XIE/Ww2VlV
+	 QS0ihTkdl6jXKVb4cggMgUcTBhXUig25CiBzIjiJSKXZHOC8Az+KxJ3lksgqpCYyFJ
+	 i2SZti1Pc7/xYrbRm2OqOcZFL7DuG1gBVNe2GjSeKQ2NjgOsXj/t/97iR0usbK5nIf
+	 HgxZYfzE1pCsl2IDLEDfWSPW9WYFjlr5PhrvdGVHkQeO9h0/hYkGBNaUGm3ivifcvf
+	 4YegQFPFOsAzA==
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5fc13355a5bso1083737eaf.3;
+        Fri, 07 Feb 2025 07:41:31 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCURf+HziPrvGUC4m44O13NYJq6Afb2MNJa2mGlyoFljNJkuYKEPtWjpQ+RxQ1aqEaXkldUaHuv/ISE=@vger.kernel.org, AJvYcCWE5dqeFn7Txn3WRf7X1Zv3IzyhYiRUru8FWFZ+Ugqu84QHa3bSiogeZ3KeJkxMI0xs9i1O1RZNx+eYqpc=@vger.kernel.org, AJvYcCWrUZNAjjHWEvbSmGyK6t2t0N0jiIAgJ1yG4rItCzBelWtzPDu+cZ+sfeJSNd4jmYWD8VUDia14TR6q@vger.kernel.org, AJvYcCX5IZe9W9MWgYAXVAVK0KvUFwi1SfLvLfYvxHbHpVBwHoZIcNONUZJivF+0wAZi7s1/89zqoOb0aG+SS+8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjblNpRC8RxkytVrfmmrYZw3/2k0H1lD+BC+M6g51oGB2y0L6b
+	/riDJn/MWhm4uxpQQBU0L+LoNFKZDCm0BhG5FjYVuY24nI6USnK55HsmgW2TjjXGSmhGPazbHNB
+	nxjR1fDD2PHUVXCc4CTdvQXPPUoE=
+X-Google-Smtp-Source: AGHT+IHRPRSDsBVMNZCUnzemgyz6Ifv/tX6iSe9DNiPMSojBjrx3KJlGvRl+GltgwRdZ8YxnwL+URQBCycC9eq3UgJE=
+X-Received: by 2002:a05:6820:54b:b0:5fa:61b9:3e99 with SMTP id
+ 006d021491bc7-5fc5e6a6675mr2632457eaf.3.1738942890477; Fri, 07 Feb 2025
+ 07:41:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250207085807.GE7593@google.com>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 15:40:07 up 275 days,  2:54,  1 user,  load average: 0.20, 0.07,
- 0.02
-User-Agent: Mutt/2.2.12 (2023-09-09)
+References: <12619233.O9o76ZdvQC@rjwysocki.net> <1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com>
+ <Z6YPpbRF_U0TxAbf@hovoldconsulting.com> <Z6YcjFBWAVVVANf2@hovoldconsulting.com>
+In-Reply-To: <Z6YcjFBWAVVVANf2@hovoldconsulting.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 7 Feb 2025 16:41:18 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0iHjkfoh2A+hAmMCTG9_nBcJrsRYFD0Hp4ZChYUo7bFEg@mail.gmail.com>
+X-Gm-Features: AWEUYZlwEPYlis9YnTvZYbPq5_yCDEI_6ZrnvegCI4YdcJhruAg5Z-3Cw5n-I5w
+Message-ID: <CAJZ5v0iHjkfoh2A+hAmMCTG9_nBcJrsRYFD0Hp4ZChYUo7bFEg@mail.gmail.com>
+Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
+ parents and children
+To: Johan Hovold <johan@kernel.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Xie <kevin.xie@starfivetech.com>, 
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-* Lee Jones (lee@kernel.org) wrote:
-> On Wed, 05 Feb 2025, Dr. David Alan Gilbert wrote:
-> 
-> > Hi Lee,
-> >   I noticed that:
-> >    drivers/mfd/max8997-irq.c    max8997_irq_exit
-> > isn't called anywhere and was about to send a deadcode patch,
-> > but I'm thinking it's actually a bug and it should be called.
-> > 
-> >   Looking at the max8998, it has basically the same function,
-> > and it calls it from an error path in it's max8998_i2c_probe.
-> > There's no equivalent call in max8997's probe.
-> > 
-> >   To me it looks like it probably goes after the 'err_i2c_haptic:'
-> > label, but I don't know the code and as far as I know I don't
-> > have one of the devices.
-> > 
-> >   Any thoughts?
-> 
-> I would convert to devm_request_threaded_irq() and remove it.
+On Fri, Feb 7, 2025 at 3:45=E2=80=AFPM Johan Hovold <johan@kernel.org> wrot=
+e:
+>
+> On Fri, Feb 07, 2025 at 02:50:29PM +0100, Johan Hovold wrote:
+>
+> > Yeah, I hit something like this yesterday as well and did confirm that
+> > reverting this commit makes the problem go away. Haven't had time to di=
+g
+> > much further.
+> >
+> > [  110.522368] Unable to handle kernel NULL pointer dereference at virt=
+ual address 0000000000000000
+>
+> > [  110.855238] Call trace:
+> > [  110.857861]  simple_pm_bus_runtime_suspend+0x14/0x48 (P)
+> > [  110.863425]  pm_generic_runtime_suspend+0x2c/0x44
+> > [  110.868362]  pm_runtime_force_suspend+0x54/0x100
+> > [  110.873217]  dpm_run_callback+0xb4/0x228
+> > [  110.877347]  device_suspend_noirq+0x70/0x2a8
+> > [  110.881844]  dpm_noirq_suspend_devices+0xe0/0x230
+> > [  110.886778]  dpm_suspend_noirq+0x24/0x98
+> > [  110.890904]  suspend_devices_and_enter+0x368/0x678
+> > [  110.895941]  pm_suspend+0x1b4/0x348
+> > [  110.899627]  state_store+0x8c/0xfc
+> > [  110.903228]  kobj_attr_store+0x18/0x2c
+> > [  110.907195]  sysfs_kf_write+0x4c/0x78
+> > [  110.911074]  kernfs_fop_write_iter+0x120/0x1b4
+> > [  110.915735]  vfs_write+0x2ac/0x358
+> > [  110.919352]  ksys_write+0x68/0xfc
+> > [  110.922873]  __arm64_sys_write+0x1c/0x28
+> > [  110.927002]  invoke_syscall+0x48/0x110
+> > [  110.930969]  el0_svc_common.constprop.0+0x40/0xe0
+> > [  110.935907]  do_el0_svc+0x1c/0x28
+> > [  110.939427]  el0_svc+0x48/0x114
+> > [  110.942769]  el0t_64_sync_handler+0xc8/0xcc
+> > [  110.947180]  el0t_64_sync+0x198/0x19c
+> > [  110.951059] Code: a9be7bfd 910003fd a90153f3 f9403c00 (f9400014)
+> > [  110.957428] ---[ end trace 0000000000000000 ]---
+>
+> Ok, so the driver data is never set and runtime PM is never enabled for
+> this simple bus device, which uses pm_runtime_force_suspend() for system
+> sleep.
 
-OK, however I don't have one of the devices, so couldn't test
-it if I tried a big rework like that.
-So I'd probably leave it personally.
+This is kind of confusing.  Why use pm_runtime_force_suspend() if
+runtime PM is never enabled and cannot really work?
 
-Dave
+> This used to work as the runtime PM state was left at 'suspended', which
+> makes pm_runtime_force_suspend() return early, but now we can end up
+> with a call to the driver runtime PM ops that dereference the NULL
+> driver data.
 
-> -- 
-> Lee Jones [李琼斯]
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Thanks for the info!
+
+pm_runtime_force_suspend() is a known weak point, but I had assumed
+that it wouldn't be involved in dependency chains starting at devices
+with DPM_FLAG_SMART_SUSPEND set.
+
+Well, more work ...
