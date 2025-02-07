@@ -1,115 +1,232 @@
-Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084612940B
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 02:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7DB15534E;
+	Fri,  7 Feb 2025 02:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738894836; cv=none; b=HGrKpoZlea/PiU/4tu7Zrg/de1xlfMnho6JQVUFk+F6y+CZjvFJQ+zMDpxXVbLZv8z33HlEE5TmUceNLmEqZqa6YJQOz71zarIVDAGDRqE2+F4fyJPI1aM0dKv5NOfSFjAhpU+1X59tSlJJPystdYnOETbcBcm5cUWGnyC4iG1M=
+	t=1738894836; cv=none; b=Q8DgrzxRdU9EUWpMS+K9Mrb8KzCQsaF2+DC0mGCJpSB0SeMbMuWLvSX1RjQHAVo+DD2D5qByVDuUWtmyI/GEawEHqUHt3NGSef7kR5KeDmdjOA22Cc1aAYcyt4GCRX2FUUQf0VYPF+SxEvCSRqMcPqnuab1zh/l+pefUq3tmti4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738894836; c=relaxed/simple;
-	bh=/qjNMy3fr7XuhlxXcW8LsjCb5CUjcoySJdmCymTEiM0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=NQeGSanqyJJPtaQJexBbN5KJzHmv8ceUKNe1mYDx1V66Pmj8+rePREGHoC6IheH3aXZkhf2VqQhgwt2VbppLx4K7CsB6C904IM6KLyHduuJ2lLtMgzKjhwLCBxRRt3ebX966d83N5QNv5WgXAw6TbOptjcc2xQJP5erG0YYH2KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=paAZRdml; arc=none smtp.client-ip=91.218.175.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	bh=Z3OIrwsUmYtJjqFW5lrZWuTp/tPSpI1Ry+5T/TtxFZ8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oUr5lmEtqDU3YBJ63CRZFq3Io5ay1NKbc9SQYJL4wcEvQJQmXxm6J5UcAyRJkPVkD8ki5tMrPHplM8MYpOKNIPr6NC7bLzsteePkGpw5DWXMJevehnHHQL66LNcjYShVQgKMqkhYQw9LkeUAVaUpF5a8+b3fXwd0kqb6754EeDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K1utQbk0; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="paAZRdml"
-Date: Thu, 6 Feb 2025 21:20:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738894827;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=fYzg4hGuEqL0tGkP/p0EcOQZjOlU4CNbCwCV0BxXbeg=;
-	b=paAZRdml1C+HBnVTIMd9UWRr1mO8Vm+8iEuQSKWPQV7BHwZAK7hfpuvoP2YDhBwYsru4zx
-	zVdNzWzw7zPF0rnvrpmz+Ej7FId3MBWlN070fZ81zQGoNlt/ghSnkO4vPqNXRPGqds+wlp
-	hEOihYb9MOqG5NooIyBhoX4gwXzpyf0=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] bcachefs fixes for 6.14-rc2
-Message-ID: <z2eszznjel6knkkvckjxvkp5feo5jhnwvls3rtk7mbt47znvcr@kvo6dhimlghe>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K1utQbk0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738894835; x=1770430835;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Z3OIrwsUmYtJjqFW5lrZWuTp/tPSpI1Ry+5T/TtxFZ8=;
+  b=K1utQbk0ia+WcPrEzyk59hZx+XDxKR+mPF9WwA0mkeRoQIapv2w9b4T5
+   WBjrKPwabmB6nkMtIrPApbWMNNo//t5Z3+TWz7+WKMZ3PtLKFXhKtyYoV
+   sYdkeIcGtYnsO42XQpVSOJdQiKLlogzbRP23Hx1peG4pRjkojL6nEB0ow
+   Ddus2C7Vpv9b/tI40kyayyv1EjkPZlZLLaNos0DoyGkPaOTsNqz9f0QJk
+   cndGaw4S1er9JW0tik8wKtZTKS4vaLzSINF3rO3cUP5vARa7mzlYs+CNf
+   RAdWmKTADd34o1Z5NKHMBEAyYgnf8A9DM2Ts2WlsIybmrl3zUp9skEnG+
+   A==;
+X-CSE-ConnectionGUID: Uj/HoZnlQiaX6eGGO+elhQ==
+X-CSE-MsgGUID: U1Fk5hwKQbid5HbhzHE35g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50917640"
+X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
+   d="scan'208";a="50917640"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 18:20:34 -0800
+X-CSE-ConnectionGUID: UMgVbdHjS0iyenMGjFH58A==
+X-CSE-MsgGUID: SwTZnvy6Q/OPkajO5qz9HA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="148615572"
+Received: from p12ill20yoongsia.png.intel.com ([10.88.227.38])
+  by orviesa001.jf.intel.com with ESMTP; 06 Feb 2025 18:20:21 -0800
+From: Song Yoong Siang <yoong.siang.song@intel.com>
+To: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Willem de Bruijn <willemb@google.com>,
+	Florian Bezdeka <florian.bezdeka@siemens.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Bjorn Topel <bjorn@kernel.org>,
+	Magnus Karlsson <magnus.karlsson@intel.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Jonathan Lemon <jonathan.lemon@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Joe Damato <jdamato@fastly.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Mina Almasry <almasrymina@google.com>,
+	Daniel Jurgens <danielj@nvidia.com>,
+	Song Yoong Siang <yoong.siang.song@intel.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
+	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+	Bouska Zdenek <zdenek.bouska@siemens.com>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	intel-wired-lan@lists.osuosl.org,
+	xdp-hints@xdp-project.net
+Subject: [PATCH bpf-next v10 3/5] net: stmmac: Add launch time support to XDP ZC
+Date: Fri,  7 Feb 2025 10:19:41 +0800
+Message-Id: <20250207021943.814768-4-yoong.siang.song@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250207021943.814768-1-yoong.siang.song@intel.com>
+References: <20250207021943.814768-1-yoong.siang.song@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-Nothing major, things continue to be fairly quiet over here.
+Enable launch time (Time-Based Scheduling) support for XDP zero copy via
+the XDP Tx metadata framework.
 
-Tracking some bugs that show up on nix build servers; would like someone
-to confirm or deny that these are or are not still happening on 6.14,
-and if you've got an environment where this is reproducing and can work
-with me to debug that would save me some trouble...
+This patch has been tested with tools/testing/selftests/bpf/xdp_hw_metadata
+on Intel Tiger Lake platform. Below are the test steps and result.
 
-Also, another bug report is implicating hibernate, please let me know if
-you have any data on that, still trying to piece together what's going
-on there.
+Test 1: Send a single packet with the launch time set to 1 s in the future.
 
-And as usual, be noisy if you're seeing a serious bug that's not getting
-resolved.
+Test steps:
+1. On the DUT, start the xdp_hw_metadata selftest application:
+   $ sudo ./xdp_hw_metadata enp0s30f4 -l 1000000000 -L 1
 
-The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+2. On the Link Partner, send a UDP packet with VLAN priority 1 to port 9091
+   of the DUT.
 
-  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+Result:
+When the launch time is set to 1 s in the future, the delta between the
+launch time and the transmit hardware timestamp is 16.963 us, as shown in
+printout of the xdp_hw_metadata application below.
+  0x55b5864717a8: rx_desc[4]->addr=88100 addr=88100 comp_addr=88100 EoP
+  No rx_hash, err=-95
+  HW RX-time:   1734579065767717328 (sec:1734579065.7677)
+                delta to User RX-time sec:0.0004 (375.624 usec)
+  XDP RX-time:   1734579065768004454 (sec:1734579065.7680)
+                 delta to User RX-time sec:0.0001 (88.498 usec)
+  No rx_vlan_tci or rx_vlan_proto, err=-95
+  0x55b5864717a8: ping-pong with csum=5619 (want 0000)
+                  csum_start=34 csum_offset=6
+  HW RX-time:   1734579065767717328 (sec:1734579065.7677)
+                delta to HW Launch-time sec:1.0000 (1000000.000 usec)
+  0x55b5864717a8: complete tx idx=4 addr=4018
+  HW Launch-time:   1734579066767717328 (sec:1734579066.7677)
+                    delta to HW TX-complete-time sec:0.0000 (16.963 usec)
+  HW TX-complete-time:   1734579066767734291 (sec:1734579066.7677)
+                         delta to User TX-complete-time sec:0.0001
+                         (130.408 usec)
+  XDP RX-time:   1734579065768004454 (sec:1734579065.7680)
+                 delta to User TX-complete-time sec:0.9999
+                (999860.245 usec)
+  HW RX-time:   1734579065767717328 (sec:1734579065.7677)
+                delta to HW TX-complete-time sec:1.0000 (1000016.963 usec)
+  0x55b5864717a8: complete rx idx=132 addr=88100
 
-are available in the Git repository at:
+Test 2: Send 1000 packets with a 10 ms interval and the launch time set to
+        500 us in the future.
 
-  git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-02-06
+Test steps:
+1. On the DUT, start the xdp_hw_metadata selftest application:
+   $ sudo chrt -f 99 ./xdp_hw_metadata enp0s30f4 -l 500000 -L 1 > \
+     /dev/shm/result.log
 
-for you to fetch changes up to 44a7bfed6f352b4bae4fd244d0fcd32aa25d0deb:
+2. On the Link Partner, send 1000 UDP packets with a 10 ms interval and
+   VLAN priority 1 to port 9091 of the DUT.
 
-  bcachefs: bch2_bkey_sectors_need_rebalance() now only depends on bch_extent_rebalance (2025-02-05 19:56:24 -0500)
+Result:
+When the launch time is set to 500 us in the future, the average delta
+between the launch time and the transmit hardware timestamp is 13.854 us,
+as shown in the analysis of /dev/shm/result.log below. The XDP launch time
+works correctly in sending 1000 packets continuously.
+  Min delta: 08.410 us
+  Avr delta: 13.854 us
+  Max delta: 17.076 us
+  Total packets forwarded: 1000
 
-----------------------------------------------------------------
-bcachefs fixes for 6.14-rc2
+Reviewed-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+Signed-off-by: Song Yoong Siang <yoong.siang.song@intel.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h      |  2 ++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 13 +++++++++++++
+ 2 files changed, 15 insertions(+)
 
-- add a SubmittingPatches to clarify that patches submitted for bcachefs
-  do, in fact, need to be tested
-- discard path now correctly issues journal flushes when needed, this
-  fixes performance issues when the filesystem is nearly full and we're
-  bottlenecked on copygc
-- fix a bug that could cause the pending rebalance work accounting to be
-  off when devices are being onlined/offlined; users should report if
-  they are still seeing this
-- and a few more trivial ones
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+index f05cae103d83..925d8b97a42b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
+@@ -106,6 +106,8 @@ struct stmmac_metadata_request {
+ 	struct stmmac_priv *priv;
+ 	struct dma_desc *tx_desc;
+ 	bool *set_ic;
++	struct dma_edesc *edesc;
++	int tbs;
+ };
+ 
+ struct stmmac_xsk_tx_complete {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index d04543e5697b..ff67dc4ecf72 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2514,9 +2514,20 @@ static u64 stmmac_xsk_fill_timestamp(void *_priv)
+ 	return 0;
+ }
+ 
++static void stmmac_xsk_request_launch_time(u64 launch_time, void *_priv)
++{
++	struct timespec64 ts = ns_to_timespec64(launch_time);
++	struct stmmac_metadata_request *meta_req = _priv;
++
++	if (meta_req->tbs & STMMAC_TBS_EN)
++		stmmac_set_desc_tbs(meta_req->priv, meta_req->edesc, ts.tv_sec,
++				    ts.tv_nsec);
++}
++
+ static const struct xsk_tx_metadata_ops stmmac_xsk_tx_metadata_ops = {
+ 	.tmo_request_timestamp		= stmmac_xsk_request_timestamp,
+ 	.tmo_fill_timestamp		= stmmac_xsk_fill_timestamp,
++	.tmo_request_launch_time	= stmmac_xsk_request_launch_time,
+ };
+ 
+ static bool stmmac_xdp_xmit_zc(struct stmmac_priv *priv, u32 queue, u32 budget)
+@@ -2600,6 +2611,8 @@ static bool stmmac_xdp_xmit_zc(struct stmmac_priv *priv, u32 queue, u32 budget)
+ 		meta_req.priv = priv;
+ 		meta_req.tx_desc = tx_desc;
+ 		meta_req.set_ic = &set_ic;
++		meta_req.tbs = tx_q->tbs;
++		meta_req.edesc = &tx_q->dma_entx[entry];
+ 		xsk_tx_metadata_request(meta, &stmmac_xsk_tx_metadata_ops,
+ 					&meta_req);
+ 		if (set_ic) {
+-- 
+2.34.1
 
-----------------------------------------------------------------
-Jeongjun Park (2):
-      bcachefs: fix incorrect pointer check in __bch2_subvolume_delete()
-      bcachefs: fix deadlock in journal_entry_open()
-
-Kent Overstreet (4):
-      bcachefs docs: SubmittingPatches.rst
-      bcachefs: Fix discard path journal flushing
-      bcachefs: Fix rcu imbalance in bch2_fs_btree_key_cache_exit()
-      bcachefs: bch2_bkey_sectors_need_rebalance() now only depends on bch_extent_rebalance
-
- .../filesystems/bcachefs/SubmittingPatches.rst     | 98 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- fs/bcachefs/alloc_background.c                     | 47 ++++++-----
- fs/bcachefs/alloc_foreground.c                     | 10 ++-
- fs/bcachefs/alloc_types.h                          |  1 +
- fs/bcachefs/btree_key_cache.c                      |  1 -
- fs/bcachefs/buckets_waiting_for_journal.c          | 12 ++-
- fs/bcachefs/buckets_waiting_for_journal.h          |  4 +-
- fs/bcachefs/inode.h                                |  4 +-
- fs/bcachefs/journal.c                              | 18 +++-
- fs/bcachefs/journal.h                              |  1 +
- fs/bcachefs/journal_types.h                        |  1 +
- fs/bcachefs/opts.h                                 | 14 ----
- fs/bcachefs/rebalance.c                            |  8 +-
- fs/bcachefs/rebalance.h                            | 20 +++++
- fs/bcachefs/subvolume.c                            |  7 +-
- fs/bcachefs/super.c                                | 11 +++
- fs/bcachefs/super.h                                |  1 +
- fs/bcachefs/trace.h                                | 14 +++-
- 19 files changed, 214 insertions(+), 59 deletions(-)
- create mode 100644 Documentation/filesystems/bcachefs/SubmittingPatches.rst
