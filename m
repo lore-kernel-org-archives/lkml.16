@@ -1,136 +1,103 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569461547C8
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4101DDC0B
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738919784; cv=none; b=Jqi5jzyX/EOjTibOiVAPZICEKIXWMgG8DFc2UVuCEAedTQW692xcGQzSHCFerAeaeBA/3eDXPKC+VWUxDjQgpoG/SA+Du96HbcMtm5awQSj5ikQ+ZcY+uFN5nJnbpkywk6HbmCC0BxLmUyyWpWIWVJvR6+JFs33NjuaDhtOJE5Y=
+	t=1738919786; cv=none; b=eiGxTlJWINcML8loEuCluv+OsRvbv5Qg8LkYPeLred8hAfJ6FTIqeFzlk4zLJ1l0ZPlv6D6iIMaRNEyjzrJODEItcFnMPpRvndW4CyGF5rHzQKgzpCKcm213jozTS4y4RYeE49o1641FsLlCfLGy13LixWcDS8YCt1DX8xSxgog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738919784; c=relaxed/simple;
-	bh=atqP75+HJRz2RK3tG3LDTZipLVEuQAHbH77yDUX1UHE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YUWNlQF/9/qv2HZCX6CbV7d9czxEXyARpY9TCMi25JCixUPhXnZdYxX7w1qlmp86iUS+Ku5Ku/xdmy8xW7ePdwDC80zTXl7D2lc4a+3XQjf+a5bpU67rgdf3hrS3+Xa+3XCyJTqDe33EhX351mCTIlX1I6PTYiBGFPKx2IwpWr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qeP7yrLl; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738919786; c=relaxed/simple;
+	bh=8QyhjSt+PXmG79JqqMzYxvWUPvnaR1/TlhVoEt5+boM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=d+kqMSc3DvDvByra5Ue273e5IwMcr+N0tQ67SrJvcn6EL8DO0tMqrlbc8keZCGSSwHeWcPjfzmd6IJ+gHE3XY8GTfxdWVLVTOzJdK67u+IU0PGmrafjftxjkDdeZ7bfDxoO4eBcZ7Or0nPhNIsQOynFDn44pQnuBHEsknMLGxmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rEfuvVzJ; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qeP7yrLl"
-Message-ID: <116da9a0-125c-4760-9a21-184db65eddfd@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738919770;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=omI1qo9LOPL0reR+VdkIMl+fUT7dTAnamBjfQ/u7Oq4=;
-	b=qeP7yrLlC1jkX9oNtoF/4uAI7HyK+v6mGgtrONdyX/eppZOi2MMAzmvWg5qq1pE6hbcK8O
-	rqrUX9C2BuHDfQyYnamDSy9hMtS+ysOQGrraWSG4AAE5yYt50+JPOvnfy3YZBwrJhG1gTL
-	cCZL/o1SLBFtEl4CwTZvMoV/eOmeOK4=
-Date: Fri, 7 Feb 2025 17:16:00 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rEfuvVzJ"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38dc627eba6so675630f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 01:16:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738919783; x=1739524583; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vvLbUtxX6Is1AqBp8WxV0jhxtX114UxVQqr6c6sxU+8=;
+        b=rEfuvVzJaugBmbO1ALFHHOKtedha/I3DKWGnXzXrsyODjKqCWZlu28q9j8b4cyUpc9
+         b0leMaD7xx/qHCTYdURVKfF4E7/UtBJd4/eAC4UFFT9vbl2CrVu74q/Ks1iYUSHp4KZk
+         5XJJ0iKczoiohEHsDJnavZJKLIeCtJLZQQ1kRsxyreaysn3zoGMI5w5eQUzhB1d3Jfmp
+         +27hrAO18exGrdY0nIdnERfjHfTMCO1tfEKm7VKRkEzE58e1tl1RR5vlwQZZ4jMQiohN
+         xvOMQKX1KNigz25GtoQA74Pa3Tcro+vQvL9fZiSs5eli9585J/eTw067p6Ebxpm3Tfhw
+         Pq1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738919783; x=1739524583;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vvLbUtxX6Is1AqBp8WxV0jhxtX114UxVQqr6c6sxU+8=;
+        b=oTjmaKAPPcNqcBaaVz02Gdhr96fDIdM+dgzs0Bqq7OMURofRj2QUWi0M4L4R5BwIs4
+         CN10aHxct/9erYUQhdIGrMWM5OnZzCPckUxfVu+qVKXKVmNpQ82ee6ermibGXh+k0aI1
+         DjRfhP6MQnAn71fkOKRl+BpDjnbEnjNhLdX+AFVkLC0whjQ2ChqH4ISCluuYgP2nDQJ+
+         L1n3RtyVUsgQLOWpg+yAYQQwLK9XyenFBOplcG67nACdZ43cEySRR4wqrS9YVCx7m8c6
+         ZSizCq6x4mLgDTjV1M6F2WwNRxpU10S1IAVrhidsWjtSX2Y4sHoZZUCOy+gZ8gOWL87K
+         zk8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVw3FKYvhjfqNVWvnuMX2vTrvC1Ye5PlqEPHAWyoVBcPT7jCVWwp7aXdgjvjpgr3iK8JggCcP344aoGS30=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy++oD6ElzTOBevyb/rezVpkVULS5RGqR72gRxja+Gr0gcetx7f
+	0dpPEmJHSz5V9+6+DuGklH7DVOq509n9AXlt/e+idspGqfhbnCqVLjgm+PSSJog=
+X-Gm-Gg: ASbGnctu0CVCWI70BcfFgmmHewOE7D+XFSZIGhkz+lWJw0ipi2LJ+bdygx1XztP89A2
+	IXL/otL+yARao9589NcSDBxSOoTjMuJ/abRqc52DuMRlj613aXCopiK8+lrDLuV6666/8mQ4R5u
+	uKPR3TZKBDSWj1ftJHJjcDiBUipnw2VL29DR5xlX1+C7mydztCR5VsB8zp6ON2yTRAOXEy03Jhm
+	ML4G3w4hi5nnZM7sDCnjAHI6nlvbkJzBttC+WXnd33MCj1RbxlMhTw32hd/4EdGtjbBcZFAEFHy
+	xsYmW1wS/W7Jqw8qXWv9
+X-Google-Smtp-Source: AGHT+IHzf8MzMXdkrcAtuah1r8BuF90slZNj+eI0Wnjcj38CkfEtHceBBNaIgCqFjXafoOn3pJtT+w==
+X-Received: by 2002:a5d:64c3:0:b0:38d:c58f:4cfd with SMTP id ffacd0b85a97d-38dc8914130mr1679493f8f.0.1738919783039;
+        Fri, 07 Feb 2025 01:16:23 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38dbdd5c87csm4012010f8f.52.2025.02.07.01.16.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 01:16:22 -0800 (PST)
+Date: Fri, 7 Feb 2025 12:16:19 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Selvin Xavier <selvin.xavier@broadcom.com>
+Cc: Kalesh AP <kalesh-anakkur.purayil@broadcom.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH next] RDMA/bnxt_re: Fix buffer overflow in debugfs code
+Message-ID: <a6b081ab-55fe-4d0c-8f69-c5e5a59e9141@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3] docs/zh_CN: Update the translation of dev-tools/ubsan
- to v6.14-rc1
-To: WangYuli <wangyuli@uniontech.com>, alexs@kernel.org, corbet@lwn.net,
- dzm91@hust.edu.cn
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- horms@kernel.org, zhanjun@uniontech.com, guanwentao@uniontech.com,
- chenlinxuan@uniontech.com
-References: <2B33A00C9F5BECC7+20250207084821.251531-1-wangyuli@uniontech.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <2B33A00C9F5BECC7+20250207084821.251531-1-wangyuli@uniontech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
+Add some bounds checking to prevent memory corruption in
+bnxt_re_cc_config_set().  This is debugfs code so the bug can only be
+triggered by root.
 
-在 2/7/25 4:48 PM, WangYuli 写道:
-> Commit 918327e9b7ff ("ubsan: Remove CONFIG_UBSAN_SANITIZE_ALL")
-> removed the CONFIG_UBSAN_SANITIZE_ALL configuration option. Update
-> the Chinese documentation accordingly and revise the document format
-> by the way.
->
-> Link: https://lore.kernel.org/all/6F05157E5E157493+20250123043258.149643-1-wangyuli@uniontech.com/
-> Link: https://lore.kernel.org/all/fb3c5ec4-eabc-48c0-bf0b-d20cad978b4f@linux.dev/
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+Fixes: 656dff55da19 ("RDMA/bnxt_re: Congestion control settings using debugfs hook")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/infiniband/hw/bnxt_re/debugfs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
+diff --git a/drivers/infiniband/hw/bnxt_re/debugfs.c b/drivers/infiniband/hw/bnxt_re/debugfs.c
+index f4dd2fb51867..d7354e7753fe 100644
+--- a/drivers/infiniband/hw/bnxt_re/debugfs.c
++++ b/drivers/infiniband/hw/bnxt_re/debugfs.c
+@@ -285,6 +285,9 @@ static ssize_t bnxt_re_cc_config_set(struct file *filp, const char __user *buffe
+ 	u32 val;
+ 	int rc;
+ 
++	if (count >= sizeof(buf))
++		return -EINVAL;
++
+ 	if (copy_from_user(buf, buffer, count))
+ 		return -EFAULT;
+ 
+-- 
+2.47.2
 
-
-Thanks,
-
-Yanteng
-
-> ---
-> Changelog:
->   *v1->v2: Update commit title to v6.14-rc1 and add Dongliang Mu's Chinese name.
->    v2->v3: Remove the ".. _cn_ubsan:" tag.
-> ---
->   .../translations/zh_CN/dev-tools/ubsan.rst    | 33 +++++++++----------
->   1 file changed, 15 insertions(+), 18 deletions(-)
->
-> diff --git a/Documentation/translations/zh_CN/dev-tools/ubsan.rst b/Documentation/translations/zh_CN/dev-tools/ubsan.rst
-> index 2487696b3772..81ef6f77caeb 100644
-> --- a/Documentation/translations/zh_CN/dev-tools/ubsan.rst
-> +++ b/Documentation/translations/zh_CN/dev-tools/ubsan.rst
-> @@ -3,7 +3,14 @@
->   .. include:: ../disclaimer-zh_CN.rst
->   
->   :Original: Documentation/dev-tools/ubsan.rst
-> -:Translator: Dongliang Mu <dzm91@hust.edu.cn>
-> +
-> +:翻译:
-> +
-> + 慕冬亮 Dongliang Mu <dzm91@hust.edu.cn>
-> +
-> +:校译:
-> +
-> + 王昱力 WangYuli <wangyuli@uniontech.com>
->   
->   未定义行为消毒剂 - UBSAN
->   ====================================
-> @@ -55,30 +62,20 @@ GCC自4.9.x [1_] （详见 ``-fsanitize=undefined`` 选项及其子选项）版
->   
->   使用如下内核配置启用UBSAN::
->   
-> -	CONFIG_UBSAN=y
-> -
-> -使用如下内核配置检查整个内核::
-> -
-> -        CONFIG_UBSAN_SANITIZE_ALL=y
-> -
-> -为了在特定文件或目录启动代码插桩，需要在相应的内核Makefile中添加一行类似内容:
-> +  CONFIG_UBSAN=y
->   
-> -- 单文件（如main.o）::
-> -
-> -    UBSAN_SANITIZE_main.o := y
-> -
-> -- 一个目录中的所有文件::
-> -
-> -    UBSAN_SANITIZE := y
-> -
-> -即使设置了``CONFIG_UBSAN_SANITIZE_ALL=y``，为了避免文件被插桩，可使用::
-> +排除要被检测的文件::
->   
->     UBSAN_SANITIZE_main.o := n
->   
-> -与::
-> +排除一个目录中的所有文件::
->   
->     UBSAN_SANITIZE := n
->   
-> +当全部文件都被禁用，可通过如下方式为特定文件启用::
-> +
-> +  UBSAN_SANITIZE_main.o := y
-> +
->   未对齐的内存访问检测可通过开启独立选项 - CONFIG_UBSAN_ALIGNMENT 检测。
->   该选项在支持未对齐访问的架构上(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS=y)
->   默认为关闭。该选项仍可通过内核配置启用，但它将产生大量的UBSAN报告。
