@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 587A91DF742
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:20:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 661EC1E2838
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:20:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738952450; cv=none; b=JRFHQOT1TzRWfKF8o9gQ13Z94s2yAm8COnbIAdfmMELGAuGdJLnB6wraFrV9TLwwVkEfPGF9fvToXQuBTR8J7kQ0ltKzfVUHRsTp4SX7INYv61rGCAH8TgBIPZmBBCNGyzuWWuNrLD1xkb7tMh2Tu6MNpa1/SW5Q9RZ4JpP1flE=
+	t=1738952457; cv=none; b=lOMBsd3impXYDSY4UOa9nWkT5sgAamq+z9wVr0PQelwh+UE5AEYFVD5TwUwvAX8ZdaUPapIGXfdRZb+Ym/g488XDpdqO5MFhXy2Xr90jHrG7pH2PD9aSeTG+qVdIVsNebJRkgwPBIWaTSu3YrafS2s36F+wtkNUOz0D05o5/3KQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738952450; c=relaxed/simple;
-	bh=UTeeZbsTDckptcMmwxBg4eJtdzAEBY2VyVDL/ysU2e4=;
+	s=arc-20240116; t=1738952457; c=relaxed/simple;
+	bh=wIJzfbgl//RjLqbrSrwj0AUEPdAaPbKFyNH74sjYkv0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N+qlX5X1d4K14b4HuRqKkdNuyynd9cT4jTi+jFyngl++7rse1+/C8tGsxFqRyA9c21eXqSwb4Mr0UHSqsnXPxTcp9HSb5B5RGhxco2eL45uTk5HKvUhx5uqE+U4J4J4zUedPiO0SeDHiCm6qe15E2bYwngRiKKyJG7QHfcE9OVc=
+	 MIME-Version; b=llyV8HJ+e20V2G3kgx9PFwnLlcXxGx0Ajyrc5MM4quzTxvQq/6TL4JF2sB0u1lAJsET5SbzkvBmsKbENik9BOSxZ3wj6E3kv7OlZOpWZXWfUDXy5wvQhk6GXPBeHvPSxXSYnTIMMLGav+KU1OblI6W+9x8UGpgslgxP9v5WoBIU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDE1F1DB5;
-	Fri,  7 Feb 2025 10:21:05 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 168691EDB;
+	Fri,  7 Feb 2025 10:21:13 -0800 (PST)
 Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CEF0B3F63F;
-	Fri,  7 Feb 2025 10:20:39 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB59C3F63F;
+	Fri,  7 Feb 2025 10:20:46 -0800 (PST)
 From: James Morse <james.morse@arm.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -47,9 +47,9 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
 	Shanker Donthineni <sdonthineni@nvidia.com>,
 	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v6 34/42] x86/resctrl: Drop __init/__exit on assorted symbols
-Date: Fri,  7 Feb 2025 18:18:15 +0000
-Message-Id: <20250207181823.6378-35-james.morse@arm.com>
+Subject: [PATCH v6 36/42] x86/resctrl: Add end-marker to the resctrl_event_id enum
+Date: Fri,  7 Feb 2025 18:18:17 +0000
+Message-Id: <20250207181823.6378-37-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20250207181823.6378-1-james.morse@arm.com>
 References: <20250207181823.6378-1-james.morse@arm.com>
@@ -61,22 +61,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Because ARM's MPAM controls are probed using MMIO, resctrl can't be
-initialised until enough CPUs are online to have determined the
-system-wide supported num_closid. Arm64 also supports 'late onlined
-secondaries', where only a subset of CPUs are online during boot.
+The resctrl_event_id enum gives names to the counter event numbers on x86.
+These are used directly by resctrl.
 
-These two combine to mean the MPAM driver may not be able to initialise
-resctrl until user-space has brought 'enough' CPUs online.
+To allow the MPAM driver to keep an array of these the size of the enum
+needs to be known.
 
-To allow MPAM to initialise resctrl after __init text has been free'd,
-remove all the __init markings from resctrl.
-
-The existing __exit markings cause these functions to be removed by the
-linker as it has never been possible to build resctrl as a module. MPAM
-has an error interrupt which causes the driver to reset and disable
-itself. Remove the __exit markings to allow the MPAM driver to tear down
-resctrl when an error occurs.
+Add a 'num_events' define which can be used to size an array. This isn't
+a member of the enum to avoid updating switch statements that would
+otherwise be missing a case.
 
 Signed-off-by: James Morse <james.morse@arm.com>
 Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
@@ -84,134 +77,20 @@ Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
-Changes since v4:
- * Earlier __init marker removal migrated here.
----
- arch/x86/kernel/cpu/resctrl/core.c     | 6 +++---
- arch/x86/kernel/cpu/resctrl/internal.h | 4 ++--
- arch/x86/kernel/cpu/resctrl/monitor.c  | 2 +-
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 6 +++---
- include/linux/resctrl.h                | 6 +++---
- 5 files changed, 12 insertions(+), 12 deletions(-)
+ include/linux/resctrl_types.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 921c351d57ae..31558d7abe54 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -738,7 +738,7 @@ struct rdt_options {
- 	bool	force_off, force_on;
+diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.h
+index 51c51a1aabfb..70226f5ab3e3 100644
+--- a/include/linux/resctrl_types.h
++++ b/include/linux/resctrl_types.h
+@@ -51,4 +51,6 @@ enum resctrl_event_id {
+ 	QOS_L3_MBM_LOCAL_EVENT_ID	= 0x03,
  };
  
--static struct rdt_options rdt_options[]  __initdata = {
-+static struct rdt_options rdt_options[]  __ro_after_init = {
- 	RDT_OPT(RDT_FLAG_CMT,	    "cmt",	X86_FEATURE_CQM_OCCUP_LLC),
- 	RDT_OPT(RDT_FLAG_MBM_TOTAL, "mbmtotal", X86_FEATURE_CQM_MBM_TOTAL),
- 	RDT_OPT(RDT_FLAG_MBM_LOCAL, "mbmlocal", X86_FEATURE_CQM_MBM_LOCAL),
-@@ -778,7 +778,7 @@ static int __init set_rdt_options(char *str)
- }
- __setup("rdt", set_rdt_options);
- 
--bool __init rdt_cpu_has(int flag)
-+bool rdt_cpu_has(int flag)
- {
- 	bool ret = boot_cpu_has(flag);
- 	struct rdt_options *o;
-@@ -798,7 +798,7 @@ bool __init rdt_cpu_has(int flag)
- 	return ret;
- }
- 
--bool __init resctrl_arch_is_evt_configurable(enum resctrl_event_id evt)
-+bool resctrl_arch_is_evt_configurable(enum resctrl_event_id evt)
- {
- 	if (!rdt_cpu_has(X86_FEATURE_BMEC))
- 		return false;
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index c44c5b496355..32ed9aeffb90 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -481,13 +481,13 @@ int alloc_rmid(u32 closid);
- void free_rmid(u32 closid, u32 rmid);
- int rdt_get_mon_l3_config(struct rdt_resource *r);
- void resctrl_mon_resource_exit(void);
--bool __init rdt_cpu_has(int flag);
-+bool rdt_cpu_has(int flag);
- void mon_event_count(void *info);
- int rdtgroup_mondata_show(struct seq_file *m, void *arg);
- void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
- 		    struct rdt_mon_domain *d, struct rdtgroup *rdtgrp,
- 		    cpumask_t *cpumask, int evtid, int first);
--int __init resctrl_mon_resource_init(void);
-+int resctrl_mon_resource_init(void);
- void mbm_setup_overflow_handler(struct rdt_mon_domain *dom,
- 				unsigned long delay_ms,
- 				int exclude_cpu);
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index 470cf16f506e..a9168913c153 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -1191,7 +1191,7 @@ static __init int snc_get_config(void)
-  *
-  * Returns 0 for success, or -ENOMEM.
-  */
--int __init resctrl_mon_resource_init(void)
-+int resctrl_mon_resource_init(void)
- {
- 	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
- 	int ret;
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 424622d2f959..2bf69bcfa47a 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -4100,7 +4100,7 @@ static void rdtgroup_destroy_root(void)
- 	}
- }
- 
--static void __init rdtgroup_setup_default(void)
-+static void rdtgroup_setup_default(void)
- {
- 	mutex_lock(&rdtgroup_mutex);
- 
-@@ -4316,7 +4316,7 @@ void resctrl_offline_cpu(unsigned int cpu)
-  *
-  * Return: 0 on success or -errno
-  */
--int __init resctrl_init(void)
-+int resctrl_init(void)
- {
- 	int ret = 0;
- 
-@@ -4373,7 +4373,7 @@ int __init resctrl_init(void)
- 	return ret;
- }
- 
--void __exit resctrl_exit(void)
-+void resctrl_exit(void)
- {
- 	mutex_lock(&rdtgroup_mutex);
- 	rdtgroup_destroy_root();
-diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-index 511dab4ffcdc..a8ff2cdba2c6 100644
---- a/include/linux/resctrl.h
-+++ b/include/linux/resctrl.h
-@@ -359,7 +359,7 @@ u32 resctrl_arch_get_num_closid(struct rdt_resource *r);
- u32 resctrl_arch_system_num_rmid_idx(void);
- int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid);
- 
--bool __init resctrl_arch_is_evt_configurable(enum resctrl_event_id evt);
-+bool resctrl_arch_is_evt_configurable(enum resctrl_event_id evt);
- 
- /**
-  * resctrl_arch_mon_event_config_write() - Write the config for an event.
-@@ -571,7 +571,7 @@ void resctrl_arch_reset_all_ctrls(struct rdt_resource *r);
- extern unsigned int resctrl_rmid_realloc_threshold;
- extern unsigned int resctrl_rmid_realloc_limit;
- 
--int __init resctrl_init(void);
--void __exit resctrl_exit(void);
-+int resctrl_init(void);
-+void resctrl_exit(void);
- 
- #endif /* _RESCTRL_H */
++#define QOS_NUM_EVENTS		(QOS_L3_MBM_LOCAL_EVENT_ID + 1)
++
+ #endif /* __LINUX_RESCTRL_TYPES_H */
 -- 
 2.39.2
 
