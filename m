@@ -1,95 +1,152 @@
-Received: from cae.in-ulm.de (cae.in-ulm.de [217.10.14.231])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD58E199238;
-	Fri,  7 Feb 2025 06:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.14.231
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738911553; cv=none; b=f2WB7ArS2r/wgz2UU/lGevy0GA/WEpx9+xFXUjO9m+AQdG4rk/LkO19JdkZJo03QKTvizBgIifrER5r7Jt23iABvWjOUjH+dMFFQhtQO+EiM11y4+MTJ85A640LYeclqI9maN9oiv9cgaYbNfGaI3d59QIC6y7ND9YuS4ONpJkg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738911553; c=relaxed/simple;
-	bh=sQPauGVYFUvdUbBLw5jDAST028vG91moT9s41QDprpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jc8Z7Qh+iuDBGq9X/H1C27gsOoMi+G+mzFbmtsSq9tGwXa5tJvrJkfGj22mmNtvWXcMQlCk1zicTuYu03WjOsUOQaJx+XAKcgdVFz7iRv6I00Rlyjx5ywkxsQpzk+wplPws9J6pMIFw/C3CO0GKah9jMv3/4tfj1U4j/VyB6CRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de; spf=pass smtp.mailfrom=c--e.de; arc=none smtp.client-ip=217.10.14.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c--e.de
-Received: by cae.in-ulm.de (Postfix, from userid 1000)
-	id 05D5514033D; Fri,  7 Feb 2025 07:51:46 +0100 (CET)
-Date: Fri, 7 Feb 2025 07:51:46 +0100
-From: "Christian A. Ehrhardt" <lk@c--e.de>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Fedor Pchelkin <boddah8794@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Benson Leung <bleung@chromium.org>,
-	Jameson Thies <jthies@google.com>,
-	Saranya Gopal <saranya.gopal@intel.com>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Mark Pearson <mpearson@squebb.ca>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH RFC 1/2] acpi: typec: ucsi: Introduce a ->poll_cci method
-Message-ID: <Z6WtgqH5CaKTfaDX@cae.in-ulm.de>
-References: <20250206184327.16308-1-boddah8794@gmail.com>
- <20250206184327.16308-2-boddah8794@gmail.com>
- <CAA8EJpr=SBQ29m8_iCigUKMHzrdbTFRSpTHv4Aapo55hMVOcaw@mail.gmail.com>
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2047.outbound.protection.outlook.com [40.107.220.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FCB232386;
+	Fri,  7 Feb 2025 06:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738911556; cv=fail; b=SlURyU+jGvQ+7vnqS7zHv7nGh7vtdl62mMXZA59Fpu1ByNW6fnuJzKhix4OnanZ1Jmbx0rPRLpfWbKrvnDgJI7mEM24AlkuxAYyJPvwneg+phv8ZLopyaeT8wRBoFhmeNKtNva3DZGg7sy93Q+v4wSmkYP7EvmGdqWe1XqkMBw8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738911556; c=relaxed/simple;
+	bh=rUDS1W7GSY9x3ufKyR5TU335l/+EBtmFCipUhA7YfhE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QhnWbADVhvF/H8ns1xEa3EAb0av1LSOx7F9iER0NKo3dA95lHGlknTDZJ1ikb8wYAlwjLW9bkYoQtlRuD2qxYycA6YiPd9uPRT3iMtaWlT5YEPU4Gl/U0JbtsYL93Dj+UPOSCWjJHZof+otVBWRp0sfMCz24cPJu2sOE8jYPg2E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=R9kh928B; arc=fail smtp.client-ip=40.107.220.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="R9kh928B"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HwViN0y+euNHxNjlVsX7Tl7KBZUVrJcSfGFVZMr53kxvVtelqFqRN0QFhJI9IcGXJfHJVUxsKu53NzOb5fh1XdfPhh1ruJW1ORSiT2DJoXD9X0SlQM0qCTpFFPh8CUPG+2mpaeFVg7y4Hp9TePPEkMDRRtkM0vjuQsg4N2M6xG+P39S/3U8J9pigthzmCx7FxssySwPB3aS36ctly1aXg65Cjtri9WOsdCGUCndclhoFB3TsFQtp5F9NCaMt1Hh6iClSCKHcpIUezwFKa9d5UdGJlDPuV5ZxHIurXbHCkbYfUNzOm9msMVD+BKjAW2HnS3sAu5xY+WFzb9vjzOvK1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=o+TII58PpEldSfBplN7Tj5YOOwq3yThcAXWsizYmDV4=;
+ b=X5XJ9hZ6Bs9DQJ5+D7q6JL6DyuLTVP8JY2GPBqbdBHYJG9zf8LV8Gy8L5gBj4sVo4YjvNf5FvDYCgFFdLezaHHLd0Bkwi7sj5z5x6wgjEQJEx5AuJTUL2+9tDzfrKbShCpZe60OO+mH7tVou+DYjSDoAZVj6EVQzsPZ7txrLBAClASo0GcAm0okVxtbaZ9c1+9sJ1puXdg8pM32iJbzU0uWH8orwn65gBDqy/6PiIGsvECl2pyBp/JHNS3RA0h9/JeVFGQmsZaFe3oXQzRMCXDwYi5AFna/RM/SsFSuipPgjn1PgYGff9o1MnxslqFQMbC4eVDDwhJwsn/Z6GXRgZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o+TII58PpEldSfBplN7Tj5YOOwq3yThcAXWsizYmDV4=;
+ b=R9kh928BvLCdB1PtdTZFPI7oa6lLtxGLfdaMhWv16H5Bqe1/t+ds7YNhht84S6gfVxESipFo1JS3qyCSW2KFjr52a384cSCaxujiRl4D+xXF3cL/icmGxt++yweylZqYtcf4VM3uVJb6mUyXLX0nFPVsTTveu3LP3VK4IzGaP4k=
+Received: from SJ0PR03CA0117.namprd03.prod.outlook.com (2603:10b6:a03:333::32)
+ by CH3PR12MB8234.namprd12.prod.outlook.com (2603:10b6:610:125::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Fri, 7 Feb
+ 2025 06:59:09 +0000
+Received: from CO1PEPF000042AC.namprd03.prod.outlook.com
+ (2603:10b6:a03:333:cafe::7a) by SJ0PR03CA0117.outlook.office365.com
+ (2603:10b6:a03:333::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.24 via Frontend Transport; Fri,
+ 7 Feb 2025 06:59:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000042AC.mail.protection.outlook.com (10.167.243.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8398.14 via Frontend Transport; Fri, 7 Feb 2025 06:59:09 +0000
+Received: from vijendar-X570-GAMING-X.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 7 Feb 2025 00:59:02 -0600
+From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+To: <vkoul@kernel.org>
+CC: <alsa-devel@alsa-project.org>, <yung-chuan.liao@linux.intel.com>,
+	<pierre-louis.bossart@linux.dev>, <sanyog.r.kale@intel.com>,
+	<Basavaraj.Hiregoudar@amd.com>, <Sunil-kumar.Dommati@amd.com>,
+	<venkataprasad.potturu@amd.com>, <Mario.Limonciello@amd.com>,
+	<linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Vijendar
+ Mukunda" <Vijendar.Mukunda@amd.com>
+Subject: [PATCH V4 2/6] soundwire: amd: add debug log for soundwire wake event
+Date: Fri, 7 Feb 2025 12:28:37 +0530
+Message-ID: <20250207065841.4718-3-Vijendar.Mukunda@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250207065841.4718-1-Vijendar.Mukunda@amd.com>
+References: <20250207065841.4718-1-Vijendar.Mukunda@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA8EJpr=SBQ29m8_iCigUKMHzrdbTFRSpTHv4Aapo55hMVOcaw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042AC:EE_|CH3PR12MB8234:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5d5f2359-c8b8-4192-c573-08dd4744eb93
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?6crXQHzAw/aZvFEAUiiH30HYo5T3RPBFcvmZsCjuwLGLxgMb3ibUBmNWY4Gm?=
+ =?us-ascii?Q?hXKrrsh4Bob5bY3uJv5f/d+ANZk1mMO7FxfQqUjI1QHm+kVdfhBkiQeJi70J?=
+ =?us-ascii?Q?55JSkOiBNdn38AqN/cRbrdp7EtRD5xa75GiNDEfXUwDcOMcfOLZDAb0isZBa?=
+ =?us-ascii?Q?nsdOYrcqaNOblOGQOZekQLBMqJwf3ROkWoC1ZX4STw9oryZrHMUmRH9aL3g/?=
+ =?us-ascii?Q?qeqs6rUXlaKxeMHdTu4Jy9XGv113XiGsNSBj6bbx1sU5gsnY1xbK+DQplhey?=
+ =?us-ascii?Q?okfccAO+fpuzt2bkGZlgI4nhk/H94X2ygsWayPF5Az6vwN/LF025rdd48QQS?=
+ =?us-ascii?Q?YAaA82UvM2VyQu5umUYuvLJMeBpcUGmxGeHhCx9Hi3LI/2evBL6cDAcWMyLD?=
+ =?us-ascii?Q?aSw4rRlJxicfb15TlBwgiUdxPvH7o/z2/nubyBBT668Pqc8VCzRuWzDtWPfE?=
+ =?us-ascii?Q?jfbr5RgppziHniUGD4wQmuT0RO0JO6qcC6+KmyHqYi/2VHBlqqMZ4JHAU75N?=
+ =?us-ascii?Q?SeKVrAxPgxmJf82HukR1WloiyBcQTVswyrunjXxTgmxc9tCT6eEHMSxjtlLZ?=
+ =?us-ascii?Q?llfBeu6XVxZJazhDFBp94m2MoOyiDHa2BJfYBuAEhd2L5a6jBJ1tU8htVG1U?=
+ =?us-ascii?Q?3hnOrTsgA/0yn5swFA9IXEEDVUiSTmTUb1uObd7JNUCTpttrSm2FLxNWZTBB?=
+ =?us-ascii?Q?z30VfjRyCB+kwRj3Y2XEUv9IQLk26sj2SYr92ejwsh2QC981Jo4OsWKWEyO+?=
+ =?us-ascii?Q?e7jNE+06uWsqxjr2bo+iw799fEBUH6d4w7s4AB63ketUHEroXX0aaHSKrGIx?=
+ =?us-ascii?Q?rRJJOii9x5nZ3cNgRdXNpQe2lzLYOtmcl8s2TPMgtLkzVs1QlUhDFoAH9IkH?=
+ =?us-ascii?Q?Wr4dYdYLn4uSRKT4usxuRhgIaiRzeA5jcGiMt2Z5YR8ZD/C0eHxbDQsR0Dqx?=
+ =?us-ascii?Q?g83Wqgl8F98vmPiAu3wQKTwKVDWAsVQ35bSMR+xgDANlwYQEJ5PYr2IC9AU8?=
+ =?us-ascii?Q?MpCh+j6aO1Me4WONOO5JQcpxmY+ix90pY5x1RZnpQPSNhGrI3gP1RGHaYnYn?=
+ =?us-ascii?Q?zA3ePktBNb4jwmHVTJVxu6nwmakzH4IlMW+izuvSTVGygqmDx6o8mceOocii?=
+ =?us-ascii?Q?QUnbCTjucPm2XrxXoKFn+PCSz3iC2S4Nn07SSDP9DczEdfDVj4wNhlmqXpvM?=
+ =?us-ascii?Q?3Puxf9+9KLirFi9bE7v/U622/J3bxRsoRRkzlCzUiosMju6/JMyhxTWQQjxk?=
+ =?us-ascii?Q?vd9qn0HlHoWnXa6KKp66rIcKinAuVto4/dnCWem10MaNZsX00i7oZ4er6BpF?=
+ =?us-ascii?Q?hCfbTkROMB5+Jt2pjgjRAtYYZSj02cuADIk7kT7EmUSaT1WRvmCMsWeNi1kO?=
+ =?us-ascii?Q?27tz2we7aU6Ha3zzxgcBnhqpePARUtFKV8TjLuGAYaM7taYIrhzbFUheoHIK?=
+ =?us-ascii?Q?dOJ4iY/yul+C/8kzISb4R8yAWuJ6oHob06Ak+OhdhDk3txdCt1UlLbNyVaQj?=
+ =?us-ascii?Q?CDJxdrDd5oyDDSg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 06:59:09.0594
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d5f2359-c8b8-4192-c573-08dd4744eb93
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000042AC.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8234
 
+Add debug log in amd_sdw_process_wake_event() function.
 
-Hi,
+Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+---
+ drivers/soundwire/amd_manager.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Fri, Feb 07, 2025 at 02:38:03AM +0200, Dmitry Baryshkov wrote:
-> On Thu, 6 Feb 2025 at 20:43, Fedor Pchelkin <boddah8794@gmail.com> wrote:
-> >
-> > From: "Christian A. Ehrhardt" <lk@c--e.de>
-> >
-> > For the ACPI backend of UCSI the UCSI "registers" are just a memory copy
-> > of the register values in an opregion. The ACPI implementation in the
-> > BIOS ensures that the opregion contents are synced to the embedded
-> > controller and it ensures that the registers (in particular CCI) are
-> > synced back to the opregion on notifications. While there is an ACPI call
-> > that syncs the actual registers to the opregion there is rarely a need to
-> > do this and on some ACPI implementations it actually breaks in various
-> > interesting ways.
-> >
-> > The only reason to force a sync from the embedded controller is to poll
-> > CCI while notifications are disabled. Only the ucsi core knows if this
-> > is the case and guessing based on the current command is suboptimal, i.e.
-> > leading to the following spurious assertion splat:
-> >
-> > WARNING: CPU: 3 PID: 76 at drivers/usb/typec/ucsi/ucsi.c:1388 ucsi_reset_ppm+0x1b4/0x1c0 [typec_ucsi]
-> > CPU: 3 UID: 0 PID: 76 Comm: kworker/3:0 Not tainted 6.12.11-200.fc41.x86_64 #1
-> > Hardware name: LENOVO 21D0/LNVNB161216, BIOS J6CN45WW 03/17/2023
-> > Workqueue: events_long ucsi_init_work [typec_ucsi]
-> > RIP: 0010:ucsi_reset_ppm+0x1b4/0x1c0 [typec_ucsi]
-> > Call Trace:
-> >  <TASK>
-> >  ucsi_init_work+0x3c/0xac0 [typec_ucsi]
-> >  process_one_work+0x179/0x330
-> >  worker_thread+0x252/0x390
-> >  kthread+0xd2/0x100
-> >  ret_from_fork+0x34/0x50
-> >  ret_from_fork_asm+0x1a/0x30
-> >  </TASK>
-> >
-> > Thus introduce a ->poll_cci() method that works like ->read_cci() with an
-> > additional forced sync and document that this should be used when polling
-> > with notifications disabled. For all other backends that presumably don't
-> > have this issue use the same implementation for both methods.
-> 
-> Should the ucsi_init() also use ->poll_cci instead of ->read_cci?
-> Although it's executed with notifications enabled, it looks as if it
-> might need the additional resync.
-
-I don't think it should be neccessary. The command completion event
-for the ucsi_send_command just above should have synced already and
-anything that happens after that ought to generate an event.
-
-Best regards,
-Christian
+diff --git a/drivers/soundwire/amd_manager.c b/drivers/soundwire/amd_manager.c
+index 187006e68ad6..60be5805715e 100644
+--- a/drivers/soundwire/amd_manager.c
++++ b/drivers/soundwire/amd_manager.c
+@@ -849,6 +849,7 @@ static void amd_sdw_update_slave_status(u32 status_change_0to7, u32 status_chang
+ 
+ static void amd_sdw_process_wake_event(struct amd_sdw_manager *amd_manager)
+ {
++	dev_dbg(amd_manager->dev, "SoundWire Wake event reported\n");
+ 	pm_request_resume(amd_manager->dev);
+ 	writel(0x00, amd_manager->acp_mmio + ACP_SW_WAKE_EN(amd_manager->instance));
+ 	writel(0x00, amd_manager->mmio + ACP_SW_STATE_CHANGE_STATUS_8TO11);
+-- 
+2.34.1
 
