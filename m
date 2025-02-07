@@ -1,159 +1,491 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4CA18DB08;
-	Fri,  7 Feb 2025 16:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1FF18DB0A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738946676; cv=none; b=BmpK0OY4CrKM0Sw7Q2Yyy8UlF/EilIboAXKcQ4CBxbTXjW+qJSYVsjCLvuMQOOqBuLzRf7mFqFNQTaZzrAqHaxPl8oGxe+17OW4ZX27FwK1eKky+7xS6pX+t3GYribiU9IA827WTu46w04RfwLwy50Lwfrk8pEabdPfts9NiuV4=
+	t=1738946697; cv=none; b=kaK92Qt7TxmvmXrFhABfbNngwm+mEzYYC3BhudDpgjJc6rECGF2lQ0v1k2gWPIfVf2BTH2IiJlCTYu2nswHbqnfym2wIpAR1vAq6LGGDMl7k+wDlCredTtQRQNmA6xciWhjT7Z01dZFR9xb60x5c+bmbCyGIN3Pwg3axLRzyK9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738946676; c=relaxed/simple;
-	bh=JdlVQooyESRVCEFJ40knIl+97sMuXCaHm/o4iCmD5DU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZMSV+sOz2lv3Yk6PE3gypLmj6+m2keoYC1LZiHsshLtXdOKGBg/IFQga5YFRry2AjV+56AIcgO0nAOJLi1tADPhyXyzJpnoF4TdhAUgsY6wvHeO0yKQPs0lwpyJnYAUhbdZp8yVK0ZlSPxgL63Y3qgGcTqLUXoXKvatzE1qfRFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jSbp9tWs; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738946697; c=relaxed/simple;
+	bh=i9bS6npSCXjd0xRxPt7pUuM461bc20nql/jjB9Cr8Sg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F2zEtCdGQ+B2PmV3R84S+85eEyI+/Tr6zartAM8J4AVlO0o4UjXLM7Cv8vvegSGXwm05m8q5hE/rt8Ai2QY6lNHmAf5EzR1T4WuhHpCyQAiG9nm6+421rranRn27quBGU2WuSMzIHTLtRhk4utOqvDvhSlKVzNZFzwo3ksl80SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=APUQ4Y8k; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jSbp9tWs"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3eb939021bfso1163232b6e.3;
-        Fri, 07 Feb 2025 08:44:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738946673; x=1739551473; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=mBOLwQhvsCYjUO5QU6lf4fihBLDLeyv12uvte6XSdZ8=;
-        b=jSbp9tWsSj8zndOhXQLzwat+3AB+3DPkpV44nUwoXTfPGnUeqs8410iZtQ+B3Lk5aj
-         Gjyn1jBWa23ou0fHo7gw9bxZBCKjTmhKqsZHkxtil0Po9CNmZWRxTHVqsC1PxEP09gRD
-         dTir+Z6Je7Lz1ERDPosw1/5437AeZnM5Wx6eU+pv7OM+zVOa4yFDq9bempsnNZcPY/5Y
-         5o4DQMUFdajV6FKcKOXEmFAybpwQNjPISONKfn/mmbFo0amdmuN2wigW7mtOE5D/n70A
-         +6mT6qdcCL3bCntuF1ou79FYQMPqB6c9syA3V287EGDjNlrw7JAK9vBU0YoSHK1S5wKW
-         LkPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738946673; x=1739551473;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mBOLwQhvsCYjUO5QU6lf4fihBLDLeyv12uvte6XSdZ8=;
-        b=pKq4ipRJjp+6ucCibH6DNKL6McwfzePimMTZNjamkUJ+xjKSaexF68+g/zmn8MusYz
-         QnggxfwaWMjD+mFFRWvklBCta60ekVUkHrHTVdKKmyGbfiImZM5GafXOH3Xk8UG7HXir
-         qVHPdAg8+hcrXQhU0L+kTBEuEqcvrIQCiJ3s+7ALMx3XFVjjHOxg8+rPC3dOKOFGRuhL
-         9Zb1nxvui/sVLuc7CyezW7yxyfQH3FQRnFzW8UZ/U1iX941mvJUqySvycb3ToyvuV+2M
-         BrMaLsiqJ/UIk55RmA9oRbo01rfSQMDGmxNu7bSe6jQ9x8GBOSac82fPxzO/qBfFWPqX
-         4E8w==
-X-Forwarded-Encrypted: i=1; AJvYcCV6yB/7kSpT237PkPafY4unS9FQNj1cmKlCUOZhhAOFmXzLSNopWPxl/j43kiYhrYiFJ2Ez3v+k@vger.kernel.org, AJvYcCVtVygkPSs5EBtEgXw0QZTprH6ENCcRB0ZZR57HrzzP3Lvn9fzT6YVH9wuWR8bmUDfuMipBJwGNjIWwxKI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzI461CxG6OOC6QVGEhstEFietSEMLovlvnsblxxCRbtS4Lc8la
-	H052zXGxOPhVHQij/f4fiUamn1sozJL0b6lJvZxdpFix3acOjbTn
-X-Gm-Gg: ASbGncueFP4udESS1tmriSKxQEEmY6p2gSVtaeihnrUxgBt0LGE1yu4c/hPSGxQkMwc
-	RiwuaOj8TAHozVijJUWE9V9D1Y2xlCGM3hi94O2hGBt2sgpo+fC7WUlbJLHmLn5jqOFglMCxzfx
-	G3u3jlL15blMbSkwWC9/NONKUm50O8RGUFgdznEmfkNc4h+wU1iB4jiC1jI6OmD+YVLuZPBps9P
-	xZgTp0T2+xlaW+uVygIIVkFG45srioa9LoWLIazyxHRcC/e40dji2LmKXkCvrveG+dW0MRDmhcW
-	JITg45UeJa9F74CkltM/dgWdhr3lTIlqfTf1gQTX4OI=
-X-Google-Smtp-Source: AGHT+IEOz7Pml1qWs1pvT3+42Bmr4hlj7VERSJ0J0/N7ecamWse8IkB0YXhPyt8g0x+kvpCBwGwGYA==
-X-Received: by 2002:a05:6808:3027:b0:3f1:cfb4:9ca with SMTP id 5614622812f47-3f392363e4bmr2298021b6e.36.1738946673396;
-        Fri, 07 Feb 2025 08:44:33 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726af9343c2sm860404a34.20.2025.02.07.08.44.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 08:44:32 -0800 (PST)
-Message-ID: <318e8b95-4ef8-43ca-a19d-129372a9dc48@gmail.com>
-Date: Fri, 7 Feb 2025 08:44:31 -0800
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="APUQ4Y8k"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 54747AB5;
+	Fri,  7 Feb 2025 17:43:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1738946618;
+	bh=i9bS6npSCXjd0xRxPt7pUuM461bc20nql/jjB9Cr8Sg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=APUQ4Y8kCJ3bXGp5L+3RuSGmUJx6mrYv9Yh7es/6Vn5rxE4TeVWptGCXHgIw8NLBo
+	 EQj6jPP4GgYMBEQr4khulMncCB4ZnNkGjhRsDucfD7BaZy5Bl3PmGhqXu8KNAf9C5Z
+	 CPzdBMdA14/Uf+fhH4iYmmgYr5jo4lNAOuH3OWRc=
+Date: Fri, 7 Feb 2025 18:44:46 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	"open list:DRM DRIVERS FOR XILINX" <dri-devel@lists.freedesktop.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Michal Simek <michal.simek@amd.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	"moderated list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 2/2] drm: zynqmp_dp: Use scope-based mutex helpers
+Message-ID: <20250207164446.GB24886@pendragon.ideasonboard.com>
+References: <20250207162528.1651426-1-sean.anderson@linux.dev>
+ <20250207162528.1651426-3-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] net: dsa: b53: Enable internal GPHY on BCM63268
-To: Kyle Hendry <kylehendrydev@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
- Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250206043055.177004-1-kylehendrydev@gmail.com>
- <1317d50b-8302-4936-b56c-7a9f5b3970b9@broadcom.com>
- <9bd9c1e4-2401-46bd-937f-996e97d750c5@lunn.ch>
- <a804e0a4-2275-41c3-be3b-7dd79c2418cd@gmail.com>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
-In-Reply-To: <a804e0a4-2275-41c3-be3b-7dd79c2418cd@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250207162528.1651426-3-sean.anderson@linux.dev>
 
-On 2/6/25 17:41, Kyle Hendry wrote:
+Hi Sean,
+
+Thank you for the patch.
+
+On Fri, Feb 07, 2025 at 11:25:28AM -0500, Sean Anderson wrote:
+> Convert most mutex_(un)lock calls to use (scoped_)guard instead. This
+> generally reduces line count and prevents bugs like forgetting to unlock
+> the mutex. I've left traditional calls in a few places where scoped
+> helpers would be more verbose. This mostly happens where
+> debugfs_file_put needs to be called regardless. I looked into defining a
+> CLASS for debugfs_file, but it seems like more effort than it's worth
+> since debugfs_file_get can fail.
 > 
-> On 2025-02-06 12:17, Andrew Lunn wrote:
->> On Thu, Feb 06, 2025 at 10:15:50AM -0800, Florian Fainelli wrote:
->>> Hi Kyle,
->>>
->>> On 2/5/25 20:30, Kyle Hendry wrote:
->>>> Some BCM63268 bootloaders do not enable the internal PHYs by default.
->>>> This patch series adds functionality for the switch driver to
->>>> configure the gigabit ethernet PHY.
->>>>
->>>> Signed-off-by: Kyle Hendry <kylehendrydev@gmail.com>
->>> So the register address you are manipulating logically belongs in the 
->>> GPIO
->>> block (GPIO_GPHY_CTRL) which has become quite a bit of a sundry here. I
->>> don't have a strong objection about the approach picked up here but 
->>> we will
->>> need a Device Tree binding update describing the second (and optional)
->>> register range.
->> Despite this being internal, is this actually a GPIO? Should it be
->> modelled as a GPIO line connected to a reset input on the PHY? It
->> would then nicely fit in the existing phylib handling of a PHY with a
->> GPIO reset line?
->>
->>     Andrew
-> The main reason I took this approach is because a SF2 register has
-> similar bits and I wanted to be consistent with that driver. If it
-> makes more sense to treat these bits as GPIOs/clocks/resets then it
-> would make the implementation simpler.
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+> ---
+> 
+> Changes in v2:
+> - Convert some conditional return statements to returns of ternary
+>   expressions.
+> - Remove unnecessary whitespace change
+> 
+>  drivers/gpu/drm/xlnx/zynqmp_dp.c | 147 +++++++++++--------------------
+>  1 file changed, 50 insertions(+), 97 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> index 189a08cdc73c..63842f657836 100644
+> --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> @@ -1534,10 +1534,10 @@ zynqmp_dp_bridge_mode_valid(struct drm_bridge *bridge,
+>  	}
+>  
+>  	/* Check with link rate and lane count */
+> -	mutex_lock(&dp->lock);
+> -	rate = zynqmp_dp_max_rate(dp->link_config.max_rate,
+> -				  dp->link_config.max_lanes, dp->config.bpp);
+> -	mutex_unlock(&dp->lock);
+> +	scoped_guard(mutex, &dp->lock)
+> +		rate = zynqmp_dp_max_rate(dp->link_config.max_rate,
+> +					  dp->link_config.max_lanes,
+> +					  dp->config.bpp);
 
-I don't think there is a need to go that far, and I don't think any of 
-those abstractions work really well in the sense that they are neither 
-clocks, nor resets, nor GPIOs, they are just enable bits for the power 
-gating logic of the PHY, power domains would be the closest to what this 
-is, but this is a very heavy handed approach with little benefit IMHO.
+Could we use curly braces even for single-statement scopes ?
 
-What we do need is document this register in the binding however.
+	scoped_guard(mutex, &dp->lock) {
+		rate = zynqmp_dp_max_rate(dp->link_config.max_rate,
+					  dp->link_config.max_lanes,
+					  dp->config.bpp);
+	}
+
+I think this would make the scope clearer.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>  	if (mode->clock > rate) {
+>  		dev_dbg(dp->dev, "filtered mode %s for high pixel rate\n",
+>  			mode->name);
+> @@ -1722,13 +1722,9 @@ static enum drm_connector_status __zynqmp_dp_bridge_detect(struct zynqmp_dp *dp)
+>  static enum drm_connector_status zynqmp_dp_bridge_detect(struct drm_bridge *bridge)
+>  {
+>  	struct zynqmp_dp *dp = bridge_to_dp(bridge);
+> -	enum drm_connector_status ret;
+>  
+> -	mutex_lock(&dp->lock);
+> -	ret = __zynqmp_dp_bridge_detect(dp);
+> -	mutex_unlock(&dp->lock);
+> -
+> -	return ret;
+> +	guard(mutex)(&dp->lock);
+> +	return __zynqmp_dp_bridge_detect(dp);
+>  }
+>  
+>  static const struct drm_edid *zynqmp_dp_bridge_edid_read(struct drm_bridge *bridge,
+> @@ -1881,10 +1877,9 @@ static ssize_t zynqmp_dp_pattern_read(struct file *file, char __user *user_buf,
+>  	if (unlikely(ret))
+>  		return ret;
+>  
+> -	mutex_lock(&dp->lock);
+> -	ret = snprintf(buf, sizeof(buf), "%s\n",
+> -		       test_pattern_str[dp->test.pattern]);
+> -	mutex_unlock(&dp->lock);
+> +	scoped_guard(mutex, &dp->lock)
+> +		ret = snprintf(buf, sizeof(buf), "%s\n",
+> +			       test_pattern_str[dp->test.pattern]);
+>  
+>  	debugfs_file_put(dentry);
+>  	return simple_read_from_buffer(user_buf, count, ppos, buf, ret);
+> @@ -1939,24 +1934,18 @@ static int zynqmp_dp_enhanced_get(void *data, u64 *val)
+>  {
+>  	struct zynqmp_dp *dp = data;
+>  
+> -	mutex_lock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+>  	*val = dp->test.enhanced;
+> -	mutex_unlock(&dp->lock);
+>  	return 0;
+>  }
+>  
+>  static int zynqmp_dp_enhanced_set(void *data, u64 val)
+>  {
+>  	struct zynqmp_dp *dp = data;
+> -	int ret = 0;
+>  
+> -	mutex_lock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+>  	dp->test.enhanced = val;
+> -	if (dp->test.active)
+> -		ret = zynqmp_dp_test_setup(dp);
+> -	mutex_unlock(&dp->lock);
+> -
+> -	return ret;
+> +	return dp->test.active ? zynqmp_dp_test_setup(dp) : 0;
+>  }
+>  
+>  DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_enhanced, zynqmp_dp_enhanced_get,
+> @@ -1966,24 +1955,19 @@ static int zynqmp_dp_downspread_get(void *data, u64 *val)
+>  {
+>  	struct zynqmp_dp *dp = data;
+>  
+> -	mutex_lock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+>  	*val = dp->test.downspread;
+> -	mutex_unlock(&dp->lock);
+>  	return 0;
+>  }
+>  
+>  static int zynqmp_dp_downspread_set(void *data, u64 val)
+>  {
+>  	struct zynqmp_dp *dp = data;
+> -	int ret = 0;
+>  
+> -	mutex_lock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+>  	dp->test.downspread = val;
+> -	if (dp->test.active)
+> -		ret = zynqmp_dp_test_setup(dp);
+> -	mutex_unlock(&dp->lock);
+>  
+> -	return ret;
+> +	return dp->test.active ? zynqmp_dp_test_setup(dp) : 0;
+>  }
+>  
+>  DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_downspread, zynqmp_dp_downspread_get,
+> @@ -1993,33 +1977,32 @@ static int zynqmp_dp_active_get(void *data, u64 *val)
+>  {
+>  	struct zynqmp_dp *dp = data;
+>  
+> -	mutex_lock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+>  	*val = dp->test.active;
+> -	mutex_unlock(&dp->lock);
+>  	return 0;
+>  }
+>  
+>  static int zynqmp_dp_active_set(void *data, u64 val)
+>  {
+>  	struct zynqmp_dp *dp = data;
+> -	int ret = 0;
+> +	int ret;
+>  
+> -	mutex_lock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+>  	if (val) {
+>  		if (val < 2) {
+>  			ret = zynqmp_dp_test_setup(dp);
+>  			if (ret)
+> -				goto out;
+> +				return ret;
+>  		}
+>  
+>  		ret = zynqmp_dp_set_test_pattern(dp, dp->test.pattern,
+>  						 dp->test.custom);
+>  		if (ret)
+> -			goto out;
+> +			return ret;
+>  
+>  		ret = zynqmp_dp_update_vs_emph(dp, dp->test.train_set);
+>  		if (ret)
+> -			goto out;
+> +			return ret;
+>  
+>  		dp->test.active = true;
+>  	} else {
+> @@ -2032,10 +2015,8 @@ static int zynqmp_dp_active_set(void *data, u64 val)
+>  				 err);
+>  		zynqmp_dp_train_loop(dp);
+>  	}
+> -out:
+> -	mutex_unlock(&dp->lock);
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_active, zynqmp_dp_active_get,
+> @@ -2102,9 +2083,8 @@ static int zynqmp_dp_swing_get(void *data, u64 *val)
+>  	struct zynqmp_dp_train_set_priv *priv = data;
+>  	struct zynqmp_dp *dp = priv->dp;
+>  
+> -	mutex_lock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+>  	*val = dp->test.train_set[priv->lane] & DP_TRAIN_VOLTAGE_SWING_MASK;
+> -	mutex_unlock(&dp->lock);
+>  	return 0;
+>  }
+>  
+> @@ -2113,12 +2093,11 @@ static int zynqmp_dp_swing_set(void *data, u64 val)
+>  	struct zynqmp_dp_train_set_priv *priv = data;
+>  	struct zynqmp_dp *dp = priv->dp;
+>  	u8 *train_set = &dp->test.train_set[priv->lane];
+> -	int ret = 0;
+>  
+>  	if (val > 3)
+>  		return -EINVAL;
+>  
+> -	mutex_lock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+>  	*train_set &= ~(DP_TRAIN_MAX_SWING_REACHED |
+>  			DP_TRAIN_VOLTAGE_SWING_MASK);
+>  	*train_set |= val;
+> @@ -2126,10 +2105,9 @@ static int zynqmp_dp_swing_set(void *data, u64 val)
+>  		*train_set |= DP_TRAIN_MAX_SWING_REACHED;
+>  
+>  	if (dp->test.active)
+> -		ret = zynqmp_dp_update_vs_emph(dp, dp->test.train_set);
+> -	mutex_unlock(&dp->lock);
+> +		return zynqmp_dp_update_vs_emph(dp, dp->test.train_set);
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_swing, zynqmp_dp_swing_get,
+> @@ -2140,10 +2118,9 @@ static int zynqmp_dp_preemphasis_get(void *data, u64 *val)
+>  	struct zynqmp_dp_train_set_priv *priv = data;
+>  	struct zynqmp_dp *dp = priv->dp;
+>  
+> -	mutex_lock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+>  	*val = FIELD_GET(DP_TRAIN_PRE_EMPHASIS_MASK,
+>  			 dp->test.train_set[priv->lane]);
+> -	mutex_unlock(&dp->lock);
+>  	return 0;
+>  }
+>  
+> @@ -2152,12 +2129,11 @@ static int zynqmp_dp_preemphasis_set(void *data, u64 val)
+>  	struct zynqmp_dp_train_set_priv *priv = data;
+>  	struct zynqmp_dp *dp = priv->dp;
+>  	u8 *train_set = &dp->test.train_set[priv->lane];
+> -	int ret = 0;
+>  
+>  	if (val > 2)
+>  		return -EINVAL;
+>  
+> -	mutex_lock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+>  	*train_set &= ~(DP_TRAIN_MAX_PRE_EMPHASIS_REACHED |
+>  			DP_TRAIN_PRE_EMPHASIS_MASK);
+>  	*train_set |= val;
+> @@ -2165,10 +2141,9 @@ static int zynqmp_dp_preemphasis_set(void *data, u64 val)
+>  		*train_set |= DP_TRAIN_MAX_PRE_EMPHASIS_REACHED;
+>  
+>  	if (dp->test.active)
+> -		ret = zynqmp_dp_update_vs_emph(dp, dp->test.train_set);
+> -	mutex_unlock(&dp->lock);
+> +		return zynqmp_dp_update_vs_emph(dp, dp->test.train_set);
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_preemphasis, zynqmp_dp_preemphasis_get,
+> @@ -2178,31 +2153,24 @@ static int zynqmp_dp_lanes_get(void *data, u64 *val)
+>  {
+>  	struct zynqmp_dp *dp = data;
+>  
+> -	mutex_lock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+>  	*val = dp->test.link_cnt;
+> -	mutex_unlock(&dp->lock);
+>  	return 0;
+>  }
+>  
+>  static int zynqmp_dp_lanes_set(void *data, u64 val)
+>  {
+>  	struct zynqmp_dp *dp = data;
+> -	int ret = 0;
+>  
+>  	if (val > ZYNQMP_DP_MAX_LANES)
+>  		return -EINVAL;
+>  
+> -	mutex_lock(&dp->lock);
+> -	if (val > dp->num_lanes) {
+> -		ret = -EINVAL;
+> -	} else {
+> -		dp->test.link_cnt = val;
+> -		if (dp->test.active)
+> -			ret = zynqmp_dp_test_setup(dp);
+> -	}
+> -	mutex_unlock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+> +	if (val > dp->num_lanes)
+> +		return -EINVAL;
+>  
+> -	return ret;
+> +	dp->test.link_cnt = val;
+> +	return dp->test.active ? zynqmp_dp_test_setup(dp) : 0;
+>  }
+>  
+>  DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_lanes, zynqmp_dp_lanes_get,
+> @@ -2212,9 +2180,8 @@ static int zynqmp_dp_rate_get(void *data, u64 *val)
+>  {
+>  	struct zynqmp_dp *dp = data;
+>  
+> -	mutex_lock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+>  	*val = drm_dp_bw_code_to_link_rate(dp->test.bw_code) * 10000ULL;
+> -	mutex_unlock(&dp->lock);
+>  	return 0;
+>  }
+>  
+> @@ -2222,7 +2189,6 @@ static int zynqmp_dp_rate_set(void *data, u64 val)
+>  {
+>  	struct zynqmp_dp *dp = data;
+>  	int link_rate;
+> -	int ret = 0;
+>  	u8 bw_code;
+>  
+>  	if (do_div(val, 10000))
+> @@ -2237,13 +2203,9 @@ static int zynqmp_dp_rate_set(void *data, u64 val)
+>  	    bw_code != DP_LINK_BW_5_4)
+>  		return -EINVAL;
+>  
+> -	mutex_lock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+>  	dp->test.bw_code = bw_code;
+> -	if (dp->test.active)
+> -		ret = zynqmp_dp_test_setup(dp);
+> -	mutex_unlock(&dp->lock);
+> -
+> -	return ret;
+> +	return dp->test.active ? zynqmp_dp_test_setup(dp) : 0;
+>  }
+>  
+>  DEFINE_DEBUGFS_ATTRIBUTE(fops_zynqmp_dp_rate, zynqmp_dp_rate_get,
+> @@ -2253,9 +2215,8 @@ static int zynqmp_dp_ignore_aux_errors_get(void *data, u64 *val)
+>  {
+>  	struct zynqmp_dp *dp = data;
+>  
+> -	mutex_lock(&dp->aux.hw_mutex);
+> +	guard(mutex)(&dp->lock);
+>  	*val = dp->ignore_aux_errors;
+> -	mutex_unlock(&dp->aux.hw_mutex);
+>  	return 0;
+>  }
+>  
+> @@ -2266,9 +2227,8 @@ static int zynqmp_dp_ignore_aux_errors_set(void *data, u64 val)
+>  	if (val != !!val)
+>  		return -EINVAL;
+>  
+> -	mutex_lock(&dp->aux.hw_mutex);
+> +	guard(mutex)(&dp->lock);
+>  	dp->ignore_aux_errors = val;
+> -	mutex_unlock(&dp->aux.hw_mutex);
+>  	return 0;
+>  }
+>  
+> @@ -2280,9 +2240,8 @@ static int zynqmp_dp_ignore_hpd_get(void *data, u64 *val)
+>  {
+>  	struct zynqmp_dp *dp = data;
+>  
+> -	mutex_lock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+>  	*val = dp->ignore_hpd;
+> -	mutex_unlock(&dp->lock);
+>  	return 0;
+>  }
+>  
+> @@ -2293,9 +2252,8 @@ static int zynqmp_dp_ignore_hpd_set(void *data, u64 val)
+>  	if (val != !!val)
+>  		return -EINVAL;
+>  
+> -	mutex_lock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+>  	dp->ignore_hpd = val;
+> -	mutex_unlock(&dp->lock);
+>  	return 0;
+>  }
+>  
+> @@ -2391,14 +2349,12 @@ static void zynqmp_dp_hpd_work_func(struct work_struct *work)
+>  	struct zynqmp_dp *dp = container_of(work, struct zynqmp_dp, hpd_work);
+>  	enum drm_connector_status status;
+>  
+> -	mutex_lock(&dp->lock);
+> -	if (dp->ignore_hpd) {
+> -		mutex_unlock(&dp->lock);
+> -		return;
+> -	}
+> +	scoped_guard(mutex, &dp->lock) {
+> +		if (dp->ignore_hpd)
+> +			return;
+>  
+> -	status = __zynqmp_dp_bridge_detect(dp);
+> -	mutex_unlock(&dp->lock);
+> +		status = __zynqmp_dp_bridge_detect(dp);
+> +	}
+>  
+>  	drm_bridge_hpd_notify(&dp->bridge, status);
+>  }
+> @@ -2410,11 +2366,9 @@ static void zynqmp_dp_hpd_irq_work_func(struct work_struct *work)
+>  	u8 status[DP_LINK_STATUS_SIZE + 2];
+>  	int err;
+>  
+> -	mutex_lock(&dp->lock);
+> -	if (dp->ignore_hpd) {
+> -		mutex_unlock(&dp->lock);
+> +	guard(mutex)(&dp->lock);
+> +	if (dp->ignore_hpd)
+>  		return;
+> -	}
+>  
+>  	err = drm_dp_dpcd_read(&dp->aux, DP_SINK_COUNT, status,
+>  			       DP_LINK_STATUS_SIZE + 2);
+> @@ -2428,7 +2382,6 @@ static void zynqmp_dp_hpd_irq_work_func(struct work_struct *work)
+>  			zynqmp_dp_train_loop(dp);
+>  		}
+>  	}
+> -	mutex_unlock(&dp->lock);
+>  }
+>  
+>  static irqreturn_t zynqmp_dp_irq_handler(int irq, void *data)
+
 -- 
-Florian
+Regards,
+
+Laurent Pinchart
