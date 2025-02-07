@@ -1,132 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DA31A83F5;
-	Fri,  7 Feb 2025 11:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55871A83F5
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 11:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738928463; cv=none; b=bNCCMwe1A72NwymtWQbe11shwXJom0/lWs4w2n5KU6EeATZBEWmlngNW4zgDjdCyNk591MxZpUt+MAADF7eqv74X/cue+bTxt45koaKdAUEyTs7aFnqdkT6zHnK03iqS5+HOPUeSjx6Lq+ppNSXUk4wTl4bEj0u4PHywRL2601I=
+	t=1738928475; cv=none; b=iFZkvQEXZMG2qR4jwkgt3gWDfZLw0xns1+MsXtjLd7vZCSf+N5DA1BVEIbVM9qvfqgM/Axi8RuK0dUsQ3skdz4/iPIxy68+TYSLdkw7chE67ejv055Aj1/0rva9iomMD12PUngnFhAM9GHluEUXgGEI5z6vig7jEJ34u/4phSGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738928463; c=relaxed/simple;
-	bh=Kr3VE9NUyZO8hS9QqWqW3tBkPoYkI+NxTJxvWVkvBkA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=At1e8l77Um540pNmXO/N7Cmqouy3khTM+ruvgy8iCGnWXpX/MNmAFw2SeMzK0FO6uF7O5qYh4hVQ3IjtKG1PPZmmKp8I+ovCdXeQmpkukspqxnFD9vy9FX5Ra0a44It/6RITWcAIpkGFU8DPS0/Ilsfz2eiwKpcCyAO/2B2abAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E+3Ktxd6; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738928475; c=relaxed/simple;
+	bh=cZSjRJkyOD6TmZ/WS2slPnUyGbACn7ZDTsrX/AZ0pgQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=SGq7M6RHBjLESr6p0twlQyqk6olsDoA8/KSs1gEVkCCVQithJvVaYuJDys6FPLRY8aMTlNBU4Lwqivk2pN+V7fF7exU5u3ZYTLGo9jpMg3rEmtyc66dqbdwfAjFyKMutWzC2Ls8l5/EJZ0wt/C2U6j/RblCRh4W8b5lBkPq16p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UzO/1bPx; arc=none smtp.client-ip=209.85.208.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E+3Ktxd6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738928462; x=1770464462;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Kr3VE9NUyZO8hS9QqWqW3tBkPoYkI+NxTJxvWVkvBkA=;
-  b=E+3Ktxd6ld7bk0PZqL1XlsaV/l1FDW/wJDBjvjip+lY7m4mjNZ4TQL8B
-   Cytb2XuwFlUqkMrPS35M9H8fngyL5cNNew2EonMHjeCzfBtsmtqz56kwe
-   JFakJ5Nl2OH4aK/Fz4lfz0iC6w+LWnw5PtHMdL3xZOPn00V3w0yYqoj7z
-   rauFCMQ3UdWUcmpf51GcJKG4XsxX16z4tDZCrdI8h3yiFDodBCM15EXxS
-   d5M61J02J+jbenrBJssgW3cbrF8GgOHsbYO6AkUkpaSs63918KQrYpd5V
-   T7S/4U85c7PJJ9jEFd3J6CPGrcpoD6Xr6wSkhSpkiHk+/WVmjRQZL5Zss
-   A==;
-X-CSE-ConnectionGUID: a5Z5cfmsQSCal/R5udKozw==
-X-CSE-MsgGUID: Jef3ZS/KQCK3lujza3IRSQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="50204716"
-X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
-   d="scan'208";a="50204716"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 03:41:01 -0800
-X-CSE-ConnectionGUID: KPH5yCU9QtuhzEinvrTVsw==
-X-CSE-MsgGUID: LxkwO1UyTTKjfONVxwkKqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
-   d="scan'208";a="111290324"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 07 Feb 2025 03:40:56 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tgMj6-000yF9-36;
-	Fri, 07 Feb 2025 11:40:52 +0000
-Date: Fri, 7 Feb 2025 19:40:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Suman Ghosh <sumang@marvell.com>, horms@kernel.org,
-	sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
-	hkelam@marvell.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lcherian@marvell.com,
-	jerinj@marvell.com, john.fastabend@gmail.com, bbhushan2@marvell.com,
-	hawk@kernel.org, andrew+netdev@lunn.ch, ast@kernel.org,
-	daniel@iogearbox.net, bpf@vger.kernel.org, larysa.zaremba@intel.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Suman Ghosh <sumang@marvell.com>
-Subject: Re: [net-next PATCH v5 6/6] octeontx2-pf: AF_XDP zero copy transmit
- support
-Message-ID: <202502071925.3T93J9MM-lkp@intel.com>
-References: <20250206085034.1978172-7-sumang@marvell.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UzO/1bPx"
+Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5de4c781e00so484168a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 03:41:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738928472; x=1739533272; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Q3giu+1JVJz0bWBbpQHM3+1tkJWHyu35NWOLlexwW+8=;
+        b=UzO/1bPx28xWfFb0fdv2NN9DvtoRKOABL20lEr9rQveA/cRkOo1plG3MzlmO1HRk7M
+         ExtkySbOG5XD8x6qETAagbuak0Ntyx8eEEpQrxa/Rxei5RZiEL8D6AMM7X2G1njZWbgd
+         yHBMrVr+osJn3l0GUmSd3o0F/uXdNkQ+lKgztzP/96hM1bWGtn8SNcC7caeu+cczT6iz
+         Z12IDr9QKcAkqkt/eciGxHyIwFWEAmudpk5Hrqag2knBn0Zcp4wFstqL0/U4P6Ql4Gyi
+         qdy4ph00L12NVKnYEA0EQeyVq5yardgK6Ut3rx6cJGrysY6pCZNQiAT5Co9Z0i0Va8IU
+         vIAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738928472; x=1739533272;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Q3giu+1JVJz0bWBbpQHM3+1tkJWHyu35NWOLlexwW+8=;
+        b=a4y5EMZMHG6QJJ0hq07TPsMTRj1Wy+nIsccY9PGf5jgmKqTVksadgQG3CFz3nH5htL
+         qF7aDUnUhjOaXCou4bekkKJMO0ajgNey0WjdYwnpFiEJCh4XE5RhM4FuRunOP855wfY3
+         Jf4mxferWvrT0KghgbyP7ubGd/XEkJOBYy7rwllJUzYziY/m6MNcPKSNs57BX86DawLP
+         o1WU1/QBjFBeCtLN65qib4RXtQafSUQ+15mxyUIfwPL607VmjVETVLlcFg5uap2Ff6IA
+         ToCF4hN2Gi3XsIqKGVpUjGMdlY9JtgllryMmV7niFcjxxzyg6NrOnxFXCq00cCyQ+Tbf
+         n0bQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUblSimFX+z/VFc3fK7ycm26mfdsiWDE6cqaJ5ekXIYh+lzC82O2fLA8jEQihYOWQ+sLCHUJJ5yUifdxg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG/BaJM68eL2RKrSMBLZyPywvECbk0+pyBx47UYzTQMEfuA0GE
+	CRsZhrv7tePBku/pqQq85WmhMse4RVbprJuPsxrckZSbd3OcaNHxNQTSlfTTd28C/Bmr/5AGiFG
+	Gy4fzag==
+X-Google-Smtp-Source: AGHT+IHz5Jnv25yTFfvgIHShgN+xb7dlGf/juT87t9s1pt/pvBtGaFad96IzoB8SA+tjONOvrxah4H7dwu52
+X-Received: from edbfj17.prod.google.com ([2002:a05:6402:2b91:b0:5cf:c230:2ef])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:40d5:b0:5dc:db1e:ab4e
+ with SMTP id 4fb4d7f45d1cf-5de45072163mr3607619a12.19.1738928472361; Fri, 07
+ Feb 2025 03:41:12 -0800 (PST)
+Date: Fri,  7 Feb 2025 12:40:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206085034.1978172-7-sumang@marvell.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <cover.1738928210.git.dvyukov@google.com>
+Subject: [PATCH v6 0/9] perf report: Add latency and parallelism profiling
+From: Dmitry Vyukov <dvyukov@google.com>
+To: namhyung@kernel.org, irogers@google.com, ak@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Dmitry Vyukov <dvyukov@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Suman,
+There are two notions of time: wall-clock time and CPU time.
+For a single-threaded program, or a program running on a single-core
+machine, these notions are the same. However, for a multi-threaded/
+multi-process program running on a multi-core machine, these notions are
+significantly different. Each second of wall-clock time we have
+number-of-cores seconds of CPU time.
 
-kernel test robot noticed the following build warnings:
+Currently perf only allows to profile CPU time. Perf (and all other
+existing profilers to the be best of my knowledge) does not allow to
+profile wall-clock time.
 
-[auto build test WARNING on net-next/main]
+Optimizing CPU overhead is useful to improve 'throughput', while
+optimizing wall-clock overhead is useful to improve 'latency'.
+These profiles are complementary and are not interchangeable.
+Examples of where latency profile is needed:
+ - optimzing build latency
+ - optimizing server request latency
+ - optimizing ML training/inference latency
+ - optimizing running time of any command line program
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Suman-Ghosh/octeontx2-pf-use-xdp_return_frame-to-free-xdp-buffers/20250206-165634
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20250206085034.1978172-7-sumang%40marvell.com
-patch subject: [net-next PATCH v5 6/6] octeontx2-pf: AF_XDP zero copy transmit support
-config: x86_64-buildonly-randconfig-006-20250207 (https://download.01.org/0day-ci/archive/20250207/202502071925.3T93J9MM-lkp@intel.com/config)
-compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250207/202502071925.3T93J9MM-lkp@intel.com/reproduce)
+CPU profile is useless for these use cases at best (if a user understands
+the difference), or misleading at worst (if a user tries to use a wrong
+profile for a job).
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502071925.3T93J9MM-lkp@intel.com/
+This series add latency and parallelization profiling.
+See the added documentation and flags descriptions for details.
 
-All warnings (new ones prefixed by >>):
+Brief outline of the implementation:
+ - add context switch collection during record
+ - calculate number of threads running on CPUs (parallelism level)
+   during report
+ - divide each sample weight by the parallelism level
+This effectively models that we were taking 1 sample per unit of
+wall-clock time.
 
->> drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c:112:6: warning: variable 'iova' set but not used [-Wunused-but-set-variable]
-     112 |         u64 iova;
-         |             ^
-   1 warning generated.
+We still default to the CPU profile, so it's up to users to learn
+about the second profiling mode and use it when appropriate.
+
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Changes in v6:
+ - remove latency column in perf_hpp__cancel_latency if
+   sort order is specified, but does not include latency
+ - add tests
+ - rebased to perf-tools-next HEAD
+
+Changes in v5:
+ - fixed formatting of latency field in --stdout mode
+ - added description of --latency flag in Documentation flags
+
+Changes in v4:
+ - added "Shrink struct hist_entry size" commit
+ - rebased to perf-tools-next HEAD
+
+Changes in v3:
+ - rebase and split into patches
+ - rename 'wallclock' to 'latency' everywhere
+ - don't enable latency profiling by default,
+   instead add record/report --latency flag
+
+Dmitry Vyukov (9):
+  perf report: Add machine parallelism
+  perf report: Add parallelism sort key
+  perf report: Switch filtered from u8 to u16
+  perf report: Add parallelism filter
+  perf report: Add latency output field
+  perf report: Add --latency flag
+  perf report: Add latency and parallelism profiling documentation
+  perf test: Add tests for latency and parallelism profiling
+  perf hist: Shrink struct hist_entry size
+
+ .../callchain-overhead-calculation.txt        |   5 +-
+ .../cpu-and-latency-overheads.txt             |  85 ++++++++++++++
+ tools/perf/Documentation/perf-record.txt      |   4 +
+ tools/perf/Documentation/perf-report.txt      |  54 ++++++---
+ tools/perf/Documentation/tips.txt             |   3 +
+ tools/perf/builtin-record.c                   |  20 ++++
+ tools/perf/builtin-report.c                   |  39 +++++++
+ tools/perf/tests/shell/base_report/setup.sh   |  18 ++-
+ .../tests/shell/base_report/test_basic.sh     |  52 +++++++++
+ tools/perf/ui/browsers/hists.c                |  27 +++--
+ tools/perf/ui/hist.c                          | 106 ++++++++++++------
+ tools/perf/util/addr_location.c               |   1 +
+ tools/perf/util/addr_location.h               |   7 +-
+ tools/perf/util/event.c                       |  11 ++
+ tools/perf/util/events_stats.h                |   2 +
+ tools/perf/util/hist.c                        |  90 ++++++++++++---
+ tools/perf/util/hist.h                        |  32 +++++-
+ tools/perf/util/machine.c                     |   7 ++
+ tools/perf/util/machine.h                     |   6 +
+ tools/perf/util/sample.h                      |   2 +-
+ tools/perf/util/session.c                     |  12 ++
+ tools/perf/util/session.h                     |   1 +
+ tools/perf/util/sort.c                        |  69 +++++++++++-
+ tools/perf/util/sort.h                        |   3 +-
+ tools/perf/util/symbol.c                      |  34 ++++++
+ tools/perf/util/symbol_conf.h                 |   8 +-
+ 26 files changed, 602 insertions(+), 96 deletions(-)
+ create mode 100644 tools/perf/Documentation/cpu-and-latency-overheads.txt
 
 
-vim +/iova +112 drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
-
-   104	
-   105	static void otx2_xdp_snd_pkt_handler(struct otx2_nic *pfvf,
-   106					     struct otx2_snd_queue *sq,
-   107					     struct nix_cqe_tx_s *cqe,
-   108					     int *xsk_frames)
-   109	{
-   110		struct nix_send_comp_s *snd_comp = &cqe->comp;
-   111		struct sg_list *sg;
- > 112		u64 iova;
-   113	
-   114		sg = &sq->sg[snd_comp->sqe_id];
-   115	
-   116		if (sg->flags & OTX2_AF_XDP_FRAME) {
-   117			(*xsk_frames)++;
-   118			return;
-   119		}
-   120	
-   121		iova = sg->dma_addr[0];
-   122		if (sg->flags & OTX2_XDP_REDIRECT)
-   123			otx2_dma_unmap_page(pfvf, sg->dma_addr[0], sg->size[0], DMA_TO_DEVICE);
-   124		xdp_return_frame((struct xdp_frame *)sg->skb);
-   125		sg->skb = (u64)NULL;
-   126	}
-   127	
-
+base-commit: 9e676a024fa1fa2bd8150c2d2ba85478280353bc
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1.502.g6dc24dfdaf-goog
+
