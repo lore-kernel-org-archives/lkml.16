@@ -1,277 +1,175 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35931662EF;
-	Fri,  7 Feb 2025 08:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99761B041C
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738917108; cv=none; b=rPVUt8hTFP6sGHL58hAh1FihbxvhpxSFcXQPPeNTHPMACjgOUvZ96e3RmthwQiLZ+lzS+lMN+F93XSvDNFw6I7gLynBRiuHhZTfrGv137zb/5dDqJ+9Hlri9B3g5ciIwVxKyNj7K7z3sga6l8FvExhWF0okEwh3/1S5sHcW/dLw=
+	t=1738917112; cv=none; b=IS+rwwrVNb33+jUT8xYVoLQGRe4C6xG+2634JgyEDGNvU0pN+NdCVpAZqYcRGrUBhNui3cT/yDZB7KRHGGxmX2hzVc7K7a1QHmuizTQkqEunT17bL39gLuPXu270bzgms4Tk/eweliCkH1xxVeDLsBJqFkAEdcihLT6UYVWZMWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738917108; c=relaxed/simple;
-	bh=3T+4D4OZYxnH92h9beC7wrRjiY+wNoBy2B/wrWJ5ihk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XjA59UvIbn8rS8093AGUHKU/r1fjdRqbhJWygC+IqSPxWbS41tPM8RC739UCaRdNnEOhssXXNWJxtXKa6YqbiloKhHwid0ao+a9ybJ41RIVKKkhC6kR8j6jxqWh4STgOPNZBSa69WaIkp1nN7TzpDURLTbFH7GEPwRSOdumrVfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.starfivetech.com; spf=none smtp.mailfrom=linux.starfivetech.com; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.starfivetech.com
-X-QQ-mid: bizesmtpsz4t1738917093t6p35lw
-X-QQ-Originating-IP: F3vYl0ctFhV2QVNdxoiZ+gl2R3+YyxEuwE/J1iVBRD0=
-Received: from [192.168.60.235] ( [183.27.97.113])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 07 Feb 2025 16:31:30 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 5179800746963532279
-Message-ID: <05B9953079BA21AF+fffef577-a880-4ed6-a71b-14ec82aeea97@linux.starfivetech.com>
-Date: Fri, 7 Feb 2025 16:31:29 +0800
+	s=arc-20240116; t=1738917112; c=relaxed/simple;
+	bh=NFcvsTr2jMTbG67gbqmy+1fBOe2tK1hIOagDIIPVIjw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nJVA0UEhTDXpCe1x2NtDRR5z8hdnFRZm7r27/z/8YKHkl9Hx9IAK3FvAAF3RSp2VPDsjRx1yl2GIXkdTFJHyYLfqDfLAYgtGfILeG4N0hdQXF3DbBr2V16F7hQMlI0A44yrhCbzektkbs9GU7N5M0AQm0/J28cualYqdpo2JpMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ByAFKKEV; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ByAFKKEV"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38da72cc47bso1322747f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 00:31:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738917109; x=1739521909; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1hiP/lIM/V6E17F8R7p0zjqfLH9MnBXnboKjp+6HCK8=;
+        b=ByAFKKEVe0jTf41yC9uqtbmFnW0l2Kur5nGwDXm9XRzemWseQuXrmyvLGVbG6kLk8j
+         EjpPtrwt3qgowpRRKHG7cBNw0yjINaWp2P7317+MyOzFd2H3CmvvrMfWCKlrqtubxO7i
+         yaKpvLkUGkz5IXsY3QSI4c4EpDQ5zovu3B5QvrfnLjEBqFPKEeVEBH9ZcGtXcsGX355+
+         1+SNsWRxm9AiwqJYdna88VhY/HlD5OhodCgbI5d6kMLksf08blwl8C57XrXy65I6bvIN
+         iz+qQSJQv9WikGMDd4JldqdVRHLwFJxu8ZpdD5p+1blTC4enTS7EpblIgN0pU1oTRxNH
+         ib2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738917109; x=1739521909;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1hiP/lIM/V6E17F8R7p0zjqfLH9MnBXnboKjp+6HCK8=;
+        b=e6wdvtV9A4vx17g3chHh2H1tMHBGzFxqnej1zhrtNcOmffSCYOc295D0BtqQOhNZSa
+         gL8oNxNUe+ng2vGkPgSg+FblFoIT55kJya7Ip2WnUC5IjuvS/i0qKsJir0kKT4+muIV7
+         6Wfiz1nyBNAJKQXggt7es8jEXo5MY4BWPqDshMcpcVZ0NTUxf1uZ0oDSUxvgG42tP6QX
+         xJO+ql2MdekZHMGLcg6Yr4zunrDfrBWrKDSJvBMjHksarRa2PCvAzIcyzmhklTIsGTBV
+         4DxPfL+x7dgLnkLt2GeH4fTBNtkvPdQh8Sh/lrrVRB9LDmmWzn0Zxc60R25zfVE3yq6a
+         xsWA==
+X-Forwarded-Encrypted: i=1; AJvYcCU3VL8p+YsNKO/lPpDjP95Qorm3KVHxwpkik74Aeup821Q82HbLb6cgk7oETLnZeiGNrKL/0IvE+PjTygk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypbNFEcoD8NhqfDhSLkwnsONJ6XMV4X94tf+nI2rNLVXVSq+Db
+	rXKmm4+3Oi/Ne1wrndgz3uynwPDGNDmhPkVQYdzpngNxHOwS0WYXYQ/pX4XXL1c=
+X-Gm-Gg: ASbGncufgCDbkLtl5/VP40xJ2r+XwSDUBFtG4IhfE9Wk0xRw8SrsAJOHilBnYVIiUjX
+	YrKtj+duw9TjYmMvr4bugLyTkQSHoq2GdM3k/K0VmalKw8+LoWPugJW98GM7tn96zJT/hc0eOfU
+	kDb/5u3AxBT6a52LPGovOnb8zhYrdyG2+FvvEPesfVwNoku7Nl48+I+Ab3Dg+LhR8DoRwf07j2V
+	jL4Q6x1riQWsL6sc1Wa8tpUigmKdG5rTvySxkJDuEdugxL+AY80M56Z27sLvekD5timMwNdcA01
+	8QPHXtcwyHT9Fg==
+X-Google-Smtp-Source: AGHT+IFOlZiM3R6pqOc8wdbixGurSPRs6W4HzpwA+czNqsoQykv2dpkhOJF/Zj4Aws45Gicc3f+vOQ==
+X-Received: by 2002:a5d:6d0d:0:b0:38d:b229:87ff with SMTP id ffacd0b85a97d-38dc8db1d53mr1416604f8f.14.1738917109114;
+        Fri, 07 Feb 2025 00:31:49 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:ae69:c28e:8e23:dca])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dca0041sm46003075e9.14.2025.02.07.00.31.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 00:31:48 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Dipen Patel <dipenp@nvidia.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	timestamp@lists.linux.dev,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v2] gpiolib: don't build HTE code with CONFIG_HTE disabled
+Date: Fri,  7 Feb 2025 09:31:46 +0100
+Message-ID: <20250207083146.17872-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] riscv: dts: starfive: jh7110-common: replace
- syscrg clock assignments
-To: E Shattow <e@freeshell.de>,
- Emil Renner Berthing <emil.renner.berthing@canonical.com>,
- Conor Dooley <conor@kernel.org>, Emil Renner Berthing <kernel@esmil.dk>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org, Hal Feng <hal.feng@starfivetech.com>
-References: <20250203013730.269558-1-e@freeshell.de>
- <20250203013730.269558-2-e@freeshell.de>
- <CAJM55Z-M9MsJAtPi-t=_tNV3oG_kdDiS6H=H3koJwTEwB8GJ-Q@mail.gmail.com>
- <981a3f30-c646-423a-a2dd-e19fef5c69e5@freeshell.de>
-Content-Language: en-US
-From: Hal Feng <hal.feng@linux.starfivetech.com>
-In-Reply-To: <981a3f30-c646-423a-a2dd-e19fef5c69e5@freeshell.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:linux.starfivetech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: N7uEtCzC8wDSU5GgdvpIOvHsIwEu6cw1nHKJAHljI71wJqFJ4DB1Nzd1
-	1DgeW5Y0jB3YypTHFBHcwRVXmhLXjoeu69SKmNFwjvfc46Vt2DV0lG2J5ZNSXPm0L6aWaJ1
-	HKVwzb2F8ZNf3W+bYE1yfFGdAGiRoB8W3155WkELds2X1rcPIja1xIAEou8LTHodFDK+XNu
-	vcGqNHfi36mRb9o6QoXu6Q10d+VgNemyT8+xvtpy7TS2zXyHqHhkopgVWuHhT01GxFFhpN8
-	0CRhg4wPKH6PFlxeyyMf1dMWExbtMO3amwko2kCz9OTKlM7D1HdBE1169gjzhWt7F7HZd4S
-	w9kCiK8G+sHEsgUYpnlQmW0dYYPqYTTFRVrOse3B6VRZd3NqjTUSsif/qqDT6dGB7FFKTMV
-	CDkUnvIBMQMu9ECJTgbMogTTz/9gk4BoFOa//c2cQz6KV3oFRytO9Nl4mo0cI87UhyaJS8X
-	pi1vIAp5i8ZBl9CZnCuff/EwJNl9qg2UptfPF8i9b7qdjcn2E7/I1tULt+r76aZC/fkEwro
-	bQygAsm9KK38uzB3GCngRsqG9Wpa52YKF/HQQS2o8T5pFTA3oTmRZugTfwtUjJPgnJQFd0p
-	6sYMWOp6Or9e31le44fndCSKNPrx6sP/MOXTKG2Y8BRczb1f5WJ0p2d+OcwgVxMSm2TxYPS
-	SYWwEalk2vkoUm311gT0/amZa9JOsReFMbCnB8BoiavOQxdG6GWSVXhlJr31M70cBX2T6zv
-	5Ur1XePOctuFByD38ms+W2mmRpULp2xNJ9DgM/9dGclZkoq0luSUbiFDO2aClMHQ5cVgIJb
-	WA9nUbSDxvkHxZcMZYS3MGaXAYjgUtRwIOx2N7R+4mYSA0hf9Qdv8lCsOfH2HVS2fRn03AX
-	tTIdTt3Bxyl8faHqluZxT4HmR3T2r7WS8r59nHXLTNqDtsSOFPXqav4zn77Li4s+FZEiRiD
-	DVj7S34QgWra6TShSpP5s3Rn6m6pnG0sc4CM=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-X-QQ-RECHKSPAM: 0
+Content-Transfer-Encoding: 8bit
 
-On 2/5/2025 8:52 PM, E Shattow wrote:
-> 
-> 
-> On 2/5/25 02:16, Emil Renner Berthing wrote:
->> E Shattow wrote:
->>> Replace syscrg assignments of clocks, clock parents, and rates with
->>> default settings for compatibility with downstream boot loader SPL
->>> secondary program loader.
->>>
->>> Signed-off-by: E Shattow <e@freeshell.de>
->>> ---
->>>  arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 11 ++++++++---
->>>  1 file changed, 8 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>> index 48fb5091b817..a5661b677687 100644
->>> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>> @@ -359,9 +359,14 @@ spi_dev0: spi@0 {
->>>  };
->>>
->>>  &syscrg {
->>> -	assigned-clocks = <&syscrg JH7110_SYSCLK_CPU_CORE>,
->>> -			  <&pllclk JH7110_PLLCLK_PLL0_OUT>;
->>> -	assigned-clock-rates = <500000000>, <1500000000>;
->>> +	assigned-clocks = <&syscrg JH7110_SYSCLK_CPU_ROOT>,
->>> +			  <&syscrg JH7110_SYSCLK_BUS_ROOT>,
->>> +			  <&syscrg JH7110_SYSCLK_PERH_ROOT>,
->>> +			  <&syscrg JH7110_SYSCLK_QSPI_REF>;
->>> +	assigned-clock-parents = <&pllclk JH7110_PLLCLK_PLL0_OUT>,
->>> +				 <&pllclk JH7110_PLLCLK_PLL2_OUT>,
->>> +				 <&pllclk JH7110_PLLCLK_PLL2_OUT>,
->>> +				 <&syscrg JH7110_SYSCLK_QSPI_REF_SRC>;
->> 
->> I think Conor asked about this too, but you still don't write why it's ok to
->> drop the 500MHz and 1,5GHz assignments to the cpu-core and pll0 clocks
->> respectively. You should add this to the commit message itself.
->> 
->> /Emil
-> 
-> Is this a remedy for a bug in the JH7110 CPU? I'm not clear why tweaking
-> the frequencies and increasing core voltage was ever needed.
-> 
-> This goes back to series "clk: starfive: jh7110-sys: Fix lower rate of
-> CPUfreq by setting PLL0 rate to 1.5GHz" [1].
-> 
-> Since [1] I have had problems with several passively cooled Milk-V Mars
-> CM Lite systems powering off due to thermal limits. My experience then
-> is that the specialized 1.5GHz operation is not appropriate for all
-> JH7110 CPU board layouts and applications.
-> 
-> Hal says I failed to get these assignments in Linux to work in U-Boot
-> because U-Boot doesn't have driver support to increase CPU voltage, and
-> Hal offering to add this to a driver in U-Boot... but that's the wrong
-> way around in my opinion, unless there's some defect in the JH7110 CPU
-> that it won't run reliably with hardware defaults.
-> 
-> 1:
-> https://lore.kernel.org/all/20240603020607.25122-1-xingyu.wu@starfivetech.com/
-> 
-> What is the correct thing to do here?
-> 
-> -E
-> 
-> From mboxrd@z Thu Jan  1 00:00:00 1970
-> Return-Path: <linux-riscv-bounces+linux-riscv=archiver.kernel.org@lists.infradead.org>
-> X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-> 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-> Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-> 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-> 	(No client certificate requested)
-> 	by smtp.lore.kernel.org (Postfix) with ESMTPS id B9A24C02192
-> 	for <linux-riscv@archiver.kernel.org>; Wed,  5 Feb 2025 13:10:59 +0000 (UTC)
-> DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-> 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-> 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-> 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-> 	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-> 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-> 	List-Owner; bh=GY86gaXkDRjEBAUNvogHkHuyO230wjLSabDM8v7zKQQ=; b=Un7uhhDTAT8/9N
-> 	FxyCZTIeuEf9Tz2EWguoSASPTIRzVsA8OD+zansoq7n0Em+ejnESLoVicWRdNflaSCojelA6mxlZr
-> 	79fy10oRgiIKMOAb1fwJcsq+rGF8jSdXwi0a2zKjGYb4u4ZNy/uLBiIynsSH/VCYysTKQK6p7wAiC
-> 	7RYsK3WfvbZKMTBmH2vKxA7ERtfZGfNAJqRjHzBM06+ZfEDf9V2UQ3pGUdGPoTZYkQoS8smFEx47Z
-> 	U3KclAiQD6NRzOmPD/VXwUGXQEpLonSaLk7kbAdo3cWww6Wyou3w4XqxHQpym6FyLsKAWWSk7d4vx
-> 	ZbYQckPNKc65NmLst1TA==;
-> Received: from localhost ([::1] helo=bombadil.infradead.org)
-> 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
-> 	id 1tffB9-00000003Lk1-2ly8;
-> 	Wed, 05 Feb 2025 13:10:55 +0000
-> Received: from freeshell.de ([2a01:4f8:231:482b::2])
-> 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
-> 	id 1tfetw-00000003I2R-42Et
-> 	for linux-riscv@lists.infradead.org;
-> 	Wed, 05 Feb 2025 12:53:10 +0000
-> Received: from [192.168.2.35] (unknown [98.97.25.24])
-> 	(Authenticated sender: e)
-> 	by freeshell.de (Postfix) with ESMTPSA id 7ADA8B4C01E1;
-> 	Wed,  5 Feb 2025 13:53:01 +0100 (CET)
-> Message-ID: <981a3f30-c646-423a-a2dd-e19fef5c69e5@freeshell.de>
-> Date: Wed, 5 Feb 2025 04:52:59 -0800
-> MIME-Version: 1.0
-> User-Agent: Mozilla Thunderbird
-> Subject: Re: [PATCH v2 1/5] riscv: dts: starfive: jh7110-common: replace
->  syscrg clock assignments
-> To: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
->  Conor Dooley <conor@kernel.org>, Emil Renner Berthing <kernel@esmil.dk>,
->  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
->  Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
->  <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-> Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
->  linux-riscv@lists.infradead.org
-> References: <20250203013730.269558-1-e@freeshell.de>
->  <20250203013730.269558-2-e@freeshell.de>
->  <CAJM55Z-M9MsJAtPi-t=_tNV3oG_kdDiS6H=H3koJwTEwB8GJ-Q@mail.gmail.com>
-> Content-Language: en-US
-> From: E Shattow <e@freeshell.de>
-> In-Reply-To: <CAJM55Z-M9MsJAtPi-t=_tNV3oG_kdDiS6H=H3koJwTEwB8GJ-Q@mail.gmail.com>
-> X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-> X-CRM114-CacheID: sfid-20250205_045309_156119_468548BF 
-> X-CRM114-Status: GOOD (  16.14  )
-> X-BeenThere: linux-riscv@lists.infradead.org
-> X-Mailman-Version: 2.1.34
-> Precedence: list
-> List-Id: <linux-riscv.lists.infradead.org>
-> List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
->  <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-> List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-> List-Post: <mailto:linux-riscv@lists.infradead.org>
-> List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-> List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
->  <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-> Content-Type: text/plain; charset="us-ascii"
-> Content-Transfer-Encoding: 7bit
-> Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-> Errors-To: linux-riscv-bounces+linux-riscv=archiver.kernel.org@lists.infradead.org
-> 
-> 
-> 
-> On 2/5/25 02:16, Emil Renner Berthing wrote:
->> E Shattow wrote:
->>> Replace syscrg assignments of clocks, clock parents, and rates with
->>> default settings for compatibility with downstream boot loader SPL
->>> secondary program loader.
->>>
->>> Signed-off-by: E Shattow <e@freeshell.de>
->>> ---
->>>  arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 11 ++++++++---
->>>  1 file changed, 8 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>> index 48fb5091b817..a5661b677687 100644
->>> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>> @@ -359,9 +359,14 @@ spi_dev0: spi@0 {
->>>  };
->>>
->>>  &syscrg {
->>> -	assigned-clocks = <&syscrg JH7110_SYSCLK_CPU_CORE>,
->>> -			  <&pllclk JH7110_PLLCLK_PLL0_OUT>;
->>> -	assigned-clock-rates = <500000000>, <1500000000>;
->>> +	assigned-clocks = <&syscrg JH7110_SYSCLK_CPU_ROOT>,
->>> +			  <&syscrg JH7110_SYSCLK_BUS_ROOT>,
->>> +			  <&syscrg JH7110_SYSCLK_PERH_ROOT>,
->>> +			  <&syscrg JH7110_SYSCLK_QSPI_REF>;
->>> +	assigned-clock-parents = <&pllclk JH7110_PLLCLK_PLL0_OUT>,
->>> +				 <&pllclk JH7110_PLLCLK_PLL2_OUT>,
->>> +				 <&pllclk JH7110_PLLCLK_PLL2_OUT>,
->>> +				 <&syscrg JH7110_SYSCLK_QSPI_REF_SRC>;
->> 
->> I think Conor asked about this too, but you still don't write why it's ok to
->> drop the 500MHz and 1,5GHz assignments to the cpu-core and pll0 clocks
->> respectively. You should add this to the commit message itself.
->> 
->> /Emil
-> 
-> Is this a remedy for a bug in the JH7110 CPU? I'm not clear why tweaking
-> the frequencies and increasing core voltage was ever needed.
-> 
-> This goes back to series "clk: starfive: jh7110-sys: Fix lower rate of
-> CPUfreq by setting PLL0 rate to 1.5GHz" [1].
-> 
-> Since [1] I have had problems with several passively cooled Milk-V Mars
-> CM Lite systems powering off due to thermal limits. My experience then
-> is that the specialized 1.5GHz operation is not appropriate for all
-> JH7110 CPU board layouts and applications.
-> 
-> Hal says I failed to get these assignments in Linux to work in U-Boot
-> because U-Boot doesn't have driver support to increase CPU voltage, and
-> Hal offering to add this to a driver in U-Boot... but that's the wrong
-> way around in my opinion, unless there's some defect in the JH7110 CPU
-> that it won't run reliably with hardware defaults.
-> 
-> 1:
-> https://lore.kernel.org/all/20240603020607.25122-1-xingyu.wu@starfivetech.com/
-> 
-> What is the correct thing to do here?
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Please see my reply in
-https://lore.kernel.org/all/ZQ2PR01MB130736F5C893337606FD6937E6F1A@ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn/
+Hardware timestamping is only used on tegra186 platforms but we include
+the code and export the symbols everywhere. Shrink the binary a bit by
+compiling the relevant functions conditionally.
 
-Thanks.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Changes in v2:
+- reduce preprocessor ifdiffery
 
-Best regards,
-Hal
+ drivers/gpio/gpiolib.c        |  2 ++
+ include/linux/gpio/consumer.h | 36 +++++++++++++++++++++--------------
+ 2 files changed, 24 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index be3351583508..0f4b31f4a995 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2908,6 +2908,7 @@ int gpiod_direction_output_nonotify(struct gpio_desc *desc, int value)
+ 	return ret;
+ }
+ 
++#if IS_ENABLED(CONFIG_HTE)
+ /**
+  * gpiod_enable_hw_timestamp_ns - Enable hardware timestamp in nanoseconds.
+  *
+@@ -2973,6 +2974,7 @@ int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags)
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(gpiod_disable_hw_timestamp_ns);
++#endif /* CONFIG_HTE */
+ 
+ /**
+  * gpiod_set_config - sets @config for a GPIO
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index 0b1acd014186..bc670f98faa6 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -111,8 +111,6 @@ int gpiod_get_direction(struct gpio_desc *desc);
+ int gpiod_direction_input(struct gpio_desc *desc);
+ int gpiod_direction_output(struct gpio_desc *desc, int value);
+ int gpiod_direction_output_raw(struct gpio_desc *desc, int value);
+-int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
+-int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
+ 
+ /* Value get/set from non-sleeping context */
+ int gpiod_get_value(const struct gpio_desc *desc);
+@@ -349,18 +347,6 @@ static inline int gpiod_direction_output_raw(struct gpio_desc *desc, int value)
+ 	WARN_ON(desc);
+ 	return -ENOSYS;
+ }
+-static inline int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc,
+-					       unsigned long flags)
+-{
+-	WARN_ON(desc);
+-	return -ENOSYS;
+-}
+-static inline int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc,
+-						unsigned long flags)
+-{
+-	WARN_ON(desc);
+-	return -ENOSYS;
+-}
+ static inline int gpiod_get_value(const struct gpio_desc *desc)
+ {
+ 	/* GPIO can never have been requested */
+@@ -561,6 +547,28 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
+ 
+ #endif /* CONFIG_GPIOLIB */
+ 
++#if IS_ENABLED(CONFIG_GPIOLIB) && IS_ENABLED(CONFIG_HTE)
++int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
++int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags);
++#else
++static inline int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc,
++					       unsigned long flags)
++{
++	if (!IS_ENABLED(CONFIG_GPIOLIB))
++		WARN_ON(desc);
++
++	return -ENOSYS;
++}
++static inline int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc,
++						unsigned long flags)
++{
++	if (!IS_ENABLED(CONFIG_GPIOLIB))
++		WARN_ON(desc);
++
++	return -ENOSYS;
++}
++#endif /* CONFIG_GPIOLIB && CONFIG_HTE */
++
+ static inline
+ struct gpio_desc *devm_fwnode_gpiod_get(struct device *dev,
+ 					struct fwnode_handle *fwnode,
+-- 
+2.45.2
 
