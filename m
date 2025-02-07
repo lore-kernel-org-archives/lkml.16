@@ -1,90 +1,71 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950E84EB51;
-	Fri,  7 Feb 2025 03:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585C94EB51
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 03:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738898531; cv=none; b=M8VO/kNm/qryqZe3oD6JOYpqsak08caR59XOta4mnw1XvZLHuFSns4oERR/4O0EBe+tXnMMAwPWvTiYqqanr+DI7sEY3X8TSHI6pCbCPagzlFww5SlBrtuWvSouzFD1x8tq2Jyi47qStuvMVTUuSDiafiOx/jjoPwed+h95MgDI=
+	t=1738898589; cv=none; b=fG1+mFsUZ14VYx6s0W2W9wjOrrhHJIh6ysV9P1DomgxDp3SHKC8UNzaZhCuvGID4tzLteOc2rURfx9bXgSaYZFxs+CJxXMhJ4hyhAWvGYvHH6yFGSCTqzWxdC0pmux6MA+69ue58/rZAfp91UmfD01x63xnI5u/Uw5sk0XZM6Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738898531; c=relaxed/simple;
-	bh=+hA2hRWd/YVlIbqHU3n1pQUJ5I78G7XG6cyfw+tWCYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=K0rupVXSUmfw2RzLUNfsapjAYC6vRWvPx/IpQJvzsR3DFOeNLm9SmDTuod5R/eiuop6V4XGNkHW9b1ZK6FbIqIeBjpfXXRd6rl8UhnbYiRir+LcoKnbeTFzc7GI1l+WNctXE4Y2OzvgSUUprLoEgLCv5jIT7y0y8OHGcEEskF7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=smm/e1U5; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="smm/e1U5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1738898513;
-	bh=XmN+jcCj+jUFOZ3QBM+zG9UgpSQDqQDhocEgZlDHscc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=smm/e1U5MxpZJw7m92b57PXM9qlTYd79MnE7y7pKSk7Oqea/06ELnJaEpY4MTQu1J
-	 2DAPN7rRYMqSokcFMSx7Pwu1Racx2IVgwmawQUGbuC7k2mLEKXFCFICoCEbf3bph5t
-	 57HvGOD7otDpGCNtovgUfCSlH386YuXVZTTvdYaelEVCuurL1RyGd7Eydq8WqIO/4s
-	 95SX4GSFcWjJWKW4NCALFg+Ir6PrXHs0+gcOG/U5zsLiHJTsoetSWfkv4IOgBFi/rK
-	 ZW+j7r1lB2DY3Dzf08YJMVUHYRcisv4k7fionoteCTLE3/N597TLZR63aTTQkcHLkQ
-	 lXYqQH/GHXpmQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Ypzm06XMLz4wc4;
-	Fri,  7 Feb 2025 14:21:52 +1100 (AEDT)
-Date: Fri, 7 Feb 2025 14:22:01 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Simona Vetter <simona.vetter@ffwll.ch>
-Cc: Louis Chauvet <louis.chauvet@bootlin.com>, Intel Graphics
- <intel-gfx@lists.freedesktop.org>, DRI <dri-devel@lists.freedesktop.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the drm-misc tree
-Message-ID: <20250207142201.550ce870@canb.auug.org.au>
+	s=arc-20240116; t=1738898589; c=relaxed/simple;
+	bh=BHOG030G1wT7bp+UFhFqN8KVkfS+ZnfpvkGRCB+5hmU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=hGT8nHzGrWC7r5qSiOWypvYCFhf5KYkunuODt6xV5AP2MZQ/g4+IVU7q4179j7+3eXwFgiePtE205htqHkTKAg8dH0fMg9k7g2ybhbiZ+pzVcgMf4j/AHq2mB+baxQ9NsSWdSBTX7rdfOUU530rvgVBQZd09cTjAgXT2qZ2EyPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d04b390e9cso11341675ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 19:23:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738898587; x=1739503387;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VfSbqr6Tj8VVtpWyLsBORg/8nvfwvnihOqp6CnETHJU=;
+        b=u9zL8bLTCo0dsJRY3ZETTJY1m7avXMZXPK5+o8/l4rp2u3k/lhNS79lw5zPyDxtUE9
+         j2PkSppKtAhsPx5nX4K2BlhQLZgciO3VKfiOu9f+MUTjkQbFP5um3ktCSduo0K0Hb6j/
+         vSNNCebdPfKCPT4HiknJV2EJRyq54RrJjOf786PlXFJzjJDK372hLrhu3juWERG0Ne2b
+         nrm93DYljATOzH8Umr8AmnKKZoUWW1cYwNgYCRDnC3SeAHENvIDb1kKCej4Ibgobeqho
+         xB/QVg2WIRjqAvwAiNSjDbEeQjUTuORA03Bf43LEmwuz4ypNhz5k/ORMXQmgkpCD2JRw
+         iR7A==
+X-Gm-Message-State: AOJu0YwT0aFem0KzlzgtRikSczfX3mdNFxW4Fm/Gy7Kor4u6hYwD7AxK
+	nIXrLWVAL54x8cB2h6mNSzy0shkhLLh/aOhenKAeLGSpnlwaZzQs6YHMauaho99lV9mkNIKuVso
+	mrB5DJuMPUX5tq3wDQ1XsjsIM+fKUDldVQwhd2YR9xrpgpYiiSAleefM=
+X-Google-Smtp-Source: AGHT+IFS7gZsSQJVv2XR7SeBDFoHe5wYchoVjX3bMJ4zTdlwRnL56EaWc1AyubBYEd8zea4ZjoAgRMDCOcDITyzlNM3Wh2hyDj9J
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/CO13eDYE2hSrQzooTNLi81+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Received: by 2002:a05:6e02:1aae:b0:3cf:fe1f:f5c5 with SMTP id
+ e9e14a558f8ab-3d13dd13f64mr12577175ab.9.1738898587401; Thu, 06 Feb 2025
+ 19:23:07 -0800 (PST)
+Date: Thu, 06 Feb 2025 19:23:07 -0800
+In-Reply-To: <20250207023801.2519834-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a57c9b.050a0220.2b1e6.000b.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] general protection fault in qca_close
+From: syzbot <syzbot+b9cff96f1ca33356d180@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/CO13eDYE2hSrQzooTNLi81+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Hi all,
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-After merging the drm-misc tree, today's linux-next build (htmldocs)
-produced this warning:
+Reported-by: syzbot+b9cff96f1ca33356d180@syzkaller.appspotmail.com
+Tested-by: syzbot+b9cff96f1ca33356d180@syzkaller.appspotmail.com
 
-/home/sfr/next/next/drivers/gpu/drm/drm_writeback.c:243: warning: expecting=
- prototype for drm_writeback_connector_init_with_encoder(). Prototype was f=
-or __drm_writeback_connector_init() instead
+Tested on:
 
-Introduced by commit
+commit:         808eb958 Add linux-next specific files for 20250206
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1113edf8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=88b25e5d30d576e4
+dashboard link: https://syzkaller.appspot.com/bug?extid=b9cff96f1ca33356d180
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15a164a4580000
 
-  135d8fc7af44 ("drm: writeback: Create an helper for drm_writeback_connect=
-or initialization")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/CO13eDYE2hSrQzooTNLi81+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmelfFkACgkQAVBC80lX
-0GxOswf/Q0ZqJRSFGLds1Zw6WvqNfVNgDGFqUiCGDvQ+/uoLJgxlN1BrZ2srXEK8
-2hcTn6gWE8r7syqa8crjQlLfDQZyPx+l/KBFs+8Or20jsBpXQQTbd/Koy5IALnwm
-C7/n70kWcPHUoAaZY9l9KimnjROgaMRO9RdvKHZz2/3J1kTxm60aIUVMEVPaZRYl
-8RjtEcsnCEB/A14bR6L5Z8lCikNwBU/ghJvCUDpIp2y+/gpPCNyS5mRLEdIXruFd
-g3H1ggVluOM8TQUMZbB6GmjDDBsNxep2MgoU8oqODuXOWcXYfUAsIdGbWUlMd6jE
-zzAZdAOktfD1FqOPCPNw76LB6t+bKg==
-=J2Az
------END PGP SIGNATURE-----
-
---Sig_/CO13eDYE2hSrQzooTNLi81+--
+Note: testing is done by a robot and is best-effort only.
