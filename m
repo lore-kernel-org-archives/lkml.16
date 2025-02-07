@@ -1,102 +1,108 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0157753A7;
-	Fri,  7 Feb 2025 10:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3756553A7;
+	Fri,  7 Feb 2025 10:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738924386; cv=none; b=JW2M/dwXxge/fFOd6GSoXI31HCUSNpeGBHBPytAmM8PYcT+fuEG5mJLlCCbO4cIA9+n8cp8XWe39W7Yta/BgxTY16oeF6D8yNRGoeGx0EprtGwRrXHDo+2mi2GnHD2gk2G9O8KR84XhMhdgNaDJxA0MaeQH1bQm3Io51+giIDOA=
+	t=1738924537; cv=none; b=JPte5bIid8fy0LurPfX8s8I98skDaTBPgYkrg9pmw1dAg8Z6ruGFnO2oxB1ZB6tszvi8oLDRomoJqtDN1UcvtIV2lscUlTLe6/pw6kS9f2k5Nhq7+MWt6p5kS8a/V5u3vMgHmhTuA+isYHQdtA4b90QYUHR87XhKE7lD/ISF/II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738924386; c=relaxed/simple;
-	bh=WTDr/G1skVjWh8EnYLcNXt+LRgyLBrCm/eeyjKJlj/4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aCu6+JpGergC9Ssif3ghH5tCqVBmroNJ7jRmHFYRntvPaJrfiSg/f9kdQo3mCEndqyASwtvXBgr6Hj1kSOxIk2jz2n10Lo7NozrxXCAQ+EbBFE7WoFNLt1B08MxUpSHk0A9vPF6WAgeHnZS7wAyGUbJjmV2U8x6x8mVp6ZVhJnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=mqmKUKFO; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1738924537; c=relaxed/simple;
+	bh=drEqbq+UnvUiG38XEE933fBD387EM48h5DcS6gouwlY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l4hP9UgxW38FWfgIqkvMsb4Sgfm698zMYFK0/tbRMuWgBd5C3IN9PO0u2zQQXbDuUBANJhNHIIf0f3PbTLHpFDwiy4wjvs0q9kZWNmcmZMDHagBoSKZoWSsyY9ybZ55bRWhzPnoEErUYtAduYZh+XQfMNYOCkpEhsqO24UT9CJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ge21TZ35; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="mqmKUKFO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=eGngS
-	niGDrpZdwRnlYe6zvDuqB1QaaruKTmGkVzWykQ=; b=mqmKUKFOh3Qufl1/u/9Cb
-	2VuNFBU2ymjULKWifLfcBMdH+Eg6oqU5RPxVlSNPqgp532PpoBZq6H2AfUlx2a17
-	go1ld8S14sq21CvO+fWg8e7v5nlDxFKBuiXV57x4145sVYdC8glJD4m2oDsW/UaZ
-	2Mt4RLqMQKEBk1zUxDE2wI=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgB3gALo4KVn4NbiBg--.39589S2;
-	Fri, 07 Feb 2025 18:31:06 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org
-Cc: kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	bwawrzyn@cisco.com,
-	cassel@kernel.org,
-	wojciech.jasko-EXT@continental-corporation.com,
-	a-verma1@ti.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rockswang7@gmail.com,
-	"hans.zhang" <hans.zhang@cixtech.com>
-Subject: [PATCH] PCI: cadence: Fix sending message with data or without data
-Date: Fri,  7 Feb 2025 18:31:01 +0800
-Message-Id: <20250207103101.31287-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ge21TZ35"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5dce4a5d8a0so3220982a12.1;
+        Fri, 07 Feb 2025 02:35:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738924534; x=1739529334; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MSXOXieTVzhRaapZT+T7hFM0hi46AothZ59+EmZcB08=;
+        b=Ge21TZ35TTdcA4rTcPUGHtfa0lsIwv7wuJ1PhFEMD1+so8hxfV5tHx4StI15UsOmoU
+         7vsH0kqvUlYTO+lGW2c1Xta5DKBrSNa8dlcXcZenp22PJUNtCM9I4Z+19ef0wgv3N/2t
+         58Onh+JX4x6+2/CiaBww828WM9NZkdr4BvLuZpI/lsm6sjG8zJ+WxEjqQr4U1QXYWklm
+         lowwm1Nezzy4SJQzWLuQ/zz9QvxkZFbUwh0KoEc4afXe8lmJzCmtS5+mCIbL/ltspNbJ
+         DLL8qJXvGwFnX9K87AKOTxQp74gzZ2Qz6WC1bMxGlOlqFgpeokqaZT5jxVuOWyx+AmIx
+         wE7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738924534; x=1739529334;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MSXOXieTVzhRaapZT+T7hFM0hi46AothZ59+EmZcB08=;
+        b=XTA9vTH2HRyfyOUwPJndBMzfnu9SjUFt7uRcGZJzWhL7g33vnwzZxsu4jSg71uM/pl
+         Y86X8skvmiNHr/kA1VecePI6wAfwe7+7W7N3N2tjPsso1Q4WfgqSMQcKymNbSBxYPzpv
+         EMVJV0aIsmSpD9heT5GmJSmtaWQl549flU10FBB2T2Rqi5dnM4Onb7xwLP4bh86+iB/h
+         9eSaJU4E175NZ+4P1S7zl3SzrK9NMEHhe2TL8XhvfXAyTFeJSohVtq74Wm6FkHdvHnOT
+         ICAn+5Ss7Pf5r6T7RTnNZDD3vUYu2cwkoINLgf6U/+QFVTh+Gmcrylh134Nzj1+FkBLx
+         t9MA==
+X-Forwarded-Encrypted: i=1; AJvYcCUB4pewmjylgyeFfzAQ2ix6qsMxNV/a4SwthdK2xYoyEIh77nkQsUsXR0quDEsZLUqIHOEaTRG0XqzO@vger.kernel.org, AJvYcCUHSXb5v0nkYHZVm5btNixaimW2aTJ0Kh9RlHjpM52miaWj/yQoyT/CnPkOAouPPv5R/qhqIZMhWaHoLqIN@vger.kernel.org, AJvYcCVZrJT2tBCVAnX9vEttYIYaTwdKhbWlYfEK0YQrGwaNGDwRAdwJbDeB6VsFbHNhOt0ykJrNW+MD@vger.kernel.org, AJvYcCW2UzeLCY/C1GadvMyakiYGgINDPJK1ncn2Mj7fSskmSOV3E2TItdGdqNMZQY4NY/DpvND+89oVYkjCNnc=@vger.kernel.org, AJvYcCWgyrajtyKEfUa7ogbh7nq7avb6iDBgfC9UBpLnc2WWfXKC1vpDw4w10OMkV6GK5dJN7qXxx1sShlwN@vger.kernel.org, AJvYcCXhs6/c4mdz4F5pX1oOGEA5YXSCfqPKO0FSoinF70pV1JSYTrkASWPQCYi2OB52Gs9VcRAw5CWffvGh@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ8F/iptWSxgFcGvq8PC89Oo8YXXYoxmQssDzly5tHG9bLRYyC
+	WzQNxPwWzCOiSbKhgSAa4Io11a7e4qf2duddwKwzayTMNrcQ8kygvj60Jn1VLEd5duPDW6YB5NB
+	bxulvXYFcZCpDKjdVk3JMj9OJZes=
+X-Gm-Gg: ASbGncuvqKN0E4kKEwmxEd8p0gjsbYeiRn7yyu1mxXdT7NcOvnrCwqj+PHR6xKbPiJn
+	jEIiDcrSC+upPJ9muWXK1b9XAxLswfv45+U5otWMoluzCrxM53RqXLpwykREi3Yf+pdnsJUPX
+X-Google-Smtp-Source: AGHT+IFsDdaucX1wfJ1VUpx8G0evRZY0LiedNNpXT4C7C5nBCiZUH/mVnC/GlcSGS3PbeRf0OT9nsN0Xw9qx25jpLbY=
+X-Received: by 2002:a05:6402:4606:b0:5d9:ae5:8318 with SMTP id
+ 4fb4d7f45d1cf-5de450706dbmr6829476a12.20.1738924534208; Fri, 07 Feb 2025
+ 02:35:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgB3gALo4KVn4NbiBg--.39589S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJr13Cw1fJw45CF4rtw48tFb_yoW8CF1xpF
-	yUG34Syw1xJrWavan5Z3WDXF13JFnayF9rJw4q934fuF17u34UGr12kFyrGFW5GrWvqr17
-	uw1DtF9rGF4fA3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jIzuJUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiDxvso2el3j8yPQAAs3
+References: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com> <20250206-gpio-set-array-helper-v2-5-1c5f048f79c3@baylibre.com>
+In-Reply-To: <20250206-gpio-set-array-helper-v2-5-1c5f048f79c3@baylibre.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 7 Feb 2025 12:34:58 +0200
+X-Gm-Features: AWEUYZn9dUBLgrBMB29t-azFViPsoLod9-AdOpM2gmZK6mo_lnlhIZ1x0iHhJeM
+Message-ID: <CAHp75VcNJzPH8to1Y6NzPMXnH48Ve4LJ7oid7_wEHtwhO82Fmw@mail.gmail.com>
+Subject: Re: [PATCH v2 05/13] gpio: max3191x: use gpiod_multi_set_value_cansleep
+To: David Lechner <dlechner@baylibre.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andy@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, 
+	Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "hans.zhang" <hans.zhang@cixtech.com>
+On Fri, Feb 7, 2025 at 12:48=E2=80=AFAM David Lechner <dlechner@baylibre.co=
+m> wrote:
+>
+> Reduce verbosity by using gpiod_multi_set_value_cansleep() instead of
+> gpiod_set_array_value_cansleep().
 
-View from cdns document cdn_pcie_gen4_hpa_axi_ips_ug_v1.04.pdf.
-In section 9.1.7.1 AXI Subordinate to PCIe Address Translation
-Registers below:
+It seems you missed my comment.
 
-axi_s_awaddr bits 16 is 1 for MSG with data and 0 for MSG without data.
+> +static void gpiod_set_array_single_value_cansleep(struct gpio_descs *des=
+cs,
+>                                                   int value)
 
-Signed-off-by: hans.zhang <hans.zhang@cixtech.com>
----
- drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 +--
- drivers/pci/controller/cadence/pcie-cadence.h    | 2 +-
- 2 files changed, 2 insertions(+), 3 deletions(-)
+This is not good namespacing. Can we change this while at it?
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-index e0cc4560dfde..0bf4cde34f51 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-@@ -352,8 +352,7 @@ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
- 	spin_unlock_irqrestore(&ep->lock, flags);
- 
- 	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(MSG_ROUTING_LOCAL) |
--		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code) |
--		 CDNS_PCIE_MSG_NO_DATA;
-+		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code);
- 	writel(0, ep->irq_cpu_addr + offset);
- }
- 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index f5eeff834ec1..39ee9945c903 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -246,7 +246,7 @@ struct cdns_pcie_rp_ib_bar {
- #define CDNS_PCIE_NORMAL_MSG_CODE_MASK		GENMASK(15, 8)
- #define CDNS_PCIE_NORMAL_MSG_CODE(code) \
- 	(((code) << 8) & CDNS_PCIE_NORMAL_MSG_CODE_MASK)
--#define CDNS_PCIE_MSG_NO_DATA			BIT(16)
-+#define CDNS_PCIE_MSG_DATA			BIT(16)
- 
- struct cdns_pcie;
- 
+max3191x_...
 
-base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
--- 
-2.47.1
+(I would go with max3191x_set_modesel_pins() to make it shorter. I
+have no clue why the function repeats so much from gpiod API naming.
+Is there anything else which is named in a similar way? Perhaps fix it
+by a separate patch?)
 
+--=20
+With Best Regards,
+Andy Shevchenko
