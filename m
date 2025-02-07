@@ -1,257 +1,317 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0DFA40C03
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 04:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2767E9;
+	Fri,  7 Feb 2025 04:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738901383; cv=none; b=FjCvxcwIBJhwPnHLMjSFHY8+QYtp4o5bsUdLFi7iQb+v1Sk16Apo6ZITQ4hSOVk9pyStdTXmTcQQyReFxqdZUIfTHWqPts5WgLvL1ttT6Wh6JI6LoObMuRamRQjACC3C+amjCYOVopkyLhbQgbgx0ejAynVJpnJxnPLPXRL6a7A=
+	t=1738901418; cv=none; b=IRBFCPr4zwnt/tmcWjq9ji3xdqjIr0CjW28KR1ZkmtPSeNN46fyx1bLOv98AvahE0uTkSz9rZUjmOhT3igAU2bfi7SK3eleRlPkDRwp7W6co+5+Ps26DF74+6n4zP65yMGf+zUpytMT1/ZTfgnfIv7Rpzzo0quK/Bx0oYbxnTF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738901383; c=relaxed/simple;
-	bh=D6VsKlx6yQBeQKSTpfYYHRpyAtSuykD8W8kHcbMWQHA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l+by4R+o89TsTcqN6Np4vlUGaQGTdb/INCE/JlMeaL0ViuPxuhTfx4FTpQOLxM2NVyhg8APulnAwzGwVUGKkYf7sd94HJC3z4fhONRI8JzY96gn1HlrGfS4bTlXNqCR2Xz24hL6Gfq5TLYERz90f2pA2GB04Ax3DJyvJOHQg1mA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4B38106F;
-	Thu,  6 Feb 2025 20:10:01 -0800 (PST)
-Received: from [10.162.16.89] (a077893.blr.arm.com [10.162.16.89])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D69983F63F;
-	Thu,  6 Feb 2025 20:09:33 -0800 (PST)
-Message-ID: <c804485f-d042-4013-9fef-ad7eb91c3a85@arm.com>
-Date: Fri, 7 Feb 2025 09:39:30 +0530
+	s=arc-20240116; t=1738901418; c=relaxed/simple;
+	bh=HtCNjSH8Ryfa0ku1LVrTtGZFWTFYVMgJPQ0+bK607CE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bCGz2f73VxH97Ugi5MG6mSnFk+NnANInbL/St7gD/mYswbowFgUgVeC/3yUiSb+d1VLUjTMpnoHjGZB7hiDMjR4pOqFjUMdPm7+H8Yf5F59fMVVYOnkZTBL6nT9TQ5yO6cZitfvkVOFi4TF1jLmx3VLjYAaNN/XUeAJVxUFY4d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rv4HfJ4U; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rv4HfJ4U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CAE3C4CED1;
+	Fri,  7 Feb 2025 04:10:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738901417;
+	bh=HtCNjSH8Ryfa0ku1LVrTtGZFWTFYVMgJPQ0+bK607CE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Rv4HfJ4U46+hO2PlImFD47ipe0JxNRBDA7sjqXZdFoMcs8zQtiVni7RGVtpaLIyUl
+	 4nQ3Al5+ijNirS7CB+1mQRkGdTgZDS0jZQB/3d3ETwN1zXVoN73ESN+DaTbVZeyWI/
+	 lNF13Lbh96S8Omb5qSkMUfGrTbyU8/mSRqT00QJKApbtNiABNof5fBoTGgxeJS2H2a
+	 uF0+OQECtuQGSfkJCIfAIrb2YCYpHKSg/oM7BP8d94JJAjx0VWezpuUWkVvbTaZoqW
+	 zIrfIyRSvkDiKH2cp0WtpeHn5euGaiRpCeOGn24gkvbhV9glK9Svifp+Osz9s7DRsc
+	 IYGJcfCakD7bQ==
+From: Eric Biggers <ebiggers@kernel.org>
+To: Mustafa Ismail <mustafa.ismail@intel.com>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	linux-rdma@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH v3] RDMA/irdma: switch to using the crc32c library
+Date: Thu,  6 Feb 2025 20:08:16 -0800
+Message-ID: <20250207040816.69163-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 07/16] arm64: hugetlb: Use ___set_ptes() and
- ___ptep_get_and_clear()
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Muchun Song <muchun.song@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250205151003.88959-1-ryan.roberts@arm.com>
- <20250205151003.88959-8-ryan.roberts@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250205151003.88959-8-ryan.roberts@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/5/25 20:39, Ryan Roberts wrote:
-> Refactor the huge_pte helpers to use the new generic ___set_ptes() and
-> ___ptep_get_and_clear() APIs.
-> 
-> This provides 2 benefits; First, when page_table_check=on, hugetlb is
-> now properly/fully checked. Previously only the first page of a hugetlb
+From: Eric Biggers <ebiggers@google.com>
 
-PAGE_TABLE_CHECK will be fully supported now in hugetlb irrespective of
-the page table level. This is definitely an improvement.
+Now that the crc32c() library function directly takes advantage of
+architecture-specific optimizations, it is unnecessary to go through the
+crypto API.  Just use crc32c().  This is much simpler, and it improves
+performance due to eliminating the crypto API overhead.
 
-> folio was checked. Second, instead of having to call __set_ptes(nr=1)
-> for each pte in a loop, the whole contiguous batch can now be set in one
-> go, which enables some efficiencies and cleans up the code.
+Note that for crc32c the equivalent of crypto_shash_digest() is
+cpu_to_le32(~crc32c(~0, ...)), considering that crypto_shash_digest()
+had before and inversions as well as a cpu_to_le32() built-in.  This
+means that this driver is using u32 for fixed-endian types; this patch
+does not try to fix that but rather just keep the exact same behavior.
 
-Improvements done to common __set_ptes() will automatically be available
-for hugetlb pages as well. This converges all batch updates in a single
-i.e __set_ptes() which can be optimized further in a single place. Makes
-sense.
+Link: https://lore.kernel.org/r/20250207033643.59904-1-ebiggers@kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
 
-> 
-> One detail to note is that huge_ptep_clear_flush() was previously
-> calling ptep_clear_flush() for a non-contiguous pte (i.e. a pud or pmd
-> block mapping). This has a couple of disadvantages; first
-> ptep_clear_flush() calls ptep_get_and_clear() which transparently
-> handles contpte. Given we only call for non-contiguous ptes, it would be
-> safe, but a waste of effort. It's preferable to go stright to the layer
+v2: Resent as standalone patch and improved the commit message.
+v3: Added cpu_to_le32() to match the existing behavior exactly.
 
-A small nit - typo s/stright/straight
+ drivers/infiniband/hw/irdma/Kconfig |  1 +
+ drivers/infiniband/hw/irdma/main.h  |  1 -
+ drivers/infiniband/hw/irdma/osdep.h |  6 +---
+ drivers/infiniband/hw/irdma/puda.c  | 19 +++++-------
+ drivers/infiniband/hw/irdma/puda.h  |  5 +--
+ drivers/infiniband/hw/irdma/utils.c | 47 ++---------------------------
+ 6 files changed, 12 insertions(+), 67 deletions(-)
 
-> below. However, more problematic is that ptep_get_and_clear() is for
-> PAGE_SIZE entries so it calls page_table_check_pte_clear() and would not
-> clear the whole hugetlb folio. So let's stop special-casing the non-cont
-> case and just rely on get_clear_contig_flush() to do the right thing for
-> non-cont entries.
+diff --git a/drivers/infiniband/hw/irdma/Kconfig b/drivers/infiniband/hw/irdma/Kconfig
+index b6f9c41bca51d..5f49a58590ed7 100644
+--- a/drivers/infiniband/hw/irdma/Kconfig
++++ b/drivers/infiniband/hw/irdma/Kconfig
+@@ -5,8 +5,9 @@ config INFINIBAND_IRDMA
+ 	depends on IPV6 || !IPV6
+ 	depends on PCI
+ 	depends on ICE && I40E
+ 	select GENERIC_ALLOCATOR
+ 	select AUXILIARY_BUS
++	select CRC32
+ 	help
+ 	  This is an Intel(R) Ethernet Protocol Driver for RDMA driver
+ 	  that support E810 (iWARP/RoCE) and X722 (iWARP) network devices.
+diff --git a/drivers/infiniband/hw/irdma/main.h b/drivers/infiniband/hw/irdma/main.h
+index 9f0ed6e844711..0705ef3d72a93 100644
+--- a/drivers/infiniband/hw/irdma/main.h
++++ b/drivers/infiniband/hw/irdma/main.h
+@@ -28,11 +28,10 @@
+ #ifndef CONFIG_64BIT
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #endif
+ #include <linux/auxiliary_bus.h>
+ #include <linux/net/intel/iidc.h>
+-#include <crypto/hash.h>
+ #include <rdma/ib_smi.h>
+ #include <rdma/ib_verbs.h>
+ #include <rdma/ib_pack.h>
+ #include <rdma/rdma_cm.h>
+ #include <rdma/iw_cm.h>
+diff --git a/drivers/infiniband/hw/irdma/osdep.h b/drivers/infiniband/hw/irdma/osdep.h
+index ddf02a462efa2..4b4f78288d12e 100644
+--- a/drivers/infiniband/hw/irdma/osdep.h
++++ b/drivers/infiniband/hw/irdma/osdep.h
+@@ -4,11 +4,10 @@
+ #define IRDMA_OSDEP_H
+ 
+ #include <linux/pci.h>
+ #include <linux/bitfield.h>
+ #include <linux/net/intel/iidc.h>
+-#include <crypto/hash.h>
+ #include <rdma/ib_verbs.h>
+ 
+ #define STATS_TIMER_DELAY	60000
+ 
+ struct irdma_dma_info {
+@@ -41,19 +40,16 @@ struct ib_device *to_ibdev(struct irdma_sc_dev *dev);
+ void irdma_ieq_mpa_crc_ae(struct irdma_sc_dev *dev, struct irdma_sc_qp *qp);
+ enum irdma_status_code irdma_vf_wait_vchnl_resp(struct irdma_sc_dev *dev);
+ bool irdma_vf_clear_to_send(struct irdma_sc_dev *dev);
+ void irdma_add_dev_ref(struct irdma_sc_dev *dev);
+ void irdma_put_dev_ref(struct irdma_sc_dev *dev);
+-int irdma_ieq_check_mpacrc(struct shash_desc *desc, void *addr, u32 len,
+-			   u32 val);
++int irdma_ieq_check_mpacrc(const void *addr, u32 len, u32 val);
+ struct irdma_sc_qp *irdma_ieq_get_qp(struct irdma_sc_dev *dev,
+ 				     struct irdma_puda_buf *buf);
+ void irdma_send_ieq_ack(struct irdma_sc_qp *qp);
+ void irdma_ieq_update_tcpip_info(struct irdma_puda_buf *buf, u16 len,
+ 				 u32 seqnum);
+-void irdma_free_hash_desc(struct shash_desc *hash_desc);
+-int irdma_init_hash_desc(struct shash_desc **hash_desc);
+ int irdma_puda_get_tcpip_info(struct irdma_puda_cmpl_info *info,
+ 			      struct irdma_puda_buf *buf);
+ int irdma_cqp_sds_cmd(struct irdma_sc_dev *dev,
+ 		      struct irdma_update_sds_info *info);
+ int irdma_cqp_manage_hmc_fcn_cmd(struct irdma_sc_dev *dev,
+diff --git a/drivers/infiniband/hw/irdma/puda.c b/drivers/infiniband/hw/irdma/puda.c
+index 7e3f9bca2c235..694e5a9ed15d0 100644
+--- a/drivers/infiniband/hw/irdma/puda.c
++++ b/drivers/infiniband/hw/irdma/puda.c
+@@ -921,12 +921,10 @@ void irdma_puda_dele_rsrc(struct irdma_sc_vsi *vsi, enum puda_rsrc_type type,
+ 		return;
+ 	}
+ 
+ 	switch (rsrc->cmpl) {
+ 	case PUDA_HASH_CRC_COMPLETE:
+-		irdma_free_hash_desc(rsrc->hash_desc);
+-		fallthrough;
+ 	case PUDA_QP_CREATED:
+ 		irdma_qp_rem_qos(&rsrc->qp);
+ 
+ 		if (!reset)
+ 			irdma_puda_free_qp(rsrc);
+@@ -1093,19 +1091,16 @@ int irdma_puda_create_rsrc(struct irdma_sc_vsi *vsi,
+ 	ret = irdma_puda_replenish_rq(rsrc, true);
+ 	if (ret)
+ 		goto error;
+ 
+ 	if (info->type == IRDMA_PUDA_RSRC_TYPE_IEQ) {
+-		if (!irdma_init_hash_desc(&rsrc->hash_desc)) {
+-			rsrc->check_crc = true;
+-			rsrc->cmpl = PUDA_HASH_CRC_COMPLETE;
+-			ret = 0;
+-		}
++		rsrc->check_crc = true;
++		rsrc->cmpl = PUDA_HASH_CRC_COMPLETE;
+ 	}
+ 
+ 	irdma_sc_ccq_arm(&rsrc->cq);
+-	return ret;
++	return 0;
+ 
+ error:
+ 	irdma_puda_dele_rsrc(vsi, info->type, false);
+ 
+ 	return ret;
+@@ -1394,12 +1389,12 @@ static int irdma_ieq_handle_partial(struct irdma_puda_rsrc *ieq,
+ 	irdma_ieq_update_tcpip_info(txbuf, fpdu_len, seqnum);
+ 
+ 	crcptr = txbuf->data + fpdu_len - 4;
+ 	mpacrc = *(u32 *)crcptr;
+ 	if (ieq->check_crc) {
+-		status = irdma_ieq_check_mpacrc(ieq->hash_desc, txbuf->data,
+-						(fpdu_len - 4), mpacrc);
++		status = irdma_ieq_check_mpacrc(txbuf->data, fpdu_len - 4,
++						mpacrc);
+ 		if (status) {
+ 			ibdev_dbg(to_ibdev(ieq->dev), "IEQ: error bad crc\n");
+ 			goto error;
+ 		}
+ 	}
+@@ -1463,12 +1458,12 @@ static int irdma_ieq_process_buf(struct irdma_puda_rsrc *ieq,
+ 			break;
+ 		}
+ 		crcptr = datap + fpdu_len - 4;
+ 		mpacrc = *(u32 *)crcptr;
+ 		if (ieq->check_crc)
+-			ret = irdma_ieq_check_mpacrc(ieq->hash_desc, datap,
+-						     fpdu_len - 4, mpacrc);
++			ret = irdma_ieq_check_mpacrc(datap, fpdu_len - 4,
++						     mpacrc);
+ 		if (ret) {
+ 			list_add(&buf->list, rxlist);
+ 			ibdev_dbg(to_ibdev(ieq->dev),
+ 				  "ERR: IRDMA_ERR_MPA_CRC\n");
+ 			return -EINVAL;
+diff --git a/drivers/infiniband/hw/irdma/puda.h b/drivers/infiniband/hw/irdma/puda.h
+index bc6d9514c9c10..2fc638f2b1434 100644
+--- a/drivers/infiniband/hw/irdma/puda.h
++++ b/drivers/infiniband/hw/irdma/puda.h
+@@ -117,11 +117,10 @@ struct irdma_puda_rsrc {
+ 	u64 *rq_wrid_array;
+ 	u32 compl_rxwqe_idx;
+ 	u32 rx_wqe_idx;
+ 	u32 rxq_invalid_cnt;
+ 	u32 tx_wqe_avail_cnt;
+-	struct shash_desc *hash_desc;
+ 	struct list_head txpend;
+ 	struct list_head bufpool; /* free buffers pool list for recv and xmit */
+ 	u32 alloc_buf_count;
+ 	u32 avail_buf_count; /* snapshot of currently available buffers */
+ 	spinlock_t bufpool_lock;
+@@ -161,14 +160,12 @@ int irdma_puda_poll_cmpl(struct irdma_sc_dev *dev, struct irdma_sc_cq *cq,
+ 
+ struct irdma_sc_qp *irdma_ieq_get_qp(struct irdma_sc_dev *dev,
+ 				     struct irdma_puda_buf *buf);
+ int irdma_puda_get_tcpip_info(struct irdma_puda_cmpl_info *info,
+ 			      struct irdma_puda_buf *buf);
+-int irdma_ieq_check_mpacrc(struct shash_desc *desc, void *addr, u32 len, u32 val);
+-int irdma_init_hash_desc(struct shash_desc **desc);
++int irdma_ieq_check_mpacrc(const void *addr, u32 len, u32 val);
+ void irdma_ieq_mpa_crc_ae(struct irdma_sc_dev *dev, struct irdma_sc_qp *qp);
+-void irdma_free_hash_desc(struct shash_desc *desc);
+ void irdma_ieq_update_tcpip_info(struct irdma_puda_buf *buf, u16 len, u32 seqnum);
+ int irdma_cqp_qp_create_cmd(struct irdma_sc_dev *dev, struct irdma_sc_qp *qp);
+ int irdma_cqp_cq_create_cmd(struct irdma_sc_dev *dev, struct irdma_sc_cq *cq);
+ int irdma_cqp_qp_destroy_cmd(struct irdma_sc_dev *dev, struct irdma_sc_qp *qp);
+ void irdma_cqp_cq_destroy_cmd(struct irdma_sc_dev *dev, struct irdma_sc_cq *cq);
+diff --git a/drivers/infiniband/hw/irdma/utils.c b/drivers/infiniband/hw/irdma/utils.c
+index 0e594122baa78..e73b14fd95ef1 100644
+--- a/drivers/infiniband/hw/irdma/utils.c
++++ b/drivers/infiniband/hw/irdma/utils.c
+@@ -1271,62 +1271,19 @@ void irdma_ieq_mpa_crc_ae(struct irdma_sc_dev *dev, struct irdma_sc_qp *qp)
+ 	info.ae_code = IRDMA_AE_LLP_RECEIVED_MPA_CRC_ERROR;
+ 	info.ae_src = IRDMA_AE_SOURCE_RQ;
+ 	irdma_gen_ae(rf, qp, &info, false);
+ }
+ 
+-/**
+- * irdma_init_hash_desc - initialize hash for crc calculation
+- * @desc: cryption type
+- */
+-int irdma_init_hash_desc(struct shash_desc **desc)
+-{
+-	struct crypto_shash *tfm;
+-	struct shash_desc *tdesc;
+-
+-	tfm = crypto_alloc_shash("crc32c", 0, 0);
+-	if (IS_ERR(tfm))
+-		return -EINVAL;
+-
+-	tdesc = kzalloc(sizeof(*tdesc) + crypto_shash_descsize(tfm),
+-			GFP_KERNEL);
+-	if (!tdesc) {
+-		crypto_free_shash(tfm);
+-		return -EINVAL;
+-	}
+-
+-	tdesc->tfm = tfm;
+-	*desc = tdesc;
+-
+-	return 0;
+-}
+-
+-/**
+- * irdma_free_hash_desc - free hash desc
+- * @desc: to be freed
+- */
+-void irdma_free_hash_desc(struct shash_desc *desc)
+-{
+-	if (desc) {
+-		crypto_free_shash(desc->tfm);
+-		kfree(desc);
+-	}
+-}
+-
+ /**
+  * irdma_ieq_check_mpacrc - check if mpa crc is OK
+- * @desc: desc for hash
+  * @addr: address of buffer for crc
+  * @len: length of buffer
+  * @val: value to be compared
+  */
+-int irdma_ieq_check_mpacrc(struct shash_desc *desc, void *addr, u32 len,
+-			   u32 val)
++int irdma_ieq_check_mpacrc(const void *addr, u32 len, u32 val)
+ {
+-	u32 crc = 0;
+-
+-	crypto_shash_digest(desc, addr, len, (u8 *)&crc);
+-	if (crc != val)
++	if ((__force u32)cpu_to_le32(~crc32c(~0, addr, len)) != val)
+ 		return -EINVAL;
+ 
+ 	return 0;
+ }
+ 
 
-Like before, this change is unrelated to all the conversions done earlier for
-the set and clear paths above using the new helpers. Hence ideally it should
-be separated out into a different patch.
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+-- 
+2.48.1
 
-> 
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> ---
->  arch/arm64/mm/hugetlbpage.c | 50 ++++++++-----------------------------
->  1 file changed, 11 insertions(+), 39 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-> index e870d01d12ea..02afee31444e 100644
-> --- a/arch/arm64/mm/hugetlbpage.c
-> +++ b/arch/arm64/mm/hugetlbpage.c
-> @@ -166,12 +166,12 @@ static pte_t get_clear_contig(struct mm_struct *mm,
->  	pte_t pte, tmp_pte;
->  	bool present;
->  
-> -	pte = __ptep_get_and_clear(mm, addr, ptep);
-> +	pte = ___ptep_get_and_clear(mm, ptep, pgsize);
->  	present = pte_present(pte);
->  	while (--ncontig) {
->  		ptep++;
->  		addr += pgsize;
-> -		tmp_pte = __ptep_get_and_clear(mm, addr, ptep);
-> +		tmp_pte = ___ptep_get_and_clear(mm, ptep, pgsize);
->  		if (present) {
->  			if (pte_dirty(tmp_pte))
->  				pte = pte_mkdirty(pte);
-> @@ -215,7 +215,7 @@ static void clear_flush(struct mm_struct *mm,
->  	unsigned long i, saddr = addr;
->  
->  	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
-> -		__ptep_get_and_clear(mm, addr, ptep);
-> +		___ptep_get_and_clear(mm, ptep, pgsize);
->  
->  	__flush_hugetlb_tlb_range(&vma, saddr, addr, pgsize, true);
->  }
-
-___ptep_get_and_clear() will have the opportunity to call page_table_check_pxx_clear()
-depending on the page size passed unlike the current scenario.
-
-> @@ -226,32 +226,20 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
->  	size_t pgsize;
->  	int i;
->  	int ncontig;
-> -	unsigned long pfn, dpfn;
-> -	pgprot_t hugeprot;
->  
->  	ncontig = num_contig_ptes(sz, &pgsize);
->  
->  	if (!pte_present(pte)) {
->  		for (i = 0; i < ncontig; i++, ptep++, addr += pgsize)
-> -			__set_ptes(mm, addr, ptep, pte, 1);
-> +			___set_ptes(mm, ptep, pte, 1, pgsize);
-
-IIUC __set_ptes() wrapper is still around in the header. So what's the benefit of
-converting this into ___set_ptes() ? __set_ptes() gets dropped eventually ?
-
->  		return;
->  	}
->  
-> -	if (!pte_cont(pte)) {
-> -		__set_ptes(mm, addr, ptep, pte, 1);
-> -		return;
-> -	}
-> -
-> -	pfn = pte_pfn(pte);
-> -	dpfn = pgsize >> PAGE_SHIFT;
-> -	hugeprot = pte_pgprot(pte);
-> -
->  	/* Only need to "break" if transitioning valid -> valid. */
-> -	if (pte_valid(__ptep_get(ptep)))
-> +	if (pte_cont(pte) && pte_valid(__ptep_get(ptep)))
->  		clear_flush(mm, addr, ptep, pgsize, ncontig);
->  
-> -	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
-> -		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
-> +	___set_ptes(mm, ptep, pte, ncontig, pgsize);
->  }
-
-Similarly __set_ptes() will have the opportunity to call page_table_check_pxx_set()
-depending on the page size passed unlike the current scenario.
-
->  
->  pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
-> @@ -441,11 +429,9 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
->  			       unsigned long addr, pte_t *ptep,
->  			       pte_t pte, int dirty)
->  {
-> -	int ncontig, i;
-> +	int ncontig;
->  	size_t pgsize = 0;
-> -	unsigned long pfn = pte_pfn(pte), dpfn;
->  	struct mm_struct *mm = vma->vm_mm;
-> -	pgprot_t hugeprot;
->  	pte_t orig_pte;
->  
->  	VM_WARN_ON(!pte_present(pte));
-> @@ -454,7 +440,6 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
->  		return __ptep_set_access_flags(vma, addr, ptep, pte, dirty);
->  
->  	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
-> -	dpfn = pgsize >> PAGE_SHIFT;
->  
->  	if (!__cont_access_flags_changed(ptep, pte, ncontig))
->  		return 0;
-> @@ -469,19 +454,14 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
->  	if (pte_young(orig_pte))
->  		pte = pte_mkyoung(pte);
->  
-> -	hugeprot = pte_pgprot(pte);
-> -	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
-> -		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
-> -
-> +	___set_ptes(mm, ptep, pte, ncontig, pgsize);
->  	return 1;
->  }
-
-This makes huge_ptep_set_access_flags() cleaner and simpler as well.
-
->  
->  void huge_ptep_set_wrprotect(struct mm_struct *mm,
->  			     unsigned long addr, pte_t *ptep)
->  {
-> -	unsigned long pfn, dpfn;
-> -	pgprot_t hugeprot;
-> -	int ncontig, i;
-> +	int ncontig;
->  	size_t pgsize;
->  	pte_t pte;
->  
-> @@ -494,16 +474,11 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
->  	}
->  
->  	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
-> -	dpfn = pgsize >> PAGE_SHIFT;
->  
->  	pte = get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
->  	pte = pte_wrprotect(pte);
->  
-> -	hugeprot = pte_pgprot(pte);
-> -	pfn = pte_pfn(pte);
-> -
-> -	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
-> -		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
-> +	___set_ptes(mm, ptep, pte, ncontig, pgsize);
->  }
-
-This makes huge_ptep_set_wrprotect() cleaner and simpler as well.
-
->  
->  pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
-> @@ -517,10 +492,7 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
->  	pte = __ptep_get(ptep);
->  	VM_WARN_ON(!pte_present(pte));
->  
-> -	if (!pte_cont(pte))
-> -		return ptep_clear_flush(vma, addr, ptep);
-> -
-> -	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
-> +	ncontig = num_contig_ptes(page_size(pte_page(pte)), &pgsize);
-
-A VMA argument is present in this function huge_ptep_clear_flush(). Why not just
-use that to get the huge page size here, instead of retrieving the PFN contained
-in page table entry which might be safer ?
-
-s/page_size(pte_page(pte))/huge_page_size(hstate_vma(vma))
-
->  	return get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
->  }
->  
