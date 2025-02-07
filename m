@@ -1,142 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F30191F62;
-	Fri,  7 Feb 2025 21:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71E5194C6A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 21:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738962888; cv=none; b=FsObFx7PNOD44it1ba1zG4WdSQOXfTsn1wN+3h8NmUeCSW4JH1c1Q4gQXIvmJu3/Nwhx5PZa1og7MqYWk38jIT0qCMouoqS/SS+LgRj1arJA8VplbrzkGCOBzJim3X/0BZ+TH6fpP1qi7v9G1MfuAEZBO5raMWzDdQjTSzXJAhI=
+	t=1738962974; cv=none; b=OW22L1/U4frHEreVRbAgo2O+QURY0psOZpNM+vJi5JMSEabF1WSKP4PoPBWI2BzadMytBdmk0aM6z1KJFG6sjh4mZTtCKNFDGd41voynXyJRtdQFjjhO+4tSjjtC5dUCcehcx6DvgjO1jTXjX4/CpaAjPcQ8PvXxcQgIeEU9YLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738962888; c=relaxed/simple;
-	bh=UzW/j/MhqjsYRn0dghOTG6lqfHaO4zHzu7s6Zg/VY/E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yf+5SqMPPMm9WBBudqw9xDm7eCerFBLRnof9s7kKQG01M7cjeLjhX7ft5yi0d+BjFbNESZH5dM/odO/RfWQwZkkKNncaRnimaM3v9zUtfsNa9cJ+bxvnl6n9Wxi83WMvSUQhgdLH4vsXlDWBQu4k6zcf4QS6EyNysmEanEMVuhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ajEYgs9i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738962974; c=relaxed/simple;
+	bh=wAB8wrAH27a054btGvkYTtyL9HVh//P5TEAeDQMMsOk=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=SwI8Rv0qKRG95tRlfjU4zX/b/jCTXuItbMGkKJNklgcZTnXcaeJkDonoN7JKTTMLTms6Ais0tl9ZWQ+3YYsTQGMBTj9PYP9YB0gHa7U2D1EMsIfMjgAm9yRRn+oAlO9XSee6UmByTEtmedM7Z6N6aX736KT1+vsxZE2V2SRoVvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GlpHsWaV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nMt1Adce; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ajEYgs9i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBDBFC4CED1;
-	Fri,  7 Feb 2025 21:14:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738962887;
-	bh=UzW/j/MhqjsYRn0dghOTG6lqfHaO4zHzu7s6Zg/VY/E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ajEYgs9iieuGO09n478aohb5YMW8lk2JTRt4af0yaVOQ1f/LWFzJYkZszvSuyxCdi
-	 m6MJHrjqS7u4zjp6Pb/+wZEJQyYHGR/Urwk/ywwC8++BNosP6hTySNThSXqHCI4oNW
-	 fUu9IFSkdAPdrkwWBvp08Sn/umIoCe6c3pZsqcnmfN3ZLGPcPAMS8pWApZRE7L6Ft6
-	 Fy+pgcqOCeOT3cjagQmE9QRcJQjXbP3sD7IOVEvDfxQhUauhP6RxywKknJiXHRFUZy
-	 gyJEPmo7EzMyKx9633gllG4ZmYJNCK9VwO8LtfbkGpEvRHIPCa4+UcIi56Si8I4zDy
-	 pYrDLxLrDHMMA==
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-307325f2436so23171411fa.0;
-        Fri, 07 Feb 2025 13:14:47 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVeN5m9HSSEoTdogWk9ET8q244Ha14ejdZle0SEPMixSEHCnE+oweAU6azd+1NyeV95h7MykZ3KhU/3TcfJ@vger.kernel.org, AJvYcCWOyDVZqFCNmxUSNLpLKvDfFNyMBf2z4xWx61fYc7+6SkiTGDAcQzTIZufYocPhTy3HiRk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeivdGUUuX4oMP4hvOb8qgxH6NpvDCiKcjNIbozebAeWz6BgNE
-	dqgJ6hkdQqfRa75hdjbfr+vIhVGDc4ApZ0pXWTTD5KHVoqodBBZbYJOi0LY2QtZRvFN7yEVx/6m
-	dpf46it2Wu7mup8wEjYG9T+Om32s=
-X-Google-Smtp-Source: AGHT+IFH/lse15fSsw/oIj5fPPzMgUf+j3EWKTx6cAiTONgWZxGRKhsKbpDczDZ5OAGzjx0G1mLA4wKdWJEkU80mgKI=
-X-Received: by 2002:a2e:a545:0:b0:302:3261:8e33 with SMTP id
- 38308e7fff4ca-307e57afd20mr16636731fa.4.1738962886567; Fri, 07 Feb 2025
- 13:14:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GlpHsWaV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nMt1Adce"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738962970;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dPIsYcEi7cL0vy+2BbDAVB8vWVCujcidKi+brvoAQmo=;
+	b=GlpHsWaV9m4kdbutFVe07rVOKeMoXwVArr2NlnjJyQjG4xSCVxCH40EJb1oqoH5WykV+N3
+	NxQqck20+olhXehmxQ76fz+68aMHXhaD3SFtQ3N0uqAS5ys1Zx8TFbs7YxUGLZCyRyxRc0
+	6dmILWZS6AeHESurQJdt2idmqTyPRK+ayKor2gh88SV8m9dmwx9yOiAOVzi2kXYcBWalux
+	uFeB5GP8ODCBMvcuBGiK1meiclYwzXBx8js9KyTMHkrFEm9RA8VdZUDO69VbQCL7FvY3PZ
+	qGwH+DnWal/2HBO2xyVLMtBe0MdEpQ5hgCKc8dvYjacG8Dejz4NEIkUGsmQfQg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738962970;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dPIsYcEi7cL0vy+2BbDAVB8vWVCujcidKi+brvoAQmo=;
+	b=nMt1Adce0mCt6DpmpnjxTOiPeulRl68LxvEkxCKz2gTvTCmo9hhweKsQPoMHiW19JkGiN/
+	2H7GgwsZFctXBLAQ==
+To: Jens Axboe <axboe@kernel.dk>, Nam Cao <namcao@linutronix.de>, Anna-Maria
+ Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
+ <frederic@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] hrtimers: Make hrtimer_update_function() less expensive
+In-Reply-To: <ad55978e-4356-494e-8cda-9e6487344768@kernel.dk>
+References: <cover.1738746927.git.namcao@linutronix.de>
+ <9b33f490fb1d207d3918ef5e116dc3412ae35c1e.1738746927.git.namcao@linutronix.de>
+ <35d4b9be-3d08-4eaa-8750-7b34ec6e6064@kernel.dk> <87y0yjm4hi.ffs@tglx>
+ <4f317ca3-0ffd-4ee0-9da6-8b80a6366d0f@kernel.dk> <87h656n3r6.ffs@tglx>
+ <ad55978e-4356-494e-8cda-9e6487344768@kernel.dk>
+Date: Fri, 07 Feb 2025 22:16:09 +0100
+Message-ID: <87ikpllali.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <40ab531dfb491020ae1cc07d68dd03b0fb1d1fc8.1738440683.git.dxu@dxuuu.xyz>
-In-Reply-To: <40ab531dfb491020ae1cc07d68dd03b0fb1d1fc8.1738440683.git.dxu@dxuuu.xyz>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 8 Feb 2025 06:14:10 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARKnzM8hX1P1Gt8MDb6DxO4Nys7k9vphwqsrVW29vZg8g@mail.gmail.com>
-X-Gm-Features: AWEUYZm9fHMkVzPM1gtg6FqcNdCAygp82-dY1x8wHjOO6F2QFFyeM8FOUgnaSTo
-Message-ID: <CAK7LNARKnzM8hX1P1Gt8MDb6DxO4Nys7k9vphwqsrVW29vZg8g@mail.gmail.com>
-Subject: Re: [PATCH] tools/build: Skip jobserver flgas in -s detection
-To: Daniel Xu <dxu@dxuuu.xyz>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, jolsa@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Sun, Feb 2, 2025 at 5:11=E2=80=AFAM Daniel Xu <dxu@dxuuu.xyz> wrote:
->
-> Currently there is unnecessarily verbose output:
->
->     $ make -j8 bzImage
->     mkdir -p /home/dlxu/dev/linux/tools/objtool && make
->       O=3D/home/dlxu/dev/linux subdir=3Dtools/objtool --no-print-director=
-y -C
->       objtool
->     mkdir -p /home/dlxu/dev/linux/tools/bpf/resolve_btfids && make
->       O=3D/home/dlxu/dev/linux subdir=3Dtools/bpf/resolve_btfids
->       --no-print-directory -C bpf/resolve_btfids
->       INSTALL libsubcmd_headers
->       INSTALL libsubcmd_headers
->       UPD     include/config/kernel.release
->
-> The reason this happens is that it seems that make is internally adding
-> the following flag to $(MAKEFLAGS):
->
->     ---jobserver-auth=3Dfifo:/tmp/GMfifo1880691
->
-> This breaks -s detection which searches for 's' in $(short-opts), as any
-> this entire long flag is treated as a short flag and the presence of any
-> 's' triggers silent=3D1.
->
-> Fix by filtering out such flags so it's still correct to do a substring
-> search for 's'.
->
-> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+The sanity checks in hrtimer_update_function() are expensive for high
+frequency usage like in the io/uring code due to locking.
 
+Hide the sanity checks behind CONFIG_PROVE_LOCKING, which has a decent
+chance to be enabled on a regular basis for testing.
 
-This is not the right fix.
+Fixes: 8f02e3563bb5 ("hrtimers: Introduce hrtimer_update_function()")
+Reported-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ include/linux/hrtimer.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The code for calculating short-opts is correct.
-
-This is documented in GNU Make manual:
- Recall that MAKEFLAGS will put all single-letter options (such as =E2=80=
-=98-t=E2=80=99) into
- the first word, and that word will be empty if no single-letter options we=
-re
- given. To work with this, it=E2=80=99s helpful to add a value at the start=
- to ensure
- there=E2=80=99s a word: for example =E2=80=98-$(MAKEFLAGS)=E2=80=99.
-
-https://www.gnu.org/software/make/manual/make.html#Testing-Flags
-
-
-The root cause is different.
-
-
-
-
-> ---
->  tools/scripts/Makefile.include | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.incl=
-ude
-> index 0aa4005017c7..a413f73a7856 100644
-> --- a/tools/scripts/Makefile.include
-> +++ b/tools/scripts/Makefile.include
-> @@ -139,9 +139,9 @@ endif
->  # If the user is running make -s (silent mode), suppress echoing of comm=
-ands
->  # make-4.0 (and later) keep single letter options in the 1st word of MAK=
-EFLAGS.
->  ifeq ($(filter 3.%,$(MAKE_VERSION)),)
-> -short-opts :=3D $(firstword -$(MAKEFLAGS))
-> +short-opts :=3D $(filter-out ---%,$(firstword -$(MAKEFLAGS)))
->  else
-> -short-opts :=3D $(filter-out --%,$(MAKEFLAGS))
-> +short-opts :=3D $(filter-out --% ---%,$(MAKEFLAGS))
->  endif
->
->  ifneq ($(findstring s,$(short-opts)),)
-> --
-> 2.47.1
->
->
-
-
---
-Best Regards
-Masahiro Yamada
+--- a/include/linux/hrtimer.h
++++ b/include/linux/hrtimer.h
+@@ -333,6 +333,7 @@ static inline int hrtimer_callback_runni
+ static inline void hrtimer_update_function(struct hrtimer *timer,
+ 					   enum hrtimer_restart (*function)(struct hrtimer *))
+ {
++#ifdef CONFIG_PROVE_LOCKING
+ 	guard(raw_spinlock_irqsave)(&timer->base->cpu_base->lock);
+ 
+ 	if (WARN_ON_ONCE(hrtimer_is_queued(timer)))
+@@ -340,7 +341,7 @@ static inline void hrtimer_update_functi
+ 
+ 	if (WARN_ON_ONCE(!function))
+ 		return;
+-
++#endif
+ 	timer->function = function;
+ }
+ 
