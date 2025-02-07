@@ -1,130 +1,85 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7171EB19D
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D0661F7069;
+	Fri,  7 Feb 2025 15:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738941842; cv=none; b=tyo8sU9JM7y+pwb+8ZokBPwCQGjGF0F4v5p3HeMRkxw/tzdGXHLSKNbQf3/eGVU8vJiiLyedCbOzUghT196Wxk6l66oBYOqn+LVfyst3L+8n2H77Xl6/savclxM4sa1tEgeT8HznE8QgKkTKb9ivkk+TX9DKKjSR9c5zYQm0q80=
+	t=1738941852; cv=none; b=gDdfEvGRJwiYfMEotTf6q2iK78awF5oiMd/70bO+iK+UH2MqM5iLTXq5TqfveNWii6MLvZuc+1D8caGavlqQA1NmD4+VoNkJGW617xmjgZnbJoo7Xx11fWnS8kwKYvTPuUiDmQjRwaXdkGxd5ZGZbf5O4CpKjOB0HaBXFBnPrzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738941842; c=relaxed/simple;
-	bh=0QDQqHrgVLXCxx+qW9kTksbcFhM3nUPG5B9br80WLWs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cCt1qAB1mDQeaNIh/OPp4/i52qttRQswn2oeOOKaXrOvLbN6r3CKR/k15VLVFmbo54NaCuPdg1WsqREMQKtVWrLeGILyMcpJnBNtNTFeWDMbWAgILIlNVfn/hX8vTAcEANvg+sSo5FXSXoRprP2sK7HFUG+oZy8wS2oDD9Q8lco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XYaujCYb; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1738941852; c=relaxed/simple;
+	bh=L0mpe55eMmldTcY+TI4GJoQofUNmY83l2376LcHT7M8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OJftgfbLd9PL4nUt8vWGIE2d9WMmfNRzmIGjJUTDoQWpGBYlLNNNNB/ug6i5w3NvckRt3y706YeKJAtES+aw3TDyUE2WITLSouXLPWDdsGo6JR7kWpn/5oKs0WX5q6kjzwjuYjBsm21wSyncPjtJr/BmjbKsjESeGAcj8PyKvps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=OTIUAY90; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XYaujCYb"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5f2e370bb3aso654962eaf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 07:24:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738941840; x=1739546640; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Uxr/gLgLMBNgytGiMYTlRHUYI9qRODMAWATD12wZy7U=;
-        b=XYaujCYbI88MZnV/G1lJee/MJ+aCiASTiFsxGFr9js3x7vf8JGH98j/GA1jebLnB7k
-         AYCBzmQ5J04Kkmnx8bwh5xQuGwHIGssb+JITSRCnTiScbPdDSJ7oTTtxMQ7jMCfICJ5h
-         AGIvkX9jOQ7Ulj255s8i/mBds32LVSMexP+G7G1coNQJqWieGncNv0zDB+nUuoaNWx9a
-         Ym8HUmf231hNfPIToW0B/21hQn3CJeW/8kLwDhLnMXi09ErzQN86A4DcQz7yYQFh6IXm
-         blS/OJmd0k2WGFyABzHbqHbdlIg+4QZ2NTvP0JqoZ0aSyZuIgki6GSgiClYuTufvcFAs
-         xTgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738941840; x=1739546640;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uxr/gLgLMBNgytGiMYTlRHUYI9qRODMAWATD12wZy7U=;
-        b=sQLIsA/VOCUHzTicBpVRQQ01lbW/OZcdSo75bAM0A4918SN8K87DxjvyvooJNS++Na
-         8OpxdM9RzUMXi6oYcI+eeiCps6rMG38/WrmQfQonAyAOfMArgqGMWyNgVWGZH/Dp9DkP
-         Bi8XjzXIpQlNrDVNt8BoVyUiEZYPIRwid2rnTBqUglDfrxzPMjla1TySY0SfUNS26UhD
-         sqS1K05Dkxklo47sexpW8u4u/OUsqHiUmpmhr7tSgeZhv62tBzUxuljkKH7LSIdrtHuk
-         rEB1vCZipTDCUB5IU2EHhNXPOFwT7/dRbiBmlb5RIZfz8nyPzhQTgelRV7d4sMxrEBYh
-         +T2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU7MlegZVG6540eoLDjk1cOagoZkWYCHJU6dzSrVg/QBKt5lMMMm8N8irMivhnMm5ffRdJ2JgVNslxVyFQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuId5qTQqlPi0kh3f5fq6w4qnbFVXKgC5ro80voLOupgZ7poek
-	7OumeMMotd15tBOcKFwPcj0r2g1I6py9+CXX7laP/3BEORmMeh9NvSnkaamzSYc=
-X-Gm-Gg: ASbGncvQ0Tm8t5gL3OQ38hPMKMoJKRqFFsFkYUGaDzZHHErOxsUeUzVQqB4syFEys2u
-	6xsrMm5OD0XqcEm2gTw12KhdZPnrIDQvSyDCoicXrH1tpD0ROdivOGF49KCzP392bzO4HJAUIJQ
-	NOhzgfiOjeQGsQOEtbHMJQ3h0XpKnhi36VKPIdHDuGSdOwk1YWZ8nR6qU4yJir1q/2vBQVEYnVO
-	csY5+sLeWwIdMHdWyxORfdeXK7939w+cZkHLrEdRroAWeA5vQjgbYBr7340NdnIiyAQlhAvNhph
-	ayGK3Pzi0JjceLBSwN/vpUFd8kRntlufqODUA9U+iBmWAiH6o+KS
-X-Google-Smtp-Source: AGHT+IF71KkvJXcsCE6zlhD6P6zBCyc3Fr6QETt2X0hURimYWWudXZ1vnECtKv4gtVKmBwfLEwmh0Q==
-X-Received: by 2002:a05:6820:162a:b0:5f6:765c:d260 with SMTP id 006d021491bc7-5fc5e707990mr2247407eaf.7.1738941839640;
-        Fri, 07 Feb 2025 07:23:59 -0800 (PST)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc544b03b4sm781542eaf.3.2025.02.07.07.23.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 07:23:58 -0800 (PST)
-Message-ID: <b1459947-18ec-4835-8891-5251d8f8c95e@baylibre.com>
-Date: Fri, 7 Feb 2025 09:23:56 -0600
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="OTIUAY90"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=D1450
+	5eoFP/0xHq7p3qPv0wbvi5mxm7mCJIYN+BDc8k=; b=OTIUAY90DLyBjvAVzKodo
+	dxCxwtWyJpZFyWNEBuo6XmogqRDXXqHcNRa2bhLhzNqTcnky4xuS0rgcPXbYl1f6
+	ZMN6lsIVDdxV7Ks8QNXMM0WDrpTXFZSn05emJCa1eUtVf6KHHBzapSGauP1J5ZYl
+	WL4gfdNR2xTvM0LYCZJhVo=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgDnzyuAJaZngv75Bg--.43623S2;
+	Fri, 07 Feb 2025 23:23:45 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org
+Cc: kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	s-vadapalli@ti.com,
+	thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rockswang7@gmail.com,
+	"Hans Zhang" <18255117159@163.com>
+Subject: [PATCH] PCI: cadence: Fix runtime atomic count underflow.
+Date: Fri,  7 Feb 2025 23:23:43 +0800
+Message-Id: <20250207152343.37448-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 04/13] bus: ts-nbus: use gpiod_multi_set_value_cansleep
-To: Andy Shevchenko <andy.shevchenko@gmail.com>,
- Yury Norov <yury.norov@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
-References: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com>
- <20250206-gpio-set-array-helper-v2-4-1c5f048f79c3@baylibre.com>
- <CAHp75Vf+3pc84vV-900Ls64hM1M7Ji6Dmy8FPwL=n0=sJFSuVA@mail.gmail.com>
- <CAHp75Vdt5EU83mJrB7Sb_pgRNbhvCQ=F2Lyq7mQLAvV-w6cqEA@mail.gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <CAHp75Vdt5EU83mJrB7Sb_pgRNbhvCQ=F2Lyq7mQLAvV-w6cqEA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PygvCgDnzyuAJaZngv75Bg--.43623S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7GFyfKF4kJryfuF4fZFyxXwb_yoWDWFc_u3
+	ZYvF4IyFs0gr9Ikayay3WrXryDZa4jqw4jgan3tF43AF1xtw1DW3WkZF98ZF1kG3Z8JFyj
+	yw1qv3ZrCF9rAjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRZNVkUUUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwDso2emHzxZYgABsY
 
-On 2/7/25 6:17 AM, Andy Shevchenko wrote:
-> +Yury.
-> 
-> On Fri, Feb 7, 2025 at 2:15 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->> On Fri, Feb 7, 2025 at 12:48 AM David Lechner <dlechner@baylibre.com> wrote:
-> 
-> ...
-> 
->>>  static void ts_nbus_write_byte(struct ts_nbus *ts_nbus, u8 byte)
->>>  {
->>> -       struct gpio_descs *gpios = ts_nbus->data;
->>>         DECLARE_BITMAP(values, 8);
->>>
->>>         values[0] = byte;
->>>
->>> -       gpiod_set_array_value_cansleep(8, gpios->desc, gpios->info, values);
->>> +       gpiod_multi_set_value_cansleep(ts_nbus->data, values);
->>
->> As I said before, this is buggy code on BE64. Needs to be fixed.
-> 
-> Or isn't? Do we have a test case in bitmap for such a case?
-> 
->>>  }
-> 
-> 
+From: "Hans Zhang" <18255117159@163.com>
 
-Maybe not the best style, but I don't think it is buggy. Bitmaps are always
-handled in long-sized chunks and not cast to bytes so endianness doesn't affect
-it. I didn't see an explicit test, but bitmap_read() and bitmap_write() use
-array access like this so indirectly it is being tested.
+If the pci_host_probe fails to be executed and run one time
+pm_runtime_put_sync. Run pm_runtime_put_sync or pm_runtime_put again in
+cdns_plat_pcie_probe or j721e_pcie_probe. Finally, it will print log
+"runtime PM usage count underflow!".
+
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+ drivers/pci/controller/cadence/pcie-cadence-host.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+index 8af95e9da7ce..fe0b8d76005e 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence-host.c
++++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+@@ -576,8 +576,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 
+ 	return 0;
+ 
+- err_init:
+-	pm_runtime_put_sync(dev);
+-
++err_init:
+ 	return ret;
+ }
+
+base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
+-- 
+2.47.1
+
