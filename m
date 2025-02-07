@@ -1,97 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FA51DD88D;
-	Fri,  7 Feb 2025 09:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6AC91DE3A7
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738921024; cv=none; b=MV+k33HOA+NW4AOJoYMdcoT+cOg1oaHRP+o1vkXfRe9v6RDQp5oqDua4fE71A7FSxyO/9Zm6P2TOJb7ZToHs/kWxiOR3wR/wb23a16QlZ+/G++0Lj4AZ7DG3GJ+an+OB7cKAp52BUqAmy1OGcYidLHqs8g315XnWiyvYfDA2whw=
+	t=1738921026; cv=none; b=fRPTIt/fWngl/Lai+x36TlRa8t2YAToYVWKfx/j/ZP3eFBm89LPh8x9CAWKUfdMIPWktw5W3xuXkik4+j1sKJ+Z9x/H+fH2EjQF0kCg99AUQJ13bGIJHlLF7s99EPzruGchY5nQsV2ReMoAcuVlUPwh4ovUQyYK6pHeIhWD58fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738921024; c=relaxed/simple;
-	bh=f8S5Z26MQ4v00FiRKizfZIrEOYaW+rK3aHSMP+4o0HY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eYPygVfulTvRIBL5wSYQ2a4wdXZoJIBu6lpBJ+w5P2+vDJXL4YCcQu4zC+HPm5UMsrxcbY1G6rMM1FTxjBofiQLOsTQ39pcgRBu7sTRfmvc43A7GQbKHyUGzuAX+XLSVlLZsQ/H5GjNAVQm0rhsbRPeO7zVqm7JwamB3OLnLlmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h+CqAoLq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738921026; c=relaxed/simple;
+	bh=DZTAjfcVEUMXilHAzTkctefbUlsyz5gN6B4U82wmSfA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bZEAIvjkLlLqj3eMn5+yBnWjjuUSUrst8EYNifH+XTg3tsdZXgaLo6VFqnGi2KGjn9kFEVMZHK+XukB0aLqmFmzTa6is+lAkNWpY338XirBwB4PkvNbMTMwhY/YBnK81Tcd4M+G4KGw1O/JnxQu2dntTgFpf9Np/gFV6RXz6yww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UPGHq/OE; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h+CqAoLq"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BAAE2C4CED1;
-	Fri,  7 Feb 2025 09:37:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738921023;
-	bh=f8S5Z26MQ4v00FiRKizfZIrEOYaW+rK3aHSMP+4o0HY=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=h+CqAoLqfWodIlcT3E1goZycS0fH2ARZzvspuepmfVQRN8e/4R6ZmXXwAD/CeceZP
-	 3LKwJJISJuBYojRQZ+WFiesGfqF9yix1uiYWixcywfkcVG8PvwU9xrw13mbc8SAeBY
-	 4uTGNEP62Nw3Blil+RiPt9GWTAR1ZHU6Czpp7irFkEtlBHDKiS56Gkm8+4d/Cf9FgU
-	 1xv6jS/D+an01o2ehJWb40AICepUBq+rmhCsl48v4MAzxFr03bhg7qFwv5v3iW1alW
-	 qHJpB6pNayqXKm3Dk1Yl2MHib/THDE0eSGTVxTKOXmev/RAhQc6xnnhqC/Zd1oC7FQ
-	 uRHhvFiC02bfQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE96BC02196;
-	Fri,  7 Feb 2025 09:37:03 +0000 (UTC)
-From: Chuan Liu via B4 Relay <devnull+chuan.liu.amlogic.com@kernel.org>
-Date: Fri, 07 Feb 2025 17:36:10 +0800
-Subject: [PATCH] clk: Correct the data types of the variables in
- clk_calc_new_rates
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UPGHq/OE"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-436249df846so12300465e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 01:37:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738921023; x=1739525823; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DZTAjfcVEUMXilHAzTkctefbUlsyz5gN6B4U82wmSfA=;
+        b=UPGHq/OEGsLt/LitskuTmmS481dbq0ATubFggBBwGLX4GiB5KDxrKwXIOp6la7UQer
+         ICFaRTtYP1TCcWRSCutXVXWIk+hhMbrss3onbzlLw9kOCUs4o1/V5oXBvLZJBOxVHE/b
+         ML4il5yurF9Sza0Gg1nIKPEQ2XLEmq/i1Fj3yjEC/QYOQstbwkuhv27j/og+47Mmaoj9
+         iS/4Y1wK9b8Mwmatus2i6I1ys06fQXSZWTnsRsJVj/cX+jbD/iUKfWAk3RUTUyY/hlkq
+         TJtkmbOEDSImn4Mnd4xvBeUZ3wizO5/eXNEQrbirhA3H469yY06oGQHn8y/r1H2HuR1R
+         Lwmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738921023; x=1739525823;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DZTAjfcVEUMXilHAzTkctefbUlsyz5gN6B4U82wmSfA=;
+        b=pm8a60hQdjA2ClvBUeHGlibUAETyQIF6TLD5oIEAgJLvB7Q5bNjJ5WHbogvcqgAhrB
+         MgY6+Vu6jHftbrBVKo+F8a1RzpmVkkiC+rpo69GjsEu9hJGIthUEUqWNB4qx13kAnO35
+         RAvj6qbnFVdcTQ8d9GG2qkKkqmk3f4w9OqOQ2zpBrkUT2Dgmd4e+3Vq92cxwkOiDTTi1
+         APuHI0Sx0krG9DE4TtDKFVfj/5yddtFWeJIPSYJotZ9ohBNRW3lfsccxZu5u/Vfz7qu5
+         AlIPCoItQ/mWcquB8bmH0nVbxdzU8nNXv431kmdiDNw3o0HGbG8DkHGHY3zpIVCq78aD
+         PM7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXp7KUgOnwpFktRI6WwdYRCUAn4bL+kQVNWwXyje4IboiPhekHE+pWAZlPubzy94+F6OYik0+CxySQqkCo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfcfdHqi/zgm7dwvJfdfxbsjMECaDCB5vc0Zz/FEMGfVIFzFMd
+	q78itAvH8zgZ4BCcORIg6UyzEqvBm25cbJ3OaiE/fBDIjRBbELxOXbNWmF6V/QEAlPo93smx4jn
+	8ZYdR8cwQZyc3UCLcsPXcAO/Mb97NkFlAViWx
+X-Gm-Gg: ASbGncvDCvPSRfq/y12ARM3LXEQI/Hkb1seQCmWBi5LccQbIRbNLWh4tb8JLX4to8l5
+	bAB+TCUT50RCh3VgMkJOageyuXvZYl88dtMaGORlRg1MJrevkDQWtHE0uofMwZfytcbunhioWT6
+	zRWHttJGM++9qt5SOlkvXOLD9W/9g=
+X-Google-Smtp-Source: AGHT+IHuGjdlqwgeTAUhzEPVafoaXXC6hiVr8E+u3Ozfb8k4Fr6W8d/NvE60aVN0kWu0TCZXFFymCnn9uBwb/aF1fiA=
+X-Received: by 2002:a5d:47c7:0:b0:38d:ada6:f261 with SMTP id
+ ffacd0b85a97d-38dc8da7968mr1534040f8f.11.1738921023063; Fri, 07 Feb 2025
+ 01:37:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-correct_data_types-v1-1-f22bc7ea220d@amlogic.com>
-X-B4-Tracking: v=1; b=H4sIAAnUpWcC/x3MTQqAIBBA4avErBNM+oGuEhGTTjUbi1GiEO+et
- PwW7yUIJEwBxiqB0M2BT1/Q1BXYA/1Oil0xGG06bfSg7ClCNi4OIy7xvSioDR0SYtuveoASXkI
- bP/90mnP+AOo8U/tkAAAA
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Chuan Liu <chuan.liu@amlogic.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738921022; l=877;
- i=chuan.liu@amlogic.com; s=20240902; h=from:subject:message-id;
- bh=kAjBoWOCJ4Ktd9GA2YrUkGuLwEKid48PkvX+9Mpiwa0=;
- b=bOGjHFE86GTkOgfuiMiFJ2HgIDxYB+nL6hQ5zLfsBT3io0i9+CYMt0vF2wV3Q9XTRoJola1oj
- HpJMjHnIE+UA0Xg1yf8L4IHfXfd+Lh0V4FU+6TNriHw4gihEglu4w+i
-X-Developer-Key: i=chuan.liu@amlogic.com; a=ed25519;
- pk=fnKDB+81SoWGKW2GJNFkKy/ULvsDmJZRGBE7pR5Xcpo=
-X-Endpoint-Received: by B4 Relay for chuan.liu@amlogic.com/20240902 with
- auth_id=203
-X-Original-From: Chuan Liu <chuan.liu@amlogic.com>
-Reply-To: chuan.liu@amlogic.com
+References: <20250206-printing_fix-v3-0-a85273b501ae@invicto.ai> <20250206-printing_fix-v3-5-a85273b501ae@invicto.ai>
+In-Reply-To: <20250206-printing_fix-v3-5-a85273b501ae@invicto.ai>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 7 Feb 2025 10:36:50 +0100
+X-Gm-Features: AWEUYZkj2fGcFoTVezigggL9H4Yb160h5AwliIu1UEAWrlmXMzfRaAs7Nqrubqk
+Message-ID: <CAH5fLgh56iNEBVO3J9-_brJ=H=ThaXuZ4iEXj=seABvXy=r7AQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] rust: workqueue: add missing newline to pr_info! examples
+To: Alban Kurti <kurti@invicto.ai>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Jonathan Corbet <corbet@lwn.net>, David Gow <davidgow@google.com>, 
+	Dirk Behme <dirk.behme@de.bosch.com>, Asahi Lina <lina@asahilina.net>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Wedson Almeida Filho <walmeida@microsoft.com>, 
+	"Andreas Hindborg (Samsung)" <nmi@metaspace.dk>, Tejun Heo <tj@kernel.org>, Fiona Behrens <me@kloenk.dev>, 
+	Vincenzo Palazzo <vincenzopalazzodev@gmail.com>, Xiangfei Ding <dingxiangfei2009@gmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Martin Rodriguez Reboredo <yakoyoku@gmail.com>, 
+	Fox Chen <foxhlchen@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Chuan Liu <chuan.liu@amlogic.com>
+On Thu, Feb 6, 2025 at 10:08=E2=80=AFPM Alban Kurti <kurti@invicto.ai> wrot=
+e:
+>
+> The documentation examples in rust/kernel/workqueue.rs use pr_info!
+> calls that lack a trailing newline. To maintain consistency with
+> kernel logging practices, this patch adds the newline to all
+> affected examples.
+>
+> Fixes: 15b286d1fd05 ("rust: workqueue: add examples")
+> Reported-by: Miguel Ojeda <ojeda@kernel.org>
+> Closes: https://github.com/Rust-for-Linux/linux/issues/1139
+> Signed-off-by: Alban Kurti <kurti@invicto.ai>
 
-In clk_calc_new_rates, the "ret" is only used to store the return value
-of clk_core_determine_round_nolock, and the data type of the return
-value of clk_core_determine_round_nolock is int.
-
-Signed-off-by: Chuan Liu <chuan.liu@amlogic.com>
----
- drivers/clk/clk.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 9b45fa005030..e153d1901a60 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2283,7 +2283,7 @@ static struct clk_core *clk_calc_new_rates(struct clk_core *core,
- 	unsigned long min_rate;
- 	unsigned long max_rate;
- 	int p_index = 0;
--	long ret;
-+	int ret;
- 
- 	/* sanity */
- 	if (IS_ERR_OR_NULL(core))
-
----
-base-commit: 1e1fd26ed4ca05cc1f0e5857918da4dd54967f7d
-change-id: 20250207-correct_data_types-fadaeaa46b07
-
-Best regards,
--- 
-Chuan Liu <chuan.liu@amlogic.com>
-
-
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
