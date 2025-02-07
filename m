@@ -1,116 +1,79 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2985118FDAE;
-	Fri,  7 Feb 2025 23:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C22B1A01C6
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 23:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738972246; cv=none; b=qAiNt1AENWKl+231ZaDbFpljbM1GzhCg7fTl1WzqCq3fJmWjhKLmZEMduZTbwYr6c2lBdlTPnAmcqfzFMcb7BhhroIuPdR/udtGLoIJYkenA7z5FysQJOenqd3DX1WdyPE+cEDe4SUJCFyLZa0YMxyJpNq/Cr3b3scOEiucnjIs=
+	t=1738972268; cv=none; b=OZJhaaXiX9OdJMYyzBY+eM5JlcD1lXqsJE//QKqqK2kkqP3g9Z8J1DGL2UkhCidgSMRAn2rh1AIeFIyplgui0Haa5BERVk1t2lkpF7IdpxTXL+xhCX5zMG4fj2Q0uySEDbEgvFIK8Gsk4UY59PMdTko/nMJLxw4LYCdChe1v7HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738972246; c=relaxed/simple;
-	bh=CYB3FSNwFShTpdPawetKpiJWckc8LHuMIECqtzbzRuA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p6qRm/xna1Ll1YZsrnx3Vt394WlEHaQDEPE7N5ptZoW0pdVELzRyVEm7egITs0RsNp8o9dY/jSBEJUBO9GgpUNnzs9OTFbNIU7LS8gOlp8YDjslrEOEnsdthfoZNIPM8FMIn1FsO/Y0vRLZiX26OTVyUiU1kXHLqx/96Nt6tjwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c7Zyw6rK; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738972268; c=relaxed/simple;
+	bh=Vq+09W4mgj9fEbqYP3sdkSQxq68Duobqs14XfGePAEQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EChwGxpO0SOgaqwRRYBYdg22lTpKUOtuqYwCNttK4f/LXqiMDRKqkP8J5BnW4v8IoD43DwQFuEyTlaJ0RU/nOwj7sizOX9+z/bDBEBzQY1srLzb4gPPd5Bowug8HF6C2iNnYZbnjhL4EtNJshl9xzgHrxcpWTRU65qeHDzt1Yas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=riAlfKEU; arc=none smtp.client-ip=199.89.1.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7Zyw6rK"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-38dc6d55ebaso918466f8f.1;
-        Fri, 07 Feb 2025 15:50:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738972242; x=1739577042; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=USgMOjHrfaLirLOT5WzrXhmwlLjtY2e3GvXtshzzQDE=;
-        b=c7Zyw6rK1Lzqm4hzIYaSpqj4hgXLU2DimUsrbrNZ71qd57zMBowm0Y4A+3scX+fAq2
-         MwEyA+CWGuYQSw3ZuH6MgMrzrZvVafX+TfM3BRL3yAJMU9BxOw+Q94sAFW/qP2YHZxl2
-         seUswpuFiuWr3BDJV16MwR7IxGpcgrOR6e9T6qbE5Yokt2uBt+Kf2j9LeoSZ/dDgESjq
-         CE/NX0DuuP1vE6RNdmKiv7KxICtciiiGYbytk0eux8eMfMa4KUW/0cEJC5dpOY0o7Ynt
-         p2WCAu7fySol75OSiO1WxrFud2Ld+M7jyLo0NmwIOT2nSAFGrcO8/Y+FCnJGS8Vg5Dtg
-         hBtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738972242; x=1739577042;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=USgMOjHrfaLirLOT5WzrXhmwlLjtY2e3GvXtshzzQDE=;
-        b=obuQgRcUcgjO/cSUpxhY6y7T0tlkJ+oaI8dPMfZ3mKGCJDzN9n7mRD71uoQ6grucM4
-         J0V+HLYz8Yw1uHOb4bJzJ+d7l2pzl45pLmB3US5qnV0tTtbq0uL4St5YHyYJ8BrZXX98
-         cH/VetV60beG4X1dFx0DXEK/tg43loYHklWG5PU7mYAWgVVkawBw6PmrME2pnbR1XM7l
-         32g5SG22vOrwWboHFu7EKgIaIk7UJhGN4rnB4UOqYXo9+RXoQ9PlezLIixJs/DpGxzoF
-         Ng44vMnT9x+OYdWmrJSh+sjwh6JhDXPg+hRkXG/KJL3mw0QmnaS2w81I7NJB5CraVRxo
-         +SIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJnnGlUd5zYTyKQp8QDwssZkdWozw5k1jW6yMLjsKtjZQaZU5fNPic+99pGIBC08bVJy7i6vICEx8iTBju@vger.kernel.org, AJvYcCVAJHZU1bH+C7IAV8KCwF8d1y4eR4C7CSoFHQzTts6mGh2f7G52W8TajqLEYcM0xzDVEcV3FZqfZdAq5lYx@vger.kernel.org, AJvYcCVsLvsiQ/ap+750f8zGVeiZx3gdhctlyBkgVQ53xlphmfT3vaCYhb1zre3jUqR/k/QinX4JNKYhhidTHw==@vger.kernel.org, AJvYcCX2hPF8lq3zyy7ODfO+lpa8WYnkaM3VwglU7WIfBG44jMF3bZfKIR9eJbf7BAR+NaDPnGIFrxm86VKbOKQuqjVh@vger.kernel.org, AJvYcCXkPUxSaNxjeJ8ZSeHYyZZkq88iD2eeZtzAfSzwVxICAknBDI+08XHRs2NTjlL6oM/ULHY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEvUb6DbfPl5n+yGWkWum+uT3nnZmbklg6IyfPcUY4ArhyR2wL
-	NIi00J/6GsynPUzihJ0YWZA6bWiQaJJaa5FmVYop13kXxrDY3QvSwrCQNLhrMZDwVObo6pkA5yA
-	E+mkCpyBGirrt/7rWu58Il4Ys+OQ=
-X-Gm-Gg: ASbGncvQrjZWg7pBiwFvt1dU/9YKESrsoIZu5biw0bqINe8WVgblcmo2xTYSLyUI3U4
-	ncwYrNitYPx7ObQ8p8hn/VVL/npQ27xSb+MthLBCKGXAOl+E3naSoSQue+ntgPRRS8fmnKYxQFY
-	8s0nmm1Tgv+di+6YF0cpfPvA741MY4
-X-Google-Smtp-Source: AGHT+IGdgzDpsGso08/WhacNlqhvHR4fHBB/5Nz0HBLIhyrzc3k6+vYm1v3vC1IFWO2rgyWwA0J32kxp6cJzNPaPo+I=
-X-Received: by 2002:a05:6000:1865:b0:38d:c0c0:b410 with SMTP id
- ffacd0b85a97d-38dc960e4d7mr3988849f8f.0.1738972242115; Fri, 07 Feb 2025
- 15:50:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="riAlfKEU"
+Received: from localhost (localhost [127.0.0.1])
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4YqW2J4sf5zlgTwl;
+	Fri,  7 Feb 2025 23:51:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1738972260; x=1741564261; bh=Vq+09W4mgj9fEbqYP3sdkSQx
+	q68Duobqs14XfGePAEQ=; b=riAlfKEU19YiNv/nG7PN3m0g1lmwSZTvcfoZCjKM
+	rUeLF+be5lpSDQs2QfE20QFC0pvMZj5AY9sR0a8dWaWe6tdv6eJQMms9s0hstZed
+	V1PC9iXeMfp66vf+ONQXWSMBaHrlMH9ujpc507ovljRyrG4RvJSNnejmF5hD1cfc
+	3GrvV0b2nv5ZMRPDwVbMGDYKMDoppppkz3A3b+JHh/iI8xHQyIoLlFfmznG068Td
+	E4zx7ouUFFUiDP6K2/KGsNHjCyNcB034tiTYuRJDLBB+agp/QpVPYJAuoNK4mhI5
+	tiow2uk3Kln3A3gs6nGiFw2RGIPB/J77nrPMgspALVvYPQ==
+X-Virus-Scanned: by MailRoute
+Received: from 009.lax.mailroute.net ([127.0.0.1])
+ by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id 8592HZxvcuNV; Fri,  7 Feb 2025 23:51:00 +0000 (UTC)
+Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4YqW264Zj7zlgTwQ;
+	Fri,  7 Feb 2025 23:50:54 +0000 (UTC)
+Message-ID: <c0bc8997-606f-4f45-98b1-8439aea416ca@acm.org>
+Date: Fri, 7 Feb 2025 15:50:50 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207012045.2129841-1-stephen.s.brennan@oracle.com> <20250207012045.2129841-3-stephen.s.brennan@oracle.com>
-In-Reply-To: <20250207012045.2129841-3-stephen.s.brennan@oracle.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 7 Feb 2025 15:50:31 -0800
-X-Gm-Features: AWEUYZkFsykde3fyEMInELSdBVAKmObvfOG_wL5GI8Zt-4AF2wq8l2htXaP5ptM
-Message-ID: <CAADnVQLiyezBW34dhkwZw+mWmkFAYMZUdHbOa4uYCdPbgS10SQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] btf: Add the option to include global variable types
-To: Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Kees Cook <kees@kernel.org>, KP Singh <kpsingh@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Sami Tolvanen <samitolvanen@google.com>, 
-	Eduard Zingerman <eddyz87@gmail.com>, linux-arch <linux-arch@vger.kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Jiri Olsa <jolsa@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, Jann Horn <jannh@google.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, Hao Luo <haoluo@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, linux-debuggers@vger.kernel.org, 
-	Alexei Starovoitov <ast@kernel.org>, Song Liu <song@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 03/33] locking: Introduce <linux/thread_safety.h>
+To: Marco Elver <elver@google.com>
+Cc: Christoph Hellwig <hch@lst.de>, Peter Zijlstra <peterz@infradead.org>,
+ Will Deacon <will@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>,
+ Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
+ Ingo Molnar <mingo@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Waiman Long <longman@redhat.com>
+References: <20250206175114.1974171-1-bvanassche@acm.org>
+ <20250206175114.1974171-4-bvanassche@acm.org> <20250207035345.GA4920@lst.de>
+ <567ceff3-bbd9-4724-a80d-3db46ee40c98@acm.org>
+ <CANpmjNOQDgmyXQZGbHoPJi+Mr0rkZ=SH3NMkbRSfhueNyDAhog@mail.gmail.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <CANpmjNOQDgmyXQZGbHoPJi+Mr0rkZ=SH3NMkbRSfhueNyDAhog@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 6, 2025 at 5:21=E2=80=AFPM Stephen Brennan
-<stephen.s.brennan@oracle.com> wrote:
-> When the feature was implemented in pahole, my measurements indicated
-> that vmlinux BTF size increased by about 25.8%, and module BTF size
-> increased by 53.2%. Due to these increases, the feature is implemented
-> behind a new config option, allowing users sensitive to increased memory
-> usage to disable it.
->
+On 2/7/25 3:19 PM, Marco Elver wrote:
+> This is not a problem as I have demonstrated with my approach.
 
-...
-> +config DEBUG_INFO_BTF_GLOBAL_VARS
-> +       bool "Generate BTF type information for all global variables"
-> +       default y
-> +       depends on DEBUG_INFO_BTF && PAHOLE_VERSION >=3D 128
-> +       help
-> +         Include type information for all global variables in the BTF. T=
-his
-> +         increases the size of the BTF information, which increases memo=
-ry
-> +         usage at runtime. With global variable types available, runtime
-> +         debugging and tracers may be able to provide more detail.
+That's not what my email is about. My email is about whether or not to
+continue supporting the sparse locking context annotations.
 
-This is not a solution.
-Even if it's changed to 'default n' distros will enable it
-like they enable everything and will suffer a regression.
-
-We need to add a new module like vmlinux_btf.ko that will contain
-this additional BTF data. For global vars and everything else we might need=
-.
-
-pw-bot: cr
+Bart.
