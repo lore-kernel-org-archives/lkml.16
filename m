@@ -1,159 +1,175 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D2F1547CA;
-	Fri,  7 Feb 2025 08:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F921547CA
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738915996; cv=none; b=qkolyYY1MJOgK4oHXwqQ53HmvXtPSxliZ73k+9ZrWa4lDCWNSA4b20vTsGAlSCuXx2XP8rtoFazyti3+gZkzyFTNGwdVIOF+7Ps8rck1BX6x/fS6Obh3ViuQfdhJ+kO3nDYYJO9DJNjrly6RGEN8y42pFuaJgzC8wGD15befDW4=
+	t=1738916033; cv=none; b=uhZy20d1M87kWHuLJXFis1HCvaHcE9cUeKYJWSHMnpRd0bwZJYM89UoV6cFmyQdPmXSHQ9uhPHwoBAwQJzQSEQ7Pup72B7q9vYJ+p8YGqZyowlXGp8PTG59TBGcdj4cs9eD/zdFZqr4ErazthvTgg3XeLfNwQvF+xeah2YnXUGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738915996; c=relaxed/simple;
-	bh=pwdgnneK3dst1VUutsdE5GPzlHdvaje/IbI+REn1fKg=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=TiaAxFx9lu4kSclDakCdQ32ngLcUWN0+9Rig8kGy8uQUXsvutXUWzwOfSDoXSOQxvGDVK/9NXl8VUD3icZvxbXzvaEHRKYf1lxe9C1rtFi+faKs0XaWznOEV/j296XgzVb1bOmFecrEwmebwlMUcRgORpU5ln8SNsRdiORRcfLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=36MBkKWr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bw1eyIbx; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738916033; c=relaxed/simple;
+	bh=1d979SMpTvfaQYObS7fA8SQtXquqn1pvuecnqSzawEw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JmPnnFZNpe9C4A/I9GkHCylml9Kx4ATcwQcL8vY6GbAzzn+dMf4AIJfpqBkbje/TufMr8Z9N6siwOdjg07KQymH11ahOY2We/U7b4BSeT3GUjxB5CkTvDMCa1O4Q6q48Lwvs75LxP3rnK5QNChiBJmoyJXWLOnVjdl5jcZHatHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=LGx5E8gU; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="36MBkKWr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bw1eyIbx"
-Date: Fri, 07 Feb 2025 08:13:12 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738915993;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qZjbsWaHjvehxwqwuNv4yk95BFAXowqdx+sHrdVqZDY=;
-	b=36MBkKWrrNXZVJ4U2quYSC+nC3cyy2oRnVm7Mirx+l3rNwxRmTM1haBc5m/MJgly88Uw6H
-	3M1GsI/xxhzYiMhKXfDMNml5/0pI5cslPTobTIV4b/1jG9ju4JBdwGIU+abOHm8tDyLJqG
-	/ZwSpzuss9NWLlmYhwf3rDDF3Qib82As94qd7vUFto7s4XuKJclXjIosuBClNpiAMNP+R2
-	eY8wAhwU0ckJArtwAsANjL+Sh7REVg8xYkVsrqXTSwnhkgFwC1gzVwO0wu25lW4L7areJT
-	qCZ7sKEZiDoQ96vGLZZml+evQ9dzfWHO0jju/JaBnwxpQumTNeu0NzHFOevyeA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738915993;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qZjbsWaHjvehxwqwuNv4yk95BFAXowqdx+sHrdVqZDY=;
-	b=bw1eyIbxNJF2KrqmA9sJlfM+RQVZ2R8+4bhaN4yK8xak+/vCmCG27v2gBeSaXOH0R16E6t
-	clthY5R0Qz7yvwAA==
-From: "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: timers/urgent] timers/migration: Fix off-by-one root mis-connection
-Cc: Matt Fleming <mfleming@cloudflare.com>,
- Frederic Weisbecker <frederic@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250205160220.39467-1-frederic@kernel.org>
-References: <20250205160220.39467-1-frederic@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="LGx5E8gU"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1738916027; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=roiWbo9CpskJmB7RUqO3TURA636FBHMLgNiNyGc+Dr0=;
+	b=LGx5E8gUAFrdDsb76gsucAkJxBroLwfYvej27Cwxrv7isep4FAB1UoqiHLS34QkX0JSrKdvVWqDfe3sNDd8wkXnc2/n65Dsuz4S9Od+V7pOBbQ3iPQ4vg9GJmllrFISbMM237Wdo4hs+UFUBR0qf/rUz61O/rFVdEBkCm+ncR0o=
+Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WOylSQ5_1738915710 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 07 Feb 2025 16:08:30 +0800
+From: Hongzhen Luo <hongzhen@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org,
+	Hongzhen Luo <hongzhen@linux.alibaba.com>
+Subject: [PATCH v2] erofs: use Z_EROFS_LCLUSTER_TYPE_MAX to simplify switches
+Date: Fri,  7 Feb 2025 16:08:29 +0800
+Message-ID: <20250207080829.2405528-1-hongzhen@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173891599227.10177.12341111504955542995.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the timers/urgent branch of tip:
+There's no need to enumerate each type.  No logic changes.
 
-Commit-ID:     868c9037df626b3c245ee26a290a03ae1f9f58d3
-Gitweb:        https://git.kernel.org/tip/868c9037df626b3c245ee26a290a03ae1f9f58d3
-Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Wed, 05 Feb 2025 17:02:20 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 07 Feb 2025 09:02:16 +01:00
-
-timers/migration: Fix off-by-one root mis-connection
-
-Before attaching a new root to the old root, the children counter of the
-new root is checked to verify that only the upcoming CPU's top group have
-been connected to it. However since the recently added commit b729cc1ec21a
-("timers/migration: Fix another race between hotplug and idle entry/exit")
-this check is not valid anymore because the old root is pre-accounted
-as a child to the new root. Therefore after connecting the upcoming
-CPU's top group to the new root, the children count to be expected must
-be 2 and not 1 anymore.
-
-This omission results in the old root to not be connected to the new
-root. Then eventually the system may run with more than one top level,
-which defeats the purpose of a single idle migrator.
-
-Also the old root is pre-accounted but not connected upon the new root
-creation. But it can be connected to the new root later on. Therefore
-the old root may be accounted twice to the new root. The propagation of
-such overcommit can end up creating a double final top-level root with a
-groupmask incorrectly initialized. Although harmless given that the final
-top level roots will never have a parent to walk up to, this oddity
-opportunistically reported the core issue:
-
-  WARNING: CPU: 8 PID: 0 at kernel/time/timer_migration.c:543 tmigr_requires_handle_remote
-  CPU: 8 UID: 0 PID: 0 Comm: swapper/8
-  RIP: 0010:tmigr_requires_handle_remote
-  Call Trace:
-   <IRQ>
-   ? tmigr_requires_handle_remote
-   ? hrtimer_run_queues
-   update_process_times
-   tick_periodic
-   tick_handle_periodic
-   __sysvec_apic_timer_interrupt
-   sysvec_apic_timer_interrupt
-  </IRQ>
-
-Fix the problem by taking the old root into account in the children count
-of the new root so the connection is not omitted.
-
-Also warn when more than one top level group exists to better detect
-similar issues in the future.
-
-Fixes: b729cc1ec21a ("timers/migration: Fix another race between hotplug and idle entry/exit")
-Reported-by: Matt Fleming <mfleming@cloudflare.com>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/all/20250205160220.39467-1-frederic@kernel.org
+Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
 ---
- kernel/time/timer_migration.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Changes since v1: Put the exception branch at the beginning.
 
-diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
-index 9cb9b65..2f63308 100644
---- a/kernel/time/timer_migration.c
-+++ b/kernel/time/timer_migration.c
-@@ -1675,6 +1675,9 @@ static int tmigr_setup_groups(unsigned int cpu, unsigned int node)
+v1: https://lore.kernel.org/all/20250207064135.2249529-1-hongzhen@linux.alibaba.com/
+---
+ fs/erofs/zmap.c | 65 +++++++++++++++++++++----------------------------
+ 1 file changed, 28 insertions(+), 37 deletions(-)
+
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 689437e99a5a..f65c76991e02 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -265,23 +265,22 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
+ 		if (err)
+ 			return err;
  
- 	} while (i < tmigr_hierarchy_levels);
- 
-+	/* Assert single root */
-+	WARN_ON_ONCE(!err && !group->parent && !list_is_singular(&tmigr_level_list[top]));
+-		switch (m->type) {
+-		case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
++		if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
++			erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
++				  m->type, lcn, vi->nid);
++			DBG_BUGON(1);
++			return -EOPNOTSUPP;
++		}
 +
- 	while (i > 0) {
- 		group = stack[--i];
++		if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
+ 			lookback_distance = m->delta[0];
+ 			if (!lookback_distance)
+ 				goto err_bogus;
+ 			continue;
+-		case Z_EROFS_LCLUSTER_TYPE_PLAIN:
+-		case Z_EROFS_LCLUSTER_TYPE_HEAD1:
+-		case Z_EROFS_LCLUSTER_TYPE_HEAD2:
++		} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
+ 			m->headtype = m->type;
+ 			m->map->m_la = (lcn << lclusterbits) | m->clusterofs;
+ 			return 0;
+-		default:
+-			erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
+-				  m->type, lcn, vi->nid);
+-			DBG_BUGON(1);
+-			return -EOPNOTSUPP;
+ 		}
+ 	}
+ err_bogus:
+@@ -329,35 +328,31 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
+ 	DBG_BUGON(lcn == initial_lcn &&
+ 		  m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD);
  
-@@ -1716,7 +1719,12 @@ static int tmigr_setup_groups(unsigned int cpu, unsigned int node)
- 		WARN_ON_ONCE(top == 0);
- 
- 		lvllist = &tmigr_level_list[top];
--		if (group->num_children == 1 && list_is_singular(lvllist)) {
+-	switch (m->type) {
+-	case Z_EROFS_LCLUSTER_TYPE_PLAIN:
+-	case Z_EROFS_LCLUSTER_TYPE_HEAD1:
+-	case Z_EROFS_LCLUSTER_TYPE_HEAD2:
++	if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
++		erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
++		DBG_BUGON(1);
++		return -EFSCORRUPTED;
++	}
 +
-+		/*
-+		 * Newly created root level should have accounted the upcoming
-+		 * CPU's child group and pre-accounted the old root.
-+		 */
-+		if (group->num_children == 2 && list_is_singular(lvllist)) {
- 			/*
- 			 * The target CPU must never do the prepare work, except
- 			 * on early boot when the boot CPU is the target. Otherwise
++	if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
++		if (m->delta[0] != 1) {
++			erofs_err(sb, "bogus CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
++			DBG_BUGON(1);
++			return -EFSCORRUPTED;
++		}
++		if (m->compressedblks)
++			goto out;
++	} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
+ 		/*
+ 		 * if the 1st NONHEAD lcluster is actually PLAIN or HEAD type
+ 		 * rather than CBLKCNT, it's a 1 block-sized pcluster.
+ 		 */
+ 		m->compressedblks = 1;
+-		break;
+-	case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
+-		if (m->delta[0] != 1)
+-			goto err_bonus_cblkcnt;
+-		if (m->compressedblks)
+-			break;
+-		fallthrough;
+-	default:
+-		erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", lcn,
+-			  vi->nid);
+-		DBG_BUGON(1);
+-		return -EFSCORRUPTED;
++		goto out;
+ 	}
+ out:
+ 	m->map->m_plen = erofs_pos(sb, m->compressedblks);
+ 	return 0;
+-err_bonus_cblkcnt:
+-	erofs_err(sb, "bogus CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
+-	DBG_BUGON(1);
+-	return -EFSCORRUPTED;
+ }
+ 
+ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
+@@ -386,9 +381,7 @@ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
+ 				m->delta[1] = 1;
+ 				DBG_BUGON(1);
+ 			}
+-		} else if (m->type == Z_EROFS_LCLUSTER_TYPE_PLAIN ||
+-			   m->type == Z_EROFS_LCLUSTER_TYPE_HEAD1 ||
+-			   m->type == Z_EROFS_LCLUSTER_TYPE_HEAD2) {
++		} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
+ 			if (lcn != headlcn)
+ 				break;	/* ends at the next HEAD lcluster */
+ 			m->delta[1] = 1;
+@@ -452,8 +445,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+ 		}
+ 		/* m.lcn should be >= 1 if endoff < m.clusterofs */
+ 		if (!m.lcn) {
+-			erofs_err(inode->i_sb,
+-				  "invalid logical cluster 0 at nid %llu",
++			erofs_err(inode->i_sb, "invalid logical cluster 0 at nid %llu",
+ 				  vi->nid);
+ 			err = -EFSCORRUPTED;
+ 			goto unmap_out;
+@@ -469,8 +461,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+ 			goto unmap_out;
+ 		break;
+ 	default:
+-		erofs_err(inode->i_sb,
+-			  "unknown type %u @ offset %llu of nid %llu",
++		erofs_err(inode->i_sb, "unknown type %u @ offset %llu of nid %llu",
+ 			  m.type, ofs, vi->nid);
+ 		err = -EOPNOTSUPP;
+ 		goto unmap_out;
+-- 
+2.43.5
+
