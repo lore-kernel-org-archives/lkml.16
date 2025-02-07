@@ -1,127 +1,145 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8CA18E050;
-	Fri,  7 Feb 2025 17:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573A819922F
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738950181; cv=none; b=hTmQN5SlL5z6FTthwNomkHrhAEqOAtO2cSd1HccYmKbiMGdGhg26uo5F3yBynLmsSXZ9LbtS31LQntEPrirYy8aa0ZxX9j+A06DcX63/apzJCyOAZYjkyK7NyMaD6A/EtlRrF1zZ/gBysRvxnA/BlzAA5LJ86gcLBkrSQCnF8Ww=
+	t=1738950213; cv=none; b=jCD6AOzpwpG9VpDLH+v/RiOysUzoxg/5BrxiasJHktgZnIXky60gGbrDOfUP4DLQeEtZ66Srb8bjA3d5H+nfckEfiH/LDaKgEZGf3H6A82H9/LLE7yDKogHucqOz49TdsbYWj8S/fKsnuwi1z2iO6wr4z+W3lkRI1d16Gp9b6gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738950181; c=relaxed/simple;
-	bh=ZenoNmF0riWMGf/aW8UIPtWaG8UbAzKLSI4ehKi+4lQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HVcPdNzVTgTn0ANJyeUWswL9q3pan/nwi8EtqVgvwn+VJdx5+3VtugLpGLlJkT6/a67z4PyO1Rfm0O6rHphizTB4xE4qztOT+Hy9IOooFQvqIButq+2Dz28r/2hMAe9i4nL7+uwXJDfZu6h07mXISHD5Rrt2UVIfHuXssAv1GOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dPzVucqY; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738950213; c=relaxed/simple;
+	bh=9m/4ZtNIG19aRdnHzcO/vXlqSMM2mmfQBeR4JAkSDc4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ar5ZFa/AtRKfuw4Q+5F//o9BJc+RKRRXL/T38xBZI44i+eTZxgWDoaURSEUuWYtUmxdBeuwy2tgk0ml1mPlE/9LsUShsC23c3A7/hc1eXaatbvkpALDF2bevAPbeL3VP8vBLoZuxNxY2utvj6qEdOBz7jQcyZVcENo6R0uJAuvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=QeMPXL6Q; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPzVucqY"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-46783d44db0so23861381cf.1;
-        Fri, 07 Feb 2025 09:42:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="QeMPXL6Q"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4364a37a1d7so23287945e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:43:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738950178; x=1739554978; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-transfer-encoding
-         :content-disposition:mime-version:references:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=u54wyKy08YVTcdsmqPxr1bFLRjYzOxYrbgu4ALnLyls=;
-        b=dPzVucqYjbvI5BK2NfJFp4RDcdcAGFc/EyYuYa0k5OhmkNAYhEu7qINaOyF8hy4w2y
-         Yy5USVH9fhtkBSxstCKXTZynlSfwrOOhsU+veWSU+QSjXzp7OXqSdhc+eu7iq+egJlpV
-         yBkBkoyvT/sK3FIphjW0bjCQOKYxbPzhhS9l/6wNoVtrBrMWQjluKfIY4z9iEccys9XX
-         lx08FbK8Y6gSu8AeZb3i8syIhxZKjUzfOlFiO/ZuGdg9OlHA2GlXfuvJp3+saW86hc37
-         8MZ8zlsiAk9i7mqMN3REkRqywvinswftm5nIAef5HAz7NeOsw2aDimIMBlCDWc3ugl+m
-         F+PQ==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738950208; x=1739555008; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IetCQx0BtEm/B71PL9JFs54qQSQD4i7yGXxs4Re/YLo=;
+        b=QeMPXL6QqF1bPxgJlO/0gCt500Ocg2MWjdS5mvr3zN/8K82Q0+CSt14iIOCSZv/+Y5
+         MphXlYJcFtdF8Jo6fV2XH/jnJLQhGoIFHoNQEU23TWQACz7L4kEH1xu1B/0WXYRDNXb+
+         Rbp5OKLSs9tDMPfh8DIfPyOCY209TEqxgGZivK9f22VRevdYQuPLkRWMiQRH5wt1a8sj
+         02bAfjo6hrKYIMbfn0fyYSNPtH96HSQzqlsLVlHIt3uWescHMmQypBOHoX7VR1ioVaQa
+         ifU4OcFKk6+JA7mj8p8OniCASUclDeziTr0sdOEAygKmIS8Cw7iyZb/l+yKoXaiXRe6H
+         cBBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738950178; x=1739554978;
-        h=user-agent:in-reply-to:content-transfer-encoding
-         :content-disposition:mime-version:references:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u54wyKy08YVTcdsmqPxr1bFLRjYzOxYrbgu4ALnLyls=;
-        b=JWtNAm6lKn19xgJzUi0Bq2mAsTQ/m8Cfya95kW+LSKxa5K+rbIJRQe114B2FsGNjzv
-         oAqWWUJEEQqr5O4DYDhY4LpE+pLHjWlSH39olhzEBvFpu16yY2lhPG4O3QboECBMzVR+
-         6yh5i47bNy5n0DzZIrsa6ZcfxOwXQFDE3FwBgRJO7+Sp3XnZSpFP6rfJtxEySeDURAuP
-         QJ1YIFfZTAutaLrT668ti0wERrwXA8mHT54MzJ9fx2RwsPupQ3AVJGW7CFeR2PugK2Zc
-         Bpe6Id5AbR4z+dz5+JNQBenecvmGNqy1Zv1cGKnblKFBpv9icn5cUNdr2mcPRXj+5vXc
-         Hy2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXZLQGfmTOBBOMV1cqhqDFOTHPjpWo9385zZn3I3Z+7pUqX10dYaiRRTnhLnRLCQAXsk4efW+lnEw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPjcpEdiSXaUBfFdVRX5xraLlUeW5Uxq508jxLTVMqgwoQSgc+
-	0JyjfezNOIkclc4POwtQA8LmQQyJSEX2lJzHAeQ0xcaB1ic2jpac
-X-Gm-Gg: ASbGncsSYEfgqYECOX5QI5t8Bz+dsTvtQ7BHBrKr4Qf+G5pu1rYwctjkQBKiLZypMZI
-	ZV5knf5m5aOA2qaQRAFOGrraVicFRukW21XZkACen1U62wF0HGoJQZWoIrP0QaB9e3MrwZkB5Wp
-	cEthfdlyPRJq37MNrgjMO5kfac3XTQsqPszD5Iq+taXVDK5xZ78ox9wigVZakBjV3g42IdDiYKo
-	cFHzwgzsaWciA5LymBlCLfobGRCndTQEv9dl6nX3R98Dbt2UBsXU9/JFzcrqLBt7E3IwamQna2I
-	H688NNA5vUhPJMuQzMDrheL2Snm2SYYJyufvfJEqivU=
-X-Google-Smtp-Source: AGHT+IH3DF2ccE09vTzNT3aWXfr9o8hGV8lDRWlk4BMtyiA39cvcPxbJvfohs7KwFEtPpIsYgHBr/g==
-X-Received: by 2002:ac8:7d89:0:b0:46c:7252:927f with SMTP id d75a77b69052e-471679a02c0mr46777051cf.6.1738950178512;
-        Fri, 07 Feb 2025 09:42:58 -0800 (PST)
-Received: from localhost (pppoe-209-91-167-254.vianet.ca. [209.91.167.254])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47149275d5esm19033831cf.8.2025.02.07.09.42.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 09:42:57 -0800 (PST)
-Date: Fri, 7 Feb 2025 12:42:55 -0500
-From: Trevor Woerner <twoerner@gmail.com>
-To: Dragan Simic <dsimic@manjaro.org>
-Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] thermal/drivers/rockchip: add missing rk3328 mapping
- entry
-Message-ID: <20250207174255.GA29827@localhost>
-References: <20250207164740.14475-1-twoerner@gmail.com>
- <fc3c4542d5cc4d95f74692140e5ea8b5@manjaro.org>
+        d=1e100.net; s=20230601; t=1738950208; x=1739555008;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IetCQx0BtEm/B71PL9JFs54qQSQD4i7yGXxs4Re/YLo=;
+        b=vxAickm5ZO6bshsr1Uly14Yb2e3R4oyjtJ9hjgdF4SSMeCSac+XtoluoGgJBOvUcDC
+         KmToK9kL7QeM3Yk5rXYlOF3ZavurD3CbHXN0h3w8WGhVuVddMFqb5AFNVKcHtPXNJKto
+         KARH3RUky/CzJfQHk2oa7yf+9dLWaSxXYGpNMFpHEWDn2WIu/pTvzNAfvk/oDZP6Bwv7
+         jmXSTMCvTi1Knu+wYTJJAQgmK8j5E86wp2fhTFse0Th1Z8rKEONq4y/Dkaumzc7VZAbS
+         Uq1f/SMnrPhmHdt5/ZJbRdGCCAVINurkGCINhkn5XL2qNdm3kAfp6x9nl5bee0J5P8lL
+         LOXw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQwVZJZ//7hsWSwm702GPc3HUri57lxuJPw6m5+b21tL5BxhqIXgkHTXiIaCVprhXyosUJFbOYHfybBPk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwESEtu5xrudV6QL8f9Kd6z55yHUQ/FfXAGQoDevGb25HP9ntvF
+	CGINa2tWj/IwnEEyf2L1jjmnw/f7nGGQVSbZW+mheEKajAUo0r14ug0/tcBwP/o=
+X-Gm-Gg: ASbGncvgtKpBM3x4psr85W0n00MghlP3l6c0m7JqqJlRKJn6GbyeIM96hZqYQLS6lHA
+	rgeZm1S29CW8HHJuoDuiQRKGm+RHGUPtc7YRp87H4dLitTo7niH9Ef3PMiMWnbakVx1NwAH5vcx
+	AS80nNkutuf1h4GNW7ujb7Xo4yGDK/13Ho0QwD94O4CN1ECJl5Oz/E/tyH6MO4uUp4TyCneEdnq
+	8A7SN9dUGKSu70eThPVewMSPf1KB8bIKLHX7boYrAlJgUXEul7WViXyau7HqEZ5q9WPfIjtuGih
+	Gah0VCijTsPCjw2BFxfX7/bAbYa8sQ/D9nGnoCp2TxfQpd9eWm9AHnXTIASf
+X-Google-Smtp-Source: AGHT+IFZAkbPMDhch3CHM1MWaqe+44k/0uA7F84dwm4WQWejM1tHjBHdsK2TtZv0OcHNrDfRBy217g==
+X-Received: by 2002:a05:600c:3552:b0:438:a1f5:3e38 with SMTP id 5b1f17b1804b1-439249c75c3mr41835255e9.30.1738950208480;
+        Fri, 07 Feb 2025 09:43:28 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43907f61ca4sm62393345e9.1.2025.02.07.09.43.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 09:43:28 -0800 (PST)
+Message-ID: <fdabae33-a1df-41f7-9e1f-9973f252599a@rivosinc.com>
+Date: Fri, 7 Feb 2025 18:43:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/9] riscv: Fix riscv_online_cpu_vec
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, charlie@rivosinc.com,
+ jesse@rivosinc.com, Anup Patel <apatel@ventanamicro.com>
+References: <20250207161939.46139-11-ajones@ventanamicro.com>
+ <20250207161939.46139-13-ajones@ventanamicro.com>
+ <1a4de5bb-913d-489a-ac96-3f4dec48cb2d@rivosinc.com>
+ <20250207-f0e7e2b868ef3e9f2a174f29@orel>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20250207-f0e7e2b868ef3e9f2a174f29@orel>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <fc3c4542d5cc4d95f74692140e5ea8b5@manjaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Fri 2025-02-07 @ 06:15:22 PM, Dragan Simic wrote:
-> Hello Trevor,
-> 
-> On 2025-02-07 17:47, Trevor Woerner wrote:
-> > The mapping table for the rk3328 is missing the entry for -25°C which is
-> > found in the TRM[1] §9.5.2 "Temperature-to-code mapping".
-> > 
-> > NOTE: the kernel uses the tsadc_q_sel=1'b1 mode which is defined as:
-> >       4096-<code in table>. Whereas the table in the TRM gives the code
-> >       "3774" for -25°C, the kernel uses 4096-3774=322.
-> > 
-> > Link:
-> > https://opensource.rock-chips.com/images/9/97/Rockchip_RK3328TRM_V1.1-Part1-20170321.pdf
-> > Signed-off-by: Trevor Woerner <twoerner@gmail.com>
-> 
-> Thanks for the patch.  I think this should also include a Fixes tag
 
-Okay, I'll send a v2. It's not really a big fix. The TRM instructs the code
-to interpolate linearly between values (which I assume the Linux kernel does?)
-and the table is completely linear in this range.
 
-> and be submitted for inclusion into stable kernels.
+On 07/02/2025 18:08, Andrew Jones wrote:
+> On Fri, Feb 07, 2025 at 05:47:28PM +0100, Clément Léger wrote:
+>>
+>>
+>> On 07/02/2025 17:19, Andrew Jones wrote:
+>>> We shouldn't probe when we already know vector is unsupported and
+>>> we should probe when we see we don't yet know whether it's supported.
+>>> Furthermore, we should ensure we've set the access type to
+>>> unsupported when we don't have vector at all.
+>>>
+>>> Fixes: e7c9d66e313b ("RISC-V: Report vector unaligned access speed hwprobe")
+>>> Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
+>>> ---
+>>>  arch/riscv/kernel/unaligned_access_speed.c | 6 ++++--
+>>>  1 file changed, 4 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kernel/unaligned_access_speed.c
+>>> index b7a8ff7ba6df..161964cf2abc 100644
+>>> --- a/arch/riscv/kernel/unaligned_access_speed.c
+>>> +++ b/arch/riscv/kernel/unaligned_access_speed.c
+>>> @@ -367,10 +367,12 @@ static void check_vector_unaligned_access(struct work_struct *work __always_unus
+>>>  
+>>>  static int riscv_online_cpu_vec(unsigned int cpu)
+>>>  {
+>>> -	if (!has_vector())
+>>> +	if (!has_vector()) {
+>>> +		per_cpu(vector_misaligned_access, cpu) = RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED;
+>>>  		return 0;
+>>> +	}
+>>>  
+>>> -	if (per_cpu(vector_misaligned_access, cpu) != RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED)
+>>> +	if (per_cpu(vector_misaligned_access, cpu) != RISCV_HWPROBE_MISALIGNED_VECTOR_UNKNOWN)
+>>>  		return 0;
+>>>  
+>>>  	check_vector_unaligned_access_emulated(NULL);
+>>
+>> Hi Andrew,
+>>
+>> Wouldn't it be easier just not to register the hotplug callback in case
+>> !has_vector() ? In which case just set all possible cpus
+>> vector_misaligned_access to RISCV_HWPROBE_MISALIGNED_VECTOR_UNSUPPORTED
+>> at startup.
 > 
-> > ---
-> >  drivers/thermal/rockchip_thermal.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/thermal/rockchip_thermal.c
-> > b/drivers/thermal/rockchip_thermal.c
-> > index f551df48eef9..a8ad85feb68f 100644
-> > --- a/drivers/thermal/rockchip_thermal.c
-> > +++ b/drivers/thermal/rockchip_thermal.c
-> > @@ -386,6 +386,7 @@ static const struct tsadc_table rk3328_code_table[]
-> > = {
-> >  	{296, -40000},
-> >  	{304, -35000},
-> >  	{313, -30000},
-> > +	{322, -25000},
-> >  	{331, -20000},
-> >  	{340, -15000},
-> >  	{349, -10000},
+> We could do that, but I have another use for the hotplug callback that
+> you'll see near the end of the series.
+
+Ok, I saw patch 7/9.
+
+BTW, what happened to patch 8 ? I thought it was in my spam but even
+lore.kernel.org does not have it:
+https://lore.kernel.org/linux-riscv/20250207161939.46139-11-ajones@ventanamicro.com/T/#t
+
+Thanks,
+
+Clément
+
+> 
+> Thanks,
+> drew
+
