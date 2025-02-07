@@ -1,175 +1,116 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from poodle.tulip.relay.mailchannels.net (poodle.tulip.relay.mailchannels.net [23.83.218.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D3DA23;
-	Sat,  8 Feb 2025 00:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738973043; cv=none; b=jOZOGrU3/I/NYmevCjFyV+eOrIr9Kil1CC0voxY/j2tXA9kb7nr+hiAwKuvs4+fG2bc0Kjqx02oDTPHhZEsIauU0eIJEg/73dPxvmUDL4mB54nmRIApD786GfygqEHNSsaNwzZmKiaMTb2x+jZerOxue7VTDK1M4AO5I9pKVLA8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738973043; c=relaxed/simple;
-	bh=2STvfBkzSCvzpdSOGbhHw9/tYsaPc4yptm9r05vncu4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hLfHuuGsN5Oy9h8rsLmlidmwuEdk2mfIo7vHrZaY0mfj58m+bLqc4axyK1meP9Oy5rizLdcSO0kt9AMbw8vp0JCz0saKiWzlqlqnKCplsQMLcdwpeBQwNH0RWVzKty/NmVLKRvIb1mj6veDtb+JBM6zhgkgivTF/mWVmaNQ+eSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SeIuooAg; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E1F4A1C;
+	Sat,  8 Feb 2025 00:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.249
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738973115; cv=pass; b=RwiWdOE3NIeXygxXwediL1JlF19DCq4eJSpA4tkfQQsK3i/LabyNVtKVw5USWrnKg1AJMkZxIZ9fIjC+3ntTUsLY8iy/5XfBsl5QBQcC5fk2YzZnqLeyEz/uCMjGCuDKyC5k8qkzaYZdoVte7dLGuEXUfF70PA3Xb4HkAzBGuJk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738973115; c=relaxed/simple;
+	bh=6nIn93xgtbMPZ1IbkvH9U+yB6qf0/CglZ/7Xa5WX9Es=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OHOwkCsPVfLGc+9sAP309jCLfv2XgCIo5Q4ycFGFGwUJSOLLqHh6vVq7hzeKl5PTxqLTKCRmht59/rUE/lHcq2jVLLqKqFa4vtnvuUh0TfDmSooOUZkkqFtLeRef3MWsrgm2WAMBHB2mQ9daaUEtmUEQ8a842S42YCpbneoeO2c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=IyQ18xOu; arc=pass smtp.client-ip=23.83.218.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SeIuooAg"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38dd4e26e79so6884f8f.1;
-        Fri, 07 Feb 2025 16:04:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738973040; x=1739577840; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QvLyhY6owKPW2I6LIaEqsveAbrbpfjuOOZhRQN2NfTg=;
-        b=SeIuooAgeWjw7EA4GFBtLECVv7ZWJEkBvN0vw1zkwE06WHb9dnKiUnZqwEQ+au/QuH
-         eThZtVt9D5EO3a9aGIqMZNSTUws8XCAWSzzuVRUuIH2nJj94obvWZdfImrpZ+0+uS8mY
-         YWE8WGHgvVwylhivg3/JxR/0YdBGzU+JRPIK12oyfR74IlfQIodsF8CgFefBaWxJrcZB
-         nHrvX45f50PihLgcUBblfo3O9NniC5oOAzebHYaReAPIcmxpb5Fkphcwodle3DWWXASa
-         2qQuu3KMl5xt2jBy6f5VOnZMzNCTi9AALkGFU/tPFGx66ZGEQUbALXH3/ocL4B1nMKrf
-         1xAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738973040; x=1739577840;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QvLyhY6owKPW2I6LIaEqsveAbrbpfjuOOZhRQN2NfTg=;
-        b=saKdoZzthahwm6jGaWlSDaDwEdFVEh/45WdTCkB6mxUOnxoIQuVmJDT+nrjs3E9fc8
-         6ZceqQl9ylTewGhRf21tsHubHmvepPzYHe3JBTtehcwcf59ya3I9so+5Z39pTsgh+r3l
-         i4P2W3fsOaj6KswWMjgACpVHHbxzeI6qtedo1btMVg4aUlh+uPgxsTnwBiNNCQvXRcI3
-         y6uV+kCDVOersXpk2PrQEwvbzjAeTsA0zHkWyp8xLYrLDom+T6L/yvKp9nl9ROQgEARj
-         AxBKOIk99QIFwijJixGQKfCQBZ9QpEUm6YbWj+oFe9cI4Rcprx7DGu40nINuqN9+9S7s
-         gH6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVGUCZPMDeDY5lHs5I4ripI6JjSEgbU7gHZu2UYvRLqqDGDMFyk5geDGtrSTLGFnpvEElkIRBHDAtDeqZwi@vger.kernel.org, AJvYcCVL4zDGHXndcbsdF4ptjhPk5KTkanNwburi6J1ET78H8AT2vzY4ogGdlz2GCuJZJZEDX54=@vger.kernel.org, AJvYcCVZ9qPcG9kvv0fsepu5DzsLzCW7XxzgydF6n08oUzTZsNSvWYaP5fdQgOgw6xQFi8vn/vhsdx1K4EZ+@vger.kernel.org, AJvYcCWP4zm3rpIGhKNFO6ot6PSgzmYvOV79zpGcKoaQA6yzOkiHWKCBGbW/7B72Z2b20el5BijHsd/R1KjLQnStUyqzRksD@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKeC+PUArwzNz8MVVUGUgG1oIYnFeLN7JBnFL33hJaDehXLrjR
-	dom1YYAE9KxmGEyvMBXTNG0g9D0AV8z8rNXNDkqz/FzTjIsjwwmV
-X-Gm-Gg: ASbGncubVX5FEUjb6rHVjQgpDil+HxEfoAeFkGhMiIgEHFT5CFB5BxbZK83Qzl+9/cJ
-	RTxpwfrI0GUIHYaP6+s+A9LcENbRZuX2EMDyJ/5MSvMf7FHsujALn20XOcjKoBBDKCnqIunQj/s
-	lD3QpJwmZS9yy72PQkBUcoCrcVXg9+EXBnmbcx2PpkNWt6jm4LMMwW5bgTXlv9axp8JXFSyWUP0
-	GyNfAX0jHg4K3X+HlI6+2t+dAEQ5ILTk5EAZ+iAXuuVbDYFBjEnjhEW92eXEHuFIXVAHcFsJdD5
-	i8LJQ26IR3aFEfEGJb2bBdo6
-X-Google-Smtp-Source: AGHT+IGxECD89hAn1Ixdo4SeJV1zmM5RTDj2Hth3O4byoRJgQoykCw9yET/1VT7lC1auRqJvXra1/Q==
-X-Received: by 2002:a05:6000:4021:b0:38c:1362:41b5 with SMTP id ffacd0b85a97d-38dc8d91f2amr3316788f8f.6.1738973039365;
-        Fri, 07 Feb 2025 16:03:59 -0800 (PST)
-Received: from krava (85-193-35-212.rib.o2.cz. [85.193.35.212])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dc9ff64sm68170485e9.9.2025.02.07.16.03.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 16:03:58 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Sat, 8 Feb 2025 01:03:55 +0100
-To: Jann Horn <jannh@google.com>
-Cc: Eyal Birger <eyal.birger@gmail.com>, kees@kernel.org,
-	luto@amacapital.net, wad@chromium.org, oleg@redhat.com,
-	mhiramat@kernel.org, andrii@kernel.org,
-	alexei.starovoitov@gmail.com, olsajiri@gmail.com, cyphar@cyphar.com,
-	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
-	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de,
-	daniel@iogearbox.net, ast@kernel.org, andrii.nakryiko@gmail.com,
-	rostedt@goodmis.org, rafi@rbk.io, shmulik.ladkani@gmail.com,
-	bpf@vger.kernel.org, linux-api@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] seccomp: pass uretprobe system call through
- seccomp
-Message-ID: <Z6afa2Z4IYlIAbJ2@krava>
-References: <20250202162921.335813-1-eyal.birger@gmail.com>
- <CAG48ez1Pj6MT=RV-sogtNbw7WLLmCrC-3TkNfRjpcCif8iNGkA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="IyQ18xOu"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 5F1D72C4572;
+	Fri,  7 Feb 2025 23:58:03 +0000 (UTC)
+Received: from pdx1-sub0-mail-a256.dreamhost.com (trex-6.trex.outbound.svc.cluster.local [100.127.158.245])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id EA3982C410D;
+	Fri,  7 Feb 2025 23:58:02 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738972683; a=rsa-sha256;
+	cv=none;
+	b=bdQhSzO5qRul2hJ4Ak5M6Gq3XCwOjbr6tlSIh78jjdKCfWo2acYpE5CRj17TR/2l0+nfnN
+	f4RWWpNvOCCTySj57BdboMvwMwJzR+/K68uzjPAo9q7wHWlMuYF3UgAMUnnnJtCiU1PGtu
+	9J3OaS6PS20k0DauSOqKYZOg0JrVs6LEvBQKK7pXwSPWoit7MJjTponCEk84GQpK77olh8
+	5wckuy8VCmqPTc/7Wpx3U2a6Y8YmB8rJsfwgEnVR2Xoujxu3cNQ5KYsKec+BvwQRK9ZdGW
+	QySxtnU29P0WjC4dOkWv+knOayuQHlnjPhST3Q/cLTn1EoVS73EgXTaQdqEHCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1738972683;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=6nIn93xgtbMPZ1IbkvH9U+yB6qf0/CglZ/7Xa5WX9Es=;
+	b=KqCDtiP/K0vWVrXq3esTY6/OOz1mxyMi02izssylGH1USYNAsqIohVLMATxtrWysHdg4ar
+	6yue144mpV/ZKvwd8ADWA5kDijtt4rJwH5JOwxEW7u2xTj+7fxo1kPRdVu3iei91jxnsBi
+	MYZO/55BStz1vnIyZjtNYW/1mMxmYx7wasPHTVl72h+talB7oH3LmsFupa5qYkFqvLgk9H
+	HvTQyRFvy3CmJefui0G4DO5CWnBi5k/ihTHXK5e9CSIC5U54GSP65zTXv5P8bISdNVSQs5
+	DnoEH26cOM5FIppAR/7p96s3gszmv4FenvCM8/+Zi0ymRx6O5MWxduNbtE653Q==
+ARC-Authentication-Results: i=1;
+	rspamd-587f8d7697-hhqps;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Invention-Inform: 3f0ccca42e6f0850_1738972683274_3335836820
+X-MC-Loop-Signature: 1738972683274:2535421094
+X-MC-Ingress-Time: 1738972683274
+Received: from pdx1-sub0-mail-a256.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.127.158.245 (trex/7.0.2);
+	Fri, 07 Feb 2025 23:58:03 +0000
+Received: from offworld (unknown [172.58.112.146])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a256.dreamhost.com (Postfix) with ESMTPSA id 4YqWBK5fSzz2W;
+	Fri,  7 Feb 2025 15:58:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1738972682;
+	bh=6nIn93xgtbMPZ1IbkvH9U+yB6qf0/CglZ/7Xa5WX9Es=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=IyQ18xOuGA+OGl4fVd9I/sUtfpK9kSBxdZR9RcXr5F4x4Vcpj3tuKZeTMkukZBs8Q
+	 vkykugiPCn2JsTPGuCndyKVrSDe8cZkDfl2q8X4bWv3OeP/VPAGAQP/8Aitk7f+c9J
+	 X8zX1ZplnFlZt/xCFKxPbUu1jLYOxNRoqYqwam167wWXYuHjROXjdB+Ab0UVPM6wje
+	 P+YyRQdFKTd3RaU667/ZCIRS6v1dfo3DrieOyeaMdNM3nYJM9BMdiIIRnqO4OitEr0
+	 akuRN1+LvV59Y3EtuHwKv4Ic0gxCXDN+DwHdONI4XUNzF2H392cXMnK97b/LAyegVB
+	 lpEM4O/SrNScA==
+Date: Fri, 7 Feb 2025 15:57:58 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 02/18] cxl/pci: Moving code in cxl_hdm_decode_init()
+Message-ID: <20250207235758.kczvcogrkkrwmcrn@offworld>
+References: <20250207153753.418849-1-rrichter@amd.com>
+ <20250207153753.418849-3-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez1Pj6MT=RV-sogtNbw7WLLmCrC-3TkNfRjpcCif8iNGkA@mail.gmail.com>
+In-Reply-To: <20250207153753.418849-3-rrichter@amd.com>
+User-Agent: NeoMutt/20220429
 
-On Fri, Feb 07, 2025 at 04:27:09PM +0100, Jann Horn wrote:
-> On Sun, Feb 2, 2025 at 5:29 PM Eyal Birger <eyal.birger@gmail.com> wrote:
-> > uretprobe(2) is an performance enhancement system call added to improve
-> > uretprobes on x86_64.
-> >
-> > Confinement environments such as Docker are not aware of this new system
-> > call and kill confined processes when uretprobes are attached to them.
-> 
-> FYI, you might have similar issues with Syscall User Dispatch
-> (https://docs.kernel.org/admin-guide/syscall-user-dispatch.html) and
-> potentially also with ptrace-based sandboxes, depending on what kinda
-> processes you inject uprobes into. For Syscall User Dispatch, there is
-> already precedent for a bypass based on instruction pointer (see
-> syscall_user_dispatch()).
-> 
-> > Since uretprobe is a "kernel implementation detail" system call which is
-> > not used by userspace application code directly, pass this system call
-> > through seccomp without forcing existing userspace confinement environments
-> > to be changed.
-> 
-> This makes me feel kinda uncomfortable. The purpose of seccomp() is
-> that you can create a process that is as locked down as you want; you
-> can use it for some light limits on what a process can do (like in
-> Docker), or you can use it to make a process that has access to
-> essentially nothing except read(), write() and exit_group(). Even
-> stuff like restart_syscall() and rt_sigreturn() is not currently
-> excepted from that.
-> 
-> I guess your usecase is a little special in that you were already
-> calling from userspace into the kernel with SWBP before, which is also
-> not subject to seccomp; and the syscall is essentially an
-> arch-specific hack to make the SWBP a little faster.
-> 
-> If we do this, we should at least ensure that there is absolutely no
-> way for anything to happen in sys_uretprobe when no uretprobes are
-> configured for the process - the first check in the syscall
-> implementation almost does that, but the implementation could be a bit
-> stricter. It checks for "regs->ip != trampoline_check_ip()", but if no
-> uprobe region exists for the process, trampoline_check_ip() returns
-> `-1 + (uretprobe_syscall_check - uretprobe_trampoline_entry)`. So
-> there is a userspace instruction pointer near the bottom of the
-> address space that is allowed to call into the syscall if uretprobes
-> are not set up. Though the mmap minimum address restrictions will
-> typically prevent creating mappings there, and
-> uprobe_handle_trampoline() will SIGILL us if we get that far without a
-> valid uretprobe.
+On Fri, 07 Feb 2025, Robert Richter wrote:
 
-nice catch, I think change below should fix that
+>Commit 3f9e07531778 ("cxl/pci: simplify the check of mem_enabled in
+>cxl_hdm_decode_init()") changed the code flow in this function. The
+>root port is determined before a check to leave the function. Since
+>the root port is not used by the check it can be moved to run the
+>check first. This improves code readability and avoids unnesessary
+>code execution.
+>
+>Signed-off-by: Robert Richter <rrichter@amd.com>
 
-thanks,
-jirka
-
-
----
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 0c74a4d4df65..9b8837d8f06e 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -368,19 +368,21 @@ void *arch_uretprobe_trampoline(unsigned long *psize)
- 	return &insn;
- }
- 
--static unsigned long trampoline_check_ip(void)
-+static unsigned long trampoline_check_ip(unsigned long tramp)
- {
--	unsigned long tramp = uprobe_get_trampoline_vaddr();
--
- 	return tramp + (uretprobe_syscall_check - uretprobe_trampoline_entry);
- }
- 
- SYSCALL_DEFINE0(uretprobe)
- {
- 	struct pt_regs *regs = task_pt_regs(current);
--	unsigned long err, ip, sp, r11_cx_ax[3];
-+	unsigned long err, ip, sp, r11_cx_ax[3], tramp;
-+
-+	tramp = uprobe_get_trampoline_vaddr();
-+	if (tramp == -1)
-+		goto sigill;
- 
--	if (regs->ip != trampoline_check_ip())
-+	if (regs->ip != trampoline_check_ip(tramp))
- 		goto sigill;
- 
- 	err = copy_from_user(r11_cx_ax, (void __user *)regs->sp, sizeof(r11_cx_ax));
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
