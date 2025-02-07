@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 520551A073F
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:19:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A6791AC882
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:19:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738952357; cv=none; b=bETZGzdoMoj0w0bLHTth9HxA0/tIsMctefuH5eUZTmc1+A3p2Y1dG+Otnp0v+xWUdyFKBX1QxJ1Wu5up5q2Pv+aRb899O5gZ4y1q6dtBxgOd7+gGVArnL9SZcRkO+48xxe7oPFMNq+LxsQAgBEFklplWS8ONfnkDxzeSc6wGMyI=
+	t=1738952360; cv=none; b=T25bv2oNfRLwC8zjNYGfI9rCeOYgC33xZksTJ9KqSGWVI7dT3tWADnCOA2+j+WZXmBpkgfhhh2Joob+FaaqUuJua6w/1TQsmiv/xzGvqwPhjOpfmhLu3aXfzJjRZPPCAHusBareOK+HU3hPh9EjlLBm/Qo1rar0XMiUtNNyD07U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738952357; c=relaxed/simple;
-	bh=zeN6inby7XeT4P1Gx3hGEWF3PE5xJ1J+qJ778LSthW8=;
+	s=arc-20240116; t=1738952360; c=relaxed/simple;
+	bh=7lgzfSf2A+6XQKrZqgc77g7KpSUFq5vLPtOq4VJzqas=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jO7VB7Iwd0UJjTZVro2ICrfxFCklrapKJiSB1n1/hiUksjY+Rgn5oWpRWIki/cvs6hG9Y5mi+yi27XysyxtVgPaXfYx6e17LqzEtXAR98K0TCKLfxyAIccefp4XgSGGtPO78urT25QM6AHX2VTVKksC4lIJvIawIqtnhGjPori8=
+	 MIME-Version; b=gN6rFzEk+ytxObicFvWKXe+uQdn9SZR1eB0IEq8Wgzq/RHyxFw9dL4CAKD/GD1bCgv3+Y6fivx4/sKgqBZr2IXbwfxC1uf1F314k3FfN/CAKoMolRAigPlASoAxnpdRKuQW96+WrbbwJ4DH2HBuVZk3LMKlapX/9o1c1k1DzZLw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FD301DB5;
-	Fri,  7 Feb 2025 10:19:37 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 553E9113E;
+	Fri,  7 Feb 2025 10:19:41 -0800 (PST)
 Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6772D3F63F;
-	Fri,  7 Feb 2025 10:19:11 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14D3E3F63F;
+	Fri,  7 Feb 2025 10:19:14 -0800 (PST)
 From: James Morse <james.morse@arm.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -48,9 +48,9 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
 	Dave Martin <Dave.Martin@arm.com>,
 	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v6 09/42] x86/resctrl: Add helper for setting CPU default properties
-Date: Fri,  7 Feb 2025 18:17:50 +0000
-Message-Id: <20250207181823.6378-10-james.morse@arm.com>
+Subject: [PATCH v6 10/42] x86/resctrl: Remove rdtgroup from update_cpu_closid_rmid()
+Date: Fri,  7 Feb 2025 18:17:51 +0000
+Message-Id: <20250207181823.6378-11-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20250207181823.6378-1-james.morse@arm.com>
 References: <20250207181823.6378-1-james.morse@arm.com>
@@ -62,22 +62,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-rdtgroup_rmdir_ctrl() and rdtgroup_rmdir_mon() set the per-CPU
-pqr_state for CPUs that were part of the rmdir()'d group.
+update_cpu_closid_rmid() takes a struct rdtgroup as an argument, which
+it uses to update the local CPUs default pqr values. This is a problem
+once the resctrl parts move out to /fs/, as the arch code cannot
+poke around inside struct rdtgroup.
 
-Another architecture might not have a 'pqr_state', its hardware may
-need the values in a different format. MPAM's equivalent of RMID values
-are not unique, and always need the CLOSID to be provided too.
-
-There is only one caller that modifies a single value,
-(rdtgroup_rmdir_mon()). MPAM always needs both CLOSID and RMID
-for the hardware value as these are written to the same system
-register.
-
-As rdtgroup_rmdir_mon() has the CLOSID on hand, only provide a
-helper to set both values. These values are read by
-__resctrl_sched_in(), but may be written by a different CPU without
-any locking, add READ/WRTE_ONCE() to avoid torn values.
+Rename update_cpu_closid_rmid() as resctrl_arch_sync_cpus_defaults()
+to be used as the target of an IPI, and pass the effective CLOSID
+and RMID in a new struct.
 
 Co-developed-by: Dave Martin <Dave.Martin@arm.com>
 Signed-off-by: Dave Martin <Dave.Martin@arm.com>
@@ -88,111 +80,97 @@ Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
 Changes since v1:
- * In rdtgroup_rmdir_mon(), (re)set CPU default closid based on the
-   parent control group, to avoid the appearance of referencing
-   something that we're in the process of destroying (even if it
-   doesn't make a difference because the victim mon group necessarily
-   has the same closid as the parent control group).
+ * To clarify the meanings of the new helper and struct:
 
-   Update comment to match.
+   Rename resctrl_arch_sync_cpu_default() to
+   resctrl_arch_sync_cpu_closid_rmid();
 
-   No (intentional) functional change.
+   Rename struct resctrl_cpu_sync to struct resctrl_cpu_defaults;
+
+   Flesh out the comment block in <linux/resctrl.h>.
+
+   No functional change.
 ---
- arch/x86/include/asm/resctrl.h         | 14 +++++++++++---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 20 ++++++++++++++------
- 2 files changed, 25 insertions(+), 9 deletions(-)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 17 +++++++++++++----
+ include/linux/resctrl.h                | 22 ++++++++++++++++++++++
+ 2 files changed, 35 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/resctrl.h b/arch/x86/include/asm/resctrl.h
-index 8b1b6ce1e51b..6908cd0e6e40 100644
---- a/arch/x86/include/asm/resctrl.h
-+++ b/arch/x86/include/asm/resctrl.h
-@@ -4,8 +4,9 @@
- 
- #ifdef CONFIG_X86_CPU_RESCTRL
- 
--#include <linux/sched.h>
- #include <linux/jump_label.h>
-+#include <linux/percpu.h>
-+#include <linux/sched.h>
- 
- /*
-  * This value can never be a valid CLOSID, and is used when mapping a
-@@ -96,8 +97,8 @@ static inline void resctrl_arch_disable_mon(void)
- static inline void __resctrl_sched_in(struct task_struct *tsk)
- {
- 	struct resctrl_pqr_state *state = this_cpu_ptr(&pqr_state);
--	u32 closid = state->default_closid;
--	u32 rmid = state->default_rmid;
-+	u32 closid = READ_ONCE(state->default_closid);
-+	u32 rmid = READ_ONCE(state->default_rmid);
- 	u32 tmp;
- 
- 	/*
-@@ -132,6 +133,13 @@ static inline unsigned int resctrl_arch_round_mon_val(unsigned int val)
- 	return val * scale;
- }
- 
-+static inline void resctrl_arch_set_cpu_default_closid_rmid(int cpu, u32 closid,
-+							    u32 rmid)
-+{
-+	WRITE_ONCE(per_cpu(pqr_state.default_closid, cpu), closid);
-+	WRITE_ONCE(per_cpu(pqr_state.default_rmid, cpu), rmid);
-+}
-+
- static inline void resctrl_arch_set_closid_rmid(struct task_struct *tsk,
- 						u32 closid, u32 rmid)
- {
 diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index cd8f65c12124..f706e5a288b1 100644
+index f706e5a288b1..62d9a50c7bba 100644
 --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -3731,14 +3731,21 @@ static int rdtgroup_mkdir(struct kernfs_node *parent_kn, const char *name,
- static int rdtgroup_rmdir_mon(struct rdtgroup *rdtgrp, cpumask_var_t tmpmask)
+@@ -355,13 +355,13 @@ static int rdtgroup_cpus_show(struct kernfs_open_file *of,
+  * from update_closid_rmid() is protected against __switch_to() because
+  * preemption is disabled.
+  */
+-static void update_cpu_closid_rmid(void *info)
++void resctrl_arch_sync_cpu_closid_rmid(void *info)
  {
- 	struct rdtgroup *prdtgrp = rdtgrp->mon.parent;
-+	u32 closid, rmid;
- 	int cpu;
+-	struct rdtgroup *r = info;
++	struct resctrl_cpu_defaults *r = info;
  
- 	/* Give any tasks back to the parent group */
- 	rdt_move_group_tasks(rdtgrp, prdtgrp, tmpmask);
+ 	if (r) {
+ 		this_cpu_write(pqr_state.default_closid, r->closid);
+-		this_cpu_write(pqr_state.default_rmid, r->mon.rmid);
++		this_cpu_write(pqr_state.default_rmid, r->rmid);
+ 	}
  
--	/* Update per cpu rmid of the moved CPUs first */
-+	/*
-+	 * Update per cpu closid/rmid of the moved CPUs first.
-+	 * Note: the closid will not change, but the arch code still needs it.
-+	 */
-+	closid = prdtgrp->closid;
-+	rmid = prdtgrp->mon.rmid;
- 	for_each_cpu(cpu, &rdtgrp->cpu_mask)
--		per_cpu(pqr_state.default_rmid, cpu) = prdtgrp->mon.rmid;
-+		resctrl_arch_set_cpu_default_closid_rmid(cpu, closid, rmid);
+ 	/*
+@@ -376,11 +376,20 @@ static void update_cpu_closid_rmid(void *info)
+  * Update the PGR_ASSOC MSR on all cpus in @cpu_mask,
+  *
+  * Per task closids/rmids must have been set up before calling this function.
++ * @r may be NULL.
+  */
+ static void
+ update_closid_rmid(const struct cpumask *cpu_mask, struct rdtgroup *r)
+ {
+-	on_each_cpu_mask(cpu_mask, update_cpu_closid_rmid, r, 1);
++	struct resctrl_cpu_defaults defaults, *p = NULL;
 +
- 	/*
- 	 * Update the MSR on moved CPUs and CPUs which have moved
- 	 * task running on them.
-@@ -3771,6 +3778,7 @@ static int rdtgroup_ctrl_remove(struct rdtgroup *rdtgrp)
++	if (r) {
++		defaults.closid = r->closid;
++		defaults.rmid = r->mon.rmid;
++		p = &defaults;
++	}
++
++	on_each_cpu_mask(cpu_mask, resctrl_arch_sync_cpu_closid_rmid, p, 1);
+ }
  
- static int rdtgroup_rmdir_ctrl(struct rdtgroup *rdtgrp, cpumask_var_t tmpmask)
- {
-+	u32 closid, rmid;
- 	int cpu;
+ static int cpus_mon_write(struct rdtgroup *rdtgrp, cpumask_var_t newmask,
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index a939c0cec7fe..da3b344d06d3 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -266,6 +266,28 @@ struct resctrl_schema {
+ 	u32				num_closid;
+ };
  
- 	/* Give any tasks back to the default group */
-@@ -3781,10 +3789,10 @@ static int rdtgroup_rmdir_ctrl(struct rdtgroup *rdtgrp, cpumask_var_t tmpmask)
- 		   &rdtgroup_default.cpu_mask, &rdtgrp->cpu_mask);
- 
- 	/* Update per cpu closid and rmid of the moved CPUs first */
--	for_each_cpu(cpu, &rdtgrp->cpu_mask) {
--		per_cpu(pqr_state.default_closid, cpu) = rdtgroup_default.closid;
--		per_cpu(pqr_state.default_rmid, cpu) = rdtgroup_default.mon.rmid;
--	}
-+	closid = rdtgroup_default.closid;
-+	rmid = rdtgroup_default.mon.rmid;
-+	for_each_cpu(cpu, &rdtgrp->cpu_mask)
-+		resctrl_arch_set_cpu_default_closid_rmid(cpu, closid, rmid);
- 
- 	/*
- 	 * Update the MSR on moved CPUs and CPUs which have moved
++struct resctrl_cpu_defaults {
++	u32 closid;
++	u32 rmid;
++};
++
++/**
++ * resctrl_arch_sync_cpu_closid_rmid() - Refresh this CPU's CLOSID and RMID.
++ *					 Call via IPI.
++ * @info:	If non-NULL, a pointer to a struct resctrl_cpu_defaults
++ *		specifying the new CLOSID and RMID for tasks in the default
++ *		resctrl ctrl and mon group when running on this CPU.  If NULL,
++ *		this CPU is not re-assigned to a different default group.
++ *
++ * Propagates reassignment of CPUs and/or tasks to different resctrl groups
++ * when requested by the resctrl core code.
++ *
++ * This function records the per-cpu defaults specified by @info (if any),
++ * and then reconfigures the CPU's hardware CLOSID and RMID for subsequent
++ * execution based on @current, in the same way as during a task switch.
++ */
++void resctrl_arch_sync_cpu_closid_rmid(void *info);
++
+ /**
+  * resctrl_get_default_ctrl() - Return the default control value for this
+  *                              resource.
 -- 
 2.39.2
 
