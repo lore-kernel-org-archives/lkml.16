@@ -1,208 +1,179 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2067.outbound.protection.outlook.com [40.107.94.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820F018DB0E;
-	Fri,  7 Feb 2025 19:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738956194; cv=fail; b=ZqFx+7rhQaZMgff6+T+q5FfMEnWMIdTjMtQfVNZH2ETirUpLLQUe/DWGRMgxlKXlfhkfpHpcxkbuzjpRld36FNDldFlKxW7NjZWQSBnE2jismGv+Ym2IDfAyNEUnwSNWlr0QvtFZn+Jx8pRf3qz08aESTI8dvTgx1yVDrmLxG+w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738956194; c=relaxed/simple;
-	bh=XQwprlq63FMZOJk6A5qohAO9jqqXAcZ04X8MlKEuF6Y=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=XjXT2xFAXus4376GCEVOhXUxvw0UXln+eTozIro3DzR9IT6RlRYUH/Zugq7bOxg0+LVmg6xX/FwiKF+aVRGg2B8jcOdfeFZJl6uLYWFVPIHCnyZPGl6qZZxqx1voM3FbPFsCtoKZnir46JC2PvvcunwyhhrGjiwqfX/0kZG2TVA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4pV/I7eR; arc=fail smtp.client-ip=40.107.94.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E4BE19C54C;
+	Fri,  7 Feb 2025 19:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738956223; cv=none; b=fCsbzS6Ouvbm//URY913vqiFiY2W4jSCr9GIkJHXMQPzWbI6T2ig+U5U6PLIHG0gic4NyA8+JBsHQVUKw3eeVyff9YZ5RDVIcsWlgEoxpbTO64S54sboIKZwTKBZ0djWnnP17PJz5TDtfRJpHQIAatZMeWp5NA6ULy1vuFeuRls=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738956223; c=relaxed/simple;
+	bh=8MbEJHUAnmFkC4AXfklUkLaQ7QSVqyMXCuTljOpWDkc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IentTRrXRTTfFkqOu7ln2v0uQimknu4i+AlCDaTFRwjtFGhYFrKqHiSM2FDhhLeqMsa6cH2C5OYnTrcOwNR6L9ROXt5QNPeLfiQWaoH/FK+L+Bb1641iL5l0m4OPlYjh47KGpKuvh8+kPZV2PT2wOS6+80oRjGHwNSMH74kQiFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=SecTTOrV; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4pV/I7eR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nar9Ch+FGvyeoINAnvIBqI3RwT6kzAiX00YnjmS+Pe21Bos1POFt/GfYzs7Fu0+Gkln6Y5WyNBRd/gZUU6MK9F0p53EwJswOrn1eW9Zny1fGVp9s4E6zTMUzp8qsRh43VDpDAeeZkbcg1vbAnCJ2XxcFu2shG76TBPEM9yiZ+FGvUSAzHLbq+UnbcZWMvBz+ie9ppP9RxoH0cDgekc4MZagtJpGruPr97exvaqr1TeWAjzP3c5TRhQ9LlfEhAM8oebm5Z5hrG7cQK3/oA9UWh4gOB9UwJYQCgYLlSHCxorZLL7rE7/OHyOFSHYQ68RFFbFJTyns/JZ9PKBoB3FeRvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=y+EV6efjyEn6eEbRpupZyF2Ai0PdWevCvkYAp1sUoBM=;
- b=r+mhwEZsZpSE7ZNPCwS3MT4iyWOumhrar4VWf4ynE0jlswKewGUivjGp8dHjuBw4pDY7egfB/oJ5y8eZc9ljiwf+KTnrMJ6otx9LoIJEAiDaRd3pSsEvZWSBzVnmghZMKwv3KVpLJ5ZPVDfgsydNHAsOQNfEXeLv90pDB3NvWunBxVzBhPPSTFzrG9eWsVs8yt91MRI1nC/FZ2E9G/mWxGy+lJj4RsDMZtZDzLtqSz8Mvb0uG4evsULa3g2TUHNO9xFaB1bYAaOh+AhOlyIc/Lt3pFUIw9rftIg8mlX4FfrbZsajWtOEOk/OhVqLUuLc0ZTE7M03RWlEKouK2OLxww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y+EV6efjyEn6eEbRpupZyF2Ai0PdWevCvkYAp1sUoBM=;
- b=4pV/I7eRpCaK9i7Dd2EYzILUCDGY0hlfKjBjukiSMTB2T5DQXh+xO5cEX95LGrXxeOjtsQ3ih3HZh1vlR0/IeTQ75n+CWw5088T4fM+bpo7MsFK8ioxKDYJxC21UyddMmQkQ8I6JAtYVfUnu5mgDYH1M/0G5UgwIS9xcEaOxJ5M=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- CH3PR12MB8308.namprd12.prod.outlook.com (2603:10b6:610:131::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8398.25; Fri, 7 Feb 2025 19:23:10 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f%3]) with mapi id 15.20.8422.010; Fri, 7 Feb 2025
- 19:23:09 +0000
-Message-ID: <5df5c06a-b1fe-4b79-a313-2b4c5b088f83@amd.com>
-Date: Fri, 7 Feb 2025 13:23:06 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 13/16] cxl/pci: Add error handler for CXL PCIe Port RAS
- errors
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
- jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
- ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
- rrichter@amd.com, nathan.fontenot@amd.com,
- Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
- ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com, alucerop@amd.com
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
- <20250107143852.3692571-14-terry.bowman@amd.com>
- <Z6W92JUQQt4Lf6Ip@gourry-fedora-PF4VCD3F>
-Content-Language: en-US
-From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <Z6W92JUQQt4Lf6Ip@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0238.namprd04.prod.outlook.com
- (2603:10b6:806:127::33) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="SecTTOrV"
+Received: from [10.17.64.61] (unknown [131.107.8.61])
+	by linux.microsoft.com (Postfix) with ESMTPSA id E824C2107306;
+	Fri,  7 Feb 2025 11:23:40 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E824C2107306
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738956221;
+	bh=EoLJ5bDNcw7tjbOauCSXGT8dabn5ExzMhG8BNOChz24=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SecTTOrVqBTCGw1QtsfbKYSD8/AKM3u4XWP9VnYyhnpNG2jq8PnFZ05QgzdGccqpv
+	 dBn2vSJyxccAuqWT+pCEBT4JRo5B7YiQ+f6KHckUL0StzoAhdounj//tkI+iSDZ2t2
+	 HmtpqiRdXARRKV5yAYk5GqVKe/kFGkdjo+bcU8ag=
+Message-ID: <ba702678-e1a3-49b5-9c5e-76329e83c812@linux.microsoft.com>
+Date: Fri, 7 Feb 2025 11:23:40 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|CH3PR12MB8308:EE_
-X-MS-Office365-Filtering-Correlation-Id: dc62906a-7047-4fd1-bd41-08dd47acdb5f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?K2lvODY4UHRqSDQzdG14Ymhwdnhvc3VhMFFoczQ2MmVxMVU0SVMzcm52LzAx?=
- =?utf-8?B?TEx3NzdEZjRsbzZMWDJGWlBWNU5DVTg0S2ZWTVNIWGtWNGVEc2V5ek9MczZp?=
- =?utf-8?B?MTVtWDdFVUtrQnlMQk1qV1ovNms0Rmt0M1dmYk05ZG5OREtVK2xtcXZNTTh3?=
- =?utf-8?B?RzZBWlB1a3hNVHlFUm1vbktBaUVJV1BkM01xYWhiK1YyeHJEbWFGeTFqMUpJ?=
- =?utf-8?B?MHFBMGJtTHcwTDRueFRIMGFid29KQVluc25nOFQ2Sk9GcnNXYlZXekNmSzBo?=
- =?utf-8?B?NE1FZHdaNmRsbkhoVndrMnY2TFovYlUyMENMSGUyOFhQNUxRQWt0eFVtUUxp?=
- =?utf-8?B?R0crOXFqNU1qWXBlWDBUdURtY3dIUEJRTkFMOFhTNXErUXh0OWM4NTk2TlY4?=
- =?utf-8?B?U2pEZThFbGxJejd4VElzekFCbW44c1VNR3lTemFXS3lQQ0dldW02ditXWDgw?=
- =?utf-8?B?R2lFKzBpWGNBSWpqdGFSVDVoMy9keTU5S0tuV2YzRnlkd3F1NXJaMi9OQncy?=
- =?utf-8?B?SWpoaE9UeVo1NWdlQ1hYdjROWC9VRFl0UmxPanZGUU9lb0pkdWt2OTczaGVw?=
- =?utf-8?B?SmdnM1ZHZ29CekRBNllHalUxMExNb053a01haDMyVFE3VXFBYmtOZm0xVFZH?=
- =?utf-8?B?TlR6clVNMCs2bFF2Vktxa3VYcDBLTXRaWm15N3FYZE94QVpNK3ZyYzBIbzhp?=
- =?utf-8?B?RGs1aDZZdTBCcE9Gd2pMcVFnVEJoRldnMWxHeGsvOUtyN29jaUt6eDYrb3lo?=
- =?utf-8?B?b205RW96ek5heGdDalBUMzQ1WVUxbm1IZENMM1VJM3pqWk0vTzlEWG1WNU8v?=
- =?utf-8?B?Y3hEd2pXdnU2eUU4YVVwMVQzdW5lYlFHMERiUXc2MDFMVkI5bGdvdVNidnVF?=
- =?utf-8?B?cXZ2WU5KdEwwNFIybmxQbmZ2a1R5b0YwcE9ENzJWZ2g3ekQzUXVZMTlSTnlK?=
- =?utf-8?B?VklFcThGZEdERFJxalpwRG9xWHZ6Vnl4czV3R1N5YmI5ZmZhT2hIc1NEanNF?=
- =?utf-8?B?RDZ3STFTZFNmRUZNSS9DVzZGVVAzVk8zY1NiTnpSdU1pWWFMMmlUR1I1ZUlU?=
- =?utf-8?B?S3RVK1BCYThLRjM1VVRITmNKU0JBQlBCTnI0MmZrc0hCejVPQlR1bjFEZkRh?=
- =?utf-8?B?bEhKMFlORHY4enF4d0pTNWtkWkdIcXVTa0JuY1dYNkdndDBpdGNrNGJsSGlR?=
- =?utf-8?B?RHVDdW56VWp1RGd2Vy85UmhJRGpMaDFaWHV3T3lSYWZ1UnFyM0lSbTl0b3p2?=
- =?utf-8?B?WHlWMi9oOC9xa3c4OTI1VFk1eFpnSFJhSUhNNUpxaGEyZG04QXdSYW9rUW5l?=
- =?utf-8?B?WXRvc01wSGlTL3ZsUWxMZlVmbGcrdXB1UDZwT0lVQjUvMGxpckh2d1Q2WjV3?=
- =?utf-8?B?dTRKemRkQ24zNzB4Y0d0aVN6K3pVL085UjBtQkhYQThyU2IvdmFra0YwNTJQ?=
- =?utf-8?B?WGZtc3N5NkRORFZtYlZiTzd1cm1uVnNVVzZhMlRDc1NFaVZmQlhYVkl6MnNE?=
- =?utf-8?B?ZFFzQTIxanA2MG1FRGdvaUlYQm5sdEFObVl2RlZUVTcrWUUrd2FIZmFBL01q?=
- =?utf-8?B?UGo0bjRKK0xWdzVOTDRrOFZSODQyUy9Ga0pJcHRtV0pOMjBvRXRiL0EyNzJV?=
- =?utf-8?B?Q1JzQTJndzd4QkU4anZlN2pBWVZST3dpcndBYjIwOE40S0xncnNwbjgvSzV1?=
- =?utf-8?B?ell0MFVZaXVneTMzUjYxVVZxNVRMc2sxK0dsTk84bHpmMjhrRUlYWW1vakNS?=
- =?utf-8?B?RXk0dzB6bmJuOFlPQWU2M3kyK0tLaW1oM2ZZUkFjdTJZckpzanY2ME9qTlBR?=
- =?utf-8?B?dmJreWNPdS9ERDNZb3ZWazBMTCtnSGxCSDY4OUtyZXpnNFpVZzlMWnlydGg4?=
- =?utf-8?Q?E9ATm25N67eEj?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Q2RJU05hbm9IL2xZYXZiLzlTcFcvSnFoYkFvRWpLYis0czZkdDhlRDRla0hH?=
- =?utf-8?B?d2wxMXZFNEQwc05qaCtnRGtOMmhpOXVQcXpYSkhRdCsxRUtkV1pFVVdTOGxX?=
- =?utf-8?B?VHRxTnIrVWFJdFMvQTN3SFBOYnRYNnduUURveFFVelUzUWlMTkl0eHRTRzMy?=
- =?utf-8?B?dTZwL29hclVySkFpWFRWWXZPVG96NjByK2g5ZW5IQlVGbjhYdmkyazhEZmN2?=
- =?utf-8?B?STRmSkNrNElyaGlMQ2g2MlVRMFlCTHdoOU5BQk5xd1NSbXVtRjB3U0hYMEdy?=
- =?utf-8?B?YngvMXFWTk9FYWtBYnJIU3Qzd2czeWUxaG1McVJjVUpJak0yOUlXbjE1ZVp5?=
- =?utf-8?B?ZHNaUExtUjFSTnN3TW1JaElDOWt4NDFWdWNOaFlydi9TUG9BeUM1UUpLUFo4?=
- =?utf-8?B?NlRuYTZyZFVhYTJzbmx4Tzh5V1k0aUp3TGxOMnh1RnFiVkdhcVRIdzUwM1oz?=
- =?utf-8?B?T1pFTVlIT0FGZStWTndlM3RRWSszLzU1V2E4b0tEcDdkazR0ZlRUQmZESUlu?=
- =?utf-8?B?ZFB5UWIrU3A3V24rYUdxOWoxUllPV1ZEeEJjLzBKcWpla2gzZm1Ld3F3TGRO?=
- =?utf-8?B?SHp0cnptVDRrVzJQZEpKZjRaa3JQK3NwY1NoYWFpdTlLM2xoeUljMGFRbGNQ?=
- =?utf-8?B?eGlLejNiN3FnODFoYSs0RHpFMGZScDVEYWpYeThiSVlKaFJoQ1lFWGNWWGhr?=
- =?utf-8?B?NWs1cVhhbVVzRnFuWUoycmVscm5ackhkZ2YrL3d2RmZXUVB4NmpxTnlUVFdJ?=
- =?utf-8?B?bUZ5WGJqNm9rU3hLdHYyWjRCZzdLM1NmOTQ1OFcwRnh0S0Q2VE1BaUNyNmpp?=
- =?utf-8?B?d3JMeTZHSDhYbUZnL3cwU05IYURYSU10dzVWOU4xSkM1T1JteHdYVFovSlR0?=
- =?utf-8?B?MWx3VFQ3QUhuU0Y0S2hObE1ET3ZHZkZiOVhSK015T3ZzOVN2MENqZW0xZUVE?=
- =?utf-8?B?aTIzWTNPSy81OXFhdXlmWkd1V29HOXVDUUVhUDVBaVkramtEREFFd2NVYWpY?=
- =?utf-8?B?OE1ndWZBdmdRTElBbWxPUWplQS9HQ3Q0RTRJYTd3NDJyR0RNU0ZyTElyaTRB?=
- =?utf-8?B?RkU3N1dsQ0g1YVRvVFd6OW1vdWp2dVBMZXVnbWJGMnpFRlVoakRHWFBFUm42?=
- =?utf-8?B?ckl1bGNtMkVmWUpOa1A3YzRkYkVQdGdRUlhUUkhkcnNJTEFHNW0xV0EvNXhI?=
- =?utf-8?B?QXZmSFg4NVZJbTFlVzd1THZSVkdXRHR5TUNEVFVZWG9DQk1mZnZNSTIwaFRq?=
- =?utf-8?B?dnpmTHdBY1pmK20rb3JLU1czU3dRZlE3RWQ4SWRNajdxdG4wTjhyV25icFJk?=
- =?utf-8?B?Z2RVbGFhRXlKNzFRcGJQOXJlSjFHbGdFV2RBWlN3K2xXajJBSDdqdlJiTHVV?=
- =?utf-8?B?dE5Oc3NjQnNSU1l2QlA1UTJFa2UzaGdTdmpOK1cvaFhRMkxlR2JVb2E0dlp4?=
- =?utf-8?B?NzQvNGVKOUdlbXVOUHdyNDNNL2hjZTZLMnZjc1BFcHkxTXZ3dlVlN2puczYy?=
- =?utf-8?B?dXdFcjJoclc0YklUVm9Ld0Y2NzkvWlY3SlpEa1p6MGU5VGxVNEw1SXgyTzdY?=
- =?utf-8?B?eGhMd1NxRmZtVHBxdm9iS2wxamtsMVpZYmY2YjVQclVsTDZwbm9JV0dHNnVm?=
- =?utf-8?B?R1dCZVBRb0pMUUVWM2NsL0RnN2l5ZWhoaG93R3IxQTlVTmF4K3AxdTJxOUJL?=
- =?utf-8?B?K1BiWGh4cmdybUt1SndRTnc0bnducDFIdEdZUHlnUnlaN1A1cHp4MWRWVytU?=
- =?utf-8?B?Q3lrZmNrb2tmS1FUME05bGpxMmJ0azVGaG9IMXkyZ2J1MEw5S1UraXU4V1BY?=
- =?utf-8?B?UktIbDBuTHFtUStHMW5ITDZ5Nnc5SnkwQnJlZWNuQ0pjVUVKVzhBTzdzWkRG?=
- =?utf-8?B?anJCdklzaHZqOHR5UUNDaWhWcCtZYVUvOVFqQVlwZ3JwcjlDVG51QXA1UFA4?=
- =?utf-8?B?MWpUMnlRaGM0SUE0aE9uWjUrY3p1a0t1WEFDMk8raW9BK1psMDFJVmtUeHhT?=
- =?utf-8?B?RHlnWEtaZ0pqN1UvNUZCbHFCMzRHSStiYlpRdXFjRGpsVHFwOHZiaGNPelVG?=
- =?utf-8?B?OWVLdXJIdThZaTlvTmVNL3JVRW5oWUtvYnMzM2tTSS9NVGtGOE5jNFJ3bzlK?=
- =?utf-8?Q?AQFdPG1uxrTARXskaxIFer1hF?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc62906a-7047-4fd1-bd41-08dd47acdb5f
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 19:23:09.8753
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uFJI4XVPdlQmpiZTNGN1jpGWXxY8H3TcYsiAsoYoh2Kza0M9ggNngKnHFa6U4HqTEn+6/we8romCdj3rNE8zWQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8308
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/7] ima: define and call ima_alloc_kexec_file_buf
+To: Mimi Zohar <zohar@linux.ibm.com>, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+ James.Bottomley@HansenPartnership.com
+References: <20250203232033.64123-1-chenste@linux.microsoft.com>
+ <20250203232033.64123-2-chenste@linux.microsoft.com>
+ <1a7e9cf84715386b7ac3dc2103fd38ba180dd216.camel@linux.ibm.com>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <1a7e9cf84715386b7ac3dc2103fd38ba180dd216.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-
-On 2/7/2025 2:01 AM, Gregory Price wrote:
-> On Tue, Jan 07, 2025 at 08:38:49AM -0600, Terry Bowman wrote:
->> +static void __iomem *cxl_pci_port_ras(struct pci_dev *pdev)
+On 2/7/2025 11:10 AM, Mimi Zohar wrote:
+> On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
+>> Carrying the IMA measurement list across kexec requires allocating a
+>> buffer and copying the measurement records.  Separate allocating the
+>> buffer and copying the measurement records into separate functions in
+>> order to allocate the buffer at kexec 'load' and copy the measurements
+>> at kexec 'execute'.
+>>
+>> This patch includes the following changes:
+>>   - Refactor ima_dump_measurement_list() to move the memory allocation
+>>     to a separate function ima_alloc_kexec_file_buf() which allocates
+>>     buffer of size 'kexec_segment_size' at kexec 'load'.
+>>   - Make the local variable ima_kexec_file in ima_dump_measurement_list()
+>>     a local static to the file, so that it can be accessed from
+>>     ima_alloc_kexec_file_buf(). Compare actual memory required to ensure
+>>     there is enough memory for the entire measurement record.
+>>   - Copy as many measurement events as possible.
+>>   - Make necessary changes to the function ima_add_kexec_buffer() to call
+>>     the above two functions.
+>>   - Compared the memory size allocated with memory size of the entire
+>>     measurement record. If there is not enough memory, it will copy as many
+>>     IMA measurement records as possible, and this situation will result
+>>     in a failure of remote attestation.
+>>
+>> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+>> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+>> ---
+>>   security/integrity/ima/ima.h       |   1 +
+>>   security/integrity/ima/ima_kexec.c | 105 +++++++++++++++++++++--------
+>>   security/integrity/ima/ima_queue.c |   4 +-
+>>   3 files changed, 80 insertions(+), 30 deletions(-)
+>>
+>> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+>> index 3c323ca213d4..447a6eb07c2d 100644
+>> --- a/security/integrity/ima/ima.h
+>> +++ b/security/integrity/ima/ima.h
+>> @@ -274,6 +274,7 @@ bool ima_template_has_modsig(const struct ima_template_desc
+>> *ima_template);
+>>   int ima_restore_measurement_entry(struct ima_template_entry *entry);
+>>   int ima_restore_measurement_list(loff_t bufsize, void *buf);
+>>   int ima_measurements_show(struct seq_file *m, void *v);
+>> +int ima_get_binary_runtime_entry_size(struct ima_template_entry *entry);
+>>   unsigned long ima_get_binary_runtime_size(void);
+>>   int ima_init_template(void);
+>>   void ima_init_template_list(void);
+>> diff --git a/security/integrity/ima/ima_kexec.c
+>> b/security/integrity/ima/ima_kexec.c
+>> index 52e00332defe..b60a902460e2 100644
+>> --- a/security/integrity/ima/ima_kexec.c
+>> +++ b/security/integrity/ima/ima_kexec.c
+>> @@ -15,62 +15,99 @@
+>>   #include "ima.h"
+>>   
+>>   #ifdef CONFIG_IMA_KEXEC
+>> +static struct seq_file ima_kexec_file;
+>> +
+>> +static void ima_reset_kexec_file(struct seq_file *sf)
 >> +{
->> +	struct cxl_port *port;
+>> +	sf->buf = NULL;
+>> +	sf->size = 0;
+>> +	sf->read_pos = 0;
+>> +	sf->count = 0;
+>> +}
 >> +
->> +	if (!pdev)
->> +		return NULL;
+>> +static void ima_free_kexec_file_buf(struct seq_file *sf)
+>> +{
+>> +	vfree(sf->buf);
+>> +	ima_reset_kexec_file(sf);
+>> +}
 >> +
->> +	if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT) ||
->> +	    (pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM)) {
->> +		struct cxl_dport *dport;
->> +		void __iomem *ras_base;
+>> +static int ima_alloc_kexec_file_buf(size_t segment_size)
+>> +{
+>> +	/*
+>> +	 * kexec 'load' may be called multiple times.
+>> +	 * Free and realloc the buffer only if the segment_size is
+>> +	 * changed from the previous kexec 'load' call.
+>> +	 */
+>> +	if (ima_kexec_file.buf &&
+>> +		(ima_kexec_file.size == segment_size)) {
+>> +		goto out;
+>> +	}
+> Nice cleanup from v5.  The line doesn't doesn't need to be split.  Both the
+> parenthesis and the brackets can be removed.
+>
+> In the future, before posting patches, please use scripts/checkpatch.pl.
+>
+> CHECK: Unnecessary parentheses around 'ima_kexec_file.size == segment_size'
+> #82: FILE: security/integrity/ima/ima_kexec.c:41:
+> +	if (ima_kexec_file.buf &&
+> +		(ima_kexec_file.size == segment_size)) {
+>
+> CHECK: Alignment should match open parenthesis
+> #83: FILE: security/integrity/ima/ima_kexec.c:42:
+> +	if (ima_kexec_file.buf &&
+> +		(ima_kexec_file.size == segment_size)) {
+>
+> Or simply join the two lines.
+>
+> thanks,
+>
+> Mimi
+>
 >> +
->> +		port = find_cxl_port(&pdev->dev, &dport);
->> +		ras_base = dport ? dport->regs.ras : NULL;
-> I'm fairly certain dport can come back here uninitialized, you
-> probably want to put this inside the `if (port)` block and 
-> pre-initialize dport to NULL.
-Right, it can. NULL dport check here covers this, no?:
-
-		ras_base = dport ? dport->regs.ras : NULL;
-
-Terry
-
->> +		if (port)
->> +			put_device(&port->dev);
->> +		return ras_base;
-> You can probably even simplify this down to something like
->
-> 		struct_cxl_dport *dport = NULL;
->
-> 		port = find_cxl_port(&pdev->dev, &dport);
-> 		if (port)
-> 			put_device(&port->dev);
->
-> 		return dport ? dport->regs.ras : NULL;
->
->
-> ~Gregory
+>> +	ima_free_kexec_file_buf(&ima_kexec_file);
+>> +
+>> +	/* segment size can't change between kexec load and execute */
+>> +	ima_kexec_file.buf = vmalloc(segment_size);
+>> +	if (!ima_kexec_file.buf)
+>> +		return -ENOMEM;
+>> +
+>> +	ima_kexec_file.size = segment_size;
+>> +
+>> +out:
+>> +	ima_kexec_file.read_pos = 0;
+>> +	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved space
+>> */
+>> +
+>> +	return 0;
+>> +}
+>>
+Thanks, Mimi, will update in the next release
 
