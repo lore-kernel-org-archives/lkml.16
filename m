@@ -1,175 +1,140 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DCC13CFA6;
-	Fri,  7 Feb 2025 05:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A94E233148;
+	Fri,  7 Feb 2025 05:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738906987; cv=none; b=BtDGGCuYpS5XRCwWnD/EklYlUjwMakiT8yzLNKtlc9BNTdi7BLeBtVmBk8PpnepKGqyCuVScQSnwOmAqIMIztynpoaa15pE3UbMqfhUrtyIefcT8ZPOylZ2tJLb3pV0IFbfpbXnx5deHYv7xcMuuVFuYI0z3hRlgMLVwFZUGnPM=
+	t=1738907008; cv=none; b=fMyuV6EDbeamXNJll/XnwKgiydZ7kLovNP0cv7SB4wLPpa2cJ27rAqsqAVkKzpVkgB/DYbHok+lhZtqJrcIZGKu9omPpDVCgtnnYvdNnIE0Bx/4+i06V6kUYtrEzDmZGZPoh8xQXp63yAThIP+S2Ig1wrKqENocdJLjafxCcg6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738906987; c=relaxed/simple;
-	bh=11k0J7SJXQWZRFuWCglBUF7/hV4fhUXshZRVhbYDlL0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ElQSZtgIDeYQkBl6UDOcSDJvdwgwUyNn8PdcLgHSBRt1NSsAiVPKyWM1D+gX61DD2Md91eOL8Un4Tg/KaqMKYB1njqQ+WzVpxWaON5TP6mxC9eQS0Q8FCH1VUPQTmPHDdGr3BZIkjQjEPnjI0rxv8Lvjntt+Ibe/6KIfUNe0GGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hqgmSoZy; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1738907008; c=relaxed/simple;
+	bh=FbqvspU70ux8xhH5GV7nNntPDn/y+jPWMJBM4gK4o4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KQvn/N06svjMCy8Avly0D2cdjsVJ7kQ/lpD0kuX6Mo4KMSjSmIZjTb1raZUT7vq3rwnJ0td/9DrmDWVySDu8fH0Lmtr6K324PyUdrfpSFliuaxd6xdAzwKGhgEl8eheJLn8Z09ztj5VTjmzuSxigUpefOgTqPADF9MEP9G8lI4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ZCfHWylj; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hqgmSoZy"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5175gq222868858
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 6 Feb 2025 23:42:52 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1738906972;
-	bh=H37U1nr2lOv9jYFyNln2CSztqFrKuMmT/UtblK3qmKo=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=hqgmSoZywUlBqmrCAcuuV6QlsFMrfFxXuVFw/rn3+23Kya2iHIDU5WD7xE2tcctho
-	 /lsrOdmumIvgbOa6OpkczXC/ODrOGEopDwh1kX15CGxmLaiLvFZ75eKiZBoWMgr2Zu
-	 AkJEnnvQqRQUC3Qntag//YDudh07urACNQCdPZBc=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5175gqS0016443
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 6 Feb 2025 23:42:52 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 6
- Feb 2025 23:42:52 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 6 Feb 2025 23:42:52 -0600
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.104])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5175gptM115695;
-	Thu, 6 Feb 2025 23:42:51 -0600
-Date: Fri, 7 Feb 2025 11:12:50 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Peter Chen <peter.chen@kernel.org>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <pawell@cadence.com>,
-        <rogerq@kernel.org>, <gregkh@linuxfoundation.org>, <balbi@kernel.org>,
-        <jun.li@nxp.com>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
-Subject: Re: [PATCH] usb: cdns3: exit cdns3_gadget_udc_start if
- FAST_REG_ACCESS cannot be set
-Message-ID: <tf7qwkoybolexehzagzel67kdxdfsve2f3qdueomedld72v7pp@bquo47wpsxul>
-References: <20250206125943.786949-1-s-vadapalli@ti.com>
- <20250207022523.GA22848@nchen-desktop>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZCfHWylj"
+Received: by linux.microsoft.com (Postfix, from userid 1152)
+	id BDCE0205491C; Thu,  6 Feb 2025 21:43:25 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BDCE0205491C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738907005;
+	bh=yYbYHbF6Cw2M3eiKWKa9HfzDACNKpJkgQcaNttK4MrI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZCfHWyljCupEp3sfyTltcraBRrq9wyuuYMRTGtXV/bMyMbfbhRJeQkdPlXIqjEIXn
+	 B9/oQoF7IGgQOuGEby5GglfpaTbssUztNH5HRBKlSJFWuN7DMUlJaGta8Tw+cIicYv
+	 08bp+f/m+zRDMtocHIUGCuk98CDlWWR6eYL9g50Y=
+Date: Thu, 6 Feb 2025 21:43:25 -0800
+From: Shyam Saini <shyamsaini@linux.microsoft.com>
+To: Rasmus Villemoes <linux@rasmusvillemoes.dk>, hch@infradead.org,
+	christophe.leroy@csgroup.eu
+Cc: linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
+	code@tyhicks.com, mcgrof@kernel.org, frkaya@linux.microsoft.com,
+	vijayb@linux.microsoft.com, petr.pavlu@suse.com,
+	linux@weissschuh.net, samitolvanen@google.com, da.gomez@samsung.com,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org
+Subject: Re: [v1 2/3] include: move
+ lookup_or_create_module_kobject()/to_module* to module.h
+Message-ID: <20250207054325.GA25299@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20250204052222.1611510-1-shyamsaini@linux.microsoft.com>
+ <20250204052222.1611510-3-shyamsaini@linux.microsoft.com>
+ <87h658u6hr.fsf@prevas.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250207022523.GA22848@nchen-desktop>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <87h658u6hr.fsf@prevas.dk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Fri, Feb 07, 2025 at 10:25:23AM +0800, Peter Chen wrote:
+Hi Everyone,
 
-Hello Peter,
-
-> On 25-02-06 18:29:36, Siddharth Vadapalli wrote:
-> > When the device is in a low power state, access to the following
-> > registers takes a long time:
-> > - EP_CFG
-> > - EP_TRADDR
-> > - EP_CMD
-> > - EP_SEL
-> > - EP_STS
-> > - USB_CONF
-> > 
-> > To address this, the fast register access feature can be enabled by
-> > setting PUSB_PWR_FST_REG_ACCESS bit of the USB_PWR register, which
-> > allows quick access by software. Software is expected to poll on
-> > PUSB_PWR_FST_REG_ACCESS_STAT to ensure that fast register access has
-> > been enabled by the controller. Attempting to access any of the
-> > aforementioned registers after setting PUSB_PWR_FST_REG_ACCESS but
-> > before PUSB_PWR_FST_REG_ACCESS_STAT has been set will result in
-> > undefined behavior and potentially result in system hang.
-> > 
-> > Hence, poll on PUSB_PWR_FST_REG_ACCESS_STAT before proceeding with
-> > gadget configuration, and exit if it cannot be enabled.
-> > 
-> > Fixes: b5148d946f45 ("usb: cdns3: gadget: set fast access bit")
-> > Cc: <stable@vger.kernel.org>
-> > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+On Wed, Feb 05, 2025 at 09:43:12AM +0100, Rasmus Villemoes wrote:
+> On Mon, Feb 03 2025, Shyam Saini <shyamsaini@linux.microsoft.com> wrote:
+> 
+> > Move the following to module.h to allow common usages:
+> >  - lookup_or_create_module_kobject()
+> >  - to_module_attr
+> >  - to_module_kobject
+> >
+> > This makes lookup_or_create_module_kobject() as inline.
+> >
+> > Signed-off-by: Shyam Saini <shyamsaini@linux.microsoft.com>
 > > ---
-> > 
-> > Hello,
-> > 
-> > This patch is based on commit
-> > 92514ef226f5 Merge tag 'for-6.14-rc1-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
-> > of Mainline Linux.
-> > 
-> > Regards,
-> > Siddharth.
-> > 
-> >  drivers/usb/cdns3/cdns3-gadget.c | 18 ++++++++++++++++--
-> >  1 file changed, 16 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/usb/cdns3/cdns3-gadget.c b/drivers/usb/cdns3/cdns3-gadget.c
-> > index fd1beb10bba7..b62691944272 100644
-> > --- a/drivers/usb/cdns3/cdns3-gadget.c
-> > +++ b/drivers/usb/cdns3/cdns3-gadget.c
-> > @@ -2971,8 +2971,6 @@ static void cdns3_gadget_config(struct cdns3_device *priv_dev)
-> >  	/* enable generic interrupt*/
-> >  	writel(USB_IEN_INIT, &regs->usb_ien);
-> >  	writel(USB_CONF_CLK2OFFDS | USB_CONF_L1DS, &regs->usb_conf);
-> > -	/*  keep Fast Access bit */
-> > -	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
+> >  include/linux/module.h | 39 +++++++++++++++++++++++++++++++++++++++
+> >  kernel/params.c        | 39 ---------------------------------------
+> >  2 files changed, 39 insertions(+), 39 deletions(-)
+> >
+> > diff --git a/include/linux/module.h b/include/linux/module.h
+> > index 12f8a7d4fc1c..ba5f5e6c3927 100644
+> > --- a/include/linux/module.h
+> > +++ b/include/linux/module.h
+> > @@ -894,8 +894,47 @@ static inline void *module_writable_address(struct module *mod, void *loc)
+> >  #endif /* CONFIG_MODULES */
 > >  
-> >  	cdns3_configure_dmult(priv_dev, NULL);
-> >  }
-> > @@ -2990,6 +2988,8 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
-> >  	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
-> >  	unsigned long flags;
-> >  	enum usb_device_speed max_speed = driver->max_speed;
-> > +	int ret;
-> > +	u32 reg;
-> >  
-> >  	spin_lock_irqsave(&priv_dev->lock, flags);
-> >  	priv_dev->gadget_driver = driver;
-> > @@ -2997,6 +2997,20 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
-> >  	/* limit speed if necessary */
-> >  	max_speed = min(driver->max_speed, gadget->max_speed);
-> >  
-> > +	/*  keep Fast Access bit */
-> > +	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
-> > +	reg = readl(&priv_dev->regs->usb_pwr);
-> > +	if (!(reg & PUSB_PWR_FST_REG_ACCESS_STAT)) {
-> > +		ret = readl_poll_timeout_atomic(&priv_dev->regs->usb_pwr, reg,
-> > +						(reg & PUSB_PWR_FST_REG_ACCESS_STAT),
-> > +						10, 1000);
-> > +		if (ret) {
-> > +			dev_err(priv_dev->dev, "Failed to enable fast access\n");
-> > +			spin_unlock_irqrestore(&priv_dev->lock, flags);
-> > +			return ret;
-> > +		}
-> > +	}
+> >  #ifdef CONFIG_SYSFS
+> > +/* sysfs output in /sys/modules/XYZ/parameters/ */
+> > +#define to_module_attr(n) container_of_const(n, struct module_attribute, attr)
+> > +#define to_module_kobject(n) container_of(n, struct module_kobject, kobj)
+> >  extern struct kset *module_kset;
+> >  extern const struct kobj_type module_ktype;
 > > +
-> >  	switch (max_speed) {
-> >  	case USB_SPEED_FULL:
-> >  		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
+> > +static inline struct module_kobject * __init lookup_or_create_module_kobject(const char *name)
 > 
-> Hi Siddharth,
+> As others have said, this is way too big for an inline. Also, __init is
+> at best harmless (if it is indeed inlined into all callers), but if for
+> whatever reason the compiler decides to emit an OOL version, we
+> definitely do not want that in .init.text as we are now calling it from
+> non-init code.
 > 
-> Would you please keep this change at cdns3_gadget_config in case the
-> controller is power lost during the system suspend?
+> > +{
+> > +	struct module_kobject *mk;
+> > +	struct kobject *kobj;
+> > +	int err;
+> > +
+> > +	kobj = kset_find_obj(module_kset, name);
+> > +	if (kobj) {
+> > +		mk = to_module_kobject(kobj);
+> > +	} else {
+> > +		mk = kzalloc(sizeof(struct module_kobject), GFP_KERNEL);
+> > +		BUG_ON(!mk);
+> > +
+> 
+> And while the BUG_ON() is borderline acceptable in the current,
+> only-used-during-init, state, that definitely must go away once the
+> function can be called from non-init code.
+> 
+> This is what I alluded to when I said that the function might need some
+> refactoring before module_add_driver can start using it.
+> 
+> I'd say that the BUG_ON can simply be removed and replaced by a return
+> NULL; an "impossible" error case that can already be hit by some of the
+> code below, so callers have to be prepared for it anyway. If the
+> allocation fails (during early boot or later), the allocator already
+> makes a lot of noise, so there's no reason to even do a WARN_ON, and
+> since it "only" affects certain /sys objects, it's probably better to
+> let the machine try to complete boot instead of killing it.
+> 
+> Also, I agree with the suggestion to drop/outdent the whole else{} branch by
+> changing the if() to do "return to_module_kobject(kobj);".
+> 
+> To summarize:
+> 
+> - refactor to do an early return
+> 
+> - drop BUG_ON, replace by return NULL.
+> 
+> - drop static and __init, perhaps change __init to __modinit (which is a
+>   pre-existing #define in params.c, so the function remains __init if
+>   !CONFIG_MODULES), add an appropriate declaration somewhere, and if you
+>   like, also do the rename
+> 
+> - make use of it from module_add_driver()
 
-I did think of that initially, but the problem with doing so is that we
-are already accessing USB_CONF above in the "switch(max_speed)" section.
-The PUSB_PWR_FST_REG_ACCESS bit needs to be set before accessing any of:
-- EP_CFG
-- EP_TRADDR
-- EP_CMD
-- EP_SEL
-- EP_STS
-- USB_CONF
+I have addressed these feedback in v2, thank you for the reviews.
 
-Please let me know if you have an alternate suggestion to address the
-above.
-
-Regards,
-Siddharth.
+Thanks,
+Shyam
