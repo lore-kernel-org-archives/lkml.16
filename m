@@ -1,284 +1,172 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2054.outbound.protection.outlook.com [40.107.102.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E2F2030A;
-	Fri,  7 Feb 2025 03:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738897483; cv=fail; b=T7rYkKa4qkv1s4hACFR2NMBYzgSlRJB/ertr52On0J3oWqi+I/OtIaVCpCvxXVu/yhkCVFYuAM7iQb4Piep2YXFzIoSAoI/r195zn8QPPHTYLmmKT859ByeItPtvb7NMIDwCHsxNTsxyD/oj4nrSxvkcl3n1jFvccrBHPiUWl3Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738897483; c=relaxed/simple;
-	bh=v8kx2ozMR1fZN8X8Bh6L6f8sSofQutIOF+rEeaNCY90=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=DXcUiPK4fB9OyJcmlmliljS4bReuMG2WCrVm+ALbS9AwvgdAlWkfCcT1SFiK+dshcHpZkiP/YWR7/5m69sJpSdPa0ELCfKAjiDudIvWeeqdWnIdsBPUMkEXYbL118EBuiZSDrBaI8vOE2TZWMiZLd9k5r2GIFaJrSRJvcMVADVg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=tF9WAzKY; arc=fail smtp.client-ip=40.107.102.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20052AF1E;
+	Fri,  7 Feb 2025 03:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738897512; cv=none; b=GSvkg4m7gVa7TjXY130R8pFaLj0iZBIjHKuZsU6lZ09TRFjbKc7ciUJ4jpEVa61BxsoeTcZRY8O70VzBksg60uI163Sw7PJOXBcOkQR9lTdqgoTNNpyjbASv5uVbuFNwMJAvEkqgNQhwsQHcnE8dbUAgBUL1tjmv2Xcf7PDPgbk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738897512; c=relaxed/simple;
+	bh=AM9VDgNJkOEJ/gBbgnmK3npw0SmrzFX7jP4QZOkq6p8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=OK7T6aOSN0Q2EQ6WB5eRMlxvN/Ha4fgNR/FRPSWms/BPcew+rdp3WYj2r798jXGlnkhb67OMBT/XHix+NeBx0DToVMU1KC3H36NCZvqrBNRDSynjiYLo8mnQGotu9BEQUYEnKhNELaMazr6B4mtHF8cC0xWJ5kWh44cPV98Y2E8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GKjUw1E9; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="tF9WAzKY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WeT+kCaq7lEbyF0ptXdBLQ/iHFDuO6UZJt8dyiwok+oFTDMQLF6m2ZxMZXYF3TRDskPaDLg0abQeFkvXDv9Cdg0FRvfMr1mwrmx2mkdcmZKv/ZZIJI9IgIo1axijKAdI9BmcePk1YQ/I/AyRZf/FNAUGtgLC64d2kvMUDWmBAVElsGtfHF5mN6YVvReVDoyqjLaPnHeJXovkGTjPIZF1TXXXiP4IbfOQR6ANadSGQKo8/vgn0v2GPx8hN7Nq8i9hRe4r3/l/jsUXSy+QjxhO0lCVD1FYTnOScpAXxG1NnNuv8JhSKvfV/+UkE8BrrAOVz3EWHOk2ppL4rFEuQsPtLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7DiWakKrrZIIxQG/QZnzqFXfIp8haJWItSfwhpsyneE=;
- b=QOv9yjheqhpD2SpSBF638PfbeBn1eb1MbzWdiKnyjEV5pjEeJjQCkvLIfhciUSi023IDo8En5kZhu3suo+V3IMQroe0Xbw/SXOw2L82HcaR6FDaf1gyQPDkl2Dnw7pBNhjPCgozfN8fqgWtPTLqXwLzuPaNUPa24V0qlyXt6TLeL28UAGqy8KnZjMp3WnDnsPFO5ws2NWQ9U//MLlPvZTokapZap/RpiSA3pE3QRdqqk1fOq+rCXIte+yDSk7wppu6kOebv6iGFNCb2s5xPEsVDblVINKCvbbWbeOFuuTkMSolVOPzi6sNZEt8c4PS+G7fPxdp6fQ+1TePQB6k55pA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7DiWakKrrZIIxQG/QZnzqFXfIp8haJWItSfwhpsyneE=;
- b=tF9WAzKYHrdA+JnAHa3W4t9dDZ0mpiock5riSYZnBSj5EEcc12C6RvShWUJXyrIPXHgsIqN2LhykyHd6AXwLJq2JNoMMrP82+z36+CyoAtg6ub6O6fDyk48Q080VkyopSJqeJa9R7MIeBq0TeQt0EgQ70NZnNW5CgCYUrOMJ/pi/jIqn8ryQ6E3+tpnHwoYAfNwV5Fl3UmULBIpnTjZUs7yKZq4xx50Ohl3eJG8vlLAeFBr2+QUVygkhsFO3HA3ojTlGUjGuo0UXmqYlKJPux+Qxr6c2DxPm+DZtbz8vxuS9vaBlwVglnARrZNRD0jHZuQDbMdCdPD8w8Q4JFS5Zkw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH7PR12MB6657.namprd12.prod.outlook.com (2603:10b6:510:1fe::7)
- by DM6PR12MB4436.namprd12.prod.outlook.com (2603:10b6:5:2a3::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Fri, 7 Feb
- 2025 03:04:38 +0000
-Received: from PH7PR12MB6657.namprd12.prod.outlook.com
- ([fe80::e1a7:eda7:8475:7e0a]) by PH7PR12MB6657.namprd12.prod.outlook.com
- ([fe80::e1a7:eda7:8475:7e0a%5]) with mapi id 15.20.8422.011; Fri, 7 Feb 2025
- 03:04:38 +0000
-From: Tushar Dave <tdave@nvidia.com>
-To: jgg@nvidia.com,
-	corbet@lwn.net,
-	bhelgaas@google.com,
-	paulmck@kernel.org,
-	akpm@linux-foundation.org,
-	thuth@redhat.com,
-	rostedt@goodmis.org,
-	xiongwei.song@windriver.com,
-	vidyas@nvidia.com,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Cc: vsethi@nvidia.com,
-	sdonthineni@nvidia.com,
-	Tushar Dave <tdave@nvidia.com>
-Subject: [RESEND PATCH v2] PCI: Fix Extend ACS configurability
-Date: Thu,  6 Feb 2025 19:03:38 -0800
-Message-Id: <20250207030338.456887-1-tdave@nvidia.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR04CA0289.namprd04.prod.outlook.com
- (2603:10b6:303:89::24) To PH7PR12MB6657.namprd12.prod.outlook.com
- (2603:10b6:510:1fe::7)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GKjUw1E9"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21c2f1b610dso39551125ad.0;
+        Thu, 06 Feb 2025 19:05:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738897510; x=1739502310; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4o4TSS9FsO3vXUbBh9d56FG0CFO0Dizjn5EtzUGaSE0=;
+        b=GKjUw1E9Uv3FB/JKEoP1xlaxcpuy+v41UxcxIiS7rbj0MZ5fO6jTlkvqYAQ4Lewx3A
+         7dhmuf5WSGSvfRWz77JbLyfn9G+kojQ+XH/v85ecs26046/TSnxvRekjhjtPQTrNVtSD
+         1eNVkgLdulrNDc9VUWEpAM43IavkI8lT2ghOusBsOQHwjR19kTN9pJDm65j2oWa0fIs2
+         M2IiHjyMD8fY5kzjl3OSJ+Lik1b/Qi5hMlv5G4dUWw92uFys7Gdw+TWboDg1LcEcP4we
+         atvTwnG6U0G74Z6dtZr9z3mee18ajWHE5sUGZQYz3t3CV6bd2PSuWXv2229riDkUeAZp
+         ZggA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738897510; x=1739502310;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4o4TSS9FsO3vXUbBh9d56FG0CFO0Dizjn5EtzUGaSE0=;
+        b=NTTLAU3GDcJF9Z/OTCYBsmYwR3vqSb5Kke/+mBdjIUu2cxaWyERkHQgFKVhGU7W+2D
+         dLVHnHnBqQshU7tRLLuE9S/yfgwoQKAI6e1FnOK6doiM1jek9Hlm6L1U86mfnt3neKDj
+         TqdiHrinc/NYJmXgXqI4gwf3BEt4+iwlbBxTAcRjonfs5DTFojCgGO34EzHQ9KZpsbMS
+         kFBoAckTFxql1hwBhTXBUoQmw0XBLUVbqLlfC4PVWBJqMLZ4FreFIv7H08r7g5YjIkWr
+         MHrFBuruTd3VGverAR+YkLeLOKuWcsRRCx5a3e2zH9GW4yKL/94dQaFqYKU78msXH/X+
+         oXXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVLG/ZGAXth11e0d79CF6W73zAvyoxZpLTXM6lLA9k+lnycBVtor3uHLVOXnmX+22IRiwVyeNQhnxmgi6xb@vger.kernel.org, AJvYcCW/WvUF1AQTWEkW1iP6s/pwHBi2LXAd1VCCP1CambS5WOHoN4LkRHiYUuF58mv/KbjA5lMJTvuoy35fRDbs@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1TVV/gXtjmH7GIGHTDmbac4px4vNx9aht+b/pkpzUuqQkRuJf
+	vo67qXXqOlO7Fm7qkfhvbe7f6YiKvlmvIddaCUh5MX/cbXl/Rleo
+X-Gm-Gg: ASbGnctewfuuFwY3Gz+wQR0rS2OIvseP7gFwRIuHx00fyTgjIX8y7eySelEbouVr/HA
+	jtI9S7RawIASjV6dMxRPNkYPIb19XaqtQXheJo/d/XgU8//Dks8psyfaXPGeNTU+jdjzF0otv6y
+	yYxOV3IBrwos6IKxw0hnv1iLbAAGmqQlWaQdE+8APaqxgyQ9aP3rbbroiZ6T8QNp6VYEgznwVvY
+	bFnNxQB7Elpuu6lecxllN7yF0STKAo/MVvv+q3yj+WlW4yzFxDQA9sG7hQrimwRFv2Z1QgPCg36
+	+Lwj9ofTlDJnDctlFlHQ1kuY0bwdptdAklAtWknUX4fjvTx/gYkCyy2liF1C/g==
+X-Google-Smtp-Source: AGHT+IHU1oP15UNA5b2tlLhSpLU0N0t0y190lFWi2XLtEm75ybNppw1Nu9VXhNbPeToD/613i6kadw==
+X-Received: by 2002:a05:6a00:929c:b0:729:597:4fa9 with SMTP id d2e1a72fcca58-7305d53a88fmr2934639b3a.22.1738897509828;
+        Thu, 06 Feb 2025 19:05:09 -0800 (PST)
+Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048c16370sm1986354b3a.152.2025.02.06.19.05.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2025 19:05:09 -0800 (PST)
+Message-ID: <6491ceb6-e48b-442b-ac61-7b2b65252d7a@gmail.com>
+Date: Fri, 7 Feb 2025 12:05:05 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6657:EE_|DM6PR12MB4436:EE_
-X-MS-Office365-Filtering-Correlation-Id: 13f9aee9-f479-45be-8de1-08dd472428d6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QU0MyNIXPXGK+tq4FmjI85CBjpt4YvsVvtHG/AugJH7374ln+ZrrfxPazCbi?=
- =?us-ascii?Q?velVs4B/+z5RZfC1Uijms2fGeTWsuFg5L5o5KXHodk1kX+ldoanMIEvsfx1N?=
- =?us-ascii?Q?N5HpSQyDfSuSHaX5ncohQLgcRWyLiyL9NSfimilakymBqcTtpVUcmN757r/V?=
- =?us-ascii?Q?Xa7scpStX5+W67mXnPEqkbwtaC7Qf6lYrd9Im6Edp8g8anspPEGzS3Y4w6qD?=
- =?us-ascii?Q?lxk/FoYvDEd4HObcjZnti+TDa7pMEweEd1QIRIMw/rIpdMOm9BVLv1r5UfzV?=
- =?us-ascii?Q?xMemMeRA5QIK+eQu7VCbDdcNT9c2OQ0zWYVAxZ3j473oBu2+kJhg98MTJ5Ys?=
- =?us-ascii?Q?tzFEjSeIOD6M0P0IJLjGh3/RPhYXEOZl6JhyxX6/Vx9Q5u0foMLagxwmNFdo?=
- =?us-ascii?Q?KVeCRtF6r2m9rsRgpXuJQRylH1taE8p1ZXwOtEstsOfjBKam24xYma4ERc66?=
- =?us-ascii?Q?pQodUYbWBzAlEr43X+jDEWTNO3i1bYXEF1rKrdgbRJBRuIk+1iEjB4KXArKj?=
- =?us-ascii?Q?VAvMBLSR+PY8g0DV3y3kbgXzGaH+iolTrwIEEBy0tvwyeO1gneIlbdT184Vq?=
- =?us-ascii?Q?sjBBzqKVGbjjZjj5hP/xwReCeLAXh6PPsf5lmcKAQuIkxH1Fc5FA9usmTnEJ?=
- =?us-ascii?Q?weTFU8IVTzKUmBfVZ1N26bu/wGYKN/0Pd3WVdDJQpF6KQuyhY8jlUTcwbZIx?=
- =?us-ascii?Q?0FoZ78JTnYrG2eqweOpUkMyiUeAInumhWYsjqScHMwQSh1WjVUl4fAW89xvK?=
- =?us-ascii?Q?i2R+31TRhT8VkSvFUhUtObiRKTsIsSEe+bUyEu+n40viErZEt0dr4invU3l/?=
- =?us-ascii?Q?axAhNML+05S5wXmR74By7v1aFM+dgoXL+b8uSaOlVpsb6Osg5wRsuLmpCKzG?=
- =?us-ascii?Q?IDKsZSjePvtPHi5Qc33XrcdwNRr11oZBOdCu39JDAuZl5+ea7t3iCGm8JjZK?=
- =?us-ascii?Q?DYcBsGWQhbEF08pzZv0+8uMl8A2Z232i9bSpWqOTCvk9l85MHG0rL3twhOye?=
- =?us-ascii?Q?Kb36w50EP8Trr9fiQxDH5q0+NglVfN27ldOiGtf4bVHRPXNSlShJPWe+q9GC?=
- =?us-ascii?Q?Kv2y5jvD+m3MlTYyxpOB18RBlxG57iFp3TlJ3pQaaq5uMQGP2lOH2FLtSb8d?=
- =?us-ascii?Q?tuWS45ICYyR69ubx/IN7nGMslP8YqPujvvHtUK51fAdAZbHewQVNF30sscOY?=
- =?us-ascii?Q?dEEcqB19myFbDnR9w2HTCOBSp/yiRsYMX9+0GW5Y3DYS/F3m32PDBFcAoMqZ?=
- =?us-ascii?Q?OPNG2L6vBX5FresT/lv9p+TGoatCTR8xfLussTF5Y8kKHgH7Daqvyg/5KSM1?=
- =?us-ascii?Q?TdJnYQkvg7lqpvN9njRMVkhN+lgoL1m07kkJR9itLWv0tP3VtFIyaZAqd6v0?=
- =?us-ascii?Q?UuAKEANfUHQr3quH2WI2AG62GcUtsdhLoMsKHcx5jQKD0PCi4ZVXnk9ec9cy?=
- =?us-ascii?Q?DLKO+yny7XU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6657.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?uEJ/Qjvoec1XFHS74J3K17vEwqi+d772HjoDm71KbSXFOW5txJcm+1QKeR8V?=
- =?us-ascii?Q?aa6ZPwAggcwLriUxXjPdQft84Xz7U66sLG4XxIe1P6g+HsQuB/1aAJ7HpqsG?=
- =?us-ascii?Q?pon2xIYeQgobes9jKU1JmXBrgJemMKrL3+rMkDhl2BieBKcJ27CivQGz2dEh?=
- =?us-ascii?Q?2SRIUVlLkIzCjQunH3dYcXNFWz7q8c2n/quiffzlq9GqIThhsyaZHlLDzJvB?=
- =?us-ascii?Q?RxraMoHEBF+yY5pzvR6jIf1m27o9d+xz3m1gbKRlOuj8TnQ5qv1Qt3I6aEyn?=
- =?us-ascii?Q?cP84Jrz7ejQRvGwh17VCAkNAMPdRPkD5Bl0wliX/iSINUoiOnEeIwgUIoQqk?=
- =?us-ascii?Q?2xpYyg/M0GlNlFSqa4mz/cx0VMJ5R6oIju5Sm0ZIHTIalgv/sqku9A+kOs3S?=
- =?us-ascii?Q?De4wxRiCcnVc1rmpGUgPZlQMg4YPB5OcmdD0+5ZZvLL0YERbuLJfuamOzy/K?=
- =?us-ascii?Q?D7T+ndsH+d3F+Eu/caz71BYkny0WCmyUU0xU6w2X6bUPcydpH9dK6itugYIP?=
- =?us-ascii?Q?z0VR00K3dAU00hUhpeCoS/YvIQdKy1WLcV5HO865Li5cK9k+RQ/Ww5MAKT9M?=
- =?us-ascii?Q?SDWGIW/sb8I6ebh9mMFKHp/0yO8q5hzD3xO7q9hp0Emt34XfHJQZMEJyLXAk?=
- =?us-ascii?Q?AywXWpR8WvNfnFPHham0wMQ3qrynWBprz7w0y/zhSLb+m56Wi8ZCkYJgw0UY?=
- =?us-ascii?Q?bTQVQUnywL9FBVPK855qeQ9Q4sGdBrh80JZUiXP17N6TVObFepiH3bw2rvuC?=
- =?us-ascii?Q?dDx3ff29SJNqrGiNzrS+eASqLyh1lTWgeoq0e7FHhsgefMg5HTfWSiWq5OCk?=
- =?us-ascii?Q?OdryCQtSv4KoDL4FD9vvvRS9WJBi5hBF9/YMM7DVwyO1JRGKdz1Ze68EbXNe?=
- =?us-ascii?Q?Wkx+zg3hHFP8G0WB6JaG9NaQCxFVkVnp1ydOPrCINghVUrZFyP2I8Xbn6PSE?=
- =?us-ascii?Q?c0R2gK/sBN+tlNDMQz5m7HjKbV9FZuCXnbgA0MYsfh5igUQekgklYgYoRXmy?=
- =?us-ascii?Q?yDc7c+jSnG4We5ijztcV6tWTTgJowVWAFhsktfGnpOxaydhlxfQauKOGslRO?=
- =?us-ascii?Q?WXev+dW7fu7GazGfFJO9WD04qnw7xcl+0S9IomGIbhrFPTyvoQNam6qNoJ44?=
- =?us-ascii?Q?ucwUPdb1UwHR6Z6f175zaIFZfq7m2Pxd2A0dgRrdprU8ASkKSDiGW6CZ64Fa?=
- =?us-ascii?Q?a/u1Qg8I1LuVRZpihEGhQ99NVvQWQyi+oUrMas+2o1SjkSY5KSL26zZQa3V4?=
- =?us-ascii?Q?jvPr6AuFCM8DXLKhv+WHjExCm7jUGlMXiAlDzemnJp1HCfAk9DLGm7VjZuju?=
- =?us-ascii?Q?fsy8fmvrKW0UfUrJURSbSs0tZw4aHVp1Oqi2/69YH3WDaui55Vq+N/jwNbfO?=
- =?us-ascii?Q?UoPYxzaJF+DqdBD6jO6RYoi+KJmkAxhb3pma+bThBY3DCY2G1WCZ6taKOJXX?=
- =?us-ascii?Q?tIYM8mgVOK817BUc40MRjBvVqUJLqjHIYEOl9rDjPOkwT8oKehzsk+25VNVF?=
- =?us-ascii?Q?lAn+J+iJ7p4GDEibp+LGBrYqzLPXOaMdWrjulAf6KOJGXsHhVI+B+zyjapl6?=
- =?us-ascii?Q?zUz8XqmTwH0SehA1mfxfyqhjk3jDyK8ZmZCiav3X?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13f9aee9-f479-45be-8de1-08dd472428d6
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6657.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 03:04:38.7259
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ffp6WweVpcjcUO8HaQ1/yCHGbmKcFoUiooavTenpvcNzeXGRZrnomuPV7A7F1xeftyRUdxoPJLpJVYG0QNsywQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4436
+User-Agent: Mozilla Thunderbird
+To: kent.overstreet@linux.dev
+Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+ Akira Yokosawa <akiyks@gmail.com>
+References: <z2eszznjel6knkkvckjxvkp5feo5jhnwvls3rtk7mbt47znvcr@kvo6dhimlghe>
+Subject: Re: [GIT PULL] bcachefs fixes for 6.14-rc2
+Content-Language: en-US
+From: Akira Yokosawa <akiyks@gmail.com>
+In-Reply-To: <z2eszznjel6knkkvckjxvkp5feo5jhnwvls3rtk7mbt47znvcr@kvo6dhimlghe>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Commit 47c8846a49ba ("PCI: Extend ACS configurability") introduced
-bugs that fail to configure ACS ctrl to the value specified by the
-kernel parameter. Essentially there are two bugs.
+Hello Kent,
 
-First, when ACS is configured for multiple PCI devices using
-'config_acs' kernel parameter, it results into error "PCI: Can't parse
-ACS command line parameter". This is due to the bug in code that doesn't
-preserve the ACS mask instead overwrites the mask with value 0.
+Kent Overstreet wrote:
+> Nothing major, things continue to be fairly quiet over here.
+> 
+> Tracking some bugs that show up on nix build servers; would like someone
+> to confirm or deny that these are or are not still happening on 6.14,
+> and if you've got an environment where this is reproducing and can work
+> with me to debug that would save me some trouble...
+> 
+> Also, another bug report is implicating hibernate, please let me know if
+> you have any data on that, still trying to piece together what's going
+> on there.
+> 
+> And as usual, be noisy if you're seeing a serious bug that's not getting
+> resolved.
+> 
 
-For example, using 'config_acs' to configure ACS ctrl for multiple BDFs
-fails:
+I'm not Linus, and not a serious bug, but let me be noisy.
 
-	Kernel command line: pci=config_acs=1111011@0020:02:00.0;101xxxx@0039:00:00.0 "dyndbg=file drivers/pci/pci.c +p"
-	PCI: Can't parse ACS command line parameter
-	pci 0020:02:00.0: ACS mask  = 0x007f
-	pci 0020:02:00.0: ACS flags = 0x007b
-	pci 0020:02:00.0: Configured ACS to 0x007b
+See below.
 
-After this fix:
+> The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+> 
+>   Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-02-06
+> 
+> for you to fetch changes up to 44a7bfed6f352b4bae4fd244d0fcd32aa25d0deb:
+> 
+>   bcachefs: bch2_bkey_sectors_need_rebalance() now only depends on bch_extent_rebalance (2025-02-05 19:56:24 -0500)
+> 
+> ----------------------------------------------------------------
+> bcachefs fixes for 6.14-rc2
+> 
+> - add a SubmittingPatches to clarify that patches submitted for bcachefs
+>   do, in fact, need to be tested
+> - discard path now correctly issues journal flushes when needed, this
+>   fixes performance issues when the filesystem is nearly full and we're
+>   bottlenecked on copygc
+> - fix a bug that could cause the pending rebalance work accounting to be
+>   off when devices are being onlined/offlined; users should report if
+>   they are still seeing this
+> - and a few more trivial ones
+> 
+> ----------------------------------------------------------------
+> Jeongjun Park (2):
+>       bcachefs: fix incorrect pointer check in __bch2_subvolume_delete()
+>       bcachefs: fix deadlock in journal_entry_open()
+> 
+> Kent Overstreet (4):
+>       bcachefs docs: SubmittingPatches.rst
 
-	Kernel command line: pci=config_acs=1111011@0020:02:00.0;101xxxx@0039:00:00.0 "dyndbg=file drivers/pci/pci.c +p"
-	pci 0020:02:00.0: ACS mask  = 0x007f
-	pci 0020:02:00.0: ACS flags = 0x007b
-	pci 0020:02:00.0: ACS control = 0x005f
-	pci 0020:02:00.0: ACS fw_ctrl = 0x0053
-	pci 0020:02:00.0: Configured ACS to 0x007b
-	pci 0039:00:00.0: ACS mask  = 0x0070
-	pci 0039:00:00.0: ACS flags = 0x0050
-	pci 0039:00:00.0: ACS control = 0x001d
-	pci 0039:00:00.0: ACS fw_ctrl = 0x0000
-	pci 0039:00:00.0: Configured ACS to 0x0050
+This caused a new warning in "make htmldocs", which was reported at:
 
-Second bug is in the bit manipulation logic where we copy the bit from
-the firmware settings when mask bit 0.
+    https://lore.kernel.org/20250204141216.4a2635ee@canb.auug.org.au/
 
-For example, 'disable_acs_redir' fails to clear all three ACS P2P redir
-bits due to the wrong bit fiddling:
+, and has not been taken care of.
 
-	Kernel command line: pci=disable_acs_redir=0020:02:00.0;0030:02:00.0;0039:00:00.0 "dyndbg=file drivers/pci/pci.c +p"
-	pci 0020:02:00.0: ACS mask  = 0x002c
-	pci 0020:02:00.0: ACS flags = 0xffd3
-	pci 0020:02:00.0: Configured ACS to 0xfffb
-	pci 0030:02:00.0: ACS mask  = 0x002c
-	pci 0030:02:00.0: ACS flags = 0xffd3
-	pci 0030:02:00.0: Configured ACS to 0xffdf
-	pci 0039:00:00.0: ACS mask  = 0x002c
-	pci 0039:00:00.0: ACS flags = 0xffd3
-	pci 0039:00:00.0: Configured ACS to 0xffd3
+I'd like you not to ignore such a friendly report!
 
-After this fix:
+Regards, Akira
 
-	Kernel command line: pci=disable_acs_redir=0020:02:00.0;0030:02:00.0;0039:00:00.0 "dyndbg=file drivers/pci/pci.c +p"
-	pci 0020:02:00.0: ACS mask  = 0x002c
-	pci 0020:02:00.0: ACS flags = 0xffd3
-	pci 0020:02:00.0: ACS control = 0x007f
-	pci 0020:02:00.0: ACS fw_ctrl = 0x007b
-	pci 0020:02:00.0: Configured ACS to 0x0053
-	pci 0030:02:00.0: ACS mask  = 0x002c
-	pci 0030:02:00.0: ACS flags = 0xffd3
-	pci 0030:02:00.0: ACS control = 0x005f
-	pci 0030:02:00.0: ACS fw_ctrl = 0x005f
-	pci 0030:02:00.0: Configured ACS to 0x0053
-	pci 0039:00:00.0: ACS mask  = 0x002c
-	pci 0039:00:00.0: ACS flags = 0xffd3
-	pci 0039:00:00.0: ACS control = 0x001d
-	pci 0039:00:00.0: ACS fw_ctrl = 0x0000
-	pci 0039:00:00.0: Configured ACS to 0x0000
+>       bcachefs: Fix discard path journal flushing
+>       bcachefs: Fix rcu imbalance in bch2_fs_btree_key_cache_exit()
+>       bcachefs: bch2_bkey_sectors_need_rebalance() now only depends on bch_extent_rebalance
+> 
+>  .../filesystems/bcachefs/SubmittingPatches.rst     | 98 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  fs/bcachefs/alloc_background.c                     | 47 ++++++-----
+>  fs/bcachefs/alloc_foreground.c                     | 10 ++-
+>  fs/bcachefs/alloc_types.h                          |  1 +
+>  fs/bcachefs/btree_key_cache.c                      |  1 -
+>  fs/bcachefs/buckets_waiting_for_journal.c          | 12 ++-
+>  fs/bcachefs/buckets_waiting_for_journal.h          |  4 +-
+>  fs/bcachefs/inode.h                                |  4 +-
+>  fs/bcachefs/journal.c                              | 18 +++-
+>  fs/bcachefs/journal.h                              |  1 +
+>  fs/bcachefs/journal_types.h                        |  1 +
+>  fs/bcachefs/opts.h                                 | 14 ----
+>  fs/bcachefs/rebalance.c                            |  8 +-
+>  fs/bcachefs/rebalance.h                            | 20 +++++
+>  fs/bcachefs/subvolume.c                            |  7 +-
+>  fs/bcachefs/super.c                                | 11 +++
+>  fs/bcachefs/super.h                                |  1 +
+>  fs/bcachefs/trace.h                                | 14 +++-
+>  19 files changed, 214 insertions(+), 59 deletions(-)
+>  create mode 100644 Documentation/filesystems/bcachefs/SubmittingPatches.rst
 
-Fixes: 47c8846a49ba ("PCI: Extend ACS configurability")
-Signed-off-by: Tushar Dave <tdave@nvidia.com>
----
-
-changes in v2:
- - Addressed review comments by Jason and Bjorn.
- - Removed Documentation changes (already taken care by other patch).
- - Amended commit description.
-
- drivers/pci/pci.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 869d204a70a3..c1ab5d50112d 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -954,8 +954,10 @@ struct pci_acs {
- };
- 
- static void __pci_config_acs(struct pci_dev *dev, struct pci_acs *caps,
--			     const char *p, u16 mask, u16 flags)
-+			     const char *p, const u16 acs_mask, const u16 acs_flags)
- {
-+	u16 flags = acs_flags;
-+	u16 mask = acs_mask;
- 	char *delimit;
- 	int ret = 0;
- 
-@@ -963,7 +965,7 @@ static void __pci_config_acs(struct pci_dev *dev, struct pci_acs *caps,
- 		return;
- 
- 	while (*p) {
--		if (!mask) {
-+		if (!acs_mask) {
- 			/* Check for ACS flags */
- 			delimit = strstr(p, "@");
- 			if (delimit) {
-@@ -971,6 +973,8 @@ static void __pci_config_acs(struct pci_dev *dev, struct pci_acs *caps,
- 				u32 shift = 0;
- 
- 				end = delimit - p - 1;
-+				mask = 0;
-+				flags = 0;
- 
- 				while (end > -1) {
- 					if (*(p + end) == '0') {
-@@ -1027,10 +1031,13 @@ static void __pci_config_acs(struct pci_dev *dev, struct pci_acs *caps,
- 
- 	pci_dbg(dev, "ACS mask  = %#06x\n", mask);
- 	pci_dbg(dev, "ACS flags = %#06x\n", flags);
-+	pci_dbg(dev, "ACS control = %#06x\n", caps->ctrl);
-+	pci_dbg(dev, "ACS fw_ctrl = %#06x\n", caps->fw_ctrl);
- 
--	/* If mask is 0 then we copy the bit from the firmware setting. */
--	caps->ctrl = (caps->ctrl & ~mask) | (caps->fw_ctrl & mask);
--	caps->ctrl |= flags;
-+	/* For mask bits that are 0 copy them from the firmware setting
-+	 * and apply flags for all the mask bits that are 1.
-+	 */
-+	caps->ctrl = (caps->fw_ctrl & ~mask) | (flags & mask);
- 
- 	pci_info(dev, "Configured ACS to %#06x\n", caps->ctrl);
- }
--- 
-2.34.1
 
