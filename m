@@ -1,94 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out199-7.us.a.mail.aliyun.com (out199-7.us.a.mail.aliyun.com [47.90.199.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A29E236451;
-	Fri,  7 Feb 2025 09:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD3D236A89;
+	Fri,  7 Feb 2025 09:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738920920; cv=none; b=WrHWmZl+4pCq4+mQW1tcA3Uk6+koXs15bKq92jHgEDgByShuqS2iOn4fqb5l05rbm/oTR3DYwZbe7Kx4ltS4nP5b35MykUUACdERWXTL3VldhZyKnil5rTfUGbVqqgko/V5qwVXNusCWOw8sE1Mmq+mCkR4z5aULYmtFuvCxw50=
+	t=1738920924; cv=none; b=AHa0ecnAxFqPXF3Rf28ajLj8WoFSlcrS4ylgoaFc7VxxpkQES72f5vp49THH54HqAd6hWs9SjyVWLFaxf4aa0aH/HED/dfSz8p/4/ZepM69RkVUa93DFjvCyvA0cMfSOllWFDVzSI029KMp9KAg1HMemBOzhyq1G/ztyEiDdFLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738920920; c=relaxed/simple;
-	bh=BQ6G7rgyFz/R8XkAhMbxsguKvT3vIKNZNcMTlSTb8AY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dnn5MAGEydDekQAegtg4kCBZ7Ue2K9jqTzlJKk8tPcIofiTiKVtJyzTQ3ns3aLvqljKE5GOCpkD0MzAEyBckoaPhyy00kn6BNgjxa+ymCUjEIZS5R5WroaF9YSBNb/fwIfotWMzKkX8pknB83NG1SfPbap0BONIsTDCPVSCbm5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NME9/MnE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738920924; c=relaxed/simple;
+	bh=n+KDLJ+vD3Bt+/Cr8vhSTfA6mf0eChU3PqcwnHXsbxk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nII9D5ZfdkCFLMqhrA2U2FDci30Ir7rN2J1topg2XHwNjfFGHv1F0ZylFmvonDQN8gJgs6bhcCfWRLYo6F0u5G/qnxloFuj8I817Wwjykx1xwBpKrJsseMGmIW3YBAi5o/2Mz99Ds08Hp/Gs/Px/wrR6vvTEpFRE3QXAf4n+SHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xN6X0AaD; arc=none smtp.client-ip=47.90.199.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NME9/MnE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14DD2C4CEE4;
-	Fri,  7 Feb 2025 09:35:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738920919;
-	bh=BQ6G7rgyFz/R8XkAhMbxsguKvT3vIKNZNcMTlSTb8AY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NME9/MnETm0FjT0XwSS1TNU9xgUJmlkdQhA6Rht+p/8zPbA14eEVsFClb4a2/rYoQ
-	 dUMn8vDgckAIZmS5BJMNrDjQfQHZrqiaQr7cUZlAnBNYgV6+uKoc06No62rhuh6HxP
-	 Xhi0feJUq7fmJmoGxZOFr24ys+m4Lm9OgqR2PRrM=
-Date: Fri, 7 Feb 2025 10:35:16 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Jillian Donahue <jilliandonahue58@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH] f_midi_complete to call tasklet_hi_schedule
-Message-ID: <2025020708-manned-antidote-7d57@gregkh>
-References: <CAArt=Lib_PiR1z07hb1E3tqq-PG=KVKU9CZP3cPsQE5ciokLVw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xN6X0AaD"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1738920903; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=nsVyOK7lf4dncZjmNZ83lvgaF7otJZXfXf1rIy5TN2k=;
+	b=xN6X0AaDFM134nZqlPaxRnASZZMaC2hMpMH3uXDA0G+P44VstETa8W97PIBU6co8ewkSCzzzsBvGlD9lL9Gdwlmfa5Aux+++wJzebNNarpEVmX2nBQWFMj/c5ZGCxINbD4E12MxxAWSSKQ30ylK2Zmu0FJ7PtW6Ysywk+YsFSzA=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WOyzNCd_1738920901 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 07 Feb 2025 17:35:02 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	bhelgaas@google.com,
+	kbusch@kernel.org,
+	sathyanarayanan.kuppuswamy@linux.intel.com
+Cc: mahesh@linux.ibm.com,
+	oohall@gmail.com,
+	xueshuai@linux.alibaba.com,
+	Jonathan.Cameron@huawei.com,
+	terry.bowman@amd.com
+Subject: [PATCH v3 0/4] PCI/AER: Report fatal errors of RCiEP and EP if link recoverd
+Date: Fri,  7 Feb 2025 17:34:56 +0800
+Message-ID: <20250207093500.70885-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAArt=Lib_PiR1z07hb1E3tqq-PG=KVKU9CZP3cPsQE5ciokLVw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 06, 2025 at 12:32:14PM -0700, Jillian Donahue wrote:
-> >From 9cb2628740d9f55f6f3faa5cce2de5eb8590f434 Mon Sep 17 00:00:00 2001
-> From: Jill Donahue <jilliandonahue58@gmail.com>
-> Date: Thu, 6 Feb 2025 10:18:05 -0700
-> Subject: [PATCH] f_midi_complete to call tasklet_hi_schedule
+changes since v2:
+- moving the "err_port" rename to a separate patch per Sathyanarayanan
+- rewrite comments of dpc_process_error per Sathyanarayanan
+- remove NULL initialization for err_dev per Sathyanarayanan
 
-This all shouldn't be in the body of the email, please do not use web
-email clients.  The kernel documentation should show you how to use git
-send-email or other tools.
+changes since v1:
+- rewrite commit log per Bjorn
+- refactor aer_get_device_error_info to reduce duplication per Keith
+- fix to avoid reporting fatal errors twice for root and downstream ports per Keith
 
-> 
-> When using USB MIDI, a lock is attempted to be acquired twice through a
-> re-entrant call to f_midi_transmit, causing a deadlock.
-> 
-> Fix it by using tasklet_hi_schedule() to schedule the inner
-> f_midi_transmit() via a tasklet from the completion handler.
-> 
-> Link: https://lore.kernel.org/all/CAArt=LjxU0fUZOj06X+5tkeGT+6RbXzpWg1h4t4Fwa_KGVAX6g@mail.gmail.com/
-> 
-> Fixes: d5daf49b58661 ("USB: gadget: midi: add midi function driver")
+The AER driver has historically avoided reading the configuration space of an
+endpoint or RCiEP that reported a fatal error, considering the link to that
+device unreliable. Consequently, when a fatal error occurs, the AER and DPC
+drivers do not report specific error types, resulting in logs like:
 
-No Cc: stable?
+   pcieport 0000:30:03.0: EDR: EDR event received
+   pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+   pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+   pcieport 0000:30:03.0: AER: broadcast error_detected message
+   nvme nvme0: frozen state error detected, reset controller
+   nvme 0000:34:00.0: ready 0ms after DPC
+   pcieport 0000:30:03.0: AER: broadcast slot_reset message
 
-No blank line between Link: and Fixes: please
+AER status registers are sticky and Write-1-to-clear. If the link recovered
+after hot reset, we can still safely access AER status of the error device.
+In such case, report fatal errors which helps to figure out the error root
+case.
 
-> Signed-off-by: Jill Donahue <jilliandonahue58@gmail.com>
-> ---
->  drivers/usb/gadget/function/f_midi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+After this patch set, the logs like:
 
-And this is a v2 patch, right?
+   pcieport 0000:30:03.0: EDR: EDR event received
+   pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+   pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+   pcieport 0000:30:03.0: AER: broadcast error_detected message
+   nvme nvme0: frozen state error detected, reset controller
+   pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
+   nvme 0000:34:00.0: ready 0ms after DPC
+   nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
+   nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
+   nvme 0000:34:00.0:    [ 4] DLP                    (First)
+   pcieport 0000:30:03.0: AER: broadcast slot_reset message 
 
-> 
-> diff --git a/drivers/usb/gadget/function/f_midi.c
-> b/drivers/usb/gadget/function/f_midi.c
-> index 837fcdfa3..37d438e5d 100644
-> --- a/drivers/usb/gadget/function/f_midi.c
-> +++ b/drivers/usb/gadget/function/f_midi.c
-> @@ -283,7 +283,7 @@ f_midi_complete(struct usb_ep *ep, struct usb_request *req)
->                         /* Our transmit completed. See if there's more to go.
->                          * f_midi_transmit eats req, don't queue it again. */
->                         req->length = 0;
-> -                       f_midi_transmit(midi);
-> +                       tasklet_hi_schedule(&midi->tasklet);
->                         return;
->                 }
+Shuai Xue (4):
+  PCI/DPC: Rename pdev to err_port for dpc_handler
+  PCI/EDR: Rename edev to err_port for edr_handle_event
+  PCI/DPC: Run recovery on device that detected the error
+  PCI/AER: Report fatal errors of RCiEP and EP if link recoverd
 
-Your whitespace is all damaged and this can't be applied :(
+ drivers/pci/pci.h      |  5 +++--
+ drivers/pci/pcie/aer.c | 11 +++++++----
+ drivers/pci/pcie/dpc.c | 31 ++++++++++++++++++++++++-------
+ drivers/pci/pcie/edr.c | 35 ++++++++++++++++++-----------------
+ drivers/pci/pcie/err.c |  9 +++++++++
+ 5 files changed, 61 insertions(+), 30 deletions(-)
 
-thanks,
+-- 
+2.39.3
 
-greg k-h
