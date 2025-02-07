@@ -1,108 +1,74 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A2E3C38;
-	Fri,  7 Feb 2025 02:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45117145A0B;
+	Fri,  7 Feb 2025 02:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738893679; cv=none; b=UeLGt2O7xRbDFZc4oxJtKublihvwhn7NtCAv6TyJBR3E8BtVJ71r29UaymI0/nFD5HTdvEFpANvp9mDi9YiVzRrOIDzOpGGNrQmZyzlXt1MqvoVnQS5F1zTr+9JOY8jzOvoSyMcX7V/jktSJHRnvRkFzzGoQW4BM/jyimiOaeCc=
+	t=1738893727; cv=none; b=e8Uhi9yqfWVFy8nc2o5Ep6HG4i2qSL0Tg/B+7zGOtQsxoNJk8/zgOmuzZPuHoCeIkWg7lVtk6z+hbzyZ2Es06CfNmMoI6CjtFwvV3/SSOJCHZON+R7ldvbH+qFVrI9ox+feMuqYrn7MhL1H6pEC2dEBuHauM08tkfMOThUFRLRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738893679; c=relaxed/simple;
-	bh=m3D42JUrM6TyUor3EeqLRscsl8+YaClJzqOQSbgkqVo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=e4SlS9AwJCw0sv2eXxqCaff8ENFfqUO8zI4S9PVo30Y27e7fQnuCYvkF5H6G3ayi0Wc4xKsb54loib5jV9xLTA8kwYDpfsGk3XIbupXDsuTgLiwu68svwBVuCHHcqGvOODA/B+Q/zKTun3tHSCmAnzKeA57w4A9SGxgB/Jp+Zqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pijQCxOU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pijQCxOU"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5171PCvk028281;
-	Fri, 7 Feb 2025 02:01:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/lmx7Fh3p/PFSQ1apxhaW8EkLnRUOlfdQPR75DkhK3I=; b=pijQCxOUD8hli9WO
-	EFm1iUiclCmsfcdrgNIv+wn7Yc9CGIZU74Lh226C2FYoYDJfthhWYb58yD6BKDZ+
-	DGMTxo+WfoiluyundsP+TYpcEd4YZHOU0UI9ST2cbXHXYcetVrxmbn5/Hc7jnBFh
-	/qIXcXY2hxf7vLn9vPrcdySeJFs6U3/8QFBgt/iR30nY/xLbl4URFH5wAvzkQnkY
-	/tY4r0mpVREaohlz5QZXwL8u1uF0CiCtcp3OsScnUtg3FVlleLRAIiGMLWvIIXne
-	Qzn+mfqGppOKm/lCMtQ30uBumOaBS4745HzFaFHs1vWqzTE68qnVNQUc1kzw7iha
-	E1Un6g==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44n7p7r5fe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 02:01:11 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51721B5f012127
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 7 Feb 2025 02:01:11 GMT
-Received: from [10.231.195.16] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Feb 2025
- 18:01:09 -0800
-Message-ID: <3e9d565e-dbb0-4a7a-987e-ed817e810607@quicinc.com>
-Date: Fri, 7 Feb 2025 10:01:08 +0800
+	s=arc-20240116; t=1738893727; c=relaxed/simple;
+	bh=kuKBGXfWF72GPnn9aAJK/5eaTrwvDCrw7ihGfLyKqrE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Rj2qZO7YH4Tyt/U1vLDljb5bxeERIzLhXYsNXG9ZvNYQGuXtIKoT5zc5Ej1qNtPprXgmRNEMkSSB0k0fs16KQ4XVZY6YwotdRwpGjIDQGEz9p0rdcK2fbkucVUcWZp6ADuN1OHI9aReGzjh0nwbM7XvD9xvZxD+frxZLvTLjdKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA3AAC4CEE0;
+	Fri,  7 Feb 2025 02:02:05 +0000 (UTC)
+Date: Thu, 6 Feb 2025 21:02:47 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 7/8] tracing: Show module names and addresses of last
+ boot
+Message-ID: <20250206210247.4daa94c8@gandalf.local.home>
+In-Reply-To: <20250207105111.1067fc1421bf682818e488c1@kernel.org>
+References: <20250205225031.799739376@goodmis.org>
+	<20250205225104.096389081@goodmis.org>
+	<20250207105111.1067fc1421bf682818e488c1@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: ath11k: allow APs combination when dual stations
- are supported
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-CC: <ath11k@lists.infradead.org>, <jjohnson@kernel.org>, <kvalo@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-wireless@vger.kernel.org>
-References: <d410576f-2fc7-4de1-af51-29fbe8b14948@quicinc.com>
- <20250115130359.138890-1-jtornosm@redhat.com>
- <748a5a75-1385-4691-85c1-e9cc5eb4ffc2@oss.qualcomm.com>
- <e1c9b030-8a6c-4aba-8bdd-853113bef396@quicinc.com>
- <2b52714a-0fe2-4c85-95bc-4a6c0a8a0b60@oss.qualcomm.com>
-Content-Language: en-US
-From: "Yu Zhang (Yuriy)" <quic_yuzha@quicinc.com>
-In-Reply-To: <2b52714a-0fe2-4c85-95bc-4a6c0a8a0b60@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: xFGOH_jcjhZNjLTVEwc8FlmP-SfXgfVw
-X-Proofpoint-ORIG-GUID: xFGOH_jcjhZNjLTVEwc8FlmP-SfXgfVw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_01,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=424
- impostorscore=0 suspectscore=0 priorityscore=1501 bulkscore=0 adultscore=0
- clxscore=1015 mlxscore=0 spamscore=0 phishscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502070014
 
+On Fri, 7 Feb 2025 10:51:11 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-
-On 2/7/2025 4:20 AM, Jeff Johnson wrote:
-> On 2/5/2025 11:46 PM, Yu Zhang (Yuriy) wrote:
->>
->>
->> On 1/16/2025 8:31 AM, Jeff Johnson wrote:
->>
->>> Kalle, can you review? You currently have this deferred in patchwork:
->>> https://patchwork.kernel.org/project/linux-wireless/patch/20240829064420.3074140-1-quic_yuzha@quicinc.com/
->>>
->>> /jeff
->>>
->> Jeff, can you help with this because Kallo has stepped down?
->>
->>
->> /Yuriy
+> >   # cat instances/boot_mapped/last_boot_info
+> >   Offset: 10c00000
+> >   ffffffffc00ca000 usb_serial_simple
+> >   ffffffffc00ae000 usbserial
+> >   ffffffffc008b000 bfq  
 > 
-> We should avoid having new module parameters
-> Is there a solution that doesn't require that?
+> This is just a suggestion, what about using the same format for all
+> lines? For example,
 > 
+> # cat instances/boot_mapped/last_boot_info
+> 10c00000         [kernel]
+> ffffffffc00ca000 usb_serial_simple
+> ffffffffc00ae000 usbserial
+> ffffffffc008b000 bfq
 
-Yes, I think might not have expressed clearly. I was referring to the 
-patch we discussed earlier, that Kallo deferred in Patchwork:
-https://patchwork.kernel.org/project/linux-wireless/patch/20240829064420.3074140-1-quic_yuzha@quicinc.com/
+This can be confusing because the first is an offset, and the others are
+addresses.
 
+> 
+> > 
+> >   # echo function > instances/boot_mapped/current_tracer
+> >   # cat instances/boot_mapped/last_boot_info
+> >   Offset: current  
+> 
+> And this one is empty if it is already for the current.
+> (because last boot information is cleared)
+
+Hmm, I have to think about that.
+
+Thanks,
+
+-- Steve
