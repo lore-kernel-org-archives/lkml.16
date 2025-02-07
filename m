@@ -1,118 +1,88 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC33192590;
-	Fri,  7 Feb 2025 17:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5304E18E050;
+	Fri,  7 Feb 2025 17:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738950672; cv=none; b=afZPEjnoqeLx82XbjCHLsoMuVcz2Ky1sUdCveNUiHHdnbCZ6A3JUB3pQppVLmcF+Was32BAE7EPp9lrBrnSMRwYuSe+Yb/UjHMS6E9W/E7BoLjfgYjD8XNnzfuLjWX5wUZGXWTU8j0YTbdMDsPBl1QWcW+YhnesLneRfWsvAGqs=
+	t=1738950678; cv=none; b=dVr5BSxuxNstNjPb1D9VXO260nuBEOqUDRCJksb6TNsfA0z0BCgR4R7lZaedzJ7FaRzhxPJ0Iz3JUu7Gzr7aXZF/FSrvNJRYTDF81Ywp0i6HATyDhPUvpXAy5kG5ZMpR2cWO4kj0MtiyR4TquxCacYzyA5lB19WZCY2alJbhUuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738950672; c=relaxed/simple;
-	bh=pqczq43LpbSA3CT/HD+7MZiv+8Bcwe2G0ZZF/QFuS6U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kKxrWbDbOw79Xa0njyJHZ5FBldHw0zV3x9NV5ONOWnHAZHPtV1Ifp7bQAAPu8FvZRsM/BZhGedptsxOcV2hsuWeYqPkoY/mVwr+OsVJFcncDS5xaoYNSamUeuTY2cINwZ/f7MnR1p+VsUXK16GeOU5Sd9B7jMhFUajU+sqmbX6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A5XihiZE; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738950678; c=relaxed/simple;
+	bh=MPsbYwDUYNurUngqJp6G/NBnW5xTPrQhzn/NqyWKp/I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ju2hpJ/z5DsxS5jiSoD3QA78k1IhkPl6d6MmPAv1cF92wePu1Fgvzuwwg9LQekTOQEgd+vsQ8M4hI0oR7srBVnBtVFE71ygM0tXIB1MYv9wWr8oeCv93w576iIDTOcbKAS93gK98+hFTIzaU2F3F9W5cc2yKBzH4qJpFUH87vgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=4p0Wz68f; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5XihiZE"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7be6fdeee35so389888185a.1;
-        Fri, 07 Feb 2025 09:51:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738950669; x=1739555469; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/93fpw68fWcW+DcrP5O/aiX1Id4V9BT6qntICk6OEis=;
-        b=A5XihiZEyg1mjWHYhU8b2VZCgfJ2HKqpHtcIAosbh06dcRkHvXcAqNgXwx+PIApJrf
-         XEsuF2+5NwWJAKQzq3bIQf3P/KkXKL4xoSf8GpcURcXzo5OZ2C7LMuuE9prmXanajwqw
-         H2F69fYc85jczXGZ/7sezginrk9xySXKChLf3MIWTrbfV+rRjeuB4RZfdLIEruwFgVfc
-         UbeRXGWreWIGrR8ZExPJKF2sQMq67upim1GT6hOCNPK+SXjBESckwwutB99KAu7DWQZQ
-         CUutD5IQ7Bk82g1cYAGPprRAE3639w2auhLE+rwYW4LRXqQPRDWlhaqCqrJvgjPCLD7P
-         8H0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738950669; x=1739555469;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/93fpw68fWcW+DcrP5O/aiX1Id4V9BT6qntICk6OEis=;
-        b=ULeU41JIqp9bssN+5AlqQwpnZEqkK/G6KuBgWsH59RHmLNmCYpzHfeQ06eeAB0n3MW
-         8EOk2BQXqZ2Tp6tr89p4VovFTrSx2Ejqm4NQ5B0bquqXRoVdfe5ycwpuDseVLzJm4FzW
-         8kGxlbwxzpOIRvjaDdfBVN/J3TkNE9GBIvY7wIxMAaGb7sDbvvr71SSqmXcBcSZeHd+q
-         hUmmPmeK5RRx+OJgbh9VgKFsDdfRotm8/yYTyMXPLpuk9kNjZ9DuHHpGFb2KMooXO8Th
-         TpF9706cJEgf6qKx+dnW77Gzc6CFZBmW5jcmj90Fxn3MrJ+MpLR3jD1YNM97/FB1PYtP
-         HLLA==
-X-Forwarded-Encrypted: i=1; AJvYcCXAtqK8bz25J7Na/m2Bv0NMO/itjcMUpSgOSmYARORHI9YbJxrLjHikFnUC6Cc6cDuFHC/3b3yHIQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkiaiwFZxzc/J9HKrc1UrZoiM2mn6IJOkfHCgrRFhV84pv9wLO
-	da1bXATkO0SCs1EAjbIIiUxcAcuIRJ/feeoz9fGagoeheXm1xsDpAkdihvNi
-X-Gm-Gg: ASbGnculj+90/mS8C2p8xYc9pzg0ViYMMw6D4/TMVj8qYuBeX2cKCrE3qUM7My+7RxK
-	QGcdTDvs/IxixHuX4GayHm2thQ0XX2k5tpcejxK+7Ak8TKyTps3Rco37tTSmbkbrJC5GOb/g7Mo
-	F9MOMEVFrTi57ubkyQd9Mce6jYrnP4nptABQVw67OpIWLccPAW/JNjht0nRxuW/kNbSxZHufgpi
-	08mn6KU2S8QuuO19iOPZpxWokpmWxnVqVVQF6IKJU/J1kUygzIOg7j8d/9GF8pK/EI+DrCDxFbG
-	+Hu6v73+3DjfaMNaZK2fUSpEseJmXAohv7gBu0Cvy5dVKvnD0x2dMwRWKA8=
-X-Google-Smtp-Source: AGHT+IH5tTCU4j64XQ4F4wjfiG3qYOH2jmpjJmMKHXE/ZZKsEer/8T4dfoO0EiAxA0tixUxKnduYEw==
-X-Received: by 2002:a05:620a:f0b:b0:7b6:d6ff:86ba with SMTP id af79cd13be357-7c047c4acb2mr596123985a.52.1738950668737;
-        Fri, 07 Feb 2025 09:51:08 -0800 (PST)
-Received: from localhost.localdomain (pppoe-209-91-167-254.vianet.ca. [209.91.167.254])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041e9f901sm215674785a.87.2025.02.07.09.51.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 09:51:07 -0800 (PST)
-From: Trevor Woerner <twoerner@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Caesar Wang <wxt@rock-chips.com>,
-	Rocky Hao <rocky.hao@rock-chips.com>,
-	linux-pm@vger.kernel.org (open list:THERMAL),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC support),
-	linux-rockchip@lists.infradead.org (open list:ARM/Rockchip SoC support)
-Cc: stable@vger.kernel.org
-Subject: [PATCH v2] thermal/drivers/rockchip: add missing rk3328 mapping entry
-Date: Fri,  7 Feb 2025 12:50:47 -0500
-Message-ID: <20250207175048.35959-1-twoerner@gmail.com>
-X-Mailer: git-send-email 2.44.0.501.g19981daefd7c
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="4p0Wz68f"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4YqM383gzPz6CmQyW;
+	Fri,  7 Feb 2025 17:51:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1738950670; x=1741542671; bh=arZC9itOZYPHb4htpROweMNR
+	ItRM9wRu6g3C03a4eNw=; b=4p0Wz68fs9rAFvaE6K+Pcnw03c8oypR+LYtDCAWe
+	4MZxuL392j8HAiu+d4K0EtwY9DMs53aDzTL6wxzRY3NyUkil8G5dQYZKq7kLKC1U
+	pPyZWAWLVj3TaOolA4lGnbv0TDRrhGqdL48OnDhVlE0985t/i7tnXF0rPUjBmX3Q
+	I5tLJbBxNzkjx5l1t/yag8XGTS7AYSHPBdYEHkvm4/dr1L382tLQKFwQB39JfhUD
+	AfvwTs2XQo8vLlBF7tYYWILOlcxdZqQRJVAfSMUnPb4vTKESzDckohXqZADMdYDB
+	yv/MtpqEPDvoqzF5zNuGuDz7+nsluGg9R3UO9woX1CLi2g==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id QRwso-HXEgj6; Fri,  7 Feb 2025 17:51:10 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4YqM2y6hzWz6CmR1W;
+	Fri,  7 Feb 2025 17:51:06 +0000 (UTC)
+Message-ID: <ad4bd008-8d0d-439b-879c-e9cf4c89ec56@acm.org>
+Date: Fri, 7 Feb 2025 09:51:05 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] scsi: Bypass certain SCSI commands on disks with
+ "use_192_bytes_for_3f" attribute
+To: WangYuli <wangyuli@uniontech.com>, James.Bottomley@HansenPartnership.com,
+ martin.petersen@oracle.com
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
+ zhanjun@uniontech.com, guanwentao@uniontech.com, chenlinxuan@uniontech.com,
+ Xinwei Zhou <zhouxinwei@uniontech.com>, Xu Rao <raoxu@uniontech.com>,
+ Yujing Ming <mingyujing@uniontech.com>
+References: <5653B7D4FD7224D2+20250207091723.258095-1-wangyuli@uniontech.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <5653B7D4FD7224D2+20250207091723.258095-1-wangyuli@uniontech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The mapping table for the rk3328 is missing the entry for -25C which is
-found in the TRM section 9.5.2 "Temperature-to-code mapping".
+On 2/7/25 1:17 AM, WangYuli wrote:
+> +	/* Bofore we queue this comman, check attribute use_192_bytes_for_3f */
 
-NOTE: the kernel uses the tsadc_q_sel=1'b1 mode which is defined as:
-      4096-<code in table>. Whereas the table in the TRM gives the code
-      "3774" for -25C, the kernel uses 4096-3774=322.
+Please replace this source code comment with a comment that explains why 
+the code below is necessary. The above comment duplicates the code below
+rather than explaining something that cannot be derived from the code
+easily. Additionally, there are spelling errors in the above comment.
 
-Link: https://opensource.rock-chips.com/images/9/97/Rockchip_RK3328TRM_V1.1-Part1-20170321.pdf
-Cc: stable@vger.kernel.org
-Fixes: eda519d5f73e ("thermal: rockchip: Support the RK3328 SOC in thermal driver")
-Signed-off-by: Trevor Woerner <twoerner@gmail.com>
----
-changes in v2:
-- remove non-ascii characters in commit message
-- remove dangling [1] reference in commit message
-- include "Fixes:"
-- add request for stable backport
----
- drivers/thermal/rockchip_thermal.c | 1 +
- 1 file changed, 1 insertion(+)
+> +	if (cmd->cmnd[0] == MODE_SENSE && sdev->use_192_bytes_for_3f == 1 &&
 
-diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
-index f551df48eef9..a8ad85feb68f 100644
---- a/drivers/thermal/rockchip_thermal.c
-+++ b/drivers/thermal/rockchip_thermal.c
-@@ -386,6 +386,7 @@ static const struct tsadc_table rk3328_code_table[] = {
- 	{296, -40000},
- 	{304, -35000},
- 	{313, -30000},
-+	{322, -25000},
- 	{331, -20000},
- 	{340, -15000},
- 	{349, -10000},
--- 
-2.44.0.501.g19981daefd7c
+Please remove "== 1" because this part is redundant when using a single
+bit in a boolean "and" expression.
 
+> +		cmd->result = (DID_ABORT << 16);
+
+Please remove the superfluous parentheses from the above statement.
+
+Thanks,
+
+Bart.
