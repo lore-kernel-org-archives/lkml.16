@@ -1,175 +1,171 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F921547CA
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086C0199254
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738916033; cv=none; b=uhZy20d1M87kWHuLJXFis1HCvaHcE9cUeKYJWSHMnpRd0bwZJYM89UoV6cFmyQdPmXSHQ9uhPHwoBAwQJzQSEQ7Pup72B7q9vYJ+p8YGqZyowlXGp8PTG59TBGcdj4cs9eD/zdFZqr4ErazthvTgg3XeLfNwQvF+xeah2YnXUGQ=
+	t=1738916042; cv=none; b=MOhP3gBri9x8gqh+SPPH0qV+49+B4r+Gwyy5uC/l3V4s5N5jgpuPJ8ttq/gHnOQBLCa1829Yz/8sk8FWkgO8XtUUMhi1GcU4VtJ9FcqArmKdG+2XWKAqsgCcmL5zDqWccFmYg6StfBStrhexn67frePdgZ3lNju/i2F9NWQU17c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738916033; c=relaxed/simple;
-	bh=1d979SMpTvfaQYObS7fA8SQtXquqn1pvuecnqSzawEw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JmPnnFZNpe9C4A/I9GkHCylml9Kx4ATcwQcL8vY6GbAzzn+dMf4AIJfpqBkbje/TufMr8Z9N6siwOdjg07KQymH11ahOY2We/U7b4BSeT3GUjxB5CkTvDMCa1O4Q6q48Lwvs75LxP3rnK5QNChiBJmoyJXWLOnVjdl5jcZHatHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=LGx5E8gU; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1738916042; c=relaxed/simple;
+	bh=DzRl7T8sIjvlyYTMPc+CcYOkIjrhZ4zBf6aWJ7k8aKQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g7UnSKkhN9UBTDrUA0IUAkPvodeOH/V1FvrdBStulkXWT7AcbDbpDMKF2nBKGDDLvq8gy6BUCaJShpCwem9pvZni8kVHEXFfPDCE9xtSENnxf9OBZymnVt71oSMBZIp9wNWY9PxB+030PGWDNqyp+2Rd/PfAS8JqbX3FRtj20Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Bq6YVLY5; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="LGx5E8gU"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1738916027; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=roiWbo9CpskJmB7RUqO3TURA636FBHMLgNiNyGc+Dr0=;
-	b=LGx5E8gUAFrdDsb76gsucAkJxBroLwfYvej27Cwxrv7isep4FAB1UoqiHLS34QkX0JSrKdvVWqDfe3sNDd8wkXnc2/n65Dsuz4S9Od+V7pOBbQ3iPQ4vg9GJmllrFISbMM237Wdo4hs+UFUBR0qf/rUz61O/rFVdEBkCm+ncR0o=
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WOylSQ5_1738915710 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 07 Feb 2025 16:08:30 +0800
-From: Hongzhen Luo <hongzhen@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org,
-	Hongzhen Luo <hongzhen@linux.alibaba.com>
-Subject: [PATCH v2] erofs: use Z_EROFS_LCLUSTER_TYPE_MAX to simplify switches
-Date: Fri,  7 Feb 2025 16:08:29 +0800
-Message-ID: <20250207080829.2405528-1-hongzhen@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Bq6YVLY5"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso11379245e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 00:13:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738916038; x=1739520838; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ffr0OMCgv5rw2MLpHSX7E1qg3OY60t4awxWCHQtHUac=;
+        b=Bq6YVLY5jlP5t/oj0RASV7dDXvJI2VBVua8urckQG+4Wlf0Tt/V5efn95XhxZGexDE
+         WZFL5H38mPJqGQvc+ntjj5eXih/0rQJc3aK8gKHRnLRvrlc+tiB+kKEd7+0C7M1NDeul
+         /iKtRz2V1okrSOpp48WFWHGORBxA2izRX4e0G81JSPxs1IBc++v8Ylr69bqxEK8zy4tn
+         O44grSmOc61ZgTf1+aUL+qrnUYV4BmrOFNjXmOmGWR8AM5O8RzEVgmTnnwRGPL/4GG7k
+         IR1o0uh2ggftfP7+l9G38PEMtvKbQW6coufUU1XCJv2MtvkVhDY9EyAbyBChW+FTqUIS
+         i2HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738916038; x=1739520838;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ffr0OMCgv5rw2MLpHSX7E1qg3OY60t4awxWCHQtHUac=;
+        b=qC46nrexol30/tZevgCSc93fzY+rcmygg6SFyE6wardEn4rZT7DdAHMbSinFxn9atJ
+         1EUtlhhbMRnOgdqm4jvqrWB6ys3Puq0P62r8O0GLyMBggn0IM8ph/pt6deJC0NCbXjZx
+         RPWpBsDFdTgKEAnheKwdN2Qd5eIVhhd81FwqCLl6omoVvml0UMDfZEBltmvoPpv7DQqb
+         96MWcwOzSoN0GrxDd+7IpVg1y/WWzdxY5qRTCU35Knhrz/YAvvGySbi8mTTPJrJaxPMy
+         oWBgAjZVFUBXZJKSLqPJ8dKIbEPj6eH/hRgzGYl0ajGLeN2PjTyiiClXwEBG53kmJ8cm
+         W5Zw==
+X-Forwarded-Encrypted: i=1; AJvYcCUU6EICnVph/IM9uXQ7+6cNHTKpWl87xFfW1d6HZoAxusX7qVjh1rHkf0yKjevU39eSSkBHCsavm9mSgQc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFYGYmDtnrz1Iwqze647K+6mB4OqxuyEX3ob38UDnZ+CHzPQsn
+	+QKsyapzatP6Q0INLfaANR3nvmwr8+hoPSR1AwO8FJZcp1Ehpi2iHsqA0OxEU7s=
+X-Gm-Gg: ASbGnct+383Sjvrh4uKwYRDnZZFYAOE/9/UgK+urpCUtkNWtdkvvmKVmlFNwj9oNyuK
+	shfXOyzZxPWUtxAKIUgbcmfd8A75WHi3DTNODSLX4NVKuht+hYiR0n+lEEVjSZQkCsOCMKlnubl
+	6cAIkKBUE2ZtaKfYyOsbenu3WzAFxmEZA5pySTHy43lDh/uF9KjMdmQynzD11yUC56uDU/+al60
+	S2fbaHHV4Y9GNkKa1+M4onr6q69LU9C+zZLxR1AY9CEWcPogxN+vAzYdkCaL8shOwfcryxkVN+q
+	HVSTmTLqmsFkDRWbjj1sY3QR5+uahNG1IRWn7kUlXRfC0XMGR0XbzuIJ7FDu
+X-Google-Smtp-Source: AGHT+IEGr/YRTYNXaAzVLspq4nx30yqY6bs6EtU6OBmGn64/zPMRjPnpKtSGL4mxDnpbYdH0c6ehyw==
+X-Received: by 2002:a05:600c:35c5:b0:438:e231:d35e with SMTP id 5b1f17b1804b1-439248b6ebamr20948965e9.0.1738916038069;
+        Fri, 07 Feb 2025 00:13:58 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc09fc2d9sm3167994f8f.6.2025.02.07.00.13.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 00:13:57 -0800 (PST)
+Message-ID: <d03581a9-495d-47df-99f2-96065b06ee8f@rivosinc.com>
+Date: Fri, 7 Feb 2025 09:13:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 09/21] RISC-V: Add Ssccfg ISA extension definition and
+ parsing
+To: Atish Patra <atishp@rivosinc.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Anup Patel <anup@brainfault.org>,
+ Atish Patra <atishp@atishpatra.org>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org
+References: <20250205-counter_delegation-v4-0-835cfa88e3b1@rivosinc.com>
+ <20250205-counter_delegation-v4-9-835cfa88e3b1@rivosinc.com>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20250205-counter_delegation-v4-9-835cfa88e3b1@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-There's no need to enumerate each type.  No logic changes.
 
-Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
----
-Changes since v1: Put the exception branch at the beginning.
 
-v1: https://lore.kernel.org/all/20250207064135.2249529-1-hongzhen@linux.alibaba.com/
----
- fs/erofs/zmap.c | 65 +++++++++++++++++++++----------------------------
- 1 file changed, 28 insertions(+), 37 deletions(-)
+On 06/02/2025 08:23, Atish Patra wrote:
+> Ssccfg (‘Ss’ for Privileged architecture and Supervisor-level
+> extension, ‘ccfg’ for Counter Configuration) provides access to
+> delegated counters and new supervisor-level state.
+> 
+> This patch just enables the definitions and enable parsing.
+> 
+> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> ---
+>  arch/riscv/include/asm/hwcap.h | 2 ++
+>  arch/riscv/kernel/cpufeature.c | 2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+> index b4eddcb57842..fa5e01bcb990 100644
+> --- a/arch/riscv/include/asm/hwcap.h
+> +++ b/arch/riscv/include/asm/hwcap.h
+> @@ -103,6 +103,8 @@
+>  #define RISCV_ISA_EXT_SSCSRIND		94
+>  #define RISCV_ISA_EXT_SMCSRIND		95
+>  #define RISCV_ISA_EXT_SMCNTRPMF         96
+> +#define RISCV_ISA_EXT_SSCCFG            97
+> +#define RISCV_ISA_EXT_SMCDELEG          98
+>  
+>  #define RISCV_ISA_EXT_XLINUXENVCFG	127
+>  
+> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> index 8f225c9c3055..3cb208d4913e 100644
+> --- a/arch/riscv/kernel/cpufeature.c
+> +++ b/arch/riscv/kernel/cpufeature.c
+> @@ -390,12 +390,14 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+>  	__RISCV_ISA_EXT_BUNDLE(zvksg, riscv_zvksg_bundled_exts),
+>  	__RISCV_ISA_EXT_DATA(zvkt, RISCV_ISA_EXT_ZVKT),
+>  	__RISCV_ISA_EXT_DATA(smaia, RISCV_ISA_EXT_SMAIA),
+> +	__RISCV_ISA_EXT_DATA(smcdeleg, RISCV_ISA_EXT_SMCDELEG),
 
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 689437e99a5a..f65c76991e02 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -265,23 +265,22 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
- 		if (err)
- 			return err;
- 
--		switch (m->type) {
--		case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
-+		if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
-+			erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
-+				  m->type, lcn, vi->nid);
-+			DBG_BUGON(1);
-+			return -EOPNOTSUPP;
-+		}
-+
-+		if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
- 			lookback_distance = m->delta[0];
- 			if (!lookback_distance)
- 				goto err_bogus;
- 			continue;
--		case Z_EROFS_LCLUSTER_TYPE_PLAIN:
--		case Z_EROFS_LCLUSTER_TYPE_HEAD1:
--		case Z_EROFS_LCLUSTER_TYPE_HEAD2:
-+		} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
- 			m->headtype = m->type;
- 			m->map->m_la = (lcn << lclusterbits) | m->clusterofs;
- 			return 0;
--		default:
--			erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
--				  m->type, lcn, vi->nid);
--			DBG_BUGON(1);
--			return -EOPNOTSUPP;
- 		}
- 	}
- err_bogus:
-@@ -329,35 +328,31 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
- 	DBG_BUGON(lcn == initial_lcn &&
- 		  m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD);
- 
--	switch (m->type) {
--	case Z_EROFS_LCLUSTER_TYPE_PLAIN:
--	case Z_EROFS_LCLUSTER_TYPE_HEAD1:
--	case Z_EROFS_LCLUSTER_TYPE_HEAD2:
-+	if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
-+		erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
-+		DBG_BUGON(1);
-+		return -EFSCORRUPTED;
-+	}
-+
-+	if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
-+		if (m->delta[0] != 1) {
-+			erofs_err(sb, "bogus CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
-+			DBG_BUGON(1);
-+			return -EFSCORRUPTED;
-+		}
-+		if (m->compressedblks)
-+			goto out;
-+	} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
- 		/*
- 		 * if the 1st NONHEAD lcluster is actually PLAIN or HEAD type
- 		 * rather than CBLKCNT, it's a 1 block-sized pcluster.
- 		 */
- 		m->compressedblks = 1;
--		break;
--	case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
--		if (m->delta[0] != 1)
--			goto err_bonus_cblkcnt;
--		if (m->compressedblks)
--			break;
--		fallthrough;
--	default:
--		erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", lcn,
--			  vi->nid);
--		DBG_BUGON(1);
--		return -EFSCORRUPTED;
-+		goto out;
- 	}
- out:
- 	m->map->m_plen = erofs_pos(sb, m->compressedblks);
- 	return 0;
--err_bonus_cblkcnt:
--	erofs_err(sb, "bogus CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
--	DBG_BUGON(1);
--	return -EFSCORRUPTED;
- }
- 
- static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
-@@ -386,9 +381,7 @@ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
- 				m->delta[1] = 1;
- 				DBG_BUGON(1);
- 			}
--		} else if (m->type == Z_EROFS_LCLUSTER_TYPE_PLAIN ||
--			   m->type == Z_EROFS_LCLUSTER_TYPE_HEAD1 ||
--			   m->type == Z_EROFS_LCLUSTER_TYPE_HEAD2) {
-+		} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
- 			if (lcn != headlcn)
- 				break;	/* ends at the next HEAD lcluster */
- 			m->delta[1] = 1;
-@@ -452,8 +445,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 		}
- 		/* m.lcn should be >= 1 if endoff < m.clusterofs */
- 		if (!m.lcn) {
--			erofs_err(inode->i_sb,
--				  "invalid logical cluster 0 at nid %llu",
-+			erofs_err(inode->i_sb, "invalid logical cluster 0 at nid %llu",
- 				  vi->nid);
- 			err = -EFSCORRUPTED;
- 			goto unmap_out;
-@@ -469,8 +461,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 			goto unmap_out;
- 		break;
- 	default:
--		erofs_err(inode->i_sb,
--			  "unknown type %u @ offset %llu of nid %llu",
-+		erofs_err(inode->i_sb, "unknown type %u @ offset %llu of nid %llu",
- 			  m.type, ofs, vi->nid);
- 		err = -EOPNOTSUPP;
- 		goto unmap_out;
--- 
-2.43.5
+Hi Atish,
+
+based on your dt-binding commit, if smcdeleg depends on Sscsrind, Zihpm,
+Zicntr, then you could add a validation callback here:
+
+static int riscv_smcdeleg_validate(const struct riscv_isa_ext_data
+*data, const unsigned long *isa_bitmap)
+{
+	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_SSCSRIND) &&
+	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZIHPM) &&
+	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZICNTR))
+		return 0;
+
+	return -EPROBE_DEFER;
+}
+
+__RISCV_ISA_EXT_DATA_VALIDATE(smcdeleg, RISCV_ISA_EXT_SMCDELEG,
+riscv_smcdeleg_validate),
+
+>  	__RISCV_ISA_EXT_DATA(smcntrpmf, RISCV_ISA_EXT_SMCNTRPMF),
+>  	__RISCV_ISA_EXT_DATA(smcsrind, RISCV_ISA_EXT_SMCSRIND),
+>  	__RISCV_ISA_EXT_DATA(smmpm, RISCV_ISA_EXT_SMMPM),
+>  	__RISCV_ISA_EXT_SUPERSET(smnpm, RISCV_ISA_EXT_SMNPM, riscv_xlinuxenvcfg_exts),
+>  	__RISCV_ISA_EXT_DATA(smstateen, RISCV_ISA_EXT_SMSTATEEN),
+>  	__RISCV_ISA_EXT_DATA(ssaia, RISCV_ISA_EXT_SSAIA),
+> +	__RISCV_ISA_EXT_DATA(ssccfg, RISCV_ISA_EXT_SSCCFG),
+
+Ditto for this one with Smcdeleg, Sscsrind, Zihpm, Zicntr, Sscofpmf,
+Smcntrpmf.
+
+Thanks,
+
+Clément
+
+>  	__RISCV_ISA_EXT_DATA(sscofpmf, RISCV_ISA_EXT_SSCOFPMF),
+>  	__RISCV_ISA_EXT_DATA(sscsrind, RISCV_ISA_EXT_SSCSRIND),
+>  	__RISCV_ISA_EXT_SUPERSET(ssnpm, RISCV_ISA_EXT_SSNPM, riscv_xlinuxenvcfg_exts),
+> 
 
