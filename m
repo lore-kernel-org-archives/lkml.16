@@ -1,127 +1,236 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12391155321
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 05:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF38233D8E
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 05:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738907125; cv=none; b=HBQMeGiy72axrcHhPApF7LEsFqm2YrW6cGAMVPrtmpPI09ghOgH5N5Vr8EcoBIXxZxUSuyFzqZASWOjp7SHPMjtqyI/IP7Nh+VvCq6PiBR5Bb5ZNkcaha/ykQqZvw23eRoMxIubyI8zWx5AxldMecLJ1gIEY72n4bGXVmtnB208=
+	t=1738907126; cv=none; b=G8cjpNY3jnAhql9n0CFz7xfADI3K8T4b0Q1db2rIgAxkzYGn3kv3uz1ExiHr+/R1J9701i5eA9PZKOMfpnxMUVhiF/Xi8NMXP/zEVXmRlUX9TYl0VCngrGkCpA7tUo8gYpKnCFxavJpzjNCkjpHG60veTLDfTn55PiXgee9qRVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738907125; c=relaxed/simple;
-	bh=yNAklZeUoXRJTrPWxkmW/j1+cyi+Qc/2qy0zSBz6qMg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=mCYwS2PBjharWhayD1wRp98r4XhrORf6r11NmKGW1qzqNP6PcdwRnUCYIlMA3Mn3UuOXx6MrqI6NWHq9clkC7xGj8bgao2tFwxiqQGvgq269Ui0RiKdmrbHg2mDgzXSMCkC/l6aT/q8EzI5/bID32f66m36kROxd9VSjplROhIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d05063cc0fso12150695ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 21:45:23 -0800 (PST)
+	s=arc-20240116; t=1738907126; c=relaxed/simple;
+	bh=TSqw6WTzkGxJ2g7v2P63DZ+KseEhuRtpFe8QcAD65c0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OkrULn+zYDYyVF0HtXzzy1R5UqZdlM4FxxBB2O9T7qm2PtOin6YWFYooBBR8eKmsHEg6aQJZlz8Py+IisjdG2e5kgJ6uBy5K4gfSX26EYw/InkceVNcM4czbCXqi11EWHbROvbG8+b1X6gxV8WiVS9gBszVDRV2KPRfg9Wb0uPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=UHEPg4YV; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="UHEPg4YV"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7b6eeff1fdfso146684085a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 21:45:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1738907123; x=1739511923; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BiL88Vl7FssHFuR4sgsTuWpUW3EZbuNKD07jWPDb1JA=;
+        b=UHEPg4YVibcpTJ1mxaJRGLdhZvlvZ2EM/Z4sqsMsVLTNFTaB2r8peb7JBdIex/qYnw
+         lK5vLlkMdjY+tqFSXvVOw2WSelcQ+KUb51Ho0dWExP4NnKMCFRdOAP7F+qX1hyyW4wD5
+         RIVDkAPbgqdMWSgeaDWSWU+IbwuFVEDj38tiSDNlZ5WuD1dC43q3doQNvVCaophJgEDN
+         M7a9eyQma7FA72ofTx5y/50H6w0wtKVKm7p1pqzCXLnoMeddfD/uFzKnyPjSeklPNtgs
+         eySYagC2xNcvtlDc6Vyk6pIUVuFpXtVHmsnM1iGYa5a2GZLgVGAhMRMThPKIqVqAJmvy
+         jfZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1738907123; x=1739511923;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/aJk6I7huKkph+gkza4v3eeiMOL1KM+4rXTTfmnphr4=;
-        b=uMQV3rWQx263PvVRj6yFEr5q64j98mv3GNKBhwzQ8ksCxCUtORfAvPiYDLgAt/iKVd
-         3aGSpICv7yfrhiNrxmSuDhc/py/Qbf1Y4VZE4f3E6Vu+BI//cJp77MAcdag+cCp280Xt
-         8lDoX7r6KEPg3KqDAxD6LkyGPI26cCi1B3c+0kUy1w5tTyEfLopKdnLFM/v6cIv0FOut
-         /+BJqC5JVMf3H7Hxe5ojmnGBgOMMqucdIEmbD763lbB9qSJNHk9S/l2r7Rgck0ZUGHhm
-         9t7AGE6vDWxjbCaczfgpEOwPMFPjxXBhkQCsqZTP9/EKacpMFHwz4+FzJfLCxz0gGFFa
-         tN4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVntyl0jcC6ml9ZjsG6q/puOR/guhpuwysrtlaYrzAs8Ipr6KFXJmCRU8sYA6aIP3KSpQccyUVDGRx4swc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxhx+p6p++C89N8G0GDGbJt7gFa3ufBtN+n0av7KkftS5LyPVHp
-	CcGANwTTfbawBvhULhxQdLrijxf1a1WwZMjp+SnDZUHZL5CVkOfHXR82njZaFO1z+/PscNnL3Yq
-	zMZHZHgWKKEoW7STB2QwvnA/GEPpmTUjmdZdheux+ae01D/o/6R3bTjg=
-X-Google-Smtp-Source: AGHT+IGFIGmrTvw1U5QxWHgPk02dBW1cRvFUdYDrEASXoksl0fVn8jXzYyE8WJ+HzAkGg6+1iBYHsfaHo1/LhvYWBwas8BhadUaM
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BiL88Vl7FssHFuR4sgsTuWpUW3EZbuNKD07jWPDb1JA=;
+        b=PvDh2mnaznGE3Ilyu7p5AzJPtujBDMmR9CCosM814+yzcLWx0l6rLBBTEH/YAAhk/M
+         WSR8yIsG4Q5EESecAXwH1X4mhYLf6uUgN9UYWakdRWYevBG2PXyJoO2liZlM3XvtW/AH
+         aISE5TZNOHt0a5y/+6y06hqpqAMIKOn0ypYJwkNmUekRCSkRfjPQiJXChfUrfI0WCjDF
+         RJEpVKPnP+FLTVNlwRFxomsywzKsMc3MEMvGjtnKh1vQnqWrpo2h7/ZfDBLPgBNm2Z3N
+         9pg0m0p9pnhcLx35Cbqse/9PbxTuVdwm1HX4+d6gfftXCrHL1q83ah5SdcPUY1CJUprg
+         lCTg==
+X-Forwarded-Encrypted: i=1; AJvYcCW4qs7vS0b6TXyl0nGHvYnWV5+/wKuWnfhIcTRzJ8p95+LKWskGI9FtSDGBpVv6ym4P0RouZUUwpq4eSfM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJjdVzXrYOucpU+MEaJG8ibKR9u8mBYaYr6MtNA8EhseaBF3vc
+	d9/6eAs/Wdxiv4cWp8YuNp37bY5q7fIIRckQ7ifsVlyrtXSm84kOK006UB5rW10=
+X-Gm-Gg: ASbGncsQiNJ4JqfWCIulM2+Me4ripzKsXkvjDJP5/3DdhNbwLiJL+WOV9PR4wiXNr7t
+	j4slbEvfC589Rn18LhrMQD4sr4TXICkGMuN1f0Bo9m5EPSwFVyK5Y2beiYh8bk2xvNnwzQ3eBmw
+	vKup/wYzXEXpFOYK02fsii5oYkMSftV0NcTUMi3vjzVPvP0BMS2XxEXDgTEsluM8qDZG79yzArP
+	fzovkE90c1HGLWf37KTImamCkrsr6ANQYfVJdBp3Oo2Kkk3og8DjS/A3m60XmGUOCT7/h453Vns
+	vFw=
+X-Google-Smtp-Source: AGHT+IGZ3e/LBC9oFo92G9gFvFYL6g4CWsC0kkEIeD2dmJfNrUDCabnMPaFC52kKEkSHxzG2IanhUQ==
+X-Received: by 2002:a05:620a:258b:b0:7b6:e9be:97dc with SMTP id af79cd13be357-7c047ba498bmr301516785a.8.1738907123361;
+        Thu, 06 Feb 2025 21:45:23 -0800 (PST)
+Received: from debian.debian ([2a09:bac5:79dd:25a5::3c0:2])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041eb7f94sm147517385a.96.2025.02.06.21.45.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2025 21:45:22 -0800 (PST)
+Date: Thu, 6 Feb 2025 21:45:20 -0800
+From: Yan Zhai <yan@cloudflare.com>
+To: bpf@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Yan Zhai <yan@cloudflare.com>, Brian Vazquez <brianvv@google.com>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kernel-team@cloudflare.com, Hou Tao <houtao@huaweicloud.com>
+Subject: [PATCH v2 bpf 2/2] selftests: bpf: test batch lookup on array of
+ maps with holes
+Message-ID: <6e710c8034800cb14e7db2d77b2081222bcb247e.1738905497.git.yan@cloudflare.com>
+References: <cover.1738905497.git.yan@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a01:b0:3a9:cde3:2ecc with SMTP id
- e9e14a558f8ab-3d05a689690mr53786515ab.6.1738907123178; Thu, 06 Feb 2025
- 21:45:23 -0800 (PST)
-Date: Thu, 06 Feb 2025 21:45:23 -0800
-In-Reply-To: <00000000000086d0e406184c8e78@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a59df3.050a0220.2b1e6.0011.GAE@google.com>
-Subject: Re: [syzbot] [rdma?] WARNING in rxe_pool_cleanup
-From: syzbot <syzbot+221e213bf17f17e0d6cd@syzkaller.appspotmail.com>
-To: jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, yanjun.zhu@linux.dev, zyjzyj2000@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1738905497.git.yan@cloudflare.com>
 
-syzbot has found a reproducer for the following issue on:
+Iterating through array of maps may encounter non existing keys. The
+batch operation should not fail on when this happens.
 
-HEAD commit:    bb066fe812d6 Merge tag 'pci-v6.14-fixes-2' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16a973df980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1909f2f0d8e641ce
-dashboard link: https://syzkaller.appspot.com/bug?extid=221e213bf17f17e0d6cd
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11a01df8580000
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-bb066fe8.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ac7155966351/vmlinux-bb066fe8.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/92d6cbf35949/bzImage-bb066fe8.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+221e213bf17f17e0d6cd@syzkaller.appspotmail.com
-
-smc: removing ib device syz0
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 5645 at drivers/infiniband/sw/rxe/rxe_pool.c:116 rxe_pool_cleanup+0x47/0x50 drivers/infiniband/sw/rxe/rxe_pool.c:116
-Modules linked in:
-CPU: 0 UID: 0 PID: 5645 Comm: syz.0.16 Not tainted 6.14.0-rc1-syzkaller-00081-gbb066fe812d6 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:rxe_pool_cleanup+0x47/0x50 drivers/infiniband/sw/rxe/rxe_pool.c:116
-Code: 00 00 fc ff df 80 3c 08 00 74 08 48 89 df e8 10 aa 1a f9 48 83 3b 00 75 0b e8 95 11 b4 f8 5b c3 cc cc cc cc e8 8a 11 b4 f8 90 <0f> 0b 90 5b c3 cc cc cc cc 90 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 0018:ffffc9000ce370e8 EFLAGS: 00010293
-RAX: ffffffff890b4c96 RBX: ffff888052855380 RCX: ffff88801f3e8000
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffff888052855300
-RBP: 0000000000000002 R08: ffffffff88e3bcc3 R09: 1ffff1100a50a8ee
-R10: dffffc0000000000 R11: ffffffff89096000 R12: dffffc0000000000
-R13: dffffc0000000000 R14: ffff888052854658 R15: dffffc0000000000
-FS:  00007fc32943e6c0(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fc32943dfe0 CR3: 00000000405a6000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- rxe_dealloc+0x33/0x100 drivers/infiniband/sw/rxe/rxe.c:24
- ib_dealloc_device+0x50/0x200 drivers/infiniband/core/device.c:647
- __ib_unregister_device+0x366/0x3d0 drivers/infiniband/core/device.c:1520
- ib_unregister_device_and_put+0xb9/0xf0 drivers/infiniband/core/device.c:1567
- nldev_dellink+0x2c6/0x310 drivers/infiniband/core/nldev.c:1825
- rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
- rdma_nl_rcv+0x6dd/0x9e0 drivers/infiniband/core/netlink.c:259
- netlink_unicast_kernel net/netlink/af_netlink.c:1322 [inline]
- netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1348
- netlink_sendmsg+0x8e4/0xcb0 net/netlink/af_netlink.c:1892
- sock_sendmsg_nosec net/socket.c:713 [inline]
- __sock_sendmsg+0x221/0x270 net/socket.c:728
- ____sys_sendmsg+0x52a/0x7e0 net/socket.c:2568
- ___sys_sendmsg net/socket.c:2622 [inline]
- __sys_sendmsg+0x269/0x350 net/socket.c:2654
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fc32858cde9
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fc32943e038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007fc3287a6160 RCX: 00007fc32858cde9
-RDX: 0000000020000000 RSI: 0000200000000000 RDI: 0000000000000004
-RBP: 00007fc32860e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fc3287a6160 R15: 00007ffc02559df8
- </TASK>
-
-
+Signed-off-by: Yan Zhai <yan@cloudflare.com>
 ---
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+ .../bpf/map_tests/map_in_map_batch_ops.c      | 62 +++++++++++++------
+ 1 file changed, 44 insertions(+), 18 deletions(-)
+
+diff --git a/tools/testing/selftests/bpf/map_tests/map_in_map_batch_ops.c b/tools/testing/selftests/bpf/map_tests/map_in_map_batch_ops.c
+index 66191ae9863c..79c3ccadb962 100644
+--- a/tools/testing/selftests/bpf/map_tests/map_in_map_batch_ops.c
++++ b/tools/testing/selftests/bpf/map_tests/map_in_map_batch_ops.c
+@@ -120,11 +120,12 @@ static void validate_fetch_results(int outer_map_fd,
+ 
+ static void fetch_and_validate(int outer_map_fd,
+ 			       struct bpf_map_batch_opts *opts,
+-			       __u32 batch_size, bool delete_entries)
++			       __u32 batch_size, bool delete_entries,
++			       bool has_holes)
+ {
+-	__u32 *fetched_keys, *fetched_values, total_fetched = 0;
+-	__u32 batch_key = 0, fetch_count, step_size;
+-	int err, max_entries = OUTER_MAP_ENTRIES;
++	int err, max_entries = OUTER_MAP_ENTRIES - !!has_holes;
++	__u32 *fetched_keys, *fetched_values, total_fetched = 0, i;
++	__u32 batch_key = 0, fetch_count, step_size = batch_size;
+ 	__u32 value_size = sizeof(__u32);
+ 
+ 	/* Total entries needs to be fetched */
+@@ -134,9 +135,8 @@ static void fetch_and_validate(int outer_map_fd,
+ 	      "Memory allocation failed for fetched_keys or fetched_values",
+ 	      "error=%s\n", strerror(errno));
+ 
+-	for (step_size = batch_size;
+-	     step_size <= max_entries;
+-	     step_size += batch_size) {
++	/* hash map may not always return full batch */
++	for (i = 0; i < OUTER_MAP_ENTRIES; i++) {
+ 		fetch_count = step_size;
+ 		err = delete_entries
+ 		      ? bpf_map_lookup_and_delete_batch(outer_map_fd,
+@@ -155,6 +155,7 @@ static void fetch_and_validate(int outer_map_fd,
+ 		if (err && errno == ENOSPC) {
+ 			/* Fetch again with higher batch size */
+ 			total_fetched = 0;
++			step_size += batch_size;
+ 			continue;
+ 		}
+ 
+@@ -184,18 +185,19 @@ static void fetch_and_validate(int outer_map_fd,
+ }
+ 
+ static void _map_in_map_batch_ops(enum bpf_map_type outer_map_type,
+-				  enum bpf_map_type inner_map_type)
++				  enum bpf_map_type inner_map_type,
++				  bool has_holes)
+ {
++	__u32 max_entries = OUTER_MAP_ENTRIES - !!has_holes;
+ 	__u32 *outer_map_keys, *inner_map_fds;
+-	__u32 max_entries = OUTER_MAP_ENTRIES;
+ 	LIBBPF_OPTS(bpf_map_batch_opts, opts);
+ 	__u32 value_size = sizeof(__u32);
+ 	int batch_size[2] = {5, 10};
+ 	__u32 map_index, op_index;
+ 	int outer_map_fd, ret;
+ 
+-	outer_map_keys = calloc(max_entries, value_size);
+-	inner_map_fds = calloc(max_entries, value_size);
++	outer_map_keys = calloc(OUTER_MAP_ENTRIES, value_size);
++	inner_map_fds = calloc(OUTER_MAP_ENTRIES, value_size);
+ 	CHECK((!outer_map_keys || !inner_map_fds),
+ 	      "Memory allocation failed for outer_map_keys or inner_map_fds",
+ 	      "error=%s\n", strerror(errno));
+@@ -209,6 +211,24 @@ static void _map_in_map_batch_ops(enum bpf_map_type outer_map_type,
+ 			((outer_map_type == BPF_MAP_TYPE_ARRAY_OF_MAPS)
+ 			 ? 9 : 1000) - map_index;
+ 
++	/* This condition is only meaningful for array of maps.
++	 *
++	 * max_entries == OUTER_MAP_ENTRIES - 1 if it is true. Say
++	 * max_entries is short for n, then outer_map_keys looks like:
++	 *
++	 *   [n, n-1, ... 2, 1]
++	 *
++	 * We change it to
++	 *
++	 *   [n, n-1, ... 2, 0]
++	 *
++	 * So it will leave key 1 as a hole. It will serve to test the
++	 * correctness when batch on an array: a "non-exist" key might be
++	 * actually allocated and returned from key iteration.
++	 */
++	if (has_holes)
++		outer_map_keys[max_entries - 1]--;
++
+ 	/* batch operation - map_update */
+ 	ret = bpf_map_update_batch(outer_map_fd, outer_map_keys,
+ 				   inner_map_fds, &max_entries, &opts);
+@@ -219,15 +239,17 @@ static void _map_in_map_batch_ops(enum bpf_map_type outer_map_type,
+ 	/* batch operation - map_lookup */
+ 	for (op_index = 0; op_index < 2; ++op_index)
+ 		fetch_and_validate(outer_map_fd, &opts,
+-				   batch_size[op_index], false);
++				   batch_size[op_index], false,
++				   has_holes);
+ 
+ 	/* batch operation - map_lookup_delete */
+ 	if (outer_map_type == BPF_MAP_TYPE_HASH_OF_MAPS)
+ 		fetch_and_validate(outer_map_fd, &opts,
+-				   max_entries, true /*delete*/);
++				   max_entries, true /*delete*/,
++				   has_holes);
+ 
+ 	/* close all map fds */
+-	for (map_index = 0; map_index < max_entries; map_index++)
++	for (map_index = 0; map_index < OUTER_MAP_ENTRIES; map_index++)
+ 		close(inner_map_fds[map_index]);
+ 	close(outer_map_fd);
+ 
+@@ -237,16 +259,20 @@ static void _map_in_map_batch_ops(enum bpf_map_type outer_map_type,
+ 
+ void test_map_in_map_batch_ops_array(void)
+ {
+-	_map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_ARRAY);
++	_map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_ARRAY, false);
+ 	printf("%s:PASS with inner ARRAY map\n", __func__);
+-	_map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_HASH);
++	_map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_HASH, false);
+ 	printf("%s:PASS with inner HASH map\n", __func__);
++	_map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_ARRAY, true);
++	printf("%s:PASS with inner ARRAY map with holes\n", __func__);
++	_map_in_map_batch_ops(BPF_MAP_TYPE_ARRAY_OF_MAPS, BPF_MAP_TYPE_HASH, true);
++	printf("%s:PASS with inner HASH map with holes\n", __func__);
+ }
+ 
+ void test_map_in_map_batch_ops_hash(void)
+ {
+-	_map_in_map_batch_ops(BPF_MAP_TYPE_HASH_OF_MAPS, BPF_MAP_TYPE_ARRAY);
++	_map_in_map_batch_ops(BPF_MAP_TYPE_HASH_OF_MAPS, BPF_MAP_TYPE_ARRAY, false);
+ 	printf("%s:PASS with inner ARRAY map\n", __func__);
+-	_map_in_map_batch_ops(BPF_MAP_TYPE_HASH_OF_MAPS, BPF_MAP_TYPE_HASH);
++	_map_in_map_batch_ops(BPF_MAP_TYPE_HASH_OF_MAPS, BPF_MAP_TYPE_HASH, false);
+ 	printf("%s:PASS with inner HASH map\n", __func__);
+ }
+-- 
+2.39.5
+
+
