@@ -1,185 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C06C47F4A;
-	Fri,  7 Feb 2025 04:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FA947F4A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 04:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738903316; cv=none; b=U442TDsB7gkQoFxBbwPQr4AAerui55SXjRN0sdgV6ZY/G7zhcSsg4N/wZbE+HD7pCjAfATAbE+ZOZdfei9+KZ0oCxSfHP8ui7UEqBBY6mUuVtt7ddnpgViktMYjeRp6I+PGb6NFQPNT2DQ6HpAQziToDvZsq3Vv0sQZx1GSXiyo=
+	t=1738903386; cv=none; b=MsjTYHlXyrd86Wg/X1BZvI+g/xl7628QGQDIEeCSsibWzReIMLiiAzSGgY+BQx3aYXK1JbvLV2d8kT1FBYXoPRkNJGL51fyYGHzsf69zlBORloLgEZ/j7/6YaUBXOpUKqNASL50chY82i1v9qP9W/KWpE5e+XMa6ZC8lq3NpS5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738903316; c=relaxed/simple;
-	bh=PlKndQBatwTKy9+60WtpOETzqjcfWtoczr+gzcJPlRY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j0yHKbp3+v3YteVE1kmoCOiKN1J9Dtp8ZJugbOygcZSlnViPpSEmgUacpPraQW+qNhSIBySs48CKS6BXqIVYFDdXXP/Biq/nSVJ/bOyQqMZS/ZWJuCa8Qr4M+E7mfgbMHEGt1w4tJRsTP7cwUm9xqBwD/XPnlcNd+FIGdmjtNEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dtOcUr0b; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dtOcUr0b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738903314; x=1770439314;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PlKndQBatwTKy9+60WtpOETzqjcfWtoczr+gzcJPlRY=;
-  b=dtOcUr0bBcbAR2U6V1TY55T8Li8yYUnjfPbOal/UNIKuxwBLeM5tdj1h
-   ZV81y+ibS0LkiKKb2gsH48YtcM5CQdt304jwEF7wmUo4JlbO+jXIP1Kmf
-   ldyy3pmWoW5fxk5nGoMYUOy5CkPU/b04V21LTI+zMArPdWaSCIHTTtZOV
-   A6xWLlFlyo09MRUevwVOuIbJdgiWrhnaYOZ4rZNafuy6y+YdVChizcj6M
-   7GHkO+1h01jGSlo2tbsMPlqHcijtdX+63ONpTDnBGX8JmNmot0c3MKj9g
-   HYhEJEHtZzLzy23Fx3lUp6YDbu1jigh3n6M0bI1NCzRsBP6cOpoJktlZx
-   w==;
-X-CSE-ConnectionGUID: OdmuComeS0GVi+ZZ8fg5og==
-X-CSE-MsgGUID: bU+EeYQnSZeYum/wgNUYeQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="56954183"
-X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
-   d="scan'208";a="56954183"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 20:41:53 -0800
-X-CSE-ConnectionGUID: R9P02Zz8Tfytm/ep0oBjLA==
-X-CSE-MsgGUID: qjxvQInCQ2i4O4/EjflaIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="134656767"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa002.fm.intel.com with ESMTP; 06 Feb 2025 20:41:51 -0800
-Date: Fri, 7 Feb 2025 12:40:56 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Yidong Zhang <yidong.zhang@amd.com>
-Cc: linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org,
-	mdf@kernel.org, hao.wu@intel.com, yilun.xu@intel.com,
-	lizhi.hou@amd.com, DMG Karthik <Karthik.DMG@amd.com>,
-	Nishad Saraf <nishads@amd.com>,
-	Prapul Krishnamurthy <prapulk@amd.com>,
-	Hayden Laccabue <hayden.laccabue@amd.com>
-Subject: Re: [PATCH V2 1/4] drivers/fpga/amd: Add new driver amd versal-pci
-Message-ID: <Z6WO2Ktc9HoqdUSU@yilunxu-OptiPlex-7050>
-References: <20241210183734.30803-1-yidong.zhang@amd.com>
- <20241210183734.30803-2-yidong.zhang@amd.com>
- <Z5YPWHVmL29zuQNm@yilunxu-OptiPlex-7050>
- <3b520bab-d948-470a-b06f-5494243ebc1a@amd.com>
- <Z6Q3W2mUw/ZbtnWV@yilunxu-OptiPlex-7050>
- <796e2826-a423-4d0c-977a-105ed236e067@amd.com>
- <Z6Vtz/Bb8wsIH0pG@yilunxu-OptiPlex-7050>
- <7b9bd24f-8f89-4d6c-a079-47c4c0b88a35@amd.com>
+	s=arc-20240116; t=1738903386; c=relaxed/simple;
+	bh=l28bo4mDwzw88FFGvVIJ4yL27O0KXcV9kHOMit/seQ0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=bTwzFXeFNnU2MqgLYV8t21fvQlSPvcvtB411eOpj0V9Fd35kd/4/1LXejH/k67kBhNiqTliC5r0vv0Xq5x4qfCfMB/9SVDCgWrg8f7iDVNiWNJ+z6sGb0k6Ln8x4r+FxHnQKxnemzdQmJqAZo/nE+gMz5CHAhRO8Poz0LkGYorE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d13d1f8420so3957005ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 20:43:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738903384; x=1739508184;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IYnmXfF+wliVnYwSsy3DeSlG0ELSSnfxMMMvRycYlvs=;
+        b=sg3tACwo+fHFnTrxGeFrDQB73krins9oXaKOai8+54taSd0SGS9FmYHzdxoX0eYDzt
+         MO0o2/w0Wvadz9BgvFGuoN53IoCUhet1zaqxc9ND2nAq29mNSF3yK9dHA3U6M2ERTRA2
+         0H61zjFP0t1bkV9S+WUyXG6zg03DDQdYL+Hxv1UFcRlPUKq2Wvz1I/sQ0p8Vnm0xF8HA
+         KEobGFCnxeTe1lS9PIST1VV+Hngpi4ZMD49PokOTjlsN4AWB7fBPm0EbbzU4K6GhF6Hj
+         nhKDEmCYpAVuqfuVQ9pj0PUhumgF56ZYBBjwg27+eQBHhexlmM3kgHpf3RQ0kp7Be5CH
+         b35g==
+X-Gm-Message-State: AOJu0YyL2K0lZtPgUqJOAFw+hjEmH8hsvVU1nlYecNDPu0rdUGKhhb6C
+	rotYJPdkDxEXlmEP46ErDRz+f3WO7auGm7H/Fk6hzJiEFgRi4S5uWZGlUFE7q6ff90uwDaCzFON
+	lDl+haW58LrrSQQKyL9Cly5sUtxLjc24ezX974jxw86sQ+now0hfmCUc=
+X-Google-Smtp-Source: AGHT+IGC+TurZO28Qz53UDMZRs4+0VwADErdzt/KtBWRxsdZd7qlAOvdOSp+cFcSY3K69zdHCs8ezaV5xzNWeyGyh0A6SNvD8J3B
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7b9bd24f-8f89-4d6c-a079-47c4c0b88a35@amd.com>
+X-Received: by 2002:a05:6e02:20c4:b0:3cf:c8ec:d390 with SMTP id
+ e9e14a558f8ab-3d13dcdea07mr17478615ab.4.1738903384363; Thu, 06 Feb 2025
+ 20:43:04 -0800 (PST)
+Date: Thu, 06 Feb 2025 20:43:04 -0800
+In-Reply-To: <20250207040929.2197410-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a58f58.050a0220.2b1e6.000f.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] BUG: corrupted list in hci_chan_del (2)
+From: syzbot <syzbot+10bd8fe6741eedd2be2e@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Feb 06, 2025 at 07:16:25PM -0800, Yidong Zhang wrote:
-> 
-> 
-> On 2/6/25 18:19, Xu Yilun wrote:
-> > Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
-> > 
-> > 
-> > > > No need to detach a specific driver, remove all devices in the
-> > > > fpga-region. I imagine this could also be a generic flow for all PCI/e
-> > > > based FPGA cards.
-> > > 
-> > > I see your point. Is there an existing example in current fpga driver for
-> > > PCI/e based cards?
-> > 
-> > No. The fpga-region re-enumeration arch is still WIP, so no existing
-> > implementation.
-> 
-> Got you. I can also help to test or provide feedback.
-> Actually, I had sent Nava my protype of using configfs for the non-OF
-> driver. He should have the updated patch soon.
-> 
-> > 
-> > > 
-> > > We will need to talk to our management team and re-design our driver.
-> > > I think we have 2 approaches:
-> > > 1) Align with linux fpga, having one driver for both userPF and mgmtPF; or
-> > 
-> > Don't get you. Linux FPGA doesn't require one driver for both PFs.
-> 
-> I assume when you said "generic flow for removing all devices in
-> fpga-region" means that there is a single driver which use the fpga-region
-> callbacks to remove all devices and then re-progream the FPGA.
-> 
-> On AMD V70 hardware, the userPF has different deviceid than the mgmtPF.
-> Thus, our current design is having 2 separate pcie drivers for each
-> different deviceid.
-> 
-> Thus, in our current design, the fpga-region should be in the userPF driver
-> which has callbacks to remove all devices. But in mgmtPF, it is more like a
+Hello,
 
-A question, if the FPGA logic is cleared, does the userPF still exist on
-PCIe bus?
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-> utility which only handles request from the userPF but it has the management
-> privilege. Usually, cloud vendors require the mgmtPF deployed in their
-> secured domain (can be a separate physical machine).
+Reported-by: syzbot+10bd8fe6741eedd2be2e@syzkaller.appspotmail.com
+Tested-by: syzbot+10bd8fe6741eedd2be2e@syzkaller.appspotmail.com
 
-I though mgmtPF & userPF are just 2 functions on one PCIe card, they are not?
-Then how the mgmtPF writes data to another physical machine and
-influence the userPF?
+Tested on:
 
-Thanks,
-Yilun
+commit:         808eb958 Add linux-next specific files for 20250206
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1757edf8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=88b25e5d30d576e4
+dashboard link: https://syzkaller.appspot.com/bug?extid=10bd8fe6741eedd2be2e
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=15b564a4580000
 
-> 
-> We can keep 2 drivers, one for userPF, one for mgmtPF. The userPF and mgmtPF
-> communicate each other via the communication channel because they can be
-> physically on different machine.
-> 
-> Are you looking for us to upstream both of them together?
-> If yes, I still think that the fpga-region should be in the userPF driver.
-> The mgmtPF driver is still a utility driver.
-> 
-> Please correct me if I am wrong.:)
-> 
-> > 
-> > > 2) find a different location (maybe driver/misc) for the version-pci driver,
-> > > because it is an utility driver, not need to be tied with fpga framework.
-> > 
-> > I'm not the misc maintainer, but I assume in-tree utility driver +
-> > out-of-tree client driver is not generally welcomed.
-> 
-> Great info! Thanks! I will have to discuss this with my team too.
-> 
-> My understanding, so far based on your comments above, the drivers/fpga
-> prefer to use fpga-region ops to handle FPGA re-program changes.
-> 
-> The current versal-pci driver is a utility driver.
-> The fpga-region should be within the userPF driver.
-> 
-> We can try to make our userPF driver in-tree as well. But the current plan
-> is to do it later.
-> 
-> If you prefer we do both of them together. I can talk to my team.
-> 
-> Thanks,
-> David
-> > 
-> > Thanks,
-> > Yilun
-> > 
-> > > 
-> > > Please let me know you thoughts. Which way is acceptable by you.
-> > > 
-> > > Thanks,
-> > > David
-> > > > 
-> > > > Thanks,
-> > > > Yilun
-> > > > 
-> > > > > driver and allow the userPF driver re-enumerate all to match the new
-> > > > > hardware.
-> > > > > 
-> > > > > I think my understanding is correct, it is doable.
-> > > > > 
-> > > > > As long as we can keep our userPF driver as separate driver, the code change
-> > > > > won't be too big.
-> > > > > 
-> > > > > > 
-> > > > > > Thanks,
-> > > > > > Yilun
+Note: testing is done by a robot and is best-effort only.
