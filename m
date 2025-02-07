@@ -1,141 +1,123 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED0C18DB21;
-	Fri,  7 Feb 2025 16:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD59156236
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738945787; cv=none; b=j6S/mvXCaw7g1O86nso3wNv/HGd1lLZw4gMuZcZ3rxl/ljKp0qhv8QIfpA2vtRKYxb7SYe8eLDrGzD8Dla0tsa36jIFeiloApOBZ8DfkIzSKsHJ7T81IoszQVk1l7PcL6UlyFvxXp/hRRgC69cN+yEQTTGJUAwy5WS62PQO7AFk=
+	t=1738945851; cv=none; b=DQh87BXDCA9BL0nFGgSHbVhfi84gN9zTQN2v4YMf47Y8gXULKFobL26GCOW0SlBQqKEBKdMsoZXtX0YO0MQ3uSrmTWsyXt79VEjG2RomvR42M6x0NCyOqt++FaHm88JKgdYQPx9gwvrpAQkhwJFan8PS6nO1dhDJWYZljbJUpNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738945787; c=relaxed/simple;
-	bh=CTg/oPt7b8oDc+wpDgmpUzTTliBbDj+D/KiMzWPe6wg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lKphFsLLsqdGDscdO+PbqSUEP30xEO3UqUORo9CwoRii6QW0pAAlmSwCRERMfKTUvaxfC2aIiZCt9qDtWw93vtp28QAecZCg3EQx7rqio7DhTooEi7iELSaQUJa63YCLGWCn76XlzryyRWNNJi2S0lbvvfSNCVqWn4eMg9gCc/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=m+l0jBJc; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1738945851; c=relaxed/simple;
+	bh=Ijfj0q6MLOVMyRdQ07uyaRYvZdP27Sa5gpSKK8sH32U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pbHmcEyz9FJ/dS0Jf56dSSzUEULOI/Z+N4GiNMtGhqQ65bvUmHaRSSwVBhWgHVoQhUnWwX/P0ukrh8gUWEUesI3+k2owjLLB1KSLYTPfYCCuUaLRzNNAqX0TZOwBRk3/VXCBTc3hVH1898x5GFDpH4Mw7OWz5PvgWeKw0NZb4Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=h3sr346R; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="m+l0jBJc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1738945783;
-	bh=CTg/oPt7b8oDc+wpDgmpUzTTliBbDj+D/KiMzWPe6wg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=m+l0jBJc2+iprI6Pu9oAN8vZvFcertgTLFqvOC1P0Cf9VU8moZlNVRZxTS+ML6aBh
-	 G1pCo6/0HOXqFJxWmsDkvSkoTE03JlUCGl4Mb/oqTR1fEqyQTtvq23xAtTATRaDaO5
-	 MJEDmnG2FxgwQjEX2QUP0rH/r2ZLN6TJy/mv1snvQP5kK9TNdsMR6M6cF5Dd0sCFla
-	 EfOK4JfX3CzuSkoOnpwn/MhwtyrOPpWkat8fKqRZIoCiwJ+ZbLAdJ7MXmcgbvhtV0F
-	 LHLnW5Vh17bwySYzpWPGmFgTs3tfTj9hIiYzyYg4SJafUiyZqFJRpEZPjqoXDM6lhD
-	 P+7cCBNuAglyg==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id CF71617E1507;
-	Fri,  7 Feb 2025 17:29:42 +0100 (CET)
-Date: Fri, 7 Feb 2025 17:29:35 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
-Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Jonathan
- Corbet <corbet@lwn.net>, Steven Price <steven.price@arm.com>, Liviu Dudau
- <liviu.dudau@arm.com>, kernel@collabora.com, Tvrtko Ursulin
- <tursulin@ursulin.net>, Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
- dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 0/5] drm/panthor: Display size of internal kernel
- BOs through fdinfo
-Message-ID: <20250207172935.2fa23902@collabora.com>
-In-Reply-To: <20250130172851.941597-1-adrian.larumbe@collabora.com>
-References: <20250130172851.941597-1-adrian.larumbe@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="h3sr346R"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6dd0d09215aso17554186d6.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:30:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1738945849; x=1739550649; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=n047GxOF/6B17NuKH3fttxHpdcTkmFoC+Qx5gIWUBTo=;
+        b=h3sr346RCtd6JbqlOt6DH9vJvV+X+F+THl1kNI4rZN/Q+5P9y4S8HB4OVkOHjaM1+s
+         g778kzUtC4N8CLqYlDyyu4SaRbwmKZwdDp0s7Cdm47YDbpWhz181swqGpTLL36PqU28c
+         gFh3dec0qhTiETsnazOHFYRWCX/CctZbnXQYnyAOTbIvhjhlNTFKbUvEi8gjNld9oUHp
+         ocLBNqgzzGhF2nARmFcwFitNqyUJy5rjk+6w1bsq0KZkgYyk7Ds0IiXUgbt8rM6mYKmM
+         y0qrkfZodls4U603p7WPX63bwO6+JpotPO9pjuLAPWz1f9iwYu3lkkg2eZ9xNO0Wzf1r
+         Ukxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738945849; x=1739550649;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n047GxOF/6B17NuKH3fttxHpdcTkmFoC+Qx5gIWUBTo=;
+        b=lli64j91Vc67Z72TUofk8qO87NlMgfIwHPbTjJYF4reIDeOWkluP7b8b8jxJaf7Byz
+         YueSvxeEqhv4lbQg2dfQoD2m/u6V8MJEEpY5E4zQV+A651MaKCh42/zFO6utIZIzHegH
+         sxayF/renTxmZqmETfM3V4H2Ob7aE8eIn5FtpaWHFsty2oTxidjPQXBktI0cZ/ugkHpL
+         2pORKOyhODNbTgm7Q3rkYA8m36Iy8YRa/QYZGT3q37Qdr/cqS/z78qLKVZpc52dzMAlp
+         o1/6GcHtN91FK5x71PGeS15z9j2/9FiGvPEA9Cqk4dhUFxo+xh4iQk5j5DeNQTbTLU9s
+         LxlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVH39g0UsTqDB6eDOFzhRAPEaMHjJqssfjk6Pcu0ik9JcizujJGGjc6OQWN8nP7HZ6R09YiHMqarPWJii4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/gRMVm9yMG8sH/ql0dwvU3LW49ovY7qkarZNFBPo5PXU2MVjV
+	9qQPS152mW4gbXMe69BmNI4GhnQWhHWKhLb2XW2krJN7z24bPJityBtTG3UayDw=
+X-Gm-Gg: ASbGncujKyXoGPqXT5+VIG2BGKA9/xv6bKj5tCcd96eyPaz9ZObvEJJAt1PDJPWRDgf
+	BHANU4ICwzyrsh7sOzOA2qZ6NoGDP94iNUG120HQUOi2O7qosf7cWlfEvjaUEBP2Gn6z26JLH3g
+	gPR7KS8USN+P9RxYgGLY9MxVW1quf9Rr054AVF3MTMJbImfSk1wc2Cu3LDHZYLj8JJa+z4eOj39
+	E3WHFfYo48lSHtcbUus1fmJhq98ymWWlCjK0TWHvm/dDFPAL5nGVCasiz741q0fGPIzrW+TQagv
+	07GGPWp/tkpvo64eY/ig9pjalZ6tKCllgTsUksBSrzOpl45ukmibphHSdINufT2r5T97fcnOzQ=
+	=
+X-Google-Smtp-Source: AGHT+IHyvvZ4n7fuu5XAqR8Gn+c6EeG9F8wKLFAfXqxR3mTdPo+r0XyLMsPyLNxl849TZ4VS3a6Dsg==
+X-Received: by 2002:a05:6214:1bcc:b0:6d3:f1ff:f8d6 with SMTP id 6a1803df08f44-6e4456fd4e9mr47684616d6.40.1738945848853;
+        Fri, 07 Feb 2025 08:30:48 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e442fd3407sm12357656d6.82.2025.02.07.08.30.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 08:30:48 -0800 (PST)
+Date: Fri, 7 Feb 2025 11:30:46 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 18/18] cxl/acpi: Unify CFMWS memory log messages with
+ SRAT messages
+Message-ID: <Z6Y1NloQyDCal8EP@gourry-fedora-PF4VCD3F>
+References: <20250207153753.418849-1-rrichter@amd.com>
+ <20250207153753.418849-19-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207153753.418849-19-rrichter@amd.com>
 
-On Thu, 30 Jan 2025 17:28:08 +0000
-Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+On Fri, Feb 07, 2025 at 04:37:53PM +0100, Robert Richter wrote:
+> CFMWS entries have a similar importance as SRAT table entries to
+> describe memory regions. For CXL error analysis and memory debugging
+> information of both is needed. Unify output of both messages to
+> improve logging. Change the style of CFMWS message according to SRAT
+> output. Also, turn messages into a dev_info() same as for SRAT.
+> 
+> SRAT pr_info() for reference:
+> 
+> drivers/acpi/numa/srat.c:
+>   pr_info("SRAT: Node %u PXM %u [mem %#010Lx-%#010Lx]%s%s\n",
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 
-> This patch series enables display of the size of driver-owned shmem BO's =
-that aren't
-> exposed to userspace through a DRM handle. Also fixes a use-after-free bu=
-g in the
-> existing fdinfo implementation for Panthor.
->=20
-> Discussion of previous revision can be found here [1].
->=20
-> Changelog:
-> v10:
->  - Simplified locking scheme in panthor_vm_heaps_sizes
->  - Fixed kernel test robot warning about documentation
->  - Added some R-b tags to patches
-> v9:
->  - Added proper locking around group pool xarray to prevent UAF errors.
->  - Added proper locking around vms pool xarray loop for the same reason
->  - Added new patch that fixes UAF error because no locking when accessing=
-=20
->    fdinfo group stats.
->  - Some minor cosmetic and naming changes.
-> v8:
->  - Made print_size public and added prefix argument for drm_print_memory_=
-stats
->  - Updated documentation commit to reflect new name tags
->  - Some minor polishing
-> v7:
->  - Added new commit: mentions the formation rules for driver-specific fdi=
-nfo keys
->  - Added new commit: adds a helper that lets driver print memory size key=
-:value
->    pairs with their driver name as a prefix.
->  - Modified later commits to make use of the previous ones.
->  - Deleted mentions of now unnecessary memory keys in the old revision.
-> v6:
->  - Replace up_write witnh up_read, which was left out in the previous ver=
-sion
->  - Fixed some minor comment and documentation issues reported by the kern=
-el test robot
-> v5:
->  - Replaced down_write semaphore with the read flavour
->  - Fixed typo and added explicit description for drm-shared-internal in
->  the fdinfo documentation file for Panthor.
-> v4:
->  - Remove unrelated formating fix
->  - Moved calculating overall size of a group's kernel BO's into
->  its own static helper.
->  - Renamed group kernel BO's size aggregation function to better
->  reflect its actual responsibility.
->=20
-> [1] https://lore.kernel.org/dri-devel/20250123225325.3271764-1-adrian.lar=
-umbe@collabora.com/
->=20
-> Adri=C3=A1n Larumbe (5):
->   Documentation/gpu: Clarify format of driver-specific fidnfo keys
->   drm/file: Add fdinfo helper for printing regions with prefix
->   drm/panthor: Expose size of driver internal BO's over fdinfo
->   Documentation/gpu: Add fdinfo meanings of panthor-*-memory tags
->   drm/panthor: Fix race condition when gathering fdinfo group samples
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
-Queued to drm-misc-next.
-
->=20
->  Documentation/gpu/drm-usage-stats.rst   |  5 ++-
->  Documentation/gpu/panthor.rst           | 10 +++++
->  drivers/gpu/drm/drm_file.c              | 27 ++++++++----
->  drivers/gpu/drm/panthor/panthor_drv.c   | 14 ++++++
->  drivers/gpu/drm/panthor/panthor_heap.c  | 26 +++++++++++
->  drivers/gpu/drm/panthor/panthor_heap.h  |  2 +
->  drivers/gpu/drm/panthor/panthor_mmu.c   | 33 ++++++++++++++
->  drivers/gpu/drm/panthor/panthor_mmu.h   |  3 ++
->  drivers/gpu/drm/panthor/panthor_sched.c | 58 ++++++++++++++++++++++++-
->  drivers/gpu/drm/panthor/panthor_sched.h |  3 ++
->  include/drm/drm_file.h                  |  5 +++
->  11 files changed, 176 insertions(+), 10 deletions(-)
->=20
-
+> ---
+>  drivers/cxl/acpi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 3e75e612cbc4..93c73b163c28 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -447,7 +447,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
+>  			cfmws->base_hpa,
+>  			cfmws->base_hpa + cfmws->window_size - 1, rc);
+>  	else
+> -		dev_dbg(dev, "decode range: node: %d range [%#llx - %#llx]\n",
+> +		dev_info(dev, "ACPI: CFMWS: Node %u [mem %#010Lx-%#010Lx]\n",
+>  			phys_to_target_node(cfmws->base_hpa), cfmws->base_hpa,
+>  			cfmws->base_hpa + cfmws->window_size - 1);
+>  
+> -- 
+> 2.39.5
+> 
