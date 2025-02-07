@@ -1,100 +1,138 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB578479
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 22:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B735F1ADFFB
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 22:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738966795; cv=none; b=cscRDwLAsULSVRbNX5oEAPFwrm9V+jI+eARQskX6Owadg+TSBkxHlhqtxnO+f/DU0CeOkzrgv2b6jFuDDk/CZZf6jvqdjVRWs7688Ut+9m3VRkmVy4QCBcbijIFFvWSInizlMakrIQIITCFRVE832PO20iWuX969mGEJ7voDzzw=
+	t=1738966917; cv=none; b=cSZMnjf14Sn+QQYRv/EVvBpI6F9M9ZTunc0QGQvosGplYMPC2NSDlFPZBFu1momzxy58t1QSITDIj/2MMJkdVvxiH/Xoz0vuBL53QU54e44E0fmO53WPSTl6QCVTc6yYoiZijJpzCNGIicvfKzCo0XhmwxCk2jf+ry0TvbZzP2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738966795; c=relaxed/simple;
-	bh=ps5EjYggeB2pmCfRj5Y1qHEl1n/SHTtVyuqzfKf0ht8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=me0WFFHTxe0O2Kv3yCz0sXAox9+hqwYsc6XKo4ub4HpGUhgwQG5M0l3Dvw/MnFZc0p4PRTxSR+yFh7Ohv/XJVmMqOXILkneVASTD8tDfm6aackv4BPu/JxNO9MvPPG0aISizNkREzR65r0Lv5JgHJcsSXevGSqmMM0vfRDkcmLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ScZcY2N1; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1738966917; c=relaxed/simple;
+	bh=tK3rfULmuKjq5ZkQcPkvEUu0wfRoYfeMb1VFEZvdmi8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sx9hzsB5gVa8tSyYqpO1427cOCQwBQ5x1pkpbHV8jtObFColwGD8aQfFkb5eG71mVtv/Wr+Boa9bijP4WaKigIiYOcStJ5rJgD7AhMiVR6fdwT6YgFGOF9nQFuW5LMGHGIjR6ud+l6fOzEgD6+BmzjFhZMNQyEgXy8JQdJz4yVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=SvhxL5Vf; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ScZcY2N1"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6e1a41935c3so34388466d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 14:19:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="SvhxL5Vf"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6f972c031efso32062337b3.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 14:21:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738966793; x=1739571593; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LNYJ3hvEn3WHrM7IryEw3ayHWigT+bDMHa3yuIYsG60=;
-        b=ScZcY2N15IHWTxx1YUi5LctkewctjNwvLcXxq9GP8s+82s7Mk5Ne0lkrlBJf+9AdCj
-         b6g0YS8ZHUL3MNxGaMkeJvE+7hUVvopjH+pLIZI0itSWr2bDPAb7ABrtb8vbvvptGfEr
-         GTuuuggOnXEUpEO5qCaSbGYay6wZQtvoyu2bKhgI1OkBOstmEfsmaTIuIHLQaIKB/aKT
-         Pu2lfW2LlbjU1TNwoxgGjfXc9M4M1vMBj3DE7ejJ/WZ9omXbKXrdpcIpsEWlILF50wyV
-         F0bkS+XXOHxvDmjkU3OEfYBqnkMMlBhCjpHZL9x9w3Hn6bHpiXxNQLOrxJH2hQbPdmvM
-         /1SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738966793; x=1739571593;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=paul-moore.com; s=google; t=1738966912; x=1739571712; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LNYJ3hvEn3WHrM7IryEw3ayHWigT+bDMHa3yuIYsG60=;
-        b=gSYFTeefUXvIi+nRW40/1chyrH+Yo6keZ9njxcaoodE1xfLWmlRRn7148cWw3yYOpf
-         /YWAPeZeRcjE9Lr9WHvy0jIlENERdPQc8FqEDeX/qK+MCy13yR3907p7SHveon5+6yuj
-         NsVGWS4cZbArQCLEgQe6c8nha9H+LpzNO54N3XoTAOjYKWICMdHy0VYiMUBKZdNAsBEr
-         ytgXP+xV36cnXzt01SXvbOyCsLkFwwcNN/k7pq0scnK/P3ECzVCwInnkab3CJXlrOjoH
-         x+mxCarJc6uFZg/cah0pBxfM3hD0TTHNlXkkY4k2527jB7woWs/P1RvKDhPCjTphgZuI
-         JQ6w==
-X-Forwarded-Encrypted: i=1; AJvYcCX/lCPGs8cU/lhmGVsKPTzXb8x2DXGcDF84aPIhGVYm7y8ZH9OoyzSADA3lFTgHd3JXkf0WcPD5tAi6H7c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSNrbjVSgxPolu7UAmp3mqORrGKgJ6Fi0uwMY+ldM+E7P4aE2B
-	unRjJEg3QqGank1KUydVfk3vnVCTFxWUtBYK25QWy0CBre/EWJ01MpXbb7ADFuU=
-X-Gm-Gg: ASbGncvF6Gb9z9UpDs1lx/WMvAKiX4lKQdBiq/XBCMPxuTh8nJjaGIkg8RiOn/l/tWM
-	jOY/a1elkF3rYKsf284u5P62C5VYn68eNun5oWXygND3Pv5Uwa9XzR9J3/mAY1D8hTdOEnVsykN
-	8P028/r3JZR5LF6tW53oXaUlGMRYes2XQLjJewozE3qhp7ZL7VL0T1vuBhz43foQvbMURxAcz1Z
-	xHik7zxRWJ5hQUesvLIqNSjpbQ40qGIljUdzRWUhdLcolcSFJedvEbR2DH/cP0okvCcWDF/IokJ
-	QgNzNB4XWBOubwc4n01xEHKvevb25bV5Fh8f2KRoU3PZWl73GCV+fzC5zCT5hTroVvSOLzG2oQ=
-	=
-X-Google-Smtp-Source: AGHT+IHuh8FZ1mgmCnMmsLjrt+LL4tFHjVCmaSizXKjRSMf8Fg3xlArwjI3h301vYadEZcBHltyvdA==
-X-Received: by 2002:ad4:576b:0:b0:6d8:9062:6616 with SMTP id 6a1803df08f44-6e4455d2f32mr79737356d6.7.1738966793258;
-        Fri, 07 Feb 2025 14:19:53 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43bad5a7bsm21233486d6.119.2025.02.07.14.19.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 14:19:52 -0800 (PST)
-Date: Fri, 7 Feb 2025 17:19:50 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Jim Kao <jim.kao@xconn-tech.com>
-Cc: Robert Richter <rrichter@amd.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 03/18] cxl/pci: cxl_hdm_decode_init: Move comment
-Message-ID: <Z6aHBuGwuEMy6Kc1@gourry-fedora-PF4VCD3F>
-References: <20250207153753.418849-1-rrichter@amd.com>
- <20250207153753.418849-4-rrichter@amd.com>
- <Z6YurVy_K96jet3U@gourry-fedora-PF4VCD3F>
- <BYAPR06MB413558D98731EBD422CF24E4A1F12@BYAPR06MB4135.namprd06.prod.outlook.com>
+        bh=cEPaswESS1PjI7HNTDsrPk0/PCf34GKT+5GZnVwgZXY=;
+        b=SvhxL5VfunWjdcxlzGG8u4EHGFeoE7Hsd7VSpFB7mWXw538cZ6lDN4xCKYTXb/F+ny
+         JbRof8Ynh2JOOl8IEVEzxfhATq8HT3CWC6o87hI1Dl3UZ3xrmnLWMIGhmVi/pE05I+rY
+         wXAW8Gxfq1MDGFgixyMSTZ7C6RkY/wCTbtpQY/iUWB4Px9eYadHPzV5zmwu0p1ba1Fls
+         KqkW5/VjK9BGXv1fuP1CZ9vmL9Az40NU67ezIiqr+Ds75KxDZMG7loRBZdD1GTsngRdi
+         tzNxoG0aRQBGjAxlrwK8Jz8epBG8jx9S+R7TsMHL4XvmInAhe0rtltaxBlCKY3sgmmVa
+         lQSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738966912; x=1739571712;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cEPaswESS1PjI7HNTDsrPk0/PCf34GKT+5GZnVwgZXY=;
+        b=Xboc7v5LSLhYcLRYEpeVhocJJdTCCX/fRBlccexhni4Rj8f5NCgQ6aGHUVX9WU0DIp
+         G+TKamSQbCPbOLcT5BB4KBy37QWz+B9wAcWbwLdtNqOkf/tjIaifv5ZjK+1VslTdYIRB
+         iTXoQZfI4Yl1b0Z22F8r3lypiIyIR6AlFcWMgKuNor5Kh29sO8YBT3LhKjzExVu/qhyO
+         yzT+QpxLbrbgbeyRjfGdpNAacf3KJ+sD7gG2vD3x+mJEs0Wf+qcQs4dNQS+O+D2jpNcr
+         H7UofyDy6DvAWszTas2r8EXpeOMaeT1D4hDNC0M6bjgd2y+ZKYqTWNhmC3/hM3Wrc7S1
+         DAsg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7ZTueLjZL3vJ03LABiZ4okJ44EciXOHzsi7jpJfYRaMsR4JSkQjLLevaPQ2ljIxvrikw4Hoi/JOvJpS8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaFC7QdpRnlnhN3dre2ahQ9nUziNAEAxIXZ5xzzoO3EReIHiue
+	nlW1ih3CYg6mMBfYfhYOWDgIF0iyEZ0dS3qTCsJxYeMmjFpG2raDLrqmkuyaaCDYUX/PPvcR1y6
+	Nipn/CEb86/I9HBcraSWqCo2sz3d3CL3RxB0h
+X-Gm-Gg: ASbGncu0G12whx3lAb7cvsxVYBNMjr1SF5KmPGpKvP/Qgkz29z1KPhZxd8v132CfJth
+	gJltl24UCWCZDA+li4FKr7U3qfIbHcNbgogx2Kv+AflPzJR+JCfHWlXMbXORtzB1lkDBIoTY=
+X-Google-Smtp-Source: AGHT+IHBRA127lA39kegDN775o8sxuc/2TfRWjm6n/rOOXgCq5OxY/YTyMkihpXgx3uBbbWMJZ1NIqaD8HwuOOVN9kc=
+X-Received: by 2002:a05:690c:730a:b0:6f9:c6e2:89a8 with SMTP id
+ 00721157ae682-6f9c6e2c8b3mr21691667b3.6.1738966912666; Fri, 07 Feb 2025
+ 14:21:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR06MB413558D98731EBD422CF24E4A1F12@BYAPR06MB4135.namprd06.prod.outlook.com>
+References: <20250127155723.67711-1-hamzamahfooz@linux.microsoft.com>
+ <8743aa5049b129982f7784ad24b2ec48@paul-moore.com> <f4efd956-ebe9-4a02-8b98-b80e16db95af@kernel.dk>
+In-Reply-To: <f4efd956-ebe9-4a02-8b98-b80e16db95af@kernel.dk>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 7 Feb 2025 17:21:42 -0500
+X-Gm-Features: AWEUYZm96FCzr6LWRjIh3Nuf8FgTiXEW22PFLZ07c4RqLniYHD_Dg4aIbl2L02M
+Message-ID: <CAHC9VhQDMSw9VNzd1pLRv1a3v8y2wz9rM4k0wa1t-Wq8KO6kFw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] io_uring: refactor io_uring_allowed()
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Pavel Begunkov <asml.silence@gmail.com>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
+	=?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>, 
+	=?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>, 
+	=?UTF-8?Q?Bram_Bonn=C3=A9?= <brambonne@google.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>, linux-security-module@vger.kernel.org, 
+	io-uring@vger.kernel.org, selinux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 07, 2025 at 09:36:08PM +0000, Jim Kao wrote:
-> Do we have any limitation for HDM Decoder Range in Linux Kernel ?
-> We has observed that Linux might be hung if range is larger than 8TB.
-> 
-> Jim
-> 
+On Fri, Feb 7, 2025 at 4:54=E2=80=AFPM Jens Axboe <axboe@kernel.dk> wrote:
+> On 2/7/25 2:42 PM, Paul Moore wrote:
+> > On Jan 27, 2025 Hamza Mahfooz <hamzamahfooz@linux.microsoft.com> wrote:
+> >>
+> >> Have io_uring_allowed() return an error code directly instead of
+> >> true/false. This is needed for follow-up work to guard io_uring_setup(=
+)
+> >> with LSM.
+> >>
+> >> Cc: Jens Axboe <axboe@kernel.dk>
+> >> Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+> >> ---
+> >>  io_uring/io_uring.c | 21 ++++++++++++++-------
+> >>  1 file changed, 14 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
+> >> index 7bfbc7c22367..c2d8bd4c2cfc 100644
+> >> --- a/io_uring/io_uring.c
+> >> +++ b/io_uring/io_uring.c
+> >> @@ -3789,29 +3789,36 @@ static long io_uring_setup(u32 entries, struct=
+ io_uring_params __user *params)
+> >>      return io_uring_create(entries, &p, params);
+> >>  }
+> >>
+> >> -static inline bool io_uring_allowed(void)
+> >> +static inline int io_uring_allowed(void)
+> >>  {
+> >>      int disabled =3D READ_ONCE(sysctl_io_uring_disabled);
+> >>      kgid_t io_uring_group;
+> >>
+> >>      if (disabled =3D=3D 2)
+> >> -            return false;
+> >> +            return -EPERM;
+> >>
+> >>      if (disabled =3D=3D 0 || capable(CAP_SYS_ADMIN))
+> >> -            return true;
+> >> +            goto allowed_lsm;
+> >
+> > I'd probably just 'return 0;' here as the "allowed_lsm" goto label
+> > doesn't make a lot of sense until patch 2/2, but otherwise this
+> > looks okay to me.
+>
+> Agree, get rid of this unnecessary goto.
 
-Do you have any additional details? dmesg/core dumps, etc?
+Done.  Converted to return in patch 1/2 and brought the goto/label
+back in patch 2/2.
 
-Seems pretty suspicious that it happens right on the 44-bit boundary.
+> > Jens, are you okay with this patch?  If yes, can we get an ACK from you=
+?
+>
+> With that change, yep I'm fine with both of these and you can add my
+> acked-by to them.
+
+Great.  Both patches have now been merged into lsm/dev, thanks everyone!
+
+--=20
+paul-moore.com
