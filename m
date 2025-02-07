@@ -1,185 +1,120 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D477D2A1D8;
-	Fri,  7 Feb 2025 17:36:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD875191F95
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738949820; cv=none; b=GL+w+0ejQq2MWnA3tR8ZyOlDdbwy+TsOSqS8spbNG07YGvVzcdZecpmpVKqwcgZ3cbfnH+oJqi3cwYi5Me+TDmYOfbB4hhCNZuS5HjRB3bV056x+tNRqY/iZjYpqFGRfUOfPjZetoLqq5851OAvL4AcOVY8D6H4io3pZ3cswBqk=
+	t=1738949986; cv=none; b=iwcRRxBzYolBBsaP70IW0e/9WI+47rnQbk83J6ZAeOQfwMqsrF6XPD2SukuL7itV47q2M1SyXuaQig7B5u3Jg6I+YJ+nE+BoDI1pnARyJomFpwVDiiDPyBwZKCeIwA1lhrkJEGT2Mbhlkep6Ue6VaXE32tEzQ1sx0yn2HpVAjXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738949820; c=relaxed/simple;
-	bh=fcpm8zPo3t6of/QhUdAYAl07owRMtxY3+gOrEtI6YWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fY2DDaJolrDbX+2hsjEKbpojvFS4MTp5YXlGSxjSD5RVoj1AqshHJFR4sH3RfJZr+eiE1yBQV/VigPBZPfDb+j+aUGoiqn0cD8TwceGgRFO5QRfA/Zjc1/tWsrvGKNb7QI/pmp04LDlBw5pyIwFz0qmgVf3h39UANpFyw3Kbl9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=exoVW02j; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1738949986; c=relaxed/simple;
+	bh=DAwV0ZDD7XKfB/jVCkUNZ+6EmreX87Agu2Ytogu1Se4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EljZ+mDbQWnGcxQfSkcI5jyTYSBeJ8HDm0Qvvx4Ri7CwTnye44RQDsJiyVhBKmfyGqTqrgRe59OqH9lg31SEKioxhAJ+xukXhYEbUfyEfTT7cKMRMhfSfnfmgW4InhHw7J56Bq+QyjkmLKfJdHUDuu5MKlig9QGFrs8Hv9Ij4BA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=miG2TfTH; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="exoVW02j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1738949815;
-	bh=fcpm8zPo3t6of/QhUdAYAl07owRMtxY3+gOrEtI6YWw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=exoVW02jeexZbuX6mheZygHMwFFf+/EVtzbAUB74lRSEEJFBEYxPjYKEDzndF5JDY
-	 X1k8Z9+gNFuw6g7TiNF0RjWtkJvyMkB3zBgO+g76aYEECEz7SZt44mSps9XppaAwiO
-	 6Bi/H8XlfziQ64dS7BCZa+q8lM4HICX4/LiLh+68X0ZgGfnAdUiJN+yuo2HGSrGEjK
-	 OV/v/0pnyoEDH+ElvroIgHM3Yc+2/lvucEBAyttMIB4SfeXK4MQ52qAAlElY/b01rz
-	 PqNRMtI/iGM0U5DNp1l9vPGdXiDVa4rl0Bp8MoVIblLppA8pcEb/48bDeuHOE1PeyD
-	 Usc5bfC34ASKQ==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1FDB217E02AF;
-	Fri,  7 Feb 2025 18:36:55 +0100 (CET)
-Date: Fri, 7 Feb 2025 18:36:47 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Miguel Ojeda
- <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
- <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?UTF-8?B?QmrDtnJu?=
- Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin
- <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice
- Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Beata
- Michalska <beata.michalska@arm.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] drm/panthor: Convert IOCTL defines to an enum
-Message-ID: <20250207183647.2bc1e5ed@collabora.com>
-In-Reply-To: <20250204232824.3819437-1-robh@kernel.org>
-References: <20250204232824.3819437-1-robh@kernel.org>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="miG2TfTH"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d05815e89dso189915ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:39:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738949984; x=1739554784; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DAwV0ZDD7XKfB/jVCkUNZ+6EmreX87Agu2Ytogu1Se4=;
+        b=miG2TfTHk9zfSZV/Y93Oool7v9pbzvC37FjOnrVACv5k7q3lp6jz+ec+Drt1vAfxs9
+         9Yb9Eap++Qb3Ui60RKgP7S/2aVUvTCVOUtLJHTGYyNuNvxVOb04JT2xi2q2Sn1mvFagA
+         z2Bv60I8PlZsZMLfgV0ibeaPLxPr3EGbP2SY0cMC0ZF2hgoOQfXuL/rW9dtCNxc2eWBU
+         yFZ0+71F9GZQgp898/zAr9N6EGtVwMt6SgZ+hc9RByW6AKzOLtm+5ioum9W/aIwnbvxO
+         G7R+7/MSNT7rzo+aFTWyIITDifU50f9XFIrJ0L5gEkgMh4ZEmKBaVOqJFRbC0FrOcp4v
+         evPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738949984; x=1739554784;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DAwV0ZDD7XKfB/jVCkUNZ+6EmreX87Agu2Ytogu1Se4=;
+        b=f+8c2YPO99fNTdz5TNSikPCubSmVYURuz+mzTGWQ9x0IQL9GPUtN9lXJFjALYmo9pt
+         BY9vi24z2SGr/UFNWTUC+pEbgrdjaPwg1998y06fIhlaHpJcHmn0Cadpx4Cjb6px2aXu
+         B9yY3SRWyJhjTyu39Hv9TdVdGbM0tDfF6gVEieMnd1aIJLza0uV/h8nKVo40JIf4rg6Y
+         fd3NYT4lAlq8wMcBPbrU/hM5u83tsS1LyuKdEezbaoG5ynP+8i8eFhn0c+DY0fcrxOQh
+         T457HRhgTpJsAd3zJc4lTz1vR9MMi3K598SJQGUIZGVyIwnuxZgOnDZkBFTjIyigRw1j
+         hwjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWeOo0v0kJzVZVDwjNx1I29LjUAk0z1fKggVDmX/PDbztQ3lx4T50ATmtzL1yE+aekjj4Z6tignX0H17K4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5vvZbCGQ0ijjDxV/FrCu8QqH4lKbgwvOvNDhDAQwn28Q4JSiD
+	caUPH0oNc6joZP9+0gSDmZ7WJoXh4yUwkTOQpiSHunLwzSqfYohRywJktLjKD08k+YkVSvVJkc7
+	Z37kcnrID5zl1klu62ZTOEzxCgqKPuZFxAc/L
+X-Gm-Gg: ASbGncvdzPB5MYMrgtUPvWFy3MZgaqZNiGfkFAey/liw9qs3FZZ19Eer4jIeKQs4K/1
+	95x7SGpzElIr0TC506fjRyBKD2aW7c0l3BcNGD3IhdVmgjsV6NkaqHs3dyGSJBthHyWdTE3myLA
+	==
+X-Google-Smtp-Source: AGHT+IG2PZEPVN0jHc4P+ExauCoYGraNODE7PEkkOi1ZDm2UKmFVLgym3wxsSLiZQoE0o6kgrT5CxH4l66kQwIHnclg=
+X-Received: by 2002:a05:6e02:1d91:b0:3cf:fdcd:8a4d with SMTP id
+ e9e14a558f8ab-3d13f1a4319mr3380595ab.3.1738949983677; Fri, 07 Feb 2025
+ 09:39:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250205173140.238294-1-irogers@google.com> <20250205173140.238294-12-irogers@google.com>
+ <7692d2d6-16d5-4f50-8c3a-37f1db356426@linux.intel.com> <CAP-5=fU+9MgMbQKpFix+Jw8k+-_yfAs-F+FYE4CmTWxevPmd-A@mail.gmail.com>
+ <9fa56c75-2ee6-4901-9e04-0ec23412fd62@linux.intel.com> <CAP-5=fWpbXSwZq5biRZ1fjcSJY2DO4g=cv-0K8jZ1Gzv3bOfhA@mail.gmail.com>
+ <58e08371-8d43-4f84-baaf-64b0af95c7cb@linux.intel.com> <CAP-5=fX+u_Un-WYKA35sc366kniuXFVfRDT+dzWd-axTG5PmpA@mail.gmail.com>
+ <51732c12-b5d7-4b81-8ea5-79e87b87795d@linux.intel.com> <CAP-5=fWQj01O3WmGLoAf6O_uEeMHpOUqVWvHi3nW_kGj4VtZWg@mail.gmail.com>
+ <145ce38d-67c5-47e5-9625-0ae9e9831fd9@linux.intel.com> <f0eb58c2-afba-4810-96d5-61f1c942ed57@linux.intel.com>
+ <CAP-5=fW3eY70Vh_GuTVB=M2MFcpe-WqRy76cK++UMYT5OKMtLg@mail.gmail.com> <608077bc-4139-4a97-8dc4-7997177d95c4@linux.intel.com>
+In-Reply-To: <608077bc-4139-4a97-8dc4-7997177d95c4@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 7 Feb 2025 09:39:32 -0800
+X-Gm-Features: AWEUYZk3WYTIZU97X64nIAVTgKop2yNKcEJMcno_p4UD4K2cx_w64MI2estpCs0
+Message-ID: <CAP-5=fWRcA0OmJLxGTo3smi7QFzmTWs=U11WUZ4g1-rW9HLoyw@mail.gmail.com>
+Subject: Re: [PATCH v5 11/24] perf vendor events: Update/add Graniterapids events/metrics
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>, 
+	Michael Petlan <mpetlan@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue,  4 Feb 2025 17:28:24 -0600
-"Rob Herring (Arm)" <robh@kernel.org> wrote:
+On Thu, Feb 6, 2025 at 11:53=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
+[snip]
+> No, it's the perf tool which inject the "slots" event in parse_ids().
+>
+> In parse_groups(), the tool_events[] is constructed here.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/t=
+ools/perf/util/metricgroup.c#n1557
+>
+> In the find_tool_events(), the tool_pmu__event_to_str() is used to
+> compare the tool_events. It only check the event name, no PMU or arch.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/t=
+ools/perf/util/metricgroup.c#n1389
+>
+> So the tool_events[TOOL_PMU__EVENT_SLOTS] is set to true, because the
+> p-core Topdown metrics has "slots" event.
+>
+> The tool_events is shared. So when parsing the e-core metrics, the
+> "slots" is automatically added.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/t=
+ools/perf/util/metricgroup.c#n1476
+>
+> I think we may need a similar fix in the tool_pmu__event_to_str() to
+> skip the "slots" for x86.
 
-> Use an enum instead of #defines for panthor IOCTLs. This allows the
-> header to be used with Rust code as bindgen can't handle complex
-> defines.
-> 
-> Cc: Beata Michalska <beata.michalska@arm.com>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+Thanks! Just thinking out loud, I think the reason we'd starting to
+see this problem on hybrid and not on seen it on non-hybrid ICL and
+later models (where I run the code every day) is that the
+parse_events__sort_events_and_fix_groups shouldn't fix the topdown
+grouping for the atom case. Fwiw, if I had a test machine ;-)
 
-Queued to drm-misc-next.
-
-> ---
->  include/uapi/drm/panthor_drm.h | 86 +++++++++++++++++-----------------
->  1 file changed, 44 insertions(+), 42 deletions(-)
-> 
-> diff --git a/include/uapi/drm/panthor_drm.h b/include/uapi/drm/panthor_drm.h
-> index b99763cbae48..97e2c4510e69 100644
-> --- a/include/uapi/drm/panthor_drm.h
-> +++ b/include/uapi/drm/panthor_drm.h
-> @@ -129,48 +129,6 @@ enum drm_panthor_ioctl_id {
->  	DRM_PANTHOR_TILER_HEAP_DESTROY,
->  };
->  
-> -/**
-> - * DRM_IOCTL_PANTHOR() - Build a Panthor IOCTL number
-> - * @__access: Access type. Must be R, W or RW.
-> - * @__id: One of the DRM_PANTHOR_xxx id.
-> - * @__type: Suffix of the type being passed to the IOCTL.
-> - *
-> - * Don't use this macro directly, use the DRM_IOCTL_PANTHOR_xxx
-> - * values instead.
-> - *
-> - * Return: An IOCTL number to be passed to ioctl() from userspace.
-> - */
-> -#define DRM_IOCTL_PANTHOR(__access, __id, __type) \
-> -	DRM_IO ## __access(DRM_COMMAND_BASE + DRM_PANTHOR_ ## __id, \
-> -			   struct drm_panthor_ ## __type)
-> -
-> -#define DRM_IOCTL_PANTHOR_DEV_QUERY \
-> -	DRM_IOCTL_PANTHOR(WR, DEV_QUERY, dev_query)
-> -#define DRM_IOCTL_PANTHOR_VM_CREATE \
-> -	DRM_IOCTL_PANTHOR(WR, VM_CREATE, vm_create)
-> -#define DRM_IOCTL_PANTHOR_VM_DESTROY \
-> -	DRM_IOCTL_PANTHOR(WR, VM_DESTROY, vm_destroy)
-> -#define DRM_IOCTL_PANTHOR_VM_BIND \
-> -	DRM_IOCTL_PANTHOR(WR, VM_BIND, vm_bind)
-> -#define DRM_IOCTL_PANTHOR_VM_GET_STATE \
-> -	DRM_IOCTL_PANTHOR(WR, VM_GET_STATE, vm_get_state)
-> -#define DRM_IOCTL_PANTHOR_BO_CREATE \
-> -	DRM_IOCTL_PANTHOR(WR, BO_CREATE, bo_create)
-> -#define DRM_IOCTL_PANTHOR_BO_MMAP_OFFSET \
-> -	DRM_IOCTL_PANTHOR(WR, BO_MMAP_OFFSET, bo_mmap_offset)
-> -#define DRM_IOCTL_PANTHOR_GROUP_CREATE \
-> -	DRM_IOCTL_PANTHOR(WR, GROUP_CREATE, group_create)
-> -#define DRM_IOCTL_PANTHOR_GROUP_DESTROY \
-> -	DRM_IOCTL_PANTHOR(WR, GROUP_DESTROY, group_destroy)
-> -#define DRM_IOCTL_PANTHOR_GROUP_SUBMIT \
-> -	DRM_IOCTL_PANTHOR(WR, GROUP_SUBMIT, group_submit)
-> -#define DRM_IOCTL_PANTHOR_GROUP_GET_STATE \
-> -	DRM_IOCTL_PANTHOR(WR, GROUP_GET_STATE, group_get_state)
-> -#define DRM_IOCTL_PANTHOR_TILER_HEAP_CREATE \
-> -	DRM_IOCTL_PANTHOR(WR, TILER_HEAP_CREATE, tiler_heap_create)
-> -#define DRM_IOCTL_PANTHOR_TILER_HEAP_DESTROY \
-> -	DRM_IOCTL_PANTHOR(WR, TILER_HEAP_DESTROY, tiler_heap_destroy)
-> -
->  /**
->   * DOC: IOCTL arguments
->   */
-> @@ -1019,6 +977,50 @@ struct drm_panthor_tiler_heap_destroy {
->  	__u32 pad;
->  };
->  
-> +/**
-> + * DRM_IOCTL_PANTHOR() - Build a Panthor IOCTL number
-> + * @__access: Access type. Must be R, W or RW.
-> + * @__id: One of the DRM_PANTHOR_xxx id.
-> + * @__type: Suffix of the type being passed to the IOCTL.
-> + *
-> + * Don't use this macro directly, use the DRM_IOCTL_PANTHOR_xxx
-> + * values instead.
-> + *
-> + * Return: An IOCTL number to be passed to ioctl() from userspace.
-> + */
-> +#define DRM_IOCTL_PANTHOR(__access, __id, __type) \
-> +	DRM_IO ## __access(DRM_COMMAND_BASE + DRM_PANTHOR_ ## __id, \
-> +			   struct drm_panthor_ ## __type)
-> +
-> +enum {
-> +	DRM_IOCTL_PANTHOR_DEV_QUERY =
-> +		DRM_IOCTL_PANTHOR(WR, DEV_QUERY, dev_query),
-> +	DRM_IOCTL_PANTHOR_VM_CREATE =
-> +		DRM_IOCTL_PANTHOR(WR, VM_CREATE, vm_create),
-> +	DRM_IOCTL_PANTHOR_VM_DESTROY =
-> +		DRM_IOCTL_PANTHOR(WR, VM_DESTROY, vm_destroy),
-> +	DRM_IOCTL_PANTHOR_VM_BIND =
-> +		DRM_IOCTL_PANTHOR(WR, VM_BIND, vm_bind),
-> +	DRM_IOCTL_PANTHOR_VM_GET_STATE =
-> +		DRM_IOCTL_PANTHOR(WR, VM_GET_STATE, vm_get_state),
-> +	DRM_IOCTL_PANTHOR_BO_CREATE =
-> +		DRM_IOCTL_PANTHOR(WR, BO_CREATE, bo_create),
-> +	DRM_IOCTL_PANTHOR_BO_MMAP_OFFSET =
-> +		DRM_IOCTL_PANTHOR(WR, BO_MMAP_OFFSET, bo_mmap_offset),
-> +	DRM_IOCTL_PANTHOR_GROUP_CREATE =
-> +		DRM_IOCTL_PANTHOR(WR, GROUP_CREATE, group_create),
-> +	DRM_IOCTL_PANTHOR_GROUP_DESTROY =
-> +		DRM_IOCTL_PANTHOR(WR, GROUP_DESTROY, group_destroy),
-> +	DRM_IOCTL_PANTHOR_GROUP_SUBMIT =
-> +		DRM_IOCTL_PANTHOR(WR, GROUP_SUBMIT, group_submit),
-> +	DRM_IOCTL_PANTHOR_GROUP_GET_STATE =
-> +		DRM_IOCTL_PANTHOR(WR, GROUP_GET_STATE, group_get_state),
-> +	DRM_IOCTL_PANTHOR_TILER_HEAP_CREATE =
-> +		DRM_IOCTL_PANTHOR(WR, TILER_HEAP_CREATE, tiler_heap_create),
-> +	DRM_IOCTL_PANTHOR_TILER_HEAP_DESTROY =
-> +		DRM_IOCTL_PANTHOR(WR, TILER_HEAP_DESTROY, tiler_heap_destroy),
-> +};
-> +
->  #if defined(__cplusplus)
->  }
->  #endif
-
+Ian
