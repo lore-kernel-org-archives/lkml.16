@@ -1,114 +1,144 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B18C1662EF;
-	Fri,  7 Feb 2025 08:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED31D19F111
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738917229; cv=none; b=b1mg9AM7pVWP+iiOAyOyypEJWYD1gikrthmZJAJdmNUZb2GVTnOQD51UYGDacoLj8tnVX9QyMlMpZfHFDp/WKZd/spm3c4VpHl/HTaayfUmkn97BKFgHh7Pk4HVi+VK9PUiZ3vpPo0TzPCakz5swvuBhUU/I1pK0648h04Ui9Ew=
+	t=1738917396; cv=none; b=PpvYsHoBhLaLQHVrMhqBF4JKVrRjcwYbmT4HncSElY3LLuaUL8EWNrmpyLBE0asAMd/qSU4Ai50qFQJ20rSWDkARXH9xFeiHVlrNVnj3ns9TfJaeb/dEXxYpJsP6PviL4R9DPA5iyeyPmcgZGP8yTdfW5nsXGS2XgeXQVv4BYVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738917229; c=relaxed/simple;
-	bh=rEyHxETDDNZrKnj0uGzVSatZPl0zol+heJ1YboWObbQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=trXx/9X+pe3l0gGbjGGxzPeggBf9UNEuTx0hyvsl82oaBknmHsSfELKUEfPkHL3yjDRYtHWP645xJ+mjUh60cxywDyd7FqhRl+AqgTAbrJxat+J8vG+39WbGVfIZTZwUPzaiMAyuHYI1Pg9mNWoOx7mGMdLVWm7i/I5tXIGrW2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SHcdBsCn; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738917396; c=relaxed/simple;
+	bh=95R7wtZe+y2DcnVkficYA9or/YfcSNgSUS2n9SAYGs4=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=D/MG59nflpPZVOFzKb3ZtBbW5+WPTtTtsWmNCJtfzUQMjzoI9+6MosIOmaXHuAmxYRvVpr3mpYKds/OREsGUI5eW7ORyU2M4kfx3hm2L1AmW7JBlvX51PEaLoBrgab9SmYxziejbJTwIuK34P+GGHQKmlN7iihsyB8ez8zf3PS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LAUsS20J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SHcdBsCn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=BS6iDdO4KJAv6Qvg1+T7FVPsD1MTg6ZHoV7nJRWxmPs=; b=SHcdBsCnGAKozLK3fxywAwg34L
-	BVZPfTBDE1VZ10TjXglEiLiuaAB8RrcyO2F8rz7/C2J98vfWOYNkNrpkQJT9C6DtFoRrmMQ7LSo+B
-	HmByJT+181U0H2f1v3QDbBdIl89CaNSkifK0XxetTK0hlDQkXkdVlJdh9p5ngZ3s0b+vNLphhs7nl
-	gvcCC4KbKJPJ1jzoXFEIavvv29vyxdkrJNPRJOHzNPRkDrtH2xbf/rfahL+4pdo/AwOhMRqwUXX4e
-	5My+1oS6ezE3ciKCo+G4a6I3Hpbb1AZ00WbiIazjNftHCjllrSaicLbDmFY77bbrSQPaVUHLDFnKB
-	zt+Nr0ow==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgJnr-0000000H901-2oF4;
-	Fri, 07 Feb 2025 08:33:40 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3A7A2300310; Fri,  7 Feb 2025 09:33:35 +0100 (CET)
-Date: Fri, 7 Feb 2025 09:33:35 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Marco Elver <elver@google.com>
-Cc: Bart Van Assche <bvanassche@acm.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, rcu@vger.kernel.org,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCH RFC 01/24] compiler_types: Move lock checking attributes
- to compiler-capability-analysis.h
-Message-ID: <20250207083335.GW7145@noisy.programming.kicks-ass.net>
-References: <20250206181711.1902989-1-elver@google.com>
- <20250206181711.1902989-2-elver@google.com>
- <552e940f-df40-4776-916e-78decdaafb49@acm.org>
- <CANpmjNP6by9Kp0rf=ihwj_3j6AW+5aSm6L3LZ4NEW7uvBAV02Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LAUsS20J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24C50C4CED1;
+	Fri,  7 Feb 2025 08:36:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738917395;
+	bh=95R7wtZe+y2DcnVkficYA9or/YfcSNgSUS2n9SAYGs4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=LAUsS20JTtH6AV9OROJt/fNj30Nbuw3DWl80TVd7AaQnxmvSwanZ+MPddNBfbkQe8
+	 r3zbXLwCp6AV+4Qjp84/we4L3s1ITPWCp8F0MMLz7QTFZPbiCLhhDSgGFxcKWDc8sA
+	 CDbHzbZSnVTf8GGoSrcNgH6cvyPZjU6ML42tYTaGbhOIYhbfa0+TOVFc7CSulngMJ5
+	 WNJbPHVhH71hoRhyCFr8tB50cXAdw/fELGtL6PVQmg45Ajz6nbOzwZzv4hQ9vvma/S
+	 AN8PEZEpmTbLeoG3CJC52HgFfGjvlLTD+BMUKrAyjEsyHfI2IylNgO0heRShTbBEy2
+	 KVA8ZGw485vHQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNP6by9Kp0rf=ihwj_3j6AW+5aSm6L3LZ4NEW7uvBAV02Q@mail.gmail.com>
+Date: Fri, 07 Feb 2025 09:36:31 +0100
+From: Michael Walle <mwalle@kernel.org>
+To: Cheng Ming Lin <linchengming884@gmail.com>
+Cc: tudor.ambarus@linaro.org, pratyush@kernel.org,
+ miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+ linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+ alvinzhou@mxic.com.tw, leoyu@mxic.com.tw, Cheng Ming Lin
+ <chengminglin@mxic.com.tw>
+Subject: Re: [PATCH 1/2] mtd: spi-nor: macronix: Add post_sfdp fixups for Quad
+ Input Page Program
+In-Reply-To: <20250207081846.362919-2-linchengming884@gmail.com>
+References: <20250207081846.362919-1-linchengming884@gmail.com>
+ <20250207081846.362919-2-linchengming884@gmail.com>
+Message-ID: <8901dcd481a2185ad34fa7dd09997b38@kernel.org>
+X-Sender: mwalle@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 06, 2025 at 07:48:38PM +0100, Marco Elver wrote:
-> On Thu, 6 Feb 2025 at 19:40, Bart Van Assche <bvanassche@acm.org> wrote:
-> >
-> > On 2/6/25 10:09 AM, Marco Elver wrote:
-> > > +/* Sparse context/lock checking support. */
-> > > +# define __must_hold(x)              __attribute__((context(x,1,1)))
-> > > +# define __acquires(x)               __attribute__((context(x,0,1)))
-> > > +# define __cond_acquires(x)  __attribute__((context(x,0,-1)))
-> > > +# define __releases(x)               __attribute__((context(x,1,0)))
-> > > +# define __acquire(x)                __context__(x,1)
-> > > +# define __release(x)                __context__(x,-1)
-> > > +# define __cond_lock(x, c)   ((c) ? ({ __acquire(x); 1; }) : 0)
-> >
-> > If support for Clang thread-safety attributes is added, an important
-> > question is what to do with the sparse context attribute. I think that
-> > more developers are working on improving and maintaining Clang than
-> > sparse. How about reducing the workload of kernel maintainers by
-> > only supporting the Clang thread-safety approach and by dropping support
-> > for the sparse context attribute?
-> 
-> My 2c: I think Sparse's context tracking is a subset, and generally
-> less complete, favoring false negatives over false positives (also
-> does not support guarded_by).
-> So in theory they can co-exist.
-> In practice, I agree, there will be issues with maintaining both,
-> because there will always be some odd corner-case which doesn't quite
-> work with one or the other (specifically Sparse is happy to auto-infer
-> acquired and released capabilities/contexts of functions and doesn't
-> warn you if you still hold a lock when returning from a function).
-> 
-> I'd be in favor of deprecating Sparse's context tracking support,
-> should there be consensus on that.
+Hi Cheng,
 
-I don't think I've ever seen a useful sparse locking report, so yeah, no
-tears shed on removing it.
+> Although certain Macronix NOR flash support the Quad Input Page Program
+> feature, the corresponding information in the 4-byte Address 
+> Instruction
+> Table of these flash is not properly filled. As a result, this feature
+> cannot be enabled as expected.
+> 
+> To address this issue, a post_sfdp fixups implementation is required to
+> correct the missing information.
+> 
+> Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
+> ---
+>  drivers/mtd/spi-nor/macronix.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/drivers/mtd/spi-nor/macronix.c 
+> b/drivers/mtd/spi-nor/macronix.c
+> index 830da21eea08..ada17999ccbb 100644
+> --- a/drivers/mtd/spi-nor/macronix.c
+> +++ b/drivers/mtd/spi-nor/macronix.c
+> @@ -45,8 +45,26 @@ mx25l25635_post_bfpt_fixups(struct spi_nor *nor,
+>  	return 0;
+>  }
+> 
+> +static int
+> +macronix_qpp4b_post_sfdp_fixups(struct spi_nor *nor)
+> +{
+> +	/* PP_1_1_4_4B is supported but missing in 4BAIT. */
+> +	struct spi_nor_flash_parameter *params = nor->params;
+> +
+> +	params->hwcaps.mask |= SNOR_HWCAPS_PP_1_1_4;
+> +	spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP_1_1_4],
+> +			SPINOR_OP_PP_1_1_4_4B, SNOR_PROTO_1_1_4);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct spi_nor_fixups mx25l25635_fixups = {
+>  	.post_bfpt = mx25l25635_post_bfpt_fixups,
+> +	.post_sfdp = macronix_qpp4b_post_sfdp_fixups,
+> +};
+> +
+> +static const struct spi_nor_fixups macronix_qpp4b_fixups = {
+> +	.post_sfdp = macronix_qpp4b_post_sfdp_fixups,
+>  };
+> 
+>  static const struct flash_info macronix_nor_parts[] = {
+> @@ -102,11 +120,13 @@ static const struct flash_info 
+> macronix_nor_parts[] = {
+>  		.size = SZ_64M,
+>  		.no_sfdp_flags = SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
+>  		.fixup_flags = SPI_NOR_4B_OPCODES,
+> +		.fixups = &macronix_qpp4b_fixups,
+>  	}, {
+>  		.id = SNOR_ID(0xc2, 0x20, 0x1b),
+>  		.name = "mx66l1g45g",
+>  		.size = SZ_128M,
+>  		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
+> +		.fixups = &macronix_qpp4b_fixups,
+>  	}, {
+>  		.id = SNOR_ID(0xc2, 0x23, 0x14),
+>  		.name = "mx25v8035f",
+> @@ -154,18 +174,21 @@ static const struct flash_info 
+> macronix_nor_parts[] = {
+>  		.size = SZ_64M,
+>  		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
+>  		.fixup_flags = SPI_NOR_4B_OPCODES,
+> +		.fixups = &macronix_qpp4b_fixups,
+>  	}, {
+>  		.id = SNOR_ID(0xc2, 0x25, 0x3a),
+>  		.name = "mx66u51235f",
+>  		.size = SZ_64M,
+>  		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
+>  		.fixup_flags = SPI_NOR_4B_OPCODES,
+> +		.fixups = &macronix_qpp4b_fixups,
+>  	}, {
+>  		.id = SNOR_ID(0xc2, 0x25, 0x3c),
+>  		.name = "mx66u2g45g",
+>  		.size = SZ_256M,
+>  		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
+>  		.fixup_flags = SPI_NOR_4B_OPCODES,
+> +		.fixups = &macronix_qpp4b_fixups,
+>  	}, {
+>  		.id = SNOR_ID(0xc2, 0x26, 0x18),
+>  		.name = "mx25l12855e",
+
+Could you also please share the SFDP dumps of these flashes with us?
+
+Thanks,
+-michael
