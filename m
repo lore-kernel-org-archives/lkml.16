@@ -1,71 +1,103 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC851E261F
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 13:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 182512417FE;
+	Fri,  7 Feb 2025 13:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738933206; cv=none; b=hQt1/p/Hxqwp0EBovMAcwye1ICiHQRzyM9pZcmifBo4hKaV37c3eVGlBDkcB3cBmKyDqBLk8r5unbNNlklIEG0yF+XZDPbjEXwNbl1o3XUKajrXg2DKb/E6X14EZsthSJGF0YfjFNYILKkPa0aaA63TacZHuffG7qYYLvrbGKng=
+	t=1738933275; cv=none; b=T29iy19kuohPzMk3+VYJ+tY/g6gEl84oMoclLXkTCqpfDc9u5NUQhaDUo5I+dy+QpJ6/JOC3kBpAsbUDzXknL51BwHE0KcPm3Q2sSu0YjfrpimqoMr1DAlbK6/81vwJULvFpZ2Hm9gngjBGRZRafKwzB9d9tPRWRjp0/0q2jviU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738933206; c=relaxed/simple;
-	bh=SyQQAJTUFy4leBdQ4t01g2LRZfdnpy2UO2td1UJ6ZH4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=QLE8McSq+Sg9/vwi3uQ/FZWABwtL1tn7IUTxvCICctFBLEzXqpuwmJpsA+R2+n/7MIHww+93d6N1NdJdTt9Ce9ZF1ItlJBa6O8iIKhlVUiuCNS3s1zTsphe0td0Zf86AXDU6q/yf+NiTp8HdsKuZY9qassHEVNzkva7qh3piVbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ce81a40f5cso32346725ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 05:00:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738933203; x=1739538003;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XkaJEa0TUKx7j+Qzg/Pj77okuDTlfjSAB2YMcmAh+40=;
-        b=KF7qjEuefaIG4k/5KGwwjRChIMHmVnlQMRtcGv+Dp/kukM8EdYeiFWv9AmMsaZLXVZ
-         JO0tV23Jkwqk7CVZ6FOjbE3tVlIhWchh4KQU5QEmtK9NeBekwdMBHm4VCjK7jZrAIahy
-         qSZRMv7DHjYWwsRyGVJrBebND+6lLX/MX/ryH3bgbkURLEWirIjrx+T258PQY1xc5RdN
-         iJzkoGw1XRWpaP3u6GxQPkjiGRWV6wAByeGZFJrXEr7KeM+m+wQj7EzoI0wkNHjauVIP
-         Dk7BNAcTNKM6ZycX1oKiwI9sIH1bndngyD1FqVx/svXFSDbM+GRn1c3dUpyModHj0Tzm
-         8Nuw==
-X-Gm-Message-State: AOJu0YzhhLR5Ez+TB1OhMsF2x1JsZmrRjVuWCoapHTdRXnnzAokrG0KO
-	8mwcNAC12g2qhLfIYkD1ebuWa3UiokrYByKOFW/O4ADJrsxv+x4FJDMc+baEgh3ud0vq2Htor+M
-	+4U6A4num/YMJv1eL5YCwMu3XCotWp/224+fG+6qbk1CI96ru9mGusos=
-X-Google-Smtp-Source: AGHT+IHo6iptwjLHoC008fHeJacExFtQ/yt4FPE1JbrxuJqLWT87wWnkGmISoMyjSe2C5AN0OuiPUpU7sVlah+CBRFAEPkA9cbfA
+	s=arc-20240116; t=1738933275; c=relaxed/simple;
+	bh=Ri+nZKhrqNqc4K6NynU1QfDk1qq/yEzFehK1JRmB5q8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=jXoFUcy8q+XegIRs/aiUVXSfz9pJa38ly6/y54zhDXW97V2yh/4FIOcu45NvVMukX/5I3TW4e6q5M3yzAqQ1kc2NICsX12i3uZy1rRx/5unRUSogE5jYtts6z4xK0Uveyptl66x30px6rBs/6kn2e2siNxLbBQjePBkXw3DJaiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p5d8RaYe; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p5d8RaYe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86F57C4CED6;
+	Fri,  7 Feb 2025 13:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738933274;
+	bh=Ri+nZKhrqNqc4K6NynU1QfDk1qq/yEzFehK1JRmB5q8=;
+	h=From:Date:Subject:To:Cc:From;
+	b=p5d8RaYeBUhddRQvltb2j5Wc/pwV5SIZiqgwdwveFYtxRYjxBWFTuaYOWB+wBBDzS
+	 dFao1r9KJPoHzLnpFJqGOhmuPiT6nDrhaerMtLBcuy0gFdPs5OGAnkCG18mZniIasr
+	 n04TpLDe4/92MHfB4sWTG+2tUvDARgxpSKiBt1AxFb7sI2UY8Wug12SSLVNEFSetMR
+	 aYWObCzmeYILgCcfcV0WrEjivAg2unuuP84KyTjnobmeEraGJNrCNr/8wduj59cxOg
+	 /2OFyr4QmqSQfd9DngZTpORRRXfdqLna6u7hB/15WTEKifh5i4QvNY2w/Ej7+rHz8c
+	 TgthbgA4e+9cQ==
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-3eb7f3b1342so1077154b6e.1;
+        Fri, 07 Feb 2025 05:01:14 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXdfWfvDyxLRveKsSCeJvbuwxxEY3Mu8Y//Wy9pWl3scxdEr1MNIArsni0OasS0MZEinWw2tsOngxNCXSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywrd+I+iseod4hICAOer1T5OpIxIp9o9PbV193OdwXUIISzbj3F
+	j8JT4l3T/AMQK+nBNQwVrWrGwzZxWiK1Bs2TYNE1xT0bNuIPC7BWuU3vF2wDjEl6b46gg0+7/Oi
+	nwfZ+Fcy65mLmhadpqSdORmdEdwQ=
+X-Google-Smtp-Source: AGHT+IGDKZGSlFQXEoQ9r7INWiaurDqemMuFbZGmORsYRZs5Ad39G3qermyXYv8nzNaBWrJ8ybp7AxqGkjeb48HrVNs=
+X-Received: by 2002:a05:6808:181c:b0:3eb:6dd3:12bf with SMTP id
+ 5614622812f47-3f392340277mr2194231b6e.28.1738933273796; Fri, 07 Feb 2025
+ 05:01:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3a07:b0:3d0:164e:958 with SMTP id
- e9e14a558f8ab-3d13df21e54mr21741905ab.17.1738933203284; Fri, 07 Feb 2025
- 05:00:03 -0800 (PST)
-Date: Fri, 07 Feb 2025 05:00:03 -0800
-In-Reply-To: <20250207122525.2703519-1-lizhi.xu@windriver.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a603d3.050a0220.2b1e6.0022.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] BUG: corrupted list in hci_chan_del (2)
-From: syzbot <syzbot+10bd8fe6741eedd2be2e@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
-	syzkaller-bugs@googlegroups.com
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 7 Feb 2025 14:01:02 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hOVsML89netZiY751QiPqQD-7mUYxpdJFwNmxgxu6JZA@mail.gmail.com>
+X-Gm-Features: AWEUYZkxaEmVneClcUk3VaH3LiRB1q8kbPCkhQqfDtFTFo_KNqCp1DVjctCWvXM
+Message-ID: <CAJZ5v0hOVsML89netZiY751QiPqQD-7mUYxpdJFwNmxgxu6JZA@mail.gmail.com>
+Subject: [GIT PULL] ACPI fixes for v6.14-rc2
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Hi Linus,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Please pull from the tag
 
-Reported-by: syzbot+10bd8fe6741eedd2be2e@syzkaller.appspotmail.com
-Tested-by: syzbot+10bd8fe6741eedd2be2e@syzkaller.appspotmail.com
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ acpi-6.14-rc2
 
-Tested on:
+with top-most commit 3e3e377dd1f300bbdd230533686ce9c9f4f8a90d
 
-commit:         ed58d103 Add linux-next specific files for 20250207
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=133af3df980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=244a34ec1429746
-dashboard link: https://syzkaller.appspot.com/bug?extid=10bd8fe6741eedd2be2e
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=12bd21b0580000
+ Merge branches 'acpi-property' and 'acpi-resource'
 
-Note: testing is done by a robot and is best-effort only.
+on top of commit 2014c95afecee3e76ca4a56956a936e23283f05b
+
+ Linux 6.14-rc1
+
+to receive ACPI fixes for 6.14-rc2.
+
+These fix three assorted issues, including one recent regression:
+
+ - Add an ACPI IRQ override quirk for Eluktronics MECH-17 to make the
+   internal keyboard work (Gannon Kolding).
+
+ - Make acpi_data_prop_read() reflect the OF counterpart behavior in
+   error cases (Andy Shevchenko).
+
+ - Remove recently added strict ACPI PRM handler address checks that
+   prevented PRM from working on some platforms in the field (Aubrey
+   Li).
+
+Thanks!
+
+
+---------------
+
+Andy Shevchenko (1):
+      ACPI: property: Fix return value for nval == 0 in acpi_data_prop_read()
+
+Aubrey Li (1):
+      ACPI: PRM: Remove unnecessary strict handler address checks
+
+Gannon Kolding (1):
+      ACPI: resource: IRQ override for Eluktronics MECH-17
+
+---------------
+
+ drivers/acpi/prmt.c     |  4 +---
+ drivers/acpi/property.c | 10 +++++-----
+ drivers/acpi/resource.c |  6 ++++++
+ 3 files changed, 12 insertions(+), 8 deletions(-)
