@@ -1,1466 +1,187 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2086.outbound.protection.outlook.com [40.107.95.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0BE220698;
-	Fri,  7 Feb 2025 14:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738937412; cv=none; b=ozSjQvJSmHMcT2bYkfEWgUwH3NO8oDhRhY7mAZX0HeAA/kNBeyBM75b84ntASae1yGDLKJPWitb0OO8Am7oAp5tBSdBtejMF35beCbi1OVOeDPOolZw0ygCBRml+P8aLYbUXUUjrqrMuENtBH8eNSxGP5sYhlip0yp5yoo6RJPs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738937412; c=relaxed/simple;
-	bh=NYw9RFJaf0Ua3MDcgFE8PCU+lJVTfEmlttFGcGzRXmM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Jj9WRIBM/ym46bGl5gEN+JgJ9r/aMvS4M+wUuMGvZDB3IhbUo73Mh+m9jmM4PYTBE5kw3riaBLGqxKSibWFDKTNP6hrrAOvJIOVYGAszV1OOK6hMyqtyO8OI3vdMUtlyMNw0Um5XRhzxdI58ypqNoedAnoBruTVPJiMCA1iNSGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=ACwYLHTI; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45641F1509;
+	Fri,  7 Feb 2025 14:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738937508; cv=fail; b=BWJIseIDWhSdHUWf3c+VckoCOfd2LkmUsyekZ78kVOde//mWR/gY0PICJAkozyxYEo/+5wlk2aYOQ1VY5aGsXv2tnWXLTY70UcFpYMpMG9FL/2FeKo7b1HZvZfJqzzOsitF49ks1Yi5IVphGPeANspK8g6ipXfB/zDnyt8RYzcA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738937508; c=relaxed/simple;
+	bh=+bxhiaF7bFrKrgDKEOsvDBerqICeFxwsxv9hsUvazdc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LRWMqzJgIG24HO+mu5f3fivy2ZYt48fYe6wNXvV3QjZIzkVbsG0lDRmF0zrsy7bad9O7DrxWntIh3eugwCgW/LnxkAoFMtSbKs0u/mUF/pVKyNMzemTdnKioOnT7c21+IEb0i75grmyn4QkcW0o9ZWjzFnCeVCc7s3MZoGsVb0I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=sproWXJQ; arc=fail smtp.client-ip=40.107.95.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="ACwYLHTI"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517D7hDp009155;
-	Fri, 7 Feb 2025 09:10:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=m963a
-	dpLNzYRiBhYjdaLqLGf1lLlWgfap3NO6YL0vbM=; b=ACwYLHTIeceA3tz96GyUi
-	nRt0OJvB0WPae5J6nQ8ICSIHDeX16IOubOe3rQPCtv3b3/L0j0Ip2o/jFBMWJkN+
-	stOMHDuaZe2nnfvSPIzviu48kfMK5PXfk0ipmYt4esLgOPzGlWtB7dSvFvTXfte7
-	g+3b5aiQoylc+xECvsCUauumNB++MBu9akGtdlwyvJuLz/uFaEteYN/YFN6qQweT
-	/deHkwAMEfad0in6GL+L9CgA6MSir3VdXi0rTY5V6+Nkd8LiHoPppz+raqSuP6Mp
-	joDoDoSR2JophGDgMSo4uV0aAFQGMqbnMAuxe1ah8LMd2x+DDYAhXIfYOju0kklV
-	Q==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 44njsq079g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 09:10:03 -0500 (EST)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 517EA2it008529
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 7 Feb 2025 09:10:02 -0500
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 7 Feb 2025 09:10:02 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 7 Feb 2025 09:10:01 -0500
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 7 Feb 2025 09:10:01 -0500
-Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.147])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 517E9a4v015095;
-	Fri, 7 Feb 2025 09:09:56 -0500
-From: Antoniu Miclaus <antoniu.miclaus@analog.com>
-To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>
-CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Subject: [PATCH v12 9/9] iio: adc: ad4851: add ad485x driver
-Date: Fri, 7 Feb 2025 16:09:18 +0200
-Message-ID: <20250207140918.7814-10-antoniu.miclaus@analog.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250207140918.7814-1-antoniu.miclaus@analog.com>
-References: <20250207140918.7814-1-antoniu.miclaus@analog.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="sproWXJQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dyDdbr8srFSuH/2ynWZfzyubECCJcOTOWXR586DLJpHp8YgO5OGTsZDugOmzFwTnUbFNCCMhqYU/9gCsADoJg+EPib8L8XiDe6g2qDulWIfQedU1bq+b8wzAmHvVv0PIdPS436145OyIk+bmHyPG892OqJB6/B1lyyYbs0Q2af6cmWFMZ7hQRfELeyOe0M30SzYg5mEVHfWF4N/UdqCKpIEQ4juvWnCzi49YIA+Kg+bpqhRP0DImhPz/z/N6GhnnHxTezzG6gLGiysBJmyChpgKdHz0wlTRStwTItJFhOFDH3u8UAfpnkeiBdcQBwr9L5Hf9I+mc2l7AXMqu0uuPEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RNF9t1H1iylBGp9kfoFugSOoJ0egJZ2N/VVJ4zrcz6k=;
+ b=E5QQWaWOZ92yY1VwZGYAUNubHD/2c9KKcGT5dmbDAno7nPS57+p3BEYcwTYjG5UxF0dk3u821JPZ6uIFr4MNj5lX8mD4XNfKvKC95jf4SAF8Ci/WEGyio8LA0FTb8q7ziYCUIp7zZj8zFLOdFWMKT8qA467xyplXlFv6NwZRxGuJGedapGajlafGCaJISnkcuFgxrsv2ow458sQ/pTHzf5YSK8LzBACIlvrm1mZws/UhdHR5G/RcgfBbZ543OYs6WHE5QrxgPQuw6IYJ48w84+vYywGguAL1angFx4jixFRN7J/mX504taQxrzhiHDjBz+APAxFcpPcupoLysG5mqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RNF9t1H1iylBGp9kfoFugSOoJ0egJZ2N/VVJ4zrcz6k=;
+ b=sproWXJQ/RPT8DHXlitoK7Ak/OrEj1U+P7sfTayt1eL84FVcZrSCHJMLzh0V9tQfB3SRAZs2Gtx9e2jYwh5084/RUYh9gFd8CDEq1fhf4JYXY6aFF/XhvVyQaIgaCcvYoGEgCBk61tAm3tC+W6lUGT+b8nGVID8HvLIVzx9HB+shbOiQXOGrL5h1CKnEwfsShCGAFgwDspucInsGLJw2bC1muFFKuvLgjzxxYZC5ZMRz/uKgtWOCyMT6xeH78GbD9/+3VVjZ/TcjcSKJNr7qnsX2gOvHcZotLW5PC8knBmFtvMiOJbwEPYkyRmmZYZ8vbc7PHRVZXP+TfmnPFf0yZQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ MW4PR12MB7312.namprd12.prod.outlook.com (2603:10b6:303:21a::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.10; Fri, 7 Feb
+ 2025 14:11:42 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8422.012; Fri, 7 Feb 2025
+ 14:11:42 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: linux-mm@kvack.org,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Hugh Dickins <hughd@google.com>,
+ David Hildenbrand <david@redhat.com>, Yang Shi <yang@os.amperecomputing.com>,
+ Miaohe Lin <linmiaohe@huawei.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Yu Zhao <yuzhao@google.com>, John Hubbard <jhubbard@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/7] Buddy allocator like (or non-uniform) folio split
+Date: Fri, 07 Feb 2025 09:11:39 -0500
+X-Mailer: MailMate (2.0r6222)
+Message-ID: <019EB6CA-0F4B-496A-B2AE-A3A553585281@nvidia.com>
+In-Reply-To: <20250206000111.6c54e67d1933f8bbc01a46cd@linux-foundation.org>
+References: <20250205031417.1771278-1-ziy@nvidia.com>
+ <20250206000111.6c54e67d1933f8bbc01a46cd@linux-foundation.org>
+Content-Type: text/plain
+X-ClientProxiedBy: BL1PR13CA0420.namprd13.prod.outlook.com
+ (2603:10b6:208:2c2::35) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=Bdgi0qt2 c=1 sm=1 tr=0 ts=67a6143b cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=T2h4t0Lz3GQA:10 a=gAnH3GRIAAAA:8 a=PdnLphnlRHatXsZTSfAA:9 a=oVHKYsEdi7-vN-J5QA_j:22
-X-Proofpoint-ORIG-GUID: GYE30s_MKDK7e5rt7tD_apofQwftTG1d
-X-Proofpoint-GUID: GYE30s_MKDK7e5rt7tD_apofQwftTG1d
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_06,2025-02-07_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=0 adultscore=0 phishscore=0 priorityscore=1501
- mlxlogscore=999 clxscore=1015 spamscore=0 impostorscore=0 bulkscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502070108
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|MW4PR12MB7312:EE_
+X-MS-Office365-Filtering-Correlation-Id: 11adc471-c64c-4090-9fa5-08dd478158a5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?wNBNfR8DWIGBmUJDaoob4pVClYGkfhSdNAjsAtoKh46hsS1Q25v5yPocf6bo?=
+ =?us-ascii?Q?ETP1e09vLKX1/D2GB4IXGVE2kYd3GhlOIB39wIXZBWpdXMfPf+bVmJjbNACz?=
+ =?us-ascii?Q?xfwojERmiRUKO45wzscjJPMSsu+Kg2txJb+zMq3/FwUEOALPdPDybBq5wJcd?=
+ =?us-ascii?Q?gmKIzSYHlrlBHhHnfiFi3YmgYAz3DY90oRN0GUHv0fBN3u+M4BqHrw2vonM6?=
+ =?us-ascii?Q?k/F1tkAzvanzwFJmdQHwspOwYAhQLXagNd6c2MTcIA9BKc8HdTU6IEugW7cc?=
+ =?us-ascii?Q?KoqqeL+mL37HGby8XmuJWfR9F4XO8i0gKcIEp8TpVLfrANwj4DFlGMDC4198?=
+ =?us-ascii?Q?cDQymmJPqVFofW1FIf10D6BMqGDUDkziWuY74KpK2BCmFHt81oUX/M6zwl/Z?=
+ =?us-ascii?Q?Ocd3uRXdzfn6awVRIuS2NzI+ClVyUWkvzYWlH1PjVsTvO0Ct4oLwcuG2BmRP?=
+ =?us-ascii?Q?9D2Pme7QFOztfwcmG4EKsXuSWQpUXqQ+9clntPBPNmL26HMR01sFBTxkWEOa?=
+ =?us-ascii?Q?mOtBp1Vban9vZrFVXkgsgA7h/4kR7pSlbJfXCNVTi3p/JWvyXcl7pJyyT05r?=
+ =?us-ascii?Q?pCV7hvPIn9Qzmc7ts/Inps3eQBoPBBbFIEjPoGeUjZAT57YnadPhLjxfHv3t?=
+ =?us-ascii?Q?OxqJD9uuEU1TaKL6uZObsX+HTPwprIg9/o0BwLbNpEjS1siGBVPE8CLFQTo3?=
+ =?us-ascii?Q?okSUPVwxSY/HeBvs9P0sWNLRkfjCGK7/4EJX7d5lB46OJCEtiwNngzj9E9Cd?=
+ =?us-ascii?Q?sreqRSP7k7sF/bOPzMK1AZZb7+20VVmEtammk5REGFi82UGDrZXOxuP8wetA?=
+ =?us-ascii?Q?Wg9+0XBskpsZ70rZCITkEfG4srEc1iNXZ5015OmPiG+PdlNOVAx0EQjWLe+A?=
+ =?us-ascii?Q?auh9EUYOIQsjqy2tHtaZnIrD7QNqzrii70p0MhFHjLv3CIziRu5FUlz+ixrh?=
+ =?us-ascii?Q?JtD9NOr0RVMY9TztDWKQOM2uO7Ryw5+zaTpRciQIFYcGMUVNsw7SUdLzjQu3?=
+ =?us-ascii?Q?t7y+GCPqZnDP3wevudkL3pb4hEuN6OYbd+6Z1aO/LCVvEqVI36I/BgVRI+Un?=
+ =?us-ascii?Q?36PeKfSgJgtI/k17jdVfk2hwhKImIVcDJH8cz09svTnNwYc2AQwtPXrLNQcO?=
+ =?us-ascii?Q?rHl1EIPErAonpX7HC45CvoDYkSwLO9aIGz1xfAs+MgML85KlNIqNK5e+ofX1?=
+ =?us-ascii?Q?2e/tDZnxhdtEq5nhHLn1w2TZwAYaNjw5vDV9NowC2AXSd4B8UFHq6Zvo+N97?=
+ =?us-ascii?Q?o56WCBxO81BPVbEf9x12jXeMYLPigPYcfB5MmfrNKXehSJRMRNcQ1l5o/rC1?=
+ =?us-ascii?Q?9NZAQsZ+XLIYA+qCOPtIt7DcnWyz8ng4bp4C8iqSniKldKq1eiQo9iRrf5Zs?=
+ =?us-ascii?Q?OWhmlRw+eeCd2cfEhsPCxVpJrrT7?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?siWhneEoqq3weNy1LOQd5C2QhldlhI2W6MAF86HhI3TQLDhXSlr2ytOvni6T?=
+ =?us-ascii?Q?2KP03u63N87lcwBUFDznErigvXkQi1UTyfUqh/pfgD0J92b3y4diDZRZDkVo?=
+ =?us-ascii?Q?v3QqWhMtZf9vmOLO0HxZNssLC++mppDe+PvvwjICfVCMyKXAih2e/HkHLsAe?=
+ =?us-ascii?Q?T+KQXB5oOTT7T7omtO8F8u57hwCylJgpo84yNz2AYHW9vZsvtoE7w6zr2Nrm?=
+ =?us-ascii?Q?cT8b6j7k3bNwt1VHT0QQKly/4DSoSup3XV/ggzsTwOi2lmipsWJ8E2croaLt?=
+ =?us-ascii?Q?a1Qi2P3PX0Mk2nWLlTTuyH9ir2Z+oN3o6CMYdeBjkn/jTsrDJkRVR+wurvnn?=
+ =?us-ascii?Q?rU++hG1lhRY3Zjl/NR4NAUyJjBV7knAx71lwm6aqSNZokkfXS17k9nBuzpLt?=
+ =?us-ascii?Q?j4P1flqFnuKG7VCuJqowemnEmOvpcZT7ZiA+Px6xolvRuFJxJfMb2Zm/EHnd?=
+ =?us-ascii?Q?s4p4iaJT5LQ3WQgfl1ggWUCeBrLgcMELOqc7AZgGQZDoGphatfaRuLbddGeE?=
+ =?us-ascii?Q?OBAM8iC9HvbGYqOSyCgfe2ghEpWc4XmRuSMYxJxVJ0UyjDwY9kem3D4rkboE?=
+ =?us-ascii?Q?/Naww5xvNY5z+URwHYPEN9jKRZ6ksqgGo79lVT0qR8YgSRUOHyElAIprJfED?=
+ =?us-ascii?Q?lYw6gfpW0eUBbXgz9w5xwWK07a1D0dGr7WJWQyp1WgXVovtar174sS96SHmB?=
+ =?us-ascii?Q?r6PVZn+Jkyyp7yN6yhB7Gc0FhrCmbIeYsWLw4BXjAvDcehNSc3QEuQUc5HXK?=
+ =?us-ascii?Q?oTfb9GDoMbBdDNb8eLii5I/rF2qt/O508pA46Km0SpDEiXM08CI17d0a1Tmp?=
+ =?us-ascii?Q?wySQYVwJ/G9N8DNkhvQPHj6VDwWig1pj4M3qVBi5JSk1GQ83IGxVCgsq1RDs?=
+ =?us-ascii?Q?+4aXAf85J4JlQRYS+JUACkwG75VfwTB5YRXj8f4tBntEKTd8KuDU37xCQmXt?=
+ =?us-ascii?Q?DVhkp9JGbr2GxiS62qT90YUpjhTLL04hkZeZ6SzxaqdF0cjrBigeebpI8I+6?=
+ =?us-ascii?Q?/he0/UPJ3Byxfjz8gU9zjOy7Vq3bGQy36JNP8rd9q3WT9fQlq3K/k6WXrnAn?=
+ =?us-ascii?Q?3zrS3xciv7IfFVKxHEFVNGwZJ696X03j59xvMSX0UOCP8HmuYImsfYpBeznt?=
+ =?us-ascii?Q?KEAHX+rzdm6nfJYxF0LyV169TOmLYi5ZcxgozXqLbOS0rh5idCOdYN+rT+4z?=
+ =?us-ascii?Q?yIs8efBRfU5DmhydaknUMeRyUBeo9FFhjDgPbzlFqXk6h6+M818Dfur2/Xif?=
+ =?us-ascii?Q?DDY2Y2Q5a3SuUgidZp5oNcyvBRDgqj4RtTBAP3w5s86dFQ2DPlmH+tWIK+WO?=
+ =?us-ascii?Q?ZnF7iOEBf56a6Aj5duQhy9pBnBc+pPx7D2IXkx7bmJbO5uANP6kGTCqr8YXl?=
+ =?us-ascii?Q?xsE54V6Q9OKMCsnnp6tRU8kwZ8TKjU1waFXXrHPgB3A9sXLfr/n6X72DVqMh?=
+ =?us-ascii?Q?PzoUBMEjf/32taYKBcuyn3KPHlXJceSWtpUU9x7ljRR0B6cg+DEkm26tRqom?=
+ =?us-ascii?Q?JfUDihcJNPveBDSnbSP/S6L7VXVWUzjKEeNTODXgdIwiDXlo6vswlXAbBUmw?=
+ =?us-ascii?Q?yJosexvByCL6ylfsO2pP42zfvAw9tg56qwh0rr8k?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11adc471-c64c-4090-9fa5-08dd478158a5
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 14:11:42.1208
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NkYclZKLdjYC2mE/oWhOi2voY7DgZoxc6H4GgAhyI+nXrauQBax42D2i1imj4f27
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7312
 
-Add support for the AD485X a fully buffered, 8-channel simultaneous
-sampling, 16/20-bit, 1 MSPS data acquisition system (DAS) with
-differential, wide common-mode range inputs.
+On 6 Feb 2025, at 3:01, Andrew Morton wrote:
 
-Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
----
-changes in v12.
- - drop trailing comma.
- - rework parse_channels_common function as suggested in prev review.
- - check ret first, reg after.
- - use fwnode_property_read_bool instead of fwnode_property_present for
-   consistency.
- drivers/iio/adc/Kconfig  |   14 +
- drivers/iio/adc/Makefile |    1 +
- drivers/iio/adc/ad4851.c | 1316 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 1331 insertions(+)
- create mode 100644 drivers/iio/adc/ad4851.c
+> On Tue,  4 Feb 2025 22:14:10 -0500 Zi Yan <ziy@nvidia.com> wrote:
+>
+>> This patchset adds a new buddy allocator like (or non-uniform) large folio
+>> split to reduce the total number of after-split folios, the amount of memory
+>> needed for multi-index xarray split, and keep more large folios after a split.
+>
+> It would be useful (vital, really) to provide some measurements which
+> help others understand the magnitude of these resource savings, please.
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 849c90203071..afd83fddda76 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -61,6 +61,20 @@ config AD4695
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called ad4695.
- 
-+config AD4851
-+	tristate "Analog Device AD4851 DAS Driver"
-+	depends on SPI
-+	depends on PWM
-+	select REGMAP_SPI
-+	select IIO_BACKEND
-+	help
-+	  Say yes here to build support for Analog Devices AD4851, AD4852,
-+	  AD4853, AD4854, AD4855, AD4856, AD4857, AD4858, AD4858I high speed
-+	  data acquisition system (DAS).
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called ad4851.
-+
- config AD7091R
- 	tristate
- 
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index ee19afba62b7..e4d8ba12f841 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_AD_SIGMA_DELTA) += ad_sigma_delta.o
- obj-$(CONFIG_AD4000) += ad4000.o
- obj-$(CONFIG_AD4130) += ad4130.o
- obj-$(CONFIG_AD4695) += ad4695.o
-+obj-$(CONFIG_AD4851) += ad4851.o
- obj-$(CONFIG_AD7091R) += ad7091r-base.o
- obj-$(CONFIG_AD7091R5) += ad7091r5.o
- obj-$(CONFIG_AD7091R8) += ad7091r8.o
-diff --git a/drivers/iio/adc/ad4851.c b/drivers/iio/adc/ad4851.c
-new file mode 100644
-index 000000000000..01cc88ecad52
---- /dev/null
-+++ b/drivers/iio/adc/ad4851.c
-@@ -0,0 +1,1316 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Analog Devices AD4851 DAS driver
-+ *
-+ * Copyright 2024 Analog Devices Inc.
-+ */
-+
-+#include <linux/array_size.h>
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/minmax.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/spi/spi.h>
-+#include <linux/types.h>
-+#include <linux/unaligned.h>
-+#include <linux/units.h>
-+
-+#include <linux/iio/backend.h>
-+#include <linux/iio/iio.h>
-+
-+#define AD4851_REG_INTERFACE_CONFIG_A	0x00
-+#define AD4851_REG_INTERFACE_CONFIG_B	0x01
-+#define AD4851_REG_PRODUCT_ID_L		0x04
-+#define AD4851_REG_PRODUCT_ID_H		0x05
-+#define AD4851_REG_DEVICE_CTRL		0x25
-+#define AD4851_REG_PACKET		0x26
-+#define AD4851_REG_OVERSAMPLE		0x27
-+
-+#define AD4851_REG_CH_CONFIG_BASE	0x2A
-+#define AD4851_REG_CHX_SOFTSPAN(ch)	((0x12 * (ch)) + AD4851_REG_CH_CONFIG_BASE)
-+#define AD4851_REG_CHX_OFFSET(ch)	(AD4851_REG_CHX_SOFTSPAN(ch) + 0x01)
-+#define AD4851_REG_CHX_OFFSET_LSB(ch)	AD4851_REG_CHX_OFFSET(ch)
-+#define AD4851_REG_CHX_OFFSET_MID(ch)	(AD4851_REG_CHX_OFFSET_LSB(ch) + 0x01)
-+#define AD4851_REG_CHX_OFFSET_MSB(ch)	(AD4851_REG_CHX_OFFSET_MID(ch) + 0x01)
-+#define AD4851_REG_CHX_GAIN(ch)		(AD4851_REG_CHX_OFFSET(ch) + 0x03)
-+#define AD4851_REG_CHX_GAIN_LSB(ch)	AD4851_REG_CHX_GAIN(ch)
-+#define AD4851_REG_CHX_GAIN_MSB(ch)	(AD4851_REG_CHX_GAIN(ch) + 0x01)
-+#define AD4851_REG_CHX_PHASE(ch)	(AD4851_REG_CHX_GAIN(ch) + 0x02)
-+#define AD4851_REG_CHX_PHASE_LSB(ch)	AD4851_REG_CHX_PHASE(ch)
-+#define AD4851_REG_CHX_PHASE_MSB(ch)	(AD4851_REG_CHX_PHASE_LSB(ch) + 0x01)
-+
-+#define AD4851_REG_TESTPAT_0(c)		(0x38 + (c) * 0x12)
-+#define AD4851_REG_TESTPAT_1(c)		(0x39 + (c) * 0x12)
-+#define AD4851_REG_TESTPAT_2(c)		(0x3A + (c) * 0x12)
-+#define AD4851_REG_TESTPAT_3(c)		(0x3B + (c) * 0x12)
-+
-+#define AD4851_SW_RESET			(BIT(7) | BIT(0))
-+#define AD4851_SDO_ENABLE		BIT(4)
-+#define AD4851_SINGLE_INSTRUCTION	BIT(7)
-+#define AD4851_REFBUF			BIT(2)
-+#define AD4851_REFSEL			BIT(1)
-+#define AD4851_ECHO_CLOCK_MODE		BIT(0)
-+
-+#define AD4851_PACKET_FORMAT_0		0
-+#define AD4851_PACKET_FORMAT_1		1
-+#define AD4851_PACKET_FORMAT_MASK	GENMASK(1, 0)
-+
-+#define AD4851_OS_EN_MSK		BIT(7)
-+#define AD4851_OS_RATIO_MSK		GENMASK(3, 0)
-+
-+#define AD4851_TEST_PAT			BIT(2)
-+
-+#define AD4858_PACKET_SIZE_20		0
-+#define AD4858_PACKET_SIZE_24		1
-+#define AD4858_PACKET_SIZE_32		2
-+
-+#define AD4857_PACKET_SIZE_16		0
-+#define AD4857_PACKET_SIZE_24		1
-+
-+#define AD4851_TESTPAT_0_DEFAULT	0x2A
-+#define AD4851_TESTPAT_1_DEFAULT	0x3C
-+#define AD4851_TESTPAT_2_DEFAULT	0xCE
-+#define AD4851_TESTPAT_3_DEFAULT(c)	(0x0A + (0x10 * (c)))
-+
-+#define AD4851_SOFTSPAN_0V_2V5		0
-+#define AD4851_SOFTSPAN_N2V5_2V5	1
-+#define AD4851_SOFTSPAN_0V_5V		2
-+#define AD4851_SOFTSPAN_N5V_5V		3
-+#define AD4851_SOFTSPAN_0V_6V25		4
-+#define AD4851_SOFTSPAN_N6V25_6V25	5
-+#define AD4851_SOFTSPAN_0V_10V		6
-+#define AD4851_SOFTSPAN_N10V_10V	7
-+#define AD4851_SOFTSPAN_0V_12V5		8
-+#define AD4851_SOFTSPAN_N12V5_12V5	9
-+#define AD4851_SOFTSPAN_0V_20V		10
-+#define AD4851_SOFTSPAN_N20V_20V	11
-+#define AD4851_SOFTSPAN_0V_25V		12
-+#define AD4851_SOFTSPAN_N25V_25V	13
-+#define AD4851_SOFTSPAN_0V_40V		14
-+#define AD4851_SOFTSPAN_N40V_40V	15
-+
-+#define AD4851_MAX_LANES		8
-+#define AD4851_MAX_IODELAY		32
-+
-+#define AD4851_T_CNVH_NS		40
-+#define AD4851_T_CNVH_NS_MARGIN		10
-+
-+#define AD4841_MAX_SCALE_AVAIL		8
-+
-+#define AD4851_MAX_CH_NR		8
-+#define AD4851_CH_START			0
-+
-+struct ad4851_scale {
-+	unsigned int scale_val;
-+	u8 reg_val;
-+};
-+
-+static const struct ad4851_scale ad4851_scale_table_unipolar[] = {
-+	{ 2500, 0x0 },
-+	{ 5000, 0x2 },
-+	{ 6250, 0x4 },
-+	{ 10000, 0x6 },
-+	{ 12500, 0x8 },
-+	{ 20000, 0xA },
-+	{ 25000, 0xC },
-+	{ 40000, 0xE },
-+};
-+
-+static const struct ad4851_scale ad4851_scale_table_bipolar[] = {
-+	{ 5000, 0x1 },
-+	{ 10000, 0x3 },
-+	{ 12500, 0x5 },
-+	{ 20000, 0x7 },
-+	{ 25000, 0x9 },
-+	{ 40000, 0xB },
-+	{ 50000, 0xD },
-+	{ 80000, 0xF },
-+};
-+
-+static const unsigned int ad4851_scale_avail_unipolar[] = {
-+	2500,
-+	5000,
-+	6250,
-+	10000,
-+	12500,
-+	20000,
-+	25000,
-+	40000,
-+};
-+
-+static const unsigned int ad4851_scale_avail_bipolar[] = {
-+	5000,
-+	10000,
-+	12500,
-+	20000,
-+	25000,
-+	40000,
-+	50000,
-+	80000,
-+};
-+
-+struct ad4851_chip_info {
-+	const char *name;
-+	unsigned int product_id;
-+	int num_scales;
-+	unsigned long max_sample_rate_hz;
-+	unsigned int resolution;
-+	unsigned int max_channels;
-+	int (*parse_channels)(struct iio_dev *indio_dev);
-+};
-+
-+enum {
-+	AD4851_SCAN_TYPE_NORMAL,
-+	AD4851_SCAN_TYPE_RESOLUTION_BOOST,
-+};
-+
-+struct ad4851_state {
-+	struct spi_device *spi;
-+	struct pwm_device *cnv;
-+	struct iio_backend *back;
-+	/*
-+	 * Synchronize access to members the of driver state, and ensure
-+	 * atomicity of consecutive regmap operations.
-+	 */
-+	struct mutex lock;
-+	struct regmap *regmap;
-+	const struct ad4851_chip_info *info;
-+	struct gpio_desc *pd_gpio;
-+	bool resolution_boost_enabled;
-+	unsigned long cnv_trigger_rate_hz;
-+	unsigned int osr;
-+	bool vrefbuf_en;
-+	bool vrefio_en;
-+	bool bipolar_ch[AD4851_MAX_CH_NR];
-+	unsigned int scales_unipolar[AD4841_MAX_SCALE_AVAIL][2];
-+	unsigned int scales_bipolar[AD4841_MAX_SCALE_AVAIL][2];
-+};
-+
-+static int ad4851_reg_access(struct iio_dev *indio_dev,
-+			     unsigned int reg,
-+			     unsigned int writeval,
-+			     unsigned int *readval)
-+{
-+	struct ad4851_state *st = iio_priv(indio_dev);
-+
-+	if (readval)
-+		return regmap_read(st->regmap, reg, readval);
-+
-+	return regmap_write(st->regmap, reg, writeval);
-+}
-+
-+static int ad4851_set_sampling_freq(struct ad4851_state *st, unsigned int freq)
-+{
-+	struct pwm_state cnv_state = {
-+		.duty_cycle = AD4851_T_CNVH_NS + AD4851_T_CNVH_NS_MARGIN,
-+		.enabled = true,
-+	};
-+	int ret;
-+
-+	freq = clamp(freq, 1, st->info->max_sample_rate_hz);
-+
-+	cnv_state.period = DIV_ROUND_UP_ULL(NSEC_PER_SEC, freq);
-+
-+	ret = pwm_apply_might_sleep(st->cnv, &cnv_state);
-+	if (ret)
-+		return ret;
-+
-+	st->cnv_trigger_rate_hz = freq;
-+
-+	return 0;
-+}
-+
-+static const int ad4851_oversampling_ratios[] = {
-+	1, 2, 4, 8, 16,	32, 64, 128,
-+	256, 512, 1024, 2048, 4096, 8192, 16384, 32768,
-+	65536,
-+};
-+
-+static int ad4851_osr_to_regval(unsigned int ratio)
-+{
-+	int i;
-+
-+	for (i = 1; i < ARRAY_SIZE(ad4851_oversampling_ratios); i++)
-+		if (ratio == ad4851_oversampling_ratios[i])
-+			return i - 1;
-+
-+	return -EINVAL;
-+}
-+
-+static int __ad4851_get_scale(struct iio_dev *indio_dev, int scale_tbl,
-+			      unsigned int *val, unsigned int *val2)
-+{
-+	const struct iio_scan_type *scan_type;
-+	unsigned int tmp;
-+
-+	scan_type = iio_get_current_scan_type(indio_dev, &indio_dev->channels[0]);
-+	if (IS_ERR(scan_type))
-+		return PTR_ERR(scan_type);
-+
-+	tmp = ((u64)scale_tbl * MICRO) >> scan_type->realbits;
-+	*val = tmp / MICRO;
-+	*val2 = tmp % MICRO;
-+
-+	return 0;
-+}
-+
-+static int ad4851_scale_fill(struct iio_dev *indio_dev)
-+{
-+	struct ad4851_state *st = iio_priv(indio_dev);
-+	unsigned int i, val1, val2;
-+	int ret;
-+
-+	for (i = 0; i < ARRAY_SIZE(ad4851_scale_avail_unipolar); i++) {
-+		ret = __ad4851_get_scale(indio_dev,
-+					 ad4851_scale_avail_unipolar[i],
-+					 &val1, &val2);
-+		if (ret)
-+			return ret;
-+
-+		st->scales_unipolar[i][0] = val1;
-+		st->scales_unipolar[i][1] = val2;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(ad4851_scale_avail_bipolar); i++) {
-+		ret = __ad4851_get_scale(indio_dev,
-+					 ad4851_scale_avail_bipolar[i],
-+					 &val1, &val2);
-+		if (ret)
-+			return ret;
-+
-+		st->scales_bipolar[i][0] = val1;
-+		st->scales_bipolar[i][1] = val2;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ad4851_set_oversampling_ratio(struct iio_dev *indio_dev,
-+					 const struct iio_chan_spec *chan,
-+					 unsigned int osr)
-+{
-+	struct ad4851_state *st = iio_priv(indio_dev);
-+	int val, ret;
-+
-+	guard(mutex)(&st->lock);
-+
-+	if (osr == 1) {
-+		ret = regmap_clear_bits(st->regmap, AD4851_REG_OVERSAMPLE,
-+					AD4851_OS_EN_MSK);
-+		if (ret)
-+			return ret;
-+	} else {
-+		val = ad4851_osr_to_regval(osr);
-+		if (val < 0)
-+			return -EINVAL;
-+
-+		ret = regmap_update_bits(st->regmap, AD4851_REG_OVERSAMPLE,
-+					 AD4851_OS_EN_MSK |
-+					 AD4851_OS_RATIO_MSK,
-+					 FIELD_PREP(AD4851_OS_EN_MSK, 1) |
-+					 FIELD_PREP(AD4851_OS_RATIO_MSK, val));
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = iio_backend_oversampling_ratio_set(st->back, osr);
-+	if (ret)
-+		return ret;
-+
-+	switch (st->info->resolution) {
-+	case 20:
-+		switch (osr) {
-+		case 0:
-+			return -EINVAL;
-+		case 1:
-+			val = 20;
-+			break;
-+		default:
-+			val = 24;
-+			break;
-+		}
-+		break;
-+	case 16:
-+		val = 16;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = iio_backend_data_size_set(st->back, val);
-+	if (ret)
-+		return ret;
-+
-+	if (osr == 1 || st->info->resolution == 16) {
-+		ret = regmap_clear_bits(st->regmap, AD4851_REG_PACKET,
-+					AD4851_PACKET_FORMAT_MASK);
-+		if (ret)
-+			return ret;
-+
-+		st->resolution_boost_enabled = false;
-+	} else {
-+		ret = regmap_update_bits(st->regmap, AD4851_REG_PACKET,
-+					 AD4851_PACKET_FORMAT_MASK,
-+					 FIELD_PREP(AD4851_PACKET_FORMAT_MASK, 1));
-+		if (ret)
-+			return ret;
-+
-+		st->resolution_boost_enabled = true;
-+	}
-+
-+	if (st->osr != osr) {
-+		ret = ad4851_scale_fill(indio_dev);
-+		if (ret)
-+			return ret;
-+
-+		st->osr = osr;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ad4851_get_oversampling_ratio(struct ad4851_state *st, unsigned int *val)
-+{
-+	unsigned int osr;
-+	int ret;
-+
-+	guard(mutex)(&st->lock);
-+
-+	ret = regmap_read(st->regmap, AD4851_REG_OVERSAMPLE, &osr);
-+	if (ret)
-+		return ret;
-+
-+	if (!FIELD_GET(AD4851_OS_EN_MSK, osr))
-+		*val = 1;
-+	else
-+		*val = ad4851_oversampling_ratios[FIELD_GET(AD4851_OS_RATIO_MSK, osr) + 1];
-+
-+	st->osr = *val;
-+
-+	return IIO_VAL_INT;
-+}
-+
-+static void ad4851_pwm_disable(void *data)
-+{
-+	pwm_disable(data);
-+}
-+
-+static int ad4851_setup(struct ad4851_state *st)
-+{
-+	unsigned int product_id;
-+	int ret;
-+
-+	if (st->pd_gpio) {
-+		/* To initiate a global reset, bring the PD pin high twice */
-+		gpiod_set_value(st->pd_gpio, 1);
-+		fsleep(1);
-+		gpiod_set_value(st->pd_gpio, 0);
-+		fsleep(1);
-+		gpiod_set_value(st->pd_gpio, 1);
-+		fsleep(1);
-+		gpiod_set_value(st->pd_gpio, 0);
-+		fsleep(1000);
-+	} else {
-+		ret = regmap_set_bits(st->regmap, AD4851_REG_INTERFACE_CONFIG_A,
-+				      AD4851_SW_RESET);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (st->vrefbuf_en) {
-+		ret = regmap_set_bits(st->regmap, AD4851_REG_DEVICE_CTRL,
-+				      AD4851_REFBUF);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (st->vrefio_en) {
-+		ret = regmap_set_bits(st->regmap, AD4851_REG_DEVICE_CTRL,
-+				      AD4851_REFSEL);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = regmap_write(st->regmap, AD4851_REG_INTERFACE_CONFIG_B,
-+			   AD4851_SINGLE_INSTRUCTION);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(st->regmap, AD4851_REG_INTERFACE_CONFIG_A,
-+			   AD4851_SDO_ENABLE);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_read(st->regmap, AD4851_REG_PRODUCT_ID_L, &product_id);
-+	if (ret)
-+		return ret;
-+
-+	if (product_id != st->info->product_id)
-+		dev_info(&st->spi->dev, "Unknown product ID: 0x%02X\n",
-+			 product_id);
-+
-+	ret = regmap_set_bits(st->regmap, AD4851_REG_DEVICE_CTRL,
-+			      AD4851_ECHO_CLOCK_MODE);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_write(st->regmap, AD4851_REG_PACKET, 0);
-+}
-+
-+/*
-+ * Find the longest consecutive sequence of false values from field
-+ * and return starting index.
-+ */
-+static int ad4851_find_opt(const unsigned long *field, unsigned int start,
-+			   unsigned int nbits, unsigned int *val)
-+{
-+	unsigned int bit = start, end, start_cnt, cnt = 0;
-+
-+	for_each_clear_bitrange_from(bit, end, field, start + nbits) {
-+		if (end - bit > cnt) {
-+			cnt = end - bit;
-+			start_cnt = bit - start;
-+		}
-+	}
-+
-+	if (!cnt)
-+		return -ENOENT;
-+
-+	*val = start_cnt;
-+
-+	return cnt;
-+}
-+
-+static int ad4851_calibrate(struct iio_dev *indio_dev)
-+{
-+	struct ad4851_state *st = iio_priv(indio_dev);
-+	unsigned int opt_delay, num_lanes, delay, i, s, c;
-+	enum iio_backend_interface_type interface_type;
-+	DECLARE_BITMAP(pn_status, AD4851_MAX_LANES * AD4851_MAX_IODELAY);
-+	bool status;
-+	int ret;
-+
-+	ret = iio_backend_interface_type_get(st->back, &interface_type);
-+	if (ret)
-+		return ret;
-+
-+	switch (interface_type) {
-+	case IIO_BACKEND_INTERFACE_SERIAL_CMOS:
-+		num_lanes = indio_dev->num_channels;
-+		break;
-+	case IIO_BACKEND_INTERFACE_SERIAL_LVDS:
-+		num_lanes = 1;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (st->info->resolution == 16) {
-+		ret = iio_backend_data_size_set(st->back, 24);
-+		if (ret)
-+			return ret;
-+
-+		ret = regmap_write(st->regmap, AD4851_REG_PACKET,
-+				   AD4851_TEST_PAT | AD4857_PACKET_SIZE_24);
-+		if (ret)
-+			return ret;
-+	} else {
-+		ret = iio_backend_data_size_set(st->back, 32);
-+		if (ret)
-+			return ret;
-+
-+		ret = regmap_write(st->regmap, AD4851_REG_PACKET,
-+				   AD4851_TEST_PAT | AD4858_PACKET_SIZE_32);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	for (i = 0; i < indio_dev->num_channels; i++) {
-+		ret = regmap_write(st->regmap, AD4851_REG_TESTPAT_0(i),
-+				   AD4851_TESTPAT_0_DEFAULT);
-+		if (ret)
-+			return ret;
-+
-+		ret = regmap_write(st->regmap, AD4851_REG_TESTPAT_1(i),
-+				   AD4851_TESTPAT_1_DEFAULT);
-+		if (ret)
-+			return ret;
-+
-+		ret = regmap_write(st->regmap, AD4851_REG_TESTPAT_2(i),
-+				   AD4851_TESTPAT_2_DEFAULT);
-+		if (ret)
-+			return ret;
-+
-+		ret = regmap_write(st->regmap, AD4851_REG_TESTPAT_3(i),
-+				   AD4851_TESTPAT_3_DEFAULT(i));
-+		if (ret)
-+			return ret;
-+
-+		ret = iio_backend_chan_enable(st->back,
-+					      indio_dev->channels[i].channel);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	for (i = 0; i < num_lanes; i++) {
-+		for (delay = 0; delay < AD4851_MAX_IODELAY; delay++) {
-+			ret = iio_backend_iodelay_set(st->back, i, delay);
-+			if (ret)
-+				return ret;
-+
-+			ret = iio_backend_chan_status(st->back, i, &status);
-+			if (ret)
-+				return ret;
-+
-+			__assign_bit(i * AD4851_MAX_IODELAY + delay, pn_status,
-+				     status);
-+		}
-+	}
-+
-+	for (i = 0; i < num_lanes; i++) {
-+		c = ad4851_find_opt(pn_status, i * AD4851_MAX_IODELAY,
-+				    AD4851_MAX_IODELAY, &s);
-+		if (c < 0)
-+			return c;
-+
-+		opt_delay = s + c / 2;
-+		ret = iio_backend_iodelay_set(st->back, i, opt_delay);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	for (i = 0; i < indio_dev->num_channels; i++) {
-+		ret = iio_backend_chan_disable(st->back, i);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = iio_backend_data_size_set(st->back, 20);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_write(st->regmap, AD4851_REG_PACKET, 0);
-+}
-+
-+static int ad4851_get_calibscale(struct ad4851_state *st, int ch, int *val, int *val2)
-+{
-+	unsigned int reg_val;
-+	int gain;
-+	int ret;
-+
-+	guard(mutex)(&st->lock);
-+
-+	ret = regmap_read(st->regmap, AD4851_REG_CHX_GAIN_MSB(ch), &reg_val);
-+	if (ret)
-+		return ret;
-+
-+	gain = reg_val << 8;
-+
-+	ret = regmap_read(st->regmap, AD4851_REG_CHX_GAIN_LSB(ch), &reg_val);
-+	if (ret)
-+		return ret;
-+
-+	gain |= reg_val;
-+
-+	*val = gain;
-+	*val2 = 15;
-+
-+	return IIO_VAL_FRACTIONAL_LOG2;
-+}
-+
-+static int ad4851_set_calibscale(struct ad4851_state *st, int ch, int val,
-+				 int val2)
-+{
-+	u64 gain;
-+	u8 buf[2];
-+	int ret;
-+
-+	if (val < 0 || val2 < 0)
-+		return -EINVAL;
-+
-+	gain = val * MICRO + val2;
-+	gain = DIV_U64_ROUND_CLOSEST(gain * 32768, MICRO);
-+
-+	put_unaligned_be16(gain, buf);
-+
-+	guard(mutex)(&st->lock);
-+
-+	ret = regmap_write(st->regmap, AD4851_REG_CHX_GAIN_MSB(ch), buf[0]);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_write(st->regmap, AD4851_REG_CHX_GAIN_LSB(ch), buf[1]);
-+}
-+
-+static int ad4851_get_calibbias(struct ad4851_state *st, int ch, int *val)
-+{
-+	unsigned int lsb, mid, msb;
-+	int ret;
-+
-+	guard(mutex)(&st->lock);
-+	/*
-+	 * After testing, the bulk_write operations doesn't work as expected
-+	 * here since the cs needs to be raised after each byte transaction.
-+	 */
-+	ret = regmap_read(st->regmap, AD4851_REG_CHX_OFFSET_MSB(ch), &msb);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_read(st->regmap, AD4851_REG_CHX_OFFSET_MID(ch), &mid);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_read(st->regmap, AD4851_REG_CHX_OFFSET_LSB(ch), &lsb);
-+	if (ret)
-+		return ret;
-+
-+	if (st->info->resolution == 16) {
-+		*val = msb << 8;
-+		*val |= mid;
-+		*val = sign_extend32(*val, 15);
-+	} else {
-+		*val = msb << 12;
-+		*val |= mid << 4;
-+		*val |= lsb >> 4;
-+		*val = sign_extend32(*val, 19);
-+	}
-+
-+	return IIO_VAL_INT;
-+}
-+
-+static int ad4851_set_calibbias(struct ad4851_state *st, int ch, int val)
-+{
-+	u8 buf[3];
-+	int ret;
-+
-+	if (val < 0)
-+		return -EINVAL;
-+
-+	if (st->info->resolution == 16)
-+		put_unaligned_be16(val, buf);
-+	else
-+		put_unaligned_be24(val << 4, buf);
-+
-+	guard(mutex)(&st->lock);
-+	/*
-+	 * After testing, the bulk_write operations doesn't work as expected
-+	 * here since the cs needs to be raised after each byte transaction.
-+	 */
-+	ret = regmap_write(st->regmap, AD4851_REG_CHX_OFFSET_LSB(ch), buf[2]);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(st->regmap, AD4851_REG_CHX_OFFSET_MID(ch), buf[1]);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_write(st->regmap, AD4851_REG_CHX_OFFSET_MSB(ch), buf[0]);
-+}
-+
-+static int ad4851_set_scale(struct iio_dev *indio_dev,
-+			    const struct iio_chan_spec *chan, int val, int val2)
-+{
-+	struct ad4851_state *st = iio_priv(indio_dev);
-+	unsigned int scale_val[2];
-+	unsigned int i;
-+	const struct ad4851_scale *scale_table;
-+	size_t table_size;
-+	int ret;
-+
-+	if (st->bipolar_ch[chan->channel]) {
-+		scale_table = ad4851_scale_table_bipolar;
-+		table_size = ARRAY_SIZE(ad4851_scale_table_bipolar);
-+	} else {
-+		scale_table = ad4851_scale_table_unipolar;
-+		table_size = ARRAY_SIZE(ad4851_scale_table_unipolar);
-+	}
-+
-+	for (i = 0; i < table_size; i++) {
-+		ret = __ad4851_get_scale(indio_dev, scale_table[i].scale_val,
-+					 &scale_val[0], &scale_val[1]);
-+		if (ret)
-+			return ret;
-+
-+		if (scale_val[0] != val || scale_val[1] != val2)
-+			continue;
-+
-+		return regmap_write(st->regmap,
-+				    AD4851_REG_CHX_SOFTSPAN(chan->channel),
-+				    scale_table[i].reg_val);
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int ad4851_get_scale(struct iio_dev *indio_dev,
-+			    const struct iio_chan_spec *chan, int *val,
-+			    int *val2)
-+{
-+	struct ad4851_state *st = iio_priv(indio_dev);
-+	const struct ad4851_scale *scale_table;
-+	size_t table_size;
-+	u32 softspan_val;
-+	int i, ret;
-+
-+	if (st->bipolar_ch[chan->channel]) {
-+		scale_table = ad4851_scale_table_bipolar;
-+		table_size = ARRAY_SIZE(ad4851_scale_table_bipolar);
-+	} else {
-+		scale_table = ad4851_scale_table_unipolar;
-+		table_size = ARRAY_SIZE(ad4851_scale_table_unipolar);
-+	}
-+
-+	ret = regmap_read(st->regmap, AD4851_REG_CHX_SOFTSPAN(chan->channel),
-+			  &softspan_val);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < table_size; i++) {
-+		if (softspan_val == scale_table[i].reg_val)
-+			break;
-+	}
-+
-+	if (i == table_size)
-+		return -EIO;
-+
-+	ret = __ad4851_get_scale(indio_dev, scale_table[i].scale_val, val,
-+				 val2);
-+	if (ret)
-+		return ret;
-+
-+	return IIO_VAL_INT_PLUS_MICRO;
-+}
-+
-+static int ad4851_read_raw(struct iio_dev *indio_dev,
-+			   const struct iio_chan_spec *chan,
-+			   int *val, int *val2, long info)
-+{
-+	struct ad4851_state *st = iio_priv(indio_dev);
-+
-+	switch (info) {
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		*val = st->cnv_trigger_rate_hz;
-+		*val2 = st->osr;
-+		return IIO_VAL_FRACTIONAL;
-+	case IIO_CHAN_INFO_CALIBSCALE:
-+		return ad4851_get_calibscale(st, chan->channel, val, val2);
-+	case IIO_CHAN_INFO_SCALE:
-+		return ad4851_get_scale(indio_dev, chan, val, val2);
-+	case IIO_CHAN_INFO_CALIBBIAS:
-+		return ad4851_get_calibbias(st, chan->channel, val);
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+		return ad4851_get_oversampling_ratio(st, val);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ad4851_write_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int val, int val2, long info)
-+{
-+	struct ad4851_state *st = iio_priv(indio_dev);
-+
-+	switch (info) {
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		if (val < 0 || val2 < 0)
-+			return -EINVAL;
-+		return ad4851_set_sampling_freq(st, val * st->osr + val2 * st->osr / MICRO);
-+	case IIO_CHAN_INFO_SCALE:
-+		return ad4851_set_scale(indio_dev, chan, val, val2);
-+	case IIO_CHAN_INFO_CALIBSCALE:
-+		return ad4851_set_calibscale(st, chan->channel, val, val2);
-+	case IIO_CHAN_INFO_CALIBBIAS:
-+		return ad4851_set_calibbias(st, chan->channel, val);
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+		return ad4851_set_oversampling_ratio(indio_dev, chan, val);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ad4851_update_scan_mode(struct iio_dev *indio_dev,
-+				   const unsigned long *scan_mask)
-+{
-+	struct ad4851_state *st = iio_priv(indio_dev);
-+	unsigned int c;
-+	int ret;
-+
-+	for (c = 0; c < indio_dev->num_channels; c++) {
-+		if (test_bit(c, scan_mask))
-+			ret = iio_backend_chan_enable(st->back, c);
-+		else
-+			ret = iio_backend_chan_disable(st->back, c);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ad4851_read_avail(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan,
-+			     const int **vals, int *type, int *length,
-+			     long mask)
-+{
-+	struct ad4851_state *st = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SCALE:
-+		if (st->bipolar_ch[chan->channel]) {
-+			*vals = (const int *)st->scales_bipolar;
-+			*type = IIO_VAL_INT_PLUS_MICRO;
-+			/* Values are stored in a 2D matrix */
-+			*length = ARRAY_SIZE(ad4851_scale_avail_bipolar) * 2;
-+		} else {
-+			*vals = (const int *)st->scales_unipolar;
-+			*type = IIO_VAL_INT_PLUS_MICRO;
-+			/* Values are stored in a 2D matrix */
-+			*length = ARRAY_SIZE(ad4851_scale_avail_unipolar) * 2;
-+		}
-+		return IIO_AVAIL_LIST;
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+		*vals = ad4851_oversampling_ratios;
-+		*length = ARRAY_SIZE(ad4851_oversampling_ratios);
-+		*type = IIO_VAL_INT;
-+		return IIO_AVAIL_LIST;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_scan_type ad4851_scan_type_20_u[] = {
-+	[AD4851_SCAN_TYPE_NORMAL] = {
-+		.sign = 'u',
-+		.realbits = 20,
-+		.storagebits = 32,
-+	},
-+	[AD4851_SCAN_TYPE_RESOLUTION_BOOST] = {
-+		.sign = 'u',
-+		.realbits = 24,
-+		.storagebits = 32,
-+	},
-+};
-+
-+static const struct iio_scan_type ad4851_scan_type_20_b[] = {
-+	[AD4851_SCAN_TYPE_NORMAL] = {
-+		.sign = 's',
-+		.realbits = 20,
-+		.storagebits = 32,
-+	},
-+	[AD4851_SCAN_TYPE_RESOLUTION_BOOST] = {
-+		.sign = 's',
-+		.realbits = 24,
-+		.storagebits = 32,
-+	},
-+};
-+
-+static int ad4851_get_current_scan_type(const struct iio_dev *indio_dev,
-+					const struct iio_chan_spec *chan)
-+{
-+	struct ad4851_state *st = iio_priv(indio_dev);
-+
-+	return st->resolution_boost_enabled ? AD4851_SCAN_TYPE_RESOLUTION_BOOST
-+					    : AD4851_SCAN_TYPE_NORMAL;
-+}
-+
-+#define AD4851_IIO_CHANNEL							\
-+	.type = IIO_VOLTAGE,							\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_CALIBSCALE) |			\
-+		BIT(IIO_CHAN_INFO_CALIBBIAS) |					\
-+		BIT(IIO_CHAN_INFO_SCALE),					\
-+	.info_mask_separate_available = BIT(IIO_CHAN_INFO_SCALE),		\
-+	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ) |		\
-+		BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),				\
-+	.info_mask_shared_by_all_available =					\
-+		BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),				\
-+	.indexed = 1
-+
-+/*
-+ * In case of AD4858_IIO_CHANNEL the scan_type is handled dynamically during the
-+ * parse_channels function.
-+ */
-+#define AD4858_IIO_CHANNEL							\
-+{										\
-+	AD4851_IIO_CHANNEL							\
-+}
-+
-+#define AD4857_IIO_CHANNEL							\
-+{										\
-+	AD4851_IIO_CHANNEL,							\
-+	.scan_type = {								\
-+		.sign = 'u',							\
-+		.realbits = 16,							\
-+		.storagebits = 16,						\
-+	},									\
-+}
-+
-+static int ad4851_parse_channels_common(struct iio_dev *indio_dev,
-+					struct iio_chan_spec **chans,
-+					const struct iio_chan_spec ad4851_chan)
-+{
-+	struct ad4851_state *st = iio_priv(indio_dev);
-+	struct device *dev = &st->spi->dev;
-+	struct iio_chan_spec *channels, *chan_start;
-+	unsigned int num_channels, reg;
-+	unsigned int index = 0;
-+	int ret;
-+
-+	num_channels = device_get_child_node_count(dev);
-+	if (num_channels > AD4851_MAX_CH_NR)
-+		return dev_err_probe(dev, -EINVAL, "Too many channels: %u\n",
-+				     num_channels);
-+
-+	channels = devm_kcalloc(dev, num_channels, sizeof(*channels), GFP_KERNEL);
-+	if (!channels)
-+		return -ENOMEM;
-+
-+	chan_start = channels;
-+
-+	device_for_each_child_node_scoped(dev, child) {
-+		ret = fwnode_property_read_u32(child, "reg", &reg);
-+		if (ret)
-+			return dev_err_probe(dev, ret,
-+					     "Missing channel number\n");
-+		if (reg >= AD4851_MAX_CH_NR)
-+			return dev_err_probe(dev, ret,
-+					     "Invalid channel number\n");
-+		*channels = ad4851_chan;
-+		channels->scan_index = index++;
-+		channels->channel = reg;
-+
-+		if (fwnode_property_present(child, "diff-channels")) {
-+			channels->channel2 = reg + st->info->max_channels;
-+			channels->differential = 1;
-+		}
-+
-+		st->bipolar_ch[reg] = fwnode_property_read_bool(child, "bipolar");
-+
-+		if (st->bipolar_ch[reg]) {
-+			channels->scan_type.sign = 's';
-+		} else {
-+			ret = regmap_write(st->regmap, AD4851_REG_CHX_SOFTSPAN(reg),
-+					   AD4851_SOFTSPAN_0V_40V);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		channels++;
-+	}
-+
-+	*chans = chan_start;
-+
-+	return num_channels;
-+}
-+
-+static int ad4857_parse_channels(struct iio_dev *indio_dev)
-+{
-+	struct iio_chan_spec *ad4851_channels;
-+	const struct iio_chan_spec ad4851_chan = AD4857_IIO_CHANNEL;
-+	int ret;
-+
-+	ret = ad4851_parse_channels_common(indio_dev, &ad4851_channels,
-+					   ad4851_chan);
-+	if (ret < 0)
-+		return ret;
-+
-+	indio_dev->channels = ad4851_channels;
-+	indio_dev->num_channels = ret;
-+
-+	return 0;
-+}
-+
-+static int ad4858_parse_channels(struct iio_dev *indio_dev)
-+{
-+	struct ad4851_state *st = iio_priv(indio_dev);
-+	struct device *dev = &st->spi->dev;
-+	struct iio_chan_spec *ad4851_channels;
-+	const struct iio_chan_spec ad4851_chan = AD4858_IIO_CHANNEL;
-+	int ret;
-+
-+	ret = ad4851_parse_channels_common(indio_dev, &ad4851_channels,
-+					   ad4851_chan);
-+	if (ret < 0)
-+		return ret;
-+
-+	device_for_each_child_node_scoped(dev, child) {
-+		ad4851_channels->has_ext_scan_type = 1;
-+		if (fwnode_property_read_bool(child, "bipolar")) {
-+			ad4851_channels->ext_scan_type = ad4851_scan_type_20_b;
-+			ad4851_channels->num_ext_scan_type = ARRAY_SIZE(ad4851_scan_type_20_b);
-+
-+		} else {
-+			ad4851_channels->ext_scan_type = ad4851_scan_type_20_u;
-+			ad4851_channels->num_ext_scan_type = ARRAY_SIZE(ad4851_scan_type_20_u);
-+		}
-+		ad4851_channels++;
-+	}
-+
-+	indio_dev->channels = ad4851_channels;
-+	indio_dev->num_channels = ret;
-+
-+	return 0;
-+}
-+
-+/*
-+ * parse_channels() function handles the rest of the channel related attributes
-+ * that are usually are stored in the chip info structure.
-+ */
-+static const struct ad4851_chip_info ad4851_info = {
-+	.name = "ad4851",
-+	.product_id = 0x67,
-+	.max_sample_rate_hz = 250 * KILO,
-+	.resolution = 16,
-+	.max_channels = AD4851_MAX_CH_NR,
-+	.parse_channels = ad4857_parse_channels,
-+};
-+
-+static const struct ad4851_chip_info ad4852_info = {
-+	.name = "ad4852",
-+	.product_id = 0x66,
-+	.max_sample_rate_hz = 250 * KILO,
-+	.resolution = 20,
-+	.max_channels = AD4851_MAX_CH_NR,
-+	.parse_channels = ad4858_parse_channels,
-+};
-+
-+static const struct ad4851_chip_info ad4853_info = {
-+	.name = "ad4853",
-+	.product_id = 0x65,
-+	.max_sample_rate_hz = 1 * MEGA,
-+	.resolution = 16,
-+	.max_channels = AD4851_MAX_CH_NR,
-+	.parse_channels = ad4857_parse_channels,
-+};
-+
-+static const struct ad4851_chip_info ad4854_info = {
-+	.name = "ad4854",
-+	.product_id = 0x64,
-+	.max_sample_rate_hz = 1 * MEGA,
-+	.resolution = 20,
-+	.max_channels = AD4851_MAX_CH_NR,
-+	.parse_channels = ad4858_parse_channels,
-+};
-+
-+static const struct ad4851_chip_info ad4855_info = {
-+	.name = "ad4855",
-+	.product_id = 0x63,
-+	.max_sample_rate_hz = 250 * KILO,
-+	.resolution = 16,
-+	.max_channels = AD4851_MAX_CH_NR,
-+	.parse_channels = ad4857_parse_channels,
-+};
-+
-+static const struct ad4851_chip_info ad4856_info = {
-+	.name = "ad4856",
-+	.product_id = 0x62,
-+	.max_sample_rate_hz = 250 * KILO,
-+	.resolution = 20,
-+	.max_channels = AD4851_MAX_CH_NR,
-+	.parse_channels = ad4858_parse_channels,
-+};
-+
-+static const struct ad4851_chip_info ad4857_info = {
-+	.name = "ad4857",
-+	.product_id = 0x61,
-+	.max_sample_rate_hz = 1 * MEGA,
-+	.resolution = 16,
-+	.max_channels = AD4851_MAX_CH_NR,
-+	.parse_channels = ad4857_parse_channels,
-+};
-+
-+static const struct ad4851_chip_info ad4858_info = {
-+	.name = "ad4858",
-+	.product_id = 0x60,
-+	.max_sample_rate_hz = 1 * MEGA,
-+	.resolution = 20,
-+	.max_channels = AD4851_MAX_CH_NR,
-+	.parse_channels = ad4858_parse_channels,
-+};
-+
-+static const struct ad4851_chip_info ad4858i_info = {
-+	.name = "ad4858i",
-+	.product_id = 0x6F,
-+	.max_sample_rate_hz = 1 * MEGA,
-+	.resolution = 20,
-+	.max_channels = AD4851_MAX_CH_NR,
-+	.parse_channels = ad4858_parse_channels,
-+};
-+
-+static const struct iio_info ad4851_iio_info = {
-+	.debugfs_reg_access = ad4851_reg_access,
-+	.read_raw = ad4851_read_raw,
-+	.write_raw = ad4851_write_raw,
-+	.update_scan_mode = ad4851_update_scan_mode,
-+	.get_current_scan_type = ad4851_get_current_scan_type,
-+	.read_avail = ad4851_read_avail,
-+};
-+
-+static const struct regmap_config regmap_config = {
-+	.reg_bits = 16,
-+	.val_bits = 8,
-+	.read_flag_mask = BIT(7),
-+};
-+
-+static const char * const ad4851_power_supplies[] = {
-+	"vcc",	"vdd", "vee", "vio",
-+};
-+
-+static int ad4851_probe(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev;
-+	struct device *dev = &spi->dev;
-+	struct ad4851_state *st;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	st = iio_priv(indio_dev);
-+	st->spi = spi;
-+
-+	ret = devm_mutex_init(dev, &st->lock);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_regulator_bulk_get_enable(dev,
-+					     ARRAY_SIZE(ad4851_power_supplies),
-+					     ad4851_power_supplies);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "failed to get and enable supplies\n");
-+
-+	ret = devm_regulator_get_enable_optional(dev, "vddh");
-+	if (ret < 0 && ret != -ENODEV)
-+		return dev_err_probe(dev, ret, "failed to enable vddh voltage\n");
-+
-+	ret = devm_regulator_get_enable_optional(dev, "vddl");
-+	if (ret < 0 && ret != -ENODEV)
-+		return dev_err_probe(dev, ret, "failed to enable vddl voltage\n");
-+
-+	ret = devm_regulator_get_enable_optional(dev, "vrefbuf");
-+	if (ret < 0 && ret != -ENODEV)
-+		return dev_err_probe(dev, ret, "failed to enable vrefbuf voltage\n");
-+
-+	st->vrefbuf_en = ret != -ENODEV;
-+
-+	ret = devm_regulator_get_enable_optional(dev, "vrefio");
-+	if (ret < 0 && ret != -ENODEV)
-+		return dev_err_probe(dev, ret, "failed to enable vrefio voltage\n");
-+
-+	st->vrefio_en = ret != -ENODEV;
-+
-+	st->pd_gpio = devm_gpiod_get_optional(dev, "pd", GPIOD_OUT_LOW);
-+	if (IS_ERR(st->pd_gpio))
-+		return dev_err_probe(dev, PTR_ERR(st->pd_gpio),
-+				     "Error on requesting pd GPIO\n");
-+
-+	st->cnv = devm_pwm_get(dev, NULL);
-+	if (IS_ERR(st->cnv))
-+		return dev_err_probe(dev, PTR_ERR(st->cnv),
-+				     "Error on requesting pwm\n");
-+
-+	st->info = spi_get_device_match_data(spi);
-+	if (!st->info)
-+		return -ENODEV;
-+
-+	st->regmap = devm_regmap_init_spi(spi, &regmap_config);
-+	if (IS_ERR(st->regmap))
-+		return PTR_ERR(st->regmap);
-+
-+	ret = ad4851_set_sampling_freq(st, HZ_PER_MHZ);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(&st->spi->dev, ad4851_pwm_disable,
-+				       st->cnv);
-+	if (ret)
-+		return ret;
-+
-+	ret = ad4851_setup(st);
-+	if (ret)
-+		return ret;
-+
-+	indio_dev->name = st->info->name;
-+	indio_dev->info = &ad4851_iio_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	ret = st->info->parse_channels(indio_dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = ad4851_scale_fill(indio_dev);
-+	if (ret)
-+		return ret;
-+
-+	st->back = devm_iio_backend_get(dev, NULL);
-+	if (IS_ERR(st->back))
-+		return PTR_ERR(st->back);
-+
-+	ret = devm_iio_backend_request_buffer(dev, st->back, indio_dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_iio_backend_enable(dev, st->back);
-+	if (ret)
-+		return ret;
-+
-+	ret = ad4851_calibrate(indio_dev);
-+	if (ret)
-+		return ret;
-+
-+	return devm_iio_device_register(dev, indio_dev);
-+}
-+
-+static const struct of_device_id ad4851_of_match[] = {
-+	{ .compatible = "adi,ad4851", .data = &ad4851_info, },
-+	{ .compatible = "adi,ad4852", .data = &ad4852_info, },
-+	{ .compatible = "adi,ad4853", .data = &ad4853_info, },
-+	{ .compatible = "adi,ad4854", .data = &ad4854_info, },
-+	{ .compatible = "adi,ad4855", .data = &ad4855_info, },
-+	{ .compatible = "adi,ad4856", .data = &ad4856_info, },
-+	{ .compatible = "adi,ad4857", .data = &ad4857_info, },
-+	{ .compatible = "adi,ad4858", .data = &ad4858_info, },
-+	{ .compatible = "adi,ad4858i", .data = &ad4858i_info, },
-+	{ }
-+};
-+
-+static const struct spi_device_id ad4851_spi_id[] = {
-+	{ "ad4851", (kernel_ulong_t)&ad4851_info },
-+	{ "ad4852", (kernel_ulong_t)&ad4852_info },
-+	{ "ad4853", (kernel_ulong_t)&ad4853_info },
-+	{ "ad4854", (kernel_ulong_t)&ad4854_info },
-+	{ "ad4855", (kernel_ulong_t)&ad4855_info },
-+	{ "ad4856", (kernel_ulong_t)&ad4856_info },
-+	{ "ad4857", (kernel_ulong_t)&ad4857_info },
-+	{ "ad4858", (kernel_ulong_t)&ad4858_info },
-+	{ "ad4858i", (kernel_ulong_t)&ad4858i_info },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(spi, ad4851_spi_id);
-+
-+static struct spi_driver ad4851_driver = {
-+	.probe = ad4851_probe,
-+	.driver = {
-+		.name = "ad4851",
-+		.of_match_table = ad4851_of_match,
-+	},
-+	.id_table = ad4851_spi_id,
-+};
-+module_spi_driver(ad4851_driver);
-+
-+MODULE_AUTHOR("Sergiu Cuciurean <sergiu.cuciurean@analog.com>");
-+MODULE_AUTHOR("Dragos Bogdan <dragos.bogdan@analog.com>");
-+MODULE_AUTHOR("Antoniu Miclaus <antoniu.miclaus@analog.com>");
-+MODULE_DESCRIPTION("Analog Devices AD4851 DAS driver");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("IIO_BACKEND");
--- 
-2.48.1
+Hi Andrew,
 
+Can you please drop this series for now? I find that, after your above request,
+I misunderstood how xas_split_alloc() and xas_split() works in xarray, thus,
+my current implementation allocates more than enough xa_node during non-uniform
+split, although the excessive ones are freed at the end. It defeats the purpose
+of reducing memory consumption of multi-index xarray split, even if
+folio_split() has no function issue AFAICT. I am working on a better
+implementation that might require new xarray operations. I will post it as v7
+later. I really appreciate that you asked about more info above. :)
+
+More details on memory saving for multi-index xarray split during non-uniform
+split compared to existing uniform split (I will add this to commit log in the
+next version):
+
+Existing uniform split requires 2^(order % XA_CHUNK_SHIFT) xa_node allocations
+during split, when the folio needs to be split to order-0. But non-uniform split
+only requires at most 1 xa_node allocation. For example, to split an order-9
+folio, 8 xa_nodes are needed for uniform split, since the folio takes 8
+multi-index slots in the xarray. But for non-uniform split, only the slot
+containing the given struct page needs a xa_node after the split. There will be
+a 7 xa_node saving.
+
+Hi Matthew,
+
+Do you mind checking my statement above on xarray memory saving? And correct me
+if I miss anything. Thanks.
+
+Best Regards,
+Yan, Zi
