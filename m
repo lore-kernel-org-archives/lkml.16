@@ -1,111 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F1B23C8C4;
-	Fri,  7 Feb 2025 22:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848AD1B040E;
+	Fri,  7 Feb 2025 22:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738968570; cv=none; b=ESWkkURAtroe+JZPbef8ytY9Ijo1K27gHMoArBeB40Ry0QvnD0YFcOt8We529PYyFlCt0DQi0eS/85IRFvNafYCMbsVP0wAqnYexIPE3AF5rfwKrkUrkhWtZZ5x/ds3u/CdqQWSxQftKNpil+MGINcxLTi3vvm+p+ifvo1G3pvc=
+	t=1738968981; cv=none; b=MbEH/Np5plujR02Moz4uoj8zQfBPIWUngpXhbqulp1czFqT8ntCB0L3vcrFliKz8heVBHjkw+ZIoeWgvQhQ/vLoCsPZg3kd5tLKXEWjGcTeZskdMBxCs8f+Arwf1ZYB1DsuoQo2MohMrvEWVdxK14RDFmkpjSg3dfM03owQ15L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738968570; c=relaxed/simple;
-	bh=owl9CVvvtG4wUxs40IqT3ipinai74SzRIByVFrvUN8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s3bdr/j6yMijnYvadk4xrNgPs+RxoNR+q2Mzjnal+T3O4gzisIBhWTP2FRyx4jy2gGoABgEczwnZYH0Yf4XiYTwJBudIquAUysdxzxu54f7By6BN7xc8T92wMmosmv48fzxSzreKm7d5AZwSS+ZIaAkmjS61+Ydn0uan0WoRsN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iRDMQFhU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738968981; c=relaxed/simple;
+	bh=J0Zof1jX8lwMfeOx7nFV7wNnWKhmohl7boxXi/fPwN0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LO4PY8DQo471dO8HG1Mqcv2Flz77EORILaNScpjCxjsW+2EEP70o+mHNTdFlSzKE4N8uMdxtHG3vzTL06DUMuyWrOw9A4gGRJxYItFGkVvJWBTZ8TZVzNWRbBFxlU1wB9hGNHuzoondNDyUPbV0WYtr/AOt4Lg0oblItk0sLaMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CNhNQvw3; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iRDMQFhU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26CA0C4CEE2;
-	Fri,  7 Feb 2025 22:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738968570;
-	bh=owl9CVvvtG4wUxs40IqT3ipinai74SzRIByVFrvUN8g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iRDMQFhUqf3Y9j2K4MSyxcguvtSusGJAQ0eqU2s1r9eA6CBTQTwYXcVaOhk45dNQ5
-	 qWxuw8KgkfsOKNLX7rvIBVzdP2vo3Q/aCbQnLWhdR4f71+bTVKPiE2yJKGVthsHyFW
-	 HN7ahdBcfJQGxZPgR9djShZW9SFcvdeRCX33Qd1BTdH3+iZoSmnBAd7Ocy51xwgzTS
-	 MM9Hye8RLeJ0Xu0SwLKszOraecX04CRmygN2O75FQyPrThd97yCU3wZWhe3KCjo7C9
-	 sqnadSr9tfcFsVmeU69d8smXtHsyfI+W1SSBnjUmUvfnprjXlsK/IZwSo77PrqHKEG
-	 pkiy6NoGku1QQ==
-Date: Fri, 7 Feb 2025 22:49:28 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH 3/5] lib/crc32: standardize on crc32c() name for
- Castagnoli CRC32
-Message-ID: <20250207224928.GB2819332@google.com>
-References: <20250205005403.136082-1-ebiggers@kernel.org>
- <20250205005403.136082-4-ebiggers@kernel.org>
- <20250207224233.GA1261167@ax162>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CNhNQvw3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738968979; x=1770504979;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=J0Zof1jX8lwMfeOx7nFV7wNnWKhmohl7boxXi/fPwN0=;
+  b=CNhNQvw39wh4tIoD6zr3a31C4OOglA+Og+lL+ENCcniSYl/APYkrgfhF
+   w4zbdRW6M7TficXsZR6YWskfbZi87xUk6DjbRer32vSbGHWb6r1fSgYHa
+   SGMYmbhOBXTNFAzE4vladduMk3b4xuggFMi1n13AvIxBfGVsW9Bky/lwo
+   W4zexDZzD/iGDp9mCZMo2IFBEfnXY3WMlH4WO+7INx7wx37LZ7IFNydGK
+   7eTYRQR1jVBJnsce4SZosFYBV+XByScxKOr7CTAGcVn8cHJ3O4od68sI3
+   HcgOwsLPpskaf4Y/KmJUiGex/0JLG5bYwbeTh5qW49W8MpdDnL7+/e8JP
+   g==;
+X-CSE-ConnectionGUID: NMEvnQk8QDq0klRXzNCp4g==
+X-CSE-MsgGUID: SQYaJeHUQOC6+Tm29HOAaA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="38855795"
+X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
+   d="scan'208";a="38855795"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 14:56:18 -0800
+X-CSE-ConnectionGUID: XzKn7J1AQR2sKm7JS5F0zw==
+X-CSE-MsgGUID: O2PlMsNGTbKVIxZiwCav5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
+   d="scan'208";a="111421966"
+Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO xpardee-desk.lan) ([10.124.221.44])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 14:56:17 -0800
+From: Xi Pardee <xi.pardee@linux.intel.com>
+To: xi.pardee@linux.intel.com,
+	rajvi0912@gmail.com,
+	irenic.rajneesh@gmail.com,
+	david.e.box@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH v6 0/6] Add Arrow Lake U/H support
+Date: Fri,  7 Feb 2025 14:56:06 -0800
+Message-ID: <20250207225615.401235-1-xi.pardee@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207224233.GA1261167@ax162>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 07, 2025 at 03:42:33PM -0700, Nathan Chancellor wrote:
-> Hi Eric,
-> 
-> On Tue, Feb 04, 2025 at 04:54:01PM -0800, Eric Biggers wrote:
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > For historical reasons, the Castagnoli CRC32 is available under 3 names:
-> > crc32c(), crc32c_le(), __crc32c_le().  Most callers use crc32c().  The
-> > more verbose versions are not really warranted; there is no "_be"
-> > version that the "_le" version needs to be differentiated from, and the
-> > leading underscores are pointless.
-> > 
-> > Therefore, let's standardize on just crc32c().  Remove the other two
-> > names, and update callers accordingly.
-> > 
-> > Specifically, the new crc32c() comes from what was previously
-> > __crc32c_le(), so compared to the old crc32c() it now takes a size_t
-> > length rather than unsigned int, and it's now in linux/crc32.h instead
-> > of just linux/crc32c.h (which includes linux/crc32.h).
-> > 
-> > Later patches will also rename __crc32c_le_combine(), crc32c_le_base(),
-> > and crc32c_le_arch().
-> > 
-> > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ...
-> > diff --git a/include/linux/crc32.h b/include/linux/crc32.h
-> > index 61a7ec29d6338..bc39b023eac0f 100644
-> > --- a/include/linux/crc32.h
-> > +++ b/include/linux/crc32.h
-> > @@ -27,12 +27,11 @@ static inline u32 crc32_be(u32 crc, const void *p, size_t len)
-> >  	if (IS_ENABLED(CONFIG_CRC32_ARCH))
-> >  		return crc32_be_arch(crc, p, len);
-> >  	return crc32_be_base(crc, p, len);
-> >  }
-> >  
-> > -/* TODO: leading underscores should be dropped once callers have been updated */
-> > -static inline u32 __crc32c_le(u32 crc, const void *p, size_t len)
-> > +static inline u32 crc32c(u32 crc, const void *p, size_t len)
-> >  {
-> >  	if (IS_ENABLED(CONFIG_CRC32_ARCH))
-> >  		return crc32c_le_arch(crc, p, len);
-> >  	return crc32c_le_base(crc, p, len);
-> >  }
-> 
-> I think this rename is responsible for a build failure I see with an
-> ARCH=mips configuration on current -next:
-> 
->   $ make -skj"$(nproc)" ARCH=mips CROSS_COMPILE=mips-linux- mrproper 32r6_defconfig arch/mips/lib/crc32-mips.o
->   arch/mips/lib/crc32-mips.c:25:9: error: 'crc32c' redeclared as different kind of symbol
->      25 |         crc32c,
->         |         ^~~~~~
->   In file included from arch/mips/lib/crc32-mips.c:12:
->   include/linux/crc32.h:32:19: note: previous definition of 'crc32c' with type 'u32(u32,  const void *, size_t)' {aka 'unsigned int(unsigned int,  const void *, unsigned int)'}
->      32 | static inline u32 crc32c(u32 crc, const void *p, size_t len)
->         |                   ^~~~~~
-> 
+This patch series contains six patches to add Arrow Lake
+U/H support in intel_pmc_core driver. 
 
-Thanks for pointing this out!  I temporarily dropped the series from crc-next
-and will send out a revised version soon.  The enum value in crc32-mips.c will
-need to be renamed.
+The first five patches are preparation patches. The third
+patch creates a generic init function for all platforms.
+The fourth patch replaces the init functions with pmc_dev_info
+structures in X86_MATCH_VFM() of core.c file. In order to
+support platform specific init actions, the patch also
+adds a init function field in the pmc_dev_info structure.
+The fifth patch moves architecture specific action from
+core.c to init() function in spt.c.
 
-- Eric
+v6->v5:
+- Move arch specific action from core.c to init() function
+  of spt.c
+- Remove core init functions from header and change them
+  to static functions within each file.
+
+v5->v4:
+- Replace DMU with full name.
+- Rename func field to pci_func.
+- Remove arch_specific callback function and replace 
+  generic_core_init completely with arch specific init
+  functions when needed to allow more flexibility.
+
+v4->v3:
+- Remove all per architecture init functions and replace with
+  pmc_dev_info structures in x86_cpu_id structure in core.c.
+- Remove fixup field and add arch_specific field in 
+  pmc_dev_info structure.
+- Move ssram init comment to be function comment.
+- Remove ssram field in pmc_dev_info structure.
+- Captilize PMC
+- Remove PMC_IDX_SOC
+
+v3->v2:
+- Create a generic init function for all platforms
+
+v2->v1:
+- Create an info structure for platform variation information
+- Make generic init function to static in tgl.c
+- Fix typo
+
+Xi Pardee (6):
+  platform/x86:intel/pmc: Make tgl_core_generic_init() static
+  platform/x86/intel/pmc: Remove duplicate enum
+  platform/x86:intel/pmc: Create generic_core_init() for all platforms
+  platform/x86/intel/pmc: Remove simple init functions
+  platform/x86:intel/pmc: Move arch specific action to init function
+  platform/x86/intel/pmc: Add Arrow Lake U/H support to intel_pmc_core
+    driver
+
+ drivers/platform/x86/intel/pmc/adl.c  |  22 ++---
+ drivers/platform/x86/intel/pmc/arl.c  |  79 ++++++++++--------
+ drivers/platform/x86/intel/pmc/cnp.c  |  21 ++---
+ drivers/platform/x86/intel/pmc/core.c | 114 +++++++++++++++++---------
+ drivers/platform/x86/intel/pmc/core.h |  46 ++++++++---
+ drivers/platform/x86/intel/pmc/icl.c  |  18 +---
+ drivers/platform/x86/intel/pmc/lnl.c  |  25 ++----
+ drivers/platform/x86/intel/pmc/mtl.c  |  45 +++-------
+ drivers/platform/x86/intel/pmc/spt.c  |  33 +++++---
+ drivers/platform/x86/intel/pmc/tgl.c  |  39 ++++-----
+ 10 files changed, 228 insertions(+), 214 deletions(-)
+
+-- 
+2.43.0
+
