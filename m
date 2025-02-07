@@ -1,94 +1,155 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6378C1E0DE5
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 13:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486B99454;
+	Fri,  7 Feb 2025 13:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738934529; cv=none; b=bWsFO2LqH7IywNhWPFB1uIDSu6UL1yFr5OpxzkoU6rulhxudI9vmOX+EnGmrsUL7YBONbYFWI4yHuj7UV1Q10yl/ss7K8vLqAb+xoDQkex+FMFBSZcLg2qumJzgYLR3XpkR4ocNSMTXDHKgTSf7GBic1UjcxenEDw56BGLHcHUg=
+	t=1738934528; cv=none; b=XHVlLDVMkRmjKLaI8PFnHyYC6T11JhScAlslr9zzCTV9tHjPc82ABeib58JOKyofpmQOXHdz8/BWolXJ2rTSn8WbHeIoLJKjC6t4koyC68Xn359tfV5FdWMx5xWUlcqFXK1AKSj/FkPlLpQGjEgAWN6UM/Jti7SrI8PaEpMTvNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738934529; c=relaxed/simple;
-	bh=QAv4Uk7xjI7U4Ul0z799/x2JfDjv6NjBN239+qGFBi4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qzN3uDYvteMcUpC2e0OzGfdL/gNcM5m0xiccR0btiZ6dxcoRJX+2CdSY1mJBhke4JLsqUMbkemDWV9GmEzJxrWbe2lN3w6yo9gf6WVY2OqjiZUJxlFqvjhA/O+XJ6POc1Pla/6h7/7UtahnzH0UTvgE3Ta1gjLVjNb2WYwLe3WI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab78bcb4b19so133814766b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 05:22:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738934526; x=1739539326;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T6oDg721bXUvOIh6fe5YBPLTPmdr3iKJaMpPd/VBhew=;
-        b=UDt5fTzOouPL7GkHp+Ni0fo0SO3JsKSu350b21PLkfAikJJrZELhi+V1lvW7nl+xB8
-         zUIsAVkOW4Mr/UCNZRM/IzzNtfgzNItpOe+qhIOQEnWVbBPDkVhtCkLvf/Ic5vK3fgmH
-         +VgqvAyDmzcT110bvTP3q0r/5OwsGpR6qSJB9uZgOBZ/fbESz54+anngsK7glZjKvc1K
-         G5Icr8UapZ5E/fRd34wbFDVXOdOYgJprxmMUmIlJU3NHnG9mSQbexYMCSk22T7g8b86m
-         t//2P0Rv092nYk+oBYvNAuBmZv7aaC1bvXZJhMJkZjJ77yHuKJXIyi6pkDssLCMwgbg2
-         TeCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCWnmGQYo9WPvQYRWvr+AaQsZ8xz+juYe7oBese3Jlq+NWiqTeIRoEuHI40k+io2xfM346P6j3r0bin4k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuwsDZwf0aDJlhgacf4RwDMNxbiEw5HPnioqjdPJtA6axRoDDU
-	3IrtSKRcbJmjT6izSSNz3CXA+zLU2UFB90rAy36TsodyrqxUekU2
-X-Gm-Gg: ASbGncsgv1HL0wmP1oTBPCuOGiWbMR2bOKAumQD3UBtt9oxEtwst7l116a7zWgGwbao
-	e396E87Aemx82NeqG2kLj4mDbweAZ067T2wulYoSpbATWG5TvB+4bRZ11CBJxpGp+wbBo/mWQHo
-	+VQYspYjsOZOOpP9+c9GOcqV84RH8YN6uSCdcVfNlIf8iEfm8hU9wRXpXiAblfob0iUQfx5VXDE
-	VK/Je0xJNkqJH8keAs8TkgKE6RW9Fmo6g4G9jzhrDPaneVjr9Q60qg/8jqLck8ucYMya6yloSPs
-	ftyreQ==
-X-Google-Smtp-Source: AGHT+IHisEKjtNadKLbDyA72+sFuYHBGHWzwVbJ/R5NbtEJXtTXrKIsGZtiUgMNA4lG2FghoXvmGGg==
-X-Received: by 2002:a17:907:6eac:b0:aa6:5910:49af with SMTP id a640c23a62f3a-ab789b1f93cmr335553866b.24.1738934525171;
-        Fri, 07 Feb 2025 05:22:05 -0800 (PST)
-Received: from gmail.com ([2a03:2880:30ff:2::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7826ed43esm183693066b.58.2025.02.07.05.22.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 05:22:04 -0800 (PST)
-Date: Fri, 7 Feb 2025 05:22:01 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@kernel.org, vincent.guittot@linaro.org,
-	linux-kernel@vger.kernel.org, juri.lelli@redhat.com,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, corbet@lwn.net,
-	qyousef@layalina.io, chris.hyser@oracle.com,
-	patrick.bellasi@matbug.net, pjt@google.com, pavel@ucw.cz,
-	qperret@google.com, tim.c.chen@linux.intel.com, joshdon@google.com,
-	timj@gnu.org, kprateek.nayak@amd.com, yu.c.chen@intel.com,
-	youssefesmat@chromium.org, joel@joelfernandes.org, efault@gmx.de,
-	tglx@linutronix.de, kernel-team@meta.com
-Subject: Re: [PATCH 03/15] sched/fair: Add lag based placement
-Message-ID: <20250207-convivial-silver-chachalaca-fc0fba@leitao>
-References: <20230531115839.089944915@infradead.org>
- <20230531124603.794929315@infradead.org>
- <20250207-petite-eminent-husky-7d1704@leitao>
- <20250207111141.GD7145@noisy.programming.kicks-ass.net>
- <20250207-tunneling-tested-koel-c59d33@leitao>
- <20250207123020.GJ14028@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1738934528; c=relaxed/simple;
+	bh=x3MPmRQLk1AbgqBDCcQ3vNHDApwtWPJ2zOR9fDuK2UY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZqATvrqv5UHq7tuqqOOo8klfYwHhyr7tR2gpWQ1w2uPnzzEkifFlb37/jh6JhQkfwd13P3hijezs4v6HGaXxBPra9qd7n93HGLwxZaMHsugceh3fSaMLPJqttfgf/bPrWmxDv4XfZ1PUVUyKS5TAzAGpY7JvQWsXRxpPJg33ypc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=afh4qDIV; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="afh4qDIV"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 757C044408;
+	Fri,  7 Feb 2025 13:22:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738934523;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cAoBxYtUrA+ImixRo4h70vs5ozOMbJ+LCR06GvVPFo4=;
+	b=afh4qDIV12OqDpxGG9POlW/Ful9p+5JGQ5qX3/lTlhDj5DUKDoL5jTNdjweBuT6KjAxufx
+	dddXk3qct2y18ieVIkccL3yPotdffCSZKl0bq0LnUu1rkTcsaQfZ2SOD1HawnHLhiG5UtV
+	satrL61jVdC+nRv3WQbrtpBvEhOXX+wefn5P1seGOUuud7vc8KnIc8e7jsKaqIB119V8fx
+	S5prJcTsbD4km1s6jbbThG14GmOpeYLZjqn4gc7aBroQapHT/Zq/boIRoz1gfLo4Afu5Kd
+	qY22F5tMCVb0Nbq+RJpPlmU3t5yGf2bCrHCdhFpfQqKGFbdEol+sJ4wU/QagUw==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: "Rabara, Niravkumar L" <niravkumar.l.rabara@intel.com>
+Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
+ <vigneshr@ti.com>,  "linux@treblig.org" <linux@treblig.org>,  Shen Lichuan
+ <shenlichuan@vivo.com>,  Jinjie Ruan <ruanjinjie@huawei.com>,
+  "u.kleine-koenig@baylibre.com" <u.kleine-koenig@baylibre.com>,
+  "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+  "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] mtd: rawnand: cadence: support deferred prob
+ when DMA is not ready
+In-Reply-To: <BL3PR11MB65320CBE12D13EBD3940CE44A2F12@BL3PR11MB6532.namprd11.prod.outlook.com>
+	(Niravkumar L. Rabara's message of "Fri, 7 Feb 2025 09:12:44 +0000")
+References: <20250116032154.3976447-1-niravkumar.l.rabara@intel.com>
+	<20250116032154.3976447-2-niravkumar.l.rabara@intel.com>
+	<87plkgpk8k.fsf@bootlin.com>
+	<BL3PR11MB653276DFD3339ADAADC70CCFA2EE2@BL3PR11MB6532.namprd11.prod.outlook.com>
+	<874j1i0wfq.fsf@bootlin.com>
+	<BL3PR11MB65321B556C59C995DC05C70AA2E92@BL3PR11MB6532.namprd11.prod.outlook.com>
+	<87msf8z5uu.fsf@bootlin.com>
+	<BL3PR11MB6532451B44E7C5D82F5EC4AFA2F42@BL3PR11MB6532.namprd11.prod.outlook.com>
+	<87o6zi83se.fsf@bootlin.com>
+	<BL3PR11MB6532369D14375CC94AA2714BA2F42@BL3PR11MB6532.namprd11.prod.outlook.com>
+	<87frkt96nw.fsf@bootlin.com>
+	<BL3PR11MB653239DDBD9D8E7D413B60F4A2F42@BL3PR11MB6532.namprd11.prod.outlook.com>
+	<877c6357o5.fsf@bootlin.com>
+	<BL3PR11MB65320CBE12D13EBD3940CE44A2F12@BL3PR11MB6532.namprd11.prod.outlook.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Fri, 07 Feb 2025 14:22:01 +0100
+Message-ID: <87ikpl3n5y.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207123020.GJ14028@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleeflecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjeetueegtdekjeekueekfeeuudekkedutdejhfefgfevtdeutdetgfduvdfggfffnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmpdhgihhthhhusgdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehnihhrrghvkhhumhgrrhdrlhdrrhgrsggrrhgrsehinhhtvghlrdgtohhmpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehlihhnuhigsehtrhgvsghlihhgrdhorhhgpdhrtghpthhtohepshhhvghnl
+ hhitghhuhgrnhesvhhivhhordgtohhmpdhrtghpthhtoheprhhurghnjhhinhhjihgvsehhuhgrfigvihdrtghomhdprhgtphhtthhopehurdhklhgvihhnvgdqkhhovghnihhgsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopehlihhnuhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhg
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Fri, Feb 07, 2025 at 01:30:20PM +0100, Peter Zijlstra wrote:
-> On Fri, Feb 07, 2025 at 04:25:02AM -0800, Breno Leitao wrote:
-> 
-> > I haven't seen this patch in stable. Is it queue up for the next
-> > submission for stable?
-> 
-> It's not yet queued, up. I meant to do that this week, but 'stuff' kept
-> getting in between. I'll try and get it pushed into tip/sched/urgent
-> this seekend somewhere -- but it is unlikely to make -rc2 at this pace.
 
-That is fine.  I just want to assure that this patch will eventually get
-to stable, so, I don't need to carry forward this patch forever in my
-production tree.
+>> >> >> > My apologies for the confusion.
+>> >> >> > Slave DMA terminology used in cadence nand controller bindings
+>> >> >> > and driver is indeed confusing.
+>> >> >> >
+>> >> >> > To answer your question it is,
+>> >> >> > 1 - External DMA (Generic DMA controller).
+>> >> >> >
+>> >> >> > Nand controller IP do not have embedded DMA controller (2 -
+>> >> >> > peripheral
+>> >> >> DMA).
+>> >> >> >
+>> >> >> > FYR, how external DMA is used.
+>> >> >> > https://elixir.bootlin.com/linux/v6.13.1/source/drivers/mtd/nand
+>> >> >> > /ra
+>> >> >> > w/c
+>> >> >> > adence-nand-controller.c#L1962
+>> >> >>
+>> >> >> In this case we should have a dmas property (and perhaps dma-names=
+),
+>> no?
+>> >> >>
+>> >> > No, I believe.
+>> >> > Cadence NAND controller IP do not have dedicated handshake
+>> >> > interface to connect with DMA controller.
+>> >> > My understanding is dmas (and dma-names) are only used for the
+>> >> > dedicated handshake interface between peripheral and the DMA
+>> controller.
+>> >>
+>> >> I don't see well how you can defer if there is no resource to grab.
+>> >> And if there is a resource to grab, why is it not described anywhere?
+>> >>
+>> >
+>> > Since NAND controller do not have handshake interface with DMA
+>> controller.
+>> > Driver is using external DMA for memory-to-memory copy.
+>>=20
+>> I'm sorry you lost me again. What do you mean handshake? There is no
+>> request line? There is no way the NAND controller can trigger DMA transf=
+ers?
+>>=20
+> Yes, I mean there is no request line, so there is no way the NAND control=
+ler can
+> trigger DMA transfer.
+>
+> Sorry I used the terminology based on Synopsys DesignWare AXI DMA Control=
+ler
+> that is used with Agilex5 SoCFPGA platform.=20=20
+> https://github.com/torvalds/linux/blob/v6.14-rc1/drivers/dma/dw-axi-dmac/=
+dw-axi-dmac-platform.c#L1372
+>
+>> What do you mean mem-to-mem, how is this useful to the controller?
+>>=20
+> I mean system memory to/from NAND MMIO register address for page
+>  read/write data transfer.=20
+>
+> 	reg =3D <0x10b80000 0x10000>,=20
+> 		<0x10840000 0x1000>; <--- This MMIO address block
+> 	reg-names =3D "reg", "sdma";
+>
+>> > Your point is since the driver is using external DMA and it should be
+>> > described in bindings?
+>>=20
+>> Yes. But maybe I still don't get it correctly.
+>>=20
+> dmas is an optional property in cadence nand controller bindings.=20
+> https://github.com/torvalds/linux/blob/v6.14-rc1/Documentation/devicetree=
+/bindings/mtd/cdns%2Chp-nfc.yaml#L36
+> Does it need to change to required property in bindings?
 
-I will let in ~week if we are still seeing this warning in our machines.
+On one side you have a dedicated MMIO region, which imply we should have
+an external DMA engine that is probably generic. On the other side it
+feels like only the NAND controller uses it and it should be pictured as
+a peripheral DMA controller and in this case we should not use the DMA
+engine API at all. Your case is something in between, I don't like it
+much. Anyway, we cannot break bindings, so please respin the series
+because I totally lost your initial target.
 
-Thanks for the quick response,
---breno
+Miqu=C3=A8l
