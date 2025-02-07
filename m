@@ -1,137 +1,111 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D221DE2BF;
-	Fri,  7 Feb 2025 09:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6478A1DC992;
+	Fri,  7 Feb 2025 09:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738920320; cv=none; b=LA1xhGaEvYUfEVdQ9zXAyxjIOPq1jpXJGRPdnBiOuFnpFK2KLheF2BkEGuQqB9Q+OGhwTLqKxOTx5fV2q4smQLwjTXEgHhLUqYBq3fiUy8oUqbgAmnKjt5mdBlJshfDz6bLFFPd/fDodkatyrhksVWBky24RFNfJ+1oCcBdmBNQ=
+	t=1738920327; cv=none; b=ZN82sksFD6yqgo0bIMs9eB9P4ZRdNcYgjU2RVhkbLamni3MPKy5eKwhBAPXj7pDVR+UdkVwpn1TRnwkFOMhHscq1gUlzI3w0xInaQLyapmoD1ErAcyqaXNgbLgiujRbgVTJxpDvJ96Pa9MjbmR+RdgUSnuZDnYQwbvFSZkA3ZF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738920320; c=relaxed/simple;
-	bh=KBLkEL12Og2x3Pglq0lPKHmlfc+op+vs3fb6Uyx1aJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dYKGGsahQul9/We9fhQQuIC3G0o0Mglq/YXWy9Y6YbUXGuO6Y3DvY7OGUl2TMnOiv6AxJGeDSjAh+qGC23qiEq3SlBYFdvC67OZBTBEqm0KjS6+ZkMYXlt0txJ7bFaHNybTclm4u0oSdl6w0puvVWgHwO2M2+eeib6di4cFH7so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=reP7Jvbc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qJt5Iz8U; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1738920327; c=relaxed/simple;
+	bh=kF7bqOfEPUr/1NjhgrCLEjkTuw9hFLco2ae4W2t7H38=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=hDmekiPxPiBRAHSx+GHoIoAY4MSUA665L72M35LVh1DZOQObmtstZyoHc3lWV+RuTfk3tcJGb1BDWZ8KYis/dGqDANWOQ0MS3yEzzDYq3cLAp64gFnKh9NH5KZrH0WMwxO8ObAsD7duxMftvXN1SrjPnc2O2EpsPZH+OkxkYRjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FoDA4+SM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="reP7Jvbc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qJt5Iz8U"
-Date: Fri, 7 Feb 2025 10:25:14 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738920316;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VhaHIolMqVaOKYQrrLkqK1G4I/2AK3phIMMuTF3pFWo=;
-	b=reP7JvbcU0nfOWcSr3dJZmrxK5PQZGFlsLkEuFFgIPl0MwajUgTqxxSd2w1mapH1lnohce
-	Dt+L8IRlNu3GG4Y4SPILVNj/qQ51TByMbchdQI4kOrjL6EPzsm5hA4oHHNWCgM0dwx092g
-	1uTItGKhAbjDmnB8dciy/vxknCXn8o0ZTuLzjLERhGSFbYbONep0oJ7EN3HyAQlDLonCpJ
-	hHkfcCXWi8Ns5jgBfKcA0Fc7xQ3JyipUAksSeDCLWCVnloijRX5cAwXh1DxWZ9CgghQ74D
-	PqWgiz/Blka85Kxai5sWW625S7TUlRc8Fn+M/nZDvohviOy6mdTEwTEcb/po8w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738920316;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VhaHIolMqVaOKYQrrLkqK1G4I/2AK3phIMMuTF3pFWo=;
-	b=qJt5Iz8UgObFD7UP8tWK4AITuhI5urfa9k2BZtjcbS8a/x8wc1tc8plkXpxvBbvmp/93Gi
-	W3afGDhGaKSUj7AA==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Mateusz Polchlopek <mateusz.polchlopek@intel.com>, 
-	Richard Cochran <richardcochran@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	"Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>
-Subject: Re: [PATCH net-next 0/4] ptp: vmclock: bugfixes and cleanups for
- error handling
-Message-ID: <20250207102320-55575f30-68fd-4aa3-93a0-d97173253471@linutronix.de>
-References: <20250206-vmclock-probe-v1-0-17a3ea07be34@linutronix.de>
- <e16551dd-3a84-49ba-b875-c11f77239984@intel.com>
- <34d961bf2f40f054dd79cf7d8cf81a3eefd00a59.camel@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FoDA4+SM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFF92C4CED1;
+	Fri,  7 Feb 2025 09:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738920327;
+	bh=kF7bqOfEPUr/1NjhgrCLEjkTuw9hFLco2ae4W2t7H38=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=FoDA4+SMwU8LqI5xPUcyA5YFPx2OWZI08q3Zegddu0PgzHiWdxO7CWWhvxNWYlxfO
+	 dxkAoFvD3RWtPpsGuE01QUligb3BkydtmaoZ9r1m5GRHlXSAJnM1aGUM14/0YtftKv
+	 YJFXuGPrXlqL1jF+R4A2SGhThekSSY8+H3DM6AGpVU1h45nmQBol/xtwKLYmpy3MMa
+	 2rkC6jrFEvTH+QIqLb0TYStvohRDuUiYMwg+IrXXdCfeK5ehqdwQvzUndv4t1wpGwO
+	 ocRFK/Zdt2lU4sEVLCsY7bAd8mMJc7XDY973225MKpI4xz01Cpu/vxcuqwWCuwqdCp
+	 jl/ifOtnDArsQ==
+Date: Fri, 07 Feb 2025 03:25:25 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <34d961bf2f40f054dd79cf7d8cf81a3eefd00a59.camel@infradead.org>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-media@vger.kernel.org, conor+dt@kernel.org, 
+ devicetree@vger.kernel.org, krzk+dt@kernel.org, eajames@linux.ibm.com, 
+ mchehab@kernel.org, andrew@aj.id.au, openbmc@lists.ozlabs.org, 
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, joel@jms.id.au, 
+ linux-arm-kernel@lists.infradead.org
+To: Jammy Huang <jammy_huang@aspeedtech.com>
+In-Reply-To: <20250207082351.1298990-1-jammy_huang@aspeedtech.com>
+References: <20250207082351.1298990-1-jammy_huang@aspeedtech.com>
+Message-Id: <173892032595.3714424.13095199531321692299.robh@kernel.org>
+Subject: Re: [PATCH v3] media: dt-bindings: aspeed,video-engine: Convert to
+ json schema
 
-On Fri, Feb 07, 2025 at 09:10:42AM +0000, David Woodhouse wrote:
-> On Fri, 2025-02-07 at 08:13 +0100, Mateusz Polchlopek wrote:
-> > 
-> > 
-> > On 2/6/2025 6:45 PM, Thomas Weiﬂschuh wrote:
-> > > Some error handling issues I noticed while looking at the code.
-> > > 
-> > > Only compile-tested.
-> > > 
-> > > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> > > ---
-> > > Thomas Weiﬂschuh (4):
-> > > †††††† ptp: vmclock: Set driver data before its usage
-> > > †††††† ptp: vmclock: Don't unregister misc device if it was not registered
-> > > †††††† ptp: vmclock: Clean up miscdev and ptp clock through devres
-> > > †††††† ptp: vmclock: Remove goto-based cleanup logic
-> > > 
-> > > † drivers/ptp/ptp_vmclock.c | 46 ++++++++++++++++++++--------------------------
-> > > † 1 file changed, 20 insertions(+), 26 deletions(-)
-> > > ---
-> > > base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> > > change-id: 20250206-vmclock-probe-57cbcb770925
-> > > 
-> > > Best regards,
-> > 
-> > As those all are fixes and cleanups then I think it should be tagged to
-> > net not net-next.
+
+On Fri, 07 Feb 2025 16:23:51 +0800, Jammy Huang wrote:
+> Convert aspeed-video.txt to yaml format.
+> Update aspeed-video.txt to aspeed,video-engine.yaml in MAINTAINER file.
 > 
-> Agreed. Thanks, Thomas. For all four:
-
-Ack.
-
-
-> Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
-
-Thanks.
-
-> I'm about to post a fifth which adds a .owner to vmclock_miscdev_fops.
-
-I assume you want me to include this in my series.
-
-> Tested with the existing '-device vmclock' support in QEMU, plus this
-> hack to actually expose a PTP clock to the guest (which we haven't
-> worked out how to do *properly* from the timekeeping subsystem of a
-> Linux host yet; qv).
+> Additional changes:
+> - Two phandle properties, 'aspeed,scu' and 'aspeed,gfx', are added for
+>   video engine to capture video from sources other than VGA.
+> - Update examples and include appropriate file directives to resolve
+>   errors identified by `dt_binding_check` and `dtbs_check`.
 > 
-> --- a/hw/acpi/vmclock.c
-> +++ b/hw/acpi/vmclock.c
-> @@ -151,6 +151,18 @@ static void vmclock_realize(DeviceState *dev,
-> Error **errp)
->  
->      qemu_register_reset(vmclock_handle_reset, vms);
->  
-> +	vms->clk->time_type = VMCLOCK_TIME_TAI;
-> +    vms->clk->flags = VMCLOCK_FLAG_TAI_OFFSET_VALID;
-> +    vms->clk->tai_offset_sec = -3600;
-> +    vms->clk->clock_status = VMCLOCK_STATUS_SYNCHRONIZED;
-> +    vms->clk->counter_value = 0;
-> +    vms->clk->counter_id = VMCLOCK_COUNTER_X86_TSC;
-> +    vms->clk->time_sec = 1704067200;
-> +    vms->clk->time_frac_sec = 0x8000000000000000ULL;
-> +    vms->clk->counter_period_frac_sec = 0x1a6e39b3e0ULL;
-> +    vms->clk->counter_period_shift = 4;
-> +    //vms->clk->counter_period_frac_sec = 0x1934c67f9b2ce6ULL;
-> +
->      vmclock_update_guest(vms);
->  }
->  
+> Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
+> ---
+>  v3:
+>   - Add Additional changes into comments.
+>   - Remove | after phandle description
+> 
+>  v2:
+>   - Update patch subject
+>   - Add NOTE for false positive warning
+> ---
+>  .../bindings/media/aspeed,video-engine.yaml   | 84 +++++++++++++++++++
+>  .../bindings/media/aspeed-video.txt           | 33 --------
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 85 insertions(+), 34 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/aspeed,video-engine.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
 > 
 
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/media/aspeed,video-engine.yaml:44:55: [error] syntax error: mapping values are not allowed here (syntax)
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/aspeed,video-engine.yaml: ignoring, error parsing file
+./Documentation/devicetree/bindings/media/aspeed,video-engine.yaml:44:55: mapping values are not allowed in this context
+make[2]: *** Deleting file 'Documentation/devicetree/bindings/media/aspeed,video-engine.example.dts'
+Documentation/devicetree/bindings/media/aspeed,video-engine.yaml:44:55: mapping values are not allowed in this context
+make[2]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/media/aspeed,video-engine.example.dts] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1511: dt_binding_check] Error 2
+make: *** [Makefile:251: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250207082351.1298990-1-jammy_huang@aspeedtech.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
