@@ -1,66 +1,25 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915D11DC99E
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 939D016C684
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738919854; cv=none; b=XWlGOJg0Moihk0IsOn0WytFezKxzEQ3dBYRNFkgKJf+0ImaOm187WbHK+DlXY/+mjMJQHAl5IBFuGy+T3/WbG9sht5YX6lHo3GDEcZEexMjSEis9/i1ifwOSZkBMbivJRgir5k/Y1yPonAYEH3JRlsaQLiOqVbnDoh1S9QhVgM0=
+	t=1738920001; cv=none; b=Rjqu8LCOUWmQdA5W8Q8FvK1SuuvyQIhVZNEH8fVvHruNvlFcaqOo9Jtm+fqeTOE6irrF/qZf0MKv6sd3Bm3hbtrJAH7hBFj12oPztHXERrxEM+Vs0MJhRXqBpZx85/AggGN2vPeokEhSHHFe9sCkrTsS/OgRHmxhloGIAUQqVvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738919854; c=relaxed/simple;
-	bh=4sLgzJdXEoCSFEANM5B681JYjIInCuX+heQpB/pWcXI=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=b9PO6XQwlZ2KfAzQiBgzC4OTvchyfFXjBG3qTmBq6xIL0+qhCvIEzyxrJeQIhTthIB5i3/MUYyns+rhnQDnf5STSVtTF1gqwUrFd3WQ1Hl0iuO3xwtaZ2e0/fato7/s32iSlf6v/4lJna5XZeHlSqJWcqyVGXSfny5uGfIaZdkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PHrAczNh; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PHrAczNh"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-436326dcb1cso12228405e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 01:17:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738919851; x=1739524651; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Tq0arpYSvoFDp5urlt72DtEA/DJDLUpDJMGDTdBFzlc=;
-        b=PHrAczNhn7fTujUipW1TJDiEUqDY4YdUCwdGXWKRvDU4u2BNPMUg2BGWw8tJJEQ6rw
-         2Fb/bDRRkNPijUNNtH0MKHruGTMfII+L4FEJA+FH8lyedN4iuqcXpvvZTKej+KdiFQAJ
-         GBSvsfnU7UuGf2WAydbNz//MfHBogOIgZTm+mLXgD4WIfdqhPEIN5P4r0q8IxOwl4PaD
-         T2mvixFD4yQCCIwBJElvGyWrZ/yaI2TWqv9j84mH1Y9qXKzGhvS07QRLH0M3774SH3ok
-         fXCV1KoboC6PD4505w2+pdLI6+VME/qT8cuSMpzHXR6ubjbpr9CdPG9sSD31HEWKlJLw
-         gRCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738919851; x=1739524651;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Tq0arpYSvoFDp5urlt72DtEA/DJDLUpDJMGDTdBFzlc=;
-        b=Hx5xGxWr0QJ8couOGq0N4O4nh0EbL0+YTj2rtza9lfLyqa3isLMtszDveAnGNV+Ktp
-         XZ8ARPGHbmoM7gelhJHayC4f3C3hUAwI2pVxsgh7vgfGYaIvZCaSii1EM+WxaF1hQg9Y
-         DH7KWZemOvGB7A+VonvUQQn5jYG0sz5J+okB8obV5oToNP8UiQO3VLceWRnETa8F5eJF
-         Tadn/Qi1eS4hKQ91FE0p7HMak9vURhECpZJFXvqN6Y1TNDlLzZVqUMBj2qx6mM6NzehI
-         uZx1moHQrrjvgGdE/YOes8vD2I01pdbbfxsiChrbdSiAXbMnkIv2koqI7Jlk9IaIzOlx
-         rWEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWso8wX/W5Jx9ylOnxJZXu/HaeqHRpMn5HcZQxIAosZxeNy/3S7MrQd+2Nv+2kJdd3Ihy+HX96yq9ph0q8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLIIbWgO31AKe2h2x0V6nQfHrj560kFC3RAwIBJYk2DDn1Pv+f
-	l9ayBoSFEEPNMPQphkAn/DmBAbHh/HKyh+Tl6UcR1EtG0Xwzsh+0rTXdbPKo7jA=
-X-Gm-Gg: ASbGncszYACKGhIrW1SUYzkP6dRw19HZcp7JiFjgtABdPY57GZCaMhxDzgOGgLNM9Yj
-	eJeig6vVBTNKdWs6PCGDn8ITGrJvQBG3Ej46Ry2hQ29cY0CULK1Hb3g9TDFVgIiAlqTun5/pq2B
-	kNjVtZaA7vqepiIlntReLENPLnBSSoacWi4kZIp0DDxtsOdR7/+DxM9cBPDXzE7BXTWRXUCCn9m
-	uCqOgA08BjxDXVf1mJjhQt/08o1LGDupI3uAGDHj0ahDN1E1vId9e7R7pcGzLXENhFI3QwkrvYJ
-	pmhue8AxtNmUQGfB3ALhPFdPoHh3SJjaj8ZYMNDEOwxBmrxnASzI+Q9gsW90LDCQgHtJ
-X-Google-Smtp-Source: AGHT+IGQfxMRIuGwsG2LhdgudYjnLLYSobR1Dg5dLuvm+yyL57tGU6pvxJPHQWM8uWlNOLtqEwvAaw==
-X-Received: by 2002:a05:600c:1d90:b0:436:faeb:2a1b with SMTP id 5b1f17b1804b1-43924991f5dmr20328145e9.13.1738919850827;
-        Fri, 07 Feb 2025 01:17:30 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:5b26:96be:712e:30cd? ([2a01:e0a:982:cbb0:5b26:96be:712e:30cd])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dca0179sm47187875e9.11.2025.02.07.01.17.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 01:17:30 -0800 (PST)
-Message-ID: <7180babd-302a-4f86-8770-bdd9f5c773cf@linaro.org>
-Date: Fri, 7 Feb 2025 10:17:29 +0100
+	s=arc-20240116; t=1738920001; c=relaxed/simple;
+	bh=BOSvGSnUaWn3jxNlcqKSZUu5q+UExUoJyYOA4DDgnso=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QcoZpB8Q0m1ZokmjAymi1zQekM27WFZ7Z3lrV9rEkytZrZ9qGMl9KCEfjCxDqOyyUIcdJ/ls99xjaaFmmI82y7XFLAI/jeFNV55Ig/azddxQtLTiVDMwjzkJfnx1OhspofGVstLPykKRuSOKO8ojos7MobyNtCjusdjvP3bn8zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACBCB106F;
+	Fri,  7 Feb 2025 01:20:21 -0800 (PST)
+Received: from [10.162.16.89] (a077893.blr.arm.com [10.162.16.89])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5AF5C3F5A1;
+	Fri,  7 Feb 2025 01:19:53 -0800 (PST)
+Message-ID: <e1fe2a0c-d567-4a26-af06-89e3a37ba638@arm.com>
+Date: Fri, 7 Feb 2025 14:49:50 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,132 +27,114 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH RFC v2] dt-bindings: mmc: mmc-slot: make compatible
- property optional
-To: Dharma.B@microchip.com, ulf.hansson@linaro.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, khilman@baylibre.com,
- jbrunet@baylibre.com, martin.blumenstingl@googlemail.com
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+Subject: Re: [PATCH v1 11/16] mm/vmalloc: Gracefully unmap huge ptes
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org
-References: <20250205-mmc-slot-v2-1-da3c5f30e2d9@microchip.com>
- <f6d7ffa0-6c08-45fb-9153-5e4aad1ca86a@linaro.org>
- <003ffa44-c88a-4234-a54a-50cd1140982a@microchip.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <003ffa44-c88a-4234-a54a-50cd1140982a@microchip.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
+ <20250205151003.88959-12-ryan.roberts@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250205151003.88959-12-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 07/02/2025 10:02, Dharma.B@microchip.com wrote:
-> On 07/02/25 2:25 pm, Neil Armstrong wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know
->> the content is safe
->>
->> On 05/02/2025 04:48, Dharma Balasubiramani wrote:
->>> Remove the compatible property from the list of required properties and
->>> mark it as optional.
->>>
->>> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
->>> ---
->>> Changes in v2:
->>> - Instead of moving the compatible string to the other binding, just
->>> make it
->>>     optional (remove from required list).
->>> - Link to v1: https://lore.kernel.org/r/20241219-mmc-slot-v1-1-
->>> dfc747a3d3fb@microchip.com
->>> ---
->>>    Documentation/devicetree/bindings/mmc/mmc-slot.yaml | 1 -
->>>    1 file changed, 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-slot.yaml b/
->>> Documentation/devicetree/bindings/mmc/mmc-slot.yaml
->>> index 1f0667828063..ca3d0114bfc6 100644
->>> --- a/Documentation/devicetree/bindings/mmc/mmc-slot.yaml
->>> +++ b/Documentation/devicetree/bindings/mmc/mmc-slot.yaml
->>> @@ -29,7 +29,6 @@ properties:
->>>        maxItems: 1
->>>
->>>    required:
->>> -  - compatible
->>>      - reg
->>
->> If you remove it from here then it's still required in Documentation/
->> devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml
->> so please add it.
+
+
+On 2/5/25 20:39, Ryan Roberts wrote:
+> Commit f7ee1f13d606 ("mm/vmalloc: enable mapping of huge pages at pte
+> level in vmap") added its support by reusing the set_huge_pte_at() API,
+> which is otherwise only used for user mappings. But when unmapping those
+> huge ptes, it continued to call ptep_get_and_clear(), which is a
+> layering violation. To date, the only arch to implement this support is
+> powerpc and it all happens to work ok for it.
 > 
-> If moving the compatible to its specific binding isn't appropriate (as
-> per Conor),
-> and if removing it from the required list here doesn’t seem reasonable
-> to you,
-> then adding an unnecessary compatible string in our DTS files doesn’t
-> make sense to me.
+> But arm64's implementation of ptep_get_and_clear() can not be safely
+> used to clear a previous set_huge_pte_at(). So let's introduce a new
+> arch opt-in function, arch_vmap_pte_range_unmap_size(), which can
+> provide the size of a (present) pte. Then we can call
+> huge_ptep_get_and_clear() to tear it down properly.
 > 
-> What could be the solution then?
-
-The solution is right but you modify the meson-mx-sdio bindings, so
-simply add compatible in a required list for the slot node.
-
-Something like:
-========================================================================
-diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml
-index 022682a977c6..0d4d9ca6a8d9 100644
---- a/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml
-+++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml
-@@ -60,6 +60,9 @@ patternProperties:
-        bus-width:
-          enum: [1, 4]
-
-+    required:
-+      - compatible
-+
-      unevaluatedProperties: false
-
-========================================================================
-
-Conor, Is it right ?
-
-Neil
-
->>
->> Thanks,
->> Neil
->>
->>>
->>>    unevaluatedProperties: false
->>>
->>> ---
->>> base-commit: 40b8e93e17bff4a4e0cc129e04f9fdf5daa5397e
->>> change-id: 20241219-mmc-slot-0574889daea3
->>>
->>> Best regards,
->>
+> Note that if vunmap_range() is called with a range that starts in the
+> middle of a huge pte-mapped page, we must unmap the entire huge page so
+> the behaviour is consistent with pmd and pud block mappings. In this
+> case emit a warning just like we do for pmd/pud mappings.
 > 
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+>  include/linux/vmalloc.h |  8 ++++++++
+>  mm/vmalloc.c            | 18 ++++++++++++++++--
+>  2 files changed, 24 insertions(+), 2 deletions(-)
 > 
+> diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+> index 31e9ffd936e3..16dd4cba64f2 100644
+> --- a/include/linux/vmalloc.h
+> +++ b/include/linux/vmalloc.h
+> @@ -113,6 +113,14 @@ static inline unsigned long arch_vmap_pte_range_map_size(unsigned long addr, uns
+>  }
+>  #endif
+>  
+> +#ifndef arch_vmap_pte_range_unmap_size
+> +static inline unsigned long arch_vmap_pte_range_unmap_size(unsigned long addr,
+> +							   pte_t *ptep)
+> +{
+> +	return PAGE_SIZE;
+> +}
+> +#endif
+> +
+>  #ifndef arch_vmap_pte_supported_shift
+>  static inline int arch_vmap_pte_supported_shift(unsigned long size)
+>  {
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index fcdf67d5177a..6111ce900ec4 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -350,12 +350,26 @@ static void vunmap_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
+>  			     pgtbl_mod_mask *mask)
+>  {
+>  	pte_t *pte;
+> +	pte_t ptent;
+> +	unsigned long size = PAGE_SIZE;
 
+Default fallback size being PAGE_SIZE like before.
+
+>  
+>  	pte = pte_offset_kernel(pmd, addr);
+>  	do {
+> -		pte_t ptent = ptep_get_and_clear(&init_mm, addr, pte);
+> +#ifdef CONFIG_HUGETLB_PAGE
+> +		size = arch_vmap_pte_range_unmap_size(addr, pte);
+> +		if (size != PAGE_SIZE) {
+> +			if (WARN_ON(!IS_ALIGNED(addr, size))) {
+> +				addr = ALIGN_DOWN(addr, size);
+> +				pte = PTR_ALIGN_DOWN(pte, sizeof(*pte) * (size >> PAGE_SHIFT));
+> +			}
+> +			ptent = huge_ptep_get_and_clear(&init_mm, addr, pte, size);
+> +			if (WARN_ON(end - addr < size))
+> +				size = end - addr;
+> +		} else
+> +#endif
+> +			ptent = ptep_get_and_clear(&init_mm, addr, pte);
+
+ptep_get_and_clear() gets used both, when !HUGETLB_PAGE or HUGETLB_PAGE with
+arch_vmap_pte_range_unmap_size() returned value being PAGE_SIZE, which makes
+sense.
+
+>  		WARN_ON(!pte_none(ptent) && !pte_present(ptent));
+> -	} while (pte++, addr += PAGE_SIZE, addr != end);
+> +	} while (pte += (size >> PAGE_SHIFT), addr += size, addr != end);
+>  	*mask |= PGTBL_PTE_MODIFIED;
+>  }
+>  
+
+LGTM
+
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
