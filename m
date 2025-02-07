@@ -1,196 +1,105 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2055.outbound.protection.outlook.com [40.107.244.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F403810E9;
-	Fri,  7 Feb 2025 02:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738896379; cv=fail; b=GEsw49S0aVrLFqPZ6mBwjjaoDegHCJt6oSDjUWnzh8tOKM2+nxmPBUqyedl/REHBcth9gVuRMbBjbVnZUSV+qd5RuKOUESH1o0bLXvc/uvpMClzytwOLb7TZvpG/Fv9MSdTzUjXSJmMoYeY10v+Q5KEGYkuV/iLmlFJ/czglQ9c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738896379; c=relaxed/simple;
-	bh=nzYKaBtZwfaTuI9ENMQvRvVK3rKEvMI7bcAk9h1GKx4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=W0fK36hx9m3LRSNKjsGo8pwyGjMwFlhUZX64hUrus3CK8ettrKlrZJLrm4CEUIOLjh0d8JVb3JKnt0EcnusqD6J65knYiumYbgeqjkDQ+qd9GSDnoe+Xi4TqSrgU2Sw60oimy0ajVf6M8Gxq7QbTQU/Sn6YJ8bjVM58CYyAg8Kg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HQF3MW2y; arc=fail smtp.client-ip=40.107.244.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074818F4A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 02:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738896399; cv=none; b=hXW3GK50WWiSlOBEcKz1j54UXOvh4qLcH6pd9lbqN+TsWTe7EqzA7abFdCKLog6hvUvNsD1zb5VpTiWcLH4oFs+np8i6GafzQQp/1CFa9C8lRxaI7CFznOEQdlqWhwO/MTjBpmtKAdWEZ/unaTtPtV/aIA40k8dsJ9A77MvGmC8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738896399; c=relaxed/simple;
+	bh=ZJdvlGs4crMKaBj/SifsNV0LPjiP0y+A37oSlyc6GRQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X4tgHhy5Gfndj2Fw8/jZQmGdV1i9PBbvcmicbE1rg7LvOJU1z3PkoUgo6+aYsLsGD+u9hPByOLV1Z7vnmpQTpCwR3dhz2dvpd7FODnIXtPcMO1B/p+YAB6MrK77LADAYp7Ug24s+9XVkKWr0ntSMPMk9MnP5s26YZBsVXQJAya8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WbWijki4; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HQF3MW2y"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XW5HRBUdkuGQ6bZMMddaK6rUTcGtE0+8PC/PyrCYUJUybmFlj6sGJJnYzHVOYbhlQn3fC2EeFfGlrKQroi7sUym3UPRWPPOIBjIxpTPiEjzyHbz8NcClJEthp5KazWo56BRHc+jXDDYVatloOsxjW3HhYhfYmDiGssMnUwSZbpVMR2lV+dOfVXSpPNEpvLDK91BRcwMsoXEVLlRCXjlUyp43cdQvKP0//9YBFKDtovS4yZojCd6w/Twer3KUQ2/zFDQ7Ueltjg6Uve8L1mYlYY5orXjrganOgJtFQHPrvPHvvAQ6rN9V0i1F7MXYqNm1GhjO7nHF7ptLH3k5qr3Kgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RlOAwRYql73yOJxV44zhv4TCNTw6b6+KL4b+CDvy7m4=;
- b=Tfy8/MagzqKm40tSn7JVVfIwh+V9bKLC4yY/1KkMGWgSx72ruoSb3J/AVTF4DLo+oUlavcZU1WoYW9caYJ1yr9xHQHaKsjeg2YFF270EKBEDlIFggYxTGpmNFV1DmOHFvLiMXqMgbtBnPQJ0wzvJNPCXucA7BwTlSsYDjbEtxiPkZcpHuZA/6VuIoKbKZaLfCkCD1anrRj5bDXnhs1EOOPBLjIScmjHbXmENo08Viq596407BinQUAZCZDbZ4AUCaaXJgeJ3bgkWOgrqRrDQQcynld12TpVPXPhFBXaEV4V7V9bpUQD+fDGPSF7SEVGO2DaoTbe79pjHFi6C3zuDEQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RlOAwRYql73yOJxV44zhv4TCNTw6b6+KL4b+CDvy7m4=;
- b=HQF3MW2yVWj4G1+zwhr7kPLoZuZuDghjvAp3gHNcRaoBeFR6B59PKi2ba2HgNjReJNtEXhpyiyS0jz/uS7wOQ6uwCt5LXf9hU94RIVDUm/K5j5+6b+UUOfdhB5/U12uRb9nhZXJB7f0ZX3jXkGI6//KjcTPJKrjAry5C3KNbc5E=
-Received: from CYZPR12CA0001.namprd12.prod.outlook.com (2603:10b6:930:8b::8)
- by CY8PR12MB8363.namprd12.prod.outlook.com (2603:10b6:930:7a::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Fri, 7 Feb
- 2025 02:46:12 +0000
-Received: from CY4PEPF0000EE3C.namprd03.prod.outlook.com
- (2603:10b6:930:8b:cafe::dc) by CYZPR12CA0001.outlook.office365.com
- (2603:10b6:930:8b::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.29 via Frontend Transport; Fri,
- 7 Feb 2025 02:46:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EE3C.mail.protection.outlook.com (10.167.242.13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Fri, 7 Feb 2025 02:46:12 +0000
-Received: from [10.136.39.79] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 6 Feb
- 2025 20:44:39 -0600
-Message-ID: <6d436d56-20f7-4106-bedc-e9d146427fa9@amd.com>
-Date: Fri, 7 Feb 2025 08:14:10 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WbWijki4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738896395;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XshCRkcmNwuT/euYxqOTUA+A6AWBxcJxcyOmEZR6oEo=;
+	b=WbWijki4Xptc9w7EqbvOZAfE1qlh+t7UkT3gDxPke3hHv5KnatSHbuxzxPxQ4KOwFT8Yd+
+	REo7GRjV/v4/7yQ5O1Lplveg5zoQEiNV20DT1jTVwa6m1v5+2RvDTmFp0sGpbvs4RA6S/s
+	I9Ui0cq8QQ4i0j9JrWbQ7fYxDJwWhUg=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-608-lBuVdnwAM5KLvc1qTpQu6A-1; Thu,
+ 06 Feb 2025 21:46:32 -0500
+X-MC-Unique: lBuVdnwAM5KLvc1qTpQu6A-1
+X-Mimecast-MFC-AGG-ID: lBuVdnwAM5KLvc1qTpQu6A
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B9EC81800879;
+	Fri,  7 Feb 2025 02:46:30 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.206])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6015419560AE;
+	Fri,  7 Feb 2025 02:46:28 +0000 (UTC)
+Date: Fri, 7 Feb 2025 10:46:24 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	akpm@linux-foundation.org, chrisl@kernel.org
+Subject: Re: [PATCH 06/12] mm/swapfile.c: update the code comment above
+ swap_count_continued()
+Message-ID: <Z6V0APCLWxkWF0/r@fedora>
+References: <20250205092721.9395-1-bhe@redhat.com>
+ <20250205092721.9395-7-bhe@redhat.com>
+ <CAMgjq7CHrN4cmS-JACUphQHKwv7gQdcCbzYRQ_H+ORBa4tJ7uQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] sched/topology: Enable topology_span_sane check only
- for debug builds
-To: Valentin Schneider <vschneid@redhat.com>, Peter Zijlstra
-	<peterz@infradead.org>
-CC: Naman Jain <namjain@linux.microsoft.com>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
- Gorman <mgorman@suse.de>, <stable@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Steve Wahl <steve.wahl@hpe.com>, Saurabh
- Singh Sengar <ssengar@linux.microsoft.com>, <srivatsa@csail.mit.edu>, Michael
- Kelley <mhklinux@outlook.com>
-References: <20250203114738.3109-1-namjain@linux.microsoft.com>
- <f6bf04e8-3007-4a44-86d8-2cc671c85247@amd.com>
- <20250205095506.GB7145@noisy.programming.kicks-ass.net>
- <0835864f-6dc5-430d-91c0-b5605007d9d2@amd.com>
- <20250205101600.GC7145@noisy.programming.kicks-ass.net>
- <e0774ea1-27ac-4aa1-9a96-5e27aa8328e6@amd.com>
- <xhsmhed0bjdum.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <xhsmhed0bjdum.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE3C:EE_|CY8PR12MB8363:EE_
-X-MS-Office365-Filtering-Correlation-Id: 937fa5b9-db48-4650-ab51-08dd472195b7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|7416014|36860700013|32650700017;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Z0Q4STdOMGc2bnRuR2VIalRFb2ZraXduVmcvbmoxUSsrTDBLNkhXNDZsNWRR?=
- =?utf-8?B?Mmhhd3QxNXQ0WmlmSmdxMWkzbk5VN1crZjRHQ2tOUS9lMFp6WGZ4bVdKNCtO?=
- =?utf-8?B?VEJHQWpvV3AxMzRpVk40ZjQ4RzNNaVltK1VqZS90cVNDMGRWNmswR2FlMVZI?=
- =?utf-8?B?a2ZwTjdXRjQ0UENaYURrSFlrUUtNUXFHcFYxaHpQYUV5N2YvWXBuT2h1d1BU?=
- =?utf-8?B?TEpuN3ppa29xd0ZJMWxqVDRXSEorRmxZREIvNHIreXZTNUhkaWZ4TkZaSldP?=
- =?utf-8?B?TDd5ZFcrQTlNWVp4dHBucGlNckV6S0JVNXhLMW9VV1pUek9NRWNqZmdKNjBk?=
- =?utf-8?B?bTYrbFVYVEhYTTBkbzRScDBYNmlJR2tNSjM3QUtZZE90SkJRdmhZVkZVaWVN?=
- =?utf-8?B?cDZ3RVB0YTNZUGR5RnFEL0t4S1RsRlR5OTlXcGtMOFg4bmRQbU1DSVBiOGxM?=
- =?utf-8?B?em9wdnlRSks4bTNOWUNsaVRPZnNxTVM3VFZKbFZMZjVNZ0d1ajQyRTVaR3V2?=
- =?utf-8?B?cDg5KzlFb2xTWTJqY2h5YVBuT3E2UzZXVjhIS0cwZE01MkhpTXU0Y0N1ZVNK?=
- =?utf-8?B?U1VDUHoxZldBRk5WSDZPeHpLZEIwOS9IV0RGODJvMnNIWFJFYXgzZ0p2Rllh?=
- =?utf-8?B?bXNSQnoxN1JITDR5Y3JhVlFyM2hqb1NVbHhSN0FqdFBaV0tPOXR4L2Jtd2Z2?=
- =?utf-8?B?VEU3a3dMc1pIbXdMQjFyN1BCOWwzeklCMlBQZjNhS3p5Q29MSEtrZ0NMeElS?=
- =?utf-8?B?VjlSMW1oRTJ4K0JNSzhDa0N1VHZYN0Vqb2pldnowbE05MUJkdW15TnU1RHBO?=
- =?utf-8?B?a1RaWmZkRE9HRC82MzhnRVBtT0tlTWhuakJWMks1a0dNakJyNDVhK1QrSEsx?=
- =?utf-8?B?b01jWXNqQWUyZm9wNUdqbzVGSTJseUlHaURhMk5GNFNybUZQYVRYMlEvZkV0?=
- =?utf-8?B?WEVvZDE5N0w1S1I5ekY4dmRLbEk4dlZzR1htckpwU1JSbHJtbytEMWxUSnQ1?=
- =?utf-8?B?RFRoTXcwMUFrZHpvelg1RFhzOE9KTSt6V1pXYVdQLy96V3JLQzlUdEVBNWhG?=
- =?utf-8?B?OGFOek45Q3FkcVpER00rU3JBK2gxN1lNU1kyV1ROK0taYkh1K2ZLZzJQZXFG?=
- =?utf-8?B?Kzl1cXNMS2xWQUorb2lQRlVhaGtpNDRlZXd1NDhiNG5CZkkyK2J1U1F4YmY1?=
- =?utf-8?B?eWtrajVqbXBrYWFrekozN2hWT0dYK2NIVGhFYnhIMVcyd2R5Q3lneXBTZE0r?=
- =?utf-8?B?ZWE0TTZvY3NiaXhWVjBkcnNmSEp2L3dIellqT3BkSlErSktCeEdWZGo1RzFp?=
- =?utf-8?B?dG1ScEFuS3FybzJFTTZBNnJMYW5XVkRBdUF3T1BWbWt4Zmh4ZHppdThxZU1Z?=
- =?utf-8?B?MVBEdlVLcGZPa3BKNGUwZyszWGMvQkxGUUUxbzBDY2N4VTFoTnVubzFscENa?=
- =?utf-8?B?MXN5ek0rTndyKzJ0N0ZoWnl4WCtvOTFhaDVaRVYyTWpZdVdsRTh4N0RBZnI2?=
- =?utf-8?B?dzljVnFUd0xnQklZNmpiU3l1WDRTcDNrQ0ZWQ3d3RWtKQWRqOG9MblhLb2Zt?=
- =?utf-8?B?ZEdqcGltMnBCK09WdFNuUFJ4VDU0VnVQZDMrVWpPSmRzSzFqdmxpSkREd1p0?=
- =?utf-8?B?YTdDbXM0UW51NHFHWC9WN211eHg2ano2ek1IS1cxWWZsM3dDbkJDYmJha0pk?=
- =?utf-8?B?OUxVTmluSHJybzludXJkMlF5TVBLVDF1RVQwcUcwbS9DOEpPdzRjOWwrbHFm?=
- =?utf-8?B?WHRJRG1IRUc3VldXWnZ2c0RNTDg4UjNFODNFc2ZPZVcwSzlvTDBtS2RJWnkr?=
- =?utf-8?B?bytvbG9xSFp2YU1xUnJReVJaT3J5WDF0a093ZVdlZU85dHZPcWFtcGh2cFJI?=
- =?utf-8?B?SWY1a0ZmcFNnelV1b05GbS9JQW42WkIvQWZuTEJRa1JDckFyT2NYNTlGTVYr?=
- =?utf-8?B?UW1yREVuY0lNY0p0NFBKUUZPdjlValp4UWlyMi80Q0pvLzhtbDgzWGl5ZDM3?=
- =?utf-8?B?d0RZc291eUNnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(7416014)(36860700013)(32650700017);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 02:46:12.6407
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 937fa5b9-db48-4650-ab51-08dd472195b7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE3C.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8363
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMgjq7CHrN4cmS-JACUphQHKwv7gQdcCbzYRQ_H+ORBa4tJ7uQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Hello Valentin,
+On 02/06/25 at 03:50pm, Kairui Song wrote:
+> On Wed, Feb 5, 2025 at 5:28 PM Baoquan He <bhe@redhat.com> wrote:
+> >
+> > Now, swap_count_continued() has two callers, __swap_duplicate() and
+> > __swap_entry_free_locked(), the relevant code comment is stale.
+> > Update it to reflect the current situation.
+> >
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> >  mm/swapfile.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/mm/swapfile.c b/mm/swapfile.c
+> > index bf284ba16198..9ee2238042a5 100644
+> > --- a/mm/swapfile.c
+> > +++ b/mm/swapfile.c
+> > @@ -3789,8 +3789,8 @@ int add_swap_count_continuation(swp_entry_t entry, gfp_t gfp_mask)
+> >   * into, carry if so, or else fail until a new continuation page is allocated;
+> >   * when the original swap_map count is decremented from 0 with continuation,
+> >   * borrow from the continuation and report whether it still holds more.
+> > - * Called while __swap_duplicate() or swap_entry_free() holds swap or cluster
+> > - * lock.
+> > + * Called while __swap_duplicate() or caller of __swap_entry_free_locked()
+> > + * holds swap or cluster lock.
+> 
+> It should be only "cluster lock" not "swap or cluster lock" now?
 
-On 2/6/2025 8:54 PM, Valentin Schneider wrote:
-> [..snip..]
->> So circling back to my original question around "SDTL_ARCH_VERIFIED",
->> would folks be okay to an early bailout from topology_span_sane() on:
->>
->>       if (!sched_debug() && (tl->flags & SDTL_ARCH_VERIFIED))
->>        return;
->>
->> and more importantly, do folks care enough about topology_span_sane()
->> to have it run on other architectures and not just have it guarded
->> behind just "sched_debug()" which starts off as false by default?
->>
-> 
-> If/when possible I prefer to have sanity checks run unconditionally, as
-> long as they don't noticeably impact runtime. Unfortunately this does show
-> up in the boot time, though Steve had a promising improvement for that.
-> 
-> Anyway, if someone gets one of those hangs on a
-> 
->    do { } while (group != sd->groups)
-> 
-> they'll quickly turn on sched_verbose (or be told to) and the sanity check
-> will holler at them, so I'm not entirely against it.
-
-If you're game, I'm too!
-
-I just put it out there in case folks had any strong feelings against
-this on other arch but that doesn't seem to be the case and we all love
-a simple solution :)
+You are right, I will update.
 
 > 
->> (Sorry for the long answer explaining my thought process.)
->>
->>>
->>> That I can't remember, sorry :/
->>
->> --
->> Thanks and Regards,
->> Prateek
+> >   */
+> >  static bool swap_count_continued(struct swap_info_struct *si,
+> >                                  pgoff_t offset, unsigned char count)
+> > --
+> > 2.41.0
+> >
 > 
-
--- 
-Thanks and Regards,
-Prateek
 
