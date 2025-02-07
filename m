@@ -1,112 +1,204 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BFA19C540;
-	Fri,  7 Feb 2025 17:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5041922E0
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738949484; cv=none; b=pJ9p1QRUtth8ay/I9o4LEiIwef8KgE7S2QBJug2SK7ySZH+CcsHE1JluZdKWLssMKeKpUUCiHs1CJRENIce6FjqByF5PyTCV3p2u6o3seTQrCC2GHlGQEty3nM++gAKwliTEC4K5PM7Ka0lH8JX5kI0HXIGgHGv98ywcuA/eOco=
+	t=1738949630; cv=none; b=gt1xzEcC3bD16mxfp/8oGLeimfYCIp7m7K0F48gDb32dGgHVldOduVfWucpZx1RuzPdfPt7OQBvyWOVE8aWfvILq7i4N1/jOT7d5Y1tDPsk7pWIuuhvqjIpmzcMM0wD2FBfGFPS+yV12/mOzTOZxf0jMsyUKpEWPVt/+daencb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738949484; c=relaxed/simple;
-	bh=DMoehDVrexS+KO0jDz168m0nPSMZhAKy9NA3o9zTPqw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dedCHwVzvy1PcMyRWcASyjKxfKjE2U82EAZkIntvgqsmzJDdJhD8i+cpR4iyHm1E7JWKQicWYW/aF4VR7YxEBL2uYTVsMzaPLfsJ24zBkYLggSlKPsf0Af4eO/PZL8gng0HJih/C6JdLFoKk6bDjvw1dMX+2QYqWwlkB2U9kpzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Vqp8+wTl; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738949630; c=relaxed/simple;
+	bh=heKwUZUbcmyVtVPlyLMpMkb+c7yJ6iwb4h2qAwrn0GM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YspDJradkV08bCPQqvC3kgVO7YL4HtnaZnSlO3anpTkts3OStTmFiphoiwoCJWbUnbuviAwt4jhJphkMv4ST9NRfkKH7N1VMxFIw7ChdoUfXXK5vStS9kyzgNniPxo/ZBz+WoU0G53qAf5FrqNYXYtCY6E2BLD4sdZ+QMMca2IM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DbpT7yJY; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Vqp8+wTl"
-Message-ID: <a7b185bc-ff77-4701-a4dd-b93d5613643a@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738949480;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9g4ND8PPP28x50vbU7Fogg2mjWlyGpBFIHQIKFRKzBE=;
-	b=Vqp8+wTlTVL6bE0bo52wGbA8p9PswYl0fctqjGXZ4u02noCxob1wbd/rlpymbUAE+ISL3l
-	nJPnxRV55knkF4BZi/5OH+fbBPhF2dLH5XnyPu2uZMAvAqQpUXpwRsDAKXEjYbtkV4Y04Q
-	Dcb9kLXImFzgFZ8NhgCEiOJhx8qzZP4=
-Date: Fri, 7 Feb 2025 11:28:12 -0600
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DbpT7yJY"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f6022c2c3so7869755ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:33:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738949627; x=1739554427; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=b6DSgMi12Y1DTWXSxB1u+L8gWNg8zLGbTo3gPZs3j0U=;
+        b=DbpT7yJYRz9SQNTxCL+wl8s+6SLB6Y1380v4uJ74Fyci/v2Dd7M1XOm/gm66OWIwFt
+         Zdax0CP873T/CyZmTFBO7+cotKmoU6PHjRNSjw700LXUMk3p09VAFdI1eYVNoWM8AB6+
+         rK7SGJFf+u8nc1+zpEHf/g9+dhratuH5qqpjtM0IDxWuOx83YQu33Ew0whbUc2BP94n6
+         m7VzkS/zA/Y48CnVmrgQAKboLsMjyN/8ATNMf5hGbt1H1fEzF8MQrU4V+31pLrWPxVEE
+         bi1NmvGRJ8LlOStXgh0AbHBZhZ8urdlheTk6Fkq1kfcp+GhqGuCj7SSiCgjFABHmMj+K
+         cWPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738949627; x=1739554427;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=b6DSgMi12Y1DTWXSxB1u+L8gWNg8zLGbTo3gPZs3j0U=;
+        b=rAxR4LiOxaJTz1GcmggkX6HhDObdxKqRr8/LThyzmQUA7XSn5G9U0i68Xxg8inh7Xg
+         MH3Anu177rZt8yu0BhCj7ULnHx0Yc70McbZDbULHBLdnxmIe/rObz1kxeMJvW69jzxI+
+         TZjSlabRLVlj0xct8qElnr54B3QuNimrpx9eqXBK22YiTdAYotd2MrXgxzHGqN1gd4Em
+         3Jk279TA0cyik9euw6+DcRAvG8+ZFS8kHaIuDPOBQgT8IYAKGlKLrsnldB2EMe/iaEhe
+         9u6JJkhnzBm2/j9nFtldp11jbGiFJyWk28WDhked67KoT16OsHTUHmDAiwnMmZHukLne
+         XovQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXbeHL21VHB/q4x/NBtIXh0krnBJaeT0zqX1SWXVFgEIjq3LB6QHrqb+ldqxm2NVbQonch5G/T1aNyX5a4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweGwxdQuS3wBYLaFo+K4wGL/axlsAAkszZBwCbZDMXZU1kmyha
+	1WXcalxfKvVgpXesWpNmSjgPax/hIqoyDrsaw9LqAaphrLk8zgqlPtPTb1tD5Q==
+X-Gm-Gg: ASbGncvozT/r6TMxz0sRHSe9Ds/uKGxCqPACmShfV7+eEVDUayfIutZ61dhrJk1lR4k
+	Rt1geoWy7X28MoEFoQ4gtTAWoKPezbvDBvhgj3pXPttLd2CEW1mrlz65OVFFqK2FueWLRKUheyL
+	9lIFilYbC071E/0dxmUs8tp1mv70vEuzUdPu1yPCyFLi7bIkejeveXvBeR4sgq9XLwpsb7JSavz
+	SO1IYx67ZPmSbeK6Dwr7iYFUYlJAzqZC86UQZeLzfjj6efrJK4gshhaC5YQD/DOyLXpc6u64t2o
+	ZK4VKm/GWYtGQxCZ1tdVFzauZA==
+X-Google-Smtp-Source: AGHT+IF/6HJMivCoSnQWmuUQfnYzeYmJJ18uAMqp9K/Rr+W3BGx4zE82YztHxZQyN+t5mKrGChZ44g==
+X-Received: by 2002:a05:6a20:2d07:b0:1e1:b105:158f with SMTP id adf61e73a8af0-1edf36f3822mr13144747637.19.1738949627535;
+        Fri, 07 Feb 2025 09:33:47 -0800 (PST)
+Received: from thinkpad ([120.60.76.168])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51aee5bb1sm3342184a12.38.2025.02.07.09.33.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 09:33:46 -0800 (PST)
+Date: Fri, 7 Feb 2025 23:03:41 +0530
+From: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
+To: Wilson Ding <dingwei@marvell.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Sanghoon Lee <salee@marvell.com>
+Subject: Re: [PATCH 1/1] PCI: armada8k: Disable LTSSM on link down interrupts
+Message-ID: <20250207173341.anqw7ybp7vn6md4s@thinkpad>
+References: <20241112064241.749493-1-jpatel2@marvell.com>
+ <20241112214337.GA1861873@bhelgaas>
+ <BY3PR18MB4673E2698A6F465FEB56B5A2A7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
+ <BY3PR18MB467343D941D2F7706FD88FCBA7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v9 0/5] Support system sleep with offloaded usb transfers
-To: Guan-Yu Lin <guanyulin@google.com>
-Cc: gregkh@linuxfoundation.org, Thinh.Nguyen@synopsys.com,
- mathias.nyman@intel.com, stern@rowland.harvard.edu, perex@perex.cz,
- tiwai@suse.com, sumit.garg@linaro.org, kekrby@gmail.com, oneukum@suse.com,
- ricardo@marliere.net, lijiayi@kylinos.cn, quic_jjohnson@quicinc.com,
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-sound@vger.kernel.org
-References: <20250117145145.3093352-1-guanyulin@google.com>
- <943a7b09-8e77-4813-810a-18fea0e61482@linux.dev>
- <CAOuDEK3aip9SLCUPOzpVPwx-O4rmF-+sQrF4GJasGPBzV=qJdg@mail.gmail.com>
- <e5b1c3bf-4457-4859-92fc-785f7d6037fa@linux.dev>
- <CAOuDEK2u509kNjyL6qm27QgvtoCscRcsLixW=W8ABz2NF8A-tw@mail.gmail.com>
- <c8c699f7-bf9b-4e36-910e-c6f1c7092543@linux.dev>
- <CAOuDEK1w9Xbik-VbXwSd1ZYUWx9EQ_TnvEdV3WX2L-8Wtuj5bw@mail.gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
-In-Reply-To: <CAOuDEK1w9Xbik-VbXwSd1ZYUWx9EQ_TnvEdV3WX2L-8Wtuj5bw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <BY3PR18MB467343D941D2F7706FD88FCBA7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
 
-On 2/7/25 04:54, Guan-Yu Lin wrote:
-> On Tue, Feb 4, 2025 at 7:57 AM Pierre-Louis Bossart
-> <pierre-louis.bossart@linux.dev> wrote:
->>
->> On 2/2/25 20:57, Guan-Yu Lin wrote:
->>> On Tue, Jan 28, 2025 at 11:22 PM Pierre-Louis Bossart
->>> <pierre-louis.bossart@linux.dev> wrote:
->>>>
->>>> I am not following, sorry.
->>>>
->>>> Is the desired outcome to
->>>>
->>>> a) prevent the system from entering S3 if there is an active USB audio offloaded stream?
->>>>
->>>> or b) allow offloaded transactions even when the system is in S3?
->>>>
->>>>
->>>> which is it?
->>>>
->>>> a) would be rather interesting, but currently we don't have any such behavior supported. When the system enters S3 all audio stops. The stream will resume when the system goes back to S0. Do we really want the battery to drain in S3?
->>>>
->>>> b) seems rather complicated, once the on-going DMA transfers complete then who's going to refill buffers for the USB offloaded streams? Allowing the lowest level to operate even in S3 is only a small part of the puzzle, someone's got to provide data at some point. Unless the data is generated also by a side DSP having access to mass storage or wireless interfaces?
->>>
->>> Thanks for the question, the intent of our proposal should be (b), to
->>> allow offloaded transactions even when the system is in S3.
->>> In our design, the DSP wakes the system before the buffers are fully
->>> drained. This patchset enables the USB controller for offloaded
->>> transfers during system suspend (S3). To be precise, this patchset
->>> focuses solely on enabling the USB controller in S3 and does not
->>> include other necessary components for continuous offloaded USB
->>> transfers. I'll revise the commit message/cover letter to reflect
->>> this.Thanks for highlighting the potential ambiguity.
->>
->> Thanks for the precision.
->>
->> It was my understanding that anything above S1 could incur a hardware/software latency of two seconds or more to go back to S0. That would imply a buffering scheme that's significantly larger than usual offloaded solutions. In "typical" offload implementations it's rare to go beyond 100s of ms, since at some point you run into user-experience issues when applying volume changes or when changing tracks. It's usually a no-go if the user has to wait for a perceivable amount of time while the buffers drain.
->>
->> Not to mention that quite a few platforms no longer support S3, since 'Modern Standby' aka "S0 Low Power Idle" or 's2idle' was introduced in the Windows 10 days S3 became largely a legacy feature gradually dropped since no one really uses it.
+On Sat, Feb 01, 2025 at 12:57:56AM +0000, Wilson Ding wrote:
+> I am writing to follow up on this serious of PCIe patches submitted by Jenish.
+> Unfortunately, he has since left the company, and some comments on these
+>  patches were not addressed in a timely manner. I apologize for the delay
+> and any inconvenience this may have caused. I have reviewed the feedback
+> provided and am now taking over this work. I appreciate the time and effort
+> you have put into reviewing the patch and providing valuable comments.
+> I will ensure that the necessary changes are made and resubmit the patch
+> in the proper manner, as it was not initially submitted as a series.
 > 
-> I think for mobile devices, the S3 state is still used since the
-> hardware/software latency wouldn't be as big as you described, so
-> mobile devices could still use S3 for power saving. How about using a
-> "knob" to isolate the feature to specific devices? "Knob" could be
-> dynamically switched by some functions, or we could statically
-> determine it as a dts attribute or build config. Will a "knob" address
-> your concern for this feature? Do you have a preference on the "knob"
-> design?
+> > > When a PCI link down condition is detected, the link training state
+> > > machine must be disabled immediately.
+> > 
+> > Why?
+> > 
+> > "Immediately" has no meaning here.  Arbitrary delays are possible and must
+> > not break anything.
+> 
+> Yes, I agree. A delay cannot be avoided. The issue we encountered is that
+> the RC may not be aware of the link down when it happens. In this case,
+> any access to the PCI config space may hang up PCI bus. The only thing we
+> can do is to rely on this link down interrupt. By disabling APP_LTSSM_EN,
+> RC will bypass all device accesses with returning all ones (for read).
+> 
 
-My recollection of mobile devices is that they only relied on S0 platform substates, e.g. S0i1, S0i2, so that the device was always 'active' from a pm_runtime perspective. I have never seen a case where the device was 'active' in S3, I don't think this can work with the current system/pm_runtime power management, can it?
-In other words, audio streaming was supported in S0/D0, S0ix/D0ix but S3/D0ix was not a supported configuration.
+Ok. One comment below.
 
-That said, if you managed to make this work, at the very least this should be a device-specific property, not an unconditional blanket enablement of a capability that raises quite a few questions.
+> > > Signed-off-by: Jenishkumar Maheshbhai Patel
+> > > <mailto:jpatel2@marvell.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-armada8k.c | 38
+> > > ++++++++++++++++++++++
+> > >  1 file changed, 38 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c
+> > > b/drivers/pci/controller/dwc/pcie-armada8k.c
+> > > index b5c599ccaacf..07775539b321 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-armada8k.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-armada8k.c
+> > > @@ -53,6 +53,10 @@ struct armada8k_pcie {
+> > >  #define PCIE_INT_C_ASSERT_MASK		BIT(11)
+> > >  #define PCIE_INT_D_ASSERT_MASK		BIT(12)
+> > >
+> > > +#define PCIE_GLOBAL_INT_CAUSE2_REG	(PCIE_VENDOR_REGS_OFFSET
+> > + 0x24)
+> > > +#define PCIE_GLOBAL_INT_MASK2_REG	(PCIE_VENDOR_REGS_OFFSET
+> > + 0x28)
+> > > +#define PCIE_INT2_PHY_RST_LINK_DOWN	BIT(1)
+> > > +
+> > >  #define PCIE_ARCACHE_TRC_REG		(PCIE_VENDOR_REGS_OFFSET
+> > + 0x50)
+> > >  #define PCIE_AWCACHE_TRC_REG		(PCIE_VENDOR_REGS_OFFSET
+> > + 0x54)
+> > >  #define PCIE_ARUSER_REG			(PCIE_VENDOR_REGS_OFFSET
+> > + 0x5C)
+> > > @@ -204,6 +208,11 @@ static int armada8k_pcie_host_init(struct
+> > dw_pcie_rp *pp)
+> > >  	       PCIE_INT_C_ASSERT_MASK | PCIE_INT_D_ASSERT_MASK;
+> > >  	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK1_REG, reg);
+> > >
+> > > +	/* Also enable link down interrupts */
+> > > +	reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG);
+> > > +	reg |= PCIE_INT2_PHY_RST_LINK_DOWN;
+> > > +	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG, reg);
+> > > +
+> > >  	return 0;
+> > >  }
+> > >
+> > > @@ -221,6 +230,35 @@ static irqreturn_t armada8k_pcie_irq_handler(int
+> > irq, void *arg)
+> > >  	val = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_CAUSE1_REG);
+> > >  	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_CAUSE1_REG, val);
+> > >
+> > > +	val = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_CAUSE2_REG);
+> > > +
+> > > +	if (PCIE_INT2_PHY_RST_LINK_DOWN & val) {
+> > > +		u32 ctrl_reg = dw_pcie_readl_dbi(pci,
+> > PCIE_GLOBAL_CONTROL_REG);
+> > 
+> > Add blank line.
+> > 
+> > > +		/*
+> > > +		 * The link went down. Disable LTSSM immediately. This
+> > > +		 * unlocks the root complex config registers. Downstream
+> > > +		 * device accesses will return all-Fs
+> > > +		 */
+> > > +		ctrl_reg &= ~(PCIE_APP_LTSSM_EN);
+> > > +		dw_pcie_writel_dbi(pci, PCIE_GLOBAL_CONTROL_REG,
+> > ctrl_reg);
+> > 
+> > And here.
+> > 
+> > > +		/*
+> > > +		 * Mask link down interrupts. They can be re-enabled once
+> > > +		 * the link is retrained.
+> > > +		 */
+> > > +		ctrl_reg = dw_pcie_readl_dbi(pci,
+> > PCIE_GLOBAL_INT_MASK2_REG);
+> > > +		ctrl_reg &= ~PCIE_INT2_PHY_RST_LINK_DOWN;
+> > > +		dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG,
+> > ctrl_reg);
+> > 
+> > And here.  Follow existing coding style in this file.
+> > 
+> > > +		/*
+> > > +		 * At this point a worker thread can be triggered to
+> > > +		 * initiate a link retrain. If link retrains were
+> > > +		 * possible, that is.
+> > > +		 */
 
+Who is supposed to retrain the link? Where is the worker thread?
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
