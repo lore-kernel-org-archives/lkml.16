@@ -1,788 +1,187 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C512832C8B;
-	Fri,  7 Feb 2025 01:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B17A2417DB;
+	Fri,  7 Feb 2025 01:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738890243; cv=none; b=qAoWeBdpe13AfIK9n54dClshhFU/XRziABFJwMOKVANwE1IvAptZcrGvx5qB1qcOT551nxkLbkqx/TY75D4AuKJj9soCGiH0sLmMJGYmzG7eby2227TyAv6wNiPvPDwAQLbzPoO3pCIqGTjDOVcUsckvqI5Xt7NhtcFIn4LiCBA=
+	t=1738890283; cv=none; b=t/SNgRstALn0nO58GC8DVl6ADWSMs92XRkIDFS8kuS1TQwAJ+2ez1w4AvHmaRe+mFJLql8tUpM8pM3caOqJpBkv6x+f9iKBmeJfcALV5DTcPT+b+72IIul5+z/CHfnW+wBR3aHELjOeKbLh1/Z03fWaLZ3m3Gm5iqwlNBh847do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738890243; c=relaxed/simple;
-	bh=vs5AFYJ/QdF8jc2pCK+7CPHgDysrSnkye4UP67+2vhQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bhdFSrMKW+68onAQRooGKn2Z0iuaJrhbb74+1i/hAg9EJ2QRCPSrNAEwN0SGCdokGa871LSfYxsogwxUL+znhH7pCiN57z1GBNPPdKCXn6FEScmtaBhsMtFvZa5LZGOHbSE7zAX/VgZh6n2ttacc1Dy83xVGHY94981QlUO/dYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBE4312FC;
-	Thu,  6 Feb 2025 17:04:22 -0800 (PST)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6138D3F63F;
-	Thu,  6 Feb 2025 17:03:56 -0800 (PST)
-Date: Fri, 7 Feb 2025 01:02:02 +0000
-From: Andre Przywara <andre.przywara@arm.com>
-To: Andras Szemzo <szemzo.andras@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai
- <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, Linus Walleij <linus.walleij@linaro.org>, Philipp
- Zabel <p.zabel@pengutronix.de>, Maxime Ripard <mripard@kernel.org>, Vinod
- Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Ulf
- Hansson <ulf.hansson@linaro.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>, Florian
- Fainelli <florian.fainelli@broadcom.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 09/10] ARM: dts: sun8i: add DTSI file for V853
-Message-ID: <20250207010202.63bb5ac6@minigeek.lan>
-In-Reply-To: <20250205125225.1152849-10-szemzo.andras@gmail.com>
-References: <20250205125225.1152849-1-szemzo.andras@gmail.com>
-	<20250205125225.1152849-10-szemzo.andras@gmail.com>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+	s=arc-20240116; t=1738890283; c=relaxed/simple;
+	bh=ZL+ndmNfqd3tamYa3VWakgMQzhn04vpvwNH6uRi65lk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pwdXAVWwjYg4rkGSfSWyMTx8eZvqImZ8N+2Zu1CqKAeY6XznCpC8IiJeWpb8qxeYln+ruFN5u3EjQpHvCA/gLZ+qZre/oZ11JdwNcCp7TaYGHvf3ZonOU3KDCVH1kxMcv8z23og4pyPIMCbibAXIzncJTzZXShsUZXk0/nQWTBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DX5vGF3G; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DX5vGF3G"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e461015fbd4so1215686276.2;
+        Thu, 06 Feb 2025 17:04:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738890279; x=1739495079; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nBeAB9EAPsdPt9h4RsZ9JexiVqKep4iAtSHxkdAthOk=;
+        b=DX5vGF3GL+Ol+/EjTKhHvzptqmfA23Cb+wWdI9NnjqoiO2veRTngMUcN7LobvMtiOP
+         QDiIf1s4UA5GhZjT4XrsIcc2173jTgFmj8lQDQJhwGW4ejXP0slwkgasriWa2mN8/0Ls
+         DngvEoYy2H2JDZnY5bMWJmPRjgO7v12L7Nc9evswNGrzVQSgxZ0QbC8Z+pU2HfLd5Ksc
+         TORGfHrfMuhIciih2+wKmyAo/iOITm7ITZUIiBjN0o23XSpCON57yzrKz+FlQ3YRCiDl
+         rR3yHSCdDtqttN4nxlkY5QllGzK6For0dTWyassk4LbC3aayp+he/O+PINCMzk+tIcWP
+         0+Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738890279; x=1739495079;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nBeAB9EAPsdPt9h4RsZ9JexiVqKep4iAtSHxkdAthOk=;
+        b=fcc9okwEJTu3HaAEEIDCMZfnmI0szEn6MDOOET2asTYornpbaXiPUx5q7VDEX/yTzr
+         kctO0UWx+A1hjCn8ieAHb5Zdm0vofd6deV35n9miZRyqEr3zMGAQHDo3DqaYg5pNFWdH
+         EKCCH6B1r0XkYN6U72Po5lR3dyp1btNz6B5qlzFy5kB96ZH8TTXC88N5yIoyIYDoja3Y
+         ccIr+vv2KL1hjvZ5w0g+Z4ai7D3fe0piZRS1wmpq3MiJknlrOrvAeJv6nr7WnA7u+uc5
+         2zKof1oBCTH9JeOSfqPRHIOGrQq7Lgo/Lg5RLjMh5d3XaDBdDVaoqK2L5mNM6iR7AMLv
+         n70Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWEjBQ+E35jp64E0jCc/vv/EzJSRh2PTcISfId5pmH2fJwxESfoxxbGTLj33IZ/8bVF7STPSJuxug1ddAI=@vger.kernel.org, AJvYcCWtFNKhcTQajioLOoqT+ocibto4duPsFLrqnD5Ta4GhtjoEFT2drm9AMBl1RlBf/yYsPVbbVEHzELGZG7ppTY0ZJw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUK0Zy9DKH9rLHecycog8ZPw9vp/ZzjkGh5xgmXojnp82n9M5A
+	KwNyMyUbqe9yJGgYkAnsfupP59XMwRXkod09MQTpJ4Uvpje3z5Smkmm+ndkfXa7axes+DhAcxIv
+	0lG9J8UGemRA0r87FhPtck7uLKWXH4rCBcnw=
+X-Gm-Gg: ASbGncsf7Aq3hfG8SPvbElw5FnoU4iVtv9IfTFSjxVIuoco/pggZEfqoKHR4uhdQKZp
+	7/iKjx/xQ2BwNfMG8++A/HidKj6pIxs2GdsQq3nhocrH1P3AdHEa6HgfxBWaKNrCNEc4XVGECSA
+	==
+X-Google-Smtp-Source: AGHT+IH3PuVwAoFUjAULcqQwIb0hR5Y6wMOWun5P+e33kfKR85xoqXMtJOVgBAjytAxqIK3Qwa4LXHfXrr1ZVH51WVs=
+X-Received: by 2002:a05:690c:c96:b0:6f7:5868:86ea with SMTP id
+ 00721157ae682-6f9b27e746bmr13652667b3.8.1738890279357; Thu, 06 Feb 2025
+ 17:04:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250206113314.335376-2-krzysztof.m.lopatowski@gmail.com>
+In-Reply-To: <20250206113314.335376-2-krzysztof.m.lopatowski@gmail.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Thu, 6 Feb 2025 17:04:28 -0800
+X-Gm-Features: AWEUYZlfkHpBVzqXbre-MsSMpmUHF-Og9KBIsqtpvym-LfMnbMzQLHpCrvsUUYE
+Message-ID: <CAH0uvoj-aS44f78iQiVqDZiR1mN5SHcXgR17_Lnu_b5CC-ZsPQ@mail.gmail.com>
+Subject: Re: [PATCH] perf: Improve startup time by reducing unnecessary stat() calls
+To: =?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>
+Cc: namhyung@kernel.org, acme@kernel.org, irogers@google.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed,  5 Feb 2025 13:52:24 +0100
-Andras Szemzo <szemzo.andras@gmail.com> wrote:
+Hello Krzysztof,
 
-Hi,
+On Thu, Feb 6, 2025 at 3:36=E2=80=AFAM Krzysztof =C5=81opatowski
+<krzysztof.m.lopatowski@gmail.com> wrote:
+>
+> When testing perf trace on NixOS, I noticed significant startup delays:
+> - `ls`: ~2ms
+> - `strace ls`: ~10ms
+> - `perf trace ls`: ~550ms
 
-those comments go on top of those in my previous reply:
+Thank you so much for this insight.
 
-> V853/V851 is a new SoC by Allwinner. Add a basic dtsi file for it.
-> 
-> Signed-off-by: Andras Szemzo <szemzo.andras@gmail.com>
+>
+> Profiling showed that 51% of the time is spent reading files,
+> 26% in loading BPF programs, and 11% in `newfstatat`.
+
+That's a valuable piece of info, thank you.
+
+>
+> This patch optimizes module path exploration by avoiding `stat()` calls
+> unless necessary. For filesystems that do not implement `d_type`
+> (DT_UNKNOWN), it falls back to the old behavior.
+> See `readdir(3)` for details.
+>
+> This reduces `perf trace ls` time to ~500ms.
+
+Before:
+
+perf $ time sudo ./perf trace -a --max-events=3D1 -S 2 >&1 1>/dev/null
+         ? (         ): :2278675/2278675  ... [continued]: read())
+                                        =3D 1
+real    0m0.833s
+
+So 833ms.
+
+After:
+
+perf $ time sudo ./perf trace -a --max-events=3D1 -S 2 >&1 1>/dev/null
+         ? (         ): :2274650/2274650  ... [2: No such file or directory
+<SNIP>
+real    0m0.805s
+user    0m0.004s
+sys     0m0.011s
+
+805ms.
+
+And the results are consistent. Apparently works for me, thank you :)
+
+>
+> A more thorough startup optimization based on command parameters would
+> be ideal, but that is a larger effort.
+>
+> Signed-off-by: Krzysztof =C5=81opatowski <krzysztof.m.lopatowski@gmail.co=
+m>
 > ---
->  arch/arm/boot/dts/allwinner/sun8i-v853.dtsi | 656 ++++++++++++++++++++
->  1 file changed, 656 insertions(+)
->  create mode 100644 arch/arm/boot/dts/allwinner/sun8i-v853.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/allwinner/sun8i-v853.dtsi b/arch/arm/boot/dts/allwinner/sun8i-v853.dtsi
-> new file mode 100644
-> index 000000000000..8b82b8783127
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/allwinner/sun8i-v853.dtsi
-> @@ -0,0 +1,656 @@
-> +// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
-> +// Copyright (C) 2024 Andras Szemzo <szemzo.andras@gmail.com>
-> +
-> +#include <dt-bindings/clock/sun6i-rtc.h>
-> +#include <dt-bindings/clock/allwinner,sun8i-v853-r-ccu.h>
-> +#include <dt-bindings/reset/allwinner,sun8i-v853-r-ccu.h>
-> +#include <dt-bindings/clock/allwinner,sun8i-v853-ccu.h>
-> +#include <dt-bindings/reset/allwinner,sun8i-v853-ccu.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/power/allwinner,sun8i-v853-ppu.h>
-> +
-> +/ {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +
-> +	dcxo: dcxo-clk {
-> +		compatible = "fixed-clock";
-> +		clock-output-names = "osc24M";
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7","arm,armv7";
+>  tools/perf/util/machine.c | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 2d51badfbf2e..76b857fd752b 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -1354,7 +1354,7 @@ static int maps__set_module_path(struct maps *maps,=
+ const char *path, struct kmo
+>
+>  static int maps__set_modules_path_dir(struct maps *maps, const char *dir=
+_name, int depth)
+>  {
+> -       struct dirent *dent;
+> +       const struct dirent *dent;
 
-The binding says to only give the CPU name, so just the first string,
-no fallback.
+Is it necessary to constify dent?
 
-> +			reg = <0>;
-> +			clocks = <&ccu CLK_CPU>;
-> +			clock-names = "cpu";
-> +			clock-frequency = <912000000>;
+>         DIR *dir =3D opendir(dir_name);
+>         int ret =3D 0;
+>
+> @@ -1365,14 +1365,20 @@ static int maps__set_modules_path_dir(struct maps=
+ *maps, const char *dir_name, i
+>
+>         while ((dent =3D readdir(dir)) !=3D NULL) {
+>                 char path[PATH_MAX];
+> -               struct stat st;
+> +               unsigned char d_type =3D dent->d_type;
+>
+> -               /*sshfs might return bad dent->d_type, so we have to stat=
+*/
+>                 path__join(path, sizeof(path), dir_name, dent->d_name);
+> -               if (stat(path, &st))
+> -                       continue;
+>
+> -               if (S_ISDIR(st.st_mode)) {
+> +               if (d_type =3D=3D DT_UNKNOWN) {
+> +                       struct stat st;
+> +
+> +                       if (stat(path, &st))
+> +                               continue;
+> +                       if (S_ISDIR(st.st_mode))
+> +                               d_type =3D DT_DIR;
+> +               }
+> +
+> +               if (d_type =3D=3D DT_DIR) {
+>                         if (!strcmp(dent->d_name, ".") ||
+>                             !strcmp(dent->d_name, ".."))
+>                                 continue;
+> --
+> 2.47.2
+>
+>
 
-Please remove this, it only makes sense for a constant frequency, which
-is contradicted by the previous two properties.
+Acked-by: Howard Chu <howardchu95@gmail.com>
 
-> +			clock-latency = <200000>;
-> +			cooling-min-level = <5>;
-> +			cooling-max-level = <0>;
-> +			#cooling-cells = <2>; /* min followed by max */
-> +			dynamic-power-coefficient = <142>;
-> +		};
-> +	};
-> +
-> +	pmu {
-> +		compatible = "arm,cortex-a7-pmu";
-> +		interrupts = <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
-
-What's the second interrupt for? I'd assume that's for a second core?
-Can you check that? Use "perf record" (perf stat does not trigger
-interrupts), and then check the counter in /proc/interrupts.
-
-> +		interrupt-parent = <&gic>;
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv7-timer";
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-
-This should be GIC_CPU_MASK_SIMPLE(1) for a single core CPU.
-
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-> +		clock-frequency = <24000000>;
-> +		interrupt-parent = <&gic>;
-> +		arm,cpu-registers-not-fw-configured;
-> +		arm,no-tick-in-suspend;
-> +	};
-> +
-> +	soc {
-> +		compatible = "simple-bus";
-> +		ranges;
-> +		interrupt-parent = <&gic>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		dma-noncoherent;
-> +
-> +		pio: pinctrl@2000000 {
-> +			compatible = "allwinner,sun8i-v853-pinctrl";
-> +			reg = <0x2000000 0x800>;
-> +			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_APB0>, <&dcxo>, <&rtc CLK_OSC32K>;
-> +			clock-names = "apb", "hosc", "losc";
-> +			gpio-controller;
-> +			interrupt-controller;
-> +			#gpio-cells = <3>;
-> +			#interrupt-cells = <3>;
-> +
-> +			/omit-if-no-ref/
-> +			uart0_ph9_pins: uart0-ph9-pins {
-> +				pins = "PH9", "PH10";
-> +				function = "uart0";
-> +				allwinner,pinmux = <5>;
-> +			};
-> +
-> +			/omit-if-no-ref/
-> +			uart2_pe12_pins: uart2-pe12-pins {
-
-There is only one set of UART2 pins in PortE, so drop the pin number:
-	uart2_pe_pins: uart-pe-pins {
-
-> +				pins = "PE12", "PE13";
-> +				function = "uart2";
-> +				allwinner,pinmux = <6>;
-> +			};
-> +
-> +			/omit-if-no-ref/
-> +			dsi_2lane_pins: dsi-2lane-pins {
-> +				pins = "PD1", "PD2", "PD3", "PD4", "PD5", "PD6";
-> +				function = "dsi";
-> +				allwinner,pinmux = <5>;
-> +			};
-> +
-> +			/omit-if-no-ref/
-> +			spi0_pins: spi0-pins {
-
-SPI0 can be muxed to PortF as well, so please use spi0_pc_pins.
-
-> +				pins = "PC0", "PC1", "PC2", "PC3", "PC4", "PC5";
-
-This includes the optional WP and HOLD pins, I think they should be
-separate? So add a second node, with just PC4 and PC5, and then
-reference both nodes in your SPI flash node, in the board .dts.
-The base pins should be untagged, but the optional pins should carry
-the omit-if-no-ref tag.
-
-> +				function = "spi0";
-> +				allwinner,pinmux = <4>;
-> +			};
-> +
-> +			/omit-if-no-ref/
-> +			spi3_pins: spi3-pins {
-> +				pins = "PH11", "PH12", "PH13", "PH14";
-> +				function = "spi3";
-> +				allwinner,pinmux = <6>;
-> +			};
-> +
-> +			/omit-if-no-ref/
-> +			i2c2_ph11_pins: i2c2-ph11-pins {
-> +				pins = "PH11", "PH12";
-> +				function = "i2c2";
-> +				allwinner,pinmux = <5>;
-> +			};
-> +
-> +			/omit-if-no-ref/
-> +			i2c3_ph13_pins: i2c3-ph13-pins {
-> +				pins = "PH13", "PH14";
-> +				function = "i2c3";
-> +				allwinner,pinmux = <5>;
-> +			};
-> +
-> +			/omit-if-no-ref/
-> +			mmc0_pins: mmc0-pins {
-> +				pins = "PF0", "PF1", "PF2", "PF3", "PF4", "PF5";
-> +				function = "sdc0";
-> +				allwinner,pinmux = <2>;
-> +				drive-strength = <30>;
-> +				bias-pull-up;
-> +			};
-> +
-> +			/omit-if-no-ref/
-> +			mmc1_pins: mmc1-pins {
-
-mmc1_pe_pins
-
-> +				pins = "PE0", "PE1", "PE2", "PE3", "PE4", "PE5";
-> +				function = "sdc1";
-> +				allwinner,pinmux = <6>;
-> +				drive-strength = <30>;
-> +				bias-pull-up;
-> +			};
-> +
-> +			/omit-if-no-ref/
-> +			rmii_pe_pins: rmii-pe-pins {
-> +				pins = "PE0", "PE1", "PE2", "PE3", "PE4",
-> +				       "PE5", "PE6", "PE7", "PE8", "PE9";
-> +				function = "emac";
-> +				allwinner,pinmux = <3>;
-> +			};
-> +		};
-
-Verified that the pin numbers and the pinmux match the function in the
-manual.
-
-> +
-> +		ccu: clock-controller@2001000 {
-> +			compatible = "allwinner,sun8i-v853-ccu";
-> +			reg = <0x2001000 0x1000>;
-> +			clocks = <&dcxo>,
-> +				 <&rtc CLK_IOSC>,
-> +				 <&rtc CLK_OSC32K>;
-> +			clock-names = "hosc", "iosc", "losc";
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +		};
-> +
-> +		gpadc: adc@2009000 {
-> +			compatible = "allwinner,sun20i-d1-gpadc";
-> +			reg = <0x2009000 0x0400>;
-> +			clocks = <&ccu CLK_BUS_GPADC>;
-> +			resets = <&ccu RST_BUS_GPADC>;
-> +			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "disabled";
-> +			#io-channel-cells = <1>;
-> +		};
-> +
-> +		i2s0: i2s@2032000 {
-> +			compatible = "allwinner,sun50i-r329-i2s";
-> +			reg = <0x2032000 0x1000>;
-> +			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_I2S0>,
-> +				 <&ccu CLK_I2S0>;
-> +			clock-names = "apb", "mod";
-> +			resets = <&ccu RST_BUS_I2S0>;
-> +			dmas = <&dma 3>, <&dma 3>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +			#sound-dai-cells = <0>;
-> +		};
-> +
-> +		i2s1: i2s@2033000 {
-> +			compatible = "allwinner,sun50i-r329-i2s";
-> +			reg = <0x2033000 0x1000>;
-> +			interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_I2S1>,
-> +				 <&ccu CLK_I2S1>;
-> +			clock-names = "apb", "mod";
-> +			resets = <&ccu RST_BUS_I2S1>;
-> +			dmas = <&dma 4>, <&dma 4>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +			#sound-dai-cells = <0>;
-> +		};
-> +
-> +		timer: timer@2050000 {
-> +			compatible = "allwinner,sun20i-d1-timer",
-> +				     "allwinner,sun8i-a23-timer";
-> +			reg = <0x2050000 0xa0>;
-> +			interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-
-Shouldn't there be four interrupts, for the four timers?
-
-> +			clocks = <&dcxo>;
-> +		};
-> +
-> +		wdt: watchdog@20500a0 {
-> +			compatible = "allwinner,sun20i-d1-wdt-reset",
-> +				     "allwinner,sun20i-d1-wdt";
-> +			reg = <0x20500a0 0x20>;
-> +			interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&dcxo>, <&rtc CLK_OSC32K>;
-> +			clock-names = "hosc", "losc";
-> +			status = "reserved";
-
-Who is this reserved for? Should be "okay", no?
-
-> +		};
-> +
-> +		uart0: serial@2500000 {
-> +			compatible = "snps,dw-apb-uart";
-> +			reg = <0x2500000 0x400>;
-> +			reg-io-width = <4>;
-> +			reg-shift = <2>;
-> +			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_UART0>;
-> +			resets = <&ccu RST_BUS_UART0>;
-> +			dmas = <&dma 14>, <&dma 14>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +		};
-> +
-> +		uart1: serial@2500400 {
-> +			compatible = "snps,dw-apb-uart";
-> +			reg = <0x2500400 0x400>;
-> +			reg-io-width = <4>;
-> +			reg-shift = <2>;
-> +			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_UART1>;
-> +			resets = <&ccu RST_BUS_UART1>;
-> +			dmas = <&dma 15>, <&dma 15>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +		};
-> +
-> +		uart2: serial@2500800 {
-> +			compatible = "snps,dw-apb-uart";
-> +			reg = <0x2500800 0x400>;
-> +			reg-io-width = <4>;
-> +			reg-shift = <2>;
-> +			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_UART2>;
-> +			resets = <&ccu RST_BUS_UART2>;
-> +			dmas = <&dma 16>, <&dma 16>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +		};
-> +
-> +		uart3: serial@2500c00 {
-> +			compatible = "snps,dw-apb-uart";
-> +			reg = <0x2500c00 0x400>;
-> +			reg-io-width = <4>;
-> +			reg-shift = <2>;
-> +			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_UART3>;
-> +			resets = <&ccu RST_BUS_UART3>;
-> +			dmas = <&dma 17>, <&dma 17>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +		};
-> +
-> +		i2c0: i2c@2502000 {
-> +			compatible = "allwinner,sun8i-v536-i2c",
-> +				     "allwinner,sun6i-a31-i2c";
-> +			reg = <0x2502000 0x400>;
-> +			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_I2C0>;
-> +			resets = <&ccu RST_BUS_I2C0>;
-> +			dmas = <&dma 43>, <&dma 43>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c1: i2c@2502400 {
-> +			compatible = "allwinner,sun8i-v536-i2c",
-> +				     "allwinner,sun6i-a31-i2c";
-> +			reg = <0x2502400 0x400>;
-> +			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_I2C1>;
-> +			resets = <&ccu RST_BUS_I2C1>;
-> +			dmas = <&dma 44>, <&dma 44>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c2: i2c@2502800 {
-> +			compatible = "allwinner,sun8i-v536-i2c",
-> +				     "allwinner,sun6i-a31-i2c";
-> +			reg = <0x2502800 0x400>;
-> +			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_I2C2>;
-> +			resets = <&ccu RST_BUS_I2C2>;
-> +			dmas = <&dma 45>, <&dma 45>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c3: i2c@2502c00 {
-> +			compatible = "allwinner,sun8i-v536-i2c",
-> +				     "allwinner,sun6i-a31-i2c";
-> +			reg = <0x2502c00 0x400>;
-> +			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_I2C3>;
-> +			resets = <&ccu RST_BUS_I2C3>;
-> +			dmas = <&dma 46>, <&dma 46>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c4: i2c@2503000 {
-> +			compatible = "allwinner,sun8i-v536-i2c",
-> +				     "allwinner,sun6i-a31-i2c";
-> +			reg = <0x2503000 0x400>;
-> +			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_I2C4>;
-> +			resets = <&ccu RST_BUS_I2C4>;
-> +			dmas = <&dma 47>, <&dma 47>;
-> +			dma-names = "rx", "tx";
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		syscon: syscon@3000000 {
-> +			compatible = "allwinner,sun8i-h3-system-control";
-> +			reg = <0x3000000 0x1000>;
-> +			ranges;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			sram_c: sram@20000 {
-> +				compatible = "mmio-sram";
-> +				reg = <0x00020000 0x21000>;
-> +				#address-cells = <1>;
-> +				#size-cells = <1>;
-> +				ranges = <0 0x00020000 0x21000>;
-> +
-> +				ve_sram: sram-section@0 {
-
-The manual says "Using ISP SRAM". Do you know what it really is?
-
-> +				    compatible = "allwinner,sun8i-v3s-sram-c", 
-> +						 "allwinner,sun4i-a10-sram-c1";
-> +				    reg = <0x000000 0x21000>;
-> +				};
-> +			};
-> +		};
-> +
-> +		dma: dma-controller@3002000 {
-> +			compatible = "allwinner,sun20i-d1-dma";
-> +			reg = <0x3002000 0x1000>;
-> +			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_DMA>, <&ccu CLK_MBUS_DMA>;
-> +			clock-names = "bus", "mbus";
-> +			resets = <&ccu RST_BUS_DMA>;
-> +			dma-channels = <16>;
-> +			dma-requests = <48>;
-> +			#dma-cells = <1>;
-> +		};
-> +
-> +		hwspinlock: hwlock@3005000 {
-> +		    compatible = "allwinner,sun6i-a31-hwspinlock";
-> +			reg = <0x3005000 0x1000>;
-> +			clocks = <&ccu CLK_BUS_SPINLOCK>;
-> +			clock-names = "ahb";
-> +			resets = <&ccu RST_BUS_SPINLOCK>;
-> +			reset-names = "ahb";
-> +			interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		sid: efuse@3006000 {
-> +			compatible = "allwinner,sun20i-d1-sid";
-> +			reg = <0x3006000 0x1000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			ths_calib: ths-calib@14 {
-> +				reg = <0x14 0x8>;
-> +			};
-> +		};
-> +
-> +		hstimer@3008000 {
-> +			compatible = "allwinner,sun7i-a20-hstimer";
-> +			reg = <0x03008000 0x1000>;
-> +			interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_HSTIMER>;
-> +		};
-> +
-> +		gic: interrupt-controller@3021000 {
-> +			compatible = "arm,gic-400";
-> +			reg = <0x03021000 0x1000>,	/* GIC Dist */
-> +			      <0x03022000 0x2000>,	/* GIC CPU */
-> +			      <0x03024000 0x2000>,	/* GIC VCPU Control */
-> +			      <0x03026000 0x2000>;	/* GIC VCPU */
-> +			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-
-GIC_CPU_MASK_SIMPLE(1)
-
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +		};
-> +
-> +		mbus: dram-controller@3102000 {
-> +			compatible = "allwinner,sun20i-d1-mbus";
-> +			reg = <0x3102000 0x1000>,
-> +			      <0x3103000 0x1000>;
-> +			reg-names = "mbus", "dram";
-> +			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_MBUS>,
-> +				 <&ccu CLK_DRAM>,
-> +				 <&ccu CLK_BUS_DRAM>;
-> +			clock-names = "mbus", "dram", "bus";
-> +			dma-ranges = <0 0x40000000 0x80000000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			#interconnect-cells = <1>;
-> +		};
-> +
-> +		mmc0: mmc@4020000 {
-> +			compatible = "allwinner,sun20i-d1-mmc";
-> +			reg = <0x4020000 0x1000>;
-> +			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
-> +			clock-names = "ahb", "mmc";
-> +			resets = <&ccu RST_BUS_MMC0>;
-> +			reset-names = "ahb";
-> +			no-sdio;
-> +			no-mmc;
-> +			cap-sd-highspeed;
-> +			max-frequency = <150000000>;
-> +			mmc-ddr-1_8v;
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		mmc1: mmc@4021000 {
-> +			compatible = "allwinner,sun20i-d1-mmc";
-> +			reg = <0x4021000 0x1000>;
-> +			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
-> +			clock-names = "ahb", "mmc";
-> +			resets = <&ccu RST_BUS_MMC1>;
-> +			reset-names = "ahb";
-> +			cap-sd-highspeed;
-> +			cap-mmc-highspeed;
-> +			max-frequency = <150000000>;
-> +			mmc-ddr-1_8v;
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		mmc2: mmc@4022000 {
-> +			compatible = "allwinner,sun20i-d1-mmc";
-> +			reg = <0x4022000 0x1000>;
-> +			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_MMC2>, <&ccu CLK_MMC2>;
-> +			clock-names = "ahb", "mmc";
-> +			resets = <&ccu RST_BUS_MMC2>;
-> +			reset-names = "ahb";
-> +			no-sdio;
-> +			no-sd;
-> +			cap-mmc-highspeed;
-> +			max-frequency = <150000000>;
-> +			mmc-ddr-1_8v;
-> +			mmc-ddr-3_3v;
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		spi0: spi@4025000 {
-> +			compatible = "allwinner,sun50i-r329-spi";
-> +			reg = <0x4025000 0x1000>;
-> +			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_SPI0>, <&ccu CLK_SPI0>;
-> +			clock-names = "ahb", "mod";
-> +			resets = <&ccu RST_BUS_SPI0>;
-> +			dmas = <&dma 22>, <&dma 22>;
-> +			dma-names = "rx", "tx";
-> +			num-cs = <1>;
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		spi1: spi@4026000 {
-> +			compatible = "allwinner,sun50i-r329-spi-dbi",
-> +				     "allwinner,sun50i-r329-spi";
-> +			reg = <0x4026000 0x1000>;
-> +			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_SPI1>, <&ccu CLK_SPI1>;
-> +			clock-names = "ahb", "mod";
-> +			resets = <&ccu RST_BUS_SPI1>;
-> +			dmas = <&dma 23>, <&dma 23>;
-> +			dma-names = "rx", "tx";
-> +			num-cs = <1>;
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		spi2: spi@4027000 {
-> +			compatible = "allwinner,sun50i-r329-spi";
-> +			reg = <0x4027000 0x1000>;
-> +			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_SPI2>, <&ccu CLK_SPI2>;
-> +			clock-names = "ahb", "mod";
-> +			resets = <&ccu RST_BUS_SPI2>;
-> +			dmas = <&dma 24>, <&dma 24>;
-> +			dma-names = "rx", "tx";
-> +			num-cs = <1>;
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		spi3: spi@4028000 {
-> +			compatible = "allwinner,sun50i-r329-spi";
-> +			reg = <0x4028000 0x1000>;
-> +			interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_SPI3>, <&ccu CLK_SPI3>;
-> +			clock-names = "ahb", "mod";
-> +			resets = <&ccu RST_BUS_SPI3>;
-> +			dmas = <&dma 25>, <&dma 25>;
-> +			dma-names = "rx", "tx";
-> +			num-cs = <1>;
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		usb_otg: usb@4100000 {
-> +			compatible = "allwinner,sun8i-a33-musb";
-> +			reg = <0x4100000 0x400>;
-> +			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "mc";
-> +			clocks = <&ccu CLK_BUS_OTG>;
-> +			resets = <&ccu RST_BUS_OTG>;
-> +			extcon = <&usbphy 0>;
-> +			phys = <&usbphy 0>;
-> +			phy-names = "usb";
-> +			status = "disabled";
-> +		};
-> +
-> +		usbphy: phy@4100400 {
-> +			compatible = "allwinner,sun8i-v853-usb-phy";
-> +			reg = <0x4100400 0x100>,
-> +			      <0x4101800 0x100>;
-> +			reg-names = "phy_ctrl",
-> +				    "pmu0";
-> +			clocks = <&ccu CLK_USB_OHCI>;
-> +			clock-names = "usb0_phy";
-> +			resets = <&ccu RST_USB_PHY>;
-> +			reset-names = "usb0_reset";
-> +			status = "disabled";
-> +			#phy-cells = <1>;
-> +		};
-> +
-> +		ehci0: usb@4101000 {
-> +			compatible = "generic-ehci";
-> +			reg = <0x4101000 0x100>;
-> +			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_OHCI>,
-> +				 <&ccu CLK_BUS_EHCI>,
-> +				 <&ccu CLK_USB_OHCI>;
-> +			resets = <&ccu RST_BUS_OHCI>,
-> +				 <&ccu RST_BUS_EHCI>;
-> +			phys = <&usbphy 0>;
-> +			phy-names = "usb";
-> +			status = "disabled";
-> +		};
-> +
-> +		ohci0: usb@4101400 {
-> +			compatible = "generic-ohci";
-> +			reg = <0x4101400 0x100>;
-> +			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_OHCI>,
-> +				 <&ccu CLK_USB_OHCI>;
-> +			resets = <&ccu RST_BUS_OHCI>;
-> +			phys = <&usbphy 0>;
-> +			phy-names = "usb";
-> +			status = "disabled";
-> +		};
-> +
-> +		ppu: power-controller@7001000 {
-> +			compatible = "allwinner,sun8i-v853-ppu";
-> +			reg = <0x7001000 0x400>;
-> +			clocks = <&r_ccu CLK_BUS_R_PPU>;
-> +			resets = <&r_ccu RST_BUS_R_PPU>;
-> +			#power-domain-cells = <1>;
-> +		};
-> +
-> +		r_ccu: clock-controller@7010000 {
-> +			compatible = "allwinner,sun8i-v853-r-ccu";
-> +			reg = <0x7010000 0x230>;
-> +			clocks = <&dcxo>,
-> +				 <&rtc CLK_IOSC>,
-> +				 <&rtc CLK_OSC32K>,
-> +				 <&ccu CLK_PLL_PERIPH_200M>,
-> +				 <&ccu CLK_PLL_AUDIO_4X>;
-> +			clock-names = "hosc",
-> +				      "iosc",
-> +				      "losc",
-> +				      "pll-periph",
-> +				      "pll-audio";
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +		};
-> +
-> +		nmi_intc: intc-nmi@7010320 {
-> +			compatible = "allwinner,sun9i-a80-nmi";
-> +			interrupt-parent = <&gic>;
-> +			#interrupt-cells = <2>;
-> +			#address-cells = <0>;
-> +			interrupt-controller;
-> +			reg = <0x07010320 0xc>;
-> +			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		rtc: rtc@7090000 {
-> +			compatible = "allwinner,sun50i-r329-rtc";
-> +			reg = <0x7090000 0x400>;
-> +			interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&r_ccu CLK_BUS_R_RTC>;
-> +			clock-names = "bus";
-> +			resets = <&r_ccu RST_BUS_R_RTC>;
-> +			wakeup-source;
-> +			#clock-cells = <1>;
-> +		};
-
-Verified that all MMIO base addresses, DMA channels and interrupts are
-matching the manual.
-
-Cheers,
-Andre
-
-> +	};
-> +};
-
+Thanks,
+Howard
