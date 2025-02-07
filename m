@@ -1,83 +1,149 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60E02417C9;
-	Fri,  7 Feb 2025 12:53:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E86944E;
+	Fri,  7 Feb 2025 12:56:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738932807; cv=none; b=ahIeCEcckxxW7HfJdTq6UfzTq1Y+U2gcv/T26aAS1GNFUQcv9vCTiKeFQ817GO3pbdKFC9X/kmv53Cduj2Rc09Tz6c9Y0p5jSQWui+qPviVh/LCN11+2wxcIJg5wFTUfXOYjgsdjdyo68/EtArPWIHsnQTsD7T/OPOzo8NktK2k=
+	t=1738932961; cv=none; b=SwJ9e1ph2Jy8dwsFGaEs67tZoSTfiGUnrNCo8O4TNp5SZPB0ZrIvyvy3vF6IM/Z9d3/W+Rz8pMwsHIB6JRZmHNLrWCDi2VdrZF5duHj4PjMvhEhjLpUG7JmrSagl7ydFSDv+rCFqZo1Etd//wFIBP4Ug3IJog2JoTz8y9qMR51o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738932807; c=relaxed/simple;
-	bh=k04RPwsmTcsvvy3E4I3d8fzWMPRzRo8r9205m3ptnWM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BomLqS2TnFaqGi5j4aRDW0nhaegm2yTVLZZwS2hnjnbeDJgvxypsW4VAzwriSS63pW1RpeuLto7e6YCHjIFk/usV/4i3KpxKC8Hvev2zzcrq9ejDZQ8PDkO40ECMXljmDF8kF2QIO8zNiQA5JeJSc5ai/YCuMaQBei+HevrHbrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rm0CZCqC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738932961; c=relaxed/simple;
+	bh=2ZSzyPSgW8Nc958RFBf7+Jl5gwzWQyIwJddG+ZITof0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bopoOyGT/UjYYabxrBqg1BJuW6dkguUwu0RPpZ18cEtK7KBMdW7PcC27OtHOhpOdmLcRFMPl7SdGtfZRj22wRRXNoxJfWueXHCnSRqzs8vJcuKGJvREP2zl1PZbrMN/6aMKu03f32x6PKUFNXIJYkSZpCVzzyuKF/5JZ2+FiBvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lZR/rV+0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rm0CZCqC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A777C4CED1;
-	Fri,  7 Feb 2025 12:53:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lZR/rV+0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B76B7C4CEE4;
+	Fri,  7 Feb 2025 12:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738932807;
-	bh=k04RPwsmTcsvvy3E4I3d8fzWMPRzRo8r9205m3ptnWM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=rm0CZCqCgshy5c/bLVPLikN8tS51zXT6PJ0Bdp032EHrlaI9XheivPFD5wgk8jUVB
-	 XWFm+zMle9eihVI4jc+bA+f8+WPUNxWQAyqHBOy6ofckTekEPqAGcKToEcPKEiq41P
-	 Oa+5NhtOTBkbRArUS2WFXzjej2/YKutSWLzjEA3GCuHggb7Z6/mX4UN8RegtVynom7
-	 tgiemlu4fV3ltmkmbzP/cCdMCoGCrNHdEpZoRkZT4MPr/KAaGzP/AhYvlCxEwfEtB3
-	 5mnuA5zqfVokeLdUT/vZSNEa/oglrIQ/egfbM9N/g4JTRufD0eS6ZpknbZPFSahVh3
-	 t+AtiK2BInhjA==
-Date: Fri, 7 Feb 2025 13:53:24 +0100 (CET)
-From: Jiri Kosina <jikos@kernel.org>
-To: Aditya Garg <gargaditya08@live.com>
-cc: "bentiss@kernel.org" <bentiss@kernel.org>, 
-    Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
-    =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
-    =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <thomas@t-8ch.de>, 
-    Kerem Karabay <kekrby@gmail.com>, 
-    Orlando Chamberlain <orlandoch.dev@gmail.com>, 
-    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-    "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Subject: Re: [PATCH RESEND v2 1/4] HID: hid-appletb-bl: add driver for the
- backlight of Apple Touch Bars
-In-Reply-To: <PN0PR01MB8288DA05B1DEE461C605348DB8F72@PN0PR01MB8288.INDPRD01.PROD.OUTLOOK.COM>
-Message-ID: <qnpr84r1-78q1-8n61-r705-r64q220p7222@xreary.bet>
-References: <PN0PR01MB8288DA05B1DEE461C605348DB8F72@PN0PR01MB8288.INDPRD01.PROD.OUTLOOK.COM>
+	s=k20201202; t=1738932960;
+	bh=2ZSzyPSgW8Nc958RFBf7+Jl5gwzWQyIwJddG+ZITof0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=lZR/rV+0VhtumFB64rWvIRmSkJYNvI75YnLrs5wh1Am4DhV70rkAtGM0b3kneW76V
+	 87H7eVVRtUl1zSL8sqRuuglz32fuwLYqyzHw129htIo3oeevS1zJcsSnCskcKIyitV
+	 LlIAqIpcqd8dOp0P1v6NSbOa+3g6e30v3ZwYFpEWVscv4Na0b0vuymusyJa4/p5QkR
+	 ZU3IkMoWjXg0HDKMPLbKcLjUQpo9AqDM8XvuksRglQ9msaaeAIUEQd/Ezojj6+iP7F
+	 Hnf0bBgNvW/y2V98h5Juc822q6dcI6jhVxZ/ljtIAvBYoOECpzSsHGRE/DYO9+yeJ6
+	 mpaz/+V9ehXKQ==
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5f2e13cb359so610443eaf.3;
+        Fri, 07 Feb 2025 04:56:00 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW1IChN8XS+BDmAcuEpuSUY9tB1JTjS84ougcTXyHqk2JVsK1a4XoCZ0eRw++/DHtsubuF1xyng7biDxbw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDLFQQ2/5/k17nVLzfqihcq6hozc2tjRzFiptrESkRZDxjuaDn
+	dUipcDpIf4C/3NkBJYaiC55RW0pA0Uyt2EWyBP75JpZGRxbLQQKxKtfp97SxXjyEJZdhbb45zm4
+	IlNeXhI3Ut26oqhicZaz/T2PgiVc=
+X-Google-Smtp-Source: AGHT+IEyfVjxr2CaZz42veOqMmMnwZ7LuGcTfrWXmqUvCORGtrVP5OmTvh5k4R3LvXW9FE+RLZ1rwgna9R6NGUll6rc=
+X-Received: by 2002:a05:6820:80c:b0:5f3:4175:1d7f with SMTP id
+ 006d021491bc7-5fc5e75e777mr1648130eaf.8.1738932959992; Fri, 07 Feb 2025
+ 04:55:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <2781262.mvXUDI8C0e@rjwysocki.net>
+In-Reply-To: <2781262.mvXUDI8C0e@rjwysocki.net>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 7 Feb 2025 13:55:48 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0jytAtj_rDSz52OznCNV5Wo3hb0bjXCUR+ox99YdSxJ_Q@mail.gmail.com>
+X-Gm-Features: AWEUYZmjaDNtsCO8S0PoOQU0JXAH_FPdWde4Xo4SlHl4_NqLpMRiOTA1XUUpKfo
+Message-ID: <CAJZ5v0jytAtj_rDSz52OznCNV5Wo3hb0bjXCUR+ox99YdSxJ_Q@mail.gmail.com>
+Subject: Re: [PATCH v1] cpufreq: intel_pstate: Make it possible to avoid
+ enabling CAS
+To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Zhang Rui <rui.zhang@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 5 Feb 2025, Aditya Garg wrote:
+On Mon, Jan 27, 2025 at 3:07=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.ne=
+t> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Capacity-aware scheduling (CAS) is enabled by default by intel_pstate on
+> hybrid systems without SMT, but in some usage scenarios it may be more
+> attractive to place tasks for maximum CPU performance regardless of the
+> extra cost in terms of energy, which is the case on such systems when
+> CAS is not enabled, so introduce a command line option to forbid
+> intel_pstate to enable CAS.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> > Sorry for being dense, but does that mean that it's either 
-> > hid-appletb-bl or hid-apple, but never both to make a good user 
-> > experience on those devices?
-> > 
-> > If so, can you please point out what exactly is the reason?
-> > 
-> > Either those have different VID/PID combination, and then it can be easily
-> > made conditional both in code and in runtime.
-> > Are we talking about conflicting VID/PID combinations, some of them
-> > needing current hid-apple, and some of them needing (in a mutually
-> > exclusive way) hid-appletb-bl?
-> > 
-> 
-> Just to clarify a bit more,
-> 
-> The touchbar backlight device is 05ac:8102, in all the models with magic 
-> backlight, that is, with as well as without touchbar. The MacBook Air 
-> 2020 is the only model with this device but not having a touchbar.
-> 
-> This device is responsible for both the touchbar brightness and the 
-> keyboard backlight, the 0th interface being responsible for keyboard 
-> backlight on Air and 1st on others.
+Srinivas,
 
-Ah, wow, ok, then it's indeed really messy. Thanks for the explanation.
+Any concerns or comments?
 
--- 
-Jiri Kosina
-SUSE Labs
-
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt |    3 +++
+>  Documentation/admin-guide/pm/intel_pstate.rst   |    3 +++
+>  drivers/cpufreq/intel_pstate.c                  |    9 +++++++++
+>  3 files changed, 15 insertions(+)
+>
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2295,6 +2295,9 @@
+>                         per_cpu_perf_limits
+>                           Allow per-logical-CPU P-State performance contr=
+ol limits using
+>                           cpufreq sysfs interface
+> +                       no_cas
+> +                         Do not enable capacity-aware scheduling (CAS) o=
+n
+> +                         hybrid systems
+>
+>         intremap=3D       [X86-64,Intel-IOMMU,EARLY]
+>                         on      enable Interrupt Remapping (default)
+> --- a/Documentation/admin-guide/pm/intel_pstate.rst
+> +++ b/Documentation/admin-guide/pm/intel_pstate.rst
+> @@ -696,6 +696,9 @@
+>         Use per-logical-CPU P-State limits (see `Coordination of P-state
+>         Limits`_ for details).
+>
+> +``no_cas``
+> +       Do not enable capacity-aware scheduling (CAS) which is enabled by
+> +       default on hybrid systems.
+>
+>  Diagnostics and Tuning
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -936,6 +936,8 @@
+>         NULL,
+>  };
+>
+> +static bool no_cas __ro_after_init;
+> +
+>  static struct cpudata *hybrid_max_perf_cpu __read_mostly;
+>  /*
+>   * Protects hybrid_max_perf_cpu, the capacity_perf fields in struct cpud=
+ata,
+> @@ -1041,6 +1043,10 @@
+>
+>  static void hybrid_init_cpu_capacity_scaling(bool refresh)
+>  {
+> +       /* Bail out if enabling capacity-aware scheduling is prohibited. =
+*/
+> +       if (no_cas)
+> +               return;
+> +
+>         /*
+>          * If hybrid_max_perf_cpu is set at this point, the hybrid CPU ca=
+pacity
+>          * scaling has been enabled already and the driver is just changi=
+ng the
+> @@ -3835,6 +3841,9 @@
+>         if (!strcmp(str, "no_hwp"))
+>                 no_hwp =3D 1;
+>
+> +       if (!strcmp(str, "no_cas"))
+> +               no_cas =3D true;
+> +
+>         if (!strcmp(str, "force"))
+>                 force_load =3D 1;
+>         if (!strcmp(str, "hwp_only"))
+>
+>
+>
+>
