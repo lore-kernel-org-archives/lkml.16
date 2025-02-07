@@ -1,109 +1,105 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDDA023C8B6
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289FB23C8B6
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738943693; cv=none; b=pBFGqbykfF8uXXYDMhJmlz0cuEIeI3wTRhzEdXEGdrGwmWRbjVo69SJBZCWn0nbvjaPKsMdMW892ahxFdOPW56Cp26PlX8F3JIR/kgh07vjpYUf/69HDlDLnjtU093igm5bOERx6w0fwDMIYgA0UyOKt9xfHtFicjT7FiqjsL+s=
+	t=1738943700; cv=none; b=kq+IKZkpbLQC/Cv1EF2RvVofbUmyFoD0oXp9HmVyywNfMIKeRPXPouVuiLM41BS/3iLIBr7WCAs2qe7q0ASA9O5j9Z6gkdtBEC5uWv8rnqfyDa0drsXG8kWTIIHjRI/u+9EjhKUTDdmHGztXb+PCqU+2DCQ65kQHAWq5eTqncuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738943693; c=relaxed/simple;
-	bh=eUVDbaP3j/lKTHZEXesfkZxjA0dDHUU1jYO8Rq2Glhg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UkbFIKoMnF3vZ9BY9UF4P3hn9LG2EHcFjiNgxevthKCSXTmWOlO59ZpaefpaWsIHFY3EjLVdnZwcVScuQFtJgWYQi3lYvQq4iRepiF4aKC069iVNJZArX3gWuKWim5neYngaUCUdvuuAHw6MZAmCttA7VWndDeDAGnnUj4MvQUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08C49113E;
-	Fri,  7 Feb 2025 07:55:14 -0800 (PST)
-Received: from [10.1.196.57] (eglon.cambridge.arm.com [10.1.196.57])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8FC2D3F58B;
-	Fri,  7 Feb 2025 07:54:44 -0800 (PST)
-Message-ID: <72934529-d6a3-4231-8ed7-6e7dc4325e9c@arm.com>
-Date: Fri, 7 Feb 2025 15:54:42 +0000
+	s=arc-20240116; t=1738943700; c=relaxed/simple;
+	bh=I2GuDhxl+08paIRrviBkUYIALNebE4rhANc6ESbwfJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pV6Zbl6Bm1TABXeh40tA1RBdRPIUoxkh7AGGZSUFN8JnQmaclMmSCXU5L/QBRvdCBEQ892cC/9pFEERRRtUjo+bFjWF2brpfUHSjk6V3Vm3H9m0LTyckJiDN/tgEZ2/d1AHEnGwg40fU2BGGnYcSB9aSnuaFf6IzugLrKDbGwUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=HT8TUE/8; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="HT8TUE/8"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e440e64249so18789616d6.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 07:54:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1738943698; x=1739548498; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wG4kDX3mPsVlAfvrUd487lzsY97VgTkw0/bdTrkhSGs=;
+        b=HT8TUE/8/UXvNaK5LmB/835+M8y9p+nozLAhhaRKfPQUnhy28oZ0BpcxKxygPiVK2e
+         0UgWSXIhF+xAR3eojV0+7V2VAeCMmmnNy6DICKseoiCyEvtDk8GiZWfDKWts25dDqKKF
+         8U3nA/JxGFuPvLioH7pcJO4B2CCVrAAQKFXFs5V2GdsgI7z4NtC396a4v5kWFW8mAv1q
+         QZxYjB34hpMKOJiwuhkP5OIZ7sLrmJSe8VsS7LHiogQW0bLMZX0Cn2xwbHKSx/YSbVrZ
+         OBXC5YgCBUYUpehBIhozOTD2gFyKVMa4zVgw0tccR9fS67jLAFJY7PmkGa2rQyhrEHHC
+         RRDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738943698; x=1739548498;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wG4kDX3mPsVlAfvrUd487lzsY97VgTkw0/bdTrkhSGs=;
+        b=RTzswbV4mPzl3AN9OdTQodVDU4T9B78Krdi8QWbuRIfKM4g5ngvhcVCwve9WuDs+7x
+         VAKRnou3ST1oLy7OWlSBtenWYcrndohLQat9nthPnU7rXp6tzJUBVhx40+467jQa3zgw
+         X5xg4PvXCm8RpIPX51Wfu4i/boZM+5g1aRpvljV1NLGKhmU3Q2doBhuiG5ej6KjUqCiA
+         am5NL2waxPcVOIkbSO0FJdcDNofK59Evi/tqqKW9EXq9s3ffbiywFYMGmQqs8Ra4AqFH
+         JwpH3fSB+zVN+ZCB/CfekUDNcoqBkWWjyAnKZeVw+ioQwzL0+twxS3UCG+AyP1D57yx2
+         lVpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUPIx2ryfWdm0cIfFREupcsxLUtPre9naMJQRc0F/CVXw0J63i4gSIk2qkdZJEP2+6R/WcSNLC6ZodtXzI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3GM7rLxriY9VwmSH/594aVErOMB13NoXumLGV9FHFYY2XLZiC
+	OSAsEVrPqp52TwZNjUj6bmvPSvhUiaFUN+dXA/z2Dp+gcFKraExalF95jHs8Mqs=
+X-Gm-Gg: ASbGncuNDUdEtEF72ZywuelHK/kjdgX5yXGWLyHAIRrH3EZyy2K6tBKn5aCoE+27nsb
+	xANI0AX+Gsc05QQLBB9kusuBTyqa9XipmaT3iqEvbI6Oy1Kk6svQmYFa8WVJzpA5PwFgoBSuk0m
+	4iUZny2Z2Uce8QzEk21MmrBujohPprtAiix0NvGQhEp2k1wbGIQ/YHHEqI8ROxGTC3SB5OzsZyp
+	lB7MQUe7oT1O/XfZsr6nxKF8E8a6FdMJpGcyTOkyqVpZCb4NIhdbgkb1r7Q0XRTiw5/3VYnJ/n/
+	fLLLbudk7+v7T4a3fXHqq5ctMlWsoBAs4iD1wjBwGCrEGAVhw/sKrHOWZ5pWAofG
+X-Google-Smtp-Source: AGHT+IEq6vakQzNYiXzUmxGw05TQjdF65NCz8Qjlk4Szby4FeLGiS8FNdUCgGzZaq1/yR/BAprqyEQ==
+X-Received: by 2002:ad4:5f89:0:b0:6d8:8a7b:66a4 with SMTP id 6a1803df08f44-6e4455e8913mr53333496d6.14.1738943697961;
+        Fri, 07 Feb 2025 07:54:57 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43ba2be69sm18281116d6.15.2025.02.07.07.54.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 07:54:57 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tgQgy-0000000FNdT-38ej;
+	Fri, 07 Feb 2025 11:54:56 -0400
+Date: Fri, 7 Feb 2025 11:54:56 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Mitchell Augustin <mitchell.augustin@canonical.com>
+Cc: saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com,
+	andrew+netdev@lunn.ch, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Talat Batheesh <talatb@nvidia.com>,
+	Feras Daoud <ferasda@nvidia.com>
+Subject: Re: modprobe mlx5_core on OCI bare-metal instance causes
+ unrecoverable hang and I/O error
+Message-ID: <20250207155456.GA3665725@ziepe.ca>
+References: <CAHTA-uaH9w2LqQdxY4b=7q9WQsuA6ntg=QRKrsf=mPfNBmM5pw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 33/40] x86/resctrl: Drop __init/__exit on assorted
- symbols
-To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Fenghua Yu <fenghua.yu@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
- shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
- dfustini@baylibre.com, amitsinght@marvell.com,
- David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
- Dave Martin <dave.martin@arm.com>, Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-References: <20241004180347.19985-1-james.morse@arm.com>
- <20241004180347.19985-34-james.morse@arm.com>
- <2897562e-fc97-4cc4-b4ad-316e84c87c9d@intel.com>
-Content-Language: en-GB
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <2897562e-fc97-4cc4-b4ad-316e84c87c9d@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHTA-uaH9w2LqQdxY4b=7q9WQsuA6ntg=QRKrsf=mPfNBmM5pw@mail.gmail.com>
 
-Hi Reinette,
+On Wed, Feb 05, 2025 at 05:09:13PM -0600, Mitchell Augustin wrote:
+> Hello,
+> 
+> I have identified a bug in the mlx5_core module, or some related component.
+> 
+> Doing the following on a freshly provisioned Oracle Cloud bare metal
+> node with this configuration [0] will reliably cause the entire
+> instance to become unresponsive:
+> 
+> rmmod mlx5_ib; rmmod mlx5_core; modprobe mlx5_core
+> 
+> This also produces the following output:
+> 
+> [  331.267175] I/O error, dev sda, sector 35602992 op 0x0:(READ) flags
+> 0x80700 phys_seg 33 prio class 0
 
-On 24/10/2024 00:56, Reinette Chatre wrote:
-> On 10/4/24 11:03 AM, James Morse wrote:
->> Because ARM's MPAM controls are probed using MMIO, resctrl can't be
->> initialised until enough CPUs are online to have determined the
->> system-wide supported num_closid. Arm64 also supports 'late onlined
->> secondaries', where only a subset of CPUs are online during boot.
->>
->> These two combine to mean the MPAM driver may not be able to initialise
->> resctrl until user-space has brought 'enough' CPUs online.
->>
->> To allow MPAM to initialise resctrl after __init text has been free'd,
->> remove all the __init markings from resctrl.
->>
->> The existing __exit markings cause these functions to be removed by the
->> linker as it has never been possible to build resctrl as a module. MPAM
->> has an error interrupt which causes the driver to reset and disable
->> itself. Remove the __exit markings to allow the MPAM driver to tear down
->> resctrl when an error occurs.
+Is it using iscsi/srp/nfs/etc for any filesystems?
 
->> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
->> index f484726a2588..f713ac628444 100644
->> --- a/arch/x86/kernel/cpu/resctrl/core.c
->> +++ b/arch/x86/kernel/cpu/resctrl/core.c
->> @@ -775,7 +775,7 @@ struct rdt_options {
->>  	bool	force_off, force_on;
->>  };
->>  
->> -static struct rdt_options rdt_options[]  __initdata = {
->> +static struct rdt_options rdt_options[]  __ro_after_init = {
->>  	RDT_OPT(RDT_FLAG_CMT,	    "cmt",	X86_FEATURE_CQM_OCCUP_LLC),
->>  	RDT_OPT(RDT_FLAG_MBM_TOTAL, "mbmtotal", X86_FEATURE_CQM_MBM_TOTAL),
->>  	RDT_OPT(RDT_FLAG_MBM_LOCAL, "mbmlocal", X86_FEATURE_CQM_MBM_LOCAL),
->> @@ -815,7 +815,7 @@ static int __init set_rdt_options(char *str)
->>  }
->>  __setup("rdt", set_rdt_options);
->>  
->> -bool __init rdt_cpu_has(int flag)
->> +bool rdt_cpu_has(int flag)
-
-> I assume this can be dropped when resctrl_arch_is_evt_configurable() uses
-> a helper instead?
-
-resctrl_arch_is_evt_configurable() is that helper! If we wanted to decouple this in the
-x86 arch code, it could do the rdt_cpu_has() stuff at boot, then test flags in
-rdt_mon_features - but that isn't how it works today, and I don't think its worth the churn.
-
-This __init marker causes a mismatched-sections warning because its called via
-resctrl_arch_is_evt_configurable() from non __init marked code.
-
-
-Thanks,
-
-James
+Jason
