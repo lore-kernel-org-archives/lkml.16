@@ -1,95 +1,109 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from smtp.smtpout.orange.fr (smtp-65.smtpout.orange.fr [80.12.242.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF3F19CD19;
-	Fri,  7 Feb 2025 18:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C653419CD19;
+	Fri,  7 Feb 2025 18:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738953946; cv=none; b=csf6pGhDv3RzvjbV3UvDqH6T9AhGMszw+c4WTgXMLDHckVLQDbKOZrZIhUT4YxmEuwGSbzEkdjJvEyJHuHwWe/BB2N8snX/LSugJ700G/dU0mYUQVCSyU3yqxi/I2y3YIWx9TbuAUcvSs8ULFgXKChKHaNEL+mXbsuY3GQOQO1w=
+	t=1738953987; cv=none; b=U5cIoV1Log3WK8pL7fBd+f3J/HlBEkVrmnoNb2dHdPt6HwBwJHegiI2AqwEq2LeIb8DHni1sDqEmqjBbMBq0vRG9p1wVCV3UsWIsPvkHwvREQ2NqZmseQaZGPFLi7SAh6ozWI9GKNRjZiHhurlVGuqsEspSVNEiWLpFYVJXW5no=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738953946; c=relaxed/simple;
-	bh=G08VBEyiJJ6tR5NpSaqtSnJ8b/jJyircUmEMF27A+NA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YIoHov2ohflqahHw72UWyyergCGtTlERGmp3lh/9kjBIV/UVnk3YFMQ1xxWLwFxCkyUBnR8VRLoVfSS72LtZ5VsMrarQT1kOfEh7XyCHJ2Sa2T/Qpxa1JVAjGWAH0mPj7s5iOwg7eW3jtoHwFK3zysMb8k90k55TeVciHR8HXGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5dcef27deecso3538990a12.1;
-        Fri, 07 Feb 2025 10:45:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738953943; x=1739558743;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9VhtexnXVY7QzQMUAllx3j3vLs0pu8Zqa/G9m/NY7Is=;
-        b=m7+Kq4m+rEjPUvojINjofKZqdxl5Z0+F6Y5ADmtfJNtJtgVsEqDJFvzc4pZKzsPOi6
-         h0kHf+mXWtralaU/Zl0D6onLfBRSmw6Im1pGi95827OS6G+pZkO50T5zzJLprXJ0/WUs
-         wH7Bz2/++Qs4R0l2kp8R6zuvasfV3Ec5BKgMPfi6c4VmNeA3Z+iElXRinSW/O0ef3eRE
-         tCXxSYHLLyLEfVNLEtembU4pzno2IMGg7AoZsf4m2XTLEF4etw7oK+jFFfSrjx3e+mRu
-         WwSjkhfR08Jn6qDXTHMjNxunCzeZ2YFwWPpEK/28B34SU0S9569gYZ4wVaDcLegl6PCG
-         gj2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXa80UfyHBkq30PSfUd4a5W4KpHl9UOJ+Rh6NB1qRwqm1mThkqZzwB3Icf3nZITS8UbyAMPNQu1+npSIbmOJrVH@vger.kernel.org, AJvYcCXhHjdcw3kWoGKN3ayZMt0RQvZky/ABmrYCcY39Mv2xeULunyNjoy75WhqpZt4uc60QvN7+auAm33q1f1Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNPbw6PToN5DrkkfiTpBhy9GjwZITy7bpOWKwWVmrm+ZDMzlMt
-	mOytrDZ/JIT2VqH59dhgwmAaWjDpX44VWryv8WzqRmZvkeO5c/ej
-X-Gm-Gg: ASbGncvMuLzrUONLBmXqfmGS7VadgPN8syEyqt01RHbBLyD5V6X7K01XVu4ymPzczc3
-	+zGHCqPIajMFgZNNSaE9vZwEfCj81NpINoHc9Sqk0Vj38lGFZfVXlH6Vwsan2QyZ8yoX47FOqT1
-	ZURMsKDr6kUxbZESY6wBH81qoJzL48LuQBYmjAwI1eLMKpq+6FNdzN7nVyXJK7IiTW8SL6NdHTN
-	fvGFsvF1Lvxiu8qKc7qEY5dfn/eWbIx372LyzIPxBk0sUQI0AkxAa7aePzQ/ce5f0n/AjqD++Qc
-	qpxNAA==
-X-Google-Smtp-Source: AGHT+IHAR6axEQ9+MHkvZntvG8d4OS0CceWilbre6crnARE2tUy/m826mkvKKvBjhjA1TdvTgvMfIg==
-X-Received: by 2002:a05:6402:3483:b0:5dc:c9ce:b01b with SMTP id 4fb4d7f45d1cf-5de450048camr4278947a12.8.1738953942726;
-        Fri, 07 Feb 2025 10:45:42 -0800 (PST)
-Received: from gmail.com ([2a03:2880:30ff:9::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcf1b81608sm2898142a12.35.2025.02.07.10.45.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 10:45:41 -0800 (PST)
-Date: Fri, 7 Feb 2025 10:45:39 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Mark Brown <broonie@debian.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Shuah Khan <shuah@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kselftest/arm64: Fix uninitialized variable warning in
- FPMR test
-Message-ID: <20250207-small-marmot-of-opposition-e7afd3@leitao>
-References: <20250207-arm_fix_selftest-v1-1-0d6eeb04299e@debian.org>
- <89da135a-8c14-478f-9830-0b03ecd0b14d@sirena.org.uk>
+	s=arc-20240116; t=1738953987; c=relaxed/simple;
+	bh=jG9PP8OmSmsAi3gu2ND0UFBXsklxiSRJ0nVDoTXKJjQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FzEZcYjrLr/e+N/57VzZTy8FCqH3XmiGEhdMJOUbXa3Gle3tDsfv9haUjp7+pWPcPUHStfaMjSQvVlpo9tAaJZ3kUSK1x3z8myTlgsx7O5lEAflRnOPoo5kD5cjh0zqZOmHAi4K6mqT1PjDXdaGsD8m0y66FIJC4aZtb4zShlsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=nHaBnrUd; arc=none smtp.client-ip=80.12.242.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="nHaBnrUd"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id gTDktBe395xHLgTDntrXhH; Fri, 07 Feb 2025 19:37:05 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1738953425;
+	bh=6PlvsS0qz2CZcL8tmalhXpsBjS7gKY13HQPvHB3Mi8k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=nHaBnrUdPy2gXkXp1Wx7o8rVZjSVn4a+/+Mp+IizYUbpbvBBy3HoHLGJMgWzlxKvK
+	 5mx95ssZsPeC5rsYQbglj27IczHL+NWevccjj363Yq+Rf4LvKqqgIKlI563wq+hmiG
+	 g4sWQJ7WfTaafSCF9z1teOIui76v+b9w9DP1hJciI4GLT1yyT09v9SyWBZYlhZVe2b
+	 +5iNuQOPcZGanus78zusUL+B02npJA3gBILv3KU6Myi1E5A4eVu25j7bb5slSrpAXS
+	 ao6+TeuupJbe8BNAdA+VveQj+8ZmmL9B1wxVhhjhyiAj1n3SjQQMilYPY8a5dWpeUs
+	 bKu8dZTtMSyZw==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Fri, 07 Feb 2025 19:37:05 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <1ee664ec-f912-467e-aedb-81208987ea2a@wanadoo.fr>
+Date: Fri, 7 Feb 2025 19:36:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/7] mfd: Add core driver for Nuvoton NCT6694
+To: Ming Yu <a0282524688@gmail.com>, tmyu0@nuvoton.com, lee@kernel.org,
+ linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
+ mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net,
+ jdelvare@suse.com, alexandre.belloni@bootlin.com
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
+ netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
+ linux-usb@vger.kernel.org
+References: <20250207074502.1055111-1-a0282524688@gmail.com>
+ <20250207074502.1055111-2-a0282524688@gmail.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250207074502.1055111-2-a0282524688@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <89da135a-8c14-478f-9830-0b03ecd0b14d@sirena.org.uk>
 
-Hello Mark,
-
-On Fri, Feb 07, 2025 at 05:26:06PM +0000, Mark Brown wrote:
-> On Fri, Feb 07, 2025 at 03:06:42AM -0800, Breno Leitao wrote:
-> > Fix compiler warning about potentially uninitialized orig_fpmr variable:
-> > 
-> > 	testcases/fpmr_siginfo.c: In function ‘fpmr_present’:
-> > 	testcases/fpmr_siginfo.c:68:25: warning: ‘orig_fpmr’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-> > 	                         fprintf(stderr, "FPMR in frame is %llx, was %llx\n",
-> > 	                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > 	                                 fpmr_ctx->fpmr, orig_fpmr);
-> > 	                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~
+Le 07/02/2025 à 08:44, Ming Yu a écrit :
+> The Nuvoton NCT6694 is a peripheral expander with 16 GPIO chips,
+> 6 I2C controllers, 2 CANfd controllers, 2 Watchdog timers, ADC,
+> PWM, and RTC.
 > 
-> This seems like something that should be reported to the compiler
-> people, we only print the FPMR value if have_fpmr and there's an
-> assignment to orig_fpmr in that case.  Which compiler is this?
+> This driver implements USB device functionality and shares the
+> chip's peripherals as a child device.
+> 
+> Each child device can use the USB functions nct6694_read_msg()
+> and nct6694_write_msg() to issue a command. They can also request
+> interrupt that will be called when the USB device receives its
+> interrupt pipe.
 
-Good point. I am using:
-	# gcc --version
-	gcc (GCC) 11.5.0 20240719 (Red Hat 11.5.0-2)
+...
 
-Clang, on the other hand, isn't upset about it.
+> +static struct irq_chip nct6694_irq_chip = {
 
-	# clang --target=aarch64-redhat-linux-gnu -fintegrated-as -Wall -O2 -g -I/home/leit/Devel/upstream/tools/testing/selftests/ -isystem /home/leit/Devel/upstream/usr/include -I/home/leit/Devel/upstream/tools/include -std=gnu99 -I. -Wno-address-of-packed-member -Wno-gnu-variable-sized-type-not-at-end -D_GNU_SOURCE=  testcases/fpmr_siginfo.c test_signals.c test_signals_utils.c testcases/testcases.c signals.S sve_helpers.c -o testcases/fpmr_siginfo
-	# clang --version
-	clang version 19.1.3 (CentOS 19.1.3-1.el9)
+This could be const.
+
+(I'm working on a serie that should constify struct irq_chip, so this 
+one would already be done)
+
+> +	.name = "nct6694-irq",
+> +	.flags = IRQCHIP_SKIP_SET_WAKE,
+> +	.irq_bus_lock = nct6694_irq_lock,
+> +	.irq_bus_sync_unlock = nct6694_irq_sync_unlock,
+> +	.irq_enable = nct6694_irq_enable,
+> +	.irq_disable = nct6694_irq_disable,
+> +};
+> +
+> +static int nct6694_irq_domain_map(struct irq_domain *d, unsigned int irq,
+> +				  irq_hw_number_t hw)
+> +{
+> +	struct nct6694 *nct6694 = d->host_data;
+> +
+> +	irq_set_chip_data(irq, nct6694);
+> +	irq_set_chip_and_handler(irq, &nct6694_irq_chip, handle_simple_irq);
+> +
+> +	return 0;
+> +}
+
+...
+
+CJ
 
