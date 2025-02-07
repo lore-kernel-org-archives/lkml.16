@@ -1,182 +1,276 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759521DE4FC;
-	Fri,  7 Feb 2025 10:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1EC1DE4CD
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 10:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738925762; cv=none; b=bJrNCf1JTJH4NMd2q3lPMrb4CdUEXiexOI0unPYXcw0F94zkrgma36oqCjoMgJrH35N3+HPJ+itF+gcw0CXbcmzwFMO8GVzPjv7uP01JKbkHWtxy883eG8UcsZRi9Q/AY4Fd7IKuyDiMK118t+ovZEj6C6PQ3Ebbsd3TaZVSqbI=
+	t=1738925787; cv=none; b=Yol+oWz0XhpUTB1KfFUEAEY/MhcLza1gKfYQtRIRh4/jwLvyWdXnExKBPVDtV8e5EWUQfTiUHCHQY8llssVCXjEZziKXFfg35BSEklMtny116CBpo9r9CpWhGp8peAHzMLwi1HB6cbUpQE4ONjyH1bw2FOcFfjdoN5/PcS7Y06M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738925762; c=relaxed/simple;
-	bh=pYt+xftXndusuacIlXxk2mWb9HDWRHFU3WAlQvHyqeg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WkTNpoLXB34+DvvODvDdeURGrX6CsIsIGU0rqT7qWvxmUD01RXUG6+clHGzpL81NbDoo5k1y6KTU7v2L2Sz1hzwJBfmwBlDfHxx8FO/jxOIVD/yEcb3mdw6qMXHBzDgi0k6KHda59V3sg0JYiUuZNeb/eq4Lo2lqbdpPDzHlxEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=RUKNtCf+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=/2tW65eZ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=RUKNtCf+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=/2tW65eZ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="RUKNtCf+";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="/2tW65eZ";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="RUKNtCf+";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="/2tW65eZ"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9986F21160;
-	Fri,  7 Feb 2025 10:55:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738925758; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=fff5YP4Ec4Ar0HOYCFpKljGsZstst5SYCqA0UJvrHTA=;
-	b=RUKNtCf+36/DPgwryIMM4y87jpIXZdbMug0M812QEPrYHQzZ2iVX9Ctg5AMk31+/2e05UB
-	yTA3D5sEKLSON04m2+sjQfLqC/raNznG00et61eAKvO8UI1Se9CIXcNk9uJnM+GnFLvNxd
-	jDxeiSGm7XBH42kF82/Ua3PE7mpvrrM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738925758;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=fff5YP4Ec4Ar0HOYCFpKljGsZstst5SYCqA0UJvrHTA=;
-	b=/2tW65eZsKGlKjntmZcpZJ7Pa8qyvzoJPjtQvuHkya6I2GWfWcBtbMVTHyqJgL49YxaSVf
-	lfoHns/mWBs3uFAw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1738925758; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=fff5YP4Ec4Ar0HOYCFpKljGsZstst5SYCqA0UJvrHTA=;
-	b=RUKNtCf+36/DPgwryIMM4y87jpIXZdbMug0M812QEPrYHQzZ2iVX9Ctg5AMk31+/2e05UB
-	yTA3D5sEKLSON04m2+sjQfLqC/raNznG00et61eAKvO8UI1Se9CIXcNk9uJnM+GnFLvNxd
-	jDxeiSGm7XBH42kF82/Ua3PE7mpvrrM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1738925758;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=fff5YP4Ec4Ar0HOYCFpKljGsZstst5SYCqA0UJvrHTA=;
-	b=/2tW65eZsKGlKjntmZcpZJ7Pa8qyvzoJPjtQvuHkya6I2GWfWcBtbMVTHyqJgL49YxaSVf
-	lfoHns/mWBs3uFAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 71FB313694;
-	Fri,  7 Feb 2025 10:55:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id iCK7GL7mpWdReQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 07 Feb 2025 10:55:58 +0000
-Message-ID: <f8b08ef9-5bba-490c-9d99-9ab955e68732@suse.cz>
-Date: Fri, 7 Feb 2025 11:55:58 +0100
+	s=arc-20240116; t=1738925787; c=relaxed/simple;
+	bh=bLLFVr6Bm8Tegrq2cqZjHRigcihHscrYl+BIeOaDFRc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HpmDwcq4PEhMbEGmb/w9wlTYjxwSNEfp2imF0/c6p6L/4x2tbSN6L9Xrs4V3fUmTx3yeXhtJIACowd5QFsvEvFKNjHndSVZuKmQDLKHNmlqqWw7i02WEsFpn1PuqXfRkqwb57QmLTl+aa9rUtz3jjeBhNh6Fnp/64H5r+drZEWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tgM1w-00054w-LI; Fri, 07 Feb 2025 11:56:16 +0100
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tgM1r-003xhc-2o;
+	Fri, 07 Feb 2025 11:56:11 +0100
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tgM1r-007rrW-2a;
+	Fri, 07 Feb 2025 11:56:11 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Byungho An <bh74.an@samsung.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Russell King <linux@armlinux.org.uk>
+Subject: [PATCH net-next v2 1/1] net: sxgbe: rework EEE handling based on PHY negotiation
+Date: Fri,  7 Feb 2025 11:56:10 +0100
+Message-Id: <20250207105610.1875327-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
- related applications since v6.13
-Content-Language: en-US
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Matthew Wilcox <willy@infradead.org>,
- Christian Heusel <christian@heusel.eu>, Josef Bacik <josef@toxicpanda.com>,
- Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Joanne Koong <joannelkoong@gmail.com>, linux-mm <linux-mm@kvack.org>
-References: <2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu>
- <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
- <Z6XWVU6ZTCIl3jnc@casper.infradead.org>
- <03eb13ad-03a2-4982-9545-0a5506e043d0@suse.cz>
- <CAJfpegtvy0N8dNK-jY1W-LX=TyGQxQTxHkgNJjFbWADUmzb6xA@mail.gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
- KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
- 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
- 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
- tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
- Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
- 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
- LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
- 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
- BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABzSBWbGFzdGltaWwg
- QmFia2EgPHZiYWJrYUBzdXNlLmN6PsLBlAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
- AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJkBREIBQkRadznAAoJECJPp+fMgqZkNxIQ
- ALZRqwdUGzqL2aeSavbum/VF/+td+nZfuH0xeWiO2w8mG0+nPd5j9ujYeHcUP1edE7uQrjOC
- Gs9sm8+W1xYnbClMJTsXiAV88D2btFUdU1mCXURAL9wWZ8Jsmz5ZH2V6AUszvNezsS/VIT87
- AmTtj31TLDGwdxaZTSYLwAOOOtyqafOEq+gJB30RxTRE3h3G1zpO7OM9K6ysLdAlwAGYWgJJ
- V4JqGsQ/lyEtxxFpUCjb5Pztp7cQxhlkil0oBYHkudiG8j1U3DG8iC6rnB4yJaLphKx57NuQ
- PIY0Bccg+r9gIQ4XeSK2PQhdXdy3UWBr913ZQ9AI2usid3s5vabo4iBvpJNFLgUmxFnr73SJ
- KsRh/2OBsg1XXF/wRQGBO9vRuJUAbnaIVcmGOUogdBVS9Sun/Sy4GNA++KtFZK95U7J417/J
- Hub2xV6Ehc7UGW6fIvIQmzJ3zaTEfuriU1P8ayfddrAgZb25JnOW7L1zdYL8rXiezOyYZ8Fm
- ZyXjzWdO0RpxcUEp6GsJr11Bc4F3aae9OZtwtLL/jxc7y6pUugB00PodgnQ6CMcfR/HjXlae
- h2VS3zl9+tQWHu6s1R58t5BuMS2FNA58wU/IazImc/ZQA+slDBfhRDGYlExjg19UXWe/gMcl
- De3P1kxYPgZdGE2eZpRLIbt+rYnqQKy8UxlszsBNBFsZNTUBCACfQfpSsWJZyi+SHoRdVyX5
- J6rI7okc4+b571a7RXD5UhS9dlVRVVAtrU9ANSLqPTQKGVxHrqD39XSw8hxK61pw8p90pg4G
- /N3iuWEvyt+t0SxDDkClnGsDyRhlUyEWYFEoBrrCizbmahOUwqkJbNMfzj5Y7n7OIJOxNRkB
- IBOjPdF26dMP69BwePQao1M8Acrrex9sAHYjQGyVmReRjVEtv9iG4DoTsnIR3amKVk6si4Ea
- X/mrapJqSCcBUVYUFH8M7bsm4CSxier5ofy8jTEa/CfvkqpKThTMCQPNZKY7hke5qEq1CBk2
- wxhX48ZrJEFf1v3NuV3OimgsF2odzieNABEBAAHCwXwEGAEKACYCGwwWIQSpQNQ0mSwujpkQ
- PVAiT6fnzIKmZAUCZAUSmwUJDK5EZgAKCRAiT6fnzIKmZOJGEACOKABgo9wJXsbWhGWYO7mD
- 8R8mUyJHqbvaz+yTLnvRwfe/VwafFfDMx5GYVYzMY9TWpA8psFTKTUIIQmx2scYsRBUwm5VI
- EurRWKqENcDRjyo+ol59j0FViYysjQQeobXBDDE31t5SBg++veI6tXfpco/UiKEsDswL1WAr
- tEAZaruo7254TyH+gydURl2wJuzo/aZ7Y7PpqaODbYv727Dvm5eX64HCyyAH0s6sOCyGF5/p
- eIhrOn24oBf67KtdAN3H9JoFNUVTYJc1VJU3R1JtVdgwEdr+NEciEfYl0O19VpLE/PZxP4wX
- PWnhf5WjdoNI1Xec+RcJ5p/pSel0jnvBX8L2cmniYnmI883NhtGZsEWj++wyKiS4NranDFlA
- HdDM3b4lUth1pTtABKQ1YuTvehj7EfoWD3bv9kuGZGPrAeFNiHPdOT7DaXKeHpW9homgtBxj
- 8aX/UkSvEGJKUEbFL9cVa5tzyialGkSiZJNkWgeHe+jEcfRT6pJZOJidSCdzvJpbdJmm+eED
- w9XOLH1IIWh7RURU7G1iOfEfmImFeC3cbbS73LQEFGe1urxvIH5K/7vX+FkNcr9ujwWuPE9b
- 1C2o4i/yZPLXIVy387EjA6GZMqvQUFuSTs/GeBcv0NjIQi8867H3uLjz+mQy63fAitsDwLmR
- EP+ylKVEKb0Q2A==
-In-Reply-To: <CAJfpegtvy0N8dNK-jY1W-LX=TyGQxQTxHkgNJjFbWADUmzb6xA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[infradead.org,heusel.eu,toxicpanda.com,redhat.com,lists.linux.dev,vger.kernel.org,gmail.com,kvack.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:mid]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 2/7/25 11:43, Miklos Szeredi wrote:
-> On Fri, 7 Feb 2025 at 11:25, Vlastimil Babka <vbabka@suse.cz> wrote:
-> 
->> Could be a use-after free of the page, which sets PG_lru again. The list
->> corruptions in __rmqueue_pcplist also suggest some page manipulation after
->> free. The -1 refcount suggests somebody was using the page while it was
->> freed due to refcount dropping to 0 and then did a put_page()?
-> 
-> Can you suggest any debug options that could help pinpoint the offender?
+From: Andrew Lunn <andrew@lunn.ch>
 
-CONFIG_DEBUG_VM enables a check in put_page_testzero() that would catch the
-underflow (modulo a tiny race window where it wouldn't). Worth trying.
+Rework EEE handling to depend on PHY negotiation results. Enable EEE
+only after a valid link is established and allow proper LPI mode
+activation.
 
-> Thanks,
-> Miklos
+Previously, sxgbe_eee_init() was called in sxgbe_open() to invoke
+phy_init_eee() most probably before the PHY could complete
+auto-negotiation. Non-automotive PHYs typically take ~1 sec to
+establish a link, so EEE was rarely enabled.
+
+Now, EEE activation is deferred until after PHY negotiation.  The driver
+delegates EEE control to phylib via ethtool set/get calls. Timer values
+are taken from phydev->eee_cfg.tx_lpi_timer, and sxgbe_eee_adjust()
+configures EEE based on phydev->enable_tx_lpi and the PHY link status.
+
+This activation of LPI may reveal issues that were hidden when LPI was
+rarely active.
+
+WARNING: This patch is only compile tested.
+
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+changes v2:
+- major rework with many changes
+- use phydev->eee_cfg.tx_lpi_timer where possible
+- drop sxgbe_eee_init() and rework sxgbe_eee_adjust()
+---
+ .../net/ethernet/samsung/sxgbe/sxgbe_common.h |  2 -
+ .../ethernet/samsung/sxgbe/sxgbe_ethtool.c    | 22 +-----
+ .../net/ethernet/samsung/sxgbe/sxgbe_main.c   | 69 +++++++------------
+ 3 files changed, 26 insertions(+), 67 deletions(-)
+
+diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h b/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
+index 1458939c3bf5..a8eed188d110 100644
+--- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
++++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_common.h
+@@ -526,6 +526,4 @@ int sxgbe_restore(struct net_device *ndev);
+ 
+ const struct sxgbe_mtl_ops *sxgbe_get_mtl_ops(void);
+ 
+-void sxgbe_disable_eee_mode(struct sxgbe_priv_data * const priv);
+-bool sxgbe_eee_init(struct sxgbe_priv_data * const priv);
+ #endif /* __SXGBE_COMMON_H__ */
+diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c
+index 4a439b34114d..a13360962e47 100644
+--- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c
++++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_ethtool.c
+@@ -140,8 +140,6 @@ static int sxgbe_get_eee(struct net_device *dev,
+ 	if (!priv->hw_cap.eee)
+ 		return -EOPNOTSUPP;
+ 
+-	edata->tx_lpi_timer = priv->tx_lpi_timer;
+-
+ 	return phy_ethtool_get_eee(dev->phydev, edata);
+ }
+ 
+@@ -150,22 +148,8 @@ static int sxgbe_set_eee(struct net_device *dev,
+ {
+ 	struct sxgbe_priv_data *priv = netdev_priv(dev);
+ 
+-	priv->eee_enabled = edata->eee_enabled;
+-
+-	if (!priv->eee_enabled) {
+-		sxgbe_disable_eee_mode(priv);
+-	} else {
+-		/* We are asking for enabling the EEE but it is safe
+-		 * to verify all by invoking the eee_init function.
+-		 * In case of failure it will return an error.
+-		 */
+-		priv->eee_enabled = sxgbe_eee_init(priv);
+-		if (!priv->eee_enabled)
+-			return -EOPNOTSUPP;
+-
+-		/* Do not change tx_lpi_timer in case of failure */
+-		priv->tx_lpi_timer = edata->tx_lpi_timer;
+-	}
++	if (!priv->hw_cap.eee)
++		return -EOPNOTSUPP;
+ 
+ 	return phy_ethtool_set_eee(dev->phydev, edata);
+ }
+@@ -228,7 +212,7 @@ static void sxgbe_get_ethtool_stats(struct net_device *dev,
+ 	int i;
+ 	char *p;
+ 
+-	if (priv->eee_enabled) {
++	if (dev->phydev->eee_active) {
+ 		int val = phy_get_eee_err(dev->phydev);
+ 
+ 		if (val)
+diff --git a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
+index 12c8396b6942..8a385c92a6d1 100644
+--- a/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
++++ b/drivers/net/ethernet/samsung/sxgbe/sxgbe_main.c
+@@ -87,7 +87,7 @@ static void sxgbe_enable_eee_mode(const struct sxgbe_priv_data *priv)
+ 		priv->hw->mac->set_eee_mode(priv->ioaddr);
+ }
+ 
+-void sxgbe_disable_eee_mode(struct sxgbe_priv_data * const priv)
++static void sxgbe_disable_eee_mode(struct sxgbe_priv_data * const priv)
+ {
+ 	/* Exit and disable EEE in case of we are in LPI state. */
+ 	priv->hw->mac->reset_eee_mode(priv->ioaddr);
+@@ -110,52 +110,25 @@ static void sxgbe_eee_ctrl_timer(struct timer_list *t)
+ 	mod_timer(&priv->eee_ctrl_timer, SXGBE_LPI_TIMER(eee_timer));
+ }
+ 
+-/**
+- * sxgbe_eee_init
+- * @priv: private device pointer
+- * Description:
+- *  If the EEE support has been enabled while configuring the driver,
+- *  if the GMAC actually supports the EEE (from the HW cap reg) and the
+- *  phy can also manage EEE, so enable the LPI state and start the timer
+- *  to verify if the tx path can enter in LPI state.
+- */
+-bool sxgbe_eee_init(struct sxgbe_priv_data * const priv)
++static void sxgbe_eee_adjust(struct sxgbe_priv_data *priv)
+ {
+-	struct net_device *ndev = priv->dev;
+-	bool ret = false;
++	struct phy_device *phydev = priv->dev->phydev;
+ 
+-	/* MAC core supports the EEE feature. */
+-	if (priv->hw_cap.eee) {
+-		/* Check if the PHY supports EEE */
+-		if (phy_init_eee(ndev->phydev, true))
+-			return false;
++	if (!priv->hw_cap.eee)
++		return;
+ 
+-		timer_setup(&priv->eee_ctrl_timer, sxgbe_eee_ctrl_timer, 0);
+-		priv->eee_ctrl_timer.expires = SXGBE_LPI_TIMER(eee_timer);
++	if (phydev->enable_tx_lpi) {
+ 		add_timer(&priv->eee_ctrl_timer);
+-
+ 		priv->hw->mac->set_eee_timer(priv->ioaddr,
+ 					     SXGBE_DEFAULT_LPI_TIMER,
+-					     priv->tx_lpi_timer);
+-
+-		pr_info("Energy-Efficient Ethernet initialized\n");
+-
+-		ret = true;
++					     phydev->eee_cfg.tx_lpi_timer);
++		priv->eee_enabled = true;
++	} else {
++		sxgbe_disable_eee_mode(priv);
++		priv->eee_enabled = false;
+ 	}
+ 
+-	return ret;
+-}
+-
+-static void sxgbe_eee_adjust(const struct sxgbe_priv_data *priv)
+-{
+-	struct net_device *ndev = priv->dev;
+-
+-	/* When the EEE has been already initialised we have to
+-	 * modify the PLS bit in the LPI ctrl & status reg according
+-	 * to the PHY link status. For this reason.
+-	 */
+-	if (priv->eee_enabled)
+-		priv->hw->mac->set_eee_pls(priv->ioaddr, ndev->phydev->link);
++	priv->hw->mac->set_eee_pls(priv->ioaddr, phydev->link);
+ }
+ 
+ /**
+@@ -301,6 +274,16 @@ static int sxgbe_init_phy(struct net_device *ndev)
+ 		return -ENODEV;
+ 	}
+ 
++	if (priv->hw_cap.eee) {
++		phy_support_eee(phydev);
++		phy_eee_rx_clock_stop(priv->dev->phydev, true);
++		phydev->eee_cfg.tx_lpi_timer = SXGBE_DEFAULT_LPI_TIMER;
++
++		/* configure timer which will be used for LPI handling */
++		timer_setup(&priv->eee_ctrl_timer, sxgbe_eee_ctrl_timer, 0);
++		priv->eee_ctrl_timer.expires = SXGBE_LPI_TIMER(eee_timer);
++	}
++
+ 	netdev_dbg(ndev, "%s: attached to PHY (UID 0x%x) Link = %d\n",
+ 		   __func__, phydev->phy_id, phydev->link);
+ 
+@@ -802,7 +785,7 @@ static void sxgbe_tx_all_clean(struct sxgbe_priv_data * const priv)
+ 		sxgbe_tx_queue_clean(tqueue);
+ 	}
+ 
+-	if ((priv->eee_enabled) && (!priv->tx_path_in_lpi_mode)) {
++	if (priv->eee_enabled && !priv->tx_path_in_lpi_mode) {
+ 		sxgbe_enable_eee_mode(priv);
+ 		mod_timer(&priv->eee_ctrl_timer, SXGBE_LPI_TIMER(eee_timer));
+ 	}
+@@ -1179,9 +1162,6 @@ static int sxgbe_open(struct net_device *dev)
+ 		priv->hw->dma->rx_watchdog(priv->ioaddr, SXGBE_MAX_DMA_RIWT);
+ 	}
+ 
+-	priv->tx_lpi_timer = SXGBE_DEFAULT_LPI_TIMER;
+-	priv->eee_enabled = sxgbe_eee_init(priv);
+-
+ 	napi_enable(&priv->napi);
+ 	netif_start_queue(dev);
+ 
+@@ -1207,9 +1187,6 @@ static int sxgbe_release(struct net_device *dev)
+ {
+ 	struct sxgbe_priv_data *priv = netdev_priv(dev);
+ 
+-	if (priv->eee_enabled)
+-		del_timer_sync(&priv->eee_ctrl_timer);
+-
+ 	/* Stop and disconnect the PHY */
+ 	if (dev->phydev) {
+ 		phy_stop(dev->phydev);
+-- 
+2.39.5
 
