@@ -1,105 +1,71 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F421F18BC3F;
-	Fri,  7 Feb 2025 16:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6AE23C8DE;
+	Fri,  7 Feb 2025 16:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738945876; cv=none; b=TjC+EOw9NxigvrxawKUYw0UI1YOaz5a8iDb0Dy2y/v0b5zVqLM31+HcZuJ22Ta15AvqL6uSJHA2fdlVIZcF5jCyYfy5o1n/O+4Uj2r/z4Q9DrZC9nOTrGDJ2OxHZmna9Yk87JiIYCndGZ95mRNJBKybD6LUdutRgS4W0SC2QWXQ=
+	t=1738945938; cv=none; b=PvSZTbiAp4lXfj85V9KRcZ840Q3pfPSw7/gonKVO0UpbJpZJiZ4qz96MYxqwjCSkiWsvaAIzyR4Zgnd6zqHZNs2lOdYzgTcjVhwRwtmJEs8ZZw1AOzQ+j9EgJeBsXvOBPJ5bxj++kvqE28Di5VzcnCUYMYhYZNfYki1jUng57mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738945876; c=relaxed/simple;
-	bh=3rHb+tKlCuLegTX3Cv0TdmZIeOzyZRa316mQ0pQT6Vw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XiFv/GP8ZHRQDstV5iXkH7KCSmrJ3vL9HtfxEAa1ciZ8lZ4r1A964Bd1+EEu+K4sacxldFyx3QYd2HdGByMPye8LLC+wWtHZkxBu3zgVS7BOi5oP/pJwLpOv2bhSeo/t8j3erVnlldZTrCoMIkIYWPmeWUTReN36ePkugV6wV4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UwSjCpkF; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738945938; c=relaxed/simple;
+	bh=SWMAtsZl+6/OnFXjwi8FBccywuIUqyfNqF4ljMcrhtk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l39NGbMzobziSgPBZkFySF/vi9w6UhkXzoKFjVPRk/Rnve7d+sHmcD1EoP4yF1283IFdHualt1Op64EB31kxFa50KUjTsZBcRuY1SnxBIMo2g0KJSh9dmjFnk7ouTH72SHW/S1nTc+NFr4yTdWPWo/1O0c043mOWi6a9Uju1tt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=qfKJAe0S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UwSjCpkF"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-38dc73cc5acso762126f8f.0;
-        Fri, 07 Feb 2025 08:31:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738945873; x=1739550673; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UYnGgZPDK4gRxkfUxbitpLr2RSPLoi7AT6rj4xgzIwk=;
-        b=UwSjCpkFv6OUi1We0gWD7NqaErC5gnypoqQyX7C9f4ur4bUgFEvAb6FbtGWwNoOcTU
-         2jeTE4DxpmV92UMpROygq/TyatG83pF+nYAWJ/MHbpzj5NswwSEzEnp6LKMNKPFkoWAr
-         XG/ir7KP0gbyRVKwvUvIhoyzPr/UhOwCP1pxfI3iKTQSSsHPD3L53kgk/UfY/PbQ/NOL
-         1r9Ssxi/VI9PVee69+tomsxT/6PoGK/3BWyNAj6QcrPbcE2PaGVdJnQNZA93Iji1+tTs
-         f+eCClAf432vHNl2q+wQzayvneorFJ/kcn4QSnKkBeIRm9uhfIa7jvLeNnBug1h+SJmc
-         BZfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738945873; x=1739550673;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UYnGgZPDK4gRxkfUxbitpLr2RSPLoi7AT6rj4xgzIwk=;
-        b=D/cRYnXxt6rsaWvZhcIpwATugJihQHFOWdW+Dx/1wkIhRfUAKHB8L6cQh95FTlg81O
-         IcoEcdzoY3z/5qD6i2ysGowYigyXACUnPEGhq+9nK3iZn+YdXHzYlP3ZbwXS3C4h7I5I
-         Ca3BxNvFFcy1xJF8ykl/K/2kqp2ddEfaCIyhjC4/0v3XyOpBJHGRHRv7/F64+R2vogSx
-         qY9E5KS5jWy2BeKgw+yP42zqIyEyxsHhwdFb9576owGFfpwNZusMia3N2ZgYmvFvpytG
-         BEKj5dmIjr98goTMGk0HXoqgKDd5NUKngB3pMUTGIfiRNnL+9UVGCsNLHgfUPxONKF7z
-         um3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUFV9HoXu6M13TWAqwYkjcFBV3RHhtPn4okfaAt1u0x4uJxw7hwPTi0lXnApBq0u0cwSbJ0QaE6+g7Ti42H@vger.kernel.org, AJvYcCVm4lgi77d4SQhrteyfjHPoeHM8AONDr0W/XOabOkGonIQ1rgNvpwFYAqSGIgdhK3sYwh97IX1Yivyc@vger.kernel.org, AJvYcCWBPrim/sBTNYQuKsrad4FiIDMOL5N4Nc96aJGwKR2wU9KegEVlsK+3Q3m9iuT3RyVSMR0OQ0iPzys93b4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDo+Qxa6kz4D7AsGtkPfYPLr6wqEOE5tC46MFGDhIXZWthmzYn
-	WU3YZPaA6xIZQze3ClMIYFwSBTetNnQKfx2jGoExuhgjOVrn6+yZ
-X-Gm-Gg: ASbGncucAnAzneFTlA6Kn3Y2q4gmNaANLuvlV1l8632ErwsqmbACfKzWkg4MEDHjjIy
-	TYQBuh4ohot4+VS/+1d/mzP1Ur3qKpXrRzjMj8tY2e2FpQZMFKmYFQGyzY5ANFqB/eY4+UqLe3S
-	9kQInqmVoTdHxivXurySvf3Rm4vm1gj/TG2CFwUd5qEALyDUyn7tfLaDraWhW+U8hy0AcIW5uPt
-	Mu42FZvZaCP7yO4x29TYzPHrNvKZv7yFPE6nk8yLmw77OFklPVH/FoYMbQHbWioqdtGkmOC/6lr
-	E/Ci96pqBfhzxGKp3OYs60u9L84V+aktJIUPxjhO62UHg3BXBi1+cQ==
-X-Google-Smtp-Source: AGHT+IFkdTADIPTPp+4U7XElbVxbfJRvAfoKWeBJ3z5NDrM3R19vG4v0kiOYf5OhwHGFSQiHjJfM3w==
-X-Received: by 2002:a5d:64a3:0:b0:385:faec:d945 with SMTP id ffacd0b85a97d-38dc9924025mr3008547f8f.9.1738945872663;
-        Fri, 07 Feb 2025 08:31:12 -0800 (PST)
-Received: from playground.localdomain ([82.79.237.175])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbde0ff2fsm4890258f8f.80.2025.02.07.08.31.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 08:31:12 -0800 (PST)
-From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-To: Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: patches@opensource.cirrus.com,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: dt-bindings: wlf,wm8960: add 'port' property
-Date: Fri,  7 Feb 2025 11:30:29 -0500
-Message-Id: <20250207163029.3365-1-laurentiumihalcea111@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qfKJAe0S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF3BC4CED1;
+	Fri,  7 Feb 2025 16:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1738945937;
+	bh=SWMAtsZl+6/OnFXjwi8FBccywuIUqyfNqF4ljMcrhtk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qfKJAe0SImk6yzc/QUsgDUhlmToZBrTalW/O15nq7508s5F5gGtY71ag1/47Sbozr
+	 U25N4b3CN94u3L8Y+N0i/rhptzRmHMWa1lFBsUi6yTxgep+7JXx8FSiNlHNMxH9m9k
+	 gVFMY2c52jV/+QZlGkHN4OwOL4PXRfOWASkXvzKk=
+Date: Fri, 7 Feb 2025 17:32:14 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jillian Donahue <jilliandonahue58@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH] f_midi_complete to call tasklet_hi_schedule
+Message-ID: <2025020741-ladder-startling-b1c0@gregkh>
+References: <CAArt=Lib_PiR1z07hb1E3tqq-PG=KVKU9CZP3cPsQE5ciokLVw@mail.gmail.com>
+ <2025020708-manned-antidote-7d57@gregkh>
+ <CAArt=Lg25QafefcOAGcvj2ZHuQ4Keip70NFSF1K3mau=2Y12XQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAArt=Lg25QafefcOAGcvj2ZHuQ4Keip70NFSF1K3mau=2Y12XQ@mail.gmail.com>
 
-From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+On Fri, Feb 07, 2025 at 09:10:50AM -0700, Jillian Donahue wrote:
+> On Fri, Feb 7, 2025 at 2:35 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >   The kernel documentation should show you how to use git
+> > send-email or other tools.
+> 
+> ok, I will use this when I resubmit.
+> 
+> > No Cc: stable?
+> 
+> Cc: stable@vger.kernel.org
+> Like so? I just emailed the 3 from the maintainer script.
 
-The wm8960 codec may be used with audio graph card and thus may require an
-additional property: 'port'. Add it.
+Yes.  See:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for what that means.
 
-Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
----
- Documentation/devicetree/bindings/sound/wlf,wm8960.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+> > And this is a v2 patch, right?
+> 
+> I have sent a few out because I cannot seem to get it right. I can add
+> v2 to the next one, if that helps.
 
-diff --git a/Documentation/devicetree/bindings/sound/wlf,wm8960.yaml b/Documentation/devicetree/bindings/sound/wlf,wm8960.yaml
-index 62e62c335d07..3c2b9790ffcf 100644
---- a/Documentation/devicetree/bindings/sound/wlf,wm8960.yaml
-+++ b/Documentation/devicetree/bindings/sound/wlf,wm8960.yaml
-@@ -75,6 +75,10 @@ properties:
-       enable DACLRC pin. If shared-lrclk is present, no need to enable DAC for
-       captrue.
- 
-+  port:
-+    $ref: audio-graph-port.yaml#
-+    unevaluatedProperties: false
-+
- required:
-   - compatible
-   - reg
--- 
-2.34.1
+You have to, the Documentation says to :)
 
+thanks,
+
+greg k-h
