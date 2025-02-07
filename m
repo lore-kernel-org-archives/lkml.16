@@ -1,127 +1,120 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC695246324;
-	Fri,  7 Feb 2025 15:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AAD62405EE
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738943113; cv=none; b=q7v0/IU5K0EEm4qUvvQegpGcKy2QdF55dgRrdshg32R4HO7dRjSc3ypo84yPnBWlWpgYWIjXzOg0EViMNNh2rZWCH3Un7lnwTFZdvTDFlNaSbmY8Ji6NAo7jnnbiMUgFV5yElfkxOnsif2ao6D8Wma9d+t7/g1EpGjwmD9r9vlU=
+	t=1738943126; cv=none; b=UQZZnQlWBYg5ygGGPSK6q33Lvna/ukf77MLsc1p4f6H//19N287pBt2WH5iEXMML8U8K7ETKkYaHkYHDcJriRULZxZe7DHjyVPKd+9HczOZz7eWHzcqRKKkDFhEx4KQUUNt/HuB5Ufz4untn9EI1s91gy3IPHGq/6frkqghAhj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738943113; c=relaxed/simple;
-	bh=6Dv9u9iMz+DcsLmWTQCbzBZtfz2P+8l8k57NZKBzhGM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=L3Hn7mAqunUNVhth7VDc59T+RaTyee+DkFcyIPaR2W75PeyDAirxQzzR6UBeYi+KWrSetWSR92Xoa3mW7Z9Cr9C31ja+09PDx0dPALqwbkoOwnQdH6oCwcgZzEs3M/KCED06XWc/mZw6lMKWw1PhS1rJfzycE3IYhqjXSvftzNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nETfRjyi; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nETfRjyi"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6e41e18137bso19341746d6.1;
-        Fri, 07 Feb 2025 07:45:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738943111; x=1739547911; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xvOxm3G/Y/wXWwgs+RUvwCjbDevM4XGRT57WeF3I8uE=;
-        b=nETfRjyi4bJIK59ZgMQNdvF4elCXyyuQ+Hysjz0t72jFSxmUuXu2CsKhKA0QmqyZF7
-         biUKSzXSGbi2g2hkPs5+ZUJBmXgLNfSmLBjpnn4Vh+dSywNz8Cs1BCvD6SMHwcvQ54+L
-         rYG+qoDFvAEfRpyvlRGTumn5WYfo48gs480MBfMac0HPi5LKq1eBGfeP1Sr/yj45qYbd
-         Z9NvGmqANwqd3lPp48tAgn00F5ZnSbUPx3y0JNLanZLpo9heq8vAGD9P7EC9j6t4kSMr
-         CDLZZCk4mHsSQd8tkZgFDlgrwnl3aVmRL1lpt4I2XCKpbGX3O7SHDcThI8R5AZpOMUfb
-         F2Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738943111; x=1739547911;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xvOxm3G/Y/wXWwgs+RUvwCjbDevM4XGRT57WeF3I8uE=;
-        b=qWNvj2OaWaREYsRaBgvMrdylfkk2PcXamQtOXgcBAGxw8qq/8qdUB535nX0uulofJK
-         DZtKF1p+azgRugBJOn9R6MVUZmEM2hmmtF94pwbaXIr5PVVCmo0is31higawbrXJQDxQ
-         Kf/Wpwa4/HZYZsA7n5y2HVofH2QwxAn3F0BgAjW6gW31aXb3QOH5BFpkj7zKb++TBT00
-         Fr+STAs7IF2aBw0XzBpnPy1aE814afeyZfn9a4BGDR14+8QKadE55NGBbkSDfzi1Vo1F
-         W+MUzx1YYwTim6h1BS8X8ChLWYCAopzE4GAQhbiXCmZFix/Cx3S7N1akGigKVfvhvjrV
-         6Wng==
-X-Forwarded-Encrypted: i=1; AJvYcCV5BfB/xXeJq+2mwAzJ3DfqT8Uf7K86N0MdPmWMU0ZbqvnNGRUV2xmeKdLk0eDHjgPJ8EvofPrF@vger.kernel.org, AJvYcCXJH7zdv2tRS4DeOJe4ClZBkGNmcyb2bLjlRjVqv72RoxFDiuTdip6y7kDO8hkiS+wFradDjUMdnVZLOg==@vger.kernel.org, AJvYcCXV5LSeGBcLWuOzKffQ8whjOYHRi9BekAOeYwi0JgxKD96rDknsS5j3I79Enl5tZSon3tsC4K4wKdgqjSc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUenR7wXJTTxoDRzVCgNfVu3J8QlByihSJjij7/IrDA8glpGUz
-	eBD35B7oFUXt3H73o60o3u83wc772lbh1quKF3ZFojzPd7TpaoOr
-X-Gm-Gg: ASbGncvzKsl1UI9zNvbugrmH2Kknyi/e2+4JLCQaC3QMpDWSOaDvtK8S8IsB9xCNfE1
-	qhRuAC4Bka0RTsCw/erViMaDQncgrCFDJNwjW2kDxpTfvFUGxiLdHbB6C17eb16uHxIdCbXa8di
-	IQi3RbPHgT9NEaa5zcoFydfjwW/Tdm/vgOC7SN4Epu74kRMKxr2f7KThha6N0p0b8twYUiix35r
-	pLZP2FjoP4D4uX3gmxkAORQhBhATx3kZ75TWHMA9yjB86JZpUmojxS7NlGc3KR+xs6HHQBGbflU
-	WATzx+4KXoeTqAdCJhSs65TY26GeOhFgWrknBg==
-X-Google-Smtp-Source: AGHT+IEh3IqsRiFrek8tlhG6fHu+9WMFlGMLV/pDjWkxT5uqn7EgEaqU55vIUyhc7fcVKGe5qFQQVg==
-X-Received: by 2002:a05:6214:dae:b0:6e4:4331:aae0 with SMTP id 6a1803df08f44-6e4455c465emr36455376d6.1.1738943110627;
-        Fri, 07 Feb 2025 07:45:10 -0800 (PST)
-Received: from newman.cs.purdue.edu ([128.10.127.250])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43ba36d5csm18258186d6.26.2025.02.07.07.45.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 07:45:10 -0800 (PST)
-From: Jiasheng Jiang <jiashengjiangcool@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: GR-QLogic-Storage-Upstream@marvell.com,
-	James.Bottomley@hansenpartnership.com,
-	arun.easi@cavium.com,
-	bvanassche@acm.org,
-	jhasan@marvell.com,
-	jiashengjiangcool@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	manish.rangankar@cavium.com,
-	markus.elfring@web.de,
-	martin.petersen@oracle.com,
-	nilesh.javali@cavium.com,
-	skashyap@marvell.com,
-	stable@vger.kernel.org
-Subject: [PATCH v3 2/2] scsi: qedf: Add check for bdt_info
-Date: Fri,  7 Feb 2025 15:45:05 +0000
-Message-Id: <20250207154505.4819-2-jiashengjiangcool@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250207154505.4819-1-jiashengjiangcool@gmail.com>
-References: <2025020721-silver-uneasy-5565@gregkh>
- <20250207154505.4819-1-jiashengjiangcool@gmail.com>
+	s=arc-20240116; t=1738943126; c=relaxed/simple;
+	bh=Vy1Sk59oXfB37yoXgb/SPCcylPviwNA/0R1/9xV2Cek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mqpvsQBojjChkSbfWGNtUp+2+RN8q0mGqmWYD6D5d8+rkvWxtZKmZ1JZvJFY2x4O1DhveY5kn8UeaZSSW8cd/qb7Hw++dl9ea8P8AzUvwswaoDCUWLfmiWTZT6N79y3+oStCNlyLvBunUiy+jdUa5tiCAthQ0fxB0Eh1nS4BJuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 806D01E7D;
+	Fri,  7 Feb 2025 07:45:47 -0800 (PST)
+Received: from [10.1.196.57] (eglon.cambridge.arm.com [10.1.196.57])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4EB4B3F58B;
+	Fri,  7 Feb 2025 07:45:21 -0800 (PST)
+Message-ID: <cb82676d-807b-42b9-b692-62adba91a063@arm.com>
+Date: Fri, 7 Feb 2025 15:45:19 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 21/40] x86/resctrl: Change
+ mon_event_config_{read,write}() to be arch helpers
+To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Fenghua Yu <fenghua.yu@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+ shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+References: <20241004180347.19985-1-james.morse@arm.com>
+ <20241004180347.19985-22-james.morse@arm.com>
+ <a0936b56-4a60-4fb3-be65-91e65d360aca@intel.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <a0936b56-4a60-4fb3-be65-91e65d360aca@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add a check for "bdt_info". Otherwise, if one of the allocations
-for "cmgr->io_bdt_pool[i]" fails, "bdt_info->bd_tbl" will cause a NULL
-pointer dereference.
+Hi Reinette,
 
-Fixes: 61d8658b4a43 ("scsi: qedf: Add QLogic FastLinQ offload FCoE driver framework.")
-Cc: <stable@vger.kernel.org> # v5.10+
-Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
----
-Changelog:
+On 23/10/2024 23:19, Reinette Chatre wrote:
+> On 10/4/24 11:03 AM, James Morse wrote:
+>> @@ -315,6 +322,24 @@ int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid);
+>>  
+>>  bool __init resctrl_arch_is_evt_configurable(enum resctrl_event_id evt);
+>>  
+>> +/**
+>> + * resctrl_arch_mon_event_config_write() - Write the config for a counter.
+> 
+> Please avoid the term "counter" for events ... the upcoming AMD work adds support
+> for counters*. 
 
-v2 -> v3:
+Fixed.
 
-1. No change.
 
-v1 -> v2:
+>> + * @info:	struct resctrl_mon_config_info describing the resource, domain
+>> + *		and event.
+> 
+> Expected "config" to appear as part of information about function
+> that claims to writes config?
 
-1. No change.
----
- drivers/scsi/qedf/qedf_io.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'll rename the variable.
 
-diff --git a/drivers/scsi/qedf/qedf_io.c b/drivers/scsi/qedf/qedf_io.c
-index d52057b97a4f..1ed0ee4f8dde 100644
---- a/drivers/scsi/qedf/qedf_io.c
-+++ b/drivers/scsi/qedf/qedf_io.c
-@@ -125,7 +125,7 @@ void qedf_cmd_mgr_free(struct qedf_cmd_mgr *cmgr)
- 	bd_tbl_sz = QEDF_MAX_BDS_PER_CMD * sizeof(struct scsi_sge);
- 	for (i = 0; i < num_ios; i++) {
- 		bdt_info = cmgr->io_bdt_pool[i];
--		if (bdt_info->bd_tbl) {
-+		if (bdt_info && bdt_info->bd_tbl) {
- 			dma_free_coherent(&qedf->pdev->dev, bd_tbl_sz,
- 			    bdt_info->bd_tbl, bdt_info->bd_tbl_dma);
- 			bdt_info->bd_tbl = NULL;
--- 
-2.25.1
 
+>> + *
+>> + * Must be called on a CPU that is a member of the specified domain.
+
+> I am not sure about this. Is this documentation intended to support authors of
+> arch code? In that case it may be instead useful to know that this function will be
+> called on a CPU that is a member of the specified domain to avoid confusion from arch
+> side whether it needs to take some action to ensure function is called on right CPU.
+> 
+> 	Called on a CPU that is a member of the specified domain.
+
+I don't think we have clear idea who this documentation is for - I'm assuming its for the
+caller...
+
+I'll change this to "Called via IPI to reach a CPU that is a member of the specified
+domain", as that covers both views, and adds that its called in irq context.
+
+
+>> + */
+>> +void resctrl_arch_mon_event_config_write(void *info);
+>> +
+>> +/**
+>> + * resctrl_arch_mon_event_config_read() - Read the config for a counter.
+> 
+> counter -> event
+> 
+>> + * @info:	struct resctrl_mon_config_info describing the resource, domain
+>> + *		and event.
+> 
+> Copy&paste? No information on how config is returned.
+
+Laziness - there is only one possible place it could be! I've added:
+| * Reads resource, domain and eventid from @config_info and reads the
+|  * hardware config value into config_info->mon_config.
+
+and similar on the other function.
+
+
+Thanks,
+
+James
