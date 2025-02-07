@@ -1,60 +1,62 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B3423C8AE;
-	Fri,  7 Feb 2025 16:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926771E9B3E;
+	Fri,  7 Feb 2025 16:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738944858; cv=none; b=Rzn+UXdm+ad7QbtBrUDr1i9k9SqBv24vXE/p+E+vNmDg9QQFf2ncbKO0AJR1DQDs874OE3eOS9BkRFINRnaFsRXL1LAsI6g6xmdKnbB9ueoItsXN/R2jJWUXaD0Rq0lyG7gq9TBAW8XZiQ8yJ9vcKoUZJmkY0u3BzVHadrkFvd4=
+	t=1738944861; cv=none; b=hIbYLV90dGyo8kGZ7KIg/lARhucACdwgZRVhf2OnD/Jjj5Uz2+kf0zlEutGHYjf3Yt3OL/snxDa8Lel5sr9E7ORQhWro65DnLXlsXBtfq2rw6QIRmRxG+MczZw/TJrOcU4kDFIdPIqCBSo/YEASVm69L0lhCDL6c6ek3JGf8AaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738944858; c=relaxed/simple;
-	bh=EM9klKFY4xMwaWQWmsojjGWIcEKo0Aso40CzFs3PHgQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OJV+mQTZqlO70bBLcbd9fAt4SVcRQ+KYrDdnE7uBbvY5J8hLew3IrPD2hLV5WfAU44NDeHryJzjslGuv63PT0pddLkf5ctZZ4U37cAH9MFdLB6y0iWcP13050fcSwg4ir2XU1cKTE6Wmklp4pvFBf0d3w9Q6j+cpm3sJn7tKk9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EIlQp5cM; arc=none smtp.client-ip=209.85.218.46
+	s=arc-20240116; t=1738944861; c=relaxed/simple;
+	bh=ivAJqzmzhWhtE7LeblyHIwqmO3N16F8TYnkUpwVTQ1M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RxC2SLcvayW1aE2EziiKh++1QCweyl7CF6HPUtv5WkUI4xP60DrQoAMlJ3DBNqK+jJ0U6rNZmz4fnFd5nKPojEb86D0cz+Qmf3gK6C2bw7gBsrTJ9GlAKqYNn6B/WhI8bGOcwAQsu8mcrro6SZp92w/lqoD/UXaJ7PzgLhrulX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OoicNu00; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EIlQp5cM"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aaeec07b705so388757066b.2;
-        Fri, 07 Feb 2025 08:14:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoicNu00"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5de594e2555so1731a12.2;
+        Fri, 07 Feb 2025 08:14:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738944855; x=1739549655; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VNoNUqAETs1xeTDeK4+IVuq9A5rrpEE0Blu4HixpU0g=;
-        b=EIlQp5cMMe+jmz6FojOSa1Yo2AlCnSuMcXN/AdXqJXPlt6UWmQRRyqSlQsFWYEa/LV
-         Xub9lCz873J69afS5gKyoQ6A9WRBmaE9MISxTnDttY433aslgD4GP96cmqu0nkg6+BuN
-         pbcyyanZw74wd5WdDShVuYKii2hDD3rE69R3U2RtTlefL7Xdt4lv7EHC6DavXcpxx0qe
-         R6FCaRm4C3B6b5GesUxpKVw6TsbuFrbNsSX2LvBSGcvQXRJW4DWNFtYrReEx5gzq/CF/
-         G0abhpyZ+z4huafSz3v9Bsg2MCcykjwbFvW5j49shdilrigJqxo9iAWvYZHDReHb4IiA
-         jFtQ==
+        d=gmail.com; s=20230601; t=1738944857; x=1739549657; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K12Mwqh9s176fAcmeazekWdagIsoXOnn2kNrLEsbXSw=;
+        b=OoicNu00UlQ71eaM1hwkx6Js6XTfU0iuMzD6dYGJbLMOyh+M9CY9dOM11lfjruLH5V
+         iU9nP27fZ0JOrqRUX9aVyLYskNO3s3wHOzjVAc7/S0rC7bqWa8Bn7mv1IBs+w2CabVnC
+         ococV8x6nuBOgRii/Zfp4q0u4gC8/FytN0zKz2cx5iG1PD5SPANcU3Wvp7belvbNTUE7
+         nFhxI8QPg9TfpcZTGDc5cBibEMeoLI+3PkpcsCrUoSiw3+Ztnot5sOYnzBn0axJN4x91
+         dCMSOOXkU6ay6kK4l7OJgGtT1GHl/c+dRyEes7f09e1aKtbavkjVvalCOf/r7i/Yv7VO
+         nMhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738944855; x=1739549655;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VNoNUqAETs1xeTDeK4+IVuq9A5rrpEE0Blu4HixpU0g=;
-        b=NIsml22ALST+jPe+wyLPaW6YqMyls8ZiT2IebaGecf54GPWh5Vm0TWdeKxpMJ+R34h
-         nBA7ic+dbxe4hw2hLAaJsSMndBCk4G/q5CWvFUgOi71jAqkuopEOHfcmwUD9jAFEEGbb
-         fexZjlghs9ILXROLGyjWLpYJlmTvJfbLCMeadgoa5vjWn71nT7KpXjM1WgPt8EqKEK0X
-         whgx5O162buZQnJEZ+DshL/lLqydw4gj6q/Togiro1ItWN/C1QGdLjGiGgXHG6FEj5gB
-         hkfsRv67Q5axoX71BFDMoMnvHcDR3jnoWhO0fkhus6njSoWGJWSQKL5YEmBRRVfFfmKl
-         JOJg==
-X-Forwarded-Encrypted: i=1; AJvYcCU3moPVxn67d2K+m7KzFCE5xyxWJF1Nnvw6MpT92tZFDj6x2xREuqJoCScLKOXFFvOq4zEYrM1KZpfO+rM=@vger.kernel.org, AJvYcCVxOKwowT/7O8BvizwoVJxEnqrbTsXeUrgShe9eQsU471BK8HzFSrTfPPdEXobz0wfkqTodbubCG8zWfo7Q@vger.kernel.org, AJvYcCXHd/Lj3FmvwkLRU9IITyvd4ykw+SQtWyD1ERgtN9/Pmeigdg5Lik1kttH18d62Ivtl3Et0dDb33V0O@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCzlz45f5MbjnlYCnYYj2FlfYS92FaK5on5R1BxRUMLLUvj6AA
-	DzjW/PA0T4thrykjcuIOWM+WvhWedyDe2Mdcv7jNQxhpdLvVLL5k
-X-Gm-Gg: ASbGnct3LzSS2L2Ohw4NGF77+JvUqYjRr1cB+v4MAUq8pfQZtejInIPPWZl/6rdrfVO
-	weQx2RaSVNc3gIHvlBtJXwdJmycI7Rtrc3CwXqk2Ul5NHYbopPiWFJsh609HrGOdWsoQqR7LMaa
-	TnEvzfIBYQMGZhlJKjE7cuLOOATQKNTArWj3hfAyj6EKBO9QqaUboeVqRVEuvQGpgKe6echvwSH
-	bHJCbz0s+R5EO64c6JlSTIsJJ4K6WX4pdI3vAOCdVms78cfbElYOZM2hK4JISPDF/UNH+BPLn9S
-	ZC4tgMMN/2oh2jcZenT3gP5Xe8UPt9Q=
-X-Google-Smtp-Source: AGHT+IFN2gwGauYCLmmBl6S5dp3zPHiMgY1Un+kohLntY/fjgMFUk0oT6fB3bJBthbtbFhaptqU/oQ==
-X-Received: by 2002:a17:907:9719:b0:ab6:e10e:2f5 with SMTP id a640c23a62f3a-ab789bf6ae5mr424561866b.37.1738944854519;
-        Fri, 07 Feb 2025 08:14:14 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738944857; x=1739549657;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K12Mwqh9s176fAcmeazekWdagIsoXOnn2kNrLEsbXSw=;
+        b=qAcqCW+6VgrK411NVMxtGGcAKzj/MKGD2E96v8IaehaoHojoXNvQczQsfqDBjYt0mH
+         /cXPsWyVzbDAW/4kofilaH/dPXQkFDDMtSALBMrUbJ7htj2/sup0E2WxQNspewzQG7ke
+         Cb8xftAng6A62N/IPD/6TiQlxD+bJbnrmrZSBgNdpvlKVx/eJ0ahO6KkWjQjfXosZTPD
+         U55BeNY4gvUGmLNenEO165xwqo8mT49KOmO40WzsV9uyyFdIzHVDP7cJXy5ilL4GKkGm
+         XCJCqpzdtAr+N547BxfiF8GQUxte/obzOwEE+yUmVgk9BwEJANS9gxwRayq2gQpN2q+m
+         Xp/w==
+X-Forwarded-Encrypted: i=1; AJvYcCU62hgj5yLwN4KJhC+TvQlb0JNIxh3ivxPZ6rTelhbx+VOkf4E3C2JInkdMkqo2fLhhyJDy6h39iNb+@vger.kernel.org, AJvYcCW7yjUXvhYCUZNeu6/bi2G0+TstezcG8byVXJnHgtE3fHaveXY3vAjWnJOL6HBuVt+SqmXby29n7tvqj7ns@vger.kernel.org, AJvYcCXAAQnX4dwhqbFqIkiO/zy4kPqMfeeFyINaE93LvH2U3U91BoZwKb6/KEn/2BoEM3JK4zyu7cMgfLweHVI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyTS3OAoVpUymFU8lJ5YJsZjNcxmVbWXq4j07AaCWYVDFcG+UB
+	2f49GazmE808YQ1POTZgC7CkhzAXJNlCP8GuahKVljVq8TWnEDQ6
+X-Gm-Gg: ASbGnctikOC5blxHSqQrmQU6IbAHdJHuLpQerL3JuXZID9Ka5eMLmjVrzq/Lume4QMu
+	taGFFs4aq9V6tpDt8AKUNCDBLtJrM/1ekTC0XCqeL4LyzRkex/SWLaHRwoTyyG/Znm6rx34Ork/
+	lJUSmk+r5dA7BQ0AwUbixGtUZJv9QfKm20udEp3C9sumFFXIZ/HkWdQsawUDa1lBhAIXvHYYD72
+	lFUo//3lnw0Fm+1L6LPi9g7E5ZCQ/aTFKO7j/BRVzR/NGaYGHAdahimsN5U43EqO+xtoZKEZ3NA
+	bV0XV9QvZFVp/ej0mg1v2SMDo5SGFc4=
+X-Google-Smtp-Source: AGHT+IHKtGaUznMfC2HvIs5L+C3oM0B7uIn7g8Ot9+4W28N8HQZGrd8QU8c6LEOz9u4yDIbEjw8XNQ==
+X-Received: by 2002:a17:907:7e94:b0:ab7:66d3:bc88 with SMTP id a640c23a62f3a-ab789c6cec9mr371983866b.52.1738944855999;
+        Fri, 07 Feb 2025 08:14:15 -0800 (PST)
 Received: from CYBER-ABAKUS.kucica ([87.116.134.57])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ab7732e712esm293592666b.96.2025.02.07.08.14.13
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ab7732e712esm293592666b.96.2025.02.07.08.14.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 08:14:13 -0800 (PST)
+        Fri, 07 Feb 2025 08:14:15 -0800 (PST)
 From: Nikola Jelic <nikola.jelic83@gmail.com>
 To: lgirdwood@gmail.com,
 	broonie@kernel.org,
@@ -67,10 +69,12 @@ To: lgirdwood@gmail.com,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: rwalton@cmlmicro.com
-Subject: [PATCH v3 1/2] ASoC: dt-bindings: Add cmx655 codec
-Date: Fri,  7 Feb 2025 17:13:44 +0100
-Message-ID: <20250207161412.6281-1-nikola.jelic83@gmail.com>
+Subject: [PATCH v3 2/2] ASoC: codecs: cmx655: Add CML's CMX655D codec
+Date: Fri,  7 Feb 2025 17:13:45 +0100
+Message-ID: <20250207161412.6281-2-nikola.jelic83@gmail.com>
 X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250207161412.6281-1-nikola.jelic83@gmail.com>
+References: <20250207161412.6281-1-nikola.jelic83@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,111 +86,1428 @@ Content-Transfer-Encoding: 8bit
 Signed-off-by: Nikola Jelic <nikola.jelic83@gmail.com>
 
 ---
-V2 -> V3: fixed dt_binding_check + yamllint warnings
-V1 -> V2: removed the txt file, fixed review remarks
+V2 -> V3: Review remarks
+V1 -> V2: Review remarks, code style + various other fixes
 ---
- .../bindings/sound/cml,cmx655d.yaml           | 78 +++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
- 2 files changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/cml,cmx655d.yaml
+ sound/soc/codecs/Kconfig      |   16 +
+ sound/soc/codecs/Makefile     |    6 +
+ sound/soc/codecs/cmx655-i2c.c |   60 ++
+ sound/soc/codecs/cmx655-spi.c |   60 ++
+ sound/soc/codecs/cmx655.c     | 1051 +++++++++++++++++++++++++++++++++
+ sound/soc/codecs/cmx655.h     |  154 +++++
+ 6 files changed, 1347 insertions(+)
+ create mode 100644 sound/soc/codecs/cmx655-i2c.c
+ create mode 100644 sound/soc/codecs/cmx655-spi.c
+ create mode 100644 sound/soc/codecs/cmx655.c
+ create mode 100644 sound/soc/codecs/cmx655.h
 
-diff --git a/Documentation/devicetree/bindings/sound/cml,cmx655d.yaml b/Documentation/devicetree/bindings/sound/cml,cmx655d.yaml
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index ee35f3aa5521..d06b4eb8f1e5 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -63,6 +63,7 @@ config SND_SOC_ALL_CODECS
+ 	imply SND_SOC_BT_SCO
+ 	imply SND_SOC_BD28623
+ 	imply SND_SOC_CHV3_CODEC
++	imply SND_SOC_CMX655
+ 	imply SND_SOC_CQ0093VC
+ 	imply SND_SOC_CROS_EC_CODEC
+ 	imply SND_SOC_CS35L32
+@@ -747,6 +748,21 @@ config SND_SOC_CPCAP
+ 	tristate "Motorola CPCAP codec"
+ 	depends on MFD_CPCAP || COMPILE_TEST
+ 
++config SND_SOC_CMX655D
++	tristate
++
++config SND_SOC_CMX655D_I2C
++       tristate "CMX655D codec (I2C)"
++       depends on I2C
++       select SND_SOC_CMX655D
++       select REGMAP_I2C
++
++config SND_SOC_CMX655D_SPI
++       tristate "CMX655D codec (SPI)"
++       depends on SPI
++       select SND_SOC_CMX655D
++       select REGMAP_SPI
++
+ config SND_SOC_CQ0093VC
+ 	tristate
+ 
+diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+index d7ad795603c1..130d29e2e574 100644
+--- a/sound/soc/codecs/Makefile
++++ b/sound/soc/codecs/Makefile
+@@ -58,6 +58,9 @@ snd-soc-aw88399-y := aw88399.o
+ snd-soc-bd28623-y := bd28623.o
+ snd-soc-bt-sco-y := bt-sco.o
+ snd-soc-chv3-codec-y := chv3-codec.o
++snd-soc-cmx655-y := cmx655.o
++snd-soc-cmx655-i2c-y := cmx655-i2c.o
++snd-soc-cmx655-spi-y := cmx655-spi.o
+ snd-soc-cpcap-y := cpcap.o
+ snd-soc-cq93vc-y := cq93vc.o
+ snd-soc-cros-ec-codec-y := cros_ec_codec.o
+@@ -475,6 +478,9 @@ obj-$(CONFIG_SND_SOC_AW88399)	+= snd-soc-aw88399.o
+ obj-$(CONFIG_SND_SOC_BD28623)	+= snd-soc-bd28623.o
+ obj-$(CONFIG_SND_SOC_BT_SCO)	+= snd-soc-bt-sco.o
+ obj-$(CONFIG_SND_SOC_CHV3_CODEC) += snd-soc-chv3-codec.o
++obj-$(CONFIG_SND_SOC_CMX655D) += snd-soc-cmx655.o
++obj-$(CONFIG_SND_SOC_CMX655D_I2C) += snd-soc-cmx655-i2c.o
++obj-$(CONFIG_SND_SOC_CMX655D_SPI) += snd-soc-cmx655-spi.o
+ obj-$(CONFIG_SND_SOC_CQ0093VC) += snd-soc-cq93vc.o
+ obj-$(CONFIG_SND_SOC_CPCAP)	+= snd-soc-cpcap.o
+ obj-$(CONFIG_SND_SOC_CROS_EC_CODEC)	+= snd-soc-cros-ec-codec.o
+diff --git a/sound/soc/codecs/cmx655-i2c.c b/sound/soc/codecs/cmx655-i2c.c
 new file mode 100644
-index 000000000000..1648f606bf48
+index 000000000000..dcbf3f1d337f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/cml,cmx655d.yaml
-@@ -0,0 +1,78 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/cml,cmx655d.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/sound/soc/codecs/cmx655-i2c.c
+@@ -0,0 +1,60 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +
-+title: CML Micro CMX655D codec
++#include <linux/version.h>
++#include <linux/module.h>
++#include <linux/i2c.h>
++#include <linux/of.h>
 +
-+maintainers:
-+  - Richard Walton <rwalton@cmlmicro.com>
-+  - Nikola Jelic <nikola.jelic83@gmail.com>
++#include "cmx655.h"
 +
-+description:
-+  The CMX655D is an ultra-low power voice codec.
++static int cmx655_i2c_probe(struct i2c_client *client)
++{
++	int ret;
++	struct regmap *regmap = devm_regmap_init_i2c(client, &cmx655_regmap);
 +
-+allOf:
-+  - $ref: dai-common.yaml#
++	ret =
++	    cmx655_common_register_component(&client->dev,
++					     regmap,
++					     client->irq);
++	if (ret < 0) {
++		dev_err(&client->dev,
++			"%s: Register component failed %d\n", __func__, ret);
++	}
 +
-+properties:
-+  compatible:
-+    enum:
-+      - cml,cmx655d
++	return ret;
++};
 +
-+  reg:
-+    description: Local bus address
-+    maxItems: 1
++static void cmx655_i2c_remove(struct i2c_client *client)
++{
++	cmx655_common_unregister_component(&client->dev);
++};
 +
-+  "#sound-dai-cells":
-+    description: The first cell indicating the audio interface
-+    const: 0
++static const struct i2c_device_id cmx655_device_id[] = {
++	{ "cmx655", 0 },
++	{ }
++};
 +
-+  reset-gpios:
-+    description: GPIO used for codec reset, negative logic
-+    maxItems: 1
++MODULE_DEVICE_TABLE(i2c, cmx655_device_id);
 +
-+  interrupts:
-+    description: Interrupt for the CMX655D IRQ line
-+    maxItems: 1
++static const struct of_device_id cmx655_of_match[] = {
++	{.compatible = "cml,cmx655d" },
++	{ }
++};
 +
-+  interrupt-names:
-+    description: Interrupt name for the CMX655D IRQ line
-+    maxItems: 1
++MODULE_DEVICE_TABLE(of, cmx655_of_match);
 +
-+  cml,classd-oc-reset-attempts:
-+    description: Maximum number of times to reset CMX655 class-D
-+      following a overcurrent event.
-+      >10000 = disable limit.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1
-+    maximum: 10001
-+    default: 5
++static struct i2c_driver cmx655_i2c_driver = {
++	.probe = cmx655_i2c_probe,
++	.remove = cmx655_i2c_remove,
++	.driver = {
++		   .name = "cmx655",
++		   .of_match_table = cmx655_of_match,
++		    },
++	.id_table = cmx655_device_id
++};
 +
-+required:
-+  - compatible
-+  - reg
++module_i2c_driver(cmx655_i2c_driver);
 +
-+unevaluatedProperties: false
++MODULE_DESCRIPTION("ASoC CMX655 driver, I2C adapter");
++MODULE_AUTHOR("CML");
++MODULE_LICENSE("GPL");
+diff --git a/sound/soc/codecs/cmx655-spi.c b/sound/soc/codecs/cmx655-spi.c
+new file mode 100644
+index 000000000000..d5a74ae1d592
+--- /dev/null
++++ b/sound/soc/codecs/cmx655-spi.c
+@@ -0,0 +1,60 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        status = "okay";
-+        audio-codec@54 {
-+            compatible = "cml,cmx655d";
-+            #sound-dai-cells = <0>;
-+            reg = <0x54>;
-+            reset-gpios = <&gpio 24 GPIO_ACTIVE_LOW>;
-+            interrupt-parent = <&gpio>;
-+            interrupts = <25 IRQ_TYPE_EDGE_RISING>;
-+            cml,classd-oc-reset-attempts = <5>;
-+        };
++#include <linux/version.h>
++#include <linux/module.h>
++#include <linux/spi/spi.h>
++#include <linux/of.h>
 +
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 5079ca6ce1d1..c471a4b905cf 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -308,6 +308,8 @@ patternProperties:
-     description: Carl Cloos Schweisstechnik GmbH.
-   "^cloudengines,.*":
-     description: Cloud Engines, Inc.
-+  "^cml,.*":
-+    description: CML Micro, Ltd.
-   "^cnm,.*":
-     description: Chips&Media, Inc.
-   "^cnxt,.*":
++#include "cmx655.h"
++
++static int cmx655_spi_probe(struct spi_device *spi)
++{
++	int ret;
++	struct regmap *regmap = devm_regmap_init_spi(spi, &cmx655_regmap);
++
++	ret =
++	    cmx655_common_register_component(&spi->dev,
++					     regmap,
++					     spi->irq);
++	if (ret < 0) {
++		dev_err(&spi->dev,
++			"%s: Register component failed %d\n", __func__, ret);
++	}
++
++	return ret;
++};
++
++static void cmx655_spi_remove(struct spi_device *spi)
++{
++	cmx655_common_unregister_component(&spi->dev);
++};
++
++static const struct spi_device_id cmx655_device_id[] = {
++	{ "cmx655" },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(spi, cmx655_device_id);
++
++static const struct of_device_id cmx655_of_match[] = {
++	{.compatible = "cml,cmx655d" },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(of, cmx655_of_match);
++
++static struct spi_driver cmx655_spi_driver = {
++	.probe = cmx655_spi_probe,
++	.remove = cmx655_spi_remove,
++	.driver = {
++		   .name = "cmx655",
++		   .of_match_table = cmx655_of_match,
++		    },
++	.id_table = cmx655_device_id
++};
++
++module_spi_driver(cmx655_spi_driver);
++
++MODULE_DESCRIPTION("ASoC CMX655 driver, SPI adapter");
++MODULE_AUTHOR("CML");
++MODULE_LICENSE("GPL");
+diff --git a/sound/soc/codecs/cmx655.c b/sound/soc/codecs/cmx655.c
+new file mode 100644
+index 000000000000..5b65a579fdba
+--- /dev/null
++++ b/sound/soc/codecs/cmx655.c
+@@ -0,0 +1,1051 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/version.h>
++#include <linux/regmap.h>
++#include <linux/module.h>
++#include <linux/interrupt.h>
++#include <linux/delay.h>
++#include <linux/gpio.h>
++#include <linux/of.h>
++#include <sound/soc.h>
++#include <sound/soc-dapm.h>
++#include <sound/tlv.h>
++
++#include "cmx655.h"
++
++static const struct reg_default cmx655_reg_defaults[] = {
++	{ CMX655_ISR, 0x00 },
++	{ CMX655_ISM, 0x00 },
++	{ CMX655_ISE, 0x00 },
++	{ CMX655_CLKCTRL, 0x00 },
++	{ CMX655_RDIVHI, 0x00 },
++	{ CMX655_RDIVLO, 0x00 },
++	{ CMX655_NDIVHI, 0x00 },
++	{ CMX655_NDIVLO, 0x00 },
++	{ CMX655_PLLCTRL, 0x00 },
++	{ CMX655_SAICTRL, 0x00 },
++	{ CMX655_SAIMUX, 0x00 },
++
++	{ CMX655_RVF, 0x00 },
++	{ CMX655_LDCTRL, 0x00 },
++	{ CMX655_RDCTRL, 0x00 },
++	{ CMX655_LEVEL, 0x00 },
++
++	{ CMX655_NGCTRL, 0x00 },
++	{ CMX655_NGTIME, 0x00 },
++	{ CMX655_NGLSTAT, 0x00 },
++	{ CMX655_NGRSTAT, 0x00 },
++
++	{ CMX655_PVF, 0x00 },
++	{ CMX655_PREAMP, 0x00 },
++	{ CMX655_VOLUME, 0x00 },
++	{ CMX655_ALCCTRL, 0x00 },
++	{ CMX655_ALCTIME, 0x00 },
++	{ CMX655_ALCGAIN, 0x00 },
++	{ CMX655_ALCSTAT, 0x00 },
++	{ CMX655_DST, 0x00 },
++	{ CMX655_CPR, 0x00 },
++
++	{ CMX655_SYSCTRL, 0x00 },
++	{ CMX655_COMMAND, 0x00 },
++	{ 0x34, 0x29 },
++	{ 0x35, 0x40 },
++	{ 0x36, 0x80 },
++	{ 0x37, 0x80 },
++
++};
++
++static const struct regmap_range cmx655_valid_reg[] = {
++	{ 0x00, 0x0a },
++	{ 0x0c, 0x0f },
++	{ 0x1c, 0x1f },
++	{ 0x28, 0x30 },
++	{ 0x32, 0x33 }
++};
++
++static const struct regmap_range cmx655_read_only_reg[] = {
++	{ 0x00, 0x00 },
++	{ 0x1e, 0x1f },
++	{ 0x2e, 0x2e }
++};
++
++static const struct regmap_range cmx655_write_only_reg[] = {
++	{ 0x33, 0x33 }
++};
++
++static const struct regmap_access_table cmx655_readable_reg = {
++	.yes_ranges = cmx655_valid_reg,
++	.n_yes_ranges = ARRAY_SIZE(cmx655_valid_reg),
++	.no_ranges = cmx655_write_only_reg,
++	.n_no_ranges = ARRAY_SIZE(cmx655_write_only_reg)
++};
++
++static const struct regmap_access_table cmx655_writeable_reg = {
++	.yes_ranges = cmx655_valid_reg,
++	.n_yes_ranges = ARRAY_SIZE(cmx655_valid_reg),
++	.no_ranges = cmx655_read_only_reg,
++	.n_no_ranges = ARRAY_SIZE(cmx655_read_only_reg)
++};
++
++static bool cmx655_volatile_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case CMX655_COMMAND:
++	case CMX655_SYSCTRL:
++	case CMX655_ISR:
++	case CMX655_ISE:
++		return true;
++	default:
++		return false;
++	}
++};
++
++const struct regmap_config cmx655_regmap = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = CMX655_COMMAND,
++
++	.volatile_reg = cmx655_volatile_reg,
++	.wr_table = &cmx655_writeable_reg,
++	.rd_table = &cmx655_readable_reg,
++
++	.reg_defaults = cmx655_reg_defaults,
++	.num_reg_defaults = ARRAY_SIZE(cmx655_reg_defaults),
++	.cache_type = REGCACHE_MAPLE,
++};
++EXPORT_SYMBOL_GPL(cmx655_regmap);
++
++static int cmx655_start_sys_clk(struct snd_soc_component *component)
++{
++	int ret;
++	int i;
++	unsigned int val;
++
++	val = snd_soc_component_read(component, CMX655_ISR);
++	ret = snd_soc_component_write(component, CMX655_COMMAND,
++				      CMX655_CMD_CLOCK_START);
++	if (ret < 0) {
++		dev_err(component->dev,
++			"Failed to write start clock command %d\n", ret);
++		return ret;
++	}
++
++	for (i = 0; i < 100; i++) {
++		val = snd_soc_component_read(component, CMX655_ISR);
++		if (val & CMX655_ISR_CLKRDY)
++			break;
++	}
++
++	if (i == 100)
++		ret = -EIO;
++	return ret;
++}
++
++static int cmx655_stop_sys_clk(struct snd_soc_component *component)
++{
++	return snd_soc_component_write(component, CMX655_COMMAND,
++				       CMX655_CMD_CLOCK_STOP);
++}
++
++/**
++ * cmx655_get_sys_clk_config(): Get the clock configuration.
++ * @clk_id: Clock source setting as defined in cmx655.h
++ * @primary_mode: Non-zero if the CMX655 is the DAI primary
++ * @sr_setting: Setting for sample rate 0 to 3
++ * @clk_src: pointer for storing clock source (PLLREF, PLLSEL and
++ *           CLKSEL bits)
++ * @rdiv: pointer for storing PLL's RDIV value (13 bits)
++ * @ndiv: pointer for storing PLL's NDIV value (13 bits)
++ * @pll_ctrl: pointer for storing PLLCTRL register value (8 bits)
++ *
++ * Get the clock setup for the system clock based on clock Id, DAI primary mode
++ * and sample rate.
++ *
++ * Return: 0 for success, negative value otherwise
++ */
++static int cmx655_get_sys_clk_config(int clk_id,
++				     int primary_mode,
++				     int sr_setting,
++				     int *clk_src,
++				     int *rdiv, int *ndiv, int *pll_ctrl)
++{
++	if (clk_id == CMX655_SYSCLK_AUTO) {
++		if (primary_mode != 0)
++			clk_id = CMX655_SYSCLK_RCLK;
++		else
++			clk_id = CMX655_SYSCLK_LRCLK;
++	}
++	*rdiv = 0;
++	*ndiv = 0;
++	*pll_ctrl = 0;
++	switch (clk_id) {
++	case CMX655_SYSCLK_RCLK:
++		*clk_src = CMX655_CLKCTRL_CLRSRC_RCLK;
++		break;
++	case CMX655_SYSCLK_LPO:
++		*clk_src = CMX655_CLKCTRL_CLRSRC_LPO;
++		break;
++	case CMX655_SYSCLK_LRCLK:
++		*clk_src = CMX655_CLKCTRL_CLRSRC_LRCLK;
++		*rdiv = 1;
++		switch (sr_setting) {
++		case CMX655_CLKCTRL_SR_8K:
++			*ndiv = 3072;
++			*pll_ctrl = (0 << CMX655_PLLCTRL_LFILT_SHIFT) ||
++			    (3 << CMX655_PLLCTRL_CPI_SHIFT);
++			break;
++		case CMX655_CLKCTRL_SR_16K:
++			*ndiv = 1536;
++			*pll_ctrl = (0 << CMX655_PLLCTRL_LFILT_SHIFT) ||
++			    (3 << CMX655_PLLCTRL_CPI_SHIFT);
++			break;
++		case CMX655_CLKCTRL_SR_32K:
++			*ndiv = 768;
++			*pll_ctrl = (12 << CMX655_PLLCTRL_LFILT_SHIFT) ||
++			    (3 << CMX655_PLLCTRL_CPI_SHIFT);
++			break;
++		case CMX655_CLKCTRL_SR_48K:
++			*ndiv = 512;
++			*pll_ctrl = (12 << CMX655_PLLCTRL_LFILT_SHIFT) ||
++			    (3 << CMX655_PLLCTRL_CPI_SHIFT);
++			break;
++		default:
++			return -EINVAL;
++		}
++		break;
++	default:
++		return -EINVAL;
++	}
++	return 0;
++};
++
++/**
++ * cmx655_setup_rate(): Setup the clock and sample rate.
++ * @component: sound component to set up
++ * @hw_params: hardware parameters holding the sample rate
++ *
++ * Setup the clock and sample rate. The clock needs to be setup at the same
++ * time as the sample rate in case we are using the serial port as the clock
++ * source.
++ * If the clock source the serial port then the PLL settings are dependent on
++ * the sample rate.
++ *
++ * Return: 0 for success, negative for error.
++ */
++static int cmx655_setup_rate(struct snd_soc_component *component,
++			     struct snd_pcm_hw_params *hw_params)
++{
++	int ret;
++	struct cmx655_data *cmx655_data =
++	    snd_soc_component_get_drvdata(component);
++	struct cmx655_dai_data *cmx655_dai_data = &cmx655_data->dai_data;
++	int srate = params_rate(hw_params);
++	int primary_mode;
++	int srate_setting;
++	int clk_src;
++	int rdiv;
++	int ndiv;
++	int pll_ctrl;
++	int sys_ctrl;
++	int vol;
++
++	primary_mode = snd_soc_component_read(component, CMX655_SAICTRL);
++	primary_mode = primary_mode & CMX655_SAI_MSTR;
++
++	switch (srate) {
++	case 8000:
++		srate_setting = CMX655_CLKCTRL_SR_8K;
++		break;
++	case 16000:
++		srate_setting = CMX655_CLKCTRL_SR_16K;
++		break;
++	case 32000:
++		srate_setting = CMX655_CLKCTRL_SR_32K;
++		break;
++	case 48000:
++		srate_setting = CMX655_CLKCTRL_SR_48K;
++		break;
++	default:
++		dev_err(component->dev, "Unsupported rate %d\n", srate);
++		return -EINVAL;
++	}
++
++	ret = cmx655_get_sys_clk_config(cmx655_dai_data->sys_clk,
++					primary_mode, srate_setting,
++					&clk_src, &rdiv, &ndiv, &pll_ctrl);
++	if (ret < 0) {
++		dev_err(component->dev,
++			"Failed to get system clock settings %i\n", ret);
++		return ret;
++	}
++
++	if (clk_src == CMX655_CLKCTRL_CLRSRC_LRCLK) {
++		dev_dbg(component->dev,
++			"Using LRCLK as clk source. Using LPO for setup then switch over to LRCLK later");
++		cmx655_dai_data->clk_src = clk_src;
++		cmx655_dai_data->best_clk_running = false;
++		clk_src = CMX655_CLKCTRL_CLRSRC_LPO;
++	} else {
++		cmx655_dai_data->best_clk_running = true;
++	}
++
++	if (snd_soc_component_test_bits(component, CMX655_CLKCTRL,
++					CMX655_CLKCTRL_CLRSRC_MASK |
++					CMX655_CLKCTRL_SR_MASK,
++					clk_src | srate_setting) == 0) {
++		dev_dbg(component->dev, "Rate Setup correct skipping setup\n");
++		return 0;
++	}
++	/* Turn all inputs and outputs off before disabling clock */
++	sys_ctrl = snd_soc_component_read(component, CMX655_SYSCTRL);
++	snd_soc_component_update_bits(component, CMX655_SYSCTRL,
++				      CMX655_SYSCTRL_MICR |
++				      CMX655_SYSCTRL_MICL |
++				      CMX655_SYSCTRL_PAMP |
++				      CMX655_SYSCTRL_LOUT, 0);
++
++	cmx655_stop_sys_clk(component);
++	/* Set new sample rate and clock source */
++	snd_soc_component_update_bits(component, CMX655_CLKCTRL,
++				      CMX655_CLKCTRL_CLRSRC_MASK |
++				      CMX655_CLKCTRL_SR_MASK,
++				      clk_src | srate_setting);
++	/* Set new RDIV */
++	snd_soc_component_update_bits(component, CMX655_RDIVHI,
++				      0x1F, rdiv >> 8);
++	snd_soc_component_update_bits(component, CMX655_RDIVLO,
++				      0xFF, rdiv & 0xFF);
++	/* Set new NDIV */
++	snd_soc_component_update_bits(component, CMX655_NDIVHI,
++				      0x1F, ndiv >> 8);
++	snd_soc_component_update_bits(component, CMX655_NDIVLO,
++				      0xFF, ndiv & 0xFF);
++	/* Set new PLLCTRL */
++	snd_soc_component_update_bits(component, CMX655_PLLCTRL,
++				      0xFF, pll_ctrl & 0xFF);
++	/* Now we can re-start the clock */
++	ret = cmx655_start_sys_clk(component);
++	if (ret < 0) {
++		dev_err(component->dev,
++			"System clock failed to start %i\n", ret);
++		return ret;
++	}
++	/* Turn anything on that we turned off */
++	if ((sys_ctrl & (CMX655_SYSCTRL_MICR | CMX655_SYSCTRL_MICL)) > 0) {
++		snd_soc_component_update_bits(component, CMX655_SYSCTRL,
++					      CMX655_SYSCTRL_MICR |
++					      CMX655_SYSCTRL_MICL, sys_ctrl);
++		/* Wait for filters to settle */
++		if (snd_soc_component_test_bits
++		    (component,
++		     CMX655_RVF,
++		     CMX655_VF_DCBLOCK,
++		     CMX655_VF_DCBLOCK) == 0) {
++			/* DC blocking filter off, Shorter wait */
++			usleep_range(3500, 4000);
++		} else {
++			/* This allows time for Mics and DC blocking filter to settle */
++			msleep(320);
++		}
++	}
++
++	if ((sys_ctrl & (CMX655_SYSCTRL_PAMP | CMX655_SYSCTRL_LOUT)) > 0) {
++		/* Store volume */
++		vol = snd_soc_component_read(component, CMX655_VOLUME);
++		/* Lower volume with smooth on */
++		snd_soc_component_write(component, CMX655_VOLUME, 0x80);
++		snd_soc_component_update_bits(component, CMX655_SYSCTRL,
++					      CMX655_SYSCTRL_PAMP |
++					      CMX655_SYSCTRL_LOUT, sys_ctrl);
++		/* Restore volume */
++		snd_soc_component_write(component, CMX655_VOLUME, vol);
++	}
++
++	return 0;
++};
++
++static int cmx655_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
++{
++	struct snd_soc_component *component = dai->component;
++	unsigned int reg_val = 0;
++	/* Set primary bit */
++	switch (fmt & SND_SOC_DAIFMT_CLOCK_PROVIDER_MASK) {
++	case SND_SOC_DAIFMT_CBM_CFM:
++		reg_val = reg_val | CMX655_SAI_MSTR;
++		break;
++	case SND_SOC_DAIFMT_CBS_CFS:
++		break;
++	default:
++		dev_err(component->dev,
++			"Unsupported digital audio interface primary mode\n");
++		return -EINVAL;
++	}
++	/* Set data format */
++	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
++	case SND_SOC_DAIFMT_I2S:
++		reg_val = reg_val | CMX655_SAI_DLY | CMX655_SAI_POL;
++		break;
++	case SND_SOC_DAIFMT_LEFT_J:
++		break;
++	default:
++		dev_err(component->dev,
++			"Unsupported digital audio interface data format\n");
++		return -EINVAL;
++	}
++	/* Change invert bits if required */
++	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
++	case SND_SOC_DAIFMT_NB_NF:
++		break;
++	case SND_SOC_DAIFMT_NB_IF:
++		reg_val = reg_val ^ CMX655_SAI_POL;
++		break;
++	case SND_SOC_DAIFMT_IB_NF:
++		reg_val = reg_val | CMX655_SAI_BINV;
++		break;
++	case SND_SOC_DAIFMT_IB_IF:
++		reg_val = (reg_val | CMX655_SAI_BINV) ^ CMX655_SAI_POL;
++		break;
++	default:
++		dev_err(component->dev,
++			"Unknown digital audio interface polarity\n");
++		return -EINVAL;
++	}
++
++	/* Write value to codec */
++	snd_soc_component_write(component, CMX655_SAICTRL, reg_val);
++	return 0;
++}
++
++static int cmx655_set_dai_sysclk(struct snd_soc_dai *dai,
++				 int clk_id, unsigned int freq, int dir)
++{
++	struct cmx655_data *cmx655_data =
++	    snd_soc_component_get_drvdata(dai->component);
++	struct cmx655_dai_data *cmx655_dai_data = &cmx655_data->dai_data;
++
++	switch (clk_id) {
++	case CMX655_SYSCLK_MIN ... CMX655_SYSCLK_MAX:
++		break;
++	default:
++		return -EINVAL;
++	}
++	cmx655_dai_data->sys_clk = clk_id;
++
++	return 0;
++}
++
++static int cmx655_dai_prepare(struct snd_pcm_substream *stream,
++			      struct snd_soc_dai *dai)
++{
++	int ret = 0;
++	struct snd_soc_component *component = dai->component;
++	struct cmx655_data *cmx655_data =
++	    snd_soc_component_get_drvdata(component);
++	struct cmx655_dai_data *cmx655_dai_data = &cmx655_data->dai_data;
++
++	if (!cmx655_dai_data->best_clk_running) {
++		/* Stop the clock change over to the correct one an start it again */
++		ret = cmx655_stop_sys_clk(component);
++		if (ret < 0) {
++			dev_err(component->dev, "Failed to stop clock %d\n",
++				ret);
++			goto get_out;
++		}
++		ret =
++		    snd_soc_component_update_bits(component, CMX655_CLKCTRL,
++						  CMX655_CLKCTRL_CLRSRC_MASK,
++						  cmx655_dai_data->clk_src);
++		if (ret < 0) {
++			dev_err(component->dev,
++				"Failed to set new clock setup %d\n", ret);
++			goto get_out;
++		}
++		ret = cmx655_start_sys_clk(component);
++		if (ret < 0) {
++			dev_warn(component->dev, "Failed to restart clock\n");
++			ret = 0;
++			/*
++			 * This will happen if the CPU driver does not start the LRCLK
++			 * until the last point.
++			 * For now we will assume the clock will start
++			 */
++		}
++		cmx655_dai_data->best_clk_running = true;
++	}
++get_out:
++	return ret;
++};
++
++static int cmx655_hw_params(struct snd_pcm_substream *stream,
++			    struct snd_pcm_hw_params *hw_params,
++			    struct snd_soc_dai *dai)
++{
++	int ret;
++	struct snd_soc_component *component = dai->component;
++	struct cmx655_data *cmx655_data =
++	    snd_soc_component_get_drvdata(component);
++	struct cmx655_dai_data *cmx655_dai_data = &cmx655_data->dai_data;
++	unsigned int enabled_streams = cmx655_dai_data->enabled_streams;
++
++	/* Setup clock and sample rate */
++	ret = cmx655_setup_rate(component, hw_params);
++	if (ret < 0) {
++		dev_err(component->dev, "Failed to set rates %d\n",
++			ret);
++		return ret;
++	}
++
++	/* Set mono bit based on channel count */
++	if (params_channels(hw_params) == 1) {
++		dev_dbg(component->dev, "Switching into mono mode\n");
++		snd_soc_component_update_bits(component, CMX655_SAICTRL,
++					      CMX655_SAI_MONO, CMX655_SAI_MONO);
++	} else {
++		snd_soc_component_update_bits(component, CMX655_SAICTRL,
++					      CMX655_SAI_MONO, 0);
++	}
++
++	if (cmx655_data->irq)
++		cmx655_data->oc_cnt = 0;
++	if (enabled_streams == 0) {
++		dev_dbg(component->dev,
++			"First stream to enable, enabling SAI\n");
++		/*
++		 * If first stream to be enabled
++		 * Enable SAI (serial audio interface) port
++		 * We need it running before the platform starts.
++		 * to avoid I2S sync errors
++		 */
++		snd_soc_component_update_bits(component, CMX655_SYSCTRL,
++					      CMX655_SYSCTRL_SAI,
++					      CMX655_SYSCTRL_SAI);
++	} else {
++		dev_dbg(component->dev,
++			"Not first stream to enable, skipping SAI enable\n");
++	}
++
++	/* Inc enabled streams by 1 */
++	cmx655_dai_data->enabled_streams = enabled_streams + 1;
++
++	return ret;
++}
++
++static void cmx655_dai_shutdown(struct snd_pcm_substream *stream,
++				struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component = dai->component;
++	struct cmx655_data *cmx655_data =
++	    snd_soc_component_get_drvdata(component);
++	struct cmx655_dai_data *cmx655_dai_data = &cmx655_data->dai_data;
++	unsigned int enabled_streams = cmx655_dai_data->enabled_streams;
++
++	if (enabled_streams == 0) {
++		dev_dbg(component->dev,
++			"Shutdown called when SAI not running\n");
++		return;
++	}
++	enabled_streams = enabled_streams - 1;
++	cmx655_dai_data->enabled_streams = enabled_streams;
++	if (enabled_streams == 0) {
++		dev_dbg(component->dev,
++			"Last stream to disable, disabling SAI\n");
++		snd_soc_component_update_bits(component, CMX655_SYSCTRL,
++					      CMX655_SYSCTRL_SAI, 0);
++		cmx655_dai_data->best_clk_running = false;
++	} else {
++		dev_dbg(component->dev,
++			"Not last stream to disable, skipping SAI disable\n");
++	}
++}
++
++static const struct snd_soc_dai_ops cmx655_dai_ops = {
++	.set_sysclk = cmx655_set_dai_sysclk,
++	.set_fmt = cmx655_set_dai_fmt,
++
++	.prepare = cmx655_dai_prepare,
++	.hw_params = cmx655_hw_params,
++	.shutdown = cmx655_dai_shutdown,
++};
++
++static struct snd_soc_dai_driver cmx655_dai_driver = {
++	.name = "cmx655",
++	.playback = {
++		     .stream_name = "CMX655 Playback",
++		     .channels_min = 1,
++		     .channels_max = 2,
++		     .rates = CMX655_RATES,
++		     .formats = CMX655_FMTS,
++		      },
++	.capture = {
++		    .stream_name = "CMX655 Record",
++		    .channels_min = 1,
++		    .channels_max = 2,
++		    .rates = CMX655_RATES,
++		    .formats = CMX655_FMTS,
++		     },
++	.ops = &cmx655_dai_ops,
++	.symmetric_rate = 1
++};
++
++static irqreturn_t cmx655_irq_thread(int irq, void *data)
++{
++	struct snd_soc_component *component = data;
++	struct cmx655_data *cmx655_data =
++	    snd_soc_component_get_drvdata(component);
++	unsigned int status;
++
++	status = snd_soc_component_read(component, CMX655_ISR);
++	if (status == 0)
++		return IRQ_NONE;
++	/* Thermal protection event */
++	if (status & CMX655_ISR_THERM) {
++		dev_err(component->dev,
++			"CMX655 class-D over temperature detected\n");
++	}
++	/* Over current  event */
++	if (status & CMX655_ISR_AMPOC) {
++		dev_warn(component->dev,
++			 "CMX655 class-D over current detected\n");
++		if (cmx655_data->oc_cnt < cmx655_data->oc_cnt_max) {
++			/* Re enable class-D */
++			snd_soc_component_update_bits(component,
++						      CMX655_SYSCTRL,
++						      CMX655_SYSCTRL_PAMP,
++						      CMX655_SYSCTRL_PAMP);
++			if (cmx655_data->oc_cnt_max <= 10000)
++				cmx655_data->oc_cnt = cmx655_data->oc_cnt + 1;
++		} else {
++			/* Re enable count reached, do not try again */
++			dev_err(component->dev,
++				"Class-D over current restart attempts exceeded\n");
++		}
++	}
++	return IRQ_HANDLED;
++}
++
++static int cmx655_component_probe(struct snd_soc_component *component)
++{
++	int ret;
++	struct cmx655_data *cmx655_data =
++	    snd_soc_component_get_drvdata(component);
++
++	ret = cmx655_start_sys_clk(component);
++	if (ret < 0) {
++		dev_err(component->dev, "Failed to start system clock %d\n",
++			ret);
++		goto codec_err;
++	}
++	cmx655_data->oc_cnt = 0;
++	if (cmx655_data->irq) {
++		ret =
++		    request_threaded_irq(cmx655_data->irq, NULL,
++					 cmx655_irq_thread, IRQF_ONESHOT,
++					 "cmx655", component);
++		if (ret < 0) {
++			dev_err(component->dev,
++				"Failed to setup interrupt %d\n", ret);
++			goto interrupt_err;
++		}
++		snd_soc_component_write(component, CMX655_ISM,
++					(CMX655_ISM_AMPOC | CMX655_ISM_THERM));
++	}
++
++	return 0;
++
++interrupt_err:
++codec_err:
++	return ret;
++}
++
++static void cmx655_component_remove(struct snd_soc_component *component)
++{
++	struct cmx655_data *cmx655_data =
++	    snd_soc_component_get_drvdata(component);
++
++	if (cmx655_data->irq) {
++		snd_soc_component_write(component, CMX655_ISM, 0);
++		free_irq(cmx655_data->irq, component);
++	}
++}
++
++static const DECLARE_TLV_DB_SCALE(cmx655_level, -1200, 100, 0);
++static const DECLARE_TLV_DB_SCALE(cmx655_ng_thresh, -6300, 100, 0);
++static const DECLARE_TLV_DB_SCALE(cmx655_vol, -9100, 100, 1);
++static const DECLARE_TLV_DB_SCALE(cmx655_pre_amp, 0, 600, 0);
++static const DECLARE_TLV_DB_SCALE(cmx655_dst_gain, -6200, 200, 0);
++static const DECLARE_TLV_DB_SCALE(cmx655_alc_gain, 0, 100, 0);
++static const DECLARE_TLV_DB_SCALE(cmx655_alc_thresh, -3100, 100, 0);
++
++static const char *const cmx655_ngratio_text[] = {
++	"1:2",
++	"1:3",
++	"1:4"
++};
++
++static SOC_ENUM_SINGLE_DECL(cmx655_ngratio_enum, CMX655_NGCTRL, 5,
++			    cmx655_ngratio_text);
++static const char *const cmx655_ngattack_text[] = {
++	"1.5ms",
++	"3ms",
++	"4.5ms",
++	"6ms",
++	"12ms",
++	"24ms",
++	"48ms",
++	"96ms"
++};
++
++static SOC_ENUM_SINGLE_DECL(cmx655_ngattack_enum, CMX655_NGTIME, 4,
++			    cmx655_ngattack_text);
++static const char *const cmx655_ngrelease_text[] = {
++	"0.06s",
++	"0.12s",
++	"0.24s",
++	"0.48s",
++	"0.96s",
++	"1.92s",
++	"3.84s",
++	"7.68s"
++};
++
++static SOC_ENUM_SINGLE_DECL(cmx655_ngrelease_enum, CMX655_NGTIME, 0,
++			    cmx655_ngrelease_text);
++static const char *const cmx655_hpf_text[] = {
++	"Disabled",
++	"SRate/320",
++	"SRate/53.3",
++	"SRate/26.7"
++};
++
++static SOC_ENUM_SINGLE_DECL(cmx655_hpf_capture_enum, CMX655_RVF, 0,
++			    cmx655_hpf_text);
++static SOC_ENUM_SINGLE_DECL(cmx655_hpf_playback_enum, CMX655_PVF, 0,
++			    cmx655_hpf_text);
++static const char *const cmx655_companding_text[] = {
++	"u-Law",
++	"a-Law"
++};
++
++static SOC_ENUM_SINGLE_DECL(cmx655_companding, CMX655_SAIMUX, 5,
++			    cmx655_companding_text);
++static const char *const cmx655_alc_ratio_text[] = {
++	"1.5:1",
++	"2:1",
++	"4:1",
++	"Inf:1"
++};
++
++static SOC_ENUM_SINGLE_DECL(cmx655_alc_ratio_enum, CMX655_ALCCTRL, 5,
++			    cmx655_alc_ratio_text);
++/* Note: The attack and release times are the same as the Noise gate's. */
++static SOC_ENUM_SINGLE_DECL(cmx655_alc_attack_enum, CMX655_ALCTIME, 4,
++			    cmx655_ngattack_text);
++static SOC_ENUM_SINGLE_DECL(cmx655_alc_release_enum, CMX655_ALCTIME, 0,
++			    cmx655_ngrelease_text);
++
++static const struct snd_kcontrol_new cmx655_snd_controls[] = {
++	/* Capture */
++	SOC_DOUBLE_TLV("Master Capture Volume", CMX655_LEVEL, 4, 0, 15, 0,
++		       cmx655_level),
++
++	SOC_SINGLE("Digital Capture Block Switch", CMX655_RVF,
++		   CMX655_VF_DCBLOCK_SHIFT,
++		   1, 0),
++
++	SOC_SINGLE("LPF Capture Switch", CMX655_RVF, 3, 1, 0),
++	SOC_ENUM("HPF Capture Switch", cmx655_hpf_capture_enum),
++	/* Noise gate */
++	SOC_SINGLE("Noise Gate Capture Switch", CMX655_NGCTRL, 7, 1, 0),
++	SOC_SINGLE_TLV("Noise Gate Threshold Capture Volume", CMX655_NGCTRL, 0, 31, 0,
++		       cmx655_ng_thresh),
++	SOC_ENUM("Noise Gate Ratio Capture Switch", cmx655_ngratio_enum),
++	SOC_ENUM("Noise Gate Attack Capture Switch", cmx655_ngattack_enum),
++	SOC_ENUM("Noise Gate Release Capture Switch", cmx655_ngrelease_enum),
++
++	/* Playback */
++	SOC_SINGLE_TLV("Master Playback Volume", CMX655_VOLUME, 0, 91, 0,
++		       cmx655_vol),
++	SOC_SINGLE_TLV("Preamp Playback Volume", CMX655_PREAMP, 0, 3, 0,
++		       cmx655_pre_amp),
++	SOC_SINGLE("Smooth Playback Switch", CMX655_VOLUME, 7, 0x01, 0),
++	SOC_SINGLE("Dogital Capture Block Playback Switch", CMX655_PVF,
++		   CMX655_VF_DCBLOCK_SHIFT,
++		   1, 0),
++	SOC_SINGLE("LPF Playback Switch", CMX655_PVF, 3, 1, 0),
++	SOC_ENUM("HPF Playback Switch", cmx655_hpf_playback_enum),
++	SOC_SINGLE("Soft Mute Playback Switch", CMX655_CPR, 0, 1, 0),
++	SOC_SINGLE("ALC Playback Switch", CMX655_ALCCTRL, 7, 1, 0),
++	SOC_ENUM("ALC Ratio Playback Switch", cmx655_alc_ratio_enum),
++	SOC_SINGLE_TLV("ALC Threshold Playback Volume", CMX655_ALCCTRL,
++		       0, 31, 0,
++		       cmx655_alc_thresh),
++	SOC_SINGLE_TLV("ALC Playback Volume", CMX655_ALCGAIN, 0, 12, 0,
++		       cmx655_alc_gain),
++	SOC_ENUM("ALC Attack Playback Switch", cmx655_alc_attack_enum),
++	SOC_ENUM("ALC Release Playback Switch", cmx655_alc_release_enum),
++
++	/* Digital Sidetone */
++	SOC_SINGLE_TLV("Sidetone Playback Volume", CMX655_DST, 0, 31, 0,
++		       cmx655_dst_gain),
++	/* Companding */
++	SOC_SINGLE("Companding Switch", CMX655_SAIMUX, 4, 1, 0),
++	SOC_ENUM("Companding Type", cmx655_companding),
++};
++
++static const char *const cmx655_mic_mux_text[] = {
++	"Normal",
++	"Swapped",
++	"Left only",
++	"Right only"
++};
++
++static SOC_ENUM_SINGLE_DECL(cmx655_mic_mux_enum, CMX655_SAIMUX, 0,
++			    cmx655_mic_mux_text);
++
++static const char *const cmx655_amp_mux_text[] = {
++	"Left",
++	"Right",
++	"Mean"
++};
++
++static SOC_ENUM_SINGLE_DECL(cmx655_amp_mux_enum, CMX655_SAIMUX, 2,
++			    cmx655_amp_mux_text);
++
++static const char *const cmx655_digital_sidetone_text[] = {
++	"Left",
++	"Right",
++	"Mean"
++};
++
++static SOC_ENUM_SINGLE_DECL(cmx655_sidetone_enum, CMX655_DST, 5,
++			    cmx655_digital_sidetone_text);
++static const struct snd_kcontrol_new cmx655_mic_mux =
++SOC_DAPM_ENUM("SAI Capture Route",
++	      cmx655_mic_mux_enum);
++
++static const struct snd_kcontrol_new cmx655_amp_mux =
++SOC_DAPM_ENUM("Play_SAI Playback Route",
++	      cmx655_amp_mux_enum);
++
++static const struct snd_kcontrol_new cmx655_spkr_en[] = {
++	SOC_DAPM_SINGLE_VIRT("Playback Switch", 1)
++};
++
++static const struct snd_kcontrol_new cmx655_lout_en[] = {
++	SOC_DAPM_SINGLE_VIRT("Playback Switch", 1)
++};
++
++static const struct snd_kcontrol_new cmx655_sidetone_mux =
++SOC_DAPM_ENUM("DST Route", cmx655_sidetone_enum);
++
++static const struct snd_kcontrol_new cmx655_dst_en[] = {
++	SOC_DAPM_SINGLE_VIRT("Playback Switch", 1)
++};
++
++static int cmx655_mic_dapm_event(struct snd_soc_dapm_widget *widget,
++				 struct snd_kcontrol *control, int event)
++{
++	struct snd_soc_component *component =
++	    snd_soc_dapm_to_component(widget->dapm);
++	int reg_val;
++
++	switch (event) {
++	case SND_SOC_DAPM_POST_PMU:
++		/*
++		 *After turn on give MIC filters time
++		 * Time can be shorter if the DC blocking filter is not enabled
++		 */
++		reg_val = snd_soc_component_read(component, CMX655_RVF);
++		if ((reg_val && CMX655_VF_DCBLOCK) > 0) {
++			/* This allows time for Mics and DC blocking filter to settle */
++			msleep(320);
++		} else {
++			usleep_range(3500, 4000);
++		}
++		break;
++	default:
++		break;
++	}
++	return 0;
++}
++
++static const struct snd_soc_dapm_widget cmx655_dapm_widgets[] = {
++	/* Input path widgets */
++	SND_SOC_DAPM_INPUT("MICL"),
++	SND_SOC_DAPM_INPUT("MICR"),
++
++	/* Custom widgets for Mics to get them to turn on before switches */
++	CMX655_DAPM_MIC("Left Mic", 1),
++	CMX655_DAPM_MIC("Right Mic", 0),
++
++	SND_SOC_DAPM_MUX("SAI Left Capture Mux", SND_SOC_NOPM, 0, 0,
++			 &cmx655_mic_mux),
++	SND_SOC_DAPM_MUX("SAI Right Capture Mux", SND_SOC_NOPM, 0, 0,
++			 &cmx655_mic_mux),
++	/*
++	 * Note: SAI enable is controlled by DAI's HWparams and shutdown. Using
++	 * DAPM control resulted in I2S sync errors on the platform driver
++	 */
++	SND_SOC_DAPM_AIF_OUT("SAI Left Out", "CMX655 Record", 0,
++			     SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_OUT("SAI Right Out", "CMX655 Record", 1,
++			     SND_SOC_NOPM, 0, 0),
++
++	/* Output path widgets */
++	SND_SOC_DAPM_AIF_IN("SAI Left In", "CMX655 Playback", 0,
++			    SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("SAI Right In", "CMX655 Playback", 1,
++			    SND_SOC_NOPM, 0, 0),
++
++	SND_SOC_DAPM_MUX("SAI Playback Route", SND_SOC_NOPM, 0, 0,
++			 &cmx655_amp_mux),
++
++	SND_SOC_DAPM_DAC("Power Amp", "CMX655 Playback", CMX655_SYSCTRL, 3, 0),
++	SND_SOC_DAPM_DAC("Line Out", "CMX655 Playback", CMX655_SYSCTRL, 4, 0),
++
++	SND_SOC_DAPM_SWITCH("SPKR Switch", SND_SOC_NOPM, 0, 0, cmx655_spkr_en),
++	SND_SOC_DAPM_SWITCH("LOUT Switch", SND_SOC_NOPM, 0, 0, cmx655_lout_en),
++
++	SND_SOC_DAPM_OUTPUT("SPKR"),
++	SND_SOC_DAPM_OUTPUT("LOUT"),
++
++	/* Digital side tone widgets */
++	SND_SOC_DAPM_SWITCH("DST Switch", SND_SOC_NOPM, 0, 0, cmx655_dst_en),
++	SND_SOC_DAPM_MUX("DST Mux", CMX655_DST, 7, 0, &cmx655_sidetone_mux),
++
++};
++
++static const struct snd_soc_dapm_route cmx655_dapm_routes[] = {
++	/* Main output path */
++	{ "SPKR", NULL, "SPKR Switch" },
++	{ "LOUT", NULL, "LOUT Switch" },
++	{ "SPKR Switch", "Playback Switch", "Power Amp" },
++	{ "LOUT Switch", "Playback Switch", "Line Out" },
++	{ "Power Amp", NULL, "SAI Playback Route" },
++	{ "Line Out", NULL, "SAI Playback Route" },
++	{ "SAI Playback Route", "Left", "SAI Left In" },
++	{ "SAI Playback Route", "Right", "SAI Right In" },
++	{ "SAI Playback Route", "Mean", "SAI Left In" },
++	{ "SAI Playback Route", "Mean", "SAI Right In" },
++	/* Main input path */
++	{ "SAI Right Out", NULL, "SAI Right Capture Mux" },
++	{ "SAI Left Out", NULL, "SAI Left Capture Mux" },
++	{ "SAI Left Capture Mux", "Normal", "Left Mic" },
++	{ "SAI Right Capture Mux", "Normal", "Right Mic" },
++	{ "SAI Left Capture Mux", "Swapped", "Right Mic" },
++	{ "SAI Right Capture Mux", "Swapped", "Left Mic" },
++	{ "SAI Left Capture Mux", "Left only", "Left Mic" },
++	{ "SAI Right Capture Mux", "Left only", "Left Mic" },
++	{ "SAI Left Capture Mux", "Right only", "Right Mic" },
++	{ "SAI Right Capture Mux", "Right only", "Right Mic" },
++	{ "Right Mic", NULL, "MICR" },
++	{ "Left Mic", NULL, "MICL" },
++	/* Digital side tone */
++	{ "DST Mux", "Left", "Left Mic" },
++	{ "DST Mux", "Right", "Right Mic" },
++	{ "DST Mux", "Mean", "Left Mic" },
++	{ "DST Mux", "Mean", "Right Mic" },
++
++	{ "DST Switch", "Playback Switch", "DST Mux" },
++
++	{ "Power Amp", NULL, "DST Switch" },
++	{ "Line Out", NULL, "DST Switch" },
++
++};
++
++static const struct snd_soc_component_driver cmx655_component_driver = {
++	.controls = cmx655_snd_controls,
++	.num_controls = ARRAY_SIZE(cmx655_snd_controls),
++	.dapm_widgets = cmx655_dapm_widgets,
++	.num_dapm_widgets = ARRAY_SIZE(cmx655_dapm_widgets),
++	.dapm_routes = cmx655_dapm_routes,
++	.num_dapm_routes = ARRAY_SIZE(cmx655_dapm_routes),
++
++	.probe = cmx655_component_probe,
++	.remove = cmx655_component_remove
++};
++
++static int cmx655_parse_data_from_of(const struct device_node *device_node,
++				     struct cmx655_data *cmx655_data)
++{
++	int ret;
++	unsigned int val;
++
++	ret =
++	    of_property_read_u32(device_node,
++				 "cml,classd-oc-reset-attempts", &val);
++	if (ret >= 0)
++		cmx655_data->oc_cnt_max = val;
++	else
++		cmx655_data->oc_cnt_max = 5;
++
++	return 0;
++}
++
++/**
++ * cmx655_common_register_component() - registers cmx655 codec.
++ * @dev: bus-specific device descriptor
++ * @regmap: bus-specific register mapping
++ * @irq: interrupt id for the device
++ *
++ * Return: 0 for success, negative number otherwise
++ */
++int cmx655_common_register_component(struct device *dev, struct regmap *regmap,
++				     int irq)
++{
++	int ret;
++	struct cmx655_data *cmx655_data;
++	struct cmx655_dai_data *cmx655_dai_data = dev_get_platdata(dev);
++
++	cmx655_data = devm_kzalloc(dev, sizeof(*cmx655_data), GFP_KERNEL);
++	if (!cmx655_data)
++		return -ENOMEM;
++	cmx655_data->regmap = regmap;
++	if (IS_ERR(cmx655_data->regmap))
++		return PTR_ERR(cmx655_data->regmap);
++	cmx655_data->irq = irq;
++	if (cmx655_dai_data) {
++		memcpy(&cmx655_data->dai_data, cmx655_dai_data,
++		       sizeof(*cmx655_dai_data));
++	}
++	if (dev->of_node) {
++		ret = cmx655_parse_data_from_of(dev->of_node, cmx655_data);
++		if (ret < 0) {
++			dev_err(dev,
++				"Failed to extract data from device tree%d\n",
++				ret);
++			return ret;
++		}
++	}
++	cmx655_data->reset_gpio = devm_gpiod_get_optional(dev,
++							  "reset",
++							  GPIOD_OUT_LOW);
++	if (cmx655_data->reset_gpio) {
++		gpiod_set_value_cansleep(cmx655_data->reset_gpio, 1);
++		usleep_range(10, 1000);
++		gpiod_set_value_cansleep(cmx655_data->reset_gpio, 0);
++	} else {
++		dev_dbg(dev, "No reset GPIO, using reset command\n");
++		regmap_write(cmx655_data->regmap, CMX655_COMMAND,
++			     CMX655_CMD_SOFT_RESET);
++	}
++	dev_set_drvdata(dev, cmx655_data);
++
++	return devm_snd_soc_register_component(dev,
++					       &cmx655_component_driver,
++					       &cmx655_dai_driver, 1);
++}
++EXPORT_SYMBOL_GPL(cmx655_common_register_component);
++
++void cmx655_common_unregister_component(struct device *dev)
++{
++	struct cmx655_data *cmx655_data = dev_get_drvdata(dev);
++
++	snd_soc_unregister_component(dev);
++	gpiod_set_value_cansleep(cmx655_data->reset_gpio, 1);
++}
++EXPORT_SYMBOL_GPL(cmx655_common_unregister_component);
++
++MODULE_DESCRIPTION("ASoC CMX655 driver");
++MODULE_AUTHOR("CML");
++MODULE_LICENSE("GPL");
+diff --git a/sound/soc/codecs/cmx655.h b/sound/soc/codecs/cmx655.h
+new file mode 100644
+index 000000000000..1c6123753191
+--- /dev/null
++++ b/sound/soc/codecs/cmx655.h
+@@ -0,0 +1,154 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#ifndef CMX655_H
++#define CMX655_H
++
++#include <linux/gpio.h>
++#include <linux/regmap.h>
++#include <sound/pcm.h>
++
++#define CMX655_ISR      (0x00)
++#define     CMX655_ISR_MICR        BIT(0)
++#define     CMX655_ISR_MICL        BIT(1)
++#define     CMX655_ISR_AMPOC       BIT(2)
++#define     CMX655_ISR_AMPCLIP     BIT(3)
++#define     CMX655_ISR_CLKRDY      BIT(4)
++#define     CMX655_ISR_THERM       BIT(5)
++#define     CMX655_ISR_VOL         BIT(6)
++#define     CMX655_ISR_CAL         BIT(7)
++
++#define CMX655_ISM      (0x01)
++#define     CMX655_ISM_MICR        BIT(0)
++#define     CMX655_ISM_MICL        BIT(1)
++#define     CMX655_ISM_AMPOC       BIT(2)
++#define     CMX655_ISM_AMPCLIP     BIT(3)
++#define     CMX655_ISM_CLKRDY      BIT(4)
++#define     CMX655_ISM_THERM       BIT(5)
++#define     CMX655_ISM_VOL         BIT(6)
++#define     CMX655_ISM_CAL         BIT(7)
++#define CMX655_ISE      (0x02)
++#define CMX655_CLKCTRL  (0x03)
++#define     CMX655_CLKCTRL_PREDIV_SHIFT    (0)
++#define     CMX655_CLKCTRL_PREDIV_VALUE    (0x3)
++#define     CMX655_CLKCTRL_PREDIV_MASK     (CMX655_CLKCTRL_PREDIV_VALUE << \
++					CMX655_CLKCTRL_PREDIV_SHIFT)
++#define     CMX655_CLKCTRL_CLRSRC_SHIFT    (2)
++#define     CMX655_CLKCTRL_CLRSRC_VALUE    (0x7)
++#define     CMX655_CLKCTRL_CLRSRC_MASK     (CMX655_CLKCTRL_CLRSRC_VALUE << \
++					CMX655_CLKCTRL_CLRSRC_SHIFT)
++#define     CMX655_CLKCTRL_CLRSRC_RCLK     (0x0 << CMX655_CLKCTRL_CLRSRC_SHIFT)
++#define     CMX655_CLKCTRL_CLRSRC_LPO      (0x1 << CMX655_CLKCTRL_CLRSRC_SHIFT)
++#define     CMX655_CLKCTRL_CLRSRC_LRCLK    (0x7 << CMX655_CLKCTRL_CLRSRC_SHIFT)
++#define     CMX655_CLKCTRL_SR_SHIFT        (5)
++#define     CMX655_CLKCTRL_SR_VALUE        (0x3)
++#define     CMX655_CLKCTRL_SR_MASK         (CMX655_CLKCTRL_SR_VALUE << \
++					CMX655_CLKCTRL_SR_SHIFT)
++#define     CMX655_CLKCTRL_SR_8K            (0x0 << CMX655_CLKCTRL_SR_SHIFT)
++#define     CMX655_CLKCTRL_SR_16K           (0x1 << CMX655_CLKCTRL_SR_SHIFT)
++#define     CMX655_CLKCTRL_SR_32K           (0x2 << CMX655_CLKCTRL_SR_SHIFT)
++#define     CMX655_CLKCTRL_SR_48K           (0x3 << CMX655_CLKCTRL_SR_SHIFT)
++
++#define CMX655_RDIVHI   (0x04)
++#define CMX655_RDIVLO   (0x05)
++#define CMX655_NDIVHI   (0x06)
++#define CMX655_NDIVLO   (0x07)
++#define CMX655_PLLCTRL  (0x08)
++#define     CMX655_PLLCTRL_CPI_SHIFT       (0)
++#define     CMX655_PLLCTRL_LFILT_SHIFT     (4)
++#define CMX655_SAICTRL  (0x09)
++#define     CMX655_SAI_PCM         BIT(0)
++#define     CMX655_SAI_BINV        BIT(2)
++#define     CMX655_SAI_POL         BIT(3)
++#define     CMX655_SAI_DLY         BIT(4)
++#define     CMX655_SAI_MONO        BIT(5)
++#define     CMX655_SAI_WL          BIT(6)
++#define     CMX655_SAI_MSTR        BIT(7)
++
++#define CMX655_SAIMUX   (0x0a)
++#define CMX655_RVF      (0x0c)
++#define     CMX655_VF_DCBLOCK_SHIFT     (2)
++#define     CMX655_VF_DCBLOCK           (0x1 << CMX655_VF_DCBLOCK_SHIFT)
++#define CMX655_LDCTRL   (0x0d)
++#define CMX655_RDCTRL   (0x0e)
++#define CMX655_LEVEL    (0x0f)
++#define CMX655_NGCTRL   (0x1c)
++#define CMX655_NGTIME   (0x1d)
++#define CMX655_NGLSTAT  (0x1e)
++#define CMX655_NGRSTAT  (0x1f)
++#define CMX655_PVF      (0x28)
++#define CMX655_PREAMP   (0x29)
++#define CMX655_VOLUME   (0x2a)
++#define CMX655_ALCCTRL  (0x2b)
++#define CMX655_ALCTIME  (0x2c)
++#define CMX655_ALCGAIN  (0x2d)
++#define CMX655_ALCSTAT  (0x2e)
++#define CMX655_DST      (0x2f)
++#define CMX655_CPR      (0x30)
++#define CMX655_SYSCTRL  (0x32)
++#define     CMX655_SYSCTRL_MICR    BIT(0)
++#define     CMX655_SYSCTRL_MICL    BIT(1)
++#define     CMX655_SYSCTRL_PAMP    BIT(3)
++#define     CMX655_SYSCTRL_LOUT    BIT(4)
++#define     CMX655_SYSCTRL_SAI     BIT(5)
++
++#define CMX655_COMMAND  (0x33)
++#define     CMX655_CMD_CLOCK_STOP  (0x00)
++#define     CMX655_CMD_CLOCK_START (0x01)
++#define     CMX655_CMD_SOFT_RESET  (0xff)
++
++/*  GPIO connection for reset and irq */
++#define CMX655_RESETN   (24)
++#define CMX655_IRQN     (25)
++#define CMX655_CS       (8)
++
++#define CMX655_RATES (SNDRV_PCM_RATE_8000 | \
++		SNDRV_PCM_RATE_16000 | \
++		SNDRV_PCM_RATE_32000 | \
++		SNDRV_PCM_RATE_48000)
++
++#define CMX655_FMTS (SNDRV_PCM_FMTBIT_U8 | SNDRV_PCM_FMTBIT_S16_LE)
++
++/*
++ * clock id's when calling set sysclk
++ * Auto = Use RCLK when in DAI primary mode. Use LRCLK in secondary mode.
++ * DO NOT use CMX655_SYSCLK_LRCLK when in DAI primary mode
++ */
++#define CMX655_SYSCLK_AUTO  (0)
++#define CMX655_SYSCLK_RCLK  (1)
++#define CMX655_SYSCLK_LRCLK (2)
++#define CMX655_SYSCLK_LPO   (3)
++#define CMX655_SYSCLK_MIN   (CMX655_SYSCLK_AUTO)
++#define CMX655_SYSCLK_MAX   (CMX655_SYSCLK_LPO)
++
++/* CMX655 microphone widget helper macro */
++#define CMX655_DAPM_MIC(wname, wshift) \
++  (struct snd_soc_dapm_widget) { \
++    .id = snd_soc_dapm_mic, .name = wname, .kcontrol_news = NULL, \
++    .num_kcontrols = 0, .reg = CMX655_SYSCTRL, .shift = wshift, \
++    .mask = 1, .on_val = 1, .off_val = 0, .event = cmx655_mic_dapm_event, \
++    .event_flags = SND_SOC_DAPM_POST_PMU }
++
++struct cmx655_dai_data {
++	int sys_clk;
++	unsigned int enabled_streams;
++	bool best_clk_running;
++	int clk_src;
++};
++
++struct cmx655_data {
++	struct regmap *regmap;
++	struct cmx655_dai_data dai_data;
++	struct gpio_desc *reset_gpio;
++	int irq;
++	/* Number of times the class-D overcurrent has been reset */
++	unsigned int oc_cnt;
++	/* Max times the class-D overcurrent should be reset */
++	unsigned int oc_cnt_max;
++};
++
++extern const struct regmap_config cmx655_regmap;
++
++int cmx655_common_register_component(struct device *dev, struct regmap *regmap, int irq);
++void cmx655_common_unregister_component(struct device *dev);
++
++#endif
 -- 
 2.47.2
 
