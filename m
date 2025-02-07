@@ -1,81 +1,141 @@
-Received: from mx.nixnet.email (mx.nixnet.email [5.161.67.119])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0723194091;
-	Fri,  7 Feb 2025 22:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.161.67.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356E58479;
+	Fri,  7 Feb 2025 22:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738966520; cv=none; b=ta17keOf5CpS/0Og9pzL3CTVe6TjyR2yPCCx3XUk+5YV2Uc2Ld6UHnN5UW2DQQCf3oPsijrMoGMqoQO/HBZXWZJoISB7JOSX2DQ+Jaz5qJSt0pTLlvkl1aoEAvqdMiHOOS77YtGL6oUFPLinK2GAvRORvM/MGM6Dz//kvil4xVo=
+	t=1738966619; cv=none; b=HuR3RqB00jzEGip201cAVf4udoQHEXGKv5BGdhxpVkqr3YKE2e8xFNW4RDQxzIFroWi3ZCDv6CKbkmE6wU9G2BdHi+eVkXn+hsZ5Y1Yf044AH+Z2aUl40ZmfN9+2NBLgE3RFxZhXipstkm4OerWIV5zmn8Z6xrySae+fXOJNdVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738966520; c=relaxed/simple;
-	bh=Ga7CbJd40sfYvrQ9Iauv10Cwuj5BSAHcXQTxrVVFGZg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=Qof3zM78ARkPPVz1L7TRU9nLApBf1U+j38FIfWhAyWaREEcw9YMo/pFxzbEWtvrEQUcYBv8l2ZYwMQ2EF3+mc1kJ2mMWKC49lW7/IQUI03MJdS2wY7pLsB0qfLyh8tFBuoxyZgmOxWlFac4BKGDLOrDBrRxK6GBNwmSf45fCJx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=pwned.life; spf=pass smtp.mailfrom=pwned.life; dkim=pass (1024-bit key) header.d=pwned.life header.i=@pwned.life header.b=dHtKmsm0; arc=none smtp.client-ip=5.161.67.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=pwned.life
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pwned.life
+	s=arc-20240116; t=1738966619; c=relaxed/simple;
+	bh=vBguwXYtPq2YWrzcJrg+d/ZEDpXox2WcEHb2Zy7c7eI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U7KKC5ZZHQxp8z+auOg9P4ARKBvpoByITE7QFcGj777tHeCgOPUNUrAleeDb2PMBM5n7G11R+QaadhX6HtgQasGMN98IEXk9hviPEmng8kK6GX9jirLTSV55gbQSIWObdGx5iDfAUu2i0cluWlfd59KsejxHiI8nVf4eEM40/7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AAYITtmD; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pwned.life header.i=@pwned.life header.b="dHtKmsm0"
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by mx.nixnet.email (Postfix) with ESMTPSA id A8B1A7D3AE;
-	Fri,  7 Feb 2025 23:06:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pwned.life; s=202002021149;
-	t=1738966010;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RAJGnsk9g5KDk+Q6J8DtXwovGOwC+pY2zb5XcFKtlEs=;
-	b=dHtKmsm0GezbtgkY50+nD9qgSx4yCBe93thtI8O3lUGCJ6PRgM86xk0mtn1gQfQeBAhsny
-	i96gF7bQgCMhjEUCU5ML4LSy9Pi+yDyk4eYRrjhe51TeFqDqRIGR3Uan0XxUYcTIkr/haM
-	8CvzHYJOyDxi+OZ/ieRTObhKI6LlEsg=
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AAYITtmD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=giX8OGERwfO4MHhAX700Y15yzZhxddmBA51O/pJlx9o=; b=AAYITtmDEiu1aMKUL25OhuP4Km
+	7y3Uc/Dxmajc1tLFw2Z+q0OHmEaZzfj6mtBiHcZOOQXD+wg4wik1cB0hA63URPfaSqid0BMQAmrkE
+	adzUTEZOcmySqN7tBuT1ZqGPb10W68PEgCXPCg6sCAFaxPm90JEvA6h/lHnT+mVCpGI6dlVmilYxr
+	XnGCPLB3YMNKDAtGMfFbUUFnd5WxAVEdhnvDTTyX2IioKhtB+C+5y+TGX5EXjSvqdWojPICCDsA0f
+	0AGQtIvIpyJ5dMG5E2YOYMY9KluYwIt18CE2l+3Hyt48J9w5P5Cu3V1DKh7ErcugqdIcb7CyCAfOG
+	fMSWYtFQ==;
+Received: from [50.53.2.24] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tgWeS-0000000HJx6-2HzP;
+	Fri, 07 Feb 2025 22:16:45 +0000
+Message-ID: <8edae47f-2b70-4a47-9141-c728037cc029@infradead.org>
+Date: Fri, 7 Feb 2025 14:16:38 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] docs/arch: remove deprecated function name
+To: Jiayuan Chen <mrpre@163.com>, linux-doc@vger.kernel.org, corbet@lwn.net
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ linux-kernel@vger.kernel.org
+References: <20250207125504.728688-1-mrpre@163.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250207125504.728688-1-mrpre@163.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 07 Feb 2025 23:06:47 +0100
-Message-Id: <D7MK034JDRNO.3LKC9MDH3QRNX@pwned.life>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- <stable@vger.kernel.org>
-Cc: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
- <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
- <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
- <lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
- <f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>,
- <srw@sladewatkins.net>, <rwarsow@gmx.de>, <conor@kernel.org>,
- <hargar@microsoft.com>, <broonie@kernel.org>
-Subject: Re: [PATCH 6.13 000/619] 6.13.2-rc2 review
-From: "Achill Gilgenast" <fossdd@pwned.life>
-X-Greeting: Hi mom! Look, I'm in somebodys mail client!
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250206160718.019272260@linuxfoundation.org>
-In-Reply-To: <20250206160718.019272260@linuxfoundation.org>
+Content-Transfer-Encoding: 7bit
 
-On Thu Feb 6, 2025 at 5:11 PM CET, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.2 release.
-> There are 619 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 08 Feb 2025 16:05:17 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.2-=
-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
- linux-6.13.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
-Tested-By: Achill Gilgenast <fossdd@pwned.life>
 
-Builded and booted using Alpine Linux's packaging and configs. Thanks!
+On 2/7/25 4:55 AM, Jiayuan Chen wrote:
+> The dumpstack.c file has undergone many modifications, and the
+> print_context_stack() function was removed or rewritten a long time ago,
+> so it's better to remove the incorrect guidance.
+> 
+> I also want to preserve the original contributor info by keeping email
+> address and name.
+> 
+> Signed-off-by: Jiayuan Chen <mrpre@163.com>
+
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+
+> ---
+>  Documentation/arch/x86/kernel-stacks.rst | 51 +++++++++---------------
+>  1 file changed, 18 insertions(+), 33 deletions(-)
+> 
+> diff --git a/Documentation/arch/x86/kernel-stacks.rst b/Documentation/arch/x86/kernel-stacks.rst
+> index 738671a4070b..45b7a225da11 100644
+> --- a/Documentation/arch/x86/kernel-stacks.rst
+> +++ b/Documentation/arch/x86/kernel-stacks.rst
+> @@ -112,41 +112,26 @@ Printing backtraces on x86
+>  ==========================
+>  
+>  The question about the '?' preceding function names in an x86 stacktrace
+> -keeps popping up, here's an indepth explanation. It helps if the reader
+> -stares at print_context_stack() and the whole machinery in and around
+> -arch/x86/kernel/dumpstack.c.
+> +keeps popping up. This provides guidance about it. It helps if the reader
+> +stares at printk_stack_addressk() and its callers and pays special
+> +attention to the 'reliable' parameter ('?' basically means that the
+> +address is unreliable).
+>  
+> -Adapted from Ingo's mail, Message-ID: <20150521101614.GA10889@gmail.com>:
+> +The detail about '?' can be found in the comments within dumpstack.c:
+> +::
+>  
+> -We always scan the full kernel stack for return addresses stored on
+> -the kernel stack(s) [1]_, from stack top to stack bottom, and print out
+> -anything that 'looks like' a kernel text address.
+> +    /*
+> +     * Scan the stack, printing any text addresses we find.  At the
+> +     * same time, follow proper stack frames with the unwinder.
+> +     *
+> +     * Addresses found during the scan which are not reported by
+> +     * the unwinder are considered to be additional clues which are
+> +     * sometimes useful for debugging and are prefixed with '?'.
+> +     * This also serves as a failsafe option in case the unwinder
+> +     * goes off in the weeds.
+> +     */
+>  
+> -If it fits into the frame pointer chain, we print it without a question
+> -mark, knowing that it's part of the real backtrace.
+>  
+> -If the address does not fit into our expected frame pointer chain we
+> -still print it, but we print a '?'. It can mean two things:
+> +You can also get more info from Ingo's original emal. [1]_
+>  
+> - - either the address is not part of the call chain: it's just stale
+> -   values on the kernel stack, from earlier function calls. This is
+> -   the common case.
+> -
+> - - or it is part of the call chain, but the frame pointer was not set
+> -   up properly within the function, so we don't recognize it.
+> -
+> -This way we will always print out the real call chain (plus a few more
+> -entries), regardless of whether the frame pointer was set up correctly
+> -or not - but in most cases we'll get the call chain right as well. The
+> -entries printed are strictly in stack order, so you can deduce more
+> -information from that as well.
+> -
+> -The most important property of this method is that we _never_ lose
+> -information: we always strive to print _all_ addresses on the stack(s)
+> -that look like kernel text addresses, so if debug information is wrong,
+> -we still print out the real call chain as well - just with more question
+> -marks than ideal.
+> -
+> -.. [1] For things like IRQ and IST stacks, we also scan those stacks, in
+> -       the right order, and try to cross from one stack into another
+> -       reconstructing the call chain. This works most of the time.
+> +.. [1] https://lore.kernel.org/lkml/20150521101614.GA10889@gmail.com/
+
+-- 
+~Randy
+
