@@ -1,95 +1,79 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFFE199EB7
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 21:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63936199EB7
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 21:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738963408; cv=none; b=Mocz39pwuaUaPM42KEV5P8XZ+Y633dmuXyWI/MOlbc0+eYJg35UdOfcMvvlhCwqF3Cbcys9xNb6BkdOUGHIC892U9fTeV9iYeztQQ+6UL9PzOwGlzsshPipRpP2VkCORBZeyD6F21Okbx05N59AhM+MZXENWzuQDXIUIyQO4RRY=
+	t=1738963455; cv=none; b=nSy2OEEwPE6eypAqeulzz9ozEeAkDCdvuE12xsuIypY5OgUQo0mVg8MlmasR0kwzpz2QpaeBsKpzU0GjVp8G5pXH2Ueg7NHywAoRzYZQzcGS3uRq3qYo+5775M0kFaqQMOnHpR9Qom6o6rlhdjoZE3xN7Kf+zpnxVM8+74/uTmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738963408; c=relaxed/simple;
-	bh=2fnqc0zpuTZ1osqRxouJu28UD5i3KWjrsuvBjj0eF4A=;
+	s=arc-20240116; t=1738963455; c=relaxed/simple;
+	bh=Jh8bJM2/fI9Ng6LWK2hdPmWaTdsJAUhglOnt064rwcQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YIkPeRLUR/gZMS1uT6V+wSd2N4FFdZjLVIlRJQtv6WZVRzQmyhrcBTkhJSFnjxsSKxaaIoR1bJh/cDXG9zBCqL5V84jmwhDhFX+Qu8ErZVq6isYcM8QfxUEB6I3zu/GoE06UCnIf0L19JRtIXw1sHTa+2pm1eq9UBlfYmZi0GQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nzf6L4v0; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=UW6n4TgP+hJGhoXQV1IwnFg3AsNs7U4N+aMSnFBARpcewE3o4+5C7CX6cvm+1vgmrEwlcdrzKywGXcjsJEv0r8L0WvMBiNYUmHzQFNAeZRlnzMbJzsx/J+t8vKCGH2dOjzLawYWA4Vmxn+GZZEobm0aBDyfOFpFpuOKMbtFm/do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=odQmWd+W; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nzf6L4v0"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21625b4f978so35785ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 13:23:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="odQmWd+W"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e440e64249so22716616d6.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 13:24:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738963407; x=1739568207; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1738963452; x=1739568252; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z6XMDBGWHjm28kopyGkEygbqgRtjfyapFQf4AL4yI3g=;
-        b=Nzf6L4v0lgcDAxKyiHJo7hX1cP+V4JmbomeTeFRfCVv7pPUGc/w2gXmpuwgta3izAF
-         iG41HWpnvOna4yGSKJA9xj1SvTGL1MOYDa1+tqWGyuqKygzhulHgZIroFYW3LEBlqh9I
-         zHFoVRVVQq/NeDA1W6IFQTrr4r4GFEC0SX2F/b0qMx0vCQ/z4YQ2hwMSXTA0m1yoU3pB
-         pc3C9PnahVCZSj2t3UQb20YyGA7ic5vZH07Bqga5ByfkqfKj++kD24kRoISprBYWnqMd
-         Fx3MLgWrNgNkEmrG5f88q6mZcryD+hPKBA7ovo7jb1L5QptYi6KPLJTlYgk0exvcgDlv
-         hHJA==
+        bh=gYyXNF2oTW8ZaEdbEsNiifpIRvkBhrKm317n8H4kIGo=;
+        b=odQmWd+W3Dxj5N8vfZrbfR3yoHcsLCQQVyMysetv8CBtNjrxqb6yahA7njybQEUmW/
+         V5OLzcbtDzFyZHaAGTk5ZK+eJnhskKVum8kqsW0d9ZbVb62fKSkAC80cliIFfxHdQGwH
+         pBaHTMHmOX6bxkZpd+GQxlbLz/ZUsuR3t7SoUu/bbifRhJ8bAQe+myf7VQy2MszwtEgF
+         +Wy/yYfg4DCjkKsuq7FhBc4KIolDF+FXnqBT4b2iOQoJ44ADjXp4D6N8SuIFuWT264qn
+         BizcX4ML/XDzQ1BnlLbFp8988RIZX+5HyD2QurnYQFKgxN7tXtSDXALSoVtdAvaS6Aav
+         1NEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738963407; x=1739568207;
+        d=1e100.net; s=20230601; t=1738963452; x=1739568252;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Z6XMDBGWHjm28kopyGkEygbqgRtjfyapFQf4AL4yI3g=;
-        b=Mc9MljfnI3y6jIEp7CeqmZami7Kz3AhRRG9wHVn6gECSgucX5U3K8enET0A8XDAeen
-         iwMzmUMKT0x++LzgZkFXLdGj7cQCPa7BcWZ8SUy3c0AUINv4ilOf8MMKV8/9ZgSGjO1D
-         b0xqcuui1dDQaTXIblJttKHOmJginOijaWmnIfm9V83HB2Rm6Oi8x6QdQLsYUa24TQsP
-         KfC5c3fV/Rbhvbr96s0uJNk7eOeVpTXIK0RHSVmu9aGQ9v9GyQlChR49hrR37ZRY5yFG
-         M6Kz+s0DhRQTpMkRhfI5XIyWzdklLoydOgnD2PvwYw1Enorg7iGd4CzGMWeGEXd4jZF6
-         cf3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXn9xYGNxAta7cDLsNZCLdIu0ctkRJ9Sx0L3yz99wsJwP32NIAaNlvLSH2o92/F76PTSivT695+/JmgCqU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywac1nGdMXYqujiVNPGgNiYetmpZLJlFwekCC2Mm5m/KcZk8M0j
-	3eXzdMA9dfjLxF7WmRn+Y1SYKay9U8RIFiLV3FKDtlPgsRBuGcJVHNRqMOjJgw==
-X-Gm-Gg: ASbGncuozNS0xDiRUYl6+UFGPg4wT/dxbp1u9b1BN82Jy5lnxMOdIiYbXX6CU6Ds0QB
-	rgsvZ4elKvCHCEiUWsoRPitbQ5qEhBgQIEqysZbm6nMWgbcD0XBrTZ1DjKfT7RCGl43XpQ2RcfK
-	77pA6t5fWhjd9F9fDtuoMQ/7hHd54EX36tL2SLIi9IcyjaIW64FLTQOai0yECaHGfOguEaRzlgW
-	JEOJrNdeILT8gUGSIxJwYCvjWcdHABMzQ9U1sBubITxxcwy29BEB+Qa5n2/lJsIZqdFTmMkj3Om
-	tELIOmb3mUR1m5fkcG6TKSf2Ag9QO/JL9VqAK9dQCSo28u37IdRBXg==
-X-Google-Smtp-Source: AGHT+IHso8RJPb+vtNaFlFpohsHAMYbmR3QFQJHAAenGlRgMQKXQ54uhWmZuUpEKK6ELwZyS2450Bw==
-X-Received: by 2002:a17:903:3348:b0:216:201e:1b63 with SMTP id d9443c01a7336-21f69f35c2dmr461955ad.11.1738963406326;
-        Fri, 07 Feb 2025 13:23:26 -0800 (PST)
-Received: from google.com (147.141.16.34.bc.googleusercontent.com. [34.16.141.147])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048bf1504sm3593423b3a.108.2025.02.07.13.23.24
+        bh=gYyXNF2oTW8ZaEdbEsNiifpIRvkBhrKm317n8H4kIGo=;
+        b=NNpEgaCptYkVAm+LNj6SerMYBKUfKqxOVfB9sV4mZZkucLYoo78GjdCLs3xCPQOMBK
+         Dp5/3IWorwlybtQFekLyY0+s9yykGHswZWQO9S6l41baPaL4ZVncELI2S9Bhp9dAY2zA
+         WaI9HbR6lr5iHjDAwOZjdCn9O2SgwvA/Xlv16rHEQMPav5DALSveoqDGYNp90QFrt5cA
+         ip3rscUW1zoXD3YsUgZb+ei4lP5lklWrfV7VCxa3Fdb5v6rA4MQ1xSBmclJwQFbgGF+Q
+         4gWGMurQPv05O1MkxhZRIIrUCl803uZm0BgViavUR5Vv8/Zz2JcWP4U6ZkPLjUQvBApP
+         xYWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWq6/XoMHG+a2KVCo92UjpifOeoal+/q3mz2Tkb156Z/GbPvpYQRbjFNI+48siI7L0Plam3Miy3TDaQtBI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8vY3UoDbeGv2z78MjkRTi3kTB5v6+m5W3/lK5kBbujs3pfZ7k
+	kPx4ruRoDUYqcmUYYA4owhFQ1AZoIhRppjLF13u/BuhYGUKyffVmkXd1gGCUEtc=
+X-Gm-Gg: ASbGncvAbU2zPVa7wjQeNXa0HzQm2MgAjJjEa0upSuuuKh1p1BG+sr7B34nePuRqBaq
+	kc0CaVIXCLkQ8RsiHQ7a8NXEoOwYirGj4GR92xKBdLPeW0QW73C9coRisDXWQV59LXBntMUhSuT
+	q1G5pnylGC2/GRbosjAzK2oGXpYCgL0b9kEh+DtgyxG9qkBCcB/ehUAunN6It658tmdBbA16pbe
+	C/lq1euJ8EpzDQmO02JnGyY6W3OGaMZ/mlGYTJsNRko3+SWCuCaJ/bT6Ysr4BzsUcVu7ncCgRz8
+	24jMZEHL5ml2snItgCZyXsSq2rNGXkk5HWs3/SwcP+hoSGb6tB8blezKduChFPWzuOawpbiioA=
+	=
+X-Google-Smtp-Source: AGHT+IFobMYtRD+ts0IjDmZUcfPs9gYsgQs0G1siAa2ZlSeZodwmtBL8KT228UzP8KiW1YKKcAkJYA==
+X-Received: by 2002:ad4:5bc4:0:b0:6e4:41b3:4983 with SMTP id 6a1803df08f44-6e4456dd202mr74890986d6.35.1738963452178;
+        Fri, 07 Feb 2025 13:24:12 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e44f4835e6sm4336616d6.111.2025.02.07.13.24.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 13:23:25 -0800 (PST)
-Date: Fri, 7 Feb 2025 21:23:20 +0000
-From: Peilin Ye <yepeilin@google.com>
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bpf@ietf.org,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	David Vernet <void@manifault.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Quentin Monnet <qmo@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	Yingchi Long <longyingchi24s@ict.ac.cn>,
-	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>,
-	Neel Natu <neelnatu@google.com>,
-	Benjamin Segall <bsegall@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 4/9] bpf: Introduce load-acquire and
- store-release instructions
-Message-ID: <Z6Z5yLETaJ38TvqR@google.com>
-References: <cover.1738888641.git.yepeilin@google.com>
- <d03d8c3305e311c6cb29924119b5eecae8370bbc.1738888641.git.yepeilin@google.com>
- <cff3dc9eaa592dbe634e336eb83f9bb47dd9705a.camel@linux.ibm.com>
+        Fri, 07 Feb 2025 13:24:11 -0800 (PST)
+Date: Fri, 7 Feb 2025 16:24:09 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 00/18] cxl: Address translation support, part 1:
+ Cleanups and refactoring
+Message-ID: <Z6Z5-UQYSfi7Btlz@gourry-fedora-PF4VCD3F>
+References: <20250207153753.418849-1-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -98,41 +82,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cff3dc9eaa592dbe634e336eb83f9bb47dd9705a.camel@linux.ibm.com>
+In-Reply-To: <20250207153753.418849-1-rrichter@amd.com>
 
-Hi Ilya,
+On Fri, Feb 07, 2025 at 04:37:35PM +0100, Robert Richter wrote:
+> This series is the first part of adding support for CXL address
+> translation. It contains cleanup and code refactoring in preparation
+> of the actual implementation that will be sent in part 2. Cleanup and
+> code refactoring have been split in a separate series to reduce the
+> number of patches of the series. Even without address translation on
+> top this rework improves esp. the region code, cleans it up,
+> simplifies it and adds debugging messages to better analyze region
+> creation failures:
+> 
+> Content of patches:
+> 
+>  * Patches 1: Remove else after return.
+> 
+>  * Patches 2-4: Cleanups and comments around cxl_hdm_decode_init().
+> 
+>  * Patches 5, 6, 13: Adding and modifying helper functions.
+> 
+>  * Patches 7-12, 14: Refactoring of endpoint decoder setup.
+> 
+>  * Patches 15-18: Adding and modifying debug messages.
+> 
+> Most of the patches were part of my first submission of v1 [1], some
+> of them were already reviewed.
+> 
+> [1] https://lore.kernel.org/linux-cxl/20250107141015.3367194-1-rrichter@amd.com/
+>
 
-On Fri, Feb 07, 2025 at 12:28:43PM +0100, Ilya Leoshkevich wrote:
-> Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
+For entire series:
 
-Thanks!
+Tested-by: Gregory Price <gourry@gourry.net>
 
-> s390x has a strong memory model, and the regular load and store
-> instructions are atomic as long as operand addresses are aligned.
+Tested individually and w/ a rebase of the full translation patch set from
+[1] on a Zen5 platform with PRM and translation.
 
-I see.
-
-> IIUC the verifier already enforces this unless BPF_F_ANY_ALIGNMENT
-> is set, in which case whoever loaded the program is responsible for the
-> consequences: memory accesses that happen to be unaligned would
-> not trigger an exception, but they would not be atomic either.
-
-The verifier rejects misaligned BPF_ATOMIC instructions since commit
-ca36960211eb ("bpf: allow xadd only on aligned memory"), even if
-BPF_F_ANY_ALIGNMENT is set - so this patch makes the verifier reject
-misaligned load-acquires and store-releases, too, to keep the behaviour
-consistent:
-
-Specifically, check_atomic_load() calls check_load_mem() (and
-check_atomic_store() calls check_store_reg()) with the
-@strict_alignment_once argument equals true.  See also selftests
-load_acquire_misaligned() and store_release_misaligned() in PATCH 8/9.
-
-> So I can implement the new instructions as normal loads/stores after
-> this series is merged.
-
-That would be great!
-
-Thanks,
-Peilin Ye
-
+Will test again with part-2 as I expect some changes.
