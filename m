@@ -1,119 +1,111 @@
-Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD8CF80BFF;
-	Fri,  7 Feb 2025 10:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1E8D80BFF;
+	Fri,  7 Feb 2025 10:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738923654; cv=none; b=pX8V7Xheq4lavWwn6bQMSYRsFqNrDAcOwgR1KGgEYuJG3kGZiAmz+sqg4Zk3d/MsxNf3saZjBGmyKNcTgFkxiq3WFcc0TydJB/Q7jdr2bu83QtbMBbzUcqvhWuxg/TNObbBzqDKmbe1xjCL3mt5P/vranquZDa24Xro1EvA79x4=
+	t=1738923708; cv=none; b=e1Hgon0rESAQu4VkLqPTjUI5ooRBs5qYi/kWrUHrr8emK5RmtWfdalxbXm0Ii1qcboFoo7UApQWwVdB3gjOdgqnGIHoZjJnbOSQalbjdJOpbWy/8Fhr17kZbl7KsSv039akUHD0uYv7BOwdqgGhQpifkx02M47j24DXCcyBo+dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738923654; c=relaxed/simple;
-	bh=FsMReRhSR0sfiNrZcqLBVDxK/HU2cNflLinb44tDRLs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aeDGL53dqbw8gs8Iq4A++K4+VctO+Xy+YXCEdVa1ZHkwKhtAIivTPE427MXEcvRwzv0gNoH238pSW7erZiDVdsX749QmZX5JOafYokFr+9UTHm7jPAs2bM0kR4xl8BYY61t2t/ccMBbBM8WVtSA1xgVWL2DIVxm5oVrebGoucvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 517AKQEU007044;
-	Fri, 7 Feb 2025 04:20:26 -0600
-Received: (from greg@localhost)
-	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 517AKOvj007043;
-	Fri, 7 Feb 2025 04:20:24 -0600
-Date: Fri, 7 Feb 2025 04:20:24 -0600
-From: "Dr. Greg" <greg@enjellic.com>
-To: Paul Moore <paul@paul-moore.com>
-Cc: linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jmorris@namei.org
-Subject: Re: [PATCH v4 2/14] Add TSEM specific documentation.
-Message-ID: <20250207102024.GA6415@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20240826103728.3378-3-greg@enjellic.com> <8642afa96650e02f50709aa3361b62c4@paul-moore.com> <20250205120026.GA15809@wind.enjellic.com> <CAHC9VhRq0PrH=0n6okkvfed=8QQOfv-ERA60NNWvLXetgrB_2w@mail.gmail.com>
+	s=arc-20240116; t=1738923708; c=relaxed/simple;
+	bh=Z9G/KBGEl6Byxr08x6OT7vhgRLei0KOl+J1GPs7OByM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OukmUJfkYWDiY9ewtvrzfxZnL36y0SyBT3flRKIRweShdvv9SEekLdFg60rpEYUQmpFW9h6HVc06Ff5JYyKzHVHyGGf0sSXR0jhXM/PNGTFDB4BnswTuzJYGgZlyh7NS8yxSmXVjJaZSgQwsWOC0AzIhk4KrMlXNSaDb4z4DKok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 927F2113E;
+	Fri,  7 Feb 2025 02:22:08 -0800 (PST)
+Received: from [10.162.16.89] (a077893.blr.arm.com [10.162.16.89])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 407113F63F;
+	Fri,  7 Feb 2025 02:21:39 -0800 (PST)
+Message-ID: <15660c4c-5c4d-4229-b5c5-abcabd402058@arm.com>
+Date: Fri, 7 Feb 2025 15:51:37 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhRq0PrH=0n6okkvfed=8QQOfv-ERA60NNWvLXetgrB_2w@mail.gmail.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Fri, 07 Feb 2025 04:20:26 -0600 (CST)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 13/16] mm: Don't skip arch_sync_kernel_mappings() in
+ error paths
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
+ <20250205151003.88959-14-ryan.roberts@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250205151003.88959-14-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 06, 2025 at 10:48:57AM -0500, Paul Moore wrote:
 
-Good morning to everyone.
 
-> On Wed, Feb 5, 2025 at 7:01???AM Dr. Greg <greg@enjellic.com> wrote:
-> > On Tue, Jan 28, 2025 at 05:23:52PM -0500, Paul Moore wrote:
-> >
-> > > I believe the LSM can support both the enforcement of security policy
-> > > and the observation of security relevant events on a system.  In fact
-> > > most of the existing LSMs do both, at least to some extent.
-> > >
-> > > However, while logging of security events likely needs to be
-> > > asynchronous for performance reasons, enforcement of security policy
-> > > likely needs to be synchronous to have any reasonable level of
-> > > assurance.  You are welcome to propose LSMs which provide
-> > > observability functionality that is either sync, async, or some
-> > > combination of both (? it would need to make sense to do both ?), but
-> > > I'm not currently interested in accepting LSMs that provide
-> > > asynchronous enforcement as I don't view that as a "reasonable"
-> > > enforcement mechanism.
-> >
-> > This is an artificial distinction that will prove limiting to the
-> > security that Linux will be able to deliver in the future.
-> >
-> > Based on your response, is it your stated position as Linux security
-> > maintainer, that you consider modern Endpoint Detection and Response
-> > Systems (EDRS) lacking with respect to their ability to implement a
-> > "reasonable" enforcement and assurance mechanism?
+On 2/5/25 20:39, Ryan Roberts wrote:
+> Fix callers that previously skipped calling arch_sync_kernel_mappings()
+> if an error occurred during a pgtable update. The call is still required
+> to sync any pgtable updates that may have occurred prior to hitting the
+> error condition.
+> 
+> These are theoretical bugs discovered during code review.
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: 2ba3e6947aed ("mm/vmalloc: track which page-table levels were modified")
+> Fixes: 0c95cba49255 ("mm: apply_to_pte_range warn and fail if a large pte is encountered")
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 
-> As stated previously: "I'm not currently interested in accepting
-> LSMs that provide asynchronous enforcement as I don't view that as a
-> reasonable enforcement mechanism."
+This change could stand on its own and LGTM.
 
-You personally don't, the IT and security compliance industry does, it
-seems to leave Linux security infrastructure in an interesting
-conundrum.
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-For the record, just to be very clear as to what an LSM is allowed to
-do under your administration, for our benefit and the benefit of
-others:
-
-An LSM asynchronously streams an encoding of every security event that
-occurs into something in userspace, somewhere, that interprets those
-events.  Is userspace allowed to directly signal the operating system
-if it detects an anomaly in one of those events or a pattern of events
-and at what resolution level can the signalling occur?
-
-> > If this is the case, your philosophy leaves Linux in a position that
-> > is inconsistent with how the industry is choosing to implement
-> > security.
-
-> In this case perhaps TSEM is not well suited for the upstream Linux
-> kernel and your efforts are better spent downstream, much like the
-> industry you appear to respect.
-
-Fascinating response from someone given the privilege of
-maintainership status of a sub-system in a project whose leadership
-preaches the need to always work with and submit to upstream.
-
-Even more fascinating when that individual publically states that he
-is employed by the largest technology company in the world because of
-that companies desire to promote the health and well being of the
-Linux eco-system and community.
-
-For the record, we don't respect any industry, we respect the need to
-address the challenges associated with how we are currently doing and
-thinking about things.
-
-> paul-moore.com
-
-Our apologies to everyone for being a voice crying out in the
-wilderness.
-
-As always,
-Dr. Greg
-
-The Quixote Project - Flailing at the Travails of Cybersecurity
-              https://github.com/Quixote-Project
+> ---
+>  mm/memory.c  | 6 ++++--
+>  mm/vmalloc.c | 4 ++--
+>  2 files changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 539c0f7c6d54..a15f7dd500ea 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3040,8 +3040,10 @@ static int __apply_to_page_range(struct mm_struct *mm, unsigned long addr,
+>  		next = pgd_addr_end(addr, end);
+>  		if (pgd_none(*pgd) && !create)
+>  			continue;
+> -		if (WARN_ON_ONCE(pgd_leaf(*pgd)))
+> -			return -EINVAL;
+> +		if (WARN_ON_ONCE(pgd_leaf(*pgd))) {
+> +			err = -EINVAL;
+> +			break;
+> +		}
+>  		if (!pgd_none(*pgd) && WARN_ON_ONCE(pgd_bad(*pgd))) {
+>  			if (!create)
+>  				continue;
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 6111ce900ec4..68950b1824d0 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -604,13 +604,13 @@ static int vmap_small_pages_range_noflush(unsigned long addr, unsigned long end,
+>  			mask |= PGTBL_PGD_MODIFIED;
+>  		err = vmap_pages_p4d_range(pgd, addr, next, prot, pages, &nr, &mask);
+>  		if (err)
+> -			return err;
+> +			break;
+>  	} while (pgd++, addr = next, addr != end);
+>  
+>  	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
+>  		arch_sync_kernel_mappings(start, end);
+>  
+> -	return 0;
+> +	return err;
+>  }
+>  
+>  /*
