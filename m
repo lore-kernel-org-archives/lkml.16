@@ -1,230 +1,119 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875EA10E5;
-	Fri,  7 Feb 2025 19:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A894923C8B4;
+	Fri,  7 Feb 2025 19:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738955469; cv=none; b=RTA1IZkvcu+vjJwtSs7/qMtKwsP7YvP2RAiLp+aMCwO+wBX2J6YmCmf1gqc9iwlqBpikj85Tqahf6UMmxLb4os9M1DVph9smvl2PGdyLAmq2CnSUdWLVXWjBCJOpIo/RrGpwOJQGGhNf0bhwmjPHxkkYckG+v776EYXjWtKNolY=
+	t=1738955622; cv=none; b=k53qA61or2KjcD4Mh+pi+CwnnvGGSBAQWC8LwfeVJkkgpBD05BVB23bVq4yYQwpBGHLxfMxkGuerq9sVcVDn8HDMwkGoUHTgJuBfG+Gn+JV+E1DFHyEHqtni+88YP7X0kuUeEB3+IApaYrUW/hbjTGoLQixt8j1ZtdUs68gYUVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738955469; c=relaxed/simple;
-	bh=DJuLtTjfrvQjqJ4tHfAAS2f216HEzMWW3ZHgrNo24Bw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FZoYdmIlIlm3KCIxs9tCMb9s+QQCyvOlRiMtKw5eUiop51PZvvlLkjyd8eW5MgsedsxHbH45KP1h9WxYSZApGmz9+zYD50d1blZWpK+CDytUfslRIsEYSYe4LZwNgvMtD7zuIgTevvKUYtBxj6iOpyX0TPZ/D/chShWOPunFU3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aX7z8Xh8; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738955622; c=relaxed/simple;
+	bh=J4yryIaByWP8KIZwe+z/0r7YkxqehmJF+7Ro82u0zfU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fTiQyTWj7l1O0Qm20zHWJpXPDNUCWllyto3TqWZl2TtyYX7mY2KJ3IIUvUFnixAMkFiq72aytkrWhy7W4FmQvphCir+PeAsHPcrl1uEFTOfDApUenpZgCqqUzfSM4V0AB+oWiRQC8dcPB9Js0J22rC2pvsfIjO7cYL3KFABdVtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=IQb1rN4W; arc=none smtp.client-ip=178.238.236.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aX7z8Xh8"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517Hc8H6004422;
-	Fri, 7 Feb 2025 19:10:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ZFrW49
-	+Epm/QRPQlGO4LNK3NBVsNDkvRNdGiTRRz3oo=; b=aX7z8Xh8Gae3wzDbqnDo9v
-	ivhvizxT73A7ioZ6QfW+BOmKp5h+iQ15bQo60qqsRgRcfCeaETCT7vVYn3+QOA38
-	Sph4SMrd3WtX32rfd4lv5jzLhRCoRwqeobX9D2AFeEnv01EMq5+v6z9wNgP8YsQ9
-	u1laprOsb+/1zGPM00bB+j1tLc1/Jkv8aooIW//DfWI8F7RwNOUTzG8fRlpjmrse
-	M/Zt7vDnC/aw9lEPh9NyHna4uwBpnFdEE2fDT6e1DeawTo5OMheoUs9IWwq3/cIO
-	yhMoUJg2PHgbjP4pqBoIfm2jHCYYf7O5MUIEmSmrSnwJe4U407shKQ26f6K0kwVg
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44nfn5jwns-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 19:10:36 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 517H0QAV021508;
-	Fri, 7 Feb 2025 19:10:35 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j0n1vqs5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 19:10:35 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 517JAZfD65077650
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Feb 2025 19:10:35 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1B8F15805D;
-	Fri,  7 Feb 2025 19:10:35 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E0F1858043;
-	Fri,  7 Feb 2025 19:10:32 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.80.253])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  7 Feb 2025 19:10:32 +0000 (GMT)
-Message-ID: <1a7e9cf84715386b7ac3dc2103fd38ba180dd216.camel@linux.ibm.com>
-Subject: Re: [PATCH v7 1/7] ima: define and call ima_alloc_kexec_file_buf
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com
-Date: Fri, 07 Feb 2025 14:10:32 -0500
-In-Reply-To: <20250203232033.64123-2-chenste@linux.microsoft.com>
-References: <20250203232033.64123-1-chenste@linux.microsoft.com>
-	 <20250203232033.64123-2-chenste@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="IQb1rN4W"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=Cc:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=v+ctddmnQF2PlnEUYBVoF2cTShrkIZzsUJyQpI/HFCw=; b=IQb1rN4WJs5E5/0kCQGVwBnM+W
+	GcDOfoxuhBkrbJI1Bzv8knilAnNadiG3ohQHhgUV+lBa1tOJc1P3vbSSpLfcwWiIZHHNtrofgXr6H
+	yevXNIW0bDcv0jThr14mIE5ZvmJAfI6TsBxUuxxNM8HUiXTiSW0/XkNMB+Lt7LB79vnFn1Vw2RyNX
+	r45CBxDlkqX/ZPl1JSUZ2WD3ANYYP5w/pxTG7+LXedgL2Go7DluwEBW9+s/HXu2c+Qjfsu8Takmvb
+	Vn2HDoezgwxJnxTjFrjyCrWiTW8rdTS63OH6OmAFk3nSlLVhAHVxCDURs5EsIQ9DEORITG02zmqCT
+	A6jmPXgw==;
+From: Andreas Kemnade <andreas@kemnade.info>
+To: vigneshr@ti.com,
+	aaro.koskinen@iki.fi,
+	andreas@kemnade.info,
+	khilman@baylibre.com,
+	rogerq@kernel.org,
+	tony@atomide.com,
+	jmkrzyszt@gmail.com,
+	andi.shyti@kernel.org,
+	reidt@ti.com,
+	wsa@kernel.org,
+	linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: stable@kernel.org
+Subject: [PATCH] i2c: omap: fix IRQ storms
+Date: Fri,  7 Feb 2025 19:54:35 +0100
+Message-Id: <20250207185435.751878-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 7QGSpxPfaoZwyEkN0gvx2kdN2Zxuv-kP
-X-Proofpoint-GUID: 7QGSpxPfaoZwyEkN0gvx2kdN2Zxuv-kP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_09,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- suspectscore=0 mlxscore=0 adultscore=0 priorityscore=1501 bulkscore=0
- mlxlogscore=999 clxscore=1015 spamscore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502070142
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
-> Carrying the IMA measurement list across kexec requires allocating a
-> buffer and copying the measurement records.=C2=A0 Separate allocating the
-> buffer and copying the measurement records into separate functions in
-> order to allocate the buffer at kexec 'load' and copy the measurements
-> at kexec 'execute'.
->=20
-> This patch includes the following changes:
-> =C2=A0- Refactor ima_dump_measurement_list() to move the memory allocatio=
-n
-> =C2=A0=C2=A0 to a separate function ima_alloc_kexec_file_buf() which allo=
-cates
-> =C2=A0=C2=A0 buffer of size 'kexec_segment_size' at kexec 'load'.
-> =C2=A0- Make the local variable ima_kexec_file in ima_dump_measurement_li=
-st()
-> =C2=A0=C2=A0 a local static to the file, so that it can be accessed from=
-=20
-> =C2=A0=C2=A0 ima_alloc_kexec_file_buf(). Compare actual memory required t=
-o ensure=20
-> =C2=A0=C2=A0 there is enough memory for the entire measurement record.
-> =C2=A0- Copy as many measurement events as possible.
-> =C2=A0- Make necessary changes to the function ima_add_kexec_buffer() to =
-call
-> =C2=A0=C2=A0 the above two functions.
-> =C2=A0- Compared the memory size allocated with memory size of the entire=
-=20
-> =C2=A0=C2=A0 measurement record. If there is not enough memory, it will c=
-opy as many
-> =C2=A0=C2=A0 IMA measurement records as possible, and this situation will=
- result
-> =C2=A0=C2=A0 in a failure of remote attestation.
->=20
-> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> ---
-> =C2=A0security/integrity/ima/ima.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0=C2=A0 1 +
-> =C2=A0security/integrity/ima/ima_kexec.c | 105 +++++++++++++++++++++-----=
+On the GTA04A5 writing a reset command to the gyroscope causes IRQ
+storms because NACK IRQs are enabled and therefore triggered but not
+acked.
+
+Sending a reset command to the gyroscope by
+i2cset 1 0x69 0x14 0xb6
+with an additional debug print in the ISR (not the thread) itself
+causes
+
+[ 363.353515] i2c i2c-1: ioctl, cmd=0x720, arg=0xbe801b00
+[ 363.359039] omap_i2c 48072000.i2c: addr: 0x0069, len: 2, flags: 0x0, stop: 1
+[ 363.366180] omap_i2c 48072000.i2c: IRQ LL (ISR = 0x1110)
+[ 363.371673] omap_i2c 48072000.i2c: IRQ (ISR = 0x0010)
+[ 363.376892] omap_i2c 48072000.i2c: IRQ LL (ISR = 0x0102)
+[ 363.382263] omap_i2c 48072000.i2c: IRQ LL (ISR = 0x0102)
+[ 363.387664] omap_i2c 48072000.i2c: IRQ LL (ISR = 0x0102)
+repeating till infinity
+[...]
+(0x2 = NACK, 0x100 = Bus free, which is not enabled)
+Apparently no other IRQ bit gets set, so this stalls.
+
+Do not ignore enabled interrupts and make sure they are acked.
+If the NACK IRQ is not needed, it should simply not enabled, but
+according to the above log, caring about it is necessary unless
+the Bus free IRQ is enabled and handled. The assumption that is
+will always come with a ARDY IRQ, which was the idea behind
+ignoring it, proves wrong.
+It is true for simple reads from an unused address.
+
+So revert
+commit c770657bd261 ("i2c: omap: Fix standard mode false ACK readings").
+
+The offending commit was used to reduce the false detections in
+i2cdetect. i2cdetect warns for confusing the I2C bus, so having some
+rare false detections (I have never seen such on my systems) is the
+lesser devil than having basically the system hanging completely.
+
+No more details came to light in the corresponding email thread since
+several months:
+https://lore.kernel.org/linux-omap/20230426194956.689756-1-reidt@ti.com/
+so no better fix to solve both problems can be developed right now.
+
+Fixes: c770657bd261 ("i2c: omap: Fix standard mode false ACK readings").
+CC: <stable@kernel.org>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 ---
-> =C2=A0security/integrity/ima/ima_queue.c |=C2=A0=C2=A0 4 +-
-> =C2=A03 files changed, 80 insertions(+), 30 deletions(-)
->=20
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index 3c323ca213d4..447a6eb07c2d 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -274,6 +274,7 @@ bool ima_template_has_modsig(const struct ima_templat=
-e_desc
-> *ima_template);
-> =C2=A0int ima_restore_measurement_entry(struct ima_template_entry *entry)=
-;
-> =C2=A0int ima_restore_measurement_list(loff_t bufsize, void *buf);
-> =C2=A0int ima_measurements_show(struct seq_file *m, void *v);
-> +int ima_get_binary_runtime_entry_size(struct ima_template_entry *entry);
-> =C2=A0unsigned long ima_get_binary_runtime_size(void);
-> =C2=A0int ima_init_template(void);
-> =C2=A0void ima_init_template_list(void);
-> diff --git a/security/integrity/ima/ima_kexec.c
-> b/security/integrity/ima/ima_kexec.c
-> index 52e00332defe..b60a902460e2 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -15,62 +15,99 @@
-> =C2=A0#include "ima.h"
-> =C2=A0
-> =C2=A0#ifdef CONFIG_IMA_KEXEC
-> +static struct seq_file ima_kexec_file;
-> +
-> +static void ima_reset_kexec_file(struct seq_file *sf)
-> +{
-> +	sf->buf =3D NULL;
-> +	sf->size =3D 0;
-> +	sf->read_pos =3D 0;
-> +	sf->count =3D 0;
-> +}
-> +
-> +static void ima_free_kexec_file_buf(struct seq_file *sf)
-> +{
-> +	vfree(sf->buf);
-> +	ima_reset_kexec_file(sf);
-> +}
-> +
-> +static int ima_alloc_kexec_file_buf(size_t segment_size)
-> +{
-> +	/*
-> +	 * kexec 'load' may be called multiple times.
-> +	 * Free and realloc the buffer only if the segment_size is
-> +	 * changed from the previous kexec 'load' call.
-> +	 */
-> +	if (ima_kexec_file.buf &&
-> +		(ima_kexec_file.size =3D=3D segment_size)) {
-> +		goto out;
-> +	}
+ drivers/i2c/busses/i2c-omap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Nice cleanup from v5.  The line doesn't doesn't need to be split.  Both the
-parenthesis and the brackets can be removed.
-
-In the future, before posting patches, please use scripts/checkpatch.pl.
-
-CHECK: Unnecessary parentheses around 'ima_kexec_file.size =3D=3D segment_s=
-ize'
-#82: FILE: security/integrity/ima/ima_kexec.c:41:
-+	if (ima_kexec_file.buf &&
-+		(ima_kexec_file.size =3D=3D segment_size)) {
-
-CHECK: Alignment should match open parenthesis
-#83: FILE: security/integrity/ima/ima_kexec.c:42:
-+	if (ima_kexec_file.buf &&
-+		(ima_kexec_file.size =3D=3D segment_size)) {
-
-Or simply join the two lines.
-
-thanks,
-
-Mimi
-
-> +
-> +	ima_free_kexec_file_buf(&ima_kexec_file);
-> +
-> +	/* segment size can't change between kexec load and execute */
-> +	ima_kexec_file.buf =3D vmalloc(segment_size);
-> +	if (!ima_kexec_file.buf)
-> +		return -ENOMEM;
-> +
-> +	ima_kexec_file.size =3D segment_size;
-> +
-> +out:
-> +	ima_kexec_file.read_pos =3D 0;
-> +	ima_kexec_file.count =3D sizeof(struct ima_kexec_hdr);	/* reserved spac=
-e
-> */
-> +
-> +	return 0;
-> +}
->=20
+diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
+index 92faf03d64cf..b54d4120899f 100644
+--- a/drivers/i2c/busses/i2c-omap.c
++++ b/drivers/i2c/busses/i2c-omap.c
+@@ -1057,7 +1057,7 @@ omap_i2c_isr(int irq, void *dev_id)
+ 	u16 stat;
+ 
+ 	stat = omap_i2c_read_reg(omap, OMAP_I2C_STAT_REG);
+-	mask = omap_i2c_read_reg(omap, OMAP_I2C_IE_REG) & ~OMAP_I2C_STAT_NACK;
++	mask = omap_i2c_read_reg(omap, OMAP_I2C_IE_REG);
+ 
+ 	if (stat & mask)
+ 		ret = IRQ_WAKE_THREAD;
+-- 
+2.39.5
 
