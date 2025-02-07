@@ -1,116 +1,93 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B42118E03A
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC30023C8DB;
+	Fri,  7 Feb 2025 17:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738947760; cv=none; b=KYSN/YHzfc8Pq1qQhDFrJED9vbXabivATbOta6JJDE87tgunwjfL6qaGdrpdlzbffPZfN0e6iy7LWZ7OW3qq0KMLrnPT/o/UG6/BlB1Yka2toCYS3kjnb63ptPiKO3/aVvaWu1RH+xEaFyOL9X2vb8kj+BibPcc/qXYoBC8bTOQ=
+	t=1738947797; cv=none; b=h/0+Vu2U+9+4d4en6EuJu3kxWD+GwMpEETUZVkKLtDXlCZlhh/KH+wPX0oSMjy2yfxMAUEoNaSirEM6FqvoARAOxYg4gNDeAnTN4l6Vpaqc3jRBDEEHqSDksOdtxCmb66hC9OZdN/4XRo/JvuFjLeEhkut3XlUpoVoJ8MM83kKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738947760; c=relaxed/simple;
-	bh=M+O9C18J9TDsrtn9ygBQi2moURCD+M5fRkIKJLNmNxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GZhQXmC6qgUkUDxFSBFGSpjawIVXDtuXflTNonWuLg5AsD+RwLrt8ZO2A4rOb/2TdfkxsQpwlCVUTOW2Polwt7FlVHrAfZ9MuWOgfvQOKCl7PKjsPvBHwhaZp/sJb2eX+Nm8V+dq533XuOyZNKoFra6bOvMfiyc+HbX81LCfNZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=blt/I/5X; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738947797; c=relaxed/simple;
+	bh=oNUYLYJ3cBbS2gYJzUrPZKysiTn8zeg+2VOsqprROM8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cEcLurwf4uy0/mQXj9EmsgjpX2VSsLs7ho3Eq5moroBrJGnu5Kc29mrWAJOOiu4XsxN/fZVCBPZM5QSM1TZnpEDQEXzpaoQGvHdCuh1cwTbrQ3sVYE730n7/Y7kZZRVDHXtj8NrcRbIVYax3CZL9rOj0YuuxL+Fa/CuX1+rNqCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NKtv0DZX; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="blt/I/5X"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21c2f1b610dso57677685ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:02:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738947759; x=1739552559; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rywibxB4P0UxOm27bdG2YMzPN91p4Wq7QrOrZT5kceE=;
-        b=blt/I/5X1OGUlyUvFAZKvF25NIe2vjiox/Egu+TipkSlES00Lv6pDpLnKjeRYjaszN
-         sYCb3dselH7FljbEgaMpGVD6Q+lw9bAkZyG/6Z8/V3MtZUljS7vqKXzsR6Njs6O5Gsqm
-         vo6NQa1c9ztY4kHphRMIGVl3FddO3LiB2cbIwmugraJN1DoXx67G5U8rvbxwPJtgkJRh
-         Zm/HfkDgup4e62ki6IRUS8zgeAxysrZnMZccsXLNmK7P60lFE6qUP0gNa91opM+z/jLN
-         0BaLkxGtLbfd7BrOihnOtJ2dnSFvtM0JJfuGJvDAWHH9fzav3YxkK6XnZ0fF7fWeB62s
-         S2+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738947759; x=1739552559;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rywibxB4P0UxOm27bdG2YMzPN91p4Wq7QrOrZT5kceE=;
-        b=Ul7T3NubcFCkYfMHHxNnRfYeANM4mx5DMu4sn1/gRk1A2Y8huBZuQb8lDdeSNOIGE5
-         8ThapyfUCvHd0un1IeJ+/Vn8K/nckmvbL/eJxBUd19Blf6Dx7YbkDAUyNfXuDQfeccyG
-         Ud25x1WHQ30vGe3Y7f2q4vqfwufUjIV4A69tz570icXcG9khetUyTHz6U+yE5HFUwLXH
-         /iJir8JJ6QvL3t23OXPhqBURZSC9iZHPfvZBYVFTSlvur3Dig5cpRLOn2Mk8/WX//zYs
-         yW5A1TuzLRR8Pv+vh1DrHkFuSykWe6dspyKXJkQ2fuCb1Ynr69961sFV48D4xDIgKWMM
-         W+1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW+uuve/in+iklMPooZgyofFIpPH+UE1s6hIAXw08qEZARkOefynp5hU3Z6yBmcE1h3g1U9A/pf7fRcc6Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzN260NZZjT3ceKGMAgUYj9OumZy948Etz5clQywoVNXjfyprCC
-	QCOcfqX1qzNU3Hnyjxz1DaXULrbcSIHbFaemzSjZ/mco6DdQZvYtMtg6TeJh5Q==
-X-Gm-Gg: ASbGncsWn5wW5J51PRy1yu04t058JNZum/m3dUaeT/5kkRwLVCzjtbgkJ+ZASAM8UQt
-	IjS/YH+mFRxmHp0iE0y6AItTXylH4mmUeq0o0RagQUuaoof2f/JM5i6EIqNKqqWijC7uTblxEW/
-	AM4C91RoQCwhs1/frYhlQtYAcogxPffjNcO0pp5P0lo38hp/+JWVMhyO/6PNTyxNNvufaPqrwqy
-	y8rj/fIsRalq0acXnDFWO86gqawPohusRkT4wO3bY3uSXEo6MqpezBKFBauI017JWkvbKifV9FR
-	PHcYU0tFmHFnH6nQk/0K0EeUvg==
-X-Google-Smtp-Source: AGHT+IF+5sAnHX5mqvTlJ9cr8EhXaxBIvoy2AbYyW6DPwIIxGnNU6p8DQD6XKoRE3E/2PxieJLgHVg==
-X-Received: by 2002:a17:902:da87:b0:21f:3abc:b9e8 with SMTP id d9443c01a7336-21f4e7c6aa8mr55271435ad.43.1738947758661;
-        Fri, 07 Feb 2025 09:02:38 -0800 (PST)
-Received: from thinkpad ([120.60.76.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f365616ecsm33083075ad.100.2025.02.07.09.02.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 09:02:38 -0800 (PST)
-Date: Fri, 7 Feb 2025 22:32:31 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Easwar Hariharan <eahariha@linux.microsoft.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	"open list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: hv: Correct a comment
-Message-ID: <20250207170231.kpwk2z2xoqr3czqy@thinkpad>
-References: <20250128190141.69220-1-eahariha@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NKtv0DZX"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 517H2qbu3039421
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Feb 2025 11:02:52 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738947772;
+	bh=oNUYLYJ3cBbS2gYJzUrPZKysiTn8zeg+2VOsqprROM8=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=NKtv0DZXtokLgalUpTO60zr4Cf092BJfxuhfrDpxAUoUfsROwTrh3/q9n5mXPkjbH
+	 YgRW3VjP4wISo23vbD+PR4PjwilQoT/OWyZdPDmrWqWUHlttRLYxn+LPNKbd4OM5xL
+	 HF8yee3ax0+YOWrbnW163mVqy7vQzwiCiPmxPLqw=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 517H2qI7040519
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 7 Feb 2025 11:02:52 -0600
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 7
+ Feb 2025 11:02:52 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 7 Feb 2025 11:02:52 -0600
+Received: from [10.247.30.175] (lt5cd3040qtn.dhcp.ti.com [10.247.30.175])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 517H2qv4105448;
+	Fri, 7 Feb 2025 11:02:52 -0600
+Message-ID: <0c5f962b-3264-49c8-a1c5-893b8eb41b63@ti.com>
+Date: Fri, 7 Feb 2025 11:02:52 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/3] Add TI TPS65215 PMIC GPIO Support
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
+        <rogerq@kernel.org>, <tony@atomide.com>, <linus.walleij@linaro.org>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <m-leonard@ti.com>, <praneeth@ti.com>,
+        <christophe.jaillet@wanadoo.fr>
+References: <20250113225530.124213-1-s-ramamoorthy@ti.com>
+ <CAMRc=Meqjy+cqfueM_dQE8uP32zS0ib41qE+OPPWFkhoVTGc2w@mail.gmail.com>
+Content-Language: en-US
+From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+In-Reply-To: <CAMRc=Meqjy+cqfueM_dQE8uP32zS0ib41qE+OPPWFkhoVTGc2w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250128190141.69220-1-eahariha@linux.microsoft.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Jan 28, 2025 at 07:01:40PM +0000, Easwar Hariharan wrote:
+Hi,
 
-Even though the patch description is not needed here, it is a good practice to
-add one (even if it duplicates the subject).
+On 2/7/2025 2:53 AM, Bartosz Golaszewski wrote:
+> On Mon, Jan 13, 2025 at 11:55 PM Shree Ramamoorthy <s-ramamoorthy@ti.com> wrote:
+>> TPS65215 is a Power Management Integrated Circuit (PMIC) that has
+>> significant register map overlap with TPS65219. The series introduces
+>> TPS65215 and restructures the existing driver to support multiple devices.
+>>
+>> This follow-up series is dependent on:
+>> Commit f84464ec8190 ("regulator: dt-bindings: Add TI TPS65215 PMIC bindings")
+>> Commit 8206c20f4c82 ("mfd: tps65215: Add support for TI TPS65215 PMIC")
+>> Commit 0e0b7f00c111 ("mfd: tps65215: Remove regmap_read check")
+>>
+> Did these go into v6.14?
+>
+> Bart
 
-- Mani
+These didn't. I figured with the dependency feedback, it was easier to combine the series for TPS65215 and TPS65214 into 1 series.
 
-> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 6084b38bdda17..3ae3a8a79dcf0 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1356,7 +1356,7 @@ static struct pci_ops hv_pcifront_ops = {
->   *
->   * If the PF driver wishes to initiate communication, it can "invalidate" one or
->   * more of the first 64 blocks.  This invalidation is delivered via a callback
-> - * supplied by the VF driver by this driver.
-> + * supplied to the VF driver by this driver.
->   *
->   * No protocol is implied, except that supplied by the PF and VF drivers.
->   */
-> -- 
-> 2.43.0
-> 
+I submitted the combined mfd + dt-binding series [0] first, and once that was ACK'd, I will follow up with the gpio series for both devices.
+Let me know if there's a different approach you would recommend!
 
--- 
-மணிவண்ணன் சதாசிவம்
+[0]: https://lore.kernel.org/all/20250206173725.386720-1-s-ramamoorthy@ti.com/
+
