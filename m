@@ -1,168 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8301F7916;
-	Fri,  7 Feb 2025 13:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413F02E64A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 13:46:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738935918; cv=none; b=kJRFzNEOQ0iw1OQ1Vjmw/uhZfTZBWx6SZKefaIUupF6vTJnlb9dUbKZx83Hyl7Ju5PZUqocSxepl1hS2TlEjiZW3BAcnhnF6pkGgsEW00+6uQg7ehX2yJbP80RdpnK7MJmxEGWd8+FLzuMNrCnbzH0Xc1k7qbk20pxoaKNvCvyA=
+	t=1738935990; cv=none; b=oS2tYpVUkNrLIWqzjoXAuU5qyqOv+PqL4kPflqpfo1TzR+Fr6nG8yQPCihussGm8Q2zEJuplb5cTZzHOPIAdGjk0YhEtx/NvW1b/fKxhHyDGz7arW/PcmA2BjbtPxvHDoxnjnQxQzMO4YKL6/LKGpt+DoLWsy1jZ/i1sfzql67A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738935918; c=relaxed/simple;
-	bh=DuwKaH3YjKZMxKG65W1fEFU23EHCiVuzIenYqSc8+F8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hqCeGd5pFALJ/R083A9Di5m2D+eZzLHd/PhDgQ7rtv6aAwnaGI+EhryOXIhUtpvRo+9IrEF64LiqDo2mmAHfMlrIIJKWoNsa5g2lRW9vHBwMeEoKg3tnTwLVyeyCyfUEfEJvGSWnaV54xqVc2BwfDhZnzFwuvTlfc0m4EW3UA7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oBnq71BS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738935990; c=relaxed/simple;
+	bh=vLuC24EPaivqxLe6lifOx+BXfgDMOD9Mwf5eQ78tRek=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mqLRvJ4IrimKcvj1drk90vnxjnJKfH+f438GgAIWx24ISo93yYD1DouF1LkWG/7XHAOL6TQd0f8E26Ry6AAt2nrW/RiMjxv3CPzBS0FvYC21m0IioVSs2WTlq6gEgzAsIFLPDs/1pNKnUyu2sa7qzg2IaQbD1xWAoMAPAanPlvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lCCiTEtD; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oBnq71BS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 783DBC4CEE8;
-	Fri,  7 Feb 2025 13:45:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738935918;
-	bh=DuwKaH3YjKZMxKG65W1fEFU23EHCiVuzIenYqSc8+F8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=oBnq71BSX09apoFsHYSuNjDAuqexoV41HBqR53U9f9Nb1y7iMgFLyr/suJ3kH5vGA
-	 VZKD8r33bFX8nSQlSofUvGXesN3arBG4lIVEBb12UwsCpMehLyHuR+UfGwcE6O5kz+
-	 aVkPVuT4ZatkZeMzbbssb96K5bz8q1kgnSf/NPdoOk5ay7Jz3GuqQaxxq0kedWFBjv
-	 reOUmH7V1V4mC/fEmNhBr1mmu5Y+AL9FZgUixEC6W//OjA17mrDpWBFXz7kYz8Uia2
-	 QlRhxS42psKS8VZ0qMnVEcFzctDI7d/5q6Nx96dbJyq25refetJS7kmjqgll4Fzszw
-	 koNRJYQngUokg==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Fri, 07 Feb 2025 08:45:04 -0500
-Subject: [PATCH v4 2/2] nfsd: lift NFSv4.0 handling out of
- nfsd4_cb_sequence_done()
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lCCiTEtD"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5dcea5d8f16so4135598a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 05:46:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738935986; x=1739540786; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=REZB0sANexIP4XWMliuMvr5qpUJSVkumhZ+m2qFPPrQ=;
+        b=lCCiTEtD2gNfm6AqChHPuRc2KPGoJzTzPE+FKw3ljKMALCYCeHeqnBZrfvLzojc6Fh
+         hdkYYBSjFSZmjjKtR+LbaJkCM6awAWxC+LtP32J6R26DuxBfsEtdoe91QSVO+JEhk/A/
+         HpoKGudf73n/UhFnNsYkUttzY/RWzl2s0zwMbzIhyupOYUX9AG3Gl64FkjOdP4J/MlDX
+         xk76YwkBY5KVfUV/Dx6RzT8iXBwO5eK/cYiTLtWsotjCaK5yQ/xTLuskA99spGgvKDKR
+         o9OlbfqsmTsQ8ojvtQOE3TQrY0ydCXbcqHaQbpBsBM9ccbYIzMgV6076Eq47i69bJcLO
+         IuKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738935986; x=1739540786;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=REZB0sANexIP4XWMliuMvr5qpUJSVkumhZ+m2qFPPrQ=;
+        b=g0palsoHMQPpLMEKx2SiFdq27v0CHI48U3IQOtNLvYsbwRQ1w2uGgoGZqMHj60ft25
+         3OJSVX9t9VLHKpPvmtuPQWV/7+niUAJ2qGqNnzScewNuOa3N+50YDLSaQuOUuMefIeyt
+         I6Fm1aQt19Zlzb+iRBum2sb5UJb0sE7LvYGaT2d1R4VpKpjpTssjQIe9bs60GbxYaKi1
+         9qL+Oh4juRbr0UbyksVgcxSXCFj7yVfzn7lFUeSCY0+YaPG2xzfSGJARtnOT4WIO2UXx
+         ubTdJ/sfByT9gefkpSM7Hc8aR9TDsMA86/0vmH1W2l9NEtWi07wkvUfyzY/+aT3SSJ1M
+         HWBw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3v3EHC1sH8w6A3W4xs2YzlcWIvi68er7580ZiUnkNGC08IbSTeQHAnSGJcBXbB1IoyaY9DsRzAXatcjg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yweat7FOP5PGNEyLNNqC44sFqDbYyWV2Qq9m8F7G3yT6b0O9UQV
+	JInjnnVBmcYYsnFiRWxDWkYiFLtDoohQQkXZwNcLsAoODmUSNDoJzMUvMY6IlX0wTNmCGTyz1De
+	MjABkJgbpOPkyi/T9Hm3ccwvbw6HW4dwy2SL7Hw==
+X-Gm-Gg: ASbGnctqQJgKvlfWmQM0Eog4qDUj6S772026JejXnNXtDLiMk4lxkdvRZlos5lllQBh
+	JgQgGqpJYYUrTGbORqCURDh2qOr7zabE/RtvybTqjV6Hl8DpxWDxE97VqRUFWv9cHWovT1ECg9p
+	L62C3ktVLOrhgakdiae2ZA2hhMIA==
+X-Google-Smtp-Source: AGHT+IGY8kij5Gw761pb9WCJ3OdCdQXdihHUkrlAY5K9v1F2nAWhoN0vVHzkn1H9rDSmMNEfVZre/vOTmplsfCnlq0s=
+X-Received: by 2002:a05:6402:4607:b0:5de:44b1:478 with SMTP id
+ 4fb4d7f45d1cf-5de44e5cedcmr3900526a12.0.1738935986461; Fri, 07 Feb 2025
+ 05:46:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-nfsd-6-14-v4-2-1aa42c407265@kernel.org>
-References: <20250207-nfsd-6-14-v4-0-1aa42c407265@kernel.org>
-In-Reply-To: <20250207-nfsd-6-14-v4-0-1aa42c407265@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3323; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=DuwKaH3YjKZMxKG65W1fEFU23EHCiVuzIenYqSc8+F8=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnpg5riqjm/sjDV1X7n6mW4LrLroQQy0ZT6kMpG
- lEJRkKG6V6JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ6YOawAKCRAADmhBGVaC
- FQaaD/40UEXK1+ZdDZW3YjHHysSY4SO3AIBzCchQ1A79c5iY6YDOfHpSzt033c8tumzi6053N5o
- cUlVtL3iY5yVs5lQyhxMQVkXJPzkbNHOUIU/IdyX3wm65veHfSudjx2uvMPApZFfdOWRzd+hxxl
- YojgWUqu7In6+yznjiRQh8yKrIzF7r1xSqlRbBjc/+QfTHeBBPn0vM3rCXnGqEnuuQK2+Yy4Dr2
- RNLvUe4EblAEAP+ep63D3+79VvgT1hmSkGR9SUandQgIzTzARJ+Zb8/gQBPwMH3NRL7fFtGujgJ
- CWsPTB1qvf6Zc4qd5QaX7u/cOzgI7k94QdiPsH18vHBgSe3GsORAeG1QTv/R7cf+vulKAZdRlkP
- 5niheqGc8luHH8/ykyLzBF6n5NZ0BxmiszPhwTCt9p4vMw4IcLvChYqCZq1dbrWkHMmCuEK6ceN
- voNyI192lQ64NuujPwFPI3YHa0OQR7robPThnXoQVavhd+h334oJnio7FsxR9HFdUB+AoQACad7
- cQuDtONFpASnpVDRJQXk0BAXTpPtdGkBAeI6ZpoQ0SXC4w3EOa74xwzybIcU+cQG6KAPDkuQhaQ
- pEgvSx7KckgpM+gWCoPLDZo3DB+AnfD7ICDXDsF4ZKmVh4DGGhRzc4r+UTud5DAxYJRwdPjiy0i
- //uCi2EIPuaL8rQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+References: <20250207060917.30201-1-15645113830zzh@gmail.com> <20250207061359.31442-1-15645113830zzh@gmail.com>
+In-Reply-To: <20250207061359.31442-1-15645113830zzh@gmail.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Fri, 7 Feb 2025 14:46:14 +0100
+X-Gm-Features: AWEUYZl6wrK3CIIZekBSGVtJ1GNvTbisrqKhw77_kxRsmvIqReURPFIxoIPae7A
+Message-ID: <CAKfTPtBwRV4ndO5Zao1YbNNSi0EtMbrO081nDKjNvdjmJv5xZg@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] sched: Reduce the default slice to avoid tasks
+ getting an extra tick
+To: zihan zhou <15645113830zzh@gmail.com>
+Cc: bsegall@google.com, dietmar.eggemann@arm.com, juri.lelli@redhat.com, 
+	linux-kernel@vger.kernel.org, mgorman@suse.de, mingo@redhat.com, 
+	peterz@infradead.org, rostedt@goodmis.org, vschneid@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
-It's a bit strange to call nfsd4_cb_sequence_done() on a callback with no
-CB_SEQUENCE. Lift the handling of restarting a call into a new helper,
-and move the handling of NFSv4.0 into nfsd4_cb_done().
+On Fri, 7 Feb 2025 at 07:15, zihan zhou <15645113830zzh@gmail.com> wrote:
+>
+> Reduce the default slice, add a comment explaining why this modification
+> was made.
+>
+> Signed-off-by: zihan zhou <15645113830zzh@gmail.com>
+> ---
+>  kernel/sched/fair.c | 47 +++++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 43 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 26958431deb7..754b0785eaa0 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -71,10 +71,49 @@ unsigned int sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
+>  /*
+>   * Minimal preemption granularity for CPU-bound tasks:
+>   *
+> - * (default: 0.75 msec * (1 + ilog(ncpus)), units: nanoseconds)
+> - */
+> -unsigned int sysctl_sched_base_slice                   = 750000ULL;
+> -static unsigned int normalized_sysctl_sched_base_slice = 750000ULL;
+> + * (default: 0.70 msec * (1 + ilog(ncpus)), units: nanoseconds)
+> + *
+> + * The old default value for slice is 0.75 msec * (1 + ilog(ncpus)) which
+> + * means that we have a default slice of
+> + * 0.75 for 1 cpu
+> + * 1.50 up to 3 cpus
+> + * 2.25 up to 7 cpus
+> + * 3.00 for 8 cpus and above.
+> + *
+> + * For HZ=250 and HZ=100, because of the tick accuracy, the runtime of tasks
+> + * is far higher than their slice.
+> + * For HZ=1000 with 8 cpus or more, the accuracy of tick is already
+> + * satisfactory, but there is still an issue that tasks will get an extra
+> + * tick because the tick often arrives a little faster than expected. In this
+> + * case, the task can only wait until the next tick to consider that it has
+> + * reached its deadline, and will run 1ms longer.
+> + *
+> + * vruntime + sysctl_sched_base_slice =     deadline
+> + *         |-----------|-----------|-----------|-----------|
+> + *              1ms          1ms         1ms         1ms
+> + *                    ^           ^           ^           ^
+> + *                  tick1       tick2       tick3       tick4(nearly 4ms)
+> + *
+> + * There are two reasons for tick error: clockevent precision and the
+> + * CONFIG_IRQ_TIME_ACCOUNTING/CONFIG_PARAVIRT_TIME_ACCOUNTING.
+> + * with CONFIG_IRQ_TIME_ACCOUNTING every tick will be less than 1ms, but even
+> + * without it, because of clockevent precision, tick still often less than
+> + * 1ms.
+> + *
+> + * In order to make scheduling more precise, we changed 0.75 to 0.70,
+> + * Using 0.70 instead of 0.75 should not change much for other configs
+> + * and would fix this issue:
+> + * 0.70 for 1 cpu
+> + * 1.40 up to 3 cpus
+> + * 2.10 up to 7 cpus
+> + * 2.8 for 8 cpus and above.
+> + *
+> + * This does not guarantee that tasks can run the slice time accurately every
+> + * time, but occasionally running an extra tick has little impact.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4callback.c | 53 ++++++++++++++++++++++++++------------------------
- 1 file changed, 28 insertions(+), 25 deletions(-)
+The explanation above about why you change sysctl_sched_base_slice
+from 0.75 to 0.70 should be put in commit message instead of the code
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index a8603c3cdcdafbf9ccc6296425112f1730419b7b..570762d992c553987923669d57b4ab8f529655d3 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1328,27 +1328,22 @@ static void nfsd4_cb_prepare(struct rpc_task *task, void *calldata)
- 	rpc_call_start(task);
- }
- 
--static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback *cb)
-+static void requeue_callback(struct rpc_task *task, struct nfsd4_callback *cb)
- {
- 	struct nfs4_client *clp = cb->cb_clp;
--	struct nfsd4_session *session = clp->cl_cb_session;
--	bool ret = false;
- 
--	if (!clp->cl_minorversion) {
--		/*
--		 * If the backchannel connection was shut down while this
--		 * task was queued, we need to resubmit it after setting up
--		 * a new backchannel connection.
--		 *
--		 * Note that if we lost our callback connection permanently
--		 * the submission code will error out, so we don't need to
--		 * handle that case here.
--		 */
--		if (RPC_SIGNALLED(task))
--			goto requeue;
--
--		return true;
-+	nfsd41_cb_release_slot(cb);
-+	if (!test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags)) {
-+		trace_nfsd_cb_restart(clp, cb);
-+		task->tk_status = 0;
-+		cb->cb_need_restart = true;
- 	}
-+}
-+
-+static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback *cb)
-+{
-+	struct nfsd4_session *session = cb->cb_clp->cl_cb_session;
-+	bool ret = false;
- 
- 	if (cb->cb_held_slot < 0)
- 		goto requeue;
-@@ -1427,19 +1422,14 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
- retry_nowait:
- 	/*
- 	 * RPC_SIGNALLED() means that the rpc_client is being torn down and
--	 * (possibly) recreated. Restart the call completely in that case.
-+	 * (possibly) recreated. Restart the whole callback in that case.
- 	 */
- 	if (!RPC_SIGNALLED(task)) {
- 		rpc_restart_call_prepare(task);
- 		return false;
- 	}
- requeue:
--	nfsd41_cb_release_slot(cb);
--	if (!test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags)) {
--		trace_nfsd_cb_restart(clp, cb);
--		task->tk_status = 0;
--		cb->cb_need_restart = true;
--	}
-+	requeue_callback(task, cb);
- 	return false;
- }
- 
-@@ -1450,8 +1440,21 @@ static void nfsd4_cb_done(struct rpc_task *task, void *calldata)
- 
- 	trace_nfsd_cb_rpc_done(clp);
- 
--	if (!nfsd4_cb_sequence_done(task, cb))
-+	if (!clp->cl_minorversion) {
-+		/*
-+		 * If the backchannel connection was shut down while this
-+		 * task was queued, we need to resubmit it after setting up
-+		 * a new backchannel connection.
-+		 *
-+		 * Note that if we lost our callback connection permanently
-+		 * the submission code will error out, so we don't need to
-+		 * handle that case here.
-+		 */
-+		if (RPC_SIGNALLED(task))
-+			requeue_callback(task, cb);
-+	} else if (!nfsd4_cb_sequence_done(task, cb)) {
- 		return;
-+	}
- 
- 	if (cb->cb_status) {
- 		WARN_ONCE(task->tk_status,
+With this change:
 
--- 
-2.48.1
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 
+> + *
+> + */
+> +unsigned int sysctl_sched_base_slice                   = 700000ULL;
+> +static unsigned int normalized_sysctl_sched_base_slice = 700000ULL;
+>
+>  const_debug unsigned int sysctl_sched_migration_cost   = 500000UL;
+>
+> --
+> 2.33.0
+>
