@@ -1,39 +1,32 @@
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158861A3141;
-	Fri,  7 Feb 2025 19:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA5C118DB0E;
+	Fri,  7 Feb 2025 19:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738955933; cv=none; b=oeXbS0wrmnF0wGYbXpowRTze3J4ZW4Od1TFK5FvvP8WBaoC3ip9OYM5o4kOTo8uVHpqEdwtByu+klAZ+QbB/7T3zkTsuKigGfs3C+MCCf9FhldoXz/OQBQ6qsejA3a6TcnTvXMMZiRBo4UoGO8qJi1F5ZWpTC89/BpJ7tWZRjIc=
+	t=1738956058; cv=none; b=pGXojiCfd65CSAGgcE3vEkZcqZyhukNM0cKp6rUCc+u/XdeVjy4KDl5SS4y2ayP5xxfKPlMbdfGN/CJ2+9V/Td1dTudG6vOQNoU19qkhuTpS1fP/Wkh+M5XuIzQT48+Nx3NzWG+CoIMw6n2ON6lDr7Sm6BufUYvIU81aqonnHz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738955933; c=relaxed/simple;
-	bh=hzKbZ8fP/OSMSD/R0tqD9tsgwLS5wn2Ud2IztAjubuM=;
+	s=arc-20240116; t=1738956058; c=relaxed/simple;
+	bh=MPOdjOsZq6P8+ZUOLvXCEU95PiamdoowEEV6uK8MWTM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ejBR0k71K4Kbh353uulYiYC+ezNs8osen4SQavoTU/LG7lWLqrTt2yObxabHEGzq63oAQnM2RttnuiqxjR/L8g6zPXLPPCgIF7Nl4lYubZr3VfbywrH25TJ4eFtPlC6laRVC6E1cTsZofakQqyBXUJ0cVOB0rC2t4odd9RGW/Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st; spf=pass smtp.mailfrom=marcan.st; dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b=sHjNiqpm; arc=none smtp.client-ip=212.63.210.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marcan.st
+	 In-Reply-To:Content-Type; b=VorxpNifqQ9BR0Mx7EMQCavc8UL8lIE14KD+xXxayp7ACqon700jWM/r1+71OZqit9MnAvktr+lrVddayYaJjBfpFQJltjdbdjoRkio85dYWPZfJMbwC4Sb79qDxViE8OW9oMSRcC5eXuAVbj33d3kc6KbdYo6vvjcBHYKFgWWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=JvGq8pOE; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b="sHjNiqpm"
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: marcan@marcan.st)
-	by mail.marcansoft.com (Postfix) with ESMTPSA id B39684203E;
-	Fri,  7 Feb 2025 19:18:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
-	t=1738955928; bh=hzKbZ8fP/OSMSD/R0tqD9tsgwLS5wn2Ud2IztAjubuM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=sHjNiqpm+Nd9HwV76Weu9j8XnhP47P+uq7573nSGjE9eJAyMBGyfSz+yDqxX6/PbL
-	 qGSrltV/BCfiDLNFTn81hhoQodk3U1539JLY+XxQxsYSYqNw5pmUFc1mBnVZftWSlu
-	 xlcYlCzr/llfrxVde6Zuv+94X0XSE9sUPZTFGxNLXwKD6ciSyz2pWKO2yZz9Q6rXCS
-	 L0fglNEajp8MokCOE25A31kFkq2rWrA5e+tWOksyAmdAJG3AC0U8m5vtM2BC02b0ck
-	 hByJ4GYVkOtsVXJaITTvCU2bOyI/hIwth37+vWN3sNvsFpWOjkzlICkMkNrTaWi1/1
-	 +DLBb/GdHKTjw==
-Message-ID: <ae11fa0f-7b3e-4dd7-8b4f-da0e9daa99bd@marcan.st>
-Date: Sat, 8 Feb 2025 04:18:44 +0900
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JvGq8pOE"
+Received: from [10.17.64.61] (unknown [131.107.8.61])
+	by linux.microsoft.com (Postfix) with ESMTPSA id CB5A02107306;
+	Fri,  7 Feb 2025 11:20:55 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CB5A02107306
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1738956056;
+	bh=zdZ/uDQtZb8rk+qu5u0Z4m4Ap1sKgFkFGaXTq+duMqI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JvGq8pOEV0DjerwLjO87ymq3rSfWYanj6xtSiX++XRQgflsNRMWR6me86+9TXWzhp
+	 4YVqiTb0mdXUHK8dOoZ8t0WSesAi+/zHZ69b7M6yjtUdxwKgRIDcKuvcch/nhd6qD/
+	 VyzY5kPOdQccOJRDHSXj9B4DRfUsMYuTj54kJffU=
+Message-ID: <3ef51a84-b300-49a3-87f1-b850c5978264@linux.microsoft.com>
+Date: Fri, 7 Feb 2025 11:20:55 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,118 +34,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma
- coherent allocator abstraction.)
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>, Dave Airlie <airlied@gmail.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Greg KH <gregkh@linuxfoundation.org>,
- phasta@kernel.org, Christoph Hellwig <hch@lst.de>,
- Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Abdiel Janulgue <abdiel.janulgue@gmail.com>, daniel.almeida@collabora.com,
- aliceryhl@google.com, robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
- DRI Development <dri-devel@lists.freedesktop.org>
-References: <2025013030-gummy-cosmic-7927@gregkh>
- <20250130172437.GN5556@nvidia.com>
- <2025013148-reversal-pessimism-1515@gregkh>
- <20250131135421.GO5556@nvidia.com>
- <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
- <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local>
- <CAPM=9tzPR9wd=3Wbjnp-T0W8-dDfGah-H3Ny52G85B+2Ev9ksA@mail.gmail.com>
- <208e1fc3-cfc3-4a26-98c3-a48ab35bb9db@marcan.st>
- <Z6UPXxEJYpanU9iU@cassiopeiae>
- <4c0a7cf9-26e1-4a19-8a6e-7c30bc3aef86@marcan.st>
- <20250207-mature-pastel-rottweiler-e6dbd9@lemur>
- <1bbdf8b7-a70b-4994-865e-7fcb8d53ebef@marcan.st>
- <CAHk-=wiQUya5_zTwLFNT2XkX-bf_H1vJiJ3zuADnO-3EwOOjVA@mail.gmail.com>
-From: Hector Martin <marcan@marcan.st>
+Subject: Re: [PATCH v7 1/7] ima: define and call ima_alloc_kexec_file_buf
+To: Mimi Zohar <zohar@linux.ibm.com>, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+ James.Bottomley@HansenPartnership.com
+References: <20250203232033.64123-1-chenste@linux.microsoft.com>
+ <20250203232033.64123-2-chenste@linux.microsoft.com>
+ <4d258641d36088b1a1239724a2951211159d81f0.camel@linux.ibm.com>
 Content-Language: en-US
-In-Reply-To: <CAHk-=wiQUya5_zTwLFNT2XkX-bf_H1vJiJ3zuADnO-3EwOOjVA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <4d258641d36088b1a1239724a2951211159d81f0.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-
-
-On 2025/02/08 3:33, Linus Torvalds wrote:
-> On Fri, 7 Feb 2025 at 10:02, Hector Martin <marcan@marcan.st> wrote:
+On 2/6/2025 8:49 AM, Mimi Zohar wrote:
+> Thanks, Steven, for picking up and working on Tushar's patch set.
+>
+> I normally finish reviewing the patch set, before commenting.  In this case, there's
+> a generic comment that relates to all of the patches.  It's also a way of letting you
+> know that I've started reviewing the patch set.  The remaining comments will come
+> after I finish reviewing the patch set.
+>
+> On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
+>> Carrying the IMA measurement list across kexec requires allocating a
+>> buffer and copying the measurement records.  Separate allocating the
+>> buffer and copying the measurement records into separate functions in
+>> order to allocate the buffer at kexec 'load' and copy the measurements
+>> at kexec 'execute'.
 >>
->> Meanwhile, for better or worse, much of Linux infra *is* centralized -
->> for example, the mailing lists themselves, and a lot of the Git hosting.
-> 
-> The mailing lists are mostly on kernel.org, but the git hosting most
-> certainly is not centralized in any way.
-> 
-> The kernel.org git repositories used to be special in that I didn't
-> require signed tags for them, because I trusted the user maintenance.
-> But I was encouraging signed tags even back then, and once it got to
-> the point where most were signed anyway, I just made it a rule. So now
-> kernel.org isn't special even in that respect.
-> 
-> Now, kernel.org is very much _convenient_. And you see that in the
-> stats: of my pulls in the last year, 85% have been from kernel.org.
-> But that is very much because it is convenient, not because it's
-> centralized.
-> 
-> But that still leaves the 15% that aren't kernel.org.
+>> This patch includes the following changes:
+>>   - Refactor ima_dump_measurement_list() to move the memory allocation
+>>     to a separate function ima_alloc_kexec_file_buf() which allocates
+>>     buffer of size 'kexec_segment_size' at kexec 'load'.
+>>   - Make the local variable ima_kexec_file in ima_dump_measurement_list()
+>>     a local static to the file, so that it can be accessed from
+>>     ima_alloc_kexec_file_buf(). Compare actual memory required to ensure
+>>     there is enough memory for the entire measurement record.
+>>   - Copy as many measurement events as possible.
+>>   - Make necessary changes to the function ima_add_kexec_buffer() to call
+>>     the above two functions.
+>>   - Compared the memory size allocated with memory size of the entire
+>>     measurement record. If there is not enough memory, it will copy as many
+>>     IMA measurement records as possible, and this situation will result
+>>     in a failure of remote attestation.
+>>
+>> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> I understand you want to credit Tushar for the patch, but the mechanism is described
+> in Documentation/process/submitting-patches.rst.  Refer to the paragraph on "Co-
+> developed-by".  There is no tag named "Author".
+>
+>> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+>> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+> "Suggested-by" goes before the Signed-off-by tag(s). "Reviewed-by" tag goes after
+> your and/or Tushar's Signed-off-tag.
+>
+>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+> Before the "Co-developed-by" tag was defined, it was implied simply by this ordering
+> of the "Signed-off-by" tags.
+>
+> For those patches you didn't modify, simply import Tushar's patch with him as the
+> author and add your Signed-off-by tag after his.
+>
+> thanks,
+>
+> Mimi
 
-For all intents and purposes, 85% centralized might as well be fully
-centralized. That is, any downtime on kernel.org will affect the
-community effectively the same as downtime on a true central SPOF would.
-
-> More importtantly, not being centralized was very much a basic tenet
-> of git, so *if* git.kernel.org were to become problematic, it's very
-> easy to move git repositories anywhere else. Very much by design.
-
-And this is why, over focus on *decentraliation*, I think we should be
-focusing on *recoverability* and *data availability*.
-
-There are two distinct scenarios. If kernel.org goes down for a while,
-that screws with people's workflow. They can find alternatives, but it
-will cause immediate, acute disruption, even while using "decentralized"
-git. You still need to tell people where the new repos are, reconfigure
-remotes, etc.. If the disruption is expected to be short-lived, a lot of
-people will choose to just ride it out, rather than find alternatives,
-or will only use alternatives in an ad-hoc manner where strictly
-necessary. Nobody does a "true" complete migration to another Git
-hosting when faced with a brief, temporary outage (heck, even just the
-time it takes to push a Linux Git tree from scratch to somewhere new is
-much longer than ideal, more so if your internet connection isn't the
-best or the routing to the server in question isn't great). At most you
-push whatever you're working on as needed somewhere else.
-
-If kernel.org goes down permanently or long term (or becomes
-problematic), that's when you start doing a full migration. And thanks
-to the Git design, this is possible - not because it's decentralized per
-se, but because everyone has local copies of almost everything, and they
-can easily be restored onto a new service.
-
-The same goes for a forge scenario. If it goes down briefly, you fix it,
-and you can still use email to communicate with people ad hoc and send
-git changes around through any other hosting. It's still Git at the end
-of the day. Emailed patches and Git trees aren't going to become
-unusable just because most or all of the regular development happens on
-a forge.
-
-And if it goes down permanently or long term, or becomes problematic,
-what really matters isn't that it's "decentralized" as in federation.
-It's that the data is available, in much the same way it is for
-lore.kernel.org, and that people are actively backing it up (and it
-isn't hard to arrange for a handful of folks/organizations to have up to
-date mirrors, you don't need a Git-like scenario where literally
-everyone has full repo dumps; heck, I have a big NAS at home, I'd
-volunteer myself). Then, the service can be restored elsewhere when
-needed. If the issue is with the specific forge software used, you can
-always develop a migration plan to a different software (which, if the
-risk is managed properly, shouldn't be a time-critical process anyway).
-
-- Hector
+Thanks Mimi, will update it in next release.
 
