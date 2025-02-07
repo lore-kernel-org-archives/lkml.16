@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98BCA1A2392
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:18:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56D481A3159
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:18:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738952335; cv=none; b=j6QzO2/ED3pnKKQ8laQHCnSckAV1cCFMDiqXOOKmq2upV/sY7HcG3nXZ+7Y1Fxo9RJmAv00O1m7epWGX4K78paKi3kKjx4HldFhD1NEG9iVVka1o6/+JLn77WrtV21pp1zUObyOH4uisRVbZOke8IsRSvUYSI7HQNP39wx7vwXA=
+	t=1738952339; cv=none; b=GGplyoytEyC6vTrGzaG+oiDHTo6PPz24PnA3TbcxU2Qpc5X3EFt+Q7dS+Zj8pR+iBolX9IWtl/oSY9sjh+RtNHaVDBpw2Iau4ZLAJCJuwFc6QQN3djn4h2Fjj9HsaJlIkaJecmPug0S/ZvIXKuuiYrUzhSLHv0ssEi1UFxLia3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738952335; c=relaxed/simple;
-	bh=JvjmFvpySVLTBbK1co5xknkgXeDJB0olJytTBxkBwa8=;
+	s=arc-20240116; t=1738952339; c=relaxed/simple;
+	bh=G8nrtDk6Oy+sI9G+7HpVuEW1w2zxWq/gYebz2oY25H0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=X0lBDKHrISfaYiAqWBPEM2e3kWlij/eA8qAv12QMh1uyQGJk54w1crk5Z/0FPthxWRpCBqXGIPCPtGuT6YX/CO6QUK1ejT6c1G1pDvRwmS/hdH9UtOBTG7++ZqoEs7osGqA6uFAuYPqQHJQqFfWE0Fgcf3DD34Zht6Q6d8JEYXE=
+	 MIME-Version; b=kqmJZbZPMvwBuKVjMVgdOVyU5qmBtXgT9v49H7LPHOUgyYmXh+9phPZAyp1DjCS+YLBGtWVocKdWNvs49CzNV8R1TG01SnBTnd/nlcQfuNZagLxNAxeCwy+Pk4HUAGlgvN3//pIeE363EkmoxC4GsARJ2L4j+IvKmHZj4SBN+54=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C08A1113E;
-	Fri,  7 Feb 2025 10:19:15 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFDC112FC;
+	Fri,  7 Feb 2025 10:19:19 -0800 (PST)
 Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A34C83F63F;
-	Fri,  7 Feb 2025 10:18:49 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A23A03F63F;
+	Fri,  7 Feb 2025 10:18:53 -0800 (PST)
 From: James Morse <james.morse@arm.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -47,9 +47,9 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
 	Shanker Donthineni <sdonthineni@nvidia.com>,
 	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v6 03/42] x86/resctrl: Remove fflags from struct rdt_resource
-Date: Fri,  7 Feb 2025 18:17:44 +0000
-Message-Id: <20250207181823.6378-4-james.morse@arm.com>
+Subject: [PATCH v6 04/42] x86/resctrl: Use schema type to determine how to parse schema values
+Date: Fri,  7 Feb 2025 18:17:45 +0000
+Message-Id: <20250207181823.6378-5-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20250207181823.6378-1-james.morse@arm.com>
 References: <20250207181823.6378-1-james.morse@arm.com>
@@ -61,133 +61,240 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The resctrl arch code specifies whether a resource controls a cache or
-memory using the fflags field. This field is then used by resctrl to
-determine which files should be exposed in the filesystem.
+Resctrl's architecture code gets to specify a function pointer that is
+used when parsing schema entries. This is expected to be one of two
+helpers from the filesystem code.
 
-Allowing the architecture to pick this value means the RFTYPE_
-flags have to be in a shared header, and allows an architecture
-to create a combination that resctrl does not support.
+Setting this function pointer allows the architecture code to change
+the ABI resctrl presents to user-space, and forces resctrl to expose
+these helpers.
 
-Remove the fflags field, and pick the value based on the resource
-id.
+Instead, add a schema format enum to choose which schema parser to
+use. This allows the helpers to be made static and the structs used
+for passing arguments moved out of shared headers.
 
 Signed-off-by: James Morse <james.morse@arm.com>
+Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
 Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
 Changes since v5:
- * Made fflags_from_resource() return an unsigned long.
- * Removed a space.
+ * Merged the contents of get_parser() with its only caller.
+ * Removed the description of what the range schema is used for.
+ * Waggled some whitespace.
 
 Changes since v4:
- * Removed an extra space
- * Fixed a typo
+ * Creation of the enum moves into this patch - review tags not picked up.
+ * Removed some whitespace.
+
+Changes since v3:
+ * Removed a spurious semicolon
+
+Changes since v2:
+ * This patch is new
 ---
- arch/x86/kernel/cpu/resctrl/core.c     |  4 ----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 18 ++++++++++++++++--
- include/linux/resctrl.h                |  2 --
- 3 files changed, 16 insertions(+), 8 deletions(-)
+ arch/x86/kernel/cpu/resctrl/core.c        |  8 +++---
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 32 +++++++++++++++++++----
+ arch/x86/kernel/cpu/resctrl/internal.h    | 10 -------
+ include/linux/resctrl.h                   | 17 ++++++++----
+ 4 files changed, 43 insertions(+), 24 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 12b41316d8f7..8ef2e449b465 100644
+index 8ef2e449b465..e9fe129a02f8 100644
 --- a/arch/x86/kernel/cpu/resctrl/core.c
 +++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -74,7 +74,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+@@ -72,7 +72,7 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+ 			.mon_scope		= RESCTRL_L3_CACHE,
+ 			.ctrl_domains		= ctrl_domain_init(RDT_RESOURCE_L3),
  			.mon_domains		= mon_domain_init(RDT_RESOURCE_L3),
- 			.parse_ctrlval		= parse_cbm,
+-			.parse_ctrlval		= parse_cbm,
++			.schema_fmt		= RESCTRL_SCHEMA_BITMAP,
  			.format_str		= "%d=%0*x",
--			.fflags			= RFTYPE_RES_CACHE,
  		},
  		.msr_base		= MSR_IA32_L3_CBM_BASE,
- 		.msr_update		= cat_wrmsr,
-@@ -88,7 +87,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+@@ -85,7 +85,7 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+ 			.name			= "L2",
+ 			.ctrl_scope		= RESCTRL_L2_CACHE,
  			.ctrl_domains		= ctrl_domain_init(RDT_RESOURCE_L2),
- 			.parse_ctrlval		= parse_cbm,
+-			.parse_ctrlval		= parse_cbm,
++			.schema_fmt		= RESCTRL_SCHEMA_BITMAP,
  			.format_str		= "%d=%0*x",
--			.fflags			= RFTYPE_RES_CACHE,
  		},
  		.msr_base		= MSR_IA32_L2_CBM_BASE,
- 		.msr_update		= cat_wrmsr,
-@@ -102,7 +100,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+@@ -98,7 +98,7 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+ 			.name			= "MB",
+ 			.ctrl_scope		= RESCTRL_L3_CACHE,
  			.ctrl_domains		= ctrl_domain_init(RDT_RESOURCE_MBA),
- 			.parse_ctrlval		= parse_bw,
+-			.parse_ctrlval		= parse_bw,
++			.schema_fmt		= RESCTRL_SCHEMA_RANGE,
  			.format_str		= "%d=%*u",
--			.fflags			= RFTYPE_RES_MB,
  		},
  	},
- 	[RDT_RESOURCE_SMBA] =
-@@ -114,7 +111,6 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+@@ -109,7 +109,7 @@ struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+ 			.name			= "SMBA",
+ 			.ctrl_scope		= RESCTRL_L3_CACHE,
  			.ctrl_domains		= ctrl_domain_init(RDT_RESOURCE_SMBA),
- 			.parse_ctrlval		= parse_bw,
+-			.parse_ctrlval		= parse_bw,
++			.schema_fmt		= RESCTRL_SCHEMA_RANGE,
  			.format_str		= "%d=%*u",
--			.fflags			= RFTYPE_RES_MB,
  		},
  	},
- };
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 45093b9e8e63..3391ac8ecb2d 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2165,6 +2165,20 @@ static int rdtgroup_mkdir_info_resdir(void *priv, char *name,
- 	return ret;
+diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+index 4af27ef5a8a1..f4334f437ffc 100644
+--- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
++++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+@@ -23,6 +23,15 @@
+ 
+ #include "internal.h"
+ 
++struct rdt_parse_data {
++	struct rdtgroup		*rdtgrp;
++	char			*buf;
++};
++
++typedef int (ctrlval_parser_t)(struct rdt_parse_data *data,
++			       struct resctrl_schema *s,
++			       struct rdt_ctrl_domain *d);
++
+ /*
+  * Check whether MBA bandwidth percentage value is correct. The value is
+  * checked against the minimum and max bandwidth values specified by the
+@@ -64,8 +73,8 @@ static bool bw_validate(char *buf, u32 *data, struct rdt_resource *r)
+ 	return true;
  }
  
-+static unsigned long fflags_from_resource(struct rdt_resource *r)
-+{
-+	switch (r->rid) {
-+	case RDT_RESOURCE_L3:
-+	case RDT_RESOURCE_L2:
-+		return RFTYPE_RES_CACHE;
-+	case RDT_RESOURCE_MBA:
-+	case RDT_RESOURCE_SMBA:
-+		return RFTYPE_RES_MB;
+-int parse_bw(struct rdt_parse_data *data, struct resctrl_schema *s,
+-	     struct rdt_ctrl_domain *d)
++static int parse_bw(struct rdt_parse_data *data, struct resctrl_schema *s,
++		    struct rdt_ctrl_domain *d)
+ {
+ 	struct resctrl_staged_config *cfg;
+ 	u32 closid = data->rdtgrp->closid;
+@@ -143,8 +152,8 @@ static bool cbm_validate(char *buf, u32 *data, struct rdt_resource *r)
+  * Read one cache bit mask (hex). Check that it is valid for the current
+  * resource type.
+  */
+-int parse_cbm(struct rdt_parse_data *data, struct resctrl_schema *s,
+-	      struct rdt_ctrl_domain *d)
++static int parse_cbm(struct rdt_parse_data *data, struct resctrl_schema *s,
++		     struct rdt_ctrl_domain *d)
+ {
+ 	struct rdtgroup *rdtgrp = data->rdtgrp;
+ 	struct resctrl_staged_config *cfg;
+@@ -210,6 +219,7 @@ static int parse_line(char *line, struct resctrl_schema *s,
+ 		      struct rdtgroup *rdtgrp)
+ {
+ 	enum resctrl_conf_type t = s->conf_type;
++	ctrlval_parser_t *parse_ctrlval = NULL;
+ 	struct resctrl_staged_config *cfg;
+ 	struct rdt_resource *r = s->res;
+ 	struct rdt_parse_data data;
+@@ -220,6 +230,18 @@ static int parse_line(char *line, struct resctrl_schema *s,
+ 	/* Walking r->domains, ensure it can't race with cpuhp */
+ 	lockdep_assert_cpus_held();
+ 
++	switch (r->schema_fmt) {
++	case RESCTRL_SCHEMA_BITMAP:
++		parse_ctrlval = &parse_cbm;
++		break;
++	case RESCTRL_SCHEMA_RANGE:
++		parse_ctrlval = &parse_bw;
++		break;
 +	}
 +
-+	return WARN_ON_ONCE(1);
-+}
++	if (WARN_ON_ONCE(!parse_ctrlval))
++		return -EINVAL;
 +
- static int rdtgroup_create_info_dir(struct kernfs_node *parent_kn)
- {
- 	struct resctrl_schema *s;
-@@ -2185,14 +2199,14 @@ static int rdtgroup_create_info_dir(struct kernfs_node *parent_kn)
- 	/* loop over enabled controls, these are all alloc_capable */
- 	list_for_each_entry(s, &resctrl_schema_all, list) {
- 		r = s->res;
--		fflags = r->fflags | RFTYPE_CTRL_INFO;
-+		fflags = fflags_from_resource(r) | RFTYPE_CTRL_INFO;
- 		ret = rdtgroup_mkdir_info_resdir(s, s->name, fflags);
- 		if (ret)
- 			goto out_destroy;
- 	}
+ 	if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP &&
+ 	    (r->rid == RDT_RESOURCE_MBA || r->rid == RDT_RESOURCE_SMBA)) {
+ 		rdt_last_cmd_puts("Cannot pseudo-lock MBA resource\n");
+@@ -240,7 +262,7 @@ static int parse_line(char *line, struct resctrl_schema *s,
+ 		if (d->hdr.id == dom_id) {
+ 			data.buf = dom;
+ 			data.rdtgrp = rdtgrp;
+-			if (r->parse_ctrlval(&data, s, d))
++			if (parse_ctrlval(&data, s, d))
+ 				return -EINVAL;
+ 			if (rdtgrp->mode ==  RDT_MODE_PSEUDO_LOCKSETUP) {
+ 				cfg = &d->staged_config[t];
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 75252a7e1ebc..b5543bd506c3 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -459,11 +459,6 @@ static inline bool is_mbm_event(int e)
+ 		e <= QOS_L3_MBM_LOCAL_EVENT_ID);
+ }
  
- 	for_each_mon_capable_rdt_resource(r) {
--		fflags = r->fflags | RFTYPE_MON_INFO;
-+		fflags = fflags_from_resource(r) | RFTYPE_MON_INFO;
- 		sprintf(name, "%s_MON", r->name);
- 		ret = rdtgroup_mkdir_info_resdir(r, name, fflags);
- 		if (ret)
+-struct rdt_parse_data {
+-	struct rdtgroup		*rdtgrp;
+-	char			*buf;
+-};
+-
+ /**
+  * struct rdt_hw_resource - arch private attributes of a resctrl resource
+  * @r_resctrl:		Attributes of the resource used directly by resctrl.
+@@ -500,11 +495,6 @@ static inline struct rdt_hw_resource *resctrl_to_arch_res(struct rdt_resource *r
+ 	return container_of(r, struct rdt_hw_resource, r_resctrl);
+ }
+ 
+-int parse_cbm(struct rdt_parse_data *data, struct resctrl_schema *s,
+-	      struct rdt_ctrl_domain *d);
+-int parse_bw(struct rdt_parse_data *data, struct resctrl_schema *s,
+-	     struct rdt_ctrl_domain *d);
+-
+ extern struct mutex rdtgroup_mutex;
+ 
+ extern struct rdt_hw_resource rdt_resources_all[];
 diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-index 37279e2a89da..496ddcaa4ecf 100644
+index 496ddcaa4ecf..aed231a6d30c 100644
 --- a/include/linux/resctrl.h
 +++ b/include/linux/resctrl.h
-@@ -210,7 +210,6 @@ enum resctrl_scope {
-  * @format_str:		Per resource format string to show domain value
-  * @parse_ctrlval:	Per resource function pointer to parse control values
-  * @evt_list:		List of monitoring events
-- * @fflags:		flags to choose base and info files
-  * @cdp_capable:	Is the CDP feature available on this resource
-  */
- struct rdt_resource {
-@@ -232,7 +231,6 @@ struct rdt_resource {
- 						 struct resctrl_schema *s,
- 						 struct rdt_ctrl_domain *d);
- 	struct list_head	evt_list;
--	unsigned long		fflags;
- 	bool			cdp_capable;
+@@ -183,7 +183,6 @@ struct resctrl_membw {
+ 	u32				*mb_map;
  };
  
+-struct rdt_parse_data;
+ struct resctrl_schema;
+ 
+ enum resctrl_scope {
+@@ -192,6 +191,16 @@ enum resctrl_scope {
+ 	RESCTRL_L3_NODE,
+ };
+ 
++/**
++ * enum resctrl_schema_fmt - The format user-space provides for a schema.
++ * @RESCTRL_SCHEMA_BITMAP:	The schema is a bitmap in hex.
++ * @RESCTRL_SCHEMA_RANGE:	The schema is a decimal number,
++ */
++enum resctrl_schema_fmt {
++	RESCTRL_SCHEMA_BITMAP,
++	RESCTRL_SCHEMA_RANGE,
++};
++
+ /**
+  * struct rdt_resource - attributes of a resctrl resource
+  * @rid:		The index of the resource
+@@ -208,7 +217,7 @@ enum resctrl_scope {
+  * @data_width:		Character width of data when displaying
+  * @default_ctrl:	Specifies default cache cbm or memory B/W percent.
+  * @format_str:		Per resource format string to show domain value
+- * @parse_ctrlval:	Per resource function pointer to parse control values
++ * @schema_fmt:		Which format string and parser is used for this schema.
+  * @evt_list:		List of monitoring events
+  * @cdp_capable:	Is the CDP feature available on this resource
+  */
+@@ -227,9 +236,7 @@ struct rdt_resource {
+ 	int			data_width;
+ 	u32			default_ctrl;
+ 	const char		*format_str;
+-	int			(*parse_ctrlval)(struct rdt_parse_data *data,
+-						 struct resctrl_schema *s,
+-						 struct rdt_ctrl_domain *d);
++	enum resctrl_schema_fmt	schema_fmt;
+ 	struct list_head	evt_list;
+ 	bool			cdp_capable;
+ };
 -- 
 2.39.2
 
