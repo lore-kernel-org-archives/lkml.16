@@ -1,43 +1,50 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C951D7E41;
-	Fri,  7 Feb 2025 09:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142931D5CFF;
+	Fri,  7 Feb 2025 09:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738919128; cv=none; b=CgYv5Z7F9gc0GFYn64c/SWAut8n25WBjHqB4Sx7uciwZJjZs7CK0KdiUJhLGsYTMdUs13TvKOgjq8zCfKRbsaJtD6uSXuDNzgD5SLNBZgxM0Hfnhww9l2xuqZdYwYpEG4NAKRf99LeymR4thzr1L8qwZ3fsiSUOQDScbctGebVU=
+	t=1738919140; cv=none; b=ljCSk47oneGAD9CzBjssK26LoSKIip+4+35o1awwQ4/oXYTQKYbhoRyyBgN69ZYuZWuFZ3OnQaky2uKoOry4VBXwZotinatkRcOMNDhCKTsiOQwwRRW9We5/EGPBYfffsrF7Xx8FdJnS1A1TxIrJueBiVPxM+0/Nj614wlJch4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738919128; c=relaxed/simple;
-	bh=HDV2XgWZWGOLz7GUhH/TJiTek9PEyoDKgc7XS8kOcu0=;
+	s=arc-20240116; t=1738919140; c=relaxed/simple;
+	bh=IgByweI1gQxM5fdrkwHJV0fnw7YYouZy18piG/OIGyg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PQLXN9bDxOgomECFv59OHqYWfD2abNcysjVsu5RvnFmSKVlz2XdCrZmNXwZMQ8xgAVEJpgMaz8jc0d07GXLveMSaqLk+FCbg1yYfjYHAGp5WLzUhDAsewLfd4JattU7KGDiSkH9lk4aw6pHGxxLocwBoGvSISAFSx2+waYn93UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=rWqnbIbx; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AtJ3QhQ0hAISunlLwZu7s0L0urjgf2CjIbHfFg2JWoqyeXMu3szfdOJ5OchYB0TSU7ZIMF/dUNUARUMQLppxBW2HjGO4Dp6LzyuhsKOMJ9qqoWqexp8FykYq1LLS7OhopyiFJmz15QOQIEdKUg86fNdoWstvi5vmQwgeqNdweho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RCXsqTKM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="rWqnbIbx"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1ADAF2BA;
-	Fri,  7 Feb 2025 10:04:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1738919050;
-	bh=HDV2XgWZWGOLz7GUhH/TJiTek9PEyoDKgc7XS8kOcu0=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RCXsqTKM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B54DEC4CED1;
+	Fri,  7 Feb 2025 09:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738919139;
+	bh=IgByweI1gQxM5fdrkwHJV0fnw7YYouZy18piG/OIGyg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rWqnbIbxXL9V47iBpD9vejgoCdnRi0MxEe7QGTvyQQY/zC4DHRW4Y+e/Ipoqh2K1U
-	 UCqtBTQvNZeLsr7R1uDEN7FuYQTUbsWJuJDNqX9a8MO7CbjAfPzAJ4id00JZSeB+wU
-	 QDu2NEN4YqiwZQi1C/3selmQkJce498ECtgQcMv4=
-Date: Fri, 7 Feb 2025 11:05:18 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Jonathan Corbet <corbet@lwn.net>, workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v4] docs: clarify rules wrt tagging other people
-Message-ID: <20250207090518.GE24886@pendragon.ideasonboard.com>
-References: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
+	b=RCXsqTKM1S4AYJJXtYdduHVxDWsRmEjHvgT+2HyqqsIc7I6NIAfv8+w9Qy1vf9Ryq
+	 +X3E7amyZzr72hMvlLsIuR5gwDI/w03eG6b9D52WisunAdtUY/avjwwMAbv5mIBMfQ
+	 h8EeOcJmKfHdOvYwj8j+X5NoBZqwKzEipxip6PHDsmjlKg3MFmLxFWcScTlmOAO7cI
+	 WNLPori5QmTfpMDmGKrk1/NPVqL4aGpfpXL0b7FY+zxSXBNwsz27kP43pkevmSUxOL
+	 Qi+mVRuil54nNkHUf2asNVE3Yuj+rgK81kzykyFHsoGzhfhSoOZsomztEMt5AABHzR
+	 yLGqYmiBxF0XQ==
+Date: Fri, 7 Feb 2025 10:05:34 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Mike Yuan <me@yhndnzj.com>
+Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, 
+	"cgzones@googlemail.com" <cgzones@googlemail.com>, "stable@vger.kernel.org" <stable@vger.kernel.org>, 
+	Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: [PATCH] fs/xattr: actually support O_PATH fds in *xattrat()
+ syscalls
+Message-ID: <20250207-bildhaft-hallen-9870a5d1f8fa@brauner>
+References: <20250205204628.49607-1-me@yhndnzj.com>
+ <20250206-uhrwerk-faultiere-7a308565e2d3@brauner>
+ <Kn-2tlpxN8YNmh0j0udjQ8YIFNZMVVJYJh-LyBoYNBfpax28PNUkXuH6gnod7if2eX3NRVs3Ey8uCHRpwg_S5hPX_ADtrgMZbDTWFpHd_uU=@yhndnzj.com>
+ <20250206-erbauen-ornament-26f338d98f13@brauner>
+ <cfnfHaahrrXJJOgvNjb5hFbU0qh8gVXJ62R9uP9AItBEywyNH9vNBRzJbPR8xTv-LtFaUJYTHvyuLBfkznwJPt3fEcqNBFxf_yKJeZKwL3I=@yhndnzj.com>
+ <20250206-wisst-rangieren-d59f7882761a@brauner>
+ <Ah2vDyFwRPpHngjgEblSFQWijS6qnrD_LSbpUrdefKpgTotaT4CyzL4RqaWM7axQamVuGi3hPdIzuXl9qBlfHZ9m4-hcUWaWuaoc35Gt8D8=@yhndnzj.com>
+ <20250206-steril-raumplanung-733224062432@brauner>
+ <xTJWqaYffvXfz-lTQmt2HHs8ryqde0VIbhIlW0DFCW3wxft7WfIDCRm03BsB4Gz4IgWHXwarpkIE880mjL63DVRfU-p1sGJGUFSQBmp_CXY=@yhndnzj.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,191 +53,185 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <xTJWqaYffvXfz-lTQmt2HHs8ryqde0VIbhIlW0DFCW3wxft7WfIDCRm03BsB4Gz4IgWHXwarpkIE880mjL63DVRfU-p1sGJGUFSQBmp_CXY=@yhndnzj.com>
 
-Hi Thorsten,
+On Thu, Feb 06, 2025 at 03:19:03PM +0000, Mike Yuan wrote:
+> On 2025-02-06 at 15:54, Christian Brauner <brauner@kernel.org> wrote:
+> > 
+> > On Thu, Feb 06, 2025 at 02:26:51PM +0000, Mike Yuan wrote:
+> > 
+> > > On 2025-02-06 at 14:35, Christian Brauner brauner@kernel.org wrote:
+> > > 
+> > > > On Thu, Feb 06, 2025 at 01:25:19PM +0000, Mike Yuan wrote:
+> > > > 
+> > > > > On 2/6/25 11:03, Christian Brauner brauner@kernel.org wrote:
+> > > > > 
+> > > > > > On Thu, Feb 06, 2025 at 09:51:33AM +0000, Mike Yuan wrote:
+> > > > > > 
+> > > > > > > On 2/6/25 10:31, Christian Brauner brauner@kernel.org wrote:
+> > > > > > > 
+> > > > > > > > On Wed, Feb 05, 2025 at 08:47:23PM +0000, Mike Yuan wrote:
+> > > > > > > > 
+> > > > > > > > > Cited from commit message of original patch [1]:
+> > > > > > > > > 
+> > > > > > > > > > One use case will be setfiles(8) setting SELinux file contexts
+> > > > > > > > > > ("security.selinux") without race conditions and without a file
+> > > > > > > > > > descriptor opened with read access requiring SELinux read permission.
+> > > > > > > > > 
+> > > > > > > > > Also, generally all at() syscalls operate on O_PATH fds, unlike
+> > > > > > > > > f() ones. Yet the O_PATH fds are rejected by *xattrat() syscalls
+> > > > > > > > > in the final version merged into tree. Instead, let's switch things
+> > > > > > > > > to CLASS(fd_raw).
+> > > > > > > > > 
+> > > > > > > > > Note that there's one side effect: f*xattr() starts to work with
+> > > > > > > > > O_PATH fds too. It's not clear to me whether this is desirable
+> > > > > > > > > (e.g. fstat() accepts O_PATH fds as an outlier).
+> > > > > > > > > 
+> > > > > > > > > [1] https://lore.kernel.org/all/20240426162042.191916-1-cgoettsche@seltendoof.de/
+> > > > > > > > > 
+> > > > > > > > > Fixes: 6140be90ec70 ("fs/xattr: add *at family syscalls")
+> > > > > > > > > Signed-off-by: Mike Yuan me@yhndnzj.com
+> > > > > > > > > Cc: Al Viro viro@zeniv.linux.org.uk
+> > > > > > > > > Cc: Christian Göttsche cgzones@googlemail.com
+> > > > > > > > > Cc: Christian Brauner brauner@kernel.org
+> > > > > > > > > Cc: stable@vger.kernel.org
+> > > > > > > > > ---
+> > > > > > > > 
+> > > > > > > > I expanded on this before. O_PATH is intentionally limited in scope and
+> > > > > > > > it should not allow to perform operations that are similar to a read or
+> > > > > > > > write which getting and setting xattrs is.
+> > > > > > > > 
+> > > > > > > > Patches that further weaken or dilute the semantics of O_PATH are not
+> > > > > > > > acceptable.
+> > > > > > > 
+> > > > > > > But the at() variants really should be able to work with O_PATH fds, otherwise they're basically useless? I guess I just need to keep f() as-is?
+> > > > > > 
+> > > > > > I'm confused. If you have:
+> > > > > > 
+> > > > > > filename = getname_maybe_null(pathname, at_flags);
+> > > > > > if (!filename) {
+> > > > > > CLASS(fd, f)(dfd);
+> > > > > > if (fd_empty(f))
+> > > > > > error = -EBADF;
+> > > > > > else
+> > > > > > error = file_setxattr(fd_file(f), &ctx);
+> > > > > > 
+> > > > > > Then this branch ^^ cannot use fd_raw because you're allowing operations
+> > > > > > directly on the O_PATH file descriptor.
+> > > > > > 
+> > > > > > Using the O_PATH file descriptor for lookup is obviously fine which is
+> > > > > > why the other branch exists:
+> > > > > > 
+> > > > > > } else {
+> > > > > > error = filename_setxattr(dfd, filename, lookup_flags, &ctx);
+> > > > > > }
+> > > > > > 
+> > > > > > IOW, your patch makes AT_EMPTY_PATH work with an O_PATH file descriptor
+> > > > > > which isn't acceptable. However, it is already perfectly fine to use an
+> > > > > > O_PATH file descriptor for lookup.
+> > > > > 
+> > > > > Well, again, [1] clearly stated the use case:
+> > > > > 
+> > > > > > Those can be used to operate on extended attributes,
+> > > > > > especially security related ones, either relative to a pinned directory
+> > > > > > or [on a file descriptor without read access, avoiding a
+> > > > > > /proc/<pid>/fd/<fd> detour, requiring a mounted procfs].
+> > > > > 
+> > > > > And this surfaced in my PR to systemd:
+> > > > > 
+> > > > > https://github.com/systemd/systemd/pull/36228/commits/34fe16fb177d2f917570c5f71dfa8f5b9746b9a7
+> > > > > 
+> > > > > How are xattrat() syscalls different from e.g. fchmodat2(AT_EMPTY_PATH) in that regard? I can agree that the semantics of fxattr() ought to be left untouched, yet I fail to grok the case for _at variants.
+> > > > 
+> > > > man openat:
+> > > > 
+> > > > O_PATH (since Linux 2.6.39)
+> > > > Obtain a file descriptor that can be used for two purposes: to indicate a location in the filesystem tree and to perform operations that act purely at the file descriptor level.
+> > > > The file itself is not opened, and other file operations (e.g., read(2), write(2), fchmod(2), fchown(2), fgetxattr(2), ioctl(2), mmap(2)) fail with the error EBADF.
+> > > > 
+> > > > The following operations can be performed on the resulting file descriptor:
+> > > > 
+> > > > • close(2).
+> > > > 
+> > > > • fchdir(2), if the file descriptor refers to a directory (since Linux 3.5).
+> > > > 
+> > > > • fstat(2) (since Linux 3.6).
+> > > > 
+> > > > • fstatfs(2) (since Linux 3.12).
+> > > > 
+> > > > • Duplicating the file descriptor (dup(2), fcntl(2) F_DUPFD, etc.).
+> > > > 
+> > > > • Getting and setting file descriptor flags (fcntl(2) F_GETFD and F_SETFD).
+> > > > 
+> > > > • Retrieving open file status flags using the fcntl(2) F_GETFL operation: the returned flags will include the bit O_PATH.
+> > > > 
+> > > > • Passing the file descriptor as the dirfd argument of openat() and the other "*at()" system calls. This includes linkat(2) with AT_EMPTY_PATH (or via procfs using AT_SYM‐
+> > > > LINK_FOLLOW) even if the file is not a directory.
+> > > > 
+> > > > • Passing the file descriptor to another process via a UNIX domain socket (see SCM_RIGHTS in unix(7)).
+> > > > 
+> > > > Both fchownat() and fchmodat() variants have had this behavior which
+> > > > is a bug. And not a great one because it breaks O_PATH guarantees.
+> > > > That's no reason to now also open up further holes such as getting and
+> > > > setting xattrs.
+> > > 
+> > > AFAICS that's not really what the kernel development has been after.
+> > > fchmodat2(2) in particular was added fairly recently (6.6,
+> > > https://github.com/torvalds/linux/commit/09da082b07bbae1c11d9560c8502800039aebcea).
+> > > One of the highlights was to add support for O_PATH + AT_EMPTY_PATH).
+> > 
+> > 
+> > These system calls had pre-existing inconsistency. And allowing
+> > fchownat() but then not fchmodat2() seemd asymmetric. But given the
+> > discussion now I wish I hadn't even allowed that.
+> > 
+> > > And to me the semantics seem reasonably OK really: O_PATH fds are a way to
+> > > pin the inode (i.e. still within the boundry of getting a reference to
+> > > a file system object (without opening it) if I shall put it). All the calls
+> > > mentioned above operate on the file system object metadata, not the actual data,
+> > > hence O_PATH is just providing a file location.
+> > > 
+> > > The separation of at() and regular f() versions have remained pretty consistent too
+> > > (of cource, not with this patch, which is mostly an RFC) - fchmod() and fchown()
+> > > refuse O_PATH fds while the at() counterparts accept them. Did all these suddenly
+> > > change overnight?
+> > > 
+> > > > If you want to perform read/write like operations you need a proper file
+> > > > descriptor for that and not continue to expand the meaning of O_PATH
+> > > > until it is indistinguishable from a regular file descriptor.
+> > > 
+> > > I definitely agree. But xattr is metadata, not data. listxattr() does not even
+> > > do any POSIX permission check...
+> > 
+> > 
+> > That it's metadata is an interesting difference but really not that
+> > important. Plus, the manpage also doesn't care about this distinction.
+> > Ownership and mode changes are bad enough, setting and getting random
+> > xattrs seems like a terrible idea.
+> > 
+> > If I sent an O_PATH file descriptor around today in a sandbox without
+> > procfs mounted then I know no one can suddenly set posix acls using that
+> > file descriptor. With this change they suddenly can.
+> > 
+> > This won't be enabled.
+> 
+> OK, so I see the previous discussions now:
+> 
+> https://lore.kernel.org/all/20220622025715.upflevvao3ttaekj@senku/
+> 
+> > Since the current functionality cannot be retroactively disabled as it
+> > is being used already through /proc/self/fd/$n, adding *xattrat(AT_EMPTY_PATH)
+> > doesn't really change what is currently possible by userspace.
+> >
+> > I would say we should add *xattrat(2) and then we can add an upgrade
+> > mask blocking it (and other operations) later.
+> 
+> I suppose some of these points shifted over the years, which is also fine.
+> It's unfortunate though that the commit message would remain misleading forever.
 
-Thank you for the patch.
+I'm tempted to do some light-hearted trolling. I always marvel at the
+precise and detailed systemd commit and merge messages. ;)
 
-On Thu, Feb 06, 2025 at 03:30:10PM +0100, Thorsten Leemhuis wrote:
-> Point out that explicit permission is usually needed to tag other people
-> in changes, but mention that implicit permission can be sufficient in
-> certain cases. This fixes slight inconsistencies between Reported-by:
-> and Suggested-by: and makes the usage more intuitive.
-> 
-> While at it, explicitly mention the dangers of our bugzilla instance, as
-> it makes it easy to forget that email addresses visible there are only
-> shown to logged-in users.
-> 
-> The latter is not a theoretical issue, as one maintainer mentioned that
-> his employer received a EU GDPR (general data protection regulation)
-> complaint after exposing a email address used in bugzilla through a tag
-> in a patch description.
-> 
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Simona Vetter <simona.vetter@ffwll.ch>
-> Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
-> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
-> ---
-> 
-> Jonathan, what do you think of this? I felt somewhat unsure about this a
-> few weeks ago, but I guess I was overly careful. If you think this
-> change is fine and shouldn't cause any trouble for anyone, feel free to
-> merge this. And if not, please speak up.
-> 
-> Note: this triggers a few checkpatch.pl complaints that are irrelevant
-> when when to comes to changes like this.
-> 
-> v4:
-> - slight wording change to make a implicity aspect explicit, as pointed
->   out by Mauro
-> - Add reviewed-bys from Mauro and Shuah
-> - The number of reviewed-bys is still smal, nevertheless drop the
->   DONOTMERGE and hole that Jonathan will speak up if he thinks this is
->   a stupid move.
-> 
-> v3: https://lore.kernel.org/all/c29ef5fa12e37c3a289e46d4442b069af94e5b05.1733127212.git.linux@leemhuis.info/
-> - try yet again from a slightly different angle which loosens the rules
->   slightly. This from review feedback to earlier versions is apparently
->   what other developers want and from their "no lawyer" perspective
->   consider to be okay. As IANAL myself I don't feel totally comfortable
->   with this and have no idea if this legally is sound, so tag patch with
->   "DONOTMERGE" for now; will remove this for v4 if enough people add a
->   "Reviewed-by". Otherwise the story of this patch might end here, unless
->   someone else submits it for inclusion (you are free to do so!).
-> - remote patch adding Suggested-by: tag to 5.Posting and submit it
->   separately
-> 
-> v2: https://lore.kernel.org/all/cover.1731749544.git.linux@leemhuis.info/
-> - Retry differently. This slightly hardens the rule for Reported-by:
->   while slightly lessening it for Suggested-by:. Those in the end are
->   quite similar, so it does not make much sense to apply different ones.
->   I considered using an approach along the lines of "if you reported it
->   in pubic by mail, implicit permission to use in a tag is granted"; but
->   I abstained from it, as I assume there are good reasons for the
->   existing approach regarding Suggested-by:.
-> - CC all the people that provided feedback on the text changes in v1
-> 
-> v1: https://lore.kernel.org/all/f5bc0639a20d6fac68062466d5e3dd0519588d08.1731486825.git.linux@leemhuis.info/
-> - initial version
-> ---
->  Documentation/process/5.Posting.rst          | 13 +++++--
->  Documentation/process/submitting-patches.rst | 39 ++++++++++++++------
->  2 files changed, 36 insertions(+), 16 deletions(-)
-> 
-> diff --git a/Documentation/process/5.Posting.rst b/Documentation/process/5.Posting.rst
-> index dbb763a8de901d..22fa925353cf54 100644
-> --- a/Documentation/process/5.Posting.rst
-> +++ b/Documentation/process/5.Posting.rst
-> @@ -268,10 +268,15 @@ The tags in common use are:
->   - Cc: the named person received a copy of the patch and had the
->     opportunity to comment on it.
->  
-> -Be careful in the addition of tags to your patches, as only Cc: is appropriate
-> -for addition without the explicit permission of the person named; using
-> -Reported-by: is fine most of the time as well, but ask for permission if
-> -the bug was reported in private.
-> +Be careful in the addition of the aforementioned tags to your patches, as all
-> +except for Cc:, Reported-by:, and Suggested-by: need explicit permission of the
-> +person named. For those three implicit permission is sufficient if the person
-> +contributed to the Linux kernel using that name and email address according
-> +to the lore archives or the commit history -- and in case of Reported-by:
-> +and Suggested-by: did the reporting or suggestion in public. Note,
-> +bugzilla.kernel.org is a public place in this sense, but email addresses
-> +used there are private; so do not expose them in tags, unless the person
-> +used them in earlier contributions.
-
-I like this text very much, it's concise and clear. My only possible
-concern is that "explicit permission" isn't defined. I assume that
-someone sendubg a Reviewed-by or Acked-by tag in a public mail thread
-counts as permission, but strictly speaking it's not explicit.
-
-Regardless of that, I think we can clarify what explicit permission
-means in a follow-up patch. If you would like to merge this one as-is,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-You have my explicit permission to include this tag in the commit :-D
-
->  Sending the patch
-> diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
-> index 8fdc0ef3e604f4..72f6de419ccc4c 100644
-> --- a/Documentation/process/submitting-patches.rst
-> +++ b/Documentation/process/submitting-patches.rst
-> @@ -495,10 +495,10 @@ list archives.  A "# Suffix" may also be used in this case to clarify.
->  
->  If a person has had the opportunity to comment on a patch, but has not
->  provided such comments, you may optionally add a ``Cc:`` tag to the patch.
-> -This is the only tag which might be added without an explicit action by the
-> -person it names - but it should indicate that this person was copied on the
-> -patch.  This tag documents that potentially interested parties
-> -have been included in the discussion.
-> +This tag documents that potentially interested parties have been included in
-> +the discussion. Note, this is one of only three tags you might be able to use
-> +without explicit permission of the person named (see 'Tagging people requires
-> +permission' below for details).
->  
->  Co-developed-by: states that the patch was co-created by multiple developers;
->  it is used to give attribution to co-authors (in addition to the author
-> @@ -544,9 +544,9 @@ hopefully inspires them to help us again in the future. The tag is intended for
->  bugs; please do not use it to credit feature requests. The tag should be
->  followed by a Closes: tag pointing to the report, unless the report is not
->  available on the web. The Link: tag can be used instead of Closes: if the patch
-> -fixes a part of the issue(s) being reported. Please note that if the bug was
-> -reported in private, then ask for permission first before using the Reported-by
-> -tag.
-> +fixes a part of the issue(s) being reported. Note, the Reported-by tag is one
-> +of only three tags you might be able to use without explicit permission of the
-> +person named (see 'Tagging people requires permission' below for details).
->  
->  A Tested-by: tag indicates that the patch has been successfully tested (in
->  some environment) by the person named.  This tag informs maintainers that
-> @@ -596,11 +596,11 @@ Usually removal of someone's Tested-by or Reviewed-by tags should be mentioned
->  in the patch changelog (after the '---' separator).
->  
->  A Suggested-by: tag indicates that the patch idea is suggested by the person
-> -named and ensures credit to the person for the idea. Please note that this
-> -tag should not be added without the reporter's permission, especially if the
-> -idea was not posted in a public forum. That said, if we diligently credit our
-> -idea reporters, they will, hopefully, be inspired to help us again in the
-> -future.
-> +named and ensures credit to the person for the idea: if we diligently credit
-> +our idea reporters, they will, hopefully, be inspired to help us again in the
-> +future. Note, this is one of only three tags you might be able to use without
-> +explicit permission of the person named (see 'Tagging people requires
-> +permission' below for details).
->  
->  A Fixes: tag indicates that the patch fixes an issue in a previous commit. It
->  is used to make it easy to determine where a bug originated, which can help
-> @@ -618,6 +618,21 @@ Finally, while providing tags is welcome and typically very appreciated, please
->  note that signers (i.e. submitters and maintainers) may use their discretion in
->  applying offered tags.
->  
-> +.. _tagging_people:
-> +
-> +Tagging people requires permission
-> +----------------------------------
-> +
-> +Be careful in the addition of the aforementioned tags to your patches, as all
-> +except for Cc:, Reported-by:, and Suggested-by: need explicit permission of the
-> +person named. For those three implicit permission is sufficient if the person
-> +contributed to the Linux kernel using that name and email address according
-> +to the lore archives or the commit history -- and in case of Reported-by:
-> +and Suggested-by: did the reporting or suggestion in public. Note,
-> +bugzilla.kernel.org is a public place in this sense, but email addresses
-> +used there are private; so do not expose them in tags, unless the person
-> +used them in earlier contributions.
-> +
->  .. _the_canonical_patch_format:
->  
->  The canonical patch format
-> 
-> base-commit: e8bcda12176c47f2ce6c5104955845d028a640e8
-
--- 
-Regards,
-
-Laurent Pinchart
+On a serious note, we often have stuff in commit messages that doesn't
+age well. That's just a fact of development.
