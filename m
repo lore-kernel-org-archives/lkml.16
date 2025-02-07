@@ -1,195 +1,664 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16E1919D072;
-	Fri,  7 Feb 2025 19:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA9C23C8CE;
+	Fri,  7 Feb 2025 19:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738956406; cv=none; b=H51MnA6LPsWuNGARt4VRTTg8AsQBgy35PxsdmHwdUnZrOBwF0NDZrInFOfF30u7QZoSZDi/kFjd3B8sc8sL5b+H5ins+XSDdIRoLoqjFVZvtZffN/R1ajtMhk1wIjwJSxv6nF84MTl0uwmjh6Tg+EnvaBc+TmXaIp1whWIRmUWM=
+	t=1738956730; cv=none; b=C6fCZaHrn/yJa+fbRYFuroJanYTP/I21b5PP2qrEHrKU2EyCyqd/sQSNKJOdFJ+HFTtd2s1LwaSDLkYnyEGl/sJ0h3ipR/S3lvS4auiriHNdcY6dK9gd6IoedgKZunCLsVEvMjQLvSSY1SGnXbZ7rU7JTB/mNAGExcp5aF2zths=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738956406; c=relaxed/simple;
-	bh=k0Zde3ZCoKnNvkcAgebFE1C8C65rYcxrWiIZbEaOWDM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CSdaT6cl5eGvqgig+rx31FIM2OL6krTljTeIdwpP5dgHB5qKiYGK0MAeJum4S1NLtl45ywCwbD14yXCHovHil3grHM9bj3JSrcizomXjjw64vwvEKFINvpwlro+8RpE6y0fKAPIipNOg64xjv80pwx4HfokkeagfMGxbmZdCtOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=A1xWaKB3; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1738956730; c=relaxed/simple;
+	bh=EEEntiAJrmUftpkrG70BXLZ8eCgxyZK9/oiiWWGEkSI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G7D3T2Lqe4TAosx90sEPtdoMd1x1NymmTRlYO/mJ/iz+zuECEjLMaxbYxPRtIwch90DaCF0TwisEFKPUVhauU5pfMdX2WYSZ22LdsXJWG6nu5zg6XGyLbWkor+xym6e44BUC3X2qSNSv2SMlKMEl07wfRssL5WKYOpDDAkXAJhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nhzO359s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="A1xWaKB3"
-Received: from [10.17.64.61] (unknown [131.107.8.61])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5C0222107303;
-	Fri,  7 Feb 2025 11:26:43 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5C0222107303
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1738956403;
-	bh=bCF9KTGATV07tkTcQHYttgvePnMruMM0SaW9KUYhyWk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=A1xWaKB3sPBOuKnzR+J7xb/jHr9BG4z4xks8EZD/eSp0Zxg8MMXkQYlOffSa75eJj
-	 pZMXYw1o6gNaeR8HpOvw0I56iSAso+PFdDhAlIuOCP+xfNcUcpF1fcAHN2GerYoN+H
-	 eFI8cYlRYpqtLtwTWq5CmSMWfXRSsdLm/oncwKS8=
-Message-ID: <f1591776-d2bd-4e7b-b308-220b0edd93d3@linux.microsoft.com>
-Date: Fri, 7 Feb 2025 11:26:43 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nhzO359s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2374C4CED1;
+	Fri,  7 Feb 2025 19:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738956729;
+	bh=EEEntiAJrmUftpkrG70BXLZ8eCgxyZK9/oiiWWGEkSI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nhzO359sub7i7DKZphIsWBQio+yyj+7ab6a5+nsYvc5wNBdnz8ebkVqe2Wf+vMIl8
+	 ccwTBpI4OLYag6Jfv9vfqt2JuRPIPCFHWSN2htA8yUvVSKxeABiNHSfPw/V/sehOQ5
+	 cRLlJYrHW5b+IfZ5NMbEdfqL/Ab9qpSEnb0nKB6ttfRcLZPGiTRR7b/m6N7D7Dpa/C
+	 RF6cGvK0Tccb/ne9MTyb8tF256+g+EEOiYs3n6DT8/gnknGev450qAf59sNC7+eFzF
+	 C87v7LDXhwMd0hc5L6+HN5o1QInM0ReR+aVYr7+qMeYUkJE6MkaOG669nPQ3OkZpiF
+	 Z3ni02vPof7QQ==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH] kbuild: add Kbuild bash completion
+Date: Sat,  8 Feb 2025 04:31:31 +0900
+Message-ID: <20250207193133.506076-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 7/7] ima: measure kexec load and exec events as
- critical data
-To: Stefan Berger <stefanb@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>,
- roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
- eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
- code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
- kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
- James.Bottomley@HansenPartnership.com
-References: <20250203232033.64123-1-chenste@linux.microsoft.com>
- <20250203232033.64123-9-chenste@linux.microsoft.com>
- <3a4053664cde06622e1f9a9d8e3a5aab80b9beb7.camel@linux.ibm.com>
- <b2b3fa5d3d20284f790ce74bb97da2b9795a0e0e.camel@linux.ibm.com>
- <8ca0bdd9-7cae-4adf-b4c0-eebf057d4c5b@linux.ibm.com>
-Content-Language: en-US
-From: steven chen <chenste@linux.microsoft.com>
-In-Reply-To: <8ca0bdd9-7cae-4adf-b4c0-eebf057d4c5b@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 2/7/2025 9:48 AM, Stefan Berger wrote:
->
->
-> On 2/7/25 12:06 PM, Mimi Zohar wrote:
->> On Fri, 2025-02-07 at 10:16 -0500, Mimi Zohar wrote:
->>> On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
->>>> The amount of memory allocated at kexec load, even with the extra 
->>>> memory
->>>> allocated, might not be large enough for the entire measurement 
->>>> list.  The
->>>> indeterminate interval between kexec 'load' and 'execute' could 
->>>> exacerbate
->>>> this problem.
->>>>
->>>> Define two new IMA events, 'kexec_load' and 'kexec_execute', to be
->>>> measured as critical data at kexec 'load' and 'execute' respectively.
->>>> Report the allocated kexec segment size, IMA binary log size and the
->>>> runtime measurements count as part of those events.
->>>>
->>>> These events, and the values reported through them, serve as 
->>>> markers in
->>>> the IMA log to verify the IMA events are captured during kexec soft
->>>> reboot.  The presence of a 'kexec_load' event in between the last two
->>>> 'boot_aggregate' events in the IMA log implies this is a kexec soft
->>>> reboot, and not a cold-boot. And the absence of 'kexec_execute' event
->>>> after kexec soft reboot implies missing events in that window which
->>>> results in inconsistency with TPM PCR quotes, necessitating a cold 
->>>> boot
->>>> for a successful remote attestation.
->>>
->>> As a reminder, please include directions for verifying the buffer 
->>> data hash against
->>> the buffer data.  The directions would be similar to those in commit 
->>> 6b4da8c0e7f
->>> ("IMA: Define a new template field buf").
->>>
->>>>
->>>> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
->>>> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->>>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->>>> Signed-off-by: steven chen <chenste@linux.microsoft.com>
->>>> ---
->>>>   security/integrity/ima/ima_kexec.c | 23 +++++++++++++++++++++++
->>>>   1 file changed, 23 insertions(+)
->>>>
->>>> diff --git a/security/integrity/ima/ima_kexec.c
->>>> b/security/integrity/ima/ima_kexec.c
->>>> index c9c916f69ca7..0342ddfa9342 100644
->>>> --- a/security/integrity/ima/ima_kexec.c
->>>> +++ b/security/integrity/ima/ima_kexec.c
->>>> @@ -17,6 +17,8 @@
->>>>   #include "ima.h"
->>>>     #ifdef CONFIG_IMA_KEXEC
->>>> +#define IMA_KEXEC_EVENT_LEN 256
->>>> +
->>>>   static struct seq_file ima_kexec_file;
->>>>   static void *ima_kexec_buffer;
->>>>   static size_t kexec_segment_size;
->>>> @@ -36,6 +38,24 @@ static void ima_free_kexec_file_buf(struct 
->>>> seq_file *sf)
->>>>       ima_reset_kexec_file(sf);
->>>>   }
->>>>   +static void ima_measure_kexec_event(const char *event_name)
->>>> +{
->>>> +    char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
->>>> +    size_t buf_size = 0;
->>>> +    long len;
->>>> +
->>>> +    buf_size = ima_get_binary_runtime_size();
->>>> +    len = atomic_long_read(&ima_htable.len);
->>>> +
->>>> +    scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
->>>> + "kexec_segment_size=%lu;ima_binary_runtime_size=%lu;"
->>>> +            "ima_runtime_measurements_count=%ld;",
->>>> +                kexec_segment_size, buf_size, len);
->>>
->>>  From scripts/checkpatch.pl, "Alignment should match open parenthesis".
->>>
->>>> +
->>>> +    ima_measure_critical_data("ima_kexec", event_name, 
->>>> ima_kexec_event,
->>>> +                    strlen(ima_kexec_event), false, NULL,
->>>> 0);
->>>
->>>  From the kernel-doc scnprintf(), returns the number of bytes.  
->>> There should be no
->>> need to calculate it using strlen().
->>>
->>>> +}
->>>> +
->>>>   static int ima_alloc_kexec_file_buf(size_t segment_size)
->>>>   {
->>>>       /*
->>>> @@ -60,6 +80,7 @@ static int ima_alloc_kexec_file_buf(size_t 
->>>> segment_size)
->>>>   out:
->>>>       ima_kexec_file.read_pos = 0;
->>>>       ima_kexec_file.count = sizeof(struct ima_kexec_hdr);    /* 
->>>> reserved
->>>> space
->>>> */
->>>> +    ima_measure_kexec_event("kexec_load");
->>>>         return 0;
->>>>   }
->>>> @@ -201,6 +222,8 @@ static int ima_update_kexec_buffer(struct 
->>>> notifier_block
->>>> *self,
->>>>           return ret;
->>>>       }
->>>>   +    ima_measure_kexec_event("kexec_execute");
->>>> +
->>>>       ret = ima_dump_measurement_list(&buf_size, &buf,
->>>>                       kexec_segment_size);
->>>
->>> After fixing up and applying this patch set to 6.14.0-rc1, I'm not 
->>> seeing the
->>> "kexec_execute".  Even after changing the default extra memory, I'm 
->>> still not
->>> seeing
->>> the measurement.
->>
->> FYI, after reverting commit 254ef9541d68 ("ima: Suspend PCR extends 
->> and log appends
->> when rebooting"), I'm seeing the "kexec_execute" measurement.
->
-> I would try sth. like this:
-> static int ima_reboot_notifier(struct notifier_block *nb,
->                    unsigned long action,
->                    void *data)
-> {
->     if (action == SYS_RESTART && data && !strcmp(data, "kexec reboot"))
->         ima_measure_kexec_event("kexec_execute");
->>
->> Mimi
->>
->>
-Thanks, will fix this in 6.14.0-rc1 in next version
+Kernel build commands can sometimes be long, particularly when
+cross-compiling, making them tedious to type and prone to mistypes.
+
+This commit introduces bash completion support for common variables
+and targets in Kbuild.
+
+For installation instructions, please refer to the documentation in
+Documentation/kbuild/bash-completion.rst.
+
+The following examples demonstrate how this saves typing.
+
+[Example 1] a long command line for cross-compiling
+
+  $ make A<TAB>
+   -> completes 'A' to 'ARCH='
+
+  $ make ARCH=<TAB>
+   -> displays all supported architectures
+
+  $ make ARCH=arm64 CR<TAB>
+   -> completes 'CR' to 'CROSS_COMPILE='
+
+  $ make ARCH=arm64 CROSS_COMPILE=<TAB>
+   -> displays installed toolchains
+
+  $ make ARCH=arm64 CROSS_COMPILE=aa<TAB>
+   -> completes 'CROSS_COMPILE=aa' to 'CROSS_COMPILE=aarch64-linux-gnu-'
+
+  $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- def<TAB>
+   -> completes 'def' to 'defconfig'
+
+[Example 2] a single build target
+
+  $ make f<TAB>
+   -> completes 'f' to 'fs/'
+
+  $ make fs/<TAB>
+   -> displays objects and sub-directories in fs/
+
+  $ make fs/xf<TAB>
+   -> completes 'fs/xf' to 'fs/xfs/'
+
+  $ make fs/xfs/l<TAB>
+   -> completes 'fs/xfs/l' to 'fs/xfs/libxfs/xfs_'
+
+  $ make fs/xfs/libxfs/xfs_g<TAB>
+   -> completes 'fs/xfs/libxfs/xfs_g' to 'fs/xfs/libxfs/xfs_group.o'
+
+This does not aim to provide a complete list of variables and targets,
+as there are too many. However, it covers variables and targets used
+in common scenarios, and I hope this is useful enough.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ Documentation/kbuild/bash-completion.rst |  65 ++++
+ Documentation/kbuild/index.rst           |   2 +
+ MAINTAINERS                              |   1 +
+ scripts/bash-completion/make             | 451 +++++++++++++++++++++++
+ 4 files changed, 519 insertions(+)
+ create mode 100644 Documentation/kbuild/bash-completion.rst
+ create mode 100644 scripts/bash-completion/make
+
+diff --git a/Documentation/kbuild/bash-completion.rst b/Documentation/kbuild/bash-completion.rst
+new file mode 100644
+index 000000000000..2b52dbcd0933
+--- /dev/null
++++ b/Documentation/kbuild/bash-completion.rst
+@@ -0,0 +1,65 @@
++.. SPDX-License-Identifier: GPL-2.0-only
++
++==========================
++Bash completion for Kbuild
++==========================
++
++The kernel build system is written using Makefiles, and Bash completion
++for the `make` command is available through the `bash-completion`_ project.
++
++However, the Makefiles for the kernel build are complex. The generic completion
++rules for the `make` command do not provide meaningful suggestions for the
++kernel build system, except for the options of the `make` command itself.
++
++To enhance completion for various variables and targets, the kernel source
++includes its own completion script at `scripts/bash-completion/make`.
++
++This script provides additional completions when working within the kernel tree.
++Outside the kernel tree, it defaults to the generic completion rules for the
++`make` command.
++
++Prerequisites
++=============
++
++The script relies on helper functions provided by `bash-completion`_ project.
++Please ensure it is installed on your system. On most distributions, you can
++install the `bash-completion` package through the standard package manager.
++
++How to use
++==========
++
++You can source the script directly::
++
++  $ source scripts/bash-completion/make
++
++Or, you can copy it into the search path for Bash completion scripts.
++For example::
++
++  $ mkdir -p ~/.local/share/bash-completion/completions
++  $ cp scripts/bash-completion/make ~/.local/share/bash-completion/completions/
++
++Details
++=======
++
++The additional completion for Kbuild is enabled in the following cases:
++
++ - You are in the root directory of the kernel source.
++ - You are in the top-level build directory created by the O= option
++   (checked via the `source` symlink pointing to the kernel source).
++ - The -C make option specifies the kernel source or build directory.
++ - The -f make option specifies a file in the kernel source or build directory.
++
++If none of the above are met, it falls back to the generic completion rules.
++
++The completion supports:
++
++  - Commonly used targets, such as `all`, `menuconfig`, `dtbs`, etc.
++  - Make (or environment) variables, such as `ARCH`, `LLVM`, etc.
++  - Single-target builds (`foo/bar/baz.o`)
++  - Configuration files (`*_defconfig` and `*.config`)
++
++Some variables offer intelligent behavior. For instance, `CROSS_COMPILE=`
++followed by a TAB displays installed toolchains. The list of defconfig files
++shown depends on the value of the `ARCH=` variable.
++
++.. _bash-completion: https://github.com/scop/bash-completion/
+diff --git a/Documentation/kbuild/index.rst b/Documentation/kbuild/index.rst
+index e82af05cd652..3731ab22bfe7 100644
+--- a/Documentation/kbuild/index.rst
++++ b/Documentation/kbuild/index.rst
+@@ -23,6 +23,8 @@ Kernel Build System
+     llvm
+     gendwarfksyms
+ 
++    bash-completion
++
+ .. only::  subproject and html
+ 
+    Indices
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 896a307fa065..cca379fbeb4f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12566,6 +12566,7 @@ F:	Makefile
+ F:	scripts/*vmlinux*
+ F:	scripts/Kbuild*
+ F:	scripts/Makefile*
++F:	scripts/bash-completion/
+ F:	scripts/basic/
+ F:	scripts/clang-tools/
+ F:	scripts/dummy-tools/
+diff --git a/scripts/bash-completion/make b/scripts/bash-completion/make
+new file mode 100644
+index 000000000000..d06e642ddcf7
+--- /dev/null
++++ b/scripts/bash-completion/make
+@@ -0,0 +1,451 @@
++# SPDX-License-Identifier: GPL-2.0-only
++# bash completion for GNU make with kbuild extension       -*- shell-script -*-
++
++# Load the default completion script for make. It is typically located at
++# /usr/share/bash-completion/completions/make, but we do not rely on it.
++__kbuild_load_default_make_completion()
++{
++	local -a dirs=("${BASH_COMPLETION_USER_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion}/completions")
++	local ifs=$IFS IFS=: dir compfile this_dir
++
++	for dir in ${XDG_DATA_DIRS:-/usr/local/share:/usr/share}; do
++	        dirs+=("$dir"/bash-completion/completions)
++	done
++	IFS=$ifs
++
++	this_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
++
++	for dir in "${dirs[@]}"; do
++		if [[ ! -d ${dir} || ${dir} = "${this_dir}" ]]; then
++			continue
++		fi
++
++		for compfile in make make.bash _make; do
++			compfile=$dir/$compfile
++			# Avoid trying to source dirs; https://bugzilla.redhat.com/903540
++			if [[ -f ${compfile} ]] && . "${compfile}" &>/dev/null; then
++
++				__kbuild_default_make_completion=$(
++					# shellcheck disable=SC2046 # word splitting is the point here
++					set -- $(complete -p make)
++
++					while [[ $# -gt 1 && "$1" != -F ]]; do
++						shift
++					done
++
++					if [[ "$1" = -F ]]; then
++						echo "$2"
++					fi
++				)
++
++				return
++			fi
++		done
++	done
++}
++
++__kbuild_load_default_make_completion
++
++__kbuild_handle_variable()
++{
++	local var=${1%%=*}
++	local cur=${cur#"${var}"=}
++	local srctree=$2
++	local keywords=()
++
++	case $var in
++	ARCH)
++		# sub-directories under arch/
++		keywords+=($(find "${srctree}/arch" -mindepth 1 -maxdepth 1 -type d -printf '%P\n'))
++		# architectures hard-coded in the top Makefile
++		keywords+=(i386 x86_64 sparc32 sparc64 parisc64)
++		;;
++	CROSS_COMPILE)
++		# toolchains with a full path
++		local cross_compile=()
++		local c c2
++		_filedir
++
++		for c in "${COMPREPLY[@]}"; do
++			# eval for tilde expansion
++			# suppress error, as this fails when it contains a space
++			eval "c2=${c}" 2>/dev/null || continue
++			if [[ ${c} == *-elfedit && ! -d ${c2} && -x ${c2} ]]; then
++				cross_compile+=("${c%elfedit}")
++			fi
++		done
++
++		# toolchains in the PATH environment
++		while read -r c; do
++			if [[ ${c} == *-elfedit ]]; then
++				keywords+=("${c%elfedit}")
++			fi
++		done < <(compgen -c)
++
++		COMPREPLY=()
++		_filedir -d
++
++		# Add cross_compile directly without passing it to compgen.
++		# Otherwise, toolchain paths with a tilde do not work.
++		# e.g.)
++		#   CROSS_COMPILE=~/0day/gcc-14.2.0-nolibc/aarch64-linux/bin/aarch64-linux-
++		COMPREPLY+=("${cross_compile[@]}")
++		;;
++	LLVM)
++		# LLVM=1 uses the default 'clang' etc.
++		keywords+=(1)
++
++		# suffix for a particular version. LLVM=-18 uses 'clang-18' etc.
++		while read -r c; do
++			if [[ ${c} == clang-[0-9]* ]]; then
++				keywords+=("${c#clang}")
++			fi
++		done < <(compgen -c)
++
++		# directory path to LLVM toolchains
++		_filedir -d
++		;;
++	KCONFIG_ALLCONFIG)
++		# KCONFIG_ALLCONFIG=1 selects the default fragment
++		keywords+=(1)
++		# or the path to a fragment file
++		_filedir
++		;;
++	C | KBUILD_CHECKSRC)
++		keywords+=(1 2)
++		;;
++	V | KBUILD_VERBOSE)
++		keywords+=({,1}{,2})
++		;;
++	W | KBUILD_EXTRA_WARN)
++		keywords+=({,1}{,2}{,3}{,c}{,e})
++		;;
++	KBUILD_ABS_SRCTREE | KBUILD_MODPOST_NOFINAL | KBUILD_MODPOST_WARN | \
++		CLIPPY | KBUILD_CLIPPY | KCONFIG_NOSILENTUPDATE | \
++		KCONFIG_OVERWRITECONFIG | KCONFIG_WARN_UNKNOWN_SYMBOL | \
++		KCONFIG_WERROR )
++		keywords+=(1)
++		;;
++	INSTALL_MOD_STRIP)
++		keywords+=(1 --strip-debug --strip-unneeded)
++		;;
++	O | KBUILD_OUTPUT | M | KBUILD_EXTMOD | MO | KBUILD_EXTMOD_OUTPUT | *_PATH)
++		# variables that take a directory.
++		_filedir -d
++		return
++		;;
++	KBUILD_EXTRA_SYMBOL | KBUILD_KCONFIG | KCONFIG_CONFIG)
++		# variables that take a file.
++		_filedir
++		return
++	esac
++
++	COMPREPLY+=($(compgen -W "${keywords[*]}" -- "${cur}"))
++}
++
++# Check the -C, -f options and 'source' symlink. Return the source tree we are
++# working in.
++__kbuild_get_srctree()
++{
++	local words=("$@")
++	local cwd makef_dir
++
++        # see if a path was specified with -C/--directory
++        for ((i = 1; i < ${#words[@]}; i++)); do
++		if [[ ${words[i]} == -@(C|-directory) ]]; then
++			# eval for tilde expansion.
++			# suppress error, as this fails when it contains a space
++			eval "cwd=${words[i + 1]}" 2>/dev/null
++			break
++		fi
++        done
++
++	if [[ -z ${cwd} ]]; then
++		cwd=.
++	fi
++
++        # see if a Makefile was specified with -f/--file/--makefile
++        for ((i = 1; i < ${#words[@]}; i++)); do
++		if [[ ${words[i]} == -@(f|-?(make)file) ]]; then
++			# eval for tilde expansion
++			# suppress error, as this fails when it contains a space
++			eval "makef_dir=${words[i + 1]%/*}" 2>/dev/null
++			break
++		fi
++        done
++
++	if [ -z "${makef_dir}" ]; then
++		makef_dir=${cwd}
++	elif [[ ${makef_dir} != /* ]]; then
++		makef_dir=${cwd}/${makef_dir}
++	fi
++
++	# If ${makef_dir} is a build directory created by the O= option, there
++	# is a symbolic link 'source', which points to the kernel source tree.
++	if [[ -L ${makef_dir}/source ]]; then
++		makef_dir=$(readlink "${makef_dir}/source")
++	fi
++
++	echo "${makef_dir}"
++}
++
++# Get SRCARCH to do a little more clever things
++__kbuild_get_srcarch()
++{
++	local words=("$@")
++	local arch srcarch uname_m
++
++        # see if ARCH= is explicitly specified
++        for ((i = 1; i < ${#words[@]}; i++)); do
++		if [[ ${words[i]} == ARCH=* ]]; then
++			arch=${words[i]#ARCH=}
++			break
++		fi
++        done
++
++	# If ARCH= is not specified, check the build marchine's architecture
++	if [[ -z ${arch} ]]; then
++		uname_m=$(uname -m)
++
++		# shellcheck disable=SC2209 # 'sh' is SuperH, not a shell command
++		case ${uname_m} in
++		arm64 | aarch64*) arch=arm64 ;;
++		arm* | sa110)     arch=arm ;;
++		i?86 | x86_64)    arch=x86 ;;
++		loongarch*)       arch=loongarch ;;
++		mips*)            arch=mips ;;
++		ppc*)             arch=powerpc ;;
++		riscv*)           arch=riscv ;;
++		s390x)            arch=s390 ;;
++		sh[234]*)         arch=sh ;;
++		sun4u)            arch=sparc64 ;;
++		*)                arch=${uname_m} ;;
++		esac
++	fi
++
++	case ${arch} in
++		parisc64)          srcarch=parisc ;;
++		sparc32 | sparc64) srcarch=sparc ;;
++		i386 | x86_64)     srcarch=x86 ;;
++		*)                 srcarch=${arch} ;;
++	esac
++
++	echo "$srcarch"
++}
++
++# small Makefile to parse obj-* syntax
++__kbuild_tmp_makefile()
++{
++cat <<'EOF'
++.PHONY: __default
++__default:
++	$(foreach m,$(obj-y) $(obj-m) $(obj-),$(foreach s, -objs -y -m -,$($(m:%.o=%$s))) $(m))
++EOF
++echo "include ${1}"
++}
++
++_make_for_kbuild ()
++{
++	# shellcheck disable=SC2034 # these are set by _init_completion
++	local cur prev words cword split
++	_init_completion -s || return
++
++	local srctree
++	srctree=$(__kbuild_get_srctree "${words[@]}")
++
++	# If 'kernel' and 'Documentation' directories are found, we assume this
++	# is a kernel tree. Otherwise, we fall back to the generic rule provided
++	# by the bash-completion project.
++	if [[ ! -d ${srctree}/kernel || ! -d ${srctree}/Documentation ]]; then
++		if [ -n "${__kbuild_default_make_completion}" ]; then
++			"${__kbuild_default_make_completion}" "$@"
++		fi
++		return
++	fi
++
++	# make options with a parameter (copied from the bash-completion project)
++	case ${prev} in
++        --file | --makefile | --old-file | --assume-old | --what-if | --new-file | \
++		--assume-new | -!(-*)[foW])
++		_filedir
++		return
++		;;
++	--include-dir | --directory | -!(-*)[ICm])
++		_filedir -d
++		return
++		;;
++	-!(-*)E)
++		COMPREPLY=($(compgen -v -- "$cur"))
++		return
++		;;
++	--eval | -!(-*)[DVx])
++		return
++		;;
++	--jobs | -!(-*)j)
++		COMPREPLY=($(compgen -W "{1..$(($(_ncpus) * 2))}" -- "$cur"))
++		return
++		;;
++	esac
++
++	local keywords=()
++
++	case ${cur} in
++	-*)
++		# make options (copied from the bash-completion project)
++		local opts
++		opts="$(_parse_help "$1")"
++		COMPREPLY=($(compgen -W "${opts:-$(_parse_usage "$1")}" -- "$cur"))
++		if [[ ${COMPREPLY-} == *= ]]; then
++			compopt -o nospace
++		fi
++		return
++		;;
++	*=*)
++		__kbuild_handle_variable "${cur}" "${srctree}"
++		return
++		;;
++	KBUILD_*)
++		# There are many variables prefixed with 'KBUILD_'.
++		# Display them only when 'KBUILD_' is entered.
++		# shellcheck disable=SC2191 # '=' is appended for variables
++		keywords+=(
++			KBUILD_{CHECKSRC,EXTMOD,EXTMOD_OUTPUT,VERBOSE,EXTRA_WARN,CLIPPY}=
++			KBUILD_BUILD_{USER,HOST,TIMESTAMP}=
++			KBUILD_MODPOST_{NOFINAL,WARN}=
++			KBUILD_{ABS_SRCTREE,EXTRA_SYMBOLS,KCONFIG}=
++		)
++		;;
++	KCONFIG_*)
++		# There are many variables prefixed with 'KCONFIG_'.
++		# Display them only when 'KCONFIG_' is entered.
++		# shellcheck disable=SC2191 # '=' is appended for variables
++		keywords+=(
++			KCONFIG_{CONFIG,ALLCONFIG,NOSILENTUPDATE,OVERWRITECONFIG}=
++			KCONFIG_{SEED,PROBABILITY}=
++			KCONFIG_WARN_UNKNOWN_SYMBOL=
++			KCONFIG_WERROR=
++		)
++		;;
++	*)
++		# By default, hide KBUILD_* and KCONFIG_* variables.
++		# Instead, display only the prefix parts.
++		keywords+=(KBUILD_ KCONFIG_)
++		;;
++	esac
++
++	if [[ ${cur} != /* && ${cur} != *//* ]]; then
++		local dir srcarch kbuild_file tmp
++		srcarch=$(__kbuild_get_srcarch "${words[@]}")
++
++		# single build
++		dir=${cur}
++		while true; do
++			if [[ ${dir} == */* ]]; then
++				dir=${dir%/*}
++			else
++				dir=.
++			fi
++
++			# Search for 'Kbuild' or 'Makefile' in the parent
++			# directories (may not be a direct parent)
++			if [[ -f ${srctree}/${dir}/Kbuild ]]; then
++				kbuild_file=${srctree}/${dir}/Kbuild
++				break
++			fi
++			if [[ -f ${srctree}/${dir}/Makefile ]]; then
++				kbuild_file=${srctree}/${dir}/Makefile
++				break
++			fi
++
++			if [[ ${dir} == . ]]; then
++				break
++			fi
++		done
++
++		if [[ -n ${kbuild_file} ]]; then
++			tmp=($(__kbuild_tmp_makefile "${kbuild_file}" |
++			       SRCARCH=${srcarch} obj=${dir} src=${srctree}/${dir} \
++			       "${1}" -n -f - 2>/dev/null))
++
++			# Add $(obj)/ prefix
++			if [[ ${dir} != . ]]; then
++				tmp=("${tmp[@]/#/${dir}\/}")
++			fi
++
++			keywords+=("${tmp[@]}")
++		fi
++
++		# *_defconfig and *.config files. These might be grouped into
++		# subdirectories, e.g., arch/powerpc/configs/*/*_defconfig.
++		if [[ ${cur} == */* ]]; then
++			dir=${cur%/*}
++		else
++			dir=.
++		fi
++
++		tmp=($(find "${srctree}/arch/${srcarch}/configs/${dir}" \
++		       "${srctree}/kernel/configs/${dir}" \
++		       -mindepth 1 -maxdepth 1 -type d -printf '%P/\n' \
++		       -o -printf '%P\n' 2>/dev/null))
++
++		if [[ ${dir} != . ]]; then
++			tmp=("${tmp[@]/#/${dir}\/}")
++		fi
++
++		keywords+=("${tmp[@]}")
++	fi
++
++	# shellcheck disable=SC2191 # '=' is appended for variables
++	keywords+=(
++		#
++		# variables (append =)
++		#
++		ARCH=
++		CROSS_COMPILE=
++		LLVM=
++		C= M= MO= O= V= W=
++		INSTALL{,_MOD,_HDR,_DTBS}_PATH=
++		KERNELRELEASE=
++
++		#
++		# targets
++		#
++		all help
++		clean mrproper distclean
++		clang-{tidy,analyzer} compile_commands.json
++		coccicheck
++		dtbs{,_check,_install} dt_binding_{check,schemas}
++		headers{,_install}
++		vmlinux install
++		modules{,_prepare,_install,_sign}
++		vdso_install
++		tags TAGS cscope gtags
++		rust{available,fmt,fmtcheck}
++		kernelversion kernelrelease image_name
++		kselftest{,-all,-install,-clean,-merge}
++
++		# configuration
++		{,old,olddef,sync,def,savedef,rand,listnew,helpnew,test,tiny}config
++		{,build_}{menu,n,g,x}config
++		local{mod,yes}config
++		all{no,yes,mod,def}config
++		{yes2mod,mod2yes,mod2no}config
++
++		# docs
++		{html,textinfo,info,latex,pdf,epub,xml,linkcheck,refcheck,clean}docs
++
++		# package
++		{,bin,src}{rpm,deb}-pkg
++		{pacman,dir,tar}-pkg
++		tar{,gz,bz2,xz,zst}-pkg
++		perf-tar{,gz,bz2,xz,zst}-src-pkg
++	)
++
++	COMPREPLY=($(compgen -W "${keywords[*]}" -- "${cur}"))
++
++	# Do not append a space for variables, subdirs, "KBUILD_", "KCONFIG_".
++	if [[ ${COMPREPLY-} == *[=/] || ${COMPREPLY-} =~ ^(KBUILD|KCONFIG)_$ ]]; then
++		compopt -o nospace
++	fi
++
++} && complete -F _make_for_kbuild make
+-- 
+2.43.0
 
