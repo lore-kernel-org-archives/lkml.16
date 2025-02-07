@@ -1,322 +1,184 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23F32417EF
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 01:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111082417EF;
+	Fri,  7 Feb 2025 01:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738891093; cv=none; b=PQ6WuiqdlLRzYld1ui5Ine1FSbnZCZwWoK6CRNCMGoia2e/coZ1etRhWEOm8U6+BIo/MyzZL8dvgFwzOVETS9BguASMR4Lw4nvZowpvUa4Mm96Gl0/dw24ljwDqVWciqQKpher6j7CPDn2J6QGrw8GYHvoQO21j2/wqBqstDzlc=
+	t=1738891180; cv=none; b=Fju8NGulFso+XAy3+/+iiBEZI9NrRYZVT3EWw8cNIMc4cgnQkzPG0h5D0TCfFDsNtMh80QHuZQAtV7XF+7xf5R5NNlklBaALwvYxkR/uygCSRO1RLfNNb8i29J1PKRJ6+yzF4Y6DPv1735MqT1Qu1T5y2a8jzU1QMYJUn/wiD7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738891093; c=relaxed/simple;
-	bh=lDoLPbDZ6NIEeUzdLFAfeQZPdo2qqCNitanFJzj7hYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MlhUlVHe9hLd6XDbCQfchD3XTlQ8e1E6eld9W2JtZ4SK2Gcw8UA93+YTp2Mkre6jXAvSXr1HCQWUms9lobp/Vvv2JLI1Jqrnvaw8ZXjwPZMbyPgDLNhYGIgYvtG89r6UOMEK/pZ32cWxExNCUrJiHRT88ebX4khdFEYxqlCIzNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qCjVygLr; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738891180; c=relaxed/simple;
+	bh=KN6mFjpaqTVBw7J+oEKnqle3KzOzbwQRqtAiVjvxZiA=;
+	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
+	 Content-Type:Date:Message-ID; b=cPhiIOyseoV5QuZqBPFX0XPJSHVr+9BIQ1gumsh9uSTjTYcEEiICeOyj3rJOA6eQkXzj2m3hH4/iVtR9+LvHyzrn/uFqpkYZtPCbDGx9rPVzyBP/PF5n7EvK96Jw9URW0m9md5223VV+YPnTKAokvTuk7B05BVFrnx7BBgpgsi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net; spf=pass smtp.mailfrom=jvosburgh.net; dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b=N7OpDhCI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=df66N7m+; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jvosburgh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qCjVygLr"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-307e4e72ef3so4454541fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 17:18:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738891089; x=1739495889; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=AqDBg4JrDbDEdqCVDYeZfUdF14hB1bs2IvGtXbYbNwc=;
-        b=qCjVygLr5hQ5z3gpLf3aI4DgvupMLyzjBMtOp7WS7dCa5RnvzkWM8e5FS9Q+GI0QMa
-         kAMnitciaNk7xGGTovMq1/NluVSS2u68AF7iArTrUrhD5z5zLgtGeJyy7aQ/IYcSwEU2
-         uLfRTcGmKvN/QOyi5H8jVeHFG1UzG65/3FDwb5PzWU7Y1FGPUTXxq4m6lQ/DLiwiMPUY
-         dnBqPAHPIz0lqbwF8Rd5BdWRWvC8h8Z2vSQ/9tCIKlO/N9m01E2yCujab3HfsvNqtKDm
-         7kqh4duIFxphklmWeobN7N8H9N0BGhN4pVrD/vOr9UvYNmk2Lpx/nQG4X1Jh9T+uES6L
-         fsoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738891089; x=1739495889;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AqDBg4JrDbDEdqCVDYeZfUdF14hB1bs2IvGtXbYbNwc=;
-        b=Y/uNVrLprojtVS5fgDIrc8JE0CYZkk4g7Ydyk0BVGWiOHld0qNBL2az/h8QgXNIyA0
-         gsaWnNVxyi6PtzX4nWdgX6o6D0fAViFAA79u5aZYdFwoY1lVMf+Gk+WJcxZlHsyHvgRm
-         OpEO56LANqBz8RWcHpbJoRMsHD3w3ZOEbYtjNdS16NcEtAX72zBVv7VI+5JbQg9XwX1n
-         tUS9vkyq7xcuizTEgMakT/WHyW4mak7vKtchqXHCKM9i7O6LQj4sNbXye2JqI4WI/fxF
-         l08Wt+kKZ9ApePZeO9boNUHdl70GXOs9peuvL3BEXPTEoUpVyjlNeJRjo+CbA3kdyrBp
-         zC8w==
-X-Forwarded-Encrypted: i=1; AJvYcCV2TWq3k0YuY7gxdQ8DAWonhFdSjlxFJX+gFJJaRLVmZWoZd8htvMUy8nh1PaBq2cVIXCCAQddtNNvJ074=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcpMT7e6rkq5Bk3xNr9yuHayYrri3/0gRQAvbevUa5fAtnPHOZ
-	J0sCSCsteq2SaAXW9BxTWo4Ib5H41gM/mYeM02pTEJSqoLSIlsvEgdbeTKtDB5s=
-X-Gm-Gg: ASbGncsB1W8/ngXdu07f4MhfwQrzRux4LsSKWgvPM0H7gneU6uR61PL9jluwZ611b7z
-	W6eUwvefc6goohx32xdB/rzehQ39w9YrO6u/MzhBA5pAoqpYbBqAYPBLWqFj+/Kvmilz/gwIPCM
-	dT/xzfosYLnQfQEtWo8Nf9PUt7gxGjcTnDTEbf4PNtqjxsDxEOQ1cvGX94LEO45nQ92i/3VsaUL
-	GVM0Dk0yBzdqwGdMho9ckl1h4yZbziyb5CIHqQNCI0V5zwD+ArbgJ4Jgyn3zOCocIfmcAToBwxX
-	HCf28C+m6/Lwim7R4UETucDocGdd13zkE9MU0U8skcTPbp8uuPg6vs83kq+2usvXthBgDMI=
-X-Google-Smtp-Source: AGHT+IG2lkzxSmUx82FzbPLQ/hW3rqWO15jMbDm5b1rlxpTED4CetvMVgKiWq8py3ZdXmyuNhOVP3Q==
-X-Received: by 2002:a2e:ab19:0:b0:302:2cdf:7fbb with SMTP id 38308e7fff4ca-307e57cb0bamr3045791fa.6.1738891088835;
-        Thu, 06 Feb 2025 17:18:08 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--b8c.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::b8c])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de177d0bsm2705741fa.17.2025.02.06.17.18.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 17:18:08 -0800 (PST)
-Date: Fri, 7 Feb 2025 03:18:06 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Jessica Zhang <quic_jesszhan@quicinc.com>
-Cc: Rob Clark <robdclark@gmail.com>, quic_abhinavk@quicinc.com, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Simona Vetter <simona@ffwll.ch>, Simona Vetter <simona.vetter@ffwll.ch>, 
-	quic_ebharadw@quicinc.com, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Clark <robdclark@chromium.org>, 
-	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Subject: Re: [PATCH v5 00/14] drm/msm/dpu: Add Concurrent Writeback Support
- for DPU 10.x+
-Message-ID: <id3mz22ng424ywybruremw7gogbdesqmqyrulvwjwjwjlq3ixe@5t2pu6rcfzae>
-References: <20250128-concurrent-wb-v5-0-6464ca5360df@quicinc.com>
- <zoswzhubdq7ezxpecz72ki5kloyyedqo232toiol4r7hi244me@52rzudflyl52>
- <cbf66ae4-9f52-4f8f-b569-6a71f8b55a4f@quicinc.com>
+	dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b="N7OpDhCI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="df66N7m+"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id F037E1140217;
+	Thu,  6 Feb 2025 20:19:36 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Thu, 06 Feb 2025 20:19:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jvosburgh.net;
+	 h=cc:cc:content-id:content-transfer-encoding:content-type
+	:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to; s=fm1; t=1738891176; x=1738977576; bh=nM5RR7pVDpPRZWTwREsGw
+	zpq8Pw6RX8jNoRT+vRn0tE=; b=N7OpDhCIXK5uHXT/xymgQ9g8YeW13I9BEBZ9g
+	uPbzc+GmvpyvEs7AmuloiVeoC8vhPNdV6Jjacfj88zSIaW1EZ51UulhMZZTnz8m6
+	15XVmdvALO4ZJcXtXrZbg6igk55FE4tHL4a4kkHKOveuDO8CLSuz3Zo9r1IlFDyo
+	MmXgEp9pWx6Azuas+c2wi+KuZzIcbnoPPI810Xr4tZyWNNhl42uxvt7Rh3lhEXFj
+	sxTegQhVnJxRue2VvYhHf/S9EEwLbE5sECvIztfPylFcPlatJOra+j7XH1TNa1ir
+	ROVTcCdjhUu0zTa5BhXHwu2RS1+FamRUxkyuXo69geoB7X2Dg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-id
+	:content-transfer-encoding:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1738891176; x=1738977576; bh=nM5RR7pVDpPRZWTwREsGwzpq8Pw6RX8jNoR
+	T+vRn0tE=; b=df66N7m+bqR9HJ0VIYLH3uoC8fzk/c4i04ara7vRbUrScMRd7+3
+	5ikfobG1iykN5bJ/eBM3yeFkz6VE84F19Ho5GlT2sA+RcMpXabwHST2DU+g1P3c9
+	J47C92GGHJ2bxKKrqF5m2pfxhr8bjRcSedp3Nocil6CKrQlQH2Zb6OkDRy6u/Rl1
+	NVWoSCLEPRtTkTrbPsBfrRFUxw6PshV9156ZKxZ6uv9U6pj/BhsR5jhsUdvzPu3B
+	9m6Ew2D3rGKqa3eG6k4sUAu6kDnCb0Uvn1OJSDqv3gFgyr2WmjOs6Qeqap8mty6a
+	GVTuXOlFJGc7MgFph/qmpQmF0ROi94POP7w==
+X-ME-Sender: <xms:qF-lZ84iFZrW9tb-KW9H4ldlnFAVabJqovzws6kFxVP1PbTebDMlFw>
+    <xme:qF-lZ94BI5pN-msy4r0gdZts-spE_Q_l4KaNK1K5dScqPDMwUmjZXGlCuycfzm7F5
+    PN-bK4d9IBtNRMvNdc>
+X-ME-Received: <xmr:qF-lZ7eXnUgVtK2gxypF1EwG65BzUVMPxLYoNtROoc_u2bvvT9VEhTKJCyyutOY32GZWQw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjeelfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhfogggtgfffkfesthhqredtredt
+    vdenucfhrhhomheplfgrhicugghoshgsuhhrghhhuceojhhvsehjvhhoshgsuhhrghhhrd
+    hnvghtqeenucggtffrrghtthgvrhhnpeeifedvleefleejveethfefieduueeivdefieev
+    leffuddvveeftdehffffteefffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehjvhesjhhvohhssghurhhghhdrnhgvthdpnhgspghrtghpthht
+    ohepudehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehrrgiiohhrsegslhgrtg
+    hkfigrlhhlrdhorhhgpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgv
+    thdprhgtphhtthhopehlihhuhhgrnhhgsghinhesghhmrghilhdrtghomhdprhgtphhtth
+    hopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohephhhorhhmshes
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopehshhhurghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgv
+    fidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepsghorhhishhpsehnvhhiug
+    hirgdrtghomh
+X-ME-Proxy: <xmx:qF-lZxJv_1QqvaG3_PVHE_tUuOx_8HSSon8COsL3br0CneBccCE7Qw>
+    <xmx:qF-lZwI7aOvUq2OyvORL1RP6NqzxJIMl6EIWCZ5l4DgGciJPziEpGA>
+    <xmx:qF-lZyyII4POJE9YZVBh6R5sxxCjuAmyPHe0FELvLWFVyVlJu6GfFg>
+    <xmx:qF-lZ0IUpuU93ALE4_M2sDDHpZxLi_gHFVvBGvmbCeQDIa4lHPG00A>
+    <xmx:qF-lZx4nruX6811yxh_FmcnVygtGCvUc24oT6ItovWu1Cm4yPRxDXN4A>
+Feedback-ID: i53714940:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 6 Feb 2025 20:19:36 -0500 (EST)
+Received: by famine.localdomain (Postfix, from userid 1000)
+	id B13239FD35; Thu,  6 Feb 2025 17:19:34 -0800 (PST)
+Received: from famine (localhost [127.0.0.1])
+	by famine.localdomain (Postfix) with ESMTP id AE1DA9FCB2;
+	Thu,  6 Feb 2025 17:19:34 -0800 (PST)
+From: Jay Vosburgh <jv@jvosburgh.net>
+To: Hangbin Liu <liuhangbin@gmail.com>
+cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+    "David S. Miller" <davem@davemloft.net>,
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+    Paolo Abeni <pabeni@redhat.com>,
+    Nikolay Aleksandrov <razor@blackwall.org>,
+    Simon Horman <horms@kernel.org>, Jianbo Liu <jianbol@nvidia.com>,
+    Boris Pismenny <borisp@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
+    Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 net 1/2] bonding: fix incorrect MAC address setting to
+ receive NS messages
+In-reply-to: <20250206094600.357420-2-liuhangbin@gmail.com>
+References: <20250206094600.357420-1-liuhangbin@gmail.com>
+ <20250206094600.357420-2-liuhangbin@gmail.com>
+Comments: In-reply-to Hangbin Liu <liuhangbin@gmail.com>
+   message dated "Thu, 06 Feb 2025 09:45:59 +0000."
+X-Mailer: MH-E 8.6+git; nmh 1.8+dev; Emacs 29.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cbf66ae4-9f52-4f8f-b569-6a71f8b55a4f@quicinc.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <624904.1738891174.1@famine>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 06 Feb 2025 17:19:34 -0800
+Message-ID: <624905.1738891174@famine>
 
-On Thu, Feb 06, 2025 at 02:45:19PM -0800, Jessica Zhang wrote:
-> 
-> 
-> On 1/29/2025 9:51 AM, Dmitry Baryshkov wrote:
-> > On Tue, Jan 28, 2025 at 07:20:32PM -0800, Jessica Zhang wrote:
-> > > DPU supports a single writeback session running concurrently with primary
-> > > display when the CWB mux is configured properly. This series enables
-> > > clone mode for DPU driver and adds support for programming the CWB mux
-> > > in cases where the hardware has dedicated CWB pingpong blocks. Currently,
-> > > the CWB hardware blocks have only been added to the SM8650
-> > > hardware catalog and only DSI has been exposed as a possible_clone of WB.
-> > > 
-> > > This changes are split into two parts:
-> > > 
-> > > The first part of the series will pull in Dmitry's patches to refactor
-> > > the DPU resource manager to be based off of CRTC instead of encoder.
-> > > This includes some changes (noted in the relevant commits) by me and
-> > > Abhinav to fix some issues with getting the global state and refactoring
-> > > the CDM allocation to work with Dmitry's changes.
-> > > 
-> > > The second part of the series will add support for CWB by doing the
-> > > following:
-> > > 
-> > > 1) Add the CWB mux to the hardware catalog and clarify the pingpong
-> > >     block index enum to specifiy which pingpong blocks are dedicated to
-> > >     CWB only and which ones are general use pingpong blocks
-> > > 2) Add support for configuring the CWB mux via dpu_hw_cwb ops
-> > > 3) Add pending flush support for CWB
-> > > 4) Add support for validating clone mode in the DPU CRTC and setting up
-> > >     CWB within the encoder
-> > > 5) Adjust the encoder trigger flush, trigger start, and kickoff order to
-> > >     accomodate clone mode
-> > > 6) Adjust when the frame done timer is started for clone mode
-> > > 7) Define the possible clones for DPU encoders so that WB encoders can
-> > >     be cloned by non-WB encoders
-> > > 
-> > > The feature was tested on SM8650 using IGT's kms_writeback test with the
-> > > following change [1] and dumping the writeback framebuffer when in clone
-> > > mode. I haven't gotten the chance to test it on DP yet, but I've
-> > > validated both single and dual LM on DSI.
-> > > 
-> > > To test CWB with IGT, you'll need to apply this series [1] and run the
-> > > following command to dump the writeback buffer:
-> > > 
-> > > IGT_FRAME_DUMP_PATH=<dump path> FRAME_PNG_FILE_NAME=<file name> \
-> > > ./build/tests/kms_writeback -d [--run-subtest dump-valid-clones] \
-> > > 
-> > > You can also do CRC validation by running this command:
-> > > 
-> > > ./build/tests/kms_writeback [--run-subtest dump-valid-clones]
-> > > 
-> > > NOTE: this series depends on Dmitry's modeset fixes [2]
-> > > 
-> > > [1] https://patchwork.freedesktop.org/series/137933/
-> > > [2] https://patchwork.freedesktop.org/series/142905/
-> > > 
-> > > ---
-> > > Changes in v5:
-> > > - Rebased onto MSM modeset fixes series (Dmitry)
-> > > - Reordered RM refactor patches to prevent breaking CI and to avoid
-> > >    breaking when partially applied (Dmitry)
-> > > - Switch CWB resource reservation to reserve CWB mux first (Dmitry)
-> > > - Reworded commit messages to be clearer (Dmitry)
-> > > - Change CDM check to fail only if both DP and WB outputs are
-> > >    requesting the CDM block simultaneously (Dmitry)
-> > > - Use helper to grab dsc config in dpu_encoder_update_topology
-> > > - Link to v4: https://lore.kernel.org/r/20241216-concurrent-wb-v4-0-fe220297a7f0@quicinc.com
-> > > 
-> > > Changes in v4:
-> > > - Rebased onto latest msm-next
-> > > - Added kunit tests for framework changes
-> > > - Skip valid clone check for encoders that don't have any possible clones set
-> > >    (this is to avoid failing kunit tests, specifically the HDMI state helper tests)
-> > > - Link to v3: https://lore.kernel.org/r/20241016-concurrent-wb-v3-0-a33cf9b93835@quicinc.com
-> > > 
-> > > Changes in v3:
-> > > - Dropped support for CWB on DP connectors for now
-> > > - Dropped unnecessary PINGPONG array in *_setup_cwb()
-> > > - Add a check to make sure CWB and CDM aren't supported simultaneously
-> > >    (Dmitry)
-> > > - Document cwb_enabled checks in dpu_crtc_get_topology() (Dmitry)
-> > > - Moved implementation of drm_crtc_in_clone_mode() to drm_crtc.c (Jani)
-> > > - Dropped duplicate error message for reserving CWB resources (Dmitry)
-> > > - Added notes in framework changes about posting a separate series to
-> > >    add proper KUnit tests (Maxime)
-> > > - Added commit message note addressing Sima's comment on handling
-> > >    mode_changed (Dmitry)
-> > > - Formatting fixes (Dmitry)
-> > > - Added proper kerneldocs (Dmitry)
-> > > - Renamed dpu_encoder_helper_get_cwb() -> *_get_cwb_mask() (Dmitry)
-> > > - Capitalize all instances of "pingpong" in comments (Dmitry)
-> > > - Link to v2: https://lore.kernel.org/r/20240924-concurrent-wb-v2-0-7849f900e863@quicinc.com
-> > > 
-> > > Changes in v2:
-> > > - Moved CWB hardware programming to its own dpu_hw_cwb abstraction
-> > >    (Dmitry)
-> > > - Reserve and get assigned CWB muxes using RM API and KMS global state
-> > >    (Dmitry)
-> > > - Dropped requirement to have only one CWB session at a time
-> > > - Moved valid clone mode check to DRM framework (Dmitry and Ville)
-> > > - Switch to default CWB tap point to LM as the DSPP
-> > > - Dropped printing clone mode status in atomic state (Dmitry)
-> > > - Call dpu_vbif_clear_errors() before dpu_encoder_kickoff() (Dmitry)
-> > > - Squashed setup_input_ctrl() and setup_input_mode() into a single
-> > >    dpu_hw_cwb op (Dmitry)
-> > > - Moved function comment docs to correct place and fixed wording of
-> > >    comments/commit messages (Dmitry)
-> > > - Grabbed old CRTC state using proper drm_atomic_state API in
-> > >    dpu_crtc_atomic_check() (Dmitry)
-> > > - Split HW catalog changes of adding the CWB mux block and changing the
-> > >    dedicated CWB pingpong indices into 2 separate commits (Dmitry)
-> > > - Moved clearing the dpu_crtc_state.num_mixers to "drm/msm/dpu: fill
-> > >    CRTC resources in dpu_crtc.c" (Dmitry)
-> > > - Fixed alignment and other formatting issues (Dmitry)
-> > > - Link to v1: https://lore.kernel.org/r/20240829-concurrent-wb-v1-0-502b16ae2ebb@quicinc.com
-> > > 
-> > > ---
-> > > Dmitry Baryshkov (3):
-> > >        drm/msm/dpu: fill CRTC resources in dpu_crtc.c
-> > >        drm/msm/dpu: move resource allocation to CRTC
-> > >        drm/msm/dpu: switch RM to use crtc_id rather than enc_id for allocation
-> > > 
-> > > Jessica Zhang (11):
-> > >        drm/msm/dpu: Add CWB to msm_display_topology
-> > >        drm/msm/dpu: Require modeset if clone mode status changes
-> > >        drm/msm/dpu: Fail atomic_check if multiple outputs request CDM block
-> > >        drm/msm/dpu: Reserve resources for CWB
-> > >        drm/msm/dpu: Configure CWB in writeback encoder
-> > >        drm/msm/dpu: Support CWB in dpu_hw_ctl
-> > >        drm/msm/dpu: Adjust writeback phys encoder setup for CWB
-> > >        drm/msm/dpu: Start frame done timer after encoder kickoff
-> > >        drm/msm/dpu: Skip trigger flush and start for CWB
-> > >        drm/msm/dpu: Reorder encoder kickoff for CWB
-> > >        drm/msm/dpu: Set possible clones for all encoders
-> > > 
-> > >   drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c           | 229 +++++++++++-
-> > >   drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h           |   3 +
-> > >   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        | 416 ++++++++++++---------
-> > >   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h        |  16 +-
-> > >   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h   |   7 +-
-> > >   .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c    |  16 +-
-> > >   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c         |  30 +-
-> > >   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h         |  15 +-
-> > >   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h        |   2 +
-> > >   drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |  27 +-
-> > >   drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h            |  13 +-
-> > >   drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c             | 293 ++++++++++-----
-> > >   drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h             |  14 +-
-> > >   13 files changed, 752 insertions(+), 329 deletions(-)
-> > > ---
-> > > base-commit: 86313a9cd152330c634b25d826a281c6a002eb77
-> > > change-id: 20240618-concurrent-wb-97d62387f952
-> > > prerequisite-change-id: 20241209-abhinavk-modeset-fix-74864f1de08d:v3
-> > > prerequisite-patch-id: a197a0cd4647cb189ea20a96583ea78d0c98b638
-> > > prerequisite-patch-id: 112c8f1795cbed989beb02b72561854c0ccd59dd
-> > 
-> > No, it's not a full list. Please use b4 prep --check-deps to check
-> > dependencies. See the following errors:
-> 
-> Hi Dmitry,
-> 
-> Ah, I should've put my changes on drm-misc-next instead of trying to pull in
-> the merged drm changes on top of msm-next... The deps list is fixed now.
+Hangbin Liu <liuhangbin@gmail.com> wrote:
 
-That's not a problem. I think your deps list was missing one series. I
-was able to pick up something that made your patches apply cleanly.
+>When validation on the backup slave is enabled, we need to validate the
+>Neighbor Solicitation (NS) messages received on the backup slave. To
+>receive these messages, the correct destination MAC address must be added
+>to the slave. However, the target in bonding is a unicast address, which
+>we cannot use directly. Instead, we should first convert it to a
+>Solicited-Node Multicast Address and then derive the corresponding MAC
+>address.
+>
+>Fixes: 8eb36164d1a6 ("bonding: add ns target multicast address to slave d=
+evice")
+>Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 
-> Thanks for the heads up,
-> 
-> Jessica Zhang
-> 
-> > 
-> > $ b4 shazam -H 20250128-concurrent-wb-v5-0-6464ca5360df@quicinc.com
-> > Grabbing thread from lore.kernel.org/all/20250128-concurrent-wb-v5-0-6464ca5360df@quicinc.com/t.mbox.gz
-> > Checking for newer revisions
-> > Grabbing search results from lore.kernel.org
-> > Analyzing 15 messages in the thread
-> > Analyzing 174 code-review messages
-> > Checking attestation on all messages, may take a moment...
-> > ---
-> >    ✓ [PATCH v5 1/14] drm/msm/dpu: fill CRTC resources in dpu_crtc.c
-> >    ✓ [PATCH v5 2/14] drm/msm/dpu: move resource allocation to CRTC
-> >    ✓ [PATCH v5 3/14] drm/msm/dpu: switch RM to use crtc_id rather than enc_id for allocation
-> >    ✓ [PATCH v5 4/14] drm/msm/dpu: Add CWB to msm_display_topology
-> >    ✓ [PATCH v5 5/14] drm/msm/dpu: Require modeset if clone mode status changes
-> >    ✓ [PATCH v5 6/14] drm/msm/dpu: Fail atomic_check if multiple outputs request CDM block
-> >    ✓ [PATCH v5 7/14] drm/msm/dpu: Reserve resources for CWB
-> >    ✓ [PATCH v5 8/14] drm/msm/dpu: Configure CWB in writeback encoder
-> >    ✓ [PATCH v5 9/14] drm/msm/dpu: Support CWB in dpu_hw_ctl
-> >    ✓ [PATCH v5 10/14] drm/msm/dpu: Adjust writeback phys encoder setup for CWB
-> >    ✓ [PATCH v5 11/14] drm/msm/dpu: Start frame done timer after encoder kickoff
-> >    ✓ [PATCH v5 12/14] drm/msm/dpu: Skip trigger flush and start for CWB
-> >    ✓ [PATCH v5 13/14] drm/msm/dpu: Reorder encoder kickoff for CWB
-> >    ✓ [PATCH v5 14/14] drm/msm/dpu: Set possible clones for all encoders
-> >    ---
-> >    ✗ No key: ed25519/quic_jesszhan@quicinc.com
-> >    ✓ Signed: DKIM/quicinc.com
-> > ---
-> > Total patches: 14
-> > ---
-> >   Base: using specified base-commit 86313a9cd152330c634b25d826a281c6a002eb77
-> >   Deps: looking for dependencies matching 2 patch-ids
-> >   Deps: Applying prerequisite patch: [PATCH v2 1/2] drm: allow encoder mode_set even when connectors change for crtc
-> >   Deps: Applying prerequisite patch: [PATCH v3 2/2] drm/tests: Add test for drm_atomic_helper_commit_modeset_disables()
-> > Magic: Preparing a sparse worktree
-> > Unable to cleanly apply series, see failure log below
-> > ---
-> > Applying: drm: allow encoder mode_set even when connectors change for crtc
-> > Applying: drm/tests: Add test for drm_atomic_helper_commit_modeset_disables()
-> > Applying: drm/msm/dpu: fill CRTC resources in dpu_crtc.c
-> > Patch failed at 0003 drm/msm/dpu: fill CRTC resources in dpu_crtc.c
-> > When you have resolved this problem, run "git am --continue".
-> > If you prefer to skip this patch, run "git am --skip" instead.
-> > To restore the original branch and stop patching, run "git am --abort".
-> > error: patch failed: drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c:1230
-> > error: drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c: patch does not apply
-> > error: patch failed: drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c:719
-> > error: drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c: patch does not apply
-> > hint: Use 'git am --show-current-patch=diff' to see the failed patch
-> > 
-> > 
-> > > 
-> > > Best regards,
-> > > -- 
-> > > Jessica Zhang <quic_jesszhan@quicinc.com>
-> > > 
-> > 
-> > -- 
-> > With best wishes
-> > Dmitry
-> 
+	I think this now deserves some commentary in the code.  Not
+because this function itself is unclear, but because there's the
+similarly-named slave_set_ns_maddr() (singular, not plural as in this
+patch) that will behave in a subtly different manner after this patch is
+applied.
 
--- 
-With best wishes
-Dmitry
+	The "maddrs" version here will convert the provided IPv6 address
+to the IPv6 solicited-nodes multicast address (RFC 4291 section 2.7.1)
+and thence to the MAC address, via ndisc_mc_map(), whereas the "maddr"
+version uses the supplied IPv6 address directly for multicast MAC
+address conversion.
+
+	Assuming that I'm following that correctly, I think this
+distinction deserves explanation.  And if I'm getting it wrong, then it
+definitely deserves some explanation.
+
+	FWIW, functionally, I think it's doing the correct thing.
+
+	-J
+
+>---
+> drivers/net/bonding/bond_options.c | 4 +++-
+> 1 file changed, 3 insertions(+), 1 deletion(-)
+>
+>diff --git a/drivers/net/bonding/bond_options.c b/drivers/net/bonding/bon=
+d_options.c
+>index 327b6ecdc77e..63cf209dcdc9 100644
+>--- a/drivers/net/bonding/bond_options.c
+>+++ b/drivers/net/bonding/bond_options.c
+>@@ -1246,6 +1246,7 @@ static void slave_set_ns_maddrs(struct bonding *bon=
+d, struct slave *slave, bool
+> {
+> 	struct in6_addr *targets =3D bond->params.ns_targets;
+> 	char slot_maddr[MAX_ADDR_LEN];
+>+	struct in6_addr mcaddr;
+> 	int i;
+> =
+
+> 	if (!slave_can_set_ns_maddr(bond, slave))
+>@@ -1255,7 +1256,8 @@ static void slave_set_ns_maddrs(struct bonding *bon=
+d, struct slave *slave, bool
+> 		if (ipv6_addr_any(&targets[i]))
+> 			break;
+> =
+
+>-		if (!ndisc_mc_map(&targets[i], slot_maddr, slave->dev, 0)) {
+>+		addrconf_addr_solict_mult(&targets[i], &mcaddr);
+>+		if (!ndisc_mc_map(&mcaddr, slot_maddr, slave->dev, 0)) {
+> 			if (add)
+> 				dev_mc_add(slave->dev, slot_maddr);
+> 			else
+>-- =
+
+>2.46.0
+>
+
+---
+	-Jay Vosburgh, jv@jvosburgh.net
