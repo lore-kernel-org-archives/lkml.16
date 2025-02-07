@@ -1,104 +1,73 @@
-Received: from mail-ed1-f67.google.com (mail-ed1-f67.google.com [209.85.208.67])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6448B1ADFE3
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 21:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2EC1B4239;
+	Fri,  7 Feb 2025 21:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738963861; cv=none; b=dp0tTpaH2TGx54QJ8O/LAFVSgWvEOcLJgxvY3qUgK4vrXpHoohPS1Zi7D/c1a4oEbEMRo2LJfSS2Jgli/pjSPTab60PgB0CKFS5OodqqAprKHtcz+6pzYJGJ5xRh84EJfFZbPGdn0Oq16CuTuMSZig0YvIylGUZHWpbGRwWu8CY=
+	t=1738963863; cv=none; b=uA/T6uSTczGH+TMSkokkcTalM5Au5IpMTX6JhV64P6n13GDKkxfmfXkumm3xAZf7DLTenHaYcMLDAQOOYT615jJ+W4+6E1dWiEPq/tiHvMCsqMXMoxkEHuZPqZ6Ufn5czoWMuRcodej+G9Z3DL/ejxG19THr9O4/o6cSUgwx/DY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738963861; c=relaxed/simple;
-	bh=+6oiqaaJJZBSTgJt7cr/nz+zlZDyPJcdPJJ1tqADoQw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MgZyRkfE+w8tkEf+guknFzMf1DKNy3eYkXeCxWGo3GZMBRXcRXHHxRIhwfi222GUYtZ6Z/4EXtt4FKfNWdlbwyO188k0opq+GIvzDBZ7cWcJPZXUx6jivsFSMC3BfsUS/T04YU23Woz1F7Ezeu1Ai49rIwrV7G3dVSzgzXr1pyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=F5QKiU3U; arc=none smtp.client-ip=209.85.208.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1738963863; c=relaxed/simple;
+	bh=BXQFxnvsuU4LQPV7c9DJhV8HVRtjQhLi4kkYYPr8Lpg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CgETk0lIhMSCXAoiN84Htcx1YQ2fm0H4944X700Y5X6Q1W9ofvRxqo1bvjSa/j/Jp39A3uTjdVNgaWmMkTxB6gWWfcwGpSlYJRBhti88dPZWubUVGd60V/Cth6CSY2He/cGXcYHPB025w4mg68Ygapr8GpbmWqcDYAErto2Wi70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gxJLIngt; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="F5QKiU3U"
-Received: by mail-ed1-f67.google.com with SMTP id 4fb4d7f45d1cf-5d9837f201aso6895005a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 13:30:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxJLIngt"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21f4a4fbb35so28326445ad.0;
+        Fri, 07 Feb 2025 13:31:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738963858; x=1739568658; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738963860; x=1739568660; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=40fBozq6c0TkdqArUgdBEkwINdlhv9dUFzf9IoId2GU=;
-        b=F5QKiU3UT7/cd5et8D7VUZK1rN0vOTTH+KnRPXmuHkvZ9e4tbJtxjgYGWHxiCqvhkD
-         LhIux0zrLvLiDkfPO0t+Cl6ER8whQ4FPcOkV8d7j8kp+JLQEF5dI7vCCd5YuPvRMjy0Z
-         HWHTs4QN99+vn9ESFYbUKv3cdH4OkgX6X3XtGCqAb9XTBFGvcg3TYubkPEic1OtRP5SD
-         qbPXnxszwaRvbrOiYEOtUwUBqKgQM5/H3X0VC+85paDeAPg4LppLkB9A1RMqRwEyNm79
-         8SF7Jb6jz+Qf61ONzmCjEs9OSQKXUjSGoMADOysnAF3+phhPU3TnLtw+Dfd5sud0Inip
-         L7IQ==
+        bh=r08o33ipA5MWxiDyUsWZrYJbXTEaBXzVTqjJSzQg9iU=;
+        b=gxJLIngtdzlQWZ4yNdXsDTr/hUoDMA6V1Of6bELl3AReG1Zh6Z2zJw2RbsETcWupX1
+         XlMo5A8J11XjKk5hoOV31vdj17UBSghNt1P0nE3M547UaP2fIQbMPB1b4lXpGWSqdU0O
+         k6G1CSl6A6dBauhyUwCw21BH1VHC9t6ry4miqk3Qb6ZCBghcdezk6wsuNs9r3SbN6bHm
+         tR/B2/o/5bgH4vGojEnpkmGPGVyXdHo/10Vs+b5Bn2odZ6lUVlvJvsKqY0CgBwf68Fbh
+         BlCvfG1gZRBokfHBdABboYhZbfeYmIP1+cp6VKGacbUEp0XyIjSisvaxdeNORLflHoEn
+         IIEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738963858; x=1739568658;
+        d=1e100.net; s=20230601; t=1738963860; x=1739568660;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=40fBozq6c0TkdqArUgdBEkwINdlhv9dUFzf9IoId2GU=;
-        b=rSQ2lDSMp0cJ3oqdLdvGykhI/uc3E3ntRRO8S3q0UpCUJZpnsmAbPBO8UHTB/zDH8f
-         4SUeJOg6P+ZU0f3WMwzItRKzHNV0jdTj2k7lXqKSTrfnVZdq5JwRTizEiDLCHWo6sOzi
-         hFmIFCPS6mSsiga4vrYjPGNUZ99MZQcLlUSu70QUHBuIXN7Thgi85fnR1w73eU7ODFWj
-         7O5Y1SJbe1lG8x17juvTmUvppCsaYLrPPEW4CVkoqzdHHE51xBm1sAsQUGf7HrdVSygs
-         prknFaUpHsrpaoyW07O88hLg2UasksMfa0U138p8UppYejBvz3uK6SGb7F9cWFboqUYr
-         caVg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5Uxh7wAGDsmk8VOjR97TgD13uyQquHnQa1/Ok93kS0acFsaqH6lQc/RRM7g6QfMpf7FuEVu6AueJyuhk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzB0qNUXZ/xyhe90vLyFqE7zL8vMbv9ikvWmcEAPR6WIMyh0TKs
-	NNLGtQQQVIsiKt5Gz1pWTQiBB4RmlqaCIagHVDrhJzuOfJWDu5bWP+WKwEE6n2Y=
-X-Gm-Gg: ASbGncuPCKsejvPonD1pEnjq2mw5kWC4l2UWHOCkxbcuNcsBcoq12UhG24IZy5dRQqm
-	6c7MyONC0o0IeX063ESyjD99sAhB5d7XpIizw8/OnT0QTzxa1A+igPmykRj1EX7XQSnoAk1Xhll
-	TM7YxXALE6Q7k14GW5fOJutjZptAwCaFH8XCrNtJX0E/V1MAUwC6/YxIDC0ftojx7jCXtVlqwzQ
-	zpNwbhViGNcvjdRihkxwdXzTzR2EogDiVPyQo0RLuNCvs6yBb6Eesm71Sl0DzR8tjEEV/afswaH
-	3IiRcZmMJxKsIyYWqVRvUw9aFjZiO2aUB+lguz7e0f95TU4qAoR9UayXHzk=
-X-Google-Smtp-Source: AGHT+IHdgQJ7DwynP053GuIeTr8ET1fqfbj4b4w2jAvtUK8o6z4D6NWZ0Lj9wjRmGi2DVjCyZAY3SQ==
-X-Received: by 2002:a05:6402:278e:b0:5de:5a85:2f1f with SMTP id 4fb4d7f45d1cf-5de5a853144mr824186a12.7.1738963857569;
-        Fri, 07 Feb 2025 13:30:57 -0800 (PST)
-Received: from localhost (host-79-41-239-37.retail.telecomitalia.it. [79.41.239.37])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcf1b80fa5sm3198428a12.34.2025.02.07.13.30.56
+        bh=r08o33ipA5MWxiDyUsWZrYJbXTEaBXzVTqjJSzQg9iU=;
+        b=dzw6xrED2vuAE2bcrHfu0RSeABxzdcv8pVzTlyz239DQLeP3VGuHZeDTSa05iZnVOv
+         eYy66mvGoX9Y02cF6P17SS8fEa9PEH5D3ulOUeI57gRH60LA1wvxy5BwrZ0Q6bKOWBD3
+         0Mb7K2akcqzZ+V9IT/1P/kbOPIjeJiqAdKpy0z3EuLPAkKzp3j8aGcjRtFEs1khTI3mp
+         /LkWgK9a0cyyPSGL2pvpWIQHVvi7415D/G3a/EZStfLnjglSBq5yDZ3ZuvFMRcLN3q3C
+         omoSMwKPPmtjZdECVJLX0xRtLc7Qj63JxsWz55WGIJz9452hn0vBRAq18fWiyTeVthVs
+         dKNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLIVdceL3UC0YA6oNAfCIEuaKfv5nQwwWvOl/idIYvuqIScDv16cJcGrbhzC/31XtgDABKp1g78xg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb5ezgDZY/TdZXNlGG0A8lzjkbJbAca8ORCGAzIdH1ix9xWM03
+	ZL0h+W/Ai5IJC5iZPikSevQn4L813cZ8W+rDLADuuPTAfz+vVgRp2SWsibla
+X-Gm-Gg: ASbGncuUGWoMdwZRLr7jxWY/6a/Gk382H6ZW1Aq7vXMwCKjq9aP0ZpJD5r4lqoyGAWw
+	s0YRMmAuxcBzbi6zeWEVCWB0LGrttte+lO/Ea0l0gjYhuCCw+7xPqQcQ/fNuMgqnfOjKTBMU6KN
+	UrE0F968cW2BmKes6K11HkVfyzpHaYukyc0zP4LyBmIkH90lqqIV2knDaLHpN9/XnjCIY5aOejw
+	NfjGbo2pQObm3cjNo0P5FDmenMEyleUO+EyIxm2TEjAenZsW2ACDtk6YdEYpogRiSSK7qUzWo2K
+	Kxk4drtRZQR1W2fC/JbzaOzIbUogSLGbaekS
+X-Google-Smtp-Source: AGHT+IHn/Sqx5UTattoHfMQZVuvqP4SjkP7AIUoPZrjTtvEDi6s0xiyeVV7amDsrzhgZo8xXMjEHwQ==
+X-Received: by 2002:a17:903:1a0c:b0:215:a303:24e9 with SMTP id d9443c01a7336-21f4f0efcb1mr77119635ad.3.1738963859889;
+        Fri, 07 Feb 2025 13:30:59 -0800 (PST)
+Received: from localhost.localdomain ([181.192.80.27])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687c79esm35406485ad.175.2025.02.07.13.30.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 13:30:57 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-To: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v7 01/11] dt-bindings: clock: Add RaspberryPi RP1 clock bindings
-Date: Fri,  7 Feb 2025 22:31:41 +0100
-Message-ID: <915c345d51f7743ea0eeaa814249fc366c0757e9.1738963156.git.andrea.porta@suse.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1738963156.git.andrea.porta@suse.com>
-References: <cover.1738963156.git.andrea.porta@suse.com>
+        Fri, 07 Feb 2025 13:30:59 -0800 (PST)
+From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
+To: ukleinek@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	rafael.v.volkmer@gmail.com
+Subject: [PATCH v3 1/3] pwm: tiehrpwm: replace manual bit definitions with bitfield.h macros
+Date: Fri,  7 Feb 2025 18:29:54 -0300
+Message-Id: <20250207212954.934-1-rafael.v.volkmer@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <uw4ans5zzvo65voerbaxvj2erethpuh2jfm2iu7ekqyvgg62nx@lglwyjcpa5aw>
+References: <uw4ans5zzvo65voerbaxvj2erethpuh2jfm2iu7ekqyvgg62nx@lglwyjcpa5aw>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -107,168 +76,262 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add device tree bindings for the clock generator found in RP1 multi
-function device, and relative entries in MAINTAINERS file.
+Simplify bit manipulation by replacing manual BIT(x) definitions with
+GENMASK() and FIELD_PREP() from <linux/bitfield.h>. This improves
+readability, consistency, and aligns with modern kernel practices
+while preserving existing functionality.
 
-Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Additionally, update set_prescale_div() to use FIELD_PREP() for
+TBCTL_CLKDIV_MASK and TBCTL_HSPCLKDIV_MASK instead of manually
+shifting bits. This makes the code more maintainable and avoids
+potential errors in bit field assignments.
+
+Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
 ---
- .../clock/raspberrypi,rp1-clocks.yaml         | 58 ++++++++++++++++++
- MAINTAINERS                                   |  6 ++
- .../clock/raspberrypi,rp1-clocks.h            | 61 +++++++++++++++++++
- 3 files changed, 125 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
- create mode 100644 include/dt-bindings/clock/raspberrypi,rp1-clocks.h
+ drivers/pwm/pwm-tiehrpwm.c | 222 ++++++++++++++++++++++++-------------
+ 1 file changed, 142 insertions(+), 80 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
-new file mode 100644
-index 000000000000..19af5eccb8cc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/raspberrypi,rp1-clocks.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: RaspberryPi RP1 clock generator
-+
-+maintainers:
-+  - Andrea della Porta <andrea.porta@suse.com>
-+
-+description: |
-+  The RP1 contains a clock generator designed as three PLLs (CORE, AUDIO,
-+  VIDEO), and each PLL output can be programmed through dividers to generate
-+  the clocks to drive the sub-peripherals embedded inside the chipset.
-+
-+  Link to datasheet:
-+  https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
-+
-+properties:
-+  compatible:
-+    const: raspberrypi,rp1-clocks
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#clock-cells':
-+    const: 1
-+    description:
-+      The available clocks are defined in
-+      include/dt-bindings/clock/raspberrypi,rp1-clocks.h.
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#clock-cells'
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/raspberrypi,rp1-clocks.h>
-+
-+    rp1 {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        clocks@c040018000 {
-+            compatible = "raspberrypi,rp1-clocks";
-+            reg = <0xc0 0x40018000 0x0 0x10038>;
-+            #clock-cells = <1>;
-+            clocks = <&clk_rp1_xosc>;
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 896a307fa065..266569c1edd9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19748,6 +19748,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/media/raspberrypi,rp1-cfe.yaml
- F:	drivers/media/platform/raspberrypi/rp1-cfe/
+diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+index 0125e73b98df..50516f46ab04 100644
+--- a/drivers/pwm/pwm-tiehrpwm.c
++++ b/drivers/pwm/pwm-tiehrpwm.c
+@@ -13,85 +13,147 @@
+ #include <linux/clk.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/of.h>
++#include <linux/bitfield.h>
  
-+RASPBERRY PI RP1 PCI DRIVER
-+M:	Andrea della Porta <andrea.porta@suse.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
-+F:	include/dt-bindings/clock/rp1.h
-+
- RC-CORE / LIRC FRAMEWORK
- M:	Sean Young <sean@mess.org>
- L:	linux-media@vger.kernel.org
-diff --git a/include/dt-bindings/clock/raspberrypi,rp1-clocks.h b/include/dt-bindings/clock/raspberrypi,rp1-clocks.h
-new file mode 100644
-index 000000000000..248efb895f35
---- /dev/null
-+++ b/include/dt-bindings/clock/raspberrypi,rp1-clocks.h
-@@ -0,0 +1,61 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+-/* EHRPWM registers and bits definitions */
+-
+-/* Time base module registers */
+-#define TBCTL			0x00
+-#define TBPRD			0x0A
+-
+-#define TBCTL_PRDLD_MASK	BIT(3)
+-#define TBCTL_PRDLD_SHDW	0
+-#define TBCTL_PRDLD_IMDT	BIT(3)
+-#define TBCTL_CLKDIV_MASK	(BIT(12) | BIT(11) | BIT(10) | BIT(9) | \
+-				BIT(8) | BIT(7))
+-#define TBCTL_CTRMODE_MASK	(BIT(1) | BIT(0))
+-#define TBCTL_CTRMODE_UP	0
+-#define TBCTL_CTRMODE_DOWN	BIT(0)
+-#define TBCTL_CTRMODE_UPDOWN	BIT(1)
+-#define TBCTL_CTRMODE_FREEZE	(BIT(1) | BIT(0))
+-
+-#define TBCTL_HSPCLKDIV_SHIFT	7
+-#define TBCTL_CLKDIV_SHIFT	10
+-
+-#define CLKDIV_MAX		7
+-#define HSPCLKDIV_MAX		7
+-#define PERIOD_MAX		0xFFFF
+-
+-/* compare module registers */
+-#define CMPA			0x12
+-#define CMPB			0x14
+-
+-/* Action qualifier module registers */
+-#define AQCTLA			0x16
+-#define AQCTLB			0x18
+-#define AQSFRC			0x1A
+-#define AQCSFRC			0x1C
+-
+-#define AQCTL_CBU_MASK		(BIT(9) | BIT(8))
+-#define AQCTL_CBU_FRCLOW	BIT(8)
+-#define AQCTL_CBU_FRCHIGH	BIT(9)
+-#define AQCTL_CBU_FRCTOGGLE	(BIT(9) | BIT(8))
+-#define AQCTL_CAU_MASK		(BIT(5) | BIT(4))
+-#define AQCTL_CAU_FRCLOW	BIT(4)
+-#define AQCTL_CAU_FRCHIGH	BIT(5)
+-#define AQCTL_CAU_FRCTOGGLE	(BIT(5) | BIT(4))
+-#define AQCTL_PRD_MASK		(BIT(3) | BIT(2))
+-#define AQCTL_PRD_FRCLOW	BIT(2)
+-#define AQCTL_PRD_FRCHIGH	BIT(3)
+-#define AQCTL_PRD_FRCTOGGLE	(BIT(3) | BIT(2))
+-#define AQCTL_ZRO_MASK		(BIT(1) | BIT(0))
+-#define AQCTL_ZRO_FRCLOW	BIT(0)
+-#define AQCTL_ZRO_FRCHIGH	BIT(1)
+-#define AQCTL_ZRO_FRCTOGGLE	(BIT(1) | BIT(0))
+-
+-#define AQCTL_CHANA_POLNORMAL	(AQCTL_CAU_FRCLOW | AQCTL_PRD_FRCHIGH | \
+-				AQCTL_ZRO_FRCHIGH)
+-#define AQCTL_CHANA_POLINVERSED	(AQCTL_CAU_FRCHIGH | AQCTL_PRD_FRCLOW | \
+-				AQCTL_ZRO_FRCLOW)
+-#define AQCTL_CHANB_POLNORMAL	(AQCTL_CBU_FRCLOW | AQCTL_PRD_FRCHIGH | \
+-				AQCTL_ZRO_FRCHIGH)
+-#define AQCTL_CHANB_POLINVERSED	(AQCTL_CBU_FRCHIGH | AQCTL_PRD_FRCLOW | \
+-				AQCTL_ZRO_FRCLOW)
+-
+-#define AQSFRC_RLDCSF_MASK	(BIT(7) | BIT(6))
+-#define AQSFRC_RLDCSF_ZRO	0
+-#define AQSFRC_RLDCSF_PRD	BIT(6)
+-#define AQSFRC_RLDCSF_ZROPRD	BIT(7)
+-#define AQSFRC_RLDCSF_IMDT	(BIT(7) | BIT(6))
+-
+-#define AQCSFRC_CSFB_MASK	(BIT(3) | BIT(2))
+-#define AQCSFRC_CSFB_FRCDIS	0
+-#define AQCSFRC_CSFB_FRCLOW	BIT(2)
+-#define AQCSFRC_CSFB_FRCHIGH	BIT(3)
+-#define AQCSFRC_CSFB_DISSWFRC	(BIT(3) | BIT(2))
+-#define AQCSFRC_CSFA_MASK	(BIT(1) | BIT(0))
+-#define AQCSFRC_CSFA_FRCDIS	0
+-#define AQCSFRC_CSFA_FRCLOW	BIT(0)
+-#define AQCSFRC_CSFA_FRCHIGH	BIT(1)
+-#define AQCSFRC_CSFA_DISSWFRC	(BIT(1) | BIT(0))
+-
+-#define NUM_PWM_CHANNEL		2	/* EHRPWM channels */
 +/*
-+ * Copyright (C) 2021 Raspberry Pi Ltd.
++ * --------------------------------------
++ * Time base module registers
++ * --------------------------------------
 + */
++#define TBCTL					0x00
++#define TBPRD					0x0A
 +
-+#ifndef __DT_BINDINGS_CLOCK_RASPBERRYPI_RP1
-+#define __DT_BINDINGS_CLOCK_RASPBERRYPI_RP1
++/* TBCTL: CTRMODE field (bits [1:0]) */
++#define TBCTL_CTRMODE_MASK		GENMASK(1, 0)
 +
-+#define RP1_PLL_SYS_CORE		0
-+#define RP1_PLL_AUDIO_CORE		1
-+#define RP1_PLL_VIDEO_CORE		2
++/* The possible values for that field */
++#define TBCTL_CTRMODE_UP		FIELD_PREP(TBCTL_CTRMODE_MASK, 0U)
++#define TBCTL_CTRMODE_DOWN		FIELD_PREP(TBCTL_CTRMODE_MASK, 1U)
++#define TBCTL_CTRMODE_UPDOWN	FIELD_PREP(TBCTL_CTRMODE_MASK, 2U)
++#define TBCTL_CTRMODE_FREEZE	FIELD_PREP(TBCTL_CTRMODE_MASK, 3U)
 +
-+#define RP1_PLL_SYS			3
-+#define RP1_PLL_AUDIO			4
-+#define RP1_PLL_VIDEO			5
++/* TBCTL: PRDLD bit (bit [3]) */
++#define TBCTL_PRDLD_MASK		GENMASK(3, 3)
 +
-+#define RP1_PLL_SYS_PRI_PH		6
-+#define RP1_PLL_SYS_SEC_PH		7
-+#define RP1_PLL_AUDIO_PRI_PH		8
++/* Possible values for PRDLD */
++#define TBCTL_PRDLD_SHDW		FIELD_PREP(TBCTL_PRDLD_MASK, 0U) /* 0 => shadow */
++#define TBCTL_PRDLD_IMDT		FIELD_PREP(TBCTL_PRDLD_MASK, 1U) /* 1 => immediate */
 +
-+#define RP1_PLL_SYS_SEC			9
-+#define RP1_PLL_AUDIO_SEC		10
-+#define RP1_PLL_VIDEO_SEC		11
++/* TBCTL: Combined bits [12:7] actually split into two subfields:
++ *    - TBCTL_HSPCLKDIV => bits [9:7]
++ *    - TBCTL_CLKDIV    => bits [12:10]
++ */
++#define TBCTL_HSPCLKDIV_MASK	GENMASK(9, 7)
++#define TBCTL_CLKDIV_MASK		GENMASK(12, 10)
 +
-+#define RP1_CLK_SYS			12
-+#define RP1_CLK_SLOW_SYS		13
-+#define RP1_CLK_DMA			14
-+#define RP1_CLK_UART			15
-+#define RP1_CLK_ETH			16
-+#define RP1_CLK_PWM0			17
-+#define RP1_CLK_PWM1			18
-+#define RP1_CLK_AUDIO_IN		19
-+#define RP1_CLK_AUDIO_OUT		20
-+#define RP1_CLK_I2S			21
-+#define RP1_CLK_MIPI0_CFG		22
-+#define RP1_CLK_MIPI1_CFG		23
-+#define RP1_CLK_PCIE_AUX		24
-+#define RP1_CLK_USBH0_MICROFRAME	25
-+#define RP1_CLK_USBH1_MICROFRAME	26
-+#define RP1_CLK_USBH0_SUSPEND		27
-+#define RP1_CLK_USBH1_SUSPEND		28
-+#define RP1_CLK_ETH_TSU			29
-+#define RP1_CLK_ADC			30
-+#define RP1_CLK_SDIO_TIMER		31
-+#define RP1_CLK_SDIO_ALT_SRC		32
-+#define RP1_CLK_GP0			33
-+#define RP1_CLK_GP1			34
-+#define RP1_CLK_GP2			35
-+#define RP1_CLK_GP3			36
-+#define RP1_CLK_GP4			37
-+#define RP1_CLK_GP5			38
-+#define RP1_CLK_VEC			39
-+#define RP1_CLK_DPI			40
-+#define RP1_CLK_MIPI0_DPI		41
-+#define RP1_CLK_MIPI1_DPI		42
++/* Max values if needed: */
++#define CLKDIV_MAX				7U
++#define HSPCLKDIV_MAX			7U
++#define PERIOD_MAX				0xFFFF
 +
-+/* Extra PLL output channels - RP1B0 only */
-+#define RP1_PLL_VIDEO_PRI_PH		43
-+#define RP1_PLL_AUDIO_TERN		44
++/*
++ * --------------------------------------
++ * Compare module registers
++ * --------------------------------------
++ */
++#define CMPA					0x12
++#define CMPB					0x14
 +
-+#endif
++/*
++ * --------------------------------------
++ * Action qualifier (AQ) module registers
++ * --------------------------------------
++ */
++#define AQCTLA					0x16
++#define AQCTLB					0x18
++#define AQSFRC					0x1A
++#define AQCSFRC					0x1C
++
++/*
++ * AQCTLA and AQCTLB share similar 2-bit fields for
++ * various events (ZRO, PRD, CAU, CBU, etc.).
++ *
++ * For instance, bits [1:0] => ZRO,
++ *               bits [3:2] => PRD,
++ *               bits [5:4] => CAU,
++ *               bits [9:8] => CBU, etc.
++ */
++#define AQCTL_ZRO_MASK			GENMASK(1, 0)
++#define AQCTL_PRD_MASK			GENMASK(3, 2)
++#define AQCTL_CAU_MASK			GENMASK(5, 4)
++#define AQCTL_CBU_MASK			GENMASK(9, 8)
++
++/*
++ * FORCE LOW	=> 0b01
++ * FORCE HIGH	=> 0b01
++ * FORCE TOGGLE	=> 0b01
++ */
++#define AQCTL_FRCLOW			1U
++#define AQCTL_FRCHIGH			2U
++#define AQCTL_FRCTOGGLE			3U
++
++/* These values in CAU: */
++#define AQCTL_CAU_FRCLOW		FIELD_PREP(AQCTL_CAU_MASK, AQCTL_FRCLOW)
++#define AQCTL_CAU_FRCHIGH		FIELD_PREP(AQCTL_CAU_MASK, AQCTL_FRCHIGH)
++#define AQCTL_CAU_FRCTOGGLE	FIELD_PREP(AQCTL_CAU_MASK, AQCTL_FRCTOGGLE)
++
++/* These values in PRD: */
++#define AQCTL_PRD_FRCLOW		FIELD_PREP(AQCTL_PRD_MASK, AQCTL_FRCLOW)
++#define AQCTL_PRD_FRCHIGH		FIELD_PREP(AQCTL_PRD_MASK, AQCTL_FRCHIGH)
++#define AQCTL_PRD_FRCTOGGLE		FIELD_PREP(AQCTL_PRD_MASK, AQCTL_FRCTOGGLE)
++
++/* These values in ZRO: */
++#define AQCTL_ZRO_FRCLOW		FIELD_PREP(AQCTL_ZRO_MASK, AQCTL_FRCLOW)
++#define AQCTL_ZRO_FRCHIGH		FIELD_PREP(AQCTL_ZRO_MASK, AQCTL_FRCHIGH)
++#define AQCTL_ZRO_FRCTOGGLE		FIELD_PREP(AQCTL_ZRO_MASK, AQCTL_FRCTOGGLE)
++
++/* These values in CBU: */
++#define AQCTL_CBU_FRCLOW		FIELD_PREP(AQCTL_CBU_MASK, AQCTL_FRCLOW)
++#define AQCTL_CBU_FRCHIGH		FIELD_PREP(AQCTL_CBU_MASK, AQCTL_FRCHIGH)
++#define AQCTL_CBU_FRCTOGGLE		FIELD_PREP(AQCTL_CBU_MASK, AQCTL_FRCTOGGLE)
++
++/* Predefined combinations for channel polarity */
++#define AQCTL_CHANA_POLNORMAL	\
++	(AQCTL_CAU_FRCLOW  | AQCTL_PRD_FRCHIGH | AQCTL_ZRO_FRCHIGH)
++#define AQCTL_CHANA_POLINVERSED	\
++	(AQCTL_CAU_FRCHIGH | AQCTL_PRD_FRCLOW  | AQCTL_ZRO_FRCLOW)
++#define AQCTL_CHANB_POLNORMAL	\
++	(AQCTL_CBU_FRCLOW  | AQCTL_PRD_FRCHIGH | AQCTL_ZRO_FRCHIGH)
++#define AQCTL_CHANB_POLINVERSED	\
++	(AQCTL_CBU_FRCHIGH | AQCTL_PRD_FRCLOW  | AQCTL_ZRO_FRCLOW)
++
++/* AQSFRC: RLDCSF => bits [7:6] */
++#define AQSFRC_RLDCSF_MASK		GENMASK(7, 6)
++
++#define AQSFRC_RLDCSF_ZRO		FIELD_PREP(AQSFRC_RLDCSF_MASK, 0U)
++#define AQSFRC_RLDCSF_PRD		FIELD_PREP(AQSFRC_RLDCSF_MASK, 1U)
++#define AQSFRC_RLDCSF_ZROPRD	FIELD_PREP(AQSFRC_RLDCSF_MASK, 2U)
++#define AQSFRC_RLDCSF_IMDT		FIELD_PREP(AQSFRC_RLDCSF_MASK, 3U)
++
++/* AQCSFRC: CSFB => bits [3:2], CSFA => bits [1:0] */
++#define AQCSFRC_CSFB_MASK		GENMASK(3, 2)
++#define AQCSFRC_CSFA_MASK		GENMASK(1, 0)
++
++/* The possible 2-bit values for CSFB or CSFA fields */
++#define AQCSFRC_FRCDIS			0U
++#define AQCSFRC_FRCLOW			1U
++#define AQCSFRC_FRCHIGH			2U
++#define AQCSFRC_DISSWFRC		3U
++
++/* These values in CSFB: */
++#define AQCSFRC_CSFB_FRCDIS		FIELD_PREP(AQCSFRC_CSFB_MASK, AQCSFRC_FRCDIS)
++#define AQCSFRC_CSFB_FRCLOW		FIELD_PREP(AQCSFRC_CSFB_MASK, AQCSFRC_FRCLOW)
++#define AQCSFRC_CSFB_FRCHIGH	FIELD_PREP(AQCSFRC_CSFB_MASK, AQCSFRC_FRCHIGH)
++#define AQCSFRC_CSFB_DISSWFRC	FIELD_PREP(AQCSFRC_CSFB_MASK, AQCSFRC_DISSWFRC)
++
++/* These values in CSFA: */
++#define AQCSFRC_CSFA_FRCDIS		FIELD_PREP(AQCSFRC_CSFA_MASK, AQCSFRC_FRCDIS)
++#define AQCSFRC_CSFA_FRCLOW		FIELD_PREP(AQCSFRC_CSFA_MASK, AQCSFRC_FRCLOW)
++#define AQCSFRC_CSFA_FRCHIGH	FIELD_PREP(AQCSFRC_CSFA_MASK, AQCSFRC_FRCHIGH)
++#define AQCSFRC_CSFA_DISSWFRC	FIELD_PREP(AQCSFRC_CSFA_MASK, AQCSFRC_DISSWFRC)
++
++/* EHRPWM channels */
++#define NUM_PWM_CHANNEL			2U
+ 
+ struct ehrpwm_context {
+ 	u16 tbctl;
+@@ -167,8 +229,8 @@ static int set_prescale_div(unsigned long rqst_prescaler, u16 *prescale_div,
+ 			*prescale_div = (1 << clkdiv) *
+ 					(hspclkdiv ? (hspclkdiv * 2) : 1);
+ 			if (*prescale_div > rqst_prescaler) {
+-				*tb_clk_div = (clkdiv << TBCTL_CLKDIV_SHIFT) |
+-					(hspclkdiv << TBCTL_HSPCLKDIV_SHIFT);
++				*tb_clk_div = FIELD_PREP(TBCTL_CLKDIV_MASK, clkdiv) |
++								FIELD_PREP(TBCTL_HSPCLKDIV_MASK, hspclkdiv);
+ 				return 0;
+ 			}
+ 		}
 -- 
-2.35.3
+2.25.1
 
