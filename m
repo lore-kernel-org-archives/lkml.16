@@ -1,133 +1,139 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED18F1EB18D;
-	Fri,  7 Feb 2025 15:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450D223C8BA
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738943955; cv=none; b=aOauz6zYIHy5Qb6hy1ORs7VjVwb6tpW0sQHen1lwtfelGxWUQj6nmhWf7YkjB/wcY1Ol8wuZqzWxHhQFgigMRIMyARJewyyjmrWl5cZuJ10zcM9dkSn8oGWJ4z0dbC+j+o6ZD2UR2o6O07aH02DYmC+pHajqL6Ts+Vdrn8pfe7Q=
+	t=1738944142; cv=none; b=WsOKhoQU/olHxyDS+j3NovT4eo2vpJZ4oTqNYkSppGCCX2NcDNQE9sKaIRyRJbldcViz/5n1Q9SBgkCAOv4ZAkhUI+ZD//jn4zWUUYt6GKE1A3ZjpxrfVXbsg9wejOeZNA8wn9xXFhIV0x6cl0/hZpEX6BMAvLdQqASGT4Sg8ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738943955; c=relaxed/simple;
-	bh=HpFqvIT+cfFtpH+ABRHpXGMzJbwYFkCkvBI+O9Njk7I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=NJvqUAUVPcF2SajMSILrLJkA7+L+kRBG/RLjd3NYrffNMmMYaSCDWBXJ8tBn2b5N0baNQ8/NUYFgYVKt9Osp83GK/72aAQDZ8SPg3WUY8mlzg3+hjbdRx71AKXAgKfyFtZYbsLYTiv2ygvuNjAJFp0XF0p4xTSTgvlo1qMgRBOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=byed9zhr; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738944142; c=relaxed/simple;
+	bh=zpMXVfQjnAUBW6qykmx3EJiuUjgkhNeI+8nEmVNmDko=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oSjAoyU+/foTHh+Eug669F4/p/8mMsz+RftUQk6J9qwnz92aF+kTweTwLw2kUsL5lAON/IiGc2N2mYk8/xOBD5pLRpdBaI18hzCFDrE/Gg9O68zp+RNVRK68+oy/Q3q8Pf3IgAE0IKNnK6UHjulZ0137MqdN1UA98Q9XFpCvWlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=VHlZg2ER; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="byed9zhr"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51770SKi016630;
-	Fri, 7 Feb 2025 15:59:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	btt4RdEIIBJit2kN1ZGw58yZ2tYbo1VWqyU39sDoZ30=; b=byed9zhrpfHTTQ/X
-	LfH+jwBFDCMq3fX98IR5AUybDQ14ORpb7PPMbTUnTwfWnbpWiZcjMSK5DOhIUxJ0
-	uPmxtugUXK0XXmVDbS91rG2fjWhBRNTtjQQSWKJfp3RJoJnsoRs4qdOo3WB4ZtOc
-	sRCauJVK257buDaWy638BZOx8OYGagO1sYyHn2MOjdLjGSMk/Q30k+O6fcx8EiXH
-	RwaMNs1hdpzHXIZ5k0xJy9dMSNH85pZ/9R2R8zcQoHX59Pq4+sxFjFwXhiL8XiUl
-	WNqAAsymidUEcvxj5+5Vx3k2boomnxo3yfwVQMh6dHvkUVkwvqAemr72mIb/ygmU
-	B/ZsFA==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nddh1bxx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 15:58:59 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 517FwxUw007384
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 7 Feb 2025 15:58:59 GMT
-Received: from nsssdc-sh01-lnx.ap.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 7 Feb 2025 07:58:54 -0800
-From: Lei Wei <quic_leiwei@quicinc.com>
-Date: Fri, 7 Feb 2025 23:53:16 +0800
-Subject: [PATCH net-next v5 5/5] MAINTAINERS: Add maintainer for Qualcomm
- IPQ9574 PCS driver
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="VHlZg2ER"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c0155af484so297356285a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:02:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1738944139; x=1739548939; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XBpucnCVHzGQH+O7bMwiQtnZts9S0udJs+IqXXWisiQ=;
+        b=VHlZg2ERA0DascTFe5PwYOVyGHK2KqVWQv7FDvQHq6jbNOVtIUmlzEbf7gOx8kamoF
+         D6eyukfOalEygtvLLf2jgKaCDld7bRjLu3TPPpuocLSNnJvEjb7XXAV1d8ZkLT4Bj6kY
+         Fg+SYtb+0KGIbaPM1Xt9qmnZgbcuaJqeh3D+It3Qqst1MEIQ+ACo5GS3pVSDNyy4BgyL
+         D6Am8UsBNGaJ0pnz7/s0N7Lhim7pNZ05dvIPx1NhSw56U0HQshsxh2rUcq8grIwzricg
+         QLbKjsqG/dexWCoYxntSzGJ4v30LqHksWJXcX19otZweMjd0DA8vfqIOsKzHR6cq41H+
+         v3SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738944139; x=1739548939;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XBpucnCVHzGQH+O7bMwiQtnZts9S0udJs+IqXXWisiQ=;
+        b=CPdBDEFlVybzE91NxBd2ZuMxzyZmDSZOKTumq5t070mFG3LqaftoK0RtBLAZcJpGOa
+         V5BYV0SDPvOSg6tFCxIXrIvm7G5xNRnuOyJmZkZyjoAOAN9S2eC8BKfkPoP9P4UofSnh
+         giK6QgN558sl7UlYngJVTuHFdop8jLKkEpqYA8RLfa8OTwdqS+xH8SGJzi5T3Da0WoXX
+         i/TV+ChS3ZBQxhn3wiaaaJj8STT4y7+6+Tle7/agyzuUUcxNgOv1egmttWtDgy8/c+AH
+         N1bMNfs4iMuIdV3+NaZMFjfyZqFzLmNFTunoH5PS6zxI/u0uir5B4RHeZaBPxrPAs1P8
+         NY1g==
+X-Forwarded-Encrypted: i=1; AJvYcCWALpR0kCFYnG+657L1dzuDTCC8/E7FLghK1ymyBKjgb0f0gxbn0GLt8lXuczQtPd8TdLHnhpU3rVOQgPI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNQZ1LDbja/LXqyXvc0aGDpFW1cH6z+Dz00Me76cL17PQCRDFu
+	vzVO6TDvy/pDfX45gxKuEbqh+Tn1/fnVDMFK+PWT2Cv+DaTMPJgoljqKdkNAAxM=
+X-Gm-Gg: ASbGnctyODmCODkLSJ7nokoDbQSP8XTU6djtMVMdPGbDPCIijI5TH7xcO8wiXUJLxft
+	ZojuuTY8cG5Z/ENEPdOmjBCx2fazIRbPYZeBXvFbk/Azqr33Me2+DmVCKX2aertGhkUz1oNqgHQ
+	wK3Dhoq1PlmFSkgNPb9uBxJuGnKBwFXb34TtB0LoS1TWounPZ8OhmPm2+w0ZJbP6ldPcHAsXsZW
+	/UMQObOv0Ki/WjiHiiAUVC8oqsmBTUikQVrHWTx+1ShUjOxsQrL7hsaei8QkigI+7iS06+Y6YiX
+	HiEIPyUlL+tBzIah41f2W4+G64sxOa5c/tLZPAPOHxnGzKxiMY3nFcm6sAsLpS5Ga/xv9xfEVA=
+	=
+X-Google-Smtp-Source: AGHT+IHaACtCyvYcSAtPimBnfNUn6WiPGaHDl2LoofMFjXuD4jKdMZq31UofSzyQhbo/FJ8IF4spoQ==
+X-Received: by 2002:a05:620a:26a1:b0:7b6:d252:b4e4 with SMTP id af79cd13be357-7c047c9507cmr677196085a.53.1738944138934;
+        Fri, 07 Feb 2025 08:02:18 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47149275ff8sm18152201cf.11.2025.02.07.08.02.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 08:02:16 -0800 (PST)
+Date: Fri, 7 Feb 2025 11:02:13 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 02/18] cxl/pci: Moving code in cxl_hdm_decode_init()
+Message-ID: <Z6YuhYHz7K-arZuo@gourry-fedora-PF4VCD3F>
+References: <20250207153753.418849-1-rrichter@amd.com>
+ <20250207153753.418849-3-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250207-ipq_pcs_6-14_rc1-v5-5-be2ebec32921@quicinc.com>
-References: <20250207-ipq_pcs_6-14_rc1-v5-0-be2ebec32921@quicinc.com>
-In-Reply-To: <20250207-ipq_pcs_6-14_rc1-v5-0-be2ebec32921@quicinc.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit
-	<hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <quic_kkumarcs@quicinc.com>, <quic_suruchia@quicinc.com>,
-        <quic_pavir@quicinc.com>, <quic_linchen@quicinc.com>,
-        <quic_luoj@quicinc.com>, <quic_leiwei@quicinc.com>,
-        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
-        <vsmuthu@qti.qualcomm.com>, <john@phrozen.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1738943908; l=960;
- i=quic_leiwei@quicinc.com; s=20240829; h=from:subject:message-id;
- bh=HpFqvIT+cfFtpH+ABRHpXGMzJbwYFkCkvBI+O9Njk7I=;
- b=VSf5SDGe+EnzqQXbNcX0ZedQX9iLRui2ne1AO4awX8E7tUkqeORxShAC4dsbxOx3N9vUvaoaj
- cvqD6OL5v74D1zuNfctv9XjqfM+PNLpLq7JYEMjArAWFapZ/nPs3zzI
-X-Developer-Key: i=quic_leiwei@quicinc.com; a=ed25519;
- pk=uFXBHtxtDjtIrTKpDEZlMLSn1i/sonZepYO8yioKACM=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: rHfawhoiJifVUufzwZsZwbfmp-crgsGk
-X-Proofpoint-GUID: rHfawhoiJifVUufzwZsZwbfmp-crgsGk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_07,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- clxscore=1015 mlxlogscore=814 lowpriorityscore=0 impostorscore=0
- mlxscore=0 spamscore=0 priorityscore=1501 adultscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502070121
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207153753.418849-3-rrichter@amd.com>
 
-Add maintainer for the Ethernet PCS driver supported for Qualcomm
-IPQ9574 SoC.
+On Fri, Feb 07, 2025 at 04:37:37PM +0100, Robert Richter wrote:
+> Commit 3f9e07531778 ("cxl/pci: simplify the check of mem_enabled in
+> cxl_hdm_decode_init()") changed the code flow in this function. The
+> root port is determined before a check to leave the function. Since
+> the root port is not used by the check it can be moved to run the
+> check first. This improves code readability and avoids unnesessary
+> code execution.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 
-Signed-off-by: Lei Wei <quic_leiwei@quicinc.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 896a307fa065..60c340a2de5e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19525,6 +19525,15 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/regulator/vqmmc-ipq4019-regulator.yaml
- F:	drivers/regulator/vqmmc-ipq4019-regulator.c
- 
-+QUALCOMM IPQ9574 Ethernet PCS DRIVER
-+M:	Lei Wei <quic_leiwei@quicinc.com>
-+L:	netdev@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/net/pcs/qcom,ipq9574-pcs.yaml
-+F:	drivers/net/pcs/pcs-qcom-ipq9574.c
-+F:	include/dt-bindings/net/qcom,ipq9574-pcs.h
-+F:	include/linux/pcs/pcs-qcom-ipq9574.h
-+
- QUALCOMM NAND CONTROLLER DRIVER
- M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
- L:	linux-mtd@lists.infradead.org
-
--- 
-2.34.1
-
+> ---
+>  drivers/cxl/core/pci.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 2ec8c97ab160..f8e22bc278c3 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -419,14 +419,6 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+>  	if (!hdm)
+>  		return -ENODEV;
+>  
+> -	root = to_cxl_port(port->dev.parent);
+> -	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
+> -		root = to_cxl_port(root->dev.parent);
+> -	if (!is_cxl_root(root)) {
+> -		dev_err(dev, "Failed to acquire root port for HDM enable\n");
+> -		return -ENODEV;
+> -	}
+> -
+>  	if (!info->mem_enabled) {
+>  		rc = devm_cxl_enable_hdm(&port->dev, cxlhdm);
+>  		if (rc)
+> @@ -435,6 +427,14 @@ int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+>  		return devm_cxl_enable_mem(&port->dev, cxlds);
+>  	}
+>  
+> +	root = to_cxl_port(port->dev.parent);
+> +	while (!is_cxl_root(root) && is_cxl_port(root->dev.parent))
+> +		root = to_cxl_port(root->dev.parent);
+> +	if (!is_cxl_root(root)) {
+> +		dev_err(dev, "Failed to acquire root port for HDM enable\n");
+> +		return -ENODEV;
+> +	}
+> +
+>  	for (i = 0, allowed = 0; i < info->ranges; i++) {
+>  		struct device *cxld_dev;
+>  
+> -- 
+> 2.39.5
+> 
