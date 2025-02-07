@@ -1,145 +1,121 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12E919E99E
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 07:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D552E18C93C;
+	Fri,  7 Feb 2025 07:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738912543; cv=none; b=ALY11+cFfbYwC3/K0b6f2V4kn/1MC9B8kW6a1YvZvdpsEA9LZLqV+7i4lqsIByATqSTfGpNFT58EVxT3k1n6cs7dp+h1BJN8noFsBbrmapQc4xgWF063gefMMLVSL2s7fnS1hHHzXWh7jcdPjJ2uF3rfaGhwmAmt2P7Ke8JEFAU=
+	t=1738912603; cv=none; b=B1ehUPD2BdGIxq0NnfpTUL5PFUsW4U47hsM+fyIF0Alb4XpyDV2QqNZttraMo4ci2f0ScYPDj8QFwcPOzTJppFSGLavWhy1X+ROVAelBrUgYNpecgQNrWu7LzdhLjw0ZdkqvbA221sVjUB1Djao/srg7iuY4E/aQxrWC/FXJ69I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738912543; c=relaxed/simple;
-	bh=dUnNqw1brKPXE6dDQeYeK/FFGBNMkG1EB3CHxG+wkJY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XsWzOhAh9jL0GDTCbMfi1+sm0BevXaP+Qu6WxYzAONRqCf3eF+9jFreZUKhWDY1TKY07vXO034gNMka5sFNokTbeBO1dqAPbD9azBN7qJI1DxJC+0XW/Cf3161c2q9A/9i/ZeDzZc7PKLAWSioa4XLCrnvP0ClxUy3WvpYZw7Vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DL+i4tep; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738912603; c=relaxed/simple;
+	bh=2GN1NU3tJjR3b9qlw2Ov2OyUerdjYXF7dBWJ1LPloZg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=j3wScj3NeZn60LWyYNPCMhPrlZYX++i/5XJZvRqkIdkRN3k4H/RqJu2N5BgZUKqlYZhpTCD3rWEEgmISAbVrL6fvG7noR2VPBM/qzWjE78WNOPv6cG1X1UTnZcLDyekIQ/ur60zFuBRXI0rnR0tbVk8h9FyLS2EByxYanft+yj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=DqZticIc; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DL+i4tep"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21f3c119fe6so33673625ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 23:15:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738912541; x=1739517341; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZE4R1S1j/M6pE22+nPWcID1WidunmigR9GW3OBmBoT4=;
-        b=DL+i4tep+7bgTVKJpktqcmJkyOAk52S1Y4nXzYtMukimi8FFddEiltDD4TC1lzTWEo
-         puWLcXl0gmYRYX6biIwq7H11D7cfp/PSUqA+nXVEAqWbojaEuucTTBjPwSKvMuNr2/HE
-         lUQGOBHV8WtE2D+29tK+8gmuBAgJOCK+V0S6hPZ0k6NFOTssbVOeokHql47UbDp4SrhD
-         fbTfBjfdZWMQaYZNCWKRVAm7rb1/YMv0koObwimFz816Hj8zG4vpE4sEBBn9PAHnlLth
-         LrQ+JfBZUxxAQxZvkUyyHoB+a9KyyqgvaYbnfMUVhpyvD0VsEw/hCpP1P2qWWlla+juf
-         kVZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738912541; x=1739517341;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZE4R1S1j/M6pE22+nPWcID1WidunmigR9GW3OBmBoT4=;
-        b=iskN2WqCQ7wy5XlhpP8tAH7GtembMuffX7jd2ZNVglD6xQHrlEgNHsfu0I9DdiZ6hP
-         5PdJH+iZYmFYF/1mTqS5rOZpjsfgiI16rJ4I79DEHCbVhm2DTouemhI2ww4tXQqdzQL+
-         2W4dDmgybzh/ClUiXXk0RHQflMU+eTARt+O8kyO1brxkvx76ZLpT6vKzhhLwUXhXqsVB
-         6hVJYbj99AWOAwmKKSvjWaKSbfrKLDDnilj5IXV4JMob98M74m8GkFmlQMsHHXByyIpU
-         TJ6xoRLNwBsmute1flqu0vMEm3PyL8Ul0MuZG5Pay9qwUBoNYZoPTVk4B5GX/NZEBqZX
-         DsMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdPBtRrng7E8fB8g31r88wF0k1QvsZYECpqQHymJ08Qgz0AuKygvmeA7866qVGZvVmQf4vNpTleLL08gU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4KyPEt9wUrtqEYt9i96SmIAXq6Q7JAsKOu7Rv5MuOirIJ5T9w
-	BaLnxu+yNLktpi8obbAhopeSRWA3uOMwfLoxxsP1h0GOMerfs9h3tgiqIQXWyYM=
-X-Gm-Gg: ASbGncvuGNwvvvZlqH1ANC/WIZm7bIPhz4bargkN9LddvGXL4JRyRePSCvCHo9ezWu4
-	dSn3UQixvUqxdr/VwIh5rFJFnBwsLgFpMa0zaMxD31/GLvZ43Yl76jQNBI0m2CwqoJoCMlYCEXv
-	8HThNficWWW5cpmLAmwdt8w84Ge4yBxNaAnTcJj8H4Bb2L02zXNKdPRyKstUm+GGgIi8chQ4YkW
-	HSjMpmQpHdgKS8J/v2hAbUUWhosPFD/24VHQZBOrSrXVmv0K2DzFomrW2mh5EpRwO3Jg/CSjxLo
-	RTn6w3GqQV+x4+VJqg==
-X-Google-Smtp-Source: AGHT+IG0HmX1b0ZP7iCDqtRYBLY1OA2uSMSxmzc5p4sdX0Udih5vnsk0XFTryW6rzf65b5fUm+ItCQ==
-X-Received: by 2002:a05:6a00:4fc7:b0:71e:4cff:2654 with SMTP id d2e1a72fcca58-7305d44a475mr3508897b3a.6.1738912541001;
-        Thu, 06 Feb 2025 23:15:41 -0800 (PST)
-Received: from localhost ([122.172.84.139])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048bf135dsm2358026b3a.113.2025.02.06.23.15.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 23:15:40 -0800 (PST)
-Date: Fri, 7 Feb 2025 12:45:38 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Benno Lossin <benno.lossin@proton.me>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Trevor Gross <tmgross@umich.edu>, Viresh Kumar <vireshk@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>, linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Erik Schilling <erik.schilling@linaro.org>,
-	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	Anisse Astier <anisse@astier.eu>, linux-clk@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="DqZticIc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1738912594;
+	bh=2GN1NU3tJjR3b9qlw2Ov2OyUerdjYXF7dBWJ1LPloZg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=DqZticIco6xTt9rAFjK6Gh3OJX/LCUq93zaeumuCbWYvVEhK3QrhmFOKYjpA+XmiB
+	 r0XyuanliRK+rrcc1VNwWzwpsUo/6txJW7YCuAc0UpLZvpqC/y6JIjFex7y3BodFMb
+	 myl6tLmvqb9CkslMZb9PGAohSMkEG17UgDEK8RD9uBJd/AMFqYmBc8y3Di/WBYWOHS
+	 hzRjowGJT2X2gq3EVpQvYD2i6HPU+xXTUmy+kg0hDkH2v/TfRQ1lnlCB8nM/zaaoKT
+	 KKVQW6FdnPqkCHqHlSt+uAJX+zwzeiFg/w2WdLIEdYmAtNWLwuvqfMZzJqiDiIaRSC
+	 wgQ5OzKA7Uuzg==
+Received: from apertis-1.home (2a01cb088CCA73006086f5f072C6a07A.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:8cca:7300:6086:f5f0:72c6:a07a])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: jmassot)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 107A317E0FC3;
+	Fri,  7 Feb 2025 08:16:34 +0100 (CET)
+Message-ID: <950770a2406dd9ac3163e677c6d887d06df5b8c6.camel@collabora.com>
+Subject: Re: [PATCH v3 2/2] arm64: renesas: add initial support for MYIR
+ Remi Pi
+From: Julien Massot <julien.massot@collabora.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, kernel@collabora.com, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V8 00/14] Rust bindings for cpufreq and OPP core + sample
- driver
-Message-ID: <20250207071538.xjxauatta2jsedz4@vireshk-i7>
-References: <cover.1738832118.git.viresh.kumar@linaro.org>
- <Z6Sgwbgfp-9SCr8Y@pollux>
+Date: Fri, 07 Feb 2025 08:16:33 +0100
+In-Reply-To: <CAMuHMdXAS6pnNcT=A7i9La22tbDXYf7EKqbJzHuK2ze2gf6cgg@mail.gmail.com>
+References: <20250131-myir-remi-pi-v3-0-2dda53e79291@collabora.com>
+	 <20250131-myir-remi-pi-v3-2-2dda53e79291@collabora.com>
+	 <CAMuHMdXAS6pnNcT=A7i9La22tbDXYf7EKqbJzHuK2ze2gf6cgg@mail.gmail.com>
+Organization: Collabora Ltd.
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6Sgwbgfp-9SCr8Y@pollux>
 
-Hi Danilo,
+SGkgR2VlcnQsIEtyenlzenRvZiwKCj4gT24gRnJpLCAzMSBKYW4gMjAyNSBhdCAxMDo1OCwgSnVs
+aWVuIE1hc3NvdCA8anVsaWVuLm1hc3NvdEBjb2xsYWJvcmEuY29tPiB3cm90ZToKPiA+IEFkZCBi
+YXNpYyBzdXBwb3J0IGZvciB0aGUgTVlJUiBSZW1pIFBpIChiYXNlZCBvbiByOWEwN2cwNDRsMik6
+Cj4gPiDCoC0gVUFSVAo+ID4gwqAtIGkyYwo+ID4gwqAtIGVtbWMKPiA+IMKgLSBVU0IgaG9zdAo+
+ID4gwqAtIEhETUkgb3V0cHV0Cj4gPiDCoC0gRXRoZXJuZXQKPiA+IAo+ID4gU2lnbmVkLW9mZi1i
+eTogSnVsaWVuIE1hc3NvdCA8anVsaWVuLm1hc3NvdEBjb2xsYWJvcmEuY29tPgo+IAo+IFRoYW5r
+cyBmb3IgdGhlIHVwZGF0ZSEKPiAKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvcmVuZXNhcy9yOWEwN2cwNDRsMi1yZW1pLXBpLmR0cwo+ID4gQEAgLTAsMCAr
+MSwzNTEgQEAKPiAKPiA+ICsvIHsKPiA+ICvCoMKgwqDCoMKgwqAgbW9kZWwgPSAiTVlJUiBUZWNo
+IExpbWl0ZWQgUmVtaSBQaSBNWUItWUcyTFgtUkVNSSI7Cj4gPiArwqDCoMKgwqDCoMKgIGNvbXBh
+dGlibGUgPSAibXlpcixyZW1pLXBpIiwgInJlbmVzYXMscjlhMDdnMDQ0bDIiLCAicmVuZXNhcyxy
+OWEwN2cwNDQiOwo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoCBhbGlhc2VzIHsKPiA+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGV0aGVybmV0MCA9ICZldGgwOwo+ID4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgZXRoZXJuZXQxID0gJmV0aDE7Cj4gPiArCj4gPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCBpMmMwID0gJmkyYzA7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBpMmMxID0gJmkyYzE7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBpMmMyID0gJmkyYzI7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpMmMzID0g
+JmkyYzM7Cj4gPiArCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBtbWMwID0gJnNk
+aGkwOwo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2VyaWFsMCA9ICZz
+Y2lmMDsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNlcmlhbDMgPSAmc2NpZjM7
+Cj4gCj4gV2Fzbid0IHRoZSBwbGFuIHRvIGRyb3Agc2NpZjMsIHNvIGl0IGNhbiBiZSB1c2VkIGJ5
+IGFuIFJUT1MgcnVubmluZwo+IG9uIHRoZSBDb3J0ZXgtQTMzIGNvcmU/ClNvcnJ5LCBpbmRlZWQg
+SSBmb3Jnb3Qgc2NpZjMgcmVtb3ZhbC4gSSBkb24ndCBzZWUgYSByZWFzb24gdG8gYm9ycm93IHRo
+ZQpDb3J0ZXgtQTMzIHNjaWYuCgo+IAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+c2VyaWFsNCA9ICZzY2lmNDsKPiA+ICvCoMKgwqDCoMKgwqAgfTsKPiA+ICsKPiA+ICvCoMKgwqDC
+oMKgwqAgY2hvc2VuIHsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0ZG91dC1w
+YXRoID0gInNlcmlhbDA6MTE1MjAwbjgiOwo+ID4gK8KgwqDCoMKgwqDCoCB9Owo+ID4gKwo+ID4g
+K8KgwqDCoMKgwqDCoCBtZW1vcnlANDgwMDAwMDAgewo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgZGV2aWNlX3R5cGUgPSAibWVtb3J5IjsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIC8qIGZpcnN0IDEyOE1CIGlzIHJlc2VydmVkIGZvciBzZWN1cmUgYXJlYS4gKi8K
+PiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJlZyA9IDwweDAgMHg0ODAwMDAwMCAw
+eDAgMHgzODAwMDAwMD47Cj4gPiArwqDCoMKgwqDCoMKgIH07Cj4gPiArCj4gPiArwqDCoMKgwqDC
+oMKgIHJlZ181cDB2OiByZWd1bGF0b3ItNXAwdiB7Cj4gCj4gPiArwqDCoMKgwqDCoMKgIHJlZ18z
+cDN2OiByZWd1bGF0b3ItM3AzdiB7Cj4gCj4gPiArwqDCoMKgwqDCoMKgIHJlZ18xcDh2OiByZWd1
+bGF0b3ItMXA4diB7Cj4gCj4gPiArwqDCoMKgwqDCoMKgIHJlZ18xcDF2OiByZWd1bGF0b3ItdmRk
+LWNvcmUgewo+IAo+ID4gK8KgwqDCoMKgwqDCoCBoZG1pLW91dCB7Cj4gCj4gTW9yZSBzb3J0aW5n
+IHdvcmsgdG8gZG8uLi4KPiAKPiBPaywgSSB3aWxsIGtlZXAgaW4gbWluZCBmb3IgdGhlIG5leHQg
+dGltZS4KPiAKPiAKPiA+ICt9Owo+IAo+ID4gK8KgwqDCoMKgwqDCoCBzZGhpMF9waW5zOiBzZDAg
+ewo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2QwX2RhdGEgewo+ID4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBpbnMgPSAiU0QwX0RBVEEw
+IiwgIlNEMF9EQVRBMSIsICJTRDBfREFUQTIiLCAiU0QwX0RBVEEzIiwKPiA+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICJTRDBfREFU
+QTQiLCAiU0QwX0RBVEE1IiwgIlNEMF9EQVRBNiIsICJTRDBfREFUQTciOwo+ID4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBvd2VyLXNvdXJjZSA9IDwxODAw
+PjsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIH07Cj4gPiArCj4gPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzZDBfY3RybCB7Cj4gCj4gSGVyZSwgdG9vLiBQbHVzIHRo
+ZSB1bmRlcnNjb3JlcyByZXBvcnRlZCBieSBLcnp5c3p0b2YuCk9rLCBubyB1bmRlcnNjb3JlIGlu
+IG5vZGUgbmFtZXMsIGV2ZW4gZm9yIHRoZSBwaW5zIGRlZmluaXRpb24uCgo+IAo+ID4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBpbnMgPSAiU0QwX0NMSyIs
+ICJTRDBfQ01EIjsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBwb3dlci1zb3VyY2UgPSA8MTgwMD47Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCB9Owo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2QwX3JzdCB7
+Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGlucyA9
+ICJTRDBfUlNUIyI7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgcG93ZXItc291cmNlID0gPDE4MDA+Owo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgfTsKPiA+ICvCoMKgwqDCoMKgwqAgfTsKPiAKPiBJIGZpeGVkIHRoZSBzdHlsZSBpc3N1
+ZXMgbG9jYWxseSwgc28gaWYgeW91IGNhbiBjb25maXJtIG9yIGRlbnkgdGhlIHJlbW92YWwKPiBv
+ZiBzY2lmMywgSSBjYW4gZml4IHRoYXQgd2hpbGUgYXBwbHlpbmcuCkNvbmZpcm1lZCwgd2Ugc2hv
+dWxkIG5vdCBlbmFibGUgc2NpZjMuCgoKVGhhbmtzCi0tIApKdWxpZW4K
 
-On 06-02-25, 12:45, Danilo Krummrich wrote:
-> I gave it a quick shot and it seems there are a few Clippy warnings,
-
-I could find only one (related to core::format_args), are there more ?
-
-(Earlier I had a debug commit on top of the series in my branch and
-Clippy didn't give any warnings as format_flags was getting used from
-there.)
-
-> plus rustfmtcheck complains.
-
-I am not sure how to solve them.
-
-Diff in rust/kernel/cpufreq.rs at line 628:
-
-         // SAFETY: The C code returns a valid pointer here, which is again passed to the C code in
-         // an array.
--        attr[next] = unsafe {
--            addr_of_mut!(bindings::cpufreq_freq_attr_scaling_available_freqs) as *mut _
--        };
-+        attr[next] =
-+            unsafe { addr_of_mut!(bindings::cpufreq_freq_attr_scaling_available_freqs) as *mut _ };
-         next += 1;
-
-         if boost {
-
-If I move the code as suggested here, then I get warning about not
-adding a SAFETY comment for unsafe code (which looks to be a tool
-specific bug).
-
-I can move the entire thing into the unsafe block, but the assignment
-to attr[next] isn't unsafe.
-
-What do yo suggest here ?
-
-> There are also two minor checkpatch complaints about line length.
-
-Yeah, they came from the first commit (which wasn't written by me and
-so I avoided touching it), fixed now.
-
--- 
-viresh
