@@ -1,231 +1,73 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCA61A238F
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 07:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DEF188733;
+	Fri,  7 Feb 2025 07:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738913128; cv=none; b=EXDhF7qnAfO7VwjFHi4SvLk2xMaiCesBVC+Nwx8H983oC6Y2ic0TeRPWceXlGj4ku34tXherg8YBhgtSmU+GAXm0Id1COD2hpoAA8Zu+D1Igej78EcVIeKCvnGQxynvJyvKiHVIF4cOixNInmzvMiYa4vK3qmual7NnJG57tezY=
+	t=1738913140; cv=none; b=Z5AfDl59ntAZGi8HnEwjOVHIUZciEgr/ErM/HPa9kv5Mkmo3heQhvCnSJEeGsyXuiFPULVPGo2bndtKCm4X6HDbGyQXXrfDj+io1KW65/LehNqdqh66yknxJWocWKkXIzvxy7D8dTMs/jUT6t1CgAqOjcfDziwwyMUf5YhbBOHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738913128; c=relaxed/simple;
-	bh=O0aqnBT9JAAVKCeAK3LfeehnqqGfJKXDwwwFQNpDHRM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kTsNhwP/g3T+fjeFebMRaeXq8KVmlo8MeweVMKfUzudxHE1r1ug+Dzy4VTaIvyBiqmrLbMgojTjVPbWsAxMCAlzWQzz6fN2bgbCR/AeU5cCZDsSnAkgLMuxtLcQ8r/uJtzCQu8wOo9WcMEMEX1gBrlNZZsn2pgpUn4Bp+5qtSFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hDsz/CNG; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738913140; c=relaxed/simple;
+	bh=RH1nZRu6/rvTiYwNWNvLjiMC9XfUG3eG9OzimREUwgU=;
+	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=YoQCrBV2LvRSe8oamQWo5soDI2UJvyFa6P/HYmtfDw6BGMGqvVjVjjb6iDis8XhJiyYVsd161gE3JM2Mw97L8MGB7pwheVdRJEhgi6xTeRmgyiJi9cwnuraDUZG3Ob7LoIX7/a2f+Egso+PgIdBfFj4RD6J4azzzQOGdAWpxfLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MMnApV3N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hDsz/CNG"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5176Wuli009174;
-	Fri, 7 Feb 2025 07:25:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hsR/l7juiq4ts5nn339YbMnXmxHjFM8kaFQiNj600+w=; b=hDsz/CNGBR131zDp
-	hcI9ZSlp06L1IljgZOoNaYowp6tamoWPmVJwVFsvCJ4A9Ci3+jye80lxRI6ETDXd
-	KquCFoUMnMYo37pNlPyYELgekwQrw1/4XLHWwDuEgeSRGGQmdS/wAtR0dxNZ+79a
-	+SfOn0y9y8MTUk9fSffwusjQlBaqTi4FtRr9RM6SxQcPAwN5ZAYghWEQYPm6iy5A
-	WSrql/vHP7k//o1j+9aym0tf5gGOJeZHPKZOVSBXbYyfHahiBAUc/P7c1LN7rJho
-	r3OG9NZv3gcaTpC9sICG7c5Hh41gFFU4TvrLPI1FC3Y+LwJZFCif0ZLQaHoea2Yd
-	kvcZUQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nd0f04a7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 07:25:17 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5177PFwb011606
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 7 Feb 2025 07:25:15 GMT
-Received: from [10.239.133.114] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Feb 2025
- 23:25:10 -0800
-Message-ID: <a2d221a7-ca6d-4956-8537-bee39e89f61c@quicinc.com>
-Date: Fri, 7 Feb 2025 15:25:08 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMnApV3N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BCD1C4CED1;
+	Fri,  7 Feb 2025 07:25:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738913139;
+	bh=RH1nZRu6/rvTiYwNWNvLjiMC9XfUG3eG9OzimREUwgU=;
+	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
+	b=MMnApV3NXZZMPZW3IGvqiDxdnVD7McmJuXaD2J2CFRVEEz1U5oOJ/73tGE0Vj18mw
+	 zA/YpQwJ20DYSsFFAdCpYuwRoh7owAExbbrSdecSTLrPijpZKy6hv7tRsFmhEQWouw
+	 7dhP3TgkVAGEQo5SYnGIG6xLpAOJKPUaWYNGapPzfSypfh0VeAtIT+jjhCcmE18NfJ
+	 R3VxW3NSXWK9L7LMptQauHv+P7c3n9d/gKQWa6EMt1u3y9ABEKWoP5jk59cK8badPw
+	 TbDrW4kCQmk9GcCGX90m4/yPY5oPEkElu7bKkv281t6Gmk5U1NCfSdiaMtNJ8llbi3
+	 pJcVrGGRDj97Q==
+Message-ID: <9dd0d7d40b9e178650c9c70a6a496568@kernel.org>
+Date: Fri, 07 Feb 2025 07:25:37 +0000
+From: "Maxime Ripard" <mripard@kernel.org>
+To: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH v6 04/26] drm/bridge: panel: drm_panel_bridge_remove:
+ warn when called on non-panel bridge
+In-Reply-To: <20250206-hotplug-drm-bridge-v6-4-9d6f2c9c3058@bootlin.com>
+References: <20250206-hotplug-drm-bridge-v6-4-9d6f2c9c3058@bootlin.com>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, "Alexandre
+ Belloni" <alexandre.belloni@bootlin.com>, "Andrzej Hajda" <andrzej.hajda@intel.com>, "Boris
+ Brezillon" <bbrezillon@kernel.org>, "Catalin Marinas" <catalin.marinas@arm.com>, "Claudiu
+ Beznea" <claudiu.beznea@tuxon.dev>, "Daniel Thompson" <danielt@kernel.org>, "David
+ Airlie" <airlied@gmail.com>, "Dmitry Baryshkov" <dmitry.baryshkov@linaro.org>, "Fabio
+ Estevam" <festevam@gmail.com>, =?utf-8?b?SGVydsOpIENvZGluYQ==?= <herve.codina@bootlin.com>, "Inki
+ Dae" <inki.dae@samsung.com>, "Jagan Teki" <jagan@amarulasolutions.com>, "Jernej
+ Skrabec" <jernej.skrabec@gmail.com>, "Jessica Zhang" <quic_jesszhan@quicinc.com>, "Jonas
+ Karlman" <jonas@kwiboo.se>, "Jonathan Corbet" <corbet@lwn.net>, "Laurent
+ Pinchart" <Laurent.pinchart@ideasonboard.com>, "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Marek
+ Szyprowski" <m.szyprowski@samsung.com>, "Maxime Ripard" <mripard@kernel.org>, "Neil
+ Armstrong" <neil.armstrong@linaro.org>, "Nicolas Ferre" <nicolas.ferre@microchip.com>, "Paul
+ Kocialkowski" <contact@paulk.fr>, "Paul Kocialkowski" <paul.kocialkowski@bootlin.com>, "Pengutronix
+ Kernel Team" <kernel@pengutronix.de>, "Robert Foss" <rfoss@kernel.org>, "Sam
+ Ravnborg" <sam@ravnborg.org>, "Sascha Hauer" <s.hauer@pengutronix.de>, "Shawn
+ Guo" <shawnguo@kernel.org>, "Simona Vetter" <simona@ffwll.ch>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Thomas Zimmermann" <tzimmermann@suse.de>, "Will
+ Deacon" <will@kernel.org>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] coresight-tmc: stop disabling tmc when flush timeout
-To: Leo Yan <leo.yan@arm.com>
-CC: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>,
-        "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>,
-        <kernel@quicinc.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250103-fix_cpu_hung-v1-1-a7b9b3893d44@quicinc.com>
- <20250206103213.GB8855@e132581.arm.com>
-Content-Language: en-US
-From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-In-Reply-To: <20250206103213.GB8855@e132581.arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: tnsEgEBAKxKwCDPY-SvT6kd_vqoOjR6A
-X-Proofpoint-GUID: tnsEgEBAKxKwCDPY-SvT6kd_vqoOjR6A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_03,2025-02-07_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- lowpriorityscore=0 spamscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
- adultscore=0 malwarescore=0 phishscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502070056
 
+On Thu, 6 Feb 2025 19:14:19 +0100, Luca Ceresoli wrote:
+> This function is for panel_bridge instances only. The silent return when
+> invoked on other bridges might hide actual errors, so avoid them to go
+> unnoticed.
+> 
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> 
+> [ ... ]
 
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
-On 2/6/2025 6:32 PM, Leo Yan wrote:
-> Hi Yuanfang,
-> 
-> On Fri, Jan 03, 2025 at 04:01:54PM +0800, Yuanfang Zhang wrote:
->>
->> When multiple ETMs are enabled simultaneously, the time required
->> to complete a flush in the process of reading the TMC device node
->> may exceed the default wait time of 100us.
-> 
-> Have you tried how long time would be safe to wait for the
-> TMCREADY_BIT bit to be set on your platform?
-yes, 400000us.
-> 
->> If the TMC capture is stopped while any ETM has not completed its
->> flush, it can cause the corresponding CPU to hang.
->>
->> Fix the by checking the TMCReady bit after the flush. If TMCReady
->> bit is set, TraceCaptEn bit can be clear; otherwise, return directly
->> and stop the TMC read.
-> 
-> When a timeout for TMC flush and stop is detected, if the driver
-> arbitrarily bails out without disabling TMC, this would leave the
-> hardware always on.
-> 
-> I would like first know if a longer timeout can fix the issue.
-> 
-> Thanks,
-> Leo
-> 
-yes, longer timeout can fix this issue.
-
->> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
->> ---
->>  drivers/hwtracing/coresight/coresight-tmc-etf.c | 17 +++++++++++++++--
->>  drivers/hwtracing/coresight/coresight-tmc-etr.c | 22 +++++++++++++++++-----
->>  2 files changed, 32 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
->> index d4f641cd9de69488fe3d1c1dc9b5a9eafb55ed59..bded290c42891d782344d9a6e63ebdbed6719133 100644
->> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
->> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
->> @@ -80,11 +80,21 @@ static void tmc_etb_dump_hw(struct tmc_drvdata *drvdata)
->>         return;
->>  }
->>
->> -static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
->> +static int __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
->>  {
->> +       int rc;
->> +
->>         CS_UNLOCK(drvdata->base);
->>
->>         tmc_flush_and_stop(drvdata);
->> +
->> +       rc = tmc_wait_for_tmcready(drvdata);
->> +       if (rc) {
->> +               dev_err(&drvdata->csdev->dev,
->> +                       "Failed to disable : TMC is not ready\n");
->> +               CS_LOCK(drvdata->base);
->> +               return rc;
->> +       }
->>         /*
->>          * When operating in sysFS mode the content of the buffer needs to be
->>          * read before the TMC is disabled.
->> @@ -94,6 +104,7 @@ static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
->>         tmc_disable_hw(drvdata);
->>
->>         CS_LOCK(drvdata->base);
->> +       return 0;
->>  }
->>
->>  static void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
->> @@ -650,7 +661,9 @@ int tmc_read_prepare_etb(struct tmc_drvdata *drvdata)
->>                         ret = -EINVAL;
->>                         goto out;
->>                 }
->> -               __tmc_etb_disable_hw(drvdata);
->> +               ret = __tmc_etb_disable_hw(drvdata);
->> +               if (ret)
->> +                       goto out;
->>         }
->>
->>         drvdata->reading = true;
->> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
->> index a48bb85d0e7f44a25b813f3c828cc3d705d16012..63a1f7501562fa0b5c2fe6ea53dce4d82842bec3 100644
->> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
->> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
->> @@ -1135,11 +1135,21 @@ static void tmc_etr_sync_sysfs_buf(struct tmc_drvdata *drvdata)
->>         }
->>  }
->>
->> -static void __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
->> +static int __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
->>  {
->> +       int rc;
->> +
->>         CS_UNLOCK(drvdata->base);
->>
->>         tmc_flush_and_stop(drvdata);
->> +
->> +       rc = tmc_wait_for_tmcready(drvdata);
->> +       if (rc) {
->> +               dev_err(&drvdata->csdev->dev,
->> +                       "Failed to disable : TMC is not ready\n");
->> +               CS_LOCK(drvdata->base);
->> +               return rc;
->> +       }
->>         /*
->>          * When operating in sysFS mode the content of the buffer needs to be
->>          * read before the TMC is disabled.
->> @@ -1150,7 +1160,7 @@ static void __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
->>         tmc_disable_hw(drvdata);
->>
->>         CS_LOCK(drvdata->base);
->> -
->> +       return 0;
->>  }
->>
->>  void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
->> @@ -1779,9 +1789,11 @@ int tmc_read_prepare_etr(struct tmc_drvdata *drvdata)
->>         }
->>
->>         /* Disable the TMC if we are trying to read from a running session. */
->> -       if (coresight_get_mode(drvdata->csdev) == CS_MODE_SYSFS)
->> -               __tmc_etr_disable_hw(drvdata);
->> -
->> +       if (coresight_get_mode(drvdata->csdev) == CS_MODE_SYSFS) {
->> +               ret = __tmc_etr_disable_hw(drvdata);
->> +               if (ret)
->> +                       goto out;
->> +       }
->>         drvdata->reading = true;
->>  out:
->>         spin_unlock_irqrestore(&drvdata->spinlock, flags);
->>
->> ---
->> base-commit: fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
->> change-id: 20250103-fix_cpu_hung-b5a95179ada4
->>
->> Best regards,
->> --
->> Yuanfang Zhang <quic_yuanfang@quicinc.com>
->>
->>
-
+Thanks!
+Maxime
