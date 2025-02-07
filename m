@@ -1,187 +1,117 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11021122.outbound.protection.outlook.com [52.101.62.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742CE191F95;
-	Fri,  7 Feb 2025 17:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.122
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738949203; cv=fail; b=kcI4dEkYee0ZLVdaJK93D0nWh1qSiNMnLdxNj6JRxaIEeC0cV/PwSl1W7c5WvDEeHXY++ICffmmPa4M7Aw0KdHmyS4/WvR2v6+Io4jXtiHn9SLoOAPufn0WozAMdXAJ2T3j4fnkRYiSwIG6kjZlirthxs2voUUF+6A7lAumsfRw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738949203; c=relaxed/simple;
-	bh=NEm87uarWnM78an+8q2MQw5Igqeo30iSqy821auUFy4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=CpBpeksu0Bk21CPgVWToz03TAjxMBll+aHM9S1wZU9Q4tA1Pn2x9pWznBwkmP28PsBvPsHmyO+6RmXPUtAnM/VMiRkHDII+UMXVA/tejrjuGmp0m9iMOK1RR4DLHK1QhhjWcbGMfNTG8CvCv7SLJeAXwM+XnTGBH+k5HHgigt1I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=YbZNxO4J; arc=fail smtp.client-ip=52.101.62.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D3E1990DE
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738949206; cv=none; b=lpFVT/zbskvQtS88D08Mf/gbC8kXybzOwSoNPbZulGTcyZKEytHsNBrFETibJx04RcF9IIdsrDs5M8NEHKQHAcXJvKcbp6gnXZDG3tSvz4hi+sB5SeE59eyDsi4eXVKd+dXxRnwbVeHBM3lW4DdLq6bVA2HqHKr0KDdIRXLWlGA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738949206; c=relaxed/simple;
+	bh=avwKJTHwZhEICbpkM2GsB25ND3png6YyHfACluZr+Ug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TWG4K4K9nQkNrQ4OmblXW9LeHACNs+Kcle/rnDBD6ElyC4A5U1J2mJcbxgMI2tqbhopllOgPr4iKT1xsSFevIFjrqVS9SqfD9ePhkGA6/9XHFoV6Mrmn2Rt0no7Qnj5Zp7kwrpXupaNJC2mtKSI/zmoqAgvmlPzzsg99Qy52/Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=byR1w/oE; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="YbZNxO4J"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eyVJoYR5kYE7PbtAj42pGLEYK2fOTKu+ySkmPvdlKN9GHa5G6UUYg21aJxqJSv6zjJNL33Xh5g8+TU84zNjqqVhOxXRKm1kcn4cPx/BFSu66dbncPa23VGHpGOk9DjRt+VhPjKKZo7ctkFvqFvoX0IgQ5EzXOI1sECkZqku62pXQyIk0NPq+8kcaJ+2kGKv7abGjPpEQsTjRMSo6VqLFGV8KlwaF4p8NmB5fnygJPjC8hFOGbcNKL9UJ7T8aLD1lp8Wz6YX+toxd5NXGJtORqZyoPvcUO9FVGBGpVr9DvfSSoZfXgRM4kcJMQwjywUEaBt3pjGPkepQgXM9zORVSiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Kf86esOqftn6DamydQ+ejG3Myztgs0HnQYivrLcmy1o=;
- b=EN3mxwn1VknXPgKwKKZfcf9T3KpEs0ERN2otyCZO+HRh4Tjc7ZD5G+7QVYZ9ihOleYZov/mWfcAYGVtzStNo1zL5erBwvDAa2sdDw61fGiSibd9QdwrAboVphe7FzbtHO5Xhdb4que9tb7ecjfTGyUWT8/yKKoUs0KC+MAILeoKTXekA2L6HdmkekqcDftOKZM9t8muJDP6+L0EVaZkELVHmOQbcpJYvLJ9vu30xda7F3uvZn2wsMgulIN9A6i8JIo1XNFkBKaNeTWjznP5dE5zQ5aQaoDe69Pc3F/mguXN7WXOkg9v2Tis/fQt2Mg79QqM24hXbalRTZAqcU0SqBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kf86esOqftn6DamydQ+ejG3Myztgs0HnQYivrLcmy1o=;
- b=YbZNxO4JffpOFVnI335Dm/8WjdNIbQ/kV9PFAOsYAeowv05UkCQ+6hMvXIvEc3cW7tE+/GiuFtxk861vS4wuCVSReidsr6FKjXNJDwQ3O7nU/d/akB28ACjmEYmMYbLutb1d+OJ/1pqTNDNt36sRcklPDidu4OZfcCLq9JxnJo0=
-Received: from SA6PR21MB4231.namprd21.prod.outlook.com (2603:10b6:806:412::20)
- by SA6PR21MB4209.namprd21.prod.outlook.com (2603:10b6:806:414::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.8; Fri, 7 Feb
- 2025 17:26:39 +0000
-Received: from SA6PR21MB4231.namprd21.prod.outlook.com
- ([fe80::5c62:d7c6:4531:3aff]) by SA6PR21MB4231.namprd21.prod.outlook.com
- ([fe80::5c62:d7c6:4531:3aff%3]) with mapi id 15.20.8445.005; Fri, 7 Feb 2025
- 17:26:39 +0000
-From: Long Li <longli@microsoft.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>, Konstantin Taranov
-	<kotaranov@microsoft.com>
-CC: Ajay Sharma <sharmaajay@microsoft.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>, Shiraz Saleem
-	<shirazsaleem@microsoft.com>, "linux-rdma@vger.kernel.org"
-	<linux-rdma@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "kernel-janitors@vger.kernel.org"
-	<kernel-janitors@vger.kernel.org>
-Subject: RE: [EXTERNAL] [PATCH next] RDMA/mana_ib: Fix error code in probe()
-Thread-Topic: [EXTERNAL] [PATCH next] RDMA/mana_ib: Fix error code in probe()
-Thread-Index: AQHbeUDvGHPi0oncJ0yJ3OK83fR6srM8GCzw
-Date: Fri, 7 Feb 2025 17:26:39 +0000
-Message-ID:
- <SA6PR21MB42317A411C6A2309ADD73493CEF12@SA6PR21MB4231.namprd21.prod.outlook.com>
-References: <2bbe900e-18b3-46b5-a08c-42eb71886da6@stanley.mountain>
-In-Reply-To: <2bbe900e-18b3-46b5-a08c-42eb71886da6@stanley.mountain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=69173ac1-1ea3-4e1f-8159-bf0b2c66d5c9;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-02-07T17:25:53Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA6PR21MB4231:EE_|SA6PR21MB4209:EE_
-x-ms-office365-filtering-correlation-id: 189b5625-4686-4b3f-6ce2-08dd479c94e0
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?0MdqVpFNM3Hr5T1TcwlTNa3og3YKtUxUULJMajxAicXPsOtI2PmdiQqxJpOW?=
- =?us-ascii?Q?QPNR/EKO4lp4zzp8dRk6SFK+H1jr4q1igcWg8C4jbq5soj9CDDIIOWPa70pm?=
- =?us-ascii?Q?Zmz9/DMAPEVUISS7Z8+J456TzNM1HLzmvMUkduoLeXsEKZ/U+TR/+qvDXC4y?=
- =?us-ascii?Q?O4TXiyxov7cdsiOS2V3sC0hKSZFwyrZt6d9baxn6l1n54saQ1MT+Da/sX2tP?=
- =?us-ascii?Q?5DrIetn2T+YGwU+tiTVJ9UtrivrEW6gDzZj44fnEqhLL05L80qc0V8/p3cOF?=
- =?us-ascii?Q?+gVzyLtcLRiGTwVV6Ms5HPQ2voP4++1+GmOV/crUVUjwKLIZDhyfBEurwbrJ?=
- =?us-ascii?Q?u4cBztakQxZdnec2l4vwxtLMkZ4womiQJ5K5HS+OedgGLfav4p/tJMq7k3nP?=
- =?us-ascii?Q?CVtWZKBJYT2vDunblxl11wsc0Gy/nRZfBRVca1jjDkH/svhQUY30TNJQ6Yyo?=
- =?us-ascii?Q?jHiUnWa/H53pz4k47cnJyHur+o8ieFflcxI726nplFaDzax4HbsyEDzSipXi?=
- =?us-ascii?Q?axfZPBwF/JTxV9a8kZmzTySoQ5EdVkyC0olCHjeebbTqAVO5rHrPh5Ptjqn1?=
- =?us-ascii?Q?si6vyD9t7W8NVOVDYGBXEC+KCsTEij5DJy/eu5rDRt/7eeuqBthRxGyI7veQ?=
- =?us-ascii?Q?8GagLwzhkcFJ3x+HiqmKsqJoVi9LP2zB64h/VOh+6Hsf60qMFikTSaTqbtBk?=
- =?us-ascii?Q?RPOWCL7HIno1yYp5A9t/NXou2PdUM1FqKmPVK0m8Z+/K8vDV/nub2Z9nqNXZ?=
- =?us-ascii?Q?NZSIq2Loxagkg4KP42Ve42tHGS/9cIb2qNi2wsab3y8oayZZ4j32nlhFr9jx?=
- =?us-ascii?Q?J8Rx6B4WpqqbIQv3G9czyYJesYaNqekRCu81XrXnnUomD0MfXGQayyHJjxuc?=
- =?us-ascii?Q?jlOIh2ebdeSG5n6CeMENldrxcMLut6ka+qeabGNX0FWJHmpUJgZWGfN/OO0q?=
- =?us-ascii?Q?3shj7yVVIPb9AhcjDkPGbbxOxtQ9UrSd5lTX3AIdxJPf0Qh3b3bKwaR4pRo1?=
- =?us-ascii?Q?nWEY6EcdAYqd38O5PpQj7Lz/vaXSO0MDwpoBlpkQnTfcoGTUMVjuTIlti8Nj?=
- =?us-ascii?Q?6KYB4pV/m675RFwZ3hNeFCrnL2Eofio8YCa5xb4JgiMs222ZdC/5tEprVFh5?=
- =?us-ascii?Q?Uohp6xQhmoIgDgD20cKXn60fdcbIv1fdCVdkv8d1qOlY4kkk/KTMHEj9ugTj?=
- =?us-ascii?Q?TZCE0rZ4JbIujwedfD8HnhS1cfyDuOaXlUIkhZfdxcZuH+zM33gecQ3eQNh9?=
- =?us-ascii?Q?7By0J+o8lvN2o7tRecWo3bIofEhcm3DEjdkg7LYeX6/ko5S103q5825R2tzX?=
- =?us-ascii?Q?Ynf3Ssbh5Mc3zG0B7+NDIdLui2S4irVb8pfLWaRhgA6NEHLbXfT8yCuagoI+?=
- =?us-ascii?Q?EYR55VUSMUZbhNiOSF2pP2CKQgnEQ4Do2DsyRD41yR/pELGlwKeCKu206KXh?=
- =?us-ascii?Q?5eJSYPq/j4UOoTIiAMJG+CyARuX7xC03?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA6PR21MB4231.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?f4Ha8CgNwGbBA4dOqlGIGz/1BCYL3NaWwCjD2hy7keJ1UQGGR11a5sQQyvKI?=
- =?us-ascii?Q?Vcsf91LFfI4BWO6SarY41vZhfeaDzaS9DwwGo794AjXcVNIhq5J18CT3dgz7?=
- =?us-ascii?Q?2atrQrEjmm5xGiSkywl62onII4ibRLRL4YLmcHBNJUxmoa5pHItmyF20nPIN?=
- =?us-ascii?Q?6MlsxuyAYgAobKHUYGwFcSwCaRuGiufWo9sHBQYfbhOEpxgBzyBchi1u278Y?=
- =?us-ascii?Q?hCO87OUCGMt1mglUIoMza0iRbVjTN9vvCAw0XOprnoYr+0clXPnc5ZKzVs9J?=
- =?us-ascii?Q?HG50Xs++PB4mvJw83LFZzTgIp5kCvpssliNZV5bkNUmlKjfEaUpxIyoRGCyP?=
- =?us-ascii?Q?TjQofwjL9Pu2c+S4rak7+BQIcvsrYxUtvlAQF2OpkpCJoJzKbYo9snLQC7ZJ?=
- =?us-ascii?Q?killCa0IGuPFvALRs0XnGrSRgZPmYltYAMqXdRCRRdHfERKmBcn4y+aVfa4g?=
- =?us-ascii?Q?8hrC5VbHanl4u6wt7P/TMMoayFYDejPiNYvTCWAbB0BVxttaBg0l8Y52uFbW?=
- =?us-ascii?Q?HAn9DJuiV5clxbZF4QqX385ZExQssaKZhpi5EitCOcNhL5poPRVLIAaHPxEx?=
- =?us-ascii?Q?Z5ZLa3p73UuA6sWlU1YvsqkpLn5Lv0C1qXHNF+6IHArJxFFyFhwdpyARlvnH?=
- =?us-ascii?Q?S1XzbVj1vQHLThsnQohe+Y7vfLsBaaHPh0CTMQtGFU3ScoF0dKKbnKG1Dt56?=
- =?us-ascii?Q?nB1GBBXRRHLT38I47sa07aBNLXkO3SaczlMGtXD5JWPCTc2zkc97FUMhXyn8?=
- =?us-ascii?Q?zIEtY0U9clPhFuOeL7vHdbkRcObdrFAGEF8+d46s5ubmiLM8WHXhp4qJoUro?=
- =?us-ascii?Q?VKsyfQCMlK+bw5MwJzSe9/ggrsp9mnJv83zQA6iP6LGwgSuXanuDk3XNrNC9?=
- =?us-ascii?Q?k8sgcsvl6tJs5EJp2bUH8DTjmKxS42HttFSZZW0Hea7PofIl+ShSt5om4k0r?=
- =?us-ascii?Q?cG6KD5o9NdTwuRCvSB78MPnZmhM668UYiFyEKPsEEAv63CQmoI870F4sB9BO?=
- =?us-ascii?Q?bKFzE32qJu9iPm3B0kQka5Eyjh0lc8MM+HkDxtI12/dXc5+YbLB/4g60CsyP?=
- =?us-ascii?Q?gRl3Gn5p2ha1k2p1Z3pV/gP26wj5iaqeG6vdrbXuorY5vsocbQizbkl6msEe?=
- =?us-ascii?Q?hg60sbq6doaY3AO+KJdlCJlnZW6dp5zgQfgguFInTgslaAR4i+qt5slfOX79?=
- =?us-ascii?Q?YvG+vycJ+LYObD5qX2t75q93/SYN4oY36S0V00Cl/Vhrj7Pc+HDiWLT+nbI3?=
- =?us-ascii?Q?L3BAeuXm16str/ZbbpY27QwX2p45LTv1G/Bh//unGXvcFdMclOS1aQroMAIT?=
- =?us-ascii?Q?jZxAOtGkMl+lBWmcHAVHPHZNGF/5WYhZxur5gkMb52FA9NLJQZoEp7tIM/95?=
- =?us-ascii?Q?A0CFu+QtG4r+xBfuBtWFa9tzNfJBdSJgXfxcxqv1ttN7D51mPqLLRa5P+EKZ?=
- =?us-ascii?Q?VGFNlNo4wQz+HvcisSUf+/kmDNGrE7beCCs2z7b7WlQSVYw7yaJDN1klH+j8?=
- =?us-ascii?Q?owXSOocG/d/j9BBOsPu7AQ6r+1osDXFE4ZJ88E2xufFkrD8ryyD3tAAiSSgU?=
- =?us-ascii?Q?yO8E1sP2M2G+u93UGJbg86kGuXFuCTdRr02X6SSh?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="byR1w/oE"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21f50895565so15058945ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:26:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738949204; x=1739554004; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=8kQ7aPeifT1xdGGMZlwPvaAdEmOG9nj84TNIl4A91gs=;
+        b=byR1w/oED7Q6rEzBU+7qJGjHYCyqfUxqGMIPOhQPeJhbLZTPqWwuZJMQYkRBVswMdv
+         YXDLKHyYpJ06soD/0Da0AvBeMkp56CilUOqSfNepxe8STCJQ3PGkP6p8pAOybL9go6YO
+         mb/fYc24iwlrJBAgD6sWTFdozKC0Fd03IUJDJrOMYmbI1UIdr0SS6KyjjQYqmHw7mA/h
+         n3L4ufRqsFvRyITX2tfLnSqXMntHKgVXaL40e57jD1dhsQ0jfbd2oKkj3e9xnvxJjh3K
+         nkIgA2aHhHp6JCBTSz8DX90Ef6EeABtip6ByMI1tQSsf0mHXWzqTDSsU9HH/r9MgWHZM
+         wSSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738949204; x=1739554004;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8kQ7aPeifT1xdGGMZlwPvaAdEmOG9nj84TNIl4A91gs=;
+        b=S8bhSFbMEFAhy0QVe6OQzX82aKLtDZC6AMyWCkCkXKMS2RkcsX8Es+K0PF9e/WCaR8
+         YXjkNHdxODsCg7HXYcmfTX02Z0GVw0bPuz7V+C+0p+mtqyNdXgKbaQjT3BC2/EF4lChE
+         tnSoGuC7tCMA+XGyZViev5hWOXUViUMp+v/3AgooRSHPoLMR1/+sraKvjoQ7ih2KzAtV
+         ZhylCZEi6GOp4H3W2lhp/918BgxPWTNo5S9Il++IxiJkLmjYb82VizwqhXs4wZ8/e20H
+         necmP6boVQvv+1fZSrleT1/T4lQxPGu7IOOWsnp71AxBwc2ebwTT1wukFhubrddFCm7Z
+         0YyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWra5qdnDcXEumSXz9o1uCt3dg0O3uXHAt6UQgDW4vB1bV0ls4NVPpF9xrRwY2sN4hnEHzVTJ6AYjj+5tA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+HYOvrbeKvLE7TKMyBrFDIOK8d9mjhqYCzENp6T9aqKxH0+By
+	y4jcQzP9HrIEDFs2Uq9Q/8KVJOJOIMBpailJVT8sBRYNvDL4cs4VfQookI6PdA==
+X-Gm-Gg: ASbGnctvGlBQ8FqVL9RbDecKJd3KYf+sZPkstCWKC8f5G8v/nRBjme3wa3Fioh6bi2I
+	/bnKV3IEplNJdEmfGQvcPicYLUnrhIo0LQFFLBdiXxKuOJplL7lo3w3pzg8pQwlxAghTRXp0mg9
+	p/ZviXnTEDWiLE69wPUYTBe6Uv4F8K+unS1+L1uBZBG7TrCUL1hksNBY293Bh73GmrHf6zvNRy6
+	pkv66WBUh9f+CjKieOej2XiDskEWJFtGs3qgnzYFBRGbT/mN++ief+Ng2+kGT9FUpI/KUtQVnI4
+	RdQrGQI55IR617diGGDSQuaFHQ==
+X-Google-Smtp-Source: AGHT+IGwlMJjAWRYza5p7WJGxEFFQpo89Mjy7QrfQNgroEojUj8PNO092Q8xdIFkP1o8AKidffm+WQ==
+X-Received: by 2002:a05:6a20:d705:b0:1e6:509c:1664 with SMTP id adf61e73a8af0-1ee03b6f0ffmr6990656637.39.1738949204454;
+        Fri, 07 Feb 2025 09:26:44 -0800 (PST)
+Received: from thinkpad ([120.60.76.168])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048c16222sm3332034b3a.135.2025.02.07.09.26.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 09:26:43 -0800 (PST)
+Date: Fri, 7 Feb 2025 22:56:40 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Cc: kvalo@kernel.org, jjohnson@kernel.org, linux-wireless@vger.kernel.org,
+	ath12k@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] wifi: ath11k/ath12k: Set IRQ affinity hint after
+ requesting all shared IRQs
+Message-ID: <20250207172640.npoa3ojrdhxg765a@thinkpad>
+References: <20240823155502.57333-1-manivannan.sadhasivam@linaro.org>
+ <a8f4f4e7-1c13-44d8-b19e-4ac85b48ee04@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA6PR21MB4231.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 189b5625-4686-4b3f-6ce2-08dd479c94e0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2025 17:26:39.4596
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ve1WY+sxfPI+u9q5F0VdEfF/GD2AhI67ApFGmVlyqXHPT3dvg0CIKdeZtBeUrWhVHM0acfd5GF9yd3gQ58WvKA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR21MB4209
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a8f4f4e7-1c13-44d8-b19e-4ac85b48ee04@oss.qualcomm.com>
 
-> Return -ENOMEM if dma_pool_create() fails.  Don't return success.
->=20
-> Fixes: df91c470d9e5 ("RDMA/mana_ib: create/destroy AH")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+On Fri, Jan 31, 2025 at 02:21:45PM -0800, Jeff Johnson wrote:
+> On 8/23/2024 8:54 AM, Manivannan Sadhasivam wrote:
+> > Hi,
+> > 
+> > This series fixes a warning from kernel IRQ core that gets triggered in the
+> > error path of QCA6390 probe. While fixing that I also noticed the same issue in
+> > the ath12k driver, so added an untested patch for the same.
+> > 
+> > Finally, I updated the irq_set_affinity_hint() API in both drivers as it was
+> > depercated.
+> > 
+> > - Mani
+> > 
+> > Manivannan Sadhasivam (3):
+> >   wifi: ath11k: Set IRQ affinity hint after requesting all shared IRQs
+> >   wifi: ath12k: Set IRQ affinity hint after requesting all shared IRQs
+> >   wifi: ath11k/ath12k: Replace irq_set_affinity_hint() with
+> >     irq_set_affinity_and_hint()
+> > 
+> >  drivers/net/wireless/ath/ath11k/pci.c | 26 +++++++++++++-------------
+> >  drivers/net/wireless/ath/ath12k/pci.c | 26 +++++++++++++-------------
+> >  2 files changed, 26 insertions(+), 26 deletions(-)
+> > 
+> 
+> What is the status of this series. I inherited it in Patchwork from Kalle.
+> 
+> It looks like there was a question if the 1/3 patch was actually applicable.
+> 
+> If we think this series is needed, can you rebase & repost?
+> 
 
-Thank you!
+Yeah, this series slipped through the cracks. I will respin.
 
-Reviewed-by: Long Li <longli@microsoft.com>
+- Mani
 
-> ---
->  drivers/infiniband/hw/mana/device.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/infiniband/hw/mana/device.c
-> b/drivers/infiniband/hw/mana/device.c
-> index 0a7553f819ba..a17e7a6b0545 100644
-> --- a/drivers/infiniband/hw/mana/device.c
-> +++ b/drivers/infiniband/hw/mana/device.c
-> @@ -144,8 +144,10 @@ static int mana_ib_probe(struct auxiliary_device *ad=
-ev,
->=20
->  	dev->av_pool =3D dma_pool_create("mana_ib_av", mdev->gdma_context-
-> >dev,
->  				       MANA_AV_BUFFER_SIZE,
-> MANA_AV_BUFFER_SIZE, 0);
-> -	if (!dev->av_pool)
-> +	if (!dev->av_pool) {
-> +		ret =3D -ENOMEM;
->  		goto destroy_rnic;
-> +	}
->=20
->  	ret =3D ib_register_device(&dev->ib_dev, "mana_%d",
->  				 mdev->gdma_context->dev);
-> --
-> 2.47.2
-
+-- 
+மணிவண்ணன் சதாசிவம்
