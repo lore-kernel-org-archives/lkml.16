@@ -1,461 +1,231 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA171A3162
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 07:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCA61A238F
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 07:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738913055; cv=none; b=AkxVFyQHkelczhhrXIGjkdV3qRHyCNxbX2sSF3vQg+uADGpdT7wKJXkoeHKR8Ac7t0/cZ5fExih2op8EAvetxzQ4VnTtxVBnMi1uznHN33+JY4Pk0iFfCvojwFMK8WAXa5mkA+A1IPJmoV2LZL76mLKYxoUldJd6QbkV8xl9qTI=
+	t=1738913128; cv=none; b=EXDhF7qnAfO7VwjFHi4SvLk2xMaiCesBVC+Nwx8H983oC6Y2ic0TeRPWceXlGj4ku34tXherg8YBhgtSmU+GAXm0Id1COD2hpoAA8Zu+D1Igej78EcVIeKCvnGQxynvJyvKiHVIF4cOixNInmzvMiYa4vK3qmual7NnJG57tezY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738913055; c=relaxed/simple;
-	bh=JISDy7apNAejMZAa8FO0CO25crcCy/Ra9WwSJ3yfKT8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uM9CuwKHG/9HfPsv8D9PkhHaUmGxMjXKhBK/ZimIvUQPWpyTEj85rjs2hW+dsQ3/0FCtOFvSOrdgVFHgmiYRRBHBH6K7fsaLEbyHARJfCgGEpmY1gA9D41SECV+dYBdNhwsrxAjeID5lrH8P19x87vA11oue57UO69SfgENEbZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i5ccoG++; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738913128; c=relaxed/simple;
+	bh=O0aqnBT9JAAVKCeAK3LfeehnqqGfJKXDwwwFQNpDHRM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=kTsNhwP/g3T+fjeFebMRaeXq8KVmlo8MeweVMKfUzudxHE1r1ug+Dzy4VTaIvyBiqmrLbMgojTjVPbWsAxMCAlzWQzz6fN2bgbCR/AeU5cCZDsSnAkgLMuxtLcQ8r/uJtzCQu8wOo9WcMEMEX1gBrlNZZsn2pgpUn4Bp+5qtSFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hDsz/CNG; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i5ccoG++"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30795988ebeso16309871fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 23:24:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738913051; x=1739517851; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wTT4v2BpOw2Q7OHKdTgmL3H6PdreoNWO8bjsZzdUenw=;
-        b=i5ccoG++EpkpQZIcrbue+LIMhqCHO0D02pEus1Cwa2gfeM6RevgOgeCH/XzT3EMd+c
-         9ONV4AVA+w7pnh/MirEuuYpqAlS+eS+j5tV2FusNjADB73FTN6E1Iuy6wy8EAvoX3Qdx
-         NoyQTZpCVEr+Bf5lH5XHZkhDJQ6g6e70DbR482ZfMXdInKtPjqGdTURW/dbzHLKSyjuO
-         j4c6cuPsZZmeJDhhbwwdN4D0In8EMXUu4Z+k6DWLEcsnm3M6RMjTo83rK0P2s8f+UG+V
-         rrkeQTQu7Dvf+luhMSuxVD6Ax2TCaZUOrrkxAjTtrAXUs89rKjjdImZ0jOuWfjBaaYav
-         G+DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738913051; x=1739517851;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wTT4v2BpOw2Q7OHKdTgmL3H6PdreoNWO8bjsZzdUenw=;
-        b=ObKEZXzWxcbaki9dhxgid6MPBjW1gaM3XdvBBWOTuxVZO6BL2ST3YznD+f8jyLuJVt
-         tm5J6V9ltfgQxgE0gGG5MClLfIF17mHxMgA+iS91pQW9Ag/D87m5uDq/o8bk324ntVQI
-         8A050iKOe8OzEyYP+pUfhU4Cs+RojlcQGe+WrWOx2Meag5oodDID23GD/h3YHePP4fKn
-         8KVQs73LFRKJyuC8kNHQZXxnz9HDvYriChqI1IuF70QYvwwdmhTc1lz5v89Z487ok70D
-         FrVWKBTZKur0cAu+QjxdCPm+TuxLuPww9N33p4YzC62ulHzI7x5xP1WmpzDaq8qjvkJU
-         8HAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUTPfkti2molFbKdxZi5RwUAp04DCJKocGHP0LtMsbF4PzcVjGtQ5EnBPAef3QSv/rUuDE3n9bB+RZ7wq8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6VFW0Vsj/vaDziNHSZ/73VWwJKbCV9JDnm4vcrbj8rbRl3zQ7
-	BYaq1kvbIsNL4Uck45jYjDPDaPFQDyq0K+tsRJeALG+Vw8JqtqVnAVwqbZpPE/rAAf2n5veVIMM
-	oRCZORCAI5/sbHXLd1t6nDUZZVmxKrDCSxGxP
-X-Gm-Gg: ASbGncstc1MUhCx1+SzxSlY26EJ7PA7yC/QFA7q0qvacyHw31lRFajGRYWuaFEQ21N9
-	DvCgz647aBpNx6lwIKpJQIhrKDx3ZBnIS22zHw3kBFWTbyJgNbdCvWpzBUKPqKt0EtZ43OdfJTM
-	1i7HkYOOq5JGrl/593248OElBAa/c=
-X-Google-Smtp-Source: AGHT+IEjmAEPKHFh1PtxHFJzmpT5dEZOSRzzD7oVG5l4DlR9eZmzG37zwv2QWIpoOiVBv/WBOx8rVgA04jFA934zoig=
-X-Received: by 2002:a2e:bcc9:0:b0:307:c829:f170 with SMTP id
- 38308e7fff4ca-307e57c8157mr5830801fa.4.1738913050824; Thu, 06 Feb 2025
- 23:24:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hDsz/CNG"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5176Wuli009174;
+	Fri, 7 Feb 2025 07:25:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	hsR/l7juiq4ts5nn339YbMnXmxHjFM8kaFQiNj600+w=; b=hDsz/CNGBR131zDp
+	hcI9ZSlp06L1IljgZOoNaYowp6tamoWPmVJwVFsvCJ4A9Ci3+jye80lxRI6ETDXd
+	KquCFoUMnMYo37pNlPyYELgekwQrw1/4XLHWwDuEgeSRGGQmdS/wAtR0dxNZ+79a
+	+SfOn0y9y8MTUk9fSffwusjQlBaqTi4FtRr9RM6SxQcPAwN5ZAYghWEQYPm6iy5A
+	WSrql/vHP7k//o1j+9aym0tf5gGOJeZHPKZOVSBXbYyfHahiBAUc/P7c1LN7rJho
+	r3OG9NZv3gcaTpC9sICG7c5Hh41gFFU4TvrLPI1FC3Y+LwJZFCif0ZLQaHoea2Yd
+	kvcZUQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nd0f04a7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Feb 2025 07:25:17 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5177PFwb011606
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 7 Feb 2025 07:25:15 GMT
+Received: from [10.239.133.114] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 6 Feb 2025
+ 23:25:10 -0800
+Message-ID: <a2d221a7-ca6d-4956-8537-bee39e89f61c@quicinc.com>
+Date: Fri, 7 Feb 2025 15:25:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738772628.git.dvyukov@google.com> <eb32b9b13856b0d508836b61b3e8377aef9163a3.1738772628.git.dvyukov@google.com>
- <Z6WBsruddcx0SFV5@google.com>
-In-Reply-To: <Z6WBsruddcx0SFV5@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Fri, 7 Feb 2025 08:23:58 +0100
-X-Gm-Features: AWEUYZnqrQJOKE9UFcFO-tomn8VxWBzeoUDebj1GCcBNi6YH8fTb4K7mbIwImCM
-Message-ID: <CACT4Y+afC5WfTMaKGtg760PS5oXkkurzAyHVyKr9TsPs9RU2DQ@mail.gmail.com>
-Subject: Re: [PATCH v5 6/8] perf report: Add --latency flag
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] coresight-tmc: stop disabling tmc when flush timeout
+To: Leo Yan <leo.yan@arm.com>
+CC: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>,
+        "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>,
+        <kernel@quicinc.com>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250103-fix_cpu_hung-v1-1-a7b9b3893d44@quicinc.com>
+ <20250206103213.GB8855@e132581.arm.com>
+Content-Language: en-US
+From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+In-Reply-To: <20250206103213.GB8855@e132581.arm.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: tnsEgEBAKxKwCDPY-SvT6kd_vqoOjR6A
+X-Proofpoint-GUID: tnsEgEBAKxKwCDPY-SvT6kd_vqoOjR6A
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_03,2025-02-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
+ lowpriorityscore=0 spamscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
+ adultscore=0 malwarescore=0 phishscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502070056
 
-On Fri, 7 Feb 2025 at 04:44, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> On Wed, Feb 05, 2025 at 05:27:45PM +0100, Dmitry Vyukov wrote:
-> > Add record/report --latency flag that allows to capture and show
-> > latency-centric profiles rather than the default CPU-consumption-centric
-> > profiles. For latency profiles record captures context switch events,
-> > and report shows Latency as the first column.
-> >
-> > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: linux-perf-users@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> >
-> > ---
-> > Changes in v5:
-> >  - added description of --latency flag in Documentation flags
-> > ---
-> >  tools/perf/Documentation/perf-record.txt |  4 +++
-> >  tools/perf/Documentation/perf-report.txt |  5 +++
-> >  tools/perf/builtin-record.c              | 20 ++++++++++++
-> >  tools/perf/builtin-report.c              | 32 +++++++++++++++---
-> >  tools/perf/ui/hist.c                     | 41 +++++++++++++++++++-----
-> >  tools/perf/util/hist.h                   |  1 +
-> >  tools/perf/util/sort.c                   | 33 +++++++++++++++----
-> >  tools/perf/util/sort.h                   |  2 +-
-> >  tools/perf/util/symbol_conf.h            |  4 ++-
-> >  9 files changed, 122 insertions(+), 20 deletions(-)
-> >
-> > diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> > index 80686d590de24..c7fc1ba265e27 100644
-> > --- a/tools/perf/Documentation/perf-record.txt
-> > +++ b/tools/perf/Documentation/perf-record.txt
-> > @@ -227,6 +227,10 @@ OPTIONS
-> >       '--filter' exists, the new filter expression will be combined with
-> >       them by '&&'.
-> >
-> > +--latency::
-> > +     Enable data collection for latency profiling.
-> > +     Use perf report --latency for latency-centric profile.
-> > +
-> >  -a::
-> >  --all-cpus::
-> >          System-wide collection from all CPUs (default if no target is specified).
-> > diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-> > index 87f8645194062..66794131aec48 100644
-> > --- a/tools/perf/Documentation/perf-report.txt
-> > +++ b/tools/perf/Documentation/perf-report.txt
-> > @@ -68,6 +68,11 @@ OPTIONS
-> >  --hide-unresolved::
-> >          Only display entries resolved to a symbol.
-> >
-> > +--latency::
-> > +        Show latency-centric profile rather than the default
-> > +        CPU-consumption-centric profile
-> > +        (requires perf record --latency flag).
-> > +
-> >  -s::
-> >  --sort=::
-> >       Sort histogram entries by given key(s) - multiple keys can be specified
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index 5db1aedf48df9..e219639ac401b 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -161,6 +161,7 @@ struct record {
-> >       struct evlist           *sb_evlist;
-> >       pthread_t               thread_id;
-> >       int                     realtime_prio;
-> > +     bool                    latency;
-> >       bool                    switch_output_event_set;
-> >       bool                    no_buildid;
-> >       bool                    no_buildid_set;
-> > @@ -3371,6 +3372,9 @@ static struct option __record_options[] = {
-> >                    parse_events_option),
-> >       OPT_CALLBACK(0, "filter", &record.evlist, "filter",
-> >                    "event filter", parse_filter),
-> > +     OPT_BOOLEAN(0, "latency", &record.latency,
-> > +                 "Enable data collection for latency profiling.\n"
-> > +                 "\t\t\t  Use perf report --latency for latency-centric profile."),
-> >       OPT_CALLBACK_NOOPT(0, "exclude-perf", &record.evlist,
-> >                          NULL, "don't record events from perf itself",
-> >                          exclude_perf),
-> > @@ -4017,6 +4021,22 @@ int cmd_record(int argc, const char **argv)
-> >
-> >       }
-> >
-> > +     if (record.latency) {
-> > +             /*
-> > +              * There is no fundamental reason why latency profiling
-> > +              * can't work for system-wide mode, but exact semantics
-> > +              * and details are to be defined.
-> > +              * See the following thread for details:
-> > +              * https://lore.kernel.org/all/Z4XDJyvjiie3howF@google.com/
-> > +              */
-> > +             if (record.opts.target.system_wide) {
-> > +                     pr_err("Failed: latency profiling is not supported with system-wide collection.\n");
-> > +                     err = -EINVAL;
-> > +                     goto out_opts;
-> > +             }
-> > +             record.opts.record_switch_events = true;
-> > +     }
-> > +
-> >       if (rec->buildid_mmap) {
-> >               if (!perf_can_record_build_id()) {
-> >                       pr_err("Failed: no support to record build id in mmap events, update your kernel.\n");
-> > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> > index 2a19abdc869a1..69de6dbefecfa 100644
-> > --- a/tools/perf/builtin-report.c
-> > +++ b/tools/perf/builtin-report.c
-> > @@ -112,6 +112,8 @@ struct report {
-> >       u64                     nr_entries;
-> >       u64                     queue_size;
-> >       u64                     total_cycles;
-> > +     u64                     total_samples;
-> > +     u64                     singlethreaded_samples;
-> >       int                     socket_filter;
-> >       DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
-> >       struct branch_type_stat brtype_stat;
-> > @@ -331,6 +333,10 @@ static int process_sample_event(const struct perf_tool *tool,
-> >                                    &rep->total_cycles, evsel);
-> >       }
-> >
-> > +     rep->total_samples++;
-> > +     if (al.parallelism == 1)
-> > +             rep->singlethreaded_samples++;
-> > +
-> >       ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
-> >       if (ret < 0)
-> >               pr_debug("problem adding hist entry, skipping event\n");
-> > @@ -1079,6 +1085,11 @@ static int __cmd_report(struct report *rep)
-> >               return ret;
-> >       }
-> >
-> > +     /* Don't show Latency column for non-parallel profiles by default. */
-> > +     if (rep->singlethreaded_samples * 100 / rep->total_samples >= 99 &&
-> > +                     !symbol_conf.prefer_latency)
-> > +             perf_hpp__cancel_latency();
-> > +
-> >       evlist__check_mem_load_aux(session->evlist);
-> >
-> >       if (rep->stats_mode)
-> > @@ -1468,6 +1479,10 @@ int cmd_report(int argc, const char **argv)
-> >                   "Disable raw trace ordering"),
-> >       OPT_BOOLEAN(0, "skip-empty", &report.skip_empty,
-> >                   "Do not display empty (or dummy) events in the output"),
-> > +     OPT_BOOLEAN(0, "latency", &symbol_conf.prefer_latency,
-> > +                 "Show latency-centric profile rather than the default\n"
-> > +                 "\t\t\t  CPU-consumption-centric profile\n"
-> > +                 "\t\t\t  (requires perf record --latency flag)."),
-> >       OPT_END()
-> >       };
-> >       struct perf_data data = {
-> > @@ -1722,16 +1737,25 @@ int cmd_report(int argc, const char **argv)
-> >               symbol_conf.annotate_data_sample = true;
-> >       }
-> >
-> > +     symbol_conf.enable_latency = true;
-> >       if (report.disable_order || !perf_session__has_switch_events(session)) {
-> >               if (symbol_conf.parallelism_list_str ||
-> > -                             (sort_order && strstr(sort_order, "parallelism")) ||
-> > -                             (field_order && strstr(field_order, "parallelism"))) {
-> > +                     symbol_conf.prefer_latency ||
-> > +                     (sort_order && (strstr(sort_order, "latency") ||
-> > +                             strstr(sort_order, "parallelism"))) ||
-> > +                     (field_order && (strstr(field_order, "latency") ||
-> > +                             strstr(field_order, "parallelism")))) {
-> >                       if (report.disable_order)
-> > -                             ui__error("Use of parallelism is incompatible with --disable-order.\n");
-> > +                             ui__error("Use of latency profile or parallelism is incompatible with --disable-order.\n");
-> >                       else
-> > -                             ui__error("Use of parallelism requires --switch-events during record.\n");
-> > +                             ui__error("Use of latency profile or parallelism requires --latency flag during record.\n");
-> >                       return -1;
-> >               }
-> > +             /*
-> > +              * If user did not ask for anything related to
-> > +              * latency/parallelism explicitly, just don't show it.
-> > +              */
-> > +             symbol_conf.enable_latency = false;
-> >       }
-> >
-> >       if (sort_order && strstr(sort_order, "ipc")) {
-> > diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-> > index 6de6309595f9e..b453f8eb579cc 100644
-> > --- a/tools/perf/ui/hist.c
-> > +++ b/tools/perf/ui/hist.c
-> > @@ -632,27 +632,36 @@ void perf_hpp__init(void)
-> >               return;
-> >
-> >       if (symbol_conf.cumulate_callchain) {
-> > -             hpp_dimension__add_output(PERF_HPP__OVERHEAD_ACC);
-> > +             /* Use idempotent addition to avoid more complex logic. */
-> > +             if (symbol_conf.prefer_latency)
-> > +                     hpp_dimension__add_output(PERF_HPP__LATENCY_ACC, true);
-> > +             hpp_dimension__add_output(PERF_HPP__OVERHEAD_ACC, true);
-> > +             if (symbol_conf.enable_latency)
-> > +                     hpp_dimension__add_output(PERF_HPP__LATENCY_ACC, true);
-> >               perf_hpp__format[PERF_HPP__OVERHEAD].name = "Self";
-> >       }
-> >
-> > -     hpp_dimension__add_output(PERF_HPP__OVERHEAD);
-> > +     if (symbol_conf.prefer_latency)
-> > +             hpp_dimension__add_output(PERF_HPP__LATENCY, true);
-> > +     hpp_dimension__add_output(PERF_HPP__OVERHEAD, true);
-> > +     if (symbol_conf.enable_latency)
-> > +             hpp_dimension__add_output(PERF_HPP__LATENCY, true);
-> >
-> >       if (symbol_conf.show_cpu_utilization) {
-> > -             hpp_dimension__add_output(PERF_HPP__OVERHEAD_SYS);
-> > -             hpp_dimension__add_output(PERF_HPP__OVERHEAD_US);
-> > +             hpp_dimension__add_output(PERF_HPP__OVERHEAD_SYS, false);
-> > +             hpp_dimension__add_output(PERF_HPP__OVERHEAD_US, false);
-> >
-> >               if (perf_guest) {
-> > -                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_SYS);
-> > -                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_US);
-> > +                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_SYS, false);
-> > +                     hpp_dimension__add_output(PERF_HPP__OVERHEAD_GUEST_US, false);
-> >               }
-> >       }
-> >
-> >       if (symbol_conf.show_nr_samples)
-> > -             hpp_dimension__add_output(PERF_HPP__SAMPLES);
-> > +             hpp_dimension__add_output(PERF_HPP__SAMPLES, false);
-> >
-> >       if (symbol_conf.show_total_period)
-> > -             hpp_dimension__add_output(PERF_HPP__PERIOD);
-> > +             hpp_dimension__add_output(PERF_HPP__PERIOD, false);
-> >  }
-> >
-> >  void perf_hpp_list__column_register(struct perf_hpp_list *list,
-> > @@ -701,6 +710,22 @@ void perf_hpp__cancel_cumulate(void)
-> >       }
-> >  }
-> >
-> > +void perf_hpp__cancel_latency(void)
-> > +{
-> > +     struct perf_hpp_fmt *fmt, *lat, *acc, *tmp;
-> > +
-> > +     if (is_strict_order(field_order) || is_strict_order(sort_order))
-> > +             return;
-> > +
-> > +     lat = &perf_hpp__format[PERF_HPP__LATENCY];
-> > +     acc = &perf_hpp__format[PERF_HPP__LATENCY_ACC];
-> > +
-> > +     perf_hpp_list__for_each_format_safe(&perf_hpp_list, fmt, tmp) {
-> > +             if (fmt_equal(lat, fmt) || fmt_equal(acc, fmt))
-> > +                     perf_hpp__column_unregister(fmt);
-> > +     }
-> > +}
-> > +
-> >  void perf_hpp__setup_output_field(struct perf_hpp_list *list)
-> >  {
-> >       struct perf_hpp_fmt *fmt;
-> > diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> > index 91159f16c60b2..29d4c7a3d1747 100644
-> > --- a/tools/perf/util/hist.h
-> > +++ b/tools/perf/util/hist.h
-> > @@ -582,6 +582,7 @@ enum {
-> >
-> >  void perf_hpp__init(void);
-> >  void perf_hpp__cancel_cumulate(void);
-> > +void perf_hpp__cancel_latency(void);
-> >  void perf_hpp__setup_output_field(struct perf_hpp_list *list);
-> >  void perf_hpp__reset_output_field(struct perf_hpp_list *list);
-> >  void perf_hpp__append_sort_keys(struct perf_hpp_list *list);
-> > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> > index bc4c3acfe7552..2b6023de7a53a 100644
-> > --- a/tools/perf/util/sort.c
-> > +++ b/tools/perf/util/sort.c
-> > @@ -2622,6 +2622,7 @@ struct hpp_dimension {
-> >       const char              *name;
-> >       struct perf_hpp_fmt     *fmt;
-> >       int                     taken;
-> > +     int                     was_taken;
-> >  };
-> >
-> >  #define DIM(d, n) { .name = n, .fmt = &perf_hpp__format[d], }
-> > @@ -3513,6 +3514,7 @@ static int __hpp_dimension__add(struct hpp_dimension *hd,
-> >               return -1;
-> >
-> >       hd->taken = 1;
-> > +     hd->was_taken = 1;
-> >       perf_hpp_list__register_sort_field(list, fmt);
-> >       return 0;
-> >  }
-> > @@ -3547,10 +3549,15 @@ static int __hpp_dimension__add_output(struct perf_hpp_list *list,
-> >       return 0;
-> >  }
-> >
-> > -int hpp_dimension__add_output(unsigned col)
-> > +int hpp_dimension__add_output(unsigned col, bool implicit)
-> >  {
-> > +     struct hpp_dimension *hd;
-> > +
-> >       BUG_ON(col >= PERF_HPP__MAX_INDEX);
-> > -     return __hpp_dimension__add_output(&perf_hpp_list, &hpp_sort_dimensions[col]);
-> > +     hd = &hpp_sort_dimensions[col];
-> > +     if (implicit && !hd->was_taken)
-> > +             return 0;
->
-> I don't think you need these implicit and was_taken things.
-> Just removing from the sort list when it's unregistered seems to work.
->
-> ---8<---
-> @@ -685,6 +685,7 @@ void perf_hpp_list__prepend_sort_field(struct perf_hpp_list *list,
->  static void perf_hpp__column_unregister(struct perf_hpp_fmt *format)
->  {
->         list_del_init(&format->list);
-> +       list_del_init(&format->sort_list);
->         fmt_free(format);
->  }
->
-> ---8<---
 
-It merely suppresses the warning, but does not work the same way. See
-this for details:
-https://lore.kernel.org/all/CACT4Y+ZREdDL7a+DMKGFGae1ZjX1C8uNRwCGF0c8iUJtTTq0Lw@mail.gmail.com/
 
+On 2/6/2025 6:32 PM, Leo Yan wrote:
+> Hi Yuanfang,
+> 
+> On Fri, Jan 03, 2025 at 04:01:54PM +0800, Yuanfang Zhang wrote:
+>>
+>> When multiple ETMs are enabled simultaneously, the time required
+>> to complete a flush in the process of reading the TMC device node
+>> may exceed the default wait time of 100us.
+> 
+> Have you tried how long time would be safe to wait for the
+> TMCREADY_BIT bit to be set on your platform?
+yes, 400000us.
+> 
+>> If the TMC capture is stopped while any ETM has not completed its
+>> flush, it can cause the corresponding CPU to hang.
+>>
+>> Fix the by checking the TMCReady bit after the flush. If TMCReady
+>> bit is set, TraceCaptEn bit can be clear; otherwise, return directly
+>> and stop the TMC read.
+> 
+> When a timeout for TMC flush and stop is detected, if the driver
+> arbitrarily bails out without disabling TMC, this would leave the
+> hardware always on.
+> 
+> I would like first know if a longer timeout can fix the issue.
+> 
 > Thanks,
-> Namhyung
->
->
-> > +     return __hpp_dimension__add_output(&perf_hpp_list, hd);
-> >  }
-> >
-> >  int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
-> > @@ -3809,10 +3816,24 @@ static char *setup_overhead(char *keys)
-> >       if (sort__mode == SORT_MODE__DIFF)
-> >               return keys;
-> >
-> > -     keys = prefix_if_not_in("overhead", keys);
-> > -
-> > -     if (symbol_conf.cumulate_callchain)
-> > -             keys = prefix_if_not_in("overhead_children", keys);
-> > +     if (symbol_conf.prefer_latency) {
-> > +             keys = prefix_if_not_in("overhead", keys);
-> > +             keys = prefix_if_not_in("latency", keys);
-> > +             if (symbol_conf.cumulate_callchain) {
-> > +                     keys = prefix_if_not_in("overhead_children", keys);
-> > +                     keys = prefix_if_not_in("latency_children", keys);
-> > +             }
-> > +     } else if (!keys || (!strstr(keys, "overhead") &&
-> > +                     !strstr(keys, "latency"))) {
-> > +             if (symbol_conf.enable_latency)
-> > +                     keys = prefix_if_not_in("latency", keys);
-> > +             keys = prefix_if_not_in("overhead", keys);
-> > +             if (symbol_conf.cumulate_callchain) {
-> > +                     if (symbol_conf.enable_latency)
-> > +                             keys = prefix_if_not_in("latency_children", keys);
-> > +                     keys = prefix_if_not_in("overhead_children", keys);
-> > +             }
-> > +     }
-> >
-> >       return keys;
-> >  }
-> > diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-> > index 11fb15f914093..180d36a2bea35 100644
-> > --- a/tools/perf/util/sort.h
-> > +++ b/tools/perf/util/sort.h
-> > @@ -141,7 +141,7 @@ int report_parse_ignore_callees_opt(const struct option *opt, const char *arg, i
-> >
-> >  bool is_strict_order(const char *order);
-> >
-> > -int hpp_dimension__add_output(unsigned col);
-> > +int hpp_dimension__add_output(unsigned col, bool implicit);
-> >  void reset_dimensions(void);
-> >  int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
-> >                       struct evlist *evlist,
-> > diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-> > index c5b2e56127e22..cd9aa82c7d5ad 100644
-> > --- a/tools/perf/util/symbol_conf.h
-> > +++ b/tools/perf/util/symbol_conf.h
-> > @@ -49,7 +49,9 @@ struct symbol_conf {
-> >                       keep_exited_threads,
-> >                       annotate_data_member,
-> >                       annotate_data_sample,
-> > -                     skip_empty;
-> > +                     skip_empty,
-> > +                     enable_latency,
-> > +                     prefer_latency;
-> >       const char      *vmlinux_name,
-> >                       *kallsyms_name,
-> >                       *source_prefix,
-> > --
-> > 2.48.1.362.g079036d154-goog
-> >
+> Leo
+> 
+yes, longer timeout can fix this issue.
+
+>> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+>> ---
+>>  drivers/hwtracing/coresight/coresight-tmc-etf.c | 17 +++++++++++++++--
+>>  drivers/hwtracing/coresight/coresight-tmc-etr.c | 22 +++++++++++++++++-----
+>>  2 files changed, 32 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+>> index d4f641cd9de69488fe3d1c1dc9b5a9eafb55ed59..bded290c42891d782344d9a6e63ebdbed6719133 100644
+>> --- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
+>> +++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+>> @@ -80,11 +80,21 @@ static void tmc_etb_dump_hw(struct tmc_drvdata *drvdata)
+>>         return;
+>>  }
+>>
+>> -static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+>> +static int __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+>>  {
+>> +       int rc;
+>> +
+>>         CS_UNLOCK(drvdata->base);
+>>
+>>         tmc_flush_and_stop(drvdata);
+>> +
+>> +       rc = tmc_wait_for_tmcready(drvdata);
+>> +       if (rc) {
+>> +               dev_err(&drvdata->csdev->dev,
+>> +                       "Failed to disable : TMC is not ready\n");
+>> +               CS_LOCK(drvdata->base);
+>> +               return rc;
+>> +       }
+>>         /*
+>>          * When operating in sysFS mode the content of the buffer needs to be
+>>          * read before the TMC is disabled.
+>> @@ -94,6 +104,7 @@ static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+>>         tmc_disable_hw(drvdata);
+>>
+>>         CS_LOCK(drvdata->base);
+>> +       return 0;
+>>  }
+>>
+>>  static void tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
+>> @@ -650,7 +661,9 @@ int tmc_read_prepare_etb(struct tmc_drvdata *drvdata)
+>>                         ret = -EINVAL;
+>>                         goto out;
+>>                 }
+>> -               __tmc_etb_disable_hw(drvdata);
+>> +               ret = __tmc_etb_disable_hw(drvdata);
+>> +               if (ret)
+>> +                       goto out;
+>>         }
+>>
+>>         drvdata->reading = true;
+>> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+>> index a48bb85d0e7f44a25b813f3c828cc3d705d16012..63a1f7501562fa0b5c2fe6ea53dce4d82842bec3 100644
+>> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+>> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+>> @@ -1135,11 +1135,21 @@ static void tmc_etr_sync_sysfs_buf(struct tmc_drvdata *drvdata)
+>>         }
+>>  }
+>>
+>> -static void __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+>> +static int __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+>>  {
+>> +       int rc;
+>> +
+>>         CS_UNLOCK(drvdata->base);
+>>
+>>         tmc_flush_and_stop(drvdata);
+>> +
+>> +       rc = tmc_wait_for_tmcready(drvdata);
+>> +       if (rc) {
+>> +               dev_err(&drvdata->csdev->dev,
+>> +                       "Failed to disable : TMC is not ready\n");
+>> +               CS_LOCK(drvdata->base);
+>> +               return rc;
+>> +       }
+>>         /*
+>>          * When operating in sysFS mode the content of the buffer needs to be
+>>          * read before the TMC is disabled.
+>> @@ -1150,7 +1160,7 @@ static void __tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+>>         tmc_disable_hw(drvdata);
+>>
+>>         CS_LOCK(drvdata->base);
+>> -
+>> +       return 0;
+>>  }
+>>
+>>  void tmc_etr_disable_hw(struct tmc_drvdata *drvdata)
+>> @@ -1779,9 +1789,11 @@ int tmc_read_prepare_etr(struct tmc_drvdata *drvdata)
+>>         }
+>>
+>>         /* Disable the TMC if we are trying to read from a running session. */
+>> -       if (coresight_get_mode(drvdata->csdev) == CS_MODE_SYSFS)
+>> -               __tmc_etr_disable_hw(drvdata);
+>> -
+>> +       if (coresight_get_mode(drvdata->csdev) == CS_MODE_SYSFS) {
+>> +               ret = __tmc_etr_disable_hw(drvdata);
+>> +               if (ret)
+>> +                       goto out;
+>> +       }
+>>         drvdata->reading = true;
+>>  out:
+>>         spin_unlock_irqrestore(&drvdata->spinlock, flags);
+>>
+>> ---
+>> base-commit: fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
+>> change-id: 20250103-fix_cpu_hung-b5a95179ada4
+>>
+>> Best regards,
+>> --
+>> Yuanfang Zhang <quic_yuanfang@quicinc.com>
+>>
+>>
+
