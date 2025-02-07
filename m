@@ -1,94 +1,92 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF5018BC1D;
-	Fri,  7 Feb 2025 08:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A525D18BC1D
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738917124; cv=none; b=UEbYOGi6CHj/4XrhDW0db5hsp0tbsdUiv6PtOIZK7B+U+c/IDGQXxhRpS2hBZzCWxhAfFIxybEuk1eKfmzce0JUAlhU53kCE9zSAQJaheSQ8uHCi2Ec8/vDtWlSD7eXhpkR2FO9iUfYDIVt0Q8m5lrlpo0UkL63qL4Sit6knsmQ=
+	t=1738917187; cv=none; b=NfhnsRoYcdRRwq4DwzmnyXG+tPdM1GUJ6wRtBhk6ofU86/dPnf/ZPY7b/QXX0/rGM6HNWcaHWKJY3NOJFLOJh+KSSwcK0+nEszm8pktb1w8khmox12TLTsQbHuauT4vWJKmJDqZ3wd1hneG2TtsJYJ1rcZZ1pz/96mU5J78EbqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738917124; c=relaxed/simple;
-	bh=eeSINdtBrvPrjbWTpeaZBr86AvE1msJUnn6egUQhP9M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pobp3WciKtQMajHmGk36HlU22AO0zqOoR8LrO4sNNYOBcTXevOKPjqjHahq+Ua1h94/XaJSk2jNNPaeghYWfdTAu1cRebEY9RZx399Y8sbuDRGrzfSEVnXXVsWRUaxKg8qOZ3LaMHDsof/njBFR7w8MbVB1Qosd8t3K+Rscnapo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=n1aF/WV1; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738917187; c=relaxed/simple;
+	bh=FDZ31Nx3civlmwWIQQAP+ROKkOH2EWUR9BDacWGiMAk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DfTQDTSGcGj3z/TfzxLY/NOXFEEUZ7QArV7SF8SherxAvmFlh1yLCM7TRLp0ReCeEDgCBZdTloyTAsot/BL0LjriJ85ldSEyxyO+KwK151JfGomlFRxnqII5vi0yYuJE1q2IJ5GfqDEH4lnhplsGLnQbGZXqgjUY6VuWCOnLyyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SfoCiJ9V; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n1aF/WV1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=MToFBoTN88Sw05TH5ZS066HLD3eJYQXco+AkkB2Qigk=; b=n1aF/WV1DDdRxaIXJUvr5MNqUK
-	ifPIG3chJ0TLLOH62d9qj1v0lIBf+1MDvYz+tb9h7VwPWH3bWvGKqyGpVaweiMsJ0h2O5pTeUZkdk
-	bKoQGNxthlrkH2htARmUYq5TuJM+m0h1eS0k5QZEHcF0YgBFW6PegATEF1BQyrF6ZgW8CJrV+spOS
-	4bvaoq2YwNuIHbK6vKm6NIGgKkS4UKjAC7imF91I3fgPjh58wHl8Zp3Z0eHpJE2+oigZ+Kw2tjKgR
-	TUV4Cqm3ICzRGmQPDoyzOaTKPJRk4WPnc085QqcR7VeSeTs59m+RFKzDkwEYHUc+pt4l+r41wQrum
-	1ogE9ihA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgJlg-0000000H8yt-07vH;
-	Fri, 07 Feb 2025 08:31:45 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 7B47E300310; Fri,  7 Feb 2025 09:31:19 +0100 (CET)
-Date: Fri, 7 Feb 2025 09:31:19 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Marco Elver <elver@google.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, rcu@vger.kernel.org,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCH RFC 11/24] locking/mutex: Support Clang's capability
- analysis
-Message-ID: <20250207083119.GV7145@noisy.programming.kicks-ass.net>
-References: <20250206181711.1902989-1-elver@google.com>
- <20250206181711.1902989-12-elver@google.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SfoCiJ9V"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3061513d353so18968711fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 00:33:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738917184; x=1739521984; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FDZ31Nx3civlmwWIQQAP+ROKkOH2EWUR9BDacWGiMAk=;
+        b=SfoCiJ9V/vHiHRjbGyW+Y2lWJG8yPIm37fEdVB15NIJlb7S5tB/xw2kFDZZRJrQ2W3
+         EetzkglO9qerFRPG4XiUMExACleKkhO68Apr9m5hJAFSVeQDjV0Uv1KfxOdJTm36qtOx
+         GD1iBS4TP8FKwBt7gq3gnOyVVvb/G+o4LAV1BfFAlCjAHZj2+FD0i+G3edMoM8DC36eN
+         TiqaaOjfQIh773M25wfGlWWi3je1EMZ1SRMw+CwxMP97SzZVuvEEoLrp0wGETIPMmpfg
+         C81prLIxwYEpLdhXoBAuiaLTQ0nqqdUIAdo0CSgawvyVwGF6++P7n7Fh3bWGnRC/9VnO
+         lV7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738917184; x=1739521984;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FDZ31Nx3civlmwWIQQAP+ROKkOH2EWUR9BDacWGiMAk=;
+        b=A6DlLKXEQq3Q38NPinmrYK9DW7aoixmHnmzU8IBYola+LxBtc2V5XdrO1klv+kX0MA
+         N9B1gFM+cUPpQnXoKzm5I7xuIpGfmK1O1e8a/vr7J9AzoblrF5Ibdkh3FmPju5WQe/qR
+         vbRVEN8ZeCgiVkFuvR1V8XiADaJaEZbNO/K9KtVw+Bhq6wsBVy1562/d7Zl77yYAeloC
+         4VpgqVdseLk7YKEIaG3pAgGTROdGphKLXUL/Hrp5i4ChaqQdyRZ4Cwhcsa+7lXidiEDp
+         mKFt8XH5rk2KEixynfitZalbGm8zi78cpma5dBcGYtl3qq4hFYmWYpXSdmQJ0v0Ebu5+
+         v1mg==
+X-Forwarded-Encrypted: i=1; AJvYcCXdVyjAAAzeV+L/yVgzTCJnl9AdIsa3OE4tdZXB/Uv2u5t9pyXznDiDa/LLopRll7yt0JKaOYl+8tCnmGA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxhAp3s9KNVuwMgW8XgSCGuGaVsZFyuGxXi/aHr0kHGhI+39hM
+	+pUYghF0kMySiiIO12ZOf1TXtWIuBI10RJn3xwwF8sqYyQnzaQzL8TpUxKdtJ2Kbu83s8bVuv7B
+	C7hVqCFE9sogoTybTMHJf93IoqiZyT8aL43tAxA==
+X-Gm-Gg: ASbGncsusBFpv2dbQmwhQE1y2LEar0ksiaJ/9ITNbcRUT8LkJSmkh9yx7AZR8Ha7Q8a
+	S18R+VpLdk6N7/tN4mhV5b5dIfWJhG36gNyBmG1x5feOdiebf/Jtx3l4JD5n3N6X8gcHFzpf9wF
+	E9qZawMfX6gmGQeZtwgPHL1e2skq0=
+X-Google-Smtp-Source: AGHT+IHgWB89hNW9OJ6NJL1Rj2tEIBIMQOYDoOww7bCgZyhnauDXQruFNOqLsaUZ2hE+SG4ZneFMitUz5QVDxTih6yw=
+X-Received: by 2002:a05:6512:e84:b0:544:ebf:741c with SMTP id
+ 2adb3069b0e04-54414aa880emr710177e87.31.1738917183753; Fri, 07 Feb 2025
+ 00:33:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206181711.1902989-12-elver@google.com>
+References: <20250207083146.17872-1-brgl@bgdev.pl>
+In-Reply-To: <20250207083146.17872-1-brgl@bgdev.pl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 7 Feb 2025 09:32:53 +0100
+X-Gm-Features: AWEUYZmWklGhQOPVR4YjGZK1-XCvq6-AQnGa_lgtdadT-6hgqTW9nexvfLKNX_k
+Message-ID: <CAMRc=Mcxw+O+rW4zUwM3roLxj3vAGAkepnVssyd7ifMvuuO=OA@mail.gmail.com>
+Subject: Re: [PATCH v2] gpiolib: don't build HTE code with CONFIG_HTE disabled
+To: Dipen Patel <dipenp@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	timestamp@lists.linux.dev, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 06, 2025 at 07:10:05PM +0100, Marco Elver wrote:
+On Fri, Feb 7, 2025 at 9:31=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Hardware timestamping is only used on tegra186 platforms but we include
+> the code and export the symbols everywhere. Shrink the binary a bit by
+> compiling the relevant functions conditionally.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
 
->  extern int __must_check mutex_lock_interruptible_nested(struct mutex *lock,
-> +					unsigned int subclass) __cond_acquires(0, lock);
->  extern int __must_check mutex_lock_killable_nested(struct mutex *lock,
-> +					unsigned int subclass) __cond_acquires(0, lock);
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> +extern int __must_check mutex_lock_interruptible(struct mutex *lock) __cond_acquires(0, lock);
-> +extern int __must_check mutex_lock_killable(struct mutex *lock) __cond_acquires(0, lock);
+I missed Linus' tag.
 
-> +extern int mutex_trylock(struct mutex *lock) __cond_acquires(1, lock);
-
-> +extern int atomic_dec_and_mutex_lock(atomic_t *cnt, struct mutex *lock) __cond_acquires(1, lock);
-
-So this form is *MUCH* saner than what we currently have.
-
-Can we please fix up all the existing __cond_lock() code too?
+Bart
