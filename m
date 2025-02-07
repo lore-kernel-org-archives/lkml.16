@@ -1,102 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-gw01.astralinux.ru (mail-gw01.astralinux.ru [37.230.196.243])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E03F238D26;
-	Fri,  7 Feb 2025 15:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40631EB19B;
+	Fri,  7 Feb 2025 15:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.230.196.243
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738942563; cv=none; b=PDccOy/nj+npnMl8Ct/4ARYcsfuAkDVmyGLt2oI621RHHn0uIluuekMjJsaKPAJO8o/bGeyCnlgyUpWYro+4yJ4DzfkGKNiOlcEtZKEmpFRIhX60cvBkmgr8tFqsUHdPofvXfZY34oNH/w++vVvizOxN3VTmDNs5hL4E964/4Fg=
+	t=1738942676; cv=none; b=fhWZhEzNgdPOzEGsoVV0HyNI78BhZtHgHsqbanJPQ8r93OkUMAMuGQYAVVSz1nr4M39YeDbe+g/vsLOy21tUXqdxibQIN9qar2+DwRwU8elcRdI+fQcNroWI7bCdExOYibEjHZ70k1ehV/Zd900KWOp2IBe3I+IWqm42uACfCgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738942563; c=relaxed/simple;
-	bh=eKpgUtAgKnXTGC6co7uKVWueEzNDPDo4Nk/czisWYtg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WzOgQQy1RsmK9vebcBeNvAHTgnfz/xEuZC/MuxI3Luwm9KbBPJiGKS7hisbpVQya2UhGJeDJbrHxCe2IcU2kdIas6JZ9YwBJtCMM3Vtavct474s2ZRU4M5l9ScNCIPPozYWdYHg95xXLho/joY8UgiNHXYAJ61xbQj0ep9fMaL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d4ut1yQf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d4ut1yQf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98F86C4CEE7;
-	Fri,  7 Feb 2025 15:36:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738942562;
-	bh=eKpgUtAgKnXTGC6co7uKVWueEzNDPDo4Nk/czisWYtg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=d4ut1yQfA3Pk3v+NsBRvsw5imZrHkQALoPXxQQc55SaiXNe4AiaTrpTpgRIipNNeA
-	 ySqgK3NgnS1He0wCD57KnEOHQ+VvT83sWS71xIlI8Xiqq3k7sIumhArxicHBf2/c+y
-	 xZMurC/mLajsp+tWySjRviAzMCovcC/Hj9o+AdTv/m9uLm75HoPeCLLCH4wgc9K4HL
-	 NJUgDAna3AZeGdPf3IHgeSMNujwlpcPOU2uaw9aZvCJGr/EoQDskpmvMmM7vpXPZZ0
-	 e+HDIofcaFLlhjr38FwPOAQC0+Ky/Y9kNYFZoeOVxtZIH8FKM9g0ASfLFYpFIYKg98
-	 wHYv5V2c5ztyQ==
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-71e2766994bso1275581a34.3;
-        Fri, 07 Feb 2025 07:36:02 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVsALLTIWbJjJKUYK7xqTY69HM6LsLMrJChyBm5GXmo4KfvDIV4jyXdnXnW3pLNXoQGSsFS7Y7quYF+RpM=@vger.kernel.org, AJvYcCX91xst/nd3y2eirOWNXrXB+db6JjIrjJ1anaspevC32K73n5lB49YZOSNmCKCILyKc3mZPW0FvDy0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb2/919WMdyOyYWmpGZ27RxbwKoe36iRfi3TjivOvu/0XW/viL
-	NgKUiKBE7AlE2MDb4A2+Jns6KMREf5nMoU+h4awVz/Gjle9g/3IXDkOL0lGQO5+7Z+RcpRtEsN7
-	SqPWHeloW0mfJg+TScoEgb6J+tH8=
-X-Google-Smtp-Source: AGHT+IGDqX02CBpJr/9unc9HxWUlrUy3BWcAJQWZ9KGi7lke/D7VSaQ5LkwjmEIBLLPhGSFgK6ZZxlvDoGw17vx9UGo=
-X-Received: by 2002:a05:6830:6e12:b0:71d:eb02:baed with SMTP id
- 46e09a7af769-726b87da973mr2863629a34.8.1738942561839; Fri, 07 Feb 2025
- 07:36:01 -0800 (PST)
+	s=arc-20240116; t=1738942676; c=relaxed/simple;
+	bh=VOepS3saF6lXyvNja4h23kQbudvfHAFdAOjA8Ph7kJY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fC/w6rbhZeMdL+WEyLBPf1OUIm+l7e+OG+4izEntAyrTqT3r4R00BzfkzTn1q0MQdNOuEv5KnkP0IJ/8r7WKlsgGMJypGBIvBLFH5CC5vSX26ljh+bWuuSjgL6baWLdFY6WhmhavIOV+iiET3gxN/i4rP5nn/2qhHLf2PfF5A1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=37.230.196.243
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+Received: from gca-sc-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
+	by mail-gw01.astralinux.ru (Postfix) with ESMTP id 3BA2824CC6;
+	Fri,  7 Feb 2025 18:37:40 +0300 (MSK)
+Received: from new-mail.astralinux.ru (gca-yc-ruca-srv-mail03.astralinux.ru [10.177.185.108])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-gw01.astralinux.ru (Postfix) with ESMTPS;
+	Fri,  7 Feb 2025 18:37:39 +0300 (MSK)
+Received: from rbta-msk-lt-156703.astralinux.ru (unknown [10.177.20.117])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4YqJ4x4phBz1gyXY;
+	Fri,  7 Feb 2025 18:37:37 +0300 (MSK)
+From: Alexey Panov <apanov@astralinux.ru>
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alexey Panov <apanov@astralinux.ru>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	Longlong Xia <xialonglong@kylinos.cn>,
+	stable <stable@kernel.org>
+Subject: [PATCH 5.10/5.15] tty: n_gsm: Fix use-after-free in gsm_cleanup_mux
+Date: Fri,  7 Feb 2025 18:36:51 +0300
+Message-Id: <20250207153651.7115-1-apanov@astralinux.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1916668.tdWV9SEqCh@rjwysocki.net> <4917ca35e5e0c7035f09c02d5080a69ed3e88c44.camel@linux.intel.com>
- <29daaf17-7711-44b1-baad-86dadcf01666@arm.com>
-In-Reply-To: <29daaf17-7711-44b1-baad-86dadcf01666@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 7 Feb 2025 16:35:50 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0jUM6TKJuJsA9ZJF1PvnudOmJFd0RC26iQd0zQSWM+wnA@mail.gmail.com>
-X-Gm-Features: AWEUYZkFtzMjH24WMjqwIJWFD9HdS0B_DDWuxd0jrQeHeGeKWcJj0_-js2jJPyM
-Message-ID: <CAJZ5v0jUM6TKJuJsA9ZJF1PvnudOmJFd0RC26iQd0zQSWM+wnA@mail.gmail.com>
-Subject: Re: [RFT][PATCH v1 0/5] cpuidle: menu: Avoid discarding useful
- information when processing recent idle intervals
-To: Christian Loehle <christian.loehle@arm.com>
-Cc: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, 
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Aboorva Devarajan <aboorvad@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-KSMG-AntiPhishing: NotDetected, bases: 2025/02/07 14:10:00
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Envelope-From: apanov@astralinux.ru
+X-KSMG-AntiSpam-Info: LuaCore: 50 0.3.50 df4aeb250ed63fd3baa80a493fa6caee5dd9e10f, {Tracking_uf_ne_domains}, {Tracking_internal2}, {Tracking_from_domain_doesnt_match_to}, astralinux.ru:7.1.1;lore.kernel.org:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;new-mail.astralinux.ru:7.1.1, FromAlignment: s
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 190874 [Feb 07 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.7
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/02/07 12:24:00 #27143140
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected, bases: 2025/02/07 14:13:00
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 1
 
-On Fri, Feb 7, 2025 at 4:24=E2=80=AFPM Christian Loehle
-<christian.loehle@arm.com> wrote:
->
-> On 2/7/25 14:48, Artem Bityutskiy wrote:
-> > Hi,
-> >
-> > thanks for the patches!
-> >
-> > On Thu, 2025-02-06 at 15:21 +0100, Rafael J. Wysocki wrote:
-> >> Hi Everyone,
-> >>
-> >> This work had been triggered by a report that commit 0611a640e60a ("ev=
-entpoll:
-> >> prefer kfree_rcu() in __ep_remove()") had caused the critical-jOPS met=
-ric of
-> >> the SPECjbb 2015 benchmark [1] to drop by around 50% even though it ge=
-nerally
-> >> reduced kernel overhead.  Indeed, it was found during further investig=
-ation
-> >> that the total interrupt rate while running the SPECjbb workload had f=
-allen as
-> >> a result of that commit by 55% and the local timer interrupt rate had =
-fallen
-> >> by
-> >> almost 80%.
-> >
-> > I ran SPECjbb2015 with and it doubles critical-jOPS and basically makes=
- it
-> > "normal" again. Thanks!
-> >
-> > Reported-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-> > Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-> >
->
-> I'll go take a look in-depth, honestly the statistical test of
-> get_typical_interval() is somewhat black magic to me before and after
-> 4/5, so if that actually works better fine with me.
-> I'll run some tests, too.
+commit 9462f4ca56e7d2430fdb6dcc8498244acbfc4489 upstream.
 
-Thank you!
+BUG: KASAN: slab-use-after-free in gsm_cleanup_mux+0x77b/0x7b0
+drivers/tty/n_gsm.c:3160 [n_gsm]
+Read of size 8 at addr ffff88815fe99c00 by task poc/3379
+CPU: 0 UID: 0 PID: 3379 Comm: poc Not tainted 6.11.0+ #56
+Hardware name: VMware, Inc. VMware Virtual Platform/440BX
+Desktop Reference Platform, BIOS 6.00 11/12/2020
+Call Trace:
+ <TASK>
+ gsm_cleanup_mux+0x77b/0x7b0 drivers/tty/n_gsm.c:3160 [n_gsm]
+ __pfx_gsm_cleanup_mux+0x10/0x10 drivers/tty/n_gsm.c:3124 [n_gsm]
+ __pfx_sched_clock_cpu+0x10/0x10 kernel/sched/clock.c:389
+ update_load_avg+0x1c1/0x27b0 kernel/sched/fair.c:4500
+ __pfx_min_vruntime_cb_rotate+0x10/0x10 kernel/sched/fair.c:846
+ __rb_insert_augmented+0x492/0xbf0 lib/rbtree.c:161
+ gsmld_ioctl+0x395/0x1450 drivers/tty/n_gsm.c:3408 [n_gsm]
+ _raw_spin_lock_irqsave+0x92/0xf0 arch/x86/include/asm/atomic.h:107
+ __pfx_gsmld_ioctl+0x10/0x10 drivers/tty/n_gsm.c:3822 [n_gsm]
+ ktime_get+0x5e/0x140 kernel/time/timekeeping.c:195
+ ldsem_down_read+0x94/0x4e0 arch/x86/include/asm/atomic64_64.h:79
+ __pfx_ldsem_down_read+0x10/0x10 drivers/tty/tty_ldsem.c:338
+ __pfx_do_vfs_ioctl+0x10/0x10 fs/ioctl.c:805
+ tty_ioctl+0x643/0x1100 drivers/tty/tty_io.c:2818
+
+Allocated by task 65:
+ gsm_data_alloc.constprop.0+0x27/0x190 drivers/tty/n_gsm.c:926 [n_gsm]
+ gsm_send+0x2c/0x580 drivers/tty/n_gsm.c:819 [n_gsm]
+ gsm1_receive+0x547/0xad0 drivers/tty/n_gsm.c:3038 [n_gsm]
+ gsmld_receive_buf+0x176/0x280 drivers/tty/n_gsm.c:3609 [n_gsm]
+ tty_ldisc_receive_buf+0x101/0x1e0 drivers/tty/tty_buffer.c:391
+ tty_port_default_receive_buf+0x61/0xa0 drivers/tty/tty_port.c:39
+ flush_to_ldisc+0x1b0/0x750 drivers/tty/tty_buffer.c:445
+ process_scheduled_works+0x2b0/0x10d0 kernel/workqueue.c:3229
+ worker_thread+0x3dc/0x950 kernel/workqueue.c:3391
+ kthread+0x2a3/0x370 kernel/kthread.c:389
+ ret_from_fork+0x2d/0x70 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:257
+
+Freed by task 3367:
+ kfree+0x126/0x420 mm/slub.c:4580
+ gsm_cleanup_mux+0x36c/0x7b0 drivers/tty/n_gsm.c:3160 [n_gsm]
+ gsmld_ioctl+0x395/0x1450 drivers/tty/n_gsm.c:3408 [n_gsm]
+ tty_ioctl+0x643/0x1100 drivers/tty/tty_io.c:2818
+
+[Analysis]
+gsm_msg on the tx_ctrl_list or tx_data_list of gsm_mux
+can be freed by multi threads through ioctl,which leads
+to the occurrence of uaf. Protect it by gsm tx lock.
+
+Signed-off-by: Longlong Xia <xialonglong@kylinos.cn>
+Cc: stable <stable@kernel.org>
+Suggested-by: Jiri Slaby <jirislaby@kernel.org>
+Link: https://lore.kernel.org/r/20240926130213.531959-1-xialonglong@kylinos.cn
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[ Alexey: Replace guard macro with spin_lock_irqsave due to its unavailability
+in pre-6.1 kernels. Based on a v1 patch from Longlong Xia [1]. ]
+Link: https://lore.kernel.org/all/20240924093519.767036-1-xialonglong@kylinos.cn/ [1]
+Signed-off-by: Alexey Panov <apanov@astralinux.ru>
+---
+Backport fix for CVE-2024-50073
+ drivers/tty/n_gsm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index aae9f73585bd..1becbdf7c470 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -2443,6 +2443,7 @@ static void gsm_cleanup_mux(struct gsm_mux *gsm, bool disc)
+ 	int i;
+ 	struct gsm_dlci *dlci;
+ 	struct gsm_msg *txq, *ntxq;
++	unsigned long flags;
+ 
+ 	gsm->dead = true;
+ 	mutex_lock(&gsm->mutex);
+@@ -2471,9 +2472,12 @@ static void gsm_cleanup_mux(struct gsm_mux *gsm, bool disc)
+ 	mutex_unlock(&gsm->mutex);
+ 	/* Now wipe the queues */
+ 	tty_ldisc_flush(gsm->tty);
++
++	spin_lock_irqsave(&gsm->tx_lock, flags);
+ 	list_for_each_entry_safe(txq, ntxq, &gsm->tx_list, list)
+ 		kfree(txq);
+ 	INIT_LIST_HEAD(&gsm->tx_list);
++	spin_unlock_irqrestore(&gsm->tx_lock, flags);
+ }
+ 
+ /**
+-- 
+2.30.2
+
