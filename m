@@ -1,93 +1,110 @@
-Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E958479
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC3B23C8D9
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738950405; cv=none; b=iifLcjGFyxpElqjjBGkasko/Jdoq25gLfedBRxNW9SaAQ/EHHUZMAGkkvqDOCKXettbp5tlShWpqZwnq1lAfKqIp7O6ihY/t1NSogxHocDyoV+veruPbFh/8fAKt1OigHuYFx+U/ps3LeBQislqD84F9hizhbHLZ2boo9ct/l1Q=
+	t=1738950480; cv=none; b=fFrnjhXAbrrqNV8g/2SnNAiVcPXv0VTX3DU75NN4nKnD9MDA6SqGzWw7kdi7SdGTeaM+4eCYVyrDFFingQ9DzpYmVqcWoUHQ93Gil5/bTk/oyuAasA3YS/BijrRVP/AsMkvgZ4AyYlDoD4uOyfQcKtsIRJ9luzpUrWMRRVgAdUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738950405; c=relaxed/simple;
-	bh=WvY5bGb6US+fjVoH7ycDafdwd1CWU5+uiCvekY76wY0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IJjzAIuaQNzDdaxkolWBnY042TbZUY8XMGd9cTfTya1mmp+Nsiy9taCKFOZoMSBC1jGP1INgucw5dB9bemPOPA7Dd42j5ulf39aZ1fG69FdRKpj56wm77fMkwWWW4LPxeZSdnRg83iPZvQT8oTzFiA2HZOWr6lEQf/LU9K2Uaws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=RKwzyY2y; arc=none smtp.client-ip=199.89.1.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="RKwzyY2y"
-Received: from localhost (localhost [127.0.0.1])
-	by 009.lax.mailroute.net (Postfix) with ESMTP id 4YqLxt30VSzlgTwl;
-	Fri,  7 Feb 2025 17:46:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1738950397; x=1741542398; bh=Kk9Jj/avA8J1oASKyHDrwC8e
-	RHvb7jBheDGjgcYfKUw=; b=RKwzyY2yvxxXo4W3mQyIqItoZrHtmCtZ6QS6rNBo
-	qHKUqNASdQtiBsaRLOzUyyfjIGmBWkpC8PTwMAK0VCTgK2kJeB/5AS5XcGbF6Qu2
-	SUyUF9NyPLh5S98RklOGUxRdQhWC79oRc89RpjhYO8BXeznMFgPEvFdbhOMfaU78
-	yH4PrMJq629MTSSYr3DkSzjUAklf/U6UEnq1SQWLaJ/25cdlcnOykqEw/lOyhjqS
-	Q+O4GmBtN3u82Le2K/LlPe1Ozqe6XIw3ktMP3LdwnXDK0pTae8WiMH9RpeVO3axV
-	dPkSGP2wTMB0ErLCSGtlO7vODaLyULP1F2odUk++Z17Svw==
-X-Virus-Scanned: by MailRoute
-Received: from 009.lax.mailroute.net ([127.0.0.1])
- by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id Zl5C0Nm-mq4s; Fri,  7 Feb 2025 17:46:37 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4YqLxl3T3mzlgTwF;
-	Fri,  7 Feb 2025 17:46:35 +0000 (UTC)
-Message-ID: <94fa4f05-929f-4be8-b2d1-0277826984b1@acm.org>
-Date: Fri, 7 Feb 2025 09:46:34 -0800
+	s=arc-20240116; t=1738950480; c=relaxed/simple;
+	bh=X8vLtEFCqpioyxyUoF5BAw9f0a1GinJmIHMGzx54B+g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KI7twfHvQx0+bXehhKXot9LmOuGuLHPoL08RAq9gtY5bcA6m7MMRBMjAzGwOpsl4Z06OVah9ovklO2atn+6+ojzmZ7ToB64LgSJR3k2G19pURhcPaMX8krMn90R5ugz4NBEerMoezVpOp3CjPHoHOVFfL43CNzhw3bwR9LV3svU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1tgSRK-000000000iv-3IAC;
+	Fri, 07 Feb 2025 12:46:54 -0500
+Message-ID: <e87ff5822692fdc8dcfed428f8e8b2e2a577a20d.camel@surriel.com>
+Subject: Re: [PATCH v9 00/12] AMD broadcast TLB invalidation
+From: Rik van Riel <riel@surriel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Oleksandr Natalenko <oleksandr@natalenko.name>, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, bp@alien8.de, dave.hansen@linux.intel.com, 
+	zhengqi.arch@bytedance.com, nadav.amit@gmail.com, thomas.lendacky@amd.com, 
+	kernel-team@meta.com, linux-mm@kvack.org, akpm@linux-foundation.org, 
+	jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com
+Date: Fri, 07 Feb 2025 12:46:54 -0500
+In-Reply-To: <20250207081629.GT7145@noisy.programming.kicks-ass.net>
+References: <20250206044346.3810242-1-riel@surriel.com>
+	 <12602226.O9o76ZdvQC@natalenko.name>
+	 <8111558b52cec1152746b05a9c1d657d18df0fe2.camel@surriel.com>
+	 <20250206142308.GR7145@noisy.programming.kicks-ass.net>
+	 <ad7bc8809b8501e157a6e6da3a5b5863ca56c995.camel@surriel.com>
+	 <20250207081629.GT7145@noisy.programming.kicks-ass.net>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.1 (3.54.1-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 00/33] Compile-time thread-safety checking
-To: Peter Zijlstra <peterz@infradead.org>, Marco Elver <elver@google.com>
-Cc: Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Nick Desaulniers <ndesaulniers@google.com>,
- Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>,
- Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org
-References: <20250206175114.1974171-1-bvanassche@acm.org>
- <CANpmjNOsf1RnYJuZ7pmWVYNqVYMYe+eTL0vhDKU5sLihR9fN-g@mail.gmail.com>
- <90c7a807-b0a0-4b42-866f-f74c5d1c62e5@acm.org>
- <20250207084223.GX7145@noisy.programming.kicks-ass.net>
- <Z6XM6zjK3mtqYfan@elver.google.com>
- <20250207090827.GZ7145@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250207090827.GZ7145@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Sender: riel@surriel.com
 
-On 2/7/25 1:08 AM, Peter Zijlstra wrote:
-> On Fri, Feb 07, 2025 at 10:05:47AM +0100, Marco Elver wrote:
->> Yes, you can add multiple guarded_by. But it's just going to enforce
->> that you need to hold both locks before you access the member. If you
->> want the rules to be more complex, the best way to express that is with
->> some helpers. E.g. something like this (tested on top my series)
-> 
-> Oh gawd, this is going to be a pain, isn't it :/
+On Fri, 2025-02-07 at 09:16 +0100, Peter Zijlstra wrote:
+> On Thu, Feb 06, 2025 at 09:48:25AM -0500, Rik van Riel wrote:
+>=20
+>=20
+> > we can just round up the
+> > end address to the nearest stride boundary
+> > there, with a comment explaining why?
+>=20
+> Well, why are we rounding at all? I don't think I've seen an
+> explanation
+> for that anywhere yet.
+>=20
+> What made you do this?
 
-The Clang thread-safety annotations are used widely so behavior of
-existing attributes must be preserved. I propose to introduce new
-thread-safety attributes when useful to annotate kernel code. As an
-example, the Clang try_acquire_capability function attribute does not
-support functions that return pointers although this is a common pattern
-in the Linux kernel. I think that introducing a new function attribute
-to support functions that return pointers is a better solution than
-trying to annotate such functions with any of the existing Clang
-thread-safety attributes.
+The only real reason is to not end up with a 0
+value for nr in these loops:
 
-Thanks,
+        for (addr =3D info->start; addr < info->end; addr +=3D nr <<
+PAGE_SHIFT) {
+                nr =3D min((info->end - addr) >> PAGE_SHIFT,
+invlpgb_count_max);
+                invlpgb_flush_addr_nosync(addr, nr);
+        }      =20
 
-Bart.
+Which makes me think we could just insert a
+"nr =3D max(nr, 1)" in there, and round up
+partial pages that way?
+
+Looking further, I already did that on the
+userspace flushing side. Let me do the same
+thing on the kernel side, and remove the
+other code related to partial pages being
+passed in.
+
+--=20
+All Rights Reversed.
