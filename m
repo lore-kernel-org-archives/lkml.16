@@ -1,130 +1,90 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC62B2417FE
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 11:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D3E1624C3;
+	Fri,  7 Feb 2025 11:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738928679; cv=none; b=t/ViBD17J+cjjP+ZcA3Hq85P78J0W3yRDE6vJMmgHhqRgE3L/I52kgBrT1bHKbwIk0UhFtgYpM+FkJK2/5CiLEG3gVmpovMCW5A4GqPWy0AO4E+xVj7+7ocVbwzPOlfWx7hpE3t//DgamWb+OY6gUiMYYu52pt9ZW+BKz9j+lzQ=
+	t=1738928809; cv=none; b=P19enRTWq6XqsI0kCPvvtki0+ERn8VoIt0s4FIBidOYGAf0ow8SZvApNlf0V0NZ5Db8KPKKasMcbK45yu6oRj6Oa30hcyI11cRSd7hUpEReKDZ+s/+ntKGh1UT9VUkBXy/irF0tCL/vZpLdUr7USG9D+/w8Iqpgo/9rPY+AKAzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738928679; c=relaxed/simple;
-	bh=JGu5JKj8jpkSVK3yYAVXPTbMrFO/6XIzUyJoj353e50=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mh5jl36xgX6o2RP3QAbvqbka+YYMmcDC8SGh58FE0Mgo8NXufNuMNOiYRYHzj5wrYSX1huo4oFJOcKrZPyuPZdZACeO6iQ2WvGOW3uKqE5F9uuTvieQYJdxgmH8euEoRdLxSCQKt7fLK4xzzubzeb+Z/omsIDXJ0S4O8Z/zSNKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1oXZJbCm; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738928809; c=relaxed/simple;
+	bh=sjN/g62W9GZCGhfmhpvikdNIpkQvCQh2KKR1vBQPh84=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DtT1TiHgyHCTvVwf+WJURtEJfMmKmjMzj2LBqCay77wqbdHrGvnLGPKGvNt4EUy6ffST7Z/PoF27RRlbii8zKA0N5KCoq0KCIYw9n37Po0RAEPOmW1hCFkN4MkuZOf6z41UiiwHZK1U3P23HwRBcyn2VqDLdhagQxoG3prsn8sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=emrjmMB0; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1oXZJbCm"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-307de77b4easo17289361fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 03:44:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738928676; x=1739533476; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WXlta8LjLzGu/J5ZyrXnJulBIRAv/5fz0j1rTgufk1Y=;
-        b=1oXZJbCmfxmJNPNi6O1mHtivr84eVIXwahsR+6TvyZHHRlYkB+eRaKCqRYZqzjhp73
-         uFOt8h9ZQnJBop5c6FzTt1rk8v0so+OaEopEpY5u8wRjCzBo/AMsGBWEFmi05m4CPWRi
-         9g/SuERpGvOEipNgFKEpSgs46i1jHfwrKlBKl0GOn336YIM8B0wGfi6xvTdB2ZjcBUSp
-         xPmV4+xmUCMm2tgZgFfM5HSv5Mt7RmzJt/iHYYv0Qk2+SDqoyISeMym8DINNV9zycUV0
-         O/Kk4NaAA7Uz99kC4xJbJdnliPu1tyTtx8Xmb+qJfpmmSjUoo/ZFo+kdL1j0XmY2/Tkm
-         7AAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738928676; x=1739533476;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WXlta8LjLzGu/J5ZyrXnJulBIRAv/5fz0j1rTgufk1Y=;
-        b=S1fmNlkuDbRLlCapbU2qum2EdnzJyc+HRErcYGRGJK1haXlyERKjCmO21kJ7jRO/cC
-         ct89gNVv9ywRFzJ9O7iZG36BvE5lhaAFSWzeXUHt2CCGEPWYn1CWlhnje+aTQ0N6uDAe
-         ZHr18s5+o70xllftRgxnFIQRqV8ZkyKsFj8PJtGUY8NKCS8dI3rEBD8ZnegchnzrtqtB
-         UV5Pb2MFcSy6KpgteeosUYON2L62uLPO11d5oYBrAyVexg2cI+TBROfM/YAyv6G9dZKj
-         zotsfXftnh0R6nl8xx4PLUnRw8EqU4jB5bCwcXAkJmMl4IemLppbs6CnU7XKCvhXlC7O
-         Pzow==
-X-Forwarded-Encrypted: i=1; AJvYcCU7HqjQ9ffxexKaT0jNlUjqm5vwD2+ca7XbPt0lUL6AVR9fise/bFwx4HBTSSaBnQrPsXcjyIx8yThZidU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzu2TTpZHMcWA3Tk6s3hUhmhUdr2Jnzwnp2KQjfEch/yu80hSGe
-	cY2+zITVex3W99QreKSwp5l9Fy66CtzDR2ygDoRnHHc8rhPlWh4oCFiWeSKNvRA+9cozdgLw2Rt
-	BWIu2zd0fUTJDeCJE+I/yyVlNNXEpRITQy8Nm
-X-Gm-Gg: ASbGnctHE+wo9LHP33A3iBmB/DrmYMhliJ6Umdaw5sICm42U96vdNe52vOok9D5DqEP
-	ybNu8TcdmPBcW1/MvtT6kK4HK6Ddp613fDlvkNCmFGz5BjwCKAEYBQEO2voRxRMfmYxJtse2w4Y
-	wgGmA6sOlyWGw4tgrewSw/XIQC0zE=
-X-Google-Smtp-Source: AGHT+IFBD05bWatFNIOO3CjU1frhz0tzz0FlpHNb00Eyed6A0AXOGuMdcR8AEQ1ya2IawmyznAQ/JPQadiMtzM4HLe4=
-X-Received: by 2002:a2e:900e:0:b0:2ff:4e4b:cbe2 with SMTP id
- 38308e7fff4ca-307da58e04dmr21221901fa.14.1738928675866; Fri, 07 Feb 2025
- 03:44:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="emrjmMB0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1738928805;
+	bh=sjN/g62W9GZCGhfmhpvikdNIpkQvCQh2KKR1vBQPh84=;
+	h=From:Subject:Date:To:Cc:From;
+	b=emrjmMB0ml5lExd73luM0XYoz4ylcY4lNsZtA9QhEB9JjTAqzPnYAT07xZlTihLBd
+	 kJf+a9zvQCvxRF2DjcQ3Fb/w1n7qVtTPrNO17XXM53mV1Z5wvi4WIlwaJYShWJX3hP
+	 ZX/0wUiAONIjYGjGGOuFkeOL22Sl5ZyA5R6Ea62LtIF9ojslqCbalmEk2JOnFAaI+l
+	 kCX/MEohlxcJk73r+r2todghlKSw67UtGznO/WRRNBmiY7sBt05Gmx0gLauLzV3eBe
+	 +K356uuNZbT4VecR75ZAw6q6qkSqnnu2pxyGYKjY1qMAXdGIZcXkA2ZbZQAAATCpPL
+	 ymWb1sgwiOW+w==
+Received: from localhost (unknown [188.27.58.83])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id C726D17E0850;
+	Fri,  7 Feb 2025 12:46:44 +0100 (CET)
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Subject: [PATCH 0/4] Sound fix for Valve Steam Deck OLED on resume from
+ suspend
+Date: Fri, 07 Feb 2025 13:46:01 +0200
+Message-Id: <20250207-sof-vangogh-fixes-v1-0-67824c1e4c9a@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738772628.git.dvyukov@google.com> <87ldujkjsi.fsf@linux.intel.com>
- <CACT4Y+aVWH6d7kuxzvcJSarXMQB-PPDTcE5OvN2tjkOLnzmMLg@mail.gmail.com>
- <CAP-5=fUxY1KYXN-HcJPd2D66j5cC6DFTGPzYFVvJKvBLqyz6-Q@mail.gmail.com> <Z6WEkAPxtpVmx8cO@google.com>
-In-Reply-To: <Z6WEkAPxtpVmx8cO@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Fri, 7 Feb 2025 12:44:24 +0100
-X-Gm-Features: AWEUYZknqnNJQVXcj50I7GgYjjXVJVRJ6QKmq5lQDRQ69NY3CN35CUU5DSIPf7E
-Message-ID: <CACT4Y+ZrFOWZodAM_Ay5hZRht=7D5KWcK7q4=DBpf-E2vs+JmA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/8] perf report: Add latency and parallelism profiling
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHnypWcC/x3LQQqAIBBA0avErBswK5SuEi2kxpqNhgMShHdva
+ Pl5/BeECpPA0r1QqLJwThpD38F+hXQS8qEN1tjZWONQcsSqkM8LIz8kOFsf4mEm70YH+t2FftB
+ t3Vr7ABk/fZVjAAAA
+X-Change-ID: 20250207-sof-vangogh-fixes-528afd048737
+To: Liam Girdwood <lgirdwood@gmail.com>, 
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
+ Bard Liao <yung-chuan.liao@linux.intel.com>, 
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
+ Daniel Baluta <daniel.baluta@nxp.com>, 
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Vijendar Mukunda <Vijendar.Mukunda@amd.com>, 
+ Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
+Cc: kernel@collabora.com, sound-open-firmware@alsa-project.org, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
 
-On Fri, 7 Feb 2025 at 04:57, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> On Thu, Feb 06, 2025 at 10:51:16AM -0800, Ian Rogers wrote:
-> > On Thu, Feb 6, 2025 at 10:41=E2=80=AFAM Dmitry Vyukov <dvyukov@google.c=
-om> wrote:
-> > > On Thu, 6 Feb 2025 at 19:30, Andi Kleen <ak@linux.intel.com> wrote:
-> > [snip]
-> > > > We traditionally didn't do it, but in general test coverage
-> > > > of perf report is too low, so I would recommend to add some simple
-> > > > test case in the perf test scripts.
-> > >
-> > > What of this is testable within the current testing framework?
-> > > Also how do I run tests? I failed to figure it out.
-> >
-> > Often just having a test that ensure a command doesn't segfault is
-> > progress :-) The shell tests Andi mentions are here:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/shell?h=3Dperf-tools-next
-> > There's no explicit `perf report` test there but maybe the annotate,
-> > diff or record tests could give you some ideas.
->
-> Well, we have. :)
->
->   $ ./perf test -vv report
->   116: perftool-testsuite_report:
->   --- start ---
->   test child forked, pid 109653
->   -- [ PASS ] -- perf_report :: setup :: prepare the perf.data file
->   ## [ PASS ] ## perf_report :: setup SUMMARY
->   -- [ SKIP ] -- perf_report :: test_basic :: help message :: testcase sk=
-ipped
->   -- [ PASS ] -- perf_report :: test_basic :: basic execution
->   -- [ PASS ] -- perf_report :: test_basic :: number of samples
->   -- [ PASS ] -- perf_report :: test_basic :: header
->   -- [ PASS ] -- perf_report :: test_basic :: header timestamp
->   -- [ PASS ] -- perf_report :: test_basic :: show CPU utilization
->   -- [ PASS ] -- perf_report :: test_basic :: pid
->   -- [ PASS ] -- perf_report :: test_basic :: non-existing symbol
->   -- [ PASS ] -- perf_report :: test_basic :: symbol filter
->   ## [ PASS ] ## perf_report :: test_basic SUMMARY
->   ---- end(0) ----
->   116: perftool-testsuite_report                                       : =
-Ok
->
-> Thanks,
-> Namhyung
+Stress testing resume from suspend on Valve Steam Deck OLED (Galileo)
+revealed that audio may break and cannot be recovered without performing
+a system reboot.
 
+This patch series provides a new ACP quirk to address the issue, along
+with a few additional improvements to AMD Vangogh/ACP SOF drivers.
 
-Thanks, Namhyung, Andi, Ian, this is useful.
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+---
+Cristian Ciocaltea (4):
+      ASoC: SOF: amd: Add post_fw_run_delay ACP quirk
+      ASoC: SOF: amd: Drop unused includes from Vangogh driver
+      ASoC: SOF: amd: Handle IPC replies before FW_BOOT_COMPLETE
+      ASoC: SOF: amd: Add branch prediction hint in ACP IRQ handler
 
-Added tests in v6:
-https://lore.kernel.org/linux-perf-users/eb8506dfa5998da3b891ba3d36f7ed4a7d=
-b4ca2b.1738928210.git.dvyukov@google.com/T/#u
+ sound/soc/sof/amd/acp-ipc.c     | 25 +++++++++++++++++--------
+ sound/soc/sof/amd/acp.c         |  1 +
+ sound/soc/sof/amd/acp.h         |  1 +
+ sound/soc/sof/amd/pci-vangogh.c |  2 --
+ sound/soc/sof/amd/vangogh.c     | 22 ++++++++++++++++++----
+ 5 files changed, 37 insertions(+), 14 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250207-sof-vangogh-fixes-528afd048737
+
