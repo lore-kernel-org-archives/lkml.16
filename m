@@ -1,171 +1,150 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086C0199254
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B59A199254
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738916042; cv=none; b=MOhP3gBri9x8gqh+SPPH0qV+49+B4r+Gwyy5uC/l3V4s5N5jgpuPJ8ttq/gHnOQBLCa1829Yz/8sk8FWkgO8XtUUMhi1GcU4VtJ9FcqArmKdG+2XWKAqsgCcmL5zDqWccFmYg6StfBStrhexn67frePdgZ3lNju/i2F9NWQU17c=
+	t=1738916048; cv=none; b=hxuJcLuE/iG83JN4sLH5UX/Tnx5i0hNAJ1GpnJpltNYVnJxkYbck3DX5b4SnG12qB9S+DTelYBxr+CkIpcZF9mg87vSdACWEmTWx63cuMsPguf4v2s93WXvpCduz/eM5awu0rxWE7KDyTIHIPxJVFUT5USTROuyca7Z34yg+4to=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738916042; c=relaxed/simple;
-	bh=DzRl7T8sIjvlyYTMPc+CcYOkIjrhZ4zBf6aWJ7k8aKQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g7UnSKkhN9UBTDrUA0IUAkPvodeOH/V1FvrdBStulkXWT7AcbDbpDMKF2nBKGDDLvq8gy6BUCaJShpCwem9pvZni8kVHEXFfPDCE9xtSENnxf9OBZymnVt71oSMBZIp9wNWY9PxB+030PGWDNqyp+2Rd/PfAS8JqbX3FRtj20Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Bq6YVLY5; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738916048; c=relaxed/simple;
+	bh=h7ENOft2SY09K8gYYNgwcT/3gUzWbpo8/Oe79D/1UmY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qLUbNrWSxMlVM6N82u8wyzbQRieFs/TlKdrq6kLns2FLqbRLQX0kG3W08kbAK/XTi+HgppZazIcsD0Ctd+enPLrW7iRvo4/06uRHMKgCopOa704Mu7lTBSmKHAGQzjG/NfwCCs6fGyPLEEHqxVXTeIkd6XtYUl1fCefJwAjQILE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RLObjaHV; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Bq6YVLY5"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4361e89b6daso11379245e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 00:13:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738916038; x=1739520838; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ffr0OMCgv5rw2MLpHSX7E1qg3OY60t4awxWCHQtHUac=;
-        b=Bq6YVLY5jlP5t/oj0RASV7dDXvJI2VBVua8urckQG+4Wlf0Tt/V5efn95XhxZGexDE
-         WZFL5H38mPJqGQvc+ntjj5eXih/0rQJc3aK8gKHRnLRvrlc+tiB+kKEd7+0C7M1NDeul
-         /iKtRz2V1okrSOpp48WFWHGORBxA2izRX4e0G81JSPxs1IBc++v8Ylr69bqxEK8zy4tn
-         O44grSmOc61ZgTf1+aUL+qrnUYV4BmrOFNjXmOmGWR8AM5O8RzEVgmTnnwRGPL/4GG7k
-         IR1o0uh2ggftfP7+l9G38PEMtvKbQW6coufUU1XCJv2MtvkVhDY9EyAbyBChW+FTqUIS
-         i2HA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RLObjaHV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738916044;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B+vuW6U48iDvPQRM7yyRLxHLzZYL+ucqowEQ4SiSdz8=;
+	b=RLObjaHVZXgmnlqXvHFSYeXW3fIJpIHP8nfKXaDYHruHG0Hjerp037paB9BIqSyyiJ9/iE
+	Mj+wY58WqxkBjJhK/HKQqQKPbYH/EE/Ev7+E4XBL1ayhSAduE8ayvKKYvtC8fgqWDq49UF
+	8xQFwtAq2rn8solJZG9EZ9e5NqXxPV8=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-632-yjIuPE0UO8umdut7PvOqxw-1; Fri, 07 Feb 2025 03:14:03 -0500
+X-MC-Unique: yjIuPE0UO8umdut7PvOqxw-1
+X-Mimecast-MFC-AGG-ID: yjIuPE0UO8umdut7PvOqxw
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-21f49f0bd8fso16401835ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 00:14:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738916038; x=1739520838;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ffr0OMCgv5rw2MLpHSX7E1qg3OY60t4awxWCHQtHUac=;
-        b=qC46nrexol30/tZevgCSc93fzY+rcmygg6SFyE6wardEn4rZT7DdAHMbSinFxn9atJ
-         1EUtlhhbMRnOgdqm4jvqrWB6ys3Puq0P62r8O0GLyMBggn0IM8ph/pt6deJC0NCbXjZx
-         RPWpBsDFdTgKEAnheKwdN2Qd5eIVhhd81FwqCLl6omoVvml0UMDfZEBltmvoPpv7DQqb
-         96MWcwOzSoN0GrxDd+7IpVg1y/WWzdxY5qRTCU35Knhrz/YAvvGySbi8mTTPJrJaxPMy
-         oWBgAjZVFUBXZJKSLqPJ8dKIbEPj6eH/hRgzGYl0ajGLeN2PjTyiiClXwEBG53kmJ8cm
-         W5Zw==
-X-Forwarded-Encrypted: i=1; AJvYcCUU6EICnVph/IM9uXQ7+6cNHTKpWl87xFfW1d6HZoAxusX7qVjh1rHkf0yKjevU39eSSkBHCsavm9mSgQc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFYGYmDtnrz1Iwqze647K+6mB4OqxuyEX3ob38UDnZ+CHzPQsn
-	+QKsyapzatP6Q0INLfaANR3nvmwr8+hoPSR1AwO8FJZcp1Ehpi2iHsqA0OxEU7s=
-X-Gm-Gg: ASbGnct+383Sjvrh4uKwYRDnZZFYAOE/9/UgK+urpCUtkNWtdkvvmKVmlFNwj9oNyuK
-	shfXOyzZxPWUtxAKIUgbcmfd8A75WHi3DTNODSLX4NVKuht+hYiR0n+lEEVjSZQkCsOCMKlnubl
-	6cAIkKBUE2ZtaKfYyOsbenu3WzAFxmEZA5pySTHy43lDh/uF9KjMdmQynzD11yUC56uDU/+al60
-	S2fbaHHV4Y9GNkKa1+M4onr6q69LU9C+zZLxR1AY9CEWcPogxN+vAzYdkCaL8shOwfcryxkVN+q
-	HVSTmTLqmsFkDRWbjj1sY3QR5+uahNG1IRWn7kUlXRfC0XMGR0XbzuIJ7FDu
-X-Google-Smtp-Source: AGHT+IEGr/YRTYNXaAzVLspq4nx30yqY6bs6EtU6OBmGn64/zPMRjPnpKtSGL4mxDnpbYdH0c6ehyw==
-X-Received: by 2002:a05:600c:35c5:b0:438:e231:d35e with SMTP id 5b1f17b1804b1-439248b6ebamr20948965e9.0.1738916038069;
-        Fri, 07 Feb 2025 00:13:58 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc09fc2d9sm3167994f8f.6.2025.02.07.00.13.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 00:13:57 -0800 (PST)
-Message-ID: <d03581a9-495d-47df-99f2-96065b06ee8f@rivosinc.com>
-Date: Fri, 7 Feb 2025 09:13:56 +0100
+        d=1e100.net; s=20230601; t=1738916042; x=1739520842;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B+vuW6U48iDvPQRM7yyRLxHLzZYL+ucqowEQ4SiSdz8=;
+        b=xDc73f7NePIXQnaVGPxxCKq4xGn5+RCTCF/jDoALliRgwlJ5OTSOXGnGXDyfsiiDZ0
+         150dPzq9yaTZLb1DKXoyVihxbriPz/ATaA+u9i8Eb9EHCDdDIbjP0fd597tED/oceS+r
+         1qAbYaknJmk0jlFD8pLhSnZSExrPwmD9XsFi+soymSLzm8fnbJ64vWR+e9O+ZyjI1Mii
+         38nfYhQE/TSfVO3luGkAFczWBgieMLqcj8Wc+MZEiO9iuEiirzzFfbcvoKeIOD5yy5/e
+         YtF0VbDD6vYQIqYFlZtr7BvPlz+uqSxlUmlDp6DbdvaVy+wUbK7ksKJdUGGTPu/ZwzA+
+         uS4w==
+X-Forwarded-Encrypted: i=1; AJvYcCXilIH2t0YrEHNG1b1cCqddfeZT9ZXORlfa7+l8emep4TU0tSiWXX6+D9KxRNoJL0p+wS1B3zTduHmTLc0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyZLyY5QwAeVLcT+Ogxl8geCCwEJSQmV7UphzORu5OE2L88e+X
+	OB1//q9ASwTyCVIMtFvjdN/JQpvK8lhbK4W5TA/T187s7qnWmIos81rYlhV4HQztIrPvyiBcKNP
+	WpNGVIcNx4amflAt5nwcxSHmzZ8rx7plhShoW/ti1fHgTI7E6i57Zqs2TrEKI7g==
+X-Gm-Gg: ASbGncuRw+38f08IeHwNqymr6WxZBDcWQESEjiE7ihZdwXTJlFFnRpjnCl5op2/7F/A
+	CYLK7VLAAOj+oDYDcFP54khuob6YDnbFBHAwMlerRu0rlzCt2w3BS32ov5kOnkZqr7/iUlU1Nud
+	sx1Zw6DA0cvYEqrOKAtwHSrS/ejUHh6dZV6kRpBbv8UHSXJoQdDJFdmicnZyq5OUXGP2W7PIzsX
+	uGk5tEr41vHvHaTtmu1cHm61WMC94P/uKgJ9zG6rWcRNt9qGYdjBUSsdQDzHn1vXVtFeiUo
+X-Received: by 2002:a17:903:2309:b0:215:a04a:89d5 with SMTP id d9443c01a7336-21f4e1cf038mr40201335ad.2.1738916042446;
+        Fri, 07 Feb 2025 00:14:02 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEgk9M0daWYVa2Ek7u8oS/CFLYtRBIoNw24mfM3TS73uCeiCwSamNzyIev1riImUKcHHz726g==
+X-Received: by 2002:a17:903:2309:b0:215:a04a:89d5 with SMTP id d9443c01a7336-21f4e1cf038mr40201145ad.2.1738916042195;
+        Fri, 07 Feb 2025 00:14:02 -0800 (PST)
+Received: from localhost ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d8bdsm24540065ad.151.2025.02.07.00.14.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 00:14:01 -0800 (PST)
+From: Coiby Xu <coxu@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	=?UTF-8?q?Daniel=20P=20=2E=20Berrang=C3=A9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Pingfan Liu <kernelfans@gmail.com>,
+	Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH v8 7/7] x86/crash: make the page that stores the dm crypt keys inaccessible
+Date: Fri,  7 Feb 2025 16:13:58 +0800
+Message-ID: <20250207081358.129794-1-coxu@redhat.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250207080818.129165-1-coxu@redhat.com>
+References: <20250207080818.129165-1-coxu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 09/21] RISC-V: Add Ssccfg ISA extension definition and
- parsing
-To: Atish Patra <atishp@rivosinc.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atishp@atishpatra.org>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, weilin.wang@intel.com
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org
-References: <20250205-counter_delegation-v4-0-835cfa88e3b1@rivosinc.com>
- <20250205-counter_delegation-v4-9-835cfa88e3b1@rivosinc.com>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20250205-counter_delegation-v4-9-835cfa88e3b1@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+This adds an addition layer of protection for the saved copy of dm
+crypt key. Trying to access the saved copy will cause page fault.
 
+Suggested-by: Pingfan Liu <kernelfans@gmail.com>
+Signed-off-by: Coiby Xu <coxu@redhat.com>
+---
+ arch/x86/kernel/machine_kexec_64.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-On 06/02/2025 08:23, Atish Patra wrote:
-> Ssccfg (‘Ss’ for Privileged architecture and Supervisor-level
-> extension, ‘ccfg’ for Counter Configuration) provides access to
-> delegated counters and new supervisor-level state.
-> 
-> This patch just enables the definitions and enable parsing.
-> 
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
-> ---
->  arch/riscv/include/asm/hwcap.h | 2 ++
->  arch/riscv/kernel/cpufeature.c | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
-> index b4eddcb57842..fa5e01bcb990 100644
-> --- a/arch/riscv/include/asm/hwcap.h
-> +++ b/arch/riscv/include/asm/hwcap.h
-> @@ -103,6 +103,8 @@
->  #define RISCV_ISA_EXT_SSCSRIND		94
->  #define RISCV_ISA_EXT_SMCSRIND		95
->  #define RISCV_ISA_EXT_SMCNTRPMF         96
-> +#define RISCV_ISA_EXT_SSCCFG            97
-> +#define RISCV_ISA_EXT_SMCDELEG          98
->  
->  #define RISCV_ISA_EXT_XLINUXENVCFG	127
->  
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-> index 8f225c9c3055..3cb208d4913e 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -390,12 +390,14 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
->  	__RISCV_ISA_EXT_BUNDLE(zvksg, riscv_zvksg_bundled_exts),
->  	__RISCV_ISA_EXT_DATA(zvkt, RISCV_ISA_EXT_ZVKT),
->  	__RISCV_ISA_EXT_DATA(smaia, RISCV_ISA_EXT_SMAIA),
-> +	__RISCV_ISA_EXT_DATA(smcdeleg, RISCV_ISA_EXT_SMCDELEG),
-
-Hi Atish,
-
-based on your dt-binding commit, if smcdeleg depends on Sscsrind, Zihpm,
-Zicntr, then you could add a validation callback here:
-
-static int riscv_smcdeleg_validate(const struct riscv_isa_ext_data
-*data, const unsigned long *isa_bitmap)
-{
-	if (__riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_SSCSRIND) &&
-	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZIHPM) &&
-	    __riscv_isa_extension_available(isa_bitmap, RISCV_ISA_EXT_ZICNTR))
-		return 0;
-
-	return -EPROBE_DEFER;
-}
-
-__RISCV_ISA_EXT_DATA_VALIDATE(smcdeleg, RISCV_ISA_EXT_SMCDELEG,
-riscv_smcdeleg_validate),
-
->  	__RISCV_ISA_EXT_DATA(smcntrpmf, RISCV_ISA_EXT_SMCNTRPMF),
->  	__RISCV_ISA_EXT_DATA(smcsrind, RISCV_ISA_EXT_SMCSRIND),
->  	__RISCV_ISA_EXT_DATA(smmpm, RISCV_ISA_EXT_SMMPM),
->  	__RISCV_ISA_EXT_SUPERSET(smnpm, RISCV_ISA_EXT_SMNPM, riscv_xlinuxenvcfg_exts),
->  	__RISCV_ISA_EXT_DATA(smstateen, RISCV_ISA_EXT_SMSTATEEN),
->  	__RISCV_ISA_EXT_DATA(ssaia, RISCV_ISA_EXT_SSAIA),
-> +	__RISCV_ISA_EXT_DATA(ssccfg, RISCV_ISA_EXT_SSCCFG),
-
-Ditto for this one with Smcdeleg, Sscsrind, Zihpm, Zicntr, Sscofpmf,
-Smcntrpmf.
-
-Thanks,
-
-Clément
-
->  	__RISCV_ISA_EXT_DATA(sscofpmf, RISCV_ISA_EXT_SSCOFPMF),
->  	__RISCV_ISA_EXT_DATA(sscsrind, RISCV_ISA_EXT_SSCSRIND),
->  	__RISCV_ISA_EXT_SUPERSET(ssnpm, RISCV_ISA_EXT_SSNPM, riscv_xlinuxenvcfg_exts),
-> 
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index a68f5a0a9f37..f615fcb6d35d 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -598,13 +598,35 @@ static void kexec_mark_crashkres(bool protect)
+ 	kexec_mark_range(control, crashk_res.end, protect);
+ }
+ 
++/* make the memory storing dm crypt keys in/accessible */
++static void kexec_mark_dm_crypt_keys(bool protect)
++{
++	unsigned long start_paddr, end_paddr;
++	unsigned int nr_pages;
++
++	if (kexec_crash_image->dm_crypt_keys_addr) {
++		start_paddr = kexec_crash_image->dm_crypt_keys_addr;
++		end_paddr = start_paddr + kexec_crash_image->dm_crypt_keys_sz - 1;
++		nr_pages = (PAGE_ALIGN(end_paddr) - PAGE_ALIGN_DOWN(start_paddr))/PAGE_SIZE;
++		if (protect)
++			set_memory_np((unsigned long)phys_to_virt(start_paddr), nr_pages);
++		else
++			__set_memory_prot(
++				(unsigned long)phys_to_virt(start_paddr),
++				nr_pages,
++				__pgprot(_PAGE_PRESENT | _PAGE_NX | _PAGE_RW));
++	}
++}
++
+ void arch_kexec_protect_crashkres(void)
+ {
+ 	kexec_mark_crashkres(true);
++	kexec_mark_dm_crypt_keys(true);
+ }
+ 
+ void arch_kexec_unprotect_crashkres(void)
+ {
++	kexec_mark_dm_crypt_keys(false);
+ 	kexec_mark_crashkres(false);
+ }
+ #endif
+-- 
+2.48.1
 
