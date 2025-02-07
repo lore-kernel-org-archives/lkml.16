@@ -1,82 +1,93 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49F41DE2CD;
-	Fri,  7 Feb 2025 09:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEC01DE3B1
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:42:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738921334; cv=none; b=BIRGhLVOeyjPGUS7iXKOfULlTWGCLKTeKA+HXshPh9dekyIQa3zZsmdOXAWYw9ksD1KBrmR79x4C3TfUxfQ13bDaECr5aZ4NHch9HG5k3NaArAcB+7EgfGv0U2FEFWkp8f1KqOYY9h0V49ELDMTNF3v3pFmFY0K3/+iu8rVdBzg=
+	t=1738921345; cv=none; b=K6EbzQ4yI/Ol0UTGjc/ovxvIrAKlMEdDoSR+WATyBuhZslKntdgP+nd52Z5Quv5GipU4H/RqpXTBpiDzUyTkTqOHaDGcImlSgXv16h+CBqJIA+ni5Ose6BD2ihgpEvttbY1I5asAMBo0OMBgugFllQUbT7J3qcpw3+8bOStlXnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738921334; c=relaxed/simple;
-	bh=EewjN7nUhhtBPJOdfrZj64y7+JiFITVsxY5wBikw+WQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YaroOi9OJkcqxJ9pYjTXQxe+jCnMiVL5EaSqPN+qPZmqjpyqzyHTLW5qPZ2Qgg6qBgPXC+8QhWtvu+1i9KvhTRsMLH+7y/KCHmDQDp0DpIduj6eMAMiROjfeh8UZwp+VotxJumfMdG+Vopzp1DpRq6TuRtRxp24wPLu+OWvjadw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=ZXDaVjrD; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1738921345; c=relaxed/simple;
+	bh=ofFTj1TCyaZo+iCF/kD699zoLnBmPF0uKOAMou48smo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D7oVs6HvvdaaJNjocSkKKK7oPyK9QWY1RgbQSPJDeUjJOYHP7mg3Q6xmwfjddEscvgzFTCXHKpt9Ia9Qi4l10fwo65AsrYIGu5QcPL8JrSA02qvIHIo7xDPNJYzM8aXbN9raSZt86wBw5zmvziga3W2ZJWb43FQq/e+AVdv1PDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lvaxwmt8; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="ZXDaVjrD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=MhA1jDIfQ8iLGh9WfIUR3+LgFXMnqWm6EVDsj31vync=; b=ZXDaVjrDmJbS9jssNlbQ3D9Elb
-	r5Xsr+O3eH47BnThcCfwS3N8+p4zkexJmJG/747y6dDuOu7tkQkOCvKJ/GIuRunQjUD6KD25n0+X3
-	kcG1BAZ7Itvv9TbLunVGLSNIL1mtgJ3nUXgMX0L0AqAZcAaGEdBVjoDUsKQTUOzpRXN09nHvpZUNL
-	gxmLUvE2bu1GrU38+PRWbHHxCXP/OkHk9Ra1tn1ik0thv5vZatZna2CGm8jwG8HBcv9Yy+l75vUsS
-	o1ViSi5mUUyx6WHm0LR1XrsNS8UhS0DYuuJvLTJx0/gsGGdfUYRudFcqYM/d22WAdImA1rarkFFsF
-	lnfvqmgw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tgJwx-00FpRv-2r;
-	Fri, 07 Feb 2025 16:56:21 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 07 Feb 2025 16:56:20 +0800
-Date: Fri, 7 Feb 2025 16:56:20 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: David Howells <dhowells@redhat.com>
-Cc: netdev@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 03/24] crypto: Add 'krb5enc' hash and cipher AEAD
- algorithm
-Message-ID: <Z6XKtPKryJsRfYvK@gondor.apana.org.au>
-References: <20250203142343.248839-1-dhowells@redhat.com>
- <20250203142343.248839-4-dhowells@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lvaxwmt8"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2f9d5f8a4b9so2950562a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 01:42:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738921343; x=1739526143; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ofFTj1TCyaZo+iCF/kD699zoLnBmPF0uKOAMou48smo=;
+        b=lvaxwmt8sbPUYDJu+InC/np7gRgchdJlu3bdSNbeG/44enAw7lOkK3NKMuJq1g5nP5
+         6ifhul5uyD73nCfaHAB++DotE9bkKOAVWay6t+fvuhGfVTw54GKF6hUweuLE8u7FY8LU
+         NQ0nNoPqcZk7Hg8iRKGG+7HMj8cYZWxdojAAzHRjem69mDEkJfxorCPPEb5Z50T+Br4u
+         AhbDdgtc1g74bmU0uR4KOo0LWQG28dhZHwSCUb3A5RGpCUA4YFZ2jofXjNLZS0Cd5WVE
+         G4bvT/Onq/RGV/9hVSnD52LrskiddR0R0XHE1mdicBv88KVKE8rmAYq44XxjN7Bqo1w9
+         a/OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738921343; x=1739526143;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ofFTj1TCyaZo+iCF/kD699zoLnBmPF0uKOAMou48smo=;
+        b=elEtrZjtDO5yEIhXmjUHmnb1nawkCM/Y0hYu7AUQygNKdDjo+XUHvmnFyTfkRcZqb7
+         CF10rdo1MC/D6sphjqp4WgRz18r0T5e5TDIVD/Tx8PIwsRqo5U4TSuvgw5Qziq0No+9t
+         obK1S85yOhqVp01VxJH1xKE+zb0pAk5iJO0JDDULcDhB6zB+zeEvUTKqAKB6VHJ0EAC+
+         RAsTLGAGVn7pBJPEMZRKQPKuoGQ7egL6lQToqA+nx9o4Y6eXa0/hu3g7JfdGhLuUqQ9u
+         iFmf0fd0Nj8YJLhwSswKcLC3AFiZI5mirgqPk8W8/SfM5JegcTjEbw1tDdJLJ1rNr9QO
+         mgvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUAJnPerMr6t2jF6oMuiBBfC3ynKVJXsfMfja9Vdub33anprdp7ZJzRgA6AbIE6SJTxRxUKqDHAQ+0QNCM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUdBlhirc92/OQ/uA0fzfA7O0uqhG8T/+C2xv3NMaPrikmkCQn
+	jWcp7hJStqDj3LUBhpn0i76Z+/yLgD9Q8X6xg4mL4mBkzpsY9KiHaJ3j7ukSWTBYoUrdFIOt6gJ
+	bu2Up+YVQXkhVw1NpafWWTWq9SJb/tUsRnzF0
+X-Gm-Gg: ASbGnctjZfQdNqh/fPcq7eLbkuRSkfgnK9Tvr7ajgabNAb7kUpY9S1L47n+uYWDzsUy
+	ui+MIIxYUBYSNd3PzEGb3InOZbJbZMkfOPNQaMLOv4SOVXJ7S+KLLwdkTQ337JmWw+9cK/Nx9/T
+	KC8QvFdecqzS6ak4JXlYyDT89VyxuK
+X-Google-Smtp-Source: AGHT+IG4ZY4IqMmaYiHGhuhfQn/5+xCxjBM+K68OROGK7+Yzk74KuOTCA8zbxSoW+j9bpj4TSCIuaHZf3rRZy50Wr64=
+X-Received: by 2002:a17:90b:3143:b0:2ee:f22a:61dd with SMTP id
+ 98e67ed59e1d1-2fa243eef9bmr3628490a91.32.1738921343365; Fri, 07 Feb 2025
+ 01:42:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203142343.248839-4-dhowells@redhat.com>
+References: <20250206175114.1974171-1-bvanassche@acm.org> <CANpmjNOsf1RnYJuZ7pmWVYNqVYMYe+eTL0vhDKU5sLihR9fN-g@mail.gmail.com>
+ <90c7a807-b0a0-4b42-866f-f74c5d1c62e5@acm.org> <20250207084223.GX7145@noisy.programming.kicks-ass.net>
+ <Z6XM6zjK3mtqYfan@elver.google.com> <20250207090827.GZ7145@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250207090827.GZ7145@noisy.programming.kicks-ass.net>
+From: Marco Elver <elver@google.com>
+Date: Fri, 7 Feb 2025 10:41:47 +0100
+X-Gm-Features: AWEUYZlZ64s_-iiKP6W_6Jm5GgDCkTGb1MAvFK0wIx2GPboEISjek7OYIKFBvdE
+Message-ID: <CANpmjNPoFMacBc8YhsN0hcw_npCbfixQq44JkXPFdb0uPaNUVA@mail.gmail.com>
+Subject: Re: [PATCH RFC 00/33] Compile-time thread-safety checking
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Bart Van Assche <bvanassche@acm.org>, Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>, Jann Horn <jannh@google.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Feb 03, 2025 at 02:23:19PM +0000, David Howells wrote:
+On Fri, 7 Feb 2025 at 10:08, Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> [!] Note that the net/sunrpc/auth_gss/ implementation gets a pair of
-> ciphers, one non-CTS and one CTS, using the former to do all the aligned
-> blocks and the latter to do the last two blocks if they aren't also
-> aligned.  It may be necessary to do this here too for performance reasons -
-> but there are considerations both ways:
+> On Fri, Feb 07, 2025 at 10:05:47AM +0100, Marco Elver wrote:
+>
+> > Yes, you can add multiple guarded_by. But it's just going to enforce
+> > that you need to hold both locks before you access the member. If you
+> > want the rules to be more complex, the best way to express that is with
+> > some helpers. E.g. something like this (tested on top my series)
+>
+> Oh gawd, this is going to be a pain, isn't it :/
 
-The CTS template will take any hardware accelerated CBC implementation
-and turn it into CTS.
+For complex locking patterns, yes. :-/
 
-So there is no reason to do the CTS/CBC thing by hand at all.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Which is why I'm proposing it to be opt-in but relatively complete
+(most primitives supported), so that either we have time to work out
+how to deal with more complex patterns, or just leave some things
+opted-out.
