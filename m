@@ -1,180 +1,200 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2057.outbound.protection.outlook.com [40.107.95.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBD119049A
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 06:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738911194; cv=fail; b=PSaJwnnUrCkJvGJBQ5SIvjO4s0ngLCLycPOf7s/8OZH4hFg6rTyBiaLJ83N62gVdmGXh8wQGe8WzxcmrsrR/Mm1PVH8yY9Q/sVsj3QEV47mZQRVqlTI9GF75LY6O59OnymIC7LUk9UjJJPacO4OyE3TKw3MXubODvpB+2y9Ywls=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738911194; c=relaxed/simple;
-	bh=SPO2LcBCNNbApByU0dYGp2134Tw9Qv5qCoT/wzVg62M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rDL37NoLhWKi58q7hlS8VhSMfHzrIjZ5YXp5sX76nTT2Jut/blPiQ5NN/kDyvM+1TzC92EEbsPSRemCO1Hftn303LembPtLGIU1mfBFboLM2aWRbH3Ui3ZwesY+26mEHmn6XNN35cSp+Y9CFK2EwjOEbW7OK6S7yjUSnDgn4gow=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EB9yrURU; arc=fail smtp.client-ip=40.107.95.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12D615539D;
+	Fri,  7 Feb 2025 06:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738911422; cv=none; b=JWas6kVsd6R+WwMqtcpefHX21yhncD26OKx4hgj56XMSr0QIiXydapMv3PKdMMLy5tVMAlfs3HWSM9/kk8id3+M/Dl1zJZPb9wFqxUuWSRIt0Pwj3j2Q/3Z1Np7zm854DR4Og7SgQYTGUxCUCuGRUVZFNurwKBgvWv49GOog5sQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738911422; c=relaxed/simple;
+	bh=a+ZrqQ7/dxIQo/7BABs6hf+fQbkXeAcGoBpGTTHuav4=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=ApZeG3nxs7PnrQsnlGoRrlKL7n3gFh118rVsK4k4RgPWFgMiS4O3eGLlKIE+RmiZsOe++W8LPFHmwbhxRe5XaNTSZ7SqyBqXuUyOuUyDfJBZOws/sPhTXp7w80Jr5KN6PoSh5bwK4R3ZHAc+Dgz7cZ5TTa4krAAXy73rOQSeXtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=g/byUuNE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0AVtNEM4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=g/byUuNE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0AVtNEM4; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EB9yrURU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=H0m5lEVd3pNRs0mVpNlfWBxRM+8qX5YYhS2a6sMbU3hHIIwz2MlKO9b046Z2hCDZjOR0ze30kQU0kHb9ozWUUEZsdc/OnnGoLKOr/1CJ/yWyx+d+Gnnw7nCdR/E2viXcjFnF3SpA8Rgf2pDvG0scotZNxQ2FA5ztmAwCfAl5RQVIqGO7IcSUqM60x1vF25aENLqNPQejbJv7Y8ZQylfxIzvZyCRHt5nwXraXpRESFMm81xsUL8//Ur/LODBx7T1L5lS7uM74hRDoH6mtDR2S6iDx8Ak5+VZfQOxi7wJc8mf+mBs5IFeRtamUmPanqLwaHoA5aKcAwFT1OP+w/1kVqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YQcOgzTjQZeWkeaFYn7fZxUgCjYRHMcxbpIumbvq+zU=;
- b=aP5OOo7TVp40SYbGwYWtnRXSPaS0u+YMr8H7XtdtxOpduiHB6ZeB2O6Z6t47XPF4zYW8IUZJ5XS7TsGhCb4C3V4U9qDnTxbBjiiNdG0AJ0dXYPN4UjCor8KP20mxKEJ7yLxdslcEa+97xpfq2TP7nNpxmDSWak77NCaLAYAZ8XvnRJRNM93Ep0vnCNd/Sgl6tVGtvuzQrb4RGT/zhPdERKYlLRCizb4XJvOr0CRWwktL2icay1/jTYApnFaonCdjrTUyydx4wJstUiCXQF8rhjUpxvk6nkwqWlHSShkgtK/rGOuvhP4/xoMlYxUosyzO/zToz4mllWqHLRyJr0b7NQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YQcOgzTjQZeWkeaFYn7fZxUgCjYRHMcxbpIumbvq+zU=;
- b=EB9yrURUjHWQ0+80t0YXklv6Kn+u1R1lhbuteZgaCxOsCOyYFglW5nPvQObQD3mOJ0FX26T6+JNLBrZRDo7bI6Kimmfs4dWPCXw/k8F7hf1OGspIl9tiKeOFUieR97VK5T2HNtHd9b6OWz9i9XP/nKH0nCoLpBLQ12zV7Wmzr+lX4nyW4hA/pqpxahhDC9SgNUvGTcesZlmKrPTLgazi22AYbVcK3/jn9KIHEJbtSPqjtangQNfktHNryRJS8bHPWf/JaasItJEoXtHc3UgXilMQNdhigKxguGfp08wglTGtc8HSn4MC/PfWzrcF0a2wvJSyAQ0pMEwVuuaMHFOLgg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
- by CH0PR12MB8529.namprd12.prod.outlook.com (2603:10b6:610:18d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Fri, 7 Feb
- 2025 06:53:10 +0000
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5%7]) with mapi id 15.20.8422.010; Fri, 7 Feb 2025
- 06:53:10 +0000
-Date: Fri, 7 Feb 2025 07:53:06 +0100
-From: Andrea Righi <arighi@nvidia.com>
-To: Changwoo Min <changwoo@igalia.com>
-Cc: tj@kernel.org, void@manifault.com, kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] sched_ext: Add a core event and update scx schedulers
-Message-ID: <Z6Wt0kV6IPBbIGk8@gpd3>
-References: <20250207031338.393045-1-changwoo@igalia.com>
- <Z6WnCHiwkvahtdgR@gpd3>
- <7623f8e9-d598-4c0f-8f65-5cb0cf563d4e@igalia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7623f8e9-d598-4c0f-8f65-5cb0cf563d4e@igalia.com>
-X-ClientProxiedBy: FR2P281CA0106.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:9c::18) To CY5PR12MB6405.namprd12.prod.outlook.com
- (2603:10b6:930:3e::17)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="g/byUuNE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0AVtNEM4";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="g/byUuNE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0AVtNEM4"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B243C21163;
+	Fri,  7 Feb 2025 06:56:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738911418; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vVqNNwToD8mb5gmNkOobwURBO8YT/dTtWhgkGdmCTSY=;
+	b=g/byUuNEK43A+/ZMqs225i5G2gZ+L/vIkhPn+hKgPPfe/DyiBIqHQctF8jQWZGlok4onwm
+	GcRnx5OlAqiccDcRtxY0FGVzYRIz7rYtn0jd5grlpZbiisTkBqNOCq+3Jx5lTv/MsX09PU
+	hR4jbDGEJOAo+ZHPnZ37DdSctMZkiTo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738911418;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vVqNNwToD8mb5gmNkOobwURBO8YT/dTtWhgkGdmCTSY=;
+	b=0AVtNEM43RZt0RHtjPbb0ohoAtdWUQy5BGkLgSMZPjtq7ShseB2uMBmNjdK9dN7polsAA/
+	5es7VmQ1c05X+oAQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1738911418; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vVqNNwToD8mb5gmNkOobwURBO8YT/dTtWhgkGdmCTSY=;
+	b=g/byUuNEK43A+/ZMqs225i5G2gZ+L/vIkhPn+hKgPPfe/DyiBIqHQctF8jQWZGlok4onwm
+	GcRnx5OlAqiccDcRtxY0FGVzYRIz7rYtn0jd5grlpZbiisTkBqNOCq+3Jx5lTv/MsX09PU
+	hR4jbDGEJOAo+ZHPnZ37DdSctMZkiTo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1738911418;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vVqNNwToD8mb5gmNkOobwURBO8YT/dTtWhgkGdmCTSY=;
+	b=0AVtNEM43RZt0RHtjPbb0ohoAtdWUQy5BGkLgSMZPjtq7ShseB2uMBmNjdK9dN7polsAA/
+	5es7VmQ1c05X+oAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EE1CA13694;
+	Fri,  7 Feb 2025 06:56:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id nm3JJ7OupWdYMAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 07 Feb 2025 06:56:51 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|CH0PR12MB8529:EE_
-X-MS-Office365-Filtering-Correlation-Id: 05aa719c-0143-4390-8d44-08dd4744157b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?3S3IvmNDmcC+dAGPDJQsNTeNbZCeyHiUPcV2UTjCScNgYRos4Yhsh2MM4q3C?=
- =?us-ascii?Q?a2NW02BVHEDSewHdcOwzLW96jjMEiHlTfrJYBInd6KUhKQbKsUp6MNGAryWl?=
- =?us-ascii?Q?xdjR+5atspCEMKejtmtZYcLGBIIkpZdRcGn6GOGnr7y+1Gc6Jv5vSbuhuYgL?=
- =?us-ascii?Q?2upkwArqEb6TcWGZkOuGCdJPcTUtkPZj54x7KXQy63zYOxqqU76Z0XvYrjO4?=
- =?us-ascii?Q?hHKxQeFG4H+RfDv/wYJz0ji1atHpugmrcuDY8+Uthy18IgjMLmKkvxCgAQ/g?=
- =?us-ascii?Q?TMnCdpt1Zub3mEEV4CSnCMn7nzxOPgeqaY4CyWCfwEjwxuEBCJn2BEalxzbl?=
- =?us-ascii?Q?jwqiH3ohyF8uSsyzwZ2Lc97V/ufoqtjERKGDgSJ7Od7pk2TWjYQue+6XfkaG?=
- =?us-ascii?Q?e86zLpy9M9G8pYsorB+WmD4cuNk/aeVocCwm2DPvKCw1iMf8GD7YSnINkEuX?=
- =?us-ascii?Q?Q2LAV4MgGlRCQlgbwWH41p9w8TybhaFPG5FKQoDCR1s6b6fGdygG8diTTKp8?=
- =?us-ascii?Q?M3WOYlTLxKCxHHKm/Rpjox/2DDUnuXA6JLYMw4uK88lw/qwQsWuFvVK/ySL8?=
- =?us-ascii?Q?yfE0WEfox9s1YcbiyPeInnnJuVk9jToilRzGfaQW7LZCW2t6plyZ/9a5SUaq?=
- =?us-ascii?Q?r9KK/lcJDqfuuO3BprlDdkR5pjcxEH9MYNx8Rz77//4YF7eqwonBl8mmXhiE?=
- =?us-ascii?Q?m9qZYBLFnSKVu8oTm2b1TwHxaBjH3wbVeue+hktsN4N+OB0YhJIQo9HRcQ+l?=
- =?us-ascii?Q?G+uGf5xjRoyWSmhLi+wgWWYJURJ9yuIo/vLAf1C5c38pLFvFoghYGac3rsVQ?=
- =?us-ascii?Q?DGZn5flwOJnaHSE1nYda6ZYZNZN3lRGbLuiCxGNSEi8+P1BPqfKJz4SE441g?=
- =?us-ascii?Q?PoZ4246uBOm2RzvmIpMzF3biTtxMftq4yyKquz/VeQ/ywYre/WaYc0um5Bfk?=
- =?us-ascii?Q?djDo+X3IGCZN2nc6tkglrdM+Q5abYJz2XHme6MhQkgHNSKWlSDZlJsor88xr?=
- =?us-ascii?Q?ZZlB20U5yhpgyXfEPg1jpEEYqcNHp4evfxVLRMrp65Q2L//0VgDSqlPlTysh?=
- =?us-ascii?Q?h1rfYvBtSUQHv8OEBbNxGM6PI1/JmdGUY0GHF0Y3GG+HmnEe4nNYaPnBNpME?=
- =?us-ascii?Q?Y09rNEXlFu4mSkn07QEWKO1p+jb9jPsAjHnqkIGQB3xDKWEYqv/OUlpurNLf?=
- =?us-ascii?Q?uSOGYgbsfZVaDTSZxN91vgKmmyJhw5aVvaVdB/8NrRV/XtlgcEjvQGNPnX5c?=
- =?us-ascii?Q?72fID4mkYVSf5vBSp8y2nPGj6KETzhiiY6tC0OP7WxfX1Tb51gcbUC/x66lT?=
- =?us-ascii?Q?YpXR1gCK3DJuqRiJ3PfOpwhxtRx6G2slstD9JD1WnUZOdFFzoVl9Mz7GdOyx?=
- =?us-ascii?Q?ifklzn7mJ615QKDsEpHXUYiKbSBb?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?r3WxvIuJxy706jYp1BLPVKtSRt+kj3DqknJ8aS7hkIx02WpRqE8Yj8v8KRzD?=
- =?us-ascii?Q?gLrGUofRxd5IVIkthslCvIDWmr+Fyadc1ZywyGHM6HxfCkMtcmC3FSQFhqJK?=
- =?us-ascii?Q?er0rPMew+cTKwY3dRpyuXuRkTYCj/VQuq0EVye/uAOpD2dHGdiVhf0kwPn4J?=
- =?us-ascii?Q?8vtfmflWNEzRHalNPibDF9G7EfzKYSc1y4QiPpkxljjH6oJvHNjX8VJxYEBP?=
- =?us-ascii?Q?d7/obQgsTQInOpHI4XmlKyJS5BxjtkIk/bIcn1zEWWtswNIbmJaWVDfyPkRN?=
- =?us-ascii?Q?w1gUsb9noRTMSrO+61/C6ZiMVsSht23trjoipOKF/ekwE3wdTiafOm0iE8xu?=
- =?us-ascii?Q?h1fQh3sHbzh3J/SJ3lrTK24HTsml5uELxRCGZH6f7mGY8Qr55RvNp+U2RT3S?=
- =?us-ascii?Q?6IitGaAJscpQYwJdGfF5NAwbtjNfqoH5ECndJ+FVsuihyNk6eLwVqfj+MZ7D?=
- =?us-ascii?Q?1Iqbsc9tbXfc8ga1eYtgZ+GfZPndN2+7403yj/evxTuOY1urkJ1K988E/O/9?=
- =?us-ascii?Q?KA56FZx3fQMzHJuGKWThQSEtxUCpFpPRvZyIMHVCNsv5Aa/ubHgvqMrbUbRB?=
- =?us-ascii?Q?AIU9R4FtNfcouUS7sm+ijRZoh1zoAkaHizSUoM84q1zWuxpbhY0D5iWfNXwo?=
- =?us-ascii?Q?PRO30T+TzL/5xuTknxpdHbk42cz3diBZWQnD7RWvqw2i0A+6lCSPBHWgd8r7?=
- =?us-ascii?Q?j9YiSiXOMWWLRmuMGV73efcAPgFchhK9qkxaqa5p+SI+acvpuAjzNDzTPX+7?=
- =?us-ascii?Q?Wv2BwiBlUwjnuaeJErqFnjBh9zu7bC/n6HVUJAjYTfdokPRPUtmUszApKMpu?=
- =?us-ascii?Q?1kj+kGxvio3MCjKzwdWgybF0j9skgZ5NYx/JSIv11pTocdp/i/0FgLHIdzaP?=
- =?us-ascii?Q?Vs6vl+OAIMegUfPUj3kM65Z/TUB3wovS+nkrYjYvdQLJcE2YHv3wYSH0dH9h?=
- =?us-ascii?Q?T0Xnl6v/E0qNl+/cZG5zSpO65Dl+ZZr9O7eT7ezIt4e6e0HnWBmzt9p8XDXn?=
- =?us-ascii?Q?ejidYmc3YhA8hdW89q04sgZ4JHD7ko3OhygJaLwgiRmN/dqjBLgTuKHIpJgm?=
- =?us-ascii?Q?z3v+JgS4B/201jPmHbGsclp85LI+yR4eQ62c3iUSzfZGu5H7klOMu6LlCE88?=
- =?us-ascii?Q?nqyZGrz7dZeUPAysgu/veKizPyQO+gzSOanoPAL3qwIZl2P2zPRDglPJKLyw?=
- =?us-ascii?Q?Tnko5grmYHF0mIn4AR1MAr3hlHX99+Cyv1dTO/tIj+EI40mbvQ4Ce5vvlnpM?=
- =?us-ascii?Q?K4p5prXlwC64k0BgdhMEaZ4Y7p/uFOuG+6pOy8sBo11TKjrGxYXvgZmlR8E7?=
- =?us-ascii?Q?vgmDC+GlNUEGx7btMxG7345HN19t17sVruy1o81P3bp7ryXvdeIN2x3QHVAT?=
- =?us-ascii?Q?jD1rRd4aVXjGvwDxzwzMPb9ewueR6Cf4IzFVgHB40Iy583IzfwOPCKw8UykL?=
- =?us-ascii?Q?atRMSrTvPzB5i/VHO3yN00ewDPoUZS7ehnF8dkfpgj/GczjE/B/wzKwLDNOf?=
- =?us-ascii?Q?oUfyxPepgF1vzN/3U+WE4crjLwUuovHQoGnA6KeX1CUUiBmv2Xpvs9ZLTYru?=
- =?us-ascii?Q?vlIVFbyiVtgHVvkAsAjj+VtBEiAjTp6Pc3YZtB4u?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05aa719c-0143-4390-8d44-08dd4744157b
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 06:53:10.1146
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vP8Fg2rFa+QGBAOyJl2YuENfWFrqnhaQoGZ8TgngXLP8nXQjif/37ffUlUMsCKzO0N6QATNSE8D+M4g/XUWjOQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8529
+From: "NeilBrown" <neilb@suse.de>
+To: "Kent Overstreet" <kent.overstreet@linux.dev>
+Cc: "Christian Brauner" <brauner@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Namjae Jeon" <linkinjeon@kernel.org>, "Steve French" <sfrench@samba.org>,
+ "Sergey Senozhatsky" <senozhatsky@chromium.org>,
+ "Tom Talpey" <tom@talpey.com>, "Paul Moore" <paul@paul-moore.com>,
+ "Eric Paris" <eparis@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, audit@vger.kernel.org
+Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
+ user_path_locked_at() to never return negative dentry
+In-reply-to: <173890403265.22054.8267826472424760232@noble.neil.brown.name>
+References: <>,
+ <6p2m4jqtl62cabb2xolxt76ycule5prukjzx4nxklvhk23g6qh@luj2tzicloph>,
+ <173890403265.22054.8267826472424760232@noble.neil.brown.name>
+Date: Fri, 07 Feb 2025 17:53:43 +1100
+Message-id: <173891122321.22054.758548441508211924@noble.neil.brown.name>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.996];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Fri, Feb 07, 2025 at 03:49:24PM +0900, Changwoo Min wrote:
-> Hello,
-> 
-> On 25. 2. 7. 15:24, Andrea Righi wrote:
-> > Hi,
-> > 
-> > On Fri, Feb 07, 2025 at 12:13:36PM +0900, Changwoo Min wrote:
-> > > This patchset introduces a new event, SCX_EV_ENQ_SLICE_DFL, and updates
-> > > two scx schedulers -- scx_qmap and scx_central -- to print out the new
-> > > event.
+On Fri, 07 Feb 2025, NeilBrown wrote:
+> On Fri, 07 Feb 2025, Kent Overstreet wrote:
+> > On Fri, Feb 07, 2025 at 02:36:47PM +1100, NeilBrown wrote:
+> > > No callers of kern_path_locked() or user_path_locked_at() want a
+> > > negative dentry.  So change them to return -ENOENT instead.  This
+> > > simplifies callers.
 > > > 
-> > > SCX_EV_ENQ_SLICE_DFL counts how many times the tasks' time slice is set
-> > > to the default value (SCX_SLICE_DFL) by the sched_ext core in the enqueue
-> > > and pick_next paths.
-> > > 
-> > > Scheduling a task with SCX_SLICE_DFL unintentionally would be a source
-> > > of latency spikes because SCX_SLICE_DFL is relatively long (20 msec).
-> > > Thus, soaring the SCX_EV_ENQ_SLICE_DFL value would be a sign of BPF
-> > > scheduler bugs, causing latency spikes.
+> > > This results in a subtle change to bcachefs in that an ioctl will now
+> > > return -ENOENT in preference to -EXDEV.  I believe this restores the
+> > > behaviour to what it was prior to
 > > 
-> > Not directly related to this patch set, but as a general thought: would it
-> > be useful to introduce ops->slice_ms (in sched_ext_ops) to override
-> > SCX_SLICE_DFL?
-> > 
-> > With that, schedulers that care about latency could set a smaller default
-> > time slice to prevent potential spikes caused by the implicit use of
-> > SCX_SLICE_DFL.
-> > 
-> > Opinions?
+> > I'm not following how the code change matches the commit message?
 > 
-> That sounds like a good idea!
+> Maybe it doesn't.  Let me checked.
+> 
+> Two of the possible error returns from bch2_ioctl_subvolume_destroy(),
+> which implements the BCH_IOCTL_SUBVOLUME_DESTROY ioctl, are -ENOENT and
+> -EXDEV.
+> 
+> -ENOENT is returned if the path named in arg.dst_ptr cannot be found.
+> -EXDEV is returned if the filesystem on which that path exists is not
+>  the one that the ioctl is called on.
+> 
+> If the target filesystem is "/foo" and the path given is "/bar/baz" and
+> /bar exists but /bar/baz does not, then user_path_locked_at or
+> user_path_at will return a negative dentry corresponding to the
+> (non-existent) name "baz" in /bar.
+> 
+> In this case the dentry exists so the filesystem on which it was found
+> can be tested, but the dentry is negative.  So both -ENOENT and -EXDEV
+> are credible return values.
+> 
+> 
+> - before bbe6a7c899e7 the -EXDEV is tested immediately after the call
+>   to user_path_at() so there is no chance that ENOENT will be returned.
+>   I cannot actually find where ENOENT could be returned ...  but that
+>   doesn't really matter now.
 
-Alright, I'll send a patch after this one is applied.
+No, that's not right.  user_path_at() never returns a negative dentry.
+It isn't documented and I tried reading the code instead of looking at
+callers.
+
+So before that commit it DID return ENOENT rather than -EXDEV where as
+after that commit it returns -EXDEV rather than -ENOENT.
+
+So my patch IS restoring the old behaviour.  Are you *sure* you want
+-EXDEV when given a non-existent path?
 
 Thanks,
--Andrea
+NeilBrown
+
 
 > 
-> Regards,
-> Changwoo Min
+> - after that patch .... again the -EXDEV test comes first. That isn't
+>   what I remember.  I must have misread it.
+> 
+> - after my patch user_path_locked_at() will return -ENOENT if the whole
+>   name cannot be found.  So now you get -ENOENT instead of -EXDEV.
+> 
+> So with my patch, ENOENT always wins, and it was never like that before.
+> Thanks for challenging me!
+> 
+> Do you think there could be a problem with changing the error returned
+> in this circumstance? i.e. if you try to destroy a subvolume with a
+> non-existant name on a different filesystem could getting -ENOENT
+> instead of -EXDEV be noticed?
+> 
+> Thanks,
+> NeilBrown
+> 
+> 
+
