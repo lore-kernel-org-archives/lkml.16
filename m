@@ -1,73 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DEF188733;
-	Fri,  7 Feb 2025 07:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC561898F8;
+	Fri,  7 Feb 2025 07:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738913140; cv=none; b=Z5AfDl59ntAZGi8HnEwjOVHIUZciEgr/ErM/HPa9kv5Mkmo3heQhvCnSJEeGsyXuiFPULVPGo2bndtKCm4X6HDbGyQXXrfDj+io1KW65/LehNqdqh66yknxJWocWKkXIzvxy7D8dTMs/jUT6t1CgAqOjcfDziwwyMUf5YhbBOHY=
+	t=1738913190; cv=none; b=R2dMyjBEStCfL5n6kSO7ukhZYA0KEoClIjntZ+jXVU54pQaJelBv5+mSE8ObuR+5bO+xg2gRMCy7YGkIZZUHXgSGL+IJ6jPEx0aia4Z5sODvAXVIugM8yg6Zuo9wFcDshpU8MmfKt67WL/nbjfjFw59sTb0Y37OSFHMk4XCaLy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738913140; c=relaxed/simple;
-	bh=RH1nZRu6/rvTiYwNWNvLjiMC9XfUG3eG9OzimREUwgU=;
-	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=YoQCrBV2LvRSe8oamQWo5soDI2UJvyFa6P/HYmtfDw6BGMGqvVjVjjb6iDis8XhJiyYVsd161gE3JM2Mw97L8MGB7pwheVdRJEhgi6xTeRmgyiJi9cwnuraDUZG3Ob7LoIX7/a2f+Egso+PgIdBfFj4RD6J4azzzQOGdAWpxfLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MMnApV3N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738913190; c=relaxed/simple;
+	bh=GNBx8Hs4Tvp0WSNd2XqLEnLKn2B42fVjP3eTGupS1QM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ApI1qM/qcsuX1R4UWFPfjZAxvH6vPAv+/Dbr+1u7IY+TUr9vVXZVletN7TeTt3aCADbXZuk0+0tzSfSFto/jgfu3uSOLhlC+EnnNWg188y5Qyg4vr3lgNLGnMCuNQLVb7/afhpCEDATqMg8i1jlPgqc3MXCR4B5kPr9UFxBzPEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=none smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=m18ev+Aq; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MMnApV3N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BCD1C4CED1;
-	Fri,  7 Feb 2025 07:25:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738913139;
-	bh=RH1nZRu6/rvTiYwNWNvLjiMC9XfUG3eG9OzimREUwgU=;
-	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
-	b=MMnApV3NXZZMPZW3IGvqiDxdnVD7McmJuXaD2J2CFRVEEz1U5oOJ/73tGE0Vj18mw
-	 zA/YpQwJ20DYSsFFAdCpYuwRoh7owAExbbrSdecSTLrPijpZKy6hv7tRsFmhEQWouw
-	 7dhP3TgkVAGEQo5SYnGIG6xLpAOJKPUaWYNGapPzfSypfh0VeAtIT+jjhCcmE18NfJ
-	 R3VxW3NSXWK9L7LMptQauHv+P7c3n9d/gKQWa6EMt1u3y9ABEKWoP5jk59cK8badPw
-	 TbDrW4kCQmk9GcCGX90m4/yPY5oPEkElu7bKkv281t6Gmk5U1NCfSdiaMtNJ8llbi3
-	 pJcVrGGRDj97Q==
-Message-ID: <9dd0d7d40b9e178650c9c70a6a496568@kernel.org>
-Date: Fri, 07 Feb 2025 07:25:37 +0000
-From: "Maxime Ripard" <mripard@kernel.org>
-To: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH v6 04/26] drm/bridge: panel: drm_panel_bridge_remove:
- warn when called on non-panel bridge
-In-Reply-To: <20250206-hotplug-drm-bridge-v6-4-9d6f2c9c3058@bootlin.com>
-References: <20250206-hotplug-drm-bridge-v6-4-9d6f2c9c3058@bootlin.com>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, "Alexandre
- Belloni" <alexandre.belloni@bootlin.com>, "Andrzej Hajda" <andrzej.hajda@intel.com>, "Boris
- Brezillon" <bbrezillon@kernel.org>, "Catalin Marinas" <catalin.marinas@arm.com>, "Claudiu
- Beznea" <claudiu.beznea@tuxon.dev>, "Daniel Thompson" <danielt@kernel.org>, "David
- Airlie" <airlied@gmail.com>, "Dmitry Baryshkov" <dmitry.baryshkov@linaro.org>, "Fabio
- Estevam" <festevam@gmail.com>, =?utf-8?b?SGVydsOpIENvZGluYQ==?= <herve.codina@bootlin.com>, "Inki
- Dae" <inki.dae@samsung.com>, "Jagan Teki" <jagan@amarulasolutions.com>, "Jernej
- Skrabec" <jernej.skrabec@gmail.com>, "Jessica Zhang" <quic_jesszhan@quicinc.com>, "Jonas
- Karlman" <jonas@kwiboo.se>, "Jonathan Corbet" <corbet@lwn.net>, "Laurent
- Pinchart" <Laurent.pinchart@ideasonboard.com>, "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Marek
- Szyprowski" <m.szyprowski@samsung.com>, "Maxime Ripard" <mripard@kernel.org>, "Neil
- Armstrong" <neil.armstrong@linaro.org>, "Nicolas Ferre" <nicolas.ferre@microchip.com>, "Paul
- Kocialkowski" <contact@paulk.fr>, "Paul Kocialkowski" <paul.kocialkowski@bootlin.com>, "Pengutronix
- Kernel Team" <kernel@pengutronix.de>, "Robert Foss" <rfoss@kernel.org>, "Sam
- Ravnborg" <sam@ravnborg.org>, "Sascha Hauer" <s.hauer@pengutronix.de>, "Shawn
- Guo" <shawnguo@kernel.org>, "Simona Vetter" <simona@ffwll.ch>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>, "Thomas Zimmermann" <tzimmermann@suse.de>, "Will
- Deacon" <will@kernel.org>
-Content-Transfer-Encoding: 7bit
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="m18ev+Aq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1738912157;
+	bh=vExr/k4izXnEyMj5vAQFu6YLcOSxk2Bumi57aU79gNE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=m18ev+AqvzZXZl4UENn3SzRCHefmGlFdsVDMGfwFxpqHeImW16QtBscRGbWa+oVnO
+	 7q+pC7Rw1GEFZourfYIkeqg2nVDDYvu6QJ7fmZFQWk4K4X+vlq3IO2AmjFuX7/njnP
+	 m/woygW2gn2zYzyc1GIBaDxvLeQ3+K0dW63jJp8U=
+X-QQ-mid: bizesmtpip2t1738912146t0d05bp
+X-QQ-Originating-IP: KbPEmLI51H/AqPiTH2dKHqAitYt0x2kqm+pvVRQkeTg=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 07 Feb 2025 15:09:03 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 14445604798787441459
+From: WangYuli <wangyuli@uniontech.com>
+To: masahiroy@kernel.org,
+	nathan@kernel.org,
+	nicolas@fjasle.eu,
+	jeffbai@aosc.io
+Cc: linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	revy@deepin.org,
+	zhanjun@uniontech.com,
+	guanwentao@uniontech.com,
+	chenlinxuan@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH] scripts: install-extmod-build: add missing quotation marks for CC variable
+Date: Fri,  7 Feb 2025 15:08:55 +0800
+Message-ID: <43AE9F470D835AD1+20250207070855.227283-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: OMHTpzRlrft84jDKd48MkmOX6UG88xjq1eQb82+B+SWFgZ1RrijioPNu
+	mwk3VGFDekorQZwOXGUIzEeAdGynA0PCs01wdVLTorqo6YMTi2a4QWqUnw6L62NEBmAlFNU
+	7696gIn/aaweauy3HuJKqePE8mHkgF2E23SheLzweMR6wtwHu7d9MG8CWov30kh2T6+7F1w
+	r2Hpmb/+4B4nIOuvlKTji6bZsy0+WYiG/ZufL3F9iCc5hvZElx3PRTU4uyVG7TfKEe3bCzS
+	KRKvV0ubQZuprK7JZ81ly5eOj7kl6oBQUtumzlK0NGfz0pvrOVNzhbhSJmlvcYUtKI3CbRw
+	b+Nk5vmXpKJN3UCTFCeiiPzziV5yi3tsdcbp4gxYEdF90B58dDfBnZ4SqTXVz7oLLnIEI0n
+	McytGQ5eQTynxZSbHgIcwy7jmSaPpoxXkyD2iimPGjFlbhFAzZo63716NUDCPIGC4VD6rrx
+	h/kSpmrDL7N8ynSr13wo6HCJQaY56vTFcqN6TSpGQyRGEZvfXwcMwz9JZgIpnejw1lZ/yDJ
+	Mr5QtlQSCvSwihpD9tz2W2U0bJ6c2zfRVL9NSvhGVMXRGnu4jCHqe8PmN1BUL/0QtSv5ugA
+	sAn4s+I4oj3kmB6GKLuImcos0Q9Zxu0g0lNFj0L3CkWu+Vj3dvwZBMj1EgIA9BWFNRJIepS
+	ZXqfAsCP74q3Sz52l4+zNU6T8OTTJLA+1nT7J2EAWRkbvfHi93Fxth+5+9A6CB3vyXSJILR
+	kERuzy+1aya7zxw6evjHhLqcDbf0idZY7RoJYrFs0xe3TEVuDSWDVrVWsHFx90UhwqPzVnS
+	DCOjyPooqcrvpDQP2x+QcyyFDH5gpYGli2cAcssNBxX8ciQZv6r/4DZ8/OEQRJPf/hana1s
+	HGMnwE+qjSzH9mQQL8UJHp+YANZXW4pl29QG9iklUV04f0qVKiqM52vLxGahDLm0Abxmxvt
+	D4IBzv+ipkncKuTh8IrMekpHfTPrQ2kYytYw1agXiGKP224/lTxM5CZ/vnrbX3pzUtY/8i2
+	+Ww4BxJ0EuLFsjMB2F
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+X-QQ-RECHKSPAM: 0
 
-On Thu, 6 Feb 2025 19:14:19 +0100, Luca Ceresoli wrote:
-> This function is for panel_bridge instances only. The silent return when
-> invoked on other bridges might hide actual errors, so avoid them to go
-> unnoticed.
-> 
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> 
-> [ ... ]
+While attempting to build a Debian packages with CC="ccache gcc", I
+saw the following error as builddeb builds linux-headers-$KERNELVERSION:
 
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
+  make HOSTCC=ccache gcc VPATH= srcroot=. -f ./scripts/Makefile.build obj=debian/linux-headers-6.14.0-rc1/usr/src/linux-headers-6.14.0-rc1/scripts
+  make[6]: *** No rule to make target 'gcc'.  Stop.
 
-Thanks!
-Maxime
+Upon investigation, it seems that one instance of $(CC) variable reference
+in ./scripts/package/install-extmod-build was missing quotation marks,
+causing the above error.
+
+Add the missing quotation marks around $(CC) to fix build.
+
+Fixes: 5f73e7d0386d ("kbuild: refactor cross-compiling linux-headers package")
+Co-developed-by: Mingcong Bai <jeffbai@aosc.io>
+Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+Tested-by: WangYuli <wangyuli@uniontech.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ scripts/package/install-extmod-build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/package/install-extmod-build b/scripts/package/install-extmod-build
+index bb6e23c1174e..b724626ea0ca 100755
+--- a/scripts/package/install-extmod-build
++++ b/scripts/package/install-extmod-build
+@@ -63,7 +63,7 @@ if [ "${CC}" != "${HOSTCC}" ]; then
+ 	# Clear VPATH and srcroot because the source files reside in the output
+ 	# directory.
+ 	# shellcheck disable=SC2016 # $(MAKE), $(CC), and $(build) will be expanded by Make
+-	"${MAKE}" run-command KBUILD_RUN_COMMAND='+$(MAKE) HOSTCC=$(CC) VPATH= srcroot=. $(build)='"${destdir}"/scripts
++	"${MAKE}" run-command KBUILD_RUN_COMMAND='+$(MAKE) HOSTCC="$(CC)" VPATH= srcroot=. $(build)='"${destdir}"/scripts
+ 
+ 	rm -f "${destdir}/scripts/Kbuild"
+ fi
+-- 
+2.47.2
+
