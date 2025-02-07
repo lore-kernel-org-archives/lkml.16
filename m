@@ -1,101 +1,81 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE31155321;
-	Fri,  7 Feb 2025 06:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48537155321
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 06:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738910393; cv=none; b=gmQXrNjOsJ0EIdAxjZvFvuF5B/2scPxh7tmEBNyGIsJq73qqnpY52qzpYctzwMUNRqe8+e5mUEsygepZ28Q2lOAoWwqQpj7E9BWzhwyzLHrEh4FSXwUCVBeFbsv3uT/95CVK/ukT1G3nWFYo+NvOpUwa5HKvPvjDmW2EqSiEmrc=
+	t=1738910468; cv=none; b=KSqxAmqhNMf51UfqO6Vh/HMCmvfjJIP5VOcBwmkOio9mllWHiIRCfFIx1QWuwMuSMN5FUQ8+AAkbSL7omjNUaVhXBFgCa/R/rnxdwR/B+dUSw7n2OwTTrVu10JPdUQBYI3QcLx6W8MfwrlOmYRrPTN41ybdlrsAc2HHqvuf0BAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738910393; c=relaxed/simple;
-	bh=mZf+64j7IJ9OcN720VTUhKgpoeEI3CV5TslwobD69Co=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jL4dl8rYNkOKx4lFff0pMvX1FXS+6fkaGsUGS+QhxjE8kMUFAk9OxsNCZVFR04TBVG9nwI2GsJj2jeBqRR4fnyxCMXUG0+iY8Fl2RvFtHuvzjG145mybVjB95ZtTUpc2/NLEO+m2VDimC/S64rg6uT2Pt5pVaqLT/wyylb4n09w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=h5901ET1; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1738910468; c=relaxed/simple;
+	bh=ArR7zYz86Ez4uhd4rwMLooklYz+b7WuD2cq4ty32OB0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c7bPVQVJMZuGIEGuedJpN2grvwSmLuSycBr5aJiYJCnooYFapb+WwXx6xgOcyIRbEGc27FeWbHWTtL4oILz5UQXs8Sy+gKniol2qKcsnsIoHoGQdIZ6ZKXaAfsp8lHD8F7WqgmQXT6k0WH49vHgopk+qPX/NGrD4yyDi8Ux8hGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Px8TfBYE; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="h5901ET1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1738910357; x=1739515157; i=markus.elfring@web.de;
-	bh=Q+GMZrWbQPeFgGXVAUNcUDEPcQrHqKVSUyxOWHSP9pY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=h5901ET12iU/tY8yrJpVzEwLOOpslR80K8iIrwX5CLCoEZPnmwegULl749/j5Q0c
-	 P4j2QZGF9cidayGnaYtFMCqPcguATqTAhEWDm24TjX5o3pSYhVO4hNxax4q8Evtw5
-	 h4iHJsQQA0/RrxHwwhbkr0byfmSl4eriY8acMv0S7/FuYGjH9FMmA2saFz9Ff5bId
-	 p4d05bBXZoyqvbFItIpCMesosoQGPW9cexJofrr+sNipspc3ZENOeK/xbXUjWHarJ
-	 6TDD+uY7vY31vvnuzx0M5ehw3W4WXSTkcdFM72EBNwPapnl3QphDFceSpKp22hojf
-	 YmyWFBDxATLNGwrgQg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.29]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MovjQ-1t4BFi4BuY-00gzab; Fri, 07
- Feb 2025 07:39:17 +0100
-Message-ID: <60c5504d-341f-4ce5-b337-1eca92a9506f@web.de>
-Date: Fri, 7 Feb 2025 07:39:03 +0100
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Px8TfBYE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=6M/gjwMYToGUfPcFCFm7i2+C+QJkneKtwonDxid/34k=; b=Px8TfBYE0jIW359A0p8Yycs5N8
+	4Jd+LOyhVSz1WyJYQgz9gT+iAqxHEtb5LKW+VHDjdusS5XubY09+cedrC5jYfKkOlW13bAqJDggTG
+	sdTFzd87h0gFtktP/o+cqOuAgKleOTB5K7QpJKY6DgQWfnJjwoF7OiqMlqYKT4uopVNYZcO/hLuhJ
+	ZiRVnTavvhpY5+ob1z6M6dTRp4Ma9cjjZCziKZepA9zAigysoH+YGxVguRKmVCikDMIcErLVbxzK/
+	MORgdmR92hF77ip13HTW/fsV5QINGYUg4uUyRG2hmisoyOuksFPsqdyDntwmXv5uFXJx2rwMwoVrO
+	W1MgmiuA==;
+Received: from [58.29.143.236] (helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tgI2m-005ghO-59; Fri, 07 Feb 2025 07:40:58 +0100
+From: Changwoo Min <changwoo@igalia.com>
+To: tj@kernel.org,
+	void@manifault.com,
+	arighi@nvidia.com
+Cc: kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org,
+	Changwoo Min <changwoo@igalia.com>
+Subject: [PATCH v2 0/2] sched_ext: Add a core event and update scx schedulers
+Date: Fri,  7 Feb 2025 15:40:50 +0900
+Message-ID: <20250207064052.399227-1-changwoo@igalia.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
-To: Bjorn Helgaas <helgaas@kernel.org>,
- Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
- linux-pci@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
- Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>,
- Jingoo Han <jingoohan1@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Michal Simek <michal.simek@amd.com>, Peter Zijlstra <peterz@infradead.org>
-References: <20250206202654.GA1000968@bhelgaas>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250206202654.GA1000968@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:ptz3nnZtmUVmcg1qEZL/aod4GKTb9kszv30HNUilffQRioTZtjn
- N26Yiwfdzw2FW9CEUkbZycLr0hf2IuFw592zSvETmERrSVEMTpnwV4JBuAInsHpb457OW8+
- p3rrr4irZZlF3LUaur/uuh+tVrFCylQ4iK+Nhupp7RkqE27DBMg5FNcgLugsMMTktox63CX
- 9zNkbpVV7ftDJ5Wh5NkrA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:+JDvlsTy8GI=;za+YhPRmymZVqd3v58UcuzexL2K
- C4I2tvcEOfrN1BlviofhFXm6NRQ4JhVjkGDi98kJ4okJLyuGaXQb3EcDkOb3WXIJ9XYefHoLa
- 9U2Z8ABxy4RnJ3aqMiieMZkRl9SfME3KiKjL+sgnQeK3sVoymkzNdrPJ92wxXNkYwbw0ubuG5
- xP7/OLJ2qw5vZN6CkPyLL2v0+AeHVSbcAPuiL2Oek0lyv3S+tS0hdJUEc1vRGEFK+uNoj6Fm4
- GQCgE/F8SzNnoeOwFhjeZbIn6BQrXsPT8yATrPG8wBd2I5zEvgWh7Yi46T2zXL7GsQOBrcjN8
- 4BNd8mAa/mjBE12lMbA6qq4tNPq/ASSCS6Wb2kUDpV6wIKWLkiG8Aki/3UMMFfw663c4Spn+3
- As2Gf+fK11jZzdlcaajI75lAujLcfcfUT7OFPoGyz+CvdloP1/vfhvzgOcAjWqzn8v47/wbWP
- 3Ga+gcs5xk3c+BpDjE+uTOXGByIHhqMrAt/+7YbpdnDZyfmYsOPdXBsLJpoocGZGMH4s56jJE
- 9chQojhyjuFG0NitOx2WIsxdW1uB1rphL26N+lVm4Z7pC6np8XfZMhfhch2ADLXYmqm50UqDJ
- ifchxbISjN/0HlXGwu+Di4RPMzB9PjYi1devvSya4mKvl+ImiDxkbUi2AijNej2aOWiH2BdWK
- vW8OHE0VAF41H7GVBGtO7h6vig7iVJh9DBT1ZM7VwaKRBsBGzAED2/zR83WJ2BRxPlT2x6CcF
- zWuZNsLieDpXJQy7bB8jWQ+t0bNg8DyEdL4razsNm3lA7g9mjXeDn3aYzbX5xy3wjAvUg22MH
- ZIEFmzKvUwp5UW/tw7SytCJd3cmSDuCPOv4yFs5EnBe2DI9rlxpOrC1m5K+EX8Kez6x1ATbj9
- 5ly6B4pUkmkoIUYPHjRUKl22ztCMq4azsdgU0hPWI6+JefwYldLOxS4NCivRJi9PSe37oMKcY
- A1ZWaYBTzo6IzpQZUmPviIS3MnalUzJ/AjH1YQIXPqGDj1qnUmfPh0WyQKAFU5BOkT4b4HIEX
- 7EvOvaTT8jR9R77WeKe8q1jufd1TQusnqKQZXD8lVxfp3G4cJnVSgT0KhgWhiqV2gyiRwEPjp
- 9tcqWfKmqcgHje1mLUpSlKk/ZrldyBGdXiRm+C8RYgO0LX5R1oMD6JOja7X2vvBJ+vg/ypPuQ
- 4D9lxu7szxj9s9xghHj4QjiqNYoVIfa/gEmwo2PLoakgdvg8o3Tsu3hwilIC0MAjX22iKldP0
- F7D94h8oIVsYZ9lR/LQDPSkMoQqqZPKqVaOf6Xjr75MGzO/RZuVATr69cawJxNo6EJBowHuw2
- S4rTrNRMNZfof3kQgL1ZxEPJSFwzvw5LKUzujdM34niir30uCzCPlLoaDSN4V4G49uyuXAuiV
- 7pr8x2Rrr5Hooop+SHovwKVH0DabY+Yzh1ZpxeLiNY3AUJKuFjhaUI6Xe6ZjKZlB1tIJxZvCX
- 5tGTTeg==
+Content-Transfer-Encoding: 8bit
 
-> I don't *really* like guard() anyway because it's kind of magic in
-> that the unlock doesn't actually appear in the code, and it's kind of
-> hard to unravel what guard() is and how it works.  But I guess that's
-> mostly because it's just a new idiom that takes time to internalize.
-How will the circumstances evolve further for growing applications of
-scope-based resource management?
+This patchset introduces a new event, SCX_EV_ENQ_SLICE_DFL, and updates
+two scx schedulers -- scx_qmap and scx_central -- to print out the new
+event.
 
-Regards,
-Markus
+SCX_EV_ENQ_SLICE_DFL counts how many times the tasks' time slice is set
+to the default value (SCX_SLICE_DFL) by the sched_ext core in the enqueue
+and pick_next paths.
+
+Scheduling a task with SCX_SLICE_DFL unintentionally would be a source
+of latency spikes because SCX_SLICE_DFL is relatively long (20 msec).
+Thus, soaring the SCX_EV_ENQ_SLICE_DFL value would be a sign of BPF
+scheduler bugs, causing latency spikes.
+
+ChangeLog v1 -> v2:
+  - Instrument the event at select_task_rq_scx() when ops.select_cpu()
+    is not provided.
+
+Changwoo Min (2):
+  sched_ext: Add an event, SCX_EV_ENQ_SLICE_DFL
+  sched_ext: Print an event, SCX_EV_ENQ_SLICE_DFL, in scx_qmap/central
+
+ kernel/sched/ext.c                | 16 +++++++++++++++-
+ tools/sched_ext/scx_central.bpf.c |  2 ++
+ tools/sched_ext/scx_qmap.bpf.c    |  2 ++
+ 3 files changed, 19 insertions(+), 1 deletion(-)
+
+-- 
+2.48.1
+
