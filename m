@@ -1,40 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7B78479;
-	Fri,  7 Feb 2025 17:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC33192590;
+	Fri,  7 Feb 2025 17:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738950650; cv=none; b=YBtpFeNI8htBWYLeETykEinwyTlYOdZtjOrXOTHDakUSp2LjbVL26ek5QZYocJzmALZirT7EuNprKMTEO2zvxb02Vq7t/wna0hEsiw5rwy45kkafvxiPml8udNVwcfzi6hl7IQC5ZqIz0IZEmeVcgeXlSz8gEOKOshV3/qcKp18=
+	t=1738950672; cv=none; b=afZPEjnoqeLx82XbjCHLsoMuVcz2Ky1sUdCveNUiHHdnbCZ6A3JUB3pQppVLmcF+Was32BAE7EPp9lrBrnSMRwYuSe+Yb/UjHMS6E9W/E7BoLjfgYjD8XNnzfuLjWX5wUZGXWTU8j0YTbdMDsPBl1QWcW+YhnesLneRfWsvAGqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738950650; c=relaxed/simple;
-	bh=t+IItAz6EBV9wYDZ5I/qgGInlietaD3wt1uQZCadlBU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ah3erjLWLq+rx+j6iFld9nu0E9GKED7abe540XapGqtAaJTECV5B44Kms0tKH2/V4Ba/Q0rT48opOFq9qUcDQNNwN173FRuViRoy1W5ciRgTPzabiwmjO2Db3WdmZYc4tKFiwQjB5m7Enl5uew7KqXn6nrL8zRiPY8m/kxgvuIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CHXpM+O6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738950672; c=relaxed/simple;
+	bh=pqczq43LpbSA3CT/HD+7MZiv+8Bcwe2G0ZZF/QFuS6U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kKxrWbDbOw79Xa0njyJHZ5FBldHw0zV3x9NV5ONOWnHAZHPtV1Ifp7bQAAPu8FvZRsM/BZhGedptsxOcV2hsuWeYqPkoY/mVwr+OsVJFcncDS5xaoYNSamUeuTY2cINwZ/f7MnR1p+VsUXK16GeOU5Sd9B7jMhFUajU+sqmbX6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A5XihiZE; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CHXpM+O6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00F9BC4CED1;
-	Fri,  7 Feb 2025 17:50:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738950649;
-	bh=t+IItAz6EBV9wYDZ5I/qgGInlietaD3wt1uQZCadlBU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CHXpM+O67PSn0hU0FPVpAtVecL/cK0fYcDNMtFNPRDLYoDBUmOh2JmkF73NWccWb1
-	 6H39lQbCCSseJYkrQs7Mbq5pUUqv7b4enfaQA+IF0U3A+eeDLknOzda9LlhklmuAdN
-	 o9PyaF7Kh0JTPNl0E3PY6ZT0WC3n48eiYkQqieImnQOOqUBn+CN58+NamHNUn3JOKZ
-	 5uunry3qb9yKBfukeHifTRYN9jRWrKNkJpZW1N4Pfvyq5lH39tXeKcbdXNyE5qgfFS
-	 ZWjUCb907deXmCtpLnqMXfnNzuxuBXwGHXUg2zvMnKUzIXH8x4ZYKlhGXXINFiGXaB
-	 skmGA9dsCBOGA==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>
-Subject: [PATCH] modpost: introduce get_basename() helper
-Date: Sat,  8 Feb 2025 02:50:13 +0900
-Message-ID: <20250207175024.412054-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A5XihiZE"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7be6fdeee35so389888185a.1;
+        Fri, 07 Feb 2025 09:51:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738950669; x=1739555469; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/93fpw68fWcW+DcrP5O/aiX1Id4V9BT6qntICk6OEis=;
+        b=A5XihiZEyg1mjWHYhU8b2VZCgfJ2HKqpHtcIAosbh06dcRkHvXcAqNgXwx+PIApJrf
+         XEsuF2+5NwWJAKQzq3bIQf3P/KkXKL4xoSf8GpcURcXzo5OZ2C7LMuuE9prmXanajwqw
+         H2F69fYc85jczXGZ/7sezginrk9xySXKChLf3MIWTrbfV+rRjeuB4RZfdLIEruwFgVfc
+         UbeRXGWreWIGrR8ZExPJKF2sQMq67upim1GT6hOCNPK+SXjBESckwwutB99KAu7DWQZQ
+         CUutD5IQ7Bk82g1cYAGPprRAE3639w2auhLE+rwYW4LRXqQPRDWlhaqCqrJvgjPCLD7P
+         8H0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738950669; x=1739555469;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/93fpw68fWcW+DcrP5O/aiX1Id4V9BT6qntICk6OEis=;
+        b=ULeU41JIqp9bssN+5AlqQwpnZEqkK/G6KuBgWsH59RHmLNmCYpzHfeQ06eeAB0n3MW
+         8EOk2BQXqZ2Tp6tr89p4VovFTrSx2Ejqm4NQ5B0bquqXRoVdfe5ycwpuDseVLzJm4FzW
+         8kGxlbwxzpOIRvjaDdfBVN/J3TkNE9GBIvY7wIxMAaGb7sDbvvr71SSqmXcBcSZeHd+q
+         hUmmPmeK5RRx+OJgbh9VgKFsDdfRotm8/yYTyMXPLpuk9kNjZ9DuHHpGFb2KMooXO8Th
+         TpF9706cJEgf6qKx+dnW77Gzc6CFZBmW5jcmj90Fxn3MrJ+MpLR3jD1YNM97/FB1PYtP
+         HLLA==
+X-Forwarded-Encrypted: i=1; AJvYcCXAtqK8bz25J7Na/m2Bv0NMO/itjcMUpSgOSmYARORHI9YbJxrLjHikFnUC6Cc6cDuFHC/3b3yHIQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkiaiwFZxzc/J9HKrc1UrZoiM2mn6IJOkfHCgrRFhV84pv9wLO
+	da1bXATkO0SCs1EAjbIIiUxcAcuIRJ/feeoz9fGagoeheXm1xsDpAkdihvNi
+X-Gm-Gg: ASbGnculj+90/mS8C2p8xYc9pzg0ViYMMw6D4/TMVj8qYuBeX2cKCrE3qUM7My+7RxK
+	QGcdTDvs/IxixHuX4GayHm2thQ0XX2k5tpcejxK+7Ak8TKyTps3Rco37tTSmbkbrJC5GOb/g7Mo
+	F9MOMEVFrTi57ubkyQd9Mce6jYrnP4nptABQVw67OpIWLccPAW/JNjht0nRxuW/kNbSxZHufgpi
+	08mn6KU2S8QuuO19iOPZpxWokpmWxnVqVVQF6IKJU/J1kUygzIOg7j8d/9GF8pK/EI+DrCDxFbG
+	+Hu6v73+3DjfaMNaZK2fUSpEseJmXAohv7gBu0Cvy5dVKvnD0x2dMwRWKA8=
+X-Google-Smtp-Source: AGHT+IH5tTCU4j64XQ4F4wjfiG3qYOH2jmpjJmMKHXE/ZZKsEer/8T4dfoO0EiAxA0tixUxKnduYEw==
+X-Received: by 2002:a05:620a:f0b:b0:7b6:d6ff:86ba with SMTP id af79cd13be357-7c047c4acb2mr596123985a.52.1738950668737;
+        Fri, 07 Feb 2025 09:51:08 -0800 (PST)
+Received: from localhost.localdomain (pppoe-209-91-167-254.vianet.ca. [209.91.167.254])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041e9f901sm215674785a.87.2025.02.07.09.51.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 09:51:07 -0800 (PST)
+From: Trevor Woerner <twoerner@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Caesar Wang <wxt@rock-chips.com>,
+	Rocky Hao <rocky.hao@rock-chips.com>,
+	linux-pm@vger.kernel.org (open list:THERMAL),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC support),
+	linux-rockchip@lists.infradead.org (open list:ARM/Rockchip SoC support)
+Cc: stable@vger.kernel.org
+Subject: [PATCH v2] thermal/drivers/rockchip: add missing rk3328 mapping entry
+Date: Fri,  7 Feb 2025 12:50:47 -0500
+Message-ID: <20250207175048.35959-1-twoerner@gmail.com>
+X-Mailer: git-send-email 2.44.0.501.g19981daefd7c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,136 +80,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The logic to retrieve the basename appears multiple times.
-Factor out the common pattern into a helper function.
+The mapping table for the rk3328 is missing the entry for -25C which is
+found in the TRM section 9.5.2 "Temperature-to-code mapping".
 
-I copied kbasename() from include/linux/string.h and renamed it
-to get_basename().
+NOTE: the kernel uses the tsadc_q_sel=1'b1 mode which is defined as:
+      4096-<code in table>. Whereas the table in the TRM gives the code
+      "3774" for -25C, the kernel uses 4096-3774=322.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Link: https://opensource.rock-chips.com/images/9/97/Rockchip_RK3328TRM_V1.1-Part1-20170321.pdf
+Cc: stable@vger.kernel.org
+Fixes: eda519d5f73e ("thermal: rockchip: Support the RK3328 SOC in thermal driver")
+Signed-off-by: Trevor Woerner <twoerner@gmail.com>
 ---
+changes in v2:
+- remove non-ascii characters in commit message
+- remove dangling [1] reference in commit message
+- include "Fixes:"
+- add request for stable backport
+---
+ drivers/thermal/rockchip_thermal.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- scripts/mod/modpost.c    | 41 ++++++++++++++++++----------------------
- scripts/mod/modpost.h    |  1 +
- scripts/mod/sumversion.c | 13 ++++---------
- 3 files changed, 23 insertions(+), 32 deletions(-)
-
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index e18ae7dc8140..b81b623e1853 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -98,6 +98,18 @@ static inline bool strends(const char *str, const char *postfix)
- 	return strcmp(str + strlen(str) - strlen(postfix), postfix) == 0;
- }
- 
-+/**
-+ * get_basename - return the last part of a pathname.
-+ *
-+ * @path: path to extract the filename from.
-+ */
-+const char *get_basename(const char *path)
-+{
-+	const char *tail = strrchr(path, '/');
-+
-+	return tail ? tail + 1 : path;
-+}
-+
- char *read_text_file(const char *filename)
- {
- 	struct stat st;
-@@ -1458,14 +1470,8 @@ static void extract_crcs_for_object(const char *object, struct module *mod)
- 	const char *base;
- 	int dirlen, ret;
- 
--	base = strrchr(object, '/');
--	if (base) {
--		base++;
--		dirlen = base - object;
--	} else {
--		dirlen = 0;
--		base = object;
--	}
-+	base = get_basename(object);
-+	dirlen = base - object;
- 
- 	ret = snprintf(cmd_file, sizeof(cmd_file), "%.*s.%s.cmd",
- 		       dirlen, object, base);
-@@ -1692,11 +1698,7 @@ static void check_exports(struct module *mod)
- 		s->crc_valid = exp->crc_valid;
- 		s->crc = exp->crc;
- 
--		basename = strrchr(mod->name, '/');
--		if (basename)
--			basename++;
--		else
--			basename = mod->name;
-+		basename = get_basename(mod->name);
- 
- 		if (!contains_namespace(&mod->imported_namespaces, exp->namespace)) {
- 			modpost_log(!allow_missing_ns_imports,
-@@ -1732,11 +1734,8 @@ static void check_modname_len(struct module *mod)
- {
- 	const char *mod_name;
- 
--	mod_name = strrchr(mod->name, '/');
--	if (mod_name == NULL)
--		mod_name = mod->name;
--	else
--		mod_name++;
-+	mod_name = get_basename(mod->name);
-+
- 	if (strlen(mod_name) >= MODULE_NAME_LEN)
- 		error("module name is too long [%s.ko]\n", mod->name);
- }
-@@ -1913,11 +1912,7 @@ static void add_depends(struct buffer *b, struct module *mod)
- 			continue;
- 
- 		s->module->seen = true;
--		p = strrchr(s->module->name, '/');
--		if (p)
--			p++;
--		else
--			p = s->module->name;
-+		p = get_basename(s->module->name);
- 		buf_printf(b, "%s%s", first ? "" : ",", p);
- 		first = 0;
- 	}
-diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
-index ffd0a52a606e..af2aca51bedb 100644
---- a/scripts/mod/modpost.h
-+++ b/scripts/mod/modpost.h
-@@ -210,6 +210,7 @@ void get_src_version(const char *modname, char sum[], unsigned sumlen);
- /* from modpost.c */
- extern bool target_is_big_endian;
- extern bool host_is_big_endian;
-+const char *get_basename(const char *path);
- char *read_text_file(const char *filename);
- char *get_line(char **stringp);
- void *sym_get_data(const struct elf_info *info, const Elf_Sym *sym);
-diff --git a/scripts/mod/sumversion.c b/scripts/mod/sumversion.c
-index 6de9af17599d..e79fc40d852f 100644
---- a/scripts/mod/sumversion.c
-+++ b/scripts/mod/sumversion.c
-@@ -309,15 +309,10 @@ static int parse_source_files(const char *objfile, struct md4_ctx *md)
- 
- 	cmd = xmalloc(strlen(objfile) + sizeof("..cmd"));
- 
--	base = strrchr(objfile, '/');
--	if (base) {
--		base++;
--		dirlen = base - objfile;
--		sprintf(cmd, "%.*s.%s.cmd", dirlen, objfile, base);
--	} else {
--		dirlen = 0;
--		sprintf(cmd, ".%s.cmd", objfile);
--	}
-+	base = get_basename(objfile);
-+	dirlen = base - objfile;
-+	sprintf(cmd, "%.*s.%s.cmd", dirlen, objfile, base);
-+
- 	dir = xmalloc(dirlen + 1);
- 	strncpy(dir, objfile, dirlen);
- 	dir[dirlen] = '\0';
+diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+index f551df48eef9..a8ad85feb68f 100644
+--- a/drivers/thermal/rockchip_thermal.c
++++ b/drivers/thermal/rockchip_thermal.c
+@@ -386,6 +386,7 @@ static const struct tsadc_table rk3328_code_table[] = {
+ 	{296, -40000},
+ 	{304, -35000},
+ 	{313, -30000},
++	{322, -25000},
+ 	{331, -20000},
+ 	{340, -15000},
+ 	{349, -10000},
 -- 
-2.43.0
+2.44.0.501.g19981daefd7c
 
