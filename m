@@ -1,225 +1,236 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C0D1EB186
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBA6238D27
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738940089; cv=none; b=FlV7HaSgtsrD6XK8Rjj24x/PcpA5EN4bWcqehK7D9xuNtIJQelFjoI4YL+vIUH1GbErXoMySPyDu3Q2b3DPB2ZGSuPUv5YGupgpMgAGh/V3fMlRGF1SoXDZoLhhMOi4au1an1VkOGGIT2g4L2Av22jJHL2MBOKvC2V6R9tPR+lc=
+	t=1738940149; cv=none; b=KqQ3U2f2tnstDWgwH0VLasquSpWX0Sq1+VbGFs5gtJq+dUBqOsNrXis9tzeD1ry/CUOKWgO/D+Nvx4GyAo/piBQ4oxB/UG+r1gNoztQC184QtfwaUnwODyH9RXOvUfA468mZw783u+9p+Zh2g4tB1N7m7/ad8kQgIDTJaYhdRYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738940089; c=relaxed/simple;
-	bh=7YwVG7hAXiAQe6oe2H0WofBt3yAK0jzo/OvknGwgC6M=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=auT2qfQgoXSniPLkPdxk0nWrKkozxEGWyBvqSKOnNZiOtH9cRtc32HCKwo+PTk/G7FrjO6yySWGD17GAcNv6BBuJ30jejJhxg6d3T404mxjNoJf797ptGC8PHGqUeqGrkSjRvxr4jiPAl2j0Ev37Ar/a/ZxN1bw46Ab+Im4DN7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Hi3mVsh0; arc=none smtp.client-ip=209.85.208.73
+	s=arc-20240116; t=1738940149; c=relaxed/simple;
+	bh=ps1zzEkNImieF8mbHoTKbxIx4PanamP60WsGwxnYYWA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MYNx4VvmsAy3su7kVh7TnEq/jLJEd/VYzOYxZZgFdrOlD+V7e+nBO9taYLYSJpArTyXLI8FilrUv/UWrglZMgIrvO8BRWdNih3E6Q0VDy0mQ2DBkySiID+RGC4bhzz2BwoL0uqPQIoObWW9MwO5XgKUIp6LSnF2Lme08F1FTbkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d6MwczPh; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hi3mVsh0"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5dca72b752fso2420390a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:54:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d6MwczPh"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5de4c7720bcso1021912a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:55:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738940086; x=1739544886; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EVbHfeOZZeQwuwJHSY7djFz56cmMNDUZpBf4HXbLLoc=;
-        b=Hi3mVsh0LHkS2s+IEsd8GkDOkiSu7nsxf0cFvs42g1rh4uprA+7/cqGmt8epD4iERp
-         +CQJ+YljRKkE3JFQ5m1YuOUKiQkfx+Ubu51QlfwA7dv3RVOlVf/sJkIKwzlOZFCsq8q0
-         KL7Cn8Hgfu5mxWHQcbq35J2nZE502XxI1W7LkrN7sjSiOWQAF7Hzu+wAGf88yqZM3tZF
-         XNXu7AQGERtZykCvg2qMuFDObGMrgi2MgJsszA3rDUOCRIdK7AYZ1kBnpV/Kj2TvVfvq
-         yWHeUUEzRMUrLThTDBiluL0i62pbABclQoxsvc11FvsbGHxxpSTGG7YisYf2eyljSPI1
-         DBHg==
+        d=google.com; s=20230601; t=1738940146; x=1739544946; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=daaNvLMzn/C14SPQHtJPlMGQZX0eBHgUr4X9JmhBDFI=;
+        b=d6MwczPh3qixMTJSmmI0xYIrQmuj40CPRK6Vt0AldkX3jOVeKyTsIhtr1/ExoYIJ0A
+         bdTQ8dPGSFBnCRlQXwu4haim6RrmJd15N7J022/SxY9ydueWMhNUwDx9W/mJiysFRGJ1
+         ai42TlxMf+6+sGAO/nwaKSq32AH1x/XbHxGUfng3PkoO8dNpNn94e9RJjPnLFqHyngSs
+         n/F08LFP28hEllBLIhlG/e9B5UVPjHafM8XthggoRifl3CbyloVvB7r2SsUmZYgaVyyO
+         Wt9pBj2+z4K/SFEQ8EyYhp54oF7tijFIkF6nT5JzXGB1R/Wu8qnpQft7c1k/55PchrDJ
+         UmXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738940086; x=1739544886;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EVbHfeOZZeQwuwJHSY7djFz56cmMNDUZpBf4HXbLLoc=;
-        b=D7vVZVjQkeMzy28+x7dDrtP0shxVTdoTcBefOLgLXIwE37fxI6rZQ9up/IHQt4cqPl
-         RjrJppBlybw+Fa3xTwr+xQSD8Vfh1EADMQ+2OL0dONDFAJESPnxzPaCpJ8IPT6oB89jg
-         0/jBrVWYHUjLbETbF4DVtfjcFd6INF9+KuTEpNP9Y84i0xBnjD7ZvlQ55J13BhCzS8Zm
-         NLnNlsc9P4hzAyllDKO8yTZlZOsmuC6hWZJV1F8cwoXOxgW8SiL5zIdeu5/Sva/IdHTM
-         j/hJOnG8B1z0ZefdMxySsugTh+nXfvrw4WP9KMW01ihMrTeXqwZj1L4c6OMMxMu828aE
-         dwTg==
-X-Forwarded-Encrypted: i=1; AJvYcCWgVpOyJnmA30WklZDaG9k+QlH0Nffed2wOQi8XbgBSj5Y6tJkslWBwZotbEQS+LPnJsPM9aemIqmEaQ9Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/xQs6poWAKd2MWhvbQ7En3EAyXsk1nAR6Wuv6Iv3uuMWIUYNF
-	h8lXGjNhKQfazIRA7KqMjd8I4Ine0bBhlLkvQKnH1jV6ji75ShPIPwXyVH5bY1IjbfhAtid2hPF
-	o+E2oSQ==
-X-Google-Smtp-Source: AGHT+IHcADnZ88ZDBPcCM/6Viy+F4eISrGE+uNYHO/bQ+LOgCwyU9X5ytoU17kork4MbEbCQlQqyCizNz+Zl
-X-Received: from edbio9.prod.google.com ([2002:a05:6402:2189:b0:5dc:22e2:2325])
- (user=qperret job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:35c6:b0:5de:5263:ae79
- with SMTP id 4fb4d7f45d1cf-5de5263af0bmr1071447a12.12.1738940085850; Fri, 07
- Feb 2025 06:54:45 -0800 (PST)
-Date: Fri,  7 Feb 2025 14:54:38 +0000
-In-Reply-To: <20250207145438.1333475-1-qperret@google.com>
+        d=1e100.net; s=20230601; t=1738940146; x=1739544946;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=daaNvLMzn/C14SPQHtJPlMGQZX0eBHgUr4X9JmhBDFI=;
+        b=s41SCTDE7ckvIVYuXg98qH2zhL4yfXTj+AZyvzGWE3io0mFbb71Firf3AoNXOHgqhJ
+         5do02LeFkTvCUDwJ5NaYlMPQiuKkW4BG2kylCtr4pNgc4h4wi38e5AZCSd7tne4VGpe5
+         lWMKGThbzeOZ79lF1sHRUxKwYi0bIxj2f9I7o0t+WstrDDjA/qT+LMpelaRzOJcBXIxB
+         39ZfDDNPt5NjBGMP2xltjEdA/WS/lcZFxus54pL5LX5zRM14P/QMDftHQvwritHSYvaE
+         UW1Cb8dSdVqeqf1r0GcrhwJhcyIkTAitP7EDVmsV+DdNQwJzRUiY3e4RxOUZa88rkSEJ
+         KIlA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7PBfFMGmUMvnF/OrSTKKyX/L71oEny6cAq95OwuPXA7HuObexXSp7DTu4VZRAI5Qh/APo7GuN/fF0nNw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzl1ihinGZ9g/MjXCR+uZ5aRBFVlpFIo1uau7ROtfnztbYpj+CD
+	ALzTdTWlydy8kltMg1lDn9YLRY48bRLVruZ1u9iOtl/nfTjsipEJcE4NaXYcjX0oxfPwroYfFWk
+	DqOO0jbZibQHzxCPK7Xe5Bi2LUJYkx5Y8L3tI
+X-Gm-Gg: ASbGncvsVdZ729Gkq38ezJ0EhnS0O8l3H0lRDh+UWFY4M6Pgp0nKF2UwTPPzgbODP28
+	ShEedgRXrgE7DjBBbM3UvODeX6VHpw0gUix7oF49BlFy2DB/IWVMIgynpCf0LZNmwquuhBBty
+X-Google-Smtp-Source: AGHT+IFSsEet/4yJ/161O0Uvv6q3fbuknhI7ZPo2TFQ2ugoTZ1KvI6aQQGUzVl4jTas+kZyyjbO3zYDo95CL+8LTaLA=
+X-Received: by 2002:a17:906:7954:b0:ab7:ad9:7baf with SMTP id
+ a640c23a62f3a-ab789a65709mr445745066b.4.1738940146034; Fri, 07 Feb 2025
+ 06:55:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250207145438.1333475-1-qperret@google.com>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250207145438.1333475-3-qperret@google.com>
-Subject: [PATCH 2/2] KVM: arm64: Simplify np-guest hypercalls
-From: Quentin Perret <qperret@google.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>
-Cc: Fuad Tabba <tabba@google.com>, Vincent Donnefort <vdonnefort@google.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20250205163609.3208829-1-aleksander.lobakin@intel.com>
+ <20250205163609.3208829-2-aleksander.lobakin@intel.com> <CANn89iJjCOThDqwsK4v2O8LfcwAB55YohNZ8T2sR40uM2ZoX5w@mail.gmail.com>
+ <fe1b0def-89d1-4db3-bf98-7d6c61ff5361@intel.com> <CANn89iJr1R4BGK2Qd+OEgsE7kEPi7X8tgyxjHnYoU7VOU_wgfA@mail.gmail.com>
+ <3decafb9-34fe-4fb7-9203-259b813f810c@intel.com>
+In-Reply-To: <3decafb9-34fe-4fb7-9203-259b813f810c@intel.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Fri, 7 Feb 2025 15:55:35 +0100
+X-Gm-Features: AWEUYZnJnHzdvKxve0MJIVdVjA-1GeUXFloJeOiMB6oD9CE892YP9IKOO_loV8U
+Message-ID: <CANn89iJNq2VC55c-DcA6YC-2EHYZoyov7EUXTHKF2fYy8-wW+w@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 1/8] net: gro: decouple GRO from the NAPI layer
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: Kees Cook <kees@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@kernel.org>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, netdev@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	=?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When the handling of a guest stage-2 permission fault races with an MMU
-notifier, the faulting page might be gone from the guest's stage-2 by
-the point we attempt to call (p)kvm_pgtable_stage2_relax_perms(). In the
-normal KVM case, this leads to returning -EAGAIN which user_mem_abort()
-handles correctly by simply re-entering the guest. However, the pKVM
-hypercall implementation has additional logic to check the page state
-using __check_host_shared_guest() which gets confused with absence of a
-page mapped at the requested IPA and returns -ENOENT, hence breaking
-user_mem_abort() and hilarity ensues.
-
-Luckily, several of the hypercalls for managing the stage-2 page-table
-of NP guests have no effect on the pKVM ownership tracking (wrprotect,
-test_clear_young, mkyoung, and crucially relax_perms), so the extra
-state checking logic is in fact not strictly necessary. So, to fix the
-discrepancy between standard KVM and pKVM, let's just drop the
-superfluous __check_host_shared_guest() logic from those hypercalls and
-make the extra state checking a debug assertion dependent on
-CONFIG_NVHE_EL2_DEBUG as we already do for other transitions.
-
-Signed-off-by: Quentin Perret <qperret@google.com>
+On Fri, Feb 7, 2025 at 1:00=E2=80=AFPM Alexander Lobakin
+<aleksander.lobakin@intel.com> wrote:
+>
+> From: Eric Dumazet <edumazet@google.com>
+> Date: Thu, 6 Feb 2025 19:35:50 +0100
+>
+> > On Thu, Feb 6, 2025 at 1:15=E2=80=AFPM Alexander Lobakin
+> > <aleksander.lobakin@intel.com> wrote:
+> >>
+> >> From: Eric Dumazet <edumazet@google.com>
+> >> Date: Wed, 5 Feb 2025 18:48:50 +0100
+> >>
+> >>> On Wed, Feb 5, 2025 at 5:46=E2=80=AFPM Alexander Lobakin
+> >>> <aleksander.lobakin@intel.com> wrote:
+> >>>>
+> >>>> In fact, these two are not tied closely to each other. The only
+> >>>> requirements to GRO are to use it in the BH context and have some
+> >>>> sane limits on the packet batches, e.g. NAPI has a limit of its
+> >>>> budget (64/8/etc.).
+> >>>> Move purely GRO fields into a new tagged group, &gro_node. Embed it
+> >>>> into &napi_struct and adjust all the references. napi_id doesn't
+> >>>> really belong to GRO, but:
+> >>>>
+> >>>> 1. struct gro_node has a 4-byte padding at the end anyway. If you
+> >>>>    leave napi_id outside, struct napi_struct takes additional 8 byte=
+s
+> >>>>    (u32 napi_id + another 4-byte padding).
+> >>>> 2. gro_receive_skb() uses it to mark skbs. We don't want to split it
+> >>>>    into two functions or add an `if`, as this would be less efficien=
+t,
+> >>>>    but we need it to be NAPI-independent. The current approach doesn=
+'t
+> >>>>    change anything for NAPI-backed GROs; for standalone ones (which
+> >>>>    are less important currently), the embedded napi_id will be just
+> >>>>    zero =3D> no-op.
+> >>>>
+> >>>> Three Ethernet drivers use napi_gro_flush() not really meant to be
+> >>>> exported, so move it to <net/gro.h> and add that include there.
+> >>>> napi_gro_receive() is used in more than 100 drivers, keep it
+> >>>> in <linux/netdevice.h>.
+> >>>> This does not make GRO ready to use outside of the NAPI context
+> >>>> yet.
+> >>>>
+> >>>> Tested-by: Daniel Xu <dxu@dxuuu.xyz>
+> >>>> Acked-by: Jakub Kicinski <kuba@kernel.org>
+> >>>> Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+> >>>> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+> >>>> ---
+> >>>>  include/linux/netdevice.h                  | 26 +++++---
+> >>>>  include/net/busy_poll.h                    | 11 +++-
+> >>>>  include/net/gro.h                          | 35 +++++++----
+> >>>>  drivers/net/ethernet/brocade/bna/bnad.c    |  1 +
+> >>>>  drivers/net/ethernet/cortina/gemini.c      |  1 +
+> >>>>  drivers/net/wwan/t7xx/t7xx_hif_dpmaif_rx.c |  1 +
+> >>>>  net/core/dev.c                             | 60 ++++++++-----------
+> >>>>  net/core/gro.c                             | 69 +++++++++++--------=
 ---
- arch/arm64/kvm/hyp/nvhe/mem_protect.c | 69 +++++++++++++++------------
- 1 file changed, 38 insertions(+), 31 deletions(-)
+> >>>>  8 files changed, 112 insertions(+), 92 deletions(-)
+> >>>>
+> >>>> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> >>>> index 2a59034a5fa2..d29b6ebde73f 100644
+> >>>> --- a/include/linux/netdevice.h
+> >>>> +++ b/include/linux/netdevice.h
+> >>>> @@ -340,8 +340,8 @@ struct gro_list {
+> >>>>  };
+> >>>>
+> >>>>  /*
+> >>>> - * size of gro hash buckets, must less than bit number of
+> >>>> - * napi_struct::gro_bitmask
+> >>>> + * size of gro hash buckets, must be <=3D the number of bits in
+> >>>> + * gro_node::bitmask
+> >>>>   */
+> >>>>  #define GRO_HASH_BUCKETS       8
+> >>>>
+> >>>> @@ -370,7 +370,6 @@ struct napi_struct {
+> >>>>         unsigned long           state;
+> >>>>         int                     weight;
+> >>>>         u32                     defer_hard_irqs_count;
+> >>>> -       unsigned long           gro_bitmask;
+> >>>>         int                     (*poll)(struct napi_struct *, int);
+> >>>>  #ifdef CONFIG_NETPOLL
+> >>>>         /* CPU actively polling if netpoll is configured */
+> >>>> @@ -379,11 +378,14 @@ struct napi_struct {
+> >>>>         /* CPU on which NAPI has been scheduled for processing */
+> >>>>         int                     list_owner;
+> >>>>         struct net_device       *dev;
+> >>>> -       struct gro_list         gro_hash[GRO_HASH_BUCKETS];
+> >>>>         struct sk_buff          *skb;
+> >>>> -       struct list_head        rx_list; /* Pending GRO_NORMAL skbs =
+*/
+> >>>> -       int                     rx_count; /* length of rx_list */
+> >>>> -       unsigned int            napi_id; /* protected by netdev_lock=
+ */
+> >>>> +       struct_group_tagged(gro_node, gro,
+> >>>> +               unsigned long           bitmask;
+> >>>> +               struct gro_list         hash[GRO_HASH_BUCKETS];
+> >>>> +               struct list_head        rx_list; /* Pending GRO_NORM=
+AL skbs */
+> >>>> +               int                     rx_count; /* length of rx_li=
+st */
+> >>>> +               u32                     napi_id; /* protected by net=
+dev_lock */
+> >>>> +
+> >>>
+> >>> I am old school, I would prefer a proper/standalone old C construct.
+> >>>
+> >>> struct gro_node  {
+> >>>                 unsigned long           bitmask;
+> >>>                struct gro_list         hash[GRO_HASH_BUCKETS];
+> >>>                struct list_head        rx_list; /* Pending GRO_NORMAL=
+ skbs */
+> >>>                int                     rx_count; /* length of rx_list=
+ */
+> >>>                u32                     napi_id; /* protected by netde=
+v_lock */
+> >>> };
+> >>>
+> >>> Really, what struct_group_tagged() can possibly bring here, other tha=
+n
+> >>> obfuscation ?
+> >>
+> >> You'd need to adjust every ->napi_id access, which is a lot.
+> >> Plus, as I wrote previously, napi_id doesn't really belong here, but
+> >> embedding it here eases life.
+> >>
+> >> I'm often an old school, too, but sometimes this helps a lot.
+> >> Unless you have very strong preference on this.
+> >>
+> >
+> > Is struct_group_tagged even supported by ctags ?
+> >
+> > In terms of maintenance, I am sorry to say this looks bad to me.
+> >
+> > Even without ctags, I find git grep -n "struct xxxx {" quite good.
+>
+> compile_commands.json (already supported natively by Kbuild) + clangd is
+> not enough?
+>
+> Elixir correctly tags struct_group()s.
+>
+> napi->napi_id is used in a lot of core files and drivers, adjusting all
+> the references is not what I wanted to do in the series which does
+> completely different things.
 
-diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-index 41847c04b270..4c2f6a6a2efe 100644
---- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-+++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-@@ -998,63 +998,73 @@ int __pkvm_host_unshare_guest(u64 gfn, struct pkvm_hyp_vm *vm)
- 	return ret;
- }
- 
--int __pkvm_host_relax_perms_guest(u64 gfn, struct pkvm_hyp_vcpu *vcpu, enum kvm_pgtable_prot prot)
-+static void assert_host_shared_guest(struct pkvm_hyp_vm *vm, u64 ipa)
- {
--	struct pkvm_hyp_vm *vm = pkvm_hyp_vcpu_to_hyp_vm(vcpu);
--	u64 ipa = hyp_pfn_to_phys(gfn);
- 	u64 phys;
- 	int ret;
- 
--	if (prot & ~KVM_PGTABLE_PROT_RWX)
--		return -EINVAL;
-+	if (!IS_ENABLED(CONFIG_NVHE_EL2_DEBUG))
-+		return;
- 
- 	host_lock_component();
- 	guest_lock_component(vm);
- 
- 	ret = __check_host_shared_guest(vm, &phys, ipa);
--	if (!ret)
--		ret = kvm_pgtable_stage2_relax_perms(&vm->pgt, ipa, prot, 0);
- 
- 	guest_unlock_component(vm);
- 	host_unlock_component();
- 
--	return ret;
-+	WARN_ON(ret && ret != -ENOENT);
- }
- 
--int __pkvm_host_wrprotect_guest(u64 gfn, struct pkvm_hyp_vm *vm)
-+int __pkvm_host_relax_perms_guest(u64 gfn, struct pkvm_hyp_vcpu *vcpu, enum kvm_pgtable_prot prot)
- {
-+	struct pkvm_hyp_vm *vm = pkvm_hyp_vcpu_to_hyp_vm(vcpu);
- 	u64 ipa = hyp_pfn_to_phys(gfn);
--	u64 phys;
- 	int ret;
- 
--	host_lock_component();
--	guest_lock_component(vm);
-+	if (pkvm_hyp_vm_is_protected(vm))
-+		return -EPERM;
- 
--	ret = __check_host_shared_guest(vm, &phys, ipa);
--	if (!ret)
--		ret = kvm_pgtable_stage2_wrprotect(&vm->pgt, ipa, PAGE_SIZE);
-+	if (prot & ~KVM_PGTABLE_PROT_RWX)
-+		return -EINVAL;
- 
-+	assert_host_shared_guest(vm, ipa);
-+	guest_lock_component(vm);
-+	ret = kvm_pgtable_stage2_relax_perms(&vm->pgt, ipa, prot, 0);
- 	guest_unlock_component(vm);
--	host_unlock_component();
- 
- 	return ret;
- }
- 
--int __pkvm_host_test_clear_young_guest(u64 gfn, bool mkold, struct pkvm_hyp_vm *vm)
-+int __pkvm_host_wrprotect_guest(u64 gfn, struct pkvm_hyp_vm *vm)
- {
- 	u64 ipa = hyp_pfn_to_phys(gfn);
--	u64 phys;
- 	int ret;
- 
--	host_lock_component();
-+	if (pkvm_hyp_vm_is_protected(vm))
-+		return -EPERM;
-+
-+	assert_host_shared_guest(vm, ipa);
- 	guest_lock_component(vm);
-+	ret = kvm_pgtable_stage2_wrprotect(&vm->pgt, ipa, PAGE_SIZE);
-+	guest_unlock_component(vm);
- 
--	ret = __check_host_shared_guest(vm, &phys, ipa);
--	if (!ret)
--		ret = kvm_pgtable_stage2_test_clear_young(&vm->pgt, ipa, PAGE_SIZE, mkold);
-+	return ret;
-+}
- 
-+int __pkvm_host_test_clear_young_guest(u64 gfn, bool mkold, struct pkvm_hyp_vm *vm)
-+{
-+	u64 ipa = hyp_pfn_to_phys(gfn);
-+	int ret;
-+
-+	if (pkvm_hyp_vm_is_protected(vm))
-+		return -EPERM;
-+
-+	assert_host_shared_guest(vm, ipa);
-+	guest_lock_component(vm);
-+	ret = kvm_pgtable_stage2_test_clear_young(&vm->pgt, ipa, PAGE_SIZE, mkold);
- 	guest_unlock_component(vm);
--	host_unlock_component();
- 
- 	return ret;
- }
-@@ -1063,18 +1073,15 @@ int __pkvm_host_mkyoung_guest(u64 gfn, struct pkvm_hyp_vcpu *vcpu)
- {
- 	struct pkvm_hyp_vm *vm = pkvm_hyp_vcpu_to_hyp_vm(vcpu);
- 	u64 ipa = hyp_pfn_to_phys(gfn);
--	u64 phys;
- 	int ret;
- 
--	host_lock_component();
--	guest_lock_component(vm);
--
--	ret = __check_host_shared_guest(vm, &phys, ipa);
--	if (!ret)
--		kvm_pgtable_stage2_mkyoung(&vm->pgt, ipa, 0);
-+	if (pkvm_hyp_vm_is_protected(vm))
-+		return -EPERM;
- 
-+	assert_host_shared_guest(vm, ipa);
-+	guest_lock_component(vm);
-+	kvm_pgtable_stage2_mkyoung(&vm->pgt, ipa, 0);
- 	guest_unlock_component(vm);
--	host_unlock_component();
- 
- 	return ret;
- }
--- 
-2.48.1.502.g6dc24dfdaf-goog
+Leave napi_id in struct napi, it has nothing to do with gro.
 
+>
+> Page Pool uses tagged struct groups, as well a ton of other different
+> files. Do you want to revert all this and adjust a couple thousand
+> references only due to ctags and grep?
+>
+> (instead of just clicking on the references generated by clangd)
+
+I obviously can not catch all netdev traffic.
