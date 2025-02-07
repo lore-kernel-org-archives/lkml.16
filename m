@@ -1,183 +1,113 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4D51E261F;
-	Fri,  7 Feb 2025 12:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F0E1E5B6C;
+	Fri,  7 Feb 2025 12:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738932494; cv=none; b=fUkJtWzbntGN7GfYk9SQk72z4Z/jdrSpjO7Ea7de+VxIRNRYxHwbzRtGfMEo7hD+JU8rYXDhbz/EncHlL1kf71DW5moqXs8kCva0zrxsgZSrvTHpI3KTFNhAtmEm9shvDt2LVCZk7+boHdzPHz7CPUogbq16VmymIqaMR5e+BbI=
+	t=1738932527; cv=none; b=AI+0DhA4WjSXbpPUjqXcb2eWWcRZxwqAc/mB6fvEQsw+yRpxyeOCRR5+u1B8N9qzN4fKV0B/X/52a5HemM6Hyud2UBwUFP0FRvCRfo1RSa3VAtZGmn9IdhmVB+LCwxLoFF8XwhTs5HO9Bqp1gDqlmf4ThFaSC7PZzFAEdSDW4dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738932494; c=relaxed/simple;
-	bh=epku/j8X4GjSIG5flo+ZN8vsdWinTiQ7kI3SLzVqYIA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e0R7ahY19ecytslur3imHaNCsvJsbtl05+Pbs7ZoTTfmC29K/vMMnbunM7laZ/ikoly0M5hqRL8Qz4sG12TY+Fdm5u/RWwQSPPaS7VVse6rleswR47TdFl4fMI0C/A6aMB3B6JoNkPPCaOAHKyFnoWPNh6cnrhQAkOJZF14b1Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=DXvx0o34; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1738932527; c=relaxed/simple;
+	bh=B583Jt+dZN0idFwnznXbNLEdBMPIyxuJIgGbaof1NUQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LSxGFMxjQcxhwvOeDlpIZxjRO0N259489vH3/SYzwJRMTEHPH6Tjhy8sUHYlc1ybkJp086I/5mm9V86D8HZkWLXscxd/2tXRxKe+1NphLPiDt61KH/9ojLEsiHuQ7g2U7jeFKV7MfyT/qyhu4mA1FtAj7aaKeQ3+bqkEyD7Tm0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=iNLakeYL; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="DXvx0o34"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id A63C7A1756;
-	Fri,  7 Feb 2025 13:48:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=EN5uKDKBs2TFBzx+EqNY
-	KD0FORICT1RtSymVEFjrtcw=; b=DXvx0o34J8tTdtOgr4q89tlci9jbO0RrQ6fW
-	TXNr7u1PtxCsnh1BOEsqRK97S3nrRPxf4GT7h8Gs0bKnTLAE/z/JwbaRRqbQDTYN
-	dD7s3YOw/jqtY4Wu8Jh8E46tn98ERfdFCavJR5OLn7cSGbK2gy8ITCkzEK3jVYNA
-	DvAoWLv0Euejeb0kHXdMxiy+nEQ/cXxrNcbChdCtl2nyduSoe2xpQ4yBCteGFQ6F
-	v/E+zIpAFn7+/QCptZZNjNHabqZOYi/wlE1IhoDuoOKaubX7AE7wmyxfgkjh0m8d
-	U4QWu6hLhQjA6TTltdO2GsfZ/SRmgj6LEayrIp75UclgXB/UqhIn5kN/PAqm/c5T
-	lkFPvRBqTNqyL9hyhmDsL4KZ0foqda9txlMoj/uvYvFwuRKKt0jJohUzLXO24S3d
-	N109isuNKJzQSwvZ2TJLdZQqFD71W7r4AjXH0Dmq6SDHMrkE/kjAiMdAlBfbrGae
-	nT8HgY51NWk9EPaM4R+BB0HLz/AiqWC7cXPHVMTmVR/PQPiNYTPIjfcwVnzuK8h/
-	7uohdHTTg7g5iOMz0e+96WvyX1lAqpjK3xl4C0EOk1BiltDqV6E4z+30hQ+kHT9H
-	EAd7c/vb3Qd3/ix1vbt1au1oYqvfoZ+8kmFMwL+A/OwqOYBcu9/inCAjVFcG3qI3
-	T4orMqc=
-From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, Mark Brown
-	<broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Alexandre
- Belloni" <alexandre.belloni@bootlin.com>, Claudiu Beznea
-	<claudiu.beznea@tuxon.dev>
-Subject: [PATCH for-6.14 v3 3/4] spi: atmel-quadspi: Use `devm_dma_request_chan()`
-Date: Fri, 7 Feb 2025 13:47:58 +0100
-Message-ID: <20250207124802.165408-4-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250207124802.165408-1-csokas.bence@prolan.hu>
-References: <20250207124802.165408-1-csokas.bence@prolan.hu>
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="iNLakeYL"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.1)
+ id 120da5e98b0c8ecc; Fri, 7 Feb 2025 13:48:41 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id CF36C6BAA02;
+	Fri,  7 Feb 2025 13:48:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1738932521;
+	bh=B583Jt+dZN0idFwnznXbNLEdBMPIyxuJIgGbaof1NUQ=;
+	h=From:Subject:Date;
+	b=iNLakeYLi+BrC5iPPaK53O9ZiJkiYEIu4KKa6Fad8zSOv7dpbXcLofQvJlUBVl5jg
+	 iy+ZO9AxrSJ7Av2qQjde30MAUWUUQ8ARufDIjtFQS9HdM+kRNYHnixZ5QGUD1UZkBw
+	 ZOv/7NYzfZ8zQ+lP7NiFtcDPOOjJFrD9lX32ZButH3+bgdHRFZNCIuoeilxE+wOIMD
+	 LEr85K4qxNpgFVxNZzqmmy15awR/nwcCBN0o4mBo9ujXfmkj8UyqX76LQqStuO5nF+
+	 3CMZ+ZVaEsHtjySxNVAQIE4BWt+i4NxuhgyjPBQtrugoXpfH9EBSNIKLz5ox+D3Y08
+	 TNlKOW6HQtGXw==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>
+Subject: [PATCH v1] cpufreq: intel_pstate: Relocate platform preference check
+Date: Fri, 07 Feb 2025 13:48:40 +0100
+Message-ID: <2776745.mvXUDI8C0e@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1738932487;VERSION=7985;MC=1603935075;ID=401535;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29ACD94852617560
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: spam:low
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleeffecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnegoufhprghmkfhpucdlfedttddmnecujfgurhephffvvefufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeffffffkefgheehffelteeiveeffeevhfelteejvddvieejjeelvdeiheeuveeuffenucfkphepudelhedrudefiedrudelrdelgeenucfuphgrmhfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhrihhnihhvrghsrdhprghnughruhhvrggurgeslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehruhhirdiihhg
+X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
 
-Leave releasing of DMA channels up to the devm
-facilities. This way we can eliminate the rest
-of the "goto ladder".
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+Move the invocation of intel_pstate_platform_pwr_mgmt_exists() before
+checking whether or not HWP is enabled because it does not depend on
+any code running before it except for the vendor check and if CPU
+performance scaling is going to be carried out by the platform, all of
+the code that runs before that function (again, except for the vendor
+check) is redundant.
+
+This is not expected to alter any functionality except for the ordering
+of messages printed by intel_pstate_init() when it is going to return an
+error before attempting to register the driver.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/spi/atmel-quadspi.c | 44 ++++++++++---------------------------
- 1 file changed, 11 insertions(+), 33 deletions(-)
+ drivers/cpufreq/intel_pstate.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/spi/atmel-quadspi.c b/drivers/spi/atmel-quadspi.c
-index abdc49d9d940..b1fb4426c78d 100644
---- a/drivers/spi/atmel-quadspi.c
-+++ b/drivers/spi/atmel-quadspi.c
-@@ -1288,18 +1288,20 @@ static int atmel_qspi_dma_init(struct spi_controller *ctrl)
- 	struct atmel_qspi *aq = spi_controller_get_devdata(ctrl);
- 	int ret;
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -3688,6 +3688,15 @@
+ 	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
+ 		return -ENODEV;
  
--	aq->rx_chan = dma_request_chan(&aq->pdev->dev, "rx");
-+	aq->rx_chan = devm_dma_request_chan(&aq->pdev->dev, "rx");
- 	if (IS_ERR(aq->rx_chan)) {
- 		aq->rx_chan = NULL;
- 		return dev_err_probe(&aq->pdev->dev, PTR_ERR(aq->rx_chan),
- 				     "RX DMA channel is not available\n");
- 	}
- 
--	aq->tx_chan = dma_request_chan(&aq->pdev->dev, "tx");
-+	aq->tx_chan = devm_dma_request_chan(&aq->pdev->dev, "tx");
- 	if (IS_ERR(aq->tx_chan)) {
- 		ret = dev_err_probe(&aq->pdev->dev, PTR_ERR(aq->tx_chan),
- 				    "TX DMA channel is not available\n");
--		goto release_rx_chan;
-+		aq->rx_chan = NULL;
-+		aq->tx_chan = NULL;
-+		return ret;
- 	}
- 
- 	ctrl->dma_rx = aq->rx_chan;
-@@ -1310,20 +1312,6 @@ static int atmel_qspi_dma_init(struct spi_controller *ctrl)
- 		 dma_chan_name(aq->tx_chan), dma_chan_name(aq->rx_chan));
- 
- 	return 0;
--
--release_rx_chan:
--	dma_release_channel(aq->rx_chan);
--	aq->rx_chan = NULL;
--	aq->tx_chan = NULL;
--	return ret;
--}
--
--static void atmel_qspi_dma_release(struct atmel_qspi *aq)
--{
--	if (aq->rx_chan)
--		dma_release_channel(aq->rx_chan);
--	if (aq->tx_chan)
--		dma_release_channel(aq->tx_chan);
- }
- 
- static const struct atmel_qspi_ops atmel_qspi_ops = {
-@@ -1428,14 +1416,13 @@ static int atmel_qspi_probe(struct platform_device *pdev)
- 
- 	/* Request the IRQ */
- 	irq = platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		err = irq;
--		goto dma_release;
--	}
-+	if (irq < 0)
-+		return irq;
++	/*
++	 * The Intel pstate driver will be ignored if the platform
++	 * firmware has its own power management modes.
++	 */
++	if (intel_pstate_platform_pwr_mgmt_exists()) {
++		pr_info("P-states controlled by the platform\n");
++		return -ENODEV;
++	}
 +
- 	err = devm_request_irq(&pdev->dev, irq, atmel_qspi_interrupt,
- 			       0, dev_name(&pdev->dev), aq);
- 	if (err)
--		goto dma_release;
-+		return err;
+ 	id = x86_match_cpu(hwp_support_ids);
+ 	if (id) {
+ 		hwp_forced = intel_pstate_hwp_is_enabled();
+@@ -3743,15 +3752,6 @@
+ 		default_driver = &intel_cpufreq;
  
- 	pm_runtime_set_autosuspend_delay(&pdev->dev, 500);
- 	pm_runtime_use_autosuspend(&pdev->dev);
-@@ -1445,7 +1432,7 @@ static int atmel_qspi_probe(struct platform_device *pdev)
- 
- 	err = atmel_qspi_init(aq);
- 	if (err)
--		goto dma_release;
-+		return err;
- 
- 	err = spi_register_controller(ctrl);
- 	if (err) {
-@@ -1453,18 +1440,12 @@ static int atmel_qspi_probe(struct platform_device *pdev)
- 		pm_runtime_disable(&pdev->dev);
- 		pm_runtime_set_suspended(&pdev->dev);
- 		pm_runtime_dont_use_autosuspend(&pdev->dev);
--		goto dma_release;
-+		return err;
- 	}
- 	pm_runtime_mark_last_busy(&pdev->dev);
- 	pm_runtime_put_autosuspend(&pdev->dev);
- 
- 	return 0;
+ hwp_cpu_matched:
+-	/*
+-	 * The Intel pstate driver will be ignored if the platform
+-	 * firmware has its own power management modes.
+-	 */
+-	if (intel_pstate_platform_pwr_mgmt_exists()) {
+-		pr_info("P-states controlled by the platform\n");
+-		return -ENODEV;
+-	}
 -
--dma_release:
--	if (aq->caps->has_dma)
--		atmel_qspi_dma_release(aq);
--
--	return err;
- }
+ 	if (!hwp_active && hwp_only)
+ 		return -ENOTSUPP;
  
- static int atmel_qspi_sama7g5_suspend(struct atmel_qspi *aq)
-@@ -1514,9 +1495,6 @@ static void atmel_qspi_remove(struct platform_device *pdev)
- 
- 	ret = pm_runtime_get_sync(&pdev->dev);
- 	if (ret >= 0) {
--		if (aq->caps->has_dma)
--			atmel_qspi_dma_release(aq);
--
- 		if (aq->caps->has_gclk) {
- 			ret = atmel_qspi_sama7g5_suspend(aq);
- 			if (ret)
--- 
-2.48.1
+
 
 
