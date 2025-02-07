@@ -1,148 +1,152 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA20523C8BA
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37041EB1A7;
+	Fri,  7 Feb 2025 16:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738944198; cv=none; b=AME0QhTQooUnCoqUKhcLfS74oj13YR+I2BwW7h16KjLVgy+yh/p16pUdk3zVj74p/1eCK+s7GG6BuNw+41KzLEZuGp3+jVJtHTNSu+/ZMiMj3JTu2rzwAwebtHD5KgmF99V12lb4Bx9ITYc/kazUUKIDd+aFjImznzFsKiXXkAE=
+	t=1738944200; cv=none; b=SZd6v0vN0PBCgN7enmY5tOyI6OxIC7KpU/lKh5TJGElbXc4Mj4WQlH1BVh1hdcg8Q9zOo8vQWIAtebFjisnlFOncHFkpGDr+bAXvgSD1tICLMypGuQr6VuyqRQdcX/Ib6NG9gX347jSyRprZ0rYn7IVdNQBMpf8lFfMOKtb1JyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738944198; c=relaxed/simple;
-	bh=GHIvu70WhmvWUGg5M9QDzOCrlBwTZ+HBxP8CnmsAMwQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XEtd2FGdMUYAsgJUiOr3ivTD6ijo1S58EhCVE1LLplSJuamMSptZb+YUJLm7yy6Y/P9wCoB5J3bh9tw779wfgo0gUuEQQCluLwY62bBElZS8G6HJZuN63izEUOzmO6mt/8t3lteJgcEIlQz3+p2B9SpxKDIS/wzjUetbA/BGQOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ggUZYF0F; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738944200; c=relaxed/simple;
+	bh=OZqExQTgpVnAcofXSl/4YJt3huOhFICvFo1TvD+B5MQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d0cHaspm/JfC+OTbrhVcvWeNX18xH5YL0Me4RElRSeWPVmBZBS6dnX08Sl69/1MdJWjIly1JuaFBFHDVp2mmZrqj9nOpUaiYknZgXHMTuzMlpbJXMsqTIBQda6sC+1nV8PQvLxvfBn5HHzuV7iu9HjwylXiAjdShQw5pL4sC+wQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCc+goyw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ggUZYF0F"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4678c9310afso290981cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:03:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738944196; x=1739548996; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=MdDEU/QzTK0Yv60rlv7pPkEUhIKKBhNRZbHuip232OA=;
-        b=ggUZYF0F61+5hqQtQvIzgxvxwc7eQIuRRe7NwxGjuflLCUSdhGYLKa++b3eR0iACpb
-         A5B0gTcMc7A/fKFimvCNddEZiqx1KP6jp7Jn9sep4rIyltgs5RyZufDSyOPy1501ChT0
-         GuQHAYLYHoupNgMeL4tXNcJOJVyyRE5v7sJ0d9WtQfckwmcWoCh94yl5So0BJ7/okEWg
-         F0ktBNZEoMWEw6n6FeRNYfyo17Ax6aoMA1gnJWaT4ssIBrunAFvVMpViUCfuHaK0NLMZ
-         l+YNqCHpusrixYbnE1DEw2HmAcIqJadz8//GGlgo/6iHQyy09ZY+II0OStXgzxga86kI
-         Wk/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738944196; x=1739548996;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MdDEU/QzTK0Yv60rlv7pPkEUhIKKBhNRZbHuip232OA=;
-        b=Yo+0wA57qrwFVQv1EbS7vknOrqcgKSzCLEP/hq1EiPso8DFQoWo9nGDa6syQRAeCwT
-         zraV20a4hpGgm6WmjJZoN4XYW5zvbxT9/QX6z2AubS7hjsvrq3itQHccGz5eE+k9ycJx
-         K0F2e/1upEHcaBHmOlyuW5/kQna1CjK8WX+trJoPXL0kmL3VWe1vMAqUGfp4OADOr8Bc
-         kI/3u4rYu6EVOzKt7k62K5vBiUmJreJ01bWIem1T4vGg8/qVqWA5EFL3NwR+O/ST70iX
-         Wsko/oJvByvNPqVO8zBEcpcsaxm0fuRbkKxrUqgTDajqPTQY3RKtf5xonVVf5Yfp6W9L
-         e+gA==
-X-Forwarded-Encrypted: i=1; AJvYcCXpWjmybbSXPn+dLcnNQe+Fb2p9GNOWV7qt+Cr1hGaSFu4frBjB+FkDIqTDuWNYOp/1h89PyHFqYwTt9vI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyv5r69GwG59v7lX3jucOjLi13b4yOG+qojSOD9g1VV2mkBd60a
-	5gFRvJYEtuyf/cXlxmMvGDjd+je70Gswrtdmi+qRUi0WX5oV4m4QgbaBkrz9H3i3uQ6j7EA2nRP
-	mxl2EM1Rexo+jn7b9V5ciW7X+2eegBDpnwof9UWD0Oqak+wPO8D+qem4eaQ==
-X-Gm-Gg: ASbGncsN4azS12KYnQdbt/0XxiTu6pbksqdaLjCEorLpj2oQ/GfAsxsSpKJi3Ipcn0V
-	lFXMjXsBqIHIuK3gd3c1BE1BpDIndvBLI1KBBWNHXoAU1Rz+ga5WlVXe5JcPvDeOdl2RJJT88Ea
-	H8RhImtdiy5Hs041j4GHmtyNDSjE0=
-X-Google-Smtp-Source: AGHT+IGDyv0tdeFgXFK4+NXokpnrs/Ow3uJbgvKxbsWdPKX1+p9MQq8C8C9h8dofo0MMgYw3EfAQ2y0fXmepjUd7Zo8=
-X-Received: by 2002:a05:622a:613:b0:465:3d28:8c02 with SMTP id
- d75a77b69052e-471685b49e9mr3654221cf.26.1738944195478; Fri, 07 Feb 2025
- 08:03:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCc+goyw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C931CC4CED1;
+	Fri,  7 Feb 2025 16:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738944199;
+	bh=OZqExQTgpVnAcofXSl/4YJt3huOhFICvFo1TvD+B5MQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cCc+goyw6gWdvp1Fsdw0g39SFhKTacSn3FidfRixezuSDjWxq/NjnMkQeAkCo3tEK
+	 QY5ha3hGNWuf8c05mPnoACbSSwhk9Wv1MocEhcAkL7X0G4KEL4yrQC05D5I66LTrYZ
+	 Yjh3HHNmjzmDngt9fTeZQITzVQZP2K+qpV8twbkTgWCh4jYP20FLf1ZLhFzcZJ0JEF
+	 4qmVOHbLszGngwpHWMTncxaouw1Beqru1sthhh0T6Kh+DrUKsEbUivPcPA3S4wY8Vm
+	 iBRfwPwSTmVrxJfRg5co9gh6AtyTxOYSLTMPJmBZsBniauB9pMt+EZBpHdh8zjNLxs
+	 GNd5+DeGkrv3Q==
+Date: Fri, 7 Feb 2025 16:03:14 +0000
+From: Conor Dooley <conor@kernel.org>
+To: neil.armstrong@linaro.org
+Cc: Dharma.B@microchip.com, ulf.hansson@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, khilman@baylibre.com,
+	jbrunet@baylibre.com, martin.blumenstingl@googlemail.com,
+	linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v2] dt-bindings: mmc: mmc-slot: make compatible
+ property optional
+Message-ID: <20250207-cheating-winking-1dace55a4341@spud>
+References: <20250205-mmc-slot-v2-1-da3c5f30e2d9@microchip.com>
+ <f6d7ffa0-6c08-45fb-9153-5e4aad1ca86a@linaro.org>
+ <003ffa44-c88a-4234-a54a-50cd1140982a@microchip.com>
+ <7180babd-302a-4f86-8770-bdd9f5c773cf@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206044346.3810242-1-riel@surriel.com> <20250206044346.3810242-7-riel@surriel.com>
-In-Reply-To: <20250206044346.3810242-7-riel@surriel.com>
-From: Brendan Jackman <jackmanb@google.com>
-Date: Fri, 7 Feb 2025 17:03:04 +0100
-X-Gm-Features: AWEUYZkA3hse0G5JQpW_KHFyjXe2jABBlo7SQc0ZzAcOAMPI-l3KDCePqFxbKzA
-Message-ID: <CA+i-1C3LDJTf26WdBo7MvCdTs-dybqsUp3Ze7NowcOUHPWMXrg@mail.gmail.com>
-Subject: Re: [PATCH v9 06/12] x86/mm: use INVLPGB for kernel TLB flushes
-To: Rik van Riel <riel@surriel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
-	peterz@infradead.org, dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com, 
-	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com, 
-	linux-mm@kvack.org, akpm@linux-foundation.org, jannh@google.com, 
-	mhklinux@outlook.com, andrew.cooper3@citrix.com, 
-	Manali Shukla <Manali.Shukla@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="pz7qrlCazOFTDsBh"
+Content-Disposition: inline
+In-Reply-To: <7180babd-302a-4f86-8770-bdd9f5c773cf@linaro.org>
 
-On Thu, 6 Feb 2025 at 05:45, Rik van Riel <riel@surriel.com> wrote:
-> diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-> index 36939b104561..227e972b6fbc 100644
-> --- a/arch/x86/mm/tlb.c
-> +++ b/arch/x86/mm/tlb.c
-> @@ -1086,6 +1086,30 @@ void flush_tlb_all(void)
->         on_each_cpu(do_flush_tlb_all, NULL, 1);
->  }
->
-> +static bool broadcast_kernel_range_flush(struct flush_tlb_info *info)
-> +{
-> +       unsigned long addr;
-> +       unsigned long nr;
+
+--pz7qrlCazOFTDsBh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Feb 07, 2025 at 10:17:29AM +0100, neil.armstrong@linaro.org wrote:
+> On 07/02/2025 10:02, Dharma.B@microchip.com wrote:
+> > On 07/02/25 2:25 pm, Neil Armstrong wrote:
+> > > EXTERNAL EMAIL: Do not click links or open attachments unless you know
+> > > the content is safe
+> > >=20
+> > > On 05/02/2025 04:48, Dharma Balasubiramani wrote:
+> > > > Remove the compatible property from the list of required properties=
+ and
+> > > > mark it as optional.
+> > > >=20
+> > > > Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+> > > > ---
+> > > > Changes in v2:
+> > > > - Instead of moving the compatible string to the other binding, just
+> > > > make it
+> > > >  =C2=A0=C2=A0 optional (remove from required list).
+> > > > - Link to v1: https://lore.kernel.org/r/20241219-mmc-slot-v1-1-
+> > > > dfc747a3d3fb@microchip.com
+> > > > ---
+> > > >  =C2=A0 Documentation/devicetree/bindings/mmc/mmc-slot.yaml | 1 -
+> > > >  =C2=A0 1 file changed, 1 deletion(-)
+> > > >=20
+> > > > diff --git a/Documentation/devicetree/bindings/mmc/mmc-slot.yaml b/
+> > > > Documentation/devicetree/bindings/mmc/mmc-slot.yaml
+> > > > index 1f0667828063..ca3d0114bfc6 100644
+> > > > --- a/Documentation/devicetree/bindings/mmc/mmc-slot.yaml
+> > > > +++ b/Documentation/devicetree/bindings/mmc/mmc-slot.yaml
+> > > > @@ -29,7 +29,6 @@ properties:
+> > > >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 maxItems: 1
+> > > >=20
+> > > >  =C2=A0 required:
+> > > > -=C2=A0 - compatible
+> > > >  =C2=A0=C2=A0=C2=A0 - reg
+> > >=20
+> > > If you remove it from here then it's still required in Documentation/
+> > > devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml
+> > > so please add it.
+> >=20
+> > If moving the compatible to its specific binding isn't appropriate (as
+> > per Conor),
+> > and if removing it from the required list here doesn=E2=80=99t seem rea=
+sonable
+> > to you,
+> > then adding an unnecessary compatible string in our DTS files doesn=E2=
+=80=99t
+> > make sense to me.
+> >=20
+> > What could be the solution then?
+>=20
+> The solution is right but you modify the meson-mx-sdio bindings, so
+> simply add compatible in a required list for the slot node.
+>=20
+> Something like:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.=
+yaml b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml
+> index 022682a977c6..0d4d9ca6a8d9 100644
+> --- a/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml
+> @@ -60,6 +60,9 @@ patternProperties:
+>        bus-width:
+>          enum: [1, 4]
+>=20
+> +    required:
+> +      - compatible
 > +
-> +       if (!IS_ENABLED(CONFIG_X86_BROADCAST_TLB_FLUSH))
-> +               return false;
-> +
-> +       if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-> +               return false;
+>      unevaluatedProperties: false
+>=20
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> Conor, Is it right ?
 
-I think that first conditional can be shunted off into the header
+Looks about right, ye.
 
-diff --git a/arch/x86/include/asm/disabled-features.h
-b/arch/x86/include/asm/disabled-features.h
-index c492bdc97b05..61376b4e4fa7 100644
---- a/arch/x86/include/asm/disabled-features.h
-+++ b/arch/x86/include/asm/disabled-features.h
-@@ -129,6 +129,12 @@
- #define DISABLE_SEV_SNP                (1 << (X86_FEATURE_SEV_SNP & 31))
- #endif
+--pz7qrlCazOFTDsBh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-+#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
-+#define DISABLE_INVLPGB        0
-+#else
-+#define DISABLE_INVLPGB        (1 << (X86_FEATURE_INVLPGB & 31))
-+#endif
-+
- /*
-  * Make sure to add features to the correct mask
-  */
-@@ -146,7 +152,7 @@
- #define DISABLED_MASK11
-(DISABLE_RETPOLINE|DISABLE_RETHUNK|DISABLE_UNRET| \
-                         DISABLE_CALL_DEPTH_TRACKING|DISABLE_USER_SHSTK)
- #define DISABLED_MASK12        (DISABLE_FRED|DISABLE_LAM)
--#define DISABLED_MASK13        0
-+#define DISABLED_MASK13        (DISABLE_INVLPGB)
- #define DISABLED_MASK14        0
- #define DISABLED_MASK15        0
- #define DISABLED_MASK16
-(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP| \
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 227e972b6fbc..b8a8665359a2 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -1091,9 +1091,6 @@ static bool broadcast_kernel_range_flush(struct
-flush_tlb_info *info)
-        unsigned long addr;
-        unsigned long nr;
+-----BEGIN PGP SIGNATURE-----
 
--       if (!IS_ENABLED(CONFIG_X86_BROADCAST_TLB_FLUSH))
--               return false;
--
-        if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
-                return false;
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ6YupQAKCRB4tDGHoIJi
+0lR7AQDXPOIB/dOY3/s7IOG1B+gKdzycmLoO1kXUzVZl9O+qDgEAvw94V1PMPp2c
+Ws95nHufVdgDH1bM8gATFJfYPq295wM=
+=tzxl
+-----END PGP SIGNATURE-----
 
-With !CPU_SUP_AMD and the above, broadcast_kernel_range_flush
-disappears from tlb.o. (Caveat - I didn't actually read the disasm I
-just made it noinline and checked the call disappeared).
-
-It's actually more lines of code but now they're off in a boilerplate
-header and it's consistent with the other flags that do this.
+--pz7qrlCazOFTDsBh--
