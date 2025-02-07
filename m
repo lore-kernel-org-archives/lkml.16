@@ -1,65 +1,73 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48891DFE0C
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA6D1A00E7
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738959002; cv=none; b=ei9SlyCm2b6AKZFtXFTgFrmx5p/9gawh11R1Cy2Day92TM8195LrgrW+Ec7h2PjJEL5klrLpEv5Mt7Gqma9WPNjO7yE8bCJe4TayA7+BsmuUeTrqDOfnjE79Wc3UX7qmAW4snn2jxma8yMsuHB36X3JNugAz0CX9eDgK9tTw/MA=
+	t=1738959111; cv=none; b=Z2fO1IGw45MabyInS8Kl9bmC7QIJYmiHyi3roltbNjlJuV3MgYpDFUTWiq72Y8FTtfTtCu34yZz5hHoXkHq4jKfptD2YAyyPK9ne/U02yhqWPYXsrADlSqyiUfF5t8Jn8djBbEJxEoe+9HF1MgxV7Y69/YABJV8ViUwzwGt3Iqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738959002; c=relaxed/simple;
-	bh=tLizlzLwgQHZVLFutxZhfY3pv9A8Teg53pGXyak+xGE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FDnfGflH2645ZaD6HV65/ILq6W9fDXT3j7CXA1W+7y9fKAT8YTXK8B0tL/PhHvQ1G6KErCy6hcmuXJGCKm0PzLxZ2VycjrkB5DtH8dIGIMtMySOf7QyuRkvE4M0BKm8y1bFDw11w0ozS+WEYph6AyJkRtBofpjmHthVCO5LRILI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=blKpFvjl; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1738959111; c=relaxed/simple;
+	bh=o0JjXXcxDBv5TFdiXfnwXkrMd28amcy8OmNIPYYWh9o=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jHKyhdbbHq8yl+JVs9PRY5F9/CGq4D5Dr8l+0PhIU6DR6dquaf7pL4vnoy99ap7SmwTdVPoFTykFnfZztJW9pVmQ+eAtwh4km3y7ZAtOKrTHPfNxyqIOW3fVxUpQCJK9d4mf+Ghmd/cQbuX2Ck7WX7QLJsrNWEb90RHokpL0lhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PL5mlcE0; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="blKpFvjl"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-71e565708beso1503173a34.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:09:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738958999; x=1739563799; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=swdhvOmsaXx4i7dmA/GM5tND4Q4MNmxeKJptvQs4OEQ=;
-        b=blKpFvjlXVQfTdNiVN/EcYi85K3CD3hu5RZT7Jh8K91uLtHQ+b+7/Y2HV4JLY45T2i
-         47FhrDIOesVrVsgth7RyE6GiyEOtt0pOMnqqsDDT0tO6RFYpmhsbkVIwiPB4oxUGCP3j
-         AM0s+BP/SKHMlkj9wifyeT4OsKjz/7PusTPmy3OQL3hQhMB10TdyCNOgUz9cFXADl39M
-         jHtfjIAsj7rtTKnFMmJaQr5Dgz2Tq7+7ZP+xD2FhsHgfEtBorlrLKBEPBlUfL6cYPBzC
-         3TqGiNhL7YGxEoebQnAn0iFSoHYKX5FWgkVfjTCD2fQhwIynbCk2hQHZ/8zFzAFj491c
-         3dRw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PL5mlcE0"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517FNZ7o008015
+	for <linux-kernel@vger.kernel.org>; Fri, 7 Feb 2025 20:11:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=kDMiMudtV4tgXrnAq0wBH3
+	feb/UwjZ0g++lmYLeshWU=; b=PL5mlcE0EoqntLZxTAHB3tdKWGaTln3Gos4ikq
+	ivTq4o8QpTXZHwSma8QkcNSqOG9SgYe0/UtkznOE37N8h96p5H750cnBmKZ18i4k
+	AXv/4OxEtUliSdKKdVyqkjApasPpZi6uAXetQuliUU9T47m+wsKNe0Y0XWAN/6KW
+	P9D+KvHpe556cnjYTAE438sU189CdnhDAuRatemEDuQrie0V9VeTX/y59/HXLluw
+	4V/lHdEMQPpTnU2IsE/Q5B5HvREJOGvop7qWqksacGI2rLa1qVqmmjzi6eYIDmup
+	68RraPLethyUy3Oz83DbSvTscHsXhE9g9+yATRUdP0O30iVQ==
+Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com [209.85.161.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nmsbgpv0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 20:11:47 +0000 (GMT)
+Received: by mail-oo1-f72.google.com with SMTP id 006d021491bc7-5fc057bd4a9so1737030eaf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:11:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738958999; x=1739563799;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=swdhvOmsaXx4i7dmA/GM5tND4Q4MNmxeKJptvQs4OEQ=;
-        b=uUC7Bh2Q9XMwKOsSCyvbp//oVGzMpj5gxQLev6mXRncscEkirYRhAFjJBnTDsogYzT
-         RqdSjbJDputRzLDJaPr+VlJoysdBmpaIoEzSvCdS6OQHXRKEx1ACTU+tiYl71O48qWZS
-         zaZw0BvaomTbb+oPP59iXPdrzAxz7wyZlzU+9VQNJB8jWXmQWDuJvFxlBDdWXr2WGVSh
-         fx9J6QDDY+msjvr/ewERGBVS+GZBAMF/tjual2YWhy3CdyKhZ8UifjtKMjSbaoGfH1xU
-         qKpk+5GobWEqR1r34duttB6l2ZgwH9mUV2LnJ06qD+n/9iZW3NOjTs3gDuR729SUIESd
-         5TWg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3X1hSpIdnf7wgeBu6EtNhg1UWWXtoYcAlhVj5G4NV8NXMNUzBwNf54thnPfhVA2CnfDy1rtSTfyMBHvc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzjBxDIXIjXXbBoH9ak15pkN0tVDPU4Bdpvhzdy91JiaPOseS5
-	Gm3uE6le4f+TxHwC/QvUYvHGeavaQ8n+4ZOI9C6pWaTKCHmN1g73jQdJXLaM5uM=
-X-Gm-Gg: ASbGncv59UsEW2jhsgP89e38H11LgLllLq55nmLDeyYvpkrO+zuiqeH6hBKqQnN4mG9
-	MWQC+5ansmSBeOPki3wsAOKMzca2EHPBAcpFO7avPP/5wMk45nN2ZUmdlU93YVp39XrNT0d/2Dz
-	3MkFRIANl4Y2moCSGAHKXuxtPtV8KBdlc7GjMPq+DciOId8X313ZwrDEn5eK67a1ovhEeH4eA3B
-	4G1jIUunmxPF7b3zMg9q7seGwQP3PhGHUWo2p8PVK/xsMQ/n/T6UqhX6mQjjY7zNGwFd1GbmeMr
-	kFxfTdB+o3WAjT1DG8WR5vreYzFW3DfKyL3wdDBpC3zQzsM=
-X-Google-Smtp-Source: AGHT+IH91tufyShH1cB+QwfqnbPdhPjOBiatDQJckt758pCIvv3nuGpnBSZuIupBhL5FP+01Xc2JEQ==
-X-Received: by 2002:a05:6830:6c10:b0:71d:eee3:fd26 with SMTP id 46e09a7af769-726b87b7814mr3104475a34.4.1738958998924;
-        Fri, 07 Feb 2025 12:09:58 -0800 (PST)
-Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc544b08d4sm930387eaf.2.2025.02.07.12.09.56
+        d=1e100.net; s=20230601; t=1738959107; x=1739563907;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kDMiMudtV4tgXrnAq0wBH3feb/UwjZ0g++lmYLeshWU=;
+        b=mtMKqXS0xuLTsVZ4lr0QHDuPwq9dRQYlafRlcbcglpVOitsUguFM9cKqtnU2977CmA
+         HPBfDEt2Sy1K+flTeeJzrBD6mf2K1NItYXr55GKMKXYxFSAs5Z4JlPJrihkS/rsHqJkM
+         Xm7PFaAHYcCYexKrwqji+OZKOoEYB0fXVUpq7M2T8cCJf48VeTo9nV5ukQKKHib3XNac
+         KBZyLk1Zwl6o+bV2GbyptGUxzyMi8pz6HMv7zAVeeqybtKTRG0ph5vdQUEN5hqqB3aSY
+         4qxh1RlmDGgo6u6SNRKdgUiL+H2IlJC+cJDIquPjZL4qQt0qKl/qjXyvle6/0m52jOzR
+         ajRA==
+X-Forwarded-Encrypted: i=1; AJvYcCW1xNfcGQP2SmglV7cW60Y374FhShdTc49fnKQeUMP0heQRV6rJnmS8DdU6Vx8OB185jzUKlW89eD+ln9c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHzcX50zgyMtuuFIvF5iifwBhizU8XkwHLq/CeKFM7NBXHcHZx
+	fkhxvICsTl7kqReGxr+crqaUAyVU38chrsORBJ7FWPBK+y3XCs8rTDkJ9+iH3i/WmKv58HmUJ0w
+	Al26DJs6cWEsl4MRDkMn63SMZ9qesmS/rMsOAl0v/hUHhhR+XvN8eLMFOe6XsUHrLeU7dqII=
+X-Gm-Gg: ASbGnctg9s75Hzqhhd4FSVcAEiUvbd1tbXaPGThcmpiPpddrQq805SJCUhe3y2lyMn/
+	Qq6Ev5ychHfzkXLUm8qiLTPBLUj43tPKPBfjwI1+FGBVR44SQV39Qh7H38PcSrGLuxfyj9uKFP7
+	2MqSWPwNTEt8+TL8rKOy7x5jHyJdup45VjUtwaWc0JrGAXryR04RP//EY36IvIBNPvRYiBehzUN
+	cdhXE6nApIhvwJ4OE/5RG392geX6dPKmN9MpYDmgvseE3d0kmBTucrLBUVpz2guK3saKer3wO8J
+	YsxGnznZIZ4P0vnsIzMOcwvkLdFe8Out7uttaYvdIg2ptw8gqbPRsWwXoFVgpuyOu6uInWH+Gbm
+	7w+BI
+X-Received: by 2002:a05:6871:628b:b0:2b7:5726:c931 with SMTP id 586e51a60fabf-2b84015e5bcmr2686342fac.5.1738959107012;
+        Fri, 07 Feb 2025 12:11:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFYyG3xljRm3I0DrpeKbRB9vGDzRlNGHyM0fmkRS4g7aLScA8naZOYGycC46hNgw83glXa44g==
+X-Received: by 2002:a05:6871:628b:b0:2b7:5726:c931 with SMTP id 586e51a60fabf-2b84015e5bcmr2686329fac.5.1738959106644;
+        Fri, 07 Feb 2025 12:11:46 -0800 (PST)
+Received: from [192.168.86.65] (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b825fe58a9sm1017758fac.20.2025.02.07.12.11.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 12:09:57 -0800 (PST)
-From: David Lechner <dlechner@baylibre.com>
-Date: Fri, 07 Feb 2025 14:09:14 -0600
-Subject: [PATCH v8 17/17] iio: dac: ad5791: Add offload support
+        Fri, 07 Feb 2025 12:11:46 -0800 (PST)
+From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Date: Fri, 07 Feb 2025 12:17:33 -0800
+Subject: [PATCH] dmaengine: qcom: bam_dma: Avoid accessing BAM_REVISION on
+ remote BAM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,310 +76,111 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-dlech-mainline-spi-engine-offload-2-v8-17-e48a489be48c@baylibre.com>
-References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
-In-Reply-To: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
-To: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>
-Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Lars-Peter Clausen <lars@metafoo.de>, David Jander <david@protonic.nl>, 
- Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-iio@vger.kernel.org, Axel Haslam <ahaslam@baylibre.com>, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- David Lechner <dlechner@baylibre.com>
-X-Mailer: b4 0.14.2
+Message-Id: <20250207-bam-read-fix-v1-1-027975cf1a04@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAFxqpmcC/x2MQQqAIBAAvxJ7bkFXQuor0UFzrT1koRCB9Pek4
+ wzMVCichQtMXYXMtxQ5UwPdd7DuLm2MEhoDKRoUKYveHZjZBYzyIHmjabTBRKehJVfmpv/dvLz
+ vB1R6MoteAAAA
+To: Vinod Koul <vkoul@kernel.org>, Md Sadre Alam <quic_mdalam@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Georgi Djakov <djakov@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2733;
+ i=bjorn.andersson@oss.qualcomm.com; h=from:subject:message-id;
+ bh=o0JjXXcxDBv5TFdiXfnwXkrMd28amcy8OmNIPYYWh9o=;
+ b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBnpmp1RtxFcyltaPy4QkUHiZuJjtKYg4o3K8zlj
+ uCRKySR3oqJAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCZ6ZqdRUcYW5kZXJzc29u
+ QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcVD2g/6A8MHdtGf7f1BUcAhzUWaEHPcVGtQSlcHHwNHbIX
+ fo4oS0rrmMpcXOinC/Hl/WlPZhg9kRewpVgGMT3rvIwNVWa7pLQbUpJHI98/MdQwxm5hKneFtuS
+ wHwFdD10g6RpZka/HgEzwTv/rin2uTAHaHe2+zzqkRaE9raaU6vU95CKSG++u87l9CpCM6EPU34
+ H8oAB0I9ixITUzOer489lG/ET4tF2MEdvA2/fCzJFpP+IDQ8bsq1gv+yEhNUb3jVjqsd3HuM7Qi
+ nXBmnQS4GJ7K+MwZUxcGkYkDEnZovmEVmdyeCJtHy+NC2lf5NSPe9qk2UM7EFP04lrc3IjuBDD/
+ IPl/5OV1o1dUp3ZTpP8RPm6w77ny787CMdgNEsIXIPvypzjrJVe3avTsCu451CjUD94tPdiTKKX
+ G7A3+oqQWL3TP+fehmwPuxZSLLo7RJmdnrhmvi5Cn5FDI286SXccC0m1Qb9+cItD6E8KJyhtj2m
+ bovtmyWVMuPRRKMdLJr5Hl66v5RwGzHxgfPwzsMljs6KCy23i9PqmqxRTlbloTw6aIKR+Roar1n
+ HT7zL1UYc8QmvRfhY+T2NiQYMB1Z+YgQkGnIxj3gD7Lzmd+G3rc5y1iN/5RAHLKOwV/StU+eviN
+ a4FYq6MWzrZu+hfukZJUHYupReI6NDun7YWL2zAsYP9w=
+X-Developer-Key: i=bjorn.andersson@oss.qualcomm.com; a=openpgp;
+ fpr=05DE03CC5F35EA4F0966D5250B1F393F0D99ADC5
+X-Proofpoint-ORIG-GUID: Ro8t6PIOvsTKHeIZNG6Gh88yE5M4xvs-
+X-Proofpoint-GUID: Ro8t6PIOvsTKHeIZNG6Gh88yE5M4xvs-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_09,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ phishscore=0 mlxlogscore=999 malwarescore=0 spamscore=0 mlxscore=0
+ adultscore=0 priorityscore=1501 bulkscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502070151
 
-From: Axel Haslam <ahaslam@baylibre.com>
+Commit '57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing
+unavailable register")' made this read unconditional, in order to
+identify if the instance is BAM-NDP or BAM-Lite.
+But the BAM_REVISION register is not accessible on remotely managed BAM
+instances and attempts to access it causes the system to crash.
 
-Add SPI offload support to stream TX buffers using DMA.
-This allows loading samples to the DAC with a rate of 1 MSPS.
+Move the access back to be conditional and expand the checks that was
+introduced to restore the old behavior when no revision information is
+available.
 
-Signed-off-by: Axel Haslam <ahaslam@baylibre.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
-Signed-off-by: David Lechner <dlechner@baylibre.com>
+Fixes: 57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing unavailable register")
+Reported-by: Georgi Djakov <djakov@kernel.org>
+Closes: https://lore.kernel.org/lkml/9ef3daa8-cdb1-49f2-8d19-a72d6210ff3a@kernel.org/
+Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
 ---
+ drivers/dma/qcom/bam_dma.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-v7 changes:
-* Removed extra space character.
-* Added write_raw_get_fmt callback to avoid having to check val2.
-* Don't allow sampling frequency of 0 Hz.
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index c14557efd577..d42d913492a8 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -445,8 +445,8 @@ static void bam_reset(struct bam_device *bdev)
+ 	writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
+ 
+ 	/* set descriptor threshold, start with 4 bytes */
+-	if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
+-		     BAM_NDP_REVISION_END))
++	if (!bdev->bam_revision ||
++	    in_range(bdev->bam_revision, BAM_NDP_REVISION_START, BAM_NDP_REVISION_END))
+ 		writel_relaxed(DEFAULT_CNT_THRSHLD,
+ 			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
+ 
+@@ -1006,8 +1006,8 @@ static void bam_apply_new_config(struct bam_chan *bchan,
+ 			maxburst = bchan->slave.src_maxburst;
+ 		else
+ 			maxburst = bchan->slave.dst_maxburst;
+-		if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
+-			     BAM_NDP_REVISION_END))
++		if (!bdev->bam_revision ||
++		    in_range(bdev->bam_revision, BAM_NDP_REVISION_START, BAM_NDP_REVISION_END))
+ 			writel_relaxed(maxburst,
+ 				       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
+ 	}
+@@ -1199,11 +1199,12 @@ static int bam_init(struct bam_device *bdev)
+ 	u32 val;
+ 
+ 	/* read revision and configuration information */
+-	val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
+-	if (!bdev->num_ees)
++	if (!bdev->num_ees) {
++		val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
+ 		bdev->num_ees = (val >> NUM_EES_SHIFT) & NUM_EES_MASK;
+ 
+-	bdev->bam_revision = val & REVISION_MASK;
++		bdev->bam_revision = val & REVISION_MASK;
++	}
+ 
+ 	/* check that configured EE is within range */
+ 	if (bdev->ee >= bdev->num_ees)
 
-v6 changes: new patch in v6
 ---
- drivers/iio/dac/Kconfig  |   3 +
- drivers/iio/dac/ad5791.c | 163 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 166 insertions(+)
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250207-bam-read-fix-2b31297d3fa1
 
-diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
-index 5690a37267d86ea3ec805adfa32e13c052864061..4811ea973125a0dea1f8a9cdee1e0c045bc21981 100644
---- a/drivers/iio/dac/Kconfig
-+++ b/drivers/iio/dac/Kconfig
-@@ -296,6 +296,9 @@ config AD5770R
- config AD5791
- 	tristate "Analog Devices AD5760/AD5780/AD5781/AD5790/AD5791 DAC SPI driver"
- 	depends on SPI
-+	select SPI_OFFLOAD
-+	select IIO_BUFFER
-+	select IIO_BUFFER_DMAENGINE
- 	help
- 	  Say yes here to build support for Analog Devices AD5760, AD5780,
- 	  AD5781, AD5790, AD5791 High Resolution Voltage Output Digital to
-diff --git a/drivers/iio/dac/ad5791.c b/drivers/iio/dac/ad5791.c
-index 4f28f49071c244bfcd21c7553aa3e39e9751490a..07848be3f8d5654418ebbac7b33c14fd1014a2c8 100644
---- a/drivers/iio/dac/ad5791.c
-+++ b/drivers/iio/dac/ad5791.c
-@@ -15,9 +15,12 @@
- #include <linux/module.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
-+#include <linux/spi/offload/consumer.h>
- #include <linux/spi/spi.h>
- #include <linux/sysfs.h>
-+#include <linux/units.h>
- 
-+#include <linux/iio/buffer-dmaengine.h>
- #include <linux/iio/dac/ad5791.h>
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
-@@ -64,11 +67,13 @@
-  * struct ad5791_chip_info - chip specific information
-  * @name:		name of the dac chip
-  * @channel:		channel specification
-+ * @channel_offload:	channel specification for offload
-  * @get_lin_comp:	function pointer to the device specific function
-  */
- struct ad5791_chip_info {
- 	const char *name;
- 	const struct iio_chan_spec channel;
-+	const struct iio_chan_spec channel_offload;
- 	int (*get_lin_comp)(unsigned int span);
- };
- 
-@@ -81,6 +86,11 @@ struct ad5791_chip_info {
-  * @gpio_clear:		clear gpio
-  * @gpio_ldac:		load dac gpio
-  * @chip_info:		chip model specific constants
-+ * @offload_msg:	spi message used for offload
-+ * @offload_xfer:	spi transfer used for offload
-+ * @offload:		offload device
-+ * @offload_trigger:	offload trigger
-+ * @offload_trigger_hz:	offload sample rate
-  * @vref_mv:		actual reference voltage used
-  * @vref_neg_mv:	voltage of the negative supply
-  * @ctrl:		control register cache
-@@ -96,6 +106,11 @@ struct ad5791_state {
- 	struct gpio_desc		*gpio_clear;
- 	struct gpio_desc		*gpio_ldac;
- 	const struct ad5791_chip_info	*chip_info;
-+	struct spi_message		offload_msg;
-+	struct spi_transfer		offload_xfer;
-+	struct spi_offload		*offload;
-+	struct spi_offload_trigger	*offload_trigger;
-+	unsigned int			offload_trigger_hz;
- 	unsigned short			vref_mv;
- 	unsigned int			vref_neg_mv;
- 	unsigned			ctrl;
-@@ -232,6 +247,25 @@ static int ad5780_get_lin_comp(unsigned int span)
- 		return AD5780_LINCOMP_10_20;
- }
- 
-+static int ad5791_set_sample_freq(struct ad5791_state *st, int val)
-+{
-+	struct spi_offload_trigger_config config = {
-+		.type = SPI_OFFLOAD_TRIGGER_PERIODIC,
-+		.periodic = {
-+			.frequency_hz = val,
-+		},
-+	};
-+	int ret;
-+
-+	ret = spi_offload_trigger_validate(st->offload_trigger, &config);
-+	if (ret)
-+		return ret;
-+
-+	st->offload_trigger_hz = config.periodic.frequency_hz;
-+
-+	return 0;
-+}
-+
- static int ad5791_read_raw(struct iio_dev *indio_dev,
- 			   struct iio_chan_spec const *chan,
- 			   int *val,
-@@ -259,6 +293,9 @@ static int ad5791_read_raw(struct iio_dev *indio_dev,
- 		do_div(val64, st->vref_mv);
- 		*val = -val64;
- 		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		*val = st->offload_trigger_hz;
-+		return IIO_VAL_INT;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -299,6 +336,24 @@ static const struct ad5791_chip_info _name##_chip_info = {		\
- 			},						\
- 			.ext_info = ad5791_ext_info,			\
- 	},								\
-+	.channel_offload = {						\
-+			.type = IIO_VOLTAGE,				\
-+			.output = 1,					\
-+			.indexed = 1,					\
-+			.address = AD5791_ADDR_DAC0,			\
-+			.channel = 0,					\
-+			.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),	\
-+			.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |	\
-+				BIT(IIO_CHAN_INFO_OFFSET),		\
-+			.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),\
-+			.scan_type = {					\
-+				.sign = 'u',				\
-+				.realbits = (bits),			\
-+				.storagebits = 32,			\
-+				.shift = (_shift),			\
-+			},						\
-+			.ext_info = ad5791_ext_info,			\
-+	},								\
- }
- 
- AD5791_DEFINE_CHIP_INFO(ad5760, 16, 4, ad5780_get_lin_comp);
-@@ -322,14 +377,106 @@ static int ad5791_write_raw(struct iio_dev *indio_dev,
- 
- 		return ad5791_spi_write(st, chan->address, val);
- 
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		if (val < 1)
-+			return -EINVAL;
-+		return ad5791_set_sample_freq(st, val);
- 	default:
- 		return -EINVAL;
- 	}
- }
- 
-+static int ad5791_write_raw_get_fmt(struct iio_dev *indio_dev,
-+				    struct iio_chan_spec const *chan,
-+				    long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		return IIO_VAL_INT;
-+	default:
-+		return IIO_VAL_INT_PLUS_MICRO;
-+	}
-+}
-+
-+static int ad5791_buffer_preenable(struct iio_dev *indio_dev)
-+{
-+	struct ad5791_state *st = iio_priv(indio_dev);
-+	struct spi_offload_trigger_config config = {
-+		.type = SPI_OFFLOAD_TRIGGER_PERIODIC,
-+		.periodic = {
-+			.frequency_hz = st->offload_trigger_hz,
-+		},
-+	};
-+
-+	if (st->pwr_down)
-+		return -EINVAL;
-+
-+	return spi_offload_trigger_enable(st->offload, st->offload_trigger,
-+					 &config);
-+}
-+
-+static int ad5791_buffer_postdisable(struct iio_dev *indio_dev)
-+{
-+	struct ad5791_state *st = iio_priv(indio_dev);
-+
-+	spi_offload_trigger_disable(st->offload, st->offload_trigger);
-+
-+	return 0;
-+}
-+
-+static const struct iio_buffer_setup_ops ad5791_buffer_setup_ops = {
-+	.preenable = &ad5791_buffer_preenable,
-+	.postdisable = &ad5791_buffer_postdisable,
-+};
-+
-+static int ad5791_offload_setup(struct iio_dev *indio_dev)
-+{
-+	struct ad5791_state *st = iio_priv(indio_dev);
-+	struct spi_device *spi = st->spi;
-+	struct dma_chan *tx_dma;
-+	int ret;
-+
-+	st->offload_trigger = devm_spi_offload_trigger_get(&spi->dev,
-+		st->offload, SPI_OFFLOAD_TRIGGER_PERIODIC);
-+	if (IS_ERR(st->offload_trigger))
-+		return dev_err_probe(&spi->dev, PTR_ERR(st->offload_trigger),
-+				     "failed to get offload trigger\n");
-+
-+	ret = ad5791_set_sample_freq(st, 1 * MEGA);
-+	if (ret)
-+		return dev_err_probe(&spi->dev, ret,
-+				     "failed to init sample rate\n");
-+
-+	tx_dma = devm_spi_offload_tx_stream_request_dma_chan(&spi->dev,
-+							     st->offload);
-+	if (IS_ERR(tx_dma))
-+		return dev_err_probe(&spi->dev, PTR_ERR(tx_dma),
-+				     "failed to get offload TX DMA\n");
-+
-+	ret = devm_iio_dmaengine_buffer_setup_with_handle(&spi->dev,
-+		indio_dev, tx_dma, IIO_BUFFER_DIRECTION_OUT);
-+	if (ret)
-+		return ret;
-+
-+	st->offload_xfer.len = 4;
-+	st->offload_xfer.bits_per_word = 24;
-+	st->offload_xfer.offload_flags = SPI_OFFLOAD_XFER_TX_STREAM;
-+
-+	spi_message_init_with_transfers(&st->offload_msg, &st->offload_xfer, 1);
-+	st->offload_msg.offload = st->offload;
-+
-+	return devm_spi_optimize_message(&spi->dev, st->spi, &st->offload_msg);
-+}
-+
- static const struct iio_info ad5791_info = {
- 	.read_raw = &ad5791_read_raw,
- 	.write_raw = &ad5791_write_raw,
-+	.write_raw_get_fmt = &ad5791_write_raw_get_fmt,
-+};
-+
-+static const struct spi_offload_config ad5791_offload_config = {
-+	.capability_flags = SPI_OFFLOAD_CAP_TRIGGER |
-+			    SPI_OFFLOAD_CAP_TX_STREAM_DMA,
- };
- 
- static int ad5791_probe(struct spi_device *spi)
-@@ -416,6 +563,21 @@ static int ad5791_probe(struct spi_device *spi)
- 	indio_dev->channels = &st->chip_info->channel;
- 	indio_dev->num_channels = 1;
- 	indio_dev->name = st->chip_info->name;
-+
-+	st->offload = devm_spi_offload_get(&spi->dev, spi, &ad5791_offload_config);
-+	ret = PTR_ERR_OR_ZERO(st->offload);
-+	if (ret && ret != -ENODEV)
-+		return dev_err_probe(&spi->dev, ret, "failed to get offload\n");
-+
-+	if (ret != -ENODEV) {
-+		indio_dev->channels = &st->chip_info->channel_offload;
-+		indio_dev->setup_ops = &ad5791_buffer_setup_ops;
-+		ret = ad5791_offload_setup(indio_dev);
-+		if (ret)
-+			return dev_err_probe(&spi->dev, ret,
-+					     "fail to setup offload\n");
-+	}
-+
- 	return devm_iio_device_register(&spi->dev, indio_dev);
- }
- 
-@@ -452,3 +614,4 @@ module_spi_driver(ad5791_driver);
- MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
- MODULE_DESCRIPTION("Analog Devices AD5760/AD5780/AD5781/AD5790/AD5791 DAC");
- MODULE_LICENSE("GPL v2");
-+MODULE_IMPORT_NS("IIO_DMAENGINE_BUFFER");
-
+Best regards,
 -- 
-2.43.0
+Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
 
