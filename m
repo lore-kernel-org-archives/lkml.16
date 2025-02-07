@@ -1,264 +1,406 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2073.outbound.protection.outlook.com [40.107.94.73])
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023090.outbound.protection.outlook.com [40.107.44.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C38818E02A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB0823497B;
 	Fri,  7 Feb 2025 06:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.73
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.90
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738911566; cv=fail; b=iUeZUct8f541wzCQXQe1rk80p2vUK6ZRBlxwOYhaK1oiD1ZsodniZahd2VYu1K8M9OqzwPv9yprjlGizcXMitZH3zl+DBfKFtpr//zankAF+2ZyyFMi49NCrnlcS5kPPcIm33FDHURJ18lwuhbY+Llo26L68U+GBtf6vRkGd4h8=
+	t=1738911567; cv=fail; b=RiEzwTUmRiguqdXgDwWmww9jTPYYHB7efGH7PEZtL7KM7C4bgsA/nN31RVjQVN05cHKpdla8Se6td08i9Oab9QCrt3sN0kcwBvAHJiLSEKh6wXmXn1mz/wJrnY/nwgrBzLs5ab9BX6ftbIGlB1Q2VfLcQMbu1gB+DLF1WcxzZ5I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738911566; c=relaxed/simple;
-	bh=o5RpFRNyUAdMxcez9kpsMZoK08VE+2GqfZ7i6PsHtcY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IqIA/ZkXN0vhP4JQQ0oyTzz8p5lKUtEHufox16OSEOroQ7pZj/39sMjHIDcr0/rN+iuix9qyVdA+3fvbEUMvq5Y06UPt0flfbAcm9rhmMY+npqgiKMb9NwOnvRgZDxf5VQZOVcqCH03cwJzTUL0RjglKfxCo7T6lVoC2pS8syhg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=w7upvc1S; arc=fail smtp.client-ip=40.107.94.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1738911567; c=relaxed/simple;
+	bh=muJgnlfKvREpdtP/Xa93EYvZXUzuOKgkY8QdYYUU/MQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=lEZviMBneMkRIC1xaNpiEoc7GLJlfdnSWfASLRuibhDT4q36g7iNRk/W/d92m/+4LGsQzoJfcTcaQ4n1TYHzUXdkdB2d1ps3CQ9E4QRIGWE+0qgfNWoldYzPtXEdYSsNc1ifj+sMssduSj5xfNisvNYWg+QYaqLjrYJwLAbNqZ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=pf056tLm; arc=fail smtp.client-ip=40.107.44.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="w7upvc1S"
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="pf056tLm"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ee2gx3PrMI6/iUcDCVI2SOInmBLyPVfrh1e/cRuMT2yspe3rTKGeRfAEF4Wi0uaGlboCxrpezh1DNLCS1hJWafANkANbScp6c0AWd+kgiNeWOsH8DaWZfM26PCf018smV4UX+j1JbVPYZd5AnyF5qbFRh2b1hTpIyJQsHG8cn6/axSE5pqq2wOMn/wd8h3qKdL3ssHhCfA9+41nOsVkXu2fvb0Wuon9T476VDm0D9Q0LOUGisrANCUDJ+DpdtJc/3KR/79EguX4CybmC+C28ETwJC+e56Trm3pcgr6Cgare2vHvzjKI6bEDoznYwmm3JeU3eqWPFz0SfKelu7bVQJQ==
+ b=PWjTk2I8vwJPR+xO7VOE41QSgx7GNIjAce1ZOja1G94oxXQzRlpWAPJESbVYKc7CKRzmNQqBPsnJnbU8MbWY0qy+FkC+ynJ3mCjs+Xny9nLRfx3GRag+1vUQoK223t0FYFSqOrKlE9IR0WayAkcSDlHDPKZ8pG6v0/UZ1hKfUyM+N1olUtzAMqGkOFE0ZKcvzCZ9QPVpyBa5vIGqLGoq5lLCW4gwD1RF2rk3gYWIgqgMjEyyNltdexLpNUzDgZBlfcebVBfAovKUjg8bCPoOXB3xnsWcEJxRALKvgvWCsze2/IQ6Bgopxa4il/udS2yOUksX8Dup+UzZhgiEEG1PkA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cmv3S732E4bOpEp1y3xB9rfay+/HF6gbMTTyf8m925M=;
- b=GPKJQFuM48kewcxdBGfYcMd5dpqmp2oPIQ3MdupwdPFUzef4hS8d6Hl7f35fDk+dBAmWeAKctpr6/PaK7zkeVyGUlm9v1pxUdfZ35Dh7XCyVkQv//JO1tFvq+kp3GPtpHepXclfxcEgo0gshsNS3x6FnDBDVLSOJzlaxiNf6Fq6baXXzHXZk2/7PdRAg9fvI5yxV3IIdAdt/N7KxG6xG2OkYBQ3bDxYSnHyL5XdbHmLOUaIvH7LKZscsLzxeR8krM0YfmX+oN7QNfbKJxkZfRhx6CglUIwnNlk+2RHlf7LaF9kSYfmz5ZhRt7PBwiixccsDoNYdAzGdLWCmhsQdCgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=PJi0q22ErnVh69NftfZYlL1/SvdFNAtQbqlfFhTW3ss=;
+ b=giCrcgRVma1qzFJsZQ5D8QCLvNSsh/y1mxhyjJIjlGi39x6OG1lKIFrJFXf4DVOQH9aCTPk/HUYCMdfA0OGHd1Y4p5/MjXJxydHUQ1RD2FbAHCh+yRLtczpzfighZYgL0vaM0R4TmUiw9Hhxbxwa2fO51jodUDjGEBGEg2apBMELmvv1aXJzyCHzBfm2dRJLzBLrh9TS5Xc+uUcCxu95ItwcFOJeUWmgcKrSbrcxD0tdxR91qqsyrfJDlqyL5QWBQsj8Jzd8/kDMLAHUd0ZFWL1OQJx5dLukBYYTstee2Ba+62vBEy6bjLWLxJDvI5JyVaAjsiFUSufBArF2U3QDrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cmv3S732E4bOpEp1y3xB9rfay+/HF6gbMTTyf8m925M=;
- b=w7upvc1SQrO/a/6adHLqOp2Yh1IrChABFDjV2S5BQUFqkeLPZUkU4lCuArKViULqpClSLBelDKqTDZRGqnkgq4k9YDHEO29UUxioobbmJmyLsgbM5MV0G3P8ZPXgrCbT5xWTmfQU/HuIyamR7b9YeqOetXZEMFsQ2bNoNF8NFCY=
-Received: from SJ2PR07CA0002.namprd07.prod.outlook.com (2603:10b6:a03:505::25)
- by SN7PR12MB6886.namprd12.prod.outlook.com (2603:10b6:806:262::6) with
+ bh=PJi0q22ErnVh69NftfZYlL1/SvdFNAtQbqlfFhTW3ss=;
+ b=pf056tLmiyNvt8Z9XS4nY2WJtc4OSY0NKCYCxAzsc+Gph5wRlOUlcqBFh1wUXCP08n6wkxIeOsz+OmNIVfiO8+u3U2zzlEd+ThOr5cPMaJDwlyWGXvNlbhdrGDi2DGPbIonWBahJlQeS489ZZi+kxvctLHkn1KJ25eUWnIn5Oc67P38jxZzLa7JQ1wyZE+Sj81linSTc4KXAz7i2p89rkyhHsavFiGnACAIfqT+NLdiqRdSZ23mdNcW7FlCpHnRd4JzXGjQNJGL6QNNwbyqJb0a0j8m1PG5iF6w00Y6rkrUnWDWkOwfOgPj+NvuoGNPMQFNhotFQ0NXAcw6ColAu6Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
+ by KL1PR03MB7647.apcprd03.prod.outlook.com (2603:1096:820:e7::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Fri, 7 Feb
- 2025 06:59:21 +0000
-Received: from SJ1PEPF00001CE5.namprd03.prod.outlook.com
- (2603:10b6:a03:505:cafe::a) by SJ2PR07CA0002.outlook.office365.com
- (2603:10b6:a03:505::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.29 via Frontend Transport; Fri,
- 7 Feb 2025 06:59:21 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CE5.mail.protection.outlook.com (10.167.242.21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Fri, 7 Feb 2025 06:59:20 +0000
-Received: from vijendar-X570-GAMING-X.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 7 Feb 2025 00:59:16 -0600
-From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-To: <vkoul@kernel.org>
-CC: <alsa-devel@alsa-project.org>, <yung-chuan.liao@linux.intel.com>,
-	<pierre-louis.bossart@linux.dev>, <sanyog.r.kale@intel.com>,
-	<Basavaraj.Hiregoudar@amd.com>, <Sunil-kumar.Dommati@amd.com>,
-	<venkataprasad.potturu@amd.com>, <Mario.Limonciello@amd.com>,
-	<linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Vijendar
- Mukunda" <Vijendar.Mukunda@amd.com>
-Subject: [PATCH V4 6/6] soundwire: amd: add soundwire host wake interrupt enable/disable sequence
-Date: Fri, 7 Feb 2025 12:28:41 +0530
-Message-ID: <20250207065841.4718-7-Vijendar.Mukunda@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250207065841.4718-1-Vijendar.Mukunda@amd.com>
-References: <20250207065841.4718-1-Vijendar.Mukunda@amd.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.14; Fri, 7 Feb
+ 2025 06:59:20 +0000
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123]) by TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123%7]) with mapi id 15.20.8398.021; Fri, 7 Feb 2025
+ 06:59:19 +0000
+Message-ID: <b12d31b3-9d0d-480c-9adb-baa3aa7aa437@amlogic.com>
+Date: Fri, 7 Feb 2025 14:59:15 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/5] dt-bindings: pinctrl: Add support for Amlogic SoCs
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+References: <20250122-amlogic-pinctrl-v4-0-4677b2e18ff1@amlogic.com>
+ <20250122-amlogic-pinctrl-v4-1-4677b2e18ff1@amlogic.com>
+ <20250127185939.GA612868-robh@kernel.org>
+Content-Language: en-US
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <20250127185939.GA612868-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR02CA0024.apcprd02.prod.outlook.com
+ (2603:1096:3:17::36) To TYZPR03MB6896.apcprd03.prod.outlook.com
+ (2603:1096:400:289::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE5:EE_|SN7PR12MB6886:EE_
-X-MS-Office365-Filtering-Correlation-Id: 892290b7-d3ee-4cae-6ad3-08dd4744f29e
+X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|KL1PR03MB7647:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3e55f1a6-f81e-4c7d-1ea1-08dd4744f18d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?AHOff5JKKrNsss8VNOprRKaMBkhlmFvjjvkFZE/AxH1kadGbxyj+MpzIGCIH?=
- =?us-ascii?Q?xwr9YQpcKumAnPJfujgu4CwyIFJrWFd1GAD/DFij4lttBCqkfw+ZunUIFHo+?=
- =?us-ascii?Q?A2ik2u9NqfB69xrpnJhS6zIOTDMIOjavKa5zi7t2NfbyI1j/6wTcGzSnwSm5?=
- =?us-ascii?Q?O9KkJFEmfTf56jgG5qGoXZm0HTi5p/G8bqw9wzCLaaqob+Y608E0aMjto9xH?=
- =?us-ascii?Q?ZGIU60BNXzv5vG5LSnkr+rkUfFnUI4qLst2Qfk1hEbPPXJlowmrY/JrepZkG?=
- =?us-ascii?Q?O6r+E0qcsXhhRh6gOjOXD1s5tcbvUf0rGQsbnssamqkrQDVk737Z1IzLFoOA?=
- =?us-ascii?Q?EZU4JtACxeZkJnlDOL1wzRxD2ZPOKFiu8u9dciqJNrHXeuziEufmjUx4K69T?=
- =?us-ascii?Q?7sSVQviWsjOw2AMmboc/o5oRAW3tDz0qeHaLRlNIpNUDq4/8TIcc7MktKim7?=
- =?us-ascii?Q?AetiRDvsbBbpGk3RxO5k6D2A4yHi8t1O0lUv+5hHHs/sUFiH19ZZQa4Cs6K/?=
- =?us-ascii?Q?pmyv5q+zxrh/W4NCvc3jb2KQbX41FW6iK4pUufn+vx6tKvXi+fBYy8Kf0exi?=
- =?us-ascii?Q?L37VSNHWOsyrP0b0ESf/In/+5cDtOqxfR3sumc3g5se/5fZU1CACMBCRPA2B?=
- =?us-ascii?Q?cn6tw8gR51bJUnjEORnPp5P6n/IIwpA5vk8SuPrSpymohqYNfIxUzsPvCVU5?=
- =?us-ascii?Q?PK+O93Gjn3RzKeNS/a+gMY74F6kzBp10ipGAAQqFWYjPnR+K5bg/Ma5bEM3Y?=
- =?us-ascii?Q?F8uH5BTWNnKkGoSa2Zq+lEQMwici0xiVsDHiB84zVLQ+ys6n+EepAODgwkJK?=
- =?us-ascii?Q?53LDJctC7Ze7pMynWh9/jRz83tKSpgVEb+8LDNDujHaiwQ6c9jnxua1h/dlS?=
- =?us-ascii?Q?sHfhT5tNRwg5OZi487kQW2HdjByzgbA1T3aDVYqWdZc5xi4sdUqDEmebwvpJ?=
- =?us-ascii?Q?N8kGdf70PidN5Po9HPgYtes58YiUfrYp24bPA3wHf83Obii9BFyeZbN8zRxu?=
- =?us-ascii?Q?N7ULu09uBjx5NmKs0WbhEl13miTt8YI2R7QOXxORFYTnVeHX+SKHUzN+MV8H?=
- =?us-ascii?Q?E6QVglffXLMbNgojzORBtZxLZZMAl3e5I8ByNnGMfQRhV53Jcl9VaW7hM9JA?=
- =?us-ascii?Q?wu/HEQdPtusYAYPQLxigxZsxsn9YljwZ9Wt6skNIt30tIiyzxaVLhfrI8A9z?=
- =?us-ascii?Q?TR/wqjcO0Cp3c8YxTgM1PJKy+oEc2zqCuJa+TwP3yqveF1BhbrUu56oq/NUf?=
- =?us-ascii?Q?rW0wLydmNn+pNlAqui+eX/QZz15MD5nFqc2BpDiUYRtAymEqKSGT8Th6G5YR?=
- =?us-ascii?Q?1as4EEdBiPMx8XCxaQ9uefJ4S4kVJl5b9stCF4uixd1lvV02ihVt/9uo2uI6?=
- =?us-ascii?Q?EsGo8J6bGJb09eJiug2yyx74taeFHyZFGbKyZK79DtpLi+e34c8dksO5BuUF?=
- =?us-ascii?Q?Wln/ierdem5klX53g17fOh0ukJvy2Gd62RiuHMv+rapBjP7ujcl0kykq1oT3?=
- =?us-ascii?Q?M4ECrWkYdk2J/jQ=3D?=
+	=?utf-8?B?aTVLc1p3U0hDSHNiMUQvOUdxMVVIWmNmRDN4aUxFWmtVL0gveDFTNG1oWEg0?=
+ =?utf-8?B?cHQ1RHVuS2JZSnFoLzl6TGZmaXllSjJkbmwwb09oS3o5SWZqeTlmMGc3Z0JP?=
+ =?utf-8?B?TENmWWwrS1ZZZ2h5YUhJRlpuUEVBRGVmbk02WS9XcUwwRkpXQTFPSVI2eWh1?=
+ =?utf-8?B?NDdiZXRxcWQ1UU5XeEgzdm9KVDFSRDladURObEVJc080aFMwZVNJYm4zbGdn?=
+ =?utf-8?B?ZVlHenU1RDhEaGxOSnU2NVliODNxNFBuTkROekl1WmwvSjNvQ0VpZW9qa2R6?=
+ =?utf-8?B?VXlDM0NXajV6L1RiVjRrbW44OFhLb0VkZTBiMTBIQ082YitHYkN3VkZ4em5T?=
+ =?utf-8?B?eXVuRUtIakJoNVZsQ09OTGVkYTBrc05JVndEYXMwbWdFcFIzQk9tYnhOZjEz?=
+ =?utf-8?B?dGtIUHFiZU5iQWRpMFlUSkdqTzg2OElhVGJJOGl1eTlZSk9SbjdPSi9iZGEx?=
+ =?utf-8?B?dFhrdFIzOGxkSERJclFHWGlHT1VsQXZydktzdytpMGo1eUtSazZ5WlNHZXhS?=
+ =?utf-8?B?Z096Nm1MTWpOTy9PanppTnppYnNIYnl0QjhLUU5zZWUwcCtVWU1JdDZUNVRm?=
+ =?utf-8?B?bFhjdFZrK1pidUgwMXpiSEMxSStoRGN3WTFmTnJrd05KUXJHOEZWMElycGM2?=
+ =?utf-8?B?YWUreHBzTEJpRDdiRnZyYlNJSy8rL1c4OVBIWEpCSXRWakU3WGc4Q0FxQzN4?=
+ =?utf-8?B?S2hEQTVwS3RWdjNNMExMekErajdjUDNNa2xGUXBPamtyV1h2OXVsd2dUVEUr?=
+ =?utf-8?B?VFZTVTNCTVczc013TjRET2p1N1NxWGErdUV2YkVjeWo1L0JyWEduMEsxZ3Zv?=
+ =?utf-8?B?eGEzcFVrNXVwUnl0eit2eUZrdzlHaDhZZDdkVHp1WWs3emFlL2czV2RJTTlV?=
+ =?utf-8?B?MWFLeWhONGxqV0VMTWo0VzVtbTN1clQ5NXFZQkNYeThwdHFqdFVRWFdad3VU?=
+ =?utf-8?B?WkI2UEFTOERYdFNxTXJ4QkwwOGtzMnpYT3ZFbUtJTUhQanpaNDE4V25ZYzd1?=
+ =?utf-8?B?aE1TTnp1K3F4MXVuUC8rUURIcUpHbHEzaklMK3R4R29Kdmg1NTNPMlpSK1g4?=
+ =?utf-8?B?Y3krdU9tWFZMbDN5ZHpQbHgxY25OVlo3MG1FTFFoSmtPMnNUMERpdVpxeGFj?=
+ =?utf-8?B?WkRCUnBkbFNqcFYrQk9Za3FVb0JoK0s0THhkZUo3MDUxOFlhdWxwZS9UWnJz?=
+ =?utf-8?B?NDNhU3pVZzh2NU9IVmlvVmhibk9vSjlSakpyYTN6T1Q0ZGozalRkY2QyR2xP?=
+ =?utf-8?B?MzBoUjNkaTloNXVMRkYzSXN2RUpjU3ZDa0xEVnZLLzM1NklFSkJCWTdrNkx4?=
+ =?utf-8?B?dkxPcDNzT25DSFZmem5CdlZOS1lWa29QWWtHYVE1WFRaOVRHSW9jWlREcDY4?=
+ =?utf-8?B?NGRVd0FYWFZPaWtQZ0M5OGkxdHd1MC9GemI1cUNDNkhwTm9VTEJUOG80NWx0?=
+ =?utf-8?B?Ky8vcnRLbEtwRzlqa1NNa09GcjFyMXFPOEIyR3pMaUZvc3lUa0FJMnVRK05y?=
+ =?utf-8?B?cXZNL1U1SG1Oc29PcTAvUFdwbnIxSDYySS9ZcExwRU5Vdm4wOG53UlorZzJ0?=
+ =?utf-8?B?YlRhcGYzSWQ1WXVrWHlPUjhNRHlOK3pXM0ZoL2w2dnM3aWtOWDYwYWFqNk92?=
+ =?utf-8?B?akQ5aEJHQnliUnpvYnNkb3JNanIrNWJqdHo4dUt4aFlmT3l2bzlkOTZldzI0?=
+ =?utf-8?B?OGRYZlppQ1JmTVE1SGZjcXdyNHJwTVlQcEdNaEc4TC8yOTVuWTFJVFArVjFL?=
+ =?utf-8?B?RmtOQVNSZEw3UjNlSUJhQWYxbno0MytjQ2ZKVVA3QlJZemwxbGo3eWFiNEx5?=
+ =?utf-8?B?WUpmeVBGMHZuQ0YySTh5Zz09?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 06:59:20.8732
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?c1g3K003MFcrVFFUNmx3RDQzZ0ZHN0I0RzIzVXlYVDdaZnh1VG9UT2pCT1k5?=
+ =?utf-8?B?ZUt6VnZ4ZWNSZUZkSXpneXJ4bWVsK3owanpCWm9MbUt1WUhQTmsxZzZ6TlhJ?=
+ =?utf-8?B?SXQ0TXBML3RyclN1VDluUmhGM05vOFF3eVRpakpOK010dmJtaGhyclBYZFBy?=
+ =?utf-8?B?MURtNHYxZzBzLzBNRXZHMFIwZUNyQVFMaXVLczdqWkxFZHZoZGxPM0pEd0tl?=
+ =?utf-8?B?b3FIMVpac25tQkNObCtYejgwVTl3RUkwblhBdU1uV1dHNjBSZlBjNkd1V2tw?=
+ =?utf-8?B?ZTVSWVhYSjBaMGFNQ055Skg4RGZaaFNDMjh2ZWw2ZHh6L2FXNHN5cGJ5UHNF?=
+ =?utf-8?B?VzY4RE5RQTZCTGloRm1pUFVtQVN0Zm91emMwak05M2xORThSY29acEV0dXpt?=
+ =?utf-8?B?empWY0tOMjY0bjYvOXRzZDlQeG9FUWZETE5TUEV4ejdxNWhISVBBYlBFMW91?=
+ =?utf-8?B?Wm9DNCtBV1hVZktjeTUyWHVUOG1PamVFcjU1VS9NbWhiUkZaMlRIQWpSQUdC?=
+ =?utf-8?B?aGFBTVNVN0pxSmhmUUlQcithR2ZOakpJa3hBUkZoWUVzQUV2QVNDdHRSNi8x?=
+ =?utf-8?B?WUZJZjJ3bGt2WDhsOE1oQWtsbnhCYjFUNSsxa0NvWkdRNWllN3hGQy8yT0Fn?=
+ =?utf-8?B?a1F4dzZEczRnN3FZVktPbU5MR1kzRkxNK1Yrb0R3VWI1Sy9rL0loR2JMYS96?=
+ =?utf-8?B?aU1mNFlpdGtCeXZDbkptdHNlZVRObTVuQlhNaWl1UTlWL0F4cGJLU3FuUWtQ?=
+ =?utf-8?B?ZnBjVks5a0hlSHYyQkVGNTAzUTFMSzc5UnBqMkswMlZkd291VFdLRXdQOEZU?=
+ =?utf-8?B?NlQ4dTVyQ0pYa0JrTHZxSUxEL2ltbnFpdmJ2QVRoSkQ4L2RQSnRvaSszVjZ3?=
+ =?utf-8?B?VGJHN2lPWENVbjBhSzNLd203czk1azhxY2dWQ0t4ZWpQayt4VC94OHpIa1N1?=
+ =?utf-8?B?Vk1uRU9DR1c0R2RvWHZjSEQ5NC9kakFSb0ZEYXFJMDFzbSt4YVdvay8ya090?=
+ =?utf-8?B?QUNVWk5BT3NXeTNaaWRkd2wrM2h1bFZDNlB1bkd0MFhiSmFWWEtqL2Vjcmxo?=
+ =?utf-8?B?em5Nc3ZlUGo2azcvN1ZocngyVmNpRUVvcS9Cb2laTkhTNjVxNWZFNGVkaHBs?=
+ =?utf-8?B?LzdsblgycVpiUXliVHZiSndjcktzdVdHd3hSWCtwRlFNTjc1MU41QTZkTkda?=
+ =?utf-8?B?dG5OREtXVnhDUERqMGxWU3lVczBOZExjb2F4REZWSWRDQThHakEyOTZVYjNx?=
+ =?utf-8?B?RGlCMlZ4M1BpSllNU0RYNVVQTmpRVVZaSzhzZG4zMUMrTmMwejdzbDB1a0kr?=
+ =?utf-8?B?K2V4VGszZlhFTjNqdXd4eUF4SHNIT0s2ckpjeXRtVzNkOXArVW53K201ZlJV?=
+ =?utf-8?B?cjc2ZEFYM0EwQjZSVVNRWTV1RmJlSG8wakFCVUttUmR0ejNScmVJRE9PV05a?=
+ =?utf-8?B?SkQ1RDJPY3NJZThoSGhUK3RYV1RTZWxVb0ZRUFh5M1dwVGplU0xxQWRFbnBy?=
+ =?utf-8?B?ZEpGR2EzaUVxWGxmbWlHUUlKVktEc1FDZ215c2hsQlZCVm9WQ2dzcll2N2E2?=
+ =?utf-8?B?WEk5a0x5VDBrSGw5T29Zb0FONU8ra2t5WVJjdGh3N0FKTEN1RU1GVXBNSzE4?=
+ =?utf-8?B?bGQ3OW1Gd0NoMk1UZENKMVFraUhoUVBpQjBXcTVNdEVVbkZ5RTN4cVhMQjJS?=
+ =?utf-8?B?aGI5eFVBeFY4c2YzYTdscExYNmczUFBscmlzeXUzZklOZkg0RnZvclU2K0Fo?=
+ =?utf-8?B?WlNweG84VVJEa21tU2xrVVZZMnE1U200blBiZDBtTE91N3RwUjBMbzV2bjVJ?=
+ =?utf-8?B?bWUvQWJqTjhaOWxtQTQ3am1LdHFBRjJLMjFyLzc3K20zOWJRcWNlNnFCc281?=
+ =?utf-8?B?NjM3eDN5b1VZaXVHNm43eHdheDB5Q1A5UjVEdndvQ3RSUXUrUUUxSGlTV1Rr?=
+ =?utf-8?B?czZmWmFjUGpEcFJNRlNoLy83bWJpbHNuQkhxd0hVMyttaWxSVVBPQytjSVoy?=
+ =?utf-8?B?ZFAxY2FrNHRFb1hYY2lmMWdjRFlIK2t1UzVsejJiTzZ4U2dCNTBMbk85cmtw?=
+ =?utf-8?B?WVAwN08yUlJYVmRYUTNqejZBNWw2RDVOS1l4ejNGa0pCVzBLT1dBU0NFYVhS?=
+ =?utf-8?B?cUllOFpRM052MnMvNGRUOTJpY2J4MDk5aDRqaGhtdEFJcGVQWGdGKzgxOHRO?=
+ =?utf-8?B?NXc9PQ==?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e55f1a6-f81e-4c7d-1ea1-08dd4744f18d
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 06:59:19.4660
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 892290b7-d3ee-4cae-6ad3-08dd4744f29e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE5.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6886
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tv8a/vB/spiVngwCooGhLzugyxwcNu3io0s0NuRl/4NdPHRvLJXT06srCispZReDt5AvL1TtJaADpHRMw9cnG1SbQ67UaCp/frBfUt505RU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB7647
 
-For wake event, SoundWire host wake interrupt will be asserted based on
-below pre-conditions for ACP7.0 & ACP7.1 platforms.
-- ACP device should be in D0 state.
-- SoundWire manager instance should be in D3 state.
-- SoundWire manager device state should be set to D3.
-- ACP_PME_EN should be set to 1.
+Hi Rob,
+    Thanks for your reply.
 
-Implement code changes to enable/disable SoundWire host wake interrupt mask
-during suspend and resume as per design flow for ACP7.0 & ACP7.1 platforms.
+On 2025/1/28 02:59, Rob Herring wrote:
+> [ EXTERNAL EMAIL ]
+> 
+> On Wed, Jan 22, 2025 at 11:25:59AM +0800, Xianwei Zhao wrote:
+>> Add the dt-bindings for Amlogic pin controller, and add a new
+>> dt-binding header file which document the GPIO bank names of
+>> all Amlogic subsequent SoCs.
+> 
+> Did you mean 'all subsequent Amlogic SoCs'? How can you know that?
+> Future SoCs may be different.
+> > Update the subject to say this is for A4 SoC.
+> 
 
-Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
----
- drivers/soundwire/amd_manager.c | 58 +++++++++++++++++++++++++++++++++
- drivers/soundwire/amd_manager.h |  2 ++
- 2 files changed, 60 insertions(+)
+Will do.
 
-diff --git a/drivers/soundwire/amd_manager.c b/drivers/soundwire/amd_manager.c
-index d38b4baee221..8e74536808fa 100644
---- a/drivers/soundwire/amd_manager.c
-+++ b/drivers/soundwire/amd_manager.c
-@@ -166,6 +166,34 @@ static int amd_sdw_set_device_state(struct amd_sdw_manager *amd_manager, u32 tar
- 	return 0;
- }
- 
-+static int amd_sdw_host_wake_enable(struct amd_sdw_manager *amd_manager, bool enable)
-+{
-+	u32 intr_cntl1;
-+	u32 sdw_host_wake_irq_mask;
-+
-+	if (!amd_manager->wake_en_mask)
-+		return 0;
-+
-+	switch (amd_manager->instance) {
-+	case ACP_SDW0:
-+		sdw_host_wake_irq_mask = AMD_SDW0_HOST_WAKE_INTR_MASK;
-+		break;
-+	case ACP_SDW1:
-+		sdw_host_wake_irq_mask = AMD_SDW1_HOST_WAKE_INTR_MASK;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	intr_cntl1 = readl(amd_manager->acp_mmio + ACP_EXTERNAL_INTR_CNTL(ACP_SDW1));
-+	if (enable)
-+		intr_cntl1 |= sdw_host_wake_irq_mask;
-+	else
-+		intr_cntl1 &= ~sdw_host_wake_irq_mask;
-+	writel(intr_cntl1, amd_manager->acp_mmio + ACP_EXTERNAL_INTR_CNTL(ACP_SDW1));
-+	return 0;
-+}
-+
- static void amd_sdw_ctl_word_prep(u32 *lower_word, u32 *upper_word, struct sdw_msg *msg,
- 				  int cmd_offset)
- {
-@@ -1182,11 +1210,21 @@ static int __maybe_unused amd_suspend(struct device *dev)
- 
- 	if (amd_manager->power_mode_mask & AMD_SDW_CLK_STOP_MODE) {
- 		amd_sdw_wake_enable(amd_manager, false);
-+		if (amd_manager->acp_rev >= ACP70_PCI_REV_ID) {
-+			ret = amd_sdw_host_wake_enable(amd_manager, false);
-+			if (ret)
-+				return ret;
-+		}
- 		ret = amd_sdw_clock_stop(amd_manager);
- 		if (ret)
- 			return ret;
- 	} else if (amd_manager->power_mode_mask & AMD_SDW_POWER_OFF_MODE) {
- 		amd_sdw_wake_enable(amd_manager, false);
-+		if (amd_manager->acp_rev >= ACP70_PCI_REV_ID) {
-+			ret = amd_sdw_host_wake_enable(amd_manager, false);
-+			if (ret)
-+				return ret;
-+		}
- 		/*
- 		 * As per hardware programming sequence on AMD platforms,
- 		 * clock stop should be invoked first before powering-off
-@@ -1220,11 +1258,21 @@ static int __maybe_unused amd_suspend_runtime(struct device *dev)
- 	}
- 	if (amd_manager->power_mode_mask & AMD_SDW_CLK_STOP_MODE) {
- 		amd_sdw_wake_enable(amd_manager, true);
-+		if (amd_manager->acp_rev >= ACP70_PCI_REV_ID) {
-+			ret = amd_sdw_host_wake_enable(amd_manager, true);
-+			if (ret)
-+				return ret;
-+		}
- 		ret = amd_sdw_clock_stop(amd_manager);
- 		if (ret)
- 			return ret;
- 	} else if (amd_manager->power_mode_mask & AMD_SDW_POWER_OFF_MODE) {
- 		amd_sdw_wake_enable(amd_manager, true);
-+		if (amd_manager->acp_rev >= ACP70_PCI_REV_ID) {
-+			ret = amd_sdw_host_wake_enable(amd_manager, true);
-+			if (ret)
-+				return ret;
-+		}
- 		ret = amd_sdw_clock_stop(amd_manager);
- 		if (ret)
- 			return ret;
-@@ -1265,8 +1313,18 @@ static int __maybe_unused amd_resume_runtime(struct device *dev)
- 		ret = amd_sdw_clock_stop_exit(amd_manager);
- 		if (ret)
- 			return ret;
-+		if (amd_manager->acp_rev >= ACP70_PCI_REV_ID) {
-+			ret = amd_sdw_host_wake_enable(amd_manager, false);
-+			if (ret)
-+				return ret;
-+		}
- 	} else if (amd_manager->power_mode_mask & AMD_SDW_POWER_OFF_MODE) {
- 		writel(0x00, amd_manager->acp_mmio + ACP_SW_WAKE_EN(amd_manager->instance));
-+		if (amd_manager->acp_rev >= ACP70_PCI_REV_ID) {
-+			ret = amd_sdw_host_wake_enable(amd_manager, false);
-+			if (ret)
-+				return ret;
-+		}
- 		val = readl(amd_manager->mmio + ACP_SW_CLK_RESUME_CTRL);
- 		if (val) {
- 			val |= AMD_SDW_CLK_RESUME_REQ;
-diff --git a/drivers/soundwire/amd_manager.h b/drivers/soundwire/amd_manager.h
-index 1d5e94371f81..6cc916b0c820 100644
---- a/drivers/soundwire/amd_manager.h
-+++ b/drivers/soundwire/amd_manager.h
-@@ -194,6 +194,8 @@
- #define AMD_SDW_CLK_RESUME_DONE				3
- #define AMD_SDW_WAKE_STAT_MASK				BIT(16)
- #define AMD_SDW_WAKE_INTR_MASK				BIT(16)
-+#define AMD_SDW0_HOST_WAKE_INTR_MASK			BIT(22)
-+#define AMD_SDW1_HOST_WAKE_INTR_MASK			BIT(23)
- #define AMD_SDW_DEVICE_STATE				0x1430
- #define AMD_SDW0_DEVICE_STATE_MASK			GENMASK(1, 0)
- #define AMD_SDW1_DEVICE_STATE_MASK			GENMASK(3, 2)
--- 
-2.34.1
+>>
+>> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>> ---
+>>   .../bindings/pinctrl/amlogic,pinctrl-a4.yaml       | 127 +++++++++++++++++++++
+>>   include/dt-bindings/pinctrl/amlogic,pinctrl.h      |  46 ++++++++
+>>   2 files changed, 173 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
+>> new file mode 100644
+>> index 000000000000..c4fdcd69bbf5
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml
+>> @@ -0,0 +1,127 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pinctrl/amlogic,pinctrl-a4.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Amlogic pinmux controller
+>> +
+>> +maintainers:
+>> +  - Xianwei Zhao <xianwei.zhao@amlogic.com>
+>> +
+>> +allOf:
+>> +  - $ref: pinctrl.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: amlogic,pinctrl-a4
+>> +
+>> +  "#address-cells":
+>> +    const: 2
+>> +
+>> +  "#size-cells":
+>> +    const: 2
+> 
+> Do you really need 2^64 address space to define the GPIO nodes?
+> 
 
+I discussed it with Krzysztof earlier in the V3.
+32-bit is enough, but since APB bus is defined as 64-bit, here is following.
+
+https://lore.kernel.org/all/d08136ac-e08f-4e5d-b562-78529f34d86f@kernel.org/
+
+>> +
+>> +  ranges: true
+>> +
+>> +patternProperties:
+>> +  "^gpio@[0-9a-f]+$":
+>> +    type: object
+>> +
+>> +    properties:
+>> +      reg:
+>> +        minItems: 1
+>> +        items:
+>> +          - description: pin config register
+>> +          - description: pin mux setting register (some special pin fixed function)
+>> +          - description: pin drive strength register (optional)
+>> +
+>> +      reg-names:
+>> +        minItems: 1
+>> +        items:
+>> +          - const: gpio
+>> +          - const: mux
+>> +          - const: ds
+>> +
+>> +      gpio-controller: true
+>> +
+>> +      "#gpio-cells":
+>> +        const: 2
+>> +
+>> +      gpio-ranges:
+>> +        maxItems: 1
+>> +
+>> +    required:
+>> +      - reg
+>> +      - reg-names
+>> +      - gpio-controller
+>> +      - "#gpio-cells"
+>> +      - gpio-ranges
+>> +
+>> +    additionalProperties: false
+> 
+> Move this above 'properties'
+>
+
+Will do.
+
+>> +
+>> +  "^func-[0-9a-z-]+$":
+>> +    type: object
+>> +    patternProperties:
+>> +      "^group-[0-9a-z-]+$":
+>> +        type: object
+>> +        allOf:
+>> +          - $ref: /schemas/pinctrl/pincfg-node.yaml
+>> +          - $ref: /schemas/pinctrl/pinmux-node.yaml
+>> +
+>> +        required:
+>> +          - pinmux
+>> +    additionalProperties: false
+> 
+> Move this above 'patternProperties'
+> 
+
+Will do.
+
+>> +
+>> +required:
+>> +  - compatible
+>> +  - "#address-cells"
+>> +  - "#size-cells"
+>> +  - ranges
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/pinctrl/amlogic,pinctrl.h>
+>> +    apb {
+>> +      #address-cells = <2>;
+>> +      #size-cells = <2>;
+>> +      periphs_pinctrl: pinctrl {
+>> +        compatible = "amlogic,pinctrl-a4";
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +        ranges;
+>> +
+>> +        gpio@14 {
+>> +          reg = <0 0x14 0 0x10>, <0 0x14 0 0x10>;
+> 
+> Both registers at the same address? I hope that's a typo.
+> 
+
+Will fix it.
+
+>> +          reg-names = "gpio", "mux";
+>> +          gpio-controller;
+>> +          #gpio-cells = <2>;
+>> +          gpio-ranges = <&periphs_pinctrl 0 8 10>;
+>> +        };
+>> +
+>> +        func-uart-b {
+>> +          group-default {
+>> +            pinmux = <AML_PINMUX(AMLOGIC_GPIO_B, 1, 4)>;
+>> +            bias-pull-up;
+>> +            drive-strength-microamp = <4000>;
+>> +          };
+>> +
+>> +          group-pins1 {
+>> +            pinmux = <AML_PINMUX(AMLOGIC_GPIO_B, 5, 2)>;
+>> +            bias-pull-up;
+>> +            drive-strength-microamp = <4000>;
+>> +          };
+>> +        };
+>> +
+>> +        func-uart-c {
+>> +          group-default {
+>> +            pinmux = <AML_PINMUX(AMLOGIC_GPIO_B, 3, 1)>,
+>> +                     <AML_PINMUX(AMLOGIC_GPIO_B, 2, 1)>;
+>> +            bias-pull-up;
+>> +            drive-strength-microamp = <4000>;
+>> +          };
+>> +        };
+>> +      };
+>> +    };
+>> diff --git a/include/dt-bindings/pinctrl/amlogic,pinctrl.h b/include/dt-bindings/pinctrl/amlogic,pinctrl.h
+>> new file mode 100644
+>> index 000000000000..7d40aecc7147
+>> --- /dev/null
+>> +++ b/include/dt-bindings/pinctrl/amlogic,pinctrl.h
+>> @@ -0,0 +1,46 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
+>> +/*
+>> + * Copyright (c) 2024 Amlogic, Inc. All rights reserved.
+>> + * Author: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_AMLOGIC_PINCTRL_H
+>> +#define _DT_BINDINGS_AMLOGIC_PINCTRL_H
+>> +/* Normal PIN bank */
+>> +#define AMLOGIC_GPIO_A               0
+>> +#define AMLOGIC_GPIO_B               1
+>> +#define AMLOGIC_GPIO_C               2
+>> +#define AMLOGIC_GPIO_D               3
+>> +#define AMLOGIC_GPIO_E               4
+>> +#define AMLOGIC_GPIO_F               5
+>> +#define AMLOGIC_GPIO_G               6
+>> +#define AMLOGIC_GPIO_H               7
+>> +#define AMLOGIC_GPIO_I               8
+>> +#define AMLOGIC_GPIO_J               9
+>> +#define AMLOGIC_GPIO_K               10
+>> +#define AMLOGIC_GPIO_L               11
+>> +#define AMLOGIC_GPIO_M               12
+>> +#define AMLOGIC_GPIO_N               13
+>> +#define AMLOGIC_GPIO_O               14
+>> +#define AMLOGIC_GPIO_P               15
+>> +#define AMLOGIC_GPIO_Q               16
+>> +#define AMLOGIC_GPIO_R               17
+>> +#define AMLOGIC_GPIO_S               18
+>> +#define AMLOGIC_GPIO_T               19
+>> +#define AMLOGIC_GPIO_U               20
+>> +#define AMLOGIC_GPIO_V               21
+>> +#define AMLOGIC_GPIO_W               22
+>> +#define AMLOGIC_GPIO_X               23
+>> +#define AMLOGIC_GPIO_Y               24
+>> +#define AMLOGIC_GPIO_Z               25
+>> +
+>> +/* Special PIN bank */
+>> +#define AMLOGIC_GPIO_DV              26
+>> +#define AMLOGIC_GPIO_AO              27
+>> +#define AMLOGIC_GPIO_CC              28
+>> +#define AMLOGIC_GPIO_TEST_N  29
+>> +#define AMLOGIC_GPIO_ANALOG  30
+>> +
+>> +#define AML_PINMUX(bank, offset, mode)       (((((bank) << 8) + (offset)) << 8) | (mode))
+>> +
+>> +#endif /* _DT_BINDINGS_AMLOGIC_PINCTRL_H */
+>>
+>> --
+>> 2.37.1
+>>
