@@ -1,214 +1,202 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A7518DB3E
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE1219C552
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738959358; cv=none; b=j7LXydr19xNCHkiObeSv1lqsMyRR1fQMuHrZ1C7AxWsJYGeVlL8Nf8GZ8jl/pIPnL5T75nDnwGey+gLh0GX+3CQway85K5dhky7zgET9B1MbWcu6o/wW082C57wHBuw65ByeptMpLiinN9WiopSNTY5ibzDgqW4oeBp8YIoAyY8=
+	t=1738959383; cv=none; b=P65mU5r1n5BWtsS7jb4uWlvDxG0d/zV/TxX7/A40Tx+C+UKnYyf37mjeMG1ESnNo/CnREbvhRycYhfG820esS2XODBh+SgjZhu9IIeAiwAMTgxsv/ucP3XQvRcwThwRLEVBdMLOTrSzKVWFgoWs4jK6KXBGJ1OPzaxTRcFVHSgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738959358; c=relaxed/simple;
-	bh=XGMvDYH+ZBfMomDZojSz38WvBMWSrd47TfBrAuw/d/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n+3w9tTYXxHa+Yz92YSGpU3P1dWxiIkjIGr3tg404hREy0o0tCKiKRCB5ocDCtwNZXof+GBlqecdwTOoRHVAjMJ4cXOKrVjTAOZzSFh5BnxaLLAH6ACgUPV5OTCcLC+FxGpFQwia/BTlgftJbnPXN/x/wp+gwLHljJc0r2QZYmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vxfYYmXe; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vxfYYmXe"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-544ff616065so734046e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:15:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738959355; x=1739564155; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dWNO5UzsnpexvCHlrSBPf+8oTEt2ops9lZPp4je2o8A=;
-        b=vxfYYmXea0RtSKNilsy51CPRBziKc+SC7dp7pmfANTyveIfC22GH1Ur7Dt24Dshgcm
-         HDvzJdn16pWoRPZapQ57vBJ919vOAWyamgmey/EgRhsb2LKJZ9CjGIxns6qhQ3cy29QU
-         N3EEnSiattzr4rIaxiVLQrA2EQH2Z8RyEuXkQw3yqa1rj/wvoHSIpl9Wc3ztQboVuTFo
-         NGxJXtiU0+PlxTkaN8OEcgxSSTP546uumjIiePrCcIGq5WxJ2pjllbT+aUq80QIDYO7X
-         lhqDYTM7HZAUMXDSEd+6NwQQ1MBBj5oO9Ehnh2EAfIiWwqUhelEUb50H9Zsu+3jCCJY7
-         v2oQ==
+	s=arc-20240116; t=1738959383; c=relaxed/simple;
+	bh=GIjvK8obr1EsIPH7YblNllgU+FxgUKI7x5puD9o3V+s=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=FtF6iZEDlud98z2UIch19CvmyWjlZEnEhtASW/FP5QJxT4zrvH0SLGA4mcdIELH2OeJwqpF6VHVtoyUKATdsZWTix+u6acmyPsZd6oyqQilIfDvkcZuzHkTuDzU1Zp0tpqV1pBp4NbSxVHcpXyRcViD/vXnxk9adcmyyDMCrJ00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-84f543c55dcso460666939f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:16:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738959355; x=1739564155;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dWNO5UzsnpexvCHlrSBPf+8oTEt2ops9lZPp4je2o8A=;
-        b=HmXm2oG79pky4U4KrDMz0qPKBDnGQjz5zAevtDoeFVZLxX5NNw8JmBg4BDP3gRPv3w
-         bwJ+vAG62p/0MYgRE2T700bTwEq3NtaKMC86/xYK8gZLNFqRr+xeEDXLdZqyK4RQZdbC
-         DzQ4Ys3IVH6TxB0fUJXksFOzre1a5QuRXt9rZHG7pvYUWDW2QVXlS1rMlnWnbuEiUF0r
-         6GjawLe5bXHRZVqGrDFCpxeEG7TLAtO3KY31ke3qqg7xOW+RNmGRa67wYyMymjKqB5eg
-         ooiPVX4mwSK3BhHRxXp1H1ywVtbTbMcpLZoUNs8vdWNy+ZIhM8knQp6skAVbHHFS6FfH
-         1hlA==
-X-Forwarded-Encrypted: i=1; AJvYcCW5qZ/7XTfZfIyPyS+t4S19UwG87rQDh1AakmVZscmuQ+2FPz+VBNJkcI9k9IbHwhkgRAhYDF8ROm/ae1I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzi46sTIh8joT6bzGf5q6+I/S18bnV8aDAN9CBK6hd6QQN1OgEE
-	OdYVumi2Sxctx0zthwuVcc04n9pCbtL2yVje/dIW+sYdcB9GwLAxHCHx+tJjL8c=
-X-Gm-Gg: ASbGnctIYRip31+lLJ+DkG3BVQOrBVh02XKCSN59ojrf0riqa8P5fMQfohSO2xwKCYM
-	oPb0b3Kz5aJH6DuoxQK1MufHPaDcuR1JO++F+S9YU7ZDQDOTkN0O/C60y+dkTG3HU38asODSdrT
-	VYE1/o1NrrccjzEDs8SXd0PBtRvBwgrtNgt9LbNXuCjXU7yw58zlC9tez4UwSI+35cR+1oZtVaS
-	aTVWeAh+/EnMWrFwDnDMN2G59YHMOwVV9l1y5Cr33Mot8TpLX1cUJEDpVmUMBl+wxQnztb2td3K
-	UvzSTZDs4pDhqwPaJpO5jU3rGpRzp1elgs21XbmDI9VtBoj/Dc0YwxMFIBXlu0dY6j8zSkE=
-X-Google-Smtp-Source: AGHT+IGSmIUydg0+R0j/FoBoW9Qs9XCT7GS44GYVcTAmwx8jzTkr7kYBEUacuIIicC7/zwZ1PEFX2w==
-X-Received: by 2002:a05:6512:39cd:b0:544:132e:155d with SMTP id 2adb3069b0e04-54414ae06dcmr1783151e87.39.1738959353946;
-        Fri, 07 Feb 2025 12:15:53 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5441053eb99sm548152e87.22.2025.02.07.12.15.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 12:15:53 -0800 (PST)
-Date: Fri, 7 Feb 2025 22:15:50 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	=?utf-8?Q?=C5=81ukasz?= Bartosik <ukaszb@chromium.org>, Abhishek Pandit-Subedi <abhishekpandit@chromium.org>, 
-	Benson Leung <bleung@chromium.org>, Pavan Holla <pholla@chromium.org>, 
-	"Christian A. Ehrhardt" <lk@c--e.de>, Jameson Thies <jthies@google.com>, 
-	"Katiyar, Pooja" <pooja.katiyar@intel.com>, "Pathak, Asutosh" <asutosh.pathak@intel.com>, 
-	"Jayaraman, Venkat" <venkat.jayaraman@intel.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] usb: typec: ucsi: Command mailbox interface for
- the userspace
-Message-ID: <mpe6hgyqmw5eohrwulzy7ujdrlgccgqxwdjdjq7zmsdhsemzcd@b6q2hu5ezvqv>
-References: <20250206141936.1117222-1-heikki.krogerus@linux.intel.com>
- <20250206141936.1117222-2-heikki.krogerus@linux.intel.com>
- <2025020643-federal-uneatable-5da4@gregkh>
- <Z6YE4mJHx1zHNW8d@kuha.fi.intel.com>
+        d=1e100.net; s=20230601; t=1738959381; x=1739564181;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fwtD7r/dnyvFQJRe81E8ceHYhoJmHqhqeFWJf+mogvI=;
+        b=Lymf7h9pF9foPOOMsl9NdDF0G1mAKwO67S0tPO5Mm1H8kjqBJglcUN0h90avHw0VfE
+         a8IKOKQZ8aRnwokg2uP3Lwe2UR73dP07fcM8i4rtUv0G0IoEIY+Ia3w8//7Nm+P3s94n
+         KijH8PzJawAiLQo7N7pgtOrPNOmj/Y1w1B3BS0xMcOoe81DerUPaIsXonmktemo+DqoE
+         XLt25medrTPJYJvOM/BxGzh6i0AV5ep67MKlC4GeiSZupTPXVBQTs8ERdUzBEQJKRiZI
+         E7RRMiCOEcjrFVO5nOst9wEN47sIMSEIgxAj21JvIqV1zMjYmO34f0VFtxRmNboLQqzY
+         CHuw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPF3yp267AGcJdBzeGl/BuXnHnRkCwxU5jKdj8Dh3skTX9t545NIBDJcwrq8pI/mKgEen32IyW9IOlbY0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJJ0sD9Vv2z+VieCkgXvkH2eF2RoD11r7Ctm3hswmg8DITCTOm
+	iOkhrQCh7LsItJ0B9LaSr9C74FOGFDJti6754IICQa+rAaSJCkqSudbwEhw/JHyMR/tJoUBNy+8
+	v6afhM7eksE3+Erf5PvRLIVvnRLKk27k+H0jvDpOkbDRy0WuaXwxDTEE=
+X-Google-Smtp-Source: AGHT+IHnPEhdO26T5ea1Ewf1PBp2sLivTNHPXOVL7RZZxPG+E/H+qZvUb6d1pFsMHhnCdlfD76AZVF0uEZT5m04xCSnKMY7d5HqP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6YE4mJHx1zHNW8d@kuha.fi.intel.com>
+X-Received: by 2002:a92:cda7:0:b0:3cf:b6c9:5fc9 with SMTP id
+ e9e14a558f8ab-3d13deaa81dmr45812495ab.8.1738959380694; Fri, 07 Feb 2025
+ 12:16:20 -0800 (PST)
+Date: Fri, 07 Feb 2025 12:16:20 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a66a14.050a0220.f64af.0005.GAE@google.com>
+Subject: [syzbot] [bluetooth?] general protection fault in __timer_delete_sync
+From: syzbot <syzbot+1eaee1ec18b9d18ca3b8@syzkaller.appspotmail.com>
+To: avkrasnov@salutedevices.com, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, luiz.von.dentz@intel.com, 
+	marcel@holtmann.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Feb 07, 2025 at 03:04:34PM +0200, Heikki Krogerus wrote:
-> On Thu, Feb 06, 2025 at 03:51:48PM +0100, Greg Kroah-Hartman wrote:
-> > On Thu, Feb 06, 2025 at 04:19:31PM +0200, Heikki Krogerus wrote:
-> > > Some of the UCSI commands can be used to configure the
-> > > entire Platform Policy Manager (PPM) instead of just
-> > > individual connectors. To allow the user space communicate
-> > > those commands with the PPM, adding a mailbox interface. The
-> > > interface is a single attribute file that represents the
-> > > main "OPM to PPM" UCSI data structure.
-> > > 
-> > > The mailbox allows any UCSI command to be sent to the PPM so
-> > > it should be also useful for validation, testing and
-> > > debugging purposes.
-> > 
-> > As it's for this type of thing, why not put it in debugfs instead?
-> > 
-> > > +static ssize_t ucsi_write(struct file *filp, struct kobject *kobj,
-> > > +			  const struct bin_attribute *attr,
-> > > +			  char *buf, loff_t off, size_t count)
-> > > +{
-> > > +	struct ucsi_sysfs *sysfs = attr->private;
-> > > +	struct ucsi *ucsi = sysfs->ucsi;
-> > > +	int ret;
-> > > +
-> > > +	u64 *control = (u64 *)&sysfs->mailbox[UCSI_CONTROL];
-> > > +	u32 *cci = (u32 *)&sysfs->mailbox[UCSI_CCI];
-> > > +	void *data = &sysfs->mailbox[UCSI_MESSAGE_IN];
-> > > +
-> > > +	/* TODO: MESSAGE_OUT. */
-> > > +	if (off != UCSI_CONTROL || count != sizeof(*control))
-> > > +		return -EFAULT;
-> > > +
-> > > +	mutex_lock(&sysfs->lock);
-> > > +
-> > > +	memset(data, 0, UCSI_MAX_DATA_LENGTH(ucsi));
-> > > +
-> > > +	/* PPM_RESET has to be handled separately. */
-> > > +	*control = get_unaligned_le64(buf);
-> > > +	if (UCSI_COMMAND(*control) == UCSI_PPM_RESET) {
-> > > +		ret = ucsi_reset_ppm(ucsi, cci);
-> > > +		goto out_unlock_sysfs;
-> > > +	}
-> > > +
-> > > +	mutex_lock(&ucsi->ppm_lock);
-> > > +
-> > > +	ret = ucsi->ops->sync_control(ucsi, *control, cci, NULL, 0);
-> > > +	if (ret)
-> > > +		goto out_unlock_ppm;
-> > > +
-> > > +	if (UCSI_CCI_LENGTH(*cci) && ucsi->ops->read_message_in(ucsi, data, UCSI_CCI_LENGTH(*cci)))
-> > > +		dev_err(ucsi->dev, "failed to read MESSAGE_IN\n");
-> > > +
-> > > +	ret = ucsi->ops->sync_control(ucsi, UCSI_ACK_CC_CI | UCSI_ACK_COMMAND_COMPLETE,
-> > > +				      NULL, NULL, 0);
-> > > +out_unlock_ppm:
-> > > +	mutex_unlock(&ucsi->ppm_lock);
-> > > +out_unlock_sysfs:
-> > > +	mutex_unlock(&sysfs->lock);
-> > > +
-> > > +	return ret ?: count;
-> > > +}
-> > 
-> > This worries me, any userspace tool can now do this?  What other "bad"
-> > things can it to the connection?
-> 
-> Although, there is actually only a limited number of things that you
-> can do to the connection using UCSI, that is definitely a concern.
-> 
-> The PPM (which is the EC firmware in most cases) is expected to prevent
-> any harmful or "unauthorized" UCSI commands from being executed, but
-> I'm not sure there is any guarantees for that at the moment.
-> 
-> > > +int ucsi_sysfs_register(struct ucsi *ucsi)
-> > > +{
-> > > +	struct ucsi_sysfs *sysfs;
-> > > +	int ret;
-> > > +
-> > > +	sysfs = kzalloc(struct_size(sysfs, mailbox, UCSI_MAILBOX_SIZE(ucsi)), GFP_KERNEL);
-> > > +	if (!sysfs)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	sysfs->ucsi = ucsi;
-> > > +	mutex_init(&sysfs->lock);
-> > > +	memcpy(sysfs->mailbox, &ucsi->version, sizeof(ucsi->version));
-> > > +
-> > > +	sysfs_bin_attr_init(&sysfs->bin_attr);
-> > > +
-> > > +	sysfs->bin_attr.attr.name = "ucsi";
-> > > +	sysfs->bin_attr.attr.mode = 0644;
-> > > +
-> > > +	sysfs->bin_attr.size = UCSI_MAILBOX_SIZE(ucsi);
-> > > +	sysfs->bin_attr.private = sysfs;
-> > > +	sysfs->bin_attr.read_new = ucsi_read;
-> > > +	sysfs->bin_attr.write_new = ucsi_write;
-> > > +
-> > > +	ret = sysfs_create_bin_file(&ucsi->dev->kobj, &sysfs->bin_attr);
-> > 
-> > You raced with userspace and lost, right?  Why are you dynamically
-> > creating this attribute, can't you just use a static one?
-> 
-> The size of the attribute depends on the UCSI version.
-> 
-> > But again, why not debugfs?  I'd feel a lot more comfortable with that
-> > instead of sysfs.
-> 
-> I would actually prefer debugfs for this, but this is in any case
-> not primarily for debugging and validation.
-> 
-> The initial goal was to supply the user space some way to control the
-> EC's power related policies using UCSI commands such as
-> SET_POWER_LEVEL and GET_POWER_LEVEL (guys, please correct me if I got
-> that wrong).
+Hello,
 
-It generally feels that exporting the whole unmoderated channel to the
-firmware just to set power level is wrong. It should be interfaced
-through the PSY driver.
+syzbot found the following issue on:
 
-> 
-> But I'm now again wondering could those power policy tasks be handled
-> using the UCSI power supplies after all? Venkat, did you look into
-> that?
-> 
-> thanks,
-> 
-> -- 
-> heikki
+HEAD commit:    808eb958781e Add linux-next specific files for 20250206
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=106cb3df980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=88b25e5d30d576e4
+dashboard link: https://syzkaller.appspot.com/bug?extid=1eaee1ec18b9d18ca3b8
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12736df8580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1043a4a4580000
 
--- 
-With best wishes
-Dmitry
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/493ef93f2e5f/disk-808eb958.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/b41757cd41c9/vmlinux-808eb958.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/24f456104aad/bzImage-808eb958.xz
+
+The issue was bisected to:
+
+commit c411c62cc13319533b1861e00cedc4883c3bc1bb
+Author: Arseniy Krasnov <avkrasnov@salutedevices.com>
+Date:   Thu Jan 30 18:43:26 2025 +0000
+
+    Bluetooth: hci_uart: fix race during initialization
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17aea1b0580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=146ea1b0580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=106ea1b0580000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+1eaee1ec18b9d18ca3b8@syzkaller.appspotmail.com
+Fixes: c411c62cc133 ("Bluetooth: hci_uart: fix race during initialization")
+
+RBP: 00007f95dbd414c0 R08: 00007fffc17488e7 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000246 R12: 00007f95dbd415b0
+R13: 00007fffc1748b60 R14: 00007f95dbd448e1 R15: 00007f95dbd41518
+ </TASK>
+Bluetooth: Can't allocate HCI device
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000067: 0000 [#1] PREEMPT SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x0000000000000338-0x000000000000033f]
+CPU: 1 UID: 0 PID: 5832 Comm: syz-executor371 Not tainted 6.14.0-rc1-next-20250206-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+RIP: 0010:__lock_acquire+0x6a/0x2100 kernel/locking/lockdep.c:5091
+Code: b6 04 30 84 c0 0f 85 f8 16 00 00 45 31 f6 83 3d 2b ef 80 0e 00 0f 84 c8 13 00 00 89 54 24 60 89 5c 24 38 4c 89 f8 48 c1 e8 03 <80> 3c 30 00 74 12 4c 89 ff e8 18 6e 8b 00 48 be 00 00 00 00 00 fc
+RSP: 0018:ffffc90003e2f6d0 EFLAGS: 00010002
+RAX: 0000000000000067 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: dffffc0000000000 RDI: 0000000000000338
+RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000001
+R10: dffffc0000000000 R11: fffffbfff203744f R12: ffff88807b490000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000338
+FS:  0000000000000000(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f95dbd12930 CR3: 000000000e738000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+ __timer_delete_sync+0x148/0x310 kernel/time/timer.c:1644
+ del_timer_sync include/linux/timer.h:185 [inline]
+ h5_close+0x4b/0x170 drivers/bluetooth/hci_h5.c:257
+ hci_uart_tty_close+0x205/0x290 drivers/bluetooth/hci_ldisc.c:557
+ tty_ldisc_kill+0xa3/0x1a0 drivers/tty/tty_ldisc.c:613
+ tty_ldisc_release+0x1a1/0x200 drivers/tty/tty_ldisc.c:781
+ tty_release_struct+0x2b/0xe0 drivers/tty/tty_io.c:1690
+ tty_release+0xd06/0x12c0 drivers/tty/tty_io.c:1861
+ __fput+0x3e9/0x9f0 fs/file_table.c:464
+ task_work_run+0x24f/0x310 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0xa2a/0x2860 kernel/exit.c:938
+ do_group_exit+0x207/0x2c0 kernel/exit.c:1087
+ __do_sys_exit_group kernel/exit.c:1098 [inline]
+ __se_sys_exit_group kernel/exit.c:1096 [inline]
+ __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1096
+ x64_sys_call+0x26c3/0x26d0 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f95dbcfdb69
+Code: Unable to access opcode bytes at 0x7f95dbcfdb3f.
+RSP: 002b:00007fffc1748ae8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007f95dbcfdb69
+RDX: 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000001
+RBP: 00007f95dbd72370 R08: ffffffffffffffb8 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000246 R12: 00007f95dbd72370
+R13: 0000000000000000 R14: 00007f95dbd72dc0 R15: 00007f95dbcc7480
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:__lock_acquire+0x6a/0x2100 kernel/locking/lockdep.c:5091
+Code: b6 04 30 84 c0 0f 85 f8 16 00 00 45 31 f6 83 3d 2b ef 80 0e 00 0f 84 c8 13 00 00 89 54 24 60 89 5c 24 38 4c 89 f8 48 c1 e8 03 <80> 3c 30 00 74 12 4c 89 ff e8 18 6e 8b 00 48 be 00 00 00 00 00 fc
+RSP: 0018:ffffc90003e2f6d0 EFLAGS: 00010002
+RAX: 0000000000000067 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: dffffc0000000000 RDI: 0000000000000338
+RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000001
+R10: dffffc0000000000 R11: fffffbfff203744f R12: ffff88807b490000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000338
+FS:  0000000000000000(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f95dbd12930 CR3: 000000000e738000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	b6 04                	mov    $0x4,%dh
+   2:	30 84 c0 0f 85 f8 16 	xor    %al,0x16f8850f(%rax,%rax,8)
+   9:	00 00                	add    %al,(%rax)
+   b:	45 31 f6             	xor    %r14d,%r14d
+   e:	83 3d 2b ef 80 0e 00 	cmpl   $0x0,0xe80ef2b(%rip)        # 0xe80ef40
+  15:	0f 84 c8 13 00 00    	je     0x13e3
+  1b:	89 54 24 60          	mov    %edx,0x60(%rsp)
+  1f:	89 5c 24 38          	mov    %ebx,0x38(%rsp)
+  23:	4c 89 f8             	mov    %r15,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	80 3c 30 00          	cmpb   $0x0,(%rax,%rsi,1) <-- trapping instruction
+  2e:	74 12                	je     0x42
+  30:	4c 89 ff             	mov    %r15,%rdi
+  33:	e8 18 6e 8b 00       	call   0x8b6e50
+  38:	48                   	rex.W
+  39:	be 00 00 00 00       	mov    $0x0,%esi
+  3e:	00 fc                	add    %bh,%ah
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
