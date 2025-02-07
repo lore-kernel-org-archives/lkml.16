@@ -1,48 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A0353A7;
-	Fri,  7 Feb 2025 10:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD12A1547F8
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 10:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738924895; cv=none; b=MiFhI0kPnfnH/FRfdBxFNN3WYMaSnOmgMx70TCtS3jzZu/8cZLitEFjcMPm/1sPd2ZWhnPk6y5Kj74PHqh2qXdkR8lCZVBuYNXKh/b8rdjpXS0OCML14vJqcb7Ihdx0o8v/CCnQpn0kXMRpR9lZpgC/Ik/30PmXSyieG4AUfk/E=
+	t=1738924996; cv=none; b=tH75E0PzUHu4eH2T7/tITXj7tB8qnDuPsSlz9WIodh8IOh0cHdI7yH7pWpbQTJbahunpKeMRthH1oQ1o+6cBdkrBaYXKMKXHN1jlwDDFtXAeQ93SKxJ/MGfRDB7HCcTzsT6F/+1bL+K9VfRRdOevOZQ4bNCqOYL0s5HDvCXlt1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738924895; c=relaxed/simple;
-	bh=UzsjoUCqhTOFiLpomAhh9OUmFU4xJr7T+OHaniS6+Js=;
+	s=arc-20240116; t=1738924996; c=relaxed/simple;
+	bh=hAoNykFyJ7QZhJYFf4N5rnUpO0uqECz17MfHTMXMUC4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SKzW2ULZHgmlvXcESYkSuKP8BCQrSXXx0/iRhXigOKIKLDcXGECh+4jMnCtVJ0kf2ZHtQxA49WwxD5w/Iy9C35TB/siDesjKaLFd0YgUy4tTBUsk8i9HOlieIZsUnNEXSywf9dJtZycd7c8i6gp8aDs1y+T3NCKlvjAxP5qN/2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q0XrUub7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ouehcxxZLoUxYP6ydB3NOJZdNrD16vdFare778nwwJcM1hx8fJgwdN681zKwLc8xcjKEApdw7xz3jhF9zFLZ0/iASU57gX75TTnaZWBrEZYtTCZDi83sUt5V5OBwNOcQODTr16vpZ5Ba+mbdJ4yddGFeXTrB9QjxxHbd3PcY2aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vnfPJdu7; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q0XrUub7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0917CC4CED1;
-	Fri,  7 Feb 2025 10:41:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738924893;
-	bh=UzsjoUCqhTOFiLpomAhh9OUmFU4xJr7T+OHaniS6+Js=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q0XrUub7ZzUUrFOvSlVSs1xNDC5AFx6d6VmTXMC8qZRuQmLm6jCAns/4Aga4JvE0O
-	 09WhXvfwuv5SdTdSaHryWRPh9sGaHjKS+3GbUe/XdkJJnV+PXqSCAI4R+CZQkeWA6D
-	 gCZ8aP3U/Z6ho77enkGuwrk5HgMpfymKoPa2HmxYAG/d5YQIkEQoB9KlxfYN6Gbd5z
-	 ZPXMB5SACHoCEmf568E/dC9GKli/t/XrtYoDuhMPe9d2FDol24g3GSel6tkUoHgGVd
-	 Ay+QA/9QvDeI5Tft4bsM9JGhDgF5Ab7Zw+WxEndJ8hurCZ/i2EOtfRaIBbE4+zKmVm
-	 fZlktHlXq416Q==
-Date: Fri, 7 Feb 2025 11:41:28 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Thierry Reding <treding@nvidia.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Vidya Sagar <vidyas@nvidia.com>, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	quic_schintav@quicinc.com, johan+linaro@kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
-	sagar.tv@gmail.com
-Subject: Re: [PATCH V1] PCI: tegra194: Add support for PCIe RC & EP in
- Tegra234 Platforms
-Message-ID: <Z6XjWJd9jm0HHNXW@ryzen>
-References: <20250128044244.2766334-1-vidyas@nvidia.com>
- <Z5jH0G3V7fPXk0BG@ryzen>
- <20250203165932.72kezmi3dtqpytvg@thinkpad>
- <zaj4vcbduaoceaueqq5hvbw5rvoksk5oz6via3jhfp7lyzlxnh@2umxfxphupgd>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vnfPJdu7"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f48ab13d5so23486195ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 02:43:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738924994; x=1739529794; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=g1GRWaZfYYbqC6/CdwihJesZg/YXxEXg0hSLoDojT10=;
+        b=vnfPJdu7MsXDHg4E+P5wN6VqJIJQ4bNizNlTrqjj0EKHkJw2o7AANMm1iUJVtBDxql
+         vchVkX8cyyp91Dg3LMll4Tr0kMj8cNcRI7kJGXruWl9177GkitVDtiEBfYhzpyetOYvp
+         6U2jVjNQdCOUkUUlx2Is3QxwYoF8f7B/EwMal9xFP71geSFF7gTzsPOniYv5t5Z7VfOq
+         8WJ8bNNdX6brp5a3c6jFqIjVFDhu2UkBH9uTwR0TcIDjJwoF73Tp86NCcwANA93eDNiv
+         ho2tIc6IKVhl2dBRAYgStZw0+BTUmRBp2OrO5y/3eg04byd0L+ilsA6Jpz/rzEyosOHZ
+         Ycag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738924994; x=1739529794;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g1GRWaZfYYbqC6/CdwihJesZg/YXxEXg0hSLoDojT10=;
+        b=mEmrTfq7JV+mglOivA5mmpWyV3x+2Am+75n2hA/5Zs5WBvsd+F9WnWqyT08A8HDyCh
+         /mLg9B68X/gCaHZtHCYQTFZIfAHHcIMOFShmtWW8BTjG2uAhttTeiTSEQY+JvvmAwyKb
+         wiLocgDhZRAaTz2biSwrN0XCSHpW9IXyEZhWOFcBUR+TymfYA5pt4K1KoAdpj8cf1Mou
+         iT5gmtae/5Bi0xlp51TxQBVkjc422k+PpZn9eNVCzSC2qIXq4mS17yMZk1bhyf3Z3ntG
+         t50Pb/OJ+CoA4EkJuzEI+grJk5KhlHKwAr6gZGGQ4qGsOH00H69zY8UvAyIhXjR8oshF
+         E3Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCX/SnRbqJihxMhh+EIQaceyGsHVTDFtP/zBk+jZbq9piDfdxDEnKGjB2L/M7kM3Q7kHiNFDDZofBdfQ1+o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLR8ERysdAVMJv+Z34Oc1XQgpjyP59/tWQV6rjb9u8T6kfpL9C
+	KgINopsOXFIuw9ToQSnkQARKrY4FLw0yLra2aCTavJcDV5LL7yI7I5cwyBc2+mM=
+X-Gm-Gg: ASbGncvOBtsMECp6DHnwshx6MC54LElzlJLppCdDPMJjgeiFqLyOUmo13swrPR8aKpb
+	DHX8T0gVRxMXKL/Sv19VgR5ADYPv43DPQ91ZWWPY3Ll6rBiZWeyP3Gh+Fxx2fnftkbE1YmbI1V/
+	7oUHnbMnWih/vAEjfbC56oxAaIONL3qt7trHllqFivSbIdKB8NsmEnutTOmep/F6oQlUrxeLDCi
+	Doo0iL2RGQhOc7h0ZdINEIArtAqPMCG6r+3XFZntGOwODQgEfWpEErJpe9mXN1udZx+kmWUqCxI
+	YupC7aP+kbkqqlvWXw==
+X-Google-Smtp-Source: AGHT+IG+GWLav9UJfqyQ68A1jcf3lhjRtJkvLA7MYkbHl336IPSn8Kmidgk/a94noG0INXD1mHf3Mw==
+X-Received: by 2002:a17:902:ea0d:b0:21d:dae6:d956 with SMTP id d9443c01a7336-21f4e6e1eb8mr44938405ad.24.1738924994072;
+        Fri, 07 Feb 2025 02:43:14 -0800 (PST)
+Received: from localhost ([122.172.84.139])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653c997sm27289215ad.78.2025.02.07.02.43.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 02:43:13 -0800 (PST)
+Date: Fri, 7 Feb 2025 16:13:11 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Stephen Boyd <sboyd@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Michael Turquette <mturquette@baylibre.com>,
+	linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Erik Schilling <erik.schilling@linaro.org>,
+	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH V8 06/14] rust: Add bare minimal bindings for clk
+ framework
+Message-ID: <20250207104311.g2lexa75o26z6aox@vireshk-i7>
+References: <cover.1738832118.git.viresh.kumar@linaro.org>
+ <c68081e18d939aefc7f6dac798df6b72e81bba4b.1738832118.git.viresh.kumar@linaro.org>
+ <Z6ShsuLykigNscz8@pollux>
+ <Z6SiiRubSXGInbgj@pollux>
+ <0cd42d2d683ea057e6034978b02c7f84.sboyd@kernel.org>
+ <Z6VBo51g54xAmelQ@cassiopeiae>
+ <20250207092448.n5mzbt6lg6zqud4a@vireshk-i7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,56 +96,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <zaj4vcbduaoceaueqq5hvbw5rvoksk5oz6via3jhfp7lyzlxnh@2umxfxphupgd>
+In-Reply-To: <20250207092448.n5mzbt6lg6zqud4a@vireshk-i7>
 
-On Tue, Feb 04, 2025 at 06:19:51PM +0100, Thierry Reding wrote:
-> On Mon, Feb 03, 2025 at 10:29:32PM +0530, Manivannan Sadhasivam wrote:
-> > On Tue, Jan 28, 2025 at 01:04:32PM +0100, Niklas Cassel wrote:
-> > > Hello Vidya,
-> > > 
-> > > On Tue, Jan 28, 2025 at 10:12:44AM +0530, Vidya Sagar wrote:
-> > > > Add PCIe RC & EP support for Tegra234 Platforms.
-> > > 
-> > > The commit log does leave quite a few questions unanswered.
-> > > 
-> > > Since you are just updating the Kconfig and nothing else:
-> > > Does the DT binding already have support for the Tegra234 SoC?
-> > > Does the driver already have support for the Tegra234 SoC?
-> > > 
-> > > Looking at the DT binding and driver, the answer to both questions
-> > > is yes. (This should have been in the commit message IMO.)
-> > > 
-> > > 
-> > > But that leads me to the question, since there is support for Tegra234
-> > > SoC in the driver, does this means that this fixes a regression, e.g.
-> > > the Kconfig ARCH_TEGRA_234_SOC was added after the driver support in
-> > > this driver was added. In this case, you should have a Fixes: tag that
-> > > points to the commit that added ARCH_TEGRA_234_SOC.
-> > > 
-> > > Or has the the driver support for Tegra234 been "dead-code" since it
-> > > was originally added? (Because without this patch, no one can have
-> > > tested it, at least not without COMPILE_TEST.)
-> > > In this case, you should add:
-> > > Fixes: a54e19073718 ("PCI: tegra194: Add Tegra234 PCIe support")
-> > > 
-> > 
-> > TBH, I don't like muddling with Kconfig like this. Ideally, the driver should
-> > just depend on ARCH_TEGRA || COMPILE_TEST and the driver should be selected by
-> > the relevant defconfig.
+On 07-02-25, 14:54, Viresh Kumar wrote:
+> On 07-02-25, 00:11, Danilo Krummrich wrote:
+> > Guess this should be Opaque<bindings::clk>.
 > 
-> ARCH_TEGRA is a symbol that exists both on 32-bit and 64-bit ARM. This
-> driver is completely useless on 32-bit ARM and only used on a very small
-> subset of 64-bit ARM devices. It doesn't make sense to be able to enable
-> this if you want to build a kernel for say Tegra210.
+> So it should be this now ?
 
-Well, if you look in drivers/pci/controller/dwc/Kconfig
-there are quite a few drivers that does:
+Also, I should be using ARef and AlwaysRefCounted along with that ? I
+am not sure if I can use those with the clk API. Yes, it is refcounted
+but there is no direct way of incrementing the refcount unlike other
+frameworks. clk_get() accepts a dev pointer and a char pointer,
+whereas clk_put() accepts the clk pointer itself.
 
-depends on ARM64 or ARM and then a ARCH_ something.
-
-I don't see why you can't do
-depends on (ARCH_TEGRA && ARM64) || COMPILE_TEST
-
-
-Kind regards,
-Niklas
+-- 
+viresh
