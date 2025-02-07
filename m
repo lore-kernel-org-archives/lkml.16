@@ -1,124 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7671219C57C
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843991AB6D8;
+	Fri,  7 Feb 2025 20:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738961905; cv=none; b=CKAJ1rZLN1s6Z6B9JXuZRfjf1LHSlMVLHVePIkCoa2aqOD20Bx3jZUG/947YXxgEGLE52uRtuFEcXtHqGkTSCM/Sk6jg6tNMwmz9WVyOHv9q7dsn5Z2FnrCDQTbMO39wA0jnxUUhwyIhyzGD3Is0kXTNl1vqUsloM4lu49vbhnU=
+	t=1738961930; cv=none; b=EncQPJtEzDZUVW2y2DqnYUzkCeGjBhzJlmOGu1GAHxUujkmLqK9U5Ikw7s+/8MO0Xc3XAUOuDixvF7bnhlWA1M5Qtruo+yCFPPB8YicZQS0LtEl5eAVOxRis+t0kz+xgymbPVd9Wn2DgZgdDq/+EOYO8DH4HARy0zSPjJEU5YHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738961905; c=relaxed/simple;
-	bh=QiuQnx28cJB0ahNmGnfzVmE5WhzlI4cl3/aFIyRBfmg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=YJJXSsx6weWhzx2ZFlenokYaMUE4r3aKOZc+ub6/rNSsnGH7ATDTaG/Bn1Vdrj+7sZSvioDH8vmP2FLrrRf7d5PFSY1LAp/Fdi96I2R3c1n4ILjiogi3tVtb011geRu+ipLg1jCV2SrhLhR4nRs44apLjDFUPYs9uTXqfVE2cVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtLpxp99; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738961930; c=relaxed/simple;
+	bh=xAwZ9HQ5MAYCQ2LR1z5gYPvNqDl0kPb5mILIXPxKDY0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XSjs1730Y0Scu8t/TGgh54GonDgLK0NhS26sDS8n9S2tKS85W921BhKd8U/jZLHFxMDWCPhGVGN/cdtdTiNx/flKMMd/zOQ1wAckbhw9OW9vHK/UVkBAPrp5gy40fNaMEGexpo0AVMYQVGXnyI2OGhGqA1uFa5fwdr8yfRoXfGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=VacKsLnk; arc=none smtp.client-ip=199.89.1.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtLpxp99"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D40A6C4CED1;
-	Fri,  7 Feb 2025 20:58:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738961905;
-	bh=QiuQnx28cJB0ahNmGnfzVmE5WhzlI4cl3/aFIyRBfmg=;
-	h=Date:From:To:Cc:Subject:From;
-	b=jtLpxp99jpvq0C0hgjgMCD1DSGsutO1pgmqoR8Oikhj5RbTKbXOEn65C0qItmV0ZK
-	 1EoP5DG25wX+A/T4Qcmhe/isZvN2w1kAQN7qY99LLuWNb25HehhXF90zHwhvZRuv8K
-	 jF3d4ZWhtR8S8ysNDTlkQD+eySdszD5Vj11pUKez5t8dvhaqsBsUXX+2VVkdnhFuTj
-	 RiKrTK3Y35dhSLiLjHKio9QrucoQmIdCZG/PkTk2qSNqwwr06f3iSq6Kk4TdV3+0AR
-	 MvcwTrIAb2wd6BzO9NG0bz6Z2mA0m2PEfUQPvd3bmy2BmPAoYUSIdv0BuYX2QO0kf9
-	 LeF1hxMEgukRA==
-Date: Fri, 7 Feb 2025 10:58:23 -1000
-From: Tejun Heo <tj@kernel.org>
-To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: linux-kernel@vger.kernel.org, sched-ext@meta.com
-Subject: [PATCH sched_ext/for-6.14-fixes 1/2] sched_ext: Implement auto local
- dispatching of migration disabled tasks
-Message-ID: <Z6Zz79AUub1YuHwD@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="VacKsLnk"
+Received: from localhost (localhost [127.0.0.1])
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4YqRCP5bPRzlgTwQ;
+	Fri,  7 Feb 2025 20:58:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1738961910; x=1741553911; bh=cPoTgIZpKmlByO7NU1gC7bDa
+	ucVwG90zqII2j1CUOIQ=; b=VacKsLnkTdDYtPmt5J4MPD4Qx4KqDnMmmqgENTJ6
+	EtGKhhNCL3FbJzNKd+ETkPPQM7+k0i3yX2iW8q/3iMGik+SUc/EL6VtGWa/NeKJN
+	Xf+/DVOiqp671Tk9LAbh+uq9jSBWZPDCH6WEM2Pa99LrTCfC/C87dWCgPe+7K9Xk
+	fMbRKCIgv980B/wIrp69eB1ri2/70yj+HAHygqGUrxfkh47z6ndhXJmkhf+Izy1r
+	tAkHcBQg1sSGNalB0ZQLoJflY/+OnefFs9gkD6Te4zEZ5jQ7crrhLu+66NEMH6Yj
+	Xsf+d717IbvZq+tYBbHv0evOn2tmB661eFAH2wyxXERWAw==
+X-Virus-Scanned: by MailRoute
+Received: from 009.lax.mailroute.net ([127.0.0.1])
+ by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id Wva0VBNH7R1P; Fri,  7 Feb 2025 20:58:30 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4YqRC05LwRzlgTwF;
+	Fri,  7 Feb 2025 20:58:20 +0000 (UTC)
+Message-ID: <38bde2a3-762d-49ed-a2a6-ac3bd698bedc@acm.org>
+Date: Fri, 7 Feb 2025 12:58:20 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 11/24] locking/mutex: Support Clang's capability
+ analysis
+To: Peter Zijlstra <peterz@infradead.org>, Marco Elver <elver@google.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>,
+ Alexander Potapenko <glider@google.com>, Bill Wendling <morbo@google.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
+ Joel Fernandes <joel@joelfernandes.org>, Jonathan Corbet <corbet@lwn.net>,
+ Josh Triplett <josh@joshtriplett.org>, Justin Stitt
+ <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Miguel Ojeda <ojeda@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Uladzislau Rezki <urezki@gmail.com>, Waiman Long <longman@redhat.com>,
+ Will Deacon <will@kernel.org>, kasan-dev@googlegroups.com,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev, rcu@vger.kernel.org,
+ linux-crypto@vger.kernel.org
+References: <20250206181711.1902989-1-elver@google.com>
+ <20250206181711.1902989-12-elver@google.com>
+ <20250207083119.GV7145@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250207083119.GV7145@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Migration disabled tasks are special and pinned to their previous CPUs. They
-tripped up some unsuspecting BPF schedulers as their ->nr_cpus_allowed may
-not agree with the bits set in ->cpus_ptr. Make it easier for BPF schedulers
-by automatically dispatching them to the pinned local DSQs by default. If a
-BPF scheduler wants to handle migration disabled tasks explicitly, it can
-set SCX_OPS_ENQ_MIGRATION_DISABLED.
+On 2/7/25 12:31 AM, Peter Zijlstra wrote:
+> Can we please fix up all the existing __cond_lock() code too?
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
----
- kernel/sched/ext.c |   23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+It would be great to get rid of __cond_lock().
 
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -123,6 +123,19 @@ enum scx_ops_flags {
- 	SCX_OPS_SWITCH_PARTIAL	= 1LLU << 3,
- 
- 	/*
-+	 * A migration disabled task can only execute on its current CPU. By
-+	 * default, such tasks are automatically put on the CPU's local DSQ with
-+	 * the default slice on enqueue. If this ops flag is set, they also go
-+	 * through ops.enqueue().
-+	 *
-+	 * A migration disabled task never invokes ops.select_cpu() as it can
-+	 * only select the current CPU. Also, p->cpus_ptr will only contain its
-+	 * current CPU while p->nr_cpus_allowed keeps tracking p->user_cpus_ptr
-+	 * and thus may disagree with cpumask_weight(p->cpus_ptr).
-+	 */
-+	SCX_OPS_ENQ_MIGRATION_DISABLED = 1LLU << 4,
-+
-+	/*
- 	 * CPU cgroup support flags
- 	 */
- 	SCX_OPS_HAS_CGROUP_WEIGHT = 1LLU << 16,	/* cpu.weight */
-@@ -130,6 +143,7 @@ enum scx_ops_flags {
- 	SCX_OPS_ALL_FLAGS	= SCX_OPS_KEEP_BUILTIN_IDLE |
- 				  SCX_OPS_ENQ_LAST |
- 				  SCX_OPS_ENQ_EXITING |
-+				  SCX_OPS_ENQ_MIGRATION_DISABLED |
- 				  SCX_OPS_SWITCH_PARTIAL |
- 				  SCX_OPS_HAS_CGROUP_WEIGHT,
- };
-@@ -882,6 +896,7 @@ static bool scx_warned_zero_slice;
- 
- static DEFINE_STATIC_KEY_FALSE(scx_ops_enq_last);
- static DEFINE_STATIC_KEY_FALSE(scx_ops_enq_exiting);
-+static DEFINE_STATIC_KEY_FALSE(scx_ops_enq_migration_disabled);
- static DEFINE_STATIC_KEY_FALSE(scx_ops_cpu_preempt);
- static DEFINE_STATIC_KEY_FALSE(scx_builtin_idle_enabled);
- 
-@@ -2014,6 +2029,11 @@ static void do_enqueue_task(struct rq *r
- 	    unlikely(p->flags & PF_EXITING))
- 		goto local;
- 
-+	/* see %SCX_OPS_ENQ_MIGRATION_DISABLED */
-+	if (!static_branch_unlikely(&scx_ops_enq_migration_disabled) &&
-+	    is_migration_disabled(p))
-+		goto local;
-+
- 	if (!SCX_HAS_OP(enqueue))
- 		goto global;
- 
-@@ -5052,6 +5072,7 @@ static void scx_ops_disable_workfn(struc
- 		static_branch_disable(&scx_has_op[i]);
- 	static_branch_disable(&scx_ops_enq_last);
- 	static_branch_disable(&scx_ops_enq_exiting);
-+	static_branch_disable(&scx_ops_enq_migration_disabled);
- 	static_branch_disable(&scx_ops_cpu_preempt);
- 	static_branch_disable(&scx_builtin_idle_enabled);
- 	synchronize_rcu();
-@@ -5661,6 +5682,8 @@ static int scx_ops_enable(struct sched_e
- 
- 	if (ops->flags & SCX_OPS_ENQ_EXITING)
- 		static_branch_enable(&scx_ops_enq_exiting);
-+	if (ops->flags & SCX_OPS_ENQ_MIGRATION_DISABLED)
-+		static_branch_enable(&scx_ops_enq_migration_disabled);
- 	if (scx_ops.cpu_acquire || scx_ops.cpu_release)
- 		static_branch_enable(&scx_ops_cpu_preempt);
- 
+In the description of commit 4a557a5d1a61 ("sparse: introduce
+conditional lock acquire function attribute") I found the following
+URL: 
+https://lore.kernel.org/all/CAHk-=wjZfO9hGqJ2_hGQG3U_XzSh9_XaXze=HgPdvJbgrvASfA@mail.gmail.com/
+
+That URL points at an e-mail from Linus Torvalds with a patch for sparse
+that implements support for __cond_acquires(). It seems to me that the
+sparse patch has never been applied to the sparse code base (the git URL
+for sparse is available at https://sparse.docs.kernel.org/en/latest/).
+Additionally, the most recent commit to the sparse code base is from
+more than a year ago (see also 
+https://git.kernel.org/pub/scm/devel/sparse/sparse.git/).
+
+In other words, switching from __cond_lock() to __cond_acquires()
+probably will make sparse report more "context imbalance" warnings.
+
+If this is a concern to anyone, please speak up.
+
+Thanks,
+
+Bart.
+
