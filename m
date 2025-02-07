@@ -1,93 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C3923ED7D;
-	Fri,  7 Feb 2025 15:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFE3523FC7B
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738943170; cv=none; b=Oqc4OMlJ4PT8rod+TyYG1pA+0c3orwIzvqo6t/UORhgiOps5cMg8hkIZ0Cf3YNs2FjjqbsEuj36L00yuxCOSAbz4dx1qxWhiChTzEdOXH6XabZJvaHYvEj8UWak8TDP9fsMGU3RIxssLjO1LYzRiPx3Jd1lHDFEioYjGKNUIUqA=
+	t=1738943187; cv=none; b=LZe3RvqDnaGB30CM47pOIhHkzK67vDYDsjS5Q1BcFiAkVFTH+nACtQ+zaThOkSaCF3BCnTysiKijHUr2csMmktN/B/UZsQy23wm6aPSIls5gV7mZUTnT/Wk+NvbTALRXP0UiRCj0sSwA80/eGLD0iLEYThPzNSdGmRIm3yK8ji4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738943170; c=relaxed/simple;
-	bh=9axXkAUlqFza4DaVZ0GFZXMPQsYFrXfavM1CTA8TUs0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JzQ2Pyl+Cpb2bBVUJT9AZoMJQ8JP27d2yKi8CAxjzllk50ZRzeNAgO8A7bJZ6+ybyZiMNqakucnkk0bNaOCj3JtZqN3ZDT+FU5tTLelKeb0Axh7Z16XY9YZXiIMDAOwRHz1D0VCGAj2x3H0iHEX6vZrP74zwZ2qV71NoaiuwOR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BU3Ck9QJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BU3Ck9QJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37ECDC4CEE8;
-	Fri,  7 Feb 2025 15:46:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738943170;
-	bh=9axXkAUlqFza4DaVZ0GFZXMPQsYFrXfavM1CTA8TUs0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BU3Ck9QJ7vOsjygK1+2xFx29AxyURJU3L8R/J2BfdY5Khgrsb/3SBk9dyfxapwuXj
-	 oVdhNgqb2sbOOS4RG4r8aA0MtpvgIYKZH8e13yNBuims/uMPGqh/DU/zYIrZ6ss/Wf
-	 D1A43ARPqR3nud8NrO2NLHkmsCRvQ2UddeSaSmNly+LA4sewoBciaogsz4gMjtKU3L
-	 WkfrzcRsKGBhbPrtI6S+ql6ycJh2UcYuAbbvS++dHwW4WqmrPhj6pNEpaYRKlxvy56
-	 6kMD9TEqrQ6b+QxT2HAJX7bLaDI6neeoY7j90iMk0zmcHFH8A8yRuNCNsfdfMAXNgy
-	 v7UekX58696WQ==
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-71e565708beso1332239a34.1;
-        Fri, 07 Feb 2025 07:46:10 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUXVEG1Nt5iUL8fOUNMpg1EZTGRKJ1YVS3ZAKeCriyH48th6kQFcxTaRG4rDBhnVOWj7YVbcLFUZ1OWlj4=@vger.kernel.org, AJvYcCVbBpfv5vjc4dVBXRXgQSsjgPeDQVjDQuxD5zHU8ho6J7syhmSsCEhBCmROaRNLatTMA+y+7FSWpCc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6UVh5/n9ImP3lcmgO5Fzz+I+wgk2s0WcHxuc78Ie699sux4U1
-	iPYlCr/IVxbfG4POTw+wNBfHyX1xHkcDv7zZJ3PJrfoczu5hcA6LjPKMnVnDWmIKE0e0zzbA6sC
-	fDiOiOgMkh0Vv/eBywD+KdSpKkH0=
-X-Google-Smtp-Source: AGHT+IFwftW2hpSvI0/jco9/o383vJhWj1dqg/XtvjgZmygGI6vPRJZqt/4I+rFgyBwh2j8clYnBkY2Va5Uy/W9SoJI=
-X-Received: by 2002:a05:6830:698f:b0:71d:5236:9295 with SMTP id
- 46e09a7af769-726b88a3d2amr2711818a34.24.1738943169513; Fri, 07 Feb 2025
- 07:46:09 -0800 (PST)
+	s=arc-20240116; t=1738943187; c=relaxed/simple;
+	bh=w5uyEtNGcDZlD4PvfHP4W2wGbdvaKXukjZOuGos7Fv8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a9HzqV1dGMANiQiB+uSNkp4U1aA1W52TXTBeYBhPKmPoR3YHaWGfNhUflaysfa2ZFFG+Sg8YWEojkeM90OnJnJs5Uz8Z3c+uzqlZYhJHWiaoZLRh2zYTe+xf8P7QhpNplbDo7HPrpvyP681PBjRzBs6czyV1xElMN43rDK293+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E82B51EA6;
+	Fri,  7 Feb 2025 07:46:47 -0800 (PST)
+Received: from [10.1.196.57] (eglon.cambridge.arm.com [10.1.196.57])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C28293F58B;
+	Fri,  7 Feb 2025 07:46:21 -0800 (PST)
+Message-ID: <20de5d61-c50d-45b2-bd6e-6a200d250237@arm.com>
+Date: Fri, 7 Feb 2025 15:46:20 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1916668.tdWV9SEqCh@rjwysocki.net> <4917ca35e5e0c7035f09c02d5080a69ed3e88c44.camel@linux.intel.com>
-In-Reply-To: <4917ca35e5e0c7035f09c02d5080a69ed3e88c44.camel@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 7 Feb 2025 16:45:58 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0giy4ZhQdLXJXQqg+vMeP6TWZodWfwVVjbSuFz5_FEvMw@mail.gmail.com>
-X-Gm-Features: AWEUYZnA5w9uoY8Rk1EW1LDawHEtcIforzag7f5A72GKMB0rR-PWmA6wyaJHj2w
-Message-ID: <CAJZ5v0giy4ZhQdLXJXQqg+vMeP6TWZodWfwVVjbSuFz5_FEvMw@mail.gmail.com>
-Subject: Re: [RFT][PATCH v1 0/5] cpuidle: menu: Avoid discarding useful
- information when processing recent idle intervals
-To: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Christian Loehle <christian.loehle@arm.com>, Aboorva Devarajan <aboorvad@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 25/40] x86/resctrl: Make prefetch_disable_bits belong
+ to the arch code
+To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Fenghua Yu <fenghua.yu@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+ shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+References: <20241004180347.19985-1-james.morse@arm.com>
+ <20241004180347.19985-26-james.morse@arm.com>
+ <d174c794-6b7c-4a34-8c1d-b992f6eb7095@intel.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <d174c794-6b7c-4a34-8c1d-b992f6eb7095@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 7, 2025 at 3:48=E2=80=AFPM Artem Bityutskiy
-<artem.bityutskiy@linux.intel.com> wrote:
->
-> Hi,
->
-> thanks for the patches!
->
-> On Thu, 2025-02-06 at 15:21 +0100, Rafael J. Wysocki wrote:
-> > Hi Everyone,
-> >
-> > This work had been triggered by a report that commit 0611a640e60a ("eve=
-ntpoll:
-> > prefer kfree_rcu() in __ep_remove()") had caused the critical-jOPS metr=
-ic of
-> > the SPECjbb 2015 benchmark [1] to drop by around 50% even though it gen=
-erally
-> > reduced kernel overhead.  Indeed, it was found during further investiga=
-tion
-> > that the total interrupt rate while running the SPECjbb workload had fa=
-llen as
-> > a result of that commit by 55% and the local timer interrupt rate had f=
-allen
-> > by
-> > almost 80%.
->
-> I ran SPECjbb2015 with and it doubles critical-jOPS and basically makes i=
-t
-> "normal" again. Thanks!
->
-> Reported-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-> Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+Hi Reinette,
 
-Thank you!
+On 23/10/2024 23:53, Reinette Chatre wrote:
+> On 10/4/24 11:03 AM, James Morse wrote:
+>> prefetch_disable_bits is set by rdtgroup_locksetup_enter() from a
+>> value provided by the architecture, but is largely read by other
+>> architecture helpers.
+>>
+>> Instead of exporting this value, make
+>> resctrl_arch_get_prefetch_disable_bits() set it so that the other
+>> arch-code helpers can use the cached-value.
+> 
+> The "exporting" term has already caused some confusion. How about:
+> 
+> Make resctrl_arch_get_prefetch_disable_bits() set prefetch_disable_bits
+> so that it can be isolated to arch-code from where the other arch-code
+> helpers can use its cached-value.
+> 
+> (Please feel free to improve.)
+
+I'd cleaned those up - but I'll go with your version as it'll be in the
+correct voice.
+
+
+Thanks,
+
+James
