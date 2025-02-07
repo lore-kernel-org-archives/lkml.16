@@ -1,95 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D7D16A95B;
-	Fri,  7 Feb 2025 12:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D6DB1E6DC5;
+	Fri,  7 Feb 2025 12:17:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738930671; cv=none; b=RcW1jfL1k4KdvmQ6ciKThrETDdH96ROrv0hACgojmHNZnrsRMGRfeNjdGOHKlFeCN5TmT1uqrEEmTlXVVPjHKxua+YWKPYBBKcuAHUu1NZskwpc3358NUq7yOR4OOTLYBZ6SXlKV8UmGxKAI43bFM8Of6+q7pUJcIPAY+TTXi2A=
+	t=1738930674; cv=none; b=HF7idT+1v7rdqZXb4S2gxTfr0SKLIaUKW39+Za1jDOdNTV7HNBLy90ws3gXGyoaYdJglEhnrC6mIniuCKSOm31nUU1Saha/hM5/qLKEMLSYWmGsekIaKAuRAC4vxanUV2T6PFYknFOmnK3DIFu/tKCO8dVxsX2RA1aKxOpsXjh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738930671; c=relaxed/simple;
-	bh=bf8DBZCUM8J3LvQ2Du0d66p+za3gm1XatxHVyOIRTxk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Njl7K0PB94c+Oy3rY3CuDVeM4SmacV8mBHDq3gvwvNgWxg4KlCfrNM7uVu1dqad+Vt0jxClRgmnfYCqz9s1xEbGoZ0qJhCxJVGVDFap7EugYUxJ3q93+dyMYv+Lv62QMyjQNBnY4GbtL7graMxjClvdynVTZ4Lu3GaEw0tOL2cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bAkbTOkf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bAkbTOkf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F2E5C4CED1;
-	Fri,  7 Feb 2025 12:17:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738930671;
-	bh=bf8DBZCUM8J3LvQ2Du0d66p+za3gm1XatxHVyOIRTxk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bAkbTOkfjcgCjv+YHr/Eld/oS7A4IZFK7+i34SkqUxeth89sXGDZIvAuEhKL4Us7k
-	 lAJKcCXEn78ZYZU71GwJ4jRKzew/4/sG7ciN9TNo9xHOfXJ2frLiWiPtnAvVbBEi1E
-	 YF6I/MIQ2hw1mX6ml8XhNtH3DDZGm1v3xwIyWddvurGMRU+urjk8qCuPepP3XmsOm5
-	 hDGD5xCqSWNDfVu14ZzSXhL2R46w5HshBFiiXsYZ8g/ZRuT1m9F4iH6eizUT80n9c1
-	 7RpV1zj6rnBeuJHz2YO0PZcknsxn9wP3OQSTZ5g4ywrmHQJEwJmvwLfsFCtPA1nRfC
-	 ptn3+iRplC4gQ==
-Date: Fri, 7 Feb 2025 13:17:45 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Lyude Paul <lyude@redhat.com>, rust-for-linux@vger.kernel.org,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Xiangfei Ding <dingxiangfei2009@gmail.com>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] rust/kernel: Add faux device bindings
-Message-ID: <Z6X56URWy8zSHV9i@pollux>
-References: <20250207004049.178049-1-lyude@redhat.com>
- <2025020702-garlic-kindly-8377@gregkh>
+	s=arc-20240116; t=1738930674; c=relaxed/simple;
+	bh=Diwc8kaOpiUiKonF5IYBToi/IYCdpwMOdLIk8dSBMf8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JyXm/vK18fBaTUy9CD2LTzfBjL9DMxMB3qUnlE4L4krmbMxlloM6GrahxCkzAEKFvvERnrv+FSGv4RiX7LHXElk1il+5U/x98tc1x2FHvB5P8V8XifODp9INqcFhEALiJ3IK4BFoy6UGHJ9MiO56pUHAj4ixjv9ntPHIAQ6YD4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 517CGfoY007959;
+	Fri, 7 Feb 2025 06:16:41 -0600
+Received: (from greg@localhost)
+	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 517CGcXR007958;
+	Fri, 7 Feb 2025 06:16:38 -0600
+Date: Fri, 7 Feb 2025 06:16:38 -0600
+From: "Dr. Greg" <greg@enjellic.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Hector Martin <marcan@marcan.st>, Dave Airlie <airlied@gmail.com>,
+        Jason Gunthorpe <jgg@nvidia.com>, Greg KH <gregkh@linuxfoundation.org>,
+        phasta@kernel.org, Christoph Hellwig <hch@lst.de>,
+        Danilo Krummrich <dakr@kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+        daniel.almeida@collabora.com, aliceryhl@google.com,
+        robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
+        Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+        Bj??rn Roy Baron <bjorn3_gh@protonmail.com>,
+        Benno Lossin <benno.lossin@proton.me>,
+        Andreas Hindborg <a.hindborg@kernel.org>,
+        Trevor Gross <tmgross@umich.edu>,
+        Valentin Obst <kernel@valentinobst.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
+        "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
+        DRI Development <dri-devel@lists.freedesktop.org>
+Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma coherent allocator abstraction.)
+Message-ID: <20250207121638.GA7356@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20250130154646.GA2298732@nvidia.com> <2025013030-gummy-cosmic-7927@gregkh> <20250130172437.GN5556@nvidia.com> <2025013148-reversal-pessimism-1515@gregkh> <20250131135421.GO5556@nvidia.com> <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st> <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local> <CAPM=9tzPR9wd=3Wbjnp-T0W8-dDfGah-H3Ny52G85B+2Ev9ksA@mail.gmail.com> <208e1fc3-cfc3-4a26-98c3-a48ab35bb9db@marcan.st> <CAHk-=wi=ZmP2=TmHsFSUGq8vUZAOWWSK1vrJarMaOhReDRQRYQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2025020702-garlic-kindly-8377@gregkh>
+In-Reply-To: <CAHk-=wi=ZmP2=TmHsFSUGq8vUZAOWWSK1vrJarMaOhReDRQRYQ@mail.gmail.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Fri, 07 Feb 2025 06:16:41 -0600 (CST)
 
-On Fri, Feb 07, 2025 at 10:25:09AM +0100, Greg Kroah-Hartman wrote:
-> On Thu, Feb 06, 2025 at 07:40:45PM -0500, Lyude Paul wrote:
-> > +
-> > +/// The registration of a faux device.
-> > +///
-> > +/// This type represents the registration of a [`struct faux_device`]. When an instance of this type
-> > +/// is dropped, its respective faux device will be unregistered from the system.
-> > +///
-> > +/// # Invariants
-> > +///
-> > +/// `self.0` always holds a valid pointer to an initialized and registered [`struct faux_device`].
-> > +///
-> > +/// [`struct faux_device`]: srctree/include/linux/device/faux.h
-> > +#[repr(transparent)]
-> > +pub struct Registration(NonNull<bindings::faux_device>);
-> > +
-> > +impl Registration {
-> > +    /// Create and register a new faux device with the given name.
-> > +    pub fn new(name: &CStr) -> Result<Self> {
-> > +        // SAFETY:
-> > +        // - `name` is copied by this function into its own storage
-> > +        // - `faux_ops` is safe to leave NULL according to the C API
-> > +        let dev = unsafe { bindings::faux_device_create(name.as_char_ptr(), null()) };
-> 
-> I'm fine with null() here, but why wouldn't a rust binding want to allow
-> this?  What's unique here that make it this way, or is it just that the
-> current users you are thinking of don't care about it?
+On Thu, Feb 06, 2025 at 09:58:36AM -0800, Linus Torvalds wrote:
 
-This is what I meant when I mentioned allowing NULL for the faux_device_ops
-allows us to simplify the Rust abstraction quite a bit.
+Good morning to everyone.
 
-Having probe() and remove() doesn't do a lot for us in this case in Rust other
-than needing a separate faux::Driver trait with a corresponding faux::Adapter
-implementation to handle those callbacks. It'd be an unnecessary indirection.
+> On Thu, 6 Feb 2025 at 01:19, Hector Martin <marcan@marcan.st> wrote:
+> >
+> > If shaming on social media does not work, then tell me what does,
+> > because I'm out of ideas.
 
-Do you see any advantage going through probe()?
+> Because if we have issues in the kernel development model, then
+> social media sure as hell isn't the solution. The same way it sure
+> as hell wasn't the solution to politics.
+>
+> Technical patches and discussions matter. Social media brigading - no
+> thank you.
+
+I truely wish that technical patches and discussions were the currency
+that matter but I believe we are struggling with that, at least in
+some venues in the kernel development process.
+
+No one should construe that statement as an endorsement of berating
+people on social media as the 'fix'.
+
+I come at this from the perspective of having worked on Linux since
+around December of 1991.  I first met you and Tove in 1995 at the Free
+Software Conference at MIT that Stallman sponsored.  When we first
+met, I told you that cancer patients in North Dakota were enjoying
+more time with their families because of what we were able to do with
+Linux and optimizing medical processes at our Cancer Center.
+
+RedHat paid me to speak at a number of conferences in the 90's talking
+about how Linux was going to dominate enterprise computing, given that
+it was about technology people doing the 'right' technology thing.
+
+I'm seeing things that make me regret those words.
+
+Probably the last technical contribution of my career is leading an
+initiative to provide the Linux community a generic security modeling
+architecture.  Not to supplant or replace anything currently being
+done, but to provide a flexible alternative to the development of
+alternate and/or customized workload models, particularly in this era
+of machine learning and modeling.
+
+Four patch series over two years, as of yesterday, not a single line
+of code ever reviewed.
+
+For a contribution that touches nothing outside of its own directory
+and does nothing unless people choose to execute a workload under its
+control.
+
+We were meticulous in our submissions to avoid wasting maintainers
+time.  We even waited two months without hearing a word before we sent
+an inquiry as to the status of one of the submissions.  We were told,
+rather curtly, that anything we sent would likely be ignored if we
+ever inquired about them.
+
+We tried to engage, perhaps to excess, in technical discussions
+attempting to explain why and how we chose to implement what we were
+proposing.  Including input from advisors who are running production
+IT systems that feel that there needs to be better approaches to
+addressing their security needs.
+
+There were never any relevant technical exchanges.  The discussion
+consisted of, we have decided to do things a certain way, no
+discussion, if you don't like that you should really consider doing
+something other than submitting to upstream Linux.
+
+The all powerful sub-system maintainer model works well if the big
+technology companies can employ omniscient individuals in these roles,
+but those types are a bit hard to come by.  Lacking that, there is the
+tangible risk of stifling innovation and Linux is the only place that
+innovation can occur in the operating system space.
+
+Not sure what the fix is, from a project management perspective the
+technology industry has never faced a challenge like this.  The fork
+model, which was the classic protection in open-source, doesn't work
+at this scale.
+
+We have a Code Of Conduct that we can't scream or hurl four letter
+words and insults at one another.  Maybe it already exists but a Code
+Of Standards for maintainers would seem to be an imperative if we are
+going to move forward productively.  Jim are you listening?
+
+Obviously respect and open-mindedness to new ideas appears to be the
+grease that makes all of this run smoothly.  Unfortunately that seems
+to be about as rare a commodity as omniscience in our industry.
+
+>                  Linus
+
+Linus, best wishes to you and your family, it has been a fascinating
+ride and thing to watch.
+
+As always,
+Dr. Greg
+
+The Quixote Project - Flailing at the Travails of Cybersecurity
+              https://github.com/Quixote-Project
