@@ -1,96 +1,161 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA6514E2C2
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334FE14E2C2
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738945747; cv=none; b=ZTteC6GXan13MKpGrXw3qcemGpgjM0oYbnvQCVLuoOZF1q8+/wDkLAXK1M+ir2Mt9v1hblggUZ+DBfa6IsfPnu7h6VR7eygZO6Q3co1kWcCGXwi99ytH82Uh4HrJWcTq5eQyHmYNCdouxajatR4K9HQpCjDWB5kC/OOhI9Hh7eI=
+	t=1738945759; cv=none; b=RI7u1UZ6FnbP17EeEjhnKeiZFdSiRA7PJi0zsxQInxXvURQEP+m3ks744xjD5MksNDBMttv1i6xBJHht2u9rFm6N9xijBoonJ55iqMKKaZhHLdf3+mAvdRFqbUdEGajs69mM4Jx97OQ7OMXRA2CCN8eQ9EL8cCiyJ6xvqpbAbwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738945747; c=relaxed/simple;
-	bh=XaErmJGNd3qnIEy9xm5OsxWh5sNMP7wTJqbrGvV6l1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BqnFtejiV5h4kL1Vlo5xVwTh8bHW2EDMu0BEOR7gqIyORv3bcOBVS/zmn3x0Ma3t3WSPIP+uJdCvcRbqLvT0mFFhUSXFmCxEriCmYZzk+W0+DTx4sSOsB0aquX3jrNzCd2lhLjI0o5O6d3c0dLnnVcYYt3xSWhZZGFs4z0XM/Oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Am5OLymG; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1738945759; c=relaxed/simple;
+	bh=57uHeJssUhSTwboeRjLbjHP/8gebXbxQ08iLQ68S9QU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BSJp/p6Tt01lvSQyP7bgQsY8JTMHj6jcWSoxNwF73k8wZUWxVxJChM+3Qujj/M+n9ppbRKoVxvQ37S9v3fAzNUxlzg6CceHfSr/4QOJPEEEUT5r0CG5A3cPxU5HfmRbqyfxMouUeS260s69ZKqUiCM2qcmZtm36sLOeraavXe+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mtEJ1Sr2; arc=none smtp.client-ip=209.85.167.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Am5OLymG"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-467b086e0easo12094161cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:29:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mtEJ1Sr2"
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3eba0f09c3aso703443b6e.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:29:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738945744; x=1739550544; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SuwKjNIyamlXv9GNIw1RStP37nLjo1Z0L3Uzn683JD8=;
-        b=Am5OLymGP1mWNAu4sDdyRW/Ud3Iw4M9+k0HcoiZaPIpcpu31LYMFFeXkvEFunorelI
-         FBD6OVUAqG5mpss7VB030Z1mbdZE1vsixdZoiLZ2mXcD6MYX5HdzR1OSKKU6UQM1NNkU
-         hQkZV6B8BIsCuQ0TNnytcSE4lNPIkMz0AmwjnB5r44OhKuR3K8Cc3zGfZ1wm3cwktaYr
-         Q/iGpQGDN8O9W4xv3ExQnqJDVAZH9G0vT1U7xHG7nuOFCDoMs+gY96BoEOj/f2ejppon
-         Pgu4I5dP/3/CQ+HqdWBJJUcVsGxNWuRShUPj3dfWK1kzmq7FC9VRZbXNWzFUh/rbo5cF
-         Sivg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738945755; x=1739550555; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=k5z98lSfe6WwRG+wC0Tg6PRqMgic/o2qF3h3J+ulLEk=;
+        b=mtEJ1Sr2l7/lIK8nvmtXf2sOSfDvQGnL/msUKLZ4fK99Rd4clSOcYOIj0eFfGaLOdX
+         PhbPZ29bbmJC0xUP5e0yRlFjkXShnUq/dnZ/WcJcZ9M7t7eYficY5G1lTOMk0+/DyFz7
+         e7suiMpue9zPF6ivH9gxewbO9CUN2xj5AcJLrNAWv/c297UzMkAI7UiZLl1csBec2nzX
+         TKEh6k+Px2lri8jnJt3ooEj+r4MH63cF5+lZ0wLdUaKwV8lZvZ4i9cjd0QcxPZu2haAn
+         qI9z/jykdLqcHLrqXuxBKAy1uKVNi2IOwAJY0Rl1NN0AWeZ68C+NE4/maNTj/grV7fSA
+         H/KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738945744; x=1739550544;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SuwKjNIyamlXv9GNIw1RStP37nLjo1Z0L3Uzn683JD8=;
-        b=MIfOgTrGpuJrXnLjrgNqSyjrpgQRMUJ1lml6ibJHpKo2SdQ9CKRcXtwwDBfOrn6ZBI
-         TwPoJHOGLceZ6wmiKc2AW+1cjJfEUzrLrUgdloHRDx2tghjEJK0DUiO5Wdv4LbV1IOYM
-         nue9H8nrjE6iuDXWayxQoo20jm+y5N9T9Cja7FWB7izV+5DJCquv/VskIrW6+mhsWCBJ
-         oU60JEkF0bgLXgvwL76KEvFKTyq5F/lxdopscvPfsKYhknh8S5EzVcmZo3Zf5H5oyLWm
-         fczuA+9mOyItK5H+6vaDEpeED6DlHqVgqHV82W/eyYiE0b7UuOkMSYsgbrMF96rk+nZD
-         xvnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJtHWXzYPg2O+M7bt6PxMzUv6TboxnenWQxYgCGt9+uCElMkqo/UExpFr1wgaOxOR+Ax7lCAiPTpwFaJw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDJvEIg4ej9U/IuI80Wp1LW9t+32At/y3g5YnyPn05CbczsWjE
-	jiJ6K6vLJqkurDeZi6Dvj97/TTwDSO84Q7fYgD1Y+fInvj5zrgUZQ4NLfYtQ9hk=
-X-Gm-Gg: ASbGncssTf7zm4HZ3TZUImioCNhaIILS4R2B59ODJrWT0OgWIaEzV+TyPdBXEFwu4wD
-	e2Ky7rsZxCf2JvqTHm/B7goN3vFkd/Kv5Wa3RxnLV47rk2reIt+HfkOT14CHyAWaFXzlH+ZGJ0u
-	FMI9w3CBkS/jGYKrDSPUhOzBj7rbppXIfSfbP3GFYgMT4o89w+ejWL9l0zEPID87nuyLGTGxnCh
-	ItL0CEudJux1cYUZa3Frcy6ScY9kgHHpzVkOyobgc/4LtQld56H+BSFmxZBSGl1gc24vvZEMxHs
-	KY8VFQbK35U8vmCjAOfP+N67nGrXSeSlHURT4ScNL0aBQ8fdYp4HmEEV/W2EeAaG1K942afFYg=
-	=
-X-Google-Smtp-Source: AGHT+IHQAWmbysLX02YAGwkH8oMiID89cBQFNJKcH9csyPpK0VEmVQy/XH7JC/mzj/dhUwQ7C7TLgA==
-X-Received: by 2002:ac8:7d86:0:b0:467:7725:8b69 with SMTP id d75a77b69052e-47167b2ebe8mr53489691cf.40.1738945743960;
-        Fri, 07 Feb 2025 08:29:03 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47153bec57fsm18399611cf.73.2025.02.07.08.29.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 08:29:03 -0800 (PST)
-Date: Fri, 7 Feb 2025 11:29:01 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 13/18] cxl/region: Add function to find a port's
- switch decoder by range
-Message-ID: <Z6Y0zecGPhlHgVMd@gourry-fedora-PF4VCD3F>
-References: <20250207153753.418849-1-rrichter@amd.com>
- <20250207153753.418849-14-rrichter@amd.com>
+        d=1e100.net; s=20230601; t=1738945755; x=1739550555;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k5z98lSfe6WwRG+wC0Tg6PRqMgic/o2qF3h3J+ulLEk=;
+        b=NRyZLZk6GyAVanmA4r4+eYQLgFxeCxA/Ba2XiV1ntFvAHLT1ITZIsUyI04acVWfprw
+         tYSivFeFVM6M0WSHE03wgfAwA8wDspfL82ByYzK25CLe4QZK6EPon1ySwfUJgxPgmWdl
+         LkosKZXMxKuJ8t4WuNVsOFhM75aOjMjzeLmGNU10lRwiCkpuyOuiTbJm+ZwTO3T6tSBZ
+         NDv/UuOLJxAJmcFrGWVu8eG0bh3o8iEZHBil4xGTlHiLA4G3wlAJSk+kiP6AGzOd1VO8
+         7gXwdjVm4VmGOklMo1zqCA/VXXqBc37tCND44r3MG999LF4Lh/jcAAXXk+HDe9b2ZA9d
+         f0oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWBEJaJ6Xq24CvrnfrL1WxNUZtXWCI9JHczQcNeGfHYBZIP9HkPz2rpvwmI+HzwpLarG7nIX4SmULutlbk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzp0mJS3hZy6NuPyfxSEzwPjgNtVFRDEa7rAeeMt8ZUf5pt0CF0
+	8KG6PxgzLmtspx14luXbuCCbOtdlQ64lAIp96Ic/8/foExQWRzKlbQNZuYTFnJU=
+X-Gm-Gg: ASbGncvy+xG1lDKBLnyAIM4NLRITFjRU3SLjm2t9y/QaiFhOQLXjCJgOY7ja+8hJtx8
+	tpP99FQ/0hasciKG26F+diH/Ahk1BvNKjBK3fPhJ4zQ82EkVor/gPYOJ4mY08hdP28MCid6iTU1
+	uE/Xj9rdZNKtB810IHeN/d7T6XMODzjourcgQQC6/vWn8EYsQSASak7cV3Xvogt/vIkrQHHqLo3
+	HbzOISzBVVfjOACwv1YX//WVfoEI7dtBUp29xLBdyzjtG3HU6pSAygXo38StbA248sASTnF5AX1
+	GLxLfvEbarG/jTV5Oe3hvi5kKbE3FzhQm8uawZr3kId8/CzeNiUg
+X-Google-Smtp-Source: AGHT+IG7StedQ5Vnf2T8W9EtvcPrRVDItpyl7T3DBHEMIV0RzDgNrv3XTiomaadolzmBwJACvP6VXg==
+X-Received: by 2002:a05:6808:30a3:b0:3e3:bd1c:d584 with SMTP id 5614622812f47-3f3922d9a38mr2709674b6e.9.1738945755147;
+        Fri, 07 Feb 2025 08:29:15 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3f389ed6220sm756084b6e.15.2025.02.07.08.29.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 08:29:13 -0800 (PST)
+Message-ID: <74ec33db-6721-4b86-86a6-e18b0a01fc47@baylibre.com>
+Date: Fri, 7 Feb 2025 10:29:11 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207153753.418849-14-rrichter@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/13] gpiolib: add gpiod_multi_set_value_cansleep()
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
+References: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com>
+ <20250206-gpio-set-array-helper-v2-1-1c5f048f79c3@baylibre.com>
+ <CAMuHMdU5tt5_t2SfYO3OUsHenu_0PhpKeLHktNdCx-W6zCEymw@mail.gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <CAMuHMdU5tt5_t2SfYO3OUsHenu_0PhpKeLHktNdCx-W6zCEymw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 07, 2025 at 04:37:48PM +0100, Robert Richter wrote:
-> Factor out code to find the switch decoder of a port for a specific
-> address range. Reuse the code to search a root decoder, create the
-> function cxl_port_find_switch_decoder() and rework
-> match_root_decoder_by_range() to be usable for switch decoders too.
+On 2/7/25 3:10 AM, Geert Uytterhoeven wrote:
+> Hi David,
 > 
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+> On Thu, 6 Feb 2025 at 23:48, David Lechner <dlechner@baylibre.com> wrote:
+>> Add a new gpiod_multi_set_value_cansleep() helper function with fewer
+>> parameters than gpiod_set_array_value_cansleep().
+>>
+>> Calling gpiod_set_array_value_cansleep() can get quite verbose. In many
+>> cases, the first arguments all come from the same struct gpio_descs, so
+>> having a separate function where we can just pass that cuts down on the
+>> boilerplate.
+>>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> 
+> Thanks for your patch!
+> 
+>> --- a/include/linux/gpio/consumer.h
+>> +++ b/include/linux/gpio/consumer.h
+>> @@ -655,4 +655,11 @@ static inline void gpiod_unexport(struct gpio_desc *desc)
+>>
+>>  #endif /* CONFIG_GPIOLIB && CONFIG_GPIO_SYSFS */
+>>
+>> +static inline int gpiod_multi_set_value_cansleep(struct gpio_descs *descs,
+>> +                                                unsigned long *value_bitmap)
+>> +{
+>> +       return gpiod_set_array_value_cansleep(descs->ndescs, descs->desc,
+>> +                                             descs->info, value_bitmap);
+> 
+> I am wondering whether this needs a check for !IS_ERR_OR_NULL(descs),
+> to handle the !CONFIG_GPIOLIB and gpiod_get_array_optional() cases?
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+I don't think it is strictly needed, but could be convenient for future use
+cases. If we add it, should it be:
+
+	if (IS_ERR_OR_NULL(descs))
+		return PTR_ERR(descs);
+
+or:
+
+	if (!descs)
+		return -EINVAL;
+
+	if (IS_ERR(descs))
+		return PTR_ERR(descs);
+
+?
+
+For comparison, gpiod_set_array_value_cansleep() will return -EINVAL if the
+first argument is NULL.
+
+> 
+> Slightly related: shouldn't gpiod_put_array() (both the implementation
+> and the !CONFIG_GPIOLIB dummy) allow the caller to pass NULL, to
+> streamline the gpiod_get_array_optional() case?
+> 
+>> +}
+>> +
+>>  #endif
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+
