@@ -1,49 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A45F1B040E;
-	Fri,  7 Feb 2025 22:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74691B85F8;
+	Fri,  7 Feb 2025 22:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738967999; cv=none; b=YWdqnv/B48IED7Y5JLsEHhUtB9qJA6g9dToOXa2QpjaB9uIuq/86UyaEY5rEqZfxiuKfJZIroUJhojBU1lxtfJ34CEBsh5H4zwrCn3aPAsnXb/kNTKJZSI+zzWE2L4dlanKpsu664Ko457FjJMY8M6WkmNb9yoQOnn3myqI/GPM=
+	t=1738968099; cv=none; b=YvhgMNhtR4f+YwFnJ7SVU1mSqz/TVrkfgq9UmgmXaYINTrrfHSSFUUI30MGWsqGdGwYbQdUSDnYXWJKubloPc6/Z+dkrnowAydw2d1qMtjbw0/uoa5xvSPPYI1u62yeHJNMNOG8KR6ZTbCqsMh3OW4S2Z4yN880YLDgdzhT0azU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738967999; c=relaxed/simple;
-	bh=CkqyHQsJo+5JgwcQ+3Aney3H89UG2dd28pIxPBnkThc=;
+	s=arc-20240116; t=1738968099; c=relaxed/simple;
+	bh=5ib1PTrHwCZ+lCJZnTPYTpCRuH0ctx+Px4qttu2dPnw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fOoX6/fhlggfAkcp1ypbb3vCLAGBjvOndxreFdCm8i1CZgf6f+JFKXzNxI63f2Sz8cWfgEcWKq7zBsaotsKCEnIuoZydMvUkWkgRSoVOZ+l2+3eD+3LhbwDhs85xehz3ndUufJ744QFQGme8LFZ4pTrRmgEv8HFIGWHfsh7zpuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Buo4wBT7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kVoWWw/lk9m7bpxi3pdtMNox6FcTpvh1AVSA3vGvN6P3//nr1zhVfNBwa7ut9dj7ubQx4b4mCW9JYNVVLakNFaxoNOnEPjDE3SDHX8jdlJGp2/ltNYhZHsaEsANkRfar6++LKv6T3JvqRvBJ1flgjsMiF6Yxe5wkKLgMYFta7Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=u8HTEcEt; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Buo4wBT7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99F1CC4CEE2;
-	Fri,  7 Feb 2025 22:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738967998;
-	bh=CkqyHQsJo+5JgwcQ+3Aney3H89UG2dd28pIxPBnkThc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Buo4wBT7WySW/cbrPBP+wB3qhkBQ8zFJhNDXrpHD67VpuPSgCDGgU43I2ExBeJV1I
-	 w3KEytqAB16A6TgmE/CTJGj1UiiRERNRb6h+CinduxI0njnEbr1BSdLNGGvzEJ9p82
-	 xkYjKhTn6PvmmI0MdPjEEEiKWMsprsc0IcB8jkbjck/W53T/dvgCJ5yvBfhXOU4una
-	 Q2cT9vI5pxXWYmV8+F/pNzT/Vvtr4hUynBhoEPHek6BOqKCJGDgzdBmIUE7G5M3B5N
-	 +ewgiIMbsG4h5Iga3CGWAbBjCmJ6/82gilSELUs8/jlvRFRPVW3ce/01j5aDt6uLmf
-	 tdC1DLNZ7Q4RQ==
-Date: Fri, 7 Feb 2025 12:39:57 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, Ian May <ianm@nvidia.com>,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] sched_ext: idle: Introduce node-aware idle cpu kfunc
- helpers
-Message-ID: <Z6aLvYaYlQ3KRZQM@slm.duckdns.org>
-References: <20250207211104.30009-1-arighi@nvidia.com>
- <20250207211104.30009-7-arighi@nvidia.com>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="u8HTEcEt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qQvebxCbkMZCNGjKogtEbnvfJMWKBTT8tF0Exv7OWtk=; b=u8HTEcEt4GpqNwk3vtnXj2cTse
+	BUQTX9ypsTEPpPlT8dJSWgu7Bm+/oYi+8/EEdbCQ5X0Px/rmnhnaHHIS8NSUppSEIiIfPsnHXYOJY
+	YlU4lyRHaovcGTm+mjm0QIKvAwN1sai10dfrNYE8OSCVS5KXXzVc4C/f1IbuGbb/smgoxbqPWYCq3
+	lmkNPQ20Q0uqkmpnaJta8V1Bjb83YMJdMQjdZOxdBYw1bZXkZXC+/bjITZwXHz6nNJG1qZkq7jdvz
+	QZpq54b5DJRL2TFKKRDcwgax4gzVEo4ns3ppP/7d/yzK682+2bttcpEcgHNRx/h8ZG2i/so/WVVDb
+	HkygA3SA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tgX2U-00000006fyj-1HFS;
+	Fri, 07 Feb 2025 22:41:34 +0000
+Date: Fri, 7 Feb 2025 22:41:34 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/19] VFS: add _async versions of the various directory
+ modifying inode_operations
+Message-ID: <20250207224134.GM1977892@ZenIV>
+References: <20250206054504.2950516-1-neilb@suse.de>
+ <20250206054504.2950516-10-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,66 +50,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250207211104.30009-7-arighi@nvidia.com>
+In-Reply-To: <20250206054504.2950516-10-neilb@suse.de>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Hello,
+On Thu, Feb 06, 2025 at 04:42:46PM +1100, NeilBrown wrote:
+> These "_async" versions of various inode operations are only guaranteed
+> a shared lock on the directory but if the directory isn't exclusively
+> locked then they are guaranteed an exclusive lock on the dentry within
+> the directory (which will be implemented in a later patch).
+> 
+> This will allow a graceful transition from exclusive to shared locking
+> for directory updates, and even to async updates which can complete with
+> no lock on the directory - only on the dentry.
 
-On Fri, Feb 07, 2025 at 09:40:53PM +0100, Andrea Righi wrote:
-> +/**
-> + * scx_bpf_cpu_to_node - Return the NUMA node the given @cpu belongs to
-> + */
-> +__bpf_kfunc int scx_bpf_cpu_to_node(s32 cpu)
+I'm sorry, but I don't buy the "complete with no lock on directory"
+part - not without a verifiable proof of correctness of the locking
+scheme.  Especially if you are putting rename into the mix.
 
-Maybe scx_bpf_cpu_node() to be in line with scx_bpf_task_cpu/cgroup()?
+And your method prototypes pretty much bake that in.
 
-> +{
-> +#ifdef CONFIG_NUMA
-> +	if (cpu < 0 || cpu >= nr_cpu_ids)
-> +		return -EINVAL;
+*IF* we intend to try going that way (and I'm not at all convinced
+that it's feasible - locking aside, there's also a shitload of fun
+with fsnotify, audit, etc.), let's make those new methods take
+a single argument - something like struct mkdir_args, etc., with
+inlines for extracting individual arguments out of that.  Yes, it's
+ugly, but it allows later changes without a massive headache on
+each calling convention modification.
 
-Use ops_cpu_valid()? Otherwise, we can end up calling cpu_to_node() with an
-impossible CPU. Also, I don't think CPU -> node mapping function should be
-able to return an error value. It should just trigger ops error.
+Said that, an explicit description of locking scheme and a proof of
+correctness (at least on the "it can't deadlock" level) is, IMO,
+a hard requirement for the entire thing, async or no async.
 
-> +
-> +	return idle_cpu_to_node(cpu);
-
-This is contingent on scx_builtin_idle_per_node, right? It's confusing for
-CPU -> node mapping function to return NUMA_NO_NODE depending on an ops
-flag. Shouldn't this be a generic mapping function?
-
-> index 50e1499ae0935..caa1a80f9a60c 100644
-> --- a/tools/sched_ext/include/scx/compat.bpf.h
-> +++ b/tools/sched_ext/include/scx/compat.bpf.h
-> @@ -130,6 +130,25 @@ bool scx_bpf_dispatch_vtime_from_dsq___compat(struct bpf_iter_scx_dsq *it__iter,
->  	 scx_bpf_now() :							\
->  	 bpf_ktime_get_ns())
->  
-> +#define __COMPAT_scx_bpf_cpu_to_node(cpu)					\
-> +	(bpf_ksym_exists(scx_bpf_cpu_to_node) ?					\
-> +	 scx_bpf_cpu_to_node(cpu) : 0)
-> +
-> +#define __COMPAT_scx_bpf_get_idle_cpumask_node(node)				\
-> +	(bpf_ksym_exists(scx_bpf_get_idle_cpumask_node) ?			\
-> +	 scx_bpf_get_idle_cpumask_node(node) :					\
-> +	 scx_bpf_get_idle_cpumask())						\
-> +
-> +#define __COMPAT_scx_bpf_get_idle_smtmask_node(node)				\
-> +	(bpf_ksym_exists(scx_bpf_get_idle_smtmask_node) ?			\
-> +	 scx_bpf_get_idle_smtmask_node(node) :					\
-> +	 scx_bpf_get_idle_smtmask())
-> +
-> +#define __COMPAT_scx_bpf_pick_idle_cpu_node(cpus_allowed, node, flags)		\
-> +	(bpf_ksym_exists(scx_bpf_pick_idle_cpu_node) ?				\
-> +	 scx_bpf_pick_idle_cpu_node(cpus_allowed, node, flags) :		\
-> +	 scx_bpf_pick_idle_cpu(cpus_allowed, flags))
-
-Can you please document when these compat macros can be dropped? Also,
-shouldn't it also provide a compat macro for the new ops flag using
-__COMPAT_ENUM_OR_ZERO()? Otherwise, trying to load new binary using the new
-flag on an older kernel will fail, right?
-
-Thanks.
-
--- 
-tejun
+We *do* have such for the current locking scheme.
