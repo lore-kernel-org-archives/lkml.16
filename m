@@ -1,85 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B914D23C8CB;
-	Fri,  7 Feb 2025 21:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FF91A254C
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 21:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738964478; cv=none; b=XHqTzY2B4qbQepOhVeQMra/TfRqK9d6DZynR3fgDkW+N60WKl4NPSeHiKLuPTusVsCVVETXUgLD1Z9ZmPgCOYxBu4WdkaTWjBkNHCZvPE1lpPfd0WuFHjr3ooQq/QRq14XLI4Pt/oxZJr2VlTa5gANs+UNSSuW7wZx0Y+ZbGv8U=
+	t=1738964581; cv=none; b=Ytty7bSG5CowIs6KkPwIMvKl31hBTkYaLGPfXzVfLZ+STGXiUd8SF38LDymVrtHXg+fLEINuhJBpAhpBDCxIV7rY2kRlzzgGLK8p1LpzgLs4I7dfFtR/oU6JLwFnZeafpa7iYlzLJToeQxJDVuOuJwAruP6Nq7FWAascX4CTn0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738964478; c=relaxed/simple;
-	bh=bqBytptlQlI73yqYfMLj2ttbYFVky1pvmuVnq2C2jHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z3Qn8SqMoEjQt+5j2leRHvjrM6GbVv7DFrJP3TpXnKmzGdy95dHxoxulIE3gQ267QPxzcloOcSUSlFx4kFQHo0wFeg7/6bDPZ2qh6o4oseIa5uWt3s4N9EQo1MSrcKSfHEcBYNmFRyLASKv2vDlH+Uy+/E91WcUzZKe2rSgbJg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZtNmAYwu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738964581; c=relaxed/simple;
+	bh=YY45Gnycd+3o7hKOW8C8JWYriuERUUgTq475FPmCvGI=;
+	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
+	 References:In-Reply-To; b=OlAlDCdrS6UXnvIau54TwncJ8anbXJ7HjNH2M5XVpYCHtchJNmpdK2mg6yBy8Qdh7Dc0+u5uj/0RpZZmODjyK4q/VhIm5ZAilOLeIlhJf6VBiH7b5x5cpGO+vWs6a00H2gkdDn0Jvxe9ssCfzg9Z7JNASu4lcBnuciAm5aIEdm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=U3lj2Y/H; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZtNmAYwu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82DD0C4CED1;
-	Fri,  7 Feb 2025 21:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738964478;
-	bh=bqBytptlQlI73yqYfMLj2ttbYFVky1pvmuVnq2C2jHE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZtNmAYwul23XH0zCg2ocs+olF6xs3OWFogWmnRQH6KXquwcmduMhunb+CYcrGRZIU
-	 Png6QHlNUBRlsq3XbaVCOQV3fMt8qbLdd9j35K0KDCto0QpAbmOyetSSMbXJqBZljM
-	 dVxU3/t2z06NfEnMVaI2/9zJMPeqCQLR/gASA3SuR+8sT84xmXUKkL2BUbfWu1zuJI
-	 ohaQ+oIInjT0SzVPfjtiJm3a5OIBJrxZJdF4hMpGx55Xh4T3RCBgTmAS2ZU38Ok0ER
-	 W7UdvYLlXAyg9ZyIE/t7+kbCyYTHblN/IBZ7CSCJjaXMCLDGcSb+o/YIeLV/9K9Wvm
-	 OgWJb324GuRyQ==
-Date: Fri, 7 Feb 2025 14:41:13 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Brendan Jackman <jackmanb@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org,
-	linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] objtool: Add option to fail build on vmlinux
- warnings
-Message-ID: <20250207214113.GB661404@ax162>
-References: <20250113-objtool-strict-v3-0-8b51f94957fb@google.com>
- <20250114001440.cagqlvjfvw6ghsj7@jpoimboe>
- <CA+i-1C0MFQCLOah56wWQhPhtk4p0ynhxh48eTmQ0-0x+pB6fvw@mail.gmail.com>
- <20250130183042.GB3394637@ax162>
- <CA+i-1C2rw6uNOpeY8fakco8T75udRhLJLxJ4CHgJNKBhbxGa_A@mail.gmail.com>
- <20250131204920.GA1974131@ax162>
- <CA+i-1C1A_0nkY6G+W3n=dYqEJHZGuEwNXK=xrWNwDh7561x_9A@mail.gmail.com>
- <20250206171036.GF180182@ax162>
- <20250207025127.2sy74bhcu6wtbo6a@jpoimboe>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="U3lj2Y/H"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e45258610bso83116d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 13:42:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1738964578; x=1739569378; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :mime-version:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IvI4JoqoZo9YGBOkVNl+HIo1GyCi9K0UiyKNezQvlcg=;
+        b=U3lj2Y/Hx5rw231y8IvfEZA+lYWKI2a/kzxlcQ8vJa/yp7+fGbyE40xukdNfaPhLBS
+         eyeDnWgB5AA8dq9i/vKzwxnC9ODoz6u7VLzacFdmcaG5qP9mSgTEd/+akTpspOncMGuB
+         eGO4GX9HdY7HcVy7hLgPRbXbexsqMMXVGXE3kNBNBI2wkNY6ApWORKUc1VjMhyX9ewfa
+         AjWGpToEHycw8wORMj1lwuSUk17dnep90bRZD8M+Nhobnvrzm0sp4yMdyN3TuAYupkbU
+         imjbUreNvBUyeHuWItTJeMTj8mBBy+8jETR8lPzeBfbDVpJ9TttR5w/t47qQFv6iVTj3
+         A9mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738964578; x=1739569378;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IvI4JoqoZo9YGBOkVNl+HIo1GyCi9K0UiyKNezQvlcg=;
+        b=tAiG5Bvvnba33m4NlWS2WKKOJUhMOX8o2ivY+21O/N2gTbde8h7EloAkOgZshugFih
+         YlbT1V3fjU8wPi+MCoPNpHDiHz7uevzPmo7Zsl7wkSHpHgGFr4zXfUqa3sYYZ3+kQdac
+         ObBpQhfKjV29+GMOb1WGDEFjrFfNUNMKBc0hO4blvlbCgrlMlP1vde+F3xUHKWmYi9mv
+         jhzUmpx0D0LsiUbsZQ+DpfhwwABDSbk2hFSiK0GWipxAlVu9V+dI3vg+mt3hTEv+oJO7
+         zIJjuPoOXJiTCmCmYDEZ7p6P24BaLQf91fe9K9fZVg32hkUjiq1jMuO2xw21JT2gmP15
+         mqyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVuQMm8c5qc4HQ+ouoY6YTE97lRGvNUPgxIitbU2Lc/Re2/50LbMUqbMBgho14UatGvkvRw3lBMYAPxujU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmfteStmbbNTYetCne51F5psS7nGpG/x1/nUik4lTkBhjQcwgM
+	l+K2EKjUNx9u3DV4UbBxqIVoiNwDNk1d7Lrj4SxhjJDcgFwC/qxaoh6vzi0Dxg==
+X-Gm-Gg: ASbGncsRqnWYYlmWPPfa+qLFk8tnc0KfOmy1XQabChu1yu9asaD19Sk+CyOWc7zC3rd
+	aFt9OeNK7z/To0nGtsu2pCUhEfnfyPuAj94Yz1WbplI05b9XF9XVOoZhcZI0B7jFymHnfE3fgpM
+	sNCk5Uj8XbHhdEXDEG97fwC/bcZ/KUYUi/Rg1DIORBRJS2c1Jfw+yAt93E+avCtZF7TSmq/53r7
+	K5TIE4Tvp/bYD9Hzx6qCtaPcDnImu+/pTfZEAP3UuoxictcPcOxNY+kr+gzcm1/GWFioP6bFIRz
+	z8EqdkvDlg==
+X-Google-Smtp-Source: AGHT+IFs+6UcZosHd2iDR62Ugi6tG8vmQY7p/Mreyxu8ihzV+H08wfaEH+7KqK5h9qrbMMnVoHlMRw==
+X-Received: by 2002:a05:6214:21c9:b0:6e4:2479:d59b with SMTP id 6a1803df08f44-6e445a1f182mr86494526d6.16.1738964578659;
+        Fri, 07 Feb 2025 13:42:58 -0800 (PST)
+Received: from localhost ([70.22.175.108])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6e44b159663sm8220186d6.100.2025.02.07.13.42.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 13:42:58 -0800 (PST)
+Date: Fri, 07 Feb 2025 16:42:57 -0500
+Message-ID: <a4541fab007858c599aed1d1e3e98883@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207025127.2sy74bhcu6wtbo6a@jpoimboe>
+MIME-Version: 1.0 
+Content-Type: text/plain; charset=UTF-8 
+Content-Transfer-Encoding: 8bit 
+X-Mailer: pstg-pwork:20250207_1530/pstg-lib:20250207_1633/pstg-pwork:20250207_1530
+From: Paul Moore <paul@paul-moore.com>
+To: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>, linux-kernel@vger.kernel.org
+Cc: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Jens Axboe <axboe@kernel.dk>, Pavel Begunkov <asml.silence@gmail.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, =?UTF-8?q?Bram=20Bonn=C3=A9?= <brambonne@google.com>, =?UTF-8?q?Thi=C3=A9baud=20Weksteen?= <tweek@google.com>, =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>, Masahiro Yamada <masahiroy@kernel.org>, linux-security-module@vger.kernel.org, io-uring@vger.kernel.org, selinux@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] lsm,io_uring: add LSM hooks for io_uring_setup()
+References: <20250127155723.67711-2-hamzamahfooz@linux.microsoft.com>
+In-Reply-To: <20250127155723.67711-2-hamzamahfooz@linux.microsoft.com>
 
-On Thu, Feb 06, 2025 at 06:51:27PM -0800, Josh Poimboeuf wrote:
-> On Thu, Feb 06, 2025 at 10:10:36AM -0700, Nathan Chancellor wrote:
-> > Right, I think gating on '!COMPILE_TEST' would not be a terrible way to
-> > introduce it. We would definitely want to remove that dependency as
-> > soon as possible because we want compile testers to be qble to find
-> > these problems and have them be noticeable but it should make the
-> > introduction of CONFIG_OBJTOOL_WERROR less disruptive.
+On Jan 27, 2025 Hamza Mahfooz <hamzamahfooz@linux.microsoft.com> wrote:
 > 
-> I want to get CONFIG_OBJTOOL_WERROR merged soon.  I'm working on some
-> other patches to go along with it that will hopefully ease some of the
-> pain.  I'll post those soon and then hopefully we can get it into
-> linux-next.
+> It is desirable to allow LSM to configure accessibility to io_uring
+> because it is a coarse yet very simple way to restrict access to it. So,
+> add an LSM for io_uring_allowed() to guard access to io_uring.
+> 
+> Cc: Paul Moore <paul@paul-moore.com>
+> Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+> ---
+>  include/linux/lsm_hook_defs.h       |  1 +
+>  include/linux/security.h            |  5 +++++
+>  io_uring/io_uring.c                 |  2 +-
+>  security/security.c                 | 12 ++++++++++++
+>  security/selinux/hooks.c            | 14 ++++++++++++++
+>  security/selinux/include/classmap.h |  2 +-
+>  6 files changed, 34 insertions(+), 2 deletions(-)
 
-Sounds good to me, getting it into linux-next will give us a good idea
-of how disruptive it may be.
+Thanks Hamza, this looks good to me, but we need to wait until we get an
+ACK from Jens on path 1/2; he's pretty responsive so I don't think we'll
+have to wait too long.
 
-> I didn't quite follow the OBJTOOL_FLAGS idea.  We already have
-> OBJTOOL_ARGS which allows adding arguments (though not removing them),
-> was it mean to be something like that?
+As far as the return/label issue in patch 1/2, as long as there are no
+other issues, and you are okay with the change, I can fix that up when
+merging your patches.
 
-Yes, I should have prefaced "if it does not already exist" since I did
-not realize that there was already support for adding to objtool
-arguments via an environment/make variable already.
-
-Cheers,
-Nathan
+--
+paul-moore.com
