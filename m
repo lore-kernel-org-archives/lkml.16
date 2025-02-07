@@ -1,52 +1,48 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967DD19CD13;
-	Fri,  7 Feb 2025 22:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1239502BE;
+	Fri,  7 Feb 2025 22:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738967401; cv=none; b=Vrx+pU4LeQkhhbWVXbvwO+ntPArfNcpi0DOqDqJnuQjvi7wok4huVClRqOTL8FquGxsekb2cy36O04RQCkd3E6bXg4gAJqGVri/Xs4B5BQzvlH75CDdn9yRksocsM9ePiNCdpjQ9xcuDQORmSKTWbDEV+8117nzLRBNSIgsweVQ=
+	t=1738967438; cv=none; b=bgXcqW60EV05oBCCRz9zrNO/YbLPNhfIH9V9vS/eYxx9BIVl60vLln2dxQTYxqbnmJ/0hfZcpNtKzLZb2cfJBpQvqSLJv6nWXblI5MjBMdeJtkveJcLJbrFkW1bYODIbRGHL5tsdkWWpiX6BtdDa+0s50lKjV1O6Tuu8J6/UPso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738967401; c=relaxed/simple;
-	bh=VORfoixWND1EdNRfn9r90WVhSJ0cjr21spkOTDrOjII=;
+	s=arc-20240116; t=1738967438; c=relaxed/simple;
+	bh=QWhAu2OFt+EcyVIJFJNCIRag3WhrVrPecqNWFTdZByw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bUYDlFJSAGwk41bH285zD34unYKIbs26r9nWSKqjAKEUebMiraZk3Ou+XWOowhKvpCqTn62JbDGSxGFQJfwpCFrdbuunNqXtuSzpk1uJhyJ7PJX1itfpo+SO5qYBVLxdAxhM0eVa0yDIOUcimW7raZZbJJarYIBU3aZgjBpbA/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TliR2Ibm; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mc5+T/hlVwDlwhFqXbS/1scSppHoxA/U7R5muEyMdOx2Oyga9P3nG3VG8eX56uYZAaBJtRfFyOtLOOFETIf91p6Ry0ompT46fBde1HDrMmn2MDVAyf84SeDVN7pjHiSuCLYigPS5Y4Y1iRrMzY5l2qW1WCU0GhAuxPVztcjFl3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IKxJkumQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TliR2Ibm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=iwyiGppbNocaIaOIGmwIgHsJ5j+0ZIA7Ss/btyu1daA=; b=TliR2IbmHPe+my3kZwyOEfgQyf
-	GC+ekNottY+PZcaFE99Lmx93J+PvUdFIUlwbYT+kn7nUg5+H4QFzKYBz4btuUvtMeacr/sT60HT2g
-	fncT0uFdZYFf0r+5GFQnCayQ8jyURcbo6znfGVljWO/bzdVKUN4BUS59ueuBwpSh94k8ZyK9sTRIa
-	A7/KrfD6rXOWD1uY0F/arTQWorjSo0xzzmfnO/akia3FnZzoGvR7lyBgxM5XpxtBXTiD9Bs+TmQdv
-	lWEX75AddXRjoAh2AJZd3Oq4W+2tfWMLQnJIg0g2bxDbrqnZ603zIbNMcYmOuQ70RWK5b6/denmxs
-	bd6InkoA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgWrE-00000008m1X-29MR;
-	Fri, 07 Feb 2025 22:29:56 +0000
-Date: Fri, 7 Feb 2025 22:29:56 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Josef Bacik <josef@toxicpanda.com>, Miklos Szeredi <miklos@szeredi.hu>,
-	Christian Heusel <christian@heusel.eu>,
-	Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	Joanne Koong <joannelkoong@gmail.com>,
-	linux-mm <linux-mm@kvack.org>,
-	Mantas =?utf-8?Q?Mikul=C4=97nas?= <grawity@gmail.com>
-Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for
- FUSE/Flatpak related applications since v6.13
-Message-ID: <Z6aJZO2MzOgI4wG8@casper.infradead.org>
-References: <2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu>
- <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
- <9cd88643-daa8-4379-be0a-bd31de277658@suse.cz>
- <20250207172917.GA2072771@perftesting>
- <8f7333f2-1ba9-4df4-bc54-44fd768b3d5b@suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IKxJkumQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 271F5C4CED1;
+	Fri,  7 Feb 2025 22:30:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738967438;
+	bh=QWhAu2OFt+EcyVIJFJNCIRag3WhrVrPecqNWFTdZByw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IKxJkumQhUPgGWAsqWW2kTJ27fp/W+zPCJeVYydLPw9ikhWoEtUHEYp9DznKWRQtC
+	 WWixNS13A5/Eg03mx4GriQ5fCkjMVxqkfs0FvReMn+DP9EDW0wIaKIfTLuHk2n3HI8
+	 PTL/U7V1HEMzoZ2SUSDh0jBuA2Y0egnfuqS0QKqt/VpAYSpzWHCuc+TWc2CBzKdNes
+	 gjYHOBAH28dTWYg6VuBms3HWgaARd9ZKwyZqSHXv9XrTD+3SCAqH6KKa5FeTIiycRc
+	 bBOYgxiyMo+CMVYfVE2GLhLScU6IyWd52+hjTx4E50QxqRsZYPPlAYQfYLstUoH7JE
+	 mF8xbAOUylJSA==
+Date: Fri, 7 Feb 2025 12:30:37 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Andrea Righi <arighi@nvidia.com>
+Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>, Ian May <ianm@nvidia.com>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] sched_ext: idle: Per-node idle cpumasks
+Message-ID: <Z6aJjTFNJKjDfG77@slm.duckdns.org>
+References: <20250207211104.30009-1-arighi@nvidia.com>
+ <20250207211104.30009-6-arighi@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,34 +51,129 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8f7333f2-1ba9-4df4-bc54-44fd768b3d5b@suse.cz>
+In-Reply-To: <20250207211104.30009-6-arighi@nvidia.com>
 
-On Fri, Feb 07, 2025 at 07:39:02PM +0100, Vlastimil Babka wrote:
-> On 2/7/25 18:29, Josef Bacik wrote:
-> > On Fri, Feb 07, 2025 at 05:49:34PM +0100, Vlastimil Babka wrote:
-> >> On 2/7/25 10:34, Miklos Szeredi wrote:
-> >> > [Adding Joanne, Willy and linux-mm].
-> >> > 
-> >> > 
-> >> > On Thu, 6 Feb 2025 at 11:54, Christian Heusel <christian@heusel.eu> wrote:
-> >> >>
-> >> >> Hello everyone,
-> >> >>
-> >> >> we have recently received [a report][0] on the Arch Linux Gitlab about
-> >> >> multiple users having system crashes when using Flatpak programs and
-> >> >> related FUSE errors in their dmesg logs.
-> >> >>
-> >> >> We have subsequently bisected the issue within the mainline kernel tree
-> >> >> to the following commit:
-> >> >>
-> >> >>     3eab9d7bc2f4 ("fuse: convert readahead to use folios")
-> >> 
-> >> I see that commit removes folio_put() from fuse_readpages_end(). Also it now
-> >> uses readahead_folio() in fuse_readahead() which does folio_put(). So that's
-> >> suspicious to me. It might be storing pointers to pages to ap->pages without
-> >> pinning them with a refcount.
+Hello,
 
-you don't need to pin them with a refcount.  the folio is locked, so the
-page cache has a refcount until you unlock it (possibly by calling
-folio_end_read()).
+On Fri, Feb 07, 2025 at 09:40:52PM +0100, Andrea Righi wrote:
+> +/*
+> + * cpumasks to track idle CPUs within each NUMA node.
+> + *
+> + * If SCX_OPS_BUILTIN_IDLE_PER_NODE is not enabled, a single global cpumask
+> + * from is used to track all the idle CPUs in the system.
+> + */
+> +struct idle_cpus {
+>  	cpumask_var_t cpu;
+>  	cpumask_var_t smt;
+> -} idle_masks CL_ALIGNED_IF_ONSTACK;
+> +};
 
+Can you prefix the type name with scx_?
+
+Unrelated to this series but I wonder whether we can replace "smt" with
+"core" in the future to become more consistent with how the terms are used
+in the kernel:
+
+  struct scx_idle_masks {
+          cpumask_var_t   cpus;
+          cpumask_var_t   cores;
+  };
+
+We expose "smt" name through kfuncs but we can rename that to "core" through
+compat macros later too.
+
+> +/*
+> + * Find the best idle CPU in the system, relative to @node.
+> + */
+> +s32 scx_pick_idle_cpu(const struct cpumask *cpus_allowed, int node, u64 flags)
+> +{
+> +	nodemask_t unvisited = NODE_MASK_ALL;
+> +	s32 cpu = -EBUSY;
+> +
+> +	if (!static_branch_maybe(CONFIG_NUMA, &scx_builtin_idle_per_node))
+> +		return pick_idle_cpu_from_node(cpus_allowed, NUMA_NO_NODE, flags);
+> +
+> +	/*
+> +	 * If an initial node is not specified, start with the current
+> +	 * node.
+> +	 */
+> +	if (node == NUMA_NO_NODE)
+> +		node = numa_node_id();
+> +
+> +	/*
+> +	 * Traverse all nodes in order of increasing distance, starting
+> +	 * from @node.
+> +	 *
+> +	 * This loop is O(N^2), with N being the amount of NUMA nodes,
+> +	 * which might be quite expensive in large NUMA systems. However,
+> +	 * this complexity comes into play only when a scheduler enables
+> +	 * SCX_OPS_BUILTIN_IDLE_PER_NODE and it's requesting an idle CPU
+> +	 * without specifying a target NUMA node, so it shouldn't be a
+> +	 * bottleneck is most cases.
+> +	 *
+> +	 * As a future optimization we may want to cache the list of hop
+> +	 * nodes in a per-node array, instead of actually traversing them
+> +	 * every time.
+> +	 */
+> +	for_each_numa_node(node, unvisited, N_POSSIBLE) {
+> +		cpu = pick_idle_cpu_from_node(cpus_allowed, node, flags);
+
+Maybe rename pick_idle_cpu_in_node() to stay in sync with
+SCX_PICK_IDLE_IN_NODE? It's not like pick_idle_cpu_from_node() walks from
+the node, right? It just picks within the node.
+
+> @@ -460,38 +582,50 @@ s32 scx_select_cpu_dfl(struct task_struct *p, s32 prev_cpu, u64 wake_flags, bool
+>  
+>  void scx_idle_reset_masks(void)
+>  {
+> +	int node;
+> +
+> +	if (!static_branch_maybe(CONFIG_NUMA, &scx_builtin_idle_per_node)) {
+> +		cpumask_copy(idle_cpumask(NUMA_NO_NODE)->cpu, cpu_online_mask);
+> +		cpumask_copy(idle_cpumask(NUMA_NO_NODE)->smt, cpu_online_mask);
+> +		return;
+> +	}
+> +
+>  	/*
+>  	 * Consider all online cpus idle. Should converge to the actual state
+>  	 * quickly.
+>  	 */
+> -	cpumask_copy(idle_masks.cpu, cpu_online_mask);
+> -	cpumask_copy(idle_masks.smt, cpu_online_mask);
+> -}
+> +	for_each_node(node) {
+> +		const struct cpumask *node_mask = cpumask_of_node(node);
+> +		struct cpumask *idle_cpus = idle_cpumask(node)->cpu;
+> +		struct cpumask *idle_smts = idle_cpumask(node)->smt;
+> -void scx_idle_init_masks(void)
+> -{
+> -	BUG_ON(!alloc_cpumask_var(&idle_masks.cpu, GFP_KERNEL));
+> -	BUG_ON(!alloc_cpumask_var(&idle_masks.smt, GFP_KERNEL));
+> +		cpumask_and(idle_cpus, cpu_online_mask, node_mask);
+> +		cpumask_copy(idle_smts, idle_cpus);
+> +	}
+
+nitpick: Maybe something like the following is more symmetric with the
+global case and easier to read?
+
+  for_each_node(node) {
+        const struct cpumask *node_mask = cpumask_of_node(node);
+        cpumask_and(idle_cpumask(node)->cpu, cpu_online_mask, node_mask);
+        cpumask_and(idle_cpumask(node)->smt, cpu_online_mask, node_mask);
+  }
+
+>  }
+>  
+>  static void update_builtin_idle(int cpu, bool idle)
+>  {
+> -	assign_cpu(cpu, idle_masks.cpu, idle);
+> +	int node = idle_cpu_to_node(cpu);
+
+minor: I wonder whether idle_cpu_to_node() name is a bit confusing - why
+does a CPU being idle have anything to do with its node mapping? If there is
+a better naming convention, great. If not, it is what it is.
+
+Thanks.
+
+-- 
+tejun
