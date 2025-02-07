@@ -1,105 +1,112 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289FB23C8B6
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05FF523C8D3
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738943700; cv=none; b=kq+IKZkpbLQC/Cv1EF2RvVofbUmyFoD0oXp9HmVyywNfMIKeRPXPouVuiLM41BS/3iLIBr7WCAs2qe7q0ASA9O5j9Z6gkdtBEC5uWv8rnqfyDa0drsXG8kWTIIHjRI/u+9EjhKUTDdmHGztXb+PCqU+2DCQ65kQHAWq5eTqncuA=
+	t=1738943702; cv=none; b=cQ4WEPSIo2A+3jtyOKZnTUqc2E7uQd6i8MTQE8KDGDF1xHyhb0s86tbN0C6CpJhdYktxQUsihodpRCxeCvFMr3gRppDICdkAqubOUaDuLVe/mVtEEQ5ao+VqnKfOLuyGVgOb9eQ2slfRfnltPNd1gNmnDsP/AwY6zVTGOaF4K9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738943700; c=relaxed/simple;
-	bh=I2GuDhxl+08paIRrviBkUYIALNebE4rhANc6ESbwfJk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pV6Zbl6Bm1TABXeh40tA1RBdRPIUoxkh7AGGZSUFN8JnQmaclMmSCXU5L/QBRvdCBEQ892cC/9pFEERRRtUjo+bFjWF2brpfUHSjk6V3Vm3H9m0LTyckJiDN/tgEZ2/d1AHEnGwg40fU2BGGnYcSB9aSnuaFf6IzugLrKDbGwUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=HT8TUE/8; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="HT8TUE/8"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e440e64249so18789616d6.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 07:54:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1738943698; x=1739548498; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wG4kDX3mPsVlAfvrUd487lzsY97VgTkw0/bdTrkhSGs=;
-        b=HT8TUE/8/UXvNaK5LmB/835+M8y9p+nozLAhhaRKfPQUnhy28oZ0BpcxKxygPiVK2e
-         0UgWSXIhF+xAR3eojV0+7V2VAeCMmmnNy6DICKseoiCyEvtDk8GiZWfDKWts25dDqKKF
-         8U3nA/JxGFuPvLioH7pcJO4B2CCVrAAQKFXFs5V2GdsgI7z4NtC396a4v5kWFW8mAv1q
-         QZxYjB34hpMKOJiwuhkP5OIZ7sLrmJSe8VsS7LHiogQW0bLMZX0Cn2xwbHKSx/YSbVrZ
-         OBXC5YgCBUYUpehBIhozOTD2gFyKVMa4zVgw0tccR9fS67jLAFJY7PmkGa2rQyhrEHHC
-         RRDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738943698; x=1739548498;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wG4kDX3mPsVlAfvrUd487lzsY97VgTkw0/bdTrkhSGs=;
-        b=RTzswbV4mPzl3AN9OdTQodVDU4T9B78Krdi8QWbuRIfKM4g5ngvhcVCwve9WuDs+7x
-         VAKRnou3ST1oLy7OWlSBtenWYcrndohLQat9nthPnU7rXp6tzJUBVhx40+467jQa3zgw
-         X5xg4PvXCm8RpIPX51Wfu4i/boZM+5g1aRpvljV1NLGKhmU3Q2doBhuiG5ej6KjUqCiA
-         am5NL2waxPcVOIkbSO0FJdcDNofK59Evi/tqqKW9EXq9s3ffbiywFYMGmQqs8Ra4AqFH
-         JwpH3fSB+zVN+ZCB/CfekUDNcoqBkWWjyAnKZeVw+ioQwzL0+twxS3UCG+AyP1D57yx2
-         lVpg==
-X-Forwarded-Encrypted: i=1; AJvYcCUPIx2ryfWdm0cIfFREupcsxLUtPre9naMJQRc0F/CVXw0J63i4gSIk2qkdZJEP2+6R/WcSNLC6ZodtXzI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3GM7rLxriY9VwmSH/594aVErOMB13NoXumLGV9FHFYY2XLZiC
-	OSAsEVrPqp52TwZNjUj6bmvPSvhUiaFUN+dXA/z2Dp+gcFKraExalF95jHs8Mqs=
-X-Gm-Gg: ASbGncuNDUdEtEF72ZywuelHK/kjdgX5yXGWLyHAIRrH3EZyy2K6tBKn5aCoE+27nsb
-	xANI0AX+Gsc05QQLBB9kusuBTyqa9XipmaT3iqEvbI6Oy1Kk6svQmYFa8WVJzpA5PwFgoBSuk0m
-	4iUZny2Z2Uce8QzEk21MmrBujohPprtAiix0NvGQhEp2k1wbGIQ/YHHEqI8ROxGTC3SB5OzsZyp
-	lB7MQUe7oT1O/XfZsr6nxKF8E8a6FdMJpGcyTOkyqVpZCb4NIhdbgkb1r7Q0XRTiw5/3VYnJ/n/
-	fLLLbudk7+v7T4a3fXHqq5ctMlWsoBAs4iD1wjBwGCrEGAVhw/sKrHOWZ5pWAofG
-X-Google-Smtp-Source: AGHT+IEq6vakQzNYiXzUmxGw05TQjdF65NCz8Qjlk4Szby4FeLGiS8FNdUCgGzZaq1/yR/BAprqyEQ==
-X-Received: by 2002:ad4:5f89:0:b0:6d8:8a7b:66a4 with SMTP id 6a1803df08f44-6e4455e8913mr53333496d6.14.1738943697961;
-        Fri, 07 Feb 2025 07:54:57 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43ba2be69sm18281116d6.15.2025.02.07.07.54.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 07:54:57 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tgQgy-0000000FNdT-38ej;
-	Fri, 07 Feb 2025 11:54:56 -0400
-Date: Fri, 7 Feb 2025 11:54:56 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Mitchell Augustin <mitchell.augustin@canonical.com>
-Cc: saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com,
-	andrew+netdev@lunn.ch, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Talat Batheesh <talatb@nvidia.com>,
-	Feras Daoud <ferasda@nvidia.com>
-Subject: Re: modprobe mlx5_core on OCI bare-metal instance causes
- unrecoverable hang and I/O error
-Message-ID: <20250207155456.GA3665725@ziepe.ca>
-References: <CAHTA-uaH9w2LqQdxY4b=7q9WQsuA6ntg=QRKrsf=mPfNBmM5pw@mail.gmail.com>
+	s=arc-20240116; t=1738943702; c=relaxed/simple;
+	bh=y8hgClxh41dIdE7g0dLAnEBinfy5soi0hWyD1OiYr3c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tfp9PBk2/XxOgCcMS1ZyC1fXEqldNraMRwx4H2CsLPU2jMusdaWAEaa390azaOkOMTkdtxGR3SV4e0f37U6xylp+NcBhpoAVK2lJwm1/3hPnL81HQMp3NCEmoyJZgJOVWLIf+AtUnrJsGvf5lxFekxFuosutWF8Omu1K7FHm3EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 339A51E32;
+	Fri,  7 Feb 2025 07:55:23 -0800 (PST)
+Received: from [10.1.196.57] (eglon.cambridge.arm.com [10.1.196.57])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 08BD63F58B;
+	Fri,  7 Feb 2025 07:54:52 -0800 (PST)
+Message-ID: <70f4a5ad-9a89-4833-bbb3-84b7613201c2@arm.com>
+Date: Fri, 7 Feb 2025 15:54:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHTA-uaH9w2LqQdxY4b=7q9WQsuA6ntg=QRKrsf=mPfNBmM5pw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 38/40] fs/resctrl: Add boiler plate for external
+ resctrl code
+To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Fenghua Yu <fenghua.yu@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+ shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+References: <20241004180347.19985-1-james.morse@arm.com>
+ <20241004180347.19985-39-james.morse@arm.com>
+ <b674aa71-bd06-4cd9-be3e-13e99fb23f15@intel.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <b674aa71-bd06-4cd9-be3e-13e99fb23f15@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 05, 2025 at 05:09:13PM -0600, Mitchell Augustin wrote:
-> Hello,
-> 
-> I have identified a bug in the mlx5_core module, or some related component.
-> 
-> Doing the following on a freshly provisioned Oracle Cloud bare metal
-> node with this configuration [0] will reliably cause the entire
-> instance to become unresponsive:
-> 
-> rmmod mlx5_ib; rmmod mlx5_core; modprobe mlx5_core
-> 
-> This also produces the following output:
-> 
-> [  331.267175] I/O error, dev sda, sector 35602992 op 0x0:(READ) flags
-> 0x80700 phys_seg 33 prio class 0
+Hi Reinette,
 
-Is it using iscsi/srp/nfs/etc for any filesystems?
+On 24/10/2024 01:08, Reinette Chatre wrote:
+> On 10/4/24 11:03 AM, James Morse wrote:
+> ...
+>> +++ b/fs/resctrl/Kconfig
+>> @@ -0,0 +1,37 @@
+>> +config RESCTRL_FS
+>> +	bool "CPU Resource Control Filesystem (resctrl)"
+>> +	depends on ARCH_HAS_CPU_RESCTRL
+>> +	select KERNFS
+>> +	select PROC_CPU_RESCTRL if PROC_FS
+>> +	help
+>> +	  Some architectures provide hardware facilities to group tasks and
+>> +	  monitor and control their usage of memory system resources such as
+>> +	  caches and memory bandwidth.  Examples of such facilities include
+>> +	  Intel's Resource Director Technology (Intel(R) RDT) and AMD's
+>> +	  Platform Quality of Service (AMD QoS).
+>> +
+>> +	  If your system has the necessary support and you want to be able to
+>> +	  assign tasks to groups and manipulate the associated resource
+>> +	  monitors and controls from userspace, say Y here to get a mountable
+>> +	  'resctrl' filesystem that lets you do just that.
+>> +
+>> +	  If nothing mounts or prods the 'resctrl' filesystem, resource
+>> +	  controls and monitors are left in a quiescent, permissive state.
+>> +
+>> +	  On architectures where this can be disabled independently, it is
+>> +	  safe to say N.
+>> +
+>> +	  See <file:Documentation/arch/x86/resctrl.rst> for more information.
+>> +
+>> +config RESCTRL_FS_PSEUDO_LOCK
+>> +	bool
+>> +	help
+>> +	  Software mechanism to pin data in a cache portion using
+>> +	  micro-architecture specific knowledge.
+>> +
 
-Jason
+> There now seems to be two copies of this ... patch #23 added this exact same
+> "config RESCTRL_FS_PSEUDO_LOCK" snippet to arch/x86/Kconfig
+
+Oops - I'm surprised Kbuild didn't bark at me about that!
+
+
+>> +config RESCTRL_RMID_DEPENDS_ON_CLOSID
+>> +	bool
+>> +	help
+>> +	  Enable by the architecture when the RMID values depend on the CLOSID.
+> 
+> "Enable by" -> "Enabled by"?
+
+Yup,
+
+
+Thanks,
+
+James
