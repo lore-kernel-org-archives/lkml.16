@@ -1,166 +1,109 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEDD1A9B23;
-	Fri,  7 Feb 2025 08:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175561A23BC;
+	Fri,  7 Feb 2025 08:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738917860; cv=none; b=cWsHseaA9nOwabL82sZ364luJxJAlfi2Xy8+DMGULbrn4wri34tiNWlecoO6uc7zKgj36FDxyKL4BhoZbjUy/8RVgCPquPeUHmHFCmg216yILs+XNbTUmTIQpfOFYVpF/xKnaEM68drA4lK7PLN6qfDNqiR5N8VB5EFz/Eebpug=
+	t=1738917920; cv=none; b=Yg7VhVq/J85EdPpEIMGEFeMxkmGA/JZMeX/dtMetSp1mc4IFYZF3VDU00LFeM/ZgGrPM+DVSabHhkuBqbz39MNKJZHwQME5t/C6RJr3Nk21hy2pRYwEXbDbBhRwXHyx9zBsBJgBSxeS6HGXYUTsPuCpfz4NHTJqty2GlBff9Dws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738917860; c=relaxed/simple;
-	bh=4AMVKnA4Yl9VxnoZHymOByxuJ0NjohQqFooKmFgj2l4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tadfXDhCgUo6/jNu9dX3OOKQA6EFfG08PWaNkAmDoZtlo/lx4SCx/aow0jsYy7OFqBOnPsiz/GKz9j5GyjD1qnpZx7P5nZotnfSPirZDD0RUcx+q2U3SmXR8x2Wk3ZqWy5i3JdpEsrUit7BwG2Y8eOM3EOFJ8m3fD7MyNV3gsNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=WR2d6udS; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="WR2d6udS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1738917806;
-	bh=4AMVKnA4Yl9VxnoZHymOByxuJ0NjohQqFooKmFgj2l4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=WR2d6udSkWrihIYIzMZ1yhfxC1TBEXMD3YCWDPYTsm8pHYxueu0YBbKcsClXUd9W3
-	 pbBrrbiFg2aH7Uqxq0tDOIhI5juPdSSpXDR7JnXN3FNKyn+cZrGFyxvrwciJvTSmvc
-	 kuBGEN/gv3puwPBCWQtDxWlCil4AvgxeDIWu9fZE=
-X-QQ-mid: bizesmtpip4t1738917773t7qcvwr
-X-QQ-Originating-IP: aQmi5+1bY/uehK58/CAnbsc6+7yO2zQA6RLCQs5rDek=
-Received: from [IPV6:240e:668:120a::253:10f] ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 07 Feb 2025 16:42:51 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 4169232281569066851
-Message-ID: <F8B5E18BC516C367+a0f1236a-bd3b-43b8-8861-dc5f4c0dcfe8@uniontech.com>
-Date: Fri, 7 Feb 2025 16:42:51 +0800
+	s=arc-20240116; t=1738917920; c=relaxed/simple;
+	bh=u5uf4Tir0xtyLJKs+PEP57pDaPKUCR5Tk4tC6W+Pwrc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=alAUzNizwhXFfPJQf+corWFAMQHXGlEQhrISOzr6NeelD38DGsn7wCDkMQF+DHAGlhyvWH3AA7ZO+iiOSFvZr10FoMNKh5fhKX4WflB6EBaqNTMd9XAZxb/mm8VhTnQEhixdwxFtHK6f/JcCXcC/+CDPLpNBEs4OJwiObFU4NAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-866fbf798baso366979241.2;
+        Fri, 07 Feb 2025 00:45:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738917915; x=1739522715;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EBXViw2B5++lx3lKvCWR8ZB0A4ECbVpnUmvGe59jHB4=;
+        b=LXekXXfTj0Z+jhDtTQCyxXnRuHaYIU8gLAXcJXinj9kWyW3rR6Tc5H3mAP2VFwbezE
+         o22NYUT84p/L0+Nt3wdoWucSJV1bDLdE/9Bz6jZcp4y3jP9f8RQuaBBGhL7eQk0phYyO
+         r65q4hm2EGfpiAqunfLQSLrW5W25Arrg71Xj0+RxQh9+4i97UqqaeY50+VLezlJj2x6M
+         ERzsr4ZOFQdQMXGEBNt1b7lpLawAKbqKk3leSu+gmMwLil/k70aG75GjQvlLATYIH/yJ
+         OaEOk7BM8d8uzP1y2EQ8FsFwrc6q5GXZbPD4fyaQp5WdVXKsgFehUPPrRt06af78RUEf
+         9ZaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/I3P5q8aURyA1sFRR45B/z/AXNyGe+z0d9Gz7SMZmDIXG7I3fctAau5lgbaWVp5DzO19gxaBEwVKv@vger.kernel.org, AJvYcCW33S/JDRTFmkcD/Tc4vBX0pFPmOkOfIBX54ikZWgoWXoCfksb6R1vDhysfeQcfO/6H4ytXDgcAbboJuJKy+rgbe1Y=@vger.kernel.org, AJvYcCXrn+YJwB/zUl9VUTSM1v+peTrvPNps72bnPwM7ZEkJjLIxkl+HO8OwStk+UqahGh2vJJN7OFiUX44cK+/i@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkXQmau9PlsJyYGyZR3H7t/L63ZFF1+/HQBbDPZKFbbl+8zxxg
+	CWlLgOkSuCYJQyvSWzFhQTlDyxaSJjX+rEmKQQz347UW6HcyQYfj7xpQa+gn
+X-Gm-Gg: ASbGncvsUaWrWo/BrIdfpd0BG+CGuJrvMJbhGUs/ktzJRA8+zT1HR0bBKOsLpb/oShK
+	vb+LqdJhDCbAIQmvyeNgjopO0/9t/MnKjQOoraqSN4TehHARe/PPOqYax4pijP/czHRVnGvbuip
+	lYpaDw/ksvFbifiVwCgN4VEx6qASAnwV3LCWMFsu3bjBRM+LKNNOknk6Ugf/J6Bt484x+Yq7wP+
+	rZpnLfJAubO3bbHo4U7PasbPOuqRX4rFdWDo79xuvODGk3gxnfqJGerDVaSL1v7NzpEbc0WvEt1
+	M6cLR6l2xcC0YJ/L6BseE7Z2KWmI2Kzb/JgnkF2NJWS/DtA2/+aQ4Q==
+X-Google-Smtp-Source: AGHT+IFnQrVzR9eRppe56mDFwd3I+xj3xG59VzrBWgMBhhoNMgKb8yVkQOAbZPDqOowSoAPJ3kTx7Q==
+X-Received: by 2002:a05:6102:578d:b0:4b1:340a:ce63 with SMTP id ada2fe7eead31-4ba85e3dae8mr1279456137.11.1738917915216;
+        Fri, 07 Feb 2025 00:45:15 -0800 (PST)
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4ba773045f8sm560930137.26.2025.02.07.00.45.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 00:45:14 -0800 (PST)
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-864e4f5b253so517213241.1;
+        Fri, 07 Feb 2025 00:45:14 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV65zjgcQQACjbK/qJd2Aj2I1d3wkGWC39AycXTsG0fACPIfBaQqN43bg9yg9mYd7mKoIDszHYrjfIR@vger.kernel.org, AJvYcCX37+8vENechgh3LQRrgXn0OhKb78H4ZkOlbzXu7FEjO+8Tj5UhsOpgq2Qx2YWCtF5nnPzGcb4pfHs99Xao@vger.kernel.org, AJvYcCXuMJf+Etf9d5kHH9v4BPYJHJwk/NnMFJ/7b8M84+nw5U0G3g0Bv+ZzRLzWiodJqPgYrRrw6oe7FWclASI3zReU6cs=@vger.kernel.org
+X-Received: by 2002:a05:6102:4b13:b0:4b2:c391:7d16 with SMTP id
+ ada2fe7eead31-4ba85df078fmr1195440137.7.1738917914082; Fri, 07 Feb 2025
+ 00:45:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] docs/zh_CN: Update the translation of dev-tools/ubsan
- to v6.14-rc1
-To: Yanteng Si <si.yanteng@linux.dev>, alexs@kernel.org, corbet@lwn.net,
- dzm91@hust.edu.cn
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- horms@kernel.org, zhanjun@uniontech.com, guanwentao@uniontech.com,
- chenlinxuan@uniontech.com
-References: <EE89209B6353C426+20250207031812.15023-1-wangyuli@uniontech.com>
- <fb3c5ec4-eabc-48c0-bf0b-d20cad978b4f@linux.dev>
-Content-Language: en-US
-From: WangYuli <wangyuli@uniontech.com>
-Autocrypt: addr=wangyuli@uniontech.com; keydata=
- xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
- IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
- qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
- 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
- 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
- VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
- DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
- o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
-In-Reply-To: <fb3c5ec4-eabc-48c0-bf0b-d20cad978b4f@linux.dev>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------AMdez96DqXl9pgQhSGFaW310"
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NhW0RaXPB1Ljml702OJWiJwt9r5aar9Os3FbRygzpRpFdpIeCb+vAM6N
-	oCmJYRmhR+aA78w3caA6wmQTGmCDAK0Ji9hEA0s4qlV7aX1D7lGOcCDkGEfQqeP7RB6c90b
-	NDk9WKMeqLPzHV+oxJ/Y8+2D9bsY+8E8viXi40kApkwWpCHcVSpji8HF7BXupUTuiF2j4c5
-	o4hERZka8NxIWXnzVtD64vbsWBWGwwaa3SX4p7aenwgjvPKErOmlx/mNEVN5lGdxiStAocr
-	7O2tkxtj4jPsPbY7RpADUs0ZNxKTNWa8uKmM7pCjpPndQjehGZYPs+OfP605ef2vJcpr5Ol
-	XfJVLoZkNfLXrJI7NgCsv0pfSyQIUVE+aGvnZfpn0X1Ctlo7mhpsHjC2b5xPUgVKRE4axV4
-	GDyNTGnIU2ZqhTWfkLMTrgv6BW0XXb0LwfutzmLsR+nbQR0komTWp+f64CbP38gJliRZNty
-	eA5w2N6I8ZBk8wDnPFJeXTskfGopRcOtXqCG3FoN0bMr7JrLULxZFS05opaogWF9VRKi2tV
-	LavVe48NrqWM2SsMVVw5oxO6HaNroyzM4qsl3WvAxADZxs7OV/2urQ9U/Cf/aZfazgXmYvX
-	Y8RRc3D8dejaZKXX1s96h/rHJPL639BGKVAQvdcSuyGe/rRgNE88cS/QAnPKS69Aed61g/F
-	fw5qDStlD0h1qiUV9g+Tuprw0ctd94i2ENfsGUUF4ZV9gmoADXoPnY9jigpaXWLx7tnOqj8
-	m5gHFJVJuiIdMlHeuXjA/x1N0r1GcNeZkyvdOqdGuAb0t/Uul31fq26Bhp4KznCmmMh/9Yg
-	7B7u8riLAHgHLWwDJAbf/9sIG+L/CqbrkbgnU2M4Tg8vweU+1thN5ZoKg2Gssy+aDg9Dx+F
-	OoH8enkKTUuxpFtWVwjuWt6jI0IRhF+m8p8HKbc5kY5crB2cfndtTiNre4e0ZwYBhUP7NGd
-	Owjxl/RX5cyO2pn/1Ck+Hv6av722ClXVbEaNr5j2H7Kq2woV90B9Eii32yYLwcoj/2gZOM7
-	l2RgHwDDBx/m306uFwIa+EfptZOBUliQxRUvQCKT45kDLJut1lmj8oLSeM6wmnlt+JVVyK9
-	ZaXalQ9LPo13jDHvcWZcl06t+UYAllWhVJnFpG6wkF/
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+References: <20250131-myir-remi-pi-v3-0-2dda53e79291@collabora.com>
+ <20250131-myir-remi-pi-v3-2-2dda53e79291@collabora.com> <CAMuHMdXAS6pnNcT=A7i9La22tbDXYf7EKqbJzHuK2ze2gf6cgg@mail.gmail.com>
+ <950770a2406dd9ac3163e677c6d887d06df5b8c6.camel@collabora.com>
+In-Reply-To: <950770a2406dd9ac3163e677c6d887d06df5b8c6.camel@collabora.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 7 Feb 2025 09:45:01 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdW5yn-ups7+uJqmEXcZjZ=LqxmxRPfFM=zLh+EvWsC-XQ@mail.gmail.com>
+X-Gm-Features: AWEUYZmxZYxOa7pFoJM9l8ZXRqq9cw7oUCIl5Wo35rPZxgOoflR7oSAg2hN9nGg
+Message-ID: <CAMuHMdW5yn-ups7+uJqmEXcZjZ=LqxmxRPfFM=zLh+EvWsC-XQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] arm64: renesas: add initial support for MYIR Remi Pi
+To: Julien Massot <julien.massot@collabora.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, kernel@collabora.com, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------AMdez96DqXl9pgQhSGFaW310
-Content-Type: multipart/mixed; boundary="------------b4sOYHXODrU0YHePDnnnDNUh";
- protected-headers="v1"
-From: WangYuli <wangyuli@uniontech.com>
-To: Yanteng Si <si.yanteng@linux.dev>, alexs@kernel.org, corbet@lwn.net,
- dzm91@hust.edu.cn
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- horms@kernel.org, zhanjun@uniontech.com, guanwentao@uniontech.com,
- chenlinxuan@uniontech.com
-Message-ID: <a0f1236a-bd3b-43b8-8861-dc5f4c0dcfe8@uniontech.com>
-Subject: Re: [PATCH v2] docs/zh_CN: Update the translation of dev-tools/ubsan
- to v6.14-rc1
-References: <EE89209B6353C426+20250207031812.15023-1-wangyuli@uniontech.com>
- <fb3c5ec4-eabc-48c0-bf0b-d20cad978b4f@linux.dev>
-In-Reply-To: <fb3c5ec4-eabc-48c0-bf0b-d20cad978b4f@linux.dev>
+Hi Julien,
 
---------------b4sOYHXODrU0YHePDnnnDNUh
-Content-Type: multipart/mixed; boundary="------------V4Zpgc4Ie0BYFZljWPt6Ol30"
+On Fri, 7 Feb 2025 at 08:16, Julien Massot <julien.massot@collabora.com> wrote:
+> > On Fri, 31 Jan 2025 at 10:58, Julien Massot <julien.massot@collabora.com> wrote:
+> > > Add basic support for the MYIR Remi Pi (based on r9a07g044l2):
+> > >  - UART
+> > >  - i2c
+> > >  - emmc
+> > >  - USB host
+> > >  - HDMI output
+> > >  - Ethernet
+> > >
+> > > Signed-off-by: Julien Massot <julien.massot@collabora.com>
+> >
+> > Thanks for the update!
 
---------------V4Zpgc4Ie0BYFZljWPt6Ol30
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+> > I fixed the style issues locally, so if you can confirm or deny the removal
+> > of scif3, I can fix that while applying.
+>
+> Confirmed, we should not enable scif3.
 
-T24gMjAyNS8yLzcgMTY6MzcsIFlhbnRlbmcgU2kgd3JvdGU6DQoNCj4NCj4+ICsuLiBfY25f
-dWJzYW46DQo+IHdlIGRvbid0IG5lZWQgdGhlIHRhZy4NCk9LLCB3aWxsIHNlbmQgcGF0Y2gg
-djMuDQo+PiDCoCDCoCDmnKrlrprkuYnooYzkuLrmtojmr5LliYIgLSBVQlNBTg0KPj4gwqAg
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQo+PiBAQCAtNTUsMzAgKzY0
-LDIwIEBAIEdDQ+iHqjQuOS54IFsxX10g77yI6K+m6KeBIGBgLWZzYW5pdGl6ZT11bmRlZmlu
-ZWRgYCANCj4+IOmAiemhueWPiuWFtuWtkOmAiemhue+8ieeJiA0KPj4gwqAgwqAg5L2/55So
-5aaC5LiL5YaF5qC46YWN572u5ZCv55SoVUJTQU46Og0KPj4gwqAgLcKgwqDCoCBDT05GSUdf
-VUJTQU49eQ0KPj4gLQ0KPj4gLeS9v+eUqOWmguS4i+WGheaguOmFjee9ruajgOafpeaVtOS4
-quWGheaguDo6DQo+PiAtDQo+DQo+PiAtwqDCoMKgwqDCoMKgwqAgQ09ORklHX1VCU0FOX1NB
-TklUSVpFX0FMTD15DQo+PiArwqAgQ09ORklHX1VCU0FOPXkNCj4NCj4gUGxlYXNlIGtlZXAg
-dGhlIGluZGVudGF0aW9uIGxlbmd0aCBjb25zaXN0ZW50IHdpdGggdGhlIG9yaWdpbmFsIG9u
-ZS4NCj4NCj4NCkl0IGFscmVhZHkgZG9lcy4NCg0KUGxlYXNlIHNlZSBjb21taXQgOTE4MzI3
-ZTliN2ZmYjQ1MzIxY2JiNGI5Yjg2YjU4ZWM1NTVmZTZiMyAoInVic2FuOiBSZW1vdmUNCg0K
-Q09ORklHX1VCU0FOX1NBTklUSVpFX0FMTCIpJ3MgY2hhbmdlIG9mIA0KRG9jdW1lbnRhdGlv
-bi9kZXYtdG9vbHMvdWJzYW4ucnN0IGZvcg0KDQp0aGUgZGV0YWlscy4NCg0KDQpUaGFua3Ms
-DQoNCi0tIA0KV2FuZ1l1bGkNCg==
---------------V4Zpgc4Ie0BYFZljWPt6Ol30
-Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Thanks,
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.15 with the above fixed.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+Gr{oetje,eeting}s,
 
-xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
-P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
-FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
-AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
-bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
-AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
-GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
-7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
-/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
-=3DBlkq
------END PGP PUBLIC KEY BLOCK-----
+                        Geert
 
---------------V4Zpgc4Ie0BYFZljWPt6Ol30--
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---------------b4sOYHXODrU0YHePDnnnDNUh--
-
---------------AMdez96DqXl9pgQhSGFaW310
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZ6XHiwUDAAAAAAAKCRDF2h8wRvQL7jAR
-AP9c0n8n2XmIBpq+7Fxt2lxtuSRdudSiWj/mEJra6mnciwEAkExH+ysItjfxSJ+uXmKrtHMcjjpt
-0SEiJEh+YOn2iQg=
-=PUt8
------END PGP SIGNATURE-----
-
---------------AMdez96DqXl9pgQhSGFaW310--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
