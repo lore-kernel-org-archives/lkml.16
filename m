@@ -1,81 +1,125 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DC41DE2D7;
-	Fri,  7 Feb 2025 12:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C84D1E0DE5
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 12:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738931074; cv=none; b=Y08rI1uL+1EAmA8n0AM00Ioku0ouHgOWI0eqOF70ldo8zcs8vEbWXyDyQSKSFQ8dFnAfmp1SaZ0sWF6I7MgM3NHtXJIV6+9Q+kHbyJMSPamqCfh2cgx5bSXj2YouHL40IA6j8MzuisiBXa/QuIAuUl7D9K01ZytcB4JFNMo2n3o=
+	t=1738931109; cv=none; b=OhaDrHVVwqDChhLTMN8JGFNLctJJQEl88YVyKpO0YX2usT0QHE2oaP8y7kVVKaFtuHH+wjx6bzjNUTH7IhDCA/qBiIoxzLCRhu10gSCOF3nd/iAzbAyhekmdjM8g20pJiA479nwhrr6zK+dHI2ixW+KVi7IrObY2YLROellLAVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738931074; c=relaxed/simple;
-	bh=9nrnAX7g76UWmoPEt9UrJmN4OQ1dlbCNQg8d6gBuWW4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mw6sB3yJkxFKlb0PjYIBUrMXxow4Mnoa4nInzV/v3e+jXXZU+Fp6rBps97JJREhLKVWcqxDFcBxTkxGch5ELRjxTzhU5tdMtxl5MO8WfwKbZi+HpeYWlb5zMEgXfPOA0yt1U1HUagCmD1Cm1WDKQ4Wvi22g/0CkCQa0jPSqirdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YqCnn0Kx0z4f3jsy;
-	Fri,  7 Feb 2025 20:24:13 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id E8B951A06DE;
-	Fri,  7 Feb 2025 20:24:28 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP1 (Coremail) with SMTP id cCh0CgAHbHx7+6VnRtaCDA--.12125S3;
-	Fri, 07 Feb 2025 20:24:28 +0800 (CST)
-Message-ID: <7fd947c4-7939-4ccd-8868-3fa419571a78@huaweicloud.com>
-Date: Fri, 7 Feb 2025 20:24:27 +0800
+	s=arc-20240116; t=1738931109; c=relaxed/simple;
+	bh=YRb6AeOz1RqLmzMCWVfuqJ1sWZSxZBHIwyWEGJnMSpE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KDuOnovrSv0HYXfeba4Kcz3LvOYudJZict9hyArQavXkm4mdL8zm0hS9MhD1PgG2+cnyPg0irg6AzamWQaNy0z1LRM0uV22TrDavojopL8lUOT+joshtzPfPDjtotYvzEcKf9atDAKyxTV7Tm6qSIlZjxrgSc0yJRX6gzYffMy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38dc660b56cso1076473f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 04:25:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738931106; x=1739535906;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/Br3Loe5xkO2tw+VOvibWqFKoDDBPsOAhDYLOuWOSM4=;
+        b=vHLvkyCMUvjM4q9ggj5mCl8yCZc+yTMgXxbFO4mvzuiHprD4TffRQy+QQ6c24q74cp
+         GrXZaXwtIIMsevJpd39jch0W1LWCR1rMgGUHNaNUZACz/2WjFkgSFXXJAogh8hEVIo62
+         G+maEEXIO4BGJ/WMierJ+6azlfo34Zq+Z3wUyv42KAyc3Y1JQjGmXokSKfrC3R/PDSMD
+         l8e1dOdd8h4fyJJCsHdIQOuWNflQg8FwwmX6UqrXwnuWrFejZFcrdK6aHMWNLWS/BJhB
+         sVaEFXe5WG7qS+b3GkjuwMcpSCPxMVD8Y+LNhwNisxRd5b6QSRVNXqOr3ymcMfiDsT1H
+         BwSw==
+X-Forwarded-Encrypted: i=1; AJvYcCUnE9cukVHL2XNHSwkV8oVASnELxbaGnZJnBuDgIF968Pgiy9POaIqeP98j5cpd1XvCewX2LeXuC94RKts=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5LhGoTmldsFGqfL3eioRqTMkBifM5GVZJepS7CptdJQgP4woa
+	zPOFf4LM8JWSkZeX12bO9eAVu6nLBiQl+837o6hJQQ6ESC7x3s2X
+X-Gm-Gg: ASbGncteEanoPu7CllDs6tr4xlR3qld6Iw4wb8qPNw1Dc2ArWcwraxK9/BgS63q/b8E
+	o73Yar+acGq8PmsviDiDSkv17z6xKAmaoM9+ua8lfIOcNJ3z7UP62KuViZkbCC1jsn2ZJvZjYHL
+	zMFoXATBNSLTKlnnKCgSpLdwlObVQMmTla/HftuYLOJoTkniLl7a2Htm73mI5nKi07nb5rkN2tA
+	A8/J8bXq3jeoodtnrViqZhcXSlGqBO7Q0CywHwmx4ozQaaPOvjhquRqdCIsxXKBzyyJJdSfgj3L
+	2BIXRA==
+X-Google-Smtp-Source: AGHT+IH7DOIpj6/qlVtnMj01ml1oRAUIZ2yKNO7QyAzuAHGlzzHzw2o/AxRJsDZB6z7IfPtnZc7W6g==
+X-Received: by 2002:a5d:64a1:0:b0:38d:ca76:9e73 with SMTP id ffacd0b85a97d-38dca76a03fmr1894034f8f.47.1738931105547;
+        Fri, 07 Feb 2025 04:25:05 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:8::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f84400sm260858866b.57.2025.02.07.04.25.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 04:25:05 -0800 (PST)
+Date: Fri, 7 Feb 2025 04:25:02 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@kernel.org, vincent.guittot@linaro.org,
+	linux-kernel@vger.kernel.org, juri.lelli@redhat.com,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, corbet@lwn.net,
+	qyousef@layalina.io, chris.hyser@oracle.com,
+	patrick.bellasi@matbug.net, pjt@google.com, pavel@ucw.cz,
+	qperret@google.com, tim.c.chen@linux.intel.com, joshdon@google.com,
+	timj@gnu.org, kprateek.nayak@amd.com, yu.c.chen@intel.com,
+	youssefesmat@chromium.org, joel@joelfernandes.org, efault@gmx.de,
+	tglx@linutronix.de, kernel-team@meta.com
+Subject: Re: [PATCH 03/15] sched/fair: Add lag based placement
+Message-ID: <20250207-tunneling-tested-koel-c59d33@leitao>
+References: <20230531115839.089944915@infradead.org>
+ <20230531124603.794929315@infradead.org>
+ <20250207-petite-eminent-husky-7d1704@leitao>
+ <20250207111141.GD7145@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 2/8] nvme: set BLK_FEAT_WRITE_ZEROES_UNMAP if
- device supports DEAC bit
-To: Christoph Hellwig <hch@lst.de>
-Cc: linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
- linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org, tytso@mit.edu, djwong@kernel.org,
- yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com,
- yangerkun@huawei.com
-References: <20250115114637.2705887-1-yi.zhang@huaweicloud.com>
- <20250115114637.2705887-3-yi.zhang@huaweicloud.com>
- <20250128064623.GB21401@lst.de>
-Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <20250128064623.GB21401@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgAHbHx7+6VnRtaCDA--.12125S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYV7kC6x804xWl14x267AKxVW8JVW5JwAF
-	c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
-	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
-	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
-	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
-	64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r
-	1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kI
-	c2xKxwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AKxVWUtVW8ZwCFx2IqxVCFs4
-	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
-	MI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
-	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
-	6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
-	BIdaVFxhVjvjDU0xZFpf9x07UQzVbUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207111141.GD7145@noisy.programming.kicks-ass.net>
 
-On 2025/1/28 14:46, Christoph Hellwig wrote:
-> I think you also need to add BLK_FEAT_WRITE_ZEROES_UNMAP to the list
-> of features supported by the nvme-mpath stacking driver in
-> nvme_mpath_alloc_disk, so that this gets propagated to multipathed
-> devices.
+Hello Peter,
+
+On Fri, Feb 07, 2025 at 12:11:41PM +0100, Peter Zijlstra wrote:
+> On Fri, Feb 07, 2025 at 02:07:18AM -0800, Breno Leitao wrote:
+> > Hello Peter,
+> > 
+> > On Wed, May 31, 2023 at 01:58:42PM +0200, Peter Zijlstra wrote:
+> > >
+> > >  place_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int initial)
+> > >  {
+> > <snip>
+> > > -		vruntime -= thresh;
+> > > +		lag *= load + se->load.weight;
+> > > +		if (WARN_ON_ONCE(!load))
+> > 
+> > I have 6.13 running on some hosts, and in some cases, where the system
+> > is getting some OOMs, I see the following stack:
+> > 
+> >           WARNING: CPU: 29 PID: 593474 at kernel/sched/fair.c:5250 place_entity+0x199/0x1b0
+> > 
+> >            Call Trace:
+> >             <TASK>
+> >             ? place_entity+0x199/0x1b0
+> >             reweight_entity+0x188/0x200
+> >             enqueue_task_fair.llvm.15448040313737105663+0x28c/0x560
+> >             enqueue_task+0x30/0x120
+> >             ttwu_do_activate+0x99/0x230
+> >             try_to_wake_up+0x25a/0x4a0
+> >             ? hrtimer_dummy_timeout+0x10/0x10
+> >             hrtimer_wakeup+0x25/0x30
+> >             __hrtimer_run_queues+0xf1/0x250
+> >             hrtimer_interrupt+0xfb/0x220
+> >             __sysvec_apic_timer_interrupt+0x47/0x140
+> >             sysvec_apic_timer_interrupt+0x35/0x80
+> >             asm_sysvec_apic_timer_interrupt+0x16/0x20
+> > 
+> > I am sorry for not decoding the stack, but I am having a hard time
+> > decoding the stack properly. The values I got was misleading, and I am
+> > working to understand what is happening.
+> > 
+> > Anyway, I don't have a reproducer and this problem doesn't happen
+> > frequent enough. I have 1K hosts with 6.13 and I saw it 5 times in the
+> > last week.
 > 
-> Otherwise this looks good to me.
+> Weird. Would you mind trying with the below patch on top?
 
-Ha, thanks for pointing this out, I missed this case, will add.
+Thanks for the quick answer. I will pick it on top of our tree, and
+start rolling it to those 1k hosts I have been playing with.
 
-Thanks,
-Yi.
-
+I haven't seen this patch in stable. Is it queue up for the next
+submission for stable?
