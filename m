@@ -1,120 +1,180 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37AE1EDA3E
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 13:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A515E1E98F4;
+	Fri,  7 Feb 2025 13:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738935817; cv=none; b=PVakJ3pPeqEqO4NIjsDhkLy2HmdllTjP5Jst5uMZc9vTWqOKaJG0XGbtOscJwkMdszoIB9fmZOn6wk5KVErIqeBWWG1EqNhmh7yyPQWjsX2vhg8BscH414exnNr6pB/s93/loPbwp+wIsSBCts9JLh1lkxYEtB6v0BehbNS2elY=
+	t=1738935857; cv=none; b=X3m4acHs1YJ2p6jSL+O7EYtV2oFawZ+aSRe1uQWvPoan7rsexDhlbwCrHElCOr+beI26AkMiEvRtlt4CgOg8V8BUQQ9exr8VMuTO1ije0QfDljYJlzDkkavUNaT1VK0CG67YsjY0qvaUOp16nWkFeYIlt3mpfgldQ5Y/ZYoRHCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738935817; c=relaxed/simple;
-	bh=FHXUInqL1mERxxhyzNOi52kx1FixifBEqw9FLbgO6ak=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y1FJ+aslPOhL3KvImfJ4izra6vcvRCyESWVPnqa17yhb7WKxBkdNdeoMwAvmOmS8CSMIjKC+40EkTPr2UOcAyyI/IFmSRRs8Lm2v4NsTs++8CcpMjFugnuDinAGqHDR/lVIDcaZjIrAZVtRWg13BqrY5zn7jRdX6qyLRV9FSxfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IgMMk9gZ; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1738935857; c=relaxed/simple;
+	bh=yvDb/9al0b5cbGYGz+egPFvQ2z5zm9IAuwXMbV2aY9g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NCV45qB507VuFAcO3DYHJmiRvTwL3WFIiKhj6Z7pm5sLjIbEJWcvqQ+gub6HojVgQmYaWHam3uBqk3708hvHoloOzCOvYXZKdw045P4zDOlqbZz2WX36xY98glacjEwyhyhIYfkFSR93PylcrMoOTTRpN4HEyHRhYY1lnFDf9NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UJcrWYj8; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IgMMk9gZ"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5441db195a8so650873e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 05:43:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738935814; x=1739540614; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hKsA6ABCoqBy1+Rb3r5XpccEe89AQ7e2K8/y7ck82Vw=;
-        b=IgMMk9gZ3JPUYBx/vOP6SoETaTqSSkg1iVoaSrvoZZRjmyVPTR7uXLkUyRJDBh+44C
-         9qH7Pget8/lMo7QlJ5039TV/rRiAmCZjmf6T1kTLFj9LLmU1r8bD82X+VZhoRkxeFQzk
-         S4EzUikNabl4jDWsojT5NDw19aIKyyL43ZRfliLt3xbgM++6w6ctXEnK5PSbou2gbSSs
-         9FDKZXi551DRgrMNvxqiezx6uriDsxNl5omaxXV9rEluB3kAXq1lLVeGb2yrrZZ45QnG
-         9T9J7kcqk4hsBI6odtKhrT1G1RF4CeR0o1rPIgpE7+l58xgbHZjUifudEsiROt4twjaV
-         lAIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738935814; x=1739540614;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hKsA6ABCoqBy1+Rb3r5XpccEe89AQ7e2K8/y7ck82Vw=;
-        b=prejrLW30Ii9rp45urI5+G8gEXDxUc0ytevZjTiKK5Xktp6+1SCnrgNmQdZDhSD2PF
-         IIQTQSes2PtY0f8Ruy2FGU2Uq/9FNXKq7xdbWLTvietz01FZLoydGmTTNCTsR7Kr8vsR
-         +KNtg0CSP3+XWCRWLqbe5GO4oDMYaX0YZrWACNdPVXMjpFoUGeRaBL4/DcvUNsAVgm1t
-         w/4/vfQy1q/3sGzxWbTAaxowCyww2CabHw+oGxkDgpq6WMZzpNqACwHaX6DIiUt+7xrs
-         iqRwvPN3EXvuH/qkxu3AbHZX56RgZhwdipzzuRwUjA0t0hdCl9XwnILId0FyUMJcf4X4
-         dyTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNXFbiTXq4Tj04aEA1QIoYvsVXcXCzaaudprI2k6S858uwaNF2r5Tjo3iLyiqrSh4v/nRwTzOr2Kcfyjw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztJGbqz8OR3RBtm2KgAhLJhsAIxyIDWt9sg1pJVIorDfYOEKN7
-	vr1WbiEBbCkk6x9Z3aEXy+Qf8cRoUd/uxuQnUr/iSvj+u5D5lm2bJHPRVCztnGPLmlwc555AcV/
-	J15/F5p6w/xkUTpo/AeKy4/S0Wx7iF/v2T6E2/fYp+Kka+76N5t4=
-X-Gm-Gg: ASbGnctjrRZ/M9RKaprJJvfAOVvJO8ltaYQdbiRCMYUdqrpJRgTjsq4lQ75KvVN1qre
-	EMucKwx7WmwLp+NgyYZYKNUeNeZOkO9PZQALiRTnZKGI2TOoA1dlvDmxnd50mrPN7GA4UUjsR0A
-	E9XC3ZWVGBm6s6lHmm6Db0gm5goII=
-X-Google-Smtp-Source: AGHT+IHks/1sa0KdRih+/AWLyA7Q3wgROj+ap1j3UX5UezETpT6I8+u4s+rJOBhjffLIcT1QtpxoyyrTQqGKdpXxMKw=
-X-Received: by 2002:a05:6512:31ce:b0:541:3175:19b4 with SMTP id
- 2adb3069b0e04-5440e643812mr2557388e87.11.1738935813528; Fri, 07 Feb 2025
- 05:43:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UJcrWYj8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738935856; x=1770471856;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yvDb/9al0b5cbGYGz+egPFvQ2z5zm9IAuwXMbV2aY9g=;
+  b=UJcrWYj8vxwHNBuwzgZYTu4L3Gr4BSKf/1Tje0gr+JbAW655GQPLKk6A
+   ZIoZZ+q9WBlkNn7CULRyzZKdSbSWimV8jQ/AxbSVGamcWzO5UqHuc/S12
+   GTt/UuSimA5N+cGjxLo/9lJurXQv+vtCKqQ37/QIYruOceGxk5NuIbwWn
+   YNcj+gQYnHT2Htf1bki//aRd9giraY8q3WQE29lJtVxNwgjj2vWYFE4Dj
+   HP/iMhWXflyix+2Y+nWZf1naWby1IUzgIFUqGAYTZPuNH69bEcenZgvth
+   lsERRQBWqgx37XCBohXJr+zFzPZvlkFC9avTCZT4gW7SH3fnPcSEvLj2T
+   w==;
+X-CSE-ConnectionGUID: 9xHJAJrXSgOU5j+m+aPSzQ==
+X-CSE-MsgGUID: pIfWsmu6TgaTzgdEglFd+Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39448796"
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="39448796"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:44:15 -0800
+X-CSE-ConnectionGUID: YD3vx1NJSq2zirfoHgButQ==
+X-CSE-MsgGUID: ndUXSvlTQgKqyCDXne74cw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="116533405"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 07 Feb 2025 05:44:10 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tgOeN-000yPD-1L;
+	Fri, 07 Feb 2025 13:44:07 +0000
+Date: Fri, 7 Feb 2025 21:43:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kumar Kartikeya Dwivedi <memxor@gmail.com>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Peter Zijlstra <peterz@infradead.org>,
+	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>,
+	Dohyun Kim <dohyunkim@google.com>,
+	linux-arm-kernel@lists.infradead.org, kernel-team@meta.com
+Subject: Re: [PATCH bpf-next v2 22/26] bpf: Introduce rqspinlock kfuncs
+Message-ID: <202502072155.DbOeX8Le-lkp@intel.com>
+References: <20250206105435.2159977-23-memxor@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204175659.150617-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=MeS1gCP2aNKs9xydqLQQnVbWHbVoSqTyLzVcENDFZYM=g@mail.gmail.com> <Z6YMDwflaxCFdnoc@smile.fi.intel.com>
-In-Reply-To: <Z6YMDwflaxCFdnoc@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 7 Feb 2025 14:43:21 +0100
-X-Gm-Features: AWEUYZn4w0AFhjUVVaaPzWXSUburvcZM3FGt7u2UBMubmSEsv8i14THnw7uGdr0
-Message-ID: <CAMRc=McATQEVKrh=Pi6u8tSgQac85YoT=U8X6WrdRW8mXgUSyw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Deduplicate some code in for_each_requested_gpio_in_range()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206105435.2159977-23-memxor@gmail.com>
 
-On Fri, Feb 7, 2025 at 2:35=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Feb 07, 2025 at 09:46:31AM +0100, Bartosz Golaszewski wrote:
-> > On Tue, Feb 4, 2025 at 6:57=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
->
-> ...
->
-> > >  /**
-> > > - * for_each_hwgpio - Iterates over all GPIOs for given chip.
-> > > + * for_each_hwgpio_in_range - Iterates over all GPIOs in a given ran=
-ge
-> > >   * @_chip: Chip to iterate over.
-> > >   * @_i: Loop counter.
-> > > + * @_base: First GPIO in the ranger.
-> > > + * @_size: Amount of GPIOs to check starting from @base.
-> > >   * @_label: Place to store the address of the label if the GPIO is r=
-equested.
-> > >   *          Set to NULL for unused GPIOs.
-> > >   */
-> > > -#define for_each_hwgpio(_chip, _i, _label) \
-> > > +#define for_each_hwgpio_in_range(_chip, _i, _base, _size, _label)   =
-                   \
-> > >         for (CLASS(_gpiochip_for_each_data, _data)(&_label, &_i); \
-> > > -            *_data.i < _chip->ngpio; \
-> > > +            *_data.i < _size;                                       =
-                   \
-> > >              (*_data.i)++, kfree(*(_data.label)), *_data.label =3D NU=
-LL) \
-> > >                 if (IS_ERR(*_data.label =3D \
-> > > -                       gpiochip_dup_line_label(_chip, *_data.i))) {}=
- \
-> > > +                       gpiochip_dup_line_label(_chip, _base + *_data=
-.i))) {}           \
-> > >                 else
-> >
-> > Can you add a kerneldoc here as well, please?
->
-> Sure, but it will duplicate the above.
->
+Hi Kumar,
 
-Will it though? It's a separate macro with different semantics.
+kernel test robot noticed the following build errors:
 
-Bart
+[auto build test ERROR on 0abff462d802a352c87b7f5e71b442b09bf9cfff]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Kumar-Kartikeya-Dwivedi/locking-Move-MCS-struct-definition-to-public-header/20250206-190258
+base:   0abff462d802a352c87b7f5e71b442b09bf9cfff
+patch link:    https://lore.kernel.org/r/20250206105435.2159977-23-memxor%40gmail.com
+patch subject: [PATCH bpf-next v2 22/26] bpf: Introduce rqspinlock kfuncs
+config: x86_64-buildonly-randconfig-004-20250207 (https://download.01.org/0day-ci/archive/20250207/202502072155.DbOeX8Le-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250207/202502072155.DbOeX8Le-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502072155.DbOeX8Le-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from fs/timerfd.c:26:
+   In file included from include/linux/syscalls.h:94:
+   In file included from include/trace/syscall.h:7:
+   In file included from include/linux/trace_events.h:10:
+   In file included from include/linux/perf_event.h:62:
+   In file included from include/linux/security.h:35:
+   In file included from include/linux/bpf.h:33:
+   In file included from arch/x86/include/asm/rqspinlock.h:27:
+>> include/asm-generic/rqspinlock.h:40:12: error: conflicting types for 'resilient_tas_spin_lock'
+      40 | extern int resilient_tas_spin_lock(rqspinlock_t *lock, u64 timeout);
+         |            ^
+   arch/x86/include/asm/rqspinlock.h:17:12: note: previous declaration is here
+      17 | extern int resilient_tas_spin_lock(struct qspinlock *lock, u64 timeout);
+         |            ^
+   1 error generated.
+--
+   In file included from fs/splice.c:27:
+   include/linux/mm_inline.h:47:41: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+      47 |         __mod_lruvec_state(lruvec, NR_LRU_BASE + lru, nr_pages);
+         |                                    ~~~~~~~~~~~ ^ ~~~
+   include/linux/mm_inline.h:49:22: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+      49 |                                 NR_ZONE_LRU_BASE + lru, nr_pages);
+         |                                 ~~~~~~~~~~~~~~~~ ^ ~~~
+   In file included from fs/splice.c:31:
+   In file included from include/linux/syscalls.h:94:
+   In file included from include/trace/syscall.h:7:
+   In file included from include/linux/trace_events.h:10:
+   In file included from include/linux/perf_event.h:62:
+   In file included from include/linux/security.h:35:
+   In file included from include/linux/bpf.h:33:
+   In file included from arch/x86/include/asm/rqspinlock.h:27:
+>> include/asm-generic/rqspinlock.h:40:12: error: conflicting types for 'resilient_tas_spin_lock'
+      40 | extern int resilient_tas_spin_lock(rqspinlock_t *lock, u64 timeout);
+         |            ^
+   arch/x86/include/asm/rqspinlock.h:17:12: note: previous declaration is here
+      17 | extern int resilient_tas_spin_lock(struct qspinlock *lock, u64 timeout);
+         |            ^
+   2 warnings and 1 error generated.
+--
+   In file included from fs/aio.c:20:
+   In file included from include/linux/syscalls.h:94:
+   In file included from include/trace/syscall.h:7:
+   In file included from include/linux/trace_events.h:10:
+   In file included from include/linux/perf_event.h:62:
+   In file included from include/linux/security.h:35:
+   In file included from include/linux/bpf.h:33:
+   In file included from arch/x86/include/asm/rqspinlock.h:27:
+>> include/asm-generic/rqspinlock.h:40:12: error: conflicting types for 'resilient_tas_spin_lock'
+      40 | extern int resilient_tas_spin_lock(rqspinlock_t *lock, u64 timeout);
+         |            ^
+   arch/x86/include/asm/rqspinlock.h:17:12: note: previous declaration is here
+      17 | extern int resilient_tas_spin_lock(struct qspinlock *lock, u64 timeout);
+         |            ^
+   In file included from fs/aio.c:29:
+   include/linux/mman.h:159:9: warning: division by zero is undefined [-Wdivision-by-zero]
+     159 |                _calc_vm_trans(flags, MAP_SYNC,       VM_SYNC      ) |
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/mman.h:137:21: note: expanded from macro '_calc_vm_trans'
+     137 |    : ((x) & (bit1)) / ((bit1) / (bit2))))
+         |                     ^ ~~~~~~~~~~~~~~~~~
+   include/linux/mman.h:160:9: warning: division by zero is undefined [-Wdivision-by-zero]
+     160 |                _calc_vm_trans(flags, MAP_STACK,      VM_NOHUGEPAGE) |
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/mman.h:137:21: note: expanded from macro '_calc_vm_trans'
+     137 |    : ((x) & (bit1)) / ((bit1) / (bit2))))
+         |                     ^ ~~~~~~~~~~~~~~~~~
+   2 warnings and 1 error generated.
+
+
+vim +/resilient_tas_spin_lock +40 include/asm-generic/rqspinlock.h
+
+c34e46edef2a89 Kumar Kartikeya Dwivedi 2025-02-06  39  
+7a9d3b27f7bf9c Kumar Kartikeya Dwivedi 2025-02-06 @40  extern int resilient_tas_spin_lock(rqspinlock_t *lock, u64 timeout);
+7a9d3b27f7bf9c Kumar Kartikeya Dwivedi 2025-02-06  41  #ifdef CONFIG_QUEUED_SPINLOCKS
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  42  extern int resilient_queued_spin_lock_slowpath(rqspinlock_t *lock, u32 val, u64 timeout);
+7a9d3b27f7bf9c Kumar Kartikeya Dwivedi 2025-02-06  43  #endif
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  44  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
