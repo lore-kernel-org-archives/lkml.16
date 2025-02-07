@@ -1,140 +1,123 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BC61AA1D5;
-	Fri,  7 Feb 2025 18:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7DB19259D;
+	Fri,  7 Feb 2025 18:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738953650; cv=none; b=MpWZc8s8F5sZiwGF5364Jzp6mdSfwHnETzpQj7NiHBnAVawK98i/x/d6UXomLcDdejMbMsA8wt5VGKjcbbfDBRmKzXr5QIAcsqcZDMgBgp54Y2VQmB2qwz3/o+lGdDeAB3bLRevNMPQGR0CbahePVrRIvFnVua+LMp7db8/qz2o=
+	t=1738953740; cv=none; b=ITfEPtgmMCO+ye/b9eFN4R4d8j2fMmmdcOATguoKCoCgofih+v+3I13Cxj9OH157fVfzjC0NNLS9t77y+Lrto6AHvXkkACqFk79DnpHF+Nici34Sx9DeD+MWUL8svArqeLN9TCs6Lr3HL+HxaXNTEs/6bgCidSsWJvF41FQzFFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738953650; c=relaxed/simple;
-	bh=tUad5obh1sGKnZ1z6Mhnxwc9ebc79vt8oTrv7jdMbaM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VxQBZ/Xinv564V3hdQTX0zJWHB8Kn+/OzZTdpfSkdFbfqwCqYDrFqde3Vnl+THzIJgvIZ3GLEoHXmnLH5aaMp99Qpmb7tROaT4SOOSaELAADHSvara+yj9+CkDEn9RrlNAO+gwCUOsWMru14dsQVfv3+uTOzggPOVtv/bPGJycs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bQMBVDg1; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738953740; c=relaxed/simple;
+	bh=vLL2/x5Xd0jIBxlSa0RKV1awz+Qu2EmvR9mbuE5+/VQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sOrcOMsjuqvwRThnpreAhen9JyTIQPKst0VFGX4QITj7YjXh5MM3IbCheK0IslFOsMT0uEpSGjDTt0rAS/RpAuon3J+HJxBC+vgM3S+MzOHQ6wSV1Y3zfW9hdToHjYOzcfsjBMHvn9LsK6OFtr6JHZzYrg3e7MO2n/oJhugWxtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lU/EHgnv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bQMBVDg1"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-46c8474d8daso18567431cf.3;
-        Fri, 07 Feb 2025 10:40:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738953646; x=1739558446; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tUad5obh1sGKnZ1z6Mhnxwc9ebc79vt8oTrv7jdMbaM=;
-        b=bQMBVDg18h/J2Q7vsile03PIBqJHveCDBefASZE9i8VbOEHOyXCkNKwca9we0zEN8k
-         q4KjJ7wbhM/VwgKQp47UBOFPDoQdkInWYv10jMDmZhK75lrjNqQPWKBHvJDaDCSdGF1a
-         edK8+OUicUaMX03gntgKxou7Qi8ZMk0oHcOgpiS43HcV+9+zf23BhTSwODH48cX4tcHp
-         VoqA5km7epiVgL/QIcUfIDdMFK+qRzGd21ihgYy/PRVrZ3m75kl/iyU3D3wkIrvjbdDX
-         +Jt8N0YSxDmirekA0vBXrwA2PP3Wr1THSS4qVj6Icn7Vx7iJVhw623DiJLBEOgigW5aG
-         ErxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738953646; x=1739558446;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tUad5obh1sGKnZ1z6Mhnxwc9ebc79vt8oTrv7jdMbaM=;
-        b=g44Yc3XCY+pWoT1+PSi2d8JvFn1LReNTxNTUt2yherO1nStjmapr8C0rPvNfFrePj3
-         g7kMGWl1XAegThW0JvWv/Me83IpQMGAuyit53UD7XVN/BtftM9Puiq6mBx3VJKtXcSGb
-         CkjIgFNYRFsV5vtl6C+m9T58V8YX0Td7NrgA7J3NXjPN2u42MI67YKtitnEsJU7TsEAv
-         nLSUyjFoFDKm0ohu6twTiiP5ZUU3XsKx6RTdmyDZgdhb+V6DshKG3IESOsXsqbIuHYJb
-         7U/ohb/y2wmzWDSCqpR6Nv/yHFJebKDmxX5MhwGgdQB3ghr/OdKh2GAdyejcapOV6PsJ
-         bAyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWfN3+YgacFZSBM7Dj9jJF04R9pCs7qqPSyV1OfvMLazzu2HPgB41Uq5STmm/Myg/e5E7guf122YmulKhpf@vger.kernel.org, AJvYcCWiaPwu56pj76CU2vxyHi8vyC1fEZKpPD4sBQA128bRg2y6AXXIOAUKaYxpqULXnXz1XOB27bwbgtSNR7HP@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpG6VVhjzkxS89VQQy+k1UTQI1X/LnCFNVbH+S2rapjycDbnaA
-	y1j0cOWInlzg8Km5gOeCGCnh+a9xpBNmS7iOQUMN0IhJlHNnPa02uONFGVJenxlcsBmV2bPFlJk
-	G3bSTufY+fNnPZSoKha22O1qP0cs=
-X-Gm-Gg: ASbGncsMCJhzuMVcWry3mdXpHE6ZJvbL6KaxgYjPx2EKdqFNWFPu+s50Wg4dWjfQ8Vg
-	5zmFAUs+fFyZwcHplWq/Y/U+TF83bYnhfh/aWopf128Wv0+8kBSFQGj7QxhP1rPFTkhL7C7adtQ
-	==
-X-Google-Smtp-Source: AGHT+IFpWMWqwooQlduaHSefPEdDLXhN9MxWGpYS18PqjtFEZCMhIa8KHRBDKNK+utCkNE15zRjZXTH49Crp2j726b4=
-X-Received: by 2002:ac8:5856:0:b0:46e:25ed:1601 with SMTP id
- d75a77b69052e-471679ead7dmr52946611cf.14.1738953646572; Fri, 07 Feb 2025
- 10:40:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lU/EHgnv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B93C6C4CED1;
+	Fri,  7 Feb 2025 18:42:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738953740;
+	bh=vLL2/x5Xd0jIBxlSa0RKV1awz+Qu2EmvR9mbuE5+/VQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lU/EHgnv5I6H8usnbQYNKAxUsM/ibmNjM7UzvmoGBB1RU9p3Ww4mZjs6Nq+xrde5s
+	 ZjzStGvrVAdKlkMjlOxLglUEvARggZU3r40bcHWzKXHNDOb3hgTeX89+B2+FaG7rJ9
+	 5hhzmaduMKTd6PXr/EyvocZm+eOfct311qJrq7wASAjy43unh43C92NFf73xO4mUpu
+	 6wZHV6ypcyQZyB+2xGJbWwtdPMT7hMcBeHJPchCK0E8UDAc+TUGl5jMixb4eBvFGDo
+	 lMRslavPambFGytHtGFGhRHB7+kBjtqNT8pUbo/pF59uPPQ5E5KmwqVtQC3ONEeJeL
+	 BJgWmlygp2/SA==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH] kconfig: do not clear SYMBOL_VALID when reading include/config/auto.conf
+Date: Sat,  8 Feb 2025 03:41:55 +0900
+Message-ID: <20250207184157.497745-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu>
- <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
- <Z6XWVU6ZTCIl3jnc@casper.infradead.org> <03eb13ad-03a2-4982-9545-0a5506e043d0@suse.cz>
- <CAJfpegtvy0N8dNK-jY1W-LX=TyGQxQTxHkgNJjFbWADUmzb6xA@mail.gmail.com>
- <f8b08ef9-5bba-490c-9d99-9ab955e68732@suse.cz> <94df7323-4ded-416a-b850-41e7ba034fdc@bsbernd.com>
-In-Reply-To: <94df7323-4ded-416a-b850-41e7ba034fdc@bsbernd.com>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Fri, 7 Feb 2025 10:40:35 -0800
-X-Gm-Features: AWEUYZlUKF3uMuKxv0gUMyubbyPvOYLv_SrV7TmDhm4xS-0PwcRiRKnubnUKYwY
-Message-ID: <CAJnrk1atv4N-BDWnwmESvczJhkayXyQqnLEypkmuJNKBa6gq8A@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
- related applications since v6.13
-To: Bernd Schubert <bernd@bsbernd.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Matthew Wilcox <willy@infradead.org>, Christian Heusel <christian@heusel.eu>, 
-	Josef Bacik <josef@toxicpanda.com>, Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm <linux-mm@kvack.org>, =?UTF-8?Q?Mantas_Mikul=C4=97nas?= <grawity@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 7, 2025 at 3:16=E2=80=AFAM Bernd Schubert <bernd@bsbernd.com> w=
-rote:
->
->
->
-> On 2/7/25 11:55, Vlastimil Babka wrote:
-> > On 2/7/25 11:43, Miklos Szeredi wrote:
-> >> On Fri, 7 Feb 2025 at 11:25, Vlastimil Babka <vbabka@suse.cz> wrote:
-> >>
-> >>> Could be a use-after free of the page, which sets PG_lru again. The l=
-ist
-> >>> corruptions in __rmqueue_pcplist also suggest some page manipulation =
-after
-> >>> free. The -1 refcount suggests somebody was using the page while it w=
-as
-> >>> freed due to refcount dropping to 0 and then did a put_page()?
-> >>
-> >> Can you suggest any debug options that could help pinpoint the offende=
-r?
-> >
-> > CONFIG_DEBUG_VM enables a check in put_page_testzero() that would catch=
- the
-> > underflow (modulo a tiny race window where it wouldn't). Worth trying.
->
-> I typically run all of my tests with these options enabled
->
-> https://github.com/bsbernd/tiny-qemu-virtio-kernel-config
->
->
-> If Christian or Mantas could tell me what I need to install and run, I
-> could probably quickly give it a try.
->
+When conf_read_simple() is called with S_DEF_AUTO, it is meant to read
+previous symbol values from include/config/auto.conf to determine which
+include/config/* files should be touched.
 
-Copying/pasting from [1], these are the repro steps that's listed:
+This process should not modify the current symbol status in any way.
+However, conf_touch_deps() currently invalidates all symbol values and
+recalculates them, which is totally unneeded.
 
-1) Install Bottles: flatpak install flathub com.usebottles.bottles
-2) Open Bottles and create a bottle
-3) In a terminal open the kernel log using dmesg/journalctl in follow mode
-4) Once the bottle has been initialized, open it, select "Run
-Executable" and point it at any Windows executable
-Note that at that same moment a BUG: Bad page state in process fuse
-mainloop error message will appear and the system will become
-unresponsive (keyboard and mouse might still work but you'll be unable
-to actually do anything, open or close any application, or even reboot
-or shutdown; you are able to ping the device and initiate an SSH
-connection but all it does is just display the banner)
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
+ scripts/kconfig/confdata.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-Thanks,
-Joanne
+diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+index 3b55e7a4131d..ac95661a1c9d 100644
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -385,7 +385,7 @@ int conf_read_simple(const char *name, int def)
+ 
+ 	def_flags = SYMBOL_DEF << def;
+ 	for_all_symbols(sym) {
+-		sym->flags &= ~(def_flags|SYMBOL_VALID);
++		sym->flags &= ~def_flags;
+ 		switch (sym->type) {
+ 		case S_INT:
+ 		case S_HEX:
+@@ -398,7 +398,11 @@ int conf_read_simple(const char *name, int def)
+ 		}
+ 	}
+ 
+-	expr_invalidate_all();
++	if (def == S_DEF_USER) {
++		for_all_symbols(sym)
++			sym->flags &= ~SYMBOL_VALID;
++		expr_invalidate_all();
++	}
+ 
+ 	while (getline_stripped(&line, &line_asize, in) != -1) {
+ 		struct menu *choice;
+@@ -464,6 +468,9 @@ int conf_read_simple(const char *name, int def)
+ 		if (conf_set_sym_val(sym, def, def_flags, val))
+ 			continue;
+ 
++		if (def != S_DEF_USER)
++			continue;
++
+ 		/*
+ 		 * If this is a choice member, give it the highest priority.
+ 		 * If conflicting CONFIG options are given from an input file,
+@@ -967,10 +974,8 @@ static int conf_touch_deps(void)
+ 	depfile_path[depfile_prefix_len] = 0;
+ 
+ 	conf_read_simple(name, S_DEF_AUTO);
+-	sym_calc_value(modules_sym);
+ 
+ 	for_all_symbols(sym) {
+-		sym_calc_value(sym);
+ 		if (sym_is_choice(sym))
+ 			continue;
+ 		if (sym->flags & SYMBOL_WRITE) {
+@@ -1084,12 +1089,12 @@ int conf_write_autoconf(int overwrite)
+ 	if (ret)
+ 		return -1;
+ 
+-	if (conf_touch_deps())
+-		return 1;
+-
+ 	for_all_symbols(sym)
+ 		sym_calc_value(sym);
+ 
++	if (conf_touch_deps())
++		return 1;
++
+ 	ret = __conf_write_autoconf(conf_get_autoheader_name(),
+ 				    print_symbol_for_c,
+ 				    &comment_style_c);
+-- 
+2.43.0
 
-[1] https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issue=
-s/110
-
->
->
-> Thanks,
-> Bernd
