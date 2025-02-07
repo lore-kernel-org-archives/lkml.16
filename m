@@ -1,70 +1,188 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B856E4C6E
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 01:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38D04C6E;
+	Fri,  7 Feb 2025 01:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738893308; cv=none; b=ee5mKCYzjyTaNTXtSbNnwdWYkk6u+/HhHzEFVw14VqYQq3aPOKO1lrBBvngYjRWng8WnDAE2LiOP+C/nWBqsinR2dwWUpMuuHzrzIbvco2JdlNFzH8pKkhXwKOEs2dzWgV9uOL7MLiWW1Zry1xy3sKC9okiQhGsIil6iHbviHJA=
+	t=1738893380; cv=none; b=SQLlKaAmYJ/CkbQNs/N6wofJi/4EsEEmiB4xJNJCR3oJfnop28OEHAscPDbopvb3L6Y0SJbBoX+ZzWH43JRuKHhsO5jz8XwZstgJJ95hOLrnEgOd8lqOdwtZxKoxK2w6UFr0rkRWwQJd8u3LwtBuWymbxYrLdBWsuA42x4mlKHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738893308; c=relaxed/simple;
-	bh=7v+IAjs+a7k+xcD1eDojkVVweFMLNRvVslSMEDCMKrk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Fy+QKzqhvBYxgD7O3lQ76+M11Bxz8YDeHlN7/ZrjtN1xqu0HcGTiByux1jUID5iwIQvajRHEzpBJr3Gy8xP6FG1lDuaMCIqOd6UZPulbkJd4g6Zy9ktNxKgAzDTLCenLndLpQBJPvYcLbeS5tQcWniGrrrsNqWxzO/ldslM/XYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=a4cChLA4; arc=none smtp.client-ip=185.125.188.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1738893380; c=relaxed/simple;
+	bh=tHPE4KQsGaB0rdSLDL9FPomEhkbkFulVZvxmy7qodNE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s8PyfiAzYy+t804kS0cUm8TD4PDFHe0AQYiPq2EyXWRxS2mMWzUExJ9dhs44mPFNjf+0uCClUm5xYXJiU8Eu0WaXCcAbj0R8GCdaNfXH+kHbWvm0T496NAAzk3qao6szPR5EoYvnhoV0RW7wVkHF+y7ELOLikuOmNs/cfgBxSjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kzx/qbs6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="a4cChLA4"
-Received: from t14.canonical.com (45.249.116.193.sa.leaptel.network [45.249.116.193])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 41FD940631;
-	Fri,  7 Feb 2025 01:47:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1738892875;
-	bh=7v+IAjs+a7k+xcD1eDojkVVweFMLNRvVslSMEDCMKrk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type;
-	b=a4cChLA4wEO7touohQKNppVQdApgcAx70n4EB5aY03QKti2qqgItzejzcTykanpUp
-	 zpd7F+1okusHo9vNf0oqDcVvI7L8PvnC2QeGHJFuGs5MgiquB4eKDg4nAaLRV2hGXo
-	 MBBqQ85VCiTOHC6FGnEyPOGU8mAuzWPJgaudphyBLwXMTlC7aNcXMDepDoRF+dbq2l
-	 K6NDHW8XLy2R7qAK0J+SPB2ycWkxdCzMcpSKK9BCUQMLF4cuE1Jv+N3zUQYR3H3Apl
-	 5fWeh4Icy6RpMgfimtmVXG/kwt9bzQMebLJlZQR5w9STZFkxI57r822aMXp/GhGtdI
-	 8tc0QFqH/RMeQ==
-From: Alex Murray <alex.murray@canonical.com>
-To: Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, tglx@linutronix.de, bp@alien8.de,
- andrew.cooper3@citrix.com, Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH] [v4] x86/cpu: Help users notice when running old Intel
- microcode
-In-Reply-To: <20250206214723.B5F4DB81@davehans-spike.ostc.intel.com>
-References: <20250206214723.B5F4DB81@davehans-spike.ostc.intel.com>
-Date: Fri, 07 Feb 2025 12:17:48 +1030
-Message-ID: <87tt96ikzf.fsf@canonical.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kzx/qbs6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F93CC4CEDD;
+	Fri,  7 Feb 2025 01:56:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738893380;
+	bh=tHPE4KQsGaB0rdSLDL9FPomEhkbkFulVZvxmy7qodNE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kzx/qbs63vufU+GaCQaYW/w3FiEi2P8r7c1JkmMaHym7v9yVEkYMj9qWfTWBhLlYT
+	 LoXGG0o2FKeJXFsqQ2AaOqaiOerKzI+THa0Rpe6CtmwxkX8ys+J+jfho8xqiGxcr31
+	 4BA9l8TUOwdsHu97xwncUqVD79uk9TFglTAPG6dGc/z/F+sfHLj2yjeF1E4LJhntI0
+	 alYQyEar+x2rxk223qHgrJ3NrVmSUZIXaHuWY2p2SmdGZLOCQqKKilGpyI2okbXRhV
+	 16t89SeD+KSZonp5Wu83qzwaAUGW1keRkhTQ0o07RTUL/+ifLzRNHlovyF+VaU3wO5
+	 JqjDnyB3haLbA==
+Date: Thu, 6 Feb 2025 17:56:18 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: syzbot <syzbot+86a8ab09a0f655f1ff19@syzkaller.appspotmail.com>,
+ davem@davemloft.net, edumazet@google.com, horms@kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com,
+ syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] general protection fault in
+ generic_hwtstamp_ioctl_lower (2)
+Message-ID: <20250206175618.6ac4182d@kernel.org>
+In-Reply-To: <67a230a8.050a0220.d7c5a.00ba.GAE@google.com>
+References: <67a230a8.050a0220.d7c5a.00ba.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hey Dave,
+On Tue, 04 Feb 2025 07:22:16 -0800 syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of git://g..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13324b24580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=98d83cc1742b7377
+> dashboard link: https://syzkaller.appspot.com/bug?extid=86a8ab09a0f655f1ff19
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17324b24580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=161595f8580000
 
-On Thu, 2025-02-06 at 13:47:23 -0800, Dave Hansen wrote:
+Hi Kory!
 
->
-> Also note that the "intel-ucode-defs.h" file is simple, ugly and
-> has lots of magic numbers. That's on purpose and should allow a
-> single file to be shared across lots of stable kernel regardless of if
-> they have the new "VFM" infrastructure or not. It was generated with
-> a dumb script.
->
+Looks like syzbot wasn't able to bisect and didn't CC you.
+Please take a look, looks like struct kernel_hwtstamp_config
+gets into the ioctl paths.
 
-Should this script be included as part of this patch so that it is easy
-for others to update intel-ucode-defs.h if needed in the future?
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/3d07b0558b0e/disk-69e858e0.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/e5e2250eb3b1/vmlinux-69e858e0.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/3e676d17effc/bzImage-69e858e0.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+86a8ab09a0f655f1ff19@syzkaller.appspotmail.com
+> 
+> netdevsim netdevsim0 netdevsim1: set [1, 0] type 2 family 0 port 6081 - 0
+> netdevsim netdevsim0 netdevsim2: set [1, 0] type 2 family 0 port 6081 - 0
+> netdevsim netdevsim0 netdevsim3: set [1, 0] type 2 family 0 port 6081 - 0
+> Oops: general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN PTI
+> KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+> CPU: 0 UID: 0 PID: 5827 Comm: syz-executor976 Not tainted 6.13.0-syzkaller-09760-g69e858e0b8b2 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+> RIP: 0010:generic_hwtstamp_ioctl_lower+0x125/0x420 net/core/dev_ioctl.c:456
+> Code: fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 b7 02 00 00 48 ba 00 00 00 00 00 fc ff df 4d 8b 75 10 49 8d 7e 10 48 89 f8 48 c1 e8 03 <0f> b6 0c 10 49 8d 46 27 48 89 c6 83 e0 07 48 c1 ee 03 0f b6 14 16
+> RSP: 0018:ffffc90003e4f250 EFLAGS: 00010202
+> RAX: 0000000000000002 RBX: ffff88807c788000 RCX: 0000000000000000
+> RDX: dffffc0000000000 RSI: ffffffff893547b8 RDI: 0000000000000010
+> RBP: ffffc90003e4f338 R08: 0000000000000007 R09: 0000000000000003
+> R10: ffffc90003e4f2ab R11: 0000000000000001 R12: 1ffff920007c9e4e
+> R13: ffffc90003e4f410 R14: 0000000000000000 R15: 1ffff920007c9e9b
+> FS:  0000555562e35380(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000180 CR3: 0000000078b1a000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  generic_hwtstamp_get_lower net/core/dev_ioctl.c:480 [inline]
+>  generic_hwtstamp_get_lower+0xe8/0x130 net/core/dev_ioctl.c:468
+>  dev_get_hwtstamp_phylib+0x181/0x610 net/core/dev_ioctl.c:291
+>  tsconfig_prepare_data+0x15f/0x650 net/ethtool/tsconfig.c:51
+>  ethnl_default_doit+0x31a/0xbd0 net/ethtool/netlink.c:493
+>  genl_family_rcv_msg_doit+0x202/0x2f0 net/netlink/genetlink.c:1115
+>  genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+>  genl_rcv_msg+0x565/0x800 net/netlink/genetlink.c:1210
+>  netlink_rcv_skb+0x165/0x410 net/netlink/af_netlink.c:2543
+>  genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1322 [inline]
+>  netlink_unicast+0x53c/0x7f0 net/netlink/af_netlink.c:1348
+>  netlink_sendmsg+0x8b8/0xd70 net/netlink/af_netlink.c:1892
+>  sock_sendmsg_nosec net/socket.c:713 [inline]
+>  __sock_sendmsg net/socket.c:728 [inline]
+>  ____sys_sendmsg+0x9ae/0xb40 net/socket.c:2568
+>  ___sys_sendmsg+0x135/0x1e0 net/socket.c:2622
+>  __sys_sendmsg+0x16e/0x220 net/socket.c:2654
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f098155c919
+> Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007ffca30ea5f8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 00007f09815aa4ad RCX: 00007f098155c919
+> RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
+> RBP: 00007f09815aa47d R08: 0000000000000000 R09: 0000555500000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f09815aa3e5
+> R13: 0000000000000001 R14: 00007ffca30ea640 R15: 0000000000000003
+>  </TASK>
+> Modules linked in:
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:generic_hwtstamp_ioctl_lower+0x125/0x420 net/core/dev_ioctl.c:456
+> Code: fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 b7 02 00 00 48 ba 00 00 00 00 00 fc ff df 4d 8b 75 10 49 8d 7e 10 48 89 f8 48 c1 e8 03 <0f> b6 0c 10 49 8d 46 27 48 89 c6 83 e0 07 48 c1 ee 03 0f b6 14 16
+> RSP: 0018:ffffc90003e4f250 EFLAGS: 00010202
+> RAX: 0000000000000002 RBX: ffff88807c788000 RCX: 0000000000000000
+> RDX: dffffc0000000000 RSI: ffffffff893547b8 RDI: 0000000000000010
+> RBP: ffffc90003e4f338 R08: 0000000000000007 R09: 0000000000000003
+> R10: ffffc90003e4f2ab R11: 0000000000000001 R12: 1ffff920007c9e4e
+> R13: ffffc90003e4f410 R14: 0000000000000000 R15: 1ffff920007c9e9b
+> FS:  0000555562e35380(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000180 CR3: 0000000078b1a000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> ----------------
+> Code disassembly (best guess), 3 bytes skipped:
+>    0:	48 c1 ea 03          	shr    $0x3,%rdx
+>    4:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1)
+>    8:	0f 85 b7 02 00 00    	jne    0x2c5
+>    e:	48 ba 00 00 00 00 00 	movabs $0xdffffc0000000000,%rdx
+>   15:	fc ff df
+>   18:	4d 8b 75 10          	mov    0x10(%r13),%r14
+>   1c:	49 8d 7e 10          	lea    0x10(%r14),%rdi
+>   20:	48 89 f8             	mov    %rdi,%rax
+>   23:	48 c1 e8 03          	shr    $0x3,%rax
+> * 27:	0f b6 0c 10          	movzbl (%rax,%rdx,1),%ecx <-- trapping instruction
+>   2b:	49 8d 46 27          	lea    0x27(%r14),%rax
+>   2f:	48 89 c6             	mov    %rax,%rsi
+>   32:	83 e0 07             	and    $0x7,%eax
+>   35:	48 c1 ee 03          	shr    $0x3,%rsi
+>   39:	0f b6 14 16          	movzbl (%rsi,%rdx,1),%edx
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+> 
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+> 
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+> 
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+> 
+> If you want to undo deduplication, reply with:
+> #syz undup
 
-Thanks,
-Alex
