@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB97B1DED42;
-	Fri,  7 Feb 2025 14:45:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49A523FC73;
+	Fri,  7 Feb 2025 14:45:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738939531; cv=none; b=XSElDEahHJ645Z5Og/6J9ZfYjz6uKskQErN1VH2Y9ej6bOtgpwMBnr4LcRhbdEOo8DnjN8Q3u1YN5Gc9SgtqWmtjpA0/4DvoLIbBp9tlBnnkPE+LSmf7k1FkoDmZBd4ViclPITNReSF7/Y01GC67mUvyMmv19bpaSsrRV/nyvP4=
+	t=1738939536; cv=none; b=i0z+WBeXq+N1A4TSVJnzVHLARyGnQcDhj0CfoZ6kq2kxQokI8+XTbx42yeC52DLKmaiTc25Jmnqy8Y27P5tYS/rfDxjjmR8RzxfE9HvVrHmYNtQ368boCPU3tMrc3FU+G06s4jcTQLn1v/chrWP76oif+ojy3NK0hJQp/njnfHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738939531; c=relaxed/simple;
-	bh=HvjrvFow89eoXG/4FaHsGNn+cFr/jhjduCYFd/WQOUg=;
+	s=arc-20240116; t=1738939536; c=relaxed/simple;
+	bh=7hfPiEnPqTZNH54VQL3qc4CVt5szt28nHy+WMJdjp8Y=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=abaB57rYPIdcrmfGZnaKblBOqUlN2dtpDUMomGyxal7NtRw9+5+17VdMYNS96Ir0lN/O6yrKtsWHndsbe23GscxrzJUz1EFoCR0iS7GEG2uku7fKiyhthb/yQBc/ngQGa60jZshQdfx1eBOBFiPUr35fGOAbmFa6Dz2/6blZIxU=
+	 MIME-Version:Content-Type; b=fUm7GbKzm8tLHF4+E4Qc8AtLEU9WXyzOfpJR39DYhtCFDzjOZY/ooIGYwkQM4HIbL5b7bQuUy84ytRoE6m9Fi9MJoMjBoiNaXIePDhxOaLAdAVmjWpu38jtxOCEipwj7cB1hmaWHWhCEoiHN4VIjY4+6t58xvrA+diC/r8zembQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YqGvY2nxNz6HJZ8;
-	Fri,  7 Feb 2025 22:44:25 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YqGvf2YlLz6HJc5;
+	Fri,  7 Feb 2025 22:44:30 +0800 (CST)
 Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id A43AD1408F9;
-	Fri,  7 Feb 2025 22:45:26 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 9E713140B55;
+	Fri,  7 Feb 2025 22:45:31 +0800 (CST)
 Received: from P_UKIT01-A7bmah.china.huawei.com (10.126.173.5) by
  frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 7 Feb 2025 15:45:23 +0100
+ 15.1.2507.39; Fri, 7 Feb 2025 15:45:29 +0100
 From: <shiju.jose@huawei.com>
 To: <linux-edac@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
 	<linux-acpi@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -44,9 +44,9 @@ CC: <linux-doc@vger.kernel.org>, <bp@alien8.de>, <tony.luck@intel.com>,
 	<prime.zeng@hisilicon.com>, <roberto.sassu@huawei.com>,
 	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
 	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v19 01/15] EDAC: Add support for EDAC device features control
-Date: Fri, 7 Feb 2025 14:44:30 +0000
-Message-ID: <20250207144445.1879-2-shiju.jose@huawei.com>
+Subject: [PATCH v19 03/15] EDAC: Add ECS control feature
+Date: Fri, 7 Feb 2025 14:44:32 +0000
+Message-ID: <20250207144445.1879-4-shiju.jose@huawei.com>
 X-Mailer: git-send-email 2.43.0.windows.1
 In-Reply-To: <20250207144445.1879-1-shiju.jose@huawei.com>
 References: <20250207144445.1879-1-shiju.jose@huawei.com>
@@ -63,285 +63,501 @@ X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
 
 From: Shiju Jose <shiju.jose@huawei.com>
 
-Add generic EDAC device feature controls supporting the registration
-of RAS features available in the system. The driver exposes control
-attributes for these features to userspace in
-/sys/bus/edac/devices/<dev-name>/<ras-feature>/
+Add EDAC ECS (Error Check Scrub) control to manage a memory device's
+ECS feature.
+
+The Error Check Scrub (ECS) is a feature defined in JEDEC DDR5 SDRAM
+Specification (JESD79-5) and allows the DRAM to internally read, correct
+single-bit errors, and write back corrected data bits to the DRAM array
+while providing transparency to error counts.
+
+The DDR5 device contains number of memory media FRUs per device. The
+DDR5 ECS feature and thus the ECS control driver supports configuring
+the ECS parameters per FRU.
+
+Memory devices support the ECS feature register with the EDAC device
+driver, which retrieves the ECS descriptor from the EDAC ECS driver.
+This driver exposes sysfs ECS control attributes to userspace via
+/sys/bus/edac/devices/<dev-name>/ecs_fruX/.
+
+The common sysfs ECS control interface abstracts the control of an
+arbitrary ECS functionality to a common set of functions.
+
+Support for the ECS feature is added separately because the control
+attributes of the DDR5 ECS feature differ from those of the scrub
+feature.
+
+The sysfs ECS attribute nodes are only present if the client driver
+has implemented the corresponding attribute callback function and
+passed the necessary operations to the EDAC RAS feature driver during
+registration.
 
 Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Tested-by: Daniel Ferguson <danielf@os.amperecomputing.com>
 Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 ---
- Documentation/edac/features.rst |  94 +++++++++++++++++++++++++++++
- Documentation/edac/index.rst    |  10 ++++
- drivers/edac/edac_device.c      | 102 ++++++++++++++++++++++++++++++++
- include/linux/edac.h            |  26 ++++++++
- 4 files changed, 232 insertions(+)
- create mode 100644 Documentation/edac/features.rst
- create mode 100644 Documentation/edac/index.rst
+ Documentation/ABI/testing/sysfs-edac-ecs |  74 ++++++++
+ Documentation/edac/scrub.rst             |   2 +
+ drivers/edac/Kconfig                     |   9 +
+ drivers/edac/Makefile                    |   1 +
+ drivers/edac/ecs.c                       | 207 +++++++++++++++++++++++
+ drivers/edac/edac_device.c               |  17 ++
+ include/linux/edac.h                     |  48 +++++-
+ 7 files changed, 356 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-edac-ecs
+ create mode 100755 drivers/edac/ecs.c
 
-diff --git a/Documentation/edac/features.rst b/Documentation/edac/features.rst
+diff --git a/Documentation/ABI/testing/sysfs-edac-ecs b/Documentation/ABI/testing/sysfs-edac-ecs
 new file mode 100644
-index 000000000000..6b0fdc6f5d6e
+index 000000000000..87c885c4eb1a
 --- /dev/null
-+++ b/Documentation/edac/features.rst
-@@ -0,0 +1,94 @@
-+.. SPDX-License-Identifier: GPL-2.0 OR GFDL-1.2-no-invariants-or-later
++++ b/Documentation/ABI/testing/sysfs-edac-ecs
+@@ -0,0 +1,74 @@
++What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX
++Date:		March 2025
++KernelVersion:	6.15
++Contact:	linux-edac@vger.kernel.org
++Description:
++		The sysfs EDAC bus devices /<dev-name>/ecs_fruX subdirectory
++		pertains to the memory media ECS (Error Check Scrub) control
++		feature, where <dev-name> directory corresponds to a device
++		registered with the EDAC device driver for the ECS feature.
++		/ecs_fruX belongs to the media FRUs (Field Replaceable Unit)
++		under the memory device.
 +
-+============================================
-+Augmenting EDAC for controlling RAS features
-+============================================
++		The sysfs ECS attr nodes are only present if the parent
++		driver has implemented the corresponding attr callback
++		function and provided the necessary operations to the EDAC
++		device driver during registration.
 +
-+Copyright (c) 2024-2025 HiSilicon Limited.
++What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/log_entry_type
++Date:		March 2025
++KernelVersion:	6.15
++Contact:	linux-edac@vger.kernel.org
++Description:
++		(RW) The log entry type of how the DDR5 ECS log is reported.
 +
-+:Author:   Shiju Jose <shiju.jose@huawei.com>
-+:License:  The GNU Free Documentation License, Version 1.2 without
-+           Invariant Sections, Front-Cover Texts nor Back-Cover Texts.
-+           (dual licensed under the GPL v2)
++		- 0 - per DRAM.
 +
-+- Written for: 6.15
++		- 1 - per memory media FRU.
 +
-+Introduction
-+------------
-+The expansion of EDAC for controlling RAS features and exposing features
-+control attributes to userspace via sysfs. Some Examples:
++		- All other values are reserved.
 +
-+1. Scrub control
++What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/mode
++Date:		March 2025
++KernelVersion:	6.15
++Contact:	linux-edac@vger.kernel.org
++Description:
++		(RW) The mode of how the DDR5 ECS counts the errors.
++		Error count is tracked based on two different modes
++		selected by DDR5 ECS Control Feature - Codeword mode and
++		Row Count mode. If the ECS is under Codeword mode, then
++		the error count increments each time a codeword with check
++		bit errors is detected. If the ECS is under Row Count mode,
++		then the error counter increments each time a row with
++		check bit errors is detected.
 +
-+2. Error Check Scrub (ECS) control
++		- 0 - ECS counts rows in the memory media that have ECC errors.
 +
-+3. ACPI RAS2 features
++		- 1 - ECS counts codewords with errors, specifically, it counts
++		      the number of ECC-detected errors in the memory media.
 +
-+4. Post Package Repair (PPR) control
++		- All other values are reserved.
 +
-+5. Memory Sparing Repair control etc.
++What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/reset
++Date:		March 2025
++KernelVersion:	6.15
++Contact:	linux-edac@vger.kernel.org
++Description:
++		(WO) ECS reset ECC counter.
 +
-+High level design is illustrated in the following diagram::
++		- 1 - reset ECC counter to the default value.
 +
-+        +-----------------------------------------------+
-+        |   Userspace - Rasdaemon                       |
-+        | +-------------+                               |
-+        | | RAS CXL mem |     +---------------+         |
-+        | |error handler|---->|               |         |
-+        | +-------------+     | RAS dynamic   |         |
-+        | +-------------+     | scrub, memory |         |
-+        | | RAS memory  |---->| repair control|         |
-+        | |error handler|     +----|----------+         |
-+        | +-------------+          |                    |
-+        +--------------------------|--------------------+
-+                                   |
-+                                   |
-+   +-------------------------------|------------------------------+
-+   |     Kernel EDAC extension for | controlling RAS Features     |
-+   |+------------------------------|----------------------------+ |
-+   || EDAC Core          Sysfs EDAC| Bus                        | |
-+   ||   +--------------------------|---------------------------+| |
-+   ||   |/sys/bus/edac/devices/<dev>/scrubX/ |   | EDAC device || |
-+   ||   |/sys/bus/edac/devices/<dev>/ecsX/   |<->| EDAC MC     || |
-+   ||   |/sys/bus/edac/devices/<dev>/repairX |   | EDAC sysfs  || |
-+   ||   +---------------------------|--------------------------+| |
-+   ||                           EDAC|Bus                        | |
-+   ||                               |                           | |
-+   ||   +----------+ Get feature    |      Get feature          | |
-+   ||   |          | desc +---------|------+ desc +----------+  | |
-+   ||   |EDAC scrub|<-----| EDAC device    |      |          |  | |
-+   ||   +----------+      | driver- RAS    |----->| EDAC mem |  | |
-+   ||   +----------+      | feature control|      | repair   |  | |
-+   ||   |          |<-----|                |      +----------+  | |
-+   ||   |EDAC ECS  |      +---------|------+                    | |
-+   ||   +----------+    Register RAS|features                   | |
-+   ||         ______________________|_____________              | |
-+   |+---------|---------------|------------------|--------------+ |
-+   |  +-------|----+  +-------|-------+     +----|----------+     |
-+   |  |            |  | CXL mem driver|     | Client driver |     |
-+   |  | ACPI RAS2  |  | scrub, ECS,   |     | memory repair |     |
-+   |  | driver     |  | sparing, PPR  |     | features      |     |
-+   |  +-----|------+  +-------|-------+     +------|--------+     |
-+   |        |                 |                    |              |
-+   +--------|-----------------|--------------------|--------------+
-+            |                 |                    |
-+   +--------|-----------------|--------------------|--------------+
-+   |    +---|-----------------|--------------------|-------+      |
-+   |    |                                                  |      |
-+   |    |            Platform HW and Firmware              |      |
-+   |    +--------------------------------------------------+      |
-+   +--------------------------------------------------------------+
++		- All other values are reserved.
 +
++What:		/sys/bus/edac/devices/<dev-name>/ecs_fruX/threshold
++Date:		March 2025
++KernelVersion:	6.15
++Contact:	linux-edac@vger.kernel.org
++Description:
++		(RW) DDR5 ECS threshold count per gigabits of memory cells.
++		The ECS error count is subject to the ECS Threshold count
++		per Gbit, which masks error counts less than the Threshold.
 +
-+1. EDAC Features components - Create feature specific descriptors.
-+   For example, EDAC scrub, EDAC ECS, EDAC memory repair in the above
-+   diagram.
++		Supported values are 256, 1024 and 4096.
 +
-+2. EDAC device driver for controlling RAS Features - Get feature's attribute
-+   descriptors from EDAC RAS feature component and registers device's RAS
-+   features with EDAC bus and exposes the features control attributes via
-+   the sysfs EDAC bus. For example, /sys/bus/edac/devices/<dev-name>/<feature>X/
++		All other values are reserved.
+diff --git a/Documentation/edac/scrub.rst b/Documentation/edac/scrub.rst
+index 50bb44b126fa..5f1ff2bf54b0 100644
+--- a/Documentation/edac/scrub.rst
++++ b/Documentation/edac/scrub.rst
+@@ -257,3 +257,5 @@ sysfs
+ 
+ Sysfs files are documented in
+ `Documentation/ABI/testing/sysfs-edac-scrub`
 +
-+3. RAS dynamic feature controller - Userspace sample modules in rasdaemon for
-+   dynamic scrub/repair control to issue scrubbing/repair when excess number
-+   of corrected memory errors are reported in a short span of time.
-diff --git a/Documentation/edac/index.rst b/Documentation/edac/index.rst
-new file mode 100644
-index 000000000000..de4a3aa452cb
++`Documentation/ABI/testing/sysfs-edac-ecs`
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 175d706168ab..9dfc2ea02df1 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -84,6 +84,15 @@ config EDAC_SCRUB
+ 	  into a unified set of functions.
+ 	  Say 'y/n' to enable/disable EDAC scrub feature.
+ 
++config EDAC_ECS
++	bool "EDAC ECS (Error Check Scrub) feature"
++	help
++	  The EDAC ECS feature is optional and is designed to control on-die
++	  error check scrub (e.g., DDR5 ECS) in the system. The common sysfs
++	  ECS interface abstracts the control of various ECS functionalities
++	  into a unified set of functions.
++	  Say 'y/n' to enable/disable EDAC ECS feature.
++
+ config EDAC_AMD64
+ 	tristate "AMD64 (Opteron, Athlon64)"
+ 	depends on AMD_NB && EDAC_DECODE_MCE
+diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+index f2a86ed997b7..21334b909ec4 100644
+--- a/drivers/edac/Makefile
++++ b/drivers/edac/Makefile
+@@ -14,6 +14,7 @@ edac_core-y	+= edac_module.o edac_device_sysfs.o wq.o
+ edac_core-$(CONFIG_EDAC_DEBUG)		+= debugfs.o
+ 
+ edac_core-$(CONFIG_EDAC_SCRUB)		+= scrub.o
++edac_core-$(CONFIG_EDAC_ECS)		+= ecs.o
+ 
+ ifdef CONFIG_PCI
+ edac_core-y	+= edac_pci.o edac_pci_sysfs.o
+diff --git a/drivers/edac/ecs.c b/drivers/edac/ecs.c
+new file mode 100755
+index 000000000000..7fd97984e039
 --- /dev/null
-+++ b/Documentation/edac/index.rst
-@@ -0,0 +1,10 @@
-+.. SPDX-License-Identifier: GPL-2.0 OR GFDL-1.2-no-invariants-or-later
++++ b/drivers/edac/ecs.c
+@@ -0,0 +1,207 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * The generic ECS driver is designed to support control of on-die error
++ * check scrub (e.g., DDR5 ECS). The common sysfs ECS interface abstracts
++ * the control of various ECS functionalities into a unified set of functions.
++ *
++ * Copyright (c) 2024-2025 HiSilicon Limited.
++ */
 +
-+==============
-+EDAC Subsystem
-+==============
++#include <linux/edac.h>
 +
-+.. toctree::
-+   :maxdepth: 1
++#define EDAC_ECS_FRU_NAME "ecs_fru"
 +
-+   features
-diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
-index 621dc2a5d034..142a661ff543 100644
---- a/drivers/edac/edac_device.c
-+++ b/drivers/edac/edac_device.c
-@@ -570,3 +570,105 @@ void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
- 		      block ? block->name : "N/A", count, msg);
- }
- EXPORT_SYMBOL_GPL(edac_device_handle_ue_count);
-+
-+static void edac_dev_release(struct device *dev)
-+{
-+	struct edac_dev_feat_ctx *ctx = container_of(dev, struct edac_dev_feat_ctx, dev);
-+
-+	kfree(ctx->dev.groups);
-+	kfree(ctx);
-+}
-+
-+const struct device_type edac_dev_type = {
-+	.name = "edac_dev",
-+	.release = edac_dev_release,
++enum edac_ecs_attributes {
++	ECS_LOG_ENTRY_TYPE,
++	ECS_MODE,
++	ECS_RESET,
++	ECS_THRESHOLD,
++	ECS_MAX_ATTRS
 +};
 +
-+static void edac_dev_unreg(void *data)
++struct edac_ecs_dev_attr {
++	struct device_attribute dev_attr;
++	int fru_id;
++};
++
++struct edac_ecs_fru_context {
++	char name[EDAC_FEAT_NAME_LEN];
++	struct edac_ecs_dev_attr dev_attr[ECS_MAX_ATTRS];
++	struct attribute *ecs_attrs[ECS_MAX_ATTRS + 1];
++	struct attribute_group group;
++};
++
++struct edac_ecs_context {
++	u16 num_media_frus;
++	struct edac_ecs_fru_context *fru_ctxs;
++};
++
++#define TO_ECS_DEV_ATTR(_dev_attr)	\
++	container_of(_dev_attr, struct edac_ecs_dev_attr, dev_attr)
++
++#define EDAC_ECS_ATTR_SHOW(attrib, cb, type, format)				\
++static ssize_t attrib##_show(struct device *ras_feat_dev,			\
++			     struct device_attribute *attr, char *buf)		\
++{										\
++	struct edac_ecs_dev_attr *dev_attr = TO_ECS_DEV_ATTR(attr);		\
++	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);		\
++	const struct edac_ecs_ops *ops = ctx->ecs.ecs_ops;			\
++	type data;								\
++	int ret;								\
++										\
++	ret = ops->cb(ras_feat_dev->parent, ctx->ecs.private,			\
++		      dev_attr->fru_id, &data);					\
++	if (ret)								\
++		return ret;							\
++										\
++	return sysfs_emit(buf, format, data);					\
++}
++
++EDAC_ECS_ATTR_SHOW(log_entry_type, get_log_entry_type, u32, "%u\n")
++EDAC_ECS_ATTR_SHOW(mode, get_mode, u32, "%u\n")
++EDAC_ECS_ATTR_SHOW(threshold, get_threshold, u32, "%u\n")
++
++#define EDAC_ECS_ATTR_STORE(attrib, cb, type, conv_func)			\
++static ssize_t attrib##_store(struct device *ras_feat_dev,			\
++			      struct device_attribute *attr,			\
++			      const char *buf, size_t len)			\
++{										\
++	struct edac_ecs_dev_attr *dev_attr = TO_ECS_DEV_ATTR(attr);		\
++	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);		\
++	const struct edac_ecs_ops *ops = ctx->ecs.ecs_ops;			\
++	type data;								\
++	int ret;								\
++										\
++	ret = conv_func(buf, 0, &data);						\
++	if (ret < 0)								\
++		return ret;							\
++										\
++	ret = ops->cb(ras_feat_dev->parent, ctx->ecs.private,			\
++		      dev_attr->fru_id, data);					\
++	if (ret)								\
++		return ret;							\
++										\
++	return len;								\
++}
++
++EDAC_ECS_ATTR_STORE(log_entry_type, set_log_entry_type, unsigned long, kstrtoul)
++EDAC_ECS_ATTR_STORE(mode, set_mode, unsigned long, kstrtoul)
++EDAC_ECS_ATTR_STORE(reset, reset, unsigned long, kstrtoul)
++EDAC_ECS_ATTR_STORE(threshold, set_threshold, unsigned long, kstrtoul)
++
++static umode_t ecs_attr_visible(struct kobject *kobj, struct attribute *a, int attr_id)
 +{
-+	device_unregister(data);
++	struct device *ras_feat_dev = kobj_to_dev(kobj);
++	struct edac_dev_feat_ctx *ctx = dev_get_drvdata(ras_feat_dev);
++	const struct edac_ecs_ops *ops = ctx->ecs.ecs_ops;
++
++	switch (attr_id) {
++	case ECS_LOG_ENTRY_TYPE:
++		if (ops->get_log_entry_type)  {
++			if (ops->set_log_entry_type)
++				return a->mode;
++			else
++				return 0444;
++		}
++		break;
++	case ECS_MODE:
++		if (ops->get_mode) {
++			if (ops->set_mode)
++				return a->mode;
++			else
++				return 0444;
++		}
++		break;
++	case ECS_RESET:
++		if (ops->reset)
++			return a->mode;
++		break;
++	case ECS_THRESHOLD:
++		if (ops->get_threshold) {
++			if (ops->set_threshold)
++				return a->mode;
++			else
++				return 0444;
++		}
++		break;
++	default:
++		break;
++	}
++
++	return 0;
++}
++
++#define EDAC_ECS_ATTR_RO(_name, _fru_id)       \
++	((struct edac_ecs_dev_attr) { .dev_attr = __ATTR_RO(_name), \
++				     .fru_id = _fru_id })
++
++#define EDAC_ECS_ATTR_WO(_name, _fru_id)       \
++	((struct edac_ecs_dev_attr) { .dev_attr = __ATTR_WO(_name), \
++				     .fru_id = _fru_id })
++
++#define EDAC_ECS_ATTR_RW(_name, _fru_id)       \
++	((struct edac_ecs_dev_attr) { .dev_attr = __ATTR_RW(_name), \
++				     .fru_id = _fru_id })
++
++static int ecs_create_desc(struct device *ecs_dev,
++			   const struct attribute_group **attr_groups, u16 num_media_frus)
++{
++	struct edac_ecs_context *ecs_ctx;
++	u32 fru;
++
++	ecs_ctx = devm_kzalloc(ecs_dev, sizeof(*ecs_ctx), GFP_KERNEL);
++	if (!ecs_ctx)
++		return -ENOMEM;
++
++	ecs_ctx->num_media_frus = num_media_frus;
++	ecs_ctx->fru_ctxs = devm_kcalloc(ecs_dev, num_media_frus,
++					 sizeof(*ecs_ctx->fru_ctxs),
++					 GFP_KERNEL);
++	if (!ecs_ctx->fru_ctxs)
++		return -ENOMEM;
++
++	for (fru = 0; fru < num_media_frus; fru++) {
++		struct edac_ecs_fru_context *fru_ctx = &ecs_ctx->fru_ctxs[fru];
++		struct attribute_group *group = &fru_ctx->group;
++		int i;
++
++		fru_ctx->dev_attr[ECS_LOG_ENTRY_TYPE] =
++					EDAC_ECS_ATTR_RW(log_entry_type, fru);
++		fru_ctx->dev_attr[ECS_MODE] = EDAC_ECS_ATTR_RW(mode, fru);
++		fru_ctx->dev_attr[ECS_RESET] = EDAC_ECS_ATTR_WO(reset, fru);
++		fru_ctx->dev_attr[ECS_THRESHOLD] =
++					EDAC_ECS_ATTR_RW(threshold, fru);
++
++		for (i = 0; i < ECS_MAX_ATTRS; i++)
++			fru_ctx->ecs_attrs[i] = &fru_ctx->dev_attr[i].dev_attr.attr;
++
++		sprintf(fru_ctx->name, "%s%d", EDAC_ECS_FRU_NAME, fru);
++		group->name = fru_ctx->name;
++		group->attrs = fru_ctx->ecs_attrs;
++		group->is_visible  = ecs_attr_visible;
++
++		attr_groups[fru] = group;
++	}
++
++	return 0;
 +}
 +
 +/**
-+ * edac_dev_register - register device for RAS features with EDAC
-+ * @parent: parent device.
-+ * @name: name for the folder in the /sys/bus/edac/devices/,
-+ *	  which is derived from the parent device.
-+ *	  For eg. /sys/bus/edac/devices/cxl_mem0/
-+ * @private: parent driver's data to store in the context if any.
-+ * @num_features: number of RAS features to register.
-+ * @ras_features: list of RAS features to register.
++ * edac_ecs_get_desc - get EDAC ECS descriptors
++ * @ecs_dev: client device, supports ECS feature
++ * @attr_groups: pointer to attribute group container
++ * @num_media_frus: number of media FRUs in the device
 + *
 + * Return:
-+ *  * %0       - Success.
-+ *  * %-EINVAL - Invalid parameters passed.
-+ *  * %-ENOMEM - Dynamic memory allocation failed.
-+ *
++ *  * %0	- Success.
++ *  * %-EINVAL	- Invalid parameters passed.
++ *  * %-ENOMEM	- Dynamic memory allocation failed.
 + */
-+int edac_dev_register(struct device *parent, char *name,
-+		      void *private, int num_features,
-+		      const struct edac_dev_feature *ras_features)
++int edac_ecs_get_desc(struct device *ecs_dev,
++		      const struct attribute_group **attr_groups, u16 num_media_frus)
 +{
-+	const struct attribute_group **ras_attr_groups;
-+	struct edac_dev_feat_ctx *ctx;
-+	int attr_gcnt = 0;
-+	int ret, feat;
-+
-+	if (!parent || !name || !num_features || !ras_features)
++	if (!ecs_dev || !attr_groups || !num_media_frus)
 +		return -EINVAL;
 +
-+	/* Double parse to make space for attributes */
-+	for (feat = 0; feat < num_features; feat++) {
-+		switch (ras_features[feat].ft_type) {
-+		/* Add feature specific code */
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ras_attr_groups = kcalloc(attr_gcnt + 1, sizeof(*ras_attr_groups), GFP_KERNEL);
-+	if (!ras_attr_groups) {
-+		ret = -ENOMEM;
-+		goto ctx_free;
-+	}
-+
-+	attr_gcnt = 0;
-+	for (feat = 0; feat < num_features; feat++, ras_features++) {
-+		switch (ras_features->ft_type) {
-+		/* Add feature specific code */
-+		default:
-+			ret = -EINVAL;
-+			goto groups_free;
-+		}
-+	}
-+
-+	ctx->dev.parent = parent;
-+	ctx->dev.bus = edac_get_sysfs_subsys();
-+	ctx->dev.type = &edac_dev_type;
-+	ctx->dev.groups = ras_attr_groups;
-+	ctx->private = private;
-+	dev_set_drvdata(&ctx->dev, ctx);
-+
-+	ret = dev_set_name(&ctx->dev, name);
-+	if (ret)
-+		goto groups_free;
-+
-+	ret = device_register(&ctx->dev);
-+	if (ret) {
-+		put_device(&ctx->dev);
-+		return ret;
-+	}
-+
-+	return devm_add_action_or_reset(parent, edac_dev_unreg, &ctx->dev);
-+
-+groups_free:
-+	kfree(ras_attr_groups);
-+ctx_free:
-+	kfree(ctx);
-+	return ret;
++	return ecs_create_desc(ecs_dev, attr_groups, num_media_frus);
 +}
-+EXPORT_SYMBOL_GPL(edac_dev_register);
+diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
+index 40407f0ee600..a8421dc9ab3c 100644
+--- a/drivers/edac/edac_device.c
++++ b/drivers/edac/edac_device.c
+@@ -627,6 +627,9 @@ int edac_dev_register(struct device *parent, char *name,
+ 			attr_gcnt++;
+ 			scrub_cnt++;
+ 			break;
++		case RAS_FEAT_ECS:
++			attr_gcnt += ras_features[feat].ecs_info.num_media_frus;
++			break;
+ 		default:
+ 			return -EINVAL;
+ 		}
+@@ -671,6 +674,20 @@ int edac_dev_register(struct device *parent, char *name,
+ 			scrub_cnt++;
+ 			attr_gcnt++;
+ 			break;
++		case RAS_FEAT_ECS:
++			if (!ras_features->ecs_ops)
++				goto data_mem_free;
++
++			dev_data = &ctx->ecs;
++			dev_data->ecs_ops = ras_features->ecs_ops;
++			dev_data->private = ras_features->ctx;
++			ret = edac_ecs_get_desc(parent, &ras_attr_groups[attr_gcnt],
++						ras_features->ecs_info.num_media_frus);
++			if (ret)
++				goto data_mem_free;
++
++			attr_gcnt += ras_features->ecs_info.num_media_frus;
++			break;
+ 		default:
+ 			ret = -EINVAL;
+ 			goto data_mem_free;
 diff --git a/include/linux/edac.h b/include/linux/edac.h
-index b4ee8961e623..8c4b6ca2a994 100644
+index 1cbab08720df..f8346014c14e 100644
 --- a/include/linux/edac.h
 +++ b/include/linux/edac.h
-@@ -661,4 +661,30 @@ static inline struct dimm_info *edac_get_dimm(struct mem_ctl_info *mci,
+@@ -667,6 +667,7 @@ static inline struct dimm_info *edac_get_dimm(struct mem_ctl_info *mci,
+ /* RAS feature type */
+ enum edac_dev_feat {
+ 	RAS_FEAT_SCRUB,
++	RAS_FEAT_ECS,
+ 	RAS_FEAT_MAX
+ };
  
- 	return mci->dimms[index];
- }
-+
-+/* RAS feature type */
-+enum edac_dev_feat {
-+	RAS_FEAT_MAX
+@@ -707,9 +708,47 @@ static inline int edac_scrub_get_desc(struct device *scrub_dev,
+ { return -EOPNOTSUPP; }
+ #endif /* CONFIG_EDAC_SCRUB */
+ 
++/**
++ * struct edac_ecs_ops - ECS device operations (all elements optional)
++ * @get_log_entry_type: read the log entry type value.
++ * @set_log_entry_type: set the log entry type value.
++ * @get_mode: read the mode value.
++ * @set_mode: set the mode value.
++ * @reset: reset the ECS counter.
++ * @get_threshold: read the threshold count per gigabits of memory cells.
++ * @set_threshold: set the threshold count per gigabits of memory cells.
++ */
++struct edac_ecs_ops {
++	int (*get_log_entry_type)(struct device *dev, void *drv_data, int fru_id, u32 *val);
++	int (*set_log_entry_type)(struct device *dev, void *drv_data, int fru_id, u32 val);
++	int (*get_mode)(struct device *dev, void *drv_data, int fru_id, u32 *val);
++	int (*set_mode)(struct device *dev, void *drv_data, int fru_id, u32 val);
++	int (*reset)(struct device *dev, void *drv_data, int fru_id, u32 val);
++	int (*get_threshold)(struct device *dev, void *drv_data, int fru_id, u32 *threshold);
++	int (*set_threshold)(struct device *dev, void *drv_data, int fru_id, u32 threshold);
 +};
 +
-+/* EDAC device feature information structure */
-+struct edac_dev_data {
-+	u8 instance;
-+	void *private;
++struct edac_ecs_ex_info {
++	u16 num_media_frus;
 +};
 +
-+struct edac_dev_feat_ctx {
-+	struct device dev;
-+	void *private;
-+};
++#if IS_ENABLED(CONFIG_EDAC_ECS)
++int edac_ecs_get_desc(struct device *ecs_dev,
++		      const struct attribute_group **attr_groups,
++		      u16 num_media_frus);
++#else
++static inline int edac_ecs_get_desc(struct device *ecs_dev,
++				    const struct attribute_group **attr_groups,
++				    u16 num_media_frus)
++{ return -EOPNOTSUPP; }
++#endif /* CONFIG_EDAC_ECS */
 +
-+struct edac_dev_feature {
-+	enum edac_dev_feat ft_type;
-+	u8 instance;
-+	void *ctx;
-+};
-+
-+int edac_dev_register(struct device *parent, char *dev_name,
-+		      void *parent_pvt_data, int num_features,
-+		      const struct edac_dev_feature *ras_features);
- #endif /* _LINUX_EDAC_H_ */
+ /* EDAC device feature information structure */
+ struct edac_dev_data {
+-	const struct edac_scrub_ops *scrub_ops;
++	union {
++		const struct edac_scrub_ops *scrub_ops;
++		const struct edac_ecs_ops *ecs_ops;
++	};
+ 	u8 instance;
+ 	void *private;
+ };
+@@ -718,13 +757,18 @@ struct edac_dev_feat_ctx {
+ 	struct device dev;
+ 	void *private;
+ 	struct edac_dev_data *scrub;
++	struct edac_dev_data ecs;
+ };
+ 
+ struct edac_dev_feature {
+ 	enum edac_dev_feat ft_type;
+ 	u8 instance;
+-	const struct edac_scrub_ops *scrub_ops;
++	union {
++		const struct edac_scrub_ops *scrub_ops;
++		const struct edac_ecs_ops *ecs_ops;
++	};
+ 	void *ctx;
++	struct edac_ecs_ex_info ecs_info;
+ };
+ 
+ int edac_dev_register(struct device *parent, char *dev_name,
 -- 
 2.43.0
 
