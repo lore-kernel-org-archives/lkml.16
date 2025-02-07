@@ -1,111 +1,211 @@
-Received: from lf-1-19.ptr.blmpb.com (lf-1-19.ptr.blmpb.com [103.149.242.19])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417841CDFCC
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.149.242.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25DF8185B5F
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738922088; cv=none; b=FNRg27/pyD+3Q8Hp9c0D7p4RJa+ti6GASdwKV06KUyH8FtDSSJ6MsprUz3+Vze2OzjjMWG8lVvO+x6EUSeOhsjFYYgwBRCnqvulWxVkXdi1mfju1T37r4cZDQlUZsGhYuTWu3E7wFCFIZRG5lNfbNTIlwQthMVywpCKwfWmURaQ=
+	t=1738922200; cv=none; b=kBnSzg6Do80RVc6x2TggkNsZXVKW0Ut7acLs+VV4je+tpjqKcr9pAUbF5w9dVcrvixGFGXiy+7t0z0trCSJ/5ujp1oJr1xqLCSZsdbfnr+MyBDIvORxF260OF66abxntJx3jtM87OoTx+P+NPh80JizICSI/TLCQQjJoLiXoaMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738922088; c=relaxed/simple;
-	bh=agaQceQd1bDu4sOTVHXeeG0BKQ3+Zt0nmWgpIyNwVzw=;
-	h=Date:Message-Id:Content-Type:Cc:Mime-Version:Subject:To:From; b=E/MoLiXXNZN17abV6ONn3ACbIuBE6fAHNfU1+DUW2Ull9fYBvg+BFqDxyWeniUSeAZNvwUZP3O9U2/GLu54BPrv4iv2vnb2s9xfx2LeuBTeSVWbXuyov1gY3izQtMWaQ9/Qjz9bkPiDWHOSaYzNwZbknKDOPmOCBBN62uFR04lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=deepcomputing.io; spf=pass smtp.mailfrom=deepcomputing.io; dkim=pass (2048-bit key) header.d=deepcomputing-io.20200927.dkim.feishu.cn header.i=@deepcomputing-io.20200927.dkim.feishu.cn header.b=Ext4D7g2; arc=none smtp.client-ip=103.149.242.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=deepcomputing.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deepcomputing.io
+	s=arc-20240116; t=1738922200; c=relaxed/simple;
+	bh=8dSp7jpKHxboTrZ29vEvzIoTaKmW9cItRIc7qe/m/qM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NUj6Ppi7MAR4CXhOdT3jNDsTn89+MsRv+1hNYJJARlPBj8DwP2n6KBe/zcjqv96v3FjT94MsNj9iRnhlbMj70cEkhf7q3ptiU7rfUUd+0P7hWm48qX61i8bXbw4e+YjXrqgQlTRpG6qAWVBUfqx6Jvwbb2AtvJKrdarBBFUFrMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=WOKA8iiT; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deepcomputing-io.20200927.dkim.feishu.cn header.i=@deepcomputing-io.20200927.dkim.feishu.cn header.b="Ext4D7g2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=deepcomputing-io.20200927.dkim.feishu.cn; t=1738921152;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=nmICg0JeV9q0TueMgSa31FvUhRcU9+mUNKRb/fAv+c4=;
- b=Ext4D7g2kPHU3YeMoyg7w2U5doYWuKL65p5hQ+TumzUUIjwY/gsZn5W1oos5unnOzjQJ+2
- jUlCuQPgHV5b/WholkhRwGAbHdJn6TVTXM/sA+aPMy+OV/CRpMgc1IOfbaG78XaLlq6PK7
- BxIzAxf89c1UX2pGJ+v4YLyZTyibfV2WkUKsSLbDEJ79URlLIi6EKZtYWceaD0995Kwf2W
- YczpLFsyG4MqWHDNQvtjjwkiWYCL3oXvjwdj081Wh0fBCp4b6D0y+i540kbte3zMd3rTV5
- booSEJXZZbpDdMQnbcsl8Hljzahk6xeSQKc3k865TQ2xudjDCCsF95KsxEX4fA==
-Date: Fri,  7 Feb 2025 17:36:18 +0800
-Content-Transfer-Encoding: 7bit
-X-Mailer: git-send-email 2.34.1
-X-Lms-Return-Path: <lba+267a5d4be+30baf8+vger.kernel.org+sandie.cao@deepcomputing.io>
-Message-Id: <20250207093618.126636-1-sandie.cao@deepcomputing.io>
-Received: from roma-MacBookPro.. ([113.110.140.128]) by smtp.feishu.cn with ESMTPS; Fri, 07 Feb 2025 17:39:09 +0800
-Content-Type: text/plain; charset=UTF-8
-Cc: "Paul Walmsley" <paul.walmsley@sifive.com>, 
-	"Palmer Dabbelt" <palmer@dabbelt.com>, 
-	"Albert Ou" <aou@eecs.berkeley.edu>, <linux-riscv@lists.infradead.org>, 
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>, 
-	"Sandie Cao" <sandie.cao@deepcomputing.io>
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="WOKA8iiT"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2165448243fso45946665ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 01:56:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessos.org; s=google; t=1738922197; x=1739526997; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FFa0TwOfaeXeN6TUv3CVAI4nkkhAF2OdqwCTnqd5M/Y=;
+        b=WOKA8iiToA1iq46FdNlA6XW4IQbhDFLACJ2RnvJMe3yV/ETcAlry9xlQ6Kx1LP9IXM
+         lAdgduHGgQdq1Qd+d5c06ye6ZIgWDy5uZfjS1QJnixBYdibc/cVRWb7cIfdKT6ABNz0o
+         P0PXYUyQpbU8yh6GB5rTfVwvhnzaCSInAHAl30bA1+Nd0o77K6PolilMrDSo5A2pW6DT
+         YoQ/09SvgzlPHnIvhDEC+zsjhlmiu7vzAAgcxXOc8QTPtGPJhGkd+JsqfrBjKRPceQ2q
+         AjFZOYksURfu18I3TZ7ibLLWAjjFc5xElHAyLSPHr7EGPafHg0y4SR+SgOci509M1/FI
+         fycw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738922197; x=1739526997;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FFa0TwOfaeXeN6TUv3CVAI4nkkhAF2OdqwCTnqd5M/Y=;
+        b=SucTHgUQkVhlHNjIPv1z5/I2jj54qXOEjITIxaSJEg8xUTkxt7Kx7bPPGl4KrNSJT5
+         Yod3xgsLDkNynbhL0OlAmYKPZF+U+E4xKbudv9o2WMxG9DMdf56Zv+W01/+O75CgkQxw
+         D24bM3v3upk932BmlhjAUNbdQl0HBXhoirxrY29Uw84HkhIGylplk1JgV5aHfWAPuOVd
+         lqatZFSkq/DpYapreH5ppOwxhYdpqqP2zlRZB9nI5KIMq7NGhU1ATNKAdKDXuPnS3QTt
+         xxjTH2Tk0S3mwTtB38soKjJfehO7eyXW7S/qbCF9x312ErLw3gqD/Lp3Gf7hoClAa8Rh
+         NWkA==
+X-Forwarded-Encrypted: i=1; AJvYcCWiuVy3rkxU47RGZ0+fXekCfzNB/hrtSGXFOTuvrN215xZYYBDI8kTdTS/BRBi6FOfdB2QLMza/Y84yFAM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmeTfK4PL7OhnHa8p3PnqwuhUYA62jSF8yA26jXBksl1O07FvO
+	jwSqZda7hwn8NTpOv3R8VIEvzcuF+4kVWxxHOtLslF9KcMEUnG4xctVh8rZcb+pPFXwCJWGKP0f
+	3EFHDqtcc68OCAT/IyQeHFEtLwEAyXmV1F7HXPQ==
+X-Gm-Gg: ASbGncveJOpkFblAXb7N1TKXDdS2eYuAN4xn70NdD8afnEX+8lhRKJZvc0XrXMC0DNE
+	dUrDQDPk1sypM33TnTs4zQ2sPwrOn/kFLcRgPPa0rzgxfC2nmVv7bmpsWBBjEVLvK+bFcvWdG
+X-Google-Smtp-Source: AGHT+IHFsq67V9fZ6rUZE9lwc+hW9hSgTgLl260hi13irnaaHCOdFVGrplRNPaMrZzRN26tBc6n2xDx1800vyAUMGlM=
+X-Received: by 2002:a17:903:32cb:b0:21d:dfae:300c with SMTP id
+ d9443c01a7336-21f4e6a064dmr47724015ad.3.1738922197049; Fri, 07 Feb 2025
+ 01:56:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: [PATCH] riscv: dts: starfive: fml13v01: enable pcie1
-X-Original-From: Sandie Cao <sandie.cao@deepcomputing.io>
-To: "Conor Dooley" <conor@kernel.org>, 
-	"Emil Renner Berthing" <kernel@esmil.dk>, 
-	"Rob Herring" <robh@kernel.org>, 
-	"Krzysztof Kozlowski" <krzk+dt@kernel.org>
-From: "Sandie Cao" <sandie.cao@deepcomputing.io>
+MIME-Version: 1.0
+References: <167dfe31-89cb-6135-aafc-ece0cb234daa@linux.intel.com> <20250205133707.GA910099@bhelgaas>
+In-Reply-To: <20250205133707.GA910099@bhelgaas>
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Fri, 7 Feb 2025 17:56:01 +0800
+X-Gm-Features: AWEUYZmSIbYXwpTueTUNZARdYQzw_ZN0Jf23ei1FezC0aIP7wNJvJt6gC5HE750
+Message-ID: <CAPpJ_edsGMBobHaG+9YYpdSgp2tR5CDqDhDY-MuD606hp5Q-=Q@mail.gmail.com>
+Subject: Re: [PATCH 1/1] PCI/ASPM: Fix L1SS saving
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>, 
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Starfive Soc common defines GPIO28 as pcie1 reset, GPIO21 as pcie1 wakeup;
-But the FML13V01 board uses GPIO21 as pcie1 reset, GPIO28 as pcie1 wakeup;
-redefine pcie1 gpio and enable pcie1 for pcie based Wi-Fi.
+Bjorn Helgaas <helgaas@kernel.org> =E6=96=BC 2025=E5=B9=B42=E6=9C=885=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=889:37=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Wed, Feb 05, 2025 at 10:38:24AM +0200, Ilpo J=C3=A4rvinen wrote:
+> > On Tue, 4 Feb 2025, Bjorn Helgaas wrote:
+> >
+> > > [+cc Rafael]
+> > >
+> > > On Fri, Jan 31, 2025 at 05:29:13PM +0200, Ilpo J=C3=A4rvinen wrote:
+> > > > The commit 1db806ec06b7 ("PCI/ASPM: Save parent L1SS config in
+> > > > pci_save_aspm_l1ss_state()") aimed to perform L1SS config save for =
+both
+> > > > the Upstream Port and its upstream bridge when handling an Upstream
+> > > > Port, which matches what the L1SS restore side does. However,
+> > > > parent->state_saved can be set true at an earlier time when the
+> > > > upstream bridge saved other parts of its state.
+> > >
+> > > So I guess the scenario is that we got here because some driver calle=
+d
+> > > pci_save_state(pdev):
+> > >
+> > >   pci_save_state
+> > >     dev->state_saved =3D true                <--
+> > >     pci_save_pcie_state
+> > >       pci_save_aspm_l1ss_state
+> > >         if (pcie_downstream_port(pdev))
+> > >           return
+> > >         # save pdev L1SS state here
+> > >         if (parent->state_saved)           <--
+> > >           return
+> > >         # save parent L1SS state here
+> > >
+> > > and the problem is that we previously called pci_save_state(parent),
+> > > which set "parent->state_saved =3D true" but did not save its L1SS st=
+ate
+> > > because pci_save_aspm_l1ss_state() is a no-op for Downstream Ports,
+> > > right?
+> >
+> > Yes! An unfortunate interaction between those two checks.
+> >
+> > > But I would think this would be a very common situation because
+> > > pcie_portdrv_probe() calls pci_save_state() for Downstream Ports when
+> > > pciehp, AER, PME, etc, are enabled, and this would happen before the
+> > > pci_save_state() calls from Endpoint drivers.
+> > >
+> > > So I'm a little surprised that this didn't blow up for everybody
+> > > immediately.  Is there something that makes this unusual?
+> >
+> > I agree it should be very common and was quite surprised that -next
+> > did not catch it. What I recall though is you modified the patch while
+> > applying it by adding those Downstream Port checks so the fix
+> > patch's Tested-by was for different code from what got applied (and it
+> > would have been caught would the original author have tested also the
+> > modified commit).
+>
+> Sigh, that makes sense, it's probably my fault, sorry.  I apologize
+> for messing this up and causing all this extra work.
+>
+> I applied this to pci/for-linus yesterday, so it should make it for
+> v6.14-rc2.
 
-Signed-off-by: Sandie Cao <sandie.cao@deepcomputing.io>
----
- .../jh7110-deepcomputing-fml13v01.dts         | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
+Just back from holidays.
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts b/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts
-index 30b0715196b6..8d9ce8b69a71 100644
---- a/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts
-+++ b/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts
-@@ -11,6 +11,40 @@ / {
- 	compatible = "deepcomputing,fml13v01", "starfive,jh7110";
- };
- 
-+&pcie1 {
-+	perst-gpios = <&sysgpio 21 GPIO_ACTIVE_LOW>;
-+	phys = <&pciephy1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie1_pins>;
-+	status = "okay";
-+};
-+
-+&sysgpio {
-+	pcie1_pins: pcie1-0 {
-+		clkreq-pins {
-+			pinmux = <GPIOMUX(29, GPOUT_LOW,
-+					      GPOEN_DISABLE,
-+					      GPI_NONE)>;
-+			bias-pull-down;
-+			drive-strength = <2>;
-+			input-enable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+
-+		wake-pins {
-+			pinmux = <GPIOMUX(28, GPOUT_HIGH,
-+					      GPOEN_DISABLE,
-+					      GPI_NONE)>;
-+			bias-pull-up;
-+			drive-strength = <2>;
-+			input-enable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+	};
-+};
-+
- &usb0 {
- 	dr_mode = "host";
- 	status = "okay";
+Thanks to Nikl=C4=81vs' bug report, Ilpo's quick fix and Bjorn's cooperatio=
+n.
 
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
--- 
-2.34.1
+Acked-by: Jian-Hong Pan <jhp@endlessos.org>
+
+> > Unfortunately, I cannot think of anything that would be so unusual to
+> > warrant not detecting it earlier. Maybe it was just the holiday period
+> > causing less testing and lower level of awareness in general? The machi=
+ne
+> > doesn't always hang because of the problem as was the case with Nikl=C4=
+=81vs,
+> > so it might have occurred but went unnoticed if it occurred for a devic=
+e
+> > that is not critical.
+> >
+> > > > Then later when
+> > > > attempting to save the L1SS config while handling the Upstream Port=
+,
+> > > > parent->state_saved is true in pci_save_aspm_l1ss_state() resulting=
+ in
+> > > > early return and skipping saving bridge's L1SS config because it is
+> > > > assumed to be already saved. Later on restore, junk is written into
+> > > > L1SS config which causes issues with some devices.
+> > > >
+> > > > Remove parent->state_saved check and unconditionally save L1SS conf=
+ig
+> > > > also for the upstream bridge from an Upstream Port which ought to b=
+e
+> > > > harmless from correctness point of view. With the Upstream Port che=
+ck
+> > > > now present, saving the L1SS config more than once for the bridge i=
+s no
+> > > > longer a problem (unlike when the parent->state_saved check got
+> > > > introduced into the fix during its development).
+> > > >
+> > > > Fixes: 1db806ec06b7 ("PCI/ASPM: Save parent L1SS config in pci_save=
+_aspm_l1ss_state()")
+> > > > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D219731
+> > > > Reported-by: Nikl=C4=81vs Ko=C4=BCes=C5=86ikovs <pinkflames.linux@g=
+mail.com>
+> > > > Tested-by: Nikl=C4=81vs Ko=C4=BCes=C5=86ikovs <pinkflames.linux@gma=
+il.com>
+> > > > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > > > ---
+> > > >  drivers/pci/pcie/aspm.c | 3 ---
+> > > >  1 file changed, 3 deletions(-)
+> > > >
+> > > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > > > index e0bc90597dca..da3e7edcf49d 100644
+> > > > --- a/drivers/pci/pcie/aspm.c
+> > > > +++ b/drivers/pci/pcie/aspm.c
+> > > > @@ -108,9 +108,6 @@ void pci_save_aspm_l1ss_state(struct pci_dev *p=
+dev)
+> > > >   pci_read_config_dword(pdev, pdev->l1ss + PCI_L1SS_CTL2, cap++);
+> > > >   pci_read_config_dword(pdev, pdev->l1ss + PCI_L1SS_CTL1, cap++);
+> > > >
+> > > > - if (parent->state_saved)
+> > > > -         return;
+> > > > -
+> > > >   /*
+> > > >    * Save parent's L1 substate configuration so we have it for
+> > > >    * pci_restore_aspm_l1ss_state(pdev) to restore.
+> > > >
+> > > > base-commit: 72deda0abee6e705ae71a93f69f55e33be5bca5c
+> > > > --
+> > > > 2.39.5
+> > > >
+> > >
+> >
+> > --
+> >  i.
+>
