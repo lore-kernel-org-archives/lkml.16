@@ -1,154 +1,240 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0513513B791
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 06:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7812842AB4
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 06:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738908939; cv=none; b=PEQATiJnW1yxgmhMN2TA1kLi/YK6JIQj9qbxOhJlB0P1vhE4yAHb/CCJFRxnmXDEFW9J8WAFy/jssNm141pgXH1g3gTU57XYPUkZcaX/25JE7QW4YQ1zP3FmE2MC9NR48rYM5KHqtFAQqd9WC0GAUqb5sN1jqpTzHO1Pyws68l0=
+	t=1738908958; cv=none; b=soPSKGxuA3qSUgbqP2Szh+a38VD8HPNG6lrGwMZQimvRiypxmm8liKNnJNII52/mAIfcEwbyb7JKMHbRtnMUtqNPHvMOVVSRs9wUiTcScSoc9Za6bb80JVTqQ413lpdYoXmzn4G5s2DVRKWyo5lwMHR2JPJRZAjbDbsldRO+iCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738908939; c=relaxed/simple;
-	bh=M8TXGk/PYHN7tZ/qk9weZpHSf5KfVZ+12wEOEPBvsNE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EyAWmA/FadW4O189V1odFbfl9Lj0FuxVi7qZTBuDTytGSfemUvHIGvweP9niPlpFE+0tzI2eI87/Z8aE78TwO+gVK/jdMwkr+MX/o8txv5mRiQiDOTbYppoUX5o+Q26bwoeNswt7cndJUgK+C2c+IlmAo1EpV0lM3JWaRW/OVbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aqocwG8M; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738908958; c=relaxed/simple;
+	bh=zL0uFr5zuW1LbxTLRGhclxaqp0jHaXqVnQ8FzK29zzo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dym+K7hYnRzbfBaaOmvBSzMkkkLVGd7+R55+ADlHNmuQNpoKyEGTNC443FQg/8ASPeQp6A82dS7Ufa1WLr+9RBaom/KShUAvY0k1szvQHpf0Z6cNNsflSg98IDFyq2QkMEx7s8WJzaiKnp0LCOHlGfLoC16nwtL9hWKUWTkM3oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LwCAw8S4; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aqocwG8M"
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-21f0bc811dbso41535175ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 22:15:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LwCAw8S4"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d13fe99d03so62265ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 22:15:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738908937; x=1739513737; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1738908955; x=1739513755; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pc0d3IeUyKXn7ajlIilqfGDxOeSfWxBgCDj0yI4TU/I=;
-        b=aqocwG8MdPmajzWUb8ejN9wKoqJUgy5USvgcYpQdDaiieYPY5mmW2bcB3euO5FHBjV
-         VmbfigmvREablYtFnn8cfzvtEfGybxLKFzWf89HovLmkUAnFiBvgYxwFW89QkQqV3ev+
-         TiK93CM2svMlNf2gTSzjR5hxqEiJHUHPOiqSXIlXHsT33dN9b2iD6w/IzTQ4ErfzLF9h
-         I+wPOE1kpvX86kTzMJH4RYD1DZHdXK3QKKZw6brcac1gKWJBWqA6LfeTizqt0qAHyHy+
-         8i1MuQtovEP5AJkEOltv5gnLaEPR2RqXhXX5p0Z1NlFnZmWFRg2uAfCFpQUp6xTQX9S2
-         LYVw==
+        bh=PmT4YAJ/bMVgNv3L+lDdg4yrssrAeEO5RGqNN+S9m1Q=;
+        b=LwCAw8S48UJoWZer8+iLpYLnZdTEl/9jL8eglkOyIBaz/4LMV77ooUuiOH7WWjdcqL
+         dKYzgQVjRUOuBm8P432J6vXBZeKn/i1u8E6QJF7iblacczNtCgf88a1WpFOoNT+CPq+k
+         zb9Jeethp40mVJudXbptqUuZ0A3GTvCk5Mx72r+7vx5CHrl3AZLL8A1KvJDaNkohuJ0w
+         BO4/mXEP99/bSoTlK/MrC7d+4xs0+HQqLQD0q7LwBj+dPJu45rz3BygDD1hLYo1nQROh
+         mRVCz8VPr56oqojYJMQ7Hr8a5goDbblppoD5cxdk/S/NTyQwr5FLYYSlFNQb8gGwTkuB
+         o9bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738908937; x=1739513737;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1738908955; x=1739513755;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pc0d3IeUyKXn7ajlIilqfGDxOeSfWxBgCDj0yI4TU/I=;
-        b=bLYEbpYgk3OX5gtOMMT4eIXryRBPhQzIFTElXhQt+JF97rdWRdbBtHZozXUI2IIkuG
-         b9ctxoDQfB5Px9yC4sO+gFqBizutumGM+eq4Lox5L11EfRAkoK/djdsT3/NdABAEN63U
-         Fdkakc8iMbLa7aKgJVrqUsIGhp2yKysBMPOH0OfrMZewDTKoPKRQGczHqbdYHVuGvhLw
-         O7WKUEtPpnoEkPvYCgVjA5YKP6ywOxCbDa3F1jpBmH/TSjnwZa+OGFM6KfeF43Cacfno
-         M/uXrHxDuNoHPUTHgVK1zMRNgdVAOGaN+6hZxpICCKevhoDVOWaugEktDmiZCtIHLi9W
-         Q9SQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0m+dGCEVFA4r8GRRemRYGDnWM8KFzvCh4BygK7CU3LhxDm+xvWNfAPungGZ9jcGw36/78T24yKqU8T64=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywm0TY+3OBB1Ic2h9YoKt5QL394rOJBqYQ3NG1UyC9Al/NG5S9t
-	rDEw47cHhd9VL62GTFlTB+JEU4ySgzSdkXbIERgq8oPmgh60SirH
-X-Gm-Gg: ASbGncvWNf1g0/Cy86XmPM8LLYjaqw7O3/lIqHBCSXA/betx3kVRsBAPyUJbOXWH/D6
-	+qx65XYl5AtHYsEqvyCwieT+xY8FvQ+9dsEZ58onbpAClyDHeyISxtamsI07L6zu+0eFgcnKfCJ
-	VZu6uqtsbHNelm4KqPDs3F3gW8j12SORhU8Eu2P3SQZG7kEikMZsO8MqnwpXc0JyPnt9Uihu17g
-	qakhnZE4uGJUm1FR6JLe0d+o7RlVjjL1EUEGBjL2jz67ob2mZYX9jcge6DI5fHw9KO4aS6f/6fF
-	Aelv4jE+SqwUX1vhHcuc5MXybOEbt/B9FIs=
-X-Google-Smtp-Source: AGHT+IGp5Au8lMSsNEuE09EeQNPJ2JqbpcpsDFsXUrLsQqibKO9Z07VGbPoCUjT3m+PqUgdJjyEopw==
-X-Received: by 2002:a17:902:f745:b0:215:b18d:ca with SMTP id d9443c01a7336-21f2f1e7263mr119073955ad.18.1738908937124;
-        Thu, 06 Feb 2025 22:15:37 -0800 (PST)
-Received: from localhost.localdomain ([114.67.205.189])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51aee5bb1sm2309779a12.38.2025.02.06.22.15.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 22:15:36 -0800 (PST)
-From: zihan zhou <15645113830zzh@gmail.com>
-To: 15645113830zzh@gmail.com
-Cc: bsegall@google.com,
-	dietmar.eggemann@arm.com,
-	juri.lelli@redhat.com,
-	linux-kernel@vger.kernel.org,
-	mgorman@suse.de,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	rostedt@goodmis.org,
-	vincent.guittot@linaro.org,
-	vschneid@redhat.com
-Subject: [PATCH V2 1/2] sched: Reduce the default slice to avoid tasks getting an extra tick
-Date: Fri,  7 Feb 2025 14:14:00 +0800
-Message-Id: <20250207061359.31442-1-15645113830zzh@gmail.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250207060917.30201-1-15645113830zzh@gmail.com>
-References: <20250207060917.30201-1-15645113830zzh@gmail.com>
+        bh=PmT4YAJ/bMVgNv3L+lDdg4yrssrAeEO5RGqNN+S9m1Q=;
+        b=PtEzMMt7jrsqjD4lWbkh7kgstwoFi3sBAFWMpzWjn2o1kXB5JURZN3UlECquqVv7aw
+         zfWPeODvoWLtOeNNE/dFjhbRtLihgtciXsKQdnXNuQ5CzmmTVoWYefuaPj6XOPKxiTEj
+         qNo/xtyi+qG1g0hU14RuFkoMGh//PHl0YljXjSTbn3ArMWIp7j9I6j6f9RspjF0JDgBj
+         Xy9ATBrYNZC3m0GKusHUgGcut9APOg/KbriW27gMxlCiIlhA2RAta8xELPTJrU41OZga
+         11JohkQIZGulkwB+jIDyn93lNUxTm3yGrm2YDBqD1QxMDyRUXsn4x0NmVA/cNwmIAWi5
+         S21w==
+X-Forwarded-Encrypted: i=1; AJvYcCUPhGUdwu91tDR4KLbFg61EUb9R+hujUZsFoT1Kc/uQPYVMwTqUmOJQQW87kqZlRL29ohpqy5Gu1lrSruA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0Fv9ZwkSzeWx0YeV4TnZewLLRkIEvdwb7AidgomWfJxZwL3EN
+	1A71+8xJv7+57PXO1pnSEnF84x7+ROgplniXSAfU62B+fTYdQu+zmkkqAw6qsNKbhDezFO0lAOh
+	PGfvuUOahW9hk6LehudneLvPORLsCZUBqtOX6
+X-Gm-Gg: ASbGncvSHWRU9R5u5wCjA97RQlAW2AOLoTzi5dfKiIXxWzWYQ9qypQWkD3jRHuFXie4
+	PyBrf4NdoSJLYhTY+d60UBS9Lnsbeg6wE1MWt6nXPEJcIvQ0M4ZeID76S5pm/PgrcGSKZfUXZtg
+	==
+X-Google-Smtp-Source: AGHT+IF+wCm4E7tTq8Y1HQ78eRvqCBryQCd6UY10sEhy6TB5WXiDni0BwJKrZn/RYKRJFGSYm53sATxTEQyBVh99/24=
+X-Received: by 2002:a92:ca09:0:b0:3a7:dea7:87a6 with SMTP id
+ e9e14a558f8ab-3d13f25d537mr1413515ab.29.1738908955359; Thu, 06 Feb 2025
+ 22:15:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <Z5qjwRG5jX9zAGtf@google.com> <CAHBxVyHL4CO1xGpzkNfvxk71gUYdVyrXZkqZHZ+ZV2VxeGFf8w@mail.gmail.com>
+ <Z51RxQslsfSrW2ub@google.com> <CAP-5=fWzzWqNAgmrDHav63Z+HMnSP0RZJ3Q7PQpuzP7Tf_HP7g@mail.gmail.com>
+ <Z6FcHJFYGc7HzSna@google.com> <CAP-5=fW9f2mxuTV2FGCdhKm7M9g8v6VsLJJXTPTLRr5tUv9rOA@mail.gmail.com>
+ <Z6LFp5jiED7_-weN@google.com> <CAP-5=fU6WSOK_N0NoLcMSSdaWAkdC2DUBwLqsLn_KA7m6dJyeQ@mail.gmail.com>
+ <Z6RD7NuT9IPhOkIV@google.com> <CAP-5=fV8rRMQyMDuy1vcxyEX9Gf8x0QJdVEP-K5krBec_A7mpA@mail.gmail.com>
+ <Z6WPmYCJcc6pPKDA@google.com>
+In-Reply-To: <Z6WPmYCJcc6pPKDA@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 6 Feb 2025 22:15:43 -0800
+X-Gm-Features: AWEUYZlep2lJ_fdPrUZD0QpJbnnI-471NkyNtX9_ZJAnqoEA_Ii0syWQ7AP9Uhs
+Message-ID: <CAP-5=fU0263rZx+i_dpeBWVUiKHuNNp4ER7WhDe2zHPUsq=wmw@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] perf parse-events: Reapply "Prefer sysfs/JSON
+ hardware events over legacy"
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Atish Kumar Patra <atishp@rivosinc.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>, 
+	Beeman Strong <beeman@rivosinc.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Reduce the default slice, add a comment explaining why this modification
-was made.
+On Thu, Feb 6, 2025 at 8:44=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+> On Wed, Feb 05, 2025 at 11:44:57PM -0800, Ian Rogers wrote:
+> > Why was adding a PMU to an event name, working around ARM's PMU bug,
+> > such an unsurmontable problem that the original change was reverted?
+> > Because 1 person didn't want to have to write a PMU prefix and
+> > considered it a monumental regression having to do so.
+>
+> Because it's a legacy event 'cycles' and he didn't expect the wildcard
+> behavior?
 
-Signed-off-by: zihan zhou <15645113830zzh@gmail.com>
----
- kernel/sched/fair.c | 47 +++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 43 insertions(+), 4 deletions(-)
+And someone who say with perf v6.14 can type `perf stat -e data_read
+...` and then with your proposal now has to type `perf stat -e
+uncore_imc_free_running/data_read/ ...` because data_read isn't a core
+event, this is expected behavior because the error message mentions
+perf list?
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 26958431deb7..754b0785eaa0 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -71,10 +71,49 @@ unsigned int sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
- /*
-  * Minimal preemption granularity for CPU-bound tasks:
-  *
-- * (default: 0.75 msec * (1 + ilog(ncpus)), units: nanoseconds)
-- */
--unsigned int sysctl_sched_base_slice			= 750000ULL;
--static unsigned int normalized_sysctl_sched_base_slice	= 750000ULL;
-+ * (default: 0.70 msec * (1 + ilog(ncpus)), units: nanoseconds)
-+ *
-+ * The old default value for slice is 0.75 msec * (1 + ilog(ncpus)) which
-+ * means that we have a default slice of
-+ * 0.75 for 1 cpu
-+ * 1.50 up to 3 cpus
-+ * 2.25 up to 7 cpus
-+ * 3.00 for 8 cpus and above.
-+ *
-+ * For HZ=250 and HZ=100, because of the tick accuracy, the runtime of tasks
-+ * is far higher than their slice.
-+ * For HZ=1000 with 8 cpus or more, the accuracy of tick is already
-+ * satisfactory, but there is still an issue that tasks will get an extra
-+ * tick because the tick often arrives a little faster than expected. In this
-+ * case, the task can only wait until the next tick to consider that it has
-+ * reached its deadline, and will run 1ms longer.
-+ *
-+ * vruntime + sysctl_sched_base_slice =     deadline
-+ *         |-----------|-----------|-----------|-----------|
-+ *              1ms          1ms         1ms         1ms
-+ *                    ^           ^           ^           ^
-+ *                  tick1       tick2       tick3       tick4(nearly 4ms)
-+ *
-+ * There are two reasons for tick error: clockevent precision and the
-+ * CONFIG_IRQ_TIME_ACCOUNTING/CONFIG_PARAVIRT_TIME_ACCOUNTING.
-+ * with CONFIG_IRQ_TIME_ACCOUNTING every tick will be less than 1ms, but even
-+ * without it, because of clockevent precision, tick still often less than
-+ * 1ms.
-+ *
-+ * In order to make scheduling more precise, we changed 0.75 to 0.70,
-+ * Using 0.70 instead of 0.75 should not change much for other configs
-+ * and would fix this issue:
-+ * 0.70 for 1 cpu
-+ * 1.40 up to 3 cpus
-+ * 2.10 up to 7 cpus
-+ * 2.8 for 8 cpus and above.
-+ *
-+ * This does not guarantee that tasks can run the slice time accurately every
-+ * time, but occasionally running an extra tick has little impact.
-+ *
-+ */
-+unsigned int sysctl_sched_base_slice			= 700000ULL;
-+static unsigned int normalized_sysctl_sched_base_slice	= 700000ULL;
- 
- const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
- 
--- 
-2.33.0
+> > > 1. RISC-V is working on a solution with the current status and it's n=
+ot
+> > >    absoluted needed to change the current behavior.
+> >
+> > They said to you directly it was what they wanted, that's why I
+> > reposted this change and it is, has always been, in the cover letter.
+> > They've then followed up expressing their desire for this behavior but
+> > having to have a plan b as the original change was reverted and you
+> > are blocking this change landing.
+>
+> So they have the plan B.  But still prefer overriding legacy with JSON?
 
+Yes.
+
+> > > 2. Apple-M is fixed already.
+> >
+> > No, James tried to repro the bug on a Juno board, not an Apple M, and
+> > didn't succeed. I don't know what kernel he tried. I was told by Mark
+> > Rutland (at LPC) that the tool fix was absolutely necessary and the
+> > PMU driver wouldn't be fixed, hence the series flipping behavior that
+> > I thought Intel would most likely block and wasn't keen to do in the
+> > 1st place (not least wade through all the test behavior changes and
+> > the bug tail). All of this was premised on a threat of reverting all
+> > of the hybrid support so that Apple M could be made to work again, and
+> > I was trying to do a less worse alternative.
+> > https://lore.kernel.org/r/20231123042922.834425-1-irogers@google.com
+>
+> Sorry, it's not clear to me what's the problem exactly.  Can you give me
+> an example command line?
+
+What broke: when arm PMUs were recognized as core and not uncore PMUs,
+as part of fixing hybrid, we encoded legacy events on them. So
+arm_blah/cycles/ became a type 0 config 0 event, no extended type as
+PMU support for that is tested first. A type 0 config 0 event is
+broken on the Apple-M PMUs, an event that doesn't count or something
+like that. Because they had a sysfs event of arm_blah/cycles/ before
+the change the broken legacy encoding on the PMU was never used, the
+legacy event broke things.
+
+Because they had this problem the Apple-M users were used to using
+arm_blah/cycles/ rather than cycles to avoid legacy events. This
+change, not your proposal, is making it so that without a PMU they
+also don't get legacy events because in no uncertain terms it was
+expressed they weren't going to work. There was a lot of advocating
+for removing all hybrid support from the tool.
+
+> > I don't understand what you are trying to say. I'm saying the behavior
+> > of perf list in its output is arbitrary. We use the same printing code
+> > for every kind of event. An aesthetic decision to put things on a line
+> > does not imply that it is more valid to use or not use a PMU, it just
+> > happens to be what the tool does. Did I break perf list as if you look
+> > in old perf list you see:
+> > ```
+> > $ perf list
+> > List of pre-defined events (to be used in -e or -M):
+> >
+> >  duration_time                                      [Tool event]
+> > ...
+> > ```
+> > while now you see:
+> > ```
+> > $ perf list
+> > List of pre-defined events (to be used in -e or -M):
+> > ...
+> > tool:
+> >  duration_time
+> >       [Wall clock interval time in nanoseconds. Unit: tool]
+> > ...
+> > ```
+> > I'm hoping people find it useful to have the unit documented.
+>
+> The most important information I think is the name of the event
+> (duration_time).  It'd be appropriate if you could call it
+> 'tool/duration_time/' but I'm not sure if it's acceptable cause
+> tool events are not real PMU events.  If so, maybe
+>
+>  duration_time or tool/duration_time/
+>
+> ?
+
+I don't mind showing a PMU and not showing a PMU. duration_time isn't
+a core event, does it also get allowed no PMU prefix in your new
+scheme? My point isn't to discuss duration_time it is to point out
+that `perf list` output isn't sacred and says different things over
+time. Those things may or may not include a PMU as there has never
+been any rigor, it is a mush of strings that are printed.
+
+In the perf list code we have an event and an alias. In my opinion if
+something is an alias of something else then it implies having the
+same perf_event_attr encoding. In your proposal this wouldn't be true
+for legacy events as it isn't true today. Which has always been my
+point about wanting to get this fixed.
+
+> I think people should use a PMU prefix before wildcard is enabled.
+
+I don't understand. You want to break uncore events without a PMU and
+disable wild carding, then enable wildcarding again. Like I say I
+think it is better you work on this behavior under a non `-e` command
+line option.
+
+> > > > What happens if an event is both in sysfs and json? Well the sysfs =
+event
+> > > > will get the description from the json and then I believe it won't
+> > > > behave as you show. Did the event get broken, as perf list no longe=
+r
+> > > > shows it with a PMU, by having a json description written? I think =
+not
+> > > > and I think having descriptions with events is a good thing.
+> > >
+> > > That's bad.  Probably we should fix it takes only one of the sources =
+and
+> > > change the JSON event not to clash with sysfs.
+> >
+> > No, you are talking about breaking everything already, let's not break
+> > it yet further - not least as we lack a reasonable way to test it. I
+> > think if you are serious about having such breaking changes then it is
+> > best you add a new command line option, like with libpfm events.
+>
+> I don't want to break things.  What's the intended behavior in that case?
+
+The behavior is in pmu's update_event, but basically we prefer the
+json data over the sysfs data:
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
+ee/tools/perf/util/pmu.c?h=3Dperf-tools-next#n506
+This allows the json/tool data to correct the sysfs data - as well as
+to add information like descriptions and topic.
+But my point isn't that I support your let's have two events instead
+of updating events. I have maintained this behavior as it has always
+been the behavior and I care about not breaking everything. Something
+that I assumed was taken for granted hence making `perf top` behave in
+a way where it is showing samples for processes that have terminated
+by default.
+
+Thanks,
+Ian
