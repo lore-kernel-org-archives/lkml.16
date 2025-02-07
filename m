@@ -1,48 +1,46 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C711A1EB18C;
-	Fri,  7 Feb 2025 14:46:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F181EB191
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:46:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738939590; cv=none; b=RA4sAloDUo6JA96Ymuw+nOF/D+72J0VH9VlvPBwws1TL3BIX1knrS0Uy0x8sqmTNG1TGM1SwS1V7ySXwFfP4NIEDEoWdv4ZtOjTQMU/4Ry6z8uesOheoGfL9NGRSc//KijzGmYBp4zT9vowOhwmQhH8UtxyQkf0kjfyP8w08huI=
+	t=1738939590; cv=none; b=n3f/iIWHSOps5l0VeF2tLtSwxXnMLdvmqnUWglpgLYgRhN7t2bXdehc1P9ii4teXDRG6EGK6sxVC1PiW4u6/thvoyrS1NQ2NN/rNgiV/uBC/4jodKnyZXNmrB4ijxr+3+xuyLKXk8Moc2ZCjzaTZtW9HjGQTsEQaq5XBgli9t+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738939590; c=relaxed/simple;
-	bh=NEvFF2Y1LTbWWAZyUyd8pv2xjBdWXjikltka8ZTTU9I=;
+	bh=M9q3u0+HRQMXw8svqoafAM0/nSwqqqdOR5EW9LVB0cI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=mVeyGiLH6beTLUTfVQxUdemxKE+faMNg2yUVydRb79b47MzPWb14UI+320IvlwmM4z+5Zfanr+Evq10ZEx0c5AfetsyTraLIO5ctB8xqmK1/plJJIsfxs/MXlzJhzAvgEMgCuT86fVx8/e5HzybiCiWSkzrE2mMfjrBp/8ubWKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mmKeQca3; arc=none smtp.client-ip=217.70.183.196
+	 MIME-Version:Content-Type; b=FI0vFvLgC2bvB/9+mXXLnQExzocIUzDu/91kAkTyg2dj16tYAjs+ijsGER5Tx9e3VTerIMEQjiXgMJ+pVdG42TAQyt02EWa3uqX61cqQLqIe9o2OS83T8UUpSxIkfJ2WUxDm4CSFWoqTjbAQkjCkkyUUvzcGxWWRFW4mUqF1uNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BltvHSjv; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mmKeQca3"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3673B443B8;
-	Fri,  7 Feb 2025 14:46:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BltvHSjv"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 930494441C;
+	Fri,  7 Feb 2025 14:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738939585;
+	t=1738939586;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zotNU7rJ3SVVOWKtFNsAK5uaTmDszXvpsTrfKkmZ7NQ=;
-	b=mmKeQca3SwF0SEnls1X8Rt3DCjE9SSenlQicXMWpoMt80HZKE8t/yStGUuRpJDAe4pMWHw
-	zhoFObvhK5kggHmjxfi5iPqqlUGcaSo+AbSTR5DdC9IHDOCYEiFGwHEy0uKsj/oYp8w9b4
-	sBw9TTqa6xnTFGtBCZ4r+iklF1MxdUn8Qmrz/eeGB9ExgOQeaFAnJnfCQyI3g10WgZSebM
-	ybSpBOM+iJ2qZC6GSNrpJYyHpecBfhgDuqTP3vVg2HnCLRQic0gnWVXxA2ifh3wgTnbI2a
-	mmYiGE6n/C8xSaCUSNz7b6RV1NfSIX0hhdFV8EApSH/hrXXkalDfM1jykpjfCA==
+	bh=2IJtGFPULPpR5EW3kSBevdNRFYGACBrlSgd0kID7CBc=;
+	b=BltvHSjv3EB+ep5vcpHgxweAeNNwN7i4oPyXf9Q5XXxC30PsEwjSpgezd+HiiM4sGTO3SE
+	h1nBzz1aVLxgZa/6UtSIlDEngWjsADcCIUmVgXOHixEc2UiSLdY5H51U0rvjdk156ocrjy
+	nxy13esdjP3BwewhD4WLGEYvVNQSNrsDtAd2CxLkuPgtdZvVMawJTfQYLVImP37cef+uQK
+	93uQ0GYzjYwxkWgs0atYhpkoJj8F8PmRt3H5C9A9gIbDUyMZBJ8Mnh84YVMgOMI0bWlxyk
+	nNioXfacgbERUePmdOeVM7NU/CQbOvcGKb7zzxfIIVJZELfrlVKdEFXolbdC6g==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250203213036.9816-1-robh@kernel.org>
-References: <20250203213036.9816-1-robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: mtd: physmap: Ensure all properties are
- defined
-Message-Id: <173893958505.2918383.10809886449430911872.b4-ty@bootlin.com>
-Date: Fri, 07 Feb 2025 15:46:25 +0100
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ richard@nod.at, syzkaller-bugs@googlegroups.com, vigneshr@ti.com
+In-Reply-To: <tencent_78F778176466C7F364036D096B03A8E44F05@qq.com>
+References: <87ikpn57sy.fsf@bootlin.com>
+ <tencent_78F778176466C7F364036D096B03A8E44F05@qq.com>
+Subject: Re: [PATCH V2] mtd: capture device name setting failure when
+ adding mtd
+Message-Id: <173893958654.2918383.13397786440999528769.b4-ty@bootlin.com>
+Date: Fri, 07 Feb 2025 15:46:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,21 +52,24 @@ Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.15-dev
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleehiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtkeertdertdejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheeifffhueelgfdtleetgfelvefggfehudelvdehuddulefgheelgfehieevvdegnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrgedvrdegiegnpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtp
- hhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleehiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtkeertdertdejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheeifffhueelgfdtleetgfelvefggfehudelvdehuddulefgheelgfehieevvdegnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrgedvrdegiegnpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepiedprhgtphhtthhopehlihhnuhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepshihiihkrghllhgvrhdqsghughhssehgohhoghhlvghgrhhouhhpshdrtghomhdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtohepvggruggrvhhishesqhhqrdgtohhmpdhrt
+ ghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Mon, 03 Feb 2025 15:30:35 -0600, Rob Herring (Arm) wrote:
-> Device specific schemas should not allow undefined properties which is
-> what 'additionalProperties: true' allows. Add the missing 'ranges'
-> property, and fix this constraint.
+On Fri, 07 Feb 2025 20:10:35 +0800, Edward Adam Davis wrote:
+> syzbot reported a WARNING in release_mtd_partition. [1]
 > 
+> The reproducer uses "/proc/thread-self/fail-nth" to trigger the failure
+> of memory allocation when executing dev_set_name() in add_mtd_device(),
+> which eventually causes device_register() to fail because the device name
+> is not set, and finally triggers a warning in put_device().
 > 
+> [...]
 
 Applied to mtd/next, thanks!
 
-[1/1] dt-bindings: mtd: physmap: Ensure all properties are defined
-      commit: 038e2ba01cf5ff94dc8f740328ec565d18bb764e
+[1/1] mtd: capture device name setting failure when adding mtd
+      commit: 3f930a52d7151addefa6d5ba9f7f2c17dc52db1d
 
 Patche(s) should be available on mtd/linux.git and will be
 part of the next PR (provided that no robot complains by then).
