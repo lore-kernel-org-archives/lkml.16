@@ -1,166 +1,95 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2D31A76BB
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 07:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EF5148FED
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 07:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738914597; cv=none; b=kRu827bR2ExvGzElm7Y5tUVeYYAgZayZIt/rc7nBMQYZBZXmPm1ckkIaqlcGZjVD7ZUBp/0yDsd/qw531qG5ggogVJfAvRvW0nMGteHPlrJkN/f37MeruRoEknJnirFglY9yvxz0Ymm0VFzfzJJIjzSJKngcel+jv1LlsDNW3G4=
+	t=1738914678; cv=none; b=m/3xhS9IR2JEVbj0Iead3E1wUM0VIVVgim0kbS3vn3N2x6JH9GF2gtOO0hiKDxpzXX8Xycmh8J4PzElEisqvJslUfg0sKe+6Gm3rTEwbFiuIRy0OADaU4C6m0PAUF/4XRMcOBRk7Hbm0FFnUorHYryVbjzhxCvlpVKj/tBoo0R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738914597; c=relaxed/simple;
-	bh=Ygym6BkiYRNRVTcjvqeMUfbvwZUuejhc3e16JsbSEyU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GMF1FBNzyEECfR254QUCSZ/JqX3+C7SYhTXQjxOydlmdd6LnHYnLVJVC9YJqmyvEnRPxKA/QxGB6ZYBp0Hn8A2LBT2OukNJmmWT6gqT55dBJI8WsZGyHAR/dhdOhzxyGucPgdt5jbLgREhwh3EQFciDV8MfLNZY9HbjGShLmM0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xRxOy3TK; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xRxOy3TK"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-308d625295cso1011601fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 23:49:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1738914593; x=1739519393; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9YnJ+2PmTsfRhc+KXPzUKFsOLYmtdTuDzT6pXI9Dax4=;
-        b=xRxOy3TKazuT/+N00yFHK2AMpqnNnjvi6VtAotQPdtxANrvIobd6xcardMunCAayWo
-         pdF2TzifsGYZJwzOCRRof6xhnzgh2wSitTnmSSXVjYGkKkdUSc+SsGq4Un0k+1AO1zJE
-         u3RV8S7YHV3jmgH9qIDx1t0BH2sKRJLYlWMG7OUp0WIkaRzY21YNhFlqZu0DCH8lndx4
-         H14WrlmMZcSLFYXikk7KXcgoVZXupaWEeo4luT8AaCXQpRga3GwEuPul0wVXt7eYa+g9
-         j4TJrslFQ6uz8PsWqKr52AOOKGORUFUky5QTgUA1RNhQkBvte8EEMagzkSnGt/eGgq9a
-         T/Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738914593; x=1739519393;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9YnJ+2PmTsfRhc+KXPzUKFsOLYmtdTuDzT6pXI9Dax4=;
-        b=R7P78srUY9zoKC0qKndE29WKvC6pDgVWs8Pp6oIh+FubLS8yy9zWDr/yFtzYVROa2P
-         dGqokVLerMWLLZYF5Jfqc0p+CF3LMP1tTTKkCvK4vjaaRmJabUnBRrDZVzzmL2ZkyLAs
-         VBfgTxCnnHKnz0fDzV2obs1yGXzerSyLY2WZWfi2FhRfigCIGcOPEBT+Rb3ekyVCSCSG
-         uDybNF0jnE74Mc7brHuIM/wbJndjVqjou+at6rOlMZm2qeQmiCw5jGINF6ctetF+ebRT
-         wxytVsgbZawZqTAyIRjQifyxJBJsiBo69ukAP0vLVYSfIdWGsJq+7rkVV2WFTVMFShX7
-         /UBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWaN+mudDuYS7ILntEyL4XYTi1XqzkOPP8udoi7kLPtxNG7UFJ6mUE21dxg0rp4CGBSr0K7Wk9PsEIZSY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIHuVBgrQK12UexoCF/WRIrPxgIgMznM81+9rr9YIT39Q0W4Bw
-	9wp9FluQ4uhvw4NfNDVQ/FXC8oJi+z7eReICRAeDCNdVpu46O3BtaNm0RCnXWr/YAFn33U3SHKK
-	2O4hL+Kv3AUfhLKcS+O3VzKYX81rjPHYJrP3AgQ==
-X-Gm-Gg: ASbGncusESde3rjLI9SJ5I/6cd6gmdt+VBYaCtKyxUMS+CuzVSBu1A8fJd/CeC7RCpw
-	JUqDJJSWKV9d0GgMyC/EMZj68UGcH0UJoszaygez5EN1gTXpbOCOytDg2ggB1SBYma8wUM1csxG
-	uv3MFL/zy88VZDLdtM2NWGay18TuU=
-X-Google-Smtp-Source: AGHT+IHxfwDC2v+wc+kLsonGMp3GoKKzCthmXUYddx5+xjdW0P9Z9tmgYCfXp3s8UQ6aQdx9J+hIzu6ut5Mn8kOKlFE=
-X-Received: by 2002:a05:6512:2348:b0:542:1ba3:984c with SMTP id
- 2adb3069b0e04-54414a9656dmr486368e87.6.1738914592500; Thu, 06 Feb 2025
- 23:49:52 -0800 (PST)
+	s=arc-20240116; t=1738914678; c=relaxed/simple;
+	bh=eRVinGj2S3v0VlJVHhwxqXd43YaM6DSrZx2C8cOZHeA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=r7xpRn6vKhWIwm89cFgMF0nLwWJy0EyQjVqPsoesgDQIrKB4Hz5jgALTs3NONL0XqZjUPslqiC+8/tyD4qtnk/geNV2UVZmYgors7kI5wmw9byLQdEiSUt36qSpTza7upwoQm8Fn45a3ZuHc3PZ2oB9OfO2iqrIssq26e06QNJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 4b311c22e52811efa216b1d71e6e1362-20250207
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:2b91d666-3be3-4bd3-a863-acd9e749915a,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-INFO: VERSION:1.1.45,REQID:2b91d666-3be3-4bd3-a863-acd9e749915a,IP:0,URL
+	:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:-5
+X-CID-META: VersionHash:6493067,CLOUDID:cc5e5b58d7cdf6f0a1fc14d7143cf5bb,BulkI
+	D:250207144718WD2CAVF2,BulkQuantity:1,Recheck:0,SF:17|19|64|66|78|80|81|82
+	|83|102|841,TC:nil,Content:0|52,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:4
+	0,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE
+	:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_SNR
+X-UUID: 4b311c22e52811efa216b1d71e6e1362-20250207
+X-User: liuye@kylinos.cn
+Received: from [172.30.70.73] [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <liuye@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
+	with ESMTP id 935327732; Fri, 07 Feb 2025 15:51:09 +0800
+Message-ID: <1b58ede7-062a-49fe-bea8-e99b3dd7b2b1@kylinos.cn>
+Date: Fri, 7 Feb 2025 15:51:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com>
-In-Reply-To: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 7 Feb 2025 08:49:41 +0100
-X-Gm-Features: AWEUYZmvPOokVsveJHg1umO_SehF1d2PdlzyWo93hmjOZpSCnJ3bOhxNiJqJwrs
-Message-ID: <CAMRc=Mf9WQjVXvea7tHx0MJG2H8Yqxw=zGqvjp7dfD7+=huDKw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/13] gpiolib: add gpiod_multi_set_value_cansleep
-To: David Lechner <dlechner@baylibre.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: liuye <liuye@kylinos.cn>
+Subject: Re: [PATCH] mm/mempool: Use kmalloc_array_node to replace
+ kmalloc_array
+To: "Harry (Hyeonggon) Yoo" <42.hyeyoo@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250207055213.141890-1-liuye@kylinos.cn>
+ <Z6WsZsczBNOrmN0N@MacBook-Air-5.local>
+Content-Language: en-US
+In-Reply-To: <Z6WsZsczBNOrmN0N@MacBook-Air-5.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 6, 2025 at 11:48=E2=80=AFPM David Lechner <dlechner@baylibre.co=
-m> wrote:
->
-> This series was inspired by some minor annoyance I have experienced a
-> few times in recent reviews.
->
-> Calling gpiod_set_array_value_cansleep() can be quite verbose due to
-> having so many parameters. In most cases, we already have a struct
-> gpio_descs that contains the first 3 parameters so we end up with 3 (or
-> often even 6) pointer indirections at each call site. Also, people have
-> a tendency to want to hard-code the first argument instead of using
-> struct gpio_descs.ndescs, often without checking that ndescs >=3D the
-> hard-coded value.
->
-> So I'm proposing that we add a gpiod_multi_set_value_cansleep()
-> function that is a wrapper around gpiod_set_array_value_cansleep()
-> that has struct gpio_descs as the first parameter to make it a bit
-> easier to read the code and avoid the hard-coding temptation.
->
-> I've just done gpiod_multi_set_value_cansleep() for now since there
-> were over 10 callers of this one. There aren't as many callers of
-> the get and atomic variants, but we can add those too if this seems
-> like a useful thing to do.
->
-> Maintainers, if you prefer to have this go through the gpio tree, please
-> give your Acked-by:, otherwise I will resend what is left after the next
-> kernel release.
->
-> ---
-> Changes in v2:
-> - Renamed new function from gpiods_multi_set_value_cansleep() to
->   gpiod_multi_set_value_cansleep()
-> - Fixed typo in name of replaced function in all commit messages.
-> - Picked up trailers.
-> - Link to v1: https://lore.kernel.org/r/20250131-gpio-set-array-helper-v1=
--0-991c8ccb4d6e@baylibre.com
->
-> ---
-> David Lechner (13):
->       gpiolib: add gpiod_multi_set_value_cansleep()
->       auxdisplay: seg-led-gpio: use gpiod_multi_set_value_cansleep
->       bus: ts-nbus: validate ts,data-gpios array size
->       bus: ts-nbus: use gpiod_multi_set_value_cansleep
->       gpio: max3191x: use gpiod_multi_set_value_cansleep
->       iio: adc: ad7606: use gpiod_multi_set_value_cansleep
->       iio: amplifiers: hmc425a: use gpiod_multi_set_value_cansleep
->       iio: resolver: ad2s1210: use gpiod_multi_set_value_cansleep
->       mmc: pwrseq_simple: use gpiod_multi_set_value_cansleep
->       mux: gpio: use gpiod_multi_set_value_cansleep
->       net: mdio: mux-gpio: use gpiod_multi_set_value_cansleep
->       phy: mapphone-mdm6600: use gpiod_multi_set_value_cansleep
->       ASoC: adau1701: use gpiod_multi_set_value_cansleep
->
->  drivers/auxdisplay/seg-led-gpio.c           |  3 +--
->  drivers/bus/ts-nbus.c                       | 10 ++++++----
->  drivers/gpio/gpio-max3191x.c                | 18 +++++++-----------
->  drivers/iio/adc/ad7606.c                    |  3 +--
->  drivers/iio/adc/ad7606_spi.c                |  3 +--
->  drivers/iio/amplifiers/hmc425a.c            |  3 +--
->  drivers/iio/resolver/ad2s1210.c             |  8 ++------
->  drivers/mmc/core/pwrseq_simple.c            |  3 +--
->  drivers/mux/gpio.c                          |  4 +---
->  drivers/net/mdio/mdio-mux-gpio.c            |  3 +--
->  drivers/phy/motorola/phy-mapphone-mdm6600.c |  4 +---
->  include/linux/gpio/consumer.h               |  7 +++++++
->  sound/soc/codecs/adau1701.c                 |  4 +---
->  13 files changed, 31 insertions(+), 42 deletions(-)
-> ---
-> base-commit: df4b2bbff898227db0c14264ac7edd634e79f755
-> change-id: 20250131-gpio-set-array-helper-bd4a328370d3
->
-> Best regards,
-> --
-> David Lechner <dlechner@baylibre.com>
->
 
-I can provide an immutable branch for the entire series for everyone
-to pull or I can apply patch one, provide an immutable branch and
-every subsystem can take their respective patches. What do you prefer?
+在 2025/2/7 14:47, Harry (Hyeonggon) Yoo 写道:
+> On Fri, Feb 07, 2025 at 01:52:13PM +0800, Liu Ye wrote:
+>> The kmalloc_array call could be replaced with kmalloc_array_node
+>> to allocate memory on a specific NUMA node.
+> 
+> Why is it useful to replace kmalloc_array() with kmalloc_array_node()
+> in the code?
+> 
+>> Signed-off-by: Liu Ye <liuye@kylinos.cn>
+>> ---
+>>  mm/mempool.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/mm/mempool.c b/mm/mempool.c
+>> index 3223337135d0..51eabcc87177 100644
+>> --- a/mm/mempool.c
+>> +++ b/mm/mempool.c
+>> @@ -328,8 +328,8 @@ int mempool_resize(mempool_t *pool, int new_min_nr)
+>>  	spin_unlock_irqrestore(&pool->lock, flags);
+>>  
+>>  	/* Grow the pool */
+>> -	new_elements = kmalloc_array(new_min_nr, sizeof(*new_elements),
+>> -				     GFP_KERNEL);
+>> +	new_elements = kmalloc_array_node(new_min_nr, sizeof(*new_elements),
+>> +				     GFP_KERNEL, NUMA_NO_NODE);
+> 
+> What do you mean by 'allocate memory on a specific NUMA node'
+> when you pass NUMA_NO_NODE?
+> It's essentially the same as what kmalloc_array() does.
+> 
 
-Bartosz
+Yeah, my brain short-circuited. Discard this patch.
+
+
