@@ -1,81 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1371F95A;
-	Fri,  7 Feb 2025 00:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174924C83;
+	Fri,  7 Feb 2025 00:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738888183; cv=none; b=G5dcMp+NXvLOHbNY7bv86XrUeg9oIlMdp3SxMe8efXM7uxXNT5GrdU7cgTV0p9pNiK4Jo/wjLfPpTKsSl7DsdtebibNDmjZJV8Wt4cxWc09/X61+vwGmVR146SLJhbOxo/NEb5yauvJ0DppxcgKkaRTZcpCK7A45aGa+kJCMTyQ=
+	t=1738888258; cv=none; b=JeUCT8CiQmapT0HSCo50I4+tyxxcXXCP2Xus8EwqKK9cLlR4mS6XW8eZiDubkeTl8g7171zyHhJuoGAg+RbJRi/D1tvHh4m9roEX8+mzPdDrXB0bJts4YTK66FolJf/pCrERCGhlJogfsgA6DjP8JDF+Yhtxs6+h0KtbfKAMZ7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738888183; c=relaxed/simple;
-	bh=394j8Z0b6091bH8cpo4/leUwPDluUyEIe29eznp9v/Y=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=GXw3/nHaFmSjaNazoM9ZNu5cHSV29aOls8/JwUW7//7XLdmnCr0bQ7KsN6RvFQqai8Z/xGzvEnTPaCGiCdm8vSRRzktF/H3UTRvKl5hfHZfJlLE5rBoyTjJS+G7IzRNL12UJfyUM1atPz8RjbD5cd3RJ332nRooHJU/MsPHq8sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cH6Wfmxn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738888258; c=relaxed/simple;
+	bh=f6QX11ftdCfY6kNBmj6JPctntdXs2EUjTmvX8mE2Pn4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dOqI9sglmgr4VP36OUK0Z8ZMblzcGtMF0z2z2rQnw6SPgsM2z+lj++MkS3NcXSXOTosPFTYxXbZbdN4tG6T/dZ8YvFPtvPj6JQQbAKTeU/eJDIYRLtSqEVVmn3pFrzmZ6iOuoIRrjDZlGSkRVXPYORl7G3+vbhWFuoztRIIO+OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=iiiAa4HB; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cH6Wfmxn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09692C4CEDF;
-	Fri,  7 Feb 2025 00:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1738888181;
-	bh=394j8Z0b6091bH8cpo4/leUwPDluUyEIe29eznp9v/Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cH6WfmxnF52p9Zequ1wu7UNwiFQG9Q9DFgHs3+QDdI63nHyM6sfGRF6ORytziBHBG
-	 1svUtzspmlPno7QIYJtnR9zgKZPtG9f9VRRcOxc9zMOT1pNOcS0MkqJE4BtWRzysLo
-	 MVYoEEfJiWjb8IfK5tW9plqHYJnc6c1PwQKhrUMc=
-Date: Thu, 6 Feb 2025 16:29:39 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>, Andy
- Lutomirski <luto@kernel.org>, Anthony Yznaga <anthony.yznaga@oracle.com>,
- Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
- Benjamin Herrenschmidt <benh@kernel.crashing.org>, Borislav Petkov
- <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, David Woodhouse <dwmw2@infradead.org>, Eric
- Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@redhat.com>, James
- Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>, Krzysztof
- Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paolo
- Bonzini <pbonzini@redhat.com>, Pasha Tatashin <pasha.tatashin@soleen.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Pratyush Yadav <ptyadav@amazon.de>, Rob Herring <robh+dt@kernel.org>, Rob
- Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
- Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, Steven Rostedt
- <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky
- <thomas.lendacky@amd.com>, Usama Arif <usama.arif@bytedance.com>, Will
- Deacon <will@kernel.org>, devicetree@vger.kernel.org,
- kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-Message-Id: <20250206162939.a1f86fb835f1eeb7ed73ff1c@linux-foundation.org>
-In-Reply-To: <20250206132754.2596694-1-rppt@kernel.org>
-References: <20250206132754.2596694-1-rppt@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="iiiAa4HB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1738888253;
+	bh=f6QX11ftdCfY6kNBmj6JPctntdXs2EUjTmvX8mE2Pn4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=iiiAa4HBK3bn13H+H1kOwVh+mn5z6VWo6Ahhndd7+Wnswha9uSjavAwn9CNZCtCet
+	 AxPq32AAq3/inh+uMjY2SBaGaNLqVQibCgsubIp+V4hCV/0fLBRNk5Tg/Cx+GApr08
+	 7YotrWhz0v6O0i/y6ZmDstxGztwGtpNWZn29CjbNj4Rv9b1DicISREvkExtybfBXzY
+	 pTebmGviXJQfxUnK+imwNpYuiWlWeMPqec9n8VGR/K2XF6t2euY1Xvj4FVDsVVdWgB
+	 Q8qqtuR/hCgDbidwImTyhHNiBWb8yMN5dPKOQiHx33hHtuDq22+vasCcddLEHnfE3N
+	 uTkfQUxyp7Ltw==
+Received: from pecola.lan (unknown [159.196.93.152])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 6F446746BD;
+	Fri,  7 Feb 2025 08:30:52 +0800 (AWST)
+Message-ID: <1b38b084be4dd7167e80709d3b960ac1b4952af3.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v17 1/1] mctp pcc: Implement MCTP over PCC Transport
+From: Jeremy Kerr <jk@codeconstruct.com.au>
+To: Adam Young <admiyo@amperemail.onmicrosoft.com>, 
+ admiyo@os.amperecomputing.com, Matt Johnston <matt@codeconstruct.com.au>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Sudeep Holla
+	 <sudeep.holla@arm.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Huisong Li <lihuisong@huawei.com>
+Date: Fri, 07 Feb 2025 08:30:52 +0800
+In-Reply-To: <b2ab6aa8-c7c7-44c1-9490-178101f9d00e@amperemail.onmicrosoft.com>
+References: <20250205183244.340197-1-admiyo@os.amperecomputing.com>
+	 <20250205183244.340197-2-admiyo@os.amperecomputing.com>
+	 <99629576779509c98782464df15fa77e658089e8.camel@codeconstruct.com.au>
+	 <b2ab6aa8-c7c7-44c1-9490-178101f9d00e@amperemail.onmicrosoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
 
-On Thu,  6 Feb 2025 15:27:40 +0200 Mike Rapoport <rppt@kernel.org> wrote:
+Hi Adam,
 
-> This a next version of Alex's "kexec: Allow preservation of ftrace buffers"
-> series (https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.com),
-> just to make things simpler instead of ftrace we decided to preserve
-> "reserve_mem" regions.
-> 
-> The patches are also available in git:
-> https://git.kernel.org/rppt/h/kho/v4
-> 
-> 
-> Kexec today considers itself purely a boot loader: When we enter the new
-> kernel, any state the previous kernel left behind is irrelevant and the
-> new kernel reinitializes the system.
+> Is that your only concern with this patch?
 
-I tossed this into mm.git for some testing and exposure.
+Yes, hence the ack. If there are other changes that you end up doing in
+response to other reviews, then please address the spacing thing too,
+but that certainly doesn't warrant a new revision on its own.
 
-What merge path are you anticipating?
+> What else would need to happen in order for this to get ACKed at this
+> point?
 
-Review activity seems pretty thin thus far?
+It already has an ack from me.
+
+As for actual merging: If the netdev maintainers have further reviews,
+please address those. If not, I assume they would merge in this window.
+
+Cheers,
+
+
+Jeremy
