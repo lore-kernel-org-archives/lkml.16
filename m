@@ -1,100 +1,96 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from siberian.tulip.relay.mailchannels.net (siberian.tulip.relay.mailchannels.net [23.83.218.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94021A01C6
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 23:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738972355; cv=none; b=adjApIDObRMylSn2t6tHTSFxw2t06t3AFjqt13mqMLVhhEbR12aldZlBbLI0UcocpMy7HkH++q0XmoNKl/Cc4Yby5P6IWUAKpDoVvA+RwdCgcjAJnmirUO+/JSJqAD/YRdocHLJyd86d2wKspq818KAMtrlLGkE5Dhdipo/TCJI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738972355; c=relaxed/simple;
-	bh=feHZLMYdw1GKKdpzxXYJZHObDJpwzN8+Y0Xx2Qps0Fw=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02FA1C6FED;
+	Fri,  7 Feb 2025 23:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.246
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738972618; cv=pass; b=ElJih/K7+KOSsn2j49MYp67jWEro4ljWUcHmZXUb9AqBu7H1LcuPD52FmND+aLWggWoV75aeDqWNJB99r+rEsiqvSAfASNlzKOeyF308M6zga44ieWuUxSjS8Lmistry4QIf+iWPODvrz3XSbw2JvjQUigPpVZGOzkwRp4ch3yw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738972618; c=relaxed/simple;
+	bh=xjU2AoaATGbbGSjUdwSZk4LtHMEWHvAyBIlKDio5h3g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Di8xks8LiL8xu5U4jaewHz1MfhE/nMufGOKNVEd8INHIS7onR4tf8bbXO8jljnXRSu9NTeMPUm5bOJEyA4qsJtc++vtjNOlKqO/K/EY1VZMcBm3D7kkBfJZ1D+/54bgs5k6IGGcCVlcoWLrksAH7xG3txBynDMCuIQ4cILC4Vm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=RoNmWspQ; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z981z+VNmz4PBlWgxu04WsVPhfd6q66sTBzoAcQt2Sz0+e2sfLy908Y+LIcgSy/ezI65vYZ8Sc7+CGtGU4fTT88ZbdhaxBJqGsNywjZwH7WFfQxUjzG88TWoufDOl2ZoTj2+7UlBZiC2P87SjD2vBWd1kKFb4fNlmJdzTQ6VOM4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=UHRKk8fK; arc=pass smtp.client-ip=23.83.218.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="RoNmWspQ"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21f48ab13d5so37920595ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 15:52:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738972353; x=1739577153; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oQcVjQRwopmrHuG7wgsXbQFTOWJLCaxzXjS7jJ9aNqc=;
-        b=RoNmWspQB8vNq6Ey74DOIuMh74vAkRoq85X9+moyA0z/rBNoXhmo9jFa3Sf/M5W6DI
-         GBp2Q7gEJFvIf9el8ifnUWlfB8oLJ8CRmTJD+j7JDRz0LfGgy9n1o/FeDvJvBSO9VUTO
-         7bcGlgSTc5315bdmrf8r2FqBlk/dbZHihABSupdMjwEN71guGwrWYAL0+vpfkbDE1pga
-         WdVc0NNW5J5IP96coq3aNR/1NxrgX73rzjA2gha5b3t8rWb4VnqwfB+LR370OaHaLQb3
-         +Qx2e66rRETtAe8WMynzj9fG38J46oKSTFFlukmQb3eB9hfr3tqDgKQPlSqr1gwyMXai
-         Y1SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738972353; x=1739577153;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oQcVjQRwopmrHuG7wgsXbQFTOWJLCaxzXjS7jJ9aNqc=;
-        b=IhYixTQ+DMnbkya9XQbbWAx7Yl03lL7U+C9lga86njx5CG9fxNMdiqc3E7iEuH7+mP
-         In8E2C0oMH7N6rxvOFLtyBx6fgJXULafM3zpcMa3Fg48cB+tQOpzSFKB8QGSCnDgLTvz
-         mj6hVs92PRH9veidDLGMOJCRbl/O90lVB6LokydvTbeqQO76Q5MwrCCFyny0fbAfx7r8
-         ENanAkD2K+u2Ks+LxxduxnI9fThGkxs0I41cCxB1gz1EHxcT6bJ8nTtBPLmSzlZ+6GRk
-         xNHggyDXX+my84kCXdrl4890Sp8leb7skpJy4iHP4ICNUX4rXCsKR1qhsNYqGApeKbxt
-         cPFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXaQ1ZhiaF/4ULoX9RvTGpLHxYH2Z/319El2ubqqSxtU2sMEoJx2IfVQbJwTbbhay4x0T+tqJrN3oYwOD0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6gVzrPliVzcfavACuxhMNw9pOFAdVrsbx5uGi3JEswRnWafx7
-	0Mggb5ffZw7GLNbPM9bOGm29ypBYC/+JvUvyy4Yi3+2UyLmQVd/WZKKEV6JGzdU=
-X-Gm-Gg: ASbGncsWfmIK3Fy/hiNPCwckYh628zHIoxmgxSsVvL7uebsJvH5eT/IarSRJI2WjgBU
-	RZDzef+vKbqSHBf9HUGP6ugI0elVPWkTLsvCwEb5JFFkiSNY+Q5USzS2w0nbm5SQ3me4z7YsGYZ
-	uy8lazETwa7MoH6hPEjInb2FN1Z5o+TTmwPecmUmcji4Ga34fO1UeDsUQ2BcBcbdF/ri+azaOCt
-	ul/IS/qhzSCx3KSKrysslN53fs6fGTrS4khtxF4lN5DQkNPS5+m+Fb/7gJokCaqUsa/DY7ozxXt
-	d4/kXV9NqJEaNBNGh3mSW4b9zA==
-X-Google-Smtp-Source: AGHT+IH5jRZW/ovSUPH8eJRvmKh5nXw8ULDIWD5h4+evTSN5U5cvmcLVFvRfp+GmY1NLadqVCxbddQ==
-X-Received: by 2002:a17:903:94e:b0:215:9470:7e82 with SMTP id d9443c01a7336-21f4e6a035bmr94058495ad.4.1738972353039;
-        Fri, 07 Feb 2025 15:52:33 -0800 (PST)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368da60bsm36436795ad.258.2025.02.07.15.52.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 15:52:32 -0800 (PST)
-Date: Fri, 7 Feb 2025 15:52:28 -0800
-From: Deepak Gupta <debug@rivosinc.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	alistair.francis@wdc.com, richard.henderson@linaro.org,
-	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
-	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
-	cleger@rivosinc.com, alexghiti@rivosinc.com,
-	samitolvanen@google.com, broonie@kernel.org,
-	rick.p.edgecombe@intel.com
-Subject: Re: [PATCH v9 01/26] mm: helper `is_shadow_stack_vma` to check
- shadow stack vma
-Message-ID: <Z6acvL9W4G9Y90WV@debug.ba.rivosinc.com>
-References: <20250204-v5_user_cfi_series-v9-0-b37a49c5205c@rivosinc.com>
- <20250204-v5_user_cfi_series-v9-1-b37a49c5205c@rivosinc.com>
- <6543c6b6-da86-4c10-9b8c-e5fe6f6f7da9@suse.cz>
- <Z6aa24/5M5Xdhe/A@debug.ba.rivosinc.com>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="UHRKk8fK"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 55D9580C67;
+	Fri,  7 Feb 2025 23:56:49 +0000 (UTC)
+Received: from pdx1-sub0-mail-a256.dreamhost.com (100-125-6-118.trex-nlb.outbound.svc.cluster.local [100.125.6.118])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id C2928828DD;
+	Fri,  7 Feb 2025 23:56:48 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738972608; a=rsa-sha256;
+	cv=none;
+	b=mt1TUUeR7uCh8p/4i4X24dEMdktNlXP9txFbNzIjvDcKu3trAuQ3eMnQCbv4SnRs4GFA8+
+	5Ho5IsboCcO8KSBMdKtT7JGwPrYneSPuEk4Af3UnbOMSnfDxFx9FdGZAvC0Kc/a7M2PIzA
+	69FBPAqOs9cmurCDcaW9lB3urxNksODMYrYQnX7wA/W85c/Y5JOuVeXC7CjTgrABmucods
+	lKYs6jkebrdDrMURsDdPcE16eMoxqPpXM8AtVWUGavy+FBEDTRipvF4zup8C+TIfGAFbQS
+	jfYAbJnPowMY3IN+MJFCo5Yz+f6Ki6sj9uR/IMV8MUXB5FHfUjMQX4Ja9LvdfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1738972608;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=xjU2AoaATGbbGSjUdwSZk4LtHMEWHvAyBIlKDio5h3g=;
+	b=0TzXa9sclK5gftc/0CpYHp5bKfbcmUL6EBY0ZRcYdqEUm49TYpSqV6RCOl2R5gH+scZPrd
+	m41ebIhOG7EASr3TDkGe33L31fCROrzLBzAEO+UOyVuumd903DJUrM6ZxDS1RWIdAjAYJl
+	DJvZl5rlrwUAmJ/ZLnAkC3YLd77IF9oq7Ey2x8/p8nkPpIoxDP0ovi9oFNWaJSIEWXk1J+
+	mshFcZXK1pHqstddOMh9KrNxzVMVnyY6GuPMTjIZmAMA25QafsyHaSCaFCLQyRtBvta3HU
+	TaldSwycVgSEzciXXcTMYNxErDuox2py/vzy/ksKhQsJMm0WrewZchQBs6wv7A==
+ARC-Authentication-Results: i=1;
+	rspamd-68c88d6cff-rsb5v;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Quick-Snatch: 6706618518ad465d_1738972609100_1136860145
+X-MC-Loop-Signature: 1738972609100:3282361098
+X-MC-Ingress-Time: 1738972609100
+Received: from pdx1-sub0-mail-a256.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.125.6.118 (trex/7.0.2);
+	Fri, 07 Feb 2025 23:56:49 +0000
+Received: from offworld (unknown [172.58.112.146])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a256.dreamhost.com (Postfix) with ESMTPSA id 4YqW8v5RmQz9C;
+	Fri,  7 Feb 2025 15:56:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1738972608;
+	bh=xjU2AoaATGbbGSjUdwSZk4LtHMEWHvAyBIlKDio5h3g=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=UHRKk8fKCqoNxaZWb3s6gEoAOyGhYR9D4FCwkOUy5mbMDc1LCf+S/HMszDA3wPmMN
+	 6kjvpr7hHhfp7GOPNYPev63aDIvBXCG70L7m2gx62+6eHUPTQ5hEErDNKjatl1ExuZ
+	 XfKuYGv3jSeUOv/BuJA8oT9nH8PPrpLsDe71sSJeUujoLIRUZN0PjIjL+r8StB61A0
+	 L+Mu55TEL0TxgCPUZUtAGd8By5F4hHSPSqdOPLph8YZFUYIn0APEDgexYGJyOPS0j0
+	 DJ23Yr3cOWKnw9PYGcE14OR5bsi8HiTPlf4C/9oytDveHShGqJ8dISkXEGT1n8ofMd
+	 FpB8KOsQOzoEQ==
+Date: Fri, 7 Feb 2025 15:56:44 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 01/18] cxl: Remove else after return
+Message-ID: <20250207235644.bdocx2kwegy2stdo@offworld>
+References: <20250207153753.418849-1-rrichter@amd.com>
+ <20250207153753.418849-2-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -103,40 +99,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <Z6aa24/5M5Xdhe/A@debug.ba.rivosinc.com>
+In-Reply-To: <20250207153753.418849-2-rrichter@amd.com>
+User-Agent: NeoMutt/20220429
 
-On Fri, Feb 07, 2025 at 03:44:27PM -0800, Deepak Gupta wrote:
->On Fri, Feb 07, 2025 at 10:27:10AM +0100, Vlastimil Babka wrote:
->>On 2/5/25 02:21, Deepak Gupta wrote:
->>>VM_SHADOW_STACK (alias to VM_HIGH_ARCH_5) is used to encode shadow stack
->>
->>I see that arm GCS uses VM_HIGH_ARCH_6.
->>
->>>VMA on three architectures (x86 shadow stack, arm GCS and RISC-V shadow
->>
->>And RISC-V doesn't define it at all, not even in this patchset, or did I
->>miss it somewhere?
->>
+On Fri, 07 Feb 2025, Robert Richter wrote:
+
+>Remove unnecessary 'else' after return. Improves readability of code.
+>It is easier to place comments. Check and fix all occurrences under
+>drivers/cxl/.
 >
->hmm...
->Something wrong in my workflow and rebasing.
->Thanks for catching this.
+>Signed-off-by: Robert Richter <rrichter@amd.com>
+>Reviewed-by: Gregory Price <gourry@gourry.net>
+>Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-I think this is the miss on my part.
-
-I had this patch in last series which introduces `ARCH_HAS_USER_SHADOW_STACK`
-https://lore.kernel.org/all/20241111-v5_user_cfi_series-v8-1-dce14aa30207@rivosinc.com/
-
-As part of above patch, `CONFIG_X86_USER_SHADOW_STACK` was replaced with
-`CONFIG_ARCH_HAS_USER_SHADOW_STACK` in `mm.h` to define VM_SHADOW_STACK
-as VM_HIGH_ARCH_5. It was all fine because all 3 arches were using VM_HIGH_ARCH_5. 
-
-However as things progressed on, arm64 ended up using VM_HIGH_ARCH_6. But
-arm64 gcs patches also landed the introduction of `ARCH_HAS_USER_SHADOW_STACK`.
-So I dropped this patch from my v9 and didn't pay attention and actually missed
-the definition.
-
->
->>>stack). In case architecture doesn't implement shadow stack, it's VM_NONE
->>>Introducing a helper `is_shadow_stack_vma` to determine shadow stack vma
->>>or not.
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
