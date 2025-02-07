@@ -1,95 +1,114 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B8213CFA6;
-	Fri,  7 Feb 2025 05:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E96913EFE3
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 05:45:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738907021; cv=none; b=ujYYOq3w54kL2GIaH8RxtdIFBvh/doUs+s+/P1JyMDFmg+fjS+ghOzjHqeVvQsLolecDm0GsbOWGTWoZBKuMDJ9VlpW6ZgJnN67cDjKWmkYTJIcJU1+83LCh8tjw1DRvh7H/LZ1s8wpp9un1MUNJxk59+x21FpEJTluKOq41zSA=
+	t=1738907120; cv=none; b=pTtHWlb503rQeRYpk1fxX4CQaCJfn/VH9MaNdGeJI9H5dsAXripLPvkl/Qzrb2CuOtZzqNC2mLDtyfIdvRRu3kWUpT1/vZE239O0vLpFLze3KS4fgAn3bcBFOrbtx3UWwtSGlKvp8ZNikRTf2XIhZH9S51P5bBBElAB7WCdRukg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738907021; c=relaxed/simple;
-	bh=QZ+/ABzqoT4spBJY25jeXthY0X87myu/uIIk+g7BFFI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DTTwtRSiZxskkeDRE9W3JJCnym53czPddSjTXhWBdHxKrBVeEU+jZkYQh7Tsw0lXIzN1v+/eQal5mqb5tyzpa5P0g6QL0Go1drh1SuyNbeyW+/yPw9HWSVzFikmXsA8LfQ3Qeg9sSxKFrlZEdW2ZEXq9trIDSTdke+KAyWymKUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gTz+oIII; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738907120; c=relaxed/simple;
+	bh=gGezzYUMXDPK6inJCR26T2eTUq46GlYyJKYRkqpWgx0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=FGUC7cs+TWhRhGdoyXWXEncJnOw+cipgKDqu4AHBP2WKAnvy8Zq3/GiJ4HjpM8NsN3taMSnNz7gVYfS3KJvTiDa8mOj1MlBO8XCHVqJvVzJ7Bj6PR0TgsOmOYXz1uOl56uiC9wVOjHNdg7LB3OnXO1u/duSwlY3EPUJMib2EWio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=b1ky/Dop; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gTz+oIII"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21f573ff39bso1969775ad.1;
-        Thu, 06 Feb 2025 21:43:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="b1ky/Dop"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7be49f6b331so160648385a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 21:45:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738907020; x=1739511820; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4oaIvYvQBu4niJTPgoiSKYP3MHzIjlH/YJlINX4NRXQ=;
-        b=gTz+oIIIbs0ldfOeuJLjSqi1vgBp7YP08QEHONqoAS6Ab3t6e0nvreuw+SAGGpbe2x
-         QSaIilSYcj9DOzeSZNVLpGrtlvOcm6r7tZH9GefgP1807GQGIgHqwEctmeMitnvAlEe2
-         lbk4ZzjM9EjCq5Mqic2EoO2KuoMLzrWZWwP+svOdzxKlMmwFdHSVKF1cyL3FIVozJK0K
-         NY9kxM9aAKHDUmi7Li+mWj76zuOPEtmdmOtNSSfiqbkgB6Z8Fkiq786AwMYAMjqjdzrw
-         70ERafbfciwYZ0acxXEclCmSP7IRT59uj6M3F0A/HqyufnGKd2OsLJLdtSr6mOw1fDwi
-         Dytw==
+        d=cloudflare.com; s=google09082023; t=1738907116; x=1739511916; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5IiZZm6INZur7VVU7RwSrWYWqBqXxi7mFTnqmXj0pFQ=;
+        b=b1ky/Dopd3ZyYLidjqAEjjEtD/pNxHIeEP6hdmIq5KfSj4M3FKwIZFAqROusAUAi6T
+         OCDHKTdMcRb8yV1XzEnzByg7XgSxdQlHKnJpokKj85X1MMPYn8sZbJbaQKyUZNgl7h7R
+         gXy1uPMgVm960SeUswycb4p6U0yRjtdAWJyQ9rGyat6qdoQma4BLghkTIVUcmSCKLCFJ
+         JkMPt/gjly39jtkQfkE3zeawIr2gkCCx1i9TG4ttVwSh2VRhIhs9JAgtI5J5fTiCIY2k
+         RIVNlQJdD0WF6QbTWv0xU//PsKajVtHPtNPW18Pp7yFEsebp+KSE2ph9EXOQqWLkTztM
+         nBag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738907020; x=1739511820;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1738907116; x=1739511916;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4oaIvYvQBu4niJTPgoiSKYP3MHzIjlH/YJlINX4NRXQ=;
-        b=lgFSD0CI0k/Li2TANyt7UwcqCoUBMgiEodqyhaeTqyM/5k2zHj9H6XYLQxssGf/yCP
-         mpd7hyhk9ORbbOc/Aszo4cjavuOVtmIoJReRpGOL/kq/KcIgMcHvthiydVzAf9hESYev
-         3/Tpc9681rd2F2z2vsHRB2YLdBtSPr40vnuZEudoPQEyUHI6ZJfJV5nFgHpmk7Ma6vOI
-         D2XLLeYULYfwzECept9Q7e2MvR7sbqfe90biMg+19clVOYyUpJBGnDxP7ZW3UohUewPd
-         Bo9qBGwVzv9vqjDiatcc7SRn448/2NjrbET3S1pjcOoutNoJ3HBZXk4I19G10diAIiz0
-         x+Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCUj+fnryWTYW4Mg1Pxv/GYz+o5CKDKdXd6bXM3QilXTacUganxt1WcJDcAUc/aGpAupULYdvDqwUgftGQo=@vger.kernel.org, AJvYcCV6KSqNySv+kPQFskdnUsF6jzNlvH3XoKF8OB3GF3QLsex1Odp1e74bXcqpcE67ZSXRFKwwc4w6@vger.kernel.org, AJvYcCXDbhkbUWW1MIrEHxw1V6Ltu4vrfikICUvTHwBOPWOB90cZ84FlTqieT5L/KymwyA0ypGuhxPEL@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUob3pzVOz79l/IDF6ylQ17YJdFydprK70H55RuV1qCPTuLBJE
-	IGjQTJSYrgilF2Bq6Qd8Sb8EgU4CHE42FV0N6IrxNOUCRZadwhTDDBe4TA==
-X-Gm-Gg: ASbGncu2u76mBZ9T+HqsLgFr6li2kz9mtfm202dTcEu3crh1d/fMFbvUJ0lPnjKFSnf
-	+jpWIYzq8YC4Xmp86kJiFWjwWfJwFkZ42BT8MV2Z090N/lbsqvNXsquSZlxkrWgfxUt9uVoBt86
-	Vb4q7yHK/iiAE/liZk9mHENAnYOfqZDSLMZKnrbmS4zxOupWrQ7HdPTbMoNWL5ChwUPH19f5MZ9
-	1buALMV5GTV+xHFykOzXcEppH2P5oRyvWsubZdJm0jY3TFyTJZZwmyRheH8FyY3hT6c/zIQqdH3
-	ASIrLBVwQMvKbcjS0QLHPSAdYBW4v2HxovPcJYtbXqrHQWtXiQcc8fGGMh6cOnkVk6yTQBASHbV
-	Jqlq4ug==
-X-Google-Smtp-Source: AGHT+IHcBYS7+hJxgdBY/wIHUqMNCV5DmWfWyMOx0rt8+aM1hXIn1PnKkugiHfCHdnQk5sllDXmxKw==
-X-Received: by 2002:a17:903:234e:b0:21f:1549:a55a with SMTP id d9443c01a7336-21f4e1c8b5dmr37802505ad.1.1738907019700;
-        Thu, 06 Feb 2025 21:43:39 -0800 (PST)
-Received: from hoboy.vegasvil.org (108-78-253-96.lightspeed.sntcca.sbcglobal.net. [108.78.253.96])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683dde1sm22043165ad.149.2025.02.06.21.43.38
+        bh=5IiZZm6INZur7VVU7RwSrWYWqBqXxi7mFTnqmXj0pFQ=;
+        b=KZ5nv1uI0ggPMdRM01nRhe4m3n2M1nYgWxZym+LytfOIsH/sargpRorKQA9Qd1sPj+
+         R0iwB/m+wzh/hAKf8y6hjJ5VwDMnd0mjVvF5wq2k8cJj+97tpNWE1mZKfQJF7cuLXf+q
+         A/+vIndjPxd/ptuqVGXh0K1Hj+7G4Y6pwmKYDxdZvmI7p7IzpM0fy+I4Ipg6sOuYKm8e
+         n/4BAX9hgEQr6+ETICUAbPEjfXIWgIGi15tMMW2ZlB2PbP/juNmPw5pPl/N5xHTUFSXC
+         M0oiNcIv1n+R/9dYPR+5AH5BeRtj4KA7dYdtUIk5kBhjG6FFCoGBXKdQeX1DBb0tDwWW
+         lzlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV6EzsWSzrK1tpA6onpdiEbPut/NV+3prwKo4tWNvD9C9Xw9T/ZIhOim6JrCffhMH3dxtxEsjjD5lA93B4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7jOBeolSHwtx9TtxSHiLmSPDH1z6VzRnZnnRqlyyt5qFsjoD7
+	MNGQNLyE7l/7EUOAAhH5hlqHjYX8nB8072iIW++MYTkrj2LmErVJ0U7dFAC+FHU=
+X-Gm-Gg: ASbGncsZW75allVB0gtbBLts8VVhQTbr6x3P196FOO5LC8ajbmmpYQgqGtkBDQiosfx
+	1uqy/I5kEULGtdbs5tdpnPewC31t1/A6R9Ux3HlG+fFSWdR3HqcvHU27wV/QfHKCFXk5LTkTYsM
+	efnZ8L6EchGfp1BQ7qWA+XOFFL8mO7hVHt8A/DXjw5jTrD9fQjj73kl6P2RQjf0rpIRCJ7ez1ZV
+	5dH3ngEG2bxfgy/GbUTp8DW0ti/lBIYQSUOPLBFpmGwhOLBr9ztW1fOpIvdZeCBeL8fcvlt8HVQ
+	Lnk=
+X-Google-Smtp-Source: AGHT+IHeDFG4PsZo7iKREMUrGLF3htyuKAaLBY80zJViJUgHflhFdo3XRhrHt9jyqehSZE1DfqfxDg==
+X-Received: by 2002:a05:620a:290d:b0:7be:8343:df2b with SMTP id af79cd13be357-7c047c34936mr298818285a.10.1738907116412;
+        Thu, 06 Feb 2025 21:45:16 -0800 (PST)
+Received: from debian.debian ([2a09:bac5:79dd:25a5::3c0:2])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041e9f9e6sm148107685a.85.2025.02.06.21.45.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 21:43:38 -0800 (PST)
-Date: Thu, 6 Feb 2025 21:43:35 -0800
-From: Richard Cochran <richardcochran@gmail.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: David Woodhouse <dwmw2@infradead.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	David Woodhouse <dwmw@amazon.co.uk>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH net-next 0/4] ptp: vmclock: bugfixes and cleanups for
- error handling
-Message-ID: <Z6Wdhz7ysFYWSoGi@hoboy.vegasvil.org>
-References: <20250206-vmclock-probe-v1-0-17a3ea07be34@linutronix.de>
+        Thu, 06 Feb 2025 21:45:14 -0800 (PST)
+Date: Thu, 6 Feb 2025 21:45:11 -0800
+From: Yan Zhai <yan@cloudflare.com>
+To: bpf@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Yan Zhai <yan@cloudflare.com>, Brian Vazquez <brianvv@google.com>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kernel-team@cloudflare.com, Hou Tao <houtao@huaweicloud.com>
+Subject: [PATCH v2 bpf 0/2] bpf: skip non exist keys in
+Message-ID: <cover.1738905497.git.yan@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250206-vmclock-probe-v1-0-17a3ea07be34@linutronix.de>
 
-On Thu, Feb 06, 2025 at 06:45:00PM +0100, Thomas Weiﬂschuh wrote:
-> Some error handling issues I noticed while looking at the code.
-> 
-> Only compile-tested.
-> 
-> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+generic_map_lookup_batch
 
-For the series:
+The generic_map_lookup_batch currently returns EINTR if it fails with
+ENOENT and retries several times on bpf_map_copy_value. The next batch
+would start from the same location, presuming it's a transient issue.
+This is incorrect if a map can actually have "holes", i.e.
+"get_next_key" can return a key that does not point to a valid value. At
+least the array of maps type may contain such holes legitly. Right now
+these holes show up, generic batch lookup cannot proceed any more. It
+will always fail with EINTR errors.
 
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+This patch fixes this behavior by skipping the non-existing key, and
+does not return EINTR any more.
+
+V1->V2: split the fix and selftests; fixed a few selftests issues.
+
+V1: https://lore.kernel.org/bpf/Z6OYbS4WqQnmzi2z@debian.debian/
+
+Yan Zhai (2):
+  bpf: skip non exist keys in generic_map_lookup_batch
+  selftests: bpf: test batch lookup on array of maps with holes
+
+ kernel/bpf/syscall.c                          | 16 ++---
+ .../bpf/map_tests/map_in_map_batch_ops.c      | 62 +++++++++++++------
+ 2 files changed, 49 insertions(+), 29 deletions(-)
+
+-- 
+2.39.5
+
+
