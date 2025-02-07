@@ -1,278 +1,168 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D8918DB00;
-	Fri,  7 Feb 2025 16:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA51192B6D
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738946554; cv=none; b=W71nm+12VTM+AMPFiR2JmyKt9+s48fq/q8oEuj0iPcxFev16pf7X8VCuTYaDohf4pfrw+5+Fd4+smi1k08tWV9DW5OtKyshQuXaxDLTXZ4SG5tRTJVH3Tzk+dbMg0VoWZ2RIDBUQEqBhXv/qiR7jAJUu7woJNj3n9MTylzlF+X0=
+	t=1738946559; cv=none; b=aLzu3r9w+NRz6nSQ3BSH087s6uvxc9JRvOYB7RXYN8uMp4sRP9Bj59I2hBudDn8mmM6OkmDsalQTad24eFxHAs+MjrhkZCSYPHrKEI85J8vemxIwrhVMQERIHsSH1y7ihPFLxoK5Lepb9UAZN7wboWB4Cg0P4oPRk5QQB5jYT/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738946554; c=relaxed/simple;
-	bh=wivoohQzKrQd6Be3GRYjXHheHFpcjocBVpQVFCpY0Ec=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r1f97BXGvOKutX6uwnLJDDu4cLAZc5HZdhD08/Vul2gXxnzwYjulgI0vWPSWqrSAQlCcZVKBKA8cG2BRFzapGMz8wnbCdFxMMcCM4iU9PptcecY6aK+v5BIrMhdg+gFKTxAIWi39yH/OAK7q5/I+zAo6HmyejZ83aXjPYdRtlsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JsF37aok; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1738946559; c=relaxed/simple;
+	bh=JZ/B2GnqaYMj06z1WHxZMz1svapB0kh9gs+Iaev+UXA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I1MjOQXT+ZDtgW+yvpw+uiv9SrY7lvGGoeXys4I5wjxLtOgbr73YzxLkUhchyFn46wd6mo7nbot/LEo5NhIe1lvZsUwJC7MXLXc4PKKIu08CFvtBLqtkvY8Hf+CKE5b1pfOziMdfeX2c+SmC5ZArmMbH3qK6VBmnM1CwlvcI4vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=gyB3S3j2; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JsF37aok"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1738946549;
-	bh=wivoohQzKrQd6Be3GRYjXHheHFpcjocBVpQVFCpY0Ec=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=JsF37aokdx/VKD2OChBl+6YAwAPlldoBXBYUSA+zWCQUQO0TULDAbYdKuTpLievR9
-	 p8u2i6k5JBa1CVdhWrfvbUKD2SQQPB6zsS/chtMlexq5qFP9VxTZXWC3oIQ0kHEsUn
-	 vRji0Xzyws/+zfMIObwdpqszyufOsXlcDGvd9w50r0nsUxD/QsrDlR9H0UfECpuqXV
-	 86OM57DXsbGKb4j1DP1e7PvgsxDd3usY08tnC0CQyu8cb01J9EWh3qby1nKPYzkxk1
-	 MaLYTausCuz+KTyFflyFsEorb+02AxZvCBvdx39TadnHX4wWdHQemz25pW6xM/Hy/F
-	 I/U065c1qnlQw==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 97EBD17E0858;
-	Fri,  7 Feb 2025 17:42:28 +0100 (CET)
-Date: Fri, 7 Feb 2025 17:42:21 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc: Maxime Ripard <mripard@kernel.org>, Florent Tomasin	
- <florent.tomasin@arm.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring	
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
- <conor+dt@kernel.org>, Steven Price <steven.price@arm.com>, Liviu Dudau	
- <liviu.dudau@arm.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>, Benjamin
- Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey
- <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, "T . J .
- Mercier"	 <tjmercier@google.com>, Christian =?UTF-8?B?S8O2bmln?=	
- <christian.koenig@amd.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Yong
- Wu <yong.wu@mediatek.com>, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, nd@arm.com, Akash Goel
- <akash.goel@arm.com>
-Subject: Re: [RFC PATCH 0/5] drm/panthor: Protected mode support for Mali
- CSF GPUs
-Message-ID: <20250207174221.2decc154@collabora.com>
-In-Reply-To: <2cef75795cf3eb1c224f3562134d2ed887dbff60.camel@ndufresne.ca>
-References: <cover.1738228114.git.florent.tomasin@arm.com>
-	<3ykaewmjjwkp3y2f3gf5jvqketicd4p2xqyajqtfnsxci36qlm@twidtyj2kgbw>
-	<1a73c3acee34a86010ecd25d76958bca4f16d164.camel@ndufresne.ca>
-	<ppznh3xnfuqrozhrc7juyi3enxc4v3meu4wadkwwzecj7oxex7@moln2fiibbxo>
-	<9d0e381758c0e83882b57102fb09c5d3a36fbf57.camel@ndufresne.ca>
-	<1f436caa-1c27-4bbd-9b43-a94dad0d89d0@arm.com>
-	<20250205-amorphous-nano-agouti-b5baba@houat>
-	<2085fb785095dc5abdac2352adfb3e1e1c8ae549.camel@ndufresne.ca>
-	<20250207160253.42551fb1@collabora.com>
-	<2cef75795cf3eb1c224f3562134d2ed887dbff60.camel@ndufresne.ca>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="gyB3S3j2"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4363dc916ceso20770415e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 08:42:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738946555; x=1739551355; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bhByG6ma/CCtg99IeiiHau0X6tUcp/TIvfIcykd8Mjw=;
+        b=gyB3S3j25FpDuBWaHlXGfoMU12QJEClQZM6ZYr7/WEyhMBJdIqZ1ai74tAva1DZIEC
+         rtnIHQ8L4KLBDv8vE73+lnfm08QJmc3JOIs8rHM/Mg/sWSizK1qhG6uNGbeZQWka9Qvl
+         xlnRRHrMG4d/1Y+B2xO0Pwx6COXUXQPUPt2LfplXjvLOFWPEZp745oSROmAcCcbkmUYo
+         SLZAeD5sKDIvJAcv6nolHR2lJCEqdwy7OU1GkMni87UUpgpyAYa3LSDyAiFihGh56vaP
+         qsI0PAcaQwl8O21emZmRr1e8HIpW6EGl6SJ6gKz7pI6HxvPGQ8fPJAjQCshz1q+a7xm2
+         7AJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738946555; x=1739551355;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bhByG6ma/CCtg99IeiiHau0X6tUcp/TIvfIcykd8Mjw=;
+        b=sL5p5jHw0J8Lj+Rf4XG4d7nRdjGt+fxT4AbWYfj5mzRHKpzEVtuS3gSY7U0ml5QesA
+         uMpNbshRPPvcL7pRbM2bP7gfUr4D/t4VeIpw08gSfPYHvv0hKnbssgAgXZIeqk+wt/+x
+         hWLtQYDhyLJg+JMbXB6Fx0Tdex1i/Iu+a+7d/nJgVIYrEnHmNFxpq/GWOJ+tjbsUkzx6
+         D2MOuL96AN98l3SfqlBGpHpW/ot5vWrsDMqNjkCdBBqu5/rL+B7GipMtz++pGt2sq6Yi
+         DdNoACq3ngR5rF7Watw8bAFDm1LD/mgcqre2m6nn6WG/eq3GbtuG26FuxZccEfCRKhj2
+         q/vg==
+X-Forwarded-Encrypted: i=1; AJvYcCXqc+qknwneE+fGbqPy3C+yGNXmJV0LZsMATSHH9kc31ADKnHJlRn4ERJwbza9SqNSFW9DHDnm/YRWZuK4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvDH89sdqmIs59CET8l2TTD8lWD9R50oIglv0z9+V7LpfzLs0G
+	nI7mqgZUIcXH4nVXwIvnrD1vvsEKs5Bjt3JWOXh2oqB5Cr8/u0RZUTePNjXSmmXzfm5oWGufUGS
+	I/2E=
+X-Gm-Gg: ASbGncuEpDmTaRule27zXP8ThOx++KrUCf7bQlXsBYXD26HIs/xEarpPJpGevcUQe0k
+	NfIHABtNqKCkL4ZJXlY9cxtakY74Jk8HPCaRtga47Dmdk7KnB4OaD7lU5fmAMAB5ALUmLJsvIPw
+	RlO6Fd1psijO7h14jr+cYM7TlJ4rIVnVhDNHuWU3TSAKU1W8B6+z4OEjwaPpkH73ResHtHFGGKV
+	OAZGLXJRS3y7eZrg+SyoUbdEN74UjHROgClTXSz97WeYcUBMrv2tKwafx1w/9tHh8zkdYO2odID
+	720ssGS9JzxXA0hIUaE1UyniK+FsGVe+6pVazYQEKhCifZP/ZVOuirkNlztg
+X-Google-Smtp-Source: AGHT+IFndOVqVL6fCq+3s96eJy475G+cWXMlxn4LNE1FeT93u8xS7tBkrWZrckpAsU4XEeMbaXtLdQ==
+X-Received: by 2002:a5d:5f48:0:b0:386:37f8:451c with SMTP id ffacd0b85a97d-38dbb20b159mr7040560f8f.1.1738946555464;
+        Fri, 07 Feb 2025 08:42:35 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d94d40csm94877305e9.9.2025.02.07.08.42.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 08:42:34 -0800 (PST)
+Message-ID: <95bcf744-63b0-4b44-800e-ff2ba1ddf86a@rivosinc.com>
+Date: Fri, 7 Feb 2025 17:42:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/9] riscv: Change check_unaligned_access_speed_all_cpus
+ to void
+To: Andrew Jones <ajones@ventanamicro.com>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, charlie@rivosinc.com,
+ jesse@rivosinc.com, Anup Patel <apatel@ventanamicro.com>
+References: <20250207161939.46139-11-ajones@ventanamicro.com>
+ <20250207161939.46139-15-ajones@ventanamicro.com>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20250207161939.46139-15-ajones@ventanamicro.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, 07 Feb 2025 11:32:18 -0500
-Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
 
-> Le vendredi 07 f=C3=A9vrier 2025 =C3=A0 16:02 +0100, Boris Brezillon a =
-=C3=A9crit=C2=A0:
-> > Sorry for joining the party late, a couple of comments to back Akash
-> > and Nicolas' concerns.
-> >=20
-> > On Wed, 05 Feb 2025 13:14:14 -0500
-> > Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
-> >  =20
-> > > Le mercredi 05 f=C3=A9vrier 2025 =C3=A0 15:52 +0100, Maxime Ripard a =
-=C3=A9crit=C2=A0: =20
-> > > > On Mon, Feb 03, 2025 at 04:43:23PM +0000, Florent Tomasin wrote:   =
-=20
-> > > > > Hi Maxime, Nicolas
-> > > > >=20
-> > > > > On 30/01/2025 17:47, Nicolas Dufresne wrote:   =20
-> > > > > > Le jeudi 30 janvier 2025 =C3=A0 17:38 +0100, Maxime Ripard a =
-=C3=A9crit=C2=A0:   =20
-> > > > > > > Hi Nicolas,
-> > > > > > >=20
-> > > > > > > On Thu, Jan 30, 2025 at 10:59:56AM -0500, Nicolas Dufresne wr=
-ote:   =20
-> > > > > > > > Le jeudi 30 janvier 2025 =C3=A0 14:46 +0100, Maxime Ripard =
-a =C3=A9crit=C2=A0:   =20
-> > > > > > > > > Hi,
-> > > > > > > > >=20
-> > > > > > > > > I started to review it, but it's probably best to discuss=
- it here.
-> > > > > > > > >=20
-> > > > > > > > > On Thu, Jan 30, 2025 at 01:08:56PM +0000, Florent Tomasin=
- wrote:   =20
-> > > > > > > > > > Hi,
-> > > > > > > > > >=20
-> > > > > > > > > > This is a patch series covering the support for protect=
-ed mode execution in
-> > > > > > > > > > Mali Panthor CSF kernel driver.
-> > > > > > > > > >=20
-> > > > > > > > > > The Mali CSF GPUs come with the support for protected m=
-ode execution at the
-> > > > > > > > > > HW level. This feature requires two main changes in the=
- kernel driver:
-> > > > > > > > > >=20
-> > > > > > > > > > 1) Configure the GPU with a protected buffer. The syste=
-m must provide a DMA
-> > > > > > > > > >    heap from which the driver can allocate a protected =
-buffer.
-> > > > > > > > > >    It can be a carved-out memory or dynamically allocat=
-ed protected memory region.
-> > > > > > > > > >    Some system includes a trusted FW which is in charge=
- of the protected memory.
-> > > > > > > > > >    Since this problem is integration specific, the Mali=
- Panthor CSF kernel
-> > > > > > > > > >    driver must import the protected memory from a devic=
-e specific exporter.   =20
-> > > > > > > > >=20
-> > > > > > > > > Why do you need a heap for it in the first place? My unde=
-rstanding of
-> > > > > > > > > your series is that you have a carved out memory region s=
-omewhere, and
-> > > > > > > > > you want to allocate from that carved out memory region y=
-our buffers.
-> > > > > > > > >=20
-> > > > > > > > > How is that any different from using a reserved-memory re=
-gion, adding
-> > > > > > > > > the reserved-memory property to the GPU device and doing =
-all your
-> > > > > > > > > allocation through the usual dma_alloc_* API?   =20
-> > > > > > > >=20
-> > > > > > > > How do you then multiplex this region so it can be shared b=
-etween
-> > > > > > > > GPU/Camera/Display/Codec drivers and also userspace ?   =20
-> > > > > > >=20
-> > > > > > > You could point all the devices to the same reserved memory r=
-egion, and
-> > > > > > > they would all allocate from there, including for their users=
-pace-facing
-> > > > > > > allocations.   =20
-> > > > > >=20
-> > > > > > I get that using memory region is somewhat more of an HW descri=
-ption, and
-> > > > > > aligned with what a DT is supposed to describe. One of the chal=
-lenge is that
-> > > > > > Mediatek heap proposal endup calling into their TEE, meaning kn=
-owing the region
-> > > > > > is not that useful. You actually need the TEE APP guid and its =
-IPC protocol. If
-> > > > > > we can dell drivers to use a head instead, we can abstract that=
- SoC specific
-> > > > > > complexity. I believe each allocated addressed has to be mapped=
- to a zone, and
-> > > > > > that can only be done in the secure application. I can imagine =
-similar needs
-> > > > > > when the protection is done using some sort of a VM / hyperviso=
-r.
-> > > > > >=20
-> > > > > > Nicolas
-> > > > > >    =20
-> > > > >=20
-> > > > > The idea in this design is to abstract the heap management from t=
-he
-> > > > > Panthor kernel driver (which consumes a DMA buffer from it).
-> > > > >=20
-> > > > > In a system, an integrator would have implemented a secure heap d=
-river,
-> > > > > and could be based on TEE or a carved-out memory with restricted =
-access,
-> > > > > or else. This heap driver would be responsible of implementing the
-> > > > > logic to: allocate, free, refcount, etc.
-> > > > >=20
-> > > > > The heap would be retrieved by the Panthor kernel driver in order=
- to
-> > > > > allocate protected memory to load the FW and allow the GPU to ent=
-er/exit
-> > > > > protected mode. This memory would not belong to a user space proc=
-ess.
-> > > > > The driver allocates it at the time of loading the FW and initial=
-ization
-> > > > > of the GPU HW. This is a device globally owned protected memory. =
-  =20
-> > > >=20
-> > > > The thing is, it's really not clear why you absolutely need to have=
- the
-> > > > Panthor driver involved there. It won't be transparent to userspace,
-> > > > since you'd need an extra flag at allocation time, and the buffers
-> > > > behave differently. If userspace has to be aware of it, what's the
-> > > > advantage to your approach compared to just exposing a heap for tho=
-se
-> > > > secure buffers, and letting userspace allocate its buffers from the=
-re?   =20
-> > >=20
-> > > Unless I'm mistaken, the Panthor driver loads its own firmware. Since=
- loading
-> > > the firmware requires placing the data in a protected memory region, =
-and that
-> > > this aspect has no exposure to userspace, how can Panthor not be impl=
-icated ? =20
-> >=20
-> > Right, the very reason we need protected memory early is because some
-> > FW sections need to be allocated from the protected pool, otherwise the
-> > TEE will fault as soon at the FW enters the so-called 'protected mode'.
-> >=20
-> > Now, it's not impossible to work around this limitation. For instance,
-> > we could load the FW without this protected section by default (what we
-> > do right now), and then provide a DRM_PANTHOR_ENABLE_FW_PROT_MODE
-> > ioctl that would take a GEM object imported from a dmabuf allocated
-> > from the protected dma-heap by userspace. We can then reset the FW and
-> > allow it to operate in protected mode after that point. This approach
-> > has two downsides though:
-> >=20
-> > 1. We have no way of checking that the memory we're passed is actually
-> > suitable for FW execution in a protected context. If we're passed
-> > random memory, this will likely hang the platform as soon as we enter
-> > protected mode.
-> >=20
-> > 2. If the driver already boot the FW and exposed a DRI node, we might
-> > have GPU workloads running, and doing a FW reset might incur a slight
-> > delay in GPU jobs execution.
-> >=20
-> > I think #1 is a more general issue that applies to suspend buffers
-> > allocated for GPU contexts too. If we expose ioctls where we take
-> > protected memory buffers that can possibly lead to crashes if they are
-> > not real protected memory regions, and we have no way to ensure the
-> > memory is protected, we probably want to restrict these ioctls/modes to
-> > some high-privilege CAP_SYS_.
-> >=20
-> > For #2, that's probably something we can live with, since it's a
-> > one-shot thing. If it becomes an issue, we can even make sure we enable
-> > the FW protected-mode before the GPU starts being used for real.
-> >=20
-> > This being said, I think the problem applies outside Panthor, and it
-> > might be that the video codec can't reset the FW/HW block to switch to
-> > protected mode as easily as Panthor. =20
->=20
-> Overall the reset and reboot method is pretty ugly in my opinion.
 
-Yeah, I'm not entirely sold on this approach either, but I thought it
-was good to mention it for completeness.
+On 07/02/2025 17:19, Andrew Jones wrote:
+> The return value of check_unaligned_access_speed_all_cpus() is always
+> zero, so make the function void so we don't need to concern ourselves
+> with it. The change also allows us to tidy up
+> check_unaligned_access_all_cpus() a bit.
+> 
+> Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
+> ---
+>  arch/riscv/kernel/unaligned_access_speed.c | 15 +++++----------
+>  1 file changed, 5 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kernel/unaligned_access_speed.c
+> index 02b485dc4bc4..780f1c5f512a 100644
+> --- a/arch/riscv/kernel/unaligned_access_speed.c
+> +++ b/arch/riscv/kernel/unaligned_access_speed.c
+> @@ -218,7 +218,7 @@ static int riscv_offline_cpu(unsigned int cpu)
+>  }
+>  
+>  /* Measure unaligned access speed on all CPUs present at boot in parallel. */
+> -static int __init check_unaligned_access_speed_all_cpus(void)
+> +static void __init check_unaligned_access_speed_all_cpus(void)
+>  {
+>  	unsigned int cpu;
+>  	unsigned int cpu_count = num_possible_cpus();
+> @@ -226,7 +226,7 @@ static int __init check_unaligned_access_speed_all_cpus(void)
+>  
+>  	if (!bufs) {
+>  		pr_warn("Allocation failure, not measuring misaligned performance\n");
+> -		return 0;
+> +		return;
+>  	}
+>  
+>  	/*
+> @@ -261,12 +261,10 @@ static int __init check_unaligned_access_speed_all_cpus(void)
+>  	}
+>  
+>  	kfree(bufs);
+> -	return 0;
+>  }
+>  #else /* CONFIG_RISCV_PROBE_UNALIGNED_ACCESS */
+> -static int __init check_unaligned_access_speed_all_cpus(void)
+> +static void __init check_unaligned_access_speed_all_cpus(void)
+>  {
+> -	return 0;
+>  }
+>  #endif
+>  
+> @@ -403,10 +401,10 @@ static int __init vec_check_unaligned_access_speed_all_cpus(void *unused __alway
+>  
+>  static int __init check_unaligned_access_all_cpus(void)
+>  {
+> -	bool all_cpus_emulated;
+>  	int cpu;
+>  
+> -	all_cpus_emulated = check_unaligned_access_emulated_all_cpus();
+> +	if (!check_unaligned_access_emulated_all_cpus())
+> +		check_unaligned_access_speed_all_cpus();
+>  
+>  	if (!has_vector()) {
+>  		for_each_online_cpu(cpu)
+> @@ -417,9 +415,6 @@ static int __init check_unaligned_access_all_cpus(void)
+>  			    NULL, "vec_check_unaligned_access_speed_all_cpus");
+>  	}
+>  
+> -	if (!all_cpus_emulated)
+> -		return check_unaligned_access_speed_all_cpus();
+> -
+>  	return 0;
+>  }
+>  
 
-> But to stick
-> with the pure rationale, rebooting the SCP on MTK is much harder, since i=
-ts not
-> specific to a single HW/driver.
->=20
-> Other codecs like Samsung MFC, Venus/Iris, Chips&Media, etc. that approac=
-h seams
-> plausible, but we still can't trust the buffer, which to me is not accept=
-able.
+Hi Andrew,
 
-Unfortunately, there's so many ways this can go wrong, because we're
-not just talking about FW exec sections, but also data buffers that
-have to be dynamically allocated by userspace (suspend buffers for GPU
-contexts, textures/framebuffers, decode frames, ...). If there's no
-central component kernel-side we can refer to to check correctness, the
-only safe guard is privilege-based restriction...
+I had a similar patch in an upcoming series but you were faster !
+
+Reviewed-by: Clément Léger <cleger@rivosinc.com>
+
+Thanks,
+
+Clément
+
+
+
