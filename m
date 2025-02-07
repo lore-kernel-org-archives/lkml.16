@@ -1,78 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CABF8479;
-	Fri,  7 Feb 2025 17:51:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6ED8479;
+	Fri,  7 Feb 2025 17:52:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738950715; cv=none; b=E2T3f7AJLXL3zmBd7qkIKCrxfhbrVEjYJopbe6UOw2pBBKydVamDurYpKYVkQonejLczO6NNyQK79lrnCCwGaHJzYHDTwJcUk6oYoTgs+alaewR+LGjPteInaAwRisZYNv7N+kna2w9Vn34fzQ5P3TOzGUJInuWSA0ZcSiNy+l8=
+	t=1738950775; cv=none; b=mYxpyfL1El2qNKpDz4jCZaKFHvYxHSUT//EbZiRkQjdU9Yeif9cOQCL5y9ITfYx/GDDd4Df3CNKdiVtOtdal5y+8H8HrEeCrPnWwYawcxdxY/3xBIuWXF56N8WTPmorSY8kUFhr9iMuVmcBO2554nXX6XQrKPLTYBCVf5E2sV40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738950715; c=relaxed/simple;
-	bh=b8WBVjVkJiqfW3LmTFn95i2/AjXZK/HkOd6sFqAYCPk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MVp9fPFv8sUumJ2DZnDAypgdv1jssy5up1KfMSSKKiy1cHmgg/Z/RsucadWFvapXOnBP+ekRV52slD/zajhkohAo+GxUfUlRjlO4N5J3gJk1yxtlltI0V0Kjz0JvPW+nVwHALPgWTwhlRKqk8xshM7/x96gZTuP3tezp3EsL+58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pP9uPRWm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738950775; c=relaxed/simple;
+	bh=o7WL3rojOnZteVHaXqfHStpkFhdgk+b0ovUxVviMNXA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LF1qYheVfJN2f3NsbX1giCBWfjxQ61iP2Pb8rvCtQrIhHqGx0tb+zESp2lkKM+D8K1BhiSr9EmmPOYbCmOClQ9oAQ1DrWJWBIlnPSNPzC8Vw6gI7Nr2hsHzwis3A0hV59Gz9TFj67gPno/GC1uZoOF3Q0N1yoIZMmoqAxisg3Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G40TBqV1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pP9uPRWm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2093C4CED1;
-	Fri,  7 Feb 2025 17:51:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G40TBqV1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63D52C4CED1;
+	Fri,  7 Feb 2025 17:52:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738950714;
-	bh=b8WBVjVkJiqfW3LmTFn95i2/AjXZK/HkOd6sFqAYCPk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=pP9uPRWm5UkYlSL3AEPCKAse3p5ltmiWi/M7VgA1qKF2Wm2nfszKLo89GbT71tCwy
-	 bX+rHjIOnjOX2KKa5uAY/pyJxNMwRnGewJHERGgMMNZz5y1IgXoane7QSggKv5RJFx
-	 3tXi/blbvHhSRNofsbxY1FBuvtGMN49uXWPOujIyh5rzaTHdY0OhxccHJeBEjBnY9O
-	 tVAzIOXQie65tr8/aaOImLdwpZlaV/5nCMIUHcbN35NgVc9mKD1PoBzNv092FyGRBg
-	 EEV26+zehOqHUJGUwsx05OYD9XWYvdcqg9yi3imzwMJvLThaKLOBwvuRAAatR4uL4X
-	 fRIMYFFTinzMw==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>
-Subject: [PATCH] modpost: use strstarts() to clean up parse_source_files()
-Date: Sat,  8 Feb 2025 02:50:55 +0900
-Message-ID: <20250207175104.412158-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=k20201202; t=1738950774;
+	bh=o7WL3rojOnZteVHaXqfHStpkFhdgk+b0ovUxVviMNXA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G40TBqV1iOeetam5qpFi3xZs0wRJjQws8L0f8wwMs7uRHkjDRWs1fzI/pB4PdJgxo
+	 qpCGqWEq02xMTTrow+jjp6zEyegQ9cL5WZfavmKDK9+67ajyf4v5ZGvX05aWD3cG+1
+	 oQR2BU7Gaaw7D1dlP21wzupMrNYGnNeQ+PmRddAdqI0De8HLOxp6aazIjHtrgga0Py
+	 V9NpsPHmTNEXO1BOkwVk9J2WHEWTX3gwASbcaLwH4Y4MTvvVRGtJ/NIPE9gA0iawE5
+	 C0XXs8m3lk/E+u+7P5LyNbjG8OX1sTZ2PmlbD33flwqsdbVEHtuPNeIdgGorYXKbVh
+	 Re8DBUsIAP5ww==
+Date: Fri, 7 Feb 2025 09:52:52 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: Weinan Liu <wnliu@google.com>, indu.bhagat@oracle.com,
+	irogers@google.com, joe.lawrence@redhat.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-toolchains@vger.kernel.org, live-patching@vger.kernel.org,
+	mark.rutland@arm.com, peterz@infradead.org,
+	roman.gushchin@linux.dev, rostedt@goodmis.org, will@kernel.org
+Subject: Re: [PATCH 0/8] unwind, arm64: add sframe unwinder for kernel
+Message-ID: <20250207175252.wtsfjqnm52jkevog@jpoimboe>
+References: <mb61pwme55kuw.fsf@kernel.org>
+ <20250206150212.2485132-1-wnliu@google.com>
+ <mb61pikpm3q76.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <mb61pikpm3q76.fsf@kernel.org>
 
-No functional changes are intended.
+On Fri, Feb 07, 2025 at 12:16:29PM +0000, Puranjay Mohan wrote:
+> Weinan Liu <wnliu@google.com> writes:
+> > Thank you for reporting this issue.
+> > I just found out that Josh also intentionally uses '>' instead of '>=' for the same reason
+> > https://lore.kernel.org/lkml/20250122225257.h64ftfnorofe7cb4@jpoimboe/T/#m6d70a20ed9f5b3bbe5b24b24b8c5dcc603a79101
+> >
+> > QQ, do we need to care the stacktrace after '__noreturn' function?
+> 
+> Yes, I think we should, but others people could add more to this.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+FYI, here's how ORC handles this:
 
- scripts/mod/sumversion.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+	/*
+	 * Find the orc_entry associated with the text address.
+	 *
+	 * For a call frame (as opposed to a signal frame), state->ip points to
+	 * the instruction after the call.  That instruction's stack layout
+	 * could be different from the call instruction's layout, for example
+	 * if the call was to a noreturn function.  So get the ORC data for the
+	 * call instruction itself.
+	 */
+	orc = orc_find(state->signal ? state->ip : state->ip - 1);
 
-diff --git a/scripts/mod/sumversion.c b/scripts/mod/sumversion.c
-index e79fc40d852f..3dd28b4d0099 100644
---- a/scripts/mod/sumversion.c
-+++ b/scripts/mod/sumversion.c
-@@ -330,7 +330,7 @@ static int parse_source_files(const char *objfile, struct md4_ctx *md)
- 			line++;
- 		p = line;
- 
--		if (strncmp(line, "source_", sizeof("source_")-1) == 0) {
-+		if (strstarts(line, "source_")) {
- 			p = strrchr(line, ' ');
- 			if (!p) {
- 				warn("malformed line: %s\n", line);
-@@ -344,7 +344,7 @@ static int parse_source_files(const char *objfile, struct md4_ctx *md)
- 			}
- 			continue;
- 		}
--		if (strncmp(line, "deps_", sizeof("deps_")-1) == 0) {
-+		if (strstarts(line, "deps_")) {
- 			check_files = 1;
- 			continue;
- 		}
+and state->signal is only set for exceptions/interrupts (including
+preemption and page faults) and newly forked tasks which haven't run
+yet.
+
 -- 
-2.43.0
-
+Josh
