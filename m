@@ -1,128 +1,201 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2078.outbound.protection.outlook.com [40.107.237.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FB123C8B4
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 19:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738955313; cv=none; b=KXaXk9/mYGHnsUGSSqYlmMcH/wwXNnXIaRXhH5vHWcZXxhJtjuZfLPEQnlqYje1mz7xM6JyRF3eO5fb4vpGdUrpyg8uDd9cZpjr1ZUrGI7K55otr6eUXFqTu41n0y5Vjl8emnE188w9E8e9y2xIwpj4zRzonmuDSzPfR4/yPaSM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738955313; c=relaxed/simple;
-	bh=IRIdsHo2f6s+8U6OjOmHN3XuXiXtRoErFCPo7YRIvzY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bMzqkHgAKm/V9zeuh4qxCCV8YcJkSQ6iHc9qk3+WgY6YtyfW2AAfEXrWOR/4BN+P+48iI+D/hKa6Y0Sc/7QEK/1mw75LcFesR2VGf9yiGw9e5c2c5R+1wGVUGT6OIIG6osQOJyT2t/v4Sa/kZRR+LjgeJchq9kSDFkfa8zSKyCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SMDXcW6C; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1E023C8B4;
+	Fri,  7 Feb 2025 19:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738955327; cv=fail; b=RPLTJa3tx+S3Q4N/ud66vaqsQWhrnQQ1MHLy4+WvIv54vAkYc3KArfvj4MGf9Mb4sk58UnN3r7VH1vvZHqzYYuJIG8CLbZUH7VkfN7bfFToriSwR7kXrZeL7BAMWjOhXyiJsu7bvTs4A6EEomQmrJUq03mblHZ3r66NUCcpDGKA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738955327; c=relaxed/simple;
+	bh=5q8ZYCzHPFEPE8E7ff1VTfm6WYRM8I87UE/xsmH/h/0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZBFEXu0MOydltNBO/UEFBkvRRTYujshpl0BhNpsq1KUf3Ij0oXxS87EesMyj20Xtlw/KpIYLhMDP3fERBCZHTDBmSCIQdLdxiwmSDyPStXRgeINydxA1jYFXMzPGxrDoXThZSYEkGpBD7qMjFM0wwdjZO55p9NgoPvuCD4JBxY0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YwSYasXp; arc=fail smtp.client-ip=40.107.237.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SMDXcW6C"
-Date: Fri, 7 Feb 2025 11:08:17 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738955303;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U0hzUnHzdhCo2y6/Zd0m67AYnch7xq5CWs11SS1frqA=;
-	b=SMDXcW6C8ljTR21eTp2x0+eWZlmxR3qfLrtZHahBQAHzrBnFfq/SeM0H+atDZAAsjOQz5m
-	gXSxkybAbiEROU7ZuFuiPPPJcVIrzEGMDZeEwHZws+N1vazLNlfHjfMA51O7DjjTQyfAbD
-	sMKNHNGEWC9UK9SMaK7BSzbXZqLU/DI=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Eric Auger <eauger@redhat.com>,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-	kvmarm <kvmarm@lists.linux.dev>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	christoffer.dall@arm.com, suzuki.poulose@arm.com, will@kernel.org,
-	catalin.marinas@arm.com, coltonlewis@google.com, joey.gouly@arm.com,
-	yuzenghui@huawei.com, darren@os.amperecomputing.com,
-	vishnu@os.amperecomputing.com
-Subject: Re: [PATCH] KVM: arm64: nv: Set ISTATUS for emulated timers, If
- timer expired
-Message-ID: <Z6ZaIVtZ2k798Dn0@linux.dev>
-References: <4d443db1-85b1-4071-acd5-3187deb9cb17@redhat.com>
- <2f6b2cb1-3d32-480a-9801-9b993ae74e2d@os.amperecomputing.com>
- <152d262e-641d-4bb1-9656-a13e049d62c4@redhat.com>
- <86h661wje4.wl-maz@kernel.org>
- <4a9fbdd9-ad23-44bc-8ba5-399f08068db4@redhat.com>
- <86cygpwfy0.wl-maz@kernel.org>
- <b22d5916-8b55-43bc-a256-2136d66ad25f@redhat.com>
- <86frkptzr6.wl-maz@kernel.org>
- <Z6ZMdv8jJUvYwQzT@linux.dev>
- <86bjvdtxb5.wl-maz@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YwSYasXp"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=d8N6LNjDs6pNK1W/kSmIqosvzvxZpCEShdyj4imw+99tS7tqUhh76MUzfWKvmCDeITwbBKwZB/tXFsEoUkhfbJMWHS0VrUaBAoDcG/L6rjhMCcMlt1TkVuJYDJzH5RF+w7oUsV/Q8DVfxOQm+yNpfg4lPO1FJWYPvMQvMJ3/F7oL2ChTfDOlpFRkFvBYaS4q3AEka+RNPpFFLqN0HELiGWq8tkoZbir2W+AlGNAMDgsC7SgLMbzXFwVlapCzrJmFdaYo7QwMx3fZ9bt6bHsnH4WXc54NdZ9w6HU73k7134MSgvUfozxnDuRhx6Oxp3U2/9nizGymZUtybqgLlAlUzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=t2W5npEX9WXvbkaoJopPbgR0TRlPqDB6n1n27xXJ84c=;
+ b=O3OuPjwuvksMHDuKYkS1Lpt37VthN5swu8PUd90gMWcco9R1u61Q8PpHooXNQ/+SPEMTzRv088a8FPHhukP6orfStviFiMIWcjCNmWOlj5WWmdOhKpxCLpaHJkzRNHkF0aEbjNwLnbr+fhRzlfLtjvlX/PndSVOQ9VLG1XC47fLTSoG3O3Wxp56T1egPhHpTk/koMNXpQJJLXr2IEtz3rhvzPPbUM/TstATc83McCkg4/7GUpyfhI/SVuFuLl0BgPcvIYHul7BOQyTT+3VCAba7kOY9GAspH+HSiFnl5hknW4C7Sf191HquWcaIG51zGxEzh7f2/BEZvLzmyB6dtLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t2W5npEX9WXvbkaoJopPbgR0TRlPqDB6n1n27xXJ84c=;
+ b=YwSYasXpvEpGn/ulcZFMv9lbEm9xpyTa/05YPBJL5Ka0ONVAj1IHhT+RAwthllzCluImc7ovDxRf8J9JO7tG20KytFit1i3LmD3B1Pi8aJqg2gDjxHIYAoVRTbUgXcyfah2X74+vpfAMYm4kH53jc9x9RYgQIV1fXROJHNkmtdE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ DS7PR12MB6334.namprd12.prod.outlook.com (2603:10b6:8:95::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8422.14; Fri, 7 Feb 2025 19:08:39 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%3]) with mapi id 15.20.8422.010; Fri, 7 Feb 2025
+ 19:08:39 +0000
+Message-ID: <6749f386-4bd0-4395-9ad4-a9663fac9bc1@amd.com>
+Date: Fri, 7 Feb 2025 13:08:35 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 08/16] cxl/pci: Map CXL PCIe Root Port and Downstream
+ Switch Port RAS registers
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+ rrichter@amd.com, nathan.fontenot@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+ ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com, alucerop@amd.com
+References: <20250107143852.3692571-1-terry.bowman@amd.com>
+ <20250107143852.3692571-9-terry.bowman@amd.com>
+ <Z6W2hFI7UsEslB3U@gourry-fedora-PF4VCD3F>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <Z6W2hFI7UsEslB3U@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9PR13CA0025.namprd13.prod.outlook.com
+ (2603:10b6:806:21::30) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86bjvdtxb5.wl-maz@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|DS7PR12MB6334:EE_
+X-MS-Office365-Filtering-Correlation-Id: 012be20b-37b7-4855-f06a-08dd47aad495
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NTJGbDNTMlY3R21OL0l5Y1d5bDhSUE9pOW9naU5LbVVpUVdoRXJtbUxwZDhl?=
+ =?utf-8?B?UWhWamlMMHpJMUc4clIzWnVtTW9CZmFhcGk4U3gzWXZUdnZ6dC9ISG1OMkd2?=
+ =?utf-8?B?c09uc3dCOTFWT0FIQy80MXhmdDM0bnhaYnJ3K2VjQmZKMWRFQTRicURUSFFR?=
+ =?utf-8?B?NDRQalFCTWJiQ0FVd2pNOERaakdHbXp0RVUzUVppSmtPS2RidGpPdm1iTVZH?=
+ =?utf-8?B?Um5sOXFkOVlLRGVxR0YwMStSOUtSOC8wS1RWTFRhSDBDUDJrajFZMGQ2L2Rn?=
+ =?utf-8?B?MytBOFRHQTdHZUJyeGgxRHRZT3luUVVhUTN5NVMvTDRYQTNNVFBEMytmc2Z0?=
+ =?utf-8?B?eVptSTY4MDJoZm42WTBiM2pKb0NHR3dEVFdCbDljV0xPejdtWUJ4TmZUeHJi?=
+ =?utf-8?B?U2ZjSWlIQkdPS3drVlJiNzdXQnZ0dlBjUHQwcnEzVHJxWElmU2NzVGxHUmJt?=
+ =?utf-8?B?M3AyWmcwR0VPbDZVSmM3MzNldVFydE9DWnlQdGNTK2dJOWxYWmJZaWMvYlJK?=
+ =?utf-8?B?NFdCYjBQakg4MjJVbVEwTVQ5WWxZOU9NN2ZRV0QrbGFyUzVGV1N1UFd4TkRK?=
+ =?utf-8?B?Z0dIRUhCZENwbFc0SzFjTDZLSHhFb3dPQ1lQcHpKTWpTTTRzVm81S3p4NmFV?=
+ =?utf-8?B?UEgvN0ZTRWMzbHVKT0NBOWxDcWlib3RRY2NXOUR1MkJZd21HbXZET2oxZXhC?=
+ =?utf-8?B?RUVBamNDZGVudmV3ak5UQ0ZhL0NERkhOWXQyUzdYZjBqZWZmRzBKaWs2NTd5?=
+ =?utf-8?B?Q2oyazc0RG1YbVZJdjJ1S29VUXFyMEJsblBvY3hQV0prUDlQNUxsbUs3eXhk?=
+ =?utf-8?B?c0pDbnF1Q0hwVFo4ZmJqZldVZERSekFFM2tCZThQVzgzeW1YTEhITTIxbVpl?=
+ =?utf-8?B?SVlGNFhLTzgxZzRML254Zk1zWmdmdkJrbkVuMlVuNGtyVzZpMlR4MnBqZ1JJ?=
+ =?utf-8?B?Y0FqK2pGckhrTUlXdjlYV2Rad1IzZGkwVmdzQmVGV29UR0FySjRNSE5XV3gv?=
+ =?utf-8?B?VWtmSlFYd1B1ZWpEb21nTnp0SjlMNUJ2Q011WnpsQzBzT0tSOGkveEZLTmQy?=
+ =?utf-8?B?Rkh0bFAzdHcvMGFyVjRGbVg2TWpmQ2lXamhZeFZPMm0yNzhsTkVzaEx3cWF6?=
+ =?utf-8?B?SDhBZ04xL0J4MzdCUnozb0l3MHZQZVRqTzRubU1xQzROQlNRbnJKajVicFZ6?=
+ =?utf-8?B?RkpsTHhWMFlJSjBEZkxFUUNtZ3QrR2h2QTZTREZzYUw4TEhVcjltMWdJNCth?=
+ =?utf-8?B?MCtKaXE4ckJlbk9wbk52NWpjRENtN1o4em5FNjJ0NUtmL0FkcWVYZmFGZCsx?=
+ =?utf-8?B?MExqbGIxMjZTcjJHbGNGdXJQS0trZ3lpZ2ZQd2ZLR0dDcVNtV3A2QzV1Y0NF?=
+ =?utf-8?B?UVBseE9pNkZ4Zjc2YlAyWHpjVitaTlEvdmlMM3JlM2thQXpNZXpFNzRjL29M?=
+ =?utf-8?B?L1pIcmRVcEtPbC8yL25WY3hzNnpZMEhUMXNoWUQzT3pVZitjZy9DTDZoQVNz?=
+ =?utf-8?B?eTQ4Y1pkbTE3V0dQVFJKVm1KWlp0WmUrTm5ib0I5U2h5ZVVzVjdocTV1YmZy?=
+ =?utf-8?B?VnRidThjZjg1L2RlQkRqakRDeGxiUWp3QzZYQ3grZnpOU1BaRmFNamxXWnkw?=
+ =?utf-8?B?NzdvYTBRNzNUM2h5QS8vZGhSNHNCWEZ4c1paS0UzeGs1WVIxWXE5MTJ2TGs0?=
+ =?utf-8?B?OUM4Mk5QN0dNdVdsaXdWeU5LSnl3cmJ5UkR6WG9GWXhTZk1vK3phTE9seVhn?=
+ =?utf-8?B?ZFpNYjFacFJ4aXdkYmJYVFhJRGxSZ2ppY1FnaXdVK3NHbXlmMXpUcDJZSHJT?=
+ =?utf-8?B?YVhoM05rMzNQTm9WaVNYWlVSSzZ2TCtZWWJhekwrbTZqNmw0K3U1NVlmYk5H?=
+ =?utf-8?Q?ygxY7at7gjz8H?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UXdIQVdpcUNOUDVHRmU5ZkVyRnJ6aEVWVmtXWnRsMTNGeU5hM2JlMzBtQm5t?=
+ =?utf-8?B?YnRONWZEdm1jUk1SMTA1U2JYRWdGclJUMUlHVDUvNENadmhhOE1iVkV3VzFI?=
+ =?utf-8?B?SW96ZjFJemsvS2h5Y2J0Tm5ZQXJTN2QwZWdxaWExUmdBNDI2MDd5bkVWb0k3?=
+ =?utf-8?B?VVVia2lscW9TWkFGTi9YN0c0bDdkZ0Q3dE5xZnh2VEhybmorY0tKQUV0ZXU5?=
+ =?utf-8?B?c3BSVjNvVXloalFIbzJWUE12Y01jNFE0ZEZpNm8vMk5QbHFaekdhMFkyeVFr?=
+ =?utf-8?B?b0hkWmoyZllDOVoraDRkZnpSNk8rVGIwelV0bFJYc2tXMmorVmkwYU8yODhr?=
+ =?utf-8?B?bllrVStoOWtQMXdxenQ3NlMzNFZ1RlhxZ2MrZUZXVUpRL3RzaTROTURWTDNu?=
+ =?utf-8?B?MjVTQUJZSjRLSEhOVTgyTmxsNDM4eWorUUVnMEpNQ1hOaU5PNHp3ZUxBTXpr?=
+ =?utf-8?B?L1VFTmZWOUFzUnlzSGJOaTZranJHSWcyZC9CdlE3eE9zU0tjTFNQcGFUOVZZ?=
+ =?utf-8?B?L3M2ZE1sWjNjWXMxalRISVVrQVlvOGI1d0ZmS1NSSm5VWGQ5Sk5VMlg4azRD?=
+ =?utf-8?B?L1duK2NKcklucS80eDJsZVdJQkdoaTNWWnpVTzhocXBpUHNVcGlKM0dwQVpG?=
+ =?utf-8?B?Q3hZdGtzYng5SGJXMm9aTGZ3TDV4Rk0zbnl6N3ZPTXZ6eCt3eGRQdXNaeUdB?=
+ =?utf-8?B?Vm9vNnRCQi8zNTkzYmM5cjlrMWtoVU1hVTlDd296K09sOVYzc0lEMnBJS1dz?=
+ =?utf-8?B?Tk9jYXBJRWRqU3owdk1ZamxkZUdad1R4TEIwYWxlZWF0NjVNN2Z5dFN3b0F3?=
+ =?utf-8?B?cHNuT1QzWDlRRUNDajdaaWg5cE9ybnVxMjBRSDBxdHV0K3F0YkN4ZnFhK25Y?=
+ =?utf-8?B?YlowaDMzS3o5UzhObUV0dEk2dS9EL0pGNlFJU3AxVEpBbDN1U3RCcEpGa2gr?=
+ =?utf-8?B?d1JBbWRXZ3MxWURmMUlERnNFRHExWkNyeEt1dGFrRjlUMHBzTVBpRTJzb3Y4?=
+ =?utf-8?B?V0haV3JIOEtTNitwQnhJOSt5VmFHbXV2SzdqNTlCM3VhWk9tMkNsWGNlOElj?=
+ =?utf-8?B?SHR5RzdtMERxeWRwUDRhbjdNdkVNQ3NIdGh4VitvZ2ptam14UERUUEF2a1FU?=
+ =?utf-8?B?dEM4eHpJNjRiUExOTmlrakNUV2wwa1loa2hxYzZPS3RxTXVYbXdGZ3lVcmNj?=
+ =?utf-8?B?UnpwdyttbVlJK0tuOUNaQnRRc1FCZUtpSlJWNko5enU2R2dYMFRvU3o3MURz?=
+ =?utf-8?B?SEJOVlFaY0FvdjZFUVhCK2VTNHZJU0paY2dvbVNuQmJ5a2hsTjZFOThEN29O?=
+ =?utf-8?B?UFRTOW1aNVlFQ2drUTJHQWNVVkFhTFFGam8zYXpqWU9MZmtmS1dwUmx5Zm11?=
+ =?utf-8?B?TWhnc2hacHBxSVpOL3prVEdmQ0tybTJRK1QrWUwrOW1Oa3NhQ0dBWGx2T3lQ?=
+ =?utf-8?B?U1JIMkN3TDVINmVnSDVWcy84M3dxai80RDVtSDRSLzZ4VEtHNlpwOHZHWFo1?=
+ =?utf-8?B?VlJ6U2xzQk0zdUFFY1FFLzlGbENSZFg4WXR4NnRJbVFQMVdiRXhEL2g2eENY?=
+ =?utf-8?B?ZjI2cmxaUzlEK01pTnY0ejJmeVJJSVNtYW1iVjdkYklLVmZaWTZMeGF6RWVq?=
+ =?utf-8?B?VlJtU1lHWmh0TWh4bVVva3BTQWIxUi9QRFFvdUVYVGpiNVNaSEJPcTd5VUFz?=
+ =?utf-8?B?YmtMbDZvV2puYlh5dWR6TGdrbGpNb00vbG1kKzJucnIwazJpNUNJV2JEVFlF?=
+ =?utf-8?B?aWtFV1AxYW5WQUpEZWxjakRXaXhKQTJkMG5YUEZUWGdYemJEQzVRcSt3SG1V?=
+ =?utf-8?B?TG9WZVlDSnV6WFJvdHR1MEZOcEJ3L1BYRXhYN0RNSW8zeFBVQmpiT0VNVHZs?=
+ =?utf-8?B?WU1SSkdxZFd4R3hvbUFiMnl0OFVvK1VPMWkyVTllakNVUHBMVFZXMFpOVXFa?=
+ =?utf-8?B?K2Ezb0FyNW5ranZNeDlmK3lqZktHa2h3ckE2TVpRSzQvOUIwc2N3Zzc1Y1Av?=
+ =?utf-8?B?WDFqRWhkNlUrVFBIR1cySERNbFZ3NUVFTkdFcHhjZUtoRWl2aVAyck1yWWQw?=
+ =?utf-8?B?cEdSS29QMFZmQ1E5OGdqWG9NUU1hRXA0eGhhaHNDd1Z2ZkNDWWxCSUNuQWFa?=
+ =?utf-8?Q?ktb+fjfp+5x6l54n/fXuZd9Eo?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 012be20b-37b7-4855-f06a-08dd47aad495
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 19:08:39.4778
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: e8rYqwgqqNWrXjVubAT1efymNzJkgX75rQJoGY/FlG6yReiG66kklDmWZ4s3UiI8V6A3yDWJXvlrP90ZzvqboA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6334
 
-On Fri, Feb 07, 2025 at 06:38:22PM +0000, Marc Zyngier wrote:
-> On Fri, 07 Feb 2025 18:09:58 +0000,
-> Oliver Upton <oliver.upton@linux.dev> wrote:
-> > 
-> > Hey,
-> > 
-> > On Fri, Feb 07, 2025 at 05:45:33PM +0000, Marc Zyngier wrote:
-> > > I found at least one issue that could fail the migration. Before the
-> > > VM starts running, we limit the feature set to the subset we actually
-> > > support with NV.
-> > > 
-> > > By doing this, we also change the value of IDreg fields that are not
-> > > writable, because they describe features that we don't support.
-> > > Obviously, that fails on restore.
-> > > 
-> > > I need to have a think...
-> > 
-> > We spoke about this a while ago (and I forgot til now), but I was
-> > wondering if we could use vCPU feature flags to describe NV, including
-> > the selection between FEAT_E2H0 and FEAT_VHE.
-> > 
-> > I think this might match userspace expectations a bit more closely where
-> > the state of the ID registers after init gives the actual feature set
-> > supported by the VM.
-> 
-> I'm not sure that's enough. Let me give you an example:
-> 
-> My host has FEAT_XNX, described in ID_AA64MMFR1_EL1.XNX. For whatever
-> reason, we don't allow this field to be written to, even out of NV
-> context. This is odd, because for an EL1 VM, this field means nothing
-> at all.
-> 
-> However, we don't yet support FEAT_XNX with NV (it requires some extra
-> surgery in the S2 walker, in the S2 shadowing code and in AT).
-> 
-> How would you manage this field if you had a vcpu flag saying E2H0 or
-> not? I don't think it helps, at least not in that particular case. It
-> may help for some things, but not all.
-> 
-> It feels that we need to define the field limit (and what is writable
-> or not) based on the NV/!NV support, and maybe E2H0/VHE as well.
 
-I think we're both aiming in the right direction, I just didn't make my
-point clear.
 
-The ID registers we make visible to userspace after KVM_ARM_VCPU_INIT
-*must* describe a feature set we will actually honor for the VM. No late
-masking of features (i.e. first KVM_RUN), since it pretty much
-guarantees userspace won't be able to save/restore correctly.
-
-While we describe NV up front, we've been talking about allowing
-userspace to make the E2H0 v. VHE selection through the ID registers as
-well. My suggestion is that we have userspace select the flavor of NV
-it wants (E2H0 v. VHE) up front and completely nuke from orbit the idea
-of late feature fixups.
-
-This would solve your example of XNX, as we'd apply NV enforcement early
-and not expose the feature. Same would also hold for VHE-only features,
-such as recursive NV.
-
-Hopefully I made more sense this time around :)
-
--- 
-Thanks,
-Oliver
+On 2/7/2025 1:30 AM, Gregory Price wrote:
+> On Tue, Jan 07, 2025 at 08:38:44AM -0600, Terry Bowman wrote:
+>> +static bool dev_is_cxl_pci(struct device *dev, u32 pcie_type)
+>> +{
+>> +	struct pci_dev *pdev;
+>> +
+>> +	if (!dev || !dev_is_pci(dev))
+>> +		return false;
+>> +
+>> +	pdev = to_pci_dev(dev);
+>> +
+>> +	return (pci_pcie_type(pdev) == pcie_type);
+>> +}
+>> +
+>> +static void cxl_init_ep_ports_aer(struct cxl_ep *ep)
+>> +{
+>> +	struct cxl_dport *dport = ep->dport;
+>> +
+>> +	if (dport) {
+>> +		struct device *dport_dev = dport->dport_dev;
+>> +
+>> +		if (dev_is_cxl_pci(dport_dev, PCI_EXP_TYPE_DOWNSTREAM) ||
+>> +		    dev_is_cxl_pci(dport_dev, PCI_EXP_TYPE_ROOT_PORT))
+> Mostly an observation - this kind of comparison seems to be coming up
+> more.  Wonder if an explicit set of APIs for these checks would be worth
+> it to clean up the 3 or 4 different comparison variants i've seen.
+>
+> Either way
+>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+>
+> ~Gregory
+Do you recommend moving dev_is_cxl_pci() to pci library as is? Thanks for 'Reviewed-by:`. Terry
