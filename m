@@ -1,138 +1,177 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723AE1662EF
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 23:01:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8929D42069;
+	Fri,  7 Feb 2025 23:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738969268; cv=none; b=bC8eJvTY2/Z4+LnMd4BYD+monp65uDBOjrF237t+FKPLSgh2DPYfTEtoVM1yP3Xf0JDTTcTu0f/0tiFDZ/Sxdx/VCDSV2id9LSWgcvEVj6t61mKXH8M+oHwLcz8i2RIAoFuFV/AIzyShLKromcFLGXmaWOXzR8vQyTUpDUXLQUY=
+	t=1738969696; cv=none; b=NvBpHF+LFYw3tDU1oaS3mW2byDeDHqu0DkJMnwnH9a0j087RzUoEux1fj9a4hfUUhE0veaR4PvK4aZo92iG6E/8xwy8YjJmtVs+OfPOCc4CsLtlkaAdaLXlfJFyrQ7d9BF5C8+pJLXdZJYnZ+0/aBkTcOS6LWOuCGaTxMtPEYK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738969268; c=relaxed/simple;
-	bh=/YVBbjgdStsucstPuiF22JUohyLUdQTtDMIZoiQQhPQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sC/0MUhvdfiWP1tQxtx/kRGeAvM73NOLT3lWPs11dn37tkwQEjYZPw4ExTvpvV2W2XIT1dHrem18c3vklPDdbU377ZLrn1P9uBQnpMZd2L9SJAn5AaDnbnjOe3q4zRE1woea8fDOF8dYrq4xRkNBkDYkQu5JPCJQnDpgTKZRr9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PM9pkRTK; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1738969696; c=relaxed/simple;
+	bh=Oc7RiMoWI7yb2Dpzra2Br0c8/SWdMxeBDwF0F1BCyb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d5SJjWlvcQjK/henby6uktvjtI78h78ZgwV1GwPZJZsPRJLDl/XcCn+YBv03XVW5rNpNpVksgrhDrgsIKVVd0/rDue7eXhbUVPLRA3XEMmiIwYi+smt7iRXObvFdgG8uF+ctFxi6ctPu2WC0jGNGpt9ggM4mni8pR1OleD/g814=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IubVekm8; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PM9pkRTK"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d13fe99d03so43065ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 15:01:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1738969265; x=1739574065; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FfMOIAC27pniiagSZ/FhquHIbbeUldDht0MiRiI5kLc=;
-        b=PM9pkRTKmzct7wCtLLKVXw6pY9UB6NrSKre97aZUPgrthxeChOu9jMI8ypiq3wCUuo
-         O6z7sqZFX49xR2wV2C7kjC1lSfs9UkZ8ZOyKyw3zQZqgYVpP9fVks+DZbB4E/bFXTvF2
-         McCVd9z0C+Oa+GlFNuQI79irITfmSDuLWn9Om4lpRYTDqwr9yyk3pqTCmq5Inxc8nqZt
-         L7/rhRkc+CsmemvUTnBg7hM8xSAz//7uvpFDiy6DBIndscLCpBdQAYA9qNddRu1BCUCg
-         5cJ6EXPcb16rLDgoEAdJNuHbjQtOBN1asWwmR9o39urRP13UsnUkbGl/M2sO68+ik6Vt
-         8/KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738969265; x=1739574065;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FfMOIAC27pniiagSZ/FhquHIbbeUldDht0MiRiI5kLc=;
-        b=tQL2TeTL5U8KrCIL3la5ydGN+t/yh6brTZgzJuM9cPUeOG4bT5t29Lv7eB/JAaKyT6
-         p8wQJzpIGWse6qABmf6ccvdceXcWDKHS4+S7YXlpiSlcbJaW/LfC/QDnlqzWckFbB4LF
-         RVfBHgvutqK+d6n1iW6OmlkM7YTnQdEtnSnjye33Bk0v3qC6QqX73eQ50QWihw7H0DUs
-         3OQxI+gnJcXXwFkbu+Qsm0T76RJX9wjt3j1Lolo5289qsdIJ8nEmXhsmKjOQY4K0JBgj
-         xOIGFf25c0tlKFLxjwpDFfWKwS1qAcUcV4uAMFlYLZgGG7Lhwt2WXPCDtWloV4x7rVtQ
-         pGYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxw3sTrFGlm3f47WH4OBORb3mnl4bzAzLUjux/xtyjRPh2QwkV0zUa1ZeAvtTkpIajSpM3mLe4wq7kqOA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5uWPorB1eu9ALCu1NwdawppgKxlfaL4sUOJNw5TVPIbFJB9JF
-	SE5sdVDc7bEEkor0o50i3fM2ik2k6S41782lNOHwKSlO9Dk7TU0A1PmFXf6Mq0HCirnV8DYUWOe
-	MbbLTfltadF+h0vy6UHhg/hCJeShCNkeqdvDU
-X-Gm-Gg: ASbGncvxQShNK8fKy3fUVV5OGYLdRi7DxdoXQAAZpKtoYWkY93je56feNS+u8IwFusM
-	fsrFIYpNJ3XB0fCakbOOdengxZq9MuPDaBBC/GPo9jJ6AFBUpOp42lUaE2K+UZv1n2RNKv8mu1A
-	==
-X-Google-Smtp-Source: AGHT+IEQavM44VaMiVTdLFXb3q3Pnsi9/ocZob5iEs7I2kOf0D7P/rqPiNB+EnCuylIv+Aq8KgoHLfUMvDDHSv1zloU=
-X-Received: by 2002:a05:6e02:ca5:b0:3bc:bd17:d68e with SMTP id
- e9e14a558f8ab-3d14f0f95bamr163065ab.21.1738969265248; Fri, 07 Feb 2025
- 15:01:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IubVekm8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738969694; x=1770505694;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Oc7RiMoWI7yb2Dpzra2Br0c8/SWdMxeBDwF0F1BCyb8=;
+  b=IubVekm82EAycqEJUEGOt0lZKB4PXE9JQgS0WuOiQF8uJg473jv1H8F7
+   aEqW9Bv2niU+hTbFN8zwlLCesJ2eBXpnYuvlOQQhaqJHS+hxX9RUTnd+D
+   BVcPEVbpahLyfWn50pLiwS+fytE5ab4WoRq+sDGMKwmUOx8ircGefnq5+
+   XDwjj24T8lgO3rKMz7UZRv1K9UOGBJCwXfyQR8DEw3CUfsJwcULDw2BWa
+   kKY2cpM4KvY0a3v433wdIAQdfKSef5G8/nnN4nuD8jBBmeV/9PAmlyGCK
+   UbLc3r7kn+QrSSbAd2/Q/RE9WBVqO2+kdNcrsw4sbi2h/UNWRDLSQYFEn
+   A==;
+X-CSE-ConnectionGUID: U6lJF+J/TuyDIQsh0/JPuA==
+X-CSE-MsgGUID: BtUWdYXRQO2sXTb4i04frQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="57041247"
+X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
+   d="scan'208";a="57041247"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 15:08:13 -0800
+X-CSE-ConnectionGUID: Ticm+k70TgqMdmnjmXTvSA==
+X-CSE-MsgGUID: 4mLKRo8+S1+cdz+jELcYUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="116862702"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.111.82])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 15:08:13 -0800
+Date: Fri, 7 Feb 2025 15:08:11 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Robert Richter <rrichter@amd.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 05/18] cxl: Introduce parent_port_of() helper
+Message-ID: <Z6aSW8N4yULozrDE@aschofie-mobl2.lan>
+References: <20250207153753.418849-1-rrichter@amd.com>
+ <20250207153753.418849-6-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207185154.824433-1-irogers@google.com> <20250207185154.824433-4-irogers@google.com>
- <0990a674-d8ab-4abc-a904-299513773f90@linux.intel.com>
-In-Reply-To: <0990a674-d8ab-4abc-a904-299513773f90@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 7 Feb 2025 15:00:54 -0800
-X-Gm-Features: AWEUYZkjpQVxy9CeNCt8XEEaPoctFrZdno6hJO3kJVCcgAYPbRPLwWzPi6nRiIc
-Message-ID: <CAP-5=fXCtWZicFAk+d8KSWkNDNREjk-Djz0jh=EZXX1f29Dd1w@mail.gmail.com>
-Subject: Re: [PATCH v7 03/24] perf vendor events: Add Arrowlake events/metrics
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>, 
-	Michael Petlan <mpetlan@redhat.com>, Thomas Falcon <thomas.falcon@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207153753.418849-6-rrichter@amd.com>
 
-On Fri, Feb 7, 2025 at 12:44=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
->
-> On 2025-02-07 1:51 p.m., Ian Rogers wrote:
-> > +    {
-> > +        "BriefDescription": "Percentage of time that the core is stall=
-ed due to a TPAUSE or UMWAIT instruction",
-> > +        "MetricExpr": "100 * cpu_atom@SERIALIZATION.C01_MS_SCB@ / (8 *=
- cpu_atom@CPU_CLK_UNHALTED.CORE@)",
-> > +        "MetricName": "tma_info_serialization _%_tpause_cycles",
->
-> It doesn't seem a correct MetricName. A convert script bug?
+On Fri, Feb 07, 2025 at 04:37:40PM +0100, Robert Richter wrote:
+> Often a parent port must be determined. Introduce the parent_port_of()
+> helper function for this.
 
-They come from the E-core_TMA_Metrics.csv line 91:
-https://github.com/captain5050/perfmon/blob/main/E-core_TMA_Metrics.csv
-Info.Serialization %_Tpause_Cycles 100 * SERIALIZATION.C01_MS_SCB /
-#SLOTS 100 * SERIALIZATION.C01_MS_SCB / #SLOTS 100 *
-SERIALIZATION.C01_MS_SCB / #SLOTS 100 * SERIALIZATION.C01_MS_SCB /
-#SLOTS Percentage of time that the core is stalled due to a TPAUSE or
-UMWAIT instruction
+Would this be simpler with less touchpoints:
 
-The % works okay in the metric name but we could swap it if you want.
+Make next_port() available to the port driver by moving it from
+region.c to port.c. Note that simply exporting from the region
+driver is not an option since region driver is not guaranteed
+to be configured.
 
-Thanks,
-Ian
+(Basically I'm suggesting keep the name and touch region.c less)
 
-> > +        "Unit": "cpu_atom"
-> > +    },diff --git a/tools/perf/pmu-events/arch/x86/arrowlake/uncore-oth=
-er.json b/tools/perf/pmu-events/arch/x86/arrowlake/uncore-other.json
-> > new file mode 100644
-> > index 000000000000..1ac5b5ef8094
-> > --- /dev/null
-> > +++ b/tools/perf/pmu-events/arch/x86/arrowlake/uncore-other.json
-> > @@ -0,0 +1,10 @@
-> > +[
-> > +    {
-> > +        "BriefDescription": "This 48-bit fixed counter counts the UCLK=
- cycles.",
-> > +        "Counter": "FIXED",
-> > +        "EventCode": "0xff",
-> > +        "EventName": "UNC_CLOCK.SOCKET",
-> > +        "PerPkg": "1",
-> > +        "Unit": "CLOCK"
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/cxl/core/port.c   | 15 +++++++++------
+>  drivers/cxl/core/region.c | 11 ++---------
+>  drivers/cxl/cxl.h         |  1 +
+>  3 files changed, 12 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index f9501a16b390..d19930c009ce 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -606,17 +606,20 @@ struct cxl_port *to_cxl_port(const struct device *dev)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(to_cxl_port, "CXL");
+>  
+> +struct cxl_port *parent_port_of(struct cxl_port *port)
+> +{
+> +	if (!port || !port->parent_dport)
+> +		return NULL;
+> +	return port->parent_dport->port;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(parent_port_of, "CXL");
+> +
+>  static void unregister_port(void *_port)
+>  {
+>  	struct cxl_port *port = _port;
+> -	struct cxl_port *parent;
+> +	struct cxl_port *parent = parent_port_of(port);
+>  	struct device *lock_dev;
+>  
+> -	if (is_cxl_root(port))
+> -		parent = NULL;
+> -	else
+> -		parent = to_cxl_port(port->dev.parent);
+> -
+>  	/*
+>  	 * CXL root port's and the first level of ports are unregistered
+>  	 * under the platform firmware device lock, all other ports are
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 5d252dfae138..54afdb0fa61c 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1734,13 +1734,6 @@ static int cmp_interleave_pos(const void *a, const void *b)
+>  	return cxled_a->pos - cxled_b->pos;
 >
-> On MTL and ARL, the unit should be CNCU.
-> Thomas will propose a convertor script patch to fix it.
->
-> Thanks,
-> Kan
->
-> > +    }
-> > +]
->
+}
+>  
+> -static struct cxl_port *next_port(struct cxl_port *port)
+> -{
+> -	if (!port->parent_dport)
+> -		return NULL;
+> -	return port->parent_dport->port;
+> -}
+> -
+>  static int match_switch_decoder_by_range(struct device *dev,
+>  					 const void *data)
+>  {
+> @@ -1767,7 +1760,7 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+>  	struct device *dev;
+>  	int rc = -ENXIO;
+>  
+> -	parent = next_port(port);
+> +	parent = parent_port_of(port);
+>  	if (!parent)
+>  		return rc;
+>  
+> @@ -1847,7 +1840,7 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled)
+>  	 */
+>  
+>  	/* Iterate from endpoint to root_port refining the position */
+> -	for (iter = port; iter; iter = next_port(iter)) {
+> +	for (iter = port; iter; iter = parent_port_of(iter)) {
+>  		if (is_cxl_root(iter))
+>  			break;
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 6baec4ba9141..0d7aff8b97b3 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -721,6 +721,7 @@ static inline bool is_cxl_root(struct cxl_port *port)
+>  int cxl_num_decoders_committed(struct cxl_port *port);
+>  bool is_cxl_port(const struct device *dev);
+>  struct cxl_port *to_cxl_port(const struct device *dev);
+> +struct cxl_port *parent_port_of(struct cxl_port *port);
+>  void cxl_port_commit_reap(struct cxl_decoder *cxld);
+>  struct pci_bus;
+>  int devm_cxl_register_pci_bus(struct device *host, struct device *uport_dev,
+> -- 
+> 2.39.5
+> 
