@@ -1,191 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530EF18FDD5
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 10:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7B4718FDD5;
+	Fri,  7 Feb 2025 10:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738925814; cv=none; b=SXDpOi7V5YqYwoizFv4/QUknkiOhgjFr3zrygQfS3Z5zIaWd77MktYASnwUbzLJUkhf9BZ+0gUDszR0BnjjNzyFTw3HimiMTrAE/5BlEtCSCftON9YuiWxwAmq1sLB9pk4cJFkNjauk9lpiWfzx9yDUYNvOReD0aE1CE0P1me38=
+	t=1738925977; cv=none; b=DZDnGxFx5BGQrtwbQ37OKgopKOL3ymBXxkb7Ec5no78RUvQ3A1cU6sCWGcBSYhA/z92o5EmYxNzNgpkZFEKR/eQrzDlSbO8PPKldTRxjO2065zSyZg0VPyNIO6iPEswT/U/sMQW8e/Vly9/j4JLMYOz0CJmqAwW7FUbbfkU5A7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738925814; c=relaxed/simple;
-	bh=cAbcrUr3iHWB2z0ft4FDiFBvw4ju9eArjwIjp8c2MwM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=PttDhSx6bWMFbYeYNZWWwB4kbcA6FjNufzaqvYNhOfi9Dfyq0DUekEHxUIAaCxae/CVXliAe6BRXY8v3tntBgFY+hGp6oeS3gzcefo6jp7GyP94tedhZXqmu79pLoKu1y1wSoKmUIqmwxdtloignkvjH1pivExCxkGK7BRq6+uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HyJ8lyyb; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738925977; c=relaxed/simple;
+	bh=09GEDZOBjJebNIp9BxeX+G4r6l6zI1/5kwZj27WKTCE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=BF7tl/n48ct5Jo7YCGaYw3PE8SG86jyN5I/HpSVIfuEDfgUU0luC5VRR5B5Y5zOT3IBiDV6R9+mII3g3undUBxQkQSXnEKGtSWTlrpoqNZJ77bBpZ7VTOoWbVIXi3s9r5hJOMBb+hu9AsZI96ldb7sNT4sMjzj3RcwlR8OQBd+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jo+mV9y8; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HyJ8lyyb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738925812; x=1770461812;
-  h=date:from:to:cc:subject:message-id;
-  bh=cAbcrUr3iHWB2z0ft4FDiFBvw4ju9eArjwIjp8c2MwM=;
-  b=HyJ8lyybNeiRJZsXQfNd7sHtNqq0f8XEo3UvD8Q1SjnWl2FqtYdNRA6j
-   QOs6vFdsS3WyWpqNYl4bB/qP0JFIEfZ5dmG93mQwJZrefOfUZOtPZXM7y
-   64fbD7Adpl62kOW+54cfRIVeNt/qTc4LvCH9rcIynDWyG0Yltg+hDQlba
-   nMC5wnHpm+DGVAUEeQ342TZ+Sn+xO5nq5evmBktP9fjDWeIvrCySLYz3L
-   p0ilrG0RcXQPoW3IIcvI3ksvZA1fsZ46S20vove3Y7C0RKkHgG5YZjbyN
-   D39Slhfg7oJoOGnE3Abpqj6ubWZEv+GJCi5msseM0kppXApWf6eUBvWgi
-   g==;
-X-CSE-ConnectionGUID: efHigRK4SJqRI2fDX35tXg==
-X-CSE-MsgGUID: guVfiB6nRQCSC7Y+39StVw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39457690"
-X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
-   d="scan'208";a="39457690"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 02:56:51 -0800
-X-CSE-ConnectionGUID: KAy4M2reTlWzjZz//1PQHQ==
-X-CSE-MsgGUID: x/k4PnZyTfyLWAhqZU7yow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
-   d="scan'208";a="111418755"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 07 Feb 2025 02:56:50 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tgM2S-000yCV-2O;
-	Fri, 07 Feb 2025 10:56:48 +0000
-Date: Fri, 07 Feb 2025 18:56:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [paulmck-rcu:dev.2025.02.05b] BUILD SUCCESS
- 1ceda59f0cb3c09cd7e73511a86e40013d6d1396
-Message-ID: <202502071825.p1hPbAGX-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jo+mV9y8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=+gT7krOuH2+RgpEMb8xy3/JNXgH+wrXNxHLDB4T4b+o=;
+	b=jo+mV9y8F1LxRJOs/GpvpUI9smsOopaATolG8vi/wF2CbEqSdvO6eGBBaEXK5Z
+	LfD9TdV4tbYzJY//hBVS12oyEWmVc5tYoj6+0nnZJJRRQ1M5sxePHZ3iRmmcudtr
+	dFR+Wpzn5+P/AM1DojO+29nRtJvBedGxhkXCawEK016Q4=
+Received: from [192.168.243.52] (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD3v7Bu56VnFvRUKQ--.7416S2;
+	Fri, 07 Feb 2025 18:58:55 +0800 (CST)
+Message-ID: <acf18b4c-8ad5-48ea-9767-5383b138ca74@163.com>
+Date: Fri, 7 Feb 2025 18:58:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: cadence: Fix sending message with data or without
+ data
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org
+Cc: kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+ bhelgaas@google.com, bwawrzyn@cisco.com, cassel@kernel.org,
+ wojciech.jasko-EXT@continental-corporation.com, a-verma1@ti.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
+References: <20250207103101.31287-1-18255117159@163.com>
+Content-Language: en-US
+In-Reply-To: <20250207103101.31287-1-18255117159@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wD3v7Bu56VnFvRUKQ--.7416S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Kw1UCFyfJrWkJrWfCFWUCFg_yoW8uF1fpF
+	W8Ga4Sy3WIqrWavan5Za1UAF13J3Z3tF9rX3yv934fuFnru34UGr129Fy5GFW7GrWkWr1x
+	A3WDtF9rKF4fAFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UJ73kUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxnso2el4eZdYwAAs2
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2025.02.05b
-branch HEAD: 1ceda59f0cb3c09cd7e73511a86e40013d6d1396  fixup! printk: Flush console log from kernel_power_off()
 
-elapsed time: 1443m
 
-configs tested: 114
-configs skipped: 4
+On 2025/2/7 18:31, Hans Zhang wrote:
+> From: "hans.zhang" <hans.zhang@cixtech.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I'm so sorry, guys.
+The correct email address should be: Hans Zhang <18255117159@163.com>
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              alldefconfig    gcc-13.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                                 defconfig    gcc-13.2.0
-arc                   randconfig-001-20250206    gcc-13.2.0
-arc                   randconfig-002-20250206    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                     davinci_all_defconfig    clang-21
-arm                      jornada720_defconfig    clang-21
-arm                       netwinder_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250206    clang-21
-arm                   randconfig-002-20250206    clang-19
-arm                   randconfig-003-20250206    clang-21
-arm                   randconfig-004-20250206    gcc-14.2.0
-arm                         s5pv210_defconfig    gcc-14.2.0
-arm64                            alldefconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250206    clang-21
-arm64                 randconfig-002-20250206    clang-21
-arm64                 randconfig-003-20250206    clang-15
-arm64                 randconfig-004-20250206    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250206    gcc-14.2.0
-csky                  randconfig-002-20250206    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon               randconfig-001-20250206    clang-21
-hexagon               randconfig-002-20250206    clang-18
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250206    clang-19
-i386        buildonly-randconfig-002-20250206    gcc-12
-i386        buildonly-randconfig-003-20250206    clang-19
-i386        buildonly-randconfig-004-20250206    clang-19
-i386        buildonly-randconfig-005-20250206    clang-19
-i386        buildonly-randconfig-006-20250206    gcc-12
-i386                                defconfig    clang-19
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250206    gcc-14.2.0
-loongarch             randconfig-002-20250206    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                         bigsur_defconfig    gcc-14.2.0
-mips                       bmips_be_defconfig    gcc-14.2.0
-mips                           ip32_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250206    gcc-14.2.0
-nios2                 randconfig-002-20250206    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250206    gcc-14.2.0
-parisc                randconfig-002-20250206    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                        fsp2_defconfig    gcc-14.2.0
-powerpc                    ge_imp3a_defconfig    gcc-14.2.0
-powerpc                     kmeter1_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250206    clang-21
-powerpc               randconfig-002-20250206    clang-19
-powerpc               randconfig-003-20250206    clang-21
-powerpc64             randconfig-001-20250206    clang-15
-powerpc64             randconfig-002-20250206    clang-17
-powerpc64             randconfig-003-20250206    clang-19
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250206    clang-19
-riscv                 randconfig-002-20250206    clang-17
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250206    clang-21
-s390                  randconfig-002-20250206    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                        apsh4ad0a_defconfig    gcc-14.2.0
-sh                          r7780mp_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250206    gcc-14.2.0
-sh                    randconfig-002-20250206    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250206    gcc-14.2.0
-sparc                 randconfig-002-20250206    gcc-14.2.0
-sparc64               randconfig-001-20250206    gcc-14.2.0
-sparc64               randconfig-002-20250206    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250206    clang-15
-um                    randconfig-002-20250206    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250206    clang-19
-x86_64      buildonly-randconfig-002-20250206    clang-19
-x86_64      buildonly-randconfig-003-20250206    clang-19
-x86_64      buildonly-randconfig-004-20250206    clang-19
-x86_64      buildonly-randconfig-005-20250206    clang-19
-x86_64      buildonly-randconfig-006-20250206    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250206    gcc-14.2.0
-xtensa                randconfig-002-20250206    gcc-14.2.0
+> View from cdns document cdn_pcie_gen4_hpa_axi_ips_ug_v1.04.pdf.
+> In section 9.1.7.1 AXI Subordinate to PCIe Address Translation
+> Registers below:
+> 
+> axi_s_awaddr bits 16 is 1 for MSG with data and 0 for MSG without data.
+> 
+> Signed-off-by: hans.zhang <hans.zhang@cixtech.com>
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+The correct Signed-off should be: Hans Zhang <18255117159@163.com>
+
+> ---
+>   drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 +--
+>   drivers/pci/controller/cadence/pcie-cadence.h    | 2 +-
+>   2 files changed, 2 insertions(+), 3 deletions(-)
+> 
+> 
+> base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> index e0cc4560dfde..0bf4cde34f51 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -352,8 +352,7 @@ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
+>   	spin_unlock_irqrestore(&ep->lock, flags);
+>   
+>   	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(MSG_ROUTING_LOCAL) |
+> -		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code) |
+> -		 CDNS_PCIE_MSG_NO_DATA;
+> +		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code);
+>   	writel(0, ep->irq_cpu_addr + offset);
+>   }
+>   
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index f5eeff834ec1..39ee9945c903 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -246,7 +246,7 @@ struct cdns_pcie_rp_ib_bar {
+>   #define CDNS_PCIE_NORMAL_MSG_CODE_MASK		GENMASK(15, 8)
+>   #define CDNS_PCIE_NORMAL_MSG_CODE(code) \
+>   	(((code) << 8) & CDNS_PCIE_NORMAL_MSG_CODE_MASK)
+> -#define CDNS_PCIE_MSG_NO_DATA			BIT(16)
+> +#define CDNS_PCIE_MSG_DATA			BIT(16)
+>   
+>   struct cdns_pcie;
+>   
+
