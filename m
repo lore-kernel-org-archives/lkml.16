@@ -1,205 +1,306 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4321624F9;
-	Fri,  7 Feb 2025 19:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD19B38385
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 19:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738956824; cv=none; b=uAu31QG67EN7uc6fIRGDHz/XbiRgChjR2CsoI1MTw0/7PjG9zOq+IGM4Zf3L+i0CVEzU3jZo3nrm11Cjae7xD+uLfShXEOkUqsLD5k7dudqf2NH0UhPPkAL8S/av5cRe+LWSiyVultsPB3VvupxquvI++tEiAGjg6PeDLE0eXnM=
+	t=1738956864; cv=none; b=ZAmECeYpvh7axWaB7ksAEx5CmTOxDE4A/rdrJHO0tpOf+R7qAT3hUqlCR/hMiqShLE6tpCId4ajxOeKI4kMSdnSomB/Ap2WOvD5rUfS9fTsIXVrzmpYPnpzYqTbweAw6zsoL/XkQSF5PfnmyBE4zFe5l54xGKIao6bzUzq6xb64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738956824; c=relaxed/simple;
-	bh=qarPXWpicXFi48pwPuzafODk1yLIbX5SHYZ493qwT8o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aOO6ihb03Q1ZaDIyOp4AQOViC4R2O6+h1gfcoj7YIaaYgindGe3MbfiBv9G7anC5RoMrR2mufn6+0CiTBHxt6jDURA/1lNcugSdTp7FLZxOvXaWZwnU1VzFOy4mH3UebZGTfjgE9N4D4WIOSOiG5/Uh8zKH8s0nbsbL2H6vB1PE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CBlhRl1A; arc=none smtp.client-ip=209.85.208.49
+	s=arc-20240116; t=1738956864; c=relaxed/simple;
+	bh=yXyaRFsfbcRZa8mdgI3KBeBwLQb1tKUg7Z/RrIGzunk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=B4YB9RAisb2gs3qBzL1/BmEQqRAg7QOhKUke5WsSZtqNuXqB3laTSCkt5tk3UQv5I9CCBx10NWZPs1+AyZSs9pEKEbdLXj/NsSJviwJ1xXyyawtam5rPVMNnw4nfkdWBgGqaYKeR4DSIlREc7POJccLvUFgf0SMShRqr6wItWDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VmZNs3AM; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CBlhRl1A"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5de5bf41652so90278a12.1;
-        Fri, 07 Feb 2025 11:33:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VmZNs3AM"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aa68b513abcso454986066b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 11:34:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738956821; x=1739561621; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738956861; x=1739561661; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wvcv5oFO5yuh0ssL0C2FZl0cPKOHFQnsd+cAtQTfxww=;
-        b=CBlhRl1AwE0uIW4L1I/PRrtnorFz7wDz6l6E+PXPMK1y/x3H9MXTwEGHI0jCdzng1m
-         uScB4+vyPsJvvKItjwOtxhHmRgABmsTFPvzgBV2J3twfgGItaxqBFRMMg9GUSyVLeGoz
-         JXqtopt06Zeh47z+AaNafP0DNl+C5FFOs9xo/aXCgOQtE3/K9T3osPiEK7EM1k4f/l4d
-         ApyCJIPKQMKPH5dF5BmH099BajiEOD5VG3LtgMYwX2PhI37QKfe+GrB2ctfgyGaaeB5o
-         gmQB0CNKuOlNjXirlWtthy4Rr223jKJ6a2Z9Vw9O3H5/o8p2fhZZ/32abLvC+oOJg8K0
-         mHzw==
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QeS+9WJZSrbWBbt9QXqilVKlrmtig3rOwP+M3p8OKjY=;
+        b=VmZNs3AM+qIM7KfG62QvYDgQeMnhdPPDSzEx35LIhdcgErWWqBYDjad8apH2NhMC5T
+         lUwwayPCHoL2aQeUqT/dDpHVNObDwxCSR7Yxjf+t3F00HHlgNrnfalPkJZ00aEZAQDQF
+         5jJ8VCpke5r6ToGKGSTBxAcE4SyocGLB0tCZamCiGWo3SPGyEsCbm7zynSPgERK1UEZa
+         yP+jvHBq96z8h3XxKYebpbg5R6DJkpGLCdCcACT8OnZL0i2DFKPCpSdWY0OdzwZshxuZ
+         rKjpDqvkOiwJ1hb1liKw6rAsggL598DtdpTT2ykQ7Dy9hM1/F9DGbmKIjkOF1rxSrLyE
+         kepA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738956821; x=1739561621;
+        d=1e100.net; s=20230601; t=1738956861; x=1739561661;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wvcv5oFO5yuh0ssL0C2FZl0cPKOHFQnsd+cAtQTfxww=;
-        b=XNQyla0D6kxHBm1HeYt0ZGud6iqHJS1HHE85GiLK7AjzgLd18RthXpTfg0XBdqSoEL
-         xPbDRra5XfEkM0O3v/5K3Nre8IN4w4U8hAkLDSvO8EmZ/ZvwB4o5Wm3dIEY+kjJCktmi
-         WU+rPJDwLMKybv2Ah0tZ58UpiHew2ltb2iay06GDk9rM1fqOA2uXWGzcUpnuvTtX5iHu
-         f/qCYObMx1j/5CJUvh9trA8ZmTrRHK0+xFivQipInOlCqj9f6WMTbAKNDlP8ZqlFw5rN
-         txUisHvqORBZewYFC+NszgXrpufSSBSXKeJj5hqe12lCtyqYBSZMkMRrdsPEGwdYmu40
-         PJSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXJKNMxcCzv2PWsbcNsgedtp14MtGgg26wGv7IufcBRdO1/X21/hQUeM2CY8U6bXwHmqz29s9HXC+1PHeB/@vger.kernel.org, AJvYcCXOK43RYIQzNwCy/A6fmtoi0cJ+i2BfN+AB4NsstpyRhr5p5+qU74CkqjhN+9OAy57FJ16GE2pjNaYdN3gW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/rBTjZb93SxNrYCVcCvji3mSE1h1woWFCAm5834ljbMB/p4OR
-	alHtOKQPuliW3IuxCRkvUE+VR2up5SyQudJBgngfxRJRpQX1g9Z4fvlTCFc9xPSNQaH+11p41Kw
-	LMLGPlUtDLPTJDutX05TxsvFxbDUjTz5QV2I=
-X-Gm-Gg: ASbGncv8Qq9J9MWN5Kqp6RBmIhRU2yY9GJDH580EUPviD43B+rafgEaVCYBiKbWAg8n
-	f+J0YgdrZ13wuUC5HQPh4tZ5eQe8wXVuk0n6w9flkf8RS/f0+SYIhFcDyuxGFgWXzHB9YRhgQ
-X-Google-Smtp-Source: AGHT+IFFs/Rqjxw2rV1FceqF1aOlkkljxp6UG0aTtGzBzzmTu3tUmF2R/pfQViZ76iqviap50rlzTA+TBnKXzO/8mSs=
-X-Received: by 2002:a05:6402:13c8:b0:5dc:cc02:5d25 with SMTP id
- 4fb4d7f45d1cf-5de45002faamr4611268a12.11.1738956820532; Fri, 07 Feb 2025
- 11:33:40 -0800 (PST)
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QeS+9WJZSrbWBbt9QXqilVKlrmtig3rOwP+M3p8OKjY=;
+        b=IKpx6eqW77pwbl9dNpAISF3pEirgBofLYedxjH+RPDqIE61Z2ebKzqIFTqNwWhl5+8
+         VF73jmFabYwvIeAIo+dMys72e2iAu8iMEhIWz9thSrfS4Yb6UmLLkM+JJMrU36hCuQu6
+         HOy14CmMGheYIDeiPPBDDJg9RmRZq99ULEwT1/Td5dx4au4RGH7IfiHhv3QuwJyue+dj
+         erk0kFoDfJdt3Y4OVpgIFzXCyKs+EKpTlLDswiUte6EhrLuWN+dHC9IWJ5U2x+80nPBF
+         WYsmit4dqQmNFAFCtga17ho4HVfOTsF81vDwtgPSjzKNY4D6MdXgg9LPFKfjvoXcN+Eh
+         pLbw==
+X-Forwarded-Encrypted: i=1; AJvYcCWo7ga4uQnUjqPpt4/baswMf9tlGQK6PIvuYeN15uenTEeOV5FFr+WlDcOaUk8cb8eEzZ9XcusmIh2zNIg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI2b0w+gbsz1o/38CIWfl56lT7LKM9sSYqWsbmY6E0HC0XpR4K
+	EtSjKS06KosH4uSSIoUDissfXP0y6W9y7eT1jE7hnGWjnsrSNqdwFRHuyDNGc/SmngAelFTVIFy
+	zwlkL4EbWRA7W414JEmS2YzKYzkU=
+X-Gm-Gg: ASbGncuaWPVFdp7ZR0k4zhyb+c4nj1XGP9Oa2rTajsZiIo+stbOG9HhUMquMlNnpjbj
+	ihIjDISxLH2iAXjUkLaZkw/8rmFGlVbpbez25n22M0GEaRViDXCbtEGgy3Z5sfr4zNjb1TE4=
+X-Google-Smtp-Source: AGHT+IHOafKpeSEFMi0xRXSjrssnAbCXR+GlLwmssgfpW18MN+M5umsybRvBSIYlTs7ddaoC+meuaxrwWnM28m76Dts=
+X-Received: by 2002:a17:907:d01:b0:ab6:d59b:614d with SMTP id
+ a640c23a62f3a-ab789b395a1mr546964166b.23.1738956860591; Fri, 07 Feb 2025
+ 11:34:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67a487f7.050a0220.19061f.05fc.GAE@google.com> <20250206165404.495fd127b4dc32a62574841a@linux-foundation.org>
- <20250207-teuer-viermal-9c60839ff221@brauner>
-In-Reply-To: <20250207-teuer-viermal-9c60839ff221@brauner>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 7 Feb 2025 20:33:28 +0100
-X-Gm-Features: AWEUYZmeqLI8aVU-FWqBjZ55K5Oj3LwvTof94Ff0ynkNlOpyfA4oM0EVeDHUmoo
-Message-ID: <CAOQ4uxgB0q3bMT6+jE4WmYKhvxDdfUzfw1+67ohUfHsAVGeHGg@mail.gmail.com>
-Subject: Re: [syzbot] [mm?] WARNING in fsnotify_file_area_perm
-To: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	syzbot <syzbot+7229071b47908b19d5b7@syzkaller.appspotmail.com>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	syzkaller-bugs@googlegroups.com, linux-fsdevel@vger.kernel.org, 
-	Jens Axboe <axboe@kernel.dk>, Josef Bacik <josef@toxicpanda.com>
+From: Dave Airlie <airlied@gmail.com>
+Date: Sat, 8 Feb 2025 05:34:09 +1000
+X-Gm-Features: AWEUYZktsJBYh64lbHz693fyJWH_GLSBO6Q6rkjM4bUaxPMm5LI4MI-U1mOSzjE
+Message-ID: <CAPM=9tw9VgDGf5qioLH+qZWcbm0Vx7UhucXp2y5hTjjQSAUi-A@mail.gmail.com>
+Subject: [git pull] drm fixes for 6.14-rc2
+To: Linus Torvalds <torvalds@linux-foundation.org>, Sima Vetter <sima@ffwll.ch>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 7, 2025 at 9:46=E2=80=AFAM Christian Brauner <brauner@kernel.or=
-g> wrote:
->
-> On Thu, Feb 06, 2025 at 04:54:04PM -0800, Andrew Morton wrote:
-> >
-> > Thanks.  Let me cc linux-fsdevel and a few others who might help with
-> > this.
->
-> Thanks! I already have a fix for this in vfs.fixes:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/commit/?h=3Dv=
-fs.fixes&id=3Db13036454697d83e53bf754efbcaaedf431b7a8a
->
+Hi Linus,
 
-Yes, I hope that it is fixed.
-The assertion in a fsnotify_file_area_perm() hook on page read fault
-on the blockdev, which shouldn't have FMODE_FSNOTIFY_HSM set.
-
-
-> I'll get that out today.
->
+Just regular drm fixes, amdgpu, xe and i915 mostly, but a few
+scattered fixes. I think one of the i915 fixes fixes some build combos
+that Guenter was seeing.
 
 Thanks,
-Amir.
+Dave.
 
+drm-fixes-2025-02-08:
+drm fixes for 6.14-rc2
 
-> >
-> >
-> > On Thu, 06 Feb 2025 01:59:19 -0800 syzbot <syzbot+7229071b47908b19d5b7@=
-syzkaller.appspotmail.com> wrote:
-> >
-> > > Hello,
-> > >
-> > > syzbot found the following issue on:
-> > >
-> > > HEAD commit:    69e858e0b8b2 Merge tag 'uml-for-linus-6.14-rc1' of gi=
-t://g..
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=3D135c17245=
-80000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dd033b14ae=
-ef39158
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=3D7229071b479=
-08b19d5b7
-> > > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for=
- Debian) 2.40
-> > >
-> > > Unfortunately, I don't have any reproducer for this issue yet.
-> > >
-> > > Downloadable assets:
-> > > disk image (non-bootable): https://storage.googleapis.com/syzbot-asse=
-ts/7feb34a89c2a/non_bootable_disk-69e858e0.raw.xz
-> > > vmlinux: https://storage.googleapis.com/syzbot-assets/a53b888c1f3f/vm=
-linux-69e858e0.xz
-> > > kernel image: https://storage.googleapis.com/syzbot-assets/6b5e17edaf=
-c0/bzImage-69e858e0.xz
-> > >
-> > > IMPORTANT: if you fix the issue, please add the following tag to the =
-commit:
-> > > Reported-by: syzbot+7229071b47908b19d5b7@syzkaller.appspotmail.com
-> > >
-> > > loop0: detected capacity change from 0 to 32768
-> > > XFS: ikeep mount option is deprecated.
-> > > XFS (loop0): Mounting V5 Filesystem a2f82aab-77f8-4286-afd4-a8f747a74=
-bab
-> > > XFS (loop0): Ending clean mount
-> > > XFS (loop0): Quotacheck needed: Please wait.
-> > > XFS (loop0): Quotacheck: Done.
-> > > ------------[ cut here ]------------
-> > > WARNING: CPU: 0 PID: 5321 at ./include/linux/fsnotify.h:145 fsnotify_=
-file_area_perm+0x1e5/0x250 include/linux/fsnotify.h:145
-> > > Modules linked in:
-> > > CPU: 0 UID: 0 PID: 5321 Comm: syz.0.0 Not tainted 6.13.0-syzkaller-09=
-760-g69e858e0b8b2 #0
-> > > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debia=
-n-1.16.3-2~bpo12+1 04/01/2014
-> > > RIP: 0010:fsnotify_file_area_perm+0x1e5/0x250 include/linux/fsnotify.=
-h:145
-> > > Code: c3 cc cc cc cc e8 fb 8f c6 ff 49 83 ec 80 4c 89 e7 48 83 c4 08 =
-5b 41 5c 41 5d 41 5e 41 5f 5d e9 01 9f 00 00 e8 dc 8f c6 ff 90 <0f> 0b 90 e=
-9 0a ff ff ff 48 c7 c1 10 73 1b 90 80 e1 07 80 c1 03 38
-> > > RSP: 0018:ffffc9000d416320 EFLAGS: 00010283
-> > > RAX: ffffffff81f8dce4 RBX: 0000000000000001 RCX: 0000000000100000
-> > > RDX: ffffc9000e5c2000 RSI: 00000000000008fa RDI: 00000000000008fb
-> > > RBP: 0000000000008000 R08: ffffffff81f8dbdc R09: 1ffff110087dca2e
-> > > R10: dffffc0000000000 R11: ffffed10087dca2f R12: ffff888033d4b1c0
-> > > R13: 0000000000000010 R14: dffffc0000000000 R15: ffffc9000d416460
-> > > FS:  00007f5bca7346c0(0000) GS:ffff88801fc00000(0000) knlGS:000000000=
-0000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 0000000020000100 CR3: 0000000033fd2000 CR4: 0000000000352ef0
-> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > Call Trace:
-> > >  <TASK>
-> > >  filemap_fault+0x14a9/0x16c0 mm/filemap.c:3509
-> > >  __do_fault+0x135/0x390 mm/memory.c:4977
-> > >  do_read_fault mm/memory.c:5392 [inline]
-> > >  do_fault mm/memory.c:5526 [inline]
-> > >  do_pte_missing mm/memory.c:4047 [inline]
-> > >  handle_pte_fault mm/memory.c:5889 [inline]
-> > >  __handle_mm_fault+0x4c44/0x70f0 mm/memory.c:6032
-> > >  handle_mm_fault+0x3e5/0x8d0 mm/memory.c:6201
-> > >  faultin_page mm/gup.c:1196 [inline]
-> > >  __get_user_pages+0x1a92/0x4140 mm/gup.c:1491
-> > >  __get_user_pages_locked mm/gup.c:1757 [inline]
-> > >  __gup_longterm_locked+0xe64/0x17f0 mm/gup.c:2529
-> > >  gup_fast_fallback+0x2266/0x29c0 mm/gup.c:3430
-> > >  pin_user_pages_fast+0xcc/0x160 mm/gup.c:3536
-> > >  iov_iter_extract_user_pages lib/iov_iter.c:1844 [inline]
-> > >  iov_iter_extract_pages+0x3bb/0x5c0 lib/iov_iter.c:1907
-> > >  __bio_iov_iter_get_pages block/bio.c:1181 [inline]
-> > >  bio_iov_iter_get_pages+0x4f1/0x1460 block/bio.c:1263
-> > >  iomap_dio_bio_iter+0xc9c/0x1740 fs/iomap/direct-io.c:406
-> > >  __iomap_dio_rw+0x13b7/0x25b0 fs/iomap/direct-io.c:703
-> > >  iomap_dio_rw+0x46/0xa0 fs/iomap/direct-io.c:792
-> > >  xfs_file_dio_write_unaligned+0x2ef/0x6f0 fs/xfs/xfs_file.c:692
-> > >  xfs_file_dio_write fs/xfs/xfs_file.c:725 [inline]
-> > >  xfs_file_write_iter+0x5c6/0x720 fs/xfs/xfs_file.c:876
-> > >  do_iter_readv_writev+0x71a/0x9d0
-> > >  vfs_writev+0x38b/0xbc0 fs/read_write.c:1050
-> > >  do_pwritev fs/read_write.c:1146 [inline]
-> > >  __do_sys_pwritev2 fs/read_write.c:1204 [inline]
-> > >  __se_sys_pwritev2+0x196/0x2b0 fs/read_write.c:1195
-> > >  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-> > >  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-> > >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> > > RIP: 0033:0x7f5bc998cda9
+amdgpu:
+- Add new tiling flag for DCC write compress disable
+- Add BO metadata flag for DCC
+- Fix potential out of bounds access in display
+- Seamless boot fix
+- CONFIG_FRAME_WARN fix
+- PSR1 fix
+
+xe:
+- OA uAPI related fixes
+- Fix SRIOV migration initialization
+- Restore devcoredump to a sane state
+
+i915:
+- Fix the build error with clamp after WARN_ON on gcc 13.x+
+- HDCP related fixes
+- PMU fix zero delta busyness issue
+- Fix page cleanup on DMA remap failure
+- Drop 64bpp YUV formats from ICL+ SDR planes
+- GuC log related fix
+- DisplayPort related fixes
+
+ivpu:
+- Fix error handling
+
+komeda:
+- add return check
+
+zynqmp:
+- fix locking in DP code
+
+ast:
+- fix AST DP timeout
+
+cec:
+- fix broken CEC adapter check
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b=
+:
+
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+
+are available in the Git repository at:
+
+  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-02-08
+
+for you to fetch changes up to 4f6993b3feab7bfb1869a8fa12eb8b375964c19f:
+
+  Merge tag 'drm-intel-fixes-2025-02-06' of
+https://gitlab.freedesktop.org/drm/i915/kernel into drm-fixes
+(2025-02-07 15:42:21 +1000)
+
+----------------------------------------------------------------
+drm fixes for 6.14-rc2
+
+amdgpu:
+- Add new tiling flag for DCC write compress disable
+- Add BO metadata flag for DCC
+- Fix potential out of bounds access in display
+- Seamless boot fix
+- CONFIG_FRAME_WARN fix
+- PSR1 fix
+
+xe:
+- OA uAPI related fixes
+- Fix SRIOV migration initialization
+- Restore devcoredump to a sane state
+
+i915:
+- Fix the build error with clamp after WARN_ON on gcc 13.x+
+- HDCP related fixes
+- PMU fix zero delta busyness issue
+- Fix page cleanup on DMA remap failure
+- Drop 64bpp YUV formats from ICL+ SDR planes
+- GuC log related fix
+- DisplayPort related fixes
+
+ivpu:
+- Fix error handling
+
+komeda:
+- add return check
+
+zynqmp:
+- fix locking in DP code
+
+ast:
+- fix AST DP timeout
+
+cec:
+- fix broken CEC adapter check
+
+----------------------------------------------------------------
+Alex Hung (1):
+      drm/amd/display: Fix out-of-bound accesses
+
+Ankit Nautiyal (2):
+      drm/i915/dp: fix the Adaptive sync Operation mode for SDP
+      drm/i915/dp: Return min bpc supported by source instead of 0
+
+Ashutosh Dixit (2):
+      drm/xe/oa: Preserve oa_ctrl unused bits
+      drm/xe/oa: Set stream->pollin in xe_oa_buffer_check_unlocked
+
+Brian Geffon (1):
+      drm/i915: Fix page cleanup on DMA remap failure
+
+Daniele Ceraolo Spurio (1):
+      drm/i915/guc: Debug print LRC state entries only if the context is pi=
+nned
+
+Dave Airlie (4):
+      Merge tag 'amd-drm-fixes-6.14-2025-02-05' of
+https://gitlab.freedesktop.org/agd5f/linux into drm-fixes
+      Merge tag 'drm-misc-fixes-2025-02-06' of
+https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
+      Merge tag 'drm-xe-fixes-2025-02-06' of
+https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
+      Merge tag 'drm-intel-fixes-2025-02-06' of
+https://gitlab.freedesktop.org/drm/i915/kernel into drm-fixes
+
+Guenter Roeck (1):
+      drm/i915/backlight: Return immediately when scale() finds
+invalid parameters
+
+Gustavo Sousa (1):
+      drm/print: Include drm_device.h
+
+Hans Verkuil (1):
+      gpu: drm_dp_cec: fix broken CEC adapter properties check
+
+Haoxiang Li (1):
+      drm/komeda: Add check for komeda_get_layer_fourcc_list()
+
+Jacek Lawrynowicz (3):
+      accel/ivpu: Fix error handling in ivpu_boot()
+      accel/ivpu: Clear runtime_error after pm_runtime_resume_and_get() fai=
+ls
+      accel/ivpu: Fix error handling in recovery/reset
+
+Jani Nikula (2):
+      drm/i915/dp: Iterate DSC BPP from high to low on all platforms
+      drm/i915/dp: Fix potential infinite loop in 128b/132b SST
+
+Lo-an Chen (1):
+      drm/amd/display: Fix seamless boot sequence
+
+Lucas De Marchi (2):
+      drm/xe/devcoredump: Move exec queue snapshot to Contexts section
+      drm/xe: Fix and re-enable xe_print_blob_ascii85()
+
+Marek Ol=C5=A1=C3=A1k (1):
+      drm/amdgpu: add a BO metadata flag to disable write compression for V=
+ulkan
+
+Mario Limonciello (1):
+      accel/amdxdna: Add MODULE_FIRMWARE() declarations
+
+Maxime Ripard (1):
+      Merge remote-tracking branch 'drm-misc/drm-misc-next-fixes' into
+drm-misc-fixes
+
+Michal Wajdeczko (1):
+      drm/xe/pf: Fix migration initialization
+
+Nathan Chancellor (1):
+      drm/amd/display: Respect user's CONFIG_FRAME_WARN more for dml files
+
+Suraj Kandpal (2):
+      drm/i915/hdcp: Fix Repeater authentication during topology change
+      drm/i915/hdcp: Use correct function to check if encoder is HDMI
+
+Thomas Zimmermann (1):
+      drm/ast: astdp: Fix timeout for enabling video signal
+
+Tom Chung (1):
+      Revert "drm/amd/display: Use HW lock mgr for PSR1"
+
+Umesh Nerlige Ramappa (1):
+      drm/i915/pmu: Fix zero delta busyness issue
+
+Ville Syrj=C3=A4l=C3=A4 (1):
+      drm/i915: Drop 64bpp YUV formats from ICL+ SDR planes
+
+ drivers/accel/amdxdna/amdxdna_pci_drv.c            |  5 ++
+ drivers/accel/ivpu/ivpu_drv.c                      |  8 ++-
+ drivers/accel/ivpu/ivpu_pm.c                       | 84 ++++++++++++------=
+----
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c            |  3 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c            |  8 ++-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.h            |  2 +
+ drivers/gpu/drm/amd/amdgpu/sdma_v7_0.c             |  5 +-
+ drivers/gpu/drm/amd/display/dc/core/dc.c           |  2 +-
+ .../gpu/drm/amd/display/dc/dce/dmub_hw_lock_mgr.c  |  3 +-
+ drivers/gpu/drm/amd/display/dc/dml/Makefile        | 14 ++--
+ drivers/gpu/drm/amd/display/dc/dml2/Makefile       | 22 +++---
+ .../dc/dml2/dml21/dml21_translation_helper.c       |  4 +-
+ .../amd/display/dc/dml2/dml2_translation_helper.c  |  6 +-
+ .../drm/amd/display/dc/hubbub/dcn30/dcn30_hubbub.c |  3 +-
+ .../drm/amd/display/dc/hubbub/dcn31/dcn31_hubbub.c |  3 +-
+ .../drm/amd/display/dc/hubbub/dcn32/dcn32_hubbub.c |  3 +-
+ .../drm/amd/display/dc/hubbub/dcn35/dcn35_hubbub.c |  3 +-
+ .../gpu/drm/amd/display/dc/hubp/dcn30/dcn30_hubp.c |  2 +
+ .../gpu/drm/amd/display/dc/hubp/dcn32/dcn32_hubp.c |  2 +
+ .../drm/amd/display/dc/hwss/dcn35/dcn35_hwseq.c    |  3 +-
+ .../drm/arm/display/komeda/komeda_wb_connector.c   |  4 ++
+ drivers/gpu/drm/ast/ast_dp.c                       |  2 +-
+ drivers/gpu/drm/display/drm_dp_cec.c               | 14 +---
+ drivers/gpu/drm/i915/display/intel_backlight.c     |  5 +-
+ drivers/gpu/drm/i915/display/intel_dp.c            | 12 ++--
+ drivers/gpu/drm/i915/display/intel_dp_mst.c        |  4 ++
+ drivers/gpu/drm/i915/display/intel_hdcp.c          | 15 +++-
+ drivers/gpu/drm/i915/display/skl_universal_plane.c |  4 --
+ drivers/gpu/drm/i915/gem/i915_gem_shmem.c          |  6 +-
+ drivers/gpu/drm/i915/gt/uc/intel_guc_submission.c  | 36 ++++++++--
+ drivers/gpu/drm/xe/regs/xe_oa_regs.h               |  6 ++
+ drivers/gpu/drm/xe/xe_devcoredump.c                | 42 ++++-------
+ drivers/gpu/drm/xe/xe_devcoredump.h                |  2 +-
+ drivers/gpu/drm/xe/xe_gt.c                         |  4 +-
+ drivers/gpu/drm/xe/xe_gt_sriov_pf.c                | 14 +++-
+ drivers/gpu/drm/xe/xe_gt_sriov_pf.h                |  6 ++
+ drivers/gpu/drm/xe/xe_guc_ct.c                     |  3 +-
+ drivers/gpu/drm/xe/xe_guc_log.c                    |  4 +-
+ drivers/gpu/drm/xe/xe_oa.c                         | 21 +++---
+ include/drm/drm_print.h                            |  1 +
+ include/uapi/drm/amdgpu_drm.h                      |  9 ++-
+ 41 files changed, 250 insertions(+), 149 deletions(-)
