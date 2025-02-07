@@ -1,75 +1,115 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E6A18C928
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 06:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F48E15FD13
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 06:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738911106; cv=none; b=qTHrTULghfmv2MXu15/3tdI6w22JTScTEzk42b14+SuQ27u+8wzZPQ+uPgMf2hAMf3MAypmVfsUT0SiEfy8OiuLj6l6RieGAg+/XOf9XccNeo0L4KvZqh+6xdiVnWRAuoyDPI2+6qqHmSXTOZhnBAoLM7lPXL/g8Umyr+oZWYVY=
+	t=1738911191; cv=none; b=eWmU3id62zn+2vL3LtOSEdLETh+uBbnoEex9NegKcSGZUd62Wvkt/0HNzUIXsqx9lbd8fce2g5LVybVo1UdKX5pdaVtqvUYqLKa5NaYOxdn3W75lTFw1SF2ejIxLyLnBw109eFoUhePR7x7mtM8RlxS3KxtoecEeNeNBLkWqfrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738911106; c=relaxed/simple;
-	bh=xh8ZM3QFkkSk+FOMf+3c0vTZV18zOe9kyuRrvfP61IA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I1r2zTQOA1IidEeRd38GCAA9DppixeJvXmfKp6MngAEMPxFpsZmrE6T5zmX3ZL6dFUKn0oKop1mwThWT3Ugy5FG7B9VkkkhyEASv2tTvA7SZsKPN1mAmTqHHimtyLoe18B7Rb+lc03RrejGf2FvATHK/uJUGjmFyYwJyZhDvvBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jbR3vVtS; arc=none smtp.client-ip=91.218.175.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1738911191; c=relaxed/simple;
+	bh=fp3yNdV4dxXMRi80coUOwaKpOJz4Lwgnb74388pRDO0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mIfODYvPxCy8vGOJVKw4SfTqJOX1hIRhHDPAW8havu020EdAIsOcDO0vxLqQqaN1OM6ubUij3uvJxDUBsqSgGVwLP/myIm7uJM17Gg8VAoFxdZtln7J4fDB+vRqe7i3QCftgpbxjv0Y9nq1LD0L6paoTVoJZEe5g3sK4cLnhXYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=gfQ4/rhx; arc=none smtp.client-ip=54.243.244.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jbR3vVtS"
-Date: Fri, 7 Feb 2025 01:51:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738911088;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tqkw7E8iW/wES+Hraomqy4dQ/FgA7hv7hZ59Xs56vO4=;
-	b=jbR3vVtSYanJASGOtIvu3UUK2uJsV3dp7GUOhAsHPo2EaYUkES3FhKIz1dns29fbGShb/i
-	jR7B5bNsZFibJK0oA5hlpBUqbasgozVKfew9gpTIizSaq9H9A8iV1CiSXvwMmbjmqjo0M1
-	2etK59nIiUX8Q6CISpdX6yGKhBs1UZY=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: NeilBrown <neilb@suse.de>
-Cc: Christian Brauner <brauner@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Steve French <sfrench@samba.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Tom Talpey <tom@talpey.com>, Paul Moore <paul@paul-moore.com>, Eric Paris <eparis@redhat.com>, 
-	linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, audit@vger.kernel.org
-Subject: Re: [PATCH 1/2] VFS: change kern_path_locked() and
- user_path_locked_at() to never return negative dentry
-Message-ID: <lfzaikkzt46fatqzqjeanxx2m2cwll46mqdcbizph22cck6stw@rhdne3332qdx>
-References: <>
- <7mxksfnkamzqromejfknfsat6cah4taggprj3wxdoputvvwc7f@qnjsm36bsrex>
- <173891006340.22054.12479197204884946914@noble.neil.brown.name>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="gfQ4/rhx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1738911142;
+	bh=3TrnJ9Z/xHsuAJRQWEc2Y4wHAx1RLl4jmH7juixi/sY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=gfQ4/rhxudhXSMxBFFlcFLRwUfteW9eXRKhuIV1bD4pJE1ObNTL0NV7K0nWSV4Y39
+	 PrVpbDmQ9z3FmqgTQld/BDA4+INs8loZwEkhTq0h93UbUsk85hDZqCkYuyFumFjaNC
+	 vFy/svFv/R9nJPAH6hZ1TW1bHz9knv8KN5U5Lbeo=
+X-QQ-mid: bizesmtpip2t1738911130twu7d2b
+X-QQ-Originating-IP: 2Ogc0sig6WvB+aX1FzWDHy5qpj/rqCpc0tfCtt62W14=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 07 Feb 2025 14:52:08 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 7797445353055566242
+From: WangYuli <wangyuli@uniontech.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	wangyuli@uniontech.com,
+	jiaxun.yang@flygoat.com,
+	guanwentao@uniontech.com
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	zhanjun@uniontech.com,
+	chenlinxuan@uniontech.com
+Subject: [PATCH] LoongArch: kernel: proc: Use str_yes_no() helper function
+Date: Fri,  7 Feb 2025 14:52:01 +0800
+Message-ID: <FC3B31E885291324+20250207065201.191475-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173891006340.22054.12479197204884946914@noble.neil.brown.name>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: M8Li3la+wnbNwAjFOV2edtc8e4abS0veJgDFYMVpnSVwMs2ZDmQDQGNb
+	MShBjLimIkad3XqPQwVOEOtcBmLnq6E7LvYaYHD/bx0Mxzq5xyqp9OyyB06SwQkjH2cq5EO
+	jQ0WZ3JOfx6x7lHwfJ+ECFfi2S5PdU9pX6skNjOdCokfUAm3kiMqNRVJs6+5V52apiMMYfE
+	ap6by6KZVouDLz31reFZMIIe+hzK7HzTUq37igZprzWSZhswHYHXGOxgeJu4ppXYwlCU0aF
+	PPv2qpzYmtbH92NSTzH21Zc2MV+yw9n89h3TSAOvWRrFRdG+6kbbHmCW/J+SE4fgiEGYS8r
+	5qjV4EAsvdqbQziqwyscHAIC2RsER2HYggQ9XfzRk3VNOLMfnRPdOK6eneFSkqVdazJxIQe
+	rW7YUjI3fe2FJujXjoGt8zytewJV9bQe4i8+/8tZaMtoSl3rE8+lBgcLO52t/WDFKI/Zzz/
+	+Ne3qBI+J7rdBbkY/0bBNqRue1EezHgWZprOFJowTt7aDm30HiQfM3pPOp31Cg0YzsF1XA7
+	/FPaI4O6S4HemthifGWvtczWHWeWU4bx2RBGZEh1vAxALiLyHcwcWihIFp9725MEMO9RJcg
+	UeJd3nNpDEqR3nGNvm6VOAcnAKexuFVxdW4pX/hkrZZPbqMcmb/XYTvZYB1s5WqpxtSQeAB
+	SOAGP4DWYH1eOixUgc4nP8MFCe3guOvPsrmnBkotfolzH45t73sOTFmhij0uGlz0HfeYWGj
+	Esghi7su5wl7plCvexK2cmKNqWM4XN0an8grgAq+YfIqvkIYGTLjcMU6JzsTIXQBiJHCNWp
+	h9+vbmzWkLBP9V7aN+RkHvNEmPxqRW/qONRXcrZeJFHApA6c7Gy8AIA08HfwomUQ3rPhhiz
+	uIUe3CY6qNOKq0QvOadRve1IchkQdPpT0CIITI/NHMqrjMrEshYgqSX34XS0lW6EIYGEtLx
+	WSczAjBpRKrbXAx41yZSD+nyAf2lupD9EwrSxl6dpfxAbqjC53Blv6srrLpJ+zVy0xLYOYd
+	NHUjjKYQ==
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-RECHKSPAM: 0
 
-On Fri, Feb 07, 2025 at 05:34:23PM +1100, NeilBrown wrote:
-> On Fri, 07 Feb 2025, Kent Overstreet wrote:
-> > On Fri, Feb 07, 2025 at 03:53:52PM +1100, NeilBrown wrote:
-> > > Do you think there could be a problem with changing the error returned
-> > > in this circumstance? i.e. if you try to destroy a subvolume with a
-> > > non-existant name on a different filesystem could getting -ENOENT
-> > > instead of -EXDEV be noticed?
-> > 
-> > -EXDEV is the standard error code for "we're crossing a filesystem
-> > boundary and we can't or aren't supposed to be", so no, let's not change
-> > that.
-> > 
-> 
-> OK.  As bcachefs is the only user of user_path_locked_at() it shouldn't
-> be too hard.
+Remove hard-coded strings by using the str_yes_no() helper function.
 
-Hang on, why does that require keeping user_path_locked_at()? Just
-compare i_sb...
+Similar to commit c4a0a4a45a45 ("MIPS: kernel: proc: Use str_yes_no()
+helper function").
+
+Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+---
+ arch/loongarch/kernel/proc.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
+index 6ce46d92f1f1..56a230238c9c 100644
+--- a/arch/loongarch/kernel/proc.c
++++ b/arch/loongarch/kernel/proc.c
+@@ -91,10 +91,9 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 	if (cpu_has_lbt_mips)	seq_printf(m, " lbt_mips");
+ 	seq_printf(m, "\n");
+ 
+-	seq_printf(m, "Hardware Watchpoint\t: %s",
+-		      cpu_has_watch ? "yes, " : "no\n");
++	seq_printf(m, "Hardware Watchpoint\t: %s", str_yes_no(cpu_has_watch));
+ 	if (cpu_has_watch) {
+-		seq_printf(m, "iwatch count: %d, dwatch count: %d\n",
++		seq_printf(m, ", iwatch count: %d, dwatch count: %d",
+ 		      cpu_data[n].watch_ireg_count, cpu_data[n].watch_dreg_count);
+ 	}
+ 
+@@ -104,7 +103,7 @@ static int show_cpuinfo(struct seq_file *m, void *v)
+ 	raw_notifier_call_chain(&proc_cpuinfo_chain, 0,
+ 				&proc_cpuinfo_notifier_args);
+ 
+-	seq_printf(m, "\n");
++	seq_printf(m, "\n\n");
+ 
+ 	return 0;
+ }
+-- 
+2.47.2
+
