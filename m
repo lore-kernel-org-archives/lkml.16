@@ -1,99 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB531A727D
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 169BB7DA8C
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738917579; cv=none; b=u/wIz4+SBRyLBGjlbiFeYgFCT7lCsUPk8dExgYQGHENWBaQL+4XLCjkeOjmmoLIaANQRNpcL0JRsl19teL8VQm5chwdzqhRRoMZvSjtyDyq8exAuOh4Lgf8vx3udiVYEMC3hjzL09owia0GAWcwtdw0EiNm1hmAuzlOJshgAUD8=
+	t=1738917692; cv=none; b=QFIEcEOvsm9j7xZyUo1Fae34v0OABYJsOwNT0bg1p2S4GSlDq8+F2df4mCByXw9CVFePmEXdBJz1BzByzkrhERiUltEMJj+pwCdOy/UXtH54hbChUceFjGRJmjjNbg6jYwptAis+x31Pyrir1NsRBH7ZwwnYoOMIzvpTbqi/kiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738917579; c=relaxed/simple;
-	bh=JkXN5D2U7NLeqI0IP0jOonEhjbx2JXNOvVZXrZ10IqA=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=THENQRH7QH1pq/F3xNhqTGk5CUGCTpQgo6ZRgoW9tHFsutV5YK57+XZV+Scea7+5erSyGGfrqUfi8haVV7lj0Gq9Q3euxflzyRG1byh2UPL+cvg0QOd4diAO/54kaQPYRG805qWhQOxoOBqUosmuo2PK8RxC6x8dTS69eYQ/rkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WdWtu5Vm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WdWtu5Vm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E83B6C4CED1;
-	Fri,  7 Feb 2025 08:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738917579;
-	bh=JkXN5D2U7NLeqI0IP0jOonEhjbx2JXNOvVZXrZ10IqA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WdWtu5VmRtLR8H/yKw9Z6K9uRACmj63TkIPo+Ss3RAZy3MAhtKo1McpqNmM69zBFz
-	 TvFfu7Jq3Jl16wpHmTo78QxEo3HOyUl4rApgM4y9m6hQWWxX9B+jldP13I4Uyx30l2
-	 w7Jm2pdqNBKrfy+Lfcan+BjjqUfCuFxYQCwF505cgkdsmx54kJKMnOKiH+WqEqHWF3
-	 zQf0y3z6UvGcQ2iyDvqU16FG9bsv04R+UAv13PAZmRrwWCsHINmFvpxcn6QP3kEY/i
-	 gW+n0mTOJJsoZM/IHyJS3yKgFJeWZyUfpkLhB9fpwm5MB1TYp/q7WSckokvD04pjrg
-	 x+Aj0X0oUSIqQ==
+	s=arc-20240116; t=1738917692; c=relaxed/simple;
+	bh=rA/hJ9ZH5vUSfyk8MgnRZZLD+mKzVmJhBoAsz26oAC4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ohd1HwAxMZaff7b0YKtbWYGPpMufAWObrchaURMNpfMZA98tX2TWKGJ5Txc7eBmVtzijzoyVb7cp0/XdSiBzOlVQlMTfXdQpD24tDESzAtf8cfULB2I9GK+ls6DNIM/mR/rlWWxw4AOgD8ZDxJChiYfFDmxou/xe4AVJj5ER+9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 602831063;
+	Fri,  7 Feb 2025 00:41:52 -0800 (PST)
+Received: from [10.162.16.89] (a077893.blr.arm.com [10.162.16.89])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 68CBC3F5A1;
+	Fri,  7 Feb 2025 00:41:24 -0800 (PST)
+Message-ID: <3bbae070-1ae3-4f5d-86ab-b3221425a1cb@arm.com>
+Date: Fri, 7 Feb 2025 14:11:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Fri, 07 Feb 2025 09:39:34 +0100
-From: Michael Walle <mwalle@kernel.org>
-To: Cheng Ming Lin <linchengming884@gmail.com>
-Cc: tudor.ambarus@linaro.org, pratyush@kernel.org,
- miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
- linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
- alvinzhou@mxic.com.tw, leoyu@mxic.com.tw, Cheng Ming Lin
- <chengminglin@mxic.com.tw>
-Subject: Re: [PATCH 2/2] mtd: spi-nor: macronix: Add support for Macronix NOR
- Flash
-In-Reply-To: <20250207081846.362919-3-linchengming884@gmail.com>
-References: <20250207081846.362919-1-linchengming884@gmail.com>
- <20250207081846.362919-3-linchengming884@gmail.com>
-Message-ID: <811f5b9d7b2842a3e1293ac6a0bb3b70@kernel.org>
-X-Sender: mwalle@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 10/16] mm/vmalloc: Warn on improper use of
+ vunmap_range()
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
+ <20250205151003.88959-11-ryan.roberts@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250205151003.88959-11-ryan.roberts@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Cheng,
+On 2/5/25 20:39, Ryan Roberts wrote:
+> A call to vmalloc_huge() may cause memory blocks to be mapped at pmd or
+> pud level. But it is possible to subsquently call vunmap_range() on a
 
-> From: Cheng Ming Lin <chengminglin@mxic.com.tw>
+s/subsquently/subsequently
+
+> sub-range of the mapped memory, which partially overlaps a pmd or pud.
+> In this case, vmalloc unmaps the entire pmd or pud so that the
+> no-overlapping portion is also unmapped. Clearly that would have a bad
+> outcome, but it's not something that any callers do today as far as I
+> can tell. So I guess it's jsut expected that callers will not do this.
+
+s/jsut/just
+
 > 
-> Due to incorrect values in the 4-BAIT table for these two flash IDs,
-> it is necessary to add these two flash IDs with fixups.
+> However, it would be useful to know if this happened in future; let's
+> add a warning to cover the eventuality.
 
-What's the part number of these flashes?
+This is a reasonable check to prevent bad outcomes later.
 
-> --- a/drivers/mtd/spi-nor/macronix.c
-> +++ b/drivers/mtd/spi-nor/macronix.c
-> @@ -127,6 +127,9 @@ static const struct flash_info macronix_nor_parts[] 
-> = {
->  		.size = SZ_128M,
->  		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
->  		.fixups = &macronix_qpp4b_fixups,
-> +	}, {
-
-Although we don't have .name anymore, a comment like
-
-/* <partname> */
-
-is recommended.
-
-> +		.id = SNOR_ID(0xc2, 0x20, 0x1c),
-> +		.fixups = &macronix_qpp4b_fixups,
->  	}, {
->  		.id = SNOR_ID(0xc2, 0x23, 0x14),
->  		.name = "mx25v8035f",
-> @@ -182,6 +185,9 @@ static const struct flash_info macronix_nor_parts[] 
-> = {
->  		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
->  		.fixup_flags = SPI_NOR_4B_OPCODES,
->  		.fixups = &macronix_qpp4b_fixups,
-> +	}, {
-
-same same
-
-> +		.id = SNOR_ID(0xc2, 0x25, 0x3b),
-> +		.fixups = &macronix_qpp4b_fixups,
->  	}, {
->  		.id = SNOR_ID(0xc2, 0x25, 0x3c),
->  		.name = "mx66u2g45g",
-
-Thanks,
--michael
+> 
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+>  mm/vmalloc.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index a6e7acebe9ad..fcdf67d5177a 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -374,8 +374,10 @@ static void vunmap_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+>  		if (cleared || pmd_bad(*pmd))
+>  			*mask |= PGTBL_PMD_MODIFIED;
+>  
+> -		if (cleared)
+> +		if (cleared) {
+> +			WARN_ON(next - addr < PMD_SIZE);
+>  			continue;
+> +		}
+>  		if (pmd_none_or_clear_bad(pmd))
+>  			continue;
+>  		vunmap_pte_range(pmd, addr, next, mask);
+> @@ -399,8 +401,10 @@ static void vunmap_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+>  		if (cleared || pud_bad(*pud))
+>  			*mask |= PGTBL_PUD_MODIFIED;
+>  
+> -		if (cleared)
+> +		if (cleared) {
+> +			WARN_ON(next - addr < PUD_SIZE);
+>  			continue;
+> +		}
+>  		if (pud_none_or_clear_bad(pud))
+>  			continue;
+>  		vunmap_pmd_range(pud, addr, next, mask);
+Why not also include such checks in vunmap_p4d_range() and __vunmap_range_noflush()
+for corresponding P4D and PGD levels as well ?
