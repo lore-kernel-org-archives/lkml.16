@@ -1,93 +1,98 @@
-Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FDFA1A2C0B;
-	Fri,  7 Feb 2025 07:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE631A2544;
+	Fri,  7 Feb 2025 07:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738913770; cv=none; b=iWrvLgfmCklD69UHfV5cX4SNB56akciEwm/vCEEfWKBlaXXpz+mPU9Lsn+9EAiNYTGQ2UfMHtliIp8YtQR99SePNiNyLLZaWfCspSbfILLZ2M8lCqMm6ZfbecIZx9+/4xIHzEk/LfF5Kw1psLCrQG9Y8VfGNZnlEuYwplzXzfDE=
+	t=1738913769; cv=none; b=QK+QbJV5kPx+dQUQ++sS/dlzpyfOVCLAkNj9NDoND5enVp43/1MLpKZC5ZxTQIZzU5awixWRCBWKLZv+xU1CAuCa7F2g3auyfiTs9vobXmyAJT8OHhIdavtckqdLjK5jB1NZoMrmaaGQQDAMOXgzFgWrgWUDb85JqSAViw2MymU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738913770; c=relaxed/simple;
-	bh=KP0xPlJQnncOfGBLdKus6e0ffsRrhdP0K7kpQJEhrmk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EnO9dCmmhiwM167qlyJiz9kUicDTAIl7pobJ4JEX38sdB65W/VYpuXLlq5bm5s/2kbZjlO5hK+3+qM0QyGcVJ5wAW+twYGBcZyQ74MCAo4h+LSeUGulPOiCTR3lrfpv74ETBF8u+oruGKrqavCEtQ4xqLB86Wzw/wOfGUuS1Wlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from unicom145.biz-email.net
-        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id EZP00148;
-        Fri, 07 Feb 2025 15:34:48 +0800
-Received: from jtjnmail201607.home.langchao.com (10.100.2.7) by
- jtjnmail201609.home.langchao.com (10.100.2.9) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 7 Feb 2025 15:34:47 +0800
-Received: from locahost.localdomain (10.94.12.190) by
- jtjnmail201607.home.langchao.com (10.100.2.7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 7 Feb 2025 15:34:47 +0800
-From: Charles Han <hanchunchao@inspur.com>
-To: <mkl@pengutronix.de>, <manivannan.sadhasivam@linaro.org>,
-	<thomas.kopp@microchip.com>, <mailhol.vincent@wanadoo.fr>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <cem@kernel.org>,
-	<djwong@kernel.org>, <corbet@lwn.net>
-CC: <linux-can@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, Charles Han <hanchunchao@inspur.com>
-Subject: [v2] Documentation: Remove repeated word in docs
-Date: Fri, 7 Feb 2025 15:34:29 +0800
-Message-ID: <20250207073433.23604-1-hanchunchao@inspur.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1738913769; c=relaxed/simple;
+	bh=lRRvLjOjWz7k/Hrges3g7wd4SV2ewKBhzV0A11CrK+4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fNPy0hHwqjsBJvic0WYkJroGYtkwlkB1PVSaDrPZZNlFJlpoHbBGuH6DDibNltDo9EAj/VKFOXKtsjknk/sGx0vrJ/mrgTIKmgfgUNV4CpDgEbbDZsGT2fnV2vx7kAGN2Ox0eYS6R3ZQgbppbj5BiePyYDOLQppAIsgG10KmfVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CbOKN8rP; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CbOKN8rP"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5174KrI7008031;
+	Fri, 7 Feb 2025 07:36:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=TElmkLpAeSRtWN2JQWnKor
+	ZVjXpepyP+ED8zX2uO+wA=; b=CbOKN8rPswP1K97isQdRyhHtN/QjZA8fbdBX52
+	hLAW9EQ51qHmb4+yTCS9DVW3/EgjuF2Gza9cfhx7prmQa90QldjbDHZRsfMqhNUr
+	OpUumF8AAGXYoEfTThXMcfwafZKAHDdDoXP2/zXw+Q2D2NPT66V/QrZUacHuXIz8
+	U4CUmnALXpt4mWMYnVmslnjW7SGJFlwJy6fQAVi2YiGJcG5o+mSlQIsqwzeQoT41
+	Ci+u1EuAPpFhu8pM7ir+jlH0FcsMGHWdm415ilzvc5k1aEj6yadEageZFmpmSpL2
+	8Od0tcIHd3VxkEvgBiIMqQQ/xT2mxyLh8MntgZ8JMyaMNibA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nb2m8eak-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Feb 2025 07:36:04 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5177a3P4026898
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 7 Feb 2025 07:36:03 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 6 Feb 2025 23:36:00 -0800
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <dmitry.baryshkov@linaro.org>, <quic_varada@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/1] Fix USB vdd info for IPQ9574
+Date: Fri, 7 Feb 2025 13:05:44 +0530
+Message-ID: <20250207073545.1768990-1-quic_varada@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: Jtjnmail201617.home.langchao.com (10.100.2.17) To
- jtjnmail201607.home.langchao.com (10.100.2.7)
-tUid: 20252071534487ca61296d0d4a6ca2047d9cd90f405c0
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 5lz9yiNqETeXupsAH0LNfOxJ0JSKv0dU
+X-Proofpoint-ORIG-GUID: 5lz9yiNqETeXupsAH0LNfOxJ0JSKv0dU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_03,2025-02-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=618
+ suspectscore=0 bulkscore=0 phishscore=0 malwarescore=0 mlxscore=0
+ spamscore=0 priorityscore=1501 lowpriorityscore=0 adultscore=0
+ clxscore=1015 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502070057
 
-Remove the repeated word "to" docs.
+Use correct regulator for USB phy.
 
-Signed-off-by: Charles Han <hanchunchao@inspur.com>
----
- .../devicetree/bindings/net/can/microchip,mcp251xfd.yaml      | 2 +-
- Documentation/filesystems/xfs/xfs-online-fsck-design.rst      | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+v2: * Skip the first patch as it has been pulled in
+    * Reword and fix commit message formatting for the remaining patch
 
-diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml b/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
-index 2a98b26630cb..c155c9c6db39 100644
---- a/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
-+++ b/Documentation/devicetree/bindings/net/can/microchip,mcp251xfd.yaml
-@@ -40,7 +40,7 @@ properties:
- 
-   microchip,rx-int-gpios:
-     description:
--      GPIO phandle of GPIO connected to to INT1 pin of the MCP251XFD, which
-+      GPIO phandle of GPIO connected to INT1 pin of the MCP251XFD, which
-       signals a pending RX interrupt.
-     maxItems: 1
- 
-diff --git a/Documentation/filesystems/xfs/xfs-online-fsck-design.rst b/Documentation/filesystems/xfs/xfs-online-fsck-design.rst
-index 12aa63840830..e231d127cd40 100644
---- a/Documentation/filesystems/xfs/xfs-online-fsck-design.rst
-+++ b/Documentation/filesystems/xfs/xfs-online-fsck-design.rst
-@@ -4521,8 +4521,8 @@ Both online and offline repair can use this strategy.
- | For this second effort, the ondisk parent pointer format as originally   |
- | proposed was ``(parent_inum, parent_gen, dirent_pos) → (dirent_name)``.  |
- | The format was changed during development to eliminate the requirement   |
--| of repair tools needing to to ensure that the ``dirent_pos`` field       |
--| always matched when reconstructing a directory.                          |
-+| of repair tools needing to ensure that the ``dirent_pos`` field always   |
-+| matched when reconstructing a directory.                                 |
- |                                                                          |
- | There were a few other ways to have solved that problem:                 |
- |                                                                          |
+v1: For some reason, the dt-bindings [1] patch posted and Acked long
+    time back seems to have slipped through the cracks and hasn't been
+    merged. Including it along with this patch as both are related.
+    dt_binding_check & dtbs_check passed.
+
+    1 - https://lore.kernel.org/linux-arm-msm/170266996013.286103.17303148912355511017.robh@kernel.org/
+
+Varadarajan Narayanan (1):
+  arm64: dts: qcom: ipq9574: Fix USB vdd info
+
+ arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+
+base-commit: 40b8e93e17bff4a4e0cc129e04f9fdf5daa5397e
+prerequisite-patch-id: d3da55704446c2222b5c624d9bb3a738357cb2fc
 -- 
-2.43.0
+2.34.1
 
