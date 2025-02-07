@@ -1,108 +1,138 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B004175D5D
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF682175D5D
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738951188; cv=none; b=Jl9QGMM5BNXyaSa0ztU19+Lp7npazJHr2/jNCUpi4sUPFNMeC6GN627ZaZVWX4VYUur4s4Mxhg2Krtjq9F7GPkDwowtEqjXqgYlCOH8eBHrYc7e5/p4oPw40ALMT7i2Mhv9//A3j6BLpxXoS7N3DxVduInA2e3kfIekZv5wIijw=
+	t=1738951229; cv=none; b=SG+Op218XyRVMFR7/b2r51I6jUNEPCk8naN5pLhrm0UMpiGC5PgVzfuK1MP8nNvqMhijLA/vgiKhKe2HfRuPRZEfjSvhHBG7YtOweMRrubbDAFy4/ZTyTn9+5WAKEIDV/1Btq5rejbmrAkrZIa4R0OgQuzV6gzvEMWGntAxE79M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738951188; c=relaxed/simple;
-	bh=qsTJIapezLhW06qmRT26gxTR963xvPSpeajLEAGo7zU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=owJI9hLsQzvlOMVEuVsmDrZS65Fj8DeisoZAf+EE0FI9lT8KH1JrJIdMuPC1Y2uuy3iCwCrT6O/SBIwShlK9h5XmiWVMkSckPz3Mrw737G66IYONDtRvbjXnZYuq8pzeSr0rup/a+ti1KHK7Yuu7nuLETPmDAiYUS4v4OD/C2q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=manKdVlA; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1738951229; c=relaxed/simple;
+	bh=ebmbm1SA2evPzgRYp3musNvOVbJxxqYQ6sgiHGaC1e0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AdhbJWrfdqbICFiy3GzuLwo2fux6IbjO+VZ2LYHRwmTB85esKrc2WCNr+iejzz76mCsjHF33a0646AJ7f13B30bEg26cEHU3xrJimQ4PGOiJiq9OFoY4jgmNtp8eIQFh34/dLVszOjL2Fx2+30EaRptGjZNA74NXIoxflJwVpTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=O4Y/n+QO; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="manKdVlA"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-307de8f18d6so17021881fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:59:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="O4Y/n+QO"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3d14811cabfso1659995ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 10:00:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1738951184; x=1739555984; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7PwmuaIBJ/10qYXXlbzfefJdtGyrGJpw93xkGEeBXLI=;
-        b=manKdVlAEr21pgIoeTb/dwp8ulbOv2UqgP1EM9KyJx9Lvz660bhwrC8ToeF0SazzLA
-         Ef1AQMFfQBN3G6imEWAAXvEunzuxgg/i0jOalxqZY1FPMLpJA5BfMSNCkRsCvr4M6+d/
-         E6uCGFkDzl8D58Y3jLe2CqtwBOz7QLgN1bhhA=
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1738951227; x=1739556027; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xMNhNJkx3fFqX0U1Zs6VO58/T6R6XQxl18p8Q1ICoic=;
+        b=O4Y/n+QOBNRrBk7QTzoyn3uMRTV8tRHVcn9JcG3GqXb1MCqHwxixasu8tUQzDuGM6+
+         8PSTVkJqx1AXtPSvnla5KJH/G0s+T2ZtGcl2CRPrVcGJ7bxc9fH0Elbuigips209+a0W
+         tMq8HfS29LAvWg5OlMC+0Hr5O3YF0ENRAQowl+LcYWyyMXjXcB578vCE9VQMCX/1mSe4
+         B3R2ux4TGQD9ZNHNsN3nSvB4kJBFn0l/Fy0VO4Z2xmj06qzckgpvU68dJWtyjCNWwsUW
+         +pCDF3+BnIq6bZ1U3GHsYUxSS414ZWxNSFrxWUUcW80pQ2IwHdpTwdvHp0HVPOqDZGmk
+         0N+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738951184; x=1739555984;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7PwmuaIBJ/10qYXXlbzfefJdtGyrGJpw93xkGEeBXLI=;
-        b=uk6BauKuju+XfLvnmsRwssIduiFXe7lkivIVnAbdJ+dTS1/4vln1fPMwjCB1G7YVAE
-         H51zvlWmhCR9AKgvAskQ2j41r4iNuGFx3VHfNbL6g7yBN5+4rOE17v4QUIy65a6mGxOI
-         n/U/IiUMlBZrz1AS5SjF09fBW29mJPaQ0tI+6hppjUt2zoZbkqGBJMz0UccXiZOw3i0n
-         IIDBp1WaOGO00mFzRX1gnVfT7sKxjMmzggM7jCbWY+5G5ZN8DQP5l10lzwOhqD6RNSf+
-         M5FuPNa0EiAiu47CwQ6igBxvgIfNo3Dt1BwPrIUZfHrP4Y8jrb89kvRyaB2p+CjpChpx
-         iYww==
-X-Forwarded-Encrypted: i=1; AJvYcCU+y49SvObp0go2a2Cj2SivmJz+cw0LUPGnEOsgasU3u2GxvYmxLOFuJozBrT+TCEGjUc2Xh9MSun0LFq4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS2g3JS2dlVzLbAttZZQ8f986MbMuD6hSbxn9gtNU0CXwtVRxm
-	8EWZkbAzj0Ucb4xethqcNhXaSs/N52FPD+kd0J+W4UnnZsF+7O5py4U63C2nDDyLR8erX7zVgRH
-	eGLDo
-X-Gm-Gg: ASbGncuG246zdTlvmexef/cdY4QVX5qmB6L+sVQ9922AXjw0oofTG/Ib3KWlw95rrrN
-	Sr5KXMmB4l2PgIhMtFxMcbQh2B2HkOUYku6J3B4ZQy66+fKMI1MWIPsC1u48ioJT1h0+hcvoh6b
-	6tq95TLsDyvx9gEXyDBrkncyCFZQC1xzG2UiZElV178aq7daGUWUkgffnqfRhL/qLwGOg00TJyA
-	COBvW4DGHZawU7rqTvKUP6EN8M+z4aHoKYx4ji+mzW9Shsl5LC0kWMWH15aHTLCuFDA2TrpLdEt
-	jmaGYQMwQGx3mKq1/O8iibwCXa3BC+RkXUUkLgAsk6kqj+X5laBWOlE=
-X-Google-Smtp-Source: AGHT+IGN8Zg8gCYPOB74R3lO/Q4mqJe2zJioN6QW4A7FuETifGGJGb2t6vyZbEPtACufvn41+AbadQ==
-X-Received: by 2002:a05:651c:b29:b0:2fb:5f9d:c284 with SMTP id 38308e7fff4ca-307e57f1261mr11961511fa.16.1738951183633;
-        Fri, 07 Feb 2025 09:59:43 -0800 (PST)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de1a6549sm5386891fa.44.2025.02.07.09.59.42
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1738951227; x=1739556027;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xMNhNJkx3fFqX0U1Zs6VO58/T6R6XQxl18p8Q1ICoic=;
+        b=BDQePlDOehIKDTawWsavJ2VuLrbaQ+HTCOyvhnbo6DG+mFUYL9xyVKQFCCsK3t881e
+         A1/KmInjKNatxJJ9IVVAOj9zZsIyI/DJ5KQ6nIX3EDiqL012GjyJIo6j65PLh6PcYefB
+         f2iH0ZIzeSie+gQECmtDc2FE/PmxSqWvcxY3owj85URXEVqKD/lWh4RTKniNggufYxq4
+         YX0cst+LJouG73vt3Mp8S8Nu1RPDR5DMp7bDsu/xced+TVEUM2NSTYSbTrkbpg0OCbY0
+         3SB3g5YE8cFXsPIBSf/i2NykcvDfdqMpoJKP/bpmqZbj26zNsMRfUaIM5rdRAfFqFveJ
+         CmxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNLH+q+5C6LrWSJSmOx3bzeS7CslEIaQGXBoJtZ0FujeGe389EggCf6kk1NimJ8IAdBhsCx2MeWlC1ss0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWnWEOVjDel1gTDQ05RDQtbqKspeGgxkOnxIRJ0Sq/3RLfsU2o
+	Nu8DsbICmiGz9XknGxJvGexnRomdiBCUWEm95RMFgCk1puGSvrlDqa6lkecAiqQ=
+X-Gm-Gg: ASbGncuDnCNxLBCehBuD6xjCWg3Pk3UiIrXG0wSXrcNTLzDS9tzVFX3hiMiZPoeWgKP
+	qR52PSzfQB3I3iR2VDNHC4DsORpw0WXIvM6yPjMYVugLcyvGFsLVVon8s0YWicgH+ma3mh8WLAU
+	RckuuMB43pVpriPTzjfqQuNgpGG1B/Hien439Wi1MSaB0a40ekBctXcexrPqW+PU4nIipqOIzPh
+	JcpBdizu0AZieSlji6VaRQcHK61XWgk5EZg1MdkthYOg+17Ie7vXg8kEYLnNAotyGYJE1j77V4C
+	/ix54RFNU86lawOjJXiR0/ESPLeMqUccARS2Rz05slGm2mT2BD7dUTM=
+X-Google-Smtp-Source: AGHT+IGt1SBRGKsD6WpAiEsXocNvoOHnb4Bn+U0x/Qz/EiAOgMhIEF8/efAO7K9USdddQwvdoBY1EA==
+X-Received: by 2002:a05:6e02:20c9:b0:3ce:4b12:fa17 with SMTP id e9e14a558f8ab-3d13df1d891mr32114905ab.19.1738951226514;
+        Fri, 07 Feb 2025 10:00:26 -0800 (PST)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d05e9a0e52sm8627095ab.61.2025.02.07.10.00.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 09:59:42 -0800 (PST)
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54410d769f7so2272949e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:59:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXTwIZSXJ5Ipfsv9VYgxpgP7B7uf4zeuX5ujLRGg8q3utRB0t03Dfm4nNKF0U0DzXrY71xVjSpwAxg/GJs=@vger.kernel.org
-X-Received: by 2002:a05:6512:b8a:b0:542:6105:bb72 with SMTP id
- 2adb3069b0e04-54414a9cbc3mr1362214e87.19.1738951182378; Fri, 07 Feb 2025
- 09:59:42 -0800 (PST)
+        Fri, 07 Feb 2025 10:00:26 -0800 (PST)
+Message-ID: <8c43a1ac-ae57-4e90-a791-3f1eb61b6c70@riscstar.com>
+Date: Fri, 7 Feb 2025 12:00:24 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206131300.1295111-1-yelangyan@huaqin.corp-partner.google.com>
- <20250206131300.1295111-4-yelangyan@huaqin.corp-partner.google.com>
-In-Reply-To: <20250206131300.1295111-4-yelangyan@huaqin.corp-partner.google.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 7 Feb 2025 09:59:30 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=Xe90b6x4JF716=O==U3US-vONovcvDm0yfOconkFRPcg@mail.gmail.com>
-X-Gm-Features: AWEUYZnN1bml-NA4ebUvH8W9aveGL3aSVmaC8yx15fMw7Kdh-ZCSTxHkG5ADkjk
-Message-ID: <CAD=FV=Xe90b6x4JF716=O==U3US-vONovcvDm0yfOconkFRPcg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] drm/panel: panel-himax-hx83102: support for
- csot-pna957qt1-1 MIPI-DSI panel
-To: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
-Cc: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, airlied@gmail.com, 
-	simona@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
-	tzimmermann@suse.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: spacemit: enable config option
+To: Yixun Lan <dlan@gentoo.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Alex Elder <elder@kernel.org>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ spacemit@lists.linux.dev
+References: <20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On Thu, Feb 6, 2025 at 5:13=E2=80=AFAM Langyan Ye
-<yelangyan@huaqin.corp-partner.google.com> wrote:
->
-> The csot-pna957qt1-1 is a 10.95" TFT panel. The MIPI controller on this
-> panel is the same as the other panels here, so add this panel to this
-> driver.
->
-> Signed-off-by: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
+On 2/7/25 6:11 AM, Yixun Lan wrote:
+> Pinctrl is an essential driver for SpacemiT's SoC,
+> so let's enable it by default for this SoC.
+> 
+> The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
+> 'make defconfig' to select kernel configuration options.
+> This result in a broken uart driver where fail at probe()
+> stage due to no pins found.
+> 
+> Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
+> Reported-by: Alex Elder <elder@kernel.org>
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
 > ---
->  drivers/gpu/drm/panel/panel-himax-hx83102.c | 123 ++++++++++++++++++++
->  1 file changed, 123 insertions(+)
+> This should fix problem that CONFIG_PINCTRL_SPACEMIT_K1 is not enabled
+> when using make defconfig, thus fail to initilize uart driver which requst
+> pins during probe stage.
 
-Pushed to drm-misc-next:
+Thanks Yixun.
 
-[3/3] drm/panel: panel-himax-hx83102: support for csot-pna957qt1-1
-MIPI-DSI panel
-      commit: 05345cea4ff5a857612df3f10144dec685c07e6d
+Tested-by: Alex Elder <elder@riscstar.com>
+
+> ---
+>   arch/riscv/Kconfig.socs          | 1 +
+>   drivers/pinctrl/spacemit/Kconfig | 1 +
+>   2 files changed, 2 insertions(+)
+> 
+> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+> index 1916cf7ba450ec9958265de2ca41dc504d4d2f7c..17606940bb5239d0fdfc6b5aefb50eeb982d14aa 100644
+> --- a/arch/riscv/Kconfig.socs
+> +++ b/arch/riscv/Kconfig.socs
+> @@ -26,6 +26,7 @@ config ARCH_SOPHGO
+>   
+>   config ARCH_SPACEMIT
+>   	bool "SpacemiT SoCs"
+> +	select PINCTRL
+>   	help
+>   	  This enables support for SpacemiT SoC platform hardware.
+>   
+> diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/spacemit/Kconfig
+> index 168f8a5ffbb952cbeae3e3401c11149558e0a84b..aa3dea535def87ed75d86bc555b2b90643adbdea 100644
+> --- a/drivers/pinctrl/spacemit/Kconfig
+> +++ b/drivers/pinctrl/spacemit/Kconfig
+> @@ -7,6 +7,7 @@ config PINCTRL_SPACEMIT_K1
+>   	tristate "SpacemiT K1 SoC Pinctrl driver"
+>   	depends on ARCH_SPACEMIT || COMPILE_TEST
+>   	depends on OF
+> +	default ARCH_SPACEMIT
+>   	select GENERIC_PINCTRL_GROUPS
+>   	select GENERIC_PINMUX_FUNCTIONS
+>   	select GENERIC_PINCONF
+> 
+> ---
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> change-id: 20250207-k1-pinctrl-option-de5bdfd6b42e
+> 
+> Best regards,
+
