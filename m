@@ -1,100 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF7D191F62;
-	Fri,  7 Feb 2025 21:13:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F30191F62;
+	Fri,  7 Feb 2025 21:14:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738962808; cv=none; b=ZO7YaESEx7THsVNgsUWlycBL93whip/UMEsIFKQLIcvxaw+q9w5r77o37WUaA6XrqozNiFrIYxGchuvTH1h0DOYp7iDIVTN1gT7+MTozazm98AZArrZMZkZBbRj9NvKGksVQ5OJdt0wcC9FWdbxvjN5U8PAZ5rIeECsV1Gnmx1E=
+	t=1738962888; cv=none; b=FsObFx7PNOD44it1ba1zG4WdSQOXfTsn1wN+3h8NmUeCSW4JH1c1Q4gQXIvmJu3/Nwhx5PZa1og7MqYWk38jIT0qCMouoqS/SS+LgRj1arJA8VplbrzkGCOBzJim3X/0BZ+TH6fpP1qi7v9G1MfuAEZBO5raMWzDdQjTSzXJAhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738962808; c=relaxed/simple;
-	bh=i+FPbLfb3FeZGf8iVI9Kn0P0WUY2o6LfvZIp2136khc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AlrjKskJB9DWJDOO/d18vfspcynMLOQLW+55PNMDX7m6OBQjPfLYlw+depcbb03CesKY/rewwfpzsAhqOeuoN91tlvHK8zsXoNBxBJBF/0mJLk89KIHtOSiSbHxs0JkYSf0yO8cEU6H0JtF5HcmQwjiNisHu26BleVvEwoJc/ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hIHiE1PX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738962888; c=relaxed/simple;
+	bh=UzW/j/MhqjsYRn0dghOTG6lqfHaO4zHzu7s6Zg/VY/E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Yf+5SqMPPMm9WBBudqw9xDm7eCerFBLRnof9s7kKQG01M7cjeLjhX7ft5yi0d+BjFbNESZH5dM/odO/RfWQwZkkKNncaRnimaM3v9zUtfsNa9cJ+bxvnl6n9Wxi83WMvSUQhgdLH4vsXlDWBQu4k6zcf4QS6EyNysmEanEMVuhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ajEYgs9i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hIHiE1PX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77CC5C4CED1;
-	Fri,  7 Feb 2025 21:13:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ajEYgs9i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBDBFC4CED1;
+	Fri,  7 Feb 2025 21:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738962807;
-	bh=i+FPbLfb3FeZGf8iVI9Kn0P0WUY2o6LfvZIp2136khc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hIHiE1PXvwu/RZaOU381Yxl961zrhQfjJ/FjF7vm1gr9JDA4FgwbhIKgWC97jRl98
-	 98LKU7idXQKvb1j2/O3amjKUtC0fNIWQzdVAlXoJkb6AaoiRs4BBtHB/Myz9SWx6GN
-	 onG3LwdCvGZejOYKC4BV7CKnRRVw3EfmDAnt82i9AJwDSkko10uCVDsuADqQjX0Zkq
-	 rwYsPL9tF6jOHAfHhYFsrlOyvYKN+TEI1p88x9c4H0eopvfKg25xW2JXIF6ryufrD6
-	 ix1TTK1G26mSZIMmXhUCWOT+z+/Sqftr0d9SzeC/JjBxURkScVxbDYiG5loXQ9kSJq
-	 HZairn7WZzGEg==
-Date: Fri, 7 Feb 2025 13:13:24 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Indu Bhagat <indu.bhagat@oracle.com>, x86@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
- .sframe headers
-Message-ID: <20250207211324.jwtyy3z5ud2jwegi@jpoimboe>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
- <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
- <20250124192159.ypvqwoqjvhasamev@jpoimboe>
- <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
- <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com>
- <20250129020249.owmklacvuvss7z7n@jpoimboe>
- <9a726893-4973-40f0-a2b5-63b2036e2e4e@linux.ibm.com>
+	s=k20201202; t=1738962887;
+	bh=UzW/j/MhqjsYRn0dghOTG6lqfHaO4zHzu7s6Zg/VY/E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ajEYgs9iieuGO09n478aohb5YMW8lk2JTRt4af0yaVOQ1f/LWFzJYkZszvSuyxCdi
+	 m6MJHrjqS7u4zjp6Pb/+wZEJQyYHGR/Urwk/ywwC8++BNosP6hTySNThSXqHCI4oNW
+	 fUu9IFSkdAPdrkwWBvp08Sn/umIoCe6c3pZsqcnmfN3ZLGPcPAMS8pWApZRE7L6Ft6
+	 Fy+pgcqOCeOT3cjagQmE9QRcJQjXbP3sD7IOVEvDfxQhUauhP6RxywKknJiXHRFUZy
+	 gyJEPmo7EzMyKx9633gllG4ZmYJNCK9VwO8LtfbkGpEvRHIPCa4+UcIi56Si8I4zDy
+	 pYrDLxLrDHMMA==
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-307325f2436so23171411fa.0;
+        Fri, 07 Feb 2025 13:14:47 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVeN5m9HSSEoTdogWk9ET8q244Ha14ejdZle0SEPMixSEHCnE+oweAU6azd+1NyeV95h7MykZ3KhU/3TcfJ@vger.kernel.org, AJvYcCWOyDVZqFCNmxUSNLpLKvDfFNyMBf2z4xWx61fYc7+6SkiTGDAcQzTIZufYocPhTy3HiRk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeivdGUUuX4oMP4hvOb8qgxH6NpvDCiKcjNIbozebAeWz6BgNE
+	dqgJ6hkdQqfRa75hdjbfr+vIhVGDc4ApZ0pXWTTD5KHVoqodBBZbYJOi0LY2QtZRvFN7yEVx/6m
+	dpf46it2Wu7mup8wEjYG9T+Om32s=
+X-Google-Smtp-Source: AGHT+IFH/lse15fSsw/oIj5fPPzMgUf+j3EWKTx6cAiTONgWZxGRKhsKbpDczDZ5OAGzjx0G1mLA4wKdWJEkU80mgKI=
+X-Received: by 2002:a2e:a545:0:b0:302:3261:8e33 with SMTP id
+ 38308e7fff4ca-307e57afd20mr16636731fa.4.1738962886567; Fri, 07 Feb 2025
+ 13:14:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <9a726893-4973-40f0-a2b5-63b2036e2e4e@linux.ibm.com>
+References: <40ab531dfb491020ae1cc07d68dd03b0fb1d1fc8.1738440683.git.dxu@dxuuu.xyz>
+In-Reply-To: <40ab531dfb491020ae1cc07d68dd03b0fb1d1fc8.1738440683.git.dxu@dxuuu.xyz>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Sat, 8 Feb 2025 06:14:10 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARKnzM8hX1P1Gt8MDb6DxO4Nys7k9vphwqsrVW29vZg8g@mail.gmail.com>
+X-Gm-Features: AWEUYZm9fHMkVzPM1gtg6FqcNdCAygp82-dY1x8wHjOO6F2QFFyeM8FOUgnaSTo
+Message-ID: <CAK7LNARKnzM8hX1P1Gt8MDb6DxO4Nys7k9vphwqsrVW29vZg8g@mail.gmail.com>
+Subject: Re: [PATCH] tools/build: Skip jobserver flgas in -s detection
+To: Daniel Xu <dxu@dxuuu.xyz>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, jolsa@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 02:56:36PM +0100, Jens Remus wrote:
-> On 29.01.2025 03:02, Josh Poimboeuf wrote:
-> 
-> > Note FDEs aren't even needed here as the unwinder doesn't need to know
-> > when a function begins/ends.  The only info needed by the unwinder is
-> > just the fre_data struct.  So a simple binary search of fres[] is all
-> > that's really needed.
-> 
-> In SFrame V2 FDEs specify ranges bound by function start address and
-> length.  FREs in contrast specify open ranges bounded by start address.
-> Their effect ends either with the next FRE becoming into effect or when
-> their FDE range ends.
-> This concept enables holes in the .text section which do not have any
-> valid FDE/FRE information associated.
-> 
-> Your proposal lacks some sort of mechanism to replicate those holes.
-> It could be FDEs with a flag (or no offsets?) that specifies their
-> range has no valid information.
+On Sun, Feb 2, 2025 at 5:11=E2=80=AFAM Daniel Xu <dxu@dxuuu.xyz> wrote:
+>
+> Currently there is unnecessarily verbose output:
+>
+>     $ make -j8 bzImage
+>     mkdir -p /home/dlxu/dev/linux/tools/objtool && make
+>       O=3D/home/dlxu/dev/linux subdir=3Dtools/objtool --no-print-director=
+y -C
+>       objtool
+>     mkdir -p /home/dlxu/dev/linux/tools/bpf/resolve_btfids && make
+>       O=3D/home/dlxu/dev/linux subdir=3Dtools/bpf/resolve_btfids
+>       --no-print-directory -C bpf/resolve_btfids
+>       INSTALL libsubcmd_headers
+>       INSTALL libsubcmd_headers
+>       UPD     include/config/kernel.release
+>
+> The reason this happens is that it seems that make is internally adding
+> the following flag to $(MAKEFLAGS):
+>
+>     ---jobserver-auth=3Dfifo:/tmp/GMfifo1880691
+>
+> This breaks -s detection which searches for 's' in $(short-opts), as any
+> this entire long flag is treated as a short flag and the presence of any
+> 's' triggers silent=3D1.
+>
+> Fix by filtering out such flags so it's still correct to do a substring
+> search for 's'.
+>
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
 
-In ORC, a hole is simply specified by an ORC entry (aka "FRE") of type
-UNDEFINED.
 
-That could be done here as well: the linker would replace a gap with an
-"undefined" FRE which could be identified either by setting a bit in the
-FRE header, or by using a special fre_data[] entry.  For example,
-fre_data index 0 could just be a placeholder for the undefined FRE type.
+This is not the right fix.
 
--- 
-Josh
+The code for calculating short-opts is correct.
+
+This is documented in GNU Make manual:
+ Recall that MAKEFLAGS will put all single-letter options (such as =E2=80=
+=98-t=E2=80=99) into
+ the first word, and that word will be empty if no single-letter options we=
+re
+ given. To work with this, it=E2=80=99s helpful to add a value at the start=
+ to ensure
+ there=E2=80=99s a word: for example =E2=80=98-$(MAKEFLAGS)=E2=80=99.
+
+https://www.gnu.org/software/make/manual/make.html#Testing-Flags
+
+
+The root cause is different.
+
+
+
+
+> ---
+>  tools/scripts/Makefile.include | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.incl=
+ude
+> index 0aa4005017c7..a413f73a7856 100644
+> --- a/tools/scripts/Makefile.include
+> +++ b/tools/scripts/Makefile.include
+> @@ -139,9 +139,9 @@ endif
+>  # If the user is running make -s (silent mode), suppress echoing of comm=
+ands
+>  # make-4.0 (and later) keep single letter options in the 1st word of MAK=
+EFLAGS.
+>  ifeq ($(filter 3.%,$(MAKE_VERSION)),)
+> -short-opts :=3D $(firstword -$(MAKEFLAGS))
+> +short-opts :=3D $(filter-out ---%,$(firstword -$(MAKEFLAGS)))
+>  else
+> -short-opts :=3D $(filter-out --%,$(MAKEFLAGS))
+> +short-opts :=3D $(filter-out --% ---%,$(MAKEFLAGS))
+>  endif
+>
+>  ifneq ($(findstring s,$(short-opts)),)
+> --
+> 2.47.1
+>
+>
+
+
+--
+Best Regards
+Masahiro Yamada
