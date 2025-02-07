@@ -1,101 +1,108 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABB91A5BA6
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 19:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388F41A5BA6
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 19:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738954916; cv=none; b=OLewMcqY1Ji/QWrbWrgQZwWkG24tQ0SxwMUTP9b/hcQXT+dH6YqqXNcirpYmfPaIa5PQFt47QPGuCCZ4/Jg3EqwRmLLZzk/ZWxtb7CM3X6GKnK5PENphDTPSHZ82iVNbetDYvXqRTNWPSyw68Nnpcn5eRxWx8OprefPZUSmIJm4=
+	t=1738954930; cv=none; b=sCaYZJhgqUBhSTDkO8Gd0QIjhnnbxB5Mp+oTsDxpKeA0ZijZ/fbfY67SjjKiNfsz1VXo/55CGiIc0WJShgPINBNiGxs8e26lM6j2FDjk/Uti56+QSQH7b8QyJBQmrn0Y7fFh2tEO44CmeRvcgbHHfB04jgOTrBI7Keo9fEh7f9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738954916; c=relaxed/simple;
-	bh=YPSaecsiFXwDzTGHAFZ+jSzAX3eweeruBqLKgpgEvCY=;
+	s=arc-20240116; t=1738954930; c=relaxed/simple;
+	bh=9lMFGcnDh+Vm3/ngY1FYhUIdaRDXvS2jcOYj8/wDl9Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qdoRwWdw3w1473YD9Kj0lJmmeoGShhkhz13yvIrnvi0fpxtlkUoq5RuvLRj4mNEXJxF80o1tdzcnNPbp4yBe/u4eMAwCnxyXryA/wiU+kdEjg5u7vtRG1hqrKR5Cyb0vuj4c0R3pe8Dt8hFOB3QPAZF09f2z6ROvXQ3KmhQ2n/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=W9a48pDC; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	 Content-Type:Content-Disposition:In-Reply-To; b=NAmF/p13ZnGprHkkxlfL4xy5gXEXXYTucswikf5AgS8EXasvmuUgp5JZCrElf/sr8I39lE8AJqpZTdXxkOwkmJEBSwWM0w1eK5Hq8ZyMObqzqGin/pTyVn2rlrUhgrVCUDc8YLZ9B5by5r1tVRxn43Fp+wCVbFgeMx2cmwP9g+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j4ewA/7B; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="W9a48pDC"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7b7041273ddso218961185a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 11:01:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1738954914; x=1739559714; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jhHb/Iyzu9wCbvQ3EuxPsy9WEDtQ71gsxOEbCbrMAfg=;
-        b=W9a48pDCS4gt7FtBNlj7uKmO9Pm2RKBBxA9qICSurXf0AhrGc5f1hhwZGIeuFnT/Eh
-         QRcWjyALaxu8QteGT5B6VQVJ8ZXe5fLZMEBVDZk/rkDdtqRlF8HcrJjbCwN0QzQy78Ee
-         YLMOnUH7IylejaoHt3HLJRFJIc1zc9DZE8gSUYAnn0Rz7nNhc2JStbwQbbBl2/ZUmuXm
-         8CTNOlV1/pkv6WWuCp2aVNHycS9d9j9I0v4T6ZxqBCf4dyQ/QVJNNOkRZNvd5/v+tSMO
-         gaMmADwnAcZz7nWJziV7K77t6BnFs6Tap9R1Zwr+7tmnhHKX633UTaMlmk/MhKi/Q/Hi
-         ZdRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738954914; x=1739559714;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jhHb/Iyzu9wCbvQ3EuxPsy9WEDtQ71gsxOEbCbrMAfg=;
-        b=u8XHmCs8dwm8z0ByKxYvYreA2cp5YcEiDsGSAiRFmmyOUQvD1Kx5Qw5ycvrMSNq/SQ
-         R1ysjwzJiNvMoxH22kfgPnaeio/Ij7Ca64AZOiKiB/VM+juB0Z7NorL5odJowHPdmVLf
-         Kqzl1dg8nABVH1QMhhtKfOa84BNN1v7eltMI9Bek4Fo5mKq6MKegvQjvqsrcdpzZsYCm
-         8HY5WBv7d7FqaN1WsUDl9271yNwHrs53jCKWsHbcdFqxHV95ab9PXcFKKJlht24b8pkE
-         mD4dPNmQ8mu1xo614Sku9BhjKmrPI6cnEtAvZ0ctOzky4h6EJoLnnFluLmeEbeqYQbAE
-         I6Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCWOfUfJwUCcnQV2oLB7y6zriFxM1NRnvgSBser6UiUZE+br50wRHE6VNMd26nh3A53lCQPOJhq9HinSxuM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy30z83RSOhPx/1MAMgar0RVq1EQgBJWmvBeHUNLbouZHkQFUor
-	qWwDTmDkmKbzbkmThRDiaYE4GQNgheg2OGEb5vscaOc4kEesFJeFimwC5/AI5b4=
-X-Gm-Gg: ASbGncs+mO72OG3De4nVGXd6F/kL6ToKQ0CFA/PMO80/2jllgAe++r8FyyC5sHrpASg
-	XTAHFRNfBbm0rmaHGoFD1UGI4HpezS5ethcaBppWYX+QmBmq1fCgtUC5lBvDDKvKalz4r6hPJD1
-	+yqzczOiV/9ODuk7Cum8tseh3vFnwtqMu57uB396zqr8RtSJct8MmD2EL4wukUi9BRaQpYwwh5P
-	eXwqNg1qa2uXV5o3DnuOZ+BsoX+dwMr3M0y6j4jbRR5Vtz8cwTXfZiY7512EV3ezEVIFusu3E/M
-	fXA0VG5d0hFPtJ5C/M9hDbKucqJbcPMH367ChGhBzMTqUm/H16h2f5zXeSrofhJA
-X-Google-Smtp-Source: AGHT+IGI7NvAKLU4JsJOvorfEjiFHTyYvApddGJTHotUW76EJE4gTICxKMW+ZU1MxMaOyB1msPjlAw==
-X-Received: by 2002:a05:620a:2b99:b0:7b7:106a:1991 with SMTP id af79cd13be357-7c047bba9demr630217685a.16.1738954913493;
-        Fri, 07 Feb 2025 11:01:53 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47153bc75aesm19533301cf.64.2025.02.07.11.01.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 11:01:53 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tgTbs-0000000FUFC-1jHG;
-	Fri, 07 Feb 2025 15:01:52 -0400
-Date: Fri, 7 Feb 2025 15:01:52 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Mitchell Augustin <mitchell.augustin@canonical.com>
-Cc: saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com,
-	andrew+netdev@lunn.ch, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Talat Batheesh <talatb@nvidia.com>,
-	Feras Daoud <ferasda@nvidia.com>
-Subject: Re: modprobe mlx5_core on OCI bare-metal instance causes
- unrecoverable hang and I/O error
-Message-ID: <20250207190152.GA3665794@ziepe.ca>
-References: <CAHTA-uaH9w2LqQdxY4b=7q9WQsuA6ntg=QRKrsf=mPfNBmM5pw@mail.gmail.com>
- <20250207155456.GA3665725@ziepe.ca>
- <CAHTA-uasZ+ZkdzaSzz-QH=brD3PDb+wGfvE-k377SW7BCEi6hg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j4ewA/7B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738954928; x=1770490928;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=9lMFGcnDh+Vm3/ngY1FYhUIdaRDXvS2jcOYj8/wDl9Y=;
+  b=j4ewA/7BTGQ/lFvXevdN0KWo4xLWi9ujhD2CWfHEEDZ3ocediox3pMEp
+   TlSAHQgX67vZYNP2eOcXDrSjxatlud7yfUT00O4NBTgHl0XbAyIr9yDsW
+   QyKHam9y6g9XK6zpp3lzqkJBzt5otGgAaUJVnjdMUp6O4OAyi+Ihz6tq+
+   P6hd90h1tY89S7ddpqGf8Fy1Q2Mt25WlcBhNau7NpIJwQLyKsnI89kXNe
+   J6mq2VbXLmoRccZ85Aj3zNnuhHohreJlZR9MPY7fviM2txinMAhvRh5Em
+   jUE6tcaCest5WoWTFxpUpgaDmFalm7A5YFh3KAyLB/XQqdbexzFxdmwzH
+   A==;
+X-CSE-ConnectionGUID: iOsbxl8/S0u5bJvOpb4wLw==
+X-CSE-MsgGUID: cX/6VvZYTziZX2drbhXEcw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="50585430"
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="50585430"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 11:02:07 -0800
+X-CSE-ConnectionGUID: BzjZhFMbQtqkTqO+k33isg==
+X-CSE-MsgGUID: cN59XlJOTFG7I4gwIBy78A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="111448396"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 11:02:06 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tgTc4-00000009Iol-1iBq;
+	Fri, 07 Feb 2025 21:02:04 +0200
+Date: Fri, 7 Feb 2025 21:02:04 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] kthread: Return the assigned value rather than 0
+Message-ID: <Z6ZYrFY_3edV5HZr@smile.fi.intel.com>
+References: <20250203164855.3699026-1-andriy.shevchenko@linux.intel.com>
+ <Z6FjGV1-CxE12f8L@pavilion.home>
+ <Z6IkFec26HmiwM4H@smile.fi.intel.com>
+ <Z6YbTgpbimhonft2@black.fi.intel.com>
+ <Z6ZRu4biBY7Y_Zss@pavilion.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAHTA-uasZ+ZkdzaSzz-QH=brD3PDb+wGfvE-k377SW7BCEi6hg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z6ZRu4biBY7Y_Zss@pavilion.home>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Feb 07, 2025 at 10:02:46AM -0600, Mitchell Augustin wrote:
-> > Is it using iscsi/srp/nfs/etc for any filesystems?
+On Fri, Feb 07, 2025 at 07:32:27PM +0100, Frederic Weisbecker wrote:
+> Le Fri, Feb 07, 2025 at 04:40:14PM +0200, Andy Shevchenko a écrit :
+> > On Tue, Feb 04, 2025 at 04:28:37PM +0200, Andy Shevchenko wrote:
+> > > On Tue, Feb 04, 2025 at 01:45:13AM +0100, Frederic Weisbecker wrote:
+> > > > Le Mon, Feb 03, 2025 at 06:48:55PM +0200, Andy Shevchenko a écrit :
+> > > > > Recently introduced kthread_affine_preferred() has a bug that the value
+> > > > > of ret variable set but not used. This breaks the compilation with error
+> > > > > (assume default CONFIG_WERROR=y and `make W=1` to run the build):
+> > > > > 
+> > > > > kernel/kthread.c:862:6: error: variable 'ret' set but not used [-Werror,-Wunused-but-set-variable]
+> > > > > 
+> > > > > Fixes: 4d13f4304fa4 ("kthread: Implement preferred affinity")
+> > > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > 
+> > > > Thanks but I already have it queued there:
+> > > > 
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/frederic/linux-dynticks.git/commit/?h=kthread/fixes&id=1b0332a42656b798bea867631d739de023633ec6
+> > > > 
+> > > > I'll do a pull request shortly.
+> > > 
+> > > I'm fine with any approach as long as the issue will be fixed rather sooner.
+> > 
+> > Any news? As of today no appearance of the (alternative) fix either in upstream,
+> > or in Linux Next. What's the plan, please?
 > 
-> Yes, dev sda is using iSCSI:
+> It's there for a week or so. I must confess I should have advertized it:
+> 
+> 1b0332a42656 ("kthread: Fix return value on kzalloc() failure in kthread_affine_preferred()")
 
-If you remove the driver that is providing transport for your
-filesystem the system will hang like you showed.
+Thank you, I see it now!
 
-It can be done, but the process sequencing the load/unload has to be
-entirely contained to a tmpfs so it doesn't become blocked on IO that
-cannot complete.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Jason
+
