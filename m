@@ -1,116 +1,187 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F9A1DF97D;
-	Fri,  7 Feb 2025 12:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8304B1DEFDC;
+	Fri,  7 Feb 2025 12:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738930337; cv=none; b=NBic+kvU1oY1ihdbdcKDhVg81UT+nd73AhTA8PcLO6G1sI6/t4Q0fryTkBhKeqFq6x7CgCinxXK9XHQT0ovyMp6Q6LWXtr272itUsV2TtUgZzn3zbwYZ/O+zbcp6TihQhFP8eAh9+bw3ZaUJ7DWRrqlhFqtLUgkO3+86OZy+T1w=
+	t=1738930414; cv=none; b=or62JOQQ2crzA54tjqADr9Np/NEb76AVhDZ4MBxdEcylk8t1aIwu0jFuYyBqfyPKQLXV3OtuL8IRspaXoP6lPVBdZ+/4fefcylZWC7Hi7u0k7nThmQDX9Z+ZIFxRH/Tn3edllZBUSA6hLU5d1LqHRCcCo0hVk4KmzbFwanviUig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738930337; c=relaxed/simple;
-	bh=JHVNcI3xg4IrPDaXnnLHrbwRcYBbXD8MmMYM+m8cIxY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=g7ucMMLSawh+XgJ9jxKe6iD5vJczDKFUD9QVWacnEuPK+OsjgXfMZ/rERGppJW8E+gprEphmMNfwPG8Rb3DhAIhqHUt3uBbGaRwmF6PYrdxPLESteMupcL8vNJ3w4CalzzY80NFgE+gg9KTgQjzmCuOQb8Fstf8X2ho73zO5SO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from [127.0.0.1] (unknown [180.172.76.141])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 1D9FF342FDD;
-	Fri, 07 Feb 2025 12:12:11 +0000 (UTC)
-From: Yixun Lan <dlan@gentoo.org>
-Date: Fri, 07 Feb 2025 20:11:42 +0800
-Subject: [PATCH] pinctrl: spacemit: enable config option
+	s=arc-20240116; t=1738930414; c=relaxed/simple;
+	bh=UgGDfz4QxlxB7uGN8UyOKQSTzMDA+3Otn6I41VTV8cA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ty+ZZzfauGkUO+90JmBm5KlVxaPxBr1djib2b4iyBEQrru1mSZL2FbfApOiF0ROxjbZ6lnhqm7C/KALiJF5dqyCXJVONvGsNKjZMoe9nO2q7qNYzp/DJSNv4dCIeIB6c7kjTT6gB/y6CutWklLzG1pQZXAdHfXmdCbQgrZnohpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=hbmmYScl; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="hbmmYScl"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id BB49AA0155;
+	Fri,  7 Feb 2025 13:13:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=9OWJCfb9mBLeS+qmNVaUT+6UZW8yr/J2AZVV36sD2ZM=; b=
+	hbmmYSclNOifu72HvKJxj6Y5pZNFpH6l4kkirtkjOaoTZiSI7K3JJAUx8Pa3SXq+
+	mdf8oDbbSLODUF38fKCw0nGjT/imQ/ZCqHImbjtST5Av33AEF2xuSnMRQVnJEaVV
+	7yBq17zEmanhUQdwMksLjcRS6CAQTLnTM6VpiNQPdzd7xuyayyMTpwZyMJTNAKso
+	bxR2R2EZyLfukKSKdvGy9BfIQiXk0E+0pNT644TuNfEa4jS+4+batQACg9oXVLeH
+	00FXDQk41hra3YYyEi3QMXIHacJqmEI3H9Ta8JFpToX05GGly/uyXWUo01MBiQR8
+	ktIS65aCK+9sJUnVuVGn7rcq65TWPOCXAoXMZt1As9uVHV1vxd5f/GQHdTvMshN5
+	fElzM0reZ1kyBJ2vGSMG/KRCaBfuUa86hfYri9Sf+mkb4YjolUlbbftrg6NvGL8b
+	4m/dsJyeK492Ix9v9RnaoM+7yZit0YD4PPzwBmzTZnWpR13Jq+mJrz3YtYXMrOlc
+	gFruXYe7sMO19gdVizP/2P8joDU51Lr9JNcYrmSrWK+ctVgGhl+kQ5514aYWa6gv
+	mn6sYR8uiBV4oxnmSXhoC3PnZO0ZE6EDAhC/jR7QQp6oB6HYqq8kJKOTPdqQU2cG
+	5I62Vbc/hrgsci1ULrMGQblwR116tSu2GaIvWIFI3P4=
+From: =?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>
+To: <imx@lists.linux.dev>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: =?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>, "Michal
+ Swiatkowski" <michal.swiatkowski@linux.intel.com>, Jacob Keller
+	<jacob.e.keller@intel.com>, Simon Horman <horms@kernel.org>, Wei Fang
+	<wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>, Clark Wang
+	<xiaoning.wang@nxp.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH net-next v4] net: fec: Refactor MAC reset to function
+Date: Fri, 7 Feb 2025 13:12:55 +0100
+Message-ID: <20250207121255.161146-2-csokas.bence@prolan.hu>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-k1-pinctrl-option-v1-1-e8a7e4d8404f@gentoo.org>
-X-B4-Tracking: v=1; b=H4sIAH34pWcC/x2MQQqAIBAAvyJ7bsEkC/pKdKhcaylMVCIQ/550H
- JiZDJECU4RRZAj0cOTbVWgbAduxuJ2QTWVQUmmp5IBni57dlsKFt0/VRkN6Ndb0a6cIaucDWX7
- /5zSX8gFzfmeRYwAAAA==
-X-Change-ID: 20250207-k1-pinctrl-option-de5bdfd6b42e
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Alex Elder <elder@kernel.org>, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
- spacemit@lists.linux.dev, Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1848; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=JHVNcI3xg4IrPDaXnnLHrbwRcYBbXD8MmMYM+m8cIxY=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBnpfiYZWflhguUmnNsz2Ee2Fm6knaCOFupVZUID
- MU7bzEB0NSJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ6X4mF8UgAAAAAAuAChp
- c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277c0xD/9QSxsI/yGV+w8nXX
- IyjEUQiRt+ioHM9mdbjlpQZlxg064SV6PFNJhvuyZuXKslsnava4tySY1VwWVWggZsguyD0ZlHI
- drKklsQ19Lj7Fhr140KgPHzLldl7OSqLU0aBLkpWTEZcS4UWA2Sxh4PbLWVZZ4zOxyrDN5npP/Z
- tGgI+Eaa/BzLj5UaavGoC8uRnVPXpvcCBWDCojGT3Mm2j1rvBJNt4uCO86DT6qGo11xaFP8obJB
- ftB4g5d/W/MeMvphkXHWDFzgmYX5Q8MhGw2CwhpsuOt30JyVNmHzOqWEvHQXpQzQShWuJJakYgx
- VCrpGvlkeJhzWb6Ga2c1dsTlgZGmWZQKQH8nVN+3FOCRAqO8tWKd3zgcewPuHI5YZOt0261YL06
- x0oDhWqFkhdrA7AKMnd94Lmx1W1ZbQom2/Wg53Ap99Y8aDCVy9dK1Q2fuCJOcd1HWAcvN896506
- 1JNVtB+3eWIJbYHSJr9U34dkd8vMWLZ4gYO4Ayo1q822S2N94wxv2BJ9yrgAYdNM9FbeWZr27x+
- cxUGLS1sRTXbCavDMvuPd3Hg3WybmGA6ZcsVDuQZmd4t2h5hKawvDfnAqNYMhn0gIe28ung7IyO
- D/3nwcEUsaSeJQ3W3nlzvWeFpLy4/FK0b9VKK9sgRSpok1OgK2KUeyyt+ER6f3aCLJ0w==
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1738930407;VERSION=7985;MC=1996129542;ID=399764;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A29ACD94852617560
 
-Pinctrl is an essential driver for SpacemiT's SoC,
-so let's enable it by default for this SoC.
+The core is reset both in `fec_restart()` (called on link-up) and
+`fec_stop()` (going to sleep, driver remove etc.). These two functions
+had their separate implementations, which was at first only a register
+write and a `udelay()` (and the accompanying block comment). However,
+since then we got soft-reset (MAC disable) and Wake-on-LAN support, which
+meant that these implementations diverged, often causing bugs.
 
-The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
-'make defconfig' to select kernel configuration options.
-This result in a broken uart driver where fail at probe()
-stage due to no pins found.
+For instance, as of now, `fec_stop()` does not check for
+`FEC_QUIRK_NO_HARD_RESET`, meaning the MII/RMII mode is cleared on eg.
+a PM power-down event; and `fec_restart()` missed the refactor renaming
+the "magic" constant `1` to `FEC_ECR_RESET`.
 
-Fixes: a83c29e1d145 ("pinctrl: spacemit: add support for SpacemiT K1 SoC")
-Reported-by: Alex Elder <elder@kernel.org>
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
+To harmonize current implementations, and eliminate this source of
+potential future bugs, refactor implementation to a common function.
+
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Csókás, Bence <csokas.bence@prolan.hu>
 ---
-This should fix problem that CONFIG_PINCTRL_SPACEMIT_K1 is not enabled
-when using make defconfig, thus fail to initilize uart driver which requst
-pins during probe stage.
----
- arch/riscv/Kconfig.socs          | 1 +
- drivers/pinctrl/spacemit/Kconfig | 1 +
- 2 files changed, 2 insertions(+)
 
-diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-index 1916cf7ba450ec9958265de2ca41dc504d4d2f7c..17606940bb5239d0fdfc6b5aefb50eeb982d14aa 100644
---- a/arch/riscv/Kconfig.socs
-+++ b/arch/riscv/Kconfig.socs
-@@ -26,6 +26,7 @@ config ARCH_SOPHGO
+Notes:
+    Recommended options for this patch:
+    `--color-moved --color-moved-ws=allow-indentation-change`
+    Changes in v2:
+    * collect Michal's tag
+    * reformat message to 75 cols
+    * fix missing `u32 val`
+    Changes in v3:
+    * rename parameter to `allow_wol`
+    Changes in v3:
+    * clarify message
+    * collect Jacob's tag
+    * rebased onto c2933b2befe2
+    Changes in v4:
+    * collect Simon's tag
+    * rebased again
+    * drop Fixes:, target net-next
+
+ drivers/net/ethernet/freescale/fec_main.c | 52 +++++++++++------------
+ 1 file changed, 25 insertions(+), 27 deletions(-)
+
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index f7c4ce8e9a26..a86cfebedaa8 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -1093,6 +1093,29 @@ static void fec_enet_enable_ring(struct net_device *ndev)
+ 	}
+ }
  
- config ARCH_SPACEMIT
- 	bool "SpacemiT SoCs"
-+	select PINCTRL
- 	help
- 	  This enables support for SpacemiT SoC platform hardware.
++/* Whack a reset.  We should wait for this.
++ * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
++ * instead of reset MAC itself.
++ */
++static void fec_ctrl_reset(struct fec_enet_private *fep, bool allow_wol)
++{
++	u32 val;
++
++	if (!allow_wol || !(fep->wol_flag & FEC_WOL_FLAG_SLEEP_ON)) {
++		if (fep->quirks & FEC_QUIRK_HAS_MULTI_QUEUES ||
++		    ((fep->quirks & FEC_QUIRK_NO_HARD_RESET) && fep->link)) {
++			writel(0, fep->hwp + FEC_ECNTRL);
++		} else {
++			writel(FEC_ECR_RESET, fep->hwp + FEC_ECNTRL);
++			udelay(10);
++		}
++	} else {
++		val = readl(fep->hwp + FEC_ECNTRL);
++		val |= (FEC_ECR_MAGICEN | FEC_ECR_SLEEP);
++		writel(val, fep->hwp + FEC_ECNTRL);
++	}
++}
++
+ /*
+  * This function is called to start or restart the FEC during a link
+  * change, transmit timeout, or to reconfigure the FEC.  The network
+@@ -1109,17 +1132,7 @@ fec_restart(struct net_device *ndev)
+ 	if (fep->bufdesc_ex)
+ 		fec_ptp_save_state(fep);
  
-diff --git a/drivers/pinctrl/spacemit/Kconfig b/drivers/pinctrl/spacemit/Kconfig
-index 168f8a5ffbb952cbeae3e3401c11149558e0a84b..aa3dea535def87ed75d86bc555b2b90643adbdea 100644
---- a/drivers/pinctrl/spacemit/Kconfig
-+++ b/drivers/pinctrl/spacemit/Kconfig
-@@ -7,6 +7,7 @@ config PINCTRL_SPACEMIT_K1
- 	tristate "SpacemiT K1 SoC Pinctrl driver"
- 	depends on ARCH_SPACEMIT || COMPILE_TEST
- 	depends on OF
-+	default ARCH_SPACEMIT
- 	select GENERIC_PINCTRL_GROUPS
- 	select GENERIC_PINMUX_FUNCTIONS
- 	select GENERIC_PINCONF
+-	/* Whack a reset.  We should wait for this.
+-	 * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
+-	 * instead of reset MAC itself.
+-	 */
+-	if (fep->quirks & FEC_QUIRK_HAS_MULTI_QUEUES ||
+-	    ((fep->quirks & FEC_QUIRK_NO_HARD_RESET) && fep->link)) {
+-		writel(0, fep->hwp + FEC_ECNTRL);
+-	} else {
+-		writel(1, fep->hwp + FEC_ECNTRL);
+-		udelay(10);
+-	}
++	fec_ctrl_reset(fep, false);
+ 
+ 	/*
+ 	 * enet-mac reset will reset mac address registers too,
+@@ -1373,22 +1386,7 @@ fec_stop(struct net_device *ndev)
+ 	if (fep->bufdesc_ex)
+ 		fec_ptp_save_state(fep);
+ 
+-	/* Whack a reset.  We should wait for this.
+-	 * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
+-	 * instead of reset MAC itself.
+-	 */
+-	if (!(fep->wol_flag & FEC_WOL_FLAG_SLEEP_ON)) {
+-		if (fep->quirks & FEC_QUIRK_HAS_MULTI_QUEUES) {
+-			writel(0, fep->hwp + FEC_ECNTRL);
+-		} else {
+-			writel(FEC_ECR_RESET, fep->hwp + FEC_ECNTRL);
+-			udelay(10);
+-		}
+-	} else {
+-		val = readl(fep->hwp + FEC_ECNTRL);
+-		val |= (FEC_ECR_MAGICEN | FEC_ECR_SLEEP);
+-		writel(val, fep->hwp + FEC_ECNTRL);
+-	}
++	fec_ctrl_reset(fep, true);
+ 	writel(fep->phy_speed, fep->hwp + FEC_MII_SPEED);
+ 	writel(FEC_DEFAULT_IMASK, fep->hwp + FEC_IMASK);
+ 
 
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250207-k1-pinctrl-option-de5bdfd6b42e
-
-Best regards,
+base-commit: 26db4dbb747813b5946aff31485873f071a10332
 -- 
-Yixun Lan
+2.48.1
+
 
