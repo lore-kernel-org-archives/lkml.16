@@ -1,64 +1,65 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D56B1DE2C5;
-	Fri,  7 Feb 2025 11:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F511DF726;
+	Fri,  7 Feb 2025 11:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738928963; cv=none; b=ATaP35hqpxJXBgqVoy6ORU+euxuHR15tUwJYMN547VHNjg7oRxuvd5YzGXvFOCoE9g/uXLPmYDDQffrlZJPNn5rCfzgUwUhDm76Cal0FlxKSW3LGq+AanBxhcZmCDAPJWbCsvvG90l7w+wDSG+v/KdamzyNF/H5dLidg4P2OaR4=
+	t=1738928967; cv=none; b=szXwaLljJVfjZgxNZul79UlQMdoeKUcRyOp3KxW97etkqJDtxD0xseMKTSEmGkqRwr3ldnwvdN3Mp6lxv0HDgLHey5VQb/vaiOzHwdryzXHlB35qcSLzfEb7cErwaH9jUbD1nYOJ43c6m+Bg4Xio4/4uUHNmwi2zX/eZvcYJD7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738928963; c=relaxed/simple;
-	bh=0Yf/Rfr+NHX2/Q4mKwJy176ogs/lxV/TndOmxnrns74=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BvGE4BXkgCtZkMKkrA3HMup6YzQ2lSu3azHkxLz0jaWqSrLvsxu9mj7E8mj9WB7qVYnRQVRrP86RwoIc4E6UuJQU1/UMDhatbW+VtAlk88uBqhZeJnwavAXZM+kAHPHoiHRgP4V7K53qdG1W03kfxI/+ufPdiBd4Ejk2y8zGNtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WpJH5huM; arc=none smtp.client-ip=209.85.160.173
+	s=arc-20240116; t=1738928967; c=relaxed/simple;
+	bh=6LI98nWpmfIwKLFD4MOsZyS7JGUGVQ9Mj8HjC795U5s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KIVnJLOXbh4usHvWl2L06oEqIDsbo5YH/UyXwPwgZ14toKw/8b+Zm5NRhumQ9kkIWj/mL1swX7dlpA1YruV8fGyknto02TjL/tp3Qu4bjQ9amTUtRCMDsjaUeedYh6H4TeBJMhm7cggqBKBg1XHvuHQnv42Jyc4+cPlmjXmOXFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OQESw395; arc=none smtp.client-ip=209.85.160.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpJH5huM"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4679eacf2c5so18810791cf.0;
-        Fri, 07 Feb 2025 03:49:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQESw395"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-467a63f5d1cso16174081cf.0;
+        Fri, 07 Feb 2025 03:49:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738928961; x=1739533761; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Sw/J6qj2MKqhorzz/+v7HPrex3uNLaL4DKE5oDSkpI=;
-        b=WpJH5huMEHBjpA41nvYG52gMEWJl+Wu31aeD5ZL63JMRQjCiA0IPHFagAWP7f7NcPj
-         1R7h8khC4OibOBnGE8ha1ihtXl25j1QvkKbCrbU6b2+InhZeCs4tygSXcTUhWa6L9O1L
-         jf21Bj5rM3kW5iKPSHr+gLvZhXnUc9qeGLGf5UUdYcGmr0GO4mH54w7UDrUG8fTl+erh
-         Hx2Z0wVMf66vi8UeQxg5LhqTAW0uze+yMfQY9ocX+vLAP4thkx72uIZKIYOAako4E2Rt
-         EtgudzC4IXS7CvNu/mw2J6KIup//GQ4Nn7mMCHPuhiId4edZ2Ef4V/MVWAgEVugvzTcr
-         oh2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738928961; x=1739533761;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1738928965; x=1739533765; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2Sw/J6qj2MKqhorzz/+v7HPrex3uNLaL4DKE5oDSkpI=;
-        b=PnIunVrrYuNrVWeeXWuqAwMJHyW2biZZq3K0IoFbmhb+K5BY1wNULA+8eJpTH5kT6+
-         7yk7ZaEd5MtmFAqDNFyfDdaJH4k7O9xHsqlC3Wvhm5Och76x/1Ma37Nn7U7mCpguScO6
-         x8hzewUeP+IqtSZ4X0jUp/H/je9rc9eftn9sk1BeEClDz/RJGBOy+psIl8ujLNzUpDVl
-         Qff202+rCgBzCwSQkhHJQGUKPtQ5Vb/23qEsv8BUFDAZ07xQFMLCRqrBq15D4dhvS4SU
-         s9uR4PIvkQqb8xU/HYuO5IpJEJB6uHMeQX1f/7YEzf7hTaDKXNhYLIyHryE6GK6/uieX
-         G6kA==
-X-Forwarded-Encrypted: i=1; AJvYcCWAXwT3lZZnTtRJSdYkwVBYx0wMiq9JdFAXG8z+oJcCDisFgG5U7NobyDpyqONN6Xf5CDqeQxWh6pqCYm087iU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+x4VH7Q5iAzXaFki0StBGsU8AAh024E2lRu3uyeHRBdVpyzpl
-	9koT7H1a7Es1YVSOvCUy8IqQXLOHCGEH09PVkOqt0rbpfq6AFgr/
-X-Gm-Gg: ASbGncuP03JjYXGoPLklgzysV8MsTol4+bnTm2zjDl9M7olslPfF6hZGXpsY1OdhfuV
-	ZV07vwMj3/wBjTGjo+iSGQOnmXeK+X/tWfmBsdBQVmGNFgczOI90EXXLmjt1mnbRZhxgAZE/60w
-	lfC5EWbIVpfa15kCD+OKdbnXwEsbAgRb5h725mkwVRIli4Yd1S9fZ4xGrjwVl6lkA1XzhDbeSPf
-	qOd9qTSRIutIIegO9vdJJBnaxtjC7e3lnt+tMyxgx/IcAQTLX700GarAhIan/AIFl/KB5VkgR4i
-	93wbSBVKac7TycZEuJiAUpyrU+GnSSETP0w8
-X-Google-Smtp-Source: AGHT+IHkFVQChPxz9j2Un74KGPPMKNixrHI7/GTnMnz7ga7iR+in4Q1VqQqga8PB9wfht5h6kyyAqA==
-X-Received: by 2002:a05:622a:281:b0:467:5712:a69a with SMTP id d75a77b69052e-47167a2b105mr39805311cf.29.1738928960844;
-        Fri, 07 Feb 2025 03:49:20 -0800 (PST)
+        bh=hK+YCFAeUnwDbxFTqeARy5CxKfn0P294F8L6cIYwfKI=;
+        b=OQESw395PusovQppro4mGytZkA0pR2rIE5DFbGfO5m6F/Dfp2zGJej2+OdYGQJzXPd
+         70RoZkmNvabjLJucTBSqmylXrW60LDpAspFH7wyQZHvnr8F/NbyJq8CXq2lHWeFO0FMR
+         FT4A9W2OVaqXEzkUQ5W1GUKCbNQTMnRcKeQhDFpgvQ+YIMHglIPSlO/0jKHOlGz81qCl
+         06SDJrUcECjhw7r8tsX0KQQEgzSL8HEHQ4Fs/DWbnpL+M2th1EAZKIrsvkpb2upWiJOs
+         VKrNVOoPQCWvqJWymLwEk+82lv5J2tQjWE216adhX65QTrPuUa//Uv2v7FJ0h8R2egS7
+         d9Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738928965; x=1739533765;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hK+YCFAeUnwDbxFTqeARy5CxKfn0P294F8L6cIYwfKI=;
+        b=JUszsDCaFK7SWSRb2XU/GeW1YSsNqOQCycmd00mAJqMivGx1dnUctCowX09M/GESze
+         Z8RkwV6tcikBNz9IFWrK/frWIsS1YSd50KEm0PRNXKiPOnMOAj6tXU/DCPocK+w117zz
+         0JEjykIUUTW1qpJhlp6PhYaSOpfrNIQYWr8+hQ77S+9LBTrdMKSvJ5DZGRSo0FjzSaE0
+         PzYEP2jtnIN2pOAx/FzQir8cjDnUlwXipvACW0L5iJ5gtBVIIpgQNSYVWwDwLKMHLK9H
+         bOU2tsHx93PBB6BH32GaJa2upGGa470PtxYAi5vq7Y2+Anl1lMli5NqgWq8nTz2wEkqj
+         neNg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxMa3p67GFUDHAr4N5Cv0AG5jBBVNAhfbPCUQYdQ9ZePelJNS1CUZUOJFgPyzJTLGbbySmTDwl7zQzJlZEWvk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAIqTGAc6McdxhNhlbq3PXxTcQbIBhzNlCg6pQoa/rBO5zCaOj
+	Sx/a40YYmHJlKJCgUHdt0/K3AYzQo0SHIp0UaKGA8JqZppx/QCdE
+X-Gm-Gg: ASbGncuK6jFYCSn+bmL73ofnoOeG0gqBSxlxV7XpBHO0fxQbCa+3r6nlpSLBAV3sdDd
+	qbGOth1UJm6t5fJ36by/hpCt1ZMRiCryx0H72XpraAZT+TqrfKTncykxOsalN1bgVzcCIZThB2E
+	3bxBPYLwC4ki6ArbYjYtySH06KKg9EBPDjvjpwHiPoM/KZUa3G8Z7XJwAltm9DFOJb9g3icjqAT
+	80POJ+IVvaP7irHenN5j7aH1mZE+EkKdvEQjaFsCWLPHhnbPUgAWDTKuJ4Z23JsCay3bgLSIQi3
+	qli9CpWFYSeoXkP6q9KyWhraxLj/pSa/U4Z/
+X-Google-Smtp-Source: AGHT+IGxR5KcsF0QxbLNpPy+JQtMWenZBATsqt2Lkl51oLAVcnzHiSaaIoK94C4AErF4bUXchTkRRA==
+X-Received: by 2002:a05:622a:64c:b0:466:ac03:a714 with SMTP id d75a77b69052e-47167ad097dmr41893781cf.36.1738928964719;
+        Fri, 07 Feb 2025 03:49:24 -0800 (PST)
 Received: from tamird-mac.local ([2600:4041:5be7:7c00:fb:aded:686f:8a03])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471492763ebsm15533731cf.1.2025.02.07.03.49.18
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471492763ebsm15533731cf.1.2025.02.07.03.49.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 03:49:19 -0800 (PST)
+        Fri, 07 Feb 2025 03:49:23 -0800 (PST)
 From: Tamir Duberstein <tamird@gmail.com>
-Subject: [PATCH v4 0/2] scanf: convert self-test to KUnit
-Date: Fri, 07 Feb 2025 06:49:10 -0500
-Message-Id: <20250207-scanf-kunit-convert-v4-0-a23e2afaede8@gmail.com>
+Date: Fri, 07 Feb 2025 06:49:12 -0500
+Subject: [PATCH v4 2/2] scanf: break kunit into test cases
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,11 +68,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADbzpWcC/33NQQ7CIBCF4asY1o4BhpbqynsYF5ROlajUQCWap
- neXdmNjjMv/JfPNwCIFR5HtVgMLlFx0nc+h1itmz8afCFyTm0kuCy5QQLTGt3B5eNeD7Xyi0EO
- reWMR6xqVZfnyHqh1z1k9HHOfXey78JqfJDGt/70kQADf6rKQquVUm/3pZtx1Y7sbm7wkP4bk+
- NuQ2ZBam1JUTcUVfRu4NNRvA4EDVmWjLRJpoZbGOI5vnxPVxz4BAAA=
-X-Change-ID: 20250131-scanf-kunit-convert-f70dc33bb34c
+Message-Id: <20250207-scanf-kunit-convert-v4-2-a23e2afaede8@gmail.com>
+References: <20250207-scanf-kunit-convert-v4-0-a23e2afaede8@gmail.com>
+In-Reply-To: <20250207-scanf-kunit-convert-v4-0-a23e2afaede8@gmail.com>
 To: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
  Steven Rostedt <rostedt@goodmis.org>, 
  Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
@@ -79,99 +78,168 @@ To: David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>,
  Sergey Senozhatsky <senozhatsky@chromium.org>, 
  Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- Tamir Duberstein <tamird@gmail.com>, 
- Geert Uytterhoeven <geert@linux-m68k.org>
+ Tamir Duberstein <tamird@gmail.com>
 X-Mailer: b4 0.15-dev
 
-This is one of just 3 remaining "Test Module" kselftests (the others
-being bitmap and printf), the rest having been converted to KUnit. In
-addition to the enclosed patch, please consider this an RFC on the
-removal of the "Test Module" kselftest machinery.
+Use `suite_{init,exit}` and move some tests into `scanf_test_cases`.
+This gives us nicer output in the event of a failure.
 
-I tested this using:
-
-$ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 scanf
-
+Reviewed-by: David Gow <davidgow@google.com>
 Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
-Changes in v4:
-- Bake `test` into various macros, greatly reducing diff noise.
-- Revert control flow changes.
-- Link to v3: https://lore.kernel.org/r/20250204-scanf-kunit-convert-v3-0-386d7c3ee714@gmail.com
+ lib/scanf_kunit.c | 82 +++++++++++++++++++++++++++++++------------------------
+ 1 file changed, 47 insertions(+), 35 deletions(-)
 
-Changes in v3:
-- Reduce diff noise in lib/Makefile. (Petr Mladek)
-- Split `scanf_test` into a few test cases. New output:
-  : =================== scanf (10 subtests) ====================
-  : [PASSED] numbers_simple
-  : ====================== numbers_list  =======================
-  : [PASSED] delim=" "
-  : [PASSED] delim=":"
-  : [PASSED] delim=","
-  : [PASSED] delim="-"
-  : [PASSED] delim="/"
-  : ================== [PASSED] numbers_list ===================
-  : ============ numbers_list_field_width_typemax  =============
-  : [PASSED] delim=" "
-  : [PASSED] delim=":"
-  : [PASSED] delim=","
-  : [PASSED] delim="-"
-  : [PASSED] delim="/"
-  : ======== [PASSED] numbers_list_field_width_typemax =========
-  : =========== numbers_list_field_width_val_width  ============
-  : [PASSED] delim=" "
-  : [PASSED] delim=":"
-  : [PASSED] delim=","
-  : [PASSED] delim="-"
-  : [PASSED] delim="/"
-  : ======= [PASSED] numbers_list_field_width_val_width ========
-  : [PASSED] numbers_slice
-  : [PASSED] numbers_prefix_overflow
-  : [PASSED] test_simple_strtoull
-  : [PASSED] test_simple_strtoll
-  : [PASSED] test_simple_strtoul
-  : [PASSED] test_simple_strtol
-  : ====================== [PASSED] scanf ======================
-  : ============================================================
-  : Testing complete. Ran 22 tests: passed: 22
-  : Elapsed time: 5.517s total, 0.001s configuring, 5.440s building, 0.067s running
-- Link to v2: https://lore.kernel.org/r/20250203-scanf-kunit-convert-v2-1-277a618d804e@gmail.com
+diff --git a/lib/scanf_kunit.c b/lib/scanf_kunit.c
+index ad27b45c605e..05c8f7e724d8 100644
+--- a/lib/scanf_kunit.c
++++ b/lib/scanf_kunit.c
+@@ -430,8 +430,11 @@ static void numbers_list_hh(struct kunit *test, const char *delim)
+ 	numbers_list_8(signed char,	   "0x%hhx", delim, "hhi", check_char);
+ }
+ 
+-static void numbers_list(struct kunit *test, const char *delim)
++static void numbers_list(struct kunit *test)
+ {
++	const char * const *param = test->param_value;
++	const char *delim = *param;
++
+ 	numbers_list_ll(test, delim);
+ 	numbers_list_l(test, delim);
+ 	numbers_list_d(test, delim);
+@@ -502,8 +505,11 @@ static void numbers_list_field_width_hh(struct kunit *test, const char *delim)
+  * List of numbers separated by delim. Each field width specifier is the
+  * maximum possible digits for the given type and base.
+  */
+-static void numbers_list_field_width_typemax(struct kunit *test, const char *delim)
++static void numbers_list_field_width_typemax(struct kunit *test)
+ {
++	const char * const *param = test->param_value;
++	const char *delim = *param;
++
+ 	numbers_list_field_width_ll(test, delim);
+ 	numbers_list_field_width_l(test, delim);
+ 	numbers_list_field_width_d(test, delim);
+@@ -565,8 +571,11 @@ static void numbers_list_field_width_val_hh(struct kunit *test, const char *deli
+  * List of numbers separated by delim. Each field width specifier is the
+  * exact length of the corresponding value digits in the string being scanned.
+  */
+-static void numbers_list_field_width_val_width(struct kunit *test, const char *delim)
++static void numbers_list_field_width_val_width(struct kunit *test)
+ {
++	const char * const *param = test->param_value;
++	const char *delim = *param;
++
+ 	numbers_list_field_width_val_ll(test, delim);
+ 	numbers_list_field_width_val_l(test, delim);
+ 	numbers_list_field_width_val_d(test, delim);
+@@ -582,7 +591,12 @@ static void numbers_list_field_width_val_width(struct kunit *test, const char *d
+  */
+ static void numbers_slice(struct kunit *test)
+ {
+-	numbers_list_field_width_val_width(test, "");
++	const char *delim = "";
++
++	KUNIT_ASSERT_PTR_EQ(test, test->param_value, NULL);
++	test->param_value = &delim;
++
++	numbers_list_field_width_val_width(test);
+ }
+ 
+ #define test_number_prefix(T, str, scan_fmt, expect0, expect1, n_args, fn)	\
+@@ -734,62 +748,60 @@ static const char * const number_delimiters[] = {
+ 	" ", ":", ",", "-", "/",
+ };
+ 
+-static void test_numbers(struct kunit *test)
++static void number_delimiter_param_desc(const char * const *param,
++					   char *desc)
+ {
+-	int i;
++	snprintf(desc, KUNIT_PARAM_DESC_SIZE, "delim=\"%s\"", *param);
++}
+ 
+-	/* String containing only one number. */
+-	numbers_simple(test);
++KUNIT_ARRAY_PARAM(number_delimiters, number_delimiters, number_delimiter_param_desc);
+ 
++static struct kunit_case scanf_test_cases[] = {
++	KUNIT_CASE(numbers_simple),
+ 	/* String with multiple numbers separated by delimiter. */
+-	for (i = 0; i < ARRAY_SIZE(number_delimiters); i++) {
+-		numbers_list(test, number_delimiters[i]);
+-
+-		/* Field width may be longer than actual field digits. */
+-		numbers_list_field_width_typemax(test, number_delimiters[i]);
+-
+-		/* Each field width exactly length of actual field digits. */
+-		numbers_list_field_width_val_width(test, number_delimiters[i]);
+-	}
+-
++	KUNIT_CASE_PARAM(numbers_list, number_delimiters_gen_params),
++	/* Field width may be longer than actual field digits. */
++	KUNIT_CASE_PARAM(numbers_list_field_width_typemax, number_delimiters_gen_params),
++	/* Each field width exactly length of actual field digits. */
++	KUNIT_CASE_PARAM(numbers_list_field_width_val_width, number_delimiters_gen_params),
+ 	/* Slice continuous sequence of digits using field widths. */
+-	numbers_slice(test);
++	KUNIT_CASE(numbers_slice),
++	KUNIT_CASE(numbers_prefix_overflow),
+ 
+-	numbers_prefix_overflow(test);
+-}
++	KUNIT_CASE(test_simple_strtoull),
++	KUNIT_CASE(test_simple_strtoll),
++	KUNIT_CASE(test_simple_strtoul),
++	KUNIT_CASE(test_simple_strtol),
++	{}
++};
+ 
+-static void scanf_test(struct kunit *test)
++static int scanf_suite_init(struct kunit_suite *suite)
+ {
+ 	test_buffer = kmalloc(BUF_SIZE, GFP_KERNEL);
+ 	if (!test_buffer)
+-		return;
++		return -1;
+ 
+ 	fmt_buffer = kmalloc(BUF_SIZE, GFP_KERNEL);
+ 	if (!fmt_buffer) {
+ 		kfree(test_buffer);
+-		return;
++		return -1;
+ 	}
+ 
+ 	prandom_seed_state(&rnd_state, 3141592653589793238ULL);
+ 
+-	test_numbers(test);
+-
+-	test_simple_strtoull(test);
+-	test_simple_strtoll(test);
+-	test_simple_strtoul(test);
+-	test_simple_strtol(test);
++	return 0;
++}
+ 
++static void scanf_suite_exit(struct kunit_suite *suite)
++{
+ 	kfree(fmt_buffer);
+ 	kfree(test_buffer);
+ }
+ 
+-static struct kunit_case scanf_test_cases[] = {
+-	KUNIT_CASE(scanf_test),
+-	{}
+-};
+-
+ static struct kunit_suite scanf_test_suite = {
+ 	.name = "scanf",
++	.suite_init = scanf_suite_init,
++	.suite_exit = scanf_suite_exit,
+ 	.test_cases = scanf_test_cases,
+ };
+ 
 
-Changes in v2:
-- Rename lib/{test_scanf.c => scanf_kunit.c}. (Andy Shevchenko)
-- Link to v1: https://lore.kernel.org/r/20250131-scanf-kunit-convert-v1-1-0976524f0eba@gmail.com
-
----
-Tamir Duberstein (2):
-      scanf: convert self-test to KUnit
-      scanf: break kunit into test cases
-
- MAINTAINERS                          |   2 +-
- arch/m68k/configs/amiga_defconfig    |   1 -
- arch/m68k/configs/apollo_defconfig   |   1 -
- arch/m68k/configs/atari_defconfig    |   1 -
- arch/m68k/configs/bvme6000_defconfig |   1 -
- arch/m68k/configs/hp300_defconfig    |   1 -
- arch/m68k/configs/mac_defconfig      |   1 -
- arch/m68k/configs/multi_defconfig    |   1 -
- arch/m68k/configs/mvme147_defconfig  |   1 -
- arch/m68k/configs/mvme16x_defconfig  |   1 -
- arch/m68k/configs/q40_defconfig      |   1 -
- arch/m68k/configs/sun3_defconfig     |   1 -
- arch/m68k/configs/sun3x_defconfig    |   1 -
- arch/powerpc/configs/ppc64_defconfig |   1 -
- lib/Kconfig.debug                    |  20 ++-
- lib/Makefile                         |   2 +-
- lib/{test_scanf.c => scanf_kunit.c}  | 260 +++++++++++++++++------------------
- tools/testing/selftests/lib/Makefile |   2 +-
- tools/testing/selftests/lib/config   |   1 -
- tools/testing/selftests/lib/scanf.sh |   4 -
- 20 files changed, 149 insertions(+), 155 deletions(-)
----
-base-commit: a86bf2283d2c9769205407e2b54777c03d012939
-change-id: 20250131-scanf-kunit-convert-f70dc33bb34c
-
-Best regards,
 -- 
-Tamir Duberstein <tamird@gmail.com>
+2.48.1
 
