@@ -1,135 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA65195FE5;
-	Fri,  7 Feb 2025 21:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E12195FE5;
+	Fri,  7 Feb 2025 21:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738962377; cv=none; b=LVKIU0gQP4bmm/ZGsUmDG+tTp3tygEcE9n+9xwEBI053r1yqmfYzMAdk0clCf1c84KgefvCklx1Z+C1g76PPRIC8HV3Jrk20oI/VNQlvc5QkoQRufRU6uQ9oHivR3j6ruQxd6JLaHOF78SUyRH1B9HTUTPz0k4+Sc9sOvKj2OAU=
+	t=1738962423; cv=none; b=CAIZNjcOPnv5PaTGqAg5zO/YYQiHDatadp0iscW07mbVKu/dstrs7iDhO2t9JJUIYRHpWgz9KUbES33TSq+IXRr9vQ83fgh9z4/ohGOKWUOnvgij/PjFTrjAl/yZQWABaSNqs27jiwGHgraOyOvlWso+QHw+S3kgMb1JCywUTV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738962377; c=relaxed/simple;
-	bh=CWHgdZOppLmmnI46ZiNcfojftqw4NwN4AdkDsU0kazE=;
+	s=arc-20240116; t=1738962423; c=relaxed/simple;
+	bh=4GKrQ5U797hVfpWQA1VnqUs/BrKDPGseYOGmUXO/MIU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XLPNfOccAvpOSEqlyIf1Jt11WP+Np3TNA9X8PQjWL3N2WQwxmgIelptQRK3bDkPBHIAKjlTCio7Y6K+FIbgb31/EFckOgfGEPb3HkzrQelE7TpJVS+xGN6EcmfmQcfod8DF1biP8VStj15LeeuNwPxFqNrcQ9MAzgMZc6zAz0rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lA9CadGx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hSgKSzlD9NpD9UH5olpkHH6WJUqtSIUsPZOKVl/XKbN0tC92luT9Pcr2GhLfk4/tEX1wvDxykciEfrIVXqppP5TTC4dlE6MOYfYPBFAR1UUf2MNx0zra9Ox++wBjJDpbXfuwoVg/ELdLRBhYq3zpC7wzIWI5WqsSCaCqCkQ+DAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=iWpA14qo; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lA9CadGx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA878C4CEE2;
-	Fri,  7 Feb 2025 21:06:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738962376;
-	bh=CWHgdZOppLmmnI46ZiNcfojftqw4NwN4AdkDsU0kazE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lA9CadGxW+5SWtL6mD1Ai28l9ccyQ3Kz2ZucS0KfsHm62u1rJ2n7eeFeC24FMOwjI
-	 wTGAcb+7RkzA69BG1Tu+spDhw53E0J+RZY9DW7FlZd+AJsp2WV1ZDiR5lL/xK+2nj3
-	 xbkb4lrtjmoBXVAmL7HO2fYugE0b9HWlLNMjKr4AbsZzkbZLtU/y5dSTfkdZeil32X
-	 PEZ8SqxRQ2cXLJONfjeyWYhuatZbgESFXbyS+MEbcaNAo/nneQEzQr38n0Pb/wbqOP
-	 YcIK+H0FzkWUv8nZHPtKJcueQIX5MmN4ReYhBwk45KdsKBwoO+uTB4KtQSsZVCgbGP
-	 AmANWcKa4UbVg==
-Date: Fri, 7 Feb 2025 13:06:14 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Weinan Liu <wnliu@google.com>, Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v4 19/39] unwind_user/sframe: Add support for reading
- .sframe contents
-Message-ID: <20250207210614.nks6bxad4jhdulwg@jpoimboe>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <77c0d1ec143bf2a53d66c4ecb190e7e0a576fbfd.1737511963.git.jpoimboe@kernel.org>
- <b35ca3a3-8de5-4d32-8d30-d4e562f6b0de@linux.ibm.com>
- <20250204185121.jt5ylxsouqi5dyie@jpoimboe>
- <d2345191-0b73-4860-89be-9a189078d85e@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="iWpA14qo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=VMfQNKakdosGgCE/nHD9nb+3Jp3yPfJ7LJDKlDdWB5k=; b=iWpA14qo54Sb7PjVBey/Q6AvOA
+	NFOlKNJJxPlTs01B7EYlp6oKUYIkdeE60dInD30jyJibzY1SRX7IUW8IWzg2EOHFtGiS6bVCNBW9d
+	hM4ZBL77EHHl+zXhh6KgfzE9wZ6ljBgRtbaWCYIYy7hFsSVZvkZrcvxR5SqQgecKEM/U8O5l6gjui
+	rsPfM6PtGTSiu4c+/QDdPeGuHGnX2ahtKFBebcqFAQ9aw+JcBej8F5LVCRQy24zsVc4tHW7cjfeIg
+	1xBfCenWMKpXiTOeRolDYmuJxyNwrdRemWwaxli51Hyiew3MXcR579Eq/3fUQXkcQbqmPAE2piBmF
+	3bC+cgtg==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tgVYw-00000006axk-3l8e;
+	Fri, 07 Feb 2025 21:06:58 +0000
+Date: Fri, 7 Feb 2025 21:06:58 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 14/19] VFS: Ensure no async updates happening in
+ directory being removed.
+Message-ID: <20250207210658.GK1977892@ZenIV>
+References: <20250206054504.2950516-1-neilb@suse.de>
+ <20250206054504.2950516-15-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d2345191-0b73-4860-89be-9a189078d85e@linux.ibm.com>
+In-Reply-To: <20250206054504.2950516-15-neilb@suse.de>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Wed, Feb 05, 2025 at 10:47:58AM +0100, Jens Remus wrote:
-> UNSAFE_GET_USER_INC(ra_off, cur, offset_size, Efault);
+On Thu, Feb 06, 2025 at 04:42:51PM +1100, NeilBrown wrote:
+> vfs_rmdir takes an exclusive lock on the target directory to ensure
+> nothing new is created in it while the rmdir progresses.  With the
+> possibility of async updates continuing after the inode lock is dropped
+> we now need extra protection.
 > 
-> With offset_size=1 expands into:
-> 
-> __UNSAFE_GET_USER_INC(/*to=*/ra_off, /*from=*cur, /*type=*/u8, /*label=*/Efault);
-> 
-> Expands into:
-> 
-> {
-> 	u8 __to;
-> 	unsafe_get_user(__to, (u8 __user *)cur, Efault);
-> 	cur += sizeof(__to);
-> 	ra_off = (typeof(ra_off))__to;
-> }
-> 
-> The issue is that on the last line __to is u8 instead of s8 and thus
-> u8 gets casted to s32, which is performed without sign extension.  __to
-> would need to be s8 or get casted to s8 for sign extension to take
-> place.
+> Any async updates will have DCACHE_PAR_UPDATE set on the dentry.  We
+> simply wait for that flag to be cleared on all children.
 
-Ah, I get it now, thanks for spelling that out for me.
+> +static void d_update_wait(struct dentry *dentry, unsigned int subclass)
+> +{
+> +	/* Note this may only ever be called in a context where we have
+> +	 * a lock preventing this dentry from becoming locked, possibly
+> +	 * an update lock on the parent dentry.  The must be a smp_mb()
+> +	 * after that lock is taken and before this is called so that
+> +	 * the following test is safe. d_update_lock() provides that
+> +	 * barrier.
+> +	 */
+> +	if (!(dentry->d_flags & DCACHE_PAR_UPDATE))
+> +		return
+> +	lock_acquire_exclusive(&dentry->d_update_map, subclass,
+> +			       0, NULL, _THIS_IP_);
 
-Here's what I have at the moment:
+What the fuck?
 
-#define __UNSAFE_GET_USER_INC(to, from, type, label)			\
-({									\
-	type __to;							\
-	unsafe_get_user(__to, (type __user *)from, label);		\
-	from += sizeof(__to);						\
-	to = __to;							\
-})
+> +	spin_lock(&dentry->d_lock);
+> +	wait_var_event_spinlock(&dentry->d_flags,
+> +				!check_dentry_locked(dentry),
+> +				&dentry->d_lock);
+> +	spin_unlock(&dentry->d_lock);
+> +	lock_map_release(&dentry->d_update_map);
+> +}
 
-#define __UNSAFE_GET_USER_INC(to, from, size, label, u_or_s)		\
-({									\
-	switch (size) {							\
-	case 1:								\
-		__UNSAFE_GET_USER_INC(to, from, u_or_s##8, label);	\
-		break;							\
-	case 2:								\
-		__UNSAFE_GET_USER_INC(to, from, u_or_s##16, label);	\
-		break;							\
-	case 4:								\
-		__UNSAFE_GET_USER_INC(to, from, u_or_s##32, label);	\
-		break;							\
-	default:							\
-		dbg_sec_uaccess("%d: bad unsafe_get_user() size %u\n",	\
-				__LINE__, size);			\
-		return -EFAULT;						\
-	}								\
-})
-
-#define UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label)		\
-	__UNSAFE_GET_USER_INC(to, from, size, label, u)
-
-#define UNSAFE_GET_USER_SIGNED_INC(to, from, size, label)		\
-	__UNSAFE_GET_USER_INC(to, from, size, label, s)
-
-#define UNSAFE_GET_USER_INC(to, from, size, label)				\
-	_Generic(to,								\
-		 u8:	UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label),	\
-		 u16:	UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label),	\
-		 u32:	UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label),	\
-		 s8:	UNSAFE_GET_USER_SIGNED_INC(to, from, size, label),	\
-		 s16:	UNSAFE_GET_USER_SIGNED_INC(to, from, size, label),	\
-		 s32:	UNSAFE_GET_USER_SIGNED_INC(to, from, size, label))
+OK, I realize that it compiles, but it should've raised all
+kinds of red flags for anyone reading that.  return + <newline> is
+already fishy, but having the next line indented *less* than that
+return is firmly in the "somebody's trying to hide something nasty
+here" territory, even without parsing the damn thing.
