@@ -1,231 +1,117 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667E31DB14C
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA3B197A92;
+	Fri,  7 Feb 2025 20:44:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738960898; cv=none; b=dmOGjNJ+yM6l+sbxIAb2HyciB8fjmvzcFvQMB4tC/Qat3dTGzw3u6YZvCUYfOJ8gDQUaY05NRNKsVm9qOQhuROkmnDfE9K23z3a1NWupRj8mqOPyGAXahZVZeBC07jKKD2IyGaSyYXZ2//zZLzwya+IKsjepMPtTen6a1DhUGxg=
+	t=1738961055; cv=none; b=JpvBxSuzaLb27dxsf0rpFQF7q8EKYOQjrEMIlSPADzWFJ+B/owMyNzFvVj+5uyLnjZMxIZA1FB2jUniJ6pUoEIHJRIHneDezRIy/b5krKT5ijC0S7wdXwR5kopLe9V+pkCvL+oLYYxpXJWGeQUZnPLGDJSvNn/Hqru2TKAEOTjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738960898; c=relaxed/simple;
-	bh=nvBn7R4zl24lXF8bRo2NYM4At9i0z38sCJ0Oi1zDsD0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jAAF5uuMu0Ut08HrfEabVrSwOZbWqJVbWocKeEhlFKMkUHMP3Xmza5fxZSTv9KHG1EDp4cpFq7VufdMO6f2HCdIvKgy3RCcEMRIQRvcH+GLY06wiI/LmLD6csyaRMBeyDf1QHjoDYg4os634mzAM5EdSR45d5VTq3l2elgiIvKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jBpLuFpi; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738961055; c=relaxed/simple;
+	bh=VjCQ/dNJzo32/blT7wrbpdnCgdz6nwbeGNYKaHWKkpQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=KmXFLmQvYX3+4pj3aDDbvrEgUG/EdR9G8Rmvfj3GDOPmW/viQb59O50C4HTRR6Rp67qTKZWsmP0FepMkh7bQ1tfvB1uzT5hyQloYphwlzC+nsAx2RsIuImEj6sAYuA/MQc/qFth/phe9gqPjIAw9sH7g1EIu42GdtMAbkc9tnV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gosUNd/s; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jBpLuFpi"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30613802a04so26543491fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:41:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738960894; x=1739565694; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a8UJbddvLQG9wXJNzynWa7omOtgBQR2Tq8dAU0qNTtA=;
-        b=jBpLuFpi8awAQFehuVzFwx0neQzYX+5yQzbo+BH9RBWVpP9Q2sPkPHGy7WmdS6+MgE
-         LNWGmYyCXUsr7vD3oT7eAbRcufx6H+IMP2s7FTXJ/MZIfTWCsfOGLSf63BgDDOghPcy3
-         HgbwlG95W/5ZFgngvHES+ebLwf06g+orrHPZ5Sd80RcZ8B1OxVbqVdKBbAMFGSkVnZ9A
-         ipc5n5gsF+gOwsJmdypd/LbqW8R2hms3p8UXF3y0FWtOtpb9WhV6NdsW+0Ayll5daeff
-         goj3EadKUYK1jV9GK3Db79CvczAlMUHWLYtjKyN50C75uyLk6p3gaolOu1SENC3UhFMW
-         rDdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738960894; x=1739565694;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a8UJbddvLQG9wXJNzynWa7omOtgBQR2Tq8dAU0qNTtA=;
-        b=GryzXfDgjUHwSq7tF4wY3HAepO5XoqEzY+NdaoZWWup8K5cLdOwKBR0wztDwF3I4FB
-         uxJOWs05otNpscA19FxsEHb+tzgXQIZCr5hWmXQ+zznQTH+Za0SK6+Msisc65WP3z0N+
-         lwfSfyk6Kep8d+64YxZqWlb4Orlvjer1sPzkbIsqyI2xCO/CqoO9BydcIGT2y4VdJrBO
-         g7Qc7PvFrjA9kcPG62EEb/x0CT18UsfYcmzWJDq0n8euzvdz/YZwTVDF0HIt8+dpShJE
-         3Q/LmIyTWsuAnPPrseighUsPhiUvVQ5DvzOLYhMmHyJwxS9/7Fa+aKYKXP7Yz0l0nT1q
-         AXKw==
-X-Forwarded-Encrypted: i=1; AJvYcCVttqdX0KmhOapm8/awGle7CSKYzoZtBz7EMgIgE+6pKAygzOA5aaPWbtrd4TsnauuPnvTNA2yQ1EJKPQ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOUsDuVdBdnZ4csd1eTD1aIC5Goruf3wfN/GntRKFa6RD5ePOh
-	HLE+cCRD9gEpYMO1DLptCrghWvDtSbUH89mERKMg4Iqzl7T3gNC6/GWTAKrCDcc=
-X-Gm-Gg: ASbGncv+y/WP5FlOZAPWirTQDrKgb4HTq6pgUnd6wmUe8o+ZO5TZWuh+0rzfQBQfmKJ
-	sumRZAUk5RSLsQxdAHZ2DryyzZ0p45h+ECriP2efgkLWLsuf2zdImY4Ay0e2rqDCvdKA9psnM58
-	+J2+QeaQPtsq98DZatuHFji9nphRs3UQwOrK55TVodAymIvqcidUiHVcpeHZxhS5pVGvh1Hir/t
-	/E2bx7Tzr2NNC2k0iAfSJqJLJnhP4DY7KO156KzSIYZMZwUitWuzUO0jUS5363Npg5E+lc6Rcqd
-	13wZJ0IvfmKcMeOOYiAfM0I=
-X-Google-Smtp-Source: AGHT+IE+PEeFY+/fGE/0oTDa+1Oyc89e2djwYGmCFITdkpFlLgeM+hJaVdYS05brkuhQo+y4hh2GcQ==
-X-Received: by 2002:a2e:b8c6:0:b0:302:175e:5abb with SMTP id 38308e7fff4ca-307e57ce521mr12024031fa.3.1738960894523;
-        Fri, 07 Feb 2025 12:41:34 -0800 (PST)
-Received: from umbar.lan ([192.130.178.90])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de178628sm5343811fa.10.2025.02.07.12.41.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 12:41:33 -0800 (PST)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 07 Feb 2025 22:41:20 +0200
-Subject: [PATCH v4 6/6] arm64: dts: qcom: qrb2210-rb1: add Bluetooth
- support
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gosUNd/s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738961053; x=1770497053;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=VjCQ/dNJzo32/blT7wrbpdnCgdz6nwbeGNYKaHWKkpQ=;
+  b=gosUNd/suEhUy0JKtyTxoOEvb81/z5qhzo0Ha3yjouAz+tFJUMeNKDY/
+   d3FUq+Drir3yFPyTMiiexqtwbEflVeLqy6olCcb0wlTVgUxsESLQQcn+l
+   n+2Ajh9MmAX8CX176N67jQ8Qc/oboHo4vjvCefvwUhGmWIbr9sU4N1oif
+   jvn8NF0WNn6gkssUyDGnqiz0CrRpxDjdIjw+Q7tnOlMnHD2krvAov1bfB
+   d/PEvxA1yem4IuH4845gc9xZdNSrceUXNTjfeargkLb5i9imT1YLubJvW
+   Nk/FcoQiqz3UxD2yPvznbfDVcUIumLkcRME4FPb/y2ITiS1Eq1xPvx/uo
+   g==;
+X-CSE-ConnectionGUID: CWOdrxDQRWqlcfR+Qg0T4g==
+X-CSE-MsgGUID: 59xuhKQ2RoKJFA8fsDEluA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39741909"
+X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
+   d="scan'208";a="39741909"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 12:44:13 -0800
+X-CSE-ConnectionGUID: asEEEMBdTL6snNOUTBa72g==
+X-CSE-MsgGUID: 3QM6z1AuT46svrxRetQVeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
+   d="scan'208";a="116631038"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 12:44:12 -0800
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 2FDB520B5713;
+	Fri,  7 Feb 2025 12:44:10 -0800 (PST)
+Message-ID: <0990a674-d8ab-4abc-a904-299513773f90@linux.intel.com>
+Date: Fri, 7 Feb 2025 15:44:08 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 03/24] perf vendor events: Add Arrowlake events/metrics
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Perry Taylor <perry.taylor@intel.com>,
+ Samantha Alt <samantha.alt@intel.com>,
+ Caleb Biggers <caleb.biggers@intel.com>,
+ Edward Baker <edward.baker@intel.com>, Michael Petlan <mpetlan@redhat.com>,
+ Thomas Falcon <thomas.falcon@intel.com>
+References: <20250207185154.824433-1-irogers@google.com>
+ <20250207185154.824433-4-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250207185154.824433-4-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-rb1-bt-v4-6-d810fc8c94a9@linaro.org>
-References: <20250207-rb1-bt-v4-0-d810fc8c94a9@linaro.org>
-In-Reply-To: <20250207-rb1-bt-v4-0-d810fc8c94a9@linaro.org>
-To: Marcel Holtmann <marcel@holtmann.org>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, 
- Rocky Liao <quic_rjliao@quicinc.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3166;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=nvBn7R4zl24lXF8bRo2NYM4At9i0z38sCJ0Oi1zDsD0=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnpm/ubXRilr+k7yK/Z4ZjyxXCNNia7uDidNpQ8
- sX5SOfx5zmJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ6Zv7gAKCRCLPIo+Aiko
- 1WrwB/9oYqO4kJTo5HFANYeTOnbkNfsQhepHwUbzzOqYGYqpxQVZmBr8VToM1SAv0sizF0vxQTs
- XRm+qgA1PS9ecw0ruoBWfz7wjB/8Mv45Y2X1RFcLfpwAhtkUlGM9Wz9ceZvmN9uC9DOtS+3TrEh
- YqfaTatOhHYtB85pc6buQE/BBrEmT9XcoF1r5+JI/n0QmKdvxAZDBLy+nDNYuvVIqWBy7q5HAZT
- zLD5FSrzKDxRSPlegfdbm7RJWcoPbjosqd2E9YJCh2uOPOgsK71vLTZsGn1nI631SnNIPytZS3x
- GyHI/Qz4fFFZA2FBmRdktbJdfRS5x+Y7hgMpnaY5qoc7lleC
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Add support for the onboard WCN3950 BT/WiFi chip. Corresponding firmware
-has been merged to linux-firmware and should be available in the next
-release.
 
-Bluetooth: hci0: setting up wcn399x
-Bluetooth: hci0: QCA Product ID   :0x0000000f
-Bluetooth: hci0: QCA SOC Version  :0x40070120
-Bluetooth: hci0: QCA ROM Version  :0x00000102
-Bluetooth: hci0: QCA Patch Version:0x00000001
-Bluetooth: hci0: QCA controller version 0x01200102
-Bluetooth: hci0: QCA Downloading qca/cmbtfw12.tlv
-Bluetooth: hci0: QCA Downloading qca/cmnv12.bin
-Bluetooth: hci0: QCA setup on UART is completed
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- arch/arm64/boot/dts/qcom/qrb2210-rb1.dts | 83 ++++++++++++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
+On 2025-02-07 1:51 p.m., Ian Rogers wrote:
+> +    {
+> +        "BriefDescription": "Percentage of time that the core is stalled due to a TPAUSE or UMWAIT instruction",
+> +        "MetricExpr": "100 * cpu_atom@SERIALIZATION.C01_MS_SCB@ / (8 * cpu_atom@CPU_CLK_UNHALTED.CORE@)",
+> +        "MetricName": "tma_info_serialization _%_tpause_cycles",
 
-diff --git a/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts b/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
-index 7a789b41c2f1887f0c41ae24da2e2fe8915ab13c..9a2c86144ed529f13987b4135407f605b9ec71cd 100644
---- a/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
-+++ b/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
-@@ -15,6 +15,7 @@ / {
- 
- 	aliases {
- 		serial0 = &uart4;
-+		serial1 = &uart3;
- 		sdhc1 = &sdhc_1;
- 		sdhc2 = &sdhc_2;
- 	};
-@@ -549,6 +550,66 @@ can@0 {
- };
- 
- &tlmm {
-+	uart3_default: uart3-default-state {
-+		cts-pins {
-+			pins = "gpio8";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-bus-hold;
-+		};
-+
-+		rts-pins {
-+			pins = "gpio9";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+
-+		tx-pins {
-+			pins = "gpio10";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+
-+		rx-pins {
-+			pins = "gpio11";
-+			function = "qup3";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	uart3_sleep: uart3-sleep-state {
-+		cts-pins {
-+			pins = "gpio8";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-bus-hold;
-+		};
-+
-+		rts-pins {
-+			pins = "gpio9";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-down;
-+		};
-+
-+		tx-pins {
-+			pins = "gpio10";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+
-+		rx-pins {
-+			pins = "gpio11";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+		};
-+	};
-+
- 	lt9611_rst_pin: lt9611-rst-state {
- 		pins = "gpio41";
- 		function = "gpio";
-@@ -584,6 +645,28 @@ key_volp_n: key-volp-n-state {
- 	};
- };
- 
-+&uart3 {
-+	/delete-property/ interrupts;
-+	interrupts-extended = <&intc GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-+			      <&tlmm 11 IRQ_TYPE_LEVEL_HIGH>;
-+	pinctrl-0 = <&uart3_default>;
-+	pinctrl-1 = <&uart3_sleep>;
-+	pinctrl-names = "default", "sleep";
-+
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "qcom,wcn3950-bt";
-+
-+		vddio-supply = <&pm4125_l15>;
-+		vddxo-supply = <&pm4125_l13>;
-+		vddrf-supply = <&pm4125_l10>;
-+		vddch0-supply = <&pm4125_l22>;
-+		enable-gpios = <&tlmm 87 GPIO_ACTIVE_HIGH>;
-+		max-speed = <3200000>;
-+	};
-+};
-+
- /* UART connected to the Micro-USB port via a FTDI chip */
- &uart4 {
- 	compatible = "qcom,geni-debug-uart";
+It doesn't seem a correct MetricName. A convert script bug?
 
--- 
-2.39.5
+> +        "Unit": "cpu_atom"
+> +    },diff --git a/tools/perf/pmu-events/arch/x86/arrowlake/uncore-other.json b/tools/perf/pmu-events/arch/x86/arrowlake/uncore-other.json
+> new file mode 100644
+> index 000000000000..1ac5b5ef8094
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/x86/arrowlake/uncore-other.json
+> @@ -0,0 +1,10 @@
+> +[
+> +    {
+> +        "BriefDescription": "This 48-bit fixed counter counts the UCLK cycles.",
+> +        "Counter": "FIXED",
+> +        "EventCode": "0xff",
+> +        "EventName": "UNC_CLOCK.SOCKET",
+> +        "PerPkg": "1",
+> +        "Unit": "CLOCK"
+
+On MTL and ARL, the unit should be CNCU.
+Thomas will propose a convertor script patch to fix it.
+
+Thanks,
+Kan
+
+> +    }
+> +]
 
