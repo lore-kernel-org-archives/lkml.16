@@ -1,385 +1,300 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2084.outbound.protection.outlook.com [40.107.220.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71FA1AE877
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738916578; cv=none; b=EScI6iv6XopqWFNKh0l+Knm3P7SyN/Z5yDydgdQBn4OPIrBnTZHXP4wXgjI24Qo8sl/tQ2MdwX6V3Sm1+Dq0gbyVfZxmfN1Gnw5XRs2prlaxwMlOvc30/UdEWkUomtbbKjZIL93jNcBatZbBwtViuKNAnY9Te0gT9jUN+YG6BdA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738916578; c=relaxed/simple;
-	bh=uyIPqJtcAeA2olpBoS+hiPrvu9ArIEtSVxfiTvl9wHQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A1j4JMFVy3svcdOne+lfj0bAQNmZr53bJgPL2xbQxQe+/iO4hBXksfTta0k7y+8Y0om7nYQHfH7HZPsV7WhRQ4n90fuAqP01cSist5PDXuxXrZ7Blo3nsm8SnuJSc1u85T5i4TZB5oomIErExCvlWJWO85vHtOSRdEGiF9f/U6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OH/JSeeV; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4BD72417F5;
+	Fri,  7 Feb 2025 08:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738916631; cv=fail; b=NpkJTUWuC24fjRaDUjHPkg4TP/+lE6Kslx4UK53FAkvPC6LBpMVra1X3CWWDp9q05/29w3fcStRDR+p1OPitPwlfS2IoVm4hDveG+Uc8PfkNegdEWAgx6fY7Vi98rzZX+CV8Ydp7eP0Qt1KYXpNKIHz3t7ewk8JOuXXZEmXZwTk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738916631; c=relaxed/simple;
+	bh=X88XtDvZY8cNRIr0Hbjtnx3SFajbcY3pNXaCLK2K5CU=;
+	h=Content-Type:Date:Message-Id:Subject:From:To:Cc:References:
+	 In-Reply-To:MIME-Version; b=c3CF+DexADT64QXJnLXKeYsaS9XIuV+/0oEbrj/Di3nGtfEGQpQf/lIm2m6bVZOd13oK9JDGxMLofJL/u5DUW+9KjVGPIj/0SixXPdQd5cAJ7OMqXBqkR8ThkSzwjpIR4EPbddHomPJg4b+PBnQwTYLpj/+vnmJN3TcXqMVow+k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Be/f/7Ef; arc=fail smtp.client-ip=40.107.220.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OH/JSeeV"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21f48ebaadfso20293025ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 00:22:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738916576; x=1739521376; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lbQ9smQGiQ3pQ47PhLzxsopzKF4AYaEjDdxKrNjHerU=;
-        b=OH/JSeeV6HdR6IthtRwKi9cdciyUo0rghxfxyQPwVaNPmZG4PzakkHEFLQkuPy5H/r
-         GjEnD7PwubJ+WWFHx9ebtJz5Ao0dF9IjkUJLmizxuDJeHSN+96WNfSHIGqu6UPSg1vtf
-         jKmDtDBDazvRBSSCjcx91ijX/UVnv+07xvpIP3g0l+ZED6qbW0MubNOemkC6D8gAQNcj
-         ZRc2YElI3MmgMKod0PlZiC6+p/9uSS85SsWL1brg6YWdM0B3wOD06Tcbe0QVxPJzp2Oe
-         MdTOApzfi3qtPZWbkfZxW6dmuZXZ7TT9D5sXbnXVKhDwbYkBZoALgYtdNEp5LQU1oZU9
-         GR0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738916576; x=1739521376;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lbQ9smQGiQ3pQ47PhLzxsopzKF4AYaEjDdxKrNjHerU=;
-        b=rPbxK7FWFLwuTJvqI/nJAZF3czLJAaagYpmiEGMs3f7xHfl8/NuXHBgZspCTbZj+Uo
-         AHQqndgrRAg2AI4EJNxm1eZqwTd/cEWk0mzKkWQqTpOZgjJUlw/2G7M8GAEgDhtb6yf5
-         lhcRlcF+DWU3HbaNMmldWarzuAhFEzFTI96xxvEPk3ttIQ4tz/nUPWi4F6bno+UXvOyR
-         O6VWY/xW7PfRYSxjc+tNSr9ge8ScfJ3ZwntBT9fYbvNmj3imiVKtHIMTBZfRVV4gNrD9
-         Ys1RQ0kHoPUA6wT3DEECR0fgCpmODhlcMj5BNVXcmSVr8rmqfsAazxFf3tahQ11htDy1
-         lJoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVE4yXjJ/KX8dsjA/QYrxrDFpw1PolAID7JQpWEiz9HqdJBQcHb1rxJSJN/sYnhgX3Lhv1wOrN2D2rBo1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9ssEfVKCT+6vnCXbc+ZkILeTbqyZl821qkrdErVmNw/Rb6PNX
-	F8w4NLUeA1bARTZuOMCFiSGfOeOpnGmwfTUf7MvjJ3Ggt/oUYBrIuafhug==
-X-Gm-Gg: ASbGncsXrp2M1CBf+076KWk3+rhVEndJoDuZfaA2FCU6opdorMI9GU0FeTzQUvy+PPI
-	naygphsdHTBjBIzwK+1mqSUQR3J2UrlHpYVUwIiNe4SJctYWH6xA7G1SBev591vKblx+OLoh/W/
-	1iI6CZjJkHYejErt9829DbEMgADiwS7Y99ZKrJpatBauNvh+VfLXff84AXYaxVROkaXFk2kLc8p
-	QDLl9XxPGfSgbxsfam7GCYZ3XoC3wHqjccF3smqZa1QluLK5Z3Uw9DBRYfKhOuqPj5/lFEQLfqd
-	4ImQAfxHeuUvlZ6UqBWYQZ74mvZFPimso/ryB+M=
-X-Google-Smtp-Source: AGHT+IHkz5YJLMmlyCKbgMmwY1B9eZyCM6gtFZO7Tzp+qwSeB03U8dc72lq9ltLkPefYXgVcG6LALg==
-X-Received: by 2002:a05:6a21:9003:b0:1e0:ce71:48e0 with SMTP id adf61e73a8af0-1ee03b70c4cmr4837597637.39.1738916576105;
-        Fri, 07 Feb 2025 00:22:56 -0800 (PST)
-Received: from twhmp6px (mxsmtp211.mxic.com.tw. [211.75.127.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048a9e0bdsm2487921b3a.24.2025.02.07.00.22.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 00:22:55 -0800 (PST)
-Received: from hqs-appsw-a2o.mp600.macronix.com (linux-patcher [172.17.236.67])
-	by twhmp6px (Postfix) with ESMTPS id 5A54A805EC;
-	Fri,  7 Feb 2025 16:33:31 +0800 (CST)
-From: Cheng Ming Lin <linchengming884@gmail.com>
-To: tudor.ambarus@linaro.org,
-	pratyush@kernel.org,
-	mwalle@kernel.org,
-	miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: alvinzhou@mxic.com.tw,
-	leoyu@mxic.com.tw,
-	Cheng Ming Lin <chengminglin@mxic.com.tw>
-Subject: [PATCH 2/2] mtd: spi-nor: macronix: Add support for Macronix NOR Flash
-Date: Fri,  7 Feb 2025 16:18:46 +0800
-Message-Id: <20250207081846.362919-3-linchengming884@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250207081846.362919-1-linchengming884@gmail.com>
-References: <20250207081846.362919-1-linchengming884@gmail.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Be/f/7Ef"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KmYMnPkMeP5gwbBNAb3xdl85eqtZNXGZCzLjOE9Alytkru6ULWtPRnztGTafAWowM2ZPTg0KD2M/ekNOgYECDPuTXu/VQgMG8H2oQ5TMJJFg1CXvKzgzSkBSMlmDvjjw8rpzNbK14zk2fKiVgBcMu4upcdKWOSGN0y9GTOikatS3VsxiCsGPg96wOfVLSWS9oBIz2XFFYrMuHbh8u7iXi2ueTVa9V36PE3R+Lfbht/sogiI6KXC0rKSFEMaTV1c20H10FaYlIpMrTnZ3R9W9pkpcNbs42jvqqCg0U+v622xjZhMYa88CT3aYsPPV2aHhlZvDVoeDzBS6JC+V7NgYDA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=utCr9kpxUiyav5Q+CosLtNdcf0OK0YstI4xKo7w+9IQ=;
+ b=Wh6JX847IucJfZN4biySTZDvAtnhs284Crmk5HU0Fw3AIaFIzjvgVc8QDasA8vHc3b+6SSKFf63PJp4VjsVkBBNvCgQZeiaz1aRlg6J/0FqaPUyWS54VkD/+vGuaG4PUrgH5B3QqYsR1iGzCziSf25h/z0crP78cPLC3Dgqfrs7LLw9xFkmX9Qx9suDk8zjFCVgdJfAy2BLC4TSWzM98F13xMWFwZAvI9HuWO5KboOlri86s1he2snPyVCQGB7jmCUhTJcHNP47aVsPLxPy1sOj25AgK5jRxSH9e+2R8sBp2fSzt73kp4gRjouU6l6SSD0upTxxKhVuA8FPL6z/Iag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=utCr9kpxUiyav5Q+CosLtNdcf0OK0YstI4xKo7w+9IQ=;
+ b=Be/f/7Efx+wpTyGF4xr8Phc35uzteKFEKVjWtfBDhVKNyFFp29KwMJ5QjuoVD5oltZNQitbt+gAxNeDl+HJSPV9UOnMMTp5QpLzeQe9Hu7bevs7tzawAKuWh4m0+FL/6lZvXwKspoUoGPL32/YqA9CXUgZtFQb2Sn1TvT4YyazyzAvH7/YfimKv90v+SklfGsx0/lCIF2LAHfVTh25V7Z7L8HuAvkfYcQE9HdnAILqs4IzHx2Fnc5eqmuT8O18roInwDtxaxqSmq1ReFoc/1eRY2+wbuHqRvwFuStcoEkp/A6sMltjb/CxfGEwz+aP4rK9ch9epKbh72tPJ3Pcv44g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by PH7PR12MB9174.namprd12.prod.outlook.com (2603:10b6:510:2ed::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Fri, 7 Feb
+ 2025 08:23:45 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8422.010; Fri, 7 Feb 2025
+ 08:23:45 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 07 Feb 2025 17:23:37 +0900
+Message-Id: <D7M2HTWHNGEZ.10FM642ZMX1PX@nvidia.com>
+Subject: Re: [PATCH v2 2/2] gpu: nova-core: add initial documentation
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Zhi Wang" <zhiw@nvidia.com>, "Danilo Krummrich" <dakr@kernel.org>
+Cc: <airlied@gmail.com>, <simona@ffwll.ch>, <corbet@lwn.net>,
+ <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+ <tzimmermann@suse.de>, <ajanulgu@redhat.com>, <lyude@redhat.com>,
+ <pstanner@redhat.com>, <cjia@nvidia.com>, <jhubbard@nvidia.com>,
+ <bskeggs@nvidia.com>, <acurrid@nvidia.com>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
+ <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <dri-devel@lists.freedesktop.org>, <linux-doc@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <rust-for-linux@vger.kernel.org>, "Nouveau"
+ <nouveau-bounces@lists.freedesktop.org>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250204190400.2550-1-dakr@kernel.org>
+ <20250204190400.2550-2-dakr@kernel.org>
+ <20250205155646.00003c2f@nvidia.com>
+In-Reply-To: <20250205155646.00003c2f@nvidia.com>
+X-ClientProxiedBy: TYCP286CA0061.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:31a::13) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|PH7PR12MB9174:EE_
+X-MS-Office365-Filtering-Correlation-Id: 91b76403-d03f-46b6-e332-08dd4750bce2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|1800799024|376014|7416014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eFdKamJqcWpxckpHWlFRZTUzNmVVRnV3elNMWm9tSGE3OS9zeUhOVGJyUi8y?=
+ =?utf-8?B?VFdhT0VqNEljL05TdVF2OHVVOGJwLzRXKzNpajkwNE5VditabHJmMEpWbGhS?=
+ =?utf-8?B?L2JTL0kxOUJYc1JnSy81eUtpc2VaWi9DN1hoSTh2S1hhT1ZXczRpVHhTVWw2?=
+ =?utf-8?B?eGhmelRUcWVpYlhESk9BM2lUVlE1USt3TGZxdGcxaENWYlRsdjd3U0N5TTRk?=
+ =?utf-8?B?ZHJVd09uajdjL0lNQzRnUzdhUnQxajFmWVRrSi84SmR5K3RXbG9pcW9DZHBN?=
+ =?utf-8?B?ejZjWHRXZ2hidlhKOG0ycjYrTnF2amU1dU05ZmxjMTdvUmt3dUdmQ083TzZQ?=
+ =?utf-8?B?S2RxLzVpQkJmQUtPOVRleUNlRGVHUWU5WC84V0pkK1FsY2JrMVUySXE0bE1J?=
+ =?utf-8?B?czVGYm4reStta0t5UWRGeXlhUmU5aGkvNWFVMHdoUWZFQ3ZMc2d6NWRyUUI0?=
+ =?utf-8?B?RUhKUWdEZk5obW05R2ROTUI5SWI1WWs4eHRocXdTZ3ZVMFVIWTRjS0xVVEZS?=
+ =?utf-8?B?MXMxemhMOXM1aXMwL1N1bEdXQllBTTVNaEt1eStCTVBYMnhCNGZNN3E0QjdZ?=
+ =?utf-8?B?bWw5L3dVOHM2SS90dzBmYlArTFUya2o2akF3SXZkL0F3K0xCM1V4K21wR1Zh?=
+ =?utf-8?B?UENQK01FZG9Rc092eWRhcnBpcGhaNzh0aGJ3MWdDZlZUeG41bmt6OFFrbllE?=
+ =?utf-8?B?TGdTWW1HQ0pSdTV4Mm91Z0x3bktQMXorNHRjalR3d2ozUjZzaXRKcS9wUWNZ?=
+ =?utf-8?B?NEd4YThFc21rNzZ4U20xZGQ0Q2N1b3hHdGIyQlJvMGl4RFVQeUplai9ueFBQ?=
+ =?utf-8?B?UjdyY203UVNNRDZQS1UvU2dLZDMvS1l3cGlUb2czVU80ckt2a1lKSjI3V3pt?=
+ =?utf-8?B?M1l1T09odk40azNraG5FRG41cTJsK0JpcTFlRHRCL0pMbFR5NThwdnkwUzVB?=
+ =?utf-8?B?Wk9VSVdGeS8zendPQ0NvYUtFM1dybnVoU3d2b0ttTkNZSUczL0xucVp1aDdo?=
+ =?utf-8?B?TTlwVU9sMUFuZGtVemNSRngvakRCMUtQZUU2clltNjkyY080amFrdFdiSVdj?=
+ =?utf-8?B?SGd5bFgyNzVPRlRLeDYzbE15MmFrZFRPdVh2K3NuMUNudlJNNGVLVjBjS3FX?=
+ =?utf-8?B?ZWtSSTRZcHdkc2NMRlNETDY4ZHE1Qjk2clltVUhidlBaNnNvcFQ0aVlNOHBx?=
+ =?utf-8?B?ckE2cUNPeVZQUVZBajM3dks4Q3pWdVFPV01UN216TGNSOUM4ZEQ4bmxmR0xj?=
+ =?utf-8?B?c0JjRHYyYjRvZWZNQVRDOWlsR1dmNWRTYWEzT21lUXAwdUtZOUE1ODBYZnR2?=
+ =?utf-8?B?RUNtNTFvdVZyS1lyc0k5dElOaXJjMVZCeEFoTnNVUCtVNDFzcFhWOE1wb3dW?=
+ =?utf-8?B?SytIdTI5RThSNnhDYkN6ZG1BMnV4RS9PbVlqQ2FoVlF0THZMZUFPQTIzN2tP?=
+ =?utf-8?B?Kzl2ZS9ZVnlJa0ZSSkpCWStwL3BibFVuaVZKNktqeUNuSFY4aGVET3pKRnZw?=
+ =?utf-8?B?QnNzaWJxWUxzL2ZWRWdDQmg5UEYxRExucGIxcUdocHluRDgyelkxOEZoYk5x?=
+ =?utf-8?B?ZjRTV3U4Y0s4ZmdzNUs1MU92RUEzQStoSy96andWdUNZMDNJS1o0dDlGc25B?=
+ =?utf-8?B?Z2RLU1Y2bnJXRUVBeUcyUC9xdkZYVXRYQUxhRUpmYVA3MlBmNG0wZkhrd2Ri?=
+ =?utf-8?B?RVJmblp4RG9TMnJKWnBZVzBVdmp1M0syb1F5MW9FdStzbWdIeXI4TjYwNWhj?=
+ =?utf-8?B?OWdJZ3oxa1ZNSlFmMTRQbDBpZDdnY3RlZ0hVVW4rNE5Dc1VncmZhNDlsZUtL?=
+ =?utf-8?B?aDFaQXFVN1A1cHJDTVRZQkdFWVgvNm5IV0crMEprMXNGKy9YY0FQU0k4OGtL?=
+ =?utf-8?Q?2SJlVrFVuKQUx?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZGgyUW9CbzczYVZDbm1rRzVxTHF6bzFqdkJySjlsY1ZVVUhGSXZQSFVLZ0JQ?=
+ =?utf-8?B?VDZ4R1MyTW9hZzRpeTFGdG1HQk4yeVR5ZG1acldjYTlITG42a3BHN3hkdVAv?=
+ =?utf-8?B?Yk45L3ZqbW1oaEZjN0V0TjRoT0s2U01FYUpSSnpTT1VmeU4vTGNhV0k1TVFN?=
+ =?utf-8?B?SXlmclZMSVRIS2ZLSExJSS8wdVhhOEI2UmpNUnNKL25EQXZtamNnVXQ1VEtR?=
+ =?utf-8?B?STFsSmJCekdxT2sybHRJcVRkQlNwdUhacjI0RVdsVG1aTmZudHFyQWpWTG5v?=
+ =?utf-8?B?eldXSmtUYTVJY21pZG5VdDVEUlVnN0tSQTkwRUJuemRCdXdLZlVrWHhrU2NU?=
+ =?utf-8?B?ZFlUUVVpZStmbW9sUlVWZlhaNmx0U2JTeEdJUmE3b1MxdURFUWJmckJoVFNs?=
+ =?utf-8?B?TU1jMFc4dTlHeFN5VEpEd1oxdzE4Ri80MDVNS0pmdUc1Q3JkMDZLclhXc0wr?=
+ =?utf-8?B?bU5kVWhOaGE4UmgreDMzcEVyZXBTY2VxdDFDaXltZFpVQmE3QmdFVktvNTg4?=
+ =?utf-8?B?Zmd3cU1zSTFDQ0dNVmpyT2QxaGI1bkhPbTlBWlFnUWZmZUx1eHBPUHpKbnBk?=
+ =?utf-8?B?SU5uaDlrdzlMeTN3bTBTdEFORXNRMGJwQzZFT0t4NHdHTXdMU2ZMb3NvK0l4?=
+ =?utf-8?B?cjRUTGVGd05sbXhzeDNmL2hKM1lHc2FWcEptQVF1V2xGZkhKV3JENTZIekNp?=
+ =?utf-8?B?czRzenFna0wyaEl3bW5WbEZ2UVMvdE1hdXZRRWVOTEhFRkZFTUxUditiRVor?=
+ =?utf-8?B?RVE1eG5nRSt2ZlpLaTgwMUhSLzZkNVBuRXhHSmZNWEdqNGhxYlk1QWQzR09v?=
+ =?utf-8?B?TGVpQXNkNGJCNFJYZUJxb3BlWUFTNmQrVkxHTWY5WWN6eEkyelJkL2NPaWkr?=
+ =?utf-8?B?YWxPam43aTZweDRuOThDWSszTGtDQjRZT1RwWGpZQ3ZZTHRpaTFkbytKcmc5?=
+ =?utf-8?B?RW5udVl6b0ZXK2ZaRGFqK2g1WGZKREszOGU4T2doTks3NTZxMnB4ZjRNOE0y?=
+ =?utf-8?B?dXp1MzBaM3dadTBYQzkwZms5ZitLREJMSWVhSVVKNkQyb2FCL2p6am5TUW0r?=
+ =?utf-8?B?QXJRalVuYUdqc3hRdE5DOWZnYldzeTRZcnZNa1lZY2JPN1RyQ3ozMG9jSTEr?=
+ =?utf-8?B?QW53endFanpRNEZzNFZKUkZEU0RISGQzRytrUitHMGMxdzRxN0dWQ3drOTlZ?=
+ =?utf-8?B?UTZNQW5nVHMxQ3RiQm5UY0E4ZEduVXZWcFdkSjdRaE9YcVlsNGJvT2JSUitC?=
+ =?utf-8?B?ZERJaHN3d1dDMzlsc05XOUt5UlBzdFFxTE91THp3OWlwbERoNHozbld3d0ha?=
+ =?utf-8?B?cjRNdEJJVUJkVjEwaVV2dnUxYlkzUFJLaCs5eTJVVmlETms4b3RGV1c3SERQ?=
+ =?utf-8?B?L2gzR3ZWcWFaZXFyU0xYR21ZRGdwWjh4Z3lCcGxRR2VBQVpVeVF5cUdoVlhr?=
+ =?utf-8?B?RU12Zm5DTUgrMFNoZG13YTBUVzBZRWwvckxZbUc3aWlZa3dqRG50MWpTb2NE?=
+ =?utf-8?B?UjBRZ0R4UUNaYjJZTCtwbE84S2lNbEVzQ0d5bDJ6TmQvWjgwRDdxTW84Y1pt?=
+ =?utf-8?B?MGJmSXFNcmJrM0lIdTJLVCtDZVQxYXBoWWV5LzZhMnJESFNkaSt3OWVaQndw?=
+ =?utf-8?B?bzFQV09teFYrTUJrM3dPbmxTdWxOOEJoMyt1SWJ1K3pxRDRFeHEwYnp0OWNq?=
+ =?utf-8?B?MFpEdkduMlBaT3dTYlFtWkE0YUdKM21mRUFXZVpOaDVITWcrOHMxZGpIdmNv?=
+ =?utf-8?B?SW5HUFRWZmZka1BCYWhSdW9VbTJNdHpFa3BqS1c3bVc5bldxWnEvb2JmUEtB?=
+ =?utf-8?B?TWxNTFl4VzhnZEtUMXNQbmhnWW9oL1kzNENWU2g0VTZoT1BpdzZpWTJUaXRL?=
+ =?utf-8?B?eExvcGU4NXVCbGJYSnpCTUwweEo3b3I0MElaNXhUb09CVzdQNU9rc1hlQ0Fm?=
+ =?utf-8?B?a0JubVhTQXJQdVcxSEp6RnBQNnR6aXludXFGY3BpL2x5b2ltdHZIUlA0b3h0?=
+ =?utf-8?B?ZFZwR1gxb2NXQy9PNlFMZmNIejBGSmEyVTZNN2ZIL1FTUFBrMmtpZk50dDVJ?=
+ =?utf-8?B?WTdCVTNLaG5FeDVhY0x2amNSem81bnZ4ZmFQNk1EU0lDR0J1TVYzSzZlRmpa?=
+ =?utf-8?B?V2NyU1RIWWlPcXpjcVJoQlM2V1ZzM3JOQWwrbkcvRzV3YzV2NlhyOWNFbFRu?=
+ =?utf-8?Q?0EDkiJzWBCYN8ZkDCuuhRe6lrqbdqEGv8fMuOrdL1sXJ?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91b76403-d03f-46b6-e332-08dd4750bce2
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 08:23:45.0482
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NjdLu9ylLjZoNs6cH5C18YAUra9UzelYE2CPblgWHvJjO06LdzAjiaHqS/dASFOwZbQ2VzRa4xoaS0mlaSFFxw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9174
 
-From: Cheng Ming Lin <chengminglin@mxic.com.tw>
+On Wed Feb 5, 2025 at 10:56 PM JST, Zhi Wang wrote:
+> On Tue,  4 Feb 2025 20:03:12 +0100
+> Danilo Krummrich <dakr@kernel.org> wrote:
+>
+>> Add the initial documentation of the Nova project.
+>>=20
+>> The initial project documentation consists out of a brief introduction
+>> of the project, as well as project guidelines both general and nova-core
+>> specific and a task list for nova-core specifically.
+>>=20
+>> The task list is divided into tasks for general Rust infrastructure
+>> required by the project, tasks regarding GSP enablement and firmware
+>> abstraction, general GPU driver tasks as well as tasks related to
+>> external API design and test infrastructure.
+>>=20
+>> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+>> ---
+>>   - Add task "Generic register abstraction".
+>>   - Change complexity of "Debugfs abstractions".
+>> ---
+>>  Documentation/gpu/drivers.rst              |   1 +
+>>  Documentation/gpu/nova/core/guidelines.rst |  24 ++
+>>  Documentation/gpu/nova/core/todo.rst       | 445 +++++++++++++++++++++
+>>  Documentation/gpu/nova/guidelines.rst      |  73 ++++
+>>  Documentation/gpu/nova/index.rst           |  30 ++
+>>  MAINTAINERS                                |   1 +
+>>  6 files changed, 574 insertions(+)
+>>  create mode 100644 Documentation/gpu/nova/core/guidelines.rst
+>>  create mode 100644 Documentation/gpu/nova/core/todo.rst
+>>  create mode 100644 Documentation/gpu/nova/guidelines.rst
+>>  create mode 100644 Documentation/gpu/nova/index.rst
+>>=20
+>> diff --git a/Documentation/gpu/drivers.rst b/Documentation/gpu/drivers.r=
+st
+>> index 1f17ad0790d7..7c2c5dcb5fd4 100644
+>> --- a/Documentation/gpu/drivers.rst
+>> +++ b/Documentation/gpu/drivers.rst
+>> @@ -24,6 +24,7 @@ GPU Driver Documentation
+>>     panfrost
+>>     panthor
+>>     zynqmp
+>> +   nova/index
+>> =20
+>>  .. only::  subproject and html
+>> =20
+>> diff --git a/Documentation/gpu/nova/core/guidelines.rst b/Documentation/=
+gpu/nova/core/guidelines.rst
+>> new file mode 100644
+>> index 000000000000..a389d65d7982
+>> --- /dev/null
+>> +++ b/Documentation/gpu/nova/core/guidelines.rst
+>> @@ -0,0 +1,24 @@
+>> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> +Guidelines
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> +
+>> +This documents contains the guidelines for nova-core. Additionally, all=
+ common
+>> +guidelines of the Nova project do apply.
+>> +
+>> +Driver API
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> +
+>> +One main purpose of nova-core is to implement the abstraction around th=
+e
+>> +firmware interface of GSP and provide a firmware (version) independent =
+API for
+>> +2nd level drivers, such as nova-drm or the vGPU manager VFIO driver.
+>> +
+>> +Therefore, it is not permitted to leak firmware (version) specifics, th=
+rough the
+>> +driver API, to 2nd level drivers.
+>> +
+>> +Acceptance Criteria
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> +
+>> +- To the extend possible, patches submitted to nova-core must be tested=
+ for
+>> +  regressions with all 2nd level drivers.
+>> diff --git a/Documentation/gpu/nova/core/todo.rst b/Documentation/gpu/no=
+va/core/todo.rst
+>> new file mode 100644
+>> index 000000000000..5e66ec35c5e3
+>> --- /dev/null
+>> +++ b/Documentation/gpu/nova/core/todo.rst
+>> @@ -0,0 +1,445 @@
+>> +.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> +Task List
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> +
+>
+> ...
+>
+>> +
+>> +Generic register abstraction
+>> +----------------------------
+>> +
+>> +Work out how register constants and structures can be automatically gen=
+erated
+>> +through generalized macros.
+>> +
+>> +Example:
+>> +
+>> +.. code-block:: rust
+>> +
+>> +	register!(BOOT0, 0x0, u32, pci::Bar<SIZE>, Fields [
+>> +	   MINOR_REVISION(3:0, RO),
+>> +	   MAJOR_REVISION(7:4, RO),
+>> +	   REVISION(7:0, RO), // Virtual register combining major and minor re=
+v.
+>> +	])
+>> +
+>
+> I think it is better not to tie this to pci::Bar and its operations. It
+> would be better to have a intermediate container as the macro param. The
+> container holds the register region vaddr pointer, size, read/write trait=
+s.
+> The macro expands it from there, thus, we can also use this on firmware
+> memory structures, e.g. GSP WPR2 info.
 
-Due to incorrect values in the 4-BAIT table for these two flash IDs,
-it is necessary to add these two flash IDs with fixups.
-
-Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
----
-zynq> cat /sys/bus/spi/devices/spi0.0/spi-nor/jedec_id
-c2201c
-zynq> cat /sys/bus/spi/devices/spi0.0/spi-nor/manufacturer
-macronix
-zynq> hexdump -Cv /sys/bus/spi/devices/spi0.0/spi-nor/sfdp
-00000000  53 46 44 50 06 01 02 ff  00 06 01 10 30 00 00 ff  |SFDP........0...|
-00000010  c2 00 01 04 10 01 00 ff  84 00 01 02 c0 00 00 ff  |................|
-00000020  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-00000030  e5 20 fb ff ff ff ff 7f  44 eb 08 6b 08 3b 04 bb  |. ......D..k.;..|
-00000040  fe ff ff ff ff ff 00 ff  ff ff 44 eb 0c 20 0f 52  |..........D.. .R|
-00000050  10 d8 00 ff 87 49 bd 00  84 d2 04 e2 44 03 67 38  |.....I......D.g8|
-00000060  30 b0 30 b0 f7 bd ff 5c  4a 9e 29 ff f0 50 f9 85  |0.0....\J.)..P..|
-00000070  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-00000080  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-00000090  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-000000a0  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-000000b0  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-000000c0  7f 8f ff ff 21 5c dc ff  ff ff ff ff ff ff ff ff  |....!\..........|
-000000d0  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-000000e0  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-000000f0  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-00000100  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-00000110  00 36 00 27 9d f9 c0 64  85 cb ff ff ff ff ff ff  |.6.'...d........|
-00000120
-zynq> sha256sum /sys/bus/spi/devices/spi0.0/spi-nor/sfdp
-9af233495e5cffd2f38e9e2b8334a0d51c01fa93e9a17a991f674c8d6a350358  /sys/bus/spi/devices/spi0.0/spi-nor/sfdp
-zynq> cat /sys/kernel/debug/spi-nor/spi0.0/capabilities
-Supported read modes by the flash
- 1S-1S-1S
-  opcode        0x13
-  mode cycles   0
-  dummy cycles  0
- 1S-1S-2S
-  opcode        0x3c
-  mode cycles   0
-  dummy cycles  8
- 1S-2S-2S
-  opcode        0xbc
-  mode cycles   0
-  dummy cycles  4
- 1S-1S-4S
-  opcode        0x6c
-  mode cycles   0
-  dummy cycles  8
- 1S-4S-4S
-  opcode        0xec
-  mode cycles   2
-  dummy cycles  4
- 4S-4S-4S
-  opcode        0xec
-  mode cycles   2
-  dummy cycles  4
-
-Supported page program modes by the flash
- 1S-1S-1S
-  opcode        0x12
- 1S-1S-4S
-  opcode        0x34
- 1S-4S-4S
-  opcode        0x3e
-zynq> cat /sys/kernel/debug/spi-nor/spi0.0/params
-name            (null)
-id              c2 20 1c c2 20 1c
-size            256 MiB
-write size      1
-page size       256
-address nbytes  4
-flags           4B_OPCODES | HAS_4BAIT | SOFT_RESET
-
-opcodes
- read           0xec
-  dummy cycles  6
- erase          0xdc
- program        0x3e
- 8D extension   none
-
-protocols
- read           1S-4S-4S
- write          1S-4S-4S
- register       1S-1S-1S
-
-erase commands
- 21 (4.00 KiB) [1]
- 5c (32.0 KiB) [2]
- dc (64.0 KiB) [3]
- c7 (256 MiB)
-
-sector map
- region (in hex)   | erase mask | overlaid
- ------------------+------------+----------
- 00000000-0fffffff |     [   3] | no
-zynq> dd if=/dev/urandom of=/tmp/spi_test bs=1M count=2
-2+0 records in
-2+0 records out
-2097152 bytes (2.0MB) copied, 0.082418 seconds, 24.3MB/s
-zynq> mtd_debug erase /dev/mtd0 0 2097152
-Erased 2097152 bytes from address 0x00000000 in flash
-zynq> mtd_debug read /dev/mtd0 0 2097152 /tmp/spi_read
-Copied 2097152 bytes from address 0x00000000 in flash to /tmp/spi_read
-zynq> hexdump /tmp/spi_read
-0000000 ffff ffff ffff ffff ffff ffff ffff ffff
-*
-0200000
-zynq> sha256sum /tmp/spi_read
-4bda3a28f4ffe603c0ec1258c0034d65a1a0d35ab7bd523a834608adabf03cc5  /tmp/spi_read
-zynq> mtd_debug write /dev/mtd0 0 2097152 /tmp/spi_test
-Copied 2097152 bytes from /tmp/spi_test to address 0x00000000 in flash
-zynq> mtd_debug read /dev/mtd0 0 2097152 /tmp/spi_read
-Copied 2097152 bytes from address 0x00000000 in flash to /tmp/spi_read
-zynq> sha256sum /tmp/spi*
-affd6358abe2a75a7edd4d28a9c62bbb25d485c8958993d6e4fbc3de579b8dc0  /tmp/spi_read
-affd6358abe2a75a7edd4d28a9c62bbb25d485c8958993d6e4fbc3de579b8dc0  /tmp/spi_test
-zynq> mtd_debug erase /dev/mtd0 0 2097152
-Erased 2097152 bytes from address 0x00000000 in flash
-zynq> mtd_debug read /dev/mtd0 0 2097152 /tmp/spi_read
-Copied 2097152 bytes from address 0x00000000 in flash to /tmp/spi_read
-zynq> sha256sum /tmp/spi*
-4bda3a28f4ffe603c0ec1258c0034d65a1a0d35ab7bd523a834608adabf03cc5  /tmp/spi_read
-affd6358abe2a75a7edd4d28a9c62bbb25d485c8958993d6e4fbc3de579b8dc0  /tmp/spi_test
-
-zynq> mtd_debug info /dev/mtd0
-mtd.type = MTD_NORFLASH
-mtd.flags = MTD_CAP_NORFLASH
-mtd.size = 268435456 (256M)
-mtd.erasesize = 65536 (64K)
-mtd.writesize = 1
-mtd.oobsize = 0
-regions = 0
-
-zynq> cat /sys/bus/spi/devices/spi0.0/spi-nor/jedec_id
-c2253b
-zynq> cat /sys/bus/spi/devices/spi0.0/spi-nor/manufacturer
-macronix
-zynq> hexdump -Cv /sys/bus/spi/devices/spi0.0/spi-nor/sfdp
-00000000  53 46 44 50 06 01 02 ff  00 06 01 10 30 00 00 ff  |SFDP........0...|
-00000010  c2 00 01 04 10 01 00 ff  84 00 01 02 c0 00 00 ff  |................|
-00000020  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-00000030  e5 20 fb ff ff ff ff 3f  44 eb 08 6b 08 3b 04 bb  |. .....?D..k.;..|
-00000040  fe ff ff ff ff ff 00 ff  ff ff 44 eb 0c 20 0f 52  |..........D.. .R|
-00000050  10 d8 00 ff 89 49 bd 00  8d 12 00 e2 44 03 67 44  |.....I......D.gD|
-00000060  30 b0 30 b0 f7 bd d5 5c  4a 9e 29 ff f0 50 f9 85  |0.0....\J.)..P..|
-00000070  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-00000080  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-00000090  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-000000a0  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-000000b0  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-000000c0  7f 8f ff ff 21 5c dc ff  ff ff ff ff ff ff ff ff  |....!\..........|
-000000d0  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-000000e0  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-000000f0  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-00000100  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff  |................|
-00000110  00 20 00 17 9d f9 c0 64  85 cb ff ff ff ff ff ff  |. .....d........|
-00000120
-zynq> sha256sum /sys/bus/spi/devices/spi0.0/spi-nor/sfdp
-ef47525560aa30ca7eb4634eb2eb15a0aa618d3b61f774933f9935d05fb475f6  /sys/bus/spi/devices/spi0.0/spi-nor/sfdp
-zynq> cat /sys/kernel/debug/spi-nor/spi0.0/capabilities
-Supported read modes by the flash
- 1S-1S-1S
-  opcode        0x13
-  mode cycles   0
-  dummy cycles  0
- 1S-1S-2S
-  opcode        0x3c
-  mode cycles   0
-  dummy cycles  8
- 1S-2S-2S
-  opcode        0xbc
-  mode cycles   0
-  dummy cycles  4
- 1S-1S-4S
-  opcode        0x6c
-  mode cycles   0
-  dummy cycles  8
- 1S-4S-4S
-  opcode        0xec
-  mode cycles   2
-  dummy cycles  4
- 4S-4S-4S
-  opcode        0xec
-  mode cycles   2
-  dummy cycles  4
-
-Supported page program modes by the flash
- 1S-1S-1S
-  opcode        0x12
- 1S-1S-4S
-  opcode        0x34
- 1S-4S-4S
-  opcode        0x3e
-
-zynq> cat /sys/kernel/debug/spi-nor/spi0.0/params
-name            (null)
-id              c2 25 3b c2 25 3b
-size            128 MiB
-write size      1
-page size       256
-address nbytes  4
-flags           4B_OPCODES | HAS_4BAIT | SOFT_RESET
-
-opcodes
- read           0xec
-  dummy cycles  6
- erase          0xdc
- program        0x3e
- 8D extension   none
-
-protocols
- read           1S-4S-4S
- write          1S-4S-4S
- register       1S-1S-1S
-
-erase commands
- 21 (4.00 KiB) [1]
- 5c (32.0 KiB) [2]
- dc (64.0 KiB) [3]
- c7 (128 MiB)
-
-sector map
- region (in hex)   | erase mask | overlaid
- ------------------+------------+----------
- 00000000-07ffffff |     [   3] | no
-
-zynq> dd if=/dev/urandom of=/tmp/spi_test bs=1M count=2
-2+0 records in
-2+0 records out
-2097152 bytes (2.0MB) copied, 0.082397 seconds, 24.3MB/s
-zynq> mtd_debug erase /dev/mtd0 0 2097152
-Erased 2097152 bytes from address 0x00000000 in flash
-zynq> mtd_debug read /dev/mtd0 0 2097152 /tmp/spi_read
-Copied 2097152 bytes from address 0x00000000 in flash to /tmp/spi_read
-zynq> hexdump /tmp/spi_read
-0000000 ffff ffff ffff ffff ffff ffff ffff ffff
-*
-0200000
-zynq> sha256sum /tmp/spi_read
-4bda3a28f4ffe603c0ec1258c0034d65a1a0d35ab7bd523a834608adabf03cc5  /tmp/spi_read
-zynq> mtd_debug write /dev/mtd0 0 2097152 /tmp/spi_test
-Copied 2097152 bytes from /tmp/spi_test to address 0x00000000 in flash
-zynq> mtd_debug read /dev/mtd0 0 2097152 /tmp/spi_read
-Copied 2097152 bytes from address 0x00000000 in flash to /tmp/spi_read
-zynq> sha256sum /tmp/spi*
-8b57e38d293cf08cca7ef239ee70d20d70356ae798c2065576463414e490a759  /tmp/spi_read
-8b57e38d293cf08cca7ef239ee70d20d70356ae798c2065576463414e490a759  /tmp/spi_test
-zynq> mtd_debug erase /dev/mtd0 0 2097152
-Erased 2097152 bytes from address 0x00000000 in flash
-zynq> mtd_debug read /dev/mtd0 0 2097152 /tmp/spi_read
-Copied 2097152 bytes from address 0x00000000 in flash to /tmp/spi_read
-zynq> sha256sum /tmp/spi*
-4bda3a28f4ffe603c0ec1258c0034d65a1a0d35ab7bd523a834608adabf03cc5  /tmp/spi_read
-8b57e38d293cf08cca7ef239ee70d20d70356ae798c2065576463414e490a759  /tmp/spi_test
-
-zynq> mtd_debug info /dev/mtd0
-mtd.type = MTD_NORFLASH
-mtd.flags = MTD_CAP_NORFLASH
-mtd.size = 134217728 (128M)
-mtd.erasesize = 65536 (64K)
-mtd.writesize = 1
-mtd.oobsize = 0
-regions = 0
-
- drivers/mtd/spi-nor/macronix.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macronix.c
-index ada17999ccbb..d8c7607b3f22 100644
---- a/drivers/mtd/spi-nor/macronix.c
-+++ b/drivers/mtd/spi-nor/macronix.c
-@@ -127,6 +127,9 @@ static const struct flash_info macronix_nor_parts[] = {
- 		.size = SZ_128M,
- 		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
- 		.fixups = &macronix_qpp4b_fixups,
-+	}, {
-+		.id = SNOR_ID(0xc2, 0x20, 0x1c),
-+		.fixups = &macronix_qpp4b_fixups,
- 	}, {
- 		.id = SNOR_ID(0xc2, 0x23, 0x14),
- 		.name = "mx25v8035f",
-@@ -182,6 +185,9 @@ static const struct flash_info macronix_nor_parts[] = {
- 		.no_sfdp_flags = SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
- 		.fixup_flags = SPI_NOR_4B_OPCODES,
- 		.fixups = &macronix_qpp4b_fixups,
-+	}, {
-+		.id = SNOR_ID(0xc2, 0x25, 0x3b),
-+		.fixups = &macronix_qpp4b_fixups,
- 	}, {
- 		.id = SNOR_ID(0xc2, 0x25, 0x3c),
- 		.name = "mx66u2g45g",
--- 
-2.25.1
+Another reason for not tying this to a particular bus is that Tegra
+doesn't use PCI to reach the registers of its integrated GPU. Maybe we
+can remove that parameter from the register!() macro and have read()
+take a generic argument for its `bar` parameter instead, so that method
+gets automatically specialized for every type of bus we need to use?
 
