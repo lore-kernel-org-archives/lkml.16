@@ -1,116 +1,53 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F402E64A
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 13:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A1313BAE4;
+	Fri,  7 Feb 2025 13:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738936196; cv=none; b=JLwQ2NWDDjxMAT169anapAgtooafLyQT+uUGufuEYOlkFErkzcq05sJUtbgOgqQgduq5lrPoPdIFT0a9fcQ4khW4tGvqPeY2ShwsiQHYPi4y61NAMbktT4VS6/qUPe3Dk3f+VaD0AfzIdSZOi9aSMSwQ+v1AzzQ7WGDo8J+mi3I=
+	t=1738936221; cv=none; b=gaypW9TeRiK6NNfNA7fALKMsn+1lS/M1tlOFnA6Tm557Ec+gHRz+dUOtcJ0K1XwXxCFmn8j7PzkloUMvSogVLgIP5ToClShvxnvnqwGGSZ/EMPNj0xNhG47PJzZEriOCmnNiHoUfw5kX7Xufo/sKztydpzAXdg+0l/oQY6sT5z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738936196; c=relaxed/simple;
-	bh=juFaumXjbLoOz65YU45sqBaxAyFGQIdadpsHlfe1m5M=;
+	s=arc-20240116; t=1738936221; c=relaxed/simple;
+	bh=HdiibnTlxgzZttepD4t7cwMKLWgurPZtGPoNMkNkJvM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FxLoLNYN6w6vTatIlTiXviaiwgGb7VrZCOaQPgNI6h4XZq3q5Ol3XiCkOSi276IcXvutqP6iouxt8HkO92xYvH11aHHHc9RfaaZy5xXLmZT4lj4MXLGiFRyfvaYxz2UBEUXHmPtu6BHeFheAqK09+qY+a3NImXosT/suBC2tAFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=WRQQgkTS; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=JG3irscNe4fV52ISasKzodVkQ3Cgjbm+V+43b4Jo+dAcTzYlPwmDKKspuyyPUVkmB9wfbxzBjszB7vJ2N2/UkMxTiOKhG9wr3dnQLep7620mns5dHQ7stSO4fhSodjExSJ3bGQve3e+s0rov4xkSUAe4shj3Nx8uH3J0maWpJys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tu8nr7/I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="WRQQgkTS"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38dc627eba6so878467f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 05:49:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1738936193; x=1739540993; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gpzEGYGNBlnkdvpss0WFxUtrvy3hr5xZCI7pyjeA6nE=;
-        b=WRQQgkTSVFp5Pk6nAaiccJ9cbFWobKVQp/qz10aWgsHPRZ+/EfPqq1JZ+s9M9R5/Nn
-         E7cYIdibkmnMu6ykVmToBgCdu8He2lzOqbp8BsrqZSi30Yiv/1lb26OiBfjgvfJnwocU
-         yP6MPMUvekv/tVbA5FKVLCbvxQFH+PcNj/bdg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738936193; x=1739540993;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gpzEGYGNBlnkdvpss0WFxUtrvy3hr5xZCI7pyjeA6nE=;
-        b=Np6oODUDaIMydTQfQEv1sVBmT8E0Vkv3vdr7gmBtbZUbPfWV5CCTzahku453IwiGIe
-         AWvgcVyBGIojSHS2X3k2g6UDdIDOh91MU19C7DF4XmM2t9k1vUmTe6SVgfykr34+IvjR
-         qovOfEuVscysx5WUqi/GzcztWXA5q/ZBQQyCD98aM0mnq+NfksTFhUlT8ozyRQI9l1HU
-         8IuRm81FpnjbnrlEUwwVkcuGXqq/eAThH7m+rJlCGV/L93/0rFdNzNuEv7GlJl6Qq16I
-         k4RUvT6D8lDGJ8PUXifPWaqAwcSSIAthE/jd/9ij8/FPTWPB45JlHpwqp7icppy+yqAZ
-         tIOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpZn6b6b7i8H8NwfdyZtPh9wcaax3H9E++awO0fu3sGtjo9J6mxhAReF9toIN0YdA16p/SchvURmw+lCg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzZO4u4j581ErfPMcn9wD3gJTAvOqmB4GJjGHx7TGGnBzYS+dt
-	0lSnJquAQgFGgpvj5NPUWQESQLuNScOScIGwTXHw0T3tULpjky3crnjqR+UAYzI=
-X-Gm-Gg: ASbGnct12JOvFyF89gMlASF3l2DJW6XOrPd6NAj3ggeWUBOfbnXySPLAyKoS8393dcP
-	+Y7I1cl5Sg9nfBcsZg0K6E49K3CPQna01HR4/bfE+CVd3ltx3o/6XHbgMJ51CCrCOVMhQw/o7v5
-	z+YXbfZIbfXR/IPaKEjsDkk7XYbhl+nJrbRQtS1VDc6EmcxjtmZqxY9aDZwTZrqcXlmX5Uzsw05
-	YLRLuUJcij83WpUV8O2cLNTYQBnxDzaH7Oy2OoiOAh2XaIBBB6MnROal7BOuUfyDPGLYj0exaWR
-	0mPMK+ZTzR97Q6Sm01bPqqUXR5E=
-X-Google-Smtp-Source: AGHT+IGJqAMB1t0pJiSzXY6UMdV7Lyj9QcEwc09QaQmxoJvGxizmah3qJE54xKnmFhg5DOnjQ57dWQ==
-X-Received: by 2002:a05:6000:1a8d:b0:38a:88b8:99af with SMTP id ffacd0b85a97d-38dc8dd0c01mr2285461f8f.22.1738936192850;
-        Fri, 07 Feb 2025 05:49:52 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbdd53a6esm4511438f8f.43.2025.02.07.05.49.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 05:49:52 -0800 (PST)
-Date: Fri, 7 Feb 2025 14:49:50 +0100
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: Hector Martin <marcan@marcan.st>
-Cc: Simona Vetter <simona@ffwll.ch>, Jason Gunthorpe <jgg@nvidia.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>, phasta@kernel.org,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	daniel.almeida@collabora.com, aliceryhl@google.com,
-	robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
-	DRI Development <dri-devel@lists.freedesktop.org>
-Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma
- coherent allocator abstraction.)
-Message-ID: <Z6YPfsDSNdRUskvp@phenom.ffwll.local>
-Mail-Followup-To: Hector Martin <marcan@marcan.st>,
-	Simona Vetter <simona@ffwll.ch>, Jason Gunthorpe <jgg@nvidia.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>, phasta@kernel.org,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	daniel.almeida@collabora.com, aliceryhl@google.com,
-	robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
-	DRI Development <dri-devel@lists.freedesktop.org>
-References: <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
- <20250130154646.GA2298732@nvidia.com>
- <2025013030-gummy-cosmic-7927@gregkh>
- <20250130172437.GN5556@nvidia.com>
- <2025013148-reversal-pessimism-1515@gregkh>
- <20250131135421.GO5556@nvidia.com>
- <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
- <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local>
- <4c143b85-063a-4413-a6ca-e9d80e26da96@marcan.st>
- <c5a49bcb-45cf-4295-80e0-c4b07083df00@marcan.st>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tu8nr7/I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2DA0C4CEDF;
+	Fri,  7 Feb 2025 13:50:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738936220;
+	bh=HdiibnTlxgzZttepD4t7cwMKLWgurPZtGPoNMkNkJvM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Tu8nr7/IxuTd2BWH0Dbgn6A+XDj+X7Z8VZ+Aay8gfc5EAKtdu4IuPC5ppicUgfuI2
+	 YPSoKaQZAsx/kiHe3iZCICYPa1qpYpXcD13lJWtnpVYPRqIXkP78bU6Xk7yXJLwuMT
+	 o+AhUqQWVZgt77ZwqPu0imfZ0lTUUgb+CVNdSH2cvUY5HQGzATQHeGWngL0sqCTl5I
+	 Mcgp2xZdsG/hk1UM+P9zEdHJUXszjoIXsD64VBzLKIXcmBRcRunLPJZ15/JVkFpB1s
+	 uLq0kTkmN/ffgKcBTw7gUuL2hJa7NZxBUF4VOGoUlcOiTAECkrFS1PCAbko0xHsTRp
+	 dCpfZ1c5btsfQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tgOkX-000000000xd-1lBk;
+	Fri, 07 Feb 2025 14:50:29 +0100
+Date: Fri, 7 Feb 2025 14:50:29 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Jon Hunter <jonathanh@nvidia.com>,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Linux PCI <linux-pci@vger.kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kevin Xie <kevin.xie@starfivetech.com>,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
+ parents and children
+Message-ID: <Z6YPpbRF_U0TxAbf@hovoldconsulting.com>
+References: <12619233.O9o76ZdvQC@rjwysocki.net>
+ <1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -119,166 +56,121 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c5a49bcb-45cf-4295-80e0-c4b07083df00@marcan.st>
-X-Operating-System: Linux phenom 6.12.11-amd64 
+In-Reply-To: <1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com>
 
-On Fri, Feb 07, 2025 at 07:20:03PM +0900, Hector Martin wrote:
-> On 2025/02/07 18:41, Hector Martin wrote:
-> > On 2025/02/06 3:52, Simona Vetter wrote:
-> >> On Tue, Feb 04, 2025 at 03:46:14AM +0900, Hector Martin wrote:
-> >>> Adding Linus
-> >>>
-> >>> My 2c: If Linus doesn't pipe up with an authoritative answer to this
-> >>> thread, Miguel and the other Rust folks should just merge this series
-> >>> once it is reviewed and ready, ignoring Christoph's overt attempt at
-> >>> sabotaging the project. If Linus pulls it, what Christoph says doesn't
-> >>> matter. If Linus doesn't pull it, the R4L project is essentially dead
-> >>> until either Linus or Christoph make a move. Everything else is beating
-> >>> around the bush.
-> >>>
-> >>> Rust folks: Please don't waste your time and mental cycles on drama like
-> >>> this. It's not worth your time. Either Linus likes it, or he doesn't.
-> >>> Everything else is distractions orchestrated by a subset of saboteur
-> >>> maintainers who are trying to demoralize you until you give up, because
-> >>> they know they're going to be on the losing side of history sooner or
-> >>> later. No amount of sabotage from old entrenched maintainers is going to
-> >>> stop the world from moving forward towards memory-safe languages.
-> >>>
-> >>> FWIW, in my opinion, the "cancer" comment from Christoph would be enough
-> >>> to qualify for Code-of-Conduct action, but I doubt anything of the sort
-> >>> will happen.
-> >>
-> >> Yeah no.
-> >>
-> >> https://chaos.social/@sima/113942119012147959
-> >>
-> >> This was about you, because typing a proper answer takes a bit longer. It
-> >> was also about your toots on fedi, like this:
-> >>
-> >> https://social.treehouse.systems/@marcan/113941468353031993
-> >>
-> >> And "haha it's only a joke" does not work with your public profile and following.
-> >>
-> >> I do understand the frustration and temptation to just burn it all to the
-> >> ground, head the call of the sirens, or maybe for me more pick up goat
-> >> farming in the Swiss Alps. But you can't have it both and expect to also
-> >> be part of and contribute to the same community. And personally I don't
-> >> appreciate getting drenched in gasoline while I'm trying to quench flames
-> >> on the ground.
-> >>
-> >> And this isn't the first time or the second, by now it's a pretty clear
-> >> pattern over some years. And with the first I could explain why you react
-> >> like that and you had my full understanding, but eventually that runs a
-> >> bit thin as an excuse.  Now I'm left with the unlikely explanation that
-> >> you just like thundering in as the cavalry, fashionably late, maximally
-> >> destructive, because it entertains the masses on fedi or reddit or
-> >> wherever. I have no idea what you're trying to achieve here, I really
-> >> don't get it, but I am for sure fed up dealing with the fallout.
-> >>
-> >> Cheers, Sima
+On Fri, Feb 07, 2025 at 01:38:58PM +0000, Jon Hunter wrote:
+> On 28/01/2025 19:24, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > > 
-> > Since we're into complaining about social media posts on the list now,
-> > I'm going to link one of yours:
+> > Commit 6e176bf8d461 ("PM: sleep: core: Do not skip callbacks in the
+> > resume phase") overlooked the case in which the parent of a device with
+> > DPM_FLAG_SMART_SUSPEND set did not use that flag and could be runtime-
+> > suspended before a transition into a system-wide sleep state.  In that
+> > case, if the child is resumed during the subsequent transition from
+> > that state into the working state, its runtime PM status will be set to
+> > RPM_ACTIVE, but the runtime PM status of the parent will not be updated
+> > accordingly, even though the parent will be resumed too, because of the
+> > dev_pm_skip_suspend() check in device_resume_noirq().
 > > 
-> > https://chaos.social/@sima/113961496955043901
+> > Address this problem by tracking the need to set the runtime PM status
+> > to RPM_ACTIVE during system-wide resume transitions for devices with
+> > DPM_FLAG_SMART_SUSPEND set and all of the devices depended on by them.
 > > 
-> > An R4L maintainer quit after multiple rounds of hostility, including
-> > some completely unacceptable public comments bordering on downright
-> > harassment from tytso, a situation which was widely publicized.
-> > 
-> > If, according to you, that's "shockingly smooth" with "no outsized
-> > drama" other than "what I stirred up" (I guess you also missed the whole
-> > LWN post about this thread before I posted anything on Fedi? That's how
-> > I even found out about this), then I'm glad I'm disengaging with this
-> > community. The Stockholm syndrome and utter denial is palpable.
+> > Fixes: 6e176bf8d461 ("PM: sleep: core: Do not skip callbacks in the resume phase")
+> > Closes: https://lore.kernel.org/linux-pm/Z30p2Etwf3F2AUvD@hovoldconsulting.com/
+> > Reported-by: Johan Hovold <johan@kernel.org>
+> > Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Yes, the kernel's conduct is still not where I think it needs to be. And
-there are still cases occuring with some regularity which would be
-unacceptable on dri-devel and sanctioned under the freedesktop.org code of
-conduct. But that's not really new, it's not really specific to the r4l
-project, and despite that it's still not good enough, it's definitely much
-better than 10 years ago.
-
-That all aside, I put the "outsized" very intentionally in my comment. It
-carries a lot more than just the above paragraph in just one small word.
-
-> > I thought I could work with you on these issues; I don't know what
-> > happened over the past year since we last had a private conversation
-> > about this, but clearly you've changed your mind.
-
-I got seriously annoyed with you about two years ago for the first time,
-but kept chatting for quite a while longer. Nothing changed. Like I said,
-I'm not complaining about this specific case here, but about a pattern
-that you've established consistently over a fair amount of time.
-
-And if you're wondering why you didn't realize this: It's impossible to
-change people by telling them they're wrong. What does tend to work is
-explaining different perspectives, so that they can figure it out
-themselves. And sometimes that's just way too subtle to ever register.
-
-> > Thus, as you kindly requested of me in social media,
-> > 
-> > https://chaos.social/@sima/113961283260455876
-> > 
-> > I will now proceed to fuck off. Good luck.
-
-I wasn't fully awake yet this morning, but I have no issue standing behind
-that thread in it's entirety. Lightly edited for typos below, with one
-sentence added for a bit more context:
-
-This isn't about "being civil" or "friendly" and even less about "don't
-call out". This is about calling out in an ineffective and imprecise way,
-so that the people actually trying to change things are busy patching up
-your collateral damage instead of implementing real changes, while all
-you've achieved is airing your frustration for internet drama points.
-
-Aside from that I've learned through private feedback since my first mail
-here that your social media brigading has had much more of a chilling
-effect on contributors than I assumed, which is not acceptable.
-
-When you're that harmful with your calling out, eventually I'm going to be
-fed up, and you get a live round shot across your bow. And if that then
-causes you to ragequit, because you can't actually deal with the heat
-you've been dishing out coming back around the corner:
-
-Fuck off.
-
-Or as Dave Airlie put it upthread in this conversation:
-
-"Being toxic on the right side of an argument is still toxic, [...]"
-
-So please do call out broken things, do change things, I've been doing it
-for well over a decade in the linux kernel. But do it in a way that you're
-not just becoming part of the problem and making it bigger.
-
-> Oh, and one last thing. I've heard that, in whatever backroom
-> conversations you've been having about this situation, there has
-> apparently been a belief, explicit or implicit, that I am in any way
-> employed to work on the Linux kernel.
+> I am seeing the following crash during suspend on a couple of our boards (with mainline/next) and bisect is pointing to this commit ...
 > 
-> Unlike most people in this thread, I don't enjoy the luxury of a cushy
-> tech job that pays me to deal with this community. I am supported
-> exclusively by donations, which incidentally, have been steadily
-> *de*creasing since the start of the Asahi Linux project. The project has
-> zero corporate sponsorship.
+> [  216.311009] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+
+> [  216.468986] Call trace:
+> [  216.471179]  simple_pm_bus_runtime_suspend+0x14/0x48 (P)
+> [  216.476775]  pm_generic_runtime_suspend+0x2c/0x44
+> [  216.481499]  pm_runtime_force_suspend+0x54/0x14c
+> [  216.486049]  device_suspend_noirq+0x6c/0x278
+> [  216.490253]  dpm_suspend_noirq+0xc0/0x198
+> [  216.494278]  suspend_devices_and_enter+0x210/0x4c0
+> [  216.499348]  pm_suspend+0x164/0x1c8
+> [  216.503023]  state_store+0x8c/0xfc
+> [  216.506260]  kobj_attr_store+0x18/0x2c
+> [  216.509940]  sysfs_kf_write+0x44/0x54
+> [  216.513699]  kernfs_fop_write_iter+0x118/0x1a8
+> [  216.518163]  vfs_write+0x2b0/0x35c
+> [  216.521399]  ksys_write+0x68/0xfc
+> [  216.524810]  __arm64_sys_write+0x1c/0x28
+> [  216.528574]  invoke_syscall+0x48/0x110
+> [  216.532253]  el0_svc_common.constprop.0+0x40/0xe8
+> [  216.536628]  do_el0_svc+0x20/0x2c
+> [  216.540299]  el0_svc+0x30/0xd0
+> [  216.543016]  el0t_64_sync_handler+0x144/0x168
+> [  216.547736]  el0t_64_sync+0x198/0x19c
+> [  216.551327] Code: a9be7bfd 910003fd a90153f3 f9403c00 (f9400014)
+> [  216.557197] ---[ end trace 0000000000000000 ]---
 > 
-> And I do believe the fact that essentially all high-level Linux kernel
-> maintainers and contributors are paid by corporations to do it is a
-> major factor that has caused this community to become wildly out of
-> touch with what it means to be a community FOSS project.
+> I have not looked any further, but if you have any thoughts, let me know.
 
-I'm really not in favor of chiding people for how they earn money, because
-this world isn't fair and critizing people for how they get their bills
-paid is generally not ok. But this is a bit too much to just let it slide.
+Yeah, I hit something like this yesterday as well and did confirm that
+reverting this commit makes the problem go away. Haven't had time to dig
+much further.
 
-It's fairly plausible that you need the social media brigading to generate
-attention that you can convert into enough donations to support the asahi
-project. But someone has to clean up the mess your shitstorms create, it's
-sure not you, which means my and other people's mental health essentially
-pay your bills. And I really do not appreciate that dynamic.
+[  110.522368] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+[  110.531751] Mem abort info:
+[  110.534785]   ESR = 0x0000000096000004
+[  110.538799]   EC = 0x25: DABT (current EL), IL = 32 bits
+[  110.544421]   SET = 0, FnV = 0
+[  110.547716]   EA = 0, S1PTW = 0
+[  110.551097]   FSC = 0x04: level 0 translation fault
+[  110.556274] Data abort info:
+[  110.559385]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[  110.565188]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[  110.570536]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[  110.576157] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000892256000
+[  110.582946] [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
+[  110.590348] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+...
+[  110.742358] CPU: 2 UID: 0 PID: 420 Comm: suspend-test.sh Not tainted 6.13.0 #118
+[  110.750067] Hardware name: Qualcomm CRD, BIOS 6.0.231221.BOOT.MXF.2.4-00348.1-HAMOA-1 12/21/2023
+[  110.759198] pstate: 81400005 (Nzcv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+[  110.766462] pc : simple_pm_bus_runtime_suspend+0x14/0x48
+[  110.772048] lr : pm_generic_runtime_suspend+0x2c/0x44
+[  110.777352] sp : ffff8000839d3a20
+[  110.780866] x29: ffff8000839d3a20 x28: ffff0edf80fff810 x27: ffffa2dc2d1f1d30
+[  110.788303] x26: ffffa2dc2dd82000 x25: 0000000000000002 x24: ffffa2dc2cc7aca0
+[  110.795741] x23: ffffa2dc2dd1e000 x22: 0000000000000000 x21: ffffa2dc2d090e50
+[  110.803177] x20: ffffa2dc2c612498 x19: ffff0edf80fff810 x18: 0000000000000030
+[  110.810615] x17: 0005002c00000000 x16: ffffa2dc2c614ce4 x15: ffffffffffffffff
+[  110.818052] x14: 0000000000000000 x13: ffff0edf80fff980 x12: 705f64706e65675f
+[  110.825490] x11: ffffa2dc2d9c5890 x10: 0000000000000000 x9 : 0000000000000000
+[  110.832927] x8 : ffffa2dc2d2af000 x7 : ffff8000839d3a10 x6 : ffff8000839d39b0
+[  110.840364] x5 : ffff8000839d4000 x4 : 0000000000000004 x3 : ffff0edf953e0000
+[  110.847801] x2 : ffffa2dc2c4e5784 x1 : 0000000000000000 x0 : 0000000000000000
+[  110.855238] Call trace:
+[  110.857861]  simple_pm_bus_runtime_suspend+0x14/0x48 (P)
+[  110.863425]  pm_generic_runtime_suspend+0x2c/0x44
+[  110.868362]  pm_runtime_force_suspend+0x54/0x100
+[  110.873217]  dpm_run_callback+0xb4/0x228
+[  110.877347]  device_suspend_noirq+0x70/0x2a8
+[  110.881844]  dpm_noirq_suspend_devices+0xe0/0x230
+[  110.886778]  dpm_suspend_noirq+0x24/0x98
+[  110.890904]  suspend_devices_and_enter+0x368/0x678
+[  110.895941]  pm_suspend+0x1b4/0x348
+[  110.899627]  state_store+0x8c/0xfc
+[  110.903228]  kobj_attr_store+0x18/0x2c
+[  110.907195]  sysfs_kf_write+0x4c/0x78
+[  110.911074]  kernfs_fop_write_iter+0x120/0x1b4
+[  110.915735]  vfs_write+0x2ac/0x358
+[  110.919352]  ksys_write+0x68/0xfc
+[  110.922873]  __arm64_sys_write+0x1c/0x28
+[  110.927002]  invoke_syscall+0x48/0x110
+[  110.930969]  el0_svc_common.constprop.0+0x40/0xe0
+[  110.935907]  do_el0_svc+0x1c/0x28
+[  110.939427]  el0_svc+0x48/0x114
+[  110.942769]  el0t_64_sync_handler+0xc8/0xcc
+[  110.947180]  el0t_64_sync+0x198/0x19c
+[  110.951059] Code: a9be7bfd 910003fd a90153f3 f9403c00 (f9400014)
+[  110.957428] ---[ end trace 0000000000000000 ]---
 
-Cheers, Sima
--- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Johan
