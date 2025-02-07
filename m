@@ -1,162 +1,84 @@
-Received: from outbound.mail.protection.outlook.com (mail-dm6nam11on2045.outbound.protection.outlook.com [40.107.223.45])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA322500C1;
-	Fri,  7 Feb 2025 15:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738942769; cv=fail; b=SQTNefkPWpMJyPi9Gk4UtUXCXCxVBN+cApjqiZVc3+EmtLHcfO8YLMKoJfhSvwJTCvmZjI8eGzY+Yh0OvzrEYw7Z7lH21CPwKzEl+OstJWrETRwiViNY3duzpFJaZc3z5P4H6iZ165QkyuOWKsr62BNBm5TtX2Aa2HLo7HYmTzI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738942769; c=relaxed/simple;
-	bh=vaRXiTTTYdl9QdrDViWZv8abaSXPXnW9cVQ5TPD/mE8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U3XmXj+qoQ2O1ftFUNxbMmZA3NXbxysnvH6sKbtGpW5LT1IDKBLxz6Y0ImdA1GREo1/7W0QRYh0k5LNxPZvyCXzsHGZ5KfjFUnroOjoOSDkkmbEdk0No6EgQmV0W1h8qIc/c1wWPsvxxArqaTQG02x170fAwnZSnQir6ZFxlGaQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=M5JGdgu3; arc=fail smtp.client-ip=40.107.223.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D5B23F28E;
+	Fri,  7 Feb 2025 15:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738942781; cv=none; b=hQFXBiC3D5+dpY73tQGQZJJPynMtQRmPo3ES4M2PnsZZgoSDoBMh7PnVd+Mbg1Hww3SLxWmbCZSciShhanddWtefzsN9iG1q8Hjf5HCGcGYzBmkSMcbvZ9tV0DPpCWcvr91HfOG/IyMhF+kD8viyCa0B5ZyQ8L4ejuXsoF/D/lA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738942781; c=relaxed/simple;
+	bh=t4uASqSznZ8tq16GmePFTS52RmjOiqzJK2YMsqAmkfk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=LOtY3mO3AIXqLGN4wCOkgaC0mFcBR4Qp3oDcb0zLrDo+4MBZdzVbnd3zEzhypbI3VWXj9afvsj1RGpCR3/1vgH7fd7MUolzXxYjaddCUHKZOJIUNidrEq5wieofk0n7RcZKai4P0P8WJwnGF4lQWcZcFqcSmA9SKOiLXOSDtCIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/45OCr9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="M5JGdgu3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VeQrTHYv+Orv3emDPujmaSTfscL7F7Nc+l/q193RuPuc/qax/31zC/expVAE4y35K4JYNm4HUwZdBDZcAqV60wF8FVETzZH0aJJ/iKnYPhwg3U1PV7tTy98Zl9hmWBjPAgDPSdmpbuvA6edtu+OIkV7h1pcCMQysptK2toeEOa64hI+v0Z80uv9uE4ItQ9dlekEW7tD3Lr+c2RuNIwlspj5L3p/wYbZdIvYAh84PBCf5NO1M+EuOK957laFSgZzMZI7W46PtI9qxCleGyZNhwTUZs0HNZ5PVkOemWdwZd7JLt6aYm4VoXBWYdscat9mGL67ZvSZY6qJt4QEk1p1uMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G0w2fMhd4DD1eD2nixGLYLH6kh82RTcJv05MJF5WZbM=;
- b=xt0DDfbwY/+WrwlYOUTAwhcWKeFC1DSgoyTqxpelJI0n7FLzhk0aJXa3O0Hp/02OoYaeFKPC55riT8ZutQLwyeRW03gIfpKnp/9NqabOD0giF6PA7D6ZkXpYDoKiAp6S5/IBFj5fhf7iHDZ55PFaxCyjwOLTegM2IuGr9YRvD/zCz3JXRIF1iVIRU6U4z2URVK93dxyB5hmT7PDKEHREKgTmAFt84O/bnrCVKm2007thZfyoXirhVjnk+YFacy6Z6r5O5ZlMVZWx+E+UZqU3lMZ3N31j6/tlhm0AahViH2wml+Iyvu5HLEt3HJ7LbsSTawkQqmADTVl6Vp4mfnH5AQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G0w2fMhd4DD1eD2nixGLYLH6kh82RTcJv05MJF5WZbM=;
- b=M5JGdgu3PL5TmT4yo86t1v6YLfsOYkgsAL110nrQYYEW3eR11QY6HG302KZBn9Zy4MKO8JRNy27iC6WOOHl2lAMUe9fZb47FGCbDJXhkYTHy+y+ox5nkNnOwxZcRLbXxdMNYs+TVCXaUTsTvEMmbZiLiI0SPaTggWqCxrtnpjng=
-Received: from SJ0PR13CA0106.namprd13.prod.outlook.com (2603:10b6:a03:2c5::21)
- by DM3PR12MB9416.namprd12.prod.outlook.com (2603:10b6:0:4b::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8422.15; Fri, 7 Feb 2025 15:39:22 +0000
-Received: from MWH0EPF000971E2.namprd02.prod.outlook.com
- (2603:10b6:a03:2c5:cafe::f6) by SJ0PR13CA0106.outlook.office365.com
- (2603:10b6:a03:2c5::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8445.7 via Frontend Transport; Fri, 7
- Feb 2025 15:39:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000971E2.mail.protection.outlook.com (10.167.243.69) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Fri, 7 Feb 2025 15:39:22 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 7 Feb
- 2025 09:39:18 -0600
-From: Robert Richter <rrichter@amd.com>
-To: Alison Schofield <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Gregory Price
-	<gourry@gourry.net>, "Fabio M. De Francesco"
-	<fabio.m.de.francesco@linux.intel.com>, Terry Bowman <terry.bowman@amd.com>,
-	Robert Richter <rrichter@amd.com>
-Subject: [PATCH v2 18/18] cxl/acpi: Unify CFMWS memory log messages with SRAT messages
-Date: Fri, 7 Feb 2025 16:37:53 +0100
-Message-ID: <20250207153753.418849-19-rrichter@amd.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250207153753.418849-1-rrichter@amd.com>
-References: <20250207153753.418849-1-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/45OCr9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06E36C4CED1;
+	Fri,  7 Feb 2025 15:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738942780;
+	bh=t4uASqSznZ8tq16GmePFTS52RmjOiqzJK2YMsqAmkfk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=k/45OCr9XJlWgmYK7lJW8wZlmlC8nXfiuYn+lN2FhpGlSB/4HQP9Z+CseuvVV8GF3
+	 Br/lqmQZ7OngTQwaK/SQpRs0MKAJO2UraLkjUm7o9E7URcCGizlnAM9jklle4Nv8P7
+	 2uhS65Czcoxdh7tz/Tkqex2cpW/SSBLPsTc6xBpWnPKag2fImzfoAACm5v7qg1q5FW
+	 JXiqd+H/lTfxnikxPrz+n6+d8Q+S2NzEg6n367+JP73fPKwIgfXhfOsiFMomkMuq3T
+	 c29p0fQmEhR+T+XTjnDHasI1izFLnr5WorNz9CIzME+w7X/H/PI8z+wWGZQDWa6LkF
+	 F2KaOUjPcAgTQ==
+From: Mark Brown <broonie@kernel.org>
+To: Shenghao Ding <shenghao-ding@ti.com>, Baojun Xu <baojun.xu@ti.com>, 
+ Takashi Iwai <tiwai@suse.de>, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Kevin Lu <kevin-lu@ti.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>
+In-Reply-To: <20250206192537.1133763-1-andriy.shevchenko@linux.intel.com>
+References: <20250206192537.1133763-1-andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2 1/1] ASoC: tas2781: Switch to use %ptTsr
+Message-Id: <173894277874.54486.13898875284759460779.b4-ty@kernel.org>
+Date: Fri, 07 Feb 2025 15:39:38 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E2:EE_|DM3PR12MB9416:EE_
-X-MS-Office365-Filtering-Correlation-Id: 557298e1-2f22-4100-13a1-08dd478d97fc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|7416014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kYqXyOkEHc6DNKGqd9H3pbLW4hq+Qwy/XY0fxyja55G8kG/u7cUlEvZDoVg4?=
- =?us-ascii?Q?fJCbBg4/jhZZQJLVRoQk8Db+hvK5kdrvqBHuwL0XyLdUb9o6b6rxr/bryWf0?=
- =?us-ascii?Q?JJsj1wgfmLrwfiTi4VgmzNXlfTOwWcVpDjMOj6bXTgzI6lymJiiqHCsQiAVo?=
- =?us-ascii?Q?V9+/gPvSmKXKNDyMzAqJp+Mzof2sAyRGsPh3Mwp3Um/UsiiqkI247riqjUm8?=
- =?us-ascii?Q?Ia/yJ4I+loLoTUlHeckutwYH2FJ4APaw5t3SDK3PX5WtgQoasS5P/nW3Nyc7?=
- =?us-ascii?Q?//Zzun4k5BmtslB1xEe2/lVH/MtitJcUCgmqdcnKuxEIKox6MPgt7Nw4dkHC?=
- =?us-ascii?Q?oPgffavdwdwhuaYo8NK6F3uCgmhWg9ISv1UYyIu2bu2rXpuq/vC4WzrFb4DM?=
- =?us-ascii?Q?1+6q5aK9qfSo6L7TFqIUznsCQ0oKAPHWrQmYS8c5Pr4bYteCctctnwK058Ev?=
- =?us-ascii?Q?JpeLL9/kPR2QS/uXHvlgJYXmP1ZRiU3sQ43PCzcJ6t/wuEnehbqe7ifptyJp?=
- =?us-ascii?Q?2Ao/FjakwdbrULhNNvv/dlzuXU0GwrdJ2sHheAYSAnotGEcmzn+zN717ZlXM?=
- =?us-ascii?Q?dK2qzZadfAupc6dds9/Dylgf/LfcAJfoqHfse7qLyQTBFvJeZpDUI3YFUfZm?=
- =?us-ascii?Q?1NK0/UTCliQ/uLxPVE2GSecMLjW8dl80AHEmAnoPsinG9oWVD4lk8qAErd7E?=
- =?us-ascii?Q?8ZYbV5QbWFpUsjvFK6uSACXegW3YbGxTaJlaMfpYfTGkQ/mP+DTA+wjmVwbh?=
- =?us-ascii?Q?fJmJbKI0vUMwM24+PHxG2wgeFKcq6eXVqUK2EIbPVd45ZtK/e1xg89ISzWeS?=
- =?us-ascii?Q?fb2MJR1Ch2M9EPiSt6HxvMA/EOEF5F6B1iOHr5AINVnRsEiaFiXFttyrqFd6?=
- =?us-ascii?Q?Nar+gdfMEcyl/d2nbzavOxh3cQnWLNVnxCaM0uRgN/91RyBDsub2apW4Dfei?=
- =?us-ascii?Q?AeI56jFRRSCtF87kdYuvrf/vt1e7578H03glYDHYF+sBB3Q/G3nD6gqKeBE3?=
- =?us-ascii?Q?7BM3/uUlKxpw+AKQP9/kJigokW5KIt9pTf8JFGlmbIrOivWl27dyp7ZDQ0r9?=
- =?us-ascii?Q?3jPOVdGtNV98BaRpCU+w8cgiXzFZeueuPLzBJ0d8FKSh6r+FHlRODRhJgXWF?=
- =?us-ascii?Q?3ZktCxXX/7/ZPfC1DZfwPhEhQAaAVPuGJZI02Yty1hsGggeYEyMMq+8iZ0IR?=
- =?us-ascii?Q?J+WzoKcVf8MSwFMfvVTHY6u7GOn79K0WfCzu8feS7wCBBZfnwf5MOfHc2jJh?=
- =?us-ascii?Q?LicZPGJok3RqWA9OsJLkS2HYTmq1HLbaprzRojp7wFNtKIjMbwSUHr67Ttny?=
- =?us-ascii?Q?iUzkJ3W2EFBGRmDpcPqdPj1u8pGZmLDUqJYaO0WhYQeFCtcrD16FnRv9o3rR?=
- =?us-ascii?Q?/1rgbcFxnxPWkXSROEX7zBDOeDOjkDMPa2h5tKS9dJfrMzdzsxBufVhb8Li0?=
- =?us-ascii?Q?RqlTFC2XtrZa+sl+99mwvHzRgLAQOj8fYFq/U0WGQbinXvD3hbwmKW6YZawn?=
- =?us-ascii?Q?Ps7Yh6GrZFdBN7w=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(7416014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 15:39:22.0444
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 557298e1-2f22-4100-13a1-08dd478d97fc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E2.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9416
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-1b0d6
 
-CFMWS entries have a similar importance as SRAT table entries to
-describe memory regions. For CXL error analysis and memory debugging
-information of both is needed. Unify output of both messages to
-improve logging. Change the style of CFMWS message according to SRAT
-output. Also, turn messages into a dev_info() same as for SRAT.
+On Thu, 06 Feb 2025 21:25:15 +0200, Andy Shevchenko wrote:
+> Use %ptTsr instead of open-coded variant to print contents of time64_t type
+> in human readable form.
+> 
+> 
 
-SRAT pr_info() for reference:
+Applied to
 
-drivers/acpi/numa/srat.c:
-  pr_info("SRAT: Node %u PXM %u [mem %#010Lx-%#010Lx]%s%s\n",
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Signed-off-by: Robert Richter <rrichter@amd.com>
----
- drivers/cxl/acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks!
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 3e75e612cbc4..93c73b163c28 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -447,7 +447,7 @@ static int cxl_parse_cfmws(union acpi_subtable_headers *header, void *arg,
- 			cfmws->base_hpa,
- 			cfmws->base_hpa + cfmws->window_size - 1, rc);
- 	else
--		dev_dbg(dev, "decode range: node: %d range [%#llx - %#llx]\n",
-+		dev_info(dev, "ACPI: CFMWS: Node %u [mem %#010Lx-%#010Lx]\n",
- 			phys_to_target_node(cfmws->base_hpa), cfmws->base_hpa,
- 			cfmws->base_hpa + cfmws->window_size - 1);
- 
--- 
-2.39.5
+[1/1] ASoC: tas2781: Switch to use %ptTsr
+      commit: cb161c333927142818d6bf22a4da2b023fb2b8c9
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
