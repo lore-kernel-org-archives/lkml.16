@@ -1,134 +1,111 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7971C700A
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 22:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F1B23C8C4;
+	Fri,  7 Feb 2025 22:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738968442; cv=none; b=tjoFGdM5ALm+dLOjdgd0Y6Z74k7aiKKHczrVbB1e8P3VEg7Eh3vbmyv/kBGXRf+W4wG0hKwjbjOJrGvVqPdiw77H/StUBCJ4bkojNcvpVwNcLBvH/Jig+LN/UrvLKYP+e88vSWhLqqgwCTzwb3mK2AjTY0ECOvFIlFCvwkAhZ8c=
+	t=1738968570; cv=none; b=ESWkkURAtroe+JZPbef8ytY9Ijo1K27gHMoArBeB40Ry0QvnD0YFcOt8We529PYyFlCt0DQi0eS/85IRFvNafYCMbsVP0wAqnYexIPE3AF5rfwKrkUrkhWtZZ5x/ds3u/CdqQWSxQftKNpil+MGINcxLTi3vvm+p+ifvo1G3pvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738968442; c=relaxed/simple;
-	bh=Q1fbi3F8LKnBa1vR6e0w8SK35bgu0+iWdIMrLyuScbQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CXMvpjNUrplT5oPtDaCdbxzUG3sE1t0vBuMgiNcbcI7xpnqDI45bNpNxeIOQz4y/2pgwJ030kOKI3zuNqLdI9zGIipCTcj0W9OEOWPA2cAsh3xHitddhBXyPQ93NQAE23BeoZS4W/SCmfocHogBzo/TKGKLUbbR9zm3lmElz3Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hZ+oJS/w; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1738968570; c=relaxed/simple;
+	bh=owl9CVvvtG4wUxs40IqT3ipinai74SzRIByVFrvUN8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s3bdr/j6yMijnYvadk4xrNgPs+RxoNR+q2Mzjnal+T3O4gzisIBhWTP2FRyx4jy2gGoABgEczwnZYH0Yf4XiYTwJBudIquAUysdxzxu54f7By6BN7xc8T92wMmosmv48fzxSzreKm7d5AZwSS+ZIaAkmjS61+Ydn0uan0WoRsN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iRDMQFhU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hZ+oJS/w"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517CabLn011434
-	for <linux-kernel@vger.kernel.org>; Fri, 7 Feb 2025 22:47:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	GSfrT82LSQv1cmL5Q6NuLOzNcusRp2aoe4uqa6zAbDk=; b=hZ+oJS/wbJgwqJBl
-	nyf2cAtw3hj0J0dYY+QaMuFSG6sVkBGmKo5JSCgv+HNmXu+OCOm6LVDnAOIDrNBk
-	Zwnm3lvIhAka2ikEuLSrVlsB9YPq8CSW/gvN77nvjIzZp8p7P0WLDFoCqkze23Mu
-	HkazSrVSCvVr3/dyrggSKeQo4UVWWLK66NrMTE2W158jd018dNEpHwZNMMLVEAyQ
-	XSJXAdUns4rHpOR40ZBDOV30M+Bn9OOZTs1vcByoQS3kFMdkOxNHV/X7GEjPz52y
-	zbx1XO/hME/l/sN8b98DlnrpHvLBJOxHyd4BDWo9iBX4p417t/j5R8s8Yg5xsUWh
-	ffZF+w==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nja3scq3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 22:47:20 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-467a0d7fb9fso4023331cf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 14:47:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738968439; x=1739573239;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GSfrT82LSQv1cmL5Q6NuLOzNcusRp2aoe4uqa6zAbDk=;
-        b=bngDGYPvItUZOpEJMPCuJqdNLDtxO7sYX30SycPf+krr0d3x8pyETCH/Rt5gy2vjij
-         njTC8OBaNOChBEFrf+wjtOk4/RmoZ9/2EGb2ijKsCL7d9bV7KtbE3/GKQhhFXwkPh+fv
-         QRfikj8xjMwtnAmxaOMLgXgQyzgs1TX1AtQyJJ6tGfHrSkCFKYV8Mdr6BgL1LXMpjqdx
-         QnKbAVlw2JcE67EEj/MBoOQr1n7K6UtzZDzcXZ26y+oyWOFqF8fZvOITwPeOnTBGBEwN
-         0WXpMt4oTnyYxj8d3xCFuNeCg14qK2Gn86jPmCfG+WZmc0gglZL3+fXrGZ5f7J7mexcm
-         Fkyw==
-X-Forwarded-Encrypted: i=1; AJvYcCUsc4YrVsd6Z8XOKunUn7Igxok2rbyttVQSJ01hXFen1a7Ai1PyGDn3aKtf80KYpjSmvjBZcIGXmhnoqKo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFGQYeX7mzPpLosK38j/eEnA65hKtX0YkVFl/Hjuo76KPqNhie
-	c2oG93qm4g/2b9JgwLZtE8/2yXL3MAvKhQDk64DNh9bND2WDYdbii7LKTDkoYsB+x+KZWRlYQf9
-	rXvFuq7IYQ+X2+7FDvWyo+idv7YrWrJrYyf1/sTPRDMK0roHCuehKmOqvR0Q/G9k=
-X-Gm-Gg: ASbGncvu75WfigqSfH2s98Xe06S5a5NgzEklsTfngStcRWoAW2XSxxssgKcZCLzjzQh
-	edXhii0MvRUPuqP+TBCF2bNPdSYy4l0TBU5T4rYBgnxJ7utupmXHe9Yq/R/CiY74J3XaGfzuHCw
-	V4Byjuz6+m+7JVrae2mRQq4wJiq2ka7jatVHOJuknKtowzMpNi2RPTs6uYkd02+ffadkua6FtiI
-	gTFmRh3Tdk121hOOmMqSSp0vvHvi1EMHkzoXmY54E/arvkek2r8MJ4r3GRFfhoyjCwAKVtJFz5i
-	xXXrJnkTfADl0owiBH8YpgplWmPl+cKrN8UToHxuNdDRwoZpxefHAgYU75A=
-X-Received: by 2002:a05:622a:1b87:b0:467:6bbf:c1ab with SMTP id d75a77b69052e-471679c7d79mr29186461cf.3.1738968438746;
-        Fri, 07 Feb 2025 14:47:18 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGSsJAkiNdMntxbj6WaJ97FcSyVaatuMmgkKKnf1mFsTb8a3C0KJ8abaktCJbg7NroLAnIrZA==
-X-Received: by 2002:a05:622a:1b87:b0:467:6bbf:c1ab with SMTP id d75a77b69052e-471679c7d79mr29186181cf.3.1738968438388;
-        Fri, 07 Feb 2025 14:47:18 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcf1b7ad6fsm3197436a12.18.2025.02.07.14.47.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 14:47:17 -0800 (PST)
-Message-ID: <c6352263-8329-4409-b769-a22f98978ac8@oss.qualcomm.com>
-Date: Fri, 7 Feb 2025 23:47:12 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iRDMQFhU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26CA0C4CEE2;
+	Fri,  7 Feb 2025 22:49:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738968570;
+	bh=owl9CVvvtG4wUxs40IqT3ipinai74SzRIByVFrvUN8g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iRDMQFhUqf3Y9j2K4MSyxcguvtSusGJAQ0eqU2s1r9eA6CBTQTwYXcVaOhk45dNQ5
+	 qWxuw8KgkfsOKNLX7rvIBVzdP2vo3Q/aCbQnLWhdR4f71+bTVKPiE2yJKGVthsHyFW
+	 HN7ahdBcfJQGxZPgR9djShZW9SFcvdeRCX33Qd1BTdH3+iZoSmnBAd7Ocy51xwgzTS
+	 MM9Hye8RLeJ0Xu0SwLKszOraecX04CRmygN2O75FQyPrThd97yCU3wZWhe3KCjo7C9
+	 sqnadSr9tfcFsVmeU69d8smXtHsyfI+W1SSBnjUmUvfnprjXlsK/IZwSo77PrqHKEG
+	 pkiy6NoGku1QQ==
+Date: Fri, 7 Feb 2025 22:49:28 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH 3/5] lib/crc32: standardize on crc32c() name for
+ Castagnoli CRC32
+Message-ID: <20250207224928.GB2819332@google.com>
+References: <20250205005403.136082-1-ebiggers@kernel.org>
+ <20250205005403.136082-4-ebiggers@kernel.org>
+ <20250207224233.GA1261167@ax162>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] Add UFS support for SM8750
-To: Melody Olvera <quic_molvera@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Bjorn Andersson
- <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
-        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
-        Trilok Soni <quic_tsoni@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, Nitin Rawat <quic_nitirawa@quicinc.com>,
-        Manish Pandey <quic_mapa@quicinc.com>
-References: <20250113-sm8750_ufs_master-v1-0-b3774120eb8c@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250113-sm8750_ufs_master-v1-0-b3774120eb8c@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: skYN79OQD9_jGAhuB79VzJ3xiMTan0lN
-X-Proofpoint-ORIG-GUID: skYN79OQD9_jGAhuB79VzJ3xiMTan0lN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_10,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- clxscore=1015 priorityscore=1501 bulkscore=0 spamscore=0 mlxscore=0
- impostorscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502070172
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207224233.GA1261167@ax162>
 
-On 13.01.2025 10:46 PM, Melody Olvera wrote:
-> Add UFS support for SM8750 SoCs.
+On Fri, Feb 07, 2025 at 03:42:33PM -0700, Nathan Chancellor wrote:
+> Hi Eric,
 > 
-> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
-> ---
-> Nitin Rawat (5):
->       dt-bindings: phy: qcom,sc8280xp-qmp-ufs-phy: Document the SM8750 QMP UFS PHY
->       phy: qcom-qmp-ufs: Add PHY Configuration support for SM8750
->       dt-bindings: ufs: qcom: Document the SM8750 UFS Controller
->       arm64: dts: qcom: sm8750: Add UFS nodes for SM8750 SoC
->       arm64: dts: qcom: sm8750: Add UFS nodes for SM8750 QRD and MTP boards
+> On Tue, Feb 04, 2025 at 04:54:01PM -0800, Eric Biggers wrote:
+> > From: Eric Biggers <ebiggers@google.com>
+> > 
+> > For historical reasons, the Castagnoli CRC32 is available under 3 names:
+> > crc32c(), crc32c_le(), __crc32c_le().  Most callers use crc32c().  The
+> > more verbose versions are not really warranted; there is no "_be"
+> > version that the "_le" version needs to be differentiated from, and the
+> > leading underscores are pointless.
+> > 
+> > Therefore, let's standardize on just crc32c().  Remove the other two
+> > names, and update callers accordingly.
+> > 
+> > Specifically, the new crc32c() comes from what was previously
+> > __crc32c_le(), so compared to the old crc32c() it now takes a size_t
+> > length rather than unsigned int, and it's now in linux/crc32.h instead
+> > of just linux/crc32c.h (which includes linux/crc32.h).
+> > 
+> > Later patches will also rename __crc32c_le_combine(), crc32c_le_base(),
+> > and crc32c_le_arch().
+> > 
+> > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ...
+> > diff --git a/include/linux/crc32.h b/include/linux/crc32.h
+> > index 61a7ec29d6338..bc39b023eac0f 100644
+> > --- a/include/linux/crc32.h
+> > +++ b/include/linux/crc32.h
+> > @@ -27,12 +27,11 @@ static inline u32 crc32_be(u32 crc, const void *p, size_t len)
+> >  	if (IS_ENABLED(CONFIG_CRC32_ARCH))
+> >  		return crc32_be_arch(crc, p, len);
+> >  	return crc32_be_base(crc, p, len);
+> >  }
+> >  
+> > -/* TODO: leading underscores should be dropped once callers have been updated */
+> > -static inline u32 __crc32c_le(u32 crc, const void *p, size_t len)
+> > +static inline u32 crc32c(u32 crc, const void *p, size_t len)
+> >  {
+> >  	if (IS_ENABLED(CONFIG_CRC32_ARCH))
+> >  		return crc32c_le_arch(crc, p, len);
+> >  	return crc32c_le_base(crc, p, len);
+> >  }
+> 
+> I think this rename is responsible for a build failure I see with an
+> ARCH=mips configuration on current -next:
+> 
+>   $ make -skj"$(nproc)" ARCH=mips CROSS_COMPILE=mips-linux- mrproper 32r6_defconfig arch/mips/lib/crc32-mips.o
+>   arch/mips/lib/crc32-mips.c:25:9: error: 'crc32c' redeclared as different kind of symbol
+>      25 |         crc32c,
+>         |         ^~~~~~
+>   In file included from arch/mips/lib/crc32-mips.c:12:
+>   include/linux/crc32.h:32:19: note: previous definition of 'crc32c' with type 'u32(u32,  const void *, size_t)' {aka 'unsigned int(unsigned int,  const void *, unsigned int)'}
+>      32 | static inline u32 crc32c(u32 crc, const void *p, size_t len)
+>         |                   ^~~~~~
+> 
 
-You still need the same workaround 8550/8650 have in the UFS driver
-(UFSHCD_QUIRK_BROKEN_LSDBS_CAP) for it to work reliably, or at least
-that was the case for me on a 8750 QRD.
+Thanks for pointing this out!  I temporarily dropped the series from crc-next
+and will send out a revised version soon.  The enum value in crc32-mips.c will
+need to be renamed.
 
-Please check whether we can make that quirk apply based on ctrl
-version or so, so that we don't have to keep growing the compatible
-list in the driver.
-
-Konrad
+- Eric
