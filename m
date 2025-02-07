@@ -1,119 +1,95 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F313422094
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E3C165F01
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 08:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738916993; cv=none; b=KLO2TcCFcbaKAvZDUI0k81U3aIKYS9AX9wshRzx1QrrrN5VmIKlVXRHHMySqCQMGk7eFIljRFLFwbYBDQO7WZhMczUqjFoCsPLj+xDaAkOBTYgpY9AL9us3/mMDLLfihM1SQgh/ss8DtQZfhZOdE5IxGKBRVignE46cSBGyX1ec=
+	t=1738917013; cv=none; b=an4AL+Lkk4zaG4h9e18GMQ5MVy9acvYLEbeXnYQmnuN3v2UsrklfIPP6b4aj0sAzjEyFl7tweWgJfdTsmsZN89kgVf5DyvCzTCJfgFTKuP9l8o+oSN2Q+YvpfQn/YZAXPT+Yk+PGfUwZcpvjP6gbN+7Vyy8XaBFOVgT3uAl+rcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738916993; c=relaxed/simple;
-	bh=HSy2JwpD+BRqJIXapsG2+ToTnoxywnKVVRbALfYh9Lc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=knKwoQ1daeAFmqXdnEGpMYs0/lLyu0kXifbXIzDIU01BX8GMyFAj8gOYXZGh45nivgDumTPJ8AQXCTAscOJ+VbIKqgtkWisa+Qg3c2nQeugxeCJa3U/O7JqrAhIdBHXlK5Upv8QilW7gVcX7AlEhzGoSpNVG5dBu+LEs5fwHBBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xEzmipLV; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1738917013; c=relaxed/simple;
+	bh=Q0G80Tmq5tq9GB3QKskSBR5as3YHNKy/TImPvNfo28U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AnjSgf2yTy5WBfojxDOfrk1/dGeuDxpYDmCYxEz+lIBam1Zx3mmXKsmMr5tumqRI0jcberTxbjDfRVBWSHF11r1us73qytnAQlOntyIHuRhbow7kNjsInC0GDYEB/qDuMvO2kEunFzSQ0fuNUdtTcX4LVTm21i3L9BZIDJ1G8Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rMjNeUz+; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xEzmipLV"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1738916986; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=+jh2igr9cD/8DYXSIO6GjGLquskOAstJHjX1kJ7AduE=;
-	b=xEzmipLVCNb+3Kxtfd9bepjKfIo6gtqdrodcR/yJYpiJZUxwleVU8fQk7mdhgMJdzbtYeXYWd9biQDRnaXiFtl97Mk92dcAH/M34rj9Vv0Kj6ns468n4hDJ4HuqvSdmiEHEM1KSst4NwjoxScOWyf9pS/NWLaVDwvH4Y6z7vwic=
-Received: from 30.74.129.145(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WOymIew_1738916985 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 07 Feb 2025 16:29:45 +0800
-Message-ID: <f4319592-df8f-4468-b8fb-7fcbc51804c6@linux.alibaba.com>
-Date: Fri, 7 Feb 2025 16:29:44 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rMjNeUz+"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fa286ea7e8so513800a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 00:30:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738917011; x=1739521811; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=WcNq4IW6ynvt4XBAoYiudn0pAf8i1A5mggeWKw6ds34=;
+        b=rMjNeUz+DizJETtDaNCS1MEofW116pL4ZmihgG6ojCACLq+CIP07el1HhBgG3iZmh6
+         AAhq7g/5tX5H0Pm3q020rgJRHaMhOqDIOg/xc3PBjsmmv9iU4y110wroDVP5SOKh02le
+         bSkMarysrHXLHQsZjvFgTlNtk4mzFEWWXc++J5oZ2nTk+WTam+EUPLjVdmOiL1KH7hGD
+         zUwRb3zHkAW35XLMgRtDyAo/GADFvSfpoAR3OSrjn2+EOwuGhBOcB2azGoDlxEZaBMPl
+         a78AAtrxDCtcGOTBK+sA2K2Eb1XoDjCNM9/OjSyQ5sv0t+g43KczlCtq5qvTBnUVC2Ga
+         KbMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738917011; x=1739521811;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WcNq4IW6ynvt4XBAoYiudn0pAf8i1A5mggeWKw6ds34=;
+        b=NO8RlvFn00Maft/TEZJAkQ0jyYLDef6LluvdI4hOWUG6vGgmI++TOasOqtt9i5UKFl
+         eNZD4poX7zWUZn9C6W2gv8fahNAeBRgAs+yF1vBbWoso5u1nlRIcY2u81LfszvjOTxL2
+         QLDO1YRvKkfrOc1MA5uSuaZHOhNqvBTMM1myrAyK+3vlzCj19+ehbvEHuhb/2jTSZQBW
+         3cGZG0Z4DGlf54wNH0URrILJ6uR+KW/3KiEHCtb+60MnRDf5bPz64IljAXGocwqd4uZm
+         x90C4xfUmLz0mC14iaI+jEjH58LWuakandppf71j/y9cikp1ofY4ch4Pn4eac791WmVZ
+         eGag==
+X-Forwarded-Encrypted: i=1; AJvYcCUEYJaIkKlIyOfQg9zzUsNlCJqueScBvvKTTqXyEVpcQCCs3qtDfL5pHdenppDa3QMGYhf/nI5JYbumXSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzweCm0N4PylfeKrbmSHOmnPct5QkupPTdnVTPKhu50itRPAeQ4
+	2wgfv59Ws91L6ZFvoV7lPEctllNHmxTCkYu5blD32kFrcDgo03Us9RG7TJyyrdRDPB1SzrrAIFA
+	lArQc9xapmgzfbidNCWUlkd4knaA7PrNWsKFL
+X-Gm-Gg: ASbGncsfzZBoC0oueCTcT0j3F9ZW1uZ8l+XhvGpwidlVEnuiVgbUAL4FYMgD2fbSClI
+	OjuQPzmHjBH6n3OxLq80r7yiX0e9xCO/YWada9Qzdi36jliwdu+Kyrdo2y3kfbnU8JF6GpeAtxR
+	8DBxKDTeXATqDEHLNkd6qP8seakL6+
+X-Google-Smtp-Source: AGHT+IGRVhl7HL1Qe0V8gg15Rc1nfgr7gEeZnWikYKcsqVJ+lQZ42vGUUG2gbBr8DqgQs2nF6/a4ShBWmtyPQ+wpMVw=
+X-Received: by 2002:a17:90b:3596:b0:2ee:bf84:4fe8 with SMTP id
+ 98e67ed59e1d1-2fa243eaa37mr3426767a91.30.1738917010600; Fri, 07 Feb 2025
+ 00:30:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs: use Z_EROFS_LCLUSTER_TYPE_MAX to simplify
- switches
-To: Hongzhen Luo <hongzhen@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250207080829.2405528-1-hongzhen@linux.alibaba.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250207080829.2405528-1-hongzhen@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250206175114.1974171-1-bvanassche@acm.org> <20250206175114.1974171-4-bvanassche@acm.org>
+ <20250207035345.GA4920@lst.de>
+In-Reply-To: <20250207035345.GA4920@lst.de>
+From: Marco Elver <elver@google.com>
+Date: Fri, 7 Feb 2025 09:29:34 +0100
+X-Gm-Features: AWEUYZksMIm2vU21HubXDDasVJTO9346k0ZmFZaNqm_EDni4Qmk7slk02COq-Po
+Message-ID: <CANpmjNM_5dVaq8NatmTykGveUQGjWx2j4k8PQ92F=hSb+8NzAw@mail.gmail.com>
+Subject: Re: [PATCH RFC 03/33] locking: Introduce <linux/thread_safety.h>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Bart Van Assche <bvanassche@acm.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Will Deacon <will@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org, 
+	Ingo Molnar <mingo@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Waiman Long <longman@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, 7 Feb 2025 at 04:53, Christoph Hellwig <hch@lst.de> wrote:
+>
+> > - a struct that represents a synchronization object is annotated with the
+> >   CAPABILITY() attribute,
+> > - the operations on that synchronization object are annotated with the
+> >   ACQUIRE() and RELEASE() attributes,
+> > - if variables or members that should be guarded by a synchronization
+> >   object are annotated with GUARDED_BY(),
+>
+> Those are all nasty shouting names, without and good prefixing.
+>
+> But more importantly ACQUIRE() and RELEASE() seems to duplicate the
+> existing __acquires/__releases annotations from sparse.  We really need
+> to find away to unify them instead of duplicating the annotations.
 
-
-On 2025/2/7 16:08, Hongzhen Luo wrote:
-> There's no need to enumerate each type.  No logic changes.
-> 
-> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
-> ---
-> Changes since v1: Put the exception branch at the beginning.
-> 
-> v1: https://lore.kernel.org/all/20250207064135.2249529-1-hongzhen@linux.alibaba.com/
-> ---
->   fs/erofs/zmap.c | 65 +++++++++++++++++++++----------------------------
->   1 file changed, 28 insertions(+), 37 deletions(-)
-> 
-> diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-> index 689437e99a5a..f65c76991e02 100644
-> --- a/fs/erofs/zmap.c
-> +++ b/fs/erofs/zmap.c
-> @@ -265,23 +265,22 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
->   		if (err)
->   			return err;
->   
-> -		switch (m->type) {
-> -		case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
-> +		if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
-> +			erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
-> +				  m->type, lcn, vi->nid);
-> +			DBG_BUGON(1);
-> +			return -EOPNOTSUPP;
-> +		}
-> +
-> +		if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
->   			lookback_distance = m->delta[0];
->   			if (!lookback_distance)
->   				goto err_bogus;
->   			continue;
-> -		case Z_EROFS_LCLUSTER_TYPE_PLAIN:
-> -		case Z_EROFS_LCLUSTER_TYPE_HEAD1:
-> -		case Z_EROFS_LCLUSTER_TYPE_HEAD2:
-> +		} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
-
-
-Just `} else {` here?
-
->   			m->headtype = m->type;
->   			m->map->m_la = (lcn << lclusterbits) | m->clusterofs;
->   			return 0;
-> -		default:
-> -			erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
-> -				  m->type, lcn, vi->nid);
-> -			DBG_BUGON(1);
-> -			return -EOPNOTSUPP;
->   		}
->   	}
->   err_bogus:
-> @@ -329,35 +328,31 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
->   	DBG_BUGON(lcn == initial_lcn &&
->   		  m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD);
->   
-> -	switch (m->type) {
-> -	case Z_EROFS_LCLUSTER_TYPE_PLAIN:
-> -	case Z_EROFS_LCLUSTER_TYPE_HEAD1:
-> -	case Z_EROFS_LCLUSTER_TYPE_HEAD2:
-> +	if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
-> +		erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
-> +		DBG_BUGON(1);
-> +		return -EFSCORRUPTED;
-> +	}
-
-No, I don't think it's equivalent, please use
-the previous version for this part instead.
-
-Thanks,
-Gao Xiang
+This is exactly what my approach tries to do:
+https://lore.kernel.org/all/20250206181711.1902989-1-elver@google.com/T/#u
+(Make it work with the existing keywords and extend them.)
