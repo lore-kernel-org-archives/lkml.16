@@ -1,165 +1,161 @@
-Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAD3282F4
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 06:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086E74F5E0
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 06:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738909512; cv=none; b=TNxsq1qykGY54jvPi+mqDQ0+odvdP6ZnHxZ6CNVN2RC3r9tMGgzY0CmixhK0YZRfrInezX93V1ABEDQKbXWfv6qYcMjlqfNmCsYGRqx/ycQzt207selp/e1K4SN2NdLBeu0V99G+RO97vbY53bDN7aMScF9pTEiP4Xddn/10oy4=
+	t=1738909564; cv=none; b=CI3toMKwM9Ye/FKQ47ziE2rVB94Bm6ydjAfl0uxDp1fiuW7IVVObf76dt65wtfbhbSubcX5u5i1a4wuthGcHM308khDnQT/pg+XtGdarmDzTX2ohoRBjdGnR7YVcAgcIw0y5QK23jfNxnXJV2HmtK+eYvFVYGhd3uCX5k9HIHXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738909512; c=relaxed/simple;
-	bh=T3syE1O2tH2Vw9HuBQ5pQPa71ss68twxacIAl/K+4vE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cWdhGWeciEXa5URQbjr3843NK2b34GriYBMgajsZhDO1wPyshwKOWNikvDxqUgJX3q7OSYXFhe5Q6d4yq88675S7nL00rvb5LynRYlSQP1BTZ08tohPu47XSTwt54BqijHVbAdCcwkWJZX9/X29O1Kn70btNHTWB/yIDciL4dQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VPpULExR; arc=none smtp.client-ip=209.85.214.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738909564; c=relaxed/simple;
+	bh=4OA6Vgbf5mmHaHK2XX87TxyNvNbPNA/LoqBpZuhF07s=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=EI3GiKrn9tSU8OjCAkSLoHa0b6OlzEI9rG1SfHwhpLbZrQt9wmh/DaqtS2nxO9Kmz65va2aeFwi+TZo/E3zkohajZ7wZdlqMv+h7XKMGxVvm9bLFJe1oKaKGE/waPJBr8gY33Iyshh893RYhwU2ElYLOgfbOQwNzmB9SKEfi1YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cCXP40jK; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VPpULExR"
-Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-2163dc5155fso34635055ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 22:25:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cCXP40jK"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-21f5060ef10so22117805ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 22:26:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738909510; x=1739514310; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VMx2ra2tOFUB7h4xNM4Q/KmWMEPeS3JDz1QEiEqKl8U=;
-        b=VPpULExRGegzG7idiNig/ddFxI0AOJr7D+tmsU78AcxZ3e3505o6tkFkXWVqw3XOXO
-         e8/8dvfaU0lWiZmLYqD6p0DJvBumSkdDQNH2dHpRYbYFBbmk68RSdXjatuHGI25nsop+
-         AhGpYQvsp8b8JcSFqFGkMIra7b/FDipSUzqx7CIAJ6WYde498XymzK2RyHUZ9WGtjEye
-         RrFS9K/qKVt09raMUFidLmkPTAAcfMFzxQxJzqPX3m+77GJhrYa0YHwpNaNLSi/URxv2
-         eqyh9XzXm+l/HhFFY25Gb4FYrX/MNwvhuv6s5Z1yZUsUPXqyGiTB/o718oZ2rBaunKXJ
-         o2Og==
+        d=google.com; s=20230601; t=1738909562; x=1739514362; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pVBLx5GIpN7LjdmT+CcHUgO81qGH5daXphk7+y3Ogdw=;
+        b=cCXP40jKzfy5XvZx1xuB4aJJZqm5MN1MLU/bKvDhe8uGywAqayB+r/zyW41T4rIQfe
+         yz1dHyOjg15/v2KVtr8RgQKu96K37s2ioZ5Pg9+XdQxnzoAZMLp/TLNj4h9E8HDBVKli
+         LSf80eEqkiM0DqQLG+/hiqNK1FyNl7l1iznvNLg3CIEYxJ4X8yEbc+BpxVmSmd8N2PjI
+         r27mNgU9pEt/IjTiKi3xrnPoz4Ooy/LtvrYIIQyRnoPK5UUBo1JsMJwGKjWYfF5dbs3+
+         uHyVDj1mjgfAJKu+zDQ3pXOIof7jJsjijPQeqBMUHdLytenAvOQsH9PHoE4Gdg90gg6J
+         hIFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738909510; x=1739514310;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VMx2ra2tOFUB7h4xNM4Q/KmWMEPeS3JDz1QEiEqKl8U=;
-        b=vmlPjeCv/e2dc4a6eHc/rqn3cR6U77de4Cpja0cEBBGh+0hJwx28cfRbDBwlikVnmL
-         jAg301aVtrUPsPUzGSQFrIAScdZvg81LY05pynQxy+OGHkk3Ac9tS0VgofCxFppJGd7f
-         fb/vV1CH0+vN/JMpKkUv+btSYDKm0OjL30mNOC+mRcV2v5mJeU5fZ9PgPvV/kBf/S3QX
-         CtIkLoi4aW0/PlI/OsKwtFd2JRMOK9shyFvb79PVbGy6CfnhRLjKahRMlR3FPR5f3Hdn
-         5u9TRxAUy5R3Me/gNIsvWXjOf6a/RIwaQll5kdolyVFCRIUlSERhZbh80YIvlnh36bOo
-         cdAw==
-X-Forwarded-Encrypted: i=1; AJvYcCUMo8DkHuZGWv84Pph+B88KDpU1lXDiXMf94HE0f6+noRdWM9WBvgVlFoxE48lApafOSGl2aDD06MQRSO0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzF935tJn9r64Z75DO7+UlfvEObJjZpNenb+oMhMn9cpUeyq9XN
-	G9X0ZsdaPAEy/9VWEpVkc9G1VAp0+2c8/gT6UUnAEi/aBEK8ibJO
-X-Gm-Gg: ASbGncuNsJsEl0z/8+aysN+NLKvYeKSFWeFQPABZLpI+zFOy7T7+WqAjkzNhWmz+qS5
-	7uYZGN0SAiAlsYDm6qSNfAu2nk7otfE8J4xupRqAQ62KrlWPaa8T0IMFezufK3fbzG5PL0//GAG
-	I8bPMD3S7MfehLjohWsN5V6um4zNbefVEco6LbVlHk25umPt8zhBZzhI2eEEHmC2VVUNTRWTD1j
-	9vawwn1kNaV7XW2FnX3sJNBPB5PY40NnZUphLKy6r63EwpbQf54Rx/GkAxVEyMeARF9WJ85Z3ds
-	tH1cbw5Zu23/GzimnPEtoCf23BHOhKnJPyA=
-X-Google-Smtp-Source: AGHT+IHvIinbFS+Iq6UoWwI5zSifwznlydpeDCSHXdcuUzfBe6I3l5gk+34wnrdBE9YJIN+W9+GzHA==
-X-Received: by 2002:a05:6a21:170f:b0:1e0:c56f:7daf with SMTP id adf61e73a8af0-1ee03a21dddmr4361970637.6.1738909508593;
-        Thu, 06 Feb 2025 22:25:08 -0800 (PST)
-Received: from localhost.localdomain ([114.67.205.189])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51af78126sm2324069a12.68.2025.02.06.22.25.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 22:25:08 -0800 (PST)
-From: zihan zhou <15645113830zzh@gmail.com>
-To: 15645113830zzh@gmail.com
-Cc: bsegall@google.com,
-	dietmar.eggemann@arm.com,
-	juri.lelli@redhat.com,
-	linux-kernel@vger.kernel.org,
-	mgorman@suse.de,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	rostedt@goodmis.org,
-	vincent.guittot@linaro.org,
-	vschneid@redhat.com
-Subject: [PATCH V2 2/2] sched: Reduce the default slice to avoid tasks getting an extra tick
-Date: Fri,  7 Feb 2025 14:24:03 +0800
-Message-Id: <20250207062402.33725-1-15645113830zzh@gmail.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250207060917.30201-1-15645113830zzh@gmail.com>
-References: <20250207060917.30201-1-15645113830zzh@gmail.com>
+        d=1e100.net; s=20230601; t=1738909562; x=1739514362;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pVBLx5GIpN7LjdmT+CcHUgO81qGH5daXphk7+y3Ogdw=;
+        b=EG+9Qk9eTfaAUcSpKC/IVO4jbZhSuVF6O4uBFnlNsl0JWUDdT6ZEm3vyP8pB2Lm7wl
+         AdtSJgHG85DBEB+X8AdTlOhiUhsPP7sC/XLwudlJHejIo+MMKHFSPqALFXFpdF9SuWk5
+         6pdUTJiWQLQS3OF5VSKLwbbkKEEYHKmUFMfu4jE9/1xONbnUxk4B2m+TD+/YTnOoP5vB
+         fwF7SMgFZQ4PUK4Hog/ciCnhr+tkIti5dRJC+zQBRNGNR5bTnuop0Pk0NCdDfdeAM8fe
+         PDioTWWwyXQJ0lORkvZ7yojKLRl0nXuNFViiyL1oFV/0RVAKs99uQ2HLaTrCHxuj+yWW
+         sNlA==
+X-Forwarded-Encrypted: i=1; AJvYcCVeQHrbq3ihP8mO2cO65n8nwzeyoHk7RmPaHXtv8Lfbc6vsXWgB/fZRZ78Y7CeOGzPcTReW4EXf/FwtdKc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNSaEpDU21NCFvjWWbKMEc/wkriOJL3O6KWpIZPvNh/sTZ6G/r
+	Wv1gqKQccgJzeR0gU4pDch1Eg5BeYAUlOU7kt3ZKVLPojnuroVQLzgvjtlBfIOHuPBX6aA84Dvl
+	JGynF1sq4BKAdJnVxK4eGxg==
+X-Google-Smtp-Source: AGHT+IHXNTs3kgTobb4JCthlwm4Jfzsw4vmzDv2oF+RkKfjY2IbUGXQW6QU/6emUQ2gWCi0WeScassVHI7XwDeeNyw==
+X-Received: from pjtd16.prod.google.com ([2002:a17:90b:50:b0:2ef:d136:17fc])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:ce84:b0:21f:c13:89a9 with SMTP id d9443c01a7336-21f4e75d8a7mr38698485ad.35.1738909562300;
+ Thu, 06 Feb 2025 22:26:02 -0800 (PST)
+Date: Fri, 07 Feb 2025 06:25:59 +0000
+In-Reply-To: <f8030dfc5086e4e4e3709d6fcdab1e38f01fc38d.camel@infradead.org>
+ (message from Amit Shah on Thu, 06 Feb 2025 12:07:58 +0100)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Message-ID: <diqzh656p8y0.fsf@ackerleytng-ctop-specialist.c.googlers.com>
+Subject: Re: [RFC PATCH 00/39] 1G page support for guest_memfd
+From: Ackerley Tng <ackerleytng@google.com>
+To: Amit Shah <amit@infradead.org>
+Cc: tabba@google.com, quic_eberman@quicinc.com, roypat@amazon.co.uk, 
+	jgg@nvidia.com, peterx@redhat.com, david@redhat.com, rientjes@google.com, 
+	fvdl@google.com, jthoughton@google.com, seanjc@google.com, 
+	pbonzini@redhat.com, zhiquan1.li@intel.com, fan.du@intel.com, 
+	jun.miao@intel.com, isaku.yamahata@intel.com, muchun.song@linux.dev, 
+	mike.kravetz@oracle.com, erdemaktas@google.com, vannapurve@google.com, 
+	qperret@google.com, jhubbard@nvidia.com, willy@infradead.org, 
+	shuah@kernel.org, brauner@kernel.org, bfoster@redhat.com, 
+	kent.overstreet@linux.dev, pvorel@suse.cz, rppt@kernel.org, 
+	richard.weiyang@gmail.com, anup@brainfault.org, haibo1.xu@intel.com, 
+	ajones@ventanamicro.com, vkuznets@redhat.com, maciej.wieczor-retman@intel.com, 
+	pgonda@google.com, oliver.upton@linux.dev, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-fsdevel@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 
-update sysctl_sched_base_slice with debugfs, limit its value and
-update normalized_sysctl_sched_base_slice.
+Amit Shah <amit@infradead.org> writes:
 
-Signed-off-by: zihan zhou <15645113830zzh@gmail.com>
----
- kernel/sched/debug.c | 51 +++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
+>> <snip>
+>> 
+>> Thanks all your help and comments during the guest_memfd upstream
+>> calls,
+>> and thanks for the help from AMD.
+>> 
+>> Extending mmap() support from Fuad with 1G page support introduces
+>> more
+>> states that made it more complicated (at least for me).
+>> 
+>> I'm modeling the states in python so I can iterate more quickly. I
+>> also
+>> have usage flows (e.g. allocate, guest_use, host_use,
+>> transient_folio_get, close, transient_folio_put) as test cases.
+>> 
+>> I'm almost done with the model and my next steps are to write up a
+>> state
+>> machine (like Fuad's [5]) and share that.
 
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index fd7e85220715..70dda949a69a 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -166,6 +166,55 @@ static const struct file_operations sched_feat_fops = {
- 	.release	= single_release,
- };
- 
-+
-+static ssize_t sched_base_slice_write(struct file *filp, const char __user *ubuf,
-+				   size_t cnt, loff_t *ppos)
-+{
-+	char buf[16];
-+	unsigned int base_slice;
-+
-+	if (cnt > 15)
-+		cnt = 15;
-+
-+	if (copy_from_user(&buf, ubuf, cnt))
-+		return -EFAULT;
-+	buf[cnt] = '\0';
-+
-+	if (kstrtouint(buf, 10, &base_slice))
-+		return -EINVAL;
-+
-+
-+	base_slice = clamp_t(u64, base_slice,
-+					NSEC_PER_MSEC/10,   /* HZ=1000 * 10 */
-+					NSEC_PER_MSEC*100); /* HZ=100  / 10 */
-+
-+	sysctl_sched_base_slice = base_slice;
-+
-+	sched_update_scaling();
-+
-+	*ppos += cnt;
-+	return cnt;
-+}
-+
-+static int sched_base_slice_show(struct seq_file *m, void *v)
-+{
-+	seq_printf(m, "%d\n", sysctl_sched_base_slice);
-+	return 0;
-+}
-+
-+static int sched_base_slice_open(struct inode *inode, struct file *filp)
-+{
-+	return single_open(filp, sched_base_slice_show, NULL);
-+}
-+
-+static const struct file_operations sched_base_slice_fops = {
-+	.open		= sched_base_slice_open,
-+	.write		= sched_base_slice_write,
-+	.read		= seq_read,
-+	.llseek		= seq_lseek,
-+	.release	= single_release,
-+};
-+
- #ifdef CONFIG_SMP
- 
- static ssize_t sched_scaling_write(struct file *filp, const char __user *ubuf,
-@@ -505,7 +554,7 @@ static __init int sched_init_debug(void)
- 	debugfs_create_file("preempt", 0644, debugfs_sched, NULL, &sched_dynamic_fops);
- #endif
- 
--	debugfs_create_u32("base_slice_ns", 0644, debugfs_sched, &sysctl_sched_base_slice);
-+	debugfs_create_file("base_slice_ns", 0644, debugfs_sched, NULL, &sched_base_slice_fops);
- 
- 	debugfs_create_u32("latency_warn_ms", 0644, debugfs_sched, &sysctl_resched_latency_warn_ms);
- 	debugfs_create_u32("latency_warn_once", 0644, debugfs_sched, &sysctl_resched_latency_warn_once);
--- 
-2.33.0
+Thanks everyone for all the comments at the 2025-02-06 guest_memfd
+upstream call! Here are the 
 
++ Slides: https://lpc.events/event/18/contributions/1764/attachments/1409/3704/guest-memfd-1g-page-support-2025-02-06.pdf
++ State diagram: https://lpc.events/event/18/contributions/1764/attachments/1409/3702/guest-memfd-state-diagram-split-merge-2025-02-06.drawio.svg
++ For those interested in editing the state diagram using draw.io:
+  https://lpc.events/event/18/contributions/1764/attachments/1409/3703/guest-memfd-state-diagram-split-merge-2025-02-06.drawio.xml
+
+>> 
+>> I'd be happy to share the python model too but I have to work through
+>> some internal open-sourcing processes first, so if you think this
+>> will
+>> be useful, let me know!
+>
+> No problem.  Yes, I'm interested in this - it'll be helpful!
+
+I've started working through the internal processes and will update here
+when I'm done!
+
+>
+> The other thing of note is that while we have the kernel patches, a
+> userspace to drive them and exercise them is currently missing.
+
+In this and future patch series, I'll have selftests that will exercise
+any new functionality.
+
+>
+>> Then, I'll code it all up in a new revision of this series (target:
+>> March 2025), which will be accompanied by source code on GitHub.
+>> 
+>> I'm happy to collaborate more closely, let me know if you have ideas
+>> for
+>> collaboration!
+>
+> Thank you.  I think currently the bigger problem we have is allocation
+> of hugepages -- which is also blocking a lot of the follow-on work. 
+> Vishal briefly mentioned isolating pages from Linux entirely last time
+> - that's also what I'm interested in to figure out if we can completely
+> bypass the allocation problem by not allocating struct pages for non-
+> host use pages entirely.  The guest_memfs/KHO/kexec/live-update patches
+> also take this approach on AWS (for how their VMs are launched).  If we
+> work with those patches together, allocation of 1G hugepages is
+> simplified.  I'd like to discuss more on these themes to see if this is
+> an approach that helps as well.
+>
+>
+> 		Amit
+
+Vishal is still very interested in this and will probably be looking
+into this while I push ahead assuming that KVM continues to use struct
+pages. This was also brought up at the guest_memfd upstream call on
+2025-02-06, people were interested in this and think that it will
+simplify refcounting for merging and splitting.
+
+I'll push ahead assuming that we use hugetlb as the source of 1G pages,
+and assuming that KVM continues to use struct pages to describe guest
+private memory.
+
+The series will still be useful as an interim solution/prototype even if
+other allocators are preferred and get merged. :)
