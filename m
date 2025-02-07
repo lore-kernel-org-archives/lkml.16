@@ -1,100 +1,79 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DF91A9B48;
-	Fri,  7 Feb 2025 08:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30CB374F1
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 09:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738918753; cv=none; b=bJmcFYcsflnFFQ9Cv5eddlaKEhkbpinox9h5nUdmxidWuGj0YGWdHZGV7wDvOXWWks/zFJUhlkwmwu1SIsKigGnpwg8WFCP8cFv+ZTTNIe2eYJja+NX1pvNY7GFZTG/EMZp9v/HtAtG/10bpa8QxFSk78nFAGh/wsOLUtRI3qUA=
+	t=1738918843; cv=none; b=g77mFJ6e6792Vv/mnkhdmpHGXn2qCnzntclX1VbQawX13r3PwUEy0SokJatn9VJiGw5ydDxAbY9bPeUEcy6sGwDvhKcnwx5vCpEU5Mw52vANNgUgPB1tvsdEuDu2UUwMkkRB0MbIIttjUmejrvVu1cgmSxB0LnxdrBCqjGWXeEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738918753; c=relaxed/simple;
-	bh=Q4j27tE8EcIHMIt1PgSMISXAmVSJEvtj2JTSOQQaBgs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B7B/7npqvgR3HLiAvMqlPDZbZtKwRSpGh2DcycJmbb804zzvI20AluD+17wXs0Gq0pzVYWSsqq4wo/Fm/rEZL0sX7UgxcEQakJCk0OVPlIFXnc4sbYWKifofsyYjGfk19WSbcHEklS7QLch2SwmSxhsBIlHKR2Ksw85To1Kp2xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jeWFhEhU; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1738918843; c=relaxed/simple;
+	bh=cTlGKDsSn3rOvWlt8dNyBLRaRwHPYX20eFugVmBS59k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n4c0de62OALYNX6+qbgvOttKKTNxIaQ+UPWON1CmVwSTA91hCiIh7s6p6e8npezAqpg6Ih7a87uaaihnIuWDFnm+vjEZDdxfWmAYS7iOdnlgZ667OyUwzFqfbbEbr3B11W2sA8E4U3UIc+1R1QiSWrt339AqulUlJJMp03SKfAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g1+JHExr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jeWFhEhU"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 766B44439C;
-	Fri,  7 Feb 2025 08:59:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1738918748;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HS5RaRTjPPs886uKnPgM9Gu4eihbomnvhbN7rWX9FJs=;
-	b=jeWFhEhU3AQBw6HUma0NVg4uS9fJGRBckJvDPWZ6YuxA4UwHthsb/TZsi3FG3QeaxWxcX+
-	0VPhcFKQBKr7SMFDKGes8Y4TvHYYk+d6c/qzbN1B56KyiSkebZ68WK4X8R8tmzna8TT0OJ
-	q0o9NYIDYRa0ZG9zbJz/8hN73ihXnes/B8UghLrw5G740zV+AjqsUEJDeDjVL/m6/kiqLb
-	wVREEubJnZJYbHoKQlT+I8ODosFtev9JhuWRdSzv3WOBz8Z7DYXAJ4ursFyC4sFKpu7pz8
-	NQ1baJE3OfzTX5GvrPaONZndiwdcqMlEnVIuqC4imfdG1KUCCDFlE6y8yVZiQw==
-Date: Fri, 7 Feb 2025 09:59:04 +0100
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, Jagan
- Teki <jagan@amarulasolutions.com>, Marek Szyprowski
- <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>,
- Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, Paul Kocialkowski
- <contact@paulk.fr>, Maxime Ripard <mripard@kernel.org>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, =?UTF-8?Q?Herv?=
- =?UTF-8?Q?=C3=A9?= Codina <herve.codina@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Paul Kocialkowski
- <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v6 04/26] drm/bridge: panel: drm_panel_bridge_remove:
- warn when called on non-panel bridge
-Message-ID: <20250207095904.478df621@booty>
-In-Reply-To: <cpe634qeg46gfph6diw7lshdiolnpmuik3nmd4fpayg4st5r55@5bcfdwjme7z7>
-References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
-	<20250206-hotplug-drm-bridge-v6-4-9d6f2c9c3058@bootlin.com>
-	<cpe634qeg46gfph6diw7lshdiolnpmuik3nmd4fpayg4st5r55@5bcfdwjme7z7>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g1+JHExr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8799BC4CED1;
+	Fri,  7 Feb 2025 09:00:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738918842;
+	bh=cTlGKDsSn3rOvWlt8dNyBLRaRwHPYX20eFugVmBS59k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g1+JHExrHVxMiE9t3nR2JEEC+rKqoEBZvW8AN7YYisIT8IUop4loW3VbubZSMqzP4
+	 mSh39RXgmVWhOySZ7JD5W3YrVoRFyHECsPi0xhF5a7eR1fk/MoJUXiGZbTdh7oi68C
+	 p8+1hsmcpKyU2xkqbYrFukHC5EgLkvBDvbBneNj+X/i1wXAllVHY2KMVQDDqzAcHMR
+	 V7YKCM72WTjphDSeHC7QOqQf/dJsBBbK3N50agMyKlikFcigJuqvAWFQiDIIj7gRrq
+	 HwwX9eko0mvtDFLNHBnTL8pItSCp4LX8HJJjBxPGHbIgVrjedd4NV5NHmvGQCh+Jne
+	 sdgvEl2fhvddA==
+Date: Fri, 7 Feb 2025 09:00:37 +0000
+From: Lee Jones <lee@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Pankaj Dubey <pankaj.dubey@samsung.com>,
+	Will McVicker <willmcvicker@google.com>,
+	John Madieu <john.madieu.xa@bp.renesas.com>,
+	Nishanth Menon <nm@ti.com>, Vaishnav Achath <vaishnav.a@ti.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: syscon: Restore device_node_to_regmap() for
+ non-syscon nodes
+Message-ID: <20250207090037.GF7593@google.com>
+References: <20250124191644.2309790-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvkeekiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeglefffefghefhtddvfeeufeeiveekgffgleekieduteekkeetvdehudekgfdvvdenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegtvgejvgemiegtgegvmeeitggtjeemleekgeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegtvgejvgemiegtgegvmeeitggtjeemleekgeejpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefjedprhgtphhtthhopegumhhithhrhidrsggrrhihshhhkhhovheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehinhhkihdruggrvgesshgrmhhsuhhnghdrt
- ghomhdprhgtphhtthhopehjrghgrghnsegrmhgrrhhulhgrshholhhuthhiohhnshdrtghomhdprhgtphhtthhopehmrdhsiiihphhrohifshhkihesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250124191644.2309790-1-robh@kernel.org>
 
-On Fri, 7 Feb 2025 04:22:25 +0200
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
+On Fri, 24 Jan 2025, Rob Herring (Arm) wrote:
 
-> On Thu, Feb 06, 2025 at 07:14:19PM +0100, Luca Ceresoli wrote:
-> > This function is for panel_bridge instances only. The silent return when
-> > invoked on other bridges might hide actual errors, so avoid them to go
-> > unnoticed.  
+> Commit ba5095ebbc7a ("mfd: syscon: Allow syscon nodes without a
+> "syscon" compatible") broke drivers which call device_node_to_regmap()
+> on nodes without a "syscon" compatible. Restore the prior behavior for
+> device_node_to_regmap().
 > 
-> Is there a real case of something using this function in a wrong way?
+> This also makes using device_node_to_regmap() incompatible with
+> of_syscon_register_regmap() again, so add kerneldoc for
+> device_node_to_regmap() and syscon_node_to_regmap() to make it clear
+> how and when each one should be used.
+> 
+> Fixes: ba5095ebbc7a ("mfd: syscon: Allow syscon nodes without a "syscon" compatible")
+> Cc: Will McVicker <willmcvicker@google.com>
+> Cc: John Madieu <john.madieu.xa@bp.renesas.com>
+> Cc: Nishanth Menon <nm@ti.com>
+> Reported-by: Vaishnav Achath <vaishnav.a@ti.com>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  drivers/mfd/syscon.c | 29 ++++++++++++++++++++++++++---
+>  1 file changed, 26 insertions(+), 3 deletions(-)
 
-I don't know, but there was one in my v5 code. Having this warning
-would have saved me a lot of debugging, so it looked useful for future
-developers.
-
-Luca
+NOTE TO SELF: -rcs
 
 -- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Lee Jones [李琼斯]
