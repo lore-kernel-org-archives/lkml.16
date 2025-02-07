@@ -1,211 +1,117 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57271D90C5
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 23:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819AB1D90C5;
+	Fri,  7 Feb 2025 23:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738971874; cv=none; b=riryjTuTy4DB8qiRlfQx5by4/oI/Lu2fTb4sjjpSk8DkfMxKit9eJ5FOxd3sC50VdPhHFpIzvKzP8o4RlCCcyCglPWCFBVos4dP3fT27vpmmDHkeCf/M7PjhqZ34Rz1iP3lBi+oDAAXx+58ljLQDOjuxxsfTBPT8d8kHZNvbT1E=
+	t=1738971899; cv=none; b=psAjnaS8c9LSd/PMTikhIyLN1t2rPrdeNiqAPD+MJrP7UP9fJOOlk9qjyQWa+2uMurhgmaYlvXUxmixBxiWGdKODFBJes5S3affzuSRzWJMQgF949OdGHomH+s0/TJ6LfhARDFcmn169Scnw267S+jVbK9XYTwA0qPUxID40Nh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738971874; c=relaxed/simple;
-	bh=OV/hDOXoEY3RmBaaBXVJAqarimoMv+Fe1fAMJGktYVo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tq1eEjgackc1DeIeFROU9rxsAl/Xn+tVHyA103d1yPuNzuW/yqBUEI/8sMlvg+fVqbCrAJK0Q9dn5/GY9uFhe740kS527Km7byemnortFjnTq0BoTOiebVbgVBFzSt642cqr3+CTn+EAcxorLqSsl+bIRInAEGarQrk22unwYFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=IjycdCkM; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738971899; c=relaxed/simple;
+	bh=0OcYIgMuhOEeKZ02PL/wKdLJvCr/x2GC0bB/FCHa3js=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=Q51Tm/BbbGJDF8bfy8IxVtHzCWywLPm0f8o1D1q2EYMItRrBk8V/Pe1ihxPlL52rzducqKNwNd2W4x2CiX1fd6ng5EMUYY+/66uNabJiojZJVDOUrcFYi0Y1/YvIWC6daE+97Hbn5wnHLf3hTNpQ5IQZhrG4jL1deqLhgJUqH9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FcFD7E6x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="IjycdCkM"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2f9f5caa37cso5048979a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 15:44:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738971871; x=1739576671; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sFQiCNrm30AFPGwQY6ts0jjT1ZeITQwhTZXh/92SdFM=;
-        b=IjycdCkMxe6NfxYLAUVF/dGww4zeQhOE0GDVA/Ywk0p6EWl/iBFz+YZR+ecx/4mjBo
-         O6QBK6kkPc8QMSiuOlcY0LJvedvrwPgoozln14XLSVxdqPhdE+ek8Wm2mE+PBXP2bOim
-         lROjhOXiK8i3e/Q1i++JAUK/5qyOMEFUwHKulzrzlDf2bxUPbxcRs2rRjdj0+K/gYLug
-         4Np5mGYCtk+aqRlMAk6+Q0T0iHMV1S8pOLwKXem/FvYS5BtDo+q7o8CyQ4n9ba1nR8cc
-         p7qp/uIfdptzbrMPcouDb5f01x1AiRve2ZX1eQqSz1GKTjZEqK9f+hwrw9vAAVgVCHxY
-         F4sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738971871; x=1739576671;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sFQiCNrm30AFPGwQY6ts0jjT1ZeITQwhTZXh/92SdFM=;
-        b=FDgK+K05Pp4OkffXUncXsUGHTee+5K1NSkqwV+nLUTLbGczYNanM835G9FSlZcf4/I
-         Uw9yNXQ1q9CU4Xeab8xSRSWhsXsWuD9npODCPBxIu9zUcdo1QhGNb2I5uSmRmmWvOiq5
-         toEC4xKEsJpetQIp5lfBOCXSUe8tchsER2guqj2fT/YSuvUakDxBd8bjhTHuqomCUWYE
-         DADQz8l/ys9WnyAdAsePs5StgSEOBAQqWbyO9/tY6YxGZyD5TG6GFNwjmPMrN2wIVcOY
-         om3whn8m6kzLOCAEZE70g/sCYAKUiuof+JFsRQ1GHfsplP+bdcS/IAEgWI29T/oAM+vy
-         7MKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXrVsRRCRF8l97cNST0k6+GCOV0P2fTlmm1mxce8Piu2ukk0XAIXhuesbmZlMyliKVE6dWPy/UM0hJCNNM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPqeAgKl7eqlq9EfefEc0vFVjuHFysFmL0O2fH2EHHjggL2B46
-	ElUrBsHDTBQbF/bODbOSJxGXVADbrteB6ZyQULd9h9QK1VbxxOJS43ISGCqIElo=
-X-Gm-Gg: ASbGnctqwjCBQBG91i/khlvLKXl8naxZcUlCHhEPtqxvutedhDLKUyjBcwpyeLbJhvD
-	1JidfOG4gH/gmbmHcx+WpZG0uADykfA1r51WQdOdG/L76str7niZdXqIHN5po4nv7JSPqf8g4ug
-	+vWW8IMXHjUAVn+jfHlRZYf0RpxtDfMW41+3uG+dXTZ9CqYzW7UsP782u5gg4lFHGvakE2LB7EI
-	sOI/XdYd2LtqbZvp9+XBQYSDBMqF6uxacC0H8VvEbxRYVPbLsLJrcv3IFYuH1XCkgY6sHlFBalB
-	cb31n1vFcYKN8P1xygzMejc1Gg==
-X-Google-Smtp-Source: AGHT+IEu/BmgD+AgLAp2nKonkfG6/YX8d0cZZKASE/tVvqPiMWzUevWv2BoO4p6W9X0pvQWJ2zpYLw==
-X-Received: by 2002:a17:90b:380e:b0:2fa:2133:bc87 with SMTP id 98e67ed59e1d1-2fa2133bf2amr8657814a91.6.1738971870845;
-        Fri, 07 Feb 2025 15:44:30 -0800 (PST)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687d169sm36049505ad.202.2025.02.07.15.44.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 15:44:30 -0800 (PST)
-Date: Fri, 7 Feb 2025 15:44:27 -0800
-From: Deepak Gupta <debug@rivosinc.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	alistair.francis@wdc.com, richard.henderson@linaro.org,
-	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
-	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
-	cleger@rivosinc.com, alexghiti@rivosinc.com,
-	samitolvanen@google.com, broonie@kernel.org,
-	rick.p.edgecombe@intel.com
-Subject: Re: [PATCH v9 01/26] mm: helper `is_shadow_stack_vma` to check
- shadow stack vma
-Message-ID: <Z6aa24/5M5Xdhe/A@debug.ba.rivosinc.com>
-References: <20250204-v5_user_cfi_series-v9-0-b37a49c5205c@rivosinc.com>
- <20250204-v5_user_cfi_series-v9-1-b37a49c5205c@rivosinc.com>
- <6543c6b6-da86-4c10-9b8c-e5fe6f6f7da9@suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FcFD7E6x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7666C4CED1;
+	Fri,  7 Feb 2025 23:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738971899;
+	bh=0OcYIgMuhOEeKZ02PL/wKdLJvCr/x2GC0bB/FCHa3js=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=FcFD7E6x/lq9R9GSbnFWQ84X6jA3wHn8MV9k9BwUEU5Jy3GduQqYEh0TAxZg84hd6
+	 U/1mtO4DOlNDyWNaUYLvCvf330mxj9hdZo3Ap9AdXSFLJzN989NVrfwM7hrblNq5Vg
+	 rBgXMw5MXP4WKs2vld+G4/TK0CCvjuFMv45Pt2rv7LGomPO/wwwhXgaUbVlAhiwJ0k
+	 FKpaEdfJWr8j/V+qutaVdWXkjF/AlONGhMFLYgFT7+ApRz3JHy5WCCZbmTdYAil683
+	 nEtQYHSdNFhl0ynU/NrzOmE9kS6c2Mv3qEwGLvCA6rIlaSL+WsaycsHH/XLRHNOch/
+	 7FrFsFlmciVrg==
+Date: Fri, 07 Feb 2025 17:44:57 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <6543c6b6-da86-4c10-9b8c-e5fe6f6f7da9@suse.cz>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Richard Weinberger <richard@nod.at>, linux-pci@vger.kernel.org, 
+ Nicholas Piggin <npiggin@gmail.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Mark Brown <broonie@kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-crypto@vger.kernel.org, 
+ imx@lists.linux.dev, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ linuxppc-dev@lists.ozlabs.org, linux-spi@vger.kernel.org, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ linux-kernel@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>, 
+ =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+ Vinod Koul <vkoul@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Niklas Cassel <cassel@kernel.org>, linux-ide@vger.kernel.org, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Naveen N Rao <naveen@kernel.org>, 
+ Madhavan Srinivasan <maddy@linux.ibm.com>, 
+ Damien Le Moal <dlemoal@kernel.org>, devicetree@vger.kernel.org, 
+ dmaengine@vger.kernel.org, Scott Wood <oss@buserror.net>, 
+ Guenter Roeck <linux@roeck-us.net>, "David S. Miller" <davem@davemloft.net>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>, 
+ linux-watchdog@vger.kernel.org, Lee Jones <lee@kernel.org>, 
+ linux-mtd@lists.infradead.org
+To: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+In-Reply-To: <20250207-ppcyaml-v2-6-8137b0c42526@posteo.net>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-6-8137b0c42526@posteo.net>
+Message-Id: <173897189562.2630598.5483742714479681257.robh@kernel.org>
+Subject: Re: [PATCH v2 06/12] dt-bindings: pci: Convert fsl,mpc83xx-pcie to
+ YAML
 
-On Fri, Feb 07, 2025 at 10:27:10AM +0100, Vlastimil Babka wrote:
->On 2/5/25 02:21, Deepak Gupta wrote:
->> VM_SHADOW_STACK (alias to VM_HIGH_ARCH_5) is used to encode shadow stack
->
->I see that arm GCS uses VM_HIGH_ARCH_6.
->
->> VMA on three architectures (x86 shadow stack, arm GCS and RISC-V shadow
->
->And RISC-V doesn't define it at all, not even in this patchset, or did I
->miss it somewhere?
->
 
-hmm...
-Something wrong in my workflow and rebasing.
-Thanks for catching this.
+On Fri, 07 Feb 2025 22:30:23 +0100, J. Neuschäfer wrote:
+> Formalise the binding for the PCI controllers in the Freescale MPC8xxx
+> chip family. Information about PCI-X-specific properties was taken from
+> fsl,pci.txt. The examples were taken from mpc8315erdb.dts and
+> xpedite5200_xmon.dts.
+> 
+> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> ---
+> 
+> V2:
+> - merge fsl,pci.txt into fsl,mpc8xxx-pci.yaml
+> - regroup compatible strings, list single-item values in one enum
+> - trim subject line (remove "binding")
+> - fix property order to comply with dts coding style
+> ---
+>  .../devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml   | 115 +++++++++++++++++++++
+>  Documentation/devicetree/bindings/pci/fsl,pci.txt  |  27 -----
+>  2 files changed, 115 insertions(+), 27 deletions(-)
+> 
 
->> stack). In case architecture doesn't implement shadow stack, it's VM_NONE
->> Introducing a helper `is_shadow_stack_vma` to determine shadow stack vma
->> or not.
->
->This looks like an unfinished sentence. As if it was to continue with "...
->will allow us to ..." what?
->
->I'm not against a helper but this changelog is rather confusing and also
->code in arch/x86 and arch/arm64 isn't converted to the helper but testing
->VM_SHADOW_STACK still.
->
->> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
->> Reviewed-by: Mark Brown <broonie@kernel.org>
->> ---
->>  mm/gup.c  |  2 +-
->>  mm/mmap.c |  2 +-
->>  mm/vma.h  | 10 +++++++---
->>  3 files changed, 9 insertions(+), 5 deletions(-)
->>
->> diff --git a/mm/gup.c b/mm/gup.c
->> index 3883b307780e..8c64f3ff34ab 100644
->> --- a/mm/gup.c
->> +++ b/mm/gup.c
->> @@ -1291,7 +1291,7 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
->>  		    !writable_file_mapping_allowed(vma, gup_flags))
->>  			return -EFAULT;
->>
->> -		if (!(vm_flags & VM_WRITE) || (vm_flags & VM_SHADOW_STACK)) {
->> +		if (!(vm_flags & VM_WRITE) || is_shadow_stack_vma(vm_flags)) {
->>  			if (!(gup_flags & FOLL_FORCE))
->>  				return -EFAULT;
->>  			/*
->> diff --git a/mm/mmap.c b/mm/mmap.c
->> index cda01071c7b1..7b6be4eec35d 100644
->> --- a/mm/mmap.c
->> +++ b/mm/mmap.c
->> @@ -648,7 +648,7 @@ SYSCALL_DEFINE1(old_mmap, struct mmap_arg_struct __user *, arg)
->>   */
->>  static inline unsigned long stack_guard_placement(vm_flags_t vm_flags)
->>  {
->> -	if (vm_flags & VM_SHADOW_STACK)
->> +	if (is_shadow_stack_vma(vm_flags))
->>  		return PAGE_SIZE;
->>
->>  	return 0;
->> diff --git a/mm/vma.h b/mm/vma.h
->> index a2e8710b8c47..47482a25f5c3 100644
->> --- a/mm/vma.h
->> +++ b/mm/vma.h
->> @@ -278,7 +278,7 @@ static inline struct vm_area_struct *vma_prev_limit(struct vma_iterator *vmi,
->>  }
->>
->>  /*
->> - * These three helpers classifies VMAs for virtual memory accounting.
->> + * These four helpers classifies VMAs for virtual memory accounting.
->>   */
->>
->>  /*
->> @@ -289,6 +289,11 @@ static inline bool is_exec_mapping(vm_flags_t flags)
->>  	return (flags & (VM_EXEC | VM_WRITE | VM_STACK)) == VM_EXEC;
->>  }
->>
->> +static inline bool is_shadow_stack_vma(vm_flags_t vm_flags)
->> +{
->> +	return !!(vm_flags & VM_SHADOW_STACK);
->> +}
->> +
->>  /*
->>   * Stack area (including shadow stacks)
->>   *
->> @@ -297,7 +302,7 @@ static inline bool is_exec_mapping(vm_flags_t flags)
->>   */
->>  static inline bool is_stack_mapping(vm_flags_t flags)
->>  {
->> -	return ((flags & VM_STACK) == VM_STACK) || (flags & VM_SHADOW_STACK);
->> +	return ((flags & VM_STACK) == VM_STACK) || is_shadow_stack_vma(flags);
->>  }
->>
->>  /*
->> @@ -308,7 +313,6 @@ static inline bool is_data_mapping(vm_flags_t flags)
->>  	return (flags & (VM_WRITE | VM_SHARED | VM_STACK)) == VM_WRITE;
->>  }
->>
->> -
->>  static inline void vma_iter_config(struct vma_iterator *vmi,
->>  		unsigned long index, unsigned long last)
->>  {
->>
->
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+
+
+doc reference errors (make refcheckdocs):
+Warning: Documentation/devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml references a file that doesn't exist: Documentation/devicetree/bindings/pci/fsl,pci.txt
+Documentation/devicetree/bindings/pci/fsl,mpc8xxx-pci.yaml: Documentation/devicetree/bindings/pci/fsl,pci.txt
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250207-ppcyaml-v2-6-8137b0c42526@posteo.net
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
