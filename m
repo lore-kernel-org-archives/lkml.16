@@ -1,130 +1,380 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE64F14830F
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 01:46:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2714C6E
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 01:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738892784; cv=none; b=b/LrwbeI6L/REEKpsAVnfGCoZw6RDHv5t8K9X5yRX7Zh+hqoBJ3sESjsHs+JheiNtPMPoH/kHxlROdEgG696ULer/94v5AMvLquusmt+Hc6+WfM/bV4Kqy/U71VG7gD72fBTURK1+Du6JX+Ww1Q1V+LYPC5daRGMh+gq3+OgoVs=
+	t=1738892989; cv=none; b=FT75NAFSPFmLSOMkdOqPkhAy9dmiinAnr1cLBuHCGF3AHUa3AsX1ms2JlOUgwnJQHoB32uK6fI9HckXs0EHWJ+U8WTqNrxcKRcobL9h7ZfUvU8gbNqYF2YpJtNhHqmMg9y9D7Tma2FDzmx4QSl8uc06xuq+N9eQz2+yovPuj+20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738892784; c=relaxed/simple;
-	bh=hyLeDvnLTV29+khiprOAmxfCaatpQ++A9+PmCn+j+KY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UGSJfV2P15YG4nKai5XSF0hdOZzEByKoGDXpYmx+mDzhO7eeKKKNbNppGPBRWowvVyhbka0cKvfrXGszOE5HWVvv4Uwg421Tp/I+wtOhq81SKXkKNqt4+rOiPK0JJabxXQ7vNhRYNfdcE9/bQ2nGfgolf8NvgksJOYkFYK7/96A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=Lz5cm0GD; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1738892989; c=relaxed/simple;
+	bh=IclCJdX+vKplfAJvRmJxScHC9W5RUYHMaSI5s9SMm+w=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Nmz7kE90nSx8avK77hFlFPBGOMyGzN2skylTEPaXy1AtOVDSiqSpvM71CNNl2QyLAKIEGMsppjC3mwLPeFkhJijqCIZDA7K9uzLtU9D+PnJFYKakKUq5vRAOTqUYxrPcMGvuE5gNorn/feqoRqSzHUlkBNVl4/1kfI5FjR2sCcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sGd7NYNn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="Lz5cm0GD"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21634338cfdso37697005ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2025 17:46:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1738892782; x=1739497582; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=95W319fF0TuhfADXZYWyhM8ZPI/uC+h6x4fXlzFN76M=;
-        b=Lz5cm0GDjVY3zKssrueI3yp6yB6Dj63XoNB8OfiJexs9LQuY7zMNghBaUVtVGCF+A4
-         Q56mpqr4xUWGTHzZwvbhgNbPZx0FIbyku4wJOZLAWwfiDJNWU1fY+UntwxvWbwse4cuC
-         T5PtKm50gM/rurwBd1E8DGYQvAatzANG84d1U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738892782; x=1739497582;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=95W319fF0TuhfADXZYWyhM8ZPI/uC+h6x4fXlzFN76M=;
-        b=VVuMA8AMAaFxmd4WE+0EYMGqAc2k89coBrT6n1QUWORy1NfVwPf7OdDUIYMzE1RRxl
-         8NFt0Lkt5ORK8RsQbwc7U0LRhA/NBt8WFf3MWvaWG9SSphZNHwMwhgaAnk7MsWGGuvg7
-         QpFCsyP1Z8xa0/RGpBFy6JrMvBEflRdNPt6/7J1xj0wWTNd8kLK024E7k8WVDunEmSYP
-         +Y54z/XJd5HeXI96ZBTKqqMUguu9hXw1VLxbg7Eou6kwJNNK3/Dde3FSWF2Fbh9Gj4cx
-         wtPHdDW5nhc/3BqNHFM9Gz0QXT9urdrn/ubjpzmXB6/ULdABzzg06Egy1qpllD2Rm0V1
-         RYBg==
-X-Forwarded-Encrypted: i=1; AJvYcCUDb8I9g5vB/uQtbh4WHOSOTjlppkUjH/I4dA6/h1djVUdexg0e1R6VCe0zx0eErW9QcvbRWISv7qZ5vYE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCQrkc9aX6eBZe5s9ZZHAziay+dY1JNiSIA0B/vjrdHG3JREPD
-	7lMrrs4ps8uyGAnPrFEfh0gWWQRlgurebH/ToBd6JLaOh7q20sTwWW1iTw8x6yo=
-X-Gm-Gg: ASbGncsyKWvNz5jT6RHY9FxQ6CUR4+YnKoZIWkvFsDaRPyKcAF1m2xvOOHTAVXLAX82
-	n5jEbI0FsLTGo9OYKlH3g4GVp07tSyQzBUZRSKERhbsorjS/k3yYYF4+SvWxLM97DsABh7Zv8zI
-	0vfkPNL7kYzNddCdTA1pM00noFVHhPOZKrjPk3mCr5r7I5om2q37LfgGAdlkms3xY6FnOTYfP13
-	NtJRGtqAnWVMmMbaLIP+pW9K3tQ16RTEj4Bmwadtw7cZ2t0cmB+eQuf0dYKKSuLq+VPNIJa28hV
-	lrL3Vcfh8giE0dEHqCjrRU8X6ezMZtXbDuCSLf00wvSHQ0iiPqxKr12W5A==
-X-Google-Smtp-Source: AGHT+IEb0fEGfaDmVEdZDvNICNH+t4hrQlDHBujjTzaFy892ln/2xVZtzkVxDOZrFFZTZ5x9LoppSA==
-X-Received: by 2002:a17:902:f60a:b0:215:94eb:adb6 with SMTP id d9443c01a7336-21f4e73b2c6mr26502755ad.40.1738892781880;
-        Thu, 06 Feb 2025 17:46:21 -0800 (PST)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653af3bsm19561545ad.57.2025.02.06.17.46.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 17:46:21 -0800 (PST)
-Date: Thu, 6 Feb 2025 17:46:18 -0800
-From: Joe Damato <jdamato@fastly.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, Donald Hunter <donald.hunter@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Mina Almasry <almasrymina@google.com>,
-	Daniel Jurgens <danielj@nvidia.com>,
-	Martin Karsten <mkarsten@uwaterloo.ca>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v3 1/2] netdev-genl: Add an XSK attribute to
- queues
-Message-ID: <Z6Vl6lcPpj1qBN5e@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-	Donald Hunter <donald.hunter@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Mina Almasry <almasrymina@google.com>,
-	Daniel Jurgens <danielj@nvidia.com>,
-	Martin Karsten <mkarsten@uwaterloo.ca>,
-	open list <linux-kernel@vger.kernel.org>
-References: <20250204191108.161046-1-jdamato@fastly.com>
- <20250204191108.161046-2-jdamato@fastly.com>
- <20250206165746.7cf392b6@kernel.org>
- <Z6Vig04c-a46WScr@LQ3V64L9R2>
- <20250206174138.7de4580d@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sGd7NYNn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65DF4C4CEDD;
+	Fri,  7 Feb 2025 01:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738892989;
+	bh=IclCJdX+vKplfAJvRmJxScHC9W5RUYHMaSI5s9SMm+w=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=sGd7NYNnlXqNTiGAePfuPwcKA4Hr1dqYpsRe2nOkW5yvY4/B1IKyk6LTPxqEnH+WR
+	 7PkG2i1A+X35UniVBv0lT0Dx82pmqYft2NbBrSV1HmAjDsRsKo+BorJ+f3ZdUFYp/Z
+	 lj34aJWfNjJ3zHkVwl0IeEyFM2C1iNw77eASU5ST3D/nUDjE3TQm5TUAWS5f8tEte+
+	 aJWnS2+LobyfErwDE6JN8s1Hm37JIQ9r3KoxrX7+uHvrGbqgv6fbFJbv28ZxmbA7UJ
+	 wLTta+jX8UN4V60KjQ/y+sK8Zr+XJXsoInl9Du+Ay1lgHoyboI+ENVMJrPUOc5dWMv
+	 H6OUSWHSb1ZXw==
+Message-ID: <8060c2e9-478a-40fc-afeb-453d83e46ae3@kernel.org>
+Date: Fri, 7 Feb 2025 09:49:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206174138.7de4580d@kernel.org>
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] f2fs: quota: fix to avoid warning in
+ dquot_writeback_dquots()
+To: Jaegeuk Kim <jaegeuk@kernel.org>
+References: <20250206064451.3088028-1-chao@kernel.org>
+ <Z6Ut9S7ZpedBukp8@google.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <Z6Ut9S7ZpedBukp8@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 06, 2025 at 05:41:38PM -0800, Jakub Kicinski wrote:
-> On Thu, 6 Feb 2025 17:31:47 -0800 Joe Damato wrote:
-> > > nla_nest_start() can fail, you gotta nul-check the return value.
-> > > You could possibly add an nla_put_empty_nest() helper in netlink.h
-> > > to make this less awkward? I think the iouring guys had the same bug  
-> > 
-> > Ah, right.
-> > 
-> > I'll see what a helper looks like. Feels like maybe overkill?
+On 2/7/25 05:47, Jaegeuk Kim wrote:
+> On 02/06, Chao Yu wrote:
+>> F2FS-fs (dm-59): checkpoint=enable has some unwritten data.
+>>
+>> ------------[ cut here ]------------
+>> WARNING: CPU: 6 PID: 8013 at fs/quota/dquot.c:691 dquot_writeback_dquots+0x2fc/0x308
+>> pc : dquot_writeback_dquots+0x2fc/0x308
+>> lr : f2fs_quota_sync+0xcc/0x1c4
+>> Call trace:
+>> dquot_writeback_dquots+0x2fc/0x308
+>> f2fs_quota_sync+0xcc/0x1c4
+>> f2fs_write_checkpoint+0x3d4/0x9b0
+>> f2fs_issue_checkpoint+0x1bc/0x2c0
+>> f2fs_sync_fs+0x54/0x150
+>> f2fs_do_sync_file+0x2f8/0x814
+>> __f2fs_ioctl+0x1960/0x3244
+>> f2fs_ioctl+0x54/0xe0
+>> __arm64_sys_ioctl+0xa8/0xe4
+>> invoke_syscall+0x58/0x114
+>>
+>> checkpoint and f2fs_remount may race as below, resulting triggering warning
+>> in dquot_writeback_dquots().
+>>
+>> atomic write                                    remount
+>>                                                 - do_remount
+>>                                                  - down_write(&sb->s_umount);
+>>                                                   - f2fs_remount
+>> - ioctl
+>>  - f2fs_do_sync_file
+>>   - f2fs_sync_fs
+>>    - f2fs_write_checkpoint
+>>     - block_operations
+>>      - locked = down_read_trylock(&sbi->sb->s_umount)
+>>        : fail to lock due to the write lock was held by remount
+>>                                                  - up_write(&sb->s_umount);
+>>      - f2fs_quota_sync
+>>       - dquot_writeback_dquots
+>>        - WARN_ON_ONCE(!rwsem_is_locked(&sb->s_umount))
+>>        : trigger warning because s_umount lock was unlocked by remount
+>>
+>> If checkpoint comes from mount/umount/remount/freeze/quotactl, caller of
+>> checkpoint has already held s_umount lock, calling dquot_writeback_dquots()
+>> in the context should be safe.
+>>
+>> So let's record task to sbi->umount_lock_holder, so that checkpoint can
+>> know whether the lock has held in the context or not by checking current
+>> w/ it.
+>>
+>> In addition, in order to misrepresent caller of checkpoint, we should not
+>> allow to trigger async checkpoint for those callers: mount/umount/remount/
+>> freeze/quotactl.
+>>
+>> Fixes: af033b2aa8a8 ("f2fs: guarantee journalled quota data by checkpoint")
+>> Signed-off-by: Chao Yu <chao@kernel.org>
+>> ---
+>>  fs/f2fs/checkpoint.c | 17 ++++++++-----
+>>  fs/f2fs/f2fs.h       |  3 ++-
+>>  fs/f2fs/super.c      | 59 +++++++++++++++++++++++++++++++++++---------
+>>  3 files changed, 60 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+>> index efda9a022981..baff639ac0c4 100644
+>> --- a/fs/f2fs/checkpoint.c
+>> +++ b/fs/f2fs/checkpoint.c
+>> @@ -1237,7 +1237,8 @@ static int block_operations(struct f2fs_sb_info *sbi)
+>>  retry_flush_quotas:
+>>  	f2fs_lock_all(sbi);
+>>  	if (__need_flush_quota(sbi)) {
+>> -		int locked;
+>> +		bool need_lock = sbi->umount_lock_holder != current;
+>> +		bool locked = false;
 > 
-> Yeah, not sure either. Technically nla_nest_end() isn't required here,
-> but that's not very obvious to a casual reader. So a helper that hides
-> that fact could be useful:
+> I removed the above unnecessary locked.
 > 
-> static inline int nla_put_empty_nest(struct sk_buff *skb, int attrtype)
-> {
-> 	return nla_nest_start(skb, attrtype) ? 0 : -EMSGSIZE;
-> }
+>>  
+>>  		if (++cnt > DEFAULT_RETRY_QUOTA_FLUSH_COUNT) {
+>>  			set_sbi_flag(sbi, SBI_QUOTA_SKIP_FLUSH);
+>> @@ -1246,10 +1247,13 @@ static int block_operations(struct f2fs_sb_info *sbi)
+>>  		}
+>>  		f2fs_unlock_all(sbi);
+>>  
+>> -		/* only failed during mount/umount/freeze/quotactl */
+>> -		locked = down_read_trylock(&sbi->sb->s_umount);
+>> -		f2fs_quota_sync(sbi->sb, -1);
+>> -		if (locked)
+>> +		/* don't grab s_umount lock during mount/umount/remount/freeze/quotactl */
+>> +		if (need_lock && !down_read_trylock(&sbi->sb->s_umount)) {
+>> +			cond_resched();
+>> +			goto retry_flush_quotas;
+>> +		}
+>> +		f2fs_do_quota_sync(sbi->sb, -1);
+>> +		if (need_lock)
+>>  			up_read(&sbi->sb->s_umount);
+>>  		cond_resched();
+>>  		goto retry_flush_quotas;
+> 
+> Modified to:
+> 		/* don't grab s_umount lock during mount/umount/remount/freeze/quotactl */
+> 		if (!need_lock) {
+> 			f2fs_do_quota_sync(sbi->sb, -1);
+> 		} else if (down_read_trylock(&sbi->sb->s_umount)) {
+> 			f2fs_do_quota_sync(sbi->sb, -1);
+> 			up_read(&sbi->sb->s_umount);
+> 		}
+>   		cond_resched();
+>   		goto retry_flush_quotas;
 
-Yea after reading the code it makes sense that nla_nest_end is not
-needed. I wrote a small thing similar to what you proposed above,
-but yours is more succinct.
+Will update it into v2 anyway, thanks.
 
-I'll go with that and see how it looks.
+Thanks,
 
-> But totally unsure whether it's worthwhile. Just don't want for someone
-> to suggest this on v4 and make you respin once again.
+> 
+>> @@ -1867,7 +1871,8 @@ int f2fs_issue_checkpoint(struct f2fs_sb_info *sbi)
+>>  	struct cp_control cpc;
+>>  
+>>  	cpc.reason = __get_cp_reason(sbi);
+>> -	if (!test_opt(sbi, MERGE_CHECKPOINT) || cpc.reason != CP_SYNC) {
+>> +	if (!test_opt(sbi, MERGE_CHECKPOINT) || cpc.reason != CP_SYNC ||
+>> +		sbi->umount_lock_holder == current) {
+>>  		int ret;
+>>  
+>>  		f2fs_down_write(&sbi->gc_lock);
+>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>> index 62b7fed1514a..7174dea641e9 100644
+>> --- a/fs/f2fs/f2fs.h
+>> +++ b/fs/f2fs/f2fs.h
+>> @@ -1670,6 +1670,7 @@ struct f2fs_sb_info {
+>>  
+>>  	unsigned int nquota_files;		/* # of quota sysfile */
+>>  	struct f2fs_rwsem quota_sem;		/* blocking cp for flags */
+>> +	struct task_struct *umount_lock_holder;	/* s_umount lock holder */
+>>  
+>>  	/* # of pages, see count_type */
+>>  	atomic_t nr_pages[NR_COUNT_TYPE];
+>> @@ -3652,7 +3653,7 @@ int f2fs_inode_dirtied(struct inode *inode, bool sync);
+>>  void f2fs_inode_synced(struct inode *inode);
+>>  int f2fs_dquot_initialize(struct inode *inode);
+>>  int f2fs_enable_quota_files(struct f2fs_sb_info *sbi, bool rdonly);
+>> -int f2fs_quota_sync(struct super_block *sb, int type);
+>> +int f2fs_do_quota_sync(struct super_block *sb, int type);
+>>  loff_t max_file_blocks(struct inode *inode);
+>>  void f2fs_quota_off_umount(struct super_block *sb);
+>>  void f2fs_save_errors(struct f2fs_sb_info *sbi, unsigned char flag);
+>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>> index ef639a6d82e5..cb9d7b6fa3ad 100644
+>> --- a/fs/f2fs/super.c
+>> +++ b/fs/f2fs/super.c
+>> @@ -1740,22 +1740,28 @@ int f2fs_sync_fs(struct super_block *sb, int sync)
+>>  
+>>  static int f2fs_freeze(struct super_block *sb)
+>>  {
+>> +	struct f2fs_sb_info *sbi = F2FS_SB(sb);
+>> +
+>>  	if (f2fs_readonly(sb))
+>>  		return 0;
+>>  
+>>  	/* IO error happened before */
+>> -	if (unlikely(f2fs_cp_error(F2FS_SB(sb))))
+>> +	if (unlikely(f2fs_cp_error(sbi)))
+>>  		return -EIO;
+>>  
+>>  	/* must be clean, since sync_filesystem() was already called */
+>> -	if (is_sbi_flag_set(F2FS_SB(sb), SBI_IS_DIRTY))
+>> +	if (is_sbi_flag_set(sbi, SBI_IS_DIRTY))
+>>  		return -EINVAL;
+>>  
+>> +	sbi->umount_lock_holder = current;
+>> +
+>>  	/* Let's flush checkpoints and stop the thread. */
+>> -	f2fs_flush_ckpt_thread(F2FS_SB(sb));
+>> +	f2fs_flush_ckpt_thread(sbi);
+>> +
+>> +	sbi->umount_lock_holder = NULL;
+>>  
+>>  	/* to avoid deadlock on f2fs_evict_inode->SB_FREEZE_FS */
+>> -	set_sbi_flag(F2FS_SB(sb), SBI_IS_FREEZING);
+>> +	set_sbi_flag(sbi, SBI_IS_FREEZING);
+>>  	return 0;
+>>  }
+>>  
+>> @@ -2332,6 +2338,8 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
+>>  	org_mount_opt = sbi->mount_opt;
+>>  	old_sb_flags = sb->s_flags;
+>>  
+>> +	sbi->umount_lock_holder = current;
+>> +
+>>  #ifdef CONFIG_QUOTA
+>>  	org_mount_opt.s_jquota_fmt = F2FS_OPTION(sbi).s_jquota_fmt;
+>>  	for (i = 0; i < MAXQUOTAS; i++) {
+>> @@ -2555,6 +2563,8 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
+>>  
+>>  	limit_reserve_root(sbi);
+>>  	*flags = (*flags & ~SB_LAZYTIME) | (sb->s_flags & SB_LAZYTIME);
+>> +
+>> +	sbi->umount_lock_holder = NULL;
+>>  	return 0;
+>>  restore_checkpoint:
+>>  	if (need_enable_checkpoint) {
+>> @@ -2595,6 +2605,8 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
+>>  #endif
+>>  	sbi->mount_opt = org_mount_opt;
+>>  	sb->s_flags = old_sb_flags;
+>> +
+>> +	sbi->umount_lock_holder = NULL;
+>>  	return err;
+>>  }
+>>  
+>> @@ -2911,7 +2923,7 @@ static int f2fs_quota_sync_file(struct f2fs_sb_info *sbi, int type)
+>>  	return ret;
+>>  }
+>>  
+>> -int f2fs_quota_sync(struct super_block *sb, int type)
+>> +int f2fs_do_quota_sync(struct super_block *sb, int type)
+>>  {
+>>  	struct f2fs_sb_info *sbi = F2FS_SB(sb);
+>>  	struct quota_info *dqopt = sb_dqopt(sb);
+>> @@ -2959,6 +2971,16 @@ int f2fs_quota_sync(struct super_block *sb, int type)
+>>  	return ret;
+>>  }
+>>  
+>> +static int f2fs_quota_sync(struct super_block *sb, int type)
+>> +{
+>> +	int ret;
+>> +
+>> +	F2FS_SB(sb)->umount_lock_holder = current;
+>> +	ret = f2fs_do_quota_sync(sb, type);
+>> +	F2FS_SB(sb)->umount_lock_holder = NULL;
+>> +	return ret;
+>> +}
+>> +
+>>  static int f2fs_quota_on(struct super_block *sb, int type, int format_id,
+>>  							const struct path *path)
+>>  {
+>> @@ -2974,30 +2996,33 @@ static int f2fs_quota_on(struct super_block *sb, int type, int format_id,
+>>  	if (path->dentry->d_sb != sb)
+>>  		return -EXDEV;
+>>  
+>> -	err = f2fs_quota_sync(sb, type);
+>> +	F2FS_SB(sb)->umount_lock_holder = current;
+>> +
+>> +	err = f2fs_do_quota_sync(sb, type);
+>>  	if (err)
+>> -		return err;
+>> +		goto out;
+>>  
+>>  	inode = d_inode(path->dentry);
+>>  
+>>  	err = filemap_fdatawrite(inode->i_mapping);
+>>  	if (err)
+>> -		return err;
+>> +		goto out;
+>>  
+>>  	err = filemap_fdatawait(inode->i_mapping);
+>>  	if (err)
+>> -		return err;
+>> +		goto out;
+>>  
+>>  	err = dquot_quota_on(sb, type, format_id, path);
+>>  	if (err)
+>> -		return err;
+>> +		goto out;
+>>  
+>>  	inode_lock(inode);
+>>  	F2FS_I(inode)->i_flags |= F2FS_QUOTA_DEFAULT_FL;
+>>  	f2fs_set_inode_flags(inode);
+>>  	inode_unlock(inode);
+>>  	f2fs_mark_inode_dirty_sync(inode, false);
+>> -
+>> +out:
+>> +	F2FS_SB(sb)->umount_lock_holder = NULL;
+>>  	return 0;
+>>  }
+>>  
+>> @@ -3009,7 +3034,7 @@ static int __f2fs_quota_off(struct super_block *sb, int type)
+>>  	if (!inode || !igrab(inode))
+>>  		return dquot_quota_off(sb, type);
+>>  
+>> -	err = f2fs_quota_sync(sb, type);
+>> +	err = f2fs_do_quota_sync(sb, type);
+>>  	if (err)
+>>  		goto out_put;
+>>  
+>> @@ -3032,6 +3057,8 @@ static int f2fs_quota_off(struct super_block *sb, int type)
+>>  	struct f2fs_sb_info *sbi = F2FS_SB(sb);
+>>  	int err;
+>>  
+>> +	F2FS_SB(sb)->umount_lock_holder = current;
+>> +
+>>  	err = __f2fs_quota_off(sb, type);
+>>  
+>>  	/*
+>> @@ -3041,6 +3068,9 @@ static int f2fs_quota_off(struct super_block *sb, int type)
+>>  	 */
+>>  	if (is_journalled_quota(sbi))
+>>  		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
+>> +
+>> +	F2FS_SB(sb)->umount_lock_holder = NULL;
+>> +
+>>  	return err;
+>>  }
+>>  
+>> @@ -4715,6 +4745,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>>  	if (err)
+>>  		goto free_compress_inode;
+>>  
+>> +	sbi->umount_lock_holder = current;
+>>  #ifdef CONFIG_QUOTA
+>>  	/* Enable quota usage during mount */
+>>  	if (f2fs_sb_has_quota_ino(sbi) && !f2fs_readonly(sb)) {
+>> @@ -4841,6 +4872,8 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>>  	f2fs_update_time(sbi, CP_TIME);
+>>  	f2fs_update_time(sbi, REQ_TIME);
+>>  	clear_sbi_flag(sbi, SBI_CP_DISABLED_QUICK);
+>> +
+>> +	sbi->umount_lock_holder = NULL;
+>>  	return 0;
+>>  
+>>  sync_free_meta:
+>> @@ -4945,6 +4978,8 @@ static void kill_f2fs_super(struct super_block *sb)
+>>  	struct f2fs_sb_info *sbi = F2FS_SB(sb);
+>>  
+>>  	if (sb->s_root) {
+>> +		sbi->umount_lock_holder = current;
+>> +
+>>  		set_sbi_flag(sbi, SBI_IS_CLOSE);
+>>  		f2fs_stop_gc_thread(sbi);
+>>  		f2fs_stop_discard_thread(sbi);
+>> -- 
+>> 2.48.1.502.g6dc24dfdaf-goog
 
-No worries; respinning is not the end of the world.
