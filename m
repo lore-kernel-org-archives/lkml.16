@@ -1,320 +1,147 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 149C22B9B9
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 10:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249101DE4CC
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 10:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738925648; cv=none; b=cyFlWEgckOXytOIxl8dOrgbop7NdJmqxr/GDHLv/tOfLEj09xoksRYOz/+Y9w6yWY4gzXowzflNw4tnToHLAyPUW6d+IBtsIfijLtH293/k9NbLp2S1oKetL1o46uZ5A7FTy8Mq+/gitgCdjIBGXzKVBkNeD2unAZF0LI/KCvz0=
+	t=1738925659; cv=none; b=Hg9liBiOo78/Vqj0rG1dEjzE3QH8AJFwLhGGM1Qirm1nRCTmIIUqUsE9EQro/NfRkGI042t1b3Slv1R3XjHOZutm4+Eo5L2fHhjoRSCpGOgMD/OyOS/50OPB3qpdhuXhf1eF9Q2/0sgi4cWGt1XivOQwr86KN1gnJkLLFklin9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738925648; c=relaxed/simple;
-	bh=U3ee626/TzIvSAJxdMM69XEhtAoETVjuXsDRh/7LAEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RGm+iQ48/MERt8ncQr9zteZwfoqbbx2YJr2VBt4T9gXC3Uvxo3wB2sQxnE8sAoOfiBKRoJz83v5Iz1KEAj2f+rt7mh6hDyaz6sk4BoX0Kk4oW2BJK8BgCuC4wTHf6BQEAtcDXcGId9XGk/yUR9PFT9MmAN+tIHPda/GmRn0V63Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38E81113E;
-	Fri,  7 Feb 2025 02:54:24 -0800 (PST)
-Received: from [10.57.81.111] (unknown [10.57.81.111])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 525293F63F;
-	Fri,  7 Feb 2025 02:53:58 -0800 (PST)
-Message-ID: <334bdd4c-f12e-45f3-b4f9-df723889a4f4@arm.com>
-Date: Fri, 7 Feb 2025 10:53:56 +0000
+	s=arc-20240116; t=1738925659; c=relaxed/simple;
+	bh=dSflpRyFbrTCZVi6NediRQrPo4kuZnPLOGm2z/uaHaI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hrRWh8Z6lV99OIWVAjgOQV0z5BTLhGJBRsJjZXgstA0kCyEE+7BgsGdnANoxHBAdCSHlDeVo8DiE5kXT32kz5hlrmKKE+JpthcYY1InIQEjF0JjR/HNKL0bb1JTP5a6YrdRSBX/LzGaC88n2hlxX+6HRgjRJ+hMWuiLB+hM4S+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kzvMGjJS; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kzvMGjJS"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5dcd33d9d9dso8298a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 02:54:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738925656; x=1739530456; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dSflpRyFbrTCZVi6NediRQrPo4kuZnPLOGm2z/uaHaI=;
+        b=kzvMGjJSnUIqR/UCh2PbiPgU97eZO2gcUYO5oJBNJVWF30FVs9FComzsK6KVeGPJyP
+         d7Lzl9da709MS1Qe3EDdkrxZY5zkGk/i/MsOnAbeNDt7wJ2cCnmE195pDf+5e15zWsUh
+         dw7BwnaSZS9aYqvzPrlgm1KrI3loSAgKFU1u3xheTLIDpp2+upRkzKvEuDF39PVIpi85
+         N2NEszzPAzGi1JfQya5TkVB5E/nHDpI78pOEpoYxJ2GCR9flUdLGkF6awAVIjI1Eeib+
+         T/P2u4hfxHc6YjDzQasIZ0sllYqzQBF2Aas6l4S5bpZ2Juz+/Gs16amkKfRQZGO1xsbf
+         7Ykw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738925656; x=1739530456;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dSflpRyFbrTCZVi6NediRQrPo4kuZnPLOGm2z/uaHaI=;
+        b=qzfTeL8ePlIvgzYvBYrVYR8dUFDiT1fSvvGg+m9/EZqp60q8uTkddyj+1ZnoNiCo1U
+         15gzh3Nm7cBtTedmsZ1ofWc3vGZaXfcaYSuw2PNe3gN7QOxnsQITjs0VnJUJjB7LTG6U
+         42oULmCSggghgOBIoddqE6dnEw4umGoHZFUWMMmvoeIBAZMj82i6ADiHbmGe3iogoQ5+
+         qZWIM/0y1WF7258DYTAYCAv6WPtDXzmJ5t3hWkyKL0gS/hrUBNoQcRQGBMjZ4hbWNLXJ
+         62IVar5wG3NUKpZ4SqGp/xK5+AAJp2NrmSlooooLkgu0Pc5sQJNEPDS2zLK+/kcS+jbm
+         GNWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVRW8ix1JwySZ1+2TZ4gazu97rCCtdsRFIcqn+6xcQKm6mSG1zGR0yd7ul5kGDSlpV8X+GrfTKNFRfk5hc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEGzQQq8aEHSIAUSzxcMn8qN1/3ADuhtI0M8A/HNVTLvLGhnuR
+	r9ZQKYzNdA3BFY6WkXdq918NZ4UOjH1SoPNPYhcp4oqptibEaM0pzKI4WzUt6IL6eYOG+4dGAre
+	N3qGPIjA8TZuELU4p779gE5nZmrm9pryzozWU
+X-Gm-Gg: ASbGncssszg1Oj6wya7QS6B/9fER+sAdzdiDi5iZLkOaInB/UklL9nCaR0HVdAoiqEf
+	elx4kEKsMEO5iTHRKqpazbsbnvLeuSS8OJh4KseUFuUWuYTcIWlYqjpUU9QmJGBRt/YMwQnFBMj
+	mydYrjDHUihZogZAQD43u6AO9W
+X-Google-Smtp-Source: AGHT+IHtlyXXzkvXmLUKCILij4rf4Kf6Xt30bOPrPbaEDL98V2QDPJq4D2CF12ijDlbmudrFmDB1UoNvTH8Vc+Diqvo=
+X-Received: by 2002:a50:ee16:0:b0:5dc:ccb4:cb11 with SMTP id
+ 4fb4d7f45d1cf-5de46901c8dmr88336a12.4.1738925656242; Fri, 07 Feb 2025
+ 02:54:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 09/16] arm64/mm: Avoid barriers for invalid or
- userspace mappings
-Content-Language: en-GB
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Muchun Song <muchun.song@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250205151003.88959-1-ryan.roberts@arm.com>
- <20250205151003.88959-10-ryan.roberts@arm.com>
- <45717fc1-cd83-4e9e-8ce5-44d306037cc9@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <45717fc1-cd83-4e9e-8ce5-44d306037cc9@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250117145145.3093352-1-guanyulin@google.com>
+ <943a7b09-8e77-4813-810a-18fea0e61482@linux.dev> <CAOuDEK3aip9SLCUPOzpVPwx-O4rmF-+sQrF4GJasGPBzV=qJdg@mail.gmail.com>
+ <e5b1c3bf-4457-4859-92fc-785f7d6037fa@linux.dev> <CAOuDEK2u509kNjyL6qm27QgvtoCscRcsLixW=W8ABz2NF8A-tw@mail.gmail.com>
+ <c8c699f7-bf9b-4e36-910e-c6f1c7092543@linux.dev>
+In-Reply-To: <c8c699f7-bf9b-4e36-910e-c6f1c7092543@linux.dev>
+From: Guan-Yu Lin <guanyulin@google.com>
+Date: Fri, 7 Feb 2025 18:54:00 +0800
+X-Gm-Features: AWEUYZl-ygjTK0GFUqDaE7UIIfIr1rSe0TLqJUl1pqqByXhtdHXZ0WZRgydueGo
+Message-ID: <CAOuDEK1w9Xbik-VbXwSd1ZYUWx9EQ_TnvEdV3WX2L-8Wtuj5bw@mail.gmail.com>
+Subject: Re: [PATCH v9 0/5] Support system sleep with offloaded usb transfers
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+Cc: gregkh@linuxfoundation.org, Thinh.Nguyen@synopsys.com, 
+	mathias.nyman@intel.com, stern@rowland.harvard.edu, perex@perex.cz, 
+	tiwai@suse.com, sumit.garg@linaro.org, kekrby@gmail.com, oneukum@suse.com, 
+	ricardo@marliere.net, lijiayi@kylinos.cn, quic_jjohnson@quicinc.com, 
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-sound@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 07/02/2025 08:11, Anshuman Khandual wrote:
-> On 2/5/25 20:39, Ryan Roberts wrote:
->> __set_pte_complete(), set_pmd(), set_pud(), set_p4d() and set_pgd() are
->> used to write entries into pgtables. And they issue barriers (currently
->> dsb and isb) to ensure that the written values are observed by the table
->> walker prior to any program-order-future memory access to the mapped
->> location.
-> 
-> Right.
-> 
->>
->> Over the years some of these functions have received optimizations: In
->> particular, commit 7f0b1bf04511 ("arm64: Fix barriers used for page
->> table modifications") made it so that the barriers were only emitted for
->> valid-kernel mappings for set_pte() (now __set_pte_complete()). And
->> commit 0795edaf3f1f ("arm64: pgtable: Implement p[mu]d_valid() and check
->> in set_p[mu]d()") made it so that set_pmd()/set_pud() only emitted the
->> barriers for valid mappings. set_p4d()/set_pgd() continue to emit the
->> barriers unconditionally.
-> 
-> Right.
-> 
->>
->> This is all very confusing to the casual observer; surely the rules
->> should be invariant to the level? Let's change this so that every level
->> consistently emits the barriers only when setting valid, non-user
->> entries (both table and leaf).
-> 
-> Agreed.
-> 
->>
->> It seems obvious that if it is ok to elide barriers all but valid kernel
->> mappings at pte level, it must also be ok to do this for leaf entries at
->> other levels: If setting an entry to invalid, a tlb maintenance
->> operaiton must surely follow to synchronise the TLB and this contains
-> 
-> s/operaiton/operation
+On Tue, Feb 4, 2025 at 7:57=E2=80=AFAM Pierre-Louis Bossart
+<pierre-louis.bossart@linux.dev> wrote:
+>
+> On 2/2/25 20:57, Guan-Yu Lin wrote:
+> > On Tue, Jan 28, 2025 at 11:22=E2=80=AFPM Pierre-Louis Bossart
+> > <pierre-louis.bossart@linux.dev> wrote:
+> >>
+> >> I am not following, sorry.
+> >>
+> >> Is the desired outcome to
+> >>
+> >> a) prevent the system from entering S3 if there is an active USB audio=
+ offloaded stream?
+> >>
+> >> or b) allow offloaded transactions even when the system is in S3?
+> >>
+> >>
+> >> which is it?
+> >>
+> >> a) would be rather interesting, but currently we don't have any such b=
+ehavior supported. When the system enters S3 all audio stops. The stream wi=
+ll resume when the system goes back to S0. Do we really want the battery to=
+ drain in S3?
+> >>
+> >> b) seems rather complicated, once the on-going DMA transfers complete =
+then who's going to refill buffers for the USB offloaded streams? Allowing =
+the lowest level to operate even in S3 is only a small part of the puzzle, =
+someone's got to provide data at some point. Unless the data is generated a=
+lso by a side DSP having access to mass storage or wireless interfaces?
+> >
+> > Thanks for the question, the intent of our proposal should be (b), to
+> > allow offloaded transactions even when the system is in S3.
+> > In our design, the DSP wakes the system before the buffers are fully
+> > drained. This patchset enables the USB controller for offloaded
+> > transfers during system suspend (S3). To be precise, this patchset
+> > focuses solely on enabling the USB controller in S3 and does not
+> > include other necessary components for continuous offloaded USB
+> > transfers. I'll revise the commit message/cover letter to reflect
+> > this.Thanks for highlighting the potential ambiguity.
+>
+> Thanks for the precision.
+>
+> It was my understanding that anything above S1 could incur a hardware/sof=
+tware latency of two seconds or more to go back to S0. That would imply a b=
+uffering scheme that's significantly larger than usual offloaded solutions.=
+ In "typical" offload implementations it's rare to go beyond 100s of ms, si=
+nce at some point you run into user-experience issues when applying volume =
+changes or when changing tracks. It's usually a no-go if the user has to wa=
+it for a perceivable amount of time while the buffers drain.
+>
+> Not to mention that quite a few platforms no longer support S3, since 'Mo=
+dern Standby' aka "S0 Low Power Idle" or 's2idle' was introduced in the Win=
+dows 10 days S3 became largely a legacy feature gradually dropped since no =
+one really uses it.
 
-Ugh, I really need a spell checker for my editor!
+I think for mobile devices, the S3 state is still used since the
+hardware/software latency wouldn't be as big as you described, so
+mobile devices could still use S3 for power saving. How about using a
+"knob" to isolate the feature to specific devices? "Knob" could be
+dynamically switched by some functions, or we could statically
+determine it as a dts attribute or build config. Will a "knob" address
+your concern for this feature? Do you have a preference on the "knob"
+design?
 
-> 
->> the required barriers. If setting a valid user mapping, the previous
->> mapping must have been invalid and there must have been a TLB
->> maintenance operation (complete with barriers) to honour
->> break-before-make. So the worst that can happen is we take an extra
->> fault (which will imply the DSB + ISB) and conclude that there is
->> nothing to do. These are the aguments for doing this optimization at pte
-> 
-> s/aguments/arguments
-> 
->> level and they also apply to leaf mappings at other levels.
-> 
-> So user the page table updates both for the table and leaf entries remains
-> unchanged for now regarding dsb/isb sync i.e don't do anything ?
-
-Sorry, this doesn't parse.
-
-> 
->>
->> For table entries, the same arguments hold: If unsetting a table entry,
->> a TLB is required and this will emit the required barriers. If setting a
->> table entry, the previous value must have been invalid and the table
->> walker must already be able to observe that. Additionally the contents
->> of the pgtable being pointed to in the newly set entry must be visible
->> before the entry is written and this is enforced via smp_wmb() (dmb) in
->> the pgtable allocation functions and in __split_huge_pmd_locked(). But
->> this last part could never have been enforced by the barriers in
->> set_pXd() because they occur after updating the entry. So ultimately,
->> the wost that can happen by eliding these barriers for user table
->> entries is an extra fault.
-> 
-> Basically nothing needs to be done while setting user page table entries.
-> 
->>
->> I observe roughly the same number of page faults (107M) with and without
->> this change when compiling the kernel on Apple M2.
-> 
-> These are total page faults or only additional faults caused because there
-> were no dsb/isb sync after the user page table update ?
-
-total page faults. The experiment was to check that if eliding more barriers for
-valid user space mappings, does this lead to an increase in page faults? This
-very simple experiment suggests no.
-
-> 
->>
->> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
->> ---
->>  arch/arm64/include/asm/pgtable.h | 60 ++++++++++++++++++++++++++++----
->>  1 file changed, 54 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
->> index 1d428e9c0e5a..ff358d983583 100644
->> --- a/arch/arm64/include/asm/pgtable.h
->> +++ b/arch/arm64/include/asm/pgtable.h
->> @@ -767,6 +767,19 @@ static inline bool in_swapper_pgdir(void *addr)
->>  	        ((unsigned long)swapper_pg_dir & PAGE_MASK);
->>  }
->>  
->> +static inline bool pmd_valid_not_user(pmd_t pmd)
->> +{
->> +	/*
->> +	 * User-space table pmd entries always have (PXN && !UXN). All other
->> +	 * combinations indicate it's a table entry for kernel space.
->> +	 * Valid-not-user leaf entries follow the same rules as
->> +	 * pte_valid_not_user().
->> +	 */
->> +	if (pmd_table(pmd))
->> +		return !((pmd_val(pmd) & (PMD_TABLE_PXN | PMD_TABLE_UXN)) == PMD_TABLE_PXN);
-> 
-> Should not this be abstracted out as pmd_table_not_user_table() which can
-> then be re-used in other levels as well.
-
-Yeah maybe. Let me mull it over.
-
-> 
->> +	return pte_valid_not_user(pmd_pte(pmd));
->> +}
->> +
-> 
-> Something like.
-> 
-> static inline bool pmd_valid_not_user_table(pmd_t pmd)
-> {
-> 	return pmd_valid(pmd) &&
-> 	       !((pmd_val(pmd) & (PMD_PMD_TABLE_PXN | PMD_TABLE_UXN)) == PMD_TABLE_PXN);
-> }
-> 
-> static inline bool pmd_valid_not_user(pmd_t pmd)
-> {
-> 	if (pmd_table(pmd))
-> 		return pmd_valid_not_user_table(pmd);
-> 	else
-> 		return pte_valid_not_user(pmd_pte(pmd));
-> }
-> 
->>  static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
->>  {
->>  #ifdef __PAGETABLE_PMD_FOLDED
->> @@ -778,7 +791,7 @@ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
->>  
->>  	WRITE_ONCE(*pmdp, pmd);
->>  
->> -	if (pmd_valid(pmd)) {
->> +	if (pmd_valid_not_user(pmd)) {
->>  		dsb(ishst);
->>  		isb();
->>  	}
->> @@ -836,6 +849,17 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
->>  
->>  static inline bool pgtable_l4_enabled(void);
->>  
->> +
->> +static inline bool pud_valid_not_user(pud_t pud)
->> +{
->> +	/*
->> +	 * Follows the same rules as pmd_valid_not_user().
->> +	 */
->> +	if (pud_table(pud))
->> +		return !((pud_val(pud) & (PUD_TABLE_PXN | PUD_TABLE_UXN)) == PUD_TABLE_PXN);
->> +	return pte_valid_not_user(pud_pte(pud));
->> +}
-> 
-> This can be expressed in terms of pmd_valid_not_user() itself.
-> 
-> #define pud_valid_not_user()	pmd_valid_not_user(pud_pmd(pud))
-
-The trouble with this is that you end up using pmd_table() not pud_table(). For
-some configs pud_table() is hardcoded to true. So we lose the benefit. So I'd
-rather keep it as it's own function.
-
-> 
->> +
->>  static inline void set_pud(pud_t *pudp, pud_t pud)
->>  {
->>  	if (!pgtable_l4_enabled() && in_swapper_pgdir(pudp)) {
->> @@ -845,7 +869,7 @@ static inline void set_pud(pud_t *pudp, pud_t pud)
->>  
->>  	WRITE_ONCE(*pudp, pud);
->>  
->> -	if (pud_valid(pud)) {
->> +	if (pud_valid_not_user(pud)) {
->>  		dsb(ishst);
->>  		isb();
->>  	}
->> @@ -917,6 +941,16 @@ static inline bool mm_pud_folded(const struct mm_struct *mm)
->>  #define p4d_bad(p4d)		(pgtable_l4_enabled() && !(p4d_val(p4d) & P4D_TABLE_BIT))
->>  #define p4d_present(p4d)	(!p4d_none(p4d))
->>  
->> +static inline bool p4d_valid_not_user(p4d_t p4d)
->> +{
->> +	/*
->> +	 * User-space table p4d entries always have (PXN && !UXN). All other
->> +	 * combinations indicate it's a table entry for kernel space. p4d block
->> +	 * entries are not supported.
->> +	 */
->> +	return !((p4d_val(p4d) & (P4D_TABLE_PXN | P4D_TABLE_UXN)) == P4D_TABLE_PXN);
->> +}
-> 
-> Instead
-> 
-> #define p4d_valid_not_user_able() pmd_valid_not_user_able(p4d_pmd(p4d))
-> 
->> +
->>  static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
->>  {
->>  	if (in_swapper_pgdir(p4dp)) {
->> @@ -925,8 +959,11 @@ static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
->>  	}
->>  
->>  	WRITE_ONCE(*p4dp, p4d);
->> -	dsb(ishst);
->> -	isb();
->> +
->> +	if (p4d_valid_not_user(p4d)) {
-> 
-> 
-> Check p4d_valid_not_user_able() instead.
-
-I don't really know why we would want to add table into the name at this level.
-Why not be consistent and continue to use p4d_valid_not_user()? The fact that
-p4d doesn't support leaf entries is just a matter for the implementation.
-
-> 
->> +		dsb(ishst);
->> +		isb();
->> +	}
->>  }
->>  
->>  static inline void p4d_clear(p4d_t *p4dp)
->> @@ -1044,6 +1081,14 @@ static inline bool mm_p4d_folded(const struct mm_struct *mm)
->>  #define pgd_bad(pgd)		(pgtable_l5_enabled() && !(pgd_val(pgd) & PGD_TABLE_BIT))
->>  #define pgd_present(pgd)	(!pgd_none(pgd))
->>  
->> +static inline bool pgd_valid_not_user(pgd_t pgd)
->> +{
->> +	/*
->> +	 * Follows the same rules as p4d_valid_not_user().
->> +	 */
->> +	return !((pgd_val(pgd) & (PGD_TABLE_PXN | PGD_TABLE_UXN)) == PGD_TABLE_PXN);
->> +}
-> 
-> Similarly
-> 
-> #define pgd_valid_not_user_able() pmd_valid_not_user_able(pgd_pmd(pgd))
-> 
-> 
->> +
->>  static inline void set_pgd(pgd_t *pgdp, pgd_t pgd)
->>  {
->>  	if (in_swapper_pgdir(pgdp)) {
->> @@ -1052,8 +1097,11 @@ static inline void set_pgd(pgd_t *pgdp, pgd_t pgd)
->>  	}
->>  
->>  	WRITE_ONCE(*pgdp, pgd);
->> -	dsb(ishst);
->> -	isb();
->> +
->> +	if (pgd_valid_not_user(pgd)) {
-> 
-> Check pgd_valid_not_user_able() instead.
-> 
->> +		dsb(ishst);
->> +		isb();
->> +	}
->>  }
->>  
->>  static inline void pgd_clear(pgd_t *pgdp)
-
+Regards,
+Guan-Yu
