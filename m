@@ -1,209 +1,623 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2047.outbound.protection.outlook.com [40.107.101.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619EF1A5BB6;
-	Fri,  7 Feb 2025 18:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738954346; cv=fail; b=kzTPnHEpCMIO5W0JztibSOB+3+RBm8P9fpdNkL1LvNUtgxneQwcE8HKg4ytRPT2nCAZPkqPax1gKXLtMUJr8qd8J9blJioDRA24AkGRfYQty3lZeP4urmY9CB9fmUGo2ZjYSvS6gT3A+m+WqXCRnAJE6i5L4ibAUuxX6SlIPYTs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738954346; c=relaxed/simple;
-	bh=7FV9XQD/y1TNUsmNvSkr2FcYrcXDv/vOlIGltm/gMYI=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VshGzbJsI8oFeuFulvAXP09pURACAZIqtgA6sDcWi5csasbQLtoFc8KjyRWdO7BCET5/ifIfOVdc/TPH8H2Sf4/XlXIB8u5xjpLtCe4WIzmYP3LzejAl6xS7nqf7DZqinPRyTjKDaLp3pUTeLWUlioXCC5ph2HbtcNAMcVANIX4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2PVItWUm; arc=fail smtp.client-ip=40.107.101.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28621A3177
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738954343; cv=none; b=O469q2j8imhTS3s1RhPyyqMSGby/sgmovHNCy7adh8h5O3/8Kub47R41J1/pn7d9ZNe6m+B92TTA0iv6VA3DyMU64Gd1MomuXPoYCOWkt7bBv6QPcBsz6MVydYL60j/1U4rqu8pUwMC0ZY3TGgytdVEMA2EjnF0ef0w6+u7sUl8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738954343; c=relaxed/simple;
+	bh=wWN22//RSBLmbfzccbt69hGRAK97jH6kIt6lEzL1Ef8=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=jLI+jzNOPFjE3KkGvCdYb+VaFBTfibAhkustxIso5U55Be74JilF3/ETOJXrO9efWcus8atrTihVl6n9Yj9013H7qcQo/Mwnfr8leuHF6RwKe6IF/X+8rogkDKr+NPi7N4sYM55jSgAHMP1u0Q8zydJud1+8opPYkFhMeaB9Ns0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vHdbSaQ4; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2PVItWUm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=T/8ZiC9yJ27NixYRG708iBtS3GS28V3J4C06T4EBZiQuKrP2nmwMi1yc8M3hCy/sRh3uMsyTaSOIytRgH5pCIEJ9fGqEiQ9lTFmjt3oFdXVKkrw+6dNoHpZqxbJs07UekfFXqyIngfeiDShEr5NBxpi6aN3RvXn91p4HyT5GnNBYki4MBB2B5UCumEQher+o2qYbj9brJ7ULOjo9I0icfz6KCFaVUXICGvRjBtf7tCvIPrknVzGs8Bs/Pkx+aLEP9t1D1WWhOWNQ9shjWPD9sgHsdxed3EoMYek9Jm09o602wu7Ipj8N9O0q3W6SYpSfcgj9/2dCl4NIcLhDaoP4Sg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sW/rHxY9LmEZmiF0PWQ35fEFTLVHSBREM0Smp7NHIWY=;
- b=rTDe2e/vCj7jfJfFcYwmB+TWGsyk8DYhpdiqf0J/i7RmHTGQ+4pzaQ89ZEDYP8344cYQ6CjA4hz+ZeN2UmuVZ81zDejVK5XwLxEY5o1TRlZ4OoruZvwJ7S+pdVrdzWIO4MasdhATRKz3/rRXK6/iGeSZf6qUdGNyXJBL2Cs8VhW//Qec8/+XJ8cu0kt9Qi/PpuKFUV2uLQvmXuD0qjJVig68hpx98HpodOZbXwv17Nw4gLAjlG7qZAvrDdXQ0kTQ8vL24Zeg4BJCRKL+7uW/7H6xOxdFYf86aGouNBbP5rm6+snZWvRoTB903cAk1nBlMtmyoJrNOVyjm96wN3v1XA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sW/rHxY9LmEZmiF0PWQ35fEFTLVHSBREM0Smp7NHIWY=;
- b=2PVItWUmP9jklJ/Q/8FNP/A23wOBwM+wtEkpyIUWD+G2UCpeg5CjTyHyLd4lpC0GbtZG/E7Q9pI67FMaBz/51XMK9PbtkUmlJo6tnYvNzi+9TZoZr2zknog9soWsRD1ihkRmXo/O4+ljtIVMXFVVr66DO+W8Ct1y7uo84Q9NGx8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by CY5PR12MB6297.namprd12.prod.outlook.com (2603:10b6:930:22::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.23; Fri, 7 Feb
- 2025 18:52:20 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%4]) with mapi id 15.20.8422.010; Fri, 7 Feb 2025
- 18:52:20 +0000
-Message-ID: <11da060c-fb57-486f-bb8d-4ef830a2addb@amd.com>
-Date: Fri, 7 Feb 2025 12:52:15 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 08/23] x86/resctrl: Introduce interface to display
- number of monitoring counters
-From: "Moger, Babu" <bmoger@amd.com>
-To: Reinette Chatre <reinette.chatre@intel.com>,
- Babu Moger <babu.moger@amd.com>, corbet@lwn.net, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- tony.luck@intel.com, peternewman@google.com
-Cc: x86@kernel.org, hpa@zytor.com, paulmck@kernel.org,
- akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
- xiongwei.song@windriver.com, pawan.kumar.gupta@linux.intel.com,
- daniel.sneddon@linux.intel.com, jpoimboe@kernel.org, perry.yuan@amd.com,
- sandipan.das@amd.com, kai.huang@intel.com, xiaoyao.li@intel.com,
- seanjc@google.com, xin3.li@intel.com, andrew.cooper3@citrix.com,
- ebiggers@google.com, mario.limonciello@amd.com, james.morse@arm.com,
- tan.shaopeng@fujitsu.com, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
- eranian@google.com
-References: <cover.1737577229.git.babu.moger@amd.com>
- <80457612b98078bd7786c73f83775e4de86c699e.1737577229.git.babu.moger@amd.com>
- <6376ea35-4ce7-4ac1-967b-97f2728228e3@intel.com>
- <a6120ad5-c9fc-48cd-b2a6-cfb7ac33100a@amd.com>
-Content-Language: en-US
-In-Reply-To: <a6120ad5-c9fc-48cd-b2a6-cfb7ac33100a@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA1P222CA0137.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c2::6) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vHdbSaQ4"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6f3ff1ff117so28850277b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 10:52:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738954338; x=1739559138; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:from:subject:references:mime-version
+         :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=poaOrjqROlOxSLBeynyYX46ZQt3WXrqG/Y2chdx8MCQ=;
+        b=vHdbSaQ4ZKwA6I7AUrFToEW9rGRZBHMJuGzV5zc1aCUn/qJXDqS3L2LrCh62F/mei4
+         tWM5rJRy8vfrEub5+g1emUVzQ69HQOt8o/5pXhu6lQcKAf8gO9L6wQNgHQv2im5q7XsZ
+         K5zr5s7spa9syBdVS16VFikzq2Nd/VVyCmF3/Y4lEckOYx0ejD7jDDyXxcVTgVIjtJeW
+         1FfshB8dw8UXpGSIpfNgXvPrwLlBnf+4j1y8+rfXj5XCBKkUolV1TuTacjfqW6dHBz1L
+         kP7cKpgMWC4cV17bzDqznPCg/RaNxrTb3j4c+BmDP8xzlsITPRJWGK0+tt44DmpC11QK
+         A3VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738954338; x=1739559138;
+        h=content-transfer-encoding:to:from:subject:references:mime-version
+         :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=poaOrjqROlOxSLBeynyYX46ZQt3WXrqG/Y2chdx8MCQ=;
+        b=cTypBwHe5AV1TfMCkfhS/xq7YO9KB5lsnZvyy6tr95O6ow+VTjdytaapqkVYg4KdwI
+         /aWl12yfI//lixfrI4vwv5Njqppqu/jx0V6t7gYlfP/KMit8OB4hq7q84i3sRJThg75i
+         LgXFvGlHzRu1aM04TStpV/q71wSR22ynICoVpXkbQU6gB4EP8809+fnlEql0n8mNdVIR
+         Q+Q9tpQJ39X24sgeCT4gNQS+JmKqepnzFpus093nuymDYr9bk6mxIBNQlhgNIK8MgIyC
+         spXkoi6cV1LZNQRSyfSZjpTs+iQ6a9Zg1/7UyEtBcuKdOo5mMHvma5N9fYac2Tq8nNyc
+         SRXw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDHCzR/Fc+hykNXVSxaFLKhOEJYUVF46gnYyn5ZECw/RWs7P4adPe5JHbr52bKY2s+ElJ0/kC0S21XoIA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjYiGFftj8PdveHhjq0PKszBCAXpL+19lZEyaEOl3+Cowjrq7v
+	oD7yOZM+xi+kM5XMsltUuAKkDKQcS6ite9YI6RrR22JZAmAwVtZ0iqjzwG7/CeYzfEP4mKBUcP3
+	55mZ69w==
+X-Google-Smtp-Source: AGHT+IHebUosEcZTCCfZTHY9xsn7NQVNMd6LqIY+jG4WMRdRK7vkH1ir7IBsy4s87msAREFBI13gSaAUtZMn
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:79e4:4a45:1e80:ace5])
+ (user=irogers job=sendgmr) by 2002:a05:690c:25c2:b0:6f9:97bd:5a6e with SMTP
+ id 00721157ae682-6f9b2908d91mr407617b3.4.1738954337792; Fri, 07 Feb 2025
+ 10:52:17 -0800 (PST)
+Date: Fri,  7 Feb 2025 10:51:37 -0800
+In-Reply-To: <20250207185154.824433-1-irogers@google.com>
+Message-Id: <20250207185154.824433-9-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|CY5PR12MB6297:EE_
-X-MS-Office365-Filtering-Correlation-Id: e63f975a-f642-472f-2921-08dd47a88d0e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZTVDeUo5ZjFnQ29HSlBndXRNQXpKVGgxN0o2cEoza21aOXNNaUF4Z09SZ1hu?=
- =?utf-8?B?d1kxYjZjbXI3NlhPdWtIdWswYjFHMkJSSVUzek5GZ0QrS0NFOUFZc3U0M3dI?=
- =?utf-8?B?dzg4bVBvZzFiSWNBRk00WTlIWlF2bHBzN3FWdzFFN3E2R25IR0JjekZNUy9h?=
- =?utf-8?B?bWZtc01MZUpnUU1JbFNHWi9ncGpMZThBeTVMbllNMW5WZERuR1pUbnl6bVFq?=
- =?utf-8?B?SzZBWU54Mmp0UVJiRlN1S1VtbFF2S2cwQXdNM1pib1oweDJqQnhuRHpmaDgz?=
- =?utf-8?B?TUJPbmNGYTNlM0pzenlGU0lQSkFRbVpyc2JnT29wUEY2WlliTEJaSTdBdjFN?=
- =?utf-8?B?STE4L0szdUl1d25qd2luQUJ0U3hHUUpWMUlrQTVPZHlsY2VyVDlJSjd3SUxp?=
- =?utf-8?B?UTh2NWNTR0ZFOGMyV2pCVStJL1lrckZKb3dZT0VNekg4UHc0M0l0VU1oNUo4?=
- =?utf-8?B?T3JtbnhzeVVranBwajBXTFZZL2xpdEhKdXpVS1ZRd1REY3VEU1pBVXNmWGZq?=
- =?utf-8?B?aFcvdm43NjRkaXcxRlU3VTdUSDVRUjFZMll0U0tCaVJKOFUrV3Frb1RZakhB?=
- =?utf-8?B?bCtNeXZuNWw2MUNXVGpUOFBBcHpBRG14ZzlEZVZrTElNTTd5Rlc2RkMydjlo?=
- =?utf-8?B?WmxkZDFGR1VoZEpRY05WV25sSVRGNHdXWXFDR291bWtmOVVVTGpFUi9OcllP?=
- =?utf-8?B?Y1BEVFhaUmpZRDhFcEdWcTNpWFJKbzhwQkc1RHRvcUw2TmJkOHpWakhkZHdO?=
- =?utf-8?B?dVdOL2NBZGtGQTVHZ3JxR3RxRWFOVUk5SkFNTTVGNHlVRmNKNUhNQlgrd0h0?=
- =?utf-8?B?clZaYmJlZjdSUVFJWk1LbVg0S2FBYlVsbCs3cmdpeDlOLzAya2xSOTBhSE5B?=
- =?utf-8?B?OHhVSmN2S0gyVTVRcWJmZmRSUjJFM0xLMTM0K3VwbmhFK0NHdTlnbjM5L0R3?=
- =?utf-8?B?M3d4QmlJb2k5eGFybmw4SDBwak1nUW5XbFFoRkJ5Q0ZPRE5rKzlyRSt4OGdq?=
- =?utf-8?B?VzZMSFZzVnRNemt4QXRGSDc4N2JTM2x2dDhDTER0SjVEU1YyOVVnRU1EZjRs?=
- =?utf-8?B?NC9aSEFPbFJlRFpvOHA1V3VjVjROMUtnL3N6ZitXSU16NjBLMkVobHN2VTk1?=
- =?utf-8?B?cnBYWUVrejFtUmJqUHpsSW1GWWVLRWVSNjlGUmY1Z0gzWmoxS1NRalBnZVF6?=
- =?utf-8?B?MWVVRTRMNFhubXJPRko4MmF3K3YrWjVCMVAxQml1V2FTQnNGM3NqSXZQZUhM?=
- =?utf-8?B?ZkZaUnBUd3pNZkF5ck9peDVpM293eXJDMnVZajF3NUNTTXVCZnBMMDZ1Wnpi?=
- =?utf-8?B?QjJYY2FJRS9ERXh2SHdhWThud3RLMUFXeDFjSlFVV1l0T3V5RUtPK0xkcmhX?=
- =?utf-8?B?NERVT2VvZlp0Vy9ONStNRmpHc0pMODA3TENnaFNrZnJoR3RvNW4zWDF4bDd1?=
- =?utf-8?B?dEJkWXpkRTdlMzcyVVIxT2pzaWxqVW9PMmhqYlZlKzVpT1o4b2FWVzJ1Wk5n?=
- =?utf-8?B?cnFGOVJiREEyMHo0d2NXV2c3VlBzZG5mUlQ0RmUwVUZNRnFaMjQrMzUxb2Vl?=
- =?utf-8?B?Q2tBVllEWDBFOUt6OFZVTmlRZTdLRmRDUnZpQ0RpTzd3QncwMFNXbFlDRUZ2?=
- =?utf-8?B?SXJjSUlhUmRUdEpWSnZSdU5HNXpDMVpQSWpCK0k1Wnp3SzBaRmFTbEo1TFpy?=
- =?utf-8?B?ODlPU1kwUWdkQWVQdndqeXFoek9IenJyVGt2R2hZa0xkL2xuK2Urb2dOUzVz?=
- =?utf-8?B?OTM2Z0hKUnZ2QzREU2FIMmQxR2hSL3BPZFJlTWZ4emxGcDgxRXQxWDVXMXdR?=
- =?utf-8?B?VFZJSUZueXlTZ3hyL1ZSN0plQXRWQ3hzeFlvVU9sb2JZNVJvN3VGV005TTA3?=
- =?utf-8?Q?3VF1hlCEyYw/Y?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QmE4Zi9tVGV4aSsrVElYVWJIQ1ltQUZuVXE0aWNLWS9Pa2lvOFI4V1JtZU5F?=
- =?utf-8?B?RnQwZlpwcWRxVE5kM2wwRER4ZGE4UjE4OWYxZWFaa0RSSzFWVndCVzlEYU83?=
- =?utf-8?B?MTMvU3dJaDVERC83c2dtMnVZSWVrcmVOTzIvTWdZcTJCNHpxYktWUE02WndP?=
- =?utf-8?B?Rmd4Njd0K2N5ai9FRHJXRktsUkhtZktlLzYrSU93dDVVVDRhTDd4SzJDc0Q3?=
- =?utf-8?B?Z0FFdXVWMkNFNVA1ZHFFdGMyMHRQR0QwYmpCSForbXpDZjdqWVJPSisrUlFS?=
- =?utf-8?B?c1JvU1NEdzhGTm9PcDY1L2poKy9qMG9VSmpEWnhPdTJydGsrRzFBSXh6YmxV?=
- =?utf-8?B?K1hpMFRKTjZHMUhsWlRTbUROaVh5eUxZYnBqKy92M0FTQVI1MHFjNGhud0Ro?=
- =?utf-8?B?MGZXTjJwK0h4ZGtDeTV5S096ZXRWbjRacHJoNTBYem53T2dpMmdqb1Vxb1BG?=
- =?utf-8?B?cFVSVnZCVS9Gc0JtYnplQURpK2RkeG1mOE5WL0xsRHhmYnozRzlPVnpSM2NY?=
- =?utf-8?B?dW52TXdNRVFPdzVIMU9TcmFtL2dGaFpaNFlCMmdWUzVkaXhIRVZIQXNqbDhM?=
- =?utf-8?B?aitHSUttTFRGSWNlcDFaMnZabjFqZ3R0WWhCcmIxR3JTK3VudlBNUklKT0Za?=
- =?utf-8?B?aCtyNDFyUW1LVllvZU5jM3h3a0ZFd0VOV2xWT3NxYi9qaFVHS3d0NG41cWJQ?=
- =?utf-8?B?K1lsaVBuM1lFdlppbW5WdUVyYlpHdktrRTduT1VXZGdLV0ozalVXZE42OThy?=
- =?utf-8?B?c2NqZVp2dksza3BIRGN2OEs0QVd1SUJjNFh0eUtBejVENW05YlFEczROZzds?=
- =?utf-8?B?MVFWN3hyQjluYWZkYnZWWC9hYUY5MGpUbjRSRUNSNzZEa0Q0UUJVUGt4Zkw5?=
- =?utf-8?B?MHl0M2tpc0tTQThPc0I2SjhRQUY5SVhUcUxHMERGT1RxTzEwRVExNlREWUl3?=
- =?utf-8?B?eWFIbWFERkE0cnN2b0ZUMWhsSmVaclJvQU9RSHJsQnc4eDNwM0I0ODhraEUz?=
- =?utf-8?B?SnZxdTM5WXdRYWtYN3dTQzR0dXVVNjRRSC80UTg0YkxleEIwV0JrRUZtL3pi?=
- =?utf-8?B?TUFLUVlVeE11aXpETDQ1K05iS3VzNmwvQVorc3Q0Qit6VUJiU1VEVW9tNWxo?=
- =?utf-8?B?RDN6K3dvdkliOWwzVHFMVWJFSzRlWmFOU1dUdkx5dmVNV0JHVE9DT0E4dHg5?=
- =?utf-8?B?OWdaL1h1TWV0eE1scmR4UmhQa2FhaUhEdk84ZkxtTTlxSGlzd0Q4UEJCb3E5?=
- =?utf-8?B?K1FDRW9rMlRQVDhnSzAxTk9Eclo3NW5WNGVCalZRNEw3S0ZRUzdScmYwU3h1?=
- =?utf-8?B?NHpmd1B0NW1yVmZHY2R5S1ovcXVPeHhEVWo5WDFQLzJoakNBMk5Db2dZbHRR?=
- =?utf-8?B?OG5NaFdtN3dSbXprSXBxc1FwTzl3TkhVaHBySG8wcmdHVTAvazZSeVFnSnF5?=
- =?utf-8?B?UW1HV0tlZmp4MFFRRzRaVzVIdUZZT0luODhjQVZka3JaZ3JVTVZtMkFicGpU?=
- =?utf-8?B?VFpIMWNvVWUycHMrMTU0dlN1eDdUQVJHK3RMdWRMWnNGdHprdzVQcFhhZEN3?=
- =?utf-8?B?SzhQb0xQSUV0ZHRaVUlTOWFyd2oxYzlhaWgzdDk2ME5Obld1bUtzakR0Z25q?=
- =?utf-8?B?NEJUVklLYnBKRTZGNS8yMll1Um9iWjhoZEZwT2d1NjhJMjNvU21md0R5cWdO?=
- =?utf-8?B?WitjVkVKOG83TnBTdXU2MWVNMVBVa3VSbVNXQ01FZ3V0bER0MDJON2Z3c0px?=
- =?utf-8?B?Z25vR1YxOFFqMG1heHNobWZaMGFkbk1PMGd6dXVvVFY1Y0x6c1lhVXRHZHp1?=
- =?utf-8?B?aDA0VnJ6ajRRQ21jU2tlWXF2V0h2TXFLWlRybUhldksxMWgzRlJrdURZWVBJ?=
- =?utf-8?B?SkttaGx5ckhzYVdMWFJVcXhwQUtWYVg0b2VQcFFGcE9xK3hZOVVWY1duUGs1?=
- =?utf-8?B?UnhjTy9ZQlNRcXZvQVFIMHVHdk1KN2Q5SnBSWWdlWURSdm9qcmc3NFZ0cmdS?=
- =?utf-8?B?cXltNkc2SVpMUDZ6d3UyT0ZIRXJLR3l5Q0JVcGJ3YjF3UWF2WHVFYlNLMDJo?=
- =?utf-8?B?Vm9wVkdmTnp6SHRCWFE1TnZxdzBaSU9pMXBJYXB6UHE2bzNtTUxjM0RjMXFa?=
- =?utf-8?Q?7BzK25i9+CXfJpgA2brT/El5L?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e63f975a-f642-472f-2921-08dd47a88d0e
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 18:52:20.4523
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3o2CJq50GPd1DmCvJjCy3B0n6XRtIgG9m0d1EWDGWA8xRG6Bgh1Lpz7tt1Unly48
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6297
+Mime-Version: 1.0
+References: <20250207185154.824433-1-irogers@google.com>
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Subject: [PATCH v7 08/24] perf vendor events: Add Clearwaterforest events
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Edward Baker <edward.baker@intel.com>, 
+	Michael Petlan <mpetlan@redhat.com>, Thomas Falcon <thomas.falcon@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Reinette,
+Add events v1.00.
 
-On 2/7/2025 11:18 AM, Moger, Babu wrote:
-> Does this look ok? Just added domain in the text.
-> 
-> "The number of monitoring counters available in each domain for 
-> assignment when the system supports mbm_cntr_assign mode.
-> ::
->    # cat /sys/fs/resctrl/info/L3_MON/num_mbm_cntrs
->    32
-> 
-> The resctrl file system supports tracking up to two memory bandwidth
-> events per monitoring group: mbm_total_bytes and/or mbm_local_bytes.
-> Up to two counters can be assigned per monitoring group, one for each
-> memory bandwidth event in each domain. More monitoring groups can be 
-> tracked by assigning one counter per monitoring group. However, doing so 
-> limits memory bandwidth tracking to a single memory bandwidth event per
-> monitoring group."
+Bring in the events from:
+https://github.com/intel/perfmon/tree/main/CWF/events
 
-Revised again:
+Co-developed-by: Caleb Biggers <caleb.biggers@intel.com>
+Signed-off-by: Caleb Biggers <caleb.biggers@intel.com>
+Acked-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ .../arch/x86/clearwaterforest/cache.json      | 144 ++++++++++++++++++
+ .../arch/x86/clearwaterforest/counter.json    |   7 +
+ .../arch/x86/clearwaterforest/frontend.json   |  18 +++
+ .../arch/x86/clearwaterforest/memory.json     |  22 +++
+ .../arch/x86/clearwaterforest/other.json      |  22 +++
+ .../arch/x86/clearwaterforest/pipeline.json   | 113 ++++++++++++++
+ .../x86/clearwaterforest/virtual-memory.json  |  29 ++++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   1 +
+ 8 files changed, 356 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/cache.j=
+son
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/counter=
+.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/fronten=
+d.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/memory.=
+json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/other.j=
+son
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/pipelin=
+e.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/clearwaterforest/virtual=
+-memory.json
 
-"The number of monitoring counters available in each domain for 
-assignment when the system supports mbm_cntr_assign mode. For example, 
-on a system with 32 monitoring counters:
-::
-   # cat /sys/fs/resctrl/info/L3_MON/num_mbm_cntrs
-   32
+diff --git a/tools/perf/pmu-events/arch/x86/clearwaterforest/cache.json b/t=
+ools/perf/pmu-events/arch/x86/clearwaterforest/cache.json
+new file mode 100644
+index 000000000000..875361b30f1d
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/clearwaterforest/cache.json
+@@ -0,0 +1,144 @@
++[
++    {
++        "BriefDescription": "Counts the number of cacheable memory request=
+s that miss in the LLC. Counts on a per core basis.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x2e",
++        "EventName": "LONGEST_LAT_CACHE.MISS",
++        "PublicDescription": "Counts the number of cacheable memory reques=
+ts that miss in the Last Level Cache (LLC). Requests include demand loads, =
+reads for ownership (RFO), instruction fetches and L1 HW prefetches. If the=
+ core has access to an L3 cache, the LLC is the L3 cache, otherwise it is t=
+he L2 cache. Counts on a per core basis.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x41"
++    },
++    {
++        "BriefDescription": "Counts the number of cacheable memory request=
+s that access the LLC. Counts on a per core basis.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x2e",
++        "EventName": "LONGEST_LAT_CACHE.REFERENCE",
++        "PublicDescription": "Counts the number of cacheable memory reques=
+ts that access the Last Level Cache (LLC). Requests include demand loads, r=
+eads for ownership (RFO), instruction fetches and L1 HW prefetches. If the =
+core has access to an L3 cache, the LLC is the L3 cache, otherwise it is th=
+e L2 cache. Counts on a per core basis.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x4f"
++    },
++    {
++        "BriefDescription": "Counts the number of load ops retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.ALL_LOADS",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x81"
++    },
++    {
++        "BriefDescription": "Counts the number of store ops retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.ALL_STORES",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x82"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_1024",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x400",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x80",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x10",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_2048",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x800",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x100",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x20",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x4",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x200",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x40",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x8",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of  stores uops retired sam=
+e as MEM_UOPS_RETIRED.ALL_STORES",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.STORE_LATENCY",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x6"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/clearwaterforest/counter.json b=
+/tools/perf/pmu-events/arch/x86/clearwaterforest/counter.json
+new file mode 100644
+index 000000000000..a0eaf5b6f2bc
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/clearwaterforest/counter.json
+@@ -0,0 +1,7 @@
++[
++    {
++        "Unit": "core",
++        "CountersNumFixed": "3",
++        "CountersNumGeneric": "39"
++    }
++]
+\ No newline at end of file
+diff --git a/tools/perf/pmu-events/arch/x86/clearwaterforest/frontend.json =
+b/tools/perf/pmu-events/arch/x86/clearwaterforest/frontend.json
+new file mode 100644
+index 000000000000..7a9250e5c8f2
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/clearwaterforest/frontend.json
+@@ -0,0 +1,18 @@
++[
++    {
++        "BriefDescription": "Counts every time the code stream enters into=
+ a new cache line by walking sequential from the previous line or being red=
+irected by a jump.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x80",
++        "EventName": "ICACHE.ACCESSES",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x3"
++    },
++    {
++        "BriefDescription": "Counts every time the code stream enters into=
+ a new cache line by walking sequential from the previous line or being red=
+irected by a jump and the instruction cache registers bytes are not present=
+. -",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x80",
++        "EventName": "ICACHE.MISSES",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/clearwaterforest/memory.json b/=
+tools/perf/pmu-events/arch/x86/clearwaterforest/memory.json
+new file mode 100644
+index 000000000000..f5007e56f39b
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/clearwaterforest/memory.json
+@@ -0,0 +1,22 @@
++[
++    {
++        "BriefDescription": "Counts demand data reads that were not suppli=
+ed by the L3 cache.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x33FBFC00001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts demand read for ownership (RFO) reques=
+ts and software prefetches for exclusive ownership (PREFETCHW) that were no=
+t supplied by the L3 cache.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_RFO.L3_MISS",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x33FBFC00002",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/clearwaterforest/other.json b/t=
+ools/perf/pmu-events/arch/x86/clearwaterforest/other.json
+new file mode 100644
+index 000000000000..80454e497f83
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/clearwaterforest/other.json
+@@ -0,0 +1,22 @@
++[
++    {
++        "BriefDescription": "Counts demand data reads that have any type o=
+f response.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts demand read for ownership (RFO) reques=
+ts and software prefetches for exclusive ownership (PREFETCHW) that have an=
+y type of response.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10002",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/clearwaterforest/pipeline.json =
+b/tools/perf/pmu-events/arch/x86/clearwaterforest/pipeline.json
+new file mode 100644
+index 000000000000..6a5faa704b85
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/clearwaterforest/pipeline.json
+@@ -0,0 +1,113 @@
++[
++    {
++        "BriefDescription": "Counts the total number of branch instruction=
+s retired for all branch types.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc4",
++        "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
++        "PublicDescription": "Counts the total number of instructions in w=
+hich the instruction pointer (IP) of the processor is resteered due to a br=
+anch instruction and the branch instruction successfully retires.  All bran=
+ch type instructions are accounted for.",
++        "SampleAfterValue": "1000003"
++    },
++    {
++        "BriefDescription": "Counts the total number of mispredicted branc=
+h instructions retired for all branch types.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc5",
++        "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
++        "PublicDescription": "Counts the total number of mispredicted bran=
+ch instructions retired.  All branch type instructions are accounted for.  =
+Prediction of the branch target address enables the processor to begin exec=
+uting instructions before the non-speculative execution path is known. The =
+branch prediction unit (BPU) predicts the target address based on the instr=
+uction pointer (IP) of the branch and on the execution path through which e=
+xecution reached this IP.    A branch misprediction occurs when the predict=
+ion is wrong, and results in discarding all instructions executed in the sp=
+eculative path and re-fetching from the correct path.",
++        "SampleAfterValue": "1000003"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of unhalted =
+core clock cycles.",
++        "Counter": "Fixed counter 1",
++        "EventName": "CPU_CLK_UNHALTED.CORE",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2"
++    },
++    {
++        "BriefDescription": "Counts the number of unhalted core clock cycl=
+es. [This event is alias to CPU_CLK_UNHALTED.THREAD_P]",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x3c",
++        "EventName": "CPU_CLK_UNHALTED.CORE_P",
++        "SampleAfterValue": "1000003"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of unhalted =
+reference clock cycles.",
++        "Counter": "Fixed counter 2",
++        "EventName": "CPU_CLK_UNHALTED.REF_TSC",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x3"
++    },
++    {
++        "BriefDescription": "Counts the number of unhalted reference clock=
+ cycles at TSC frequency.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x3c",
++        "EventName": "CPU_CLK_UNHALTED.REF_TSC_P",
++        "PublicDescription": "Counts the number of reference cycles that t=
+he core is not in a halt state. The core enters the halt state when it is r=
+unning the HLT instruction. This event is not affected by core frequency ch=
+anges and increments at a fixed frequency that is also used for the Time St=
+amp Counter (TSC). This event uses a programmable general purpose performan=
+ce counter.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of unhalted =
+core clock cycles.",
++        "Counter": "Fixed counter 1",
++        "EventName": "CPU_CLK_UNHALTED.THREAD",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2"
++    },
++    {
++        "BriefDescription": "Counts the number of unhalted core clock cycl=
+es. [This event is alias to CPU_CLK_UNHALTED.CORE_P]",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x3c",
++        "EventName": "CPU_CLK_UNHALTED.THREAD_P",
++        "SampleAfterValue": "1000003"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of instructi=
+ons retired.",
++        "Counter": "Fixed counter 0",
++        "EventName": "INST_RETIRED.ANY",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts the number of instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc0",
++        "EventName": "INST_RETIRED.ANY_P",
++        "SampleAfterValue": "1000003"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of issue slo=
+ts that were not consumed by the backend because allocation is stalled due =
+to a mispredicted jump or a machine clear.",
++        "Counter": "36",
++        "EventName": "TOPDOWN_BAD_SPECULATION.ALL",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to backend stalls. [This event is alias to TOPDOWN_BE_BOUND.ALL_P=
+]",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xa4",
++        "EventName": "TOPDOWN_BE_BOUND.ALL",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2"
++    },
++    {
++        "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to backend stalls. [This event is alias to TOPDOWN_BE_BOUND.ALL]"=
+,
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xa4",
++        "EventName": "TOPDOWN_BE_BOUND.ALL_P",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of retiremen=
+t slots not consumed due to front end stalls.",
++        "Counter": "37",
++        "EventName": "TOPDOWN_FE_BOUND.ALL",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x6"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of consumed =
+retirement slots.",
++        "Counter": "38",
++        "EventName": "TOPDOWN_RETIRING.ALL",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x7"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/clearwaterforest/virtual-memory=
+.json b/tools/perf/pmu-events/arch/x86/clearwaterforest/virtual-memory.json
+new file mode 100644
+index 000000000000..78f2b835c1fa
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/clearwaterforest/virtual-memory.json
+@@ -0,0 +1,29 @@
++[
++    {
++        "BriefDescription": "Counts the number of page walks completed due=
+ to load DTLB misses to any page size.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x08",
++        "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED",
++        "PublicDescription": "Counts the number of page walks completed du=
+e to loads (including SW prefetches) whose address translations missed in a=
+ll Translation Lookaside Buffer (TLB) levels and were mapped to any page si=
+ze. Includes page walks that page fault.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0xe"
++    },
++    {
++        "BriefDescription": "Counts the number of page walks completed due=
+ to store DTLB misses to any page size.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x49",
++        "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED",
++        "PublicDescription": "Counts the number of page walks completed du=
+e to stores whose address translations missed in all Translation Lookaside =
+Buffer (TLB) levels and were mapped to any page size.  Includes page walks =
+that page fault.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0xe"
++    },
++    {
++        "BriefDescription": "Counts the number of page walks completed due=
+ to instruction fetch misses to any page size.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0x85",
++        "EventName": "ITLB_MISSES.WALK_COMPLETED",
++        "PublicDescription": "Counts the number of page walks completed du=
+e to instruction fetches whose address translations missed in all Translati=
+on Lookaside Buffer (TLB) levels and were mapped to any page size.  Include=
+s page walks that page fault.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0xe"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
+ents/arch/x86/mapfile.csv
+index a1a3a8c1af02..68c33fa7328a 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -7,6 +7,7 @@ GenuineIntel-6-(3D|47),v30,broadwell,core
+ GenuineIntel-6-56,v12,broadwellde,core
+ GenuineIntel-6-4F,v23,broadwellx,core
+ GenuineIntel-6-55-[56789ABCDEF],v1.23,cascadelakex,core
++GenuineIntel-6-DD,v1.00,clearwaterforest,core
+ GenuineIntel-6-9[6C],v1.05,elkhartlake,core
+ GenuineIntel-6-CF,v1.09,emeraldrapids,core
+ GenuineIntel-6-5[CF],v13,goldmont,core
+--=20
+2.48.1.502.g6dc24dfdaf-goog
 
-The resctrl file system supports tracking up to two memory bandwidth
-events per monitoring group: mbm_total_bytes and/or mbm_local_bytes.
-Up to two counters can be assigned per monitoring group, one for each
-memory bandwidth event in each domain. More monitoring groups can be 
-tracked by assigning one counter per monitoring group. However, doing so 
-limits memory bandwidth tracking to a single memory bandwidth event per
-monitoring group."
-
-Thanks
-Babu
