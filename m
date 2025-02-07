@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5B71BCA0A;
-	Fri,  7 Feb 2025 22:25:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9ED1D5AC3;
+	Fri,  7 Feb 2025 22:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738967144; cv=none; b=dbt2IQYte3+/M6gn5FSbid/5cRh1nO9IdnRqUI2TUzlldzGbF0bC9SCJu26ycOeiEMAgia47LHCTThJXIEIscn26F99OJ1hen1dKCegrpmW4ABJRIl8HSrvHs/RFGcwGsZy1u3f0chc6v7fno4yUWuDAQu5tj3h5W2GDbCkI990=
+	t=1738967160; cv=none; b=mUTpDZ2/zgTsBjLVCuX11SL263pFwUH+GZo92GaAsB7niNwUJlBjuVSRsQ/v5RNYgXxYwbemaW6JZE0qTYeoYEoqrHTx+ixpquoNp/JfpOembmHSpI2oUznH/FKLJtdvNVEqp7wJ/9lrdgrfMV0PWjV0kilfay9ZRmOo4RvIs+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738967144; c=relaxed/simple;
-	bh=dWI1j4mObgqvwg4j8lh2VPVQthACPy2J29+l2hHuFQE=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=tI7dCWxeaU9rqU2mxIoyIBZvB7vCPk/88fid/YHQXTRntrRMV8kMIiSCEG+F/YkskBn6LzcH0bWfOcLdsTLtbFsiFPs2QVDiTUzUQ4RFnT4X3WXszYMY6rcRMsYiux0W681yqtIz3r31xcGvB+fmUbjTbsLZwmP1Ttbzs6/o8W8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oAr/I9FM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738967160; c=relaxed/simple;
+	bh=4c08p8arazQa8gECrvhr+hcXIc9phgLVQAUASBZ3qBk=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Bzy5ZtwqJUmK0/6OATBFP+qz4p9v6de0cxdj9siJY38+jdb4qv+gEniEXdmOanmBDUCfJj36Iue+nQlFV6/sW9ZOqi1oX/gJ/sVr2CLsZBXFX7jIS/aJxnj3F8Xh7zK01E0TeOYqesoCUbivuzR0R9VJ7gX824L1H5Wn13ERVRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGDIPYDp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oAr/I9FM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47F6EC4CED1;
-	Fri,  7 Feb 2025 22:25:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGDIPYDp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B78B5C4CED1;
+	Fri,  7 Feb 2025 22:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738967144;
-	bh=dWI1j4mObgqvwg4j8lh2VPVQthACPy2J29+l2hHuFQE=;
+	s=k20201202; t=1738967159;
+	bh=4c08p8arazQa8gECrvhr+hcXIc9phgLVQAUASBZ3qBk=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=oAr/I9FMjbjE/aSf97n7F2RTQzQZ3fJCxsGbNdGQP7Om3RwmHP0f90A8qSiSgc+M5
-	 GxmFOx8jkXaq6kJlWAGyJZEQMlZ2NPG0wlRCo4wD/l/uwb5aW7TVaQXsiAHe8gKx68
-	 qQjqT7iU363ulf+u1vp1rLHHTIXytieQKI8n2BzcrqzHz8uHkKdtc0fpuLhi9GzJ/4
-	 X8/Dozc/8YXDEQyz41RDA5hX4Bo8EwitlGuXYyc+1iVxlGSrGRHr5rWBfbHpJyST2U
-	 ii/HpB/0DQxsRisehIY3/x0Ja3Ab73n5nEioF3QYgQzyc+QTf8iwOltSQF2xWsVEmI
-	 qN2bFY3XpfWcw==
+	b=VGDIPYDp1aiszNisDYUy5FaEgFCalYll3ejXIZo7TkJ77Y9A0RZOHnQ9jHrjTUkWa
+	 cldxFnhM+fur8vgxCx53390kLejTPI+cZza0DuRbQ2CKlywwIRVMlPxzC2IKcm/KeU
+	 yYGM8OAVS8JXslDTOl+G8badTUDpTL5t72o+tQYSA44GeCmAxONhAHyddUHxERrUzq
+	 CYOiZDrgoWW+KuDRme0MGz0dj5oJ2RXVq1cKbR/9fmNHjG5+7ufwT/zr/gN0LDEgAz
+	 W0/WEWhpst/HjzDsYsDGjUSYr/04dFaLOwq4HlihM2jiYZSiSL3eYh0qfAQHfwnUkD
+	 egsSMVfK2/FEw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70F87380AAEB;
-	Fri,  7 Feb 2025 22:26:13 +0000 (UTC)
-Subject: Re: [GIT PULL] Power management fixes for v6.14-rc2
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAF13380AAEB;
+	Fri,  7 Feb 2025 22:26:28 +0000 (UTC)
+Subject: Re: [GIT PULL] ACPI fixes for v6.14-rc2
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0iU1C-K9dP+8g1PMvuuWg2UT-ocgL055ruWEX23j-KuPg@mail.gmail.com>
-References: <CAJZ5v0iU1C-K9dP+8g1PMvuuWg2UT-ocgL055ruWEX23j-KuPg@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-pm.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0iU1C-K9dP+8g1PMvuuWg2UT-ocgL055ruWEX23j-KuPg@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-6.14-rc2
-X-PR-Tracked-Commit-Id: 73195bed7899150cd1005cf0a902b68793adad23
+In-Reply-To: <CAJZ5v0hOVsML89netZiY751QiPqQD-7mUYxpdJFwNmxgxu6JZA@mail.gmail.com>
+References: <CAJZ5v0hOVsML89netZiY751QiPqQD-7mUYxpdJFwNmxgxu6JZA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-acpi.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAJZ5v0hOVsML89netZiY751QiPqQD-7mUYxpdJFwNmxgxu6JZA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-6.14-rc2
+X-PR-Tracked-Commit-Id: 3e3e377dd1f300bbdd230533686ce9c9f4f8a90d
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1fa9970a4e61e9383a8ee738b44e2194d4ce7ff5
-Message-Id: <173896717208.2405435.15139542520035665688.pr-tracker-bot@kernel.org>
-Date: Fri, 07 Feb 2025 22:26:12 +0000
+X-PR-Merge-Commit-Id: 0aa0282a720fd7c58f131eb5a5b0440e839e2977
+Message-Id: <173896718743.2405435.17861272670890125347.pr-tracker-bot@kernel.org>
+Date: Fri, 07 Feb 2025 22:26:27 +0000
 To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Mario Limonciello <mario.limonciello@amd.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 7 Feb 2025 14:02:36 +0100:
+The pull request you sent on Fri, 7 Feb 2025 14:01:02 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-6.14-rc2
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-6.14-rc2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1fa9970a4e61e9383a8ee738b44e2194d4ce7ff5
+https://git.kernel.org/torvalds/c/0aa0282a720fd7c58f131eb5a5b0440e839e2977
 
 Thank you!
 
