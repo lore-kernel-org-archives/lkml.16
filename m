@@ -1,142 +1,156 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD22187342;
-	Fri,  7 Feb 2025 20:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BB419E826;
+	Fri,  7 Feb 2025 20:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738958563; cv=none; b=VvxHA+fkaVcFXdzdtt4pn8VeTVH4hn0NWCOakNUgdvo0ficCaqrsJMtUaOopbnwROPF4UHM0nlQPyfNGycmAfNM0XQmTROUAxdLtXlgj8UjZSMz02rhdVH/Jwmq0j+2qgB2UZ2P6We19WhMdD1fbCNpXFOHpkbiD6bEIqlAWjSE=
+	t=1738958567; cv=none; b=UEaiVBCljBk8Kc9HSAmffIQw9bKD5hVD0mWM6e+IL9J02RVfdwpoGQLGkOlT5ByM2nci6PlL6d7+Ni3woLwaF8ep7/N66OyDSYD2LmSBJxIkYJPBRHzfxf43CG8TF7RPUjFDVkIKtPOnUhZfeh9aIcDqFbjyPLVa4qkLLheVfLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738958563; c=relaxed/simple;
-	bh=9dk3rHUzSmTeWIRuA6b+JrU+vJEoo28SEvdU2FGvds0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jP16IB0ZgKGTppHpeXlNZaEoqJEJx7cCg9B7Vj+GaJYZi4dwUbn0QgQK3ymQrXNj7yj0u7TvwlJytzK+XdKyjTvKx7m7IDy7DgMujQau+nIf3dqY7bWZL38h5zhBKnbzdnr/QDHX7aP4NsEueHdgiKh8AmWQQsdpxgsOiC5Nl1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=n7hUQp3C; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738958567; c=relaxed/simple;
+	bh=PVJ6I93uY0R9A7EkGpZMTr75rFuHDwRPliUXmsFjesA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GBQDo6DBg3L8uq+4SF569tzjzSEUQDI3pbR4Ih5YOhmSeo9vLNvfk2pp1wCxpgPkbmFmqj0WzvjIj6vQmfSyYB5hO1fU1rQFoC0GDU5l1BLtMDvK2GBSXTQonHkTd+lqc7DhMSi5cX3Th5+nNiNVcfwTAOMWpe6/vfAStzXlkPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ee3onl77; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="n7hUQp3C"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517BVFZ0027661;
-	Fri, 7 Feb 2025 20:02:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=HwHTFE
-	VZI2gdyAGVCwWOpvvsHUwDlhYbFcodIx4JiyE=; b=n7hUQp3CPguOh8u/TiE4AS
-	boNk9/TAZ8HmNOC/+ywlbl20+nnjyZbcKm8VW5l368+S5XRBfNOxY8LeMSNRrmuc
-	4q5z696VhapOdfAWNpak8BxTmMusj+52CVqTxODgcDtVzdMIOX0XNUYe7LUSm+zZ
-	ZkjlXzHYFWYDsUkMzdFeamdpvlFpqegoI5Z2vL30UH5wCZPudjaHRWJLicLeFCwf
-	JM3Xcx+/AtzJBaLyEU3P1R4mPhZfpxsiosTU6B5ATiX6E8B3sQu186oDbV8+v3a7
-	IW4BYB8ZfwQY4C4nNTt4KBficPgDb4LlqMpOdxSvWMKr/8d2x8J15RzkGQWi/PDA
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44n910ct8u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 20:02:12 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 517JlEpi024493;
-	Fri, 7 Feb 2025 20:02:11 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxxnn7h5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Feb 2025 20:02:11 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 517K2Bdb22479392
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Feb 2025 20:02:11 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 408205805C;
-	Fri,  7 Feb 2025 20:02:11 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 97DFA5805A;
-	Fri,  7 Feb 2025 20:02:09 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.80.253])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  7 Feb 2025 20:02:09 +0000 (GMT)
-Message-ID: <861f5c51f4af46a4d731c632461b72c0045e577d.camel@linux.ibm.com>
-Subject: Re: [PATCH v7 0/7] ima: kexec: measure events between kexec load
- and excute
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com
-Date: Fri, 07 Feb 2025 15:02:09 -0500
-In-Reply-To: <b07a4b44-b76f-4691-ac01-6e91b6b83672@linux.microsoft.com>
-References: <20250203184558.61367-1-chenste@linux.microsoft.com>
-	 <eb2d3b5f-7aca-42c8-9b34-8ca07b8bc060@linux.microsoft.com>
-	 <8091ed0d942806e16f995e8444da29df7843df62.camel@linux.ibm.com>
-	 <b07a4b44-b76f-4691-ac01-6e91b6b83672@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ee3onl77"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dcd3454922so5071663a12.1;
+        Fri, 07 Feb 2025 12:02:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738958564; x=1739563364; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MAoqGjsKjKYAcfl1FF0omT/hBVvR9f1Og52o3S2J4zg=;
+        b=Ee3onl77asYaMDtJIQoNuJ5ANTvFGEgy0xuqcDhSdczh5T0H3diTqOOo+bDZV3h/ZK
+         Py6nV52EDCarzG7bKh/kz/morJDzPcgXXXwpPzuje1etbe9B1wSBb5QLJ+KTSt2buolO
+         lzRHFthKpz+ejuHVKeU4gBFzhqUG5rwZlgF3kpjSjhjHAvTd8n3Vtkn6Tz9TXozjBKyH
+         4X9HkL01tP4SAehdzJgAXxs/b4wVmnfyQOxduRsSglMz3Vt+hJOTUZcLJQkt+SKcgdP8
+         PjSumt+pbScekz6FnBVCUwPnO53Y+cG0YZUl6Wy6g3bXElP85cK4IXv6yH7ziwDjdz+k
+         XcwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738958564; x=1739563364;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MAoqGjsKjKYAcfl1FF0omT/hBVvR9f1Og52o3S2J4zg=;
+        b=pzEbEUksayMpY1/HEqXGKyQUpCZ0M8VjnUur/vApcZSp8172pKG/9g3HdynIQ3fADS
+         vSF/x1NMY19ZAZaxqm14GabkXDo5mbPS4o0yJKONlG4mlIu6pZyNIc1ydcPcIXWkVJkC
+         whJ1FHsw44M/hnJG4vUYgD5FyJNnIGIQNLfLsB2oG8QLaK0jDl4qkY3QN6wO7HGKimmQ
+         qVb6WqHaVrSy4JYXIKm0tjs7CzQt2JmcHEpoDVh9CFyYVbmH7w7jCDWEs0WTx4blzGhi
+         f4V418YnV5/tKAkxQTY4YtsqbVu7ftaAWvior34TM2GjRCRIeij8hlGbwtj106DkuPhY
+         EU6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWGM9XiXDqE4mC9SjNYCk+XyZISQws8hN0fUh3zXO7jRnocX61Vwl+uVOJKR8eYVQnuI7UmVpOjUE9h@vger.kernel.org, AJvYcCXkfEZnMZYPsWClWncv4VzJLVU03O5Efp7yqnWc8WgfPowr+3cxbFrttUOACKxthkryLC835bi3Rg1qbLeI@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx17LBGNaK9YWhv/CEmZaKqCTW4RzEAkcZNYA2S0DhrzJsibkPh
+	217PmPDBFgLsqqCiytbOf7VP2q8xyRFdCdKgQkU6Zhk3dAZkBWBYEHTBfQ==
+X-Gm-Gg: ASbGncvnEk4dnLbly8RtHOgi7CJTKfvRJSmfyMXwtAxju9KEPByEJElChrPLMwXAHcK
+	7GhZjkDXgEUkUVpUL0Y40XAI7/CRAxq+KmsMhDfJeB/K5EpqBR+mxdh+9mt3KLN1Y4pUrVVM2p0
+	vnj7e4c6hlommPJDahQ0ecBknVjdAsNXLNg43fZM/nKLVyo3I6fADnay5/8vrHSg5pk4yt0Ep2s
+	YfzcrRUm4x5Rj8xVWXHC1xFfhLAdxFFUm4QgKCoDlyjFb49ZgA0C/UcUNmK4qZkcoBTdd4UliN1
+	g4tfunJn3lB0f5Gl3ZCbKy50rT3v66d0WNlNcujBsv/WPdtvEmvZ1BPg
+X-Google-Smtp-Source: AGHT+IFCIU/WMo5fR5DhFgQY023VWnV7TO15nPnUoYJLvw70AT6oyrtEhwvHFV1d+unGDpOvscUwtg==
+X-Received: by 2002:a05:6402:34c7:b0:5d1:22c2:6c56 with SMTP id 4fb4d7f45d1cf-5de45022b39mr5550778a12.17.1738958563980;
+        Fri, 07 Feb 2025 12:02:43 -0800 (PST)
+Received: from hex.my.domain (83.8.206.8.ipv4.supernova.orange.pl. [83.8.206.8])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de59f893ebsm256797a12.45.2025.02.07.12.02.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 12:02:43 -0800 (PST)
+From: Artur Weber <aweber.kernel@gmail.com>
+Subject: [PATCH 0/7] pinctrl: bcm281xx: Add support for BCM21664 pinmux
+Date: Fri, 07 Feb 2025 21:02:39 +0100
+Message-Id: <20250207-bcm21664-pinctrl-v1-0-e7cfac9b2d3b@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: R1EQDqADoagOynRo2WPA8TunqzRaMPbK
-X-Proofpoint-GUID: R1EQDqADoagOynRo2WPA8TunqzRaMPbK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_09,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 spamscore=0 malwarescore=0 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502070150
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAN9mpmcC/x3MTQ5AMBBA4avIrDXpD0NcRSxop0xCSSsiEXfXW
+ H6L9x5IFJkSdMUDkS5OvIcMVRZglzHMJNhlg5a6llqimOymFWIlDg72jKtQxrrGGd+0iJCzI5L
+ n+1/2w/t+2nif9WIAAAA=
+X-Change-ID: 20250206-bcm21664-pinctrl-13cd7d3f7866
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Christian Daudt <bcm@fixthebug.org>, Sherman Yin <syin@broadcom.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Stanislav Jakubek <stano.jakubek@gmail.com>, 
+ ~postmarketos/upstreaming@lists.sr.ht, 
+ Artur Weber <aweber.kernel@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738958562; l=2917;
+ i=aweber.kernel@gmail.com; s=20231030; h=from:subject:message-id;
+ bh=PVJ6I93uY0R9A7EkGpZMTr75rFuHDwRPliUXmsFjesA=;
+ b=GlcJmGxxUMO6rkikwfKoNX9DJ6exqY44G8qXnStLQrxv8D6P9NvNfia+15DlyTlJVBlV0l3uD
+ xRR6NEXcgm/CqVEWlCsz0pMwab9OOhP6NvLYGEUnl4DDinuphrEk67C
+X-Developer-Key: i=aweber.kernel@gmail.com; a=ed25519;
+ pk=RhDBfWbJEHqDibXbhNEBAnc9FMkyznGxX/hwfhL8bv8=
 
-On Mon, 2025-02-03 at 16:56 -0800, steven chen wrote:
-> On 2/3/2025 4:50 PM, Mimi Zohar wrote:
-> > On Mon, 2025-02-03 at 15:25 -0800, steven chen wrote:
-> > > Hi all,
-> > >=20
-> > > The below is the correct version for review.
-> > >=20
-> > > [PATCH v7 0/7] ima: kexec: measure events between kexec load and excu=
-te
-> > > <
-> > > https://lore.kernel.org/linux-integrity/20250203232033.64123-1-chenst=
-e@linux.microso
-> > > ft.com/T/#t>
-> > >=20
-> > > Please ignore the this version because patch 5 is missing.
-> > >=20
-> > > I am really sorry to have troubled you.
-> > Thanks, Steven.=C2=A0 I was able to apply the patch set to v6.13.=C2=A0=
- For some reason, b4
-> > downloads a duplicate 4/7 patch.
-> >=20
-> > Mimi
->=20
-> Hi Mimi,
->=20
-> Please use the one below
->=20
-> [PATCH v7 0/7] ima: kexec: measure events between kexec load and excute=
-=20
-> <
-> https://lore.kernel.org/linux-integrity/20250203232033.64123-1-chenste@li=
-nux.microso
-> ft.com/T/#t>
->=20
-> Please ignore the this version because patch 5 is missing.
->=20
-> I am really sorry.
+BCM21664 is another chip from the Kona line of Broadcom SoCs, and
+its pinmux shares a lot of similarities with the BCM281xx pinmux.
 
-No problem.  My point I was trying to make the other day was that I was abl=
-e to apply
-the NEW version of the patch set (even though b4 got confused), in order to=
- give a
-heads up for anyone else trying to apply it.
+Add support for the BCM21664 pinmux controller to the BCM281xx driver.
 
-new: b4 am -o /tmp 20250203232033.64123-1-chenste@linux.microsoft.com
-old: b4 am -o /tmp 20250203184558.61367-1-chenste@linux.microsoft.com
+This also enables pinmux support for the BCM23550, which has an
+identical pinmux config to the BCM21664 (hence they can share a
+single compatible, brcm,bcm21664-pinctrl).
 
-Mimi
+While we're at it - fix a bug that affected higher registers in the
+BCM281XX driver and replace bare "unsigned" with "unsigned int" to
+comply with checkpatch requirements.
+
+Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+---
+By the way - while working on this patch, I noticed two things that
+are not implemented in mainline, but seem to be present in the pin
+controller regs according to the RDB[1][2]:
+
+- On both BCM21664 and BCM281XX, TRACE* pins only have two bits for
+  DRV_STR and no HYST bit. That seems like it deserves its own pin
+  type; however, since I don't know how to translate the reduced
+  DRV_STR value to a drive strength in mA, I did not implement it.
+  For now, I kept the same type for BCM21664 as for BCM281XX for these
+  pins (standard).
+
+- On both BCM21664 and BCM281XX, two SIM-related pins (SIM and SIM2
+  on BCM281XX, SIMDAT and SSPDO on BCM21664) have extra PUPM0 and PUPM1
+  offsets (bits 11 and 12 respectively). Vendor kernel does not do
+  anything with these bits, so I don't know what they do.
+
+If any Broadcom engineers could shed some light on these, I'd be
+grateful. Otherwise, neither of these are pressing issues, and this
+patchset is complete without them (they can be fixed in another
+patchset).
+
+[1] https://github.com/knuxdroid/android_kernel_samsung_baffinlite/blob/cm-12.1/arch/arm/mach-hawaii/include/mach/rdb/brcm_rdb_padctrlreg.h
+[2] https://github.com/s2plus/android_kernel_samsung_galaxys2plus/blob/cm-10.1_base-4.2/arch/arm/mach-capri/include/mach/rdb/brcm_rdb_padctrlreg.h
+
+---
+Artur Weber (7):
+      dt-bindings: pinctrl: Add bindings for BCM21664 pin controller
+      pinctrl: bcm281xx: Fix incorrect regmap max_registers value
+      pinctrl: bcm281xx: Use "unsigned int" instead of bare "unsigned"
+      pinctrl: bcm281xx: Provide pinctrl device info as OF platform data
+      pinctrl: bcm281xx: Add support for BCM21664 pinmux
+      ARM: dts: bcm2166x-common: Add pinctrl node
+      ARM: dts: bcm2166x: Add bcm2166x-pinctrl DTSI
+
+ .../bindings/pinctrl/brcm,bcm21664-pinctrl.yaml    | 169 ++++
+ arch/arm/boot/dts/broadcom/bcm2166x-common.dtsi    |   7 +
+ arch/arm/boot/dts/broadcom/bcm2166x-pinctrl.dtsi   | 297 +++++++
+ drivers/pinctrl/bcm/pinctrl-bcm281xx.c             | 849 +++++++++++++++++++--
+ 4 files changed, 1259 insertions(+), 63 deletions(-)
+---
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+change-id: 20250206-bcm21664-pinctrl-13cd7d3f7866
+
+Best regards,
+-- 
+Artur Weber <aweber.kernel@gmail.com>
+
