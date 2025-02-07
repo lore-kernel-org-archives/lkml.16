@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5520B23C8D6
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:18:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69D7F19D086
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 18:18:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738952327; cv=none; b=izqGUdgIhSXeiMoi+qyKUVAj5/qrg75RSaxqwacrlX2asc4PeVbu3COhAXrK/EcsvltB5KAQ7RQaVUayZ6kk8bxT+XT40e6vqBP0JV4mzAGs/hFNtZ0lydMv4v7QGAf4Y/xuW0bXJiknEXRg4AtIbe5NfFcjy5Cctd8b7lXIqHk=
+	t=1738952331; cv=none; b=oMVFkgbiD0k7EoWYdhZ1LfR/T32L+3FBF3/aN95HWDk/LGSa9Rv8xkhfGQRfMsdunkbXijD1jxzmt4VFpB0KaX7tQNunFaWm7fgsYEQIXrJGRsAnC3QgwX3z0+8B7PRKr4T0wK5Aj7AlFALfBBVU+hOuPmr27YHF6UruU1aut/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738952327; c=relaxed/simple;
-	bh=oxtvXHpuvNOpWm5ZCbOd8anwjy5mObesOz2zHP4qdrc=;
+	s=arc-20240116; t=1738952331; c=relaxed/simple;
+	bh=1kJDo3D+FQxioX+LWnPBD9q90TN8oqIurDV8yvWc2LM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FMWVolYR3rstolc5zvPnylPwfTOX2YxS6dvf5Xb76MbYp5UMiFjco1dB1cvnu65Jn8OZf992cQckcnCzSGUjxKnjOt3uyWFML63uyFE/Xr4+ibl5HOnrBhH5gssl9jHSuMImZXEMpBytw6o3HFvR+tkeQqx2jab8C9BdLlhL6rU=
+	 MIME-Version; b=t+F0Mh4sMlzK7kb3goY5f7PXgzCY+hMiCerLz7FwOR3Vg31WoOf+cKkbJJymTx6wQI+ftQaOu+SnDzWQA/zvoEsXPY320mknIYhF+DQmzgjPXQeTWxOb7jJgbq26Ac4rGjdMiYPnDrh/bAp6tEyxe0oUfWpZhO8nuqp0bLYYQuI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5DDBC12FC;
-	Fri,  7 Feb 2025 10:19:07 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4C731DB5;
+	Fri,  7 Feb 2025 10:19:11 -0800 (PST)
 Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A5973F63F;
-	Fri,  7 Feb 2025 10:18:41 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 58A653F63F;
+	Fri,  7 Feb 2025 10:18:45 -0800 (PST)
 From: James Morse <james.morse@arm.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -45,11 +45,12 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
 	Dave Martin <dave.martin@arm.com>,
 	Koba Ko <kobak@nvidia.com>,
 	Shanker Donthineni <sdonthineni@nvidia.com>,
+	Dave Martin <Dave.Martin@arm.com>,
 	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v6 01/42] x86/resctrl: Fix allocation of cleanest CLOSID on platforms with no monitors
-Date: Fri,  7 Feb 2025 18:17:42 +0000
-Message-Id: <20250207181823.6378-2-james.morse@arm.com>
+Subject: [PATCH v6 02/42] x86/resctrl: Add a helper to avoid reaching into the arch code resource list
+Date: Fri,  7 Feb 2025 18:17:43 +0000
+Message-Id: <20250207181823.6378-3-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20250207181823.6378-1-james.morse@arm.com>
 References: <20250207181823.6378-1-james.morse@arm.com>
@@ -61,58 +62,258 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-commit 6eac36bb9eb0 ("x86/resctrl: Allocate the cleanest CLOSID by
-searching closid_num_dirty_rmid") added logic that causes resctrl to
-search for the CLOSID with the fewest dirty cache lines when creating a
-new control group, if requested by the arch code. This depends on the
-values read from the llc_occupancy counters. The logic is applicable to
-architectures where the CLOSID effectively forms part of the monitoring
-identifier and so do not allow complete freedom to choose an unused
-monitoring identifier for a given CLOSID.
+Resctrl occasionally wants to know something about a specific resource,
+in these cases it reaches into the arch code's rdt_resources_all[]
+array.
 
-This support missed that some platforms may not have these counters.
-This causes a NULL pointer dereference when creating a new control
-group as the array was not allocated by dom_data_init().
+Once the filesystem parts of resctrl are moved to /fs/, this means it
+will need visibility of the architecture specific struct
+rdt_hw_resource definition, and the array of all resources.  All
+architectures would also need a r_resctrl member in this struct.
 
-As this feature isn't necessary on platforms that don't have cache
-occupancy monitors, add this to the check that occurs when a new
-control group is allocated.
+Instead, abstract this via a helper to allow architectures to do
+different things here. Move the level enum to the resctrl header and
+add a helper to retrieve the struct rdt_resource by 'rid'.
 
-Fixes: 6eac36bb9eb0 ("x86/resctrl: Allocate the cleanest CLOSID by searching closid_num_dirty_rmid")
+resctrl_arch_get_resource() should not return NULL for any value in
+the enum, it may instead return a dummy resource that is
+!alloc_enabled && !mon_enabled.
+
+Co-developed-by: Dave Martin <Dave.Martin@arm.com>
+Signed-off-by: Dave Martin <Dave.Martin@arm.com>
 Signed-off-by: James Morse <james.morse@arm.com>
+Tested-by: Peter Newman <peternewman@google.com>
 Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
 Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
 Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
-The existing code is not selected by any upstream platform, it makes
-no sense to backport this patch to stable.
+Change since v5:
+ * Ensure rdt_resources_all[] is always padded to RDT_NUM_RESOURCES
 
 Changes since v1:
- * [Commit message only] Reword the first paragraph to make it clear
-   that the issue being fixed wasn't directly associated with addition
-   of a Kconfig option.  (Actually, the option is not in Kconfig yet,
-   and gets added later in this series.)
+ * Backed out non-functional renaming of "r" to "l3" in rdt_get_tree(),
+   and unhoisted the assignment of r (as now is) back into the if ()
+   where it started out.  There seem to be no uses of this variable
+   outside this if().
+ * [Commit message only] Typo fix:
+   s/resctrl_hw_resource/rdt_hw_resource/g
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kernel/cpu/resctrl/core.c        | 12 ++++++++++--
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c |  2 +-
+ arch/x86/kernel/cpu/resctrl/internal.h    | 10 ----------
+ arch/x86/kernel/cpu/resctrl/monitor.c     |  8 ++++----
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 14 +++++++-------
+ include/linux/resctrl.h                   | 17 +++++++++++++++++
+ 6 files changed, 39 insertions(+), 24 deletions(-)
 
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 3d1735ed8d1f..12b41316d8f7 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -62,7 +62,7 @@ static void mba_wrmsr_amd(struct msr_param *m);
+ #define ctrl_domain_init(id) LIST_HEAD_INIT(rdt_resources_all[id].r_resctrl.ctrl_domains)
+ #define mon_domain_init(id) LIST_HEAD_INIT(rdt_resources_all[id].r_resctrl.mon_domains)
+ 
+-struct rdt_hw_resource rdt_resources_all[] = {
++struct rdt_hw_resource rdt_resources_all[RDT_NUM_RESOURCES] = {
+ 	[RDT_RESOURCE_L3] =
+ 	{
+ 		.r_resctrl = {
+@@ -127,6 +127,14 @@ u32 resctrl_arch_system_num_rmid_idx(void)
+ 	return r->num_rmid;
+ }
+ 
++struct rdt_resource *resctrl_arch_get_resource(enum resctrl_res_level l)
++{
++	if (l >= RDT_NUM_RESOURCES)
++		return NULL;
++
++	return &rdt_resources_all[l].r_resctrl;
++}
++
+ /*
+  * cache_alloc_hsw_probe() - Have to probe for Intel haswell server CPUs
+  * as they do not have CPUID enumeration support for Cache allocation.
+@@ -174,7 +182,7 @@ static inline void cache_alloc_hsw_probe(void)
+ bool is_mba_sc(struct rdt_resource *r)
+ {
+ 	if (!r)
+-		return rdt_resources_all[RDT_RESOURCE_MBA].r_resctrl.membw.mba_sc;
++		r = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
+ 
+ 	/*
+ 	 * The software controller support is only applicable to MBA resource.
+diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+index 536351159cc2..4af27ef5a8a1 100644
+--- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
++++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+@@ -649,7 +649,7 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
+ 	resid = md.u.rid;
+ 	domid = md.u.domid;
+ 	evtid = md.u.evtid;
+-	r = &rdt_resources_all[resid].r_resctrl;
++	r = resctrl_arch_get_resource(resid);
+ 
+ 	if (md.u.sum) {
+ 		/*
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 20c898f09b7e..75252a7e1ebc 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -512,16 +512,6 @@ extern struct rdtgroup rdtgroup_default;
+ extern struct dentry *debugfs_resctrl;
+ extern enum resctrl_event_id mba_mbps_default_event;
+ 
+-enum resctrl_res_level {
+-	RDT_RESOURCE_L3,
+-	RDT_RESOURCE_L2,
+-	RDT_RESOURCE_MBA,
+-	RDT_RESOURCE_SMBA,
+-
+-	/* Must be the last */
+-	RDT_NUM_RESOURCES,
+-};
+-
+ static inline struct rdt_resource *resctrl_inc(struct rdt_resource *res)
+ {
+ 	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(res);
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index 94a1d9780461..58b5b21349a8 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -365,7 +365,7 @@ static void limbo_release_entry(struct rmid_entry *entry)
+  */
+ void __check_limbo(struct rdt_mon_domain *d, bool force_free)
+ {
+-	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
++	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
+ 	u32 idx_limit = resctrl_arch_system_num_rmid_idx();
+ 	struct rmid_entry *entry;
+ 	u32 idx, cur_idx = 1;
+@@ -521,7 +521,7 @@ int alloc_rmid(u32 closid)
+ 
+ static void add_rmid_to_limbo(struct rmid_entry *entry)
+ {
+-	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
++	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
+ 	struct rdt_mon_domain *d;
+ 	u32 idx;
+ 
+@@ -761,7 +761,7 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_mon_domain *dom_mbm)
+ 	struct rdtgroup *entry;
+ 	u32 cur_bw, user_bw;
+ 
+-	r_mba = &rdt_resources_all[RDT_RESOURCE_MBA].r_resctrl;
++	r_mba = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
+ 	evt_id = rgrp->mba_mbps_event;
+ 
+ 	closid = rgrp->closid;
+@@ -925,7 +925,7 @@ void mbm_handle_overflow(struct work_struct *work)
+ 	if (!resctrl_mounted || !resctrl_arch_mon_capable())
+ 		goto out_unlock;
+ 
+-	r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
++	r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
+ 	d = container_of(work, struct rdt_mon_domain, mbm_over.work);
+ 
+ 	list_for_each_entry(prgrp, &rdt_all_groups, rdtgroup_list) {
 diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 6419e04d8a7b..04b653d613e8 100644
+index 04b653d613e8..45093b9e8e63 100644
 --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -157,7 +157,8 @@ static int closid_alloc(void)
+@@ -2256,7 +2256,7 @@ static void l2_qos_cfg_update(void *arg)
  
- 	lockdep_assert_held(&rdtgroup_mutex);
+ static inline bool is_mba_linear(void)
+ {
+-	return rdt_resources_all[RDT_RESOURCE_MBA].r_resctrl.membw.delay_linear;
++	return resctrl_arch_get_resource(RDT_RESOURCE_MBA)->membw.delay_linear;
+ }
  
--	if (IS_ENABLED(CONFIG_RESCTRL_RMID_DEPENDS_ON_CLOSID)) {
-+	if (IS_ENABLED(CONFIG_RESCTRL_RMID_DEPENDS_ON_CLOSID) &&
-+	    is_llc_occupancy_enabled()) {
- 		cleanest_closid = resctrl_find_cleanest_closid();
- 		if (cleanest_closid < 0)
- 			return cleanest_closid;
+ static int set_cache_qos_cfg(int level, bool enable)
+@@ -2346,8 +2346,8 @@ static void mba_sc_domain_destroy(struct rdt_resource *r,
+  */
+ static bool supports_mba_mbps(void)
+ {
+-	struct rdt_resource *rmbm = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
+-	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_MBA].r_resctrl;
++	struct rdt_resource *rmbm = resctrl_arch_get_resource(RDT_RESOURCE_L3);
++	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
+ 
+ 	return (is_mbm_enabled() &&
+ 		r->alloc_capable && is_mba_linear() &&
+@@ -2360,7 +2360,7 @@ static bool supports_mba_mbps(void)
+  */
+ static int set_mba_sc(bool mba_sc)
+ {
+-	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_MBA].r_resctrl;
++	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
+ 	u32 num_closid = resctrl_arch_get_num_closid(r);
+ 	struct rdt_ctrl_domain *d;
+ 	unsigned long fflags;
+@@ -2714,7 +2714,7 @@ static int rdt_get_tree(struct fs_context *fc)
+ 		resctrl_mounted = true;
+ 
+ 	if (is_mbm_enabled()) {
+-		r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
++		r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
+ 		list_for_each_entry(dom, &r->mon_domains, hdr.list)
+ 			mbm_setup_overflow_handler(dom, MBM_OVERFLOW_INTERVAL,
+ 						   RESCTRL_PICK_ANY_CPU);
+@@ -3951,7 +3951,7 @@ static int rdtgroup_show_options(struct seq_file *seq, struct kernfs_root *kf)
+ 	if (resctrl_arch_get_cdp_enabled(RDT_RESOURCE_L2))
+ 		seq_puts(seq, ",cdpl2");
+ 
+-	if (is_mba_sc(&rdt_resources_all[RDT_RESOURCE_MBA].r_resctrl))
++	if (is_mba_sc(resctrl_arch_get_resource(RDT_RESOURCE_MBA)))
+ 		seq_puts(seq, ",mba_MBps");
+ 
+ 	if (resctrl_debug)
+@@ -4151,7 +4151,7 @@ static void clear_childcpus(struct rdtgroup *r, unsigned int cpu)
+ 
+ void resctrl_offline_cpu(unsigned int cpu)
+ {
+-	struct rdt_resource *l3 = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
++	struct rdt_resource *l3 = resctrl_arch_get_resource(RDT_RESOURCE_L3);
+ 	struct rdt_mon_domain *d;
+ 	struct rdtgroup *rdtgrp;
+ 
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index d94abba1c716..37279e2a89da 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -37,6 +37,16 @@ enum resctrl_conf_type {
+ 	CDP_DATA,
+ };
+ 
++enum resctrl_res_level {
++	RDT_RESOURCE_L3,
++	RDT_RESOURCE_L2,
++	RDT_RESOURCE_MBA,
++	RDT_RESOURCE_SMBA,
++
++	/* Must be the last */
++	RDT_NUM_RESOURCES,
++};
++
+ #define CDP_NUM_TYPES	(CDP_DATA + 1)
+ 
+ /*
+@@ -226,6 +236,13 @@ struct rdt_resource {
+ 	bool			cdp_capable;
+ };
+ 
++/*
++ * Get the resource that exists at this level. If the level is not supported
++ * a dummy/not-capable resource can be returned. Levels >= RDT_NUM_RESOURCES
++ * will return NULL.
++ */
++struct rdt_resource *resctrl_arch_get_resource(enum resctrl_res_level l);
++
+ /**
+  * struct resctrl_schema - configuration abilities of a resource presented to
+  *			   user-space
 -- 
 2.39.2
 
