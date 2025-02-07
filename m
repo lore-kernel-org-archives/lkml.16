@@ -1,145 +1,90 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF7E23C8CB;
-	Fri,  7 Feb 2025 19:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+Received: from bout3.ijzerbout.nl (bout3.ijzerbout.nl [136.144.140.114])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 438F6194C8B
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 19:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.140.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738958132; cv=none; b=R7qo3U4ewzYGUwFkbO3eSl4EjW2As6rEP4lxcUF0abtzdPjrEc0KbPj6JD/g/G69Fm6PaX8TYJqEMaWdcztTwssL/u8IHvC3kZ+A67yOw3BSXRWfXs6g4QBfEX5Z6A/ol9FYpI+FSEn7pcBYxUYU7cnswsb/l5aHuAQaTelHXDQ=
+	t=1738958209; cv=none; b=pJrW87hp5rfhjPAyJQyIPJr4NGJjL3rij8tqwO58xffvCMV3kco/208KJCtVfFYsKxNp59kVUxJ5vgtAfoRaAOEFJgIvJb+HY/rrS6ngrMsoM6j3aUYBqt/Sh1zSMxlonUKyi/nzbT4ukYNE8KLc3PD3Ek2qZKX0gbb8xX3IDCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738958132; c=relaxed/simple;
-	bh=MJUdRTHVYHlorYQ/LVArysmz4Q5MD3lRzm3b4c75gzo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pNJ7b2pmWMV8n0mV+EwuBMr1iabEqdBOII6GtlDHretbAtIBHXY8IIsvmEEJ2QUChekUuBHfdAHOo3oD5gSGIXrl5bVHwY6qmXnu0SS3lPc6ro6krBnywQQfQo8z3Gi/PLNQpWHFdZKXnXvl2qivtqbJ2Idr1jKiaoud5i8FbOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eSMOFm2g; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738958209; c=relaxed/simple;
+	bh=hvf8Bs2/54mKsud0F53VBvuIO272se3qdishAUui/iU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iJgE+Za0qY9LE2tj4VvZmN6HxGx7CDTwZslFBUOsi6xjoiTQapwP8AUPeSaSb9wItoS9BF50KkKRdCMia1N4o+dYvmp26BnXFq7I97lp2PPeH0WRi2NvRZ2lkfQhYyKGryQTjhwe0asnWFn438qcaijl35w+WQEH34Jpi8Xa7lQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl; spf=pass smtp.mailfrom=ijzerbout.nl; dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b=FG4ITyAt; arc=none smtp.client-ip=136.144.140.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ijzerbout.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSMOFm2g"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-436202dd730so17041475e9.2;
-        Fri, 07 Feb 2025 11:55:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738958129; x=1739562929; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5rGwJnk6onGTN6F+Q+8uNYESaMmK0c3tfH4f76Zn9gg=;
-        b=eSMOFm2gqLCQbmAO0eHj665C/Cp7X8lpterbkyHbKlLdk/7T8eh2RB0+tet3CzgA3A
-         2NJ+5yIjXuO30rHGQVo2hnocfDWwCh0ttFxhcuxN2LgdfR/Yhmbc+yZSIOntX2zP/74b
-         AiJ5nZPQFnGhkd07RHiQFt+2UZuW6fauK4FEGvg/LwGn38be/NASZN4Q/nO8KJJKfQDR
-         p+BFHv+1aSeAQjfMvSYAtsCltLRrpZNbzBT4qJ/m9bRgwAHSQJsffu/GfdmiFi5zlZR4
-         urVCzXxIQDaTAseYm/UnwnXUws93i1IBhQJhoUQSaeO8zGxVjLuNHMO2dfxRcC9snBFr
-         3MwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738958129; x=1739562929;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5rGwJnk6onGTN6F+Q+8uNYESaMmK0c3tfH4f76Zn9gg=;
-        b=iLdn8fsEadn8juNvyX3r3l4Clj091LG/Gd1BqZFukrT8LvAOmHbAcWTRSrO6YjvzK8
-         4Y73niRxnjPlR/xxHLzQa4pSWvoyCwnFeinaUhbDvIoebz9h2PamM3aujGtl8E1GsO/e
-         EfJxhcVDmV+5gRvhfY93/SkSlJAMsAHMNdUeH6G6z/tj68rCY8ZNP4sphx7VabapsIVI
-         B+Gc4JM4KL8qa2BQAiwYjlRQQ/bcInv+28XNt1Bn7wbdUTSVEhgwZKa2a4r1FBtsSsse
-         MFf3BPzmbCCJSuAvN2ToK0KES1L8wMboFLjK2F4UHWJkCR1zkTIvJN3aoM4wAzQ/0i4+
-         fwwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUfFhen5Hz9I4Pya1RkH1Axb4KpvTfcwqVa7V9zKShrut84GubvE+DVrTZEciQ1O4kpxbwFzOtJR2/aNGJq@vger.kernel.org, AJvYcCVs+KCgfMHM200cSAgAjmTKOxGtH8/e6Kq0dzFGuIcDSY9SJL1ktp3A/tAdKdiKYjXUjXfVZmWaa5OmD+6B@vger.kernel.org, AJvYcCW8URw8Qs9N1FD+7EhR+CyGLGYWO/+s6jCS/QL2YCnpSypKSz9f5a1FQuOaYaJso0VmiKaulgpX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/TFRq4maceSfXNHp4l/PpXaiSNwySKzPZ0672oRqnvvKhRPZS
-	7I9pB/eAzRpo/MtVfM2WExpohqSueZXualUmBvg+RYMkaKHHhKKh
-X-Gm-Gg: ASbGncuGqvgCUCdNktHM0f0XkGnN2koVMK00+QuHGoc2o4jowUSoVklMWEcGuV071ui
-	P9qN8xnHunS/23dFuCFB52GxxX8eHodNLoIp6B0jKxqF8w5hWo486E8F//bAKHekNViap9Q/uRR
-	oPSluBsocRTknEt7UL6DuQWHkNGBeA7EsGZH230EswcPnL4i1KGeEX8u57ZVxA0jixxQvUKJQmx
-	lpMtSaIIDcp6gxrksjqXQzRgfflVLUva648vsdkvUy+IVlM14k393oGmZSbcvMoNrfMQcxUF8uw
-	dvraRpCbdEyRI6CDh3w47zqO7OM7aXT4AchGkAyVdkdLv2QiLz/9/MMJHJRZ
-X-Google-Smtp-Source: AGHT+IFkCndvhHRme8MUTVSNUm2JXoXYopJcvTKMek4MPe31gk8TP668VFJiyH5pPNKNipL4QhYt0w==
-X-Received: by 2002:a05:600c:1c9f:b0:436:1c0c:bfb6 with SMTP id 5b1f17b1804b1-439249c0324mr35381965e9.27.1738958128528;
-        Fri, 07 Feb 2025 11:55:28 -0800 (PST)
-Received: from localhost.localdomain (93-34-91-161.ip49.fastwebnet.it. [93.34.91.161])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4390d933523sm102280335e9.1.2025.02.07.11.55.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 11:55:27 -0800 (PST)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	Md Sadre Alam <quic_mdalam@quicinc.com>,
-	linux-mtd@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Christian Marangi <ansuelsmth@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] mtd: rawnand: qcom: fix broken config in qcom_param_page_type_exec
-Date: Fri,  7 Feb 2025 20:54:33 +0100
-Message-ID: <20250207195442.19157-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b="FG4ITyAt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ijzerbout.nl; s=key;
+	t=1738957622; bh=hvf8Bs2/54mKsud0F53VBvuIO272se3qdishAUui/iU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FG4ITyAtuDc6qwHLQ625TR+T96IXB3S2RK7yfPgEwcF67dJ39MLLJyAzpDVogmWts
+	 Y/SdFPbIwbDyvXMY7n8N+L2NHtehycuSh99uSaPCguy/78Pb3ANIf0Loc1+msxBccn
+	 1cb3xF4Sw0WS3nG0Uk1vhJamy8K/VmuJ3rueSZ0qTmkJFtRyOvGUaO7PchnTqRBNvz
+	 KE+Ad+L1g8dZBHSJ+Zom0IXqaHKvhDZL1rGlFeZ2QmvDrnviEwJpLxLOZnPoi1EzYf
+	 CfC4XxGCDp0DWJHwjUehLYkJPEityLWBDfyDebJVZppOFEl05/zgXmL3JHl5zJUnpv
+	 At2lD5ssvyKBExClVPu1QHepfRAL6k65uWR7qpkAETjdRZC61HAOCBeedaYGcKFE5l
+	 gDmru+kISvDc4ALvPLdwMQDyaDleOBHohWq2vQtyuKo8cWXX5b6dmVb3TakV04ukWa
+	 XKkqH324L7Dg7hXPeDTeI2eiPGD6KyC6zheicaCi8dMu2nH2j/idm6t+P5J6jyF/nr
+	 OiEvJDDy1FyN/pe30oWR5DixZcoks9tzYikWHSPEdeESXg1bU5HClqjNfqha0vxz6P
+	 JCSCher1gdkF9pmgTl5FPQmExHs7kqEEI9hXPCkWI+PuobBm3m9TMiWTsdm1ZbG/Ne
+	 I+Ygb3FOhvUfMT7eD1ThDHwU=
+Received: from [IPV6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a] (racer.ijzerbout.nl [IPv6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a])
+	by bout3.ijzerbout.nl (Postfix) with ESMTPSA id A7EF3160328;
+	Fri,  7 Feb 2025 20:46:58 +0100 (CET)
+Message-ID: <2a172c30-3df6-4f5b-a63a-04d279738b64@ijzerbout.nl>
+Date: Fri, 7 Feb 2025 20:46:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] staging: gpib: ni_usb: remove unused variable
+To: Gaston Gonzalez <gascoar@gmail.com>, linux-staging@lists.linux.dev
+Cc: dpenkler@gmail.com, gregkh@linuxfoundation.org, arnd@arndb.de,
+ dan.carpenter@oracle.com, ajithpv.linux@gmail.com, roheetchavan@gmail.com,
+ niharchaithanya@gmail.com, eleanor15x@gmail.com, everestkc@everestkc.com.np,
+ skhan@linuxfoundation.org, linux-kernel@vger.kernel.org
+References: <20250207150427.153982-1-gascoar@gmail.com>
+ <20250207150427.153982-7-gascoar@gmail.com>
+Content-Language: en-US
+From: Kees Bakker <kees@ijzerbout.nl>
+In-Reply-To: <20250207150427.153982-7-gascoar@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Fix broken config in qcom_param_page_type_exec caused by copy-paste error
-from commit 0c08080fd71c ("mtd: rawnand: qcom: use FIELD_PREP and GENMASK")
-
-In qcom_param_page_type_exec the value needs to be set to
-nandc->regs->cfg0 instead of host->cfg0. This wrong configuration caused
-the Qcom NANDC driver to malfunction on any device that makes use of it
-(IPQ806x, IPQ40xx, IPQ807x, IPQ60xx) with the following error:
-
-[    0.885369] nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xaa
-[    0.885909] nand: Micron NAND 256MiB 1,8V 8-bit
-[    0.892499] nand: 256 MiB, SLC, erase size: 128 KiB, page size: 2048, OOB size: 64
-[    0.896823] nand: ECC (step, strength) = (512, 8) does not fit in OOB
-[    0.896836] qcom-nandc 79b0000.nand-controller: No valid ECC settings possible
-[    0.910996] bam-dma-engine 7984000.dma-controller: Cannot free busy channel
-[    0.918070] qcom-nandc: probe of 79b0000.nand-controller failed with error -28
-
-Restore original configuration fix the problem and makes the driver work
-again.
-
-Cc: stable@vger.kernel.org
-Fixes: 0c08080fd71c ("mtd: rawnand: qcom: use FIELD_PREP and GENMASK")
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
- drivers/mtd/nand/raw/qcom_nandc.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
-index d2d2aeee42a7..4e3a3e049d9d 100644
---- a/drivers/mtd/nand/raw/qcom_nandc.c
-+++ b/drivers/mtd/nand/raw/qcom_nandc.c
-@@ -1881,18 +1881,18 @@ static int qcom_param_page_type_exec(struct nand_chip *chip,  const struct nand_
- 	nandc->regs->addr0 = 0;
- 	nandc->regs->addr1 = 0;
- 
--	host->cfg0 = FIELD_PREP(CW_PER_PAGE_MASK, 0) |
--		     FIELD_PREP(UD_SIZE_BYTES_MASK, 512) |
--		     FIELD_PREP(NUM_ADDR_CYCLES_MASK, 5) |
--		     FIELD_PREP(SPARE_SIZE_BYTES_MASK, 0);
--
--	host->cfg1 = FIELD_PREP(NAND_RECOVERY_CYCLES_MASK, 7) |
--		     FIELD_PREP(BAD_BLOCK_BYTE_NUM_MASK, 17) |
--		     FIELD_PREP(CS_ACTIVE_BSY, 0) |
--		     FIELD_PREP(BAD_BLOCK_IN_SPARE_AREA, 1) |
--		     FIELD_PREP(WR_RD_BSY_GAP_MASK, 2) |
--		     FIELD_PREP(WIDE_FLASH, 0) |
--		     FIELD_PREP(DEV0_CFG1_ECC_DISABLE, 1);
-+	nandc->regs->cfg0 = FIELD_PREP(CW_PER_PAGE_MASK, 0) |
-+			    FIELD_PREP(UD_SIZE_BYTES_MASK, 512) |
-+			    FIELD_PREP(NUM_ADDR_CYCLES_MASK, 5) |
-+			    FIELD_PREP(SPARE_SIZE_BYTES_MASK, 0);
-+
-+	nandc->regs->cfg1 = FIELD_PREP(NAND_RECOVERY_CYCLES_MASK, 7) |
-+			    FIELD_PREP(BAD_BLOCK_BYTE_NUM_MASK, 17) |
-+			    FIELD_PREP(CS_ACTIVE_BSY, 0) |
-+			    FIELD_PREP(BAD_BLOCK_IN_SPARE_AREA, 1) |
-+			    FIELD_PREP(WR_RD_BSY_GAP_MASK, 2) |
-+			    FIELD_PREP(WIDE_FLASH, 0) |
-+			    FIELD_PREP(DEV0_CFG1_ECC_DISABLE, 1);
- 
- 	if (!nandc->props->qpic_version2)
- 		nandc->regs->ecc_buf_cfg = cpu_to_le32(ECC_CFG_ECC_DISABLE);
--- 
-2.47.1
+Op 07-02-2025 om 16:04 schreef Gaston Gonzalez:
+> Remove unused variable 'adr1_bits' in function 'parse_board_ibrd_readback'
+>
+> This change removes the following warning:
+>
+> warning: variable ‘adr1_bits’ set but not used [-Wunused-but-set-variable]
+>
+> Signed-off-by: Gaston Gonzalez <gascoar@gmail.com>
+> ---
+>   drivers/staging/gpib/ni_usb/ni_usb_gpib.c | 2 --
+>   1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/staging/gpib/ni_usb/ni_usb_gpib.c b/drivers/staging/gpib/ni_usb/ni_usb_gpib.c
+> index d0656dc520f5..b7f221def217 100644
+> --- a/drivers/staging/gpib/ni_usb/ni_usb_gpib.c
+> +++ b/drivers/staging/gpib/ni_usb/ni_usb_gpib.c
+> @@ -427,7 +427,6 @@ static int parse_board_ibrd_readback(const u8 *raw_data, struct ni_usb_status_bl
+>   	int i = 0;
+>   	int j = 0;
+>   	int k;
+> -	unsigned int adr1_bits;
+>   	int num_data_blocks = 0;
+>   	struct ni_usb_status_block register_write_status;
+>   	int unexpected = 0;
+> @@ -460,7 +459,6 @@ static int parse_board_ibrd_readback(const u8 *raw_data, struct ni_usb_status_bl
+>   		pr_err("%s: bug: status->id=%i, != ibrd_status_id\n", __func__, status->id);
+>   		return -EIO;
+>   	}
+> -	adr1_bits = raw_data[i++];
+Careful. You're removing the i++ as well.
+>   	if (num_data_blocks) {
+>   		*actual_bytes_read = (num_data_blocks - 1) * data_block_length + raw_data[i++];
+>   	} else {
 
