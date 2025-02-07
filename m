@@ -1,201 +1,263 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2061.outbound.protection.outlook.com [40.107.93.61])
+Received: from poodle.tulip.relay.mailchannels.net (poodle.tulip.relay.mailchannels.net [23.83.218.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A49188596;
-	Fri,  7 Feb 2025 19:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6210023C8B4
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 19:06:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.249
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738955123; cv=fail; b=tPSNAwUcIsG/DQTl0h/cROmGoJENkpMgN8phQRr245J33yIplMB2OagHbJClkZzilfwPHdmSNHRS3vN3MzoY1CnIfkYkZE+IR0G6lAcmJ3MiVBgv/MoSsUwbQZHCsO+lSZ9nbP90coYCqSS8Ba6icKjwKy8jkOt2eNYyJKsSX2Q=
+	t=1738955220; cv=pass; b=O4WcV+SuRn3TqTClPEqcJPkEnoM1cY6lCBf+nv2FZAbEtpAM63dEHo7esa0nAFRypL5l2DRdNJ6zwKe6DPTWVvqgklfHNdAqsaJ+0UJIsuv/zNfzQGOyBwzQutvKMf00EVBQa3rzHBYf+cslA09gTOjz1EObtF4+kxrtMP9VERo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738955123; c=relaxed/simple;
-	bh=bePfgkJ5w7r4kJ/kBCnl/4tZJRxurWVf6Si+MiYvqWc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=MioLIvIOPRufg7UCtnVrRSJO92Oqy5eO9yRdP5dFUrLRnK0lMa4j42OwnplPYXql2WDkc3ebP1gTzn/A9KrE0kfcnvZ2DoppkBlwaH70ndxW04VnF0QiE4M0R9x5xynkWt2MGvLiCmZee46UJX9pH7iu31loQjeUuoCg7GrmD7A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ysaUHQT8; arc=fail smtp.client-ip=40.107.93.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1738955220; c=relaxed/simple;
+	bh=lO8OUsKRIjUnAPdlIj7AK58m+QTgg+zlZphQ6a3JjVc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cawnM6qma+Lo+kcOTNAat4o1mxKJcG4flA8xSStjIoqTsrptNjCNHJ6PEwyVN+r8IfJ/6fTVh7yUzppkc9aypN6IrZcgr122hKkuNCyMcpIGRM9IldfLemyBXIpCRaQi1EB+WCnDQ2chcP1bZ1/5hp4yGsb2+mVOXfO8Lvbu/jk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=ZmoBmPJr; arc=pass smtp.client-ip=23.83.218.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ysaUHQT8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=g3vzkCiiXMRo41xzbRPplTTul4p6K/yYWynCMr5S7YgRJzM+P7tQ/EXbjknVK5ZCBPjuCLHMsiFrEP9d/uxS03QC3t+F3fFBlQvZx8XsPhFTLNky7mHzbNrihZYKthDblgrU26q0flHWpsWE1vzJfYOzj0eoo590PQFPRjCHkU6PtAd7g7g5bnPfVDe7D/XDS+xjKjxZRA/fDtwvoeXLJXzIbVsIDx0Uj8JUpFnDS8ARUptWlZEe50noHNxTxiWcgRvGP//JXgf97teCO6HoZhgMIAXos99we1WCw87QfAIjBI5xMOUNleSwtllhQcfgLoukIZ5wog7jyVWU7U8Hsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bePfgkJ5w7r4kJ/kBCnl/4tZJRxurWVf6Si+MiYvqWc=;
- b=GrUsfaE5z2bFkbohy89TjXAKHcXZE9IcjPI1qyL/+xpxf86PDvjweYufbcUdSFcP8E41gVk53g4VpcqAkC0BPhQbA60+Y6S+TlgSftJXg/gIRBovsOQyhv6Gfm407HHuGITmOL1fT0VTbVC2U0YwBEfHant1SJX4Ex0ejpAhgkZUT0qEfeEcBJ1vSssjH/VNw9Si1w3VRkqqerv2O6V/QP2j2eXduV25tbQTNchJyjtNa9mcAnrOV47TOben5JjD8mbq/hUb4oIbcudjK2X7f/395QSvt8zeLwJ+Lq8qZhWuxZR3RZ2ZzMf4VX6p5Cu0ThFHSdVYzJ1skHB7omORMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bePfgkJ5w7r4kJ/kBCnl/4tZJRxurWVf6Si+MiYvqWc=;
- b=ysaUHQT8q1TEE0n1/9FeFWL7dizimBN2kHQcJSr/JS2lcyEzlaxcF4Yrxm9Mk+m6tPpCxnn4bEhbCShTf6ZaWq5ckdOK28yoNOsCOlR3lqViBLWvQ/0ZuFMoEmZUV26olfIpw7d9Fmhu1GK/Hr367G7vRZOWHdJBlRC8/cfG8gg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- DS7PR12MB6334.namprd12.prod.outlook.com (2603:10b6:8:95::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8422.14; Fri, 7 Feb 2025 19:05:19 +0000
-Received: from DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
- ([fe80::38ec:7496:1a35:599f%3]) with mapi id 15.20.8422.010; Fri, 7 Feb 2025
- 19:05:19 +0000
-Message-ID: <7497d32c-14b0-4ee5-8e0c-70be470bee0d@amd.com>
-Date: Fri, 7 Feb 2025 13:05:14 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 05/16] PCI/AER: Add CXL PCIe Port correctable error
- support in AER service driver
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
- jonathan.cameron@huawei.com, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
- ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
- rrichter@amd.com, nathan.fontenot@amd.com,
- Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
- ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com, alucerop@amd.com
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
- <20250107143852.3692571-6-terry.bowman@amd.com>
- <Z6UAk_L22eqiWCix@gourry-fedora-PF4VCD3F>
-Content-Language: en-US
-From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <Z6UAk_L22eqiWCix@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR12CA0026.namprd12.prod.outlook.com
- (2603:10b6:806:6f::31) To DS0PR12MB6390.namprd12.prod.outlook.com
- (2603:10b6:8:ce::7)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="ZmoBmPJr"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id A8A7C1A4B5A;
+	Fri,  7 Feb 2025 19:06:57 +0000 (UTC)
+Received: from pdx1-sub0-mail-a311.dreamhost.com (100-126-221-226.trex-nlb.outbound.svc.cluster.local [100.126.221.226])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id B1B081A47BD;
+	Fri,  7 Feb 2025 19:06:56 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738955217; a=rsa-sha256;
+	cv=none;
+	b=A5oFwym0jFAjufwIThzNbtzS+inIi7thY853ikaqVdrd6tGGm9Q1hA2z0DOQkuKz3pPfHm
+	X7rPHWx1K4FFCgZdqUIV+w74SzFPQ785c0g6nCV/ypu3+Fy3JfetieFSPSEELVxHuK5rmt
+	fA8XIaPdYzsNsfDoLYsmJ8o1M8s1pBG8sjs3SQqBx3Iqn9U1KPTxe/mFy0Uco8ObtKuMNp
+	sCQ9+3Yvof8kPt/M38xcyF/yqgbg8kRCMUpr3eNmZWDJXYQ/p22NFlnfmhYcI5PaASTzcu
+	kajfc7mBcZP1ks/I8CZsL1XvPYH8P/siC7jraUcXOiQ9y7ZjdwFcGQA0upV+Ag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1738955217;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=y9ZVzTIynyCcvuECIWXnJaYZt7TfAR7IJxQ+MS6iWgs=;
+	b=OqrnNmKXebMJRj3YP94DADgc7xkzZomWlQNjTj4NCFZZOls0kWbF1WGnvi+AZm7iQeGqHW
+	GWhOY2PQiUIWS/wISdiJJ5cYRNKfAqRQerEnn6ZvK0oL5hd+ND6p6bwJDxRHVfiKH+fPIj
+	qLRJFCDAPy74XBiUCCMp+V6VfLmO2EqAvMTh+I/KLwQnBbsW8gipoc+/0UiE/30pNdt3ZX
+	58+jKb0ZBrJFagGMOd5pf08ynSbrn+rqR+EHD9kGhypKG7q+eq4p5t/vvBWArRKQ58V7b0
+	oqzlub4DaYiGca+k1Ha5qBy6w5RA8y8AcNAzftP3EcxZsDg0W5pYgdP5Nh+pFA==
+ARC-Authentication-Results: i=1;
+	rspamd-587f8d7697-l5xwh;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Abiding-Thread: 0792cc8c59fd190c_1738955217544_2368620000
+X-MC-Loop-Signature: 1738955217544:1337459757
+X-MC-Ingress-Time: 1738955217544
+Received: from pdx1-sub0-mail-a311.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.126.221.226 (trex/7.0.2);
+	Fri, 07 Feb 2025 19:06:57 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a311.dreamhost.com (Postfix) with ESMTPSA id 4YqNkQ1z7Zz3S;
+	Fri,  7 Feb 2025 11:06:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1738955216;
+	bh=y9ZVzTIynyCcvuECIWXnJaYZt7TfAR7IJxQ+MS6iWgs=;
+	h=Date:From:To:Cc:Subject:Content-Type:Content-Transfer-Encoding;
+	b=ZmoBmPJr6WiGEqM7Ytf0dHTIIIECi4KJcPDCCqy1KJFfMqiLz7kr48IJESUsfQ51l
+	 EGncwPjMwwKcx82E6APWX81vCo4qmzT8QJ/ThIJmKTi+Y7XZBLuXOJTkN3kr2mPsns
+	 iwkYBQWn/Cov9lPHccIXYAy2PKtPrlkE/Jj72xsogo3SLaOXLpN7KCf+bJtj3WWBSz
+	 Fp+Q/H1k8b9rwcToguoL6SdE1zoDZDdcIv2y9FqY88W9NT1cGTJjLgDu3Cdg4xSouP
+	 +njISAkRn+eFQXtce1m5CH+fY78toitk5jc1aUUnrHEMCO+Ph99X97IRfLGuaG8z1U
+	 VoOLqAZweLuIw==
+Date: Fri, 7 Feb 2025 11:06:51 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: "Huang, Ying" <ying.huang@linux.alibaba.com>
+Cc: Raghavendra K T <raghavendra.kt@amd.com>, linux-mm@kvack.org,
+	akpm@linux-foundation.org, lsf-pc@lists.linux-foundation.org,
+	bharata@amd.com, gourry@gourry.net, nehagholkar@meta.com,
+	abhishekd@meta.com, nphamcs@gmail.com, hannes@cmpxchg.org,
+	feng.tang@intel.com, kbusch@meta.com, Hasan.Maruf@amd.com,
+	sj@kernel.org, david@redhat.com, willy@infradead.org,
+	k.shutemov@gmail.com, mgorman@techsingularity.net, vbabka@suse.cz,
+	hughd@google.com, rientjes@google.com, shy828301@gmail.com,
+	liam.howlett@oracle.com, peterz@infradead.org, mingo@redhat.com,
+	nadav.amit@gmail.com, shivankg@amd.com, ziy@nvidia.com,
+	jhubbard@nvidia.com, AneeshKumar.KizhakeVeetil@arm.com,
+	linux-kernel@vger.kernel.org, jon.grimm@amd.com,
+	santosh.shukla@amd.com, Michael.Day@amd.com, riel@surriel.com,
+	weixugc@google.com, leesuyeon0506@gmail.com, honggyu.kim@sk.com,
+	leillc@google.com, kmanaouil.dev@gmail.com, rppt@kernel.org,
+	dave.hansen@intel.com, dongjoo.linux.dev@gmail.com
+Subject: Re: [LSF/MM/BPF TOPIC] Overhauling hot page detection and promotion
+ based on PTE A bit scanning
+Message-ID: <20250207190651.hpmkzl4f2zynqiun@offworld>
+Mail-Followup-To: "Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Raghavendra K T <raghavendra.kt@amd.com>, linux-mm@kvack.org,
+	akpm@linux-foundation.org, lsf-pc@lists.linux-foundation.org,
+	bharata@amd.com, gourry@gourry.net, nehagholkar@meta.com,
+	abhishekd@meta.com, nphamcs@gmail.com, hannes@cmpxchg.org,
+	feng.tang@intel.com, kbusch@meta.com, Hasan.Maruf@amd.com,
+	sj@kernel.org, david@redhat.com, willy@infradead.org,
+	k.shutemov@gmail.com, mgorman@techsingularity.net, vbabka@suse.cz,
+	hughd@google.com, rientjes@google.com, shy828301@gmail.com,
+	liam.howlett@oracle.com, peterz@infradead.org, mingo@redhat.com,
+	nadav.amit@gmail.com, shivankg@amd.com, ziy@nvidia.com,
+	jhubbard@nvidia.com, AneeshKumar.KizhakeVeetil@arm.com,
+	linux-kernel@vger.kernel.org, jon.grimm@amd.com,
+	santosh.shukla@amd.com, Michael.Day@amd.com, riel@surriel.com,
+	weixugc@google.com, leesuyeon0506@gmail.com, honggyu.kim@sk.com,
+	leillc@google.com, kmanaouil.dev@gmail.com, rppt@kernel.org,
+	dave.hansen@intel.com, dongjoo.linux.dev@gmail.com
+References: <20250123105721.424117-1-raghavendra.kt@amd.com>
+ <87o6zub978.fsf@DESKTOP-5N7EMDA>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|DS7PR12MB6334:EE_
-X-MS-Office365-Filtering-Correlation-Id: f843f34d-d77f-44bd-3c7d-08dd47aa5d54
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cXBkd0VRU1ZrdkRLWmJWWVRwUWJ6MTVVRWk5L2YzRTFSRldBYTRNUytTaFJI?=
- =?utf-8?B?NzkvaGFscXJ1cHhUeGRDcE1CWVRhVEZYUzdjYUdSWGN1WENadEF0Uk5jWEE4?=
- =?utf-8?B?YlRWSVB0eitQSS9GbTIyUzJyV3VoSXBTYzdkZENOTWxkOU9XRkZYM1VOclha?=
- =?utf-8?B?aDFPOTUyYStieFVMdExuMmNHdUJrOXBFd3VrMjdoWjNWNUN1UVNrNWg4bXky?=
- =?utf-8?B?blBIKzUwYWRadG9DVWhMMS9sdWlpZ1IvYWNweVZjV0EvdU44bWhEVXk5dlY2?=
- =?utf-8?B?NjRYUXg4VmVrK2IrOFFzazl2NUFjN0RtamFYdmltbDRFNDUyZ21vVzNhQk9U?=
- =?utf-8?B?OW1RL3BDeGIxVUpTcTdyZUxlZGFKemNaUGJCVzZ3RDgzdE5WMm5GR3NGZkNP?=
- =?utf-8?B?Y3QxY2tEUDdMKzA2Mk9PYWYzT20xUDQ5aVdSdXljeUhCMm1yc2RtL3JacVZ6?=
- =?utf-8?B?eXR3WEVGUjlHOHhPTjNINkEyQmZWNDgvUzFXTGJBaVMvOUcwQ1VLS2JncnZq?=
- =?utf-8?B?TE8xM0p6Sy9WL2NUMTgzbTN2VUdMQWJZZFlpVDc3N3N6Q3QwZEFCZjBHdGNa?=
- =?utf-8?B?eXdEVE1YL01RZzZQcTdyZVovMGhhSGRNdExuRHc0UlkzM3ZvbjN5M2FBZWtT?=
- =?utf-8?B?aHZMUHVCZlkvdCt5SUpMcE9OVlNGdVZWZnhhTFpTSHdzak4va3Y3U2JCYUVq?=
- =?utf-8?B?TEZBc1RUUzR1STdxNDNKTWg2R2s0ay9SYlcvQVUzNXlPQjJBdlhWYzhvTkJs?=
- =?utf-8?B?OFJ6c000OFpzZ3VBS3drUEl1K1RXRHVjTTJ3Wko1UzVpalhjT094YlVCT2RK?=
- =?utf-8?B?eUNmZFVyMzZzNjNlMVc3YjFScy9oaUtxUVM4WXVTWVZFS1pDOHQzYy9yYTUr?=
- =?utf-8?B?OW1WbmpYRUxQYlJuMFhwK0ppT2NTWHByYjJzUTBFcmliNW51R2lHM01TT0Mw?=
- =?utf-8?B?VXBlcVZMbmhiaWFTYUpxK3pjNm9Wdm0zWk1qQjlkSUoxSlV5aW5DN0txeG5s?=
- =?utf-8?B?VklVeTdNN2tFSFZTdklROWlmMGJUdW5PQ1N6SW5qcFF0Mm1WUzI2V1FQYm9H?=
- =?utf-8?B?RUFvcDZGT0FnTlhRRDcvRDAybko3Y0djZW0yeWxMamFRSW9uMHduYXdBakhU?=
- =?utf-8?B?OGRpNDZMWXNVLzN0c2dCMlZVTFdFZnRHMlNyTHIvMTZRcG12Mnpqb3dmMlB4?=
- =?utf-8?B?ZE1FWDdiMVNPMzMyUWxHbHliRjhDZnVNenlHZEcvMDVuNXMxNWpILzEvNkRK?=
- =?utf-8?B?c2Y2L3o4c00xZ3p0Y1pFdjJFbTI2R0NUZmF4aUtGQnZDenp4djV0QkpIRDB2?=
- =?utf-8?B?SnJHckQySkdvNFBTbFBGd2hOL0JzY00wS1BEelFaeEtuaVlseXhPdUllOHl6?=
- =?utf-8?B?UkM5L0RjZ3hsYVRtamc1YTcxdk9aNUtCa1I3SXVQZmlSVFpTaC9FaVdaanZG?=
- =?utf-8?B?VU9IaTVlaCtZTzMvbDlkZGp6SExqUnFjQU1GRzNUSWdTTFQ2cHlqcTl3ZHdT?=
- =?utf-8?B?OUY0NHQ5WUpNTFhRZWVJU2JvYnZENW1JMjA1STFxYVRHTTVCcWhDR2Q1S295?=
- =?utf-8?B?Z2pMM25laFg3RzdkRlpnZ1RhSHB2WFg4WmJ6WTlDZWtiU0dXNlprVmxyWGZw?=
- =?utf-8?B?eGlzNThsWTRBa1VKbmJwR3AydjRKL1Fod3g3eW5QeE9aTThiUmwwank0ZTBm?=
- =?utf-8?B?YUdaUXRDOHp5UDkvZHdxOFczc3NVQUh1ZUhGWmMvWVFqUlpHeVhOb1JzYkdp?=
- =?utf-8?B?bUVBeUZYb2oyY3VGNDROQ3FXMFhBUDAxZXlvdWdDYy9kOGlueU5iN1JFd1FN?=
- =?utf-8?B?WHp5SlRFN2RUejZPZkVGQUcvNElhUGMvR3hGbUp1dGVpdGhuclNzeDAxRHBD?=
- =?utf-8?Q?I577iKrg8y6f/?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eXN4UmRmc2k5d0FTSVZCbm5MQTRkL1dwWHJHYVlHRUZJYTVqdWVBY0tGSnE3?=
- =?utf-8?B?S1hkSjRpaTFyMi8vZjVOcTlMNklJK1ZMOUlSSC94MlV2b1NRUDJJSGdUN1Vu?=
- =?utf-8?B?c04rVk4yQUg4cUpXNExLb0tFcnN3Q0h5KzUyaEpGbDc3cHFHNzRSY1lLNDhr?=
- =?utf-8?B?K2RZbXVzUTJIVDZua09wa3Q1QmNhdCt5bWJQQkFFZ0pqSWZIT0lvejNyYUI2?=
- =?utf-8?B?d3Zvb1ZGWXVxRGhUL0hMSy9ncWsxMjVSeGUvZndrdXQrYWtPdE8rMTE5MjJZ?=
- =?utf-8?B?Q09nb1dOSCsrbnhjYTZzUFdDcWZuUUVvdlhpakx5Vm5QMmdkekZPcC9XZlJS?=
- =?utf-8?B?NTJ1YSs4MGRKUWp2bjBEUGRFRXBsblpzUEdMRjNKa080U0hSTWNVdlpvTjFU?=
- =?utf-8?B?cU4ybno4WE9xaTRydGJmT2w1S0RLWW1pY3NSNGZjd2pYZFNHVjQ3S2Y1bUkw?=
- =?utf-8?B?a0R1TTB5TjBGZmUvTWl2SE9JZklIM1E0STNKWkcrZlh1VzNYcHl6OTZKQjVB?=
- =?utf-8?B?eCttdXFnN1UrZFFGZUpkU0YvaUJxejFYTDkzcDh1R1ZnSGlsYW9RcDJ2clNt?=
- =?utf-8?B?WXV2dndqa3FELzM5VndDUjUrY2FNRnRkeE05QVFmUTlRTy9kUmM5RXMzZ3NE?=
- =?utf-8?B?bFJoLzdOalpQMHY2RzJkaDFtdlQ4eDBhRjdnTUVtZ2x0N0toQ1dhUDBWWUhp?=
- =?utf-8?B?SURYL0pqSTZHZ2VDeUpBK3k5bVlnOFI1RnozQk9Yc3Z1dUFsd2QvZFFHSklu?=
- =?utf-8?B?alh6bDgwcHNOakFHa0liUitiaEN6ZUlBdWxFaGZOSEQ2MFBYQUZBZ3F1bmJz?=
- =?utf-8?B?bkV0RkhySUdtcUhNK2hhcXFNbCtPSmpFY2g1YnJPN1F1UCtnQTgxV2YzUzB1?=
- =?utf-8?B?YS95elVuOFk1OTA2ZnlZR2E4OW43VC92b2JYN1ZSR2NRTnAvVDVFblJ3bW9Q?=
- =?utf-8?B?dWNkZUgwVlFGN1g0SXNmc2dvNVlwQlQwVURTSEtLWkRFOUdsUzUzY2s5UTBl?=
- =?utf-8?B?N2wzR1RVd3ZEeGxWNWtGVDd3TE5DS1lRM0tySEtOaVUzc2s3Y3BCQ2JNSzN3?=
- =?utf-8?B?SFNSSU92eE9XazVaK0M4NDQvRC9kUnF1R2VpaSttay9MM3JIekllWUlrVm14?=
- =?utf-8?B?a3pZU1ZQeXVBbGJyajVORUhnYjJjVEVGL3VDdXBEcXQralM0cHhoczBrMXFu?=
- =?utf-8?B?UUUxYzdpVDZSNkZxOTJ1dUJvazNjbGJpc3pSMmNBRmZZMTROeVlVZHVzMG5l?=
- =?utf-8?B?ck56WXV1L2czT1pmdVA3TGtGN2Yzbi9YRWpCZ24rZWF0OWozY1N1Z21vNmds?=
- =?utf-8?B?MVZPTCsyUzJXYU1Ha1BHc3Zjbk1MbFdGeUUzN0xaSU5XcWh1bDEwY3h4NWc1?=
- =?utf-8?B?anAzY2ZxOHpGeERXSnVOeEJWR3dQaTNFeC9pdFh1eWRDZE1FeU9hVDlUV204?=
- =?utf-8?B?d01GcmxnZnBXSkIrRVV2eXR3MTJ6Z0d6ZVB1WVRSbEhRNWJYVWNubjBJZ0FR?=
- =?utf-8?B?QUxTbzRzYXVnVDlxREVXUmM1eGpyK0ZzOFY3TTdLV2syenBSdFpxQzZOVkt2?=
- =?utf-8?B?VG1oWGQ2RGcrcE05c0d6WEpmQVZiTUtJUlNFY0VkbmRqU0R0Zk9CVGNMOVVP?=
- =?utf-8?B?WHZVZWZKT2QwV1VMZFVGVkdWbXpSWHdHREE5cFRXbDYwNlpISFpFdlpPWkRn?=
- =?utf-8?B?SlhjU3VHd1pobUNDaS8vNXVGVmlSdnc4dnFraFQ4UzVRR2ZucW1BdExBbk5z?=
- =?utf-8?B?TWF0M3FSRThJMVVKNGtOTHpCNXlBVENoMHd2OFhDSmtoVTZRQktaaGFaK1hL?=
- =?utf-8?B?K2Y0S0lYdEZ3Tm1aMUJYUkZGMXlFZjhoN05sMElUaXlEd2dMR01ZYlVGRVJy?=
- =?utf-8?B?eHg2M2RvcmpsMmxRWm4yaWlGT1lWaGw4TmM0eWlKUTZHT0t2NFJFNi9BUG91?=
- =?utf-8?B?aFlyb2szb2JlT0xzV0liT2ZnbEVYa3FWRVAyL3dSYnhTSnJ4aFE0eW4zeEUx?=
- =?utf-8?B?UUZRRGtSQS9vUTJLTThObkZBTTg3Mm1BZ1o1akF2OGVHNkdpVE1SZ05yejN5?=
- =?utf-8?B?d1RiYVBtdUhKeDFHUFJVYkhyTm1nMkhEUndwZDBuU1h0b2dGTTFGVExFYVFD?=
- =?utf-8?Q?SaCaeTX80YTj2w6OMJMOYaVFA?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f843f34d-d77f-44bd-3c7d-08dd47aa5d54
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 19:05:19.4221
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O9m0sKw30EfY6p+GF09x/iM8IjapCUWNOMgFaKKi0TObZ2mhxH+4WJzBjheUSctxow6zLmeULiImcioeRvJlcw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6334
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87o6zub978.fsf@DESKTOP-5N7EMDA>
+User-Agent: NeoMutt/20220429
 
+On Sun, 26 Jan 2025, Huang, Ying wrote:
 
-
-On 2/6/2025 12:33 PM, Gregory Price wrote:
-> On Tue, Jan 07, 2025 at 08:38:41AM -0600, Terry Bowman wrote:
->> The AER service driver supports handling Downstream Port Protocol Errors in
->> Restricted CXL host (RCH) mode also known as CXL1.1. It needs the same
->> functionality for CXL PCIe Ports operating in Virtual Hierarchy (VH)
->> mode.[1]
+>Hi, Raghavendra,
+>
+>Raghavendra K T <raghavendra.kt@amd.com> writes:
+>
+>> Bharata and I would like to propose the following topic for LSFMM.
 >>
->> CXL and PCIe Protocol Error handling have different requirements that
->> necessitate a separate handling path. The AER service driver may try to
->> recover PCIe uncorrectable non-fatal errors (UCE). The same recovery is not
->> suitable for CXL PCIe Port devices because of potential for system memory
->> corruption. Instead, CXL Protocol Error handling must use a kernel panic
->> in the case of a fatal or non-fatal UCE. The AER driver's PCIe Protocol
->> Error handling does not panic the kernel in response to a UCE.
+>> Topic: Overhauling hot page detection and promotion based on PTE A bit s=
+canning.
 >>
-> Naive question: is a panic actually required if the memory is a userland
-> resource?
->
-> The code in arch/x86/kernel/cpu/mce/core.c suggests we may not panic
-> if an uncorrectable error occurs in this fashion, but simply a SIGBUS.
->
-> Unless this is down the wrong pipe - in which case disregard.
->
-> I'm still digging through background on this patch set so I may be
-> barking up the wrong tree.
->
-> ~Gregory
-The plan is to panic on any CXL device with uncorrectable errors
-regardless of where used. This is to avoid corruption.
+>> In the Linux kernel, hot page information can potentially be obtained fr=
+om
+>> multiple sources:
+>>
+>> a. PROT_NONE faults (NUMA balancing)
+>> b. PTE Access bit (LRU scanning)
+>> c. Hardware provided page hotness info (like AMD IBS)
+>>
+>> This information is further used to migrate (or promote) pages from slow=
+ memory
+>> tier to top tier to increase performance.
+>>
+>> In the current hot page promotion mechanism, all the activities includin=
+g the
+>> process address space scanning, NUMA hint fault handling and page migrat=
+ion are
+>> performed in the process context. i.e., scanning overhead is borne by the
+>> applications.
+>>
+>> I had recently posted a patch [1] to improve this in the context of slow=
+-tier
+>> page promotion. Here, Scanning is done by a global kernel thread which r=
+outinely
+>> scans all the processes' address spaces and checks for accesses by readi=
+ng the
+>> PTE A bit. The hot pages thus identified are maintained in list and subs=
+equently
+>> are promoted to a default top-tier node. Thus, the approach pushes overh=
+ead of
+>> scanning, NUMA hint faults and migrations off from process context.
 
-Terry
+It seems that overall having a global view of hot memory is where folks are=
+ leaning
+towards. In the past we have discussed an external thread to harvest inform=
+ation
+=66rom different sources and do the corresponding migration. I think your w=
+ork is a
+step in this direction (and shows promising numbers), but I'm not sure if i=
+t should
+be doing the scanning part, as opposed to just receive the information and =
+migrate
+(according to some policy based on a wider system view of what is hot; ie: =
+what CHMU
+says is hot might not be so hot to the rest of the system, or as is pointed=
+ out
+below, workload based, as priorities).
 
+>
+>This has been discussed before too.  For example, in the following thread
+>
+>https://lore.kernel.org/all/20200417100633.GU20730@hirez.programming.kicks=
+-ass.net/T/
+>
+>The drawbacks of asynchronous scanning including
+>
+>- The CPU cycles used are not charged properly
+>
+>- There may be no idle CPU cycles to use
+>
+>- The scanning CPU may be not near the workload CPUs enough
 
+One approach we experimented with was doing only the page migration asynchr=
+onously,
+leaving the scanning to the task context, which also knows the dest numa no=
+de.
+Results showed that page fault latencies were reduced without affecting ben=
+chmark
+performance. Of course busy systems are an issue, as the window between ser=
+vicing
+the fault and actually making it available to the user in fast memory is en=
+larged.
 
+>It's better to involve Mel and Peter in the discussion for this.
+>
+>> The topic was presented in the MM alignment session hosted by David Rien=
+tjes [2].
+>> The topic also finds a mention in S J Park's LSFMM proposal [3].
+>>
+>> Here is the list of potential discussion points:
+>> 1. Other improvements and enhancements to PTE A bit scanning approach. U=
+se of
+>> multiple kernel threads, throttling improvements, promotion policies, pe=
+r-process
+>> opt-in via prctl, virtual vs physical address based scanning, tuning hot=
+ page
+>> detection algorithm etc.
+>
+>One drawback of physical address based scanning is that it's hard to
+>apply some workload specific policy.  For example, if a low priority
+>workload has many relatively hot pages, while a high priority workload
+>has many relative warm (not so hot) pages.  We need to promote the warm
+>pages in the high priority workload, while physcial address based
+>scanning may report the hot pages in the low priority workload.  Right?
+>
+>> 2. Possibility of maintaining single source of truth for page hotness th=
+at would
+>> maintain hot page information from multiple sources and let other sub-sy=
+stems
+>> use that info.
+>>
+>> 3. Discuss how hardware provided hotness info (like AMD IBS) can further=
+ aid
+>> promotion. Bharata had posted an RFC [4] on this a while back.
+>>
+>> 4. Overlap with DAMON and potential reuse.
+>>
+>> Links:
+>>
+>> [1] https://lore.kernel.org/all/20241201153818.2633616-1-raghavendra.kt@=
+amd.com/
+>> [2] https://lore.kernel.org/linux-mm/20241226012833.rmmbkws4wdhzdht6@ed.=
+ac.uk/T/
+>> [3] https://lore.kernel.org/lkml/Z4XUoWlU-UgRik18@gourry-fedora-PF4VCD3F=
+/T/
+>> [4] https://lore.kernel.org/lkml/20230208073533.715-2-bharata@amd.com/
+>>
+>
+>---
+>Best Regards,
+>Huang, Ying
+>
