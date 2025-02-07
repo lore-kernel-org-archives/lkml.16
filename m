@@ -1,117 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882E9238D30;
-	Fri,  7 Feb 2025 15:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E03F238D26;
+	Fri,  7 Feb 2025 15:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738942461; cv=none; b=ChAKlDhLF04u3JWnYXTBlXI3jVcGVFVMCv9rL0rxyEicIfXq1aukNoM4B0q9ScIFXQ8iQBZJv10mYe9NexwtzhYf9bOiP5w67Y1IP1yW/fjTsj9K6B/G5hgHMuFBiaqZCnS1rDMq5gw9RMWctxQA/F3euuWoWt2PKWfu9GnhhXw=
+	t=1738942563; cv=none; b=PDccOy/nj+npnMl8Ct/4ARYcsfuAkDVmyGLt2oI621RHHn0uIluuekMjJsaKPAJO8o/bGeyCnlgyUpWYro+4yJ4DzfkGKNiOlcEtZKEmpFRIhX60cvBkmgr8tFqsUHdPofvXfZY34oNH/w++vVvizOxN3VTmDNs5hL4E964/4Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738942461; c=relaxed/simple;
-	bh=nP/eEfPN/bwxT5v2aRBfTgmJI439shKK8G5cUYRc3EY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RevnkzkqmS3LK2mWp8TbCmIWdN0TFew7e78I6R6uYxKpDOLzBv4s+DPluNIN/SBvIhx69x4iLxBvguspFIDmoC/QN5LaCPNkca1MIWcFeXf1BbUNEGCl+YIfIiJHuYp82ll2H6SCJf6oS+gQgmLpANWo2QSwqaGmFhCqMZjHG8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: X/TT5NKrToaslSelBQhr9A==
-X-CSE-MsgGUID: mV1AImCQQ+yYMGCMn86yjQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39740095"
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="39740095"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 07:34:17 -0800
-X-CSE-ConnectionGUID: VXQqLjZtSzqIIF02PqrfAg==
-X-CSE-MsgGUID: 1poCM6aWQKagH+xRcoUGUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="111471997"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 07:34:11 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1tgQMp-000000097ct-09fa;
-	Fri, 07 Feb 2025 17:34:07 +0200
-Date: Fri, 7 Feb 2025 17:34:06 +0200
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>, Peter Rosin <peda@axentia.se>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
-	linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH v2 04/13] bus: ts-nbus: use gpiod_multi_set_value_cansleep
-Message-ID: <Z6Yn7mJZwPXs8-MA@smile.fi.intel.com>
-References: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com>
- <20250206-gpio-set-array-helper-v2-4-1c5f048f79c3@baylibre.com>
- <CAHp75Vf+3pc84vV-900Ls64hM1M7Ji6Dmy8FPwL=n0=sJFSuVA@mail.gmail.com>
- <CAHp75Vdt5EU83mJrB7Sb_pgRNbhvCQ=F2Lyq7mQLAvV-w6cqEA@mail.gmail.com>
- <b1459947-18ec-4835-8891-5251d8f8c95e@baylibre.com>
+	s=arc-20240116; t=1738942563; c=relaxed/simple;
+	bh=eKpgUtAgKnXTGC6co7uKVWueEzNDPDo4Nk/czisWYtg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WzOgQQy1RsmK9vebcBeNvAHTgnfz/xEuZC/MuxI3Luwm9KbBPJiGKS7hisbpVQya2UhGJeDJbrHxCe2IcU2kdIas6JZ9YwBJtCMM3Vtavct474s2ZRU4M5l9ScNCIPPozYWdYHg95xXLho/joY8UgiNHXYAJ61xbQj0ep9fMaL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d4ut1yQf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d4ut1yQf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98F86C4CEE7;
+	Fri,  7 Feb 2025 15:36:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738942562;
+	bh=eKpgUtAgKnXTGC6co7uKVWueEzNDPDo4Nk/czisWYtg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=d4ut1yQfA3Pk3v+NsBRvsw5imZrHkQALoPXxQQc55SaiXNe4AiaTrpTpgRIipNNeA
+	 ySqgK3NgnS1He0wCD57KnEOHQ+VvT83sWS71xIlI8Xiqq3k7sIumhArxicHBf2/c+y
+	 xZMurC/mLajsp+tWySjRviAzMCovcC/Hj9o+AdTv/m9uLm75HoPeCLLCH4wgc9K4HL
+	 NJUgDAna3AZeGdPf3IHgeSMNujwlpcPOU2uaw9aZvCJGr/EoQDskpmvMmM7vpXPZZ0
+	 e+HDIofcaFLlhjr38FwPOAQC0+Ky/Y9kNYFZoeOVxtZIH8FKM9g0ASfLFYpFIYKg98
+	 wHYv5V2c5ztyQ==
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-71e2766994bso1275581a34.3;
+        Fri, 07 Feb 2025 07:36:02 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVsALLTIWbJjJKUYK7xqTY69HM6LsLMrJChyBm5GXmo4KfvDIV4jyXdnXnW3pLNXoQGSsFS7Y7quYF+RpM=@vger.kernel.org, AJvYcCX91xst/nd3y2eirOWNXrXB+db6JjIrjJ1anaspevC32K73n5lB49YZOSNmCKCILyKc3mZPW0FvDy0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb2/919WMdyOyYWmpGZ27RxbwKoe36iRfi3TjivOvu/0XW/viL
+	NgKUiKBE7AlE2MDb4A2+Jns6KMREf5nMoU+h4awVz/Gjle9g/3IXDkOL0lGQO5+7Z+RcpRtEsN7
+	SqPWHeloW0mfJg+TScoEgb6J+tH8=
+X-Google-Smtp-Source: AGHT+IGDqX02CBpJr/9unc9HxWUlrUy3BWcAJQWZ9KGi7lke/D7VSaQ5LkwjmEIBLLPhGSFgK6ZZxlvDoGw17vx9UGo=
+X-Received: by 2002:a05:6830:6e12:b0:71d:eb02:baed with SMTP id
+ 46e09a7af769-726b87da973mr2863629a34.8.1738942561839; Fri, 07 Feb 2025
+ 07:36:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b1459947-18ec-4835-8891-5251d8f8c95e@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <1916668.tdWV9SEqCh@rjwysocki.net> <4917ca35e5e0c7035f09c02d5080a69ed3e88c44.camel@linux.intel.com>
+ <29daaf17-7711-44b1-baad-86dadcf01666@arm.com>
+In-Reply-To: <29daaf17-7711-44b1-baad-86dadcf01666@arm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 7 Feb 2025 16:35:50 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0jUM6TKJuJsA9ZJF1PvnudOmJFd0RC26iQd0zQSWM+wnA@mail.gmail.com>
+X-Gm-Features: AWEUYZkFtzMjH24WMjqwIJWFD9HdS0B_DDWuxd0jrQeHeGeKWcJj0_-js2jJPyM
+Message-ID: <CAJZ5v0jUM6TKJuJsA9ZJF1PvnudOmJFd0RC26iQd0zQSWM+wnA@mail.gmail.com>
+Subject: Re: [RFT][PATCH v1 0/5] cpuidle: menu: Avoid discarding useful
+ information when processing recent idle intervals
+To: Christian Loehle <christian.loehle@arm.com>
+Cc: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, 
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Aboorva Devarajan <aboorvad@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 07, 2025 at 09:23:56AM -0600, David Lechner wrote:
-> On 2/7/25 6:17 AM, Andy Shevchenko wrote:
-> > On Fri, Feb 7, 2025 at 2:15 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> >> On Fri, Feb 7, 2025 at 12:48 AM David Lechner <dlechner@baylibre.com> wrote:
-
-...
-
-> >>>  static void ts_nbus_write_byte(struct ts_nbus *ts_nbus, u8 byte)
-> >>>  {
-> >>> -       struct gpio_descs *gpios = ts_nbus->data;
-> >>>         DECLARE_BITMAP(values, 8);
-> >>>
-> >>>         values[0] = byte;
-> >>>
-> >>> -       gpiod_set_array_value_cansleep(8, gpios->desc, gpios->info, values);
-> >>> +       gpiod_multi_set_value_cansleep(ts_nbus->data, values);
+On Fri, Feb 7, 2025 at 4:24=E2=80=AFPM Christian Loehle
+<christian.loehle@arm.com> wrote:
+>
+> On 2/7/25 14:48, Artem Bityutskiy wrote:
+> > Hi,
+> >
+> > thanks for the patches!
+> >
+> > On Thu, 2025-02-06 at 15:21 +0100, Rafael J. Wysocki wrote:
+> >> Hi Everyone,
 > >>
-> >> As I said before, this is buggy code on BE64. Needs to be fixed.
-> > 
-> > Or isn't? Do we have a test case in bitmap for such a case?
-> > 
-> >>>  }
-> 
-> Maybe not the best style, but I don't think it is buggy. Bitmaps are always
-> handled in long-sized chunks and not cast to bytes so endianness doesn't affect
-> it. I didn't see an explicit test, but bitmap_read() and bitmap_write() use
-> array access like this so indirectly it is being tested.
+> >> This work had been triggered by a report that commit 0611a640e60a ("ev=
+entpoll:
+> >> prefer kfree_rcu() in __ep_remove()") had caused the critical-jOPS met=
+ric of
+> >> the SPECjbb 2015 benchmark [1] to drop by around 50% even though it ge=
+nerally
+> >> reduced kernel overhead.  Indeed, it was found during further investig=
+ation
+> >> that the total interrupt rate while running the SPECjbb workload had f=
+allen as
+> >> a result of that commit by 55% and the local timer interrupt rate had =
+fallen
+> >> by
+> >> almost 80%.
+> >
+> > I ran SPECjbb2015 with and it doubles critical-jOPS and basically makes=
+ it
+> > "normal" again. Thanks!
+> >
+> > Reported-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+> > Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+> >
+>
+> I'll go take a look in-depth, honestly the statistical test of
+> get_typical_interval() is somewhat black magic to me before and after
+> 4/5, so if that actually works better fine with me.
+> I'll run some tests, too.
 
-Right, the potential (and likely theoretical) issue may come if DEFINE_BITMAP()
-out of a sudden will use, let's say, an array of booleans. But it wasn't my
-initial complain about the code :-)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thank you!
