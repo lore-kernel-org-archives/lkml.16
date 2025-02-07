@@ -1,108 +1,94 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C874F23ED56
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE931EB1BC
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738943047; cv=none; b=JNcysxIvO7xEV6qYtVVooanA/HeM45mlX8MwWGig4LTr8zU/Lztm5NLTD1OkGebU26Afqfd8rRer87DEdXQWWzdh1ar54wf29d3tB4NS/etsl/2+Ccp1DpKcn+1TrOZEk/DZpfDG8Eg1rNiukSFfSB9en4mRWxTvBj2lKcykDRE=
+	t=1738943047; cv=none; b=pCnTdJRxAWJrCX2dzBWOR0SLt7OuIwzhp6O0B3qPKKMxzxNmfJdZ1h+a/7NaKtD83/5NtSpLR+YSvrmOH/ziR9hjGjsY9eu0d/TEakxGUGrNDeaTb9kLTgdfG4L9W+u2aHZ4lbTFmDrXmS746L5uXr6AidWELo3g3o4HsKp29/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1738943047; c=relaxed/simple;
-	bh=Ba2G0NIqA7lMC1ql4gfYuF13yoOPA2fjN4qtRUxWmdw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WA53EgTY8uAcqpJcGSQpB9v/07FQ3DPm/DpwOJMRInMmZcEfJ3GnNGFeJLXWWIAGnon5e+eVPukdyLnBPMVZ9emNXLW5CDLbraj0rqVUGkag5OekfVKFAZsLjTu9Ouy6+8QCFR5ywdS/rY8gvasoyuIejyEfazHKOT0GW1hZg1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EEFBC1E7D;
-	Fri,  7 Feb 2025 07:44:27 -0800 (PST)
-Received: from [10.1.196.57] (eglon.cambridge.arm.com [10.1.196.57])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A67DA3F58B;
-	Fri,  7 Feb 2025 07:44:01 -0800 (PST)
-Message-ID: <f4bd5866-ba8d-46de-a073-2ad44ac8306e@arm.com>
-Date: Fri, 7 Feb 2025 15:44:00 +0000
+	bh=tWyvV6TN9ZlIoRI5GQzK6C31rOOy6GemxCxQSeFrX88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iLjLASsUnAubrnMJrYZWMj8vaXBsxZalldTAHFogPt+iioPh6yWHB5xkQ5m5XtnvQd/4xs/JLQp0+r9a7iJTiAw9SJfCIPGOag5v63gg4i5VWRH5Lled9/2HP2IAGDxnoQnLWCogv/wqCZCv1BEYDqp9qq6ij8V3YUCsX/Hy92k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s6H5L5J0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s6H5L5J0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6674DC4CEDF;
+	Fri,  7 Feb 2025 15:44:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738943046;
+	bh=tWyvV6TN9ZlIoRI5GQzK6C31rOOy6GemxCxQSeFrX88=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s6H5L5J08FBjKM89+5awG+3iyAtNIEztSkZcIjAes6Mr6j2E0IIKP8o5f+/HuV+WR
+	 WPKsswqfUGOgxJqCBL8Oqv0zawsDVGt+ne/kdi9hYAfkL6scdZTQZgZFiSodejdYTQ
+	 ucRU5ysz8F1WrntbvFo29ZLN2dc+Jq75pldRtXhEtdAKLL/oUCWsH69Q+X2d8rRoxp
+	 uyyCtL3lLcmn0Tq/t53E2wjOdFtfQADjMbDEzWWa2Y8xx57cMSWVNF4FNNAojww1v4
+	 FAbdIShSe2yYODWaUy3oIi4A0a1qysF8pzT8XjgZeDr+h1tLwvri4URUJarbjIQbQv
+	 kVqkY+FlzXoLQ==
+Date: Fri, 7 Feb 2025 16:44:04 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	linux-kernel@vger.kernel.org, Zack Rusin <zack.rusin@broadcom.com>
+Subject: Re: [PATCH v2 43/45] pwm: gpio: Switch to use hrtimer_setup()
+Message-ID: <2nvnbgmvrgtquoyzz3dzeoityq4deqxikzu3osd42kuy3n3dk6@7mjuj6kpkhb7>
+References: <cover.1738746904.git.namcao@linutronix.de>
+ <7b7115da84372a49e36a0ac1a5ce553129c3ce0b.1738746904.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 17/40] x86/resctrl: Rewrite and move the
- for_each_*_rdt_resource() walkers
-To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Fenghua Yu <fenghua.yu@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
- shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
- dfustini@baylibre.com, amitsinght@marvell.com,
- David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
- Dave Martin <dave.martin@arm.com>, Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
-References: <20241004180347.19985-1-james.morse@arm.com>
- <20241004180347.19985-18-james.morse@arm.com>
- <441b7021-a423-4689-8330-c6675c4ece60@intel.com>
-Content-Language: en-GB
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <441b7021-a423-4689-8330-c6675c4ece60@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-Hi Reinette,
-
-On 23/10/2024 22:51, Reinette Chatre wrote:
-> On 10/4/24 11:03 AM, James Morse wrote:
->> The for_each_*_rdt_resource() helpers walk the architecture's array
->> of structures, using the resctrl visible part as an iterator. These
->> became over-complex when the structures were split into a
->> filesystem and architecture-specific struct. This approach avoided
->> the need to touch every call site, and was done before there was a
->> helper to retrieve a resource by rid.
->>
->> Once the filesystem parts of resctrl are moved to /fs/, both the
->> architecture's resource array, and the definition of those structures
->> is no longer accessible. To support resctrl, each architecture would
->> have to provide equally complex macros.
->>
->> Rewrite the macro to make use of resctrl_arch_get_resource(), and
->> move these to the core header so existing x86 arch code continues
->> to use them.
-> 
-> The last part is not clear, why does it need to be moved to core
-> header for x86 to use it?
-
-If it moves to fs/resctrl/internal.h, this works for the filesystem code, but not x86.
-If stays in arch/x86/kernel/cpu/resctrl/internal.h, then the existing filesystem users break.
-
-Moving it to include/linux/resctrl.h means both filesystem and arch code can include it.
-I'll add the header file path to the commit message.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="efyvkbyv6q7tzwtb"
+Content-Disposition: inline
+In-Reply-To: <7b7115da84372a49e36a0ac1a5ce553129c3ce0b.1738746904.git.namcao@linutronix.de>
 
 
->> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
->> index 8894aed3c593..f75f0409ae09 100644
->> --- a/include/linux/resctrl.h
->> +++ b/include/linux/resctrl.h
->> @@ -26,6 +26,24 @@ int proc_resctrl_show(struct seq_file *m,
->>  /* max value for struct rdt_domain's mbps_val */
->>  #define MBA_MAX_MBPS   U32_MAX
->>  
->> +/* Walk all possible resources, with variants for only controls or monitors. */
->> +#define for_each_rdt_resource(_r)						\
->> +	for ((_r) = resctrl_arch_get_resource(0);				\
->> +	     (_r)->rid < RDT_NUM_RESOURCES - 1;					\
+--efyvkbyv6q7tzwtb
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 43/45] pwm: gpio: Switch to use hrtimer_setup()
+MIME-Version: 1.0
 
-> I do not think this reaches all resources ... should this perhaps be:
-> 	(_r) && (_r)->rid < RDT_NUM_RESOURCES
+Hello,
 
-Good catch - I wrongly assumed I was off-by-one when this blew up because the increment is
-executed before this expression, and the existing 'RDT_NUM_RESOURCES - 1' reinforced that.
-Adding the "(_r) &&" was the correct fix.
+On Wed, Feb 05, 2025 at 11:46:31AM +0100, Nam Cao wrote:
+> hrtimer_setup() takes the callback function pointer as argument and
+> initializes the timer completely.
+>=20
+> Replace hrtimer_init() and the open coded initialization of
+> hrtimer::function with the new setup mechanism.
+>=20
+> Acked-by: Zack Rusin <zack.rusin@broadcom.com>
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> Cc: "Uwe Kleine-K=F6nig" <ukleinek@kernel.org>
 
+Applied to
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+next
+=2E
 
-Thanks!
+Thanks
+Uwe
 
-James
+--efyvkbyv6q7tzwtb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmemKkEACgkQj4D7WH0S
+/k62XQf+ISrtQgrNUvaPZ92XcG9HE3OkqjrYfF+qdIVVUzU1hdLGQ2Z3R7YJ6k3R
+N5Xayd3RTyuUtxcK377rBkxto4DwTjN4aSCwhY7Oy+44aJboTKi7g+FAxbGA1n1v
+kITGBQdxM9YayvLxzVXkieqLPQoKQXI1lcd5TuODc6/RvxBLMiUcqdyumftoLMF2
+uo6FBt1GPXOAjkRDa9vvIh7k8EBaBTySH0i4v8foLcv0AtLwbQPUKIwEcM+6xQNu
+tG4Xxbj3kzIy0rc3JqDXgcJZPW0oLAhXSvPcxsmcMyhVthZE8rr61Z/usoOcENDR
+XUfTdnplK63mPwL/3pEd4+tgzbtr0g==
+=73Pe
+-----END PGP SIGNATURE-----
+
+--efyvkbyv6q7tzwtb--
