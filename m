@@ -1,40 +1,65 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175B418DB0A;
-	Fri,  7 Feb 2025 16:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4CA18DB08;
+	Fri,  7 Feb 2025 16:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738946656; cv=none; b=MtXyorEWG8gyFBPoBNAoDKJFSD9B2C/omtZB0haxOMlO3GH3B3W/LZfRVnbTfRA/dtAxjdJrGINVPcldYTjOdn4kRepmZ28RarmFepr28N2IlK1NBKshNbMF4CxV0ayVFiEzs+b6wzms40kSmuSd3mlQn5HyK7DYxN9hGFhqnL0=
+	t=1738946676; cv=none; b=BmpK0OY4CrKM0Sw7Q2Yyy8UlF/EilIboAXKcQ4CBxbTXjW+qJSYVsjCLvuMQOOqBuLzRf7mFqFNQTaZzrAqHaxPl8oGxe+17OW4ZX27FwK1eKky+7xS6pX+t3GYribiU9IA827WTu46w04RfwLwy50Lwfrk8pEabdPfts9NiuV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738946656; c=relaxed/simple;
-	bh=mpfqKzszvYHRVS4h3ZzegMtUNRbdbK2CRVu0Bq65xww=;
+	s=arc-20240116; t=1738946676; c=relaxed/simple;
+	bh=JdlVQooyESRVCEFJ40knIl+97sMuXCaHm/o4iCmD5DU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jcBywXVfdo9M/SaIti4GdJUOy4p5mjrLtai3IE8aT7RHWD9MleIwT5JDKNNfP0boGKYWkR55do2UCxpPp6l28rFkdSohKfbfDzDkJXF08MNcP4Xwl9nLoUp8Y6rVs83OIuWxbaE3ZZMiirDEZT43xDQK0y7R2vU1QAc5pojA9Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fCCFcmaq; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 In-Reply-To:Content-Type; b=ZMSV+sOz2lv3Yk6PE3gypLmj6+m2keoYC1LZiHsshLtXdOKGBg/IFQga5YFRry2AjV+56AIcgO0nAOJLi1tADPhyXyzJpnoF4TdhAUgsY6wvHeO0yKQPs0lwpyJnYAUhbdZp8yVK0ZlSPxgL63Y3qgGcTqLUXoXKvatzE1qfRFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jSbp9tWs; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fCCFcmaq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1738946652;
-	bh=mpfqKzszvYHRVS4h3ZzegMtUNRbdbK2CRVu0Bq65xww=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fCCFcmaq8dKOMU4WC5ZB3w0+2+aY8xIkb+k8lUyjSVhMX+EU7P6HG6608ayjEEZhU
-	 gVdl+vuvhRar9+nEB2rthByvchRftzrK5owsHjRMTFa97uRqZ7lAoGK5jqufrGWzKU
-	 C0sUUWg9BLpq/Cr7jOxExsFEwJdaTal7sQSO8y15UieIsy6fHYb9/SxXIUezqn/BH5
-	 WQF9U9X8W/nwUtaNLUmTYZLoHgJv3/n0pgzbLHIR0lpxwxfVCvJDk0+HxiEYN2qElY
-	 xgu6T630ApeQXmVCgoYWWJU/WE3skvTXrqqC/EvKUGLu4fXzCBenkl6FeCAd4tzjkD
-	 QNjt5Ip4JwwXw==
-Received: from [192.168.1.90] (unknown [188.27.58.83])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id A3D0817E0239;
-	Fri,  7 Feb 2025 17:44:11 +0100 (CET)
-Message-ID: <648b2706-ba92-4ce9-aff0-0ee8f3e051e6@collabora.com>
-Date: Fri, 7 Feb 2025 18:44:11 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jSbp9tWs"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3eb939021bfso1163232b6e.3;
+        Fri, 07 Feb 2025 08:44:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738946673; x=1739551473; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=mBOLwQhvsCYjUO5QU6lf4fihBLDLeyv12uvte6XSdZ8=;
+        b=jSbp9tWsSj8zndOhXQLzwat+3AB+3DPkpV44nUwoXTfPGnUeqs8410iZtQ+B3Lk5aj
+         Gjyn1jBWa23ou0fHo7gw9bxZBCKjTmhKqsZHkxtil0Po9CNmZWRxTHVqsC1PxEP09gRD
+         dTir+Z6Je7Lz1ERDPosw1/5437AeZnM5Wx6eU+pv7OM+zVOa4yFDq9bempsnNZcPY/5Y
+         5o4DQMUFdajV6FKcKOXEmFAybpwQNjPISONKfn/mmbFo0amdmuN2wigW7mtOE5D/n70A
+         +6mT6qdcCL3bCntuF1ou79FYQMPqB6c9syA3V287EGDjNlrw7JAK9vBU0YoSHK1S5wKW
+         LkPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738946673; x=1739551473;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mBOLwQhvsCYjUO5QU6lf4fihBLDLeyv12uvte6XSdZ8=;
+        b=pKq4ipRJjp+6ucCibH6DNKL6McwfzePimMTZNjamkUJ+xjKSaexF68+g/zmn8MusYz
+         QnggxfwaWMjD+mFFRWvklBCta60ekVUkHrHTVdKKmyGbfiImZM5GafXOH3Xk8UG7HXir
+         qVHPdAg8+hcrXQhU0L+kTBEuEqcvrIQCiJ3s+7ALMx3XFVjjHOxg8+rPC3dOKOFGRuhL
+         9Zb1nxvui/sVLuc7CyezW7yxyfQH3FQRnFzW8UZ/U1iX941mvJUqySvycb3ToyvuV+2M
+         BrMaLsiqJ/UIk55RmA9oRbo01rfSQMDGmxNu7bSe6jQ9x8GBOSac82fPxzO/qBfFWPqX
+         4E8w==
+X-Forwarded-Encrypted: i=1; AJvYcCV6yB/7kSpT237PkPafY4unS9FQNj1cmKlCUOZhhAOFmXzLSNopWPxl/j43kiYhrYiFJ2Ez3v+k@vger.kernel.org, AJvYcCVtVygkPSs5EBtEgXw0QZTprH6ENCcRB0ZZR57HrzzP3Lvn9fzT6YVH9wuWR8bmUDfuMipBJwGNjIWwxKI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI461CxG6OOC6QVGEhstEFietSEMLovlvnsblxxCRbtS4Lc8la
+	H052zXGxOPhVHQij/f4fiUamn1sozJL0b6lJvZxdpFix3acOjbTn
+X-Gm-Gg: ASbGncueFP4udESS1tmriSKxQEEmY6p2gSVtaeihnrUxgBt0LGE1yu4c/hPSGxQkMwc
+	RiwuaOj8TAHozVijJUWE9V9D1Y2xlCGM3hi94O2hGBt2sgpo+fC7WUlbJLHmLn5jqOFglMCxzfx
+	G3u3jlL15blMbSkwWC9/NONKUm50O8RGUFgdznEmfkNc4h+wU1iB4jiC1jI6OmD+YVLuZPBps9P
+	xZgTp0T2+xlaW+uVygIIVkFG45srioa9LoWLIazyxHRcC/e40dji2LmKXkCvrveG+dW0MRDmhcW
+	JITg45UeJa9F74CkltM/dgWdhr3lTIlqfTf1gQTX4OI=
+X-Google-Smtp-Source: AGHT+IEOz7Pml1qWs1pvT3+42Bmr4hlj7VERSJ0J0/N7ecamWse8IkB0YXhPyt8g0x+kvpCBwGwGYA==
+X-Received: by 2002:a05:6808:3027:b0:3f1:cfb4:9ca with SMTP id 5614622812f47-3f392363e4bmr2298021b6e.36.1738946673396;
+        Fri, 07 Feb 2025 08:44:33 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726af9343c2sm860404a34.20.2025.02.07.08.44.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 08:44:32 -0800 (PST)
+Message-ID: <318e8b95-4ef8-43ca-a19d-129372a9dc48@gmail.com>
+Date: Fri, 7 Feb 2025 08:44:31 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,161 +67,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] ASoC: SOF: amd: Add post_fw_run_delay ACP quirk
-To: "Mukunda,Vijendar" <vijendar.mukunda@amd.com>,
- Liam Girdwood <lgirdwood@gmail.com>,
- Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
- Bard Liao <yung-chuan.liao@linux.intel.com>,
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
- Daniel Baluta <daniel.baluta@nxp.com>,
- Kai Vehmanen <kai.vehmanen@linux.intel.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>,
- Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
- "Hiregoudar, Basavaraj" <Basavaraj.Hiregoudar@amd.com>,
- "Dommati, Sunil-kumar" <Sunil-kumar.Dommati@amd.com>
-Cc: kernel@collabora.com, sound-open-firmware@alsa-project.org,
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250207-sof-vangogh-fixes-v1-0-67824c1e4c9a@collabora.com>
- <20250207-sof-vangogh-fixes-v1-1-67824c1e4c9a@collabora.com>
- <b9c412cf-32af-4cc7-af6d-d4be5b796ccd@amd.com>
+Subject: Re: [PATCH 0/4] net: dsa: b53: Enable internal GPHY on BCM63268
+To: Kyle Hendry <kylehendrydev@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+ Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250206043055.177004-1-kylehendrydev@gmail.com>
+ <1317d50b-8302-4936-b56c-7a9f5b3970b9@broadcom.com>
+ <9bd9c1e4-2401-46bd-937f-996e97d750c5@lunn.ch>
+ <a804e0a4-2275-41c3-be3b-7dd79c2418cd@gmail.com>
 Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <b9c412cf-32af-4cc7-af6d-d4be5b796ccd@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+In-Reply-To: <a804e0a4-2275-41c3-be3b-7dd79c2418cd@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 2/7/25 2:35 PM, Mukunda,Vijendar wrote:
-> On 07/02/25 17:16, Cristian Ciocaltea wrote:
->> Stress testing resume from suspend on Valve Steam Deck OLED (Galileo)
->> revealed that the DSP firmware could enter an unrecoverable faulty
->> state, where the kernel ring buffer is flooded with IPC related error
->> messages:
->>
->> [  +0.017002] snd_sof_amd_vangogh 0000:04:00.5: acp_sof_ipc_send_msg: Failed to acquire HW lock
->> [  +0.000054] snd_sof_amd_vangogh 0000:04:00.5: ipc3_tx_msg_unlocked: ipc message send for 0x30100000 failed: -22
->> [  +0.000005] snd_sof_amd_vangogh 0000:04:00.5: Failed to setup widget PIPELINE.6.ACPHS1.IN
->> [  +0.000004] snd_sof_amd_vangogh 0000:04:00.5: Failed to restore pipeline after resume -22
->> [  +0.000003] snd_sof_amd_vangogh 0000:04:00.5: PM: dpm_run_callback(): pci_pm_resume returns -22
->> [  +0.000009] snd_sof_amd_vangogh 0000:04:00.5: PM: failed to resume async: error -22
->> [...]
->> [  +0.002582] PM: suspend exit
->> [  +0.065085] snd_sof_amd_vangogh 0000:04:00.5: ipc tx error for 0x30130000 (msg/reply size: 12/0): -22
->> [  +0.000499] snd_sof_amd_vangogh 0000:04:00.5: error: failed widget list set up for pcm 1 dir 0
->> [  +0.000011] snd_sof_amd_vangogh 0000:04:00.5: error: set pcm hw_params after resume
->> [  +0.000006] snd_sof_amd_vangogh 0000:04:00.5: ASoC: error at snd_soc_pcm_component_prepare on 0000:04:00.5: -22
->> [...]
->>
->> A system reboot would be necessary to restore the speakers
->> functionality.
->>
->> However, by delaying a bit any host to DSP transmission right after
->> the firmware boot completed, the issue could not be reproduced anymore
->> and sound continued to work flawlessly even after performing thousands
->> of suspend/resume cycles.
->>
->> Introduce the post_fw_run_delay ACP quirk to allow providing the
->> aforementioned delay via the snd_sof_dsp_ops->post_fw_run() callback for
->> the affected devices.
-> As per our understanding, Till ACP firmware starts responding to the
-> driver's IPC messages, FW won't acquire the HW lock.
-> Adding delay in post_fw_run() callback seems to not a correct solution,
-> as there are no IPC messages will be sent from host till FW boot ready
-> is received.
-
-I suspect there is some sort of a race condition or hardware fault that
-causes the DSP to become unresponsive if the host attempts to send
-messages too fast after the firmware boot completed.  Delaying the
-transmission by 100us proved to be a reliable workaround (going below
-10us was not enough).
-
-Please note this was not always easy to reproduce, e.g. in some cases I
-had to run hundreds of suspend/resume cycles, hence I think it really
-points to a timing issue.
-
-Moreover, as soon as I tried to enable SOF debugging, the issue was
-gone, no matter how hard I tried to reproduce (ran thousands of cycles).
-
-> Is fail to acquire the HW lock is for first host IPC message?
-
-That seemed to be the pattern, yes.
-
->>
->> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
->> ---
->>  sound/soc/sof/amd/acp.c     |  1 +
->>  sound/soc/sof/amd/acp.h     |  1 +
->>  sound/soc/sof/amd/vangogh.c | 18 ++++++++++++++++++
->>  3 files changed, 20 insertions(+)
->>
->> diff --git a/sound/soc/sof/amd/acp.c b/sound/soc/sof/amd/acp.c
->> index 33648ff8b83365e76d7d90e52c2cb8f884a2fe72..9e13c96528be3371e063072513c118cfc8b93fe8 100644
->> --- a/sound/soc/sof/amd/acp.c
->> +++ b/sound/soc/sof/amd/acp.c
->> @@ -27,6 +27,7 @@ MODULE_PARM_DESC(enable_fw_debug, "Enable Firmware debug");
->>  static struct acp_quirk_entry quirk_valve_galileo = {
->>  	.signed_fw_image = true,
->>  	.skip_iram_dram_size_mod = true,
->> +	.post_fw_run_delay = true,
->>  };
->>  
->>  const struct dmi_system_id acp_sof_quirk_table[] = {
->> diff --git a/sound/soc/sof/amd/acp.h b/sound/soc/sof/amd/acp.h
->> index 800594440f73914e7b8ccaf86369ac686e1da630..2a19d82d6200223cdfccd49fbcf1b52968ae1230 100644
->> --- a/sound/soc/sof/amd/acp.h
->> +++ b/sound/soc/sof/amd/acp.h
->> @@ -220,6 +220,7 @@ struct sof_amd_acp_desc {
->>  struct acp_quirk_entry {
->>  	bool signed_fw_image;
->>  	bool skip_iram_dram_size_mod;
->> +	bool post_fw_run_delay;
->>  };
->>  
->>  /* Common device data struct for ACP devices */
->> diff --git a/sound/soc/sof/amd/vangogh.c b/sound/soc/sof/amd/vangogh.c
->> index 8e2672106ac60a22824836a944503a05616f8661..d5f1dddd43e72dd62b3d031130193e6125edf9df 100644
->> --- a/sound/soc/sof/amd/vangogh.c
->> +++ b/sound/soc/sof/amd/vangogh.c
->> @@ -11,6 +11,7 @@
->>   * Hardware interface for Audio DSP on Vangogh platform
->>   */
->>  
->> +#include <linux/delay.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/module.h>
->>  
->> @@ -136,6 +137,20 @@ static struct snd_soc_dai_driver vangogh_sof_dai[] = {
->>  	},
->>  };
->>  
->> +static int sof_vangogh_post_fw_run_delay(struct snd_sof_dev *sdev)
->> +{
->> +	/*
->> +	 * Resuming from suspend in some cases my cause the DSP firmware
->> +	 * to enter an unrecoverable faulty state.  Delaying a bit any host
->> +	 * to DSP transmission right after firmware boot completion seems
->> +	 * to resolve the issue.
->> +	 */
->> +	if (!sdev->first_boot)
->> +		usleep_range(100, 150);
->> +
->> +	return 0;
->> +}
->> +
->>  /* Vangogh ops */
->>  struct snd_sof_dsp_ops sof_vangogh_ops;
->>  EXPORT_SYMBOL_NS(sof_vangogh_ops, "SND_SOC_SOF_AMD_COMMON");
->> @@ -157,6 +172,9 @@ int sof_vangogh_ops_init(struct snd_sof_dev *sdev)
->>  
->>  		if (quirks->signed_fw_image)
->>  			sof_vangogh_ops.load_firmware = acp_sof_load_signed_firmware;
->> +
->> +		if (quirks->post_fw_run_delay)
->> +			sof_vangogh_ops.post_fw_run = sof_vangogh_post_fw_run_delay;
->>  	}
->>  
->>  	return 0;
->>
+On 2/6/25 17:41, Kyle Hendry wrote:
 > 
+> On 2025-02-06 12:17, Andrew Lunn wrote:
+>> On Thu, Feb 06, 2025 at 10:15:50AM -0800, Florian Fainelli wrote:
+>>> Hi Kyle,
+>>>
+>>> On 2/5/25 20:30, Kyle Hendry wrote:
+>>>> Some BCM63268 bootloaders do not enable the internal PHYs by default.
+>>>> This patch series adds functionality for the switch driver to
+>>>> configure the gigabit ethernet PHY.
+>>>>
+>>>> Signed-off-by: Kyle Hendry <kylehendrydev@gmail.com>
+>>> So the register address you are manipulating logically belongs in the 
+>>> GPIO
+>>> block (GPIO_GPHY_CTRL) which has become quite a bit of a sundry here. I
+>>> don't have a strong objection about the approach picked up here but 
+>>> we will
+>>> need a Device Tree binding update describing the second (and optional)
+>>> register range.
+>> Despite this being internal, is this actually a GPIO? Should it be
+>> modelled as a GPIO line connected to a reset input on the PHY? It
+>> would then nicely fit in the existing phylib handling of a PHY with a
+>> GPIO reset line?
+>>
+>>     Andrew
+> The main reason I took this approach is because a SF2 register has
+> similar bits and I wanted to be consistent with that driver. If it
+> makes more sense to treat these bits as GPIOs/clocks/resets then it
+> would make the implementation simpler.
 
+I don't think there is a need to go that far, and I don't think any of 
+those abstractions work really well in the sense that they are neither 
+clocks, nor resets, nor GPIOs, they are just enable bits for the power 
+gating logic of the PHY, power domains would be the closest to what this 
+is, but this is a very heavy handed approach with little benefit IMHO.
+
+What we do need is document this register in the binding however.
+-- 
+Florian
