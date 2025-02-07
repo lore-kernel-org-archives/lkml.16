@@ -1,119 +1,134 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5466919F422
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 22:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7971C700A
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 22:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738968294; cv=none; b=JXhJNrhk95onuCVQUlB4NjmtapC3kOHmLokEqD5pkiNFSo9UjSwpz3P0TKjoIorQVf3ux7gIa/eMMt7F1hzxIEs5YZL1eEz6dB00XeCQtdCgizn0X/FSK+2dGVRTB4fJKw4s1NXN/J9YkaKu1giKnXkcTexRviy/LpTDFHBlgpk=
+	t=1738968442; cv=none; b=tjoFGdM5ALm+dLOjdgd0Y6Z74k7aiKKHczrVbB1e8P3VEg7Eh3vbmyv/kBGXRf+W4wG0hKwjbjOJrGvVqPdiw77H/StUBCJ4bkojNcvpVwNcLBvH/Jig+LN/UrvLKYP+e88vSWhLqqgwCTzwb3mK2AjTY0ECOvFIlFCvwkAhZ8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738968294; c=relaxed/simple;
-	bh=xER+J0rwCJQXKyznu3AhTqAUumvPqCAq0oO+l0T+4Ts=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZQxQS/lMLM3mrneypBEkgfcW2ZYLkggCX9uNVQmqHQPO2wWXr5StT5xwlLvrH9WmMhmnBlHg2g0fuparPSBPDqDztJ1ShFGMkoqFge8tefmsWUdrR1KKS3I7B29sMCEvNMqs9GRiV9rj0c1QBqZWYZZV9DkK1K+ZACZSfCz+s5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=w44qH0cg; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1738968442; c=relaxed/simple;
+	bh=Q1fbi3F8LKnBa1vR6e0w8SK35bgu0+iWdIMrLyuScbQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CXMvpjNUrplT5oPtDaCdbxzUG3sE1t0vBuMgiNcbcI7xpnqDI45bNpNxeIOQz4y/2pgwJ030kOKI3zuNqLdI9zGIipCTcj0W9OEOWPA2cAsh3xHitddhBXyPQ93NQAE23BeoZS4W/SCmfocHogBzo/TKGKLUbbR9zm3lmElz3Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hZ+oJS/w; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="w44qH0cg"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-219f8263ae0so50731935ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 14:44:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1738968292; x=1739573092; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aaVupd8VUc45i80fdS121DnyNihJxKhlS0yfklFXjf8=;
-        b=w44qH0cg8smdRVacaHUWJ5+JluQwJAzwMJL91s/9wbzyha0lRsaqsycVXXoBmLXUmf
-         8GBGut8+xCexykHdzbfg8uWLz8BoCR17Wu6PMbncbjJI+AN+b0MB94siQ2R6grODGb8X
-         y72ThrRxw2rnVprrZ0sXWnk5zdEt7Ch/po0RBwPwAROkxtO1o6WfPAtZpQ4dClYxil2d
-         g2K6Iteft2lxPUNkbmorHFb3oyNyGOIgBQM1AMh4WBUp7parZPwvldP41mTdgcKx3O4z
-         hQNGfa9/tNb0tv1JinKn6aMWDm8ZhtTh7rFzTNMdufnquS7kcs/KbLJMDQp3Dz9SlswS
-         bJ7Q==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hZ+oJS/w"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517CabLn011434
+	for <linux-kernel@vger.kernel.org>; Fri, 7 Feb 2025 22:47:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	GSfrT82LSQv1cmL5Q6NuLOzNcusRp2aoe4uqa6zAbDk=; b=hZ+oJS/wbJgwqJBl
+	nyf2cAtw3hj0J0dYY+QaMuFSG6sVkBGmKo5JSCgv+HNmXu+OCOm6LVDnAOIDrNBk
+	Zwnm3lvIhAka2ikEuLSrVlsB9YPq8CSW/gvN77nvjIzZp8p7P0WLDFoCqkze23Mu
+	HkazSrVSCvVr3/dyrggSKeQo4UVWWLK66NrMTE2W158jd018dNEpHwZNMMLVEAyQ
+	XSJXAdUns4rHpOR40ZBDOV30M+Bn9OOZTs1vcByoQS3kFMdkOxNHV/X7GEjPz52y
+	zbx1XO/hME/l/sN8b98DlnrpHvLBJOxHyd4BDWo9iBX4p417t/j5R8s8Yg5xsUWh
+	ffZF+w==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nja3scq3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 22:47:20 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-467a0d7fb9fso4023331cf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 14:47:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738968292; x=1739573092;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aaVupd8VUc45i80fdS121DnyNihJxKhlS0yfklFXjf8=;
-        b=VEBjFmzG9yfm/JBPXNfKmGYPVw8eGnA9YkLT3TRLq475gVcVj/ccf2bIWbm+KTyu4X
-         cZ/jYtaA2FgcgY9ZB02Zdzx6pv1BCMa5nNoqy+HUSfxZRTmwh3KfsGwyAfPKQbB1PWqp
-         mp4EMEoDdDWbrKJW4GZgCSLUoTpdBu831tGd0ntRVe5wInbWWIZyN63/6RQ7CDZR8iRw
-         3528QFa9oGQEtC50OXyx1XoPdIPHNI25Sv50Nr70v+6gJwXGNmvQlYufp0d/a5sw7wPC
-         4DVNCaRZGi2uFJCr56lCBmDuwyIX33jjGIO1gxnIOhb+3v/1JBR+vHPefoZ8SnuU/hoU
-         3iFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3iHK93bYb1encGMhr+Nc50RcPaquY03pCf03/m4FMnueAygJDN5Hkq+5vS1N4gsygAqz0CrlZO0gR1bo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1wW9ZKnVf4H4087h/E11kUzuxhhrpuegE4DtJp7HM49AGZg+/
-	4x0Rcv8G0VteCa7sq5rYnpgy45IE/8SdWNeeVZkWqgB699pDEKNuRi8qi+gB5Qg=
-X-Gm-Gg: ASbGncuhiVsy8N3Y0zNwiwgtTD2uo3S3p8Rz08z4amOJQIos2/E2hb6dmJJtZodOMqU
-	sGx4FcpvzWf2IRhCl2HZWz9gfLKUFPqTGi+ErVAyfh9hDi9gpO6txk/8HTxZi4tA5pDdBERF3B7
-	PpM4VDteHQf1xvdCUdkxCaJJaUKpOhohwLQPrHzvktcD6PU9I7YUzUuEVEf7XiDFPrgLQPEuK2w
-	jrEs+jVeFysG9HIwWy4eM1iiMqep2JBASCtNcNosqWHOvLIc6Xwv8OFOATAmM5pGndLpzjkCRNH
-	qX0JfRAqlc4svgSsaOfT93V2Vw==
-X-Google-Smtp-Source: AGHT+IGTbu0BMzwMN01MWsrhsIOFLeTlIMVdLcXc0KHhDWapExjSRgm5VmEl2B4ZBoi8LJRoMaWbIQ==
-X-Received: by 2002:a05:6a21:7a4a:b0:1ed:a578:127a with SMTP id adf61e73a8af0-1ee03b70c91mr10868884637.40.1738968292668;
-        Fri, 07 Feb 2025 14:44:52 -0800 (PST)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51aeb8d9bsm3508358a12.12.2025.02.07.14.44.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 14:44:52 -0800 (PST)
-Date: Fri, 7 Feb 2025 14:44:48 -0800
-From: Deepak Gupta <debug@rivosinc.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	alistair.francis@wdc.com, richard.henderson@linaro.org,
-	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
-	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
-	cleger@rivosinc.com, alexghiti@rivosinc.com,
-	samitolvanen@google.com, rick.p.edgecombe@intel.com
-Subject: Re: [PATCH v9 01/26] mm: helper `is_shadow_stack_vma` to check
- shadow stack vma
-Message-ID: <Z6aM4NZyJSGLwIPr@debug.ba.rivosinc.com>
-References: <20250204-v5_user_cfi_series-v9-0-b37a49c5205c@rivosinc.com>
- <20250204-v5_user_cfi_series-v9-1-b37a49c5205c@rivosinc.com>
- <6543c6b6-da86-4c10-9b8c-e5fe6f6f7da9@suse.cz>
- <5708c19d-240a-466a-b17a-d51b26ab95e6@sirena.org.uk>
+        d=1e100.net; s=20230601; t=1738968439; x=1739573239;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GSfrT82LSQv1cmL5Q6NuLOzNcusRp2aoe4uqa6zAbDk=;
+        b=bngDGYPvItUZOpEJMPCuJqdNLDtxO7sYX30SycPf+krr0d3x8pyETCH/Rt5gy2vjij
+         njTC8OBaNOChBEFrf+wjtOk4/RmoZ9/2EGb2ijKsCL7d9bV7KtbE3/GKQhhFXwkPh+fv
+         QRfikj8xjMwtnAmxaOMLgXgQyzgs1TX1AtQyJJ6tGfHrSkCFKYV8Mdr6BgL1LXMpjqdx
+         QnKbAVlw2JcE67EEj/MBoOQr1n7K6UtzZDzcXZ26y+oyWOFqF8fZvOITwPeOnTBGBEwN
+         0WXpMt4oTnyYxj8d3xCFuNeCg14qK2Gn86jPmCfG+WZmc0gglZL3+fXrGZ5f7J7mexcm
+         Fkyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUsc4YrVsd6Z8XOKunUn7Igxok2rbyttVQSJ01hXFen1a7Ai1PyGDn3aKtf80KYpjSmvjBZcIGXmhnoqKo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFGQYeX7mzPpLosK38j/eEnA65hKtX0YkVFl/Hjuo76KPqNhie
+	c2oG93qm4g/2b9JgwLZtE8/2yXL3MAvKhQDk64DNh9bND2WDYdbii7LKTDkoYsB+x+KZWRlYQf9
+	rXvFuq7IYQ+X2+7FDvWyo+idv7YrWrJrYyf1/sTPRDMK0roHCuehKmOqvR0Q/G9k=
+X-Gm-Gg: ASbGncvu75WfigqSfH2s98Xe06S5a5NgzEklsTfngStcRWoAW2XSxxssgKcZCLzjzQh
+	edXhii0MvRUPuqP+TBCF2bNPdSYy4l0TBU5T4rYBgnxJ7utupmXHe9Yq/R/CiY74J3XaGfzuHCw
+	V4Byjuz6+m+7JVrae2mRQq4wJiq2ka7jatVHOJuknKtowzMpNi2RPTs6uYkd02+ffadkua6FtiI
+	gTFmRh3Tdk121hOOmMqSSp0vvHvi1EMHkzoXmY54E/arvkek2r8MJ4r3GRFfhoyjCwAKVtJFz5i
+	xXXrJnkTfADl0owiBH8YpgplWmPl+cKrN8UToHxuNdDRwoZpxefHAgYU75A=
+X-Received: by 2002:a05:622a:1b87:b0:467:6bbf:c1ab with SMTP id d75a77b69052e-471679c7d79mr29186461cf.3.1738968438746;
+        Fri, 07 Feb 2025 14:47:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGSsJAkiNdMntxbj6WaJ97FcSyVaatuMmgkKKnf1mFsTb8a3C0KJ8abaktCJbg7NroLAnIrZA==
+X-Received: by 2002:a05:622a:1b87:b0:467:6bbf:c1ab with SMTP id d75a77b69052e-471679c7d79mr29186181cf.3.1738968438388;
+        Fri, 07 Feb 2025 14:47:18 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dcf1b7ad6fsm3197436a12.18.2025.02.07.14.47.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 14:47:17 -0800 (PST)
+Message-ID: <c6352263-8329-4409-b769-a22f98978ac8@oss.qualcomm.com>
+Date: Fri, 7 Feb 2025 23:47:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5708c19d-240a-466a-b17a-d51b26ab95e6@sirena.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/5] Add UFS support for SM8750
+To: Melody Olvera <quic_molvera@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bjorn Andersson
+ <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
+        Trilok Soni <quic_tsoni@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Nitin Rawat <quic_nitirawa@quicinc.com>,
+        Manish Pandey <quic_mapa@quicinc.com>
+References: <20250113-sm8750_ufs_master-v1-0-b3774120eb8c@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250113-sm8750_ufs_master-v1-0-b3774120eb8c@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: skYN79OQD9_jGAhuB79VzJ3xiMTan0lN
+X-Proofpoint-ORIG-GUID: skYN79OQD9_jGAhuB79VzJ3xiMTan0lN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_10,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ clxscore=1015 priorityscore=1501 bulkscore=0 spamscore=0 mlxscore=0
+ impostorscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502070172
 
-On Fri, Feb 07, 2025 at 08:06:59PM +0000, Mark Brown wrote:
->On Fri, Feb 07, 2025 at 10:27:10AM +0100, Vlastimil Babka wrote:
->> On 2/5/25 02:21, Deepak Gupta wrote:
->> > VM_SHADOW_STACK (alias to VM_HIGH_ARCH_5) is used to encode shadow stack
->
->> I see that arm GCS uses VM_HIGH_ARCH_6.
->
->That'll be bitrot in the changelog, it was originally VM_HIGH_ARCH_5 on
->arm64 as well but we had to renumber due to the addition of
->VM_MTE_ALLOWED while the GCS series was on the list.  The changelog just
->shouldn't mention VM_HIGH_ARCH_x, it's not particularly relevant here.
+On 13.01.2025 10:46 PM, Melody Olvera wrote:
+> Add UFS support for SM8750 SoCs.
+> 
+> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+> ---
+> Nitin Rawat (5):
+>       dt-bindings: phy: qcom,sc8280xp-qmp-ufs-phy: Document the SM8750 QMP UFS PHY
+>       phy: qcom-qmp-ufs: Add PHY Configuration support for SM8750
+>       dt-bindings: ufs: qcom: Document the SM8750 UFS Controller
+>       arm64: dts: qcom: sm8750: Add UFS nodes for SM8750 SoC
+>       arm64: dts: qcom: sm8750: Add UFS nodes for SM8750 QRD and MTP boards
 
-Yeah noted. Thanks.
+You still need the same workaround 8550/8650 have in the UFS driver
+(UFSHCD_QUIRK_BROKEN_LSDBS_CAP) for it to work reliably, or at least
+that was the case for me on a 8750 QRD.
+
+Please check whether we can make that quirk apply based on ctrl
+version or so, so that we don't have to keep growing the compatible
+list in the driver.
+
+Konrad
