@@ -1,161 +1,191 @@
-Received: from mail-gw02.astralinux.ru (mail-gw02.astralinux.ru [195.16.41.108])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A00B23C8BA;
-	Fri,  7 Feb 2025 16:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.16.41.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A74323C8BA;
+	Fri,  7 Feb 2025 16:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738944282; cv=none; b=DkMZO+dGe5b1g89DK5mPhhGuxpf+18pwzeIVtWmg9/Ts53t9M273qq6RNCrEfTnb0gUNzTHUtc9n3ZneVI/YqHty3vhSYAzaw8eF2+QPeB1YYYa9IvJ/Te1SDHo4UVr2IwZ58cYA0XjVDVPzk1U3LdoH1IQB0uJgoZYD/Ur09BA=
+	t=1738944289; cv=none; b=Y+9l9iJ6qdAtz/4091ef43P/oBFNIEs2TtqYUjrZmtTqWuRalcrkInOAG87QtAW8OyVUc2vHQsCfS/rAVTqzm185jDK8Corf+4PDjo5qwcWxbNOZ67vMZxj9F0QpRWC1ZHQeyBhylZhPNIsuu50z1xtJ2iRzhCSU3pzoQzp/oFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738944282; c=relaxed/simple;
-	bh=Pv8A6iEtT1eR45rzq+djtWH/jruBfbbOZ+gmhFwJyyA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WMCxo0UG2CzdDcWR6sH1w8RZawNk/8qZdRDxZEhw1iyq7g9bXodlq5DmiWnIULdTketAlRvqkhxm7CNO/yYEv06s3cF6no6ChSmivN3o+FQrP6YcjamXPIx9Zs+qDlgLGYBAM+nWIlaXa6PbF1I8P/xkiXs9XXCk71kGFER7RJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=195.16.41.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
-Received: from gca-msk-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
-	by mail-gw02.astralinux.ru (Postfix) with ESMTP id 8A8361F9C8;
-	Fri,  7 Feb 2025 19:04:29 +0300 (MSK)
-Received: from new-mail.astralinux.ru (gca-yc-ruca-srv-mail03.astralinux.ru [10.177.185.108])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-gw02.astralinux.ru (Postfix) with ESMTPS;
-	Fri,  7 Feb 2025 19:04:27 +0300 (MSK)
-Received: from rbta-msk-lt-156703.astralinux.ru (unknown [10.177.20.117])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4YqJgt2BpGz1gyXY;
-	Fri,  7 Feb 2025 19:04:26 +0300 (MSK)
-From: Alexey Panov <apanov@astralinux.ru>
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alexey Panov <apanov@astralinux.ru>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Longlong Xia <xialonglong@kylinos.cn>,
-	stable <stable@kernel.org>
-Subject: [PATCH v2 5.10/5.15] tty: n_gsm: Fix use-after-free in gsm_cleanup_mux
-Date: Fri,  7 Feb 2025 19:03:37 +0300
-Message-Id: <20250207160337.13479-1-apanov@astralinux.ru>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20250207153651.7115-1-apanov@astralinux.ru>
-References: 
+	s=arc-20240116; t=1738944289; c=relaxed/simple;
+	bh=g+ioff1W9d9VIqgoyYiXcKhKmAiaZ+9IcYUPuV414Wo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=D5uz23VYhbE3in8pKCVq8bJQYcdxwTJJpBZZ/qerZs+JhV2XAFibYGCdbkrc8Sw7NtgTpDW8oUzm/2Po9lbJLyh23RxlALOAsNKRFrdNQkZsQ1BEs3cmFjJXMtu/2NPsqqGyOlEBtJszxyuUSTbM0e6nkZCgCdtuGucLB4NOxQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KH1oL2w5; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KH1oL2w5"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517EBqNR028628;
+	Fri, 7 Feb 2025 16:04:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=9XMr2A
+	CuOZ3DXn0CmvjvXygdp2UhUHb82FDmLJ1f7Mw=; b=KH1oL2w5rXOhVP8PvS7o4x
+	NSECp8u6spVG23L5twI5ZxV7NEsEiudzYaEB5J2CqN2aeWvjHJP0vPzVszUJzkLZ
+	RKmw86ycxoSTLEQLfAIiMFvx5x3C/8iIoQdQny1VOVTZb1vrUQH4poziNAoBnbYT
+	9/N9Z/znXUe7pKShVtt2aErXnwrpx2NT60nXBIwbPhmKrfrWzFPlaHOhqmX2lBzT
+	YaKiVqteD4SflRoTP92BniUECbDEA3hADe+egmSsg76pniIPLtF3KHcsps7v4ok3
+	+1RPyVNHptHuW3RpconkQ1A9dhGRBMbsQ8h5wmI3sPNIyJM4NMcC3mu6/RWvYDmg
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44n910bngf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Feb 2025 16:04:24 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 517CJfj6005266;
+	Fri, 7 Feb 2025 16:04:23 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j05kc1qu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Feb 2025 16:04:23 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 517G4MHB35127878
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Feb 2025 16:04:23 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A1FA558052;
+	Fri,  7 Feb 2025 16:04:22 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 97C6D5805E;
+	Fri,  7 Feb 2025 16:04:21 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.150.111])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  7 Feb 2025 16:04:21 +0000 (GMT)
+Message-ID: <aa75c604583ba982507dd2ad77668d0f2fb18962.camel@linux.ibm.com>
+Subject: Re: [PATCH v7 6/7] ima: make the kexec extra memory configurable
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com
+Date: Fri, 07 Feb 2025 11:04:21 -0500
+In-Reply-To: <20250203232033.64123-8-chenste@linux.microsoft.com>
+References: <20250203232033.64123-1-chenste@linux.microsoft.com>
+	 <20250203232033.64123-8-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-KSMG-AntiPhishing: NotDetected, bases: 2025/02/07 14:10:00
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Envelope-From: apanov@astralinux.ru
-X-KSMG-AntiSpam-Info: LuaCore: 50 0.3.50 df4aeb250ed63fd3baa80a493fa6caee5dd9e10f, {Tracking_uf_ne_domains}, {Tracking_internal2}, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;astralinux.ru:7.1.1;127.0.0.199:7.1.2;lore.kernel.org:7.1.1;new-mail.astralinux.ru:7.1.1, FromAlignment: s
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 190876 [Feb 07 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.7
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/02/07 12:24:00 #27143140
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected, bases: 2025/02/07 14:13:00
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 1
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: UiSiqQgDhdjG_i3TiKAZ_xBBrQZHIQ7Q
+X-Proofpoint-GUID: UiSiqQgDhdjG_i3TiKAZ_xBBrQZHIQ7Q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_07,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 spamscore=0 malwarescore=0 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502070121
 
-From: Longlong Xia <xialonglong@kylinos.cn>
+Hi Steven,
 
-commit 9462f4ca56e7d2430fdb6dcc8498244acbfc4489 upstream.
+On Mon, 2025-02-03 at 15:20 -0800, steven chen wrote:
+> The extra memory allocated for carrying the IMA measurement list across
+> kexec is hard-coded as half a PAGE.=C2=A0 Make it configurable.
+>=20
+> Define a Kconfig option, IMA_KEXEC_EXTRA_MEMORY_KB, to configure the
+> extra memory (in kb) to be allocated for IMA measurements added during
+> kexec soft reboot.=C2=A0 Ensure the default value of the option is set su=
+ch
+> that extra half a page of memory for additional measurements is allocated
+> for the additional measurements.
+>=20
+> Update ima_add_kexec_buffer() function to allocate memory based on the
+> Kconfig option value, rather than the currently hard-coded one.
+>=20
+> From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Author: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+> ---
+> =C2=A0security/integrity/ima/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0 | 10 +++++++=
++++
+> =C2=A0security/integrity/ima/ima_kexec.c | 16 ++++++++++------
+> =C2=A02 files changed, 20 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kcon=
+fig
+> index 475c32615006..54b145ae6096 100644
+> --- a/security/integrity/ima/Kconfig
+> +++ b/security/integrity/ima/Kconfig
+> @@ -321,4 +321,14 @@ config IMA_DISABLE_HTABLE
+> =C2=A0	help
+> =C2=A0	=C2=A0=C2=A0 This option disables htable to allow measurement of d=
+uplicate records.
+> =C2=A0
+> +config IMA_KEXEC_EXTRA_MEMORY_KB
+> +	int "Extra memory for IMA measurements added during kexec soft reboot"
+> +	depends on IMA_KEXEC
+> +	default 0
+> +	help
+> +	=C2=A0 IMA_KEXEC_EXTRA_MEMORY_KB determines the extra memory to be
+> +	=C2=A0 allocated (in kb) for IMA measurements added during kexec soft r=
+eboot.
+> +	=C2=A0 If set to the default value, an extra half a page of memory for =
+those
+> +	=C2=A0 additional measurements will be allocated.
 
-BUG: KASAN: slab-use-after-free in gsm_cleanup_mux+0x77b/0x7b0
-drivers/tty/n_gsm.c:3160 [n_gsm]
-Read of size 8 at addr ffff88815fe99c00 by task poc/3379
-CPU: 0 UID: 0 PID: 3379 Comm: poc Not tainted 6.11.0+ #56
-Hardware name: VMware, Inc. VMware Virtual Platform/440BX
-Desktop Reference Platform, BIOS 6.00 11/12/2020
-Call Trace:
- <TASK>
- gsm_cleanup_mux+0x77b/0x7b0 drivers/tty/n_gsm.c:3160 [n_gsm]
- __pfx_gsm_cleanup_mux+0x10/0x10 drivers/tty/n_gsm.c:3124 [n_gsm]
- __pfx_sched_clock_cpu+0x10/0x10 kernel/sched/clock.c:389
- update_load_avg+0x1c1/0x27b0 kernel/sched/fair.c:4500
- __pfx_min_vruntime_cb_rotate+0x10/0x10 kernel/sched/fair.c:846
- __rb_insert_augmented+0x492/0xbf0 lib/rbtree.c:161
- gsmld_ioctl+0x395/0x1450 drivers/tty/n_gsm.c:3408 [n_gsm]
- _raw_spin_lock_irqsave+0x92/0xf0 arch/x86/include/asm/atomic.h:107
- __pfx_gsmld_ioctl+0x10/0x10 drivers/tty/n_gsm.c:3822 [n_gsm]
- ktime_get+0x5e/0x140 kernel/time/timekeeping.c:195
- ldsem_down_read+0x94/0x4e0 arch/x86/include/asm/atomic64_64.h:79
- __pfx_ldsem_down_read+0x10/0x10 drivers/tty/tty_ldsem.c:338
- __pfx_do_vfs_ioctl+0x10/0x10 fs/ioctl.c:805
- tty_ioctl+0x643/0x1100 drivers/tty/tty_io.c:2818
+-> If set to the default value of 0, an extra half page ...
 
-Allocated by task 65:
- gsm_data_alloc.constprop.0+0x27/0x190 drivers/tty/n_gsm.c:926 [n_gsm]
- gsm_send+0x2c/0x580 drivers/tty/n_gsm.c:819 [n_gsm]
- gsm1_receive+0x547/0xad0 drivers/tty/n_gsm.c:3038 [n_gsm]
- gsmld_receive_buf+0x176/0x280 drivers/tty/n_gsm.c:3609 [n_gsm]
- tty_ldisc_receive_buf+0x101/0x1e0 drivers/tty/tty_buffer.c:391
- tty_port_default_receive_buf+0x61/0xa0 drivers/tty/tty_port.c:39
- flush_to_ldisc+0x1b0/0x750 drivers/tty/tty_buffer.c:445
- process_scheduled_works+0x2b0/0x10d0 kernel/workqueue.c:3229
- worker_thread+0x3dc/0x950 kernel/workqueue.c:3391
- kthread+0x2a3/0x370 kernel/kthread.c:389
- ret_from_fork+0x2d/0x70 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:257
+> +
+> =C2=A0endif
+> diff --git a/security/integrity/ima/ima_kexec.c
+> b/security/integrity/ima/ima_kexec.c
+> index d5f004cfeaec..c9c916f69ca7 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -128,22 +128,26 @@ void ima_add_kexec_buffer(struct kimage *image)
+> =C2=A0				=C2=A0 .buf_min =3D 0, .buf_max =3D ULONG_MAX,
+> =C2=A0				=C2=A0 .top_down =3D true };
+> =C2=A0	unsigned long binary_runtime_size;
+> -
+> +	unsigned long extra_size;
+> =C2=A0	/* use more understandable variable names than defined in kbuf */
+> =C2=A0	void *kexec_buffer =3D NULL;
+> =C2=A0	size_t kexec_buffer_size =3D 0;
+> =C2=A0	int ret;
+> =C2=A0
+> =C2=A0	/*
+> -	 * Reserve an extra half page of memory for additional measurements
+> -	 * added during the kexec load.
+> +	 * Reserve extra memory for measurements added during kexec.
+> =C2=A0	 */
 
-Freed by task 3367:
- kfree+0x126/0x420 mm/slub.c:4580
- gsm_cleanup_mux+0x36c/0x7b0 drivers/tty/n_gsm.c:3160 [n_gsm]
- gsmld_ioctl+0x395/0x1450 drivers/tty/n_gsm.c:3408 [n_gsm]
- tty_ioctl+0x643/0x1100 drivers/tty/tty_io.c:2818
+Please rename the variable from "extra_size" to "extra_memory".
 
-[Analysis]
-gsm_msg on the tx_ctrl_list or tx_data_list of gsm_mux
-can be freed by multi threads through ioctl,which leads
-to the occurrence of uaf. Protect it by gsm tx lock.
+thanks,
 
-Signed-off-by: Longlong Xia <xialonglong@kylinos.cn>
-Cc: stable <stable@kernel.org>
-Suggested-by: Jiri Slaby <jirislaby@kernel.org>
-Link: https://lore.kernel.org/r/20240926130213.531959-1-xialonglong@kylinos.cn
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[ Alexey: Replace guard macro with spin_lock_irqsave due to its unavailability
-in pre-6.1 kernels. Based on a v1 patch from Longlong Xia [1]. ]
-Link: https://lore.kernel.org/all/20240924093519.767036-1-xialonglong@kylinos.cn/ [1]
-Signed-off-by: Alexey Panov <apanov@astralinux.ru>
----
-v1->v2: update patch author information
- drivers/tty/n_gsm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Mimmi
 
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index aae9f73585bd..1becbdf7c470 100644
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -2443,6 +2443,7 @@ static void gsm_cleanup_mux(struct gsm_mux *gsm, bool disc)
- 	int i;
- 	struct gsm_dlci *dlci;
- 	struct gsm_msg *txq, *ntxq;
-+	unsigned long flags;
- 
- 	gsm->dead = true;
- 	mutex_lock(&gsm->mutex);
-@@ -2471,9 +2472,12 @@ static void gsm_cleanup_mux(struct gsm_mux *gsm, bool disc)
- 	mutex_unlock(&gsm->mutex);
- 	/* Now wipe the queues */
- 	tty_ldisc_flush(gsm->tty);
-+
-+	spin_lock_irqsave(&gsm->tx_lock, flags);
- 	list_for_each_entry_safe(txq, ntxq, &gsm->tx_list, list)
- 		kfree(txq);
- 	INIT_LIST_HEAD(&gsm->tx_list);
-+	spin_unlock_irqrestore(&gsm->tx_lock, flags);
- }
- 
- /**
--- 
-2.30.2
+> -	binary_runtime_size =3D ima_get_binary_runtime_size();
+> +	if (CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB <=3D 0)
+> +		extra_size =3D PAGE_SIZE / 2;
+> +	else
+> +		extra_size =3D CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB * 1024;
+> +	binary_runtime_size =3D ima_get_binary_runtime_size() + extra_size;
+> +
+> =C2=A0	if (binary_runtime_size >=3D ULONG_MAX - PAGE_SIZE)
+> =C2=A0		kexec_segment_size =3D ULONG_MAX;
+> =C2=A0	else
+> -		kexec_segment_size =3D ALIGN(ima_get_binary_runtime_size() +
+> -					=C2=A0=C2=A0 PAGE_SIZE / 2, PAGE_SIZE);
+> +		kexec_segment_size =3D ALIGN(binary_runtime_size, PAGE_SIZE);
+> +
+> =C2=A0	if ((kexec_segment_size =3D=3D ULONG_MAX) ||
+> =C2=A0	=C2=A0=C2=A0=C2=A0 ((kexec_segment_size >> PAGE_SHIFT) > totalram_=
+pages() / 2)) {
+> =C2=A0		pr_err("Binary measurement list too large.\n");
 
