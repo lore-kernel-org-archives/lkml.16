@@ -1,108 +1,76 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail115-118.sinamail.sina.com.cn (mail115-118.sinamail.sina.com.cn [218.30.115.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3A32417C7;
-	Fri,  7 Feb 2025 12:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304CE2417C7
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 12:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738930192; cv=none; b=JWb5tEcTLJ5v0npHYzay1zW+8DzaNPihQSbxW3Lqm41wJdp8uW7dNoKUWGJFQ64t5X7uocXBHsWUeWzooT1TIXEI/z/jMj4ijC5W6A8u2G6cq4glQMW4+MVQRhFfV23bmwoMKxnosCGNNl0Ab0wj0W90MQ4jkQ/sxklQxFXF+O4=
+	t=1738930222; cv=none; b=WjLsoQ5eyNv9bko5UbFbM2gereOHjqWga4xIV+bi6jdzvjbOBuij1U390SpEX7ntqKySSSXlQDuiTYLkxRki0jJR4D8tF0M7Wws7SjpOi/J2we+KjWyxrCLKoVtJ0PohYBRCPwllsF1zqnnPZaOLm9Lfs8x6xZBWcUjkT/3zUUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738930192; c=relaxed/simple;
-	bh=4pF195jRI8mjpC7aYEb7qPcoCnajxFj1HhZA4jePVNk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Sglkkh8GmPbwKG01nzDEDRb36iqG8RmpPh8Wb8I4qeYCdgFmekxcHH67TH0LN8LDO1Vkzuz5gZrf/sQHvjQ1I+gH90wbLLgBhJq8OA1woaf57y9mQrYuE/tztCf13945NO1rtIkOQaqRcXbH3kvzuILwadLQGFH7CVmwJ2miOyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bHP+d+9O; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHP+d+9O"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ab6fb1851d4so403189266b.0;
-        Fri, 07 Feb 2025 04:09:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738930189; x=1739534989; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4pF195jRI8mjpC7aYEb7qPcoCnajxFj1HhZA4jePVNk=;
-        b=bHP+d+9OlhLgJzYDcAPWbTl4vYBzYvSSaYJnJaBgeAiieAKYIXN26K4K+ioaOOjAvA
-         PkZJ3BSIEkI7j4IylcEihsFrghUAKFRoabcJn4pKBQC3WTbPEX0kzcapyPEHQZu7e+85
-         FNyae9MDnOo0MVKNRta6uWu0aJ0qzkbffUGz0gAVrpSxlo29nSZct2XUU54qkLHI2lRb
-         cIDXnxTcFKVjLPZ0ne5Z2vwFGdL5JKZqmu+a/mk7FVNUleEggW4k7ZuGUgp5IDcuhOgY
-         0f+F2Rr9dSlivECG2SLwadAngKqZUutZNbumRjLGGPuyovBxCbJyFExvu0G8EbppQFUq
-         jk/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738930189; x=1739534989;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4pF195jRI8mjpC7aYEb7qPcoCnajxFj1HhZA4jePVNk=;
-        b=uDWcpYuMcANRmyEnjVdOS60OPzfjxuNM5a77TfkH0/1ZWx0gt8zgBq2TBZLY5kT8oX
-         5YxPplj2U7WCxoI37KeDHH3anjdP2Ba+C8ljlKY9N0sbCMbdnKVeaNQ4q2lNvG5b52hK
-         cu+0mEufxbtkTPAIM1gl6uSBZcATsyDXwpy83E7YbGzPz9S/GuoqXx6ZGAyvSPLwzWKJ
-         i3ldvZV3hVgT+N6PRXVGolW4bME9FZaPQr0oVK4h7vVCIcxw+7cwfQmUfR2lG/tc4jom
-         zF/9jHA4WRvEb9cgWrBkajvyK/fKCFcHzK6QVSRGvQvRqpPpJ5ypMsr5ATnhnuyvxkdP
-         ISxg==
-X-Forwarded-Encrypted: i=1; AJvYcCWNCsH/rflWkClSzplMYl/5HTpelOEADYEaaOj1RRGJIoYp1mePi1H2ICjBuazQQBREWEAe909GtQnD9A==@vger.kernel.org, AJvYcCWwy3gL19u+CM1Xm9v4yA90DdyvSvB5W24oSpoTAkJkAnKfWxqnTUZidBpMvs1FOzSZZNrYjMAGfDh9dOvMbxk=@vger.kernel.org, AJvYcCX3qPyWl9WhtakavAUhBMoQWqh2tvZGEmMe3/iwH1czEOBrCrtY5BCcKZ7ZwLL6iqA5JBWqrKeY7pUAT72M@vger.kernel.org, AJvYcCXLkuwrzhtpDApN/DtgxWpl+zdR8IJ02tS1OiHw1cR4ruCsDixgqdPEBW2MdmQ5FMlDxa+LwNLaPindZyA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxuteSjPyxikm6/KYPZABAWF1eeqGUx1XZ/MwYsWE98ihPRON7
-	uyh7OZNyZL2Afz5TPx2+Zp2Nq+oqeMYo7j/poBepp5dPjeShwFeVZR7upKtz+MH7GiE8xdMt82T
-	NMNNZP6CDZU1Jd6DstMcASEKXXrs=
-X-Gm-Gg: ASbGncu+MlznLE1OJdTV76sxej78DJ2cZvTHEN/SSlP3Xyki4y9pfHsn3x2mKT/YRD9
-	S1bh1wB7rjmG7jhZL43WGq/5Ow3OklGH7ESyaE6VjZFPNZsbMKhQ35l1bav6XFiZJprFcFdoes0
-	U=
-X-Google-Smtp-Source: AGHT+IHrbiWskXPle5ImdwLhrdLRBq1l1ymqvuJ3iK9ve3uv7DBb+2jINGkUj60DkJxJ5t3LfE4k4WUHDMyRSckgp7U=
-X-Received: by 2002:a17:906:7309:b0:ab7:6d48:10a9 with SMTP id
- a640c23a62f3a-ab76e88d3a0mr822173366b.8.1738930188495; Fri, 07 Feb 2025
- 04:09:48 -0800 (PST)
+	s=arc-20240116; t=1738930222; c=relaxed/simple;
+	bh=MP3WVOfPMvlT9wYEbM+CWX1aX77PLzB8qM3Jn7JnkW0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eOFGTTmP3Z1UcpgifrWUapIafZGSZDUqkt7TtCSrMZ1/37g8iFygN5Gl852oPKuh2OHH4HCAGBscizuvyUsys4RrpVcMHNpSoF3fg0309hH5Yg5YumBkH5tMQSLzlsNFIiVTKs8j2SKjdYOR3eMnzanK/aOpvltH3lp/anDshdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([116.24.11.16])
+	by sina.com (10.185.250.24) with ESMTP
+	id 67A5F817000048F1; Fri, 7 Feb 2025 20:10:04 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 45361010748387
+X-SMAIL-UIID: 5483E0C61FF74A2FA1B1BB89A3A6CF33-20250207-201004-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+3201be560ebfa39bc6bd@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] general protection fault in ip6_pol_route (3)
+Date: Fri,  7 Feb 2025 20:10:02 +0800
+Message-ID: <20250207121003.2030-1-hdanton@sina.com>
+In-Reply-To: <67a21f26.050a0220.163cdc.0068.GAE@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207005832.work.324-kees@kernel.org> <20250207010022.749952-6-kees@kernel.org>
- <b4f08d43-c421-4e8d-9bbb-c954c4472f8a@intel.com> <202502061835.F57547B@keescook>
-In-Reply-To: <202502061835.F57547B@keescook>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 7 Feb 2025 14:09:12 +0200
-X-Gm-Features: AWEUYZnChrRXXIJNdmCjHjynXFGSUufAJmxvP7Q8yY-4-DWvfhOKjUuhnQ7LHUg
-Message-ID: <CAHp75Vf4R73_GMNvsEWd3nyUKM8UEP22=9umArVsHYOA=dycWg@mail.gmail.com>
-Subject: Re: [PATCH 06/10] x86/tdx: Mark message.str as nonstring
-To: Kees Cook <kees@kernel.org>
-Cc: Dave Hansen <dave.hansen@intel.com>, Andy Shevchenko <andy@kernel.org>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev, 
-	Sathya Prakash <sathya.prakash@broadcom.com>, 
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>, 
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>, 
-	Kashyap Desai <kashyap.desai@broadcom.com>, Sumit Saxena <sumit.saxena@broadcom.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Nilesh Javali <njavali@marvell.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Alexey Dobriyan <adobriyan@gmail.com>, 
-	Sven Eckelmann <sven@narfation.org>, Tadeusz Struk <tadeusz.struk@linaro.org>, 
-	kernel test robot <lkp@intel.com>, Erick Archer <erick.archer@outlook.com>, 
-	Dmitry Antipov <dmantipov@yandex.ru>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
-	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, linux-kernel@vger.kernel.org, 
-	MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
-	mpi3mr-linuxdrv.pdl@broadcom.com, GR-QLogic-Storage-Upstream@marvell.com, 
-	linux-hardening@vger.kernel.org, linux-nilfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 7, 2025 at 4:37=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
-> On Thu, Feb 06, 2025 at 05:12:11PM -0800, Dave Hansen wrote:
-> > On 2/6/25 17:00, Kees Cook wrote:
+On Tue, 04 Feb 2025 06:07:34 -0800
+> syzbot found the following issue on:
+> 
+> HEAD commit:    f1b785f4c787 Merge tag 'for_linus' of git://git.kernel.org..
+> git tree:       upstream
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1209e4c0580000
 
-...
+#syz test  upstream  master
 
-> > So, the patch itself makes sense. But it does end up looking kinda
-> > funky. We call it a "str"ing and then annotate it as not a string.
->
-> Yeah, this is true all over the place. It's a string, just not a
-> NUL-terminated string: *sob*
-
-Maybe call it respectively, e.g., __nontermstr ?
-
---=20
-With Best Regards,
-Andy Shevchenko
+--- x/net/ipv6/route.c
++++ y/net/ipv6/route.c
+@@ -2258,7 +2258,7 @@ struct rt6_info *ip6_pol_route(struct ne
+ 
+ 			return rt;
+ 		}
+-	} else {
++	} else if (res.nh) {
+ 		/* Get a percpu copy */
+ 		local_bh_disable();
+ 		rt = rt6_get_pcpu_route(&res);
+--- a/drivers/hid/hid-corsair-void.c
++++ b/drivers/hid/hid-corsair-void.c
+@@ -726,6 +726,7 @@ static void corsair_void_remove(struct h
+ 	if (drvdata->battery)
+ 		power_supply_unregister(drvdata->battery);
+ 
++	cancel_delayed_work_sync(&drvdata->delayed_status_work);
+ 	cancel_delayed_work_sync(&drvdata->delayed_firmware_work);
+ 	sysfs_remove_group(&hid_dev->dev.kobj, &corsair_void_attr_group);
+ }
+--
