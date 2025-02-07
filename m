@@ -1,117 +1,127 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF3B18E050;
-	Fri,  7 Feb 2025 17:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8CA18E050;
+	Fri,  7 Feb 2025 17:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738950106; cv=none; b=io/l0hnwz9wvkO/Av/nYiE+URl8CPSLtlJ/sj+j/6oLt47IMr/d4I3GAzhqzrrAqnvBfoV8H6owC7/hJRPJwWEZVRHNNjGC7S4JCvPskp/GQXGz+tAJ3FgG+BdMo46/+l12jesXOeni6ey9e7F1aPb7CLxRlaQvn/T5aFpfIHlk=
+	t=1738950181; cv=none; b=hTmQN5SlL5z6FTthwNomkHrhAEqOAtO2cSd1HccYmKbiMGdGhg26uo5F3yBynLmsSXZ9LbtS31LQntEPrirYy8aa0ZxX9j+A06DcX63/apzJCyOAZYjkyK7NyMaD6A/EtlRrF1zZ/gBysRvxnA/BlzAA5LJ86gcLBkrSQCnF8Ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738950106; c=relaxed/simple;
-	bh=gt6tOFngHm78d/hp3pS3kUPBsTjqkKCK6t6jGboTc54=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=f+uzCq4g61zFORN+9ENmNCCXOToarH+9w2nnilHpoQ6pLrGzgYIC6OOz07NgEUbD5dpssg8P4O/NllvbRTL0a7X0YtETAnLN229L49LQOHUHRZYj1ElqbPwvbmcU0sBbmAf803KDWhbDaFjALdmaSYqbQOZAEQjCUeLliXHGYfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=bXEOx/MH; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1738950181; c=relaxed/simple;
+	bh=ZenoNmF0riWMGf/aW8UIPtWaG8UbAzKLSI4ehKi+4lQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HVcPdNzVTgTn0ANJyeUWswL9q3pan/nwi8EtqVgvwn+VJdx5+3VtugLpGLlJkT6/a67z4PyO1Rfm0O6rHphizTB4xE4qztOT+Hy9IOooFQvqIButq+2Dz28r/2hMAe9i4nL7+uwXJDfZu6h07mXISHD5Rrt2UVIfHuXssAv1GOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dPzVucqY; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="bXEOx/MH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1738950102;
-	bh=gt6tOFngHm78d/hp3pS3kUPBsTjqkKCK6t6jGboTc54=;
-	h=From:Date:Subject:To:Cc:From;
-	b=bXEOx/MHPCuwaFB3A2Twmd8u6znm+0tGgUhhzmh9uzYGjaXB9gQ3CEvOZMFFka3Hj
-	 4cmg+btcIpUG45tv1Ln1rkA7ldl1nJbETO1rHKsmjiBy7XHpxPARsolUk1tw5za+li
-	 GnE5wYbtOJc8NU27T+HpYdgQ4mjU+w9/nnVxVKmSDknYJEA/bis8BzT3PpDK0+I03x
-	 hcaPaWigjIk5e8C8EA8avIzJHF23wI//md21gk6GLudKV1V0jsmvSoe6UMv6W5xukA
-	 eCg80pBZGGZnJa2Ek9Pwr4S32HtdGtICZtttWLEa0S1PYz6Bel66hBJWj8qf/ydsy3
-	 x8inU3vDae/yg==
-Received: from [192.168.0.47] (unknown [IPv6:2804:14c:1a9:53ee::1002])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 346D717E02AF;
-	Fri,  7 Feb 2025 18:41:38 +0100 (CET)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Fri, 07 Feb 2025 14:41:24 -0300
-Subject: [PATCH v2] arm64: dts: mediatek: mt8188: Assign apll1 clock as
- parent to avoid hang
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPzVucqY"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-46783d44db0so23861381cf.1;
+        Fri, 07 Feb 2025 09:42:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738950178; x=1739554978; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-transfer-encoding
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=u54wyKy08YVTcdsmqPxr1bFLRjYzOxYrbgu4ALnLyls=;
+        b=dPzVucqYjbvI5BK2NfJFp4RDcdcAGFc/EyYuYa0k5OhmkNAYhEu7qINaOyF8hy4w2y
+         Yy5USVH9fhtkBSxstCKXTZynlSfwrOOhsU+veWSU+QSjXzp7OXqSdhc+eu7iq+egJlpV
+         yBkBkoyvT/sK3FIphjW0bjCQOKYxbPzhhS9l/6wNoVtrBrMWQjluKfIY4z9iEccys9XX
+         lx08FbK8Y6gSu8AeZb3i8syIhxZKjUzfOlFiO/ZuGdg9OlHA2GlXfuvJp3+saW86hc37
+         8MZ8zlsiAk9i7mqMN3REkRqywvinswftm5nIAef5HAz7NeOsw2aDimIMBlCDWc3ugl+m
+         F+PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738950178; x=1739554978;
+        h=user-agent:in-reply-to:content-transfer-encoding
+         :content-disposition:mime-version:references:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u54wyKy08YVTcdsmqPxr1bFLRjYzOxYrbgu4ALnLyls=;
+        b=JWtNAm6lKn19xgJzUi0Bq2mAsTQ/m8Cfya95kW+LSKxa5K+rbIJRQe114B2FsGNjzv
+         oAqWWUJEEQqr5O4DYDhY4LpE+pLHjWlSH39olhzEBvFpu16yY2lhPG4O3QboECBMzVR+
+         6yh5i47bNy5n0DzZIrsa6ZcfxOwXQFDE3FwBgRJO7+Sp3XnZSpFP6rfJtxEySeDURAuP
+         QJ1YIFfZTAutaLrT668ti0wERrwXA8mHT54MzJ9fx2RwsPupQ3AVJGW7CFeR2PugK2Zc
+         Bpe6Id5AbR4z+dz5+JNQBenecvmGNqy1Zv1cGKnblKFBpv9icn5cUNdr2mcPRXj+5vXc
+         Hy2A==
+X-Forwarded-Encrypted: i=1; AJvYcCXZLQGfmTOBBOMV1cqhqDFOTHPjpWo9385zZn3I3Z+7pUqX10dYaiRRTnhLnRLCQAXsk4efW+lnEw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPjcpEdiSXaUBfFdVRX5xraLlUeW5Uxq508jxLTVMqgwoQSgc+
+	0JyjfezNOIkclc4POwtQA8LmQQyJSEX2lJzHAeQ0xcaB1ic2jpac
+X-Gm-Gg: ASbGncsSYEfgqYECOX5QI5t8Bz+dsTvtQ7BHBrKr4Qf+G5pu1rYwctjkQBKiLZypMZI
+	ZV5knf5m5aOA2qaQRAFOGrraVicFRukW21XZkACen1U62wF0HGoJQZWoIrP0QaB9e3MrwZkB5Wp
+	cEthfdlyPRJq37MNrgjMO5kfac3XTQsqPszD5Iq+taXVDK5xZ78ox9wigVZakBjV3g42IdDiYKo
+	cFHzwgzsaWciA5LymBlCLfobGRCndTQEv9dl6nX3R98Dbt2UBsXU9/JFzcrqLBt7E3IwamQna2I
+	H688NNA5vUhPJMuQzMDrheL2Snm2SYYJyufvfJEqivU=
+X-Google-Smtp-Source: AGHT+IH3DF2ccE09vTzNT3aWXfr9o8hGV8lDRWlk4BMtyiA39cvcPxbJvfohs7KwFEtPpIsYgHBr/g==
+X-Received: by 2002:ac8:7d89:0:b0:46c:7252:927f with SMTP id d75a77b69052e-471679a02c0mr46777051cf.6.1738950178512;
+        Fri, 07 Feb 2025 09:42:58 -0800 (PST)
+Received: from localhost (pppoe-209-91-167-254.vianet.ca. [209.91.167.254])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47149275d5esm19033831cf.8.2025.02.07.09.42.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 09:42:57 -0800 (PST)
+Date: Fri, 7 Feb 2025 12:42:55 -0500
+From: Trevor Woerner <twoerner@gmail.com>
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] thermal/drivers/rockchip: add missing rk3328 mapping
+ entry
+Message-ID: <20250207174255.GA29827@localhost>
+References: <20250207164740.14475-1-twoerner@gmail.com>
+ <fc3c4542d5cc4d95f74692140e5ea8b5@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250207-mt8188-afe-fix-hang-disabled-apll1-clk-v2-1-a636d844c272@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAMNFpmcC/5WNSwqDMBRFtyIZ95W8KE3oqPsoDvKzPhqNJBJax
- L03uoMOz+Vwz8ayT+QzuzcbS75QpjhXEJeG2VHPLw/kKjPBRYeCtzCtCpUCPXgY6AOHA46yNsE
- 70EsICDa8wbQWUSphjR5YPVuSr/oZevaVR8prTN+zW/BY/04UBAQurXNS3rhqu4eNIWgTk77aO
- LF+3/cf2tTWM+AAAAA=
-X-Change-ID: 20241203-mt8188-afe-fix-hang-disabled-apll1-clk-b3c11782cbaf
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Fei Shao <fshao@chromium.org>
-Cc: kernel@collabora.com, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- =?utf-8?q?Trevor_Wu_=28=E5=90=B3=E6=96=87=E8=89=AF=29?= <Trevor.Wu@mediatek.com>, 
- Chen-Yu Tsai <wenst@chromium.org>, devicetree@vger.kernel.org, 
- stable@vger.kernel.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.14.2
+In-Reply-To: <fc3c4542d5cc4d95f74692140e5ea8b5@manjaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Certain registers in the AFE IO space require the apll1 clock to be
-enabled in order to be read, otherwise the machine hangs (registers like
-0x280, 0x410 (AFE_GAIN1_CON0) and 0x830 (AFE_CONN0_5)). During AFE
-driver probe, when initializing the regmap for the AFE IO space those
-registers are read, resulting in a hang during boot.
+On Fri 2025-02-07 @ 06:15:22 PM, Dragan Simic wrote:
+> Hello Trevor,
+> 
+> On 2025-02-07 17:47, Trevor Woerner wrote:
+> > The mapping table for the rk3328 is missing the entry for -25°C which is
+> > found in the TRM[1] §9.5.2 "Temperature-to-code mapping".
+> > 
+> > NOTE: the kernel uses the tsadc_q_sel=1'b1 mode which is defined as:
+> >       4096-<code in table>. Whereas the table in the TRM gives the code
+> >       "3774" for -25°C, the kernel uses 4096-3774=322.
+> > 
+> > Link:
+> > https://opensource.rock-chips.com/images/9/97/Rockchip_RK3328TRM_V1.1-Part1-20170321.pdf
+> > Signed-off-by: Trevor Woerner <twoerner@gmail.com>
+> 
+> Thanks for the patch.  I think this should also include a Fixes tag
 
-This has been observed on the Genio 700 EVK, Genio 510 EVK and
-MT8188-Geralt-Ciri Chromebook, all of which are based on the MT8188 SoC.
+Okay, I'll send a v2. It's not really a big fix. The TRM instructs the code
+to interpolate linearly between values (which I assume the Linux kernel does?)
+and the table is completely linear in this range.
 
-Assign CLK_TOP_APLL1_D4 as the parent for CLK_TOP_A1SYS_HP, which is
-enabled during register read and write, to make sure the apll1 is
-enabled during register operations and prevent the MT8188 machines from
-hanging during boot.
-
-Cc: stable@vger.kernel.org
-Fixes: 4dbec3a59a71 ("arm64: dts: mediatek: mt8188: Add audio support")
-Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
----
-Changes in v2:
-- Changed patch from explicitly enabling apll1 clock in the driver to
-  assigning apll1_d4 as the parent for the a1sys_hp clock in the
-  mt8188.dtsi
-- Link to v1: https://lore.kernel.org/r/20241203-mt8188-afe-fix-hang-disabled-apll1-clk-v1-1-07cdd7760834@collabora.com
----
- arch/arm64/boot/dts/mediatek/mt8188.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8188.dtsi b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-index 5d78f51c6183c15018986df2c76e6fdc1f9f43b4..6352c9bd436550dce66435f23653ebcb43ccf0cd 100644
---- a/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-@@ -1392,7 +1392,7 @@ afe: audio-controller@10b10000 {
- 			compatible = "mediatek,mt8188-afe";
- 			reg = <0 0x10b10000 0 0x10000>;
- 			assigned-clocks = <&topckgen CLK_TOP_A1SYS_HP>;
--			assigned-clock-parents =  <&clk26m>;
-+			assigned-clock-parents = <&topckgen CLK_TOP_APLL1_D4>;
- 			clocks = <&clk26m>,
- 				 <&apmixedsys CLK_APMIXED_APLL1>,
- 				 <&apmixedsys CLK_APMIXED_APLL2>,
-
----
-base-commit: ed58d103e6da15a442ff87567898768dc3a66987
-change-id: 20241203-mt8188-afe-fix-hang-disabled-apll1-clk-b3c11782cbaf
-
-Best regards,
--- 
-Nícolas F. R. A. Prado <nfraprado@collabora.com>
-
+> and be submitted for inclusion into stable kernels.
+> 
+> > ---
+> >  drivers/thermal/rockchip_thermal.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/thermal/rockchip_thermal.c
+> > b/drivers/thermal/rockchip_thermal.c
+> > index f551df48eef9..a8ad85feb68f 100644
+> > --- a/drivers/thermal/rockchip_thermal.c
+> > +++ b/drivers/thermal/rockchip_thermal.c
+> > @@ -386,6 +386,7 @@ static const struct tsadc_table rk3328_code_table[]
+> > = {
+> >  	{296, -40000},
+> >  	{304, -35000},
+> >  	{313, -30000},
+> > +	{322, -25000},
+> >  	{331, -20000},
+> >  	{340, -15000},
+> >  	{349, -10000},
