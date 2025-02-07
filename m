@@ -1,263 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5F53DAC13;
-	Fri,  7 Feb 2025 14:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C711A1EB18C;
+	Fri,  7 Feb 2025 14:46:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738939584; cv=none; b=n8WYqTGMxuN7Hkd1RV1dKMAXF/VD762e7djRjrfd9dG3Fnz+DjLzbwssccYEoTAR9TxxPTXoflebq3vMFnpAYLTJIOTfXS73WcUexGly7L1YNmI+ICtu8LRmrOWvSRWAdWWBm+EWmGfg2RUSwykoACvAqjAqA9OILoHbo6M3+rk=
+	t=1738939590; cv=none; b=RA4sAloDUo6JA96Ymuw+nOF/D+72J0VH9VlvPBwws1TL3BIX1knrS0Uy0x8sqmTNG1TGM1SwS1V7ySXwFfP4NIEDEoWdv4ZtOjTQMU/4Ry6z8uesOheoGfL9NGRSc//KijzGmYBp4zT9vowOhwmQhH8UtxyQkf0kjfyP8w08huI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738939584; c=relaxed/simple;
-	bh=vC/OWDm/dfWU9Rdnb1rw4VdhifWMLCVsGEWZ1Y/wwg0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p5PjKVELA3p7dyNcfErBMcHXABQcZyrIByfSUZTFk2I5oKp7E2qQXcpxrNKibb4+FVZA3i9XlkVQgYlQ2+3rohohUzbLi54wFpCjqu2ohAkM/Y3u9908x27jBPhOnkQ6w4D1kWlekRQD+nZNVOjNL29pH9czg64uEvIZUyzINYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qt/Q3gl0; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738939590; c=relaxed/simple;
+	bh=NEvFF2Y1LTbWWAZyUyd8pv2xjBdWXjikltka8ZTTU9I=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=mVeyGiLH6beTLUTfVQxUdemxKE+faMNg2yUVydRb79b47MzPWb14UI+320IvlwmM4z+5Zfanr+Evq10ZEx0c5AfetsyTraLIO5ctB8xqmK1/plJJIsfxs/MXlzJhzAvgEMgCuT86fVx8/e5HzybiCiWSkzrE2mMfjrBp/8ubWKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mmKeQca3; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qt/Q3gl0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738939581; x=1770475581;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vC/OWDm/dfWU9Rdnb1rw4VdhifWMLCVsGEWZ1Y/wwg0=;
-  b=Qt/Q3gl0kRxvGbxX3H59VkodAfn2jAMCMOYt3EohJ4NHw1TMvBShN4Rx
-   78x4aUaR1nV9LQBgCSx8xEpxSs0zsVUtAxBI5AL7Ex16vvwcNehnThJR0
-   29PX7GWUsNa9inPrMNJ45DKMbNXSOYzL8mk6CxFrQckVva/Vp4Tbki/Vh
-   Qa7XTLSiwpk7eWNKI4kCRVNyvgrljwhUPVtGkRgiScSv/+EgT/mM4F+wW
-   ymnCRtCa6EfAHAmIyrLJnI0+DGdAWLBY836oQK/eVpxfhH+iV4Du7QLAe
-   5RGsMBCsyYgTHrvdPYWksQdfifRlJgr+p+DRcGptFFiNePdZHblVnbSsd
-   w==;
-X-CSE-ConnectionGUID: h/ZDeoKVRp2oMWf6x7PWYA==
-X-CSE-MsgGUID: 0Tl35fpmTmqvjJndwqleWQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="56997470"
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="56997470"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 06:46:21 -0800
-X-CSE-ConnectionGUID: PLb9YVuETr67WQ2KncdH5Q==
-X-CSE-MsgGUID: 4WBlToFGQvOsbbsT4/3MBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="111461551"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 07 Feb 2025 06:46:16 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tgPcU-000yTX-08;
-	Fri, 07 Feb 2025 14:46:14 +0000
-Date: Fri, 7 Feb 2025 22:45:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>,
-	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>,
-	Dohyun Kim <dohyunkim@google.com>,
-	linux-arm-kernel@lists.infradead.org, kernel-team@meta.com
-Subject: Re: [PATCH bpf-next v2 18/26] rqspinlock: Add entry to Makefile,
- MAINTAINERS
-Message-ID: <202502072210.Fzbbpkun-lkp@intel.com>
-References: <20250206105435.2159977-19-memxor@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mmKeQca3"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3673B443B8;
+	Fri,  7 Feb 2025 14:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1738939585;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zotNU7rJ3SVVOWKtFNsAK5uaTmDszXvpsTrfKkmZ7NQ=;
+	b=mmKeQca3SwF0SEnls1X8Rt3DCjE9SSenlQicXMWpoMt80HZKE8t/yStGUuRpJDAe4pMWHw
+	zhoFObvhK5kggHmjxfi5iPqqlUGcaSo+AbSTR5DdC9IHDOCYEiFGwHEy0uKsj/oYp8w9b4
+	sBw9TTqa6xnTFGtBCZ4r+iklF1MxdUn8Qmrz/eeGB9ExgOQeaFAnJnfCQyI3g10WgZSebM
+	ybSpBOM+iJ2qZC6GSNrpJYyHpecBfhgDuqTP3vVg2HnCLRQic0gnWVXxA2ifh3wgTnbI2a
+	mmYiGE6n/C8xSaCUSNz7b6RV1NfSIX0hhdFV8EApSH/hrXXkalDfM1jykpjfCA==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250203213036.9816-1-robh@kernel.org>
+References: <20250203213036.9816-1-robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: mtd: physmap: Ensure all properties are
+ defined
+Message-Id: <173893958505.2918383.10809886449430911872.b4-ty@bootlin.com>
+Date: Fri, 07 Feb 2025 15:46:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206105435.2159977-19-memxor@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleehiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtkeertdertdejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheeifffhueelgfdtleetgfelvefggfehudelvdehuddulefgheelgfehieevvdegnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrgedvrdegiegnpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtp
+ hhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hi Kumar,
+On Mon, 03 Feb 2025 15:30:35 -0600, Rob Herring (Arm) wrote:
+> Device specific schemas should not allow undefined properties which is
+> what 'additionalProperties: true' allows. Add the missing 'ranges'
+> property, and fix this constraint.
+> 
+> 
 
-kernel test robot noticed the following build errors:
+Applied to mtd/next, thanks!
 
-[auto build test ERROR on 0abff462d802a352c87b7f5e71b442b09bf9cfff]
+[1/1] dt-bindings: mtd: physmap: Ensure all properties are defined
+      commit: 038e2ba01cf5ff94dc8f740328ec565d18bb764e
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kumar-Kartikeya-Dwivedi/locking-Move-MCS-struct-definition-to-public-header/20250206-190258
-base:   0abff462d802a352c87b7f5e71b442b09bf9cfff
-patch link:    https://lore.kernel.org/r/20250206105435.2159977-19-memxor%40gmail.com
-patch subject: [PATCH bpf-next v2 18/26] rqspinlock: Add entry to Makefile, MAINTAINERS
-config: arm-randconfig-001-20250207 (https://download.01.org/0day-ci/archive/20250207/202502072210.Fzbbpkun-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250207/202502072210.Fzbbpkun-lkp@intel.com/reproduce)
+Patche(s) should be available on mtd/linux.git and will be
+part of the next PR (provided that no robot complains by then).
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502072210.Fzbbpkun-lkp@intel.com/
+Kind regards,
+Miquèl
 
-All error/warnings (new ones prefixed by >>):
-
-   In file included from kernel/locking/rqspinlock.c:77:
->> kernel/locking/mcs_spinlock.h:57:27: warning: 'struct mcs_spinlock' declared inside parameter list will not be visible outside of this definition or declaration
-      57 | void mcs_spin_lock(struct mcs_spinlock **lock, struct mcs_spinlock *node)
-         |                           ^~~~~~~~~~~~
-   kernel/locking/mcs_spinlock.h: In function 'mcs_spin_lock':
->> kernel/locking/mcs_spinlock.h:62:13: error: invalid use of undefined type 'struct mcs_spinlock'
-      62 |         node->locked = 0;
-         |             ^~
-   kernel/locking/mcs_spinlock.h:63:13: error: invalid use of undefined type 'struct mcs_spinlock'
-      63 |         node->next   = NULL;
-         |             ^~
-   In file included from <command-line>:
-   kernel/locking/mcs_spinlock.h:83:24: error: invalid use of undefined type 'struct mcs_spinlock'
-      83 |         WRITE_ONCE(prev->next, node);
-         |                        ^~
-   include/linux/compiler_types.h:522:23: note: in definition of macro '__compiletime_assert'
-     522 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:542:9: note: in expansion of macro '_compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
-      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
-         |         ^~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:36:28: note: in expansion of macro '__native_word'
-      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
-         |                            ^~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:60:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
-      60 |         compiletime_assert_rwonce_type(x);                              \
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   kernel/locking/mcs_spinlock.h:83:9: note: in expansion of macro 'WRITE_ONCE'
-      83 |         WRITE_ONCE(prev->next, node);
-         |         ^~~~~~~~~~
-   kernel/locking/mcs_spinlock.h:83:24: error: invalid use of undefined type 'struct mcs_spinlock'
-      83 |         WRITE_ONCE(prev->next, node);
-         |                        ^~
-   include/linux/compiler_types.h:522:23: note: in definition of macro '__compiletime_assert'
-     522 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:542:9: note: in expansion of macro '_compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
-      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
-         |         ^~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:36:28: note: in expansion of macro '__native_word'
-      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
-         |                            ^~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:60:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
-      60 |         compiletime_assert_rwonce_type(x);                              \
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   kernel/locking/mcs_spinlock.h:83:9: note: in expansion of macro 'WRITE_ONCE'
-      83 |         WRITE_ONCE(prev->next, node);
-         |         ^~~~~~~~~~
-   kernel/locking/mcs_spinlock.h:83:24: error: invalid use of undefined type 'struct mcs_spinlock'
-      83 |         WRITE_ONCE(prev->next, node);
-         |                        ^~
-   include/linux/compiler_types.h:522:23: note: in definition of macro '__compiletime_assert'
-     522 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:542:9: note: in expansion of macro '_compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
-      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
-         |         ^~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:36:28: note: in expansion of macro '__native_word'
-      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
-         |                            ^~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:60:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
-      60 |         compiletime_assert_rwonce_type(x);                              \
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   kernel/locking/mcs_spinlock.h:83:9: note: in expansion of macro 'WRITE_ONCE'
-      83 |         WRITE_ONCE(prev->next, node);
-         |         ^~~~~~~~~~
-   kernel/locking/mcs_spinlock.h:83:24: error: invalid use of undefined type 'struct mcs_spinlock'
-      83 |         WRITE_ONCE(prev->next, node);
-         |                        ^~
-   include/linux/compiler_types.h:522:23: note: in definition of macro '__compiletime_assert'
-     522 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:542:9: note: in expansion of macro '_compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
-      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
-         |         ^~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:36:28: note: in expansion of macro '__native_word'
-      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
-         |                            ^~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:60:9: note: in expansion of macro 'compiletime_assert_rwonce_type'
-      60 |         compiletime_assert_rwonce_type(x);                              \
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   kernel/locking/mcs_spinlock.h:83:9: note: in expansion of macro 'WRITE_ONCE'
-      83 |         WRITE_ONCE(prev->next, node);
-         |         ^~~~~~~~~~
-   kernel/locking/mcs_spinlock.h:83:24: error: invalid use of undefined type 'struct mcs_spinlock'
-      83 |         WRITE_ONCE(prev->next, node);
-         |                        ^~
-   include/linux/compiler_types.h:522:23: note: in definition of macro '__compiletime_assert'
-     522 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:542:9: note: in expansion of macro '_compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/asm-generic/rwonce.h:36:9: note: in expansion of macro 'compiletime_assert'
-
-
-vim +62 kernel/locking/mcs_spinlock.h
-
-e207552e64ea05 include/linux/mcs_spinlock.h  Will Deacon     2014-01-21  39  
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  40  /*
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  41   * Note: the smp_load_acquire/smp_store_release pair is not
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  42   * sufficient to form a full memory barrier across
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  43   * cpus for many architectures (except x86) for mcs_unlock and mcs_lock.
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  44   * For applications that need a full barrier across multiple cpus
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  45   * with mcs_unlock and mcs_lock pair, smp_mb__after_unlock_lock() should be
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  46   * used after mcs_lock.
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  47   */
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  48  
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  49  /*
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  50   * In order to acquire the lock, the caller should declare a local node and
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  51   * pass a reference of the node to this function in addition to the lock.
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  52   * If the lock has already been acquired, then this will proceed to spin
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  53   * on this node->locked until the previous lock holder sets the node->locked
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  54   * in mcs_spin_unlock().
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  55   */
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  56  static inline
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21 @57  void mcs_spin_lock(struct mcs_spinlock **lock, struct mcs_spinlock *node)
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  58  {
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  59  	struct mcs_spinlock *prev;
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  60  
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  61  	/* Init node */
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21 @62  	node->locked = 0;
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  63  	node->next   = NULL;
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  64  
-920c720aa5aa39 kernel/locking/mcs_spinlock.h Peter Zijlstra  2016-02-01  65  	/*
-920c720aa5aa39 kernel/locking/mcs_spinlock.h Peter Zijlstra  2016-02-01  66  	 * We rely on the full barrier with global transitivity implied by the
-920c720aa5aa39 kernel/locking/mcs_spinlock.h Peter Zijlstra  2016-02-01  67  	 * below xchg() to order the initialization stores above against any
-920c720aa5aa39 kernel/locking/mcs_spinlock.h Peter Zijlstra  2016-02-01  68  	 * observation of @node. And to provide the ACQUIRE ordering associated
-920c720aa5aa39 kernel/locking/mcs_spinlock.h Peter Zijlstra  2016-02-01  69  	 * with a LOCK primitive.
-920c720aa5aa39 kernel/locking/mcs_spinlock.h Peter Zijlstra  2016-02-01  70  	 */
-920c720aa5aa39 kernel/locking/mcs_spinlock.h Peter Zijlstra  2016-02-01  71  	prev = xchg(lock, node);
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  72  	if (likely(prev == NULL)) {
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  73  		/*
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  74  		 * Lock acquired, don't need to set node->locked to 1. Threads
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  75  		 * only spin on its own node->locked value for lock acquisition.
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  76  		 * However, since this thread can immediately acquire the lock
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  77  		 * and does not proceed to spin on its own node->locked, this
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  78  		 * value won't be used. If a debug mode is needed to
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  79  		 * audit lock status, then set node->locked value here.
-5faeb8adb956a5 include/linux/mcs_spinlock.h  Jason Low       2014-01-21  80  		 */
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  81  		return;
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  82  	}
-4d3199e4ca8e66 kernel/locking/mcs_spinlock.h Davidlohr Bueso 2015-02-22  83  	WRITE_ONCE(prev->next, node);
-e207552e64ea05 include/linux/mcs_spinlock.h  Will Deacon     2014-01-21  84  
-e207552e64ea05 include/linux/mcs_spinlock.h  Will Deacon     2014-01-21  85  	/* Wait until the lock holder passes the lock down. */
-e207552e64ea05 include/linux/mcs_spinlock.h  Will Deacon     2014-01-21  86  	arch_mcs_spin_lock_contended(&node->locked);
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  87  }
-e72246748ff006 include/linux/mcs_spinlock.h  Tim Chen        2014-01-21  88  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
