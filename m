@@ -1,102 +1,106 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F3023C8DE
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 16:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B617923C8DE;
+	Fri,  7 Feb 2025 16:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738946007; cv=none; b=DzPq8bES6WvovLuqDVXfslmKlpCgkPf2I6FpQ1FJtXvosVnVc9PXPZfI08yA5W3l1peMD32jsLmIkeyDv0MNKapUNipliJYdN/lDa2PEN9vh60KqYrtdCG8UhQzcs04nH3LyiVWE/FkdhHRMKnsxGZ34iI6xpzdm8rOzZ2KpP3A=
+	t=1738946167; cv=none; b=eEdO+h3owkGPOO2fXACOXK06hcREqVrBFOSPpMYUrSfTK7nuwfbkLvsQhv1rResfuOR2C2gcT/UbQyLuOFfzPOm0Whoy5FIFxuwQzimN22tb8DX8IahvqoMT1AV3tJ2hWlm7YxzuDXY0MxDzXqYSLiZcbrM/ZHnAsc/sKf/DVm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738946007; c=relaxed/simple;
-	bh=N2uS9yWPLD4E6ZHEuCHhrIKMkX02v4Rz8ruwE/3Kq40=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rCH39pXt1e1Fnm4Fahrt+LeCdC3T+2qcBJfjgPuWeW8Puo/WPIZOFkl98tEJ1pftRyajekQh0IjwOaqCJF0xaizlHaDi8PY8CjrJzJaz2K7MYwpIl7gB44M28FmYH45Dpno7v49X5ELQ3zOHhZ2JbsLG3etWljalmid7uVCtq2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=qs3BCIO9; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1738946167; c=relaxed/simple;
+	bh=xsyUA2Qan0ANfv/i9DvHs2mxeJq+KyeixSzoPtL4hbE=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=iYupn7cIKzA8kugui5bCbGvk4dl9uT0Dx3fXQBBycC+n50tw9UbvebbD4+DLo7G0gdCKrwv/IEitypnrhAEqNKTh6OfEvjy4/ItGwumSzvD6cx6yMtOS26lhZ5zFkJBw/AOTt4nKNBE18bicdiO6263r1jZIHqou1IWaLvTs8aQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=hDuRYc1T; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qs3BCIO9"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 436442BA;
-	Fri,  7 Feb 2025 17:32:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1738945929;
-	bh=N2uS9yWPLD4E6ZHEuCHhrIKMkX02v4Rz8ruwE/3Kq40=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qs3BCIO9noT5nVvOJY1+N8hSoVlybPDgYi+8fhLhLTLdudUtUI9LGIaNlkX0IfTGI
-	 nQE9OAUWaj2ccAfl6PV6vBnjK4pqeYLt4XtjtVj0uTEkrGbhFaCxKP1hNNWUF9mKAM
-	 RnQKXWodw5LuGpOKWkH3ffHekxGcesVWrYcf58bQ=
-Date: Fri, 7 Feb 2025 18:33:17 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	"open list:DRM DRIVERS FOR XILINX" <dri-devel@lists.freedesktop.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Michal Simek <michal.simek@amd.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	"moderated list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 1/2] drm: zynqmp_dp: Fix a deadlock in
- zynqmp_dp_ignore_hpd_set()
-Message-ID: <20250207163317.GA5869@pendragon.ideasonboard.com>
-References: <20250207162528.1651426-1-sean.anderson@linux.dev>
- <20250207162528.1651426-2-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="hDuRYc1T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1738946152; x=1739550952; i=markus.elfring@web.de;
+	bh=jL7iJ8uPcgTS3dFFh+s1ceSfKiJXV07ny4qcZNTr6L4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=hDuRYc1Tf8BBdIcmUUa8EkJoQRCi1G4McdH9zaYoo4X0ccFI26xVpxviWNZn6Y0v
+	 FekabawLSgnLeedvUQQWIjjF6lYKKv6kO8DLLbv1sIdENgv14DXez16X1YhLctG9Z
+	 rbwhTgZA86iiWACku2uKDp06h7b7sNYTk6zK4+N3RFHMkvRe2THBlD3L4NcnQnW9X
+	 NHHJHJktH4i95K5vEynitw89H9UWvHT6/sKMReYJHfHa9pRtEzAoHSpWolA7KZ//q
+	 mYw9RLLl4PLi2GRgi+mxcjHYUeQ2u2ekr0sTs+LrKjTS3k4ZOgpstCxNxwZDB7zbp
+	 9qcZvpQPnm4Ak3h8Lg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.29]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mkmvj-1szNGq4BJ9-00ZHZX; Fri, 07
+ Feb 2025 17:35:52 +0100
+Message-ID: <8b96ad7e-5a47-458f-bb42-7b7c9efb82e1@web.de>
+Date: Fri, 7 Feb 2025 17:35:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250207162528.1651426-2-sean.anderson@linux.dev>
+User-Agent: Mozilla Thunderbird
+To: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>, imx@lists.linux.dev,
+ linux-sound@vger.kernel.org, Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>,
+ Iuliana Prodan <iuliana.prodan@nxp.com>, Jaroslav Kysela <perex@perex.cz>,
+ Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20250207162246.3104-2-laurentiumihalcea111@gmail.com>
+Subject: Re: [PATCH v3 1/7] ASoC: SOF: imx: introduce more common structures
+ and functions
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250207162246.3104-2-laurentiumihalcea111@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Pc5O0Xl52kPNkTwaOGQwjb94NaD4v7MoUwKVirSLN/rAEXijVrh
+ cJQqpOakUzJsG60gPj1A+7aywQ3cMVMFaPDitt/nfVLYeRdDIqu06gB30YD9rRTeq9EVJCs
+ IVJ+uHy5jqggGOhJpDoVAc2wSzXYrEc1woNz4yYYHaxkch1VU0GMocTChPpodtS/tgOofgm
+ vhDA1XJSCjQYa0w7JWB1g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:RgQ1Ql5ggb4=;sCjLbkEs7cShRsezOhsV4DufP5P
+ O8Af7VJtkDrZ4gJEdvFC6ttcbFC96fMkAsM3EIqiMajTGQCTP1rwos+yswh/EV+h/dvFaNT0f
+ Y4FmGLc9V3uMiPBfiR+xcS70N7XZC1RBjNFp5wyHe8wxZrbj2cRPQ9LYK0saaWlY5nu89xVd+
+ oraUMvGSK/tHrgbFuM+f1IDcwD65dVHDs5x30IRxMRktebjH2WgFWLdgg343ULHwPGTt0OhUw
+ 9VAT2qwKIDxTdwTtqfQquz4GsMKDcV1E4p5ZQgTnUpI3uZl5kaplKRLPtzgpnF9AvuZOBqZTA
+ Lg34c25VeSI8bY9d4pY6Uh6YGmJ8Mkq8dvou75xqJ38kq9MTnLAxVJhq93gLFIK7SA5Egdtx3
+ 6yHVgSaMM634X0imyqUg8y5yfeeDk38CjY6gmyt7Yim6QWc5cl8h6187Ywdh4dY5zab+7v4qV
+ /418B+2VQYDXjitHDkP6/IbVVXvJZwbXXdU13I1dSr5mQTJ9bZrBI5kNSA1E60m5mTM1dH8ju
+ brwS+SI4eWykBLLn0PtVMCNDELk2wjkH/BeeTjh8GNaoIAnPSSUxdco5sv+VyfZF3YMt39OtY
+ 3ZtTFmnGqcvK3+CAH8tDj2m6F7TLnNxxJ2lMb2HCYl21bF1UiXKuQrFfsK4EEmPeF5XggeCkm
+ 4/aGojlLoWOZvIzwAGFTMDH3pHCwt7l2lFHFpHrbvPrBUNtA4g0Ju6W4MHbnaCTPMgjgnT8EM
+ FFKhcmcVUTMFvFtfO+wmiPyQGuBrdd4KHqKowU1Wfm7AFJWLok2ct3CyJ490o9IeyLS+pJcMP
+ 9+crdWUaTMR3KQGhT0NAPKlugyiIa3psMiaphuwhoQYgK2Z3C7lH4jCqTJ1eLl6d0d8Yl32je
+ fE42YtxnLlNi/t2LICIzxeJ5JfAkkyt8bg3sFEk3rL8w9vTzIh5bTy6iahzujYHD0aSQLHjwB
+ /DNk6WVMsxoCNiYkshqXvWvvkUrDBGrFRDyBj8rt7+XroX4Yzk9mu5gQ6ljXV2zwmCPyznCW8
+ Wv1rzS0uQ97TD6S828NDxL6BCdXDrdTb2L5n895V+3BdROAndNY6qB5lCYKcSPm9VJ5mElD4C
+ nDKLkTzOrLeValMRdvf/sIrdWPdxCRNXSfwhZ/NcY+4pdUSNHyjMuPof2KVNrGNGEVPvIJDa6
+ HaQj4+H3D7kKiMtEzNThy3kTvpMg6bnE+74mZOaSVPlcQFDTUfx2w5dIQoG/SPqUrCaG9qYms
+ Smgpdoq+9n0dmnwoRMR6sU4mDJppwwcfYl9rCdtAD3LBJtHK5GYx8JctOOdDmPN5haKc4YNab
+ f22dYXuprxonQGjXHfDp95+UGd4snx73MTn7UFWpuKEVIR5OyVJ0D1PE0Uc5jrAiXTlzTrEmu
+ 1ZEDX3hbf+n5w1HwLWqqM55NO8MO/1YomxAx04WLAoTkSmPq0t3ort4oeObrQgLvuH3RlX7YH
+ FFf4E2g==
 
-Hi Sean, Bart,
+=E2=80=A6
+> +++ b/sound/soc/sof/imx/imx-common.c
+> @@ -1,11 +1,16 @@
+=E2=80=A6
+> +static void imx_handle_reply(struct imx_dsp_ipc *ipc)
+> +{
+=E2=80=A6
+> +	spin_lock_irqsave(&sdev->ipc_lock, flags);
+> +	snd_sof_ipc_process_reply(sdev, 0);
+> +	spin_unlock_irqrestore(&sdev->ipc_lock, flags);
+> +}
+=E2=80=A6
 
-Thank you for the patch.
+Under which circumstances would you become interested to apply a statement
+like =E2=80=9Cguard(spinlock_irqsave)(&sdev->ipc_lock);=E2=80=9D?
+https://elixir.bootlin.com/linux/v6.13.1/source/include/linux/spinlock.h#L=
+572
 
-On Fri, Feb 07, 2025 at 11:25:27AM -0500, Sean Anderson wrote:
-> From: Bart Van Assche <bvanassche@acm.org>
-> 
-> Instead of attempting the same mutex twice, lock and unlock it.
-> 
-> This bug has been detected by the Clang thread-safety analyzer.
-> 
-> Cc: Sean Anderson <sean.anderson@linux.dev>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> Fixes: 28edaacb821c ("drm: zynqmp_dp: Add debugfs interface for compliance testing")
-> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-> Reviewed-by: Sean Anderson <sean.anderson@linux.dev>
-> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
-> 
-> (no changes since v1)
-> 
->  drivers/gpu/drm/xlnx/zynqmp_dp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> index 979f6d3239ba..189a08cdc73c 100644
-> --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> @@ -2295,7 +2295,7 @@ static int zynqmp_dp_ignore_hpd_set(void *data, u64 val)
->  
->  	mutex_lock(&dp->lock);
->  	dp->ignore_hpd = val;
-> -	mutex_lock(&dp->lock);
-> +	mutex_unlock(&dp->lock);
->  	return 0;
->  }
->  
-
--- 
 Regards,
-
-Laurent Pinchart
+Markus
