@@ -1,36 +1,73 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529E1183CB0
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 06:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD9815199C;
+	Fri,  7 Feb 2025 06:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738910504; cv=none; b=GqvmTuqwq4oHqDIFUSBIxHVcAs5Zo10mbUXG8Ciqtdw+572Z1moBClLOl5GHb8fpvuE4vXNjcAyVVoKusm1pVR/sJABNZ01jj4HE7yi+5BV+jQIVcAV6QYUFUSCPBsLzyehbjErftkoJ1gZYSQFM8O3f5xT+JoBgpzelYB5Ql+0=
+	t=1738910596; cv=none; b=bkJLeRz9yxZ/4YyTvoVbAsliRyYeOO1ue0uMxvexMh46kNbVP9JxWyk1xfWVhS3p/2FZH38YopYjrgwgnS0yI/er1UAVz3iiQdgkUFwgcWn419+mhQQKP5bgVF2v8mZWA85C4d6H46Yx1sJGkI2pAOag2vHwvUNBEZbj3OVfdcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738910504; c=relaxed/simple;
-	bh=/BS7cxjaHruryBsiD9GwbNvNG7PmDSNRASffx/F9y0s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R+7EbschEgy0X/ZhvGmtVtYFF2J8VgGgwPlzUJiDvjvwCrkQ0MhMhYQ/Ym3kUpMbcMSAZvaAge/4YWlTPC1WXvkzmqxGWQG2JFGt6Xh0Xd19YYaCJbtjWd3dwvF8931QkcafUWTwsKRy51FaWShsrwqcGSAn1uYrZZ/Xu7KrKRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=KjXSDsCB; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1738910596; c=relaxed/simple;
+	bh=Yf7kyqWdOoKCiD+rt4o3E6TpJM7o3QxSY83IupDlzrI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VROYG5c4OAF/ikEtHBH0GaqBtT39CuJDnuh3J3olVW9HsDFcGs+2g6W2fyxc/0i8ypYtpWXWxDyEpFsin9CO1QuTpLVlMdsFh/atlTczOgETMbLft7h5BtYV3TSpJaKeNXU5Olp8p1nvafuJNgyiV6pq9WVJVK5DvXe6edHXv/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=W0e7RNn2; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="KjXSDsCB"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1738910497; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=IckZPfDGFvE/+XKynooSNpFYbiDfWKFfsthqL+N1SNQ=;
-	b=KjXSDsCBGT2QI9KXyJAo5VKsiAkBl5JmPUrrGHP/CgJQFn3en3kzq+rmxChsH5WawXFBuk29GKePTvPIt4tjtBRwQfdj3ZskfFghlr0sssDy/sQpEVjeTG6rmV/lu3SFdLF64WVB/ZlOW8C2Ej6sN+HPCDhNm/3afpFA99iZvsQ=
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WOySS0b_1738910496 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 07 Feb 2025 14:41:36 +0800
-From: Hongzhen Luo <hongzhen@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org,
-	Hongzhen Luo <hongzhen@linux.alibaba.com>
-Subject: [PATCH RESEND] erofs: use Z_EROFS_LCLUSTER_TYPE_MAX to simplify switches
-Date: Fri,  7 Feb 2025 14:41:35 +0800
-Message-ID: <20250207064135.2249529-1-hongzhen@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="W0e7RNn2"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5175H5VL021447;
+	Fri, 7 Feb 2025 06:42:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	NX5v8nJ2puhYj5wXMtsaWBp0DSoGX4fWn2lmiYpQN9c=; b=W0e7RNn2/CQSxI8F
+	A/YnnG+ejINoeaDT+x5oXSsp6lVoJn8qppXB+IChaR8uTkO4CG6Fi3PqaIb0sZSE
+	4E3Mhplnu5dbSc93ArOyFJoZKaqQAd2SfcayPardZzr7Lgwgx9aGor+xfsi/HID5
+	dL5SXff9Yftf/V6PXH6QXw9ktL8YbGI1sLkQTljlNf2/EshPBl426rAH+h5Zshlz
+	BxqQ78J8ZOCtARjsB/PzvEekf5hDBJwGx4pf+kEUG4WhOdxWdY47nEtDZjaL4j3w
+	bN5dOj1YU3WHMANhS72sgJKJsmo3y2TpVfCBo0GofI98yIqmlHYP8VjT57oYtd2P
+	KFTV3Q==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nbvur5sc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Feb 2025 06:42:54 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5176grZ6004438
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 7 Feb 2025 06:42:53 GMT
+Received: from jiegan-gv.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 6 Feb 2025 22:42:48 -0800
+From: Jie Gan <quic_jiegan@quicinc.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+	<mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>,
+        "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+CC: Tingwei Zhang <quic_tingweiz@quicinc.com>,
+        Jinlong Mao
+	<quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v10 2/7] Coresight: Add trace_id function to retrieving the trace ID
+Date: Fri, 7 Feb 2025 14:42:08 +0800
+Message-ID: <20250207064213.2314482-3-quic_jiegan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250207064213.2314482-1-quic_jiegan@quicinc.com>
+References: <20250207064213.2314482-1-quic_jiegan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,129 +75,231 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Z8HLDujoaAOOGCMRKrbQYBql3ggZP06G
+X-Proofpoint-ORIG-GUID: Z8HLDujoaAOOGCMRKrbQYBql3ggZP06G
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_03,2025-02-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 impostorscore=0
+ suspectscore=0 bulkscore=0 priorityscore=1501 clxscore=1015 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502070051
 
-There's no need to enumerate each type.  No logic changes.
+Add 'trace_id' function pointer in ops. It's responsible for
+retrieving the device's trace ID.
 
-Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+Co-developed-by: James Clark <james.clark@linaro.org>
+Signed-off-by: James Clark <james.clark@linaro.org>
+Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
 ---
- fs/erofs/zmap.c | 59 ++++++++++++++++++-------------------------------
- 1 file changed, 22 insertions(+), 37 deletions(-)
+ drivers/hwtracing/coresight/coresight-core.c  | 27 +++++++++++++++++++
+ drivers/hwtracing/coresight/coresight-dummy.c | 11 ++++++++
+ .../coresight/coresight-etm3x-core.c          |  1 +
+ .../coresight/coresight-etm4x-core.c          |  1 +
+ drivers/hwtracing/coresight/coresight-stm.c   | 11 ++++++++
+ drivers/hwtracing/coresight/coresight-tpda.c  | 11 ++++++++
+ include/linux/coresight.h                     |  8 ++++++
+ 7 files changed, 70 insertions(+)
 
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 689437e99a5a..0ee78413bfd5 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -265,24 +265,20 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
- 		if (err)
- 			return err;
+diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+index 0a9380350fb5..6cad777757f3 100644
+--- a/drivers/hwtracing/coresight/coresight-core.c
++++ b/drivers/hwtracing/coresight/coresight-core.c
+@@ -23,6 +23,7 @@
+ #include "coresight-etm-perf.h"
+ #include "coresight-priv.h"
+ #include "coresight-syscfg.h"
++#include "coresight-trace-id.h"
  
--		switch (m->type) {
--		case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
-+		if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
- 			lookback_distance = m->delta[0];
- 			if (!lookback_distance)
- 				goto err_bogus;
- 			continue;
--		case Z_EROFS_LCLUSTER_TYPE_PLAIN:
--		case Z_EROFS_LCLUSTER_TYPE_HEAD1:
--		case Z_EROFS_LCLUSTER_TYPE_HEAD2:
-+		} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
- 			m->headtype = m->type;
- 			m->map->m_la = (lcn << lclusterbits) | m->clusterofs;
- 			return 0;
--		default:
--			erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
--				  m->type, lcn, vi->nid);
--			DBG_BUGON(1);
--			return -EOPNOTSUPP;
- 		}
-+		erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
-+			  m->type, lcn, vi->nid);
-+		DBG_BUGON(1);
-+		return -EOPNOTSUPP;
- 	}
- err_bogus:
- 	erofs_err(sb, "bogus lookback distance %u @ lcn %lu of nid %llu",
-@@ -329,35 +325,28 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
- 	DBG_BUGON(lcn == initial_lcn &&
- 		  m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD);
+ /*
+  * Mutex used to lock all sysfs enable and disable actions and loading and
+@@ -1515,6 +1516,32 @@ void coresight_remove_driver(struct amba_driver *amba_drv,
+ }
+ EXPORT_SYMBOL_GPL(coresight_remove_driver);
  
--	switch (m->type) {
--	case Z_EROFS_LCLUSTER_TYPE_PLAIN:
--	case Z_EROFS_LCLUSTER_TYPE_HEAD1:
--	case Z_EROFS_LCLUSTER_TYPE_HEAD2:
-+	if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
-+		if (m->delta[0] != 1) {
-+			erofs_err(sb, "bogus CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
-+			DBG_BUGON(1);
-+			return -EFSCORRUPTED;
-+		}
-+		if (m->compressedblks)
-+			goto out;
-+	} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
- 		/*
- 		 * if the 1st NONHEAD lcluster is actually PLAIN or HEAD type
- 		 * rather than CBLKCNT, it's a 1 block-sized pcluster.
- 		 */
- 		m->compressedblks = 1;
--		break;
--	case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
--		if (m->delta[0] != 1)
--			goto err_bonus_cblkcnt;
--		if (m->compressedblks)
--			break;
--		fallthrough;
--	default:
--		erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", lcn,
--			  vi->nid);
--		DBG_BUGON(1);
--		return -EFSCORRUPTED;
-+		goto out;
- 	}
-+	erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
-+	DBG_BUGON(1);
-+	return -EFSCORRUPTED;
- out:
- 	m->map->m_plen = erofs_pos(sb, m->compressedblks);
- 	return 0;
--err_bonus_cblkcnt:
--	erofs_err(sb, "bogus CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
--	DBG_BUGON(1);
--	return -EFSCORRUPTED;
++int coresight_etm_get_trace_id(struct coresight_device *csdev, enum cs_mode mode,
++			       struct coresight_device *sink)
++{
++	int trace_id;
++	int cpu = source_ops(csdev)->cpu_id(csdev);
++
++	switch (mode) {
++	case CS_MODE_SYSFS:
++		trace_id = coresight_trace_id_get_cpu_id(cpu);
++		break;
++	case CS_MODE_PERF:
++		trace_id = coresight_trace_id_get_cpu_id_map(cpu, &sink->perf_sink_id_map);
++		break;
++	default:
++		trace_id = -EINVAL;
++		break;
++	}
++
++	if (!IS_VALID_CS_TRACE_ID(trace_id))
++		dev_err(&csdev->dev,
++			"Failed to allocate trace ID on CPU%d\n", cpu);
++
++	return trace_id;
++}
++EXPORT_SYMBOL_GPL(coresight_etm_get_trace_id);
++
+ MODULE_LICENSE("GPL v2");
+ MODULE_AUTHOR("Pratik Patel <pratikp@codeaurora.org>");
+ MODULE_AUTHOR("Mathieu Poirier <mathieu.poirier@linaro.org>");
+diff --git a/drivers/hwtracing/coresight/coresight-dummy.c b/drivers/hwtracing/coresight/coresight-dummy.c
+index 9be53be8964b..c47f0382b943 100644
+--- a/drivers/hwtracing/coresight/coresight-dummy.c
++++ b/drivers/hwtracing/coresight/coresight-dummy.c
+@@ -41,6 +41,16 @@ static void dummy_source_disable(struct coresight_device *csdev,
+ 	dev_dbg(csdev->dev.parent, "Dummy source disabled\n");
  }
  
- static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
-@@ -386,9 +375,7 @@ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
- 				m->delta[1] = 1;
- 				DBG_BUGON(1);
- 			}
--		} else if (m->type == Z_EROFS_LCLUSTER_TYPE_PLAIN ||
--			   m->type == Z_EROFS_LCLUSTER_TYPE_HEAD1 ||
--			   m->type == Z_EROFS_LCLUSTER_TYPE_HEAD2) {
-+		} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
- 			if (lcn != headlcn)
- 				break;	/* ends at the next HEAD lcluster */
- 			m->delta[1] = 1;
-@@ -452,8 +439,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 		}
- 		/* m.lcn should be >= 1 if endoff < m.clusterofs */
- 		if (!m.lcn) {
--			erofs_err(inode->i_sb,
--				  "invalid logical cluster 0 at nid %llu",
-+			erofs_err(inode->i_sb, "invalid logical cluster 0 at nid %llu",
- 				  vi->nid);
- 			err = -EFSCORRUPTED;
- 			goto unmap_out;
-@@ -469,8 +455,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 			goto unmap_out;
- 		break;
- 	default:
--		erofs_err(inode->i_sb,
--			  "unknown type %u @ offset %llu of nid %llu",
-+		erofs_err(inode->i_sb, "unknown type %u @ offset %llu of nid %llu",
- 			  m.type, ofs, vi->nid);
- 		err = -EOPNOTSUPP;
- 		goto unmap_out;
++static int dummy_source_trace_id(struct coresight_device *csdev, __maybe_unused enum cs_mode mode,
++				 __maybe_unused struct coresight_device *sink)
++{
++	struct dummy_drvdata *drvdata;
++
++	drvdata = dev_get_drvdata(csdev->dev.parent);
++
++	return drvdata->traceid;
++}
++
+ static int dummy_sink_enable(struct coresight_device *csdev, enum cs_mode mode,
+ 				void *data)
+ {
+@@ -59,6 +69,7 @@ static int dummy_sink_disable(struct coresight_device *csdev)
+ static const struct coresight_ops_source dummy_source_ops = {
+ 	.enable	= dummy_source_enable,
+ 	.disable = dummy_source_disable,
++	.trace_id = dummy_source_trace_id,
+ };
+ 
+ static const struct coresight_ops dummy_source_cs_ops = {
+diff --git a/drivers/hwtracing/coresight/coresight-etm3x-core.c b/drivers/hwtracing/coresight/coresight-etm3x-core.c
+index c103f4c70f5d..a38e72ef8e79 100644
+--- a/drivers/hwtracing/coresight/coresight-etm3x-core.c
++++ b/drivers/hwtracing/coresight/coresight-etm3x-core.c
+@@ -701,6 +701,7 @@ static const struct coresight_ops_source etm_source_ops = {
+ 	.cpu_id		= etm_cpu_id,
+ 	.enable		= etm_enable,
+ 	.disable	= etm_disable,
++	.trace_id	= coresight_etm_get_trace_id,
+ };
+ 
+ static const struct coresight_ops etm_cs_ops = {
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+index 2c1a60577728..1a993d5380e7 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+@@ -1064,6 +1064,7 @@ static const struct coresight_ops_source etm4_source_ops = {
+ 	.cpu_id		= etm4_cpu_id,
+ 	.enable		= etm4_enable,
+ 	.disable	= etm4_disable,
++	.trace_id	= coresight_etm_get_trace_id,
+ };
+ 
+ static const struct coresight_ops etm4_cs_ops = {
+diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
+index b581a30a1cd9..64fcfa916562 100644
+--- a/drivers/hwtracing/coresight/coresight-stm.c
++++ b/drivers/hwtracing/coresight/coresight-stm.c
+@@ -281,9 +281,20 @@ static void stm_disable(struct coresight_device *csdev,
+ 	}
+ }
+ 
++static int stm_trace_id(struct coresight_device *csdev, __maybe_unused enum cs_mode mode,
++			__maybe_unused struct coresight_device *sink)
++{
++	struct stm_drvdata *drvdata;
++
++	drvdata = dev_get_drvdata(csdev->dev.parent);
++
++	return drvdata->traceid;
++}
++
+ static const struct coresight_ops_source stm_source_ops = {
+ 	.enable		= stm_enable,
+ 	.disable	= stm_disable,
++	.trace_id	= stm_trace_id,
+ };
+ 
+ static const struct coresight_ops stm_cs_ops = {
+diff --git a/drivers/hwtracing/coresight/coresight-tpda.c b/drivers/hwtracing/coresight/coresight-tpda.c
+index 189a4abc2561..d80b6427e5a6 100644
+--- a/drivers/hwtracing/coresight/coresight-tpda.c
++++ b/drivers/hwtracing/coresight/coresight-tpda.c
+@@ -241,9 +241,20 @@ static void tpda_disable(struct coresight_device *csdev,
+ 	dev_dbg(drvdata->dev, "TPDA inport %d disabled\n", in->dest_port);
+ }
+ 
++static int tpda_trace_id(struct coresight_device *csdev, __maybe_unused enum cs_mode mode,
++			 __maybe_unused struct coresight_device *sink)
++{
++	struct tpda_drvdata *drvdata;
++
++	drvdata = dev_get_drvdata(csdev->dev.parent);
++
++	return drvdata->atid;
++}
++
+ static const struct coresight_ops_link tpda_link_ops = {
+ 	.enable		= tpda_enable,
+ 	.disable	= tpda_disable,
++	.trace_id	= tpda_trace_id,
+ };
+ 
+ static const struct coresight_ops tpda_cs_ops = {
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index 157c4bd009a1..70407d61262e 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -368,6 +368,7 @@ struct coresight_ops_sink {
+  * Operations available for links.
+  * @enable:	enables flow between iport and oport.
+  * @disable:	disables flow between iport and oport.
++ * @trace_id:	alloc or read the traceid.
+  */
+ struct coresight_ops_link {
+ 	int (*enable)(struct coresight_device *csdev,
+@@ -376,6 +377,8 @@ struct coresight_ops_link {
+ 	void (*disable)(struct coresight_device *csdev,
+ 			struct coresight_connection *in,
+ 			struct coresight_connection *out);
++	int (*trace_id)(struct coresight_device *csdev, enum cs_mode mode,
++			struct coresight_device *sink);
+ };
+ 
+ /**
+@@ -385,6 +388,7 @@ struct coresight_ops_link {
+  *		is associated to.
+  * @enable:	enables tracing for a source.
+  * @disable:	disables tracing for a source.
++ * @trace_id:	alloc or read the traceid.
+  */
+ struct coresight_ops_source {
+ 	int (*cpu_id)(struct coresight_device *csdev);
+@@ -392,6 +396,8 @@ struct coresight_ops_source {
+ 		      enum cs_mode mode, struct coresight_trace_id_map *id_map);
+ 	void (*disable)(struct coresight_device *csdev,
+ 			struct perf_event *event);
++	int (*trace_id)(struct coresight_device *csdev, enum cs_mode mode,
++			struct coresight_device *sink);
+ };
+ 
+ /**
+@@ -697,4 +703,6 @@ int coresight_init_driver(const char *drv, struct amba_driver *amba_drv,
+ 
+ void coresight_remove_driver(struct amba_driver *amba_drv,
+ 			     struct platform_driver *pdev_drv);
++int coresight_etm_get_trace_id(struct coresight_device *csdev, enum cs_mode mode,
++			       struct coresight_device *sink);
+ #endif		/* _LINUX_COREISGHT_H */
 -- 
-2.43.5
+2.34.1
 
