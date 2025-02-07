@@ -1,66 +1,66 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42691A0BF1
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:09:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543F01D63CE
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738958982; cv=none; b=FUE9cCfx4bQ+cJLvwBQdfnZcQYdyjd4QpGE1amCYUH2Yub1fKJZUAFtUZNlf9VYBcAM7Gt/SRnoK/HngIi9+7y7QCX7Dp7p9Dr3AIWn7ifoa2ln7qHTu1nhZLke/z2QU1ZsI5/MUwkMDch9O1R4sotVdMsjmjjrTohbZlYtkR8I=
+	t=1738958984; cv=none; b=YUwBUTz3fufru2Hub1JBHhD7rBZjBQrWbpXnIjHkq6GYouREq6wYtT9jTLcYzkl0kjZwGJdoknJjYtLlX//fm2xN6XKGKC+iQleOIXj4KaKCXA760pmtspkIODA0FToGFSqInuIjWXOJg0wkukUd1Z1Yk6GDFTIrtsJtonGa0ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738958982; c=relaxed/simple;
-	bh=WTRyrDP74Be0UzziUCgrAt1IiqdEqmSclPtrQfncLY4=;
+	s=arc-20240116; t=1738958984; c=relaxed/simple;
+	bh=dzCJ6ZEQTNY+z2WK8kNiO9rUSbrCIMXdjhs/EOFJ84k=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=B0Du4/ucy3D2SOejoFbVfJvCiJK2PSQuRrP31uBR+m5yPeb1+Pxk+V9zxU1QLkbqLGRDyEymNaV/hgXxjRSgrYhGn7Ddj1otQsFfE7zxg/wLr4iNw/vIyev+BiQjYHqdQplhSitveUOfMEm7LMksau1JK9kC4Rt7Wnz+hAXmTbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Y661FKNP; arc=none smtp.client-ip=209.85.210.53
+	 In-Reply-To:To:Cc; b=sWZMOzm1xznWC5FVnlddyPRycYvy9WIvvEBnr95nFG6RFFOcGlmuN5OMncUR3yuyO9/AsaR9ULXeI1ZfmTGXzgV81EO5HJfx1sGNfSYguNTKwA2Cj1sOoCtzGF3uqGB5Uya6xoxEIU2rkGY+l7+dYwCfVKkpY4Npxgg2Dse6yOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DI6HWuea; arc=none smtp.client-ip=209.85.210.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Y661FKNP"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-71ded02b779so1411206a34.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:09:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DI6HWuea"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-71e157a79c8so738561a34.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:09:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738958979; x=1739563779; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738958981; x=1739563781; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pdMxJLVUyi4W3/XAWZvTW+GcXmKoS+IN/gS3t7thlds=;
-        b=Y661FKNPqJqCh1hpvQ4Tno47aIqz5DvxhlO2GhL2FXNXXH7GU6yQXaxqrkFWWzXm+y
-         irsbyI0mt/jcFkoBAb1CBan9ov3WVxsC4Z4R/ac1P7ENbNmI+8P5yeyHA+gseTVME18T
-         YUmVxDF9WLQ6iIYyUMAqKjtF8fhsj9O4IFq8KojqhbA8kVrc8vlenfAdQD6jWsDJL+Ng
-         nhiBQXGdKODUNvht28P9jqUB5AWQc+2F9HWu3rL7RnlhBjWjXCO08Qs7XmHMkj0pC18T
-         2Yt4+nZOXNuMHpZm/mlOT96tJXcUjOdh51aN5lmuCDo5KQqJ7rNydp5UwQidgjx3RMzX
-         OzdQ==
+        bh=NxYYb5ciTauJBruXQRFcV6o6UAzHMKHqZuEnooTWOkc=;
+        b=DI6HWueadtJhGR5uJi9e9KVYO1+A5PR+jFKrX2fKL6yrbH0xI3CTA3i4DKhg17hVxw
+         FzKbCk4Xm9qSM0Wxq8OHel0A3SLoj1EhG2nMOC8nPwYzm4TpZf8pD9KNrmN5oITEpnf3
+         IeRPpytQHtSPIvmZEMcZUEB5g+gZexgD54P8eVFD8jxmcRoxS+9G4eKiYEZTUU2j2eg4
+         Fika9spuMefO/ET7BUTU5lg61Mq0m3+FY02jkv36vFIa0vBoFAh7Wizdr6pEeSAINlvV
+         dunDB6wZl+guyngpq5cKk/qfsnkkuZziBFcCSnYKrFxHMxqtj5BYmPc+EIWS4lqTVkZS
+         02LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738958979; x=1739563779;
+        d=1e100.net; s=20230601; t=1738958981; x=1739563781;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pdMxJLVUyi4W3/XAWZvTW+GcXmKoS+IN/gS3t7thlds=;
-        b=bOCQ5f1AmivV6YGoZyeIf8K4UQvvhHjxZNENq6GbaNh/oticBppxPWEz4/qyI+o1m8
-         rA2nhoNrikkDOjYFekFxMwOIksYkYxj9IcdJ8nMjhePvf7eESaVRjD+SB3iIhqcvvu3W
-         H4wF1bc1PLP4aiBl/bBxVWtQKaTJ1I8b73SoZcZuKoim5eNmGpjuZz1caWVnn4ng8wSj
-         /2TVMDDJo6mB8Kxg5Ug09K/lfpxMSOdnVfa1DYZFS2A+XIWR67/0mDqGFKKDYnwROLOY
-         h1OSnwba2HrkhmfYDM777/5f4+2PrY2qbzLfAB9Nm2/fU90+bHvEouPEziER++k6eX9g
-         d6cw==
-X-Forwarded-Encrypted: i=1; AJvYcCUnyTMZomICYvqZF+RT4gT/gp49zipzGN1XPmp8eAhv1MjzEYZ/an6JVcoIqssDYvDMeZsUnGZ5AgsYY1Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywo5cm6MDaQwbNCxKq+Vk8uqrVitgyf3XeNcjU1lbAWSbwqZzHV
-	qdl287cgVuAC5A1xPBCaPn1DqknG/OlOEGVyG8bjIPLG3vlq6UoJwIzHAvyNGK4=
-X-Gm-Gg: ASbGncseBYwX55YwKObzjPwvDF+P/5eJnukCsxkEGOI5AUC3mmO52TLxkDgE0OHlp+8
-	hAiDJlZCr+eP8t4r2FrZQFzyJScOe4u4LTU9zg0oUJk0ouHFAmue02YbpQu6NinDT7UhQrF4djL
-	pHbXqHbuCCsG90QV1Fr/4RbVbWoiIGBJ4unUKtNp1hXOfrFud9YgE3EWiLO8nQfPRWwEILJuopT
-	9Knt/jo60PybRoj1DLWhpN1JOBLWD+I1QkiyhphVmDvkQi1J2Ojgxxbj2LqYwX6WRvOoykOoo1J
-	vxNxX1Xk+4wKD0KPEAdGrsCr/DgJV4FM4/kNpEDFsdjOVBc=
-X-Google-Smtp-Source: AGHT+IH5sh7VymPtzuwCp1Fwk/GTYtt6arEUE6mdjwiN9mTxM2PbOcR5pHPX9Vehw6fyomKaJMOOAw==
-X-Received: by 2002:a05:6830:698d:b0:71d:fc52:1ab6 with SMTP id 46e09a7af769-726b88a3e27mr2735801a34.23.1738958979574;
-        Fri, 07 Feb 2025 12:09:39 -0800 (PST)
+        bh=NxYYb5ciTauJBruXQRFcV6o6UAzHMKHqZuEnooTWOkc=;
+        b=PAhmVO4Kn55aZnHsiuufvua4tcTvs8O1MV7lj0XnAb5gEXMPwK9n1fDrWfKYKs0fUR
+         Qx3WXSr7//UJ+8N4QhnU1Hizsir/IgrFHS9mU4mLg/LOFak8u+iIF74Sp9ELCcJnGw2z
+         9UbMmOcFxiceHCQIijB2S7AXsPA0r9G6/fT4CypnoDV0rImcGn3noqgsn2p+yix9ZSul
+         ku1LqiUUUplYsvim54HFlCZ7d/Vmwiwjf/YT8IV5MI5Ud9s/kcctp3FAet3wSDGL441A
+         /DpZbmcT+PKA0d14JPK/ZkSDPujHVGe9qPnKD4VtI6KBx07oVIqxNamWYtSYpXngURwJ
+         Z0eg==
+X-Forwarded-Encrypted: i=1; AJvYcCXnom9G4l0ul1wsCuv5Iy4eZC6sc0GbDvMZ4nSv8+EViha5qRC5zTQsb4N7ADrf/iE0p++akKRHVuWoVOM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBYFYfHNMIflnZp4FJ1fHDw7Y7sya6qtUIhiou4VzpEkpi+Cnd
+	Zf5Ksl+/D8wqZ8j9IDODOtDWC9tTwl8NUMSx0weAW7o6+OpBlN1m22KCvnvvkYU=
+X-Gm-Gg: ASbGncsktX4Ox0ToFqviyrAyChs+fC2TKkblZLJDISmKkaM6ycm0AwW6GN+xVPwTzxL
+	EderFKiDnsfh8wnNkInDW2PPfl1qXLgPIEgFKfEtwSuejzhDZAPtjdoqXSJxSxGJoOmjVvt5Tce
+	KDqSGKI24eQRhwqcWba3raTiAoJ6L742Hd+zKjqU6D+ZAVLc533wCFGXOzLwSIST6Y4bH1fyvrj
+	LWUuq/wgiVxgjnnNdsZeDjTXDdtWusPDeIMztM+VbxodDCAyL0otzwo4rwzYm17Sw+6IO1laFlI
+	+NQ2utzh/hHah9wSg/qqO53x02k2U6U5OgOfcrbKHiSjaxI=
+X-Google-Smtp-Source: AGHT+IGK4xYaEcxApiz7m2CUhej55WwAoBbiU+s2jpWUeCLtHUqStHqG/Dhk5gCjtlNGdzV0gWWPyQ==
+X-Received: by 2002:a05:6830:4701:b0:71e:1392:80b5 with SMTP id 46e09a7af769-726b889856cmr3814221a34.24.1738958981445;
+        Fri, 07 Feb 2025 12:09:41 -0800 (PST)
 Received: from [127.0.1.1] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc544b08d4sm930387eaf.2.2025.02.07.12.09.36
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc544b08d4sm930387eaf.2.2025.02.07.12.09.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 12:09:38 -0800 (PST)
+        Fri, 07 Feb 2025 12:09:41 -0800 (PST)
 From: David Lechner <dlechner@baylibre.com>
-Date: Fri, 07 Feb 2025 14:09:05 -0600
-Subject: [PATCH v8 08/17] iio: buffer-dmaengine: split requesting DMA
- channel from allocating buffer
+Date: Fri, 07 Feb 2025 14:09:06 -0600
+Subject: [PATCH v8 09/17] iio: buffer-dmaengine: add
+ devm_iio_dmaengine_buffer_setup_with_handle()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-dlech-mainline-spi-engine-offload-2-v8-8-e48a489be48c@baylibre.com>
+Message-Id: <20250207-dlech-mainline-spi-engine-offload-2-v8-9-e48a489be48c@baylibre.com>
 References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
 In-Reply-To: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
 To: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
@@ -85,25 +85,9 @@ Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
  David Lechner <dlechner@baylibre.com>
 X-Mailer: b4 0.14.2
 
-Refactor the IIO dmaengine buffer code to split requesting the DMA
-channel from allocating the buffer. We want to be able to add a new
-function where the IIO device driver manages the DMA channel, so these
-two actions need to be separate.
-
-To do this, calling dma_request_chan() is moved from
-iio_dmaengine_buffer_alloc() to iio_dmaengine_buffer_setup_ext(). A new
-__iio_dmaengine_buffer_setup_ext() helper function is added to simplify
-error unwinding and will also be used by a new function in a later
-patch.
-
-iio_dmaengine_buffer_free() now only frees the buffer and does not
-release the DMA channel. A new iio_dmaengine_buffer_teardown() function
-is added to unwind everything done in iio_dmaengine_buffer_setup_ext().
-This keeps things more symmetrical with obvious pairs alloc/free and
-setup/teardown.
-
-Calling dma_get_slave_caps() in iio_dmaengine_buffer_alloc() is moved so
-that we can avoid any gotos for error unwinding.
+Add a new devm_iio_dmaengine_buffer_setup_with_handle() function to
+handle cases where the DMA channel is managed by the caller rather than
+being requested and released by the iio_dmaengine module.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Nuno Sa <nuno.sa@analog.com>
@@ -113,240 +97,91 @@ Signed-off-by: David Lechner <dlechner@baylibre.com>
 v7 changes: none
 
 v6 changes:
-* Split out from patch that adds the new function
-* Dropped owns_chan flag
-* Introduced iio_dmaengine_buffer_teardown() so that
-  iio_dmaengine_buffer_free() doesn't have to manage the DMA channel
----
- drivers/iio/adc/adi-axi-adc.c                      |   2 +-
- drivers/iio/buffer/industrialio-buffer-dmaengine.c | 106 ++++++++++++---------
- drivers/iio/dac/adi-axi-dac.c                      |   2 +-
- include/linux/iio/buffer-dmaengine.h               |   2 +-
- 4 files changed, 65 insertions(+), 47 deletions(-)
+* Rename from devm_iio_dmaengine_buffer_setup_ext2()
+* This patch now just adds the new function - prep work was split out
+  to a separate patch
 
-diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
-index c7357601f0f869e57636f00bb1e26c059c3ab15c..a55db308baabf7b26ea98431cab1e6af7fe2a5f3 100644
---- a/drivers/iio/adc/adi-axi-adc.c
-+++ b/drivers/iio/adc/adi-axi-adc.c
-@@ -305,7 +305,7 @@ static struct iio_buffer *axi_adc_request_buffer(struct iio_backend *back,
- static void axi_adc_free_buffer(struct iio_backend *back,
- 				struct iio_buffer *buffer)
- {
--	iio_dmaengine_buffer_free(buffer);
-+	iio_dmaengine_buffer_teardown(buffer);
- }
- 
- static int axi_adc_reg_access(struct iio_backend *back, unsigned int reg,
+v5 changes: none
+
+v4 changes:
+* This replaces "iio: buffer-dmaengine: generalize requesting DMA channel"
+---
+ drivers/iio/buffer/industrialio-buffer-dmaengine.c | 38 ++++++++++++++++++++++
+ include/linux/iio/buffer-dmaengine.h               |  5 +++
+ 2 files changed, 43 insertions(+)
+
 diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-index 614e1c4189a9cdd5a8d9d8c5ef91566983032951..02847d3962fcbb43ec76167db6482ab951f20942 100644
+index 02847d3962fcbb43ec76167db6482ab951f20942..e9d9a7d39fe191c2b6e8c196a08cdd26cd3a8d4b 100644
 --- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
 +++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-@@ -206,39 +206,29 @@ static const struct iio_dev_attr *iio_dmaengine_buffer_attrs[] = {
- 
- /**
-  * iio_dmaengine_buffer_alloc() - Allocate new buffer which uses DMAengine
-- * @dev: DMA channel consumer device
-- * @channel: DMA channel name, typically "rx".
-+ * @chan: DMA channel.
-  *
-  * This allocates a new IIO buffer which internally uses the DMAengine framework
-- * to perform its transfers. The parent device will be used to request the DMA
-- * channel.
-+ * to perform its transfers.
-  *
-  * Once done using the buffer iio_dmaengine_buffer_free() should be used to
-  * release it.
-  */
--static struct iio_buffer *iio_dmaengine_buffer_alloc(struct device *dev,
--	const char *channel)
-+static struct iio_buffer *iio_dmaengine_buffer_alloc(struct dma_chan *chan)
- {
- 	struct dmaengine_buffer *dmaengine_buffer;
- 	unsigned int width, src_width, dest_width;
- 	struct dma_slave_caps caps;
--	struct dma_chan *chan;
- 	int ret;
- 
-+	ret = dma_get_slave_caps(chan, &caps);
-+	if (ret < 0)
-+		return ERR_PTR(ret);
-+
- 	dmaengine_buffer = kzalloc(sizeof(*dmaengine_buffer), GFP_KERNEL);
- 	if (!dmaengine_buffer)
- 		return ERR_PTR(-ENOMEM);
- 
--	chan = dma_request_chan(dev, channel);
--	if (IS_ERR(chan)) {
--		ret = PTR_ERR(chan);
--		goto err_free;
--	}
--
--	ret = dma_get_slave_caps(chan, &caps);
--	if (ret < 0)
--		goto err_release;
--
- 	/* Needs to be aligned to the maximum of the minimums */
- 	if (caps.src_addr_widths)
- 		src_width = __ffs(caps.src_addr_widths);
-@@ -262,12 +252,6 @@ static struct iio_buffer *iio_dmaengine_buffer_alloc(struct device *dev,
- 	dmaengine_buffer->queue.buffer.access = &iio_dmaengine_buffer_ops;
- 
- 	return &dmaengine_buffer->queue.buffer;
--
--err_release:
--	dma_release_channel(chan);
--err_free:
--	kfree(dmaengine_buffer);
--	return ERR_PTR(ret);
- }
- 
- /**
-@@ -276,17 +260,57 @@ static struct iio_buffer *iio_dmaengine_buffer_alloc(struct device *dev,
-  *
-  * Frees a buffer previously allocated with iio_dmaengine_buffer_alloc().
-  */
--void iio_dmaengine_buffer_free(struct iio_buffer *buffer)
-+static void iio_dmaengine_buffer_free(struct iio_buffer *buffer)
- {
- 	struct dmaengine_buffer *dmaengine_buffer =
- 		iio_buffer_to_dmaengine_buffer(buffer);
- 
- 	iio_dma_buffer_exit(&dmaengine_buffer->queue);
--	dma_release_channel(dmaengine_buffer->chan);
--
- 	iio_buffer_put(buffer);
- }
--EXPORT_SYMBOL_NS_GPL(iio_dmaengine_buffer_free, "IIO_DMAENGINE_BUFFER");
-+
-+/**
-+ * iio_dmaengine_buffer_teardown() - Releases DMA channel and frees buffer
-+ * @buffer: Buffer to free
-+ *
-+ * Releases the DMA channel and frees the buffer previously setup with
-+ * iio_dmaengine_buffer_setup_ext().
-+ */
-+void iio_dmaengine_buffer_teardown(struct iio_buffer *buffer)
-+{
-+	struct dmaengine_buffer *dmaengine_buffer =
-+		iio_buffer_to_dmaengine_buffer(buffer);
-+	struct dma_chan *chan = dmaengine_buffer->chan;
-+
-+	iio_dmaengine_buffer_free(buffer);
-+	dma_release_channel(chan);
-+}
-+EXPORT_SYMBOL_NS_GPL(iio_dmaengine_buffer_teardown, "IIO_DMAENGINE_BUFFER");
-+
-+static struct iio_buffer
-+*__iio_dmaengine_buffer_setup_ext(struct iio_dev *indio_dev,
-+				  struct dma_chan *chan,
-+				  enum iio_buffer_direction dir)
-+{
-+	struct iio_buffer *buffer;
-+	int ret;
-+
-+	buffer = iio_dmaengine_buffer_alloc(chan);
-+	if (IS_ERR(buffer))
-+		return ERR_CAST(buffer);
-+
-+	indio_dev->modes |= INDIO_BUFFER_HARDWARE;
-+
-+	buffer->direction = dir;
-+
-+	ret = iio_device_attach_buffer(indio_dev, buffer);
-+	if (ret) {
-+		iio_dmaengine_buffer_free(buffer);
-+		return ERR_PTR(ret);
-+	}
-+
-+	return buffer;
-+}
- 
- /**
-  * iio_dmaengine_buffer_setup_ext() - Setup a DMA buffer for an IIO device
-@@ -300,7 +324,7 @@ EXPORT_SYMBOL_NS_GPL(iio_dmaengine_buffer_free, "IIO_DMAENGINE_BUFFER");
-  * It also appends the INDIO_BUFFER_HARDWARE mode to the supported modes of the
-  * IIO device.
-  *
-- * Once done using the buffer iio_dmaengine_buffer_free() should be used to
-+ * Once done using the buffer iio_dmaengine_buffer_teardown() should be used to
-  * release it.
-  */
- struct iio_buffer *iio_dmaengine_buffer_setup_ext(struct device *dev,
-@@ -308,30 +332,24 @@ struct iio_buffer *iio_dmaengine_buffer_setup_ext(struct device *dev,
- 						  const char *channel,
- 						  enum iio_buffer_direction dir)
- {
-+	struct dma_chan *chan;
- 	struct iio_buffer *buffer;
--	int ret;
--
--	buffer = iio_dmaengine_buffer_alloc(dev, channel);
--	if (IS_ERR(buffer))
--		return ERR_CAST(buffer);
--
--	indio_dev->modes |= INDIO_BUFFER_HARDWARE;
- 
--	buffer->direction = dir;
-+	chan = dma_request_chan(dev, channel);
-+	if (IS_ERR(chan))
-+		return ERR_CAST(chan);
- 
--	ret = iio_device_attach_buffer(indio_dev, buffer);
--	if (ret) {
--		iio_dmaengine_buffer_free(buffer);
--		return ERR_PTR(ret);
--	}
-+	buffer = __iio_dmaengine_buffer_setup_ext(indio_dev, chan, dir);
-+	if (IS_ERR(buffer))
-+		dma_release_channel(chan);
- 
- 	return buffer;
- }
- EXPORT_SYMBOL_NS_GPL(iio_dmaengine_buffer_setup_ext, "IIO_DMAENGINE_BUFFER");
- 
--static void __devm_iio_dmaengine_buffer_free(void *buffer)
-+static void devm_iio_dmaengine_buffer_teardown(void *buffer)
- {
--	iio_dmaengine_buffer_free(buffer);
-+	iio_dmaengine_buffer_teardown(buffer);
- }
- 
- /**
-@@ -357,7 +375,7 @@ int devm_iio_dmaengine_buffer_setup_ext(struct device *dev,
- 	if (IS_ERR(buffer))
- 		return PTR_ERR(buffer);
- 
--	return devm_add_action_or_reset(dev, __devm_iio_dmaengine_buffer_free,
-+	return devm_add_action_or_reset(dev, devm_iio_dmaengine_buffer_teardown,
- 					buffer);
+@@ -380,6 +380,44 @@ int devm_iio_dmaengine_buffer_setup_ext(struct device *dev,
  }
  EXPORT_SYMBOL_NS_GPL(devm_iio_dmaengine_buffer_setup_ext, "IIO_DMAENGINE_BUFFER");
-diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.c
-index ac4c96c4ccf37d752372b57acfcb8ad098930b58..7ed934dfc5fc9f08d59b2b0c33537669558ec884 100644
---- a/drivers/iio/dac/adi-axi-dac.c
-+++ b/drivers/iio/dac/adi-axi-dac.c
-@@ -168,7 +168,7 @@ static struct iio_buffer *axi_dac_request_buffer(struct iio_backend *back,
- static void axi_dac_free_buffer(struct iio_backend *back,
- 				struct iio_buffer *buffer)
- {
--	iio_dmaengine_buffer_free(buffer);
-+	iio_dmaengine_buffer_teardown(buffer);
- }
  
- enum {
++static void devm_iio_dmaengine_buffer_free(void *buffer)
++{
++	iio_dmaengine_buffer_free(buffer);
++}
++
++/**
++ * devm_iio_dmaengine_buffer_setup_with_handle() - Setup a DMA buffer for an
++ *						   IIO device
++ * @dev: Device for devm ownership
++ * @indio_dev: IIO device to which to attach this buffer.
++ * @chan: DMA channel
++ * @dir: Direction of buffer (in or out)
++ *
++ * This allocates a new IIO buffer with devm_iio_dmaengine_buffer_alloc()
++ * and attaches it to an IIO device with iio_device_attach_buffer().
++ * It also appends the INDIO_BUFFER_HARDWARE mode to the supported modes of the
++ * IIO device.
++ *
++ * This is the same as devm_iio_dmaengine_buffer_setup_ext() except that the
++ * caller manages requesting and releasing the DMA channel handle.
++ */
++int devm_iio_dmaengine_buffer_setup_with_handle(struct device *dev,
++						struct iio_dev *indio_dev,
++						struct dma_chan *chan,
++						enum iio_buffer_direction dir)
++{
++	struct iio_buffer *buffer;
++
++	buffer = __iio_dmaengine_buffer_setup_ext(indio_dev, chan, dir);
++	if (IS_ERR(buffer))
++		return PTR_ERR(buffer);
++
++	return devm_add_action_or_reset(dev, devm_iio_dmaengine_buffer_free,
++					buffer);
++}
++EXPORT_SYMBOL_NS_GPL(devm_iio_dmaengine_buffer_setup_with_handle,
++		     "IIO_DMAENGINE_BUFFER");
++
+ MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
+ MODULE_DESCRIPTION("DMA buffer for the IIO framework");
+ MODULE_LICENSE("GPL");
 diff --git a/include/linux/iio/buffer-dmaengine.h b/include/linux/iio/buffer-dmaengine.h
-index 81d9a19aeb9199dd58bb9d35a91f0ec4b00846df..72a2e3fd8a5bf5e8f27ee226ddd92979d233754b 100644
+index 72a2e3fd8a5bf5e8f27ee226ddd92979d233754b..37f27545f69f761c3327c307cc6311b02a751096 100644
 --- a/include/linux/iio/buffer-dmaengine.h
 +++ b/include/linux/iio/buffer-dmaengine.h
-@@ -12,7 +12,7 @@
+@@ -11,6 +11,7 @@
+ 
  struct iio_dev;
  struct device;
++struct dma_chan;
  
--void iio_dmaengine_buffer_free(struct iio_buffer *buffer);
-+void iio_dmaengine_buffer_teardown(struct iio_buffer *buffer);
+ void iio_dmaengine_buffer_teardown(struct iio_buffer *buffer);
  struct iio_buffer *iio_dmaengine_buffer_setup_ext(struct device *dev,
- 						  struct iio_dev *indio_dev,
- 						  const char *channel,
+@@ -26,6 +27,10 @@ int devm_iio_dmaengine_buffer_setup_ext(struct device *dev,
+ 					struct iio_dev *indio_dev,
+ 					const char *channel,
+ 					enum iio_buffer_direction dir);
++int devm_iio_dmaengine_buffer_setup_with_handle(struct device *dev,
++						struct iio_dev *indio_dev,
++						struct dma_chan *chan,
++						enum iio_buffer_direction dir);
+ 
+ #define devm_iio_dmaengine_buffer_setup(dev, indio_dev, channel)	\
+ 	devm_iio_dmaengine_buffer_setup_ext(dev, indio_dev, channel,	\
 
 -- 
 2.43.0
