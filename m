@@ -1,122 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDCF1ACEAF;
-	Fri,  7 Feb 2025 08:01:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071FC2343BC;
+	Fri,  7 Feb 2025 08:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738915303; cv=none; b=RVKZu7bX7COqlsanG6ONQyRwl+jZpglo6phr9gFKcxzHNnyUjvtDI1EYaCwwdcZMRxdqTV+P4lUIeolx3/LMoXYpZxnFzECzT86OPGM+xjPtThm5/dM5JHTR8+n7rwssazs2KiQcTVAZYfuj9fzRufh+f58VBAEH7VggqYvnNOA=
+	t=1738915309; cv=none; b=npGLVE0w5hahvD195YtxBiLhnq1xYPUY0aa1AEUHKrTiPd/gOXqMMnrbgysRMU6LMaT4Eb8AE6cHm2LI4dxH4PPkZ9mcNfAIO8oQAq323mwXWV4sAHtO1yhPN5AD+SWx1l8CAolKPjlPstNiGa0ZgLVowdfxTWw11pVrohsPyMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738915303; c=relaxed/simple;
-	bh=kFDeL/SJLlnJWVrJNKoLmxn9dhqX2WUHrbLloiO0mH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rX9WCYVCj3NK3gLtCZc7ICtlje/+oTw7YOQe0h9okOfNKwdU4MnhHmE+mH/ESQloLJtR/UdgwozCzIwspQ9wQAQ8IeT2yvcyZYL4tpB9T0jgh8dnYhBHZOkH6Z6CkltfZ5Y+KbV1zhFAad7pTa15AbweFS+bGqL0AA+z43FeeAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FjyuP9Y4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738915309; c=relaxed/simple;
+	bh=3rMvWoOtLaJ+Z7QqaoajsG/OrJLXOM4xY3HYD1xa47A=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=cNemxOm3KJW/Lw7aT3Ul/MuWI9U0G497v2evfT2iF9Y6FFdGX4M4To1OG6eZUohHTlyD3+5QRBE8v17YFm7NPjlOLQllQZv0Z/awdQYlm0mnu/M58dwtC2+faLpXrnEFHhTUsaBwzvwnTnnNisHGMyT/wnd9hZHWU1Tacu/tuoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rjBNHNEP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ia3gtQ78; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FjyuP9Y4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8CFCC4CED1;
-	Fri,  7 Feb 2025 08:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738915302;
-	bh=kFDeL/SJLlnJWVrJNKoLmxn9dhqX2WUHrbLloiO0mH4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FjyuP9Y4T8Fan+zoNUKCQyuX6jxV85gLTZoZl7hEYpJX0wcJ9Ctafn5JB4bniEoFv
-	 SRkEJ61x6qG5jit8nnguB76u3YF0z83cdx1SC73KnrQlo65sYoDYjNF/UqkYX8TYUd
-	 bCmI4+wD37/kwXdMLzB1jxhIP+dKPVsS2Ufjzms022j0pW2Bt1nKew4tWOZJRGhCTD
-	 kgzARsNkHKsPZIn6VJM0V5oKERYoKKUqLbyB+tjXl7V0B9DPzDkjQjNaTK6Rlw8X1m
-	 qoMEe5lFxkKWH3vGFGn4uYLipyVg/XSaNFkC30V3xMSio2VBL0kcdTLfmhgm1pd5gF
-	 SflwleruakgWw==
-Date: Fri, 7 Feb 2025 10:01:22 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-Message-ID: <Z6W90hz6WaXfZCjQ@kernel.org>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206205030.38d84d4062786c9e36a825b6@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rjBNHNEP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ia3gtQ78"
+Date: Fri, 07 Feb 2025 08:01:39 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1738915304;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sW48a3cSmmR2FFjdA4oXHlDwP0T7kF+57GaD0UDVPKk=;
+	b=rjBNHNEP/dtTvBOq0NtCMnjRXaPNU42R3yVqILpo7JfT7UZwaXxH/fo7QgwpSi+g537Fw2
+	lDWleo6xZ/oXN7xldYdQAg+NWV+58xqaKkVM4FcZezCds0tOZ10OiuAQqvXTzqj0QQwVIZ
+	PbeERWbdNz6GnZrk5iJKCWQWtopMmwCtDuv9Fa7UOPklHbUXjvmbkbsFDFXx+48j4Mabhe
+	20or2dMXeY/Lfjjig4rIlV7cKemEMMrKtodRCziSPTdi0Pm60bSDe9lRovjycAFRpMsC2U
+	uWUaB3A6FRWXoqv/Y9C6MAv1Hd0mTnt5YVwfm7qJCqdFCeoBUyPYmud54z4lAQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1738915304;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sW48a3cSmmR2FFjdA4oXHlDwP0T7kF+57GaD0UDVPKk=;
+	b=Ia3gtQ78//TIIHqfJ1ZwU6PUjZFaPFgWPaacSvPg+l5HY7lDqyU907neiyf+Lyi4p5kWme
+	9s93fQ41cS/zLOCw==
+From: "tip-bot2 for Geert Uytterhoeven" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] genirq: Remove leading space from
+ irq_chip::irq_print_chip() callbacks
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: =?utf-8?q?=3C893f7e9646d8933cd6786d5a1ef3eb076d263768=2E17387?=
+ =?utf-8?q?64803=2Egit=2Egeert+renesas=40glider=2Ebe=3E?=
+References: =?utf-8?q?=3C893f7e9646d8933cd6786d5a1ef3eb076d263768=2E173876?=
+ =?utf-8?q?4803=2Egit=2Egeert+renesas=40glider=2Ebe=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206205030.38d84d4062786c9e36a825b6@linux-foundation.org>
+Message-ID: <173891530013.10177.8122884860301721928.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 06, 2025 at 08:50:30PM -0800, Andrew Morton wrote:
-> My x86_64 allmodconfig sayeth:
-> 
-> WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0xca (section: .text) -> memblock_alloc_try_nid (section: .init.text)
-> WARNING: modpost: vmlinux: section mismatch in reference: kho_reserve_scratch+0xf5 (section: .text) -> scratch_scale (section: .init.data)
+The following commit has been merged into the irq/urgent branch of tip:
 
-This should fix it:
+Commit-ID:     29a61a1f40637ae010b828745fb41f60301c3a3d
+Gitweb:        https://git.kernel.org/tip/29a61a1f40637ae010b828745fb41f60301c3a3d
+Author:        Geert Uytterhoeven <geert+renesas@glider.be>
+AuthorDate:    Wed, 05 Feb 2025 15:22:56 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 07 Feb 2025 08:56:01 +01:00
 
-From 176767698d4ac5b7cddffe16677b60cb18dce786 Mon Sep 17 00:00:00 2001
-From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Date: Fri, 7 Feb 2025 09:57:09 +0200
-Subject: [PATCH] kho: make kho_reserve_scratch and kho_init_reserved_pages
- __init
+genirq: Remove leading space from irq_chip::irq_print_chip() callbacks
 
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+The space separator was factored out from the multiple chip name prints,
+but several irq_chip::irq_print_chip() callbacks still print a leading
+space.  Remove the superfluous double spaces.
+
+Fixes: 9d9f204bdf7243bf ("genirq/proc: Add missing space separator back")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/893f7e9646d8933cd6786d5a1ef3eb076d263768.1738764803.git.geert+renesas@glider.be
+
 ---
- kernel/kexec_handover.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/sysdev/fsl_msi.c          | 2 +-
+ drivers/bus/moxtet.c                   | 2 +-
+ drivers/irqchip/irq-partition-percpu.c | 2 +-
+ drivers/soc/qcom/smp2p.c               | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-index c21ea2a09d47..e0b92011afe2 100644
---- a/kernel/kexec_handover.c
-+++ b/kernel/kexec_handover.c
-@@ -620,7 +620,7 @@ static phys_addr_t __init scratch_size(int nid)
-  * active. This CMA region will only be used for movable pages which are not a
-  * problem for us during KHO because we can just move them somewhere else.
-  */
--static void kho_reserve_scratch(void)
-+static void __init kho_reserve_scratch(void)
+diff --git a/arch/powerpc/sysdev/fsl_msi.c b/arch/powerpc/sysdev/fsl_msi.c
+index 1aa0cb0..7b9a5ea 100644
+--- a/arch/powerpc/sysdev/fsl_msi.c
++++ b/arch/powerpc/sysdev/fsl_msi.c
+@@ -75,7 +75,7 @@ static void fsl_msi_print_chip(struct irq_data *irqd, struct seq_file *p)
+ 	srs = (hwirq >> msi_data->srs_shift) & MSI_SRS_MASK;
+ 	cascade_virq = msi_data->cascade_array[srs]->virq;
+ 
+-	seq_printf(p, " fsl-msi-%d", cascade_virq);
++	seq_printf(p, "fsl-msi-%d", cascade_virq);
+ }
+ 
+ 
+diff --git a/drivers/bus/moxtet.c b/drivers/bus/moxtet.c
+index 6276551..1e57ebf 100644
+--- a/drivers/bus/moxtet.c
++++ b/drivers/bus/moxtet.c
+@@ -657,7 +657,7 @@ static void moxtet_irq_print_chip(struct irq_data *d, struct seq_file *p)
+ 
+ 	id = moxtet->modules[pos->idx];
+ 
+-	seq_printf(p, " moxtet-%s.%i#%i", mox_module_name(id), pos->idx,
++	seq_printf(p, "moxtet-%s.%i#%i", mox_module_name(id), pos->idx,
+ 		   pos->bit);
+ }
+ 
+diff --git a/drivers/irqchip/irq-partition-percpu.c b/drivers/irqchip/irq-partition-percpu.c
+index 8e76d29..4441ffe 100644
+--- a/drivers/irqchip/irq-partition-percpu.c
++++ b/drivers/irqchip/irq-partition-percpu.c
+@@ -98,7 +98,7 @@ static void partition_irq_print_chip(struct irq_data *d, struct seq_file *p)
+ 	struct irq_chip *chip = irq_desc_get_chip(part->chained_desc);
+ 	struct irq_data *data = irq_desc_get_irq_data(part->chained_desc);
+ 
+-	seq_printf(p, " %5s-%lu", chip->name, data->hwirq);
++	seq_printf(p, "%5s-%lu", chip->name, data->hwirq);
+ }
+ 
+ static struct irq_chip partition_irq_chip = {
+diff --git a/drivers/soc/qcom/smp2p.c b/drivers/soc/qcom/smp2p.c
+index 4783ab1..a3e88ce 100644
+--- a/drivers/soc/qcom/smp2p.c
++++ b/drivers/soc/qcom/smp2p.c
+@@ -365,7 +365,7 @@ static void smp2p_irq_print_chip(struct irq_data *irqd, struct seq_file *p)
  {
- 	phys_addr_t addr, size;
- 	int nid, i = 1;
-@@ -672,7 +672,7 @@ static void kho_reserve_scratch(void)
-  * Scan the DT for any memory ranges and make sure they are reserved in
-  * memblock, otherwise they will end up in a weird state on free lists.
-  */
--static void kho_init_reserved_pages(void)
-+static void __init kho_init_reserved_pages(void)
- {
- 	const void *fdt = kho_get_fdt();
- 	int offset = 0, depth = 0, initial_depth = 0, len;
--- 
-2.47.2
-
-
--- 
-Sincerely yours,
-Mike.
+ 	struct smp2p_entry *entry = irq_data_get_irq_chip_data(irqd);
+ 
+-	seq_printf(p, " %8s", dev_name(entry->smp2p->dev));
++	seq_printf(p, "%8s", dev_name(entry->smp2p->dev));
+ }
+ 
+ static struct irq_chip smp2p_irq_chip = {
