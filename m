@@ -1,64 +1,48 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56C023C8D9
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E958479
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 17:46:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738950372; cv=none; b=CUDqrQTAfq+yqagi6Bj8nq8mxQbouTv2+U1dasD2yJJ5fQmusSUiDmo6cBldmmj85jX7nXfCu4bknZcGbLwc2aE7CC1VSInBF7g+3oWbYKA6HAvCvjJfAcSnn9P5MD778uR4rEWOyBIE/g6jTy+7tazylmJDMapy8PaliS6XNxA=
+	t=1738950405; cv=none; b=iifLcjGFyxpElqjjBGkasko/Jdoq25gLfedBRxNW9SaAQ/EHHUZMAGkkvqDOCKXettbp5tlShWpqZwnq1lAfKqIp7O6ihY/t1NSogxHocDyoV+veruPbFh/8fAKt1OigHuYFx+U/ps3LeBQislqD84F9hizhbHLZ2boo9ct/l1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738950372; c=relaxed/simple;
-	bh=zkUGxXfGZ4wMz7t2AFcURTYhsFrCzN2xkHW9NPoczA8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=WnpXcIH9/8IPTdybVBHFY7AFDlWqBZ08UYokI+a5Q6SxKsirGN5peha210405/D08K40TCLciHnJGvHC+R9tMvdl/zWH74spG6a6QGgfgFGrYv66NGiNnCiGpGL95kZO3ySG04sD20yIfirs0o8ALRauujXGSvbErBQKvKyLrSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=iCUr0mAI; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1738950405; c=relaxed/simple;
+	bh=WvY5bGb6US+fjVoH7ycDafdwd1CWU5+uiCvekY76wY0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IJjzAIuaQNzDdaxkolWBnY042TbZUY8XMGd9cTfTya1mmp+Nsiy9taCKFOZoMSBC1jGP1INgucw5dB9bemPOPA7Dd42j5ulf39aZ1fG69FdRKpj56wm77fMkwWWW4LPxeZSdnRg83iPZvQT8oTzFiA2HZOWr6lEQf/LU9K2Uaws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=RKwzyY2y; arc=none smtp.client-ip=199.89.1.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="iCUr0mAI"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-844e6d1283aso98428739f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 09:46:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1738950370; x=1739555170; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9zMBSc0dza2wEfppuP7pUHZ7jjAYK3TyCJJqKIWvgnI=;
-        b=iCUr0mAItybcS7zivsuNng9FGNk4LOZMwfAVSDjlPgAkcAQWNgn1b3IXvKDwNwprlb
-         lVe+R+rHTdRc2wKS+s3pMfw5sqHhDIxXctjyN0uCO7cBYdN0Ir3WWgXYUGOVms6iHfm/
-         iFTQiWZr8IPstTE4RFDRzDrAGS1S0pxjBT6ZwdT3e4DL3pB0yGE9BPvkQzm/8vSB01KN
-         Arzxln2cyaJYhiks+L20DR6b45GkNhVF+epyQ7upY/8tJ9ZnuXdA3yTrifNa1AbLiYvJ
-         3g1Sw9JvJMZdQ7dO2Xp5oeRDm/uvXO73dcvMlH0XJoIitjXXtbuJSlesgnQadll1xBw0
-         DiuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738950370; x=1739555170;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9zMBSc0dza2wEfppuP7pUHZ7jjAYK3TyCJJqKIWvgnI=;
-        b=t4Kk/9w5Psbyum29bU9+c2vXUWmIxbkJQjoqcWwRJS/k5TFJsuIaEVKl1PvXd/SN+A
-         Pv/x4WvoxosZ9yI2OyCo6Lv1rEfQwyXLd/sQf6N1ZpqZpkm1Ao0rWbCpDj1/AqNO52IS
-         mhfIhj7eiVMTW9u/kfFu4CmKNROS/3sHjKnRyajSgFMmELBkTKRh0EPR253Z/D37qKqx
-         bti4lHgbucjk9bbR3igUqTUn5MCcMLZ98wkJEYL1TaVO2sLefy8javxIbjSj5nyxWnsq
-         MH/jdohWnQ0jOjSIz5hGynkxQZwogeeSJpG1yA4XjdEWKMHaNJ1OfPi7ppq/Hu9zm9+7
-         /MMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUkxXZ6WAoAl9xtg4guGr+O8srX1tlTGdd9pEVjQJ/SZXP+dS6UQOvhLVagH+aghLCHauvLBCpcJTZfHXA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJQPV8+4P5jwhOdAwekmZ+KxmqscKAQjTnAzARhF86+7vqyZXI
-	i4yw1opUDsLBcxRE3D6KTvMmasapCuaMB5im8B40P6SFlW5oFN520TkhN5bzYHI=
-X-Gm-Gg: ASbGncvJQRtnuUHTx4ZGs4D+DD963MgrKdBtnIjIE9sDwcM8b9rOTDeFx239MuwL69v
-	vzalZOby6Ze3vXP1UJ0UW/iVw6PT3AuLcTXwEuDPzzvo7sdm3yi/gp3MdQZBTnr+xpwmjCxjgrN
-	3O4UeqHYldE/3Spo1nk3rHjjhXabHIi2lrgJ5ivHd5pna/Q4bqsbfWNgcCOxG74Gq6jodKl580Q
-	z4r5SLLSJpHoZwekPDvzyKRgCqWTYSs1GOwq+51w/Ds6ZfDJZMgpVtGzRiAYucONj3Tt1mr62l2
-	EaFXm4CvHHo=
-X-Google-Smtp-Source: AGHT+IH9SW/pdV7h8DM8hhMdlVo7eAi+ZpulgGkYCwExK/ruoerrE45EI0PzuAnOZl9Ur3dBColvag==
-X-Received: by 2002:a92:c243:0:b0:3d0:353a:c97e with SMTP id e9e14a558f8ab-3d13e2e3680mr28768365ab.10.1738950369861;
-        Fri, 07 Feb 2025 09:46:09 -0800 (PST)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d05e9a3fd5sm8288925ab.67.2025.02.07.09.46.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 09:46:09 -0800 (PST)
-Message-ID: <ad55978e-4356-494e-8cda-9e6487344768@kernel.dk>
-Date: Fri, 7 Feb 2025 10:46:08 -0700
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="RKwzyY2y"
+Received: from localhost (localhost [127.0.0.1])
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4YqLxt30VSzlgTwl;
+	Fri,  7 Feb 2025 17:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1738950397; x=1741542398; bh=Kk9Jj/avA8J1oASKyHDrwC8e
+	RHvb7jBheDGjgcYfKUw=; b=RKwzyY2yvxxXo4W3mQyIqItoZrHtmCtZ6QS6rNBo
+	qHKUqNASdQtiBsaRLOzUyyfjIGmBWkpC8PTwMAK0VCTgK2kJeB/5AS5XcGbF6Qu2
+	SUyUF9NyPLh5S98RklOGUxRdQhWC79oRc89RpjhYO8BXeznMFgPEvFdbhOMfaU78
+	yH4PrMJq629MTSSYr3DkSzjUAklf/U6UEnq1SQWLaJ/25cdlcnOykqEw/lOyhjqS
+	Q+O4GmBtN3u82Le2K/LlPe1Ozqe6XIw3ktMP3LdwnXDK0pTae8WiMH9RpeVO3axV
+	dPkSGP2wTMB0ErLCSGtlO7vODaLyULP1F2odUk++Z17Svw==
+X-Virus-Scanned: by MailRoute
+Received: from 009.lax.mailroute.net ([127.0.0.1])
+ by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id Zl5C0Nm-mq4s; Fri,  7 Feb 2025 17:46:37 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4YqLxl3T3mzlgTwF;
+	Fri,  7 Feb 2025 17:46:35 +0000 (UTC)
+Message-ID: <94fa4f05-929f-4be8-b2d1-0277826984b1@acm.org>
+Date: Fri, 7 Feb 2025 09:46:34 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,75 +50,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 05/12] io_uring: Use helper function
- hrtimer_update_function()
-To: Thomas Gleixner <tglx@linutronix.de>, Nam Cao <namcao@linutronix.de>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>, linux-kernel@vger.kernel.org
-References: <cover.1738746927.git.namcao@linutronix.de>
- <9b33f490fb1d207d3918ef5e116dc3412ae35c1e.1738746927.git.namcao@linutronix.de>
- <35d4b9be-3d08-4eaa-8750-7b34ec6e6064@kernel.dk> <87y0yjm4hi.ffs@tglx>
- <4f317ca3-0ffd-4ee0-9da6-8b80a6366d0f@kernel.dk> <87h656n3r6.ffs@tglx>
-From: Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH RFC 00/33] Compile-time thread-safety checking
+To: Peter Zijlstra <peterz@infradead.org>, Marco Elver <elver@google.com>
+Cc: Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Nathan Chancellor <nathan@kernel.org>, Kees Cook <kees@kernel.org>,
+ Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org
+References: <20250206175114.1974171-1-bvanassche@acm.org>
+ <CANpmjNOsf1RnYJuZ7pmWVYNqVYMYe+eTL0vhDKU5sLihR9fN-g@mail.gmail.com>
+ <90c7a807-b0a0-4b42-866f-f74c5d1c62e5@acm.org>
+ <20250207084223.GX7145@noisy.programming.kicks-ass.net>
+ <Z6XM6zjK3mtqYfan@elver.google.com>
+ <20250207090827.GZ7145@noisy.programming.kicks-ass.net>
 Content-Language: en-US
-In-Reply-To: <87h656n3r6.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250207090827.GZ7145@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2/6/25 2:48 PM, Thomas Gleixner wrote:
-> On Thu, Feb 06 2025 at 13:05, Jens Axboe wrote:
->> On 2/6/25 9:18 AM, Thomas Gleixner wrote:
->>> On Wed, Feb 05 2025 at 11:45, Jens Axboe wrote:
->>>> On 2/5/25 3:55 AM, Nam Cao wrote:
->>>>> diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
->>>>> index ceacf6230e34..936f8b4106cf 100644
->>>>> --- a/io_uring/io_uring.c
->>>>> +++ b/io_uring/io_uring.c
->>>>> @@ -2421,7 +2421,7 @@ static enum hrtimer_restart io_cqring_min_timer_wakeup(struct hrtimer *timer)
->>>>>  			goto out_wake;
->>>>>  	}
->>>>>  
->>>>> -	iowq->t.function = io_cqring_timer_wakeup;
->>>>> +	hrtimer_update_function(&iowq->t, io_cqring_timer_wakeup);
->>>>>  	hrtimer_set_expires(timer, iowq->timeout);
->>>>>  	return HRTIMER_RESTART;
->>>>>  out_wake:
->>>>
->>>> The timer is known expired here, it's inside the callback. Is this
->>>> really necessary or useful?
->>>
->>> It's not strictly required here, but in the end this allows to make the
->>> .function member private, which prevents stupid code fiddling with it
->>> without proper sanity checks in the debug case.
->>
->> While that makes sense, this is also a potentially hot path for min
->> timeout usage, which with small timeouts for batch/latency reasons
->> can be run tens of thousand times per second. Adding a lock and IRQ
->> dance would be counter productive.
+On 2/7/25 1:08 AM, Peter Zijlstra wrote:
+> On Fri, Feb 07, 2025 at 10:05:47AM +0100, Marco Elver wrote:
+>> Yes, you can add multiple guarded_by. But it's just going to enforce
+>> that you need to hold both locks before you access the member. If you
+>> want the rules to be more complex, the best way to express that is with
+>> some helpers. E.g. something like this (tested on top my series)
 > 
-> I fundamentally hate the fact that C does not enforce encapsulation in
-> the first place. :)
-> 
->> How about we just add a comment on why this is fine, rather than
-> 
-> Comments are the worst of a solution as you know.
+> Oh gawd, this is going to be a pain, isn't it :/
 
-Sure I don't disagree - this is just my way of attempting to be nice and
-suggest alternatives, as I don't like this patch.
+The Clang thread-safety annotations are used widely so behavior of
+existing attributes must be preserved. I propose to introduce new
+thread-safety attributes when useful to annotate kernel code. As an
+example, the Clang try_acquire_capability function attribute does not
+support functions that return pointers although this is a common pattern
+in the Linux kernel. I think that introducing a new function attribute
+to support functions that return pointers is a better solution than
+trying to annotate such functions with any of the existing Clang
+thread-safety attributes.
 
->> slow down a case that's perfectly fine by wrapping it in something
->> much more expensive than a simple memory write? Or perhaps have
->> a basic helper to set it that doesn't do the unnecessary irq lock
->> guard? That would still allow you to make .function private.
-> 
-> The right solution is to add a hotpath helper, which falls back to the
-> more expensive variant with some anyway expensive debug option, or make
-> the expensive part of hrtimer_update_function() depend on that debug
-> option in the first place and otherwise fall back to a simple store.
-> 
-> The latter is the right thing to do. Let me fix that up in mainline.
+Thanks,
 
-Yep exactly, this is the way. Thanks!
-
--- 
-Jens Axboe
+Bart.
