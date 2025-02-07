@@ -1,172 +1,112 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20052AF1E;
-	Fri,  7 Feb 2025 03:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3862030A;
+	Fri,  7 Feb 2025 03:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738897512; cv=none; b=GSvkg4m7gVa7TjXY130R8pFaLj0iZBIjHKuZsU6lZ09TRFjbKc7ciUJ4jpEVa61BxsoeTcZRY8O70VzBksg60uI163Sw7PJOXBcOkQR9lTdqgoTNNpyjbASv5uVbuFNwMJAvEkqgNQhwsQHcnE8dbUAgBUL1tjmv2Xcf7PDPgbk=
+	t=1738897670; cv=none; b=R1evhKnGSR5tGWVhnY9VWRVboZNoR3Bs+yTewo1sOts4f1NRE0ydPOYw0jG8MZ6it0PZHJBLBIDoMB1JiqhA+eBPkk3wmc5/fbjpTp4HNqQCbsj/9qroOgLUhnT/J4wYIe6nyH42aC8vNhf3u16y9jAj6lCqGL1Hb+/uAc8Ya+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738897512; c=relaxed/simple;
-	bh=AM9VDgNJkOEJ/gBbgnmK3npw0SmrzFX7jP4QZOkq6p8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=OK7T6aOSN0Q2EQ6WB5eRMlxvN/Ha4fgNR/FRPSWms/BPcew+rdp3WYj2r798jXGlnkhb67OMBT/XHix+NeBx0DToVMU1KC3H36NCZvqrBNRDSynjiYLo8mnQGotu9BEQUYEnKhNELaMazr6B4mtHF8cC0xWJ5kWh44cPV98Y2E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GKjUw1E9; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738897670; c=relaxed/simple;
+	bh=irmY+ScNwd02B+hlfgJ44cubtu6zCKlaPwTexghingU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fWWuoarY8W2K5j1h7ZWfjTuiPaZlQsPImpWGuk6ujfuqt5EygRm+ozLYChkLmlvL0LxkYsmohsBjyrG5VZV2B0ubc+xi5xmhYOWtx2K5ms5odqX4ItVUExLIwG5dWu1DsyMn44nndLOFnwg1lPH4IJNiSQ9H0NeCd9p704zr04E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gHAWfr7d; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GKjUw1E9"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21c2f1b610dso39551125ad.0;
-        Thu, 06 Feb 2025 19:05:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738897510; x=1739502310; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4o4TSS9FsO3vXUbBh9d56FG0CFO0Dizjn5EtzUGaSE0=;
-        b=GKjUw1E9Uv3FB/JKEoP1xlaxcpuy+v41UxcxIiS7rbj0MZ5fO6jTlkvqYAQ4Lewx3A
-         7dhmuf5WSGSvfRWz77JbLyfn9G+kojQ+XH/v85ecs26046/TSnxvRekjhjtPQTrNVtSD
-         1eNVkgLdulrNDc9VUWEpAM43IavkI8lT2ghOusBsOQHwjR19kTN9pJDm65j2oWa0fIs2
-         M2IiHjyMD8fY5kzjl3OSJ+Lik1b/Qi5hMlv5G4dUWw92uFys7Gdw+TWboDg1LcEcP4we
-         atvTwnG6U0G74Z6dtZr9z3mee18ajWHE5sUGZQYz3t3CV6bd2PSuWXv2229riDkUeAZp
-         ZggA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738897510; x=1739502310;
-        h=content-transfer-encoding:in-reply-to:from:content-language:subject
-         :references:cc:to:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4o4TSS9FsO3vXUbBh9d56FG0CFO0Dizjn5EtzUGaSE0=;
-        b=NTTLAU3GDcJF9Z/OTCYBsmYwR3vqSb5Kke/+mBdjIUu2cxaWyERkHQgFKVhGU7W+2D
-         dLVHnHnBqQshU7tRLLuE9S/yfgwoQKAI6e1FnOK6doiM1jek9Hlm6L1U86mfnt3neKDj
-         TqdiHrinc/NYJmXgXqI4gwf3BEt4+iwlbBxTAcRjonfs5DTFojCgGO34EzHQ9KZpsbMS
-         kFBoAckTFxql1hwBhTXBUoQmw0XBLUVbqLlfC4PVWBJqMLZ4FreFIv7H08r7g5YjIkWr
-         MHrFBuruTd3VGverAR+YkLeLOKuWcsRRCx5a3e2zH9GW4yKL/94dQaFqYKU78msXH/X+
-         oXXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVLG/ZGAXth11e0d79CF6W73zAvyoxZpLTXM6lLA9k+lnycBVtor3uHLVOXnmX+22IRiwVyeNQhnxmgi6xb@vger.kernel.org, AJvYcCW/WvUF1AQTWEkW1iP6s/pwHBi2LXAd1VCCP1CambS5WOHoN4LkRHiYUuF58mv/KbjA5lMJTvuoy35fRDbs@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1TVV/gXtjmH7GIGHTDmbac4px4vNx9aht+b/pkpzUuqQkRuJf
-	vo67qXXqOlO7Fm7qkfhvbe7f6YiKvlmvIddaCUh5MX/cbXl/Rleo
-X-Gm-Gg: ASbGnctewfuuFwY3Gz+wQR0rS2OIvseP7gFwRIuHx00fyTgjIX8y7eySelEbouVr/HA
-	jtI9S7RawIASjV6dMxRPNkYPIb19XaqtQXheJo/d/XgU8//Dks8psyfaXPGeNTU+jdjzF0otv6y
-	yYxOV3IBrwos6IKxw0hnv1iLbAAGmqQlWaQdE+8APaqxgyQ9aP3rbbroiZ6T8QNp6VYEgznwVvY
-	bFnNxQB7Elpuu6lecxllN7yF0STKAo/MVvv+q3yj+WlW4yzFxDQA9sG7hQrimwRFv2Z1QgPCg36
-	+Lwj9ofTlDJnDctlFlHQ1kuY0bwdptdAklAtWknUX4fjvTx/gYkCyy2liF1C/g==
-X-Google-Smtp-Source: AGHT+IHU1oP15UNA5b2tlLhSpLU0N0t0y190lFWi2XLtEm75ybNppw1Nu9VXhNbPeToD/613i6kadw==
-X-Received: by 2002:a05:6a00:929c:b0:729:597:4fa9 with SMTP id d2e1a72fcca58-7305d53a88fmr2934639b3a.22.1738897509828;
-        Thu, 06 Feb 2025 19:05:09 -0800 (PST)
-Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048c16370sm1986354b3a.152.2025.02.06.19.05.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2025 19:05:09 -0800 (PST)
-Message-ID: <6491ceb6-e48b-442b-ac61-7b2b65252d7a@gmail.com>
-Date: Fri, 7 Feb 2025 12:05:05 +0900
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gHAWfr7d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738897668; x=1770433668;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=irmY+ScNwd02B+hlfgJ44cubtu6zCKlaPwTexghingU=;
+  b=gHAWfr7dBy+6G5VsYhIYqaqpBhRWLJ7AvGIbqgmFnKa6WAhNXUp5Fu4D
+   e6V9/60TIyKBKpiIg30tzwpgeDi0ztsFBSgW21PoqcZ7qBIOXmJDx2I1G
+   DI92675aWZdqYm43Yq4mpSMgM3ir29V8qdAkHcWmA/U3Z899iN5QuW0An
+   R7ZSnSfgkwq79B5kKOZ5c5xPkoYb3OQ4DkbZANI03IEKVrVPfkaMdb5tk
+   n60OzTdTmlzyqj1xYd6M9s7pHxAUoTIZOvTFzdRRCXx+aIry00zyvIs2L
+   LM23dQsj8B54+oxGytJ4kmxbwiFVExl/ynHC8Ga6e7IiXDMGmFTP6zDnV
+   Q==;
+X-CSE-ConnectionGUID: SAMg61rSSGSI6Uypf0ch+A==
+X-CSE-MsgGUID: V7rTsmiQQkuvm4gsCSn83A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39798636"
+X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
+   d="scan'208";a="39798636"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 19:07:47 -0800
+X-CSE-ConnectionGUID: LVQEyuJ9Q4ms9cVUXgh3uA==
+X-CSE-MsgGUID: LnwGmhcwTSels91lzG7ltw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,266,1732608000"; 
+   d="scan'208";a="116436270"
+Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 19:07:46 -0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: pbonzini@redhat.com,
+	seanjc@google.com
+Cc: rick.p.edgecombe@intel.com,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Yan Zhao <yan.y.zhao@intel.com>
+Subject: [PATCH 0/4] Small changes related to prefetch and spurious faults
+Date: Fri,  7 Feb 2025 11:06:40 +0800
+Message-ID: <20250207030640.1585-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: kent.overstreet@linux.dev
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
- Akira Yokosawa <akiyks@gmail.com>
-References: <z2eszznjel6knkkvckjxvkp5feo5jhnwvls3rtk7mbt47znvcr@kvo6dhimlghe>
-Subject: Re: [GIT PULL] bcachefs fixes for 6.14-rc2
-Content-Language: en-US
-From: Akira Yokosawa <akiyks@gmail.com>
-In-Reply-To: <z2eszznjel6knkkvckjxvkp5feo5jhnwvls3rtk7mbt47znvcr@kvo6dhimlghe>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello Kent,
+Hi,
 
-Kent Overstreet wrote:
-> Nothing major, things continue to be fairly quiet over here.
-> 
-> Tracking some bugs that show up on nix build servers; would like someone
-> to confirm or deny that these are or are not still happening on 6.14,
-> and if you've got an environment where this is reproducing and can work
-> with me to debug that would save me some trouble...
-> 
-> Also, another bug report is implicating hibernate, please let me know if
-> you have any data on that, still trying to piece together what's going
-> on there.
-> 
-> And as usual, be noisy if you're seeing a serious bug that's not getting
-> resolved.
-> 
+This series contains some small changes related to prefetch/prefault and
+spurious faults.
 
-I'm not Linus, and not a serious bug, but let me be noisy.
+Patch 1 checks if a shadow-present old SPTE is leaf to determine a
+        prefetch fault is spurious.
 
-See below.
+Patch 2 merges the case of prefetch into the case of is_access_allowed().
 
-> The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
-> 
->   Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
-> 
-> are available in the Git repository at:
-> 
->   git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-02-06
-> 
-> for you to fetch changes up to 44a7bfed6f352b4bae4fd244d0fcd32aa25d0deb:
-> 
->   bcachefs: bch2_bkey_sectors_need_rebalance() now only depends on bch_extent_rebalance (2025-02-05 19:56:24 -0500)
-> 
-> ----------------------------------------------------------------
-> bcachefs fixes for 6.14-rc2
-> 
-> - add a SubmittingPatches to clarify that patches submitted for bcachefs
->   do, in fact, need to be tested
-> - discard path now correctly issues journal flushes when needed, this
->   fixes performance issues when the filesystem is nearly full and we're
->   bottlenecked on copygc
-> - fix a bug that could cause the pending rebalance work accounting to be
->   off when devices are being onlined/offlined; users should report if
->   they are still seeing this
-> - and a few more trivial ones
-> 
-> ----------------------------------------------------------------
-> Jeongjun Park (2):
->       bcachefs: fix incorrect pointer check in __bch2_subvolume_delete()
->       bcachefs: fix deadlock in journal_entry_open()
-> 
-> Kent Overstreet (4):
->       bcachefs docs: SubmittingPatches.rst
+Patch 3 is according to the previous discussion at [1].
 
-This caused a new warning in "make htmldocs", which was reported at:
+Patch 4 always free obsolete roots before reload mmu.
 
-    https://lore.kernel.org/20250204141216.4a2635ee@canb.auug.org.au/
+With below scenario
+1. add a memslot with size 4K
+2. prefault GPA A in the memslot
+3. delete the memslot
+4. re-add the memslot with size 2M
+5. prefault GPA A again.
 
-, and has not been taken care of.
+Patch 1 is required if zap all quirk is disabled in step 3.
+Patch 5 is required if zap all is performed in step 3 and if step 2/5 are
+        executed before any vcpu_run().
 
-I'd like you not to ignore such a friendly report!
+The series can be applied to both
+f7bafceba76e9ab475b413578c1757ee18c3e44b and
+eb723766b1030a23c38adf2348b7c3d1409d11f0.
 
-Regards, Akira
+Thanks
+Yan
 
->       bcachefs: Fix discard path journal flushing
->       bcachefs: Fix rcu imbalance in bch2_fs_btree_key_cache_exit()
->       bcachefs: bch2_bkey_sectors_need_rebalance() now only depends on bch_extent_rebalance
-> 
->  .../filesystems/bcachefs/SubmittingPatches.rst     | 98 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  fs/bcachefs/alloc_background.c                     | 47 ++++++-----
->  fs/bcachefs/alloc_foreground.c                     | 10 ++-
->  fs/bcachefs/alloc_types.h                          |  1 +
->  fs/bcachefs/btree_key_cache.c                      |  1 -
->  fs/bcachefs/buckets_waiting_for_journal.c          | 12 ++-
->  fs/bcachefs/buckets_waiting_for_journal.h          |  4 +-
->  fs/bcachefs/inode.h                                |  4 +-
->  fs/bcachefs/journal.c                              | 18 +++-
->  fs/bcachefs/journal.h                              |  1 +
->  fs/bcachefs/journal_types.h                        |  1 +
->  fs/bcachefs/opts.h                                 | 14 ----
->  fs/bcachefs/rebalance.c                            |  8 +-
->  fs/bcachefs/rebalance.h                            | 20 +++++
->  fs/bcachefs/subvolume.c                            |  7 +-
->  fs/bcachefs/super.c                                | 11 +++
->  fs/bcachefs/super.h                                |  1 +
->  fs/bcachefs/trace.h                                | 14 +++-
->  19 files changed, 214 insertions(+), 59 deletions(-)
->  create mode 100644 Documentation/filesystems/bcachefs/SubmittingPatches.rst
+[1] https://lore.kernel.org/kvm/Z2WTZGHmPDXHSrTA@google.com/
 
+Yan Zhao (4):
+  KVM: x86/mmu: Further check old SPTE is leaf for spurious prefetch
+    fault
+  KVM: x86/tdp_mmu: Merge the prefetch into the is_access_allowed()
+    check
+  KVM: x86/mmu: Make sure pfn is not changed for spurious fault
+  KVM: x86/mmu: Free obsolete roots when pre-faulting SPTEs
+
+ arch/x86/kvm/mmu/mmu.c     | 8 +++++++-
+ arch/x86/kvm/mmu/tdp_mmu.c | 6 ++----
+ 2 files changed, 9 insertions(+), 5 deletions(-)
+
+-- 
+2.43.2
 
