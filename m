@@ -1,188 +1,125 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC69E23ED6B;
-	Fri,  7 Feb 2025 14:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9F27FD;
+	Fri,  7 Feb 2025 14:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738938564; cv=none; b=feH7B6/WpBs00XK8NxqJBgdoRSvYVhVsaQNwn8eEXjKQI7n3wkrSB3w326b34bk2dJAsLmCvEB4jvRLTe9Fn6YuhzNgyxrtm+/wQuuvQQjfEW1kvlFUx86ZrA5GQNtMnRBnTEGlkOvnAcM4UUz2qYQBET2Ze5K1hRQ4KYogO7k4=
+	t=1738938619; cv=none; b=LLUpj13N1TZLj/MLZm5xRsUZaDr3EU5QE6TkLPyENYFhwxKiEpqS4ekb1ucCiHsQdw+umPfdZPDDslk4a5w3DbMTfBGGBYxzK9rR6H+TxVmucUktKf9vZjBnRned/sMBYBKP+17IKx1o5VpwfnnXVG3w0Pmqox8YivjuRSP6XqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738938564; c=relaxed/simple;
-	bh=S/DygZOpDtNGqOx0aRmkAnkflZnVc56zxPTZ31tUjpg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h4ONRu/eRGwmdU7vNbe3ijRe3LSqncMy0dqzedEYEHAHDM3otAdsB/usv0O3RmOaFoLRSedH5Sb6O+x0K9FnRGWDf3v+8zt8yBCIyzjoA7wj8tzAx1M2bahCAQabzEGv86fJ/bzCypcmnrHGkDSREa7lPLqM+ihfjo9YeCp014I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com; spf=pass smtp.mailfrom=bsbernd.com; dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b=znQjY5yR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ImJmBvux; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsbernd.com
+	s=arc-20240116; t=1738938619; c=relaxed/simple;
+	bh=M7J3Wn5yGM6nJZTo99fvgpwjBivapFjDhCds22gPMd4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RreMyo1mCCyju9mfcKJyFdrKJkOivlQdJOziX7ymjNSIaJO/gver8QdOx8DMUiGn1aI6gDgdz+V8lzzF6KCkKlV9/5zcq4T+VH2P13/nODno1cohna5xTHgQqSiuj/fW4NWFHchAr0r7Gvj3pkejU8QWngVvvllhVYeAEP3DvZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZKaS7n8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b="znQjY5yR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ImJmBvux"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.stl.internal (Postfix) with ESMTP id AFAAB11401B2;
-	Fri,  7 Feb 2025 09:29:16 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Fri, 07 Feb 2025 09:29:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bsbernd.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1738938556;
-	 x=1739024956; bh=3m3iqTfqwQmo5uXuOEtMpVp7gON0HdH2epgkHbk+nTs=; b=
-	znQjY5yRafAbGuiBuhG5TFYS2Qm/XJsgS6wicrG5b7LILkxBGLSWsoBDk46JQc7S
-	Mv8rZysq5Apz6ngZqIZXPxtmV8cPOa6hpYfM42dxULcaIPFPnC93Dq0sB6mFqa/w
-	CSpBcK3mAh7B1Pqhm79BmZP3Frb2cIuXpSZDFwRJ8/i/53sqyuupvqf+fbIXQ8BU
-	oQVs2PwBN+BKs2S630RpS1a5F4KhaSgAXAzo/bBtm0fe22Jq1iEyvAstnyhSfbRO
-	GchPUTjmkMuHGEE6Kx+sbkPYIJhCw5PREMqRdXlocGkHMGkDxpXSqTu8zIaqcg9N
-	r4Axa9BIZfg+YabXbW0Paw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738938556; x=
-	1739024956; bh=3m3iqTfqwQmo5uXuOEtMpVp7gON0HdH2epgkHbk+nTs=; b=I
-	mJmBvuxjAY474RI1qirGAwwlr7tHjCV50mU6lcrtdhLlXC6qrl1cULzEAlIj0FCd
-	Nzsqp7FysnttgW6q9M2gvIhWuDAInbdg0k1Wj1tYNpL3jgXPuNpzWkiJuCqWVY1a
-	SNjV4j+fBaQ6WBqafsaLBuIlrJk6cQKs3bcs8P0euRTRBETvxzWv3T+EhuZ+I0wz
-	kKbsy9EI154k9qDMtGlFZWXVcHULmCY6pQhdt7oO6O9YQFBgXo+2JqyQXWljuj+1
-	WvGTw5CxYspqPPWNDeD6LPNPfDT2XwbnRQSkf2qkxhEX/aP7qctCoJ1+3rnX8nib
-	5Iy97yTWyYdMVv04iR1vw==
-X-ME-Sender: <xms:uximZ1Z_ddCl05JBXx6Rahku3s340Dr_SN86yXhNLTP4NsAz4xy5Yw>
-    <xme:uximZ8aXrJF3C-79lttKncNu9Fy_VmhdCryX8cijR2QjaXjEyyYoAYqrDGuciV3Ja
-    I4qf7PO-CEiuzHF>
-X-ME-Received: <xmr:uximZ3_bwKyBC6DWQ1jNjfSJ2voC_WkpqM5hTnx5N3Numvw9dCTgzbQR80VnteC6RgApAPbDvC4bKd-NyD9kH09VsQlyGA6ZiT0esYOcF5L87CYithIZ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvleehvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddv
-    jeenucfhrhhomhepuegvrhhnugcuufgthhhusggvrhhtuceosggvrhhnugessghssggvrh
-    hnugdrtghomheqnecuggftrfgrthhtvghrnhepjefgleejueffhefhueekvdduhfetteeh
-    tdehfeejhfevudethefhtdetvdekkeevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrgh
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsvghr
-    nhgusegsshgsvghrnhgurdgtohhmpdhnsggprhgtphhtthhopeeipdhmohguvgepshhmth
-    hpohhuthdprhgtphhtthhopehluhhishesihhgrghlihgrrdgtohhmpdhrtghpthhtohep
-    mhhikhhlohhssehsiigvrhgvughirdhhuhdprhgtphhtthhopehlihhnuhigqdhfshguvg
-    hvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgv
-    rhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhhrghrvhgvhi
-    esjhhumhhpthhrrgguihhnghdrtghomhdprhgtphhtthhopegurghvihgusehfrhhomhho
-    rhgsihhtrdgtohhm
-X-ME-Proxy: <xmx:uximZzr7SJMjc5VMBEc5i5fobvwdWl7ndOuGiBKihdVIOHdk-O-RbA>
-    <xmx:uximZwrYhGl_MvuhqvfI7eekxyAv4tFz7bu9Nupo8N19iqm_m3APlQ>
-    <xmx:uximZ5SUx53l8tEkKGSc_3JnyP8FB7hJ35jwxPf7Qx0cgtfbDmTKBA>
-    <xmx:uximZ4rMhECAseuxVLRjp3If0UYzoZJVY5ciBV2tRsaIV8o6H-6RLA>
-    <xmx:vBimZxdmOXe2HGzBcEu6OwEHZGDpwh1DBjyzwaAegphGTyA8exdr6tpi>
-Feedback-ID: i5c2e48a5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 7 Feb 2025 09:29:14 -0500 (EST)
-Message-ID: <d3ee362c-accf-4ad9-99a6-5834b1c0b438@bsbernd.com>
-Date: Fri, 7 Feb 2025 15:29:13 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZKaS7n8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED409C4CED1;
+	Fri,  7 Feb 2025 14:30:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738938619;
+	bh=M7J3Wn5yGM6nJZTo99fvgpwjBivapFjDhCds22gPMd4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OZKaS7n8d6KrLvwnHFTArNDNh1QmX+z4KEpp98yD4uRL0EKAuFgdpGAW66fA24Sdv
+	 igYKaYCTqPh+XySTyc5CGBEp4UWzwGfyfXqKMUn6I/0RUMizlEn51HgHKMOr6xdVla
+	 EQkGF5YGqfJAUp4aA8W7z1SfWmwtLn4KC75lMdnzp3l7PQ1Qv5znw8woH4coIDWIDe
+	 N2gqiDDT/XVFRjN0/c+kmHGncQgIpH7CbLDDDgb8Ba1mHfM+CgfdpP6WhVZIrGX0it
+	 6dTa2wDnErroE5fsxUtFfqfU7sldz1dRjgYDwATtC0KXSVk2do+knEZ1e2EO0Q4kiY
+	 upu35g2m8fEsA==
+Date: Fri, 7 Feb 2025 08:30:17 -0600
+From: Rob Herring <robh@kernel.org>
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: netdev@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dinh Nguyen <dinguyen@kernel.org>, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, devicetree@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>
+Subject: Re: [PATCH v4 2/6] dt-bindings: net: dwmac: Convert socfpga dwmac to
+ DT schema
+Message-ID: <20250207143017.GA38694-robh@kernel.org>
+References: <20250205-v6-12-topic-socfpga-agilex5-v4-0-ebf070e2075f@pengutronix.de>
+ <20250205-v6-12-topic-socfpga-agilex5-v4-2-ebf070e2075f@pengutronix.de>
+ <173877418502.1694868.7734639778320336620.robh@kernel.org>
+ <87ikpn43dm.fsf@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] fuse: add new function to invalidate cache for all
- inodes
-To: Luis Henriques <luis@igalia.com>, Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- Matt Harvey <mharvey@jumptrading.com>, Dave Chinner <david@fromorbit.com>
-References: <20250115163253.8402-1-luis@igalia.com>
-From: Bernd Schubert <bernd@bsbernd.com>
-Content-Language: en-US, de-DE, fr
-In-Reply-To: <20250115163253.8402-1-luis@igalia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ikpn43dm.fsf@pengutronix.de>
 
-
-
-On 1/15/25 17:32, Luis Henriques wrote:
-> Currently userspace is able to notify the kernel to invalidate the cache
-> for an inode.  This means that, if all the inodes in a filesystem need to
-> be invalidated, then userspace needs to iterate through all of them and do
-> this kernel notification separately.
+On Thu, Feb 06, 2025 at 02:19:33PM +0100, Steffen Trumtrar wrote:
 > 
-> This patch adds a new option that allows userspace to invalidate all the
-> inodes with a single notification operation.  In addition to invalidate all
-> the inodes, it also shrinks the superblock dcache.
+> Hi,
 > 
-> Signed-off-by: Luis Henriques <luis@igalia.com>
-> ---
-> Just an additional note that this patch could eventually be simplified if
-> Dave Chinner patch to iterate through the superblock inodes[1] is merged.
+> On 2025-02-05 at 10:49 -06, "Rob Herring (Arm)" <robh@kernel.org> wrote:
 > 
-> [1] https://lore.kernel.org/r/20241002014017.3801899-3-david@fromorbit.com
+> > On Wed, 05 Feb 2025 16:32:23 +0100, Steffen Trumtrar wrote:
+> > > Changes to the binding while converting:
+> > > - add "snps,dwmac-3.7{0,2,4}a". They are used, but undocumented.
+> > > - altr,f2h_ptp_ref_clk is not a required property but optional.
+> > >
+> > > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> > > ---
+> > >  .../bindings/net/pcs/altr,gmii-to-sgmii.yaml       |  47 ++++++++++
+> > >  .../devicetree/bindings/net/socfpga-dwmac.txt      |  57 ------------
+> > >  .../devicetree/bindings/net/socfpga-dwmac.yaml     | 102 +++++++++++++++++++++
+> > >  3 files changed, 149 insertions(+), 57 deletions(-)
+> > >
+> > 
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> > 
+> > yamllint warnings/errors:
+> > 
+> > dtschema/dtc warnings/errors:
+> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/pcs/altr,gmii-to-sgmii.example.dtb:
+> > phy@100000240: reg: [[1, 576], [8, 1], [512, 64]] is too short
+> > 	from schema $id: http://devicetree.org/schemas/pcs/altr,gmii-to-sgmii.yaml#
+> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/pcs/altr,gmii-to-sgmii.example.dtb:
+> > phy@100000240: 'clock-names', 'clocks' do not match any of the regexes:
+> > 'pinctrl-[0-9]+'
+> > 	from schema $id: http://devicetree.org/schemas/pcs/altr,gmii-to-sgmii.yaml#
+> > 
+> > doc reference errors (make refcheckdocs):
+> > 
+> > See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250205-v6-12-topic-socfpga-agilex5-v4-2-ebf070e2075f@pengutronix.de
+> > 
+> > The base for the series is generally the latest rc1. A different dependency
+> > should be noted in *this* patch.
+> > 
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> > date:
+> > 
+> > pip3 install dtschema --upgrade
+> > 
+> > Please check and re-submit after running the above command yourself. Note
+> > that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> > your schema. However, it must be unset to test all examples with your schema.
 > 
->  fs/fuse/inode.c           | 53 +++++++++++++++++++++++++++++++++++++++
->  include/uapi/linux/fuse.h |  3 +++
->  2 files changed, 56 insertions(+)
+> 'pipx upgrade dtschema' says I have version 2025.2, but I still don't get theses errors.
 > 
-> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> index 3ce4f4e81d09..1fd9a5f303da 100644
-> --- a/fs/fuse/inode.c
-> +++ b/fs/fuse/inode.c
-> @@ -546,6 +546,56 @@ struct inode *fuse_ilookup(struct fuse_conn *fc, u64 nodeid,
->  	return NULL;
->  }
->  
-> +static int fuse_reverse_inval_all(struct fuse_conn *fc)
-> +{
-> +	struct fuse_mount *fm;
-> +	struct super_block *sb;
-> +	struct inode *inode, *old_inode = NULL;
-> +	struct fuse_inode *fi;
-> +
-> +	inode = fuse_ilookup(fc, FUSE_ROOT_ID, NULL);
-> +	if (!inode)
-> +		return -ENOENT;
-> +
-> +	fm = get_fuse_mount(inode);
-> +	iput(inode);
-> +	if (!fm)
-> +		return -ENOENT;
-> +	sb = fm->sb;
-> +
-> +	spin_lock(&sb->s_inode_list_lock);
-> +	list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
-> +		spin_lock(&inode->i_lock);
-> +		if ((inode->i_state & (I_FREEING|I_WILL_FREE|I_NEW)) ||
-> +		    !atomic_read(&inode->i_count)) {
-> +			spin_unlock(&inode->i_lock);
-> +			continue;
-> +		}
-> +
-> +		__iget(inode);
-> +		spin_unlock(&inode->i_lock);
-> +		spin_unlock(&sb->s_inode_list_lock);
-> +		iput(old_inode);
-> +
-> +		fi = get_fuse_inode(inode);
-> +		spin_lock(&fi->lock);
-> +		fi->attr_version = atomic64_inc_return(&fm->fc->attr_version);
-> +		spin_unlock(&fi->lock);
-> +		fuse_invalidate_attr(inode);
-> +		forget_all_cached_acls(inode);
-> +
-> +		old_inode = inode;
-> +		cond_resched();
-> +		spin_lock(&sb->s_inode_list_lock);
-> +	}
-> +	spin_unlock(&sb->s_inode_list_lock);
-> +	iput(old_inode);
-> +
-> +	shrink_dcache_sb(sb);
-> +
-> +	return 0;
-> +}
+>    make O=build dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/net/pcs/altr,gmii-to-sgmii.yaml
+>    make[1]: Entering directory '(...)'
+>      CHKDT   (...)/Documentation/devicetree/bindings
+>      LINT    (...)/Documentation/devicetree/bindings
+>      DTC [C] Documentation/devicetree/bindings/net/pcs/altr,gmii-to-sgmii.example.dtb
+> 
+> Anything I'm missing or doing wrong?
 
-Just a suggestion, assuming Daves patch gets merged, maybe you coud move
-the actual action into into a sub function? Makes it better visible
-what is actually does and would then make it easier to move the iteration
-part to the generic approach?
-Alternatively, maybe updates Daves patch and add fuse on top of it? Dave?
+Try:
+make O=build dt_binding_check DT_SCHEMA_FILES=net/pcs/altr,gmii-to-sgmii.yaml
 
+The full path should work, but seems there is some issue. But really, 
+DT_SCHEMA_FILES is just a sub-string to match with schema $id.
 
-Thanks,
-Bernd
+'reg' should be the number of logical entries (and what they are), not 
+the number of cells.
 
-
+Rob
