@@ -1,93 +1,129 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5271417AE1D
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 03:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B3DEC2;
+	Fri,  7 Feb 2025 03:16:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738898059; cv=none; b=uglGvGISBIu8rjgiaMItF10cNtEMC+CPi3Qu/+liKJE8XeEMYNKLWH/vuYYWl6QW1L2uvuSNyKDkbfti6whOPKnbc98ULu8vNAv8E2ogeGAWeZ80m52atS3vAxMn7wCNpcSMecm5FOG0PH93MeBEfWdX0pRTTF6lzaBrmuugP5Y=
+	t=1738898189; cv=none; b=B4EIXQa8RamwklJjuOg0Zf6aJBS9k779d0rGFMBjA9CmQUX9AsRTv99CSiNcE3dEVg4X/s9Rp9bctLLyqzS5k4USDrrrTSKjgR56mmUFmoH97vx6yc+TsSonYSVgoSIAVUIFfgn+dE+C4HE6enumOVj8RFRYm7GNGBGQtR0a3J0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738898059; c=relaxed/simple;
-	bh=PNzDsfeijeX0pwcQrXxAbqck9LLmdaMAxHm8ASHiEu0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UtOtJkYUzbY7728aoDS1Eibzeiza/Tcf/kkeBtqpHmT3zh1s6tUpIkEK8kubrNPHcXgR/3Wu5/14ie4vaJqVpjT7YnbNVqe4oNyJFdihNOys2I0gl5q02iQRGNi+JTKt/2H4ErR1PzfVAsClpBcpXlvfyfZk5d+nFzK3ZatbAjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=UI/VrQZG; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="UI/VrQZG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=QQvtVw+9grQyes+NSrofVuvHU9QmOMCgSpiNXKMLte8=; b=UI/VrQZG1zbnbFr+BERhenX5dV
-	j4iILVKIHvfw+196iYcvOc456zOCii2KkLjwRXf9b3POZhyN41DX0+rM35X3G/a+dpUoJgw7TN1En
-	AzU8W+P9kwAAG4y27Pf0NhByWgbhxlKB5rgbOXEmOl9EvJrDuPZvbJLVLPttH60895RUUNCERQ3/Q
-	93OS5h1/WsJDSaV7ulCPMHgzBg8of39vb4Socgaelu2dlXx1OYwp5s8V7XCiTnqhSIiKtKDKQscgv
-	rE/VcXLkyW15jpGX0bSgUeaRcypn688Mzx1V1VwbEkJB9vssKwtuxD2Qcaqg/W57yGH4b5pKgSBQc
-	nYPrxnsA==;
-Received: from [58.29.143.236] (helo=localhost)
-	by fanzine2.igalia.com with utf8esmtpsa 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tgEoc-005Yd1-A7; Fri, 07 Feb 2025 04:14:08 +0100
-From: Changwoo Min <changwoo@igalia.com>
-To: tj@kernel.org,
-	void@manifault.com,
-	arighi@nvidia.com
-Cc: kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org,
-	Changwoo Min <changwoo@igalia.com>
-Subject: [PATCH 2/2] sched_ext: Print an event, SCX_EV_ENQ_SLICE_DFL, in scx_qmap/central
-Date: Fri,  7 Feb 2025 12:13:38 +0900
-Message-ID: <20250207031338.393045-3-changwoo@igalia.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250207031338.393045-1-changwoo@igalia.com>
-References: <20250207031338.393045-1-changwoo@igalia.com>
+	s=arc-20240116; t=1738898189; c=relaxed/simple;
+	bh=imVNjlg3Gf1NU+7JQ+YG/FECtUN4wr+QiJzHYasDJRg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=oRm9zJ0NIY5q6X+LW0VdBGRukIgqld1BvhfkSDGJGaUgLhFIdBt7QbxwJaVe+RG+XZcv1bqf6oR702PZL4+k42Z6RUPNj4blhyZZ+vgsDj0SLs1DVcIwsMRxzt6ca2O0IY5lWn/nLRiMFuygAqo9IyZT5U26inYyfxnBJH2AasY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4YpzZR55hNzmZB8;
+	Fri,  7 Feb 2025 11:13:35 +0800 (CST)
+Received: from kwepemo500008.china.huawei.com (unknown [7.202.195.163])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0B6C41400DD;
+	Fri,  7 Feb 2025 11:16:23 +0800 (CST)
+Received: from [10.67.111.172] (10.67.111.172) by
+ kwepemo500008.china.huawei.com (7.202.195.163) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 7 Feb 2025 11:16:21 +0800
+Message-ID: <7960f4a0-e45e-7cfd-fa36-97732139d238@huawei.com>
+Date: Fri, 7 Feb 2025 11:16:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v2 0/5] kallsyms: Emit symbol for holes in text and fix
+ weak function issue
+To: Steven Rostedt <rostedt@goodmis.org>
+CC: Martin Kelly <martin.kelly@crowdstrike.com>, "masahiroy@kernel.org"
+	<masahiroy@kernel.org>, "ojeda@kernel.org" <ojeda@kernel.org>,
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, "pasha.tatashin@soleen.com"
+	<pasha.tatashin@soleen.com>, "mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"james.clark@arm.com" <james.clark@arm.com>, "mpe@ellerman.id.au"
+	<mpe@ellerman.id.au>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "mingo@redhat.com" <mingo@redhat.com>,
+	"nicolas@fjasle.eu" <nicolas@fjasle.eu>, "tglx@linutronix.de"
+	<tglx@linutronix.de>, "christophe.leroy@csgroup.eu"
+	<christophe.leroy@csgroup.eu>, "nathan@kernel.org" <nathan@kernel.org>,
+	"npiggin@gmail.com" <npiggin@gmail.com>, "mark.rutland@arm.com"
+	<mark.rutland@arm.com>, "hpa@zytor.com" <hpa@zytor.com>, "surenb@google.com"
+	<surenb@google.com>, "peterz@infradead.org" <peterz@infradead.org>,
+	"naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
+	"kent.overstreet@linux.dev" <kent.overstreet@linux.dev>, "bp@alien8.de"
+	<bp@alien8.de>, "yeweihua4@huawei.com" <yeweihua4@huawei.com>,
+	"mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
+	"mcgrof@kernel.org" <mcgrof@kernel.org>, Amit Dang
+	<amit.dang@crowdstrike.com>, "linux-modules@vger.kernel.org"
+	<linux-modules@vger.kernel.org>, "linux-kbuild@vger.kernel.org"
+	<linux-kbuild@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>
+References: <20240723063258.2240610-1-zhengyejian@huaweicloud.com>
+ <44353f4cd4d1cc7170d006031819550b37039dd2.camel@crowdstrike.com>
+ <364aaf7c-cdc4-4e57-bb4c-f62e57c23279@csgroup.eu>
+ <d25741d8a6f88d5a6c219fb53e8aa0bcc1fea982.camel@crowdstrike.com>
+ <1f11e3c4-e8fd-d4ac-23cd-0ab2de9c1799@huaweicloud.com>
+ <30ee9989044dad1a7083a85316d77b35f838e622.camel@crowdstrike.com>
+ <7266ee61-3085-74fc-2560-c62fc34c2148@huawei.com>
+ <20250121124851.2205a8b2@gandalf.local.home>
+Content-Language: en-US
+From: Zheng Yejian <zhengyejian1@huawei.com>
+In-Reply-To: <20250121124851.2205a8b2@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemo500008.china.huawei.com (7.202.195.163)
 
-Modify the scx_qmap and scx_celtral schedulers
-to print the SCX_EV_ENQ_SLICE_DFL event every second.
+On 2025/1/22 01:48, Steven Rostedt wrote:
+> 
+> Sorry for the late reply. Forgot about this as I was focused on other end-of-year issues.
+> 
+> On Sat, 14 Dec 2024 16:37:59 +0800
+> Zheng Yejian <zhengyejian1@huawei.com> wrote:
+> 
+>> The direct cause of this issue is the wrong fentry being founded by ftrace_location(),
+>> following the approach of "FTRACE_MCOUNT_MAX_OFFSET", narrowing down the search range
+>> and re-finding may also solve this problem, demo patch like below (not
+>> fully tested):
+>>
+>>       diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+>>       index 9b17efb1a87d..7d34320ca9d1 100644
+>>       --- a/kernel/trace/ftrace.c
+>>       +++ b/kernel/trace/ftrace.c
+>>       @@ -1678,8 +1678,11 @@ unsigned long ftrace_location(unsigned long ip)
+>>                               goto out;
+>>       
+>>                       /* map sym+0 to __fentry__ */
+>>       -               if (!offset)
+>>       +               if (!offset) {
+>>                               loc = ftrace_location_range(ip, ip + size - 1);
+>>       +                       while (loc > ip && loc - ip > FTRACE_MCOUNT_MAX_OFFSET)
+>>       +                               loc = ftrace_location_range(ip, loc - 1);
+>>       +               }
+>>               }
+>>
+>> Steve, Peter, what do you think?
+> 
+> Hmm, removing the weak functions from the __mcount_loc location should also
+> solve this, as the ftrace_location_range() will not return a weak function
+> if it's not part of the __mcount_loc table.
+> 
+> That is, would this patchset work?
+> 
+>    https://lore.kernel.org/all/20250102232609.529842248@goodmis.org/
 
-Signed-off-by: Changwoo Min <changwoo@igalia.com>
----
- tools/sched_ext/scx_central.bpf.c | 2 ++
- tools/sched_ext/scx_qmap.bpf.c    | 2 ++
- 2 files changed, 4 insertions(+)
+I only pick patch15 and patch16 into v6.14-rc1, since most of patches in that patches
+have already merged, and the issue seems gone, thanks!
 
-diff --git a/tools/sched_ext/scx_central.bpf.c b/tools/sched_ext/scx_central.bpf.c
-index 376c14d5dd0d..907a844723c1 100644
---- a/tools/sched_ext/scx_central.bpf.c
-+++ b/tools/sched_ext/scx_central.bpf.c
-@@ -305,6 +305,8 @@ static int central_timerfn(void *map, int *key, struct bpf_timer *timer)
- 			   scx_read_event(&events, SCX_EV_DISPATCH_KEEP_LAST));
- 		bpf_printk("%35s: %llu\n", "SCX_EV_ENQ_SKIP_EXITING",
- 			   scx_read_event(&events, SCX_EV_ENQ_SKIP_EXITING));
-+		bpf_printk("%35s: %llu\n", "SCX_EV_ENQ_SLICE_DFL",
-+			   scx_read_event(&events, SCX_EV_ENQ_SLICE_DFL));
- 		bpf_printk("%35s: %llu\n", "SCX_EV_BYPASS_DURATION",
- 			   scx_read_event(&events, SCX_EV_BYPASS_DURATION));
- 		bpf_printk("%35s: %llu\n", "SCX_EV_BYPASS_DISPATCH",
-diff --git a/tools/sched_ext/scx_qmap.bpf.c b/tools/sched_ext/scx_qmap.bpf.c
-index 5edb79742e37..7d9d1e5d2358 100644
---- a/tools/sched_ext/scx_qmap.bpf.c
-+++ b/tools/sched_ext/scx_qmap.bpf.c
-@@ -784,6 +784,8 @@ static int monitor_timerfn(void *map, int *key, struct bpf_timer *timer)
- 		   scx_read_event(&events, SCX_EV_DISPATCH_KEEP_LAST));
- 	bpf_printk("%35s: %llu\n", "SCX_EV_ENQ_SKIP_EXITING",
- 		   scx_read_event(&events, SCX_EV_ENQ_SKIP_EXITING));
-+	bpf_printk("%35s: %llu\n", "SCX_EV_ENQ_SLICE_DFL",
-+		   scx_read_event(&events, SCX_EV_ENQ_SLICE_DFL));
- 	bpf_printk("%35s: %llu\n", "SCX_EV_BYPASS_DURATION",
- 		   scx_read_event(&events, SCX_EV_BYPASS_DURATION));
- 	bpf_printk("%35s: %llu\n", "SCX_EV_BYPASS_DISPATCH",
+> 
+> -- Steve
+
 -- 
-2.48.1
+Thanks,
+Zheng Yejian
 
