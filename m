@@ -1,65 +1,65 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476A11F7561
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6783A1F8697
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738936953; cv=none; b=fL9mC0y2tvry0aZILHZpyzwzmNv8pXhKQtFhC2Z+Oecxsig3ocgMQWWHE6/6lC1pWmkMOt7hVjfTpJdvhobaYQ/CAjs+UFeHps6VqrPpKjAKNMhhmgf6WU9+xUDNil6enlhIkdla6vywt+bD0J3tAodTVSS76EMmKcZvuvDBUm8=
+	t=1738936955; cv=none; b=YQIGN/NSkxnGfn14Kwp64RO607hSZtZTpIedIqRQXqoqPpbnKViwWRgry2f9Z/Fm12Rj7vj+j2n+eNpIYG31H2weeOgpIS8w7J7dsgJS7CwEiJfVjtpaY+QFIgqPublNEXdwXUtaIyL8X2O7IRonb0XUXw++c7fQ/s6K7Kwh8b4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738936953; c=relaxed/simple;
-	bh=TcDVf7iIOl+k8slgEJNXrVsMAuZkLgOUD8RsgAfG3OQ=;
+	s=arc-20240116; t=1738936955; c=relaxed/simple;
+	bh=lZqVKRzTEdObAW6fXjwuLR5X8ri06xq7SpagYA8tR3A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eAWLjq3J+8xMeXumRq0m6aadmfKxHCXBrqml5Liz06146lryaA9iVLJiPCTaSAYu+XGYgA8MgsKhqCsOAR5uhjg38xgwdjLP9kfmTdvXfE2O4WNUBJJjgwJAnqH5b0M9bc5DXWbT2msP/jTRPgX00j71NmEb5JvHx+IzGaAJcE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=axFCGIRW; arc=none smtp.client-ip=209.85.128.52
+	 In-Reply-To:To:Cc; b=qvH4i1ELt42SaiQ023ujLaa8qzWpmPETh+E8x2DF0eyIVn8wdCLRnixud7+QheAHTdcYlbSohjqUW9YLwG0QRDtc1iUZAaV8YhqwJqqqzSXAQDa/9Y63YBKT9VRF4D6g0pzmxzeTjN6x8KMtDAhdDogKx1pHziC/2VCir911wJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Wzyem8AS; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="axFCGIRW"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43618283d48so15080835e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:02:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wzyem8AS"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43625c4a50dso14192365e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:02:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738936949; x=1739541749; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1738936951; x=1739541751; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+t0PeRcRiGWGlq2DudmFu4wvPO0Qc0iTCeH5AgQYu0k=;
-        b=axFCGIRWk+kbX4aXOoNBpoPkalGcxA1F9o0FSe7Q29CRDvwBI/Ui1Pr/QuBrakJoC8
-         UhZw0gQtSs17q263L4C/vO+KQe5mxEPya20ujEfkXzcKx/hfgdwfTUqiBmKltkcXPJ5V
-         hNuNEEPvtgKynsi1Jqhnn/6KIJ2BhHF0WiaI82IwGR9WoIauPjgL4CpQgWu3SHFFcUZU
-         Asz6Enne2Fv4AydG+duEmjnq7XbTFHiPbiDj2t3KW36efsVSfSQaTDnq7VEa1eDoOQhV
-         dUefWqHMXTAx6N1rfCOaPhuxuVEsoWCNWJtvGPbtezIFW/zfI2CilsOA20b6XtB/aDW6
-         spAg==
+        bh=va1zoX8mtnqXVu53ncI+bFuzSEXb1z3Cq8WHUrR/Cog=;
+        b=Wzyem8ASXlLjLuUN9r9gLKU6JxDVS8vheIKNBqa+IKFbE63BGAqVwH5X9PAufbcf0R
+         MyD/ifGLUNLLVnPseqEtGyh/94riSWkeYABddjQmmHU87VUkxMt1TlwZpJrwnapF9qhd
+         UwiB1pBIV7xwOjVWzLIqCzezzzNGfU8LEcITs7kOXm4l/epNBhyleNYltc/1VraVwP6X
+         708M+xx5zMuNZYCxnQA3zcH2EWt6Ngm/aw2PXsSllLhLp0lb3ZJALBReqbX+SABYmbLC
+         3bys+eNStPr53ZRYchh0lgUhR3R04ES0aifHs1oZTLdT8rTrMDTZMWvGRXJjC1pjPxL7
+         q9Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738936949; x=1739541749;
+        d=1e100.net; s=20230601; t=1738936951; x=1739541751;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+t0PeRcRiGWGlq2DudmFu4wvPO0Qc0iTCeH5AgQYu0k=;
-        b=ivr4BuLsPdqgb903f289skOQG8BnYKmITD/qA/abrBdM35pY3XaWEe4nkhOcH2kPvZ
-         aDbrx829uK2CRRfOKxo32BeLnbFY+NS0Ep9nAzFDQtf4PKrlmtug+1ExEw/N0PdQ9aVI
-         jdafEn2cKB9ZxYfaXlmY6g8+IbSVeM7v/JPIISjN1qbTWl3S360f9O7gCMbR3Hvmz8Or
-         OqUZ1k4yTxYG6ZxY2HFKgsPnprHiHs8BS7D9pGarSzMI4/Ao8HaOC5611/josoTLyFQQ
-         y1s/gq+zQ/kMXHHpphcGjVbRzed/zNcq8sK3emXHCcuqUXoe5faPsQ5U4EujTApo7slk
-         CtCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWutlxoMdWKltCAihojU/ak6F8jYMcSPC+d5wpuTIP4QF4AQ0qY9OMwKAucNTP7PJfIGHG/ddiek5UOXbA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6q1NyCbqvrxzx/6j1P1eGAuQeBdMrdGTBN/OEsct4BBD3VSiv
-	IxihUAaoMC2HriZ8SZO2zsA/JGhbp1+KZFhbS/KwAmDVm6T8TePknZuRfY/nd+U=
-X-Gm-Gg: ASbGnctw5sQgicx12/uIX6inU1MJEkn7PG162pih4LC5EXALGrwOXa3E730Aa4YrjTK
-	zB+uWvRywvPdMHd3thMyptmmWU6BVU5DDTMtUaOVc0y9JQ4lW2Fw7eO8NCoHNEIIecNVuTc3PFB
-	gCYt2vhazLzX2OkagG+gc4kV4CJtchGwDNtISnMWTHGW2Q5VWH6pIZZAOFrt++sQVWkRh7cCFLd
-	lN5pi0dYEq8foSWnmdTF1eWoZIN9PgSQpBnWdJyoTiRerFFPlu5dN0i2LJ/FUAa+QfhyfmNMNOm
-	/FQ4W8zic3+e84hSx7c9IKAoFG4u47tap+T5
-X-Google-Smtp-Source: AGHT+IF0Kfmf/PwEzCNegLbzDTONXpBMWhSLTuNeh60qPhqC5TyM8mWAKMBSCB9PUmIinuW/+wiCEw==
-X-Received: by 2002:a05:600c:35cb:b0:434:f917:2b11 with SMTP id 5b1f17b1804b1-439249b2b99mr23312925e9.21.1738936949368;
-        Fri, 07 Feb 2025 06:02:29 -0800 (PST)
+        bh=va1zoX8mtnqXVu53ncI+bFuzSEXb1z3Cq8WHUrR/Cog=;
+        b=FmpdCMmoQrkc7YQtIP5P7uBObrwKK5MDdsEcZcdR0O1VoU3fawBco0NceJrR1Fvirc
+         nFPT+QYo/WnDYYp7YJQlefOHzmUDw75gYuz1wwrjvSiQ5YOcf7rCMgkgsOPT5w5U1hDx
+         GHP4Bh7f3Zvh69BVOy/I/lK7BZ40kicyv49vNnKo6ldPyYAzNq896XxRcp78ESPIA18h
+         pHOMZLzqACxXxx9/IfxB8VudgE8aYKldwHaOZNirJC/85ls6djJPCSgaXbGblIF56gqP
+         ZvR7BqxcmV5F8CN0T5XmbViUyrhIkp7VhsHy0SKUhsez4T6c5+4vYhmmFueeCvzEQk1k
+         CziA==
+X-Forwarded-Encrypted: i=1; AJvYcCWY88TS+UgYS0shbcFjsZl9wF3QAjm+EcLEHojneDz/oCLmxtx+44Chasj7U+jUdnNKM/qv3Kdet0hhcFw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypvpZFG/0EGzOjKcTtRjZ/z8zzZFuHY4Krn0smn+fxu2uh8lit
+	dXoQQTaTVaodcKAsBpNRpnsADJAVSs+zeR2ssDT2pQzo3JmZxdTyEYbskSQysak=
+X-Gm-Gg: ASbGncuiGgZWsVIopra44kqMHhyOe3bGjaRGStkS4NmRKxt/sdcCbbQCZRms7EZW/oa
+	lYRvGc1zIkcjFvnFIJzeY6T/tsrnHeMoNh6/j4mlyMPX9hPWuLeWktweRbfuuMj+XlgtE33flrA
+	VhcTx+1Eh4zCIy9YLg1x3Dm6KDdtS6UBJt2jLBKa2p9xTsnuJ6Kv5nlF926vlVQLr4/HKUe3oeR
+	R8YtRGW/VsPJnkILtnKdSRaRzk62fCxL3btA2twXvaYT13ZjIO0P0yHYbMh9hc0C6b60+ko4RTd
+	+ywP2r943s39Z7ggNufKrq2c+WT78w8xIld1
+X-Google-Smtp-Source: AGHT+IE2pJXNda+hiiYnwyeBf6vBChbDoGs/+EqGbBksx9jMu31CSNXFGKBuAI/bGm3C2qIU4yweWA==
+X-Received: by 2002:a05:600c:502b:b0:434:f623:9fe3 with SMTP id 5b1f17b1804b1-43924993dbfmr34954585e9.16.1738936950538;
+        Fri, 07 Feb 2025 06:02:30 -0800 (PST)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391da9652bsm57384605e9.2.2025.02.07.06.02.28
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391da9652bsm57384605e9.2.2025.02.07.06.02.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 06:02:29 -0800 (PST)
+        Fri, 07 Feb 2025 06:02:30 -0800 (PST)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Fri, 07 Feb 2025 15:02:25 +0100
-Subject: [PATCH v2 1/2] dt-bindings: display: qcom,sm8550-mdss: only
+Date: Fri, 07 Feb 2025 15:02:26 +0100
+Subject: [PATCH v2 2/2] dt-bindings: display: qcom,sm8650-mdss: only
  document the mdp0-mem interconnect path
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250207-topic-sm8x50-mdss-interconnect-bindings-fix-v2-1-f712b8df6020@linaro.org>
+Message-Id: <20250207-topic-sm8x50-mdss-interconnect-bindings-fix-v2-2-f712b8df6020@linaro.org>
 References: <20250207-topic-sm8x50-mdss-interconnect-bindings-fix-v2-0-f712b8df6020@linaro.org>
 In-Reply-To: <20250207-topic-sm8x50-mdss-interconnect-bindings-fix-v2-0-f712b8df6020@linaro.org>
 To: Rob Clark <robdclark@gmail.com>, 
@@ -85,36 +85,36 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
  freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1430;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=951;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=TcDVf7iIOl+k8slgEJNXrVsMAuZkLgOUD8RsgAfG3OQ=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnphJyo+NERuJHQbRXvuofD/Lg8Z58aE+Lc+D7Tps0
- T9gSRoKJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ6YScgAKCRB33NvayMhJ0S6eEA
- CzMMqK956gONtZcEyWLIdpW851mCXU/HbQLiPU5tYUWwcaT7KEbVp8Ac3EYh4czEGOt5AMgpIt9X0K
- Px8UYk6ASwesv0OgkVz95wNNryHI4AH40p+zfVtCUUDAGcImca2Jf0L3cUU95NVDwTdPWNOh5AiznE
- KhnqMWp4xzm/0yV0AHStb5ph/Y4bjwOKThwbyc/QIk3hJrDKxbgjsrIj90EmwQbIuIED48vXAbkzR/
- wOn6/h1gL/zWv1PHniAJvTxzi7TIOhFRqnyBggpp9igt8Fo33XHkRjjAfZ+pCmC3E86jKKD3FJtXFu
- ze+d1mrfRCvMFxmEzgcKYupLotLZhPdf4TI+0fzLu0NcKD6i1XB/4TXwQeYaKaKk7uIzblgmxSCrdr
- nqxBHjC7ygZcmV3zBqwjethUT80+bcIQ8kMjV9p9lnNh+npY9FjHTfoJhFuCc1e60tFnUbOqUtRUZq
- WZdBPhKPA0zcTfmJgVD+VyH4LtzBVZ63mXsOhXqz2/MvPJ+162jxCAnpNpQU9+OMC3DFzy2yeLcA2Y
- rNhR4rF1FiDeckHfnwUeIGSv0sgxoyT1CRv1XvggUU0i5qORa82H6HiznnmShFu1j5M6Et98RnQFvh
- CbueXYNX84Ncw+RxrbE+RMBwbLLw+vwFisX8OaI5i/7c22V28zC0KzdcEn8A==
+ bh=lZqVKRzTEdObAW6fXjwuLR5X8ri06xq7SpagYA8tR3A=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnphJyiEPELOgnJBIrAJ4yLck8xsXgt7sOkv8NKNNl
+ /ePkwIyJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ6YScgAKCRB33NvayMhJ0Ua6EA
+ DPpbduG9cUIr8ze7BRlZWsk3QO6dvuL50SUVot8nbJqcCPXvDc/HnTsk+OEoRj8CaXmBWR3BzmBG/L
+ /5XllqZl8ExbyFyuG5+zBL65iOY47eF0O/aGFwWYfGllkGIoAJNhfvCnZuiPJcmywX9npz4fr9lrPn
+ NA7cWWPpyBkPUMnpmK43ghDcNGVqxoX7NjTcZEbX9yAT4nD6sJp2P4mPkMCb53FhaSUt3B7h3tqZTB
+ 371BLuhR7iKhrHqh8rYpfGFocGuQTGjDMncKy9ph0URTdDzBwCvd6OfRbGrnvKZn6oI6fa+tAt4OQE
+ gALlwfWc4/hLfL+8zdn6Ut5shc9Awu6ML0/EMjfYcHGcuUD+Rp6N/bSDiuWZdcqwXokATkSRMZBZ4c
+ zC41gBPROo5ZP7X5zZYDOv1JQ6Q5TkYFsCnge3ufFrtPBLdy7ezYvEt7623ceMeJXdW3D2a2+47saB
+ AkJKOH1Af5TsYnzAJeP5nRjXLCu6GcYCTnwEwX73HnDKsjQclHec3CkjBsaqO0EWmBYCT4FX3rV2re
+ ZegOnpXqhyQODY7TqQjO/BMjg6qjequoVVc1Al3phvn9XVw5ofaoPsE4CHcWHNCJwCtSqjipWbp21p
+ XAZxlQP8JdwFsadGqr7kMjuhD2gCLw9YLGsQD6MmtpESrvwfcFxFku6ZEfBg==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-The mdp1-mem is not supported on the SM8550 SoCs, so only support a single
+The mdp1-mem is not supported on the SM8650 SoCs, so only support a single
 mdp0-mem interconnect entry.
 
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- .../devicetree/bindings/display/msm/qcom,sm8550-mdss.yaml        | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/display/msm/qcom,sm8650-mdss.yaml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sm8550-mdss.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sm8550-mdss.yaml
-index 1ea50a2c7c8e9f420125ad30a80b4ebd05c9367a..9631fe11c152449f3dfa0b8f8f53feeba721c950 100644
---- a/Documentation/devicetree/bindings/display/msm/qcom,sm8550-mdss.yaml
-+++ b/Documentation/devicetree/bindings/display/msm/qcom,sm8550-mdss.yaml
-@@ -30,10 +30,10 @@ properties:
+diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sm8650-mdss.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sm8650-mdss.yaml
+index 24cece1e888bd35f169dc3764966685de4b6da1d..cee581513c519924712c7e0fc055099f886d0a99 100644
+--- a/Documentation/devicetree/bindings/display/msm/qcom,sm8650-mdss.yaml
++++ b/Documentation/devicetree/bindings/display/msm/qcom,sm8650-mdss.yaml
+@@ -29,10 +29,10 @@ properties:
      maxItems: 1
  
    interconnects:
@@ -127,18 +127,6 @@ index 1ea50a2c7c8e9f420125ad30a80b4ebd05c9367a..9631fe11c152449f3dfa0b8f8f53feeb
  
  patternProperties:
    "^display-controller@[0-9a-f]+$":
-@@ -91,9 +91,8 @@ examples:
-         reg = <0x0ae00000 0x1000>;
-         reg-names = "mdss";
- 
--        interconnects = <&mmss_noc MASTER_MDP 0 &gem_noc SLAVE_LLCC 0>,
--                        <&mc_virt MASTER_LLCC 0 &mc_virt SLAVE_EBI1 0>;
--        interconnect-names = "mdp0-mem", "mdp1-mem";
-+        interconnects = <&mmss_noc MASTER_MDP 0 &mc_virt SLAVE_EBI1 0>;
-+        interconnect-names = "mdp0-mem";
- 
-         resets = <&dispcc DISP_CC_MDSS_CORE_BCR>;
- 
 
 -- 
 2.34.1
