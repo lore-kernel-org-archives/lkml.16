@@ -1,30 +1,25 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7B4718FDD5;
-	Fri,  7 Feb 2025 10:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F90018FDD5
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 10:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738925977; cv=none; b=DZDnGxFx5BGQrtwbQ37OKgopKOL3ymBXxkb7Ec5no78RUvQ3A1cU6sCWGcBSYhA/z92o5EmYxNzNgpkZFEKR/eQrzDlSbO8PPKldTRxjO2065zSyZg0VPyNIO6iPEswT/U/sMQW8e/Vly9/j4JLMYOz0CJmqAwW7FUbbfkU5A7s=
+	t=1738926001; cv=none; b=V2FOlAi6FmPnCplCVc0JL6AHE40IvvCHGY4o+SGLH5aKoiYCxuWk2AdL/FNuw2wJkXnPOje/3B24IbvyI3L/88rsu6LsMRaVHDGCY6ZuFaV1xY0t8ioO+1WvOJRpJpxhBCxo5fDyE+TxHX9WgRytdKJVecLujVGb7d6KlodUOVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738925977; c=relaxed/simple;
-	bh=09GEDZOBjJebNIp9BxeX+G4r6l6zI1/5kwZj27WKTCE=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BF7tl/n48ct5Jo7YCGaYw3PE8SG86jyN5I/HpSVIfuEDfgUU0luC5VRR5B5Y5zOT3IBiDV6R9+mII3g3undUBxQkQSXnEKGtSWTlrpoqNZJ77bBpZ7VTOoWbVIXi3s9r5hJOMBb+hu9AsZI96ldb7sNT4sMjzj3RcwlR8OQBd+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jo+mV9y8; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jo+mV9y8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=+gT7krOuH2+RgpEMb8xy3/JNXgH+wrXNxHLDB4T4b+o=;
-	b=jo+mV9y8F1LxRJOs/GpvpUI9smsOopaATolG8vi/wF2CbEqSdvO6eGBBaEXK5Z
-	LfD9TdV4tbYzJY//hBVS12oyEWmVc5tYoj6+0nnZJJRRQ1M5sxePHZ3iRmmcudtr
-	dFR+Wpzn5+P/AM1DojO+29nRtJvBedGxhkXCawEK016Q4=
-Received: from [192.168.243.52] (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD3v7Bu56VnFvRUKQ--.7416S2;
-	Fri, 07 Feb 2025 18:58:55 +0800 (CST)
-Message-ID: <acf18b4c-8ad5-48ea-9767-5383b138ca74@163.com>
-Date: Fri, 7 Feb 2025 18:58:54 +0800
+	s=arc-20240116; t=1738926001; c=relaxed/simple;
+	bh=//pQVvFwakmOqUSe9lGfJeVcFsPHvgzKBULKDjW+0hU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tm1yte2EnnQRJjCjbULeyN+s7HluSdqCUtq3Gz3KByetftZU+tl5EAjwImmGW8ZnUpjXBNoHxXn0NCbJHy3drTFR/oWzFMkSE8lB4BaAiGDNwenLpj4zyk6lPDiamCUQyCz2msmJWO4epVsL3Ab1kH/ICAAfE1vzHFtyAW4L4ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E81B113E;
+	Fri,  7 Feb 2025 03:00:21 -0800 (PST)
+Received: from [10.57.81.111] (unknown [10.57.81.111])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AED2C3F63F;
+	Fri,  7 Feb 2025 02:59:55 -0800 (PST)
+Message-ID: <faa89fec-4b02-4844-859e-3b0e7f402d89@arm.com>
+Date: Fri, 7 Feb 2025 10:59:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,77 +27,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: cadence: Fix sending message with data or without
- data
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org
-Cc: kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
- bhelgaas@google.com, bwawrzyn@cisco.com, cassel@kernel.org,
- wojciech.jasko-EXT@continental-corporation.com, a-verma1@ti.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
-References: <20250207103101.31287-1-18255117159@163.com>
-Content-Language: en-US
-In-Reply-To: <20250207103101.31287-1-18255117159@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v1 10/16] mm/vmalloc: Warn on improper use of
+ vunmap_range()
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Dev Jain <dev.jain@arm.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Steve Capper <steve.capper@linaro.org>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250205151003.88959-1-ryan.roberts@arm.com>
+ <20250205151003.88959-11-ryan.roberts@arm.com>
+ <3bbae070-1ae3-4f5d-86ab-b3221425a1cb@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <3bbae070-1ae3-4f5d-86ab-b3221425a1cb@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wD3v7Bu56VnFvRUKQ--.7416S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Kw1UCFyfJrWkJrWfCFWUCFg_yoW8uF1fpF
-	W8Ga4Sy3WIqrWavan5Za1UAF13J3Z3tF9rX3yv934fuFnru34UGr129Fy5GFW7GrWkWr1x
-	A3WDtF9rKF4fAFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UJ73kUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxnso2el4eZdYwAAs2
 
-
-
-On 2025/2/7 18:31, Hans Zhang wrote:
-> From: "hans.zhang" <hans.zhang@cixtech.com>
-
-I'm so sorry, guys.
-The correct email address should be: Hans Zhang <18255117159@163.com>
-
-> View from cdns document cdn_pcie_gen4_hpa_axi_ips_ug_v1.04.pdf.
-> In section 9.1.7.1 AXI Subordinate to PCIe Address Translation
-> Registers below:
+On 07/02/2025 08:41, Anshuman Khandual wrote:
+> On 2/5/25 20:39, Ryan Roberts wrote:
+>> A call to vmalloc_huge() may cause memory blocks to be mapped at pmd or
+>> pud level. But it is possible to subsquently call vunmap_range() on a
 > 
-> axi_s_awaddr bits 16 is 1 for MSG with data and 0 for MSG without data.
+> s/subsquently/subsequently
 > 
-> Signed-off-by: hans.zhang <hans.zhang@cixtech.com>
+>> sub-range of the mapped memory, which partially overlaps a pmd or pud.
+>> In this case, vmalloc unmaps the entire pmd or pud so that the
+>> no-overlapping portion is also unmapped. Clearly that would have a bad
+>> outcome, but it's not something that any callers do today as far as I
+>> can tell. So I guess it's jsut expected that callers will not do this.
+> 
+> s/jsut/just
+> 
+>>
+>> However, it would be useful to know if this happened in future; let's
+>> add a warning to cover the eventuality.
+> 
+> This is a reasonable check to prevent bad outcomes later.
+> 
+>>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> ---
+>>  mm/vmalloc.c | 8 ++++++--
+>>  1 file changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+>> index a6e7acebe9ad..fcdf67d5177a 100644
+>> --- a/mm/vmalloc.c
+>> +++ b/mm/vmalloc.c
+>> @@ -374,8 +374,10 @@ static void vunmap_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+>>  		if (cleared || pmd_bad(*pmd))
+>>  			*mask |= PGTBL_PMD_MODIFIED;
+>>  
+>> -		if (cleared)
+>> +		if (cleared) {
+>> +			WARN_ON(next - addr < PMD_SIZE);
+>>  			continue;
+>> +		}
+>>  		if (pmd_none_or_clear_bad(pmd))
+>>  			continue;
+>>  		vunmap_pte_range(pmd, addr, next, mask);
+>> @@ -399,8 +401,10 @@ static void vunmap_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+>>  		if (cleared || pud_bad(*pud))
+>>  			*mask |= PGTBL_PUD_MODIFIED;
+>>  
+>> -		if (cleared)
+>> +		if (cleared) {
+>> +			WARN_ON(next - addr < PUD_SIZE);
+>>  			continue;
+>> +		}
+>>  		if (pud_none_or_clear_bad(pud))
+>>  			continue;
+>>  		vunmap_pmd_range(pud, addr, next, mask);
+> Why not also include such checks in vunmap_p4d_range() and __vunmap_range_noflush()
+> for corresponding P4D and PGD levels as well ?
 
-The correct Signed-off should be: Hans Zhang <18255117159@163.com>
+The kernel does not support p4d or pgd leaf entries so there is nothing to check.
 
-> ---
->   drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 +--
->   drivers/pci/controller/cadence/pcie-cadence.h    | 2 +-
->   2 files changed, 2 insertions(+), 3 deletions(-)
-> 
-> 
-> base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> index e0cc4560dfde..0bf4cde34f51 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> @@ -352,8 +352,7 @@ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
->   	spin_unlock_irqrestore(&ep->lock, flags);
->   
->   	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(MSG_ROUTING_LOCAL) |
-> -		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code) |
-> -		 CDNS_PCIE_MSG_NO_DATA;
-> +		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code);
->   	writel(0, ep->irq_cpu_addr + offset);
->   }
->   
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index f5eeff834ec1..39ee9945c903 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -246,7 +246,7 @@ struct cdns_pcie_rp_ib_bar {
->   #define CDNS_PCIE_NORMAL_MSG_CODE_MASK		GENMASK(15, 8)
->   #define CDNS_PCIE_NORMAL_MSG_CODE(code) \
->   	(((code) << 8) & CDNS_PCIE_NORMAL_MSG_CODE_MASK)
-> -#define CDNS_PCIE_MSG_NO_DATA			BIT(16)
-> +#define CDNS_PCIE_MSG_DATA			BIT(16)
->   
->   struct cdns_pcie;
->   
+Although vunmap_p4d_range() does call p4d_clear_huge(). The function is a stub
+and returns void (unlike p[mu]d_clear_huge()). I suspect we could just remove
+p4d_clear_huge() entirely. But that would be a separate patch to mm tree I think.
 
+For pgd, there isn't even an equivalent looking function.
+
+Basically at those 2 levels, it's always a table.
+
+Thanks,
+Ryan
