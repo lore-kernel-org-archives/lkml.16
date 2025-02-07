@@ -1,77 +1,106 @@
-Received: from pv50p00im-zteg10021401.me.com (pv50p00im-zteg10021401.me.com [17.58.6.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CC5238D24
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D8D238D20;
+	Fri,  7 Feb 2025 14:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738939897; cv=none; b=F9+jAvOU0py7uPxMBphDqqXyeimZ3qTmfwic9uvG0694vasxTCocVtubH7WLleD+hflA29cqQT6WN0DM71xq9P+KcHVrYjrRr5ZZBoLxoa4iLW4zJRIU4niPTVikwomPbwGPLxZfWCwORAzU2vYUCKkRc7JMpKRsCSrqncVnA7w=
+	t=1738939937; cv=none; b=ikTjC5+DjojcYjN8VOkkUWexJkL2TAvmhGO13UQ+DBv4FRIdbI73hWITuEtZEoi9NV+magJAnF22X2TeXUbV8yOht/qBVdBXXpfcCmhBugLtsDTeuv4jUBFdTcgEFHgvTZ6nG3n1FXyCQtqN/1SoVkBquxjxDqBjF/ksPGBvTLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738939897; c=relaxed/simple;
-	bh=QPTMGiauE0vFz3+ClYpVOEZsW0MdO4K8SJKrJbVAgxg=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=dcFqDlukWMAvANqfQlUm1Yk3LJQF+zwnriH+nOB3GqlOZ7kHL0dZ1scYiwHUi0y7NGFSb+54T2p1YKiyXmI77EdhMvslbuuNWVohHMfjlwTb0lUqv64Xj3vSvZxSAlR3Q1xoKBsoAj9GIDwEM9x1AYz1FAmzz6Yk0oZXHeXGQY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=Sery+jB1; arc=none smtp.client-ip=17.58.6.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1738939937; c=relaxed/simple;
+	bh=IGiibqfIMccHvyId4qwIytHUJSe5PzuOIYOLfhIzKTQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=t7vTZOogfBshGO2eIyHrfTU8dWSk++V/SjlHr7XsUWJ6HCi6p7pGxun7ZuVo+4JzuligqSB/4n0GCuo/J8ZtRFZGSl7pFkHf52wpTRPb7cQHy9Qzb7hYkquWZrXB3kMWFFhMJwa92AL/sAIgAqO+kfiDqmNuZyFuCLS91+sWrlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AIpoGQsZ; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Sery+jB1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=QPTMGiauE0vFz3+ClYpVOEZsW0MdO4K8SJKrJbVAgxg=;
-	h=Message-ID:Date:MIME-Version:To:Subject:From:Content-Type:x-icloud-hme;
-	b=Sery+jB1tpKn6/p0v5kGsHKtvNUJml2Z+cQc+O394YmX3/fDMheiCuZePhU8tVZ2u
-	 fFF2grS9Xr9plI7EvX8QXWNuFWgwCeArXVu3O0T0FD3LPJexcAohJryFnsXWQhukRU
-	 dnsXo/zMAmeXdIni5EULO5WxonTDsD1URD2LDfdVH1QDmaOAnublx+bpzx2Lc18h3n
-	 jNt8AFnrVeUcTD91BvO5ahTb4NTTaKDHppi4NexMR9XlsYmM9pfzN+k3kPgLUdwpM1
-	 OKKALgs9W06Erj0Jn3Ai5Et0tA+5ObzK3kYB5U2JL1XmKtyZDZAQFGBYfRUz8FsH+H
-	 RppbBGh04ldoA==
-Received: from [192.168.50.105] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-zteg10021401.me.com (Postfix) with ESMTPSA id EF22E8E0475;
-	Fri,  7 Feb 2025 14:51:30 +0000 (UTC)
-Message-ID: <ba6efae4-77d9-46aa-8f64-f8ffa119505f@icloud.com>
-Date: Fri, 7 Feb 2025 07:51:22 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AIpoGQsZ"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5dcdb56c9d3so3437440a12.0;
+        Fri, 07 Feb 2025 06:52:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738939934; x=1739544734; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:reply-to:from:subject:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IGiibqfIMccHvyId4qwIytHUJSe5PzuOIYOLfhIzKTQ=;
+        b=AIpoGQsZ3A8LBmtCcTZkNMI8XUHQ+L1cBCv5z1LgWP9Ci25PgXbPo/kM5fJ30bzvtc
+         6+5oyxP0qrlIDg9xxWGOooxpcMkrJXylvgvQ8LiLGcM0Ey33f4bfv4iC2AzupRuCJePz
+         qObvjUr5DmSs5D/nt/7WsevVg3eNm5v25G6GIPxaQM1raiCOGuKYLi+TO0rlCpIbP99o
+         WaxdrKAaCKeyrkJaveM6EI3VK+esSuS9af47lbcEurgHTnF0bML7Th0elRLmzpA3U7pe
+         bUPkDoUaYtJAiqddFXm3BPteoMj5dXc/LpHpnHdveGEdXnqbaF38mDMSuTxWbGPaRM1e
+         xZww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738939934; x=1739544734;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:reply-to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IGiibqfIMccHvyId4qwIytHUJSe5PzuOIYOLfhIzKTQ=;
+        b=SGBY4QYWYNIbBS6EMHBqqzZLpbD0iysK3lkuGoNpoRCJ7P5GDYHt+olNpNtpD5z4EH
+         Z8JVIhMoL1G0yz4dhT2qRq1wOsgEXvH4r63aaXD77kMTiHxUxFiyFePnxxgQ13QevrH6
+         t6wsbMdg6JR8qdNcCp0Ts+8XsdHRuqjVvOx28B3zjj6pIjZHLdN+EBoRNTO9gXVmdiZB
+         aNVaPvzEGv8KZqlOr1AL8jU5iOKa/4jWhRc9c9C73qunLa0rcYJ5okLYqHzlGmSdlR3E
+         NltP72OvLif+7T84mHGCr5MjVo71HqNJuZeGUFc309hZkze8KYRrFZ3WRdi17Di/1B5I
+         iBBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4ooAC+e+vbKumMcuHq81WcCjIn/Gr9HpkTPZjUHg0iQVqd/r1CLdl+pG72+7AGQU15iscIfemMw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJGlEzZHm7UaIcfbnK5RtFah6hyMjatAKjotFe4werCNa4oJkI
+	IoKgJ9zKjFkIi6Q3tYmRyEl53wAMS2EpDzAbLyORM11AaC5wVnYH6+KFXpWr
+X-Gm-Gg: ASbGnctqstyc1BHb9PUWXVZ5Hw2Jn0/uCGJlvewoyi5sSdeY9l9XMpIULDI9ZeykE3x
+	+6/JHWGQcq1mhbFjz/u9DyxDgbKbY7Gz0dEj+rTPd/8krfe0ZnlSAyRf9xLaO6mAg2smXGwGIyA
+	yz8Y8JzkjjnXD4mT34g4GPGYMLcLo+2jXiX8rquFF8VV8Ee5eMuppr0pFcsJ2Drz/691l7LpcXr
+	U0BvnwyaGkDiNKIXFcbzWUDfQw1cP0leLwXHP2TspEOoh7XL1Ws5C5PmrjUv5ZoL+XliisOi57+
+	VweX3mDLpC6dPxIXMlKEgqokYriYh754CrX9VzQEyUzfPQ==
+X-Google-Smtp-Source: AGHT+IGHj8Hy/1kfAVuhHL6uF2UyU0AfLUzuXn8Tm8yWbu0Icz8KAI/hDZmYJWs0+O+Fy+aQm5vZCQ==
+X-Received: by 2002:a05:6402:1ecf:b0:5dc:796f:fc86 with SMTP id 4fb4d7f45d1cf-5de4501880amr9278179a12.16.1738939934211;
+        Fri, 07 Feb 2025 06:52:14 -0800 (PST)
+Received: from abityuts-desk1.ger.corp.intel.com ([134.191.196.181])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de5142ba50sm486370a12.11.2025.02.07.06.52.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 06:52:13 -0800 (PST)
+Message-ID: <bacc3a3f6066af7a6b96c48d4aff734a29819a24.camel@gmail.com>
+Subject: Re: [PATCH v1] cpuidle: intel_idle: Update MAINTAINERS
+From: Artem Bityutskiy <dedekind1@gmail.com>
+Reply-To: dedekind1@gmail.com
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
+ <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Len Brown <lenb@kernel.org>
+Date: Fri, 07 Feb 2025 16:52:11 +0200
+In-Reply-To: <2774831.mvXUDI8C0e@rjwysocki.net>
+References: <2774831.mvXUDI8C0e@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: marcan@marcan.st
-Cc: arnd@arndb.de, asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
- olof@lixom.net, soc@lists.linux.dev, torvalds@linux-foundation.org
-References: <20250207-rm-maint-v1-1-10f069a24f3d@marcan.st>
-Subject: Re: [PATCH] MAINTAINERS: Remove myself
-From: Evelyn Harthbrooke <evieluvsrainbows@icloud.com>
-Content-Language: en-US
-In-Reply-To: <20250207-rm-maint-v1-1-10f069a24f3d@marcan.st>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 2L1ymKElDkzzHQfI_irsKi6LBV4PZzzI
-X-Proofpoint-ORIG-GUID: 2L1ymKElDkzzHQfI_irsKi6LBV4PZzzI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_07,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- mlxlogscore=874 spamscore=0 adultscore=0 phishscore=0 suspectscore=0
- clxscore=1011 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2502070113
 
-On Thu, Feb 6, 2025 at 1:31 PM Hector Martin <marcan@marcan.st> wrote:
->
-> I no longer have any faith left in the kernel development process or
-> community management approach.
->
-> Apple/ARM platform development will continue downstream. If I feel like
-> sending some patches upstream in the future myself for whatever subtree
-> I may, or I may not. Anyone who feels like fighting the upstreaming
-> fight themselves is welcome to do so.
->
+On Thu, 2025-02-06 at 20:45 +0100, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>=20
+> Update the intel_idle record in MAINTAINERS to reflect the current
+> state of affairs.
+>=20
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> =C2=A0MAINTAINERS |=C2=A0=C2=A0=C2=A0 5 +++--
+> =C2=A01 file changed, 3 insertions(+), 2 deletions(-)
+>=20
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11675,8 +11675,9 @@
+> =C2=A0F: drivers/crypto/intel/iaa/*
+> =C2=A0
+> =C2=A0INTEL IDLE DRIVER
+> -M: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> -M: Len Brown <lenb@kernel.org>
+> +M: Rafael J. Wysocki <rafael@kernel.org>
+> +R: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
 
-This is disappointing to see; Apple/ARM support was progressing incredibly well and it's sad to see you resign as one of the subsystems' core maintainers. But based on what happened in the Rust/DMA thread, it was only a matter of time.
+Could you please also add:
 
-There are admittedly quite a few issues with the way the kernel development process works as well as how the community is managed, and I hope that it will improve with time. Hopefully your efforts will indeed continue downstream, and people will put in the effort to upstream your work with you having resigned.
+M: Artem Bityutskiy <dedekind1@gmail.com>
 
-I also hope that you may decide to come back in the future, if things do indeed improve.
-
-Evelyn
+So that there are 2 e-mail addresses? Thanks!
