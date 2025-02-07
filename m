@@ -1,38 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7DB19259D;
-	Fri,  7 Feb 2025 18:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E6A1A3145;
+	Fri,  7 Feb 2025 18:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738953740; cv=none; b=ITfEPtgmMCO+ye/b9eFN4R4d8j2fMmmdcOATguoKCoCgofih+v+3I13Cxj9OH157fVfzjC0NNLS9t77y+Lrto6AHvXkkACqFk79DnpHF+Nici34Sx9DeD+MWUL8svArqeLN9TCs6Lr3HL+HxaXNTEs/6bgCidSsWJvF41FQzFFM=
+	t=1738953783; cv=none; b=bmf79ewxmhgERcyILOxeLzwVYr/C2OQokaqRT19DYFrRrWGJJlNsXYuf41yRxEZifZPSR8IQ39ZKW3HawabDO2IeUqmoR2fFEQsskNQRIMa7jRIYc/QTJAu4BiBLHa/N9TnfJPMPI1PMMS2yPtwoy/obIifW2xfgjPnNQE3j5zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738953740; c=relaxed/simple;
-	bh=vLL2/x5Xd0jIBxlSa0RKV1awz+Qu2EmvR9mbuE5+/VQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sOrcOMsjuqvwRThnpreAhen9JyTIQPKst0VFGX4QITj7YjXh5MM3IbCheK0IslFOsMT0uEpSGjDTt0rAS/RpAuon3J+HJxBC+vgM3S+MzOHQ6wSV1Y3zfW9hdToHjYOzcfsjBMHvn9LsK6OFtr6JHZzYrg3e7MO2n/oJhugWxtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lU/EHgnv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738953783; c=relaxed/simple;
+	bh=KZpYGCgP90T/gN1JAyUvL6ue46fXpr3ZBw6UD+zQaSc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iA3TWUe9bvFD5QytV+aeWTzvF00agpiRGUH7WLGS/lU2xM6qXX3f6NDRaRPg4A4EB32HPdvsdwLext1pISuHmDGUgzLo/F9JoJAtBlrr/HJrqzGfDnBLKttSuyiXL3cjIXDd8SRftOhv9ARn1NmXHZsqwN/MfukBz5JBW8FHd+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=V8ppnauY; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lU/EHgnv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B93C6C4CED1;
-	Fri,  7 Feb 2025 18:42:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738953740;
-	bh=vLL2/x5Xd0jIBxlSa0RKV1awz+Qu2EmvR9mbuE5+/VQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lU/EHgnv5I6H8usnbQYNKAxUsM/ibmNjM7UzvmoGBB1RU9p3Ww4mZjs6Nq+xrde5s
-	 ZjzStGvrVAdKlkMjlOxLglUEvARggZU3r40bcHWzKXHNDOb3hgTeX89+B2+FaG7rJ9
-	 5hhzmaduMKTd6PXr/EyvocZm+eOfct311qJrq7wASAjy43unh43C92NFf73xO4mUpu
-	 6wZHV6ypcyQZyB+2xGJbWwtdPMT7hMcBeHJPchCK0E8UDAc+TUGl5jMixb4eBvFGDo
-	 lMRslavPambFGytHtGFGhRHB7+kBjtqNT8pUbo/pF59uPPQ5E5KmwqVtQC3ONEeJeL
-	 BJgWmlygp2/SA==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH] kconfig: do not clear SYMBOL_VALID when reading include/config/auto.conf
-Date: Sat,  8 Feb 2025 03:41:55 +0900
-Message-ID: <20250207184157.497745-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="V8ppnauY"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517Hg6xv000482;
+	Fri, 7 Feb 2025 18:42:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=corp-2023-11-20; bh=Ud1cq
+	X2B/Bk8a2z8lXNW+8CRC+VrCZiQVXNoaj7J2aQ=; b=V8ppnauYKhDf/ef/8Meqx
+	Ca3X4jihY09ndkSjy652lQ49VBDseL9SfSPz8GjlG8STpn8lKuBP4JjjuZPjZkye
+	JBjoE5cF2ancexNRK3Xd4FNb81/vBUq4SJYYtdchgHOsQi9fIOZdPeBOgsy1eNMW
+	tNpBsEXmRU3UHGkw61SMBP7GVOiUKtDdL1SrPfF3DE6k5BOq4lAUoRcTWaoz//UR
+	5ND2+smqKaHCMr5bKHOmd0trJumsifZRX7f5NJV5+oaIk++X/lg381wKaUp+cTjk
+	PY8VMHAA+8Rm7d64c4JeGOSBr43ab3JO/aHtmCajdBCyuPo1zflzt1lJbkqSkke0
+	A==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44mqk8bbh0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 07 Feb 2025 18:42:57 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 517HiGLA022576;
+	Fri, 7 Feb 2025 18:42:56 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44j8ec867n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 07 Feb 2025 18:42:56 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 517Idx9N037660;
+	Fri, 7 Feb 2025 18:42:56 GMT
+Received: from localhost.localdomain (ca-dev80.us.oracle.com [10.211.9.80])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 44j8ec8665-3;
+	Fri, 07 Feb 2025 18:42:56 +0000
+From: Dongli Zhang <dongli.zhang@oracle.com>
+To: virtualization@lists.linux.dev, netdev@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc: mst@redhat.com, jasowang@redhat.com, eperezma@redhat.com,
+        michael.christie@oracle.com, pbonzini@redhat.com, stefanha@redhat.com,
+        joao.m.martins@oracle.com, joe.jin@oracle.com, si-wei.liu@oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/9] vhost-scsi: adjust vhost_scsi_get_desc() to log vring descriptors
+Date: Fri,  7 Feb 2025 10:41:46 -0800
+Message-ID: <20250207184212.20831-3-dongli.zhang@oracle.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250207184212.20831-1-dongli.zhang@oracle.com>
+References: <20250207184212.20831-1-dongli.zhang@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,84 +66,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_08,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ phishscore=0 adultscore=0 malwarescore=0 bulkscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2501170000 definitions=main-2502070139
+X-Proofpoint-GUID: LqyZ_sjfs2KJG3yuPs4Dcj8sh6sNCnPD
+X-Proofpoint-ORIG-GUID: LqyZ_sjfs2KJG3yuPs4Dcj8sh6sNCnPD
 
-When conf_read_simple() is called with S_DEF_AUTO, it is meant to read
-previous symbol values from include/config/auto.conf to determine which
-include/config/* files should be touched.
+Adjust vhost_scsi_get_desc() to facilitate logging of vring descriptors.
 
-This process should not modify the current symbol status in any way.
-However, conf_touch_deps() currently invalidates all symbol values and
-recalculates them, which is totally unneeded.
+Add new arguments to allow passing the log buffer and length to
+vhost_get_vq_desc().
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+In addition, reset 'log_num' since vhost_get_vq_desc() may reset it only
+after certain condition checks.
+
+Suggested-by: Joao Martins <joao.m.martins@oracle.com>
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
 ---
+ drivers/vhost/scsi.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
- scripts/kconfig/confdata.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
-
-diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-index 3b55e7a4131d..ac95661a1c9d 100644
---- a/scripts/kconfig/confdata.c
-+++ b/scripts/kconfig/confdata.c
-@@ -385,7 +385,7 @@ int conf_read_simple(const char *name, int def)
+diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
+index 718fa4e0b31e..ee2310555740 100644
+--- a/drivers/vhost/scsi.c
++++ b/drivers/vhost/scsi.c
+@@ -950,13 +950,17 @@ vhost_scsi_send_bad_target(struct vhost_scsi *vs,
  
- 	def_flags = SYMBOL_DEF << def;
- 	for_all_symbols(sym) {
--		sym->flags &= ~(def_flags|SYMBOL_VALID);
-+		sym->flags &= ~def_flags;
- 		switch (sym->type) {
- 		case S_INT:
- 		case S_HEX:
-@@ -398,7 +398,11 @@ int conf_read_simple(const char *name, int def)
- 		}
- 	}
+ static int
+ vhost_scsi_get_desc(struct vhost_scsi *vs, struct vhost_virtqueue *vq,
+-		    struct vhost_scsi_ctx *vc)
++		    struct vhost_scsi_ctx *vc,
++		    struct vhost_log *log, unsigned int *log_num)
+ {
+ 	int ret = -ENXIO;
  
--	expr_invalidate_all();
-+	if (def == S_DEF_USER) {
-+		for_all_symbols(sym)
-+			sym->flags &= ~SYMBOL_VALID;
-+		expr_invalidate_all();
-+	}
- 
- 	while (getline_stripped(&line, &line_asize, in) != -1) {
- 		struct menu *choice;
-@@ -464,6 +468,9 @@ int conf_read_simple(const char *name, int def)
- 		if (conf_set_sym_val(sym, def, def_flags, val))
- 			continue;
- 
-+		if (def != S_DEF_USER)
-+			continue;
++	if (likely(log_num))
++		*log_num = 0;
 +
- 		/*
- 		 * If this is a choice member, give it the highest priority.
- 		 * If conflicting CONFIG options are given from an input file,
-@@ -967,10 +974,8 @@ static int conf_touch_deps(void)
- 	depfile_path[depfile_prefix_len] = 0;
+ 	vc->head = vhost_get_vq_desc(vq, vq->iov,
+ 				     ARRAY_SIZE(vq->iov), &vc->out, &vc->in,
+-				     NULL, NULL);
++				     log, log_num);
  
- 	conf_read_simple(name, S_DEF_AUTO);
--	sym_calc_value(modules_sym);
+ 	pr_debug("vhost_get_vq_desc: head: %d, out: %u in: %u\n",
+ 		 vc->head, vc->out, vc->in);
+@@ -1086,7 +1090,7 @@ vhost_scsi_handle_vq(struct vhost_scsi *vs, struct vhost_virtqueue *vq)
+ 	vhost_disable_notify(&vs->dev, vq);
  
- 	for_all_symbols(sym) {
--		sym_calc_value(sym);
- 		if (sym_is_choice(sym))
- 			continue;
- 		if (sym->flags & SYMBOL_WRITE) {
-@@ -1084,12 +1089,12 @@ int conf_write_autoconf(int overwrite)
- 	if (ret)
- 		return -1;
+ 	do {
+-		ret = vhost_scsi_get_desc(vs, vq, &vc);
++		ret = vhost_scsi_get_desc(vs, vq, &vc, NULL, NULL);
+ 		if (ret)
+ 			goto err;
  
--	if (conf_touch_deps())
--		return 1;
--
- 	for_all_symbols(sym)
- 		sym_calc_value(sym);
+@@ -1411,7 +1415,7 @@ vhost_scsi_ctl_handle_vq(struct vhost_scsi *vs, struct vhost_virtqueue *vq)
+ 	vhost_disable_notify(&vs->dev, vq);
  
-+	if (conf_touch_deps())
-+		return 1;
-+
- 	ret = __conf_write_autoconf(conf_get_autoheader_name(),
- 				    print_symbol_for_c,
- 				    &comment_style_c);
+ 	do {
+-		ret = vhost_scsi_get_desc(vs, vq, &vc);
++		ret = vhost_scsi_get_desc(vs, vq, &vc, NULL, NULL);
+ 		if (ret)
+ 			goto err;
+ 
 -- 
-2.43.0
+2.39.3
 
