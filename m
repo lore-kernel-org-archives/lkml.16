@@ -1,44 +1,46 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D18823C8D8;
-	Fri,  7 Feb 2025 18:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4899C194AD1;
+	Fri,  7 Feb 2025 18:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738951262; cv=none; b=S45i8mhk4F8F3KnBigogpLrmso2FhFZurNey+LZGzbB/Ps/fFqxVkTq6qX7OumVfFGgdW/flqOdoY0QWnqOxyrrn6OVQwr6L6aA+64GAWDHs8cE8i63nhuNVsS08gRCk7RZYvZhUcPLOL9bV4otc67RqL7IoHqqd56IU8PqEF/I=
+	t=1738951320; cv=none; b=ONK1pAvu4ctFDRTcaZ3UOftoLJWkKnvJRo4seq8r4Voh/beSpbSE9d42znqlWH6yfbEZjWhgV2DLvsg0lfuDhTDo8fNI5IRx5fqCNDFZNTdR//2fV14zabuZwmdx4QlC1h3kN1Xq6kFxH8HYNv2oK1eff1LbEIMf+0aTa+mwnPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738951262; c=relaxed/simple;
-	bh=XVe2YdCRlLJADw3tp9Pe9D/PsFgUIabOOWwS99KZzBU=;
+	s=arc-20240116; t=1738951320; c=relaxed/simple;
+	bh=1d6FcR1MsuxyT9npMdDyYCQ3GcBkzXyhynsiiKzrzHE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y20xKbyV5ZhBJ8dprH4euIrFLGNAizzv5jD3gow0fmUGftWZQL3u3v93aBDAWrXqI4ZfNW86SQspg4W2dt7s/0cs2ZO1OpsnxfRp6B8i7Tg6sVqV1buK2JQC3yVCJ1fO7zAn6LyOeo3wRpjuFF6YeD6u+6wEG5rep/UMdhVLnII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=dXPrzqj+; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=GWg7yuoXYjN+2YgfyX8iedKQZJiIOcKf9I3EitS6o18AWltjyupoKUKuHwun6JnJl7M9eKmdyHdudWDvbLwS05x4J+gp2DwH+Q5jt6e7El5EjkxztMBWbB8bGbFMBhCimHfELRFFnvrBa9VemhDF5O+dZ0cYczzMDtpeo8oftwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kx89Hbxu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="dXPrzqj+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=LFjhYwqZspDo7xweE6XX+LKwYAcbn/jfNbT6P6FVPW8=; b=dXPrzqj+rgFVpP6r
-	PivxLFufm3m2fT6MbN7FMd4hsDmmYRRuhSYj6sX3bwlgWRbQSZu804XdEimLJZQyt8NU/p1Lvj8yE
-	nGvPl7rnzxYQSz/Z8wwk/VHMunmsA+CD/ofmUnfWu33nkQHPlMNv07QwFcOWdas28TumAR/uQpMvH
-	LPaxvyYSKFKmgKwU6Kv/k6YBeqTRHToDQPXyZ4fONrSNmXSsrrEX14pILJSLh8sG7AVXj1+PfPKxH
-	R2BzhB4Oe/boQam3oJ7zuuwVCnaTNMraI0c5bzlDB7DEnJu+j9rfLRpfQgkN1wwWUF6DRRs0/3Lc+
-	nBA2bWCO1qIboqIKhQ==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1tgSew-00EKE5-0F;
-	Fri, 07 Feb 2025 18:00:58 +0000
-Date: Fri, 7 Feb 2025 18:00:58 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bus: mhi: Remove unused functions
-Message-ID: <Z6ZKWltJcyf6euZy@gallifrey>
-References: <20250127215859.261105-1-linux@treblig.org>
- <20250201160721.bgfyi3cwilvibl74@thinkpad>
- <Z55eWunU1NRkV2QP@gallifrey>
- <20250207174353.rxsxblcrnkieise3@thinkpad>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kx89Hbxu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AC02C4CED1;
+	Fri,  7 Feb 2025 18:01:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738951319;
+	bh=1d6FcR1MsuxyT9npMdDyYCQ3GcBkzXyhynsiiKzrzHE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kx89Hbxu1wvihiHngrVL82NWGks1Q2DmwfZkp3jYn+QASb7FUTDYY9SsZ8Fb+7OS+
+	 e47rHTq+CtVZ8O21OgTcVbBfj7w0+KozrlvPuSoSwNDdBqcZQLZbYZUzUqHKqDnlgT
+	 KmPV+X46eTRwDHoop96D16YmrNuKMcDv+OHGTO63qnkUXj5QaQ4okBrp1E04XFtkPc
+	 0bfwNWO7ZrpO1XVR/4o8qawoA0JhTTk8DHDZmGKZrVv182eUYmlUTvQiB43QfbHFZH
+	 fdVzmJw5aa5j46yRqJt+GLCUpQ8qndx4bt2hq1AbBQLdakgADpbgESKtd7NqigE8et
+	 KJOXxSgcuPe4w==
+Date: Fri, 7 Feb 2025 10:01:57 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Indu Bhagat <indu.bhagat@oracle.com>
+Cc: Weinan Liu <wnliu@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev,
+	Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>,
+	linux-toolchains@vger.kernel.org, linux-kernel@vger.kernel.org,
+	live-patching@vger.kernel.org, joe.lawrence@redhat.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/8] unwind: build kernel with sframe info
+Message-ID: <20250207180157.j25afocbe2kkkbv3@jpoimboe>
+References: <20250127213310.2496133-1-wnliu@google.com>
+ <20250127213310.2496133-2-wnliu@google.com>
+ <303e0c91-2351-4ccd-8948-b400ac5d2b7f@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,39 +49,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250207174353.rxsxblcrnkieise3@thinkpad>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 18:00:47 up 275 days,  5:14,  1 user,  load average: 0.02, 0.01,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+In-Reply-To: <303e0c91-2351-4ccd-8948-b400ac5d2b7f@oracle.com>
 
-* Manivannan Sadhasivam (manivannan.sadhasivam@linaro.org) wrote:
-> On Sat, Feb 01, 2025 at 05:48:10PM +0000, Dr. David Alan Gilbert wrote:
-> > * Manivannan Sadhasivam (manivannan.sadhasivam@linaro.org) wrote:
-> > > On Mon, Jan 27, 2025 at 09:58:59PM +0000, linux@treblig.org wrote:
-> > > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > > > 
-> > > 
-> > > Subject prefix should be:
-> > > 
-> > > 'bus: mhi: host:"
-> > 
-> > Ah, do you need me to post a v2 for that?
+On Tue, Feb 04, 2025 at 04:22:27PM -0800, Indu Bhagat wrote:
+> > +++ b/arch/Kconfig
+> > @@ -1736,4 +1736,12 @@ config ARCH_WANTS_PRE_LINK_VMLINUX
+> >   	  An architecture can select this if it provides arch/<arch>/tools/Makefile
+> >   	  with .arch.vmlinux.o target to be linked into vmlinux.
+> > +config AS_HAS_SFRAME_SUPPORT
+> > +	# Detect availability of the AS option -Wa,--gsframe for generating
+> > +	# sframe unwind table.
+> > +	def_bool $(cc-option,-Wa$(comma)--gsframe)
+> > +
 > 
-> No need. I will ammend it while applying.
+> Since the version of an admissible SFrame section needs to be atleast
+> SFRAME_VERSION_2, it will make sense to include SFrame version check when
+> detecting compatible toolchain.
 
-Thanks!
+Also, Jens pointed out that checking for '-Wa,--gsframe' isn't
+sufficient, as it still succeeds for architectures that aren't yet
+supported:
 
-Dave
+  https://lore.kernel.org/b89bcb68-d010-4041-aacf-15b934675705@linux.ibm.com
 
-> - Mani
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+so in my patches I have:
+
+config AS_SFRAME
+	def_bool $(as-instr,.cfi_sections .sframe\n.cfi_startproc\n.cfi_endproc)
+
+Though I'm not sure how you would add an SFrame version check to that.
+
 -- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Josh
