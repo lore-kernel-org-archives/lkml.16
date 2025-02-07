@@ -1,177 +1,119 @@
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6C51DA614;
-	Fri,  7 Feb 2025 10:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
+Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD8CF80BFF;
+	Fri,  7 Feb 2025 10:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738923611; cv=none; b=bEBLvhUdGKtKTy8/bSUmPto7jgv1Ev99tR7CHUq2wqpQN28lVm9MfPcYYgNWwPa5fTMr8kg1x3Kv0JsnAjKY7tVcYRWQw28BgwH96qKm1uKTRdNV0Z/jRlBnK3ZH1KuPxsSioSYt+y9zA8UhXKJqx4caBSEewT6Q7I2yL1zDJWk=
+	t=1738923654; cv=none; b=pX8V7Xheq4lavWwn6bQMSYRsFqNrDAcOwgR1KGgEYuJG3kGZiAmz+sqg4Zk3d/MsxNf3saZjBGmyKNcTgFkxiq3WFcc0TydJB/Q7jdr2bu83QtbMBbzUcqvhWuxg/TNObbBzqDKmbe1xjCL3mt5P/vranquZDa24Xro1EvA79x4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738923611; c=relaxed/simple;
-	bh=9+0b5N0nDXjlOdh4CZLsVjIW1hn3/KeNxflDFFbSabo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=edkZJEH9+jwDIWLRWYQzkEA1OLq3+0KFX1j+uVo62MmTMl+p9Y/iDEh60kreWV94wMj4S7Rp4trFLjGpwNV8fbSiQDHhUQde0CQUapNQK4O264Ew03ktOZzEZNwetlbUElOI5SB01iT6l3U8But/i9odkeAnW+bIenwJmR9FFA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st; spf=pass smtp.mailfrom=marcan.st; dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b=CB6gSxDi; arc=none smtp.client-ip=212.63.210.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marcan.st
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b="CB6gSxDi"
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: marcan@marcan.st)
-	by mail.marcansoft.com (Postfix) with ESMTPSA id 5350341D83;
-	Fri,  7 Feb 2025 10:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
-	t=1738923606; bh=9+0b5N0nDXjlOdh4CZLsVjIW1hn3/KeNxflDFFbSabo=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To;
-	b=CB6gSxDiIaKLrF6ORcX3n4YTVmoGYcpplzsp8ALUPjgjfmF8V9lZ6eSFTUdxgRKAs
-	 R47c0DGTD5KsSFCo44NlMxEfGNJ4guhu9gWJMdzY48tkvul7AOidp9LG8zfL7o2Di1
-	 K3L/SiWGuk7sQ8nHMN1yEqXRqr3Edsd7OkxrWnM54IuIcEgCp86sugiR7XbmLJ7/Oc
-	 7Ea4KriPYNSYwOZeqO2Ad5eFNkx6BTgkIeSshCL1wyYJZ9jF3x/YAhaIe+EOMiQg9z
-	 Aj7zjGVGXkSuKwd4OrW8BapKIyL7jvIMxfrY0hDUL7UXavjnbwt+P5U6lgCpRASHDO
-	 D8tTitlLeaGvw==
-Message-ID: <c5a49bcb-45cf-4295-80e0-c4b07083df00@marcan.st>
-Date: Fri, 7 Feb 2025 19:20:03 +0900
+	s=arc-20240116; t=1738923654; c=relaxed/simple;
+	bh=FsMReRhSR0sfiNrZcqLBVDxK/HU2cNflLinb44tDRLs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aeDGL53dqbw8gs8Iq4A++K4+VctO+Xy+YXCEdVa1ZHkwKhtAIivTPE427MXEcvRwzv0gNoH238pSW7erZiDVdsX749QmZX5JOafYokFr+9UTHm7jPAs2bM0kR4xl8BYY61t2t/ccMBbBM8WVtSA1xgVWL2DIVxm5oVrebGoucvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 517AKQEU007044;
+	Fri, 7 Feb 2025 04:20:26 -0600
+Received: (from greg@localhost)
+	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 517AKOvj007043;
+	Fri, 7 Feb 2025 04:20:24 -0600
+Date: Fri, 7 Feb 2025 04:20:24 -0600
+From: "Dr. Greg" <greg@enjellic.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jmorris@namei.org
+Subject: Re: [PATCH v4 2/14] Add TSEM specific documentation.
+Message-ID: <20250207102024.GA6415@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20240826103728.3378-3-greg@enjellic.com> <8642afa96650e02f50709aa3361b62c4@paul-moore.com> <20250205120026.GA15809@wind.enjellic.com> <CAHC9VhRq0PrH=0n6okkvfed=8QQOfv-ERA60NNWvLXetgrB_2w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma
- coherent allocator abstraction.)
-From: Hector Martin <marcan@marcan.st>
-To: Simona Vetter <simona@ffwll.ch>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Greg KH <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, phasta@kernel.org,
- Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
- Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Abdiel Janulgue <abdiel.janulgue@gmail.com>, daniel.almeida@collabora.com,
- aliceryhl@google.com, robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
- DRI Development <dri-devel@lists.freedesktop.org>
-References: <Z4D5a5NYrAbNxUL6@pollux> <Z4kG5AcVeQKegLnb@pollux>
- <20250128092334.GA28548@lst.de>
- <293df3d54bad446e8fd527f204c6dc301354e340.camel@mailbox.org>
- <20250130154646.GA2298732@nvidia.com> <2025013030-gummy-cosmic-7927@gregkh>
- <20250130172437.GN5556@nvidia.com>
- <2025013148-reversal-pessimism-1515@gregkh>
- <20250131135421.GO5556@nvidia.com>
- <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
- <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local>
- <4c143b85-063a-4413-a6ca-e9d80e26da96@marcan.st>
-Content-Language: en-US
-In-Reply-To: <4c143b85-063a-4413-a6ca-e9d80e26da96@marcan.st>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhRq0PrH=0n6okkvfed=8QQOfv-ERA60NNWvLXetgrB_2w@mail.gmail.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Fri, 07 Feb 2025 04:20:26 -0600 (CST)
 
+On Thu, Feb 06, 2025 at 10:48:57AM -0500, Paul Moore wrote:
 
+Good morning to everyone.
 
-On 2025/02/07 18:41, Hector Martin wrote:
-> On 2025/02/06 3:52, Simona Vetter wrote:
->> On Tue, Feb 04, 2025 at 03:46:14AM +0900, Hector Martin wrote:
->>> Adding Linus
->>>
->>> My 2c: If Linus doesn't pipe up with an authoritative answer to this
->>> thread, Miguel and the other Rust folks should just merge this series
->>> once it is reviewed and ready, ignoring Christoph's overt attempt at
->>> sabotaging the project. If Linus pulls it, what Christoph says doesn't
->>> matter. If Linus doesn't pull it, the R4L project is essentially dead
->>> until either Linus or Christoph make a move. Everything else is beating
->>> around the bush.
->>>
->>> Rust folks: Please don't waste your time and mental cycles on drama like
->>> this. It's not worth your time. Either Linus likes it, or he doesn't.
->>> Everything else is distractions orchestrated by a subset of saboteur
->>> maintainers who are trying to demoralize you until you give up, because
->>> they know they're going to be on the losing side of history sooner or
->>> later. No amount of sabotage from old entrenched maintainers is going to
->>> stop the world from moving forward towards memory-safe languages.
->>>
->>> FWIW, in my opinion, the "cancer" comment from Christoph would be enough
->>> to qualify for Code-of-Conduct action, but I doubt anything of the sort
->>> will happen.
->>
->> Yeah no.
->>
->> https://chaos.social/@sima/113942119012147959
->>
->> This was about you, because typing a proper answer takes a bit longer. It
->> was also about your toots on fedi, like this:
->>
->> https://social.treehouse.systems/@marcan/113941468353031993
->>
->> And "haha it's only a joke" does not work with your public profile and following.
->>
->> I do understand the frustration and temptation to just burn it all to the
->> ground, head the call of the sirens, or maybe for me more pick up goat
->> farming in the Swiss Alps. But you can't have it both and expect to also
->> be part of and contribute to the same community. And personally I don't
->> appreciate getting drenched in gasoline while I'm trying to quench flames
->> on the ground.
->>
->> And this isn't the first time or the second, by now it's a pretty clear
->> pattern over some years. And with the first I could explain why you react
->> like that and you had my full understanding, but eventually that runs a
->> bit thin as an excuse.  Now I'm left with the unlikely explanation that
->> you just like thundering in as the cavalry, fashionably late, maximally
->> destructive, because it entertains the masses on fedi or reddit or
->> wherever. I have no idea what you're trying to achieve here, I really
->> don't get it, but I am for sure fed up dealing with the fallout.
->>
->> Cheers, Sima
-> 
-> Since we're into complaining about social media posts on the list now,
-> I'm going to link one of yours:
-> 
-> https://chaos.social/@sima/113961496955043901
-> 
-> An R4L maintainer quit after multiple rounds of hostility, including
-> some completely unacceptable public comments bordering on downright
-> harassment from tytso, a situation which was widely publicized.
-> 
-> If, according to you, that's "shockingly smooth" with "no outsized
-> drama" other than "what I stirred up" (I guess you also missed the whole
-> LWN post about this thread before I posted anything on Fedi? That's how
-> I even found out about this), then I'm glad I'm disengaging with this
-> community. The Stockholm syndrome and utter denial is palpable.
-> 
-> I thought I could work with you on these issues; I don't know what
-> happened over the past year since we last had a private conversation
-> about this, but clearly you've changed your mind.
-> 
-> Thus, as you kindly requested of me in social media,
-> 
-> https://chaos.social/@sima/113961283260455876
-> 
-> I will now proceed to fuck off. Good luck.
+> On Wed, Feb 5, 2025 at 7:01???AM Dr. Greg <greg@enjellic.com> wrote:
+> > On Tue, Jan 28, 2025 at 05:23:52PM -0500, Paul Moore wrote:
+> >
+> > > I believe the LSM can support both the enforcement of security policy
+> > > and the observation of security relevant events on a system.  In fact
+> > > most of the existing LSMs do both, at least to some extent.
+> > >
+> > > However, while logging of security events likely needs to be
+> > > asynchronous for performance reasons, enforcement of security policy
+> > > likely needs to be synchronous to have any reasonable level of
+> > > assurance.  You are welcome to propose LSMs which provide
+> > > observability functionality that is either sync, async, or some
+> > > combination of both (? it would need to make sense to do both ?), but
+> > > I'm not currently interested in accepting LSMs that provide
+> > > asynchronous enforcement as I don't view that as a "reasonable"
+> > > enforcement mechanism.
+> >
+> > This is an artificial distinction that will prove limiting to the
+> > security that Linux will be able to deliver in the future.
+> >
+> > Based on your response, is it your stated position as Linux security
+> > maintainer, that you consider modern Endpoint Detection and Response
+> > Systems (EDRS) lacking with respect to their ability to implement a
+> > "reasonable" enforcement and assurance mechanism?
 
-Oh, and one last thing. I've heard that, in whatever backroom
-conversations you've been having about this situation, there has
-apparently been a belief, explicit or implicit, that I am in any way
-employed to work on the Linux kernel.
+> As stated previously: "I'm not currently interested in accepting
+> LSMs that provide asynchronous enforcement as I don't view that as a
+> reasonable enforcement mechanism."
 
-Unlike most people in this thread, I don't enjoy the luxury of a cushy
-tech job that pays me to deal with this community. I am supported
-exclusively by donations, which incidentally, have been steadily
-*de*creasing since the start of the Asahi Linux project. The project has
-zero corporate sponsorship.
+You personally don't, the IT and security compliance industry does, it
+seems to leave Linux security infrastructure in an interesting
+conundrum.
 
-And I do believe the fact that essentially all high-level Linux kernel
-maintainers and contributors are paid by corporations to do it is a
-major factor that has caused this community to become wildly out of
-touch with what it means to be a community FOSS project.
+For the record, just to be very clear as to what an LSM is allowed to
+do under your administration, for our benefit and the benefit of
+others:
 
-- Hector
+An LSM asynchronously streams an encoding of every security event that
+occurs into something in userspace, somewhere, that interprets those
+events.  Is userspace allowed to directly signal the operating system
+if it detects an anomaly in one of those events or a pattern of events
+and at what resolution level can the signalling occur?
 
+> > If this is the case, your philosophy leaves Linux in a position that
+> > is inconsistent with how the industry is choosing to implement
+> > security.
+
+> In this case perhaps TSEM is not well suited for the upstream Linux
+> kernel and your efforts are better spent downstream, much like the
+> industry you appear to respect.
+
+Fascinating response from someone given the privilege of
+maintainership status of a sub-system in a project whose leadership
+preaches the need to always work with and submit to upstream.
+
+Even more fascinating when that individual publically states that he
+is employed by the largest technology company in the world because of
+that companies desire to promote the health and well being of the
+Linux eco-system and community.
+
+For the record, we don't respect any industry, we respect the need to
+address the challenges associated with how we are currently doing and
+thinking about things.
+
+> paul-moore.com
+
+Our apologies to everyone for being a voice crying out in the
+wilderness.
+
+As always,
+Dr. Greg
+
+The Quixote Project - Flailing at the Travails of Cybersecurity
+              https://github.com/Quixote-Project
