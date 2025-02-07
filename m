@@ -1,78 +1,78 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174924C83;
-	Fri,  7 Feb 2025 00:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00B4B652;
+	Fri,  7 Feb 2025 00:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738888258; cv=none; b=JeUCT8CiQmapT0HSCo50I4+tyxxcXXCP2Xus8EwqKK9cLlR4mS6XW8eZiDubkeTl8g7171zyHhJuoGAg+RbJRi/D1tvHh4m9roEX8+mzPdDrXB0bJts4YTK66FolJf/pCrERCGhlJogfsgA6DjP8JDF+Yhtxs6+h0KtbfKAMZ7s=
+	t=1738888544; cv=none; b=uPzyjJ255M3pk1IiabneYIKd8n1smlV6MSG2Aott56m9ExsVlxCNJp1stuRwAv6L/zI/2Rx++FMhE5vnhVTlhsB/YlhyHYUBsTNHomNBro38HV5sSsKIz0YZTV7JEo97WeJlZySECiGEpc1WwpU82X/TuvKxRW+4mT/TIfrAhJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738888258; c=relaxed/simple;
-	bh=f6QX11ftdCfY6kNBmj6JPctntdXs2EUjTmvX8mE2Pn4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dOqI9sglmgr4VP36OUK0Z8ZMblzcGtMF0z2z2rQnw6SPgsM2z+lj++MkS3NcXSXOTosPFTYxXbZbdN4tG6T/dZ8YvFPtvPj6JQQbAKTeU/eJDIYRLtSqEVVmn3pFrzmZ6iOuoIRrjDZlGSkRVXPYORl7G3+vbhWFuoztRIIO+OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=iiiAa4HB; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1738888544; c=relaxed/simple;
+	bh=O/WXDPFFzJgiadrkK901IXY0sEUM6zkrUhB7U50NAlc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a9YE58T9nZc2js18AmLbNIIse2kCQNYueeM1ujc/SdNyo1fxx/DZOmeR8IlXPltis7q7Nog+njp9xtnYFnb1RbUlJ6l8pDHIdYbkHhU8uqQHfmN6OLb8K8eBoKZ/BB2FuRcRfxgfGe3vCSU/ob6nOlZ48Znd60cwj9YTF1hzE/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DyXiHJ39; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="iiiAa4HB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1738888253;
-	bh=f6QX11ftdCfY6kNBmj6JPctntdXs2EUjTmvX8mE2Pn4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=iiiAa4HBK3bn13H+H1kOwVh+mn5z6VWo6Ahhndd7+Wnswha9uSjavAwn9CNZCtCet
-	 AxPq32AAq3/inh+uMjY2SBaGaNLqVQibCgsubIp+V4hCV/0fLBRNk5Tg/Cx+GApr08
-	 7YotrWhz0v6O0i/y6ZmDstxGztwGtpNWZn29CjbNj4Rv9b1DicISREvkExtybfBXzY
-	 pTebmGviXJQfxUnK+imwNpYuiWlWeMPqec9n8VGR/K2XF6t2euY1Xvj4FVDsVVdWgB
-	 Q8qqtuR/hCgDbidwImTyhHNiBWb8yMN5dPKOQiHx33hHtuDq22+vasCcddLEHnfE3N
-	 uTkfQUxyp7Ltw==
-Received: from pecola.lan (unknown [159.196.93.152])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 6F446746BD;
-	Fri,  7 Feb 2025 08:30:52 +0800 (AWST)
-Message-ID: <1b38b084be4dd7167e80709d3b960ac1b4952af3.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v17 1/1] mctp pcc: Implement MCTP over PCC Transport
-From: Jeremy Kerr <jk@codeconstruct.com.au>
-To: Adam Young <admiyo@amperemail.onmicrosoft.com>, 
- admiyo@os.amperecomputing.com, Matt Johnston <matt@codeconstruct.com.au>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Sudeep Holla
-	 <sudeep.holla@arm.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Huisong Li <lihuisong@huawei.com>
-Date: Fri, 07 Feb 2025 08:30:52 +0800
-In-Reply-To: <b2ab6aa8-c7c7-44c1-9490-178101f9d00e@amperemail.onmicrosoft.com>
-References: <20250205183244.340197-1-admiyo@os.amperecomputing.com>
-	 <20250205183244.340197-2-admiyo@os.amperecomputing.com>
-	 <99629576779509c98782464df15fa77e658089e8.camel@codeconstruct.com.au>
-	 <b2ab6aa8-c7c7-44c1-9490-178101f9d00e@amperemail.onmicrosoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DyXiHJ39"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22A07C4CEDD;
+	Fri,  7 Feb 2025 00:35:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738888543;
+	bh=O/WXDPFFzJgiadrkK901IXY0sEUM6zkrUhB7U50NAlc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DyXiHJ39b2O6msyD+iJ4yLCd7u1gtkgvI1IRJujiQRd2wVAIwnp0VEVpHyXwXP+Gt
+	 cZEA/xupKQlyYpEO/DvN8fQHhhJQ/MIT/CsLoQzC4Ac65HJDvSDcCdha2uvzTHPh5H
+	 wi8j7721R7BHU+HyfNz2DHBuA7PDUzriEk5V8/65YWe7E93PJ8TV/TwoT8QaLLkG09
+	 yPU7cDTcoZFYiwLYVCodRNwoMiRJ3VFZcPL2qrEbtLNVlmyc7OoHN6J2yGufKrMTsV
+	 CUAGJ+1I6m6OrSyG+aFZDJOKv0FCREFOg54n5GlFgTWVQQ3mTb/NNx9POsw1cx7caG
+	 aljVR0Fdnrkyw==
+Date: Fri, 7 Feb 2025 01:35:37 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Lyude Paul <lyude@redhat.com>
+Cc: rust-for-linux@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rust/kernel: Add faux device bindings
+Message-ID: <Z6VVWT_vqb9EGGqv@cassiopeiae>
+References: <20250206210503.102061-2-lyude@redhat.com>
+ <Z6U4APfuIEOgMzmd@cassiopeiae>
+ <13397687a4490bc5410402c9e92a90959756e102.camel@redhat.com>
+ <Z6VQ0D-L4Z0pxxsa@cassiopeiae>
+ <bab25d10d69e1b6b135cee69ee71be270ed92586.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bab25d10d69e1b6b135cee69ee71be270ed92586.camel@redhat.com>
 
-Hi Adam,
+On Thu, Feb 06, 2025 at 07:21:24PM -0500, Lyude Paul wrote:
+> But yeah - I mean, faux::Registration::as_ref::<device::Device>() lets you get
+> a device::Device which you can take a reference on using ARef. So you still
+> can take a reference count to the device without us adding support for it
+> explicitly was what I was getting at.
 
-> Is that your only concern with this patch?
+Yeah, that's true. But it would be nice to have a separate type faux::Device for
+that, just like the C struct faux_device only exists to make this obvious given
+that it's defined as follows.
 
-Yes, hence the ack. If there are other changes that you end up doing in
-response to other reviews, then please address the spacing thing too,
-but that certainly doesn't warrant a new revision on its own.
+struct faux_device {
+	struct device dev;
+};
 
-> What else would need to happen in order for this to get ACKed at this
-> point?
-
-It already has an ack from me.
-
-As for actual merging: If the netdev maintainers have further reviews,
-please address those. If not, I assume they would merge in this window.
-
-Cheers,
-
-
-Jeremy
+But I don't think we need that right away. Having a faux::Registration with
+as_raw() should be enough for now.
