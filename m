@@ -1,280 +1,167 @@
-Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2050.outbound.protection.outlook.com [40.107.220.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E5C23ED64
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738938850; cv=none; b=MPYjB9PdRJztCqNva4TVbD+j5Ac9VsValS0lk0Yjzjb3K2M7JSBQQrB8xVtmhhssm94q7A0kUnrYZCBUn0fVV0ik4eZKwxP8yRsny6grRFXsrIz2A5cWcLPpnPsQSguUQA8+tD3Gw3p/d/4MyvVqQ5dbjcs2RUN2Q31PjfTVvgM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738938850; c=relaxed/simple;
-	bh=OphVupRpdQvDbobZO1Cze3UnAcO67dyQhr+EMD1USEM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ndtR3bLYlcJemFGS+KwKWD1BV+dCkbeu2D27BP71VuPbURcNluz6Cu8seedx2MiQrWcFpONAT0bsXd2uzFwvmaxzKMo+tn2uxCshpXCBS5FmFD/fRkEhoeVhfujT2PMw74pLJHs/wfyWHh2elzgYqRjF3zevPJQRrUl2LgyHKUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V0/Vu16A; arc=none smtp.client-ip=95.215.58.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A068220694;
+	Fri,  7 Feb 2025 14:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738938881; cv=fail; b=Ja1A6sc9f4rDkTxf4Y88X7lsvVWkCbUdbEuL/3MUy+LcL2py0OugmtnO7e30AwPPH4HUmywrPcuPhiwW8FNbc2cfXNBfy3Xbv1RW2DDBPgAiMD9ZJeiJ2EEYHYungFhHBN/xGaWnIXO6Ulr+iziNKpZG2KDKmWL7MHxAL4xkJRU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738938881; c=relaxed/simple;
+	bh=ZtoVJS0tegkA/d+sl5qqvU7Yjt8d0sqjMCFykEC8vwE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=NnuVjfxgCf9+fZyY8XzCPU6NUxF0z/3FI/Uvs2GpzRGdx6Jy92mJleFy89eEO1f8Rf2PUIbLSPyd3i3wa7NtbWWozqRtf3T8WJuzaqCRbWFxWlpu/OVvMxlRVXv9S87/pXxPq8ogvTRJk4NzelNoLDvpS/vmhuzYGhNkKF3fihw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hDAqiYPL; arc=fail smtp.client-ip=40.107.220.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V0/Vu16A"
-Message-ID: <ee76a5e5-1817-4ff5-8d00-ebc21a7ae6a4@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1738938833;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fvEEIW3VWGj6n/v/DtIx2EsXu27pra6OzAXx1kJuAGU=;
-	b=V0/Vu16AnQkUHmIVZ7JlRJn4bJduclDSbd1dAe+jQa/d3wwHzbTHb7LucEmliFn9Oiwt1B
-	by/sN9+IECboLnPmPlu4BFlk40qVhKk+uAOlIciHqLn+udaAAXNxcVQHpkquM6rUWIiCRI
-	qdzQnGFUGMxhZxgPbCV446vGJ/9uRN8=
-Date: Fri, 7 Feb 2025 15:33:51 +0100
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hDAqiYPL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=x1AZ8Ls/IRjLAxJn0l/cGLTaRCw6l1TnzyynRfK4/IxHDOtoPEJS9pHjrvGkfHLrgVI6vnOTn+fPMn19qq2DUvDIXFWD8cuFtjhyJkkfu20QafQfN+OuZm6fb2vStEN2/IMg0FVTrLrjszW06hznwmuAG2+xR4v6t3NUgTL6u1bV40T2DQnUYfW7Hzu5MQYiLEcMgE8VWtFdoi4wPJW7vI+2OxhQQdCYs7Byt3ogkcV8iFdOx5hufTkkYPbEoc/3kDvS1hNnS0CM5+gMGq1wIGDkCzCQ+MHHIk8762kkBW5o3Sv2hra0Rdg/fUwcKMgwBLvN81p4KsBcTG3JhZa3lg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NxEUbKPaXvK60Rv7uM8BdZFq4zEdtnJRf7i2bdxoUPE=;
+ b=j4GtVYCf9ggha48qltDovUsUjo4N1F0HYy3v5SX6TB2zj1vHbkZSMjRSWwEwllttEC7wH8muXVjdIOlNmrvCQAYAZ/rRuDtbaSo9VOTZU5cj8zwcQ5IRZo+kMw4iBQb0kk2bgi6Xtuc/Hq6wfXO0hvh245sUfLi36BzBnlFxhpwD6qlNsYU0C6OUGLN/5NOJEKFbME2/eClQz6ouH83WsLeKbmagKR23sJK4n15ceqKxZ4HzvOYOZAsQGIg+GKEwiWadQebp0dPf0QFBVPyRXKl3xX4FZJsnl7dI0gtpzuoBsQADrxKsELB5a8eltE8zVVHY4F120hKwBizSwZlNBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NxEUbKPaXvK60Rv7uM8BdZFq4zEdtnJRf7i2bdxoUPE=;
+ b=hDAqiYPLiqy/oJuYGt4bPts2UwOE6F94/51LwsC19zuA2QYyyenGHhDSZqEGG1n3Y45tlFsU4yWWtUL/E9Xh3+kKtsljZjT8zd2gW0R10DEhLxcHIPQBZqIxkmlm58ANhzcYJ+eoLwm3mDl7C3sV6QWls20LjGrYRTFLKWA3Ar65AzBb9FaonYpECKIgfBV0eFaKj4BTIXgCwFWACy/fodE+efVt0EiI3ymLDFly7B+AbH+9ZHrKz0RgsQOC9+kDbBSwQ8FzvTMjjT89IB28VtEFWcBqdvobPYIzbPEaKpSWBSm0W7y8Ajyeg6orM5pW/Tx/wmLCYvK2TFTniofLTQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by SJ0PR12MB6992.namprd12.prod.outlook.com (2603:10b6:a03:483::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Fri, 7 Feb
+ 2025 14:34:37 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8422.011; Fri, 7 Feb 2025
+ 14:34:37 +0000
+Date: Fri, 7 Feb 2025 10:34:35 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Tushar Dave <tdave@nvidia.com>
+Cc: corbet@lwn.net, bhelgaas@google.com, paulmck@kernel.org,
+	akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
+	xiongwei.song@windriver.com, vidyas@nvidia.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, vsethi@nvidia.com,
+	sdonthineni@nvidia.com
+Subject: Re: [RESEND PATCH v2] PCI: Fix Extend ACS configurability
+Message-ID: <20250207143435.GS2960738@nvidia.com>
+References: <20250207030338.456887-1-tdave@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207030338.456887-1-tdave@nvidia.com>
+X-ClientProxiedBy: MN2PR01CA0048.prod.exchangelabs.com (2603:10b6:208:23f::17)
+ To CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] RDMA/rxe: switch to using the crc32 library
-To: Eric Biggers <ebiggers@kernel.org>, Zhu Yanjun <zyjzyj2000@gmail.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- linux-rdma@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250207032316.53941-1-ebiggers@kernel.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <20250207032316.53941-1-ebiggers@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SJ0PR12MB6992:EE_
+X-MS-Office365-Filtering-Correlation-Id: 18d9a92f-34c8-4b50-6031-08dd47848c58
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?f6tU7OuE16EsEL+xW2867xOr2Iz4lbvMNivppTnoTjgIW8RYVMkjhBGE8S1s?=
+ =?us-ascii?Q?FUXk8UBCPdQA2HqbwZ/6HlbVlm0gSayaaDdE00DOOCNuEhh17T6oiBu9NAhN?=
+ =?us-ascii?Q?EFY/e9FE18Dx2Qn/PUFqm8LdNMw6kc3GmK4EX6hqE8C0bwPEyk0dvAyKi6Uq?=
+ =?us-ascii?Q?06S5HsOREBPTPxz5Bf7DtmWvgsmZk9B65kfc1NfI9Jfrju6IM2HH4B0iH5G/?=
+ =?us-ascii?Q?N+V90zryQ4S5B3xUQK70lMqKtC5d4+7fujUycsF67DL088yEIQOGkHlo8e3F?=
+ =?us-ascii?Q?bO5C6dhLt9oX+qetfCxRXNyDl25aiNvkJajonSNY7eYImOc6u3TUkcH1E8bQ?=
+ =?us-ascii?Q?f5y7qVdyLGev82a+dNwt9Mtv6sKDXd5pGypforOd4u8bf1AuSpqOHHG0UYTi?=
+ =?us-ascii?Q?6mdVhijBP71kgL+E8NyS1A7UNKGs/BMJs+1acnMON3obt9NgCJ4mBIdd/oQ3?=
+ =?us-ascii?Q?y+ODli574s/NB6Oatw+uA9U/mqV2RBAnSca9E3xIj1qX5iaXo1v+6YcbAjbd?=
+ =?us-ascii?Q?mLpUzoGaIts3oAhnWY5ajgFa3iiHBcS6VeWHJ9+xiHr7YJ0JX8IK0Y/7wWg4?=
+ =?us-ascii?Q?AhGwfZexVfmBieO115Jj3nFoizZukVi/MvrqskaKt84cxJlzueCiR6XFyKC2?=
+ =?us-ascii?Q?QmksYzamLIsCOmO9UGlExIxajv++cdZBBSQ1H9fTQUDHKyHDMnAzU/2yMBfj?=
+ =?us-ascii?Q?85GjfLN7ipUN3OEooyUXyIy4Eiv4avQdAvpSRbpbKvUAKUJP8AR6xTZx3VkP?=
+ =?us-ascii?Q?OIvKE1ZRkH4biq8C/H6eynNGORmMxLUGyxIFokEQfMYWZj8q9jMk2A3CWofp?=
+ =?us-ascii?Q?wScGfSnltAZqw4sYtqtDeO9Z3oANfVFyCQIgZe6zjcADS/Ufxyp77b9GVJIP?=
+ =?us-ascii?Q?pVPub5VWV+XiQN3xYBe9BwXWvlbEEIW+l8CKBCNknl6wqZaeH6VQbSLdvfGD?=
+ =?us-ascii?Q?T3Qoi19K0916vXJtPnZWtATFdypZTWIj+oIndNAMuMcD2serUWFF6Evezof9?=
+ =?us-ascii?Q?vRTYcbgD7uT11PmKwV4FSgipzv53ZG1MaZCgqAJUayxK8L607EpntjDMCNEE?=
+ =?us-ascii?Q?tb1SCoGmD32uVbdpZxUY7mjaTYTE17mQnsT7eLjL+eD0BzChF6CvRSaIPaXj?=
+ =?us-ascii?Q?pyxzOkW98GIRMtsOYSUW78C3Nd4kHPd5UHdatrPycloUy9ssHMbf7KCDf0lN?=
+ =?us-ascii?Q?SYHshUzsmiXlkHPWi9W7qYY5acfZOW+f6g/JZx8EbKl3aKEb1qPkwHcqu67J?=
+ =?us-ascii?Q?c3xloCcRjCJJyPUNN437WvLamFoJHvsipCDlD21/xYQdAeVt+InYeAgqWMnd?=
+ =?us-ascii?Q?1lmUdiVCH3PxhUIpJXEsaDCKW7DzSIm1VnrRGgzDoM0axiHIYK70tVQu/bcy?=
+ =?us-ascii?Q?iCsBKQlNhbn7LNZwIjCbCeWsrWZ/?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?n8TFznpbrtKNwVIhoG7iqdYDdJaRtb/CzfMOCuX6qprxERru2vn3GYQEzaYD?=
+ =?us-ascii?Q?cruMXySZjJQD3ECh3js3NBS1qKkzOssC9qyU+Q3lS4/HPCwJwZjJ3XPSXbN6?=
+ =?us-ascii?Q?eoDXIVMcF/rUNnS6iRyxv54YZBInKn3S7hrBWs63lOCKCiFmBuHU2G46XNvV?=
+ =?us-ascii?Q?T/yZPm4J/2TN6hHc5kzT7lz4RYZakaS3FFC4Xw/emWqHxeDbiz9S6KiG7pyR?=
+ =?us-ascii?Q?U+5gurVCsKeBE1aAaa5+Vbje3CS+Hy4JV16l6yB3Qny41wAeGQf0/KFwspfA?=
+ =?us-ascii?Q?yocFbf/p9UBCWDlRgVOf49WbJ1pXo0eXLkCzF+ZrljVW/aZRzGM/dqDybstP?=
+ =?us-ascii?Q?4RBqUjgww0NhNTLjEn7e6ecEVVNIzeUWHqFhYtPnCGWl5SDqoKe9SV7Twd99?=
+ =?us-ascii?Q?vXSt8KO4ORCtKxQuWxUTdheUNfY88xfqh0WEl7Xi1Hcz8/IjJknx+kF7mb2G?=
+ =?us-ascii?Q?s8osjU2IYSHLnlHupdGiYPqIj8gM9VXK+CfXN1uZ4Se+yFW3mahRlCObwruV?=
+ =?us-ascii?Q?G+C5bmQSnf+IN+fX6h0pDPm3v9XxwkrcPjw+s+34FRhxYKjbOhgiUXlUaOaE?=
+ =?us-ascii?Q?2wnRyPw1I567PRaXSiaPd1N8sm5ySwUz/9kMcMkP9536jxJPvQ/WzCtjl7Wz?=
+ =?us-ascii?Q?P2v4Z9UJ+b0zyBZhWiMeFq4atgkETndqzFKCKMVcjFBhpsS5/sBb29sqtLg7?=
+ =?us-ascii?Q?t/xMNcvYg6wil2H5lGVOSvQFE0tmC6dEWH3cCd4ReoDYO+e3+upC7jxYHzMG?=
+ =?us-ascii?Q?5eWHbBzURulF6bRnFwig9U7cISiPEH+7i/bPMeWc5xvt1OCbZcsLoaKkBI5A?=
+ =?us-ascii?Q?EiCku1xkrnZqnLO80uyRSAX7f667UcbwlsaKsj7c+86oLTfMubSSjVcs9EL/?=
+ =?us-ascii?Q?Tg+Rn2zQ326hQ/Xk6IFj3Cktq1YHs2G+dFWKbd7BY6Exqg/V6LcvMVhDzA+J?=
+ =?us-ascii?Q?u3N7aBM9srQxwrULZCiGw36lZK7wmTtjwnCShFr4mOrh+EScsEPpky82pYrO?=
+ =?us-ascii?Q?Mn0wyjHsK6DIXzJijU9NHX2c5Skh8En1cepkvieGYOGFtlHOD+H5WKoHMk4C?=
+ =?us-ascii?Q?T3b5/g7Rhb1AFkOh7XGftm2gEEYlpmSJFcusr5Rm3BtZIjPSMuURp3vwh2H0?=
+ =?us-ascii?Q?ZhvMiKOw01iwsp8m4OZbpMJHX/8IKEfAQkSQPRGSyvwCttTom2vgsQ3yUqyY?=
+ =?us-ascii?Q?zoQ3+lKrFnm7gZfFNREH/l7fLbr1aUQBcgu95a1C5YTicXSuZjhRJ96zahSW?=
+ =?us-ascii?Q?oXiRQoczjOQa8oYu4XYHNLKE2LehvMnQw/p9IZdIX8O1DCt1MBAj7oCSgB67?=
+ =?us-ascii?Q?zjd/rUZnZYVML4VwVuaFEHwJiomp8/YrN2ADB0uqJvg0X47nJqbp8eOAQsYI?=
+ =?us-ascii?Q?6ACqM+aO2CBHaFUFR4tW5t5UOUgHCTDqINmQQkQFQtxZ80hk3JVMhrNwzI/j?=
+ =?us-ascii?Q?NliIRE3rTN6vncHK61CQ73eF70c0oBKX7Hlz/6r28uqUgmD9EaNlEdetWsLq?=
+ =?us-ascii?Q?J5qdVY1yoVGd1VJvrPUj6+1efMuFqH7Lnh327fR0up0ZsSiOOsSeREEQYHou?=
+ =?us-ascii?Q?gqxIccm9z326d5MK0LlhBoaWOUtQ1bhCbNysRDIH?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18d9a92f-34c8-4b50-6031-08dd47848c58
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 14:34:37.3802
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UjWHOBv9heQXzXg4lPB+c4uIcxPx44Av0Z4QYfgw6/1CUNkWzoawZb4aQlHY5QBv
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6992
 
-On 07.02.25 04:23, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
+On Thu, Feb 06, 2025 at 07:03:38PM -0800, Tushar Dave wrote:
+> Commit 47c8846a49ba ("PCI: Extend ACS configurability") introduced
+> bugs that fail to configure ACS ctrl to the value specified by the
+> kernel parameter. Essentially there are two bugs.
 > 
-> Now that the crc32_le() library function takes advantage of
-> architecture-specific optimizations, it is unnecessary to go through the
-> crypto API.  Just use crc32_le().  This is much simpler, and it improves
-> performance due to eliminating the crypto API overhead.
-> 
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> First, when ACS is configured for multiple PCI devices using
+> 'config_acs' kernel parameter, it results into error "PCI: Can't parse
+> ACS command line parameter". This is due to the bug in code that doesn't
+> preserve the ACS mask instead overwrites the mask with value 0.
+..
+
+> Fixes: 47c8846a49ba ("PCI: Extend ACS configurability")
+> Signed-off-by: Tushar Dave <tdave@nvidia.com>
 > ---
 > 
-> v2: Just do a minimal conversion to crc32_le().
-
-Hi, Eric
-
-Thanks a lot for your commit.
-
-I have made tests with this commit. After this patch is applied,
-the following scenarios can work well via rping.
-
-RXE <---> RXE
-
-crc32_le RXE <---> RXE with original icrc
-
-RXE <---> MLX5
-
-Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
-
-Thanks,
-Zhu Yanjun
-
+> changes in v2:
+>  - Addressed review comments by Jason and Bjorn.
+>  - Removed Documentation changes (already taken care by other patch).
+>  - Amended commit description.
 > 
->   drivers/infiniband/sw/rxe/Kconfig     |  3 +-
->   drivers/infiniband/sw/rxe/rxe.c       |  3 --
->   drivers/infiniband/sw/rxe/rxe.h       |  1 -
->   drivers/infiniband/sw/rxe/rxe_icrc.c  | 40 +--------------------------
->   drivers/infiniband/sw/rxe/rxe_loc.h   |  1 -
->   drivers/infiniband/sw/rxe/rxe_req.c   |  1 -
->   drivers/infiniband/sw/rxe/rxe_verbs.c |  4 ---
->   drivers/infiniband/sw/rxe/rxe_verbs.h |  1 -
->   8 files changed, 2 insertions(+), 52 deletions(-)
-> 
-> diff --git a/drivers/infiniband/sw/rxe/Kconfig b/drivers/infiniband/sw/rxe/Kconfig
-> index 06b8dc5093f77..c180e7ebcfc5b 100644
-> --- a/drivers/infiniband/sw/rxe/Kconfig
-> +++ b/drivers/infiniband/sw/rxe/Kconfig
-> @@ -2,12 +2,11 @@
->   config RDMA_RXE
->   	tristate "Software RDMA over Ethernet (RoCE) driver"
->   	depends on INET && PCI && INFINIBAND
->   	depends on INFINIBAND_VIRT_DMA
->   	select NET_UDP_TUNNEL
-> -	select CRYPTO
-> -	select CRYPTO_CRC32
-> +	select CRC32
->   	help
->   	This driver implements the InfiniBand RDMA transport over
->   	the Linux network stack. It enables a system with a
->   	standard Ethernet adapter to interoperate with a RoCE
->   	adapter or with another system running the RXE driver.
-> diff --git a/drivers/infiniband/sw/rxe/rxe.c b/drivers/infiniband/sw/rxe/rxe.c
-> index 1ba4a0c8726ae..f8ac79ef70143 100644
-> --- a/drivers/infiniband/sw/rxe/rxe.c
-> +++ b/drivers/infiniband/sw/rxe/rxe.c
-> @@ -29,13 +29,10 @@ void rxe_dealloc(struct ib_device *ib_dev)
->   	rxe_pool_cleanup(&rxe->mr_pool);
->   	rxe_pool_cleanup(&rxe->mw_pool);
->   
->   	WARN_ON(!RB_EMPTY_ROOT(&rxe->mcg_tree));
->   
-> -	if (rxe->tfm)
-> -		crypto_free_shash(rxe->tfm);
-> -
->   	mutex_destroy(&rxe->usdev_lock);
->   }
->   
->   /* initialize rxe device parameters */
->   static void rxe_init_device_param(struct rxe_dev *rxe)
-> diff --git a/drivers/infiniband/sw/rxe/rxe.h b/drivers/infiniband/sw/rxe/rxe.h
-> index fe7f970667325..8db65731499d0 100644
-> --- a/drivers/infiniband/sw/rxe/rxe.h
-> +++ b/drivers/infiniband/sw/rxe/rxe.h
-> @@ -19,11 +19,10 @@
->   #include <rdma/ib_pack.h>
->   #include <rdma/ib_smi.h>
->   #include <rdma/ib_umem.h>
->   #include <rdma/ib_cache.h>
->   #include <rdma/ib_addr.h>
-> -#include <crypto/hash.h>
->   
->   #include "rxe_net.h"
->   #include "rxe_opcode.h"
->   #include "rxe_hdr.h"
->   #include "rxe_param.h"
-> diff --git a/drivers/infiniband/sw/rxe/rxe_icrc.c b/drivers/infiniband/sw/rxe/rxe_icrc.c
-> index fdf5f08cd8f17..76d760fbe7ea5 100644
-> --- a/drivers/infiniband/sw/rxe/rxe_icrc.c
-> +++ b/drivers/infiniband/sw/rxe/rxe_icrc.c
-> @@ -7,32 +7,10 @@
->   #include <linux/crc32.h>
->   
->   #include "rxe.h"
->   #include "rxe_loc.h"
->   
-> -/**
-> - * rxe_icrc_init() - Initialize crypto function for computing crc32
-> - * @rxe: rdma_rxe device object
-> - *
-> - * Return: 0 on success else an error
-> - */
-> -int rxe_icrc_init(struct rxe_dev *rxe)
-> -{
-> -	struct crypto_shash *tfm;
-> -
-> -	tfm = crypto_alloc_shash("crc32", 0, 0);
-> -	if (IS_ERR(tfm)) {
-> -		rxe_dbg_dev(rxe, "failed to init crc32 algorithm err: %ld\n",
-> -			       PTR_ERR(tfm));
-> -		return PTR_ERR(tfm);
-> -	}
-> -
-> -	rxe->tfm = tfm;
-> -
-> -	return 0;
-> -}
-> -
->   /**
->    * rxe_crc32() - Compute cumulative crc32 for a contiguous segment
->    * @rxe: rdma_rxe device object
->    * @crc: starting crc32 value from previous segments
->    * @next: starting address of current segment
-> @@ -40,27 +18,11 @@ int rxe_icrc_init(struct rxe_dev *rxe)
->    *
->    * Return: the cumulative crc32 checksum
->    */
->   static __be32 rxe_crc32(struct rxe_dev *rxe, __be32 crc, void *next, size_t len)
->   {
-> -	__be32 icrc;
-> -	int err;
-> -
-> -	SHASH_DESC_ON_STACK(shash, rxe->tfm);
-> -
-> -	shash->tfm = rxe->tfm;
-> -	*(__be32 *)shash_desc_ctx(shash) = crc;
-> -	err = crypto_shash_update(shash, next, len);
-> -	if (unlikely(err)) {
-> -		rxe_dbg_dev(rxe, "failed crc calculation, err: %d\n", err);
-> -		return (__force __be32)crc32_le((__force u32)crc, next, len);
-> -	}
-> -
-> -	icrc = *(__be32 *)shash_desc_ctx(shash);
-> -	barrier_data(shash_desc_ctx(shash));
-> -
-> -	return icrc;
-> +	return (__force __be32)crc32_le((__force u32)crc, next, len);
->   }
->   
->   /**
->    * rxe_icrc_hdr() - Compute the partial ICRC for the network and transport
->    *		  headers of a packet.
-> diff --git a/drivers/infiniband/sw/rxe/rxe_loc.h b/drivers/infiniband/sw/rxe/rxe_loc.h
-> index ded46119151bb..c57ab8975c5d1 100644
-> --- a/drivers/infiniband/sw/rxe/rxe_loc.h
-> +++ b/drivers/infiniband/sw/rxe/rxe_loc.h
-> @@ -166,11 +166,10 @@ int rxe_completer(struct rxe_qp *qp);
->   int rxe_requester(struct rxe_qp *qp);
->   int rxe_sender(struct rxe_qp *qp);
->   int rxe_receiver(struct rxe_qp *qp);
->   
->   /* rxe_icrc.c */
-> -int rxe_icrc_init(struct rxe_dev *rxe);
->   int rxe_icrc_check(struct sk_buff *skb, struct rxe_pkt_info *pkt);
->   void rxe_icrc_generate(struct sk_buff *skb, struct rxe_pkt_info *pkt);
->   
->   void rxe_resp_queue_pkt(struct rxe_qp *qp, struct sk_buff *skb);
->   
-> diff --git a/drivers/infiniband/sw/rxe/rxe_req.c b/drivers/infiniband/sw/rxe/rxe_req.c
-> index 87a02f0deb000..9d0392df8a92f 100644
-> --- a/drivers/infiniband/sw/rxe/rxe_req.c
-> +++ b/drivers/infiniband/sw/rxe/rxe_req.c
-> @@ -3,11 +3,10 @@
->    * Copyright (c) 2016 Mellanox Technologies Ltd. All rights reserved.
->    * Copyright (c) 2015 System Fabric Works, Inc. All rights reserved.
->    */
->   
->   #include <linux/skbuff.h>
-> -#include <crypto/hash.h>
->   
->   #include "rxe.h"
->   #include "rxe_loc.h"
->   #include "rxe_queue.h"
->   
-> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.c b/drivers/infiniband/sw/rxe/rxe_verbs.c
-> index 6152a0fdfc8ca..c05379f8b4f57 100644
-> --- a/drivers/infiniband/sw/rxe/rxe_verbs.c
-> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.c
-> @@ -1531,14 +1531,10 @@ int rxe_register_device(struct rxe_dev *rxe, const char *ibdev_name,
->   	ib_set_device_ops(dev, &rxe_dev_ops);
->   	err = ib_device_set_netdev(&rxe->ib_dev, ndev, 1);
->   	if (err)
->   		return err;
->   
-> -	err = rxe_icrc_init(rxe);
-> -	if (err)
-> -		return err;
-> -
->   	err = ib_register_device(dev, ibdev_name, NULL);
->   	if (err)
->   		rxe_dbg_dev(rxe, "failed with error %d\n", err);
->   
->   	/*
-> diff --git a/drivers/infiniband/sw/rxe/rxe_verbs.h b/drivers/infiniband/sw/rxe/rxe_verbs.h
-> index 6573ceec0ef58..6e31134a5fa5b 100644
-> --- a/drivers/infiniband/sw/rxe/rxe_verbs.h
-> +++ b/drivers/infiniband/sw/rxe/rxe_verbs.h
-> @@ -400,11 +400,10 @@ struct rxe_dev {
->   	u64			mmap_offset;
->   
->   	atomic64_t		stats_counters[RXE_NUM_OF_COUNTERS];
->   
->   	struct rxe_port		port;
-> -	struct crypto_shash	*tfm;
->   };
->   
->   static inline struct net_device *rxe_ib_device_get_netdev(struct ib_device *dev)
->   {
->   	return ib_device_get_netdev(dev, RXE_PORT);
-> 
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+>  drivers/pci/pci.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
 
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+
+Jason
