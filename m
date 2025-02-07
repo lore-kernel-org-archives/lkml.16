@@ -1,89 +1,124 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E4471747
-	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF81E1A8F97
+	for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2025 20:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738961472; cv=none; b=A6CMgotw8lTQG4DZ/dPJPP1dIuxGijNJ3gUaNpfyiP7kYueeasEHexnTOz4VW+y5DujeyJ8dH+Dhiqgp9eiqvJITOeYZurzVjuygm3pqHZ26djIKjqUgo4sna8VT7fuivu2UDNT58WZB0ipNA62K7taRwwmckK3Tyw35BftLeO4=
+	t=1738961505; cv=none; b=D0I0O3VxyphQl+7iAxPjqrWBN37rmfafBMy940D9VLLU0BGQHHVwXMaHstnBAkXZyx4xeiyC9GDJ6Y76MN1IdMmGjhM/wlQ+MDFdPmDlFA67LvY2iwcZ5fYP6vKjIw3+mjeRUTbC5UW04yaDS7knHEgDwXTrG7lG1M+z+p8lCD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738961472; c=relaxed/simple;
-	bh=RPMRMKzNZvGEgke8xV1NcDrp6sVUFJl5xryqWqwwE2c=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=txp4l6bEJg4q1v+DmyVae/Ceer9f6IeFlUHn5zjsn27HqfxxGrcwS2zTVgq37y7UjhOX3NwNfY+CdeFK75nAet7KjgEEdEdjQiwT+3/eytosq/mXdwQuGEDKEEpXVA+Pe7PkSa2kRvVNXGv//KLR0DQVWDLY1uQr7t9H5EpUl+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1tgVJR-0000000036f-22co;
-	Fri, 07 Feb 2025 15:50:57 -0500
-Message-ID: <84be5ed882141c8b407a78590f6ecbc7080c98b0.camel@surriel.com>
-Subject: Re: [PATCH v9 06/12] x86/mm: use INVLPGB for kernel TLB flushes
-From: Rik van Riel <riel@surriel.com>
-To: Brendan Jackman <jackmanb@google.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de, 
-	peterz@infradead.org, dave.hansen@linux.intel.com,
- zhengqi.arch@bytedance.com, 	nadav.amit@gmail.com, thomas.lendacky@amd.com,
- kernel-team@meta.com, 	linux-mm@kvack.org, akpm@linux-foundation.org,
- jannh@google.com, 	mhklinux@outlook.com, andrew.cooper3@citrix.com, Manali
- Shukla	 <Manali.Shukla@amd.com>
-Date: Fri, 07 Feb 2025 15:50:57 -0500
-In-Reply-To: <CA+i-1C3LDJTf26WdBo7MvCdTs-dybqsUp3Ze7NowcOUHPWMXrg@mail.gmail.com>
-References: <20250206044346.3810242-1-riel@surriel.com>
-	 <20250206044346.3810242-7-riel@surriel.com>
-	 <CA+i-1C3LDJTf26WdBo7MvCdTs-dybqsUp3Ze7NowcOUHPWMXrg@mail.gmail.com>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.1 (3.54.1-1.fc41) 
+	s=arc-20240116; t=1738961505; c=relaxed/simple;
+	bh=j0K3veYgNs9ITuGH6rfEbzVZGYKqSl9G/AaRQDM6RO4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=BcDl43PYcrAh4ji6yjrkwT7RsLZ90xNAR2ZhSR79ZyT/z19XaxT3lU4OV+lRQTV3sRiVWjZBKqzClElgenCGlPqpMbzglpPtMJ9+X0Uob81M6zM++iEjhEwFWR9sPf73moK93Sjb+osfKfXx0MaZY1meSr41r8w2lrjBCIt+lIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=HHF9C7Tv; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="HHF9C7Tv"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-71e15d9629bso831264a34.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 12:51:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1738961502; x=1739566302; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VQGQcdGFinvFOpfGuSYGng0xGWMSfOVhvommmb2mfPo=;
+        b=HHF9C7TvC5v3O5qwMl077YKeKLExv/7juTO/sfK/IO9KN6nXmt935uSSPkBheIBR0a
+         xGQv9RnuYT509ER2xjN4t5gmuGU0dNEebvg6BB4H0SuP4nRo1Rl8OUYHopu4TbiPH8rk
+         2tXRGmIKGMu95eCN7gX+XJ9LMoHr0x2Fc/WCdAx348jQifRZz8GRkKE1re0iUyoS7tJ/
+         WrzIhMCoW17SIGvj1g/0n5Zf0aZzpAdCRIIE+5TFVrFdFN32kXobFFbf2Djb/dYHapHn
+         A6YMgBSRnmz7S0yFO7ZMeuQir1XEGSm1iyruTzkyUSkV98Lit1494ANl2exYhiNK8dYQ
+         lzUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738961502; x=1739566302;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VQGQcdGFinvFOpfGuSYGng0xGWMSfOVhvommmb2mfPo=;
+        b=Zes2IqA8WjI7/ej6XcF3wKSGf5Js0da/8LevyxiImqz/L4tx4uCv/8P9EjZ5so/NUo
+         xftDSZUvmFqL/zDBsRKSpULAkQr+c2rhEJRtUWRfMREtvL6+Azv81wdREIqSUA1wqyZW
+         mt1zYjJALgkMKkI/RX+Gzzkung2vR4MfGFupx1nzagmCIjbWPE9q4cy7t/BYECSccCic
+         qmP//myL6qzsG7TMASBYmX3KNuwk2QLLCai0BpFbj6O7dxeVRt5zx0RDEIH0wXcKUy6N
+         GexObdb7D3HjmIUHmeWXgH+V+1IvzIjszQsc2j02ASs3+AVrMbicAuqYtLpWOCUeXyk8
+         i8Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCXl9zDZxpYJwtNyS+53s1dr4NQvx4UJD8rr667P5hPkGW3YKrJ+FESvB8NQtGGi+geija59GJ3u9TbvbOI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgplC4YA0DawHgCvK7taNO3nrMHoUj3DReMpGkRz2w3JPoQdMa
+	BMuH6oNv2JPL4LKg8WRWMz0wcvTU+UbYdJNiGRqGjwcs91fmtGKKgSxrBc8T0fY=
+X-Gm-Gg: ASbGncvkX5c2RguGQxdWpiVH/PYWstRv3Lom23Iqx0sycpthWXbVAadXpnLwbkcbBbq
+	LCJlXOo6Vzj56Ij3nH1Cd2gUkO6gCZZO6JcNYT0tXOsI8nzOoCByXxvj5v/uzRREIQKVq0KuLhC
+	iJbnVLaPgU8chBd68qA7I+rGcVqlcFXM5AHloNBqz0aVXhrHGdsf5lMbhYYEoViDLzmifgiD/Ym
+	lBVNrqz+3Omd9lKdEuq/jArpwVb2cW7PPlIUKfO60seqZxXZi2EWOagNWnzs6VIF04LSxgXfolv
+	b4n7Va4EbRiOFYxaitG81HMo3aRZ6+eMtAcNcqmIdBOKjR+LEIZ7
+X-Google-Smtp-Source: AGHT+IG7PscmiUU5iaoZJFTzcARWpAGODDHZRUMCO99df9PiCQJBs76r9w1AoVJ5tFHypQESPlOSMA==
+X-Received: by 2002:a05:6830:438a:b0:71d:f343:5f5b with SMTP id 46e09a7af769-726b8829061mr3412971a34.12.1738961501979;
+        Fri, 07 Feb 2025 12:51:41 -0800 (PST)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-726afa4d2b7sm1006099a34.63.2025.02.07.12.51.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2025 12:51:41 -0800 (PST)
+Message-ID: <dd263ac6-1843-493c-90ea-d303eae561e5@baylibre.com>
+Date: Fri, 7 Feb 2025 14:51:40 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 9/9] iio: adc: ad4851: add ad485x driver
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org,
+ robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pwm@vger.kernel.org
+References: <20250207140918.7814-1-antoniu.miclaus@analog.com>
+ <20250207140918.7814-10-antoniu.miclaus@analog.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250207140918.7814-10-antoniu.miclaus@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2025-02-07 at 17:03 +0100, Brendan Jackman wrote:
-> O
-> With !CPU_SUP_AMD and the above, broadcast_kernel_range_flush
-> disappears from tlb.o. (Caveat - I didn't actually read the disasm I
-> just made it noinline and checked the call disappeared).
->=20
-> It's actually more lines of code but now they're off in a boilerplate
-> header and it's consistent with the other flags that do this.
->=20
-What compiler did you use?
+On 2/7/25 8:09 AM, Antoniu Miclaus wrote:
+> Add support for the AD485X a fully buffered, 8-channel simultaneous
+> sampling, 16/20-bit, 1 MSPS data acquisition system (DAS) with
+> differential, wide common-mode range inputs.
+> 
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> ---
 
-While I like the cleanup in principle, I
-don't want to saddle people with older
-compilers with extra code they don't need.
+...
 
---=20
-All Rights Reversed.
+> +static int ad4851_parse_channels_common(struct iio_dev *indio_dev,
+> +					struct iio_chan_spec **chans,
+> +					const struct iio_chan_spec ad4851_chan)
+> +{
+> +	struct ad4851_state *st = iio_priv(indio_dev);
+> +	struct device *dev = &st->spi->dev;
+> +	struct iio_chan_spec *channels, *chan_start;
+> +	unsigned int num_channels, reg;
+> +	unsigned int index = 0;
+> +	int ret;
+> +
+> +	num_channels = device_get_child_node_count(dev);
+> +	if (num_channels > AD4851_MAX_CH_NR)
+> +		return dev_err_probe(dev, -EINVAL, "Too many channels: %u\n",
+> +				     num_channels);
+> +
+> +	channels = devm_kcalloc(dev, num_channels, sizeof(*channels), GFP_KERNEL);
+> +	if (!channels)
+> +		return -ENOMEM;
+> +
+> +	chan_start = channels;
+> +
+> +	device_for_each_child_node_scoped(dev, child) {
+> +		ret = fwnode_property_read_u32(child, "reg", &reg);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret,
+> +					     "Missing channel number\n");
+> +		if (reg >= AD4851_MAX_CH_NR)
+> +			return dev_err_probe(dev, ret,
+
+ret will be == 0 here, so need to replace with -EINVAL.
+
+> +					     "Invalid channel number\n");
