@@ -1,170 +1,100 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A6001A0BF3;
-	Sat,  8 Feb 2025 08:52:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.8
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5641A2658
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 08:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739004732; cv=none; b=Cx4HzUEqea5ZJ1fSixiuXXUk1XVlzTeWqGhRYFS5cFLeNkED1SJnMYIyrhYhm24y0LLsPQzT26g9CCDen8Swj1LxsO5lhIwR9Mq6Xk3WUnw25lpOwciAdH6WZnFdnrH7cdAlnR3U6SrmzHhhP9CKR7zFnp+bngAD9rlRmnE4Vwk=
+	t=1739004741; cv=none; b=JS5efioR75TJVbR1uW0MT/ougfWh6GxFbA0b/DmeEOJfcI2+gsfBIL1nNtJT7ABfwk8EQsIcrPG4Wx70rJP2uYg/MPY1FZtzipYClOzLU6UiYm1ZfebRdrmkCiu+h8q+GVb+xW0q5WSK86VxYZ8EFEsmWrFxK95Xep5aZ6l3uok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739004732; c=relaxed/simple;
-	bh=AZoMrwCMIpKGPHiKvFbL1EkmEsTsjgKEnMYG1p45oV8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dksOleNrjjKc3TbISKrSaKxuSp497GGeKAn9MPjVG4qZLopDMGX+U9u+x3aqKgwn6lt9uhDbjfY6MopLeffJU6U6xY22R1S4/7mjt+qKsEIKrPTNvJsJH+obdME5qCLiyUfq88f9JPekV1otnXy+mtAMIffi0SDY9sayv2V9FUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=b2xwJPoO; arc=none smtp.client-ip=117.135.210.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1739004741; c=relaxed/simple;
+	bh=ECULLkPV4AuAQPEfZtXbNOMju38Vy0yvZVdyQigeSi4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LuKXJkLeYtjajOE1NNLNil0fOk50e24pYMYNPGZxP1oD/z0vJK3hFh2rGiva2liFTJeDvtCmKBX6SgHmpa8jGKbXqBvHRvIe3w97q2KpddYalCRt1i558ZxXNqQt03OtMMcY80vUJ1aMFF5LxAJ0YTQwatltoA1VsGtFtyPgy1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XYFXBf2r; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="b2xwJPoO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=Wp52D9fpjdxEowIxQTuIVRiH+cfHPxfJV9jwR5WSAfM=;
-	b=b2xwJPoOQBDC2eqY8yzPGC4e5KHs0I4LoGjLCbe18y8xdNlJAWhr9ulXCaNxWs
-	S4gjDWE8sh/xJuECf5wVSq1bbbD5jna11J7tvgARUdmI/tqdw/MlXbrKvcYNLfeu
-	xUXMsKYa/WRm7+dsnRPZ6O7d/jf4oBS+jJN4AftnJpLCM=
-Received: from [172.19.20.199] (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wD35zHmGqdnQ8XpAg--.51012S2;
-	Sat, 08 Feb 2025 16:50:46 +0800 (CST)
-Message-ID: <28edc5df-eed5-45b8-ab6d-76e63ef635a9@126.com>
-Date: Sat, 8 Feb 2025 16:50:46 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYFXBf2r"
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-21f50895565so21895435ad.2
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 00:52:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739004739; x=1739609539; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YyDyoD9TacPs+lBZmjke4sp2E1eatcMJb5jiWYmCNT4=;
+        b=XYFXBf2rEXCjLmY37T647DnAyc0UOHtJsUCc2QfbPo2GUY/Qi2uJRw+hgjz1g8VEXg
+         QYTnWEsMG51zBaawp0oHmFURU+wPspggmDa8u7jmGGq/j2AE8ZUPQYxjvBPXFLCLPx3z
+         fM45wlDyUXQON0ZZSHj7y/ksPuU5wq7GvkJHW4n+U4n1KGFI1VtmgzvrEp068q0YoJEu
+         vpoPVk+ya9tycRYl3cOtdOnJDeU4XWvbdqYXsOSAr0TT7OsfLpQtRHmRUUyOZrM/l8O/
+         uyAwg5QR8f7otixk2bboBTTAFNIVTORSaXyJSrHHZt4TRwNy78o1vlFhwHnqlBFbFKm1
+         ho8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739004739; x=1739609539;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YyDyoD9TacPs+lBZmjke4sp2E1eatcMJb5jiWYmCNT4=;
+        b=piIlSPV/eVkktBW9nlicNEWyZ1w2U++YGXUIbUkv7+kHBRDXrQ0AApAPE+0WXs66F0
+         60PxddT//B48tuovp/LB+9f95vKcbBYPFzZt+wXdA1mIy3DF1rGOdUWiqM+cHm3UhyHp
+         XFvPXQee7ewpVYdkllnz/IkXlts4b0icfW++vKe7dnBr4tQ+x5J4C/Nh7C5SYIvB2QjT
+         tWs31QeaPlblMcF1+DK0DeLZ6E3Rr+UC5zy26scHVUDObxBsElanag0G6z1AOqytsL2A
+         tnmga9syFnjLsxCxzPGad0YPPjGViwMcJdW0TQj2IzGz9bO7ydFNsrmsdxShoGHGsIJR
+         VjLw==
+X-Forwarded-Encrypted: i=1; AJvYcCXvsfGyBW22MRUeuuxEqnGPgGFl64mKX2CzJ1ZLomOchUnAgqnqxzoqtochZVPiq7xkoUqa+LYraBmCXuQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIIp87yzEvIeJfIgS0lZumQaOilHmFrXgfDSmZwpdxF/8WfDq6
+	cE82Uj6jeneQ8dZz5SJxDnHzYGllw2TQiDkGK69LRsW7ATgKg2e7/V5NnbFf9jc=
+X-Gm-Gg: ASbGncvRdOgxz4Sc9oehI4s7ConDu6Cc51Fo0EaUSopB0jeufpzEbAvsRu/7WSfcg/3
+	mZvbPRmG2Ijut8chTZoyQDiI18ZX0QShDwIdLDcGAqJ0lrjxPiFhwolP3kLFjWH2EKXkhdfSM4L
+	VP3yVz2asaLQskaUAMHMazTLc5X3KiIsTdfm2pMoH/RjULU6gVIUDKMXWQMp4m81lC/YcmUwRM3
+	KiF9zvWBPtvJXa4F2h7yxaXkBvVaXuBbB+y9E3adgJPicnjfILt8nGYC1pYhjQnbBsIzg8I8Dsr
+	mEppGtIag62xVPC+vBAgA+BESxSfEWhJWRY=
+X-Google-Smtp-Source: AGHT+IHCoaIMW6z15utCmKhdFqEM5RAUOsAvDcholSmZbjC9nsvgbA1dkvzJY02Du2ZkguBGP1HO4g==
+X-Received: by 2002:a17:903:2291:b0:21f:3e2d:7d2e with SMTP id d9443c01a7336-21f4e6efc9bmr101289785ad.27.1739004739631;
+        Sat, 08 Feb 2025 00:52:19 -0800 (PST)
+Received: from localhost.localdomain ([114.67.205.189])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653d41asm43152395ad.80.2025.02.08.00.52.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 00:52:19 -0800 (PST)
+From: zihan zhou <15645113830zzh@gmail.com>
+To: vincent.guittot@linaro.org
+Cc: 15645113830zzh@gmail.com,
+	bsegall@google.com,
+	dietmar.eggemann@arm.com,
+	juri.lelli@redhat.com,
+	linux-kernel@vger.kernel.org,
+	mgorman@suse.de,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	rostedt@goodmis.org,
+	vschneid@redhat.com
+Subject: Re: [PATCH V2 1/2] sched: Reduce the default slice to avoid tasks getting an extra tick
+Date: Sat,  8 Feb 2025 16:51:27 +0800
+Message-Id: <20250208085126.24341-1-15645113830zzh@gmail.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <CAKfTPtBwRV4ndO5Zao1YbNNSi0EtMbrO081nDKjNvdjmJv5xZg@mail.gmail.com>
+References: <CAKfTPtBwRV4ndO5Zao1YbNNSi0EtMbrO081nDKjNvdjmJv5xZg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/cma: add an API to enable/disable concurrent memory
- allocation for the CMA
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, david@redhat.com,
- baolin.wang@linux.alibaba.com, aisheng.dong@nxp.com, liuzixing@hygon.cn
-References: <1737717687-16744-1-git-send-email-yangge1116@126.com>
- <CAGsJ_4y2zjCzRUgxkx2GpspFBD9Yon=R3SLaGezk9drQz+ikrQ@mail.gmail.com>
-From: Ge Yang <yangge1116@126.com>
-In-Reply-To: <CAGsJ_4y2zjCzRUgxkx2GpspFBD9Yon=R3SLaGezk9drQz+ikrQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD35zHmGqdnQ8XpAg--.51012S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAF4kJr18ZFWkCw47Zw1DJrb_yoWrWryDpF
-	W8G3WYk345XrnrZ392qw4093ZIg397CF4UGFyagas7ZF9xtr12gr1UKw15ur98ArWkWF1I
-	vF4jq34a93WUZa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbPEfUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbifhntG2enCquwowAAsj
 
+Thank you for your reply!
 
+> The explanation above about why you change sysctl_sched_base_slice
+> from 0.75 to 0.70 should be put in commit message instead of the code
+> 
+> With this change:
+> 
+> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-在 2025/1/28 17:58, Barry Song 写道:
-> On Sat, Jan 25, 2025 at 12:21 AM <yangge1116@126.com> wrote:
->>
->> From: yangge <yangge1116@126.com>
->>
->> Commit 60a60e32cf91 ("Revert "mm/cma.c: remove redundant cma_mutex lock"")
->> simply reverts to the original method of using the cma_mutex to ensure
->> that alloc_contig_range() runs sequentially. This change was made to avoid
->> concurrency allocation failures. However, it can negatively impact
->> performance when concurrent allocation of CMA memory is required.
-> 
-> Do we have some data?
-Yes, I will add it in the next version, thanks.
-> 
->>
->> To address this issue, we could introduce an API for concurrency settings,
->> allowing users to decide whether their CMA can perform concurrent memory
->> allocations or not.
-> 
-> Who is the intended user of cma_set_concurrency? 
-We have some drivers that use cma_set_concurrency(), but they have not 
-yet been merged into the mainline. The cma_alloc_mem() function in the 
-mainline also supports concurrent allocation of CMA memory. By applying 
-this patch, we can also achieve significant performance improvements in 
-certain scenarios. I will provide performance data in the next version.
-I also feel it is somewhat
-> unsafe since cma->concurr_alloc is not protected by any locks.
-Ok, thanks.
-> 
-> Will a user setting cma->concurr_alloc = 1 encounter the original issue that
-> commit 60a60e32cf91 was attempting to fix?
-> 
-Yes, if a user encounters the issue described in commit 60a60e32cf91, 
-they will not be able to set cma->concurr_alloc to 1.
->>
->> Fixes: 60a60e32cf91 ("Revert "mm/cma.c: remove redundant cma_mutex lock"")
->> Signed-off-by: yangge <yangge1116@126.com>
->> Cc: <stable@vger.kernel.org>
->> ---
->>   include/linux/cma.h |  2 ++
->>   mm/cma.c            | 22 ++++++++++++++++++++--
->>   mm/cma.h            |  1 +
->>   3 files changed, 23 insertions(+), 2 deletions(-)
->>
->> diff --git a/include/linux/cma.h b/include/linux/cma.h
->> index d15b64f..2384624 100644
->> --- a/include/linux/cma.h
->> +++ b/include/linux/cma.h
->> @@ -53,6 +53,8 @@ extern int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
->>
->>   extern void cma_reserve_pages_on_error(struct cma *cma);
->>
->> +extern bool cma_set_concurrency(struct cma *cma, bool concurrency);
->> +
->>   #ifdef CONFIG_CMA
->>   struct folio *cma_alloc_folio(struct cma *cma, int order, gfp_t gfp);
->>   bool cma_free_folio(struct cma *cma, const struct folio *folio);
->> diff --git a/mm/cma.c b/mm/cma.c
->> index de5bc0c..49a7186 100644
->> --- a/mm/cma.c
->> +++ b/mm/cma.c
->> @@ -460,9 +460,17 @@ static struct page *__cma_alloc(struct cma *cma, unsigned long count,
->>                  spin_unlock_irq(&cma->lock);
->>
->>                  pfn = cma->base_pfn + (bitmap_no << cma->order_per_bit);
->> -               mutex_lock(&cma_mutex);
->> +
->> +               /*
->> +                * If the user sets the concurr_alloc of CMA to true, concurrent
->> +                * memory allocation is allowed. If the user sets it to false or
->> +                * does not set it, concurrent memory allocation is not allowed.
->> +                */
->> +               if (!cma->concurr_alloc)
->> +                       mutex_lock(&cma_mutex);
->>                  ret = alloc_contig_range(pfn, pfn + count, MIGRATE_CMA, gfp);
->> -               mutex_unlock(&cma_mutex);
->> +               if (!cma->concurr_alloc)
->> +                       mutex_unlock(&cma_mutex);
->>                  if (ret == 0) {
->>                          page = pfn_to_page(pfn);
->>                          break;
->> @@ -610,3 +618,13 @@ int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
->>
->>          return 0;
->>   }
->> +
->> +bool cma_set_concurrency(struct cma *cma, bool concurrency)
->> +{
->> +       if (!cma)
->> +               return false;
->> +
->> +       cma->concurr_alloc = concurrency;
->> +
->> +       return true;
->> +}
->> diff --git a/mm/cma.h b/mm/cma.h
->> index 8485ef8..30f489d 100644
->> --- a/mm/cma.h
->> +++ b/mm/cma.h
->> @@ -16,6 +16,7 @@ struct cma {
->>          unsigned long   *bitmap;
->>          unsigned int order_per_bit; /* Order of pages represented by one bit */
->>          spinlock_t      lock;
->> +       bool concurr_alloc;
->>   #ifdef CONFIG_CMA_DEBUGFS
->>          struct hlist_head mem_head;
->>          spinlock_t mem_head_lock;
->> --
->> 2.7.4
->>
->>
-> 
-> Thanks
-> Barry
+Thank you for your guidance! I have submitted patch v3:
+https://lore.kernel.org/all/20250208074821.11832-1-15645113830zzh@gmail.com/
 
+Looking forward to your review.
+
+Thanks!
