@@ -1,63 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6886F241100;
-	Sat,  8 Feb 2025 21:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5563244EA8
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 22:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739051994; cv=none; b=NTWYrJvmDV1vSp61aCuPkljCVOzOAhkO9lReRT+u0mtuEQRxBrV54/sLs6fLpqk08cWr4EEvKbJqpLDfyeRFjXddLfMm9RRyrH1QOvBj0whQO2l3dlYUHXR4bx0DuVhYqwtZQ8QONG9FP9Qo5h3uK3Ah1mFJsDpjUhMvuuREWSk=
+	t=1739052135; cv=none; b=JAP79FtZNnaA0WgJmYvj+ZYqr+rVhge9DldBcnt6KLlFChMEEdVuXNnb5YyXnx1ReP7uoyq78Zy9ZlAKgTDHZO6heJlgBB7urW7MwjhdMZmeY5w9qZdxXcxXb9dPCJ/MfPadedK+PSGBkM9bhuapT2I/exR7rG7HUCUTvCy3B2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739051994; c=relaxed/simple;
-	bh=RQCmYl4f87dO+OY/HCvK68sf4okDPgKkRLiTNMmiyZc=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=GOIWJISm8bFymZn/XYlVgke0t2eirI2bHJv3g5T2UFngaXvecFQiNVicoe4QzyWpLHxOtj9nvNGojD3j2VddTzPtdoEmV7kV+Wk+rCoCPu6uQucZE5wGijuQ6oh9fn6Pm6GOav/PqcrQko0nwbuSpz6lCoi5JxBN+8g323cblZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oukq83vz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739052135; c=relaxed/simple;
+	bh=PZYYI99jhIEIqaP+P+Fq26AL89DxU2583PVt03DMGQs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DCgwLvuLiICWrCgkNGAlcMGgEtuNX3iz/8aVSZL87rYZqmsQ+IlAXtIbnmAH8gdNXUAtd3tS9ATO4bwTab8c7frJ6NxH4bXAHATCJKD0KEMieY+zB0leHQ1NPL1tlAedNoPJaS0c3KKp+a49GDGbzueowhlFqMDtrE5/PixjZW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H3/IqjTX; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oukq83vz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46635C4CED6;
-	Sat,  8 Feb 2025 21:59:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739051994;
-	bh=RQCmYl4f87dO+OY/HCvK68sf4okDPgKkRLiTNMmiyZc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=Oukq83vzCIvXjJO5y3C4cRwuw26kTnEt9ypes79IAUYLzWMF0oPZKS080pkqtAVyJ
-	 7xhFjS7jKptyj9fZRCtlgQjZQlhERfTPbxWn8ilyoA5tTurvS89Si4cOTv8GqGGPKK
-	 s9mq/2oDfErhj+XB/2MmYJikFO1LM2XZK+pacSx/98HBjePsKyGF2pbBQxktnXHMPx
-	 h4W8ZTgTgfLh4uWJf1MrboCzNRZGuSGeSJzcSZUdnXnpHZ0d9/4QTgWRjiCjdcXW76
-	 +fFUfUSDyVQlhrG6ztqQ/GVznZ5is+a51AZ6/ns/6mGouGwTBu+rEg4mS3RjYZC+f8
-	 kzngRGHyCXpWA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE002380AAF5;
-	Sat,  8 Feb 2025 22:00:23 +0000 (UTC)
-Subject: Re: [GIT PULL] SCSI fixes for 6.14-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <fa30513f6dbeb074de75d33b2270dcc60c1f8faa.camel@HansenPartnership.com>
-References: <fa30513f6dbeb074de75d33b2270dcc60c1f8faa.camel@HansenPartnership.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <fa30513f6dbeb074de75d33b2270dcc60c1f8faa.camel@HansenPartnership.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
-X-PR-Tracked-Commit-Id: 5233e3235dec3065ccc632729675575dbe3c6b8a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 493f3f38da21cf61b25254f7a3dc817179b497c8
-Message-Id: <173905202240.2669229.3335363051326487603.pr-tracker-bot@kernel.org>
-Date: Sat, 08 Feb 2025 22:00:22 +0000
-To: James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, linux-scsi <linux-scsi@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H3/IqjTX"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5440efe97baso3770943e87.3
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 14:02:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739052132; x=1739656932; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WIQpq6SRVuvFzjOMbK2jhLVyaB4vMTGN2KEn5/Ffo+U=;
+        b=H3/IqjTXt4AZvx1X4CRN8YQjQg1bs91kE1SbEbf4Z9Dp/GLG2Ew9UfZXHFhdpUa8Bs
+         U9mY+1i60WwpSmOdSfs3pUCI0jtKi33zMChnaWoPt4HmgQoeEhvRDsjRZ0hrnsUSJraj
+         AX3tNMzkOj+Dubn6RpSOcuWg5Pn+HIEA1i3JIlkms+nogSVm/sM1Vx3Gi3AfHbOKsTpV
+         uZEgEUMrHqt8Mz7H2HzeeB/EbhdaA0EpuiywNsseZ2JFTF8E6I5k6ZEhuWYwaasOrviH
+         sPRMCfbvhQsWg1a49tQaevNcA9ZAlPGYIz0ySSuBNoSbpwWK9wF+nNvPloI8xlCl4de2
+         btig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739052132; x=1739656932;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WIQpq6SRVuvFzjOMbK2jhLVyaB4vMTGN2KEn5/Ffo+U=;
+        b=EZSq31sUzJ7+qA8GisT1w36dZ9PTfGHhLNWRJDFuf6TQWWqFdiTSSW0EOO7eHXEmSJ
+         ftbqY8sfHF+sqKzqXjCRnbwOKOwS0s3c2ySZ7JbPQj840wq3vL4JP//7/34dIKJj2q+5
+         sKq3ANTbih5NtsdHAiUupITv632lQuleboaKlsqDRYIKQOpaWbw4XbXRUcUiF/oLmC1y
+         IqTEJ5LqlNzt2mofEZ1SpDk8P0Hu/TIfBHV5fW5waf3WL1QINQ2z/K/EDmBUJ+o+ZwlB
+         R3Hj/0a0vV6WUzabVZNNcWcvLHEghXgeMvGnABY6gtqb14aFcJMmcInsTeL0OY99oLhp
+         Mc2A==
+X-Forwarded-Encrypted: i=1; AJvYcCXu8+0sAOnZ1BrL1FbQ0q72Hvs5dT60O/aImO9suDh285Rj4gu9OurIWzEMUCIH4X9aWSmjYV9vAvXkwrU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4ujjwqdBhXFPOttkEMJOnCXUpJz0AdkbktJup2Rk0nGm6JbH8
+	kFcRjIaw8cmq8jUg68iTCvZk2b7rn3h3lAAxuaxdrZ28TpsrOuEWHwhuLp5vS5M=
+X-Gm-Gg: ASbGncuKr0KpYVWKf8VnJQb7kPYm/WvRH89qTYcwJo14Prh6mbrMrADLfD5Qc+mPil8
+	qI16spASt7/fKj2ek0P+aLZUt2nL2qYz2sriRCCRx2ORufK/xjcDyrrdKOhV7PWmyyFu7UjPtBR
+	pOM0bGauS1vFpqH+WFHGfPseD/rUa9NwFJTArXichWxXOwwd2UVcOX8/MzBfQNZlIp7qSbgyZS1
+	XM4pSWdnA5QqE4VatgbLemGRl/jiHMZrYArGV16fxMs2PD2O8H6Vyvh6vd5K3ScaBa9SAqQoV4P
+	83O+c3g2JT7oqOjkkNOVjoUmE4V/daSeap4PcWdXO+a4i+mR8mme2Ppyux2O6OuMPcgzGWg=
+X-Google-Smtp-Source: AGHT+IEGKqym5fvj9CtXdUw1nFaJQto9Vstqwb3j/M+lRTuyEhe1tjHO7lGK5RZ6zgQDezCELt/Crg==
+X-Received: by 2002:a05:6512:6cc:b0:545:617:6ee0 with SMTP id 2adb3069b0e04-54506177055mr847461e87.33.1739052131696;
+        Sat, 08 Feb 2025 14:02:11 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-544105e5bbdsm832973e87.161.2025.02.08.14.02.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 14:02:10 -0800 (PST)
+Date: Sun, 9 Feb 2025 00:02:08 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Rudraksha Gupta <guptarud@gmail.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Sam Day <me@samcday.com>
+Subject: Re: [PATCH] ARM: dts: qcom: msm8960: Add BAM
+Message-ID: <3nz6k4oqwpcmu4miohcgv2wlhz3x5hluuytvkhe6txzg2njatx@icgiiyolzt5w>
+References: <20250208-expressatt-bam-v1-1-8794ec853442@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250208-expressatt-bam-v1-1-8794ec853442@gmail.com>
 
-The pull request you sent on Sat, 08 Feb 2025 14:23:51 -0500:
+On Sat, Feb 08, 2025 at 11:21:40AM -0800, Rudraksha Gupta wrote:
+> Copy bam nodes from qcom-ipq8064.dtsi and change
+> the regulator values to match msm8960.
+> 
+> Signed-off-by: Rudraksha Gupta <guptarud@gmail.com>
+> Co-developed-by: Sam Day <me@samcday.com>
+> Signed-off-by: Sam Day <me@samcday.com>
+> ---
+> To: Bjorn Andersson <andersson@kernel.org>
+> To: Konrad Dybcio <konradybcio@kernel.org>
+> To: Rob Herring <robh@kernel.org>
+> To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> To: Conor Dooley <conor+dt@kernel.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  arch/arm/boot/dts/qcom/qcom-msm8960.dtsi | 28 ++++++++++++++++++++++++++--
+>  1 file changed, 26 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
+> index 865fe7cc39511d7cb9ec5c4b12100404f77e2989..01eed68c8f89b547ff0c173b2ca85a54efa29b7f 100644
+> --- a/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
+> +++ b/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
+> @@ -275,11 +275,31 @@ rng@1a500000 {
+>  			clock-names = "core";
+>  		};
+>  
+> +		sdcc3bam: dma-controller@12182000 {
+> +			compatible = "qcom,bam-v1.3.0";
+> +			reg = <0x12182000 0x2000>;
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+APQ8064 has 0x8000 here, but I think 0x2000 should be enough.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/493f3f38da21cf61b25254f7a3dc817179b497c8
+> +			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&gcc SDC3_H_CLK>;
+> +			clock-names = "bam_clk";
+> +			#dma-cells = <1>;
+> +			qcom,ee = <0>;
+> +		};
 
-Thank you!
+Please keep DT nodes sorted on the @reg part. So sdcc3bam goes after
+sdcc3 node, sdcc1bam goes after sdcc1.
+
+> +
+> +		sdcc1bam: dma-controller@12402000 {
+> +			compatible = "qcom,bam-v1.3.0";
+> +			reg = <0x12402000 0x2000>;
+> +			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&gcc SDC1_H_CLK>;
+> +			clock-names = "bam_clk";
+> +			#dma-cells = <1>;
+> +			qcom,ee = <0>;
+> +		};
+> +
+>  		sdcc3: mmc@12180000 {
+>  			compatible = "arm,pl18x", "arm,primecell";
+>  			arm,primecell-periphid = <0x00051180>;
+>  			status = "disabled";
+> -			reg = <0x12180000 0x8000>;
+> +			reg = <0x12180000 0x2000>;
+>  			interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
+>  			clocks = <&gcc SDC3_CLK>, <&gcc SDC3_H_CLK>;
+>  			clock-names = "mclk", "apb_pclk";
+> @@ -289,13 +309,15 @@ sdcc3: mmc@12180000 {
+>  			max-frequency = <192000000>;
+>  			no-1-8-v;
+>  			vmmc-supply = <&vsdcc_fixed>;
+> +			dmas = <&sdcc3bam 2>, <&sdcc3bam 1>;
+> +			dma-names = "tx", "rx";
+>  		};
+>  
+>  		sdcc1: mmc@12400000 {
+>  			status = "disabled";
+>  			compatible = "arm,pl18x", "arm,primecell";
+>  			arm,primecell-periphid = <0x00051180>;
+> -			reg = <0x12400000 0x8000>;
+> +			reg = <0x12400000 0x2000>;
+>  			interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+>  			clocks = <&gcc SDC1_CLK>, <&gcc SDC1_H_CLK>;
+>  			clock-names = "mclk", "apb_pclk";
+> @@ -305,6 +327,8 @@ sdcc1: mmc@12400000 {
+>  			cap-sd-highspeed;
+>  			cap-mmc-highspeed;
+>  			vmmc-supply = <&vsdcc_fixed>;
+> +			dmas = <&sdcc1bam 2>, <&sdcc1bam 1>;
+> +			dma-names = "tx", "rx";
+>  		};
+>  
+>  		tcsr: syscon@1a400000 {
+> 
+> ---
+> base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+> change-id: 20250208-expressatt-bam-d0ed9863a626
+> 
+> Best regards,
+> -- 
+> Rudraksha Gupta <guptarud@gmail.com>
+> 
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+With best wishes
+Dmitry
