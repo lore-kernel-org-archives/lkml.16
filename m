@@ -1,153 +1,237 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2064.outbound.protection.outlook.com [40.107.92.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C536FBF
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 09:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739006168; cv=none; b=Xlt/KjTvds+g3fy3PA/BERYrf3mcELpfxLpskzQOaDRGbDHzOYWGF/wzZkeD2q2gS2TjosSM99jT0XcGnf7GX6pVXd/FiORYeedAbDvUOXx6NCrgeo7yK2Xvq6TZD6fz26cmoJRgFHgUBl2gsUPds89DXbWjJurfMhdVYDFkVjs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739006168; c=relaxed/simple;
-	bh=yTUWrKlbQ5GD/xLT4drcM54EhpoAr6SkF3Y3n/CpXjc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y1ksjZbzkLWdn3O9SUYlMEkPX55MbkEWh89jGaCsrWSOZZqzLLXaYOLalLHb8wBEOxHC/ycsO33lIUbuyR0Jo6fod3a+H1AgkVIvDWPz0ehQ/SJGbSHS+MkdqwR27BxD+5k/qT5r3kNt0tPPQCHWUz2kZl4kNO7XvvDtQIYerG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=V6pw2YRq; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210001A8F93;
+	Sat,  8 Feb 2025 09:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739006387; cv=fail; b=h/pIxsI3WOZ/gxHRu4RuTqzdkPpVXkPS5YbWQXvKLIzQ0fP22Q2v9hMAiHmNbaGUV6Rco/i8VTNL/c/59hNNQx4dOzO/ByhWoB+O113fs82KWp29ZfTOXB9fdhrwm8YtsvCJCjs/s5Y3Yy/uwtb4UPlx7EfDQfHWpiKHcuRKGXo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739006387; c=relaxed/simple;
+	bh=zN2RJ6Y69/R1B8LPA5A++9qdgCL9uyWfw4uUzZGwaXA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Tx0ZICA/qPDzfmQSI+3ILZIHFi1GvhReNb4ZahN91JZ4mUMAValUI8bhxQym2Y+r6eEFvIqv5VzSPcFONO+WobeUmvM/LBno3DAIiwfiMgLnDgZ55skVDrGZBXSoQkwcGFszwVR9/P5b+7nMBcawQ5AD5yxaDvSXwhhs6d7zIL8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ez7WtAqH; arc=fail smtp.client-ip=40.107.92.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="V6pw2YRq"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f464b9a27so43129565ad.1
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 01:16:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1739006166; x=1739610966; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=nvJCWy4EMuDIOueWrbTN3LkRGm5dA+GTUOq10vklDNE=;
-        b=V6pw2YRq3xr8SGJdIX3lXJ6Xp/RFIgP4iA0gK2WYZnYPgSsJl4gHf0j/FjfxGuRX/g
-         ktt+0aNmpj+Yg0+VaNouA7qvDWRKF4Uc63ZGMHF/aFGZESZTowsCv06nN0hR4AmL7/34
-         wPdGhk/CofF4qyEG9ELq8z1t+Nk+OQEHUDmkTXZ/lRB/xDDP6Q73NDx35lCXDaA53Zte
-         tjhJJtXdtShF5mI6qiqOkDuOuySF6IJ0esl0eAE54nHos/+S7QHeaWWsmGSqZzaYs8Ee
-         +aDygWtfERPAltP2Aznm9yJQt7CuATKHaS3KD2dnIf/icrW1l1Sx6m671m06m9YE9Gdp
-         fGvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739006166; x=1739610966;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nvJCWy4EMuDIOueWrbTN3LkRGm5dA+GTUOq10vklDNE=;
-        b=Wn9d6S/sJUbmt0WYFKtpIapgAvdFcTzKZIMBRxvQyYG0AJ7HPGtG4q5cVKTiP/6lpV
-         ucOoweRkNb3mJ9rUwzN+Qtb6d8S7c+/kLrBr1JK2yv+j9432lpIk9Qsez31UsfWm51oA
-         aaVr3v+OWIBhmVhzR/9krc9pP0ZDkdiiqFNB3bx6sZEZeG5cpXpD7gMylAL8nmsMFNFm
-         FupQkCm/vSyzVrkovvTgXE3DcTE6tVT50ZaDGcAhMVlq8AfyI4oaxFSSR0w5K33axSqM
-         TVQOnYWD2yl4RJCORk6OrNqhlXP0vLqwBLrh7jyRl25byhb/vafpJXCuXawQG4r3NkSI
-         H3zg==
-X-Forwarded-Encrypted: i=1; AJvYcCUKa/Ac54cf6Hne+lQXZEI5zVcz4ELlUWFH7aGuPd07eji42bVqBb1qLeegN7fFazuapeQ6TkUhTKrH8h4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWMRB4Ml7oQV9Isw4sWvmVbE4EeVDlLLlpKimyl4U/ZUces4Vf
-	GX0+kyNZNyOi8ZNzdUI2EP7tB2dz4SEJ7haCwrQF4v6ShXu9Z+GVEvBcKANtwFkpyD2yH4k3SC0
-	fCmRAiw==
-X-Gm-Gg: ASbGncsjBAGqP5SBmDjbNXQqSOg10wsKQqAP1BNSuf/B2HEM49ka2dziNvf0lb8pGhN
-	x7RAQimtpQmwdmzVOkzLcQ0FJvKjEvCXbL5IcGu1DospCqAMWFpV9HuS3Xu4/TC29/0qlhtW92P
-	rk5AIWqEvuk39m6RZ214ZGimiNp5MgonNABYzL2NOxAp5WZ3tA5BPHf1f9ofm21LivcdYsqFymE
-	7w5oT2WmgbATmfej8N5Ho6jSXZl3YG2HHaEaNdJvi7mZjczjJYHhUZ3gtdox880jYgs0lO9eHnU
-	Di2lmRawLQCgyAqVSzLyLKmN9Jc=
-X-Google-Smtp-Source: AGHT+IH9LMRe9AjHdNUfp2Yrb0ZiOIbt3KV7vcDcJeBZyl80We0ELLIq9YFH/aC5JlHj5VwpG1tojQ==
-X-Received: by 2002:a05:6a20:d706:b0:1e0:ca1c:8581 with SMTP id adf61e73a8af0-1ee03a8dbb8mr12087904637.21.1739006165903;
-        Sat, 08 Feb 2025 01:16:05 -0800 (PST)
-Received: from bytedance ([61.213.176.12])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7307bfc03efsm311772b3a.160.2025.02.08.01.16.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 01:16:05 -0800 (PST)
-Date: Sat, 8 Feb 2025 17:15:59 +0800
-From: Zhaoyu Liu <liuzhaoyu.zackary@bytedance.com>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	ray.huang@amd.com, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
-	simona@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/ttm: use ttm_resource_unevictable() to replace
- pin_count and swapped
-Message-ID: <20250208091559.GA118571@bytedance>
-References: <20250126093256.GA688734@bytedance>
- <bea1a3a0-c6d4-4941-9dd9-73f0756ef17b@amd.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ez7WtAqH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SSFk+tWAiVS3DZh9uFgaq9T2fVvxS71qV7s+cPryJOCNaKhiJHRRH0IkGhudIOkIXiXqW2DlJ97zkVkCGhvO7tERzBsw21pOvw/jHiPGdnhW6BXSHDxESHjLBFxdKV77htrcN2je8s0gaeb1dhjfc+ImaWRCFcZJHQ+WKOy+JqvRihGPMTsEJwZffAfVp6uxu1sFFECeiUHVHhM8vgJFJI791E0jZlq2Ar5CGUmwgZYZvv1FNLtkm4t1kNYqXgVCf9n45Hk95ds3LArkJVazIUBQh/6EHJM8dRc+wJq7C8FZQ1VuPzvixQo6RzquZVtWuEDWazmXP+ULjAWjqGJ8Mw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YCXlSoyNeTkWrRR5bVA3t63zNn8cu0VhU94gJ4q3mz8=;
+ b=KntEnY4aEe0TPxVP6VM4Heyo4Bxh/CTUvZKYY5sNHKdbeaLVgDewwjP4yjdc5hnZezNHkPLZzOc1dWfFNG4+EaNcMKABxM18DoqqcJRWlXfJY6B9Swg7rBInYmfRIK8Npu/Sd203C7QBU7vf0dBvFFewcCg8OLKQvYUyFSgHe2OyvDkFAxiPSEaaEVLYRBm2YCyvlcCBgahVjnDdpbSwnoe0N3gtMSUP7F1ZOwfcVJDtrGAcOkWDTnVOxV7ApcRcapqUe6IMTr25BV9cZ7QnTGij/Rm4Hkkv+Y/whwpc0ZlmfHa0B13oflFVCEzBOZMQTP700ya2g5dL0LGXsEoqdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YCXlSoyNeTkWrRR5bVA3t63zNn8cu0VhU94gJ4q3mz8=;
+ b=ez7WtAqHOCacJiQ2EJs665xeKsjuof3t9pDMXevWBr0E26qookQFhAjk5Cch+6WVVAXlSnLa2yigVsMpTtTR3NCvXrZBttVL4jHJfJQkOP5lY5L55fMO9Gm+4x71hAQNjdDRl0TYxCMQoxODLkMGshB2+TE2l7WVO3VcErI8ggzuazTG4J/5bhiywEjI5ZYuKjvEWuDSgZRDAZarMCjbf4XNNdp7VUy9Vj/N3KchzkX9Nz+f0Drfh+UR6J3TOmtcWTrmj8axv8TIqrrSK/0fGhrx7L1eqZRvRE5E9GtPEzdy7fO0rW8pchQzHVDTZc7i1KOyFF6ROWCtlEQ64knhsQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
+ by IA0PR12MB8277.namprd12.prod.outlook.com (2603:10b6:208:3de::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Sat, 8 Feb
+ 2025 09:19:43 +0000
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5%7]) with mapi id 15.20.8422.010; Sat, 8 Feb 2025
+ 09:19:42 +0000
+Date: Sat, 8 Feb 2025 10:19:38 +0100
+From: Andrea Righi <arighi@nvidia.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>, Ian May <ianm@nvidia.com>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] sched_ext: idle: Introduce node-aware idle cpu kfunc
+ helpers
+Message-ID: <Z6chqn0Xf6xhL5gA@gpd3>
+References: <20250207211104.30009-1-arighi@nvidia.com>
+ <20250207211104.30009-7-arighi@nvidia.com>
+ <Z6aLvYaYlQ3KRZQM@slm.duckdns.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z6aLvYaYlQ3KRZQM@slm.duckdns.org>
+X-ClientProxiedBy: FR0P281CA0015.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:15::20) To CY5PR12MB6405.namprd12.prod.outlook.com
+ (2603:10b6:930:3e::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bea1a3a0-c6d4-4941-9dd9-73f0756ef17b@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|IA0PR12MB8277:EE_
+X-MS-Office365-Filtering-Correlation-Id: bc448a19-3e43-456d-1723-08dd4821b89e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?KRlp1Chk0EuILuNKRM9xd8ZZSI25wRhGYp/dMu68PJJ9jfCndykFdY9br7t2?=
+ =?us-ascii?Q?BNeC35HL6oho3ebHrC7VLOHfaR42GyXn1KZwbp9j8REJWWFIVv2swrNlfQR4?=
+ =?us-ascii?Q?RDKOnV5iDioMUySpKwnBw5hr1J7gUWrUEVDMRSz5cJ6pF9sOZ6VBKC/qztiO?=
+ =?us-ascii?Q?DezES8z2KWkv7sCQOelA5RMugxwEMSbCTub8FJPfkYx4nJmWhBjCJ9Z8Zxfv?=
+ =?us-ascii?Q?tG60oMrXTPwvBzJ75lECSCw0J0LuGshjUTLrUlQZV8QtRnlLJHYpQ7r+5fpt?=
+ =?us-ascii?Q?9svuImK3w11LUdJWKJovAVSCzQ0dcArtO1HULbcMr/tdDRPaPep5k4iLaj9S?=
+ =?us-ascii?Q?vHsF+Rvv9EwLlIbnhBUBu1V9qDQ+r7nhNzGdlHzNIY8DK+wL/BWqLVA/qGBY?=
+ =?us-ascii?Q?yeoZIMlXXu9TLI2/7+aWBghpZ2r4uNWcv+c9L/+0Mqm6rxvsxgV39Y6jGtTG?=
+ =?us-ascii?Q?o0McXffPZciIw2wRN2WCzQ5a7zL/SXCE5nqZQbBHaACPxK6uZTyS7dzMAEUw?=
+ =?us-ascii?Q?TV5NQWc/0AuKrP09qkUpATRcGy+yXeIYbEW90bbVjAvzMauNnCti6lAv71Od?=
+ =?us-ascii?Q?Tn+D57qDPXmr8FoX42FBOxhfVXo5KTF4DkF5dzdzbgrEPweHQTGK8r/f3LAI?=
+ =?us-ascii?Q?SUyQlHgMTObynhzmgqTVgEhrGO+vsUXjJu7PjoFAArS+b6qGVB9t3cPCwqWD?=
+ =?us-ascii?Q?wNYolV8vU1mfKpPxeO5jgt8Vwa6xeNsjuEqkRzNDHrwGVzUvygOkf8awSZfk?=
+ =?us-ascii?Q?zvFfnRcqDUAp0I8WctJ9d2MIgOGjKeFZj9jmAU7GH+IQPKCoF2zzz7gDJxyW?=
+ =?us-ascii?Q?IsuEXDuoESJEM5vHoQhVNTZ8YgTYtFs0JeETxYRP79NCH9RdliQo6HyqQDZa?=
+ =?us-ascii?Q?ctgJ3z3lehyE4C5phMQnO8E/Ku/mLX5mYzwM2qa4g7nj4QzHU8P17TbCVV+v?=
+ =?us-ascii?Q?AfoX3MXXZO4goDfw+gjMbZB/2B/lHEO+o4UHNcCT/ptgWdl2uncFuX9ffJkZ?=
+ =?us-ascii?Q?U+Foi4yJi2a3YsmEMKErUX/zKl9iLIURgmrD0MAieRj5c5lm1poZEoYBp4ol?=
+ =?us-ascii?Q?PXRjswqMBqBE0UWXHVJFOAQoGqOKPjoxfiPJs9X7DT/JQh/Y44KX+NHF4/95?=
+ =?us-ascii?Q?yJjCpuC6FBFTOxI+Knh91wiOborzcVfcV5YrVe7hqTXRdlFuU94ymRW814o4?=
+ =?us-ascii?Q?X4KlNeHDQqwZ5lmoexHatks2uUA/0d/CLM0GLepC2UIahKgfykRW1wK72FS0?=
+ =?us-ascii?Q?Zgw/pHEWejXBAkbLrbkchKduA6H46oBeqHDK5+fornE+1CH13BeOUEA7/FUM?=
+ =?us-ascii?Q?l6L5TITMcjzmXrCecNs5zs81Lh3mRnqXKAcuoY459Q46ic1aLymGbvIP82lZ?=
+ =?us-ascii?Q?X5iIPCG6Ume1ILzVkCZEjnGM6if5?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?0dwX9d1Z7RRO6ktl2GCW/mTCqt/f4Zg+S1Xqn5i5Uw81lYUcuYoHU5BmzBs7?=
+ =?us-ascii?Q?6hvfroZmYef5dzdI81nNRzWSnoX+oX/edoY2MPYbbEDs8nhw7/co6GD2/UVw?=
+ =?us-ascii?Q?krx5GWmQNIfYXvQxgp9BXls5SE89rILp+hRpLim9CaXQ465+JEzHQjUNgq+5?=
+ =?us-ascii?Q?NmWudfpg/aS9vYG9gAcf36QVP6N3xiDxRMhLF2ie3aFWcEAgMBl4j1lNU2bz?=
+ =?us-ascii?Q?Z6KN7FPyRWMdxrHM66AN+nZt8N0kfRJdGCXUwCa3LPaA5Tc9vs3jwi3owalQ?=
+ =?us-ascii?Q?XAcWkj/93MjVjj72M9iIJAOJ8QhI79XPljKPN5a8DmKHRSSml12rvhmKNt8k?=
+ =?us-ascii?Q?8bjPaYSf52V7jrXIPatkWGEgJKeTUjnMWIWmP3TJhdb3nAqArwfvAKS85oID?=
+ =?us-ascii?Q?vQiFTt6L8TGy/TUIo7ey+USFeNxo5JhNnrCMzyjn8Vw8kI5q+FK+lqUaqbtv?=
+ =?us-ascii?Q?TxKBix9/0Db+XDAQaZB94bb3T7DNytRUWwahjVVsI6WEQhnlRsj7Ot5Zns1s?=
+ =?us-ascii?Q?tFMEvCbQIZa5gZw0fFQXhQCrnOM0bLCCU71Za3CdUj8XNkOuS4fEr43bbsWC?=
+ =?us-ascii?Q?vIKpDNb1oXKh/2aZub0U6Zm3yXfBtf9Yx+DhCUDJiRUXW4rk9qTSpHezRNEf?=
+ =?us-ascii?Q?VFRG24V7HrLIzrP6xxRn4R5YLzQNHTyAB0+Boc+Hv7w0jms92ueT/PfdfWxg?=
+ =?us-ascii?Q?wpKKJEIzq0zcI1qz4IqkQYL80X/9NsvuF3DSyb/8RLEnbNiBcsF0tY6xldv0?=
+ =?us-ascii?Q?dZJf9YpG8S4MOjZq44R4PV5BVYbGoUNwvDRZRAG0txtvGQ4ZYj/e71M2TcnL?=
+ =?us-ascii?Q?d9g5yOdzYsy7ZGpgHUw1pLrVjKAXctP533ZgM8FZMt30PToV8KtcZlXWuwuw?=
+ =?us-ascii?Q?D/0lgzTZoAw3kUeUO1mbAO62kZYWqftA2/rlYseCeWqwpk9rZD47bpp+7C2o?=
+ =?us-ascii?Q?DFmJIod5gqPTQdSxXZd2tc/cyD93cJVYYpVtmDH7PvX6GOVtGe3yw3WSs7D+?=
+ =?us-ascii?Q?T4ogSNDBzskIMkZkdyYMbXAkBKwO1iMovoY3re0cz5DTa+BYFjfecOYrl4cB?=
+ =?us-ascii?Q?rcisKLgXhgtallGi+VRV1PU8lN3kLt9S6kRvNgjLVSeM4riT7qpsK//YJWSI?=
+ =?us-ascii?Q?YBYUXKdwavhmp+bYDbpcvgruKqDLu95Ydd165X1Pow1a3Xk9n0dnsWh393gk?=
+ =?us-ascii?Q?ktjW6SQA6DJftljF5mpkYbuXWv5fYMTo9IZf4DbBkvjmJXAxwQ8M5VuyrqD/?=
+ =?us-ascii?Q?CNgz/NtsuW8J6Ul6riNKOQ663vsBj1bsNUwb+TGcGUUewCFfiRzPHjn16QSL?=
+ =?us-ascii?Q?Pplmn/d+fdrQSDm/oxhF4o4DSgovDU20XjWbWi84Vr9+nWsjsfRKqmp5R8Zp?=
+ =?us-ascii?Q?WGGuEm8ZgUwHB1P1oD4j91vaibZ53mC5tzSEGPq2TDAP6hgv3sLOaIj/OH6l?=
+ =?us-ascii?Q?KZ2MAVTCXNCBOWEi/5dyHmcDhpqEWuKd5Pegsc9IKNfpJmA+GV9fpWnk4A87?=
+ =?us-ascii?Q?M0miDya3yNyMtc3obV28HuOOW+E+4vXwKJMkxnGkEIt5ChDnu7WUZuH7T0VX?=
+ =?us-ascii?Q?nm1hjCHYvKJpcY7uIWuJhZgMROLocBwcm5DaT9Vx?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc448a19-3e43-456d-1723-08dd4821b89e
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2025 09:19:42.6251
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dxDisZYHfigiESBqZ0ao73rGK6JgkNaohyTycMYKe9Kug7MPW/xS9sNiyOdm9HMDgruwA2a2zy4jClyuiriDOQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8277
 
-On Tue, Feb 04, 2025 at 08:59:08AM +0100, Christian König wrote:
-> Am 26.01.25 um 10:32 schrieb Zhaoyu Liu:
-> > TTM always uses pin_count and ttm_resource_is_swapped() together to
-> > determine whether a BO is unevictable.
-> > Now use ttm_resource_unevictable() to replace them.
-> > 
-> > Signed-off-by: Zhaoyu Liu <liuzhaoyu.zackary@bytedance.com>
+On Fri, Feb 07, 2025 at 12:39:57PM -1000, Tejun Heo wrote:
+> Hello,
 > 
-> Reviewed-by: Christian König <christian.koenig@amd.com>
+> On Fri, Feb 07, 2025 at 09:40:53PM +0100, Andrea Righi wrote:
+> > +/**
+> > + * scx_bpf_cpu_to_node - Return the NUMA node the given @cpu belongs to
+> > + */
+> > +__bpf_kfunc int scx_bpf_cpu_to_node(s32 cpu)
 > 
-> I will pick this up for drm-misc-next.
+> Maybe scx_bpf_cpu_node() to be in line with scx_bpf_task_cpu/cgroup()?
+
+Ok, then maybe we can have scx_bpf_cpu_node() for the kfunc, that wraps
+scx_cpu_node() for internal use.
+
 > 
+> > +{
+> > +#ifdef CONFIG_NUMA
+> > +	if (cpu < 0 || cpu >= nr_cpu_ids)
+> > +		return -EINVAL;
+> 
+> Use ops_cpu_valid()? Otherwise, we can end up calling cpu_to_node() with an
+> impossible CPU. Also, I don't think CPU -> node mapping function should be
+> able to return an error value. It should just trigger ops error.
+
+Ok.
+
+> 
+> > +
+> > +	return idle_cpu_to_node(cpu);
+> 
+> This is contingent on scx_builtin_idle_per_node, right? It's confusing for
+> CPU -> node mapping function to return NUMA_NO_NODE depending on an ops
+> flag. Shouldn't this be a generic mapping function?
+
+The idea is that BPF schedulers can use this kfunc to determine the right
+idle cpumask to use, for example a typical usage could be:
+
+  int node = scx_bpf_cpu_node(prev_cpu);
+  s32 cpu = scx_bpf_pick_idle_cpu_in_node(p->cpus_ptr, node, SCX_PICK_IDLE_IN_NODE);
+
+Or:
+
+  int node = scx_bpf_cpu_node(prev_cpu);
+  const struct cpumask *idle_cpumask = scx_bpf_get_idle_cpumask_node(node);
+
+When SCX_OPS_BUILTIN_IDLE_PER_NODE is disabled, we need to point to the
+global idle cpumask, that is identified by NUMA_NO_NODE, so this is why we
+can return NUMA_NO_NODE fro scx_bpf_cpu_node().
+
+Do you think we should make this more clear / document this better. Or do
+you think we should use a different API?
+
+> 
+> > index 50e1499ae0935..caa1a80f9a60c 100644
+> > --- a/tools/sched_ext/include/scx/compat.bpf.h
+> > +++ b/tools/sched_ext/include/scx/compat.bpf.h
+> > @@ -130,6 +130,25 @@ bool scx_bpf_dispatch_vtime_from_dsq___compat(struct bpf_iter_scx_dsq *it__iter,
+> >  	 scx_bpf_now() :							\
+> >  	 bpf_ktime_get_ns())
+> >  
+> > +#define __COMPAT_scx_bpf_cpu_to_node(cpu)					\
+> > +	(bpf_ksym_exists(scx_bpf_cpu_to_node) ?					\
+> > +	 scx_bpf_cpu_to_node(cpu) : 0)
+> > +
+> > +#define __COMPAT_scx_bpf_get_idle_cpumask_node(node)				\
+> > +	(bpf_ksym_exists(scx_bpf_get_idle_cpumask_node) ?			\
+> > +	 scx_bpf_get_idle_cpumask_node(node) :					\
+> > +	 scx_bpf_get_idle_cpumask())						\
+> > +
+> > +#define __COMPAT_scx_bpf_get_idle_smtmask_node(node)				\
+> > +	(bpf_ksym_exists(scx_bpf_get_idle_smtmask_node) ?			\
+> > +	 scx_bpf_get_idle_smtmask_node(node) :					\
+> > +	 scx_bpf_get_idle_smtmask())
+> > +
+> > +#define __COMPAT_scx_bpf_pick_idle_cpu_node(cpus_allowed, node, flags)		\
+> > +	(bpf_ksym_exists(scx_bpf_pick_idle_cpu_node) ?				\
+> > +	 scx_bpf_pick_idle_cpu_node(cpus_allowed, node, flags) :		\
+> > +	 scx_bpf_pick_idle_cpu(cpus_allowed, flags))
+> 
+> Can you please document when these compat macros can be dropped? Also,
+> shouldn't it also provide a compat macro for the new ops flag using
+> __COMPAT_ENUM_OR_ZERO()? Otherwise, trying to load new binary using the new
+> flag on an older kernel will fail, right?
+
+Right. Will add that.
 
 Thanks,
-but I don't see it in drm-misc-next(https://cgit.freedesktop.org/drm/drm-misc/log),
-is it not merged yet?
-
----
-All The Best
-
-> > ---
-> >   drivers/gpu/drm/ttm/ttm_resource.c | 15 ++++++++++-----
-> >   1 file changed, 10 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/ttm/ttm_resource.c b/drivers/gpu/drm/ttm/ttm_resource.c
-> > index cc29bbf3eabb..a8f9f7ed6c6e 100644
-> > --- a/drivers/gpu/drm/ttm/ttm_resource.c
-> > +++ b/drivers/gpu/drm/ttm/ttm_resource.c
-> > @@ -252,11 +252,16 @@ static bool ttm_resource_is_swapped(struct ttm_resource *res, struct ttm_buffer_
-> >   	return ttm_tt_is_swapped(bo->ttm);
-> >   }
-> > +static bool ttm_resource_unevictable(struct ttm_resource *res, struct ttm_buffer_object *bo)
-> > +{
-> > +	return bo->pin_count || ttm_resource_is_swapped(res, bo);
-> > +}
-> > +
-> >   /* Add the resource to a bulk move if the BO is configured for it */
-> >   void ttm_resource_add_bulk_move(struct ttm_resource *res,
-> >   				struct ttm_buffer_object *bo)
-> >   {
-> > -	if (bo->bulk_move && !bo->pin_count && !ttm_resource_is_swapped(res, bo))
-> > +	if (bo->bulk_move && !ttm_resource_unevictable(res, bo))
-> >   		ttm_lru_bulk_move_add(bo->bulk_move, res);
-> >   }
-> > @@ -264,7 +269,7 @@ void ttm_resource_add_bulk_move(struct ttm_resource *res,
-> >   void ttm_resource_del_bulk_move(struct ttm_resource *res,
-> >   				struct ttm_buffer_object *bo)
-> >   {
-> > -	if (bo->bulk_move && !bo->pin_count && !ttm_resource_is_swapped(res, bo))
-> > +	if (bo->bulk_move && !ttm_resource_unevictable(res, bo))
-> >   		ttm_lru_bulk_move_del(bo->bulk_move, res);
-> >   }
-> > @@ -276,10 +281,10 @@ void ttm_resource_move_to_lru_tail(struct ttm_resource *res)
-> >   	lockdep_assert_held(&bo->bdev->lru_lock);
-> > -	if (bo->pin_count || ttm_resource_is_swapped(res, bo)) {
-> > +	if (ttm_resource_unevictable(res, bo)) {
-> >   		list_move_tail(&res->lru.link, &bdev->unevictable);
-> > -	} else	if (bo->bulk_move) {
-> > +	} else if (bo->bulk_move) {
-> >   		struct ttm_lru_bulk_move_pos *pos =
-> >   			ttm_lru_bulk_move_pos(bo->bulk_move, res);
-> > @@ -318,7 +323,7 @@ void ttm_resource_init(struct ttm_buffer_object *bo,
-> >   	man = ttm_manager_type(bo->bdev, place->mem_type);
-> >   	spin_lock(&bo->bdev->lru_lock);
-> > -	if (bo->pin_count || ttm_resource_is_swapped(res, bo))
-> > +	if (ttm_resource_unevictable(res, bo))
-> >   		list_add_tail(&res->lru.link, &bo->bdev->unevictable);
-> >   	else
-> >   		list_add_tail(&res->lru.link, &man->lru[bo->priority]);
-> 
+-Andrea
