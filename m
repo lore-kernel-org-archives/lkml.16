@@ -1,152 +1,112 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5904023C8D4;
-	Sat,  8 Feb 2025 10:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C3A23C8D4
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 10:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739009833; cv=none; b=EVmib5FBbwJNknYH1DXn17/rbOZY3tKQiQ8ncATLgvdo4lh0cxghZ6Ca0qNJmPrBS9NZR4m4BvhbMtytoIfj1oAMdQY8j7fvicTBKPDQ13fJ1UtEXS5a2tMOCQckAFK0a28oiHP8dC72lPBbDvDtqeSc8SWCUCRun4IEJRfFeUU=
+	t=1739009977; cv=none; b=mKWASW1XdDsRKDg5nnW7zsH8AChhr+IF2jNhPKo/wZ34wCptDpQ/132kdJy118VL7jQ68jzBsG4gjQY+SFS2e4ehJH8/oLE8bB5ohDmybVVGtU0+QvbsKuMcuWeV5fanB96lnOjYZk8HO1hipQY5LPrMHtG+CoMzxy4B1/tRSQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739009833; c=relaxed/simple;
-	bh=F5uUm7xNthdJlFWPzhW5FgGDAiMNjnlSrHx+bDSldUI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=P4d44aMfOej2mQq9WpmhMOK9difONtEWm/leXvHaD312W9XOvJ7QxdmTH/SD1vkZ+4QnsYzQrdn+ImbhVl901Wr4Al9eiLxNrNWWIeLPkgE2qIhvTpxkAJiCziCGlUTm9/ZNRliIgZmxMkxs4BEEtrOrX5IeBHDtF1zwMHqb76w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YqmwB59KVz4f3jMB;
-	Sat,  8 Feb 2025 18:16:42 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 4AC471A14E2;
-	Sat,  8 Feb 2025 18:17:05 +0800 (CST)
-Received: from [10.174.176.117] (unknown [10.174.176.117])
-	by APP2 (Coremail) with SMTP id Syh0CgDn8GMbL6dnymX1DA--.5837S2;
-	Sat, 08 Feb 2025 18:17:03 +0800 (CST)
-Subject: Re: [RESEND] [PATCH bpf-next 2/3] bpf: Overwrite the element in hash
- map atomically
-To: =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@kernel.org>,
- bpf@vger.kernel.org, rcu@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, "Paul E . McKenney" <paulmck@kernel.org>,
- Cody Haas <chaas@riotgames.com>, Hou Tao <hotforest@gmail.com>
-References: <20250204082848.13471-1-hotforest@gmail.com>
- <20250204082848.13471-3-hotforest@gmail.com>
- <cca6daf2-48f4-57b9-59a9-75578bb755b9@huaweicloud.com>
- <8734gr3yht.fsf@toke.dk>
-From: Hou Tao <houtao@huaweicloud.com>
-Message-ID: <d191084a-4ab4-8269-640f-1ecf269418a6@huaweicloud.com>
-Date: Sat, 8 Feb 2025 18:16:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	s=arc-20240116; t=1739009977; c=relaxed/simple;
+	bh=nl/UMAZyeMLDl9KNcnT4jDMNCOBQN+2wkdDP7C6aPQo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ht8YeQ0nOohzXO0u70dYnkgXyChssld9nJanTT6zhc8SZZtHCw8gIdfzycYs6Dmtt0tlvVnKdE/MkMJO9TKJLvfa9/xk6mvyULdnnC2CDvxTY1gDLABzyLUsSCzCucAWv+QWFnO6GbwoAUWRbz/9g8OGEfmYZpqc+/AyJVFZ6VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LWIMbFDE; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LWIMbFDE"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-388cae9eb9fso1439162f8f.3
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 02:19:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1739009973; x=1739614773; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E52ub7AHUPwU1UhgD1WiD/oAb/xchvUZ3s1LGR5AR/Q=;
+        b=LWIMbFDE6e+hLzyTLenQ+M/VFdTZ1HWQ4T4FnnzLUoaH47mVmUlYkVkrJPSVgfZdN5
+         XHItfFWqVvgQsMW98IeBehS6+bp4r8JS5TrtPMK0tI5DYwgZGstlNqTXM+YUHiOYnm10
+         QQ71rBp6kiwF+gg0jnUf+2Xm0DjALy+OQFshApZ5lS5FXJCAbFbDP7qJexDPREX9BkSR
+         xBSuf8klouSv8xw9EhF/nKBV5fPjdmGvc7B/IzoxbmhhpI9tbwW55+bl3cLF+SRSB6gJ
+         eT2GSfZYEzefMgtfhcL4cGpOedIrI7MO/eDv3eoI35cp4eY+t6Gq3DQBWph0nUr8kyff
+         tLSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739009973; x=1739614773;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E52ub7AHUPwU1UhgD1WiD/oAb/xchvUZ3s1LGR5AR/Q=;
+        b=I1X7koHxK3rNSV4VLRLkqpM6UzJBj0KkM0st8HlIYyUWWsGcgZqvUr8YfFmxHvobtr
+         7T9tQcjk9g/FpdC3TYi0FENEqhFSakk9I52zrS/0KJw/3WIq60rmNd4hDbMnXeRQBX+o
+         tFrpAoMkmflzDXiKIKz9UJCeLBa0Z2h1aCRCa3I+kD0adXv0Mo3s7MBN20z+y5Q+pHJB
+         4xFqHHiVF5M1LUglKjw+qGXq2mOewQJu8dARieDBBqF1k7soQZ+B1ZGpdv518ADHAWkh
+         4pl4rwj0EfNN/3PxPyUzO+FJTeVG7w/yreM8P/RaIBLeQCLm8tHyw2NZB2OoUIbDTkA8
+         3WRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSrOiXxPmzpxTtDW+u1GmDLCG3U2HrwNSIhuNeCgDmqpibrgDKbix2LtxvJaPeWYYuXzPlu0wKjIHqWyU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxR7r42cCFFGL5vGSVxcWfs8EpjEnfI2weH2l0QfeCZJR/L9wxx
+	TMNoapsq5dZhMJpnGaKSBaY0i4AX+5lOvjZbyTSTtYrFyIJJ5Ux3IvoEe27rYzg=
+X-Gm-Gg: ASbGnctIBegBakA5D8ew1ng+UNEUgqqaXDreIMhtjvdgZPs7OtPf6VtZsWLHUJ4JWHK
+	YlcVm0dAbU+qcDe9+9WkmZOx3rnV8lUQENJKS7B+RDPojInMhwfdUWmafuz1Je0oLHZ7kTuw1Gi
+	FK6jcOnmhvIrQCAYbx6XcTJzWgpG0vccrvYRbE2IMWrtzXdLXylh5mmnOcXHquQOajXKq0fFhvz
+	zGC7RYXlWLdQg+2O8+9e/kiaFFjxEGMBChMFKusWuCFR8YhmrrfXn3zif9NhQyF4ch4Qy0a5Qwx
+	VF4zTxQ72dobnoY9+FnZvXE2hNvcPT1FDB68Qqk=
+X-Google-Smtp-Source: AGHT+IHbLMa10VIqBv+a4WF96rSbHJEqAj2+w72AGx0qwl94J4A0SXsQrm/d3uwBwGUltUs98eaYqQ==
+X-Received: by 2002:a05:6000:1845:b0:38d:b807:b894 with SMTP id ffacd0b85a97d-38dc8dc35c3mr4497447f8f.18.1739009973106;
+        Sat, 08 Feb 2025 02:19:33 -0800 (PST)
+Received: from localhost.localdomain ([2a00:6d43:105:c401:e307:1a37:2e76:ce91])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd3a9cc05sm1474057f8f.0.2025.02.08.02.19.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 02:19:32 -0800 (PST)
+From: Marco Crivellari <marco.crivellari@suse.com>
+To: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Jinyang He <hejinyang@loongson.cn>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Bibo Mao <maobibo@loongson.cn>
+Subject: [PATCH v2 0/1] loongson: Fix idle VS timer enqueue
+Date: Sat,  8 Feb 2025 11:19:23 +0100
+Message-ID: <20250208101924.20743-1-marco.crivellari@suse.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <8734gr3yht.fsf@toke.dk>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:Syh0CgDn8GMbL6dnymX1DA--.5837S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXrWrArWDuw4UGF4xXw1kZrb_yoW5Cw45pr
-	WrKF1jyF4kAa4j9w4IywsxuFWakrs3try8Jr4DJryrAwn0gr97Arn2ka1SgFyrAr4rJF1F
-	qw42qrnIkayjkFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4I
-	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-	WwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
-	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
-	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
-	IYCTnIWIevJa73UjIFyTuYvjxUIa0PDUUUU
-X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
 
-Hi Toke,
+This patch aim to fix issues if timers are queued because __arch_cpu_idle()
+only checks if TIF_NEED_RESCHED is set before going to sleep.
 
-On 2/6/2025 11:05 PM, Toke Høiland-Jørgensen wrote:
-> Hou Tao <houtao@huaweicloud.com> writes:
->
->> +cc Cody Haas
->>
->> Sorry for the resend. I sent the reply in the HTML format.
->>
->> On 2/4/2025 4:28 PM, Hou Tao wrote:
->>> Currently, the update of existing element in hash map involves two
->>> steps:
->>> 1) insert the new element at the head of the hash list
->>> 2) remove the old element
->>>
->>> It is possible that the concurrent lookup operation may fail to find
->>> either the old element or the new element if the lookup operation starts
->>> before the addition and continues after the removal.
->>>
->>> Therefore, replacing the two-step update with an atomic update. After
->>> the change, the update will be atomic in the perspective of the lookup
->>> operation: it will either find the old element or the new element.
->>>
->>> Signed-off-by: Hou Tao <hotforest@gmail.com>
->>> ---
->>>  kernel/bpf/hashtab.c | 14 ++++++++------
->>>  1 file changed, 8 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
->>> index 4a9eeb7aef85..a28b11ce74c6 100644
->>> --- a/kernel/bpf/hashtab.c
->>> +++ b/kernel/bpf/hashtab.c
->>> @@ -1179,12 +1179,14 @@ static long htab_map_update_elem(struct bpf_map *map, void *key, void *value,
->>>  		goto err;
->>>  	}
->>>  
->>> -	/* add new element to the head of the list, so that
->>> -	 * concurrent search will find it before old elem
->>> -	 */
->>> -	hlist_nulls_add_head_rcu(&l_new->hash_node, head);
->>> -	if (l_old) {
->>> -		hlist_nulls_del_rcu(&l_old->hash_node);
->>> +	if (!l_old) {
->>> +		hlist_nulls_add_head_rcu(&l_new->hash_node, head);
->>> +	} else {
->>> +		/* Replace the old element atomically, so that
->>> +		 * concurrent search will find either the new element or
->>> +		 * the old element.
->>> +		 */
->>> +		hlist_nulls_replace_rcu(&l_new->hash_node, &l_old->hash_node);
->>>  
->>>  		/* l_old has already been stashed in htab->extra_elems, free
->>>  		 * its special fields before it is available for reuse. Also
->>>
->> After thinking about it the second time, the atomic list replacement on
->> the update side is enough to make lookup operation always find the
->> existing element. However, due to the immediate reuse, the lookup may
->> find an unexpected value. Maybe we should disable the immediate reuse
->> for specific map (e.g., htab of maps).
-> Hmm, in an RCU-protected data structure, reusing the memory before an
-> RCU grace period has elapsed is just as wrong as freeing it, isn't it?
-> I.e., the reuse logic should have some kind of call_rcu redirection to
-> be completely correct?
+Changes are described in [1], and [2] improve the patch further.
 
-Not for all cases. There is SLAB_TYPESAFE_BY_RCU-typed slab. For hash
-map, the reuse is also tricky (e.g., the goto again case in
-lookup_nulls_elem_raw), however it can not prevent the lookup procedure
-from returning unexpected value. I had post a patch set [1] to "fix"
-that, but Alexei said it is "a known quirk". Here I am not sure about
-whether it is reasonable to disable the reuse for htab of maps only. I
-will post a v2 for the patch set.
+The following patch is the result of [1] and [2] combined.
+Code compiled successfully, but I couldn't test the changes because of some
+trouble emulating a loongarch machine; I tried to boot with and without
+this patch, but a panic occurred, due likely to a wrong VM configuration
+(panic occurred right after the i8042 probing).
 
-[1]:
-https://lore.kernel.org/bpf/20221230041151.1231169-1-houtao@huaweicloud.com/
-> -Toke
+
+- [1] https://lore.kernel.org/all/20230811170049.308866-5-frederic@kernel.org/#t
+- [2] https://lore.kernel.org/all/06cf8750-901d-2f65-fb9e-81980688e017@loongson.cn/
+
+---
+Changes in v2:
+ - arch/loongarch/kernel/genex.S: code improved as suggested by Huacai: 
+	https://lore.kernel.org/loongarch/CAAhV-H6OKwmxhF_iWJEc8OEZ==h8dTdorTwkE8oMUMWAbU6xeg@mail.gmail.com/
+ - arch/loongarch/kernel/reset.c: asm inline inside the while loops
+
+Marco Crivellari (1):
+  loongson: Fix idle VS timer enqueue
+
+ arch/loongarch/kernel/genex.S | 31 +++++++++++++++++--------------
+ arch/loongarch/kernel/idle.c  |  3 +--
+ arch/loongarch/kernel/reset.c | 18 +++++++++---------
+ 3 files changed, 27 insertions(+), 25 deletions(-)
+
+-- 
+2.48.1
 
