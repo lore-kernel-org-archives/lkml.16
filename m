@@ -1,161 +1,75 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2274B23C8DA;
-	Sat,  8 Feb 2025 07:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0733A23C8DA
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 07:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739000321; cv=none; b=a9ahV2zIr9Avhm4vEmW7FNHeoMVon1AoyCx5MICevCBMC/6+kYG0TSBtUuUVg4fA4MlVJDtGkxgpQ0y5XKVaa8/yOsftVVIhepbG++H3yzuHHuZEMkT1bX+hYke0G2MECpQAcvZlF9PeojnQe29ZhS/lcdKigARsJMxhoSGpk58=
+	t=1739000525; cv=none; b=HEl0VWbBesE4Tn1i+hjrazFaC37lwYhiH0DXKbzLynftLA2EDdC5GPgwJTBI3t/FBK1qIsvvMGeb02gIpJ8h453wyUcTtyXJuHVidSnHhSI5qtQUo1HZyiX3eLNzCtXw9yER1w5IX/IqdrjxSeI60/d+Eruqj9uzW0jRDlPeJfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739000321; c=relaxed/simple;
-	bh=gJwHQ301n54yDLIUCwOZAzB5Xz3YPPzzFr+9JQJ1TAQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=huTn3VRGp1lWI9X9fjwIFMDzhcUdVISJDkvKlxQtGptO54Mhl22YaoTa9twKooRqYQx5kYnnwltfdyPTBHY4/PVFkD1T8yM7ChLfG0claaKXTNP/mjRIC7wxtRiR3/ppLqKz+IGFIYz/VFpm3dbfGdalSvfPc92pQZ4p236hgqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gPZzGdsH; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739000525; c=relaxed/simple;
+	bh=j2C53R8ivGhnPuA24g/BAaFIt165BsqX6Kgua/nyVjA=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=AHxV5ruiDtQwL8IrWEc9bu4NBnY+a/iOSvDTl2ddElp9eajGW1jiiwQBKxv4Wjx4ym3dQmQmVGJDkSjfkNHB6rB5Zdd3bYMeEE2SLQBHi8uytvwhl1kddBOUFyNVar5IC7s539OJrgEllMg17MU2618HYqFh9aQEimFOlq/AQoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net; spf=pass smtp.mailfrom=bit-philosophy.net; dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b=fpE+P7By; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bit-philosophy.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gPZzGdsH"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21f74c4e586so1270145ad.0;
-        Fri, 07 Feb 2025 23:38:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739000319; x=1739605119; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z54dLS16FfQUBcnzyVaUR4t6WdUrnvHtbPjH8Gr7x9s=;
-        b=gPZzGdsH2YfvPCiwmbcQZ8YqzukbKFmVil+voSVU0u8uuGH3g7ZYkQKzhTbsFgY703
-         Tb4iXcDVRumb+V1LdsLv7S3dpZyZCJHULLRzpn1FJt4f6GKbKdsJaKkQunDFICFNA9tH
-         YtvXTfhCOhR1NM+h10lyn2Z1E6ujurMqmlJO6TbSHfnZtlzLhUn+tKSdX/tMa3h07usF
-         IVuSOu1YMOL4WBiL+mY/jS1bEl/2uMX8ld8MCIAIwBr5/LrykONivESD8UPExvgj58Ob
-         DI7zAZN7kCiyo0IyQbsnKOWiGiFx3KflpaZJK6tRK/PnwIzMi8SPnsaWS4KMtEZTfpr9
-         46Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739000319; x=1739605119;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z54dLS16FfQUBcnzyVaUR4t6WdUrnvHtbPjH8Gr7x9s=;
-        b=e8Z9zzVoIfDQCyn2FM2W4Ww0BvCmjcDclrLTmDH1C+qufIYFnSRZSkAXxQIKXyTu8G
-         kUWliZYkebkQAEKhT/53f2GK44j+/FEMg1ykN4emdML2FfjXG1oxOlUoeiYNtwii3JrA
-         Q3EcvigWkfRwafd8z5DqkfzXRLC8hf51CZ/hbV2RPHey78EwuFuaiIKLeSBDqvXGDln3
-         OZAu1XeDSXr8wc/l99KJmtKcWGMQyV5zHZaDeiEYbgHmbxXAxbhbModssCbbptltLyLj
-         QA1lI+rFQsO81Cm9s50FNGFAsZnugI2thM5XqRfe0/jh3h+eVatCpdmCaNFCcu9E0dfO
-         s3RA==
-X-Forwarded-Encrypted: i=1; AJvYcCXNbcZZKLKppKWsWSu/fRuNZHgW4Aaph/pDsW2Qc/bRos5GLlQq9mt68gEJ/c3R0J8lb1WbJdmzePSW7A==@vger.kernel.org, AJvYcCXg+0VAB83JWjxCIFIjX4OgK20GIpqHVxjcgd+qTqo8lRFOD0O2twWM0CpG8DrWzVBHy/YuPkIw9Uvw2+ux@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlQV2G87MEfzbc53VrPUhTIYh1UqlWXXROxUUjYVa3bnQzycEp
-	rXrVKXurO0pDfMiZ+j8Q15Y25GsOT+6MemFf9QpnX+KUNDKqGIeO
-X-Gm-Gg: ASbGncuUVlJ69wHzCE/faQcTs7N2ddujEOCmacf/ghctcZ1AdcEEOm9AQqFwkxloPCC
-	vDQay82jBKeiax/R3L+GvBANFDObdBRWNFNu/P2XM7pMCkTdvkO37mJsu/eXjoDn7vh+tvovnBL
-	Q6DDhifDRngcoikgDaiauPVvh4YBz9CYioujBFNi2odM7IwcFUqE61N9vRzExTDoJzm7vxX8aQy
-	lk1ZysoI94cFJDAiH19MMWwjdSFrt2QAlZSVGwtHd3DoPRn0oBVsNKyHUhcFS4wKIdKLJxv0/rK
-	K22emhXBQU+/Sf97Y9ao
-X-Google-Smtp-Source: AGHT+IFea8Qp3ADaO0op//WS9gpLy5ge0G1SmFnomVBxwldU/I/LVQjgkVNEAP78TLLvMrEcaMWiGA==
-X-Received: by 2002:a17:902:d589:b0:215:9894:5670 with SMTP id d9443c01a7336-21f4e6b2660mr114185755ad.16.1739000319256;
-        Fri, 07 Feb 2025 23:38:39 -0800 (PST)
-Received: from localhost ([124.127.236.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687c17csm42017115ad.183.2025.02.07.23.38.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 23:38:38 -0800 (PST)
-From: Hao-ran Zheng <zhenghaoran154@gmail.com>
-To: clm@fb.com,
-	josef@toxicpanda.com,
-	dsterba@suse.com,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: baijiaju1990@gmail.com,
-	zhenghaoran154@gmail.com,
-	21371365@buaa.edu.cn
-Subject: [PATCH] btrfs: fix data race when accessing the block_group's used field
-Date: Sat,  8 Feb 2025 15:38:29 +0800
-Message-Id: <20250208073829.1176287-1-zhenghaoran154@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b="fpE+P7By"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=bit-philosophy.net; s=ds202411; h=Content-Transfer-Encoding:Content-Type:
+	Subject:From:To:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=JFemzGLn7nmfhKKdch5Xp13ZHbfez35zmb5LdzxnosQ=; b=fpE+P7By5B9NgLu+4wBUcivG1V
+	xIwUDOvBYRaQvjC4Qo4jq9lmWQMLzrKcQAGdKfomS/oJuebIzt6ItcWr45vNTxNDFQS+s/henGUWQ
+	4bZt5WM3HROgNwIAbKICrl+UXcpgAghsKjMET52nOPCe9fULKsFvO/EwjLxdyKZGmhhmvARLfb5qt
+	ajvSi257UoNRkTA5qlkn5Aas180IP0f0jIlTuiEcq9hT0dYm9dPDx+kqabChvC9deRpQw92zXr7VU
+	VUc5W9LIJSXNcK3mgvvU90KMM0VP2DKFYisXbrUmIPivcEeDwyLTbzhhebY4coqO/40QVH2wwwarP
+	waAvlCKg==;
+Received: from smtp
+	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	id 1tgfTO-005bco-Od
+	for linux-kernel@vger.kernel.org;
+	Sat, 08 Feb 2025 08:41:54 +0100
+Message-ID: <4bc3958d-e143-4e25-8f54-fed442e6fe3e@bit-philosophy.net>
+Date: Sat, 8 Feb 2025 08:41:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: linux-kernel@vger.kernel.org
+From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywe@bit-philosophy.net>
+Subject: Emo System (was Unification, Fair Pay, Low Jitter)
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-A data race may occur when the function `btrfs_discard_queue_work()`
-and the function `btrfs_update_block_group()` is executed concurrently.
-Specifically, when the `btrfs_update_block_group()` function is executed
-to lines `cache->used = old_val;`, and `btrfs_discard_queue_work()`
-is accessing `if(block_group->used == 0)` will appear with data race,
-which may cause block_group to be placed unexpectedly in discard_list or
-discard_unused_list. The specific function call stack is as follows:
+Emo of '1 is a superset of Sabians, Nazarenes, Hackers and Witches. (and 
+more), unifying efforts. ('1 is The One, which is a popculture angle on 
+The Theo).
 
-============DATA_RACE============
- btrfs_discard_queue_work+0x245/0x500 [btrfs]
- __btrfs_add_free_space+0x3066/0x32f0 [btrfs]
- btrfs_add_free_space+0x19a/0x200 [btrfs]
- unpin_extent_range+0x847/0x2120 [btrfs]
- btrfs_finish_extent_commit+0x9a3/0x1840 [btrfs]
- btrfs_commit_transaction+0x5f65/0xc0f0 [btrfs]
- transaction_kthread+0x764/0xc20 [btrfs]
- kthread+0x292/0x330
- ret_from_fork+0x4d/0x80
- ret_from_fork_asm+0x1a/0x30
-============OTHER_INFO============
- btrfs_update_block_group+0xa9d/0x2430 [btrfs]
- __btrfs_free_extent+0x4f69/0x9920 [btrfs]
- __btrfs_run_delayed_refs+0x290e/0xd7d0 [btrfs]
- btrfs_run_delayed_refs+0x317/0x770 [btrfs]
- flush_space+0x388/0x1440 [btrfs]
- btrfs_preempt_reclaim_metadata_space+0xd65/0x14c0 [btrfs]
- process_scheduled_works+0x716/0xf10
- worker_thread+0xb6a/0x1190
- kthread+0x292/0x330
- ret_from_fork+0x4d/0x80
- ret_from_fork_asm+0x1a/0x30
-=================================
+So the effort is now Emo System.
 
-Although the `block_group->used` was checked again in the use of the
-`peek_discard_list` function, considering that `block_group->used` is
-a 64-bit variable, we still think that the data race here is an
-unexpected behavior. It is recommended to add `READ_ONCE` and
-`WRITE_ONCE` to read and write.
 
-Signed-off-by: Hao-ran Zheng <zhenghaoran154@gmail.com>
----
- fs/btrfs/block-group.c | 4 ++--
- fs/btrfs/discard.c     | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+NB: Some disassociations also: Bitwig, Beatport, and Bitcoin are NOT 
+about me!
 
-diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
-index c0a8f7d92acc..c681b97f6835 100644
---- a/fs/btrfs/block-group.c
-+++ b/fs/btrfs/block-group.c
-@@ -3678,7 +3678,7 @@ int btrfs_update_block_group(struct btrfs_trans_handle *trans,
- 	old_val = cache->used;
- 	if (alloc) {
- 		old_val += num_bytes;
--		cache->used = old_val;
-+		WRITE_ONCE(cache->used, old_val);
- 		cache->reserved -= num_bytes;
- 		cache->reclaim_mark = 0;
- 		space_info->bytes_reserved -= num_bytes;
-@@ -3690,7 +3690,7 @@ int btrfs_update_block_group(struct btrfs_trans_handle *trans,
- 		spin_unlock(&space_info->lock);
- 	} else {
- 		old_val -= num_bytes;
--		cache->used = old_val;
-+		WRITE_ONCE(cache->used, old_val);
- 		cache->pinned += num_bytes;
- 		btrfs_space_info_update_bytes_pinned(space_info, num_bytes);
- 		space_info->bytes_used -= num_bytes;
-diff --git a/fs/btrfs/discard.c b/fs/btrfs/discard.c
-index e815d165cccc..71c57b571d50 100644
---- a/fs/btrfs/discard.c
-+++ b/fs/btrfs/discard.c
-@@ -363,7 +363,7 @@ void btrfs_discard_queue_work(struct btrfs_discard_ctl *discard_ctl,
- 	if (!block_group || !btrfs_test_opt(block_group->fs_info, DISCARD_ASYNC))
- 		return;
- 
--	if (block_group->used == 0)
-+	if (READ_ONCE(block_group->used) == 0)
- 		add_to_discard_unused_list(discard_ctl, block_group);
- 	else
- 		add_to_discard_list(discard_ctl, block_group);
--- 
-2.34.1
+https://www.bitwig.com/  (I am tracker oriented, and support Zevs 
+tracker myself).
+https://www.beatport.com/ (Beatport seems to emphasise "gay", which is 
+not my clique. (That is Emo. Note samesex attracted people can also be 
+Emo theoretically, but these are not really "in your face" problematic 
+like "gay", so not a problem.)
+Bitcoin was planned to become Ethereum, misusing a referance to me, 
+claiming it was something I, or other "emos" looked for. But it is not. 
+(no "mining" here). Let it become Ethereum, which is about their own 
+clique. https://ethereum.org/en/
 
+Light!
+Ywe,
+https://bit-philosophy.net/
