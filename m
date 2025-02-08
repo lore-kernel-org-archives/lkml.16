@@ -1,351 +1,224 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF391AF0C0
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 12:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59BF10E5;
+	Sat,  8 Feb 2025 12:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739016496; cv=none; b=foehfA8n/ttFY8lqHRvwr7gFFjB2vDR/KUI1aYR1zYlIYLaE1uQ252uwASSMljjGw4SakkA08u4F8Lymkd904F+AIkiwKngXRYnUREsl5l/VV4SkxLzAK72bsGwn7OkcyoTiOtZgFvNvRaji6PSxDbPc6qmCkop+enElcjdl7DI=
+	t=1739016632; cv=none; b=Ra5AkgyOzyZUl1n1FiAWnUJY6JqWM8yimSZ46sTtBk58RoEtYqCJL4qPszViuqW1dsudAX/r2tDrw6rR3EayVxELqBn5+kinRfA8r5CKqlNghDs1WxOe5hr9Zo5t9okhYOnUXhS7vw9UJPDNz9aYpsBfjHQI/HTRJ4uVSh9AOtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739016496; c=relaxed/simple;
-	bh=Ssnyo9VyIAM8pva2OYMvXc2B0RHjo82FxMW3rjVc928=;
+	s=arc-20240116; t=1739016632; c=relaxed/simple;
+	bh=6oZ5OWghXld3PvdlVB3z/5/NzoGFEbUv/gndN8DA9PU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RS6hgQP9SCFfBEbLs+1AzGYkyiMbO17lKWKLj/Q/jKuBI8KKrkC0rHUOkK8I96VKxHj4BRlhxPCypHqnKae0TzP6x7+fQSxwlfMXOvXCAJeubCOYzxdPVKwdEv6QuCifrv9PZtl9IkMwZ7ZqplzDI2YtZd9Ze2BKL8mYSHKrUxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SmT3KjK6; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=n1aV639lt3asuVwqRqWrLjih+7l2tpn0Z2Glbgmha8HIOtOW1GfPOkjrtw3ZD4fRmND0CUy4z37wKi5B+LBC1cC+jVymbTE+8E+lX/8dXwGjXArUp/jZkcDlnlFDjcRu35rIlSMpom808FE4F6GWgKipn0u4Kay7ZI5RJ6CsYjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1txwx7R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SmT3KjK6"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6f4b266d333so24297897b3.2
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 04:08:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739016494; x=1739621294; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/Zt8Zd6LBkBERA7ooFuXtkwFywenX9KvT5J9Ev7NBbY=;
-        b=SmT3KjK6n61WH8vpSRzd2AXNFvRG3uPm90XyYrfqLzyj9pVX2MhHlXn5zx79Q1MBSM
-         qzuqBhp+CiLCDPGyS3JxFycfHc6x+HuD7NsFQQ1Z1V1tRVDQDUZRc3tUt0UVvMaJJPQ2
-         AAdHNGzkq7MD0ff+i191jNzlPjRPLn+JLvqFnfoENRl124ttioaLOy5QIH8v0B5PDvMJ
-         HnMZlbjsb2rsdU7mS9HMUx86haLKO+fMUwt9qQFmfdpMrUx2ji8mz6AtR/ZjRmUn/ILh
-         BKFsp74xtvjR70w6/XqJREGkljtPZAGfDvz87KSNrZTWFM9e1aAj/WqQFY3yNlluNKa3
-         qnFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739016494; x=1739621294;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/Zt8Zd6LBkBERA7ooFuXtkwFywenX9KvT5J9Ev7NBbY=;
-        b=PLnQXzd8rULDZqcW2vPJoi0kO+7MAOO0vEhBO3L63Ys74y9w57DQR46ta0dRRCiPAt
-         Zb3qgImlR7kM8R0SNIFw6zoVgylnUeMv2bPuTWgUxxjErnxt8sn2qIPguOi22lVPAHCR
-         eQ+SAD/slt6X4xk8FcaTxd4UG+Bl8qiPelAh5l8T2bWC58jHRvZw5rQ3wMKn+9fop2nW
-         +7v8vEdEtjMYPLme4b8jrXAmJDYG1FY6mU8rEnNRPAdw2mMo7DQX3804VwL+wsJIYHoD
-         1Nnu5xc+0eBYtdzWP00OjluYOPOA6StvqCzj1rf8+e1R4jJY/MG5p2F/AYruMUmGsSBS
-         RFtA==
-X-Forwarded-Encrypted: i=1; AJvYcCX+B9mpZ2wO49yG4Tgv8eyBXjuYhe2hWogeJuf8uey3KoNe1kl2VHLAgzMmu8Ao68evwKgHruNCFTd2ccU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTUVJqSgp9FnjrAXGP7fE4rqVCjTYrG64mbT3B06zNHbYHaHKe
-	FmUT57hJoNwuT3yfqhYGN0pKUYs4E0W8CiFHgob75e1kn1tdKGvP/4wdB+pv2ilB3ThcOXVwcoB
-	M8JGFjJejVpEtWGrTYocybnIVQclGQDOxYUk4
-X-Gm-Gg: ASbGncsN60C9sSRAeshDEggFvjkfrWpRXj0c3lNWlehvJRqD8rWxXk55AVad53L+vxV
-	jqoWhsODsGXM68yAMVsL8kxCDLyEzgFwWZvKEkUkaQXoXXO7hvU80Y2pH4xfXGz3N4rEixKc=
-X-Google-Smtp-Source: AGHT+IHbc5t216DziMKA/qH4qbQlaaLaZ7//6CCbqp1bfIXzjDsCdH1m5P2aIHIqrw7iwj/5iV2+qvQ71f00ZH2+wco=
-X-Received: by 2002:a05:690c:6f83:b0:6ef:9017:3cd8 with SMTP id
- 00721157ae682-6f9b2a1a007mr64731167b3.35.1739016493845; Sat, 08 Feb 2025
- 04:08:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1txwx7R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 111C4C4CEE2;
+	Sat,  8 Feb 2025 12:10:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739016632;
+	bh=6oZ5OWghXld3PvdlVB3z/5/NzoGFEbUv/gndN8DA9PU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=a1txwx7Rz9vQvHyhAdvFHeZ6lkokhOXDlJL8omqvwEKYX+38riZy8Xjas/SHNpg4+
+	 XY0FJObJ9szhV2hZtu5LFxZsVBLtoe2Ickyk63Ed1lEy9C7xwRS8Hyh3R8ksXrV+ci
+	 vn3t1Sev5NCCVvJfSs6eYuyp9CS7VP54GfsuX2aBRoda9neyN+mfXcvRow1yL0Inqr
+	 /2xK95tBVdHHiURH+NhE98wyBJFBJWADMSoqDyxGdbnqMHgCvcJHou5CkJJNXoNFQI
+	 xdTRSdY4iY4EWebk088ChTuvcI70T/wtpxGtGasNrMZYC18LP7DNm5ydTS7UsjLGcQ
+	 MVvahGwyA7wmA==
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5fa2685c5c0so1172049eaf.3;
+        Sat, 08 Feb 2025 04:10:32 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVDGNMwHi7x9c3Esu0mJTCvEczkbvsH6UZYYutWldn8uQzGSlzt9IixLPxL8FQMv+ZT2jvqMWWvoN/Nh0M=@vger.kernel.org, AJvYcCWviU3Q4Apxen2INMQA6BQ0GgzqXoNNMhfa/wYBzYtEul5G70nmw3RtV8asnojHlJGVkWNpXDg8SuXMOJQ=@vger.kernel.org, AJvYcCX6T6CfvVib1Ya/cpt2AwrSd0vcwHP/A9CwkY+bZe0p1WJC327U/AK0XD1esfGDncHwSaWVr8RCPJo=@vger.kernel.org, AJvYcCXJTRdHbwA/9xUhbqrY83uwjwsdMTKqswLnIsMrtydsWD+6/17KsXtN7yI0Rx1UdPTiX6Q+CDeompaT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5gR2xQmhiwc0TOJYbU1JRdrA+VGVWzgB+WFkCDJfA91RtUGUS
+	9JoomuWQ4gUepkm7xx8ui0rzafksRyJuz52cLMYI3SaQl10oyxtMLawLnemePW1iC/ILj1AQzjG
+	SXJu1qDILjQ0VNiz1sm9fXF9ZLmg=
+X-Google-Smtp-Source: AGHT+IFq6fmcRzmDyKnw2OvsUb4nru+t3ZEYcOH4DS7zxRquZD+pDngpr41ZsPvbiECMzLbO5HL5S1HnGi5n1h9xpLw=
+X-Received: by 2002:a05:6820:827:b0:5fa:73ed:de8 with SMTP id
+ 006d021491bc7-5fc5e71b079mr4287646eaf.6.1739016631273; Sat, 08 Feb 2025
+ 04:10:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250122131925.v2.1.If6f14aa2512336173a53fc3552756cd8a332b0a3@changeid>
- <CABBYNZKoXT4u4=KJZUvG4g1OEi+xQ-LchiH8gvEZURNTzJoQDw@mail.gmail.com>
- <CADg1FFdt2mQsN4YjLTn=zp_+MahopN371EDiXQEbp+GTSaNtBg@mail.gmail.com>
- <CABBYNZJ__OMJZtEE0BFpaUdKPQv+Ym-OnsJj-kN=i_gZCeVN5w@mail.gmail.com>
- <CABBYNZ+aEpJNnz1OSAeqOxFf4s2AbvoRC+FJcRS6y5+g0Mmu+g@mail.gmail.com> <CADg1FFfhwAFD+mthx3qw_ZUtt6=1Y6pR+jX7+etwMhQFX9Ja+w@mail.gmail.com>
-In-Reply-To: <CADg1FFfhwAFD+mthx3qw_ZUtt6=1Y6pR+jX7+etwMhQFX9Ja+w@mail.gmail.com>
-From: Hsin-chen Chuang <chharry@google.com>
-Date: Sat, 8 Feb 2025 20:07:46 +0800
-X-Gm-Features: AWEUYZkkWZgY0WytBMUAMmTgG7Qnm_AicD8qLTXE5k2MIbtU_c1bdYcXfTl-BF8
-Message-ID: <CADg1FFeLhtU=anU0_SbcSvSYLpYj6qJDSbuABu+RwWBafYufQA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] Bluetooth: Fix possible race with userspace of
- sysfs isoc_alt
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org, 
-	chromeos-bluetooth-upstreaming@chromium.org, 
-	Hsin-chen Chuang <chharry@chromium.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Johan Hedberg <johan.hedberg@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Ying Hsu <yinghsu@chromium.org>, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <12619233.O9o76ZdvQC@rjwysocki.net> <1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com>
+ <Z6YPpbRF_U0TxAbf@hovoldconsulting.com> <Z6YcjFBWAVVVANf2@hovoldconsulting.com>
+ <CAJZ5v0iHjkfoh2A+hAmMCTG9_nBcJrsRYFD0Hp4ZChYUo7bFEg@mail.gmail.com>
+ <Z6YviAFD4Az3EIBa@hovoldconsulting.com> <Z6Y0NlW40yHTIlzm@hovoldconsulting.com>
+ <CAJZ5v0gBCQW2wwdB+4SyBXtqiis2k1Z2L8SOVKwcVbNxPHqvYA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0gBCQW2wwdB+4SyBXtqiis2k1Z2L8SOVKwcVbNxPHqvYA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Sat, 8 Feb 2025 13:10:19 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0gUcy4V-iztFumRZDUArQHiXE01vW3uC8Y01xnBD6Xi0Q@mail.gmail.com>
+X-Gm-Features: AWEUYZl8o4c7RwAXBNYFREaNrw5dxg8_D3B3WawlN0Lh8IZl08GlNF1Jk9NXMxk
+Message-ID: <CAJZ5v0gUcy4V-iztFumRZDUArQHiXE01vW3uC8Y01xnBD6Xi0Q@mail.gmail.com>
+Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
+ parents and children
+To: Johan Hovold <johan@kernel.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Xie <kevin.xie@starfivetech.com>, 
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="00000000000090f20d062da05cec"
+
+--00000000000090f20d062da05cec
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Luiz,
-
-On Fri, Jan 31, 2025 at 6:23=E2=80=AFPM Hsin-chen Chuang <chharry@google.co=
-m> wrote:
+On Fri, Feb 7, 2025 at 7:14=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.org=
+> wrote:
 >
-> Hi Luiz,
->
-> Good point. Although the sysfs-bus-usb API only supports reading
-> rather than writing the alt setting, I'll look for the opportunity to
-> configure it through libusb first.
->
-> Thanks
->
-> On Sat, Jan 25, 2025 at 12:06=E2=80=AFAM Luiz Augusto von Dentz
-> <luiz.dentz@gmail.com> wrote:
+> On Fri, Feb 7, 2025 at 5:26=E2=80=AFPM Johan Hovold <johan@kernel.org> wr=
+ote:
 > >
-> > Hi Hsin-chen,
-> >
-> > On Fri, Jan 24, 2025 at 10:54=E2=80=AFAM Luiz Augusto von Dentz
-> > <luiz.dentz@gmail.com> wrote:
+> > On Fri, Feb 07, 2025 at 05:06:32PM +0100, Johan Hovold wrote:
+> > > On Fri, Feb 07, 2025 at 04:41:18PM +0100, Rafael J. Wysocki wrote:
+> > > > On Fri, Feb 7, 2025 at 3:45=E2=80=AFPM Johan Hovold <johan@kernel.o=
+rg> wrote:
+> > > > > On Fri, Feb 07, 2025 at 02:50:29PM +0100, Johan Hovold wrote:
 > > >
-> > > Hi Hsin-chen,
-> > >
-> > > On Wed, Jan 22, 2025 at 11:57=E2=80=AFPM Hsin-chen Chuang <chharry@go=
-ogle.com> wrote:
+> > > > > Ok, so the driver data is never set and runtime PM is never enabl=
+ed for
+> > > > > this simple bus device, which uses pm_runtime_force_suspend() for=
+ system
+> > > > > sleep.
 > > > >
-> > > > Hi Luiz,
-> > > >
-> > > > On Thu, Jan 23, 2025 at 3:35=E2=80=AFAM Luiz Augusto von Dentz
-> > > > <luiz.dentz@gmail.com> wrote:
-> > > > >
-> > > > > Hi Hsin-chen,
-> > > > >
-> > > > > On Wed, Jan 22, 2025 at 12:20=E2=80=AFAM Hsin-chen Chuang <chharr=
-y@google.com> wrote:
-> > > > > >
-> > > > > > From: Hsin-chen Chuang <chharry@chromium.org>
-> > > > > >
-> > > > > > Use device group to avoid the racing. To reuse the group define=
-d in
-> > > > > > hci_sysfs.c, defined 2 callbacks switch_usb_alt_setting and
-> > > > > > read_usb_alt_setting which are only registered in btusb.
-> > > > > >
-> > > > > > Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute to =
-control USB alt setting")
-> > > > > > Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
-> > > > > > ---
-> > > > > >
-> > > > > > (no changes since v1)
-> > > > > >
-> > > > > >  drivers/bluetooth/btusb.c        | 42 ++++++++----------------=
---------
-> > > > > >  include/net/bluetooth/hci_core.h |  2 ++
-> > > > > >  net/bluetooth/hci_sysfs.c        | 33 ++++++++++++++++++++++++=
-+
-> > > > > >  3 files changed, 45 insertions(+), 32 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btus=
-b.c
-> > > > > > index 75a0f15819c4..bf210275e5b7 100644
-> > > > > > --- a/drivers/bluetooth/btusb.c
-> > > > > > +++ b/drivers/bluetooth/btusb.c
-> > > > > > @@ -2221,6 +2221,13 @@ static int btusb_switch_alt_setting(stru=
-ct hci_dev *hdev, int new_alts)
-> > > > > >         return 0;
-> > > > > >  }
-> > > > > >
-> > > > > > +static int btusb_read_alt_setting(struct hci_dev *hdev)
-> > > > > > +{
-> > > > > > +       struct btusb_data *data =3D hci_get_drvdata(hdev);
-> > > > > > +
-> > > > > > +       return data->isoc_altsetting;
-> > > > > > +}
-> > > > > > +
-> > > > > >  static struct usb_host_interface *btusb_find_altsetting(struct=
- btusb_data *data,
-> > > > > >                                                         int alt=
-)
-> > > > > >  {
-> > > > > > @@ -3650,32 +3657,6 @@ static const struct file_operations forc=
-e_poll_sync_fops =3D {
-> > > > > >         .llseek         =3D default_llseek,
-> > > > > >  };
-> > > > > >
-> > > > > > -static ssize_t isoc_alt_show(struct device *dev,
-> > > > > > -                            struct device_attribute *attr,
-> > > > > > -                            char *buf)
-> > > > > > -{
-> > > > > > -       struct btusb_data *data =3D dev_get_drvdata(dev);
-> > > > > > -
-> > > > > > -       return sysfs_emit(buf, "%d\n", data->isoc_altsetting);
-> > > > > > -}
-> > > > > > -
-> > > > > > -static ssize_t isoc_alt_store(struct device *dev,
-> > > > > > -                             struct device_attribute *attr,
-> > > > > > -                             const char *buf, size_t count)
-> > > > > > -{
-> > > > > > -       struct btusb_data *data =3D dev_get_drvdata(dev);
-> > > > > > -       int alt;
-> > > > > > -       int ret;
-> > > > > > -
-> > > > > > -       if (kstrtoint(buf, 10, &alt))
-> > > > > > -               return -EINVAL;
-> > > > > > -
-> > > > > > -       ret =3D btusb_switch_alt_setting(data->hdev, alt);
-> > > > > > -       return ret < 0 ? ret : count;
-> > > > > > -}
-> > > > > > -
-> > > > > > -static DEVICE_ATTR_RW(isoc_alt);
-> > > > > > -
-> > > > > >  static int btusb_probe(struct usb_interface *intf,
-> > > > > >                        const struct usb_device_id *id)
-> > > > > >  {
-> > > > > > @@ -4040,9 +4021,8 @@ static int btusb_probe(struct usb_interfa=
-ce *intf,
-> > > > > >                 if (err < 0)
-> > > > > >                         goto out_free_dev;
-> > > > > >
-> > > > > > -               err =3D device_create_file(&intf->dev, &dev_att=
-r_isoc_alt);
-> > > > > > -               if (err)
-> > > > > > -                       goto out_free_dev;
-> > > > > > +               hdev->switch_usb_alt_setting =3D btusb_switch_a=
-lt_setting;
-> > > > > > +               hdev->read_usb_alt_setting =3D btusb_read_alt_s=
-etting;
-> > > > > >         }
-> > > > > >
-> > > > > >         if (IS_ENABLED(CONFIG_BT_HCIBTUSB_BCM) && data->diag) {
-> > > > > > @@ -4089,10 +4069,8 @@ static void btusb_disconnect(struct usb_=
-interface *intf)
-> > > > > >         hdev =3D data->hdev;
-> > > > > >         usb_set_intfdata(data->intf, NULL);
-> > > > > >
-> > > > > > -       if (data->isoc) {
-> > > > > > -               device_remove_file(&intf->dev, &dev_attr_isoc_a=
-lt);
-> > > > > > +       if (data->isoc)
-> > > > > >                 usb_set_intfdata(data->isoc, NULL);
-> > > > > > -       }
-> > > > > >
-> > > > > >         if (data->diag)
-> > > > > >                 usb_set_intfdata(data->diag, NULL);
-> > > > > > diff --git a/include/net/bluetooth/hci_core.h b/include/net/blu=
-etooth/hci_core.h
-> > > > > > index f756fac95488..5d3ec5ff5adb 100644
-> > > > > > --- a/include/net/bluetooth/hci_core.h
-> > > > > > +++ b/include/net/bluetooth/hci_core.h
-> > > > > > @@ -641,6 +641,8 @@ struct hci_dev {
-> > > > > >                                      struct bt_codec *codec, __=
-u8 *vnd_len,
-> > > > > >                                      __u8 **vnd_data);
-> > > > > >         u8 (*classify_pkt_type)(struct hci_dev *hdev, struct sk=
-_buff *skb);
-> > > > > > +       int (*switch_usb_alt_setting)(struct hci_dev *hdev, int=
- new_alts);
-> > > > > > +       int (*read_usb_alt_setting)(struct hci_dev *hdev);
-> > > > > >  };
-> > > > > >
-> > > > > >  #define HCI_PHY_HANDLE(handle) (handle & 0xff)
-> > > > > > diff --git a/net/bluetooth/hci_sysfs.c b/net/bluetooth/hci_sysf=
-s.c
-> > > > > > index 041ce9adc378..887aa1935b1e 100644
-> > > > > > --- a/net/bluetooth/hci_sysfs.c
-> > > > > > +++ b/net/bluetooth/hci_sysfs.c
-> > > > > > @@ -102,8 +102,41 @@ static ssize_t reset_store(struct device *=
-dev, struct device_attribute *attr,
-> > > > > >  }
-> > > > > >  static DEVICE_ATTR_WO(reset);
-> > > > > >
-> > > > > > +static ssize_t isoc_alt_show(struct device *dev,
-> > > > > > +                            struct device_attribute *attr,
-> > > > > > +                            char *buf)
-> > > > > > +{
-> > > > > > +       struct hci_dev *hdev =3D to_hci_dev(dev);
-> > > > > > +
-> > > > > > +       if (hdev->read_usb_alt_setting)
-> > > > > > +               return sysfs_emit(buf, "%d\n", hdev->read_usb_a=
-lt_setting(hdev));
-> > > > > > +
-> > > > > > +       return -ENODEV;
-> > > > > > +}
-> > > > > > +
-> > > > > > +static ssize_t isoc_alt_store(struct device *dev,
-> > > > > > +                             struct device_attribute *attr,
-> > > > > > +                             const char *buf, size_t count)
-> > > > > > +{
-> > > > > > +       struct hci_dev *hdev =3D to_hci_dev(dev);
-> > > > > > +       int alt;
-> > > > > > +       int ret;
-> > > > > > +
-> > > > > > +       if (kstrtoint(buf, 10, &alt))
-> > > > > > +               return -EINVAL;
-> > > > > > +
-> > > > > > +       if (hdev->switch_usb_alt_setting) {
-> > > > > > +               ret =3D hdev->switch_usb_alt_setting(hdev, alt)=
-;
-> > > > > > +               return ret < 0 ? ret : count;
-> > > > > > +       }
-> > > > > > +
-> > > > > > +       return -ENODEV;
-> > > > > > +}
-> > > > > > +static DEVICE_ATTR_RW(isoc_alt);
-> > > > > > +
-> > > > > >  static struct attribute *bt_host_attrs[] =3D {
-> > > > > >         &dev_attr_reset.attr,
-> > > > > > +       &dev_attr_isoc_alt.attr,
-> > > > > >         NULL,
-> > > > > >  };
-> > > > > >  ATTRIBUTE_GROUPS(bt_host);
-> > > > >
-> > > > > While this fixes the race it also forces the inclusion of an attr=
-ibute
-> > > > > that is driver specific, so I wonder if we should introduce some
-> > > > > internal interface to register driver specific entries like this.
-> > > >
-> > > > Do you mean you prefer the original interface that only exports the
-> > > > attribute when isoc_altsetting is supported?
-> > > > Agree it makes more sense but I hit the obstacle: hci_init_sysfs is
-> > > > called earlier than data->isoc is determined. I need some time to
-> > > > verify whether changing the order won't break anything.
+> > > > This is kind of confusing.  Why use pm_runtime_force_suspend() if
+> > > > runtime PM is never enabled and cannot really work?
 > > >
-> > > We might have to do something like the following within hci_init_sysf=
-s:
-> > >
-> > > if (hdev->isoc_alt)
-> > >     dev->type =3D bt_host_isoc_alt
-> > > else
-> > >     dev->type =3D bt_host
-> > >
-> > > Now perhaps instead of adding the callbacks to hdev we add the
-> > > attribute itself, btw did you check if there isn't a sysfs entry to
-> > > interact with USB alternate settings? Because contrary to reset this
-> > > actually operates directly on the driver bus so it sort of made more
-> > > sense to me that this would be handled by USB rather than Bluetooth.
+> > > It's only done for some buses that this driver handles. The driver is
+> > > buggy; I'm preparing a fix for it regardless of the correctness of th=
+e
+> > > commit that now triggered this.
+> >
+> > Hmm. The driver implementation is highly odd, but actually works as lon=
+g
+> > as the runtime PM status is left at 'suspended' (as
+> > pm_runtime_force_resume() won't enable runtime PM unless it was enabled
+> > before suspend).
+> >
+> > So we'd strictly only need something like the below if we are going to
+> > keep the set_active propagation.
+>
+> I think you are right.
+>
+> > diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
+> > index 5dea31769f9a..d8e029e7e53f 100644
+> > --- a/drivers/bus/simple-pm-bus.c
+> > +++ b/drivers/bus/simple-pm-bus.c
+> > @@ -109,9 +109,29 @@ static int simple_pm_bus_runtime_resume(struct dev=
+ice *dev)
+> >         return 0;
+> >  }
+> >
+> > +static int simple_pm_bus_suspend(struct device *dev)
+> > +{
+> > +       struct simple_pm_bus *bus =3D dev_get_drvdata(dev);
+> > +
+> > +       if (!bus)
+> > +               return 0;
+> > +
+> > +       return pm_runtime_force_suspend(dev);
+> > +}
+> > +
+> > +static int simple_pm_bus_resume(struct device *dev)
+> > +{
+> > +       struct simple_pm_bus *bus =3D dev_get_drvdata(dev);
+> > +
+> > +       if (!bus)
+> > +               return 0;
+> > +
+> > +       return pm_runtime_force_resume(dev);
+> > +}
+> > +
+> >  static const struct dev_pm_ops simple_pm_bus_pm_ops =3D {
+> >         RUNTIME_PM_OPS(simple_pm_bus_runtime_suspend, simple_pm_bus_run=
+time_resume, NULL)
+> > -       NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_=
+force_resume)
+> > +       NOIRQ_SYSTEM_SLEEP_PM_OPS(simple_pm_bus_suspend, simple_pm_bus_=
+resume)
+> >  };
+> >
+> >  #define ONLY_BUS       ((void *) 1) /* Match if the device is only a b=
+us. */
+>
+> In the meantime, I've cut the attached (untested) patch that should
+> take care of the pm_runtime_force_suspend() issue altogether.
+>
+> It changes the code to only set the device's runtime PM status to
+> "active" if runtime PM is going to be enabled for it by the first
+> pm_runtime_enable() call, which never happens for devices where
+> runtime PM has never been enabled (because it is disabled for them
+> once again in device_suspend_late()) and for devices subject to
+> pm_runtime_force_suspend() during system suspend (because it disables
+> runtime PM for them once again).
 
-Unfortunately I tried the libusb API and it requires detaching the
-kernel driver, which means the user channel would be broken. I'll send
-out a new version which addresses the above comments, thanks.
+All right, this is not going to work.
 
-> >
-> > A quick git grep shows that this exists:
-> >
-> > Documentation/ABI/testing/sysfs-bus-usb:What:
-> > /sys/bus/usb/devices/usbX/bAlternateSetting
-> >
-> > > > >
-> > > > > > --
-> > > > > > 2.48.1.262.g85cc9f2d1e-goog
-> > > > > >
-> > > > >
-> > > > >
-> > > > > --
-> > > > > Luiz Augusto von Dentz
-> > >
-> > >
-> > >
-> > > --
-> > > Luiz Augusto von Dentz
-> >
-> >
-> >
-> > --
-> > Luiz Augusto von Dentz
+I see two problems and both are related to pm_runtime_force_suspend/resume(=
+).
 
---=20
-Best Regards,
-Hsin-chen
+The first problem is that pm_runtime_force_suspend() doesn't
+distinguish devices for which runtime PM has never been enabled from
+devices that have been runtime-suspended.  This clearly is a mistake
+as demonstrated by the breakage at hand.
+
+The second problem is that pm_runtime_force_resume() expects all
+devices to be resumed to have both runtime PM status set to
+RPM_SUSPENDED and power.needs_force_resume set.  AFAICS, checking
+power.needs_force_resume alone should be sufficient there, but even
+that is problematic because something needs to set the flag for
+devices that are expected to be resumed.
+
+Unfortunately, they both are not straightforward to address.  I have
+ideas, but nothing clear yet.
+
+For now, the power.set_active propagation can be restricted to the
+parent of the device with DPM_FLAG_SMART_SUSPEND set that needs to be
+resumed and that will just be sufficient ATM, so attached is a patch
+doing this.
+
+In the future, though, all of this needs to be addressed properly
+because if one device in a dependency chain needs to be resumed,
+whatever the reason, all of the devices depended on by it need to be
+resumed as well.
+
+--00000000000090f20d062da05cec
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="pm-sleep-restrict-set_active-propagation.patch"
+Content-Disposition: attachment; 
+	filename="pm-sleep-restrict-set_active-propagation.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_m6w5k7t70>
+X-Attachment-Id: f_m6w5k7t70
+
+LS0tCiBkcml2ZXJzL2Jhc2UvcG93ZXIvbWFpbi5jIHwgICAyMSArKysrKysrKystLS0tLS0tLS0t
+LS0KIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDEyIGRlbGV0aW9ucygtKQoKLS0t
+IGEvZHJpdmVycy9iYXNlL3Bvd2VyL21haW4uYworKysgYi9kcml2ZXJzL2Jhc2UvcG93ZXIvbWFp
+bi5jCkBAIC0xMTkxLDI0ICsxMTkxLDE4IEBACiAJcmV0dXJuIFBNU0dfT047CiB9CiAKLXN0YXRp
+YyB2b2lkIGRwbV9zdXBlcmlvcl9zZXRfbXVzdF9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2LCBi
+b29sIHNldF9hY3RpdmUpCitzdGF0aWMgdm9pZCBkcG1fc3VwZXJpb3Jfc2V0X211c3RfcmVzdW1l
+KHN0cnVjdCBkZXZpY2UgKmRldikKIHsKIAlzdHJ1Y3QgZGV2aWNlX2xpbmsgKmxpbms7CiAJaW50
+IGlkeDsKIAotCWlmIChkZXYtPnBhcmVudCkgeworCWlmIChkZXYtPnBhcmVudCkKIAkJZGV2LT5w
+YXJlbnQtPnBvd2VyLm11c3RfcmVzdW1lID0gdHJ1ZTsKLQkJaWYgKHNldF9hY3RpdmUpCi0JCQlk
+ZXYtPnBhcmVudC0+cG93ZXIuc2V0X2FjdGl2ZSA9IHRydWU7Ci0JfQogCiAJaWR4ID0gZGV2aWNl
+X2xpbmtzX3JlYWRfbG9jaygpOwogCi0JbGlzdF9mb3JfZWFjaF9lbnRyeV9yY3VfbG9ja2VkKGxp
+bmssICZkZXYtPmxpbmtzLnN1cHBsaWVycywgY19ub2RlKSB7CisJbGlzdF9mb3JfZWFjaF9lbnRy
+eV9yY3VfbG9ja2VkKGxpbmssICZkZXYtPmxpbmtzLnN1cHBsaWVycywgY19ub2RlKQogCQlsaW5r
+LT5zdXBwbGllci0+cG93ZXIubXVzdF9yZXN1bWUgPSB0cnVlOwotCQlpZiAoc2V0X2FjdGl2ZSkK
+LQkJCWxpbmstPnN1cHBsaWVyLT5wb3dlci5zZXRfYWN0aXZlID0gdHJ1ZTsKLQl9CiAKIAlkZXZp
+Y2VfbGlua3NfcmVhZF91bmxvY2soaWR4KTsKIH0KQEAgLTEyODcsOSArMTI4MSwxMiBAQAogCQlk
+ZXYtPnBvd2VyLm11c3RfcmVzdW1lID0gdHJ1ZTsKIAogCWlmIChkZXYtPnBvd2VyLm11c3RfcmVz
+dW1lKSB7Ci0JCWRldi0+cG93ZXIuc2V0X2FjdGl2ZSA9IGRldi0+cG93ZXIuc2V0X2FjdGl2ZSB8
+fAotCQkJZGV2X3BtX3Rlc3RfZHJpdmVyX2ZsYWdzKGRldiwgRFBNX0ZMQUdfU01BUlRfU1VTUEVO
+RCk7Ci0JCWRwbV9zdXBlcmlvcl9zZXRfbXVzdF9yZXN1bWUoZGV2LCBkZXYtPnBvd2VyLnNldF9h
+Y3RpdmUpOworCQlpZiAoZGV2X3BtX3Rlc3RfZHJpdmVyX2ZsYWdzKGRldiwgRFBNX0ZMQUdfU01B
+UlRfU1VTUEVORCkpIHsKKwkJCWRldi0+cG93ZXIuc2V0X2FjdGl2ZSA9IHRydWU7CisJCQlpZiAo
+ZGV2LT5wYXJlbnQpCisJCQkJZGV2LT5wYXJlbnQtPnBvd2VyLnNldF9hY3RpdmUgPSB0cnVlOwor
+CQl9CisJCWRwbV9zdXBlcmlvcl9zZXRfbXVzdF9yZXN1bWUoZGV2KTsKIAl9CiAKIENvbXBsZXRl
+Ogo=
+--00000000000090f20d062da05cec--
