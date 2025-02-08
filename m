@@ -1,143 +1,190 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C1024634B;
-	Sat,  8 Feb 2025 13:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D5B19F104
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 13:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739022142; cv=none; b=otR7BgzDFioAO6hfSHmRH9Hm+DdIrTAewOJuxgDGAB+MfTyjKqgXRyhJckss+eSfnlDaPlhuu/Q3Ry9RgyeL/bTMSColUO/HjdZhAlX+tyrV0fbbFdlOJarrt8O9eqVXvVRUW+hy46KbOG64o0W3SqSfhk9ub+KvjIBFNALyI6I=
+	t=1739022864; cv=none; b=NgJX74VZYtCybEMPwM3XV7mcqu1eSClXV/7BvmVdeDakZZX1DYbnKKsefzuo9sbCVplrphopLVzfd7OLURm3VS3O94wfS1siK4cSfekLqHWdJtIBclqpyis87qNUOZjqJ9The8N0g5mCmIdcjv40CzDLUO5r8IKfe1dqVNo9eKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739022142; c=relaxed/simple;
-	bh=ngMN4AfYaipZpH7nNPiOSYeIhrr4AomcMNkVmcAm/w8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=tUTW0QESSbMxwpE0b2s/nfDM9tXuPJc1ZFm08ro5aT3bLjvppbG9AEdCmJVhmvVEFVuJW0G7YrEXe1AsSbCjF9kGk0MZxBOPRalIqjB6rqCLAUb5ReI2r630oFqbBAymAds2k0bXcvBpcLSBY1nyAGny0EWwVu4VDIanRFet6ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=ts+0NV/w; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1739022864; c=relaxed/simple;
+	bh=+Yi54ZaTbBcDjbBofrc3cZJQT2QMn9kkopggaeEsbes=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NY0wKmhGes8anVmw+b22LpwGnQ9+SMxB5EBQxHSAQMbOLTIJZNaB5kxpL529Go6R4Nx0W0+/LJTkAEKHCKTW6+uXxEl9YRf5ZjPu+YFSwwX+AZHPYW3KahPT1R8DlKrDTyxHmx7Ai/GmnyqpFpF9Lzlut8yUtPf+uS/WNe9wFwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m0hjpo7O; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="ts+0NV/w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1739022138; x=1739626938; i=wahrenst@gmx.net;
-	bh=ngMN4AfYaipZpH7nNPiOSYeIhrr4AomcMNkVmcAm/w8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=ts+0NV/wBmL5QHLH3+9mQVm2rik2AXodnayQNhYUmhMb89ZeVB8LWQcwRZbbC4AZ
-	 C65wrfBlS80jYGBD/uG0ir75MDI/cqmCustTjdKhBX6NJNC2/0nl6rQN+cVJWr/dN
-	 /qdBVYX1URnv5hJYors7O1kOQo89VglFL+8RTtImzvwv33Xi1PP2NIuaaFhjcw6Xe
-	 W7hyZJoiT9VHc36efMdBnHzW3/AJs7AlHcu4i4IYIP8zFumJF6qIyt8CdfsnWjxm9
-	 hJ7A0XYJ6LR3Eg/mQRkhSM8DQj2a1OI0ww9M5xUiXb5QU/zJLWtugQnSxvVOErzQt
-	 hJuferDzxdtQrQAOFg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MXp9Y-1tuzeI2DYS-00L6yO; Sat, 08
- Feb 2025 14:42:18 +0100
-Message-ID: <ab88fe2a-4f59-47d1-855b-517d98773f3c@gmx.net>
-Date: Sat, 8 Feb 2025 14:42:15 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0hjpo7O"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21f0444b478so43952355ad.0
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 05:54:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739022862; x=1739627662; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iFnScfrb4FHKoOTGmqlb5WR9qT5yGH/QUW4XVtfAjOc=;
+        b=m0hjpo7O26rhUa7BAnDeOVUWmz29DusUn8U8HOGgkbtHGzK5sQhxHh5dMXlDtkI+wt
+         nJknUHlNy3SaHos06ZjK/2/HL8pvCUHDUJtWi7qZHCJfxDJzLqHfDHM/0N04WYPsWOMO
+         FdgKaYI/063nsuTHVoJ4umQ4NA4tzfNHPNLDfZeRn3H7NAKSVBjxV74+cQiKnUDcI5PA
+         nDNxyJp7YZrEC/LTQOh3U2TJYi6KghiCb5hKM5oll4fJ+1zaiTradrZEAs/s+MGhPvIX
+         T6Y25w8WNQb0XHKOptwEc1E2z0xbm5GUDFZldtOCkvz5uhZYiGHq9lipGUmWYK0h2ytI
+         B28A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739022862; x=1739627662;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iFnScfrb4FHKoOTGmqlb5WR9qT5yGH/QUW4XVtfAjOc=;
+        b=jSkIgmnWIO3Hl+ZG7vMQ9uYBpkuMdz415faD3Ok0o5eoX7mexZbB+u6FhiATKnPtA+
+         yDGh/TcUnTm1d2UawR9Fq5p5unUe5IvzHIDfvgQNAqHsfyMcbGKKl55ECjB4tZcNCowB
+         bK6GYVmS31XjQUPyWXaI8PUlmFAsncFF7inWeepoCh+0jtCwYANw/3WPAl7kZNeldWXu
+         BRQc6MhqhR7ZKvSbFg2ehPLdcHzfpV4Ih6sXcZCWjjlqLLIYrfizTgV0DzzYJVQgWcfh
+         Q1ravb/vromUP2zOiLuvHRtTqy0u/2R48blk5D12M2pkPzDJBvIjHkRJUxHRAxRtxRix
+         NnYg==
+X-Forwarded-Encrypted: i=1; AJvYcCXdGR0MCc8QgZ0l88dJI2EnRUD7yteLbR4pQuY9Oyu3unnk8DIZavAu1vOuxTJxcQVUAulfCXLTX5o0W1g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznWWAf3EycZ0RT4Mn5BZDwcSjGSraZytDMslImcxTukvFRkjuD
+	b+gkZ4G6xNpuJ7Bz+0IYCwN29txHHpWdNZeqX2y+0Ee4cFs31VMm
+X-Gm-Gg: ASbGncs2WegxIE9D/5g1zb8+cZSAq3xt3mkQCg7xJAOJHsVo2N33qxzIQqNyvz5+h+C
+	0KfW2Lrul21EAPlH8xydEDHpV7UeuYZzG+0rTSJw8oC2pMq0kVwdYM9RWXPCEL7f+Xbhut9zSGn
+	9OOsWB4MeBXDy1P7he9V5ZtM5HcodgHCaMyfC2dihXKp69qAbIox7B8Z4VIzTE1k1tX6Wy8ZE7U
+	mdohy0v+zGQVthLGugZGzdlpnD0XMpzTCTKL36YTkQ8d2fABsRWw9TIctFwoX5VUVUtNEvsm+7U
+	Gitm3q7mH8rdmoJ6282mh4aTDE7aamnlhLLaHc0Ae5N5
+X-Google-Smtp-Source: AGHT+IFbxc3GAXDoXKJ5rW0syHVzL3E4LhgGQxe7npP3vn/vPOBix39tigacRyRjZC1ZeMRoWdpayA==
+X-Received: by 2002:a05:6a00:1acc:b0:725:e015:9082 with SMTP id d2e1a72fcca58-7305d421bf5mr10321913b3a.5.1739022862027;
+        Sat, 08 Feb 2025 05:54:22 -0800 (PST)
+Received: from DESKTOP-B5TBVBT.localdomain ([175.117.51.71])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048ad292dsm4749597b3a.61.2025.02.08.05.54.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 05:54:21 -0800 (PST)
+From: Yohan Joung <jyh429@gmail.com>
+X-Google-Original-From: Yohan Joung <yohan.joung@sk.com>
+To: jaegeuk@kernel.org,
+	chao@kernel.org,
+	daeho43@gmail.com
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Yohan Joung <yohan.joung@sk.com>
+Subject: [PATCH v1] f2fs: separate discard and zone reset command from pend list
+Date: Sat,  8 Feb 2025 22:54:14 +0900
+Message-Id: <20250208135414.417-1-yohan.joung@sk.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 11/11] arm64: defconfig: Enable OF_OVERLAY option
-To: Andrea della Porta <andrea.porta@suse.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof Wilczynski <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
- <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
- Masahiro Yamada <masahiroy@kernel.org>,
- Herve Codina <herve.codina@bootlin.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>
-References: <cover.1738963156.git.andrea.porta@suse.com>
- <49da5d0cf961fef23a1622253825443eb51d660d.1738963156.git.andrea.porta@suse.com>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-Autocrypt: addr=wahrenst@gmx.net; keydata=
- xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
- IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
- NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
- JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
- TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
- f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
- V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
- aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
-In-Reply-To: <49da5d0cf961fef23a1622253825443eb51d660d.1738963156.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MqewR4qhxQkLVlA/5AQd8FA2Y6QAAPMgpTkmIvKSeA6cgOvvxNi
- IwPq/45hXyYwz0U19B9/ZViLl+kDRwuUyp/jZ5+oMkX5hQh4sgUIiu9/9JpPa65SQx566H6
- 22SPhcJScjhWewRBZrGaj1nto68z8S2LWk0HLMta3zZA0nXgrRT48zsbbp2CvpiMu0lF8xx
- K4Fjpli2GbeAMgx79RrmQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1K/4gpxF1gA=;i/nVL/nCb8vzm9lfLz1l+L8C0V9
- Bj+A5yOpr5js2Zs2Hqcsw0M7tlmhSCn0cV6xjboP1kjOOqjHtH0n3+8ux3NHcWhghu82MqBB0
- u+WgfslQrpAdsjdgCsS5A6F3M18zxhMQ38kuBRcfh3v2e9wCatAMSzBisyFFW5TSSiOb+ZRHQ
- /C4xmKr6ljKpa9JMOlw+PqXACZ7o6Owug1m0GUIQYOYP0VLFnvTZZ9bUIqqAWLXwyHLpHtMTA
- JVAbqaqhFv62JSxnZJJzoqpfPEjq8njZcYwZbdV5OA4gyEy9tpWuu5qDC1Di7ZlFcuzVSJ5hw
- h1+ao3+1MUdiTt7pxrP5CW6bf7F91taRzf5EqnqANBr/xA9e+OGU1SQqBOQyEnsX560bo3cpF
- MEhqdwJ3sasCpO7pmcFrmxxAgPWPm4C8Tw1hjx5pyxSzVokEWmAlqCm7MkHn6HrwHHvVYdCmv
- xmEh/yzO/3I65k3SOIwuoWQ93aVlMWtplH1l50riqjJs9C9EAIo5axYnGwhS14872iaLWw6f/
- maILJrVu8lXg2Z+BXWfUvMJF7F4+nPX66OWa5F7ira3HGZ391V/KMXj6CCkRLKIo4gSvApohW
- RHB2hVrb6qGoF2EqFYsa66za8hbuY65Yu6RJ9MiJh4hNV7RncgiRWacmrLgUDrgdmDlAix93j
- kzXFQKMg48v+czo9/iYoiofie78kUot9XyJ00cuV2dald+ylr8wov+5MDCM5iuXrUwYp2eDRT
- osrZxXD2/8b37enyvrt0G20VKiFpKUTD9B8W73iVSZagQO6ch15sCC4iVGGbUKzyNNgB9rBu0
- n8mTMHPU5buYnAcCbpW8VvPlVtslSDgwBSrxlI8UR0t1mYEM7X/FygYFlo8xrCiYtmpBAcSUt
- PM3zOEu1sk3g4RK9V4Eox2HEsiekXeFO7jJ8AwUfJaY8yU4/P0ej9u2WZvJ88vT/2HD7x7rxb
- 0OuZGpnIFN1Od/ZktIa/dinx8EtpNmG7e5XWWeaKEguh5Yl5TalHWXUbqfuBpwBP4mh22MMfi
- nsiSjCR4rTPtzbXKvnJG4n4Mtqn/q1Me3d7OAViXBUueIW1ZO2Y0zzeuHjpG3ntpC0Mi4dgbY
- CPGlLGfLG5DFAB+wtqRzSVZ5rt2YJQjn4j8JVwVlrOFSRMdbOXFk3AfkdokySP5g0D+eXiBpN
- g05YnMq0JhtH6E86wGwcXulmjNr3EkK9tZ1HqzTVRHiY0p+dp328uKg1i97GSIWy+kkb0PK4Z
- psuIo5YQJBadmEtZgU0upiVQ1Vb/JArDjSUIoznRQCBbTcmyZU3hlT5Wxpfx5AAFStRrChPF2
- s5L9sNLpqFQ0dhgM6iBcMcEDJBbqNWX4QQqycq+jkntfo1pXUS3P4f9nJLr7+Ur0D/0w3XrYA
- Dj4uThhpc/+6Q5YdMPySWpUFdL15CnueOOeM2oLhUuAc7vNProVYehtJSuNbIsBQogeZeiM1b
- bwHAxNQ==
+Content-Transfer-Encoding: 8bit
 
-Hi Andrea,
+currently, zone reset only occurs when there is urgent utilization and
+when pending blocks are reallocated. this causes performance
+degradation, so we are modifying it to allow pending reset zones to be
+issued.
 
-Am 07.02.25 um 22:31 schrieb Andrea della Porta:
-> The RP1 driver uses the infrastructure enabled by OF_OVERLAY config
-> option. Enable that option in defconfig in order to produce a kernel
-> usable on RaspberryPi5 avoiding to enable it separately.
->
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> ---
-> This patch is *OPTIONAL* since I'm not sure if OF_OVERLAY is a desirable
-> feature to have enabled by default. It would be advisable to have it inc=
-luded
-> so that 'make defconfig' can produce a kernel config that will work out
-> of the box on Rpi5, otherwise OF_OVERLAY has to be enabled separately.
-I think this isn't a good approach to convince the arm64 maintainer.
-This change is not really optional for the Raspberry Pi 5 and possible
-users/testers/CI rely on a working default configuration.
+Signed-off-by: Yohan Joung <yohan.joung@sk.com>
+---
+ fs/f2fs/f2fs.h    |  3 ++-
+ fs/f2fs/segment.c | 21 +++++++++++++++------
+ 2 files changed, 17 insertions(+), 7 deletions(-)
 
-So my first suggestion would be to provide a scripts/bloat-o-meter
-output (before/after). Based on this the maintainer can better decided.
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 1afa7be16e7d..09a7e13c0d00 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -349,6 +349,7 @@ struct discard_entry {
+ 
+ /* max discard pend list number */
+ #define MAX_PLIST_NUM		512
++#define ZONE_PLIST_NUM		1
+ #define plist_idx(blk_num)	((blk_num) >= MAX_PLIST_NUM ?		\
+ 					(MAX_PLIST_NUM - 1) : ((blk_num) - 1))
+ 
+@@ -410,7 +411,7 @@ struct discard_policy {
+ struct discard_cmd_control {
+ 	struct task_struct *f2fs_issue_discard;	/* discard thread */
+ 	struct list_head entry_list;		/* 4KB discard entry list */
+-	struct list_head pend_list[MAX_PLIST_NUM];/* store pending entries */
++	struct list_head pend_list[MAX_PLIST_NUM + ZONE_PLIST_NUM];/* store pending entries */
+ 	struct list_head wait_list;		/* store on-flushing entries */
+ 	struct list_head fstrim_list;		/* in-flight discard from fstrim */
+ 	wait_queue_head_t discard_wait_queue;	/* waiting queue for wake-up */
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index c282e8a0a2ec..1c32252db525 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -962,7 +962,10 @@ static struct discard_cmd *__create_discard_cmd(struct f2fs_sb_info *sbi,
+ 
+ 	f2fs_bug_on(sbi, !len);
+ 
+-	pend_list = &dcc->pend_list[plist_idx(len)];
++	if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(bdev))
++		pend_list = &dcc->pend_list[MAX_PLIST_NUM];
++	else
++		pend_list = &dcc->pend_list[plist_idx(len)];
+ 
+ 	dc = f2fs_kmem_cache_alloc(discard_cmd_slab, GFP_NOFS, true, NULL);
+ 	INIT_LIST_HEAD(&dc->list);
+@@ -1649,6 +1652,8 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+ 	struct discard_cmd *dc, *tmp;
+ 	struct blk_plug plug;
+ 	int i, issued;
++	int plist_num = f2fs_sb_has_blkzoned(sbi) ?
++		MAX_PLIST_NUM + ZONE_PLIST_NUM : MAX_PLIST_NUM;
+ 	bool io_interrupted = false;
+ 
+ 	if (dpolicy->timeout)
+@@ -1656,12 +1661,12 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+ 
+ retry:
+ 	issued = 0;
+-	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
++	for (i = plist_num - 1; i >= 0; i--) {
+ 		if (dpolicy->timeout &&
+ 				f2fs_time_over(sbi, UMOUNT_DISCARD_TIMEOUT))
+ 			break;
+ 
+-		if (i + 1 < dpolicy->granularity)
++		if (i + 1 < dpolicy->granularity && i + 1 != plist_num)
+ 			break;
+ 
+ 		if (i + 1 < dcc->max_ordered_discard && dpolicy->ordered) {
+@@ -1720,6 +1725,8 @@ static bool __drop_discard_cmd(struct f2fs_sb_info *sbi)
+ 	struct list_head *pend_list;
+ 	struct discard_cmd *dc, *tmp;
+ 	int i;
++	int plist_num = f2fs_sb_has_blkzoned(sbi) ?
++		MAX_PLIST_NUM + ZONE_PLIST_NUM : MAX_PLIST_NUM;
+ 	bool dropped = false;
+ 
+ 	mutex_lock(&dcc->cmd_lock);
+@@ -2305,7 +2312,7 @@ int f2fs_start_discard_thread(struct f2fs_sb_info *sbi)
+ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
+ {
+ 	struct discard_cmd_control *dcc;
+-	int err = 0, i;
++	int err = 0, i, plist_num;
+ 
+ 	if (SM_I(sbi)->dcc_info) {
+ 		dcc = SM_I(sbi)->dcc_info;
+@@ -2316,7 +2323,9 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
+ 	if (!dcc)
+ 		return -ENOMEM;
+ 
+-	dcc->discard_io_aware_gran = MAX_PLIST_NUM;
++	plist_num = f2fs_sb_has_blkzoned(sbi) ?
++		MAX_PLIST_NUM + ZONE_PLIST_NUM : MAX_PLIST_NUM;
++	dcc->discard_io_aware_gran = plist_num;
+ 	dcc->discard_granularity = DEFAULT_DISCARD_GRANULARITY;
+ 	dcc->max_ordered_discard = DEFAULT_MAX_ORDERED_DISCARD_GRANULARITY;
+ 	dcc->discard_io_aware = DPOLICY_IO_AWARE_ENABLE;
+@@ -2326,7 +2335,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
+ 		dcc->discard_granularity = BLKS_PER_SEC(sbi);
+ 
+ 	INIT_LIST_HEAD(&dcc->entry_list);
+-	for (i = 0; i < MAX_PLIST_NUM; i++)
++	for (i = 0; i < plist_num; i++)
+ 		INIT_LIST_HEAD(&dcc->pend_list[i]);
+ 	INIT_LIST_HEAD(&dcc->wait_list);
+ 	INIT_LIST_HEAD(&dcc->fstrim_list);
+-- 
+2.25.1
 
-In case this change is still rejected, we still have the option of
-something like this [1]
-
-Best regards
-
-[1] -
-https://patchwork.kernel.org/project/linux-kbuild/patch/20200203184820.443=
-3-3-nsaenzjulienne@suse.de/
