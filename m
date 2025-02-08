@@ -1,108 +1,266 @@
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC7323C8D4;
-	Sat,  8 Feb 2025 10:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573BF1B3725
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 10:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739010332; cv=none; b=Nhkup0Mi8w6pfdoMAOquRMwPifll3u3Bv+LML6FSocKrl0neBVkJbbO4H4z6YIhDB1opsaeh6p9V7KzF9UoFt23iBiKcK6R/Fmnvt/xWZmBasEeoIupoDOocNkoXR0DHU2ocUJ7FIK51vv6ae9K9bsZWMwPn/K7K/1i9pGkK4fA=
+	t=1739010987; cv=none; b=Nq25N89TUgMvhVnBz3PqpqcYBGPEZYASdO2zZcLoUjXsOTnI+cPFSSZZJhWdFm6rsOq8OFKYn3QUdJQFO13CyAPIbTWqLRalL6sWI/eotkEHQjVPk1en7dGi8dJ+2O+dhikEOoaVxI0i6SIQ9AlBWCq8WFsPAYQBoQNuufxun0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739010332; c=relaxed/simple;
-	bh=EfqY9jVjNxrrj+i6ZHLyQBRofU2Q3odZnxVSzFNdeAc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dAwV2qJ+4HVxJ4nXKaRXrJfwVI/YBZLuj0a9Fj+z17g6vdOigGKo9Z2sVai1+NqAX1OecbPYu4xkfTXSwv6zmj2yI19FbxYFV/NVJXc5MhkTMvrpk7YCwiYe37DcURQu5SJTxb8Ppu0w0CJqHnSXlRLNdj4rW90OIa3KlIDwmgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from localhost.localdomain (unknown [IPV6:240e:3b3:2c01:6750::1])
-	by smtp.qiye.163.com (Hmail) with ESMTP id a7d7b0c7;
-	Sat, 8 Feb 2025 18:20:17 +0800 (GMT+08:00)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Chukun Pan <amadeus@jmu.edu.cn>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v3 1/1] dt-bindings: net: rfkill-gpio: document reset-gpios
-Date: Sat,  8 Feb 2025 18:20:09 +0800
-Message-Id: <20250208102009.514525-2-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250208102009.514525-1-amadeus@jmu.edu.cn>
-References: <20250208102009.514525-1-amadeus@jmu.edu.cn>
+	s=arc-20240116; t=1739010987; c=relaxed/simple;
+	bh=SW5UhacMkzZWCSkVTvHO3TFBny3T2LZZG3994FQBevE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hj0X103PckhW+uMD4KU5o8k5x4JIteKSdTD8pfZjd15IzEraSvkzysYf4OARlrgDt8bVilVQcJbYCQIDnyonR2L/5k6Plu5QslcnGQtv/nEDz6BP/tO9hDSPQSfwoDZg5sAFmhozdX0ZfkGi+S+Fqgq8GUXC/FM0YS7E6qp/dN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nVqKCau5; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nVqKCau5"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f6d264221so3484805ad.1
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 02:36:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739010984; x=1739615784; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BoaAnmRJfikjMJJ5mT1KSvwU4+ZQgSKozzj6VL4ELUQ=;
+        b=nVqKCau5qY104+K3c/bjRqgBH78/pgL8bdTs3QOVFHbx5nZ2wFxDXK0KlA64lql/Ir
+         0L22Cf0zKnjXQFAR8bD7dG28KBB2s+U2cQOa84NHXoOAXMtynnXP42wJPkgCMibyELhu
+         kfbZCXkHFr305B8X3aQ0pRhf/BEOyDvuuAymGo0qCsSIyYYdB7LV0MBHZALe6GgkQNmw
+         Z0Z2ZKttxibL4wyBx5kj0gj7rP7TwEwt3pzLSLXnP9XuhMoySvNLoIIHBKnR8BeXpYBC
+         AOFWdgJUBMa1RoTaPkjNmkqZl1Dixii9XBta/aAJeHdHhLS5FhbpJY9/jqTS4QL+eDb0
+         A7iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739010984; x=1739615784;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BoaAnmRJfikjMJJ5mT1KSvwU4+ZQgSKozzj6VL4ELUQ=;
+        b=hkVEWFqAtQ5KU8akO3ovAczcPqUTumMaNrJPDuVjOFs/Ti6Vgq78kR69wcesxL/STz
+         aDyn93Ne/RBEszF7puK1O06WXXXlUExTewQfzedAzneKn17ykHuCD976xm6HVGww2L24
+         3Dq3JlhhGVZs1TaREXESzU5F4fGv/fPEcD8iM8YrVkOKbl6DOgAIaDT/rOSfnVc/BnwU
+         Ax2SfKtdoOAlfoZmlxz3O6h3LuLeneJHRVZm9a/7tfaPX2rr47OHeQoALVsmLefeBjJk
+         rMVqJvWdtSY3RvR5bGIGiMEwKDhrvsbBpm6nnUzRMMUT2S39GtAiyW1HBkZcnLE5reJL
+         cdgg==
+X-Forwarded-Encrypted: i=1; AJvYcCXCLwWfXPFQU5s3X3/Vr/1hhAy5jKCUeYCw8r0MFqS4N/YnRL2KrUxJSXhlb9NEIEiZ9TSnf9qoksVSzeg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7lQ32K3O3Uj2sSn6zruqPyR+5klQAKKXWFNJelnrWGFsalsTT
+	6bGXpbPGLGXd1QOX2u7oXmUXU1D/5UJ0hWLX3iC6ai6y+5rsOu+E9WaNbZZyqg==
+X-Gm-Gg: ASbGncsD7B/q6F/sevC4p9gCYUFtUXA68QYOr7MkW1XoixPBgebCI8WtJks5Nubdnh+
+	t0Ek6KkRRTxFmgZGZLMWfg4Dh0ZDlv25SOuSBPio5T4dbf7cP9WghyYQ1NxGNkWroKeztb6Hywz
+	ZctEyykXjnRVmjitCGqSE9DfYiQQIHg295Dd1CrNI4vetje8SBba1Y/Wq3GxmYi6TdnjroC4NRI
+	FUjK+X0QkzDVxzmyRiPZf2sEfcGtdk024UiyspLiJRaqjub7qzDeC1MViB7mMLwrtwjQ9KSp9BL
+	i242iLGLh3td1m3S4hhNplzV
+X-Google-Smtp-Source: AGHT+IE9RgAXmno9t4rWIPgdel/xLwnILZhf5pQ1KhWjVCU87NJl/bhU5fdwOYmDPaXFBy/uv0e86Q==
+X-Received: by 2002:a17:903:2309:b0:215:6b4c:89fa with SMTP id d9443c01a7336-21f4e1ced38mr93272025ad.8.1739010984539;
+        Sat, 08 Feb 2025 02:36:24 -0800 (PST)
+Received: from thinkpad ([120.60.69.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d8ffsm44251845ad.150.2025.02.08.02.36.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 02:36:24 -0800 (PST)
+Date: Sat, 8 Feb 2025 16:06:18 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Wilson Ding <dingwei@marvell.com>
+Cc: "cassel@kernel.org" <cassel@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Sanghoon Lee <salee@marvell.com>
+Subject: Re: [EXTERNAL] Re: [PATCH 1/1] PCI: armada8k: Add link-down handle
+Message-ID: <20250208103618.2binrjgry7ghoavc@thinkpad>
+References: <20241112213255.GA1861331@bhelgaas>
+ <AD287CCE-9FFE-49BC-B9CA-B5CED4F05AF1@linaro.org>
+ <BY3PR18MB46737FB5FDBD75CF31B505B8A7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
+ <BY3PR18MB4673207A36B2CD7C3B75EBA0A7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
+ <20250207175759.jzmoox5mke3rachy@thinkpad>
+ <BY3PR18MB46738F5857319F9637FA5050A7F12@BY3PR18MB4673.namprd18.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTEwdVhlOTBhPSkJOTR1DTFYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtKQU1MTktBQUpZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE
-	5VSktLVUpCS0tZBg++
-X-HM-Tid: 0a94e513090503a2kunma7d7b0c7
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pxg6Hio4HjIKHgI4C00LQjUL
-	ThowCUJVSlVKTEhCS0pLS0pDSUJOVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
-	Sx5BSBlIQUkYS0pBTUxOS0FBSllXWQgBWUFKQ0NINwY+
+In-Reply-To: <BY3PR18MB46738F5857319F9637FA5050A7F12@BY3PR18MB4673.namprd18.prod.outlook.com>
 
-Some 5G WWAN modems have multiple gpio controls. When using rfkill command
-to manage it, we need to at least change the status of reset and shutdown
-gpios at the same time. Also, it might be incorrect to put the reset gpio
-at usb when the module is connected via USB M2 slot, there may be other
-devices connected under some USB node, but the reset gpio is only used for
-the WWAN module. So document the reset-gpios to rfkill-gpio as an optional
-property and add it to a new example.
+On Fri, Feb 07, 2025 at 06:46:22PM +0000, Wilson Ding wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Sent: Friday, February 7, 2025 9:58 AM
+> > To: Wilson Ding <dingwei@marvell.com>; cassel@kernel.org
+> > Cc: Bjorn Helgaas <helgaas@kernel.org>; lpieralisi@kernel.org;
+> > thomas.petazzoni@bootlin.com; kw@linux.com; robh@kernel.org;
+> > bhelgaas@google.com; linux-pci@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Sanghoon Lee
+> > <salee@marvell.com>
+> > Subject: [EXTERNAL] Re: [PATCH 1/1] PCI: armada8k: Add link-down handle
+> > 
+> > + Niklas (who was interested in link down handling) On Sat, Feb 01, 2025
+> > + at 11: 05: 56PM +0000, Wilson Ding wrote: > > On November 13, 2024 3: 
+> > + 02: 55 AM GMT+05: 30, Bjorn Helgaas > > <mailto: helgaas@ kernel. org>
+> > + wrote: > >
+> > 
+> > + Niklas (who was interested in link down handling)
+> > 
+> > On Sat, Feb 01, 2025 at 11:05:56PM +0000, Wilson Ding wrote:
+> > > > On November 13, 2024 3:02:55 AM GMT+05:30, Bjorn Helgaas
+> > > > <mailto:helgaas@kernel.org> wrote:
+> > > > >In subject:
+> > > > >
+> > > > >  PCI: armada8k: Add link-down handling
+> > > > >
+> > > > >On Mon, Nov 11, 2024 at 10:48:13PM -0800, Jenishkumar Maheshbhai
+> > > > Patel wrote:
+> > > > >> In PCIE ISR routine caused by RST_LINK_DOWN we schedule work to
+> > > > >> handle the link-down procedure.
+> > > > >> Link-down procedure will:
+> > > > >> 1. Remove PCIe bus
+> > > > >> 2. Reset the MAC
+> > > > >> 3. Reconfigure link back up
+> > > > >> 4. Rescan PCIe bus
+> > > > >
+> > > > >s/PCIE/PCIe/
+> > > > >
+> > > > >Rewrap to fill 75 columns.
+> > > > >
+> > > > >I assume this basically removes a Root Port (and the hierarchy
+> > > > >below
+> > > > >it) if the link goes down, and then resets the MAC and tries to
+> > > > >bring up the link and enumerate the hierarchy again.
+> > > > >
+> > > > >No other drivers do this, so why does armada8k need it?  Is this to
+> > > > >work around some unreliable link?
+> > > >
+> > > > Certainly Qcom IPs have this same feature and I was also looking to
+> > > > implement it. But the link down should not be handled by this in the
+> > controller driver.
+> > > >
+> > > > Instead, it should be tied to bus reset in the core and the reset
+> > > > should be done through a callback implemented in the controller
+> > > > drivers. This way, the reset cannot happen in the back of PCI core and client
+> > drivers.
+> > > >
+> > > > That said, the Link down IRQ received by this driver should also be
+> > > > propagated back to the PCI core and the core should then call the
+> > > > callback to reset the bus that I mentioned above.
+> > > >
+> > >
+> > > It's more than a work-around for the unreliable link. A few customers
+> > > may have such application - independent power supply to the device
+> > > with dedicated reset GPIO to #PRST. In this way, the power cycle and
+> > > warm reset of RC and EP won't have impact on each other. However, it
+> > > may lead into the PCI driver not aware of the link down when an unexpected
+> > power down or reset occurs on the device.
+> > > We cannot assume the link will be recovered soon. The worse thing is
+> > > the driver may continue access to the device, which may hang the bus.
+> > > Since the device is no longer present on the bus, it's better to
+> > > remove it. Besides, in order to bring up the link, the only way is to
+> > > reset the MAC, which starts over the state machine of LTSSM.
+> > >
+> > > Well, we also noticed that there is no other driver that did this. I
+> > > agree it is not necessary if the power cycle or warm reset of the
+> > > device is done gracefully. The user can remove the device prior to the
+> > > power cycle/reset.  And do the rescan after the link is recovered. However,
+> > the unexpected power down is still possible.
+> > > Please enlighten me if there is any better approach to handle such
+> > > unexpected link down.
+> > >
+> > 
+> > There is no issue in retraining the link. My concern is that, the retrain should
+> > not happen autonomously in the controller driver. PCI core should be made
+> > informed of it. More below.
+> > 
+> 
+> Do you mean 
+> - pass the link down/up events to PCI core
+> - remove the device or hierarchy by PCI core upon link down
+> - initiate the link retraining in PCI core by calling the platform retrain callbacks 
+> - rescan the bus once link is recovered
+> 
 
-For example:
-  - reset: modem Reset#
-  - shutdown: modem WWAN_DISABLE# or FULL_CARD_POWER_OFF#
+Yeah. This is what I came up with quickly:
 
-rfkill unblock wwan:
-[  109.582080] usb 2-1: new SuperSpeed USB device number 2 using xhci-mtk
-
-rfkill block wwan:
-[  126.611963] usb 2-1: USB disconnect, device number 2
-
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../devicetree/bindings/net/rfkill-gpio.yaml       | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/net/rfkill-gpio.yaml b/Documentation/devicetree/bindings/net/rfkill-gpio.yaml
-index 9630c8466fac..7f297efdc976 100644
---- a/Documentation/devicetree/bindings/net/rfkill-gpio.yaml
-+++ b/Documentation/devicetree/bindings/net/rfkill-gpio.yaml
-@@ -29,6 +29,9 @@ properties:
-       - wlan
-       - wwan
+```
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index b6536ed599c3..561eeb464220 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -706,6 +706,33 @@ void pci_free_host_bridge(struct pci_host_bridge *bridge)
+ }
+ EXPORT_SYMBOL(pci_free_host_bridge);
  
-+  reset-gpios:
-+    maxItems: 1
++void pci_host_bridge_handle_link_down(struct pci_host_bridge *bridge)
++{
++       struct pci_bus *bus = bridge->bus;
++       struct pci_dev *child, *tmp;
++       int ret;
 +
-   shutdown-gpios:
-     maxItems: 1
++       pci_lock_rescan_remove();
++
++       /* Knock the devices off bus since we cannot access them */
++       list_for_each_entry_safe(child, tmp, &bus->devices, bus_list)
++               pci_stop_and_remove_bus_device(child);
++
++       /* Now retrain the link in a controller specific way to bring it back */
++       if (bus->ops->retrain_link) {
++               ret = bus->ops->retrain_link(bus);
++               if (ret) {
++                       dev_err(&bridge->dev, "Failed to retrain the link!\n");
++                       pci_unlock_rescan_remove();
++                       return;
++               }
++       }
++
++       pci_rescan_bus(bus);
++       pci_unlock_rescan_remove();
++}
++EXPORT_SYMBOL(pci_host_bridge_handle_link_down);
++
+ /* Indexed by PCI_X_SSTATUS_FREQ (secondary bus mode and frequency) */
+ static const unsigned char pcix_bus_speed[] = {
+        PCI_SPEED_UNKNOWN,              /* 0 */
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 47b31ad724fa..1c6f18a51bdd 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -637,6 +637,7 @@ struct pci_host_bridge *pci_alloc_host_bridge(size_t priv);
+ struct pci_host_bridge *devm_pci_alloc_host_bridge(struct device *dev,
+                                                   size_t priv);
+ void pci_free_host_bridge(struct pci_host_bridge *bridge);
++void pci_host_bridge_handle_link_down(struct pci_host_bridge *bridge);
+ struct pci_host_bridge *pci_find_host_bridge(struct pci_bus *bus);
  
-@@ -49,3 +52,14 @@ examples:
-         radio-type = "wlan";
-         shutdown-gpios = <&gpio2 25 GPIO_ACTIVE_HIGH>;
-     };
-+
-+  - | # 5G WWAN modem
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    rfkill {
-+        compatible = "rfkill-gpio";
-+        label = "rfkill-modem";
-+        radio-type = "wwan";
-+        reset-gpios = <&gpio0 5 GPIO_ACTIVE_HIGH>;
-+        shutdown-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+    };
+ void pci_set_host_bridge_release(struct pci_host_bridge *bridge,
+@@ -804,6 +805,7 @@ struct pci_ops {
+        void __iomem *(*map_bus)(struct pci_bus *bus, unsigned int devfn, int where);
+        int (*read)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *val);
+        int (*write)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val);
++       int (*retrain_link)(struct pci_bus *bus);
+ };
+ 
+ /*
+```
+
+Your controller driver has to call pci_host_bridge_handle_link_down() during the
+link down event (make it threaded if not done already). Then you should also
+populate the pci_ops::retrain_link() callback with the function that retrains
+the broken link. Finally, the bus will be rescanned to enumerate the devices.
+
+I do have plans to plug this retrain callback to one of the bus_reset()
+functions in the future so that we can bring the link back while doing bus level
+reset (uncorrectable AERs and such). But this will do the job for now.
+
+I will send a series on Monday with Qcom driver as a reference.
+
+- Mani
+
 -- 
-2.25.1
-
+மணிவண்ணன் சதாசிவம்
