@@ -1,158 +1,137 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B3113D28F;
-	Sat,  8 Feb 2025 06:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B072C6A3;
+	Sat,  8 Feb 2025 07:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738997666; cv=none; b=eP1qpV921/3fGfl4TTJpnQ9kdxIHxdFgLbr6+DbY+PbE6k8zzfq58MjgDnnU3yuFZ+xKftgwSZr+YieobV41rigdeZywNPDvbw2Ar+DHviEKM/ZcyGF6+0oUnq7lSOfEXkbnNMAgWBX3vXULZHW0L1K5vNRcU5KZ/ixDAkCvMNc=
+	t=1738998404; cv=none; b=BRoXv0T6FHK0jE8+tcPP0Wg6sR6y8Q5Op8igfevAKrANlIjPNJ6FWobc9gvr3xYspgo0rWbcAXaeJ16vjI5oFDoHlm6ktUOs4/bm9BNBdYUpyI9NEh5ECK0glKiXX9W2Jz38yvBeT1XucLdEBHT2rtYNVJ+UBaq74X1UzoLgUDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738997666; c=relaxed/simple;
-	bh=GkZZHT8EMogNxApeGrVHLUWon4pzNEkxxb39WL+cT14=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=ETgFwn5R2GD/1xr757t5ndPsK3u3VXG55bRUvIoOqxTQNBk3ATmRdAV3yvegaAdaW8/YwhJi88WR1fgBn0fbu1shqmknx8HD0ius6//G2GAnnTWxjD8cCU53CK/hotmxwCCEwVTSnF1DaSIiKk8OeTrIOkGSA3ZHH5XvIyIm7+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxde.zte.com.cn (unknown [10.35.20.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4YqhCK2n8TzkNx;
-	Sat,  8 Feb 2025 14:44:29 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mxde.zte.com.cn (FangMail) with ESMTPS id 4YqhCB6fjCz5TCG6;
-	Sat,  8 Feb 2025 14:44:22 +0800 (CST)
-Received: from mxct.zte.com.cn (unknown [192.168.251.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4YqhC20Njxz5B1Kq;
-	Sat,  8 Feb 2025 14:44:14 +0800 (CST)
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4YqhBq049Dz4xVcS;
-	Sat,  8 Feb 2025 14:44:03 +0800 (CST)
-Received: from njy2app01.zte.com.cn ([10.40.12.136])
-	by mse-fl1.zte.com.cn with SMTP id 5186hwHP094495;
-	Sat, 8 Feb 2025 14:43:58 +0800 (+08)
-	(envelope-from jiang.kun2@zte.com.cn)
-Received: from mapi (njb2app07[null])
-	by mapi (Zmail) with MAPI id mid204;
-	Sat, 8 Feb 2025 14:44:00 +0800 (CST)
-Date: Sat, 8 Feb 2025 14:44:00 +0800 (CST)
-X-Zmail-TransId: 2aff67a6fd30ffffffff805-3f613
-X-Mailer: Zmail v1.0
-Message-ID: <20250208144400544RduNRhwIpT3m2JyRBqskZ@zte.com.cn>
+	s=arc-20240116; t=1738998404; c=relaxed/simple;
+	bh=JCuVIdBkbL91ahwTCnLcsSpeQfwQZETjti3XZnxU6ok=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Zpc1gHMVF8FdRAjby88DEgTXYA5mkO8f0Q99Waz+aWW6Ue5iCHqYNP/LPXHdSRMouoFd2PU9MldBMYYRvSd/dGoml9TU7BWhrWWBZOfNC5gCGM9UHnzN+MLICv1CS81wvgQ9y74JjzBvJw+XCvDkAHsD0aN0+nAd/LGRP2qgH6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=YI9qCGcb; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YI9qCGcb"
+X-UUID: 3d71b43ee5eb11efb8f9918b5fc74e19-20250208
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Yrs6Kl3s6CsDWXhNqJl2Oe/kmJUZdpz3oXbEeCXJujo=;
+	b=YI9qCGcbYt91uusGUyn923egMzU1Ay8wzjXOZrStD0GXRASKWQDDXmiAcYqnPSMDFSr/FVkKOC9Ip2BCQpEVWA+QoUpAYJZCrKZEncTqaNx1wvgZwZUi/k5eO3gg/76NqlVpB8TrcUWABde+SS66ngwuqJsIRFIoHLSCDUYFVFI=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.46,REQID:22e1e3b6-338f-4b84-b9fd-7234a27486bf,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:60aa074,CLOUDID:0baf427f-427a-4311-9df4-bfaeeacd8532,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
+	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 3d71b43ee5eb11efb8f9918b5fc74e19-20250208
+Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
+	(envelope-from <yunfei.dong@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 713804393; Sat, 08 Feb 2025 15:06:38 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Sat, 8 Feb 2025 15:06:36 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Sat, 8 Feb 2025 15:06:35 +0800
+From: Yunfei Dong <yunfei.dong@mediatek.com>
+To: =?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
+	<nfraprado@collabora.com>, Sebastian Fricke <sebastian.fricke@collabora.com>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>, Hans Verkuil
+	<hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
+	<benjamin.gaignard@collabora.com>, Nathan Hebert <nhebert@chromium.org>,
+	Daniel Almeida <daniel.almeida@collabora.com>
+CC: Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
+	Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, Yunfei
+ Dong <yunfei.dong@mediatek.com>, <linux-media@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>
+Subject: [PATCH v7 1/3] media: mediatek: vcodec: remove vsi operation in common interface
+Date: Sat, 8 Feb 2025 15:06:23 +0800
+Message-ID: <20250208070633.30862-2-yunfei.dong@mediatek.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250208070633.30862-1-yunfei.dong@mediatek.com>
+References: <20250208070633.30862-1-yunfei.dong@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <jiang.kun2@zte.com.cn>
-To: <bsingharora@gmail.com>, <akpm@linux-foundation.org>, <david@redhat.com>
-Cc: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <wang.yong12@zte.com.cn>,
-        <wang.yaxin@zte.com.cn>, <fan.yu9@zte.com.cn>, <he.peilin@zte.com.cn>,
-        <tu.qiang35@zte.com.cn>, <qiu.yutan@zte.com.cn>,
-        <zhang.yunkai@zte.com.cn>, <ye.xingchen@zte.com.cn>,
-        <xu.xin16@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4IG5leHRdIGdldGRlbGF5czogZml4IGVycm9yIGZvcm1hdCBjaGFyYWN0ZXJz?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 5186hwHP094495
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67A6FD4B.000/4YqhCK2n8TzkNx
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-From: Wang Yaxin <wang.yaxin@zte.com.cn>
+Extend the VSI (video shared information) struct to allow sending slice
+parameters to SCP, as the parameters have changed on MT8188 architecture.
+Remove VSI related information from the common interface to ensure, that
+the interface is usable by architectures with and without the extended
+parameters. The new VSI extensions will be introduced in later patches.
 
-The getdelays had a compilation issue because the format string
-was not updated when the "delay min" was added. For example,
-after adding the "delay min" in printf, there were 7 strings
-but only 6 "%s" format specifiers. Similarly, after adding
-the 't->cpu_delay_total', there were 7 variables but only 
-6 format characters specifiers, causing compilation issues
-as follows. This commit fixes these issues to ensure that
-getdelays compiles correctly.
-
-root@xx:~/linux-next/tools/accounting$ make
-getdelays.c:199:9: warning: format ‘%llu’ expects argument of type
-‘long long unsigned int’, but argument 8 has type ‘char *’ [-Wformat=]
-  199 |  printf("\n\nCPU   %15s%15s%15s%15s%15s%15s\n"
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.....
-  216 |         "delay total", "delay average", "delay max", "delay min",
-      |                                                      ~~~~~~~~~~~
-      |                                                      |
-      |                                                      char *
-getdelays.c:200:21: note: format string is defined here
-  200 |         "      %15llu%15llu%15llu%15llu%15.3fms%13.6fms\n"
-      |                ~~~~~^
-      |                     |
-      |                     long long unsigned int
-      |                %15s
-getdelays.c:199:9: warning: format ‘%f’ expects argument of type
-‘double’, but argument 12 has type ‘long long unsigned int’ [-Wformat=]
-  199 |  printf("\n\nCPU   %15s%15s%15s%15s%15s%15s\n"
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.....
-  220 |         (unsigned long long)t->cpu_delay_total,
-      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      |         |
-      |         long long unsigned int
-.....
-
-Fixes: 0c3576943441 ("delayacct: add delay min to record delay peak")
-Signed-off-by: Wang Yaxin <wang.yaxin@zte.com.cn>
-Signed-off-by: Kun Jiang <jiang.kun2@zte.com.cn>
-Reviewed-by: xu xin <xu.xin16@zte.com.cn>
+Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- tools/accounting/getdelays.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ .../vcodec/decoder/vdec/vdec_h264_req_multi_if.c    | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/tools/accounting/getdelays.c b/tools/accounting/getdelays.c
-index 100ad3dc091a..3feac0482fe9 100644
---- a/tools/accounting/getdelays.c
-+++ b/tools/accounting/getdelays.c
-@@ -196,22 +196,22 @@ static int get_family_id(int sd)
-
- static void print_delayacct(struct taskstats *t)
+diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c
+index 1ed0ccec5665..ab192ce0b851 100644
+--- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c
++++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c
+@@ -171,9 +171,9 @@ struct vdec_h264_slice_inst {
+ };
+ 
+ static int vdec_h264_slice_fill_decode_parameters(struct vdec_h264_slice_inst *inst,
+-						  struct vdec_h264_slice_share_info *share_info)
++						  struct vdec_h264_slice_share_info *share_info,
++						  struct vdec_h264_slice_lat_dec_param *slice_param)
  {
--	printf("\n\nCPU   %15s%15s%15s%15s%15s%15s\n"
--	       "      %15llu%15llu%15llu%15llu%15.3fms%13.6fms\n"
--	       "IO    %15s%15s%15s%15s\n"
--	       "      %15llu%15llu%15.3fms%13.6fms\n"
--	       "SWAP  %15s%15s%15s%15s\n"
--	       "      %15llu%15llu%15.3fms%13.6fms\n"
--	       "RECLAIM  %12s%15s%15s%15s\n"
--	       "      %15llu%15llu%15.3fms%13.6fms\n"
--	       "THRASHING%12s%15s%15s%15s\n"
--	       "      %15llu%15llu%15.3fms%13.6fms\n"
--	       "COMPACT  %12s%15s%15s%15s\n"
--	       "      %15llu%15llu%15.3fms%13.6fms\n"
--	       "WPCOPY   %12s%15s%15s%15s\n"
--	       "      %15llu%15llu%15.3fms%13.6fms\n"
--	       "IRQ   %15s%15s%15s%15s\n"
--	       "      %15llu%15llu%15.3fms%13.6fms\n",
-+	printf("\n\nCPU   %15s%15s%15s%15s%15s%15s%15s\n"
-+	       "      %15llu%15llu%15llu%15llu%15.3fms%13.6fms%13.6fms\n"
-+	       "IO    %15s%15s%15s%15s%15s\n"
-+	       "      %15llu%15llu%15.3fms%13.6fms%13.6fms\n"
-+	       "SWAP  %15s%15s%15s%15s%15s\n"
-+	       "      %15llu%15llu%15.3fms%13.6fms%13.6fms\n"
-+	       "RECLAIM  %12s%15s%15s%15s%15s\n"
-+	       "      %15llu%15llu%15.3fms%13.6fms%13.6fms\n"
-+	       "THRASHING%12s%15s%15s%15s%15s\n"
-+	       "      %15llu%15llu%15.3fms%13.6fms%13.6fms\n"
-+	       "COMPACT  %12s%15s%15s%15s%15s\n"
-+	       "      %15llu%15llu%15.3fms%13.6fms%13.6fms\n"
-+	       "WPCOPY   %12s%15s%15s%15s%15s\n"
-+	       "      %15llu%15llu%15.3fms%13.6fms%13.6fms\n"
-+	       "IRQ   %15s%15s%15s%15s%15s\n"
-+	       "      %15llu%15llu%15.3fms%13.6fms%13.6fms\n",
- 	       "count", "real total", "virtual total",
- 	       "delay total", "delay average", "delay max", "delay min",
- 	       (unsigned long long)t->cpu_count,
+-	struct vdec_h264_slice_lat_dec_param *slice_param = &inst->vsi->h264_slice_params;
+ 	const struct v4l2_ctrl_h264_decode_params *dec_params;
+ 	const struct v4l2_ctrl_h264_scaling_matrix *src_matrix;
+ 	const struct v4l2_ctrl_h264_sps *sps;
+@@ -266,9 +266,6 @@ static int get_vdec_sig_decode_parameters(struct vdec_h264_slice_inst *inst)
+ 	mtk_vdec_h264_get_ref_list(b0_reflist, v4l2_b0_reflist, reflist_builder.num_valid);
+ 	mtk_vdec_h264_get_ref_list(b1_reflist, v4l2_b1_reflist, reflist_builder.num_valid);
+ 
+-	memcpy(&inst->vsi_ctx.h264_slice_params, slice_param,
+-	       sizeof(inst->vsi_ctx.h264_slice_params));
+-
+ 	return 0;
+ }
+ 
+@@ -608,7 +605,8 @@ static int vdec_h264_slice_lat_decode(void *h_vdec, struct mtk_vcodec_mem *bs,
+ 	lat_buf->src_buf_req = src_buf_info->m2m_buf.vb.vb2_buf.req_obj.req;
+ 	v4l2_m2m_buf_copy_metadata(&src_buf_info->m2m_buf.vb, &lat_buf->ts_info, true);
+ 
+-	err = vdec_h264_slice_fill_decode_parameters(inst, share_info);
++	err = vdec_h264_slice_fill_decode_parameters(inst, share_info,
++						     &inst->vsi->h264_slice_params);
+ 	if (err)
+ 		goto err_free_fb_out;
+ 
+@@ -749,6 +747,9 @@ static int vdec_h264_slice_single_decode(void *h_vdec, struct mtk_vcodec_mem *bs
+ 	if (err)
+ 		goto err_free_fb_out;
+ 
++	memcpy(&inst->vsi_ctx.h264_slice_params, &inst->h264_slice_param,
++	       sizeof(inst->vsi_ctx.h264_slice_params));
++
+ 	buf = (unsigned char *)bs->va;
+ 	nal_start_idx = mtk_vdec_h264_find_start_code(buf, bs->size);
+ 	if (nal_start_idx < 0) {
 -- 
-2.25.1
+2.46.0
+
