@@ -1,175 +1,127 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5D329D0E
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 02:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76102913;
+	Sat,  8 Feb 2025 03:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738983593; cv=none; b=Gh5X0aSEtp/DyoLi912+0jNUTiskQf+ElfY6i3LVewZ1yj3FBWmATI3yURY/OvjHBP2LlzKI9+Y31/9+MIykaQ3ooLDr+jznHWJEWBPUHEmvrZ20xtNb5cazQAGrfP+uO0/ZrGRZfdauTHR4EvDXxSvd01c1vX6gJ84JaV4Lyjg=
+	t=1738983679; cv=none; b=B2C4zUP4AdaaVPK7HHIKJbpwcG/imu72rogijVgHmc/la+XXvKq851vBQKOzMmQdcKmPRyFFXBuDahLR9gr2ZhZg0zfvdTRDq1aPrPidskFZw9mrzHnElLGrcuX1FtrvchzCFBWgJcZnJ2607kvsAWfgAXgiSm/dh2x7jikWp7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738983593; c=relaxed/simple;
-	bh=zCLFZrpce0hrEq3NAPLVvaQWe2UmOwpNTZgkvKdcabU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JwFHUjrRrgRhPAE+0z10OoKUJOHXJqVqezDyjKr/QdHgsX7wRubPsNRUUVyaytaegtMO00z2NfDrvptbfrOaFArZRM4lbJcA9/bTcYQMCoQGtkMIF4mnMQLz3fgNKlQW4jgqzMmp2bnC8oq4SvWrh34ycPkJ1EHp0sDNUtYqluA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=IKzKNKHn; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1738983679; c=relaxed/simple;
+	bh=nqpBlydxKobQ/cURbEJgsLrhdk+IEA8jA8MlvsXzBb0=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=e8zZf1s1E4zJwj1gUZcSFDJ40k0mqKJKJ1Uwlr5KlYVnmCWb33ObBX+7llJZv2U9eT57OTVDK9NKNUnMJhP9jR2ZKHlMx2ZrQOkdaI10vOFMjK2pi4CDLRhwiz7wXFXG57z12KC2WV+kcH4Se45NDaqoXiE6YvY+IT8He1C9YTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I4F0oBfS; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="IKzKNKHn"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-724a5d042c0so1597592a34.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 18:59:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I4F0oBfS"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21634338cfdso67876445ad.2;
+        Fri, 07 Feb 2025 19:01:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1738983590; x=1739588390; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PvHvDYPRlwuJsPWLTplnt5i05PwJjOrBanqn75v6zZE=;
-        b=IKzKNKHnPhIXbevVJwCw9B8gwFOwShRUWN+MA9qPsMYkgBhXp8nG+MZipY6DgQfh2e
-         r3VXIPhDFalbRDVSrapXjY3NCXO8ScEkOnCBQGhJF6i95lQ+ZSxy82mOxTLbuRsPs2Z2
-         B2TwankT88A4LnHD33tUno10J82pEfeY5+KpM3VXAiSUJlldSfX9xW1EBj5hTrNFSZxy
-         ML2plqLGO+Yv91hzn1CH71LmCNaS/lHCY5wmnH0l92FXBEmGWmOrkUkxgABbjtTKJKxk
-         lTeTEJDQU2FN/LwFqlV9roDqujlCPltKz8hdEK1HS7HC+N9JS+zqO4tNC7sK+1E3wKD1
-         dcFA==
+        d=gmail.com; s=20230601; t=1738983674; x=1739588474; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SXzRRz14yqpIHofV/zFebh3y188Exztn/L4hTgRQI5c=;
+        b=I4F0oBfS9q32sTW2rD6hPODZ5A6FMg3e7ajBi80RVVWObSZVsz1PqUXM1irYqwnmzy
+         DOGsv+oa8deQ7gPgr3OWOQf0T20/M2sq4uGvfX8RzxS4NKL062WJMmdYpLkuXYrE6Qk8
+         t0rkaeunDpJXs5tEE8IWvF0YqrVcS8eiq24+OgvMRsTtWQSscV/giC8DcFlupZArbd9z
+         xXUL5lGf/1nj+J2Mms5B9miGMx99XMpcCo48rokcUlm4psCdoWSIMfs3AymLPKJ8HTRU
+         YARfvDkGMTzx8RNmtee0NsYWw76/ayQ7DCWabB+uEhewKR1JXBHc+C4YHO+/ArmQvCpi
+         jdQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738983590; x=1739588390;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PvHvDYPRlwuJsPWLTplnt5i05PwJjOrBanqn75v6zZE=;
-        b=I/7iMo8bwy9ku1BHXrLrFjSckpFoBoOkOaPn8VO3yxixGmG7mdhRIAL7H5a3mj4imj
-         tDEcvHxSiSPxLlc3Fr/+LhCSjJwKfRDtcmXZCz4w1OaD8yzeo/n8gIDsTDjNvGAqU5Ho
-         cGT33BAcOgLITjTY27E8YtoRfA5HMWo+JPdo2r3lVnvWes++h8sA1S/7zGOYCLLIKV2t
-         jorEx9RYb7n7c+0bf0eERD4yd/MbHgwk0bxowKdi5SF5SCPlWen77UHDbPjDsaQALxji
-         LP6wHj9LNCS1JkjrFYOxdOA/PNxElf1I++XcMIcsUzDMCaknmRP4s8QtyBxqTRBiZZL9
-         bHAw==
-X-Forwarded-Encrypted: i=1; AJvYcCWzGlk27yi6yQPY68aVj5haNYHgPdAfjUocp/HJJz05yvw6Ek9Hc2+xGSKVCChnDBgplMNrlfYsj3HdNIU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8klDNNhEel7UBu9aQJZR/18pdE43ncOhK9ikBBpdy7NOOAtO0
-	EKj1kkADEl0P2GyIQ3g/jONTbzpIW6rxpVEYqP4iWWqAK+DhYJuuZpwDLY1GAp1PzKwXkL2W+T9
-	LwW9UsVIIlb/UMEf274sZRslb8xdZ98zN9ke8GA==
-X-Gm-Gg: ASbGnctCFf6muWkKFc2vd82slIYYMgEyaFl2fwQnnN5DwCsgCgZSyPWeOST20CP2FLY
-	tEUfIvaTPTXh0ayNJrPD3hKDFKpB6/xlu7FUV2dOZb2nAR5IwyrwQGfJEwkVkdF0D9/GQWwz6te
-	I=
-X-Google-Smtp-Source: AGHT+IFfCgmR8iwTSKqI7U2HdoYDqvph6iBamD8uzFVFSvAH4DmSsPQRkRlpYANAxnvRjFuZETIUtoRlunikEsWu7t8=
-X-Received: by 2002:a05:6830:6383:b0:71d:548d:6f76 with SMTP id
- 46e09a7af769-726b88ad8dfmr3715898a34.26.1738983590587; Fri, 07 Feb 2025
- 18:59:50 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738983674; x=1739588474;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SXzRRz14yqpIHofV/zFebh3y188Exztn/L4hTgRQI5c=;
+        b=Z1x65kK+hSqcSB8JZDaZizeke3sxzI5Z5inU+Tixs7tEw4wtFWx2ONLfWV2mGsIqc3
+         aWqiv7IZXJYWsV8M1I2v8R42TwMBQd6jxXKFHE/Mmn8il810wYZF26VSCWpFUkiYuXnH
+         tL2GCSonf7RSHMlIrOl7qvliyMAfcPAmZY3X1dy9+hLbuxu4EZhmx2Ccq4/tev6WxVv5
+         Eo2LFuLfFxaQudGBtTmBe8PU+9CCgr00slUOZfrWPm91Sv6vRwbUU8CTkeLxdO274pyc
+         VJMVAH4KHt07nnywtbNeQQVaYntebsyCNLIkFr8MJAp0G1+CNlSgVrJcsyRAiECWqoj3
+         MugQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVj/w6iv9e32/dvoaMwC0yHja3l54rUmwQVTT3ZVDux98OisEQc7m3YHTvMWt21glHhIDxD1IwsiAweEOL8NVo=@vger.kernel.org, AJvYcCXhe7oF+6ylh6n0TzOFZ9cSb2oyjBTejTvNg1AdwUhOn6YNa+mKO4eRIE3vAy2cWsrNLf61Sevl@vger.kernel.org, AJvYcCXk3aG9tYiTds8yIrGQle1UXRuU2yq5LLqN+Bpe5/5mDV/taYd2Eb9x4u8Kfz8tLpH5GnsxDmiHgmCq7I0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY9SN7Ox268N30e5zTjEa8c/ARmVUfiKeQjtms1hVmXLFcdjSa
+	uH/qCmnwkQaKg/UU3xq4iuIPJeY+r9ILeVohkl8aQ4x4iuE9ZZnR
+X-Gm-Gg: ASbGncvZE9xPEM+8Phg/SSdqhzFotlatjfOHNHqiatVUKq4j7QCaev3GZGq5smgV1u+
+	OP8LEOvCPHyZZOAocN4cWklD/104LBYGhfADszlHSMkHR50RtB5Xn0tqLjJdn5cVTEE3Cvh4I13
+	xnFpCmHbn7E8T3srpAXPR7VFIBHdhxxsXXEFHVmXHPLhBGiU4vBqmxwCIpSd0q+8JdQfTY/OPD4
+	teR2z2fHgF/ncXjRRuabVSKGr/pHtgVU8gCQLx1OMe65lnN/jjXuYe5nKHUAPO0ft7GrF4hQaHV
+	KBBQAhVkgjj67fpRkxIB3NzQQuMfAk8hy+CTu3y1b0TUOxQzwpweaY9Tjl2+La1ZNjq0Vkw/
+X-Google-Smtp-Source: AGHT+IHN/+0/7nmDB66q1zqOa1jqJWOSI2wBvJ26ODCFMTLzQXppEZWJ/plqUGTPn9EYqJl/M+dNwQ==
+X-Received: by 2002:a17:903:2984:b0:21f:135e:76bf with SMTP id d9443c01a7336-21f4e6a9978mr87627755ad.12.1738983673897;
+        Fri, 07 Feb 2025 19:01:13 -0800 (PST)
+Received: from localhost (p3882177-ipxg22501hodogaya.kanagawa.ocn.ne.jp. [180.15.148.177])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653babfsm37704355ad.68.2025.02.07.19.01.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 19:01:13 -0800 (PST)
+Date: Sat, 08 Feb 2025 12:01:03 +0900 (JST)
+Message-Id: <20250208.120103.2120997372702679311.fujita.tomonori@gmail.com>
+To: david.laight.linux@gmail.com, aliceryhl@google.com, boqun.feng@gmail.com
+Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, netdev@vger.kernel.org, andrew@lunn.ch,
+ hkallweit1@gmail.com, tmgross@umich.edu, ojeda@kernel.org,
+ alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+ benno.lossin@proton.me, a.hindborg@samsung.com, anna-maria@linutronix.de,
+ frederic@kernel.org, tglx@linutronix.de, arnd@arndb.de,
+ jstultz@google.com, sboyd@kernel.org, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com, tgunders@redhat.com, me@kloenk.dev
+Subject: Re: [PATCH v10 1/8] sched/core: Add __might_sleep_precision()
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <20250207181258.233674df@pumpkin>
+References: <20250207132623.168854-1-fujita.tomonori@gmail.com>
+	<20250207132623.168854-2-fujita.tomonori@gmail.com>
+	<20250207181258.233674df@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250205031425.67265-1-cuiyunhui@bytedance.com>
- <20250205031425.67265-3-cuiyunhui@bytedance.com> <0961be9f-87be-4ecc-9e60-faa78119affc@linux.alibaba.com>
-In-Reply-To: <0961be9f-87be-4ecc-9e60-faa78119affc@linux.alibaba.com>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Sat, 8 Feb 2025 10:59:39 +0800
-X-Gm-Features: AWEUYZnr_NMxngTAzPNVuIY-6PvoCxF0axRwCuZj-ABVShCDvBpbuzCDyPoFijY
-Message-ID: <CAEEQ3wnJ1ihu62JDwEhVRBjddQpm4xC-CYhj2QTa4P6EbO_hcg@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v2 2/2] perf/dwc_pcie: fix duplicate
- pci_dev devices
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: renyu.zj@linux.alibaba.com, will@kernel.org, mark.rutland@arm.com, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-Hi Shuai,
+On Fri, 7 Feb 2025 18:12:58 +0000
+David Laight <david.laight.linux@gmail.com> wrote:
 
-On Fri, Feb 7, 2025 at 10:36=E2=80=AFAM Shuai Xue <xueshuai@linux.alibaba.c=
-om> wrote:
->
->
->
-> =E5=9C=A8 2025/2/5 11:14, Yunhui Cui =E5=86=99=E9=81=93:
-> > During platform_device_register, wrongly using struct device
-> > pci_dev as platform_data caused a kmemdup copy of pci_dev. Worse
-> > still, accessing the duplicated device leads to list corruption as its
-> > mutex content (e.g., list, magic) remains the same as the original.
-> >
-> > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> > ---
-> >   drivers/perf/dwc_pcie_pmu.c | 20 +++++++++++++-------
-> >   1 file changed, 13 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
-> > index 4ac53167d7ab..fd9d87b4f201 100644
-> > --- a/drivers/perf/dwc_pcie_pmu.c
-> > +++ b/drivers/perf/dwc_pcie_pmu.c
-> > @@ -566,9 +566,7 @@ static int dwc_pcie_register_dev(struct pci_dev *pd=
-ev)
-> >       u32 sbdf;
-> >
-> >       sbdf =3D (pci_domain_nr(pdev->bus) << 16) | PCI_DEVID(pdev->bus->=
-number, pdev->devfn);
-> > -     plat_dev =3D platform_device_register_data(NULL, "dwc_pcie_pmu", =
-sbdf,
-> > -                                              pdev, sizeof(*pdev));
-> > -
-> > +     plat_dev =3D platform_device_register_simple("platform_dwc_pcie",=
- sbdf, NULL, 0);
-> >       if (IS_ERR(plat_dev))
-> >               return PTR_ERR(plat_dev);
-> >
-> > @@ -620,18 +618,26 @@ static struct notifier_block dwc_pcie_pmu_nb =3D =
-{
-> >
-> >   static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
-> >   {
-> > -     struct pci_dev *pdev =3D plat_dev->dev.platform_data;
-> > +     struct pci_dev *pdev;
-> >       struct dwc_pcie_pmu *pcie_pmu;
-> >       char *name;
-> >       u32 sbdf;
-> >       u16 vsec;
-> >       int ret;
-> >
-> > +     sbdf =3D plat_dev->id;
-> > +     pdev =3D pci_get_domain_bus_and_slot(sbdf >> 16, PCI_BUS_NUM(sbdf=
- & 0xffff),
-> > +                                        sbdf & 0xff);
-> > +     if (!pdev) {
-> > +             pr_err("No pdev found for the sbdf");
->
-> How about also adding the sbdf to print?
-OK, I'll update to v3.
+>>  static void print_preempt_disable_ip(int preempt_offset, unsigned long ip)
+>>  {
+>>  	if (!IS_ENABLED(CONFIG_DEBUG_PREEMPT))
+>> @@ -8717,7 +8699,8 @@ static inline bool resched_offsets_ok(unsigned int offsets)
+>>  	return nested == offsets;
+>>  }
+>>  
+>> -void __might_resched(const char *file, int line, unsigned int offsets)
+>> +static void __might_resched_precision(const char *file, int len, int line,
+> 
+> For clarity that ought to be file_len.
 
->
-> > +             return -ENODEV;
-> > +     }
-> > +
-> >       vsec =3D dwc_pcie_des_cap(pdev);
-> >       if (!vsec)
-> >               return -ENODEV;
-> >
-> > -     sbdf =3D plat_dev->id;
-> > +     pci_dev_put(pdev);
-> >       name =3D devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport=
-_%x", sbdf);
-> >       if (!name)
-> >               return -ENOMEM;
-> > @@ -646,7 +652,7 @@ static int dwc_pcie_pmu_probe(struct platform_devic=
-e *plat_dev)
-> >       pcie_pmu->on_cpu =3D -1;
-> >       pcie_pmu->pmu =3D (struct pmu){
-> >               .name           =3D name,
-> > -             .parent         =3D &pdev->dev,
-> > +             .parent         =3D &plat_dev->dev,
-> >               .module         =3D THIS_MODULE,
-> >               .attr_groups    =3D dwc_pcie_attr_groups,
-> >               .capabilities   =3D PERF_PMU_CAP_NO_EXCLUDE,
-> > @@ -733,7 +739,7 @@ static int dwc_pcie_pmu_offline_cpu(unsigned int cp=
-u, struct hlist_node *cpuhp_n
-> >
-> >   static struct platform_driver dwc_pcie_pmu_driver =3D {
-> >       .probe =3D dwc_pcie_pmu_probe,
-> > -     .driver =3D {.name =3D "dwc_pcie_pmu",},
-> > +     .driver =3D {.name =3D "platform_dwc_pcie",},
-> >   };
-> >
-> >   static void dwc_pcie_cleanup_devices(void)
->
+Yeah, I'll update.
 
-Thanks,
-Yunhui
+>> +				      unsigned int offsets)
+>>  {
+>>  	/* Ratelimiting timestamp: */
+>>  	static unsigned long prev_jiffy;
+>> @@ -8740,8 +8723,10 @@ void __might_resched(const char *file, int line, unsigned int offsets)
+>>  	/* Save this before calling printk(), since that will clobber it: */
+>>  	preempt_disable_ip = get_preempt_disable_ip(current);
+>>  
+>> -	pr_err("BUG: sleeping function called from invalid context at %s:%d\n",
+>> -	       file, line);
+>> +	if (len < 0)
+>> +		len = strlen(file);
+> 
+> No need for strlen(), just use a big number instead of -1.
+> Anything bigger than a sane upper limit on the filename length will do.
+
+Ah, that's right. Just passing the maximum precision (1<<15-1) works.
+
+The precision specifies the maximum length. vsnprintf() always
+iterates through a string until it reaches the maximum length or
+encounters the null terminator. So strlen() here is useless.
+
+Alice and Boqun, the above change is fine? Can I keep the tags?
