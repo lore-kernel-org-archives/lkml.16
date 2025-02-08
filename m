@@ -1,127 +1,143 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB731ACEC2;
-	Sat,  8 Feb 2025 15:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B3117597;
+	Sat,  8 Feb 2025 15:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739029646; cv=none; b=hzkKhzJhaFZ1WQ+P+Uzza1bSqmogBqVgX7IZKU/EL/p0IBySRjEM7C1UawfQ46yljTeVKrQIO7JurWYRHX2yeh2aK5tbUMqQfgi2bkbsi7dxqxhZlHG34Jou+zLr5RhgRPiu7s2/egMTJU5suz/v7SsaXqDEjV7wgQx8zhqa2j0=
+	t=1739030034; cv=none; b=aTZbsLPsk2VG8CK/PST1giBDd9uVLFHK+oCGq8/towI+wQDAEZ/jGSKOasvnrPPjMAzARMQRWNRaU02XRXS95Vh5heRAr9If1JIAg7OcAxLPTiFMBWz56BnF3UI5/rq3dhlZbSOSx7OH5g6hd7ErQ4sbyQ6ESamoGLKNnhs3YXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739029646; c=relaxed/simple;
-	bh=q+MDvtLlIi69K27ReX3lDDeT3LJLFUyE4Y1+7Huku2o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A3vPS6/sSl/UpJJQlEdsq2fKqpNcwdntG4vmuBDIEmFbkfJhL0UvnORgxgo7hcm/V0w8QllRumQK+0dGA21p68SGY5VfVrwBjYhUo4gmmeeVXRGs6QrJIzopR/foseQs8XLfEhPZZoomBEZivMdazOf8yRPHOjRu0nIAwDItFhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C7RUtNAF; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739030034; c=relaxed/simple;
+	bh=hrd6oBUOsWOJwveXn3feTKiMBZdQKoAvHAAZMfAr5DM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NLXOu1ZNQvf7ujCxr4HGiBCxiUc0qeKJzxSmPDctIOe+ALL0b6Ben6J7DneXg3sgu9DLWwDXc0UnxUH4R0fLqmmXOwOve9JA7+MtZ2RTfxibKrjdWIASHLQAUTdoDY2vKALrX9EndeOQpGswSAf+TyPGiGxTpkCRmevJMdSjo/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WxdwfUqJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7RUtNAF"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4362f61757fso29297355e9.2;
-        Sat, 08 Feb 2025 07:47:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739029643; x=1739634443; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4Ucm5nxe8cgExY3vq78pW2gU4Ws9xivfjS2fHeRhYTY=;
-        b=C7RUtNAF2QE3MngF0Ifhi9i9YnNw5keGDk0rF+wdb++ZIxVB0L/j3jSGahYbMUv6S9
-         MbKoNEi3u7W2VHOTlgm7EN5SeSa3ghAaJwAuv9uMtqmk36s6xygRi1funrIZsz79FY3j
-         I1sgDESFeCNEMs/M09vVusLUykilZubNxnJOt+XAGBQV1LGvYzMRp9cYDwHgGiScdAT2
-         x2o/VLxZmS8LRuKQ4vRgGVVNWgDnaalyvFmxO7ExSN6jt+BLiJ8oT8TupRHC7hkHopVn
-         w0+VK2cKjdQnxtnIjk9Bs3hHFGL7k+0ZDJHgzY2byYGQ6/Hj4v7MGlo7x+P31FwO8IY/
-         kaGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739029643; x=1739634443;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4Ucm5nxe8cgExY3vq78pW2gU4Ws9xivfjS2fHeRhYTY=;
-        b=MGvZRlYPgLeLAbP0WXKmYqIsCjy/DOePz/3azZBXA6RQnWThfnYG7IucgogfqkbgSc
-         XyJkFudORRp+lRW1TuDjlNeSGwVStioJfh/Z5fCKfhJkwsQDG01QAKKZG4E+6B0nuE10
-         eRkMzEODOpmKK6OWpX65xxtl2w1Ws3dp9TAna+UQaKFX1eSpceOwXk/cAJNcLvw/rCbA
-         WEgks1RqTuKFg7eWOE0GHo0ur1b26fLsa2sIzXo2+FyDbsbM4kLT/SUIeNRpb2LeIF3l
-         aI0SJU4riDV0bl+d5VnicoLQPD8YvT60otdS5LXKnz8jbqo7xYdLIbvvEps37c6vyOAV
-         Wwrg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZMNqFy8uuDtNTBHEMuwKUpM908gkeif3Dkn7VjpNxRxdjyr6FEi8cpIi0/soHcgONJeoVmejyGmvCh0YkAw==@vger.kernel.org, AJvYcCVnPggbLtR2UhxJbmeORsFaxVwSktfPSUD+SWIvbOjcRbf4VqACI3tL5LgkFZUWV1/GlS5YtqaITobkEaUX@vger.kernel.org, AJvYcCWgKCrUpP+s8IhtATWBAq5/zOSPXxRYQKx73aOaOeN03L0T2QGmqGGFjUI5KEYdLss/874=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjemRxTIy9qUnyvsv5b4XOruhUoz5RMoYOQNnjIcVbwLiX97ny
-	1cGC8GcwAZZFbJoj+shIOf0hV7QuovROYx6m9FR3r5BQik32IQ3o5GyCoY9qkAdVlUKW9AsyLGu
-	1doA79psUayKKPNrNdkm1C+yxmhw=
-X-Gm-Gg: ASbGncsZmkr8xlh0NFQRtvrEyxOqzDxu5qLCpsFQlJNRhu5sTVcsS+jM88ktyqb8eKj
-	5uOgi2Qij3ogV4SQgfZhcLnUhwUtZIh04a8HL8X8HQrpBQGJN6PsKRWfpOwc5ETpKWlu252mzt0
-	rL7bUoYIeiOhUb6XEX50f1h7v+bCx3
-X-Google-Smtp-Source: AGHT+IHhaqyd4g185PU4eVAqjVQtrJsSiS+LXstK8Loa3UCPWLCPxC+cz3OYe2OCF/ugN6bwdBMmPNV9TnSir4OMJvg=
-X-Received: by 2002:a05:600c:3b8e:b0:42c:b9c8:2bb0 with SMTP id
- 5b1f17b1804b1-4392497c946mr53277355e9.4.1739029642917; Sat, 08 Feb 2025
- 07:47:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WxdwfUqJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A537C4CED6;
+	Sat,  8 Feb 2025 15:53:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739030034;
+	bh=hrd6oBUOsWOJwveXn3feTKiMBZdQKoAvHAAZMfAr5DM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WxdwfUqJaCJuZpuA9ewGIQR9RpNqlmAQrr0PeXFfQSdv58hAvLq6zDeQYH5fBu9DB
+	 aL5KMhtsVxSQhSQBWqUjMlQDxIxdqjyoRQ7P+rMyMOL8YhrUpyEgfDm7i/3+HC4AUB
+	 JFoQ6LhcgvidsClaTyxcNgW0Vf0V//29eqprnqrQRoEWvJtk7Cxgl1gEWtvkbyJHG8
+	 pZtR49lIVPwZVDl1jJRmuHjxmRSdgSCX5zHDLr0I+mK8EIZ4HByf5g2HNlcV9SBjOq
+	 81XBvQPfqcTHdnrYGq4X6nYqmt97ADEQm43DJw7tx4cO/6GPitgNA39tHfSIRY06nN
+	 4cVNEHgLTBXKA==
+Date: Sat, 8 Feb 2025 15:53:46 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Hermes Zhang <Hermes.Zhang@axis.com>
+Cc: <robh@kernel.org>, <lars@metafoo.de>, <krzk+dt@kernel.org>,
+ <kernel@axis.com>, <linux-iio@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] iio: add IIO_MOD_NOX modifier
+Message-ID: <20250208155346.3fd5a316@jic23-huawei>
+In-Reply-To: <20250206061521.2546108-2-Hermes.Zhang@axis.com>
+References: <20250206061521.2546108-1-Hermes.Zhang@axis.com>
+	<20250206061521.2546108-2-Hermes.Zhang@axis.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127063526.76687-1-laoar.shao@gmail.com> <Z5eOIQ4tDJr8N4UR@pathway.suse.cz>
- <CALOAHbBZc6ORGzXwBRwe+rD2=YGf1jub5TEr989_GpK54P2o1A@mail.gmail.com>
- <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz> <CALOAHbDwsZqo9inSLNV1FQV3NYx2=eztd556rCZqbRvEu+DDFQ@mail.gmail.com>
- <CAPhsuW4gYKHsmtHsBDUkx7a=apr_tSP_4aFWmmFNfqOJ+3GDGQ@mail.gmail.com>
- <CALOAHbDYFAntFbwMwGgnXkHh1audSoUwG1wFu_4e8P=c=hwZ0w@mail.gmail.com>
- <CAPhsuW4HsTab+w2r23bM52kcM1RBFBKP5ujVdDvxLE9OiqgMdA@mail.gmail.com>
- <CALOAHbAJBwSYju3-XEQwy0O1DNPawuEgmhrV5ECTrL9J388yDw@mail.gmail.com>
- <CAPhsuW51E4epDCrdNcQCG+SzHiyGhE+AocjmXoD-G0JExs9N1A@mail.gmail.com> <CALOAHbAaCbvr=F6PBJ+gnQa1WNidELzZW-P2_HmBsZ1tJd6FFg@mail.gmail.com>
-In-Reply-To: <CALOAHbAaCbvr=F6PBJ+gnQa1WNidELzZW-P2_HmBsZ1tJd6FFg@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Sat, 8 Feb 2025 07:47:12 -0800
-X-Gm-Features: AWEUYZlDgwJ7w9RtugurSHUaVGNWz4hZIXfuHiwIgOVVJOukfqJCOGpHVpr1kvs
-Message-ID: <CAADnVQJZCE-Rh4xghLrruY8DW00cRUq9-ct6d=qfKk8Yc+8=pQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/2] livepatch: Add support for hybrid mode
-To: Yafang Shao <laoar.shao@gmail.com>
-Cc: Song Liu <song@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Jiri Kosina <jikos@kernel.org>, Joe Lawrence <joe.lawrence@redhat.com>, 
-	live-patching@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 7, 2025 at 10:42=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com> =
-wrote:
->
-> On Fri, Feb 7, 2025 at 2:01=E2=80=AFAM Song Liu <song@kernel.org> wrote:
-> >
-> > On Wed, Feb 5, 2025 at 6:55=E2=80=AFPM Yafang Shao <laoar.shao@gmail.co=
-m> wrote:
-> > [...]
-> > > > I think we should first understand why the trampoline is not
-> > > > freed.
-> > >
-> > > IIUC, the fexit works as follows,
-> > >
-> > >   bpf_trampoline
-> > >     + __bpf_tramp_enter
-> > >        + percpu_ref_get(&tr->pcref);
-> > >
-> > >     + call do_exit()
-> > >
-> > >     + __bpf_tramp_exit
-> > >        + percpu_ref_put(&tr->pcref);
-> > >
-> > > Since do_exit() never returns, the refcnt of the trampoline image is
-> > > never decremented, preventing it from being freed.
-> >
-> > Thanks for the explanation. In this case, I think it makes sense to
-> > disallow attaching fexit programs on __noreturn functions. I am not
-> > sure what is the best solution for it though.
->
-> There is a tools/objtool/noreturns.h. Perhaps we could create a
-> similar noreturns.h under kernel/bpf and add all relevant functions to
-> the fexit deny list.
+On Thu, 6 Feb 2025 14:15:15 +0800
+Hermes Zhang <Hermes.Zhang@axis.com> wrote:
 
-Pls avoid copy paste if possible.
-Something like:
+> Add modifier IIO_MOD_NOX for NOx concentration reporting. NOx (a generic
+> term for the mono-nitrogen oxides) are used in environment sensor as a
+> parameter to show the concentration in index format.
+> 
+> An example case: https://www.sensirion.com/media/documents/9F289B95/
+> 6294DFFC/Info_Note_NOx_Index.pdf
+Use a Link tag directly at the top of the tag block (no blank line between
+it and your SoB)
 
-BTF_SET_START(fexit_deny)
-#define NORETURN(fn) BTF_ID(func, fn)
-#include "../../tools/objtool/noreturns.h"
+> 
+> Signed-off-by: Hermes Zhang <Hermes.Zhang@axis.com>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio | 2 ++
+>  drivers/iio/industrialio-core.c         | 1 +
+>  include/uapi/linux/iio/types.h          | 1 +
+>  tools/iio/iio_event_monitor.c           | 2 ++
+>  4 files changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> index f83bd6829285..c7d54dc1f226 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> @@ -1898,6 +1898,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_concentration_o2_raw
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_concentrationX_o2_raw
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_concentration_voc_raw
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_concentrationX_voc_raw
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_concentration_nox_raw
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_concentrationX_nox_raw
 
-Should work?
+This section defines the units as percent.  Given the link above, this nox value
+seems very much to not be in percent and arguably isn't a concentration measure
+or if I read that right even a scaled value of that.
 
-Josh,
-maybe we should move noreturns.h to some common location?
+I'm not sure how we handle this in a consistent fashion :(
+At very least needs a new documentation block with the details of these units.
+This a raw attribute so it doesn't have to be possible to scale it to a 'standard'
+unit (light color sensors / intensity channels for a similar example).
+
+Is it possible to compare readings off sensors from different companies?
+
+
+
+
+>  KernelVersion:	4.3
+>  Contact:	linux-iio@vger.kernel.org
+>  Description:
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index a2117ad1337d..6a85688c9148 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -151,6 +151,7 @@ static const char * const iio_modifier_names[] = {
+>  	[IIO_MOD_PITCH] = "pitch",
+>  	[IIO_MOD_YAW] = "yaw",
+>  	[IIO_MOD_ROLL] = "roll",
+> +	[IIO_MOD_NOX] = "nox",
+>  };
+>  
+>  /* relies on pairs of these shared then separate */
+> diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
+> index 12886d4465e4..f7dfc4c71495 100644
+> --- a/include/uapi/linux/iio/types.h
+> +++ b/include/uapi/linux/iio/types.h
+> @@ -108,6 +108,7 @@ enum iio_modifier {
+>  	IIO_MOD_ROLL,
+>  	IIO_MOD_LIGHT_UVA,
+>  	IIO_MOD_LIGHT_UVB,
+> +	IIO_MOD_NOX,
+>  };
+>  
+>  enum iio_event_type {
+> diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
+> index cccf62ea2b8f..51c6f753e7d4 100644
+> --- a/tools/iio/iio_event_monitor.c
+> +++ b/tools/iio/iio_event_monitor.c
+> @@ -138,6 +138,7 @@ static const char * const iio_modifier_names[] = {
+>  	[IIO_MOD_PITCH] = "pitch",
+>  	[IIO_MOD_YAW] = "yaw",
+>  	[IIO_MOD_ROLL] = "roll",
+> +	[IIO_MOD_NOX] = "nox",
+>  };
+>  
+>  static bool event_is_known(struct iio_event_data *event)
+> @@ -236,6 +237,7 @@ static bool event_is_known(struct iio_event_data *event)
+>  	case IIO_MOD_PM4:
+>  	case IIO_MOD_PM10:
+>  	case IIO_MOD_O2:
+> +	case IIO_MOD_NOX:
+>  		break;
+>  	default:
+>  		return false;
+
