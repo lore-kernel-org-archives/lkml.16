@@ -1,62 +1,62 @@
-Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com [209.85.216.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2ED2556E
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 07:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD892556E
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 07:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739001283; cv=none; b=nk3OlPcHin0fcky197jSHJ0T+oOMdaedpddu9l7dKiJoyk5mIm0/+53nbaNQHyJVB9KUf9H79l+rqg45yzBq1iqzZujnXYHAovb/dPSM5EiMmXvhLLaMu5zhbxRJ+YBzJKtBvc1CrkIULbtmelFtQhpOBHgbnOPZNGOZEdw+k3s=
+	t=1739001562; cv=none; b=mPVUNvjWKvH4lQsEV3fTyRnKgxkmSBSL/sL9fY6LHxlsrlSZ2j4MhjEfNwnDlE1RtMfXbIvWtJXYHKGhlPzjytKSr+IcrZDmW38IIHQ6FQNHqV6lY0ZwDvsfMRiglKNyvpTrMHhvm5WGOUKIUqD25tNTSFt9qZGtZEoxqw2BdcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739001283; c=relaxed/simple;
-	bh=22ey2bGNzgvUP55lAdjbn4x2+/D0SjGrbrNLdIc8QX0=;
+	s=arc-20240116; t=1739001562; c=relaxed/simple;
+	bh=NYH1EIR1w30hMUBzWFLtaK9NEC0+m6W1SVQ1YrLKHCQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p/Cf8gLxm1WoV84tdfIbpBHOomAteQ8U8A3VU+9Y3QaOnE6upIHJ6sHVMPNqqkHlo+ZRJnzlijhVNUQ7VGw2W90xdci+Gxunrr+nYH0+FKAwywwVUbZlo6kX8Mw+9TgFUL07YJEjHojiWRHXU37cWs3IdHDLb7sCxdmVFuNOdeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BdcKuUpq; arc=none smtp.client-ip=209.85.214.195
+	 MIME-Version; b=iDObdWb12L33CImqsGBcuab9to492WQZbGw2AQmrrN9sI+ZIdWcanblYOAq0Mjm+JgT4XrrV/opn8hZQy2pJimmZyyk0/wnubIStNOE454gaWcnA+aJbLlCDkvmtEk3lDvDogAmr7IO+aTXb5K/2DzIwJALW1x2NApWE2V+OiAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J6TsYr+B; arc=none smtp.client-ip=209.85.216.67
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdcKuUpq"
-Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-21f48ebaadfso41056205ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 23:54:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6TsYr+B"
+Received: by mail-pj1-f67.google.com with SMTP id 98e67ed59e1d1-2f44353649aso4187904a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 23:59:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739001280; x=1739606080; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739001560; x=1739606360; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=boufvzkgTV244jN1bbSF1JjpgYAevUzFBFGQhL5b0K4=;
-        b=BdcKuUpqPqDxQyyYiivuaP2IFrxW3xz1MvgNzXpZq44ElR699duFTULFLRK4OA0bdf
-         q9lBI05Zhhov3GdiU9G4NKgUxRhZa9ukKqF8lEL9ff76/RnxX/6du2rkXOq0Itw+DmqV
-         YYcirQE4M6N98DCFnHFVUAxrrs+7AaxLA6aQC3g9+h2ywN9eOUPhzcKM8XfmZxT7B14p
-         MKES6UoZM37CvVtaDaBUIGklE1NP2E5F53rYrtnWTZ1CufxfYaXZJvfD34fNoGlID5uF
-         AFtEkpY1e6/rxCvmYYQjWPY6R1p5KJaZ6sKrvGHip+fYRd/r3toFUkfNeaHCtUL5W7cX
-         HOWQ==
+        bh=wIqjiMV/Bkb39K9yqJeN0eIM7HEpUk3IzO0W9QqPo48=;
+        b=J6TsYr+BxlfWMXt5XFF6AUrA/WLXACVN2WHb3m5zogpc4hVoKSu4eLsyggJEe17vvw
+         fWFkNGQ9UKdzIjjZwHQcVwKg5fsKiN3Bl5bfGuV7twFVpgtrTxZYWSHaUmunKPY4sbrX
+         K1DYElRa3kgi6zVVoiw0otVVs8U4Yu423YRot8cGR9SEyh2IoiYP93eK5Ao4wbU/ngdR
+         zssYjvs61my0/WTDTi5BIPnDBr9GTbYza2/G8yE0+C0flUX8NbVv65/D6cd+PiLU6Qwr
+         Atdr2v8GyRfXDhW5+pF/DeSAZ5DF36GgBh+S5BHKsAKdCm/8w21VaU+Y+7Yz6jusKxPE
+         6B7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739001280; x=1739606080;
+        d=1e100.net; s=20230601; t=1739001560; x=1739606360;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=boufvzkgTV244jN1bbSF1JjpgYAevUzFBFGQhL5b0K4=;
-        b=arxt54Tjt+v0Z1anTYT9khTfWU+yQH4ckL/3rJcWPW5cAxtx3QeG5+UWK2mvkfoM2U
-         XLfGvkRAui5LUg0QT7uUXiLiV+7FUAPvRYuLBVQKwc2bPnN1WDBQUZplLghToASay6SY
-         sDPTa8zXvaF5wJHD5l5r7ioNi31seYmBXtuOcfmBDQlDq//E0rP0Nqdz6c9YTNZycdls
-         5Rk07kWY8ai7qttSP4uLfuSfUD4jahvERiQHoHJXxspt23rpCzz9r8Dx2DxKTK1Gm5U4
-         6DSK4pX+5BOdqfYjilDinU+YorG1LfRxeGw/5BCwACDldVEp1TNCwWH6ZD9TD3SZTFn5
-         PN2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXl+vnxTuTPYtYaxRahINVvIymttW75d3ezhmA5jWP2CBvmNmgDo2XJD5TUuvFhpgbeGHgyPiWdvFWBYWk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZaPNs3OxAmv0Mavtb3tpMF4zfj1XrqNcdBc9HG4J64eilTicl
-	a5gSMV5Wa5nkj4Jnx9NIu5hiZN8Rp1fztMKIkUXER/WtPiEzAu1e
-X-Gm-Gg: ASbGncvLq7Fz/dYjqXyTCjI+IWZ/zMzqQ6M5FsRWYZc/U9/s0KG0CFu4GrAi7RrADXY
-	Ia+Q7dPs5ABOuJHU2gEAsZmy8JrmlcW46q2DGfArSGjuSTBonc6hUeSQyj1hzYQjinhJktuphmq
-	DSqgahF6EbW1yNWcldjy60FQPR4zsgDD1nw833ZPeurWsUSr0oY5VfXP+ZNp4bmyv3jw5dnGv0X
-	5sDVy0WDe2O0igHxPlVo2wJblf7dgRDu7j10/clIuDkUlymaZc2A2XNvoLj5mXleL5S5rIt6un6
-	RP+FWEm0Lec8FLKusqb7StSZ7QF4HiWcK3I=
-X-Google-Smtp-Source: AGHT+IFmJlwGsO7fXbd9NAglEz33u1NDMLCeoa4VRJn2oWYchoQqIA/ldj5aE4ttX040xFRn5P2UNQ==
-X-Received: by 2002:a17:903:2447:b0:21a:8dec:e57a with SMTP id d9443c01a7336-21f4e76007dmr117498275ad.48.1739001280592;
-        Fri, 07 Feb 2025 23:54:40 -0800 (PST)
+        bh=wIqjiMV/Bkb39K9yqJeN0eIM7HEpUk3IzO0W9QqPo48=;
+        b=fFmWHDS/UzEEePbBwn0eQLtfTCvamvikMP5ePUZyID95/b2D68FDDPrtntEEukiWuV
+         lACSCDODaLyfEiOSDXtW7YS5h6/xWzrWX0ccCcJA/wkNGFodH3F3UxYQgN9Iet0rWKUs
+         kCBjWV+tI573pYja2tvi4SPZ9ioq2nF6okear7MyPD2lbLOPBg7ES4cLfLS+iomNHUQY
+         T/ZI3uFmcHNHkunVI3+WEn6RsbfaJIaP1gfToKfnH1m8OgmSPrgu5x7MxHwGukTuzwwa
+         NgtL2osnwsQD6wSEVyV9ESxUXhCfg0LaWB6UXT/N6Zv3sQk2cuc2L+Zg7Zsnp5PIogrv
+         mTBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKLWThHnFRRy93uY7cW5tSKAxTLQsDp7bDjrr09KKwPyAEVnTmiLtILY8EA90TF4dtIay0MFpO1Yjq3rE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz58M9T3SCiEfk/BSMNvenpGIVmce69SeATVgLMHySllAAVy6aM
+	8dh98rfNzM3vU74/1f68aXc3X4uBQcez0kBvH9aTbCLwW4mO8P3b
+X-Gm-Gg: ASbGncv2YXltWQ598jHJwfhJbpbtbDzJJwM9y5A1Lap/UveXwEyBseE4ElUC4tolbcT
+	7mteTtaCA0Cd7nmG8ZUGBq+G4D4iK7Tl8hHQMnys8lyxi1ShkWxG7zH5zUtkuy7IaRrNfZLpnW3
+	ZbR/bYLj8zTmy6FZ0zu3m+ncFrmYrbpK+rCawameeivqn8y7PLr/llm3n0Pg0cmwfNdas9mWbem
+	qRUHGFvSDSnrWqatIPJM3fATjZNYX61CcJ3Ll/VB08V8/hkcQ2sLxfudl6RihXAV9v/UPbOy3Qd
+	AtD433REqt/19jB53HlfRcCs2UipPTi/h4g=
+X-Google-Smtp-Source: AGHT+IERz0lSqkbAawZEXTcF7FnORJti+So8tSKmF9Ij4QWWVOc+x9NZM+EqsWBO0DF7n+IULqDtDw==
+X-Received: by 2002:a05:6a00:22ce:b0:730:4c55:4fdf with SMTP id d2e1a72fcca58-7305d44c8bamr10696189b3a.7.1739001559939;
+        Fri, 07 Feb 2025 23:59:19 -0800 (PST)
 Received: from localhost.localdomain ([114.67.205.189])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368d923fsm41861585ad.256.2025.02.07.23.54.36
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048e1e80fsm4087401b3a.157.2025.02.07.23.59.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 23:54:39 -0800 (PST)
+        Fri, 07 Feb 2025 23:59:19 -0800 (PST)
 From: zihan zhou <15645113830zzh@gmail.com>
 To: 15645113830zzh@gmail.com
 Cc: bsegall@google.com,
@@ -69,9 +69,9 @@ Cc: bsegall@google.com,
 	rostedt@goodmis.org,
 	vincent.guittot@linaro.org,
 	vschneid@redhat.com
-Subject: [PATCH V3 1/2] sched: Reduce the default slice to avoid tasks getting an extra tick
-Date: Sat,  8 Feb 2025 15:53:23 +0800
-Message-Id: <20250208075322.13139-1-15645113830zzh@gmail.com>
+Subject: [PATCH V3 2/2] sched: Reduce the default slice to avoid tasks getting an extra tick
+Date: Sat,  8 Feb 2025 15:57:48 +0800
+Message-Id: <20250208075747.14104-1-15645113830zzh@gmail.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20250208074821.11832-1-15645113830zzh@gmail.com>
 References: <20250208074821.11832-1-15645113830zzh@gmail.com>
@@ -83,69 +83,148 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The old default value for slice is 0.75 msec * (1 + ilog(ncpus)) which
-means that we have a default slice of
-0.75 for 1 cpu
-1.50 up to 3 cpus
-2.25 up to 7 cpus
-3.00 for 8 cpus and above.
+Update sysctl_sched_base_slice with debugfs, limit its value and
+update normalized_sysctl_sched_base_slice.
 
-For HZ=250 and HZ=100, because of the tick accuracy, the runtime of
-tasks is far higher than their slice.
-
-For HZ=1000 with 8 cpus or more, the accuracy of tick is already
-satisfactory, but there is still an issue that tasks will get an extra
-tick because the tick often arrives a little faster than expected. In
-this case, the task can only wait until the next tick to consider that it
-has reached its deadline, and will run 1ms longer.
-
-vruntime + sysctl_sched_base_slice =     deadline
-        |-----------|-----------|-----------|-----------|
-             1ms          1ms         1ms         1ms
-                   ^           ^           ^           ^
-                 tick1       tick2       tick3       tick4(nearly 4ms)
-
-There are two reasons for tick error: clockevent precision and the
-CONFIG_IRQ_TIME_ACCOUNTING/CONFIG_PARAVIRT_TIME_ACCOUNTING. with
-CONFIG_IRQ_TIME_ACCOUNTING every tick will be less than 1ms, but even
-without it, because of clockevent precision, tick still often less than
-1ms.
-
-In order to make scheduling more precise, we changed 0.75 to 0.70,
-Using 0.70 instead of 0.75 should not change much for other configs
-and would fix this issue:
-0.70 for 1 cpu
-1.40 up to 3 cpus
-2.10 up to 7 cpus
-2.8 for 8 cpus and above.
-
-This does not guarantee that tasks can run the slice time accurately
-every time, but occasionally running an extra tick has little impact.
+Rename the function sched_update_scaling to sched_update_scaling_or_slice,
+it is no longer related to CONFIG_SMP and return void, as the previous
+function always returns 0 and there is no need to judge the return value
+again, just like the function update_sysctl.
 
 Signed-off-by: zihan zhou <15645113830zzh@gmail.com>
 Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 ---
- kernel/sched/fair.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/sched/debug.c | 52 +++++++++++++++++++++++++++++++++++++++++---
+ kernel/sched/fair.c  |  8 +++----
+ kernel/sched/sched.h |  4 ++--
+ 3 files changed, 54 insertions(+), 10 deletions(-)
 
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index fd7e85220715..f40d9d638939 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -166,6 +166,53 @@ static const struct file_operations sched_feat_fops = {
+ 	.release	= single_release,
+ };
+ 
++static ssize_t sched_base_slice_write(struct file *filp, const char __user *ubuf,
++				   size_t cnt, loff_t *ppos)
++{
++	char buf[16];
++	unsigned int base_slice;
++
++	if (cnt > 15)
++		cnt = 15;
++
++	if (copy_from_user(&buf, ubuf, cnt))
++		return -EFAULT;
++	buf[cnt] = '\0';
++
++	if (kstrtouint(buf, 10, &base_slice))
++		return -EINVAL;
++
++	base_slice = clamp_t(u64, base_slice,
++					NSEC_PER_MSEC/10,   /* HZ=1000 * 10 */
++					NSEC_PER_MSEC*100); /* HZ=100  / 10 */
++
++	sysctl_sched_base_slice = base_slice;
++
++	sched_update_scaling_or_slice();
++
++	*ppos += cnt;
++	return cnt;
++}
++
++static int sched_base_slice_show(struct seq_file *m, void *v)
++{
++	seq_printf(m, "%d\n", sysctl_sched_base_slice);
++	return 0;
++}
++
++static int sched_base_slice_open(struct inode *inode, struct file *filp)
++{
++	return single_open(filp, sched_base_slice_show, NULL);
++}
++
++static const struct file_operations sched_base_slice_fops = {
++	.open		= sched_base_slice_open,
++	.write		= sched_base_slice_write,
++	.read		= seq_read,
++	.llseek		= seq_lseek,
++	.release	= single_release,
++};
++
+ #ifdef CONFIG_SMP
+ 
+ static ssize_t sched_scaling_write(struct file *filp, const char __user *ubuf,
+@@ -188,8 +235,7 @@ static ssize_t sched_scaling_write(struct file *filp, const char __user *ubuf,
+ 		return -EINVAL;
+ 
+ 	sysctl_sched_tunable_scaling = scaling;
+-	if (sched_update_scaling())
+-		return -EINVAL;
++	sched_update_scaling_or_slice();
+ 
+ 	*ppos += cnt;
+ 	return cnt;
+@@ -505,7 +551,7 @@ static __init int sched_init_debug(void)
+ 	debugfs_create_file("preempt", 0644, debugfs_sched, NULL, &sched_dynamic_fops);
+ #endif
+ 
+-	debugfs_create_u32("base_slice_ns", 0644, debugfs_sched, &sysctl_sched_base_slice);
++	debugfs_create_file("base_slice_ns", 0644, debugfs_sched, NULL, &sched_base_slice_fops);
+ 
+ 	debugfs_create_u32("latency_warn_ms", 0644, debugfs_sched, &sysctl_resched_latency_warn_ms);
+ 	debugfs_create_u32("latency_warn_once", 0644, debugfs_sched, &sysctl_resched_latency_warn_once);
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1e78caa21436..34e7d09320f7 100644
+index 34e7d09320f7..0fe7c4530a87 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -74,10 +74,10 @@ unsigned int sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
- /*
-  * Minimal preemption granularity for CPU-bound tasks:
-  *
-- * (default: 0.75 msec * (1 + ilog(ncpus)), units: nanoseconds)
-+ * (default: 0.70 msec * (1 + ilog(ncpus)), units: nanoseconds)
+@@ -981,8 +981,8 @@ struct sched_entity *__pick_last_entity(struct cfs_rq *cfs_rq)
+ /**************************************************************
+  * Scheduling class statistics methods:
   */
--unsigned int sysctl_sched_base_slice			= 750000ULL;
--static unsigned int normalized_sysctl_sched_base_slice	= 750000ULL;
-+unsigned int sysctl_sched_base_slice			= 700000ULL;
-+static unsigned int normalized_sysctl_sched_base_slice	= 700000ULL;
+-#ifdef CONFIG_SMP
+-int sched_update_scaling(void)
++
++void sched_update_scaling_or_slice(void)
+ {
+ 	unsigned int factor = get_update_sysctl_factor();
  
- const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
+@@ -990,10 +990,8 @@ int sched_update_scaling(void)
+ 	(normalized_sysctl_##name = sysctl_##name / (factor))
+ 	WRT_SYSCTL(sched_base_slice);
+ #undef WRT_SYSCTL
+-
+-	return 0;
+ }
+-#endif
++
+ #endif
  
+ static void clear_buddies(struct cfs_rq *cfs_rq, struct sched_entity *se);
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index c7cf4cc57cdd..3ac73cbd711f 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1923,6 +1923,8 @@ init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
+ 
+ #endif /* !CONFIG_NUMA_BALANCING */
+ 
++extern void sched_update_scaling_or_slice(void);
++
+ #ifdef CONFIG_SMP
+ 
+ static inline void
+@@ -2088,8 +2090,6 @@ static inline void update_sched_domain_debugfs(void) { }
+ static inline void dirty_sched_domain_sysctl(int cpu) { }
+ #endif
+ 
+-extern int sched_update_scaling(void);
+-
+ static inline const struct cpumask *task_user_cpus(struct task_struct *p)
+ {
+ 	if (!p->user_cpus_ptr)
 -- 
 2.33.0
 
