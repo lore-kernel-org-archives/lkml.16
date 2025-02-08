@@ -1,65 +1,66 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F641D53C
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 00:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24C8D2FB
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 00:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738974431; cv=none; b=EnTg8uU9ltfSAAdMgYV/VXiCyPXDqK0PB7IELVrymlDeNvELXbceAH+BMmbS9AV3ibHcTFNLBXAbFtGKCG/CJ0ki9TiLMjykClJtHlcHKZ/MT564Udk0coHgAIwj4Q0m9jGmVXZ40YK4KW3M36Xt78DtkWmE4SDS6hjKa84dsrE=
+	t=1738974433; cv=none; b=hJKSFTCq6xC9t4tJ9Op88HpPXQp7pwuk2vOlwhCDvTWp5LppRAo5JGl4DnB8xY6+PWRQQJ8fbnLLsmwt/m2aKRrIVGnm8PD+lmOcrdg1b4ZlD7V5BwBnaBfjScne+prD8c43CPqRKBf46x27juKUzpDCKegAGuMp9ZdKgt5zfpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738974431; c=relaxed/simple;
-	bh=f0rJpJCum+b7lqaI4sn4V9SXHt/v6K6WBKvJft3vbro=;
+	s=arc-20240116; t=1738974433; c=relaxed/simple;
+	bh=uXKldyyUShxj4mE/w041cBnXe/6hXGA3PeMnMd+IOm0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UiPTp69bzw/h7APvlyvfcO6JpA/wfBTzl1LsiJKTdFXTA8XYHFMRtCyzufDz9CBGAvl8ob7522kwcQL5OHF6Pk/rVi9DiqL07yjUq7Eqohe3nOeEzYTXVVyW7SoCZRCl4VC6EbYFifwsRc72uwJ2gcipLFuxryHmyWCw/M0j4bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UGE81MeJ; arc=none smtp.client-ip=209.85.167.46
+	 In-Reply-To:To:Cc; b=f2yOCmJXwji1aaUeV0ECHz58hiXrTg0dPbPALAHoB4UFzH3C3xEuAKGiWDjLHjLufzsZbUzbRFCAm2BXxaG9oDOmlKBcZHJeI2/1LYbnJxAn/QeWAJj52N3/u82o1FvBeBz9Og6gDLyvzx1EQhJfOt0Ri16hpNEdsRbsQGGPTYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JJgv9GxO; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UGE81MeJ"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5440efe97baso2959827e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 16:27:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JJgv9GxO"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-540215984f0so2834694e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 16:27:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738974427; x=1739579227; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1738974430; x=1739579230; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=lJeDvmYfwTrdzYlRuhgm/ygX8U3uOitNLlW6Q4NvxDE=;
-        b=UGE81MeJj329uQR9E5thP/32IxVRAGRAU3V7Qs5OXIvugAbe9wpM/lOcDjElnRAk6d
-         h2oq5N2eCKhqcJpgxwNV8TqOF4dMtUYuDOgZtxjAI8KBxrzPTXmchKJgAAd5ahjZrg1K
-         hBxchajbbpXhUe6qgdMy1F9GjdX0Qz6TmtPj9akvqgGpHIXHqw/52Ep5jgsJ5P4rYCMX
-         oFoTcuhtJFdKHpjo6WqCO+egSHxSkmK/dpZAl9O+o7uoX7gZHPmNrPhzY3J07PVMd80/
-         jAOut1YjZxa7oR20HQ2BDsyHoOE0wK0GG8uohvFAKvPkjF7EtH/EaJfFBVd30GWGay37
-         mDfA==
+        bh=EJv47DTctbXXdHSD+jRLQExhlN8LdBAo21I9zEUehiI=;
+        b=JJgv9GxOaquSaTU1F4vj5pNNqiVi5AXtA81szrxchCk6plKnoIQGjuvPvylN4o0z/r
+         uMzhlzyBnk16hKHNXxHuidJge8QrjLSBWfTx7O33LMnSOXN+WHQ8f8011skLVGh0/Tn0
+         z5CMsonHaFlD9fPIoQ5tJYX2ihNyEmBS4sLAzmsomKqod/c29TLjIHs4Jqdxiz8PPI5G
+         2PZSu8gTKf14K+Xj3exvXoB2fJOupdYKg0fHJGR/htCynvFGM7obwup/6QRq+5S4njSp
+         CgD0wUKvWU9DMyyxmVEqtnJ6qPqoNQ3wNGOUNsgxtpY90+mFJ2Ymuj9m5T59pKplXfMA
+         aweQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738974427; x=1739579227;
+        d=1e100.net; s=20230601; t=1738974430; x=1739579230;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lJeDvmYfwTrdzYlRuhgm/ygX8U3uOitNLlW6Q4NvxDE=;
-        b=w+8NGYKwWVAfszR/+qty20ETf86PrDgtOql6MTI9EL2I5IJgUwXAiZaObVKVF51gEm
-         sxOod6xSTBvYBNurbMHDXJYWz1JkXh6Holuh4Bo9DF50QjmgOt91W72qDB7aaHLQ7dZU
-         OmIEFKuYAhVzKxdBmVVRDR6wmQYMjyEt9wuBYtfZG/3sp+XOfXDe98qCJSSygpKtMoNr
-         39aR/tYokrvly/GKhPQ3hpD58cHIxeCLJEfFra5HZ7JPjsE8RPUndgvh1QthuaAw9/pu
-         p4iQ5UfhD+mBr1CL9FnDFNC1Qy9gfhqTyUbK29aklKstDZA2RzcNMoWGbobKLmIsq/JK
-         muvg==
-X-Forwarded-Encrypted: i=1; AJvYcCWpPHbW4k1ZiPf6zLOFOXfcPu9V3v9Ei5rxcPJKdxEUl9SquwpRDjNfBfPRDUlma7m1boKSLrC9dBhm/E4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6nRA4m+N4puEf3un6MtxwLOqRGwyJ0XmU/IjuAF7BbBp1y5Cl
-	D5rX6T+mB4lH7cA5mMKqLLaFTTc9XWPou/AIEVCZ/ONjaoI+5dMnbb4C1zz20EQ=
-X-Gm-Gg: ASbGnctQznBRkjG9E2MCMX5J83DP/AluxoF0E0pnig15O3E3yrEbb6mOYw62iTMVYS5
-	kJDZ5ypLo+5QsyaBkvmp2T3C2doGDk+tlTPr5+y/8U7vIbfHcZAtzl4zZ35KJBKEgmEkpnXUjSM
-	R54sy/3y7gr5hpajqOwXc5Z3Ugy7mFnKqTfbBDKbuJaq9/LVYAPfbguzQ9+ugcreGjpMUkNTMkZ
-	bpu3gp2O3eyxcYXHzi6YxqONlqN2ELQbHfjjZPEwU97zgce6zuAZKYvb6B41kwaZ+kT6SQMkhDN
-	2MeQPNPIp++18N2kUqJ3rjo=
-X-Google-Smtp-Source: AGHT+IEVFsKGgciuBhusWj1+JHw/cRfA7URw+89fCpLGUhjS8WQcgx8wyX3jcJd3Ar8ldB/wtMcXDQ==
-X-Received: by 2002:ac2:5f47:0:b0:540:2122:fae9 with SMTP id 2adb3069b0e04-54414ae5d0cmr1280495e87.46.1738974427575;
-        Fri, 07 Feb 2025 16:27:07 -0800 (PST)
+        bh=EJv47DTctbXXdHSD+jRLQExhlN8LdBAo21I9zEUehiI=;
+        b=e6WwXj9VyB1V1nx4svJAqc1MVUi51ZYtDB60+Vr4TEDgCZhwU7mMom0V9RA6b0es4f
+         XhaQLQRLus/lDQ0a6ZR+8tZpbpqxKdpuaFDkHwU8bcuuaLsv6sZtjW21AS+wEyjhr/eO
+         /fIDIyv79jKgdffTmtt19Ch0rEn2+5ks6M/EqjtnqGkD1fQyZ2Oj4kFNhc9H6jycIKed
+         oQ9/f+7f5AOxPsU2AFACDrYLYZgN3rY6gwBMxb2WEuct3BZKw5cfbtI0HtmerjTKgdTK
+         K0+MI0+Shsz0MxEsPwLv1GVpcTnvwHjfLUYf9RTtBPjfLsFSggWh+s8tiHdp+h7Ai9XP
+         I38g==
+X-Forwarded-Encrypted: i=1; AJvYcCXJeKobeGUKwD2r5ScXUKZA1mt3B85KlvHhh5RhzMwbxb7yHzClhmXEUxHRfGFKFoxYi/uxObFIE5nIM1s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxO5xPG+r2fmOe7aaiUSzOkY0n/0swO3sf1kIEvmSlsvOeKx6EA
+	NYtRPcuF8di/AJrPHVCxNYYn9AcNf19/D/LuQIDpk+3E5ci+DCfiC3Oow3RFSKk=
+X-Gm-Gg: ASbGncuyHjttDwq75ZwOPttpBCRRQnQqFFKjmLKx5Ty2/qINyKsJ0sIm78IdeQvOPgY
+	VW+NCZcdHpWK1uUMLgA4jHQVdgGqukXD9OLTc5W5ntac6NjBaMvWcTAvbciPvNDGoKdUkTAf9np
+	gkKz/mVo0ST+YumnSTGoD1gNLR86ULg2CCRFsHfCMECJHS/gsSlN/gZ7jLZmiBmiZ5retcqDd5k
+	QAFv9JGdtVLEsUiLhO4jRGfREd69Uu7BfOwF82tBDNfWdJBZ5siJTht0jLygToCVWy+sYXFWObN
+	huISaCgdXjti+ktINYzV2f8=
+X-Google-Smtp-Source: AGHT+IEv2KWiExZyTc5a9/5Vv3GXcJOM2vKT9sfUvK+wfRQHsUp2vZ50Doyn8pe87sWe1wbZx0diNQ==
+X-Received: by 2002:ac2:4ec9:0:b0:543:baa3:87ab with SMTP id 2adb3069b0e04-54414b0637fmr1626318e87.47.1738974430078;
+        Fri, 07 Feb 2025 16:27:10 -0800 (PST)
 Received: from umbar.lan ([192.130.178.90])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5441060413asm588785e87.222.2025.02.07.16.27.05
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5441060413asm588785e87.222.2025.02.07.16.27.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 16:27:06 -0800 (PST)
+        Fri, 07 Feb 2025 16:27:08 -0800 (PST)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sat, 08 Feb 2025 02:27:00 +0200
-Subject: [PATCH v7 1/7] drm/msm/hdmi: switch to atomic bridge callbacks
+Date: Sat, 08 Feb 2025 02:27:01 +0200
+Subject: [PATCH v7 2/7] drm/msm/hdmi: program HDMI timings during
+ atomic_pre_enable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250208-bridge-hdmi-connector-v7-1-0c3837f00258@linaro.org>
+Message-Id: <20250208-bridge-hdmi-connector-v7-2-0c3837f00258@linaro.org>
 References: <20250208-bridge-hdmi-connector-v7-0-0c3837f00258@linaro.org>
 In-Reply-To: <20250208-bridge-hdmi-connector-v7-0-0c3837f00258@linaro.org>
 To: Andrzej Hajda <andrzej.hajda@intel.com>, 
@@ -84,67 +85,93 @@ To: Andrzej Hajda <andrzej.hajda@intel.com>,
 Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
  freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2282;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3054;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=f0rJpJCum+b7lqaI4sn4V9SXHt/v6K6WBKvJft3vbro=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnpqTV+ngwC+ACTteXyvBnI3bH+dIJQoFPCjJDF
- bdcCD7e1eOJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ6ak1QAKCRCLPIo+Aiko
- 1b/OCACZQ3v0Ts8EKLagTT66fPO5tTexGqVfbvMnhWXrmd/Fm8ZlKpGUwiHKnNtH/55Z/2FPLOW
- OZmTLAebTJaVrpVBZSjEVNCtS2QLuU0esefSHzCgztQ9OL6mHk7xlSqE8Red9GQ3wmiiy2AAuI8
- 9Wx4zZLTLObMnwKmfqX5XLMNG8L497pFhUBf1cQncq/TfC8nJEk8+bN/abXEDkp78L58S11hVq7
- 3wkMXYOleYaJrfuv9bJI4yEmhg6SfOMlu4lPDg6Jet6wAeTmdNwDXKrppEMjJFcegll30LPnfrl
- CocmH5b5d3mZuEckB17X4qpOHJDAX9VBk3XEaWh6KWXVpFQ9
+ bh=uXKldyyUShxj4mE/w041cBnXe/6hXGA3PeMnMd+IOm0=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnpqTVlnCUwmyS4BLskQiI3ujrk6aTTc1xPgxB8
+ 0lAqt09hFeJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ6ak1QAKCRCLPIo+Aiko
+ 1ZPqB/9UXLPdqs36l78Rn/gBwSRg+eQDbC3+ok/lZf6TRsodmlfH0bXiG1vEU05/tNSELtUSN69
+ ppXuioe3dimrADpDMnkEONgBIlV8qNm6JgVshm+J97UgAxflc4QQFSep692Sn2SWzHrY9p5eua6
+ vdKyeRjSdnnOAcsYCs4ZHDS8rufeFzOUEYQHEKGYbF+/CGgHZeqS65OtJpDBPmm2STZ8LnTaJ7J
+ y59FuKiWooiNGeBrDuLwVwctVj/0eZVC2lISLJCzo/PbmLqwWJG2L8Rm855sCt/7aGR/P+vJFcp
+ 7/WhQ/DWCcYE/CrGYNcf8tE/4O59UHaZhSIoe27xhdBxJ16m
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Change MSM HDMI bridge to use atomic_* callbacks in preparation to
-enablign the HDMI connector support.
+The mode_set callback is deprecated, it doesn't get the
+drm_bridge_state, just mode-related argumetns. Also Abhinav pointed out
+that HDMI timings should be programmed after setting up HDMI PHY and
+PLL. Rework the code to program HDMI timings at the end of
+atomic_pre_enable().
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/gpu/drm/msm/hdmi/hdmi_bridge.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/msm/hdmi/hdmi_bridge.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
-index 4a5b5112227f516dfc4279d0f319ec1e5b17f240..d839c71091dcdc3b020fcbba8d698d58ee7fc749 100644
+index d839c71091dcdc3b020fcbba8d698d58ee7fc749..bd94b3a70f0e5e457a88f089b491103a8c09567b 100644
 --- a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
 +++ b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
-@@ -126,7 +126,8 @@ static void msm_hdmi_config_avi_infoframe(struct hdmi *hdmi)
+@@ -126,15 +126,29 @@ static void msm_hdmi_config_avi_infoframe(struct hdmi *hdmi)
  	hdmi_write(hdmi, REG_HDMI_INFOFRAME_CTRL1, val);
  }
  
--static void msm_hdmi_bridge_pre_enable(struct drm_bridge *bridge)
-+static void msm_hdmi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
-+					      struct drm_bridge_state *old_bridge_state)
++static void msm_hdmi_set_timings(struct hdmi *hdmi,
++				 const struct drm_display_mode *mode);
++
+ static void msm_hdmi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
+ 					      struct drm_bridge_state *old_bridge_state)
  {
++	struct drm_atomic_state *state = old_bridge_state->base.state;
  	struct hdmi_bridge *hdmi_bridge = to_hdmi_bridge(bridge);
  	struct hdmi *hdmi = hdmi_bridge->hdmi;
-@@ -152,7 +153,8 @@ static void msm_hdmi_bridge_pre_enable(struct drm_bridge *bridge)
- 		msm_hdmi_hdcp_on(hdmi->hdcp_ctrl);
+ 	struct hdmi_phy *phy = hdmi->phy;
++	struct drm_encoder *encoder = bridge->encoder;
++	struct drm_connector *connector;
++	struct drm_connector_state *conn_state;
++	struct drm_crtc_state *crtc_state;
+ 
+ 	DBG("power up");
+ 
++	connector = drm_atomic_get_new_connector_for_encoder(state, encoder);
++	conn_state = drm_atomic_get_new_connector_state(state, connector);
++	crtc_state = drm_atomic_get_new_crtc_state(state, conn_state->crtc);
++
++	msm_hdmi_set_timings(hdmi, &crtc_state->adjusted_mode);
++
+ 	if (!hdmi->power_on) {
+ 		msm_hdmi_phy_resource_enable(phy);
+ 		msm_hdmi_power_on(bridge);
+@@ -177,17 +191,12 @@ static void msm_hdmi_bridge_atomic_post_disable(struct drm_bridge *bridge,
+ 	}
  }
  
--static void msm_hdmi_bridge_post_disable(struct drm_bridge *bridge)
-+static void msm_hdmi_bridge_atomic_post_disable(struct drm_bridge *bridge,
-+						struct drm_bridge_state *old_bridge_state)
+-static void msm_hdmi_bridge_mode_set(struct drm_bridge *bridge,
+-		 const struct drm_display_mode *mode,
+-		 const struct drm_display_mode *adjusted_mode)
++static void msm_hdmi_set_timings(struct hdmi *hdmi,
++				 const struct drm_display_mode *mode)
  {
- 	struct hdmi_bridge *hdmi_bridge = to_hdmi_bridge(bridge);
- 	struct hdmi *hdmi = hdmi_bridge->hdmi;
-@@ -299,8 +301,11 @@ static enum drm_mode_status msm_hdmi_bridge_mode_valid(struct drm_bridge *bridge
- }
+-	struct hdmi_bridge *hdmi_bridge = to_hdmi_bridge(bridge);
+-	struct hdmi *hdmi = hdmi_bridge->hdmi;
+ 	int hstart, hend, vstart, vend;
+ 	uint32_t frame_ctrl;
  
- static const struct drm_bridge_funcs msm_hdmi_bridge_funcs = {
--	.pre_enable = msm_hdmi_bridge_pre_enable,
--	.post_disable = msm_hdmi_bridge_post_disable,
-+	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
-+	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-+	.atomic_reset = drm_atomic_helper_bridge_reset,
-+	.atomic_pre_enable = msm_hdmi_bridge_atomic_pre_enable,
-+	.atomic_post_disable = msm_hdmi_bridge_atomic_post_disable,
- 	.mode_set = msm_hdmi_bridge_mode_set,
+-	mode = adjusted_mode;
+-
+ 	hdmi->pixclock = mode->clock * 1000;
+ 
+ 	hstart = mode->htotal - mode->hsync_start;
+@@ -306,7 +315,6 @@ static const struct drm_bridge_funcs msm_hdmi_bridge_funcs = {
+ 	.atomic_reset = drm_atomic_helper_bridge_reset,
+ 	.atomic_pre_enable = msm_hdmi_bridge_atomic_pre_enable,
+ 	.atomic_post_disable = msm_hdmi_bridge_atomic_post_disable,
+-	.mode_set = msm_hdmi_bridge_mode_set,
  	.mode_valid = msm_hdmi_bridge_mode_valid,
  	.edid_read = msm_hdmi_bridge_edid_read,
+ 	.detect = msm_hdmi_bridge_detect,
 
 -- 
 2.39.5
