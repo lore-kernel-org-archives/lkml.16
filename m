@@ -1,49 +1,35 @@
-Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596BD286A1
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 01:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6282E286A1
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 01:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738978541; cv=none; b=irNyxm6CMl4Ip40830zI77rOJM+tSvwPPnZUwi8Ygq/Y8xOX+OuhzknIyYtWd9qfJDYs0R58onxNWvrm3/4bmQRBO8lezRLC4X6WTPezqs7CkAosQJjb71RW8DlmQFFtJ1VtZ4V033cx0YT7p2LC5TVL8MHRxoJLxeX+fh+8EZU=
+	t=1738978553; cv=none; b=j0bSmVcVXRSnxUy8F5lpQChO3xKDoG5FcpujblqB/nEkrPnNUl036cTPbZ2IJNAR/WJ9G827kGIyHvx772qK7SYE73jeUCM0ZHezC8P2i0XBPcqkzxnO4hyqiNZmkea8PovgBfow2FKiZMsHySyq0bKziRnZqYW35ClwKGsKPQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738978541; c=relaxed/simple;
-	bh=FCnIGEA1W8Gdi6HLs/8CaOG461ny2CkaCwENpo878EY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fxlWrS+PV951UYNWxj4B1QlivdkD+MXVExY9MR3H8XRjXKCoCOPQzhwPhBIHoCA3ZbMXXPtc86UPuOYGmIizpr1zm7n2KVf/0I16tRU4NQTQ4kLNmUGuGCupJqN8o7F5SFwEQWgUUO9npkfoFe3i11jajZdUv4WpCZZLMsJBISw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=cpjEAGxX; arc=none smtp.client-ip=54.207.22.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1738978553; c=relaxed/simple;
+	bh=g6PO1v9uicUWh1r5Tr7vvShV/nqNgAgZew7U3vBV39k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NwvVOe6VMZ2lYfgBIB7LXHf3d1pQ83FfWzSSG3osR7P4ARuRMl/ZKVXRAyJ/YuJgoPuPWzGD7t7QqXaKHuBu7/YZ/bwkWX57XiwpSJEym8yMtS/xjVd2s/CPFqoxYtsX2uKHdpDAf6CxYJrqvNJCAdduanHpZKARIg0NNsDHVjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ZBrylQWG; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="cpjEAGxX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1738978472;
-	bh=e/xqHLyJ/T5Q7z8TKyFjea3+EClW7YemhkJ0zAILeKg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=cpjEAGxXYuqkT2eKLMwy9hyqLvA65Itl7jM7aGJcDEAW+uqrcrqgrxgslJaL1Gvis
-	 0zNAMIZf0HAhc89NoaIL8+Udq5HiqrzNxWtEwSgKNWe4LsiPw3iNmY7b1ozM41KZOO
-	 vGOnGdojgZ9p76VB2XDFQQFPnjEBg+gEHtf8iJmE=
-X-QQ-mid: bizesmtpip4t1738978440tudhzwp
-X-QQ-Originating-IP: NG0u61HUQbT6bj9uCV2n+irMw7n/LpjlyEUkegcep9U=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sat, 08 Feb 2025 09:33:58 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 581403337225196444
-From: WangYuli <wangyuli@uniontech.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	guanwentao@uniontech.com,
-	jiaxun.yang@flygoat.com,
-	wangyuli@uniontech.com
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	zhanjun@unionetch.com,
-	chenlinxuan@uniontech.com
-Subject: [PATCH] LoongArch: Remove the deprecated notifier hook mechanism
-Date: Sat,  8 Feb 2025 09:33:55 +0800
-Message-ID: <3CA1F6E1F2943EAA+20250208013355.401050-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ZBrylQWG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=b3YhI
+	mgTWo7bwbjWqGJhVMij887Z3UsLMvLi21YCkpA=; b=ZBrylQWGd10UEVgIK7fLq
+	b87r5ukudgOoaB1xL/F6jkth455HhOXlKY7pLgJxoE9E9A6ZHsczY+oP1g9EVTJd
+	v2J7D+tP7eIhdfyBH+jzumh2OSG0/VMDMPRGLpSb6ihSWaalZ07M4eNZqw/NvTvF
+	IDm3SVRHKpuKLPRuFCMYc0=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wDnd+_stKZnH3VRKw--.60201S2;
+	Sat, 08 Feb 2025 09:35:40 +0800 (CST)
+From: l1138897701@163.com
+To: jani.nikula@linux.intel.com
+Cc: luoqing@kylinos.cn,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: i915: Use struct_size() helper in kmalloc()
+Date: Sat,  8 Feb 2025 09:35:39 +0800
+Message-Id: <20250208013539.3586855-1-l1138897701@163.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,120 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NYlggeZuI0UGXmhme+f+XoDuidKh7i/0lowmDnx2Xgqc5kCAB/iRZiGy
-	fWG/C7jpgWP19QblBVEXlFhqvQCeW/0RdoBqUjemJ498+GdshvHVereXAube1j41R1fo8tx
-	VPuhI93lvIH+DlHG5vLB05M1NFmWS6Z09pCEEhswGsEqvtRNIOGyhWW+5s2D59f8P4S5GAh
-	klhxDcnc1wQBWYum7QRyIKiOyEoVB/lMlzixU+fo4iV42HDYDnqPsETvnp0xCSt35Bz5vgm
-	St8VdoCHYmDITIZqjF8OaKQJQ/wl2mRY6NhW2Cdqr+UgnWOUXIzLuSCxv8bpzgiFrGRViwV
-	0ko5TT1lIxlIh/65LhE8ceJ9dvEKdNE/Lx5bjo+Sb5kriVUACXsmLNmaPuWkMMWFu7caFUP
-	kTYYHGJHsxaLdXbJLKJz87cVgnBDWrzDi+DINJeuZypt2FYZxGQwm5b0v1+7wevYYq4lgt7
-	zPFn0+Rsd0LseJo6jATa6LNEjBayKuZCJUx+o2TSXrpV8gW2lUFcKc9SnYnkVeEfyROXyeR
-	T3R+VZkfWp+rD5xPZoz1VdYiYepA1b80AC+HCDIJTGEuf9G4Ygl6F2Iid5W6Y5O0LDCDyv/
-	EHWcLRqdn+YvJPtdmcGuitQDV5Tkx3Htfg5si/z2mx6PwkxfqYzyp6tzAsGvTPCMi0nnHur
-	MjLMKubp/ipMv+I6DlE4U49+nmzTeHELweJZwdhqf7gGYo0QlS/z0UDN/R/fjMC8oU29tkb
-	p+CG4Pz7HJgCKwuULdYknq6yw9bExODuYTmQkZoU8Dw10eawtnizOcUsd5nsT90rpiK1g3G
-	1YYOh1WEBopx19ss7SXvO87zSybsFDE+/76J4CSfsCuwcuu2Tyx/xdohutRx05w5QLhA1QU
-	QmA6b8wX0+8MV70TE1/Ln2QZM2BJdh/PMnxMvE8CWtJfJV8h8CdkqD3ksjyp1+Q1oxNfq1U
-	Az+UN0YNDXQPcA3JJ6jl3uOVn94XlBGXCaEGU9V+Nu25W1g==
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+X-CM-TRANSID:_____wDnd+_stKZnH3VRKw--.60201S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZw18tw4DZFyUXw43XF4DCFg_yoWDWFcEkr
+	WUZr97CrsxZanYkr47Gw1rZFy29w17AFWSg3Wxt34Sk347Xr4fuayDuFy2qwn7XFW3CFZx
+	ZwsruFySqr9xGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUs2-3UUUUU==
+X-CM-SenderInfo: jorrjmiyzxliqr6rljoofrz/1tbiKADtRGemp4+4VwAAsH
 
-The notifier hook mechanism in proc and cpuinfo is actually unnecessary
-for LoongArch because it's not used anywhere.
+From: luoqing <luoqing@kylinos.cn>
 
-It was originally added to the MIPS code in commit d6d3c9afaab4 ("MIPS:
-MT: proc: Add support for printing VPE and TC ids"), and LoongArch
-then inherited it.
+Make use of the struct_size() helper instead of an open-coded version,
+in order to avoid any potential type mistakes or integer overflows that,
+in the worst scenario, could lead to heap overflows.
 
-But as the kernel code stands now, this notifier hook mechanism doesn't
-really make sense for either LoongArch or MIPS.
-
-Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+Signed-off-by: luoqing <luoqing@kylinos.cn>
 ---
- arch/loongarch/include/asm/cpu-info.h | 19 -------------------
- arch/loongarch/kernel/proc.c          | 22 ----------------------
- 2 files changed, 41 deletions(-)
+ drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/cpu-info.h b/arch/loongarch/include/asm/cpu-info.h
-index 35e0a230a484..48217f07d37e 100644
---- a/arch/loongarch/include/asm/cpu-info.h
-+++ b/arch/loongarch/include/asm/cpu-info.h
-@@ -77,25 +77,6 @@ extern const char *__cpu_full_name[];
- #define cpu_full_name_string()	__cpu_full_name[raw_smp_processor_id()]
+diff --git a/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c b/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c
+index 075657018739..5cd58e0f0dcf 100644
+--- a/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c
++++ b/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c
+@@ -103,8 +103,7 @@ static struct dma_buf *mock_dmabuf(int npages)
+ 	struct dma_buf *dmabuf;
+ 	int i;
  
- struct seq_file;
--struct notifier_block;
--
--extern int register_proc_cpuinfo_notifier(struct notifier_block *nb);
--extern int proc_cpuinfo_notifier_call_chain(unsigned long val, void *v);
--
--#define proc_cpuinfo_notifier(fn, pri)					\
--({									\
--	static struct notifier_block fn##_nb = {			\
--		.notifier_call = fn,					\
--		.priority = pri						\
--	};								\
--									\
--	register_proc_cpuinfo_notifier(&fn##_nb);			\
--})
--
--struct proc_cpuinfo_notifier_args {
--	struct seq_file *m;
--	unsigned long n;
--};
+-	mock = kmalloc(sizeof(*mock) + npages * sizeof(struct page *),
+-		       GFP_KERNEL);
++	mock = kmalloc(struct_size(mock, pages, npages), GFP_KERNEL);
+ 	if (!mock)
+ 		return ERR_PTR(-ENOMEM);
  
- static inline bool cpus_are_siblings(int cpua, int cpub)
- {
-diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
-index 6ce46d92f1f1..004f494bf43f 100644
---- a/arch/loongarch/kernel/proc.c
-+++ b/arch/loongarch/kernel/proc.c
-@@ -13,28 +13,12 @@
- #include <asm/processor.h>
- #include <asm/time.h>
- 
--/*
-- * No lock; only written during early bootup by CPU 0.
-- */
--static RAW_NOTIFIER_HEAD(proc_cpuinfo_chain);
--
--int __ref register_proc_cpuinfo_notifier(struct notifier_block *nb)
--{
--	return raw_notifier_chain_register(&proc_cpuinfo_chain, nb);
--}
--
--int proc_cpuinfo_notifier_call_chain(unsigned long val, void *v)
--{
--	return raw_notifier_call_chain(&proc_cpuinfo_chain, val, v);
--}
--
- static int show_cpuinfo(struct seq_file *m, void *v)
- {
- 	unsigned long n = (unsigned long) v - 1;
- 	unsigned int isa = cpu_data[n].isa_level;
- 	unsigned int version = cpu_data[n].processor_id & 0xff;
- 	unsigned int fp_version = cpu_data[n].fpu_vers;
--	struct proc_cpuinfo_notifier_args proc_cpuinfo_notifier_args;
- 
- #ifdef CONFIG_SMP
- 	if (!cpu_online(n))
-@@ -98,12 +82,6 @@ static int show_cpuinfo(struct seq_file *m, void *v)
- 		      cpu_data[n].watch_ireg_count, cpu_data[n].watch_dreg_count);
- 	}
- 
--	proc_cpuinfo_notifier_args.m = m;
--	proc_cpuinfo_notifier_args.n = n;
--
--	raw_notifier_call_chain(&proc_cpuinfo_chain, 0,
--				&proc_cpuinfo_notifier_args);
--
- 	seq_printf(m, "\n");
- 
- 	return 0;
 -- 
-2.47.2
+2.27.0
 
