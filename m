@@ -1,78 +1,155 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB998148FE6
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 07:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E26123C8DA
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 07:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738999508; cv=none; b=qCEs976sSH0NIDAYF/Izs6iirhasYMFAhGZBuToWuIze+M1SmVLmyE5f6w2quSLEW4hoGd+PY3Z/qte51nFN5VLXxZqq0I3KlfGR795+nrmW144jSuNoz9kcblTM2zqUuGMfOSUjQa3bSP5/OWxp7vLRZwGQW6Nodmai/S5V7xA=
+	t=1739000210; cv=none; b=m1KdSK1iCCV1iO2goPoSZhFgwtxdOAZLtWJYeww6xv6XuFyyvD3qMOblVBTADlhnt1GQ9uyjmGDhxjVQzvgDFi/3OVyOSkvfGTCR+oAdyH4KSOK196TdqG0eIo8yYH/ufJ8Nh/VEqr9yMiZArciHI/VwBycnk4VElX8Y3NdVr98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738999508; c=relaxed/simple;
-	bh=nO3hchjOsaP1RONuy97ZQXYJfj/XWV3o1xs5m2QVd2Q=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=BBNOh1qXBzz5xnpW+hcygJfc/RfUnxuFOHn2ghdZyY/G4CpTSNXFb0cmjmJcMCtN56FYy8xRnHdJiViX+B6hZdJxfH9Rm5xWmZu8c+T5bVC52bUI8nM/g/V0vOtcxZYYnAPKd7HJHaI6CxKVN8Ae7nuchckVqBCjsNjHtZ5RulU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d0225c44e8so53587285ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 23:25:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738999506; x=1739604306;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bTLH3DE1scVq8ZV/C5ZLGjBap6ga1IZ5cXcRDj04E4E=;
-        b=bqdsRoV6oI9oSuEONrrsJ/KuIcaNQiMbTv16Nx2ep3IUhl4XUcrCOFJcapIpPgDNUZ
-         xhbUs3hxp7EQA6sdb5hLpHlp5tIEhjzmTu3O638x6J54DvobRBl9A3wfSpketOvT9xM2
-         +x85eEXmy+KGnXGVMCfXQa43U+WKoHu9JpnTAkMjsGsgwAX40QrxBZZAdFToIKoP8yQ3
-         cQLs1s+M/7130LmK4A8Qew54zCg6R9sujo9d2YDX71upfOz+SUFEBH3ZrliGxTXrfb9v
-         FgW556MPBWjH9GfgZaTc8yMLjgOm7QqBSjFGStR2dwH/AHFlRrUX1fABQAOX3F3NAjwx
-         CskQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0+8OkLZOVKrhCWYTJAA2rlSbZuarP4SrhgRmxkMbyAPZQmQWdYVw1uQ7ISu/ZIgGJlLjKrwj+9uhblAI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypcEgDTtZ0vbqE50hz44PUMVQzmOpEfVI3O9wmurEHpYWGGXoF
-	hdWI/SAs/Hd8upGkPCWOQjNDetc7DN+GfSHLemkTcBd7ZI3pwTtU59dKfKoTBWIPrvd2OuSqQ/D
-	ALZyi6rWw8FfyyZZsx9B037ThGzS1UFvJBErYz/7qWnWWoIvyK9uolsg=
-X-Google-Smtp-Source: AGHT+IGKkh/0FawH2W86AI8WUkzUTbydbSlAtwptxUOjYiSCq8r5MPZ/xLAa/+mPU/8D2xKFQdArsfXVcM8/oj6kp6MWTlj6YvS/
+	s=arc-20240116; t=1739000210; c=relaxed/simple;
+	bh=ZpDkIwRv/jYFmO8UBkwg1wlxJp9M55ti5+VYkT9s5xE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sPCgONwWfVg8JJTWOotGWGfPLqkULwOKWVabxVkyfibBLRKwuLA2TsvrGGLSB+P3070hxwU7qKKddLFXKh+6KPcACtE3QVph7fxE7UffUbv9qD1eABS+tP5n+ukdlTl7p0nrDl58bwUfYQ0KQgupkU4CMIwFnMZyzf5r9/3tcf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=J7x8sy3I; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="J7x8sy3I"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5185Klf7021897;
+	Sat, 8 Feb 2025 07:36:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=ThbqPU
+	VYfl1tA58Btsg9qQ4QSjuqFi+dzpNMkNcl6Q4=; b=J7x8sy3I29ecI6mZtNOMmx
+	3+zP/xeIn58oLELUx+lHFdI/aRK6oMxZhYmkGp8OBvjf/p4wgWHNlMXZqwDt+CNW
+	fWjv91WU+I5oQZJjE+DacsBkmAl0MKpyik/8BSD7qgDGv224E3PpWpOltqxbmyw4
+	m/pDs5TwusqVDFX/fTTrMyHlXUt8GQyfYmYJMALzys6czRVbkV/wZySvwSN4pysO
+	J8RmYZwe+Pz9Ij9bnPwIcEkK0e83//qZnW3F2QEfhsQ/xjhvPTtsi5ZoFFVssBSo
+	DR264fKjUuG9KG4uhNvng7U2BEgBqltn+F9p7FqWSb/e01vQ1V3+0A3gRK/DAoVg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44p11c0b83-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Feb 2025 07:36:12 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5187aBTT010237;
+	Sat, 8 Feb 2025 07:36:11 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44p11c0b80-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Feb 2025 07:36:11 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5185nGhX006525;
+	Sat, 8 Feb 2025 07:36:10 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hyeky5ur-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Feb 2025 07:36:10 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5187a8p230147296
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 8 Feb 2025 07:36:08 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 99A5520040;
+	Sat,  8 Feb 2025 07:36:08 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 95E362004D;
+	Sat,  8 Feb 2025 07:36:04 +0000 (GMT)
+Received: from [9.39.23.47] (unknown [9.39.23.47])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat,  8 Feb 2025 07:36:04 +0000 (GMT)
+Message-ID: <7b51f7de-8e4b-4766-85ca-dee24832c693@linux.ibm.com>
+Date: Sat, 8 Feb 2025 13:05:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:481c:b0:3cf:b626:66c2 with SMTP id
- e9e14a558f8ab-3d13df546c4mr45042965ab.19.1738999505985; Fri, 07 Feb 2025
- 23:25:05 -0800 (PST)
-Date: Fri, 07 Feb 2025 23:25:05 -0800
-In-Reply-To: <67a4b9e8.050a0220.d6d27.0000.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a706d1.050a0220.3d72c.0020.GAE@google.com>
-Subject: Re: [syzbot] [overlayfs?] general protection fault in clone_private_mount
-From: syzbot <syzbot+62dfea789a2cedac1298@syzkaller.appspotmail.com>
-To: amir73il@gmail.com, brauner@kernel.org, jack@suse.cz, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, lizhi.xu@windriver.com, mike@mbaynton.com, 
-	miklos@szeredi.hu, syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/9] powerpc: Use preempt_model_str().
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+        Ben Segall <bsegall@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org
+References: <20250203141632.440554-1-bigeasy@linutronix.de>
+ <20250203141632.440554-6-bigeasy@linutronix.de>
+ <65c6f60d-bb52-48bd-a02c-87ffd2a915d4@csgroup.eu>
+ <20250203160103.9DikC9FJ@linutronix.de>
+ <51999b8e-61c0-48b7-b744-c83d39e7f311@csgroup.eu>
+ <20250204082223.6iNyq_KR@linutronix.de>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <20250204082223.6iNyq_KR@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: pi0gybTkFafi5HjxwKL0ShjNjr9t0ZtV
+X-Proofpoint-ORIG-GUID: 0aeLtRwpyV5lMlEGvg-TQFK2eCUfh7vs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-08_03,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
+ adultscore=0 malwarescore=0 priorityscore=1501 mlxscore=0 bulkscore=0
+ suspectscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502080059
 
-syzbot has bisected this issue to:
 
-commit ae63304102ecd597130ecea27395739a6a6371b7
-Author: Christian Brauner <brauner@kernel.org>
-Date:   Thu Jan 23 19:19:48 2025 +0000
 
-    fs: allow detached mounts in clone_private_mount()
+On 2/4/25 13:52, Sebastian Andrzej Siewior wrote:
+> Use preempt_model_str() instead of manually conducting the preemption
+> model. Use pr_emerg() instead of printk() to pass a loglevel.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10cb5ca4580000
-start commit:   808eb958781e Add linux-next specific files for 20250206
-git tree:       linux-next
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=12cb5ca4580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14cb5ca4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=88b25e5d30d576e4
-dashboard link: https://syzkaller.appspot.com/bug?extid=62dfea789a2cedac1298
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16346df8580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=117e80e4580000
+even on powerpc, i see __die ends up calling show_regs_print_info().
+Why print it twice?
 
-Reported-by: syzbot+62dfea789a2cedac1298@syzkaller.appspotmail.com
-Fixes: ae63304102ec ("fs: allow detached mounts in clone_private_mount()")
+> 
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Naveen N Rao <naveen@kernel.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+> v2…v3:
+>    - Use printk() instead of pr_emerg() to remain consistent with the
+>      other invocations in terms of printing context.
+> 
+>   arch/powerpc/kernel/traps.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+> index edf5cabe5dfdb..d6d77d92b3358 100644
+> --- a/arch/powerpc/kernel/traps.c
+> +++ b/arch/powerpc/kernel/traps.c
+> @@ -263,10 +263,10 @@ static int __die(const char *str, struct pt_regs *regs, long err)
+>   {
+>   	printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
+>   
+> -	printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s %s\n",
+> +	printk("%s PAGE_SIZE=%luK%s %s %s%s%s%s %s\n",
+>   	       IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
+>   	       PAGE_SIZE / 1024, get_mmu_str(),
+> -	       IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
+> +	       preempt_model_str(),
+>   	       IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
+>   	       IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" __stringify(NR_CPUS)) : "",
+>   	       debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
