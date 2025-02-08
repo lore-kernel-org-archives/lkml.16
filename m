@@ -1,201 +1,284 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7D1243962
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 20:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0621F3B89;
+	Sat,  8 Feb 2025 20:45:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739047551; cv=none; b=nC9YdvP3SH/S/wJBb21Do2hKcY0+IgZ/crij1GXUU8qITf0d//iEKHqlamoNBQDVOV5LvrmAd/R8LqVEmjqi0eim8BjSiSZ3v08imU6Hkw48erN21rClDxF/0nKAxO+Rstx457XaivPF8aXa6b5oKVq//0p9rPVO3boWi85OCJQ=
+	t=1739047553; cv=none; b=L6w5OGoMbcLiADMxw/Skv2k7G2OT/wUsZZr5oj8mE7UA0K3u6zTPJKelvr7eU/8R01y3yA3VomB1hvb2tZe30xdO+jFPpJphtBmavWvLmcJLt999IG00eYvMzsq8ZbkLJJB6UqSB31wq7hLegt4GT+bfz0qYfrpfsPxj4F2ifaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739047551; c=relaxed/simple;
-	bh=MSjuyu4jTk60r211/Aj4I3bmRFDePtmI4OUPp76TA8U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kpcRkDoSSdDssq/6NVzqhszJP9IAbPSgEy4P+UrlQdA/PZBgubEqI06j4jfaLm8CiCFyXyHWqfHoSpb9ES3AB9PZFqHvcsdrxZ/BJqvIFTrUL4yWhPuzhoxyAtpKbeKM/6A5if1sADplLi8v9iIIq4GuhTkE+tc0LXnf5R7RZPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=bR9oNLqb; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1739047553; c=relaxed/simple;
+	bh=Zao7m8sPs2R+b8IWOgxr5W1kxZHjntdxauxRdT5uF8Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QxSuoUbKGhd/XhidzbinjTESCL0e4syBuRB1cGP+FKwBVdP2HCB4GEsNi4ewrB9R71A78c4Orv2onln147aIngR5GriTQ+dNSJo6oF+Yb76JFyVOpImxyq4bU4TGWuME8ETCdqbbTQD6h1GN9ZAOCT8QxHRXluqD7WbRLIrkmH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I12+tXUw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="bR9oNLqb"
-Received: from cwcc.thunk.org (pool-173-48-111-148.bstnma.fios.verizon.net [173.48.111.148])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 518KiGOj028750
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 8 Feb 2025 15:44:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1739047466; bh=i4/aJJgLvt2vX9K0kAeUf0wS62Jq2SDxN3YWCkva0QA=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=bR9oNLqbfd3dv4YQX7/Vtgz/20TMk/PM5VyDusFulLscsAdL4ONdaEOs56qChYT8f
-	 c182rp019vz5W5sQhHNRDzdZC5uLWTb8jRsLVaA5uCvOUh/jEPWLpFn9VL8vF+gc9w
-	 ANqjOq/nhErzEJEH181/E8xs74J49IJoiRiNBt3N0b3vwfle3GjD3aSDnPfmNTYZLS
-	 Nv+pSJWqVVpN574IUPrps2xyxfBGe26zvJW1yw9NtUC2FwK9QrIVROJsArSWr41iHs
-	 /8c35u4E8ECXTcWTrpP/1qIkjwlxIuSFjfxB41M1EC4sj9aOEnCEx1innvruMfSX11
-	 G5G0uympP8mfA==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 7C10915C013F; Sat, 08 Feb 2025 15:44:16 -0500 (EST)
-Date: Sat, 8 Feb 2025 15:44:16 -0500
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: "Dr. Greg" <greg@enjellic.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-        Hector Martin <marcan@marcan.st>, Dave Airlie <airlied@gmail.com>,
-        Jason Gunthorpe <jgg@nvidia.com>, Greg KH <gregkh@linuxfoundation.org>,
-        phasta@kernel.org, Christoph Hellwig <hch@lst.de>,
-        Danilo Krummrich <dakr@kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-        daniel.almeida@collabora.com, aliceryhl@google.com,
-        robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
-        Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-        Bj??rn Roy Baron <bjorn3_gh@protonmail.com>,
-        Benno Lossin <benno.lossin@proton.me>,
-        Andreas Hindborg <a.hindborg@kernel.org>,
-        Trevor Gross <tmgross@umich.edu>,
-        Valentin Obst <kernel@valentinobst.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma
- coherent allocator abstraction.)
-Message-ID: <20250208204416.GL1130956@mit.edu>
-References: <2025013030-gummy-cosmic-7927@gregkh>
- <20250130172437.GN5556@nvidia.com>
- <2025013148-reversal-pessimism-1515@gregkh>
- <20250131135421.GO5556@nvidia.com>
- <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
- <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local>
- <CAPM=9tzPR9wd=3Wbjnp-T0W8-dDfGah-H3Ny52G85B+2Ev9ksA@mail.gmail.com>
- <208e1fc3-cfc3-4a26-98c3-a48ab35bb9db@marcan.st>
- <CAHk-=wi=ZmP2=TmHsFSUGq8vUZAOWWSK1vrJarMaOhReDRQRYQ@mail.gmail.com>
- <20250207121638.GA7356@wind.enjellic.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I12+tXUw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45845C4CED6;
+	Sat,  8 Feb 2025 20:45:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739047553;
+	bh=Zao7m8sPs2R+b8IWOgxr5W1kxZHjntdxauxRdT5uF8Y=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=I12+tXUw+oyzpDLPemuaG+kmibOvLzlQr96BROh+48c3rNFZCkX2dhcaOp+Jxl14q
+	 Fcn8sBQwkwKq/w78+kc8Sq0KzU7Pz1vHL5+L3ncUnMwrUq7JaZXxuI7I4srsvV66Za
+	 vr59IVvJwN+HoHCNAKhH4fDTXbeRsqaA0VxTrur0I2cXW0Pgp7HANNg10YX+7eEFKL
+	 MXJsuKCvVCIcMZlDMrUrNVl0zI7Y0FJlqzijRCCZjjZwRjpIPddrnC10xCO3QndsM6
+	 N54cbAb7kkEn1/QAMeHL0OKwevepmTU8VVi1Ta/n/wR0vVAH/ype+iDpseLeiE+naP
+	 aKsl/TE2+LoBA==
+Message-ID: <35cae0eb73781bb36c49aed2c2bc49a808698635.camel@kernel.org>
+Subject: Re: [PATCH v5 6/7] nfsd: handle CB_SEQUENCE NFS4ERR_SEQ_MISORDERED
+ error better
+From: Jeff Layton <jlayton@kernel.org>
+To: Tom Talpey <tom@talpey.com>, Chuck Lever <chuck.lever@oracle.com>, Neil
+ Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
+ <Dai.Ngo@oracle.com>,  "J. Bruce Fields" <bfields@fieldses.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Sat, 08 Feb 2025 15:45:51 -0500
+In-Reply-To: <29e739f1-2d85-40c2-a549-5ab9d71686b0@talpey.com>
+References: <20250207-nfsd-6-14-v5-0-f3b54fb60dc0@kernel.org>
+	 <20250207-nfsd-6-14-v5-6-f3b54fb60dc0@kernel.org>
+	 <28174296-129d-4459-aa23-a94bbf00d257@oracle.com>
+	 <3e4d14075482489cd010e4ea621c0bd368700e27.camel@kernel.org>
+	 <40970e33-4689-4623-a423-b346e739ba80@talpey.com>
+	 <66532654ca25280ffa30168a977601ba4a37aaab.camel@kernel.org>
+	 <29e739f1-2d85-40c2-a549-5ab9d71686b0@talpey.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207121638.GA7356@wind.enjellic.com>
 
-On Fri, Feb 07, 2025 at 06:16:38AM -0600, Dr. Greg wrote:
-> 
-> The all powerful sub-system maintainer model works well if the big
-> technology companies can employ omniscient individuals in these roles,
-> but those types are a bit hard to come by.
+On Sat, 2025-02-08 at 14:18 -0500, Tom Talpey wrote:
+> On 2/8/2025 11:08 AM, Jeff Layton wrote:
+> > On Sat, 2025-02-08 at 13:40 -0500, Tom Talpey wrote:
+> > > On 2/8/2025 10:02 AM, Jeff Layton wrote:
+> > > > On Sat, 2025-02-08 at 12:01 -0500, Chuck Lever wrote:
+> > > > > On 2/7/25 4:53 PM, Jeff Layton wrote:
+> > > > > > For NFS4ERR_SEQ_MISORDERED, do one attempt with a seqid of 1, a=
+nd then
+> > > > > > fall back to treating it like a BADSLOT if that fails.
+> > > > > >=20
+> > > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > > > ---
+> > > > > >    fs/nfsd/nfs4callback.c | 16 ++++++++++------
+> > > > > >    1 file changed, 10 insertions(+), 6 deletions(-)
+> > > > > >=20
+> > > > > > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> > > > > > index 10067a34db3afff8d4e4383854ab9abd9767c2d6..d6e3e8bb2efabad=
+da9f922318880e12e1cb2c23f 100644
+> > > > > > --- a/fs/nfsd/nfs4callback.c
+> > > > > > +++ b/fs/nfsd/nfs4callback.c
+> > > > > > @@ -1393,6 +1393,16 @@ static bool nfsd4_cb_sequence_done(struc=
+t rpc_task *task, struct nfsd4_callback
+> > > > > >    			goto requeue;
+> > > > > >    		rpc_delay(task, 2 * HZ);
+> > > > > >    		return false;
+> > > > > > +	case -NFS4ERR_SEQ_MISORDERED:
+> > > > > > +		/*
+> > > > > > +		 * Reattempt once with seq_nr 1. If that fails, treat this
+> > > > > > +		 * like BADSLOT.
+> > > > > > +		 */
+> > > > >=20
+> > > > > Nit: this comment says exactly what the code says. If it were me,=
+ I'd
+> > > > > remove it. Is there a "why" statement that could be made here? Li=
+ke,
+> > > > > why retry with a seq_nr of 1 instead of just failing immediately?
+> > > > >=20
+> > > >=20
+> > > > There isn't one that I know of. It looks like Kinglong Mee added it=
+ in
+> > > > 7ba6cad6c88f, but there is no real mention of that in the changelog=
+.
+> > > >=20
+> > > > TBH, I'm not enamored with this remedy either. What if the seq_nr w=
+as 2
+> > > > when we got this error, and we then retry with a seq_nr of 1? Does =
+the
+> > > > server then treat that as a retransmission?
+> > >=20
+> > > So I assume you mean the requester sent seq_nr 1, saw a reply and sen=
+t a
+> > > subsequent seq_nr 2, to which it gets SEQ_MISORDERED.
+> > >=20
+> > > If so, yes definitely backing up the seq_nr to 1 will result in the
+> > > peer considering it to be a retransmission, which will be bad.
+> > >=20
+> >=20
+> > Yes, that's what I meant.
+> >=20
+> > > > We might be best off
+> > > > dropping this and just always treating it like BADSLOT.
+> > >=20
+> > > But, why would this happen? Usually I'd think the peer sent seq_nr X
+> > > before it received a reply to seq_nr X-1, which would be a peer bug.
+> > >=20
+> > > OTOH, SEQ_MISORDERED is a valid response to an in-progress retry. So,
+> > > how does the requester know the difference?
+> > >=20
+> > > If treating it as BADSLOT completely resets the sequence, then sure,
+> > > but either a) the request is still in-progress, or b) if a bug is
+> > > causing the situation, well it's not going to converge on a functiona=
+l
+> > > session.
+> > >=20
+> >=20
+> > With this patchset, on BADSLOT, we'll set SEQ4_STATUS_BACKCHANNEL_FAULT
+> > in the next forechannel SEQUENCE on the session. That should cause the
+> > client to (eventually) send a DESTROY_SESSION and create a new one.
+> >=20
+> > Unfortunately, in the meantime, because of the way the callback channel
+> > update works, the server can end up trying to send the callback again
+> > on the same session (and maybe more than once). I'm not sure that
+> > that's a real problem per-se, but it's less than ideal.
+> >=20
+> > > Not sure I have a solid suggestion right now. Whatever the fix, it
+> > > should capture any subtlety in a comment.
+> > >=20
+> >=20
+> > At this point, I'm leaning toward just treating it like BADSLOT.
+> > Basically, mark the backchannel faulty, and leak the slot so that
+> > nothing else uses it. That allows us to send backchannel requests on
+> > the other slots until the session gets recreated.
+>=20
+> Hmm, leaking the slot is a workable approach, as long as it doesn't
+> cascade more than a time or two. Some sort of trigger should be armed
+> to prevent runaway retries.
+>=20
+> It's maybe worth considering what state the peer might be in when this
+> happens. It too may effectively leak a slot, and if is retaining some
+> bogus state either as a result of or because of the previous exchange(s)
+> then this may lead to future hangs/failures. Not pretty, and maybe not
+> worth trying to guess.
+>=20
+> Tom.
+>=20
 
-I'll let you in a secret.  The maintainers are not "all-powerfui".  We
-are the "thin blue line" that is trying to keep the code to be
-maintainable and high quality.  Like most leaders of volunteer
-organization, whether it is the Internet Engineerint Task Force (the
-standards body for the Internet), we actually have very little power.
-We can not *command* people to work on retiring technical debt, or to
-improve testing infrastructure, or work on some particular feature
-that we'd very like for our users.
 
-All we can do is stop things from being accepted (either in our
-subsystem, or the imprimatur of the IETF).  Hopefully, we're only
-stopping bad things from progressing, but that *really* is all we can
-actually do.
+The idea here is that eventually the client should figure out that
+something is wrong and reestablish the session. Currently we don't
+limit the number of retries on a callback.
 
-One of the things which gets very frustrating from the maintainer's
-perspective is development teams that are only interested in their pet
-feature, and we *know*, through very bitter experience, that 95+% of
-the time, once the code is accepted, the engineers which contribute
-the code will disappear, never to be seen again.  As a result, a very
-common dynamic is that maintainers will exercise the one and only
-power which they have --- which is to refuse to accept code until it
-is pretty much perfect --- since once we accept the code, we instantly
-lose all leverge, and the contributors will be disappear, and we will
-be left with the responsibility of cleanig up the mess.  (And once
-there are users, we can't even rip out the code, since that would be a
-user-visible regression.)
+Maybe they should time out after a while? If we've retried a callback
+for more than two lease periods, give up and log something?
 
-Occasionally, there is an accusation that different standards that
-might apply for people who are in the "gold old buys club".  But what
-isn't appreciated, is that it is precisely because people who are
-long-term members of the community are trusted to stick around and
-will support code that the have sponsored.  For example, Darrick Wong,
-who contributed ext4 metadata checksuming support before we moved on
-to become the XFS maintainer, is still reviewing and making
-contributions to code that he contributed many years to ext4.  I've
-been known to submit fixes to test bugs for xfs-specific tests in
-xfstests that I discovered when running daily spinner tests on the
-linux git tree.
+Either way, I'd consider that to be follow-on work to this set.
 
-Just in the past two weeks, I've spent 15+ hours working on cleaning
-up a casefold "security fix" that had nasty on-disk backwards
-compatibility issues.  Part of it was that it was ext4 (although I
-discovered that there was also fsck.f2fs problems that had been
-overlooked), but the *other* part of why I spent so much time was that
-I sponsored the casefolding patches, and so I felt I certain moral
-responsibility to make sure the code was continued to be maintained.
 
-(And note, this has nothing to do with who employs me; the 15-20 hours
-that I spent working on creating the fix and the test scripts was
-purely on my own time, on the weekend, or late at night.  The time
-that I spend doing this isn't reflected in my performance reviews, or
-promotion propects --- in fact, arguably, over the past 15 years, this
-has probably slowed down my promotion prospects; I've only been
-promoted once since joining said big tech company...)
+> >=20
+> > > >=20
+> > > > Thoughts?
+> > > >=20
+> > > > >=20
+> > > > > > +		if (session->se_cb_seq_nr[cb->cb_held_slot] !=3D 1) {
+> > > > > > +			session->se_cb_seq_nr[cb->cb_held_slot] =3D 1;
+> > > > > > +			goto retry_nowait;
+> > > > > > +		}
+> > > > > > +		fallthrough;
+> > > > > >    	case -NFS4ERR_BADSLOT:
+> > > > > >    		/*
+> > > > > >    		 * BADSLOT means that the client and server are out of syn=
+c
+> > > > > > @@ -1403,12 +1413,6 @@ static bool nfsd4_cb_sequence_done(struc=
+t rpc_task *task, struct nfsd4_callback
+> > > > > >    		nfsd4_mark_cb_fault(cb->cb_clp);
+> > > > > >    		cb->cb_held_slot =3D -1;
+> > > > > >    		goto retry_nowait;
+> > > > > > -	case -NFS4ERR_SEQ_MISORDERED:
+> > > > > > -		if (session->se_cb_seq_nr[cb->cb_held_slot] !=3D 1) {
+> > > > > > -			session->se_cb_seq_nr[cb->cb_held_slot] =3D 1;
+> > > > > > -			goto retry_nowait;
+> > > > > > -		}
+> > > > > > -		break;
+> > > > > >    	default:
+> > > > > >    		nfsd4_mark_cb_fault(cb->cb_clp);
+> > > > > >    	}
+> > > > > >=20
+> > > > >=20
+> > > > >=20
+> > > >=20
+> > >=20
+> >=20
+>=20
 
-> Not sure what the fix is, from a project management perspective the
-> technology industry has never faced a challenge like this.  The fork
-> model, which was the classic protection in open-source, doesn't work
-> at this scale.
-
-Well, here's my suggestion.  Teams that want to get features,
-especially ones that might be potentially disruptive, into the tree,
-need to spend time becoming part of the *community*.  This means that
-they need to participate in part of the joint effort to keep the code
-maintainable and high quaity --- even if it isn't part of their
-company's short-term goals, or directly related to their pet feature
-that they are trying to get upstream.
-
-This was the trust of my "Beyond Upstream First" presentation which I
-gave to the Linux Foundation Member Summit last fall[1].
-
-[1] https://docs.google.com/presentation/d/11rMc8PBeyMItV6hv31OHSZ626_6FCZxjX6ZxEAehCpQ/edit#slide=id.p
-
-Now, I'll say that the Rust developers are making strides in the right
-direction here.  Miguel has stood for election for the Technical
-Adviory Board, and has been contributing in various ways beyond just
-Rust for Linux.  Ultimately, Cristoph's concern is that Rust is going
-to make life harder for maintainers because of particular build breaks
-getting in the way of the very limited bandwidth that Maintainers have
-(and again, a lot of the work that we do gets done on our own personal
-time; it's rare that even those maintainers employed by a "big
-technology company" have complete freedom to work on whatever they
-want; and they certainly don't have minions employed to do all of the
-grunt work to support code maintenance work, especially if we let
-crappy code slip past us in the name of "time to market" concerns.)
-
-So I think we'll get past this.  It might take some more effort, and
-more trust building --- on both sides --- but I'm fairly optismistic
-that it will happen.  It might not happe as *fast* as people might
-like; as Linus pointed out, it took ten years for the Clang compiler
-to be considered 100% fully supported --- and this was without needing
-to worrying about language issues, including an upstream language
-community which refuses to make any kind of backwards compatibility
-guarantees, and which is *actively* hostile to a second Rust compiler
-implementation (I suspect because it might limit their ability to make
-arbitrary backwards-incompatble language changes).
-
-> Obviously respect and open-mindedness to new ideas appears to be the
-> grease that makes all of this run smoothly.  Unfortunately that seems
-> to be about as rare a commodity as omniscience in our industry.
-
-The other thing which is super rare is people and companies who care
-about tech debt cleanup, code maintainability, and code quality.
-Instead of complaining about maintainers for who are unreasonably
-caring about these things, when they are desparately under-resourced
-to do as good of a job as they industry demands, how about meeting us
-half-way and *helping* us with these sort of long-term code health
-issues?  Maybe if you engage us as part of the community, we'll be a
-lot more open to adding changes that might increase the code
-maintenance burden?
-
-Cheers,
-
-					- Ted
+--=20
+Jeff Layton <jlayton@kernel.org>
