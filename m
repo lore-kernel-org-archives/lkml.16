@@ -1,31 +1,31 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09C7246345;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A7124634B;
 	Sat,  8 Feb 2025 13:32:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739021554; cv=none; b=LeouW3UrspKq/K7FT5hJE8mRvdXajvOQWQLAPZCqcNnanKw9Fe1Mc4udOKUfRvfj7xDkggTSq2Ps2df/NbiB3EUucTYgB9+8dk8ZhbjVbbRvH28oCkfDmYMUDiAMz54MUI3ArB24hDSST0zmPLYsUspP8tVYnGo7gtXuxSftaMQ=
+	t=1739021554; cv=none; b=ZX7KrppcscCNplwlXcbuBk9ObHiHcyIiodE3d4lvchIjPIb62wkN+YU/pl0D1N5C1sIkhs+qKO42gU7QTVgyJqSqG/gnFTTm0OjOUR6Yw8JFhkR6LqW8JUsut3Q9M2eh5IWjkfw8baIy2BXY1fSpL8hxE1Gh+sT9HqCs9vPLheQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739021554; c=relaxed/simple;
-	bh=VLUVgc8NZZ21G0lWwQ7ny+8mZQTDDefFbAQFB+DD/Ts=;
+	bh=Djc0doMI8bO1ADSSZS2fGxM/XL2BPWbQKQ4SfyNsQCg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IVLCjGLmB9sY4UQGBgnzvFx7o7LaJiQeScsfdwn4/EJNWf+E5E95V91GXdppNl12jASDRuP8hp/rXU8P2RDMdYo+ZOqjRIlLfBTiWgEWSemrOyyWAboJ2prNDMj2Xpzy4BkMIoSa8tn8AqjiTvuf7udWgEg/A2mJsqUkqtBSGfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=MvzF116P; arc=none smtp.client-ip=159.69.126.157
+	 In-Reply-To:To:Cc; b=mvsdk0ju2lm3vzFZLBpwRLN2mb+rRL00KkhVsVcl4LAnHLTTqg/E9+T4K6jcHWVG/bmULzl9DDVsSKZpmNHwHhX/hGkoXhw9u9pU7VXqrlFa3QwwCmtYx67Vx0xQiesCfMJ1XFb33SHJjDYHpNPk5fthVECj64a1JBBy8/DOw/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=rQADWEgh; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="MvzF116P"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="rQADWEgh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1739021543;
-	bh=VLUVgc8NZZ21G0lWwQ7ny+8mZQTDDefFbAQFB+DD/Ts=;
+	bh=Djc0doMI8bO1ADSSZS2fGxM/XL2BPWbQKQ4SfyNsQCg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=MvzF116PQKO2uhGizEWzIBzOyiZNXEoh+m5rDgLHtSzQGCijsD8JqAqIpB4dTgeFF
-	 3NMYshpo336+7egUGlHi/vO1IU2vzIhpJ069CRiLmEgQ4vkKf85kBg3ZYvadMaA77L
-	 h/hOE9Aq+DyASLI7aR+voCQOR6wH48cHFfoFd1qg=
+	b=rQADWEghpq9bZcIo79e4IKn2SjuOKao0j3o4g0XWfOhQUC9Yx/fGFaPTWPOkFeEao
+	 nVZ6Ri6Hk19vZferQaVH1uKGynrhgl82kApD9mvUTRx03uaC+HnXIePyeX7U7DtfHV
+	 uzcbx5BnsTWHySQL14qB6CJUixdRmHHDfHn8Vd+M=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Sat, 08 Feb 2025 14:31:15 +0100
-Subject: [PATCH 2/2] rust: add kunitconfig
+Date: Sat, 08 Feb 2025 14:31:14 +0100
+Subject: [PATCH 1/2] rust: pass correct target to bindgen on Usermode Linux
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,7 +34,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250208-rust-kunit-v1-2-94a026be6d72@weissschuh.net>
+Message-Id: <20250208-rust-kunit-v1-1-94a026be6d72@weissschuh.net>
 References: <20250208-rust-kunit-v1-0-94a026be6d72@weissschuh.net>
 In-Reply-To: <20250208-rust-kunit-v1-0-94a026be6d72@weissschuh.net>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
@@ -50,32 +50,37 @@ Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
  llvm@lists.linux.dev, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739021542; l=600;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739021542; l=1021;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=VLUVgc8NZZ21G0lWwQ7ny+8mZQTDDefFbAQFB+DD/Ts=;
- b=XwK4W5z5Q8bJnP6Nl/qMeWkVL2fm1JRP+9hMubchXYdjO7YrTUnamN3+tDsxa/tbM1Z22BnH8
- zSR2QZucXGUAXh/+tJo55LXESO4FYmRuh7/+WOrb/BQnYCZpoJKyFkj
+ bh=Djc0doMI8bO1ADSSZS2fGxM/XL2BPWbQKQ4SfyNsQCg=;
+ b=dXnp06q4bro+DEBeuU/Lp81e1upBO4+8Fsb3FxIIoi9uNuNGEJbP3p6ibP4m3AgzmjFBW6wES
+ Gw2FV9ZAcsmDY3btDwpe6pqx50n9XC8BK8gFhnpIznDTY5vojQQfkvB
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-The kunitconfig file in a directory is used by kunit.py to enable all
-necessary kernel configurations to run the tests in that subdirectory.
-Add such a file for rust/.
+Usermode Linux uses "um" as primary architecture name and the underlying
+physical architecture is provided in "SUBARCH".
+Resolve the target architecture flags through that underlying architecture.
+This is the same pattern as used by scripts/Makefile.clang from which
+the bindgen flags are derived.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- rust/.kunitconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ rust/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/rust/.kunitconfig b/rust/.kunitconfig
-new file mode 100644
-index 0000000000000000000000000000000000000000..9e72a5ab03c9a122348fea7c1db69e1b3fedcc00
---- /dev/null
-+++ b/rust/.kunitconfig
-@@ -0,0 +1,3 @@
-+CONFIG_KUNIT=y
-+CONFIG_RUST=y
-+CONFIG_RUST_KERNEL_DOCTESTS=y
+diff --git a/rust/Makefile b/rust/Makefile
+index 8fcfd60447bc89ba2c66a4f341288db2387b0956..a94fafb91d7d743c6c1b2248479c0d723964e5c4 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -245,6 +245,7 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387 -mpreferred-stack-boundary=% \
+ # Derived from `scripts/Makefile.clang`.
+ BINDGEN_TARGET_x86	:= x86_64-linux-gnu
+ BINDGEN_TARGET_arm64	:= aarch64-linux-gnu
++BINDGEN_TARGET_um	:= $(BINDGEN_TARGET_$(SUBARCH))
+ BINDGEN_TARGET		:= $(BINDGEN_TARGET_$(SRCARCH))
+ 
+ # All warnings are inhibited since GCC builds are very experimental,
 
 -- 
 2.48.1
