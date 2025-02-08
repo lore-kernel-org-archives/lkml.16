@@ -1,118 +1,155 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E176241107;
-	Sat,  8 Feb 2025 18:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F581714AC;
+	Sat,  8 Feb 2025 18:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739039027; cv=none; b=YqKV3JR3pZJPeY5siF0QblII+SHGeFl4cUklCY17u/l3jWDn/40RScmAdJAXqohVsxLRKty4cQdSeW+ddm7K9urkdQzoA7C2G/LXpajXmjPRHkWkyHKULdfousvGz3YyEudpL8uObcXZ2KBSDCd+5quXXM/chNHB4kASPzbb6RY=
+	t=1739039209; cv=none; b=UBnfnp7EQBXml2LDKsFyukhhhB52IeFiUUSgldnbtmkQs0RN+WJp9rAFRLqf0H8smDGzf+XTcrgBcbDKML4fMZxqMKVl7OT8hrJZVZwtx7pnpx8BPVYxj0/6RSukTXZjZFQx+NDQiqhFCLcuVUrdu/D3VczydiiUCiPuTBFeWrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739039027; c=relaxed/simple;
-	bh=jJ+AQLoMjO/x3Ps7vJSk3vzcKF5wiCVgIDoDTv4QQN0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tpKfWvlE9UEY84UZ/xSgNWgOn8d1iN0qUsHv2vOW6VCrORg3IsfMwKHXtJ8j/o3OfkmkWPaBCf4UuFXPjPKi53yvK6DNMKHtkBt9oSXLLBbxaRBZVDgOUqFVzzlbz1mzochyzxlP5mOyo7CobLQMBnlucgfmOJ/8Tw5rlEg1v44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EklgTIVz; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739039209; c=relaxed/simple;
+	bh=9vDK68QQZRosnkDe9Vqw2x9gXKsq56LrqlcltzABfh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DBmdCgTVYHxLPsj4b4SsCcGl8cY5jcwaJmkRPvvyCYbbMFRpF23/j5452BwZbOnJQj3+3khGZrv/FF4u3h0ZIP45EjFRrif3+bOhCkskS1vlSpIeN3aIZf7XgPIf1bU0C71/ASBr1+H+7C7kZcJOqNNHHtadWV9UtHa2c1wIMjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hMfsMX/2; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EklgTIVz"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5de4c7720bcso2569447a12.0;
-        Sat, 08 Feb 2025 10:23:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739039024; x=1739643824; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xiNvW4R/VJfrDNayC58/uDi99/+MsHLhziR2BZUzZIU=;
-        b=EklgTIVzy8lQ9XhJgkOFefUP4hIp+h6dI7LYOyc5bkFnRgohublN1+6JGFX8MAUNqq
-         POp0ByP0ucTmntxJsg6kFNqIypq0zCebnldvHvtvTopIAsDIuBM7ZM5k3nYh6nGlAkNY
-         HQRj4z7I+QBylib9FySozfD3IyhnpdkxNow04qEyjspDsw7qGH4cSBACd2eKBhMpDvZ9
-         K+6Izz+SLsOxxJ+9VowZ39meowCvRDdZ7egPdUHLm6xQKMg1cNupR3ma7ks9aK0rY1Fg
-         Uy0ksg7dpIJmrbAO1+BQ7elWdMx4JfLt9brzqxsxk928I0hi+6cqfnT+ZPJ3sYokYL/i
-         JP8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739039024; x=1739643824;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xiNvW4R/VJfrDNayC58/uDi99/+MsHLhziR2BZUzZIU=;
-        b=YT7KBalRLshiWJfikSuNZsE4g9apkuuDPSAD9zprG9IKZKwxT9gSr3csM4pWy9T1Jw
-         IR2n8sW6CiUstGLmeI5Ic1HYqrg9BN4nacxmyvDFV2L1JHYnd127a8j3+wjE6odHm4mo
-         ww/M2dxdSMTqQ01Gf9IgCgJz/CkI/X8/BqE73D/G1Q9Js4EzMq7ZU6E6D+xlK5naIAN1
-         ufK/FwCkhrOqhKk4Zu7QkUG65EsfLE+l78ShAY3oUpisLoE0x1NoVKpx7SATJGEcIGlG
-         3uDLnY9J55NZberoqhbBWetSBxjRfm+s+MFPeDm8mVfZ3VXGrtRb8pJVTqTMclutZ4lE
-         7sMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXWUSsRw4zvBRlrAiQUSvv8lARCYTfqUAAZGWnigSBti1oMbiKab7CI9xWjHkwtORriXf3jA2TbdujdsbT@vger.kernel.org, AJvYcCV90zzD3wwRvWkOIvRSjVKdlflEvuVNFCSqfBgtCVM8JxwtlvczT89x4rnGg4lyhTHNCwZI1cKy1KXQ@vger.kernel.org, AJvYcCX5faQdKkatJzcBRw1vWgmNGOBBnu+7r8pCBMbyWRnhTElgYI9tRuGeznWwpcHO52eXejCBDlAajWcwIh+5aA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxrxu4H8WI6WJxcFt6EYH6WpdWxMWK5ZEERv0uEio3tg9Q30qn8
-	KnLLWb3B33M7RKiYjKVIhBMagm/uXVHOhhDLN7Zu4QsQEqWdp8GZV88Ecd00Z1ZBLoLmx4Hwj6l
-	H6KaJC4rBp1adiwvM0BCEwZpDK18=
-X-Gm-Gg: ASbGnctP7LBLz7+XGrRax8lFiDThrRM75R1hnZ+FuMnQ/WA8uDA3ivz3qGGxD0BfdUa
-	EvEY3i+uBhjwlmIW/5PUNL19UaDTPT67VTJJFsIWA1f54c3eYOlYKUb/YdQ+RD072eY3HixL1
-X-Google-Smtp-Source: AGHT+IEqNBa82X3gISKr2oPC6+cVGTAfy5ePrlgVkuS7QLpMKuQGaDC6GHpRzb1UEFKg/yyqpP6k609+ra71SKuoP+8=
-X-Received: by 2002:a05:6402:2084:b0:5de:44b1:46c with SMTP id
- 4fb4d7f45d1cf-5de44feb75cmr7781329a12.7.1739039024125; Sat, 08 Feb 2025
- 10:23:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hMfsMX/2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739039208; x=1770575208;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9vDK68QQZRosnkDe9Vqw2x9gXKsq56LrqlcltzABfh8=;
+  b=hMfsMX/2c5iUcLCqAvixZmoSXlcXkKL8Nxl4X/x97CvbOhjlaaC/ra+1
+   O23X/LTFvOZO7ATuU3mCTx8gBNJAHG43LMjJQjmbzuBZ94xSEwVmvyYdD
+   7NfQl3J7h3Z8ZpR10hkb5B/4P58DaXX6V7NtuR6JqpUWBLnYOdPFi59xu
+   v64/M3mevZqRKEh8u7MbY6Z5msZmAncW9eix5MxFhhUfmVcZ8tXgOW7p/
+   7UGnaifdt6vjfj0mZNp4RdrDXWOEpAxtecPHiRwR/bBBZrDIKC/uR35Ca
+   kv1uE5hmoabgNlzRPamndVlOzqR8tMD2m8PqgMr72nC8w2eDBHqA7QVvD
+   Q==;
+X-CSE-ConnectionGUID: K+5Q//IaTwicM0FxtDo4sQ==
+X-CSE-MsgGUID: iRmcHAtuQkq9VnM4qGpeGg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="39555055"
+X-IronPort-AV: E=Sophos;i="6.13,270,1732608000"; 
+   d="scan'208";a="39555055"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 10:26:47 -0800
+X-CSE-ConnectionGUID: v2y3OrLBSIu7EbdKo51wjA==
+X-CSE-MsgGUID: LgCKuGihQye7mE4+/uUxZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,270,1732608000"; 
+   d="scan'208";a="142677431"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 08 Feb 2025 10:26:42 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tgpXL-0010UZ-2B;
+	Sat, 08 Feb 2025 18:26:39 +0000
+Date: Sun, 9 Feb 2025 02:26:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tamir Duberstein <tamird@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, llvm@lists.linux.dev,
+	Tamir Duberstein <tamird@gmail.com>
+Subject: Re: [PATCH] blackhole_dev: convert self-test to KUnit
+Message-ID: <202502090248.Ed6S8p8J-lkp@intel.com>
+References: <20250207-blackholedev-kunit-convert-v1-1-8ef0dc1ff881@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67a4eae3.050a0220.65602.0000.GAE@google.com> <67a79eb3.050a0220.3d72c.002b.GAE@google.com>
-In-Reply-To: <67a79eb3.050a0220.3d72c.002b.GAE@google.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Sat, 8 Feb 2025 19:23:32 +0100
-X-Gm-Features: AWEUYZkDy7uFTIlJQohQpCjxxZm_lZu6PPZOEeMY_q1jzs96tEGajm8SZ8cCtOo
-Message-ID: <CAGudoHGQo1Y41_91WOUJygHzrmOO4N7PY12vPpFLF=ZEFPvsBQ@mail.gmail.com>
-Subject: Re: [syzbot] [ext4?] WARNING in inode_set_cached_link
-To: syzbot <syzbot+2cca5ef7e5ed862c0799@syzkaller.appspotmail.com>
-Cc: adilger.kernel@dilger.ca, brauner@kernel.org, jack@suse.cz, 
-	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu, 
-	viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207-blackholedev-kunit-convert-v1-1-8ef0dc1ff881@gmail.com>
 
-For posterity this is expected, the ex4 fix is here:
-https://lore.kernel.org/linux-hardening/67a3b38f.050a0220.19061f.05ea.GAE@g=
-oogle.com/T/#mb782935cc6926dd5642984189d922135f023ec43
+Hi Tamir,
 
-On Sat, Feb 8, 2025 at 7:21=E2=80=AFPM syzbot
-<syzbot+2cca5ef7e5ed862c0799@syzkaller.appspotmail.com> wrote:
->
-> syzbot has bisected this issue to:
->
-> commit 6408a56623761f969537b421d99f045a4cc955b9
-> Author: Mateusz Guzik <mjguzik@gmail.com>
-> Date:   Tue Feb 4 21:32:07 2025 +0000
->
->     vfs: sanity check the length passed to inode_set_cached_link()
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D152ffca458=
-0000
-> start commit:   808eb958781e Add linux-next specific files for 20250206
-> git tree:       linux-next
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=3D172ffca458=
-0000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D132ffca458000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D88b25e5d30d57=
-6e4
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D2cca5ef7e5ed862=
-c0799
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D161241b0580=
-000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D16ee80e458000=
-0
->
-> Reported-by: syzbot+2cca5ef7e5ed862c0799@syzkaller.appspotmail.com
-> Fixes: 6408a5662376 ("vfs: sanity check the length passed to inode_set_ca=
-ched_link()")
->
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisect=
-ion
+kernel test robot noticed the following build warnings:
 
+[auto build test WARNING on 2014c95afecee3e76ca4a56956a936e23283f05b]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Tamir-Duberstein/blackhole_dev-convert-self-test-to-KUnit/20250208-074037
+base:   2014c95afecee3e76ca4a56956a936e23283f05b
+patch link:    https://lore.kernel.org/r/20250207-blackholedev-kunit-convert-v1-1-8ef0dc1ff881%40gmail.com
+patch subject: [PATCH] blackhole_dev: convert self-test to KUnit
+config: riscv-randconfig-r123-20250208 (https://download.01.org/0day-ci/archive/20250209/202502090248.Ed6S8p8J-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 14.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20250209/202502090248.Ed6S8p8J-lkp@intel.com/reproduce)
 
---=20
-Mateusz Guzik <mjguzik gmail.com>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502090248.Ed6S8p8J-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> lib/blackhole_dev_kunit.c:55:27: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __be16 [usertype] payload_len @@     got unsigned long @@
+   lib/blackhole_dev_kunit.c:55:27: sparse:     expected restricted __be16 [usertype] payload_len
+   lib/blackhole_dev_kunit.c:55:27: sparse:     got unsigned long
+
+vim +55 lib/blackhole_dev_kunit.c
+
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  26  
+a644885645ce867 lib/blackhole_dev_kunit.c Tamir Duberstein 2025-02-07  27  static void test_blackholedev(struct kunit *test)
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  28  {
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  29  	struct ipv6hdr *ip6h;
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  30  	struct sk_buff *skb;
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  31  	struct udphdr *uh;
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  32  	int data_len;
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  33  
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  34  	skb = alloc_skb(SKB_SIZE, GFP_KERNEL);
+a644885645ce867 lib/blackhole_dev_kunit.c Tamir Duberstein 2025-02-07  35  	KUNIT_ASSERT_NOT_NULL(test, skb);
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  36  
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  37  	/* Reserve head-room for the headers */
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  38  	skb_reserve(skb, HEAD_SIZE);
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  39  
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  40  	/* Add data to the skb */
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  41  	data_len = SKB_SIZE - (HEAD_SIZE + TAIL_SIZE);
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  42  	memset(__skb_put(skb, data_len), 0xf, data_len);
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  43  
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  44  	/* Add protocol data */
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  45  	/* (Transport) UDP */
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  46  	uh = (struct udphdr *)skb_push(skb, sizeof(struct udphdr));
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  47  	skb_set_transport_header(skb, 0);
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  48  	uh->source = uh->dest = htons(UDP_PORT);
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  49  	uh->len = htons(data_len);
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  50  	uh->check = 0;
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  51  	/* (Network) IPv6 */
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  52  	ip6h = (struct ipv6hdr *)skb_push(skb, sizeof(struct ipv6hdr));
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  53  	skb_set_network_header(skb, 0);
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  54  	ip6h->hop_limit = 32;
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01 @55  	ip6h->payload_len = data_len + sizeof(struct udphdr);
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  56  	ip6h->nexthdr = IPPROTO_UDP;
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  57  	ip6h->saddr = in6addr_loopback;
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  58  	ip6h->daddr = in6addr_loopback;
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  59  	/* Ether */
+843a8851e89e2e8 lib/test_blackhole_dev.c  Breno Leitao     2024-02-02  60  	skb_push(skb, sizeof(struct ethhdr));
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  61  	skb_set_mac_header(skb, 0);
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  62  
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  63  	skb->protocol = htons(ETH_P_IPV6);
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  64  	skb->pkt_type = PACKET_HOST;
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  65  	skb->dev = blackhole_netdev;
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  66  
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  67  	/* Now attempt to send the packet */
+a644885645ce867 lib/blackhole_dev_kunit.c Tamir Duberstein 2025-02-07  68  	KUNIT_EXPECT_EQ(test, dev_queue_xmit(skb), NET_XMIT_SUCCESS);
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  69  }
+509e56b37cc32c9 lib/test_blackhole_dev.c  Mahesh Bandewar  2019-07-01  70  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
