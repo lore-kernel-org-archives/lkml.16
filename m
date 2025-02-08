@@ -1,107 +1,227 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47ACB2913;
-	Sat,  8 Feb 2025 03:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5BD2913;
+	Sat,  8 Feb 2025 03:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738986034; cv=none; b=H1eh7WYEqp2bQ6guaIIWNcoXhIWaqxC/9qwMupRbna0LJWDbuCibPHASPpPpgUfM/oVsBM57rPmFSJJYyS0L0vhWZmUyRwJ2lDW57kGhMfoaK2zHl+BMFVEbOaZkJ+lgDFyjr9WGGNE+YnXQ2E7I2AninAgPdCP7eaxfDu9ym4U=
+	t=1738986183; cv=none; b=eqHBwvxwcLh0W6Nq3uC6k3/B3e0zldL6KtWqTCMsusCyk/EJvo0rFIKYxkuk1RRt2bDZjDIIhm1ai4TLzobyGuOiu0064C8LxK9HHUK9G1kvzkB0ByxAH0qy/ReQbLT7wZley1zaEmnFlV5bu+LqeqOSBEl5WMHnSPRzgit9kGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738986034; c=relaxed/simple;
-	bh=N9kaOwokRwr4iyVgwSq5BDPO0g+y+cdxPnlkd1dmLy8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kzljm/2HHca9RAGKFqdSH8CJ+8kTbbEMw8xkt7A+ZhJU2oyVZq2TjUhLHnIK1zDZ1kOf6g6Her1yFSzt4WfXV0mw5SR8DiKum99LilFVJUjNJfhTWCuVLRWFNhCyFnm4THLLK2E1OKyt4CbB1kHcjzLoOuwpxs+8dCcUXRv9qT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=cxAG5M7c; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1738986183; c=relaxed/simple;
+	bh=hSfAQNGmLqluc8FiNZOvOEIcOXlIysCcErwkqdFocqg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tICG/BNgMgBSqqwRuNH2RY1mi438m5xO3/i7lHbaG1jJL63meXSbhPTtUCbNnL/h6VHDv6y1MoRZRwSKd1bEaT/Mnay3ZK5spGeoK3oTtt6VqM3Rpv6Uy9zUdTCyF3XefMKIFqA7lseJf7ATDgkTWoQPH3+fQfch86waFqVfugU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=SQ04GN3v; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cxAG5M7c"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43934d6b155so127205e9.1;
-        Fri, 07 Feb 2025 19:40:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1738986031; x=1739590831; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=q/MoU3id3BrwdX1UH0ylVsZ7NUAgFe+E3+3PemD+rI0=;
-        b=cxAG5M7cgnRBI6gq0XHkE78DcjsveDo+RIu5Sxm7laxEqZYPn3VojzB6IwafsonPEI
-         qj47lxRo/D4czW2CiNEsDCUqR7mjPq68bBldqOSm9DtM/qAXJvQ2IKJZ9AFKxKMtGglz
-         xrGJyUb1tGElLkJOapslnSd/il1i667vtdDwXfsbTOX36c9gmt3PhktV+okYfwYe7qDJ
-         VRA1dIB9exeCdntcPv/FuXLcR4ck+2tVOxZlewVakwIPhcA1yPO3bEVIj29kfJ1pFbEe
-         Jzi0d/CHmj7mJPC15EOTuxjNbhNGX0Mn2ce6aeV8mxeAvlMxi6L/TkIY9uaAx1RzJZcr
-         uvXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738986031; x=1739590831;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q/MoU3id3BrwdX1UH0ylVsZ7NUAgFe+E3+3PemD+rI0=;
-        b=sf4MW6LDV94vD00P1ULDhhvYQvK0HvhEDqJ+6NeI6YQ5F8wZrL5G4X1Mkc0XijhGS3
-         UTkVcnhi1997r+pRrAdQglbrouzGYSq8W1J0vY27FYekPccmGU9eI449w/pS45grmHI/
-         nx/26djAAz/QuWJQwxCrUZZH8SJOAMEZPWgMIz8BkJsfJ6hNRwv7ee9uGxS1uKEiYXTx
-         HqboaDxAPFWqoBAr6dcuDFjze9/uhRsBxMnLRljTo2Vh+C2a1ob0wh5bRiioG9aycKs6
-         0qICrJHp0SGKVkRNw/6gMOnHMVweYfHxuawPJVACbMLdbm3mAoGex8veGAOxv19IUqHm
-         pePg==
-X-Forwarded-Encrypted: i=1; AJvYcCWf7BdmmQJ5N36D7ZBEolTC72R7Gvtz53ezZhJOJFF5XiQrVrx7jzaZ/XSf/862PcbsRkEIAE/Aom1+SJg=@vger.kernel.org, AJvYcCXecIy/fD5qGHUl7ZVxbyc1ME+9Ptz2wsS894aLN4YALcAVhRxdmPQ3njOqZWixx1zoEWi2AHdf@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPOM5yjeF3l4FqVT2q96GS/y1XVKp7/SdDkefC3DBvvqJLFqde
-	Q/h1SPGt6cB+GccNEDNA17izZTqJ6ZK04zPMFQZLCRPwR2Lrdo4=
-X-Gm-Gg: ASbGncs4HrzP+Oigdn/rIct1M/FtDRPpJnb+UohbaeAzgN4nI6qtpPYWVMOKAcjkY7/
-	jlxx3wgjOhK6Bbpz9nSw78jp1+41WdbaunCYdMktUm4dCwTVVgSnvNrIs02Qnf6CUJfI0c/d9Iy
-	VS3sSyjE8OYNP3gNQ7GrnfbnBLrlQV67S+BL29AIBUWnWZU7d2xBqEBurVyBsMZdAYGe8ff6Ke3
-	GLqxWxR0blpKMT1tqqeNoI/yBQz4jg2tAhshaxZ4Q8T7aFcmas1G8icNc1FOaW7H3eJxaDAFaiB
-	/AdGQxdRJslOBiIg5T865KP0Pi2b97x7UFrvwEd89a2lXJZllkCB1tBNS7VRAWUKkLOT
-X-Google-Smtp-Source: AGHT+IFcoWeDsRNdVkwNAsdBuFf9X9aBBZeb+1xqBEK8L6mmiiRZTdSH+s+jTYA4mu5Yzzw+6E/37Q==
-X-Received: by 2002:a7b:c342:0:b0:42c:baf1:4c7 with SMTP id 5b1f17b1804b1-43912d150bbmr72193195e9.4.1738986031443;
-        Fri, 07 Feb 2025 19:40:31 -0800 (PST)
-Received: from [192.168.1.3] (p5b0574a7.dip0.t-ipconnect.de. [91.5.116.167])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dcae8f0sm71285495e9.20.2025.02.07.19.40.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 19:40:30 -0800 (PST)
-Message-ID: <390d6183-6d30-4e68-ba32-a6cb99ba4083@googlemail.com>
-Date: Sat, 8 Feb 2025 04:40:29 +0100
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="SQ04GN3v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1738986124;
+	bh=PVC2ZwjFgdE0FYiEABR9gvcYX5QqylR2pFwaW2YMKgI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=SQ04GN3v9bKvcfAqmXlfXHKHSl69tT3uHAlNBsHcxaq/3FRWpr1NQeEKtZMdy6uZD
+	 ZQDCOj9qzJPSod25+nBKdtyDRtawQxrvC8fryK7AokplN8lXAysbO2//Uvw93l9WjG
+	 fo7rEWQ6nqe7sEZwNX85I4sUJR9UEgXc1VJSqCbw=
+X-QQ-mid: bizesmtpip3t1738986064tmne15y
+X-QQ-Originating-IP: 0ZjGxxybflKfLK4ZuZOuXdgJAff2klBbTzGmsoY8WFM=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Sat, 08 Feb 2025 11:41:02 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 7038331023539615292
+From: WangYuli <wangyuli@uniontech.com>
+To: James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com
+Cc: linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stern@rowland.harvard.edu,
+	bvanassche@acm.org,
+	zhanjun@uniontech.com,
+	guanwentao@uniontech.com,
+	chenlinxuan@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>,
+	Xinwei Zhou <zhouxinwei@uniontech.com>,
+	Xu Rao <raoxu@uniontech.com>,
+	Yujing Ming <mingyujing@uniontech.com>
+Subject: [PATCH v3] scsi: Bypass certain SCSI commands on disks with "use_192_bytes_for_3f" attribute
+Date: Sat,  8 Feb 2025 11:40:14 +0800
+Message-ID: <ED0FBA71A67CDFB9+20250208034014.660772-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.13 000/619] 6.13.2-rc2 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250206160718.019272260@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250206160718.019272260@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: OIwF5mu9pzoQBOQXLAcQCAWgAL85euGrLh3DPXoGuDuZmg+Pvp0MUUjQ
+	56SV7NeOE0dfcAkBbdCoJou+hpDMhhZrFV2lbsRPW8dRHFg41PQd3lv7FMc4fh0oUrLNnjr
+	4DtsBBIg1uBHgBrOOXHgTjLGamJbWbNm6TijJDXMiqD1J87u9Fwx9LVHRCwpJuKseWlWKtU
+	xIi5WiQaj6pBNmZ/GZAqPfXV2rq7Ot6pGIsS0BPEYnGfFdWRVIt85Qs0iWjMWHl/3W0yPfA
+	KNCHlWreIz+a+tUFWpBEmxyly+Ogf9ilyFPsakyOSdAAYczsND8LfimtkdSblZldVrjq1N3
+	lNK3udGDqPfbSaKuj/79yTh1GDhkMyR6NbJwu1FI0WTS0lfNZzL623SUH8WbL/q+Kgma6YT
+	YUDo+zfVV6Rvtz1RM5CU8X5Q4vWTA8iy6tunQOsXOt/FJhlkd7oMxsy3HtqdA3/LwjT1vB4
+	HU4ezIZNnl6wnAUlb3OwKUm9ygr6Q3hb6/TbtGDeeHeTyOo3dRwqoi8xRafeDopeuhPftss
+	Q0PIdtixVXpUEnLRW4YDC50LSdO8NePzZ84FK0XsG5wAFoXu6RRE8dAd0Dq0vGvR3LdwoQS
+	p7af9VvlvGV+l8mvQdJBmF0wwDIxkOcy86kkmFWXBtdDUK+9bGB3UM/EPkVb27Z/aa+LUt7
+	2ZSFYAP4dRFYwIDz6Lwd3o/mbJD+bpU3j7RJKiisfD30gsAL+lo83atfCYUC4S7269e9Q+9
+	5PFA8Tc0g/OnoiIKGlu8nV0U6fdgV/CNs6mTE4D+k5e+vIi7sB0jukmGVNvDGa8t7gtwPhQ
+	lAWn/ThHJm1EAGsfjk4PTWd0sAcXo8tJJjRLqbfHXoH7ehjQVXaCQ8OR764AyRLVHim0fnR
+	m/M8FayVuWXKktSTuz5eMBvI+//XGeIK0r/p/HiHfF72lVhsA4vP7utG0ewkgphkYUudZK6
+	fYsXyUWHOKe/ag82wnVcm9XyAhd37Ly/XrURueX7PT5FRk04huS6ELxjQWmQR7bH5iu8QMn
+	A3lDqK+r3ggaAxPjsLEn9rzjY81SMLO2wuMtA8HPpKXSVeVuCC
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-RECHKSPAM: 0
 
-Am 06.02.2025 um 17:11 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.13.2 release.
-> There are 619 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On some external USB hard drives, mounting can fail if "lshw" is
+executed during the process.
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+This occurs because data sent to the device's output endpoint in
+certain abnormal scenarios does not receive a response, leading to
+a mount timeout.
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+[ Description of "use_192_bytes_for_3f" in the kernel code: ]
+  /*
+   * Many disks only accept MODE SENSE transfer lengths of
+   * 192 bytes (that's what Windows uses).
+   */
+   sdev->use_192_bytes_for_3f = 1;
 
+The kernel's SCSI driver, when handling devices with this attribute,
+sends commands with a length of 192 bytes like this:
+  if (sdp->use_192_bytes_for_3f)
+  	res = sd_do_mode_sense(sdp, 0, 0x3F, buffer, 192, &data, NULL);
 
-Beste Grüße,
-Peter Schneider
+However, "lshw" disregards the "use_192_bytes_for_3f" attribute and
+transmits data with a length of 0xff bytes via ioctl, which can cause
+some hard drives to hang and become unusable.
 
+To resolve this issue, prevent commands with a length of 0xff bytes
+from being queued via ioctl when it detects the "use_192_bytes_for_3f"
+attribute on the device.
+
+The hard drive device identified with the issue is Lenovo USB 17ef:4531.
+Tested on HONOR NBLK-WAX9X (C234) Notebook with AMD Ryzen 7 3700U.
+
+[ Kernel logs: ]
+  2024-10-31 13:36:11 localhost kernel: [   25.770091] usb 2-2: new SuperSpeed Gen 1 USB device number 2 using xhci_hcd
+  2024-10-31 13:36:11 localhost kernel: [   25.798558] usb 2-2: New USB device found, idVendor=17ef, idProduct=4531, bcdDevice= 5.12
+  2024-10-31 13:36:11 localhost kernel: [   25.798562] usb 2-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+  2024-10-31 13:36:11 localhost kernel: [   25.798564] usb 2-2: Product: Lenovo Portable HDD
+  2024-10-31 13:36:11 localhost kernel: [   25.798566] usb 2-2: Manufacturer: Lenovo
+  2024-10-31 13:36:11 localhost kernel: [   25.798567] usb 2-2: SerialNumber: 000000001E4C
+  2024-10-31 13:36:11 localhost kernel: [   25.820244] usb-storage 2-2:1.0: USB Mass Storage device detected
+  2024-10-31 13:36:11 localhost kernel: [   25.820457] scsi host0: usb-storage 2-2:1.0
+  2024-10-31 13:36:11 localhost kernel: [   25.820633] usbcore: registered new interface driver usb-storage
+  2024-10-31 13:36:11 localhost kernel: [   25.825598] usbcore: registered new interface driver uas
+  2024-10-31 13:36:14 localhost kernel: [   28.852179] scsi 0:0:0:0: Direct-Access     Lenovo   USB Hard Drive   0006 PQ: 0 ANSI: 2
+  2024-10-31 13:36:14 localhost kernel: [   28.852961] sd 0:0:0:0: Attached scsi generic sg0 type 0
+  2024-10-31 13:36:14 localhost kernel: [   28.891218] sd 0:0:0:0: [sda] 976773164 512-byte logical blocks: (500 GB/466 GiB)
+  2024-10-31 13:36:14 localhost kernel: [   28.906892] sd 0:0:0:0: [sda] Write Protect is off
+  2024-10-31 13:36:14 localhost kernel: [   28.906896] sd 0:0:0:0: [sda] Mode Sense: 03 00 00 00
+  2024-10-31 13:36:14 localhost kernel: [   28.922606] sd 0:0:0:0: [sda] No Caching mode page found
+  2024-10-31 13:36:14 localhost kernel: [   28.922612] sd 0:0:0:0: [sda] Assuming drive cache: write through
+  2024-10-31 13:36:14 localhost kernel: [   29.007816]  sda: sda1
+  2024-10-31 13:36:15 localhost kernel: [   30.180380] sd 0:0:0:0: [sda] Attached SCSI disk
+  2024-10-31 13:36:16 localhost kernel: [   30.722863] snd_hda_codec_realtek hdaudioC1D0: hda_codec_setup_stream: NID=0x3, stream=0x5, channel=0, format=0x4011
+  2024-10-31 13:36:16 localhost kernel: [   30.734139] snd_hda_codec_realtek hdaudioC1D0: hda_codec_setup_stream: NID=0x2, stream=0x5, channel=0, format=0x4011
+  2024-10-31 13:36:17 localhost kernel: [   31.396011] start_addr=(0x20000), end_addr=(0x40000), buffer_size=(0x20000), smp_number_max=(16384)
+  2024-10-31 13:36:18 localhost kernel: [   32.933537] snd_hda_codec_realtek hdaudioC1D0: hda_codec_cleanup_stream: NID=0x3
+  2024-10-31 13:36:18 localhost kernel: [   32.933541] snd_hda_codec_realtek hdaudioC1D0: hda_codec_cleanup_stream: NID=0x2
+  2024-10-31 13:36:39 localhost kernel: [   54.242220] usb 2-2: reset SuperSpeed Gen 1 USB device number 2 using xhci_hcd
+  2024-10-31 13:36:50 localhost kernel: [   64.408879] start_addr=(0x20000), end_addr=(0x40000), buffer_size=(0x20000), smp_number_max=(16384)
+  2024-10-31 13:37:11 localhost kernel: [   85.466479] usb 2-2: reset SuperSpeed Gen 1 USB device number 2 using xhci_hcd
+  2024-10-31 13:37:11 localhost kernel: [   85.490248] sd 0:0:0:0: [sda] tag#0 FAILED Result: hostbyte=DID_TIME_OUT driverbyte=DRIVER_OK
+  2024-10-31 13:37:11 localhost kernel: [   85.490255] sd 0:0:0:0: [sda] tag#0 CDB: Read(10) 28 00 00 00 00 20 00 00 08 00
+  2024-10-31 13:37:11 localhost kernel: [   85.490258] print_req_error: I/O error, dev sda, sector 32
+  2024-10-31 13:37:33 localhost kernel: [  107.432186] start_addr=(0x20000), end_addr=(0x40000), buffer_size=(0x20000), smp_number_max=(16384)
+  2024-10-31 13:37:41 localhost kernel: [  116.194201] usb 2-2: reset SuperSpeed Gen 1 USB device number 2 using xhci_hcd
+  2024-10-31 13:37:49 localhost kernel: [  123.555484] dolphin[7271]: segfault at 10 ip 00007fcccc0d7f76 sp 00007ffe8004b860 error 4 in libKF5CoreAddons.so.5.102.0[7fcccc0a5000+83000]
+  2024-10-31 13:37:49 localhost kernel: [  123.555502] Code: d6 90 66 90 41 54 41 89 d4 55 48 89 fd 53 48 89 f3 e8 8e 94 01 00 ba 04 00 00 00 48 89 de 48 89 c7 e8 4e 8f 01 00 84 c0 75 2a <48> 8b 7d 10 48 85 ff 74 21 45 89 e1 48 89 da 48 89 ee 5b 41 b8 01
+  2024-10-31 13:38:11 localhost kernel: [  146.229510] usb 2-2: USB disconnect, device number 2
+  2024-10-31 13:38:11 localhost kernel: [  146.237993] scsi 0:0:0:0: rejecting I/O to dead device
+  2024-10-31 13:38:11 localhost kernel: [  146.238003] print_req_error: I/O error, dev sda, sector 32
+  2024-10-31 13:38:11 localhost kernel: [  146.238009] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238029] scsi 0:0:0:0: rejecting I/O to dead device
+  2024-10-31 13:38:11 localhost kernel: [  146.238030] print_req_error: I/O error, dev sda, sector 36
+  2024-10-31 13:38:11 localhost kernel: [  146.238032] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238045] scsi 0:0:0:0: rejecting I/O to dead device
+  2024-10-31 13:38:11 localhost kernel: [  146.238047] print_req_error: I/O error, dev sda, sector 6291480
+  2024-10-31 13:38:11 localhost kernel: [  146.238062] Buffer I/O error on dev sda1, logical block 786431, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238168] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238170] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238175] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238176] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238184] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238185] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238199] Buffer I/O error on dev sda, logical block 40, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238201] Buffer I/O error on dev sda, logical block 41, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238205] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238206] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238210] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238211] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238215] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238217] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238220] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238221] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238224] Buffer I/O error on dev sda, logical block 8, async page read
+  2024-10-31 13:38:11 localhost kernel: [  146.238226] Buffer I/O error on dev sda, logical block 9, async page read
+  2024-10-31 13:38:12 localhost kernel: [  146.482007] snd_hda_codec_realtek hdaudioC1D0: hda_codec_setup_stream: NID=0x3, stream=0x5, channel=0, format=0x4011
+  2024-10-31 13:38:12 localhost kernel: [  146.494064] snd_hda_codec_realtek hdaudioC1D0: hda_codec_setup_stream: NID=0x2, stream=0x5, channel=0, format=0x4011
+  2024-10-31 13:38:15 localhost kernel: [  150.065848] snd_hda_codec_realtek hdaudioC1D0: hda_codec_cleanup_stream: NID=0x3
+  2024-10-31 13:38:15 localhost kernel: [  150.065852] snd_hda_codec_realtek hdaudioC1D0: hda_codec_cleanup_stream: NID=0x2
+  2024-10-31 13:38:26 localhost kernel: [  160.433037] start_addr=(0x20000), end_addr=(0x40000), buffer_size=(0x20000), smp_number_max=(16384)
+  2024-10-31 13:39:29 localhost kernel: [  223.444589] start_addr=(0x20000), end_addr=(0x40000), buffer_size=(0x20000), smp_number_max=(16384)
+
+Link: https://linux-hardware.org/?id=usb:17ef-4531
+Link: https://lore.kernel.org/all/80ef917b-3680-4f85-93ba-c92d2b69ebaa@rowland.harvard.edu/
+Link: https://lore.kernel.org/all/ad4bd008-8d0d-439b-879c-e9cf4c89ec56@acm.org/
+Reported-by: Xinwei Zhou <zhouxinwei@uniontech.com>
+Co-developed-by: Xu Rao <raoxu@uniontech.com>
+Signed-off-by: Xu Rao <raoxu@uniontech.com>
+Tested-by: Yujing Ming <mingyujing@uniontech.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+Changelog:
+ *v1->v2: Move the bugfix to the SCSI layer.
+  v2->v3: Optimize code style and comment readability.
+---
+ drivers/scsi/scsi_lib.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index d776f13cd160..41b32c80d5db 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1560,6 +1560,7 @@ static void scsi_complete(struct request *rq)
+ static int scsi_dispatch_cmd(struct scsi_cmnd *cmd)
+ {
+ 	struct Scsi_Host *host = cmd->device->host;
++	struct scsi_device *sdev = cmd->device;
+ 	int rtn = 0;
+ 
+ 	atomic_inc(&cmd->device->iorequest_cnt);
+@@ -1608,6 +1609,17 @@ static int scsi_dispatch_cmd(struct scsi_cmnd *cmd)
+ 		goto done;
+ 	}
+ 
++	/*
++	 * Before we queue this command, check attribute use_192_bytes_for_3f.
++	 * Because transmits data with a length of 0xff bytes via ioctl may
++	 * cause some hard drives to hang and become unusable.
++	 */
++	if (cmd->cmnd[0] == MODE_SENSE && sdev->use_192_bytes_for_3f &&
++		cmd->cmnd[2] == 0x3f && cmd->cmnd[4] != 192) {
++		cmd->result = DID_ABORT << 16;
++		goto done;
++	}
++
+ 	if (unlikely(host->shost_state == SHOST_DEL)) {
+ 		cmd->result = (DID_NO_CONNECT << 16);
+ 		goto done;
 -- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+2.47.2
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
