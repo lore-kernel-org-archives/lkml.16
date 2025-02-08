@@ -1,75 +1,113 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0733A23C8DA
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 07:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310A02556E;
+	Sat,  8 Feb 2025 07:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739000525; cv=none; b=HEl0VWbBesE4Tn1i+hjrazFaC37lwYhiH0DXKbzLynftLA2EDdC5GPgwJTBI3t/FBK1qIsvvMGeb02gIpJ8h453wyUcTtyXJuHVidSnHhSI5qtQUo1HZyiX3eLNzCtXw9yER1w5IX/IqdrjxSeI60/d+Eruqj9uzW0jRDlPeJfM=
+	t=1739000972; cv=none; b=NWvJpeUUyYreHZGe409nZhVVdGOnqHDASlxv2aMnIYfPtv7w4B1C5P8Pp/bjb6UXat0lbyhqK1B60R5BjAMLwnud2YLQyo9zLdjCxUivd1jLZ1vPyU32ImBKNr9Vg5rQ6oWjS8bm241NrjXWnUc5vA46RB0Kvb7KnjTEfNLQbTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739000525; c=relaxed/simple;
-	bh=j2C53R8ivGhnPuA24g/BAaFIt165BsqX6Kgua/nyVjA=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=AHxV5ruiDtQwL8IrWEc9bu4NBnY+a/iOSvDTl2ddElp9eajGW1jiiwQBKxv4Wjx4ym3dQmQmVGJDkSjfkNHB6rB5Zdd3bYMeEE2SLQBHi8uytvwhl1kddBOUFyNVar5IC7s539OJrgEllMg17MU2618HYqFh9aQEimFOlq/AQoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net; spf=pass smtp.mailfrom=bit-philosophy.net; dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b=fpE+P7By; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-philosophy.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bit-philosophy.net
+	s=arc-20240116; t=1739000972; c=relaxed/simple;
+	bh=pgFkK/SJSFj+yChtsSrhKm7PJUCUyugKv/9ic8yFb4c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dCM1Df+f+0GjMaxNupiJz4OYTo65s6tlw6B+91NR6m112yr7QCJhxkYCj1ZYfPKSFu3LrVeZE7g8s8sgdLxid00F+weNlUL7eIjYRqPsv1ZS1uQoPhI6qtEzK7EiIAZnMRfWnCSAwY2w00ywMrpJy7gtdZ7Eea1J6A8CdAKaqAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kKJtUAdO; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bit-philosophy.net header.i=@bit-philosophy.net header.b="fpE+P7By"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=bit-philosophy.net; s=ds202411; h=Content-Transfer-Encoding:Content-Type:
-	Subject:From:To:MIME-Version:Date:Message-ID:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=JFemzGLn7nmfhKKdch5Xp13ZHbfez35zmb5LdzxnosQ=; b=fpE+P7By5B9NgLu+4wBUcivG1V
-	xIwUDOvBYRaQvjC4Qo4jq9lmWQMLzrKcQAGdKfomS/oJuebIzt6ItcWr45vNTxNDFQS+s/henGUWQ
-	4bZt5WM3HROgNwIAbKICrl+UXcpgAghsKjMET52nOPCe9fULKsFvO/EwjLxdyKZGmhhmvARLfb5qt
-	ajvSi257UoNRkTA5qlkn5Aas180IP0f0jIlTuiEcq9hT0dYm9dPDx+kqabChvC9deRpQw92zXr7VU
-	VUc5W9LIJSXNcK3mgvvU90KMM0VP2DKFYisXbrUmIPivcEeDwyLTbzhhebY4coqO/40QVH2wwwarP
-	waAvlCKg==;
-Received: from smtp
-	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	id 1tgfTO-005bco-Od
-	for linux-kernel@vger.kernel.org;
-	Sat, 08 Feb 2025 08:41:54 +0100
-Message-ID: <4bc3958d-e143-4e25-8f54-fed442e6fe3e@bit-philosophy.net>
-Date: Sat, 8 Feb 2025 08:41:54 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kKJtUAdO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739000970; x=1770536970;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=pgFkK/SJSFj+yChtsSrhKm7PJUCUyugKv/9ic8yFb4c=;
+  b=kKJtUAdOFv+YS2TIxVOyj4SRJcluMx2hsRb+15pC6+M1smFF5mDhK+pJ
+   fPulkoVlIj80DRcuWSCzKlIG5J+tJeTwmj18IboIrYEi4EPt/Mh//3xKj
+   rXRbkFg+aTJlWuZV6IKC/f7O/YhkK8fUULQvT5M/GO3xrOBy2f1/RGqam
+   WaQOjfxrLP+zxpiBJBNobWTBWe22Jfu9u2MRoMuma6y5f8Etn+UWww9P3
+   H0GnHyHAUEq/nW//BUhF5yaChrBNR/p6QX1NkUofLvyFqz8XCvAxTyuft
+   Ywel9+5J/ACYOEhlA13zX3cecMky4RgGBuOIzK685SFlrrlPGFgnPD0yY
+   g==;
+X-CSE-ConnectionGUID: xEKFoFYCRUKMp44bR4rqcQ==
+X-CSE-MsgGUID: Fa3iFysSQwCvG/LoI4ufiQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39772881"
+X-IronPort-AV: E=Sophos;i="6.13,269,1732608000"; 
+   d="scan'208";a="39772881"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 23:49:30 -0800
+X-CSE-ConnectionGUID: rNgFDb2dQRCl8HwlJcaUzA==
+X-CSE-MsgGUID: qWcmz+K7QrCyA/ZUEZm/+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="115811996"
+Received: from unknown (HELO rzhang1-mobl7.ccr.corp.intel.com) ([10.245.243.60])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 23:49:27 -0800
+From: Zhang Rui <rui.zhang@intel.com>
+To: rafael.j.wysocki@intel.com,
+	daniel.lezcano@linaro.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	lukasz.luba@arm.com,
+	srinivas.pandruvada@intel.com
+Subject: [PATCH] thermal/netlink: Prevent Userspace Segmentation Fault by Adjusting UAPI Header
+Date: Sat,  8 Feb 2025 15:49:07 +0800
+Message-Id: <20250208074907.5679-1-rui.zhang@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-kernel@vger.kernel.org
-From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywe@bit-philosophy.net>
-Subject: Emo System (was Unification, Fair Pay, Low Jitter)
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Emo of '1 is a superset of Sabians, Nazarenes, Hackers and Witches. (and 
-more), unifying efforts. ('1 is The One, which is a popculture angle on 
-The Theo).
+The intel-lpmd tool [1], which uses the THERMAL_GENL_ATTR_CPU_CAPABILITY
+attribute to receive HFI events from kernel space, encounters a
+segmentation fault after commit 1773572863c4 ("thermal: netlink: Add the
+commands and the events for the thresholds").
 
-So the effort is now Emo System.
+The issue arises because the THERMAL_GENL_ATTR_CPU_CAPABILITY raw value
+was changed while intel_lpmd still uses the old value.
 
+Although intel_lpmd can be updated to check the THERMAL_GENL_VERSION and
+use the appropriate THERMAL_GENL_ATTR_CPU_CAPABILITY value, the commit
+itself is questionable. The commit introduced a new element in the
+middle of enum thermal_genl_attr, which affects many existing attributes
+and introduces potential risks and unnecessary maintenance burdens for
+userspace thermal netlink event users.
 
-NB: Some disassociations also: Bitwig, Beatport, and Bitcoin are NOT 
-about me!
+Solve the issue by moving the newly introduced
+THERMAL_GENL_ATTR_TZ_PREV_TEMP attribute to the end of the
+enum thermal_genl_attr. This ensures that all existing thermal generic
+netlink attributes remain unaffected.
 
-https://www.bitwig.com/  (I am tracker oriented, and support Zevs 
-tracker myself).
-https://www.beatport.com/ (Beatport seems to emphasise "gay", which is 
-not my clique. (That is Emo. Note samesex attracted people can also be 
-Emo theoretically, but these are not really "in your face" problematic 
-like "gay", so not a problem.)
-Bitcoin was planned to become Ethereum, misusing a referance to me, 
-claiming it was something I, or other "emos" looked for. But it is not. 
-(no "mining" here). Let it become Ethereum, which is about their own 
-clique. https://ethereum.org/en/
+Link: https://github.com/intel/intel-lpmd [1]
+Fixes: 1773572863c4 ("thermal: netlink: Add the commands and the events for the thresholds")
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+---
+ include/uapi/linux/thermal.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Light!
-Ywe,
-https://bit-philosophy.net/
+diff --git a/include/uapi/linux/thermal.h b/include/uapi/linux/thermal.h
+index 349718c271eb..46a2633d33aa 100644
+--- a/include/uapi/linux/thermal.h
++++ b/include/uapi/linux/thermal.h
+@@ -30,7 +30,6 @@ enum thermal_genl_attr {
+ 	THERMAL_GENL_ATTR_TZ,
+ 	THERMAL_GENL_ATTR_TZ_ID,
+ 	THERMAL_GENL_ATTR_TZ_TEMP,
+-	THERMAL_GENL_ATTR_TZ_PREV_TEMP,
+ 	THERMAL_GENL_ATTR_TZ_TRIP,
+ 	THERMAL_GENL_ATTR_TZ_TRIP_ID,
+ 	THERMAL_GENL_ATTR_TZ_TRIP_TYPE,
+@@ -54,6 +53,7 @@ enum thermal_genl_attr {
+ 	THERMAL_GENL_ATTR_THRESHOLD,
+ 	THERMAL_GENL_ATTR_THRESHOLD_TEMP,
+ 	THERMAL_GENL_ATTR_THRESHOLD_DIRECTION,
++	THERMAL_GENL_ATTR_TZ_PREV_TEMP,
+ 	__THERMAL_GENL_ATTR_MAX,
+ };
+ #define THERMAL_GENL_ATTR_MAX (__THERMAL_GENL_ATTR_MAX - 1)
+-- 
+2.34.1
+
