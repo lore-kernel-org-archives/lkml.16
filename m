@@ -1,162 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ABBB241103;
-	Sat,  8 Feb 2025 17:57:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94DB91F30D0;
+	Sat,  8 Feb 2025 17:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739037466; cv=none; b=Rfqs4rm5EAp1HltnXGsw2d5Frc6gIsot4QXb/a72ezSlKJN2asbSaeo+cLajgQCDDwMoBYNHJIF3TYDsLnip0gOGcLOJwxcrmyqAnp1vdjMflZvXsvOkFXrX856Q/dleY3oCyyqpN/XX+XPiXztGwI+zW54IzjnKtqUPX+rkEPQ=
+	t=1739037469; cv=none; b=FrZwp+CUwB7XZsPr5FcrxiniBPSZrGLoyDWp2OM8dssml+xMUS2eEVcTD4wKkBwIh5kb3M61SC2XnKWfip9tZxdF+DyKHbdNXMKcKNW0W69bCwESUvwii0qfLifULGDaJ+qjh0HARzl8brh0aH06Nazx4etFdiXHh3WrRDqjH04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739037466; c=relaxed/simple;
-	bh=70Mvfj82x300QBQsD/fuLlfvYaB0Uhdq4+iLuCws1w4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kwr+Hh+JX5h91mk5HuzCR/+0cG+V4hImoJgq1TU2N2gYR8U9bf6ohlbL+VqUs80IDnM07IycMcVDcwQayjDqxIqE1mdxdiP87rHdRIDxzgW8cTsmODubtd46UKqq36dZdPNcUG6wi4lPncjU8rOFUa8Cx9soJgRmF+WGLTiO8pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XsAySnkt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739037469; c=relaxed/simple;
+	bh=ElqcLqmLknVps6zvvVp3V7cJeS2Mj3MvkQT4oWJKbwk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Cn6nwtaer+DsrVNdhNXWbA1mPkTEoHOEw1IY8wNqvoU2sDoCsyZOds8LCd1393XE81y7OU76iA3VhzUFy4znNQzJNwZTUkjxoR73986OJ8jWZVL3Qkz7Vc0I5iBf1ReGq6cot0rZYkRitsj71lBT20FOuVAtFqyVmP6vl/aueZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hK/SfdIK; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XsAySnkt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9A25C4CED6;
-	Sat,  8 Feb 2025 17:57:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739037466;
-	bh=70Mvfj82x300QBQsD/fuLlfvYaB0Uhdq4+iLuCws1w4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=XsAySnkt6jiCdDY0mMY0tmVgO2dndP2nU5YVQkyJA6y31m6mlCGYwUbzxLTO7PPy1
-	 4+JUSz/iPKAdf+PhRde2hzhHZ8k4nXFIapgUgvkne1AlbauPOcrf817gaGIPnT1mwW
-	 fF8qmOiz2Xcp/42xq/2nCDPDH+XJ49o8FxracBSN1ft1VdxMqH+4uazvbKOfE6EpZy
-	 fEq39l6/KfKeVgIYjDDYJFGd7xi9QM7bD0+nAc+pCfvIcOlUH9RMMtJEDbqZG25MHC
-	 4R8GGwllEKPMOi1NR1xBNnJaCPJP2vF+3Ks/ZbtaXU51XQ2rTfuNpccUcaHiDfBGbd
-	 6V/g6+8WTdS3Q==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Zhihang Shao <zhihang.shao.iscas@gmail.com>
-Subject: [PATCH] lib/crc-t10dif: remove crc_t10dif_is_optimized()
-Date: Sat,  8 Feb 2025 09:56:47 -0800
-Message-ID: <20250208175647.12333-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hK/SfdIK"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5186CvrO013680;
+	Sat, 8 Feb 2025 17:57:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	NpWrkCiwW3pvwybb8EHr3au7Ie54oZ1lUb2xxHuPEb0=; b=hK/SfdIK3eQ+Jmea
+	L7suKLvJSg/5SZcnllLqc4v4GtbcKem2SVmMUf64yPNL5k2lIh8xzBQCe1Dl2HvT
+	e4SZQ5W+kuNYMj3XQHLpZfbnRzmv4oPnpv86ZvoSpmsl9uRQ55vn9yydSWQfKaUM
+	Q3PugeFpDU/tC16jopnwDDrt8dmRgvBhfJ4CtStqtKPi13gMqM2G5zpLXR+O5P0K
+	Yy8uEu2yXSwov6dBFYjXFKqxx0K8ZEwPOtupN8jlgOROdAbNLcSHXLY/ZCvq/ZPM
+	EyfLHM8sffSuzN/02fWO6toADPgklBLgdnC4XxMAoSY/qyNIrmxRJKBNrqyqnpsd
+	ykIc0A==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0g8ryv7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Feb 2025 17:57:31 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 518HvU4D011878
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 8 Feb 2025 17:57:30 GMT
+Received: from [10.216.46.73] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 8 Feb 2025
+ 09:57:22 -0800
+Message-ID: <e21cd976-11dd-4a52-9134-fd06c11c0de7@quicinc.com>
+Date: Sat, 8 Feb 2025 23:27:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/5] Add UFS support for SM8750
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Melody Olvera
+	<quic_molvera@quicinc.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "Kishon Vijay
+ Abraham I" <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Alim Akhtar
+	<alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Bart Van Assche
+	<bvanassche@acm.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross
+	<agross@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        "Satya Durga
+ Srinivasu Prabhala" <quic_satyap@quicinc.com>,
+        Trilok Soni
+	<quic_tsoni@quicinc.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, Manish Pandey <quic_mapa@quicinc.com>
+References: <20250113-sm8750_ufs_master-v1-0-b3774120eb8c@quicinc.com>
+ <c6352263-8329-4409-b769-a22f98978ac8@oss.qualcomm.com>
+Content-Language: en-US
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+In-Reply-To: <c6352263-8329-4409-b769-a22f98978ac8@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: emLGHLQnAEIdVywC6tNbc8LHtI-kOvLI
+X-Proofpoint-ORIG-GUID: emLGHLQnAEIdVywC6tNbc8LHtI-kOvLI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-08_08,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ adultscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 spamscore=0 impostorscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502080152
 
-From: Eric Biggers <ebiggers@google.com>
 
-With the "crct10dif" algorithm having been removed from the crypto API,
-crc_t10dif_is_optimized() is no longer used.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
+On 2/8/2025 4:17 AM, Konrad Dybcio wrote:
+> On 13.01.2025 10:46 PM, Melody Olvera wrote:
+>> Add UFS support for SM8750 SoCs.
+>>
+>> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+>> ---
+>> Nitin Rawat (5):
+>>        dt-bindings: phy: qcom,sc8280xp-qmp-ufs-phy: Document the SM8750 QMP UFS PHY
+>>        phy: qcom-qmp-ufs: Add PHY Configuration support for SM8750
+>>        dt-bindings: ufs: qcom: Document the SM8750 UFS Controller
+>>        arm64: dts: qcom: sm8750: Add UFS nodes for SM8750 SoC
+>>        arm64: dts: qcom: sm8750: Add UFS nodes for SM8750 QRD and MTP boards
+> 
+> You still need the same workaround 8550/8650 have in the UFS driver
+> (UFSHCD_QUIRK_BROKEN_LSDBS_CAP) for it to work reliably, or at least
+> that was the case for me on a 8750 QRD.
 
-This applies to
-https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=crc-next
+Hi Konrad,
 
- arch/arm/lib/crc-t10dif-glue.c     | 6 ------
- arch/arm64/lib/crc-t10dif-glue.c   | 6 ------
- arch/powerpc/lib/crc-t10dif-glue.c | 6 ------
- arch/x86/lib/crc-t10dif-glue.c     | 6 ------
- include/linux/crc-t10dif.h         | 9 ---------
- 5 files changed, 33 deletions(-)
+The LSDBS workaround is only applicable for SM8650 and SM8550.
+SM8750 and onwards doesn't need this WA anymore as it is fixed in HW.
 
-diff --git a/arch/arm/lib/crc-t10dif-glue.c b/arch/arm/lib/crc-t10dif-glue.c
-index d24dee62670e..f3584ba70e57 100644
---- a/arch/arm/lib/crc-t10dif-glue.c
-+++ b/arch/arm/lib/crc-t10dif-glue.c
-@@ -67,14 +67,8 @@ arch_initcall(crc_t10dif_arm_init);
- static void __exit crc_t10dif_arm_exit(void)
- {
- }
- module_exit(crc_t10dif_arm_exit);
- 
--bool crc_t10dif_is_optimized(void)
--{
--	return static_key_enabled(&have_neon);
--}
--EXPORT_SYMBOL(crc_t10dif_is_optimized);
--
- MODULE_AUTHOR("Ard Biesheuvel <ard.biesheuvel@linaro.org>");
- MODULE_DESCRIPTION("Accelerated CRC-T10DIF using ARM NEON and Crypto Extensions");
- MODULE_LICENSE("GPL v2");
-diff --git a/arch/arm64/lib/crc-t10dif-glue.c b/arch/arm64/lib/crc-t10dif-glue.c
-index dab7e3796232..a007d0c5f3fe 100644
---- a/arch/arm64/lib/crc-t10dif-glue.c
-+++ b/arch/arm64/lib/crc-t10dif-glue.c
-@@ -68,14 +68,8 @@ arch_initcall(crc_t10dif_arm64_init);
- static void __exit crc_t10dif_arm64_exit(void)
- {
- }
- module_exit(crc_t10dif_arm64_exit);
- 
--bool crc_t10dif_is_optimized(void)
--{
--	return static_key_enabled(&have_asimd);
--}
--EXPORT_SYMBOL(crc_t10dif_is_optimized);
--
- MODULE_AUTHOR("Ard Biesheuvel <ard.biesheuvel@linaro.org>");
- MODULE_DESCRIPTION("CRC-T10DIF using arm64 NEON and Crypto Extensions");
- MODULE_LICENSE("GPL v2");
-diff --git a/arch/powerpc/lib/crc-t10dif-glue.c b/arch/powerpc/lib/crc-t10dif-glue.c
-index 730850dbc51d..f411b0120cc5 100644
---- a/arch/powerpc/lib/crc-t10dif-glue.c
-+++ b/arch/powerpc/lib/crc-t10dif-glue.c
-@@ -76,14 +76,8 @@ arch_initcall(crc_t10dif_powerpc_init);
- static void __exit crc_t10dif_powerpc_exit(void)
- {
- }
- module_exit(crc_t10dif_powerpc_exit);
- 
--bool crc_t10dif_is_optimized(void)
--{
--	return static_key_enabled(&have_vec_crypto);
--}
--EXPORT_SYMBOL(crc_t10dif_is_optimized);
--
- MODULE_AUTHOR("Daniel Axtens <dja@axtens.net>");
- MODULE_DESCRIPTION("CRCT10DIF using vector polynomial multiply-sum instructions");
- MODULE_LICENSE("GPL");
-diff --git a/arch/x86/lib/crc-t10dif-glue.c b/arch/x86/lib/crc-t10dif-glue.c
-index 13f07ddc9122..7734bdbc2e39 100644
---- a/arch/x86/lib/crc-t10dif-glue.c
-+++ b/arch/x86/lib/crc-t10dif-glue.c
-@@ -39,13 +39,7 @@ arch_initcall(crc_t10dif_x86_init);
- static void __exit crc_t10dif_x86_exit(void)
- {
- }
- module_exit(crc_t10dif_x86_exit);
- 
--bool crc_t10dif_is_optimized(void)
--{
--	return static_key_enabled(&have_pclmulqdq);
--}
--EXPORT_SYMBOL(crc_t10dif_is_optimized);
--
- MODULE_DESCRIPTION("CRC-T10DIF using PCLMULQDQ instructions");
- MODULE_LICENSE("GPL");
-diff --git a/include/linux/crc-t10dif.h b/include/linux/crc-t10dif.h
-index d0706544fc11..a559fdff3f7e 100644
---- a/include/linux/crc-t10dif.h
-+++ b/include/linux/crc-t10dif.h
-@@ -17,15 +17,6 @@ static inline u16 crc_t10dif_update(u16 crc, const u8 *p, size_t len)
- static inline u16 crc_t10dif(const u8 *p, size_t len)
- {
- 	return crc_t10dif_update(0, p, len);
- }
- 
--#if IS_ENABLED(CONFIG_CRC_T10DIF_ARCH)
--bool crc_t10dif_is_optimized(void);
--#else
--static inline bool crc_t10dif_is_optimized(void)
--{
--	return false;
--}
--#endif
--
- #endif
-
-base-commit: 3dceb9c4f1202d2c374976936ef803bf4b076fa7
--- 
-2.48.1
+Thanks,
+Nitin
+> 
+> Please check whether we can make that quirk apply based on ctrl
+> version or so, so that we don't have to keep growing the compatible
+> list in the driver.
+> 
+> Konrad
 
