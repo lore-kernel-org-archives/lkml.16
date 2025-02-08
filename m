@@ -1,44 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADD017BA6;
-	Sat,  8 Feb 2025 05:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9633F155A52;
+	Sat,  8 Feb 2025 05:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738993195; cv=none; b=EKdQVm9opc30OH2n5t9+nZjOdXPNRlH/gqmZ5E1EIRO8zYWDmANqPGDPatk+eMYwjmzQ6A9ExWQKgYDpQZ52kJCHarU77Uu1iT+bR+FpIRBBZCxNMMDHLPqruBwdRYLM/5NxUQ34EKFIdrCCbmGIgSAWBjQdyeaRuqxTGtGWhTI=
+	t=1738993696; cv=none; b=S8EY4xhr5HGG7fss16MBbkatDEMJPz1fx3/yKK0C8v93R7EFa+2N0cGpaJEkbtv1AIJBVKdkyG1VhmYb7cTf8P5uGwGmbKjLxLLJJzriP0RRRu3O5sgWu5BvL8TgcfstScU9OEdiqR/mk8FzhTAtMdYtIVYWwpbvYT8F7gXzKug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738993195; c=relaxed/simple;
-	bh=EIO2RApIMTaoQHu0AYGuzLxcnzfiMUbPkQ+Ttz9uEII=;
+	s=arc-20240116; t=1738993696; c=relaxed/simple;
+	bh=wA0BmDz21/8I4MOZeMPRdJ8DIn6Tlt/iSbPznwlMASM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bezvMdVPi36fGf/NACaf7GAR/fnOWukpvgaCBdmM/uzREP7m951Eqa3VGg+lQD5skLg1YFN4isN60Iclq94A7+Y5pGgImaKYhH9X4XCrv4wRWil8hX6zndKvXMwo5Gp+a2McAgSjbJSS4GLdOwXM06ep+YajPjHxyR20Vd1vgVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S7IS+KGI; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hs7IxCNHrR75U8NHgoZYArKmHqbNkAs8j+LfztFfWGmMHvKkDxtmCsq8zwTugoHjSlILy26l4kMC/BAhHRg5r5SmyofQTELskb/nA5tlFYK/CozlRT6Sk3qTL2KBC+lEkfyWlJOdPHv+BGgVpGowtzlJonctu0k0SsHvZ9L/AaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ako5oNk4; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S7IS+KGI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A947C4CED6;
-	Sat,  8 Feb 2025 05:39:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738993194;
-	bh=EIO2RApIMTaoQHu0AYGuzLxcnzfiMUbPkQ+Ttz9uEII=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S7IS+KGI3Cu01/xSeKZlmjbimenl4l3+vdhqWbdTyYouNNAUtuuQyWwiHKVab3XdB
-	 IB8DBjZoyV7v0hhgNXxbff/mQ4HWs+m6zW94oGZB5LRvd4hYLwvkeeoIn3ilJEvi6r
-	 d5sR38oZnjxCT2bzT+5w4IMqQAl2yyowhLtQ14Cx4wgFbu/70jSYWyPIo+/4ANPurY
-	 K2Vsydclww71WiA2sgAFS235YE0a/UI72AZy008IOfcGiw/Mo7tN8/zXACsW96UHkI
-	 R6JA0YGDChkYHuY3eC0/8hCSicNYgXRy9TDwA71pP8+0ttdS7ftm/K4BaU25IZCoPJ
-	 n/1jziYmSveFg==
-Date: Sat, 8 Feb 2025 13:39:44 +0800
-From: Peter Chen <peter.chen@kernel.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: pawell@cadence.com, rogerq@kernel.org, gregkh@linuxfoundation.org,
-	balbi@kernel.org, jun.li@nxp.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, srk@ti.com
-Subject: Re: [PATCH] usb: cdns3: exit cdns3_gadget_udc_start if
- FAST_REG_ACCESS cannot be set
-Message-ID: <20250208053944.GA28062@nchen-desktop>
-References: <20250206125943.786949-1-s-vadapalli@ti.com>
- <20250207022523.GA22848@nchen-desktop>
- <tf7qwkoybolexehzagzel67kdxdfsve2f3qdueomedld72v7pp@bquo47wpsxul>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ako5oNk4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738993694; x=1770529694;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wA0BmDz21/8I4MOZeMPRdJ8DIn6Tlt/iSbPznwlMASM=;
+  b=Ako5oNk40zOGNe2HMDzZEauvdM9SwvsbpfEDiWOldrqk8zGMfULvoCxi
+   c21VL3uZV/MZfctv8g2Wk+ZhK3MVcSW37yT7L5cg6MbjPgSbBsYt4SW0J
+   qKTPvCX5gi+NySTaxsYmyk5lHphKcexMxpo2vaKs9G5a1g461YWrotKJo
+   H+z6CDxjY+TqYK32CLLKPmUWZVaPgQ6tVR6mEOTMD54ca2GfHRHaWNuZK
+   QcB0l+ujUqGpZxuUWZwzhVoC/t9Zi3nJ2ZrZKAv7fd9I6Jsc2IXfIpDAN
+   2MBl75JjeYhp18VyfqKaJ3iDTkZ1o91rMXjlSwI5vH9gSET1JCgw0KtRF
+   A==;
+X-CSE-ConnectionGUID: jvYPt10wTeSTtI+7y0SgCQ==
+X-CSE-MsgGUID: ijn0HWvtT+exMGNUecqwdg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="51028442"
+X-IronPort-AV: E=Sophos;i="6.13,269,1732608000"; 
+   d="scan'208";a="51028442"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 21:48:13 -0800
+X-CSE-ConnectionGUID: HWU+sQIMQp6QzNwU1gmo2w==
+X-CSE-MsgGUID: IxhBp/1ZRTuYG0obpJ0Qcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="134955066"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 07 Feb 2025 21:48:07 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tgdhF-000zbT-0b;
+	Sat, 08 Feb 2025 05:48:05 +0000
+Date: Sat, 8 Feb 2025 13:48:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jie Gan <quic_jiegan@quicinc.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Tingwei Zhang <quic_tingweiz@quicinc.com>,
+	Jinlong Mao <quic_jinlmao@quicinc.com>, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v10 4/7] Coresight: Introduce a new struct coresight_path
+Message-ID: <202502081313.JqJlff9y-lkp@intel.com>
+References: <20250207064213.2314482-5-quic_jiegan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,117 +78,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <tf7qwkoybolexehzagzel67kdxdfsve2f3qdueomedld72v7pp@bquo47wpsxul>
+In-Reply-To: <20250207064213.2314482-5-quic_jiegan@quicinc.com>
 
-On 25-02-07 11:12:50, Siddharth Vadapalli wrote:
-> On Fri, Feb 07, 2025 at 10:25:23AM +0800, Peter Chen wrote:
-> 
-> Hello Peter,
-> 
-> > On 25-02-06 18:29:36, Siddharth Vadapalli wrote:
-> > > When the device is in a low power state, access to the following
-> > > registers takes a long time:
-> > > - EP_CFG
-> > > - EP_TRADDR
-> > > - EP_CMD
-> > > - EP_SEL
-> > > - EP_STS
-> > > - USB_CONF
-> > > 
-> > > To address this, the fast register access feature can be enabled by
-> > > setting PUSB_PWR_FST_REG_ACCESS bit of the USB_PWR register, which
-> > > allows quick access by software. Software is expected to poll on
-> > > PUSB_PWR_FST_REG_ACCESS_STAT to ensure that fast register access has
-> > > been enabled by the controller. Attempting to access any of the
-> > > aforementioned registers after setting PUSB_PWR_FST_REG_ACCESS but
-> > > before PUSB_PWR_FST_REG_ACCESS_STAT has been set will result in
-> > > undefined behavior and potentially result in system hang.
-> > > 
-> > > Hence, poll on PUSB_PWR_FST_REG_ACCESS_STAT before proceeding with
-> > > gadget configuration, and exit if it cannot be enabled.
-> > > 
-> > > Fixes: b5148d946f45 ("usb: cdns3: gadget: set fast access bit")
-> > > Cc: <stable@vger.kernel.org>
-> > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > > ---
-> > > 
-> > > Hello,
-> > > 
-> > > This patch is based on commit
-> > > 92514ef226f5 Merge tag 'for-6.14-rc1-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
-> > > of Mainline Linux.
-> > > 
-> > > Regards,
-> > > Siddharth.
-> > > 
-> > >  drivers/usb/cdns3/cdns3-gadget.c | 18 ++++++++++++++++--
-> > >  1 file changed, 16 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/usb/cdns3/cdns3-gadget.c b/drivers/usb/cdns3/cdns3-gadget.c
-> > > index fd1beb10bba7..b62691944272 100644
-> > > --- a/drivers/usb/cdns3/cdns3-gadget.c
-> > > +++ b/drivers/usb/cdns3/cdns3-gadget.c
-> > > @@ -2971,8 +2971,6 @@ static void cdns3_gadget_config(struct cdns3_device *priv_dev)
-> > >  	/* enable generic interrupt*/
-> > >  	writel(USB_IEN_INIT, &regs->usb_ien);
-> > >  	writel(USB_CONF_CLK2OFFDS | USB_CONF_L1DS, &regs->usb_conf);
-> > > -	/*  keep Fast Access bit */
-> > > -	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
-> > >  
-> > >  	cdns3_configure_dmult(priv_dev, NULL);
-> > >  }
-> > > @@ -2990,6 +2988,8 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
-> > >  	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
-> > >  	unsigned long flags;
-> > >  	enum usb_device_speed max_speed = driver->max_speed;
-> > > +	int ret;
-> > > +	u32 reg;
-> > >  
-> > >  	spin_lock_irqsave(&priv_dev->lock, flags);
-> > >  	priv_dev->gadget_driver = driver;
-> > > @@ -2997,6 +2997,20 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
-> > >  	/* limit speed if necessary */
-> > >  	max_speed = min(driver->max_speed, gadget->max_speed);
-> > >  
-> > > +	/*  keep Fast Access bit */
-> > > +	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
-> > > +	reg = readl(&priv_dev->regs->usb_pwr);
-> > > +	if (!(reg & PUSB_PWR_FST_REG_ACCESS_STAT)) {
-> > > +		ret = readl_poll_timeout_atomic(&priv_dev->regs->usb_pwr, reg,
-> > > +						(reg & PUSB_PWR_FST_REG_ACCESS_STAT),
-> > > +						10, 1000);
-> > > +		if (ret) {
-> > > +			dev_err(priv_dev->dev, "Failed to enable fast access\n");
-> > > +			spin_unlock_irqrestore(&priv_dev->lock, flags);
-> > > +			return ret;
-> > > +		}
-> > > +	}
-> > > +
-> > >  	switch (max_speed) {
-> > >  	case USB_SPEED_FULL:
-> > >  		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
-> > 
-> > Hi Siddharth,
-> > 
-> > Would you please keep this change at cdns3_gadget_config in case the
-> > controller is power lost during the system suspend?
-> 
-> I did think of that initially, but the problem with doing so is that we
-> are already accessing USB_CONF above in the "switch(max_speed)" section.
-> The PUSB_PWR_FST_REG_ACCESS bit needs to be set before accessing any of:
-> - EP_CFG
-> - EP_TRADDR
-> - EP_CMD
-> - EP_SEL
-> - EP_STS
-> - USB_CONF
-> 
-> Please let me know if you have an alternate suggestion to address the
-> above.
-> 
+Hi Jie,
 
-How about move cdns3_gadget_config at the beginning of function
-cdns3_gadget_udc_start, and add your changes at cdns3_gadget_config?
+kernel test robot noticed the following build warnings:
 
-Regards,
-Peter
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on atorgue-stm32/stm32-next linus/master v6.14-rc1 next-20250207]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jie-Gan/Coresight-Add-support-for-new-APB-clock-name/20250207-144657
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20250207064213.2314482-5-quic_jiegan%40quicinc.com
+patch subject: [PATCH v10 4/7] Coresight: Introduce a new struct coresight_path
+config: arm-randconfig-002-20250208 (https://download.01.org/0day-ci/archive/20250208/202502081313.JqJlff9y-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502081313.JqJlff9y-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502081313.JqJlff9y-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/hwtracing/coresight/coresight-core.c:659: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+    * Links or sources will read their existing or alloc a trace ID, if their ID
+   drivers/hwtracing/coresight/coresight-core.c:676: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+    * Call this after creating the path and before enabling it. This leaves
+
+
+vim +659 drivers/hwtracing/coresight/coresight-core.c
+
+   657	
+   658	/**
+ > 659	 * Links or sources will read their existing or alloc a trace ID, if their ID
+   660	 * callback is set.
+   661	 */
+   662	static int coresight_get_trace_id(struct coresight_device *csdev,
+   663					  enum cs_mode mode,
+   664					  struct coresight_device *sink)
+   665	{
+   666		if (csdev->type == CORESIGHT_DEV_TYPE_LINK && link_ops(csdev)->trace_id)
+   667			return link_ops(csdev)->trace_id(csdev, mode, sink);
+   668	
+   669		if (csdev->type == CORESIGHT_DEV_TYPE_SOURCE && source_ops(csdev)->trace_id)
+   670			return source_ops(csdev)->trace_id(csdev, mode, sink);
+   671	
+   672		return 0;
+   673	}
+   674	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
