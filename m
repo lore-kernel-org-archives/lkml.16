@@ -1,107 +1,99 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6ABB8F5C;
-	Sat,  8 Feb 2025 02:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36BC13BAE3;
+	Sat,  8 Feb 2025 02:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738980304; cv=none; b=VkAfTbUCkkUg8wmyxIQ3l5NfkdHrGSnltGlPlNWxggajxWq36mGtah4SRwlugkNdmQahCfTuIpKJOdvxcadoqtLZKYjCKEgbjas2L0QARorPJ0MR3jV2aJw0kJlzGvymUwjJ9VC/zmWyZPH+g4+z685Pk5mN1dr1bm5eNmftows=
+	t=1738980324; cv=none; b=OQQ3G7h8HUNaTBM4uvNG/zutyuo4gnowka2UpUfetodYVWADiC8BGuMF5ttyf+jAW+YY0tbsxWo6KP1drL/9XnBXctsC26V0+cEh5k5FXiGhtdGI/EAfJwJSFlBRYNympeORr18yj1G44hRDwyqXh+2fMf4PxlzqiAxXq+dpM5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738980304; c=relaxed/simple;
-	bh=R/fQ8T18/YAfqZoU6ZIDT+mBbs9GK5KJ8HzhJiilrqA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q6SnTNT8MwI/oI7hsd1bmKbCLtRTKD2BDAiVokKa5WJ1D35VV2jaXbcbClorM8OELRdF1xNS8kiKejvsMuMCnhRqoFjlM9Yiv0XV3vYQeUnE4HjRIyFfEjE0MeW6ULNP1mA1u5zso7iihf2Z7EICOx0qA9T/yWwdKxMOx4dQJ2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KU9g4qrZ; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738980324; c=relaxed/simple;
+	bh=58t8IpyQGcJKNeTsLlLndRjaNSzrG9xb2nYxYwXkYV0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=cwRifeZRyJNirRF4vYglY4eRHgYzpiR4c6XfLl8CNSu1oURtSEdZtUPolyQppIzV/ngAxyt5ZnnvKgF1lDQ8EPA64DeRYdtxo49nPmBxXBFAfQBsrk3mlsNrPx3DcCq7iZRTfxLC4JQ1RgVwNYvq3KFlTQ+0SZAbfclbxayKJ+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Q6ZTOzSu; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KU9g4qrZ"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38dd4e26e79so28685f8f.1;
-        Fri, 07 Feb 2025 18:05:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738980301; x=1739585101; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tLAWLSHy0TSwl7+tgWW0CQncnxmp+W5DE/5jbJvqW4U=;
-        b=KU9g4qrZZnn/4+2altepSQenyOw4KfT3mlcO3lLdZPe5uiUlMYjFUezwgwB1WAq519
-         lym4cQOXzEPrD2Aidq1KyRWeHvlHXp448kxrDbWWq6ACWZnYFRXFQ1Mo1OEzRLjYcPnd
-         aketVcGKXF9yhXfXYIeT2T6fP3FjNlYUPbCkIiXWLlEj4y6w7TOKIPGRpKgv1HjokbUw
-         L1nOeFQdgMtCADAIVVgUu/ClalBKGZug2zYHDYPF+8NaD36X1RZCQ0B5HIygb3pVFadX
-         qIHvaX3iZBou8wR0uxoCjzovYelAN/pkqNVw4kskbLeOAtLoeAjyeFWRvY78lFSDwDdp
-         /arg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738980301; x=1739585101;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tLAWLSHy0TSwl7+tgWW0CQncnxmp+W5DE/5jbJvqW4U=;
-        b=sgJ2ZONoQ27eQAQ5fGIwVfMhrTe29G5IFKcBcPviQO7lm+w5SMgZGru9yXrlvYn5t5
-         HilINeRB9a4NEGNjRFEIgxdaW8zPkEf0St0yt6wNEspu41GVxmfZw9Ap/e4Z6G+aC6a8
-         xuNUjEfkEZFjXC5LP4aqnvL1st4LO+1t4fv6fqPbwrvgIauhdUmRc4rebeJ5pFpcWwaA
-         YkUxGyEegxB0PUDKd+RdSg8/2N0hVBWCLZpSKbTPeZOiJoC5cNvXuap4BSY+D67h2lRE
-         Wz9/vMO/t0/8IRndKn8b29Z2m0+SNoKrGn/UGSr8PJCJypogqL42pHRRkkH0WxmJgWrp
-         JaSA==
-X-Forwarded-Encrypted: i=1; AJvYcCXG4dn/rygbRGRU4vZavw0pQG98rdhK4wewUaoKQLzF++oZ/FGZxi/OyakxX/fv1/iK/gosiP/U39ThfFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQBbtrQ6EdA/WCpDRcZrunJjF2KUlilqGZaxH7QTVPsvwoAyh/
-	57g9CndukUFxAwYqK9htzWYj4x/kLJsaIOOeB8aT3VIA/RnVyrDk03acHG20VYAPRy77QAxZ1U9
-	4pDPU8wIyidFSKRWG7sTYKjBE430=
-X-Gm-Gg: ASbGnct8vtQr5yNxLB8mz+IOpdolw8u1McXOQ67gpmJTQ7h582Rk+wO53H+WCxPumxD
-	RLoAS5Vx8c/uqSC5MYwJKc2LT7ZL3WoheFq6Gg5zh9PIB8tIm+l4k/Vl8WchjodOMXAn/O80hVl
-	dM5wCrHRSwLRxv9pjy0g9x1hwh4rpy
-X-Google-Smtp-Source: AGHT+IGLStgu8AXC9q/i8f9nQHUBuaSfxwvSq8Eg4fLl4TJeqHMutcRrjl7FjFaKlKFT+6nEI2m4IxYOG5h5nun2Xvk=
-X-Received: by 2002:a5d:6d0d:0:b0:385:f1f2:13ee with SMTP id
- ffacd0b85a97d-38dc935f47dmr3503009f8f.46.1738980300974; Fri, 07 Feb 2025
- 18:05:00 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Q6ZTOzSu"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1738980317; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=PnO79n/yAvE5EfQyNJ74YN4HFwQURsznW0Z0JEn8xXo=;
+	b=Q6ZTOzSuhtm9UwcubY8NggqA18aZuEoO1A0CzKUHFUpMFW8k9amwi8zYgakttT9Eta3tyxjTaP7SmYYiVKTvKHGBfJEK0xAka1mi6eKckdxkUX3muF8dmGILBwKeGyL/oj7eQWQZqkbK/R14fexMDoaSY7N/q6rvO6CJMFg6KQY=
+Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WP-xQ4J_1738980312 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sat, 08 Feb 2025 10:05:14 +0800
+Message-ID: <63720413-be3d-4ae3-aec7-3c62662116a9@linux.alibaba.com>
+Date: Sat, 8 Feb 2025 10:05:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206105435.2159977-1-memxor@gmail.com> <20250206105435.2159977-24-memxor@gmail.com>
-In-Reply-To: <20250206105435.2159977-24-memxor@gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 7 Feb 2025 18:04:49 -0800
-X-Gm-Features: AWEUYZlLTRyf_ClCJ_SG_e1Sm6AP8DlaHhKMYR5f6FACR-Jnh5gK8pkaAR7oKxc
-Message-ID: <CAADnVQK8+-nkvDnBq=pVkadPX9zASdTSEDn6bUe7hqgs=Bm_iQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 23/26] bpf: Handle allocation failure in acquire_lock_state
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>, Barret Rhoden <brho@google.com>, 
-	Josh Don <joshdon@google.com>, Dohyun Kim <dohyunkim@google.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kernel Team <kernel-team@meta.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v18 0/3] ACPI: APEI: handle synchronous errors in task
+ work
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: yazen.ghannam@amd.com, mark.rutland@arm.com, catalin.marinas@arm.com,
+ mingo@redhat.com, robin.murphy@arm.com, Jonathan.Cameron@Huawei.com,
+ bp@alien8.de, rafael@kernel.org, linux-arm-kernel@lists.infradead.org,
+ wangkefeng.wang@huawei.com, tanxiaofei@huawei.com, mawupeng1@huawei.com,
+ tony.luck@intel.com, linmiaohe@huawei.com, naoya.horiguchi@nec.com,
+ james.morse@arm.com, tongtiangen@huawei.com, gregkh@linuxfoundation.org,
+ will@kernel.org, jarkko@kernel.org
+Cc: linux-acpi@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+ linux-edac@vger.kernel.org, x86@kernel.org, justin.he@arm.com,
+ ardb@kernel.org, ying.huang@linux.alibaba.com, ashish.kalra@amd.com,
+ baolin.wang@linux.alibaba.com, tglx@linutronix.de,
+ dave.hansen@linux.intel.com, lenb@kernel.org, hpa@zytor.com,
+ robert.moore@intel.com, lvying6@huawei.com, xiexiuqi@huawei.com,
+ zhuo.song@linux.alibaba.com
+References: <20250107081735.16159-1-xueshuai@linux.alibaba.com>
+ <8775a7d1-b4c5-467b-942c-3041e2994735@linux.alibaba.com>
+In-Reply-To: <8775a7d1-b4c5-467b-942c-3041e2994735@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 6, 2025 at 2:55=E2=80=AFAM Kumar Kartikeya Dwivedi <memxor@gmai=
-l.com> wrote:
->
-> The acquire_lock_state function needs to handle possible NULL values
-> returned by acquire_reference_state, and return -ENOMEM.
->
-> Fixes: 769b0f1c8214 ("bpf: Refactor {acquire,release}_reference_state")
-> Signed-off-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-> ---
->  kernel/bpf/verifier.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index 9971c03adfd5..d6999d085c7d 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
-> @@ -1501,6 +1501,8 @@ static int acquire_lock_state(struct bpf_verifier_e=
-nv *env, int insn_idx, enum r
->         struct bpf_reference_state *s;
->
->         s =3D acquire_reference_state(env, insn_idx);
-> +       if (!s)
-> +               return -ENOMEM;
 
-I'll grab this fix into bpf tree.
-Next time just send it separately, so the fix is not lost
-in the patch bomb.
+
+在 2025/1/22 13:36, Shuai Xue 写道:
+> Hi, Rafael,
+> 
+> Gentle ping.
+> 
+> Thanks.
+> 
+> Best Regards,
+> Shuai
+> 
+> 在 2025/1/7 16:17, Shuai Xue 写道:
+>> changes singce v17:
+>> - rebase to Linux 6.13-rc7 with no functional changes
+>> - add reviewed-by tag for patch 1-3 from Jane Chu
+>> - add reviewed-by tag for patch 3 from Yazen
+>>
+>> changes singce v16:
+>> - add reviewed-by tag for patch 1 and patch 2 from Yazen
+>> - rewrite warning message for force kill (per Yazen)
+>> - warn with dev_err in ghes (per Jarkko)
+>> - add return value -ENXIO in memory_failure comments  (per Yazen)
+>> - Link: https://lore.kernel.org/lkml/20241104015430.98599-1-xueshuai@linux.alibaba.com/
+>>
+>> changes singce v15:
+>> - add HW_ERR and GHES_PFX prefix per Yazen
+>>
+>> changes since v14:
+>> - add reviewed-by tags from Jarkko and Jonathan
+>> - remove local variable and use twcb->pfn
+>>
+
+Hi, all,
+
+Gentle ping.
+
+Thanks.
+Shuai
+
