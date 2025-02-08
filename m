@@ -1,205 +1,324 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF70323C8D6;
-	Sat,  8 Feb 2025 08:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01E5192D80
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 08:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739003890; cv=none; b=XaMgZq1hPbOkc+Nc/33Dt6LnB2EhzK5HucwnxFI7x9vQDS6WboVeQHh+r2iZmGhKwk9+ktFq8u0fK3PKbsDp3ufRo4ldxlIB0/oHzSWxpN7/lTtOlVTBC9c6eN/ohZICeaO8M+19B1X14EoeKkLkowr98HPpOi8DVCpTXp5JVtw=
+	t=1739004029; cv=none; b=IEEzMUGOsPqn7H+fxtvQJMPE0VTFfthVGjsTf8856KkBrz4GbfZm/OUHis8AgI+c0sKr3IRQN2L184RQPp9iQItijK/JlZNltl1nOyMCy4daCw6lNlH+/W5995ylB7CLISW6feDyMg616qyBzSfbYK5UrKCZtleYX79Cn4NABf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739003890; c=relaxed/simple;
-	bh=MS8vF7c7Rpsh3pAY2Mv8MJkEjOLBxODiDVCRbRv/g4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KWS6nPFbIB9NAD43Ome+APE4/zUmvdS0/69BpSMjHgHeW7NpxLrVex5chQzLPgHpFTwlzr8F+ZragXZN9+6gJecfVdKNR9lKohudCKACYOq3QAqyvSB/edLuynCqTZorHHN7JnWy1Mjirc3PhhlSYVQmByKn5ge6x56aYTHq5eQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=E9QFQKSL; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1739004029; c=relaxed/simple;
+	bh=ZIoiEJFQS2UGUfuMcVS1Zc9UdJ39fdIMQGXZCxhDkQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Mo0QG1yDumDmFJOdHZ3dKLldZ/+Gia8jsjL/y1mx6Jd0d0U6zdhq8NjHTZeK3LNoMpUUVVbW3j3fjmDRY6KjGq6uxX8wGZ2LAhU/F/QALhy258YHrHGdwT/MSZmRhG9VyS8osbiuExt8LsOAzQLyyyz7laZ+sZF6aSWhfu/L4gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l3ZPRmPW; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="E9QFQKSL"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CD99F442F6;
-	Sat,  8 Feb 2025 08:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739003880;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EvJxtdAqRk11pGBtTHjM48jcZaiwtjZUv5lMTaJZ+Fw=;
-	b=E9QFQKSLl27KxBvOwN8qvmMJZ6woA++CO2thLknO6yxIHxN/sUCGmrCvJCHNwAR+J6GBlf
-	vwUcAOCaRbfGHz0tWysyO61ol1CslVV4KbLgCCX0gfiEtKfEcH2rfHuq/Dl+F6fizexMe+
-	WzQ59VfZ2UxWKtvusrpdf43A90luk8SFQeZbsa72BmIiK1mfoYvx9aX3bGRuWbIzrWVyZl
-	/Hh629V+VGCKL/pao6xx959ZJCt4u8+TxxiUATVb/G5ygNm/XB1aTC5Hpdf6FKO7MWryDo
-	h07zp3dntJTvO4qcc/jo1tmNH3zX19OGN80ULTxLZLJE2Wzk7OfuEQxFehVWow==
-Date: Sat, 8 Feb 2025 09:37:56 +0100
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-	Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	Haneen Mohammed <hamohammed.sa@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Melissa Wen <melissa.srw@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v3 8/8] drm/vkms: convert to use faux_device
-Message-ID: <Z6cX5MG3yM4XL9jR@Host-003>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-	Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	Haneen Mohammed <hamohammed.sa@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Melissa Wen <melissa.srw@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org
-References: <2025020620-skedaddle-olympics-1735@gregkh>
- <2025020625-unlaced-vagueness-ae34@gregkh>
- <Z6Y72LK1UW86x8av@louis-chauvet-laptop>
- <2025020855-ventricle-slang-b705@gregkh>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l3ZPRmPW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739004028; x=1770540028;
+  h=date:from:to:cc:subject:message-id;
+  bh=ZIoiEJFQS2UGUfuMcVS1Zc9UdJ39fdIMQGXZCxhDkQ4=;
+  b=l3ZPRmPWXeOZwonoL1nhwhgvfVnajLjxFppjBWAbpcM96CdQ4dktfkhG
+   e7H5Vj0QMrh4mmWk9/l9ErCQFWMgZTIe84Abfe6dK6PaHw8sx+bF8w+OV
+   jEI+1Oqqrta+I/wxo438ehwFtCn+bDQySXfBY82tMLeA1MEV4s7w3G6bs
+   blm3LDBW/mH8BQItYZuTARMCnk7j62ILYZ4aBy9+SFisexsQ7Yf//OtQ/
+   BbwmgeQMW9XDRIGN8cny7O7WuPXdeJBNgIoggbTGgp6E7PEU/XYacDFrl
+   4q/u5mF5YKliIo/3dlZrYrKFxyfjEgHjqGqAh3+0BavxF60pWZSF/fhPc
+   A==;
+X-CSE-ConnectionGUID: mtm/JXOQQOCRTxhQGUj7Pw==
+X-CSE-MsgGUID: J7KhOehGTNqtZp3N+xKeNg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39910001"
+X-IronPort-AV: E=Sophos;i="6.13,269,1732608000"; 
+   d="scan'208";a="39910001"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 00:40:27 -0800
+X-CSE-ConnectionGUID: naDK46PqQkykqMZtbwcjcQ==
+X-CSE-MsgGUID: IHdeelGARM6a/CQfFmN9uQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,269,1732608000"; 
+   d="scan'208";a="116780251"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 08 Feb 2025 00:40:26 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tggNz-000zl1-38;
+	Sat, 08 Feb 2025 08:40:23 +0000
+Date: Sat, 08 Feb 2025 16:39:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:timers/urgent] BUILD SUCCESS
+ 868c9037df626b3c245ee26a290a03ae1f9f58d3
+Message-ID: <202502081614.ZbpNhgKE-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025020855-ventricle-slang-b705@gregkh>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefudejfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetfeetffekgfefheehteefffehiefhffeutefggeefleduudeujeekgfduheetffenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeegudegtdemtgekiedtmeehugeiudemieeffeelmeeiiegrieemvgdtjeehpdhhvghlohepjfhoshhtqddttdefpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdeipdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrv
- ghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhihuhguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheprghlvghkshgrnhguvghrrdhlohgsrghkihhnsehinhhtvghlrdgtohhmpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhm
-X-GND-Sasl: louis.chauvet@bootlin.com
 
-On 08/02/25 - 08:12, Greg Kroah-Hartman wrote:
-> On Fri, Feb 07, 2025 at 05:59:04PM +0100, Louis Chauvet wrote:
-> > On 06/02/25 - 18:38, Greg Kroah-Hartman wrote:
-> > > The vkms driver does not need to create a platform device, as there is
-> > > no real platform resources associated it,  it only did so because it was
-> > > simple to do that in order to get a device to use for resource
-> > > management of drm resources.  Change the driver to use the faux device
-> > > instead as this is NOT a real platform device.
-> > > 
-> > > Cc: Louis Chauvet <louis.chauvet@bootlin.com>
-> > > Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
-> > > Cc: Simona Vetter <simona@ffwll.ch>
-> > > Cc: Melissa Wen <melissa.srw@gmail.com>
-> > > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > > Cc: Maxime Ripard <mripard@kernel.org>
-> > > Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> > > Cc: David Airlie <airlied@gmail.com>
-> > > Cc: dri-devel@lists.freedesktop.org
-> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > ---
-> > >  v3: new patch in the series.  For an example of the api working, does
-> > >      not have to be merged at this time, but I can take it if the
-> > >      maintainers give an ack.
-> > 
-> > Hi,
-> > 
-> > This patch cannot be merged into drm-misc-next because we modified the 
-> > vkms_device structure in commit 49a167c393b0 ("drm/vkms: Switch to dynamic 
-> > allocation for CRTC"), which is present in linux-next.
-> > 
-> > Once this conflict is resolved, I agree with changing from platform_device 
-> > to faux_device.
-> > 
-> > Apart from this minor conflict, I believe your patch has revealed an issue 
-> > in VKMS:
-> > 
-> > Without your patch:
-> > 
-> > 	bash-5.2# modprobe vkms
-> > 	[drm] Initialized vkms 1.0.0 for vkms on minor 0
-> > 	bash-5.2#
-> > 
-> > With your patch:
-> > 
-> > 	bash-5.2# modprobe vkms
-> > 	faux vkms: Resources present before probing
-> > 	[drm] Initialized vkms 1.0.0 for vkms on minor 0
-> > 	bash-5.2#
-> > 
-> > After some investigation, I found that the issue is not caused by your 
-> > patch but by VKMS itself:
-> > 
-> > During faux_device_create, the device core postpones the device probe to 
-> > run it later [0]. This probe checks if the devres list is empty [1] and 
-> > fails if it is not.
-> > 
-> > [0]:https://elixir.bootlin.com/linux/v6.13.1/source/drivers/base/bus.c#L534
-> > [1]:https://elixir.bootlin.com/linux/v6.13.1/source/drivers/base/dd.c#L626
-> > 
-> > With a platform driver, the order of execution was:
-> > 
-> > 	platform_device_register_simple();
-> > 		device_add();
-> > 	*async* device_probe(); /* no issue, the devres is untouched */
-> > 	devres_open_group();
-> > 
-> > But with faux-device, the order is:
-> > 
-> > 	faux_device_create();
-> > 		device_add();
-> > 	devres_open_group();
-> > 	*async* device_probe(); /* issue here, because of the previous 
-> > 				   devres_open_group */
-> 
-> Wait, what?  It shouuld be the exact same codepath, as faux_device() is
-> not doing anything different from platform here.  You might just be
-> hitting a race condition as the async probing is the same here.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/urgent
+branch HEAD: 868c9037df626b3c245ee26a290a03ae1f9f58d3  timers/migration: Fix off-by-one root mis-connection
 
-Yes, this is the same codepath, and this is a race condition. VKMS was 
-just lucky it never happend before. 
+elapsed time: 1452m
 
-> > How do you think this should be solved? I would like to keep a simple 
-> > solution, given that:
-> > - we want to have multiple vkms devices (configfs [2])
-> > - we need to ensure that device_probe is called before devres_open_group 
-> >   and devm_drm_dev_alloc to avoid this error
-> 
-> How about we take out the async probe?  You are getting lucky that it's
-> not hit on the platform device code today.  Faux really doesn't need
-> async, I was just trying to make the system work the same way that
-> platform devices did.
+configs tested: 247
+configs skipped: 5
 
-I think this should be sufficient, and allows for a very simple interface: 
-once faux_device_create returns, you can use the device "as-is", no 
-need to wait for the probe.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-What change can I do to disable async probe and test?
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    clang-21
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    clang-18
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    clang-18
+arc                              allyesconfig    gcc-13.2.0
+arc                                 defconfig    gcc-14.2.0
+arc                        nsim_700_defconfig    gcc-14.2.0
+arc                   randconfig-001-20250207    gcc-13.2.0
+arc                   randconfig-001-20250208    gcc-13.2.0
+arc                   randconfig-002-20250207    gcc-13.2.0
+arc                   randconfig-002-20250208    gcc-13.2.0
+arm                              allmodconfig    clang-18
+arm                               allnoconfig    gcc-14.2.0
+arm                              allyesconfig    clang-18
+arm                              allyesconfig    gcc-14.2.0
+arm                         at91_dt_defconfig    clang-21
+arm                                 defconfig    gcc-14.2.0
+arm                          exynos_defconfig    gcc-14.2.0
+arm                         lpc32xx_defconfig    clang-21
+arm                         mv78xx0_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250207    gcc-14.2.0
+arm                   randconfig-001-20250208    gcc-13.2.0
+arm                   randconfig-002-20250207    gcc-14.2.0
+arm                   randconfig-002-20250208    gcc-13.2.0
+arm                   randconfig-003-20250207    gcc-14.2.0
+arm                   randconfig-003-20250208    gcc-13.2.0
+arm                   randconfig-004-20250207    clang-21
+arm                   randconfig-004-20250208    gcc-13.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20250207    gcc-14.2.0
+arm64                 randconfig-001-20250208    gcc-13.2.0
+arm64                 randconfig-002-20250207    gcc-14.2.0
+arm64                 randconfig-002-20250208    gcc-13.2.0
+arm64                 randconfig-003-20250207    clang-16
+arm64                 randconfig-003-20250208    gcc-13.2.0
+arm64                 randconfig-004-20250207    clang-21
+arm64                 randconfig-004-20250208    gcc-13.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    clang-21
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20250207    gcc-14.2.0
+csky                  randconfig-001-20250208    gcc-14.2.0
+csky                  randconfig-002-20250207    gcc-14.2.0
+csky                  randconfig-002-20250208    gcc-14.2.0
+hexagon                          alldefconfig    clang-21
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    gcc-14.2.0
+hexagon                          allyesconfig    clang-18
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    gcc-14.2.0
+hexagon               randconfig-001-20250207    clang-21
+hexagon               randconfig-001-20250208    gcc-14.2.0
+hexagon               randconfig-002-20250207    clang-17
+hexagon               randconfig-002-20250208    gcc-14.2.0
+i386                             allmodconfig    clang-19
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-19
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-19
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250207    gcc-12
+i386        buildonly-randconfig-001-20250208    gcc-11
+i386        buildonly-randconfig-002-20250207    gcc-12
+i386        buildonly-randconfig-002-20250208    gcc-11
+i386        buildonly-randconfig-003-20250207    gcc-12
+i386        buildonly-randconfig-003-20250208    gcc-11
+i386        buildonly-randconfig-004-20250207    gcc-12
+i386        buildonly-randconfig-004-20250208    gcc-11
+i386        buildonly-randconfig-005-20250207    clang-19
+i386        buildonly-randconfig-005-20250208    gcc-11
+i386        buildonly-randconfig-006-20250207    clang-19
+i386        buildonly-randconfig-006-20250208    gcc-11
+i386                                defconfig    clang-19
+i386                  randconfig-001-20250208    clang-19
+i386                  randconfig-002-20250208    clang-19
+i386                  randconfig-003-20250208    clang-19
+i386                  randconfig-004-20250208    clang-19
+i386                  randconfig-005-20250208    clang-19
+i386                  randconfig-006-20250208    clang-19
+i386                  randconfig-007-20250208    clang-19
+i386                  randconfig-011-20250208    gcc-12
+i386                  randconfig-012-20250208    gcc-12
+i386                  randconfig-013-20250208    gcc-12
+i386                  randconfig-014-20250208    gcc-12
+i386                  randconfig-015-20250208    gcc-12
+i386                  randconfig-016-20250208    gcc-12
+i386                  randconfig-017-20250208    gcc-12
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                           defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250207    gcc-14.2.0
+loongarch             randconfig-001-20250208    gcc-14.2.0
+loongarch             randconfig-002-20250207    gcc-14.2.0
+loongarch             randconfig-002-20250208    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                                defconfig    gcc-14.2.0
+m68k                          hp300_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                          defconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                         10m50_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250207    gcc-14.2.0
+nios2                 randconfig-001-20250208    gcc-14.2.0
+nios2                 randconfig-002-20250207    gcc-14.2.0
+nios2                 randconfig-002-20250208    gcc-14.2.0
+openrisc                          allnoconfig    clang-21
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-12
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-21
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250207    gcc-14.2.0
+parisc                randconfig-001-20250208    gcc-14.2.0
+parisc                randconfig-002-20250207    gcc-14.2.0
+parisc                randconfig-002-20250208    gcc-14.2.0
+parisc64                            defconfig    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-21
+powerpc                          allyesconfig    gcc-14.2.0
+powerpc                      chrp32_defconfig    gcc-14.2.0
+powerpc                     mpc83xx_defconfig    clang-21
+powerpc                      ppc44x_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250207    clang-21
+powerpc               randconfig-001-20250208    gcc-14.2.0
+powerpc               randconfig-002-20250207    clang-21
+powerpc               randconfig-002-20250208    gcc-14.2.0
+powerpc               randconfig-003-20250207    gcc-14.2.0
+powerpc               randconfig-003-20250208    gcc-14.2.0
+powerpc                  storcenter_defconfig    gcc-14.2.0
+powerpc                     tqm8540_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250207    gcc-14.2.0
+powerpc64             randconfig-001-20250208    gcc-14.2.0
+powerpc64             randconfig-002-20250207    clang-21
+powerpc64             randconfig-002-20250208    gcc-14.2.0
+powerpc64             randconfig-003-20250207    gcc-14.2.0
+powerpc64             randconfig-003-20250208    gcc-14.2.0
+riscv                            allmodconfig    gcc-14.2.0
+riscv                             allnoconfig    clang-21
+riscv                            allyesconfig    gcc-14.2.0
+riscv                               defconfig    gcc-12
+riscv             nommu_k210_sdcard_defconfig    gcc-14.2.0
+riscv                    nommu_virt_defconfig    gcc-14.2.0
+riscv                 randconfig-001-20250207    gcc-14.2.0
+riscv                 randconfig-001-20250208    gcc-14.2.0
+riscv                 randconfig-002-20250207    gcc-14.2.0
+riscv                 randconfig-002-20250208    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                             allmodconfig    gcc-14.2.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250207    gcc-14.2.0
+s390                  randconfig-001-20250208    gcc-14.2.0
+s390                  randconfig-002-20250207    clang-21
+s390                  randconfig-002-20250208    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-12
+sh                        edosk7760_defconfig    clang-21
+sh                    randconfig-001-20250207    gcc-14.2.0
+sh                    randconfig-001-20250208    gcc-14.2.0
+sh                    randconfig-002-20250207    gcc-14.2.0
+sh                    randconfig-002-20250208    gcc-14.2.0
+sh                      rts7751r2d1_defconfig    gcc-14.2.0
+sh                           se7712_defconfig    gcc-14.2.0
+sh                   sh7770_generic_defconfig    clang-21
+sh                             shx3_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250207    gcc-14.2.0
+sparc                 randconfig-001-20250208    gcc-14.2.0
+sparc                 randconfig-002-20250207    gcc-14.2.0
+sparc                 randconfig-002-20250208    gcc-14.2.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250207    gcc-14.2.0
+sparc64               randconfig-001-20250208    gcc-14.2.0
+sparc64               randconfig-002-20250207    gcc-14.2.0
+sparc64               randconfig-002-20250208    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-21
+um                               allyesconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250207    clang-21
+um                    randconfig-001-20250208    gcc-14.2.0
+um                    randconfig-002-20250207    gcc-12
+um                    randconfig-002-20250208    gcc-14.2.0
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250207    gcc-12
+x86_64      buildonly-randconfig-001-20250208    clang-19
+x86_64      buildonly-randconfig-002-20250207    clang-19
+x86_64      buildonly-randconfig-002-20250208    clang-19
+x86_64      buildonly-randconfig-003-20250207    clang-19
+x86_64      buildonly-randconfig-003-20250208    clang-19
+x86_64      buildonly-randconfig-004-20250207    clang-19
+x86_64      buildonly-randconfig-004-20250208    clang-19
+x86_64      buildonly-randconfig-005-20250207    clang-19
+x86_64      buildonly-randconfig-005-20250208    clang-19
+x86_64      buildonly-randconfig-006-20250207    clang-19
+x86_64      buildonly-randconfig-006-20250208    clang-19
+x86_64                              defconfig    clang-19
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-19
+x86_64                randconfig-001-20250208    clang-19
+x86_64                randconfig-002-20250208    clang-19
+x86_64                randconfig-003-20250208    clang-19
+x86_64                randconfig-004-20250208    clang-19
+x86_64                randconfig-005-20250208    clang-19
+x86_64                randconfig-006-20250208    clang-19
+x86_64                randconfig-007-20250208    clang-19
+x86_64                randconfig-008-20250208    clang-19
+x86_64                randconfig-071-20250208    gcc-12
+x86_64                randconfig-072-20250208    gcc-12
+x86_64                randconfig-073-20250208    gcc-12
+x86_64                randconfig-074-20250208    gcc-12
+x86_64                randconfig-075-20250208    gcc-12
+x86_64                randconfig-076-20250208    gcc-12
+x86_64                randconfig-077-20250208    gcc-12
+x86_64                randconfig-078-20250208    gcc-12
+x86_64                               rhel-9.4    clang-19
+x86_64                           rhel-9.4-bpf    clang-19
+x86_64                         rhel-9.4-kunit    clang-19
+x86_64                           rhel-9.4-ltp    clang-19
+x86_64                          rhel-9.4-rust    clang-19
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250207    gcc-14.2.0
+xtensa                randconfig-001-20250208    gcc-14.2.0
+xtensa                randconfig-002-20250207    gcc-14.2.0
+xtensa                randconfig-002-20250208    gcc-14.2.0
+xtensa                    xip_kc705_defconfig    clang-21
 
-Thanks,
-Louis Chauvet
-
-> And as for the merge issue, not a problem, I just did this conversion
-> for people to see how this works and ideally test it, as you did, to
-> find issues!
-> 
-> thanks,
-> 
-> greg k-h
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
