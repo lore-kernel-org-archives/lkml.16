@@ -1,75 +1,44 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay04.th.seeweb.it (relay04.th.seeweb.it [5.144.164.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9149E1A00F2
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 22:16:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D162244EA2
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 22:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739052994; cv=none; b=RC9JcFflBbVs3S1LOyJsp/EaPfBh1BkackdNiubdH2M5rUOHCI3AAoVvEeCrNFa0ZKl5BWhhtJvgnx8Dkp3bMGTe27Y6T5B3aUTW6WM7Onv6zbQ7+8T5B74m0YGTfZx40D0BCtmtyQDDRxJC/MuyAnzPVuhZWEuXUsEXOH5JRr0=
+	t=1739053451; cv=none; b=ZtE4iYWpb1D14UcLUx9OGT9x1wQoInt9JX3G4ISBXy/Jq+L5rVfMlGOiU4M9lqdp1IYDdIhLAm+RNjZWBwrIypyUCTpADoW9MujlTsLVBqG7sPs8BCznXSOJY8aZvd/N/QTG9X6MTMtefajF+XU/OpJsbgtJASOgKWhiX3qBNG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739052994; c=relaxed/simple;
-	bh=+7zoeW3589FGpvR93VVSVuFjMsE0M0MVBWjzX/CvoLg=;
+	s=arc-20240116; t=1739053451; c=relaxed/simple;
+	bh=Is+Qs8gxBkUnO9SHFdZ152vDugn7Py1h5ACe9lKwTz8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WEzsTc6Z7ah56b4irUudLhRCpjgtvnNQvNEYFiAv3LPDx1CndgMTl7DfqwbbX8/iMNMYNXpuuRPRjUYMACj6t8U8Gn0MgGzgGnF+BVorUibqfxPDAxNqfs7cf/8VoYlQRGp3TMzQHvBU/a3VEnL67j6/J7QAVc5lJ9NyM4/fd1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L94WVeRp; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L94WVeRp"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54412a7d75cso2842689e87.2
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 14:16:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739052991; x=1739657791; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y758qolide2lClu/KzTF1R1Skq7/E6pKo00NOQS2OEQ=;
-        b=L94WVeRpumetN/kPz+9hcFfHgcjW/pLjw41+3qyLRCQ3LCu96HwluHt23k8kyIuLK6
-         WyiDjT45z4Ty6E/Eri2QnNPrxa2GFYm8PPPW8+JzFZBLZ1xEp4wGX1yrGwr1/KMJOJJO
-         KGG0R3Z1l2q/dRaQABRj2k+C7xlbXsRXqcTv4so+FRqhr2mTEiwF3z765a/4sHmTLM3D
-         5HGU1AW1AqyyWsSClXDKzGVduxsv0EhVOihxSEcsIuzzDNXPjmNpYkAXgJzX7OXPrEBB
-         kbakVD6euck8m9wXUoqBSR2nv4Ka7TgCCmJ4MxpnYC+q03KKMmuSerGbYMlZl+2qtB/H
-         61BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739052991; x=1739657791;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y758qolide2lClu/KzTF1R1Skq7/E6pKo00NOQS2OEQ=;
-        b=eRUlsW18Nl77prlwElz2nb1NeBMQyzPpFQxwHpktiVVJDRg1ltGA6iWBgADRgQHJpP
-         FCmRv7q7vWetIpCHqVizYYNomQ/bh4dGxDMNoL/1dv+t9UDsgBH3ZfvVesn5VWF7hKcO
-         yv3PT0BYVmEkOFUzB3qh+AkeWsPN+8qWwxn+iAJYA+e3Q3aklGDaw9QD2j+0xzpASVWv
-         xmeqloqSjCrLQgfOuzqTR3z/0zSmP5vtPlekn+0L8oXy93M4C4CwhIRd0YpE4pPbkRVL
-         SGzgxNpr1c+tgHMd6SxPrQ/6tSv80IHnNHVMaqNeq2FrVC49faSKJmSJ8vlp3yYrSUOd
-         I43A==
-X-Forwarded-Encrypted: i=1; AJvYcCXdKqvh/DGwU3/EVT/7qlScRgFBCsBEyTp22ROg62DqD7QjkdEUpE+PbzDJyZOPXVVGL/gfPV6vSWGY5Bw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUr9KL8LTnY3h8HOSSRRWBWVDc1ovJJ6alcqh64yvvj3V9zwNV
-	iBhui02jOC9uoujymlEBThh69V3Pfe5f7X147x2cXZZ0DY/F13YNgTQHQAxlRdo=
-X-Gm-Gg: ASbGncuCwBCbbXiF+pkFolocZnnHnlVXE3sqr5NOrR2uyQI0niRR/rUqvonUG/t5mln
-	f1AJ9j1XFqgORR8kDzqJ6wg3A8u8qGylU/aRtDwV5iga5Qg/GXqNoSZvraV4yB0tV+IlpnSWdP+
-	x3gvTGkWj08pLi6BoIKqAV+WEMs+PnaJzNyUV+hMtu4rV2vuRsBR/F7uGFinQpS8pLG4xwgIcwZ
-	6sNtx4O97ae2I3CfKHfBVJvMWRFBscsN2aAPPseT5VcOZSwJPv37I22xWBjduRnuYXOXUYfY7cm
-	32Xw4MTQObNmfl9uFj6KYeKfjNyIf4qPhu45iaMlbPnQfkiirkMnkrDye62gNZS4TglOksg=
-X-Google-Smtp-Source: AGHT+IGS/3Gpk50OVCNMUL7zf9y31rF1kOuu6KzsJaL8XToP36wzYhmmlK+erLwhB/gqSa6n86EVCg==
-X-Received: by 2002:a05:6512:108d:b0:53e:362e:ed0 with SMTP id 2adb3069b0e04-54414ae6284mr2410130e87.44.1739052990560;
-        Sat, 08 Feb 2025 14:16:30 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-544106041afsm830599e87.239.2025.02.08.14.16.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 14:16:29 -0800 (PST)
-Date: Sun, 9 Feb 2025 00:16:27 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Vikram Sharma <quic_vikramsa@quicinc.com>
-Cc: rfoss@kernel.org, todor.too@gmail.com, bryan.odonoghue@linaro.org, 
-	mchehab@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	andersson@kernel.org, konradybcio@kernel.org, hverkuil-cisco@xs4all.nl, 
-	cros-qcom-dts-watchers@chromium.org, catalin.marinas@arm.com, will@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: Re: [PATCH v13 1/2] arm64: dts: qcom: sc7280: Add support for camss
-Message-ID: <4ah6z6lsgxgpjdiuyrkkcebpwrqrfpmumklga24immz5mvmgp3@z7bplsu3q6yl>
-References: <20250208165232.2371889-1-quic_vikramsa@quicinc.com>
- <20250208165232.2371889-2-quic_vikramsa@quicinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZLBrD48tKlpPtnpXlQi+97ol1ADT4b8HLwXvKVWGZZZE8IXuuqU4ZAyjuhGJv+HgtAvUGoZRUTLY7Si8gyvE3w0dmhA4pgGRLHS5ZXuOfqXfvEjESDH0bsxwPzh6T7U1h6JnQlLg5fAOxzvuQ1nzv+eH64JDDbH/PGS7MdHq1V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 0E7742027E;
+	Sat,  8 Feb 2025 22:48:26 +0100 (CET)
+Date: Sat, 8 Feb 2025 22:48:24 +0100
+From: Marijn Suijten <marijn.suijten@somainline.org>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: qcm6490-fairphone-fp5: Enable
+ display
+Message-ID: <vm4wglq5xedieqwo4vy5eeszbx3a625jromi3ts3jkrhw3zccv@7eaol7dckbh7>
+Mail-Followup-To: Marijn Suijten <marijn.suijten@somainline.org>, 
+	Luca Weiss <luca.weiss@fairphone.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250202-fp5-display-v1-0-f52bf546e38f@fairphone.com>
+ <20250202-fp5-display-v1-1-f52bf546e38f@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,25 +47,158 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250208165232.2371889-2-quic_vikramsa@quicinc.com>
+In-Reply-To: <20250202-fp5-display-v1-1-f52bf546e38f@fairphone.com>
 
-On Sat, Feb 08, 2025 at 10:22:31PM +0530, Vikram Sharma wrote:
-> Add changes to support the camera subsystem on the SC7280.
+On 2025-02-02 23:45:51, Luca Weiss wrote:
+> Configure the MDSS nodes for the phone and add the panel node.
 > 
-> Signed-off-by: Suresh Vankadara <quic_svankada@quicinc.com>
-> Signed-off-by: Trishansh Bhardwaj <quic_tbhardwa@quicinc.com>
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 
-It was impossible to get these tags in this way. I'm not sure what
-happened, but please review them and drop incorrect tags.
+Glad to hear (and see in real life) that you're able to use the 1:1:1 topology
+patches.
 
-> Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
+Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
+
+Thanks!
+
 > ---
->  arch/arm64/boot/dts/qcom/sc7280.dtsi | 178 +++++++++++++++++++++++++++
->  1 file changed, 178 insertions(+)
-
--- 
-With best wishes
-Dmitry
+>  arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts | 94 ++++++++++++++++++++--
+>  1 file changed, 89 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts b/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
+> index 389eca9b9e68187980e92ac921a77a3c3b54f6a5..965e32473a58ae4748e4cb748980fad1d2b06ab6 100644
+> --- a/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
+> @@ -138,6 +138,34 @@ vreg_ois_dvdd_1p1: regulator-ois-dvdd-1p1 {
+>  		vin-supply = <&vreg_s8b>;
+>  	};
+>  
+> +	vreg_oled_dvdd: regulator-oled-dvdd {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "oled_dvdd";
+> +		regulator-min-microvolt = <1200000>;
+> +		regulator-max-microvolt = <1200000>;
+> +
+> +		gpio = <&tlmm 51 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +
+> +		vin-supply = <&vreg_s1b>;
+> +
+> +		regulator-boot-on;
+> +	};
+> +
+> +	vreg_oled_vci: regulator-oled-vci {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "oled_vci";
+> +		regulator-min-microvolt = <3000000>;
+> +		regulator-max-microvolt = <3000000>;
+> +
+> +		gpio = <&pm8350c_gpios 7 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +
+> +		vin-supply = <&vreg_l13c>;
+> +
+> +		regulator-boot-on;
+> +	};
+> +
+>  	reserved-memory {
+>  		cont_splash_mem: cont-splash@e1000000 {
+>  			reg = <0x0 0xe1000000 0x0 0x2300000>;
+> @@ -597,11 +625,6 @@ eeprom@51 {
+>  	};
+>  };
+>  
+> -&dispcc {
+> -	/* Disable for now so simple-framebuffer continues working */
+> -	status = "disabled";
+> -};
+> -
+>  &gcc {
+>  	protected-clocks = <GCC_CFG_NOC_LPASS_CLK>,
+>  			   <GCC_EDP_CLKREF_EN>,
+> @@ -733,6 +756,46 @@ &ipa {
+>  	status = "okay";
+>  };
+>  
+> +&mdss {
+> +	status = "okay";
+> +};
+> +
+> +&mdss_dsi {
+> +	vdda-supply = <&vreg_l6b>;
+> +	status = "okay";
+> +
+> +	panel@0 {
+> +		compatible = "fairphone,fp5-rm692e5-boe", "raydium,rm692e5";
+> +		reg = <0>;
+> +
+> +		reset-gpios = <&tlmm 44 GPIO_ACTIVE_LOW>;
+> +
+> +		vci-supply = <&vreg_oled_vci>;
+> +		vddio-supply = <&vreg_l12c>;
+> +		dvdd-supply = <&vreg_oled_dvdd>;
+> +
+> +		pinctrl-0 = <&disp_reset_n_active>, <&mdp_vsync>;
+> +		pinctrl-1 = <&disp_reset_n_suspend>, <&mdp_vsync>;
+> +		pinctrl-names = "default", "sleep";
+> +
+> +		port {
+> +			panel_in: endpoint {
+> +				remote-endpoint = <&mdss_dsi0_out>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&mdss_dsi0_out {
+> +	data-lanes = <0 1 2 3>;
+> +	remote-endpoint = <&panel_in>;
+> +};
+> +
+> +&mdss_dsi_phy {
+> +	vdds-supply = <&vreg_l10c>;
+> +	status = "okay";
+> +};
+> +
+>  &pm7250b_adc {
+>  	pinctrl-0 = <&pm7250b_adc_default>;
+>  	pinctrl-names = "default";
+> @@ -1026,6 +1089,20 @@ bluetooth_enable_default: bluetooth-enable-default-state {
+>  		bias-disable;
+>  	};
+>  
+> +	disp_reset_n_active: disp-reset-n-active-state {
+> +		pins = "gpio44";
+> +		function = "gpio";
+> +		drive-strength = <8>;
+> +		bias-disable;
+> +	};
+> +
+> +	disp_reset_n_suspend: disp-reset-n-suspend-state {
+> +		pins = "gpio44";
+> +		function = "gpio";
+> +		drive-strength = <2>;
+> +		bias-pull-down;
+> +	};
+> +
+>  	hall_sensor_default: hall-sensor-default-state {
+>  		pins = "gpio155";
+>  		function = "gpio";
+> @@ -1033,6 +1110,13 @@ hall_sensor_default: hall-sensor-default-state {
+>  		bias-pull-up;
+>  	};
+>  
+> +	mdp_vsync: mdp-vsync-state {
+> +		pins = "gpio80";
+> +		function = "mdp_vsync";
+> +		drive-strength = <2>;
+> +		bias-pull-down;
+> +	};
+> +
+>  	pm8008_int_default: pm8008-int-default-state {
+>  		pins = "gpio25";
+>  		function = "gpio";
+> 
+> -- 
+> 2.48.1
+> 
