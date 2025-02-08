@@ -1,92 +1,124 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 697C81714B7
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 09:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40361197A92
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 09:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739005948; cv=none; b=PZ2GC4zzfhO4w2/YNZ1FzNGL6CEM5LXWfx5X7zLwVlSqVcobT9DWegxnrctucW/uv0dLBAU9C3979VQpavZbYxC6YaOCFQtQmvpKY4hcayeEKUXQ2JBO6oaCipWdCpo4DyRy2ZUkyIZPx719DMcVJ1/XGKXo3rPd22+XLClnMgM=
+	t=1739005987; cv=none; b=KLbMgvxAclPr2BJ7Fj4k+CqXl4HL5hhpwwhg59z/3d58l1am+2n5yoHIPjyebinVWQG8ZcHn1oTutXwadOD9yIhioiv6+hBq4nHkxmEPnAaj9JfLws0FlLPZaiYWRwZ2hjdr+xylBEAZ/rrWvnDy8jkywKZWtLk3mETwzu5AMq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739005948; c=relaxed/simple;
-	bh=Q+dmld6crZT4EOzhdG88wF1itU11Mjx842oY3hftyFI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=naIK28konxVJ2EHyIDaLDwuWI3KR6R1SJTLlDN4xO0Z3n32KFMZ1klAzBO9KhQ5Fim+1kENVc2VcR7f/kKcu6HkET816CBkPUnAsPiVT6iy85oa54y9MRor6CroWNK+2KgFBBgEKh852EVjooZ2qowEitiDXZydVrz55+5jigjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=hFIFvg3f; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1739005987; c=relaxed/simple;
+	bh=pywsn+2Sqcpd7QK6cQ8v9f3/7UWjf0kz5BDQesfAOGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=sO6XvlAsdst4ZulljbMyCc8zvTv42TdxT8IERslfOIzvZgBoGxWvSgsHTUgrJqxBRI0p2PkY6EftPPZ7PmZZXhkq82ndc0L6O2cMHxn69Fofi2lcteBos0eCmM1LI/Iv4YQq9Hoh+pn3jpZs16moeoa+wbhgAWQ9hvnZA0mPI/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=spPRHZ5y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="hFIFvg3f"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=DjPHon4AL1YD7D9zhorib7R/ffnNYO9ciVr+kcP0nR4=; b=hFIFvg3fsTNfvUH9+hkK4+yS7I
-	j3yluTRzD+gZQvzKkZegms74+qtSEWjWiZv1gertg6XHlP6PVWEJiugAtFznG9AcNX9v2psowqyvq
-	UvT0npaicYiMzZ9Tsxt3V1LmuphtYSqM46g+6ZFEzcygXps3XkDicWjlW6mgyNOSPeCtO/H8hBZv7
-	xBM5Bq3TQPI1Z/YvI6tQnY3RSM8ijNb4m2l3GiKJp698teWkhOX0jK2sDrE2FB+o0l2GfVasyp53G
-	n+DN+jqKzRg06QEcJxxc6AW1B389sY3kmpQQeocyy/ZIodflKvqJukLlydBn7RkzJiM/mXZHfoOhF
-	7xqafNNA==;
-Received: from [58.29.143.236] (helo=[192.168.1.6])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1tggsn-006JcJ-7J; Sat, 08 Feb 2025 10:12:19 +0100
-Message-ID: <15674557-6e8c-445c-9a4a-d5f59820a70c@igalia.com>
-Date: Sat, 8 Feb 2025 18:12:13 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="spPRHZ5y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 136A4C4CED6;
+	Sat,  8 Feb 2025 09:13:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739005986;
+	bh=pywsn+2Sqcpd7QK6cQ8v9f3/7UWjf0kz5BDQesfAOGc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=spPRHZ5yMud2HOv1WLVl/G2NogGX4krB3Su6rU8jZ0WjW6uUtGHu3gFc3BMFNwRQT
+	 ovjFRgfD1yA4/p6e9aIuB5CFCv5EGJDwo1FxJTwdWLF13ifDgqO5Wb4QMib6ngjrv8
+	 B8it4qMWI52M4KTtIHRWpC9XpTNTO75AdY7IOPwIWNn5ALPooEoU5RgvTyuMZqZIVf
+	 QW/uoQ3Wpv9sfSCVNEDmDjsondqbcP9Yw9ykSZWNa0ShwzQ58fSiOoZd4INX83HRDT
+	 TBJJtVQl0V+4vjZCIz4fnYw3GzzxZjN+zhQbWGLjH40zESuRTTXSKRgAQ/dEWV/Ehw
+	 uN9y7V4ET5ISA==
+Date: Sat, 8 Feb 2025 10:12:54 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <a.p.zijlstra@chello.nl>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Borislav Petkov <bp@alien8.de>
+Subject: [GIT PULL] IRQ fix
+Message-ID: <Z6cgFhA0239YtIvU@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHSET sched_ext/for-6.15] sched_ext: Event counter updates
-To: Tejun Heo <tj@kernel.org>
-Cc: void@manifault.com, arighi@nvidia.com, linux-kernel@vger.kernel.org,
- sched-ext@meta.com
-References: <20250208084229.1274399-1-tj@kernel.org>
-From: Changwoo Min <changwoo@igalia.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <20250208084229.1274399-1-tj@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hello,
+Linus,
+
+Please pull the latest irq/urgent Git tree from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-2025-02-08
+
+   # HEAD: 29a61a1f40637ae010b828745fb41f60301c3a3d genirq: Remove leading space from irq_chip::irq_print_chip() callbacks
+
+Further fix a double-spaces-printed procps genirq output formatting
+regression caused by an optimization.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Geert Uytterhoeven (1):
+      genirq: Remove leading space from irq_chip::irq_print_chip() callbacks
 
 
-On 25. 2. 8. 17:42, Tejun Heo wrote:
-> Hello,
-> 
-> This patchset contains the following three event counter updates:
-> 
->   0001-tool-sched_ext-Event-counter-dumping-updates.patch
->   0002-sched_ext-Count-SCX_EV_DISPATCH_LOCAL_DSQ_OFFLINE-in.patch
->   0003-sched_ext-Add-SCX_EV_ENQ_SKIP_MIGRATION_DISABLED.patch
-> 
-> This patchset depends on two pending migration disabled handling patches on
-> top of sched_ext/for-614-fixes and the event counter addition in
-> sched_ext/for-6.15 and thus is on top of:
-> 
->   sched_ext/for-6.14-fixes
->   + Two migration disabled handling update patches
->     http://lkml.kernel.org/r/Z6Zz79AUub1YuHwD@slm.duckdns.org
->   + sched_ext/for-6.15
-> 
-> The following branch shows how these patches will be applied:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext.git scx-evs
-> 
-> diffstat follows. Thanks.
-> 
->   kernel/sched/ext.c                |   25 +++++++++++++++++++------
->   tools/sched_ext/scx_central.bpf.c |   21 ---------------------
->   tools/sched_ext/scx_qmap.bpf.c    |   16 ++++++++--------
->   3 files changed, 27 insertions(+), 35 deletions(-)
-> 
-> --
-> tejun
+ arch/powerpc/sysdev/fsl_msi.c          | 2 +-
+ drivers/bus/moxtet.c                   | 2 +-
+ drivers/irqchip/irq-partition-percpu.c | 2 +-
+ drivers/soc/qcom/smp2p.c               | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-Looks good to me. Thanks!
-
-Acked-by: Changwoo Min <changwoo@igalia.com>
+diff --git a/arch/powerpc/sysdev/fsl_msi.c b/arch/powerpc/sysdev/fsl_msi.c
+index 1aa0cb097c9c..7b9a5ea9cad9 100644
+--- a/arch/powerpc/sysdev/fsl_msi.c
++++ b/arch/powerpc/sysdev/fsl_msi.c
+@@ -75,7 +75,7 @@ static void fsl_msi_print_chip(struct irq_data *irqd, struct seq_file *p)
+ 	srs = (hwirq >> msi_data->srs_shift) & MSI_SRS_MASK;
+ 	cascade_virq = msi_data->cascade_array[srs]->virq;
+ 
+-	seq_printf(p, " fsl-msi-%d", cascade_virq);
++	seq_printf(p, "fsl-msi-%d", cascade_virq);
+ }
+ 
+ 
+diff --git a/drivers/bus/moxtet.c b/drivers/bus/moxtet.c
+index 6276551d7968..1e57ebfb7622 100644
+--- a/drivers/bus/moxtet.c
++++ b/drivers/bus/moxtet.c
+@@ -657,7 +657,7 @@ static void moxtet_irq_print_chip(struct irq_data *d, struct seq_file *p)
+ 
+ 	id = moxtet->modules[pos->idx];
+ 
+-	seq_printf(p, " moxtet-%s.%i#%i", mox_module_name(id), pos->idx,
++	seq_printf(p, "moxtet-%s.%i#%i", mox_module_name(id), pos->idx,
+ 		   pos->bit);
+ }
+ 
+diff --git a/drivers/irqchip/irq-partition-percpu.c b/drivers/irqchip/irq-partition-percpu.c
+index 8e76d2913e6b..4441ffe149ea 100644
+--- a/drivers/irqchip/irq-partition-percpu.c
++++ b/drivers/irqchip/irq-partition-percpu.c
+@@ -98,7 +98,7 @@ static void partition_irq_print_chip(struct irq_data *d, struct seq_file *p)
+ 	struct irq_chip *chip = irq_desc_get_chip(part->chained_desc);
+ 	struct irq_data *data = irq_desc_get_irq_data(part->chained_desc);
+ 
+-	seq_printf(p, " %5s-%lu", chip->name, data->hwirq);
++	seq_printf(p, "%5s-%lu", chip->name, data->hwirq);
+ }
+ 
+ static struct irq_chip partition_irq_chip = {
+diff --git a/drivers/soc/qcom/smp2p.c b/drivers/soc/qcom/smp2p.c
+index 4783ab1adb8d..a3e88ced328a 100644
+--- a/drivers/soc/qcom/smp2p.c
++++ b/drivers/soc/qcom/smp2p.c
+@@ -365,7 +365,7 @@ static void smp2p_irq_print_chip(struct irq_data *irqd, struct seq_file *p)
+ {
+ 	struct smp2p_entry *entry = irq_data_get_irq_chip_data(irqd);
+ 
+-	seq_printf(p, " %8s", dev_name(entry->smp2p->dev));
++	seq_printf(p, "%8s", dev_name(entry->smp2p->dev));
+ }
+ 
+ static struct irq_chip smp2p_irq_chip = {
