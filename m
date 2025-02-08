@@ -1,95 +1,88 @@
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+Received: from ssh247.corpemail.net (ssh247.corpemail.net [210.51.61.247])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553F31A9B4A
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 09:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3878D23C8D0
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 10:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.247
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739008690; cv=none; b=Jqeuzvt08FvjpwEpuTMn9uLHvauvz8dQQVEqcpmgHdcbQm9/ytRdoZ583K9HU0oCctgH6WGAn5yHgOGhvJq0rffkDZEaCAaSyfb8TdUzFgmAAlvqm7iBcimuSkEPzZbqgDriNX9VJJ4JARSPPNgBBBUYRl8BdhxMXVXnCOyBje0=
+	t=1739009085; cv=none; b=kT7k2XY3YNDW0A37C9MZOAuV7KiIB1IUy1QyR4Duwrt7hQiUW4olwYAQuemKSNSrPUIwMeqJSogNCDmAkkredh2Qa9HWkgm+79bKTPZd8FH56fhnVFGJYJ1BVVXXL1TVDVpJSU6JqejJcbTE14HxxGM9Z/SqLWbQHxA6ZHqCKbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739008690; c=relaxed/simple;
-	bh=Da5PceD4nSNuB1c7slA9pli6PCIvqpP7MItx3meXMT4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u2y6h5NPFeGWQqUUBlgsYrNtnprzWWXrCaPlFyCC4paQhsZvoL3hUkHqMlHHDAJnKbMYoWZSV0LzXrfPAzc/F11uo+kT03dWkeMONzFlr6taB9eZEozprs3OV+qXg44wtpg/qxnSdOlQq3NZrDx5hArGs/+Wym64RCHLmoOgecE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st; spf=pass smtp.mailfrom=marcan.st; dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b=FX7FzS64; arc=none smtp.client-ip=212.63.210.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marcan.st
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b="FX7FzS64"
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: marcan@marcan.st)
-	by mail.marcansoft.com (Postfix) with ESMTPSA id 5ED213FB5D;
-	Sat,  8 Feb 2025 09:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
-	t=1739008679; bh=Da5PceD4nSNuB1c7slA9pli6PCIvqpP7MItx3meXMT4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=FX7FzS64oOVPoNnOVFB1wLz/NNDiVn3OnhUKSyiWURYyh8TxPQ18nRdzlJQQmyU+B
-	 O4L6XRU0OWuNPXV5H4BymyPNXe+KWZKF3Zc+JylhFgHiCqwlzdDcy917Nr8x9X6WM6
-	 Uv1HUtzJ1CnIz3u//H0qdAmSya/MxGuQhSH3pzCYZ7MTJfqdODd2zW9yLE6Wpq5CF5
-	 Z817GuJlmx1NfzEJFtkDXLx/IK3Xjf2sAjZi1yur42q1Cn0npxSvkWRPp96ZYadzuV
-	 hkD99gVstKN8mIu2wZKI98kAWKSfTh7ik/n3NnyYAoIC2kEEgtcf2n3i7FpKIGKzKH
-	 WAV8YKPwrRKPA==
-Message-ID: <cf367a36-88fb-4999-a5ab-d34c4ded718e@marcan.st>
-Date: Sat, 8 Feb 2025 18:57:57 +0900
+	s=arc-20240116; t=1739009085; c=relaxed/simple;
+	bh=PhL46KH19l0OPsZt5RjTxZOT9eh8M+pWgnO2NLkXWfs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nsYBW6atwOkN704J/hlC8WPFEPn31yFbsMm7Mhw6BiZh7gylDPpOjGrC1WzP1XMT9OM8Lh2+BhOnXGT+UJfonVFXi8NStvu1FDDSbk5XbgmPM4wPsQociSc8bO8I0jQigPqYCEt5Vwgwj59grplD9aagljxQDcUru/iPIUxN0kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.247
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from ssh247.corpemail.net
+        by ssh247.corpemail.net ((D)) with ASMTP (SSL) id GEM00027;
+        Sat, 08 Feb 2025 18:03:27 +0800
+Received: from jtjnmail201607.home.langchao.com (10.100.2.7) by
+ jtjnmail201621.home.langchao.com (10.100.2.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Sat, 8 Feb 2025 18:03:26 +0800
+Received: from locahost.localdomain (10.94.15.112) by
+ jtjnmail201607.home.langchao.com (10.100.2.7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Sat, 8 Feb 2025 18:03:26 +0800
+From: Charles Han <hanchunchao@inspur.com>
+To: <laurent.pinchart@ideasonboard.com>, <tomi.valkeinen@ideasonboard.com>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
+	<michal.simek@amd.com>, <vishal.sagar@amd.com>
+CC: <dri-devel@lists.freedesktop.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, Charles Han <hanchunchao@inspur.com>
+Subject: [PATCH] drm: xlnx: zynqmp_dpsub: Add NULL check in zynqmp_audio_init
+Date: Sat, 8 Feb 2025 18:03:22 +0800
+Message-ID: <20250208100323.11625-1-hanchunchao@inspur.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: arm: apple: Add myself as maintainer
-To: Janne Grunau <j@jannau.net>, Arnd Bergmann <arnd@arndb.de>,
- Sven Peter <sven@svenpeter.dev>
-Cc: soc@lists.linux.dev, asahi@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250208-maint-soc-apple-v1-1-a7f7337baec0@jannau.net>
-Content-Language: en-US
-From: Hector Martin <marcan@marcan.st>
-In-Reply-To: <20250208-maint-soc-apple-v1-1-a7f7337baec0@jannau.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: Jtjnmail201618.home.langchao.com (10.100.2.18) To
+ jtjnmail201607.home.langchao.com (10.100.2.7)
+tUid: 202520818032700b0aa2241bd3ab51cd75d7331f83a16
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-On 2025/02/08 18:22, Janne Grunau wrote:
-> Sven and I have agreed to share the maintainership for the ARM/APPLE
-> platform after Marcan's step down. I'm handling the downstream Asahi
-> Linux tree since April 2024 and worked on or wrote several drivers for
-> the platform.
-> 
-> Signed-off-by: Janne Grunau <j@jannau.net>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f2594c2300f9b054a6d57ce069120df0bb451d88..9987cbc4d14b2d2be43f259688c7791ecfd10423 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2210,6 +2210,7 @@ F:	sound/soc/codecs/ssm3515.c
->  
->  ARM/APPLE MACHINE SUPPORT
->  M:	Sven Peter <sven@svenpeter.dev>
-> +M:	Janne Grunau <j@jannau.net>
->  R:	Alyssa Rosenzweig <alyssa@rosenzweig.io>
->  L:	asahi@lists.linux.dev
->  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> 
-> ---
-> base-commit: 7635a78a95dc3bff39e9c49b34108f81a9bb62db
-> change-id: 20250208-maint-soc-apple-8d2498e75509
-> 
-> Best regards,
+devm_kasprintf() can return a NULL pointer on failure,but this
+returned value in zynqmp_audio_init() is not checked.
+Add NULL check in zynqmp_audio_init(), to handle kernel NULL
+pointer dereference error.
 
-Acked-by: Hector Martin <marcan@marcan.st>
+Fixes: 3ec5c1579305 ("drm: xlnx: zynqmp_dpsub: Add DP audio support")
+Signed-off-by: Charles Han <hanchunchao@inspur.com>
+---
+ drivers/gpu/drm/xlnx/zynqmp_dp_audio.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Janne's proactive leadership on the maintenance of the downstream tree
-has been invaluable, especially as life got in my way last year and I
-couldn't do it myself.
-
-Thank you.
-
-- Hector
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c b/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
+index fa5f0ace6084..f07ff4eb3a6d 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
++++ b/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
+@@ -323,12 +323,16 @@ int zynqmp_audio_init(struct zynqmp_dpsub *dpsub)
+ 
+ 	audio->dai_name = devm_kasprintf(dev, GFP_KERNEL,
+ 					 "%s-dai", dev_name(dev));
++	if (!audio->dai_name)
++		return -ENOMEM;
+ 
+ 	for (unsigned int i = 0; i < ZYNQMP_NUM_PCMS; ++i) {
+ 		audio->link_names[i] = devm_kasprintf(dev, GFP_KERNEL,
+ 						      "%s-dp-%u", dev_name(dev), i);
+ 		audio->pcm_names[i] = devm_kasprintf(dev, GFP_KERNEL,
+ 						     "%s-pcm-%u", dev_name(dev), i);
++		if (!audio->link_names[i] || !audio->pcm_names[i])
++			return -ENOMEM;
+ 	}
+ 
+ 	audio->base = devm_platform_ioremap_resource_byname(pdev, "aud");
+-- 
+2.43.0
 
