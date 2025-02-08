@@ -1,165 +1,230 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E462D13EFE3;
-	Sat,  8 Feb 2025 15:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469A1248189;
+	Sat,  8 Feb 2025 15:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739029023; cv=none; b=bBylhiZrG88T182129gaDKJRlgPPvhAb0Yzj5YyTfkWu1T87dbBx10qZh+/8MWf+pA2kOKvF0fHDdccTH3WZUy5qerWOE/WvCxWKUkbYBXNwoaFJLPqvh+OjkFiO/oBnFWRMcn+H6LEfZ5djfBP2F8XVJMw+iHxndcS802YJ38E=
+	t=1739029044; cv=none; b=Ns1MSTKDwpAK/p1SaMWAI2cKwFbT7ybe0qqbc8iCbQ7BXgXa8xJQ28kTlBrfiSbnuqnAJzpZ4kTX8TV5Y35ObePgEom3EGXLTNshFNbW4U6eoh+/Ljti4H2CNtmzWbU8NbhKJEhmMYvOGjEPpX8Lr4YLCNIpxDqxSi1rNDK/Vdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739029023; c=relaxed/simple;
-	bh=edP5cnZdsXNLdZyaPPqteFAjfe6jOmR4Y4nreqkkx8s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JMqhTQUdH4c+dR8GV3DKXEO6p6v3bWerTjoa51uRXqJpIhonWvUVQ8bVCfKDtjM1K0pEIcoawS0FYM+KE2gpKh/vEE5ROUdCuDV1FiTYcx/WV5tQ+++0kE7dXaHIX68ntavYKHoPifMprxljm4ebRmligJa3UBdZmOclbeI41wQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=k15sMw4O; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1739029044; c=relaxed/simple;
+	bh=Of+FGUU0azeEe6zTrINmA8le2Fyns8jIwH2YV16Evw0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J4EIiyk1dvzFvxKhj9OjPipgs/TzKy3z1D4BPZTGSNINxBzyQ/s8+6nnrO67xVl92KJykZbwyM5w4HnxyxQBEychYQYLXFwwYSzneSnSTVRtNQFMi6GSn5FgjFBJ92AmEc+5mFNZyX03M9Fbn6Lit5bi7KvgH7BYlGMdd3bGxd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vif3bfRS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="k15sMw4O"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=sReTgSh8cyWWQXGCpKo6cPSEOhWgPQHHXye7J9k/w6g=; t=1739029021;
-	x=1739461021; b=k15sMw4OXE4nBpmZDaFtjk6EsyrOeyrgYTNXowC7zssFtnLvLjws/QSjFrFoi
-	SceQzdg3ZKGTjkMN4QJwdVeshvcOj5Hx5IL8lgIjrpqHA+tzNrFGKp/9gAoTmpSy3EOyXmXnaWehn
-	OVHVqdPAlzG/i1TN5GVaT7w1vQUp+z/PAPLR/4pcWv49ByMZcO5L1jbAw3EY+fagrcAGxKvG+zY4u
-	tEUwqGvi4jsJ1Zx9TgfKGf8bCMyaAtwCwR3SniIQrWpY9FTFVeaO2iQS1WMf9Ph6wXYfaGFeBkGiB
-	M1rFD1wiJO8mXuvvCaURroErpOiK1hCsO01X3wFPPbY+t0HGdQ==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1tgmsy-00FzLO-1o;
-	Sat, 08 Feb 2025 16:36:48 +0100
-Message-ID: <f50c7b22-2b31-47d2-8353-41d80f5241c1@leemhuis.info>
-Date: Sat, 8 Feb 2025 16:36:47 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vif3bfRS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CC23C4CED6;
+	Sat,  8 Feb 2025 15:37:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739029043;
+	bh=Of+FGUU0azeEe6zTrINmA8le2Fyns8jIwH2YV16Evw0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Vif3bfRSrPNw2Umvi9C0qjS5yIc4f5Z3n9moXOcAtztVXReVQLp8hhq6rDc29yWQH
+	 lzovMkJ7Optg9TPz4jDXGqEUU0+S6xnIHL4LKlip6Zdpo1FADS4QnIVAFV0u1GLZ0c
+	 5GqCbjtz2zhmuPUnewe5kFNcE6PCR3eeAoj/eP7qFeWhT81TQnpXtUIadrRhLn0yp6
+	 D/QAeftRnMyFdJij9MUmjsuVK+k8qVpjPDpPA69Xm+AcE9MUbCeD34/p+NIIwGvh+O
+	 EI3K4WjuNMbJCu0w9spHcvREVewZ7YMxVqQYxoYKHjcNWk74RzRfVHJxMs2vgAHqrm
+	 JanDAaqLRQKeQ==
+Date: Sat, 8 Feb 2025 15:37:11 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Robert Budai <robert.budai@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Alexandru Ardelean
+ <alexandru.ardelean@analog.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Nuno Sa
+ <nuno.sa@analog.com>, Ramona Gradinariu <ramona.gradinariu@analog.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>, David Lechner
+ <dlechner@baylibre.com>, Marcelo Schmitt <marcelo.schmitt@analog.com>, Paul
+ Cercueil <paul@crapouillou.net>, Antoniu Miclaus
+ <antoniu.miclaus@analog.com>, <linux-iio@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v6 5/6] iio: imu: adis16550: add adis16550 support
+Message-ID: <20250208153711.1e0215d1@jic23-huawei>
+In-Reply-To: <20250204143612.85939-6-robert.budai@analog.com>
+References: <20250204143612.85939-1-robert.budai@analog.com>
+	<20250204143612.85939-6-robert.budai@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] docs: clarify rules wrt tagging other people
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, workflows@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- Simona Vetter <simona.vetter@ffwll.ch>,
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <588cf2763baa8fea1f4825f4eaa7023fe88bb6c1.1738852082.git.linux@leemhuis.info>
- <20250207090518.GE24886@pendragon.ideasonboard.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: de-DE, en-US
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <20250207090518.GE24886@pendragon.ideasonboard.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1739029021;64fc3945;
-X-HE-SMSGID: 1tgmsy-00FzLO-1o
+Content-Transfer-Encoding: quoted-printable
 
-On 07.02.25 10:05, Laurent Pinchart wrote:
-> Thank you for the patch.
+On Tue, 4 Feb 2025 16:36:09 +0200
+Robert Budai <robert.budai@analog.com> wrote:
 
-Thx for saying that!
+> The ADIS16550 is a complete inertial system that includes a triaxis
+> gyroscope and a triaxis accelerometer. Each inertial sensor in the
+> ADIS16550 combines industry leading MEMS only technology with signal
+> conditioning that optimizes dynamic performance. The factory calibration
+> characterizes each sensor for sensitivity, bias, and alignment. As a
+> result, each sensor has its own dynamic compensation formulas that
+> provide accurate sensor measurements.
+>=20
+> Co-developed-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
+> Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
+> Co-developed-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> Signed-off-by: Robert Budai <robert.budai@analog.com>
 
-> On Thu, Feb 06, 2025 at 03:30:10PM +0100, Thorsten Leemhuis wrote:
->> Point out that explicit permission is usually needed to tag other people
->> in changes, but mention that implicit permission can be sufficient in
->> certain cases. This fixes slight inconsistencies between Reported-by:
->> and Suggested-by: and makes the usage more intuitive.
->>
->> While at it, explicitly mention the dangers of our bugzilla instance, as
->> it makes it easy to forget that email addresses visible there are only
->> shown to logged-in users.
->>
->> The latter is not a theoretical issue, as one maintainer mentioned that
->> his employer received a EU GDPR (general data protection regulation)
->> complaint after exposing a email address used in bugzilla through a tag
->> in a patch description.
-> [...]
->> -Be careful in the addition of tags to your patches, as only Cc: is appropriate
->> -for addition without the explicit permission of the person named; using
->> -Reported-by: is fine most of the time as well, but ask for permission if
->> -the bug was reported in private.
->> +Be careful in the addition of the aforementioned tags to your patches, as all
->> +except for Cc:, Reported-by:, and Suggested-by: need explicit permission of the
->> +person named. For those three implicit permission is sufficient if the person
->> +contributed to the Linux kernel using that name and email address according
->> +to the lore archives or the commit history -- and in case of Reported-by:
->> +and Suggested-by: did the reporting or suggestion in public. Note,
->> +bugzilla.kernel.org is a public place in this sense, but email addresses
->> +used there are private; so do not expose them in tags, unless the person
->> +used them in earlier contributions.
-> 
-> I like this text very much, it's concise and clear.
+A few minor comments inline given you will need to do a v7 for
+the DT feedback.  Otherwise I might just have tweaked these
+whilst applying.
 
-Glad to hear!
 
-> My only possible
-> concern is that "explicit permission" isn't defined. I assume that
-> someone sendubg a Reviewed-by or Acked-by tag in a public mail thread
-> counts as permission, but strictly speaking it's not explicit.
-> 
-> Regardless of that, I think we can clarify what explicit permission
-> means in a follow-up patch. If you would like to merge this one as-is,
+> diff --git a/drivers/iio/imu/adis16550.c b/drivers/iio/imu/adis16550.c
+> new file mode 100644
+> index 000000000000..b20dc850346f
+> --- /dev/null
+> +++ b/drivers/iio/imu/adis16550.c
+> @@ -0,0 +1,1156 @@
 
-Hmmmm. Not totally sure that I exactly understand what you mean, but I
-think I see it. But I'm not sure how to solve that. Would simply
-dropping the "explicit" solve this? Or should I start the section like this:
+> +
+> +struct adis16550 {
+> +	const struct adis16550_chip_info *info;
+> +	struct adis adis;
+> +	unsigned long clk_freq_hz;
+> +	u32 sync_mode;
+> +	struct spi_transfer xfer[2];
+> +	u8 buffer[ADIS16550_BURST_DATA_LEN + sizeof(u32)] __aligned(IIO_DMA_MIN=
+ALIGN);
+> +	__be32 din[2] __aligned(IIO_DMA_MINALIGN);
+> +	__be32 dout[2] __aligned(IIO_DMA_MINALIGN);
 
-""
-Be careful in the addition of the aforementioned tags to your patches,
-almost all need permission by the person named; one can be assumed if
-the person provided that tag in a reply or acknowledged its inclusion
-after being made aware that name and email address will end up in public
-places where they can't be removed.
+In most cases only one such marking is needed.  Devices tend not to interfe=
+re
+with themselves and we tend not to be changing values from software in one =
+of
+the buffer DMA is targetting whilst the device is using the others.
 
-The tags Cc:, Reported-by:, and Suggested-by: are an exception: for
-those three implicit permission is sufficient, ...
-"""
+So we normally just mark the first one of a set like this.  That avoids
+adding a lot of padding when it is not needed.
 
-Ciao, Thorsten
+> +};
+
+
+> +
+> +static int adis16550_set_gyro_filter_freq(struct adis16550 *st, int freq=
+_hz)
+> +{
+> +	u8 en =3D 0;
+> +
+> +	if (freq_hz)
+> +		en =3D 1;
+Could save a line or two without greatly affecting readability.
+Same thing applies in at least one other place.
+
+	u8 en =3D freq_hz ? 1 : 0;
+
+
+> +
+> +	return __adis_update_bits(&st->adis, ADIS16550_REG_CONFIG,
+> +				  ADIS16550_GYRO_FIR_EN_MASK,
+> +				  FIELD_PREP(ADIS16550_GYRO_FIR_EN_MASK, en));
+> +}
+
+> +
+> +static irqreturn_t adis16550_trigger_handler(int irq, void *p)
+> +{
+
+> +	memcpy(data, &buffer[3], (ADIS16550_SCAN_ACCEL_Z -
+> +						ADIS16550_SCAN_GYRO_X + 2) *
+> +						sizeof(__be32));
+Strange alignment.
+	memcpy(data, &buffer[3],
+	       (ADIS16550_SCAN_ACCEL_Z - ADIS16550_SCAN_GYRO_X + 2) *
+	       sizeof(__be32));
+
+Is about the best I could come up with.
+Good to add a comment on why the + 2 as well.
+
+> +	iio_push_to_buffers_with_timestamp(indio_dev, data, pf->timestamp);
+> +done:
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +	return IRQ_HANDLED;
+> +}
+
+
+
+> +static int adis16550_probe(struct spi_device *spi)
+> +{
+> +	u16 burst_length =3D ADIS16550_BURST_DATA_LEN;
+> +	struct device *dev =3D &spi->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct adis16550 *st;
+> +	struct adis *adis;
+> +	int ret;
+> +
+> +	indio_dev =3D devm_iio_device_alloc(dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	st =3D iio_priv(indio_dev);
+> +	st->info =3D spi_get_device_match_data(spi);
+> +	if (!st->info)
+> +		return -EINVAL;
+> +	adis =3D &st->adis;
+> +	indio_dev->name =3D st->info->name;
+> +	indio_dev->channels =3D st->info->channels;
+> +	indio_dev->num_channels =3D st->info->num_channels;
+> +	indio_dev->available_scan_masks =3D adis16550_channel_masks;
+> +	indio_dev->info =3D &adis16550_info;
+> +	indio_dev->modes =3D INDIO_DIRECT_MODE;
+> +
+> +	st->adis.ops =3D &adis16550_ops;
+> +	st->xfer[0].tx_buf =3D st->buffer + burst_length;
+> +	st->xfer[0].len =3D 4;
+> +	st->xfer[0].cs_change =3D 1;
+> +	st->xfer[0].delay.value =3D 8;
+> +	st->xfer[0].delay.unit =3D SPI_DELAY_UNIT_USECS;
+> +	st->xfer[1].rx_buf =3D st->buffer;
+> +	st->xfer[1].len =3D burst_length;
+> +
+> +	spi_message_init_with_transfers(&adis->msg, st->xfer, 2);
+> +
+> +	ret =3D devm_regulator_get_enable(dev, "vdd");
+> +	if (ret)
+> +		return dev_err_probe(dev, ret,
+> +			      "Failed to get vdd regulator\n");
+
+Totally trivial but preference is to align after ( unless the line ends
+up too long. In those cases it is fine to indent just one tab more than
+the line above.
+
+Here it actually fits on one line anyway as it's exactly 80 chars.
+
+		return dev_err_probe(dev, ret, "Failed to get vdd regulator\n");
+
+> +
+> +	ret =3D adis_init(&st->adis, indio_dev, spi, &adis16550_data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D __adis_initial_startup(&st->adis);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D adis16550_config_sync(st);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D devm_adis_setup_buffer_and_trigger(&st->adis, indio_dev,
+> +						 adis16550_trigger_handler);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret =3D devm_iio_device_register(dev, indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	adis16550_debugfs_init(indio_dev);
+> +
+> +	return 0;
+> +}
