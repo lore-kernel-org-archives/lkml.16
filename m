@@ -1,77 +1,118 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924C01AF0CB;
-	Sat,  8 Feb 2025 09:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2D491B392B;
+	Sat,  8 Feb 2025 09:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739007003; cv=none; b=Ru8vItugGRJLPg+sm0e+CK7fRyWB8neCkLmAXXKS9eCbXTlHiWeR0EA7n37CweenhR/90+HRrD/y3qlkoBGs9g3+wA6YMmqQQMxjaqIyFaKmPA2jozhSrb3ghuRZG/OCdWEdYHyqlAv52QF/qGCqMkgf7USKvaimgMGskB/yLss=
+	t=1739007008; cv=none; b=KeffPab7Nu1romUzKU2PcRRKGa1tyOdraGAaZA9iE2j8T9JPfu5G//ezqTJfVjA7wgq80BSzCktfFsdTHwDbV+QbhuWsEE0Q08vFv2+BDMwjcAAabBlwyoPWHJ57qIDrYOGEEZmkOeg6I8QNPZHuVyuhFr4Gtp6eNXN4UhSPOcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739007003; c=relaxed/simple;
-	bh=Gr+u2nIVHCsR7pAE46VfOUM9HNOkPW44oxKHJ3l/Y/g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I9etYOip9pWgMmur8DaYwq28mN6PEnyXcSwxbnY4haHJC9a+YV1WAKBsGzMq/Xwu8qiOapPykVC0yIyO58CbT35A8OEEZhYGA3YNCTcsN2yEwu6P9epqK2zgXcC+gT454DYNLJEIO9qTj83T1s7gXuIUNO3QzvsxO4dMpF1efzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Qz/fNv/I; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1739007008; c=relaxed/simple;
+	bh=dWo/bfeju/FyepwzWaZBtQ69y0AhMrz/V6IqsmlS4ZU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TO4zMI5OEcqMBJJcrKlpQFOa1zLuiSnDaSxNQ0nS6J2C6MTrF0aBwbzAz+/3Scxx5eovEZKgvMMUOf6aBxUWnS2PQb19dPb0Vmuqtj/9CDnfM/smgdL72n5/j0E4fG7vpiMPEBaXKDkZTnPoa63VmeuXNpmQcqRqY67AjNbeGKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ed6A45wM; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Qz/fNv/I"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=lSvdFS1Tmix55ChwG42rDuM5tBqKbIBiBkAZfphft8I=; b=Qz/fNv/InGvbRTlwHZhErnacK7
-	Is73Z5xtxofs9nfUqTQTVi10V0sJcJQD7OmNhryXcpLJzpI2eFGe0KqJZk70BIPUD5vSThVgtSGyb
-	kuAadzjdNE1XBWlQWgjKacbRPdybnZ20FwI8n8TV4sAiPyqJ2VEVumjRatcbE+wJU+o8bAe9jnGVA
-	MWneI2sxi46JEGkbJj4up5zfJItCt4lcnMfRkD+DKO8DsQ9WtLfq5RsYQJWLHWQ6EcyoFhnIQsRxS
-	dMp3n1+gE/9uxSntCbrJFeiZzZLXao/EivWbidVUxQrJCBPWY+V9ldRgYMAwjjsxXoNlmzDKBVt5G
-	90ncmAUg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46790)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tgh9p-0000Fa-2S;
-	Sat, 08 Feb 2025 09:29:49 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tgh9l-0005ME-39;
-	Sat, 08 Feb 2025 09:29:46 +0000
-Date: Sat, 8 Feb 2025 09:29:45 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Qingfang Deng <dqfext@gmail.com>
-Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next] net: ethernet: mediatek: add ethtool EEE
- callbacks
-Message-ID: <Z6ckCZpOo1_rvmh6@shell.armlinux.org.uk>
-References: <20250208092732.3136629-1-dqfext@gmail.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ed6A45wM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=bYMGG
+	j4F/JZvudIDaRtW1ZtWpqeyPToJB8Uq/ovG1Fk=; b=ed6A45wMvBi8XX+8dtWC3
+	2SbnX19nikA5ExWLPV/aZbZtwAh4o+JyW2FApF/mzmcQT4cbBLCIKJsr3NsnIuqW
+	yI2V/Vd/iuTxW2chXiDyQllQM7v37+Z6WGcHY7NfboUIbGD78ERbPvrHtTBKf+LM
+	Y2nie+60wy87W+pNbLOFvQ=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wB35gTwI6dnE0MiKg--.12901S2;
+	Sat, 08 Feb 2025 17:29:21 +0800 (CST)
+From: oushixiong1025@163.com
+To: Helge Deller <deller@gmx.de>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Lee Jones <lee@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Shixiong Ou <oushixiong@kylinos.cn>
+Subject: [PATCH v2] fbdev: lcdcfb: add missing device_remove_file()
+Date: Sat,  8 Feb 2025 17:29:18 +0800
+Message-Id: <20250208092918.251733-1-oushixiong1025@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250208092732.3136629-1-dqfext@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wB35gTwI6dnE0MiKg--.12901S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7WFy8WFWDWF4Dtw1fWr13XFb_yoW8Zry5pF
+	4UGas0grWrZrnrWr4fAF4UuF45u3s7tas3Zr1xJ345u3s3ArsYg343Ja93XrWfJa93GF1a
+	vrWrt345uF4UuaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UQVy3UUUUU=
+X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/xtbBYwXtD2enFw6wdwAAsa
 
-On Sat, Feb 08, 2025 at 05:27:32PM +0800, Qingfang Deng wrote:
-> Allow users to adjust the EEE settings of an attached PHY.
+From: Shixiong Ou <oushixiong@kylinos.cn>
 
-Why do you need to do this? Does the MAC support EEE?
+1. The device_remove_file() need to be called when driver is removing.
+2. The device_remove_file() need to be called if the call to
+   device_create_file() fails.
 
+Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+---
+v1->v2:
+	add missing 'return error'.
+	call device_remove_file() in sh_mobile_lcdc_overlay_fb_unregister().
+
+ drivers/video/fbdev/sh_mobile_lcdcfb.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/video/fbdev/sh_mobile_lcdcfb.c b/drivers/video/fbdev/sh_mobile_lcdcfb.c
+index 4715dcb59811..c52661d5491a 100644
+--- a/drivers/video/fbdev/sh_mobile_lcdcfb.c
++++ b/drivers/video/fbdev/sh_mobile_lcdcfb.c
+@@ -1504,10 +1504,14 @@ static void
+ sh_mobile_lcdc_overlay_fb_unregister(struct sh_mobile_lcdc_overlay *ovl)
+ {
+ 	struct fb_info *info = ovl->info;
++	unsigned int i;
+ 
+ 	if (info == NULL || info->dev == NULL)
+ 		return;
+ 
++	for (i = 0; i < ARRAY_SIZE(overlay_sysfs_attrs); ++i)
++		device_remove_file(info->dev, &overlay_sysfs_attrs[i]);
++
+ 	unregister_framebuffer(ovl->info);
+ }
+ 
+@@ -1516,7 +1520,7 @@ sh_mobile_lcdc_overlay_fb_register(struct sh_mobile_lcdc_overlay *ovl)
+ {
+ 	struct sh_mobile_lcdc_priv *lcdc = ovl->channel->lcdc;
+ 	struct fb_info *info = ovl->info;
+-	unsigned int i;
++	unsigned int i, error = 0;
+ 	int ret;
+ 
+ 	if (info == NULL)
+@@ -1531,9 +1535,15 @@ sh_mobile_lcdc_overlay_fb_register(struct sh_mobile_lcdc_overlay *ovl)
+ 		 info->var.yres, info->var.bits_per_pixel);
+ 
+ 	for (i = 0; i < ARRAY_SIZE(overlay_sysfs_attrs); ++i) {
+-		ret = device_create_file(info->dev, &overlay_sysfs_attrs[i]);
+-		if (ret < 0)
+-			return ret;
++		error = device_create_file(info->dev, &overlay_sysfs_attrs[i]);
++		if (error)
++			break;
++	}
++
++	if (error) {
++		while (--i >= 0)
++			device_remove_file(info->dev, &overlay_sysfs_attrs[i]);
++		return error;
+ 	}
+ 
+ 	return 0;
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.17.1
+
