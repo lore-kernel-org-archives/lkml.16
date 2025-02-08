@@ -1,145 +1,127 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80FB14A4F9;
-	Sat,  8 Feb 2025 15:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB731ACEC2;
+	Sat,  8 Feb 2025 15:47:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739029622; cv=none; b=V3YVTaXC8k9wVd46ZY97RHtKhgA9mH+2SaKKhVfga2YNExVMP2yH+EkWDXMefD5ex4E/qj6cFUSfg3f7qNR9+1/YIWcXigzpql6e6i2ezBVg4LlcRdgjfIQFyvmvklBUw2qERiEGE31+kQf5SDKyieq140mngEW+aNGt0o9JXLk=
+	t=1739029646; cv=none; b=hzkKhzJhaFZ1WQ+P+Uzza1bSqmogBqVgX7IZKU/EL/p0IBySRjEM7C1UawfQ46yljTeVKrQIO7JurWYRHX2yeh2aK5tbUMqQfgi2bkbsi7dxqxhZlHG34Jou+zLr5RhgRPiu7s2/egMTJU5suz/v7SsaXqDEjV7wgQx8zhqa2j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739029622; c=relaxed/simple;
-	bh=5oF7U/lMdQNsEhvFQBmWFeeAK8Ia/CG64J+TV4m7MlI=;
+	s=arc-20240116; t=1739029646; c=relaxed/simple;
+	bh=q+MDvtLlIi69K27ReX3lDDeT3LJLFUyE4Y1+7Huku2o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dAnF/mSBQ8MlthbJ/+MjjxBWJPEKPlgmvyZW9Amdiadnur3QOjQHhsecu62ixNfJahyRe9fc4en/S/V2Md3zaM925nP+5uZWP8+v4axLAByuRakZTEU1mBbJm4tDi/lE9elGu6xi/KrmsngQlHyUrF3u4099MWheVit3ZgOlb40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fO8KAAfB; arc=none smtp.client-ip=209.85.160.181
+	 To:Cc:Content-Type; b=A3vPS6/sSl/UpJJQlEdsq2fKqpNcwdntG4vmuBDIEmFbkfJhL0UvnORgxgo7hcm/V0w8QllRumQK+0dGA21p68SGY5VfVrwBjYhUo4gmmeeVXRGs6QrJIzopR/foseQs8XLfEhPZZoomBEZivMdazOf8yRPHOjRu0nIAwDItFhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C7RUtNAF; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fO8KAAfB"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-467a3f1e667so18951431cf.0;
-        Sat, 08 Feb 2025 07:47:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C7RUtNAF"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4362f61757fso29297355e9.2;
+        Sat, 08 Feb 2025 07:47:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739029620; x=1739634420; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739029643; x=1739634443; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4fOnrK9Ez1FxS3AJL66DzUp4872IstaGG4vVRCtFBhM=;
-        b=fO8KAAfB4VUNbRi6ZqMJqUK9R5AZ8n16OJnkk3DwcTrz2vflwAPfuF+N6ncW1ztBh/
-         tEK9AXhWphrc+GypS1VTwo7Tl9JLkgoH5bcvOdqes3A1ccCp8IoMTIzZpN/Vvw83SqPR
-         fdhSpgrPfDj0Qu788NsLkEAnVlQF+9PXMrzCQhftnStAZQJqoiQrrnN3LCl4Q0Vm4Dmh
-         HlWlB/avFB7SuzU7/XJGQZQDkWYN8gV0Hk+fN9EhMocqSlMI1tZ49VW9mZq0ZbnAkdSD
-         itnDAKN5V1eAAfj/41PAvJhBm5rkEx/Oo6B7bHUXUJFlzeu9chlgHwxav/GEPoe5/D/0
-         RZpg==
+        bh=4Ucm5nxe8cgExY3vq78pW2gU4Ws9xivfjS2fHeRhYTY=;
+        b=C7RUtNAF2QE3MngF0Ifhi9i9YnNw5keGDk0rF+wdb++ZIxVB0L/j3jSGahYbMUv6S9
+         MbKoNEi3u7W2VHOTlgm7EN5SeSa3ghAaJwAuv9uMtqmk36s6xygRi1funrIZsz79FY3j
+         I1sgDESFeCNEMs/M09vVusLUykilZubNxnJOt+XAGBQV1LGvYzMRp9cYDwHgGiScdAT2
+         x2o/VLxZmS8LRuKQ4vRgGVVNWgDnaalyvFmxO7ExSN6jt+BLiJ8oT8TupRHC7hkHopVn
+         w0+VK2cKjdQnxtnIjk9Bs3hHFGL7k+0ZDJHgzY2byYGQ6/Hj4v7MGlo7x+P31FwO8IY/
+         kaGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739029620; x=1739634420;
+        d=1e100.net; s=20230601; t=1739029643; x=1739634443;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4fOnrK9Ez1FxS3AJL66DzUp4872IstaGG4vVRCtFBhM=;
-        b=JgeYMaj8bUnoEuBeqpji9Fp80MBYVe/7oJv1gPZkDMq/TkbErTAq8+jC87ab+R9oet
-         sbtBd0znB2hmBaEN5e2tSLYRn6lFG+MXWDL2KJ2WvIoCuqJLnNjiVhhLF8xYGYcV2VA2
-         AeIqI4a6d2c5wwXAW5D0L1m/ruj0eGyb02aTR6hqe7zQs9jDxcQEECWGzrQg+6N6axum
-         bPvAYcXHqW7kTdP0j6bSyW2SFrp0t+LTm174FfTUZLqoxpUWflVzsXVt5v7kHa/d1vrl
-         R0u6+Ib9dYaPtXyOb4ZMEE05ZMlXwRVXA571ZrA7Bu12Uijm6Cn/0b3XU/V0rZDXZcLe
-         1d3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVne7mVM3kIdNlRXSL94oJddXhb0Pg5SBviOBCwiJkWtjFUJWH1joZtZFK0NWYusw7VxIwEFLDq5Rj8FLik@vger.kernel.org, AJvYcCXiItLcC+cDI4aZ5852D36VVEoJWkZHek4hn3chothejnTgvydNBABiboLTL4ZdGLczvY9TBvnytGLXX9Fv@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNA4lWWnheTcn1+9wjHR+t5gL5oY3OuWLKvl3La5CGEyAj1vyi
-	lr/ab2TdR86k54XjnPo/HPXVC7c08iwcZOEA7ACyiHiz8p6uLpa+iS+iNhBqm0w5IphvyXwWLBF
-	sV0FRwZcabkMzsUJaStJv5ZGpmDg=
-X-Gm-Gg: ASbGncusuQUBEUhDFaikdgabKRjAhnK8gQBntBANTE3LC2SfnHrB5LPT98XKcS2bHxD
-	Y4PI9bkiEytf/QrRbvvn73TJNRgK/SoAYL70WfVvmcpatfWKV9J9/iGTyPYekds1S0Oc7ZUdoNw
-	==
-X-Google-Smtp-Source: AGHT+IFSh4Mb6rl+oRG62Z0H13C2MR3PfJXfuPqUV/E9DdliMmk9tvl6Kyi3LNNOMS6rezVnMSgNza0FH6hi6ihzvh0=
-X-Received: by 2002:a05:622a:107:b0:467:706f:14b7 with SMTP id
- d75a77b69052e-47167a5327dmr98645921cf.30.1739029619751; Sat, 08 Feb 2025
- 07:46:59 -0800 (PST)
+        bh=4Ucm5nxe8cgExY3vq78pW2gU4Ws9xivfjS2fHeRhYTY=;
+        b=MGvZRlYPgLeLAbP0WXKmYqIsCjy/DOePz/3azZBXA6RQnWThfnYG7IucgogfqkbgSc
+         XyJkFudORRp+lRW1TuDjlNeSGwVStioJfh/Z5fCKfhJkwsQDG01QAKKZG4E+6B0nuE10
+         eRkMzEODOpmKK6OWpX65xxtl2w1Ws3dp9TAna+UQaKFX1eSpceOwXk/cAJNcLvw/rCbA
+         WEgks1RqTuKFg7eWOE0GHo0ur1b26fLsa2sIzXo2+FyDbsbM4kLT/SUIeNRpb2LeIF3l
+         aI0SJU4riDV0bl+d5VnicoLQPD8YvT60otdS5LXKnz8jbqo7xYdLIbvvEps37c6vyOAV
+         Wwrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZMNqFy8uuDtNTBHEMuwKUpM908gkeif3Dkn7VjpNxRxdjyr6FEi8cpIi0/soHcgONJeoVmejyGmvCh0YkAw==@vger.kernel.org, AJvYcCVnPggbLtR2UhxJbmeORsFaxVwSktfPSUD+SWIvbOjcRbf4VqACI3tL5LgkFZUWV1/GlS5YtqaITobkEaUX@vger.kernel.org, AJvYcCWgKCrUpP+s8IhtATWBAq5/zOSPXxRYQKx73aOaOeN03L0T2QGmqGGFjUI5KEYdLss/874=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjemRxTIy9qUnyvsv5b4XOruhUoz5RMoYOQNnjIcVbwLiX97ny
+	1cGC8GcwAZZFbJoj+shIOf0hV7QuovROYx6m9FR3r5BQik32IQ3o5GyCoY9qkAdVlUKW9AsyLGu
+	1doA79psUayKKPNrNdkm1C+yxmhw=
+X-Gm-Gg: ASbGncsZmkr8xlh0NFQRtvrEyxOqzDxu5qLCpsFQlJNRhu5sTVcsS+jM88ktyqb8eKj
+	5uOgi2Qij3ogV4SQgfZhcLnUhwUtZIh04a8HL8X8HQrpBQGJN6PsKRWfpOwc5ETpKWlu252mzt0
+	rL7bUoYIeiOhUb6XEX50f1h7v+bCx3
+X-Google-Smtp-Source: AGHT+IHhaqyd4g185PU4eVAqjVQtrJsSiS+LXstK8Loa3UCPWLCPxC+cz3OYe2OCF/ugN6bwdBMmPNV9TnSir4OMJvg=
+X-Received: by 2002:a05:600c:3b8e:b0:42c:b9c8:2bb0 with SMTP id
+ 5b1f17b1804b1-4392497c946mr53277355e9.4.1739029642917; Sat, 08 Feb 2025
+ 07:47:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu>
- <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
- <9cd88643-daa8-4379-be0a-bd31de277658@suse.cz> <20250207172917.GA2072771@perftesting>
- <8f7333f2-1ba9-4df4-bc54-44fd768b3d5b@suse.cz> <CAJnrk1aNVMCfTjL0vo-Qki68-5t1W+6-bJHg+x67kHEo_-q0Eg@mail.gmail.com>
- <Z6ct4bEdeZwmksxS@casper.infradead.org>
-In-Reply-To: <Z6ct4bEdeZwmksxS@casper.infradead.org>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Sat, 8 Feb 2025 07:46:48 -0800
-X-Gm-Features: AWEUYZlmX7UqjYolQF--Dd82_LLes-B_HkoK5EPAEx4gxpTBKL3nR7nmvwna1lU
-Message-ID: <CAJnrk1aY0ZFcS4JvmJL=icigencsCD8g4qmZiTuoPWj2S2Y_LQ@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
- related applications since v6.13
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Josef Bacik <josef@toxicpanda.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Christian Heusel <christian@heusel.eu>, 
-	Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm <linux-mm@kvack.org>, =?UTF-8?Q?Mantas_Mikul=C4=97nas?= <grawity@gmail.com>
+References: <20250127063526.76687-1-laoar.shao@gmail.com> <Z5eOIQ4tDJr8N4UR@pathway.suse.cz>
+ <CALOAHbBZc6ORGzXwBRwe+rD2=YGf1jub5TEr989_GpK54P2o1A@mail.gmail.com>
+ <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz> <CALOAHbDwsZqo9inSLNV1FQV3NYx2=eztd556rCZqbRvEu+DDFQ@mail.gmail.com>
+ <CAPhsuW4gYKHsmtHsBDUkx7a=apr_tSP_4aFWmmFNfqOJ+3GDGQ@mail.gmail.com>
+ <CALOAHbDYFAntFbwMwGgnXkHh1audSoUwG1wFu_4e8P=c=hwZ0w@mail.gmail.com>
+ <CAPhsuW4HsTab+w2r23bM52kcM1RBFBKP5ujVdDvxLE9OiqgMdA@mail.gmail.com>
+ <CALOAHbAJBwSYju3-XEQwy0O1DNPawuEgmhrV5ECTrL9J388yDw@mail.gmail.com>
+ <CAPhsuW51E4epDCrdNcQCG+SzHiyGhE+AocjmXoD-G0JExs9N1A@mail.gmail.com> <CALOAHbAaCbvr=F6PBJ+gnQa1WNidELzZW-P2_HmBsZ1tJd6FFg@mail.gmail.com>
+In-Reply-To: <CALOAHbAaCbvr=F6PBJ+gnQa1WNidELzZW-P2_HmBsZ1tJd6FFg@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Sat, 8 Feb 2025 07:47:12 -0800
+X-Gm-Features: AWEUYZlDgwJ7w9RtugurSHUaVGNWz4hZIXfuHiwIgOVVJOukfqJCOGpHVpr1kvs
+Message-ID: <CAADnVQJZCE-Rh4xghLrruY8DW00cRUq9-ct6d=qfKk8Yc+8=pQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] livepatch: Add support for hybrid mode
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: Song Liu <song@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Jiri Kosina <jikos@kernel.org>, Joe Lawrence <joe.lawrence@redhat.com>, 
+	live-patching@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 8, 2025 at 2:11=E2=80=AFAM Matthew Wilcox <willy@infradead.org>=
- wrote:
+On Fri, Feb 7, 2025 at 10:42=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com> =
+wrote:
 >
-> On Fri, Feb 07, 2025 at 04:22:56PM -0800, Joanne Koong wrote:
-> > > Thanks, Josef. I guess we can at least try to confirm we're on the ri=
-ght track.
-> > > Can anyone affected see if this (only compile tested) patch fixes the=
- issue?
-> > > Created on top of 6.13.1.
+> On Fri, Feb 7, 2025 at 2:01=E2=80=AFAM Song Liu <song@kernel.org> wrote:
 > >
-> > This fixes the crash for me on 6.14.0-rc1. I ran the repro using
-> > Mantas's instructions for Obfuscate. I was able to trigger the crash
-> > on a clean build and then with this patch, I'm not seeing the crash
-> > anymore.
+> > On Wed, Feb 5, 2025 at 6:55=E2=80=AFPM Yafang Shao <laoar.shao@gmail.co=
+m> wrote:
+> > [...]
+> > > > I think we should first understand why the trampoline is not
+> > > > freed.
+> > >
+> > > IIUC, the fexit works as follows,
+> > >
+> > >   bpf_trampoline
+> > >     + __bpf_tramp_enter
+> > >        + percpu_ref_get(&tr->pcref);
+> > >
+> > >     + call do_exit()
+> > >
+> > >     + __bpf_tramp_exit
+> > >        + percpu_ref_put(&tr->pcref);
+> > >
+> > > Since do_exit() never returns, the refcnt of the trampoline image is
+> > > never decremented, preventing it from being freed.
+> >
+> > Thanks for the explanation. In this case, I think it makes sense to
+> > disallow attaching fexit programs on __noreturn functions. I am not
+> > sure what is the best solution for it though.
 >
-> Since this patch fixes the bug, we're looking for one call to folio_put()
-> too many.  Is it possibly in fuse_try_move_page()?  In particular, this
-> one:
->
->         /* Drop ref for ap->pages[] array */
->         folio_put(oldfolio);
->
-> I don't know fuse very well.  Maybe this isn't it.
+> There is a tools/objtool/noreturns.h. Perhaps we could create a
+> similar noreturns.h under kernel/bpf and add all relevant functions to
+> the fexit deny list.
 
-Yeah, this looks it to me. We don't grab a folio reference for the
-ap->pages[] array for readahead and it tracks with Mantas's
-fuse_dev_splice_write() dmesg. this patch fixed the crash for me when
-I tested it yesterday:
+Pls avoid copy paste if possible.
+Something like:
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 7d92a5479998..172cab8e2caf 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -955,8 +955,10 @@ static void fuse_readpages_end(struct fuse_mount
-*fm, struct fuse_args *args,
-                fuse_invalidate_atime(inode);
-        }
+BTF_SET_START(fexit_deny)
+#define NORETURN(fn) BTF_ID(func, fn)
+#include "../../tools/objtool/noreturns.h"
 
--       for (i =3D 0; i < ap->num_folios; i++)
-+       for (i =3D 0; i < ap->num_folios; i++) {
-                folio_end_read(ap->folios[i], !err);
-+               folio_put(ap->folios[i]);
-+       }
-        if (ia->ff)
-                fuse_file_put(ia->ff, false);
+Should work?
 
-@@ -1049,6 +1051,7 @@ static void fuse_readahead(struct readahead_control *=
-rac)
-
-                while (ap->num_folios < cur_pages) {
-                        folio =3D readahead_folio(rac);
-+                       folio_get(folio);
-                        ap->folios[ap->num_folios] =3D folio;
-                        ap->descs[ap->num_folios].length =3D folio_size(fol=
-io);
-                        ap->num_folios++;
-
-
-I reran it just now with a printk by that ref drop in
-fuse_try_move_page() and I'm indeed seeing that path get hit.
-
-Not sure why fstests didn't pick this up though since splice is
-enabled by default in passthrough_hp, i'll look into this next week.
+Josh,
+maybe we should move noreturns.h to some common location?
