@@ -1,113 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54093157E6B;
-	Sat,  8 Feb 2025 04:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DAF8188938
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 04:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738988821; cv=none; b=YkXy0Bt8IqnXHDR2OJxvXrxT8ReG5bGLrysJICAXV2YKQl2nJmTdWkG1eJ3u8r8oow0yqNTuaDRQrKZNGdDFUfayE/qHYRAH+JAL2PRpi40g91HcxEVdU92X956naUJ9uwtGP6P/OdJt/POA27J2PvgUQva9jO7+VyGB6OlYD/w=
+	t=1738988847; cv=none; b=OtGeGa5+rDzKQx//vkZLpB0S08jdJKXb7W75zMdKCeYXE1OhwbGQSWOUbvt0t1fDuQ3tOTsDTS7ICUrtopjRF5XdjObRMOHxNjl2nMM5qRnJ7Ouga4d22xSNkxyaQp7EwobMUivLfmc0SL5Jfk0SKmc0AaxZJcOeqlou435AZhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738988821; c=relaxed/simple;
-	bh=ym5ptxT+2nYTumEwJVEIgFvQ7+f+3l2P58kYEQGXqFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RFdLfz4YBfSUlEz6F4Lks8QhKLmTpJbvD4XMxs3rdrGUcIoqu+Tn4uVzMPaX0dWfda2zieWPWZ9NL1QmhKS4zcHGQD2M9rK3d9egeu2z6nHaRLZNcD7tHkr9wefFHjHJ7VdyV9O5IyyqVdKSZoIAWoDQ71Ug04NnWPuWTJmRb7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D165EC4CED6;
-	Sat,  8 Feb 2025 04:26:57 +0000 (UTC)
-Date: Fri, 7 Feb 2025 23:26:50 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Dr. Greg" <greg@enjellic.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Hector Martin <marcan@marcan.st>, Dave Airlie <airlied@gmail.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Greg KH <gregkh@linuxfoundation.org>, phasta@kernel.org,
-	Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	daniel.almeida@collabora.com, aliceryhl@google.com,
-	robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	Bj??rn Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
-	DRI Development <dri-devel@lists.freedesktop.org>
-Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma
- coherent allocator abstraction.)
-Message-ID: <Z6bdCrgGEq8Txd-s@home.goodmis.org>
-References: <2025013030-gummy-cosmic-7927@gregkh>
- <20250130172437.GN5556@nvidia.com>
- <2025013148-reversal-pessimism-1515@gregkh>
- <20250131135421.GO5556@nvidia.com>
- <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
- <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local>
- <CAPM=9tzPR9wd=3Wbjnp-T0W8-dDfGah-H3Ny52G85B+2Ev9ksA@mail.gmail.com>
- <208e1fc3-cfc3-4a26-98c3-a48ab35bb9db@marcan.st>
- <CAHk-=wi=ZmP2=TmHsFSUGq8vUZAOWWSK1vrJarMaOhReDRQRYQ@mail.gmail.com>
- <20250207121638.GA7356@wind.enjellic.com>
+	s=arc-20240116; t=1738988847; c=relaxed/simple;
+	bh=bOyJdwonSSZC89a42q+OAhWsoGDY55c4ZGhaSoHMEGw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=OyFnbagvLZTNQ0bW2D411BtHKEBqwEci85NTMnGtoHWCgVFtE+T5yyoHSXfqsGMyN5TyIJ/Vr+nkEXibdwpmazyEvrk3zvEGdCOZKZ95/Ei7y19Gc4HY1VLuCYpA3tVoMN2rng8U+TUVwCafah1p+anG4UtNt6XS4ifGB1re2B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d14a3f812fso17356925ab.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 20:27:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738988844; x=1739593644;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hEcdCIGgB0Vn/57Ax2iihJ0TfDTBfU1K58AmEwI4seE=;
+        b=KWP4OLtrLCEPLWBVRnTRajSxGa/T0l7KzByoM9NbsDf6jhHPqMc39x0h9kgDXlYTtr
+         pMP6MdoZPMTUUzGPHea5WkswzPU4GU2iYQ8x2FIbygxVm7X3BPZjhsI5gzauctBa1GnQ
+         f+CSp0ThzqTZ0XBfr6bIS9UUKXcsr2Qmk9dYnB/Up6DRVo4QWc68Uh2MI5HRHj4Iuddl
+         pH1mc96+wxSz+xVUi2BGyCnFgFr1FvcUZ/88YfQUaOEZ923vFnpavZac7AVJBbu4IwGx
+         oW5yww0i6BZjw/JYu0HO+z4fuqNY0Myph6WyMkAtXRU9/KdANRxvNddeYAMrarTV3ci/
+         RWVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVovpcmCH+oH7I+w7Vr5N01H+8HAkdrQakDbk18hkihPdrvrGzWatMO+eXSHdGk7y8GGvh13yzXE3GgtYQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxu1Owx/qkPQfCd7fqbQvls3CifNSpaUNa0QvGK1ijRlG3dTZDR
+	BeG3QcMGunpgz0zkBOuZ7cXSVqGhcRql18GvisRWoyiaFEjH4+qAiEocpnwrbPWsHWv+snSlos4
+	rXi73/Hv9l4xk5tXuqqWJxGLujlY3gXVDpC/9RTvbLXhoKwnB1tWwCpQ=
+X-Google-Smtp-Source: AGHT+IGONa3WrAbCBs+aXEuwguWbD84J1vU/jPAEW3IeTBy5fJyVH1dHuEQCe9ofULEBI7Wfi/BzguJoDjtGlw0wXDHBxKdjnSZu
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207121638.GA7356@wind.enjellic.com>
+X-Received: by 2002:a92:c544:0:b0:3d0:47e3:40bb with SMTP id
+ e9e14a558f8ab-3d13dcfd0bdmr45240225ab.4.1738988844299; Fri, 07 Feb 2025
+ 20:27:24 -0800 (PST)
+Date: Fri, 07 Feb 2025 20:27:24 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a6dd2c.050a0220.110943.0008.GAE@google.com>
+Subject: [syzbot] [f2fs?] kernel BUG in folio_end_read
+From: syzbot <syzbot+92895fc54ccb69ca6fa9@syzkaller.appspotmail.com>
+To: chao@kernel.org, jaegeuk@kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Feb 07, 2025 at 06:16:38AM -0600, Dr. Greg wrote:
-> 
-> Not sure what the fix is, from a project management perspective the
-> technology industry has never faced a challenge like this.  The fork
-> model, which was the classic protection in open-source, doesn't work
-> at this scale.
+Hello,
 
-Maybe not quite a fork, but I wonder if the Rust project did something similar
-to what PREEMPT_RT did. That was to keep an out of tree patch. The full patch
-was just merged last September after being out of tree for a good 20 years.
+syzbot found the following issue on:
 
-In the beginning there was a few things in that patch that Christoph was
-against, but over time he became accepting of it.
+HEAD commit:    0de63bb7d919 Merge tag 'pull-fix' of git://git.kernel.org/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1699f5f8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1909f2f0d8e641ce
+dashboard link: https://syzkaller.appspot.com/bug?extid=92895fc54ccb69ca6fa9
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Yes, being out of tree is very difficult because you have to constantly rebase
-(we actually found quilt being a better tool than git in this case!). But it
-also gives you full flexibility to try new approaches. Just because something
-is out of tree doesn't mean it can't be published and used. Red Hat and SUSE,
-as well as many others shipped PREEMPT_RT while it was out of tree.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Note, even though PREEMPT_RT started in 2004 and wasn't fully merged until
-2024, it slowly did creep in bit by bit. For example, here's a few things that
-came from the RT patch, and each was rewritten at least 3 times to become
-acceptable by the upstream maintainers:
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-0de63bb7.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1142009a30a7/vmlinux-0de63bb7.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/5d9e46a8998d/bzImage-0de63bb7.xz
 
-  - NOHZ
-  - High res timers
-  - threaded interrupts
-  - mutex code (yes, before RT everything used a semaphore)
-  - lockdep
-  - ftrace
-  - generic interrupt code
-  - generic timer code
-  - priority inheritance
-  - SCHED_DEADLINE
-  - RT push/pull scheduling
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+92895fc54ccb69ca6fa9@syzkaller.appspotmail.com
 
-and more.
+page: refcount:2 mapcount:0 mapping:ffff8880455a0220 index:0x3807 pfn:0x5806b
+memcg:ffff888036be0000
+aops:f2fs_meta_aops ino:2
+flags: 0x4fff400000000a9(locked|waiters|uptodate|lru|node=1|zone=1|lastcpupid=0x7ff)
+raw: 04fff400000000a9 ffffea0001184188 ffff88804368b240 ffff8880455a0220
+raw: 0000000000003807 0000000000000000 00000002ffffffff ffff888036be0000
+page dumped because: VM_BUG_ON_FOLIO(success && folio_test_uptodate(folio))
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x40c40(GFP_NOFS|__GFP_COMP), pid 5320, tgid 5319 (syz.0.0), ts 62351716889, free_ts 62334302156
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1f4/0x240 mm/page_alloc.c:1551
+ prep_new_page mm/page_alloc.c:1559 [inline]
+ get_page_from_freelist+0x365c/0x37a0 mm/page_alloc.c:3477
+ __alloc_frozen_pages_noprof+0x292/0x710 mm/page_alloc.c:4739
+ alloc_pages_mpol+0x311/0x660 mm/mempolicy.c:2270
+ alloc_frozen_pages_noprof mm/mempolicy.c:2341 [inline]
+ alloc_pages_noprof+0x121/0x190 mm/mempolicy.c:2361
+ folio_alloc_noprof+0x1e/0x30 mm/mempolicy.c:2371
+ filemap_alloc_folio_noprof+0xe1/0x540 mm/filemap.c:1019
+ __filemap_get_folio+0x438/0xae0 mm/filemap.c:1970
+ pagecache_get_page+0x2c/0x130 mm/folio-compat.c:87
+ f2fs_pagecache_get_page fs/f2fs/f2fs.h:2804 [inline]
+ ra_data_block+0x674/0xb40 fs/f2fs/gc.c:1263
+ gc_data_segment fs/f2fs/gc.c:1627 [inline]
+ do_garbage_collect+0x3b55/0x80e0 fs/f2fs/gc.c:1825
+ f2fs_gc+0xf3a/0x2f60 fs/f2fs/gc.c:1929
+ f2fs_balance_fs+0x5f1/0x810 fs/f2fs/segment.c:456
+ f2fs_write_single_data_page+0x12ed/0x1bd0 fs/f2fs/data.c:2896
+ f2fs_write_cache_pages fs/f2fs/data.c:3154 [inline]
+ __f2fs_write_data_pages fs/f2fs/data.c:3309 [inline]
+ f2fs_write_data_pages+0x1e03/0x3670 fs/f2fs/data.c:3336
+ do_writepages+0x35f/0x880 mm/page-writeback.c:2687
+page last free pid 1037 tgid 1037 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1127 [inline]
+ free_frozen_pages+0xe0d/0x10e0 mm/page_alloc.c:2660
+ fscrypt_finalize_bounce_page include/linux/fscrypt.h:1119 [inline]
+ f2fs_write_end_io+0x3cd/0x9a0 fs/f2fs/data.c:335
+ blk_update_request+0x5e5/0x1160 block/blk-mq.c:983
+ blk_mq_end_request+0x3e/0x70 block/blk-mq.c:1145
+ loop_handle_cmd drivers/block/loop.c:1946 [inline]
+ loop_process_work+0x1bc8/0x21c0 drivers/block/loop.c:1964
+ process_one_work kernel/workqueue.c:3236 [inline]
+ process_scheduled_works+0xa66/0x1840 kernel/workqueue.c:3317
+ worker_thread+0x870/0xd30 kernel/workqueue.c:3398
+ kthread+0x7a9/0x920 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+------------[ cut here ]------------
+kernel BUG at mm/filemap.c:1526!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 27 Comm: kworker/u4:2 Not tainted 6.14.0-rc1-syzkaller-00020-g0de63bb7d919 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: loop0 loop_workfn
+RIP: 0010:folio_end_read+0x239/0x240 mm/filemap.c:1526
+Code: 4f c7 ff 4c 89 ef 48 c7 c6 e0 d3 13 8c e8 6f 64 11 00 90 0f 0b e8 c7 4f c7 ff 4c 89 ef 48 c7 c6 20 cc 13 8c e8 58 64 11 00 90 <0f> 0b 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc900004e73e8 EFLAGS: 00010246
+RAX: df44434cf2d67900 RBX: 0000000000000008 RCX: 0000000000000001
+RDX: dffffc0000000000 RSI: ffffffff8c0aa680 RDI: 0000000000000001
+RBP: 0000000000000000 R08: ffffffff942f9947 R09: 1ffffffff285f328
+R10: dffffc0000000000 R11: fffffbfff285f329 R12: ffffea0001601ac8
+R13: ffffea0001601ac0 R14: 1ffffd40002c0359 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f716e9b0fe0 CR3: 0000000011832000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ f2fs_finish_read_bio+0x3bb/0x850 fs/f2fs/data.c:154
+ blk_update_request+0x5e5/0x1160 block/blk-mq.c:983
+ blk_mq_end_request+0x3e/0x70 block/blk-mq.c:1145
+ loop_handle_cmd drivers/block/loop.c:1946 [inline]
+ loop_process_work+0x1bc8/0x21c0 drivers/block/loop.c:1964
+ process_one_work kernel/workqueue.c:3236 [inline]
+ process_scheduled_works+0xa66/0x1840 kernel/workqueue.c:3317
+ worker_thread+0x870/0xd30 kernel/workqueue.c:3398
+ kthread+0x7a9/0x920 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:folio_end_read+0x239/0x240 mm/filemap.c:1526
+Code: 4f c7 ff 4c 89 ef 48 c7 c6 e0 d3 13 8c e8 6f 64 11 00 90 0f 0b e8 c7 4f c7 ff 4c 89 ef 48 c7 c6 20 cc 13 8c e8 58 64 11 00 90 <0f> 0b 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc900004e73e8 EFLAGS: 00010246
+RAX: df44434cf2d67900 RBX: 0000000000000008 RCX: 0000000000000001
+RDX: dffffc0000000000 RSI: ffffffff8c0aa680 RDI: 0000000000000001
+RBP: 0000000000000000 R08: ffffffff942f9947 R09: 1ffffffff285f328
+R10: dffffc0000000000 R11: fffffbfff285f329 R12: ffffea0001601ac8
+R13: ffffea0001601ac0 R14: 1ffffd40002c0359 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff88801fc00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f716e9b0fe0 CR3: 0000000043542000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-Point being, if you are having issues with getting code upstream, don't be
-afraid to make it out of tree. Just make it easy for others to use. And slowly
-move your code into mainline. This is also a way to prove beyond a doubt how
-useful your code is. The number of users is a technical argument. Linus does
-pull things in when there is a large user base, even over other maintainer's
-objections (see sched_ext).
 
-It worked for us, it can work for you ;-)
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
--- Steve
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
