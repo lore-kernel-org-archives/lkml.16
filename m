@@ -1,194 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DEF1B3929;
-	Sat,  8 Feb 2025 11:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CEA19F11B;
+	Sat,  8 Feb 2025 11:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739013898; cv=none; b=SC/QHARKlxqmw6usMrEQpgiI/0gw3ASGQn7F8+4W1dtldiWF1W1lQb1MMKLTpG3Ffx6gaTOaUL/Bg5+q8fV3bUP0jGrmcN0BNEQLiuOuF6Y3CIqRgNxC6YhI3TM6tuxsiGUH1qj5b6riTOYcDMkOJATcLB/evMf/RMAO0fyFEJc=
+	t=1739014035; cv=none; b=Tow7LlFH0cLB92q1JDytgbUQXTXvjqPAjhTjIoc1yIu+T8fAeQEZHL058o1kbnbJxXQqI7v1JwKb0V3VJ+l1UaijTPpnyJhy6iQ1Zk109ipCI4cCqYy4lx4ofNMIWdgqpKyk3Fxa9kVof4PI3DX4qHguD+vvT04lRCgDYGCyWqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739013898; c=relaxed/simple;
-	bh=v0kY2q5RP2GhNxjivPWegKlE87r10bfakOnRz0kN0k8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G8+YBUCoGLk8xfLvQHfd5fY1Q1Tghyk+Z3UcU8VrSAEOiS0DD797oOmAXEeicbrnuV80yw13Vtp/98NunetmfrgVLuINSSAO0tfVNGghmuC8YtoKGXHIZzgtV0CRpjvNJUE1kLTkV8uv+K4XX7HNFpSBJA2tr8OV6hhWNPjsgDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDq71QIB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739014035; c=relaxed/simple;
+	bh=qnz5zuMzIZq2h2eLlk26+f6hdHlDE7lsfYLFciY9oWw=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=ZCPsHbfSIVSeodTNHSUtkUblO3Z3hiqJfYR4FW+701pzAApcUwknGK7DrpEOPlIVDaUZamsVMq+r9tEysjOG1jOHmuQipLRJnI4jdOo+iU/W+QEcTPjq38GPV1jQAXpJ18iC8jBVil8gHQcUjlPlJyuFIxUpqGuH+OHuFS7MysU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=asvi8iCG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NFxMLVXw; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDq71QIB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8D2CC4CED6;
-	Sat,  8 Feb 2025 11:24:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739013897;
-	bh=v0kY2q5RP2GhNxjivPWegKlE87r10bfakOnRz0kN0k8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qDq71QIB9p5nG6bJipYxnoLHZGDJSFhFhyWjQXe+dGoo5hB85aQvZzlPtWG/lggI9
-	 Ig2YduyYbxFcLbd4TJDU2wRVO792mw2sFE+XLgKXuf6XzMg6f+OnxDH0Ez5sC+aDIB
-	 pB+iD7xBiFfyusFKsvF9qqqqhYFcBnC8kukedvPd4N+sAibiT7b64TnJUwczW22Tyl
-	 ail48RAJ41N2Sx4fQT9dPc6jRk76zhrMIX8xMLsFYRejmeNjoQ0DzHNaUDEwEoGNc0
-	 Q9gZFp4z0fgusja7krrBHb8lP/HdVQo21T93NcJGxJJ4a5AgPISIWbMQdz+cZdnTKA
-	 nRTaYsNocszbQ==
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5f2e31139d9so1503796eaf.0;
-        Sat, 08 Feb 2025 03:24:57 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUwwYBCyHN/OxyPUU4rBl5ws/w+t8cTyGjaA2oOqcTXgSH+UMgGfmRbdFKYUYoNlj6rgG+Daz0o2bO5b9Q=@vger.kernel.org, AJvYcCVZ5SpoiWHonY1WgnLXWYUc0uZjfiykCmn41hbce8d57GWyBUqmjeot7FMdRwMayysXBnQr5kEiO+k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHaT3of5POfNPM2Oy6fkN25Kb8OUa0QxAbCi5FRBMAgFs2F3Bs
-	vnay31P2biA45ZNmbVjEo+01MSxi0RLtxGDYwXGZ//LUfMV1ziwiQ65VVDLXBNifwXL030XGJDP
-	OQCHMS7ALjp0wtAKde+QPPe+hpKQ=
-X-Google-Smtp-Source: AGHT+IGUtyAYBfOlhtXoZxL94yJwaOt4l//XmIev+fbw3I9vvksmNXaU42SX8RaOvXevlk06GW7ZOujF+PpnWBqCdQI=
-X-Received: by 2002:a05:6820:827:b0:5fa:73ed:de8 with SMTP id
- 006d021491bc7-5fc5e71b079mr4214415eaf.6.1739013897093; Sat, 08 Feb 2025
- 03:24:57 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="asvi8iCG";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NFxMLVXw"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 0849611401EF;
+	Sat,  8 Feb 2025 06:27:12 -0500 (EST)
+Received: from phl-imap-10 ([10.202.2.85])
+  by phl-compute-02.internal (MEProxy); Sat, 08 Feb 2025 06:27:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1739014032;
+	 x=1739100432; bh=qnz5zuMzIZq2h2eLlk26+f6hdHlDE7lsfYLFciY9oWw=; b=
+	asvi8iCGOQuMG5YU8COXvDZHh80Jb0VM3/BqgqvLUIpqh6QNePtF5aQxFvmcVqEw
+	e4mNeXC3lbR5dasuBJ1/8Mg6al23JyscdkPSAX0day1vGs4CAAGve+5IckW4+GjD
+	x9NUkVwq3hL5no/VlS6r5NlJ9oXL3g3YDY20bPCH6Uc3vQyqqid5nFjceIhOalya
+	Y0seZ1oY8k9SvuLS7+phu0k+35vAjYounnvwYO9ZdJIg0yrYDizukOWadAnvtz2G
+	yBW3unbh9jGtPi9sZFi9W0WMiBJVPFgCj7klv/0Ju6ZInWIxILjcm0GHGw429ogq
+	shjSJ/wBOPjSFBfqk1jDbQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739014032; x=
+	1739100432; bh=qnz5zuMzIZq2h2eLlk26+f6hdHlDE7lsfYLFciY9oWw=; b=N
+	FxMLVXwAXKjzTsxUB+hmxlErJeNmX/ElkhQp4VMiHS44XXEqVGrPtZ1VpuVEmQBt
+	E5p/398sdppXkMTXvKAX9wv7jG0qXSsEqxsaU+TORUI73JqhDgKiYeeiZZonh2Ls
+	wEfco6x+bK1OjM7r1i50cACfCAo1YCXiCFj5uwvGm/WVsYy4foEXZj3GfPVnm2+a
+	A2nLGccJQiSgtUTuy7+YSd9NHzgYVgE5xV1AIv3TF2L8kuClxaJFhQQ2qOOAA30D
+	OL39WV8mZ1uGlgoS7lcIqKVshKtbCeT36/uJOqTj4knLFrZXnDioRL3em+qLja9j
+	mfaMfMoNUbHXcTE1IKNBQ==
+X-ME-Sender: <xms:jz-nZ36O-9zKLnRpoOcUtGoivmJfu26AIGjYZGGy5c_WnaOV4O8i2w>
+    <xme:jz-nZ877PgFiFWkPTJO5xIiI2o_JNE5PvnqI0aWACPiuyxaiW8jOjj07CD9YkansF
+    sMKUfTA5DNC9PGJ_E4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvddtjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
+    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfeuvdehteeghedt
+    hedtveehuddvjeejgffgieejvdegkefhfeelheekhedvffehnecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhv
+    ohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphhouh
+    htpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdp
+    rhgtphhtthhopehkuhhurhhtsgesghhmrghilhdrtghomhdprhgtphhtthhopehilhhpoh
+    drjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohephhgu
+    vghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnh
+    gvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehplhgrthhfohhrmhdq
+    ughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:jz-nZ-eiVNvAYKGvFYT9RQLYs1EjkDI9sQy2Drj9GWIhU0PPea6v-A>
+    <xmx:jz-nZ4JSPDFszYuQyd8UKHnPATH9Ezfj0uhR1fMUskggHCpB226w2A>
+    <xmx:jz-nZ7Kx6zD9DhU5zX8puzx3pblIukLZYHQnhmyZ_MTQ00eV0yO5xA>
+    <xmx:jz-nZxwx_0I3vYzYkesTcSrxHkLYHhQpMRYKXqxiOWd0rtGOkmVLNQ>
+    <xmx:jz-nZxjcnOWFnY-6mKO7QrWkWiDY9hY_SMnK0LcFUCguVjVexaaM7GGo>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 949B93C0066; Sat,  8 Feb 2025 06:27:11 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <12630185.O9o76ZdvQC@rjwysocki.net> <009d01db79b9$aecd1c70$0c675550$@telus.net>
-In-Reply-To: <009d01db79b9$aecd1c70$0c675550$@telus.net>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Sat, 8 Feb 2025 12:24:45 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0jELEw3yAoRFLPgEcfBRoUyd6tKSNHO2Q1O6_CoeR1Bng@mail.gmail.com>
-X-Gm-Features: AWEUYZm-gRCi0A1sn3TIJUROeDBBRYieqfiS8FTKYRJKUHGfsYCZFVE-q2W_HYs
-Message-ID: <CAJZ5v0jELEw3yAoRFLPgEcfBRoUyd6tKSNHO2Q1O6_CoeR1Bng@mail.gmail.com>
-Subject: Re: [RFT][PATCH v1] cpuidle: teo: Avoid selecting deepest idle state over-eagerly
-To: Doug Smythies <dsmythies@telus.net>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Christian Loehle <christian.loehle@arm.com>, 
-	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, 
-	Aboorva Devarajan <aboorvad@linux.ibm.com>, Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Sat, 08 Feb 2025 11:26:51 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Kurt Borja" <kuurtb@gmail.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Limonciello, Mario" <mario.limonciello@amd.com>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Message-Id: <aee5fbe6-4309-450f-bea3-c0842172b043@app.fastmail.com>
+In-Reply-To: <D7MSPR52PB4E.N0X1UFVQOODZ@gmail.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20250208091438.5972-1-mpearson-lenovo@squebb.ca>
+ <D7MSPR52PB4E.N0X1UFVQOODZ@gmail.com>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix registration of tpacpi platform
+ driver
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Hi Doug,
+Thanks Kurt,
 
-On Sat, Feb 8, 2025 at 12:40=E2=80=AFAM Doug Smythies <dsmythies@telus.net>=
- wrote:
+On Fri, Feb 7, 2025, at 11:56 PM, Kurt Borja wrote:
+> Hi Mark,
 >
-> Hi Rafael,
+> On Sat Feb 8, 2025 at 4:14 AM -05, Mark Pearson wrote:
+>> When reviewing and testing the recent platform profile changes I had
+>> missed that they prevent the tpacpi platform driver from registering.
+>> This error is seen in the kernel logs, and the various tpacpi entries
+>> are not created:
+>> [ 7550.642171] platform thinkpad_acpi: Resources present before probing
 >
-> On 2025.02.04 12:58 Rafael J. Wysocki wrote:
-> >
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > It has been observed that the recent teo governor update which conclude=
-d
-> > with commit 16c8d7586c19 ("cpuidle: teo: Skip sleep length computation
-> > for low latency constraints") caused the max-jOPS score of the SPECjbb
-> > 2015 benchmark [1] on Intel Granite Rapids to decrease by around 1.4%.
-> > While it may be argued that this is not a significant increase, the
-> > previous score can be restored by tweaking the inequality used by teo
-> > to decide whether or not to preselect the deepest enabled idle state.
-> > That change also causes the critical-jOPS score of SPECjbb to increase
-> > by around 2%.
-> >
-> > Namely, the likelihood of selecting the deepest enabled idle state in
-> > teo on the platform in question has increased after commit 13ed5c4a6d9c
-> > ("cpuidle: teo: Skip getting the sleep length if wakeups are very
-> > frequent") because some timer wakeups were previously counted as non-
-> > timer ones and they were effectively added to the left-hand side of the
-> > inequality deciding whether or not to preselect the deepest idle state.
-> >
-> > Many of them are now (accurately) counted as timer wakeups, so the left=
--
-> > hand side of that inequality is now effectively smaller in some cases,
-> > especially when timer wakeups often occur in the range below the target
-> > residency of the deepest enabled idle state and idle states with target
-> > residencies below CPUIDLE_FLAG_POLLING are often selected, but the
-> > majority of recent idle intervals are still above that value most of
-> > the time.  As a result, the deepest enabled idle state may be selected
-> > more often than it used to be selected in some cases.
-> >
-> > To counter that effect, add the sum of the hits metric for all of the
-> > idle states below the candidate one (which is the deepest enabled idle
-> > state at that point) to the left-hand side of the inequality mentioned
-> > above.  This will cause it to be more balanced because, in principle,
-> > putting both timer and non-timer wakeups on both sides of it is more
-> > consistent than only taking into account the timer wakeups in the range
-> > above the target residency of the deepest enabled idle state.
-> >
-> > Link: https://www.spec.org/jbb2015/
-> > Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  drivers/cpuidle/governors/teo.c |    6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > --- a/drivers/cpuidle/governors/teo.c
-> > +++ b/drivers/cpuidle/governors/teo.c
-> > @@ -349,13 +349,13 @@
-> >         }
-> >
-> >         /*
-> > -        * If the sum of the intercepts metric for all of the idle stat=
-es
-> > -        * shallower than the current candidate one (idx) is greater th=
-an the
-> > +        * If the sum of the intercepts and hits metric for all of the =
-idle
-> > +        * states below the current candidate one (idx) is greater than=
- the
-> >          * sum of the intercepts and hits metrics for the candidate sta=
-te and
-> >          * all of the deeper states, a shallower idle state is likely t=
-o be a
-> >          * better choice.
-> >          */
-> > -       if (2 * idx_intercept_sum > cpu_data->total - idx_hit_sum) {
-> > +       if (2 * (idx_intercept_sum + idx_hit_sum) > cpu_data->total) {
-> >                 int first_suitable_idx =3D idx;
-> >
-> >                 /*
+> This happens because in thinkpad_acpi_module_init(), ibm_init() is
+> called before platform_driver_register(&tpacpi_pdriver), therefore
+> devm_platform_profile_register() is called before tpacpi_pdev probes.
 >
-> I have only just started testing the recent idle governor changes,
-> and have not gotten very far yet.
+> As you can verify in [1], in the probing sequence, the driver core
+> verifies the devres list is empty, which in this case is not because of
+> the devm_ call.
 >
-> There is a significant increase in processor package power during idle
-> with this patch, about 5 times increase (400%).
-
-Thanks for this data point!
-
-The restoration of the 1.4% benchmark score is not worth this cost IMV.
-
-> My processor: Intel(R) Core(TM) i5-10600K CPU @ 4.10GHz
-> Distro: Ubuntu 24.04.1, server, no desktop GUI.
-> CPU frequency scaling driver: intel_pstate
-> HWP: disabled.
-> CPU frequency scaling governor: performance
+>>
+>> I believe this is because the platform_profile driver registers the
+>> device as part of it's initialisation in devm_platform_profile_register,
+>> and the thinkpad_acpi driver later fails as the resource is already used.
+>>
+>> Modified thinkpad_acpi so that it has a separate platform driver for the
+>> profile handling, leaving the existing tpacpi_pdev to register
+>> successfully.
 >
-> Idle states:
-> $ grep . /sys/devices/system/cpu/cpu0/cpuidle/state*/name
-> /sys/devices/system/cpu/cpu0/cpuidle/state0/name:POLL
-> /sys/devices/system/cpu/cpu0/cpuidle/state1/name:C1_ACPI
-> /sys/devices/system/cpu/cpu0/cpuidle/state2/name:C2_ACPI
-> /sys/devices/system/cpu/cpu0/cpuidle/state3/name:C3_ACPI
+> While this works, it does not address the problem directly. Also it is
+> discouraged to create "fake" platform devices [2].
 >
-> Test durations were >=3D 45 minutes each.
+> May I suggest moving tpacpi_pdriver registration before ibm_init()
+> instead, so ibm_init_struct's .init callbacks can use devres?
 >
-> Kernel 6.14-rc1: Includes cpuidle: teo: Cleanups and very frequent wakeup=
-s handling update
-> Average Idle Power: teo governor: 2.199 watts (+25.51%)
-> Average Idle power: menu governor: 1.873 watts (+6.91%)
 
-menu hasn't changed in 6.14-rc1, so this would be variation between
-runs I suppose.
+Yep - you're right. Moving it before the init does also fix it.
 
-> Kernel 6.14-rc1-p: Added this patch for teo and "cpuidle: menu: Avoid dis=
-carding useful information when processing recent idle intervals" for menu
-> Average Idle Power: teo governor: 9.401 watts (+436.6%)
-> Only 69.61% idle is in the deepest idle state. More typically it would be=
- 98% to 99%.
+I can't see any issues with this approach, but I'll test it out a bit more carefully and do an updated version with this approach.
 
-Ah, not good.
+Thanks for the pointer.
 
-OK, this clearly doesn't go in the right direction.
-
-> 28.6531% idle time is in state 1. More typically it would be 0.03%
-> Average Idle Power: menu governor: 1.820 watts (+3.9%)
->
-> Kernel 6.13: before "cpuidle: teo: Cleanups and very frequent wakeups han=
-dling update"
-> Average Idle Power: teo governor: 1.752 watts (reference: 0.0%)
-> Average Idle power: menu governor: 1.909 watts (+9.0%)
-
-Thanks, I'm just going to drop this patch then.
-
-If you don't mind, I'll have a couple more teo updates for testing.
+Mark
