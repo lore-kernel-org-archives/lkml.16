@@ -1,135 +1,169 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C388243369;
-	Sat,  8 Feb 2025 23:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2EE2243385;
+	Sat,  8 Feb 2025 23:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739056332; cv=none; b=QMnYntRY5yHJmoc0cwLqgBFBm5LGoSAxWTwFaKznvlNKYbleVerqB/b0R+5/ULJEpo71INp+0aDFfRKrCKYJUyZnRX3lIaRKm+AD/R/YlFOGXYuH4xBRscZnw9QPi3gOsi81KQjzGklEahl80jihSkr4y6pBCXdeip3yo0mnCFE=
+	t=1739056704; cv=none; b=utBR0d4HV+B8fjw1akd8gXu0JWY5e2X+if1e6ldK+ibQjLAiHpvL5L3Updx4O/AI/pZtFLtP/3tdL0G53LwR0qpH6/ZvBBI3BrYGdmnNVQ54E3Jo4fpgFFkOiRB+gEKT1bd0KA/KYAM6VjKZJSlD6Pwi2yEFRowUn40Rc5o1TKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739056332; c=relaxed/simple;
-	bh=1wjV827th3jTy0F70iCqKUZvaUREOcmXM+A5mwYyjWQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FhcaTZVNmxYunSFr65Qoy+GYjfTvx2rYXtmBwJGp2R6RE0y+V5JBhpGeGpkaRqR9Gu/lmnG4E9U/yXlLsSetygQVs6JlOdMQ+YnYn+D5aw36afWncz1L1lc95hVbbn8Ft8wrhBy/4f1xG0s6m7fiJiS/+wGawyfc43M8OM5xAcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lF1Cyjpy; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739056704; c=relaxed/simple;
+	bh=k2KSyPkGepwheBwVWUi0wTo4TnPkA6wfYpQHzJErXkk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y7Rb0oMesySnE37rD3VSiFiJAJXQUuupBveN8ydtASz3ro24XARbwKh0G5W9cC9ndM73a0vbyhZkCoNo2okVoCA7yQQlx7LSTDUCo0mYiyMfgVFrApRHPk/FOhCv4bCqXPRFxhFpmcBxMzkjt2bMSl21T8UuB8B9DCGwV0Wj05w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=OIoK96+j; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lF1Cyjpy"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2f9b8ef4261so774509a91.1;
-        Sat, 08 Feb 2025 15:12:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739056330; x=1739661130; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CRpcGZiIRyK2SU8MzkDbiFYnsv3XNCAG+BR41Mw63Jo=;
-        b=lF1Cyjpywe5xxC9cui8eTz9GTldcepUvNpu4BsC52Q+CU8YFo9/Z9u30xYh0OzOqfK
-         a7VwemEL3lEyZi8oeP6HpEbmpiIRzEg5YnOaM2hP9QRAJpEhBmUYkJG9vofSfJa3S5YL
-         +Q8yIqmIFSmSBGn7vZIrMQM60/AsBgw751j1uxGMcs0gFtFh5HdYcyyds9kk85FJ6XDh
-         klPffVgW/rg4GN9ErcgfNlAO0Ahbd3vlOX5smX8Fh2BOkC1LOSOGmhtctZSfuloFFSlQ
-         sCFJCM7O3ou1xNekJ9t/x1+g1zRPtmHJlcWW4DYndxb1x+SbxFXH4LKX3mkfDWLAg2Xc
-         9ydg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739056330; x=1739661130;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CRpcGZiIRyK2SU8MzkDbiFYnsv3XNCAG+BR41Mw63Jo=;
-        b=VYP9RdMeOAkbT7Eh0j52w7ZkcUXuIEvACfcLJxxNIGF/ZKPW6RNNMEJJorGNRoW+S7
-         +xIIhL5xAWxiAAf/xgX+RlT9KXeomm1Zt39VX1sWZ/GqR5YCwyoXxCOXHQIB2lTVyu8B
-         akbvc8GHpJ0WSyfvAS5EMoroOw1EYqukQrYe7BtuLAUPOmSdkBGL0KBckHtVlZw/EnXJ
-         RKb+36L5dNDS7aMnK1EV91fzfjwhO1DvczbpatNCxxbGvRSxuyQ64Sob4/opL0UCE4F3
-         QVC811SpgdiZWHJmVOtGY1qmC/Yk9EE5izrPvh1P7y3ysdig5itovPvBldl2YqjkzDDU
-         eMHg==
-X-Forwarded-Encrypted: i=1; AJvYcCVUXcTKiHtnHFQJwcsNiFgZe/M8RRPmzAn79UENz2pwUPMlDD96Gxi1GDIaHkCL/eYvEIPtNlbvsGfS6Tw=@vger.kernel.org, AJvYcCVWK6mTvGfjHBXpiAw0jGv9UeUBPEhoe2vazLxH2GnWAI8NlTLtzALkiW2FlssxHSP8Z+9AbgwFb/2jQL8WD0Y=@vger.kernel.org, AJvYcCWX+VFlVib6vUqH6N9jXPXS2hUx/RavunmBf0Fz8ADPWGIXa+FafKHxD5WirLJF9narzWUcMdbgAuZx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5TrE8SQ9uicsBHrz6ZfqTDgwZOZeYZWe9V6eGx/LqKWjW6Kxj
-	2H+ng3rOn04SXYIqHVF32usqQz1koY5U9LFul52AOrU5jHAh34OTTQwBKCFrP5wpbiJzGobBq0E
-	TIiA4zdUqtQv2eaGr4XxYoYlNA7026ayz
-X-Gm-Gg: ASbGncvoMnZlp3kKeFsQ49O3bT/zgiwdaaRcMEVykHbXhQ8Xr1DFd1wfKM0PZFv04AM
-	oblzuJ1H3f1zq40VOQ+xU3soauSxy+dKJZnW7fu1xMi5p7Vrjnbzjm1vHSalyPlZ3pgHX99ZH
-X-Google-Smtp-Source: AGHT+IFOwHUa+EQds2ERkGqShn+A3uE1HTLyFgPcIBTd/8QwH661oiDAJjtgLLqCW9pSlXqx7CBtKgGhp/pmLLZhg+E=
-X-Received: by 2002:a17:90b:3e8a:b0:2ee:e518:c1d4 with SMTP id
- 98e67ed59e1d1-2fa23f5df75mr5253683a91.1.1739056330467; Sat, 08 Feb 2025
- 15:12:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="OIoK96+j"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=l+662iGsoypQZ+YZiaQg3l5f43ZUU/yKVAnTerPQ3yA=; b=OIoK96+jcxaIdkX9OzxRq4aOQN
+	JX9Nuzb5SykA/kELSkxxraCp8JhGaVHcIAIukjZjCW8QIpNjpysCCIFkKFOO0n/sNRdxshojacJ3h
+	NrkqZ9u0+HePQV7iW3v/hiWfbyTyWNKT4cNkpePkjmE8zOVpInwTUrQy6CQKAcD81xxZtYXDcW+7A
+	g9Rjuob3HGgr+2OZGF8v8rK430HrwnJkpysnX0sfFDscslYqoJwNvxrkWxzPR+IFYIyFVxbcNg6zK
+	fjPaVl+y0RMtFOaOAv6h4leDbaipZS9TOseiUomBaRPRq/0IODBSRbhDzpg9jfLjlQ1BBs9GVdltC
+	A/EQz8CA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tgu5b-00000007uKr-0hlk;
+	Sat, 08 Feb 2025 23:18:19 +0000
+Date: Sat, 8 Feb 2025 23:18:19 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 08/19] VFS: introduce lookup_and_lock() and friends
+Message-ID: <20250208231819.GR1977892@ZenIV>
+References: <20250206054504.2950516-1-neilb@suse.de>
+ <20250206054504.2950516-9-neilb@suse.de>
+ <20250207202235.GH1977892@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250202-aligned-alloc-v2-1-5af0b5fdd46f@gmail.com>
- <CANiq72nH3N9UMu2hsPG7WfYCZQwy9M_4q_rQHJnJMScQ3D9-Jg@mail.gmail.com>
- <Z6T5sOWXxmUsflW7@pollux> <CANiq72n7jx5ve9UL3oDD08=PjY55QHoMY8fyfsW9RNEvjH_b4Q@mail.gmail.com>
- <Z6UGNbowcvqTN0-T@pollux> <CANiq72=BGFp95jyyF6-uQWT8K8dS5qBpBD55duUYpF4hJDbFxw@mail.gmail.com>
- <kfkku4rjsktgkufkuehliojv3izxdutc55inmv3yvenu33zr7e@lluedzjnqnki>
-In-Reply-To: <kfkku4rjsktgkufkuehliojv3izxdutc55inmv3yvenu33zr7e@lluedzjnqnki>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 9 Feb 2025 00:11:58 +0100
-X-Gm-Features: AWEUYZnnbZ4EzpWLmE1Sqj0yqRAmogpbbReGjnIUekwxJBESoKEfvpmx3MJBQyM
-Message-ID: <CANiq72nky1vpP6qNf4rdSNnr3i7oAdaB4SRQgSG5QaUCCiMs1A@mail.gmail.com>
-Subject: Re: [PATCH v2] rust: alloc: satisfy `aligned_alloc` requirements
-To: Alejandro Colomar <alx@kernel.org>
-Cc: DJ Delorie <dj@redhat.com>, Eric Blake <eblake@redhat.com>, 
-	Will Newton <will.newton@linaro.org>, Paul Eggert <eggert@cs.ucla.edu>, linux-man@vger.kernel.org, 
-	Danilo Krummrich <dakr@kernel.org>, Tamir Duberstein <tamird@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207202235.GH1977892@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Sat, Feb 8, 2025 at 8:18=E2=80=AFPM Alejandro Colomar <alx@kernel.org> w=
-rote:
->
-> -  aligned_alloc()
->
->         It seems to be like memalign(), with *some* input validation.
->         It makes sure that the input is a power of two, or it fails.
->         However, it doesn't check that the input is multiple of
->         _Alignof(void*).  That requirement is implementation-defined;
->         neither POSIX nor ISO C impose any specific requirements, so the
->         requirements that the input is a power of two are imposed by
->         glibc.  The documentation matches the experimental behavior.
+On Fri, Feb 07, 2025 at 08:22:35PM +0000, Al Viro wrote:
+> On Thu, Feb 06, 2025 at 04:42:45PM +1100, NeilBrown wrote:
+> > lookup_and_lock() combines locking the directory and performing a lookup
+> > prior to a change to the directory.
+> > Abstracting this prepares for changing the locking requirements.
+> > 
+> > done_lookup_and_lock() provides the inverse of putting the dentry and
+> > unlocking.
+> > 
+> > For "silly_rename" we will need to lookup_and_lock() in a directory that
+> > is already locked.  For this purpose we add LOOKUP_PARENT_LOCKED.
+> 
+> Ewww...  I do realize that such things might appear in intermediate
+> stages of locking massage, but they'd better be _GONE_ by the end of it.
+> Conditional locking of that sort is really asking for trouble.
+> 
+> If nothing else, better split the function in two variants and document
+> the differences; that kind of stuff really does not belong in arguments.
+> If you need it to exist through the series, that is - if not, you should
+> just leave lookup_one_qstr() for the "locked" case from the very beginning.
 
-Thanks Alejandro.
+The same, BTW, applies to more than LOOKUP_PARENT_LOCKED part.
 
-I am not sure I agree -- I am confused about three points:
+One general observation: if the locking behaviour of a function depends
+upon the flags passed to it, it's going to cause massive headache afterwards.
 
-  - I am not sure the documentation is matching the experimental
-behavior. For instance, the Linux man pages say:
+If you need to bother with data flow analysis to tell what given call will
+do, expect trouble.
 
-      "except for the added restriction that `size` should be a
-multiple of `alignment`"
+If anything, I would rather have separate lookup_for_removal(), etc., each
+with its locking effects explicitly spelled out.  Incidentally, looking
+through that I would say that your "VFS: filename_create(): fix incorrect
+intent" is not the right solution.  If we hit that condition (no LOOKUP_DIRECTORY
+and last component ending with slash), we are going to fail anyway, the only
+question is which error to return.  Rules:
+	* if the last component lookup fails, return the error from lookup
+	* if it yields positive, return -EEXIST
+	* if it yields negative, return -ENOENT
+Correct?  So how about this:
 
-    But a call like `aligned_alloc(8, 9)` succeeds. What does "added
-restriction" mean in this context? i.e. is it supposed to fail?
-
-  - I am not sure if ISO C intends to require the power of two or not.
-One of the C23 drafts says `aligned_alloc()` is supposed to fail if
-
-      "the value of `alignment` is not a valid alignment supported by
-the implementation the function"
-
-    And then, elsewhere, that:
-
-      "Valid alignments include only fundamental alignments, plus an
-additional implementation-defined set of values, which can be empty.
-Every valid alignment value shall be a nonnegative integral power of
-two."
-
-    So if those are intended to be connected, then it sounds like a
-non-power-of-two is invalid and thus the function should fail.
-
-  - What Danilo mentioned about the sections, e.g. is the "ERRORS"
-section in the Linux man pages supposed to apply to all the functions
-documented in the same page?
-
-    Would it help to somehow indicate which errors apply for each function?
-
-Thanks a lot!
-
-Cheers,
-Miguel
+diff --git a/fs/namei.c b/fs/namei.c
+index 3ab9440c5b93..6189e54f767a 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -4054,13 +4054,13 @@ static struct dentry *filename_create(int dfd, struct filename *name,
+ 	struct dentry *dentry = ERR_PTR(-EEXIST);
+ 	struct qstr last;
+ 	bool want_dir = lookup_flags & LOOKUP_DIRECTORY;
+-	unsigned int reval_flag = lookup_flags & LOOKUP_REVAL;
+-	unsigned int create_flags = LOOKUP_CREATE | LOOKUP_EXCL;
+ 	int type;
+ 	int err2;
+ 	int error;
+ 
+-	error = filename_parentat(dfd, name, reval_flag, path, &last, &type);
++	lookup_flags &= LOOKUP_REVAL;
++
++	error = filename_parentat(dfd, name, lookup_flags, path, &last, &type);
+ 	if (error)
+ 		return ERR_PTR(error);
+ 
+@@ -4070,18 +4070,28 @@ static struct dentry *filename_create(int dfd, struct filename *name,
+ 	 */
+ 	if (unlikely(type != LAST_NORM))
+ 		goto out;
++	/*
++	 * mkdir foo/bar/ is OK, but for anything else a slash in the end
++	 * is always an error; the only question is which one.
++	 */
++	if (unlikely(last.name[last.len] && !want_dir)) {
++		dentry = lookup_dcache(&last, path->dentry, lookup_flags);
++		if (!dentry)
++			dentry = lookup_slow(&last, path->dentry, lookup_flags);
++		if (!IS_ERR(dentry)) {
++			error = d_is_positive(dentry) ? -EEXIST : -ENOENT;
++			dput(dentry);
++			dentry = ERR_PTR(error);
++		}
++		goto out;
++	}
+ 
+ 	/* don't fail immediately if it's r/o, at least try to report other errors */
+ 	err2 = mnt_want_write(path->mnt);
+-	/*
+-	 * Do the final lookup.  Suppress 'create' if there is a trailing
+-	 * '/', and a directory wasn't requested.
+-	 */
+-	if (last.name[last.len] && !want_dir)
+-		create_flags = 0;
++	/* do the final lookup */
+ 	inode_lock_nested(path->dentry->d_inode, I_MUTEX_PARENT);
+ 	dentry = lookup_one_qstr_excl(&last, path->dentry,
+-				      reval_flag | create_flags);
++				lookup_flags | LOOKUP_CREATE | LOOKUP_EXCL);
+ 	if (IS_ERR(dentry))
+ 		goto unlock;
+ 
+@@ -4089,16 +4099,6 @@ static struct dentry *filename_create(int dfd, struct filename *name,
+ 	if (d_is_positive(dentry))
+ 		goto fail;
+ 
+-	/*
+-	 * Special case - lookup gave negative, but... we had foo/bar/
+-	 * From the vfs_mknod() POV we just have a negative dentry -
+-	 * all is fine. Let's be bastards - you had / on the end, you've
+-	 * been asking for (non-existent) directory. -ENOENT for you.
+-	 */
+-	if (unlikely(!create_flags)) {
+-		error = -ENOENT;
+-		goto fail;
+-	}
+ 	if (unlikely(err2)) {
+ 		error = err2;
+ 		goto fail;
