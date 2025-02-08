@@ -1,100 +1,83 @@
-Received: from pv50p00im-tydg10021701.me.com (pv50p00im-tydg10021701.me.com [17.58.6.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BDD8F5B
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 14:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075CB1A9B4F
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 14:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739025974; cv=none; b=p1tolaqSodUpb90gj1AJiAJ60ZT0k1kOo1GDTYOtVAFPyzR2LwNG+11i+81zDBENGw1HR2DmFm9ioTZfS35e7L6/IMSV9v5tQG0MUNEl2/R/H/xacgWp7459JThz0r+sntGUwuqP8XcnUu/rIPO8CawKFq/r91B3b1OAvUYJc5o=
+	t=1739026230; cv=none; b=sM2XqiiGm1J5JhndwNIbFA3i5deFddjaTkv1C8ql3dFASKFEetP7XIjDhj/H4fUF6Wog44SeMb2GniXJ4qhIAV0IuU++AEzEDWOUUqSdDJrQXTqqRP7slgSfdFSJ/vT53mGm+qqbbb8NHA74FhxYp8r3L3Y2sR9aB49UndqRNfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739025974; c=relaxed/simple;
-	bh=TVeiZbuK+2rTLXxSC590JWmJS6wgT99EFo1yoPYm3b8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=k4t/hXipfj9f9UJbivynH7dvKFrYsuAiqDzSkw9aLSrOzSPHHSfBvqcu59E+7wU6QL3xcCx30l293OJFh8S0vIO32hHG/1a8PAIgRxUO5U1Nq2uSbNTLI+LCmwsl7BpX0rbzgygoIDRN+4G4gTyD4v0Ae5wDLr9qmHl9/WDNa0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=lhKBCK5w; arc=none smtp.client-ip=17.58.6.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="lhKBCK5w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=fj9r7R1BbGj3qp7gmu48SP5gnTn8LwG+0qCJX4cCINU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=lhKBCK5w7UnqVMphwFKW3l3DoyBJxEq2CIzty+dNTXCOAgVckrrrRWbHs9lnMJ4lu
-	 TuxEL1GEH0nCsaP25pe+zm6TuMhXtWUyArjF/p2tVRHn7nAwzDaEZldPytxGGZdRWP
-	 G3GAaFfrIdJD+RGzjKfnfz22EljV5nqUhK2E17yoflUWU1JYX+tJPtkjxGxF8jGSsA
-	 //yKYL1ymQ4g8w5K70340DJs8j4gOHr2HHYYwFXBYu6btOYvJM3pUtl6ufT5enVReZ
-	 eNHEeYIJLycI2GTUUvkXfqD/cDvrwD9XvFrhDUZBL5h8sxvQewjHD9lOoarlSxrf3M
-	 7zpkmJ8KGIsnA==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-tydg10021701.me.com (Postfix) with ESMTPSA id E377FCC6813;
-	Sat,  8 Feb 2025 14:46:06 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Sat, 08 Feb 2025 22:45:48 +0800
-Subject: [PATCH] MAINTAINERS: Add driver core headers to DRIVER CORE
- maintainers
+	s=arc-20240116; t=1739026230; c=relaxed/simple;
+	bh=C39xxZbWG5B73fuAxMhH7Wx1t74Wf7VcK2EBsSFzYbU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=bF0A8v9v4YE+y1oLyuYggkJ/ljMZmS/HeyzLq3uSxZvuvD4wnLQaX2maHaGHdMoWB1nmARihEJ4hRJpvgtpYbbFBacK6CPQr/oyC3q+6GBySKxSTqV9tDDwe+TOO83IGPX5HpwCHvynRffot9YSqQSXp5mLhrbuCrYBYjzBoMGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ce8dadfb67so20179505ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 06:50:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739026228; x=1739631028;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BbZBHmNjOsNgHsJJGIBV2EM3fYt/TUaHJ4HLa9k/xkQ=;
+        b=mNzU16bjSmTSyE1BkRhGDWzF9UqpQX7n+zW4qt0RpFJm+mieBdqEGuwWJK/RvV6TGf
+         R31364FlRci/ADUxB79D2JiM+63ip01g7EwpNIyQLqPOjcpN9gV2+PM00Cbhh/5JQ2YH
+         AwlG6MTKZE1ITIh+Vy2BelLr8AHlVoa17ScbcWCDM/cMwrGdWBDabHlDt2d4wHYfQNLX
+         J3BtSzoKYW75pwhkeIpfgQeCgsWbMoSm/M6NRqKk5fIf1R63AX387VxVGIGbhO5nQmN2
+         VZqT8qoS7iEcJSC3Ztec28Fovlr6TsNgM9hlVYHIt0bwjv0wGDyichftfqY5tYqrARDX
+         YBog==
+X-Forwarded-Encrypted: i=1; AJvYcCVoyfq9nArOPTKZtOhex4R7Klp2lniJ/WKpMoGTJcODR+KWiIWYgjMGVeyPvl1wvDYGQJmdjHLh4a3SdCw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydSssitjuHknk1Pr4GS/sP5asKU4YPWJf4CMPSzK4jELnsW2+L
+	YB+Tgo0sgz8x20yVamwz5WDmUk74SmFz1PlZw+u1aoArY506y11iFJ+NNo8LiBUrvSUboKo0q5X
+	Cwa8wKjj9ArHcIbXjQ4R9Kk0k0zV9i4vvvjWQgcRlihdYUqKLdDVzg+k=
+X-Google-Smtp-Source: AGHT+IG78lgY7nYVFXKmcWo5mIPjzy/BGpLNwEu4xmoWuk/k7xf5PKGOnTlhFukRmH0xiKUauVynhkGv4IuDjsD3J9MHxuzxBSag
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250208-drv_core_hdr-v1-1-8205b0483e3f@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIABtup2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIwML3ZSisvjk/KLU+IyUIl3LlCTDVKMUIxMzc0sloJaCotS0zAqwcdG
- xtbUA3Oa0VF4AAAA=
-X-Change-ID: 20250208-drv_core_hdr-9db1e2d24679
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Danilo Krummrich <dakr@kernel.org>, Zijun Hu <zijun_hu@icloud.com>, 
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: 6TiVs5_Dl7QJeUVNbWvpYbSlOaYqsFJ0
-X-Proofpoint-ORIG-GUID: 6TiVs5_Dl7QJeUVNbWvpYbSlOaYqsFJ0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-08_06,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=585 spamscore=0
- adultscore=0 clxscore=1015 bulkscore=0 phishscore=0 suspectscore=0
- malwarescore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2502080123
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+X-Received: by 2002:a05:6e02:1cac:b0:3d0:2314:26e5 with SMTP id
+ e9e14a558f8ab-3d13df3e9a8mr53582945ab.18.1739026228210; Sat, 08 Feb 2025
+ 06:50:28 -0800 (PST)
+Date: Sat, 08 Feb 2025 06:50:28 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a76f34.050a0220.3d72c.0029.GAE@google.com>
+Subject: [syzbot] Monthly io-uring report (Feb 2025)
+From: syzbot <syzbot+list10977d53e3ba4ce766d4@syzkaller.appspotmail.com>
+To: asml.silence@gmail.com, axboe@kernel.dk, io-uring@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+Hello io-uring maintainers/developers,
 
-According to get_maintainer.pl output, there are neither maintainer
-nor supporter for the following driver core headers:
+This is a 31-day syzbot report for the io-uring subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/io-uring
 
-include/linux/device.h
-include/linux/device/
+During the period, 1 new issues were detected and 2 were fixed.
+In total, 4 issues are still open and 113 have already been fixed.
 
-Add them to DRIVER CORE maintainers.
+Some of the still happening issues:
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 896a307fa06545e2861abe46ea7029f9b4d3628e..831dd6b0dbdef6e7510919c8f34531d79da12b8a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7106,7 +7106,9 @@ F:	Documentation/core-api/kobject.rst
- F:	drivers/base/
- F:	fs/debugfs/
- F:	fs/sysfs/
-+F:	include/linux/device/
- F:	include/linux/debugfs.h
-+F:	include/linux/device.h
- F:	include/linux/fwnode.h
- F:	include/linux/kobj*
- F:	include/linux/property.h
+Ref Crashes Repro Title
+<1> 189     No    WARNING in io_ring_exit_work (2)
+                  https://syzkaller.appspot.com/bug?extid=557a278955ff3a4d3938
+<2> 58      Yes   INFO: task hung in io_wq_put_and_exit (4)
+                  https://syzkaller.appspot.com/bug?extid=58928048fd1416f1457c
+<3> 2       Yes   INFO: task hung in hugetlbfs_zero_partial_page
+                  https://syzkaller.appspot.com/bug?extid=1c6e77303b6fae1f5957
 
 ---
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250208-drv_core_hdr-9db1e2d24679
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Best regards,
--- 
-Zijun Hu <quic_zijuhu@quicinc.com>
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
