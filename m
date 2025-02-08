@@ -1,115 +1,150 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A0F194C8B;
-	Sat,  8 Feb 2025 17:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739036287; cv=none; b=f2VFYeNOt+UY8B9OxEXXgelo+sgZGc5da/etcJq+kht3bM3FTOKh/4KHHf6hRNp6xDRBas96QE0whtR6kiPMGkW3GxjccHSGbbCq3PGlSLwDiXEUMQXheDjXWPcFOaHlxAgpjArsNE2piwiaupu3wyv0fxuTloKg2Y02PJurZxM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739036287; c=relaxed/simple;
-	bh=trQ5V8IeZ77zLFFvlWVpfikaXzktHRX+7wWFmCnfTqQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=RiMOGsJf7Ks94erxlQRY4w+pKmtzZuDyuIAOq7uVZ4HOoIXOYrcdY2STwCzhRdmGJff5G4PcYLOv8A9nAYWG4psk5Z0ryu9aj0xl3ROAzEt0fxl0kqLLoEuEvNzJ/QydLvZtKe/b4qq3ObDG25g+pv+5mecr+fWAptKGyQnXyYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=HwvI5s8C; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4BD241CA5
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 17:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739036560; cv=pass; b=bt+erHt1Cl/RHuYu/PgWZkAwPV7NxjinDQbe8l8OxRLslmgnW9HQb8yPisTl+F5o9DAp56VYJpgofbLKBV1TnvK4ovFe9DSJy0ZFuzDb/0eaBunnfVC8WLd/trxLoAI5rcR0CK8Ho9YN088GcqmvS4dzU7gPnT+n7dusIF1zNKE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739036560; c=relaxed/simple;
+	bh=mLhayLuyDboOz2U+qDH9S41X7NRkERNLxZ3NKgGpHjY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R9Pejp+j6BPRFfpc5SVjYNsSsYMSuoLJlc/bnmZB/D7Xcutgxzq4UW4h+wCz6nC0LESwE71gfyfgP1kGUcDBNHGMXHSZvYX8B/wvfIjFtfpA3jRrQfgo1q4L0kCBq0RKU7ebEnKXYJFMvyMER0kHMgqZkCvZmPqzCIBsPKvnPVE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=BGoKbXlp; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="HwvI5s8C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1739036260; x=1739641060; i=markus.elfring@web.de;
-	bh=xEiw6tA4dD9l23HqnH4yh77MThhAZVmqqkMgLZfg4ns=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=HwvI5s8C55j8Fcz6ntj/y2VTUxgiFuDp8CZ88VOBC4r+gEmGLu97igiJWnBQoyvJ
-	 rtQrd7ZOko1XaECkRayVFQ363oopIBKVc+jAMJts+lrfDCa8cZtahVgnAu+mlPx7O
-	 hMPkJcNqH3QEqTqqTaWziGD8W2VcZ8TdcxIRYZc7ZML5MSk349laj8IdZz4myMMAo
-	 rGkowTb9L0ABEJ+4LD4E4W0tYTAiUsVyLkTOsz8G23j9mZ2gc/xYB9V7bzhNi7YN7
-	 pWMqHeF7oHM8FWXFko4/50G/lRgDGX/7BUWQX4WFk3Sdg7ajcPTNQZXo4luGwHE0K
-	 cWX5ZCxgqPVBn9PLXQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.11]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MK52q-1tz2Ne1vpO-00TsYR; Sat, 08
- Feb 2025 18:37:40 +0100
-Message-ID: <a926f05d-03ec-4c78-83f2-3a50299e8be4@web.de>
-Date: Sat, 8 Feb 2025 18:37:34 +0100
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="BGoKbXlp"
+ARC-Seal: i=1; a=rsa-sha256; t=1739036548; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=UU7rJaTHqPrCdz5Idv7lA3EBmHqjRi14c+xNk1voSq3JxSqdvWJGePirDgC3aT1Yg0GeIT6fxlf9F9h0hp12YUld/HLpOmyeBR+Ih8BNtq8OhQRAsDLICk7gCRVU1z4axpzuMA6J4vQy4BKBU7aC6igxLqmlgE2PQq5GT+oBtC0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1739036548; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=i54Z1kYi2errV6FSjAGuXOU36ICII1ivXcH5Kd0r3Gg=; 
+	b=WcVPaxtexvcF1UxeGQAd1YPpKKbF+d6vInVpQNzKjisZwQPmGVK54r5c4nEKLnhBR1XN62JGbJ4N96gE45m+FseqJ3YgjP9UC7ocTGFDee4jQBqTbRXFgIBmnz3oSq8VHcaKpt1JRTGkAe3s+Xbhphz9A1FwOMgc8t5A4fFY/aA=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739036548;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=i54Z1kYi2errV6FSjAGuXOU36ICII1ivXcH5Kd0r3Gg=;
+	b=BGoKbXlp+yNo4SjaKn54/gPox0Jqb3ZkhKgsRhFSW5rMgB22zBOkRn90cf26aUP+
+	n7N7vK4BsYbukm9nfvGc7K2CrlLRKEVssH4rdgbGeBwUW7pMbds1H8H5Fnlyg7ELv8b
+	6gXAuXTUndA0G26TkzpB6HGf3GcTKAcslNan7Puk=
+Received: by mx.zohomail.com with SMTPS id 1739036545342717.44347943493;
+	Sat, 8 Feb 2025 09:42:25 -0800 (PST)
+Received: by venus (Postfix, from userid 1000)
+	id B9721180616; Sat, 08 Feb 2025 18:42:21 +0100 (CET)
+Date: Sat, 8 Feb 2025 18:42:21 +0100
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+	Zack Rusin <zack.rusin@broadcom.com>
+Subject: Re: [PATCH v2 17/45] power: supply: ab8500_chargalg: Switch to use
+ hrtimer_setup()
+Message-ID: <roiad6zbj4z2zizl6muhvlstwu4mvsh6f6g2tf2feps7ihut3g@aknn232lzqo6>
+References: <cover.1738746904.git.namcao@linutronix.de>
+ <fa0bf7376ce8f124c8285a52d9f55d0ab4c42988.1738746904.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Luo Gengkun <luogengkun@huaweicloud.com>,
- linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
- Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
- Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>,
- Namhyung Kim <namhyung@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20250122073356.1824736-1-luogengkun@huaweicloud.com>
-Subject: Re: [PATCH v3] perf/core: Fix warning due to unordred pmu_ctx_list
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250122073356.1824736-1-luogengkun@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rwgnexoc53fzo4i3"
+Content-Disposition: inline
+In-Reply-To: <fa0bf7376ce8f124c8285a52d9f55d0ab4c42988.1738746904.git.namcao@linutronix.de>
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.3.1/232.189.87
+X-ZohoMailClient: External
+
+
+--rwgnexoc53fzo4i3
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:LBDwCtf3pYQH7Ic9Ip3zlyABOhdxq1TR9NV7qouWWcN5MwGGESd
- r2G7WbB3+xBqgGD2hB2PY2aYgLjhNDaSFfoaP8W+jyyOh5RL2ilieRo1VXguNSW/Q8vGIg+
- xYj+CZFseI0eaOgyAxaeLzxHeJuEVG6pRZfM4NVZGHet2FewFoZLYArTS0EgYfCw7Q7u9Dj
- z+NjzFl8V89YqsOyB5DdQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:zPLTwgLKboI=;iyC+1cQSwUPJoHSx/jvEqJ5sQYr
- /el/ffJU396AP6/CAFTRdhvpckLnbcpmlByT/ydaEIFJY3woxUn9Ec0lf0SouwisY8d1PMIli
- /aKiFzhp0/JN8z+CE7389rqPS95VYjLo/V06eXlpdqUt+XdkeNXyEEIzKoXCsSA6L1+i90ra9
- Ib4BSzHl5koMlO6h1N5FbSJ1ZA0w3FKsPZssrSdZZXqas7Zy+MtrG0J93MTtWVYzAj33rJK6p
- 8MVN4RfP8vSPLvsJ5N9P7SIPffr0ahEsARv11Gm1EDXLTTEqGU1XYSfXFUB1pwnounfQ5NpwB
- 1FvB+c8lMr1XUMWL/OREBeC7R++fxtRp9741rbUqPLY/Z6klUOp1j1rg3VAcuICGEe2S5a1B9
- TccWl1Iffbae/nqZKHq7lvymrDwRdf4yf6YOc6Hjj6LLDcv10oYT+WHwzc/n5yDD+Ic8rmOGB
- 9+bGWTZY2zl4NZRdWutiuZNO/ZHX+PcTJSnD0fvcCjjrg4HhHbKSnWGHi6NsvnpuSSgNfgrVz
- 4uJQH6H66hFqA5zUhfuC5R0i0iBmcS6yzHeUvlHY3hXveGZOGaM8UXA6SR+x6kda10auLJGxB
- jF9porrgp+AEQ1myzyEYPiuwVvEOBg3bRO/h+hleDQNpP1WJTUrS3qW3EYpvlBtNvJ5TVF2A5
- RAR41fiVZPUFKAS2OCmIs2SgvgJJzlvbK5QZf8BaZssXMPXDCnDgnDDr67RxNw8i8OWWfXPFc
- tGgXsZkiQIrtxNXD4bXi++dUSnim+oyK1soYrP5YXzeuQJ4c0e/96WFa/+VEX3Z0pWoaQuwe9
- Q1+IYgtRl1MdjpcsXSPZr3WW1z691+72z8Qvo6nNRStWhWz7GtuhsXjzWUDB7jkDvwHOg6P+W
- a4UiMmYMkH5iwERCNwj9+V9JrLpg8bD6C3FDjhwd3PKroLyoWQDkwRbIVzjNW/AfEhbunDg91
- b1pr61nTLwv21c3/Q3RIyLRRaaiUGgRN5cyZJc0j0eG6yHFRs+5S8ieFTm+2zDCLwRlV+qY88
- VlcGh2h3w+3pIZiSQ9HvyE/oTVe33Q2ola4W4WLLzGGkYvBdhKk3YlRtfpC1s5+cJI/A0K77v
- lZscg7CDhwpFvzOCJyFYKpVxhtzP9ldwwWhyjiPL/kfU7FAJZsvslmJ9zqn+BsQp2M6MA180h
- TsacKvNLhw5S3JSWG57IQ5H1B0YYlSd6ma3QK8oSFJulnGQPbKsQdJU9nUpqDD3ekoADeaEFU
- XzKiOGur24qpPfBNPULFV5B8FkZLjvzE8Kn/GYI4jtZjZIRKUOT6ejeBmKL5GpcO/U7Cy+X3P
- bmMW8gVaNsCaiG7eFvwowbSa3mhmrlfXJZxlWDviHzn7gxcnLebpjPx/m2dRXPYZgyhNIBokM
- aqgqyD7WyGzPA4rrOo3bLClMSv4fA0llfaVKbDR6wNp1d1yRv4Se72yNeH5J1WwttufPZGAiD
- fuE5jdQ==
+Subject: Re: [PATCH v2 17/45] power: supply: ab8500_chargalg: Switch to use
+ hrtimer_setup()
+MIME-Version: 1.0
 
-=E2=80=A6
-> The follow testcase can trigger above warning:
+Hi,
 
-      following test case?
+On Wed, Feb 05, 2025 at 11:46:05AM +0100, Nam Cao wrote:
+> hrtimer_setup() takes the callback function pointer as argument and
+> initializes the timer completely.
+>=20
+> Replace hrtimer_init() and the open coded initialization of
+> hrtimer::function with the new setup mechanism.
+>=20
+> Patch was created by using Coccinelle.
+>=20
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Acked-by: Zack Rusin <zack.rusin@broadcom.com>
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> ---
 
+Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-=E2=80=A6
-> The testcase first open a lbr event, so it will alloc task_ctx_data, and
+-- Sebastian
 
-      test case?                                  allocate?
+>  drivers/power/supply/ab8500_chargalg.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/ab8500_chargalg.c b/drivers/power/suppl=
+y/ab8500_chargalg.c
+> index 7a8d1feb8e90..dc6c8b0dd1cf 100644
+> --- a/drivers/power/supply/ab8500_chargalg.c
+> +++ b/drivers/power/supply/ab8500_chargalg.c
+> @@ -1787,13 +1787,12 @@ static int ab8500_chargalg_probe(struct platform_=
+device *pdev)
+>  	psy_cfg.drv_data =3D di;
+> =20
+>  	/* Initilialize safety timer */
+> -	hrtimer_init(&di->safety_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+> -	di->safety_timer.function =3D ab8500_chargalg_safety_timer_expired;
+> +	hrtimer_setup(&di->safety_timer, ab8500_chargalg_safety_timer_expired, =
+CLOCK_MONOTONIC,
+> +		      HRTIMER_MODE_REL);
+> =20
+>  	/* Initilialize maintenance timer */
+> -	hrtimer_init(&di->maintenance_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+> -	di->maintenance_timer.function =3D
+> -		ab8500_chargalg_maintenance_timer_expired;
+> +	hrtimer_setup(&di->maintenance_timer, ab8500_chargalg_maintenance_timer=
+_expired,
+> +		      CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+> =20
+>  	/* Init work for chargalg */
+>  	INIT_DEFERRABLE_WORK(&di->chargalg_periodic_work,
+> --=20
+> 2.39.5
+>=20
+>=20
 
+--rwgnexoc53fzo4i3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> then open tracepoint and software events, so the parent ctx will have 3
+-----BEGIN PGP SIGNATURE-----
 
-                                                          context?
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmenl30ACgkQ2O7X88g7
++pr6kRAAqjGtVpLEURDXAQF1ghHM6vgpwW3UqR+iCv8NZ5VkMsP/45jyVKcMny5J
+CmyyBPmTf94bYANnUFHIAZqFJ7IWRRpQpUKwKzsBTACwcqq4ykM8BQ93xgcwHzCl
+SaNQtncDSQau+DDF3zC6U//zktSi+RVSlE8SOmtI7aSyJC5npuEZvINUQDQfnJee
+im03kyfIRV8n+ANkaPFlUuSbMae1JDyxXZMVDu4t3p148FtZOZb9FSE2UKj0YGWB
+xlBHT/ziS8s2dwdnJLKdJumoXGT1cuZXm7CzS5xvz4x3DBaWwwfUBEnwZwJ2NmP7
+E1mRqGNGolpbjZnIGe0e+U+otrEIUTxlQ48WpI9EGs8P9pzCVJkqk0VfgxDylZrJ
+zscFHaWc7PCFoW9ZpHkBr8eieMNenawIcRxYnp4cUP+nCqSl0umWVKJc4+pQNTmU
+VaTRsNX1vk/jwzOt2lG9aFESP4rNZmhETxZicD1QL0vCC1qDfBRPfkSTLGUjfX6t
+BEWhemqZIuXGPnYA6YwaQcEUS6AOv1GSWT6hz+Q1Ktjm66trvWSQl8YA7MR5/0Da
+8uw2jnl5teWeggfG7TSFkf1XEnBbj9y/Q7LUny3TNa5BreboNdD5OnJCL466g8uA
+QbOtCpp79MP0SEv9OVHJ0LeBMXgz0+zn/er9usweHObO7UgEQnc=
+=V+1s
+-----END PGP SIGNATURE-----
 
-
-> different perf_event_pmu_contexts. When doing inherit, child ctx will
-=E2=80=A6
-
-                                                inheritance?   context?
-
-
-Please avoid a typo also in the summary phrase.
-
-Regards,
-Markus
+--rwgnexoc53fzo4i3--
