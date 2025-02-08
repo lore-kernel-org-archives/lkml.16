@@ -1,182 +1,175 @@
-Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D41383;
-	Sat,  8 Feb 2025 00:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D3DA23;
+	Sat,  8 Feb 2025 00:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738972967; cv=none; b=JJFnFOI26okCRy4XfJBXUQkxZhavxPW4uBfBdD9AVrGqdZ4feVOwsduMhxlZ2CTtGCPFVMZb10s6WGwzCIcxmcXVCyXbcRQUgxpoVN7DgK4pfEq0ZpFUGrMOfumiB8WqRhqHK0VJy0L6hxXBzHJ/JmneaO9x9mu8Ngw4qhJ1MTQ=
+	t=1738973043; cv=none; b=jOZOGrU3/I/NYmevCjFyV+eOrIr9Kil1CC0voxY/j2tXA9kb7nr+hiAwKuvs4+fG2bc0Kjqx02oDTPHhZEsIauU0eIJEg/73dPxvmUDL4mB54nmRIApD786GfygqEHNSsaNwzZmKiaMTb2x+jZerOxue7VTDK1M4AO5I9pKVLA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738972967; c=relaxed/simple;
-	bh=TSP1JMmVi42tAOtGzn3k9oCoW5xLhTjyWksZSavSW7c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i6lzNbKm5x7VAD8wBZ2rkLMICdZlFSEw0aBuG1PfVdAF0Gt0bmnRk9a6BSKhlFhS/q1p7WxHrGCIIFuR3Qe5KNK0IVCPVbCBO+wqujZHmYGu3hajNPXpw00g2VbXZQKm3JOQliS7SECNHsBVJ8tDUliX5UyLl4hRs+E0/J73nR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com; spf=pass smtp.mailfrom=bsbernd.com; dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b=YHRtdASt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=uHGtx/8Y; arc=none smtp.client-ip=202.12.124.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsbernd.com
+	s=arc-20240116; t=1738973043; c=relaxed/simple;
+	bh=2STvfBkzSCvzpdSOGbhHw9/tYsaPc4yptm9r05vncu4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hLfHuuGsN5Oy9h8rsLmlidmwuEdk2mfIo7vHrZaY0mfj58m+bLqc4axyK1meP9Oy5rizLdcSO0kt9AMbw8vp0JCz0saKiWzlqlqnKCplsQMLcdwpeBQwNH0RWVzKty/NmVLKRvIb1mj6veDtb+JBM6zhgkgivTF/mWVmaNQ+eSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SeIuooAg; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b="YHRtdASt";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uHGtx/8Y"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 688F1254010E;
-	Fri,  7 Feb 2025 19:02:42 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Fri, 07 Feb 2025 19:02:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bsbernd.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1738972962;
-	 x=1739059362; bh=mrWw7gmE3NDMuFQEpyImkKuDcSno+4GUyYuDqXBEHeo=; b=
-	YHRtdAStvjmtGKokAa6Y2Zrfunbbxso7mlsWZdg5xGhTf/Hrs4t0+/aUd9jRggtM
-	GrsmQhmihu7FTyCsUMoTrSxMDbSTUQD+pAbzq/uOU8SCaMLlyrePd7pziEoDdHJo
-	A0mnezmOriDfzpD3HYU2GBr0h7mXgZkGr7rjCiVsNnMBVCF32jwEYBnzbLdULhb5
-	/Rx/SLZT6mayGuB3JPSOA0Z+lJrffsu/otn7p9epqj8p8+UjYCH4tst9ttRh4j0C
-	6g+5Yi16nUyPpzE2eTQnyo4XzEz3LjgTL7Z57CiQE+kA3Ngs051ByBirO62hNkzx
-	bt/xzDZ0MRk6b7gx5ZgrWg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738972962; x=
-	1739059362; bh=mrWw7gmE3NDMuFQEpyImkKuDcSno+4GUyYuDqXBEHeo=; b=u
-	HGtx/8YNzTm+lTQATs3ZEB/btMMaans8yIFigcc/Wgh5FbOPWTQopMeOIpmR8FLi
-	kOjqr6XcKhCdCPV4FlQcYBUPaCRRVfr3hCWUxXStV+OOcbsUftvklRPPCZY+EaGO
-	bSMxGBd1Ida58KYdysm0w9mCaWWEPyiAx0WYqA9h2i55Lq5SSVcrTJAFBLl/yWuY
-	jFe19sknFBsxzkzwwdgvlV0DGTTYulSVagk5Mh6/ZeV/eIuHDVW9oxMRuOdRomRk
-	VISOqjAxUSIFm6LnapII/NADXDXrn0AGLvKkt9cEI1nmsVL/tMeHLuRZyG03PEIn
-	cj5tw24PKtClVsjOk043Q==
-X-ME-Sender: <xms:IJ-mZxSC1TKDZEeOOlX0QW683tcGOf_6bHb_NBnLj6piHlDtfEYNow>
-    <xme:IJ-mZ6x2LAK606cQW2AoTstDH1aGL8honM13VHSHKTICIV0lKZjuPprpdQ5kENWrp
-    0sHID1Li3vV__jZ>
-X-ME-Received: <xmr:IJ-mZ21nfWXQiiTZ88T15QFKZeC0gzpmXf5qy_g6TiNNT7hvA7od1qS_ytu9sAqmLOane_Yh__9rKGNWR8V8OdMwmVjSeacg4QZvPgTR13Tfdf5LVxVf>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdeijecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddv
-    jeenucfhrhhomhepuegvrhhnugcuufgthhhusggvrhhtuceosggvrhhnugessghssggvrh
-    hnugdrtghomheqnecuggftrfgrthhtvghrnhepjeffuddtgefhfffggfejheetjeeukeei
-    teeiheevheetueeigfeiueelkeejkeeunecuffhomhgrihhnpehgihhthhhusgdrtghomh
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsvghr
-    nhgusegsshgsvghrnhgurdgtohhmpdhnsggprhgtphhtthhopeduvddpmhhouggvpehsmh
-    htphhouhhtpdhrtghpthhtohepjhhorghnnhgvlhhkohhonhhgsehgmhgrihhlrdgtohhm
-    pdhrtghpthhtohepvhgsrggskhgrsehsuhhsvgdrtgiipdhrtghpthhtohepmhhikhhloh
-    hssehsiigvrhgvughirdhhuhdprhgtphhtthhopeifihhllhihsehinhhfrhgruggvrggu
-    rdhorhhgpdhrtghpthhtoheptghhrhhishhtihgrnheshhgvuhhsvghlrdgvuhdprhgtph
-    htthhopehjohhsvghfsehtohigihgtphgrnhgurgdrtghomhdprhgtphhtthhopehmshii
-    vghrvgguihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheprhgvghhrvghsshhiohhnsh
-    eslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgv
-    lhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:IZ-mZ5BjsAQquoPRdCCIk9aFAJn_Kk7MSjUZZawKqQaPr_MF0xs1_w>
-    <xmx:IZ-mZ6iIkV1ZhC5dtnv_RbKcTcMqdI__c3w2hsXbxoSzO-8l15Uihg>
-    <xmx:IZ-mZ9q7hMMR1uHMmZdyR5jquTTgWWiSzatvNE0DVOHzcJ4bZmz0wg>
-    <xmx:IZ-mZ1hp3yuqJmcPghYQOezpPpVrgPEAd22-Pbb9Iod755E2MEJb_w>
-    <xmx:Ip-mZ7ZvGEVKrIRz2zwUDDXwnxXMfycBuSTmpA19O1NcILkjs1VrADvo>
-Feedback-ID: i5c2e48a5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 7 Feb 2025 19:02:39 -0500 (EST)
-Message-ID: <b828162e-716a-4ccd-95bb-d51e31cea538@bsbernd.com>
-Date: Sat, 8 Feb 2025 01:02:38 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SeIuooAg"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38dd4e26e79so6884f8f.1;
+        Fri, 07 Feb 2025 16:04:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738973040; x=1739577840; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=QvLyhY6owKPW2I6LIaEqsveAbrbpfjuOOZhRQN2NfTg=;
+        b=SeIuooAgeWjw7EA4GFBtLECVv7ZWJEkBvN0vw1zkwE06WHb9dnKiUnZqwEQ+au/QuH
+         eThZtVt9D5EO3a9aGIqMZNSTUws8XCAWSzzuVRUuIH2nJj94obvWZdfImrpZ+0+uS8mY
+         YWE8WGHgvVwylhivg3/JxR/0YdBGzU+JRPIK12oyfR74IlfQIodsF8CgFefBaWxJrcZB
+         nHrvX45f50PihLgcUBblfo3O9NniC5oOAzebHYaReAPIcmxpb5Fkphcwodle3DWWXASa
+         2qQuu3KMl5xt2jBy6f5VOnZMzNCTi9AALkGFU/tPFGx66ZGEQUbALXH3/ocL4B1nMKrf
+         1xAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738973040; x=1739577840;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QvLyhY6owKPW2I6LIaEqsveAbrbpfjuOOZhRQN2NfTg=;
+        b=saKdoZzthahwm6jGaWlSDaDwEdFVEh/45WdTCkB6mxUOnxoIQuVmJDT+nrjs3E9fc8
+         6ZceqQl9ylTewGhRf21tsHubHmvepPzYHe3JBTtehcwcf59ya3I9so+5Z39pTsgh+r3l
+         i4P2W3fsOaj6KswWMjgACpVHHbxzeI6qtedo1btMVg4aUlh+uPgxsTnwBiNNCQvXRcI3
+         y6uV+kCDVOersXpk2PrQEwvbzjAeTsA0zHkWyp8xLYrLDom+T6L/yvKp9nl9ROQgEARj
+         AxBKOIk99QIFwijJixGQKfCQBZ9QpEUm6YbWj+oFe9cI4Rcprx7DGu40nINuqN9+9S7s
+         gH6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVGUCZPMDeDY5lHs5I4ripI6JjSEgbU7gHZu2UYvRLqqDGDMFyk5geDGtrSTLGFnpvEElkIRBHDAtDeqZwi@vger.kernel.org, AJvYcCVL4zDGHXndcbsdF4ptjhPk5KTkanNwburi6J1ET78H8AT2vzY4ogGdlz2GCuJZJZEDX54=@vger.kernel.org, AJvYcCVZ9qPcG9kvv0fsepu5DzsLzCW7XxzgydF6n08oUzTZsNSvWYaP5fdQgOgw6xQFi8vn/vhsdx1K4EZ+@vger.kernel.org, AJvYcCWP4zm3rpIGhKNFO6ot6PSgzmYvOV79zpGcKoaQA6yzOkiHWKCBGbW/7B72Z2b20el5BijHsd/R1KjLQnStUyqzRksD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKeC+PUArwzNz8MVVUGUgG1oIYnFeLN7JBnFL33hJaDehXLrjR
+	dom1YYAE9KxmGEyvMBXTNG0g9D0AV8z8rNXNDkqz/FzTjIsjwwmV
+X-Gm-Gg: ASbGncubVX5FEUjb6rHVjQgpDil+HxEfoAeFkGhMiIgEHFT5CFB5BxbZK83Qzl+9/cJ
+	RTxpwfrI0GUIHYaP6+s+A9LcENbRZuX2EMDyJ/5MSvMf7FHsujALn20XOcjKoBBDKCnqIunQj/s
+	lD3QpJwmZS9yy72PQkBUcoCrcVXg9+EXBnmbcx2PpkNWt6jm4LMMwW5bgTXlv9axp8JXFSyWUP0
+	GyNfAX0jHg4K3X+HlI6+2t+dAEQ5ILTk5EAZ+iAXuuVbDYFBjEnjhEW92eXEHuFIXVAHcFsJdD5
+	i8LJQ26IR3aFEfEGJb2bBdo6
+X-Google-Smtp-Source: AGHT+IGxECD89hAn1Ixdo4SeJV1zmM5RTDj2Hth3O4byoRJgQoykCw9yET/1VT7lC1auRqJvXra1/Q==
+X-Received: by 2002:a05:6000:4021:b0:38c:1362:41b5 with SMTP id ffacd0b85a97d-38dc8d91f2amr3316788f8f.6.1738973039365;
+        Fri, 07 Feb 2025 16:03:59 -0800 (PST)
+Received: from krava (85-193-35-212.rib.o2.cz. [85.193.35.212])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dc9ff64sm68170485e9.9.2025.02.07.16.03.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 16:03:58 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Sat, 8 Feb 2025 01:03:55 +0100
+To: Jann Horn <jannh@google.com>
+Cc: Eyal Birger <eyal.birger@gmail.com>, kees@kernel.org,
+	luto@amacapital.net, wad@chromium.org, oleg@redhat.com,
+	mhiramat@kernel.org, andrii@kernel.org,
+	alexei.starovoitov@gmail.com, olsajiri@gmail.com, cyphar@cyphar.com,
+	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
+	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de,
+	daniel@iogearbox.net, ast@kernel.org, andrii.nakryiko@gmail.com,
+	rostedt@goodmis.org, rafi@rbk.io, shmulik.ladkani@gmail.com,
+	bpf@vger.kernel.org, linux-api@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] seccomp: pass uretprobe system call through
+ seccomp
+Message-ID: <Z6afa2Z4IYlIAbJ2@krava>
+References: <20250202162921.335813-1-eyal.birger@gmail.com>
+ <CAG48ez1Pj6MT=RV-sogtNbw7WLLmCrC-3TkNfRjpcCif8iNGkA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
- related applications since v6.13
-To: Joanne Koong <joannelkoong@gmail.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Miklos Szeredi <miklos@szeredi.hu>,
- Matthew Wilcox <willy@infradead.org>, Christian Heusel
- <christian@heusel.eu>, Josef Bacik <josef@toxicpanda.com>,
- Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm <linux-mm@kvack.org>, =?UTF-8?Q?Mantas_Mikul=C4=97nas?=
- <grawity@gmail.com>
-References: <2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu>
- <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
- <Z6XWVU6ZTCIl3jnc@casper.infradead.org>
- <03eb13ad-03a2-4982-9545-0a5506e043d0@suse.cz>
- <CAJfpegtvy0N8dNK-jY1W-LX=TyGQxQTxHkgNJjFbWADUmzb6xA@mail.gmail.com>
- <f8b08ef9-5bba-490c-9d99-9ab955e68732@suse.cz>
- <94df7323-4ded-416a-b850-41e7ba034fdc@bsbernd.com>
- <CAJnrk1atv4N-BDWnwmESvczJhkayXyQqnLEypkmuJNKBa6gq8A@mail.gmail.com>
-From: Bernd Schubert <bernd@bsbernd.com>
-Content-Language: en-US, de-DE, fr
-In-Reply-To: <CAJnrk1atv4N-BDWnwmESvczJhkayXyQqnLEypkmuJNKBa6gq8A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG48ez1Pj6MT=RV-sogtNbw7WLLmCrC-3TkNfRjpcCif8iNGkA@mail.gmail.com>
 
-
-
-On 2/7/25 19:40, Joanne Koong wrote:
-> On Fri, Feb 7, 2025 at 3:16 AM Bernd Schubert <bernd@bsbernd.com> wrote:
->>
->>
->>
->> On 2/7/25 11:55, Vlastimil Babka wrote:
->>> On 2/7/25 11:43, Miklos Szeredi wrote:
->>>> On Fri, 7 Feb 2025 at 11:25, Vlastimil Babka <vbabka@suse.cz> wrote:
->>>>
->>>>> Could be a use-after free of the page, which sets PG_lru again. The list
->>>>> corruptions in __rmqueue_pcplist also suggest some page manipulation after
->>>>> free. The -1 refcount suggests somebody was using the page while it was
->>>>> freed due to refcount dropping to 0 and then did a put_page()?
->>>>
->>>> Can you suggest any debug options that could help pinpoint the offender?
->>>
->>> CONFIG_DEBUG_VM enables a check in put_page_testzero() that would catch the
->>> underflow (modulo a tiny race window where it wouldn't). Worth trying.
->>
->> I typically run all of my tests with these options enabled
->>
->> https://github.com/bsbernd/tiny-qemu-virtio-kernel-config
->>
->>
->> If Christian or Mantas could tell me what I need to install and run, I
->> could probably quickly give it a try.
->>
+On Fri, Feb 07, 2025 at 04:27:09PM +0100, Jann Horn wrote:
+> On Sun, Feb 2, 2025 at 5:29 PM Eyal Birger <eyal.birger@gmail.com> wrote:
+> > uretprobe(2) is an performance enhancement system call added to improve
+> > uretprobes on x86_64.
+> >
+> > Confinement environments such as Docker are not aware of this new system
+> > call and kill confined processes when uretprobes are attached to them.
 > 
-> Copying/pasting from [1], these are the repro steps that's listed:
+> FYI, you might have similar issues with Syscall User Dispatch
+> (https://docs.kernel.org/admin-guide/syscall-user-dispatch.html) and
+> potentially also with ptrace-based sandboxes, depending on what kinda
+> processes you inject uprobes into. For Syscall User Dispatch, there is
+> already precedent for a bypass based on instruction pointer (see
+> syscall_user_dispatch()).
 > 
-> 1) Install Bottles: flatpak install flathub com.usebottles.bottles
-> 2) Open Bottles and create a bottle
-> 3) In a terminal open the kernel log using dmesg/journalctl in follow mode
-> 4) Once the bottle has been initialized, open it, select "Run
-> Executable" and point it at any Windows executable
-> Note that at that same moment a BUG: Bad page state in process fuse
-> mainloop error message will appear and the system will become
-> unresponsive (keyboard and mouse might still work but you'll be unable
-> to actually do anything, open or close any application, or even reboot
-> or shutdown; you are able to ping the device and initiate an SSH
-> connection but all it does is just display the banner)
+> > Since uretprobe is a "kernel implementation detail" system call which is
+> > not used by userspace application code directly, pass this system call
+> > through seccomp without forcing existing userspace confinement environments
+> > to be changed.
 > 
+> This makes me feel kinda uncomfortable. The purpose of seccomp() is
+> that you can create a process that is as locked down as you want; you
+> can use it for some light limits on what a process can do (like in
+> Docker), or you can use it to make a process that has access to
+> essentially nothing except read(), write() and exit_group(). Even
+> stuff like restart_syscall() and rt_sigreturn() is not currently
+> excepted from that.
+> 
+> I guess your usecase is a little special in that you were already
+> calling from userspace into the kernel with SWBP before, which is also
+> not subject to seccomp; and the syscall is essentially an
+> arch-specific hack to make the SWBP a little faster.
+> 
+> If we do this, we should at least ensure that there is absolutely no
+> way for anything to happen in sys_uretprobe when no uretprobes are
+> configured for the process - the first check in the syscall
+> implementation almost does that, but the implementation could be a bit
+> stricter. It checks for "regs->ip != trampoline_check_ip()", but if no
+> uprobe region exists for the process, trampoline_check_ip() returns
+> `-1 + (uretprobe_syscall_check - uretprobe_trampoline_entry)`. So
+> there is a userspace instruction pointer near the bottom of the
+> address space that is allowed to call into the syscall if uretprobes
+> are not set up. Though the mmap minimum address restrictions will
+> typically prevent creating mappings there, and
+> uprobe_handle_trampoline() will SIGILL us if we get that far without a
+> valid uretprobe.
 
-Thanks Joanne! Hmm, I found "wmplayer" in a c drive, but there doesn't
-happen much
+nice catch, I think change below should fix that
 
-   5241 pts/0    Ss     0:00 -bash
-   5317 pts/1    S+     0:00 /home/bernd/.var/app/com.usebottles.bottles/data/bottles/runners/soda-9.0-1/bin/wi
-   5319 ?        Ss     0:01 /home/bernd/.var/app/com.usebottles.bottles/data/bottles/runners/soda-9.0-1/bin/wi
-   5321 pts/1    S+     0:01 C:\windows\system32\wineboot.exe --init
-   5345 ?        Ssl    0:01 C:\windows\system32\services.exe
-   5348 ?        Ssl    0:00 C:\windows\system32\winedevice.exe
-   5359 ?        Ssl    0:01 C:\windows\system32\winedevice.exe
-   5360 ?        I      0:00 [kworker/u130:0-rpciod]
-
-It runs it, but no system issue. I had also tried "Obfuscate", but didn't
-manage to feed it a file - it runs in the sandbox and no access to
-my $HOME.
-
-I need to see is if I can find some other files, but very late here
-and busy with something else. It also runs in x2gokdrive and wine
-then over another ssh hope to the vm guest, which has a kernel with all
-these debug options - slow.
-
-Bernd
+thanks,
+jirka
 
 
-
-
-
+---
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 0c74a4d4df65..9b8837d8f06e 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -368,19 +368,21 @@ void *arch_uretprobe_trampoline(unsigned long *psize)
+ 	return &insn;
+ }
+ 
+-static unsigned long trampoline_check_ip(void)
++static unsigned long trampoline_check_ip(unsigned long tramp)
+ {
+-	unsigned long tramp = uprobe_get_trampoline_vaddr();
+-
+ 	return tramp + (uretprobe_syscall_check - uretprobe_trampoline_entry);
+ }
+ 
+ SYSCALL_DEFINE0(uretprobe)
+ {
+ 	struct pt_regs *regs = task_pt_regs(current);
+-	unsigned long err, ip, sp, r11_cx_ax[3];
++	unsigned long err, ip, sp, r11_cx_ax[3], tramp;
++
++	tramp = uprobe_get_trampoline_vaddr();
++	if (tramp == -1)
++		goto sigill;
+ 
+-	if (regs->ip != trampoline_check_ip())
++	if (regs->ip != trampoline_check_ip(tramp))
+ 		goto sigill;
+ 
+ 	err = copy_from_user(r11_cx_ax, (void __user *)regs->sp, sizeof(r11_cx_ax));
