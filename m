@@ -1,75 +1,71 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851741E515
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 05:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB4F91E515;
+	Sat,  8 Feb 2025 05:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738991772; cv=none; b=RYX1i0C+iQ2lrMo76lOTjkQI+opbpkRJvd/Ubz75JIptKCbMvyuGl2I69YOzZnUw8i/O59k+3Dide05de2lHAT7DdDjQbbQR/bb7VtWLanmYPoAsNd6DtlYFhnEj9KbJcUIPnQ60hKWIk4dfbYH4i3KQKWCh+hkdfru3tVlaqaI=
+	t=1738991814; cv=none; b=tQDd9rFNxCQmR1v6ym/2LMY+vh92HKj4zcuPndXlNHFGR8c6Aky1wQG3ANlDgPphxR0N+IsoFER1sU8TTy+CrdXiOtF1MVq9tIJecs9ywWEvfI3iYNKgLSUYUNP9XbTrUqC/2TTLpwLSoh2PEZvZ05i+Flx2r2sJl7cBGrkqvFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738991772; c=relaxed/simple;
-	bh=+vXLDNKKHiGZ7NHNfzfavEUAPVW4pEt2LGMzmhueBws=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MDUJEhCjkFSR5BhOCpkrgdL94qOmSBG0GR0SgQAbO1xH2PD6yr2Sd6/ix7D7BNG7iMtIS632xSkiwNot4i4o2MiErnZmcCvc5HbPBLbzv87rTC3AsMEYDuOEUt1lSMNY9m4AQCZt8KEO5YD7UwhGAGyUz+MQJ7xsMKGmPAMjnFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VHns+h08; arc=none smtp.client-ip=209.85.216.41
+	s=arc-20240116; t=1738991814; c=relaxed/simple;
+	bh=Wh95MniglZrxJYV1WBtECKZ07EvFPp3vsPwJ2IF32No=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EyoCzTSPJVg7VqO3EvJp2GA/RIIcfp8QlJ71YnuewVAP3i577gCRn39iRobUI7dnNZzDyZrKNijAvhEZMuk9bDwPqUm6jbUYyjOMTVaPyJHAAvuTL2S+XYA2Qpu2PQoxUbKLGybplOqpNoeVZdmGXi+W9LTkmgZdJdhhfbrGWCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H3ewHPgc; arc=none smtp.client-ip=209.85.219.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VHns+h08"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2fa0f222530so4820943a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 21:16:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3ewHPgc"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e5b22d35268so2563330276.3;
+        Fri, 07 Feb 2025 21:16:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738991770; x=1739596570; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738991812; x=1739596612; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XsXdVNzMronb2yUVKZu1ghjJ64uz8qffcCW+yBp7e6g=;
-        b=VHns+h08X0NCk3DvnyHuykvj0XyDOEou4YGOyvevomyyKkrL+0mX1QQ4wxqcM+2I07
-         7TP1ZzG1zhSCQBRiB5yy+aasb0/qOxxbr+3L8pmfoSMjXmN7R49XTJqrnWFK6ZNkB2YA
-         g2LP++vxhIXwD7nc0iYQHFK0+j5EdXmqo2q2MI2qxPAkMkmrv5n58qGEoTLteCFmm3fl
-         BEKcAMTMB/2oIMwwzhU0b4rkD7nzj3qjRoKBvVNEBJ2c3zo9YNk5Bl5H5c3vSfGEJn/Q
-         hx3uNzs06TZjHl1qdnzNYuEgwE3UzS6iehUgqAb2HzIdhokM7/lzvteRvvrhlTeJzz8L
-         aDcQ==
+        bh=Br0fmd3voz2egE/wkBW55eYvDvDY6vZCi/PhKJu8ARo=;
+        b=H3ewHPgcYVHFNOQiyZu6r0Vf7wYZn7k8d1oQgfBQHoBDwseoXtyeM2CKRwPQlucc/y
+         aZvV9g5lrLeZOG8F2qSOXtjbnJM+TbuKsY03NQszfcw8PP1hZ59dhSewfbxPzfFJiCWd
+         AcobIYXF8j0CZY1V4FJtsBRJqwS9SwLExK9B05i4aEw99Q/bBO6kAsWc4VjuZ6rMYVJm
+         AUwLkawhm5zuOJn00EHssHjXBBNpI3/hrddy70uUb8JAUGhTpJyrqMaETJP0JeeGfiQd
+         mnHrkKqjaI6gG8iyjzs6BdMPDSCe0lTmvyaZFDIAyvbnIY/u3E7qc4SvvuQvFWE48/UY
+         eZyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738991770; x=1739596570;
+        d=1e100.net; s=20230601; t=1738991812; x=1739596612;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XsXdVNzMronb2yUVKZu1ghjJ64uz8qffcCW+yBp7e6g=;
-        b=S3smu3+29HFY2MsgEShZztluG7uLTZ1fLDiGlT9WeGbW35h6ggZOe0CEbeyrd53DqC
-         auHxd1UFRwHFE9mnNnRlLEtxHe+0A0cuIMp3Kcb/C5qnc0SvdxQfDWSpej0FvbAnBXJF
-         AxyGtvE25gzt8w8bEwkOGPNqnhwrIsNuS07q63NpqpBvch5hulvCxYB74B8HLiPjI8az
-         47a5DdBtn2EVw08p7CtTI8bxNAMsoAdw06twITGmyphHjxILp+Xy00JUeOnCsn/m2kns
-         yMypgAn3Vkltos7+UsENCbEMlmLMniHqU1SY/Asl2RkIntpsIZNeMUnITupySvsKKmwP
-         tqXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCVWvj8dM7jeTzEcFHOIINjIE6bqMDy12pURVk3C1FGggfQQDDS4nOZO0P8qiq3bF6KXBEN4rGGVMK7vQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYZzWVIRfpLk1Mdkpmh9rWGuyeMrHUHQOPLz7aspD78bZ/ZwXi
-	JjJkBEbHMEGWdKYwF68ONb3hGGa7H5rmCwRmtq6w5UyhhgZNlhx/
-X-Gm-Gg: ASbGnct0Z2b69jY0ztNOZMe0JNCactvX6kuH8XPawyWYqZhZTTwFaCunUOxumeU6htD
-	9Hy4YjrG1QJju7yp/Z43q7t6bhgn+3g1PgujH/WzHLI2nu2tKFJ+qqLNnx2Roifc915p1XqKD8/
-	Jsm33f0cYzRy+XRHS2iBRw+17VvFy5zwNxRKEg/UQtF8GeCx/g0cG5Kamaj+eTwc1nw5EnV5GPV
-	jTaVA4DZ4y6pUvsZRBy2PeVdJbvwT+DqR2OO1odxSyIit1LyKAsCbw/uAkyWmM8Bv+lDTz7DKcq
-	QYV3S2mwWgg26KF2hPeGJh7NjP604jhy4w==
-X-Google-Smtp-Source: AGHT+IHeyXd1oxn7vL3HZr3tjnvx9Z4KKJpTYR1eaOG453ZqVGJwef/+ZJCtj+ujTNMOFPDU7EwVog==
-X-Received: by 2002:a17:90b:48ca:b0:2f9:9ddd:68b9 with SMTP id 98e67ed59e1d1-2fa243db8dcmr7753416a91.26.1738991769558;
-        Fri, 07 Feb 2025 21:16:09 -0800 (PST)
-Received: from distilledx.SRMIST.EDU.IN ([59.152.80.69])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa099f4d81sm4330134a91.4.2025.02.07.21.16.05
+        bh=Br0fmd3voz2egE/wkBW55eYvDvDY6vZCi/PhKJu8ARo=;
+        b=Kkl+qb1OMIV+6iHxuvJBCxuQt11D/GN/4+V1x1ASuBFFiUKViWehiGYSFL2UqEPfUm
+         E0CXdAbMJQxVkj+xTc+fScNMs8JCMWzODZAP1tiOY0hmF22EzFhd9IQT3m5COhYmjoTK
+         EPXpvLPFF8JFs6xE8obU8UT4AWuMwBgF69iT+yyPMx0PG0RonNRimFw7yTgM5PcVE9lR
+         IYUsl4YWt68/Jwirx2N3VazLrcbbSWN+HLKP9afQl5T0VSTw7+IOHnBJyNw0LC6J14Tp
+         y9wT4QhJr6zug/ul7qKbT+Fs6pmd0Fikgcf5UZXSWlRw9Bw2CMj0J7YfXz6MsRGYdHG8
+         tGtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW7FxBMPcgtKjmncqvFIT3fNPP0z1AFsZq+8UW6oOXNbxx7qda5KCbVXZY30mvnA/pCjhoHZ+Uu2Wh3Ep8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFtzDb2pTGBddwFLbNOthff6oi7oDIh58+OR3GHmR/mzQXqZcZ
+	Vl4MYSSfaRdWS4WgddLhAS0XmnVd+j2xHAZODhXsXrgusa00gf9A
+X-Gm-Gg: ASbGncua4j3sEjuWC/2kdHaRF8DbzEaKZ1DpMbz2H9bJqb8UIQpnGasgd4zH5ZfpDDs
+	20qHP3pBlPsNH18hUOzwGM+P4l5vp6xUa/ntJOfng4djGcGBAUZFBCVRuGdwA4RIk1ciN5/NBzZ
+	M2BhTiYJtFNJVBtQ+7KyQISZnnBt05IfKZ+Tv89mnwy/9Chf+3/xIroq4PdT3O9TbjNr1k7Mxeo
+	QlWHtYHaO4Q41hHeIb1mSZEYv1QMv286XZN9A//qwQT12300KEflKeoekRKkhyh4fEHFuituWoS
+	c0aFvNqcCp1Ov4qavPVrgVQ=
+X-Google-Smtp-Source: AGHT+IGX0riAH/3hApp4kFdJC0CnmcgG5Sr9IQVM/ydCvzjfY7h3u4L6L2aSCDPhoFJv0xhXauaPHg==
+X-Received: by 2002:a05:6902:168e:b0:e57:3dbc:bbbb with SMTP id 3f1490d57ef6-e5b462b5caemr5549968276.44.1738991811607;
+        Fri, 07 Feb 2025 21:16:51 -0800 (PST)
+Received: from localhost.localdomain ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5b3a1f00e0sm1207670276.2.2025.02.07.21.16.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 21:16:09 -0800 (PST)
-From: Tejas Vipin <tejasvipin76@gmail.com>
-To: neil.armstrong@linaro.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: quic_jesszhan@quicinc.com,
-	dianders@chromium.org,
-	dri-devel@lists.freedesktop.org,
+        Fri, 07 Feb 2025 21:16:50 -0800 (PST)
+From: Kurt Borja <kuurtb@gmail.com>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Armin Wolf" <W_Armin@gmx.de>
+Cc: platform-driver-x86@vger.kernel.org,
+	"Hans de Goede" <hdegoede@redhat.com>,
+	Dell.Client.Kernel@dell.com,
 	linux-kernel@vger.kernel.org,
-	Tejas Vipin <tejasvipin76@gmail.com>
-Subject: [PATCH] drm/panel: visionox-r66451: transition to mipi_dsi wrapped functions
-Date: Sat,  8 Feb 2025 10:45:41 +0530
-Message-ID: <20250208051541.176667-1-tejasvipin76@gmail.com>
+	Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH 00/10] HWMON support + DebugFS + Improvements
+Date: Sat,  8 Feb 2025 00:16:04 -0500
+Message-ID: <20250208051614.10644-1-kuurtb@gmail.com>
 X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -79,260 +75,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Change the visionox-r66451 panel to use multi style functions for 
-improved error handling.
+Hi, all :)
 
-Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
+Seeing that the alienware-wmi rework patchset is almost done I wanted to
+get ahead on development and submit these series.
+
+The main highlight is of course HWMON + manual fan control support
+(patches 7 and 8) which is highly requested by the few users who
+contacted me privately. I took a similar approach to the dell-wmi-ddv
+driver (thanks Armin!) and cached sensor readings for better
+performance.
+
+As always, your feedback is very appreciated!
+
+Based on pdx86/for-next, depends on [1].
+
+~ Kurt
 ---
- drivers/gpu/drm/panel/panel-visionox-r66451.c | 179 ++++++++----------
- 1 file changed, 76 insertions(+), 103 deletions(-)
+[1] https://lore.kernel.org/platform-driver-x86/20250207154610.13675-1-kuurtb@gmail.com/
 
-diff --git a/drivers/gpu/drm/panel/panel-visionox-r66451.c b/drivers/gpu/drm/panel/panel-visionox-r66451.c
-index 493f2a6076f8..81d615e1937a 100644
---- a/drivers/gpu/drm/panel/panel-visionox-r66451.c
-+++ b/drivers/gpu/drm/panel/panel-visionox-r66451.c
-@@ -42,85 +42,84 @@ static void visionox_r66451_reset(struct visionox_r66451 *ctx)
- static int visionox_r66451_on(struct visionox_r66451 *ctx)
- {
- 	struct mipi_dsi_device *dsi = ctx->dsi;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
- 
- 	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
- 
--	mipi_dsi_dcs_write_seq(dsi, 0xb0, 0x00);
--	mipi_dsi_dcs_write_seq(dsi, 0xc2,
--			       0x09, 0x24, 0x0c, 0x00, 0x00, 0x0c, 0x00, 0x00, 0x00,
--			       0x09, 0x3c);
--	mipi_dsi_dcs_write_seq(dsi, 0xd7,
--			       0x00, 0xb9, 0x3c, 0x00, 0x40, 0x04, 0x00, 0xa0, 0x0a,
--			       0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x19,
--			       0x3c, 0x00, 0x40, 0x04, 0x00, 0xa0, 0x0a);
--	mipi_dsi_dcs_write_seq(dsi, 0xb0, 0x80);
--	mipi_dsi_dcs_write_seq(dsi, 0xde,
--			       0x40, 0x00, 0x18, 0x00, 0x18, 0x00, 0x18, 0x00, 0x18,
--			       0x10, 0x00, 0x18, 0x00, 0x18, 0x00, 0x18, 0x02, 0x00, 0x00);
--	mipi_dsi_dcs_write_seq(dsi, 0xb0, 0x04);
--	mipi_dsi_dcs_write_seq(dsi, 0xe8, 0x00, 0x02);
--	mipi_dsi_dcs_write_seq(dsi, 0xe4, 0x00, 0x08);
--	mipi_dsi_dcs_write_seq(dsi, 0xb0, 0x00);
--	mipi_dsi_dcs_write_seq(dsi, 0xc4,
--			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
--			       0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x32);
--	mipi_dsi_dcs_write_seq(dsi, 0xcf,
--			       0x64, 0x0b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08,
--			       0x00, 0x0b, 0x77, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
--			       0x02, 0x02, 0x02, 0x02, 0x02, 0x03);
--	mipi_dsi_dcs_write_seq(dsi, 0xd3,
--			       0x45, 0x00, 0x00, 0x01, 0x13, 0x15, 0x00, 0x15, 0x07,
--			       0x0f, 0x77, 0x77, 0x77, 0x37, 0xb2, 0x11, 0x00, 0xa0,
--			       0x3c, 0x9c);
--	mipi_dsi_dcs_write_seq(dsi, 0xd7,
--			       0x00, 0xb9, 0x34, 0x00, 0x40, 0x04, 0x00, 0xa0, 0x0a,
--			       0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x19,
--			       0x34, 0x00, 0x40, 0x04, 0x00, 0xa0, 0x0a);
--	mipi_dsi_dcs_write_seq(dsi, 0xd8,
--			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
--			       0x3a, 0x00, 0x3a, 0x00, 0x3a, 0x00, 0x3a, 0x00, 0x3a,
--			       0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
--			       0x00, 0x0a, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00,
--			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0a,
--			       0x00, 0x32, 0x00, 0x0a, 0x00, 0x22);
--	mipi_dsi_dcs_write_seq(dsi, 0xdf,
--			       0x50, 0x42, 0x58, 0x81, 0x2d, 0x00, 0x00, 0x00, 0x00,
--			       0x00, 0x00, 0x6b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
--			       0x00, 0x00, 0x01, 0x0f, 0xff, 0xd4, 0x0e, 0x00, 0x00,
--			       0x00, 0x00, 0x00, 0x00, 0x0f, 0x53, 0xf1, 0x00, 0x00,
--			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
--	mipi_dsi_dcs_write_seq(dsi, 0xf7, 0x01);
--	mipi_dsi_dcs_write_seq(dsi, 0xb0, 0x80);
--	mipi_dsi_dcs_write_seq(dsi, 0xe4, 0x34, 0xb4, 0x00, 0x00, 0x00, 0x39, 0x04, 0x09, 0x34);
--	mipi_dsi_dcs_write_seq(dsi, 0xe6, 0x00);
--	mipi_dsi_dcs_write_seq(dsi, 0xb0, 0x04);
--	mipi_dsi_dcs_write_seq(dsi, 0xdf, 0x50, 0x40);
--	mipi_dsi_dcs_write_seq(dsi, 0xf3, 0x50, 0x00, 0x00, 0x00, 0x00);
--	mipi_dsi_dcs_write_seq(dsi, 0xf2, 0x11);
--	mipi_dsi_dcs_write_seq(dsi, 0xf3, 0x01, 0x00, 0x00, 0x00, 0x01);
--	mipi_dsi_dcs_write_seq(dsi, 0xf4, 0x00, 0x02);
--	mipi_dsi_dcs_write_seq(dsi, 0xf2, 0x19);
--	mipi_dsi_dcs_write_seq(dsi, 0xdf, 0x50, 0x42);
--	mipi_dsi_dcs_set_tear_on(dsi, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
--	mipi_dsi_dcs_set_column_address(dsi, 0, 1080 - 1);
--	mipi_dsi_dcs_set_page_address(dsi, 0, 2340 - 1);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb0, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc2,
-+				     0x09, 0x24, 0x0c, 0x00, 0x00, 0x0c, 0x00, 0x00, 0x00,
-+				     0x09, 0x3c);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xd7,
-+				     0x00, 0xb9, 0x3c, 0x00, 0x40, 0x04, 0x00, 0xa0, 0x0a,
-+				     0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x19,
-+				     0x3c, 0x00, 0x40, 0x04, 0x00, 0xa0, 0x0a);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb0, 0x80);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xde,
-+				     0x40, 0x00, 0x18, 0x00, 0x18, 0x00, 0x18, 0x00, 0x18,
-+				     0x10, 0x00, 0x18, 0x00, 0x18, 0x00, 0x18, 0x02, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb0, 0x04);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xe8, 0x00, 0x02);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xe4, 0x00, 0x08);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb0, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xc4,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x32);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xcf,
-+				     0x64, 0x0b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08,
-+				     0x00, 0x0b, 0x77, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-+				     0x02, 0x02, 0x02, 0x02, 0x02, 0x03);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xd3,
-+				     0x45, 0x00, 0x00, 0x01, 0x13, 0x15, 0x00, 0x15, 0x07,
-+				     0x0f, 0x77, 0x77, 0x77, 0x37, 0xb2, 0x11, 0x00, 0xa0,
-+				     0x3c, 0x9c);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xd7,
-+				     0x00, 0xb9, 0x34, 0x00, 0x40, 0x04, 0x00, 0xa0, 0x0a,
-+				     0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x19,
-+				     0x34, 0x00, 0x40, 0x04, 0x00, 0xa0, 0x0a);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xd8,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x3a, 0x00, 0x3a, 0x00, 0x3a, 0x00, 0x3a, 0x00, 0x3a,
-+				     0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x0a, 0x00, 0x0a, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0a,
-+				     0x00, 0x32, 0x00, 0x0a, 0x00, 0x22);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xdf,
-+				     0x50, 0x42, 0x58, 0x81, 0x2d, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x6b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x01, 0x0f, 0xff, 0xd4, 0x0e, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x0f, 0x53, 0xf1, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf7, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb0, 0x80);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xe4, 0x34, 0xb4, 0x00, 0x00, 0x00, 0x39,
-+				     0x04, 0x09, 0x34);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xe6, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xb0, 0x04);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xdf, 0x50, 0x40);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf3, 0x50, 0x00, 0x00, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf2, 0x11);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf3, 0x01, 0x00, 0x00, 0x00, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf4, 0x00, 0x02);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xf2, 0x19);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, 0xdf, 0x50, 0x42);
-+	mipi_dsi_dcs_set_tear_on_multi(&dsi_ctx, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
-+	mipi_dsi_dcs_set_column_address_multi(&dsi_ctx, 0, 1080 - 1);
-+	mipi_dsi_dcs_set_page_address_multi(&dsi_ctx, 0, 2340 - 1);
- 
- 	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
- 
--	return 0;
-+	return dsi_ctx.accum_err;
- }
- 
--static int visionox_r66451_off(struct visionox_r66451 *ctx)
-+static void visionox_r66451_off(struct visionox_r66451 *ctx)
- {
- 	ctx->dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
--	return 0;
- }
- 
- static int visionox_r66451_prepare(struct drm_panel *panel)
- {
- 	struct visionox_r66451 *ctx = to_visionox_r66451(panel);
--	struct mipi_dsi_device *dsi = ctx->dsi;
--	struct device *dev = &dsi->dev;
- 	int ret;
- 
- 	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies),
-@@ -132,7 +131,6 @@ static int visionox_r66451_prepare(struct drm_panel *panel)
- 
- 	ret = visionox_r66451_on(ctx);
- 	if (ret < 0) {
--		dev_err(dev, "Failed to initialize panel: %d\n", ret);
- 		gpiod_set_value_cansleep(ctx->reset_gpio, 1);
- 		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
- 		return ret;
-@@ -146,12 +144,8 @@ static int visionox_r66451_prepare(struct drm_panel *panel)
- static int visionox_r66451_unprepare(struct drm_panel *panel)
- {
- 	struct visionox_r66451 *ctx = to_visionox_r66451(panel);
--	struct device *dev = &ctx->dsi->dev;
--	int ret;
- 
--	ret = visionox_r66451_off(ctx);
--	if (ret < 0)
--		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
-+	visionox_r66451_off(ctx);
- 
- 	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
- 	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-@@ -179,7 +173,7 @@ static int visionox_r66451_enable(struct drm_panel *panel)
- 	struct visionox_r66451 *ctx = to_visionox_r66451(panel);
- 	struct mipi_dsi_device *dsi = ctx->dsi;
- 	struct drm_dsc_picture_parameter_set pps;
--	int ret;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
- 
- 	if (!dsi->dsc) {
- 		dev_err(&dsi->dev, "DSC not attached to DSI\n");
-@@ -187,25 +181,13 @@ static int visionox_r66451_enable(struct drm_panel *panel)
- 	}
- 
- 	drm_dsc_pps_payload_pack(&pps, dsi->dsc);
--	ret = mipi_dsi_picture_parameter_set(dsi, &pps);
--	if (ret) {
--		dev_err(&dsi->dev, "Failed to set PPS\n");
--		return ret;
--	}
-+	mipi_dsi_picture_parameter_set_multi(&dsi_ctx, &pps);
- 
--	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
--	if (ret < 0) {
--		dev_err(&dsi->dev, "Failed to exit sleep mode: %d\n", ret);
--		return ret;
--	}
--	msleep(120);
-+	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 120);
- 
--	ret = mipi_dsi_dcs_set_display_on(dsi);
--	if (ret < 0) {
--		dev_err(&dsi->dev, "Failed on set display on: %d\n", ret);
--		return ret;
--	}
--	msleep(20);
-+	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 20);
- 
- 	return 0;
- }
-@@ -214,24 +196,15 @@ static int visionox_r66451_disable(struct drm_panel *panel)
- {
- 	struct visionox_r66451 *ctx = to_visionox_r66451(panel);
- 	struct mipi_dsi_device *dsi = ctx->dsi;
--	struct device *dev = &dsi->dev;
--	int ret;
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
- 
--	ret = mipi_dsi_dcs_set_display_off(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to set display off: %d\n", ret);
--		return ret;
--	}
--	msleep(20);
-+	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 20);
- 
--	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
--	if (ret < 0) {
--		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
--		return ret;
--	}
--	msleep(120);
-+	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 120);
- 
--	return 0;
-+	return dsi_ctx.accum_err;
- }
- 
- static int visionox_r66451_get_modes(struct drm_panel *panel,
+
+Kurt Borja (10):
+  platform/x86: alienware-wmi-wmax: Rename thermal related symbols
+  platform/x86: alienware-wmi-wmax: Refactor is_awcc_thermal_mode()
+  platform/x86: alienware-wmi-wmax: Improve internal AWCC API
+  platform/x86: alienware-wmi-wmax: Modify supported_thermal_profiles[]
+  platform/x86: alienware-wmi-wmax: Improve platform profile probe
+  platform/x86: alienware-wmi-wmax: Add support for the "custom" thermal
+    profile
+  platform/x86: alienware-wmi-wmax: Add HWMON support
+  platform/x86: alienware-wmi-wmax: Add support for manual fan control
+  platform/x86: alienware-wmi-wmax: Add a DebugFS interface
+  platform/x86: alienware-wmi: Improve and update documentation
+
+ Documentation/wmi/devices/alienware-wmi.rst   | 390 +++------
+ drivers/platform/x86/dell/Kconfig             |   1 +
+ .../platform/x86/dell/alienware-wmi-wmax.c    | 793 +++++++++++++++---
+ 3 files changed, 792 insertions(+), 392 deletions(-)
+
+
+base-commit: e75394bbf4838857f57b6c5d00f1e56c46cd6c11
+prerequisite-patch-id: 2e54a1278aabd3810a2e501ab8f001af5f83e45c
+prerequisite-patch-id: d9e78e1086bb0fc8df23678f91fcf2e219d73f81
+prerequisite-patch-id: db9c0c4b1b0dacf365d9aa4644282e32a3e80634
+prerequisite-patch-id: c9cf42516931054b8a292774b9c86416246da36c
+prerequisite-patch-id: a047966c43a92c41a01858aed9b74470324f9e4f
+prerequisite-patch-id: 32293f8c9ed39c076c30f7bcf9ab8105ff8dd4f4
+prerequisite-patch-id: 100391541e9ca8c1a49b1e48a3f99128b0d14b5d
+prerequisite-patch-id: e7cffaa05f5212b70520d3d80c23f1804007b349
+prerequisite-patch-id: 4f9219d3b1f6281b1815f9ac5e823aa59e85f588
+prerequisite-patch-id: c37756f4b1e7f61c0dac0f3cbe68b95838ecce84
+prerequisite-patch-id: fdf58a28326cec768d5f45252dd7b1f189532623
+prerequisite-patch-id: 0a0fd32bdc83a8676eeda30e25f93c2edd3b6d3c
+prerequisite-patch-id: 4c85aa2b99a106907639075a2fc455f312a14b4f
+prerequisite-patch-id: bb7c74dd242bf773f06e531090ec63cc17b1ac69
 -- 
 2.48.1
 
