@@ -1,71 +1,78 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D3A3BBE5;
-	Sat,  8 Feb 2025 07:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB998148FE6
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 07:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738999398; cv=none; b=Rv5xVJX8fb3KfwduZh8Tayjpr7Y0lVU7tHfcIr5VspCK+BxNmV+9bU7PySAlW6rMThzLWyxRgM4fLKqq5DXbCAdw3D9fC3/BlHOJaDl/TfNx4bGyZK3xreB1ApyOv5dmJ4aJZhiKXuYnHQY4PK7AH3eKzK69J+5unGa7icPYmno=
+	t=1738999508; cv=none; b=qCEs976sSH0NIDAYF/Izs6iirhasYMFAhGZBuToWuIze+M1SmVLmyE5f6w2quSLEW4hoGd+PY3Z/qte51nFN5VLXxZqq0I3KlfGR795+nrmW144jSuNoz9kcblTM2zqUuGMfOSUjQa3bSP5/OWxp7vLRZwGQW6Nodmai/S5V7xA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738999398; c=relaxed/simple;
-	bh=SQVJlEx2V/RSeXfcXkikh7h+w57xN8e7Hv78bAbfxJY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mAsU82JLsGAXeXtM1dbdf6ixpS3mm0t5vzUuNKioJT5CjUVKmfkHodNjqbfnmrP90qeeJZ5Vsr1L5ynBrEBd0kNZ+Oe1fK5n/s8oswBkZFpHw8d8VLaYMdmyZC7HFV9tF6IPHDt+2g5TLHErnsMRRUR8xa3SJ2HtEbdhFdOVTJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Aq7ElquE; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Aq7ElquE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dIUTnKlqptBhVh4FHbYoQplL5I5DQEoGc3UGevcbKYc=; b=Aq7ElquEb4PU458vaoh2BURefq
-	0XGupeL+Ea5a1zbTs9mHs4isuqu4YDjsFkA4psNsUKV2IVtFGihdFzB3J4BlS1lx6yz2RbyKBPzLQ
-	q5ug1G3UoBjgjdjZJ8pDtcbs+0u9J4m2W1Iyo6sUbB6qG+Wy0ywQUlWoMnSn8OmDM2h3cb8/NuufT
-	bw6tV0V3F/oz2+8ixkTFko2xzqDuL2B9JR1G1aO/JW0eMEN6zXuMA2HAuspE0AAPA0iEyLWFwxwXY
-	h9ZeDE/095r6pBz9fJ78gD+4ccGeRpRxZN3tn2b/eY9RppD2xLfz/F6OIiBJtZ6ZGQIYD7hJA/Ade
-	hnrUUgrg==;
-Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tgfAx-00000009uJj-3bg7;
-	Sat, 08 Feb 2025 07:22:51 +0000
-Date: Sat, 8 Feb 2025 07:22:51 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Qi Zheng <zhengqi.arch@bytedance.com>, kevin.brodsky@arm.com,
-	riel@surriel.com, vishal.moola@gmail.com, david@redhat.com,
-	jannh@google.com, hughd@google.com, yuzhao@google.com,
-	muchun.song@linux.dev, akpm@linux-foundation.org, will@kernel.org,
-	aneesh.kumar@kernel.org, npiggin@gmail.com, arnd@arndb.de,
-	dave.hansen@linux.intel.com, rppt@kernel.org,
-	alexghiti@rivosinc.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
-	linux-um@lists.infradead.org, x86@kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 0/5] remove tlb_remove_page_ptdesc()
-Message-ID: <Z6cGS__8VRQdzAYA@casper.infradead.org>
-References: <cover.1737637631.git.zhengqi.arch@bytedance.com>
- <20250124114759.GB15996@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1738999508; c=relaxed/simple;
+	bh=nO3hchjOsaP1RONuy97ZQXYJfj/XWV3o1xs5m2QVd2Q=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=BBNOh1qXBzz5xnpW+hcygJfc/RfUnxuFOHn2ghdZyY/G4CpTSNXFb0cmjmJcMCtN56FYy8xRnHdJiViX+B6hZdJxfH9Rm5xWmZu8c+T5bVC52bUI8nM/g/V0vOtcxZYYnAPKd7HJHaI6CxKVN8Ae7nuchckVqBCjsNjHtZ5RulU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d0225c44e8so53587285ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 23:25:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738999506; x=1739604306;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bTLH3DE1scVq8ZV/C5ZLGjBap6ga1IZ5cXcRDj04E4E=;
+        b=bqdsRoV6oI9oSuEONrrsJ/KuIcaNQiMbTv16Nx2ep3IUhl4XUcrCOFJcapIpPgDNUZ
+         xhbUs3hxp7EQA6sdb5hLpHlp5tIEhjzmTu3O638x6J54DvobRBl9A3wfSpketOvT9xM2
+         +x85eEXmy+KGnXGVMCfXQa43U+WKoHu9JpnTAkMjsGsgwAX40QrxBZZAdFToIKoP8yQ3
+         cQLs1s+M/7130LmK4A8Qew54zCg6R9sujo9d2YDX71upfOz+SUFEBH3ZrliGxTXrfb9v
+         FgW556MPBWjH9GfgZaTc8yMLjgOm7QqBSjFGStR2dwH/AHFlRrUX1fABQAOX3F3NAjwx
+         CskQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0+8OkLZOVKrhCWYTJAA2rlSbZuarP4SrhgRmxkMbyAPZQmQWdYVw1uQ7ISu/ZIgGJlLjKrwj+9uhblAI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypcEgDTtZ0vbqE50hz44PUMVQzmOpEfVI3O9wmurEHpYWGGXoF
+	hdWI/SAs/Hd8upGkPCWOQjNDetc7DN+GfSHLemkTcBd7ZI3pwTtU59dKfKoTBWIPrvd2OuSqQ/D
+	ALZyi6rWw8FfyyZZsx9B037ThGzS1UFvJBErYz/7qWnWWoIvyK9uolsg=
+X-Google-Smtp-Source: AGHT+IGKkh/0FawH2W86AI8WUkzUTbydbSlAtwptxUOjYiSCq8r5MPZ/xLAa/+mPU/8D2xKFQdArsfXVcM8/oj6kp6MWTlj6YvS/
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250124114759.GB15996@noisy.programming.kicks-ass.net>
+X-Received: by 2002:a05:6e02:481c:b0:3cf:b626:66c2 with SMTP id
+ e9e14a558f8ab-3d13df546c4mr45042965ab.19.1738999505985; Fri, 07 Feb 2025
+ 23:25:05 -0800 (PST)
+Date: Fri, 07 Feb 2025 23:25:05 -0800
+In-Reply-To: <67a4b9e8.050a0220.d6d27.0000.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a706d1.050a0220.3d72c.0020.GAE@google.com>
+Subject: Re: [syzbot] [overlayfs?] general protection fault in clone_private_mount
+From: syzbot <syzbot+62dfea789a2cedac1298@syzkaller.appspotmail.com>
+To: amir73il@gmail.com, brauner@kernel.org, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-unionfs@vger.kernel.org, lizhi.xu@windriver.com, mike@mbaynton.com, 
+	miklos@szeredi.hu, syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jan 24, 2025 at 12:47:59PM +0100, Peter Zijlstra wrote:
-> Right, so I don't think Sparc and Power care to use ptdesc, they're
-> using non page page-tables.
+syzbot has bisected this issue to:
 
-i think you mean s390, not sparc.  all architectures _use_ ptdescs,
-it's just that s390  and ppc use fractional ptdescs rather than an
-entire ptdesc for an individual page table.
+commit ae63304102ecd597130ecea27395739a6a6371b7
+Author: Christian Brauner <brauner@kernel.org>
+Date:   Thu Jan 23 19:19:48 2025 +0000
 
-eventually we can change that, but we're looking out perhaps five years
-before we can allocate a ptdesc for a sub-PAGE_SIZE quantity.
+    fs: allow detached mounts in clone_private_mount()
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10cb5ca4580000
+start commit:   808eb958781e Add linux-next specific files for 20250206
+git tree:       linux-next
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=12cb5ca4580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14cb5ca4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=88b25e5d30d576e4
+dashboard link: https://syzkaller.appspot.com/bug?extid=62dfea789a2cedac1298
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16346df8580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=117e80e4580000
+
+Reported-by: syzbot+62dfea789a2cedac1298@syzkaller.appspotmail.com
+Fixes: ae63304102ec ("fs: allow detached mounts in clone_private_mount()")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
