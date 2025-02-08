@@ -1,72 +1,108 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D6B1E4A9
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 12:33:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3041E4A9;
+	Sat,  8 Feb 2025 12:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739017985; cv=none; b=CZ7/UArpyBOT15NfU8uVHFOwA8CLm3qhOv6OvEFxwTXfI+K8ZTj0XN46T9PjpIWa/otxcyQk8ev0mL53q8ANvR36U5ulwdF+3ByMjqkXYkUkHYC9tQFp5RmSfO5dLVIbvjhZ58eFE8ICIhiLgoYKsk6J/dqBEoDitZTD4HDWJ2c=
+	t=1739018055; cv=none; b=ndmfGclyh76qBPQaebse3i38MqUFpVHkXmiTBZPSRyImkiguZ8EMBNMq69XJLe3a0MUX2br1TVUVUq1diiqlJatbfOpcVlEUkYprUoyBgDcgWRBby4qog1ES5YLArYYCsxE6hUS+1/78ev3Hi5B5eMmcvQsEsm3SKyptWC6VQcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739017985; c=relaxed/simple;
-	bh=gnAf0oxD+ABqcCWkZm9AZ+oQK7K6LRG0Ib+IKWJmmeQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=jPL2AZyyRtlMu/ODiltfBLenheqjlM5TU32bhZ7fe0BXQLZooidmgtJbxBESPnzFIclplwNda7XnIJdUJyVUrwemeLPZKp6xXMyszUTzdS1mH3M9fBYIZxfQWY/nJ9Uqz9hflkSYMfTCFC9khhXo3J/2HdfUJ/V/0sJ6P6SoWNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d060cfe752so16343075ab.2
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 04:33:03 -0800 (PST)
+	s=arc-20240116; t=1739018055; c=relaxed/simple;
+	bh=7NtmFEV6HVkwd/iCjaBhvbggj+/ki/A/XgNsktxy7yA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jFh1gHngBT2QRs7sA9nr+pYOUBZx7BX1hGdRWIAkVIweLsxrVkndrsUxeuSwmPoOUXQxON3cB07WF24W8C6HMZTf4TaJww95ZQ1umadjv34SdM1+jSPPEXdGiXMukXQyzr8VG0nGQisQDbdui+oLh+VCdPEksjMal6bco/wvWwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MsdJXP/5; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MsdJXP/5"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30795988ebeso27864121fa.3;
+        Sat, 08 Feb 2025 04:34:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739018052; x=1739622852; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7NtmFEV6HVkwd/iCjaBhvbggj+/ki/A/XgNsktxy7yA=;
+        b=MsdJXP/5PaPsFlQE3nwuMrgPVfy+OEvzLFIqH9vJzWbNtSI8IXsPGWClr6cB1C5FGo
+         8OTVfMxIoE7hTQJedzcuXe14vCfmYI3Ojy+8jTwUV0gOz/sBX5Ef1zD0u3Kdg/2qZKEQ
+         c0H0eQ5M42qQua6kyMViUEf754AOoyaMdHTdHqWor7S67PPhHQrjC9j4FLJyOp8wczqh
+         JUlVBCUbp9XGmCgGP6toG7oWih9Qf8UkKEowknysXJz4cgCWrPhQsamEkoaHaEsheWZ0
+         4qjeH+kNwd5McCwTbuqFceOPWuS4nweGfqq1Wo5OCs0/gwMq52MFcCLzLN/G5g8mfrg4
+         g7Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739017983; x=1739622783;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ckiJJFIUMtQZLd0IgPbcIfCLKNQXEmTvD78+8lxDvKI=;
-        b=UJAnN+AuHhFXZKubCcsSp+HWZquZV6vT3r/K9wp1Gp8kFKdHQFsgxZQst+HfoZBtSF
-         TLtFZq3kpGVkJckPbHlstynG/K6WreGKVJWNjHFwUQ1QGDHbM15HqqzZWKVJ33IgQe0j
-         hVAQlHRQILzCvGISPM6i249ueFceJe8Qb48sJ7IV2GISasfr3V1ZkaKiMXtdxGaxURml
-         vc8nmqwjfNgMSsEqEAKMH2nWQm37WBwybFcVNTwu0U/OAvt5NbDg7PA2CKkqCcck5vVL
-         kDeeFNphzD/nex5xzOYGgFzDFJCPIdchRNuPqE+inVDvP5VFPSiLJ3TIJd8cSyumPHdU
-         6dTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXro7FlJ6b/qLHMaNjOxpjMYf2b7TWLUHK1zw7o+RiRf3CeeV4thlIT/PneXcTfuAZ19subIUladHj2ofM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDTQqKrJrsHwiwt/u17rGUYPdF5n1CMHsPqSViC39/b0dgTRwm
-	qO5HFS4TtDKWYR7QGp1vaRaEVVr4gSlWsi+MO+XJ/hB4jGW6kkCWhoEvxg70Nn9ywuZVQnd/hSZ
-	nZZxDY8MXuBhgk9TznnGa2ViAMHjqa0sMuupkADXmP/I42q/zV/c4VoY=
-X-Google-Smtp-Source: AGHT+IGTfrR+12PEw4Ctdq0/pJunjd+5wCzhpOYj5NP8mIPtjZi79jLVejQ9tJ/7dxB+EMXYzZelIpTH9rB+Zrw82xYzGRStZzGF
+        d=1e100.net; s=20230601; t=1739018052; x=1739622852;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7NtmFEV6HVkwd/iCjaBhvbggj+/ki/A/XgNsktxy7yA=;
+        b=sWJwrzvicFFXM4Db8OIXNcBXkkLdV7efNxeOSe+Md9+DyO4lhFh5ToaLhN5WWO6xeu
+         86zVoVzRAjZRPFokwMS9qHIIPqoq5sNtDFxaWCN6Uhy6eUJlr0Q4jikrIPN0DhXJSWDP
+         +803wIuaSA6VQ2EA/nGPghfqDsD7+DTXkKFAyHALi1C0B7JIIkdCgZXhSgjTHGZb3W2g
+         7tyKVD8M1aOE5vepTIp8QAzN1h2FA//33f3h522KdfkWxj2mec4jzZ3xEUcXOP60EpBF
+         WtoUwtFbgcNbmCBE+Dt3EOPPUgYjpy7X7JL8yl368Hhilk/oxAgOyhM42aVf3+d6Fylc
+         wFTg==
+X-Forwarded-Encrypted: i=1; AJvYcCWSev5cpUxj62mRVSTSwNU4ML31/+b8nXcVBfRpJHqI/3z1nCThtNzss8SSNR1v97tKpyLw7d8Qx/Ysl3s=@vger.kernel.org, AJvYcCWhJP8m4oHptyNUvKtnKdx1gtWySCs68eWg+F+MTWOqtQCW8gBI+YIy+1eegMrxXgvK1J4XYGlAmFEGOISWYw2K@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSWvOaVIhmdfvi3HaGuZZb41OuA0G2mfCWB+saELoMPPBeG2C2
+	KYVkLn0bq8NBFT1HtgjuJKEhtVEnfMqZ+VaqbP1oSdVg4vqeVyQwZA61fUXVYlsYv6Xf7sSRY3f
+	vyl954lkmUe9kzmNQoyfL8ZNfLrQ=
+X-Gm-Gg: ASbGncsx4Q6uPWONByGE+YioRCjSh3Gus3wMkkV/f6dXnFUbKvFj/mIROUIfSRoLdWm
+	19qQVXWKOc0yJBl6xxYTNW6ZYxedWOsfQa7/e3eGf7/MVm5kXlbFl/If7lr4OpmUJ0+iLfzGd7C
+	l3Q4YTK7a6V4y0TVaurJi/slW+kCz6QC0=
+X-Google-Smtp-Source: AGHT+IHOVYZ6119BddUktzA6djJrY16tcFrgFxUAy4xskpPIrBDV/cXo8QbRQDOfCKTZHGOjX8eg/TALGJvaLhNy1Bo=
+X-Received: by 2002:a05:651c:199f:b0:307:dc1f:e469 with SMTP id
+ 38308e7fff4ca-307e580c5d1mr23625221fa.20.1739018051928; Sat, 08 Feb 2025
+ 04:34:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:480b:b0:3d1:4b97:4f2d with SMTP id
- e9e14a558f8ab-3d14b974f97mr22390295ab.5.1739017983118; Sat, 08 Feb 2025
- 04:33:03 -0800 (PST)
-Date: Sat, 08 Feb 2025 04:33:03 -0800
-In-Reply-To: <20250208115825.2077-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a74eff.050a0220.3d72c.0026.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] general protection fault in __timer_delete_sync
-From: syzbot <syzbot+1eaee1ec18b9d18ca3b8@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
+References: <20250207-bitmap-kunit-convert-v1-0-c520675343b6@gmail.com>
+ <20250207-bitmap-kunit-convert-v1-3-c520675343b6@gmail.com> <CABVgOS=W3Wny0q-Kpj6P1ZXyG1R_HYCrPLtnHiuruW9FxoHrfA@mail.gmail.com>
+In-Reply-To: <CABVgOS=W3Wny0q-Kpj6P1ZXyG1R_HYCrPLtnHiuruW9FxoHrfA@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sat, 8 Feb 2025 07:33:35 -0500
+X-Gm-Features: AWEUYZnxmpKkzSNj_ExYRdu7y-yKEMYavEZgdMaiYXQTRBuM3t00g7LqepmE3D0
+Message-ID: <CAJ-ks9mTAp0UwRViKHYqfFV+qkgi89=pNxiQOZYmHdYzkJ6Wcw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] bitmap: break kunit into test cases
+To: David Gow <davidgow@google.com>
+Cc: John Hubbard <jhubbard@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Shuah Khan <shuah@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Sat, Feb 8, 2025 at 4:07=E2=80=AFAM David Gow <davidgow@google.com> wrot=
+e:
+>
+> On Sat, 8 Feb 2025 at 04:14, Tamir Duberstein <tamird@gmail.com> wrote:
+> >
+> > Move some tests into `bitmap_test_cases` and parameterize
+> > `test_bitmap_print_buf`. This gives us nicer output in the event of a
+> > failure.
+> >
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > ---
+>
+> I very much like this cleanup: the static global 'kunittest' was annoying=
+ me.
+>
+> I think there's an argument to get rid of tc_err() entirely, and just
+> use KUNIT_FAIL directly, but I'm happy either way: it is a lot of
+> churn.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+I'm happy to do that. Pulling on that thread ended up producing a nice
+cleanup. There's no way to add a patch to the series without sending
+it all again, is there?
 
-Reported-by: syzbot+1eaee1ec18b9d18ca3b8@syzkaller.appspotmail.com
-Tested-by: syzbot+1eaee1ec18b9d18ca3b8@syzkaller.appspotmail.com
+> Reviewed-by: David Gow <davidgow@google.com>
 
-Tested on:
-
-commit:         ed58d103 Add linux-next specific files for 20250207
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1447f0e4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=244a34ec1429746
-dashboard link: https://syzkaller.appspot.com/bug?extid=1eaee1ec18b9d18ca3b8
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1768dca4580000
-
-Note: testing is done by a robot and is best-effort only.
+Thanks for the review!
