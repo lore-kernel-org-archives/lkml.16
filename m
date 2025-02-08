@@ -1,108 +1,63 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC331119A
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 20:31:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD92243946;
+	Sat,  8 Feb 2025 20:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739046719; cv=none; b=MMLSEG07uK3kC1bO4YvXLCzaFMRGCdluV+TTbVLw4vBdKnUhNtrBTENUFhjAxlq2/8on40pafEFn1M/lxqgJ4UjwcU+m6EaDGn7+DAvUyGzQHi+wi22+9seRxbf0UT0n0veLJHQI5c4QpqNfNeC1vKyel2ToeeQT0NHCAp0wdJQ=
+	t=1739046733; cv=none; b=RkOf4PUhpXBv+02NYHRe+CCd2gsJulfBN2v+yEhijyt5FsrQuIOSwEbVt+r/ZsIRVfyPk2qwM+Hq6pzngbKppTR9FkrTnY0tQTmfI7MgSyzEI/X0eZM230JJYZjzWbi9Br71BwQyfDcLKmg/VbA8/KtLxttnfJI0PgjLxLNGj1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739046719; c=relaxed/simple;
-	bh=6FhoGigg93hbhRP8Lf1UPXwi8h34E9BhfLcHwuSv3ZQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ozNgtiIm6qVZeFFbiq6wT03MLws7Ze++oi4u59ua+AHgti3gREdWA/Js6/7XDTBMEshmcrTilaG7xDwZ27nWGJdyLyHs3uYPnmnmHLpqBY65R+7VKKkfjYLEm5s2U4dkc6zKbVdgUF8R7g5WFyJa8Ib/uw/meFNUE638tTcJ/7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hjVt2cAG; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1739046733; c=relaxed/simple;
+	bh=Q6EvRURVSjKHgfwvG6nn2cK0bDigrOhSG5vvq7iP3U4=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=h6/cbYzx27zLY1gHOAmvB0QXWafqEc58V97Q7pBIVFQL5m9gnKL9K0hWgpPTq5d6NLtYwpRPaybKNwV25Aqlg+t/m3EF5OzK5OD8jEyjj+OmM27moe8nn0NQHjW1KnVpDHV2i4WDl1bfu7k9BivqrkNuE+8A35vn+/FPYtJV/MM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=scH15Htn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hjVt2cAG"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5de47cf9329so3070249a12.3
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 12:31:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1739046715; x=1739651515; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RJDerw/xfRXHgl0oLYxXtpLYP2/HSeFnhpjbjeqGC3M=;
-        b=hjVt2cAG3F6K4S671PUqqFI3BJ68SvAvsjYD9lGUO3mA5p+MnW4fNqUCtXw1aup5Yo
-         aOpru3oRFWRL8o/U+L4XlkXnSm//KG/IeokNvegi4zVDhDEqSQ00RNopZr2vKJhD5Q3R
-         Wkkxt1oyholLevRgQ0jiabC79nVLuj1WGqFIA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739046715; x=1739651515;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RJDerw/xfRXHgl0oLYxXtpLYP2/HSeFnhpjbjeqGC3M=;
-        b=cEOVLT9mfejKhJVWNigYhuN1FwX8AQpOFGlryKvBJ4L7KSxZ0rXyCuJb4Uq1FRH34q
-         JU7RAv7rzYDFx4JwBklngzYT4OSc1KVPb/7ORIsNakZA2ZMEj+O6etQKgPfVmrzbx3pA
-         r5GNixEMtmt+dVci7GkmPPStLX9xHtJSX+JW/ZyoVpzzIM8QUB7/a57bFCTsxJJwVWt+
-         +xxeZgPUO5su5FUodt0HoozBKENzXfyPekkMOy53nDOx8jtxV9T0jgUUO6acRieAfhjP
-         Ubmp58PaO12O5AEtRDjVC2BjWaPbevx6kFcHsWmjMzGtBJIuiSZYRSowWj2JVLv9/m/O
-         0+bg==
-X-Forwarded-Encrypted: i=1; AJvYcCXsVs232uQyVDL9q0b8yQmFj1QqNb3FKnxMfpIVBp75VzngbM1JPR8SVuR1Mp+h7yqkMaVlXn2pipDPfrg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTH+4KdgpH50u9FO/g/n/NtOsgamH4Q99muPJkUCi6rNS/m5M6
-	YFBMiaGBVoXZU2qwrH7E7GYf+GGuTiX9+MAnf4ueFetd+fXdQC1ixR1nQ25k1HjkXWAMtWmLEtB
-	DEbIB
-X-Gm-Gg: ASbGnctNc+mR7fOFiLHmD7rcdyanY+J646ba9qbI2HXLNf2PRegdQHmxGYpN+h54Xzj
-	wdZ6IDOlVvqLrgg1DRZnMjPV32Cw1j4GR5vF4319n9pMaZ1mkJTH4FVYv8PPTOKrJP6i+7Pylx3
-	rtI9yjLkZANDa1iXnr8sWWHrnVOSBgKr9jTnNylpi1J8L6LOTikluTYkJ/uHK7+8rOMFqHddIQ8
-	74rvGzyBYesweU4tvaxc5v9f32lo8APPT3X4nnDw/8/jxp5P6eWIsfc/erMv80Sbb8i5iQ7zfP/
-	8pOlvzHV8CGInZELQZ3k0OrcXKTIXZySQciGbD2lCjul95fvtVuKzbk=
-X-Google-Smtp-Source: AGHT+IEADSXRX2tdxZqBxSn5Ukdupwo2gh/xSi6OhQkb+qyGJoqlnTNFBYcdXC6e4Pzohr/JQTA5dA==
-X-Received: by 2002:a05:6402:42cc:b0:5db:e7eb:1b34 with SMTP id 4fb4d7f45d1cf-5de4500493bmr10651150a12.13.1739046715255;
-        Sat, 08 Feb 2025 12:31:55 -0800 (PST)
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de589ad711sm2333532a12.73.2025.02.08.12.31.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Feb 2025 12:31:53 -0800 (PST)
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5de63846e56so745643a12.1
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 12:31:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXXZheMP07agO2dD1czPr3L2w2LsrAWTq01ynaMer/W1tXVWEajqIwgsakDB6+Yq3jZFCJ1T86hNW9tHzI=@vger.kernel.org
-X-Received: by 2002:a05:6512:1282:b0:544:d31:104a with SMTP id
- 2adb3069b0e04-54414aa8102mr2388633e87.25.1739046313617; Sat, 08 Feb 2025
- 12:25:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="scH15Htn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA293C4CED6;
+	Sat,  8 Feb 2025 20:32:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739046732;
+	bh=Q6EvRURVSjKHgfwvG6nn2cK0bDigrOhSG5vvq7iP3U4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=scH15HtnZRvCM3XOCEZlGTiXh7fZZjaSyPTO2ht5iB8UuGiLPibcbelLyAbdLWuCv
+	 z9xRv7PHHcSM9i+S4musuOZ5cLuZV60zET9hTm1EpExRaFBaApOd3xn0fNo20sgJok
+	 tnh0I4u0GkPYPrEMSPQcdZi4PFIMhFmwuQxLu1zBArYiIxdMOWRJCEERwYOTdw57j8
+	 JNcHC23PSATyPnKVauABquIocTQmK7yNqEh3ug9Ud8G9XyEO3adgJg+84sjEqQT+3O
+	 Y/+ueK7Td1hL473MiAbU8sywN0NIzueQW9zzZkwYQ8DrQEi9NPDUIM4pE3VIhOznoD
+	 XrRgD0fGtZ8fA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33F78380AAF5;
+	Sat,  8 Feb 2025 20:32:42 +0000 (UTC)
+Subject: Re: [GIT PULL] Rust fixes for 6.14
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250208175817.45181-1-ojeda@kernel.org>
+References: <20250208175817.45181-1-ojeda@kernel.org>
+X-PR-Tracked-List-Id: <rust-for-linux.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250208175817.45181-1-ojeda@kernel.org>
+X-PR-Tracked-Remote: https://github.com/Rust-for-Linux/linux.git tags/rust-fixes-6.14
+X-PR-Tracked-Commit-Id: 6273a058383e05465083b535ed9469f2c8a48321
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 595ab66f1becea80c4182b2d2660f357c17db2a9
+Message-Id: <173904676063.2654177.3936759655217443213.pr-tracker-bot@kernel.org>
+Date: Sat, 08 Feb 2025 20:32:40 +0000
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250208105326.3850358-1-yelangyan@huaqin.corp-partner.google.com>
- <20250208105326.3850358-2-yelangyan@huaqin.corp-partner.google.com>
-In-Reply-To: <20250208105326.3850358-2-yelangyan@huaqin.corp-partner.google.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Sat, 8 Feb 2025 12:25:02 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=WYNRraERUdZuytYmiWuXR3UwSRybXMZ42+2K2nbkef-A@mail.gmail.com>
-X-Gm-Features: AWEUYZmA-CBCC0QRXP02pRtLlgP78Gg6EgzjJkQUKaxMq3eMCZ3nTBRkI-JH_z0
-Message-ID: <CAD=FV=WYNRraERUdZuytYmiWuXR3UwSRybXMZ42+2K2nbkef-A@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] dt-bindings: display: panel: Add a new compatible
- for the panels KD110N11-51IE and 2082109QFH040022-50E
-To: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
-Cc: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	airlied@gmail.com, simona@ffwll.ch, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, thierry.reding@gmail.com, sam@ravnborg.org, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+The pull request you sent on Sat,  8 Feb 2025 18:58:17 +0100:
 
-On Sat, Feb 8, 2025 at 2:53=E2=80=AFAM Langyan Ye
-<yelangyan@huaqin.corp-partner.google.com> wrote:
->
-> Add a new compatible for the panels KINGDISPLAY KD110N11-51IE and
-> STARRY 2082109QFH040022-50E. Both panels use the HX83102 IC, so
-> add the compatible to the hx83102 bindings file.
->
-> Signed-off-by: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
-> ---
->  .../devicetree/bindings/display/panel/himax,hx83102.yaml      | 4 ++++
->  1 file changed, 4 insertions(+)
+> https://github.com/Rust-for-Linux/linux.git tags/rust-fixes-6.14
 
-I might have tried to shorten the subject line of the patch a bit, but
-I don't think it's a huge deal.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/595ab66f1becea80c4182b2d2660f357c17db2a9
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
