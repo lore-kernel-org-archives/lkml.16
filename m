@@ -1,122 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E5A611E;
-	Sat,  8 Feb 2025 03:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B5527702;
+	Sat,  8 Feb 2025 03:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738985631; cv=none; b=MYuhKtwlYrH887i1B5PoEajS76d9jwCxArey3Pt1wDSLaLFCYHjQFHRq3OjAQtBaYBIelkc/oTzM06BPoPckRXEGVUjcsdE+UTFmuTTxyQHxE2YsSO2wo8xKrRNUe9bd9ojab4WFTK5AdYg9mHHVIm06dWruedVLlj5ZK/gMKwk=
+	t=1738985885; cv=none; b=d/jok7EbKIGObQ61ToJ/aOQrFsd16Iech1pd9smkYLlGjHWaQ38mTaN4SzCStgY+rPTC8j9fmL9IaaNmQ0c5sYbAb9QkZNwAeshXds13+pQE3l/4FuD8S25AZ09Ug3BlSlwVpa0UmwoAaW56eMRSCof3LR8t9rinsLdFSxSlwIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738985631; c=relaxed/simple;
-	bh=E4ef/ftjH8Y83ESfkZ/ek4OwMIc3mSgBksj42G9pEyE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ul9pRFqSUXXvr9Yc1YIcaYE0qjvZCEVE+Q18dqvfLisHYZ34HyDCEg5aAnlsz5Lgjeo1I4MWZITUj/gSjv+76nofXiM2ugqM8g8uXs2eswBgBGDFM6pqnMmEmSNeHG9/yzfmFLFnuEhXr0AzE6GBm6wpzsw/fPFNmX2js0YZKII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JrWCyfyD; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1738985885; c=relaxed/simple;
+	bh=NunAJs4bH+Jj4+K96Vx34sPeS5kTxaTrScr8redH9YE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h8GAJIx31Z1HBbv+sba4zYYIbwgswMe8JBpf4rtCc8j13+fS+NCIF/lUIpf5MilmadDsPNuWFQF70/y+mXES4YED9D/VOIZKAfYz5mgKvkKujKKHlFP5ZRd/A7HbVZPzNyQo1coW+dkawHUYl/QjQQjDII0aLSKiOdmvw3d0Yfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A02lsO47; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JrWCyfyD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738985629; x=1770521629;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=E4ef/ftjH8Y83ESfkZ/ek4OwMIc3mSgBksj42G9pEyE=;
-  b=JrWCyfyDRTOUk0ngRY1C6TlxxztxhAuYGx0241kebH9QXtskTfEqynL7
-   LcP5cQHqCRGFLlx8g/bRNaQh+/b36nGXmXJxGXuWxAlql40gede9SWN2I
-   ek4aDW99n4kC+Bixd2+Ep9m24/yDbQJybBqqaM/bvdK9TG0A13tGJ4+RU
-   vUMj6cxeF6dvmgJ4aPo6yCJiajnURrPfQxfwkdrhNuuPZoLGX3i9unG1z
-   apfqvCfHYdiNR7iNYjCaipJ7uRoI87R8TJp+vIHOOpFxyy1+BiBsJuvZ2
-   fKrpQPHhzQaGpkosgpeNSrz62QsfvjrxV4wZGqWMRmGPtc5ETCIT6vkfu
-   w==;
-X-CSE-ConnectionGUID: IYAVMl0NSkuhQGMCWUWMTg==
-X-CSE-MsgGUID: UkVjxFPiS7eiJ1jNRFIsyA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39541413"
-X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="39541413"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 19:33:48 -0800
-X-CSE-ConnectionGUID: KfrjFuMpRnayDLYzhLb9nA==
-X-CSE-MsgGUID: nahwQkBJSY+cDoGI/mkrIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="111621205"
-Received: from choongyo-mobl.gar.corp.intel.com (HELO [10.247.21.123]) ([10.247.21.123])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 19:33:41 -0800
-Message-ID: <71887246-d30f-4134-8c6d-b379477b2457@linux.intel.com>
-Date: Sat, 8 Feb 2025 11:33:38 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A02lsO47"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38633b5dbcfso2791973f8f.2;
+        Fri, 07 Feb 2025 19:38:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738985882; x=1739590682; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TAajHkAcxxVCRGE1mUQ7VLgo1vxl4tsrpLghCF95uS8=;
+        b=A02lsO47AQpC/bjD1AwsQk7vflj8Jtid80sfTo0c6kPdf3YGMGkcG11FdGRePmq6pP
+         KLcCYMPdoXC3T1BGDMuHbuk/xajFyg4QN9p3bVpQA8PL/a4CGfYHgqv1qqYBz3Dh8YXF
+         0qGixMuHqf/WTzTb9yjZIN0CrnSe0fphEoBWZ0f29mtvhrhP+BvfHTMdLJLgHJ3G/Vir
+         g356VGhB4bIeANBgte40mXSrMKqSNr3tySRTHuFyYUO3ieSGlaupvrjad1AyC7ij0NyH
+         sJcJGP6Py0RdgUl/G8XjtIf+7bznZuRr6PlssLFUXvWWwffHCCSgDcY876MNKEkYs2eN
+         pLqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738985882; x=1739590682;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TAajHkAcxxVCRGE1mUQ7VLgo1vxl4tsrpLghCF95uS8=;
+        b=EbzPsqESFaxhUNmwO+OwywJyubdG1Gg7REtQ03JA+OBpbxanXrSPL2aSYFLPfW8/5U
+         BwETSEnYKpfG944S8AJm8wEz7kePw46JxaWtL/vbbVFzAj8VSBQkntGz9Ciwb/w9TUvP
+         07FpxbBVdAKuwvDdllINfsRPdhQMqYV0qbz8P+CiC4QNEP6mbpyvxZQi7ea4tyVvJYQW
+         nb50cLCxxv3vOXZVIF8xpld+gnDj3dMzM7dlZThUuIjMm/2YYHSUqyuInQK1ZDU9gjx5
+         C4gWZM2BJxoIOnGwhMCheVNAtlveI0K58vJsPLikh/YBQLbRuMPGSRGPFW++OgZHA9Dy
+         PQ+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXeXktnqAgWIJArBYFuvQ7MLNY0iQ8s/qgctqL+qeP3/3dmHXto2qkFz2IJkQXNhepgyjYc5FnOZfoDTVHT@vger.kernel.org, AJvYcCXmMxtQgT1nDWHf2+q6OlZ7KZT61uIvAsAGAT7HLovsjrCYoFwbiA5xMBphy9M9D3H1oxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqR5RFv2/5MbgK03RtCkw6CNVydAIYir9glN8ppDC1lESomDvt
+	bVxLabN7wf7iVSsszUcpTHVjt70byFM73MKLHsJl1mXDF3EZZARORzVgY2W2gUehJLpCFD1AUKL
+	T1MSZb0iPVfc+MzuSacOD1YMGJYc=
+X-Gm-Gg: ASbGnctzo+7Q7+uzSIgY6bKJ1wF5SRvJgt+raSlYXBVOvfwYmW7f6elarWxxaPkcBeJ
+	F3O8L/2RGs2fi2ndHClaZA9UKPqhLIFzKSjLHA3BbM+UP1HqX85BaclH9ruRBbFvuEF0vKpaMpU
+	paVrro+6bhoarPQVEETOTU7YCxIx5j
+X-Google-Smtp-Source: AGHT+IEqWSGNaokGM3+Q+Qi27BYRg7z8pN/7S0p7MVWi7u9FdwgIOo4FESwJAbGtXnIUFzUfBVmmHFgZPC2JzCquGFo=
+X-Received: by 2002:a5d:588d:0:b0:38d:a883:b95b with SMTP id
+ ffacd0b85a97d-38dc90f1277mr4650677f8f.28.1738985881846; Fri, 07 Feb 2025
+ 19:38:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v7 2/7] net: pcs: xpcs: re-initiate clause 37
- Auto-negotiation
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
- Jose Abreu <Jose.Abreu@synopsys.com>,
- David E Box <david.e.box@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
- David E Box <david.e.box@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Jiawen Wu <jiawenwu@trustnetic.com>,
- Mengyuan Lou <mengyuanlou@net-swift.com>,
- Heiner Kallweit <hkallweit1@gmail.com>, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Richard Cochran <richardcochran@gmail.com>,
- Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250206131859.2960543-1-yong.liang.choong@linux.intel.com>
- <20250206131859.2960543-3-yong.liang.choong@linux.intel.com>
- <Z6TVmdCZeWerAZKP@shell.armlinux.org.uk>
- <564ede5d-9f53-40be-9305-63f63b384e15@linux.intel.com>
- <12e86fbe-9515-4b81-951c-8bf86e2939d6@lunn.ch>
-Content-Language: en-US
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-In-Reply-To: <12e86fbe-9515-4b81-951c-8bf86e2939d6@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <AM6PR03MB5080261D024B49D26F3FFF0099F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
+ <AM6PR03MB5080EDA5E2E2FDB96C98F72F99F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
+In-Reply-To: <AM6PR03MB5080EDA5E2E2FDB96C98F72F99F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 7 Feb 2025 19:37:51 -0800
+X-Gm-Features: AWEUYZk4QqmyiW49bO-_h28Xx_PqBsFr_xfZsG6i7y5oe-FBacwGLb75TqgjTh0
+Message-ID: <CAADnVQJZnNj3KGcy-MKz_F2KEiKWGpXchxVx1zuGA-5g3SO=HQ@mail.gmail.com>
+Subject: Re: [RFC PATCH bpf-next 6/8] sched_ext: Add filter for scx_kfunc_ids_unlocked
+To: Juntong Deng <juntong.deng@outlook.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, 
+	Andrea Righi <arighi@nvidia.com>, changwoo@igalia.com, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Feb 5, 2025 at 11:35=E2=80=AFAM Juntong Deng <juntong.deng@outlook.=
+com> wrote:
+>
+> This patch adds filter for scx_kfunc_ids_unlocked.
+>
+> The kfuncs in the scx_kfunc_ids_unlocked set can be used in init, exit,
+> cpu_online, cpu_offline, init_task, dump, cgroup_init, cgroup_exit,
+> cgroup_prep_move, cgroup_cancel_move, cgroup_move, cgroup_set_weight
+> operations.
+>
+> Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
+> ---
+>  kernel/sched/ext.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>
+> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+> index 7f039a32f137..955fb0f5fc5e 100644
+> --- a/kernel/sched/ext.c
+> +++ b/kernel/sched/ext.c
+> @@ -7079,9 +7079,39 @@ BTF_ID_FLAGS(func, scx_bpf_dispatch_from_dsq, KF_R=
+CU)
+>  BTF_ID_FLAGS(func, scx_bpf_dispatch_vtime_from_dsq, KF_RCU)
+>  BTF_KFUNCS_END(scx_kfunc_ids_unlocked)
+>
+> +static int scx_kfunc_ids_unlocked_filter(const struct bpf_prog *prog, u3=
+2 kfunc_id)
+> +{
+> +       u32 moff;
+> +
+> +       if (!btf_id_set8_contains(&scx_kfunc_ids_unlocked, kfunc_id) ||
+> +           prog->aux->st_ops !=3D &bpf_sched_ext_ops)
+> +               return 0;
+> +
+> +       moff =3D prog->aux->attach_st_ops_member_off;
+> +       if (moff =3D=3D offsetof(struct sched_ext_ops, init) ||
+> +           moff =3D=3D offsetof(struct sched_ext_ops, exit) ||
+> +           moff =3D=3D offsetof(struct sched_ext_ops, cpu_online) ||
+> +           moff =3D=3D offsetof(struct sched_ext_ops, cpu_offline) ||
+> +           moff =3D=3D offsetof(struct sched_ext_ops, init_task) ||
+> +           moff =3D=3D offsetof(struct sched_ext_ops, dump))
+> +               return 0;
+> +
+> +#ifdef CONFIG_EXT_GROUP_SCHED
+> +       if (moff =3D=3D offsetof(struct sched_ext_ops, cgroup_init) ||
+> +           moff =3D=3D offsetof(struct sched_ext_ops, cgroup_exit) ||
+> +           moff =3D=3D offsetof(struct sched_ext_ops, cgroup_prep_move) =
+||
+> +           moff =3D=3D offsetof(struct sched_ext_ops, cgroup_cancel_move=
+) ||
+> +           moff =3D=3D offsetof(struct sched_ext_ops, cgroup_move) ||
+> +           moff =3D=3D offsetof(struct sched_ext_ops, cgroup_set_weight)=
+)
+> +               return 0;
+> +#endif
+> +       return -EACCES;
+> +}
+> +
+>  static const struct btf_kfunc_id_set scx_kfunc_set_unlocked =3D {
+>         .owner                  =3D THIS_MODULE,
+>         .set                    =3D &scx_kfunc_ids_unlocked,
+> +       .filter                 =3D scx_kfunc_ids_unlocked_filter,
+>  };
 
+why does sched-ext use so many id_set-s ?
 
-On 7/2/2025 9:32 pm, Andrew Lunn wrote:
->> Good point. I cannot find this scenario in the datasheet. Please allow me
->> some time to test this scenario. I will update you with the results.
-> 
-> By data sheet, do you mean documentation from Synopsis, or is this an
-> internal document? Assuming the hardware engineers have not hacked up
-> the Synopsis IP too much, the Synopsis documentation is probably the
-> most accurate you have.
-> 
->>> What about 1000BASE-X when AN is enabled or disabled and then switching
->>> to SGMII?
->>>
->> According to the datasheet, a soft reset is required.
-> 
-> Do you know if this is specific to Intels integration of the Synopsis
-> IP, or this is part of the core licensed IP?
-> 
-> We need to understand when we need a quirk because intel did something
-> odd, or it is part of the licensed IP and should happen for all
-> devices using the IP.
-> 
-> 	Andrew
-> 
+        if ((ret =3D register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
+                                             &scx_kfunc_set_select_cpu)) ||
+            (ret =3D register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
 
-Hi Andrew,
+&scx_kfunc_set_enqueue_dispatch)) ||
+            (ret =3D register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
+                                             &scx_kfunc_set_dispatch)) ||
+            (ret =3D register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
+                                             &scx_kfunc_set_cpu_release)) |=
+|
+            (ret =3D register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
+                                             &scx_kfunc_set_unlocked)) ||
 
-Thank you for your questions. Just to clarify, when I mention the 
-"datasheet," I am referring to the documentation from "Synopsis - 
-DesignWare Cores Ethernet PCS" and not specific to Intel's documentation.
+Can they all be rolled into one id_set then
+the patches 2-6 will be collapsed into one patch and
+one filter callback that will describe allowed hook/kfunc combinations?
