@@ -1,119 +1,163 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67DD1E515
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 05:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654A817DE2D;
+	Sat,  8 Feb 2025 05:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738991972; cv=none; b=YMVwrlzsiMTZsFZFLrRybjEuxJhMqqaQIWzD2hYxE36H9xuQrlZgeRg9qPi7CyKCTLbVetXXLTpexSVbfH1RFrhVr52Yfoapq1lJ6PHChHIZ2IS3idLj88kb7VIZDI86xF0DqijnxE8E/uYl99T7NgnUbVttuft9FnVmusaPnPs=
+	t=1738992315; cv=none; b=XcPqhdvIUvqpAV3QDShFe4kSTS90og6dsi8gMMR6xxQ+WbItRY173pjy6cQAIZd03hfn1rdw5KpMn5LOo+C1ZAnz9re/U6sqWI8zDjhpJ1plZ7YQM0DHk9a5kOARK0t5qokQVellJK2bMc+G5/ZezkqoLjzTAJwYAVQxDhCLWrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738991972; c=relaxed/simple;
-	bh=WE53Zhv/fLeUZ5rHu0F0uGAkBNohYeCqkpNl9GxxKqg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PZYOTXIXw4kGbUjapavzyArmMrSSGJiGcS5TqY/yneu2sGNq4MmoLhEnxzktrdUV9/JHctMLFQ0UfVzOazYYoe4X148LsBCNRmn83ZyP4WmWlzcl537NupvaMmODx+oMBqk6I7VOHHGXoi4+Fy08uhYj25CIgiV5JiIbcJPBatc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pqlFT7hf; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738992315; c=relaxed/simple;
+	bh=dS+gHUB51Qy4KVng7tLl3ipMB2TdjJ74Rnq49bkQNVI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=elR3lyIhEkS2haWOEUni37NhdSPVRg2N+2KV8kemp6NAjXU7vep+sgyW2JwaOmPvF3cdcu63RK9KbiK+Rhqb2aa1V/pHEyi/CVWyzp6Gj1/speWugtzDdwFXOvlGpmZTxXVx7Bm/ebeQWytjJozard4TjPjp3RShBx826Zz/eng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F3qeqb0U; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pqlFT7hf"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54505a75445so162677e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 21:19:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3qeqb0U"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6f6715734d9so25243267b3.3;
+        Fri, 07 Feb 2025 21:25:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738991969; x=1739596769; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XbmEch0kSfMOKC6/rJ1doWwYVcmMwQu5vCq8pLMJYLw=;
-        b=pqlFT7hf2SGQSUwRETLjfYK5Fwm/Z86rj029G8RZG1zHCpc/eP4qcGRoXpGcwFRsBH
-         iN/t9b2whobHmT2mB0V2b9330qhjLjPzkXP5wMvzxILjsQ0wku/y32shwTZXr6vfyrE/
-         oyQmOuiHKsSw5APjLTUa+hO1PChl4i0BVC/EU74jqKpFloo6/PWrdl0gFhzO0eddufSR
-         UtQ8e7ShHNCDSioHpszvF5sLP4Jg5VIYnJ9uHOcZgwkirR4KJjoWOK20YSbo2vQq7mhl
-         Ewtwayftri0y0TjvpHpS44GHHct/sc81QLISjhpBmytn9q0gfZzW28dTJf/vkjLh1gJ7
-         zp0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738991969; x=1739596769;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1738992313; x=1739597113; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XbmEch0kSfMOKC6/rJ1doWwYVcmMwQu5vCq8pLMJYLw=;
-        b=TfZ2LvETGVpfGECcD6Vy3NZ4L3F9t9Jp8h5eh6fbQNUH7o4nNNCYzaUeKb8YR5jwSL
-         H87zwIgE1fZl8+OAxTwN05kqIrM19KemC1kWKAB96aGLykLfISmpjeDQVHiOlfR9F88s
-         +3TxuRgQu4LYi6wpiGHIQc5PFYcedZn/qXQLEr2Va9MZIl6LOtsW2aL5HQkMcllPth+n
-         Gcf1pR87TPix8JFuvgRYLqXfbimkzbGR0mXyZx+eWzFX3pY9o6kKHMPYWYR0FhhBCuj4
-         Zss2ssinhht5lTHrux+obMhFhDLX1zFZ6X29tp7cIS7TGIQnys0PIRUZe0Z4S0/2ipaT
-         ig3g==
-X-Forwarded-Encrypted: i=1; AJvYcCX0igyM5IxO6n5OAWn1fyn3uV5OKm80TlTBFU6iUv1rDDj22PVQUJ8DEXTXeMlLNcIks8syeLAqhikbKiQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQQ0tKdNC/uIEwqG+FX268L17u8Lx00H/Ji/9IHwJZ929i9yNO
-	pzwGNrw+Vg2Bb3sQteoTpgBJ/yC45tD+iCsYMeAJwptvDDNTf24bXrJdoAT4Iqy02WDulj8EryM
-	qD8c=
-X-Gm-Gg: ASbGncsYi7QH7mdg5LZf7C7PDgsM+7sfZrtZsyl7UFY1Qqa1unjd3bd9bABvOOZp3gH
-	9VcmbZwCqgBjqHC3PzK1vJFModSmXAJPVK867gMNOOTGdnwoe/hbQFxv99b4bS4kF/238mdM90R
-	ifJEpy2sgBkYh3NfcxQajcO/C+z6ipZuu0PnMbbsBb1jOLTWFUC/6M1bA9+kiyB3ByBuCc5ZbNk
-	Dk7mYG35CIA756V0CvZEeHNGE5IYJI0DaZKy4uddNqJOPAPvIKoUkbx0Ok/T5VOsBk92idinave
-	ayMm9H5D3XhsZCf/YBU1SccWsvOoMpN1Ny4VLYc+2twGTWMdGIyKLZPhIBnmmHfb+v645VA=
-X-Google-Smtp-Source: AGHT+IEgvj0rP082XMOnWmPAOgxRus50LsWzxvsljRKd/lfLJp/HnL9/Ij+KWNkNuMgAahlz+FUAew==
-X-Received: by 2002:a05:6512:348e:b0:542:2a28:e30f with SMTP id 2adb3069b0e04-54414abba5bmr1913205e87.31.1738991968614;
-        Fri, 07 Feb 2025 21:19:28 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5441053ecccsm626483e87.21.2025.02.07.21.19.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 21:19:27 -0800 (PST)
-Date: Sat, 8 Feb 2025 07:19:24 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 05/35] drm/bridge: Pass full state to
- atomic_post_disable
-Message-ID: <thnyq2advlb6mumnokx55x4wcpqv63bttsd3numf47tpxermpd@e7buh4vhuq57>
-References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
- <20250204-bridge-connector-v2-5-35dd6c834e08@kernel.org>
+        bh=r6ye5i7ngncVTyxZ/vrpkYP4Udn+2F4lFb54LtwSQHU=;
+        b=F3qeqb0UKRsHCbLF4Ku5fzOQpQvPOu+RLACq4Z3aVAfRgkOZL7Pl5sg0t+DTtUr5/9
+         v2IE3SuZ+XawkxnZ02feSfCKDU1ENyMCtv0jrYEfdaWypcP1Qi+at9AUp15XVYFenHd+
+         yH3lEcSav3yJdJluJsTCAFUq7d1cf6pEpJbvHr5CQsf9HkLGDzyvra9lC6N6H/SFCsbg
+         OKR883SVaFXKCcfohbX4CHAJsWlQhl/4I6giirh1dezwwEFxKBmuL+w2EFy6qU8ITKD6
+         kGUWJ5bV6I1CvkF+yEfO20uxXbX62HB8O7lP6Erz5wyrLVOJBh8yelndGHrtNNhV7Bf3
+         rn1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738992313; x=1739597113;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r6ye5i7ngncVTyxZ/vrpkYP4Udn+2F4lFb54LtwSQHU=;
+        b=a5tIDWOczXSKriMT+mJTpgSrB0L2wBgH8XpUOh99mO1Ph79QuLz0A2H0U0kVwewqPb
+         rDHW26UEbj/z36rKKQbGUDpMw8bPhJOagbSqxhX4QpLPjcbC7gG0BBQjEAoRkMVDZOd4
+         6RZoVVB7FiOHFyHHkYBIg03hNIOzZy7WUvv7db4z6V2DdtOasibQ3iKRKxH5u4sBjPNL
+         0wikrOlunEyxIfPteRqLX11Im/METWDKQxBThAclYWccsJfTdPcTOu2PBEjg7QgZt6SV
+         gGIr+r+2BzhhyLN0aUGAk3wKv/pMGKKOm4+a8ovdWmMxsGl8Ijow+27m8e0nfwzrE/U2
+         YuDw==
+X-Forwarded-Encrypted: i=1; AJvYcCV1EZziYTxTL7Z/zmKnCWgL5WOTiTKsXpJKukgunxazt+C7RpE5EEH9SFl0Eo0FBGueLklQWdo2azp1R3CYEn/RSg==@vger.kernel.org, AJvYcCVifYyNCq4CelUEyzAedesMyblD4tHoLp/B6LPz2POZVoTTXFYUisyNtmTcQ+EhVFFCIJ2imjm2Kyh6ewk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTb7w+fpczGsQubnL6vUOruGv1zxc4n3jBMcRN6GRqRkXFymda
+	abN9W5pPlFmRFV/9QsBcrysMw++hsJmeWZbqskqqpt3b+rBE4eqVi6/YbXOvvkaav/TP1PdT5Jq
+	rpr+PINceuicRb2fBf27W9PxhYPE=
+X-Gm-Gg: ASbGncumVkiDpwwPUyNfEt0SK275fOoTZx9N47fq5FgTuYpmQpaApTW4GErYOxRAOnm
+	CGk20A9uzyEfafL9wf4gQXto6VvpLmdtaWFAuPhhBhlev3YS6MB7eoL8hhAQ/vtpWQz6Hawk=
+X-Google-Smtp-Source: AGHT+IHxC4/WuGPZSTqlSqH0jOLk9RROkA/zMyyTmOEzkL2qG2GFb8ZfppnL4/HJ931Y2HPzon3/OoVsQxVfCVZ1zsw=
+X-Received: by 2002:a05:690c:6488:b0:6f9:aeee:8f10 with SMTP id
+ 00721157ae682-6f9b29e35bfmr48635197b3.24.1738992312948; Fri, 07 Feb 2025
+ 21:25:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204-bridge-connector-v2-5-35dd6c834e08@kernel.org>
+References: <20250205205443.1986408-1-namhyung@kernel.org>
+In-Reply-To: <20250205205443.1986408-1-namhyung@kernel.org>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Fri, 7 Feb 2025 21:25:02 -0800
+X-Gm-Features: AWEUYZknLKCuyiuFJF9VAmJ_2TAsyVv31SlnJ0R8C1MZ3yfAlGRT44SqaGlUuJM
+Message-ID: <CAH0uvoinT1ZH3Cifj_skJOjfKrvQ8jdbU_3gFp21eD4PwGOwkQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] perf trace: Add --summary-mode option
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 04, 2025 at 03:57:33PM +0100, Maxime Ripard wrote:
-> It's pretty inconvenient to access the full atomic state from
-> drm_bridges, so let's change the atomic_post_disable hook prototype to
-> pass it directly.
-> 
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> ---
->  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c |  6 ++----
->  drivers/gpu/drm/bridge/chipone-icn6211.c           |  2 +-
->  drivers/gpu/drm/bridge/ite-it6505.c                |  2 +-
->  drivers/gpu/drm/bridge/lontium-lt9611.c            |  5 ++---
->  drivers/gpu/drm/bridge/panel.c                     |  3 +--
->  drivers/gpu/drm/bridge/parade-ps8640.c             |  2 +-
->  drivers/gpu/drm/bridge/samsung-dsim.c              |  2 +-
->  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c      |  2 +-
->  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c     |  2 +-
->  drivers/gpu/drm/bridge/tc358762.c                  |  3 ++-
->  drivers/gpu/drm/bridge/ti-dlpc3433.c               |  2 +-
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c              |  2 +-
->  drivers/gpu/drm/drm_bridge.c                       | 16 +++-------------
->  drivers/gpu/drm/mediatek/mtk_dsi.c                 |  2 +-
->  drivers/gpu/drm/mediatek/mtk_hdmi.c                |  2 +-
->  drivers/gpu/drm/msm/dp/dp_display.c                | 14 +++++++-------
->  drivers/gpu/drm/msm/dp/dp_drm.c                    |  5 ++---
->  drivers/gpu/drm/msm/dp/dp_drm.h                    |  2 +-
->  drivers/gpu/drm/vc4/vc4_dsi.c                      |  2 +-
->  include/drm/drm_bridge.h                           |  2 +-
->  20 files changed, 32 insertions(+), 46 deletions(-)
-> 
+Hello Namhyung,
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+On Wed, Feb 5, 2025 at 12:54=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Hello,
+>
+> I've realized that perf trace shows system call summary at the end for
+> each thread.  But sometimes users want to see the global whole system
+> summary or statistics instead.
+>
+> So I've added --summary-mode option like below:
+>
+>     $ sudo ./perf trace -as --summary-mode=3Dtotal sleep 1
+>
+>      Summary of events:
+>
+>      total, 21580 events
+>
+>        syscall            calls  errors  total       min       avg       =
+max       stddev
+>                                          (msec)    (msec)    (msec)    (m=
+sec)        (%)
+>        --------------- --------  ------ -------- --------- --------- ----=
+-----     ------
+>        epoll_wait          1305      0 14716.712     0.000    11.277   55=
+1.529      8.87%
+>        futex               1256     89 13331.197     0.000    10.614   73=
+3.722     15.49%
+>        poll                 669      0  6806.618     0.000    10.174   45=
+9.316     11.77%
+>        ppoll                220      0  3968.797     0.000    18.040   51=
+6.775     25.35%
+>        clock_nanosleep        1      0  1000.027  1000.027  1000.027  100=
+0.027      0.00%
+>        epoll_pwait           21      0   592.783     0.000    28.228   52=
+2.293     88.29%
+>        nanosleep             16      0    60.515     0.000     3.782    1=
+0.123     33.33%
+>        ioctl                510      0     4.284     0.001     0.008     =
+0.182      8.84%
+>        recvmsg             1434    775     3.497     0.001     0.002     =
+0.174      6.37%
+>        write               1393      0     2.854     0.001     0.002     =
+0.017      1.79%
+>        read                1063    100     2.236     0.000     0.002     =
+0.083      5.11%
+>        ...
+>
+> Also it changes internal data structure to hash table to track
+> statistics of syscalls.  And removes the rb_resort code.
+>
+> v3 changes)
+> * Add Acked-by from Howard
+> * Update commit messages  (Ian)
 
--- 
-With best wishes
-Dmitry
+Sorry for the delay.
+
+Reviewed-by: Howard Chu <howardchu95@gmail.com>
+
+Thanks,
+Howard
+>
+> v2 changes)
+> * Rebase to current perf-tools-next
+> * Fix some style issues  (Howard)
+> * Rename to --summary-mode  (Howard)
+>
+> Thanks,
+> Namhyung
+>
+>
+> Namhyung Kim (4):
+>   perf trace: Allocate syscall stats only if summary is on
+>   perf trace: Convert syscall_stats to hashmap
+>   perf tools: Get rid of now-unused rb_resort.h
+>   perf trace: Add --summary-mode option
+>
+>  tools/perf/Documentation/perf-trace.txt |   4 +
+>  tools/perf/builtin-trace.c              | 247 +++++++++++++++++++-----
+>  tools/perf/util/rb_resort.h             | 146 --------------
+>  3 files changed, 203 insertions(+), 194 deletions(-)
+>  delete mode 100644 tools/perf/util/rb_resort.h
+>
+> --
+> 2.48.1.502.g6dc24dfdaf-goog
+>
