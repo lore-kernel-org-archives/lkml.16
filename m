@@ -1,86 +1,109 @@
-Received: from mail115-24.sinamail.sina.com.cn (mail115-24.sinamail.sina.com.cn [218.30.115.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632F9243360
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 23:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A7D24338C;
+	Sat,  8 Feb 2025 23:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739058336; cv=none; b=WiN/6i6NLStu6M520czbllOSmt9sQVfW2Y2ZzCFOZFxF1IMYGhEfQu+wQL3OsFFtWZOj7MEXjk8/YXE6qLqogdOamuuyjjICpwPf9kJO53qxEGs05lIe7NadeRgkXwpNtf0MWp1XJ9svGXcYlXniRWfxPD0uqtN0q5lxLhFk12k=
+	t=1739058677; cv=none; b=N2JgBvtP5I16ktNCKdPzSE5j4EplxvzLgrat6xUA+mehDraTGiYcAsoAdpSpX1nVsD0SlWseWiwRpWiX/Wqq1mkaEEnr82j5OmQJv0Uft5o2FxoCeMwXB0BlEhTF9MdsSsKgvUGCGEl3JSqDzwsOGKNS+N1MT4325pmK/k6Mz/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739058336; c=relaxed/simple;
-	bh=lyrJHqCNlazaOXB4GDPy794osXsDBIPgapzh1VWxt3w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r9WRF7FHji8fg92yQMIBmGQQeSb3HZwx2DSyFBGH0QE58DTxo1szVI+iVw8LL9bl5wD8fWlRSQkGi7IwohLBUlqPF1vMiNipI9WfcOLEpIlPA1CvMUBwVdE5wIohtSHJ6jSt/7W8knJcF3qehxSQrsHf3N6v0zVdUGf4yQGZ3mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.65.158])
-	by sina.com (10.185.250.22) with ESMTP
-	id 67A7EC9600000634; Sat, 9 Feb 2025 07:45:28 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 5258107602533
-X-SMAIL-UIID: 157DEE025CAA4E75A9BEE6CB8FFCAD5D-20250209-074528-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+8863ad36d31449b4dc17@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [hams?] possible deadlock in nr_remove_neigh (2)
-Date: Sun,  9 Feb 2025 07:45:10 +0800
-Message-ID: <20250208234531.2110-1-hdanton@sina.com>
-In-Reply-To: <67a6e55f.050a0220.3d72c.001f.GAE@google.com>
-References: 
+	s=arc-20240116; t=1739058677; c=relaxed/simple;
+	bh=iog7NXc73sWuyxcREJuoWUND+JxIKumsCCLqSQQbx7k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XuBz0O/+O9qMpBN/bGw9HqVvyGJsYmO7JibpasONM6phMO23LY6v60JH+9VUlVesSMc71ootOfabOrQaZO39XIGo9diTTFRw3Ae5j9q2A5m6XdsxCPJkkrX1SO1eeXVW/GR+tChlcY0RSqOwrQTSS/F58EQv5jgcECm9qNehWnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RrtEnOqG; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RrtEnOqG"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5450268e513so184570e87.3;
+        Sat, 08 Feb 2025 15:51:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739058674; x=1739663474; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZorNv4urn5lqUcp1IYsdzjdX+6jXN4/pzRCOwjKRe0s=;
+        b=RrtEnOqGqTU+T+6/eFJ7lKw//Iy4OkVxQ9Xh4ZysQBStiuRyoXKg/DmTmjEBkFEJA+
+         9wdsBuGnK168Sw+1l6jueTJxXCgkMoRGM8gKQKUAr9MQH96VQOw8H0nNBGutIcVk8DGG
+         UYx2MB3FxXXsGPmzTN3zVQ5ZX6JcTHhGMJX89qpHzpcMih+cHbEU4vQp9b+zLxk3gQ4t
+         zzPy7tVgiUrRTGE3+lC7WEcQuPHYiGalsP0QTzyJRkPzDYPemgjW54NdYfxwkH+LZpM3
+         x1A71EluGvEwCWuooJEtCRHwErF0k9ANn1Iy6omS70YtyBBGF87uKDHXESzZn7JvK0mR
+         c19A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739058674; x=1739663474;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZorNv4urn5lqUcp1IYsdzjdX+6jXN4/pzRCOwjKRe0s=;
+        b=Rx3Dzzw9HcNFwOYXohAPkWsxT7wBlbCzSEv8b/nS19HnzgSGLat+zLSoZW1OEhZzyo
+         yoJcg6KxwaXr2rsvT0WBQMYl7K8Ak1ywMjgfLj0/EpSjgXeGk3NRLICGb8N8Jr0omrJ8
+         Uf6LC/rgavteNH6clHI++7pU1QM04E1zBbr/RL6iKaCp1tWMNbQtOE8wAtOaNs1wb1TT
+         45yTAUjLxz5kduA8W3iclT3GqkuSfdOk5SXY4Ig6X4pK45gOTqSddRzNCAVkwe7U6GyY
+         w3sfMSucNNZn6Cf3kGLA0ZONUevqPfHPowr65Hs21d3DgQOyP34/DO99cNL5Q3jGEQ8N
+         k14w==
+X-Forwarded-Encrypted: i=1; AJvYcCU/pgePUnPfakXaeCA0FC6aH2ntmqhkcRM01K6sd3Sznz2N/9A9syFZzlHIo38gFNQnfw3728D9VidUsuA7fzE=@vger.kernel.org, AJvYcCVyLXWMjG07nFKgeuUfy37bhpBDrvV1y58EUNbOo8oVDw7LinYkdE02DJUdCa+BzUrdEUNmWz2eLMlH5Hc=@vger.kernel.org, AJvYcCWeKl2wET8E+F+hPRZaj2/+++SB6ZDiPGk8g0gaRJ1Ec3nBKPDSOmt1iH9mvU6zkK29vtdduk/Dl6RF@vger.kernel.org
+X-Gm-Message-State: AOJu0YwclXvntcNwNc4Kaf1zdTMeKMe1ORWM7jd6tbsLxz17byskHHpK
+	WcAI+HT9LLS0r4Bb2J7kyTSmlO5j7uxN0cLNpyd/PyEdMvqZgVibuIj6za3rlJBzfs1pkz3g9Ab
+	moJPwCO7xNCFj+RsursOWMva7EoQ=
+X-Gm-Gg: ASbGncuSA90EQtAlzgWppC1I9XqzlVo05E+QJ9t51yo6W9owh6FIDGdoKqdZStyvbcm
+	aVAcUrR/y2zTHskZ2nHoHIuehNmjgHPx1ZOkUPuZ//B5rl+1SuivE2ebraHt3E6cPGtMUpGNU
+X-Google-Smtp-Source: AGHT+IFO9Ppe4M2HQlhZkbY7ca9gvb24B4TDFCnEVHoqFe6OH0zoB/bscSI2B3N73ivhfVsb9AQicz22BzVZkGFITKg=
+X-Received: by 2002:a05:651c:2221:b0:300:1d45:8720 with SMTP id
+ 38308e7fff4ca-307e5a6e419mr9564151fa.6.1739058673851; Sat, 08 Feb 2025
+ 15:51:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250202-aligned-alloc-v2-1-5af0b5fdd46f@gmail.com>
+ <CANiq72nH3N9UMu2hsPG7WfYCZQwy9M_4q_rQHJnJMScQ3D9-Jg@mail.gmail.com>
+ <Z6T5sOWXxmUsflW7@pollux> <CANiq72n7jx5ve9UL3oDD08=PjY55QHoMY8fyfsW9RNEvjH_b4Q@mail.gmail.com>
+ <Z6UGNbowcvqTN0-T@pollux> <CANiq72=BGFp95jyyF6-uQWT8K8dS5qBpBD55duUYpF4hJDbFxw@mail.gmail.com>
+ <kfkku4rjsktgkufkuehliojv3izxdutc55inmv3yvenu33zr7e@lluedzjnqnki>
+ <CANiq72nky1vpP6qNf4rdSNnr3i7oAdaB4SRQgSG5QaUCCiMs1A@mail.gmail.com> <iocqkifz6dsywt2ueqppsdw53bgcp6i7ju7vadxxxu7pow6w5c@n2wqgypsiq2d>
+In-Reply-To: <iocqkifz6dsywt2ueqppsdw53bgcp6i7ju7vadxxxu7pow6w5c@n2wqgypsiq2d>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 9 Feb 2025 00:50:58 +0100
+X-Gm-Features: AWEUYZnAPwfngi7GEXbp1R8IXZ4FHQZ-5gPlvU8wrpsSzolNhhp9_v9l6gBpmTE
+Message-ID: <CANiq72=k2Ac0Cj0F+xpmUeGuHjf5wqi54qX1SNzMku6RgP9-Lg@mail.gmail.com>
+Subject: Re: [PATCH v2] rust: alloc: satisfy `aligned_alloc` requirements
+To: Alejandro Colomar <alx@kernel.org>
+Cc: DJ Delorie <dj@redhat.com>, Eric Blake <eblake@redhat.com>, 
+	Will Newton <will.newton@linaro.org>, Paul Eggert <eggert@cs.ucla.edu>, linux-man@vger.kernel.org, 
+	Danilo Krummrich <dakr@kernel.org>, Tamir Duberstein <tamird@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 07 Feb 2025 21:02:23 -0800
-> syzbot has found a reproducer for the following issue on:
-> 
-> HEAD commit:    7ee983c850b4 Merge tag 'drm-fixes-2025-02-08' of https://g..
-> git tree:       upstream
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17148bdf980000
+On Sun, Feb 9, 2025 at 12:35=E2=80=AFAM Alejandro Colomar <alx@kernel.org> =
+wrote:
+>
+> Your manual page is too old.  :)
+>
+>         commit 7fd1e0f2be216a5e7f7aef0d03304bdf81bca9e0
+>         Author: DJ Delorie <dj@redhat.com>
+>         Date:   Mon May 8 20:43:35 2023 -0400
+>
+>             posix_memalign.3: Update aligned_alloc(3) to match C17
 
-#syz test
+Thanks -- good to know it is fixed! Confirming in the VM where I found
+the 2023 glibc change, it does have the man pages is updated there
+too, so that is great.
 
---- x/net/netrom/nr_route.c
-+++ y/net/netrom/nr_route.c
-@@ -100,6 +100,7 @@ static int __must_check nr_add_node(ax25
- {
- 	struct nr_node  *nr_node;
- 	struct nr_neigh *nr_neigh;
-+	struct nr_neigh *victim = NULL;
- 	int i, found;
- 	struct net_device *odev;
- 
-@@ -243,10 +244,9 @@ static int __must_check nr_add_node(ax25
- 			/* It must be better than the worst */
- 			if (quality > nr_node->routes[2].quality) {
- 				nr_node->routes[2].neighbour->count--;
--				nr_neigh_put(nr_node->routes[2].neighbour);
- 
- 				if (nr_node->routes[2].neighbour->count == 0 && !nr_node->routes[2].neighbour->locked)
--					nr_remove_neigh(nr_node->routes[2].neighbour);
-+					victim = nr_node->routes[2].neighbour;
- 
- 				nr_node->routes[2].quality   = quality;
- 				nr_node->routes[2].obs_count = obs_count;
-@@ -281,6 +281,8 @@ static int __must_check nr_add_node(ax25
- 
- 	nr_neigh_put(nr_neigh);
- 	nr_node_unlock(nr_node);
-+	if (victim)
-+		nr_remove_neigh(victim);
- 	nr_node_put(nr_node);
- 	return 0;
- }
---
+> If the implementation in glibc has changed over time, we should probably
+> add a HISTORY section documenting historic behavior.
+
+At the very least, glibc made it stricter in d1417176a35d
+("aligned_alloc: conform to C17") -- that is the 2023 change I
+referred to the other day. Before that, you could pretty much pass any
+alignment/size pair and it would succeed (small values).
+
+Cheers,
+Miguel
