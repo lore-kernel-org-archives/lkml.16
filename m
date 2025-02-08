@@ -1,546 +1,119 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DF61B85EB;
-	Sat,  8 Feb 2025 05:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67DD1E515
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 05:19:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738991839; cv=none; b=PmLCPgEJxUYFD7pU8z+LHBMq8lQDHd+yx0IJeP+WszXWKJmJyzTHVlHnVYEydffeHPmJsAItYYO3pIjz/Fqh5KtFf9ELB2Q3EQIiaoleqkvqEIDwCk0T5clyttt4OkdfKmF636elPMTYme6unx0TrEVc5GMHs3o+iHQVCuW1rhs=
+	t=1738991972; cv=none; b=YMVwrlzsiMTZsFZFLrRybjEuxJhMqqaQIWzD2hYxE36H9xuQrlZgeRg9qPi7CyKCTLbVetXXLTpexSVbfH1RFrhVr52Yfoapq1lJ6PHChHIZ2IS3idLj88kb7VIZDI86xF0DqijnxE8E/uYl99T7NgnUbVttuft9FnVmusaPnPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738991839; c=relaxed/simple;
-	bh=9muKqbJSUVdPeiRYIlVh42ZCZMbus+wplzyGdtdjqJE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EAMdcm1B80fGfKp+9JnA4lvmN4TsxRpgt2VOUc52UFAJcv1uq0529E9osr3JynIknT6uT+VaBZo9P7CVSQBCH+sanLhGgxwRxU7pmWIcMwZWvo/4O9ynMpqXCUSLElrJDt2KgW1xUYr1qWrQDhQNPgVsLNIAILoXHaXwvwPBfQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ltBN49yi; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738991972; c=relaxed/simple;
+	bh=WE53Zhv/fLeUZ5rHu0F0uGAkBNohYeCqkpNl9GxxKqg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PZYOTXIXw4kGbUjapavzyArmMrSSGJiGcS5TqY/yneu2sGNq4MmoLhEnxzktrdUV9/JHctMLFQ0UfVzOazYYoe4X148LsBCNRmn83ZyP4WmWlzcl537NupvaMmODx+oMBqk6I7VOHHGXoi4+Fy08uhYj25CIgiV5JiIbcJPBatc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pqlFT7hf; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltBN49yi"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e5b3dbd6732so2008963276.1;
-        Fri, 07 Feb 2025 21:17:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pqlFT7hf"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54505a75445so162677e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 21:19:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738991834; x=1739596634; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qkAqC+Bw7h3b39jDNFlT+YMm6ypioK+dNekzyUVSK3M=;
-        b=ltBN49yiXKBeQXpoEKcTbZRwJPh4Vmgx3wfeIr+82mCK/XWqv72z8wIQ65wvRAsy5z
-         YJX/Bj01dnU+hQQ3eeOOwDr//OdVrLHXzvTYeEIXHTN57/CBHsOKdhK2TzkAyW7noUET
-         zIN7/OBxXvpscU838gyltj3Yoy16uhVu1DHqMHzZpmdnyvB0bRWH2ew6WLsqcmlaqK+J
-         CIFOi8WFFbR/Ci+M1awetJoT9A4s4zd/R+XBtTGJI3bX6mthsoVLmmBYf3RiINm3ZNai
-         howr9ApgQhmQ7KDjQ3zXK/ftc0LYbzpZE4vi5Lvgeog3GgCU8ZCxyiVX60B5026BQqKb
-         l4IA==
+        d=linaro.org; s=google; t=1738991969; x=1739596769; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XbmEch0kSfMOKC6/rJ1doWwYVcmMwQu5vCq8pLMJYLw=;
+        b=pqlFT7hf2SGQSUwRETLjfYK5Fwm/Z86rj029G8RZG1zHCpc/eP4qcGRoXpGcwFRsBH
+         iN/t9b2whobHmT2mB0V2b9330qhjLjPzkXP5wMvzxILjsQ0wku/y32shwTZXr6vfyrE/
+         oyQmOuiHKsSw5APjLTUa+hO1PChl4i0BVC/EU74jqKpFloo6/PWrdl0gFhzO0eddufSR
+         UtQ8e7ShHNCDSioHpszvF5sLP4Jg5VIYnJ9uHOcZgwkirR4KJjoWOK20YSbo2vQq7mhl
+         Ewtwayftri0y0TjvpHpS44GHHct/sc81QLISjhpBmytn9q0gfZzW28dTJf/vkjLh1gJ7
+         zp0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738991834; x=1739596634;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qkAqC+Bw7h3b39jDNFlT+YMm6ypioK+dNekzyUVSK3M=;
-        b=X3ShUdQ2AVfTtr1FcyG6JZVFdulY1pe3IXsW/+Z8bHrFVEV3qd26EHThq8QawFXMPn
-         NyVwnafHbTTXKxq6nqahHjDZBk7PdniTTrEsnZjNjP+unlmaOjKI5cfLoafi1TPfQkQX
-         mH8MJJhigq89Af9520QN/mwzsLdVzYmtZbaQvQMvTpnq6jjatkkm6RI1KZougNrVsUSc
-         bHI5hf9rHXoRTWxJEC7VshVh15fnTyGgVImfHyhr82iVcokn1RzhRMx1fdk5ThP17g5e
-         chfBWz4EX49/4GDcTkxzlXD0jsdJDsxqa5Vh0NU3rGd2C1Ns5q9UvOCky4muNzVmXkEN
-         YY7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVzRzb5Ndk/i51dbojeyEGJbFIulNAeGYRoM39gJQwGEkNngDMzu3oP0CnVoqmNTKcxcMxWJhjq2cr90hs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjDNk6/7loHZnjooartFynrgHfR3YRDLZ1AnfsRPPaNWM6OEIL
-	/2iDhgUfVrZmjGtStS1vfeqVjcwwFabNvwfkU0yt1C+mOPo5Tgiq
-X-Gm-Gg: ASbGnctgAr9WdFOB6TDRJDNSmmoCq4AguXR8KznprRGxXxNAtr6UscGhuDz8eipE7ov
-	JaPWeNeozvSVf/KHTqmnGrGu8ObpIAZsJNqPoRZ9PUn4CfwuR3HDsNQRzeedRNGZkPC+JKzzSNO
-	ujGlB6TjWFzcrurrzN/TSUJA0IaHra5g1QAq0MMXlB0exQwjUmJQK0W21KuqBJO1dTxY7asEsfz
-	ZCIPV9c9PaF0E3ffGAGCxUP8f+2b70CyL9iT5ohwVQLcUZpv2qGbfKvAdJFCHDDy+Nvr39qU9Cz
-	OS9qoGSTTBGfMrh9+Jdn6cY=
-X-Google-Smtp-Source: AGHT+IHfeN1FcG9blUNW736S0NrkeDownTGFrI3xHREXIUVZ6aYHy8VGwSLCIFft6vAEOlEa+b1wUg==
-X-Received: by 2002:a05:6902:a8f:b0:e5b:3de2:ce95 with SMTP id 3f1490d57ef6-e5b46170272mr5314485276.9.1738991834213;
-        Fri, 07 Feb 2025 21:17:14 -0800 (PST)
-Received: from localhost.localdomain ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5b3a1f00e0sm1207670276.2.2025.02.07.21.17.11
+        d=1e100.net; s=20230601; t=1738991969; x=1739596769;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XbmEch0kSfMOKC6/rJ1doWwYVcmMwQu5vCq8pLMJYLw=;
+        b=TfZ2LvETGVpfGECcD6Vy3NZ4L3F9t9Jp8h5eh6fbQNUH7o4nNNCYzaUeKb8YR5jwSL
+         H87zwIgE1fZl8+OAxTwN05kqIrM19KemC1kWKAB96aGLykLfISmpjeDQVHiOlfR9F88s
+         +3TxuRgQu4LYi6wpiGHIQc5PFYcedZn/qXQLEr2Va9MZIl6LOtsW2aL5HQkMcllPth+n
+         Gcf1pR87TPix8JFuvgRYLqXfbimkzbGR0mXyZx+eWzFX3pY9o6kKHMPYWYR0FhhBCuj4
+         Zss2ssinhht5lTHrux+obMhFhDLX1zFZ6X29tp7cIS7TGIQnys0PIRUZe0Z4S0/2ipaT
+         ig3g==
+X-Forwarded-Encrypted: i=1; AJvYcCX0igyM5IxO6n5OAWn1fyn3uV5OKm80TlTBFU6iUv1rDDj22PVQUJ8DEXTXeMlLNcIks8syeLAqhikbKiQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQQ0tKdNC/uIEwqG+FX268L17u8Lx00H/Ji/9IHwJZ929i9yNO
+	pzwGNrw+Vg2Bb3sQteoTpgBJ/yC45tD+iCsYMeAJwptvDDNTf24bXrJdoAT4Iqy02WDulj8EryM
+	qD8c=
+X-Gm-Gg: ASbGncsYi7QH7mdg5LZf7C7PDgsM+7sfZrtZsyl7UFY1Qqa1unjd3bd9bABvOOZp3gH
+	9VcmbZwCqgBjqHC3PzK1vJFModSmXAJPVK867gMNOOTGdnwoe/hbQFxv99b4bS4kF/238mdM90R
+	ifJEpy2sgBkYh3NfcxQajcO/C+z6ipZuu0PnMbbsBb1jOLTWFUC/6M1bA9+kiyB3ByBuCc5ZbNk
+	Dk7mYG35CIA756V0CvZEeHNGE5IYJI0DaZKy4uddNqJOPAPvIKoUkbx0Ok/T5VOsBk92idinave
+	ayMm9H5D3XhsZCf/YBU1SccWsvOoMpN1Ny4VLYc+2twGTWMdGIyKLZPhIBnmmHfb+v645VA=
+X-Google-Smtp-Source: AGHT+IEgvj0rP082XMOnWmPAOgxRus50LsWzxvsljRKd/lfLJp/HnL9/Ij+KWNkNuMgAahlz+FUAew==
+X-Received: by 2002:a05:6512:348e:b0:542:2a28:e30f with SMTP id 2adb3069b0e04-54414abba5bmr1913205e87.31.1738991968614;
+        Fri, 07 Feb 2025 21:19:28 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5441053ecccsm626483e87.21.2025.02.07.21.19.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 21:17:13 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Armin Wolf" <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org,
-	"Hans de Goede" <hdegoede@redhat.com>,
-	Dell.Client.Kernel@dell.com,
-	linux-kernel@vger.kernel.org,
-	Kurt Borja <kuurtb@gmail.com>
-Subject: [PATCH 10/10] platform/x86: alienware-wmi: Improve and update documentation
-Date: Sat,  8 Feb 2025 00:16:14 -0500
-Message-ID: <20250208051614.10644-11-kuurtb@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250208051614.10644-1-kuurtb@gmail.com>
-References: <20250208051614.10644-1-kuurtb@gmail.com>
+        Fri, 07 Feb 2025 21:19:27 -0800 (PST)
+Date: Sat, 8 Feb 2025 07:19:24 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 05/35] drm/bridge: Pass full state to
+ atomic_post_disable
+Message-ID: <thnyq2advlb6mumnokx55x4wcpqv63bttsd3numf47tpxermpd@e7buh4vhuq57>
+References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
+ <20250204-bridge-connector-v2-5-35dd6c834e08@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250204-bridge-connector-v2-5-35dd6c834e08@kernel.org>
 
-Use tables to describe method operations instead of using pseudo-code.
-Drop unknown method descriptions to avoid redundancy. Drop GPIO section
-as it is currently irrelevant to this driver. Update Thermal_Information
-method documentation. Add one more helpful developer to the kudos section.
+On Tue, Feb 04, 2025 at 03:57:33PM +0100, Maxime Ripard wrote:
+> It's pretty inconvenient to access the full atomic state from
+> drm_bridges, so let's change the atomic_post_disable hook prototype to
+> pass it directly.
+> 
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+>  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c |  6 ++----
+>  drivers/gpu/drm/bridge/chipone-icn6211.c           |  2 +-
+>  drivers/gpu/drm/bridge/ite-it6505.c                |  2 +-
+>  drivers/gpu/drm/bridge/lontium-lt9611.c            |  5 ++---
+>  drivers/gpu/drm/bridge/panel.c                     |  3 +--
+>  drivers/gpu/drm/bridge/parade-ps8640.c             |  2 +-
+>  drivers/gpu/drm/bridge/samsung-dsim.c              |  2 +-
+>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c      |  2 +-
+>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi2.c     |  2 +-
+>  drivers/gpu/drm/bridge/tc358762.c                  |  3 ++-
+>  drivers/gpu/drm/bridge/ti-dlpc3433.c               |  2 +-
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c              |  2 +-
+>  drivers/gpu/drm/drm_bridge.c                       | 16 +++-------------
+>  drivers/gpu/drm/mediatek/mtk_dsi.c                 |  2 +-
+>  drivers/gpu/drm/mediatek/mtk_hdmi.c                |  2 +-
+>  drivers/gpu/drm/msm/dp/dp_display.c                | 14 +++++++-------
+>  drivers/gpu/drm/msm/dp/dp_drm.c                    |  5 ++---
+>  drivers/gpu/drm/msm/dp/dp_drm.h                    |  2 +-
+>  drivers/gpu/drm/vc4/vc4_dsi.c                      |  2 +-
+>  include/drm/drm_bridge.h                           |  2 +-
+>  20 files changed, 32 insertions(+), 46 deletions(-)
+> 
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
- Documentation/wmi/devices/alienware-wmi.rst | 390 ++++++--------------
- 1 file changed, 122 insertions(+), 268 deletions(-)
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-diff --git a/Documentation/wmi/devices/alienware-wmi.rst b/Documentation/wmi/devices/alienware-wmi.rst
-index ddc5e561960e..2bb3abfd9cd7 100644
---- a/Documentation/wmi/devices/alienware-wmi.rst
-+++ b/Documentation/wmi/devices/alienware-wmi.rst
-@@ -11,7 +11,7 @@ The WMI device WMAX has been implemented for many Alienware and Dell's G-Series
- models. Throughout these models, two implementations have been identified. The
- first one, used by older systems, deals with HDMI, brightness, RGB, amplifier
- and deep sleep control. The second one used by newer systems deals primarily
--with thermal, overclocking, and GPIO control.
-+with thermal control and overclocking.
- 
- It is suspected that the latter is used by Alienware Command Center (AWCC) to
- manage manufacturer predefined thermal profiles. The alienware-wmi driver
-@@ -69,9 +69,6 @@ data using the `bmfdec <https://github.com/pali/bmfdec>`_ utility:
-    [WmiMethodId(164), Implemented, read, write, Description("Tobii Camera Power Off.")] void TobiiCameraPowerOff([out] uint32 argr);
-  };
- 
--Some of these methods get quite intricate so we will describe them using
--pseudo-code that vaguely resembles the original ASL code.
--
- Methods not described in the following document have unknown behavior.
- 
- Argument Structure
-@@ -87,175 +84,136 @@ ID 0xA0, the argument you would pass to the method is 0xA001.
- Thermal Methods
- ===============
- 
--WMI method Thermal_Information([in] uint32 arg2, [out] uint32 argr)
---------------------------------------------------------------------
--
--::
--
-- if BYTE_0(arg2) == 0x01:
--         argr = 1
--
-- if BYTE_0(arg2) == 0x02:
--         argr = SYSTEM_DESCRIPTION
--
-- if BYTE_0(arg2) == 0x03:
--         if BYTE_1(arg2) == 0x00:
--                 argr = FAN_ID_0
--
--         if BYTE_1(arg2) == 0x01:
--                 argr = FAN_ID_1
--
--         if BYTE_1(arg2) == 0x02:
--                 argr = FAN_ID_2
--
--         if BYTE_1(arg2) == 0x03:
--                 argr = FAN_ID_3
--
--         if BYTE_1(arg2) == 0x04:
--                 argr = SENSOR_ID_CPU | 0x0100
--
--         if BYTE_1(arg2) == 0x05:
--                 argr = SENSOR_ID_GPU | 0x0100
--
--         if BYTE_1(arg2) == 0x06:
--                 argr = THERMAL_MODE_QUIET_ID
--
--         if BYTE_1(arg2) == 0x07:
--                 argr = THERMAL_MODE_BALANCED_ID
--
--         if BYTE_1(arg2) == 0x08:
--                 argr = THERMAL_MODE_BALANCED_PERFORMANCE_ID
--
--         if BYTE_1(arg2) == 0x09:
--                 argr = THERMAL_MODE_PERFORMANCE_ID
--
--         if BYTE_1(arg2) == 0x0A:
--                 argr = THERMAL_MODE_LOW_POWER_ID
--
--         if BYTE_1(arg2) == 0x0B:
--                 argr = THERMAL_MODE_GMODE_ID
--
--         else:
--                 argr = 0xFFFFFFFF
--
-- if BYTE_0(arg2) == 0x04:
--         if is_valid_sensor(BYTE_1(arg2)):
--                 argr = SENSOR_TEMP_C
--         else:
--                 argr = 0xFFFFFFFF
--
-- if BYTE_0(arg2) == 0x05:
--         if is_valid_fan(BYTE_1(arg2)):
--                 argr = FAN_RPM()
--
-- if BYTE_0(arg2) == 0x06:
--         skip
--
-- if BYTE_0(arg2) == 0x07:
--         argr = 0
--
-- If BYTE_0(arg2) == 0x08:
--         if is_valid_fan(BYTE_1(arg2)):
--                 argr = 0
--         else:
--                 argr = 0xFFFFFFFF
--
-- if BYTE_0(arg2) == 0x09:
--         if is_valid_fan(BYTE_1(arg2)):
--                 argr = FAN_UNKNOWN_STAT_0()
--
--         else:
--                 argr = 0xFFFFFFFF
--
-- if BYTE_0(arg2) == 0x0A:
--         argr = THERMAL_MODE_BALANCED_ID
--
-- if BYTE_0(arg2) == 0x0B:
--         argr = CURRENT_THERMAL_MODE()
--
-- if BYTE_0(arg2) == 0x0C:
--         if is_valid_fan(BYTE_1(arg2)):
--                 argr = FAN_UNKNOWN_STAT_1()
--         else:
--                 argr = 0xFFFFFFFF
--
--Operation 0x02 returns a *system description* buffer with the following
--structure:
--
--::
--
-- out[0] -> Number of fans
-- out[1] -> Number of sensors
-- out[2] -> 0x00
-- out[3] -> Number of thermal modes
-+WMI method GetFanSensors([in] uint32 arg2, [out] uint32 argr)
-+-------------------------------------------------------------
- 
--Operation 0x03 list all available fan IDs, sensor IDs and thermal profile
--codes in order, but different models may have different number of fans and
--thermal profiles. These are the known ranges:
-++--------------------+------------------------------------+--------------------+
-+| Operation (Byte 0) | Description                        | Arguments          |
-++====================+====================================+====================+
-+| 0x01               | Get the number of fans for a given | - Byte 1: Fan ID   |
-+|                    | fan ID.                            |                    |
-++--------------------+------------------------------------+--------------------+
-+| 0x02               | Get the temperature sensor ID      | - Byte 1: Fan ID   |
-+|                    | related to a fan sensor ID         |                    |
-++--------------------+------------------------------------+--------------------+
- 
--* Fan IDs: from 2 up to 4
--* Sensor IDs: 2
--* Thermal profile codes: from 1 up to 7
-+WMI method Thermal_Information([in] uint32 arg2, [out] uint32 argr)
-+-------------------------------------------------------------------
- 
--In total BYTE_1(ARG2) may range from 0x5 up to 0xD depending on the model.
-++--------------------+------------------------------------+--------------------+
-+| Operation (Byte 0) | Description                        | Arguments          |
-++====================+====================================+====================+
-+| 0x01               | Unknown.                           | - None             |
-++--------------------+------------------------------------+--------------------+
-+| 0x02               | Get system description number with | - None             |
-+|                    | the following structure:           |                    |
-+|                    |                                    |                    |
-+|                    | - Byte 0: Number of fans           |                    |
-+|                    | - Byte 1: Number of temperature    |                    |
-+|                    |   sensors                          |                    |
-+|                    | - Byte 2: Unknown                  |                    |
-+|                    | - Byte 3: Number of thermal        |                    |
-+|                    |   profiles                         |                    |
-++--------------------+------------------------------------+--------------------+
-+| 0x03               | List an ID or resource at a given  | - Byte 1: Index    |
-+|                    | index. Fan IDs, temperature IDs,   |                    |
-+|                    | unknown IDs and thermal profile    |                    |
-+|                    | IDs are listed in that exact       |                    |
-+|                    | order.                             |                    |
-+|                    |                                    |                    |
-+|                    | Operation 0x02 is used to know     |                    |
-+|                    | which indexes map to which         |                    |
-+|                    | resources.                         |                    |
-+|                    |                                    |                    |
-+|                    | **Returns:** ID at a given index   |                    |
-++--------------------+------------------------------------+--------------------+
-+| 0x04               | Get the current temperature for a  | - Byte 1: Sensor   |
-+|                    | given temperature sensor.          |   ID               |
-++--------------------+------------------------------------+--------------------+
-+| 0x05               | Get the current RPM for a given    | - Byte 1: Fan ID   |
-+|                    | fan.                               |                    |
-++--------------------+------------------------------------+--------------------+
-+| 0x06               | Get fan speed percentage. (not     | - Byte 1: Fan ID   |
-+|                    | implemented in every model)        |                    |
-++--------------------+------------------------------------+--------------------+
-+| 0x07               | Unknown.                           | - Unknown          |
-++--------------------+------------------------------------+--------------------+
-+| 0x08               | Get minimum RPM for a given FAN    | - Byte 1: Fan ID   |
-+|                    | ID.                                |                    |
-++--------------------+------------------------------------+--------------------+
-+| 0x09               | Get maximum RPM for a given FAN    | - Byte 1: Fan ID   |
-+|                    | ID.                                |                    |
-++--------------------+------------------------------------+--------------------+
-+| 0x09               | Get maximum RPM for a given FAN    | - Byte 1: Fan ID   |
-+|                    | ID.                                |                    |
-++--------------------+------------------------------------+--------------------+
-+| 0x0A               | Get balanced thermal profile ID.   | - None             |
-++--------------------+------------------------------------+--------------------+
-+| 0x0B               | Get current thermal profile ID.    | - None             |
-++--------------------+------------------------------------+--------------------+
-+| 0x0C               | Get current `boost` value for a    | - Byte 1: Fan ID   |
-+|                    | given fan ID.                      |                    |
-++--------------------+------------------------------------+--------------------+
- 
- WMI method Thermal_Control([in] uint32 arg2, [out] uint32 argr)
- ---------------------------------------------------------------
- 
--::
--
-- if BYTE_0(arg2) == 0x01:
--         if is_valid_thermal_profile(BYTE_1(arg2)):
--                 SET_THERMAL_PROFILE(BYTE_1(arg2))
--                 argr = 0
--
-- if BYTE_0(arg2) == 0x02:
--         if is_valid_fan(BYTE_1(arg2)):
--                 SET_FAN_SPEED_MULTIPLIER(BYTE_2(arg2))
--                 argr = 0
--         else:
--                 argr = 0xFFFFFFFF
--
--.. note::
--   While you can manually change the fan speed multiplier with this method,
--   Dell's BIOS tends to overwrite this changes anyway.
-++--------------------+------------------------------------+--------------------+
-+| Operation (Byte 0) | Description                        | Arguments          |
-++====================+====================================+====================+
-+| 0x01               | Activate a given thermal profile.  | - Byte 1: Thermal  |
-+|                    |                                    |   profile ID       |
-++--------------------+------------------------------------+--------------------+
-+| 0x02               | Set a `boost` value for a given    | - Byte 1: Fan ID   |
-+|                    | fan ID.                            | - Byte 2: Boost    |
-++--------------------+------------------------------------+--------------------+
- 
- These are the known thermal profile codes:
- 
--::
--
-- CUSTOM                         0x00
--
-- BALANCED_USTT                  0xA0
-- BALANCED_PERFORMANCE_USTT      0xA1
-- COOL_USTT                      0xA2
-- QUIET_USTT                     0xA3
-- PERFORMANCE_USTT               0xA4
-- LOW_POWER_USTT                 0xA5
--
-- QUIET                          0x96
-- BALANCED                       0x97
-- BALANCED_PERFORMANCE           0x98
-- PERFORMANCE                    0x99
--
-- GMODE                          0xAB
--
--Usually if a model doesn't support the first four profiles they will support
--the User Selectable Thermal Tables (USTT) profiles and vice-versa.
--
--GMODE replaces PERFORMANCE in G-Series laptops.
-++------------------------------+----------+------+
-+| Thermal Profile              | Type     | ID   |
-++==============================+==========+======+
-+| Custom                       | Special  | 0x00 |
-++------------------------------+----------+------+
-+| G-Mode                       | Special  | 0xAB |
-++------------------------------+----------+------+
-+| Quiet                        | Legacy   | 0x96 |
-++------------------------------+----------+------+
-+| Balanced                     | Legacy   | 0x97 |
-++------------------------------+----------+------+
-+| Balanced Performance         | Legacy   | 0x98 |
-++------------------------------+----------+------+
-+| Performance                  | Legacy   | 0x99 |
-++------------------------------+----------+------+
-+| Balanced                     | USTT     | 0xA0 |
-++------------------------------+----------+------+
-+| Balanced Performance         | USTT     | 0xA1 |
-++------------------------------+----------+------+
-+| Cool                         | USTT     | 0xA2 |
-++------------------------------+----------+------+
-+| Quiet                        | USTT     | 0xA3 |
-++------------------------------+----------+------+
-+| Performance                  | USTT     | 0xA4 |
-++------------------------------+----------+------+
-+| Low Power                    | USTT     | 0xA5 |
-++------------------------------+----------+------+
-+
-+If a model supports the User Selectable Thermal Tables (USTT) profiles, it will
-+not support the Legacy profiles and vice-versa.
-+
-+Every model supports the CUSTOM (0x00) thermal profile. GMODE replaces
-+PERFORMANCE in G-Series laptops.
- 
- WMI method GameShiftStatus([in] uint32 arg2, [out] uint32 argr)
- ---------------------------------------------------------------
- 
--::
--
-- if BYTE_0(arg2) == 0x1:
--         TOGGLE_GAME_SHIFT()
--         argr = GET_GAME_SHIFT_STATUS()
--
-- if BYTE_0(arg2) == 0x2:
--         argr = GET_GAME_SHIFT_STATUS()
-++--------------------+------------------------------------+--------------------+
-+| Operation (Byte 0) | Description                        | Arguments          |
-++====================+====================================+====================+
-+| 0x01               | Toggle *Game Shift*.               | - None             |
-++--------------------+------------------------------------+--------------------+
-+| 0x02               | Get *Game Shift* status.           | - None             |
-++--------------------+------------------------------------+--------------------+
- 
- Game Shift Status does not change the fan speed profile but it could be some
- sort of CPU/GPU power profile. Benchmarks have not been done.
-@@ -267,131 +225,27 @@ Thermal_Information does not list it.
- G-key on Dell's G-Series laptops also changes Game Shift status, so both are
- directly related.
- 
--WMI method GetFanSensors([in] uint32 arg2, [out] uint32 argr)
---------------------------------------------------------------
--
--::
--
-- if BYTE_0(arg2) == 0x1:
--        if is_valid_fan(BYTE_1(arg2)):
--                argr = 1
--        else:
--                argr = 0
--
-- if BYTE_0(arg2) == 0x2:
--        if is_valid_fan(BYTE_1(arg2)):
--                if BYTE_2(arg2) == 0:
--                        argr == SENSOR_ID
--                else
--                        argr == 0xFFFFFFFF
--        else:
--                argr = 0
--
- Overclocking Methods
- ====================
- 
--.. warning::
--   These methods have not been tested and are only partially reverse
--   engineered.
--
--WMI method Return_OverclockingReport([out] uint32 argr)
---------------------------------------------------------
--
--::
--
-- CSMI (0xE3, 0x99)
-- argr = 0
--
--CSMI is an unknown operation.
--
--WMI method Set_OCUIBIOSControl([in] uint32 arg2, [out] uint32 argr)
---------------------------------------------------------------------
--
--::
--
-- CSMI (0xE3, 0x99)
-- argr = 0
--
--CSMI is an unknown operation.
--
--WMI method Clear_OCFailSafeFlag([out] uint32 argr)
----------------------------------------------------
--
--::
--
-- CSMI (0xE3, 0x99)
-- argr = 0
--
--CSMI is an unknown operation.
--
--
- WMI method MemoryOCControl([in] uint32 arg2, [out] uint32 argr)
- ---------------------------------------------------------------
- 
- AWCC supports memory overclocking, but this method is very intricate and has
- not been deciphered yet.
- 
--GPIO methods
--============
--
--These methods are probably related to some kind of firmware update system,
--through a GPIO device.
--
--.. warning::
--   These methods have not been tested and are only partially reverse
--   engineered.
--
--WMI method FWUpdateGPIOtoggle([in] uint32 arg2, [out] uint32 argr)
--------------------------------------------------------------------
--
--::
--
-- if BYTE_0(arg2) == 0:
--         if BYTE_1(arg2) == 1:
--                 SET_PIN_A_HIGH()
--         else:
--                 SET_PIN_A_LOW()
--
-- if BYTE_0(arg2) == 1:
--         if BYTE_1(arg2) == 1:
--                 SET_PIN_B_HIGH()
--
--         else:
--                 SET_PIN_B_LOW()
--
-- else:
--         argr = 1
--
--WMI method ReadTotalofGPIOs([out] uint32 argr)
------------------------------------------------
--
--::
--
-- argr = 0x02
--
--WMI method ReadGPIOpPinStatus([in] uint32 arg2, [out] uint32 argr)
--------------------------------------------------------------------
--
--::
--
-- if BYTE_0(arg2) == 0:
--         argr = PIN_A_STATUS
--
-- if BYTE_0(arg2) == 1:
--         argr = PIN_B_STATUS
--
- Other information Methods
- =========================
- 
- WMI method ReadChassisColor([out] uint32 argr)
- ----------------------------------------------
- 
--::
--
-- argr = CHASSIS_COLOR_ID
-+Returns the chassis color internal ID.
- 
- Acknowledgements
- ================
- 
--Kudos to `AlexIII <https://github.com/AlexIII/tcc-g15>`_ for documenting
--and testing available thermal profile codes.
-+Kudos to `AlexIII <https://github.com/AlexIII/tcc-g15>`_ and
-+`T-Troll <https://github.com/T-Troll/alienfx-tools/>`_ for documenting and
-+testing some of this device's functionality, making it possible to generalize
-+this driver.
 -- 
-2.48.1
-
+With best wishes
+Dmitry
