@@ -1,94 +1,176 @@
-Received: from pv50p00im-ztdg10011201.me.com (pv50p00im-ztdg10011201.me.com [17.58.6.39])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA72D246336
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 14:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549FA20328;
+	Sat,  8 Feb 2025 14:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739024155; cv=none; b=DuCM5vI98E+9b+3Yfq00l0dsNUOmjBa4Zm7A52McMnr/acVDldthSgea41Kk3ulAsuk3gVkqaNitHvYijSlb6dngKdw3xdpfxs2gno3gtlkdjfYjfnJKXyWBdJ55Zn2uEXCuCVnOukQovmzUVixqKuxQOxpR8IziFpqTT3qIrt8=
+	t=1739024293; cv=none; b=Z8RdPYz3cbqheYE+NnVz62gi4CbtEUE9CG//yYtnyZysXlQzZlt8rtFth3VdJ+vD4mbgtWy7qGI8iqqNyw2TOSPXj3nwjkWnhFcmB/QMWg42liUXtgMSrgRVXMRzLpdaPrAI2Ko5maTobCjODJ8Cnf/tHyyQ25Ls+kw1nUiAMAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739024155; c=relaxed/simple;
-	bh=+6Arw3449YEvsaec+tbPgDndq0PzwIGCCW1mzwhn6EM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GOhS//itYbQt8Csz1kDEFImdrp5frS9S9nVS8w/ApwRdIkvkVVZFOtj5FiGPiRhttn3j409XamqaeGLBPw4hCZ/ZJS79O1bSzey5/ftLrXYECkbv0qY03MwDnxXQTInusFAaSdnLxDuVTL9oxwCPCiodyJYFA2g8cmZaUWMKnA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=gt/XUlrF; arc=none smtp.client-ip=17.58.6.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1739024293; c=relaxed/simple;
+	bh=VPpd2YYWjZluEJs9Qvp1Y2nnNlnf0rQUcWOQWnGi/4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i03lqfHqxa2U5v3DTwrs3wNY4J8bOynkIVdsm3iuJ18vNUgpZNz4aEaZkO/sKJPscsbKjHVmghsf88pe+ftq4QEXfoNM9TfXQnQ+CEwFPGjJ8UXZl6t/mnH7VHLLGcVEmaPXxJvd9z98Wd2CAjN7gWPHwX7ca8Q6lTORX6Y99C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nbUq05oo; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="gt/XUlrF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=6Ux/PWxxpeTkXEyVJkufknuvXHpPT9YcrM5y1trwYLo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=gt/XUlrF+NuxcVuCPGeojFCjST5VmrysIUzA3cEtn+jSU6QlwkBvwzuonvJMtnMJI
-	 sbE26yB8XUYTe29emctbhzvFpJ1owszl8qxn2yhCmKuWINyO5iJ1OL0illCIdhsWi7
-	 urh/0Jwn53Q9bXhjrO/edebjciCfDUJ1rcNe+Sig4gxkn3zl988GdvMCp5QsgKddga
-	 IRzXLQ9wb45YDPi4hlliuOqtpdr5qKJ9fBFiQu1mkkoZbC66CrVuG7AMaq0WaeWc5/
-	 Td7bLRcr+U1J16dTviiPPXp4+wsc87/WoxzqPC41yJ69Xc+5NL4TUqFJRcqI02Ecg8
-	 bX/9JXIfFd8oQ==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10011201.me.com (Postfix) with ESMTPSA id A7B48680268;
-	Sat,  8 Feb 2025 14:15:48 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Sat, 08 Feb 2025 22:15:26 +0800
-Subject: [PATCH] driver core: class: Remove needless return in void API
- class_remove_file()
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nbUq05oo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739024290; x=1770560290;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VPpd2YYWjZluEJs9Qvp1Y2nnNlnf0rQUcWOQWnGi/4E=;
+  b=nbUq05oojgR1cH6uSddvh9ZyyMCKHie15sZ2GCfGEI2YVksj3CQGGbhu
+   7ZDBThtyfUoXmYYzfAFF9ZO0Wz7ZdvFCyu7eOfwsS5WwwkSirATBWqAAN
+   ABTC0rshmo89U/owjU9pnfT7qvDb7SNU4qm+TJQ+ix4kC2Lhqixaw5Ckn
+   cEOPXOAIiGnSusTeZw4yFlZOvpzfb86woGCBPSmNvn6fQ7YP1DceIUqQQ
+   kEXtJ+S4JYYVflUi5mJmDWapudmBvDogP8ZaPMXOUNeqPE2iQ+s7GQeqN
+   K27yV70aoEOWbtbmt8xBzgCBFKSAGbF9+XQLo1UhKLoc9GfGfEfHmkXmb
+   Q==;
+X-CSE-ConnectionGUID: a6VuQ+ByRuuuJDqOZiBVkA==
+X-CSE-MsgGUID: J7dVg1nETcKi0ErbuifjJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="51044191"
+X-IronPort-AV: E=Sophos;i="6.13,270,1732608000"; 
+   d="scan'208";a="51044191"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 06:18:10 -0800
+X-CSE-ConnectionGUID: 5SCY/wYtTf2L5TycPuB0vA==
+X-CSE-MsgGUID: 0P956+EpRVirLOVEYoefGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,270,1732608000"; 
+   d="scan'208";a="116788686"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 08 Feb 2025 06:18:03 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tglei-00103D-12;
+	Sat, 08 Feb 2025 14:18:00 +0000
+Date: Sat, 8 Feb 2025 22:17:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Frank Li <Frank.Li@nxp.com>, Kishon Vijay Abraham I <kishon@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Niklas Cassel <cassel@kernel.org>,
+	dlemoal@kernel.org, jdmason@kudzu.us, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, imx@lists.linux.dev
+Subject: Re: [PATCH v14 06/15] PCI: endpoint: Add RC-to-EP doorbell support
+ using platform MSI controller
+Message-ID: <202502082204.6PRR3cfG-lkp@intel.com>
+References: <20250207-ep-msi-v14-6-9671b136f2b8@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250208-cls_rmv_return-v1-1-091b37945aac@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAP1mp2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIwML3eSc4vii3LL4otSS0qI83VRjSxML05QU4yRLSyWgpoKi1LTMCrC
- B0bG1tQBxDK2CYAAAAA==
-X-Change-ID: 20250208-cls_rmv_return-e39485dd3b99
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Heiner Kallweit <hkallweit1@gmail.com>, Zijun Hu <zijun_hu@icloud.com>, 
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: X1Mxg3tFfiDH4gCfj0uTPx7-O4bPG362
-X-Proofpoint-ORIG-GUID: X1Mxg3tFfiDH4gCfj0uTPx7-O4bPG362
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-08_06,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 mlxscore=0
- clxscore=1011 suspectscore=0 mlxlogscore=876 adultscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2502080119
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207-ep-msi-v14-6-9671b136f2b8@nxp.com>
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+Hi Frank,
 
-Remove return since both class_remove_file() and class_remove_file_ns()
-are void functions.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- include/linux/device/class.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[auto build test ERROR on 00f3246adeeacbda0bd0b303604e46eb59c32e6e]
 
-diff --git a/include/linux/device/class.h b/include/linux/device/class.h
-index 45ee3a634999331d4f9efa4c85bb1d36918eb27b..65880e60c720834f5a9cf102a93274e03300ce6c 100644
---- a/include/linux/device/class.h
-+++ b/include/linux/device/class.h
-@@ -193,7 +193,7 @@ static inline int __must_check class_create_file(const struct class *class,
- static inline void class_remove_file(const struct class *class,
- 				     const struct class_attribute *attr)
- {
--	return class_remove_file_ns(class, attr, NULL);
-+	class_remove_file_ns(class, attr, NULL);
- }
- 
- /* Simple class attribute that is just a static string */
+url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/platform-msi-Add-msi_remove_device_irq_domain-in-platform_device_msi_free_irqs_all/20250208-034445
+base:   00f3246adeeacbda0bd0b303604e46eb59c32e6e
+patch link:    https://lore.kernel.org/r/20250207-ep-msi-v14-6-9671b136f2b8%40nxp.com
+patch subject: [PATCH v14 06/15] PCI: endpoint: Add RC-to-EP doorbell support using platform MSI controller
+config: i386-buildonly-randconfig-003-20250208 (https://download.01.org/0day-ci/archive/20250208/202502082204.6PRR3cfG-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502082204.6PRR3cfG-lkp@intel.com/reproduce)
 
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250208-cls_rmv_return-e39485dd3b99
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502082204.6PRR3cfG-lkp@intel.com/
 
-Best regards,
+All errors (new ones prefixed by >>):
+
+   drivers/pci/endpoint/pci-ep-msi.c: In function 'pci_epf_alloc_doorbell':
+>> drivers/pci/endpoint/pci-ep-msi.c:53:15: error: implicit declaration of function 'platform_device_msi_init_and_alloc_irqs' [-Werror=implicit-function-declaration]
+      53 |         ret = platform_device_msi_init_and_alloc_irqs(&epf->dev, num_db, pci_epf_write_msi_msg);
+         |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/pci/endpoint/pci-ep-msi.c: In function 'pci_epf_free_doorbell':
+>> drivers/pci/endpoint/pci-ep-msi.c:75:9: error: implicit declaration of function 'platform_device_msi_free_irqs_all' [-Werror=implicit-function-declaration]
+      75 |         platform_device_msi_free_irqs_all(&epf->dev);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/platform_device_msi_init_and_alloc_irqs +53 drivers/pci/endpoint/pci-ep-msi.c
+
+    26	
+    27	int pci_epf_alloc_doorbell(struct pci_epf *epf, u16 num_db)
+    28	{
+    29		struct pci_epc *epc = epf->epc;
+    30		struct device *dev = &epf->dev;
+    31		struct irq_domain *dom;
+    32		void *msg;
+    33		u32 rid;
+    34		int ret;
+    35		int i;
+    36	
+    37		rid = PCI_EPF_DEVID(epf->func_no, epf->vfunc_no);
+    38		dom = of_msi_map_get_device_domain(epc->dev.parent, rid, DOMAIN_BUS_PLATFORM_MSI);
+    39		if (!dom) {
+    40			dev_err(dev, "Can't find msi domain\n");
+    41			return -EINVAL;
+    42		}
+    43	
+    44		dev_set_msi_domain(dev, dom);
+    45	
+    46		msg = kcalloc(num_db, sizeof(struct pci_epf_doorbell_msg), GFP_KERNEL);
+    47		if (!msg)
+    48			return -ENOMEM;
+    49	
+    50		epf->num_db = num_db;
+    51		epf->db_msg = msg;
+    52	
+  > 53		ret = platform_device_msi_init_and_alloc_irqs(&epf->dev, num_db, pci_epf_write_msi_msg);
+    54		if (ret) {
+    55			/*
+    56			 * The pcie_ep DT node has to specify 'msi-parent' for EP
+    57			 * doorbell support to work. Right now only GIC ITS is
+    58			 * supported. If you have GIC ITS and reached this print,
+    59			 * perhaps you are missing 'msi-map' in DT.
+    60			 */
+    61			dev_err(dev, "Failed to allocate MSI\n");
+    62			kfree(msg);
+    63			return -ENOMEM;
+    64		}
+    65	
+    66		for (i = 0; i < num_db; i++)
+    67			epf->db_msg[i].virq = msi_get_virq(dev, i);
+    68	
+    69		return ret;
+    70	}
+    71	EXPORT_SYMBOL_GPL(pci_epf_alloc_doorbell);
+    72	
+    73	void pci_epf_free_doorbell(struct pci_epf *epf)
+    74	{
+  > 75		platform_device_msi_free_irqs_all(&epf->dev);
+
 -- 
-Zijun Hu <quic_zijuhu@quicinc.com>
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
