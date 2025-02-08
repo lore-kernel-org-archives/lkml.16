@@ -1,111 +1,107 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m49230.qiye.163.com (mail-m49230.qiye.163.com [45.254.49.230])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BD21891AB;
-	Sat,  8 Feb 2025 02:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BAF51C5A;
+	Sat,  8 Feb 2025 02:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738980091; cv=none; b=f7esbLgB24uSDLscosl/0UHl6Z9T6CvqvXM+zbH5rzc/Xx3syt3KUbLjLAIj/1XE+uRdoOpH2Bjdi0GV8q5yA8hw56ZBBnaW4IOPNmvl67CCo7Xamw2Cz46rZSRY3WXLlVlLqVXQTAk8sAq0gg/cZCZDwPYONGJBNLwXTMYl94U=
+	t=1738980199; cv=none; b=bSVtys0nyQ2rzsGl+6aLmQQKlahXQMnWlWrkp1RiGxxEaup6U6TLDAjowGe2t20+Ymdu4ODQEldET8yUpw96/W6gKozmw4QgUMiZe9hRryygpModxp8VkY00DRLQW9Wap3pMIV6DVad1p79/CHlkIjfL/CKKLe9gstNsHzVVwWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738980091; c=relaxed/simple;
-	bh=OS4CA+OBtLQhST1mmHsn/UlqfYyYFGggFfg0gQckuoM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TU9DLvVkL5xs8/xQObGAA7Al/rDCymCwFQRyKDAnJ3iv0+db/s0DOwCBlr42JUXpPP4cwRPlgxkIr2J5GHJyXc8gT5jJIXnO9CZ+EG3kHRib/Ce3ePXgq6wPM90+YTvY51bwWaXjAWOreFMzu417a3VWI9LBf9zeH7fd/+MLUzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cmnB8Qh/; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738980199; c=relaxed/simple;
+	bh=8GF6YKI9AWbpPELpurdoUFOUVSq0wrthPYGfFTBMiHc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=ZbOqqh4ctnl6aYriR17OsKvzLo3NfFN7BT8n69uO6qqKX9v6/N/FKBom9wvss5XDJvzTaW9V4amCTq2Fp5oYyr0CasAogunAzTSjyq4dcBbABGRRGdFkTZvD7cCHc2JuS9R0SwWY6FvySHufn9SnwoSeBVUkAEquBSoLpwYCVgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=XBoyJNpf; arc=none smtp.client-ip=45.254.49.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmnB8Qh/"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-38dcae0d6dcso691765f8f.1;
-        Fri, 07 Feb 2025 18:01:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738980088; x=1739584888; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iGIrEua9iQ8bHgGdDw3wNHVLDjJrs0blGd4Py+scUxE=;
-        b=cmnB8Qh/L0GTYP1f32KDHDYLGh2eWrE2T1HF5sP3uexlqq8735BfjpG4ezJjOp9jL3
-         zLwZyykbe61NvFFPNFRHl7Hkp93BAKkIz+2EJz8do+6veSrp4M0DgyYByQctldEMsNWo
-         HW1g3l+AAjE4qvC2SpYe9ruW7bUTMDq7R5ob2mUEYwebK5zqFGT4tkyZDjaNOVHf7InS
-         qiqLfEW40YyHkoIKC26OOrRG+ONBDcRiaqmzxWetyc8YNZ1lR39eVB6RdmbREgKK/L8N
-         8Q2Re3mkEBBO22XvRaygiTgPSN+aCkLFBMZ3+IVVlXdF+Z3SCETJ5TxOAyI0R3R9Z/CP
-         /IKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738980088; x=1739584888;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iGIrEua9iQ8bHgGdDw3wNHVLDjJrs0blGd4Py+scUxE=;
-        b=P5/JPm0Ys4nz39Xqsvh2tMag1xL0GwzC5gl1jCGZPupX6nzsRKkAb7+0LJ+20Ly8Zs
-         pF4Lq5wJF3JBwzVcLt/PmCXTrwuTvyeOXeKCJcVVD9G4A6QE4iZk1DW0aoEyNQsnOacA
-         9h3+oFz+PNInCgZemDuGM0wHF6QZRpPxpZ/B2IuCCymZN0eAKrd3yCcGug4LTHkJRhdr
-         5opwAgg87Z7tx5IP9na/4jkjvIZhtDX7VTLKRGQQaFfTQw9UwZG+pbptCM82aK16Mo5d
-         VmgfV71GbyNBj972+edsjkQISyxAKNzQKfGUVuOW7ztTTMUnoqrPHebT9l3bzp8RLnQZ
-         TQAw==
-X-Forwarded-Encrypted: i=1; AJvYcCVh+RLYFyMitzi2cse3AlYAqyMtpU3oE6nNmSfnt94JwSyqPwDhQQWZF1eoLUrY11sW29Lm/CYsAKZqE7o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykCOxUbE5WoV0K2kWTxd1rdhmYuu6lK/4UAWRUQdxoqJej8o5J
-	rapLMhavOJjsTvA+QKMHCzyTXJKXxXz4MbaofX5xvKl8A/Kt8HFla6ZJlowRf5RqGxPOfijm87h
-	o5WHpl7sjA4ydU3ZZ4Cdke3vAZdY=
-X-Gm-Gg: ASbGncvL9SBIYgZHkCLQF7mFviBXZ4qs0d3v0A1XtnZZVyoBMJYuXoEGYM7pdWV/Gpr
-	3UPqLq9eaDKySjLLR/MRYL7cFC88SbpGh73hhBCxuSLRYeAzbQHgvTmhdnnfDkcMSu0ull7Op7B
-	wvM7cM8DNXXnSoBA8zKV5WDwFhV2oG
-X-Google-Smtp-Source: AGHT+IEoZCtmd/odsNY1AueL2/BylkudMbYiLPnq+yVpZr8qNoJRC0tBlsOa6xLF9KZbqMlXnsMGY+t/Q+QTxpioknQ=
-X-Received: by 2002:a05:6000:1865:b0:38d:bf57:f371 with SMTP id
- ffacd0b85a97d-38dc9373270mr4376973f8f.48.1738980087553; Fri, 07 Feb 2025
- 18:01:27 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="XBoyJNpf"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id a75a6bde;
+	Sat, 8 Feb 2025 09:58:05 +0800 (GMT+08:00)
+From: Elaine Zhang <zhangqing@rock-chips.com>
+To: jonas@kwiboo.se,
+	kever.yang@rock-chips.com,
+	zhangqing@rock-chips.com,
+	heiko@sntech.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	huangtao@rock-chips.com,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 2/2] arm64: dts: rockchip: Increase VOP clk rate on RK3328
+Date: Sat,  8 Feb 2025 09:57:57 +0800
+Message-Id: <20250208015757.27594-3-zhangqing@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250208015757.27594-1-zhangqing@rock-chips.com>
+References: <20250208015757.27594-1-zhangqing@rock-chips.com>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGkxNHVZDQ05DGRkaHRlPHx9WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a94e347403c03a3kunma75a6bde
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PCI6Qgw5KjIQQwNOFxUSGS06
+	ODVPCklVSlVKTEhDQkxCQ0NNSUxOVTMWGhIXVQETGhUcChIVHDsJFBgQVhgTEgsIVRgUFkVZV1kS
+	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUpOT0o3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=XBoyJNpfysrNkHeYlKIJtZfd3lX2RtFrsvjTR6b+hw5/uS9bB9Jwi8i3bedCDBc4vKJcGq5FcYV/MEiY/YZhz+x/2Em3VwmzDgwCGJFIgwiXUj59qOvZiR6JoKbSa3zzhWacFBGCokE6cH/l96f1pXaZtTSgUIuapdkDBXLC564=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=2CAH1dcXEz2+VFXon/oNdlFEefOj5kJXA/0Z8pEycdA=;
+	h=date:mime-version:subject:message-id:from;
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250206105435.2159977-1-memxor@gmail.com> <20250206105435.2159977-20-memxor@gmail.com>
-In-Reply-To: <20250206105435.2159977-20-memxor@gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 7 Feb 2025 18:01:16 -0800
-X-Gm-Features: AWEUYZnUTy2itNVn48BldfC4LoMr601PCDOaBo1fZL0B5Yg1x-9oEAhlPjMvVFU
-Message-ID: <CAADnVQLNovQYGy6_zGDi75vmNHfZ-hKz4G=gWF4Bis8b6iTYew@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 19/26] bpf: Convert hashtab.c to rqspinlock
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Martin KaFai Lau <martin.lau@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>, Barret Rhoden <brho@google.com>, 
-	Josh Don <joshdon@google.com>, Dohyun Kim <dohyunkim@google.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kernel Team <kernel-team@meta.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 6, 2025 at 2:55=E2=80=AFAM Kumar Kartikeya Dwivedi <memxor@gmai=
-l.com> wrote:
->
-> Convert hashtab.c from raw_spinlock to rqspinlock, and drop the hashed
-> per-cpu counter crud from the code base which is no longer necessary.
->
-> Signed-off-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-> ---
->  kernel/bpf/hashtab.c | 102 ++++++++++++++-----------------------------
->  1 file changed, 32 insertions(+), 70 deletions(-)
->
-> diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-> index 4a9eeb7aef85..9b394e147967 100644
-> --- a/kernel/bpf/hashtab.c
-> +++ b/kernel/bpf/hashtab.c
-> @@ -16,6 +16,7 @@
->  #include "bpf_lru_list.h"
->  #include "map_in_map.h"
->  #include <linux/bpf_mem_alloc.h>
-> +#include <asm/rqspinlock.h>
->
->  #define HTAB_CREATE_FLAG_MASK                                          \
->         (BPF_F_NO_PREALLOC | BPF_F_NO_COMMON_LRU | BPF_F_NUMA_NODE |    \
-> @@ -78,7 +79,7 @@
->   */
->  struct bucket {
->         struct hlist_nulls_head head;
-> -       raw_spinlock_t raw_lock;
-> +       rqspinlock_t raw_lock;
+The VOP on RK3328 needs to run at a higher rate in order to produce
+a proper 3840x2160 signal.
+Change to use 300MHz for VIO clk and 400MHz for VOP clk.
 
-Pls add known syzbot reports as 'Closes:' to commit log.
+Fixes: 0f2ddb128fa2 ("arm64: dts: rockchip: Increase VOP clk rate on RK3328")
+
+Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index 7d992c3c01ce..0c905f411e92 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -842,7 +842,8 @@
+ 			<&cru ACLK_BUS_PRE>, <&cru HCLK_BUS_PRE>,
+ 			<&cru PCLK_BUS_PRE>, <&cru ACLK_PERI_PRE>,
+ 			<&cru HCLK_PERI>, <&cru PCLK_PERI>,
+-			<&cru SCLK_RTC32K>;
++			<&cru SCLK_RTC32K>, <&cru ACLK_VIO_PRE>,
++			<&cru ACLK_VOP_PRE>;
+ 		assigned-clock-parents =
+ 			<&cru HDMIPHY>, <&cru PLL_APLL>,
+ 			<&cru PLL_GPLL>, <&xin24m>,
+@@ -852,8 +853,8 @@
+ 			<0>, <24000000>,
+ 			<24000000>, <24000000>,
+ 			<15000000>, <15000000>,
+-			<300000000>, <100000000>,
+-			<400000000>, <100000000>,
++			<100000000>, <100000000>,
++			<100000000>, <100000000>,
+ 			<50000000>, <100000000>,
+ 			<100000000>, <100000000>,
+ 			<50000000>, <50000000>,
+@@ -863,7 +864,8 @@
+ 			<150000000>, <75000000>,
+ 			<75000000>, <150000000>,
+ 			<75000000>, <75000000>,
+-			<32768>;
++			<32768>, <300000000>,
++			<400000000>;
+ 	};
+ 
+ 	usb2phy_grf: syscon@ff450000 {
+-- 
+2.17.1
+
