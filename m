@@ -1,84 +1,74 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF77118FC74
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 04:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A9916C850
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 04:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738988073; cv=none; b=A5s3H5O0+biNO1b0eMUcdKw8RaQ1EqCM6URfHOXH6OA8CTSUFWwrUDfzkWA5RuO92Z53ujl1qv+Ap7cm2LAfuOJ/GrS9Yx1a4+OdLElDWJoNnGIuPIt2aDsceCbqORrdgoYU3mL8Shv3vofPgjvKANUy5pb+Xkhtr+VblY1BVV8=
+	t=1738988074; cv=none; b=DlTNC8rf9JbzL7TDXOqAYuePRpL4viK9m92xrAyaiz0lUkK0SOPFNsoS0qFsX7i54L9vo6g/v3/OEkLbs/8IqhGZarZ021FsTC90VclJgLDXiPbaFFEk7bRYsazm8bfxsb6bIxYl4O99ntKyNIsHwfxsJTduW2QejObmu4tjfdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738988073; c=relaxed/simple;
-	bh=FpM3QtS635xaasFRFZ9L6RSUJzPITN/8NiBEo2sy4ME=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HrPkok3tSITSNAvxhvBIq7YSFDxFVl5YiL3yP4CdEkmwjZKjpc27irrsMY/AEtjJB2PPgxFU/z9wqUVdlGf+5J6aNAgPJEqaEM0nFcnw1s+LoGscvUV1xGpmEee6jUpZHNL8zH41TaR1r9M5rQd2OjubHRHD6qUzUO5s/ta1slE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=MC3CNqEq; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1738988074; c=relaxed/simple;
+	bh=fgaREE9e6jz5S5ZRiFkiZ2u/DNlIlA4sG+vDOPb2x/w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZLGuyIvJunIYEKk2X/SzAguQiEtz3Z3ZnjevKqrQZjLA4uxXe22cQgA08MvMJzf+Ob8eivyG4E8jdE3g0ztjL9jutfQnsMkPz6rMP6NBP+zOVIf3lqWuY5sh73CgvMBvs1rS3Mlncp5/ES5a/lDDujvSULFF5vlrTfxSiCDWrNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=FA1apH12; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="MC3CNqEq"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f5268cf50so19785675ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 20:14:30 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="FA1apH12"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f5660c2fdso24451085ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 20:14:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1738988070; x=1739592870; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2bw9rVK6jiEnat/1Ue/qEwXGDpUij+zoVhLuOEXleUM=;
-        b=MC3CNqEq1o9XqqmkVRwvCw8dmnY4c7Gjl/tkmemMIztzM0P4BnqrCuGL7cXwCenmSK
-         W/rpkSZhSc0IHRcXthbyd8D2RIfdcUJ8SGns+2nbxt7ZFUEEsRXA6u9X79quiD8RiVyt
-         knOAb/VE9iXDU8Qfac7kmpplwkp6z7I71m2B4=
+        d=fastly.com; s=google; t=1738988072; x=1739592872; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h50Y3zF4tCkc/2EOdw4zLXgmcTIrGB/eNO65/LtZobs=;
+        b=FA1apH12R37ESE1KN4zVVlpFFt82VLgU7O/JZqnzAet/W+UmpDj2MZ3aEYtaNYaf1h
+         euPLeo0uoXbubqP4IYbSauBCz1r90fQIFDlDre7Ul/7gG90pD6C+uRTtGJFdb1/zsINk
+         M8hPVxquLjUEsWk3FRQZ/rA0aaiR/RCgIBCiI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738988070; x=1739592870;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2bw9rVK6jiEnat/1Ue/qEwXGDpUij+zoVhLuOEXleUM=;
-        b=JgwWCnJiVNWp605SwFocI/H33H2RGyAxvggQrap7SFsOOYvvVzlAgkLyLygw5Ea+mx
-         QEca63llO86+nyYBnU90FvAcuoz3Gp0frwIdTvGPiTVxozgwdrzKvWlKn0QhuDOu9iRz
-         UwpauQ2ebqK9OwFgup/M3++wcwPdgmn+T++4hCH62egOcI5AMhMBEPSccJuNp5434ktB
-         RXqRhNt6NirOb4C7kiV1TA+1AxZX4njxEeg5xBOCmJ+H5IasMvek94mkgO6yM6R2kGk6
-         SEiQotDjxwfR1K4QRs530aa3hu3fU56jhbTa/Y81UXXA7M67q6vNKZu6fMnW1kD7OMqg
-         EAew==
-X-Forwarded-Encrypted: i=1; AJvYcCUTUzQRRB3qDqF9vzSyYAtEfuLMx1gGG96u2WfTUN8FSWZYLHxdmt+hyI/rK80vCNnoGZ1jt/SMxMFje5w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUKTrbSOh1ADBDxC45USvPSQTX7nk2DYhDCyD9MxX4nYHMmjp+
-	DiKwlVlFFpupbGSPRWHyV8FCplR5Q6ebqgqSky2Fk1oPYeL/XnQz5waczXl1+4o=
-X-Gm-Gg: ASbGncsJvPPUUXJsCyuronpY0019I+T8kDAmr7motX8buOPIiLacDC2efBTKwEtc5bZ
-	HH1yPef1LU/8iG/1FrNFOkaYj67WRH98A8ks18y+PXQi0c5Sf4qUfDWfXTNqMbe9glwulfYmsa6
-	0MXeBvWdvijH8RGH35IR07rSvBW6SAL/an4+XwRX7QnGOXd/o3H5QbXMG6kAvy9dN2WT9hTRM/H
-	C9rnUa9F5tLjhB/f5pcuQ4oCK9K0ocEcgFmG+sHxVEHCiQiQABnqndnsFLYt844oVVCu1CCKw0N
-	ITDO3yJXDmAaXTQE7zf7psU=
-X-Google-Smtp-Source: AGHT+IGWm1Uejyrdq6ZcmoCtjCX1hzqxmw/22k7CLLitGoGa5+xyfbDIw7xsgVppr81ZOSoy25T2tA==
-X-Received: by 2002:a17:903:166c:b0:215:6cb2:7877 with SMTP id d9443c01a7336-21f4e1cbdaemr101601115ad.4.1738988070380;
-        Fri, 07 Feb 2025 20:14:30 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738988072; x=1739592872;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h50Y3zF4tCkc/2EOdw4zLXgmcTIrGB/eNO65/LtZobs=;
+        b=daIEOEf94FoEVKKIk010KToj4lZo0wEyy+tvK6Eq2PumzrdD3x7HSHrdmJurvYu7D4
+         58LNVKHtLF1UvnuSkDv6Kq5Kmv+FJNPPajITrchMaGbFRnJZuQ6zwzSRu79DfOG7geg0
+         HNiSsdWabifiZyRjBtnCRZV7YxDoDBnv5HaNwHonXChL7TJF3W/qftSVfq17QuOa0RqS
+         wiJEe+7BTq/65Ycy8kOjsAhP2AQUBZBXCe8yRm8No3gx9u0TbiB8rSdtFCym0Ds5ZYEV
+         iQ71y6kLZaM28PN+xjpk28eoXnJXUFsxu/ZsGmkw0TN5vQjLLs+Natw/lorLltf0YA0l
+         WTgA==
+X-Forwarded-Encrypted: i=1; AJvYcCVrXmy0GMWcJKcMmQiQ5xZm0fDyYwRx0DQtmtvkR5WHLO8ZeuRRt4Wk7lQ3MA/oUcEY5+uCayM6OwBLU9o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7jSHiuQiCrF092BPAkzO0jFeV3IqveB5NbywUOolDhEtzo4Mt
+	BRfRSor5ileye7Xi5dp47tEQQqNISGa4KAdB/0Qkerp/C2UWFheiIsQNHi1pUVk=
+X-Gm-Gg: ASbGncvOKTBrKt8AweRjoe5DfEUsbeHgosD/2K6fttO6LWE9xrnHGv6jylp1Lq7B64M
+	C3EkjPeSq3kPGwJ4FXQsfYfOhje40aOmQYvuP7Yfs0JtVP3pgIC+5bMDqwpQiVTj9he9TlPsGE+
+	xpk+oN3zh3R1cB0xLQnfR5DIodyNP2DcoqEyhGg0ktBRF/EanrZutdQu7vMbxwhssPJlWjKH2l7
+	gzEaVGrztgrFaJNRTNZDONz5BbMObP/Gntf0yAf9Fru2+2WCdyZjw2FbyOZ9inK1RPup3FCrsOF
+	xcZFIsgp7meivENjK487Ah0=
+X-Google-Smtp-Source: AGHT+IFibipGLR5Jyf9zTmTf+G8WqPE/WDRNuZpNVsIuJ6CUOWboJI4UQgEjzXJ5C+bf4G/4+P5jHw==
+X-Received: by 2002:a17:902:e88e:b0:21f:55e:ed71 with SMTP id d9443c01a7336-21f4e6a0100mr87242125ad.5.1738988071853;
+        Fri, 07 Feb 2025 20:14:31 -0800 (PST)
 Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3650ce0bsm38567715ad.21.2025.02.07.20.14.28
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3650ce0bsm38567715ad.21.2025.02.07.20.14.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 20:14:29 -0800 (PST)
+        Fri, 07 Feb 2025 20:14:31 -0800 (PST)
 From: Joe Damato <jdamato@fastly.com>
 To: netdev@vger.kernel.org
 Cc: horms@kernel.org,
 	kuba@kernel.org,
 	Joe Damato <jdamato@fastly.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	bpf@vger.kernel.org (open list:XDP (eXpress Data Path):Keyword:(?:\b|_)xdp(?:\b|_)),
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Daniel Jurgens <danielj@nvidia.com>,
 	"David S. Miller" <davem@davemloft.net>,
-	David Wei <dw@davidwei.uk>,
-	Donald Hunter <donald.hunter@gmail.com>,
 	Eric Dumazet <edumazet@google.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	linux-kernel@vger.kernel.org (open list),
-	linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK),
-	Mina Almasry <almasrymina@google.com>,
 	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Subject: [PATCH net-next v5 0/3] netdev-genl: Add an xsk attribute to queues
-Date: Sat,  8 Feb 2025 04:12:22 +0000
-Message-ID: <20250208041248.111118-1-jdamato@fastly.com>
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next v5 1/3] netlink: Add nla_put_empty_nest helper
+Date: Sat,  8 Feb 2025 04:12:23 +0000
+Message-ID: <20250208041248.111118-2-jdamato@fastly.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250208041248.111118-1-jdamato@fastly.com>
+References: <20250208041248.111118-1-jdamato@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,75 +77,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Greetings
+Creating empty nests is helpful when the exact attributes to be exposed
+in the future are not known. Encapsulate the logic in a helper.
 
-Welcome to v5. No functional changes; removed an unused variable from
-patch 2.
+Signed-off-by: Joe Damato <jdamato@fastly.com>
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
+---
+ v4:
+   - new in v4
 
-This is an attempt to followup on something Jakub asked me about [1],
-adding an xsk attribute to queues and more clearly documenting which
-queues are linked to NAPIs...
+ include/net/netlink.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-After the RFC [2], Jakub suggested creating an empty nest for queues
-which have a pool, so I've adjusted this version to work that way.
-
-The nest can be extended in the future to express attributes about XSK
-as needed. Queues which are not used for AF_XDP do not have the xsk
-attribute present.
-
-I've run the included test on:
-  - my mlx5 machine (via NETIF=)
-  - without setting NETIF
-
-And the test seems to pass in both cases.
-
-Thanks,
-Joe
-
-[1]: https://lore.kernel.org/netdev/20250113143109.60afa59a@kernel.org/
-[2]: https://lore.kernel.org/netdev/20250129172431.65773-1-jdamato@fastly.com/
-
-v5:
-  - Removed unused ret variable from patch 2 as Simon suggested.
-
-v4: https://lore.kernel.org/lkml/20250207030916.32751-1-jdamato@fastly.com/
-  - Add patch 1, as suggested by Jakub, which adds an empty nest helper.
-  - Use the helper in patch 2, which makes the code cleaner and prevents
-    a possible bug.
-
-v3: https://lore.kernel.org/netdev/20250204191108.161046-1-jdamato@fastly.com/
-  - Change comment format in patch 2 to avoid kdoc warnings. No other
-    changes.
-
-v2: https://lore.kernel.org/all/20250203185828.19334-1-jdamato@fastly.com/
-  - Switched from RFC to actual submission now that net-next is open
-  - Adjusted patch 1 to include an empty nest as suggested by Jakub
-  - Adjusted patch 2 to update the test based on changes to patch 1, and
-    to incorporate some Python feedback from Jakub :)
-
-rfc: https://lore.kernel.org/netdev/20250129172431.65773-1-jdamato@fastly.com/
-
-
-Joe Damato (3):
-  netlink: Add nla_put_empty_nest helper
-  netdev-genl: Add an XSK attribute to queues
-  selftests: drv-net: Test queue xsk attribute
-
- Documentation/netlink/specs/netdev.yaml       | 13 ++-
- include/net/netlink.h                         | 15 ++++
- include/uapi/linux/netdev.h                   |  6 ++
- net/core/netdev-genl.c                        | 11 +++
- tools/include/uapi/linux/netdev.h             |  6 ++
- .../testing/selftests/drivers/net/.gitignore  |  2 +
- tools/testing/selftests/drivers/net/Makefile  |  3 +
- tools/testing/selftests/drivers/net/queues.py | 35 +++++++-
- .../selftests/drivers/net/xdp_helper.c        | 89 +++++++++++++++++++
- 9 files changed, 177 insertions(+), 3 deletions(-)
- create mode 100644 tools/testing/selftests/drivers/net/.gitignore
- create mode 100644 tools/testing/selftests/drivers/net/xdp_helper.c
-
-
-base-commit: 233a2b1480a0bdf6b40d4debf58a07084e9921ff
+diff --git a/include/net/netlink.h b/include/net/netlink.h
+index e015ffbed819..29e0db940382 100644
+--- a/include/net/netlink.h
++++ b/include/net/netlink.h
+@@ -118,6 +118,7 @@
+  *   nla_nest_start(skb, type)		start a nested attribute
+  *   nla_nest_end(skb, nla)		finalize a nested attribute
+  *   nla_nest_cancel(skb, nla)		cancel nested attribute construction
++ *   nla_put_empty_nest(skb, type)	create an empty nest
+  *
+  * Attribute Length Calculations:
+  *   nla_attr_size(payload)		length of attribute w/o padding
+@@ -2240,6 +2241,20 @@ static inline void nla_nest_cancel(struct sk_buff *skb, struct nlattr *start)
+ 	nlmsg_trim(skb, start);
+ }
+ 
++/**
++ * nla_put_empty_nest - Create an empty nest
++ * @skb: socket buffer the message is stored in
++ * @attrtype: attribute type of the container
++ *
++ * This function is a helper for creating empty nests.
++ *
++ * Returns: 0 when successful or -EMSGSIZE on failure.
++ */
++static inline int nla_put_empty_nest(struct sk_buff *skb, int attrtype)
++{
++	return nla_nest_start(skb, attrtype) ? 0 : -EMSGSIZE;
++}
++
+ /**
+  * __nla_validate_nested - Validate a stream of nested attributes
+  * @start: container attribute
 -- 
 2.43.0
 
