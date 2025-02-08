@@ -1,65 +1,40 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F79248184
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 15:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D73D42AA2
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 16:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739030329; cv=none; b=d5gFea6eu9xv8Ww/UEv2VLrIsj3zllrh9wyuVL4dQCWl2KgY3EGEVSq6o9HtpA8rg3J7DPqtCroVVxdrPUmkSgsDPt254FtKAHDmUy8PhMynGAKEJ1ey3/vsulww50gtz0aFYRSCbqY4NMIjOtuCpETPK0zrSaMt/rV8SodvLFA=
+	t=1739030473; cv=none; b=IEXyo9dRMtMnqciL+FoNe+y/4LX3yUFQlUMYBLvNePM3UDWWy3QSfmYxYcbO0Jrvqr3wCtIo905ZldBL9Lm5DcKeUZtrIIkxZBZLt8j0LpYRQ+C09csuaj4R6S6RQecqJz0tOQCmkTIRaHGVx9t+Phib4k+LVGD8q1M5X09yMTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739030329; c=relaxed/simple;
-	bh=VruUlVMVabBGJe6x03ULqVMChydUyEZ5333+XkGxjCw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D0BGQwhuENNeqk8tB+He3qy80PL8++V70sghrFEW+0XRboxj2BEyTACg4asOuHBxFqU/VgdI3sTAhxIq6TiIwEz/fWzCFt1NNJue4x7ItLdor7tt5D0kw32zGrVYObYDgveng3YqsOVs83K29Q8s2KYDuBi6uPsDtV1FIVkObAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=V0cS+XNY; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1739030473; c=relaxed/simple;
+	bh=Fg2JiZMmnK61MdHBlVq6XhIHAvPp2DJJ0WNo23hTHWY=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=aIXB+ZJ7EJmOP8c4Dvr84Cm89i/6GrMce5DQSGIo6NidSMbv2xGAD8bj6G5AVzSXNxr5b+VtHnZfU4v1MbDkBBX4svfe7edTMeY7Tubvb7TU6SY8XoP0RFLxVFzKsTa9OCqz16RUa+RFbJ1REMas/mfykGJnCtDu21udQmmhXSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=sQbTsvoQ; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="V0cS+XNY"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2fa122f62b5so607725a91.3
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 07:58:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1739030326; x=1739635126; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GnldKxmzBqwKinjZR1oDYDVj5xkQePqA06ZEDoTPiUQ=;
-        b=V0cS+XNYCw3tjOuacOyjtN4H4yNSVyv7mudK67bfmtuc81ZbQoe1FygLLVyjqMhwb8
-         HjRThDR5KqOvGE6mJMdIB3tSXaK79SfLxB+ZynRZvqt9VxOBVHbBJe16ZtXJDnLpi98o
-         tnEt4zDdPo9r68wyX37fvs97n7lVMB8pQ/xJb/w7T7gJV/DY37fNbvT1hDQm3XboyS1T
-         PEjCEHSTe+V09bbA2HMS5V/A1YYUgs6fi77fypnjqP0MP21fuOxsCrqTFCfg+ZfiQfze
-         hgctJw2iFbBxQUJ+/kFxWSVuV1fmw5qtnA/pt3pr4i8iuhPxjy4op4GAdEocxu44HWQ4
-         pLIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739030326; x=1739635126;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GnldKxmzBqwKinjZR1oDYDVj5xkQePqA06ZEDoTPiUQ=;
-        b=hee9NkSZCXnfjMXLogzDLptxufkjhf+NHyI5W56/Ul5PeHQEW97tJ8BJrOS+TiaPLY
-         3MoEH1Xjqyz5qwnb2EZpDg5zjHd1N/MXj0tQ6+Y2mmTkZbDvgOx8hfgU1EsUs44OO0EK
-         vMFKlDWtS7b831VNbSMXofNe2xnCuYvxdgtXl6gQQ3YiKdd4TRsEsPL9Fr6OfnB3gGK6
-         P4CYinPGHqx5OD18YWXaIbQ+8NQr0Op6qPCHyJ++5KhFFCkertylmBGTxyxnI6ASCqnm
-         bbmFfnJm8dmxEInj+IZyqUVgyBpkeub8Mx/SIUnLiTtm1VcIEik+19WvdDyyiXlXt/Iy
-         gg4g==
-X-Forwarded-Encrypted: i=1; AJvYcCV+oNBeF+IvqqhI8hiSoOWb0RNmLXpXtiM5d56eJf52PIRcsn6yfDUDDaDjZ7iqZpTjPs4NQufboUUYBC0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/W9rtSpDj5TDhkp4YfAx0xOzzX+BvNUN2eBK8gABjTmiqA2YL
-	VLQCS/+9FqX5jEib2+cxlPU17LTT0xoV2lQxnT5I6lzsgSMs7gWrc3Q+rU+Ss+ch0R7PeountAP
-	n
-X-Gm-Gg: ASbGncvAGg8q6AB8AnP024gIeFoTpMk4IqACktSdzyEslll0gVJ0EKzHU2vS9jtk/ZA
-	0apewalZFoLfna1sdTVfsNiSOC3Yz1DemXVQ0ne2qmw3v/7l/seb8GnBK17I5n0es2xjz78UWu/
-	tXLEz4olV5W47zo3sYwb73iD3XFa+EfIyKii3E1BKKjRW1ucpPNavi2FJN95t49+ZcsYcUcIb/A
-	M8xCPCizxs7g+W9MLZp0GO/mBuU8pRLkhs2EZolFg26BdAr6+lmUTak85OdkW/opsaf/X7WzPW2
-	IjRH13pCGF4aEsmjTkUQe99qkVmS6ey1GX0Q
-X-Google-Smtp-Source: AGHT+IEp3jhINNJbAaq0fhtM3ghHgJhMNzOT+lO6NXSocYRA+5prw0KJxYLU6aLGqfrWgIWd9yeIDQ==
-X-Received: by 2002:a17:90b:2243:b0:2ee:d9f2:2acd with SMTP id 98e67ed59e1d1-2fa245452bdmr4474697a91.6.1739030326531;
-        Sat, 08 Feb 2025 07:58:46 -0800 (PST)
-Received: from [10.4.234.23] ([139.177.225.244])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad53bff9c82sm1231302a12.37.2025.02.08.07.58.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Feb 2025 07:58:45 -0800 (PST)
-Message-ID: <f37da359-bad1-4685-aa68-1d2a2d0f8bf3@bytedance.com>
-Date: Sat, 8 Feb 2025 23:58:36 +0800
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="sQbTsvoQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1739030448; x=1739635248; i=markus.elfring@web.de;
+	bh=Fg2JiZMmnK61MdHBlVq6XhIHAvPp2DJJ0WNo23hTHWY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=sQbTsvoQxKsSobMXrvfOogsNZ9YnCYEQpBCFx4l/wbkoJPk6SZ4tOVNTGq7Hyw6h
+	 LX5dMdKoHDRBB2aS1cPGKmf5DMp8aAmVKbrvy+fx9ZKv0f5aL9LoqLThZCu1a3VED
+	 RQF6vrLTqZppfe0FZGTl2mqY1QUB1pyVgaP8hkITP9mFfNu33dEnPWdD0XW3xy37n
+	 khj52+hT0yu8OWFaLaC+WDKtAf9C94ZLjxrJUGG9HHr+0Uhd5QLorLrA1+XHIC4Jc
+	 f13v9uHV65/TkP1ubYEwEyC0Bw+jUjp4gRHhCbmEVIA6EOqMj4UKwR23SuTng3b5s
+	 502ko6QrH2BJqGjSJg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.11]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mmyr7-1swxyp0sFj-00adxo; Sat, 08
+ Feb 2025 17:00:48 +0100
+Message-ID: <af94dab5-266f-4b1d-95e1-d11a41ebe3e0@web.de>
+Date: Sat, 8 Feb 2025 17:00:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,95 +42,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Re: [PATCH v3 2/2] cgroup/rstat: Add run_delay accounting for
- cgroups
-Content-Language: en-US
-To: kernel test robot <lkp@intel.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Tejun Heo <tj@kernel.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
- <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Thomas Gleixner <tglx@linutronix.de>, Bitao Hu <yaoma@linux.alibaba.com>,
- Andrew Morton <akpm@linux-foundation.org>, Yury Norov
- <yury.norov@gmail.com>, Chen Ridong <chenridong@huawei.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
- Linux Memory Management List <linux-mm@kvack.org>,
- "(open list:CONTROL GROUP (CGROUP))" <cgroups@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-References: <20250207041012.89192-3-wuyun.abel@bytedance.com>
- <202502081318.c9fYNNx8-lkp@intel.com>
-From: Abel Wu <wuyun.abel@bytedance.com>
-In-Reply-To: <202502081318.c9fYNNx8-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Charles Han <hanchunchao@inspur.com>, dri-devel@lists.freedesktop.org,
+ linux-arm-kernel@lists.infradead.org, David Airlie <airlied@gmail.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Michal Simek <michal.simek@amd.com>,
+ Simona Vetter <simona@ffwll.ch>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Vishal Sagar <vishal.sagar@amd.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20250208100323.11625-1-hanchunchao@inspur.com>
+Subject: Re: [PATCH] drm: xlnx: zynqmp_dpsub: Add NULL checks in
+ zynqmp_audio_init()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250208100323.11625-1-hanchunchao@inspur.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:tWX9Yp8k5eSbPZvEe2id20EXKcSWu0YgkMbUFdQ9fiDBwmd7chG
+ aHIDVWOgnhfr1Y/Qs+a8/X6Jkb2yrGjp+HFoHBLLHyyJV3HU2ydAdv3+3LO40Aat4Zv0nTD
+ o219p7G2i35zOVhOGkxri+ihhfn1hNu+KmiEp6UinsfF9WaDOhFjF/OCOCw9NAEc4OhQw00
+ u9LxQ0dZreHMHPeJWHs7A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:C1ZI3h6gqPU=;snI/KsuJJ/Q8OOSdU3CR16eexbD
+ h8c8Orq/SOJWvE1jHI/JMoMrPa1WTbypZR0oe6dw8GxlJudbkjF/PrnfssXN3qq/W19Mjwmca
+ PEZ4PgRNS1tUknEGsAcQqS5UXcYUDNZscwjcWvGzzYYFs1ZCHRUdtFLbAXGOsTUbHBCQfk/yd
+ dEIc8ITQkB+/URdqrf7uRJUN2ank2dbtLEEMgFs4Zw281TQFBmAT9ZZcNBBAsN4olqRZCw8CR
+ j1IxHzjrH9bN+f/MEQEP1vBVhAZYVVsZ7qeq0SU4n3h0CNcXfdXm4NzS1BEKWZ4Fg961g/QVh
+ 3bSgidHbieeg0PUHHJ+I342fUtMXLslDIklkSZbL6Xly8kaFQ4POBazZfi1bwDuawWY4tdrox
+ u0sZ9sb5dN9CTD04l/VtJO5zVQb9sddORBFqpIPoUEDEYr0VA9K60UiFK9W8Aj1VI17j9nQfY
+ 9Pds11TcPRsA4fD/ZkZykQSOPmkIETptHgkYhChKK0MMiyNxouk0Vy2l+vFzvT8KQaOEbHwnb
+ ShFODt/ov9Z/jGAzatuW92lCbIBWxhB3V6IPoIBtUpHuemKONTIaFiQE5BYmc5MOIAQ9Bq3mP
+ /GH6gx9kuNyGLjH3VAnBmyNG2x2kgHhy/tolCxZMWw1LZvKz4AYKHod5GfoRJTSXu8oIufmwj
+ bzYtlzX4rCm4qZhxO5L70cbWluVfsZcSRQFKT/NaTNpAi5Mj+V8RCwS5OdaAzskgz1ZO4AwZA
+ hj5QyCEZfj4ypmXDeg5OJkoRlByKt1Xqin0XXCBAVy3LswsiF29qUEJnEefHlk01f40l0wzTG
+ Bn99OU41C3beD1nTTVonoVl6sRuJ9A9RBXIHFl/CwDFu0C2XiNgcEVbuUnkEaF7rwab/pL+PB
+ qvBewYHOvPSpObbRDx3V2c9mneIInT93ekqYFFVeP5BQyQNj1I2mEaKrf/a5+YTDdfyV/0kV5
+ mziKkcNLqaxWyx+/xVUegDQ85dISON2tZRQofXaqHCzWzj/UJ3jyTbbsaPtKdHMcVbtG6EXdQ
+ 9Z5qjkk4IukIz3sKHE5Q/f1qiy5xasMvcdg9/42nAVomhCOUsytwmMDr9liIpwHIgxdif3OgU
+ wI5HczhtZwx8hsgVYyKswm3h8+0kqF7soEd5cAbQl1vpOtQcple8eaDfaI5E8mAy709Qt1Fzp
+ ztpjKGk7DM1YWQ/W3ODVxQv/SWXjf8pMIA31qjhEu9phDA54tgAbuQ4LlTulD9rnChQLHZcX0
+ mzpH25f5KjNJRgmESZr0/PjT/Xx0p/7s1rSkb0YGWW2m+aa/h4nnMj2wqE61iJi3WTqGSl1Xc
+ u3ptGKSOvJG9vNrpbXeK7aBMpAmRrGbvEjcYqEFVVSZpEI/yXnzpcX1T0e+JfeR0PabU0EJgi
+ FtNCHOC3ZOc25teLO1+s8kcni4VvISRL5sHcxNUSaUShPkbp4FATMDxIDe7PMP8kFBg6bJ7rI
+ ArRpObA==
 
-On 2/8/25 1:47 PM, kernel test robot Wrote:
-> Hi Abel,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on tj-cgroup/for-next]
-> [also build test ERROR on tip/sched/core akpm-mm/mm-everything linus/master v6.14-rc1 next-20250207]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Abel-Wu/cgroup-rstat-Fix-forceidle-time-in-cpu-stat/20250207-121257
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-next
-> patch link:    https://lore.kernel.org/r/20250207041012.89192-3-wuyun.abel%40bytedance.com
-> patch subject: [PATCH v3 2/2] cgroup/rstat: Add run_delay accounting for cgroups
-> config: x86_64-kexec (https://download.01.org/0day-ci/archive/20250208/202502081318.c9fYNNx8-lkp@intel.com/config)
-> compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502081318.c9fYNNx8-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202502081318.c9fYNNx8-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->     In file included from kernel/sched/build_policy.c:19:
->     In file included from include/linux/sched/isolation.h:5:
->     In file included from include/linux/cpuset.h:17:
->     In file included from include/linux/mm.h:2224:
->     include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
->       504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
->           |                            ~~~~~~~~~~~~~~~~~~~~~ ^
->       505 |                            item];
->           |                            ~~~~
->     include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
->       511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
->           |                            ~~~~~~~~~~~~~~~~~~~~~ ^
->       512 |                            NR_VM_NUMA_EVENT_ITEMS +
->           |                            ~~~~~~~~~~~~~~~~~~~~~~
->     include/linux/vmstat.h:524:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
->       524 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
->           |                            ~~~~~~~~~~~~~~~~~~~~~ ^
->       525 |                            NR_VM_NUMA_EVENT_ITEMS +
->           |                            ~~~~~~~~~~~~~~~~~~~~~~
->     In file included from kernel/sched/build_policy.c:59:
->>> kernel/sched/cputime.c:254:22: error: no member named 'rq_sched_info' in 'struct rq'
->       254 |         return cpu_rq(cpu)->rq_sched_info.run_delay;
->           |                ~~~~~~~~~~~  ^
->     3 warnings and 1 error generated.
+> devm_kasprintf() can return a NULL pointer on failure,but this
+> returned value in zynqmp_audio_init() is not checked.
 
-Oops.. SCHED_INFO can be selected by either TASK_DELAY_ACCT or SCHEDSTATS.
-Will fix. Thanks a lot!
+Another wording suggestion:
+devm_kasprintf() calls can return null pointers on failure.
+But some return values were not checked in zynqmp_audio_init().
 
-> 
-> 
-> vim +254 kernel/sched/cputime.c
-> 
->     251	
->     252	u64 get_cpu_run_delay(int cpu)
->     253	{
->   > 254		return cpu_rq(cpu)->rq_sched_info.run_delay;
->     255	}
->     256	#endif
->     257	
-> 
 
+> Add NULL check in zynqmp_audio_init(), to handle kernel NULL
+> pointer dereference error.
+
+Thus add three checks to prevent null pointer dereferences.
+
+Regards,
+Markus
