@@ -1,647 +1,423 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968E01A83FF
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 09:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F421ACED2;
+	Sat,  8 Feb 2025 09:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739005650; cv=none; b=tPjTPnL/9B4hpzRUAHcpvXjXb1TmFZyQwkQqz132PrXnVBHzp6JvGSvuKcmGpZjkdaui6K5URWLRmStQ4+6HnDwpRLC+c0saFUIOQKJRcDLLmRK7YU33m1T9icXhcVDSTnLvqAzNX0EFUfsR5W0AmWLx1SpLGw0vOD8ldl/tqnU=
+	t=1739005654; cv=none; b=QFEB4d3L7tCaVlkGiqDC9eTb4QxBHYQu9K1mPetY6AZlcwwoelqi85rICmhEX15z6NY7NYpx92ETzA49vcbdVLexNUzRrxm8Zo5ZouYT+u+Djh+S5fdLVKywqvGKd6WNzW2AYPVJWilHb56y5VQHuTxgijPrzr5aUByAkDY3l9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739005650; c=relaxed/simple;
-	bh=3zjvjInegWC72sMChUlFEfBWlYg5usr0GeivTuVi6ko=;
+	s=arc-20240116; t=1739005654; c=relaxed/simple;
+	bh=gmgM6qnspJyPPeEevFrxQ1pNgNpJZeT3J5KPCPHoxJY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hVs01dq6huP33kqmgTJ9Um/ViaUqg5adjTFeMuaR9jGbYmwuMsvmG+39WwhHOmB8Y0AWXrZ2dwZD21x/10dY+zsiQTuXQX/Zv1DvniTJJ5XBvRGH1qKcvHMEsUzo/kX5YpL7sYnMj2Z0o795S0x3NGvW9XXpHL3HDQKovcXH4wA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DI96snzI; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=qVkGbSkmWw8SAPJ/+rewFq//5SMj6rueMPXwPh08ksY/MhjR+hWS4pbMVC959G06J2k1A8ILhDLsE3XIu/IRICmpTLTScZgX0cRUljWtlLMx4eyiiIAPoM5ujqVYeJM5JrvSWmgeiVwIZZSd+xJ0vj9QqzH79mE5xFx78IMh528=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jNE//WYT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DI96snzI"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e4565be0e0so870586d6.3
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 01:07:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739005647; x=1739610447; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KV6b6tnu4mDFf5flaAExZzS13cW4vzQ4yd+xbOv6QnE=;
-        b=DI96snzI9FYiywGws/ObiGxH0htON4LUCLbgiDGgT3R5b5Gbin8oUpszf2/Tg1HnjY
-         kmIvolxtOQmxYrTX9I7LKHBFCiRMMlC8fqT0x8I1XqLvoEPWLUiOl4TF6xgWfyoO3cuB
-         fY4Oe5+MsDuKZpdzYF2MCmGPZNPCyWc3kAhjJ6ArdJoVIRGbZEahrbeUWyLs2tWhEZlN
-         uqou1mmdc6+Xmvdu7YUn9CHaumpgr4z1yaTH+kXOnSE0f+gGyFn23RSTd+iXL8C/q771
-         0xTRE2MjPoxqx5vc3BG/EdpgweirKCP/pjhTn2Fkz9KdyC+OY/vTU1OqvDjEmkEfjnpa
-         0hjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739005647; x=1739610447;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KV6b6tnu4mDFf5flaAExZzS13cW4vzQ4yd+xbOv6QnE=;
-        b=iDF+bTtf+eUjwRja7nBLQDcf3ezS0pgz/ZBkvTjRHQ6d8ogqJ1LVztV6ei1q8Aa6rn
-         4tPmHuKrk/SpH1WgDe1rv2i55XrkgNRpD0SMo2ogolKVLhrb1dLH9lvN3ND4jpjYhDAm
-         yOmovQlhX4QGxkUftbHRY7c6QUutjW6Z90OlWXi2fuQdp9ZSSl6jWvomKZFnLS6kiQZ2
-         y9aq2cLOOQcNsv8b5qyGqM/mMQ1WN9QnoXbJDNtEJBhsUqOSBdboXcJe06enHVugLDHp
-         QM2Xaru93DCQS1LDEfDjgRe6mRDFnG86hMwnaC6no5IW8RDOdDIHZJ3gt66p0psofOu2
-         piDA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXsAcrqVgsy1KHbBoiMuMqq8oshRgTIRYdx0WwLEHtj+MWAlZNqNNmFMC2K+jWXyShfnk971oc5boIkjY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNKWOPcb8oEeKZJZP+wcBNdMcuBgOaYjT6fHPqoAk03zWS0247
-	0kptGyasuz8bFGsh/P8lc04H7XhlsYNmupMOSLaHxJ5eet8gEW6vogfoIp75fizc31CT4TRaz3p
-	92P2JsB82dPIf6qGcc7fLNWuPF5/llpuGs6Tc
-X-Gm-Gg: ASbGnct69sa9NpdNlG7fb5NHYtkRCN5N3fxY7mOGges0Ngy8klWaOWtUAIjkMJ4lRcj
-	rlBilyD1zM603Flbo/PqbXS2ZmqcLnTZyrgp/eD9FKDxxAOksjWqPPKjyG24KtO+EsUZsuR1PKw
-	==
-X-Google-Smtp-Source: AGHT+IEwAWBdNXNnenYw301s6tgUJrQCymVh5kAOIMP6trKA2Yy7KRRTbwrsjrPOe9VWfe9sOuVzgnsWo0lPFTebncQ=
-X-Received: by 2002:a05:6214:c26:b0:6e4:4011:9df7 with SMTP id
- 6a1803df08f44-6e4456460a4mr94596206d6.16.1739005647181; Sat, 08 Feb 2025
- 01:07:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jNE//WYT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77C85C4CEE4;
+	Sat,  8 Feb 2025 09:07:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739005653;
+	bh=gmgM6qnspJyPPeEevFrxQ1pNgNpJZeT3J5KPCPHoxJY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jNE//WYTwvHx/IhLAAUoKdBRV72fk5L1AJK+94O6VXv7ASOCK/GVIumAflkasico7
+	 1bCCI05chAl0Y//nbWQa/+s7UKbW1bsoep0PtrAnC570r2KLOg8kaBDes2WLG9Lrlu
+	 ooNBrOsGYHARCidy6YRkCzgCiNiMEwIiT2brnHL1efo10AZe+OapwAs37rrysSMFbr
+	 dPW5cr1/xAoxTK/VlZFJnaMqvkumc7ntNpZgqMR1d0Ytd2nuRXlrkNOh2x637el8nN
+	 z/EJRj+rETRHS2c1Xtv9LQULIHgP1iy5A8OAvvnsZSH0Owe6f+JKXFdjsEzKwof83c
+	 m+cXy/Y7TrAYQ==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54504a6955aso335789e87.2;
+        Sat, 08 Feb 2025 01:07:33 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUDcb3ftvI20/h3GFB57XCkhZmKXrTVOCAxKkCMcD33U5pJOLsgxCMXC3ED/fq1n855jqvV5269yCV6aqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZqbWyImB998yC//rSZdyDC9MMwdGcTe6SgYrlAh8Ql6iTN4ty
+	IXJ/ze0BOeSkfqeeun26OR2F2OEHo/k0MQKUaqax39B4VuPnkRsdcdbqQCWXXcmeHYjnNzbQwn2
+	eQaoi43ru1jOLxUYbp2TDraPeiBg=
+X-Google-Smtp-Source: AGHT+IE3u++5lGokgNRf6tmGJPH5GO+cGJmOpvDQOzBK3oD6bKz/N+lFkmeKLuQ/gzZx4lxiY5tyxjRBERb5aHVInBc=
+X-Received: by 2002:a05:6512:b9a:b0:540:1f7d:8b9c with SMTP id
+ 2adb3069b0e04-54414ae5fd6mr2479683e87.45.1739005651496; Sat, 08 Feb 2025
+ 01:07:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207-bitmap-kunit-convert-v1-0-c520675343b6@gmail.com> <20250207-bitmap-kunit-convert-v1-3-c520675343b6@gmail.com>
-In-Reply-To: <20250207-bitmap-kunit-convert-v1-3-c520675343b6@gmail.com>
-From: David Gow <davidgow@google.com>
-Date: Sat, 8 Feb 2025 17:07:15 +0800
-X-Gm-Features: AWEUYZl3VMG9bkYXWB7fczBGO0VmDpt5H8KKuEN000aRvGzzge7D_cTVYUm0dpk
-Message-ID: <CABVgOS=W3Wny0q-Kpj6P1ZXyG1R_HYCrPLtnHiuruW9FxoHrfA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] bitmap: break kunit into test cases
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: John Hubbard <jhubbard@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Shuah Khan <shuah@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, 
-	linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000e56e9a062d9dcd9c"
-
---000000000000e56e9a062d9dcd9c
+References: <20250208035213.109836-1-ebiggers@kernel.org>
+In-Reply-To: <20250208035213.109836-1-ebiggers@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sat, 8 Feb 2025 10:07:20 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXGr38moMGUj-p1m3u=N=RZ7XKfnCfPebd1+rTGgwmJfKQ@mail.gmail.com>
+X-Gm-Features: AWEUYZnOzyRcbu7HS6_Dq1Y3G-QaV7QZQ78tzN0zR1_EWz3Z7-Fe3eXD3iqcQa4
+Message-ID: <CAMj1kXGr38moMGUj-p1m3u=N=RZ7XKfnCfPebd1+rTGgwmJfKQ@mail.gmail.com>
+Subject: Re: [PATCH v3] crypto: x86/aes-ctr - rewrite AESNI+AVX optimized CTR
+ and add VAES support
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 8 Feb 2025 at 04:14, Tamir Duberstein <tamird@gmail.com> wrote:
+Hi Eric,
+
+On Sat, 8 Feb 2025 at 04:52, Eric Biggers <ebiggers@kernel.org> wrote:
 >
-> Move some tests into `bitmap_test_cases` and parameterize
-> `test_bitmap_print_buf`. This gives us nicer output in the event of a
-> failure.
+> From: Eric Biggers <ebiggers@google.com>
 >
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> Delete aes_ctrby8_avx-x86_64.S and add a new assembly file
+> aes-ctr-avx-x86_64.S which follows a similar approach to
+> aes-xts-avx-x86_64.S in that it uses a "template" to provide AESNI+AVX,
+> VAES+AVX2, VAES+AVX10/256, and VAES+AVX10/512 code, instead of just
+> AESNI+AVX.  Wire it up to the crypto API accordingly.
+>
+> This greatly improves the performance of AES-CTR and AES-XCTR on
+> VAES-capable CPUs, with the best case being AMD Zen 5 where an over 230%
+> increase in throughput is seen on long messages.  Performance on
+> non-VAES-capable CPUs remains about the same, and the non-AVX AES-CTR
+> code (aesni_ctr_enc) is also kept as-is for now.  There are some slight
+> regressions (less than 10%) on some short message lengths on some CPUs;
+> these are difficult to avoid, given how the previous code was so heavily
+> unrolled by message length, and they are not particularly important.
+> Detailed performance results are given in the tables below.
+>
+> Both CTR and XCTR support is retained.  The main loop remains
+> 8-vector-wide, which differs from the 4-vector-wide main loops that are
+> used in the XTS and GCM code.  A wider loop is appropriate for CTR and
+> XCTR since they have fewer other instructions (such as vpclmulqdq) to
+> interleave with the AES instructions.
+>
+> Similar to what was the case for AES-GCM, the new assembly code also has
+> a much smaller binary size, as it fixes the excessive unrolling by data
+> length and key length present in the old code.  Specifically, the new
+> assembly file compiles to about 9 KB of text vs. 28 KB for the old file.
+> This is despite 4x as many implementations being included.
+>
+> The tables below show the detailed performance results.  The tables show
+> percentage improvement in single-threaded throughput for repeated
+> encryption of the given message length; an increase from 6000 MB/s to
+> 12000 MB/s would be listed as 100%.  They were collected by directly
+> measuring the Linux crypto API performance using a custom kernel module.
+> The tested CPUs were all server processors from Google Compute Engine
+> except for Zen 5 which was a Ryzen 9 9950X desktop processor.
+>
+> Table 1: AES-256-CTR throughput improvement,
+>          CPU microarchitecture vs. message length in bytes:
+>
+>                      | 16384 |  4096 |  4095 |  1420 |   512 |   500 |
+> ---------------------+-------+-------+-------+-------+-------+-------+
+> AMD Zen 5            |  232% |  203% |  212% |  143% |   71% |   95% |
+> Intel Emerald Rapids |  116% |  116% |  117% |   91% |   78% |   79% |
+> Intel Ice Lake       |  109% |  103% |  107% |   81% |   54% |   56% |
+> AMD Zen 4            |  109% |   91% |  100% |   70% |   43% |   59% |
+> AMD Zen 3            |   92% |   78% |   87% |   57% |   32% |   43% |
+> AMD Zen 2            |    9% |    8% |   14% |   12% |    8% |   21% |
+> Intel Skylake        |    7% |    7% |    8% |    5% |    3% |    8% |
+>
+>                      |   300 |   200 |    64 |    63 |    16 |
+> ---------------------+-------+-------+-------+-------+-------+
+> AMD Zen 5            |   57% |   39% |   -9% |    7% |   -7% |
+> Intel Emerald Rapids |   37% |   42% |   -0% |   13% |   -8% |
+> Intel Ice Lake       |   39% |   30% |   -1% |   14% |   -9% |
+> AMD Zen 4            |   42% |   38% |   -0% |   18% |   -3% |
+> AMD Zen 3            |   38% |   35% |    6% |   31% |    5% |
+> AMD Zen 2            |   24% |   23% |    5% |   30% |    3% |
+> Intel Skylake        |    9% |    1% |   -4% |   10% |   -7% |
+>
+> Table 2: AES-256-XCTR throughput improvement,
+>          CPU microarchitecture vs. message length in bytes:
+>
+>                      | 16384 |  4096 |  4095 |  1420 |   512 |   500 |
+> ---------------------+-------+-------+-------+-------+-------+-------+
+> AMD Zen 5            |  240% |  201% |  216% |  151% |   75% |  108% |
+> Intel Emerald Rapids |  100% |   99% |  102% |   91% |   94% |  104% |
+> Intel Ice Lake       |   93% |   89% |   92% |   74% |   50% |   64% |
+> AMD Zen 4            |   86% |   75% |   83% |   60% |   41% |   52% |
+> AMD Zen 3            |   73% |   63% |   69% |   45% |   21% |   33% |
+> AMD Zen 2            |   -2% |   -2% |    2% |    3% |   -1% |   11% |
+> Intel Skylake        |   -1% |   -1% |    1% |    2% |   -1% |    9% |
+>
+>                      |   300 |   200 |    64 |    63 |    16 |
+> ---------------------+-------+-------+-------+-------+-------+
+> AMD Zen 5            |   78% |   56% |   -4% |   38% |   -2% |
+> Intel Emerald Rapids |   61% |   55% |    4% |   32% |   -5% |
+> Intel Ice Lake       |   57% |   42% |    3% |   44% |   -4% |
+> AMD Zen 4            |   35% |   28% |   -1% |   17% |   -3% |
+> AMD Zen 3            |   26% |   23% |   -3% |   11% |   -6% |
+> AMD Zen 2            |   13% |   24% |   -1% |   14% |   -3% |
+> Intel Skylake        |   16% |    8% |   -4% |   35% |   -3% |
+>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
 > ---
+>
 
-I very much like this cleanup: the static global 'kunittest' was annoying me.
-
-I think there's an argument to get rid of tc_err() entirely, and just
-use KUNIT_FAIL directly, but I'm happy either way: it is a lot of
-churn.
-
-Reviewed-by: David Gow <davidgow@google.com>
-
-Thanks,
--- David
-
-
->  lib/bitmap_kunit.c | 182 ++++++++++++++++++++++++++---------------------------
->  1 file changed, 89 insertions(+), 93 deletions(-)
->
-> diff --git a/lib/bitmap_kunit.c b/lib/bitmap_kunit.c
-> index 0605228288d6..f7b90f6d5f49 100644
-> --- a/lib/bitmap_kunit.c
-> +++ b/lib/bitmap_kunit.c
-> @@ -17,8 +17,6 @@
->  static char pbl_buffer[PAGE_SIZE];
->  static char print_buf[PAGE_SIZE * 2];
->
-> -static struct kunit *kunittest;
-> -
->  #define tc_err(fmt, ...) \
->         KUNIT_FAIL(kunittest, fmt, ##__VA_ARGS__)
->
-> @@ -96,7 +94,7 @@ static const unsigned long exp3_1_0[] = {
->
->  #define expect_eq_uint(x, y)           expect_eq_ulong((unsigned int)(x), (unsigned int)(y))
->
-> -static void test_zero_clear(void)
-> +static void test_zero_clear(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(bmap, 1024);
->
-> @@ -125,7 +123,7 @@ static void test_zero_clear(void)
->         expect_eq_pbl("", bmap, 1024);
->  }
->
-> -static void test_find_nth_bit(void)
-> +static void test_find_nth_bit(struct kunit *kunittest)
->  {
->         unsigned long b, bit, cnt = 0;
->         DECLARE_BITMAP(bmap, 64 * 3);
-> @@ -166,7 +164,7 @@ static void test_find_nth_bit(void)
->         }
->  }
->
-> -static void test_fill_set(void)
-> +static void test_fill_set(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(bmap, 1024);
->
-> @@ -195,7 +193,7 @@ static void test_fill_set(void)
->         expect_eq_pbl("0-1023", bmap, 1024);
->  }
->
-> -static void test_copy(void)
-> +static void test_copy(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(bmap1, 1024);
->         DECLARE_BITMAP(bmap2, 1024);
-> @@ -234,7 +232,7 @@ static void test_copy(void)
->         expect_eq_pbl("0-108,128-1023", bmap2, 1024);
->  }
->
-> -static void test_bitmap_region(void)
-> +static void test_bitmap_region(struct kunit *kunittest)
->  {
->         int pos, order;
->
-> @@ -259,7 +257,7 @@ static void test_bitmap_region(void)
->
->  #define EXP2_IN_BITS   (sizeof(exp2) * 8)
->
-> -static void test_replace(void)
-> +static void test_replace(struct kunit *kunittest)
->  {
->         unsigned int nbits = 64;
->         unsigned int nlongs = DIV_ROUND_UP(nbits, BITS_PER_LONG);
-> @@ -300,7 +298,7 @@ static const unsigned long sg_scatter_exp[] = {
->         BITMAP_FROM_U64(0x000000000000021aULL),
->  };
->
-> -static void test_bitmap_sg(void)
-> +static void test_bitmap_sg(struct kunit *kunittest)
->  {
->         unsigned int nbits = 64;
->         DECLARE_BITMAP(bmap_gather, 100);
-> @@ -421,7 +419,7 @@ static const struct test_bitmap_parselist parselist_tests[] = {
->
->  };
->
-> -static void test_bitmap_parselist(void)
-> +static void test_bitmap_parselist(struct kunit *kunittest)
->  {
->         int i;
->         int err;
-> @@ -457,7 +455,7 @@ static void test_bitmap_parselist(void)
->         }
->  }
->
-> -static void test_bitmap_printlist(void)
-> +static void test_bitmap_printlist(struct kunit *kunittest)
->  {
->         unsigned long *bmap = kmalloc(PAGE_SIZE, GFP_KERNEL);
->         char *buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-> @@ -533,7 +531,7 @@ static const struct test_bitmap_parselist parse_tests[] = {
->  #undef step
->  };
->
-> -static void test_bitmap_parse(void)
-> +static void test_bitmap_parse(struct kunit *kunittest)
->  {
->         int i;
->         int err;
-> @@ -568,7 +566,7 @@ static void test_bitmap_parse(void)
->         }
->  }
->
-> -static void test_bitmap_arr32(void)
-> +static void test_bitmap_arr32(struct kunit *kunittest)
->  {
->         unsigned int nbits, next_bit;
->         u32 arr[EXP1_IN_BITS / 32];
-> @@ -594,7 +592,7 @@ static void test_bitmap_arr32(void)
->         }
->  }
->
-> -static void test_bitmap_arr64(void)
-> +static void test_bitmap_arr64(struct kunit *kunittest)
->  {
->         unsigned int nbits, next_bit;
->         u64 arr[EXP1_IN_BITS / 64];
-> @@ -626,7 +624,7 @@ static void test_bitmap_arr64(void)
->         }
->  }
->
-> -static noinline void test_mem_optimisations(void)
-> +static noinline void test_mem_optimisations(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(bmap1, 1024);
->         DECLARE_BITMAP(bmap2, 1024);
-> @@ -669,7 +667,7 @@ static const unsigned char clump_exp[] = {
->         0x05,   /* non-adjacent 2 bits set */
->  };
->
-> -static void test_for_each_set_clump8(void)
-> +static void test_for_each_set_clump8(struct kunit *kunittest)
->  {
->  #define CLUMP_EXP_NUMBITS 64
->         DECLARE_BITMAP(bits, CLUMP_EXP_NUMBITS);
-> @@ -691,7 +689,7 @@ static void test_for_each_set_clump8(void)
->                 expect_eq_clump8(start, CLUMP_EXP_NUMBITS, clump_exp, &clump);
->  }
->
-> -static void test_for_each_set_bit_wrap(void)
-> +static void test_for_each_set_bit_wrap(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(orig, 500);
->         DECLARE_BITMAP(copy, 500);
-> @@ -716,7 +714,7 @@ static void test_for_each_set_bit_wrap(void)
->         }
->  }
->
-> -static void test_for_each_set_bit(void)
-> +static void test_for_each_set_bit(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(orig, 500);
->         DECLARE_BITMAP(copy, 500);
-> @@ -738,7 +736,7 @@ static void test_for_each_set_bit(void)
->         expect_eq_bitmap(orig, copy, 500);
->  }
->
-> -static void test_for_each_set_bit_from(void)
-> +static void test_for_each_set_bit_from(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(orig, 500);
->         DECLARE_BITMAP(copy, 500);
-> @@ -768,7 +766,7 @@ static void test_for_each_set_bit_from(void)
->         }
->  }
->
-> -static void test_for_each_clear_bit(void)
-> +static void test_for_each_clear_bit(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(orig, 500);
->         DECLARE_BITMAP(copy, 500);
-> @@ -790,7 +788,7 @@ static void test_for_each_clear_bit(void)
->         expect_eq_bitmap(orig, copy, 500);
->  }
->
-> -static void test_for_each_clear_bit_from(void)
-> +static void test_for_each_clear_bit_from(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(orig, 500);
->         DECLARE_BITMAP(copy, 500);
-> @@ -820,7 +818,7 @@ static void test_for_each_clear_bit_from(void)
->         }
->  }
->
-> -static void test_for_each_set_bitrange(void)
-> +static void test_for_each_set_bitrange(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(orig, 500);
->         DECLARE_BITMAP(copy, 500);
-> @@ -842,7 +840,7 @@ static void test_for_each_set_bitrange(void)
->         expect_eq_bitmap(orig, copy, 500);
->  }
->
-> -static void test_for_each_clear_bitrange(void)
-> +static void test_for_each_clear_bitrange(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(orig, 500);
->         DECLARE_BITMAP(copy, 500);
-> @@ -864,7 +862,7 @@ static void test_for_each_clear_bitrange(void)
->         expect_eq_bitmap(orig, copy, 500);
->  }
->
-> -static void test_for_each_set_bitrange_from(void)
-> +static void test_for_each_set_bitrange_from(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(orig, 500);
->         DECLARE_BITMAP(copy, 500);
-> @@ -894,7 +892,7 @@ static void test_for_each_set_bitrange_from(void)
->         }
->  }
->
-> -static void test_for_each_clear_bitrange_from(void)
-> +static void test_for_each_clear_bitrange_from(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(orig, 500);
->         DECLARE_BITMAP(copy, 500);
-> @@ -965,7 +963,7 @@ static struct test_bitmap_cut test_cut[] = {
->         },
->  };
->
-> -static void test_bitmap_cut(void)
-> +static void test_bitmap_cut(struct kunit *kunittest)
->  {
->         unsigned long b[5], *in = &b[1], *out = &b[0];  /* Partial overlap */
->         int i;
-> @@ -986,8 +984,14 @@ struct test_bitmap_print {
->         unsigned long nbits;
->         const char *mask;
->         const char *list;
-> +       const char *name;
->  };
->
-> +static void param_to_desc(const struct test_bitmap_print *param, char *desc)
-> +{
-> +       strscpy(desc, param->name, KUNIT_PARAM_DESC_SIZE);
-> +}
+Very nice results! One remark below.
+...
+> diff --git a/arch/x86/crypto/aes-ctr-avx-x86_64.S b/arch/x86/crypto/aes-ctr-avx-x86_64.S
+> new file mode 100644
+> index 0000000000000..25cab1d8e63f9
+> --- /dev/null
+> +++ b/arch/x86/crypto/aes-ctr-avx-x86_64.S
+> @@ -0,0 +1,592 @@
+> +/* SPDX-License-Identifier: Apache-2.0 OR BSD-2-Clause */
+> +//
+> +// Copyright 2025 Google LLC
+> +//
+> +// Author: Eric Biggers <ebiggers@google.com>
+> +//
+> +// This file is dual-licensed, meaning that you can use it under your choice of
+> +// either of the following two licenses:
+> +//
+> +// Licensed under the Apache License 2.0 (the "License").  You may obtain a copy
+> +// of the License at
+> +//
+> +//     http://www.apache.org/licenses/LICENSE-2.0
+> +//
+> +// Unless required by applicable law or agreed to in writing, software
+> +// distributed under the License is distributed on an "AS IS" BASIS,
+> +// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+> +// See the License for the specific language governing permissions and
+> +// limitations under the License.
+> +//
+> +// or
+> +//
+> +// Redistribution and use in source and binary forms, with or without
+> +// modification, are permitted provided that the following conditions are met:
+> +//
+> +// 1. Redistributions of source code must retain the above copyright notice,
+> +//    this list of conditions and the following disclaimer.
+> +//
+> +// 2. Redistributions in binary form must reproduce the above copyright
+> +//    notice, this list of conditions and the following disclaimer in the
+> +//    documentation and/or other materials provided with the distribution.
+> +//
+> +// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+> +// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+> +// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+> +// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+> +// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+> +// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+> +// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+> +// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+> +// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+> +// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+> +// POSSIBILITY OF SUCH DAMAGE.
+> +//
+> +//------------------------------------------------------------------------------
+> +//
+> +// This file contains x86_64 assembly implementations of AES-CTR and AES-XCTR
+> +// using the following sets of CPU features:
+> +//     - AES-NI && AVX
+> +//     - VAES && AVX2
+> +//     - VAES && (AVX10/256 || (AVX512BW && AVX512VL)) && BMI2
+> +//     - VAES && (AVX10/512 || (AVX512BW && AVX512VL)) && BMI2
+> +//
+> +// See the function definitions at the bottom of the file for more information.
 > +
->  static const unsigned long small_bitmap[] = {
->         BITMAP_FROM_U64(0x3333333311111111ULL),
->  };
-> @@ -1082,35 +1086,34 @@ static const char large_list[] = /* more than 4KB */
->         "49,2552-2553,2556-2557\n";
->
->  static const struct test_bitmap_print test_print[] = {
-> -       { small_bitmap, sizeof(small_bitmap) * BITS_PER_BYTE, small_mask, small_list },
-> -       { large_bitmap, sizeof(large_bitmap) * BITS_PER_BYTE, large_mask, large_list },
-> +       { small_bitmap, sizeof(small_bitmap) * BITS_PER_BYTE, small_mask, small_list, "small" },
-> +       { large_bitmap, sizeof(large_bitmap) * BITS_PER_BYTE, large_mask, large_list, "large" },
->  };
->
-> -static void test_bitmap_print_buf(void)
-> +KUNIT_ARRAY_PARAM(test_print, test_print, param_to_desc);
+> +#include <linux/linkage.h>
+> +#include <linux/cfi_types.h>
 > +
-> +static void test_bitmap_print_buf(struct kunit *kunittest)
->  {
-> -       int i;
-> +       int n;
->
-> -       for (i = 0; i < ARRAY_SIZE(test_print); i++) {
-> -               const struct test_bitmap_print *t = &test_print[i];
-> -               int n;
-> +       const struct test_bitmap_print *t = kunittest->param_value;
->
-> -               n = bitmap_print_bitmask_to_buf(print_buf, t->bitmap, t->nbits,
-> -                                               0, 2 * PAGE_SIZE);
-> -               expect_eq_uint(strlen(t->mask) + 1, n);
-> -               expect_eq_str(t->mask, print_buf, n);
-> +       n = bitmap_print_bitmask_to_buf(print_buf, t->bitmap, t->nbits,
-> +                                       0, 2 * PAGE_SIZE);
-> +       expect_eq_uint(strlen(t->mask) + 1, n);
-> +       expect_eq_str(t->mask, print_buf, n);
->
-> +       n = bitmap_print_list_to_buf(print_buf, t->bitmap, t->nbits,
-> +                                       0, 2 * PAGE_SIZE);
-> +       expect_eq_uint(strlen(t->list) + 1, n);
-> +       expect_eq_str(t->list, print_buf, n);
+> +.section .rodata
+> +.p2align 4
 > +
-> +       /* test by non-zero offset */
-> +       if (strlen(t->list) > PAGE_SIZE) {
->                 n = bitmap_print_list_to_buf(print_buf, t->bitmap, t->nbits,
-> -                                            0, 2 * PAGE_SIZE);
-> -               expect_eq_uint(strlen(t->list) + 1, n);
-> -               expect_eq_str(t->list, print_buf, n);
-> -
-> -               /* test by non-zero offset */
-> -               if (strlen(t->list) > PAGE_SIZE) {
-> -                       n = bitmap_print_list_to_buf(print_buf, t->bitmap, t->nbits,
-> -                                                    PAGE_SIZE, PAGE_SIZE);
-> -                       expect_eq_uint(strlen(t->list) + 1 - PAGE_SIZE, n);
-> -                       expect_eq_str(t->list + PAGE_SIZE, print_buf, n);
-> -               }
-> +                                               PAGE_SIZE, PAGE_SIZE);
-> +               expect_eq_uint(strlen(t->list) + 1 - PAGE_SIZE, n);
-> +               expect_eq_str(t->list + PAGE_SIZE, print_buf, n);
->         }
->  }
->
-> @@ -1118,7 +1121,7 @@ static void test_bitmap_print_buf(void)
->   * FIXME: Clang breaks compile-time evaluations when KASAN and GCOV are enabled.
->   * To workaround it, GCOV is force-disabled in Makefile for this configuration.
->   */
-> -static void test_bitmap_const_eval(void)
-> +static void test_bitmap_const_eval(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(bitmap, BITS_PER_LONG);
->         unsigned long initvar = BIT(2);
-> @@ -1186,7 +1189,7 @@ static void test_bitmap_const_eval(void)
->  /*
->   * Helper function to test bitmap_write() overwriting the chosen byte pattern.
->   */
-> -static void test_bitmap_write_helper(const char *pattern)
-> +static void test_bitmap_write_helper(struct kunit *kunittest, const char *pattern)
->  {
->         DECLARE_BITMAP(bitmap, TEST_BIT_LEN);
->         DECLARE_BITMAP(exp_bitmap, TEST_BIT_LEN);
-> @@ -1240,7 +1243,7 @@ static void test_bitmap_write_helper(const char *pattern)
->         }
->  }
->
-> -static void test_bitmap_read_write(void)
-> +static void test_bitmap_read_write(struct kunit *kunittest)
->  {
->         unsigned char *pattern[3] = {"", "all:1/2", "all"};
->         DECLARE_BITMAP(bitmap, TEST_BIT_LEN);
-> @@ -1286,10 +1289,10 @@ static void test_bitmap_read_write(void)
->         }
->
->         for (pi = 0; pi < ARRAY_SIZE(pattern); pi++)
-> -               test_bitmap_write_helper(pattern[pi]);
-> +               test_bitmap_write_helper(kunittest, pattern[pi]);
->  }
->
-> -static void test_bitmap_read_perf(void)
-> +static void test_bitmap_read_perf(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(bitmap, TEST_BIT_LEN);
->         unsigned int cnt, nbits, i;
-> @@ -1312,10 +1315,10 @@ static void test_bitmap_read_perf(void)
->                 }
->         }
->         time = ktime_get() - time;
-> -       kunit_info(kunittest, "Time spent in %s:\t%llu\n", __func__, time);
-> +       kunit_info(kunittest, "Time spent:\t%llu\n", time);
->  }
->
-> -static void test_bitmap_write_perf(void)
-> +static void test_bitmap_write_perf(struct kunit *kunittest)
->  {
->         DECLARE_BITMAP(bitmap, TEST_BIT_LEN);
->         unsigned int cnt, nbits, i;
-> @@ -1334,49 +1337,42 @@ static void test_bitmap_write_perf(void)
->                 }
->         }
->         time = ktime_get() - time;
-> -       kunit_info(kunittest, "Time spent in %s:\t%llu\n", __func__, time);
-> +       kunit_info(kunittest, "Time spent:\t%llu\n", time);
->  }
->
->  #undef TEST_BIT_LEN
->
-> -static void bitmap_test(struct kunit *test)
-> -{
-> -       kunittest = test;
-> -
-> -       test_zero_clear();
-> -       test_fill_set();
-> -       test_copy();
-> -       test_bitmap_region();
-> -       test_replace();
-> -       test_bitmap_sg();
-> -       test_bitmap_arr32();
-> -       test_bitmap_arr64();
-> -       test_bitmap_parse();
-> -       test_bitmap_parselist();
-> -       test_bitmap_printlist();
-> -       test_mem_optimisations();
-> -       test_bitmap_cut();
-> -       test_bitmap_print_buf();
-> -       test_bitmap_const_eval();
-> -       test_bitmap_read_write();
-> -       test_bitmap_read_perf();
-> -       test_bitmap_write_perf();
-> -
-> -       test_find_nth_bit();
-> -       test_for_each_set_bit();
-> -       test_for_each_set_bit_from();
-> -       test_for_each_clear_bit();
-> -       test_for_each_clear_bit_from();
-> -       test_for_each_set_bitrange();
-> -       test_for_each_clear_bitrange();
-> -       test_for_each_set_bitrange_from();
-> -       test_for_each_clear_bitrange_from();
-> -       test_for_each_set_clump8();
-> -       test_for_each_set_bit_wrap();
-> -}
-> -
->  static struct kunit_case bitmap_test_cases[] = {
-> -       KUNIT_CASE(bitmap_test),
-> +       KUNIT_CASE(test_zero_clear),
-> +       KUNIT_CASE(test_fill_set),
-> +       KUNIT_CASE(test_copy),
-> +       KUNIT_CASE(test_bitmap_region),
-> +       KUNIT_CASE(test_replace),
-> +       KUNIT_CASE(test_bitmap_sg),
-> +       KUNIT_CASE(test_bitmap_arr32),
-> +       KUNIT_CASE(test_bitmap_arr64),
-> +       KUNIT_CASE(test_bitmap_parse),
-> +       KUNIT_CASE(test_bitmap_parselist),
-> +       KUNIT_CASE(test_bitmap_printlist),
-> +       KUNIT_CASE(test_mem_optimisations),
-> +       KUNIT_CASE(test_bitmap_cut),
-> +       KUNIT_CASE_PARAM(test_bitmap_print_buf, test_print_gen_params),
-> +       KUNIT_CASE(test_bitmap_const_eval),
-> +       KUNIT_CASE(test_bitmap_read_write),
-> +       KUNIT_CASE(test_bitmap_read_perf),
-> +       KUNIT_CASE(test_bitmap_write_perf),
+> +.Lbswap_mask:
+> +       .octa   0x000102030405060708090a0b0c0d0e0f
 > +
-> +       KUNIT_CASE(test_find_nth_bit),
-> +       KUNIT_CASE(test_for_each_set_bit),
-> +       KUNIT_CASE(test_for_each_set_bit_from),
-> +       KUNIT_CASE(test_for_each_clear_bit),
-> +       KUNIT_CASE(test_for_each_clear_bit_from),
-> +       KUNIT_CASE(test_for_each_set_bitrange),
-> +       KUNIT_CASE(test_for_each_clear_bitrange),
-> +       KUNIT_CASE(test_for_each_set_bitrange_from),
-> +       KUNIT_CASE(test_for_each_clear_bitrange_from),
-> +       KUNIT_CASE(test_for_each_set_clump8),
-> +       KUNIT_CASE(test_for_each_set_bit_wrap),
->         {}
->  };
->
->
-> --
-> 2.48.1
->
+> +.Lctr_pattern:
+> +       .quad   0, 0
+> +.Lone:
+> +       .quad   1, 0
+> +.Ltwo:
+> +       .quad   2, 0
+> +       .quad   3, 0
+> +
+> +.Lfour:
+> +       .quad   4, 0
+> +
+> +.text
+> +
+> +// Move a vector between memory and a register.
+> +// The register operand must be in the first 16 vector registers.
+> +.macro _vmovdqu        src, dst
+> +.if VL < 64
+> +       vmovdqu         \src, \dst
+> +.else
+> +       vmovdqu8        \src, \dst
+> +.endif
+> +.endm
+> +
+> +// Move a vector between registers.
+> +// The registers must be in the first 16 vector registers.
+> +.macro _vmovdqa        src, dst
+> +.if VL < 64
+> +       vmovdqa         \src, \dst
+> +.else
+> +       vmovdqa64       \src, \dst
+> +.endif
+> +.endm
+> +
+> +// Broadcast a 128-bit value from memory to all 128-bit lanes of a vector
+> +// register.  The register operand must be in the first 16 vector registers.
+> +.macro _vbroadcast128  src, dst
+> +.if VL == 16
+> +       vmovdqu         \src, \dst
+> +.elseif VL == 32
+> +       vbroadcasti128  \src, \dst
+> +.else
+> +       vbroadcasti32x4 \src, \dst
+> +.endif
+> +.endm
+> +
+> +// XOR two vectors together.
+> +// Any register operands must be in the first 16 vector registers.
+> +.macro _vpxor  src1, src2, dst
+> +.if VL < 64
+> +       vpxor           \src1, \src2, \dst
+> +.else
+> +       vpxord          \src1, \src2, \dst
+> +.endif
+> +.endm
+> +
+> +// Load 1 <= %ecx <= 15 bytes from the pointer \src into the xmm register \dst
+> +// and zeroize any remaining bytes.  Clobbers %rax, %rcx, and \tmp{64,32}.
+> +.macro _load_partial_block     src, dst, tmp64, tmp32
+> +       sub             $8, %ecx                // LEN - 8
+> +       jle             .Lle8\@
+> +
+> +       // Load 9 <= LEN <= 15 bytes.
+> +       vmovq           (\src), \dst            // Load first 8 bytes
+> +       mov             (\src, %rcx), %rax      // Load last 8 bytes
+> +       neg             %ecx
+> +       shl             $3, %ecx
+> +       shr             %cl, %rax               // Discard overlapping bytes
+> +       vpinsrq         $1, %rax, \dst, \dst
+> +       jmp             .Ldone\@
+> +
+> +.Lle8\@:
+> +       add             $4, %ecx                // LEN - 4
+> +       jl              .Llt4\@
+> +
+> +       // Load 4 <= LEN <= 8 bytes.
+> +       mov             (\src), %eax            // Load first 4 bytes
+> +       mov             (\src, %rcx), \tmp32    // Load last 4 bytes
+> +       jmp             .Lcombine\@
+> +
+> +.Llt4\@:
+> +       // Load 1 <= LEN <= 3 bytes.
+> +       add             $2, %ecx                // LEN - 2
+> +       movzbl          (\src), %eax            // Load first byte
+> +       jl              .Lmovq\@
+> +       movzwl          (\src, %rcx), \tmp32    // Load last 2 bytes
+> +.Lcombine\@:
+> +       shl             $3, %ecx
+> +       shl             %cl, \tmp64
+> +       or              \tmp64, %rax            // Combine the two parts
+> +.Lmovq\@:
+> +       vmovq           %rax, \dst
+> +.Ldone\@:
+> +.endm
+> +
+> +// Store 1 <= %ecx <= 15 bytes from the xmm register \src to the pointer \dst.
+> +// Clobbers %rax, %rcx, and \tmp{64,32}.
+> +.macro _store_partial_block    src, dst, tmp64, tmp32
+> +       sub             $8, %ecx                // LEN - 8
+> +       jl              .Llt8\@
+> +
+> +       // Store 8 <= LEN <= 15 bytes.
+> +       vpextrq         $1, \src, %rax
+> +       mov             %ecx, \tmp32
+> +       shl             $3, %ecx
+> +       ror             %cl, %rax
+> +       mov             %rax, (\dst, \tmp64)    // Store last LEN - 8 bytes
+> +       vmovq           \src, (\dst)            // Store first 8 bytes
+> +       jmp             .Ldone\@
+> +
+> +.Llt8\@:
+> +       add             $4, %ecx                // LEN - 4
+> +       jl              .Llt4\@
+> +
+> +       // Store 4 <= LEN <= 7 bytes.
+> +       vpextrd         $1, \src, %eax
+> +       mov             %ecx, \tmp32
+> +       shl             $3, %ecx
+> +       ror             %cl, %eax
+> +       mov             %eax, (\dst, \tmp64)    // Store last LEN - 4 bytes
+> +       vmovd           \src, (\dst)            // Store first 4 bytes
+> +       jmp             .Ldone\@
+> +
+> +.Llt4\@:
+> +       // Store 1 <= LEN <= 3 bytes.
+> +       vpextrb         $0, \src, 0(\dst)
+> +       cmp             $-2, %ecx               // LEN - 4 == -2, i.e. LEN == 2?
+> +       jl              .Ldone\@
+> +       vpextrb         $1, \src, 1(\dst)
+> +       je              .Ldone\@
+> +       vpextrb         $2, \src, 2(\dst)
+> +.Ldone\@:
+> +.endm
+> +
+> +// Prepare the next two vectors of AES inputs in AESDATA\i0 and AESDATA\i1, and
+> +// XOR each with the zero-th round key.  Also update LE_CTR if !\final.
+> +.macro _prepare_2_ctr_vecs     is_xctr, i0, i1, final=0
+> +.if \is_xctr
+> +  .if USE_AVX10
+> +       _vmovdqa        LE_CTR, AESDATA\i0
+> +       vpternlogd      $0x96, XCTR_IV, RNDKEY0, AESDATA\i0
+> +  .else
+> +       vpxor           XCTR_IV, LE_CTR, AESDATA\i0
+> +       vpxor           RNDKEY0, AESDATA\i0, AESDATA\i0
+> +  .endif
+> +       vpaddq          LE_CTR_INC1, LE_CTR, AESDATA\i1
+> +
+> +  .if USE_AVX10
+> +       vpternlogd      $0x96, XCTR_IV, RNDKEY0, AESDATA\i1
+> +  .else
+> +       vpxor           XCTR_IV, AESDATA\i1, AESDATA\i1
+> +       vpxor           RNDKEY0, AESDATA\i1, AESDATA\i1
+> +  .endif
+> +.else
+> +       vpshufb         BSWAP_MASK, LE_CTR, AESDATA\i0
+> +       _vpxor          RNDKEY0, AESDATA\i0, AESDATA\i0
+> +       vpaddq          LE_CTR_INC1, LE_CTR, AESDATA\i1
+> +       vpshufb         BSWAP_MASK, AESDATA\i1, AESDATA\i1
+> +       _vpxor          RNDKEY0, AESDATA\i1, AESDATA\i1
+> +.endif
+> +.if !\final
+> +       vpaddq          LE_CTR_INC2, LE_CTR, LE_CTR
+> +.endif
+> +.endm
+> +
+> +// Do all AES rounds on the data in the given AESDATA vectors, excluding the
+> +// zero-th and last rounds.
+> +.macro _aesenc_loop    vecs
 
---000000000000e56e9a062d9dcd9c
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+If you make this vecs:vararg, you can drop the "" around the arguments
+in the callers.
 
-MIIUqgYJKoZIhvcNAQcCoIIUmzCCFJcCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ghIEMIIGkTCCBHmgAwIBAgIQfofDAVIq0iZG5Ok+mZCT2TANBgkqhkiG9w0BAQwFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSNjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMzA0MTkwMzUzNDdaFw0zMjA0MTkwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFI2IFNNSU1FIENBIDIwMjMwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDYydcdmKyg
-4IBqVjT4XMf6SR2Ix+1ChW2efX6LpapgGIl63csmTdJQw8EcbwU9C691spkltzTASK2Ayi4aeosB
-mk63SPrdVjJNNTkSbTowej3xVVGnYwAjZ6/qcrIgRUNtd/mbtG7j9W80JoP6o2Szu6/mdjb/yxRM
-KaCDlloE9vID2jSNB5qOGkKKvN0x6I5e/B1Y6tidYDHemkW4Qv9mfE3xtDAoe5ygUvKA4KHQTOIy
-VQEFpd/ZAu1yvrEeA/egkcmdJs6o47sxfo9p/fGNsLm/TOOZg5aj5RHJbZlc0zQ3yZt1wh+NEe3x
-ewU5ZoFnETCjjTKz16eJ5RE21EmnCtLb3kU1s+t/L0RUU3XUAzMeBVYBEsEmNnbo1UiiuwUZBWiJ
-vMBxd9LeIodDzz3ULIN5Q84oYBOeWGI2ILvplRe9Fx/WBjHhl9rJgAXs2h9dAMVeEYIYkvW+9mpt
-BIU9cXUiO0bky1lumSRRg11fOgRzIJQsphStaOq5OPTb3pBiNpwWvYpvv5kCG2X58GfdR8SWA+fm
-OLXHcb5lRljrS4rT9MROG/QkZgNtoFLBo/r7qANrtlyAwPx5zPsQSwG9r8SFdgMTHnA2eWCZPOmN
-1Tt4xU4v9mQIHNqQBuNJLjlxvalUOdTRgw21OJAFt6Ncx5j/20Qw9FECnP+B3EPVmQIDAQABo4IB
-ZTCCAWEwDgYDVR0PAQH/BAQDAgGGMDMGA1UdJQQsMCoGCCsGAQUFBwMCBggrBgEFBQcDBAYJKwYB
-BAGCNxUGBgkrBgEEAYI3FQUwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQUM7q+o9Q5TSoZ
-18hmkmiB/cHGycYwHwYDVR0jBBgwFoAUrmwFo5MT4qLn4tcc1sfwf8hnU6AwewYIKwYBBQUHAQEE
-bzBtMC4GCCsGAQUFBzABhiJodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vcm9vdHI2MDsGCCsG
-AQUFBzAChi9odHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9yb290LXI2LmNydDA2
-BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL3Jvb3QtcjYuY3JsMBEG
-A1UdIAQKMAgwBgYEVR0gADANBgkqhkiG9w0BAQwFAAOCAgEAVc4mpSLg9A6QpSq1JNO6tURZ4rBI
-MkwhqdLrEsKs8z40RyxMURo+B2ZljZmFLcEVxyNt7zwpZ2IDfk4URESmfDTiy95jf856Hcwzdxfy
-jdwx0k7n4/0WK9ElybN4J95sgeGRcqd4pji6171bREVt0UlHrIRkftIMFK1bzU0dgpgLMu+ykJSE
-0Bog41D9T6Swl2RTuKYYO4UAl9nSjWN6CVP8rZQotJv8Kl2llpe83n6ULzNfe2QT67IB5sJdsrNk
-jIxSwaWjOUNddWvCk/b5qsVUROOuctPyYnAFTU5KY5qhyuiFTvvVlOMArFkStNlVKIufop5EQh6p
-jqDGT6rp4ANDoEWbHKd4mwrMtvrh51/8UzaJrLzj3GjdkJ/sPWkDbn+AIt6lrO8hbYSD8L7RQDqK
-C28FheVr4ynpkrWkT7Rl6npWhyumaCbjR+8bo9gs7rto9SPDhWhgPSR9R1//WF3mdHt8SKERhvtd
-NFkE3zf36V9Vnu0EO1ay2n5imrOfLkOVF3vtAjleJnesM/R7v5tMS0tWoIr39KaQNURwI//WVuR+
-zjqIQVx5s7Ta1GgEL56z0C5GJoNE1LvGXnQDyvDO6QeJVThFNgwkossyvmMAaPOJYnYCrYXiXXle
-A6TpL63Gu8foNftUO0T83JbV/e6J8iCOnGZwZDrubOtYn1QwggWDMIIDa6ADAgECAg5F5rsDgzPD
-hWVI5v9FUTANBgkqhkiG9w0BAQwFADBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBS
-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
-YE9NAgMBAAGjggHgMIIB3DAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1UdDwEB
-/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFHgsCGkO2Hex
-N6ybc+GeQEb6790qMFgGA1UdIARRME8wCQYHZ4EMAQUBAjBCBgorBgEEAaAyCgMDMDQwMgYIKwYB
-BQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQC
-MAAwgZoGCCsGAQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWdu
-LmNvbS9jYS9nc2F0bGFzcjZzbWltZWNhMjAyMzBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5n
-bG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3J0MB8GA1UdIwQYMBaA
-FDO6vqPUOU0qGdfIZpJogf3BxsnGMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFs
-c2lnbi5jb20vY2EvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3JsMA0GCSqGSIb3DQEBCwUAA4ICAQAs
-exV05yVDmPhHRqOq9lAbfWOUvEf8zydxabZUHna6bayb83jD2eb9nMGGEprfuNBRmFg35sgF1TyN
-+ieuQakvQYmY8tzK49hhHa2Y3qhGCTqYTHO3ypHvhHsZiGbL0gmdgB9P8ssVIws//34ae99GUOxo
-XKTxPwwsQ5Arq42besv3/HXAW+4nRAT8d3ht5ZWCHc5rjL/vdGzu7PaYo3u0da69AZ8Sh4Gf5yoc
-QANr2ZkMrxXbLmSmnRvbkQrzlZp2YbTFnczx46429D6q75/FNFOL1vAjxtRAPzkyACvW0eKvchza
-TMvvD3IWERLlcBL5yXpENc3rI8/wVjqgAWYxlFg1b/4b/TCgYe2MZC0rx4Uh3zTIbmPNiHdN6QZ9
-oDiYzWUcqWZ5jCO4bMKNlVJXeCvdANLHuhcC8FONj5VzNgYXs6gWkp9/Wt6XnQPX4dF4JBa8JdL/
-cT46RJIzoiJHEx/8syO5FparZHIKbkunoq6niPsRaQUGeqWc56H4Z1sQXuBJN9fhqkIkG0Ywfrwt
-uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
-PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
-AmowggJmAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
-BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
-pjANBglghkgBZQMEAgEFAKCB1DAvBgkqhkiG9w0BCQQxIgQg6bVG2zaLx17qfbhZQIxg7PVCO0Kx
-zjvugs2VEmYB6n0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-MjA4MDkwNzI3WjBpBgkqhkiG9w0BCQ8xXDBaMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
-YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBCjALBgkqhkiG9w0BAQcwCwYJYIZIAWUD
-BAIBMA0GCSqGSIb3DQEBAQUABIIBAIOEdhrlwFtXtXcnMn0WFRS+xZn7B8zPL2uBzALtOLvQsyUn
-3ndC+ExZOLZlZDkScvOG1RJ5nrpQ7sOeLso/x8G/TV0Eg+sm2yWtxmNyVKc1F9hyzii3KbkVGxXI
-SsEB73zlHugYnoni9hBWJLtczjKXqzsI0ahufSRoiV/PWs1BKeesTj0Fpn/Eo9r12YJ8atk+hCz1
-ODXlKM0ipX/W0n6SBXh59VAnc/4SpBGAviMeluHaov3xhpsdqbIvXhZy3qweQZpnaVrE/iNHz2TN
-dbbx45g80KMo2/QCnmUhsZVJz9hXKnKHoBV7UMKaC4NbA/25e7vMVHzzNcbBuR0zuUQ=
---000000000000e56e9a062d9dcd9c--
+
+> +       mov             KEY, %rax
+> +1:
+> +       _vbroadcast128  (%rax), RNDKEY
+> +.irp i, \vecs
+> +       vaesenc         RNDKEY, AESDATA\i, AESDATA\i
+> +.endr
+> +       add             $16, %rax
+> +       cmp             %rax, RNDKEYLAST_PTR
+> +       jne             1b
+> +.endm
+> +
+> +// Finalize the keystream blocks in the given AESDATA vectors by doing the last
+> +// AES round, then XOR those keystream blocks with the corresponding data.
+> +// Reduce latency by doing the XOR before the vaesenclast, utilizing the
+> +// property vaesenclast(key, a) ^ b == vaesenclast(key ^ b, a).
+> +.macro _aesenclast_and_xor     vecs
+
+Same here
+
+> +.irp i, \vecs
+> +       _vpxor          \i*VL(SRC), RNDKEYLAST, RNDKEY
+> +       vaesenclast     RNDKEY, AESDATA\i, AESDATA\i
+> +.endr
+> +.irp i, \vecs
+> +       _vmovdqu        AESDATA\i, \i*VL(DST)
+> +.endr
+> +.endm
+> +
+
+...
