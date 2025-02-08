@@ -1,223 +1,143 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B161197A92;
-	Sat,  8 Feb 2025 22:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB0A24418E;
+	Sat,  8 Feb 2025 22:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739055150; cv=none; b=h4qe/GQOyJ28oKA/X746r2M6kWt2/1HcOgKrYlISedAweGgiR41mX0dvYNuBQdpARD/dPE6TdCuQ1glh23sBibF35sa4gSUR+/kzZ2ibHgURdtnx1mZ00zyNSsHqGuyFv0qKKq9ZcF9jLewz3HYK0a8nKvwNWbgLtrGIRHetJbk=
+	t=1739055165; cv=none; b=APCOMx9AcBoMuori0Hls48P+IB7Sv8l/zYNATUvPRhhL4ENBx2/ty9kHNW485SpaRa1iABRH3MPmzXvy6cz/PGkSeYyMp5LiEuRnP6ZEfuxqsUpgHg7AU7zB4pidT9K5YTrjz8GfEAZtvdEpVH+xMEyizO4spIHgRj9eSTHxDXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739055150; c=relaxed/simple;
-	bh=mhSTaDFJPq0uqbgN7C530HsDhX0TM4pjObOawOqsX5Q=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DBPie4k+wMRI3QBVLAwIllaQ8dS+3Qm2C3ESx56hr9OgwcijUkTk+Nph0p7bvRwZDapn9klEgCtbXFJEXaBnK4SrrC94nwOV3AwgFDzMpk/wuSBaizNXtsW+8UgonTKZxCluVQMg4hjMKgoZDQhlNybFVTaxSioEEdEQOdI+l5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lSyrLN/Z; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739055165; c=relaxed/simple;
+	bh=+V2DO/v/Rg0iRMpNhmXPlkc6DKQjfJ/2+v6OBma+Sdc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fbWIUDyjx6WTT2ySTcjFz2v9SvvfLPXf7t4AJaUYBW5vgKWGzBu37a31WujXTi5ykyLOYTHxyfF+zYtm+RZi7i2lMBWl8pAM5VqpgWz5wD+z61IWhLAxiwC/zVP3rPphFLdLNCspXdaBD31Xcrbs0e5ppTC3ZD44mi3/cPlUIOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V8jAUkS2; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lSyrLN/Z"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 518LhJ7i001843;
-	Sat, 8 Feb 2025 22:52:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3MGTTgVRDq2yTwh7qCVMEyC7RfP6vRQyl3jhCrQYEWU=; b=lSyrLN/Z6l2fwnl/
-	5jzfaqHcXCMqPNDoLYxMBaDES+2q1//iYCxP7QUJ6X355Bbr2PeRfuRIkT1S6xPW
-	d3ktn5s/lOkqtVd+ov3oChWE93cG8quzadA8qRzzVouMaa/is1m/ZVebUGhL5X1c
-	JDm2bvE8ji8cLLbMYJvvOplGAjuiCXUck2mAY/CCHsqW0xshHFEkJMg7T0fiKAjd
-	ncmoEzXNHN/sWFXGExpKshXTqbbdxUZ18kfZRLjlJquvlM4r4KCr5m5EqbKtzBEU
-	RpcArqknqeFR/VC8hu5pENyj/t0WOdBbUoePEQ24HI0XyywnzJN9mPx2kr5aEOBx
-	DXAYfg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0kah8rk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 08 Feb 2025 22:52:16 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 518MqGmk001213
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 8 Feb 2025 22:52:16 GMT
-Received: from hu-vikramsa-hyd.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sat, 8 Feb 2025 14:52:10 -0800
-From: Vikram Sharma <quic_vikramsa@quicinc.com>
-To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
-        <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <cros-qcom-dts-watchers@chromium.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <quic_vikramsa@quicinc.com>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>
-Subject: [PATCH v14 2/2] arm64: dts: qcom: qcs6490-rb3gen2-vision-mezzanine: Add vision mezzanine
-Date: Sun, 9 Feb 2025 04:21:43 +0530
-Message-ID: <20250208225143.2868279-3-quic_vikramsa@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250208225143.2868279-1-quic_vikramsa@quicinc.com>
-References: <20250208225143.2868279-1-quic_vikramsa@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8jAUkS2"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-46fee2b9c7aso27972441cf.2;
+        Sat, 08 Feb 2025 14:52:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739055162; x=1739659962; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jiwq+pdt/QT32WgaSaqVbKDmKdsYjXMio3uaPJqsb8I=;
+        b=V8jAUkS2U38F3Lqo3S9yLUwvaSk2VtLxOgt1r4uEj9gRLiUosKxAFWRG/60mI1B/6X
+         Uli0rNUzfjGgoPjLf3sdiXA44lueMi69ktG7OG51jE5FizU4fBJKXsf/LPXLQA8zbc7k
+         q57qySrLemJLmofLVIT3R90VyFs3LxKHyMLCOpOBBAA0CkjVJAXQ7DDpRdyLDfJ9FW70
+         goaZBwyXNlSN7DO0685vOUmfch2D6b9kDDtO6rsVX4e1V3pt/3s9PFrxT52z6GCh32g+
+         ArvGgndSHCSwrSaxkimyoFTexZxx7VA5EUfqFHz+IKImyXzZawvyQZFW8bxOdgpZzqpB
+         hj/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739055162; x=1739659962;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jiwq+pdt/QT32WgaSaqVbKDmKdsYjXMio3uaPJqsb8I=;
+        b=cj2ovkmIg82EXSDy8IgTAOGt4NNxbI/H0MVn9IFpFLbJ8GxBujxr8zBWRGy9Fhw6IP
+         Y72jiJao/F/mgm+XqISFo3S5J5vo1/N1Fx5PFFvaVwHeqozFOdLNUveUO7/n/xD9WDP5
+         wc7l/vy/hNQchVYz8OR0AO9+dxw85usfBh+cZJIVlHLjrl6loGH1hpls0QLfs5Xrcn7I
+         R/NyptPMFDM18cIbMYD0mrluMStz2VMLKQwtxN9mjXyViJgKlyb08O03aAJb2WQnb/tL
+         iPk4+Ka7YCQsJxJA3ailWZ64sNIeycr1DopWL+jIgbtD9nQc+zY1Wl7NcGFnupxnzRTe
+         hmfg==
+X-Forwarded-Encrypted: i=1; AJvYcCWurWVB5W/yoXWixgwnfYapfyT+5Ek8P8r2/JzjeoB0Z56w4ugP0U4546AF9S2hKvapRtxBy+TMsoutTcJuZfA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyX+xIe76yIfOG6uXXPx8myCVmY4O1P50na7Fxc+ihBaZnnE8C
+	rCx0IsfBNHnA96s1NIcy4v3FX9u/IQ7O2ms/J7auhCjzZL9KptZ+T6ligW7W
+X-Gm-Gg: ASbGncuSaKPdYFWt0REKLfugH0Ui+A8bvmvaSsY5QKCkqm//Hzact02nK356fDT+doR
+	Ml3WbLcAE/nz3vxIA4WSAB3PATXmMwh/XOBy4A0mb680Ol3fLjlzQyt47Rg4c3ys10OIu4N5ahZ
+	Q9yH/NEORCKsYqN2p4/mZdK0+yktg+nt6p0/+9YaKdqy6BIhhOG4s1sM/jJFzVyl2xR4uwaP5Md
+	RYH0gHFs5rIEe2jKkqrixc4j3gHInPc6x7U086Lf2tbO3D3djukGsf0s4MjMSP0Cwj4t3LkSQJ9
+	hQ5HCW8cUUhSMPM5EcSJLNsJlIlnJG4TbBjsDKgcmaM=
+X-Google-Smtp-Source: AGHT+IF9x/UVPlnlzagsmolAT1pyOw7ZFMx5hVbLojcHERHZQClpLOUgQQK/GQc5uaChpmF3X4YKWA==
+X-Received: by 2002:a05:622a:4c0e:b0:467:681c:425f with SMTP id d75a77b69052e-471679945a9mr145138131cf.4.1739055162322;
+        Sat, 08 Feb 2025 14:52:42 -0800 (PST)
+Received: from [192.168.1.159] ([2600:4041:5be7:7c00:15f6:96e9:3308:934a])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4718c20a23esm310731cf.4.2025.02.08.14.52.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 14:52:41 -0800 (PST)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH v3 0/2] lib/prime_numbers: convert self-test to KUnit
+Date: Sat, 08 Feb 2025 17:52:28 -0500
+Message-Id: <20250208-prime_numbers-kunit-convert-v3-0-8ffd5816d8dc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: QpPj38Rm5KEBQO1APYcb6V7n53ZC14ip
-X-Proofpoint-ORIG-GUID: QpPj38Rm5KEBQO1APYcb6V7n53ZC14ip
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-08_10,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- suspectscore=0 impostorscore=0 adultscore=0 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 phishscore=0 mlxlogscore=999 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502080196
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACzgp2cC/43NSw6CMBSF4a2Yjq3pAyk4ch/GGCgXuNG2pIVGQ
+ 9i7hREj4/A/g+/MJIBHCORymImHiAGdTSGPB6L7ynZAsUlNBBNnJpiig0cDDzuZGnygz8niSLW
+ zEfxIFddlLTVveJORJAweWnxv+u2euscwOv/ZziJf1//cyCmjOctVK2qlFZfXzlT4OmlnyOpGs
+ beK35ZIVpFLzsssU8CyvbUsyxd7SQaZEgEAAA==
+X-Change-ID: 20250207-prime_numbers-kunit-convert-71c9b3c1d1d4
+To: David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Luis Felipe Hernandez <luis.hernandez093@gmail.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-The Vision Mezzanine for the Qualcomm RB3 Gen 2 ships with an imx577
-camera sensor. Enable IMX577 on the vision mezzanine.
+This is a clear example of a unit test.
 
-An example media-ctl pipeline for the imx577 is:
+I tested this using:
 
-media-ctl --reset
-media-ctl -V '"imx577 '17-001a'":0[fmt:SRGGB10/4056x3040 field:none]'
-media-ctl -V '"msm_csiphy3":0[fmt:SRGGB10/4056x3040]'
-media-ctl -V '"msm_csid0":0[fmt:SRGGB10/4056x3040]'
-media-ctl -V '"msm_vfe0_rdi0":0[fmt:SRGGB10/4056x3040]'
-media-ctl -l '"msm_csiphy3":1->"msm_csid0":0[1]'
-media-ctl -l '"msm_csid0":1->"msm_vfe0_rdi0":0[1]'
+$ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 math-prime_numbers
 
-yavta -B capture-mplane -c -I -n 5 -f SRGGB10P -s 4056x3040 -F /dev/video0
+On success:
+; [08:51:41] ============== math-prime_numbers (1 subtest) ==============
+; [08:51:41] [PASSED] prime_numbers_test
+; [08:51:41] =============== [PASSED] math-prime_numbers ================
+; [08:51:41] ============================================================
+; [08:51:41] Testing complete. Ran 1 tests: passed: 1
 
-Signed-off-by: Hariram Purushothaman <quic_hariramp@quicinc.com>
-Signed-off-by: Trishansh Bhardwaj <quic_tbhardwa@quicinc.com>
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
+On failure:
+; [08:50:19] ============== math-prime_numbers (1 subtest) ==============
+; [08:50:19]     # prime_numbers_test: ASSERTION FAILED at lib/math/tests/prime_numbers_kunit.c:28
+; [08:50:19]     Expected slow == fast, but
+; [08:50:19]         slow == 0 (0x0)
+; [08:50:19]         fast == 1 (0x1)
+; [08:50:19] is-prime(2)
+; [08:50:19] [FAILED] prime_numbers_test
+; [08:50:19] # module: prime_numbers_kunit
+; [08:50:19] # math-prime_numbers: primes.{last=61, .sz=64, .primes[]=...x28208a20a08a28ac} = 2-3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61
+; [08:50:19] =============== [FAILED] math-prime_numbers ================
+; [08:50:19] ============================================================
+; [08:50:19] Testing complete. Ran 1 tests: failed: 1
+
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/Makefile             |  4 +
- .../qcs6490-rb3gen2-vision-mezzanine.dtso     | 89 +++++++++++++++++++
- 2 files changed, 93 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
+Changes in v3:
+- Remove `selftest_max` again; snuck into v2.
+- Restore `#include <linux/slab.h>`.
+- Sending v3 early because kernel test robot is sad.
+- Link to v2: https://lore.kernel.org/r/20250208-prime_numbers-kunit-convert-v2-0-863119447e04@gmail.com
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 140b0b2abfb5..213d941b1b79 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -116,6 +116,10 @@ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs615-ride.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2.dtb
-+
-+qcs6490-rb3gen2-vision-mezzanine-dtbs := qcs6490-rb3gen2.dtb qcs6490-rb3gen2-vision-mezzanine.dtbo
-+
-+dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2-vision-mezzanine.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs8300-ride.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs8550-aim300-aiot.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs9100-ride.dtb
-diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
-new file mode 100644
-index 000000000000..b9e4a5214f70
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
-@@ -0,0 +1,89 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2024-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+/*
-+ * Camera Sensor overlay on top of rb3gen2 core kit.
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+#include <dt-bindings/clock/qcom,camcc-sc7280.h>
-+#include <dt-bindings/gpio/gpio.h>
-+
-+&camss {
-+	vdda-phy-supply = <&vreg_l10c_0p88>;
-+	vdda-pll-supply = <&vreg_l6b_1p2>;
-+
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* The port index denotes CSIPHY id i.e. csiphy3 */
-+		port@3 {
-+			reg = <3>;
-+
-+			csiphy3_ep: endpoint {
-+				clock-lanes = <7>;
-+				data-lanes = <0 1 2 3>;
-+				remote-endpoint = <&imx577_ep>;
-+			};
-+		};
-+	};
-+};
-+
-+&cci1 {
-+	status = "okay";
-+};
-+
-+&cci1_i2c1 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	camera@1a {
-+		compatible = "sony,imx577";
-+
-+		reg = <0x1a>;
-+
-+		reset-gpios = <&tlmm 78 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default", "suspend";
-+		pinctrl-0 = <&cam2_default>;
-+		pinctrl-1 = <&cam2_suspend>;
-+
-+		clocks = <&camcc CAM_CC_MCLK3_CLK>;
-+		assigned-clocks = <&camcc CAM_CC_MCLK3_CLK>;
-+		assigned-clock-rates = <24000000>;
-+
-+		dovdd-supply = <&vreg_l18b_1p8>;
-+		avdd-supply = <&vph_pwr>;
-+		dvdd-supply = <&vph_pwr>;
-+
-+		port {
-+			imx577_ep: endpoint {
-+				link-frequencies = /bits/ 64 <600000000>;
-+				data-lanes = <1 2 3 4>;
-+				remote-endpoint = <&csiphy3_ep>;
-+			};
-+		};
-+	};
-+};
-+
-+&tlmm {
-+	cam2_default: cam2-default-state {
-+		pins = "gpio67";
-+		function = "cam_mclk";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	cam2_suspend: cam2-suspend-state {
-+		pins = "gpio67";
-+		function = "cam_mclk";
-+		drive-strength = <2>;
-+		bias-pull-down;
-+	};
-+};
+Changes in v2:
+- Keep all the details hidden in prime_numbers.c; expose `with_primes`
+  for debug logging in the test. (David Gow)
+- Link to v1: https://lore.kernel.org/r/20250207-prime_numbers-kunit-convert-v1-0-6067f2b7c713@gmail.com
+
+---
+Tamir Duberstein (2):
+      lib/math: Hook up tests/Makefile
+      lib/prime_numbers: convert self-test to KUnit
+
+ lib/Kconfig.debug                            | 14 +++++
+ lib/math/Makefile                            |  4 +-
+ lib/math/prime_numbers.c                     | 76 ++++------------------------
+ lib/math/prime_numbers_private.h             | 17 +++++++
+ lib/math/tests/Makefile                      |  1 +
+ lib/math/tests/prime_numbers_kunit.c         | 59 +++++++++++++++++++++
+ tools/testing/selftests/lib/config           |  1 -
+ tools/testing/selftests/lib/prime_numbers.sh |  4 --
+ 8 files changed, 102 insertions(+), 74 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250207-prime_numbers-kunit-convert-71c9b3c1d1d4
+
+Best regards,
 -- 
-2.25.1
+Tamir Duberstein <tamird@gmail.com>
 
