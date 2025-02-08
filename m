@@ -1,119 +1,92 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E18241134
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 18:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A27F24112E;
+	Sat,  8 Feb 2025 18:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739040841; cv=none; b=pynHU7pq3xqspRj6fyBqGyQvj/57J7my87nKn3vqdqpPK6i0DcatdBRyTNV+Ey7d3jhSgcAEORdjXummtAILNwE3hz/pu/Gqpw9MJR6pJi5GnQhFZEjNYpdkOMk+3J5KtgHKTYyI572utPaIdthgR8v/9VagkI0tWWFAWCeDSv8=
+	t=1739041029; cv=none; b=OWh1BSL+6A6f9GERdjBLxw+rE7hf/6guhQmOHAYFdE2n/CcS/vJN1y6rdfDPsS9Xe1ScBnSvlG3Of4BldK4QofsW4BYRW0ZhYAJXAB45iRjA6VmDDaY+bkjcOxkWZ9oGnmXUBWz2fLloFmJBTBkrc0HMCFCK7d936fIn/TOlBbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739040841; c=relaxed/simple;
-	bh=Ubo4wxDjAMDx2uw+LaC/zE4ZJCENcZS8vDOY0CHooS8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IBtoQe94Ey6KfPueaIxg5y3awFT+nTRN96MQuMyTPN9Z1h5qt15eDiYkHax670iP16TVR4+6cyrC/tC2Jysn7koZh1pzdAWNeDbEWobOOvpOKRBnp8d6WVNgaIGsdu94XoOa0TJsVcy6pJqIzjX3WoOTcq9YDLBxMH/wUBstXXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SnoT2QpC; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1739041029; c=relaxed/simple;
+	bh=doCWvBLA+TxAbIJ7ZCHQehWhJJgTPR8DjLa0lEiJKmU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=B/w61Mn7DsogqQCjRzeNyT3KXgm03bPn6V3MTdkA723ip2QQzU+xapUdqmDKMaEyQIqrsVM26A4iOjwFv979h96KAdZV3tzeWLSDHREgUAHB+gqqSXPkhX1trxNRNqO8qgy7Na6E7ME+Ax1soIPg4+HELYsnHUAzfAsi18D9TPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gATD9lyj; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SnoT2QpC"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5dcdb56c9d3so4982047a12.0
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 10:53:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gATD9lyj"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38dd14c99d3so876906f8f.3;
+        Sat, 08 Feb 2025 10:57:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1739040837; x=1739645637; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kmbr0H9srSRz+vgiAYrxGsuDDOFMLeKavVCcXEyEunw=;
-        b=SnoT2QpCFF1Frkeq3CaSKLhB5g1bmEJwFgDhUv/PjIQR6bMGj92Ea5zAiheO9ixQYD
-         UfNJmBvZeCYzXUDvrTl3OR8aGbsQWx10WsnxYZhWQ3zPU/NMAG3wvumZQsifn10gmF3R
-         gB0SPUtGzucuX67erdiybuH6hKkJ3qEqzXc80=
+        d=gmail.com; s=20230601; t=1739041026; x=1739645826; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rdUIYEZ6OxCFGuba76Ad1pkRN9bpibysoIyhG0xc+yE=;
+        b=gATD9lyjCshLFa7PpYQQn8BX+vr3X/Z4JFRuDAnPtgShBIvJTYPoXykLSph2QhtU0c
+         cH12OFid09+Hc3OS+mvxrGlGHs7DKwRzrMLa62DMntYdV8r/nHtHlkFJMLz4JgPPdgje
+         EG03qBQmFVuft5lndRjgvShn6sRwi2FZQ1y/d5X81Br17jfNnKevgHkRlFT9BbZ0JtaU
+         T+UTmVs72G/9Y5dYhvbSnXMdGd3HZPgleMkvADyT1ds/xb4BLP18RKoSUwnykv+QOmyh
+         9cvrPNifogNGTV8sx9ajF/uFbBj34ke+3crYudbzjbdm9lNz3c6rEyeIfFG26DDn2vNz
+         8+HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739040837; x=1739645637;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Kmbr0H9srSRz+vgiAYrxGsuDDOFMLeKavVCcXEyEunw=;
-        b=tNklhuPrTAYQfL8igyT8RFpOTEA1lKnD42mqs9frQzfz1PwgRZrZ5IBVxQNiaVkslE
-         Wz6+BsCE/yBU+OA4hMLlomUU132ElW7woSY9SfGbYHAbUgbY4dhVDGjRSEvPUJ9zpCti
-         LUYZOOJwgP0dCzroi8ZORgV3A8PZT+nmn6+8NFU4ncPAmxFGRe+HjPch5vuob8JmQaIb
-         u5Fxyl+kjX8DxI2G8ikZET3fB+ShCr2p8Cw+tINKAyyNGLGhYfOqnKCmss7Z82zmSXSe
-         lbL35/xMc+OussjvIT6pwaU7H+zvc7c2cMupIMH6dFOa1h5EyxyZfk7a71IahDLQBROE
-         0FbA==
-X-Forwarded-Encrypted: i=1; AJvYcCWDGwaTVZczA7JEWlWjwlB7PavUt/OAOiHX2OF4w9oxzyEHrpVoJooZfdJ8M+i4I4Hueq/GyiGmGF7TtlE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBgcUOvyZrLTqjBOD8JQ94WAC6rLm+MdP2hbeBLo6xLP1B8f9d
-	u9gDmBOXSdcAujUKJ0pCANBWdLMXcXPox7GulOJKD7wga90UQpMxWxLGFi87taPMDep7RvpKPFA
-	gT2jttQ==
-X-Gm-Gg: ASbGncui7ZO8xAjDG5tPHq9opPpBs0CArwf+m9vjFO8Mvo0Uo+iTK33Ea9k/gq6mEzt
-	B5V12VK8Xe5tOyJFhcfmhDFiIUfj/XO3fydmfgRZSqB33IAbJM+crvY3STsWhIZb3Y1JOFC5bov
-	6VBkgjC9qVIdnsgF15cp9MATco2nPbwiK2T5hxp0gW+3C61enIBaxbtMixMw/6gpTw3GnJvpnE5
-	/9UKvXKaz2kMlgoZbnWWstGn5CMOJYQwOhaJebfDB/V1l5IdtxLXrtXiocP5aHIAWVCJ3nXssPJ
-	ru0SKhQXG35XLkr+MNxBx/wZn0R0/shpkNRnxLmYqvrLt4r+l6NpmxkKO7q7r9Z7bg==
-X-Google-Smtp-Source: AGHT+IGD+CeDO781GhSMIgb9ftN+tM+yNSBbdsRKVnMCraspSfDClMlHi+5AURJyxzGSq/KUlVvMqw==
-X-Received: by 2002:a05:6402:5252:b0:5d0:c697:1f02 with SMTP id 4fb4d7f45d1cf-5de45018851mr16507528a12.17.1739040837197;
-        Sat, 08 Feb 2025 10:53:57 -0800 (PST)
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de4aa38a1asm3281167a12.79.2025.02.08.10.53.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Feb 2025 10:53:56 -0800 (PST)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5de47cf93dfso2560253a12.2
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 10:53:55 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXG8J5erV4s2oA58zYVtrJFjxwrLf3jO15UgRwXFEOruIhA80O4Kp++ccRMT40YwefDeZXdEMpe7esI3Ks=@vger.kernel.org
-X-Received: by 2002:a05:6402:358f:b0:5dc:8f03:bb5b with SMTP id
- 4fb4d7f45d1cf-5de44fe944emr19692649a12.5.1739040834771; Sat, 08 Feb 2025
- 10:53:54 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739041026; x=1739645826;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rdUIYEZ6OxCFGuba76Ad1pkRN9bpibysoIyhG0xc+yE=;
+        b=NWuiEP+MIfDVYUJ3E6fC6Djeq6/QjjcPJiwW/nOP3WyhjvyZGiHPBSFRWaz2poutkW
+         w4iBe+BwXUUycji6prsnRbxfPDwuO1nGTSirdw/nifCv3RNGfQ25RjQEsHwNwq9cqEXM
+         ERR4pfq8oPZsuwFq6Him1WRg+1Ko39DTHGmxA76FJVoapuwQiRYB5ZmAMfX+UySh6HKQ
+         psIORdXifZgHzmdqbpuIcuIBV/cwyHIBgedhVrwPgtPEnjtYaW1afeEAQPsgsxa8Ttdz
+         TUZnqs8ZTfpy0OPIbFKPvqGP2R2h0JE0ranVBQ5cLksYqEkZRPyW9ef+RfwqLoTeAdHJ
+         Mmmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUN4wBix5u/94lODzEsoTp/0pToCfbF++HMhOmi0qAyiij7TPP8P3671oCoz4LDKlF3aewigFpW386zy8cY@vger.kernel.org, AJvYcCV7eVe1lmavNE0eSVt3yCmlbkf5CHDR66J3cKepgC2FrfKTLAQUzugikSozlfXRu9sQk0Inzyk3TWQfuJbd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4MmB1IoCo/v+E3woseJEJp7wbuVWNEWUbhLvXWebTvJm7YSpw
+	bCFDrDG0TN2gWMvm+PKOckZHkn4cjlmQ+PBv1ZV24Yi+uM/N4zSa
+X-Gm-Gg: ASbGncuHSJlt8EbOfvE6lIm9Og6atQHY4KaySoykAOE2CiA3w2V4jvznfum7/TCvZ9q
+	IWv2SrTuzD+/7NqtLzCnQuglD4DdHR9dP+E6YbYBZ6IMv+uKqpkv5G/Zaz2FHd+enirZLTo26Se
+	0X9mohJ14Np2oZsOvUxur+dr+7GPRRVNEiG22m+haLKd5APLiIvGlUUz+OXikEmUeogmAqUag4B
+	frybJI4n0jTJJsG7W7mICMS33zAvIebIvbcRnSdNhd2mLW6xKFP0UrJf8Uu541y4623LzvsQR1o
+	MMSUGfypaaUe23L0Bg/8jjSD9jw/kLdUX7R2+IdqfVS5qlW2l0hxDA==
+X-Google-Smtp-Source: AGHT+IEgH57hapeWB6O35s4Jro2+v90RtJAClrbe9nhGySA9U/QR5Hj2o2se82wFLuS37dL/7ExVmg==
+X-Received: by 2002:a05:6000:2c1:b0:38d:d666:5457 with SMTP id ffacd0b85a97d-38dd66656e8mr1614779f8f.42.1739041025423;
+        Sat, 08 Feb 2025 10:57:05 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dd2ef7efesm2663243f8f.52.2025.02.08.10.57.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 10:57:04 -0800 (PST)
+Date: Sat, 8 Feb 2025 18:57:03 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>, Jan
+ Kara <jack@suse.cz>
+Subject: Re: [PATCH next 1/1] fs: Mark get_sigset_argpack() __always_inline
+Message-ID: <20250208185703.066039ab@pumpkin>
+In-Reply-To: <CAHk-=wicUO4WaEE6b010icQPpq+Gk_ZK5V2hF2iBQe-FqmBc3Q@mail.gmail.com>
+References: <20250208151347.89708-1-david.laight.linux@gmail.com>
+	<CAHk-=wicUO4WaEE6b010icQPpq+Gk_ZK5V2hF2iBQe-FqmBc3Q@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208151347.89708-1-david.laight.linux@gmail.com>
-In-Reply-To: <20250208151347.89708-1-david.laight.linux@gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 8 Feb 2025 10:53:38 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wicUO4WaEE6b010icQPpq+Gk_ZK5V2hF2iBQe-FqmBc3Q@mail.gmail.com>
-X-Gm-Features: AWEUYZkQ-gaQUcuQDLlGCQM-u1tFXVw0-fJVfL4CHFsbbrdrsyXbEEev_pRAdtQ
-Message-ID: <CAHk-=wicUO4WaEE6b010icQPpq+Gk_ZK5V2hF2iBQe-FqmBc3Q@mail.gmail.com>
-Subject: Re: [PATCH next 1/1] fs: Mark get_sigset_argpack() __always_inline
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, 8 Feb 2025 at 07:14, David Laight <david.laight.linux@gmail.com> wrote:
->
-> Since the function is 'hot enough' to worry about avoiding the
-> overhead of copy_from_user() it must be worth forcing it to be
-> inlined.
+On Sat, 8 Feb 2025 10:53:38 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Hmm. gcc certainly inlines this one for me regardless.
+...
+> And while looking at this, I note that I made get_sigset_argpack() do
+> the masked user access thing, but didn't do the same pattern for
+> get_compat_sigset_argpack()
 
-So it's either a gcc version issue (I have gcc-14.2.1), or it's some
-build configuration thing that makes the function big enough in your
-case that gcc decides not to inline things. Do you perhaps have some
-debugging options enabled? At that point, inlining is the least of all
-problems.
+That's in the next patch.
+I noticed you'd committed my cmov code.
 
-> I'd guess that gcc is counting up the number of lines in the asm again.
-
-If that's the case, then we should probably make sure that the
-relevant inline asms are marked 'inline', which makes gcc estimate it
-to be minimal:
-
-    https://gcc.gnu.org/onlinedocs/gcc/Size-of-an-asm.html
-
-but it turns out that with the compiler bug workarounds we have that
-wrapper macro for this case:
-
-   #define asm_goto_output(x...) asm volatile goto(x)
-
-which I guess we could just add the inline to.
-
-Bah. I think we should fix those things, but in the meantime your
-patch certainly isn't wrong either. So ack.
-
-And while looking at this, I note that I made get_sigset_argpack() do
-the masked user access thing, but didn't do the same pattern for
-get_compat_sigset_argpack()
-
-          Linus
+	David
