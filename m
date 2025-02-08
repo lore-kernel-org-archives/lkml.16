@@ -1,144 +1,114 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3743F14D2A0;
-	Sat,  8 Feb 2025 08:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5828C28F3;
+	Sat,  8 Feb 2025 08:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739002788; cv=none; b=hSWgUVfN+wchxFAbyE95/unPw+evj8Z+4bcw0c3wk8spZqqUzNi9hgN4ePFrx7wrNhCGcU2LnGfcbqWOBXqiyaH0+fb91p/uy6+gYVcSCsxMJZb+VTuIhIN9t6tH2eEuNB8nUAf1lpNQtEGHbZuCZIM4BQvsP632gE98PZWIw8c=
+	t=1739002831; cv=none; b=HjSo94NlOPvQwJMzuYrt5ZGa2nUbpy0X35rGzl9svabfD2MjSIZXDhzKnjm7hJlupOlX47I0QKghu8PiXoyAUrmv0ct9SbNysoaJQiBd/7sDXPVvzthj3zZkhIDjFPlMKcWKlxbvpT5Ie/rCWnP8saQowXenXVZFWVgukL96tnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739002788; c=relaxed/simple;
-	bh=D2KnIHQ35G0H8tfTbdtvlSGwvd26273FdqwPQ2qiruk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pGiMTFWm/FDU/283zL9bt5N4Usf6IxRsgHX8y+Kbn4oGtB2qsYafiv7CGlZr8Yo3KlBznQDzGOgLu/sbcVARa2SqiE6aXcxx/QaJScGigEdRnx8APre73Vvvglg12aR6xXHMVDHc+tR9E6SjkhOv/nyQtMMMMm32gDF2fC4iDe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=lp+MHX/X; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1739002831; c=relaxed/simple;
+	bh=0Swt1ZlGkTThdksPE/Bv4C1QdGg8QJOF14eYS9G6FeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QtHX3XcXa7DD0F7agoFRp00X+/T4jm4crgEzDiRheqNAxqYJbBBNHxxjreHS8lJAmfGrLGh/74SLYA9Z6mExRM2hHbvxE6lOMcVxe5rSGVum8nmfTpBrVP62RVa52VlaU+k8zWSXbx0kdqi4ZBW+/lzuwW9856w9BpE/2HKkUzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gowsds7s; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="lp+MHX/X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=hTnYo
-	CbtAHJuj+1pZO3ETrOF4oFMJtTo1AW6yi1Oyx0=; b=lp+MHX/Xgtvc+9j8XlU9V
-	kAwtapYwiO7IFBoxc2cvE9B+ytuSx8kAmLenWZDFjK1qNI7emmDa/xPslhs9h8Sg
-	DlH6RUuL9eGQL6S/yjyh23XrfkN0smJMseH2L5OrTkgYk8bN/OumC95ST2cUbsIY
-	yTu7j1K4LHeLvT8j0tQGqI=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wCn+j1bE6dnLGKVKw--.38986S2;
-	Sat, 08 Feb 2025 16:18:40 +0800 (CST)
-From: Jiayuan Chen <mrpre@163.com>
-To: rdunlap@infradead.org,
-	bagasdotme@gmail.com,
-	corbet@lwn.net
-Cc: linux-doc@vger.kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	linux-kernel@vger.kernel.org,
-	Jiayuan Chen <mrpre@163.com>
-Subject: [PATCH v4] docs/arch: remove deprecated function name
-Date: Sat,  8 Feb 2025 16:18:32 +0800
-Message-ID: <20250208081832.121337-1-mrpre@163.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gowsds7s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739002828; x=1770538828;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0Swt1ZlGkTThdksPE/Bv4C1QdGg8QJOF14eYS9G6FeU=;
+  b=Gowsds7seqe7JtSW46bwXYysLEhYqd5SJXPFFCKwxvQ+N/U6hxGUBOqF
+   BQcr4QRKlHRsANKVC6Uiax3OmCQNeuRuqom6INkbC5TdYIvxuNa1/uQ0u
+   8d9G5bL18LefRDVyKtwh70JT7B8CW+fYPSjNkSE0lTUH5JYM4yDyLDL9B
+   HUM+a4kgb5HgIbiU4+ATFfy4/tx3cvnAAczTTiFGzdcjlptSOyvsfKRid
+   VDYnWIveG0giyWWzPvP+9VVvQqIE0b4cd2XUr3KbbLL6Z67ikWO3CNjdw
+   dHObP9AVOksON5Ik/i7VTwamnrdjPCnoUU/URia7C5RsIdJkvHfVtKg0L
+   w==;
+X-CSE-ConnectionGUID: ELoy5jlfS9KZ4F97p7jolg==
+X-CSE-MsgGUID: mmMvE89uRsqsEdbHBVmt4Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="50271537"
+X-IronPort-AV: E=Sophos;i="6.13,269,1732608000"; 
+   d="scan'208";a="50271537"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 00:20:27 -0800
+X-CSE-ConnectionGUID: XS3bosKmQ4ey/q/SFd2OEA==
+X-CSE-MsgGUID: TIwCsZISRhiI/3Z8ovocLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,269,1732608000"; 
+   d="scan'208";a="111680258"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 08 Feb 2025 00:20:25 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tgg4c-000zkB-0H;
+	Sat, 08 Feb 2025 08:20:22 +0000
+Date: Sat, 8 Feb 2025 16:20:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Lizhi Xu <lizhi.xu@windriver.com>,
+	syzbot+10bd8fe6741eedd2be2e@syzkaller.appspotmail.com
+Cc: oe-kbuild-all@lists.linux.dev, eadavis@qq.com, johan.hedberg@gmail.com,
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+	luiz.dentz@gmail.com, luiz.von.dentz@intel.com, marcel@holtmann.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH next] Bluetooth: l2cap: protect conn refcnt under hci dev
+ lock
+Message-ID: <202502081633.z7O9VFNy-lkp@intel.com>
+References: <20250207140216.3076952-1-lizhi.xu@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCn+j1bE6dnLGKVKw--.38986S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxur1DGry3CryfXw1DKFyfZwb_yoWrGFWfpr
-	ZxJF93Jr4DXryIv34jvw4xury3Ar4kX3W3Jw1kGr15u3Z8Xw1avr43KF12va4Uuw1rAayY
-	vr90vr1DJan0y3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piX4S7UUUUU=
-X-CM-SenderInfo: xpus2vi6rwjhhfrp/1tbiWxLtp2em+wcgPAACsg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207140216.3076952-1-lizhi.xu@windriver.com>
 
-print_context_stack() was removed in 2016 by commit c8fe4609827ae
-("x86/dumpstack: Remove dump_trace() and related callbacks"). Remove
-the now-inaccurate guide.
+Hi Lizhi,
 
-While at it, also link to Ingo's explanatory message.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Jiayuan Chen <mrpre@163.com>
-Suggested-by: Randy Dunlap <rdunlap@infradead.org>
-Suggested-by: Jonathan Corbet <corbet@lwn.net>
-Suggested-by: Bagas Sanjaya <bagasdotme@gmail.com>
+[auto build test WARNING on next-20250207]
 
----
-V3 -> V4: Made changes based on Bagas's suggestion.
-V1 -> V3: Made changes based on suggestions from Randy and Jonathan.
----
- Documentation/arch/x86/kernel-stacks.rst | 60 +++++++++---------------
- 1 file changed, 22 insertions(+), 38 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Lizhi-Xu/Bluetooth-l2cap-protect-conn-refcnt-under-hci-dev-lock/20250207-221142
+base:   next-20250207
+patch link:    https://lore.kernel.org/r/20250207140216.3076952-1-lizhi.xu%40windriver.com
+patch subject: [PATCH next] Bluetooth: l2cap: protect conn refcnt under hci dev lock
+config: i386-buildonly-randconfig-001-20250208 (https://download.01.org/0day-ci/archive/20250208/202502081633.z7O9VFNy-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502081633.z7O9VFNy-lkp@intel.com/reproduce)
 
-diff --git a/Documentation/arch/x86/kernel-stacks.rst b/Documentation/arch/x86/kernel-stacks.rst
-index 738671a4070b..4cb68433272d 100644
---- a/Documentation/arch/x86/kernel-stacks.rst
-+++ b/Documentation/arch/x86/kernel-stacks.rst
-@@ -112,41 +112,25 @@ Printing backtraces on x86
- ==========================
- 
- The question about the '?' preceding function names in an x86 stacktrace
--keeps popping up, here's an indepth explanation. It helps if the reader
--stares at print_context_stack() and the whole machinery in and around
--arch/x86/kernel/dumpstack.c.
--
--Adapted from Ingo's mail, Message-ID: <20150521101614.GA10889@gmail.com>:
--
--We always scan the full kernel stack for return addresses stored on
--the kernel stack(s) [1]_, from stack top to stack bottom, and print out
--anything that 'looks like' a kernel text address.
--
--If it fits into the frame pointer chain, we print it without a question
--mark, knowing that it's part of the real backtrace.
--
--If the address does not fit into our expected frame pointer chain we
--still print it, but we print a '?'. It can mean two things:
--
-- - either the address is not part of the call chain: it's just stale
--   values on the kernel stack, from earlier function calls. This is
--   the common case.
--
-- - or it is part of the call chain, but the frame pointer was not set
--   up properly within the function, so we don't recognize it.
--
--This way we will always print out the real call chain (plus a few more
--entries), regardless of whether the frame pointer was set up correctly
--or not - but in most cases we'll get the call chain right as well. The
--entries printed are strictly in stack order, so you can deduce more
--information from that as well.
--
--The most important property of this method is that we _never_ lose
--information: we always strive to print _all_ addresses on the stack(s)
--that look like kernel text addresses, so if debug information is wrong,
--we still print out the real call chain as well - just with more question
--marks than ideal.
--
--.. [1] For things like IRQ and IST stacks, we also scan those stacks, in
--       the right order, and try to cross from one stack into another
--       reconstructing the call chain. This works most of the time.
-+keeps popping up. Here's the explanation, that helps when the reader
-+stares at printk_stack_addressk() and its callers and pays special
-+attention to the 'reliable' parameter ('?' basically means that the
-+address is unreliable).
-+
-+The answer can be found in the comments within show_trace_log_lvl() body
-+in arch/x86/kernel/dumpstack.c::
-+
-+    /*
-+     * Scan the stack, printing any text addresses we find.  At the
-+     * same time, follow proper stack frames with the unwinder.
-+     *
-+     * Addresses found during the scan which are not reported by
-+     * the unwinder are considered to be additional clues which are
-+     * sometimes useful for debugging and are prefixed with '?'.
-+     * This also serves as a failsafe option in case the unwinder
-+     * goes off in the weeds.
-+     */
-+
-+For more information, see also Ingo's email. [1]_
-+
-+.. [1] https://lore.kernel.org/lkml/20150521101614.GA10889@gmail.com/
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502081633.z7O9VFNy-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> net/bluetooth/l2cap_core.c:7477:27: warning: 'l2cap_conn_hold_unless_zero' defined but not used [-Wunused-function]
+    7477 | static struct l2cap_conn *l2cap_conn_hold_unless_zero(struct l2cap_conn *c)
+         |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/l2cap_conn_hold_unless_zero +7477 net/bluetooth/l2cap_core.c
+
+4d7ea8ee90e42f Luiz Augusto von Dentz 2021-01-13  7476  
+6ab54a71718943 Luiz Augusto von Dentz 2025-01-16 @7477  static struct l2cap_conn *l2cap_conn_hold_unless_zero(struct l2cap_conn *c)
+6ab54a71718943 Luiz Augusto von Dentz 2025-01-16  7478  {
+6ab54a71718943 Luiz Augusto von Dentz 2025-01-16  7479  	BT_DBG("conn %p orig refcnt %u", c, kref_read(&c->ref));
+6ab54a71718943 Luiz Augusto von Dentz 2025-01-16  7480  
+6ab54a71718943 Luiz Augusto von Dentz 2025-01-16  7481  	if (!kref_get_unless_zero(&c->ref))
+6ab54a71718943 Luiz Augusto von Dentz 2025-01-16  7482  		return NULL;
+6ab54a71718943 Luiz Augusto von Dentz 2025-01-16  7483  
+6ab54a71718943 Luiz Augusto von Dentz 2025-01-16  7484  	return c;
+6ab54a71718943 Luiz Augusto von Dentz 2025-01-16  7485  }
+6ab54a71718943 Luiz Augusto von Dentz 2025-01-16  7486  
+
 -- 
-2.43.5
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
