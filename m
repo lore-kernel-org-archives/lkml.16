@@ -1,63 +1,55 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20591B4F02;
-	Sat,  8 Feb 2025 14:51:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8218D1B4F02;
+	Sat,  8 Feb 2025 14:52:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739026307; cv=none; b=KXdE4dhbMmCE9+DsQXz+wUHdYOSS6my+atisaQME6QIEDLi9J/28gIkkmxazaPi5a3ieJ4AodgXa3agS+WByQujsaSBYVd6NK0RsKNMwM+mdoU4Gyz0M94QQiJPEPwxmzDU47JWexej86iA5EToAthygdAGbuZitr13TH1iboPo=
+	t=1739026323; cv=none; b=fzZYU0wY5Zb4k5cBXfYrZHWlxxXbWnwo6nYB2v51/kc2/ldojynuomEF2BVYxknooApyHWu3Sordiy/pNahMDGJMU07QyL2fDKZRlhY0/27MlfgRfccR66sveEYaKMlcblGvJice7eFrW8mLn1WuuzYK9onl5ZoezYrpEOvk1zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739026307; c=relaxed/simple;
-	bh=ht22R3+ZnZ+yBurQyHZdZ8pB4y4b5dzqaCEHfSSQ/t8=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ptQ5UOoc2ZbEpd1A1ziJht2JMXSWENH8+jAXzPDW/Ut3Jh0LhUVdxB3R6EMt8vryKT5WxJ/5cSy+a6WuuV9nXWEJ/p7HjW1nsCxC+YD3ONhV+A2dk2IyN767YxZE8BFqf3ovFdPWdVOMG8E+Su8pdkNGXUMyTC/KRxxvxGx9c2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wKtWT1jG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iifu4vKi; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1739026323; c=relaxed/simple;
+	bh=7kWsqrc/KlJUhNXjQXo9cz9mB/l9i6LuYbjS3Fnz7WI=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=s8IRXVp3T1gsVVbxnk43QH5Xe63ZxQwix87CLW2jTGzIujFliUtid9sSGGJZKsCTc+rYK7a0djSnTazaBA3TomBUb1Un+z75wa+UQYDB4BxSK7tWPyQJ8zLlosCl2VNO5cR2BWXryAoHBp+uIp0lLcuNqmGrKaSP1GnFP0ExFFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CTbXbCS8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+INuT4eM; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wKtWT1jG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iifu4vKi"
-Date: Sat, 08 Feb 2025 14:51:34 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CTbXbCS8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+INuT4eM"
+Date: Sat, 08 Feb 2025 14:51:59 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1739026298;
+	s=2020; t=1739026319;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RPF7beo2CSEA4OCRIRH5C/hs0qSpYn30Ezbs7pcb8G0=;
-	b=wKtWT1jGFqqoCO9VdM8QDr0e8KcjAm/jHWq04mUTi0bvyqBydWEuVI0z0xRjAtJjrMUTi5
-	R0THeIcrvum8AuwCZjRbn5F06SirgYST9mJItm/XtkntTXBmLB3skAWkRK+ddZx20P8KCJ
-	dTQEwAXh/EFXfEdReVGkn5Aslx02syanKOIwLfHAOd0zUA90jtzVNAm8llk3zMXSM/Nu7G
-	+oEx/NeA0Pg8K/zsT9hOhU6LxlTv18BsvngX3oynwOj7RybfgVEXD4XfBL5DyfRGS5lVyl
-	L7tR4aubaGIcosDS/wnUfWLd0sezaMlA4AXeJu4rQT3TfwLNdYolmHJFozI2/g==
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=HMYkJT+hQCLeSJ+zaIYjy0cT0WVbl5J56c1fh6/RtP4=;
+	b=CTbXbCS8UyJgJZyesYDea756VruzBAMqN0ugxoY86hZIyGNVJ3SleBorslOQNVeIYrQ1Y7
+	96Xz59GuV/8LqOjaO0HYEYf6fp9ugJcaIa/lhwdphd0IdxscW1QPsXILEDPLxFBKAHJOEZ
+	BxayzJ7/gMbXPI88DysEOdn+1MGx+gbtwrE3MOobeETJvgQmRNN9utj+ovNZVSx7f7QBTB
+	2y5mWadU2+ZjvkJ8PtUL7+5eLLwfi4z0FVNiQBA/0Nizox0slaWc9dd9UymRQ7mU7MRBIT
+	SCnEZZ+aJY1QDGGkw1McoBwXriJ1Pw1UkkefAIZFmAp4mFp/7BGNlw6TIr/Cvw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1739026298;
+	s=2020e; t=1739026319;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RPF7beo2CSEA4OCRIRH5C/hs0qSpYn30Ezbs7pcb8G0=;
-	b=iifu4vKiYU7rdYWklD9/tYOV3rSMO8bZEO/6dqp1uKzLicP1AoO9gVXfrCD26EVhY/QX5m
-	op0coz15Bv3akUBw==
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=HMYkJT+hQCLeSJ+zaIYjy0cT0WVbl5J56c1fh6/RtP4=;
+	b=+INuT4eM7oKm9/3klXj24iSlDnGB1GJI3SL7De1RNqtvZw5HVLl+fxXA0CBvwaj/Wr39Za
+	381X0CFyG29PG2DQ==
 From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/fair: Adhere to place_entity() constraints
-Cc: Mike Galbraith <efault@gmx.de>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@vger.kernel.org,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250128143949.GD7145@noisy.programming.kicks-ass.net>
-References: <20250128143949.GD7145@noisy.programming.kicks-ass.net>
+Subject: [tip: objtool/urgent] objtool: Move dodgy linker warn to verbose
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <173902629450.10177.17446372607519992642.tip-bot2@tip-bot2>
+Message-ID: <173902631922.10177.6027685106980851214.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -65,70 +57,38 @@ Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the sched/urgent branch of tip:
+The following commit has been merged into the objtool/urgent branch of tip:
 
-Commit-ID:     55294004b122c997591d9de8446f5a4c60402805
-Gitweb:        https://git.kernel.org/tip/55294004b122c997591d9de8446f5a4c60402805
+Commit-ID:     7e501637bd5b702a2fa627e903a0025654110e1e
+Gitweb:        https://git.kernel.org/tip/7e501637bd5b702a2fa627e903a0025654110e1e
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Tue, 28 Jan 2025 15:39:49 +01:00
+AuthorDate:    Thu, 06 Feb 2025 11:12:08 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Sat, 08 Feb 2025 15:43:12 +01:00
+CommitterDate: Sat, 08 Feb 2025 15:43:08 +01:00
 
-sched/fair: Adhere to place_entity() constraints
+objtool: Move dodgy linker warn to verbose
 
-Mike reports that commit 6d71a9c61604 ("sched/fair: Fix EEVDF entity
-placement bug causing scheduling lag") relies on commit 4423af84b297
-("sched/fair: optimize the PLACE_LAG when se->vlag is zero") to not
-trip a WARN in place_entity().
+The lld.ld borkage is fixed in the latest llvm release (?) but will
+not be backported, meaning we're stuck with broken linker for a fair
+while.
 
-What happens is that the lag of the very last entity is 0 per
-definition -- the average of one element matches the value of that
-element. Therefore place_entity() will match the condition skipping
-the lag adjustment:
+Lets not spam all clang build logs and move warning to verbose.
 
-  if (sched_feat(PLACE_LAG) && cfs_rq->nr_queued && se->vlag) {
-
-Without the 'se->vlag' condition -- it will attempt to adjust the zero
-lag even though we're inserting into an empty tree.
-
-Notably, we should have failed the 'cfs_rq->nr_queued' condition, but
-don't because they didn't get updated.
-
-Additionally, move update_load_add() after placement() as is
-consistent with other place_entity() users -- this change is
-non-functional, place_entity() does not use cfs_rq->load.
-
-Fixes: 6d71a9c61604 ("sched/fair: Fix EEVDF entity placement bug causing scheduling lag")
-Reported-by: Mike Galbraith <efault@gmx.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20250128143949.GD7145@noisy.programming.kicks-ass.net
 ---
- kernel/sched/fair.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/objtool/check.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index f4e4d3e..d0b10e1 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3782,6 +3782,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
- 		update_entity_lag(cfs_rq, se);
- 		se->deadline -= se->vruntime;
- 		se->rel_deadline = 1;
-+		cfs_rq->nr_queued--;
- 		if (!curr)
- 			__dequeue_entity(cfs_rq, se);
- 		update_load_sub(&cfs_rq->load, se->load.weight);
-@@ -3808,10 +3809,11 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 3520a45..497cb8d 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2273,7 +2273,7 @@ static int read_annotate(struct objtool_file *file,
  
- 	enqueue_load_avg(cfs_rq, se);
- 	if (se->on_rq) {
--		update_load_add(&cfs_rq->load, se->load.weight);
- 		place_entity(cfs_rq, se, 0);
-+		update_load_add(&cfs_rq->load, se->load.weight);
- 		if (!curr)
- 			__enqueue_entity(cfs_rq, se);
-+		cfs_rq->nr_queued++;
- 
- 		/*
- 		 * The entity's vruntime has been adjusted, so let's check
+ 	if (sec->sh.sh_entsize != 8) {
+ 		static bool warned = false;
+-		if (!warned) {
++		if (!warned && opts.verbose) {
+ 			WARN("%s: dodgy linker, sh_entsize != 8", sec->name);
+ 			warned = true;
+ 		}
