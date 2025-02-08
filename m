@@ -1,74 +1,82 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CBC28F3;
-	Sat,  8 Feb 2025 09:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2568B28F3
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 09:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739007108; cv=none; b=WJrBq8E+4KAXb0CxrSJ8jzpjjVHPKPpVaHPC9CWbYor4wTPhG8aQfkA201yavjzR4YL3GtvOh7s5l6wbzHwthh1TEDn8SbvFqGizsyCCNRpqbVvVr1shcdcySyjhqexxNC1gILj360+lhZRnrVwNJS4KO3I+ZH40M8NqaqkAJYk=
+	t=1739007199; cv=none; b=kmmDq69Vj+sR/i/lNIPeX6iuYyrKPlMS+3zGRfvIGRporm58MMrmhPoEsjonRk+zUd9G8Waem3PoHU5lSBI/nsnESn29Go2QJaEDqPsYJmr3PPaGQa7qnvZsETtj/jDt+YYBAIML2vpkY8GgzLiuwmzsRyuURR2zqFjkzBl8Z8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739007108; c=relaxed/simple;
-	bh=h510q3FTz/EfKQQ/Gq6Jz/spYjXtcFFEiPuXW73o+BM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WKjixuMpsRARRt5UggszvA87yyQsmdBAWv4srbRFd26F4tTkYiMWtiL9SveogLOXox2LuTgnmtwZl3YUJhP8k13Oi44Emr1+HGkgcAhzT6l5d8ACS7h877pzu0cP/7mEyYlYXy5eTO71ypQ88d4OwX6E9QaJ6e2FXlf+XmMSvV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=fjasle.eu; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=aB3vcaCM; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fjasle.eu
+	s=arc-20240116; t=1739007199; c=relaxed/simple;
+	bh=lIeyLrpRw3Nc7xVpPvIu+PInwr5AHo7b7ua3aaooq4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Ss4t84F+nF5/T053b7qKKYiYRWZMZeuvojDW1JtSdYxTsLRB9UW2Uzt8OPDM0BlUPHLLH9KVxDM2NJltNPj0XjsUy8T+1QiE0S3p8Je0ueL7N5ZJv75gNVVoB/1yiO/dQa8YjXV/nzeI4b1jBGYMEU0ypXC6FwKHGl4f8A/0f7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u8/ntJ54; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="aB3vcaCM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fjasle.eu;
-	s=ds202307; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:
-	MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=4UjfwkAqrf80at/eRS3NicNTLlZLRIZjAZ7vXqnwqAw=; b=aB3vcaCM9eJ1G8wv9iUMa1Ey/B
-	roSrhnEDl78UA+/2QJ9oIYbJxdGnQoMR0qFPzwjPSJo7Ff3Ft3SImRRjO9azwwvyJJzxxWgrblO/a
-	sHR6WC4IxsD9hZ5Qp5b5q1l+0TFK4BLrKuPOGnXV0gLEApTcZI4R7amMfCyBB8R7bK5YRealq3o1I
-	KI9FBWSpuf6Cd7v86gl6Mz2OX7wm5wJ0a1UFQvvWdP0tPm44PxIyGsyQR0vnhQb7BckUqvC3hO1U3
-	j1PfNqtN3Sw/7Qc+P2Cpiyn+i6QZIIeDwGvd/g+PH0a/XGsA3aD7jql0F2LsBj8EDfLhN+y6vqJ7L
-	H/2GUAcQ==;
-Received: from smtp
-	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	id 1tghBV-005xdL-3Q;
-	Sat, 08 Feb 2025 10:31:33 +0100
-Date: Sat, 8 Feb 2025 10:31:31 +0100
-From: Nicolas Schier <nicolas@fjasle.eu>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Nathan Chancellor <nathan@kernel.org>
-Subject: Re: [PATCH] modpost: introduce get_basename() helper
-Message-ID: <Z6ckc-O_i-qtwvb1@bergen>
-References: <20250207175024.412054-1-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u8/ntJ54"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DB50C4CED6;
+	Sat,  8 Feb 2025 09:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739007198;
+	bh=lIeyLrpRw3Nc7xVpPvIu+PInwr5AHo7b7ua3aaooq4w=;
+	h=Date:From:To:Cc:Subject:From;
+	b=u8/ntJ54X3tMGkebnVGjdsXdC3krBJB6M7TafPhS2JKkuePFz9KJGzTDYKazdYf8n
+	 Id2gLz4Fw+mhBCLGrC2f6zt/vH2fthY1EhAzTAEnLr8/SZ9azD03C/GMk4o3XKKO9Z
+	 Aa0EUVnSAJ92mB0IZAYisBM7EXWdhMnfMkfHv4F2HtM9VfVKnq3bI9K8wAGzoO1SOi
+	 oHpS32x//YyzJsXc1xbgd9IG2w3D/GNxQxPEsQgO5NlDS2kocy6hTx/2Ioc06zIEvS
+	 PSyAiL5CvtFhgd4EWcfxmICPcwM6ENr7p9PA7/14luHALMyiZKi95riJetxzjDh+VM
+	 12LCW0LilLSCw==
+Date: Sat, 8 Feb 2025 10:33:08 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, the arch/x86 maintainers <x86@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [GIT PULL] x86 fix
+Message-ID: <Z6ck1Oab-St6zfoX@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250207175024.412054-1-masahiroy@kernel.org>
-X-Operating-System: Debian GNU/Linux 12.9
-Jabber-ID: nicolas@jabber.no
 
-On Sat 08 Feb 2025 02:50:13 GMT, Masahiro Yamada wrote:
-> The logic to retrieve the basename appears multiple times.
-> Factor out the common pattern into a helper function.
-> 
-> I copied kbasename() from include/linux/string.h and renamed it
-> to get_basename().
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  scripts/mod/modpost.c    | 41 ++++++++++++++++++----------------------
->  scripts/mod/modpost.h    |  1 +
->  scripts/mod/sumversion.c | 13 ++++---------
->  3 files changed, 23 insertions(+), 32 deletions(-)
+Linus,
 
-Thanks.
+Please pull the latest x86/urgent Git tree from:
 
-Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2025-02-08
+
+   # HEAD: ee2ab467bddfb2d7f68d996dbab94d7b88f8eaf7 x86/boot: Use '-std=gnu11' to fix build with GCC 15
+
+Fix a build regression on GCC 15 builds, caused by
+GCC changing the default C version that is overriden
+in the main Makefile but not in the x86 boot code
+Makefile.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Nathan Chancellor (1):
+      x86/boot: Use '-std=gnu11' to fix build with GCC 15
+
+
+ arch/x86/boot/compressed/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index f2051644de94..606c74f27459 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -25,6 +25,7 @@ targets := vmlinux vmlinux.bin vmlinux.bin.gz vmlinux.bin.bz2 vmlinux.bin.lzma \
+ # avoid errors with '-march=i386', and future flags may depend on the target to
+ # be valid.
+ KBUILD_CFLAGS := -m$(BITS) -O2 $(CLANG_FLAGS)
++KBUILD_CFLAGS += -std=gnu11
+ KBUILD_CFLAGS += -fno-strict-aliasing -fPIE
+ KBUILD_CFLAGS += -Wundef
+ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
