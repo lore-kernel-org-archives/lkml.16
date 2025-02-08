@@ -1,128 +1,138 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6141A00F2;
-	Sat,  8 Feb 2025 09:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E582D1AF0C0
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 09:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739006861; cv=none; b=Oa2L6P5VC4CnQIZRiP+S1D0TFGA/G/V9oSkehIV6kFbcgVbsBs/wcH1NnSZQAxR2faca4ec0A6P22nJc8Pd2BePxTTSqXrPv6ru4Y6fwDKp6+tGzVuXAhWMMPyZKt3ACvbV0T9C8UBS6pTGmgtuS6mvvw4LGRh5MnjFWqUuhfbI=
+	t=1739006887; cv=none; b=P4Kc+uEttJT1ecmPVPTobKCbWt5PSSpXy+/Ra2L7L1HvlwI2Eeu+RFyKt56xSbstEBSNyZopliAGdVT7tniVbJ6J9fiY4hdt0xseRcos63mGj5lTlrL05wNddXfPEw+or4WSSQewKTmhFM/A/5hr0HXGo/W286vfZQV+Ww/Ll2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739006861; c=relaxed/simple;
-	bh=eVg8DFIOZ5ZbXNOUMIMaVaFslz0upoYFCRQIgYkwSoA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=qgGI3BpyoMqVtZknWsHneewJyy1XGFBWImdGz21DmXVNUnGW6188qkwRIAjI6+DL3RdFmHpx1/oVIgdKZpSDcSLXwhQxBFjPshBiPSGlSE6Xqoh+IQsjQgqCfzUHJXsdKl3+cBpyAIBQFmyI2EexwPRSVR0GsxHmdccvVe/yI+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QQh6VzFL; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739006887; c=relaxed/simple;
+	bh=o8R9B3Z///8urEOSTMFwcqEcnjjVd2e8O35XkdP6WrQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=XAvMwQaoiwzz98aHk/aV1tIo0NFEbFXsgOAPTwMNQ9bgM/NhNMeFc1+f+tUtwdQelpjzBSz8KIHGbsvzH7Nnc9jYqfyOFjX54tSTkRihUszJ9fccpXvUw3UHoGzSUFWksVQnKMK591MdOz/at7Ir88Osweab8xCWQ+KmsDXB2hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uZxkYhw1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQh6VzFL"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-21f6a47d617so6494095ad.2;
-        Sat, 08 Feb 2025 01:27:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739006859; x=1739611659; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tutg1hcgzbwWFewfp7lGkOiAHY/GORMI4dIKinVdgRA=;
-        b=QQh6VzFLEgiu21e8g+lg/cQAIZca1vuE0KL99/C2UiGAvMUyp9OYrcpSkbc7os/BGJ
-         1L4mHPdC9lkPsTwtZinIlCxuXk4s4ceLaL3tPB84CRQlC3qDJQNA425OejbqJ7+Nauqi
-         YWi/c5IyFBGHHrfbzh4sZmYSQqjrbPBQrjrxrQyuQ9CK4FR26+J268cCAXxtGzZZ2FZO
-         BLbF5zbCHesdmh0kart9+K0uXrLL8TuPYq5jt+/kxMji8tum/LrVn71fDWSt+0WqHqPT
-         tmJ24QFuNk1pD1TOh2jnbH3yMozyx4v5giRh5YuS772TokCmm6axyPOwrJqqkFz87leU
-         SgIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739006859; x=1739611659;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tutg1hcgzbwWFewfp7lGkOiAHY/GORMI4dIKinVdgRA=;
-        b=vmm+7S020AfXlk9gjM3mzLAvYxHPM3o9DJqdhaagM3eCxIYYpsze248CxNEY6A6Bwx
-         HdIbLRGJCsmy9oA50deUBtvz8bDPwOYPNeiIzPBUZ/iWrHiAL2eepaZx6Gkqs/2V+GwC
-         2C+TeRqDvCHGeS2SfeoWcAKgY6K6ELLbYD14tZ0JBQ7F9b+ECzNb6bIasodqhq70wtNS
-         Y28JHnmet3KG4KzSPMxniGVyK2GBwmijWlvfYWpJOifRbZyKmWe2kPMparVPWLiB+wSw
-         iEZhwDAk4x55xwq7lAZQSZb1YerpHjYA0XmckzAqQGeDVwPSP38iqUGPHgtv8s61IP+v
-         yTXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXDnZLnUVaNckIfWFrZtuDZrsN1PPF1xu295uGUPghdNriLUQApSSNYCny0vaOpmtlPFVuEJPDN@vger.kernel.org, AJvYcCXGDzpd8q3sbbCuQKP2egKHJ0f1oFb+ACmrtSUyd6ekT7MFO5QPHSFgtTaMEjqV/bu+U+Bulv/qkXcibNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVx9ILLsQ0YdHdR8f9bgbsdVMj/rUfmxnI6T38aCspVF5K/ZS8
-	fwb+/pI0Nsf/JfUonOm+F4x4Bt2ss0Uy4p0bBkMBU/0lMJXMmNl4puGhoKNQw7E=
-X-Gm-Gg: ASbGnctF3vGSF/nwQ8kLnRPjAFKJvtcXkkr2wReKs6XswCrj5hrt9L3VnRYp1PujU/u
-	vSsLQf/g63jJvwRjq9/rtJByE7GB2P5bc0FfrVOIjI4G6kEVzM66JgHHwceGgbsGoXugMIKN6Pf
-	SJiZMRYou3pJXIzq4Gaa3RxWL5MUeNSQfKUW1iHFjtbaJHvqsoNKKjg+3scECsjPBCJwfIp7XRv
-	EzyGgMp6XFRQEm6f+7285DjU8ZdqxDKq9XCWOcXtfGKn7Y2vckIG6z1EzpBmGc/HWIxwL/R5KNy
-	ng2iLRuM
-X-Google-Smtp-Source: AGHT+IHaE1Pny20tOKsmxWPGT7N00vpoT1tCqZ7Msc5rofLkOL2NuLDdaQthdI8Xp7AeEGAoSmQtVQ==
-X-Received: by 2002:a17:902:ecc7:b0:21f:6c82:1119 with SMTP id d9443c01a7336-21f6c821252mr24670645ad.18.1739006858778;
-        Sat, 08 Feb 2025 01:27:38 -0800 (PST)
-Received: from gmail.com ([116.237.135.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3687edb3sm43554845ad.184.2025.02.08.01.27.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 01:27:38 -0800 (PST)
-From: Qingfang Deng <dqfext@gmail.com>
-To: Felix Fietkau <nbd@nbd.name>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Russell King <linux@armlinux.org.uk>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH net-next] net: ethernet: mediatek: add ethtool EEE callbacks
-Date: Sat,  8 Feb 2025 17:27:32 +0800
-Message-ID: <20250208092732.3136629-1-dqfext@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uZxkYhw1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55B81C4CED6;
+	Sat,  8 Feb 2025 09:28:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739006886;
+	bh=o8R9B3Z///8urEOSTMFwcqEcnjjVd2e8O35XkdP6WrQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=uZxkYhw1aFHtJQ2DBq133cBSQOLQCkZ44nQ/AQtjG6UuA3zgB7wJL9hyaAn26s3fU
+	 1kb1aWfbgWG/kifffEmvadvbIs/6dIeAiZiJaqIOTOtqQmrCb+W1XaGyOEqpIKp2cO
+	 e+D2ET621wwxbsGv/kmufyEjuh0oXxsMKAxd5amEVS/HoJo1IPQuaUsxCxOMDZL5CN
+	 wy0LYXqT1xOHfCKZP8Hd2qqKGfc8tTXU0PTu0J0XzG6QMF/mUUBgXrBBW8wP50y0j6
+	 zx7di3qab3UY2cvbT9XLss8C80WLq1Tw7XJlb9Yuh25YtXFmJ2BDfJUn87p7un/NFA
+	 6k3QDXvBsYbyQ==
+Date: Sat, 8 Feb 2025 10:27:56 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Waiman Long <longman@redhat.com>
+Subject: [GIT PULL] timer fixes
+Message-ID: <Z6cjnBOBUxOq__Ni@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Allow users to adjust the EEE settings of an attached PHY.
+Linus,
 
-Signed-off-by: Qingfang Deng <dqfext@gmail.com>
----
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Please pull the latest timers/urgent Git tree from:
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 53485142938c..014de2c2624b 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -4474,6 +4474,20 @@ static int mtk_set_pauseparam(struct net_device *dev, struct ethtool_pauseparam
- 	return phylink_ethtool_set_pauseparam(mac->phylink, pause);
- }
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2025-02-08
+
+   # HEAD: 868c9037df626b3c245ee26a290a03ae1f9f58d3 timers/migration: Fix off-by-one root mis-connection
+
+Fix a PREEMPT_RT bug in the clocksource verification code that
+caused false positive warnings.
+
+Also fix a timer migration setup bug when new CPUs are added.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Frederic Weisbecker (1):
+      timers/migration: Fix off-by-one root mis-connection
+
+Waiman Long (1):
+      clocksource: Use migrate_disable() to avoid calling get_random_u32() in atomic context
+
+
+ kernel/time/clocksource.c     |  6 ++++--
+ kernel/time/timer_migration.c | 10 +++++++++-
+ 2 files changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index 77d9566d3aa6..2a7802ec480c 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -373,10 +373,10 @@ void clocksource_verify_percpu(struct clocksource *cs)
+ 	cpumask_clear(&cpus_ahead);
+ 	cpumask_clear(&cpus_behind);
+ 	cpus_read_lock();
+-	preempt_disable();
++	migrate_disable();
+ 	clocksource_verify_choose_cpus();
+ 	if (cpumask_empty(&cpus_chosen)) {
+-		preempt_enable();
++		migrate_enable();
+ 		cpus_read_unlock();
+ 		pr_warn("Not enough CPUs to check clocksource '%s'.\n", cs->name);
+ 		return;
+@@ -384,6 +384,7 @@ void clocksource_verify_percpu(struct clocksource *cs)
+ 	testcpu = smp_processor_id();
+ 	pr_info("Checking clocksource %s synchronization from CPU %d to CPUs %*pbl.\n",
+ 		cs->name, testcpu, cpumask_pr_args(&cpus_chosen));
++	preempt_disable();
+ 	for_each_cpu(cpu, &cpus_chosen) {
+ 		if (cpu == testcpu)
+ 			continue;
+@@ -403,6 +404,7 @@ void clocksource_verify_percpu(struct clocksource *cs)
+ 			cs_nsec_min = cs_nsec;
+ 	}
+ 	preempt_enable();
++	migrate_enable();
+ 	cpus_read_unlock();
+ 	if (!cpumask_empty(&cpus_ahead))
+ 		pr_warn("        CPUs %*pbl ahead of CPU %d for clocksource %s.\n",
+diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
+index 9cb9b6584ea1..2f6330831f08 100644
+--- a/kernel/time/timer_migration.c
++++ b/kernel/time/timer_migration.c
+@@ -1675,6 +1675,9 @@ static int tmigr_setup_groups(unsigned int cpu, unsigned int node)
  
-+static int mtk_get_eee(struct net_device *dev, struct ethtool_keee *edata)
-+{
-+	struct mtk_mac *mac = netdev_priv(dev);
-+
-+	return phylink_ethtool_get_eee(mac->phylink, edata);
-+}
-+
-+static int mtk_set_eee(struct net_device *dev, struct ethtool_keee *edata)
-+{
-+	struct mtk_mac *mac = netdev_priv(dev);
-+
-+	return phylink_ethtool_set_eee(mac->phylink, edata);
-+}
-+
- static u16 mtk_select_queue(struct net_device *dev, struct sk_buff *skb,
- 			    struct net_device *sb_dev)
- {
-@@ -4506,6 +4520,8 @@ static const struct ethtool_ops mtk_ethtool_ops = {
- 	.set_pauseparam		= mtk_set_pauseparam,
- 	.get_rxnfc		= mtk_get_rxnfc,
- 	.set_rxnfc		= mtk_set_rxnfc,
-+	.get_eee		= mtk_get_eee,
-+	.set_eee		= mtk_set_eee,
- };
+ 	} while (i < tmigr_hierarchy_levels);
  
- static const struct net_device_ops mtk_netdev_ops = {
--- 
-2.43.0
-
++	/* Assert single root */
++	WARN_ON_ONCE(!err && !group->parent && !list_is_singular(&tmigr_level_list[top]));
++
+ 	while (i > 0) {
+ 		group = stack[--i];
+ 
+@@ -1716,7 +1719,12 @@ static int tmigr_setup_groups(unsigned int cpu, unsigned int node)
+ 		WARN_ON_ONCE(top == 0);
+ 
+ 		lvllist = &tmigr_level_list[top];
+-		if (group->num_children == 1 && list_is_singular(lvllist)) {
++
++		/*
++		 * Newly created root level should have accounted the upcoming
++		 * CPU's child group and pre-accounted the old root.
++		 */
++		if (group->num_children == 2 && list_is_singular(lvllist)) {
+ 			/*
+ 			 * The target CPU must never do the prepare work, except
+ 			 * on early boot when the boot CPU is the target. Otherwise
