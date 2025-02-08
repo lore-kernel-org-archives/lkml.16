@@ -1,88 +1,110 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05CC910F4;
-	Sat,  8 Feb 2025 01:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B96D10F4;
+	Sat,  8 Feb 2025 01:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738978428; cv=none; b=Bee9zsB0Grf1/hfyu29ZTOQ5kxT+Z4Ss54FlxdTaahrLoiZGQ6/kEb+93ujdkCDP+vvZYiz9pDBrxS7lwW5Txw0qDcNraa6krGVFxx1GR+TKriFgOUq/wruEJ0DWjqWSq+SGHbS4vkiiP9Lcuqa+j1GCo308xGQbs9T9OvqAg2Y=
+	t=1738978520; cv=none; b=WATf7mCZPk/ZJAuXLe0Uda1i2W7ThgVyzPtKKIiuI7ttxMAMnuMPpMIF7Hz4maPGdeBLEnyKBvoikpzJRcryRgdUVgRKBHqmRqx11X8Hym2RCfohGpEMkMkJa0XiEfebofhtjVwigU82ub2KuehEjYM2mNjbcJJzI5Nm1uQG/gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738978428; c=relaxed/simple;
-	bh=GxOLxSZueC63DzJgTkeQHmGRYHjvD0nEUQ46oDovHIQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lS98tMbuNBwgadMAc8gICspuRpYBjCxGbHVRz434Q6C9eSxU4YgF3ng98bmSgPCoHoLiZSdW6XgOURxSGfCIHjE+NRo8UnZj3Y928KMiFKR7kDmaSbHBKR1Kzg1/4lCgT3ox0+6sMIjFpRiSq5wgrIkY3nKz4lUyN0ujAwIyUNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-21f3e2b4eceso45829965ad.2;
-        Fri, 07 Feb 2025 17:33:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738978424; x=1739583224;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=f9aR645TINf+OJeKiUGqWF7NfKIx0eqZK/lJlyTHjXo=;
-        b=W+eMK6aIXi2uHN9f4Scs1yrQ8nsCWpMLyLMv/207CMBTlN7d1nrfCPNYMMm58XZ9JY
-         E3puuQmGWqRI+MDARKflwkoOBO8h0HdW97avjMBQw7NehgLljRYCb+nobazYR2cIoTuL
-         A9vtRHkD0tuGU03XoHeD5PkTVlJlGXTXSyIwmO77RRZtMCg1i8BeMJowpBqOrE24hBWi
-         q16CRNcxa3YOZlzLe6NAmNCGwZHD3Tk72qyxrxL+mz0aVLADcorOZl8/D273c4nIwVUE
-         L0Ky3uZ10xxvM5OcMt0Z20EQ4XQ1PjkO8sxBHoCHQsUorAvA2bQwQe1U4qeyWxwzBurC
-         OmRw==
-X-Forwarded-Encrypted: i=1; AJvYcCXhfAMWmKTZoZ180WTFrBrLHMO6kuisVwQ6CniX8/brxF2WXBmq5+0DkHVBGR9HwtnoFxD7DHhdsuwkPVs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGGZq0SXopjSqzn8rLRNAOpk37t2oeNOXIyhNagsrRbGZVnPwu
-	QBw7PrK9MmWbNritbXZraazkkOSuF43Vw/uhaU9QkR+CooeZiCb8wqL8DblHc34=
-X-Gm-Gg: ASbGncvBsT/+3wqi+G0NZBeawoVw/4MWVpRTeMg7v4QehIhYQQld74nxQmr7RGFlHPl
-	ZBrcvSvPERNRlkBVezAsp0oDfhRBDBKlJfprF1Zshh7ePz1PaCFByPSyFef9xQ1WxWVlIRAtLvA
-	u1IxBUBL81VpmlAHJ1ZeVo8Mrhop607f4Vmsq0n0OUTl0bxQziiLtayY9AJCLNNjuzBAx5sl2Rl
-	9AxhtnqCZngfEz5BWkIHULV6Bztr3zTlgcPQnEl5mq8dJTr5BnqoeqwBhTZJ6ApDykHVAoaoSsa
-	u8RWU+j9Qv0i3ymevBgTsH4hCPUwzSyRxnlBgiU=
-X-Google-Smtp-Source: AGHT+IGx93suXpvROXQSc5BRJzdr7nZZ9Xq4fKtj8KLwBggZWfB5tRefZEanVToU14wEgBQOGTZyAg==
-X-Received: by 2002:a17:903:1c4:b0:216:4169:f9d7 with SMTP id d9443c01a7336-21f4e6a00f4mr97730175ad.2.1738978423995;
-        Fri, 07 Feb 2025 17:33:43 -0800 (PST)
-Received: from kylin-ThinkBook-15-G2-ITL.. ([116.128.244.171])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653ca1csm37084385ad.58.2025.02.07.17.33.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 17:33:43 -0800 (PST)
-From: xueqin Luo <luoxueqin@kylinos.cn>
-To: rafael@kernel.org,
-	rui.zhang@intel.com,
-	lenb@kernel.org
-Cc: linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	xueqin Luo <luoxueqin@kylinos.cn>
-Subject: [PATCH] ACPI: thermal: Fix incorrect comment about trip points
-Date: Sat,  8 Feb 2025 09:33:35 +0800
-Message-Id: <20250208013335.126343-1-luoxueqin@kylinos.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1738978520; c=relaxed/simple;
+	bh=2rttwtuTv47L02vXtJLve0o+H9HO5mf+HAVLx++Td6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CLmWq6UeDMLpKehEGo/zQnCmE85WyANlIPj6n10fNGon5tMgzEbvDFHbcFClu2H0sAECXFKnfIJZCiai3yNMu2C+YK8Hlc8jsrN95a2ExGwzQF1ZzskEbmA7lwH5e/RtbdYbfMblHySGd08SwFaJ2Ob2UJI0zhc+2qDF3dj1NLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=W3LD/dST; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="W3LD/dST"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=8ks+9m9ykw4HyZMMC3B3XHijPN5UcGs1i3XuYdh+tLk=; b=W3LD/dSTLiFmRzL8palH4K2Gdf
+	SkWFdhchXmF+4jyBQqg03pbWDvH1ntHvgPO7bZaXE7gKPa44TAepH4FRsbSfYZGIYnVq6XIhVy41w
+	htA4y7nfqakitdAER/XxRTguX9JqJJUtntP04w1Eshq8HtrjhxdDM8uikDSLMp58/+qOmdZ1R/ycx
+	wXewcIsQXhdjWaPW3GLNwLngzAaLkPpFaVbwpyrbX3SSO6jQit0rNMeRn7u+Dwjt/6eI8/A96Fk6q
+	thwsSmcbwLV+eXk8oT6ZYNkeOY6jOMRzibbhcBIJqKK6fW/pMIuzoxw1ZAg8ZG6DsrQzGZ5hzIwit
+	GBgMx5lA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tgZkX-00000006rWl-3dq9;
+	Sat, 08 Feb 2025 01:35:13 +0000
+Date: Sat, 8 Feb 2025 01:35:13 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: NeilBrown <neilb@suse.de>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/19] VFS: lock dentry for ->revalidate to avoid races
+ with rename etc
+Message-ID: <20250208013513.GO1977892@ZenIV>
+References: <20250206054504.2950516-1-neilb@suse.de>
+ <20250206054504.2950516-14-neilb@suse.de>
+ <20250208013043.GN1977892@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250208013043.GN1977892@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-The function `acpi_thermal_get_trip_points()` no longer retrieves
-the "_CRT" resource.  Instead, it obtains "_ACi" trip points. Update
-the comment accordingly to reflect the correct behavior.
+On Sat, Feb 08, 2025 at 01:30:43AM +0000, Al Viro wrote:
+> On Thu, Feb 06, 2025 at 04:42:50PM +1100, NeilBrown wrote:
+> > When we call ->revalidate we want to be sure we are revalidating the
+> > expected name.  As a shared lock on i_rwsem no longer prevents renames
+> > we need to lock the dentry and ensure it still has the expected name.
+> 
+> *blink*
+> 
+> We never had been guaranteed any lock on the parent - the most common
+> call chain doesn't (and didn't) have it taken.
+> 
+> > So pass parent name to d_revalidate() and be prepared to retry the
+> > lookup if it returns -EAGAIN.
+> 
+> I don't understand that one at all.  What's the point of those retries
+> on -EAGAIN?  Rename (or race with d_splice_alias(), for that matter)
+> can happen just as we return success from ->d_revalidate(), so we
+> don't get anything useful out of that check.
+> 
+> What's more, why do we need that exclusion in the first place?
+> The instance *is* given a stable parent reference and stable name,
+> so there's no need for it to even look at ->d_parent or ->d_name.
+> 
+> It looks like a bad rebase on top of ->d_revalidate() series that
+> had landed in -rc1, with the original variant trying to provide the
+> guarantees now offered by that series.
+> 
+> Unless there's something subtle I'm missing here, I would suggest
+> dropping that one.  Incidentally, d_update_trylock() would be
+> better off in fs/dcache.c - static and with just one argument.
 
-Signed-off-by: xueqin Luo <luoxueqin@kylinos.cn>
----
- drivers/acpi/thermal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sorry, lost a sentence here while editing:
 
-diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
-index 95982c098d5b..0c874186f8ae 100644
---- a/drivers/acpi/thermal.c
-+++ b/drivers/acpi/thermal.c
-@@ -803,7 +803,7 @@ static int acpi_thermal_add(struct acpi_device *device)
- 
- 	acpi_thermal_aml_dependency_fix(tz);
- 
--	/* Get trip points [_CRT, _PSV, etc.] (required). */
-+	/* Get trip points [_ACi, _PSV, etc.] (required). */
- 	acpi_thermal_get_trip_points(tz);
- 
- 	crit_temp = acpi_thermal_get_critical_trip(tz);
--- 
-2.34.1
+The only remaining caller of d_update_trylock() would be the one in
+__d_unalias(), just before the call of ->d_unalias_trylock() in there
+and it gets NULL/NULL in the last two arguments.
 
+> HOWEVER, if you do not bother with doing that before ->d_unalias_trylock()
+> (and there's no reason to do that), the whole thing becomes much simpler -
+> you can do the check inside __d_move(), after all locks had been taken.
+> 
+> After
+>         spin_lock_nested(&dentry->d_lock, 2);
+>         spin_lock_nested(&target->d_lock, 3);
+> you have everything stable.  Just make the sucker return bool instead
+> of void, check that crap and have it return false if there's a problem.
+> 
+> Callers other than __d_unalias() would just do WARN_ON(!__d_move(...))
+> instead of their __d_move() calls and __d_unalias() would have
+> 	if (__d_move(...))
+> 		ret = 0;
+> and screw the d_update_trylock/d_update_unlock there.
+> 
+> All there is to it...
