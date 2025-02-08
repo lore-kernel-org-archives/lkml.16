@@ -1,135 +1,113 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94DB91F30D0;
-	Sat,  8 Feb 2025 17:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA774241103;
+	Sat,  8 Feb 2025 17:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739037469; cv=none; b=FrZwp+CUwB7XZsPr5FcrxiniBPSZrGLoyDWp2OM8dssml+xMUS2eEVcTD4wKkBwIh5kb3M61SC2XnKWfip9tZxdF+DyKHbdNXMKcKNW0W69bCwESUvwii0qfLifULGDaJ+qjh0HARzl8brh0aH06Nazx4etFdiXHh3WrRDqjH04=
+	t=1739037505; cv=none; b=T0SQqIezIIi3Mx5qqQaXyTFX10J94bR4TpriDKvWrHc2OBi1bzYasQ/3sKFPGzMYrH5UkC/QSbDNPbK3oYEDx3/wCpW9o2OfGnyKyib5pFDj6Xlnl8NG7YRWKXBO8ZwH4MAjT+Z7xnHyXyqNth+rp3LQX+hD0kPiISFuXQqd6sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739037469; c=relaxed/simple;
-	bh=ElqcLqmLknVps6zvvVp3V7cJeS2Mj3MvkQT4oWJKbwk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Cn6nwtaer+DsrVNdhNXWbA1mPkTEoHOEw1IY8wNqvoU2sDoCsyZOds8LCd1393XE81y7OU76iA3VhzUFy4znNQzJNwZTUkjxoR73986OJ8jWZVL3Qkz7Vc0I5iBf1ReGq6cot0rZYkRitsj71lBT20FOuVAtFqyVmP6vl/aueZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hK/SfdIK; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1739037505; c=relaxed/simple;
+	bh=TPzXwCcsRWoAR35lR+EvU8dVDtgUEusKL7MNx/RyrS4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QPJHWMO6Xo8ceKBIuj3HyqBWjc3gLrKPRnwBlhTEkEIM+h0p9Mt3SRjKAzV001trsGWVhvfWPfeLO0l9BOBf1WFcrLd7TXFO+EoyWJpdZO6Ae3AOJY/cgIedNe5zf8XO12E6G/dJo7hwtLXua/84U7iiKcuTS+HaML7V1ffiqVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SWp1M+Hq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hK/SfdIK"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5186CvrO013680;
-	Sat, 8 Feb 2025 17:57:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	NpWrkCiwW3pvwybb8EHr3au7Ie54oZ1lUb2xxHuPEb0=; b=hK/SfdIK3eQ+Jmea
-	L7suKLvJSg/5SZcnllLqc4v4GtbcKem2SVmMUf64yPNL5k2lIh8xzBQCe1Dl2HvT
-	e4SZQ5W+kuNYMj3XQHLpZfbnRzmv4oPnpv86ZvoSpmsl9uRQ55vn9yydSWQfKaUM
-	Q3PugeFpDU/tC16jopnwDDrt8dmRgvBhfJ4CtStqtKPi13gMqM2G5zpLXR+O5P0K
-	Yy8uEu2yXSwov6dBFYjXFKqxx0K8ZEwPOtupN8jlgOROdAbNLcSHXLY/ZCvq/ZPM
-	EyfLHM8sffSuzN/02fWO6toADPgklBLgdnC4XxMAoSY/qyNIrmxRJKBNrqyqnpsd
-	ykIc0A==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0g8ryv7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 08 Feb 2025 17:57:31 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 518HvU4D011878
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 8 Feb 2025 17:57:30 GMT
-Received: from [10.216.46.73] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 8 Feb 2025
- 09:57:22 -0800
-Message-ID: <e21cd976-11dd-4a52-9134-fd06c11c0de7@quicinc.com>
-Date: Sat, 8 Feb 2025 23:27:19 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWp1M+Hq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81463C4CED6;
+	Sat,  8 Feb 2025 17:58:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739037505;
+	bh=TPzXwCcsRWoAR35lR+EvU8dVDtgUEusKL7MNx/RyrS4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SWp1M+Hq/6OmVxrqdVY8UhgrZ8lqpwxw+I445eIiz6L1I0BAwmZ4zq8S8XLnfl4Ne
+	 UIFIMGnosEO7nDwGXwtLIhUayUDwgHAOcdY97yj2QpYMJUs6eghesn+jxnrIAyJl09
+	 3ujf+4jZuUj01GjELjD/3YzNM/8+qEkNLI2PAwA/QkVk6Y3KQhTPDtQnTe9AoaOOPX
+	 wwyh0HGMFFnrNqGBhdshN+4B3oCZkqyqI2JCDdvcF3+8vWLzzSlEjChUMwlD64iIRk
+	 cDYiyUsbXVnBHf+6D3vOOjJNX5CvK8HVm2Mqdqd3uwjsPLVT7ebO7gdrVZ/IGAo2yE
+	 trprMNMI5gUWQ==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Rust fixes for 6.14
+Date: Sat,  8 Feb 2025 18:58:17 +0100
+Message-ID: <20250208175817.45181-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] Add UFS support for SM8750
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Melody Olvera
-	<quic_molvera@quicinc.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "Kishon Vijay
- Abraham I" <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Alim Akhtar
-	<alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bart Van Assche
-	<bvanassche@acm.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross
-	<agross@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        "Satya Durga
- Srinivasu Prabhala" <quic_satyap@quicinc.com>,
-        Trilok Soni
-	<quic_tsoni@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, Manish Pandey <quic_mapa@quicinc.com>
-References: <20250113-sm8750_ufs_master-v1-0-b3774120eb8c@quicinc.com>
- <c6352263-8329-4409-b769-a22f98978ac8@oss.qualcomm.com>
-Content-Language: en-US
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-In-Reply-To: <c6352263-8329-4409-b769-a22f98978ac8@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: emLGHLQnAEIdVywC6tNbc8LHtI-kOvLI
-X-Proofpoint-ORIG-GUID: emLGHLQnAEIdVywC6tNbc8LHtI-kOvLI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-08_08,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- adultscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 suspectscore=0
- bulkscore=0 priorityscore=1501 spamscore=0 impostorscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502080152
+Content-Transfer-Encoding: 8bit
 
+Hi Linus,
 
+Please pull these fixes for Rust.
 
-On 2/8/2025 4:17 AM, Konrad Dybcio wrote:
-> On 13.01.2025 10:46 PM, Melody Olvera wrote:
->> Add UFS support for SM8750 SoCs.
->>
->> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
->> ---
->> Nitin Rawat (5):
->>        dt-bindings: phy: qcom,sc8280xp-qmp-ufs-phy: Document the SM8750 QMP UFS PHY
->>        phy: qcom-qmp-ufs: Add PHY Configuration support for SM8750
->>        dt-bindings: ufs: qcom: Document the SM8750 UFS Controller
->>        arm64: dts: qcom: sm8750: Add UFS nodes for SM8750 SoC
->>        arm64: dts: qcom: sm8750: Add UFS nodes for SM8750 QRD and MTP boards
-> 
-> You still need the same workaround 8550/8650 have in the UFS driver
-> (UFSHCD_QUIRK_BROKEN_LSDBS_CAP) for it to work reliably, or at least
-> that was the case for me on a 8750 QRD.
+They have been in linux-next for a single round only. I will be sending
+a few others in a week.
 
-Hi Konrad,
+No conflicts expected.
 
-The LSDBS workaround is only applicable for SM8650 and SM8550.
-SM8750 and onwards doesn't need this WA anymore as it is fixed in HW.
+Thanks!
 
-Thanks,
-Nitin
-> 
-> Please check whether we can make that quirk apply based on ctrl
-> version or so, so that we don't have to keep growing the compatible
-> list in the driver.
-> 
-> Konrad
+Cheers,
+Miguel
 
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+
+are available in the Git repository at:
+
+  https://github.com/Rust-for-Linux/linux.git tags/rust-fixes-6.14
+
+for you to fetch changes up to 6273a058383e05465083b535ed9469f2c8a48321:
+
+  x86: rust: set rustc-abi=x86-softfloat on rustc>=1.86.0 (2025-02-07 00:09:33 +0100)
+
+----------------------------------------------------------------
+Rust fixes for v6.14
+
+Toolchain and infrastructure:
+
+ - Do not export KASAN ODR symbols to avoid gendwarfksyms warnings.
+
+ - Fix future Rust 1.86.0 (to be released 2025-04-03) x86_64 builds.
+
+ - Clean future Rust 1.86.0 (to be released 2025-04-03) warning.
+
+ - Fix future GCC 15 (to be released in a few months) builds.
+
+ - Fix `rusttest` target in macOS.
+
+----------------------------------------------------------------
+Alice Ryhl (1):
+      x86: rust: set rustc-abi=x86-softfloat on rustc>=1.86.0
+
+Justin M. Forbes (1):
+      rust: kbuild: add -fzero-init-padding-bits to bindgen_skip_cflags
+
+Matthew Maurer (1):
+      rust: kbuild: do not export generated KASAN ODR symbols
+
+Miguel Ojeda (1):
+      rust: init: use explicit ABI to clean warning in future compilers
+
+Tamir Duberstein (1):
+      rust: kbuild: use host dylib naming in rusttestlib-kernel
+
+ rust/Makefile                   |  5 +++--
+ rust/kernel/init.rs             |  2 +-
+ scripts/generate_rust_target.rs | 18 ++++++++++++++++++
+ 3 files changed, 22 insertions(+), 3 deletions(-)
