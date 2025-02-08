@@ -1,480 +1,204 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2138.outbound.protection.outlook.com [40.107.247.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7E42594A3;
-	Sat,  8 Feb 2025 13:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739021900; cv=none; b=fUlORbhcuUyWuzOFM+7iv4NaiDRVfkMpKfmcOLHX9wLXSlMfCNlUzoLLZBwqjceU0kY126FHQuYt91iHpVojL6epGY7ziFGk2QX6tec8aF9aOyXWsHi0duYDww0lSU/WyZ948OFX7+MCM74I1Ii3n29hznInw1pYlYGhaDo6yDE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739021900; c=relaxed/simple;
-	bh=/zSoQGaBaS/fy5tWbjFe/S/mo+6hFj/9T+VgMsge1Q0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QX4ZWFfMO+bTHG0JE8pwNhG06m5svwqXDXWg8RBV5/zHWHXbDbNF1W+wKgCFYJaiXqrCu1pIPOgmhBk7ClW9Yxph9szg/CTMLgU/p5aXAp72oki/pcALoWyMbhLCJC+SKauIVBcS3StzIHD/YHbtFl7zH3SGcJD/Yt09u4wmsJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=caJzLgjO; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A23246336;
+	Sat,  8 Feb 2025 13:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.138
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739021993; cv=fail; b=jfYeSbcn0mZWyYPIvKCFDi/1vM8z6caTB48YeXE92jM3w/BDhopmKodvm+D6fZ1kKJeV6Yn+vCgKJ8ky0ooPa3KSiddEyg+nqwHYhTX5HPzWLhmaSZ23mM07VWN2nzJcDkoMjV9IdJf7AwAeCMWqTelW6nWfrIqGIlz2NuIDyAw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739021993; c=relaxed/simple;
+	bh=vuD3jmiuA+F3txdQ+BvVtYKZ53f+pNh1MIbGLNlKbAo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=KQIQvufNLc4RZBauzpzs6rtgWrkJ/qvr/6cEEQ5HwgYzalIIGtgkZBD90OFUUq5GFURbHRa10LHUL8B31xtfCjOfra8pechpVpUEvUBoCbYl62ueIzfEcdSMqqiULXnGMsvQh/XndCmxyq4RuWJt7io66B+Rzzm9DORBIBcogr0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=solid-run.com; spf=pass smtp.mailfrom=solid-run.com; dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b=TMWCz2Y2; arc=fail smtp.client-ip=40.107.247.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=solid-run.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=solid-run.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="caJzLgjO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739021898; x=1770557898;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/zSoQGaBaS/fy5tWbjFe/S/mo+6hFj/9T+VgMsge1Q0=;
-  b=caJzLgjOzvHlACbjfGNliLURfioga/MY5LKrU8mKW5IYRMAxKJcbdAbQ
-   ItPinG/BayHi6lM13saS2XG0I8iFj0Q9pdx/qX7IAgZQw9EhrnKSC2VHM
-   VNbXGx6c/HgTY4K+vzT6hhTw1UXSRNQwxyqX4Om2TIXcw0A8XfETeWrQZ
-   coO0J21UecsfNGeCAF2rlT4bCqB+Qco2FxZskHSL9CG8XijpSvnT6woHU
-   qVUdAN7GnYvSNKs2B2DKguOuUCD6uAq9eI153KVHEFXQp/GkQ6Bpt/yf0
-   n7+BHdtQSml2AfY1B9fEDpUdHALpszXLmLaMOz9X/EyaSDEvOCTI52ky8
-   w==;
-X-CSE-ConnectionGUID: qOTapNW7TJ62i9wa95LeqQ==
-X-CSE-MsgGUID: d2HrhuMdQFOw5AikXzip8A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51084846"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="51084846"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 05:38:18 -0800
-X-CSE-ConnectionGUID: xrcAdYX7QRmeTl1J2cy0aA==
-X-CSE-MsgGUID: 0Ni79RDyQnKHEia7JUhk2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116980883"
-Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by orviesa005.jf.intel.com with ESMTP; 08 Feb 2025 05:38:13 -0800
-Received: from lincoln.igk.intel.com (lincoln.igk.intel.com [10.102.21.235])
-	by irvmail002.ir.intel.com (Postfix) with ESMTP id E39F732C9D;
-	Sat,  8 Feb 2025 13:38:11 +0000 (GMT)
-From: Larysa Zaremba <larysa.zaremba@intel.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	intel-wired-lan@lists.osuosl.org
-Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Mateusz Pacuszka <mateuszx.pacuszka@intel.com>
-Subject: [PATCH iwl-next v3 5/6] ice: support egress drop rules on PF
-Date: Sat,  8 Feb 2025 14:22:46 +0100
-Message-ID: <20250208132251.1989365-6-larysa.zaremba@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250208132251.1989365-1-larysa.zaremba@intel.com>
-References: <20250208132251.1989365-1-larysa.zaremba@intel.com>
+	dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b="TMWCz2Y2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=U6fi+1r45FS2v50xVvysanGFd58JmIJZDN1Hm34D3+fkGN4eobpawIrCkOB3NLSUMVu6NinnO1wGpaQYjSlPVLPpmSijn1KoPxrolpOXtLLuYuui/xD3rns0MFlLf+i8nHobrI2RJ99fzxZlTxRMqLkP5sBsribsYmQELckcQoMOA3rhYGKFyU5bP7n7G0CF6QBuuArRu3AldhKv24gNdaC8ZmvskubAlr+A2iwl0D6iWI9R9dRNhBgO7sScnspB9M+Axuj01zp7q4JAJ/du7wNWl3efVoAXyFQMkyhE/oG70tTXrN43M+cN1DlmqGhhwh4IK4HF17EJSzKOhfAqRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vuD3jmiuA+F3txdQ+BvVtYKZ53f+pNh1MIbGLNlKbAo=;
+ b=uGsPKO+Lt6qVAajZt9lSEBBTZT7Psat0zH/AhH4jDCd95Gyh+yfBG7Iuq09sXOR2Rv4UpAKlJ9bCjOwsPe/VnH7oRvp+VoQhKyBGdL7xLI4d5Kn2y/xFJ+KCMp/in/hUUMEOtbK5WqA9Y1+9WZPClaNFvaGYxP7FW5fF07rq1tjRnJjnoMNWcxdGc92Ne63o87V4TepvuPCAvb8cm1QJYmdr96getcHl/Kug2CvR0r2AVwcbLt8cizP9gfMRcqMsw+V+F3QPQIMydZ0LNlstpQgpC6DXBBru4V57OtqBWmltUaeX7i0EIMuLlkgwnptmopPM22cSUUFGEo7zj1DUtQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=solid-run.com; dmarc=pass action=none
+ header.from=solid-run.com; dkim=pass header.d=solid-run.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=solidrn.onmicrosoft.com; s=selector1-solidrn-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vuD3jmiuA+F3txdQ+BvVtYKZ53f+pNh1MIbGLNlKbAo=;
+ b=TMWCz2Y2Whx/55zfaB0bGZi7lPZf0UEIaksjGYitbgQvkmSlEEco7K51MQfHi35ZhaqY5u9NF1yVLxGecKX7d8Y2027Xk593o5CNDlFgFkxR6fIOu0cm87MnIbW/7ASYF1vFjDGd4RCkXkMFo+U0u+oUeSJ+0R+UR6wCkqyMf2U=
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com (2603:10a6:20b:2d5::17)
+ by AM9PR04MB7555.eurprd04.prod.outlook.com (2603:10a6:20b:2d6::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.16; Sat, 8 Feb
+ 2025 13:39:48 +0000
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::c04e:8a97:516c:5529]) by AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::c04e:8a97:516c:5529%6]) with mapi id 15.20.8422.012; Sat, 8 Feb 2025
+ 13:39:47 +0000
+From: Josua Mayer <josua@solid-run.com>
+To: Klaus Kudielka <klaus.kudielka@gmail.com>, Damien Le Moal
+	<dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, Hans de Goede
+	<hdegoede@redhat.com>
+CC: Jon Nettleton <jon@solid-run.com>, Mikhail Anikin
+	<mikhail.anikin@solid-run.com>, Yazan Shhady <yazan.shhady@solid-run.com>,
+	Rabeeh Khoury <rabeeh@solid-run.com>, "linux-ide@vger.kernel.org"
+	<linux-ide@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] ata: libahci_platform: support non-consecutive port
+ numbers
+Thread-Topic: [PATCH v2] ata: libahci_platform: support non-consecutive port
+ numbers
+Thread-Index:
+ AQHbXEaYxc+CL4CCMEqQqo4+duelkLM5OA2AgAB+CYCAAR8SgIABF3SAgACMdICAASw5gA==
+Date: Sat, 8 Feb 2025 13:39:47 +0000
+Message-ID: <26f6bc4b-265f-4576-9d34-22d6752c17d6@solid-run.com>
+References:
+ <20250101-ahci-nonconsecutive-ports-v2-1-38a48f357321@solid-run.com>
+ <bcfa145c3227b13e7b9d8bb3b0f92c678464cfdc.camel@gmail.com>
+ <fa54a148-6016-429b-b494-490041564e51@kernel.org>
+ <016bbf83fec9a0a7c7697462ce0970b94572f50c.camel@gmail.com>
+ <08981396-59d9-4be6-91c7-83421706931a@solid-run.com>
+ <cb8175c2755557dd6532ee71d1064241a1412ce2.camel@gmail.com>
+In-Reply-To: <cb8175c2755557dd6532ee71d1064241a1412ce2.camel@gmail.com>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=solid-run.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM9PR04MB7586:EE_|AM9PR04MB7555:EE_
+x-ms-office365-filtering-correlation-id: 34905c7c-8ef0-4294-82ea-08dd48460e26
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?VGNHbHFCMTR2bER3UjY3b0ZvMkI0SE5ucmluU2hhL0pBNEFLc3ZuSGVYVnlJ?=
+ =?utf-8?B?QitvVnR2WE0rVDZ3dlRNeHA2OGxSN2h1T2VjOEk5cHk5akpBZk5PQWU3U0tw?=
+ =?utf-8?B?UiszR0VpNkhVU2RJUjZyeWRTemx4L2pXNU1YQXRYZ25ROHNwSkFiTjFpeGVU?=
+ =?utf-8?B?dWtQSTFrUlU3UVM2RDcxZ2hPL25pQnd6dHJZTk51TDFLWnkzbE9HM1QraVA0?=
+ =?utf-8?B?clMwcnBBUStaSzZZWDZOUGFLaTRmbm1md2kzamI0NUVTYll0YXdBb1hzVDlj?=
+ =?utf-8?B?R0Y4N3VRZmJ5Y1BIZW0wNGZRSDhPWUJBT240djJHUGFwQlh1MUROQ0t5YW94?=
+ =?utf-8?B?UWRuSlNiQlFFWTIwQUMyU3oyOHNSL0p5aVN3VlFqdnQycktLZll0cVFyL01R?=
+ =?utf-8?B?SmQyUkRvZGJIYWVVdnh5VnU3dlpiSVZ4SW9LTjlxYW5WUHZuUkZ1MkJtN1J2?=
+ =?utf-8?B?QldwSUZmdTRvVGZtcFo4cHo1Zi8vSE56Rmpaa2s2bVhXWXEyWjIwK0loSXJq?=
+ =?utf-8?B?OEhkNHVuTmRuUmxHOEpkejV0SzJHR2cvM1ZNeklpandjWkJYWVpTZDlOVkgy?=
+ =?utf-8?B?VFpLOEFVTzAveWtRTUtzcmIrUXN0QWV5VUdNOTV5eko5MS9ZYVZiSHliUjUr?=
+ =?utf-8?B?NTBiK2w1dUJ1bG9scndxSGFESVBOZmkvM2pIRDRrTmlEbDVvT2IyZWl4Vkdq?=
+ =?utf-8?B?VG5hcE9hWmVWRGxKUk1FaGlCZDJqWnZrZExFUUs4WTFwR0dVQ2JlRjFrUlNB?=
+ =?utf-8?B?eGVsQi9GSkZtVzFkTXpFdmZ3UlIrWDBFaXFiK0hYZEwxV2MxNDlsVk5NekN4?=
+ =?utf-8?B?eS82TG5Pb2k2RE9IVWtOaUQ5RDN1ZzQyOFc0UHRIWWFlTTM1ZWVmdGFpMHY4?=
+ =?utf-8?B?Y1lGN0pFLy9rV1p5eG5aU1FmSFY3SUhhbDJXb3ZhcTJKK3UvWHc4Y1FBMUty?=
+ =?utf-8?B?cmliQldSVEU2bTFjNWdUYzV5UHBMVDJHN1JpK2JMM2lGajYzNFFWZUhDdUcw?=
+ =?utf-8?B?TVlidUN3Q1phNUZjcDdRaUIrRHBMdUxvQnlnN2tMaGwzMEJOTEliWk10RUhS?=
+ =?utf-8?B?ZHZvM255RzViZ1FNT3NzU0owZXN5bjNQL3A1UkZjU3ZDRlpyNG9xejNTcFdO?=
+ =?utf-8?B?QU1zMmdXVEJkUVE1RHhiY3NXM0RmdHRiWll0NXI5Y21kRFQ1YjlRMGN6Yndo?=
+ =?utf-8?B?bTR6WTFSMk5jbTBjeWdqTm8yUS9tazkxSzBVRXZaSFlqbHZDaFB6SEU1Nzgw?=
+ =?utf-8?B?YkFrMnpvc1BZaHRpZnhYb2R1SThLbDU0MUZiSFJSNXdvb2I0U2xxVFlmYVl0?=
+ =?utf-8?B?WHNodTJZakNBOTc4MVRMeEJkODVaVFB6QW53R0pxSG9HUlZ4K3ZSWlA2ZDY5?=
+ =?utf-8?B?YXIvWURtWFVYbWsvcUorMFVqV1BzYlJjc3hHRVp6RXdUWWExeU94WE1XbHVL?=
+ =?utf-8?B?T3dHZmNTdUNWaDgyMERCYVBGMXNDZWV5UEFnTE52cVgvSjltZ2NJdEptaDdB?=
+ =?utf-8?B?UkJsV2sxelhicklQZmtQalpEYnlrNkhNTy85TklpM2h0QzFLMFN3UDc3MUY0?=
+ =?utf-8?B?aXIzOTJ2eHpiL1IyR0p0U01TTXJzUFI5cHViSjdBc2p6amw3MDAzYnM3WExW?=
+ =?utf-8?B?M3RmSG1oem4yWE84aFBXVnQ5QUlHMzE4SklpandibEpXVXV2ekxJZjRjRjY2?=
+ =?utf-8?B?YjBpbGVmY0xiN1J1SUlUanRMVGRUVmN0UWx4USthMVYvbUhSbFc3cy9OQlVn?=
+ =?utf-8?B?T0pzcndHRklpS0RvOC9YY0V6Y1FqVkdwVkdNNHhSU3Q0c1E0RFpmQVV4Z1hG?=
+ =?utf-8?B?RWRHYk9lQlZ3MHhQa1hEQkNtQTl1WWVYRzJpYzVSRS9EZGZMUHozMlF4dW84?=
+ =?utf-8?B?T0dYRUhEWk1zYTdwbGp6RHFMbStxNnQrWjdkVWNLbE8zckh6UWg0a05QNnNV?=
+ =?utf-8?Q?z0JF41LnL59ORVOFLsejrBIsrOT+Jmxm?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB7586.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?djByZTdTQ1hhK1NSTGphbHB0RHNnbFlEN3YvWmFkbHo3V2dMMklLTzllL0Fo?=
+ =?utf-8?B?aVlFcTNDNDVtVHVuTEtWTmZxMjFTaWlnSmgraktHd0s2U0J3c1NVNGtjTjUx?=
+ =?utf-8?B?NnMvcG9hcTJUSmxxOGdTT0xMTkhJWHg5eWFpc0E4c1Q1RVZLc3NEZmRVQ2VB?=
+ =?utf-8?B?dnhoVUo4ZVBPTWV1WXRtM2dxL3FpM08wU25RcFhNSmZSbmw2TUgzdlRDWnhK?=
+ =?utf-8?B?Y1F6b2lKZGdFeklXbzA1SkZMSkl4OTBvRlczbGh0Um0yeUJBUkxaQzJlYUF2?=
+ =?utf-8?B?c3dMQzJqY1Q1Tm85UXlNSmNiRGhlTWxhckdSR2pubEZkTmZ0NW1ndVp6Ymc5?=
+ =?utf-8?B?Wk9NNlZjc1hWZnlYZ3M3VitlR3lMQmhvVkZlaTRkQ0YyY1ZhanpFT3VHdjBD?=
+ =?utf-8?B?RFMvaGZFTmxJYnpWejRXWDlZUHNHMC80bTFIRWpIQlQzcHB6Rk9wbnZpbkxO?=
+ =?utf-8?B?OVdldWVDOXMwdXNkK2l1aE1yYW9OODRUbWYzRGU5RklCWjVrejdaSmlPU0xM?=
+ =?utf-8?B?UE50VEJsOHRuVU1vZlFKMVVEcVBneDFma1laa3ZxamJjeDE4aDlWOVlZM3pS?=
+ =?utf-8?B?Ty8wYVZpTkNlNXlpdERKZzJqdktobk11aE1zVlpHTGJpVGk3ZzkzVk5xZktS?=
+ =?utf-8?B?dk1sU05naXlwYy9IWllaTnIrWlZqc2J3ckYwUzBlM1JySVN0eWEzckNabm1l?=
+ =?utf-8?B?SlYrMHp0VjhXeU9lSUVySjlhRXlheFNpTHpHOEdNZkpDL29xYWhHNlg2RzVv?=
+ =?utf-8?B?Y2Jtd1Z1bHNubDdsWTBGUXFQUXo4NnhOVWRkZERpS0JLWDBETEhYOHBZRjht?=
+ =?utf-8?B?TG9kTHJtazRWUktISWtFdmJWZXc1V0ZsazRMOVp3R0o2ckZoWTBFdHhoQVkw?=
+ =?utf-8?B?ZVJSazJUS1NYajczeHlMaGNVZGdXcFJobjdKb0lsUmhqVFVDY1RKOFRoeEdF?=
+ =?utf-8?B?TXRaTDRTL21FbkJBVk9QaTNEM3dqZnhUQmdndTdtYWdvWFA0UzdiSlZXYzJh?=
+ =?utf-8?B?S3hEbThRTTQ4VmZIQ0MveDM3ZWswT3BQZVVjUGE1OXpqUEJjTGhHOHJlYzR1?=
+ =?utf-8?B?d1NOYzY1V1FzN1ZyQSthMnhZcjRxaEhFVkFkT0tncjZKRjZJVG81Vk5DelZH?=
+ =?utf-8?B?U25BY25yUE5yUThSbGR4ekpYYklpL0tjS2JFRzVwSjZuVVFiTUszdjlMcE55?=
+ =?utf-8?B?bU9sOC9ZUGdSU1RvVFErZm5RU3dzcmlIMlZReGV2SDdvNUZOcXNmejErbTlY?=
+ =?utf-8?B?QW5tdmdXdFFSMjE3R3k0V0NGWXJLQWlKNW9HeVc3VFJTcXcwS2dSMlFtZGln?=
+ =?utf-8?B?L1kzb2RaVDN6V1ZrMlJ6Y3FtQ1pkc0MweTNyN01HcmR1aXhQT09BV0RrRkky?=
+ =?utf-8?B?MWRSbk1lRTdsTG5oeHhGU3liNW1ZeXBUdkFUa2hXdzNLWmRDMHRvcEdBSW8w?=
+ =?utf-8?B?VGRucTM0OGphYUJzWnhMWkZ3R1liV3Q0Rk1OK2xRNC9OZHlPbkpiUm53NmpY?=
+ =?utf-8?B?LzdSVUw5bnNoa1dJSWpHR0x1U3dzaGxUdC9SVFFRUXNKNTRFWmRaWm1pTGIx?=
+ =?utf-8?B?bjYzMnlXTWplbWc1Ni9wWHlZM0lQdVd2L0dPcUxJc2EvRmNnTkFDcyszVk5Q?=
+ =?utf-8?B?ZFQ4Nm9EWHdVNGE5MTE2SlR4dm5ZM043QjZHRUdacXcwWlAzZ1VmSHJ1MUxC?=
+ =?utf-8?B?WXFKUkdZc0FxQmZCeXNVOFArS1l6NFdkbGp3d3NKaGNvR2E1ODh1YkpjZkps?=
+ =?utf-8?B?bmkzRzN0NGowclhVN0MyM0tDZjZSRXVTdThCUTEwSXdHdEduWVJzNjR0aU90?=
+ =?utf-8?B?T3VENUNubDlTWk83QmMzaXpsQjZPbmdubUhoWkZNdTdiTW9qSTNTYk9qaXVt?=
+ =?utf-8?B?cW5jZERmclcrWndvVEtLSG1KeHNTNTlrOVgycHU3YUFoVGtXQ3RlZU0vNVND?=
+ =?utf-8?B?RG45U1k1MHhLRzJFME5EWkUrVmxVTDYvai9CYk5NUXRlUWVoRUs5MDZ1bzB2?=
+ =?utf-8?B?S01Jek1tdTB3d01qSklKNSttRU1qaXhCeFVQazErcTZiMkJkVUdmaDFTUThi?=
+ =?utf-8?B?b25xOWlhYXVYTTNJUmpjQXcwZFhhUGppL0RTeTlZaEtsNzMrWmQycSsyVmp2?=
+ =?utf-8?Q?1knk=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CE145F0ED2853C4DABD6DAB54D6F004E@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: solid-run.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB7586.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34905c7c-8ef0-4294-82ea-08dd48460e26
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Feb 2025 13:39:47.8537
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a4a8aaf3-fd27-4e27-add2-604707ce5b82
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BJPSdNIWLXRr1BVeC0VwWfVRaUtlBZcc2yrSFvbzPqx6LmySXP5kRIXgIGgElXu1zCUF68c60rLPBUEURbehoQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB7555
 
-tc clsact qdisc allows us to add offloaded egress rules with commands such
-as the following one:
-
-tc filter add dev <ifname> egress protocol lldp flower skip_sw action drop
-
-Support the egress rule drop action when added to PF, with a few caveats:
-* in switchdev mode, all PF traffic has to go uplink with an exception for
-  LLDP that can be delegated to a single VSI at a time
-* in legacy mode, we cannot delegate LLDP functionality to another VSI, so
-  such packets from PF should not be blocked.
-
-Also, simplify the rule direction logic, it was previously derived from
-actions, but actually can be inherited from the tc block (and flipped in
-case of port representors).
-
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
----
- drivers/net/ethernet/intel/ice/ice_eswitch.c |  4 ++
- drivers/net/ethernet/intel/ice/ice_main.c    | 56 ++++++++++++---
- drivers/net/ethernet/intel/ice/ice_repr.c    |  3 +-
- drivers/net/ethernet/intel/ice/ice_tc_lib.c  | 73 ++++++++++++++------
- drivers/net/ethernet/intel/ice/ice_tc_lib.h  |  2 +-
- drivers/net/ethernet/intel/ice/ice_txrx.c    | 17 ++---
- 6 files changed, 117 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/ice/ice_eswitch.c b/drivers/net/ethernet/intel/ice/ice_eswitch.c
-index b44a375e6365..70a523e962d8 100644
---- a/drivers/net/ethernet/intel/ice/ice_eswitch.c
-+++ b/drivers/net/ethernet/intel/ice/ice_eswitch.c
-@@ -246,6 +246,10 @@ ice_eswitch_set_target_vsi(struct sk_buff *skb,
- 	u64 cd_cmd, dst_vsi;
- 
- 	if (!dst) {
-+		struct ethhdr *eth = (struct ethhdr *)skb_mac_header(skb);
-+
-+		if (unlikely(eth->h_proto == htons(ETH_P_LLDP)))
-+			return;
- 		cd_cmd = ICE_TX_CTX_DESC_SWTCH_UPLINK << ICE_TXD_CTX_QW1_CMD_S;
- 		off->cd_qw1 |= (cd_cmd | ICE_TX_DESC_DTYPE_CTX);
- 	} else {
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index a03e1819e6d5..453d4350534b 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -8371,11 +8371,13 @@ void ice_tx_timeout(struct net_device *netdev, unsigned int txqueue)
-  * @np: net device to configure
-  * @filter_dev: device on which filter is added
-  * @cls_flower: offload data
-+ * @ingress: if the rule is added to an ingress block
-  */
- static int
- ice_setup_tc_cls_flower(struct ice_netdev_priv *np,
- 			struct net_device *filter_dev,
--			struct flow_cls_offload *cls_flower)
-+			struct flow_cls_offload *cls_flower,
-+			bool ingress)
- {
- 	struct ice_vsi *vsi = np->vsi;
- 
-@@ -8384,7 +8386,7 @@ ice_setup_tc_cls_flower(struct ice_netdev_priv *np,
- 
- 	switch (cls_flower->command) {
- 	case FLOW_CLS_REPLACE:
--		return ice_add_cls_flower(filter_dev, vsi, cls_flower);
-+		return ice_add_cls_flower(filter_dev, vsi, cls_flower, ingress);
- 	case FLOW_CLS_DESTROY:
- 		return ice_del_cls_flower(vsi, cls_flower);
- 	default:
-@@ -8393,20 +8395,42 @@ ice_setup_tc_cls_flower(struct ice_netdev_priv *np,
- }
- 
- /**
-- * ice_setup_tc_block_cb - callback handler registered for TC block
-+ * ice_setup_tc_block_cb_ingress - callback handler for ingress TC block
-  * @type: TC SETUP type
-  * @type_data: TC flower offload data that contains user input
-  * @cb_priv: netdev private data
-  */
- static int
--ice_setup_tc_block_cb(enum tc_setup_type type, void *type_data, void *cb_priv)
-+ice_setup_tc_block_cb_ingress(enum tc_setup_type type, void *type_data,
-+			      void *cb_priv)
- {
- 	struct ice_netdev_priv *np = cb_priv;
- 
- 	switch (type) {
- 	case TC_SETUP_CLSFLOWER:
- 		return ice_setup_tc_cls_flower(np, np->vsi->netdev,
--					       type_data);
-+					       type_data, true);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+/**
-+ * ice_setup_tc_block_cb_egress - callback handler for egress TC block
-+ * @type: TC SETUP type
-+ * @type_data: TC flower offload data that contains user input
-+ * @cb_priv: netdev private data
-+ */
-+static int
-+ice_setup_tc_block_cb_egress(enum tc_setup_type type, void *type_data,
-+			     void *cb_priv)
-+{
-+	struct ice_netdev_priv *np = cb_priv;
-+
-+	switch (type) {
-+	case TC_SETUP_CLSFLOWER:
-+		return ice_setup_tc_cls_flower(np, np->vsi->netdev,
-+					       type_data, false);
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-@@ -9351,16 +9375,32 @@ ice_setup_tc(struct net_device *netdev, enum tc_setup_type type,
- 	     void *type_data)
- {
- 	struct ice_netdev_priv *np = netdev_priv(netdev);
-+	enum flow_block_binder_type binder_type;
- 	struct ice_pf *pf = np->vsi->back;
-+	flow_setup_cb_t *flower_handler;
- 	bool locked = false;
- 	int err;
- 
- 	switch (type) {
- 	case TC_SETUP_BLOCK:
-+		binder_type =
-+			((struct flow_block_offload *)type_data)->binder_type;
-+
-+		switch (binder_type) {
-+		case FLOW_BLOCK_BINDER_TYPE_CLSACT_INGRESS:
-+			flower_handler = ice_setup_tc_block_cb_ingress;
-+			break;
-+		case FLOW_BLOCK_BINDER_TYPE_CLSACT_EGRESS:
-+			flower_handler = ice_setup_tc_block_cb_egress;
-+			break;
-+		default:
-+			return -EOPNOTSUPP;
-+		}
-+
- 		return flow_block_cb_setup_simple(type_data,
- 						  &ice_block_cb_list,
--						  ice_setup_tc_block_cb,
--						  np, np, true);
-+						  flower_handler,
-+						  np, np, false);
- 	case TC_SETUP_QDISC_MQPRIO:
- 		if (ice_is_eswitch_mode_switchdev(pf)) {
- 			netdev_err(netdev, "TC MQPRIO offload not supported, switchdev is enabled\n");
-@@ -9421,7 +9461,7 @@ ice_indr_setup_block_cb(enum tc_setup_type type, void *type_data,
- 	case TC_SETUP_CLSFLOWER:
- 		return ice_setup_tc_cls_flower(np, priv->netdev,
- 					       (struct flow_cls_offload *)
--					       type_data);
-+					       type_data, false);
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-diff --git a/drivers/net/ethernet/intel/ice/ice_repr.c b/drivers/net/ethernet/intel/ice/ice_repr.c
-index fb7a1b9a4313..f81bf60f8365 100644
---- a/drivers/net/ethernet/intel/ice/ice_repr.c
-+++ b/drivers/net/ethernet/intel/ice/ice_repr.c
-@@ -219,7 +219,8 @@ ice_repr_setup_tc_cls_flower(struct ice_repr *repr,
- {
- 	switch (flower->command) {
- 	case FLOW_CLS_REPLACE:
--		return ice_add_cls_flower(repr->netdev, repr->src_vsi, flower);
-+		return ice_add_cls_flower(repr->netdev, repr->src_vsi, flower,
-+					  true);
- 	case FLOW_CLS_DESTROY:
- 		return ice_del_cls_flower(repr->src_vsi, flower);
- 	default:
-diff --git a/drivers/net/ethernet/intel/ice/ice_tc_lib.c b/drivers/net/ethernet/intel/ice/ice_tc_lib.c
-index 2acc9ea5b98b..095c1fe51d97 100644
---- a/drivers/net/ethernet/intel/ice/ice_tc_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_tc_lib.c
-@@ -681,26 +681,26 @@ static int ice_tc_setup_action(struct net_device *filter_dev,
- 	fltr->action.fltr_act = action;
- 
- 	if (ice_is_port_repr_netdev(filter_dev) &&
--	    ice_is_port_repr_netdev(target_dev)) {
-+	    ice_is_port_repr_netdev(target_dev) &&
-+	    fltr->direction == ICE_ESWITCH_FLTR_EGRESS) {
- 		repr = ice_netdev_to_repr(target_dev);
- 
- 		fltr->dest_vsi = repr->src_vsi;
--		fltr->direction = ICE_ESWITCH_FLTR_EGRESS;
- 	} else if (ice_is_port_repr_netdev(filter_dev) &&
--		   ice_tc_is_dev_uplink(target_dev)) {
-+		   ice_tc_is_dev_uplink(target_dev) &&
-+		   fltr->direction == ICE_ESWITCH_FLTR_EGRESS) {
- 		repr = ice_netdev_to_repr(filter_dev);
- 
- 		fltr->dest_vsi = repr->src_vsi->back->eswitch.uplink_vsi;
--		fltr->direction = ICE_ESWITCH_FLTR_EGRESS;
- 	} else if (ice_tc_is_dev_uplink(filter_dev) &&
--		   ice_is_port_repr_netdev(target_dev)) {
-+		   ice_is_port_repr_netdev(target_dev) &&
-+		   fltr->direction == ICE_ESWITCH_FLTR_INGRESS) {
- 		repr = ice_netdev_to_repr(target_dev);
- 
- 		fltr->dest_vsi = repr->src_vsi;
--		fltr->direction = ICE_ESWITCH_FLTR_INGRESS;
- 	} else {
- 		NL_SET_ERR_MSG_MOD(fltr->extack,
--				   "Unsupported netdevice in switchdev mode");
-+				   "The action is not supported for this netdevice");
- 		return -EINVAL;
- 	}
- 
-@@ -713,13 +713,11 @@ ice_tc_setup_drop_action(struct net_device *filter_dev,
- {
- 	fltr->action.fltr_act = ICE_DROP_PACKET;
- 
--	if (ice_is_port_repr_netdev(filter_dev)) {
--		fltr->direction = ICE_ESWITCH_FLTR_EGRESS;
--	} else if (ice_tc_is_dev_uplink(filter_dev)) {
--		fltr->direction = ICE_ESWITCH_FLTR_INGRESS;
--	} else {
-+	if (!ice_tc_is_dev_uplink(filter_dev) &&
-+	    !(ice_is_port_repr_netdev(filter_dev) &&
-+	      fltr->direction == ICE_ESWITCH_FLTR_INGRESS)) {
- 		NL_SET_ERR_MSG_MOD(fltr->extack,
--				   "Unsupported netdevice in switchdev mode");
-+				   "The action is not supported for this netdevice");
- 		return -EINVAL;
- 	}
- 
-@@ -809,6 +807,11 @@ ice_eswitch_add_tc_fltr(struct ice_vsi *vsi, struct ice_tc_flower_fltr *fltr)
- 		rule_info.sw_act.flag |= ICE_FLTR_RX;
- 		rule_info.sw_act.src = hw->pf_id;
- 		rule_info.flags_info.act = ICE_SINGLE_ACT_LB_ENABLE;
-+	} else if (fltr->direction == ICE_ESWITCH_FLTR_EGRESS &&
-+		   !fltr->dest_vsi && vsi == vsi->back->eswitch.uplink_vsi) {
-+		/* PF to Uplink */
-+		rule_info.sw_act.flag |= ICE_FLTR_TX;
-+		rule_info.sw_act.src = vsi->idx;
- 	} else if (fltr->direction == ICE_ESWITCH_FLTR_EGRESS &&
- 		   fltr->dest_vsi == vsi->back->eswitch.uplink_vsi) {
- 		/* VF to Uplink */
-@@ -1051,8 +1054,13 @@ ice_add_tc_flower_adv_fltr(struct ice_vsi *vsi,
- 			tc_fltr->action.fwd.q.hw_queue, lkups_cnt);
- 		break;
- 	case ICE_DROP_PACKET:
--		rule_info.sw_act.flag |= ICE_FLTR_RX;
--		rule_info.sw_act.src = hw->pf_id;
-+		if (tc_fltr->direction == ICE_ESWITCH_FLTR_EGRESS) {
-+			rule_info.sw_act.flag |= ICE_FLTR_TX;
-+			rule_info.sw_act.src = vsi->idx;
-+		} else {
-+			rule_info.sw_act.flag |= ICE_FLTR_RX;
-+			rule_info.sw_act.src = hw->pf_id;
-+		}
- 		rule_info.priority = ICE_SWITCH_FLTR_PRIO_VSI;
- 		break;
- 	default:
-@@ -1458,11 +1466,12 @@ ice_parse_tunnel_attr(struct net_device *dev, struct flow_rule *rule,
-  * @filter_dev: Pointer to device on which filter is being added
-  * @f: Pointer to struct flow_cls_offload
-  * @fltr: Pointer to filter structure
-+ * @ingress: if the rule is added to an ingress block
-  */
- static int
- ice_parse_cls_flower(struct net_device *filter_dev, struct ice_vsi *vsi,
- 		     struct flow_cls_offload *f,
--		     struct ice_tc_flower_fltr *fltr)
-+		     struct ice_tc_flower_fltr *fltr, bool ingress)
- {
- 	struct ice_tc_flower_lyr_2_4_hdrs *headers = &fltr->outer_headers;
- 	struct flow_rule *rule = flow_cls_offload_flow_rule(f);
-@@ -1546,6 +1555,20 @@ ice_parse_cls_flower(struct net_device *filter_dev, struct ice_vsi *vsi,
- 			fltr->flags |= ICE_TC_FLWR_FIELD_ETH_TYPE_ID;
- 		}
- 
-+		if (!ingress) {
-+			bool switchdev =
-+				ice_is_eswitch_mode_switchdev(vsi->back);
-+
-+			if (switchdev != (n_proto_key == ETH_P_LLDP)) {
-+				NL_SET_ERR_MSG_FMT_MOD(fltr->extack,
-+						       "%sLLDP filtering is not supported on egress in %s mode",
-+						       switchdev ? "Non-" : "",
-+						       switchdev ? "switchdev" :
-+								   "legacy");
-+				return -EOPNOTSUPP;
-+			}
-+		}
-+
- 		headers->l2_key.n_proto = cpu_to_be16(n_proto_key);
- 		headers->l2_mask.n_proto = cpu_to_be16(n_proto_mask);
- 		headers->l3_key.ip_proto = match.key->ip_proto;
-@@ -1721,6 +1744,14 @@ ice_parse_cls_flower(struct net_device *filter_dev, struct ice_vsi *vsi,
- 			return -EINVAL;
- 		}
- 	}
-+
-+	/* Ingress filter on representor results in an egress filter in HW
-+	 * and vice versa
-+	 */
-+	ingress = ice_is_port_repr_netdev(filter_dev) ? !ingress : ingress;
-+	fltr->direction = ingress ? ICE_ESWITCH_FLTR_INGRESS :
-+				    ICE_ESWITCH_FLTR_EGRESS;
-+
- 	return 0;
- }
- 
-@@ -1970,6 +2001,7 @@ static int ice_del_tc_fltr(struct ice_vsi *vsi, struct ice_tc_flower_fltr *fltr)
-  * @vsi: Pointer to VSI
-  * @f: Pointer to flower offload structure
-  * @__fltr: Pointer to struct ice_tc_flower_fltr
-+ * @ingress: if the rule is added to an ingress block
-  *
-  * This function parses TC-flower input fields, parses action,
-  * and adds a filter.
-@@ -1977,7 +2009,7 @@ static int ice_del_tc_fltr(struct ice_vsi *vsi, struct ice_tc_flower_fltr *fltr)
- static int
- ice_add_tc_fltr(struct net_device *netdev, struct ice_vsi *vsi,
- 		struct flow_cls_offload *f,
--		struct ice_tc_flower_fltr **__fltr)
-+		struct ice_tc_flower_fltr **__fltr, bool ingress)
- {
- 	struct ice_tc_flower_fltr *fltr;
- 	int err;
-@@ -1994,7 +2026,7 @@ ice_add_tc_fltr(struct net_device *netdev, struct ice_vsi *vsi,
- 	fltr->src_vsi = vsi;
- 	INIT_HLIST_NODE(&fltr->tc_flower_node);
- 
--	err = ice_parse_cls_flower(netdev, vsi, f, fltr);
-+	err = ice_parse_cls_flower(netdev, vsi, f, fltr, ingress);
- 	if (err < 0)
- 		goto err;
- 
-@@ -2037,10 +2069,11 @@ ice_find_tc_flower_fltr(struct ice_pf *pf, unsigned long cookie)
-  * @netdev: Pointer to filter device
-  * @vsi: Pointer to VSI
-  * @cls_flower: Pointer to flower offload structure
-+ * @ingress: if the rule is added to an ingress block
-  */
- int
- ice_add_cls_flower(struct net_device *netdev, struct ice_vsi *vsi,
--		   struct flow_cls_offload *cls_flower)
-+		   struct flow_cls_offload *cls_flower, bool ingress)
- {
- 	struct netlink_ext_ack *extack = cls_flower->common.extack;
- 	struct net_device *vsi_netdev = vsi->netdev;
-@@ -2075,7 +2108,7 @@ ice_add_cls_flower(struct net_device *netdev, struct ice_vsi *vsi,
- 	}
- 
- 	/* prep and add TC-flower filter in HW */
--	err = ice_add_tc_fltr(netdev, vsi, cls_flower, &fltr);
-+	err = ice_add_tc_fltr(netdev, vsi, cls_flower, &fltr, ingress);
- 	if (err)
- 		return err;
- 
-diff --git a/drivers/net/ethernet/intel/ice/ice_tc_lib.h b/drivers/net/ethernet/intel/ice/ice_tc_lib.h
-index d84f153517ec..da09fbba03ad 100644
---- a/drivers/net/ethernet/intel/ice/ice_tc_lib.h
-+++ b/drivers/net/ethernet/intel/ice/ice_tc_lib.h
-@@ -213,7 +213,7 @@ static inline int ice_chnl_dmac_fltr_cnt(struct ice_pf *pf)
- struct ice_vsi *ice_locate_vsi_using_queue(struct ice_vsi *vsi, int queue);
- int
- ice_add_cls_flower(struct net_device *netdev, struct ice_vsi *vsi,
--		   struct flow_cls_offload *cls_flower);
-+		   struct flow_cls_offload *cls_flower, bool ingress);
- int
- ice_del_cls_flower(struct ice_vsi *vsi, struct flow_cls_offload *cls_flower);
- void ice_replay_tc_fltrs(struct ice_pf *pf);
-diff --git a/drivers/net/ethernet/intel/ice/ice_txrx.c b/drivers/net/ethernet/intel/ice/ice_txrx.c
-index 1e4f6f6ee449..0e5107fe62ad 100644
---- a/drivers/net/ethernet/intel/ice/ice_txrx.c
-+++ b/drivers/net/ethernet/intel/ice/ice_txrx.c
-@@ -2440,19 +2440,20 @@ ice_xmit_frame_ring(struct sk_buff *skb, struct ice_tx_ring *tx_ring)
- 
- 	/* allow CONTROL frames egress from main VSI if FW LLDP disabled */
- 	eth = (struct ethhdr *)skb_mac_header(skb);
--	if (unlikely((skb->priority == TC_PRIO_CONTROL ||
--		      eth->h_proto == htons(ETH_P_LLDP)) &&
--		     vsi->type == ICE_VSI_PF &&
--		     vsi->port_info->qos_cfg.is_sw_lldp))
--		offload.cd_qw1 |= (u64)(ICE_TX_DESC_DTYPE_CTX |
--					ICE_TX_CTX_DESC_SWTCH_UPLINK <<
--					ICE_TXD_CTX_QW1_CMD_S);
- 
--	ice_tstamp(tx_ring, skb, first, &offload);
- 	if ((ice_is_switchdev_running(vsi->back) ||
- 	     ice_lag_is_switchdev_running(vsi->back)) &&
- 	    vsi->type != ICE_VSI_SF)
- 		ice_eswitch_set_target_vsi(skb, &offload);
-+	else if (unlikely((skb->priority == TC_PRIO_CONTROL ||
-+			   eth->h_proto == htons(ETH_P_LLDP)) &&
-+			   vsi->type == ICE_VSI_PF &&
-+			   vsi->port_info->qos_cfg.is_sw_lldp))
-+		offload.cd_qw1 |= (u64)(ICE_TX_DESC_DTYPE_CTX |
-+					ICE_TX_CTX_DESC_SWTCH_UPLINK <<
-+					ICE_TXD_CTX_QW1_CMD_S);
-+
-+	ice_tstamp(tx_ring, skb, first, &offload);
- 
- 	if (offload.cd_qw1 & ICE_TX_DESC_DTYPE_CTX) {
- 		struct ice_tx_ctx_desc *cdesc;
--- 
-2.43.0
-
+QW0gMDcuMDIuMjUgdW0gMjA6NDUgc2NocmllYiBLbGF1cyBLdWRpZWxrYToNCj4gT24gRnJpLCAy
+MDI1LTAyLTA3IGF0IDExOjIyICswMDAwLCBKb3N1YSBNYXllciB3cm90ZToNCj4+IENhbiB5b3Ug
+Y29uZmlybSB0aGUgcGh5c2ljYWwgbnVtYmVyIG9mIHNhdGEgcG9ydHMgb24geW91ciBib2FyZD8N
+Cj4+DQo+IFRoZSBzZWNvbmQgcG9ydCBpbmRlZWQgc2VlbXMgbm90IHdpcmVkIG9uIFR1cnJpcyBP
+bW5pYS4NCj4gSWYgdGhlICJtYXNraW5nIHBvcnRfbWFwIDB4MyAtPiAweDEiIGtlcm5lbCB3YXJu
+aW5nIGhhZCBub3Qgc3VkZGVubHkgYXBwZWFyZWQsIEkgd291bGQgbm90IGhhdmUgbm90aWNlZCB0
+aGlzIGF0IGFsbC4NCj4NCj4+IEkgd291bGQgYmUgY3VyaW91cyB3aGV0aGVyIGluIGFub3RoZXIg
+Ym9hcmQgdGhhdCBoYXMgdHdvIHBvcnRzIHBoeXNpY2FsbHksDQo+PiB3aGV0aGVyIGJvdGggb2Yg
+dGhlbSB3ZXJlIGZ1bmN0aW9uYWwgYmVmb3JlIG15IHBhdGNoLg0KPiBJIGRvbid0IGhhdmUgc3Vj
+aCBhIGJvYXJkLCBidXQgdG8gbWUgaXQgc2VlbXMgdGhlIGV4aXN0aW5nIGNvZGUgd2FzIG1hZGUg
+ZXhhY3RseSBmb3IgdGhhdCBjYXNlLg0KDQpJIGhhdmUgc3VjaCBhIGJvYXJkIGFuZCB0ZXN0ZWQg
+aG93IGl0IGJlaGF2ZXMgd2l0aCBMaW51eCA2LjEuMTI0IGZyb20gRGViaWFuLg0KDQpJIG1vZGlm
+aWVkIHRoZSBkdGIgcmVtb3ZpbmcgdGhlIHBvcnQgc3Vibm9kZXMgZnJvbSBzYXRhIG5vZGVzIGFu
+ZCBmb3VuZA0KanVzdCBvbmUgZGlmZmVyZW5jZToNCg0KLSBbwqDCoMKgIDMuMjI1ODQ4XSBhaGNp
+LW12ZWJ1IGYxMGE4MDAwLnNhdGE6IG1hc2tpbmcgcG9ydF9tYXAgMHgzIC0+IDB4Mw0KwqAgW8Kg
+wqDCoCAzLjIyNTg4Ml0gYWhjaS1tdmVidSBmMTBhODAwMC5zYXRhOiBBSENJIDAwMDEuMDAwMCAz
+MiBzbG90cyAyIHBvcnRzIDYgR2JwcyAweDMgaW1wbCBwbGF0Zm9ybSBtb2RlDQrCoCBbwqDCoMKg
+IDMuMjI1ODkxXSBhaGNpLW12ZWJ1IGYxMGE4MDAwLnNhdGE6IGZsYWdzOiA2NGJpdCBuY3Egc250
+ZiBsZWQgb25seSBwbXAgZmJzIHBpbyBzbHVtIHBhcnQgc3hzDQouLi4NCi0gW8KgwqDCoCAzLjI0
+ODY3OF0gYWhjaS1tdmVidSBmMTBlMDAwMC5zYXRhOiBtYXNraW5nIHBvcnRfbWFwIDB4MyAtPiAw
+eDMNCsKgIFvCoMKgwqAgMy4yNDg3MTRdIGFoY2ktbXZlYnUgZjEwZTAwMDAuc2F0YTogQUhDSSAw
+MDAxLjAwMDAgMzIgc2xvdHMgMiBwb3J0cyA2IEdicHMgMHgzIGltcGwgcGxhdGZvcm0gbW9kZQ0K
+wqAgW8KgwqDCoCAzLjI0ODcyM10gYWhjaS1tdmVidSBmMTBlMDAwMC5zYXRhOiBmbGFnczogNjRi
+aXQgbmNxIHNudGYgbGVkIG9ubHkgcG1wIGZicyBwaW8gc2x1bSBwYXJ0IHN4cw0KDQpTbywgb25s
+eSB0aGUgbWFza2luZyBtZXNzYWdlIGdvZXMgYXdheS4NCg0KV2hlbiBjb25uZWN0aW5nIGRyaXZl
+cyB0byBlYWNoIHBvcnQsIGJvdGggcG9ydHMgcGVyIGNvbnRyb2xsZXIgd2VyZSBmdW5jdGlvbmFs
+DQpjb250cmFyeSB0byBteSBpbnR1aXRpb24uDQoNCj4NCj4gRm9yIHJlZmVyZW5jZSwgbXkgYm9h
+cmQgbGF0ZXIgcmVwb3J0cw0KPiAgIGF0YTI6IFNBVEEgbGluayBkb3duIChTU3RhdHVzIDAgU0Nv
+bnRyb2wgMzAwKQ0KPiAgIGF0YTE6IFNBVEEgbGluayB1cCA2LjAgR2JwcyAoU1N0YXR1cyAxMzMg
+U0NvbnRyb2wgMzAwKQ0KVGhhbmtzIQ0K
