@@ -1,140 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2371E1A2C29;
-	Sat,  8 Feb 2025 05:03:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D0914A0B3;
+	Sat,  8 Feb 2025 05:15:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738991018; cv=none; b=WPRX4cGMRC+sICARWZNwSzZgtDyY6Qxfiw0oH6CHgxcpCIUu/nP0sIsRGLPgbPzACfWj9rSJPlSzxcooNVXoKwZr/4PEkCYaHef8lyyyoAhAALDADQOONmS+q3UtsyBotVl9MvD0r6oTZzS41CQMNlaWAn5NMj62Fhr9NrSnmVA=
+	t=1738991716; cv=none; b=lyOvoi4JSLqumgjUxvnN3+BUDdio8nJLd46PS510eVkFZntHRPv3+gl8s/CzW5PmVo3AdDuSTyFrb2/169Sp2Qw8oLatUuOcbDcrSERSBJcDd1M2bE6XEmiXkyohA7FCXv/bFxLFr8F80kAkvgxH9KVyXGb+/BAR+LGIdRmASQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738991018; c=relaxed/simple;
-	bh=0mykn84dG9D2ONSFmXFeEpUD90P096gYCkiHrYqJSdg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UeUCnSCtWhvBt8DFFDJOWUceLiTIsHTx0ye0ou4jgtfLSGMY8zZVeUMYSlwn0nitAGFJilUmlqloHkgZu8dRU7FaIGvNVJcuoeawX3KF8ZjKlaoW2/VaYh1z6L8vLeecyMvUNcWeMlOAskThedDCtso2mr+UaSuUkSgTaLWy84o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oTr03tVr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oTr03tVr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7278C4CEDF;
-	Sat,  8 Feb 2025 05:03:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738991018;
-	bh=0mykn84dG9D2ONSFmXFeEpUD90P096gYCkiHrYqJSdg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oTr03tVrUin0okrlPb6XzfF5KTJcH4eVK9PgcB5elORDKRh1dFdIMkenQL6k2YtcP
-	 qo4YDaTtIVEGCszPCoUu4RTyacaY//Ok/6uB6gv3ZPSD1QVxRekmVCrR4tUy6Re/1F
-	 QSYkbktEiC6FfQvVNZAAqslwieEmUd+EH72Hac9ItM0kOTYgAsUKl2BZg8ssm3JxbM
-	 RciaNVlxMK1vMZX8afKCPIRu42v+3+JeH/GHzKm3VX6E0BwIx/UeLUJiDY8OT6ky60
-	 gj/sP/eHkRFKRjW+KDNYH7wM/+Y3+GD+X/K0hg/gHLII2KrxTRh809Y2x/uflEgH4H
-	 q1f1dKKak4rzQ==
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 2/2] PCI: Cache offset of Resizable BAR capability
-Date: Fri,  7 Feb 2025 23:03:29 -0600
-Message-Id: <20250208050329.1092214-3-helgaas@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250208050329.1092214-1-helgaas@kernel.org>
-References: <20250208050329.1092214-1-helgaas@kernel.org>
+	s=arc-20240116; t=1738991716; c=relaxed/simple;
+	bh=IITLHrpQ9HHWrHK0xM3nrmcduVrguCrrRbBJi2jqYTE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=cpyUZBzLEgUbunt98NDjK9q7HX83OIqlEkkqByKFZs0k7sn/9ICrKpkclEQQoQwTg22stkT17ZcH6PwmTYfFFN9yPeosbnwkE19ijo/GFYfpM/V8tKYeKGk9Ly4Pvf2v+NP8Km+b4VBljwP9sBsFiYqWjiQYsahT1ohcLz/dOLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C99CC4CED6;
+	Sat,  8 Feb 2025 05:15:14 +0000 (UTC)
+Date: Sat, 8 Feb 2025 00:15:11 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] fgraph: Fix set_graph_notrace with setting
+ TRACE_GRAPH_NOTRACE_BIT
+Message-ID: <20250208001511.535be150@batman.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Previously most resizable BAR interfaces (pci_rebar_get_possible_sizes(),
-pci_rebar_set_size(), etc) as well as pci_restore_state() searched config
-space for a Resizable BAR capability.  Most devices don't have such a
-capability, so this is wasted effort, especially for pci_restore_state().
+The code was restructured where the function graph notrace code, that
+would not trace a function and all its children is done by setting a
+NOTRACE flag when the function that is not to be traced is hit.
 
-Search for a Resizable BAR capability once at enumeration-time and cache
-the offset so we don't have to search every time we need it.  No functional
-change intended.
+There's a TRACE_GRAPH_NOTRACE_BIT which defines the bit in the flags and a
+TRACE_GRAPH_NOTRACE which is the mask with that bit set. But the
+restructuring used TRACE_GRAPH_NOTRACE_BIT when it should have used
+TRACE_GRAPH_NOTRACE.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+For example:
+
+ # cd /sys/kernel/tracing
+ # echo set_track_prepare stack_trace_save  > set_graph_notrace
+ # echo function_graph > current_tracer
+ # cat trace
+[..]
+ 0)               |                          __slab_free() {
+ 0)               |                            free_to_partial_list() {
+ 0)               |                                  arch_stack_walk() {
+ 0)               |                                    __unwind_start() {
+ 0)   0.501 us    |                                      get_stack_info();
+
+Where a non filter trace looks like:
+
+ # echo > set_graph_notrace
+ # cat trace
+ 0)               |                            free_to_partial_list() {
+ 0)               |                              set_track_prepare() {
+ 0)               |                                stack_trace_save() {
+ 0)               |                                  arch_stack_walk() {
+ 0)               |                                    __unwind_start() {
+
+Where the filter should look like:
+
+ # cat trace
+ 0)               |                            free_to_partial_list() {
+ 0)               |                              _raw_spin_lock_irqsave() {
+ 0)   0.350 us    |                                preempt_count_add();
+ 0)   0.351 us    |                                do_raw_spin_lock();
+ 0)   2.440 us    |                              }
+
+Fixes: b84214890a9bc ("function_graph: Move graph notrace bit to shadow stack global var")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- drivers/pci/pci.c   | 9 +++++++--
- drivers/pci/pci.h   | 1 +
- drivers/pci/probe.c | 1 +
- include/linux/pci.h | 1 +
- 4 files changed, 10 insertions(+), 2 deletions(-)
+ kernel/trace/trace_functions_graph.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 503376bf7e75..cf2632080a94 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1872,7 +1872,7 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
- 	unsigned int pos, nbars, i;
- 	u32 ctrl;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
-+	pos = pdev->rebar_cap;
- 	if (!pos)
- 		return;
- 
-@@ -3719,6 +3719,11 @@ void pci_acs_init(struct pci_dev *dev)
- 	pci_enable_acs(dev);
- }
- 
-+void pci_rebar_init(struct pci_dev *pdev)
-+{
-+	pdev->rebar_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
-+}
-+
- /**
-  * pci_rebar_find_pos - find position of resize ctrl reg for BAR
-  * @pdev: PCI device
-@@ -3733,7 +3738,7 @@ static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
- 	unsigned int pos, nbars, i;
- 	u32 ctrl;
- 
--	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
-+	pos = pdev->rebar_cap;
- 	if (!pos)
- 		return -ENOTSUPP;
- 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 01e51db8d285..d7b46ddfd6d2 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -799,6 +799,7 @@ static inline int acpi_get_rc_resources(struct device *dev, const char *hid,
- }
- #endif
- 
-+void pci_rebar_init(struct pci_dev *pdev);
- int pci_rebar_get_current_size(struct pci_dev *pdev, int bar);
- int pci_rebar_set_size(struct pci_dev *pdev, int bar, int size);
- static inline u64 pci_rebar_size_to_bytes(int size)
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index b6536ed599c3..24dd3dcfd223 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2564,6 +2564,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	pci_rcec_init(dev);		/* Root Complex Event Collector */
- 	pci_doe_init(dev);		/* Data Object Exchange */
- 	pci_tph_init(dev);		/* TLP Processing Hints */
-+	pci_rebar_init(dev);		/* Resizable BAR */
- 
- 	pcie_report_downtraining(dev);
- 	pci_init_reset_methods(dev);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 47b31ad724fa..9e5bbd996c83 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -353,6 +353,7 @@ struct pci_dev {
- 	struct pci_dev  *rcec;          /* Associated RCEC device */
- #endif
- 	u32		devcap;		/* PCIe Device Capabilities */
-+	u16		rebar_cap;	/* Resizable BAR capability offset */
- 	u8		pcie_cap;	/* PCIe capability offset */
- 	u8		msi_cap;	/* MSI capability offset */
- 	u8		msix_cap;	/* MSI-X capability offset */
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 54d850997c0a..136c750b0b4d 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -198,7 +198,7 @@ int trace_graph_entry(struct ftrace_graph_ent *trace,
+ 	 * returning from the function.
+ 	 */
+ 	if (ftrace_graph_notrace_addr(trace->func)) {
+-		*task_var |= TRACE_GRAPH_NOTRACE_BIT;
++		*task_var |= TRACE_GRAPH_NOTRACE;
+ 		/*
+ 		 * Need to return 1 to have the return called
+ 		 * that will clear the NOTRACE bit.
 -- 
-2.34.1
+2.45.2
 
