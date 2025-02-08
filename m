@@ -1,181 +1,144 @@
-Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401281865EB;
-	Sat,  8 Feb 2025 04:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA9A29D0E;
+	Sat,  8 Feb 2025 04:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738988101; cv=none; b=MiZBDpUBxjp12trGhW6mRYb1dNbSyF0kU7uL5CI0sy/LA26N5syZ/F7c6/7SyMu8U2SxOvd8Z3yvHDSOJ5WIMjM/5AjhfBh1/7UpUSIiWFW3tTQJT/VCYCDeDiWwC6zqZjlRYVck4uaf1nkH2ERUcAled86IH8uEkm3/nLADG5k=
+	t=1738988392; cv=none; b=fXRjEN8v9prglzx8dsKSFp9//83scAc8p1UIoDftCexWB5nrwC0ZuVrSuXaAdkLSruQTbznyFVaMTp8FvfM70PxShJfzLm69kz4O4ibOdkEWaETMXPFrTHKtPwdzB1sBewYPzB8TMpaOLc3DrF69QqpfsO/BjdW9StS8IyDLZuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738988101; c=relaxed/simple;
-	bh=fzmp6WVSt1hQtLgHLGDRJ34QhxuBlCOOQ/83wZJkBBU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J+Bbu+wCWBgedfIi9TW0HZdOcEdXpdZOmrritJ1vrsX2k4YKi7YFSaaPwLVLJkVWf4UIqVtk3Kw98S6jnlyBBC8de/Czhg5yMki+YG7PcugY79AMWYcxPBy24kTaRh7WigG/h2z1dnCKFAmRuLmAhkgWA8OcpMLGo6UTE3bzbI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=j6IYOxx7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=JJ5dTTSG; arc=none smtp.client-ip=202.12.124.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1738988392; c=relaxed/simple;
+	bh=WFRv7U2gZI1ZGCZiOVLgFgrkw2O48cae/n1kraAk1WU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YxA9mViaDNYeshMYoKAR/gw7k70qRiHdekqMCBVjcpE5HtW2+ISwsKevWI5g37zByQxy69tYrjr1oWgDs+bbQXGmMANY3oL9alEcMd3j3VIn8QNwRsw74oxeyxvetxsXNn8bJLA1EgJwww58cjhRk1EONY4p4H+hR3vzn2HO0CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FHer3K41; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="j6IYOxx7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JJ5dTTSG"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id D54542540198;
-	Fri,  7 Feb 2025 23:14:56 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Fri, 07 Feb 2025 23:14:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1738988096; x=
-	1739074496; bh=JtF8sxBvfgNNsJVOgPTReVDv4+8cuPEbOaKRQ9cp9es=; b=j
-	6IYOxx7mcd+hbsEbmnjdoyiJ4elzEZGrmCPidsq1QFuas8LKFAk/lDC40lVouFo3
-	uSViChp+M2uJE9+t3yXSUAJbAIxRQru7bMdc+i0jCM8KA/Iw83KBjozdBIhLKG3k
-	TE1wVarj+bkeXbjqK3+YIIteabTqfXZkCf4+YqtI2ohzI006LjISCnENEcSX7tIP
-	fKeTOCfZCbEEtCyrSN1fb5IATzFFkvOZzAGgU3EE2//xx8dI3hE85EL3kSlrnuAC
-	Fu3SB4hmsnmUFkxZKGvlng/HA4c2rgYv2bkS1cfJKW6qUmlKmI4583HICu5feym5
-	lEVzmMAxJUuTDzB1Xny1A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1738988096; x=1739074496; bh=J
-	tF8sxBvfgNNsJVOgPTReVDv4+8cuPEbOaKRQ9cp9es=; b=JJ5dTTSG/p1pUJ6fO
-	R/Fo1YY56uWOFl+ukCDWvTZEYMS7K0ygKERXvksmkUrKMPKBmkPUAwbAQ4xsMn5c
-	jYfcbVOVS8HiFRToq2RJo3RuGuuLCgCfzS8V6CUnrDqEHKnGyOqZPpHkd7hO2Zkf
-	7udt/lKOTjwXNjmBMjR5oyBL713z1v7ifISeORsFmcRucNzG7hr1JogberA7P6/K
-	oA+hkpY09SOazWcxuFOUZn8nxsHuroiuJydk/TXhclyWSULrHQ7wzjAzEiOHNXFH
-	DKxz+yDGGNEvniUKkeZoSKNHCqq0fHAZL3lfQ+a9qA4rzYKEJx3CeEy/pqFzlRJj
-	PPhIQ==
-X-ME-Sender: <xms:QNqmZ5MgUN1qQ5c6hiEnE6kjB9XqyROzMW4uvXW0UfASUrQtnPeAXw>
-    <xme:QNqmZ78M3AF6D2HAPJV1p8IXWSJxr4mCmvu0Llwnzb7UF0rpU83SJwoVft2DxxalY
-    1yf0IU-UVo7xHWU3k8>
-X-ME-Received: <xmr:QNqmZ4RfmddLG_wmJvwQ-bYSpCiioJVAKJJgH82Y7EBoGetI-YoHS2iGbpR0lEpHknT4y_-lRRh6pRirKnDMyKN_59Qj>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefuddulecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecuogetfedtuddqtdduuc
-    dludehmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhm
-    peforghrkhcurfgvrghrshhonhcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvg
-    gssgdrtggrqeenucggtffrrghtthgvrhhnpeeftddvjeefleffvefhgfejjeehudetteei
-    geeugfekhffhgeejudeuteehgfdvffenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdr
-    tggrpdhnsggprhgtphhtthhopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhope
-    hmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhrtghpthhtohephhgu
-    vghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvih
-    hnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhgrrhhiohdrlhhi
-    mhhonhgtihgvlhhlohesrghmugdrtghomhdprhgtphhtthhopehkuhhurhhtsgesghhmrg
-    hilhdrtghomhdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehv
-    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlse
-    hvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:QNqmZ1uvsWLNAqLhyJSy-5isNfnb4Fa7cMKf8OkSRh-D80gGIRfFBA>
-    <xmx:QNqmZxcwW3ezBGe-8T72IidKxT98neCAblFRbonhE2cOwAV7KyirHg>
-    <xmx:QNqmZx3AIocGzUJR9jytvSoI0VRYbRF4tD4IxIh5HtNgVDxw6HEdug>
-    <xmx:QNqmZ99rv3VWYPwfAlaVMunYESOH5j9uEBAZoVYjkaToWXwtBqWraQ>
-    <xmx:QNqmZwwxL_ClhcZDKfBQtdSabNeYmRmV9yZCxylWT0829--fXPEqdid2>
-Feedback-ID: ibe194615:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 7 Feb 2025 23:14:55 -0500 (EST)
-From: Mark Pearson <mpearson-lenovo@squebb.ca>
-To: mpearson-lenovo@squebb.ca
-Cc: hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	mario.limonciello@amd.com,
-	kuurtb@gmail.com,
-	platform-driver-x86@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FHer3K41"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-21f5660c2fdso24478315ad.2;
+        Fri, 07 Feb 2025 20:19:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738988391; x=1739593191; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Lpwub1T4gG8vpZv4DwF+p8Cg+KAncaMQIkWBOS5Q+w=;
+        b=FHer3K41bQYumelvBSd+18b3xJk12oBltwWKxgd8+z79nNeQe7PUssXTUYNKcTplBG
+         sT2G63cYti5ZS1122tk3Nk5zkc/ADC+NOjxcDwXH1l+kRH5LohBkxiymchMbfBu+hqtL
+         ycdgtIlqjrH9+jGtZ5VWmTLJ8BD0RQQopxcn2Kx0zi3A/TsAQ8a26zsHiqfrefdhZ0UT
+         vXEk+4Gpi1hyw8CiD7Pvsk80GAr9hoF3AFxMTKcnthm+NgxL7tnVCkWFNquyIFGR+S6O
+         fl6uCNqimNH0HiEY+AIKz+Qh/efU40bWKeHbHcyDuqU0rj9A0L0ARs9Bin8F8Hrhxn3o
+         2NIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738988391; x=1739593191;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/Lpwub1T4gG8vpZv4DwF+p8Cg+KAncaMQIkWBOS5Q+w=;
+        b=DFOa4BxPMehFXxNConuseENWmAE9UR8JdjFBjLUV84RkBefYUbKgWbYkbCk0ueWTXc
+         OfeUfwdzvehipr3Yg1HryomvvfvK1sa5mRopgGNiVaFikz0LL+VGo5SLeiG28hSNuMhx
+         bLy762AWehzjvnlkaWv5cfbveOgw+EivCMLCE1bc2VUW9Wb9RLtcKAWs94w1auvkOSl6
+         ADK4GYQKiKmuOm7DHdfTJ5jK7oBZSmp/jDDF/XpT9pxBsPh2Efya1TGZjWDMRQ5DqvoU
+         fr5N6Uzcv/0pIDmazbdqBXUzTQ5rxRTdfiXQusyKIqARpdX2j2ZxBM5SounsDF8rtw+h
+         YaSw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8M7s2LhDGUwxfq1XPiwPItVBJ1iT1P2+cjSo6P/XxDVPb2u8fmb61gIEDQ8eOa8e3lvMMI/PmjtA=@vger.kernel.org, AJvYcCUVnePCBsFnCrb2PD1xv7izVOlBShaikvYVEXVNA+E94ylpk5ugyh51otbviZW7jyv9kJlXigs8MQnaPLYH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2RJ1BzWq0E2UiWR11AQ3O/xlOtuhaoxaF1PqSnU/j4+7hc2pr
+	OH77W7Mne3s0hnx1tjTtgzKlMq+nnlrfLSVdVRR6V9xS/CMBn84/
+X-Gm-Gg: ASbGnct2iVYltofTM/bf/tm6xEqLHrTxHVUzNe0nXIs4vuZyL7vJKn1niGHpjfPAm9C
+	m/IpPF3FNnvVXQHf3cJT4+6Baz5fFy0pX1Hekytx9hDI3Sfh7/mp6oo80/TaClzitzcKbS4UDkT
+	PVxZNCKatr09ZKX2/lycXT9Dli9z2R5tmc06JXcHagkXGzhh4rNjhx/wPNZ84mYUGCSsmayIncX
+	hOdgIj0XZCjxNFV5kABG5nbAPAjkfQcGNqSXzrBT2BPZ7g3GvBKyqruIreFS4OLAbOoj8a89/0F
+	sJNvOPFsM6Yi84c=
+X-Google-Smtp-Source: AGHT+IEFL2kkPyBeTJVgIF2v5+mJ78s2mc00+cplvBR476AQZO4tXYUfkU7LPeV6YMjWiLGNewn+JA==
+X-Received: by 2002:a17:902:d50c:b0:21f:46b:a25 with SMTP id d9443c01a7336-21f4e6bea28mr94310825ad.16.1738988390367;
+        Fri, 07 Feb 2025 20:19:50 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3653ad8fsm38873685ad.61.2025.02.07.20.19.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 20:19:49 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 779294208F47; Sat, 08 Feb 2025 11:19:47 +0700 (WIB)
+Date: Sat, 8 Feb 2025 11:19:47 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Jiayuan Chen <mrpre@163.com>, linux-doc@vger.kernel.org,
+	rdunlap@infradead.org, corbet@lwn.net
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: thinkpad_acpi: Fix registration of tpacpi platform driver
-Date: Sat,  8 Feb 2025 04:14:31 -0500
-Message-ID: <20250208091438.5972-1-mpearson-lenovo@squebb.ca>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <mpearson-lenovo@squebb.ca>
-References: <mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH v3] docs/arch: remove deprecated function name
+Message-ID: <Z6bbY1wsLlGvJ7Lw@archie.me>
+References: <20250207125504.728688-1-mrpre@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="RvghZE1MoCnXZXxg"
+Content-Disposition: inline
+In-Reply-To: <20250207125504.728688-1-mrpre@163.com>
 
-When reviewing and testing the recent platform profile changes I had
-missed that they prevent the tpacpi platform driver from registering.
-This error is seen in the kernel logs, and the various tpacpi entries
-are not created:
-[ 7550.642171] platform thinkpad_acpi: Resources present before probing
 
-I believe this is because the platform_profile driver registers the
-device as part of it's initialisation in devm_platform_profile_register,
-and the thinkpad_acpi driver later fails as the resource is already used.
+--RvghZE1MoCnXZXxg
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Modified thinkpad_acpi so that it has a separate platform driver for the
-profile handling, leaving the existing tpacpi_pdev to register
-successfully.
+On Fri, Feb 07, 2025 at 08:55:04PM +0800, Jiayuan Chen wrote:
+> The dumpstack.c file has undergone many modifications, and the
+> print_context_stack() function was removed or rewritten a long time ago,
+> so it's better to remove the incorrect guidance.
 
-Tested on X1 Carbon G12.
+"print_context_stack() was removed in 2016 by commit c8fe4609827ae
+("x86/dumpstack: Remove dump_trace() and related callbacks"). Remove
+the now-inaccurate guide."
 
-Fixes: 31658c916fa6 ("platform/x86: thinkpad_acpi: Use devm_platform_profile_register()")
+>=20
+> I also want to preserve the original contributor info by keeping email
+> address and name.
+>=20
 
-Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
----
- drivers/platform/x86/thinkpad_acpi.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+"While at it, also link to Ingo's explanatory message."
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 1fcb0f99695a..1dd8f3cc5eda 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -270,6 +270,7 @@ enum tpacpi_hkey_event_t {
- #define TPACPI_DRVR_NAME TPACPI_FILE
- #define TPACPI_DRVR_SHORTNAME "tpacpi"
- #define TPACPI_HWMON_DRVR_NAME TPACPI_NAME "_hwmon"
-+#define TPACPI_PROFILE_DRVR_NAME TPACPI_NAME "_profile"
- 
- #define TPACPI_NVRAM_KTHREAD_NAME "ktpacpi_nvramd"
- #define TPACPI_WORKQUEUE_NAME "ktpacpid"
-@@ -962,6 +963,7 @@ static const struct proc_ops dispatch_proc_ops = {
- 
- static struct platform_device *tpacpi_pdev;
- static struct platform_device *tpacpi_sensors_pdev;
-+static struct platform_device *tpacpi_profile_pdev;
- static struct device *tpacpi_hwmon;
- static struct device *tpacpi_pprof;
- static struct input_dev *tpacpi_inputdev;
-@@ -10646,7 +10648,8 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
- 			"DYTC version %d: thermal mode available\n", dytc_version);
- 
- 	/* Create platform_profile structure and register */
--	tpacpi_pprof = devm_platform_profile_register(&tpacpi_pdev->dev, "thinkpad-acpi",
-+	tpacpi_pprof = devm_platform_profile_register(&tpacpi_profile_pdev->dev,
-+						      "thinkpad-acpi-profile",
- 						      NULL, &dytc_profile_ops);
- 	/*
- 	 * If for some reason platform_profiles aren't enabled
-@@ -11815,6 +11818,8 @@ static void thinkpad_acpi_module_exit(void)
- 
- 	if (tpacpi_sensors_pdev)
- 		platform_device_unregister(tpacpi_sensors_pdev);
-+	if (tpacpi_profile_pdev)
-+		platform_device_unregister(tpacpi_profile_pdev);
- 	if (tpacpi_pdev)
- 		platform_device_unregister(tpacpi_pdev);
- 	if (proc_dir)
-@@ -11901,6 +11906,17 @@ static int __init thinkpad_acpi_module_init(void)
- 		thinkpad_acpi_module_exit();
- 		return ret;
- 	}
-+
-+	tpacpi_profile_pdev = platform_device_register_simple(TPACPI_PROFILE_DRVR_NAME,
-+							      PLATFORM_DEVID_NONE, NULL, 0);
-+	if (IS_ERR(tpacpi_profile_pdev)) {
-+		ret = PTR_ERR(tpacpi_profile_pdev);
-+		tpacpi_profile_pdev = NULL;
-+		pr_err("unable to register platform profile device\n");
-+		thinkpad_acpi_module_exit();
-+		return ret;
-+	}
-+
- 	tpacpi_sensors_pdev = platform_device_register_simple(
- 						TPACPI_HWMON_DRVR_NAME,
- 						PLATFORM_DEVID_NONE, NULL, 0);
--- 
-2.48.1
+>  The question about the '?' preceding function names in an x86 stacktrace
 
+> -keeps popping up, here's an indepth explanation. It helps if the reader
+> -stares at print_context_stack() and the whole machinery in and around
+> -arch/x86/kernel/dumpstack.c.
+> +keeps popping up. This provides guidance about it. It helps if the reader
+> +stares at printk_stack_addressk() and its callers and pays special
+"... Here's the explanation, that helps when the reader ..."
+> +attention to the 'reliable' parameter ('?' basically means that the
+> +address is unreliable).
+> =20
+> -Adapted from Ingo's mail, Message-ID: <20150521101614.GA10889@gmail.com>:
+> +The detail about '?' can be found in the comments within dumpstack.c:
+> +::
+"The answer can be found in the comments within show_trace_log_lvl() body
+in arch/x86/kernel/dumpstack.c::"
+><snipped>...
+> -If the address does not fit into our expected frame pointer chain we
+> -still print it, but we print a '?'. It can mean two things:
+> +You can also get more info from Ingo's original emal. [1]_
+"For more information, see also Ingo's email. [1]_"
+><snipped>...
+> +.. [1] https://lore.kernel.org/lkml/20150521101614.GA10889@gmail.com/
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--RvghZE1MoCnXZXxg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ6bbXwAKCRD2uYlJVVFO
+o30fAPwKLj7nIXgZ/AIew6zs8lq/2DfxrCF7T8l0w7FhDAF+JQEA+cZ1+auwwU+Q
+eyAVW5EeK8WfAKJ07vC5E383fIL7hgM=
+=pwkY
+-----END PGP SIGNATURE-----
+
+--RvghZE1MoCnXZXxg--
