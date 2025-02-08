@@ -1,161 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF17A2451E6;
-	Sat,  8 Feb 2025 12:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA621A5B97
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 12:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739016654; cv=none; b=TQLlmkOnluHApQSqaX5BPmKrqzIXj9hUoX1zG+QN4rfIpy56iT28JGA7hp148l3xuCQSmXKB0pylkjzYut0yp397OMjlzww/ZDWOAi8NEuydcnjxUYs9lJ/ZZDzDLK4H8PBmHwv57zi7RPDFqP1lKdZyeYDxqQddpbH9rYH78Qc=
+	t=1739016963; cv=none; b=kSPmdadK5gLdNotT28lk+1+PL7eYgYAw3+LGBI7q6FMqG7ykrFTKmJk2LGcTKtFAj+16lq3eKk9a+xpbw8ioUKAKk9iQK79nvF8eHTSD9hGMutwF5t3fXenuj2j3XcxbrqVTXpSZoviC7aoLX33C9SHNaxweQwA/T7P0xSNe9X4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739016654; c=relaxed/simple;
-	bh=Y4cah178pVm/TyCjnR2BxWLPSd7RUgpqPRJ2KklwCB0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dlz+mqOfHt0MAna1oWePfGznsIvKz5pVxkn6cGsm5HZrwwo8wxdch372+b2COTyJs3bUjbIEByQm3VlEsYq26C58lD6V4NqIJ7YvRNH+DMHbeYZ5xhZJ7JQqTbbm7xOHLGTRpvqBZ3bQd2G32JpymziObJwYIyoc3Z6hfpjnU+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OBjqx9Lz; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739016963; c=relaxed/simple;
+	bh=9X2Is+8nuobfxML0MD5sD223L52EmcedujL3Xs/3XYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B9aDSyoqL2Wq8Pw73Z8gMX/+IAvA/E7TCMZ+X25zRNJ6mmq/w8WT51l9iliCx2CMmMcyVvChtWvnHfSwKak8Dx+M4nvGrIcEvj58tJ8Y/N+zogFl4v0+QSLRH3dZcSk/H+IafeYRBdMsaXV7uKmPAACVjVyVG5JIup7GA6GovsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F3i6Aa3h; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OBjqx9Lz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739016652; x=1770552652;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Y4cah178pVm/TyCjnR2BxWLPSd7RUgpqPRJ2KklwCB0=;
-  b=OBjqx9Lz7WtO1nhtHw4Eox+ibossr1MrffEcFG/605cWlVqv2nm5v52/
-   9H3cw1Lm3ale8+3agfp3kuUhlMVLe7cEoeCAlr3BSkp7SI/tlGlJnfrJj
-   X4H0bEgDYd9sBE39egVIX00oYfuR9i/vrtAW4QbLCtg2OMw53z0ak9o23
-   8wgOoMGPEjUtUwy0stv3dnxi+in7dMfqP/p07Zy+AsKaz38aFAeQaNPsH
-   BtO7WxybGQc+OfySPXRRYe3gKOuYajLrkLobHnHAMUd1lC+lhqnOQ9V0C
-   QB+Su5KDIpmj0nxhFiEchVNb8IAUnDlp+KhdU+xOonhPf9BJsFxuuYbsR
-   A==;
-X-CSE-ConnectionGUID: RPPS7triR1yzYKxNo245iw==
-X-CSE-MsgGUID: YbNh1tkzRl+GtVF4Gp2r7g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="57070806"
-X-IronPort-AV: E=Sophos;i="6.13,269,1732608000"; 
-   d="scan'208";a="57070806"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 04:10:52 -0800
-X-CSE-ConnectionGUID: UKX7WyT1R12FPhdDM3c1XQ==
-X-CSE-MsgGUID: YDExt5IHSWi50POe66I1Xw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,269,1732608000"; 
-   d="scan'208";a="116770919"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 08 Feb 2025 04:10:50 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tgjfa-000zw7-35;
-	Sat, 08 Feb 2025 12:10:46 +0000
-Date: Sat, 8 Feb 2025 20:10:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jill Donahue <jilliandonahue58@gmail.com>, gregkh@linuxfoundation.org,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Jill Donahue <jilliandonahue58@gmail.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v3] f_midi_complete to call tasklet_hi_schedule
-Message-ID: <202502081928.T2cRhulq-lkp@intel.com>
-References: <20250207203441.945196-1-jilliandonahue58@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F3i6Aa3h"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3d13fe99d03so107395ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 04:16:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739016961; x=1739621761; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EoOoCJvlzdVunFC7wiBiDQMCVTStsZBMYKUPjj4jfuc=;
+        b=F3i6Aa3hS6LFsijtTSWQ7IFYUzI6NIicPul65bYhnvgpYAT8ZrHJ5copa/oG6SrT7p
+         E3eFUMMVL+t93W1Af9ydw4+mo7c2QbTod0+zrpZrFbBLwD6hwCWCVDDMpVhQNvSTrgs/
+         7yPH37e799AlZnr/3gxYhUPOexr3MlLbNTzbWI5DLu1fndh4sGZalfwchu6M27EcObCf
+         6K7JTaj2YCwsU97TK/u32m6nh+cRqfrkO0o5NwcRQ1NwI/D8a7EpJjhTaUDMMY/y2GxH
+         sbiTJcvVg6ZVKuHF1UV+DSYBXDEqmRclIqHtHMA6K2YdNtaHdgRNuY/KyA56mZbwr+3A
+         tNYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739016961; x=1739621761;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EoOoCJvlzdVunFC7wiBiDQMCVTStsZBMYKUPjj4jfuc=;
+        b=GGgAVOJMsTLjduW3Sl804vipaNa1f0nu4BD/8t+jsRtf7d8wU7l9Cg8Z6kCHvqe5Sp
+         ghlOteVFeHpEbGpaL38eFFc03C2h9AlOVhpkOrGijcJPKL+ABgZxx1d/aAjEsjokaUo3
+         hOsxPIdmUfOck/pFrRAUWP9Ou2IkU3ET8pJ0naSC4YJmeciNurWvPYN7mFNJ/0jw9bfb
+         fV90diImkEF9AFKqDvngfhfi1VwcQUrPrVPBmhai5F8F+llRa6UcRJFmP7L5f1EpspRD
+         kuNSLk16mDq/b1caGvnh3e8oKlPhYhowdwbLCNBCBjOYYtA9rE1MRz/no7kvIWnco1uO
+         LESg==
+X-Forwarded-Encrypted: i=1; AJvYcCWyBWF2Fh7dji2Z9jT0uGCIqneNyVynMhs0iLuWKg4y2ezRjVGF51jIiypfxFMroG3fTOtp3yxQS+zYUMA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDdwXu3qk/UYj9TWZqXaPd91wTby3PIJZoTtQNrziNjxh8dNz/
+	U2OUFCxLWBlTHFwQNGICCUYjgd8cM8MJTMspN3PhDIPG7xc7QfXKlof9YTcEFfwLjsh420rgPaQ
+	kICW3d609p9NjS5s3woISaU6bcigRRqoOWC0c
+X-Gm-Gg: ASbGncuedL0PYDtFOqmqHOizOovMo1WF1AWCAiIMLlio9auulsj49lWajxYck8Xq4GH
+	NglBe580P2yNDkI/pfwWurF7ax558BcSG0ZgbIiiLQvj3PABirBN5TbJfmRFlaNTg1NSBkH/RvA
+	==
+X-Google-Smtp-Source: AGHT+IE7xLwciQpOBh5kEi79e8nvKtwvjRTETio4RpgpbmjNlMzN+v2v3C2ofkwJKzl2CcPXM8t4vv555F2CK9S3kvk=
+X-Received: by 2002:a05:6e02:138b:b0:3a7:dea7:87a6 with SMTP id
+ e9e14a558f8ab-3d14f10028bmr1206915ab.29.1739016960879; Sat, 08 Feb 2025
+ 04:16:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207203441.945196-1-jilliandonahue58@gmail.com>
+References: <20250207232452.994822-1-irogers@google.com> <20250208105821.1cdb54fc@pumpkin>
+In-Reply-To: <20250208105821.1cdb54fc@pumpkin>
+From: Ian Rogers <irogers@google.com>
+Date: Sat, 8 Feb 2025 04:15:49 -0800
+X-Gm-Features: AWEUYZmdU81z1QP8kW0muXTcrFk6d0O579gpWvr9mW1sB6x5E2KegUHMGlcIBs4
+Message-ID: <CAP-5=fV+iad1-7O=63QgS=3AztxPxVHc+tui_2iNbBvxuHwuHQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] Add io_dir to avoid memory overhead from opendir
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Sam James <sam@gentoo.org>, Jesper Juhl <jesperjuhl76@gmail.com>, 
+	James Clark <james.clark@linaro.org>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Michael Petlan <mpetlan@redhat.com>, Veronika Molnarova <vmolnaro@redhat.com>, 
+	Anne Macedo <retpolanne@posteo.net>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jill,
+On Sat, Feb 8, 2025 at 2:58=E2=80=AFAM David Laight
+<david.laight.linux@gmail.com> wrote:
+>
+> On Fri,  7 Feb 2025 15:24:41 -0800
+> Ian Rogers <irogers@google.com> wrote:
+>
+> > glibc's opendir allocates a minimum of 32kb, when called recursively
+> > for a directory tree the memory consumption can add up - nearly 300kb
+> > during perf start-up when processing modules. Add a stack allocated
+> > variant of readdir sized a little more than 1kb
+>
+> Does 300kB really matter?
 
-kernel test robot noticed the following build errors:
+For someone on a laptop, probably no. For a company running the
+command a large number of times in consolidated and heavily loaded
+data centers, where binaries run in memory constrained containers,
+memory usage contributes to latency of the 99th percentile slow
+executions, which because of the number of machines is something seen
+all the time.
 
-[auto build test ERROR on usb/usb-testing]
-[also build test ERROR on usb/usb-next usb/usb-linus westeri-thunderbolt/next linus/master v6.14-rc1 next-20250207]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+That said, do you need to optimize usages where you recurse over the
+kernel modules? That's something you wouldn't try to do in a data
+centre, so there isn't so much need.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jill-Donahue/f_midi_complete-to-call-tasklet_hi_schedule/20250208-043845
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-patch link:    https://lore.kernel.org/r/20250207203441.945196-1-jilliandonahue58%40gmail.com
-patch subject: [PATCH v3] f_midi_complete to call tasklet_hi_schedule
-config: i386-buildonly-randconfig-003-20250208 (https://download.01.org/0day-ci/archive/20250208/202502081928.T2cRhulq-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502081928.T2cRhulq-lkp@intel.com/reproduce)
+> You seem to be trading memory allocation against system calls.
+> My 'gut feel' is that the system call cost will dominate.
+> (Unless all the directories are small.)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502081928.T2cRhulq-lkp@intel.com/
+It isn't so much directories being small as the filenames within them.
+getdents64 will vary the size of each entry based on the filename size
+which can be up to 256 bytes. As an example, for trace points:
+```
+$ sudo ls -al /sys/kernel/debug/tracing/events/raw_syscalls/
+total 0
+drwxr-xr-x 1 root root 0 Feb  8 03:23 .
+drwxr-xr-x 1 root root 0 Feb  8 03:20 ..
+-rw-r----- 1 root root 0 Feb  8 03:23 enable
+-rw-r----- 1 root root 0 Feb  8 03:23 filter
+drwxr-xr-x 1 root root 0 Feb  8 03:23 sys_enter
+drwxr-xr-x 1 root root 0 Feb  8 03:23 sys_exit
+$ sudo ls -al /sys/kernel/debug/tracing/events/raw_syscalls/sys_enter
+total 0
+drwxr-xr-x 1 root root 0 Feb  8 03:23 .
+drwxr-xr-x 1 root root 0 Feb  8 03:23 ..
+-rw-r----- 1 root root 0 Feb  8 03:23 enable
+-rw-r----- 1 root root 0 Feb  8 03:23 filter
+-r--r----- 1 root root 0 Feb  8 03:23 format
+-r--r----- 1 root root 0 Feb  8 03:23 hist
+-r--r----- 1 root root 0 Feb  8 03:23 id
+-rw-r----- 1 root root 0 Feb  8 03:23 trigger
+```
+So each d_entry is going to cost you like 20 bytes plus the length of
+the filename. So 6 entries with filenames varying up to 9 characters,
+you need 24 or 32 bytes per entry after padding. If each entry were 32
+bytes then you'd need a buffer to hold all the data of size 192 bytes,
+the code here is using 1kb. The value used by glibc is between 32KB
+and 1MB, which is pretty generous when all you need is 192 bytes.
 
-All errors (new ones prefixed by >>):
+An issue in perf is that we may recursively descend directories and
+use opendir on each level, so the buffer size gets multiplied by the
+depth of the tree. So at 100s of KB these memory allocations are some
+of the largest seen in profiles of perf - BPF has some large
+allocations too.
 
-   drivers/usb/gadget/function/f_midi.c: In function 'f_midi_complete':
->> drivers/usb/gadget/function/f_midi.c:286:50: error: 'struct f_midi' has no member named 'tasklet'
-     286 |                         tasklet_hi_schedule(&midi->tasklet);
-         |                                                  ^~
+So why not fix opendir? I've found trying to get things landed in
+glibc is slow to glacial [1], and someone once thought those buffer
+sizes were good so who am I to argue? The LLVM libc and similar are
+making similar smaller than glibc buffer size choices. The addition of
+io_dir means we can tune for the use cases that matter to perf, such
+as kernel modules, procfs, sysfs, .. in general we don't see
+directories with lots of entries and we're a long way from the 256
+byte file name max length. While the code could potentially increase
+the number of system calls, in practice it doesn't.
 
+Thanks,
+Ian
 
-vim +286 drivers/usb/gadget/function/f_midi.c
+[1] I sent patches bringing back the "stack:tid" convention in
+/prod/pid/maps by naming stacks on allocation (an extra syscall). This
+can be used, for example, to identify stack vs heap memory accesses.
+Linux used to support this but Linus himself removed the support - the
+code to do it had quadratic execution time due to searching for each
+stack allocation the corresponding thread stack pointer. Fixing
+opendir memory size and stack naming in glibc would be good things
+imo. Were libc better we may not need this series (we still know our
+use cases better than a generic implementation).
 
-   269	
-   270	static void
-   271	f_midi_complete(struct usb_ep *ep, struct usb_request *req)
-   272	{
-   273		struct f_midi *midi = ep->driver_data;
-   274		struct usb_composite_dev *cdev = midi->func.config->cdev;
-   275		int status = req->status;
-   276	
-   277		switch (status) {
-   278		case 0:			 /* normal completion */
-   279			if (ep == midi->out_ep) {
-   280				/* We received stuff. req is queued again, below */
-   281				f_midi_handle_out_data(ep, req);
-   282			} else if (ep == midi->in_ep) {
-   283				/* Our transmit completed. See if there's more to go.
-   284				 * f_midi_transmit eats req, don't queue it again. */
-   285				req->length = 0;
- > 286				tasklet_hi_schedule(&midi->tasklet);
-   287				return;
-   288			}
-   289			break;
-   290	
-   291		/* this endpoint is normally active while we're configured */
-   292		case -ECONNABORTED:	/* hardware forced ep reset */
-   293		case -ECONNRESET:	/* request dequeued */
-   294		case -ESHUTDOWN:	/* disconnect from host */
-   295			VDBG(cdev, "%s gone (%d), %d/%d\n", ep->name, status,
-   296					req->actual, req->length);
-   297			if (ep == midi->out_ep) {
-   298				f_midi_handle_out_data(ep, req);
-   299				/* We don't need to free IN requests because it's handled
-   300				 * by the midi->in_req_fifo. */
-   301				free_ep_req(ep, req);
-   302			}
-   303			return;
-   304	
-   305		case -EOVERFLOW:	/* buffer overrun on read means that
-   306					 * we didn't provide a big enough buffer.
-   307					 */
-   308		default:
-   309			DBG(cdev, "%s complete --> %d, %d/%d\n", ep->name,
-   310					status, req->actual, req->length);
-   311			break;
-   312		case -EREMOTEIO:	/* short read */
-   313			break;
-   314		}
-   315	
-   316		status = usb_ep_queue(ep, req, GFP_ATOMIC);
-   317		if (status) {
-   318			ERROR(cdev, "kill %s:  resubmit %d bytes --> %d\n",
-   319					ep->name, req->length, status);
-   320			usb_ep_set_halt(ep);
-   321			/* FIXME recover later ... somehow */
-   322		}
-   323	}
-   324	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> There might, of course, be other code in glibc that is designed
+> to make it all slower than necessary.
+>
+>         David
