@@ -1,219 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE69317ADE8
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 11:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178E218A6A6
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 11:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739013167; cv=none; b=VCqK6p+rAavwyz4WgFkHDks4wl+Y+f7vVPM75ek8QSuKF6kXvqJLW0/MKmOBB1Kx5KmKhQZwhNt9hrTIGoxWTyuxF7yqqPvBhN3Cg40fFBTbFOaDCgN2mmoxL+GST8FLPB61nmOQNLhuawy4BOWu7mgZtsfygvPVb+9V091gguI=
+	t=1739013226; cv=none; b=slH9pAtstWoCYNG8GTmduc5LM3J0f1ZFfeL4mjnsSDMlSwumtVan2/zBfZ2EAgsSpQ9VZHoIvYhNzAzJ4c0MqYwFjxqyVMc3Orap8M+4EJZJX12bhpit/yAmF13dtmqeMS/PKTNVK5Ie+cky75o5cnJnIsphtOP5XtO4ws1VEFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739013167; c=relaxed/simple;
-	bh=77rQGx21Ayeb1DDaG2cGncdZFL2SzphziRDR+LrIUHg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Q+IC3rvCyQy480dOhyzHcZtX76nlClgX/vIjRemDNqAiOdkyiLCNCi6EhRfTWWQ2MLHVwkk/3cY9t8+QdaAj2+qiWERSPqb5Xtxek6PQhq8az9HkGcQMYClqojj9wColbaynzVYDAPCpHoxrhLSJ0Jxf2HJG3Equf3Nz0tqRctA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pw11ENmp; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739013226; c=relaxed/simple;
+	bh=zNTqRPImJ92nz+c0YeK4LqJ1stJKDQ9br/TFYbHj1Lo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qHu2RS4+tt/0Hl2pigrYN7gLjpZO8C9apaa7cDJCUmUeYXZu9bT43/7PT1XE+upWXTWRyTId84W1/0+G8rJzkBcTct/dUKm05h1wmRjeVPkHdoMzBy/UZCl0DEd5NEEM3r1XjuUnAdb2OqSNCSKBP084Ka+wW2LrTyBaczGgBXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QYxeq4YK; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pw11ENmp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739013165; x=1770549165;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=77rQGx21Ayeb1DDaG2cGncdZFL2SzphziRDR+LrIUHg=;
-  b=Pw11ENmpfoBP+4EAA4F/yf8uz9+Q7gyhMmlTZr9mCKRBmbUAdHZ9pKpF
-   scUAcg7pGW4XvwEoPM55TZiWSe3Y/vWVshhLkqCUbkDjoLnEUlNCBNrNb
-   Rzp6J+0SfaYqv0uXJymnTr0XW0mz9wy5G9SVTmfqjX92mXU5wXtX/DsYa
-   TR+Th6qy7G5+G/bDckMIbQ1OeLXEwYx9oaZlne1jPss97nVns1OogxW13
-   4V3AEeEKyySGy9EvaZ9nXDCCbZQ/6GxjL+nDxXLv/nM+ijA3GY96d/MH4
-   AemC88Zgy+Wh4pB6HFBL0cGF4aK3YDSwiPqBsRM8xQ0ZLusmp+zZLK9MK
-   A==;
-X-CSE-ConnectionGUID: Xmi9NLeYRDu2NLBJJUHn7A==
-X-CSE-MsgGUID: 3IMhzLp1S/mndosai2zGzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51081232"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="51081232"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 03:12:44 -0800
-X-CSE-ConnectionGUID: AW1hzXltQXOTHoPNMxlJOg==
-X-CSE-MsgGUID: qNHqHV1CSBC1OQsTn5m9bw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,269,1732608000"; 
-   d="scan'208";a="112270374"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 08 Feb 2025 03:12:42 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tgilM-000ztF-2v;
-	Sat, 08 Feb 2025 11:12:40 +0000
-Date: Sat, 8 Feb 2025 19:12:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/wfamnae-next20250203 6/16]
- drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2163:2: error: call to
- '__compiletime_assert_1138' declared with 'error' attribute: BUILD_BUG_ON
- failed: conf->keylen < WLAN_KEY_LEN_GCMP_256
-Message-ID: <202502081807.8dh4fSjz-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QYxeq4YK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739013224;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Yd9C+xXA2LYK4yay23tEJLHcwK0FQNJYR+yHMEQ6ia4=;
+	b=QYxeq4YKdWwP+Sl22+Fa2owq8vOWjDfVl61AY8Ygpafg5kW7bU3QcG27Anae8Ma8oqmO2Q
+	wHlDJ7+dCrp2Gu53yqs9+WfL5iTtaQQlv/XhCJsKfp6D5dHZ/qShY6QDY/l0jd4F5TLBX1
+	EubpWZNS9C8RyeL0RtVd3jGdWt1ypYw=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-548-9tRamBlGP6-FTEK_1JuOMQ-1; Sat,
+ 08 Feb 2025 06:13:40 -0500
+X-MC-Unique: 9tRamBlGP6-FTEK_1JuOMQ-1
+X-Mimecast-MFC-AGG-ID: 9tRamBlGP6-FTEK_1JuOMQ
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EAF631955DD0;
+	Sat,  8 Feb 2025 11:13:34 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.25])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A2B1619560A3;
+	Sat,  8 Feb 2025 11:13:29 +0000 (UTC)
+Date: Sat, 8 Feb 2025 19:13:25 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pratyush Yadav <ptyadav@amazon.de>,
+	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Usama Arif <usama.arif@bytedance.com>,
+	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+	changyuanl@google.com
+Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
+Message-ID: <Z6c8VeXqV1s+aPXY@fedora>
+References: <20250206132754.2596694-1-rppt@kernel.org>
+ <20250206162939.a1f86fb835f1eeb7ed73ff1c@linux-foundation.org>
+ <CA+CK2bD6204AKWGOgzLMiMsnVZ=tk+DGc+VWgi3RVt2byaLJJA@mail.gmail.com>
+ <Z6a1kxR2GlQoepgI@MiWiFi-R3L-srv>
+ <Z6cYt8QryoUfI0wc@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z6cYt8QryoUfI0wc@kernel.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250203
-head:   c8a61127eedf61fcbf8d3f34301d29a782b9eeb0
-commit: 8bfdf37e1eeb4f469702361a8c511f40f6c6e486 [6/16] wifi: iwlwifi: mvm: Use __counted_by() and avoid -Wfamnae warnings
-config: riscv-allmodconfig (https://download.01.org/0day-ci/archive/20250208/202502081807.8dh4fSjz-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 6807164500e9920638e2ab0cdb4bf8321d24f8eb)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502081807.8dh4fSjz-lkp@intel.com/reproduce)
+On 02/08/25 at 10:41am, Mike Rapoport wrote:
+> Hi Baoquan,
+> 
+> On Sat, Feb 08, 2025 at 09:38:27AM +0800, Baoquan He wrote:
+> > On 02/06/25 at 08:28pm, Pasha Tatashin wrote:
+> > > On Thu, Feb 6, 2025 at 7:29 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > > >
+> > > > On Thu,  6 Feb 2025 15:27:40 +0200 Mike Rapoport <rppt@kernel.org> wrote:
+> > > >
+> > > > > This a next version of Alex's "kexec: Allow preservation of ftrace buffers"
+> > > > > series (https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.com),
+> > > > > just to make things simpler instead of ftrace we decided to preserve
+> > > > > "reserve_mem" regions.
+> > > > >
+> > > > > The patches are also available in git:
+> > > > > https://git.kernel.org/rppt/h/kho/v4
+> > > > >
+> > > > >
+> > > > > Kexec today considers itself purely a boot loader: When we enter the new
+> > > > > kernel, any state the previous kernel left behind is irrelevant and the
+> > > > > new kernel reinitializes the system.
+> > > >
+> > > > I tossed this into mm.git for some testing and exposure.
+> > > >
+> > > > What merge path are you anticipating?
+> > > >
+> > > > Review activity seems pretty thin thus far?
+> > > 
+> > > KHO is going to be discussed at the upcoming lsfmm, we are also
+> > > planning to send v5 of this patch series (discussed with Mike
+> > > Rapoport) in a couple of weeks. It will include enhancements needed
+> > > for the hypervisor live update scenario:
+> > 
+> > So is this V4 still a RFC if v5 will be sent by plan? Should we hold the
+> > reviewing until v5? Or this series is a infrustructure building, v5 will
+> > add more details as you listed as below. I am a little confused.
+> 
+> v4 adds the very basic support for kexec handover in the simplest form we
+> could think of. There were discussions on Linux MM Alignment and Hypervisor
+> live update meetings and there people agreed about MVP for KHO that v4
+> essentially implements.
+> 
+> v5 will add more details on top of v4 and I'm not sure there's a consensus
+> about some of them among the people involved in KHO.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502081807.8dh4fSjz-lkp@intel.com/
+Thanks for the information.
 
-All errors (new ones prefixed by >>):
+Then I will apply v4 and learn the infrastructure and mechanism firstly.
 
-   In file included from drivers/net/wireless/intel/iwlwifi/mvm/d3.c:7:
-   In file included from include/linux/etherdevice.h:20:
-   In file included from include/linux/if_ether.h:19:
-   In file included from include/linux/skbuff.h:17:
-   In file included from include/linux/bvec.h:10:
-   In file included from include/linux/highmem.h:8:
-   In file included from include/linux/cacheflush.h:5:
-   In file included from arch/riscv/include/asm/cacheflush.h:9:
-   In file included from include/linux/mm.h:2224:
-   include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     505 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     512 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:524:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     524 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     525 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
->> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2163:2: error: call to '__compiletime_assert_1138' declared with 'error' attribute: BUILD_BUG_ON failed: conf->keylen < WLAN_KEY_LEN_GCMP_256
-    2163 |         BUILD_BUG_ON(conf->keylen < WLAN_KEY_LEN_GCMP_256);
-         |         ^
-   include/linux/build_bug.h:50:2: note: expanded from macro 'BUILD_BUG_ON'
-      50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-         |         ^
-   include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_BUG_ON_MSG'
-      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^
-   include/linux/compiler_types.h:542:2: note: expanded from macro 'compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^
-   include/linux/compiler_types.h:530:2: note: expanded from macro '_compiletime_assert'
-     530 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ^
-   include/linux/compiler_types.h:523:4: note: expanded from macro '__compiletime_assert'
-     523 |                         prefix ## suffix();                             \
-         |                         ^
-   <scratch space>:167:1: note: expanded from here
-     167 | __compiletime_assert_1138
-         | ^
->> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2162:2: error: call to '__compiletime_assert_1137' declared with 'error' attribute: BUILD_BUG_ON failed: conf->keylen < WLAN_KEY_LEN_CCMP
-    2162 |         BUILD_BUG_ON(conf->keylen < WLAN_KEY_LEN_CCMP);
-         |         ^
-   include/linux/build_bug.h:50:2: note: expanded from macro 'BUILD_BUG_ON'
-      50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-         |         ^
-   include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_BUG_ON_MSG'
-      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^
-   include/linux/compiler_types.h:542:2: note: expanded from macro 'compiletime_assert'
-     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^
-   include/linux/compiler_types.h:530:2: note: expanded from macro '_compiletime_assert'
-     530 |         __compiletime_assert(condition, msg, prefix, suffix)
-         |         ^
-   include/linux/compiler_types.h:523:4: note: expanded from macro '__compiletime_assert'
-     523 |                         prefix ## suffix();                             \
-         |                         ^
-   <scratch space>:163:1: note: expanded from here
-     163 | __compiletime_assert_1137
-         | ^
-   3 warnings and 2 errors generated.
+While what sounds more meaningful to me is v4 can be reviewed, then updated
+and merged. Then another patchset can be posted to add details, if you have
+reached the consensus on the infrastructure part. With that, posting and
+reviewing will be much easier. Unless you guys are still discussing the
+infrastructure part.
 
+>  
+> > > 1. Allow nodes to be added to the KHO tree at any time
+> > > 2. Remove "activate" (I will also send a live update framework that
+> > > provides the activate functionality).
+> > > 3. Allow serialization during shutdown.
+> > > 4. Decouple KHO from kexec_file_load(), as kexec_file_load() should
+> > > not be used during live update blackout time.
+> > > 5. Enable multithreaded serialization by using hash-table as an
+> > > intermediate step before conversion to FDT.
+> > 
+> 
+> -- 
+> Sincerely yours,
+> Mike.
+> 
 
-vim +2163 drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-
-  2148	
-  2149	static bool iwl_mvm_gtk_rekey(struct iwl_wowlan_status_data *status,
-  2150				      struct ieee80211_vif *vif,
-  2151				      struct iwl_mvm *mvm, u32 gtk_cipher)
-  2152	{
-  2153		int i, j;
-  2154		struct ieee80211_key_conf *key;
-  2155		DEFINE_FLEX(struct ieee80211_key_conf, conf, key, keylen,
-  2156			    WOWLAN_KEY_MAX_SIZE);
-  2157		int link_id = vif->active_links ? __ffs(vif->active_links) : -1;
-  2158	
-  2159		conf->cipher = gtk_cipher;
-  2160	
-  2161		BUILD_BUG_ON(WLAN_KEY_LEN_CCMP != WLAN_KEY_LEN_GCMP);
-> 2162		BUILD_BUG_ON(conf->keylen < WLAN_KEY_LEN_CCMP);
-> 2163		BUILD_BUG_ON(conf->keylen < WLAN_KEY_LEN_GCMP_256);
-  2164		BUILD_BUG_ON(conf->keylen < WLAN_KEY_LEN_TKIP);
-  2165		BUILD_BUG_ON(conf->keylen < sizeof(status->gtk[0].key));
-  2166	
-  2167		switch (gtk_cipher) {
-  2168		case WLAN_CIPHER_SUITE_CCMP:
-  2169		case WLAN_CIPHER_SUITE_GCMP:
-  2170			conf->keylen = WLAN_KEY_LEN_CCMP;
-  2171			break;
-  2172		case WLAN_CIPHER_SUITE_GCMP_256:
-  2173			conf->keylen = WLAN_KEY_LEN_GCMP_256;
-  2174			break;
-  2175		case WLAN_CIPHER_SUITE_TKIP:
-  2176			conf->keylen = WLAN_KEY_LEN_TKIP;
-  2177			break;
-  2178		default:
-  2179			WARN_ON(1);
-  2180		}
-  2181	
-  2182		for (i = 0; i < ARRAY_SIZE(status->gtk); i++) {
-  2183			if (!status->gtk[i].len)
-  2184				continue;
-  2185	
-  2186			conf->keyidx = status->gtk[i].id;
-  2187			IWL_DEBUG_WOWLAN(mvm,
-  2188					 "Received from FW GTK cipher %d, key index %d\n",
-  2189					 conf->cipher, conf->keyidx);
-  2190			memcpy(conf->key, status->gtk[i].key,
-  2191			       sizeof(status->gtk[i].key));
-  2192	
-  2193			key = ieee80211_gtk_rekey_add(vif, conf, link_id);
-  2194			if (IS_ERR(key))
-  2195				return false;
-  2196	
-  2197			for (j = 0; j < ARRAY_SIZE(status->gtk_seq); j++) {
-  2198				if (!status->gtk_seq[j].valid ||
-  2199				    status->gtk_seq[j].key_id != key->keyidx)
-  2200					continue;
-  2201				iwl_mvm_set_key_rx_seq_idx(key, status, j);
-  2202				break;
-  2203			}
-  2204			WARN_ON(j == ARRAY_SIZE(status->gtk_seq));
-  2205		}
-  2206	
-  2207		return true;
-  2208	}
-  2209	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
