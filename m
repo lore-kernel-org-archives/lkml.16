@@ -1,99 +1,121 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067961F2B87
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 22:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBAE1F2B86;
+	Sat,  8 Feb 2025 22:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739054118; cv=none; b=Ax65CXVnhnbB92Qb+ysUM3MRqZ02WPmWMI65TEVdlx5LiaCdqwSnxgVfncBNRSSiJqQuKCTVbER7W1bC1LDlTEddbgzYkdFSvoykmHanfIutpUXi2i6oqFMMsrJpOYErrFhjEHkLimdnrDRWFVPQjCyZLDhND94wy9ng1iQzZGw=
+	t=1739054213; cv=none; b=qhhdWayng9viBIfwvMtCVYErAMRkdx6pDMrYQopZMS5wtomEajw8KK8u90ykuaBYGEl0fOfCjQxUL4CQNA6dbvd63j821601aADL6E+C5ZS3PcxqTuPmFubkiSAv9mzDzE9ksOQcFE0k0rEv5sL7aMJXnMtjVNyFGsy/JQPo8Fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739054118; c=relaxed/simple;
-	bh=/wmy6yC82GOnuYOyCwKkx324d1uQc1M7iBLRt0YPcSQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NPDjVfaeVob5MuayiKoP0BJqf1o3aVx74hMqmPctUw3nm0sXyFsH5sAWKUqBBh7xdpwsb6qztqcTLAijCT+ZK3d7HDsOSJpLppaMhLqUfXUt5/7dTUUdxUrRj64jo6GtzEnv5kWz5SZMZzi8WIWYGuGkQG40n0Aosj8WSb4BAoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IFmrHhwg; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1739054213; c=relaxed/simple;
+	bh=VQq0CuEMnmSKCHc6HGPhwuJv24KEQFftDUrEASK1Nx0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bmfWzETHVwrYhGG9lNkRRuCper28QSm1OJ63ql+HKvvAWrnd243ps0WZ/KdFFsLDJ8s9WIpdXsHrkBi4GpaIzNItL2BBJDt5m1zHk3ndRdwNl6Ku/imP/xNJkcziSLH2XfYnCPEJgWYOYQ1e+kkUmBId+r1CqYwg+cEGuD/2xSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=H+7qsoAV; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IFmrHhwg"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab795eba976so225841566b.0
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 14:35:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1739054114; x=1739658914; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Aw5rB8a9ogv1Af1lax+6BTqRpmDPZAFLk8yjZ727oUc=;
-        b=IFmrHhwgs7cCGRVikbEAb67WxNmKWOzSX0WStZLfOCVNSNHLv722hnmADzISHbUhQq
-         UU37oWUZeSsNf74jvhz6OKVx80OtgT07UL1vWGFn6CXhB0AcBKtNkqx2qSR8u08OhWY+
-         II9cgAmletJ6ME0xF6ifoWH+4UyotgJ2M7OEs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739054114; x=1739658914;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Aw5rB8a9ogv1Af1lax+6BTqRpmDPZAFLk8yjZ727oUc=;
-        b=s+BwoiJrk8XGaekwh2QsBBkmPBVOCMhsH8qtbxBPKjpwdO1UyuU36/ybS1gzO5wFzV
-         F7Q/hslvjKmhtauFimS6tVWS3A313ovVQdAh87tIUSvQpdYGAdWpAAHehSrfN2z7tQE7
-         +Jo/93FI3VbSSq2zYSbv7Iz5rTxpnsKWkGa7cXBkIpHo8eH6UL2/mFn0Ozrsu3Pf4OeO
-         YK0Ak0V6cS0nwbhGPZCDW27PfnT1xOF5MTgIN5/piq/tqGu17hltpJnj6NQAdsRlgO56
-         j42qlGtczrxhKAtimwWqCGHCm1kLTEVJdR5Aj7C8TIW1gJ877OVSBGaniAfoVAecOupg
-         CR9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWwbqDGN1Orj3Vb9dNuno7ZW9nK7EfcQR71QVkw8burslbPHqCo91mNeU/b+A7ym0WsE92EcdIs2T0sZyc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9rkLsyLyn3xOn4nL7t7X6vbWudUGHOTyC7F2/GoZriq8ncj1Z
-	VZJBvKDwCjmxZv6uObXc6Q8WUVMgD44ZXpSkzwXHdrL1CdQvENwUqLmK51GMwOy/2mKD0e31vl3
-	jalh3iA==
-X-Gm-Gg: ASbGnct5b4yBIJeeSo/W98WCEj0kFPUi0UbuwTVcmllO//TbsKwVIgd8x5sX4r+nalJ
-	yLcsBfGd4ZhVjhMCuM2p0DBcMx4xzvUuyRXnWCQKZ/oMNmRR0ie2emlimMAH703AIWu0Fv4Snd0
-	+ntezlss3Vo8JuTR266kZIcZ1CX2ebN89WSJJimBI80dTd5rVVhTqrkvlct8M7wWQEKgyWuGVdn
-	NPsm6ExezKTfJzhbzguyU00vFfnLHc8i9lDf3z3Wc9S7uS2prHXRGdC+mrBTeFryQZlAl0+smxU
-	2qM9T4+9H2TgxD5oGN4+5K/NFwn3+d0Nz0Bbm7Mys4LJt8ZShTX9r038qSjb8xWNUw==
-X-Google-Smtp-Source: AGHT+IEly3zh0NVCgIgX9Mjo9VNMpHx+Wo32ZF4MJWrREq7iiBc+m7QxmYQIz2XiOsoNLSvA44vFVQ==
-X-Received: by 2002:a17:907:3e27:b0:ab6:f88f:bf1f with SMTP id a640c23a62f3a-ab76e9dc0e7mr1383782466b.27.1739054114060;
-        Sat, 08 Feb 2025 14:35:14 -0800 (PST)
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab78d5771easm387763766b.83.2025.02.08.14.35.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Feb 2025 14:35:13 -0800 (PST)
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5de6c70832bso444383a12.1
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 14:35:13 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWQDyosDoIkJ4P5M4lECCDJL28m8OhHpfM7tz2NA3G3W6cfKtL1ysdrFkMgUZ0fgc8+3iOiLjNOM1Z/tDs=@vger.kernel.org
-X-Received: by 2002:a05:6402:40d2:b0:5de:59fe:f585 with SMTP id
- 4fb4d7f45d1cf-5de59fef79cmr3972861a12.6.1739054113055; Sat, 08 Feb 2025
- 14:35:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="H+7qsoAV"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 518LiDZg012759;
+	Sat, 8 Feb 2025 22:36:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	HtHV6GYiZiXoheP2pg52NqMdS62PbfoLAsBzjhraaF4=; b=H+7qsoAVDTw05zHP
+	Kd9DSKP2SIeGIyZ78KRrFE3c7+ueKaakV5eFlUW6QxI+O+/fM8Cr+xseyeR9oVPW
+	rME8G/eDO23UswXGTnGAM1M9vwMIkxyqfFpqEU1In7WekU4fjumW+dkJY+lp08kH
+	Badu1nDI8TjM8tzxIqTKIsUpR0fCVeSMlayv3SCB+Q8kYu7MtJ0PI7tTCPV0jOuT
+	n4uTNx+Cj+1A9DNk/EJHF+dDC4S3fadjXqRc+fEwP7SjkpOUpvEYeSRG8CgNy8rV
+	y0C7GPHqImHbw9Sx2nvYcUy//iyQU5DwxVzLOvVQTshHkHeI5VgLndncvqbolG0c
+	k7SVJg==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0gus7vv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Feb 2025 22:36:40 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 518Mad71028838
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 8 Feb 2025 22:36:39 GMT
+Received: from [10.216.46.231] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 8 Feb 2025
+ 14:36:32 -0800
+Message-ID: <d72a1f19-d1b1-4993-bafa-a97ad6ce4bca@quicinc.com>
+Date: Sun, 9 Feb 2025 04:06:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206054504.2950516-1-neilb@suse.de> <20250206054504.2950516-15-neilb@suse.de>
- <20250207210658.GK1977892@ZenIV> <20250208220653.GQ1977892@ZenIV> <CAHk-=whEbj9p33Cn_P4PawBqkav8zQq5+WjtzqYCK0o621p1kw@mail.gmail.com>
-In-Reply-To: <CAHk-=whEbj9p33Cn_P4PawBqkav8zQq5+WjtzqYCK0o621p1kw@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 8 Feb 2025 14:34:56 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whyBwei9inP2j1CYxH=RVoFya47rd2Z5oYfKNDKAz2Hxg@mail.gmail.com>
-X-Gm-Features: AWEUYZlCBj39i2MdyBuSfTYd8OzjnY0fhKAQ--9Qm9JnvM0_fMK2hsmooPtcTg4
-Message-ID: <CAHk-=whyBwei9inP2j1CYxH=RVoFya47rd2Z5oYfKNDKAz2Hxg@mail.gmail.com>
-Subject: Re: [PATCH 14/19] VFS: Ensure no async updates happening in directory
- being removed.
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: NeilBrown <neilb@suse.de>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Jeff Layton <jlayton@kernel.org>, Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 1/2] arm64: dts: qcom: sc7280: Add support for camss
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
+        <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        <cros-qcom-dts-watchers@chromium.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>
+References: <20250208165232.2371889-1-quic_vikramsa@quicinc.com>
+ <20250208165232.2371889-2-quic_vikramsa@quicinc.com>
+ <4ah6z6lsgxgpjdiuyrkkcebpwrqrfpmumklga24immz5mvmgp3@z7bplsu3q6yl>
+Content-Language: en-US
+From: Vikram Sharma <quic_vikramsa@quicinc.com>
+In-Reply-To: <4ah6z6lsgxgpjdiuyrkkcebpwrqrfpmumklga24immz5mvmgp3@z7bplsu3q6yl>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: _HEHIkyZ8KswzEJamX-xHHnkjhHXVX97
+X-Proofpoint-GUID: _HEHIkyZ8KswzEJamX-xHHnkjhHXVX97
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-08_10,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 phishscore=0
+ clxscore=1011 adultscore=0 bulkscore=0 mlxscore=0 spamscore=0
+ mlxlogscore=914 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502080194
 
-On Sat, 8 Feb 2025 at 14:30, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+
+On 2/9/2025 3:46 AM, Dmitry Baryshkov wrote:
+> On Sat, Feb 08, 2025 at 10:22:31PM +0530, Vikram Sharma wrote:
+>> Add changes to support the camera subsystem on the SC7280.
+>>
+>> Signed-off-by: Suresh Vankadara <quic_svankada@quicinc.com>
+>> Signed-off-by: Trishansh Bhardwaj <quic_tbhardwa@quicinc.com>
+>> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+>> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> It was impossible to get these tags in this way. I'm not sure what
+> happened, but please review them and drop incorrect tags.
+Hi Dmitry,
+
+Thanks for Pointing this out.
+I got RB from Konrad on v10 of this series for this patch.
+"
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
+"
+To post v13 I fetched v12 using 'b4 shazam' and other one got added own 
+its own.
+Will fix this and post again.
 >
-> I've never used clang-format, but I do know it supports those kinds of
-> extensions, since I see them in the kernel config file.
+>> Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sc7280.dtsi | 178 +++++++++++++++++++++++++++
+>>   1 file changed, 178 insertions(+)
 
-Bah. Over-eager editing removed the context of that sentence.
+Best Regards,
+Vikram
 
-The context was supposed to be that in the kernel, we tend to have
-lots of patterns that make traditional indentation checking totally
-useless: things like the "list_for_each()" macro that obviously
-includes a loop in it and thus has indentation expectations.
-
-           Linus
