@@ -1,226 +1,166 @@
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66092244E8E;
-	Sat,  8 Feb 2025 21:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9638233DB;
+	Sat,  8 Feb 2025 21:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739050462; cv=none; b=GWM6yBK1bbua6zx5tYCfYfROvELtLI7WEj01zEgUVH7ycaCvxZRC22fjkPCITDbIwLhdL6porYZ5QOxLZ9yL2ubqaZr45hWwExbBZfoAPjEyuKylkUl7HZab5KoTkyoOrG0z4w7FJeMXWf/A6kE/9FTbBF5jsU0QOvUes+ZM1LI=
+	t=1739050630; cv=none; b=cDFuYZaQxnym0jBvCfP3NDVTr7U0nvVlJpt2SeDsnYfe8j/QJMSwILsTxsot91aIW2w3wH81uhWeTlUCcwx2/02Mvw2L5lfh9GR3INBoyin93OBIXCkjUSRLKVJjd0jAZcabQTtQ9AWgpr5hOXobTJYidBqeWEa5JPH+40d09U8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739050462; c=relaxed/simple;
-	bh=hNv+x7+fBJfBx6HgcTPkHn07XwlL1WEdrFEoAyAaDMI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UbLYOH5PhgzA5C90N8QDvSG6wFTmO1fClsJGwTeQDLsxNFFfn9QCk7br8edKKW4Md0xwb4KWGXGCVOBUACqwuzFu+xqWGY+R6aZpv/LTSQRcYv2udhFgPEmAnD2RRYiIKu9XKZp3XWaMJq/TAKUKcFYrOinFiO7PLBmc1iDF/r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CI3VbOY6; arc=none smtp.client-ip=209.85.217.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739050630; c=relaxed/simple;
+	bh=gAPK9Is+rOUBT73Lo8OH1NZL5UmFB9ClxFnT+xOzjv8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=evjZDKw25XtLHpJCb2iNGJRm+wtu7DJSQx49Kis0TZqQg/5dls6vpPCccik0/9rTg3HSIEE7gibuRl6A43CZFGWpYMv7l/EdfxSzy2DeYmGYIHhh5/Pt2GKYvSWAqzU/VbCCWQ7nAjkc1YeQB+7/3nrPa5w3mIfSTBrZDn5Dfy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ROqE++lw; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CI3VbOY6"
-Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4ba72ccc283so2010423137.2;
-        Sat, 08 Feb 2025 13:34:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739050459; x=1739655259; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tr1A4JBrm8DZqdxvHg/4VfN3wYIha/zlu4oSdgbrsgY=;
-        b=CI3VbOY6Nn5aS4sYsb66Yaubl0zGDg3CdDRGIGSkzMuUXDMFOzLJcU63jlUq3L9gkW
-         FKtBk8qctppt0WU1UaLSkoO4f6+i30K1MvZglG/zkFebimXbdbPfLbkodbWau4LIkvBh
-         ZVTga+6wvRyzhpYYxBXk9x07rmufTbJc3QbhVlRTkQx7KPXBSuD99btRNFRFGdlLO4Vk
-         wI2cz9kcpZn+yv6xyzgX27G69kWr5rE5a9uAnYAOrHnVxc2Xyxy22PM6DQvG39+2hAXL
-         y1P5wE2e5ZWLg9IPyTAeKCrY2QFs1cl69dj9IhtBnxiyl8Bk8V6vq2/+pPngVoN57KFe
-         j4mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739050459; x=1739655259;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Tr1A4JBrm8DZqdxvHg/4VfN3wYIha/zlu4oSdgbrsgY=;
-        b=vbePZGTg/15Wb7I3KF1NQvZZx8To9GUAN/XFx4tF1TyNafCZt3EjyfmfMGo4A1+9t3
-         SVAP5o4JnMam+22ybefQwJSCuc2w/ZgHCpckaeqWvkjtTLYgJdcXBwbsYVI6jKoAa+Mq
-         v26VmSGQGNyi7yiiJ1/SLT3Ni+KKJE6XvFNUy/PaVG7JClKMEwmiApnw8U6kaRsICbwI
-         6T9LPbQJF+AXWL2AZwRTwpHt6c7Y8WTlAof+OW9hbzQmxvEkeA0TJ876BW7ZOMeoJOTp
-         lOo63yC4+zBLBXvZo/2/FMx6z+2/8jFM2BkzsNbhqwX0szsJeD6XvBxHMSLGOYgWeFuS
-         B9nw==
-X-Forwarded-Encrypted: i=1; AJvYcCVY2me7blVvCjF2lQ/UBSSgToIfoi/wrudrUMQEoWLONNXO8pUCLRmtCUeBAwcjI3PiCQ08UqaA@vger.kernel.org, AJvYcCXdWwWDQMb3ADCGg2o3Z9Fl6eRHISFKCn+i/JMm29DcN9NKMFJlLYT7Bn20XKxAd8CuuPvonUH3beCgSoE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvPAPizl6rSMXBuVQF7KaDRmCyb6lw/ZnDY5AUoQ6y/tDKnPjV
-	Otb5vrhXi/zvSY77Uupj4dYWhg6UGWK/TbzUSydrbyaq3OdOFPBTtD6VG6ZUYTAwJK9w6VssSx7
-	hcsfsPGpQI7GM9WuX3syG/s+fO/E=
-X-Gm-Gg: ASbGnctDy1dcilBM66jzcuR+cKN4G+oPl5voxKejzGv7sqW2485vtKemvZQkNuRoBhG
-	fAdvVtuRlNlOIuZ5pXwk4ePzthyr8DkzFXIYlHm9xlRPEwdWBVc/t3fNCmHA/FHei+00HpK8KTc
-	43WQQHWZwARvXRKOrmtJwByAI/Vdf6xg==
-X-Google-Smtp-Source: AGHT+IGCMVvzBkTONyCiGLzGRx+BYTIKnuFp2mhSuxrcG5tm0TfmfKRTUXaNMu0nFAC/FmnQ5jzwqcE+MIxDGGSNRQM=
-X-Received: by 2002:a05:6102:6a98:b0:4bb:9b46:3f6f with SMTP id
- ada2fe7eead31-4bb9b467825mr1105069137.1.1739050459210; Sat, 08 Feb 2025
- 13:34:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ROqE++lw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739050627; x=1770586627;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gAPK9Is+rOUBT73Lo8OH1NZL5UmFB9ClxFnT+xOzjv8=;
+  b=ROqE++lwj1+b1sE6ilaKj6TqAixhRGfs/4XxahBxWcj1cZN2fiE92WcU
+   oCtilx7rRD7U5E+13smKbYeDsaKND/c2PzjeoPRSksgoTFe44zZ66vFDk
+   nSmrCakvCHx46+DBDdlcdyrmY0lUNIWdupyBNtD4kMLtf8cTR5VJwr90E
+   gzl+K2brZBT4eTk5ZvQqOiZJEcRd3pUGCgGnMsKDkNTC7CSCVJ9bbZzso
+   Ff9G9CWuvIIwdseSPu9UFpvQ7j3DFYUrM5APPBYopcGQ9X/PSjtZnCe8N
+   DSbvr2Birjs1ACOO0mtlpbwofaGfctQJq58nG+Kc3+QyEEvWFKvUFEcwn
+   w==;
+X-CSE-ConnectionGUID: +LzhJeDATXmJsZzJ4ucn3Q==
+X-CSE-MsgGUID: NCCJb8BqSpihUiRYJaddDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="38868695"
+X-IronPort-AV: E=Sophos;i="6.13,271,1732608000"; 
+   d="scan'208";a="38868695"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 13:37:07 -0800
+X-CSE-ConnectionGUID: VZ5hyFqbQ+KF/aZLFzH/DQ==
+X-CSE-MsgGUID: j1TpE7JpS7Kyltz53MM2GQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,271,1732608000"; 
+   d="scan'208";a="111661760"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 08 Feb 2025 13:37:05 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tgsVa-0010f1-2v;
+	Sat, 08 Feb 2025 21:37:02 +0000
+Date: Sun, 9 Feb 2025 05:36:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tamir Duberstein <tamird@gmail.com>, David Gow <davidgow@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Luis Felipe Hernandez <luis.hernandez093@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Tamir Duberstein <tamird@gmail.com>
+Subject: Re: [PATCH v2 2/2] lib/prime_numbers: convert self-test to KUnit
+Message-ID: <202502090509.wLhmGzkc-lkp@intel.com>
+References: <20250208-prime_numbers-kunit-convert-v2-2-863119447e04@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1737717687-16744-1-git-send-email-yangge1116@126.com>
- <CAGsJ_4y2zjCzRUgxkx2GpspFBD9Yon=R3SLaGezk9drQz+ikrQ@mail.gmail.com> <28edc5df-eed5-45b8-ab6d-76e63ef635a9@126.com>
-In-Reply-To: <28edc5df-eed5-45b8-ab6d-76e63ef635a9@126.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Sun, 9 Feb 2025 10:34:08 +1300
-X-Gm-Features: AWEUYZmHeEniBO1KvmZ5SsYHPj_w-1AYYlBIQu74Tt0dYgU0dn8Jppk0fRFDeAs
-Message-ID: <CAGsJ_4yC=950MCeLDc-8inT52zH6GSEGBBfk+A0dwWEDE5_CMg@mail.gmail.com>
-Subject: Re: [PATCH] mm/cma: add an API to enable/disable concurrent memory
- allocation for the CMA
-To: Ge Yang <yangge1116@126.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, david@redhat.com, 
-	baolin.wang@linux.alibaba.com, aisheng.dong@nxp.com, liuzixing@hygon.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250208-prime_numbers-kunit-convert-v2-2-863119447e04@gmail.com>
 
-On Sat, Feb 8, 2025 at 9:50=E2=80=AFPM Ge Yang <yangge1116@126.com> wrote:
->
->
->
-> =E5=9C=A8 2025/1/28 17:58, Barry Song =E5=86=99=E9=81=93:
-> > On Sat, Jan 25, 2025 at 12:21=E2=80=AFAM <yangge1116@126.com> wrote:
-> >>
-> >> From: yangge <yangge1116@126.com>
-> >>
-> >> Commit 60a60e32cf91 ("Revert "mm/cma.c: remove redundant cma_mutex loc=
-k"")
-> >> simply reverts to the original method of using the cma_mutex to ensure
-> >> that alloc_contig_range() runs sequentially. This change was made to a=
-void
-> >> concurrency allocation failures. However, it can negatively impact
-> >> performance when concurrent allocation of CMA memory is required.
-> >
-> > Do we have some data?
-> Yes, I will add it in the next version, thanks.
-> >
-> >>
-> >> To address this issue, we could introduce an API for concurrency setti=
-ngs,
-> >> allowing users to decide whether their CMA can perform concurrent memo=
-ry
-> >> allocations or not.
-> >
-> > Who is the intended user of cma_set_concurrency?
-> We have some drivers that use cma_set_concurrency(), but they have not
-> yet been merged into the mainline. The cma_alloc_mem() function in the
-> mainline also supports concurrent allocation of CMA memory. By applying
-> this patch, we can also achieve significant performance improvements in
-> certain scenarios. I will provide performance data in the next version.
-> I also feel it is somewhat
-> > unsafe since cma->concurr_alloc is not protected by any locks.
-> Ok, thanks.
-> >
-> > Will a user setting cma->concurr_alloc =3D 1 encounter the original iss=
-ue that
-> > commit 60a60e32cf91 was attempting to fix?
-> >
-> Yes, if a user encounters the issue described in commit 60a60e32cf91,
-> they will not be able to set cma->concurr_alloc to 1.
+Hi Tamir,
 
-A user who hasn't encountered a problem yet doesn't mean they won't
-encounter it; it most likely just means the testing time hasn't been long
-enough.
+kernel test robot noticed the following build warnings:
 
-Is it possible to implement a per-CMA lock or range lock that simultaneousl=
-y
-improves performance and prevents the original issue that commit
-60a60e32cf91 aimed to fix?
+[auto build test WARNING on 2014c95afecee3e76ca4a56956a936e23283f05b]
 
-I strongly believe that cma->concurr_alloc is not the right approach. Let's
-not waste our time on this kind of hack or workaround.  Instead, we should
-find a proper fix that remains transparent to users.
+url:    https://github.com/intel-lab-lkp/linux/commits/Tamir-Duberstein/lib-math-Hook-up-tests-Makefile/20250208-220040
+base:   2014c95afecee3e76ca4a56956a936e23283f05b
+patch link:    https://lore.kernel.org/r/20250208-prime_numbers-kunit-convert-v2-2-863119447e04%40gmail.com
+patch subject: [PATCH v2 2/2] lib/prime_numbers: convert self-test to KUnit
+config: i386-buildonly-randconfig-001-20250209 (https://download.01.org/0day-ci/archive/20250209/202502090509.wLhmGzkc-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250209/202502090509.wLhmGzkc-lkp@intel.com/reproduce)
 
-> >>
-> >> Fixes: 60a60e32cf91 ("Revert "mm/cma.c: remove redundant cma_mutex loc=
-k"")
-> >> Signed-off-by: yangge <yangge1116@126.com>
-> >> Cc: <stable@vger.kernel.org>
-> >> ---
-> >>   include/linux/cma.h |  2 ++
-> >>   mm/cma.c            | 22 ++++++++++++++++++++--
-> >>   mm/cma.h            |  1 +
-> >>   3 files changed, 23 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/include/linux/cma.h b/include/linux/cma.h
-> >> index d15b64f..2384624 100644
-> >> --- a/include/linux/cma.h
-> >> +++ b/include/linux/cma.h
-> >> @@ -53,6 +53,8 @@ extern int cma_for_each_area(int (*it)(struct cma *c=
-ma, void *data), void *data)
-> >>
-> >>   extern void cma_reserve_pages_on_error(struct cma *cma);
-> >>
-> >> +extern bool cma_set_concurrency(struct cma *cma, bool concurrency);
-> >> +
-> >>   #ifdef CONFIG_CMA
-> >>   struct folio *cma_alloc_folio(struct cma *cma, int order, gfp_t gfp)=
-;
-> >>   bool cma_free_folio(struct cma *cma, const struct folio *folio);
-> >> diff --git a/mm/cma.c b/mm/cma.c
-> >> index de5bc0c..49a7186 100644
-> >> --- a/mm/cma.c
-> >> +++ b/mm/cma.c
-> >> @@ -460,9 +460,17 @@ static struct page *__cma_alloc(struct cma *cma, =
-unsigned long count,
-> >>                  spin_unlock_irq(&cma->lock);
-> >>
-> >>                  pfn =3D cma->base_pfn + (bitmap_no << cma->order_per_=
-bit);
-> >> -               mutex_lock(&cma_mutex);
-> >> +
-> >> +               /*
-> >> +                * If the user sets the concurr_alloc of CMA to true, =
-concurrent
-> >> +                * memory allocation is allowed. If the user sets it t=
-o false or
-> >> +                * does not set it, concurrent memory allocation is no=
-t allowed.
-> >> +                */
-> >> +               if (!cma->concurr_alloc)
-> >> +                       mutex_lock(&cma_mutex);
-> >>                  ret =3D alloc_contig_range(pfn, pfn + count, MIGRATE_=
-CMA, gfp);
-> >> -               mutex_unlock(&cma_mutex);
-> >> +               if (!cma->concurr_alloc)
-> >> +                       mutex_unlock(&cma_mutex);
-> >>                  if (ret =3D=3D 0) {
-> >>                          page =3D pfn_to_page(pfn);
-> >>                          break;
-> >> @@ -610,3 +618,13 @@ int cma_for_each_area(int (*it)(struct cma *cma, =
-void *data), void *data)
-> >>
-> >>          return 0;
-> >>   }
-> >> +
-> >> +bool cma_set_concurrency(struct cma *cma, bool concurrency)
-> >> +{
-> >> +       if (!cma)
-> >> +               return false;
-> >> +
-> >> +       cma->concurr_alloc =3D concurrency;
-> >> +
-> >> +       return true;
-> >> +}
-> >> diff --git a/mm/cma.h b/mm/cma.h
-> >> index 8485ef8..30f489d 100644
-> >> --- a/mm/cma.h
-> >> +++ b/mm/cma.h
-> >> @@ -16,6 +16,7 @@ struct cma {
-> >>          unsigned long   *bitmap;
-> >>          unsigned int order_per_bit; /* Order of pages represented by =
-one bit */
-> >>          spinlock_t      lock;
-> >> +       bool concurr_alloc;
-> >>   #ifdef CONFIG_CMA_DEBUGFS
-> >>          struct hlist_head mem_head;
-> >>          spinlock_t mem_head_lock;
-> >> --
-> >> 2.7.4
-> >>
-> >>
-> >
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502090509.wLhmGzkc-lkp@intel.com/
 
-Thanks
-Barry
+All warnings (new ones prefixed by >>):
+
+   lib/math/prime_numbers.c: In function 'expand_to_next_prime':
+   lib/math/prime_numbers.c:126:15: error: implicit declaration of function 'kmalloc'; did you mean 'mm_alloc'? [-Werror=implicit-function-declaration]
+     126 |         new = kmalloc(sizeof(*new) + bitmap_size(sz),
+         |               ^~~~~~~
+         |               mm_alloc
+>> lib/math/prime_numbers.c:126:13: warning: assignment to 'struct primes *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+     126 |         new = kmalloc(sizeof(*new) + bitmap_size(sz),
+         |             ^
+   lib/math/prime_numbers.c:134:17: error: implicit declaration of function 'kfree' [-Werror=implicit-function-declaration]
+     134 |                 kfree(new);
+         |                 ^~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +126 lib/math/prime_numbers.c
+
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  106  
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  107  static bool expand_to_next_prime(unsigned long x)
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  108  {
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  109  	const struct primes *p;
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  110  	struct primes *new;
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  111  	unsigned long sz, y;
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  112  
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  113  	/* Betrand's Postulate (or Chebyshev's theorem) states that if n > 3,
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  114  	 * there is always at least one prime p between n and 2n - 2.
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  115  	 * Equivalently, if n > 1, then there is always at least one prime p
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  116  	 * such that n < p < 2n.
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  117  	 *
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  118  	 * http://mathworld.wolfram.com/BertrandsPostulate.html
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  119  	 * https://en.wikipedia.org/wiki/Bertrand's_postulate
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  120  	 */
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  121  	sz = 2 * x;
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  122  	if (sz < x)
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  123  		return false;
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  124  
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  125  	sz = round_up(sz, BITS_PER_LONG);
+717c8ae7aae4f2 lib/prime_numbers.c Chris Wilson 2017-01-13 @126  	new = kmalloc(sizeof(*new) + bitmap_size(sz),
+717c8ae7aae4f2 lib/prime_numbers.c Chris Wilson 2017-01-13  127  		      GFP_KERNEL | __GFP_NOWARN);
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  128  	if (!new)
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  129  		return false;
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  130  
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  131  	mutex_lock(&lock);
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  132  	p = rcu_dereference_protected(primes, lockdep_is_held(&lock));
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  133  	if (x < p->last) {
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  134  		kfree(new);
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  135  		goto unlock;
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  136  	}
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  137  
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  138  	/* Where memory permits, track the primes using the
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  139  	 * Sieve of Eratosthenes. The sieve is to remove all multiples of known
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  140  	 * primes from the set, what remains in the set is therefore prime.
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  141  	 */
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  142  	bitmap_fill(new->primes, sz);
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  143  	bitmap_copy(new->primes, p->primes, p->sz);
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  144  	for (y = 2UL; y < sz; y = find_next_bit(new->primes, sz, y + 1))
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  145  		new->last = clear_multiples(y, new->primes, p->sz, sz);
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  146  	new->sz = sz;
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  147  
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  148  	BUG_ON(new->last <= x);
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  149  
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  150  	rcu_assign_pointer(primes, new);
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  151  	if (p != &small_primes)
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  152  		kfree_rcu((struct primes *)p, rcu);
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  153  
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  154  unlock:
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  155  	mutex_unlock(&lock);
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  156  	return true;
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  157  }
+cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  158  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
