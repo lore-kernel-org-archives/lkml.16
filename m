@@ -1,119 +1,129 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5D523C8B4
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 08:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E2523C8B4;
+	Sat,  8 Feb 2025 08:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739003421; cv=none; b=eDfAdFRbiAsPGVpYOLoxHYZqLON31hISs2FtQ6N0xcIZ4Gw9B0I/oBpU8LavjRsOrfxGJw+A8u9t9g+SBom6iGfT2ACs14SDyNzHkT0RlexsFuL79i6+GiVcU3OpdZQJOCxvVMXeWw4FX5PPB24ULQA5oAOp8U/ZGY3g9URkyfY=
+	t=1739003474; cv=none; b=MVwFUnyKZyNqgiQ3msO3qpXS/cTIrMNkcC8EF2tCs+sEYy9ZKH1ppjjL7FnwGcnbo9dyT3zvMTVTvrNsRz3Iy2p0wQcaBYDrb9V5yWUEJ2MrV4kewZb5Yw2stYXUpV20S3L+B08CGxqKN3VHaGDkmaDDCvbCRhe9vIAkucZTR6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739003421; c=relaxed/simple;
-	bh=lVCj6stM71jMuixwYTktojduHC37Po17hX5XNGGUIXw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cLQbZZBu6mXAF0KfOJ62MuuOMQWIv6+U568A1bNs/1YrlDHPHvdK8nW3WLKy1S+ou0n1YYEFHSexv5mxiFCbrXjU4EO3Xu7Xvy1C4ICODyaNOMJB99uPU+mTUeBzBnVSHmp1RDCwXg52oZu5Mb+akhYNJ7wxkk5aCQvGLjxu9OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FLC/RcH0; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739003474; c=relaxed/simple;
+	bh=jmD7D9XcUagZ6PsaNTcK9z4/ha7zuHykclPHicgLzS0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dp0BZzR2uFAxTtijoYZe9NqJskXdxEi9OKYIIxPBdGv1r89vdFFz11xuMdz2qcmlQxfV8OnbGFSo3Gqw6R+h/RFLhvaRi1H/UgCqRoQC7wvwe5qt8M3mGgFpLb5M+DcL8C/STOAAsQw8tlL60O+VZq9RZ+B+6Nnx0GlyfzEBw4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st; spf=pass smtp.mailfrom=marcan.st; dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b=bgHr7qhZ; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marcan.st
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FLC/RcH0"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-21f6d2642faso7041945ad.1
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 00:30:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739003419; x=1739608219; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OLh4hyi5Aar0uyVibaHz9opaMmC7Yry3R/PXmYXXrV8=;
-        b=FLC/RcH0wi/k8lB1HSffFaTht7M/kIa1Luxgebn9KKhFjF9NwgCLeXWQ6XlCkm51RV
-         66XlmKj3GOq+LjeEsMrIfSRuX5v+seVko7s2LMaVQLbkpVRFnNJ1ce1P5N0VR/5zOKKN
-         lZ0NmhErNi8b8QMH9ggOaQs0VMmEmHkeWKFrPzHiDgrgE+UMmEO52RJQSfK6LdzjCVut
-         ouAyK8Clh/JjrlCLgjLQTeVGzruA35NwJePWf5faaKLjy6ug0Z6UIqOvhHYENuveUYu8
-         Wk8t1tOhnPKiTZKV4HRsdHX80qrb9yBxWNG9QQqFG+Dll3PEdtF8cY43x0zjUwn1u428
-         DtDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739003419; x=1739608219;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OLh4hyi5Aar0uyVibaHz9opaMmC7Yry3R/PXmYXXrV8=;
-        b=kFV4ZVWzD6NTIysYM7OKFb4nOzHZQ+lNMwQ1h7VbiaF7tdHYMCInHMoyafOZ+myVZC
-         fcIJbxQ5eqTEpA2mumIQkG1qCmD29zDh/UMSopzEq1RGwrIRrfNUs9hiT604Hf7XH2qY
-         J25WhOutL/nuva/w/KNPhXBsODpH3yGb8KevhuxlIRcSELLn2GP42ho9pnxZUoHjQfl2
-         TonaJt6pJOQmHVgEV2Q7D02WWs7N3rvAakze7e+df1q4UjZX3jvgRPtir+IKN1wt4axI
-         Jz72bC8mKnnTmzIKOhxcIQvhg9+z/LvCxZH1oBoHtl5NYkxubzuNvkKaaETlo6YA7GLR
-         JnFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXVBFlda4n991UTcEmXQ9h3zM9zkLxYOIpsHAi4PVrU2F8neZBqU9uPxv8rG6m4L0iQYWQoF9XwY98VzAk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzy8yWKgcoQWSdCa9hROQKNPxZgQhQtCWJgoEKME51X+hRi2gQP
-	pZTQPoJyoAd5KMq7hB+E69qzARfqgx/+5VNm6XzDHPb2jKvgXRow
-X-Gm-Gg: ASbGnctvyCX0M3gezP523UKGHbWtTy8IdBBeR0kse0GVx2hBNOoe2YbpMFpVih//yQv
-	nLSJGOTQaflWBOdCE209sz1Io9T0556u+SXLW5ut974s/EP1kdgJq/6xTQs3HDLaeTsYWhDdGIH
-	TZlBslVyQXrM+D1PVr9glVwWPDAVEh/alM/8zF0iI4Cd8duRZmT6S/64PL3hiRSbhAy7O5G4+8O
-	4RhLuZfxy4lKsXRU08FjIfNAjy1A89NCiGOLSQIN1o6trUp7nq7mfinbVtNonwot8LDmCr/SNEv
-	o/z/KD8zAtUPjKlpRc4xzSM92yIN079RHiU=
-X-Google-Smtp-Source: AGHT+IG4GwGQ6J4q9ICdapIGhJcxzR3D6XKSnGRBbEohjVtQenXmj68MCdTksljdu/p1p2iLUhd6Lw==
-X-Received: by 2002:a05:6a00:139c:b0:72a:a7a4:b4cd with SMTP id d2e1a72fcca58-7305d54712emr8610378b3a.21.1739003418868;
-        Sat, 08 Feb 2025 00:30:18 -0800 (PST)
-Received: from localhost.localdomain ([114.67.205.189])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51af64c1dsm4293089a12.52.2025.02.08.00.30.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 00:30:18 -0800 (PST)
-From: zihan zhou <15645113830zzh@gmail.com>
-To: peterz@infradead.org
-Cc: 15645113830zzh@gmail.com,
-	bsegall@google.com,
-	dietmar.eggemann@arm.com,
-	juri.lelli@redhat.com,
-	linux-kernel@vger.kernel.org,
-	mgorman@suse.de,
-	mingo@redhat.com,
-	rostedt@goodmis.org,
-	vincent.guittot@linaro.org,
-	vschneid@redhat.com
-Subject: Re: [PATCH V1] sched: Cancel the slice protection of the idle entity
-Date: Sat,  8 Feb 2025 16:29:16 +0800
-Message-Id: <20250208082915.20842-1-15645113830zzh@gmail.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250207123620.GA10324@noisy.programming.kicks-ass.net>
-References: <20250207123620.GA10324@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b="bgHr7qhZ"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: marcan@marcan.st)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id A1144427ED;
+	Sat,  8 Feb 2025 08:31:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
+	t=1739003468; bh=jmD7D9XcUagZ6PsaNTcK9z4/ha7zuHykclPHicgLzS0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=bgHr7qhZXl0G147DE6p2b5mUeL7LjemjbVzNhkEv82IActVuvakyui/C44c6MJ05L
+	 3z+wqhhacacBBogX69nFHWE/erjMEUIKmJkFToHpqc3/+P/QS9LXtsszHdpxat02av
+	 N3rSmf8MoSJyqdqiw03A8qyNP9E5hwOzX+Bspaeyuj0UyL3SpeXDREyRyaG5m7ePVG
+	 Akw6ywLY06vS1uQ16+haxN+JR8K+F69eoph8SM5J09d7b0OHV57iQQri79SjGNgOwL
+	 nnCG0cfTcJkiNTC17V2AjmrUXHLRsIJXt5SMfYMsOVqXxik/+GPPvTzYTpCUbMYAFv
+	 ZAMZrqtLu2ZcA==
+Message-ID: <1e8452ab-613a-4c85-adc0-0c4a293dbf50@marcan.st>
+Date: Sat, 8 Feb 2025 17:31:04 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: On community influencing (was Re: [PATCH v8 2/2] rust: add dma
+ coherent allocator abstraction.)
+To: Steven Rostedt <rostedt@goodmis.org>, "Dr. Greg" <greg@enjellic.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Dave Airlie <airlied@gmail.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ Greg KH <gregkh@linuxfoundation.org>, phasta@kernel.org,
+ Christoph Hellwig <hch@lst.de>, Danilo Krummrich <dakr@kernel.org>,
+ Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+ Abdiel Janulgue <abdiel.janulgue@gmail.com>, daniel.almeida@collabora.com,
+ aliceryhl@google.com, robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ Bj??rn Roy Baron <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
+ Valentin Obst <kernel@valentinobst.de>,
+ open list <linux-kernel@vger.kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
+ "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
+ DRI Development <dri-devel@lists.freedesktop.org>
+References: <2025013030-gummy-cosmic-7927@gregkh>
+ <20250130172437.GN5556@nvidia.com>
+ <2025013148-reversal-pessimism-1515@gregkh>
+ <20250131135421.GO5556@nvidia.com>
+ <2b9b75d1-eb8e-494a-b05f-59f75c92e6ae@marcan.st>
+ <Z6OzgBYZNJPr_ZD1@phenom.ffwll.local>
+ <CAPM=9tzPR9wd=3Wbjnp-T0W8-dDfGah-H3Ny52G85B+2Ev9ksA@mail.gmail.com>
+ <208e1fc3-cfc3-4a26-98c3-a48ab35bb9db@marcan.st>
+ <CAHk-=wi=ZmP2=TmHsFSUGq8vUZAOWWSK1vrJarMaOhReDRQRYQ@mail.gmail.com>
+ <20250207121638.GA7356@wind.enjellic.com> <Z6bdCrgGEq8Txd-s@home.goodmis.org>
+From: Hector Martin <marcan@marcan.st>
+Content-Language: en-US
+In-Reply-To: <Z6bdCrgGEq8Txd-s@home.goodmis.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> > A wakeup non-idle entity should preempt idle entity at any time,
-> > but because of the slice protection of the idle entity, the non-idle
-> > entity has to wait, so just cancel it.
-> > 
-> > Signed-off-by: zihan zhou <15645113830zzh@gmail.com>
-> > ---
-> >  kernel/sched/fair.c | 13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 3e9ca38512de..7777d110d053 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -8851,8 +8851,19 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
-> >  	 * Preempt an idle entity in favor of a non-idle entity (and don't preempt
-> >  	 * in the inverse case).
-> >  	 */
-> > -	if (cse_is_idle && !pse_is_idle)
-> > +	if (cse_is_idle && !pse_is_idle) {
-> > +
-> > +		/*
-> > +		 * When non-idle entity preempt an idle entity,
-> > +		 * don't give idle entity slice protection.
-> > +		 */
-> > +		if (se->vlag == se->deadline)
-> > +			se->vlag = se->deadline + 1;
-> > +
-> >  		goto preempt;
-> > +
-> > +	}
+
+
+On 2025/02/08 13:26, Steven Rostedt wrote:
+> On Fri, Feb 07, 2025 at 06:16:38AM -0600, Dr. Greg wrote:
+>>
+>> Not sure what the fix is, from a project management perspective the
+>> technology industry has never faced a challenge like this.  The fork
+>> model, which was the classic protection in open-source, doesn't work
+>> at this scale.
 > 
-> Yes, I suppose we can do this.
+> Maybe not quite a fork, but I wonder if the Rust project did something similar
+> to what PREEMPT_RT did. That was to keep an out of tree patch. The full patch
+> was just merged last September after being out of tree for a good 20 years.
+> 
+> In the beginning there was a few things in that patch that Christoph was
+> against, but over time he became accepting of it.
+> 
+> Yes, being out of tree is very difficult because you have to constantly rebase
+> (we actually found quilt being a better tool than git in this case!). But it
+> also gives you full flexibility to try new approaches. Just because something
+> is out of tree doesn't mean it can't be published and used. Red Hat and SUSE,
+> as well as many others shipped PREEMPT_RT while it was out of tree.
 
-Thank you very much for your affirmation! 
+By kernel and mesa policy, while a drm/ kernel driver is not merged with
+a stable UAPI, the mesa side cannot be merged/enabled either. That means
+that every day the driver isn't upstream, our users suffer due to
+various container technologies not shipping the driver in userspace
+since they ship upstream mesa.
+
+The process is *designed* to encourage upstreaming early and *punish*
+downstream trees.
+
+It's not just distros shipping, or even typical container technologies
+like Flatpak (we have a workaround for that specific one). We'd need to
+get stuff like Android/AOSP to ship the patched userspace driver so it
+works in Waydroid, which some people want to use. It is an impossible task.
+
+Never mind that distros aren't, in fact, inclined to ship out-of-tree
+kernels. PREEMPT_RT was an exception due to its general usefulness, and
+even then was not available everywhere, and had a reasonable excuse for
+being out-of-tree so long due to its intrusiveness in core code. Rust
+and the Rust drivers aren't even remotely as intrusive, they just stay
+off to the side in their own directories. Nobody wants to ship
+downstream kernels just for random hardware support.
+
+Out of tree doesn't work. People, both in the kernel and out of the
+kernel, want things in tree.
+
+- Hector
+
