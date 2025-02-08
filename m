@@ -1,109 +1,219 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554751B6D08;
-	Sat,  8 Feb 2025 10:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE69317ADE8
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 11:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739012307; cv=none; b=pDogr5xXPUvCozwD15S21BjQgpFKwSzl+BOjfP5meL3g5qk9xUiJgB8EgUzGu9iHCe47tz3R6EtLyNiM6xVG/e///adS8zw+b5+OyOuh+qV1ST8zxRw9TVl0skFGGOwMkYz8pppL8mnFyLaM+Fqhn6XFXiC+RQWnXJAIrdUzOug=
+	t=1739013167; cv=none; b=VCqK6p+rAavwyz4WgFkHDks4wl+Y+f7vVPM75ek8QSuKF6kXvqJLW0/MKmOBB1Kx5KmKhQZwhNt9hrTIGoxWTyuxF7yqqPvBhN3Cg40fFBTbFOaDCgN2mmoxL+GST8FLPB61nmOQNLhuawy4BOWu7mgZtsfygvPVb+9V091gguI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739012307; c=relaxed/simple;
-	bh=HC59Proqu7a5kKk3YadUGL5qeCaPIya4GivGfD9Q6n4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pJstHzH/n54LdDrh95tgO1xg+I04tS8j+kgKF9WH0b2RPZLWvbJfOU2rDRFTSEwyHtFDfrEu/dPABlR5G+HMGP4fDGeH3of2PmKxilbpAcUO7K0ge+sr29Jr6IYnow/r/tAhPEU3wrVESyxOkrssCVXURLt22gc0a7+II4WUSTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XoLycnIb; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739013167; c=relaxed/simple;
+	bh=77rQGx21Ayeb1DDaG2cGncdZFL2SzphziRDR+LrIUHg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Q+IC3rvCyQy480dOhyzHcZtX76nlClgX/vIjRemDNqAiOdkyiLCNCi6EhRfTWWQ2MLHVwkk/3cY9t8+QdaAj2+qiWERSPqb5Xtxek6PQhq8az9HkGcQMYClqojj9wColbaynzVYDAPCpHoxrhLSJ0Jxf2HJG3Equf3Nz0tqRctA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pw11ENmp; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XoLycnIb"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43932b9b09aso2759565e9.3;
-        Sat, 08 Feb 2025 02:58:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739012305; x=1739617105; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XNqqhP8d5mEOfFUjKF7km6u3cEyjj+qEkyUHE3R255o=;
-        b=XoLycnIb7R1FP0gtlOpTHKvN6AUHYbOWko2bcI/bvbMTkwlqYAxz5i8mWHdgmP01W8
-         bht6JQZQ50N/JxB/bsEM9ZmY6Qsty7+v9hwNuq6RCz2MpXJjaGGmqBea1kuEJk30P8a+
-         +7w+jGNMpNqbvJchlRViKinHA7aGZFDDmXW1K2BjUElfRLuRSJ0zJV4Zdfk1rhxYRhMw
-         60y4b7DCE6pGSq6/lZM+SLaj6ZIigHotyvrbdvT6JeVcgt1eVIJlzSAKT88T8wKEgCw1
-         y27+B2hB7L6K26unUqGRSptWtlFEyxtJAzuLNA56XO8Zoy4S3DelbJ5QkNNfJ9DEXcTF
-         Y7uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739012305; x=1739617105;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XNqqhP8d5mEOfFUjKF7km6u3cEyjj+qEkyUHE3R255o=;
-        b=PlBZhP+JXfSKqegi8AXjnLMKraZgOyjmaWJm8vgHMaKXe8vRuspQFIz13Ewaw3KG+d
-         d6yAL9T3tkNEj6LrDncYR9e8JwddG0J8vhWazdKYUOd2eZRo2Pk+LvHnJzf8D95fma/i
-         mmOfxWQKsAlHe+6u8QCv44mt/GzlyO/jngX6COkilFElzmnwtTP3ekITNJf3Wnu++Jvw
-         JVfrRyI3GYI06taymsDw0QwuVh9wXRVdxAeAXqJTswqcUn7LOJdaQ8W4xIlGC21aJhOJ
-         8mwtde4NxZDQXq2Txfm1Xeo8rMXGy4w9IyG9EBN9gRkepBq1mjkdorzZ06W8PhBUAFyj
-         Rx7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVlxmPmC0BoNOp8jq+kTcJg4p/UNyRYMLirbkK3NfHUzM06AXFD0df9VTORBmkJ7SFtx7bfXHWJ8syboEw=@vger.kernel.org, AJvYcCXUnq846iYG46PfRfIQu08P9pRhiHDMVTSm+R9YkbRFfEWitG5HJQZzCme2oaROd2X5ERnfcDTpOez3mZadCaPRCQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH9Z/7yS/iUzPIFoJio16o/GcmM5gm68KFpTRtwM3n9c6//gPN
-	8x+m9KXfUvied5uGkXO3xyQvckm2EXF3DRzGAYxt+kmyDsbvzpOC
-X-Gm-Gg: ASbGncvfplcrv9DDWXIaMjhEf1U/x5pjMKx/oZZMER3I5J5mXu2w0J1cL0FRmjsg3Ga
-	gZnwuwNmf56jjltOi29eEPLlfXCEv0EFdDH7y0KGszy+2h2LESzYjcaYGDOWkX9TrR2G2AxuAgj
-	3+HD09I500ZX1Lbl2P0E56cDOFUT3AUAsB8+h9hzvmwW5S6LY0zEnrZMQxixNWe+SIp+jo3E5CT
-	dqZoOLpdHRKNsSsrQDmGOfUFYQ35VdAybIl7FB6Q/VmkNwabx51YRDvwnimq9mcjnY841QQgWnK
-	WWrQGckNVhQmltABYMtQzSHdZgefIIxppMCY9d4NmDUgnL0DI+PcBA==
-X-Google-Smtp-Source: AGHT+IGI6rjXAZop36zSG90oUjlAUybcAcwzJW/10yNuGLLIJasyrmCRrjJ5ueyR9wWlflLpnHpCXQ==
-X-Received: by 2002:a05:600c:1da7:b0:439:34e2:455f with SMTP id 5b1f17b1804b1-43934e24665mr7757815e9.12.1739012304348;
-        Sat, 08 Feb 2025 02:58:24 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390db11200sm116292145e9.38.2025.02.08.02.58.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 02:58:23 -0800 (PST)
-Date: Sat, 8 Feb 2025 10:58:21 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Kan Liang
- <kan.liang@linux.intel.com>, Sam James <sam@gentoo.org>, Jesper Juhl
- <jesperjuhl76@gmail.com>, James Clark <james.clark@linaro.org>, Zhongqiu
- Han <quic_zhonhan@quicinc.com>, Yicong Yang <yangyicong@hisilicon.com>,
- Thomas Richter <tmricht@linux.ibm.com>, Michael Petlan
- <mpetlan@redhat.com>, Veronika Molnarova <vmolnaro@redhat.com>, Anne Macedo
- <retpolanne@posteo.net>, Dominique Martinet <asmadeus@codewreck.org>,
- Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He
- <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, "Krzysztof =?UTF-8?B?xYFvcGF0b3dza2k=?="
- <krzysztof.m.lopatowski@gmail.com>
-Subject: Re: [PATCH v2 0/7] Add io_dir to avoid memory overhead from opendir
-Message-ID: <20250208105821.1cdb54fc@pumpkin>
-In-Reply-To: <20250207232452.994822-1-irogers@google.com>
-References: <20250207232452.994822-1-irogers@google.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pw11ENmp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739013165; x=1770549165;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=77rQGx21Ayeb1DDaG2cGncdZFL2SzphziRDR+LrIUHg=;
+  b=Pw11ENmpfoBP+4EAA4F/yf8uz9+Q7gyhMmlTZr9mCKRBmbUAdHZ9pKpF
+   scUAcg7pGW4XvwEoPM55TZiWSe3Y/vWVshhLkqCUbkDjoLnEUlNCBNrNb
+   Rzp6J+0SfaYqv0uXJymnTr0XW0mz9wy5G9SVTmfqjX92mXU5wXtX/DsYa
+   TR+Th6qy7G5+G/bDckMIbQ1OeLXEwYx9oaZlne1jPss97nVns1OogxW13
+   4V3AEeEKyySGy9EvaZ9nXDCCbZQ/6GxjL+nDxXLv/nM+ijA3GY96d/MH4
+   AemC88Zgy+Wh4pB6HFBL0cGF4aK3YDSwiPqBsRM8xQ0ZLusmp+zZLK9MK
+   A==;
+X-CSE-ConnectionGUID: Xmi9NLeYRDu2NLBJJUHn7A==
+X-CSE-MsgGUID: 3IMhzLp1S/mndosai2zGzw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51081232"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="51081232"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 03:12:44 -0800
+X-CSE-ConnectionGUID: AW1hzXltQXOTHoPNMxlJOg==
+X-CSE-MsgGUID: qNHqHV1CSBC1OQsTn5m9bw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,269,1732608000"; 
+   d="scan'208";a="112270374"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 08 Feb 2025 03:12:42 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tgilM-000ztF-2v;
+	Sat, 08 Feb 2025 11:12:40 +0000
+Date: Sat, 8 Feb 2025 19:12:29 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: [gustavoars:testing/wfamnae-next20250203 6/16]
+ drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2163:2: error: call to
+ '__compiletime_assert_1138' declared with 'error' attribute: BUILD_BUG_ON
+ failed: conf->keylen < WLAN_KEY_LEN_GCMP_256
+Message-ID: <202502081807.8dh4fSjz-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri,  7 Feb 2025 15:24:41 -0800
-Ian Rogers <irogers@google.com> wrote:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250203
+head:   c8a61127eedf61fcbf8d3f34301d29a782b9eeb0
+commit: 8bfdf37e1eeb4f469702361a8c511f40f6c6e486 [6/16] wifi: iwlwifi: mvm: Use __counted_by() and avoid -Wfamnae warnings
+config: riscv-allmodconfig (https://download.01.org/0day-ci/archive/20250208/202502081807.8dh4fSjz-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 6807164500e9920638e2ab0cdb4bf8321d24f8eb)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502081807.8dh4fSjz-lkp@intel.com/reproduce)
 
-> glibc's opendir allocates a minimum of 32kb, when called recursively
-> for a directory tree the memory consumption can add up - nearly 300kb
-> during perf start-up when processing modules. Add a stack allocated
-> variant of readdir sized a little more than 1kb
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502081807.8dh4fSjz-lkp@intel.com/
 
-Does 300kB really matter?
+All errors (new ones prefixed by >>):
 
-You seem to be trading memory allocation against system calls.
-My 'gut feel' is that the system call cost will dominate.
-(Unless all the directories are small.)
+   In file included from drivers/net/wireless/intel/iwlwifi/mvm/d3.c:7:
+   In file included from include/linux/etherdevice.h:20:
+   In file included from include/linux/if_ether.h:19:
+   In file included from include/linux/skbuff.h:17:
+   In file included from include/linux/bvec.h:10:
+   In file included from include/linux/highmem.h:8:
+   In file included from include/linux/cacheflush.h:5:
+   In file included from arch/riscv/include/asm/cacheflush.h:9:
+   In file included from include/linux/mm.h:2224:
+   include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     505 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     512 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:524:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     524 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     525 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2163:2: error: call to '__compiletime_assert_1138' declared with 'error' attribute: BUILD_BUG_ON failed: conf->keylen < WLAN_KEY_LEN_GCMP_256
+    2163 |         BUILD_BUG_ON(conf->keylen < WLAN_KEY_LEN_GCMP_256);
+         |         ^
+   include/linux/build_bug.h:50:2: note: expanded from macro 'BUILD_BUG_ON'
+      50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+         |         ^
+   include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_BUG_ON_MSG'
+      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+         |                                     ^
+   include/linux/compiler_types.h:542:2: note: expanded from macro 'compiletime_assert'
+     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^
+   include/linux/compiler_types.h:530:2: note: expanded from macro '_compiletime_assert'
+     530 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |         ^
+   include/linux/compiler_types.h:523:4: note: expanded from macro '__compiletime_assert'
+     523 |                         prefix ## suffix();                             \
+         |                         ^
+   <scratch space>:167:1: note: expanded from here
+     167 | __compiletime_assert_1138
+         | ^
+>> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2162:2: error: call to '__compiletime_assert_1137' declared with 'error' attribute: BUILD_BUG_ON failed: conf->keylen < WLAN_KEY_LEN_CCMP
+    2162 |         BUILD_BUG_ON(conf->keylen < WLAN_KEY_LEN_CCMP);
+         |         ^
+   include/linux/build_bug.h:50:2: note: expanded from macro 'BUILD_BUG_ON'
+      50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+         |         ^
+   include/linux/build_bug.h:39:37: note: expanded from macro 'BUILD_BUG_ON_MSG'
+      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+         |                                     ^
+   include/linux/compiler_types.h:542:2: note: expanded from macro 'compiletime_assert'
+     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ^
+   include/linux/compiler_types.h:530:2: note: expanded from macro '_compiletime_assert'
+     530 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |         ^
+   include/linux/compiler_types.h:523:4: note: expanded from macro '__compiletime_assert'
+     523 |                         prefix ## suffix();                             \
+         |                         ^
+   <scratch space>:163:1: note: expanded from here
+     163 | __compiletime_assert_1137
+         | ^
+   3 warnings and 2 errors generated.
 
-There might, of course, be other code in glibc that is designed
-to make it all slower than necessary.
 
-	David
+vim +2163 drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+
+  2148	
+  2149	static bool iwl_mvm_gtk_rekey(struct iwl_wowlan_status_data *status,
+  2150				      struct ieee80211_vif *vif,
+  2151				      struct iwl_mvm *mvm, u32 gtk_cipher)
+  2152	{
+  2153		int i, j;
+  2154		struct ieee80211_key_conf *key;
+  2155		DEFINE_FLEX(struct ieee80211_key_conf, conf, key, keylen,
+  2156			    WOWLAN_KEY_MAX_SIZE);
+  2157		int link_id = vif->active_links ? __ffs(vif->active_links) : -1;
+  2158	
+  2159		conf->cipher = gtk_cipher;
+  2160	
+  2161		BUILD_BUG_ON(WLAN_KEY_LEN_CCMP != WLAN_KEY_LEN_GCMP);
+> 2162		BUILD_BUG_ON(conf->keylen < WLAN_KEY_LEN_CCMP);
+> 2163		BUILD_BUG_ON(conf->keylen < WLAN_KEY_LEN_GCMP_256);
+  2164		BUILD_BUG_ON(conf->keylen < WLAN_KEY_LEN_TKIP);
+  2165		BUILD_BUG_ON(conf->keylen < sizeof(status->gtk[0].key));
+  2166	
+  2167		switch (gtk_cipher) {
+  2168		case WLAN_CIPHER_SUITE_CCMP:
+  2169		case WLAN_CIPHER_SUITE_GCMP:
+  2170			conf->keylen = WLAN_KEY_LEN_CCMP;
+  2171			break;
+  2172		case WLAN_CIPHER_SUITE_GCMP_256:
+  2173			conf->keylen = WLAN_KEY_LEN_GCMP_256;
+  2174			break;
+  2175		case WLAN_CIPHER_SUITE_TKIP:
+  2176			conf->keylen = WLAN_KEY_LEN_TKIP;
+  2177			break;
+  2178		default:
+  2179			WARN_ON(1);
+  2180		}
+  2181	
+  2182		for (i = 0; i < ARRAY_SIZE(status->gtk); i++) {
+  2183			if (!status->gtk[i].len)
+  2184				continue;
+  2185	
+  2186			conf->keyidx = status->gtk[i].id;
+  2187			IWL_DEBUG_WOWLAN(mvm,
+  2188					 "Received from FW GTK cipher %d, key index %d\n",
+  2189					 conf->cipher, conf->keyidx);
+  2190			memcpy(conf->key, status->gtk[i].key,
+  2191			       sizeof(status->gtk[i].key));
+  2192	
+  2193			key = ieee80211_gtk_rekey_add(vif, conf, link_id);
+  2194			if (IS_ERR(key))
+  2195				return false;
+  2196	
+  2197			for (j = 0; j < ARRAY_SIZE(status->gtk_seq); j++) {
+  2198				if (!status->gtk_seq[j].valid ||
+  2199				    status->gtk_seq[j].key_id != key->keyidx)
+  2200					continue;
+  2201				iwl_mvm_set_key_rx_seq_idx(key, status, j);
+  2202				break;
+  2203			}
+  2204			WARN_ON(j == ARRAY_SIZE(status->gtk_seq));
+  2205		}
+  2206	
+  2207		return true;
+  2208	}
+  2209	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
