@@ -1,139 +1,226 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C71244E8E;
-	Sat,  8 Feb 2025 21:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66092244E8E;
+	Sat,  8 Feb 2025 21:34:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739050260; cv=none; b=sqwDP8V1QvDRS6qS9tHkJSxOSAZAXN+HbvK7eLn8Hd1WXqH/Rr1JR/mlR7vFbjPEw5N3fcKoMuEfWbK05dXmz2OZrXeX3mU1lRwLIRFf7zyhQK4WC/KNl013cUzhl8VobzzhYAyar6a+n7D9de7DPavnHTi3qRnPQRDtaeY59bE=
+	t=1739050462; cv=none; b=GWM6yBK1bbua6zx5tYCfYfROvELtLI7WEj01zEgUVH7ycaCvxZRC22fjkPCITDbIwLhdL6porYZ5QOxLZ9yL2ubqaZr45hWwExbBZfoAPjEyuKylkUl7HZab5KoTkyoOrG0z4w7FJeMXWf/A6kE/9FTbBF5jsU0QOvUes+ZM1LI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739050260; c=relaxed/simple;
-	bh=I7TWitL6B3XzA7VM4K4Rc8PviMZKmMeCw+xeYSM60uA=;
+	s=arc-20240116; t=1739050462; c=relaxed/simple;
+	bh=hNv+x7+fBJfBx6HgcTPkHn07XwlL1WEdrFEoAyAaDMI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cHeftgd0bcNZFl3IXgGbe0nL4sT1EtNmT2FJwy18I/v4mTZJnhiQMlDK41IHcXHJWv2pWC226dHrHNIFwqJIDrEPShI7f7WWpm/rZ3tgU5mR1u2cSSkKBv9y9peiD8ZLhmOlYdSZbAbWxl0GcHFXcZ6buHf1bf2p6WQC1p3YF40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bxdR39B4; arc=none smtp.client-ip=209.85.128.47
+	 To:Cc:Content-Type; b=UbLYOH5PhgzA5C90N8QDvSG6wFTmO1fClsJGwTeQDLsxNFFfn9QCk7br8edKKW4Md0xwb4KWGXGCVOBUACqwuzFu+xqWGY+R6aZpv/LTSQRcYv2udhFgPEmAnD2RRYiIKu9XKZp3XWaMJq/TAKUKcFYrOinFiO7PLBmc1iDF/r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CI3VbOY6; arc=none smtp.client-ip=209.85.217.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bxdR39B4"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4361815b96cso21121445e9.1;
-        Sat, 08 Feb 2025 13:30:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CI3VbOY6"
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4ba72ccc283so2010423137.2;
+        Sat, 08 Feb 2025 13:34:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739050257; x=1739655057; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739050459; x=1739655259; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MeLogvOTrg3hgl5TU48qPOFJSwSkerHCTCM95+nKuv0=;
-        b=bxdR39B4ypKR/Vn0RyKZ9gjL/vYvnS7C3QPgwG/+KdBm8CL+2PogljgPPCqtK+U12i
-         ToYIhhsduxzEYdqHFNvNf/Zprtgkfo2vhx2XcDla30g9CpFOBlMqbViVE/WR041UiJ1g
-         6BJd4zqkocgw4daOgQ4PP+O8EczjenW28ipFjWpYJqVEQ5EwKRGKs1qc1/txaQyzZP8c
-         /GPwucAMfLU5JQ1kuyDX+hGC499ekQYcLXEJggVjv4fBUwpaPXoyyq9l7LYPhHAPWNC2
-         XGLdQRy2/3NLlQ+Sd+IGwlwDwl/3Y/FV3Y2FQOAJPwK5v7MdgG4oPmHy/A5WsUzL8fEy
-         4QkQ==
+        bh=Tr1A4JBrm8DZqdxvHg/4VfN3wYIha/zlu4oSdgbrsgY=;
+        b=CI3VbOY6Nn5aS4sYsb66Yaubl0zGDg3CdDRGIGSkzMuUXDMFOzLJcU63jlUq3L9gkW
+         FKtBk8qctppt0WU1UaLSkoO4f6+i30K1MvZglG/zkFebimXbdbPfLbkodbWau4LIkvBh
+         ZVTga+6wvRyzhpYYxBXk9x07rmufTbJc3QbhVlRTkQx7KPXBSuD99btRNFRFGdlLO4Vk
+         wI2cz9kcpZn+yv6xyzgX27G69kWr5rE5a9uAnYAOrHnVxc2Xyxy22PM6DQvG39+2hAXL
+         y1P5wE2e5ZWLg9IPyTAeKCrY2QFs1cl69dj9IhtBnxiyl8Bk8V6vq2/+pPngVoN57KFe
+         j4mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739050257; x=1739655057;
+        d=1e100.net; s=20230601; t=1739050459; x=1739655259;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MeLogvOTrg3hgl5TU48qPOFJSwSkerHCTCM95+nKuv0=;
-        b=OXqPLdkYQEy+XMkFGQROr5Gaht334kmKhHxBPtzVpEWLXUFUAVMsfydzJG1JKqZx+5
-         g9c7NMhOy598tEWlghY5qdoNmTMZGVotU1j7u4aKfTEwuQTfkUdvKN5eQ5efCFr8btPX
-         jiUK2ZhMxZGiIRNdlFcz0RZ1aLQ77GXUJtp16UH2IODsLxz/kjjb7a4gTaFAX99DtAqa
-         yQ8XiNZ8+XkH7zootwXtB0cP7AWz8d31NLmYcDVCpZzyHBAdG1DAcQ1N+hOjp0Jgx3Hh
-         7F7fWH1Cj1jL0Yti75t0tjn8ty7aGXk4SfipBWSemWjg4rO+P8cgGoLbFP3MqXpcZ7kz
-         12Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCUsrJHnXRYYJ1uffYzkvEht4gcZDTYyiXABbNKtlGgNQBjrfTLQ9mjt6VxVv5knwfK2A7nZPcku2Topg+A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDM0lMGuYDNTAHpKEx5Pyr4VXmRzjuReouJRScvwl/CP71r//k
-	FRkJlrBIxeUMsjmoKTRedherxbxJW5yRAvkfvanKsEMVCNSYPRF4n/sLa8l5kcwXzzkqweG53nL
-	23yal9lJUE6tv+mGBgZr6fNx2AgA=
-X-Gm-Gg: ASbGncuFlD5hMChqEI5qEHj5IuXBqWuucEytZzrpOapbKJfLs+7+9MMupURBBrICr0j
-	eB0EMMZgf+ifKdjOHLY/Ltq42+qvj9SqXPt+ipH5xS/t1YpZQzEi3ZTS06XR+iStoZ7aFvS1vxF
-	nRWCbvrSyjDu90v82eMAHwfp+p1KuG
-X-Google-Smtp-Source: AGHT+IEP0vhMZghv54Q+6Voz3luuHMi0bOzgdsxcCEz++Zjhl9x/NdVS4KE4GKQfNkGM7Bwk01RIJ1lfPbZtfTdWZPQ=
-X-Received: by 2002:a5d:6d04:0:b0:38d:d9b3:5916 with SMTP id
- ffacd0b85a97d-38dd9b359ddmr121320f8f.1.1739050257177; Sat, 08 Feb 2025
- 13:30:57 -0800 (PST)
+        bh=Tr1A4JBrm8DZqdxvHg/4VfN3wYIha/zlu4oSdgbrsgY=;
+        b=vbePZGTg/15Wb7I3KF1NQvZZx8To9GUAN/XFx4tF1TyNafCZt3EjyfmfMGo4A1+9t3
+         SVAP5o4JnMam+22ybefQwJSCuc2w/ZgHCpckaeqWvkjtTLYgJdcXBwbsYVI6jKoAa+Mq
+         v26VmSGQGNyi7yiiJ1/SLT3Ni+KKJE6XvFNUy/PaVG7JClKMEwmiApnw8U6kaRsICbwI
+         6T9LPbQJF+AXWL2AZwRTwpHt6c7Y8WTlAof+OW9hbzQmxvEkeA0TJ876BW7ZOMeoJOTp
+         lOo63yC4+zBLBXvZo/2/FMx6z+2/8jFM2BkzsNbhqwX0szsJeD6XvBxHMSLGOYgWeFuS
+         B9nw==
+X-Forwarded-Encrypted: i=1; AJvYcCVY2me7blVvCjF2lQ/UBSSgToIfoi/wrudrUMQEoWLONNXO8pUCLRmtCUeBAwcjI3PiCQ08UqaA@vger.kernel.org, AJvYcCXdWwWDQMb3ADCGg2o3Z9Fl6eRHISFKCn+i/JMm29DcN9NKMFJlLYT7Bn20XKxAd8CuuPvonUH3beCgSoE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvPAPizl6rSMXBuVQF7KaDRmCyb6lw/ZnDY5AUoQ6y/tDKnPjV
+	Otb5vrhXi/zvSY77Uupj4dYWhg6UGWK/TbzUSydrbyaq3OdOFPBTtD6VG6ZUYTAwJK9w6VssSx7
+	hcsfsPGpQI7GM9WuX3syG/s+fO/E=
+X-Gm-Gg: ASbGnctDy1dcilBM66jzcuR+cKN4G+oPl5voxKejzGv7sqW2485vtKemvZQkNuRoBhG
+	fAdvVtuRlNlOIuZ5pXwk4ePzthyr8DkzFXIYlHm9xlRPEwdWBVc/t3fNCmHA/FHei+00HpK8KTc
+	43WQQHWZwARvXRKOrmtJwByAI/Vdf6xg==
+X-Google-Smtp-Source: AGHT+IGCMVvzBkTONyCiGLzGRx+BYTIKnuFp2mhSuxrcG5tm0TfmfKRTUXaNMu0nFAC/FmnQ5jzwqcE+MIxDGGSNRQM=
+X-Received: by 2002:a05:6102:6a98:b0:4bb:9b46:3f6f with SMTP id
+ ada2fe7eead31-4bb9b467825mr1105069137.1.1739050459210; Sat, 08 Feb 2025
+ 13:34:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1738888641.git.yepeilin@google.com> <d03d8c3305e311c6cb29924119b5eecae8370bbc.1738888641.git.yepeilin@google.com>
-In-Reply-To: <d03d8c3305e311c6cb29924119b5eecae8370bbc.1738888641.git.yepeilin@google.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Sat, 8 Feb 2025 13:30:46 -0800
-X-Gm-Features: AWEUYZkrJWmpVXeIIF_fMq9Qy1erCPKH-mY9gn4_cLquOtiI9oiPRGGrxOURbaQ
-Message-ID: <CAADnVQ+L0h8qXfYkC3+ORyQkXFJ2MgO8FDHr_Ha0QMAtS_ujag@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 4/9] bpf: Introduce load-acquire and
- store-release instructions
-To: Peilin Ye <yepeilin@google.com>
-Cc: bpf <bpf@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, bpf@ietf.org, 
-	Xu Kuohai <xukuohai@huaweicloud.com>, Eduard Zingerman <eddyz87@gmail.com>, 
-	David Vernet <void@manifault.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
-	Ilya Leoshkevich <iii@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Quentin Monnet <qmo@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>, Yingchi Long <longyingchi24s@ict.ac.cn>, 
-	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>, Neel Natu <neelnatu@google.com>, 
-	Benjamin Segall <bsegall@google.com>, LKML <linux-kernel@vger.kernel.org>
+References: <1737717687-16744-1-git-send-email-yangge1116@126.com>
+ <CAGsJ_4y2zjCzRUgxkx2GpspFBD9Yon=R3SLaGezk9drQz+ikrQ@mail.gmail.com> <28edc5df-eed5-45b8-ab6d-76e63ef635a9@126.com>
+In-Reply-To: <28edc5df-eed5-45b8-ab6d-76e63ef635a9@126.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Sun, 9 Feb 2025 10:34:08 +1300
+X-Gm-Features: AWEUYZmHeEniBO1KvmZ5SsYHPj_w-1AYYlBIQu74Tt0dYgU0dn8Jppk0fRFDeAs
+Message-ID: <CAGsJ_4yC=950MCeLDc-8inT52zH6GSEGBBfk+A0dwWEDE5_CMg@mail.gmail.com>
+Subject: Re: [PATCH] mm/cma: add an API to enable/disable concurrent memory
+ allocation for the CMA
+To: Ge Yang <yangge1116@126.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, david@redhat.com, 
+	baolin.wang@linux.alibaba.com, aisheng.dong@nxp.com, liuzixing@hygon.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 6, 2025 at 6:06=E2=80=AFPM Peilin Ye <yepeilin@google.com> wrot=
-e:
+On Sat, Feb 8, 2025 at 9:50=E2=80=AFPM Ge Yang <yangge1116@126.com> wrote:
 >
-> Introduce BPF instructions with load-acquire and store-release
-> semantics, as discussed in [1].  The following new flags are defined:
 >
->   BPF_ATOMIC_LOAD         0x10
->   BPF_ATOMIC_STORE        0x20
->   BPF_ATOMIC_TYPE(imm)    ((imm) & 0xf0)
 >
->   BPF_RELAXED        0x0
->   BPF_ACQUIRE        0x1
->   BPF_RELEASE        0x2
->   BPF_ACQ_REL        0x3
->   BPF_SEQ_CST        0x4
+> =E5=9C=A8 2025/1/28 17:58, Barry Song =E5=86=99=E9=81=93:
+> > On Sat, Jan 25, 2025 at 12:21=E2=80=AFAM <yangge1116@126.com> wrote:
+> >>
+> >> From: yangge <yangge1116@126.com>
+> >>
+> >> Commit 60a60e32cf91 ("Revert "mm/cma.c: remove redundant cma_mutex loc=
+k"")
+> >> simply reverts to the original method of using the cma_mutex to ensure
+> >> that alloc_contig_range() runs sequentially. This change was made to a=
+void
+> >> concurrency allocation failures. However, it can negatively impact
+> >> performance when concurrent allocation of CMA memory is required.
+> >
+> > Do we have some data?
+> Yes, I will add it in the next version, thanks.
+> >
+> >>
+> >> To address this issue, we could introduce an API for concurrency setti=
+ngs,
+> >> allowing users to decide whether their CMA can perform concurrent memo=
+ry
+> >> allocations or not.
+> >
+> > Who is the intended user of cma_set_concurrency?
+> We have some drivers that use cma_set_concurrency(), but they have not
+> yet been merged into the mainline. The cma_alloc_mem() function in the
+> mainline also supports concurrent allocation of CMA memory. By applying
+> this patch, we can also achieve significant performance improvements in
+> certain scenarios. I will provide performance data in the next version.
+> I also feel it is somewhat
+> > unsafe since cma->concurr_alloc is not protected by any locks.
+> Ok, thanks.
+> >
+> > Will a user setting cma->concurr_alloc =3D 1 encounter the original iss=
+ue that
+> > commit 60a60e32cf91 was attempting to fix?
+> >
+> Yes, if a user encounters the issue described in commit 60a60e32cf91,
+> they will not be able to set cma->concurr_alloc to 1.
 
-I still don't like this.
+A user who hasn't encountered a problem yet doesn't mean they won't
+encounter it; it most likely just means the testing time hasn't been long
+enough.
 
-Earlier you said:
+Is it possible to implement a per-CMA lock or range lock that simultaneousl=
+y
+improves performance and prevents the original issue that commit
+60a60e32cf91 aimed to fix?
 
-> If yes, I think we either:
->
->  (a) add more flags to imm<4-7>: maybe LOAD_SEQ_CST (0x3) and
->      STORE_SEQ_CST (0x6); need to skip OR (0x4) and AND (0x5) used by
->      RMW atomics
->  (b) specify memorder in imm<0-3>
->
-> I chose (b) for fewer "What would be a good numerical value so that RMW
-> atomics won't need to use it in imm<4-7>?" questions to answer.
->
-> If we're having dedicated fields for memorder, I think it's better to
-> define all possible values once and for all, just so that e.g. 0x2 will
-> always mean RELEASE in a memorder field.  Initially I defined all six of
-> them [2], then Yonghong suggested dropping CONSUME [3].
+I strongly believe that cma->concurr_alloc is not the right approach. Let's
+not waste our time on this kind of hack or workaround.  Instead, we should
+find a proper fix that remains transparent to users.
 
-I don't think we should be defining "all possible values",
-since these are the values that llvm and C model supports,
-but do we have any plans to support anything bug ld_acq/st_rel ?
-I haven't heard anything.
-What even the meaning of BPF_ATOMIC_LOAD | BPF_ACQ_REL ?
+> >>
+> >> Fixes: 60a60e32cf91 ("Revert "mm/cma.c: remove redundant cma_mutex loc=
+k"")
+> >> Signed-off-by: yangge <yangge1116@126.com>
+> >> Cc: <stable@vger.kernel.org>
+> >> ---
+> >>   include/linux/cma.h |  2 ++
+> >>   mm/cma.c            | 22 ++++++++++++++++++++--
+> >>   mm/cma.h            |  1 +
+> >>   3 files changed, 23 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/include/linux/cma.h b/include/linux/cma.h
+> >> index d15b64f..2384624 100644
+> >> --- a/include/linux/cma.h
+> >> +++ b/include/linux/cma.h
+> >> @@ -53,6 +53,8 @@ extern int cma_for_each_area(int (*it)(struct cma *c=
+ma, void *data), void *data)
+> >>
+> >>   extern void cma_reserve_pages_on_error(struct cma *cma);
+> >>
+> >> +extern bool cma_set_concurrency(struct cma *cma, bool concurrency);
+> >> +
+> >>   #ifdef CONFIG_CMA
+> >>   struct folio *cma_alloc_folio(struct cma *cma, int order, gfp_t gfp)=
+;
+> >>   bool cma_free_folio(struct cma *cma, const struct folio *folio);
+> >> diff --git a/mm/cma.c b/mm/cma.c
+> >> index de5bc0c..49a7186 100644
+> >> --- a/mm/cma.c
+> >> +++ b/mm/cma.c
+> >> @@ -460,9 +460,17 @@ static struct page *__cma_alloc(struct cma *cma, =
+unsigned long count,
+> >>                  spin_unlock_irq(&cma->lock);
+> >>
+> >>                  pfn =3D cma->base_pfn + (bitmap_no << cma->order_per_=
+bit);
+> >> -               mutex_lock(&cma_mutex);
+> >> +
+> >> +               /*
+> >> +                * If the user sets the concurr_alloc of CMA to true, =
+concurrent
+> >> +                * memory allocation is allowed. If the user sets it t=
+o false or
+> >> +                * does not set it, concurrent memory allocation is no=
+t allowed.
+> >> +                */
+> >> +               if (!cma->concurr_alloc)
+> >> +                       mutex_lock(&cma_mutex);
+> >>                  ret =3D alloc_contig_range(pfn, pfn + count, MIGRATE_=
+CMA, gfp);
+> >> -               mutex_unlock(&cma_mutex);
+> >> +               if (!cma->concurr_alloc)
+> >> +                       mutex_unlock(&cma_mutex);
+> >>                  if (ret =3D=3D 0) {
+> >>                          page =3D pfn_to_page(pfn);
+> >>                          break;
+> >> @@ -610,3 +618,13 @@ int cma_for_each_area(int (*it)(struct cma *cma, =
+void *data), void *data)
+> >>
+> >>          return 0;
+> >>   }
+> >> +
+> >> +bool cma_set_concurrency(struct cma *cma, bool concurrency)
+> >> +{
+> >> +       if (!cma)
+> >> +               return false;
+> >> +
+> >> +       cma->concurr_alloc =3D concurrency;
+> >> +
+> >> +       return true;
+> >> +}
+> >> diff --git a/mm/cma.h b/mm/cma.h
+> >> index 8485ef8..30f489d 100644
+> >> --- a/mm/cma.h
+> >> +++ b/mm/cma.h
+> >> @@ -16,6 +16,7 @@ struct cma {
+> >>          unsigned long   *bitmap;
+> >>          unsigned int order_per_bit; /* Order of pages represented by =
+one bit */
+> >>          spinlock_t      lock;
+> >> +       bool concurr_alloc;
+> >>   #ifdef CONFIG_CMA_DEBUGFS
+> >>          struct hlist_head mem_head;
+> >>          spinlock_t mem_head_lock;
+> >> --
+> >> 2.7.4
+> >>
+> >>
+> >
 
-What does the verifier suppose to do? reject for now? and then what?
-Map to what insn?
-
-These values might imply that bpf infra is supposed to map all the values
-to cpu instructions, but that's not what we're doing here.
-We're only dealing with two specific instructions.
-We're not defining a memory model for all future new instructions.
-
-pw-bot: cr
+Thanks
+Barry
