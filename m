@@ -1,101 +1,176 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7D8243362;
-	Sat,  8 Feb 2025 22:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0997D243369;
+	Sat,  8 Feb 2025 23:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739055588; cv=none; b=d8cnGMXpXbf5EiVvXuiTfJxmkde+26gf/eWaRVYhBYWrNxLxoSg9DNB05ZsH6ys3EiQTNrFSxG5Bonp40n9RzcXLRTJuvO5iuLUhXZEs03ViKWW191Tx5kkLErikQl6dntNCOTVAnxOCBpgbc3V/g61Vja1lpUSJT54TxrpMC4M=
+	t=1739055906; cv=none; b=DMK9BY0vIrMh1V3IiDVXdnpzeL5ViwNvC4z+SrPGK91mNPvNekMblCvJ15UTCbugUfaHlCmM+DsjDiqVEqk0qix6cDFunXp6KAY+Qj2EmXhasivrWlwkQvRTgtZ6Zav311oEOf9TZGNvu9d0JN9AXacesLkEMmwfEhMssSZxIzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739055588; c=relaxed/simple;
-	bh=aabHhy82gBFlQk/8LvIO5hE8ht59SVW+LJY0gSHUcmc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qj/jIJ9Q+vn6JG3pMm9pXnx5l0D5eZlOjm9sKoqdB90DWmlhbsI4brQazIojz3DrEVbyxTIaz0bzrfFrgYYFwndGU6w5qlIpHtHjvbDQB/So9KalEn13jxyJmvNZtAsxyFGR/FtlFAgWXETkX6uUkWZ07fyCqm954/vbKDTSvF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PAEY329r; arc=none smtp.client-ip=209.85.208.169
+	s=arc-20240116; t=1739055906; c=relaxed/simple;
+	bh=JKUGn4Qoq9C5pcGlPkGhe7+elclkJ83B4uplIMzEjU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JZ8X3YGextM6lIshS4S/zyd2xzEhQLWI2pwKRVdD0uAsqV34EGDHdwpMAszG1QxwnRuJnaAoAZsyOwp3ul6ZKQ47MXYAI4TxDArUaTT5Xwf5ocPB97hF4wFoBQ+yB3U3AJxzv75Wufi/AZpquiD7a+AjqMz77oefcxA14z/CMQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ahrljPBF; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PAEY329r"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30613802a6bso34501631fa.1;
-        Sat, 08 Feb 2025 14:59:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ahrljPBF"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-436341f575fso38118435e9.1;
+        Sat, 08 Feb 2025 15:05:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739055584; x=1739660384; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1739055903; x=1739660703; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HJs+2eRR2gBOh7G6Hp3UjP141o+AZTqQQ5yldfOP0gk=;
-        b=PAEY329rpeLPbg6hsL2De6oTx+ET8eHHqOX2ETpTx122nH7Nm9nxtRfatRGMwo9yV5
-         bRQX34lJoOfVtUuw4n7C17e7oBJqEFhYaE10tt1OSjQ0t7Z2AZ9hDXB7lW692k4nAuy9
-         dR9F10lMKcAxJLXsF0MCl4ebKcY+W00olvIOOiC/BnxYyU2kzUhNRvbM8f1mkBYNro00
-         h7Kw22lsD3R4lIH+0QlmDRZdfI2HOSK+Py3HAj469qGPOFZogD3lS/DrFCe4F/rYuDCn
-         SHEe259J8QFDkVB7fUfEz9rxhc/KN7brmt/73TAmKC992gXcIq7WayparPw+C8YqnZR1
-         CogQ==
+        bh=Jx+hNvPmHOpHVq9VFKq5DNfIsRdCbXvYRGw+9lYGTxQ=;
+        b=ahrljPBFXMc9YhV3UKNwDYh27S/RQKt6jwYNcEpyT86GWCIXunRNCUrFEweNQo02dU
+         YCXhWuQi0RXhuRv9yr11jJx4P0DofKD+0vB9qYtLbQO9kMK4dA50spB1eEFdby7uqyXw
+         LIqAYSWVPjLZyB4dQc0zIPZQn+KEhOotsisB7eeNjE8kYh5ZYaSpvPOIB4cdKuF0Fy6R
+         9aElGOc5W3lKeK89eEQ+LEpv9wlJZv4m+hmfobb/hYKGsRr7EYDNdvQlXEIWEor+dkid
+         XiUeaf5tgUcf1WZgT4Bs4ylM1/RLYIFcjpo9x0RIFc3FR9S1+RS02xX+ru16rvPfdY4/
+         J06A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739055584; x=1739660384;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739055903; x=1739660703;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HJs+2eRR2gBOh7G6Hp3UjP141o+AZTqQQ5yldfOP0gk=;
-        b=THzt7Az00d0lngEgUfGgVcwzWdCQYLdjrJ/3bGSV2UhySpTPHBSvySYoKDaeuINLkR
-         5vUDnXL9x4g3Pw/p3byYNOfr8bPnrpj8YSA4q5uaieF6M09ZGUU4zXwkoeA8nMAXbjsA
-         jzVoCvwdEkLJZ5Y1MVMu0LoFUUBzogcdk9sSoi1Bkd7Q4sYH4pDpck2RlFGN1vvbNnlP
-         w4b+UmI0euxu4Mf0nDYrZXx8hMy6+ykt325K4xNXYJOkuO9vIYLlNjBc4Sy17bwapuZe
-         qTFXjz7RsE6CxfRz2GqU48NCJmubKATRDwus67j5hsyiwajfqvlNwKKaOWlolcfEiGcB
-         kwtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6NJvUeRUW59dRi8wzAMJcaN4MZ7ifzw6cYgqspsX0KBN4gkIvaPGDAhBscIF8aFb8TdwPwDX4/VA4VH8=@vger.kernel.org, AJvYcCWzolN6hFnnq/hPpflBmPvpTHc+lMKE5pkQEdDcqksSpdgmDFNDWG/F44oiAXCJ5U5Pe8jf4bvBIbwPr/Q84r8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/f79PLXZHntS9tDcPgh1SGCiOcQl4n2go/Rz/fr8pQC26xDrU
-	7Xl8Ylz0bPANVioaEYX3ENfSuMYI60A9hyngT4bKA/Ze1ofbnRt2s3/a5X9GSdnI35KKEUxqSFq
-	PklRIVwemFg9Vrkxe6YSikUdiRKc=
-X-Gm-Gg: ASbGncvb44J8VIEnfEfP/IhevYa3ltx/X9NeasjtqP43emK+QPMb3pQJOzEc86603oM
-	xG8RuWF4OcxkHpXNMeZtCOT4O6J6pgiXoqziYJT5h1vMxqpTKiCi8DWVtzju8M4zGYU+CZhZN9o
-	GCz6Xp4+wYiAruCeLIObbmdVV4repY9ck=
-X-Google-Smtp-Source: AGHT+IExgDhOq/NwPfHEqr9YSz2UwtRZX8FJ80tVWDzcGIY3HztGkF1Iu40uH7zHUg0C+Q0jZ533e9oZPvIX5M3R46A=
-X-Received: by 2002:a2e:bc21:0:b0:300:31db:a770 with SMTP id
- 38308e7fff4ca-307e5a668dbmr24067691fa.26.1739055583531; Sat, 08 Feb 2025
- 14:59:43 -0800 (PST)
+        bh=Jx+hNvPmHOpHVq9VFKq5DNfIsRdCbXvYRGw+9lYGTxQ=;
+        b=MYALv7COpn3B6GGhqQgTXkMYRGGasIZh1Y5X8pOyrX6dUtBbnHHyFECo7z+HAi7M3m
+         QhkWKaP2NiiNusC/Jp9Q8cDHncEzNgWGRrRRoNimXRj2wns1s8TZ+ZuQCL6xOWMyhQKA
+         nHj1FcLZjJZCN/d6mU6waDCbL7hnd7/gQCIw8KS8D2btAdc3WFbpSuVkfOKe11HEm43T
+         QLkFC3cajTmhdId2fFQ7YmJsPMcSj+bd4QA88G8J92wKb3umD4No1rzFm3f2T+zdKnpk
+         bbFeMSn9ErRQ61osAduuY/0P8sn4MAWv5ZlsAyoSKq8DxuyY9v7aq6SH1QuC9jYXgrKA
+         bhNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX0DsBUPxNBt8/HJTOGHMbvIA5bDsJKwj9RwchTiGRFUTCdyKd45gB3xy45k7o++4Irquqiap41u3braZwK@vger.kernel.org, AJvYcCX7MTua+FWrN1z84otG7fKHPMKtCtjx7HhdD9E0nRCUJrA3EScFTn2A3+oOMWVjFw6VzYn27jfXyulUF/um@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5TvAiNg6kjQx4eAKbw9yhT2B2PIa0Qkyi+J4kXMq9trv+Uq7D
+	CX4Wqm/9TulLDewTXeFB74Fz4QemLJmphzMSh9RboxBLdCMEFj/4
+X-Gm-Gg: ASbGncthJ9HTOIiAceoPYmX5E4K5MiEjZ2OszUitaPUL7ZrcpbCQIx589iExYEbt9yy
+	Rv+MxckgQfXAWRoMzIz3G4CH9oxYkgT7B2YSXdYyNAWIyGvBD8kUAq3E/H+tXpA0NanYyl1c656
+	ioMxof4k0nG9ed/6M/IGyGYjEbgX4/Cu8UqvkC+0r+IlalpfhGTI2i/4Uhj1UOr8TTxWUb03bbB
+	0WPrDerTbq6LxQwxR9u/7TaYa8JX+ufIlMZrRF8z9ZXgHZ8EdZVkczE2lfSg5bEd/6I00nUmUC2
+	oGpEpJrgaiifVfPNQx3z9zjKztGi3WzVWaJcj56BXQXTaBWzBXYcsg==
+X-Google-Smtp-Source: AGHT+IHlWWqzoIlQojAWFJZ7vPMv6pE9NnK+PocpRlv6qnxxzk2UKRfbaPs6kFTCZchAn6hcApokDw==
+X-Received: by 2002:a05:600c:3556:b0:434:a781:f5d9 with SMTP id 5b1f17b1804b1-4392498a1c0mr94726125e9.11.1739055902950;
+        Sat, 08 Feb 2025 15:05:02 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d964c7csm132142945e9.17.2025.02.08.15.05.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 15:05:02 -0800 (PST)
+Date: Sat, 8 Feb 2025 23:05:00 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>, Jan
+ Kara <jack@suse.cz>
+Subject: Re: [PATCH next 1/1] fs: Mark get_sigset_argpack() __always_inline
+Message-ID: <20250208230500.05ad57a5@pumpkin>
+In-Reply-To: <CAHk-=whvmGhOzJJr1LeZ7vdSNt_CE+VJCUJ9FcLe0-Nv8UqgoA@mail.gmail.com>
+References: <20250208151347.89708-1-david.laight.linux@gmail.com>
+	<CAHk-=wicUO4WaEE6b010icQPpq+Gk_ZK5V2hF2iBQe-FqmBc3Q@mail.gmail.com>
+	<20250208190600.18075c88@pumpkin>
+	<CAHk-=whvmGhOzJJr1LeZ7vdSNt_CE+VJCUJ9FcLe0-Nv8UqgoA@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207-macros-section-v1-0-8f018cb05a20@gmail.com> <2025020847-boxcar-bovine-47e4@gregkh>
-In-Reply-To: <2025020847-boxcar-bovine-47e4@gregkh>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sat, 8 Feb 2025 17:59:06 -0500
-X-Gm-Features: AWEUYZkG71y2sEaehPPhj7H3hQ1BgQh7bejxrejjmY-Q7QIdI6tHJ85pCoTChkY
-Message-ID: <CAJ-ks9mSQ8G+SWs7MzsBdY_BTPs8yZhsrttakyp9d_zqhhC2PA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] rust: macros: fix `make rusttest` build on macOS
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 8, 2025 at 3:17=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
->
-> On Fri, Feb 07, 2025 at 12:21:51PM -0500, Tamir Duberstein wrote:
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > ---
-> > Tamir Duberstein (2):
-> >       rust: macros: improve panic messages
-> >       rust: macros: fix `make rusttest` build on macOS
->
-> Very minor nit, patch 0/X does not need a signed-off-by, and if you find
-> that you don't need any text for patch 0/X, there's no need to send a
-> patch 0/X at all!
->
-> Hopet this helps for future submissions.
->
-> thanks,
->
-> greg k-h
+On Sat, 8 Feb 2025 12:03:09 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Thanks Greg. This was me holding b4 wrong :(
-Tamir
+> On Sat, 8 Feb 2025 at 11:06, David Laight <david.laight.linux@gmail.com> wrote:
+> >
+> > Can the 'alternatives' be flipped so the .o doesn't contain loads of nops?  
+> 
+> Sadly, no. The instructions generate #UD if the CPU doesn't support SMAP.
+> 
+> Now, arguably the alternatives *should* be fixed up before the first
+> user space access and thus it would be safe to switch, but honestly, I
+> don't want to risk some early code doing odd things. The potential
+> pain would be too damn high.
+> 
+> > It'd be nice to see the clac and lfence.  
+> 
+> Heh. I agree 100%, which is why my personal tree has a patch like this:
+> 
+>     -#define LOCK_PREFIX_HERE \
+>     -           ".pushsection .smp_locks,\"a\"\n"       \
+>     -           ".balign 4\n"                           \
+>     -           ".long 671f - .\n" /* offset */         \
+>     -           ".popsection\n"                         \
+>     -           "671:"
+>     +#define LOCK_PREFIX_HERE
+
+That one is just hidden bloat. 40k on the kernel I'm building.
+Is it really worth the effort for single-cpu systems.
+I can't remember if you can still build a kernel with max-cpus of 1.
+But a minor change of removing lock prefix at compile time might make sense.
+
+>   ...
+>     -#define barrier_nospec() alternative("", "lfence", X86_FEATURE_LFENCE_RDTSC)
+>     +#define barrier_nospec() asm volatile("lfence":::"memory")
+
+Isn't that testing the wrong feature bit?
+LFENCE_RDTSC indicates that lfence serialises rdtsc.
+lfence itself is predicated by XMM2 (see higher up the file) and is always
+present for 64bit.
+
+I'm not sure whether old 32bit cpu need a speculation barrier.
+But I'm sure I remember something from a very old (p-pro era?) document
+that mentioned avoiding interleaving data and code because the data might
+be something like atan and the cpu would have to wait for it to finish
+(and that would have been after a ret/jmp as well).
+So that might have to be rmb() even on old cpu.
+
+In any case it doesn't need to be an alternative on 64bit.
+
+>   ...
+>     -#define ASM_CLAC \
+>     -   ALTERNATIVE "", "clac", X86_FEATURE_SMAP
+>     -
+>     -#define ASM_STAC \
+>     -   ALTERNATIVE "", "stac", X86_FEATURE_SMAP
+>     +#define ASM_CLAC   clac
+>     +#define ASM_STAC   stac
+>   ...
+>     -   /* Note: a barrier is implicit in alternative() */
+s/barrier/memory clobber/
+>     -   alternative("", "clac", X86_FEATURE_SMAP);
+>     +   asm volatile("clac":::"memory");
+>   ...
+>     -   /* Note: a barrier is implicit in alternative() */
+>     -   alternative("", "stac", X86_FEATURE_SMAP);
+>     +   asm volatile("stac":::"memory");
+
+Is there any reason why we get three 0x90 bytes instead of a three-byte nop?
+Indeed, since the flags can be changed there are a lot of choices.
+Compare %rsp imm8 (83:fc:xx) would probably not affect anything.
+It might even decode faster than three nop bytes.
+
+>   ...
+>     -#define ASM_BARRIER_NOSPEC ALTERNATIVE "", "lfence", X86_FEATURE_LFENCE_RDTSC
+>     +#define ASM_BARRIER_NOSPEC lfence
+> 
+> but I've never made it a real usable patch for others. It would have
+> to be some "modern CPU only" config variable, and nobody else has ever
+> complained about this until now.
+
+Defaulting to SMAP just requires a bit of bravery!
+After all (as you said) it ought to get patched out before userspace exists.
+It is still fairly new (Broadwell ix-5xxx).
+I'm sure a lot of people are still running Linux on Sandy bridge cpu.
+I've not used mine for a few years (since I stopped being an active NetBSD
+developer), but might dig it back out for testing if I retire.
+(Or just 'borrow' a slightly newer system from work.)
+
+	David
+
+
+> 
+>              Linus
+
