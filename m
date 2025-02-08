@@ -1,42 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E582D1AF0C0
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 09:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924C01AF0CB;
+	Sat,  8 Feb 2025 09:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739006887; cv=none; b=P4Kc+uEttJT1ecmPVPTobKCbWt5PSSpXy+/Ra2L7L1HvlwI2Eeu+RFyKt56xSbstEBSNyZopliAGdVT7tniVbJ6J9fiY4hdt0xseRcos63mGj5lTlrL05wNddXfPEw+or4WSSQewKTmhFM/A/5hr0HXGo/W286vfZQV+Ww/Ll2M=
+	t=1739007003; cv=none; b=Ru8vItugGRJLPg+sm0e+CK7fRyWB8neCkLmAXXKS9eCbXTlHiWeR0EA7n37CweenhR/90+HRrD/y3qlkoBGs9g3+wA6YMmqQQMxjaqIyFaKmPA2jozhSrb3ghuRZG/OCdWEdYHyqlAv52QF/qGCqMkgf7USKvaimgMGskB/yLss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739006887; c=relaxed/simple;
-	bh=o8R9B3Z///8urEOSTMFwcqEcnjjVd2e8O35XkdP6WrQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=XAvMwQaoiwzz98aHk/aV1tIo0NFEbFXsgOAPTwMNQ9bgM/NhNMeFc1+f+tUtwdQelpjzBSz8KIHGbsvzH7Nnc9jYqfyOFjX54tSTkRihUszJ9fccpXvUw3UHoGzSUFWksVQnKMK591MdOz/at7Ir88Osweab8xCWQ+KmsDXB2hE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uZxkYhw1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739007003; c=relaxed/simple;
+	bh=Gr+u2nIVHCsR7pAE46VfOUM9HNOkPW44oxKHJ3l/Y/g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I9etYOip9pWgMmur8DaYwq28mN6PEnyXcSwxbnY4haHJC9a+YV1WAKBsGzMq/Xwu8qiOapPykVC0yIyO58CbT35A8OEEZhYGA3YNCTcsN2yEwu6P9epqK2zgXcC+gT454DYNLJEIO9qTj83T1s7gXuIUNO3QzvsxO4dMpF1efzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Qz/fNv/I; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uZxkYhw1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55B81C4CED6;
-	Sat,  8 Feb 2025 09:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739006886;
-	bh=o8R9B3Z///8urEOSTMFwcqEcnjjVd2e8O35XkdP6WrQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=uZxkYhw1aFHtJQ2DBq133cBSQOLQCkZ44nQ/AQtjG6UuA3zgB7wJL9hyaAn26s3fU
-	 1kb1aWfbgWG/kifffEmvadvbIs/6dIeAiZiJaqIOTOtqQmrCb+W1XaGyOEqpIKp2cO
-	 e+D2ET621wwxbsGv/kmufyEjuh0oXxsMKAxd5amEVS/HoJo1IPQuaUsxCxOMDZL5CN
-	 wy0LYXqT1xOHfCKZP8Hd2qqKGfc8tTXU0PTu0J0XzG6QMF/mUUBgXrBBW8wP50y0j6
-	 zx7di3qab3UY2cvbT9XLss8C80WLq1Tw7XJlb9Yuh25YtXFmJ2BDfJUn87p7un/NFA
-	 6k3QDXvBsYbyQ==
-Date: Sat, 8 Feb 2025 10:27:56 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Waiman Long <longman@redhat.com>
-Subject: [GIT PULL] timer fixes
-Message-ID: <Z6cjnBOBUxOq__Ni@gmail.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Qz/fNv/I"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=lSvdFS1Tmix55ChwG42rDuM5tBqKbIBiBkAZfphft8I=; b=Qz/fNv/InGvbRTlwHZhErnacK7
+	Is73Z5xtxofs9nfUqTQTVi10V0sJcJQD7OmNhryXcpLJzpI2eFGe0KqJZk70BIPUD5vSThVgtSGyb
+	kuAadzjdNE1XBWlQWgjKacbRPdybnZ20FwI8n8TV4sAiPyqJ2VEVumjRatcbE+wJU+o8bAe9jnGVA
+	MWneI2sxi46JEGkbJj4up5zfJItCt4lcnMfRkD+DKO8DsQ9WtLfq5RsYQJWLHWQ6EcyoFhnIQsRxS
+	dMp3n1+gE/9uxSntCbrJFeiZzZLXao/EivWbidVUxQrJCBPWY+V9ldRgYMAwjjsxXoNlmzDKBVt5G
+	90ncmAUg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46790)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tgh9p-0000Fa-2S;
+	Sat, 08 Feb 2025 09:29:49 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tgh9l-0005ME-39;
+	Sat, 08 Feb 2025 09:29:46 +0000
+Date: Sat, 8 Feb 2025 09:29:45 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Qingfang Deng <dqfext@gmail.com>
+Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH net-next] net: ethernet: mediatek: add ethtool EEE
+ callbacks
+Message-ID: <Z6ckCZpOo1_rvmh6@shell.armlinux.org.uk>
+References: <20250208092732.3136629-1-dqfext@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,94 +64,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250208092732.3136629-1-dqfext@gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Linus,
+On Sat, Feb 08, 2025 at 05:27:32PM +0800, Qingfang Deng wrote:
+> Allow users to adjust the EEE settings of an attached PHY.
 
-Please pull the latest timers/urgent Git tree from:
+Why do you need to do this? Does the MAC support EEE?
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2025-02-08
-
-   # HEAD: 868c9037df626b3c245ee26a290a03ae1f9f58d3 timers/migration: Fix off-by-one root mis-connection
-
-Fix a PREEMPT_RT bug in the clocksource verification code that
-caused false positive warnings.
-
-Also fix a timer migration setup bug when new CPUs are added.
-
- Thanks,
-
-	Ingo
-
------------------->
-Frederic Weisbecker (1):
-      timers/migration: Fix off-by-one root mis-connection
-
-Waiman Long (1):
-      clocksource: Use migrate_disable() to avoid calling get_random_u32() in atomic context
-
-
- kernel/time/clocksource.c     |  6 ++++--
- kernel/time/timer_migration.c | 10 +++++++++-
- 2 files changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index 77d9566d3aa6..2a7802ec480c 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -373,10 +373,10 @@ void clocksource_verify_percpu(struct clocksource *cs)
- 	cpumask_clear(&cpus_ahead);
- 	cpumask_clear(&cpus_behind);
- 	cpus_read_lock();
--	preempt_disable();
-+	migrate_disable();
- 	clocksource_verify_choose_cpus();
- 	if (cpumask_empty(&cpus_chosen)) {
--		preempt_enable();
-+		migrate_enable();
- 		cpus_read_unlock();
- 		pr_warn("Not enough CPUs to check clocksource '%s'.\n", cs->name);
- 		return;
-@@ -384,6 +384,7 @@ void clocksource_verify_percpu(struct clocksource *cs)
- 	testcpu = smp_processor_id();
- 	pr_info("Checking clocksource %s synchronization from CPU %d to CPUs %*pbl.\n",
- 		cs->name, testcpu, cpumask_pr_args(&cpus_chosen));
-+	preempt_disable();
- 	for_each_cpu(cpu, &cpus_chosen) {
- 		if (cpu == testcpu)
- 			continue;
-@@ -403,6 +404,7 @@ void clocksource_verify_percpu(struct clocksource *cs)
- 			cs_nsec_min = cs_nsec;
- 	}
- 	preempt_enable();
-+	migrate_enable();
- 	cpus_read_unlock();
- 	if (!cpumask_empty(&cpus_ahead))
- 		pr_warn("        CPUs %*pbl ahead of CPU %d for clocksource %s.\n",
-diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
-index 9cb9b6584ea1..2f6330831f08 100644
---- a/kernel/time/timer_migration.c
-+++ b/kernel/time/timer_migration.c
-@@ -1675,6 +1675,9 @@ static int tmigr_setup_groups(unsigned int cpu, unsigned int node)
- 
- 	} while (i < tmigr_hierarchy_levels);
- 
-+	/* Assert single root */
-+	WARN_ON_ONCE(!err && !group->parent && !list_is_singular(&tmigr_level_list[top]));
-+
- 	while (i > 0) {
- 		group = stack[--i];
- 
-@@ -1716,7 +1719,12 @@ static int tmigr_setup_groups(unsigned int cpu, unsigned int node)
- 		WARN_ON_ONCE(top == 0);
- 
- 		lvllist = &tmigr_level_list[top];
--		if (group->num_children == 1 && list_is_singular(lvllist)) {
-+
-+		/*
-+		 * Newly created root level should have accounted the upcoming
-+		 * CPU's child group and pre-accounted the old root.
-+		 */
-+		if (group->num_children == 2 && list_is_singular(lvllist)) {
- 			/*
- 			 * The target CPU must never do the prepare work, except
- 			 * on early boot when the boot CPU is the target. Otherwise
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
