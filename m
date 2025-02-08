@@ -1,165 +1,90 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F45D244AFE;
-	Sat,  8 Feb 2025 16:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A05241CB1;
+	Sat,  8 Feb 2025 16:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739032899; cv=none; b=R2Qjza/aRSSHrgXextK3YrGWvOrr4YMJ5mp5YVW+811ZU/lu2WZbVKoYJe+neN6OuRkiwjayqk2Bb38YEf/k1pbS6w7MelpteLVg3wEYWkfQh6l/e4+u/Q0pP0hbxbtwJRO+lidjCkqQpO1vEqlQwkwY+IrDLISacFchb7nQpqM=
+	t=1739032946; cv=none; b=pf0hqjbKLr/cliNTqfpX7O5NFZKMaSkorW24rRY7Icf4V5r35KKXz1hfhsVUnp56OVAc6/jWLYDRkMvN9FyNsIQ4+to3yrLTR0caWWo7RmOOfPbuek/IuW387lhcb/KUrs1FZvzCuj0RjD1Hn+4iQo9uKMozuLqBLXllzs6bcPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739032899; c=relaxed/simple;
-	bh=xGwi4psJJOZC8oqFMX4FH7oNE+Fjw6HTeW5J9RMFR3c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=trlpi29d81PhFx7eKccJ6c5QUUvxSKNYZHsGhafK3n8quddyCFDKD84rpXu8Xrby9iAdDA3syRq7bSUoiIqfZt8I+l2MTJmARtyh5/rmuPLSZcGL2tgb54SwHdWdZLfi9Z/+914Cu4WkcPXsxeML3f5xCvtzcw0d12ygzcMfrTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NPtRdjJn; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739032946; c=relaxed/simple;
+	bh=DgPsBUG1mZURTvdZonNnm5wpyoUmtVyXOPK1IrfDxEY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rPrFIwKylv2LCFCJtdPZFpd/adYAH6cRsxoB3OqTDP2gon6ZZPGxIH2FMV5HQnLqsMT7GpujpGYYXs/WrwF2hBaQh6jFe18y4ov2QupWkQwjvK726cYeaRomsGxfOX+7dGbRY+Oji4qZ/JTKd0rTRB6wMCFwvgUmgjGMLKdoOSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PsBGOhYh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPtRdjJn"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ab795eba976so197538666b.0;
-        Sat, 08 Feb 2025 08:41:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739032896; x=1739637696; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kGngZIwfO/jqpHla3vwHAdrO/yliWLs6xLpeLI2Xezk=;
-        b=NPtRdjJnB6FjK4eD918bzHRBEdXPsNZ3HtYbfujqesbwh//se6nm/CVMoTyJy3qAnM
-         rmEAnHgqdr1Ipv8yGJLoyTKIQqjV3DKZeBBFrXRGuTjEsoAv0JPZ5GHVF3RsZTkQrAWB
-         V8rzMAyQhR6UVI2XtKadsjq3xqDpINTMK9QsAj2wHC6P2xUOP9llP+iBkGCFoIEsdDf6
-         LY1oslx6gXYFHZZPXdcjppDIK66dXIWAEVtUNDAiAF+vfCR7pPIIOLAkI+S5jFcjd2Nh
-         uTw4wscQiXhVArKGInMDWqKh37X/IjorxRJ56IKie1JqrK5CDqencqEQDW4CwcIc4Bhj
-         6cjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739032896; x=1739637696;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kGngZIwfO/jqpHla3vwHAdrO/yliWLs6xLpeLI2Xezk=;
-        b=Vm4FiGMKQopfYkKlrOuoWd+9ScVyQNlFlIf4LaQ7rcpiYQtpnl2ITc1EGGVHU6E6x6
-         YGYXKquO7lRUFFSzcT5xqYheqe1SRejGta+8V50s3az89foEsVSryW8eBoRlrGB4UHfm
-         yu/e5NXchu56ZCZFdJ43CwC4RBt3PeD8iYT0tOyUsXwZO/FuO8yqKX7ipLzn7+SFCVTi
-         ItLN/Ok5uV2lXwJ9ZHFB554PVfdufpEqTAq+XePMoI1HTt6Zu7DmkLp5QKZzYdHo8jft
-         23ASt2iRijn8506i+OZwreyYx5cW5SdqgzNjWsX6LrzaSO3mHEI/5cnZEY7KFaNZiTlt
-         fejg==
-X-Forwarded-Encrypted: i=1; AJvYcCUk/5AalFnzcQ9IutXx9Fs9URelyIufFkelknuCNsKRD70b72Jl0N/pHSbjdtQDlXMYaeMM+ZQrWS9lmKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/jP09y57XHzExkRK0OjI6yYldRNVKXuYLWrx20NoDBsxr2xU1
-	BLJijFFoEZ3aACkS1bKiWjuUZF4OxOO5Odr5Arc78H1ymlezpKcC8NG2mg==
-X-Gm-Gg: ASbGnctZuGCv10Wrq3Wc7D+qxbLmnyEGhwSqZO5zF/A4Bai4y/GDrilw8aYZkJP6IA7
-	AhKpN7gB3nz6CRSjiyaRzif+lVevKHBF7/4oknDNogDeYCJafV1VTNYknk5oTF7kY6lLItZvnNn
-	AkIolILhDI4LBBiVvW6hMXkn0Zw6jk4F1w1sC5c6KPv2AV04sEYi1YV3BYPjzUuGJfcYmkzQ7xa
-	Z2U+ISMua15t1apXcWEbGFxd1dW+HWlOruTKq4/JJwBuRV8D+V+xISDzk3wJtlSutlXjE3Q/08h
-	Cjgt5VbVLAuTVGbT+sN29/OV2FS9sA==
-X-Google-Smtp-Source: AGHT+IE40RmfH5zbhEsfUF13K2v7/nQmB6Wqch1RrLCWdbjL7yzGlcwxlJXoUNgWH7NMbbpApzXXew==
-X-Received: by 2002:a17:907:d03:b0:ab3:a4f6:7551 with SMTP id a640c23a62f3a-ab76e8cc47fmr1269835966b.13.1739032895654;
-        Sat, 08 Feb 2025 08:41:35 -0800 (PST)
-Received: from localhost.localdomain ([2a02:908:e842:bf20:e115:64e7:5d6:176])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab773337f3dsm501539166b.139.2025.02.08.08.41.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 08:41:35 -0800 (PST)
-From: Ole Schuerks <ole0811sch@gmail.com>
-To: linux-kbuild@vger.kernel.org
-Cc: ole0811sch@gmail.com,
-	jude.gyimah@rub.de,
-	thorsten.berger@rub.de,
-	deltaone@debian.org,
-	jan.sollmann@rub.de,
-	mcgrof@kernel.org,
-	masahiroy@kernel.org,
-	linux-kernel@vger.kernel.org,
-	nathan@kernel.org,
-	nicolas@fjasle.eu
-Subject: [PATCH v7 11/11] kconfig: Add documentation for the conflict resolver
-Date: Sat,  8 Feb 2025 17:39:59 +0100
-Message-Id: <20250208163959.3973163-12-ole0811sch@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250208163959.3973163-1-ole0811sch@gmail.com>
-References: <20250208163959.3973163-1-ole0811sch@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PsBGOhYh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1DCCC4CED6;
+	Sat,  8 Feb 2025 16:42:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739032945;
+	bh=DgPsBUG1mZURTvdZonNnm5wpyoUmtVyXOPK1IrfDxEY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PsBGOhYhaKpHqCNcPMBGbPr7AdvYG8Ti5Oz+otCVCvAMtL88q2PQRpoaHp8hJH9cV
+	 Y9ilRokFxm2Wop5qRa819CN3rUsXYVOEZpp1e0o3NtSmdUtJJpjpP9NuBjcBDHQpKy
+	 Eoea5OMH7RxPopOZMzVqFm+qXK6BsVTC0hWLTo1yD6Cy6doeRZ9NxXRauv3iWMs5q7
+	 Lc7CBDzAixd/eMHqdHN2z1/cuO3X6bQbW9EBOI00kFQLPaea1gxf4CQsR4zrCBjdyF
+	 noecdmR98+W7GT/RFXsDt0vKra6kXPFVsqra9QYIcbETLFBf7MfztOtTAxyd0AVSop
+	 iN7fcS6p6k12Q==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tgnuc-0000000048t-0XvO;
+	Sat, 08 Feb 2025 17:42:34 +0100
+Date: Sat, 8 Feb 2025 17:42:34 +0100
+From: Johan Hovold <johan@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Linux PCI <linux-pci@vger.kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kevin Xie <kevin.xie@starfivetech.com>,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
+ parents and children
+Message-ID: <Z6eJeo34N0q2ldQ9@hovoldconsulting.com>
+References: <12619233.O9o76ZdvQC@rjwysocki.net>
+ <1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com>
+ <Z6YPpbRF_U0TxAbf@hovoldconsulting.com>
+ <Z6YcjFBWAVVVANf2@hovoldconsulting.com>
+ <CAJZ5v0iHjkfoh2A+hAmMCTG9_nBcJrsRYFD0Hp4ZChYUo7bFEg@mail.gmail.com>
+ <Z6YviAFD4Az3EIBa@hovoldconsulting.com>
+ <Z6Y0NlW40yHTIlzm@hovoldconsulting.com>
+ <CAJZ5v0gBCQW2wwdB+4SyBXtqiis2k1Z2L8SOVKwcVbNxPHqvYA@mail.gmail.com>
+ <CAJZ5v0gUcy4V-iztFumRZDUArQHiXE01vW3uC8Y01xnBD6Xi0Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0gUcy4V-iztFumRZDUArQHiXE01vW3uC8Y01xnBD6Xi0Q@mail.gmail.com>
 
-Add documentation for the interface of the conflict resolver and
-instructions for installing PicoSAT. The target audience is everyone
-using xconfig, in particular, kernel developers, end users, system
-administrators, and distributors.
+On Sat, Feb 08, 2025 at 01:10:19PM +0100, Rafael J. Wysocki wrote:
+> On Fri, Feb 7, 2025 at 7:14 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
 
-Signed-off-by: Ole Schuerks <ole0811sch@gmail.com>
----
- Documentation/kbuild/kconfig.rst | 56 ++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+> > > > > > On Fri, Feb 07, 2025 at 02:50:29PM +0100, Johan Hovold wrote:
 
-diff --git a/Documentation/kbuild/kconfig.rst b/Documentation/kbuild/kconfig.rst
-index fc4e845bc249..d49ab303e757 100644
---- a/Documentation/kbuild/kconfig.rst
-+++ b/Documentation/kbuild/kconfig.rst
-@@ -285,6 +285,62 @@ Searching in xconfig:
-     You can also enter a different search string without having
-     to return to the main menu.
- 
-+Conflict resolution
-+-------------------
-+
-+    xconfig has support for conflict resolution. A conflict is in this case any
-+    situation where you want to change the value of a symbol, but
-+    unfulfilled dependencies prevent this. You can create a list of symbols
-+    and their desired values, and the conflict resolver will calculate a series
-+    of changes in xconfig, which allows setting the symbols to their desired
-+    values.
-+
-+Requirements:
-+
-+    To use the conflict resolver, PicoSAT needs to be installed as a library.
-+
-+    Debian-based distributions::
-+
-+        sudo apt install picosat
-+
-+    Fedora::
-+
-+        sudo dnf install picosat
-+
-+    You can also build PicoSAT yourself from the `sources
-+    <https://fmv.jku.at/picosat/picosat-965.tar.gz>`_. The conflict resolver
-+    requires that PicoSAT is built with tracing enabled (e.g., using the
-+    configure.sh script with the "--trace" option). It expects the shared
-+    library to be named "libpicosat-trace.so", "libpicosat-trace.so.0" or
-+    "libpicosat-trace.so.1".
-+
-+Usage:
-+
-+    To add a symbol to the list of symbols whose values should be changed (that
-+    is, the 'conflict'), you select the symbol in the main view of xconfig. With
-+    the button "Add symbol" you add the symbol to the conflict, which makes it
-+    appear in a table below the main view. You need to switch to "Show Prompt
-+    Options" under the tab "Option" if the symbol is hidden in the main view.
-+    You can set the desired value of a symbol by either clicking on the
-+    corresponding cell in the column "Wanted Value," or by selecting the
-+    symbol's row and using one of the buttons above the table.
-+
-+    Once the 'conflict' is declared, the solutions can be calculated using the
-+    button "Calculate Fixes". Once calculated, they appear in the menu on the
-+    bottom right. You can select a solution from up to three candidates. The
-+    solutions are presented in a table that shows which values the symbols need
-+    to have to resolve the conflict. Using the button "Apply selected solution"
-+    the indicated changes can automatically be applied. If you want to change
-+    the values manually, the symbols are color-coded to indicate the order in
-+    which they need to be set: Green means that a symbol is already set to the
-+    calculated value. Gray means that a symbol cannot yet be set to the
-+    calculated value and that other symbols' values need to be changed first.
-+    Red means that a symbol is not yet set to the calculated value, but that you
-+    can set it to the calculated value.
-+
-+    Note that in rare cases the conflict resolver cannot resolve the conflict
-+    even when a solution exists, it suggests unnecessary changes, or it suggests
-+    changes that do not resolve the conflict.
- 
- gconfig
- =======
--- 
-2.39.5
+> > > > > > Ok, so the driver data is never set and runtime PM is never enabled for
+> > > > > > this simple bus device, which uses pm_runtime_force_suspend() for system
+> > > > > > sleep.
 
+> For now, the power.set_active propagation can be restricted to the
+> parent of the device with DPM_FLAG_SMART_SUSPEND set that needs to be
+> resumed and that will just be sufficient ATM, so attached is a patch
+> doing this.
+
+I can confirm that this fixes the simple-pm-bus regression (without
+reintroducing the pci warning) in case you want to get this to Linus
+for rc2:
+
+Tested-by: Johan Hovold <johan+linaro@kernel.org>
+
+Johan
