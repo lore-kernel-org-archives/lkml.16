@@ -1,60 +1,62 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B86197A76
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 10:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EE71B4243
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 10:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739012016; cv=none; b=GEdhISQ7i64yV1xlYeUtswtmSjaxzFAW/6/Sk9UiktliIZEM2CYwZIdibrtXxf91HM9wKVtcvQP+PNDzDplu93sj9qRwRVoi5/0bSnFr3T7EjCXjiSc3HnO9KcCdKIuwU8OIxSDWe81aRDBIeQprS2zZfLuNIt65QBHpQW40BaU=
+	t=1739012020; cv=none; b=TBDh3clmM8oC149+/4kdTsDymJrZS6w5fMVuhsr/P22s0u52Ns2407rNPvvrqsQ4K9m0jgc9+6iD5WIJ1FnJRaj1CWlZLdv2ZWgXcCRiVJcR6FU9llIaNUZk8YQKIzoR69A8s2ceeyyz5LYP+u3gjFQVut0fY3uh9Kp14mESmLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739012016; c=relaxed/simple;
-	bh=VJVK+kc+EJwO96tG8GidwV7lHP8DNTmDWpwhKU/Ynzk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=J84wAATV9Ul0eCuQsCvtsS/E+QCGOkQdog5IiuExT9vo6kAnu36++LTVSnoeSXkDHOwu5IdIRMHw6gJyeDomIcydFKdeOrw2UkZSl4hVIYkQWgUWvmcvHm6ikdEBPIAlAu4vn3DogHPXZMZobNb/K/8yezeydG057k8ApZKr7ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=ksHEufhn; arc=none smtp.client-ip=209.85.216.45
+	s=arc-20240116; t=1739012020; c=relaxed/simple;
+	bh=hnqtuDOvE9KKTntRQWNuuRASTIzRapspAR7WuG2vANQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=md+mMC0x4Ma8cgj/h96kPyemIzBXDYJzeu7qqMSlsQ+EHMTiI5njl7ReEfQ5BmfLj+nrgnmqexG9yBP+LKUtl3XIw1QiRjqtvYIJek8AQfV0g2VXaDK6wZ8geqlJKez90V4oYreeK8f6ZAWXMYN1JxTMG8FmBtjibLqYKEM+eVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=AKBOQDBI; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="ksHEufhn"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2fa1a3c88c5so3300429a91.3
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 02:53:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="AKBOQDBI"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2fa0c039d47so4034060a91.1
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 02:53:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1739012014; x=1739616814; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ifyUzZDgKebdTMDynBzlQYZwVvqMuxRcC6rov9fIYS8=;
-        b=ksHEufhn/5Q5a5V3M+/8277cLXEpBiXl6qszK9a4tvbvfFPIKS98cMBPG/R9wejN6S
-         Zi3F2WAepWxRL5LvPblMnPmwR0XlKCnpJnzwDt2mgohMfPJ6jXenttHnNsT1J4yvIfVj
-         1OgOiiIfvTeyEr4je4vTQ7fJiCWOl1Y31NbhZy8buqXM6VOfEu9cS0TfzLe+DOt1XDG8
-         wjPPW18CY4z7fgXAma+fhWDnxeF0iwzzyGbZPbOWCm130MPGz/mxfdW3wsyA0PtnD4N5
-         /qfavKzkEklAO9r+7IsvPt5OrdDokMM/lTkdIYKXRn+enYpPt6WgitUBh+hCG0eUCNxl
-         //rA==
+        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1739012018; x=1739616818; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rbs6wjnY4vaySC1A59WocF0CXdHs9avCvrqKoElPFA8=;
+        b=AKBOQDBIiq82PtZnEkwP/R4LydtCmedKhjDRTUGx0X3sK8vdRdgNc01H7pq3Ba9bI2
+         aHbPAe9Yfj9IYhhk0AOt53ZmkTLf3lXvHHVBAfTvcGvRoeUjwpaOG1S0P9slNFNwEFAq
+         UFaX+4pk2sd0VKGGVbqDSqVOER8Ye+teuzthSQ8uBOU/nSItlUzRy78YM36W9JpQ3niQ
+         1R/Hy8ADUpRPvO5PYtgoKSC+7zOjKozjn1HFxHvm4nvwkbWmFLLuk+pbJvfW91SkWTAG
+         xBJhyo+ptKjFy28NkudKSqP2cLG/mjlB9iPuDRWS4nnie/ImL+U9mvcZt2yH3HpEkA99
+         Fk4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739012014; x=1739616814;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ifyUzZDgKebdTMDynBzlQYZwVvqMuxRcC6rov9fIYS8=;
-        b=dR6Ki7QPnC5bzRaEsR1VshTSveG7ShCL8u+37zu011c1dbOYZTkhdUxdN2PJdgBI4F
-         iTjck5ppAToFX5P07jjQuvLcWzsfyaEd2B4rhcFQESgCMUPVXcj8LmE9x34ozvUSb9up
-         dW8XuFgMdNF0fdjYfy7YvEuTVtPNGoYD1oo6xJe4eXWSQtbsa9rwk304rqCYYFSpzYa6
-         Zl4tMwMJwOd4yszsa6gGqVLtsOmds85pngaebbwBB2GIzSg4Q5tG77kNqm6NpcU3weXi
-         elw6hqeewWchZL6xxN3XIzIHWwK1tDvBobxjRsZ47NEECJzH9em2rKT762N7CW9+kJ2N
-         hIxg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9NbKIhrglwVFGr7RnsghXQAnRFn/FXzDk0C+UJS5Iijw5IsF79Z1TOk0mH5YCntZA3AmT7J+NEzrKjgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4sCFzqpH38INWI/wf+exdHqrzWP/3F/Ky7LBjMai27d/l9Ujy
-	Gn0KoHbWfIPWJCvnf0cRFh/ixOUfD90LgXCgl+iuIAQSp+DvUwH3rosj2yDdYiE=
-X-Gm-Gg: ASbGncu+blNA4aXrtDR6b46Qblx82EVAZb724opzZpCKZ1Bvle3LDEWhemFoBkMHhNp
-	qTuevek9d7q2wJbuml+9P5FpTwD7imjM4cd6Re4nEy0XYheHgoNrzRG5PBJZk7GnuUfYYo/lyXK
-	Uwfe2mOLuGBAdYMDr/uUZiNUkzPiEUmXmAuKr9o1TZbhGGCXycZji8bL/R5nmT861z7Z7FTRw3F
-	oGdXgOi/hhKkbe7k19eqOPLeHvT6p8gCRnmB2Z0xqLgtS80Qhw+6mxyY4bPWbJu46z0UT0lnp+8
-	LaNTERou7m4mQ7RmOrUD5nA3stpfJLes3etn5ECSUzLvtb0i7LWH5/EBPg+JD7I=
-X-Google-Smtp-Source: AGHT+IHy+71MYu/SjllpM7v8QcUoDCgx3OAzOTwkCu/N39mwnXIJTHVNc5qk3wqrJl8nWKdmmQrJdw==
-X-Received: by 2002:a17:90b:3fc3:b0:2ee:8008:b583 with SMTP id 98e67ed59e1d1-2fa24274b87mr11174906a91.16.1739012013966;
-        Sat, 08 Feb 2025 02:53:33 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739012018; x=1739616818;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rbs6wjnY4vaySC1A59WocF0CXdHs9avCvrqKoElPFA8=;
+        b=ObEhRqhPi4MFkeZExVog/fh3NRK4rNrBuOCFK7k6s5YhSnEGkcOuA9H4ceQcoUjWrZ
+         fGZD9dRsAu+X6gDUukCYjXUl8rMiYPx6FYliLyGFY1TFtr6DXN1p/t+MjAUZb1eqx0m+
+         guj7j31KKA+BgU6zo7jr74om0yQIR7/foDcyQvxSnU1NiiR5kKvmIUIOFV9nWEwvaTSM
+         zQSMDJY3cNWSgaq7fN9SzuaZg3njYly3i9IUXeHw2p10tTlLKaHKjIpkOpfF74sdz9Aq
+         cQw2M9Dq0e6VoqBp4kiMJeT+t/8bz0i5k6m7ydE8dJxfw3FJ9NThdNV7jJIkChpOyCfE
+         EWpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpUZ5YlzvxjkNZj/PYti22eShTfiPnwkMpgehuy7cCGxj9e8WtrqJA4ZV8W4MrCDxabnqa0y/dpd0xYRo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yze0TPU185WLHLqjS8rapQ3YdUfVhoW8N9Q/ZXPAc5ZyRon4c3w
+	BmU+dRR2N/eiLRfXxxEmwGgq6CSjub6SZmZW7K1yHcCwb2f4Ub1Im0qBLidbjPg=
+X-Gm-Gg: ASbGncs0PLH87OQXOeY9V8HxlWQZj90g0SvroBEPosgBQb/2JBMLel6DtHfVkUumn1D
+	InZ01f9CyZUuxN6Hf+J5E5tb1I6XaQc2KuIcIGooZT7Y5B/OVDASU/w5tJQ8ejhElRkBdte1cLz
+	gozfOhv3cE4gIj4BPtG6CtIAbEyAdc/0LfXGjdG40dVAHj+JqCMbdlvFmVt7Pd69LWe5phEJ4ef
+	2qTNDkzThPUEApQpxb/LV+xkXwzOEX5DwjwCec1XVONbTr/BK+W+mONYFV0lCCsPk187LJYcMqb
+	FU9ScUUBT6i8E59kOyonwX7EY2VCb14CPfoekmrYxWXqEgK+42CzKSBJ1HEQb/g=
+X-Google-Smtp-Source: AGHT+IEV5Xl0wWYrSrkRkZ1oHtQxnN+LgtfamxZdI4uYbBB3qhpK+ue4hvRde3hbMze7Nvuo6PH1TQ==
+X-Received: by 2002:a17:90b:4aca:b0:2ee:f80c:6889 with SMTP id 98e67ed59e1d1-2fa243ef19cmr11273338a91.33.1739012017749;
+        Sat, 08 Feb 2025 02:53:37 -0800 (PST)
 Received: from dgp100339560-01.huaqin.com ([116.66.212.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa36f185c5sm2142003a91.16.2025.02.08.02.53.30
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa36f185c5sm2142003a91.16.2025.02.08.02.53.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 02:53:33 -0800 (PST)
+        Sat, 08 Feb 2025 02:53:37 -0800 (PST)
 From: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
 To: neil.armstrong@linaro.org,
 	quic_jesszhan@quicinc.com,
@@ -73,10 +75,12 @@ Cc: dri-devel@lists.freedesktop.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
-Subject: [PATCH v5 0/3] support kingdisplay-kd110n11-51ie and starry-2082109qfh040022-50e MIPI-DSI panels
-Date: Sat,  8 Feb 2025 18:53:23 +0800
-Message-Id: <20250208105326.3850358-1-yelangyan@huaqin.corp-partner.google.com>
+Subject: [PATCH v5 1/3] dt-bindings: display: panel: Add a new compatible for the panels KD110N11-51IE and 2082109QFH040022-50E
+Date: Sat,  8 Feb 2025 18:53:24 +0800
+Message-Id: <20250208105326.3850358-2-yelangyan@huaqin.corp-partner.google.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250208105326.3850358-1-yelangyan@huaqin.corp-partner.google.com>
+References: <20250208105326.3850358-1-yelangyan@huaqin.corp-partner.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,46 +89,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Both panels, kingdisplay-kd110n11-51ie and starry-2082109qfh040022-50e,
-use the HX83102 IC, so add the compatibility to the hx83102 binding file.
+Add a new compatible for the panels KINGDISPLAY KD110N11-51IE and
+STARRY 2082109QFH040022-50E. Both panels use the HX83102 IC, so
+add the compatible to the hx83102 bindings file.
 
-Both kingdisplay-kd110n11-51ie and starry-2082109qfh040022-50e panels use
-HX83102 IC, so add these two panels to the driver panel-himax-hx83102.c.
+Signed-off-by: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
+---
+ .../devicetree/bindings/display/panel/himax,hx83102.yaml      | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Dropped Neil's tags since V5 is very different from V4.
-
-Changes in v5:
-- PATCH 1/3: Both panels use the HX83102 IC so add the compatible to the hx83102 bindings file.
-- PATCH 2/3: The kd110n11-51ie panel uses the HX83102 IC, so add it to the hx83102 driver.
-- PATCH 3/3: The 2082109qfh040022-50e panel uses the HX83102 IC, so add it to the hx83102 driver.
-- Link to v4: https://lore.kernel.org/all/20250123064758.743798-1-yelangyan@huaqin.corp-partner.google.com/
-
-Changes in v4:
-- PATCH 1/3: Single bindings patch for both panels with proper alphabetical order
-- PATCH 2/3: Adjust the alphabetical order of the compatible attribute
-- PATCH 3/3: Adjust the alphabetical order of the compatible attribute
-- Link to v3: https://lore.kernel.org/all/20250117091438.1486732-1-yelangyan@huaqin.corp-partner.google.com/
-
-Changes in v3:
-- Link to v2: https://lore.kernel.org/all/20250117050410.933312-1-yelangyan@huaqin.corp-partner.google.com/
-
-Changes in v2:
-- PATCH 1/4: Add compatible for KINGDISPLAY KD110N11-51IE
-- PATCH 2/4: Add compatible for STARRY 2082109QFH040022-50E
-- Link to v1: https://lore.kernel.org/all/20250116130530.3010117-1-yelangyan@huaqin.corp-partner.google.com/
-
-Langyan Ye (3):
-  dt-bindings: display: panel: Add a new compatible for the panels
-    KD110N11-51IE and 2082109QFH040022-50E
-  drm/panel: panel-himax-hx83102: support for kingdisplay-kd110n11-51ie
-    MIPI-DSI panel
-  drm/panel: panel-himax-hx83102: support for
-    starry-2082109qfh040022-50e MIPI-DSI panel
-
- .../bindings/display/panel/himax,hx83102.yaml |   4 +
- drivers/gpu/drm/panel/panel-himax-hx83102.c   | 260 ++++++++++++++++++
- 2 files changed, 264 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/display/panel/himax,hx83102.yaml b/Documentation/devicetree/bindings/display/panel/himax,hx83102.yaml
+index d876269e1fac..e4c1aa5deab9 100644
+--- a/Documentation/devicetree/bindings/display/panel/himax,hx83102.yaml
++++ b/Documentation/devicetree/bindings/display/panel/himax,hx83102.yaml
+@@ -22,6 +22,10 @@ properties:
+           - csot,pna957qt1-1
+           # IVO t109nw41 11.0" WUXGA TFT LCD panel
+           - ivo,t109nw41
++          # KINGDISPLAY KD110N11-51IE 10.95" WUXGA TFT LCD panel
++          - kingdisplay,kd110n11-51ie
++          # STARRY 2082109QFH040022-50E 10.95" WUXGA TFT LCD panel
++          - starry,2082109qfh040022-50e
+           # STARRY himax83102-j02 10.51" WUXGA TFT LCD panel
+           - starry,himax83102-j02
+       - const: himax,hx83102
 -- 
 2.34.1
 
