@@ -1,190 +1,143 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D5B19F104
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 13:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360F32475E6;
+	Sat,  8 Feb 2025 13:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739022864; cv=none; b=NgJX74VZYtCybEMPwM3XV7mcqu1eSClXV/7BvmVdeDakZZX1DYbnKKsefzuo9sbCVplrphopLVzfd7OLURm3VS3O94wfS1siK4cSfekLqHWdJtIBclqpyis87qNUOZjqJ9The8N0g5mCmIdcjv40CzDLUO5r8IKfe1dqVNo9eKI=
+	t=1739022886; cv=none; b=kVcFkjNIbbpY/HMjeyiPlDhJdTTmTeoMVoCguOWkWFEZp4tVQzMHMZfy4lGxTp7iHiu8++nGT1znLwRQ18HKn3h4OZ548HcgaM7WmSMMELq9aLt/jsvUDV0PAKpZcKWBceqG7Qu4FBMZcEZ09uu6KB2mk8edO7MzFvlqvVJIBao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739022864; c=relaxed/simple;
-	bh=+Yi54ZaTbBcDjbBofrc3cZJQT2QMn9kkopggaeEsbes=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NY0wKmhGes8anVmw+b22LpwGnQ9+SMxB5EBQxHSAQMbOLTIJZNaB5kxpL529Go6R4Nx0W0+/LJTkAEKHCKTW6+uXxEl9YRf5ZjPu+YFSwwX+AZHPYW3KahPT1R8DlKrDTyxHmx7Ai/GmnyqpFpF9Lzlut8yUtPf+uS/WNe9wFwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m0hjpo7O; arc=none smtp.client-ip=209.85.214.180
+	s=arc-20240116; t=1739022886; c=relaxed/simple;
+	bh=xAnjxESnAwa/zEVmWN3qdyx2toKtTQ2Wxc451Q+Vl00=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=SLKOozHsjgB4r2NbM+WnR+TDgSBgHK13HUr1L20rJ1BuANFbw7DKEgrWTjPSNoPFhyCNe3MGFXio40KACsWH+yEAu663nfxSyct4N78SiN+nv1XVAAXn67qGwFlkPMN/gIcs6bm/ZbeyXyIu6r1aHWLMjF142cIRZrmU7W+xvU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GMmTHfYA; arc=none smtp.client-ip=209.85.128.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0hjpo7O"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21f0444b478so43952355ad.0
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 05:54:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GMmTHfYA"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6efe4e3d698so26892387b3.0;
+        Sat, 08 Feb 2025 05:54:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739022862; x=1739627662; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iFnScfrb4FHKoOTGmqlb5WR9qT5yGH/QUW4XVtfAjOc=;
-        b=m0hjpo7O26rhUa7BAnDeOVUWmz29DusUn8U8HOGgkbtHGzK5sQhxHh5dMXlDtkI+wt
-         nJknUHlNy3SaHos06ZjK/2/HL8pvCUHDUJtWi7qZHCJfxDJzLqHfDHM/0N04WYPsWOMO
-         FdgKaYI/063nsuTHVoJ4umQ4NA4tzfNHPNLDfZeRn3H7NAKSVBjxV74+cQiKnUDcI5PA
-         nDNxyJp7YZrEC/LTQOh3U2TJYi6KghiCb5hKM5oll4fJ+1zaiTradrZEAs/s+MGhPvIX
-         T6Y25w8WNQb0XHKOptwEc1E2z0xbm5GUDFZldtOCkvz5uhZYiGHq9lipGUmWYK0h2ytI
-         B28A==
+        d=gmail.com; s=20230601; t=1739022884; x=1739627684; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xAnjxESnAwa/zEVmWN3qdyx2toKtTQ2Wxc451Q+Vl00=;
+        b=GMmTHfYAbo4oFraSc6muAxK+CTTswyNj7XKabY1u2YIC5YieN0l3XWGz5zTGTdUIVl
+         YKLql5YG9caTkqOa7ABZwpXYICh6NSIDhI7WCLh8AQTcPeojjFCr7/zah0AQAQO9PRng
+         F8cp2Fyqljpn7jkrp02E5OtqaQ6LTK4ChQ2GH+xn3o69jd+ZYTbFDkIIQmA9sWbiSDYZ
+         JNlFDWMxSdeHD/TV/2a199H7ifMYIBlx+IYgvOFAnuxDsQ+tAf30wS6dwrQ8dBxtJ0fe
+         7kpk5iUIx34hbn1Jbf81xaCGt8xQYUc6/OFf8XuaZfDZ4C7wwtfqNtDTKh3DFP3J2Cyq
+         FNaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739022862; x=1739627662;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iFnScfrb4FHKoOTGmqlb5WR9qT5yGH/QUW4XVtfAjOc=;
-        b=jSkIgmnWIO3Hl+ZG7vMQ9uYBpkuMdz415faD3Ok0o5eoX7mexZbB+u6FhiATKnPtA+
-         yDGh/TcUnTm1d2UawR9Fq5p5unUe5IvzHIDfvgQNAqHsfyMcbGKKl55ECjB4tZcNCowB
-         bK6GYVmS31XjQUPyWXaI8PUlmFAsncFF7inWeepoCh+0jtCwYANw/3WPAl7kZNeldWXu
-         BRQc6MhqhR7ZKvSbFg2ehPLdcHzfpV4Ih6sXcZCWjjlqLLIYrfizTgV0DzzYJVQgWcfh
-         Q1ravb/vromUP2zOiLuvHRtTqy0u/2R48blk5D12M2pkPzDJBvIjHkRJUxHRAxRtxRix
-         NnYg==
-X-Forwarded-Encrypted: i=1; AJvYcCXdGR0MCc8QgZ0l88dJI2EnRUD7yteLbR4pQuY9Oyu3unnk8DIZavAu1vOuxTJxcQVUAulfCXLTX5o0W1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznWWAf3EycZ0RT4Mn5BZDwcSjGSraZytDMslImcxTukvFRkjuD
-	b+gkZ4G6xNpuJ7Bz+0IYCwN29txHHpWdNZeqX2y+0Ee4cFs31VMm
-X-Gm-Gg: ASbGncs2WegxIE9D/5g1zb8+cZSAq3xt3mkQCg7xJAOJHsVo2N33qxzIQqNyvz5+h+C
-	0KfW2Lrul21EAPlH8xydEDHpV7UeuYZzG+0rTSJw8oC2pMq0kVwdYM9RWXPCEL7f+Xbhut9zSGn
-	9OOsWB4MeBXDy1P7he9V5ZtM5HcodgHCaMyfC2dihXKp69qAbIox7B8Z4VIzTE1k1tX6Wy8ZE7U
-	mdohy0v+zGQVthLGugZGzdlpnD0XMpzTCTKL36YTkQ8d2fABsRWw9TIctFwoX5VUVUtNEvsm+7U
-	Gitm3q7mH8rdmoJ6282mh4aTDE7aamnlhLLaHc0Ae5N5
-X-Google-Smtp-Source: AGHT+IFbxc3GAXDoXKJ5rW0syHVzL3E4LhgGQxe7npP3vn/vPOBix39tigacRyRjZC1ZeMRoWdpayA==
-X-Received: by 2002:a05:6a00:1acc:b0:725:e015:9082 with SMTP id d2e1a72fcca58-7305d421bf5mr10321913b3a.5.1739022862027;
-        Sat, 08 Feb 2025 05:54:22 -0800 (PST)
-Received: from DESKTOP-B5TBVBT.localdomain ([175.117.51.71])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048ad292dsm4749597b3a.61.2025.02.08.05.54.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 05:54:21 -0800 (PST)
-From: Yohan Joung <jyh429@gmail.com>
-X-Google-Original-From: Yohan Joung <yohan.joung@sk.com>
-To: jaegeuk@kernel.org,
-	chao@kernel.org,
-	daeho43@gmail.com
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Yohan Joung <yohan.joung@sk.com>
-Subject: [PATCH v1] f2fs: separate discard and zone reset command from pend list
-Date: Sat,  8 Feb 2025 22:54:14 +0900
-Message-Id: <20250208135414.417-1-yohan.joung@sk.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1739022884; x=1739627684;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xAnjxESnAwa/zEVmWN3qdyx2toKtTQ2Wxc451Q+Vl00=;
+        b=ZWgEdupXzkCzp4FcXRCh5XpE9osXw8Oz8N8QL5cvz4Eaefj3aJ3HBmjzbjILCeaQvF
+         fpXU2Kot+kQiirYBSkQhK3sUkxBvCRnfp+JF5GVImjWggCPdgEhIH0A6u02D1FwL5SrT
+         /yc3JWdjhRu23xnkNTfHlF7qFbMg15kly8BUwtyKCVHaXEP58eyDkusk0Yw6642TIg4S
+         nt6JR4+yeo/vC9ygQL69uiA/AcdJDinyFY9LjBIn/dxVbxXo/pUBiCw8+I7VHYspEJG2
+         dJ3SinQVCZ88H77wiM/k/vRqMHGLdRUIV1rF9vSQimemRYe/jQtYjj/3GMWeQFSo9cpT
+         RmkA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUDwXklX88ZAWEbw83SKTmahhX0z+WnU7OTWfV3fhpnqAm/cKhdBpy1uU/4ZEW7Zom6I5u/jsRcoLiAlGd0NKJPyuWzQ==@vger.kernel.org, AJvYcCX3h++EgwOiH1sC8uMWj4NfzaXGLAuYCriWgpQrejQPp9ax60IVM7CG4s+4m/kOFzeONZ8urDEyaDIm1tk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4IITaQOA7wRoaS/a6/VpWXY0fb2nkuXgZ8YHxqeA505+k0Mbt
+	Zu+yqx+X6STtyw19shNwHdp1tNjuLFcD2TMR5Z87/25DhkSF7h7H
+X-Gm-Gg: ASbGncsV3h1SoEj2CDPm7Fbl7uqlLrO5fQMGJyYLK4wHUx5Ep+ZJSgLgxWO83ZUlxzF
+	xgDPJ3kEQi3pJWeRxSIkT3fwOFF4oUoLJqBYkCwSRdh1FQ/gnoeDmjbz9ynco5uxsZJSVya3GIX
+	zE253M4/Scuuul4BlT3PugzY3gALyk7sZySb8jvr0OyjW4WB6/ClMbIhRoAE4eDWnUMKqCBaEe4
+	2kjUQUYRbPT3uaLLUeErplov6EKz0rrfVkyhOdlWnsT7l0C+Bv8sBMVHzPy35TsNQGyNh4UzbRe
+	I7KsgPw=
+X-Google-Smtp-Source: AGHT+IGOaJ5arC6FSU5V0uffp8x+SN3pKuMwXOVseN1MUDK9eekzQzuekSYZqkNLJZhCzNkh5nCjJQ==
+X-Received: by 2002:a05:690c:690b:b0:6f9:7921:480e with SMTP id 00721157ae682-6f9b280e465mr52260967b3.5.1739022884003;
+        Sat, 08 Feb 2025 05:54:44 -0800 (PST)
+Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99ff6a2a0sm8984917b3.89.2025.02.08.05.54.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Feb 2025 05:54:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 08 Feb 2025 08:54:41 -0500
+Message-Id: <D7N45UX5LBMY.NCG1A7Y0SKXF@gmail.com>
+Cc: "Hans de Goede" <hdegoede@redhat.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Limonciello, Mario"
+ <mario.limonciello@amd.com>, "platform-driver-x86@vger.kernel.org"
+ <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix registration of tpacpi
+ platform driver
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <mpearson-lenovo@squebb.ca>
+ <20250208091438.5972-1-mpearson-lenovo@squebb.ca>
+ <D7MSPR52PB4E.N0X1UFVQOODZ@gmail.com>
+ <aee5fbe6-4309-450f-bea3-c0842172b043@app.fastmail.com>
+In-Reply-To: <aee5fbe6-4309-450f-bea3-c0842172b043@app.fastmail.com>
 
-currently, zone reset only occurs when there is urgent utilization and
-when pending blocks are reallocated. this causes performance
-degradation, so we are modifying it to allow pending reset zones to be
-issued.
+On Sat Feb 8, 2025 at 11:26 AM -05, Mark Pearson wrote:
+> Thanks Kurt,
+>
+> On Fri, Feb 7, 2025, at 11:56 PM, Kurt Borja wrote:
+>> Hi Mark,
+>>
+>> On Sat Feb 8, 2025 at 4:14 AM -05, Mark Pearson wrote:
+>>> When reviewing and testing the recent platform profile changes I had
+>>> missed that they prevent the tpacpi platform driver from registering.
+>>> This error is seen in the kernel logs, and the various tpacpi entries
+>>> are not created:
+>>> [ 7550.642171] platform thinkpad_acpi: Resources present before probing
+>>
+>> This happens because in thinkpad_acpi_module_init(), ibm_init() is
+>> called before platform_driver_register(&tpacpi_pdriver), therefore
+>> devm_platform_profile_register() is called before tpacpi_pdev probes.
+>>
+>> As you can verify in [1], in the probing sequence, the driver core
+>> verifies the devres list is empty, which in this case is not because of
+>> the devm_ call.
+>>
+>>>
+>>> I believe this is because the platform_profile driver registers the
+>>> device as part of it's initialisation in devm_platform_profile_register=
+,
+>>> and the thinkpad_acpi driver later fails as the resource is already use=
+d.
+>>>
+>>> Modified thinkpad_acpi so that it has a separate platform driver for th=
+e
+>>> profile handling, leaving the existing tpacpi_pdev to register
+>>> successfully.
+>>
+>> While this works, it does not address the problem directly. Also it is
+>> discouraged to create "fake" platform devices [2].
+>>
+>> May I suggest moving tpacpi_pdriver registration before ibm_init()
+>> instead, so ibm_init_struct's .init callbacks can use devres?
+>>
+>
+> Yep - you're right. Moving it before the init does also fix it.
+>
+> I can't see any issues with this approach, but I'll test it out a bit mor=
+e carefully and do an updated version with this approach.
 
-Signed-off-by: Yohan Joung <yohan.joung@sk.com>
----
- fs/f2fs/f2fs.h    |  3 ++-
- fs/f2fs/segment.c | 21 +++++++++++++++------
- 2 files changed, 17 insertions(+), 7 deletions(-)
+Thinking about it a bit more. With this approach you should maybe create
+the tpacpi_pdev with platform_create_bundle() (I'm pretty sure you can
+pass a NULL (*probe) callback) to avoid races.
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 1afa7be16e7d..09a7e13c0d00 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -349,6 +349,7 @@ struct discard_entry {
- 
- /* max discard pend list number */
- #define MAX_PLIST_NUM		512
-+#define ZONE_PLIST_NUM		1
- #define plist_idx(blk_num)	((blk_num) >= MAX_PLIST_NUM ?		\
- 					(MAX_PLIST_NUM - 1) : ((blk_num) - 1))
- 
-@@ -410,7 +411,7 @@ struct discard_policy {
- struct discard_cmd_control {
- 	struct task_struct *f2fs_issue_discard;	/* discard thread */
- 	struct list_head entry_list;		/* 4KB discard entry list */
--	struct list_head pend_list[MAX_PLIST_NUM];/* store pending entries */
-+	struct list_head pend_list[MAX_PLIST_NUM + ZONE_PLIST_NUM];/* store pending entries */
- 	struct list_head wait_list;		/* store on-flushing entries */
- 	struct list_head fstrim_list;		/* in-flight discard from fstrim */
- 	wait_queue_head_t discard_wait_queue;	/* waiting queue for wake-up */
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index c282e8a0a2ec..1c32252db525 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -962,7 +962,10 @@ static struct discard_cmd *__create_discard_cmd(struct f2fs_sb_info *sbi,
- 
- 	f2fs_bug_on(sbi, !len);
- 
--	pend_list = &dcc->pend_list[plist_idx(len)];
-+	if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(bdev))
-+		pend_list = &dcc->pend_list[MAX_PLIST_NUM];
-+	else
-+		pend_list = &dcc->pend_list[plist_idx(len)];
- 
- 	dc = f2fs_kmem_cache_alloc(discard_cmd_slab, GFP_NOFS, true, NULL);
- 	INIT_LIST_HEAD(&dc->list);
-@@ -1649,6 +1652,8 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
- 	struct discard_cmd *dc, *tmp;
- 	struct blk_plug plug;
- 	int i, issued;
-+	int plist_num = f2fs_sb_has_blkzoned(sbi) ?
-+		MAX_PLIST_NUM + ZONE_PLIST_NUM : MAX_PLIST_NUM;
- 	bool io_interrupted = false;
- 
- 	if (dpolicy->timeout)
-@@ -1656,12 +1661,12 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
- 
- retry:
- 	issued = 0;
--	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
-+	for (i = plist_num - 1; i >= 0; i--) {
- 		if (dpolicy->timeout &&
- 				f2fs_time_over(sbi, UMOUNT_DISCARD_TIMEOUT))
- 			break;
- 
--		if (i + 1 < dpolicy->granularity)
-+		if (i + 1 < dpolicy->granularity && i + 1 != plist_num)
- 			break;
- 
- 		if (i + 1 < dcc->max_ordered_discard && dpolicy->ordered) {
-@@ -1720,6 +1725,8 @@ static bool __drop_discard_cmd(struct f2fs_sb_info *sbi)
- 	struct list_head *pend_list;
- 	struct discard_cmd *dc, *tmp;
- 	int i;
-+	int plist_num = f2fs_sb_has_blkzoned(sbi) ?
-+		MAX_PLIST_NUM + ZONE_PLIST_NUM : MAX_PLIST_NUM;
- 	bool dropped = false;
- 
- 	mutex_lock(&dcc->cmd_lock);
-@@ -2305,7 +2312,7 @@ int f2fs_start_discard_thread(struct f2fs_sb_info *sbi)
- static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
- {
- 	struct discard_cmd_control *dcc;
--	int err = 0, i;
-+	int err = 0, i, plist_num;
- 
- 	if (SM_I(sbi)->dcc_info) {
- 		dcc = SM_I(sbi)->dcc_info;
-@@ -2316,7 +2323,9 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
- 	if (!dcc)
- 		return -ENOMEM;
- 
--	dcc->discard_io_aware_gran = MAX_PLIST_NUM;
-+	plist_num = f2fs_sb_has_blkzoned(sbi) ?
-+		MAX_PLIST_NUM + ZONE_PLIST_NUM : MAX_PLIST_NUM;
-+	dcc->discard_io_aware_gran = plist_num;
- 	dcc->discard_granularity = DEFAULT_DISCARD_GRANULARITY;
- 	dcc->max_ordered_discard = DEFAULT_MAX_ORDERED_DISCARD_GRANULARITY;
- 	dcc->discard_io_aware = DPOLICY_IO_AWARE_ENABLE;
-@@ -2326,7 +2335,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
- 		dcc->discard_granularity = BLKS_PER_SEC(sbi);
- 
- 	INIT_LIST_HEAD(&dcc->entry_list);
--	for (i = 0; i < MAX_PLIST_NUM; i++)
-+	for (i = 0; i < plist_num; i++)
- 		INIT_LIST_HEAD(&dcc->pend_list[i]);
- 	INIT_LIST_HEAD(&dcc->wait_list);
- 	INIT_LIST_HEAD(&dcc->fstrim_list);
--- 
-2.25.1
+platform_create_bundle() only returns after the device has been
+successfully bound to the driver.
+
+~ Kurt
+
+>
+> Thanks for the pointer.
+>
+> Mark
 
