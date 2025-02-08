@@ -1,107 +1,138 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A42130A7D;
-	Sat,  8 Feb 2025 02:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4CC2940B
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 02:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738982626; cv=none; b=BR31Gyv8No8LztKPv5+dbkDpnV7LFs8NO91mGRHd6Oph7OPhYgZqEKWcpgq8XS7JNPeSn27hEzZbE3ksHCuDUjI4zkUdfMyEDmBuQIONGH3SYe8DNwGdAIf4v0BpfJPJgRl11yz5AzjbC5BDrYwiUgTGbX6KCLooElG/c91lvZo=
+	t=1738982751; cv=none; b=kKud2UYQhWo5NR7bfy6qaGQnVDQj+N6EW8gQQTYwuseMywNrSHd7MKJ/CQOzlRrD197rh2E80BJ/HreiZXZh+STljvCNxglVwS8g1C97WElVy013QdD1nn9QprZ8WIAb4rhV6d8GTJdrz3pHjv5KiBaCizVocd27JZycZrs1ElQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738982626; c=relaxed/simple;
-	bh=1yRZEVogkK7XQDQbmp2eIIgRmMSs3XbAGXlfU20Jpt8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I0FZrBf6fi7zRMNY2Zjjm801pv/MfbDtPbxOKH/7zL1eBoXPlVZ7ZPb16NggOSfrcTW3n7VXee90MirWVdb3SxN5YxmfPTA+hQvjKM+MSTjou2/OEzfS1yjlLQEeIexe44QTK1xo660iyZ54q13/bYfLVvDDnC2tl+v3qnqBgU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=i6v4X9G4; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1738982751; c=relaxed/simple;
+	bh=e+53GC+tZHxLi5hlhDJ2qkwYUo5ylA0agIxfUa2EJnU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tZtoOzJJf57UmIpVqAH/10X48gtdiZVWFwecEzAxT0qzhJYjPOEmOAoRf08gUQPH7o5indRzzKXkjy/uW6ADgwylYsaOjVWskE2M7rLcHOIWf95Oi5cEhonkDwVJn6+f4BM4Rb18cmlQnjvtxxMLPq5Cv1ypRtJDb9eTPmTK8uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bJHBEzDS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="i6v4X9G4"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-436249df846so18165215e9.3;
-        Fri, 07 Feb 2025 18:43:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1738982623; x=1739587423; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6Q96w3VhI1OyM0iRg0iyUAghNaFOtqrMksaCmsOLmiE=;
-        b=i6v4X9G4gF1qmtIAFAxOzVIeeIUnKUmSIo3yKjBG2Q1Y/331lBbj4XHhVhL8ircw8Z
-         MKZm1EtpsMSsFt0iwoHd3Wwu0sIEFWDLmHPx+IgibpIJm7sTCz8jULTGrlSC+HA7V6NW
-         uue1Bu1Lrf3Kpo1z65mPGDU3+4hWNO4k6TCOsUJtr9HCdYB2S3/LE90DNNhe1swFN3Hh
-         lngRf4MTkhP8nIPCkLyc6eTmhbu59NtNsWdXuVnMpKl/r+Tj/w1qXETOcZ9fjn4EhT72
-         HDAdEpXXqDnz91c7mZwe7x/tCMYQDVnqNCEbT0NrnAEt5qv4Aacuv4eoHjiPw2wNRPRS
-         NU2A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bJHBEzDS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738982748;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3RtI9mzHlogsKr4SkkhLppl0rKhYDgT0L5Yr9m+Pi60=;
+	b=bJHBEzDSZiK2PVfu7KYGHC+SoMLNDaXXDXAZnDJMzZulp1JyLiMQMSbvHVdBz6f64wGJXT
+	sDWWuoAGvy5t2Hy/98RAVF1ooYu/FN6qWum6S1YMQvkCYcjKxLKHXljNDNCA6u9KUCGjiU
+	mXmD6S1O7Y7BVS7oeKkBwS9wm0YuiXM=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-618-cs6F7WrzOwySGIMOkILYZg-1; Fri, 07 Feb 2025 21:45:46 -0500
+X-MC-Unique: cs6F7WrzOwySGIMOkILYZg-1
+X-Mimecast-MFC-AGG-ID: cs6F7WrzOwySGIMOkILYZg
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2fa1e63a5ffso6126923a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 18:45:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738982623; x=1739587423;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6Q96w3VhI1OyM0iRg0iyUAghNaFOtqrMksaCmsOLmiE=;
-        b=dfRdN4qTC/PcX2/11bhT9uN9nWK64oYTujJYVar+viryCHVa3BZywx4ZdZNjNeo25o
-         Zgz049OekaEBmdaR72kpxgmlrhjvlZQB0z+2xEQTkRFVyMuSewTeAf4O82Y9bEGa8v6G
-         MRDbn5MpHh8Ufb/ozeaPSEL75R91n8TV7HO6MDq+MAiMsfC2Ly7K/qebt6z0xg8GzJTD
-         Od+A98nRrIq6JObgkML0dHUadDZo7s9rs6+actA0KS9b3DKngkz8AQkjem7cBV3dS4zH
-         9CYb0LF8Xzw+zd6tStpj9o05eAVYS04cmGrgNidUux1PDHB/4vdAwrihNtEeEy8pZSvL
-         Wljg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8yS/nuRVl6HVSAQcFmkEBVLJ7qGNK0Nci49JXVjtL+JAI2pggTniVFSOYOm6TiCNJy6gh40g2Q5jCnPY=@vger.kernel.org, AJvYcCUuhgNDeBhHbyus6SKFDkLlqwqHq7ZaYseBg7nis4ykmwRHYBlk3FemiiSfC1AqALq4D9IJ6V1B@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6GfVoHbZPqZT2raMLwVIcanKXXMKsDIKAVC3EdI5hydyTlfSW
-	ybf5CaqpKBJg9Z1DCGSi3xa3O0j+z7fEnHyiIaOM0Dkq3oF4tC0=
-X-Gm-Gg: ASbGnctvhLFSuiXYIVQOxOuJkfteqSpvIXOEVjFg8rhGwuyTqGdoI1hwsY+3wHKT722
-	p/FoVxkGDT2KSl80VEOKb9MIGN0NpYu2VsUeaMNXCrm6knS+VXpdyvetiLLUXLOassMe3+9qeq1
-	6Jd+UXd2Bo+lY6p86Qih9X0gaUY6CB12ufT9fGyBg0D9f71v71we0AhiJWkBTPhgC2UIjP/djJ+
-	ArFrRME9EHyNVwJu02dBVJmKCnj5d2Cg0HAJy7pFvqrrOBYsg9eWvm3CXPG08q4IADAcFQMZNhh
-	HnthZA6tlEIeX+1w9uxv+/oC1MuNYvg6FFhWmUdt/Chm3HGGIYD/AKt9jUKBc+yQZODo
-X-Google-Smtp-Source: AGHT+IH2AAb7mKYtGgCklY/ZnYB6GdOFP0u3p7Xp7Xg+7rObcCTVDk9IjDCBVs8nQ0emmciHy27c0w==
-X-Received: by 2002:a05:600c:5492:b0:438:a214:52f4 with SMTP id 5b1f17b1804b1-439249c3836mr36026495e9.25.1738982622819;
-        Fri, 07 Feb 2025 18:43:42 -0800 (PST)
-Received: from [192.168.1.3] (p5b0574a7.dip0.t-ipconnect.de. [91.5.116.167])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dfc87desm70748545e9.25.2025.02.07.18.43.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 18:43:41 -0800 (PST)
-Message-ID: <201f2658-68bf-44b1-9092-7b8119e91f9b@googlemail.com>
-Date: Sat, 8 Feb 2025 03:43:41 +0100
+        d=1e100.net; s=20230601; t=1738982746; x=1739587546;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3RtI9mzHlogsKr4SkkhLppl0rKhYDgT0L5Yr9m+Pi60=;
+        b=NWTZ+MFdWMfpiGoQsSJI4eyFlUhe2ZmMXvrv4d2Ty96KZWkcTgyR0Y1sThVjMidbH5
+         I8LDXfuVe5F+Rr9w1RH8a35NKl7RGy6U11ucGBMBMkaLW+GDulJtILGU9pAHWN1xQVD5
+         Er1X/KZBv6ULHm5ipxA87axdEaW8QMVPZAL2SNCM8mY1H7KEBgXTLlxw3Dv3PRviH9Ih
+         990C6FpskwfzMXwb6+60DH3QBj/ozWob6s+CVh36Koc4bsm4rDVMDDkHJnA9uDaRf1ho
+         AysJFXK/xf2i4hA3oVf21qaX27DWN+X5LUm9K0pQnQTUdV56+tDZ2bx8ggQGYnNZYdHO
+         3v1w==
+X-Forwarded-Encrypted: i=1; AJvYcCWpRRXB4hy+6QluVIEz5zm021i23mREqSmT7glarfoIgRu5xTq/effzm4YqlfuQXL1Nizz1dsDP1+QMlNg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtzjKUx87dITMHlBDc5ifPn7qgDE8uIeuXJJ9+gyrcnSDx8fmV
+	AjfjczmwiRun7nX+jmR/8NYuRZhP7a/hwTAj5gkfkj3fpb54VunZdl/MuDn5Rg+2aIbChN0nf2l
+	mwYIb6kJmEkCHd7nS7C5cY6+SvvUBwzpPeh6JpAOcGX7nMInLT1xWqJ+hscaffCoKmBz9bM2gng
+	0nc0zRQKptOKcZtzvKu+ImjbjiupYyDNzkYm/9
+X-Gm-Gg: ASbGncvwhI/QB3bpqLXAUD7zqmWqda50qwVPkrcBzxpKMDpDEwtddiAT7Bemxmyl/+j
+	DIdZx6Su/IrhKwfd1ZN89aPVQEERJS93hym+Lb2Ryf8VynLo9bA2J51ErgJb+
+X-Received: by 2002:a17:90b:4d05:b0:2fa:d95:4501 with SMTP id 98e67ed59e1d1-2fa24177388mr9616148a91.18.1738982745841;
+        Fri, 07 Feb 2025 18:45:45 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGu8ZX1sXnDvvmGXdTvfrOM495sFve+We8CS1tjixi7m5H2BOV35BtGVkBZyCEfzHNupLpptblp6BV0Nerfa4Q=
+X-Received: by 2002:a17:90b:4d05:b0:2fa:d95:4501 with SMTP id
+ 98e67ed59e1d1-2fa24177388mr9616114a91.18.1738982745291; Fri, 07 Feb 2025
+ 18:45:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.12 000/583] 6.12.13-rc2 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250206160711.563887287@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250206160711.563887287@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250204173127.166673-1-kshk@linux.ibm.com> <m34remjchz3recrui5zwhuthbwxl2fb5dcjzdhxuedrbsa6q5c@xshyty77q6ul>
+In-Reply-To: <m34remjchz3recrui5zwhuthbwxl2fb5dcjzdhxuedrbsa6q5c@xshyty77q6ul>
+From: Jason Wang <jasowang@redhat.com>
+Date: Sat, 8 Feb 2025 10:45:33 +0800
+X-Gm-Features: AWEUYZmZFyJNpa-NIQ1Jhv_bLU_wN-lxtmNKgVt52wLlolbReYZyrKIK-wAfX24
+Message-ID: <CACGkMEsOC6opYfDKY8xyJHKoWF_8RaKxRqZvuzAcFpgvpyPB+g@mail.gmail.com>
+Subject: Re: [PATCH v2] vdpa/mlx5: Fix mlx5_vdpa_get_config() endianness on
+ big-endian machines
+To: Dragos Tatulea <dtatulea@nvidia.com>
+Cc: Konstantin Shkolnyy <kshk@linux.ibm.com>, virtualization@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, mjrosato@linux.ibm.com, mst@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am 06.02.2025 um 17:11 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.12.13 release.
-> There are 583 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Feb 5, 2025 at 2:16=E2=80=AFAM Dragos Tatulea <dtatulea@nvidia.com>=
+ wrote:
+>
+> On 02/04, Konstantin Shkolnyy wrote:
+> > mlx5_vdpa_dev_add() doesn=E2=80=99t initialize mvdev->actual_features. =
+It=E2=80=99s
+> > initialized later by mlx5_vdpa_set_driver_features(). However,
+> > mlx5_vdpa_get_config() depends on the VIRTIO_F_VERSION_1 flag in
+> > actual_features, to return data with correct endianness. When it=E2=80=
+=99s called
+> > before mlx5_vdpa_set_driver_features(), the data are incorrectly return=
+ed
+> > as big-endian on big-endian machines, while QEMU then interprets them a=
+s
+> > little-endian.
+> >
+> > The fix is to initialize this VIRTIO_F_VERSION_1 as early as possible,
+> > especially considering that mlx5_vdpa_dev_add() insists on this flag to
+> > always be set anyway.
+> >
+> > Signed-off-by: Konstantin Shkolnyy <kshk@linux.ibm.com>
+> > ---
+> > Changes in V2: Initialize only VIRTIO_F_VERSION_1 in actual_features,
+> > rather than all flags.
+> >
+> >  drivers/vdpa/mlx5/net/mlx5_vnet.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/=
+mlx5_vnet.c
+> > index 36099047560d..cccc49a08a1a 100644
+> > --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
+> > +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+> > @@ -3884,6 +3884,9 @@ static int mlx5_vdpa_dev_add(struct vdpa_mgmt_dev=
+ *v_mdev, const char *name,
+> >       ndev->mvdev.max_vqs =3D max_vqs;
+> >       mvdev =3D &ndev->mvdev;
+> >       mvdev->mdev =3D mdev;
+> > +     /* cpu_to_mlx5vdpa16() below depends on this flag */
+> > +     mvdev->actual_features =3D
+> > +                     (device_features & BIT_ULL(VIRTIO_F_VERSION_1));
+> >
+> >       ndev->vqs =3D kcalloc(max_vqs, sizeof(*ndev->vqs), GFP_KERNEL);
+> >       ndev->event_cbs =3D kcalloc(max_vqs + 1, sizeof(*ndev->event_cbs)=
+, GFP_KERNEL);
+> > --
+> > 2.34.1
+> >
+> The patch looks good now. Thanks!
+>
+> Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
+>
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+Acked-by: Jason Wang <jasowang@redhat.com>
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+Thanks
 
-
-Beste Grüße,
-Peter Schneider
-
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
-
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
