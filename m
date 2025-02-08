@@ -1,176 +1,118 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA121241139
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 18:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E176241107;
+	Sat,  8 Feb 2025 18:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739038806; cv=none; b=jOcUc2wkFsObE4JJulFKEQcQxWnRJweq80iXr8vh1bbrcq6dD8ZDQfzp1rweYtIAP3Vtm1u6EfZrvVVI2rqy3COXiYabY1BkwmZ6GuW/y+OFgiwgZK00q2brX91/AcvuKJNqH1T7b8z01eY5O1MMkEqWtHkQ5qV/HGzGHN9qZzQ=
+	t=1739039027; cv=none; b=YqKV3JR3pZJPeY5siF0QblII+SHGeFl4cUklCY17u/l3jWDn/40RScmAdJAXqohVsxLRKty4cQdSeW+ddm7K9urkdQzoA7C2G/LXpajXmjPRHkWkyHKULdfousvGz3YyEudpL8uObcXZ2KBSDCd+5quXXM/chNHB4kASPzbb6RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739038806; c=relaxed/simple;
-	bh=gMaAMVjZl8rtQdUE/8Mp0fRwYUJ5Kc88FYpJ0AFahzU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NyhhF+X51hkGquPjkgIeIuLimMxRpTgBtrWSbIQw1dN7ECoPFtB5Y+1OaFMFJWE2wolm62Ubrw19iqoD2r9npCNvMxgfpi+4wuq15eBnad36Gflye4JrlgJ0HvWQoUNw2vZriI6wXs/aj4RekkLU/RawWPBsHMRZkGgqdKQSSZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4Yqz654D1kz9sPd;
-	Sat,  8 Feb 2025 18:55:57 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 2kbV93WVjU2T; Sat,  8 Feb 2025 18:55:57 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4Yqz6539yJz9rvV;
-	Sat,  8 Feb 2025 18:55:57 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 624F28B79C;
-	Sat,  8 Feb 2025 18:55:57 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id ViW2ux6gv5_3; Sat,  8 Feb 2025 18:55:57 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 6213F8B763;
-	Sat,  8 Feb 2025 18:55:56 +0100 (CET)
-Message-ID: <0f05c020-47e4-444d-90ab-9eb8414f4ef8@csgroup.eu>
-Date: Sat, 8 Feb 2025 18:55:54 +0100
+	s=arc-20240116; t=1739039027; c=relaxed/simple;
+	bh=jJ+AQLoMjO/x3Ps7vJSk3vzcKF5wiCVgIDoDTv4QQN0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tpKfWvlE9UEY84UZ/xSgNWgOn8d1iN0qUsHv2vOW6VCrORg3IsfMwKHXtJ8j/o3OfkmkWPaBCf4UuFXPjPKi53yvK6DNMKHtkBt9oSXLLBbxaRBZVDgOUqFVzzlbz1mzochyzxlP5mOyo7CobLQMBnlucgfmOJ/8Tw5rlEg1v44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EklgTIVz; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EklgTIVz"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5de4c7720bcso2569447a12.0;
+        Sat, 08 Feb 2025 10:23:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739039024; x=1739643824; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xiNvW4R/VJfrDNayC58/uDi99/+MsHLhziR2BZUzZIU=;
+        b=EklgTIVzy8lQ9XhJgkOFefUP4hIp+h6dI7LYOyc5bkFnRgohublN1+6JGFX8MAUNqq
+         POp0ByP0ucTmntxJsg6kFNqIypq0zCebnldvHvtvTopIAsDIuBM7ZM5k3nYh6nGlAkNY
+         HQRj4z7I+QBylib9FySozfD3IyhnpdkxNow04qEyjspDsw7qGH4cSBACd2eKBhMpDvZ9
+         K+6Izz+SLsOxxJ+9VowZ39meowCvRDdZ7egPdUHLm6xQKMg1cNupR3ma7ks9aK0rY1Fg
+         Uy0ksg7dpIJmrbAO1+BQ7elWdMx4JfLt9brzqxsxk928I0hi+6cqfnT+ZPJ3sYokYL/i
+         JP8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739039024; x=1739643824;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xiNvW4R/VJfrDNayC58/uDi99/+MsHLhziR2BZUzZIU=;
+        b=YT7KBalRLshiWJfikSuNZsE4g9apkuuDPSAD9zprG9IKZKwxT9gSr3csM4pWy9T1Jw
+         IR2n8sW6CiUstGLmeI5Ic1HYqrg9BN4nacxmyvDFV2L1JHYnd127a8j3+wjE6odHm4mo
+         ww/M2dxdSMTqQ01Gf9IgCgJz/CkI/X8/BqE73D/G1Q9Js4EzMq7ZU6E6D+xlK5naIAN1
+         ufK/FwCkhrOqhKk4Zu7QkUG65EsfLE+l78ShAY3oUpisLoE0x1NoVKpx7SATJGEcIGlG
+         3uDLnY9J55NZberoqhbBWetSBxjRfm+s+MFPeDm8mVfZ3VXGrtRb8pJVTqTMclutZ4lE
+         7sMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXWUSsRw4zvBRlrAiQUSvv8lARCYTfqUAAZGWnigSBti1oMbiKab7CI9xWjHkwtORriXf3jA2TbdujdsbT@vger.kernel.org, AJvYcCV90zzD3wwRvWkOIvRSjVKdlflEvuVNFCSqfBgtCVM8JxwtlvczT89x4rnGg4lyhTHNCwZI1cKy1KXQ@vger.kernel.org, AJvYcCX5faQdKkatJzcBRw1vWgmNGOBBnu+7r8pCBMbyWRnhTElgYI9tRuGeznWwpcHO52eXejCBDlAajWcwIh+5aA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxrxu4H8WI6WJxcFt6EYH6WpdWxMWK5ZEERv0uEio3tg9Q30qn8
+	KnLLWb3B33M7RKiYjKVIhBMagm/uXVHOhhDLN7Zu4QsQEqWdp8GZV88Ecd00Z1ZBLoLmx4Hwj6l
+	H6KaJC4rBp1adiwvM0BCEwZpDK18=
+X-Gm-Gg: ASbGnctP7LBLz7+XGrRax8lFiDThrRM75R1hnZ+FuMnQ/WA8uDA3ivz3qGGxD0BfdUa
+	EvEY3i+uBhjwlmIW/5PUNL19UaDTPT67VTJJFsIWA1f54c3eYOlYKUb/YdQ+RD072eY3HixL1
+X-Google-Smtp-Source: AGHT+IEqNBa82X3gISKr2oPC6+cVGTAfy5ePrlgVkuS7QLpMKuQGaDC6GHpRzb1UEFKg/yyqpP6k609+ra71SKuoP+8=
+X-Received: by 2002:a05:6402:2084:b0:5de:44b1:46c with SMTP id
+ 4fb4d7f45d1cf-5de44feb75cmr7781329a12.7.1739039024125; Sat, 08 Feb 2025
+ 10:23:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/9] powerpc: Use preempt_model_str().
-To: Shrikanth Hegde <sshegde@linux.ibm.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
- Ben Segall <bsegall@google.com>, Catalin Marinas <catalin.marinas@arm.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>,
- Juri Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>,
- Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Valentin Schneider <vschneid@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>, Will Deacon <will@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Naveen N Rao <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org
-References: <20250203141632.440554-1-bigeasy@linutronix.de>
- <20250203141632.440554-6-bigeasy@linutronix.de>
- <65c6f60d-bb52-48bd-a02c-87ffd2a915d4@csgroup.eu>
- <20250203160103.9DikC9FJ@linutronix.de>
- <51999b8e-61c0-48b7-b744-c83d39e7f311@csgroup.eu>
- <20250204082223.6iNyq_KR@linutronix.de>
- <7b51f7de-8e4b-4766-85ca-dee24832c693@linux.ibm.com>
- <93833119-9406-4d30-aa7b-4521adb3a573@csgroup.eu>
- <936f0451-a4ee-4e14-9ce9-9cd9613fc55c@linux.ibm.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <936f0451-a4ee-4e14-9ce9-9cd9613fc55c@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <67a4eae3.050a0220.65602.0000.GAE@google.com> <67a79eb3.050a0220.3d72c.002b.GAE@google.com>
+In-Reply-To: <67a79eb3.050a0220.3d72c.002b.GAE@google.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Sat, 8 Feb 2025 19:23:32 +0100
+X-Gm-Features: AWEUYZkDy7uFTIlJQohQpCjxxZm_lZu6PPZOEeMY_q1jzs96tEGajm8SZ8cCtOo
+Message-ID: <CAGudoHGQo1Y41_91WOUJygHzrmOO4N7PY12vPpFLF=ZEFPvsBQ@mail.gmail.com>
+Subject: Re: [syzbot] [ext4?] WARNING in inode_set_cached_link
+To: syzbot <syzbot+2cca5ef7e5ed862c0799@syzkaller.appspotmail.com>
+Cc: adilger.kernel@dilger.ca, brauner@kernel.org, jack@suse.cz, 
+	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu, 
+	viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+For posterity this is expected, the ex4 fix is here:
+https://lore.kernel.org/linux-hardening/67a3b38f.050a0220.19061f.05ea.GAE@g=
+oogle.com/T/#mb782935cc6926dd5642984189d922135f023ec43
+
+On Sat, Feb 8, 2025 at 7:21=E2=80=AFPM syzbot
+<syzbot+2cca5ef7e5ed862c0799@syzkaller.appspotmail.com> wrote:
+>
+> syzbot has bisected this issue to:
+>
+> commit 6408a56623761f969537b421d99f045a4cc955b9
+> Author: Mateusz Guzik <mjguzik@gmail.com>
+> Date:   Tue Feb 4 21:32:07 2025 +0000
+>
+>     vfs: sanity check the length passed to inode_set_cached_link()
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D152ffca458=
+0000
+> start commit:   808eb958781e Add linux-next specific files for 20250206
+> git tree:       linux-next
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=3D172ffca458=
+0000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D132ffca458000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D88b25e5d30d57=
+6e4
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D2cca5ef7e5ed862=
+c0799
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D161241b0580=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D16ee80e458000=
+0
+>
+> Reported-by: syzbot+2cca5ef7e5ed862c0799@syzkaller.appspotmail.com
+> Fixes: 6408a5662376 ("vfs: sanity check the length passed to inode_set_ca=
+ched_link()")
+>
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisect=
+ion
 
 
 
-Le 08/02/2025 à 14:42, Shrikanth Hegde a écrit :
-> 
-> 
-> On 2/8/25 18:25, Christophe Leroy wrote:
->>
->>
->> Le 08/02/2025 à 08:35, Shrikanth Hegde a écrit :
->>>
->>>
->>> On 2/4/25 13:52, Sebastian Andrzej Siewior wrote:
->>>> Use preempt_model_str() instead of manually conducting the preemption
->>>> model. Use pr_emerg() instead of printk() to pass a loglevel.
->>>
->>> even on powerpc, i see __die ends up calling show_regs_print_info().
->>> Why print it twice?
->>
->> I don't understand what you mean, what is printed twice ?
->>
->> I can't see show_regs_print_info() printing the preemption model, am I 
->> missing something ?
->>
-> 
-> Patch 2/9 add preemption string in dump_stack_print_info.
-> 
-> __die -> show_regs() _> show_regs_print_info() -> 
-> dump_stack_print_info() -> init_utsname()->version, preempt_model_str(), 
-> BUILD_ID_VAL);
-> 
-> Wont we end up in this path?
-
-Indeed I missed that. You are right, we now get the information twice:
-
-[  440.068216] BUG: Unable to handle kernel data access on write at 
-0xc09036fc
-[  440.075051] Faulting instruction address: 0xc045ddf8
-[  440.080032] Oops: Kernel access of bad area, sig: 11 [#1]
-[  440.085438] BE PAGE_SIZE=16K PREEMPT  CMPC885
-[  440.089872] SAF3000 DIE NOTIFICATION
-[  440.093391] CPU: 0 UID: 0 PID: 472 Comm: sh Not tainted 
-6.13.0-s3k-dev-01384-g54680e2fbfb0 #1379 PREEMPT
-[  440.102977] Hardware name: MIAE 8xx 0x500000 CMPC885
-[  440.107951] NIP:  c045ddf8 LR: c045dde8 CTR: 00000000
-[  440.113015] REGS: c9bf3d60 TRAP: 0300   Not tainted 
-(6.13.0-s3k-dev-01384-g54680e2fbfb0)
-[  440.121215] MSR:  00009032 <EE,ME,IR,DR,RI>  CR: 35009393  XER: 80003100
-[  440.128198] DAR: c09036fc DSISR: 82000000
-[  440.128198] GPR00: c045c59c c9bf3e20 c27e7700 0000002e c108575c 
-00000001 c1085850 00009032
-[  440.128198] GPR08: 00000027 0198b861 00000001 3ffff000 55009393 
-100d815e 7fcf5e20 100d0000
-[  440.128198] GPR16: 100d0000 00000000 113e447c 113e4480 00000000 
-00000001 00000000 00000000
-[  440.128198] GPR24: 113e4464 00000000 c1828000 c9bf3ef8 c1136eac 
-c9bf3ef8 c2888000 c0900000
-[  440.168081] NIP [c045ddf8] lkdtm_WRITE_RO+0x34/0x50
-[  440.172969] LR [c045dde8] lkdtm_WRITE_RO+0x24/0x50
-[  440.177771] Call Trace:
-
-Christophe
-
-> 
->> Christophe
->>
->>>
->>>>
->>>> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
->>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
->>>> Cc: Nicholas Piggin <npiggin@gmail.com>
->>>> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
->>>> Cc: Naveen N Rao <naveen@kernel.org>
->>>> Cc: linuxppc-dev@lists.ozlabs.org
->>>> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
->>>> ---
->>>> v2…v3:
->>>>    - Use printk() instead of pr_emerg() to remain consistent with the
->>>>      other invocations in terms of printing context.
->>>>
->>>>   arch/powerpc/kernel/traps.c | 4 ++--
->>>>   1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
->>>> index edf5cabe5dfdb..d6d77d92b3358 100644
->>>> --- a/arch/powerpc/kernel/traps.c
->>>> +++ b/arch/powerpc/kernel/traps.c
->>>> @@ -263,10 +263,10 @@ static int __die(const char *str, struct 
->>>> pt_regs *regs, long err)
->>>>   {
->>>>       printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
->>>> -    printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s %s\n",
->>>> +    printk("%s PAGE_SIZE=%luK%s %s %s%s%s%s %s\n",
->>>>              IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
->>>>              PAGE_SIZE / 1024, get_mmu_str(),
->>>> -           IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
->>>> +           preempt_model_str(),
->>>>              IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
->>>>              IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" 
->>>> __stringify(NR_CPUS)) : "",
->>>>              debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
->>>
->>
-> 
-
+--=20
+Mateusz Guzik <mjguzik gmail.com>
