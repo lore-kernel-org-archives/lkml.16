@@ -1,142 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C4B2CA6;
-	Sat,  8 Feb 2025 00:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B943D68
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 00:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738975419; cv=none; b=njA3Vpg3F6JiGdDw5elQP+fIJ24KT9g3lrdQ5EV5h8i5GM/Oi3vBsJ0fXr/YPneq4i15W7SVAjH+AQ3cm0lExj/oxUhDcIA/mR8Yu1kp/4vm4RcDdUkekNzeTJHpScWZjMzX0gQZBoguOMg/Wn6X9zxnSor3wIhsjpKhvyfLvBM=
+	t=1738975604; cv=none; b=a+R5rpaXODcw93SHw2/tY9VFylid7Oo9ck95n48cU/4Wqck35pHEsdC00a9xt42jNQYh2a9E2PEnBDtzTKZwODSEh0fqqlk5el7hEUbzIbv5Z6WD4K2aZsdUFt7AFil3FBN+a9PCbDubXNTwAB7AuB58Ub25iVqfKuoaIGGGJwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738975419; c=relaxed/simple;
-	bh=Xg/MgPonWvECjQA65kTkegGR9LxFyeFNABlwMtYCpSU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XiGgawgiE16br+CZfWR8eFKtKWuZ3FfI7Vm/fPXDCR5le6WOOrCjErmri4p/TpYgUICS+z3VrIrRPi+P+VPgaartNyNKxSbnYo8OMrZDPXDuMA1RAyTcbzupBxI6hLnqTev2YzUHERDeGDxNnh1jbW41rfR1ZMJFpJAeHnQIWcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C4DDrIpN; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1738975604; c=relaxed/simple;
+	bh=U/iM/vgIBzMXSjVgFVisrL8eEI/4m5uzt1ogA3r6Dv0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZKNUHK50Wk0+mLq7M2UEWHvet3I7y1baaPxHVJ5PT0ISrnMjqGXaSr9NdRjxqIXk2tCSajXrvQ2sgAVrJAgaqzDzWdqyVv58QkCGn3JZQECYnDhLWbNmmVGlKcy4eB/WC0eLXbAY2mWliAQ6SNv5NpIW0jfZY9wKdDuWDshOG60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b=tNFwbnFM; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C4DDrIpN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738975418; x=1770511418;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Xg/MgPonWvECjQA65kTkegGR9LxFyeFNABlwMtYCpSU=;
-  b=C4DDrIpNf8vJJnJBzKMDonz9rnLAg6Q/aYS9ivdQH2rNqZPpJvWuDR1v
-   b1QFeoOez57D3Lr2vbmrha0DpOYarmR4ZGjA/jWQqFRpSEvB4RjODnCCX
-   XiPlAtIfHRHrtILpu6z6BaOr4cJxiK01g4gzdrqGlrGpCzKsyWaCEXbZk
-   +YqknnLobo1yjzEskA41pRlHsOPxLp3qZP3eyjioEQU6fb5bthE0E8xq+
-   xq89UqRqb6/R0+aZmB4nf0QrZutQD/n2dfZ2NU7+cifRZvaOJjAT+Bc/K
-   SmjuB1svbaTtQOIrDjpuoMJb547he64trZ4NcP5iOBhaU6h2mPmULdHN/
-   Q==;
-X-CSE-ConnectionGUID: jFmxIjEdQVykWolBG3ldfw==
-X-CSE-MsgGUID: VAFIXI9pS5KdQHrqHsXVng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39892893"
-X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="39892893"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 16:43:37 -0800
-X-CSE-ConnectionGUID: Ge764EICRVGS8/4ATAXARw==
-X-CSE-MsgGUID: gxJI/wlCTI2SpRIv2Y6toA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="116672578"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 07 Feb 2025 16:43:32 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tgYwU-000zGd-14;
-	Sat, 08 Feb 2025 00:43:30 +0000
-Date: Sat, 8 Feb 2025 08:43:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>,
-	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>,
-	Dohyun Kim <dohyunkim@google.com>,
-	linux-arm-kernel@lists.infradead.org, kernel-team@meta.com
-Subject: Re: [PATCH bpf-next v2 18/26] rqspinlock: Add entry to Makefile,
- MAINTAINERS
-Message-ID: <202502080835.XRxxo7P5-lkp@intel.com>
-References: <20250206105435.2159977-19-memxor@gmail.com>
+	dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b="tNFwbnFM"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2f43d17b0e3so4824050a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 16:46:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=futuring-girl.com; s=google; t=1738975600; x=1739580400; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pFPCDRWfiwY548OE9KMzZcnx5u4rg+rWVCQ/qhPvDMI=;
+        b=tNFwbnFMzZ5SXTUUx111kpRtDMm8uL8xgbCB/AXrbNrlaYmYAAk+64Hd1xnxgGBYeq
+         CK309McJHwXQUc7Q3LVXlHlyej9scEDIWxZgmJbu6KhJmBV9T97SCeloPNZvFQ5VxVGa
+         LBueyJu7czD3My/RnabQ4zJIXeZ9WcDG1r/rJroiIawSnvpfC2IS99Wwed17FKfal+NT
+         P56MmYdJzOTfa7l7d8mY9QaOqm6uugoQ8rWdqOQEqEkL1EbSxN9b57oBU7UnqE7fM6ij
+         gBfnrWxDCf/jUmdex178rzXLBc5PcaLABKQMJzgL/+XTXo1pAsMwh/SyAVju2CXfRh0v
+         4SgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738975600; x=1739580400;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pFPCDRWfiwY548OE9KMzZcnx5u4rg+rWVCQ/qhPvDMI=;
+        b=pnZys1lBVn6swCX5v0M0JIrgRt+zikhtzbZPtunFdpIkDWoTvIbkKuOH67BkfaZiep
+         ECu9IZIiEKJ1JH8tMtMRnfUKiiFAtxwUYBEvhNl2buqgMCpgpuEh9nc4WmNrGZKetKME
+         Ltj9NJYQHNj2RN03z5R7M6Pi9jvuigBna0sR6rESE2+impr0EDybvJuALQJEZlZqFnrn
+         6EbSqSizHfeSGHz1gCOCRlZFPDaoqQ2dOXuV6IByClyoXzWLutGsMixRgf3R+v5n/ed/
+         CMrc9I6G1/mhxf3lBT51qoaNe6H+h1+Re63OIbIxLPzc5IdIhfYc1D7lmtn5c3OTfIsZ
+         DKcg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdo9o3DBbnBBzs2L7s8gV4iTbzJw8cDjz95g4l9b6BcGL5SEpnvnep6XIayN3JnzuQG8L9hcuxHAB6sN8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWOu6ysz/qIy3j9gDcvN2LR2G9sBMeg4tm+3W/qIWtc5DBx+rw
+	NfdzOfmLvzfA5HknfZmjGM4vg1LWrZ6uoOPhhR89xJvmKI2pIoFiSvHL3Zh7JY4icymqJSJC+0p
+	VvJKZ3qhBaHOf1x9aHOcml4MPiqWPP1OkKE/TiQ==
+X-Gm-Gg: ASbGnctR5vp7Rp1LjWoQDWyoTNspvbxTZzvW3C7KrKKeYeb1ZtAthwDN21nkqv6vMDX
+	myQY0vgswEXlGwVcaBOq1ZfaMcHuscbt2jWhmCeh/rgC6sgqSpLjGarhsGsAXG3dzVz9S1w==
+X-Google-Smtp-Source: AGHT+IHyBjiDGf7wVgGsBkQDcCSh2TnPY3jPly9PKqaRjONHXxOEA+eane4+FYFN84Y/5Lfu3fPhuquGmIGMz0S+vWE=
+X-Received: by 2002:a17:90b:3c81:b0:2ee:9e06:7db0 with SMTP id
+ 98e67ed59e1d1-2fa240641ddmr7792502a91.11.1738975600350; Fri, 07 Feb 2025
+ 16:46:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250206105435.2159977-19-memxor@gmail.com>
+References: <20250206160718.019272260@linuxfoundation.org>
+In-Reply-To: <20250206160718.019272260@linuxfoundation.org>
+From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
+Date: Sat, 8 Feb 2025 09:46:29 +0900
+X-Gm-Features: AWEUYZm2SmSRtoIkVsU74yZBb6bTd0d29OHynz4X7U95eHdh1KsMA5_M1BW02hM
+Message-ID: <CAKL4bV7a5r0JL-RixXNyDmywvfyPWrsyL0QuNudxzfBcqOo7Tg@mail.gmail.com>
+Subject: Re: [PATCH 6.13 000/619] 6.13.2-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Kumar,
+Hi Greg
 
-kernel test robot noticed the following build warnings:
+On Fri, Feb 7, 2025 at 1:11=E2=80=AFAM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.13.2 release.
+> There are 619 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 08 Feb 2025 16:05:17 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.13.2-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.13.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-[auto build test WARNING on 0abff462d802a352c87b7f5e71b442b09bf9cfff]
+6.13.2-rc2 tested.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kumar-Kartikeya-Dwivedi/locking-Move-MCS-struct-definition-to-public-header/20250206-190258
-base:   0abff462d802a352c87b7f5e71b442b09bf9cfff
-patch link:    https://lore.kernel.org/r/20250206105435.2159977-19-memxor%40gmail.com
-patch subject: [PATCH bpf-next v2 18/26] rqspinlock: Add entry to Makefile, MAINTAINERS
-config: x86_64-randconfig-121-20250207 (https://download.01.org/0day-ci/archive/20250208/202502080835.XRxxo7P5-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502080835.XRxxo7P5-lkp@intel.com/reproduce)
+Build successfully completed.
+Boot successfully completed.
+No dmesg regressions.
+Video output normal.
+Sound output normal.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502080835.XRxxo7P5-lkp@intel.com/
+Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
 
-sparse warnings: (new ones prefixed by >>)
->> kernel/locking/rqspinlock.c:101:39: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got struct rqspinlock_held * @@
-   kernel/locking/rqspinlock.c:101:39: sparse:     expected void const [noderef] __percpu *__vpp_verify
-   kernel/locking/rqspinlock.c:101:39: sparse:     got struct rqspinlock_held *
-   kernel/locking/rqspinlock.c:123:39: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got struct rqspinlock_held * @@
-   kernel/locking/rqspinlock.c:123:39: sparse:     expected void const [noderef] __percpu *__vpp_verify
-   kernel/locking/rqspinlock.c:123:39: sparse:     got struct rqspinlock_held *
-   kernel/locking/rqspinlock.c:136:51: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got struct rqspinlock_held * @@
-   kernel/locking/rqspinlock.c:136:51: sparse:     expected void const [noderef] __percpu *__vpp_verify
-   kernel/locking/rqspinlock.c:136:51: sparse:     got struct rqspinlock_held *
-   kernel/locking/rqspinlock.c:206:39: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got struct rqspinlock_held * @@
-   kernel/locking/rqspinlock.c:206:39: sparse:     expected void const [noderef] __percpu *__vpp_verify
-   kernel/locking/rqspinlock.c:206:39: sparse:     got struct rqspinlock_held *
->> kernel/locking/rqspinlock.c:572:41: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct qnode *qnodes @@     got struct qnode [noderef] __percpu * @@
-   kernel/locking/rqspinlock.c:572:41: sparse:     expected struct qnode *qnodes
-   kernel/locking/rqspinlock.c:572:41: sparse:     got struct qnode [noderef] __percpu *
-   kernel/locking/rqspinlock.c: note: in included file:
-   kernel/locking/qspinlock.h:67:16: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got struct mcs_spinlock * @@
-   kernel/locking/qspinlock.h:67:16: sparse:     expected void const [noderef] __percpu *__vpp_verify
-   kernel/locking/qspinlock.h:67:16: sparse:     got struct mcs_spinlock *
+[    0.000000] Linux version 6.13.2-rc2rv
+(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 14.2.1 20250128, GNU ld (GNU
+Binutils) 2.43.1) #1 SMP PREEMPT_DYNAMIC Sat Feb  8 09:14:31 JST 2025
 
-vim +101 kernel/locking/rqspinlock.c
+Thanks
 
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06   97  
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06   98  static noinline int check_deadlock_AA(rqspinlock_t *lock, u32 mask,
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06   99  				      struct rqspinlock_timeout *ts)
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  100  {
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06 @101  	struct rqspinlock_held *rqh = this_cpu_ptr(&rqspinlock_held_locks);
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  102  	int cnt = min(RES_NR_HELD, rqh->cnt);
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  103  
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  104  	/*
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  105  	 * Return an error if we hold the lock we are attempting to acquire.
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  106  	 * We'll iterate over max 32 locks; no need to do is_lock_released.
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  107  	 */
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  108  	for (int i = 0; i < cnt - 1; i++) {
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  109  		if (rqh->locks[i] == lock)
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  110  			return -EDEADLK;
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  111  	}
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  112  	return 0;
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  113  }
-6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  114  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
