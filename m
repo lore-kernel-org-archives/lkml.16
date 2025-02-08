@@ -1,143 +1,68 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940B1243396
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 23:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12E7243365;
+	Sat,  8 Feb 2025 23:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739057004; cv=none; b=nolhmXEBu2UT6wHlqRFols0f7gsp2d+0tFq6GpteUObxeDqwJ+/spBZfNkqy8/k0PYc4GjSWcCIQPDu7SAJSFXzwFSn1aQYJAKEKrMtDSK7VDSTRHIygW8zwseb9DGNGr+qkEGpoltfOiZCwhwUasCsarkhbEf8MBoUnmiHLh2U=
+	t=1739057141; cv=none; b=eT33Mw0tr4PlEDUSxnTUZibfy1WsSzDFo4qGElv+Q7hXO6+r+INx63rCAZcaTlGLZwvVZXzuERwIF4h17RXpCilJN2PZF3c89bUHugjLH1cCQj18NQ07BEAfu2QK/SP9/6IAVSs7QAZ4TJsjJVcQRU2S5uIl4ZbTFATeKXZOWKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739057004; c=relaxed/simple;
-	bh=+tITSfmTPnYEjO3C/jiW5sciRTbuZT79tXWfdWsfbN8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=WMjuKAMKx27fFtRKhSeqcfSAFa1wMX4feLG/U3ruYlYuzlt8OrY5DziEZiFayuKuydjM2baUR7ybomEQnCpS6AfcGn4upEveRdO3EVhwBitX5eGqoCo2ygNzshkJylSqpQYjg4IeoXbq41Xao9KhQhyLcczTmjEGkHmhiCU9BO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3cfb20d74b5so26557235ab.3
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 15:23:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739057001; x=1739661801;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j9ndoZhOwaQZLQGFiiCIM0BOswD8Ed+92zYxo6GV7ec=;
-        b=wRd6KICLuvZNpvKx6hMuO3n4i94+L2xF0SRmmfW9aZVOTRd3ITm/FgFSvnxaa2Ju8m
-         LdPJMobLtD6jOxhoOIG/3AXyts2Yx9fq8f3r4QBw+piWHUwKjitvwOERH9sr644M0VMd
-         6iQw3yKir96u1rwql1Pz/hSiDAauKQ99rVAnbpBeZn/0InmJkiGzi8ED97p2rluDSD3V
-         D5J/Mxq+U2EUFJunfjcc01JjjsPfV1Fqjs+UpJR6wYmH0V9L7ZPjuIJdP+OSQp58nZDW
-         907jcvfhCGU/fMZP5EWLbgzNgnH/dmOD1CH2+8DuX0gdVfDwsEqNd6q2j+RB5fJ5ZSaN
-         bP2g==
-X-Forwarded-Encrypted: i=1; AJvYcCU9jBnma5UpnF4hzggQFGCb06EPWccEiPR2+mZm1Yg9Nnw9FTu0lECV01AR93Lp4K4CaWFvZnkBJQL27gM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDholUC4E4FW1pw/t5EHNAK7FPeP2YjW0CgO7TuyRMlBiTbTqW
-	dGvZXkhiqbVrQUcb/R4e+N2XvuJZlv7/Gc0RLLyCzVYc/iId1xkcmb5HBGArqlfmS36P3Ck0DGl
-	+WDCht97pX66OGIaXjnzm2xwUby+lAiJ+UEnIrkrah5a/AcwR+VMyO6g=
-X-Google-Smtp-Source: AGHT+IGm96PGbyixrD+vPHQeLoFUIwRZ+l2RL558GJzx+MmPLc+g1tjuplQUTMpSKRVvwS+aWxv2tSR4lIP1jQRSoijeJTpx89T/
+	s=arc-20240116; t=1739057141; c=relaxed/simple;
+	bh=ZB70q5kI0+nTD9S9fVwNrnaQfAKOMOHgbuQVSy2Grqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y0jBEE/PaHWWatYX6kTLuGw0/3+RvPDsCoq2BZU/EkIMdesbXjUNevWk6NjKSrnLU8FZMl1rLNZYA6e7aE8URoBBl7tzV62YIDQYUi3sBOvTELDVYQS+mlZzr0yiWhC7Zd+aKdhRXF+/NEqE++Sje4KqsNvLUkE+7xCkq0jZ0oI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=gEWJxoTP; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="gEWJxoTP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=HOu5RQfF0uK6Wbo4bJOtLKp5NZLWCNR/4eetZQ/Aivk=; b=gEWJxoTPm96dRqPeyS7T1gYu+E
+	iKFs94+yXUQMTvOri9ALJ5I6PeCd+9ltiSx2xvlg4Nz0Kk0yfVsx/6zXOAdd6MxdAho1I8FQlkPtk
+	goc3EFhevXqBuvTHOVKOmFh8fBDolJKD6m414Llv8WwD1Qu/k38XJdn8V3EfNmR/KYBcb1Jonbe6t
+	tA5AqHpcGTyQ5/ZPWPQnV4LE1d7rLTS/72IewH0DClwBDfmLpSBl+IAGWB2eUrb0XOqnosjOpDkQ6
+	1Gxek1abtRUAMCkDi1XeVHZAU5bVhf2TEw84QPE1AJF9LYbbosd/G30Ql9LrqwMRq68dSAACNPuf+
+	T8yBqmwg==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tguCf-00000007ugd-0uHP;
+	Sat, 08 Feb 2025 23:25:37 +0000
+Date: Sat, 8 Feb 2025 23:25:37 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: NeilBrown <neilb@suse.de>, Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>, Jeff Layton <jlayton@kernel.org>,
+	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 14/19] VFS: Ensure no async updates happening in
+ directory being removed.
+Message-ID: <20250208232537.GS1977892@ZenIV>
+References: <20250206054504.2950516-1-neilb@suse.de>
+ <20250206054504.2950516-15-neilb@suse.de>
+ <20250207210658.GK1977892@ZenIV>
+ <20250208220653.GQ1977892@ZenIV>
+ <CAHk-=whEbj9p33Cn_P4PawBqkav8zQq5+WjtzqYCK0o621p1kw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c263:0:b0:3d0:224f:32e0 with SMTP id
- e9e14a558f8ab-3d13dcfca38mr68472075ab.4.1739057001770; Sat, 08 Feb 2025
- 15:23:21 -0800 (PST)
-Date: Sat, 08 Feb 2025 15:23:21 -0800
-In-Reply-To: <6749afb0.050a0220.253251.00b2.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a7e769.050a0220.110943.0013.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] kernel BUG in bch2_btree_path_peek_slot
-From: syzbot <syzbot+3ebaf90b49bd97e920ee@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whEbj9p33Cn_P4PawBqkav8zQq5+WjtzqYCK0o621p1kw@mail.gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-syzbot has found a reproducer for the following issue on:
+On Sat, Feb 08, 2025 at 02:30:39PM -0800, Linus Torvalds wrote:
+> On Sat, 8 Feb 2025 at 14:06, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > >
+> > > OK, I realize that it compiles, but it should've raised all
+> > > kinds of red flags for anyone reading that.
+> 
+> Well, it's literally just missing a ';' so, the "red flag" is "oops,
+> nobody noticed the typo".
 
-HEAD commit:    ed58d103e6da Add linux-next specific files for 20250207
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=11c32b18580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=244a34ec1429746
-dashboard link: https://syzkaller.appspot.com/bug?extid=3ebaf90b49bd97e920ee
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=152811b0580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13443df8580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ce459b7174dd/disk-ed58d103.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/60699733c0c8/vmlinux-ed58d103.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/f589bce7c898/bzImage-ed58d103.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/c0e95d2847cc/mount_0.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3ebaf90b49bd97e920ee@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-kernel BUG at fs/bcachefs/btree_iter.c:1850!
-Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
-CPU: 1 UID: 0 PID: 2964 Comm: kworker/u8:8 Not tainted 6.14.0-rc1-next-20250207-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Workqueue: btree_update btree_interior_update_work
-RIP: 0010:bch2_btree_path_peek_slot+0xfa2/0xfe0 fs/bcachefs/btree_iter.c:1850
-Code: f7 ff ff 48 89 34 24 be 08 00 00 00 44 89 44 24 08 e8 f2 e5 e3 fd 48 8b 34 24 44 8b 44 24 08 e9 25 f7 ff ff e8 9f 08 7d fd 90 <0f> 0b e8 97 08 7d fd 90 0f 0b e8 bf 88 b7 07 e8 8a 08 7d fd 90 0f
-RSP: 0018:ffffc9000bda5800 EFLAGS: 00010293
-RAX: ffffffff84428051 RBX: 0000000000002164 RCX: ffff888030423c00
-RDX: 0000000000000000 RSI: 0000000000000100 RDI: 0000000000000000
-RBP: ffffc9000bda5910 R08: ffffffff844271e0 R09: 0000000000000000
-R10: ffffc9000bda5a80 R11: fffff520017b4b52 R12: dffffc0000000000
-R13: 1ffff1100484f0c2 R14: ffff8880242785f0 R15: 1ffff1100484f0c1
-FS:  0000000000000000(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f110aa60000 CR3: 0000000077baa000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bch2_btree_iter_peek_slot+0xb67/0x27c0 fs/bcachefs/btree_iter.c:2799
- __bch2_bkey_get_iter fs/bcachefs/btree_iter.h:573 [inline]
- bch2_bkey_get_iter fs/bcachefs/btree_iter.h:587 [inline]
- bch2_check_discard_freespace_key+0x292/0xeb0 fs/bcachefs/alloc_background.c:1404
- try_alloc_bucket fs/bcachefs/alloc_foreground.c:274 [inline]
- bch2_bucket_alloc_freelist fs/bcachefs/alloc_foreground.c:425 [inline]
- bch2_bucket_alloc_trans+0x1583/0x2ea0 fs/bcachefs/alloc_foreground.c:557
- bch2_bucket_alloc_set_trans+0x57c/0xd60 fs/bcachefs/alloc_foreground.c:713
- __open_bucket_add_buckets+0x13a2/0x1e10 fs/bcachefs/alloc_foreground.c:956
- open_bucket_add_buckets+0x33a/0x410 fs/bcachefs/alloc_foreground.c:1000
- bch2_alloc_sectors_start_trans+0xce9/0x2030
- __bch2_btree_node_alloc fs/bcachefs/btree_update_interior.c:322 [inline]
- bch2_btree_reserve_get+0x612/0x1890 fs/bcachefs/btree_update_interior.c:532
- bch2_btree_update_start+0xe56/0x14e0 fs/bcachefs/btree_update_interior.c:1230
- bch2_btree_split_leaf+0x121/0x880 fs/bcachefs/btree_update_interior.c:1851
- bch2_trans_commit_error+0x212/0x1380 fs/bcachefs/btree_trans_commit.c:908
- __bch2_trans_commit+0x804d/0x9680 fs/bcachefs/btree_trans_commit.c:1085
- bch2_trans_commit fs/bcachefs/btree_update.h:183 [inline]
- btree_update_nodes_written fs/bcachefs/btree_update_interior.c:706 [inline]
- btree_interior_update_work+0x1449/0x2a70 fs/bcachefs/btree_update_interior.c:844
- process_one_work kernel/workqueue.c:3236 [inline]
- process_scheduled_works+0xa66/0x1840 kernel/workqueue.c:3317
- worker_thread+0x870/0xd30 kernel/workqueue.c:3398
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:bch2_btree_path_peek_slot+0xfa2/0xfe0 fs/bcachefs/btree_iter.c:1850
-Code: f7 ff ff 48 89 34 24 be 08 00 00 00 44 89 44 24 08 e8 f2 e5 e3 fd 48 8b 34 24 44 8b 44 24 08 e9 25 f7 ff ff e8 9f 08 7d fd 90 <0f> 0b e8 97 08 7d fd 90 0f 0b e8 bf 88 b7 07 e8 8a 08 7d fd 90 0f
-RSP: 0018:ffffc9000bda5800 EFLAGS: 00010293
-RAX: ffffffff84428051 RBX: 0000000000002164 RCX: ffff888030423c00
-RDX: 0000000000000000 RSI: 0000000000000100 RDI: 0000000000000000
-RBP: ffffc9000bda5910 R08: ffffffff844271e0 R09: 0000000000000000
-R10: ffffc9000bda5a80 R11: fffff520017b4b52 R12: dffffc0000000000
-R13: 1ffff1100484f0c2 R14: ffff8880242785f0 R15: 1ffff1100484f0c1
-FS:  0000000000000000(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f110a231000 CR3: 000000002f9c4000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Sure - what I'm saying is that this is visually wrong; "red flag" as in
+"WTF am I looking at here?" when scrolling through the patch.
