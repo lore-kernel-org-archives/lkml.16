@@ -1,230 +1,121 @@
-Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com [209.85.216.67])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD892556E
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 07:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3AC19F101
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 07:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739001562; cv=none; b=mPVUNvjWKvH4lQsEV3fTyRnKgxkmSBSL/sL9fY6LHxlsrlSZ2j4MhjEfNwnDlE1RtMfXbIvWtJXYHKGhlPzjytKSr+IcrZDmW38IIHQ6FQNHqV6lY0ZwDvsfMRiglKNyvpTrMHhvm5WGOUKIUqD25tNTSFt9qZGtZEoxqw2BdcE=
+	t=1739001598; cv=none; b=LStXgmtSFuw6lJe0lOwff/0jQ5LsXYVGzuqN8VtKEFVs0OiWhuTNQD5OK7PLu/mNJHTa/KrUOte5Yq0JMKXZQreI1Fpa4oRUQcdfEf/T7PEMZNnru7vwgG6R6jj5I1Sp3nQLd4JOamRNtNn80+G/SQ7pIXlq0Xz0J7+/hU57Koo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739001562; c=relaxed/simple;
-	bh=NYH1EIR1w30hMUBzWFLtaK9NEC0+m6W1SVQ1YrLKHCQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iDObdWb12L33CImqsGBcuab9to492WQZbGw2AQmrrN9sI+ZIdWcanblYOAq0Mjm+JgT4XrrV/opn8hZQy2pJimmZyyk0/wnubIStNOE454gaWcnA+aJbLlCDkvmtEk3lDvDogAmr7IO+aTXb5K/2DzIwJALW1x2NApWE2V+OiAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J6TsYr+B; arc=none smtp.client-ip=209.85.216.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739001598; c=relaxed/simple;
+	bh=d7ojekL/BiCyYAVzA3C2SArdrbbraYuLRGFQNfKkvfE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wls/xUdMs/N31TAihlixkBxOh/8GI+xOc4TL5VNM3ICBQ5VXtkHNMIj6+dGm2R75Xch4N6vd8yrGTk5dgMbQiotOGnyywRu5BdbjbJks6yrRLqa8u8E7QI/gmEmWZ0OeeRHtgaBzcXO7JRpzUx3MjbO7xwu45bzczqELzAOODMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=AJP2jsCw; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6TsYr+B"
-Received: by mail-pj1-f67.google.com with SMTP id 98e67ed59e1d1-2f44353649aso4187904a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 23:59:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="AJP2jsCw"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5439e331cceso3243966e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 23:59:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739001560; x=1739606360; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=ventanamicro.com; s=google; t=1739001594; x=1739606394; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wIqjiMV/Bkb39K9yqJeN0eIM7HEpUk3IzO0W9QqPo48=;
-        b=J6TsYr+BxlfWMXt5XFF6AUrA/WLXACVN2WHb3m5zogpc4hVoKSu4eLsyggJEe17vvw
-         fWFkNGQ9UKdzIjjZwHQcVwKg5fsKiN3Bl5bfGuV7twFVpgtrTxZYWSHaUmunKPY4sbrX
-         K1DYElRa3kgi6zVVoiw0otVVs8U4Yu423YRot8cGR9SEyh2IoiYP93eK5Ao4wbU/ngdR
-         zssYjvs61my0/WTDTi5BIPnDBr9GTbYza2/G8yE0+C0flUX8NbVv65/D6cd+PiLU6Qwr
-         Atdr2v8GyRfXDhW5+pF/DeSAZ5DF36GgBh+S5BHKsAKdCm/8w21VaU+Y+7Yz6jusKxPE
-         6B7A==
+        bh=RTUTp09J3TkHO04+OyZOFWnP6EILcwwOXh/jpiP4ZkI=;
+        b=AJP2jsCwZLOev3Dg8eO4UJt45hqQXm3bmoAFCxr6infkyFTw6eFDGKswpVh+NY/Zus
+         RgS7mCB7+Vd5UdPLb0cRW/gmUkC9Iag+haStEv0LnVTU6jRj2fjRSlSOgxc0N3CDLCTE
+         zFfHEvZV70mu6XD1Ln4Ii1exlEzAzlv/glBg7DPoHtWEWKloSjGpPRtvAFqAuad/Yn7O
+         mobo2Bm5jnh7h+xQ2/II2CFcITvHbdy45H/Ib62u8uwS8pVGJuUGQhL5H1Z3bF1Qvm3c
+         kewID7Q+WIAG13G8DWfl1oh4pkg5skejqHsilH90nR47JuIay4yN4EC50uATqgIIX/Ei
+         NR8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739001560; x=1739606360;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1739001594; x=1739606394;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wIqjiMV/Bkb39K9yqJeN0eIM7HEpUk3IzO0W9QqPo48=;
-        b=fFmWHDS/UzEEePbBwn0eQLtfTCvamvikMP5ePUZyID95/b2D68FDDPrtntEEukiWuV
-         lACSCDODaLyfEiOSDXtW7YS5h6/xWzrWX0ccCcJA/wkNGFodH3F3UxYQgN9Iet0rWKUs
-         kCBjWV+tI573pYja2tvi4SPZ9ioq2nF6okear7MyPD2lbLOPBg7ES4cLfLS+iomNHUQY
-         T/ZI3uFmcHNHkunVI3+WEn6RsbfaJIaP1gfToKfnH1m8OgmSPrgu5x7MxHwGukTuzwwa
-         NgtL2osnwsQD6wSEVyV9ESxUXhCfg0LaWB6UXT/N6Zv3sQk2cuc2L+Zg7Zsnp5PIogrv
-         mTBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKLWThHnFRRy93uY7cW5tSKAxTLQsDp7bDjrr09KKwPyAEVnTmiLtILY8EA90TF4dtIay0MFpO1Yjq3rE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz58M9T3SCiEfk/BSMNvenpGIVmce69SeATVgLMHySllAAVy6aM
-	8dh98rfNzM3vU74/1f68aXc3X4uBQcez0kBvH9aTbCLwW4mO8P3b
-X-Gm-Gg: ASbGncv2YXltWQ598jHJwfhJbpbtbDzJJwM9y5A1Lap/UveXwEyBseE4ElUC4tolbcT
-	7mteTtaCA0Cd7nmG8ZUGBq+G4D4iK7Tl8hHQMnys8lyxi1ShkWxG7zH5zUtkuy7IaRrNfZLpnW3
-	ZbR/bYLj8zTmy6FZ0zu3m+ncFrmYrbpK+rCawameeivqn8y7PLr/llm3n0Pg0cmwfNdas9mWbem
-	qRUHGFvSDSnrWqatIPJM3fATjZNYX61CcJ3Ll/VB08V8/hkcQ2sLxfudl6RihXAV9v/UPbOy3Qd
-	AtD433REqt/19jB53HlfRcCs2UipPTi/h4g=
-X-Google-Smtp-Source: AGHT+IERz0lSqkbAawZEXTcF7FnORJti+So8tSKmF9Ij4QWWVOc+x9NZM+EqsWBO0DF7n+IULqDtDw==
-X-Received: by 2002:a05:6a00:22ce:b0:730:4c55:4fdf with SMTP id d2e1a72fcca58-7305d44c8bamr10696189b3a.7.1739001559939;
-        Fri, 07 Feb 2025 23:59:19 -0800 (PST)
-Received: from localhost.localdomain ([114.67.205.189])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048e1e80fsm4087401b3a.157.2025.02.07.23.59.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 23:59:19 -0800 (PST)
-From: zihan zhou <15645113830zzh@gmail.com>
-To: 15645113830zzh@gmail.com
-Cc: bsegall@google.com,
-	dietmar.eggemann@arm.com,
-	juri.lelli@redhat.com,
-	linux-kernel@vger.kernel.org,
-	mgorman@suse.de,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	rostedt@goodmis.org,
-	vincent.guittot@linaro.org,
-	vschneid@redhat.com
-Subject: [PATCH V3 2/2] sched: Reduce the default slice to avoid tasks getting an extra tick
-Date: Sat,  8 Feb 2025 15:57:48 +0800
-Message-Id: <20250208075747.14104-1-15645113830zzh@gmail.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250208074821.11832-1-15645113830zzh@gmail.com>
-References: <20250208074821.11832-1-15645113830zzh@gmail.com>
+        bh=RTUTp09J3TkHO04+OyZOFWnP6EILcwwOXh/jpiP4ZkI=;
+        b=TdJWJWvYnJbziI4ZyEwkuNkVnyM6GEV99vBB3hrWHfgv27Xhe0A0RrLpW3H2IdFm2V
+         HEnhvA2gh8urvWJnTavkdIBspTocjAvvsDgJ5ZCp3sfcASp45+v7H8eWDh0lNjnj7lcc
+         yDhghnohe4fgcHKNbegB7Ri/BFcmj0VEByssGHCb3slqmO0tMk9JFGdK+ExEwOrLBCnc
+         uqkH9MRRTTGzZD8DL8kiAo9AUgzbNoaBO4Mr8t6sZPdiwG9Lnh/CWxH9/Lpqut1/YJVh
+         cuA4ieBr0kYW8ByfZZx8hzaZc1Ph1nQutoRB2C7XwKIBh/UPeiiScy48Ls/bkwiCH4FU
+         lW5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUP/ANY2GWb85fJsahPqsMUL0QDjYK4+ppngprWYo5QEhEGZZwyWxmFss6BuQeeYQ+H6JWQgm/DUKDafhg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+bwiEiDgBJ5ziv+Xdwl4TA3YjUDCnIFx/HFHBGvPAmM3e0aHs
+	8aX5HY2vaV57T5Q5ci3uV97w2AiMj8XBRiDo4ZiY7BrGIH55Xw1/15cBHz+IIqxSYdypibJ854O
+	zK8IjYPVRrRmpO3Yu+zlEDBsKZhgiYQCtm3K2hw==
+X-Gm-Gg: ASbGncvPkrtRjPbAEaoYBXi7BEKXlA4tiLh/z17R9Rm4h5ZLBIzHDuXvbn8Q6036kta
+	3StDLIgfChOk37//gmC58vFVU0qRo/bv+k4v0TDCWPHatdBP/wMidlT4tAB2ODcAaSPmd33tbHA
+	==
+X-Google-Smtp-Source: AGHT+IHNBKUgdG3mmVsHbFdl3uVr3Q+JzefEbNXajL5yy04QQ9tefqJ/8k1ddeV63n4noi5xHd5M27eZroWTkogbhas=
+X-Received: by 2002:a05:6512:1195:b0:542:6d01:f55c with SMTP id
+ 2adb3069b0e04-54414a962c4mr2450193e87.3.1739001594018; Fri, 07 Feb 2025
+ 23:59:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250207161939.46139-11-ajones@ventanamicro.com>
+In-Reply-To: <20250207161939.46139-11-ajones@ventanamicro.com>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Sat, 8 Feb 2025 13:29:42 +0530
+X-Gm-Features: AWEUYZl3rnfE8vIlzOiLWPcC_pZ4X13tmZnTiRHW3C1wZw-naFaGo4PPV4QFVxE
+Message-ID: <CAK9=C2XmFtLHAxuWJVdvkUHFQTM+mE-D8E4sLvKxxUj_CqcbAQ@mail.gmail.com>
+Subject: Re: [PATCH 0/9] riscv: Unaligned access speed probing fixes and skipping
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, charlie@rivosinc.com, 
+	jesse@rivosinc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Update sysctl_sched_base_slice with debugfs, limit its value and
-update normalized_sysctl_sched_base_slice.
+On Fri, Feb 7, 2025 at 9:49=E2=80=AFPM Andrew Jones <ajones@ventanamicro.co=
+m> wrote:
+>
+> The first six patches of this series are fixes and cleanups of the
+> unaligned access speed probing code. The next two patches introduce
+> support to skip probing by matching vendor/arch/imp ids and checking a
+> table for the access speed type. The last patch applies the new skip
+> support to Ventana harts.
 
-Rename the function sched_update_scaling to sched_update_scaling_or_slice,
-it is no longer related to CONFIG_SMP and return void, as the previous
-function always returns 0 and there is no need to judge the return value
-again, just like the function update_sysctl.
+Alternatively, we can also skip probing misaligned access when Zicclsm
+extension is present in the ISA string. The Zicclsm extension is defined
+as part of the ratified RVA23 profile.
 
-Signed-off-by: zihan zhou <15645113830zzh@gmail.com>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
----
- kernel/sched/debug.c | 52 +++++++++++++++++++++++++++++++++++++++++---
- kernel/sched/fair.c  |  8 +++----
- kernel/sched/sched.h |  4 ++--
- 3 files changed, 54 insertions(+), 10 deletions(-)
+Regards,
+Anup
 
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index fd7e85220715..f40d9d638939 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -166,6 +166,53 @@ static const struct file_operations sched_feat_fops = {
- 	.release	= single_release,
- };
- 
-+static ssize_t sched_base_slice_write(struct file *filp, const char __user *ubuf,
-+				   size_t cnt, loff_t *ppos)
-+{
-+	char buf[16];
-+	unsigned int base_slice;
-+
-+	if (cnt > 15)
-+		cnt = 15;
-+
-+	if (copy_from_user(&buf, ubuf, cnt))
-+		return -EFAULT;
-+	buf[cnt] = '\0';
-+
-+	if (kstrtouint(buf, 10, &base_slice))
-+		return -EINVAL;
-+
-+	base_slice = clamp_t(u64, base_slice,
-+					NSEC_PER_MSEC/10,   /* HZ=1000 * 10 */
-+					NSEC_PER_MSEC*100); /* HZ=100  / 10 */
-+
-+	sysctl_sched_base_slice = base_slice;
-+
-+	sched_update_scaling_or_slice();
-+
-+	*ppos += cnt;
-+	return cnt;
-+}
-+
-+static int sched_base_slice_show(struct seq_file *m, void *v)
-+{
-+	seq_printf(m, "%d\n", sysctl_sched_base_slice);
-+	return 0;
-+}
-+
-+static int sched_base_slice_open(struct inode *inode, struct file *filp)
-+{
-+	return single_open(filp, sched_base_slice_show, NULL);
-+}
-+
-+static const struct file_operations sched_base_slice_fops = {
-+	.open		= sched_base_slice_open,
-+	.write		= sched_base_slice_write,
-+	.read		= seq_read,
-+	.llseek		= seq_lseek,
-+	.release	= single_release,
-+};
-+
- #ifdef CONFIG_SMP
- 
- static ssize_t sched_scaling_write(struct file *filp, const char __user *ubuf,
-@@ -188,8 +235,7 @@ static ssize_t sched_scaling_write(struct file *filp, const char __user *ubuf,
- 		return -EINVAL;
- 
- 	sysctl_sched_tunable_scaling = scaling;
--	if (sched_update_scaling())
--		return -EINVAL;
-+	sched_update_scaling_or_slice();
- 
- 	*ppos += cnt;
- 	return cnt;
-@@ -505,7 +551,7 @@ static __init int sched_init_debug(void)
- 	debugfs_create_file("preempt", 0644, debugfs_sched, NULL, &sched_dynamic_fops);
- #endif
- 
--	debugfs_create_u32("base_slice_ns", 0644, debugfs_sched, &sysctl_sched_base_slice);
-+	debugfs_create_file("base_slice_ns", 0644, debugfs_sched, NULL, &sched_base_slice_fops);
- 
- 	debugfs_create_u32("latency_warn_ms", 0644, debugfs_sched, &sysctl_resched_latency_warn_ms);
- 	debugfs_create_u32("latency_warn_once", 0644, debugfs_sched, &sysctl_resched_latency_warn_once);
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 34e7d09320f7..0fe7c4530a87 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -981,8 +981,8 @@ struct sched_entity *__pick_last_entity(struct cfs_rq *cfs_rq)
- /**************************************************************
-  * Scheduling class statistics methods:
-  */
--#ifdef CONFIG_SMP
--int sched_update_scaling(void)
-+
-+void sched_update_scaling_or_slice(void)
- {
- 	unsigned int factor = get_update_sysctl_factor();
- 
-@@ -990,10 +990,8 @@ int sched_update_scaling(void)
- 	(normalized_sysctl_##name = sysctl_##name / (factor))
- 	WRT_SYSCTL(sched_base_slice);
- #undef WRT_SYSCTL
--
--	return 0;
- }
--#endif
-+
- #endif
- 
- static void clear_buddies(struct cfs_rq *cfs_rq, struct sched_entity *se);
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index c7cf4cc57cdd..3ac73cbd711f 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1923,6 +1923,8 @@ init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
- 
- #endif /* !CONFIG_NUMA_BALANCING */
- 
-+extern void sched_update_scaling_or_slice(void);
-+
- #ifdef CONFIG_SMP
- 
- static inline void
-@@ -2088,8 +2090,6 @@ static inline void update_sched_domain_debugfs(void) { }
- static inline void dirty_sched_domain_sysctl(int cpu) { }
- #endif
- 
--extern int sched_update_scaling(void);
--
- static inline const struct cpumask *task_user_cpus(struct task_struct *p)
- {
- 	if (!p->user_cpus_ptr)
--- 
-2.33.0
-
+>
+> (I'd be happy to split the fixes from the new skip support if we want to
+> discuss the skip support independently, but I want to base on the fixes
+> and I'm not sure if patchwork supports Based-on: $MESSAGE_ID/$LORE_URL
+> or not at the moment, so I'm just posting together for now in order to
+> be able to check for my patchwork green lights!)
+>
+> Thanks,
+> drew
+>
+> Andrew Jones (9):
+>   riscv: Annotate unaligned access init functions
+>   riscv: Fix riscv_online_cpu_vec
+>   riscv: Fix check_unaligned_access_all_cpus
+>   riscv: Change check_unaligned_access_speed_all_cpus to void
+>   riscv: Fix set up of cpu hotplug callbacks
+>   riscv: Fix set up of vector cpu hotplug callback
+>   riscv: Prepare for unaligned access type table lookups
+>   riscv: Implement check_unaligned_access_table
+>   riscv: Add Ventana unaligned access table entries
+>
+>  arch/riscv/include/asm/cpufeature.h        |   4 +-
+>  arch/riscv/include/asm/vendorid_list.h     |   1 +
+>  arch/riscv/kernel/traps_misaligned.c       |  14 +-
+>  arch/riscv/kernel/unaligned_access_speed.c | 278 ++++++++++++++-------
+>  4 files changed, 200 insertions(+), 97 deletions(-)
+>
+> --
+> 2.48.1
+>
