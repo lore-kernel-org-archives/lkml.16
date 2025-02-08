@@ -1,142 +1,169 @@
-Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CEA19F11B;
-	Sat,  8 Feb 2025 11:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EFB192D8E;
+	Sat,  8 Feb 2025 11:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739014035; cv=none; b=Tow7LlFH0cLB92q1JDytgbUQXTXvjqPAjhTjIoc1yIu+T8fAeQEZHL058o1kbnbJxXQqI7v1JwKb0V3VJ+l1UaijTPpnyJhy6iQ1Zk109ipCI4cCqYy4lx4ofNMIWdgqpKyk3Fxa9kVof4PI3DX4qHguD+vvT04lRCgDYGCyWqo=
+	t=1739014270; cv=none; b=GbGd56Ff4TKZeUjEKafSv6hfw8kDTOrFsAfMTNVMHx1yo5BlCaPVDW0+LTW85lYWSuYzG/VlQ66r7zT9O3GTK4+XtSRUtOB3UC14TRJAeWbkVMtRrlk8s9r8I4N4CBCB8IPGfYE6NK7/BaWiTCuuBZnI1urnYit+hHMYWjqqVlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739014035; c=relaxed/simple;
-	bh=qnz5zuMzIZq2h2eLlk26+f6hdHlDE7lsfYLFciY9oWw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=ZCPsHbfSIVSeodTNHSUtkUblO3Z3hiqJfYR4FW+701pzAApcUwknGK7DrpEOPlIVDaUZamsVMq+r9tEysjOG1jOHmuQipLRJnI4jdOo+iU/W+QEcTPjq38GPV1jQAXpJ18iC8jBVil8gHQcUjlPlJyuFIxUpqGuH+OHuFS7MysU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=asvi8iCG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NFxMLVXw; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1739014270; c=relaxed/simple;
+	bh=a9PtbP4iTsYXTPmKRarNcrQugYoPQf/03FrbZJrRghA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aYx7eQ/qH/fFYhJGqEG2ONdY0DIIOvXCcrFXMlxoMeC4WwjeNWa7Q1GZUKzOQEcalM/kWzP+A54tiMAlv2ZZauhhmXlGoh6zUC/wc0jf8Vow5lH9Fm1dvbq8hnzXm0PgzGbhf6KBqbPsMTRyUq+Jkcpbopp/55N1HcN8Q2PBaMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jPHDG1za; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="asvi8iCG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NFxMLVXw"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 0849611401EF;
-	Sat,  8 Feb 2025 06:27:12 -0500 (EST)
-Received: from phl-imap-10 ([10.202.2.85])
-  by phl-compute-02.internal (MEProxy); Sat, 08 Feb 2025 06:27:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1739014032;
-	 x=1739100432; bh=qnz5zuMzIZq2h2eLlk26+f6hdHlDE7lsfYLFciY9oWw=; b=
-	asvi8iCGOQuMG5YU8COXvDZHh80Jb0VM3/BqgqvLUIpqh6QNePtF5aQxFvmcVqEw
-	e4mNeXC3lbR5dasuBJ1/8Mg6al23JyscdkPSAX0day1vGs4CAAGve+5IckW4+GjD
-	x9NUkVwq3hL5no/VlS6r5NlJ9oXL3g3YDY20bPCH6Uc3vQyqqid5nFjceIhOalya
-	Y0seZ1oY8k9SvuLS7+phu0k+35vAjYounnvwYO9ZdJIg0yrYDizukOWadAnvtz2G
-	yBW3unbh9jGtPi9sZFi9W0WMiBJVPFgCj7klv/0Ju6ZInWIxILjcm0GHGw429ogq
-	shjSJ/wBOPjSFBfqk1jDbQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739014032; x=
-	1739100432; bh=qnz5zuMzIZq2h2eLlk26+f6hdHlDE7lsfYLFciY9oWw=; b=N
-	FxMLVXwAXKjzTsxUB+hmxlErJeNmX/ElkhQp4VMiHS44XXEqVGrPtZ1VpuVEmQBt
-	E5p/398sdppXkMTXvKAX9wv7jG0qXSsEqxsaU+TORUI73JqhDgKiYeeiZZonh2Ls
-	wEfco6x+bK1OjM7r1i50cACfCAo1YCXiCFj5uwvGm/WVsYy4foEXZj3GfPVnm2+a
-	A2nLGccJQiSgtUTuy7+YSd9NHzgYVgE5xV1AIv3TF2L8kuClxaJFhQQ2qOOAA30D
-	OL39WV8mZ1uGlgoS7lcIqKVshKtbCeT36/uJOqTj4knLFrZXnDioRL3em+qLja9j
-	mfaMfMoNUbHXcTE1IKNBQ==
-X-ME-Sender: <xms:jz-nZ36O-9zKLnRpoOcUtGoivmJfu26AIGjYZGGy5c_WnaOV4O8i2w>
-    <xme:jz-nZ877PgFiFWkPTJO5xIiI2o_JNE5PvnqI0aWACPiuyxaiW8jOjj07CD9YkansF
-    sMKUfTA5DNC9PGJ_E4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvddtjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
-    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnhephfeuvdehteeghedt
-    hedtveehuddvjeejgffgieejvdegkefhfeelheekhedvffehnecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhhpvggrrhhsohhnqdhlvghnohhv
-    ohesshhquhgvsggsrdgtrgdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphhouh
-    htpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdp
-    rhgtphhtthhopehkuhhurhhtsgesghhmrghilhdrtghomhdprhgtphhtthhopehilhhpoh
-    drjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohephhgu
-    vghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnh
-    gvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehplhgrthhfohhrmhdq
-    ughrihhvvghrqdigkeeisehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:jz-nZ-eiVNvAYKGvFYT9RQLYs1EjkDI9sQy2Drj9GWIhU0PPea6v-A>
-    <xmx:jz-nZ4JSPDFszYuQyd8UKHnPATH9Ezfj0uhR1fMUskggHCpB226w2A>
-    <xmx:jz-nZ7Kx6zD9DhU5zX8puzx3pblIukLZYHQnhmyZ_MTQ00eV0yO5xA>
-    <xmx:jz-nZxwx_0I3vYzYkesTcSrxHkLYHhQpMRYKXqxiOWd0rtGOkmVLNQ>
-    <xmx:jz-nZxjcnOWFnY-6mKO7QrWkWiDY9hY_SMnK0LcFUCguVjVexaaM7GGo>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 949B93C0066; Sat,  8 Feb 2025 06:27:11 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jPHDG1za"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3854CC4CEE6;
+	Sat,  8 Feb 2025 11:31:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739014270;
+	bh=a9PtbP4iTsYXTPmKRarNcrQugYoPQf/03FrbZJrRghA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jPHDG1zaotlpXhf5asfnoBeYZASB+OATIwAB7wTXvZeHWb6vhtOkJz+rlQfBDSP+m
+	 Gc2IqbA/GKqCzA1be/ZE5Rvi0lmbNckZJdz8yCXaIUuwbbEN4YmfChEbtGnCESxVBc
+	 je2D0grSqMiyAnyFg+WmGFPrOFpGol03Fy7Kl+r6PLKlXNcWjNDTRxmLdJl5/q1zqK
+	 /VYkWBJt0pz0cuEpzyvhSrwqD5ZSvFZz15JErFwTgV+7+iDCABzgZBx9ghFupwzhz8
+	 pLz2hCLOL/scExAT8SgCOFRPmMwdwNyagKJkYrwjCImtt54cqVpHPjiwWDke+Xy2kX
+	 dps4vvnCXKvxQ==
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5f89aa7a101so1038509eaf.2;
+        Sat, 08 Feb 2025 03:31:10 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWiUZUPf45uPjJUHOwks95JqzAcjjVTey32epNfGNReWFjLLxdqpbfe/bJcVURrFzzVZ6w6l2WvAZzfrho=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzad72Ep3GdUYBsVDPn4c5fssqWMIK24jDC2egwjKMEvBXt3tCq
+	X+IHy6BO8K3xUqNTFr7W727+n5RDOBckzZqjoIGDjvPlN72GGyNEQl6F4GoSZXTa1dNLwrSjZLA
+	Xms9w400E58uL59MuJtZyWUHpCqo=
+X-Google-Smtp-Source: AGHT+IG1JlJtCnvqJUSiOxWkeEOCsazdBVYeG4ryDNk5FqiAtEwLYO8UOk3RYcnS+pcYGFl5IsC3XRkr77BvVSaXdl0=
+X-Received: by 2002:a05:6820:1c8d:b0:5f8:a3df:a9b with SMTP id
+ 006d021491bc7-5fc5e71241bmr3327386eaf.8.1739014269461; Sat, 08 Feb 2025
+ 03:31:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sat, 08 Feb 2025 11:26:51 -0500
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Kurt Borja" <kuurtb@gmail.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Limonciello, Mario" <mario.limonciello@amd.com>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Message-Id: <aee5fbe6-4309-450f-bea3-c0842172b043@app.fastmail.com>
-In-Reply-To: <D7MSPR52PB4E.N0X1UFVQOODZ@gmail.com>
-References: <mpearson-lenovo@squebb.ca>
- <20250208091438.5972-1-mpearson-lenovo@squebb.ca>
- <D7MSPR52PB4E.N0X1UFVQOODZ@gmail.com>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix registration of tpacpi platform
- driver
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20250207124802.165408-1-csokas.bence@prolan.hu> <20250207124802.165408-3-csokas.bence@prolan.hu>
+In-Reply-To: <20250207124802.165408-3-csokas.bence@prolan.hu>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Sat, 8 Feb 2025 12:30:57 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0gEdo_BeZh2tnxJMzoosxL5zzJXyf6wi7SR9du7MoQmUw@mail.gmail.com>
+X-Gm-Features: AWEUYZn7qNNPJwyjn01tuOBK_DdGPdz60cKCzLPxqXPH1jhK6KH04nQCttSsB-Q
+Message-ID: <CAJZ5v0gEdo_BeZh2tnxJMzoosxL5zzJXyf6wi7SR9du7MoQmUw@mail.gmail.com>
+Subject: Re: [PATCH for-6.14 v3 2/4] pm: runtime: Add new devm functions
+To: =?UTF-8?B?QmVuY2UgQ3PDs2vDoXM=?= <csokas.bence@prolan.hu>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks Kurt,
+On Fri, Feb 7, 2025 at 1:48=E2=80=AFPM Bence Cs=C3=B3k=C3=A1s <csokas.bence=
+@prolan.hu> wrote:
+>
+> Add `devm_pm_runtime_set_active()` and
+> `devm_pm_runtime_get_noresume()` for
+> simplifying common use cases in drivers.
+>
+> Signed-off-by: Bence Cs=C3=B3k=C3=A1s <csokas.bence@prolan.hu>
 
-On Fri, Feb 7, 2025, at 11:56 PM, Kurt Borja wrote:
-> Hi Mark,
->
-> On Sat Feb 8, 2025 at 4:14 AM -05, Mark Pearson wrote:
->> When reviewing and testing the recent platform profile changes I had
->> missed that they prevent the tpacpi platform driver from registering.
->> This error is seen in the kernel logs, and the various tpacpi entries
->> are not created:
->> [ 7550.642171] platform thinkpad_acpi: Resources present before probing
->
-> This happens because in thinkpad_acpi_module_init(), ibm_init() is
-> called before platform_driver_register(&tpacpi_pdriver), therefore
-> devm_platform_profile_register() is called before tpacpi_pdev probes.
->
-> As you can verify in [1], in the probing sequence, the driver core
-> verifies the devres list is empty, which in this case is not because of
-> the devm_ call.
->
->>
->> I believe this is because the platform_profile driver registers the
->> device as part of it's initialisation in devm_platform_profile_register,
->> and the thinkpad_acpi driver later fails as the resource is already used.
->>
->> Modified thinkpad_acpi so that it has a separate platform driver for the
->> profile handling, leaving the existing tpacpi_pdev to register
->> successfully.
->
-> While this works, it does not address the problem directly. Also it is
-> discouraged to create "fake" platform devices [2].
->
-> May I suggest moving tpacpi_pdriver registration before ibm_init()
-> instead, so ibm_init_struct's .init callbacks can use devres?
->
+So I don't like this and it is not as straightforward as it looks, but
+let me have a look at the entire series again and see why you think
+this is useful.
 
-Yep - you're right. Moving it before the init does also fix it.
-
-I can't see any issues with this approach, but I'll test it out a bit more carefully and do an updated version with this approach.
-
-Thanks for the pointer.
-
-Mark
+> ---
+>  drivers/base/power/runtime.c | 36 ++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_runtime.h   |  4 ++++
+>  2 files changed, 40 insertions(+)
+>
+> diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
+> index 2ee45841486b..f0a6c64bec19 100644
+> --- a/drivers/base/power/runtime.c
+> +++ b/drivers/base/power/runtime.c
+> @@ -1545,6 +1545,24 @@ void pm_runtime_enable(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(pm_runtime_enable);
+>
+> +static void pm_runtime_set_suspended_action(void *data)
+> +{
+> +       pm_runtime_set_suspended(data);
+> +}
+> +
+> +/**
+> + * devm_pm_runtime_set_active - devres-enabled version of pm_runtime_set=
+_active.
+> + *
+> + * @dev: Device to handle.
+> + */
+> +int devm_pm_runtime_set_active(struct device *dev)
+> +{
+> +       pm_runtime_set_active(dev);
+> +
+> +       return devm_add_action_or_reset(dev, pm_runtime_set_suspended_act=
+ion, dev);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_pm_runtime_set_active);
+> +
+>  static void pm_runtime_disable_action(void *data)
+>  {
+>         pm_runtime_dont_use_autosuspend(data);
+> @@ -1567,6 +1585,24 @@ int devm_pm_runtime_enable(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(devm_pm_runtime_enable);
+>
+> +static void pm_runtime_put_noidle_action(void *data)
+> +{
+> +       pm_runtime_put_noidle(data);
+> +}
+> +
+> +/**
+> + * devm_pm_runtime_get_noresume - devres-enabled version of pm_runtime_g=
+et_noresume.
+> + *
+> + * @dev: Device to handle.
+> + */
+> +int devm_pm_runtime_get_noresume(struct device *dev)
+> +{
+> +       pm_runtime_get_noresume(dev);
+> +
+> +       return devm_add_action_or_reset(dev, pm_runtime_put_noidle_action=
+, dev);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_pm_runtime_get_noresume);
+> +
+>  /**
+>   * pm_runtime_forbid - Block runtime PM of a device.
+>   * @dev: Device to handle.
+> diff --git a/include/linux/pm_runtime.h b/include/linux/pm_runtime.h
+> index d39dc863f612..d7eca86150b8 100644
+> --- a/include/linux/pm_runtime.h
+> +++ b/include/linux/pm_runtime.h
+> @@ -93,7 +93,9 @@ extern void pm_runtime_new_link(struct device *dev);
+>  extern void pm_runtime_drop_link(struct device_link *link);
+>  extern void pm_runtime_release_supplier(struct device_link *link);
+>
+> +int devm_pm_runtime_set_active(struct device *dev);
+>  extern int devm_pm_runtime_enable(struct device *dev);
+> +int devm_pm_runtime_get_noresume(struct device *dev);
+>
+>  /**
+>   * pm_suspend_ignore_children - Set runtime PM behavior regarding childr=
+en.
+> @@ -276,7 +278,9 @@ static inline void __pm_runtime_disable(struct device=
+ *dev, bool c) {}
+>  static inline void pm_runtime_allow(struct device *dev) {}
+>  static inline void pm_runtime_forbid(struct device *dev) {}
+>
+> +static inline int devm_pm_runtime_set_active(struct device *dev) { retur=
+n 0; }
+>  static inline int devm_pm_runtime_enable(struct device *dev) { return 0;=
+ }
+> +static inline int devm_pm_runtime_get_noresume(struct device *dev) { ret=
+urn 0; }
+>
+>  static inline void pm_suspend_ignore_children(struct device *dev, bool e=
+nable) {}
+>  static inline void pm_runtime_get_noresume(struct device *dev) {}
+> --
+> 2.48.1
+>
+>
