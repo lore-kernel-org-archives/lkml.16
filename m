@@ -1,160 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5B922FDF1;
-	Sat,  8 Feb 2025 10:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554751B6D08;
+	Sat,  8 Feb 2025 10:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739012085; cv=none; b=upO3lAWd/YDV+Jj+yT5eUdP6yI/oaRJA2K+gxnVHekJjHcQNEWqtN96Is5Jxkm80V6OMAeTp0jKwQxRFH+btzKCtmF+La2ogWBDZJvjqwALQMX7cy7CyjNTQU8Ht8VRBiEmBDqDpnLaWZCGerOK4mEC3Lt0p+oMHYJbfcfcAjwI=
+	t=1739012307; cv=none; b=pDogr5xXPUvCozwD15S21BjQgpFKwSzl+BOjfP5meL3g5qk9xUiJgB8EgUzGu9iHCe47tz3R6EtLyNiM6xVG/e///adS8zw+b5+OyOuh+qV1ST8zxRw9TVl0skFGGOwMkYz8pppL8mnFyLaM+Fqhn6XFXiC+RQWnXJAIrdUzOug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739012085; c=relaxed/simple;
-	bh=lI/51wLi2H8Tam0i5+pdnLfj876YBIBpf/fiqN/u6YM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GuJaJvUsYGM82pKy/b+tdQY8g8lzKG+Q5lVCH8IZL0GctmMCjhOa50ozgGZuab9h7IdHhIyyImOy/Yq3bPJJawKuLuMneV/99xMvhZ9/jJSXRUZ+oa4vvp17DgTX91iXmqCISE3+2E94/RUBjZoZ9pFZ80yi/yd3y5LBRHLWBQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e0dMd1kf; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739012307; c=relaxed/simple;
+	bh=HC59Proqu7a5kKk3YadUGL5qeCaPIya4GivGfD9Q6n4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pJstHzH/n54LdDrh95tgO1xg+I04tS8j+kgKF9WH0b2RPZLWvbJfOU2rDRFTSEwyHtFDfrEu/dPABlR5G+HMGP4fDGeH3of2PmKxilbpAcUO7K0ge+sr29Jr6IYnow/r/tAhPEU3wrVESyxOkrssCVXURLt22gc0a7+II4WUSTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XoLycnIb; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e0dMd1kf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739012075; x=1770548075;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lI/51wLi2H8Tam0i5+pdnLfj876YBIBpf/fiqN/u6YM=;
-  b=e0dMd1kf1xiTMXjh+Y2pUClJcKfrT0BAAcmIeejJkwtxxXk1XOlHmaLT
-   TZZcf1QEK+exipPPT9yb0CERy892c+MJgtzPKSFXuC9BsXFHTvQU5yhzM
-   6S8Hi7bFMh42cadEx+sbQcVUjBqh68NSIJC7lRS18p7W59IBrOP2QgUf8
-   PhpbQmuHhm8VRR3BW1qROlKOLPfR1Dfr+11yHTqeo5otc4W9o9TrLAYjt
-   i7Viucp5d6QMLCtAlt/7HV/dQmUiZIhxppqo1rQxA3zqvPj+aVMng1hys
-   qwCu9GtYRGzNjAvp+FdDELcnsTAhebeBdEudsFxYK0fz697YX/KYHvVjM
-   Q==;
-X-CSE-ConnectionGUID: d5DfgFCXTKSthEv9KWEO1A==
-X-CSE-MsgGUID: iwknCTFHSrmAS6LzuwOW1w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="43310486"
-X-IronPort-AV: E=Sophos;i="6.13,269,1732608000"; 
-   d="scan'208";a="43310486"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 02:54:25 -0800
-X-CSE-ConnectionGUID: PbE6dLz4RI2m2AgTbUfwlg==
-X-CSE-MsgGUID: KdnNn2DzTy25klR1Ypc8pA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,269,1732608000"; 
-   d="scan'208";a="116798959"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 02:54:23 -0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com
-Cc: rick.p.edgecombe@intel.com,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH] KVM: selftests: Wait mprotect_ro_done before write to RO in mmu_stress_test
-Date: Sat,  8 Feb 2025 18:53:18 +0800
-Message-ID: <20250208105318.16861-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XoLycnIb"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43932b9b09aso2759565e9.3;
+        Sat, 08 Feb 2025 02:58:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739012305; x=1739617105; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XNqqhP8d5mEOfFUjKF7km6u3cEyjj+qEkyUHE3R255o=;
+        b=XoLycnIb7R1FP0gtlOpTHKvN6AUHYbOWko2bcI/bvbMTkwlqYAxz5i8mWHdgmP01W8
+         bht6JQZQ50N/JxB/bsEM9ZmY6Qsty7+v9hwNuq6RCz2MpXJjaGGmqBea1kuEJk30P8a+
+         +7w+jGNMpNqbvJchlRViKinHA7aGZFDDmXW1K2BjUElfRLuRSJ0zJV4Zdfk1rhxYRhMw
+         60y4b7DCE6pGSq6/lZM+SLaj6ZIigHotyvrbdvT6JeVcgt1eVIJlzSAKT88T8wKEgCw1
+         y27+B2hB7L6K26unUqGRSptWtlFEyxtJAzuLNA56XO8Zoy4S3DelbJ5QkNNfJ9DEXcTF
+         Y7uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739012305; x=1739617105;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XNqqhP8d5mEOfFUjKF7km6u3cEyjj+qEkyUHE3R255o=;
+        b=PlBZhP+JXfSKqegi8AXjnLMKraZgOyjmaWJm8vgHMaKXe8vRuspQFIz13Ewaw3KG+d
+         d6yAL9T3tkNEj6LrDncYR9e8JwddG0J8vhWazdKYUOd2eZRo2Pk+LvHnJzf8D95fma/i
+         mmOfxWQKsAlHe+6u8QCv44mt/GzlyO/jngX6COkilFElzmnwtTP3ekITNJf3Wnu++Jvw
+         JVfrRyI3GYI06taymsDw0QwuVh9wXRVdxAeAXqJTswqcUn7LOJdaQ8W4xIlGC21aJhOJ
+         8mwtde4NxZDQXq2Txfm1Xeo8rMXGy4w9IyG9EBN9gRkepBq1mjkdorzZ06W8PhBUAFyj
+         Rx7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVlxmPmC0BoNOp8jq+kTcJg4p/UNyRYMLirbkK3NfHUzM06AXFD0df9VTORBmkJ7SFtx7bfXHWJ8syboEw=@vger.kernel.org, AJvYcCXUnq846iYG46PfRfIQu08P9pRhiHDMVTSm+R9YkbRFfEWitG5HJQZzCme2oaROd2X5ERnfcDTpOez3mZadCaPRCQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzH9Z/7yS/iUzPIFoJio16o/GcmM5gm68KFpTRtwM3n9c6//gPN
+	8x+m9KXfUvied5uGkXO3xyQvckm2EXF3DRzGAYxt+kmyDsbvzpOC
+X-Gm-Gg: ASbGncvfplcrv9DDWXIaMjhEf1U/x5pjMKx/oZZMER3I5J5mXu2w0J1cL0FRmjsg3Ga
+	gZnwuwNmf56jjltOi29eEPLlfXCEv0EFdDH7y0KGszy+2h2LESzYjcaYGDOWkX9TrR2G2AxuAgj
+	3+HD09I500ZX1Lbl2P0E56cDOFUT3AUAsB8+h9hzvmwW5S6LY0zEnrZMQxixNWe+SIp+jo3E5CT
+	dqZoOLpdHRKNsSsrQDmGOfUFYQ35VdAybIl7FB6Q/VmkNwabx51YRDvwnimq9mcjnY841QQgWnK
+	WWrQGckNVhQmltABYMtQzSHdZgefIIxppMCY9d4NmDUgnL0DI+PcBA==
+X-Google-Smtp-Source: AGHT+IGI6rjXAZop36zSG90oUjlAUybcAcwzJW/10yNuGLLIJasyrmCRrjJ5ueyR9wWlflLpnHpCXQ==
+X-Received: by 2002:a05:600c:1da7:b0:439:34e2:455f with SMTP id 5b1f17b1804b1-43934e24665mr7757815e9.12.1739012304348;
+        Sat, 08 Feb 2025 02:58:24 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390db11200sm116292145e9.38.2025.02.08.02.58.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 02:58:23 -0800 (PST)
+Date: Sat, 8 Feb 2025 10:58:21 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Kan Liang
+ <kan.liang@linux.intel.com>, Sam James <sam@gentoo.org>, Jesper Juhl
+ <jesperjuhl76@gmail.com>, James Clark <james.clark@linaro.org>, Zhongqiu
+ Han <quic_zhonhan@quicinc.com>, Yicong Yang <yangyicong@hisilicon.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, Michael Petlan
+ <mpetlan@redhat.com>, Veronika Molnarova <vmolnaro@redhat.com>, Anne Macedo
+ <retpolanne@posteo.net>, Dominique Martinet <asmadeus@codewreck.org>,
+ Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He
+ <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, "Krzysztof =?UTF-8?B?xYFvcGF0b3dza2k=?="
+ <krzysztof.m.lopatowski@gmail.com>
+Subject: Re: [PATCH v2 0/7] Add io_dir to avoid memory overhead from opendir
+Message-ID: <20250208105821.1cdb54fc@pumpkin>
+In-Reply-To: <20250207232452.994822-1-irogers@google.com>
+References: <20250207232452.994822-1-irogers@google.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-In the read-only mprotect() phase of mmu_stress_test, ensure that
-mprotect(PROT_READ) has completed before the guest starts writing to the
-read-only mprotect() memory.
+On Fri,  7 Feb 2025 15:24:41 -0800
+Ian Rogers <irogers@google.com> wrote:
 
-Without waiting for mprotect_ro_done before the guest starts writing in
-stage 3 (the stage for read-only mprotect()), the host's assertion of stage
-3 could fail if mprotect_ro_done is set to true in the window between the
-guest finishing writes to all GPAs and executing GUEST_SYNC(3).
+> glibc's opendir allocates a minimum of 32kb, when called recursively
+> for a directory tree the memory consumption can add up - nearly 300kb
+> during perf start-up when processing modules. Add a stack allocated
+> variant of readdir sized a little more than 1kb
 
-This scenario is easy to occur especially when there are hundred of vCPUs.
+Does 300kB really matter?
 
-CPU 0                  CPU 1 guest     CPU 1 host
-                                       enter stage 3's 1st loop
-                       //in stage 3
-                       write all GPAs
-                       @rip 0x4025f0
+You seem to be trading memory allocation against system calls.
+My 'gut feel' is that the system call cost will dominate.
+(Unless all the directories are small.)
 
-mprotect(PROT_READ)
-mprotect_ro_done=true
-                       GUEST_SYNC(3)
-                                       r=0, continue stage 3's 1st loop
+There might, of course, be other code in glibc that is designed
+to make it all slower than necessary.
 
-                       //in stage 4
-                       write GPA
-                       @rip 0x402635
-
-                                       -EFAULT, jump out stage 3's 1st loop
-                                       enter stage 3's 2nd loop
-                       write GPA
-                       @rip 0x402635
-                                       -EFAULT, continue stage 3's 2nd loop
-                                       guest rip += 3
-
-The test then fails and reports "Unhandled exception '0xe' at guest RIP
-'0x402638'", since the next valid guest rip address is 0x402639, i.e. the
-"(mem) = val" in vcpu_arch_put_guest() is compiled into a mov instruction
-of length 4.
-
-Even if it could be compiled into a mov instruction of length 3, the
-following execution of GUEST_SYNC(4) in guest could still cause the host
-failure of the assertion of stage 3.
-
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- tools/testing/selftests/kvm/mmu_stress_test.c | 25 +++++++++++--------
- 1 file changed, 14 insertions(+), 11 deletions(-)
-
-diff --git a/tools/testing/selftests/kvm/mmu_stress_test.c b/tools/testing/selftests/kvm/mmu_stress_test.c
-index d9c76b4c0d88..a2ccf705bb2a 100644
---- a/tools/testing/selftests/kvm/mmu_stress_test.c
-+++ b/tools/testing/selftests/kvm/mmu_stress_test.c
-@@ -35,11 +35,16 @@ static void guest_code(uint64_t start_gpa, uint64_t end_gpa, uint64_t stride)
- 	GUEST_SYNC(2);
- 
- 	/*
--	 * Write to the region while mprotect(PROT_READ) is underway.  Keep
--	 * looping until the memory is guaranteed to be read-only, otherwise
--	 * vCPUs may complete their writes and advance to the next stage
--	 * prematurely.
--	 *
-+	 * mprotect(PROT_READ) is underway.  Keep looping until the memory is
-+	 * guaranteed to be read-only, otherwise vCPUs may complete their
-+	 * writes and advance to the next stage prematurely.
-+	 */
-+	do {
-+		;
-+	} while (!READ_ONCE(mprotect_ro_done));
-+
-+	/*
-+	 * Write to the region after mprotect(PROT_READ) is done.
- 	 * For architectures that support skipping the faulting instruction,
- 	 * generate the store via inline assembly to ensure the exact length
- 	 * of the instruction is known and stable (vcpu_arch_put_guest() on
-@@ -47,16 +52,14 @@ static void guest_code(uint64_t start_gpa, uint64_t end_gpa, uint64_t stride)
- 	 * is low in this case).  For x86, hand-code the exact opcode so that
- 	 * there is no room for variability in the generated instruction.
- 	 */
--	do {
--		for (gpa = start_gpa; gpa < end_gpa; gpa += stride)
-+	for (gpa = start_gpa; gpa < end_gpa; gpa += stride)
- #ifdef __x86_64__
--			asm volatile(".byte 0x48,0x89,0x00" :: "a"(gpa) : "memory"); /* mov %rax, (%rax) */
-+		asm volatile(".byte 0x48,0x89,0x00" :: "a"(gpa) : "memory"); /* mov %rax, (%rax) */
- #elif defined(__aarch64__)
--			asm volatile("str %0, [%0]" :: "r" (gpa) : "memory");
-+		asm volatile("str %0, [%0]" :: "r" (gpa) : "memory");
- #else
--			vcpu_arch_put_guest(*((volatile uint64_t *)gpa), gpa);
-+		vcpu_arch_put_guest(*((volatile uint64_t *)gpa), gpa);
- #endif
--	} while (!READ_ONCE(mprotect_ro_done));
- 
- 	/*
- 	 * Only architectures that write the entire range can explicitly sync,
--- 
-2.43.2
-
+	David
