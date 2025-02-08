@@ -1,86 +1,58 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1A61E3DDB
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 10:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5B922FDF1;
+	Sat,  8 Feb 2025 10:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739012029; cv=none; b=poEv+u03bQ8WN5XpnCn8KBAl61ovqS2/xyEQ+jccX/ZXQoz+4kOA+coTJ6KxwaKiCbQMHmr11CkzO02iBqNSETnXy4JZCG7M38DLJfrmHqjnvgH84I1aNMwUPW2C4dRmjvwXhQIbZy7FJVOsxyoK1x8mTTd/KBXLgsXVgJupKS8=
+	t=1739012085; cv=none; b=upO3lAWd/YDV+Jj+yT5eUdP6yI/oaRJA2K+gxnVHekJjHcQNEWqtN96Is5Jxkm80V6OMAeTp0jKwQxRFH+btzKCtmF+La2ogWBDZJvjqwALQMX7cy7CyjNTQU8Ht8VRBiEmBDqDpnLaWZCGerOK4mEC3Lt0p+oMHYJbfcfcAjwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739012029; c=relaxed/simple;
-	bh=ax1o1fpei484xZRK2rQI+uwwNmAyUFKGL4YVPVJZtys=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AOiOgMBcUkuduzAYJPGMHO3Xg9Rr3CCy3Sn4bEU+y9H9YgqOlZj3aQblcTb7wXPyC+TEre1/qGSZo7PeiH1n+zC8DnS5+AZFUVzVfGcAAFZIFxkKFDLIscRnetvPGCNImtcI2bMsb21KJR7NF91EB0uqDlFS7+KmCM+drAouNMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=gLpKRRMD; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
+	s=arc-20240116; t=1739012085; c=relaxed/simple;
+	bh=lI/51wLi2H8Tam0i5+pdnLfj876YBIBpf/fiqN/u6YM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GuJaJvUsYGM82pKy/b+tdQY8g8lzKG+Q5lVCH8IZL0GctmMCjhOa50ozgGZuab9h7IdHhIyyImOy/Yq3bPJJawKuLuMneV/99xMvhZ9/jJSXRUZ+oa4vvp17DgTX91iXmqCISE3+2E94/RUBjZoZ9pFZ80yi/yd3y5LBRHLWBQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e0dMd1kf; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="gLpKRRMD"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fa3e20952fso1678354a91.1
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 02:53:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1739012025; x=1739616825; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jQrnvzVN+czw/aIxJ1bypX+PwJX4ySE3P9bY6Zh8dF4=;
-        b=gLpKRRMDhDDnnzpdN7w+LRt3jR8ikucXWESXd2Tl/iTjyKb3ZN2Keds1gpZ1nFl/xw
-         DzhL67s7XeL4NjdpfvQ0ANkwBbbf9P1uQQWJYbTvpuuGGecPMRh9y8NWLCI8bQd0QBYL
-         ZsDKhrorIcRr3we+0WhDGASHFAb5wcdxIuMCZfVGWkpxnPGMmpoyCYbWKu5JaWGjRRrE
-         XAFc5iyhb4YWIhdST2FWIRkGzxoF3DmOJutntJkxaZOxcfb7eMLYSzsGu75gi5w6SrHN
-         77PlH8H9cVI8hgICArAGE4wQzdAOU2cwF2/VbpvWs4bnJ3kBofMAI5zTCEggZK2QAsEC
-         QyCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739012025; x=1739616825;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jQrnvzVN+czw/aIxJ1bypX+PwJX4ySE3P9bY6Zh8dF4=;
-        b=AmtjRuLpg5wXudgrNFsWsbNoy773g7aH/MmM9wqdGqCyXMWevNHz23ZQFN/wxRzUQ+
-         kh+bE2CldvjzL22aOAy+HTSvYKdPm0GvybrEfb2toyIN9mo69bmayIJR2rEl9vNNC3YL
-         n43DbPe250AhY1vV1T7SBpUoNbt2W1s9cKfPp4cywN1D/pbZfusfq5yBFNwLv5sSsNxT
-         8nBKv1xQqkbGvd7QtWmbaZ1w3JZjKwHUDYdZpvZFgoN5eRWqSGd+4cY3B2Y+AeirOYRl
-         0k3fEQjmg9wLuFHz3j2MQfgkQ42v82v9Cx0/KaPHgF608I03HT64Lp4y4rK3/iA+RELl
-         c8eg==
-X-Forwarded-Encrypted: i=1; AJvYcCVbDLFmBnojY3vLd2heuTSvanhmp5ihkAlZgIjmElxtTWicam/tvi1WN8J+tFx9dp9yR5NdSoZsoSp/w54=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvGD+rNh0HKzWbfE/efuYFXNkwSY5sko0g0ABXTkTg3iJlwG1e
-	Ey+ZLTi/Egk89a2lNo0sxGhSll7502mhvnoOGqM46lMk/1PNaro5bJELuGjP0I0=
-X-Gm-Gg: ASbGnctOreJQHSQQF5B5VLf6xM8twWK1bVWif+xddB7pga9pRhAMuKB1ZbqL/xZoMQN
-	nlf2FScGHgL5xxcR4Q27hl1ws+xRd4Ho2naqXZ3Ujp3NKFC9ALyewPL91Fz24cMsp1khcAFkym3
-	EX790+Nmh9SnrcJ4yjgbA2cpfcZ0WqKLK01OCluDnsSc2EIlUyZzul50rMPtpS8bcg9RanQH+1G
-	YB88wlO8nUtdfX/cdgjb2GyUrcpx/IzHHB0PDB1Fvl767ohrSBQ+kuj+inHB5HNtNZrkwWFNVFO
-	d05Zfde3t81YK2qXKkct8M6Zw+wzcg+XaF+ndmE4VCVLTyOjT4s5g06IA4IDVh0=
-X-Google-Smtp-Source: AGHT+IGNH73KvngmIvEBiJnWdA5V2qlSw1SSZo8SpbLAGo12RqBszTDgGsAMmaVXYHfqsOSFIdlxFw==
-X-Received: by 2002:a17:90b:510e:b0:2ee:70cb:a500 with SMTP id 98e67ed59e1d1-2fa23f563b2mr9057596a91.1.1739012025335;
-        Sat, 08 Feb 2025 02:53:45 -0800 (PST)
-Received: from dgp100339560-01.huaqin.com ([116.66.212.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa36f185c5sm2142003a91.16.2025.02.08.02.53.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 02:53:44 -0800 (PST)
-From: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
-To: neil.armstrong@linaro.org,
-	quic_jesszhan@quicinc.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	thierry.reding@gmail.com,
-	sam@ravnborg.org,
-	dianders@chromium.org
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e0dMd1kf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739012075; x=1770548075;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=lI/51wLi2H8Tam0i5+pdnLfj876YBIBpf/fiqN/u6YM=;
+  b=e0dMd1kf1xiTMXjh+Y2pUClJcKfrT0BAAcmIeejJkwtxxXk1XOlHmaLT
+   TZZcf1QEK+exipPPT9yb0CERy892c+MJgtzPKSFXuC9BsXFHTvQU5yhzM
+   6S8Hi7bFMh42cadEx+sbQcVUjBqh68NSIJC7lRS18p7W59IBrOP2QgUf8
+   PhpbQmuHhm8VRR3BW1qROlKOLPfR1Dfr+11yHTqeo5otc4W9o9TrLAYjt
+   i7Viucp5d6QMLCtAlt/7HV/dQmUiZIhxppqo1rQxA3zqvPj+aVMng1hys
+   qwCu9GtYRGzNjAvp+FdDELcnsTAhebeBdEudsFxYK0fz697YX/KYHvVjM
+   Q==;
+X-CSE-ConnectionGUID: d5DfgFCXTKSthEv9KWEO1A==
+X-CSE-MsgGUID: iwknCTFHSrmAS6LzuwOW1w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="43310486"
+X-IronPort-AV: E=Sophos;i="6.13,269,1732608000"; 
+   d="scan'208";a="43310486"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 02:54:25 -0800
+X-CSE-ConnectionGUID: PbE6dLz4RI2m2AgTbUfwlg==
+X-CSE-MsgGUID: KdnNn2DzTy25klR1Ypc8pA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,269,1732608000"; 
+   d="scan'208";a="116798959"
+Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 02:54:23 -0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: pbonzini@redhat.com,
+	seanjc@google.com
+Cc: rick.p.edgecombe@intel.com,
 	linux-kernel@vger.kernel.org,
-	Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
-Subject: [PATCH v5 3/3] drm/panel: panel-himax-hx83102: support for starry-2082109qfh040022-50e MIPI-DSI panel
-Date: Sat,  8 Feb 2025 18:53:26 +0800
-Message-Id: <20250208105326.3850358-4-yelangyan@huaqin.corp-partner.google.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250208105326.3850358-1-yelangyan@huaqin.corp-partner.google.com>
-References: <20250208105326.3850358-1-yelangyan@huaqin.corp-partner.google.com>
+	kvm@vger.kernel.org,
+	Yan Zhao <yan.y.zhao@intel.com>
+Subject: [PATCH] KVM: selftests: Wait mprotect_ro_done before write to RO in mmu_stress_test
+Date: Sat,  8 Feb 2025 18:53:18 +0800
+Message-ID: <20250208105318.16861-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,189 +61,100 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The starry-2082109qfh040022-50e is a 10.95" TFT panel. The MIPI controller
-on this panel is the same as the other panels here, so add this panel to
-this driver.
+In the read-only mprotect() phase of mmu_stress_test, ensure that
+mprotect(PROT_READ) has completed before the guest starts writing to the
+read-only mprotect() memory.
 
-Signed-off-by: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
+Without waiting for mprotect_ro_done before the guest starts writing in
+stage 3 (the stage for read-only mprotect()), the host's assertion of stage
+3 could fail if mprotect_ro_done is set to true in the window between the
+guest finishing writes to all GPAs and executing GUEST_SYNC(3).
+
+This scenario is easy to occur especially when there are hundred of vCPUs.
+
+CPU 0                  CPU 1 guest     CPU 1 host
+                                       enter stage 3's 1st loop
+                       //in stage 3
+                       write all GPAs
+                       @rip 0x4025f0
+
+mprotect(PROT_READ)
+mprotect_ro_done=true
+                       GUEST_SYNC(3)
+                                       r=0, continue stage 3's 1st loop
+
+                       //in stage 4
+                       write GPA
+                       @rip 0x402635
+
+                                       -EFAULT, jump out stage 3's 1st loop
+                                       enter stage 3's 2nd loop
+                       write GPA
+                       @rip 0x402635
+                                       -EFAULT, continue stage 3's 2nd loop
+                                       guest rip += 3
+
+The test then fails and reports "Unhandled exception '0xe' at guest RIP
+'0x402638'", since the next valid guest rip address is 0x402639, i.e. the
+"(mem) = val" in vcpu_arch_put_guest() is compiled into a mov instruction
+of length 4.
+
+Even if it could be compiled into a mov instruction of length 3, the
+following execution of GUEST_SYNC(4) in guest could still cause the host
+failure of the assertion of stage 3.
+
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
 ---
- drivers/gpu/drm/panel/panel-himax-hx83102.c | 142 ++++++++++++++++++++
- 1 file changed, 142 insertions(+)
+ tools/testing/selftests/kvm/mmu_stress_test.c | 25 +++++++++++--------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-himax-hx83102.c b/drivers/gpu/drm/panel/panel-himax-hx83102.c
-index 9a818dea653f..66abfc44e424 100644
---- a/drivers/gpu/drm/panel/panel-himax-hx83102.c
-+++ b/drivers/gpu/drm/panel/panel-himax-hx83102.c
-@@ -24,6 +24,8 @@
- #define HX83102_SETPOWER	0xb1
- #define HX83102_SETDISP		0xb2
- #define HX83102_SETCYC		0xb4
-+#define HX83102_UNKNOWN_B6	0xb6
-+#define HX83102_UNKNOWN_B8	0xb8
- #define HX83102_SETEXTC		0xb9
- #define HX83102_SETMIPI		0xba
- #define HX83102_SETVDC		0xbc
-@@ -584,6 +586,121 @@ static int kingdisplay_kd110n11_51ie_init(struct hx83102 *ctx)
- 	return dsi_ctx.accum_err;
- }
+diff --git a/tools/testing/selftests/kvm/mmu_stress_test.c b/tools/testing/selftests/kvm/mmu_stress_test.c
+index d9c76b4c0d88..a2ccf705bb2a 100644
+--- a/tools/testing/selftests/kvm/mmu_stress_test.c
++++ b/tools/testing/selftests/kvm/mmu_stress_test.c
+@@ -35,11 +35,16 @@ static void guest_code(uint64_t start_gpa, uint64_t end_gpa, uint64_t stride)
+ 	GUEST_SYNC(2);
  
-+static int starry_2082109qfh040022_50e_init(struct hx83102 *ctx)
-+{
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = ctx->dsi };
+ 	/*
+-	 * Write to the region while mprotect(PROT_READ) is underway.  Keep
+-	 * looping until the memory is guaranteed to be read-only, otherwise
+-	 * vCPUs may complete their writes and advance to the next stage
+-	 * prematurely.
+-	 *
++	 * mprotect(PROT_READ) is underway.  Keep looping until the memory is
++	 * guaranteed to be read-only, otherwise vCPUs may complete their
++	 * writes and advance to the next stage prematurely.
++	 */
++	do {
++		;
++	} while (!READ_ONCE(mprotect_ro_done));
 +
-+	msleep(50);
-+
-+	hx83102_enable_extended_cmds(&dsi_ctx, true);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc4);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_UNKNOWN_D9, 0xd1);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPOWER, 0x2c, 0xb5, 0xb5, 0x31, 0xf1, 0x33,
-+				     0xc3, 0x57, 0x36, 0x36, 0x36, 0x36, 0x1a, 0x8b, 0x11, 0x65,
-+				     0x00, 0x88, 0xfa, 0xff, 0xff, 0x8f, 0xff, 0x08, 0x3c, 0x33);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETDISP, 0x00, 0x47, 0xb0, 0x80, 0x00, 0x22,
-+				     0x70, 0x3c, 0xa1, 0x22, 0x00, 0x00, 0x00, 0x88, 0xf4);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCYC, 0x14, 0x16, 0x14, 0x50, 0x14, 0x50,
-+				     0x0d, 0x6a, 0x0d, 0x6a, 0x01, 0x9e);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_UNKNOWN_B6, 0x34, 0x34, 0x03);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_UNKNOWN_B8, 0x40);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xcd);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETMIPI, 0x84);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETVDC, 0x1b, 0x04);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_UNKNOWN_BE, 0x20);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPTBA, 0xfc, 0xc4);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSTBA, 0x38, 0x38, 0x22, 0x11, 0x33, 0xa0,
-+				     0x61, 0x08, 0xf5, 0x03);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xcc);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETTCON, 0x80);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc6);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETRAMDMY, 0x97);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPWM, 0x00, 0x1e, 0x30, 0xd4, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCLOCK, 0x08, 0x13, 0x07, 0x00, 0x0f,
-+				     0x16);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPANEL, 0x02, 0x03, 0x44);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc4);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCASCADE, 0x03);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPCTRL, 0x37, 0x06, 0x00, 0x02, 0x04,
-+				     0x2c, 0xff);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP0, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x3b, 0x03, 0x73, 0x3b, 0x21, 0x21, 0x03,
-+				     0x03, 0x98, 0x10, 0x1d, 0x00, 0x1d, 0x32, 0x17, 0xa1, 0x07,
-+				     0xa1, 0x43, 0x17, 0xa6, 0x07, 0xa6, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP1, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18,
-+				     0x40, 0x40, 0x18, 0x18, 0x18, 0x18, 0x2a, 0x2b, 0x1f, 0x1f,
-+				     0x1e, 0x1e, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b,
-+				     0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
-+				     0x0a, 0x0b, 0x20, 0x21, 0x18, 0x18, 0x18, 0x18);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP3, 0x02, 0xaa, 0xea, 0xaa, 0xaa, 0x00,
-+				     0x02, 0xaa, 0xea, 0xaa, 0xaa, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETTP1, 0x07, 0x10, 0x10, 0x2a, 0x32, 0x9f,
-+				     0x01, 0x5a, 0x91, 0x14, 0x14, 0x00, 0x00, 0x00, 0x00, 0x12,
-+				     0x05, 0x02, 0x02, 0x10, 0x33, 0x02, 0x04, 0x18, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPOWER, 0x01, 0x7f, 0x11, 0xfd);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCLOCK, 0x86);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_UNKNOWN_D2, 0x3d);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc5);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP0, 0x00, 0x00, 0x00, 0x80, 0x80, 0x0c,
-+				     0xa1);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP3, 0x03, 0xff, 0xff, 0xff, 0xff, 0x00,
-+				     0x03, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETTP1, 0x02, 0x00, 0x2d, 0x01, 0x7f, 0x0f,
-+				     0x7c, 0x10, 0xa0, 0x00, 0x00, 0x77, 0x00, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x02);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPTBA, 0xf2);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCLOCK, 0x02, 0x00, 0x00, 0x10, 0x58);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_UNKNOWN_D2, 0x0a, 0x0a, 0x05, 0x03, 0x0a,
-+				     0x0a, 0x01, 0x03, 0x01, 0x01, 0x05, 0x0e);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xcc);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP0, 0x03, 0x1f, 0xe0, 0x11, 0x70);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP3, 0xab, 0xff, 0xff, 0xff, 0xff, 0xa0,
-+				     0xab, 0xff, 0xff, 0xff, 0xff, 0xa0);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETTP1, 0xfe, 0x01, 0xfe, 0x01, 0xfe, 0x01,
-+				     0x00, 0x00, 0x00, 0x03, 0x00, 0x03, 0x81, 0x02, 0x40, 0x00,
-+				     0x20, 0x9e, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x03);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc6);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCYC, 0x03, 0xff, 0xf8);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP3, 0xaa, 0xab, 0xea, 0xaa, 0xaa, 0xa0,
-+				     0xaa, 0xab, 0xea, 0xaa, 0xaa, 0xa0, 0xaa, 0xbf, 0xff, 0xff,
-+				     0xfe, 0xa0, 0xaa, 0xbf, 0xff, 0xff, 0xfe, 0xa0, 0xaa, 0xaa,
-+				     0xaa, 0xaa, 0xaa, 0xa0, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xa0);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_UNKNOWN_E1, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc4);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETMIPI, 0x96);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc5);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETMIPI, 0x4f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x02);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xcc);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETMIPI, 0x84);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x00);
-+	hx83102_enable_extended_cmds(&dsi_ctx, false);
-+
-+	mipi_dsi_msleep(&dsi_ctx, 110);
-+
-+	return dsi_ctx.accum_err;
-+}
-+
- static const struct drm_display_mode starry_mode = {
- 	.clock = 162680,
- 	.hdisplay = 1200,
-@@ -694,6 +811,28 @@ static const struct hx83102_panel_desc kingdisplay_kd110n11_51ie_desc = {
- 	.init = kingdisplay_kd110n11_51ie_init,
- };
++	/*
++	 * Write to the region after mprotect(PROT_READ) is done.
+ 	 * For architectures that support skipping the faulting instruction,
+ 	 * generate the store via inline assembly to ensure the exact length
+ 	 * of the instruction is known and stable (vcpu_arch_put_guest() on
+@@ -47,16 +52,14 @@ static void guest_code(uint64_t start_gpa, uint64_t end_gpa, uint64_t stride)
+ 	 * is low in this case).  For x86, hand-code the exact opcode so that
+ 	 * there is no room for variability in the generated instruction.
+ 	 */
+-	do {
+-		for (gpa = start_gpa; gpa < end_gpa; gpa += stride)
++	for (gpa = start_gpa; gpa < end_gpa; gpa += stride)
+ #ifdef __x86_64__
+-			asm volatile(".byte 0x48,0x89,0x00" :: "a"(gpa) : "memory"); /* mov %rax, (%rax) */
++		asm volatile(".byte 0x48,0x89,0x00" :: "a"(gpa) : "memory"); /* mov %rax, (%rax) */
+ #elif defined(__aarch64__)
+-			asm volatile("str %0, [%0]" :: "r" (gpa) : "memory");
++		asm volatile("str %0, [%0]" :: "r" (gpa) : "memory");
+ #else
+-			vcpu_arch_put_guest(*((volatile uint64_t *)gpa), gpa);
++		vcpu_arch_put_guest(*((volatile uint64_t *)gpa), gpa);
+ #endif
+-	} while (!READ_ONCE(mprotect_ro_done));
  
-+static const struct drm_display_mode starry_2082109qfh040022_50e_default_mode = {
-+	.clock = 192050,
-+	.hdisplay = 1200,
-+	.hsync_start = 1200 + 160,
-+	.hsync_end = 1200 + 160 + 66,
-+	.htotal = 1200 + 160 + 66 + 120,
-+	.vdisplay = 1920,
-+	.vsync_start = 1920 + 115,
-+	.vsync_end = 1920 + 115 + 8,
-+	.vtotal = 1920 + 115 + 8 + 28,
-+	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-+};
-+
-+static const struct hx83102_panel_desc starry_2082109qfh040022_50e_desc = {
-+	.modes = &starry_2082109qfh040022_50e_default_mode,
-+	.size = {
-+		.width_mm = 147,
-+		.height_mm = 235,
-+	},
-+	.init = starry_2082109qfh040022_50e_init,
-+};
-+
- static int hx83102_enable(struct drm_panel *panel)
- {
- 	msleep(130);
-@@ -924,6 +1063,9 @@ static const struct of_device_id hx83102_of_match[] = {
- 	{ .compatible = "kingdisplay,kd110n11-51ie",
- 	  .data = &kingdisplay_kd110n11_51ie_desc
- 	},
-+	{ .compatible = "starry,2082109qfh040022-50e",
-+	  .data = &starry_2082109qfh040022_50e_desc
-+	},
- 	{ .compatible = "starry,himax83102-j02",
- 	  .data = &starry_desc
- 	},
+ 	/*
+ 	 * Only architectures that write the entire range can explicitly sync,
 -- 
-2.34.1
+2.43.2
 
