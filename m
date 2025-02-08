@@ -1,107 +1,154 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE5C45979;
-	Sat,  8 Feb 2025 02:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DD02BAF9;
+	Sat,  8 Feb 2025 02:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738980832; cv=none; b=bx+VeRs8GZGNMaTbqLXxj/SzZM6vnRwNUqQX6qXJCaJH7UsXJ8qbKlYxflnsArKUzq/kYAZg8b0mIe+3oYxuBxkW55te+n8j92zeL7oCXuKSyX0nx2FC/lXOTpFFZl/VpQhl2FvReVDZlvkznWG8AlK8kNGDc6kXJrZ5c32iwBI=
+	t=1738980879; cv=none; b=rAFi8G+C77eY3YvrDEWvHXIuSW+vJdwvq6ZVMi5U1DILbIZk7PbFnKPZ+eNZrzDOY/hlzRayGV55MB/EEcu6vIfYGY8YW9mPnkNeGitR+cFH/5mBB8IgSxywJ9zAK1EnVvij2IKcTfPMKlgDBgnlDALUA5BtHd6kWrw2KiOajNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738980832; c=relaxed/simple;
-	bh=yeOAfOTcWI69kvo4UfVbd63U27LvdUDiuNEX53ysFZY=;
+	s=arc-20240116; t=1738980879; c=relaxed/simple;
+	bh=coAPJBA0TgnnXie5n+36MkiQOZmJDu0E3V4IHnF8ApA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qn3yYomnr33dj1ouBlG707Hm6A8OQyj5Uk0TGGtoiTk9yXXMkAEssZwadsH6NC//7CsjnjnEfZyC9jafuHDleXTcg19HNqN72GITJ1j+n8hynyHqJND83blbekJQST+nBSkbBwIdH8q5bbHZxNXtzTp6X0TGgrhnDdhVBmG9CwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=jC4puXz4; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	 In-Reply-To:Content-Type; b=KwHvuq51kweaD8yaTAGOBMee/ddQ17OrW/qh8U1cHle09AjHL3xsfl3u1rxl36WjxTZUcTqnhby2BlMM9hlKPmmz03Kdy83Atz7jZUvJfyGjWVU5/L6Lj6bqjPq4pKx7G7nhWUgLF4C2PMrcmoi0CVtnQDS88n7a3LSabPNb5+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lqCg5xFq; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="jC4puXz4"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38dae9a0566so1316940f8f.3;
-        Fri, 07 Feb 2025 18:13:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lqCg5xFq"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7b6ffda45f3so37721085a.2;
+        Fri, 07 Feb 2025 18:14:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1738980828; x=1739585628; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1738980876; x=1739585676; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=KFjUJ7x/jFIJeuzuwLBbU1zsiQZ5FR4tRjGt0l22YrA=;
-        b=jC4puXz4j9A/rVqtixz/bIQaq9EcxvB5sDtDCmW7rOJLwqVVgaNokbHJDbcuAxAtvS
-         lrYrO/CLo5X0NLR9Nz3o/Ry0dWT/iJEdGQnw7F0col4JomjId3XkIbbXumPdOPEBBNOp
-         gPzRiMK91VvREvqYMBLssTSffdOobgAy0wllLdcQSw6ES8UOZWizAtjBHUIWDlOVR82L
-         DdGGvASZ78ECepcVQpF9bUD2+AzMvHSQxGIdGhEwLeFkt/KHWcrzjs3OgQwvge7Hj6We
-         w/mq34S8AKUEW4HOrBAANuGXIfZRTq5KXQN2Edh2f3rr+hwZWQpAzcYe+qHOhPgKyDs/
-         yi+Q==
+        bh=P5/SN3DCvwYBNYU4/IONaZxto7bXDguxKcJOD+fv9VM=;
+        b=lqCg5xFqT+DKFh7FNEaa6tNeGqlHBOYtMHCbPdR9fsYy/TgZO6NhG7V7f7PsZyGu/o
+         mXS5+oasaVG2hNx2gDqvk1E1WB+l14xZ6DlvrMH7XBWfjFap9x27P9eaiChZGcvRX1If
+         Axuhkz0szVs+cLKG5TUJSBa/25CBb0U2J5CLfg5LllZN4JlqIOF+sAJHQ0OHaD/zxIPy
+         NPOTbs2dA7yFUwrgAbZN977F8G25V0qObfpyMY44fAihui3yDG5VzCMIaw/URjn4mXba
+         poMs9jDSaExjhCGoym1SpiLR2+4TUtNG6dktaLhDVgvBoRJi7Etv77rC6HNbjXW2gb3j
+         whVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738980828; x=1739585628;
+        d=1e100.net; s=20230601; t=1738980876; x=1739585676;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KFjUJ7x/jFIJeuzuwLBbU1zsiQZ5FR4tRjGt0l22YrA=;
-        b=eMr580Dfkl3CMGj9JF+jCQ3dmBS4jvUxPUWcHOW2XY4NN0VOZUJ8cyKiKLWf6TfZzn
-         HGJ+awiv939p2cSCPTeaVLu0l31QwnvrA/UW8bRBf87g/sIuws4iAZidST63crtenyhF
-         Xrnc6nChEEewEGoqQnSRR06OOR2BE6ErF95GMjN0bjyEsL+KpEFGHS60LgiPZWscu4Ji
-         n1gkz1PkoCRcCHiqFQ+LmUbuVuodjvXAw1qZEJn6LjWFAHUqKp/pfJY9Kpk1BsLFbWAA
-         hnWElvwnY71JttK3dSRVbLPwXWXLmhF+ZdqGpz7fc4m/bw/jKlCbiWzLsU97xOXqoZZt
-         LCrw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2z4Y1j3BiYGkL3ortqDKlyXwRkelDbihTG7G16QmvzSNr0v8VbY3smkUVh1mp6qb7Up7mxhS9@vger.kernel.org, AJvYcCWtVpEMMUp9tS+PCxgeKrTZIPJ8x60EBMnAXo5yWUqXW8Nqpqq0W2Wq3A7aSMUYKsLA6YxhM+pu20HxNRU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDHFyoKjEN+U+FikkezpkWwfl10iwbd7PEjZxqu+7ZmANRq34c
-	YpKRwJkXPn74Kg5LkHIx0xJlkvoHSR+P4nvo1t/pg9da+KTJUAM=
-X-Gm-Gg: ASbGncvrsvbDorg78yzPO5R4VaHgSfED/MNeLSJXHlhkGCk6UXi+J0Yy04n3RjoT55P
-	sz9A7pNl8nmrvhaTEq4b2oKFhnMV8AgodAztRXDhwNG3yyRVPPsIc77Ieck5Y2rg3lPgiXNnbyv
-	eDA/ZqyYCKgRtlk3aBQoxs2o/07ZQIVrRCh17RTTsrZrRfrVOvkUAj/xkPxllLvc9gMH679UJ/x
-	m/UAXqdVSs8WlG1j4EvlGrTknunfqbTT9goUsV51coslpHg2OopMBmPCoPf/ktS0eXqvcXzPqb/
-	dIGYMuhjiBkEUH1n69d854hDaEFKHjZ4ggy8ToXeaQNcE6Kucz9XFiYgB7Kkil6uQo6U
-X-Google-Smtp-Source: AGHT+IH23NV5ohzZLD3pCYDgj/pjnD4892PA/FRvcWDFkpPnQCQz/wLEIxVNaftguMLXLf/FT4bLWA==
-X-Received: by 2002:a5d:64cb:0:b0:38a:8d4c:aad3 with SMTP id ffacd0b85a97d-38dc913180cmr3799850f8f.18.1738980828314;
-        Fri, 07 Feb 2025 18:13:48 -0800 (PST)
-Received: from [192.168.1.3] (p5b0574a7.dip0.t-ipconnect.de. [91.5.116.167])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcdb54668sm2570722f8f.35.2025.02.07.18.13.44
+        bh=P5/SN3DCvwYBNYU4/IONaZxto7bXDguxKcJOD+fv9VM=;
+        b=g2Z8L1i13aAAO8ZONhoILaF9L28AxWoFwM7P4Ggk2cNEg56KOtt8Cv0YWG19k1A++o
+         97LIaX4ZdeXqRWNYAKsxBqbD1lO6evN2LNjZc72YODtAHxjvLWbhhYwOvKkisxgTvLet
+         K4X96Wmg7+Az3ka9lEUJoVC1I0wGrWnvg1NXifG9ZfnMCsjZ8vGz112l0HQOzW7AW9E3
+         NuEiyGwBh8obHeQg5QIg3E/wYQj27ClSxY2Gy/qfY6UYKeRQl0X+PCJlDSM+xi7YMjcs
+         KEwzsiJKlF9+T5s40+b4/XFKpZl2s87OQSaronMCSepQa9ifvFRfqeOgjnNIMm7c/edN
+         oGxA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8NT1BXQXCRbQPEynq9xx0+SkdBI6oHL9Tn9bb9UlmkpIpwB7C0uEzcYy5z4/LA7vz2S7mJcu3R4sn@vger.kernel.org, AJvYcCVMRO50FGR+xwfzw4ykFZdoVc+YLSy+kHfn9J4sH9leDqSpB97vj7YenPX0sZiKVI/yP93lWVtSxVn+E+JM@vger.kernel.org, AJvYcCW2yBMWPSKRafmHs6/X9/puXawimMqvfMw4gPoOElkbZDvv4z4pvUtLxqbUvq0ihMiJkGBaAcp40wZaVEUreQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwA1j7V+WOcgn0ukZ+BPnDvqeWVKYsw+ghaXyqZIrOJFPUBxlsE
+	3AJWaLcR89D6hWmPSNr5kNnHPwklfYw5Sa1SOK5tcgz8LPIUvizH
+X-Gm-Gg: ASbGncsZLmmmBJh+mpE0XwKZSxtQ/OyRxuXxjdrh9SmyO6gz4XDfZQgiBRjQPTSahPO
+	ZdN+OjtniaVrr5P3BdKJGOrmMMAX0MSdHlOlm5Eux/az15oqVav/0ejyIUZeUWW3/XY44e3W/TX
+	5TxyKodqzJ1Xv7d8MFiWQsw9HkStV6qiibfsPg+M8161LdGvl4o2dgpaSkyr08y2yEybZMwlcQC
+	yKcp6UdYYxslLOZzb8SGDxkP270SfJBC/NA6B8jHYS65qF4TKDglPgxS2d5750SDME7KpfBgYnz
+	uUKqcSO1KaCG9VLIBuKN7oMdOu3LseeVGb4I/qZn2xyC5Ije2lPydVPhKVhFu63tpek=
+X-Google-Smtp-Source: AGHT+IHaHLnQCpbgV9vtfeCu+dFr6ymQXG7wzjMf9uGoP8yh8kD6+ACPqZoUxJqmQwOKBWPlDIRBWg==
+X-Received: by 2002:ad4:576b:0:b0:6d9:2fe3:bf0c with SMTP id 6a1803df08f44-6e4455e878bmr24319206d6.4.1738980876519;
+        Fri, 07 Feb 2025 18:14:36 -0800 (PST)
+Received: from [192.168.1.201] (pool-108-28-192-105.washdc.fios.verizon.net. [108.28.192.105])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e45074741fsm4078006d6.15.2025.02.07.18.14.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2025 18:13:46 -0800 (PST)
-Message-ID: <9625dd20-d66d-493a-8e1f-5104c9664ec4@googlemail.com>
-Date: Sat, 8 Feb 2025 03:13:44 +0100
+        Fri, 07 Feb 2025 18:14:35 -0800 (PST)
+Message-ID: <8349c217-f0ef-3629-6a70-f35d36636635@gmail.com>
+Date: Fri, 7 Feb 2025 21:14:32 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.6 000/389] 6.6.76-rc2 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250206155234.095034647@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250206155234.095034647@linuxfoundation.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH net-next 00/13] Introduce an ethernet port representation
+Content-Language: en-US
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Vladimir Oltean <vladimir.oltean@nxp.com>,
+ =?UTF-8?Q?K=c3=b6ry_Maincent?= <kory.maincent@bootlin.com>,
+ =?UTF-8?Q?Marek_Beh=c3=ban?= <kabel@kernel.org>,
+ Oleksij Rempel <o.rempel@pengutronix.de>,
+ =?UTF-8?Q?Nicol=c3=b2_Veronese?= <nicveronese@gmail.com>,
+ Simon Horman <horms@kernel.org>, mwojtas@chromium.org,
+ Antoine Tenart <atenart@kernel.org>, devicetree@vger.kernel.org,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ Romain Gantois <romain.gantois@bootlin.com>
+References: <20250207223634.600218-1-maxime.chevallier@bootlin.com>
+From: Sean Anderson <seanga2@gmail.com>
+In-Reply-To: <20250207223634.600218-1-maxime.chevallier@bootlin.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Am 06.02.2025 um 17:06 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.6.76 release.
-> There are 389 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Hi Maxime,
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+On 2/7/25 17:36, Maxime Chevallier wrote:
+> Hello everyone,
+> 
+> This series follows the 2 RFC that were sent a few weeks ago :
+> RFC V2: https://lore.kernel.org/netdev/20250122174252.82730-1-maxime.chevallier@bootlin.com/
+> RFC V1: https://lore.kernel.org/netdev/20241220201506.2791940-1-maxime.chevallier@bootlin.com/
+> 
+> The goal of this series is to introduce an internal way of representing
+> the "outputs" of ethernet devices, for now only focusing on PHYs.
+> 
+> This allows laying the groundwork for multi-port devices support (both 1
+> PHY 2 ports, or more exotic setups with 2 PHYs in parallel, or MII
+> multiplexers).
+> 
+> Compared to the RFCs, this series tries to properly support SFP,
+> especially PHY-driven SFPs through special phy_ports named "serdes"
+> ports. They have the particularity of outputing a generic interface,
+> that feeds into another component (usually, an SFP cage and therefore an
+> SFP module).
+> 
+> This allows getting a fairly generic PHY-driven SFP support (MAC-driven
+> SFP is handled by phylink).
+> 
+> This series doesn't address PHY-less interfaces (bare MAC devices, MACs
+> with embedded PHYs not driven by phylink, or MAC connected to optical
+> SFPs) to stay within the 15 patches limit, nor does it include the uAPI
+> part that exposes these ports to userspace.
+> 
+> I've kept the cover short, much more details can be found in the RFC
+> covers.
+> 
+> Thanks everyone,
+> 
+> Maxime
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+Forgive me for my ignorance, but why have a new ethtool interface instead of
+extending ethtool_link_settings.port? It's a rather ancient interface, but it
+seems to be tackling the exact same problem as you are trying to address. Older
+NICs used to have several physical connectors (e.g. BNC, MII, twisted-pair) but
+only one could be used at once. This seems directly analogous to a PHY that
+supports multiple "port"s but not all at once. In fact, the only missing
+connector type seems to be PORT_BACKPLANE.
 
+I can think of a few reasons why you wouldn't use PORT_*:
 
-Beste Grüße,
-Peter Schneider
+- It describes the NIC and not the PHY, and perhaps there is too much impedance
+   mismatch?
+- There is too much legacy in userspace (or in the kernel) to use that API in
+   this way?
+- You need more flexibility?
 
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+At the very least, I think some discussion in one of the commits would be
+warranted. Perhaps there was some on the RFC that I missed?
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+--Sean
