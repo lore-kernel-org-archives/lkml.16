@@ -1,149 +1,148 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4501DA5F
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 03:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518A61119A
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 03:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738985078; cv=none; b=oLgkiwcsGlb85JEa8odmC52jIi2rIk+t3qV93NIUMfvj2Ok9gUNSai2l5X14+zQn2Vs14ynqT3lBbU14z3Y3MV9uw8umXADAUtuKg1GEUk46tP15fy8u6Iuon9XX3T5aGl4nMh26iVZ96bf0lx0GGeBclsrvJauYCHJETseamr4=
+	t=1738985494; cv=none; b=D/Y513qf1Sab+J7LHD3JSOlXcoJUT+pjW5K17Uc3Grc8HZyuiPhSsR1xROhPlkMeVwQDlYvorc2Ub6QIrowNQc8I6aPMsIF/wXennOoN8kol6+TTWlqJRzxU2b/Bts73VUcAvEZ65b5YdGuvFQdB93NGHS+mwAXDEDLjtQxfjko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738985078; c=relaxed/simple;
-	bh=thhMImcNjkBOZVN3411pEW3GYeb5l0VTXUUDiUnUpWQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G15Z1n1ABIPrX6EjnztWxHBaqrs5rpSu7Ja/4AagKiU3rGpd9isgdtWizga3HdODK+5yHWd3Xb1psDKMuaDIcznl4PANErbvZ12M9HNaKQ2/pdpEI+iiop17uwbUrt+BAME8BX7cloJK7Bp/jay03769Z9duzPdjHEp/jZxQC3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cQuxsSbU; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1738985494; c=relaxed/simple;
+	bh=+sardm/LolQw6ziPvWfFf1wd1dVDkIErwNJaVuBhKCI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=FPBb3jHieIv12nXuQ9uJIrQm9MVppJPTb4x8t7/+570i43LXMvxJEu07YHvRto41KUmTeL2EOkdg2PPssFfTccY2BY9BE6SUJZ+3fjCfU9WKaHAmT//9kuRMZg0Nv1tTHutp/uzh9NxIgZyOro9Qm4hapg63wA7bB315KxGNwfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--badhri.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LJFz7KrD; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--badhri.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cQuxsSbU"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30615661f98so28842421fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 19:24:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LJFz7KrD"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fa166cf656so4364327a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 19:31:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738985075; x=1739589875; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tc6hvH16HL02+LBdNm0oBeAynWr7uQ4sq+3344BeoFU=;
-        b=cQuxsSbUWSrGstyhWVkvDQ3KY2mQklY0+3v6MsbxbmMj8o9MBgViEIO6/YSIjaASnb
-         HF1xmFtWamH2BPMk9Nmt0dnbioq9M3sSTB8Ec8sAFA0+F9WGX2DopJXG1wH2RXD2TSk+
-         /u4SnctOF4HMvefgQ42H3NUaVaCNM2Q3L93KO1dRF/xfUMDUh6U/91JI56YELPSlp4ny
-         7vnH7BBomWjGDAkSAA7a7ymqZGM339E5KQeBR6y6LZuKs2gR2R6nJpJ7Llsa16aZmAWn
-         FehRxru9O2DOX9wXMcTYuNPLx/Qwg51nNU/Xx1Ty3exVNTG23Qstl4mLc3oqYxe1mWR2
-         2Avg==
+        d=google.com; s=20230601; t=1738985492; x=1739590292; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=p0gZ2q9HM3rX07kpmvYyR39VyXsdRnL4CUz3gU+Woqc=;
+        b=LJFz7KrDHsIKgE1KF5CTCVOYMs+coq4m0/ipl0e6pW7LQ5n6CX5+40/KgcCubxkXm3
+         o94Q9oPCMQYLHH3a9NPJ1hTK6ZxI1wQIyavXF3Fv8LQxJGlwLwaBV9p7bgxfYS9kTeI9
+         s14fgdWz8kX9U6R7cYZenisjEB/wRDRODQ5CCgeJUPGxpCqtuPirEo4n51djQcK8UEtb
+         IFiT4Zk3vbUW39kEGzWFR9pov6wBVCNcqMqesMC1VRNo2VQV6ixvvUpOH0929BVuFMR6
+         52os5NztoupKNjWx3tpVkD1xezoWWz3zou9zgCdxl4cT1AhCPHvJgmBnlamDUrpNwR8S
+         kvMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738985075; x=1739589875;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tc6hvH16HL02+LBdNm0oBeAynWr7uQ4sq+3344BeoFU=;
-        b=U21stQG0IO/ZQTVzSRxunQu4EI/5gu/AgbL5hNIJYaPbBYOLrXuqVPdpG71jTjvS8j
-         k8Axrl/dl9jTTuDRn6quwUy/tgnsgAtjcEjyh8YVNti2UA1CdUaBpT2RXUldA3rcJXjf
-         074D/nTFwpqWvk0IYaEXBLl0xgXUsz8oMm6+8mx/+1uJ4s65JNBVyoZZDpYScDNcGmo8
-         GWs6QJr8pV7o29z5oN6hx53m9MgW2ocx6c2DA8eE6AjS9z01ai6BkkWYALQ9hA4PdMuu
-         NnpinDt6NeA1Fg4pLbQSr5vEI15PKqwwGDdclyJ5BlRsmbZkAJUvFvudCVXttl1V4Y3R
-         S3cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKgHlZa1uZItL8BK7dvprr5LSV3Ye7s78ytCeZ3oHn/E7LwmkkpUTSLG0wKbbjX6xc/Qj6VRoBD60Sqf4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYmL1/Xp4uvrhOF4yTaManVbqb0jsnLaruRjxDDo++z3/qP5Oj
-	psMAoHzttoxJq+4iE7fvmYjitKiRqeuq49SF00BHxbApu8GnJF1jNGpQh7DIMh8=
-X-Gm-Gg: ASbGncv7Taf850YEvu5jQRBYe+Apvy/xR7CfgsssYGlQ2QQreXnbyP0t5dqiu+p/mBJ
-	QonZnFYGMxACSqNBp0pfCbkS2MJaWH0pcaGE2/n2w/xtgKt2hauEPHW/X4jF3L0pdfxTtVOmxTT
-	jePF2tCl85jTtsseSw2aZnb8EXHAM+tRz/pg2P8CG6wT2Am/ZNYwpEkggcGw7HgpB4gk3Z4OFxv
-	8sxP2G79Ek/rcTJfLvjdcj+oBxkny6YF/NG6otl8QoZUFslwCZTZ4v6sPOiuV/fJ/g06CGcJxU7
-	GBybbIgFPFFDB6bZiCr8yjo5fT5YwHNBV7suZK/yb7egUHBAC44AsbGIZKlzkpuOPZnoiug=
-X-Google-Smtp-Source: AGHT+IFydtUFynrK2gRpKzEKvd+/uEV8NSFd5so2WMhom1ky7+A67a+p0tJRz+0pk2ZePPqPbJ3Tsw==
-X-Received: by 2002:a2e:a550:0:b0:306:1524:4a65 with SMTP id 38308e7fff4ca-307e57fed91mr19942481fa.20.1738985074455;
-        Fri, 07 Feb 2025 19:24:34 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de1a67c9sm6260441fa.48.2025.02.07.19.24.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 19:24:33 -0800 (PST)
-Date: Sat, 8 Feb 2025 05:24:29 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, Simona Vetter <simona@ffwll.ch>, 
-	Simona Vetter <simona.vetter@ffwll.ch>, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 6/7] drm/msm/hdmi: also send the SPD and HDMI Vendor
- Specific InfoFrames
-Message-ID: <ry2jfdxhbogl42wbiajll5et5n2puvu46fn25v25qwpac7bbyu@wvhz3ijtfd56>
-References: <20250208-bridge-hdmi-connector-v7-0-0c3837f00258@linaro.org>
- <20250208-bridge-hdmi-connector-v7-6-0c3837f00258@linaro.org>
- <9c35f577-2124-4f80-a5d3-542b47ed6825@quicinc.com>
- <7hpfx2whiyt5pjfcqnzmx5wllezlyttugmvqg2pg3be546m75p@5jfyw4z5wxsw>
- <af3fa1fd-122b-44e9-8e3b-48918bad7bab@quicinc.com>
+        d=1e100.net; s=20230601; t=1738985492; x=1739590292;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=p0gZ2q9HM3rX07kpmvYyR39VyXsdRnL4CUz3gU+Woqc=;
+        b=vII4z8swsvESIKRYcdiOJTUUVB6o44QdVigaxbMXmfflO4RdnPF5Ml+LI5n+fzhlyD
+         Y9lWa7lAE598d9CINK9Y4gPvexDj/vzs6rpXHFkbapGAE05450QLElAozVCmm0Yokveg
+         A/re375mukQd0hIPj8Zc53Ez9D/6T5rUpptOnivNThGtiXWQBLptb3s9wBfziBqC/GCy
+         nNyGaQLFIz8PKV9e+0N8WF5Y1O7DaUZhVyUa3uNggWYPTd96/spVT0YkvZY87dHS/0cL
+         MJZBBmuCNbjDNhaaD5qlEkHDTMyD3BsS08ubqKmzByLgpUomCD48+8cdYfGlsY6ZsyBW
+         tRSw==
+X-Forwarded-Encrypted: i=1; AJvYcCXtJehmerAg6Z3BzPf8Ts+vs7+BKM7ZnQ3cIJMlpU/Fh6JGqjj0R+b0U9TRG29tC/aLeUDT+Lxx8u9kGl8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcDnJvdlBTVPZMdK5rHcs22WjScbjgHg8jlUrIRXt7RAAhb0iF
+	37DH9PCtYIOV/DLk1qf0zM41ULoZeKO8tcw2T7GXoudp6yem97bH58reQIb7GyM8wopoAwbzvOu
+	jvA==
+X-Google-Smtp-Source: AGHT+IHF6JQH1xgZnqdPNtMVklKecXq5Aajik4oseZpvmg90/Ega/bv/OBxCXP5JoMVF9e7hXVZw8+bCgNQ=
+X-Received: from pjbsp15.prod.google.com ([2002:a17:90b:52cf:b0:2ee:53fe:d0fc])
+ (user=badhri job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2d8c:b0:2f9:9ddd:689b
+ with SMTP id 98e67ed59e1d1-2fa242e75eamr7097462a91.22.1738985492599; Fri, 07
+ Feb 2025 19:31:32 -0800 (PST)
+Date: Sat,  8 Feb 2025 03:31:29 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af3fa1fd-122b-44e9-8e3b-48918bad7bab@quicinc.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <20250208033129.3524423-1-badhri@google.com>
+Subject: [PATCH v2] usb: dwc3: gadget: Prevent irq storm when TH re-executes
+From: Badhri Jagan Sridharan <badhri@google.com>
+To: Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, 
+	felipe.balbi@linux.intel.com
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jameswei@google.com, Badhri Jagan Sridharan <badhri@google.com>, stable@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Feb 07, 2025 at 07:05:14PM -0800, Abhinav Kumar wrote:
-> 
-> 
-> On 2/7/2025 6:04 PM, Dmitry Baryshkov wrote:
-> > On Fri, Feb 07, 2025 at 05:31:20PM -0800, Abhinav Kumar wrote:
-> > > 
-> > > 
-> > > On 2/7/2025 4:27 PM, Dmitry Baryshkov wrote:
-> > > > Extend the driver to send SPD and HDMI Vendor Specific InfoFrames.
-> > > > 
-> > > > While the HDMI block has special block to send HVS InfoFrame, use
-> > > > GENERIC0 block instead. VENSPEC_INFO registers pack frame data in a way
-> > > > that requires manual repacking in the driver, while GENERIC0 doesn't
-> > > > have such format requirements. The msm-4.4 kernel uses GENERIC0 to send
-> > > > HDR InfoFrame which we do not at this point anyway.
-> > > > 
-> > > 
-> > > True that GENERIC_0/1 packets can be used for any infoframe. But because we
-> > > have so many of them, thats why when there are dedicated registers for some
-> > > of them, we use them to save the GENERIC0 ones for others.
-> > 
-> > True
-> > 
-> > > Lets take a case where we want to send HVSIF, SPD and HDR together for the
-> > > same frame, then we run out as there are no HDR specific infoframe registers
-> > > we can use. Is the expectation that we will migrate to VENSPEC_INFO regs for
-> > > HVSIF when we add HDR support?
-> > 
-> > Most likely, yes. That would be a part of the HDR support. At the same
-> > time note, we can use GENERIC0 to send new HFVS InfoFrames defined in
-> > HDMI 2.x (once Linux gets support for that). At the same time we can not
-> > use VENSPEC_INFO to send those.
-> > 
-> > I can imagine that the driver will have to switch GENERIC1 between HDR
-> > (if required) and SPD (in all other cases).
-> > 
-> 
-> We dont have to use GENERIC0 for HFVS infoframes. We have dedicated
-> HFVS_INFO registers for those.
+While commit d325a1de49d6 ("usb: dwc3: gadget: Prevent losing events in
+event cache") makes sure that top half(TH) does not end up overwriting the
+cached events before processing them when the TH gets invoked more than one
+time, returning IRQ_HANDLED results in occasional irq storm where the TH
+hogs the CPU. The irq storm can be prevented by clearing the flag before
+event handler busy is cleared. Default enable interrupt moderation in all
+versions which support them.
 
-Ack, I have been checking the old (apq8064) chipset.
+ftrace event stub during dwc3 irq storm:
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000866: irq_handler_exit: irq=14 ret=handled
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000872: irq_handler_entry: irq=504 name=dwc3
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000874: irq_handler_exit: irq=504 ret=handled
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000881: irq_handler_entry: irq=504 name=dwc3
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000883: irq_handler_exit: irq=504 ret=handled
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000889: irq_handler_entry: irq=504 name=dwc3
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000892: irq_handler_exit: irq=504 ret=handled
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000898: irq_handler_entry: irq=504 name=dwc3
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000901: irq_handler_exit: irq=504 ret=handled
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000907: irq_handler_entry: irq=504 name=dwc3
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000909: irq_handler_exit: irq=504 ret=handled
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000915: irq_handler_entry: irq=504 name=dwc3
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000918: irq_handler_exit: irq=504 ret=handled
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000924: irq_handler_entry: irq=504 name=dwc3
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000927: irq_handler_exit: irq=504 ret=handled
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000933: irq_handler_entry: irq=504 name=dwc3
+    irq/504_dwc3-1111  ( 1111) [000] .... 70.000935: irq_handler_exit: irq=504 ret=handled
+    ....
 
-> 
-> > > 
-> > > Also from a validation standpoint, I guess to really validate this change
-> > > you need an analyzer which decodes the HVSIF. So was this mostly sanity
-> > > tested at this pointed to make sure that the sink just comes up?
-> > 
-> > Vertex 2 dumps received HVS InfoFrame, so the InfoFrame contents has
-> > been validated (validated SPD, AUD, HVS and AVI frames).
-> > 
-> 
-> Yup, vertex2 validation is perfect for this!
-> 
-> Overall, I am fine with this,
-> 
-> Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: stable@kernel.org
+Suggested-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Fixes: d325a1de49d6 ("usb: dwc3: gadget: Prevent losing events in event cache")
+Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+---
+ drivers/usb/dwc3/core.c   |  2 +-
+ drivers/usb/dwc3/gadget.c | 10 +++++++---
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index dfa1b5fe48dc..6df971ef7285 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1835,7 +1835,7 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+ 	dwc->tx_thr_num_pkt_prd = tx_thr_num_pkt_prd;
+ 	dwc->tx_max_burst_prd = tx_max_burst_prd;
+ 
+-	dwc->imod_interval = 0;
++	dwc->imod_interval = 1;
+ 
+ 	dwc->tx_fifo_resize_max_num = tx_fifo_resize_max_num;
+ }
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index d27af65eb08a..fad115113d28 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -4467,14 +4467,18 @@ static irqreturn_t dwc3_process_event_buf(struct dwc3_event_buffer *evt)
+ 	dwc3_writel(dwc->regs, DWC3_GEVNTSIZ(0),
+ 		    DWC3_GEVNTSIZ_SIZE(evt->length));
+ 
++	evt->flags &= ~DWC3_EVENT_PENDING;
++	/*
++	 * Add an explicit write memory barrier to make sure that the update of
++	 * clearing DWC3_EVENT_PENDING is observed in dwc3_check_event_buf()
++	 */
++	wmb();
++
+ 	if (dwc->imod_interval) {
+ 		dwc3_writel(dwc->regs, DWC3_GEVNTCOUNT(0), DWC3_GEVNTCOUNT_EHB);
+ 		dwc3_writel(dwc->regs, DWC3_DEV_IMOD(0), dwc->imod_interval);
+ 	}
+ 
+-	/* Keep the clearing of DWC3_EVENT_PENDING at the end */
+-	evt->flags &= ~DWC3_EVENT_PENDING;
+-
+ 	return ret;
+ }
+ 
+
+base-commit: 9682c35ff6ecd76d9462d4749b8b413d3e8e605e
 -- 
-With best wishes
-Dmitry
+2.48.1.502.g6dc24dfdaf-goog
+
