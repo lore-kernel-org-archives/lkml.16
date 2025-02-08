@@ -1,370 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBC8A41
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 02:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEBB256D;
+	Sat,  8 Feb 2025 02:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738982033; cv=none; b=SStta9FUieaQNEGiwImgwyYXYIzIeq/vAIQaVTlI3fCbJWsde45NcDdLwad+rlzl7WX7hMSwJ14dNv4OmDKrnwS8+U2yjkRMDr9TmIPrQ+9CXt6gvxu3S9GJidM1r9PYifxwach+ajCSuCa4781yeCRca/PiGeWOtBqw4KfI7Ro=
+	t=1738982053; cv=none; b=FhEK2aIzfKNpVktaYQS79Zu8FrWjCjm8mMUkBRnPMp2+HSeipkEeK/mw2uR021Mjqan27cbsQNQg735+w9mbhu1O61O0acYVG3ZfyPUiyZ9whft0p6phG4lAviHDFIg/lPGPwywfjZeV6yKEVWKScSAERmr/XcnFtn5thbE9VkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738982033; c=relaxed/simple;
-	bh=ZUvBqpJF9KmOEeD31WrhpF+5Q/MBZlgRg9bUED/47fM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FboFf5/ZD41Keg8LQfmt/RG9SXG45cJOS2YqpHm+VirffEpaR64JTyCR7DQMdEmIKZhxvMIuf0/h8nDsfk3Y763jSBedIJs3OvPKTcaL4uFE1HYyOqKyLKi5RVfGP9Wpu8VXPq/JJbfxIrUR3oIsPC5FS33PrsXATpMou8U30CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uMFoMM3n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738982053; c=relaxed/simple;
+	bh=qOKbebqeuHt6n1mII4i0W7EGKZGE7zmeY9ANZz+TJJ0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Dal6fwuawcPTwFnBsl1uZ4D9wpsS1VxICT7/kuegBcMuPTqe2JT68+/pIdnkv+CfEu6S7n4yDeP6cNci3uNnZlfR6kfyTDecScdObmwGMXbHEbYGevuDTo1wzPnjCs4BOK8fH4A8zd9H0VZuwPCal1NlsWqYNZOF8A21PliF4UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=REqeOSVt; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uMFoMM3n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 981A7C4CED1;
-	Sat,  8 Feb 2025 02:33:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738982032;
-	bh=ZUvBqpJF9KmOEeD31WrhpF+5Q/MBZlgRg9bUED/47fM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=uMFoMM3nBniA7lAxhXVq/bxRAFHqYxPS504JHiiHqfMbOmE0w08z+CMsc/Z+FO9YH
-	 4jnYAmWhLv0+8zdFg1PVM2fkSp5N2Gtiivm5MThoX6wTOXVbdrWGQlwU+mEusbGi7G
-	 JZB+ns7WVSxo4ktcXCx/Oaf+aEjZ/X2RHryrTfBZWRi1KsqkhnI8ZTOHi9qOZXOQ9w
-	 L6BouwStXSYR2OCxvh6DjUB8Tj9Psayi/f/PKk0JMzBKcl4KRzB23EM9bTMUM8GdtN
-	 fqmSG/PWgPt/A+dcB7iQWD9c3IU4ZsT8m+10tzJPVzMkwPYft1cLDvoUc3f7nP1y7i
-	 ALYg1OGRnttkQ==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH v3] f2fs: quota: fix to avoid warning in dquot_writeback_dquots()
-Date: Sat,  8 Feb 2025 10:33:21 +0800
-Message-ID: <20250208023321.3736348-1-chao@kernel.org>
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REqeOSVt"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-545054d78edso142281e87.1;
+        Fri, 07 Feb 2025 18:34:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738982050; x=1739586850; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nZaYFCzff4k2SD5IfCIdhLDV0dnYZaKQU4mSsfsSgdg=;
+        b=REqeOSVtiBCPljJijsbvLNVx0BPrpXyMgxrwMBWDRimMsdmFHLxDJOw5FwpziE8Up9
+         tcdA1OABKzIHXvtj1UYc4lvV/R7ItQfQinVmw6AZ2CqvLkpjC3sFQQ0ET8XXwE5MD2Ir
+         /VJEs+jWHsmx86jK72R6oK4dqMkpL8mBB5cUgwQzWD8H5FiPr6bgcf9PrwYkwaAzDlRo
+         zmSXSS7r9/piWEOjkOUtBDoKI9LipGpsa8Mw8Ldk6VrfwahGtN18BkILy03wjUmFCwhy
+         3G4muhairjuilTaGVtGsVRlxepRjMY5OiMkAV6CYCkrg3mgWGSPcmr7teLOnP2XejZgS
+         TGyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738982050; x=1739586850;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nZaYFCzff4k2SD5IfCIdhLDV0dnYZaKQU4mSsfsSgdg=;
+        b=bzbJuPiY3BxO4EDCp/BGFIlNWrDS+ZAGuHmKSrCGR6EEnyPjBndjl8E5Fe8oiwPy+9
+         x1rGqiFOubUI4ZDYE5n6pnuyO2b21TNQkNZCevUTDrXmFBLUsBpUCxqkhop48X0B/J5H
+         tydJ0pP69mAMLt62O30/Z0Rl01yklL0YPk9On6sswaOEs3xvb57tX0mr4nHYQppbg/Kw
+         7DD38azl4VoekeDyhC42Lylx8B2sBZ/F5hR7ApySolaeEKr+fanEhxbt6af3R57Px9/3
+         sOD7Z6ZkUCJ6pZrYn+8PyMbJT7IMamHRZIW8KPeuc4fwwKlyPl8leRbvKs4t/f5ackPa
+         eN9A==
+X-Forwarded-Encrypted: i=1; AJvYcCXB+C0r0ZQhPniDbAbK8cND3+0kCSyUb26svksxnpRQHiEQp919YuNKFSBlys7tYx/LvktsisxZHe1Ni7M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiYnlMCYwoMNMYFOKE7QNGzy+JR9SMbPoY79H7T+rL54bohsbc
+	oB+zlwdx7d8HwuLwJ4oeeMKjxsASDCTjYlYLstDs+OrJ0v9KcPALrJ0cDAsrsvZCIwHpA5oWvjV
+	OKVJRqEWj7KOTjBy+EbA+2rNq2YGeJ9/r
+X-Gm-Gg: ASbGncuwtnG3iw7QBoE1l1Vawx+Ov/IUPM0GPEslTp+am/HGjFFOsTxQoT5V1Ue1Fxx
+	SoeHCOUToCxMZmdgLnD1pf7m71rMd+IDgWsi3x0aqaZeA4oNMD8B+8Ivb21VlcFgD3ri08nZZ9g
+	uscS+PRK4BJkxsWzz0XlYFov/wlw65TW0=
+X-Google-Smtp-Source: AGHT+IHW8j47nmEFiep+HgERFjJG/gtUINHiQX5PAdjaIhY1IbOuBhnuKb5SVO3B/0z9gdIDlBuyoaPAQWu81Jr+eGM=
+X-Received: by 2002:a05:6512:4006:b0:53e:39e6:a1c1 with SMTP id
+ 2adb3069b0e04-54414ae5f15mr1827578e87.43.1738982049984; Fri, 07 Feb 2025
+ 18:34:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Steve French <smfrench@gmail.com>
+Date: Fri, 7 Feb 2025 20:33:58 -0600
+X-Gm-Features: AWEUYZnQmzc2cx-7HcScyM-PBSLDZBXxMLz0X6rdHPeXxaTaOYHfVyrRZMkq94c
+Message-ID: <CAH2r5muMvrt2ZT1OAF=mWxNssTg-fHcO-Zqc6r3OeZ1nrhMTgQ@mail.gmail.com>
+Subject: [GIT PULL] smb3 client fixes
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: CIFS <linux-cifs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-F2FS-fs (dm-59): checkpoint=enable has some unwritten data.
+Please pull the following changes since commit
+2014c95afecee3e76ca4a56956a936e23283f05b:
 
-------------[ cut here ]------------
-WARNING: CPU: 6 PID: 8013 at fs/quota/dquot.c:691 dquot_writeback_dquots+0x2fc/0x308
-pc : dquot_writeback_dquots+0x2fc/0x308
-lr : f2fs_quota_sync+0xcc/0x1c4
-Call trace:
-dquot_writeback_dquots+0x2fc/0x308
-f2fs_quota_sync+0xcc/0x1c4
-f2fs_write_checkpoint+0x3d4/0x9b0
-f2fs_issue_checkpoint+0x1bc/0x2c0
-f2fs_sync_fs+0x54/0x150
-f2fs_do_sync_file+0x2f8/0x814
-__f2fs_ioctl+0x1960/0x3244
-f2fs_ioctl+0x54/0xe0
-__arm64_sys_ioctl+0xa8/0xe4
-invoke_syscall+0x58/0x114
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
 
-checkpoint and f2fs_remount may race as below, resulting triggering warning
-in dquot_writeback_dquots().
+are available in the Git repository at:
 
-atomic write                                    remount
-                                                - do_remount
-                                                 - down_write(&sb->s_umount);
-                                                  - f2fs_remount
-- ioctl
- - f2fs_do_sync_file
-  - f2fs_sync_fs
-   - f2fs_write_checkpoint
-    - block_operations
-     - locked = down_read_trylock(&sbi->sb->s_umount)
-       : fail to lock due to the write lock was held by remount
-                                                 - up_write(&sb->s_umount);
-     - f2fs_quota_sync
-      - dquot_writeback_dquots
-       - WARN_ON_ONCE(!rwsem_is_locked(&sb->s_umount))
-       : trigger warning because s_umount lock was unlocked by remount
+  git://git.samba.org/sfrench/cifs-2.6.git tags/v6.14rc1-smb3-client-fixes
 
-If checkpoint comes from mount/umount/remount/freeze/quotactl, caller of
-checkpoint has already held s_umount lock, calling dquot_writeback_dquots()
-in the context should be safe.
+for you to fetch changes up to 57e4a9bd61c308f607bc3e55e8fa02257b06b552:
 
-So let's record task to sbi->umount_lock_holder, so that checkpoint can
-know whether the lock has held in the context or not by checking current
-w/ it.
+  smb: client: change lease epoch type from unsigned int to __u16
+(2025-02-06 10:01:22 -0600)
 
-In addition, in order to not misrepresent caller of checkpoint, we should
-not allow to trigger async checkpoint for those callers: mount/umount/remount/
-freeze/quotactl.
+----------------------------------------------------------------
+Four SMB3 client fixes
+- Three DFS fixes: DFS mount fix, fix for noisy log msg and one to
+remove some unused code
+- SMB3 Lease fix
+----------------------------------------------------------------
+Meetakshi Setiya (1):
+      smb: client: change lease epoch type from unsigned int to __u16
 
-Fixes: af033b2aa8a8 ("f2fs: guarantee journalled quota data by checkpoint")
-Signed-off-by: Chao Yu <chao@kernel.org>
----
-v3:
-- fix wrong name of exported function.
- fs/f2fs/checkpoint.c | 15 ++++++----
- fs/f2fs/f2fs.h       |  3 +-
- fs/f2fs/super.c      | 65 ++++++++++++++++++++++++++++++++++----------
- 3 files changed, 61 insertions(+), 22 deletions(-)
+Paulo Alcantara (3):
+      smb: client: don't trust DFSREF_STORAGE_SERVER bit
+      smb: client: fix noisy when tree connecting to DFS interlink targets
+      smb: client: get rid of kstrdup() in get_ses_refpath()
 
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index efda9a022981..bd890738b94d 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -1237,7 +1237,7 @@ static int block_operations(struct f2fs_sb_info *sbi)
- retry_flush_quotas:
- 	f2fs_lock_all(sbi);
- 	if (__need_flush_quota(sbi)) {
--		int locked;
-+		bool need_lock = sbi->umount_lock_holder != current;
- 
- 		if (++cnt > DEFAULT_RETRY_QUOTA_FLUSH_COUNT) {
- 			set_sbi_flag(sbi, SBI_QUOTA_SKIP_FLUSH);
-@@ -1246,11 +1246,13 @@ static int block_operations(struct f2fs_sb_info *sbi)
- 		}
- 		f2fs_unlock_all(sbi);
- 
--		/* only failed during mount/umount/freeze/quotactl */
--		locked = down_read_trylock(&sbi->sb->s_umount);
--		f2fs_quota_sync(sbi->sb, -1);
--		if (locked)
-+		/* don't grab s_umount lock during mount/umount/remount/freeze/quotactl */
-+		if (!need_lock) {
-+			f2fs_do_quota_sync(sbi->sb, -1);
-+		} else if (down_read_trylock(&sbi->sb->s_umount)) {
-+			f2fs_do_quota_sync(sbi->sb, -1);
- 			up_read(&sbi->sb->s_umount);
-+		}
- 		cond_resched();
- 		goto retry_flush_quotas;
- 	}
-@@ -1867,7 +1869,8 @@ int f2fs_issue_checkpoint(struct f2fs_sb_info *sbi)
- 	struct cp_control cpc;
- 
- 	cpc.reason = __get_cp_reason(sbi);
--	if (!test_opt(sbi, MERGE_CHECKPOINT) || cpc.reason != CP_SYNC) {
-+	if (!test_opt(sbi, MERGE_CHECKPOINT) || cpc.reason != CP_SYNC ||
-+		sbi->umount_lock_holder == current) {
- 		int ret;
- 
- 		f2fs_down_write(&sbi->gc_lock);
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 59470ac485f2..05879c6dc4d6 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1669,6 +1669,7 @@ struct f2fs_sb_info {
- 
- 	unsigned int nquota_files;		/* # of quota sysfile */
- 	struct f2fs_rwsem quota_sem;		/* blocking cp for flags */
-+	struct task_struct *umount_lock_holder;	/* s_umount lock holder */
- 
- 	/* # of pages, see count_type */
- 	atomic_t nr_pages[NR_COUNT_TYPE];
-@@ -3634,7 +3635,7 @@ int f2fs_inode_dirtied(struct inode *inode, bool sync);
- void f2fs_inode_synced(struct inode *inode);
- int f2fs_dquot_initialize(struct inode *inode);
- int f2fs_enable_quota_files(struct f2fs_sb_info *sbi, bool rdonly);
--int f2fs_quota_sync(struct super_block *sb, int type);
-+int f2fs_do_quota_sync(struct super_block *sb, int type);
- loff_t max_file_blocks(struct inode *inode);
- void f2fs_quota_off_umount(struct super_block *sb);
- void f2fs_save_errors(struct f2fs_sb_info *sbi, unsigned char flag);
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 24ded06c8980..ab8e57a9097e 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1738,22 +1738,28 @@ int f2fs_sync_fs(struct super_block *sb, int sync)
- 
- static int f2fs_freeze(struct super_block *sb)
- {
-+	struct f2fs_sb_info *sbi = F2FS_SB(sb);
-+
- 	if (f2fs_readonly(sb))
- 		return 0;
- 
- 	/* IO error happened before */
--	if (unlikely(f2fs_cp_error(F2FS_SB(sb))))
-+	if (unlikely(f2fs_cp_error(sbi)))
- 		return -EIO;
- 
- 	/* must be clean, since sync_filesystem() was already called */
--	if (is_sbi_flag_set(F2FS_SB(sb), SBI_IS_DIRTY))
-+	if (is_sbi_flag_set(sbi, SBI_IS_DIRTY))
- 		return -EINVAL;
- 
-+	sbi->umount_lock_holder = current;
-+
- 	/* Let's flush checkpoints and stop the thread. */
--	f2fs_flush_ckpt_thread(F2FS_SB(sb));
-+	f2fs_flush_ckpt_thread(sbi);
-+
-+	sbi->umount_lock_holder = NULL;
- 
- 	/* to avoid deadlock on f2fs_evict_inode->SB_FREEZE_FS */
--	set_sbi_flag(F2FS_SB(sb), SBI_IS_FREEZING);
-+	set_sbi_flag(sbi, SBI_IS_FREEZING);
- 	return 0;
- }
- 
-@@ -2330,6 +2336,8 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
- 	org_mount_opt = sbi->mount_opt;
- 	old_sb_flags = sb->s_flags;
- 
-+	sbi->umount_lock_holder = current;
-+
- #ifdef CONFIG_QUOTA
- 	org_mount_opt.s_jquota_fmt = F2FS_OPTION(sbi).s_jquota_fmt;
- 	for (i = 0; i < MAXQUOTAS; i++) {
-@@ -2553,6 +2561,8 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
- 
- 	limit_reserve_root(sbi);
- 	*flags = (*flags & ~SB_LAZYTIME) | (sb->s_flags & SB_LAZYTIME);
-+
-+	sbi->umount_lock_holder = NULL;
- 	return 0;
- restore_checkpoint:
- 	if (need_enable_checkpoint) {
-@@ -2593,6 +2603,8 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
- #endif
- 	sbi->mount_opt = org_mount_opt;
- 	sb->s_flags = old_sb_flags;
-+
-+	sbi->umount_lock_holder = NULL;
- 	return err;
- }
- 
-@@ -2909,7 +2921,7 @@ static int f2fs_quota_sync_file(struct f2fs_sb_info *sbi, int type)
- 	return ret;
- }
- 
--int f2fs_quota_sync(struct super_block *sb, int type)
-+int f2fs_do_quota_sync(struct super_block *sb, int type)
- {
- 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
- 	struct quota_info *dqopt = sb_dqopt(sb);
-@@ -2957,11 +2969,21 @@ int f2fs_quota_sync(struct super_block *sb, int type)
- 	return ret;
- }
- 
-+static int f2fs_quota_sync(struct super_block *sb, int type)
-+{
-+	int ret;
-+
-+	F2FS_SB(sb)->umount_lock_holder = current;
-+	ret = f2fs_do_quota_sync(sb, type);
-+	F2FS_SB(sb)->umount_lock_holder = NULL;
-+	return ret;
-+}
-+
- static int f2fs_quota_on(struct super_block *sb, int type, int format_id,
- 							const struct path *path)
- {
- 	struct inode *inode;
--	int err;
-+	int err = 0;
- 
- 	/* if quota sysfile exists, deny enabling quota with specific file */
- 	if (f2fs_sb_has_quota_ino(F2FS_SB(sb))) {
-@@ -2972,31 +2994,34 @@ static int f2fs_quota_on(struct super_block *sb, int type, int format_id,
- 	if (path->dentry->d_sb != sb)
- 		return -EXDEV;
- 
--	err = f2fs_quota_sync(sb, type);
-+	F2FS_SB(sb)->umount_lock_holder = current;
-+
-+	err = f2fs_do_quota_sync(sb, type);
- 	if (err)
--		return err;
-+		goto out;
- 
- 	inode = d_inode(path->dentry);
- 
- 	err = filemap_fdatawrite(inode->i_mapping);
- 	if (err)
--		return err;
-+		goto out;
- 
- 	err = filemap_fdatawait(inode->i_mapping);
- 	if (err)
--		return err;
-+		goto out;
- 
- 	err = dquot_quota_on(sb, type, format_id, path);
- 	if (err)
--		return err;
-+		goto out;
- 
- 	inode_lock(inode);
- 	F2FS_I(inode)->i_flags |= F2FS_QUOTA_DEFAULT_FL;
- 	f2fs_set_inode_flags(inode);
- 	inode_unlock(inode);
- 	f2fs_mark_inode_dirty_sync(inode, false);
--
--	return 0;
-+out:
-+	F2FS_SB(sb)->umount_lock_holder = NULL;
-+	return err;
- }
- 
- static int __f2fs_quota_off(struct super_block *sb, int type)
-@@ -3007,7 +3032,7 @@ static int __f2fs_quota_off(struct super_block *sb, int type)
- 	if (!inode || !igrab(inode))
- 		return dquot_quota_off(sb, type);
- 
--	err = f2fs_quota_sync(sb, type);
-+	err = f2fs_do_quota_sync(sb, type);
- 	if (err)
- 		goto out_put;
- 
-@@ -3030,6 +3055,8 @@ static int f2fs_quota_off(struct super_block *sb, int type)
- 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
- 	int err;
- 
-+	F2FS_SB(sb)->umount_lock_holder = current;
-+
- 	err = __f2fs_quota_off(sb, type);
- 
- 	/*
-@@ -3039,6 +3066,9 @@ static int f2fs_quota_off(struct super_block *sb, int type)
- 	 */
- 	if (is_journalled_quota(sbi))
- 		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-+
-+	F2FS_SB(sb)->umount_lock_holder = NULL;
-+
- 	return err;
- }
- 
-@@ -3171,7 +3201,7 @@ int f2fs_dquot_initialize(struct inode *inode)
- 	return 0;
- }
- 
--int f2fs_quota_sync(struct super_block *sb, int type)
-+int f2fs_do_quota_sync(struct super_block *sb, int type)
- {
- 	return 0;
- }
-@@ -4704,6 +4734,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 	if (err)
- 		goto free_compress_inode;
- 
-+	sbi->umount_lock_holder = current;
- #ifdef CONFIG_QUOTA
- 	/* Enable quota usage during mount */
- 	if (f2fs_sb_has_quota_ino(sbi) && !f2fs_readonly(sb)) {
-@@ -4830,6 +4861,8 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
- 	f2fs_update_time(sbi, CP_TIME);
- 	f2fs_update_time(sbi, REQ_TIME);
- 	clear_sbi_flag(sbi, SBI_CP_DISABLED_QUICK);
-+
-+	sbi->umount_lock_holder = NULL;
- 	return 0;
- 
- sync_free_meta:
-@@ -4932,6 +4965,8 @@ static void kill_f2fs_super(struct super_block *sb)
- 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
- 
- 	if (sb->s_root) {
-+		sbi->umount_lock_holder = current;
-+
- 		set_sbi_flag(sbi, SBI_IS_CLOSE);
- 		f2fs_stop_gc_thread(sbi);
- 		f2fs_stop_discard_thread(sbi);
+ fs/smb/client/cifsglob.h  | 14 +++++++-------
+ fs/smb/client/dfs.c       | 30 ++++++++++++++++--------------
+ fs/smb/client/dfs.h       |  7 +++++++
+ fs/smb/client/dfs_cache.c | 27 +++++----------------------
+ fs/smb/client/smb1ops.c   |  2 +-
+ fs/smb/client/smb2ops.c   | 18 +++++++++---------
+ fs/smb/client/smb2pdu.c   |  4 ++--
+ fs/smb/client/smb2proto.h |  2 +-
+ 8 files changed, 48 insertions(+), 56 deletions(-)
+
+
 -- 
-2.48.1.502.g6dc24dfdaf-goog
+Thanks,
 
+Steve
