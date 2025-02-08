@@ -1,43 +1,54 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC503BBE5;
-	Sat,  8 Feb 2025 07:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D3A3BBE5;
+	Sat,  8 Feb 2025 07:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738999274; cv=none; b=Id1eyq+NQISZ+CcSFIE6gDfqpQrHO8bJeLFdQ9sZSwZ67ziQ7qDWRAesr3YBG2DQa5c0vwBOl/iPkZg6YtkMMHwsDMvN1Dz1xLxg1xttHfi27+a5OuagJ+s7oq+cpXzi9BXc7AxlDjTeb/xJjpJn0helnilflAKgHM4bUvPswKo=
+	t=1738999398; cv=none; b=Rv5xVJX8fb3KfwduZh8Tayjpr7Y0lVU7tHfcIr5VspCK+BxNmV+9bU7PySAlW6rMThzLWyxRgM4fLKqq5DXbCAdw3D9fC3/BlHOJaDl/TfNx4bGyZK3xreB1ApyOv5dmJ4aJZhiKXuYnHQY4PK7AH3eKzK69J+5unGa7icPYmno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738999274; c=relaxed/simple;
-	bh=4AvSMCW8hMAkgc98W1wQbc55pDMAQI3b/O8HKsMqzdI=;
+	s=arc-20240116; t=1738999398; c=relaxed/simple;
+	bh=SQVJlEx2V/RSeXfcXkikh7h+w57xN8e7Hv78bAbfxJY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FvjU/xaKiraPknWYn3c1wxtf73AXQI3QNqllS2M8sIgYQeu/wHTuU+dRraRTDtGZLttpZGibsveQ2FT/wFMMDonbNFWVRXWUOVhV/6eNQjzZut45V3McPUiOGcr5Et99kjyBW154Qp6iobkKSCIaoIiJbvXqmfX8ga2WzeenTP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=jsbIehTx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mAsU82JLsGAXeXtM1dbdf6ixpS3mm0t5vzUuNKioJT5CjUVKmfkHodNjqbfnmrP90qeeJZ5Vsr1L5ynBrEBd0kNZ+Oe1fK5n/s8oswBkZFpHw8d8VLaYMdmyZC7HFV9tF6IPHDt+2g5TLHErnsMRRUR8xa3SJ2HtEbdhFdOVTJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Aq7ElquE; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="jsbIehTx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F7FBC4CED6;
-	Sat,  8 Feb 2025 07:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738999273;
-	bh=4AvSMCW8hMAkgc98W1wQbc55pDMAQI3b/O8HKsMqzdI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jsbIehTxPpoWPNvY9pc+J4DAmeLffs+DKvkDtMpLmIq5pXIYI5HwFMkmhm2XA1axU
-	 086Sb2lxMsFheotQvHaB8StsAGP8y491wGqNswmvhkod6CNi1H5z9hCKcaOvAJRP0a
-	 Sdvb2OFfz14ah/Fiv8Ew2X2Qlb1Sqsz4kFrRD9iI=
-Date: Sat, 8 Feb 2025 08:21:09 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Barry K. Nathan" <barryn@pobox.com>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
-	herbert@gondor.apana.org.au, herbert.xu@redhat.com
-Subject: Re: [PATCH 6.6 000/389] 6.6.76-rc2 review
-Message-ID: <2025020845-oblivion-energetic-4de2@gregkh>
-References: <20250206155234.095034647@linuxfoundation.org>
- <13a5abe4-18ea-407e-9435-ab8a36b83c86@pobox.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Aq7ElquE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=dIUTnKlqptBhVh4FHbYoQplL5I5DQEoGc3UGevcbKYc=; b=Aq7ElquEb4PU458vaoh2BURefq
+	0XGupeL+Ea5a1zbTs9mHs4isuqu4YDjsFkA4psNsUKV2IVtFGihdFzB3J4BlS1lx6yz2RbyKBPzLQ
+	q5ug1G3UoBjgjdjZJ8pDtcbs+0u9J4m2W1Iyo6sUbB6qG+Wy0ywQUlWoMnSn8OmDM2h3cb8/NuufT
+	bw6tV0V3F/oz2+8ixkTFko2xzqDuL2B9JR1G1aO/JW0eMEN6zXuMA2HAuspE0AAPA0iEyLWFwxwXY
+	h9ZeDE/095r6pBz9fJ78gD+4ccGeRpRxZN3tn2b/eY9RppD2xLfz/F6OIiBJtZ6ZGQIYD7hJA/Ade
+	hnrUUgrg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tgfAx-00000009uJj-3bg7;
+	Sat, 08 Feb 2025 07:22:51 +0000
+Date: Sat, 8 Feb 2025 07:22:51 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Qi Zheng <zhengqi.arch@bytedance.com>, kevin.brodsky@arm.com,
+	riel@surriel.com, vishal.moola@gmail.com, david@redhat.com,
+	jannh@google.com, hughd@google.com, yuzhao@google.com,
+	muchun.song@linux.dev, akpm@linux-foundation.org, will@kernel.org,
+	aneesh.kumar@kernel.org, npiggin@gmail.com, arnd@arndb.de,
+	dave.hansen@linux.intel.com, rppt@kernel.org,
+	alexghiti@rivosinc.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-openrisc@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-um@lists.infradead.org, x86@kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 0/5] remove tlb_remove_page_ptdesc()
+Message-ID: <Z6cGS__8VRQdzAYA@casper.infradead.org>
+References: <cover.1737637631.git.zhengqi.arch@bytedance.com>
+ <20250124114759.GB15996@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,52 +57,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <13a5abe4-18ea-407e-9435-ab8a36b83c86@pobox.com>
+In-Reply-To: <20250124114759.GB15996@noisy.programming.kicks-ass.net>
 
-On Fri, Feb 07, 2025 at 09:25:08PM -0800, Barry K. Nathan wrote:
-> On 2/6/25 08:06, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 6.6.76 release.
-> > There are 389 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sat, 08 Feb 2025 15:51:12 +0000.
-> > Anything received after that time might be too late.
-> [snip]
-> > Herbert Xu <herbert@gondor.apana.org.au>
-> >      crypto: api - Fix boot-up self-test race
-> [snip]
-> I mentioned in an email to the stable mailing list earlier this week that
-> the crypto-api-fix-boot-up-self-test-race patch, on my systems, is causing a
-> one-minute freeze followed by a crypto self-test failure. See the log
-> excerpt below for an example. (In that email I erroneously said the affected
-> kernel was 6.6.76-rc1. It was 6.6.75 plus stable-queue patches, but not
-> actually 6.6.76-rc1. Sorry for my mistake.)
-> 
-> I'm still experiencing this with 6.6.76-rc2. As before, reverting "crypto:
-> api - Fix boot-up self-test race" fixes it. I also tried testing 6.6.75 plus
-> this patch, and that reproduces the problem. In case it might have been a
-> compiler issue, I tried upgrading my build system from Debian bookworm to
-> trixie, but the issue reproduces with trixie's gcc 14.2 just as it does with
-> bookworm's gcc 12.2.
-> 
-> I also tested 6.12.13-rc2 and 6.13.2-rc2. Those kernels work fine in my
-> testing and do not reproduce this issue.
-> 
-> To be clear, it's personally not a real problem for me if 6.6.76 is released
-> with this patch included -- if necessary, I can just keep reverting this
-> patch until I get my systems upgraded to 6.12. However, I figure this is
-> still worth reporting, in case it eventually turns out to be something that
-> doesn't only affect me.
-> 
-> Anyway, I'll keep digging to see if I can figure out more. Since essentially
-> the same patch that's breaking 6.6 is working just fine on 6.12 and 6.13, I
-> feel like I should be able to find more clues. (However, I may be busy for
-> the next several days, so I'm not sure how soon I'll be able to make
-> progress.)
+On Fri, Jan 24, 2025 at 12:47:59PM +0100, Peter Zijlstra wrote:
+> Right, so I don't think Sparc and Power care to use ptdesc, they're
+> using non page page-tables.
 
-Thanks for the info, for some reason I thought this was hitting an
-already released kernel.  I'll go drop this patch from the 6.6.y queue
-now, thanks for pointing it out again.
+i think you mean s390, not sparc.  all architectures _use_ ptdescs,
+it's just that s390  and ppc use fractional ptdescs rather than an
+entire ptdesc for an individual page table.
 
-greg k-h
+eventually we can change that, but we're looking out perhaps five years
+before we can allocate a ptdesc for a sub-PAGE_SIZE quantity.
