@@ -1,118 +1,161 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C854611E;
-	Sat,  8 Feb 2025 04:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF77118FC74
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 04:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738988067; cv=none; b=Njuzg30BDA1qWCbEMGerg8DEUyqZCNf5gxUhsss1OVS095rqSYOSbu3hnIlcsP9lkAzo0G0dIeXlozfi7bJ8Z3BIdmSY91PR64EpDMISSQ2qDptd+HzZV/G8FHUr31909eOtlyD6SUUso5/u0vv9XffhBifQos22VkM8fT7CJCM=
+	t=1738988073; cv=none; b=A5s3H5O0+biNO1b0eMUcdKw8RaQ1EqCM6URfHOXH6OA8CTSUFWwrUDfzkWA5RuO92Z53ujl1qv+Ap7cm2LAfuOJ/GrS9Yx1a4+OdLElDWJoNnGIuPIt2aDsceCbqORrdgoYU3mL8Shv3vofPgjvKANUy5pb+Xkhtr+VblY1BVV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738988067; c=relaxed/simple;
-	bh=EAq62egMsFUWUp7EROuxcoKGX9rjJ6x8SPC15IrxFWc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lh/2G/q8pgpsFXmBJrPheXUHqmWt0PK24YKtDuJPxDGmdO1eD0y4tDGld8gaKPpXEfE5fwuCa+XdkyIWFWGg5uGRTn6mEf4Ub1mhwDOa0HSwb8Lmg0mgU77KtaaMP/MS+yPS7H/sNwej6rQje3P0yO87YgLVWMZq00moNyLAtTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ljsJDmro; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738988073; c=relaxed/simple;
+	bh=FpM3QtS635xaasFRFZ9L6RSUJzPITN/8NiBEo2sy4ME=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HrPkok3tSITSNAvxhvBIq7YSFDxFVl5YiL3yP4CdEkmwjZKjpc27irrsMY/AEtjJB2PPgxFU/z9wqUVdlGf+5J6aNAgPJEqaEM0nFcnw1s+LoGscvUV1xGpmEee6jUpZHNL8zH41TaR1r9M5rQd2OjubHRHD6qUzUO5s/ta1slE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=MC3CNqEq; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ljsJDmro"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5180JtnJ008130;
-	Sat, 8 Feb 2025 04:14:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	5cXitFAI/kHsRG6Xi1pHTV60xLTZeyWRCamLyOpJqk4=; b=ljsJDmroB7wCtbEJ
-	C8lj+LMptTeGo9yKiGrsiCxAhFcWzWE3XHIYhy39TalzkcLGzPwR8AzY7JRroZx2
-	mYvnvHCE5J6TfvChUpqZQqdm4qrGrYp+vgXLDe5gZtfvo9knAxUnP0CKLNkFb537
-	sHsI36zh9KCjqq8korEVcJWuwEsmutvTGaINi0S3Zbb1vi8DehkyuQGjryxaqk5Q
-	rGT0YAo7SiW3quBmgGAIjidrGbiGy1Z2qE7n/wgYIlbpBd95EY4ScgRW9gpL7j1a
-	1Yu077SdGKBis1PpWWT0L18jHB1tR2kIXqCNmDowE87dnDOspXEQISm8wS2jq0dZ
-	Y2Tn3g==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nvmkgarg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 08 Feb 2025 04:14:05 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5184E4Y4026997
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 8 Feb 2025 04:14:04 GMT
-Received: from [10.110.94.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 7 Feb 2025
- 20:14:03 -0800
-Message-ID: <4130c726-fb63-4ad8-8357-b9ebc78856f0@quicinc.com>
-Date: Fri, 7 Feb 2025 20:14:02 -0800
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="MC3CNqEq"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f5268cf50so19785675ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 20:14:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1738988070; x=1739592870; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2bw9rVK6jiEnat/1Ue/qEwXGDpUij+zoVhLuOEXleUM=;
+        b=MC3CNqEq1o9XqqmkVRwvCw8dmnY4c7Gjl/tkmemMIztzM0P4BnqrCuGL7cXwCenmSK
+         W/rpkSZhSc0IHRcXthbyd8D2RIfdcUJ8SGns+2nbxt7ZFUEEsRXA6u9X79quiD8RiVyt
+         knOAb/VE9iXDU8Qfac7kmpplwkp6z7I71m2B4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738988070; x=1739592870;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2bw9rVK6jiEnat/1Ue/qEwXGDpUij+zoVhLuOEXleUM=;
+        b=JgwWCnJiVNWp605SwFocI/H33H2RGyAxvggQrap7SFsOOYvvVzlAgkLyLygw5Ea+mx
+         QEca63llO86+nyYBnU90FvAcuoz3Gp0frwIdTvGPiTVxozgwdrzKvWlKn0QhuDOu9iRz
+         UwpauQ2ebqK9OwFgup/M3++wcwPdgmn+T++4hCH62egOcI5AMhMBEPSccJuNp5434ktB
+         RXqRhNt6NirOb4C7kiV1TA+1AxZX4njxEeg5xBOCmJ+H5IasMvek94mkgO6yM6R2kGk6
+         SEiQotDjxwfR1K4QRs530aa3hu3fU56jhbTa/Y81UXXA7M67q6vNKZu6fMnW1kD7OMqg
+         EAew==
+X-Forwarded-Encrypted: i=1; AJvYcCUTUzQRRB3qDqF9vzSyYAtEfuLMx1gGG96u2WfTUN8FSWZYLHxdmt+hyI/rK80vCNnoGZ1jt/SMxMFje5w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUKTrbSOh1ADBDxC45USvPSQTX7nk2DYhDCyD9MxX4nYHMmjp+
+	DiKwlVlFFpupbGSPRWHyV8FCplR5Q6ebqgqSky2Fk1oPYeL/XnQz5waczXl1+4o=
+X-Gm-Gg: ASbGncsJvPPUUXJsCyuronpY0019I+T8kDAmr7motX8buOPIiLacDC2efBTKwEtc5bZ
+	HH1yPef1LU/8iG/1FrNFOkaYj67WRH98A8ks18y+PXQi0c5Sf4qUfDWfXTNqMbe9glwulfYmsa6
+	0MXeBvWdvijH8RGH35IR07rSvBW6SAL/an4+XwRX7QnGOXd/o3H5QbXMG6kAvy9dN2WT9hTRM/H
+	C9rnUa9F5tLjhB/f5pcuQ4oCK9K0ocEcgFmG+sHxVEHCiQiQABnqndnsFLYt844oVVCu1CCKw0N
+	ITDO3yJXDmAaXTQE7zf7psU=
+X-Google-Smtp-Source: AGHT+IGWm1Uejyrdq6ZcmoCtjCX1hzqxmw/22k7CLLitGoGa5+xyfbDIw7xsgVppr81ZOSoy25T2tA==
+X-Received: by 2002:a17:903:166c:b0:215:6cb2:7877 with SMTP id d9443c01a7336-21f4e1cbdaemr101601115ad.4.1738988070380;
+        Fri, 07 Feb 2025 20:14:30 -0800 (PST)
+Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3650ce0bsm38567715ad.21.2025.02.07.20.14.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 20:14:29 -0800 (PST)
+From: Joe Damato <jdamato@fastly.com>
+To: netdev@vger.kernel.org
+Cc: horms@kernel.org,
+	kuba@kernel.org,
+	Joe Damato <jdamato@fastly.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	bpf@vger.kernel.org (open list:XDP (eXpress Data Path):Keyword:(?:\b|_)xdp(?:\b|_)),
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Daniel Jurgens <danielj@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Wei <dw@davidwei.uk>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK),
+	Mina Almasry <almasrymina@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Subject: [PATCH net-next v5 0/3] netdev-genl: Add an xsk attribute to queues
+Date: Sat,  8 Feb 2025 04:12:22 +0000
+Message-ID: <20250208041248.111118-1-jdamato@fastly.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 3/7] drm/msm/hdmi: make use of the drm_connector_hdmi
- framework
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Andrzej Hajda
-	<andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert
- Foss <rfoss@kernel.org>,
-        Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej
- Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        Simona Vetter <simona@ffwll.ch>,
-        Simona
- Vetter <simona.vetter@ffwll.ch>
-CC: <dri-devel@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20250208-bridge-hdmi-connector-v7-0-0c3837f00258@linaro.org>
- <20250208-bridge-hdmi-connector-v7-3-0c3837f00258@linaro.org>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20250208-bridge-hdmi-connector-v7-3-0c3837f00258@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: EjB0PO8S4snFNtg7weJu_Zaiq2gdOUlG
-X-Proofpoint-GUID: EjB0PO8S4snFNtg7weJu_Zaiq2gdOUlG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-08_01,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 lowpriorityscore=0 clxscore=1015 suspectscore=0
- mlxlogscore=907 mlxscore=0 bulkscore=0 spamscore=0 phishscore=0
- impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502080030
+Content-Transfer-Encoding: 8bit
+
+Greetings
+
+Welcome to v5. No functional changes; removed an unused variable from
+patch 2.
+
+This is an attempt to followup on something Jakub asked me about [1],
+adding an xsk attribute to queues and more clearly documenting which
+queues are linked to NAPIs...
+
+After the RFC [2], Jakub suggested creating an empty nest for queues
+which have a pool, so I've adjusted this version to work that way.
+
+The nest can be extended in the future to express attributes about XSK
+as needed. Queues which are not used for AF_XDP do not have the xsk
+attribute present.
+
+I've run the included test on:
+  - my mlx5 machine (via NETIF=)
+  - without setting NETIF
+
+And the test seems to pass in both cases.
+
+Thanks,
+Joe
+
+[1]: https://lore.kernel.org/netdev/20250113143109.60afa59a@kernel.org/
+[2]: https://lore.kernel.org/netdev/20250129172431.65773-1-jdamato@fastly.com/
+
+v5:
+  - Removed unused ret variable from patch 2 as Simon suggested.
+
+v4: https://lore.kernel.org/lkml/20250207030916.32751-1-jdamato@fastly.com/
+  - Add patch 1, as suggested by Jakub, which adds an empty nest helper.
+  - Use the helper in patch 2, which makes the code cleaner and prevents
+    a possible bug.
+
+v3: https://lore.kernel.org/netdev/20250204191108.161046-1-jdamato@fastly.com/
+  - Change comment format in patch 2 to avoid kdoc warnings. No other
+    changes.
+
+v2: https://lore.kernel.org/all/20250203185828.19334-1-jdamato@fastly.com/
+  - Switched from RFC to actual submission now that net-next is open
+  - Adjusted patch 1 to include an empty nest as suggested by Jakub
+  - Adjusted patch 2 to update the test based on changes to patch 1, and
+    to incorporate some Python feedback from Jakub :)
+
+rfc: https://lore.kernel.org/netdev/20250129172431.65773-1-jdamato@fastly.com/
 
 
+Joe Damato (3):
+  netlink: Add nla_put_empty_nest helper
+  netdev-genl: Add an XSK attribute to queues
+  selftests: drv-net: Test queue xsk attribute
 
-On 2/7/2025 4:27 PM, Dmitry Baryshkov wrote:
-> Setup the HDMI connector on the MSM HDMI outputs. Make use of
-> atomic_check hook and of the provided Infoframe infrastructure.
-> 
-> Acked-by: Maxime Ripard <mripard@kernel.org>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->   drivers/gpu/drm/msm/Kconfig            |   2 +
->   drivers/gpu/drm/msm/hdmi/hdmi.c        |  45 ++-------
->   drivers/gpu/drm/msm/hdmi/hdmi.h        |  15 +--
->   drivers/gpu/drm/msm/hdmi/hdmi_audio.c  |  72 ++++----------
->   drivers/gpu/drm/msm/hdmi/hdmi_bridge.c | 175 ++++++++++++++++++++++++---------
->   5 files changed, 162 insertions(+), 147 deletions(-)
-> 
+ Documentation/netlink/specs/netdev.yaml       | 13 ++-
+ include/net/netlink.h                         | 15 ++++
+ include/uapi/linux/netdev.h                   |  6 ++
+ net/core/netdev-genl.c                        | 11 +++
+ tools/include/uapi/linux/netdev.h             |  6 ++
+ .../testing/selftests/drivers/net/.gitignore  |  2 +
+ tools/testing/selftests/drivers/net/Makefile  |  3 +
+ tools/testing/selftests/drivers/net/queues.py | 35 +++++++-
+ .../selftests/drivers/net/xdp_helper.c        | 89 +++++++++++++++++++
+ 9 files changed, 177 insertions(+), 3 deletions(-)
+ create mode 100644 tools/testing/selftests/drivers/net/.gitignore
+ create mode 100644 tools/testing/selftests/drivers/net/xdp_helper.c
 
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+
+base-commit: 233a2b1480a0bdf6b40d4debf58a07084e9921ff
+-- 
+2.43.0
+
