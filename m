@@ -1,194 +1,162 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2084.outbound.protection.outlook.com [40.107.94.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C270F8BEC;
-	Sat,  8 Feb 2025 00:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738974607; cv=fail; b=Yd8qwWFEsFVIsb+0NptcJuM0HYwmHf9AJmLeMEFdkSwQ5VagND2/S2lmFIOYT8GxLS6SkF06lYoK9VSlrf0/yWLG9HsR1Zszto0Kj33Qk3U7f/QIGxZuJmYXq5NsyEWnbhGFVgH8SnoZ8v0CHAZ5hPCINURahxSy4q3R2XvE34w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738974607; c=relaxed/simple;
-	bh=9JDcgC8d/bCnUZ4kEfK0wY2IIiEY/EpgUp7DX2b/9hY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TId1759nKQy/fQvTnLkeLZt9J0J+2a8Irnjz4H9t8PQwNFTVv8sxWZSAr5kbHJnKnYlhBu11Xh6hHbb/PqHw1p4FQqMwbbG4xl7hi/5YreZXVqFIUn+v/jBfG62ipHxX0hYODFuJn0s1E7XjAy966k5ayYobM+9qLd+MIwyBxgE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BlfngzY2; arc=fail smtp.client-ip=40.107.94.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24C2129A78
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 00:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738974612; cv=none; b=N+bvvHgtiCLgNM5zWHx9VWtYcUXnLJq9zuq5H7Sk7Unr/kSOG5JcHhOlPRLS+bd3r1aF9xBnNzSOt/wCmJSRLskrINT7t5c8LtMOwf9ZyX10/hKOk4YTDpzIPdX0H+kjYkFUI0MGNTGmzLOHyqa4SH63lPi2njaqWxJ65OkGlYY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738974612; c=relaxed/simple;
+	bh=dTyHCFEZgeoYIVKxdCqftwAiXhqmTD/K/9BdX5/gf+c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mxcU28b5TQmPGTtIR5/O/zroVoGiRtj8jS9naJCP0K3bBnfkkSCvX1VA7sSmw7zhH+sp10I9b9FXFFh5atiMcIiOf1X7WIVqLDaeEyNhLs6tdeiXmf3JYc4KIkhxOX3dJDwHgXZIdIePMvVngfXj7cQKmipLxlFB0B/Bkd3po/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=LpSQN+3+; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BlfngzY2"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cBxJm3vQeekyJsyteOBH+C054RKPz6pr1j/LtxjE4QrFIZjpstG3DVZL6scED8wcdzwRBfKW9Y6r9rvWDRCEeplknYTPQUMaSD5sCF0Munw7gN65YRzwsuRyjePITLzS9i0TuGzgL6OHnTYj9p6R3T/rEJhrLGwzLVRKtaOPTKwiWNmoeVflLs1Jo9OVXV1GUw4MEFCKvwsvE4BU68wlaA/hn8+20QQJHUBe3McPmPzqjpalibyp11Y2x9U3o99P2nx4cZNo81fFZUoceBmeqo3XsUObqfUFUyIee5jACaZ/kVMuF796DRIvCKcVRviKoBM/W1lJzfqoJYdJGft2vw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fcIayVX5NDpKC7/iFdgEgOr6CFd1VVJEE7NSu3u5fSc=;
- b=jNlmRuirSbHd1fEeyQ4NNCPrh2jOUYn16UrT0IFOSZV7FWJ9X+s1R1gO5M4yDOicVqitrW6vnkIDpYhwtBd0XJUbKXDhWwP9nUwYIG78fbDekQxmJDH12glVUk9pfHMZPe0cxF2KzC8Da3Gm+A1b/c7ZbWkvBG+kc8dLOLgjN2/LsRwQa4VdEEk8WKbR5c/qrMFhifVNVzqqaND2ONleSZSGl2ImxArQIsQVbxs7UH+9Pp2owwCV4ZdtC/1w7Lw3KnrmquLcOlnK/MD9lpudxJtIuFlJMFR/lpp2OafhPLMTOd/UIXOdIJw7cuEp5cEDWBBCIF6htLpyKZtRNgywog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fcIayVX5NDpKC7/iFdgEgOr6CFd1VVJEE7NSu3u5fSc=;
- b=BlfngzY2tNx8VHq1nruiW3RWxeXZUS4tcFN3A6BZQLDp/PKX/jywq4FoGWUScmjXte4KeC8prwzTXlBnx2h4kb2qzZbd8DVwtUZ7Rd2ew0He3PI6E6UTSBu2HGGhw+2pREPyALTVv7J3nbq0dX6kJzP16iJoTugyDo4iPIGindU=
-Received: from BYAPR05CA0088.namprd05.prod.outlook.com (2603:10b6:a03:e0::29)
- by IA1PR12MB7520.namprd12.prod.outlook.com (2603:10b6:208:42f::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Sat, 8 Feb
- 2025 00:30:00 +0000
-Received: from SJ1PEPF0000231A.namprd03.prod.outlook.com
- (2603:10b6:a03:e0:cafe::79) by BYAPR05CA0088.outlook.office365.com
- (2603:10b6:a03:e0::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8377.13 via Frontend Transport; Sat,
- 8 Feb 2025 00:29:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF0000231A.mail.protection.outlook.com (10.167.242.231) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Sat, 8 Feb 2025 00:29:59 +0000
-Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 7 Feb
- 2025 18:29:57 -0600
-From: Terry Bowman <terry.bowman@amd.com>
-To: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
-	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<dan.j.williams@intel.com>, <bhelgaas@google.com>, <mahesh@linux.ibm.com>,
-	<ira.weiny@intel.com>, <oohall@gmail.com>, <Benjamin.Cheatham@amd.com>,
-	<rrichter@amd.com>, <nathan.fontenot@amd.com>, <terry.bowman@amd.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <lukas@wunner.de>,
-	<ming.li@zohomail.com>, <PradeepVineshReddy.Kodamati@amd.com>
-Subject: [PATCH v6 01/17] PCI/AER: Introduce 'struct cxl_err_handlers' and add to 'struct pci_driver'
-Date: Fri, 7 Feb 2025 18:29:25 -0600
-Message-ID: <20250208002941.4135321-2-terry.bowman@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250208002941.4135321-1-terry.bowman@amd.com>
-References: <20250208002941.4135321-1-terry.bowman@amd.com>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="LpSQN+3+"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6f6cc13d103so20418007b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 16:30:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1738974609; x=1739579409; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vn/1YmpmY/bsvQ1xvE5fHEgYiQrp6LfVJR+53TGXZzI=;
+        b=LpSQN+3+vjsDelrdQgp6sC+/nftdETikXUPZX6img083f/IH3js2St26HVNT6M+rLO
+         qH1arG/+fX3H2wJV25KQbZhRhxcV5blOnIm0nvitvgsPybt9+QWTlDtpI3SlQPOG9nEY
+         WEIeuJrSVcZAT/7MWYFWmCxe/lYtDSQyDAgq5JZG3j2KEaji0MUHk8Yq2K1BfX6pYR9d
+         pY81futRo7hFI4LX1ERtENFTXJpIT6RA/WY333aEgBhzXQMLBoc9fbkiZKjYxn1gYOQg
+         ZxhirbeVGUHZ9AnnjUs4twS1tpsOUpNtfhLZuzqW/1qzqDjqC2Wk9zdRd0dw/jfYvOMc
+         WuvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738974609; x=1739579409;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vn/1YmpmY/bsvQ1xvE5fHEgYiQrp6LfVJR+53TGXZzI=;
+        b=gTIMUqpFKr7DI3x4eVEMatbHC4F2EZ7rRHmu+6xaOyKUfBTma3b+K7HGAfeKSoesOJ
+         GL8j/UGgUwciKztx7Y1G1DSjdW3BTGXOMdVl007we75u0DrQJa9xjwKFW1xdR5oVuajk
+         nwCsITv3E1ZoPTzxkUZP7ZiQnjZigWMQTyEWsaBcvPDGBNwUriweIK+gRpP/uz13S26P
+         29UwrvRbU8qpQHELINgGmU+wtnFU9Rs2svHpcHrQmuHnFgx53uzqygSmEkZ0WBujVQMR
+         +t6tp8v53kgd3gseUsgUpp8zbAZ4gr3EHwBAILaME6NpNjHT7cKYt+DNOAYB817wosql
+         A8JA==
+X-Forwarded-Encrypted: i=1; AJvYcCWkb2VV/BTblCv+xw5O/mnnrWFTgAHE986HIQVcK1Rywj1+3kAVxMKUnSRuvxmMh3Ww0knQRu+xk+YB7kY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7+ubJBwXFm02yViCdrc2IhivJi4OUrdMYjmpeWDooNtzvzMwF
+	iY867zUu0RFFw9Mm+gXzjgPc8xFJma2Mtmzw+WLvv9GYJ3t87M6OSuZpJz1BuCrZ0kQ8HMjBl3O
+	cvxOQJh/tPdZ2alehf1x2mVI8HmV5jfOhVUKGDDcPXZty1w4g6w==
+X-Gm-Gg: ASbGncsw3vtUdkd1J7BzzA8VrV5B94yrWzFSQSywZNivZwDUciaVJRt+F4cpffONbKi
+	uMGQxoG4+FOR0KmiUTVZHg7yaiNxNy7wdLicmfKS5665tMy92KHf0YgqoIWLfQK1F5IbjI2Y=
+X-Google-Smtp-Source: AGHT+IEkAhCJmGHV6WbtwrkLl9rM3ovizpZX9REweo+0HVpQNbEna4sA8dk8N7z7a5SpuxuXJBc1ziKYlR5vHDoR5K8=
+X-Received: by 2002:a05:690c:610a:b0:6f9:3dd2:793f with SMTP id
+ 00721157ae682-6f9b29e3c69mr50537137b3.28.1738974609228; Fri, 07 Feb 2025
+ 16:30:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF0000231A:EE_|IA1PR12MB7520:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a5cd6b6-4dc3-4807-8038-08dd47d7b871
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|82310400026|36860700013|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5EYMZLVXp7cJK/JoS1DaeqGxEII0Tk7Oum1jrG0S/+cnI4Sj5H8/U9WFiGlc?=
- =?us-ascii?Q?Hoq/3usDbirIipS3JUCaOEod4euIVe4QQ37fkOnX+My3wQLXVcsfwHm8XSQN?=
- =?us-ascii?Q?Ua9MpcxEnb8K0Gxfef5QjBZ3pAORfaq9oCkohM6Kd4oXoT448n/zLTt/bN8o?=
- =?us-ascii?Q?uV3rp8XDqGdwQ5c1zYZp7YjBYx4amT7pYiRaNuS+7f/whQa30RG4kKu3MwmM?=
- =?us-ascii?Q?e9sxFpp+ap9BBiDQ+6lsAZrcmRnZGFdTRaJyagtOqSq/fOcshW7+vPv1gxt4?=
- =?us-ascii?Q?twQ08X+kg4Aw3GBYOLQhpC6zxoMuUJ0Jzg1oABure9Itk3FDOeXIzd5nSMw2?=
- =?us-ascii?Q?oOt8y9cw6ZXJIG5Ud+8hQ8R/j10clCCN17b9s0IQSjbLKAi2YMYyRpqSaYQQ?=
- =?us-ascii?Q?MAyPmSCWpy4+AsnmioJDhNNnnTUMoZCUiuZUW4VmIddfVMwMCiT6Xcu77rQ2?=
- =?us-ascii?Q?qDTx0aA5o71wZhxs/AjsB1p8CfI2CwgUdLa3vmMGJwHjGD21bDfND+Npm5NF?=
- =?us-ascii?Q?TtZET+hml9In7TO1C82s5ipcGTpEHxwPZvCe8Me8XtA1MZ4sBCGOD+FxcuQI?=
- =?us-ascii?Q?nusjfG33iAd5dEyFLwiLjshA45svZoJJggEJ7+gTr+bSjNsYCjm9tf6ghwdb?=
- =?us-ascii?Q?T1bfFHdLDmcUsF1K2RfOfB8n0T0vZ/0O+cbKba0veNLmH7H1VqQOZ8fvAal3?=
- =?us-ascii?Q?wAZ3dqqBkuIELww5mqHa1eokMeElT72zOqGKuZTvgeUoWbqAA1zkeCt1Nyf6?=
- =?us-ascii?Q?PCXKVRtRjvsh4GpJM65YyDo0j/p6l5ag2nY1HCUHEmfdCGnUmfFqa/QlIEgy?=
- =?us-ascii?Q?Aggvx4suHM+T+TyLO5dyoaiXPkhfXHDRzb9E5bJTDOjUHFRpMFetnQ0zaqYP?=
- =?us-ascii?Q?Q1l2XqBID+uSZbs6oVxKvr6bfnjHbsv5otqTkPtszMv13qwHTdC5SeDMXX1d?=
- =?us-ascii?Q?uLZ76luSlxZNjlpLo3V/XSuM6fylNsPNdkXPaBUUZP3228g0r3XuwUdTa3x+?=
- =?us-ascii?Q?CCpT/WzjPUTlsbf03ZSzRSoI7jxNWtxlLqhiWr6TXRWHxQo3fJJAZ2B6ypEP?=
- =?us-ascii?Q?wJ74nI2XqYdgWUKteJQGSX3KFTSuhb71spQzbX616rrSJrd8o3bvVlpG2HEX?=
- =?us-ascii?Q?s/4qtipGWUN93QvtL7czgpCePzZBIpqFT8AFO1ETcchICQqWbTI1QrKJjY8V?=
- =?us-ascii?Q?kavllZvWUmhitSUYg19Vy9bCs/CLMWvsVA37Wksl6sJTKppTzjFGAAJ08mkM?=
- =?us-ascii?Q?P6cH5wHjH8HPjYpF073sYgxO5WFUFZa9k3LyBw4kvIFcg00nAk09ouio88+i?=
- =?us-ascii?Q?5nsnz+/dUAemhdoP5KN0RDFRzNS6Kh1gVqnNXWu7IrvYudiPTSAfQqt7FCZu?=
- =?us-ascii?Q?ZtnwXwzcSOa4S76OxBYA7wRV7GVxRQ/Lj+lGbEeSN8B+zpicc9BI1Xif2o/i?=
- =?us-ascii?Q?RqfyscgiRH+gNmpaBkJWfEWFfXttLrQLWE2ymsPav0d1QwdAcrVtxsV6D1TK?=
- =?us-ascii?Q?VLvzFEVBiwB3xlJ+FD7UH/8rVDwyL2cYmuux?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(36860700013)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2025 00:29:59.2902
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a5cd6b6-4dc3-4807-8038-08dd47d7b871
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF0000231A.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7520
+References: <20240826103728.3378-3-greg@enjellic.com> <8642afa96650e02f50709aa3361b62c4@paul-moore.com>
+ <20250205120026.GA15809@wind.enjellic.com> <CAHC9VhRq0PrH=0n6okkvfed=8QQOfv-ERA60NNWvLXetgrB_2w@mail.gmail.com>
+ <20250207102024.GA6415@wind.enjellic.com>
+In-Reply-To: <20250207102024.GA6415@wind.enjellic.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 7 Feb 2025 19:29:58 -0500
+X-Gm-Features: AWEUYZlkch-k-LpRmOXiX93WJv51D_DkIHt3EJDkon-5dtf7UZvv_BsaEyBa3ck
+Message-ID: <CAHC9VhSd-5Lm4+DPWG-V5eav5k-Q1evh3oVHxgB7in2o+XMMEg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/14] Add TSEM specific documentation.
+To: "Dr. Greg" <greg@enjellic.com>
+Cc: linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	jmorris@namei.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-CXL.io is implemented on top of PCIe Protocol Errors. But, CXL.io and PCIe
-have different handling requirements for uncorrectable errors (UCE).
+On Fri, Feb 7, 2025 at 5:20=E2=80=AFAM Dr. Greg <greg@enjellic.com> wrote:
+> On Thu, Feb 06, 2025 at 10:48:57AM -0500, Paul Moore wrote:
+> > On Wed, Feb 5, 2025 at 7:01???AM Dr. Greg <greg@enjellic.com> wrote:
+> > > On Tue, Jan 28, 2025 at 05:23:52PM -0500, Paul Moore wrote:
+> > >
+> > > > I believe the LSM can support both the enforcement of security poli=
+cy
+> > > > and the observation of security relevant events on a system.  In fa=
+ct
+> > > > most of the existing LSMs do both, at least to some extent.
+> > > >
+> > > > However, while logging of security events likely needs to be
+> > > > asynchronous for performance reasons, enforcement of security polic=
+y
+> > > > likely needs to be synchronous to have any reasonable level of
+> > > > assurance.  You are welcome to propose LSMs which provide
+> > > > observability functionality that is either sync, async, or some
+> > > > combination of both (? it would need to make sense to do both ?), b=
+ut
+> > > > I'm not currently interested in accepting LSMs that provide
+> > > > asynchronous enforcement as I don't view that as a "reasonable"
+> > > > enforcement mechanism.
+> > >
+> > > This is an artificial distinction that will prove limiting to the
+> > > security that Linux will be able to deliver in the future.
+> > >
+> > > Based on your response, is it your stated position as Linux security
+> > > maintainer, that you consider modern Endpoint Detection and Response
+> > > Systems (EDRS) lacking with respect to their ability to implement a
+> > > "reasonable" enforcement and assurance mechanism?
+>
+> > As stated previously: "I'm not currently interested in accepting
+> > LSMs that provide asynchronous enforcement as I don't view that as a
+> > reasonable enforcement mechanism."
+>
+> You personally don't, the IT and security compliance industry does, it
+> seems to leave Linux security infrastructure in an interesting
+> conundrum.
 
-The PCIe AER service driver may attempt recovering PCIe devices with
-UCE while recovery is not used for CXL.io. Recovery is not used in the
-CXL.io case because of potential corruption on what can be system memory.
+Your concern over the state of the LSM has been previously noted, and
+I assure you I've rolled my eyes at each reference since.
 
-Create pci_driver::cxl_err_handlers structure similar to
-pci_driver::error_handler. Create handlers for correctable and
-uncorrectable CXL.io error handling.
+> For the record, just to be very clear as to what an LSM is allowed to
+> do under your administration, for our benefit and the benefit of
+> others ...
 
-The CXL error handlers will be used in future patches adding CXL PCIe
-Port Protocol Error handling.
+I've repeated my position once already, if any current or aspiring LSM
+developers are unsure about some aspect of this, they are welcome to
+bring their specific concerns to the list and we can discuss them.
 
-Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Reviewed-by: Gregory Price <gourry@gourry.net>
----
- include/linux/pci.h | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> > > If this is the case, your philosophy leaves Linux in a position that
+> > > is inconsistent with how the industry is choosing to implement
+> > > security.
+>
+> > In this case perhaps TSEM is not well suited for the upstream Linux
+> > kernel and your efforts are better spent downstream, much like the
+> > industry you appear to respect.
+>
+> Fascinating response from someone given the privilege of
+> maintainership status of a sub-system in a project whose leadership
+> preaches the need to always work with and submit to upstream.
+>
+> Even more fascinating when that individual publically states that he
+> is employed by the largest technology company in the world because of
+> that companies desire to promote the health and well being of the
+> Linux eco-system and community.
 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 47b31ad724fa..1d62e785ae1f 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -884,6 +884,14 @@ struct pci_error_handlers {
- 	void (*cor_error_detected)(struct pci_dev *dev);
- };
- 
-+/* Compute Express Link (CXL) bus error event callbacks */
-+struct cxl_error_handlers {
-+	/* CXL bus error detected on this device */
-+	pci_ers_result_t (*error_detected)(struct pci_dev *dev);
-+
-+	/* Allow device driver to record more details of a correctable error */
-+	void (*cor_error_detected)(struct pci_dev *dev);
-+};
- 
- struct module;
- 
-@@ -929,6 +937,7 @@ struct module;
-  * @sriov_get_vf_total_msix: PF driver callback to get the total number of
-  *              MSI-X vectors available for distribution to the VFs.
-  * @err_handler: See Documentation/PCI/pci-error-recovery.rst
-+ * @cxl_err_handler: Compute Express Link specific error handlers.
-  * @groups:	Sysfs attribute groups.
-  * @dev_groups: Attributes attached to the device that will be
-  *              created once it is bound to the driver.
-@@ -954,6 +963,7 @@ struct pci_driver {
- 	int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int msix_vec_count); /* On PF */
- 	u32  (*sriov_get_vf_total_msix)(struct pci_dev *pf);
- 	const struct pci_error_handlers *err_handler;
-+	const struct cxl_error_handlers *cxl_err_handler;
- 	const struct attribute_group **groups;
- 	const struct attribute_group **dev_groups;
- 	struct device_driver	driver;
--- 
-2.34.1
+I would suggest that your interpretation of my previous comments are a
+bit "off" in my opinion, but who am I to argue with a view that sees
+my comments as this fascinating!
 
+Jokes aside, to be clear I didn't tell you not to continue to post
+newer revisions of TSEM, I simply suggested that based on the choices
+you've made in designing and developing TSEM, it may be better suited
+to a downstream solution and not the upstream Linux kernel.  However,
+perhaps continuing to post a LSM that has not been accepted upstream
+due to inherent design decisions is perfectly in keeping with a LSM
+that relishes references to Don Quixote.
+
+> For the record, we don't respect any industry, we respect the need to
+> address the challenges associated with how we are currently doing and
+> thinking about things.
+
+Noted.
+
+--=20
+paul-moore.com
