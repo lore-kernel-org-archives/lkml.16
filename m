@@ -1,468 +1,167 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD50154423;
-	Sat,  8 Feb 2025 02:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D89313B7A3;
+	Sat,  8 Feb 2025 02:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738982986; cv=none; b=qynIhfWv7yAgkK+7SDvj2QTdjcaFcABOejATJ1s1gpvxuvGSXS2kFumXOeYoHGYYrc2xv9ns6CFrI9NL9eAixXYM9GhrZvBWdxgrgNsrse9fVfBqgls3CIQlTfy480m+daPJC9uGayAB7/b+ySZjklf2wTJjeQJyO1+QtiO+VJk=
+	t=1738982996; cv=none; b=Dqxm9+kzXewaG3jri/62pcKkBtdaLtCqzzs+jo4NhalbTiT8CTJ2wRmFGar2z5qTXa4AJ03llMa5P5q//QSRnfBWg05qa4lkRUApoGqZz/eIe9dwMiITgR+U8Ad5XpNllxPHA66IHiXTg6SbtoAuG2p6n0yeAfPBZYUGmJibgMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738982986; c=relaxed/simple;
-	bh=1Ewy0oyo8Os8gAQ6yHesmS0dY/JOVAyB5piU4zsf0Vs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DMsQ1W/8ZMXr3ahJeQUGjKaub0a6DRgcpftijHduPUiiIe/SH8GvswqzF5b7MY5DupuMQSyUqLJwF6I+B/NZyhxJxHlTvwgpLBVF+gh9PdCgY2KEIZRi54dKrxylg8MALBpDaZsAyE6Nnp02uhF/09jMOLIl0WVTWdFRC5cCruY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CNKFpzSl; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CNKFpzSl"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6dd43b08674so23709266d6.3;
-        Fri, 07 Feb 2025 18:49:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738982983; x=1739587783; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z/pxjG3mBleCK4XJFbeVp6idHR4qOnE5XR4YxD+Us8Y=;
-        b=CNKFpzSlOABoVA0VxCjVIAuQCtijrFTrrIJBqD1SP1AgC+pAgZTdBy0LWGcCMMWfCt
-         KDCbhXe1SFwIvbKhbKrEQnYgNkZHFsamGAjyel7Gznb6jJJYl5AcxkSDAnNdDPB+ZEGZ
-         5Y1WXbu/G/GX0tmEPP4hKGc/9kyX3I0eIA52uzzaraycj8GWGq9lwJa/oVKuP2xeq+vQ
-         9QHvRNX0wbLLADLcnPKuH70VokQwXehkoCDTmNYJqw7nNkpROYuRty7688eQsz9wuXSV
-         F/YWSJJUk8nOXp+ZytVcz1eJ79m/Ph3yMRz+UywWpf/J/OF3vnqUFD1F+cTzf7Mit8ma
-         1pKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738982983; x=1739587783;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z/pxjG3mBleCK4XJFbeVp6idHR4qOnE5XR4YxD+Us8Y=;
-        b=ZAYprxt0RApucdT5Dj6Lsmd+xesBT+bKXtmtIJ2/cYQCrRw4kKpNjFafP1Dof7lrA6
-         D4LyL97JOlD/cIWX+vkNFmpFi65ecjVlJO91Tivz6sOIuk80M+NFRIlidcgr5BP45Lvt
-         5aAhpdyX8+mRt1YWxDFOq842+XGzF1LUJ7fsVRtC6Bjl0irIFs/eQEW5zrm08lWYU2FC
-         KxbETgwyT+3qifse2sT6Db/tT1KZ3DrdC0VnMisbXg+66d1k4QCsf2tfJBF0fm9Ey2OO
-         +NStddx348DvcgpFYVgmO0RYHXiZTXgfdUhSD01B3KOGTNA3oa1JeIIpOiQodORlebBr
-         lzZw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFCFUFWJzTv1MZYqmrFvo/Ma51teRzurHlOptLgUoCCC0DnXq1SrKtCYIvzLdwKUwIppY0RUCvtqeWfZY=@vger.kernel.org, AJvYcCXYxEPsuQ5chbT9ngW4rDIZgEenC0MMsDBoOYjxVqgWbMuf+6yNYyrsqTZNz7GW+gQ1PIXf2JJdy+PBfl4nng==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+6XqkzY1jyB/i2gqh4W/7kvsksojCKUpOGBcC28uLvMQqfSaW
-	7w1TjvMsheh96/emg02PYSTTdWMGA2yKcT2WP6cw+XYmNaKwBylAQHnNrqT1bHFtXDOnCL5AxEl
-	EkM+H38MGdYWlLAWOTDzzEgYb9Ck=
-X-Gm-Gg: ASbGnctK010798yus1bD8vdJFfeYWeA9xhrzZv7JY86Mlpc3GrvRv8pEhjYISxCennr
-	1tp+O7Zc0vgsuuKDmz4ze7tqRp9cGSe4j+5fCKr35XFyWvSJ9zE5gp1gQKpgMDHmMHP1/DQAzA5
-	A=
-X-Google-Smtp-Source: AGHT+IH4gbyIlnPPY/XjW52M62RPeNvOSsfI4eQ4I+o5BejLBnIpORlZnN1OVTTiEKH/EkeZrapW4e69XbheE0JsYNY=
-X-Received: by 2002:a05:6214:5016:b0:6e4:2e00:dda9 with SMTP id
- 6a1803df08f44-6e4456feb26mr95069906d6.31.1738982983397; Fri, 07 Feb 2025
- 18:49:43 -0800 (PST)
+	s=arc-20240116; t=1738982996; c=relaxed/simple;
+	bh=ATACJNJ4XhCNhsp9+igAl7ToK86p8Dw1MpI9IPqXvUM=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=qSrQAJ06L2lApxPBsPQAJI9udDuUW/xr5HAEo/e7KNHGmSGI/SfZ+mys9EU9aV1LnLmpCiXZEL/keCwqrkWgaK64RV4uCWqPPZVEWt9SCAHjXV/mLDxC+tkbQ2afwnNKGi3+pIDXlRfxewbhtx7cEmwq2eGs2g4LSAtTPSXS1i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Yqb065Zgjz4f3kvl;
+	Sat,  8 Feb 2025 10:49:26 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 59F311A12D3;
+	Sat,  8 Feb 2025 10:49:49 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgB3219LxqZn8qbmDA--.64974S3;
+	Sat, 08 Feb 2025 10:49:49 +0800 (CST)
+Subject: Re: [PATCH v2 1/2] md/raid5: freeze reshape when encountering a bad
+ read
+To: Doug V Johnson <dougvj@dougvj.net>
+Cc: Doug Johnson <dougvj@gmail.com>, Song Liu <song@kernel.org>,
+ "open list:SOFTWARE RAID (Multiple Disks) SUPPORT"
+ <linux-raid@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <9c3420a9-8f6a-1102-37d2-8f32787b2f9a@huaweicloud.com>
+ <20250127090049.7952-1-dougvj@dougvj.net>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <21f250f9-04b5-76f6-84c9-1fd245b748c6@huaweicloud.com>
+Date: Sat, 8 Feb 2025 10:49:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127063526.76687-1-laoar.shao@gmail.com> <Z5eOIQ4tDJr8N4UR@pathway.suse.cz>
- <CALOAHbBZc6ORGzXwBRwe+rD2=YGf1jub5TEr989_GpK54P2o1A@mail.gmail.com>
- <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz> <CALOAHbDwsZqo9inSLNV1FQV3NYx2=eztd556rCZqbRvEu+DDFQ@mail.gmail.com>
- <Z6IQi4wpph0dnSD7@pathway.suse.cz> <CALOAHbBktE_jYd5zSzvmbo_K7PkFDXrykTqV1-ZDQju64EYPyg@mail.gmail.com>
- <Z6Xn61Bjm8pMd8zX@pathway.suse.cz>
-In-Reply-To: <Z6Xn61Bjm8pMd8zX@pathway.suse.cz>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Sat, 8 Feb 2025 10:49:07 +0800
-X-Gm-Features: AWEUYZkRB5X0rWYPBV2nWr2IFJm2KGkQ91VpxFso1yWHTQ3prDMkm7z-M1x3c8I
-Message-ID: <CALOAHbBs5sfAxSw4HA6KwjWbH3GmhkHJqcni0d4iB7oVZ_3vjw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/2] livepatch: Add support for hybrid mode
-To: Petr Mladek <pmladek@suse.com>
-Cc: Miroslav Benes <mbenes@suse.cz>, jpoimboe@kernel.org, jikos@kernel.org, 
-	joe.lawrence@redhat.com, live-patching@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250127090049.7952-1-dougvj@dougvj.net>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgB3219LxqZn8qbmDA--.64974S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxZr4fKF13Cr1kGw4rXF13urg_yoWrXryDpa
+	98t3Z0kFWkGrsIgFZrWw4j9FyF93s7Way5Jw47W34UZ3Z8tFyfAFWDKa45uFW8try8Xa4q
+	qFyUZr98CFWYkaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2N
+	tUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Fri, Feb 7, 2025 at 7:01=E2=80=AFPM Petr Mladek <pmladek@suse.com> wrote=
-:
->
-> On Wed 2025-02-05 14:16:42, Yafang Shao wrote:
-> > On Tue, Feb 4, 2025 at 9:05=E2=80=AFPM Petr Mladek <pmladek@suse.com> w=
-rote:
-> > >
-> > > On Mon 2025-02-03 17:44:52, Yafang Shao wrote:
-> > > > On Fri, Jan 31, 2025 at 9:18=E2=80=AFPM Miroslav Benes <mbenes@suse=
-.cz> wrote:
-> > > > >
-> > > > > > >
-> > > > > > >   + What exactly is meant by frequent replacements (busy loop=
-?, once a minute?)
-> > > > > >
-> > > > > > The script:
-> > > > > >
-> > > > > > #!/bin/bash
-> > > > > > while true; do
-> > > > > >         yum install -y ./kernel-livepatch-6.1.12-0.x86_64.rpm
-> > > > > >         ./apply_livepatch_61.sh # it will sleep 5s
-> > > > > >         yum erase -y kernel-livepatch-6.1.12-0.x86_64
-> > > > > >         yum install -y ./kernel-livepatch-6.1.6-0.x86_64.rpm
-> > > > > >         ./apply_livepatch_61.sh  # it will sleep 5s
-> > > > > > done
-> > > > >
-> > > > > A live patch application is a slowpath. It is expected not to run
-> > > > > frequently (in a relative sense).
-> > > >
-> > > > The frequency isn=E2=80=99t the main concern here; _scalability_ is=
- the key issue.
-> > > > Running livepatches once per day (a relatively low frequency) acros=
-s all of our
-> > > > production servers (hundreds of thousands) isn=E2=80=99t feasible. =
-Instead, we need to
-> > > > periodically run tests on a subset of test servers.
-> > >
-> > > I am confused. The original problem was a system crash when
-> > > livepatching do_exit() function, see
-> > > https://lore.kernel.org/r/CALOAHbA9WHPjeZKUcUkwULagQjTMfqAdAg+akqPzbZ=
-7Byc=3Dqrw@mail.gmail.com
-> >
-> > Why do you view this patchset as a solution to the original problem?
->
-> You discovered the hardlockup warnings when trying to reproduce the
-> original problem. At least, you mentioned this at
-> https://lore.kernel.org/r/20250122085146.41553-1-laoar.shao@gmail.com
->
-> And using the hybrid module would allow to livepatch do_exit() only
-> once and do not touch it any longer. It is not the right solution
-> but it would be a workaround.
->
->
-> > > The rcu watchdog warning was first mentioned in this patchset.
-> > > Do you see rcu watchdog warning in production or just
-> > > with this artificial test, please?
-> >
-> > So, we shouldn=E2=80=99t run any artificial tests on the livepatch, cor=
-rect?
-> > What exactly is the issue with these test cases?
->
-> Some tests might be too artificial. They might find problems which
-> do not exist in practice.
->
-> Disclaimer: I do not say that this is the case. You actually prove
->         later in this mail that the hardlockup warning happen
->         even in production.
->
-> Anyway, if an artificial test finds a potential problem and the fix is
-> complicated then we need to decide if it is worth it.
->
-> It does not make sense to complicate the code too much when
-> the fixed problem does not happen in practice.
->
->   + Too complicated code might introduce regressions which are
->     more serious than the original problem.
->
->   + Too complicated code increases the maintenance cost. It is
->     more complicated to add new features or fix bugs.
->
->
-> > > > > If you stress it like this, it is quite
-> > > > > expected that it will have an impact. Especially on a large busy =
-system.
-> > > >
-> > > > It seems you agree that the current atomic-replace process lacks sc=
-alability.
-> > > > When deploying a livepatch across a large fleet of servers, it=E2=
-=80=99s impossible to
-> > > > ensure that the servers are idle, as their workloads are constantly=
- varying and
-> > > > are not deterministic.
-> > >
-> > > Do you see the scalability problem in production, please?
-> >
-> > Yes, the livepatch transition was stalled.
->
-> Good to know.
->
-> >
-> > > And could you prove that it was caused by livepatching, please?
-> >
-> > When the livepatch transition is stalled, running `kpatch list` will
-> > display the stalled information.
->
-> OK.
->
-> > > > The challenges are very different when managing 1K servers versus 1=
-M servers.
-> > > > Similarly, the issues differ significantly between patching a singl=
-e
-> > > > function and
-> > > > patching 100 functions, especially when some of those functions are=
- critical.
-> > > > That=E2=80=99s what scalability is all about.
-> > > >
-> > > > Since we transitioned from the old livepatch mode to the new
-> > > > atomic-replace mode,
-> > >
-> > > What do you mean with the old livepatch mode, please?
-> >
-> > $ kpatch-build -R
->
-> I am not familiar with kpatch-build. OK, I see the following at
-> https://github.com/dynup/kpatch/blob/master/kpatch-build/kpatch-build
->
-> echo "          -R, --non-replace       Disable replace patch (replace is=
- on by default)" >&2
->
-> > >
-> > > Did you allow to install more livepatches in parallel?
-> >
-> > No.
->
-> I guess that there is a misunderstanding. I am sorry my wording was
-> not clear enough.
->
-> By "installing" more livepatches in parallel I meant to "have enabled"
-> more livepatches in parallel. It is possible only when you do not
-> use the atomic replace.
->
-> By other words, if you use "kpatch-build -R" then you could have
-> enabled more livepatches in parallel.
->
->
-> > > What was the motivation to switch to the atomic replace, please?
-> >
-> > This is the default behavior of kpatch [1] after upgrading to a new ver=
-sion.
-> >
-> > [1].  https://github.com/dynup/kpatch/tree/master
->
-> OK. I wonder if the atomic replace simplified some actions for you.
+Hi,
 
-Actually, it simplifies the livepatch deployment since it only
-involves a single livepatch.
+ÔÚ 2025/01/27 17:00, Doug V Johnson Ð´µÀ:
+> While adding an additional drive to a raid6 array, the reshape stalled
+> at about 13% complete and any I/O operations on the array hung,
+> creating an effective soft lock. The kernel reported a hung task in
+> mdXX_reshape thread and I had to use magic sysrq to recover as systemd
+> hung as well.
+> 
+> I first suspected an issue with one of the underlying block devices and
+> as precaution I recovered the data in read only mode to a new array, but
+> it turned out to be in the RAID layer as I was able to recreate the
+> issue from a superblock dump in sparse files.
+> 
+> After poking around some I discovered that I had somehow propagated the
+> bad block list to several devices in the array such that a few blocks
+> were unreable. The bad read reported correctly in userspace during
+> recovery, but it wasn't obvious that it was from a bad block list
+> metadata at the time and instead confirmed my bias suspecting hardware
+> issues
+> 
+> I was able to reproduce the issue with a minimal test case using small
+> loopback devices. I put a script for this in a github repository:
+> 
+> https://github.com/dougvj/md_badblock_reshape_stall_test
+> 
+> This patch handles bad reads during a reshape by introducing a
+> handle_failed_reshape function in a similar manner to
+> handle_failed_resync. The function aborts the current stripe by
+> unmarking STRIPE_EXPANDING and STRIP_EXPAND_READY, sets the
+> MD_RECOVERY_FROZEN bit, reverts the head of the reshape to the safe
+> position, and reports the situation in dmesg.
+> 
+> Signed-off-by: Doug V Johnson <dougvj@dougvj.net>
+> ---
+>   drivers/md/raid5.c | 23 +++++++++++++++++++++++
+>   1 file changed, 23 insertions(+)
+> 
+> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+> index 5c79429acc64..bc0b0c2540f0 100644
+> --- a/drivers/md/raid5.c
+> +++ b/drivers/md/raid5.c
+> @@ -3738,6 +3738,27 @@ handle_failed_sync(struct r5conf *conf, struct stripe_head *sh,
+>   	md_done_sync(conf->mddev, RAID5_STRIPE_SECTORS(conf), !abort);
+>   }
+>   
+> +static void
+> +handle_failed_reshape(struct r5conf *conf, struct stripe_head *sh,
+> +		      struct stripe_head_state *s)
+> +{
+> +	// Abort the current stripe
+> +	clear_bit(STRIPE_EXPANDING, &sh->state);
+> +	clear_bit(STRIPE_EXPAND_READY, &sh->state);
+> +	pr_warn_ratelimited("md/raid:%s: read error during reshape at %lu, cannot progress",
+> +			    mdname(conf->mddev),
+> +			    (unsigned long)sh->sector);
+pr_err() is fine here.
 
->
-> I ask because the proposed "hybrid" model is very similar to the "old"
-> model which did not use the atomic replace.
+> +	// Freeze the reshape
+> +	set_bit(MD_RECOVERY_FROZEN, &conf->mddev->recovery);
+> +	// Revert progress to safe position
+> +	spin_lock_irq(&conf->device_lock);
+> +	conf->reshape_progress = conf->reshape_safe;
+> +	spin_unlock_irq(&conf->device_lock);
+> +	// report failed md sync
+> +	md_done_sync(conf->mddev, 0, 0);
+> +	wake_up(&conf->wait_for_reshape);
 
-It=E2=80=99s essentially a hybrid of the old model and the atomic replace m=
-odel.
+Just wonder, this will leave the array in the state that reshape is
+still in progress, and forbid any other sync action(details in
+md_choose_sync_action()). It's better to avoid that, not quite
+sure yet how. :(
 
->
-> What are the advantages of the "hybrid" model over the "old" model, pleas=
-e?
+In theory, if user provide a new disk, this werid state can be resolved
+by doing a recovery concurrent with the reshape. However, this is too
+complicated and doesn't seem worth it.
 
-- Advantages compared to the old model
-  In the old model, it=E2=80=99s not possible to replace a specific livepat=
-ch
-with a new one. In the hybrid model, however, you can replace specific
-livepatches as needed.
+Perhaps, check badblocks before starting reshape in the first place can
+solve most problems in this case? We can keep this patch just in case
+new badblocks are set while performing reshape.
 
-- Advantages and disadvantages compared to the atomic replace model
-   - Advantage
-     In the atomic replace model, you must replace all old
-livepatches, regardless of whether they are relevant to the new
-livepatch. In the hybrid model, you only need to replace the relevant
-livepatches.
+Thanks,
+Kuai
 
-   - Disadvantage
-     In the atomic replace model, you only need to maintain a single
-livepatch. However, in the hybrid model, you need to manage multiple
-livepatches.
+> +}
+> +
+>   static int want_replace(struct stripe_head *sh, int disk_idx)
+>   {
+>   	struct md_rdev *rdev;
+> @@ -4987,6 +5008,8 @@ static void handle_stripe(struct stripe_head *sh)
+>   			handle_failed_stripe(conf, sh, &s, disks);
+>   		if (s.syncing + s.replacing)
+>   			handle_failed_sync(conf, sh, &s);
+> +		if (test_bit(STRIPE_EXPANDING, &sh->state))
+> +			handle_failed_reshape(conf, sh, &s);
+>   	}
+>   
+>   	/* Now we check to see if any write operations have recently
+> 
 
->
->
-> > > > our SREs have consistently reported that one or more servers become
-> > > > stalled during
-> > > > the upgrade (replacement).
-> > >
-> > > What is SRE, please?
-> >
-> > >From the wikipedia : https://en.wikipedia.org/wiki/Site_reliability_en=
-gineering
->
-> Good to know.
->
-> > > Could you please show some log from a production system?
-> >
-> > When the SREs initially reported that the livepatch transition was
-> > stalled, I simply advised them to try again. However, after
-> > experiencing these crashes, I dug deeper into the livepatch code and
-> > realized that scalability is a concern. As a result, periodically
-> > replacing an old livepatch triggers RCU warnings on our production
-> > servers.
-> >
-> > [Wed Feb  5 10:56:10 2025] livepatch: enabling patch 'livepatch_61_rele=
-ase6'
-> > [Wed Feb  5 10:56:10 2025] livepatch: 'livepatch_61_release6':
-> > starting patching transition
-> > [Wed Feb  5 10:56:24 2025] rcu_tasks_wait_gp: rcu_tasks grace period
-> > 1126113 is 10078 jiffies old.
-> > [Wed Feb  5 10:56:38 2025] rcu_tasks_wait_gp: rcu_tasks grace period
-> > 1126117 is 10199 jiffies old.
-> > [Wed Feb  5 10:56:52 2025] rcu_tasks_wait_gp: rcu_tasks grace period
-> > 1126121 is 10047 jiffies old.
-> > [Wed Feb  5 10:56:57 2025] livepatch: 'livepatch_61_release6': patching=
- complete
->
-> I guess that this happens primary because there are many processes
-> running in kernel code:
->
->        + many processes =3D> long task list
->        + in kernel code =3D> need to check stack
->
-> I wondered how much it is caused by livepatching do_exit() which
-> takes tasklist_lock. The idea was:
-
-I=E2=80=99ll drop the changes in do_exit() and run the test again.
-
->
->         + The processes calling do_exit() are blocked at
->           write_lock_irq(&tasklist_lock) when
->           klp_try_complete_transition() takes the tasklist_lock.
->
->         + These processes can't be transitioned because do_exit()
->           is on the stack =3D> more klp_try_complete_transition()
->           rounds is needed.
->
->           =3D> livepatching do_exit() reducess the chance of
->              klp_try_complete_transition() succcess.
->
->         Well, it should not be that big problem because the next
->          klp_try_complete_transition() should be much faster.
->          It will skip already transitioned processes quickly.
->
->        Resume: I think that livepatching of do_exit() should not be the m=
-ain
->                 problem for the stall.
->
->
-> > PS: You might argue again about the frequency. If you believe this is
-> > just a frequency issue, please suggest a suitable frequency.
->
-> I do not know. The livepatch transition might block some processes.
-> It is a kind of stress for the system. Similar to another
-> housekeeping operations.
->
-> It depends on the load and the amount and type of livepatched
-> functions. It might take some time until the system recovers
-> from the stress and the system load drops back to normal.
->
-> If you create the stress (livepatch transition) too frequently
-> and the system does not get chance to recover in between the
-> stress situations then the bad effects might accumulate
-> and might be much worse.
->
-> I have no idea if it is the case here. The rule of thumb would be:
-
-Note that I=E2=80=99ve just deployed the test to a few of our production
-servers. The test runs at a relatively low frequency, so it doesn=E2=80=99t
-introduce significant side effects to the original workload, aside
-from some latency spikes during deployment. These spikes are
-short-lived and disappear quickly.
-
->
->   + If you see the hardlockup warning _only_ when running the stress
->     test "while true: do apply_livepatch ; done;" then
->     the problem might be rather theoretical.
->
->   + If you see the hardlockup warning on production systems where
->     the you apply a livepatch only occasionally (one per day)
->     then the problem is real and we should fix it.
-
-I can't run it once per day, as it might take too long to reproduce
-the issue. If I want to reproduce it quickly, I=E2=80=99d need to deploy th=
-e
-test to more production servers, which would likely be complained
-about by our sys admins. Notably, the RCU warning even occurs when I
-run the test once every 4 hours. The reason I run the test
-periodically is that the workloads change throughout the day, so
-periodically testing them helps monitor the system's behavior across
-different workloads.
-
->
->
-> > > > > > > > Other potential risks may also arise
-> > > > > > > >   due to inconsistencies or race conditions during transiti=
-ons.
-> > > > > > >
-> > > > > > > What inconsistencies and race conditions you have in mind, pl=
-ease?
-> > > > > >
-> > > > > > I have explained it at
-> > > > > > https://lore.kernel.org/live-patching/Z5DHQG4geRsuIflc@pathway.=
-suse.cz/T/#m5058583fa64d95ef7ac9525a6a8af8ca865bf354
-> > > > > >
-> > > > > >  klp_ftrace_handler
-> > > > > >       if (unlikely(func->transition)) {
-> > > > > >           WARN_ON_ONCE(patch_state =3D=3D KLP_UNDEFINED);
-> > > > > >   }
-> > > > > >
-> > > > > > Why is WARN_ON_ONCE() placed here? What issues have we encounte=
-red in the past
-> > > > > > that led to the decision to add this warning?
-> > > > >
-> > > > > A safety measure for something which really should not happen.
-> > > >
-> > > > Unfortunately, this issue occurs during my stress tests.
-> > >
-> > > I am confused. Do you see the above WARN_ON_ONCE() during your
-> > > stress test? Could you please provide a log?
-> >
-> > Could you pls read my replyment seriously ?
->
-> This is pretty hars and offending after so many details I have already
-> provided!
-
-Sorry about that. You really help me so much.
-
->
-> It is easy to miss a detail in a flood of long mails. Also I am
-> working on many other things in parallel.
->
-> > https://lore.kernel.org/live-patching/Z5DHQG4geRsuIflc@pathway.suse.cz/=
-T/#m5058583fa64d95ef7ac9525a6a8af8ca865bf354
->
-> Ah, I have missed that you triggered this exact WARNING. It is great.
-> It confirms the theory about the race in do_exit(). I mean that
-> the transition finishes early because the processes in do_exit()
-> are not longer visible in the tasklist.
-
-It seems like that.
-
->
->
-> > > > > > > The main advantage of the atomic replace is simplify the main=
-tenance
-> > > > > > > and debugging.
-> > >
-> > > If you have problems with the atomic replace then you might stop usin=
-g
-> > > it completely and just install more livepatches in parallel.
-> >
-> > Why do we need to install livepatches in parallel if atomic replace is =
-disabled?
-> > We only need to install the additional new livepatch. Parallel
-> > installation is only necessary at boot time.
->
-> This is misunderstanding. By "installed" livepatches in parallel I
-> mean "enabled" livepatches in parallel, aka, without atomic replace.
->
-> If you have problems with atomic replace, you might stop using it.
-> Honestly, I do not see that big advantage in the hybrid model
-> over the non-atomic-replace model.
-
-I believe the ability to selectively replace a specific livepatch is a
-significant advantage over both the non-atomic-replace and
-atomic-replace models.
-
->
-> That said, I think that the hybrid mode will not prevent the
-> hardlockup warning. It seems that you have reproduced the hardlockup
-> even with a relatively simple livepatch, see
-> https://lore.kernel.org/all/CALOAHbBZc6ORGzXwBRwe+rD2=3DYGf1jub5TEr989_Gp=
-K54P2o1A@mail.gmail.com/
->
-> IMHO, we should rather detect and break the stall in
-> klp_try_complete_transition(). I mean to go the way explored in
-> the thread
-> https://lore.kernel.org/all/20250122085146.41553-1-laoar.shao@gmail.com/
-
-That=E2=80=99s a separate issue, which we can discuss it seperately.
-
---
-Regards
-Yafang
