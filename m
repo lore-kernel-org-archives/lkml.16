@@ -1,187 +1,99 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E27F1F2B86
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 22:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067961F2B87
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 22:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739053943; cv=none; b=rFEwj0heJr8C5vjl/zHIp/jch9t2TTo9IqNCOQTKbwk3eOvo8CsfO1cnTENRA+mpcQJLyJ2wVb1KL+g9rhYD9JAxHlaRAdilbucOZQevuEJVK4LTeMcTv8TSI1nZZZxQpgj6OEqoZoYJf6lEKR4OgluMHZ+o49jmTAgzcQS1A60=
+	t=1739054118; cv=none; b=Ax65CXVnhnbB92Qb+ysUM3MRqZ02WPmWMI65TEVdlx5LiaCdqwSnxgVfncBNRSSiJqQuKCTVbER7W1bC1LDlTEddbgzYkdFSvoykmHanfIutpUXi2i6oqFMMsrJpOYErrFhjEHkLimdnrDRWFVPQjCyZLDhND94wy9ng1iQzZGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739053943; c=relaxed/simple;
-	bh=cmG/SbbB3cisojdaO+4uHb7XpN+HtDdeH9DqF1/z74A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IpZBRNPjkg+PuY8X+y2xXxDs2QsmpXxbZfbluzqovMe1sffbJyUmpmZoGAmDoY/lB2XMwjVwFJLNN6/Y4OWDRJPVx+c99+5lfsI8pWTnWH6hg8wdzzSqYrG4cNVdu1xQ9caDSs4fsp9dKkRtsz3Deyp7V/bfw8OOxsm1lPm/jjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ANau2tYU; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739054118; c=relaxed/simple;
+	bh=/wmy6yC82GOnuYOyCwKkx324d1uQc1M7iBLRt0YPcSQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NPDjVfaeVob5MuayiKoP0BJqf1o3aVx74hMqmPctUw3nm0sXyFsH5sAWKUqBBh7xdpwsb6qztqcTLAijCT+ZK3d7HDsOSJpLppaMhLqUfXUt5/7dTUUdxUrRj64jo6GtzEnv5kWz5SZMZzi8WIWYGuGkQG40n0Aosj8WSb4BAoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IFmrHhwg; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ANau2tYU"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30738a717ffso28874511fa.0
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 14:32:21 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IFmrHhwg"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab795eba976so225841566b.0
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 14:35:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739053940; x=1739658740; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=OoAfmsggo7EidUtnQBiDbjVxpXFthZ69JupoUyDZEP8=;
-        b=ANau2tYUun97pk+N4T5s5yD2tgPYjtXRwLMdW0dl1pZdrxRIQuUvkbyf49sd1G9JOe
-         6bOpCTh9UPdZYDNOJk4ZPrTSeXDBnnflVsguDqZy+j9BsjzdoiXqC0+HngM67GTbK3NM
-         jcm+hV2bTJcuhpnuumAU5yB72jwtg0yBLbREwQip/mxMUSsBdfnFYnQTYYrBMZ3wT5EJ
-         tRYviQJLrDLakErMFMOh35e1BTEw43Hppzf1AHTOB52GnF5d22+ibPNP/1TA3SeUek/Y
-         X1ID1OP5sVuouIR98xRCIxDBFFa8isJTyC1N5SLqaiQ8O2+2USvUFaUuPjrKv3utGBOs
-         j3VQ==
+        d=linux-foundation.org; s=google; t=1739054114; x=1739658914; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Aw5rB8a9ogv1Af1lax+6BTqRpmDPZAFLk8yjZ727oUc=;
+        b=IFmrHhwgs7cCGRVikbEAb67WxNmKWOzSX0WStZLfOCVNSNHLv722hnmADzISHbUhQq
+         UU37oWUZeSsNf74jvhz6OKVx80OtgT07UL1vWGFn6CXhB0AcBKtNkqx2qSR8u08OhWY+
+         II9cgAmletJ6ME0xF6ifoWH+4UyotgJ2M7OEs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739053940; x=1739658740;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OoAfmsggo7EidUtnQBiDbjVxpXFthZ69JupoUyDZEP8=;
-        b=aNNEHTKGRRW8+ehUC6BIht8T28hgou+si8ZOcW5gZ1RKesz69DNJslo+i43LhEH8R7
-         LTvaZMZ3K2CTo5kIhrvYthwd9OCRMDZYLqVQTeFmvm4+Zn9ZgmEzGyDO5IPcFNPWZcQP
-         uTWM4tQRy0WFF63nYqfE9nOV4NBKnK5D64J8YG7IrYYbBeIWIRfnzOx6fGElC/wpCOLF
-         fXoPq5KRRTkiekOFKbLvWAVnebKPeK3Dvy2DO7Tgox/8P2hwGgNWWYyKOjus1FnnFV2R
-         Ls9DB2kfbm/XyBYZkKZY61k+lxj7rXZtLEHmG2ZJ88u+HYKvWiuOpVqtqvjx+v9pbjjZ
-         FbTw==
-X-Forwarded-Encrypted: i=1; AJvYcCUf7uChzIKz7jphfbdEGXHOkc5VggCiAJZ8Z9gW0kyl1qZIf1eHuOr4Jv5jb5dtzwlGUqNK9fvAX2vsAK8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+5IBlIi3bZVf8ZNEAe0RRBfiEgWjZah4s2WKVE+dcuLd/6SJD
-	7+QnFVINab6niIc8gkEzx6h0mmYvn6JuZ9VbzBdOjlpkGLRilW10w9FxaQqz48g=
-X-Gm-Gg: ASbGncvJ7HBTr5Eq0cSj5FKvrROWtaI/zUToLgmr0bVkRnD4u1vO+f7mr5TUcBB9tso
-	7CWVXn5rznL3tp6n+3vuy3GsygUC0FoO5kYVC1DmULnUCGnf1xH9GEGPt/5Cfu4RPcozppPaHpX
-	ByR+MTW0s6u5Ae3xexS5u/kiLhlcTt6kkUCimXvk74ekKI4LX6wvajd1GyNc/izdB7Hl/Tz4tru
-	qzkoDLHwu2DP1fS6TH0yZ/lBoLd1202MVl0+V7lUaL5PsmSlMNkuzkJTo+e4OzOYAA2+WYfvaZL
-	USpH1PSQiEtow9eBqmSRzfo6BcKfN0YBmkIwvOCK2AY3AJGJuD5ooVs9IAWiyn+gmva6Eiw=
-X-Google-Smtp-Source: AGHT+IHnMxSLCdxMnbDBy9u58ckrqNO9Jg2ChETCK+eCWlzlOT9M+YisygDlkTGNrNn8aaJ+5piFmg==
-X-Received: by 2002:a2e:a805:0:b0:307:2bc6:5eb4 with SMTP id 38308e7fff4ca-307e57ce743mr25834061fa.3.1739053939534;
-        Sat, 08 Feb 2025 14:32:19 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de18f728sm8231001fa.36.2025.02.08.14.32.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 14:32:18 -0800 (PST)
-Date: Sun, 9 Feb 2025 00:32:15 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Marijn Suijten <marijn.suijten@somainline.org>
-Cc: Danila Tikhonov <danila@jiaxyga.com>, neil.armstrong@linaro.org, 
-	quic_jesszhan@quicinc.com, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org, 
-	konradybcio@kernel.org, robdclark@gmail.com, quic_abhinavk@quicinc.com, sean@poorly.run, 
-	jonathan@marek.ca, jun.nie@linaro.org, fekz115@gmail.com, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, linux@mainlining.org, 
-	~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 3/4] drm/msm/dsi: Allow all bpc values
-Message-ID: <nx5zeueyifytvxpr5mm3njztt2npfbp7oczdc7zk2i7vulnoon@u2c5dfim5xci>
-References: <20250203181436.87785-1-danila@jiaxyga.com>
- <20250203181436.87785-4-danila@jiaxyga.com>
- <rnuv4dieiy6s6c5s33hff7ntr6hkneemsq5qzk3u4ug2abwisd@6ahmijlayhhr>
+        d=1e100.net; s=20230601; t=1739054114; x=1739658914;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Aw5rB8a9ogv1Af1lax+6BTqRpmDPZAFLk8yjZ727oUc=;
+        b=s+BwoiJrk8XGaekwh2QsBBkmPBVOCMhsH8qtbxBPKjpwdO1UyuU36/ybS1gzO5wFzV
+         F7Q/hslvjKmhtauFimS6tVWS3A313ovVQdAh87tIUSvQpdYGAdWpAAHehSrfN2z7tQE7
+         +Jo/93FI3VbSSq2zYSbv7Iz5rTxpnsKWkGa7cXBkIpHo8eH6UL2/mFn0Ozrsu3Pf4OeO
+         YK0Ak0V6cS0nwbhGPZCDW27PfnT1xOF5MTgIN5/piq/tqGu17hltpJnj6NQAdsRlgO56
+         j42qlGtczrxhKAtimwWqCGHCm1kLTEVJdR5Aj7C8TIW1gJ877OVSBGaniAfoVAecOupg
+         CR9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWwbqDGN1Orj3Vb9dNuno7ZW9nK7EfcQR71QVkw8burslbPHqCo91mNeU/b+A7ym0WsE92EcdIs2T0sZyc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9rkLsyLyn3xOn4nL7t7X6vbWudUGHOTyC7F2/GoZriq8ncj1Z
+	VZJBvKDwCjmxZv6uObXc6Q8WUVMgD44ZXpSkzwXHdrL1CdQvENwUqLmK51GMwOy/2mKD0e31vl3
+	jalh3iA==
+X-Gm-Gg: ASbGnct5b4yBIJeeSo/W98WCEj0kFPUi0UbuwTVcmllO//TbsKwVIgd8x5sX4r+nalJ
+	yLcsBfGd4ZhVjhMCuM2p0DBcMx4xzvUuyRXnWCQKZ/oMNmRR0ie2emlimMAH703AIWu0Fv4Snd0
+	+ntezlss3Vo8JuTR266kZIcZ1CX2ebN89WSJJimBI80dTd5rVVhTqrkvlct8M7wWQEKgyWuGVdn
+	NPsm6ExezKTfJzhbzguyU00vFfnLHc8i9lDf3z3Wc9S7uS2prHXRGdC+mrBTeFryQZlAl0+smxU
+	2qM9T4+9H2TgxD5oGN4+5K/NFwn3+d0Nz0Bbm7Mys4LJt8ZShTX9r038qSjb8xWNUw==
+X-Google-Smtp-Source: AGHT+IEly3zh0NVCgIgX9Mjo9VNMpHx+Wo32ZF4MJWrREq7iiBc+m7QxmYQIz2XiOsoNLSvA44vFVQ==
+X-Received: by 2002:a17:907:3e27:b0:ab6:f88f:bf1f with SMTP id a640c23a62f3a-ab76e9dc0e7mr1383782466b.27.1739054114060;
+        Sat, 08 Feb 2025 14:35:14 -0800 (PST)
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab78d5771easm387763766b.83.2025.02.08.14.35.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Feb 2025 14:35:13 -0800 (PST)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5de6c70832bso444383a12.1
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 14:35:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWQDyosDoIkJ4P5M4lECCDJL28m8OhHpfM7tz2NA3G3W6cfKtL1ysdrFkMgUZ0fgc8+3iOiLjNOM1Z/tDs=@vger.kernel.org
+X-Received: by 2002:a05:6402:40d2:b0:5de:59fe:f585 with SMTP id
+ 4fb4d7f45d1cf-5de59fef79cmr3972861a12.6.1739054113055; Sat, 08 Feb 2025
+ 14:35:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <rnuv4dieiy6s6c5s33hff7ntr6hkneemsq5qzk3u4ug2abwisd@6ahmijlayhhr>
+References: <20250206054504.2950516-1-neilb@suse.de> <20250206054504.2950516-15-neilb@suse.de>
+ <20250207210658.GK1977892@ZenIV> <20250208220653.GQ1977892@ZenIV> <CAHk-=whEbj9p33Cn_P4PawBqkav8zQq5+WjtzqYCK0o621p1kw@mail.gmail.com>
+In-Reply-To: <CAHk-=whEbj9p33Cn_P4PawBqkav8zQq5+WjtzqYCK0o621p1kw@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 8 Feb 2025 14:34:56 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whyBwei9inP2j1CYxH=RVoFya47rd2Z5oYfKNDKAz2Hxg@mail.gmail.com>
+X-Gm-Features: AWEUYZlCBj39i2MdyBuSfTYd8OzjnY0fhKAQ--9Qm9JnvM0_fMK2hsmooPtcTg4
+Message-ID: <CAHk-=whyBwei9inP2j1CYxH=RVoFya47rd2Z5oYfKNDKAz2Hxg@mail.gmail.com>
+Subject: Re: [PATCH 14/19] VFS: Ensure no async updates happening in directory
+ being removed.
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: NeilBrown <neilb@suse.de>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Jeff Layton <jlayton@kernel.org>, Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Feb 08, 2025 at 11:09:56PM +0100, Marijn Suijten wrote:
-> On 2025-02-03 21:14:26, Danila Tikhonov wrote:
-> > From: Eugene Lepshy <fekz115@gmail.com>
-> > 
-> > DRM DSC helper has parameters for various bpc values ​​other than 8:
-> 
-> Weird zero-width \u200b spaces here between "values" and "other", please delete
-> those.
-> 
-> > (8/10/12/14/16).
-> > 
-> > Remove this guard.
-> > 
-> > Signed-off-by: Eugene Lepshy <fekz115@gmail.com>
-> > Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
-> 
-> Should this patch elaborate that those "DRM DSC helper" don't have any
-> additional guarding for the values you mention either, i.e. passing 9 or 11 or
-> >16 don't seem to be checked anywhere else either?
-> 
-> And your title might have space to spell out "Bits Per Component" entirely.
-> 
-> > ---
-> >  drivers/gpu/drm/msm/dsi/dsi_host.c | 7 +------
-> >  1 file changed, 1 insertion(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> > index 007311c21fda..d182af7bbb81 100644
-> > --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-> > +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> > @@ -1767,11 +1767,6 @@ static int dsi_populate_dsc_params(struct msm_dsi_host *msm_host, struct drm_dsc
-> >  		return -EINVAL;
-> >  	}
-> >  
-> > -	if (dsc->bits_per_component != 8) {
-> > -		DRM_DEV_ERROR(&msm_host->pdev->dev, "DSI does not support bits_per_component != 8 yet\n");
-> > -		return -EOPNOTSUPP;
-> > -	}
-> > -
-> >  	dsc->simple_422 = 0;
-> >  	dsc->convert_rgb = 1;
-> >  	dsc->vbr_enable = 0;
-> 
-> This seems supicous on the dpu1 side, in the original DSC 1.1 (not 1.2) block in
-> dpu_hw_dsc_config(), which has:
-> 
-> 	data |= (dsc->line_buf_depth << 3);
-> 	data |= (dsc->simple_422 << 2);
-> 	data |= (dsc->convert_rgb << 1);
-> 	data |= dsc->bits_per_component;
-> 
-> The original value of `8` would overlap with the lowest bit of line_buf_depth
-> (4th bit in `data`).  Now, the 2nd bit which will take the value from
-> convert_rgb, which is already set to 1 above, will overlap with the 2nd bit in
-> your new bpc value of 10.
-> 
-> Can you double-check that this code in DPU1 is actually valid?  I assume you
-> have tested this panel at least and it is working (worthy mention in the cover
-> letter?), this just seems like yet another mistake in the original bindings
-> (though the register always had a matching value with downstream on 8 BPC panels
-> for me).
+On Sat, 8 Feb 2025 at 14:30, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> I've never used clang-format, but I do know it supports those kinds of
+> extensions, since I see them in the kernel config file.
 
-Indeed. msm-4.14 explicitly names that single-bit field as
-'input_10_bits'. The block is supposed to support bpc of 8, 10 and 12.
-This bit should only be set for bpc=10.
+Bah. Over-eager editing removed the context of that sentence.
 
-Marijn, thanks for catching it!
+The context was supposed to be that in the kernel, we tend to have
+lots of patterns that make traditional indentation checking totally
+useless: things like the "list_for_each()" macro that obviously
+includes a loop in it and thus has indentation expectations.
 
-We should start rewriting DPU register accessors to use generated
-accessors. At least it will clearly show if the field is a flag or a
-field which has some values. With the current code it is impossible to
-notice the difference.
-
-> 
-> > @@ -1779,7 +1774,7 @@ static int dsi_populate_dsc_params(struct msm_dsi_host *msm_host, struct drm_dsc
-> >  	drm_dsc_set_const_params(dsc);
-> >  	drm_dsc_set_rc_buf_thresh(dsc);
-> >  
-> > -	/* handle only bpp = bpc = 8, pre-SCR panels */
-> > +	/* handle only pre-SCR panels */
-> >  	ret = drm_dsc_setup_rc_params(dsc, DRM_DSC_1_1_PRE_SCR);
-> 
-> Good catch - this comment sounds like it's documenting a limitation of
-> this helper function, but the function does not have such limitations...
-> rc_parameters_pre_scr has values for all these combinations.
-
-I think the =8 part is a leftover of the old, pre-helper code.
-
-> 
-> - Marijn
-> 
-> >  	if (ret) {
-> >  		DRM_DEV_ERROR(&msm_host->pdev->dev, "could not find DSC RC parameters\n");
-> > -- 
-> > 2.48.1
-> > 
-
--- 
-With best wishes
-Dmitry
+           Linus
