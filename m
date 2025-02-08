@@ -1,266 +1,114 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573BF1B3725
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 10:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6A21A8F71;
+	Sat,  8 Feb 2025 10:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739010987; cv=none; b=Nq25N89TUgMvhVnBz3PqpqcYBGPEZYASdO2zZcLoUjXsOTnI+cPFSSZZJhWdFm6rsOq8OFKYn3QUdJQFO13CyAPIbTWqLRalL6sWI/eotkEHQjVPk1en7dGi8dJ+2O+dhikEOoaVxI0i6SIQ9AlBWCq8WFsPAYQBoQNuufxun0w=
+	t=1739011033; cv=none; b=VFeG++JIEUuSCkl8NwPtWi/j9j7xGWsZStwB5w18KQA+dHChv1sznEp3XLYvnTIlNxlGBs2AHpl31tjKuijt1cO2NTW//90NrCSLkQqBdqdCZzMROCWvUHWQIO5QSHGVWFCXGTpe8zeOO0zP6ntTvz7YYHevir8xOU95oVpWOVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739010987; c=relaxed/simple;
-	bh=SW5UhacMkzZWCSkVTvHO3TFBny3T2LZZG3994FQBevE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hj0X103PckhW+uMD4KU5o8k5x4JIteKSdTD8pfZjd15IzEraSvkzysYf4OARlrgDt8bVilVQcJbYCQIDnyonR2L/5k6Plu5QslcnGQtv/nEDz6BP/tO9hDSPQSfwoDZg5sAFmhozdX0ZfkGi+S+Fqgq8GUXC/FM0YS7E6qp/dN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nVqKCau5; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739011033; c=relaxed/simple;
+	bh=fbTAEHxKYAB+zntHxdQR3V8tZP+Ebuo9IaCwxPfpeWM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JyLX3/Pv5N8H0u+dxnYCkCuDn7U80DUXWkF35e58m6+4X5mxjuqPwHyrP2N7hW2x02nE9s73WW8FCK01kize8Mt9nuHDj1ZIUp8y6uNeD/iW2sv0L9Nqt0cM70A9L0NS0sPoS60ZvSHMVLSSmLoYr065B/o6KIJ2Yy+/fUcwEos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z+I9CRvD; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nVqKCau5"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f6d264221so3484805ad.1
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 02:36:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+I9CRvD"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5de594e2555so1264998a12.2;
+        Sat, 08 Feb 2025 02:37:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739010984; x=1739615784; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BoaAnmRJfikjMJJ5mT1KSvwU4+ZQgSKozzj6VL4ELUQ=;
-        b=nVqKCau5qY104+K3c/bjRqgBH78/pgL8bdTs3QOVFHbx5nZ2wFxDXK0KlA64lql/Ir
-         0L22Cf0zKnjXQFAR8bD7dG28KBB2s+U2cQOa84NHXoOAXMtynnXP42wJPkgCMibyELhu
-         kfbZCXkHFr305B8X3aQ0pRhf/BEOyDvuuAymGo0qCsSIyYYdB7LV0MBHZALe6GgkQNmw
-         Z0Z2ZKttxibL4wyBx5kj0gj7rP7TwEwt3pzLSLXnP9XuhMoySvNLoIIHBKnR8BeXpYBC
-         AOFWdgJUBMa1RoTaPkjNmkqZl1Dixii9XBta/aAJeHdHhLS5FhbpJY9/jqTS4QL+eDb0
-         A7iw==
+        d=gmail.com; s=20230601; t=1739011030; x=1739615830; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:reply-to:from:subject:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Lqq5OoJ+h980raMJOy0T0Ud0ZH+rb/gmRb99fFAaT6Q=;
+        b=Z+I9CRvDr3axEtu9pR9hiWXEo32jZuwRWrPvEpUBsbZUeKbcM4hHbnzXB/PjEkBaJ6
+         l2r+ol+0Eh6MYIRfzEQ/Cmn/wP7oK5R2jYGQDqv3KxsDN/C0K0NX5Aw4IhwluaS91x+t
+         f/2aPA1W3BdQsPUCrJZ46bEKbVqgs76Dg517N0KR5iGCY9uze75pyR4hWAhYQPoDa1Wi
+         rKeb1jCNBBGuolYcO8H5vZThC66BqYHIHUbUUq+1eWkg1aPZBWOjjtLA754jRbwi7N/x
+         XRx2Hem0JRjJnKOr7YY2YEzGdTTi9LJsdHwLhMkyKGP/NL8drUknAH9D+8nmdcABPBla
+         Br3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739010984; x=1739615784;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1739011030; x=1739615830;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:reply-to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BoaAnmRJfikjMJJ5mT1KSvwU4+ZQgSKozzj6VL4ELUQ=;
-        b=hkVEWFqAtQ5KU8akO3ovAczcPqUTumMaNrJPDuVjOFs/Ti6Vgq78kR69wcesxL/STz
-         aDyn93Ne/RBEszF7puK1O06WXXXlUExTewQfzedAzneKn17ykHuCD976xm6HVGww2L24
-         3Dq3JlhhGVZs1TaREXESzU5F4fGv/fPEcD8iM8YrVkOKbl6DOgAIaDT/rOSfnVc/BnwU
-         Ax2SfKtdoOAlfoZmlxz3O6h3LuLeneJHRVZm9a/7tfaPX2rr47OHeQoALVsmLefeBjJk
-         rMVqJvWdtSY3RvR5bGIGiMEwKDhrvsbBpm6nnUzRMMUT2S39GtAiyW1HBkZcnLE5reJL
-         cdgg==
-X-Forwarded-Encrypted: i=1; AJvYcCXCLwWfXPFQU5s3X3/Vr/1hhAy5jKCUeYCw8r0MFqS4N/YnRL2KrUxJSXhlb9NEIEiZ9TSnf9qoksVSzeg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7lQ32K3O3Uj2sSn6zruqPyR+5klQAKKXWFNJelnrWGFsalsTT
-	6bGXpbPGLGXd1QOX2u7oXmUXU1D/5UJ0hWLX3iC6ai6y+5rsOu+E9WaNbZZyqg==
-X-Gm-Gg: ASbGncsD7B/q6F/sevC4p9gCYUFtUXA68QYOr7MkW1XoixPBgebCI8WtJks5Nubdnh+
-	t0Ek6KkRRTxFmgZGZLMWfg4Dh0ZDlv25SOuSBPio5T4dbf7cP9WghyYQ1NxGNkWroKeztb6Hywz
-	ZctEyykXjnRVmjitCGqSE9DfYiQQIHg295Dd1CrNI4vetje8SBba1Y/Wq3GxmYi6TdnjroC4NRI
-	FUjK+X0QkzDVxzmyRiPZf2sEfcGtdk024UiyspLiJRaqjub7qzDeC1MViB7mMLwrtwjQ9KSp9BL
-	i242iLGLh3td1m3S4hhNplzV
-X-Google-Smtp-Source: AGHT+IE9RgAXmno9t4rWIPgdel/xLwnILZhf5pQ1KhWjVCU87NJl/bhU5fdwOYmDPaXFBy/uv0e86Q==
-X-Received: by 2002:a17:903:2309:b0:215:6b4c:89fa with SMTP id d9443c01a7336-21f4e1ced38mr93272025ad.8.1739010984539;
-        Sat, 08 Feb 2025 02:36:24 -0800 (PST)
-Received: from thinkpad ([120.60.69.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d8ffsm44251845ad.150.2025.02.08.02.36.20
+        bh=Lqq5OoJ+h980raMJOy0T0Ud0ZH+rb/gmRb99fFAaT6Q=;
+        b=dsvzVOnTLXbyA5+vENzxuIUqTmVi5F0HTHdFE3AWZRK/Q1By6lBmsHftItJ/2oUWty
+         p+MDrMyR5dnydB7Ow1jrVeRit6jZzN+0jZhcAjBR0MMxWZy/5C8SRsvWct1ugCEHYoYD
+         htE5IL2zP34Cmm39i/BNSf6Jt+d8aBl8qinmDeMUGJj08ItruFMYcIOg1Vdguae0nw0e
+         TuYla4iOpeLvDNsOp0SbuuN2vhM7csaSNSNBexvB3z/ZWT22zFcGJDGjIULDd+uHW0Zd
+         wqVqMWCu7k4qH/Ia9hzo99UyCA2yRb0VO/xKlftgvjFuuFL6Yd4PzPPQypGVadJot5XN
+         5tvw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3M1A5FhAwDKMPplzQMvlJHfevHItFBblEtqxAKwddHZNDNMAH2i6AdlsWDBvsiikplv/6dndyWxM=@vger.kernel.org, AJvYcCUT+aJf1KxeZvJqPHfAe56V5clbCTgOrNmWie69TAjQjF3j+8Er/TVoS0CNzyfuZla2We7WlwqKNeVVPi9t@vger.kernel.org, AJvYcCVvuC1zzFuMtatFn0Bf1KJ/OYmTYGkRhqOAfBWz/BjpWib0037+1FssIB+jquNrjNEQCxzak06bqR4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhuctIz9Xea7kquPi1pN1n9ZjOOmXCIJlaVwt372syut0LgP4e
+	5YSiQhHVhXcCcV2kCj83nyEYf3EzeVRNzW704XdDaK+82uTtyVjpUQO770Rz
+X-Gm-Gg: ASbGnctWFBYkNT1T+0ofXKPFRCiqXZjC/ZPI9Zu7qMr1VxhU1cPGNDNBoPXjgIArQFa
+	J7xqEpYSjPLzxswYO8NGgxhDu3uCk78Gkcn2fIdcXtkmj+LDQUN/wkbayxfbXz0iwj/KnSKwGKs
+	NPDKRWp4GgnRnl0F3I/80UJSY+Ow3GHwR5HqtHKQQqV8iQxn7fCuO1G/IuccTfMYfXOL7PEfzc5
+	9SB5JEHodbk9t0aDiVFd7sT1wpLp66ZSyCMoGDH6yNIJ9fYCWbQAfDYfM5KxJhB+QTtDg/9lUTl
+	I5syBLQCgc/lQTP7lZx6LGs+oqbsVqjeGXzDtB5DnF/OUw==
+X-Google-Smtp-Source: AGHT+IF7wQRnc4J9ubjIAS64xIxUH7T3gYgY1o1PxDnZ0PIwuxSosqX96dunVxzMghowYFQ2GxIymg==
+X-Received: by 2002:a17:907:3608:b0:ab2:db7b:5db3 with SMTP id a640c23a62f3a-ab789c6e8efmr543532166b.54.1739011030301;
+        Sat, 08 Feb 2025 02:37:10 -0800 (PST)
+Received: from abityuts-desk1.ger.corp.intel.com ([134.191.196.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7a275537csm110939466b.66.2025.02.08.02.37.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 02:36:24 -0800 (PST)
-Date: Sat, 8 Feb 2025 16:06:18 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Wilson Ding <dingwei@marvell.com>
-Cc: "cassel@kernel.org" <cassel@kernel.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Sanghoon Lee <salee@marvell.com>
-Subject: Re: [EXTERNAL] Re: [PATCH 1/1] PCI: armada8k: Add link-down handle
-Message-ID: <20250208103618.2binrjgry7ghoavc@thinkpad>
-References: <20241112213255.GA1861331@bhelgaas>
- <AD287CCE-9FFE-49BC-B9CA-B5CED4F05AF1@linaro.org>
- <BY3PR18MB46737FB5FDBD75CF31B505B8A7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
- <BY3PR18MB4673207A36B2CD7C3B75EBA0A7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
- <20250207175759.jzmoox5mke3rachy@thinkpad>
- <BY3PR18MB46738F5857319F9637FA5050A7F12@BY3PR18MB4673.namprd18.prod.outlook.com>
+        Sat, 08 Feb 2025 02:37:09 -0800 (PST)
+Message-ID: <c25d3b9abced9263da463b3ef4f31fff73878189.camel@gmail.com>
+Subject: Re: [PATCH v2] intel_idle: introduce 'no_native' module parameter
+From: Artem Bityutskiy <dedekind1@gmail.com>
+Reply-To: dedekind1@gmail.com
+To: David Arcari <darcari@redhat.com>, linux-pm@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>, Jacob Pan
+ <jacob.jun.pan@linux.intel.com>,  Len Brown <lenb@kernel.org>, Prarit
+ Bhargava <prarit@redhat.com>, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Date: Sat, 08 Feb 2025 12:37:06 +0200
+In-Reply-To: <9241eff1-0c2d-4c82-a77d-cb8b67cab6f9@redhat.com>
+References: <20250128141139.2033088-1-darcari@redhat.com>
+	 <20250206164009.816232-1-darcari@redhat.com>
+	 <6c258775cdf2f8f3c370c0cb81daf22dacf6aeed.camel@gmail.com>
+	 <9241eff1-0c2d-4c82-a77d-cb8b67cab6f9@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BY3PR18MB46738F5857319F9637FA5050A7F12@BY3PR18MB4673.namprd18.prod.outlook.com>
 
-On Fri, Feb 07, 2025 at 06:46:22PM +0000, Wilson Ding wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Sent: Friday, February 7, 2025 9:58 AM
-> > To: Wilson Ding <dingwei@marvell.com>; cassel@kernel.org
-> > Cc: Bjorn Helgaas <helgaas@kernel.org>; lpieralisi@kernel.org;
-> > thomas.petazzoni@bootlin.com; kw@linux.com; robh@kernel.org;
-> > bhelgaas@google.com; linux-pci@vger.kernel.org; linux-arm-
-> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Sanghoon Lee
-> > <salee@marvell.com>
-> > Subject: [EXTERNAL] Re: [PATCH 1/1] PCI: armada8k: Add link-down handle
-> > 
-> > + Niklas (who was interested in link down handling) On Sat, Feb 01, 2025
-> > + at 11: 05: 56PM +0000, Wilson Ding wrote: > > On November 13, 2024 3: 
-> > + 02: 55 AM GMT+05: 30, Bjorn Helgaas > > <mailto: helgaas@ kernel. org>
-> > + wrote: > >
-> > 
-> > + Niklas (who was interested in link down handling)
-> > 
-> > On Sat, Feb 01, 2025 at 11:05:56PM +0000, Wilson Ding wrote:
-> > > > On November 13, 2024 3:02:55 AM GMT+05:30, Bjorn Helgaas
-> > > > <mailto:helgaas@kernel.org> wrote:
-> > > > >In subject:
-> > > > >
-> > > > >  PCI: armada8k: Add link-down handling
-> > > > >
-> > > > >On Mon, Nov 11, 2024 at 10:48:13PM -0800, Jenishkumar Maheshbhai
-> > > > Patel wrote:
-> > > > >> In PCIE ISR routine caused by RST_LINK_DOWN we schedule work to
-> > > > >> handle the link-down procedure.
-> > > > >> Link-down procedure will:
-> > > > >> 1. Remove PCIe bus
-> > > > >> 2. Reset the MAC
-> > > > >> 3. Reconfigure link back up
-> > > > >> 4. Rescan PCIe bus
-> > > > >
-> > > > >s/PCIE/PCIe/
-> > > > >
-> > > > >Rewrap to fill 75 columns.
-> > > > >
-> > > > >I assume this basically removes a Root Port (and the hierarchy
-> > > > >below
-> > > > >it) if the link goes down, and then resets the MAC and tries to
-> > > > >bring up the link and enumerate the hierarchy again.
-> > > > >
-> > > > >No other drivers do this, so why does armada8k need it?  Is this to
-> > > > >work around some unreliable link?
-> > > >
-> > > > Certainly Qcom IPs have this same feature and I was also looking to
-> > > > implement it. But the link down should not be handled by this in the
-> > controller driver.
-> > > >
-> > > > Instead, it should be tied to bus reset in the core and the reset
-> > > > should be done through a callback implemented in the controller
-> > > > drivers. This way, the reset cannot happen in the back of PCI core and client
-> > drivers.
-> > > >
-> > > > That said, the Link down IRQ received by this driver should also be
-> > > > propagated back to the PCI core and the core should then call the
-> > > > callback to reset the bus that I mentioned above.
-> > > >
-> > >
-> > > It's more than a work-around for the unreliable link. A few customers
-> > > may have such application - independent power supply to the device
-> > > with dedicated reset GPIO to #PRST. In this way, the power cycle and
-> > > warm reset of RC and EP won't have impact on each other. However, it
-> > > may lead into the PCI driver not aware of the link down when an unexpected
-> > power down or reset occurs on the device.
-> > > We cannot assume the link will be recovered soon. The worse thing is
-> > > the driver may continue access to the device, which may hang the bus.
-> > > Since the device is no longer present on the bus, it's better to
-> > > remove it. Besides, in order to bring up the link, the only way is to
-> > > reset the MAC, which starts over the state machine of LTSSM.
-> > >
-> > > Well, we also noticed that there is no other driver that did this. I
-> > > agree it is not necessary if the power cycle or warm reset of the
-> > > device is done gracefully. The user can remove the device prior to the
-> > > power cycle/reset.  And do the rescan after the link is recovered. However,
-> > the unexpected power down is still possible.
-> > > Please enlighten me if there is any better approach to handle such
-> > > unexpected link down.
-> > >
-> > 
-> > There is no issue in retraining the link. My concern is that, the retrain should
-> > not happen autonomously in the controller driver. PCI core should be made
-> > informed of it. More below.
-> > 
-> 
-> Do you mean 
-> - pass the link down/up events to PCI core
-> - remove the device or hierarchy by PCI core upon link down
-> - initiate the link retraining in PCI core by calling the platform retrain callbacks 
-> - rescan the bus once link is recovered
-> 
+On Fri, 2025-02-07 at 12:13 -0500, David Arcari wrote:
+> > And if kernel was not configured with ACPI support, are these not
+> > recognized? Or
+> > they are just no-op basically?
+>=20
+> They are a no-op - the flags are all set to false so ACPI C-state tables=
+=20
+> are ignored.
 
-Yeah. This is what I came up with quickly:
+It would be nice to mention this too. Otherwise it sounds a bit incomplete.=
+ Like
+this:
 
-```
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index b6536ed599c3..561eeb464220 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -706,6 +706,33 @@ void pci_free_host_bridge(struct pci_host_bridge *bridge)
- }
- EXPORT_SYMBOL(pci_free_host_bridge);
- 
-+void pci_host_bridge_handle_link_down(struct pci_host_bridge *bridge)
-+{
-+       struct pci_bus *bus = bridge->bus;
-+       struct pci_dev *child, *tmp;
-+       int ret;
-+
-+       pci_lock_rescan_remove();
-+
-+       /* Knock the devices off bus since we cannot access them */
-+       list_for_each_entry_safe(child, tmp, &bus->devices, bus_list)
-+               pci_stop_and_remove_bus_device(child);
-+
-+       /* Now retrain the link in a controller specific way to bring it back */
-+       if (bus->ops->retrain_link) {
-+               ret = bus->ops->retrain_link(bus);
-+               if (ret) {
-+                       dev_err(&bridge->dev, "Failed to retrain the link!\n");
-+                       pci_unlock_rescan_remove();
-+                       return;
-+               }
-+       }
-+
-+       pci_rescan_bus(bus);
-+       pci_unlock_rescan_remove();
-+}
-+EXPORT_SYMBOL(pci_host_bridge_handle_link_down);
-+
- /* Indexed by PCI_X_SSTATUS_FREQ (secondary bus mode and frequency) */
- static const unsigned char pcix_bus_speed[] = {
-        PCI_SPEED_UNKNOWN,              /* 0 */
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 47b31ad724fa..1c6f18a51bdd 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -637,6 +637,7 @@ struct pci_host_bridge *pci_alloc_host_bridge(size_t priv);
- struct pci_host_bridge *devm_pci_alloc_host_bridge(struct device *dev,
-                                                   size_t priv);
- void pci_free_host_bridge(struct pci_host_bridge *bridge);
-+void pci_host_bridge_handle_link_down(struct pci_host_bridge *bridge);
- struct pci_host_bridge *pci_find_host_bridge(struct pci_bus *bus);
- 
- void pci_set_host_bridge_release(struct pci_host_bridge *bridge,
-@@ -804,6 +805,7 @@ struct pci_ops {
-        void __iomem *(*map_bus)(struct pci_bus *bus, unsigned int devfn, int where);
-        int (*read)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *val);
-        int (*write)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val);
-+       int (*retrain_link)(struct pci_bus *bus);
- };
- 
- /*
-```
+	If A then B. (nothing about "else").
 
-Your controller driver has to call pci_host_bridge_handle_link_down() during the
-link down event (make it threaded if not done already). Then you should also
-populate the pci_ops::retrain_link() callback with the function that retrains
-the broken link. Finally, the bus will be rescanned to enumerate the devices.
+Better way:
 
-I do have plans to plug this retrain callback to one of the bus_reset()
-functions in the future so that we can bring the link back while doing bus level
-reset (uncorrectable AERs and such). But this will do the job for now.
+	If A then B, else C.
 
-I will send a series on Monday with Qcom driver as a reference.
+:-)
 
-- Mani
+> >=20
+> Sure - so is this better:
+>=20
+> ``use_acpi`` - No-op in ACPI mode, the driver will consult ACPI tabees=
+=20
+> for C-states on/off status in native mode.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Yes, thanks!
+
