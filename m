@@ -1,195 +1,276 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12olkn2087.outbound.protection.outlook.com [40.92.21.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816DE241120;
-	Sat,  8 Feb 2025 18:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739037733; cv=none; b=Kn+4FSKSDUIx9ugQoYrXW53bNO8nUFtcjXWIs7JI01h5pjYjpmpm1FB3GV+fRKjqWi903waWERIrqvc99MR1oi20hgc+km9PdXS6DkxjU2k/DMK9pwXiPRWPLBm16nS2v/QP6+2eS10Vi2P/gakpRwIK0Ga3ORXLdG/G+0IYMpE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739037733; c=relaxed/simple;
-	bh=4+thuqXVSxj6O03R4ZOaJqV+IxG7zKTBleSi3XSoJxQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hQZ7X97pNBbSItbNAxAgiW7gn+HzA4J4xnUiS6DJgk4sB7DdBCXyTLe+vH0fnnbO3dbULvB8WWjxyaLasEunwaE1JTsdhjxlgbGBUqo1fapvrEQJk8HTULZu4NDah7ngkz+du9n5EtSTReJipz3sTwi849zNqR3788b6nXIZfhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNN54UYw; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A725241107;
+	Sat,  8 Feb 2025 18:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.21.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739037819; cv=fail; b=CjtikJpy5dHHcE/ociBNQhxSshkqLHO1VxueNL76NXtqYC8x/qZ+RMdCIyoBesPMbUhNyTGgyj0zYBEOyz7e6o8aKz3Qlrq57QhXH+at4tL1Mr0t54xEGjypob5DOcrtkYFH/cg440hADs2hsbNMB2i7jVFd+0kxpuPnT9pZA0M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739037819; c=relaxed/simple;
+	bh=EzBiT2tp878vO+PO35lvQKEVvejLu3RsxEtGW+tik0s=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=GFeTvLzNqZ5K65SINWeK5WxSp14RZP+Cji2teWRTRYM+tcTf7N+cwxoz5b/Z+j7JizcuyfrBqKNwIiJRY9NhSaqRqc263VmBTSunOaTX1/fH/oX4LX8hu10b+3QzjFjmlJId5MxEPxDThl/LT6BsjsAGKSpGGUgo0EGWA8++ZM4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=VgyUGNLy; arc=fail smtp.client-ip=40.92.21.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNN54UYw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A642C4CED6;
-	Sat,  8 Feb 2025 18:02:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739037733;
-	bh=4+thuqXVSxj6O03R4ZOaJqV+IxG7zKTBleSi3XSoJxQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=BNN54UYwh18XaZVQqQrXXBtlahkb4CvQZwjkBvBmIl/vop3OQ78yYjKf3Os1Ff6He
-	 HDPGh+7vW+HvH13vNG9j7RbdPvHQUWui4k0Y0wCbJy1QgxOBFl8GBqdP75+PEw/UAU
-	 pntoDPzgyQkmvRkOr1OT4fQ22Ne0BNebRKnurYqwIBF1A+OTLOfSGBo74i3fh3+lXc
-	 QM0gUZiDSZm1LoobA/b/F/TWWcEno2iNTK3nqVx/OnZItpcDFftHFMobfEPnp1dOB3
-	 Tgof0jsfY5eR4AjRgP5Ufd/JjlHBhq2y3mO3ZWu91FDMzTKQDiFw0DQrSR/dEjOX9K
-	 R92sRLFb4bcxw==
-Message-ID: <3e4d14075482489cd010e4ea621c0bd368700e27.camel@kernel.org>
-Subject: Re: [PATCH v5 6/7] nfsd: handle CB_SEQUENCE NFS4ERR_SEQ_MISORDERED
- error better
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>, "J. Bruce Fields" <bfields@fieldses.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Sat, 08 Feb 2025 13:02:11 -0500
-In-Reply-To: <28174296-129d-4459-aa23-a94bbf00d257@oracle.com>
-References: <20250207-nfsd-6-14-v5-0-f3b54fb60dc0@kernel.org>
-	 <20250207-nfsd-6-14-v5-6-f3b54fb60dc0@kernel.org>
-	 <28174296-129d-4459-aa23-a94bbf00d257@oracle.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="VgyUGNLy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=key54UWWIsojX572YapYD9df7hyge/r6VrhzBU8597GbZzJUlG9pkT3L+diEmPch9B5aQRJFlXvZuuePC7fnxan+TZDFNuP3OqploYBTStx/0r9m0QV5IKRhzdjI3gT5LIq/02MxQovO13jNWLiThvssJte1PaXHKvjJ0SLCeYQa2QrHYAxOP1KvqGvGZi7MYiwIxYbpV8XxS1ooQU50sLIOG2D+DHZ298jI58QvF9zi8tRjo6+XgAwQnLog5TQDXEKzZFhXecJnrtZE5ZyKB7SScb26yDsiVcI77QKGzONynRXe3hYInzVZ6345EgM1K1rJvgkxKKt2uaotJ/y6FQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IreEy4vXuUJeFqa2ACjl7G7myB7qeXHyFLg2++BZuMs=;
+ b=iPCqI9kdyEkWFlWyhM183Nvxd1U1xdNkz8EZK8ZUj9Xi9njM4zcznfBg65rP5LWxCVpFZi1CMtbg1sb5Fg+0XRY0/7w0NlZCpg1G3tmZF2cu/LnqJRsPQpfdkUwjQW8k9adDREnuCQcaOyhl0k3b8MAeWtZdTDSbFFsmZ0PyNHhmdRnvPycwTmmIMDa8Xzk8kth7OWPBCFkAJzgLuGFOwko/s4KcQ4C0GsWk0lTmr8kG3sraxJQsP8wBZvh2v2p3wTcICCNJmn4s/RMdAHZutnAIWAXGQhunOt7Q0GByeLv9nG7jljUAqKw9kdfGAfBcBEfj6YWyfIDDNsStsJGM9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IreEy4vXuUJeFqa2ACjl7G7myB7qeXHyFLg2++BZuMs=;
+ b=VgyUGNLyVmPsof1z7OMSTwlfb6eq0miZkudRYcfYMFGQ42Jfeqg96n58nveDaLe6f5VWIqM+R6eu8utHviEhnXFzmpLwA+jx1Le0kf7O4mIa50kC5VXvbThAm0kEmxiroSsBNm1lG6tnUpifN2rqOop+Jclq+/qyI39juBplShbiohZI2UQTwWwnl+GHG8+gwwqnfyTpGwmidVsPK7Z419r6knzf1jBawzYZAU+ap2IJyYdBaNUCA8DvgQ698/mEdQvfrsx4MycOxB9lcxeMiG4B6aQ0zbbfmDW8q1O8/jgAD7NthEqoCbQZracnwSrbq8Uq9C75gcCm3iAiyErkmQ==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by DM8PR02MB8121.namprd02.prod.outlook.com (2603:10b6:8:1a::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Sat, 8 Feb
+ 2025 18:03:35 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8422.010; Sat, 8 Feb 2025
+ 18:03:35 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Sean Christopherson <seanjc@google.com>, Thomas Gleixner
+	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org"
+	<x86@kernel.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Juergen Gross <jgross@suse.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan
+ Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, Jan Kiszka
+	<jan.kiszka@siemens.com>, Paolo Bonzini <pbonzini@redhat.com>, Andy
+ Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "xen-devel@lists.xenproject.org"
+	<xen-devel@lists.xenproject.org>, Nikunj A Dadhania <nikunj@amd.com>, Tom
+ Lendacky <thomas.lendacky@amd.com>
+Subject: RE: [PATCH 16/16] x86/kvmclock: Use TSC for sched_clock if it's
+ constant and non-stop
+Thread-Topic: [PATCH 16/16] x86/kvmclock: Use TSC for sched_clock if it's
+ constant and non-stop
+Thread-Index: AQHbdFA7yP+OKafhs0+Qp+iujFLydbM8IVsAgAGF1cA=
+Date: Sat, 8 Feb 2025 18:03:35 +0000
+Message-ID:
+ <SN6PR02MB4157A85EC0B1B2D45CB611FAD4F02@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250201021718.699411-1-seanjc@google.com>
+ <20250201021718.699411-17-seanjc@google.com> <Z6ZBjNdoULymGgxz@google.com>
+In-Reply-To: <Z6ZBjNdoULymGgxz@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|DM8PR02MB8121:EE_
+x-ms-office365-filtering-correlation-id: e5872516-0cd0-4fd1-bf50-08dd486ae7ee
+x-ms-exchange-slblob-mailprops:
+ 0wLWl8rLpvv/dfWT6unGWbRi7AvTEDs/ZGf/ZlgYSBNcMo1bwaYwNaT2UizFYz85L0V/s27agZjOODjxQv8nuNz3o+z3J1lx9t5qqJuaVWcqPgqKvXYydgghhOcpNX67fKMNQBXfCYpAW6jgo4N3ngY2zGxnV/K1P5CTr7lMVhLMKBsA8kmM03tzCq/IKWq8NvY6QzeosXJeB9wEDt89LvWCD6lRbHRNzIVU5jSpS6A50WmfYkLH4N/HKBFAnLptQAQB41RXmTGu7eY0vf4i9ds4ZrTaoyzoP8Ec76JnXnZVdPVDS7e39EEJwbCn9nUS5TjCJfRlDmD+W5nP0ZIt5T8AqmBnwm7L0Hr87/tRlAYh01/IEq/8Ths9/mP6MuoCZtYcSa2bA2/crzYoZJDA1Rq0WSKzXP7d9i4CfBV5bzby3ZmaGMUyzU8BUcXq1b5hgQXly4WRJiOE7U1iXMi8djQRPm54ijg/y2Ejhv1TqyeAxVGbBXF8tjoeqya5TUkle5LpHdtcCOdswjBFI4OB1FP2RltHSsffz4Zh+7YUUyz6F7nMxKiIAFlEhSOS/Y33F/NqBFi5/BVFdPm3BvpTBrAKgurCl0tPYmqcJP2x+wussJ4rLMar5AZY9+ffngPO3wut84or3Z9wEcaW4+edh+/x+AIJZ73HYkz/7e0URGdr+TDNXIS6PE6sm8BheT68cdzMo9hpG9+tTCidTx3YXjSs9UMKQfH5rdsNdqVx6iXb+ir9AEGgrHykfRihblKQKQc7lZJJTF0=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199028|15080799006|8062599003|8060799006|19110799003|102099032|1602099012|3412199025|4302099013|440099028|10035399004|12091999003;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?hUOhQZuPrM+zmuss094Vk4HcA03pmuAnS2xDn1lSEycjjntqAkeKEHJFRSBm?=
+ =?us-ascii?Q?hdgscTmnAas/BjE+UByc+zbdtynnOFEuRfNqmjQoEToxREDh6AEe9GEYxIMJ?=
+ =?us-ascii?Q?WuZzmjW7tJiXr4rdxfS8JpXMCqayahnkoqhHn+fuiVlJ0MSpEbucvEt/mbH0?=
+ =?us-ascii?Q?jjRcuG480VtbXhEwVYGPIVL86VON1FRW/cKOv9VBb4elgvqvODKXwujk76CH?=
+ =?us-ascii?Q?BsI+jnEnEBAmSnD9NXbm9s0lg8CpMIfULyH4hKbfd+op2aWPAPfdtDF9/dCW?=
+ =?us-ascii?Q?jllftKkcCT3GFHv9KDXFCpWCeg6CTWtITCteUHdFxAfulLmBxGRW58VXzS63?=
+ =?us-ascii?Q?L+wZ8ynLNFRC/tK1GMmwJSklETIEQqa06iv4DXOeNwFwGfyydcLq6jZPUQ1d?=
+ =?us-ascii?Q?co/DvS3LA3FR7x9rT4Q0//Ax38HxZVhy2r6e7Bya+3XdXjoLUDbKWI6ixrL8?=
+ =?us-ascii?Q?L29sM0cwks81ya7+HEAlDDHPW4pzHurbpsWsSiYCkLcie+HKHaXx41jjcvRo?=
+ =?us-ascii?Q?wAWNuCxLDSdLBV3ivk8ublOXvykmxpbO/6URq7an5zQMzj89L9bBMdo0MHGC?=
+ =?us-ascii?Q?8lyYkWavvFMW4L8mS76JXPyRFHNMWBwmOFRdron+BbyykC/ygpZW1codMC68?=
+ =?us-ascii?Q?tinKxNlLC42b0OBzT12ahFEmCcXxv1INMFQHnNDVcx+OHP2EBNb1tXypGbaY?=
+ =?us-ascii?Q?mkwykwtH1NDt5OHe+7EYpeE8amenHRKb0yGpjhU75xDRBPIItFhRJS6S2CHV?=
+ =?us-ascii?Q?RWJhXzhuItvz427m2hRMZrKuKZRpls1cTVpy9D0G6wwsRxSzxS7TxCDgPWKS?=
+ =?us-ascii?Q?eMdGT1AoiIlnT+phXkxqPa/x8LrF1cjlzisIGJMESVhfalgnxo6Tq7Dwhg5f?=
+ =?us-ascii?Q?Ls64H/WZVbt/8g+vjeuX7ysRG4zSHCNHcSj/NPG3OPtW2uUXpEfVgtENID/T?=
+ =?us-ascii?Q?XwepSPN2NYf9TEA/zCip/hltoRsvxYwz+xTl24dWCvMX0vIFQo9iwGlqoPKD?=
+ =?us-ascii?Q?FDpsI7CyAecNxGloSX8HqZLAVffWXeZjH8GROomL5Zs0IFavR1aUWoK229Rh?=
+ =?us-ascii?Q?7XymUpIbsCIklx7n9aBAS9WBEi5XJeEaM/9/5F5fqQoxbfdyhNbFvPaJNF+b?=
+ =?us-ascii?Q?HoIbxFC8r75RVB6teH/xfEQmj4zaOOeOUNj23qIjTTT4kLxPSjaF1juTQ2+T?=
+ =?us-ascii?Q?guYpUHgqMkf05jpi?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?+O0u1tGlmuv3hqfcdbPB/P0R2gw2lJ97dh6dhqXl3e24uR8GYGOdK/wZyEVh?=
+ =?us-ascii?Q?+OYwXcocQfUWsyCaxzR8H3RPcChrjvDMAO2TIPJ2lhQUabwo3BEgrapMb3Af?=
+ =?us-ascii?Q?wTNE9MKgjN6Bud150ovN6nZOiWMqHIqjzycX0U8xu49l3Xhc3ypj1NQwYnVC?=
+ =?us-ascii?Q?7jIDM0Ll0x9hxlnnsB8q6gQsY4ovQwDglMRzMT3/kScejkPliNNTfQxPEFDU?=
+ =?us-ascii?Q?u0bM1h+nRzUgdYD15yu/E6w/3XfZuiJAl+etJLdze4KENPDAxJbF7RpPyDkJ?=
+ =?us-ascii?Q?gOp4UM/6sfb340m0YVLMIQXDYF4/LFSnwXRQ6mheU6azbAQV1IH09+CsNLiV?=
+ =?us-ascii?Q?N4JpmAcZCe91mFnyVVjPdbfw4kWsd+JZRCLI/9BKGEe0YFj4dPQWpZa7JISz?=
+ =?us-ascii?Q?Nf7gHe+vX+YXnhXee1q0efwSSNUTn7LVFRS7j5BEcxi2aMRnTXwdbsbw71Fe?=
+ =?us-ascii?Q?450EI349bvkDj/c8GyUUyiUefc2hk8YJSvz6T+oZMYgQY+yKJwR1uzbFXECj?=
+ =?us-ascii?Q?eUgsyvBn2+z/+EL4RgCOOcIHpXAP9vj+RelLY9RqMAV+k8vvNHrbxHMRDZDm?=
+ =?us-ascii?Q?B6wFkZO5Nj3EjFCVqzpEsvsedqW7vM4Z1SwYv2jm3ADycB431uMk2C+4Izv0?=
+ =?us-ascii?Q?G44Ssze6hqwz+wc4Z8elpiw9OwaAvHxz1kpcrnlRfEY00yL/FzSmHVzBKt7F?=
+ =?us-ascii?Q?XDF3T9FZasKZYntnhevN1zxjmfvcCjOm8+QWucI1MAwvpVrL5QHzQ3bgdVL+?=
+ =?us-ascii?Q?yhC+am8O3hprgbpKBFv3UMT4gB8E6/SASxICeuRzXwVXYPWNzzH0X8gaRBa6?=
+ =?us-ascii?Q?Wj5AQeLp6fFRpGE3QNYQn5MX/zrN9oIKzHg59c4bpa1IdTWrAxn8HYYH75BC?=
+ =?us-ascii?Q?0+O04az9l7+Ttf8PcLBYgVBAkuKyJ8kka8ErcGUc0OmwucLU2digOevNE/01?=
+ =?us-ascii?Q?tTDsGA67DFZkqpEGotFy6WdQSQmPfgdjAgeSffMEmJA9kIKTFb72UdMvjRir?=
+ =?us-ascii?Q?VBHhCuFZxuMkqKXveyDzg1hDCGjya04oOJzwJ5KkHBOv1NtooNQP8/zYQxs9?=
+ =?us-ascii?Q?sfepzmJmDYQELtllQVXyZ0C0UP301f/xPATzNTBwCM6re61wAMu99XUjsxRD?=
+ =?us-ascii?Q?ft3bn4Zw509+NN+maExy0Kwhvji7y+NgZSktgubAOvyw7A/vyKa428TvSf9G?=
+ =?us-ascii?Q?rQy+HwGUh9Rfzbq/tPvCIBILzzE4mTW8rUW6RhF5JU1P1LRP9WVi/EWWUkU?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5872516-0cd0-4fd1-bf50-08dd486ae7ee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Feb 2025 18:03:35.1205
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR02MB8121
 
-On Sat, 2025-02-08 at 12:01 -0500, Chuck Lever wrote:
-> On 2/7/25 4:53 PM, Jeff Layton wrote:
-> > For NFS4ERR_SEQ_MISORDERED, do one attempt with a seqid of 1, and then
-> > fall back to treating it like a BADSLOT if that fails.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  fs/nfsd/nfs4callback.c | 16 ++++++++++------
-> >  1 file changed, 10 insertions(+), 6 deletions(-)
-> >=20
-> > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> > index 10067a34db3afff8d4e4383854ab9abd9767c2d6..d6e3e8bb2efabadda9f9223=
-18880e12e1cb2c23f 100644
-> > --- a/fs/nfsd/nfs4callback.c
-> > +++ b/fs/nfsd/nfs4callback.c
-> > @@ -1393,6 +1393,16 @@ static bool nfsd4_cb_sequence_done(struct rpc_ta=
-sk *task, struct nfsd4_callback
-> >  			goto requeue;
-> >  		rpc_delay(task, 2 * HZ);
-> >  		return false;
-> > +	case -NFS4ERR_SEQ_MISORDERED:
-> > +		/*
-> > +		 * Reattempt once with seq_nr 1. If that fails, treat this
-> > +		 * like BADSLOT.
-> > +		 */
+From: Sean Christopherson <seanjc@google.com> Sent: Friday, February 7, 202=
+5 9:23 AM
 >=20
-> Nit: this comment says exactly what the code says. If it were me, I'd
-> remove it. Is there a "why" statement that could be made here? Like,
-> why retry with a seq_nr of 1 instead of just failing immediately?
+> Dropping a few people/lists whose emails are bouncing.
 >=20
+> On Fri, Jan 31, 2025, Sean Christopherson wrote:
+> > @@ -369,6 +369,11 @@ void __init kvmclock_init(void)
+> >  #ifdef CONFIG_X86_LOCAL_APIC
+> >  	x86_cpuinit.early_percpu_clock_init =3D kvm_setup_secondary_clock;
+> >  #endif
+> > +	/*
+> > +	 * Save/restore "sched" clock state even if kvmclock isn't being used
+> > +	 * for sched_clock, as kvmclock is still used for wallclock and relie=
+s
+> > +	 * on these hooks to re-enable kvmclock after suspend+resume.
+>=20
+> This is wrong, wallclock is a different MSR entirely.
+>=20
+> > +	 */
+> >  	x86_platform.save_sched_clock_state =3D kvm_save_sched_clock_state;
+> >  	x86_platform.restore_sched_clock_state =3D kvm_restore_sched_clock_st=
+ate;
+>=20
+> And usurping sched_clock save/restore is *really* wrong if kvmclock isn't=
+ being
+> used as sched_clock, because when TSC is reset on suspend/hiberation, not=
+ doing
+> tsc_{save,restore}_sched_clock_state() results in time going haywire.
+>=20
+> Subtly, that issue goes all the way back to patch "x86/paravirt: Don't us=
+e a PV
+> sched_clock in CoCo guests with trusted TSC" because pulling the rug out =
+from
+> under kvmclock leads to the same problem.
+>=20
+> The whole PV sched_clock scheme is a disaster.
+>=20
+> Hyper-V overrides the save/restore callbacks, but _also_ runs the old TSC=
+ callbacks,
+> because Hyper-V doesn't ensure that it's actually using the Hyper-V clock=
+ for
+> sched_clock.  And the code is all kinds of funky, because it tries to kee=
+p the
+> x86 code isolated from the generic HV clock code, but (a) there's already=
+ x86 PV
+> specific code in drivers/clocksource/hyperv_timer.c, and (b) splitting th=
+e code
+> means that Hyper-V overides the sched_clock save/restore hooks even when
+> PARAVIRT=3Dn, i.e. when HV clock can't possibly be used as sched_clock.
 
-There isn't one that I know of. It looks like Kinglong Mee added it in
-7ba6cad6c88f, but there is no real mention of that in the changelog.
+Regarding (a), the one occurrence of x86 PV-specific code hyperv_timer.c is
+the call to paravirt_set_sched_clock(), and it's under an #ifdef sequence s=
+o that
+it's not built if targeting some other architecture. Or do you see somethin=
+g else
+that is x86-specific?
 
-TBH, I'm not enamored with this remedy either. What if the seq_nr was 2
-when we got this error, and we then retry with a seq_nr of 1? Does the
-server then treat that as a retransmission? We might be best off
-dropping this and just always treating it like BADSLOT.
+Regarding (b), in drivers/hv/Kconfig, CONFIG_HYPERV always selects PARAVIRT=
+.
+So the #else clause (where PARAVIRT=3Dn) in that #ifdef sequence could argu=
+ably
+have a BUILD_BUG() added. If I recall correctly, other Hyper-V stuff breaks=
+ if
+PARAVIRT is forced to "n". So I don't think there's a current problem with =
+the
+sched_clock save/restore hooks. But I would be good with some restructuring
+so that setting the sched clock save/restore hooks is more closely tied to =
+the
+sched clock choice, as long as the architecture independence of hyperv_time=
+r.c
+is preserved. And maybe there's a better way to handle hv_setup_sched_clock=
+()
+that is less messy with the #ifdef's. I'll think about that too.
 
-Thoughts?
+Michael
 
 >=20
-> > +		if (session->se_cb_seq_nr[cb->cb_held_slot] !=3D 1) {
-> > +			session->se_cb_seq_nr[cb->cb_held_slot] =3D 1;
-> > +			goto retry_nowait;
-> > +		}
-> > +		fallthrough;
-> >  	case -NFS4ERR_BADSLOT:
-> >  		/*
-> >  		 * BADSLOT means that the client and server are out of sync
-> > @@ -1403,12 +1413,6 @@ static bool nfsd4_cb_sequence_done(struct rpc_ta=
-sk *task, struct nfsd4_callback
-> >  		nfsd4_mark_cb_fault(cb->cb_clp);
-> >  		cb->cb_held_slot =3D -1;
-> >  		goto retry_nowait;
-> > -	case -NFS4ERR_SEQ_MISORDERED:
-> > -		if (session->se_cb_seq_nr[cb->cb_held_slot] !=3D 1) {
-> > -			session->se_cb_seq_nr[cb->cb_held_slot] =3D 1;
-> > -			goto retry_nowait;
-> > -		}
-> > -		break;
-> >  	default:
-> >  		nfsd4_mark_cb_fault(cb->cb_clp);
-> >  	}
-> >=20
+> VMware appears to be buggy and doesn't do have offset adjustments, and al=
+so lets
+> the TSC callbacks run.
 >=20
+> I can't tell if Xen is broken, or if it's the sanest of the bunch.  Xen d=
+oes
+> save/restore things a la kvmclock, but only in the Xen PV suspend path.  =
+So if
+> the "normal" suspend/hibernate paths are unreachable, Xen is sane.  If no=
+t, Xen
+> is quite broken.
 >=20
+> To make matters worse, kvmclock is a mess and has existing bugs.  The BSP=
+'s clock
+> is disabled during syscore_suspend() (via kvm_suspend()), but only re-ena=
+bled in
+> the sched_clock callback.  So if suspend is aborted due to a late wakeup,=
+ the BSP
+> will run without its clock enabled, which "works" only because KVM-the-hy=
+pervisor
+> is kind enough to not clobber the shared memory when the clock is disable=
+d.  But
+> over time, I would expect time on the BSP to drift from APs.
+>=20
+> And then there's this crud:
+>=20
+>   #ifdef CONFIG_X86_LOCAL_APIC
+> 	x86_cpuinit.early_percpu_clock_init =3D kvm_setup_secondary_clock;
+>   #endif
+>=20
+> which (a) should be guarded by CONFIG_SMP, not X86_LOCAL_APIC, and (b) is=
+ only
+> actually needed when kvmclock is sched_clock, because timekeeping doesn't=
+ actually
+> need to start that early.  But of course kvmclock craptastic handling of =
+suspend
+> and resume makes untangling that more difficult than it needs to be.
+>=20
+> The icing on the cake is that after cleaning up all the hacks, and having
+> kvmclock hook clocksource.suspend/resume like it should, suspend/resume u=
+nder
+> kvmclock corrupts wall clock time because timekeeping_resume() reads the =
+persistent
+> clock before resuming clocksource clocks, and the stupid kvmclock wall cl=
+ock subtly
+> consumes the clocksource/system clock.  *sigh*
+>=20
+> I have yet more patches to clean all of this up.  The series is rather un=
+wieldly,
+> as it's now sitting at 38 patches (ugh), but I don't see a way to chunk i=
+t up in
+> a meaningful way, because everything is so intertwined.  :-/
 
---=20
-Jeff Layton <jlayton@kernel.org>
