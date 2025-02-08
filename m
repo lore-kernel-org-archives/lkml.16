@@ -1,87 +1,101 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647CB190058;
-	Sat,  8 Feb 2025 16:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37641F24DD;
+	Sat,  8 Feb 2025 16:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739032225; cv=none; b=Mh0+DrrBBCUr60LM9+Cn8nfqhjcX6ky8nYjtRsCfuiJLgKjJqssp/+2/hKmtQbiFWnI6kOdd1MdySxQUiR0+9KkvukUsfkzmmyneNxSdB85HzENT9bxqvws53r2q25xsEOE4mL173aueluJUBPVq9RF6YlazuDx60oMbGBVQ6e0=
+	t=1739032439; cv=none; b=HwtQ1LtVuHo5v6aoSvhOR+Cv+aCrWifbFQD+BQJHWOUUK0k+IwEI30oPO0JnbWk07kWoljUArKwUp5f9lfN9fokJIHMcp3RmKj+vstavvKwPQw7OxHJKXKK2N6PdGBJyZf86AqeI13nGX1c8Le9AQ0t+kz5e1FFuYPIX4nkhUQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739032225; c=relaxed/simple;
-	bh=sYRKMT0vGlnOGYLve/adGBTos+uJOf24RZ51165VgKE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HO8zrZBRCLHdeO3pfRG3/FbFnfVxHCXutO3ggqLn+osQl0m43BEvCywj5xt9DeUN3QY4bK1DHc1Ri9WD9WS9uRuL6vQVcsBEcqZc6lGTHbrUwfo3kBC/jKzkAm3+5M5fyfme6mhRbsh3r3xUmIsrguMsgCiJkX9IJQkULZaI6o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=km/7xp1c; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1739032439; c=relaxed/simple;
+	bh=2odnIPKdmRpcI4fWPxxLuCsa99gwlsPFuClUYQtj1p8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=HdY8qXsTu2UKkpOevT+WMiVcg4jtybA0ymhpEfeMzxXGWNO09wWYCWB/YwW3FABg9/+Mv2HoMPC3eyKALBevuYGGDVeAALbhUUM8XuYEhxQUgR5apkypb3kHrcNERxgPdNbV2nQ44XZwAqt2Eyeu8FWPgpBraBqIpp4pLXQCdmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=WGrN0B4B; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="km/7xp1c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1739032220;
-	bh=sYRKMT0vGlnOGYLve/adGBTos+uJOf24RZ51165VgKE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=km/7xp1cFfR9NSoY3z5kaC7HUs+YiojI38gCnAIjepfiDD5je2niXMa5Uk91s3jT2
-	 4QAVe8BxZ2DXtcg1Jmb3Hi/pXqYV2gZ/db0/S33OcZZxzEX1qo1H/tcKcxgl8mGq85
-	 iv/izZHLtsR+bebZ5A7VEgKVvJGalr7f5CbjY6/s=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Sat, 08 Feb 2025 17:30:03 +0100
-Subject: [PATCH v3 1/2] leds: st1202: Check for error code from
- devm_mutex_init() call
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="WGrN0B4B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1739032422; x=1739637222; i=markus.elfring@web.de;
+	bh=2odnIPKdmRpcI4fWPxxLuCsa99gwlsPFuClUYQtj1p8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=WGrN0B4BRzejXR+jRSydrGGdzoqy2iu3CCnw9wRmHs2BqlGgGrds7nFMxljFhrta
+	 I3fRI/HpHYtBqIbEn4yD1MJUmQnFwm/V5p8QWuvEKD7qMF2D5N+iUhMGfJTBK/Qov
+	 vM8ihqZ/VTe7HZluTyQP8JrQfAWUHS1+XVrU218ZOEulqt9F5SqYqK5Ld0ob/KDgn
+	 NzlK4gCtaUphLDGOf93hpkcHXTjTJ2fd2ARiEtLAxGNnscmuJIvIZYt5BrKC2YmpS
+	 boeZQ+C6A3eYUxMZbq0aFnK1C3WgLmcSuyosCbejhx5em8m6jOSIl4VOxCcLogfQd
+	 AYhzkRFFYbJuXza3Yg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.11]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MGgJM-1tbtx604LC-004d7Q; Sat, 08
+ Feb 2025 17:33:42 +0100
+Message-ID: <4195480d-f2f3-41ad-a035-c81e8f2ab0f4@web.de>
+Date: Sat, 8 Feb 2025 17:33:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250208-must_check-devm_mutex_init-v3-1-245e417dcc9e@weissschuh.net>
-References: <20250208-must_check-devm_mutex_init-v3-0-245e417dcc9e@weissschuh.net>
-In-Reply-To: <20250208-must_check-devm_mutex_init-v3-0-245e417dcc9e@weissschuh.net>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Pavel Machek <pavel@ucw.cz>, 
- Lee Jones <lee@kernel.org>, 
- Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739032220; l=973;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=sYRKMT0vGlnOGYLve/adGBTos+uJOf24RZ51165VgKE=;
- b=tQeWG+KIeTmjQPrjsXBwafB/SalYFnXx5cABMiVr33xT+6nAHRklD75bDSCkD43a+Y4cqIuC6
- PvhnuU0fibKCn8ioaqcZ8g0yqpxsAgD7+UmQH4JFxn+0KAwoGHXuNkh
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+User-Agent: Mozilla Thunderbird
+To: Anand Moon <linux.amoon@gmail.com>, linux-pci@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Kevin Xie <kevin.xie@starfivetech.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Minda Chen <minda.chen@starfivetech.com>
+References: <20250208140110.2389-1-linux.amoon@gmail.com>
+Subject: Re: [PATCH] PCI: starfive: Fix kmemleak in StarFive PCIe driver's IRQ
+ handling
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250208140110.2389-1-linux.amoon@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ckmcvGlM0JdmTWKDkKFF9D6w0vSs1Cu1XzrhyP10Elfoz09yniv
+ 9bV+ee5DGnPrY3bTrhx8rQ2KV+Rjav3xea2CiPqervgOTKSVyA//AnbOgIEFDEDcfbIVERL
+ nqpX2DXS0QqXi+1FQYlrWPhWFEDgXBH/RX5l769dJ/18ogC7B6Onyf0LPjIEQZn5noExmaM
+ oQHL66Zy9FeRr338pP/Dw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:7VSHSfAg9bM=;VHuVFXf/3oCcPfEkxzr1q/timT5
+ LZRc5El9LJyIAR4qc2wXCvX/sPqKuRCQcGd4hkV01GGSENbAYB8KuWlVSLh+DgLuBDK+xbzkk
+ u5PN+S/4L79tD0T6perXmm3oRq6ytTBsCdy46KB9fBTCUMczdtxreMqPFkqW4DxdiJ7hTKT1X
+ MyIev+GrdRe+49ftG0aIFGCMWuAKOh8q5O0wH4F/U+KXKiRrtCpoZ/urI5VVm3clKdFNtrToP
+ 4WBidwZGnRD99nYDrCo/Z+hzkDUn5+8Wr3O+EYLWTctZFxf0uaZjV3qoJ/Ms+0pYub7/weo68
+ y3TzdKZ6P88x30GAok4LJEuBeg77XjyByXiMCN86wHg0Z7+/MpKJTrHEFiALumP96eYko+2Ue
+ dah8f6Vr0p99KmnaalzbwOLJZhQv/FYawdSYIJgVD8p856SmnjtDsASX2goF6Go8OpK/JrMvh
+ +im/81HM8FOxzQCV2SD1SdRqVEZhaPp0gk+Qys9zXepCJk57sVA2fVwjcX+MBaNEthC35Q5//
+ VhJjRe1viinEBlsfcapJtQUhBmRxCHZ2vPqyJAlfOhR3y5NGNDa9PJuodTwUaX92OS42iZz/+
+ Bj24ouuFbWuegQxwn3uuzAAxZ6IYUWVnXIzlvjSpFwVylU2u9mxB4kI0WjT1vN40Say+6LSpJ
+ EtWmmcqKw1S9YXXtiwwKScqLJrq0KKcO1puqcTMdjHOBerE/7BIDlnEOkIjXPzkYlbns+Cp4o
+ tugewgQszdBNxtnpuDgHwUCboawTEiTb1WgDadULdEiD9/2dxguUYPCVVOUBLo2EQ3w14mHf8
+ EIaQELiT69xTbwM3OYK9TC104R/1CBBWYfwoBpVLMt6v+hl9raEvNg7PNRq05OAZC87fCSHDp
+ URtXC3+OTnxtZY00vvqk53uZpIH/6pwNpTHq9bolD8tsw82NIf/ivH5Eet34I76J8EMHbBkcQ
+ zqU4v2HKXXI5GLTb6tagVXNTNa4FpZP1rr355atRzr6Ft3yehhpCVqw65n+zTO+bFXqnwvUmt
+ VvopRxNOlKc/myBOJ5MfrvvLDmuo23dKrhiB/W/1amdGTeFHpMc5Yy98FvXaKRBcfa6Wu6+Gv
+ oVBFYPYrSGcCKBICwyVEVl6xw/S34pNuZ8Kyfy1qII7gvRq3CZBD+u7efLHfL9N0b/8/Q7fe2
+ tQtCDYNakkwGbozMMthf25YygimbJjI61xP75zMK8BXRjfV7ZrMWr/jPWsdmZlpV6mmdr9oZg
+ LUeEG+ZoieilmKOQcX0yUOeBcM9AGXmvojTI4uXzeh0R5aXvNiqASCqJHFRYrzy+y+5OsfQo/
+ WCmIxRScV6iB8hNu2HfBvoUNRxxKUSfZSQzAyQZzrx+tjhfoH4J1rRozHbdc/HMj6bZwDRmub
+ sJvle+xR2xLe2Cjjsf5KcMvZakohbf19TS5hM+scKQbAiPrpZhyZcarM8EmC6HEb/frikqmrQ
+ 3DXGF8A==
 
-Even if it's not critical, the avoidance of checking the error code
-from devm_mutex_init() call today diminishes the point of using devm
-variant of it. Tomorrow it may even leak something. Add the missed
-check.
+=E2=80=A6
+> This patch addresses a kmemleak reported during StarFive PCIe driver
+=E2=80=A6
+> This patch introduces an event IRQ handler and the necessary
+> infrastructure to manage these IRQs, preventing the memory leak.
 
-Fixes: 259230378c65 ("leds: Add LED1202 I2C driver")
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
- drivers/leds/leds-st1202.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+See also:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.13#n94
 
-diff --git a/drivers/leds/leds-st1202.c b/drivers/leds/leds-st1202.c
-index b691c4886993f3e371e857543863c9a724742f39..657c62cb24fa726622369fc965fa7195e73170f0 100644
---- a/drivers/leds/leds-st1202.c
-+++ b/drivers/leds/leds-st1202.c
-@@ -356,7 +356,9 @@ static int st1202_probe(struct i2c_client *client)
- 	if (!chip)
- 		return -ENOMEM;
- 
--	devm_mutex_init(&client->dev, &chip->lock);
-+	ret = devm_mutex_init(&client->dev, &chip->lock);
-+	if (ret < 0)
-+		return ret;
- 	chip->client = client;
- 
- 	ret = st1202_dt_init(chip);
-
--- 
-2.48.1
-
+Regards,
+Markus
