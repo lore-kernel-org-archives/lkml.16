@@ -1,153 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EE8243946;
-	Sat,  8 Feb 2025 20:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB7E243946
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 20:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739046945; cv=none; b=QQOepBAqx8EemkCCbHVTQnw3EUlLxn+Cs/Y4MWjL4Zj8vqEvK54cA+W00Gi8WB68Z9JOo5man3Vyg1ddFLlVIEi6PlSlpd9bGKXs95tAEGK6ck6gu22JPlbwn9FPKl94YN3aIRNB7iYTWGBqg/ixYBN8WsRxu5+RFZPJqkFLVBM=
+	t=1739047086; cv=none; b=AHIZuK1iZfhbqT6ZLy1l7IypkkhCv+A1es8tKZrLXPMJ7yQHOQtJ2f7PCZOUydNEudngiW3zo4OVY4tH4Bd1c/MQ5kO2gbRTCe2O0oeW2PxSHGEeGIsBoGC3Tg0DDwEXjXDZEIatT/Dudhw57VEtXY+9nEzSpqGcaouRVU9spQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739046945; c=relaxed/simple;
-	bh=f41av73b1EZpNR+Lr0++naKxVjrR8Ngu/ynWj0FCoqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EpgTpgqd1HJlPhJjI1x/WHNr46Shr6y43AlK+QmgGoagdxW+Mp1EGrJo3wamel6CbEpWLDJdHJ04l0CheUWbKuef7oXLXRGfVUFoDJTQCaSQhSnXPn8U4kSSitrOmMUnXByb7vclNWg6Kyp36MA/e/WTKXe0p8+lVhS0a2sxKGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NisdrG5a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739047086; c=relaxed/simple;
+	bh=aLXDtqwkQRLpryu9rC+CUz7k+xX8tB/DDrhNDrtPAJE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ht5UmzfznBDKyKJdAfLU3Sv+MLirkz9SvYKxraHPsqK3stcJtf9Vac2O5dGIfyewhqZNjD6l67DVpFsJoxIjttxMq1akasl7puFjLSrD8XNosB1T+qL08Jw63P8heDtnpI829LJRb3QnrnEnHNIFvloUwWC1C4Q/owcIi+C/Fg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nj9mviLm; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NisdrG5a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFDEBC4CED6;
-	Sat,  8 Feb 2025 20:35:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739046943;
-	bh=f41av73b1EZpNR+Lr0++naKxVjrR8Ngu/ynWj0FCoqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NisdrG5aBDlsBrsD9yS6DZule39nLIVGrT+MgtCCiSOcP+xGQEmsEODscrS7Z8tJc
-	 IwK3mzj8u8xyMw5afnJCxibubjlbO8kBBfEQfZNH7U2oWdL5Np98g+VT9AUsCtPYOA
-	 s1XoG5i2CKZaOhJ+zLBWu4S9ltbc6cwXhn/iVd9K1rXDoD7u2eM6fTYSGPtfBVaZbs
-	 pG0FAMsUX31aBKycwOZLSEX7jNNW+evBbB2KU6pYA28EYsuFW5ZQ/9hHySld0u62vI
-	 0AzLU+sQ2jAfU+3ZxB1+DCFxiPuzDK90DNtBn/LH0148l9U/3Bscf7EpYH+6VGFmAT
-	 7WELnuBemArbQ==
-Date: Sat, 8 Feb 2025 12:35:43 -0800
-From: Kees Cook <kees@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Jann Horn <jannh@google.com>, Eyal Birger <eyal.birger@gmail.com>,
-	luto@amacapital.net, wad@chromium.org, oleg@redhat.com,
-	mhiramat@kernel.org, andrii@kernel.org,
-	alexei.starovoitov@gmail.com, cyphar@cyphar.com,
-	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com,
-	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de,
-	daniel@iogearbox.net, ast@kernel.org, andrii.nakryiko@gmail.com,
-	rostedt@goodmis.org, rafi@rbk.io, shmulik.ladkani@gmail.com,
-	bpf@vger.kernel.org, linux-api@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] seccomp: pass uretprobe system call through
- seccomp
-Message-ID: <202502081235.5A6F352985@keescook>
-References: <20250202162921.335813-1-eyal.birger@gmail.com>
- <CAG48ez1Pj6MT=RV-sogtNbw7WLLmCrC-3TkNfRjpcCif8iNGkA@mail.gmail.com>
- <Z6afa2Z4IYlIAbJ2@krava>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nj9mviLm"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-308d625295cso15251521fa.0
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 12:38:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1739047078; x=1739651878; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aLXDtqwkQRLpryu9rC+CUz7k+xX8tB/DDrhNDrtPAJE=;
+        b=nj9mviLm/yH6WBDG4BrFGxwAfOrer7tljUl+HTRPKuTxn0ZM8uXP3w+76ZLIWf0qBV
+         RPM3+spyl3Qgt4xucRPSGtxJgZDaBj2OAASaeO1483KLI7GLsKKM7aM7ctEEYDrP/Zog
+         oslMsy9wwN7Ka25EXRIZWr6koObDeylAkT4jU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739047078; x=1739651878;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aLXDtqwkQRLpryu9rC+CUz7k+xX8tB/DDrhNDrtPAJE=;
+        b=mSkcHCQXnQLBNsTnl0dpfuaen8JeYxYZNKCSgy5B/W6eUU4ARke0RbUsSVx6waJNNd
+         7HyjWmbgMZMj9Wzpuwpj/wh945q+UEJPkFImmV9tI5PYLU4XYy3gedbDahm3f6u5bwrr
+         D7Osd2K5GmORkY2c7LTSrLdBL0HWS0Vps9CRKHtN6l6u42ei5yK6k1IFlT/s6gZsuo6g
+         H5JIVCD9lj5JxvRgsVlP7HQyRWJ/SIkfmpwjQpK7dP3B51smql03zBev7eMFnKXSjp3e
+         yCHedy+ZKfl3htx4BYRx/VfbUmQnHfiqucwEJ4In2cK/sox9fJuXLV18rTY9zFjKYmGe
+         UDUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWEMQtY6hzkaNIg6SezgOHRtaGhLXVtGcL5hoym5c0bL79pNtkOUa1shQXBMDbWlOqLdKPIRorc08T5dSo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPuwy+ZGyIXPIW0jWA+0O1LZi3a2LCiWew085AZAntCWqnTja6
+	7Kvuu2foTSUsuzZWeg9BqKcPRfWi022lMfDbZCgP4bWl+G7fksWsXItvl+lvEcBXqObDKGbC5Wi
+	4CDSB
+X-Gm-Gg: ASbGncuu+ijCyghIfL8IyYc6bcq3Sx33OgKfoRFBys/smThIF0FZVqTSlecTZRM9EJN
+	BClWP4MgWZIvIyV/QWqVMpgEqAGRIBqzbOYo4OLbMRoYFc9d5ig4BHYJlAzpzZjLU24Zcbtg1cr
+	3gxsOCho4UJzPcrg8Exj7EpGQvmLB1G5rWAekmGvxz26kfTXLKeKtRnF9AfWihdq5jvPbvYWdlp
+	vhMBBWUrPNkPBO2AuAUhrGkxtuOb/YyFM6I17oz0jKpBR3NBv4f6G9+6PUNRdZRrrEWhBz1RV17
+	/Hd0gkGa3P/MmIMSIENudyVI4+SO2uuOENCRzA8PHWKRbsU5FY16jW7k5kg=
+X-Google-Smtp-Source: AGHT+IFDtEWtU90DsJ4BF3U1mP8oQgixhDED1DBZXI8LG1vstJZ9zSvjIAIn18gSrLPaNO1ANP7ayA==
+X-Received: by 2002:a2e:a913:0:b0:300:3a15:8f22 with SMTP id 38308e7fff4ca-307e581b0bdmr26874801fa.21.1739047078505;
+        Sat, 08 Feb 2025 12:37:58 -0800 (PST)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-308dd1c0ea2sm3212901fa.61.2025.02.08.12.37.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Feb 2025 12:37:57 -0800 (PST)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-308d625295cso15251121fa.0
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 12:37:56 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXGVfJ1oa2EvMq0azYfFBV1wZ9gV6p64qt8rMrbrdOn3KNaUMxQgd1l95qQ824w7BbOy+6EpTDfz7tTRQI=@vger.kernel.org
+X-Received: by 2002:a2e:9f47:0:b0:308:e803:118e with SMTP id
+ 38308e7fff4ca-308e80314f1mr1813521fa.0.1739047076046; Sat, 08 Feb 2025
+ 12:37:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z6afa2Z4IYlIAbJ2@krava>
+References: <20250206-mipi-cocci-v1-0-4ff0c69e8897@redhat.com>
+In-Reply-To: <20250206-mipi-cocci-v1-0-4ff0c69e8897@redhat.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Sat, 8 Feb 2025 12:37:43 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WkPefg00R_TAQQA6waRqGdD+3e84JXfPLk2i9BRzW6Yg@mail.gmail.com>
+X-Gm-Features: AWEUYZmtp_A3cX_L46ivt1I8hAClJ-sovMP_5NAQXDAfEvF1gvbHGKAwEokNtOY
+Message-ID: <CAD=FV=WkPefg00R_TAQQA6waRqGdD+3e84JXfPLk2i9BRzW6Yg@mail.gmail.com>
+Subject: Re: [PATCH 00/14] drm/panel: Transition away from using mipi_dsi_*_write_seq()
+To: Anusha Srivatsa <asrivats@redhat.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Joel Selvaraj <jo@jsfamily.in>, Ondrej Jirman <megi@xff.cz>, 
+	Javier Martinez Canillas <javierm@redhat.com>, Artur Weber <aweber.kernel@gmail.com>, 
+	Jianhua Lu <lujianhua000@gmail.com>, Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	Tejas Vipin <tejasvipin76@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 08, 2025 at 01:03:55AM +0100, Jiri Olsa wrote:
-> On Fri, Feb 07, 2025 at 04:27:09PM +0100, Jann Horn wrote:
-> > On Sun, Feb 2, 2025 at 5:29 PM Eyal Birger <eyal.birger@gmail.com> wrote:
-> > > uretprobe(2) is an performance enhancement system call added to improve
-> > > uretprobes on x86_64.
-> > >
-> > > Confinement environments such as Docker are not aware of this new system
-> > > call and kill confined processes when uretprobes are attached to them.
-> > 
-> > FYI, you might have similar issues with Syscall User Dispatch
-> > (https://docs.kernel.org/admin-guide/syscall-user-dispatch.html) and
-> > potentially also with ptrace-based sandboxes, depending on what kinda
-> > processes you inject uprobes into. For Syscall User Dispatch, there is
-> > already precedent for a bypass based on instruction pointer (see
-> > syscall_user_dispatch()).
-> > 
-> > > Since uretprobe is a "kernel implementation detail" system call which is
-> > > not used by userspace application code directly, pass this system call
-> > > through seccomp without forcing existing userspace confinement environments
-> > > to be changed.
-> > 
-> > This makes me feel kinda uncomfortable. The purpose of seccomp() is
-> > that you can create a process that is as locked down as you want; you
-> > can use it for some light limits on what a process can do (like in
-> > Docker), or you can use it to make a process that has access to
-> > essentially nothing except read(), write() and exit_group(). Even
-> > stuff like restart_syscall() and rt_sigreturn() is not currently
-> > excepted from that.
-> > 
-> > I guess your usecase is a little special in that you were already
-> > calling from userspace into the kernel with SWBP before, which is also
-> > not subject to seccomp; and the syscall is essentially an
-> > arch-specific hack to make the SWBP a little faster.
-> > 
-> > If we do this, we should at least ensure that there is absolutely no
-> > way for anything to happen in sys_uretprobe when no uretprobes are
-> > configured for the process - the first check in the syscall
-> > implementation almost does that, but the implementation could be a bit
-> > stricter. It checks for "regs->ip != trampoline_check_ip()", but if no
-> > uprobe region exists for the process, trampoline_check_ip() returns
-> > `-1 + (uretprobe_syscall_check - uretprobe_trampoline_entry)`. So
-> > there is a userspace instruction pointer near the bottom of the
-> > address space that is allowed to call into the syscall if uretprobes
-> > are not set up. Though the mmap minimum address restrictions will
-> > typically prevent creating mappings there, and
-> > uprobe_handle_trampoline() will SIGILL us if we get that far without a
-> > valid uretprobe.
-> 
-> nice catch, I think change below should fix that
+Hi,
 
-Thanks! Please backport this to -stable too. :)
+On Thu, Feb 6, 2025 at 1:06=E2=80=AFPM Anusha Srivatsa <asrivats@redhat.com=
+> wrote:
+>
+> Transition away from mipi_dsi_generic_write_seq() and
+> mipi_dsi_dcs_write_seq() to mipi_dsi_generic_write_seq_multi()
+> and mipi_dsi_dcs_write_seq_multi() respectively.
+>
+> This is addressing one of the gpu todo items [1]
+>
+> Used Coccinelle to make the code changes.
 
--Kees
+As Dmitry mentioned [1], I think a real cleanup needs more thought
+than can be done in a Coccinelle script. Maybe you can make a script
+that's super fancy and does a perfect conversion, but I sorta doubt it
+in this case.
 
-> 
-> thanks,
-> jirka
-> 
-> 
-> ---
-> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> index 0c74a4d4df65..9b8837d8f06e 100644
-> --- a/arch/x86/kernel/uprobes.c
-> +++ b/arch/x86/kernel/uprobes.c
-> @@ -368,19 +368,21 @@ void *arch_uretprobe_trampoline(unsigned long *psize)
->  	return &insn;
->  }
->  
-> -static unsigned long trampoline_check_ip(void)
-> +static unsigned long trampoline_check_ip(unsigned long tramp)
->  {
-> -	unsigned long tramp = uprobe_get_trampoline_vaddr();
-> -
->  	return tramp + (uretprobe_syscall_check - uretprobe_trampoline_entry);
->  }
->  
->  SYSCALL_DEFINE0(uretprobe)
->  {
->  	struct pt_regs *regs = task_pt_regs(current);
-> -	unsigned long err, ip, sp, r11_cx_ax[3];
-> +	unsigned long err, ip, sp, r11_cx_ax[3], tramp;
-> +
-> +	tramp = uprobe_get_trampoline_vaddr();
-> +	if (tramp == -1)
-> +		goto sigill;
->  
-> -	if (regs->ip != trampoline_check_ip())
-> +	if (regs->ip != trampoline_check_ip(tramp))
->  		goto sigill;
->  
->  	err = copy_from_user(r11_cx_ax, (void __user *)regs->sp, sizeof(r11_cx_ax));
+A few other note:
 
--- 
-Kees Cook
+* Tejas Vipin has been slowly whittling down this TODO item. It would
+be good to CC him on any attempts to avoid duplicating work. He just
+submitted a patch [2] that duplicates one of the panels you ran your
+script on. It would also be good to look at the patches he has been
+posting to see some of the extra complexities.
+
+* I'm happy you CCed on the cover letter, but given that I've been
+helping with this TODO entry it would have been nice to have been CCed
+on all the patches.
+
+For now I'm not going to review the individual patches in this series.
+If there are any where you think your Coccinelle script really got
+everything adjusted perfectly then feel free to point them out and
+I'll review them. If you want to help with this effort, my own
+personal preference would be to at least start w/ one panel at a time
+since probably review feedback on all the conversions will be similar.
+
+Thanks!
+
+-Doug
+
+[1] https://lore.kernel.org/r/mz6usiheb2lx6wlk47z3btvf6t6kbo4ja4n6mli5hosrp=
+cvdwp@wmvfvhaqhpkm
+[2] http://lore.kernel.org/r/20250208051541.176667-1-tejasvipin76@gmail.com
