@@ -1,150 +1,118 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4BD241CA5
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 17:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739036560; cv=pass; b=bt+erHt1Cl/RHuYu/PgWZkAwPV7NxjinDQbe8l8OxRLslmgnW9HQb8yPisTl+F5o9DAp56VYJpgofbLKBV1TnvK4ovFe9DSJy0ZFuzDb/0eaBunnfVC8WLd/trxLoAI5rcR0CK8Ho9YN088GcqmvS4dzU7gPnT+n7dusIF1zNKE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739036560; c=relaxed/simple;
-	bh=mLhayLuyDboOz2U+qDH9S41X7NRkERNLxZ3NKgGpHjY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R9Pejp+j6BPRFfpc5SVjYNsSsYMSuoLJlc/bnmZB/D7Xcutgxzq4UW4h+wCz6nC0LESwE71gfyfgP1kGUcDBNHGMXHSZvYX8B/wvfIjFtfpA3jRrQfgo1q4L0kCBq0RKU7ebEnKXYJFMvyMER0kHMgqZkCvZmPqzCIBsPKvnPVE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=BGoKbXlp; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36EF3194C8B;
+	Sat,  8 Feb 2025 17:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739036592; cv=none; b=OHExu0Bju7KFSzhHvRMHQ2EBR0xCE7ns7NekQInncJ3fChYNK2pj2ROJOI0whOuzbke9oCG29ywcPRMrxI9AlE4awSEG6s63nmcQcV27AIVY8iWd+YjA63o4NuUlJ7uxkYI+ubI9FM2U0pdfwgB322dw3JraYNsj9GJzVRbUkH0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739036592; c=relaxed/simple;
+	bh=3XNi8c+5O9/wGq9UMbfnhq0lX0Hgcw5QqTGoWqMEM5M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jv64dVZgHDYb0zLc9f4wr/pHch1dUJUY6ppzoKuFJkqAMVlO/o3fzbD9LAhs3GmLYYIUwiLqzCK5DRCapcRMDN/S8u7hdq4lQdGmTaCyLD438p8k+bebwH1jePKgAkcU1FW9WGfritifE8SwLdMw22dkDn0PEo+iLST35lZs8Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=THXe+ej1; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="BGoKbXlp"
-ARC-Seal: i=1; a=rsa-sha256; t=1739036548; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UU7rJaTHqPrCdz5Idv7lA3EBmHqjRi14c+xNk1voSq3JxSqdvWJGePirDgC3aT1Yg0GeIT6fxlf9F9h0hp12YUld/HLpOmyeBR+Ih8BNtq8OhQRAsDLICk7gCRVU1z4axpzuMA6J4vQy4BKBU7aC6igxLqmlgE2PQq5GT+oBtC0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1739036548; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=i54Z1kYi2errV6FSjAGuXOU36ICII1ivXcH5Kd0r3Gg=; 
-	b=WcVPaxtexvcF1UxeGQAd1YPpKKbF+d6vInVpQNzKjisZwQPmGVK54r5c4nEKLnhBR1XN62JGbJ4N96gE45m+FseqJ3YgjP9UC7ocTGFDee4jQBqTbRXFgIBmnz3oSq8VHcaKpt1JRTGkAe3s+Xbhphz9A1FwOMgc8t5A4fFY/aA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1739036548;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=i54Z1kYi2errV6FSjAGuXOU36ICII1ivXcH5Kd0r3Gg=;
-	b=BGoKbXlp+yNo4SjaKn54/gPox0Jqb3ZkhKgsRhFSW5rMgB22zBOkRn90cf26aUP+
-	n7N7vK4BsYbukm9nfvGc7K2CrlLRKEVssH4rdgbGeBwUW7pMbds1H8H5Fnlyg7ELv8b
-	6gXAuXTUndA0G26TkzpB6HGf3GcTKAcslNan7Puk=
-Received: by mx.zohomail.com with SMTPS id 1739036545342717.44347943493;
-	Sat, 8 Feb 2025 09:42:25 -0800 (PST)
-Received: by venus (Postfix, from userid 1000)
-	id B9721180616; Sat, 08 Feb 2025 18:42:21 +0100 (CET)
-Date: Sat, 8 Feb 2025 18:42:21 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
-	Zack Rusin <zack.rusin@broadcom.com>
-Subject: Re: [PATCH v2 17/45] power: supply: ab8500_chargalg: Switch to use
- hrtimer_setup()
-Message-ID: <roiad6zbj4z2zizl6muhvlstwu4mvsh6f6g2tf2feps7ihut3g@aknn232lzqo6>
-References: <cover.1738746904.git.namcao@linutronix.de>
- <fa0bf7376ce8f124c8285a52d9f55d0ab4c42988.1738746904.git.namcao@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THXe+ej1"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2fa1fb3c445so3280696a91.2;
+        Sat, 08 Feb 2025 09:43:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739036590; x=1739641390; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aDr9K6NjgkJte6FIg1/4kGyjFZF0Bg871DBJOAHBsU4=;
+        b=THXe+ej1ee1ujD9SaWkU6uDqqUZeOEvQRr1nZyg4sMFoHNjbXX7I4NiELjctOG/tYO
+         ogUnPbOT+NlnH5fFjGO6Fv3/yOG/eFOBBBCcZWPgq4mgf9WDPxtXZDG9nC8BIZKGXlaj
+         3pFnaom2CTuGIQKzoXw/Xnw//nO3zChIE4skDWVrW6WnLyrGI9fHra+xVoLUmh+/LSJq
+         tKTL8anCjDUuITPZIjW8Q4jna9pTqrRJy8RYehrTvnEwoMavedaVUn0AXBQbQEi9Ijbm
+         wi4QJeibzRvaFyREnTx3DbdojjSHBkUPqfol8NFSSqvk8Q45dSehRHglJYqq9UpYzUnU
+         X7ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739036590; x=1739641390;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aDr9K6NjgkJte6FIg1/4kGyjFZF0Bg871DBJOAHBsU4=;
+        b=lVv8KEc4If+o0o646y/DKODH4dmuVOLmj8eERyTKnCtb+Sq4PQsN7yooTWZFEPRnTQ
+         +v4K3HBSSSvZclyDIHbhCaX3/l2CzHpeHn5BmRjt3oLy5pUoPRN/ZRp/rzD1kYAcUEBj
+         gI/EuKtgNHNFhO2sfZsZEZF2OjM0yf7V7tSTdEAWJ5S7K1h5NEK8VamrX/ZzMvO271Q6
+         l9KlSbsIpdJofobq/Vre4qFytUAcEncxYwWN6rJYQFk4VSiE6Uk3SfLvZbPnBVE9uP1z
+         5wl0aYmKDcV68TrO/jisXsnWglINQ9Ig1EvNN12ipRVVa6Ta4poJJH4eADljkEwl8lY0
+         9Dng==
+X-Forwarded-Encrypted: i=1; AJvYcCWV5519wPxHf221oHGhxCpVr0qA15E23y+SvML8tbIYp1xsDHBbfIuUndtCd4324JK1LXBUeLGcWbwDI6w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqFSGsmBfU5FvkJO6zcmzTJiugO3WAkgVRoC5yL+4xkDSSADxu
+	TTZ6ahonQGy2lqVSWzuzKOqOJq7keWXPBLKUPPr92tdqdk5O3myIaZyscg==
+X-Gm-Gg: ASbGncttpvCQrGpjrwAmO2c4BedmNkkGjkhIFYWKY43KWElNo/Fr3nxDYbGmqGu8SVF
+	yHNFyzIbsMC39XeAbFFCXroUSzzZe8S/l7Rl4Y5syc428EZmYygOJhyOWCJHctdwSI4H0/W7HL3
+	PKWqc6ZedLTVZyxQM1qUb4jPIuTikOt8k7OwjcUwuu2rmoGsvPxLnVDf4mUgpSUsdkEu5mW0795
+	ZxHjJ6ooTEPMBU49i12KYh09L7CGyNYepiyy88PNSxAILa/YD/t1kS5TySgSpb5OiFevnBLbD9X
+	EvG6O6ay2uwbYkgizuQ5
+X-Google-Smtp-Source: AGHT+IFbiqZCA2w0VgGgTVt43/4MqMDNaFUoW/AlB+ZeZemgg3d7sKJa7g1C47N4UFcCY3OKXf7KQg==
+X-Received: by 2002:a05:6a00:2289:b0:727:3fd5:b530 with SMTP id d2e1a72fcca58-7305d4f01f2mr12619055b3a.15.1739036590345;
+        Sat, 08 Feb 2025 09:43:10 -0800 (PST)
+Received: from eleanor-wkdl.. ([140.116.96.203])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-730796ba9d7sm1140820b3a.86.2025.02.08.09.43.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 09:43:09 -0800 (PST)
+From: Yu-Chun Lin <eleanor15x@gmail.com>
+To: James.Bottomley@HansenPartnership.com,
+	deller@gmx.de
+Cc: linux-parisc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jserv@ccns.ncku.edu.tw,
+	visitorckw@gmail.com,
+	Yu-Chun Lin <eleanor15x@gmail.com>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] parisc: PDT: Fix missing prototype warning
+Date: Sun,  9 Feb 2025 01:43:04 +0800
+Message-ID: <20250208174304.2627078-1-eleanor15x@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rwgnexoc53fzo4i3"
-Content-Disposition: inline
-In-Reply-To: <fa0bf7376ce8f124c8285a52d9f55d0ab4c42988.1738746904.git.namcao@linutronix.de>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.3.1/232.189.87
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
+As reported by the kernel test robot, the following error occurs:
 
---rwgnexoc53fzo4i3
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 17/45] power: supply: ab8500_chargalg: Switch to use
- hrtimer_setup()
-MIME-Version: 1.0
+arch/parisc/kernel/pdt.c:65:6: warning: no previous prototype for 'arch_report_meminfo' [-Wmissing-prototypes]
+      65 | void arch_report_meminfo(struct seq_file *m)
+         |      ^~~~~~~~~~~~~~~~~~~
 
-Hi,
+arch_report_meminfo() is declared in include/linux/proc_fs.h and only
+defined when CONFIG_PROC_FS is enabled. Wrap its definition in #ifdef
+CONFIG_PROC_FS to fix the -Wmissing-prototypes warning.
 
-On Wed, Feb 05, 2025 at 11:46:05AM +0100, Nam Cao wrote:
-> hrtimer_setup() takes the callback function pointer as argument and
-> initializes the timer completely.
->=20
-> Replace hrtimer_init() and the open coded initialization of
-> hrtimer::function with the new setup mechanism.
->=20
-> Patch was created by using Coccinelle.
->=20
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Acked-by: Zack Rusin <zack.rusin@broadcom.com>
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> ---
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202502082315.IPaHaTyM-lkp@intel.com/
+Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+---
+ arch/parisc/kernel/pdt.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+diff --git a/arch/parisc/kernel/pdt.c b/arch/parisc/kernel/pdt.c
+index 0f9b3b5914cf..b70b67adb855 100644
+--- a/arch/parisc/kernel/pdt.c
++++ b/arch/parisc/kernel/pdt.c
+@@ -63,6 +63,7 @@ static unsigned long pdt_entry[MAX_PDT_ENTRIES] __page_aligned_bss;
+ #define PDT_ADDR_PERM_ERR	(pdt_type != PDT_PDC ? 2UL : 0UL)
+ #define PDT_ADDR_SINGLE_ERR	1UL
+ 
++#ifdef CONFIG_PROC_FS
+ /* report PDT entries via /proc/meminfo */
+ void arch_report_meminfo(struct seq_file *m)
+ {
+@@ -74,6 +75,7 @@ void arch_report_meminfo(struct seq_file *m)
+ 	seq_printf(m, "PDT_cur_entries: %7lu\n",
+ 			pdt_status.pdt_entries);
+ }
++#endif
+ 
+ static int get_info_pat_new(void)
+ {
+-- 
+2.43.0
 
--- Sebastian
-
->  drivers/power/supply/ab8500_chargalg.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/power/supply/ab8500_chargalg.c b/drivers/power/suppl=
-y/ab8500_chargalg.c
-> index 7a8d1feb8e90..dc6c8b0dd1cf 100644
-> --- a/drivers/power/supply/ab8500_chargalg.c
-> +++ b/drivers/power/supply/ab8500_chargalg.c
-> @@ -1787,13 +1787,12 @@ static int ab8500_chargalg_probe(struct platform_=
-device *pdev)
->  	psy_cfg.drv_data =3D di;
-> =20
->  	/* Initilialize safety timer */
-> -	hrtimer_init(&di->safety_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> -	di->safety_timer.function =3D ab8500_chargalg_safety_timer_expired;
-> +	hrtimer_setup(&di->safety_timer, ab8500_chargalg_safety_timer_expired, =
-CLOCK_MONOTONIC,
-> +		      HRTIMER_MODE_REL);
-> =20
->  	/* Initilialize maintenance timer */
-> -	hrtimer_init(&di->maintenance_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> -	di->maintenance_timer.function =3D
-> -		ab8500_chargalg_maintenance_timer_expired;
-> +	hrtimer_setup(&di->maintenance_timer, ab8500_chargalg_maintenance_timer=
-_expired,
-> +		      CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-> =20
->  	/* Init work for chargalg */
->  	INIT_DEFERRABLE_WORK(&di->chargalg_periodic_work,
-> --=20
-> 2.39.5
->=20
->=20
-
---rwgnexoc53fzo4i3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmenl30ACgkQ2O7X88g7
-+pr6kRAAqjGtVpLEURDXAQF1ghHM6vgpwW3UqR+iCv8NZ5VkMsP/45jyVKcMny5J
-CmyyBPmTf94bYANnUFHIAZqFJ7IWRRpQpUKwKzsBTACwcqq4ykM8BQ93xgcwHzCl
-SaNQtncDSQau+DDF3zC6U//zktSi+RVSlE8SOmtI7aSyJC5npuEZvINUQDQfnJee
-im03kyfIRV8n+ANkaPFlUuSbMae1JDyxXZMVDu4t3p148FtZOZb9FSE2UKj0YGWB
-xlBHT/ziS8s2dwdnJLKdJumoXGT1cuZXm7CzS5xvz4x3DBaWwwfUBEnwZwJ2NmP7
-E1mRqGNGolpbjZnIGe0e+U+otrEIUTxlQ48WpI9EGs8P9pzCVJkqk0VfgxDylZrJ
-zscFHaWc7PCFoW9ZpHkBr8eieMNenawIcRxYnp4cUP+nCqSl0umWVKJc4+pQNTmU
-VaTRsNX1vk/jwzOt2lG9aFESP4rNZmhETxZicD1QL0vCC1qDfBRPfkSTLGUjfX6t
-BEWhemqZIuXGPnYA6YwaQcEUS6AOv1GSWT6hz+Q1Ktjm66trvWSQl8YA7MR5/0Da
-8uw2jnl5teWeggfG7TSFkf1XEnBbj9y/Q7LUny3TNa5BreboNdD5OnJCL466g8uA
-QbOtCpp79MP0SEv9OVHJ0LeBMXgz0+zn/er9usweHObO7UgEQnc=
-=V+1s
------END PGP SIGNATURE-----
-
---rwgnexoc53fzo4i3--
