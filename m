@@ -1,105 +1,155 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771E91B0434;
-	Sat,  8 Feb 2025 13:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9C21B0434;
+	Sat,  8 Feb 2025 13:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739021555; cv=none; b=Oe5f99UijciEAckYOEweQheKE10rasWnvS8Qf8oTSgx3CrixPAh+VYmu4FiJ8jPb/QQBp/Xj3fIxW1w0DYbwhsVwb17uv7w2rSsVrHJNHm4P24/WcXd7co/mbSC+QhlPPv5yN1NZoyF6DrinwtSUf7U0BMDyq7QgBJXw2JUp0FA=
+	t=1739021888; cv=none; b=Dee4WTQ++TwV4IooV9jM7X+bdEc1lxgXHZdPRvPVUbU4WGPm8AwT8qOMBatZl/eh6CYPdqQ0LXuAAsWhtXMjzswXhCsuqJ0nAJmfwmgiuNo/OcGRrPcW8CliBY9txAFr66KwjlWOsqg0DXTb62VsnwR+ro2h50Mp32CUH3RfctU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739021555; c=relaxed/simple;
-	bh=hp/QlQLnszYTXmXShP+TaYAd6/NZl+NFs1iWbFohFHI=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ym41/NHq29fiokjfdTwzMoP+40JrrL1raVt77SuGVx3E1MC7eimz9xNxJ6iPFfgKnLIPajiEUOcGvP9tu0b2vxo/K5o/HUiJMWMLkkQxFQ8Qq9sw56MALotIS87gk9Uo6LJLtuZSYcSU+MhUX+iKJ5wcFVAgtv5hw9F0ndKZfmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=nedYq9wv; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1739021888; c=relaxed/simple;
+	bh=9xCYQsWJ9XtnOZOIYs9liH1X4ipwXFUUSjZNOHqjUH8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jdi2DvkcIpGWT0EJkQxssC/DvF4XVlVtuPNxtJKSuxprF0xKlDlo8fe+ZoDvx3O1JHOaLWGA7XymWYe/usPW3raFGOLWKH9coy5SXXSopjGCTampyTld2h1WqcuxaKsQ301vRaXKz37E/GJ/STMAJ0rICLHiC67o7bmOZ3iKA7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FtlYOnKr; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="nedYq9wv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1739021543;
-	bh=hp/QlQLnszYTXmXShP+TaYAd6/NZl+NFs1iWbFohFHI=;
-	h=From:Subject:Date:To:Cc:From;
-	b=nedYq9wvVjyXvYbGtNTq7IykiSjVwjwDQR3DCmWdVFJPHBrplMPO924UOU9qCjehx
-	 h6m+0fdWzgtZ09f37oIEJyYbnCulq+ZFiEBlAYpLhdRhVYDiyo9a9gmZrBckOOnFUs
-	 weP98sx/U4I6g84JmXbIiW+RUbnfmPCRw3J826ys=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Subject: [PATCH 0/2] rust: two small improvements for kunit
-Date: Sat, 08 Feb 2025 14:31:13 +0100
-Message-Id: <20250208-rust-kunit-v1-0-94a026be6d72@weissschuh.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FtlYOnKr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739021887; x=1770557887;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9xCYQsWJ9XtnOZOIYs9liH1X4ipwXFUUSjZNOHqjUH8=;
+  b=FtlYOnKrJMsvbnZ9wcUkc1KceZX0+g5AzIao1K2H/4H3exuE6c+KpmJJ
+   XHAU7i0gmEhX/3x4Rd1D1kHs+p23oc/Pb6uH6EC9iLwHV2edn2WRzKaM1
+   9hYL+nuj/41arlat2KquFr3sYWwkn9aVlbvD+NhcgxGqkTOLu9ow28D7R
+   YJFbPUSvAFwTSIJml7AXyYofAsShlC5zr6bDzFbGLPgsBCjvJqZbabiGY
+   FMkuqVZsUjsZApguGe+lTzkIp15aHjlf7sOyBbZXus36sCM25ngnRdHaT
+   Hg1qGLPwx3znD+ENex9ARiWTfq3dixy1Ga7rCDdQkIBbf0yi9pM3GEvIR
+   A==;
+X-CSE-ConnectionGUID: JIcn7QxhSNC3/Qa6/o5GzA==
+X-CSE-MsgGUID: I7c9Df9aSzufrpvSbpNl0A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51084796"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="51084796"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 05:38:06 -0800
+X-CSE-ConnectionGUID: luwDg+C5QLOfSYr5X93OhA==
+X-CSE-MsgGUID: FYwLAcshQJuk1QjJbraF9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="116980853"
+Received: from irvmail002.ir.intel.com ([10.43.11.120])
+  by orviesa005.jf.intel.com with ESMTP; 08 Feb 2025 05:38:02 -0800
+Received: from lincoln.igk.intel.com (lincoln.igk.intel.com [10.102.21.235])
+	by irvmail002.ir.intel.com (Postfix) with ESMTP id B59B7312FD;
+	Sat,  8 Feb 2025 13:38:00 +0000 (GMT)
+From: Larysa Zaremba <larysa.zaremba@intel.com>
+To: Tony Nguyen <anthony.l.nguyen@intel.com>,
+	intel-wired-lan@lists.osuosl.org
+Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Mateusz Pacuszka <mateuszx.pacuszka@intel.com>
+Subject: [PATCH iwl-next v3 0/6] ice: LLDP support for VFs
+Date: Sat,  8 Feb 2025 14:22:41 +0100
+Message-ID: <20250208132251.1989365-1-larysa.zaremba@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAKFcp2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIwML3aLS4hLd7NK8zBLdlBRjU4NUw0QTM+NkJaCGgqLUtMwKsGHRsbW
- 1AFKw9mBcAAAA
-X-Change-ID: 20250208-rust-kunit-dd350e1a463c
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <ndesaulniers@google.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739021542; l=1659;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=hp/QlQLnszYTXmXShP+TaYAd6/NZl+NFs1iWbFohFHI=;
- b=IgP8Mee3WFJPHH1HUqpdpDmGN6N60+iuY2FCyO62LHiCtEiHnFshVBTKBYNxlsYs+eiIliakf
- lQ9v0s83iHGA1hc6Ot4GAkcNkK7AX8Ed6AX1VO8wZSM0MFGQQpiY53m
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Two quality of live improvements for running kunit tests for rust/.
-While today there are only the doctests, more are coming [0].
+Allow to:
+* receive LLDP packets on a VF in legacy mode
+* receive LLDP packets on a VF in switchdev mode
+* transmit LLDP from a VF in switchdev mode
 
-	$ ./tools/testing/kunit/kunit.py run --kunitconfig rust/ 
-	[14:25:48] Configuring KUnit Kernel ...
-	[14:25:48] Building KUnit Kernel ...
-	Populating config with:
-	$ make ARCH=um O=.kunit olddefconfig
-	Building with:
-	$ make all compile_commands.json ARCH=um O=.kunit --jobs=16
-	[14:25:53] Starting KUnit Kernel (1/1)...
-	[14:25:53] ============================================================
-	Running tests with:
-	$ .kunit/linux kunit.enable=1 mem=1G console=tty kunit_shutdown=halt
-	[14:25:53] =========== rust_doctests_kernel (135 subtests) ============
-	[14:25:53] [PASSED] rust_doctest_kernel_alloc_kbox_rs_0
+Many VSIs can receive LLDP packets, but only one VSI
+per port can transmit LLDP, therefore LLDP TX from VF
+requires adding an egress drop rule to the PF, this is
+implemented in these series too.
 
-	...
+There are no patches that explicitly address LLDP RX in
+switchdev mode, because it just works after adding support
+in legacy mode.
 
-	[14:25:53] [PASSED] rust_doctest_kernel_workqueue_rs_3
-	[14:25:53] ============== [PASSED] rust_doctests_kernel ===============
-	[14:25:53] ============================================================
-	[14:25:53] Testing complete. Ran 135 tests: passed: 135
-	[14:25:53] Elapsed time: 5.431s total, 0.001s configuring, 5.314s building, 0.086s running
+Usage
 
-[0] https://lore.kernel.org/rust-for-linux/20241213081035.2069066-1-davidgow@google.com/
+To receive LLDP packets on VF in legacy mode:
+On host:
+ip link set dev <pf_ifname> vf <n> trust on
+On VM:
+service lldpd restart
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
-Thomas Weißschuh (2):
-      rust: pass correct target to bindgen on Usermode Linux
-      rust: add kunitconfig
+To receive LLDP packets on VF in switchdev mode (host config):
+tc qdisc add dev <pf_ifname> clsact
+tc filter add dev <pf_ifname> protocol lldp ingress \\
+   flower skip_sw action mirred egress mirror dev <repr_ifname>
 
- rust/.kunitconfig | 3 +++
- rust/Makefile     | 1 +
- 2 files changed, 4 insertions(+)
----
-base-commit: beeb78d46249cab8b2b8359a2ce8fa5376b5ad2d
-change-id: 20250208-rust-kunit-dd350e1a463c
+To transmit LLDP packets from VF (host config):
+tc qdisc add dev <pf_ifname> clsact
+tc qdisc add dev <repr_ifname> clsact
+tc filter add dev <pf_ifname> egress protocol lldp \\
+   flower skip_sw action drop
+tc filter add dev <repr_ifname> ingress protocol lldp \\
+   flower skip_sw action mirred egress redirect dev <pf_ifname>
 
-Best regards,
+For all abovementioned functionalities to work, private flag
+fw-lldp-agent must be off.
+
+v2->v3:
+* fix sparse warning caused by part of .sw_act members being initialized
+  inside the curly braces and others being initialized directly
+* reorder members inside the rinfo initializer according to struct
+  definition in ice_drop_vf_tx_lldp(), while fixing the warning above
+
+v1->v2:
+* get rid of sysfs control
+* require switchdev for VF LLDP Tx
+* in legacy mode, for VF LLDP Rx rely on configured MAC addresses
+
+Larysa Zaremba (4):
+  ice: do not add LLDP-specific filter if not necessary
+  ice: remove headers argument from ice_tc_count_lkups
+  ice: support egress drop rules on PF
+  ice: enable LLDP TX for VFs through tc
+
+Mateusz Pacuszka (2):
+  ice: fix check for existing switch rule
+  ice: receive LLDP on trusted VFs
+
+ drivers/net/ethernet/intel/ice/ice.h          |   1 +
+ drivers/net/ethernet/intel/ice/ice_common.c   |  10 +-
+ drivers/net/ethernet/intel/ice/ice_common.h   |   3 +-
+ drivers/net/ethernet/intel/ice/ice_dcb_lib.c  |   2 +-
+ drivers/net/ethernet/intel/ice/ice_eswitch.c  |   6 +
+ drivers/net/ethernet/intel/ice/ice_ethtool.c  |   2 +-
+ drivers/net/ethernet/intel/ice/ice_lib.c      |  71 ++++-
+ drivers/net/ethernet/intel/ice/ice_lib.h      |   3 +-
+ drivers/net/ethernet/intel/ice/ice_main.c     |  56 +++-
+ drivers/net/ethernet/intel/ice/ice_repr.c     |  10 +-
+ drivers/net/ethernet/intel/ice/ice_sriov.c    |   4 +
+ drivers/net/ethernet/intel/ice/ice_switch.c   |   4 +-
+ drivers/net/ethernet/intel/ice/ice_tc_lib.c   | 243 ++++++++++++++++--
+ drivers/net/ethernet/intel/ice/ice_tc_lib.h   |   4 +-
+ drivers/net/ethernet/intel/ice/ice_txrx.c     |  17 +-
+ drivers/net/ethernet/intel/ice/ice_vf_lib.c   |  26 ++
+ drivers/net/ethernet/intel/ice/ice_vf_lib.h   |  12 +
+ drivers/net/ethernet/intel/ice/ice_virtchnl.c |  48 +++-
+ 18 files changed, 449 insertions(+), 73 deletions(-)
+
 -- 
-Thomas Weißschuh <linux@weissschuh.net>
+2.43.0
 
