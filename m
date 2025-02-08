@@ -1,230 +1,65 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84F0A41
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 05:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0416BA41;
+	Sat,  8 Feb 2025 05:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738990946; cv=none; b=XMtUdPj4Po7KDw6yLYRGCM8siCNxutsCbQYkIRblQxCyFYHz55iBP7nhOyb7aH8XIQ1nvu5Js3FTipzh3d40gah4Yvaj/dOlimRR08hRN+M/z64pokoj6iqq0h6fQ6ZNNLJUWhzaSaVIyCcV7hIqHDQukAG+WzK2M7eYuVn7LYA=
+	t=1738991014; cv=none; b=fHYDr3Sjq8BoNniX4Arp6LMRR6Gwxj+fU+6GSdYTwiP5UEhMP9kVGYStGlfVFp+7nLUxYboCHnhyUjCC2v3pVVUHxX6dXeD0hbXAVa++9zpL3ZecDxBuZzE4qgHha2d41vYxpWvCB/KpINGupWqeNyCL0sJ5BNcQvo3BfCfZFH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738990946; c=relaxed/simple;
-	bh=FhWnX8Dws+tE5PvQzH5KmVPXMmipMM6EM1G19il+x6c=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=n68wuZ4wUyVEQ1JwLU/v4PKmhCMp731dQ1XLXScxEtseg8eyDtUwDK9MNVxHIKwQAYwuzy+JvhO9kv9ULVAuhq3ad6C+FGDHeomHsCGrZa5I4krcHFtNN9OwRHFSry5CnU0pSGd4rq05LmyVXou3SakqxP6rkxgmsEbKDLHnYLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d14950ac9fso20245815ab.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 21:02:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738990944; x=1739595744;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pXjDlQcZtOm4ojhk77V76o5Uy/7AELAPeFe6ypJDkI4=;
-        b=EGxSYZhkcTIzXXzFlidiw4E75qCbquyrq8SIk49PeTULhTeUV0w2Muq91gz0gsFcmn
-         OKqnDSDALibiZE9kD+/Ngjp2m6fvVN0g2Re/niUVr4HLbYvs8TjeGq9DvfJJHIgFWnmS
-         MCde3+66WOEjSOTBLLAUFRa9AZFDMRfWXOI5OYaZySNVwoke4KKfuI8OckEpMvjfoWGa
-         1BzP0zwm8nZ2klvJW3pSHdJ9x4RHo44mZEYsCyGbV1wwVkndGCfvyxhle5JVy19BNqiW
-         LTPk6ICekrF8b30D3Ct3kXjud0j7IA8Jva7YMWdn4inUMKEMI9qXLr+bBWzCf5gUkhp4
-         q9pA==
-X-Forwarded-Encrypted: i=1; AJvYcCW40rjCZ6qsEiDK/MmfehAi/HIgQvieaU2u/l/8aM+yRWN/174RDvgcLI0sMG5j44edUjyO6x3DCjMI9fo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoSR9BxLuMl3hkynAh7Ttj6fjLDKmsHsW22dCReVAVpUW6k3RQ
-	3BJ7uog44fCOaonq6rZ0WXIpoadtyJiECPqkCmcjbkm1TncBK5jAZc9UgE4FziXrFCf1B6Ka7Ec
-	hVwuBT3vKVlW9O2DSkanqW/bJHInJZP6E1UOHudaVjGttOt2FAcX7/OA=
-X-Google-Smtp-Source: AGHT+IHGJbmzJqUEKvu7F3C1RmANTGtjRLJMNgGP3GONjOAz0tc4r1iww3J0mU270UJwha9nfBS6fxKBL5/WrUqy3AGtUxgwEypQ
+	s=arc-20240116; t=1738991014; c=relaxed/simple;
+	bh=2ODyCk+gKJrnseQ6g1H+QXVp8LXA5ZinHiJQ8be5+pI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Gy+QBkRbuBy+63iP0RhEyIbMx5l2dD6A4iiwwabUcReVcJAZ4qYP0+2IBw5Cf0icw5Ue6YLXjjXCOTEUcWb8Yy+Ly5wr/6pihkt/VPiRnoYF7NoFBc5Q5KbRj2Vi6HtVMw/yJsWo36S9LelcB4K2NGJh0DGmZHq/GKYi6GFoqQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SW9h8Za6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SW9h8Za6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 582BAC4CED6;
+	Sat,  8 Feb 2025 05:03:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738991013;
+	bh=2ODyCk+gKJrnseQ6g1H+QXVp8LXA5ZinHiJQ8be5+pI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SW9h8Za6Lc76MUxTeFAyeb81vf6sLc8s74eAUK7rVJ7tNdoOOCH+Iyih1yKU1ORnu
+	 oRuq9uhqHkMqwUXBK2hNxNuzbIuUmplMubpCuFwXYldf+Obvn9id1WO0oLE4jvb4dj
+	 IC3jyA9eyu59GtPl1oP9lcHdcEetx9HEwfSMGBSu5rFclmZMHCAi2tVU3KL3MHlADR
+	 UXzKU6lI481bZzQe8yVNYVmGBO7qHpCJxn8I+kaiWg4rZOBhqumLWGJRAUYt0ZCZpz
+	 vklAGsjL8Rw58GH8nqHK0ENlkRZGueyqmgAu2mOb2XikrJeDtSZX4H5AoQxLm5U4BP
+	 OxWk8iBeLKx0g==
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alex Williamson <alex.williamson@redhat.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 0/2] PCI: Avoid capability searches in save/restore state
+Date: Fri,  7 Feb 2025 23:03:27 -0600
+Message-Id: <20250208050329.1092214-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:b49:b0:3d0:24c0:bd45 with SMTP id
- e9e14a558f8ab-3d13df5445emr40572725ab.20.1738990943836; Fri, 07 Feb 2025
- 21:02:23 -0800 (PST)
-Date: Fri, 07 Feb 2025 21:02:23 -0800
-In-Reply-To: <67720722.050a0220.2f3838.04b4.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a6e55f.050a0220.3d72c.001f.GAE@google.com>
-Subject: Re: [syzbot] [hams?] possible deadlock in nr_remove_neigh (2)
-From: syzbot <syzbot+8863ad36d31449b4dc17@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	kuba@kernel.org, linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot has found a reproducer for the following issue on:
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-HEAD commit:    7ee983c850b4 Merge tag 'drm-fixes-2025-02-08' of https://g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14b661b0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a7ddf49cf33ba213
-dashboard link: https://syzkaller.appspot.com/bug?extid=8863ad36d31449b4dc17
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=137a5df8580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17148bdf980000
+Reduce the number of times we search config space for PCI capabilities when
+saving and restoring device state.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ecfa63f9f35c/disk-7ee983c8.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e9bfce21362e/vmlinux-7ee983c8.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2942fdcc30b7/bzImage-7ee983c8.xz
+Bjorn Helgaas (2):
+  PCI: Avoid pointless capability searches
+  PCI: Cache offset of Resizable BAR capability
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+8863ad36d31449b4dc17@syzkaller.appspotmail.com
+ drivers/pci/pci.c       | 36 +++++++++++++++++++++---------------
+ drivers/pci/pci.h       |  1 +
+ drivers/pci/pcie/aspm.c | 15 ++++++++-------
+ drivers/pci/probe.c     |  1 +
+ drivers/pci/vc.c        | 22 +++++++++++-----------
+ include/linux/pci.h     |  1 +
+ 6 files changed, 43 insertions(+), 33 deletions(-)
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.14.0-rc1-syzkaller-00181-g7ee983c850b4 #0 Not tainted
-------------------------------------------------------
-syz-executor270/7031 is trying to acquire lock:
-ffffffff90146478 (nr_neigh_list_lock){+...}-{3:3}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
-ffffffff90146478 (nr_neigh_list_lock){+...}-{3:3}, at: nr_remove_neigh+0x1a/0x290 net/netrom/nr_route.c:307
+-- 
+2.34.1
 
-but task is already holding lock:
-ffff888145b6b970 (&nr_node->node_lock){+...}-{3:3}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
-ffff888145b6b970 (&nr_node->node_lock){+...}-{3:3}, at: nr_node_lock include/net/netrom.h:152 [inline]
-ffff888145b6b970 (&nr_node->node_lock){+...}-{3:3}, at: nr_add_node+0x60b/0x2be0 net/netrom/nr_route.c:214
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #2 (&nr_node->node_lock){+...}-{3:3}:
-       __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
-       _raw_spin_lock_bh+0x33/0x40 kernel/locking/spinlock.c:178
-       spin_lock_bh include/linux/spinlock.h:356 [inline]
-       nr_node_lock include/net/netrom.h:152 [inline]
-       nr_rt_device_down+0x188/0x7f0 net/netrom/nr_route.c:519
-       nr_device_event+0x126/0x170 net/netrom/af_netrom.c:126
-       notifier_call_chain+0xb7/0x410 kernel/notifier.c:85
-       call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2141
-       call_netdevice_notifiers_extack net/core/dev.c:2179 [inline]
-       call_netdevice_notifiers net/core/dev.c:2193 [inline]
-       __dev_notify_flags+0x1f9/0x2e0 net/core/dev.c:9213
-       dev_change_flags+0x10c/0x160 net/core/dev.c:9249
-       dev_ifsioc+0x9d8/0x10d0 net/core/dev_ioctl.c:563
-       dev_ioctl+0x224/0x10c0 net/core/dev_ioctl.c:826
-       sock_do_ioctl+0x19e/0x280 net/socket.c:1213
-       sock_ioctl+0x228/0x6c0 net/socket.c:1318
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl fs/ioctl.c:892 [inline]
-       __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (nr_node_list_lock){+...}-{3:3}:
-       __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
-       _raw_spin_lock_bh+0x33/0x40 kernel/locking/spinlock.c:178
-       spin_lock_bh include/linux/spinlock.h:356 [inline]
-       nr_rt_device_down+0xd5/0x7f0 net/netrom/nr_route.c:517
-       nr_device_event+0x126/0x170 net/netrom/af_netrom.c:126
-       notifier_call_chain+0xb7/0x410 kernel/notifier.c:85
-       call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2141
-       call_netdevice_notifiers_extack net/core/dev.c:2179 [inline]
-       call_netdevice_notifiers net/core/dev.c:2193 [inline]
-       __dev_notify_flags+0x1f9/0x2e0 net/core/dev.c:9213
-       dev_change_flags+0x10c/0x160 net/core/dev.c:9249
-       dev_ifsioc+0x9d8/0x10d0 net/core/dev_ioctl.c:563
-       dev_ioctl+0x224/0x10c0 net/core/dev_ioctl.c:826
-       sock_do_ioctl+0x19e/0x280 net/socket.c:1213
-       sock_ioctl+0x228/0x6c0 net/socket.c:1318
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl fs/ioctl.c:892 [inline]
-       __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (nr_neigh_list_lock){+...}-{3:3}:
-       check_prev_add kernel/locking/lockdep.c:3163 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3282 [inline]
-       validate_chain kernel/locking/lockdep.c:3906 [inline]
-       __lock_acquire+0x249e/0x3c40 kernel/locking/lockdep.c:5228
-       lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5851
-       __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
-       _raw_spin_lock_bh+0x33/0x40 kernel/locking/spinlock.c:178
-       spin_lock_bh include/linux/spinlock.h:356 [inline]
-       nr_remove_neigh+0x1a/0x290 net/netrom/nr_route.c:307
-       nr_add_node+0x23d1/0x2be0 net/netrom/nr_route.c:249
-       nr_rt_ioctl+0x126e/0x29e0 net/netrom/nr_route.c:651
-       nr_ioctl+0x19a/0x2e0 net/netrom/af_netrom.c:1254
-       sock_do_ioctl+0x116/0x280 net/socket.c:1199
-       sock_ioctl+0x228/0x6c0 net/socket.c:1318
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl fs/ioctl.c:892 [inline]
-       __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
-Chain exists of:
-  nr_neigh_list_lock --> nr_node_list_lock --> &nr_node->node_lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&nr_node->node_lock);
-                               lock(nr_node_list_lock);
-                               lock(&nr_node->node_lock);
-  lock(nr_neigh_list_lock);
-
- *** DEADLOCK ***
-
-1 lock held by syz-executor270/7031:
- #0: ffff888145b6b970 (&nr_node->node_lock){+...}-{3:3}, at: spin_lock_bh include/linux/spinlock.h:356 [inline]
- #0: ffff888145b6b970 (&nr_node->node_lock){+...}-{3:3}, at: nr_node_lock include/net/netrom.h:152 [inline]
- #0: ffff888145b6b970 (&nr_node->node_lock){+...}-{3:3}, at: nr_add_node+0x60b/0x2be0 net/netrom/nr_route.c:214
-
-stack backtrace:
-CPU: 1 UID: 0 PID: 7031 Comm: syz-executor270 Not tainted 6.14.0-rc1-syzkaller-00181-g7ee983c850b4 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_circular_bug+0x490/0x760 kernel/locking/lockdep.c:2076
- check_noncircular+0x31a/0x400 kernel/locking/lockdep.c:2208
- check_prev_add kernel/locking/lockdep.c:3163 [inline]
- check_prevs_add kernel/locking/lockdep.c:3282 [inline]
- validate_chain kernel/locking/lockdep.c:3906 [inline]
- __lock_acquire+0x249e/0x3c40 kernel/locking/lockdep.c:5228
- lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5851
- __raw_spin_lock_bh include/linux/spinlock_api_smp.h:126 [inline]
- _raw_spin_lock_bh+0x33/0x40 kernel/locking/spinlock.c:178
- spin_lock_bh include/linux/spinlock.h:356 [inline]
- nr_remove_neigh+0x1a/0x290 net/netrom/nr_route.c:307
- nr_add_node+0x23d1/0x2be0 net/netrom/nr_route.c:249
- nr_rt_ioctl+0x126e/0x29e0 net/netrom/nr_route.c:651
- nr_ioctl+0x19a/0x2e0 net/netrom/af_netrom.c:1254
- sock_do_ioctl+0x116/0x280 net/socket.c:1199
- sock_ioctl+0x228/0x6c0 net/socket.c:1318
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fcbef4bd2e9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 1f 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffe540a63c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fcbef4bd2e9
-RDX: 00002000000001c0 RSI: 000000000000890b RDI: 0000000000000008
-RBP: 0000000000000000 R08: 00007ffe540a6400 R09: 00007ffe540a6400
-R10: 00007ffe540a6400 R11: 0000000000000246 R12: 00007ffe540a63e8
-R13: 00007ffe540a6420 R14: 00000000000000de R15: 431bde82d7b634db
- </TASK>
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
