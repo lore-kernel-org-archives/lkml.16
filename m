@@ -1,74 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F941A3157;
-	Sat,  8 Feb 2025 13:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26C201DE4FC
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 13:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739020277; cv=none; b=U1CRgdMDJqYR1ZIYMxw+G7uEUT6U3MHAYfBH5bIKBv+mzSNRi18V8vYJY/dzdHzTNPgZSA+XbZ7TffKDWpHKZ73pzXC4XVz0rXs5OGKeSD7O8Y+LqaeA0FUFgTKwR0TRRsEhdwnsJ1lZeUpA316Qqej/XuVcc2jX2bZB4DXBdVU=
+	t=1739020805; cv=none; b=li72G3qms9bpwl//ClmnMDvvdUrCzqiRbuwz9q/yqim87Czg9WMhkNVMrPlNq2esem4aG/KXYoPWSgz6u6hgPhD3vrytPIC7FXO3QVe/9HMtrojzJWRaPUGkyX3rUHQgdGk4x4C2f4jIsiOVRWJvEP46l8lzPJ9iC7w2jqjMzIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739020277; c=relaxed/simple;
-	bh=n5BuwU7uYtKvDB0Fk84TTCx9il8023N4ggMSK5Wt3Ic=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=At9mjuStAv1Febbz6iBEcXb37sIocD44S9msaCqTbVLi74n2e/B8tF+MJww2zrma/AISJhk3MFhreC9fdz32+sHj/FySVVQKhGR1a9Y1hu/e9PaOkTDMjm+aSf26jDfa7lAOQtqoSCgnxKxVFddMRVm95xYIBbTruQu2qHmATD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gPSiYF/G; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gPSiYF/G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6F1AC4CED6;
-	Sat,  8 Feb 2025 13:11:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739020277;
-	bh=n5BuwU7uYtKvDB0Fk84TTCx9il8023N4ggMSK5Wt3Ic=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gPSiYF/GgGtAi4CdflkHyKdkuTvLKxF0yAtZwxinY8ohE8BND7zR0geK/5dAzRA3W
-	 Z++LkTQXDhNhj+Tby0fCEAGrRm0szgVZ/6bF42hn4nvjzADQc3W5MkCpo9MuC5ZXJn
-	 d/9HrX++8ylWOpcl4/9DqAoK5cvPXXBm0RJNKr+oCAnNuhhY+Hs47WeKIN9FawOqOe
-	 vHyA7BdpqVOJ6ZPZW1DHouLbTsF2U3o/2/xf7mmG4S64iGkvA0XrTtG8NKgVwrSBBA
-	 +dYZb9v4v/HoFrmC91wP0EdeequICLGnkYTr6/cUPjQvRJMNEYp8XirPzAlu6AbYVS
-	 KLGZ5I+rL0/Sg==
-Date: Sat, 8 Feb 2025 13:11:06 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, David
- Jander <david@protonic.nl>, Martin Sperl <kernel@martin.sperl.org>,
- linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v8 14/17] iio: adc: ad4695: Add support for SPI offload
-Message-ID: <20250208131106.70d72ac4@jic23-huawei>
-In-Reply-To: <11b7f0fd-88ae-46c3-93b5-f7a0166e82be@sirena.org.uk>
-References: <20250207-dlech-mainline-spi-engine-offload-2-v8-0-e48a489be48c@baylibre.com>
-	<20250207-dlech-mainline-spi-engine-offload-2-v8-14-e48a489be48c@baylibre.com>
-	<11b7f0fd-88ae-46c3-93b5-f7a0166e82be@sirena.org.uk>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739020805; c=relaxed/simple;
+	bh=DexpIvr88TdfO7k5m5iLsPlnbkVUejXzYo7r7+Qsk4A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RfghYSKQjcY3ZJQkEDTYzTEQKQHyUbTB56/+ruQ50iaUALW3HCZsqGQrMGjCdd53yhS3+hvStH8rBsrU7Gz07F+jfv8vyhTnuhrEjgR6cX5mns9lpI0/r3/ZaIXrN5zYaxq/tf4QBx+K3XjSSqPFLyHNQDknn8agSoFdVojIgV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4YqrRV4Svsz9sPd;
+	Sat,  8 Feb 2025 13:55:34 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id B33kh4nvbrt9; Sat,  8 Feb 2025 13:55:34 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4YqrRV3TKqz9rvV;
+	Sat,  8 Feb 2025 13:55:34 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 6E51C8B79C;
+	Sat,  8 Feb 2025 13:55:34 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id pakRPOock7vB; Sat,  8 Feb 2025 13:55:34 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 8030B8B763;
+	Sat,  8 Feb 2025 13:55:33 +0100 (CET)
+Message-ID: <93833119-9406-4d30-aa7b-4521adb3a573@csgroup.eu>
+Date: Sat, 8 Feb 2025 13:55:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/9] powerpc: Use preempt_model_str().
+To: Shrikanth Hegde <sshegde@linux.ibm.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+ Ben Segall <bsegall@google.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>,
+ Juri Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>,
+ Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Valentin Schneider <vschneid@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Will Deacon <will@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org
+References: <20250203141632.440554-1-bigeasy@linutronix.de>
+ <20250203141632.440554-6-bigeasy@linutronix.de>
+ <65c6f60d-bb52-48bd-a02c-87ffd2a915d4@csgroup.eu>
+ <20250203160103.9DikC9FJ@linutronix.de>
+ <51999b8e-61c0-48b7-b744-c83d39e7f311@csgroup.eu>
+ <20250204082223.6iNyq_KR@linutronix.de>
+ <7b51f7de-8e4b-4766-85ca-dee24832c693@linux.ibm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <7b51f7de-8e4b-4766-85ca-dee24832c693@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, 7 Feb 2025 20:20:27 +0000
-Mark Brown <broonie@kernel.org> wrote:
 
-> On Fri, Feb 07, 2025 at 02:09:11PM -0600, David Lechner wrote:
+
+Le 08/02/2025 à 08:35, Shrikanth Hegde a écrit :
 > 
-> > Add support for SPI offload to the ad4695 driver. SPI offload allows
-> > sampling data at the max sample rate (500kSPS or 1MSPS).  
 > 
-> This doesn't apply (against -rc1) so I'll skip all the IIO stuff.
+> On 2/4/25 13:52, Sebastian Andrzej Siewior wrote:
+>> Use preempt_model_str() instead of manually conducting the preemption
+>> model. Use pr_emerg() instead of printk() to pass a loglevel.
+> 
+> even on powerpc, i see __die ends up calling show_regs_print_info().
+> Why print it twice?
 
-We are pretty churn heavy for IIO in some of these drivers, so
-probably needs an immutable branch with just the SPI parts
-and I'll unwind the mess on top of that (or request rebases
-as needed!)
+I don't understand what you mean, what is printed twice ?
 
-Thanks,
+I can't see show_regs_print_info() printing the preemption model, am I 
+missing something ?
 
-Jonathan
+Christophe
+
+> 
+>>
+>> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Nicholas Piggin <npiggin@gmail.com>
+>> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+>> Cc: Naveen N Rao <naveen@kernel.org>
+>> Cc: linuxppc-dev@lists.ozlabs.org
+>> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+>> ---
+>> v2…v3:
+>>    - Use printk() instead of pr_emerg() to remain consistent with the
+>>      other invocations in terms of printing context.
+>>
+>>   arch/powerpc/kernel/traps.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+>> index edf5cabe5dfdb..d6d77d92b3358 100644
+>> --- a/arch/powerpc/kernel/traps.c
+>> +++ b/arch/powerpc/kernel/traps.c
+>> @@ -263,10 +263,10 @@ static int __die(const char *str, struct pt_regs 
+>> *regs, long err)
+>>   {
+>>       printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
+>> -    printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s %s\n",
+>> +    printk("%s PAGE_SIZE=%luK%s %s %s%s%s%s %s\n",
+>>              IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
+>>              PAGE_SIZE / 1024, get_mmu_str(),
+>> -           IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
+>> +           preempt_model_str(),
+>>              IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
+>>              IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" 
+>> __stringify(NR_CPUS)) : "",
+>>              debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
+> 
+
