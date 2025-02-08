@@ -1,183 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF63243960;
-	Sat,  8 Feb 2025 20:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC331119A
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 20:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739046657; cv=none; b=HebY2O2YSptrXcXqj7q7YEMnxXHtrqDeRwdTF/u+NKKgVaLEW6KIXrohKuDoQ/7g/FgDL1pYpOvk+LCGm7nb6Zo3HW94VzXCWRnWWTngS2s3JNyx621M+5g00+XIvkYHwDC3l27JptNqEdox5LCqnB8hH2uBZzKbfhq1a6/hjt8=
+	t=1739046719; cv=none; b=MMLSEG07uK3kC1bO4YvXLCzaFMRGCdluV+TTbVLw4vBdKnUhNtrBTENUFhjAxlq2/8on40pafEFn1M/lxqgJ4UjwcU+m6EaDGn7+DAvUyGzQHi+wi22+9seRxbf0UT0n0veLJHQI5c4QpqNfNeC1vKyel2ToeeQT0NHCAp0wdJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739046657; c=relaxed/simple;
-	bh=SlHgcOVFuSDkkrhVLNgGBirYfljYltbNzHb0GTiACPI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Iu4fF2o2/xKfCiNOSOdP/864Pd8jVD/IfwCV1LXb/owyEj838BfRuQOssZVyOKu3R4qi1v4Ak/Hi9mWo2mTH5d1UHYuOXyAq5UiY837G99JzEa++owgYvQ/0ykEWlmJdLFirKVhX8bq/M81YXrAEhrFTFO8jhmvK7lB1/xmKXdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKKUolps; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739046719; c=relaxed/simple;
+	bh=6FhoGigg93hbhRP8Lf1UPXwi8h34E9BhfLcHwuSv3ZQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ozNgtiIm6qVZeFFbiq6wT03MLws7Ze++oi4u59ua+AHgti3gREdWA/Js6/7XDTBMEshmcrTilaG7xDwZ27nWGJdyLyHs3uYPnmnmHLpqBY65R+7VKKkfjYLEm5s2U4dkc6zKbVdgUF8R7g5WFyJa8Ib/uw/meFNUE638tTcJ/7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hjVt2cAG; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKKUolps"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27257C4CED6;
-	Sat,  8 Feb 2025 20:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739046657;
-	bh=SlHgcOVFuSDkkrhVLNgGBirYfljYltbNzHb0GTiACPI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oKKUolps9yiS1untN4e6Ts138BHDcgxsdf38S6BNZuU/UrjeUdaS/dUp5YQZQ090h
-	 DJYRe1SsHT8QA1zonXLDi6MThoxfAo3Vps9AMmWmwpvbw+4CwSFmFiK7dXOP+UR3DM
-	 V4NihuJobe7xI9+J4bigi/mM3uRCWTI8oLWNafpJ73JoDOfDyTHr0Uw7buRNCfhAGJ
-	 xpCmoCiu58Zq4JpZacY/M8C1YRNXb4677jmhY6bQRxGNqmY4DyhngTQH2XPDGsEieH
-	 Rxn02XURmLawAO1NxrAGVIfwctzzhkUIsr0a/QBtUYhADcJ7vjDtwl7NsnzeP2DqDn
-	 V6luH55TRUWKQ==
-Date: Sat, 8 Feb 2025 21:31:28 +0100
-From: Alejandro Colomar <alx@kernel.org>
-To: Paul Eggert <eggert@cs.ucla.edu>
-Cc: DJ Delorie <dj@redhat.com>, Eric Blake <eblake@redhat.com>, 
-	Will Newton <will.newton@linaro.org>, linux-man@vger.kernel.org, Danilo Krummrich <dakr@kernel.org>, 
-	Tamir Duberstein <tamird@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Subject: Re: [PATCH v2] rust: alloc: satisfy `aligned_alloc` requirements
-Message-ID: <uz7llpat4rs55ixdkkvj5uyavy4t4fthk57dasiszhglgldcl5@wp272ippaffa>
-References: <20250202-aligned-alloc-v2-1-5af0b5fdd46f@gmail.com>
- <CANiq72nH3N9UMu2hsPG7WfYCZQwy9M_4q_rQHJnJMScQ3D9-Jg@mail.gmail.com>
- <Z6T5sOWXxmUsflW7@pollux>
- <CANiq72n7jx5ve9UL3oDD08=PjY55QHoMY8fyfsW9RNEvjH_b4Q@mail.gmail.com>
- <Z6UGNbowcvqTN0-T@pollux>
- <CANiq72=BGFp95jyyF6-uQWT8K8dS5qBpBD55duUYpF4hJDbFxw@mail.gmail.com>
- <kfkku4rjsktgkufkuehliojv3izxdutc55inmv3yvenu33zr7e@lluedzjnqnki>
- <d00561e2-145f-42e0-8fb2-5ca3556afac8@cs.ucla.edu>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hjVt2cAG"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5de47cf9329so3070249a12.3
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 12:31:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1739046715; x=1739651515; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RJDerw/xfRXHgl0oLYxXtpLYP2/HSeFnhpjbjeqGC3M=;
+        b=hjVt2cAG3F6K4S671PUqqFI3BJ68SvAvsjYD9lGUO3mA5p+MnW4fNqUCtXw1aup5Yo
+         aOpru3oRFWRL8o/U+L4XlkXnSm//KG/IeokNvegi4zVDhDEqSQ00RNopZr2vKJhD5Q3R
+         Wkkxt1oyholLevRgQ0jiabC79nVLuj1WGqFIA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739046715; x=1739651515;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RJDerw/xfRXHgl0oLYxXtpLYP2/HSeFnhpjbjeqGC3M=;
+        b=cEOVLT9mfejKhJVWNigYhuN1FwX8AQpOFGlryKvBJ4L7KSxZ0rXyCuJb4Uq1FRH34q
+         JU7RAv7rzYDFx4JwBklngzYT4OSc1KVPb/7ORIsNakZA2ZMEj+O6etQKgPfVmrzbx3pA
+         r5GNixEMtmt+dVci7GkmPPStLX9xHtJSX+JW/ZyoVpzzIM8QUB7/a57bFCTsxJJwVWt+
+         +xxeZgPUO5su5FUodt0HoozBKENzXfyPekkMOy53nDOx8jtxV9T0jgUUO6acRieAfhjP
+         Ubmp58PaO12O5AEtRDjVC2BjWaPbevx6kFcHsWmjMzGtBJIuiSZYRSowWj2JVLv9/m/O
+         0+bg==
+X-Forwarded-Encrypted: i=1; AJvYcCXsVs232uQyVDL9q0b8yQmFj1QqNb3FKnxMfpIVBp75VzngbM1JPR8SVuR1Mp+h7yqkMaVlXn2pipDPfrg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTH+4KdgpH50u9FO/g/n/NtOsgamH4Q99muPJkUCi6rNS/m5M6
+	YFBMiaGBVoXZU2qwrH7E7GYf+GGuTiX9+MAnf4ueFetd+fXdQC1ixR1nQ25k1HjkXWAMtWmLEtB
+	DEbIB
+X-Gm-Gg: ASbGnctNc+mR7fOFiLHmD7rcdyanY+J646ba9qbI2HXLNf2PRegdQHmxGYpN+h54Xzj
+	wdZ6IDOlVvqLrgg1DRZnMjPV32Cw1j4GR5vF4319n9pMaZ1mkJTH4FVYv8PPTOKrJP6i+7Pylx3
+	rtI9yjLkZANDa1iXnr8sWWHrnVOSBgKr9jTnNylpi1J8L6LOTikluTYkJ/uHK7+8rOMFqHddIQ8
+	74rvGzyBYesweU4tvaxc5v9f32lo8APPT3X4nnDw/8/jxp5P6eWIsfc/erMv80Sbb8i5iQ7zfP/
+	8pOlvzHV8CGInZELQZ3k0OrcXKTIXZySQciGbD2lCjul95fvtVuKzbk=
+X-Google-Smtp-Source: AGHT+IEADSXRX2tdxZqBxSn5Ukdupwo2gh/xSi6OhQkb+qyGJoqlnTNFBYcdXC6e4Pzohr/JQTA5dA==
+X-Received: by 2002:a05:6402:42cc:b0:5db:e7eb:1b34 with SMTP id 4fb4d7f45d1cf-5de4500493bmr10651150a12.13.1739046715255;
+        Sat, 08 Feb 2025 12:31:55 -0800 (PST)
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de589ad711sm2333532a12.73.2025.02.08.12.31.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Feb 2025 12:31:53 -0800 (PST)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5de63846e56so745643a12.1
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 12:31:52 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXXZheMP07agO2dD1czPr3L2w2LsrAWTq01ynaMer/W1tXVWEajqIwgsakDB6+Yq3jZFCJ1T86hNW9tHzI=@vger.kernel.org
+X-Received: by 2002:a05:6512:1282:b0:544:d31:104a with SMTP id
+ 2adb3069b0e04-54414aa8102mr2388633e87.25.1739046313617; Sat, 08 Feb 2025
+ 12:25:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ddmwmz4h6lnof5bq"
-Content-Disposition: inline
-In-Reply-To: <d00561e2-145f-42e0-8fb2-5ca3556afac8@cs.ucla.edu>
-
-
---ddmwmz4h6lnof5bq
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20250208105326.3850358-1-yelangyan@huaqin.corp-partner.google.com>
+ <20250208105326.3850358-2-yelangyan@huaqin.corp-partner.google.com>
+In-Reply-To: <20250208105326.3850358-2-yelangyan@huaqin.corp-partner.google.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Sat, 8 Feb 2025 12:25:02 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WYNRraERUdZuytYmiWuXR3UwSRybXMZ42+2K2nbkef-A@mail.gmail.com>
+X-Gm-Features: AWEUYZmA-CBCC0QRXP02pRtLlgP78Gg6EgzjJkQUKaxMq3eMCZ3nTBRkI-JH_z0
+Message-ID: <CAD=FV=WYNRraERUdZuytYmiWuXR3UwSRybXMZ42+2K2nbkef-A@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] dt-bindings: display: panel: Add a new compatible
+ for the panels KD110N11-51IE and 2082109QFH040022-50E
+To: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
+Cc: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	airlied@gmail.com, simona@ffwll.ch, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, thierry.reding@gmail.com, sam@ravnborg.org, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Paul Eggert <eggert@cs.ucla.edu>
-Cc: DJ Delorie <dj@redhat.com>, Eric Blake <eblake@redhat.com>, 
-	Will Newton <will.newton@linaro.org>, linux-man@vger.kernel.org, Danilo Krummrich <dakr@kernel.org>, 
-	Tamir Duberstein <tamird@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Subject: Re: [PATCH v2] rust: alloc: satisfy `aligned_alloc` requirements
-References: <20250202-aligned-alloc-v2-1-5af0b5fdd46f@gmail.com>
- <CANiq72nH3N9UMu2hsPG7WfYCZQwy9M_4q_rQHJnJMScQ3D9-Jg@mail.gmail.com>
- <Z6T5sOWXxmUsflW7@pollux>
- <CANiq72n7jx5ve9UL3oDD08=PjY55QHoMY8fyfsW9RNEvjH_b4Q@mail.gmail.com>
- <Z6UGNbowcvqTN0-T@pollux>
- <CANiq72=BGFp95jyyF6-uQWT8K8dS5qBpBD55duUYpF4hJDbFxw@mail.gmail.com>
- <kfkku4rjsktgkufkuehliojv3izxdutc55inmv3yvenu33zr7e@lluedzjnqnki>
- <d00561e2-145f-42e0-8fb2-5ca3556afac8@cs.ucla.edu>
-MIME-Version: 1.0
-In-Reply-To: <d00561e2-145f-42e0-8fb2-5ca3556afac8@cs.ucla.edu>
 
-Hi Paul,
+Hi,
 
-On Sat, Feb 08, 2025 at 12:09:40PM -0800, Paul Eggert wrote:
-> On 2025-02-08 11:19, Alejandro Colomar wrote:
-> > I wonder why glibc silently overaligns aligned_alloc() without reporting
-> > an error for an alignment of 2, while it reports an error for an
-> > alignment of 3.  It doesn't make much sense at first glance.
->=20
-> Why doesn't it make sense?
->=20
-> If the underlying memory management system supports only some power-of-two
-> alignments including one alignment greater than 2, it is easy to support
-> alignment of 2 by overaligning, but it is not possible to support an
-> alignment of 3.
+On Sat, Feb 8, 2025 at 2:53=E2=80=AFAM Langyan Ye
+<yelangyan@huaqin.corp-partner.google.com> wrote:
+>
+> Add a new compatible for the panels KINGDISPLAY KD110N11-51IE and
+> STARRY 2082109QFH040022-50E. Both panels use the HX83102 IC, so
+> add the compatible to the hx83102 bindings file.
+>
+> Signed-off-by: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
+> ---
+>  .../devicetree/bindings/display/panel/himax,hx83102.yaml      | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Hmmm, I thought the memory management system could find some
-overalignment that would be multiple of 3 and that could work (maybe
-3 * page size, as a big hammer).  But maybe some implementation details
-just don't allow that, so I guess it's fair to reject it.  Sounds
-reasonable.
+I might have tried to shorten the subject line of the patch a bit, but
+I don't think it's a huge deal.
 
-Do you happen to know why the memalign(3) description says that the
-alignment must be a power of two when it doesn't do any validation and
-just rounds up as necessary?  I'll send a patch for the manual page, but
-it would be good to know if something has changed about it at some
-point.  Maybe in the past it did have different requirements?
-
-
-Have a lovely night!
-Alex
-
-	alx@devuan:~/tmp/gcc$ cat overalign.c=20
-	#define _GNU_SOURCE
-	#include <errno.h>
-	#include <malloc.h>
-	#include <stdlib.h>
-	#include <string.h>
-
-	int
-	main(void)
-	{
-		int   i;
-		void  *p;
-
-		errno =3D 0;
-		p =3D aligned_alloc(3, 3);
-		printf("aligned_alloc(3, 3): %p; %#m\n", p);
-
-		puts("");
-		puts("non-power of two, alignof(void*)");
-
-		errno =3D 0;
-		p =3D aligned_alloc(24, 24);
-		printf("aligned_alloc(24, 24): %p; %#m\n", p);
-
-		puts("");
-		puts("Power of two, alignof(void*)");
-
-		errno =3D 0;
-		p =3D aligned_alloc(8, 8);
-		printf("aligned_alloc(8, 8): %p; %#m\n", p);
-	}
-	alx@devuan:~/tmp/gcc$ cc overalign.c=20
-	alx@devuan:~/tmp/gcc$ ./a.out=20
-	aligned_alloc(3, 3): (nil); EINVAL
-
-	non-power of two, alignof(void*)
-	aligned_alloc(24, 24): (nil); EINVAL
-
-	Power of two, alignof(void*)
-	aligned_alloc(8, 8): 0x55ba005056b0; 0
-
---=20
-<https://www.alejandro-colomar.es/>
-
---ddmwmz4h6lnof5bq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmenvxkACgkQnowa+77/
-2zJ7bA//bOZkKUMXrMjzqF9Aem8f7CrkQxjHx+/XGpbTeGwGk1yunlLzjTzOQJ0C
-Ih97hUJhXNWyH6DucYKHIcc5uYm44fJd6xAkQj+tFHgMXstbEd0SGtDX0tclHvPR
-azHUT1T1fKPLV82rxAP04+BT2oLTkbcRh10g4zfAoHIoLnOjC9/aDcdjjmaDJTqu
-SRP0HPv8mOc7s894o72YNMus5puyjMVGW58QbwKz+iM0RM1SbrmAOwHR+Xzlqtc6
-TZ/bWxXbFGmHQkFglIse2ylYdxSdRomzIqQH/widsTFrccgV4ql+z/XIj6h3I0OW
-4SMXIOvhvp+qFzGTLiySGgFb7hPYvy67+o30IGNxzP8JUeDdMSfuE10b7yUPZhaP
-32jRQLDmvpEJesAflce8cqDjFf/noA6+1chXtQnutqVAAjJac3TUzsTioN6mVujv
-NdudhXM2Ay+zI01vzpBht1kX6fZisjjogZSNauNlh0ws+xfk7K9ztHD9CKTV/Dv9
-18cF23kzTbExUVjuWqb19vN26gK5Dwx2/wTqND7KtIFnmhxrE2dbMAWxRGOL2iPa
-P0nad7C0XQiKN0WTTRMsYZccplmVmqaev6+IEDTuoC8Yu3C9xX6BuWOYXlvIY/Zp
-97tGNJdMA5Sm9F1GU1LwJxP+VQuLCb+teu3q1uAar2E9QVwiGh4=
-=rufw
------END PGP SIGNATURE-----
-
---ddmwmz4h6lnof5bq--
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
