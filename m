@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76C414F9D9;
-	Sat,  8 Feb 2025 02:49:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E5717A5BE;
+	Sat,  8 Feb 2025 02:49:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738982963; cv=none; b=tFpYtaRUElG8MkVpyy7xbbetsuKtTjjZqjUPIG72mjWaCoCkv301Br2m43wHony2qt9msvB+9Rh7UxnkNsnh5CKi1UoLJoc83pbH5svPuc+LheeVxLNc1scULFXoyHv/ctwlHmlYiOT1NL1FrXLidS9nvZhWKZZoPE9YIze2NkE=
+	t=1738982964; cv=none; b=PLzc0x5boLCgNI4164Qnvjwroliie9WPsaFWSAzLQmJJGbvJgnZSXUk7PuN+a15qdnKFO9Qta7KKoAG7Rk0+nf8kGpZ+QvXmgo2kdF02gkIvmxLBgbi10GW+1qO0wVC8hlbft4DR0ORWxIm81MlNE5d5k+RnFNl3gqIvwdBK//8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738982963; c=relaxed/simple;
-	bh=pg7pn03qgdZnaIVA+IRdsp6/W/WhJZLwaxEK8sNdGdQ=;
+	s=arc-20240116; t=1738982964; c=relaxed/simple;
+	bh=iSmynFUGEVW5Xd47UgfUiv25eLbOG/E5uXrX9p5Fu8Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dpMSotRiAqRTSi1HZgN7IZt9SA1PdhNj/1b/APEd2W87oNRk2Reorkb+s3loyC/Z5MgI+8avzDG4vGQUCqoB6vsUZaBRDDQ8Dw+vTTZt9jOZ6RhdvjGkOHeuGK53w1TG/iraakMLpBLvs5BrvybdGl7dJ21jSYLaaEeK6B1G8UA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M4py47nr; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SsPeZH7CZKDHcB4Ev3r0PHKjJJqXecua8F/8sKyymh7MTl56VxpcluJZd7rj/pSBXr6h5fJVL0yLPcYnWNHJWj5LpjJioLi3ethtWcDJ8Uc3GORr+vPgacVh++q+If31ir/wjzlL88CZosTtaQw8PjURXwwqg15uaMCPxiFUPsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pwNTole5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M4py47nr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AEBCC4CEE8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pwNTole5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03101C4CEE7;
 	Sat,  8 Feb 2025 02:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738982963;
-	bh=pg7pn03qgdZnaIVA+IRdsp6/W/WhJZLwaxEK8sNdGdQ=;
+	s=k20201202; t=1738982964;
+	bh=iSmynFUGEVW5Xd47UgfUiv25eLbOG/E5uXrX9p5Fu8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=M4py47nrrv508wFzYOQ1gR6K7JpARbBoBMUlgAni34wZ2dyLy5PCrqoldJeOnO3vg
-	 /kadusUb/lcjyhecsD1QgMRFs6e8s6Rn6aqwB5uzGmVdVvGvxqPCXNBstwsrtLCoHa
-	 Rcm/Ji80YbzG3QLdN5sYKmlAcKLfVc8xQmrAw7n3sJ/NGe+dWd+qkAfISEwGqR+K6A
-	 PLqb+42M7cibPLnNkPsUwDkYsruWQnRUVgXgFdoX3FnuYJgIUA+J2H90yKo/OwlMJR
-	 SsmEaFfPq8TRhEWfezm8SBMxoh3cyFzOsbTyQdLmQYvko0MS0x0mlIVRZU6313Y8og
-	 3GkR+eIKqB4TQ==
+	b=pwNTole5BaY9WapbbYumY4hsnaIJE+UAdI5VJtSC9FYKDKoN6dGrKKnwSwIraD5Ey
+	 Oq0/XMjsT7Kb7DkN1hfECuSvMXtXcHqJ3K6VYVI9jkbMg8v+oXUj4GjvA9gzFoBujC
+	 v0O3NxdakZxYWNuLCn+CcptO82BJFn0kHm196iSCFLuyXgIeeW1tXl8qsXpysSq6vK
+	 pkpCN8ASNNXiN3g/84Q9zQUMaYmJiLWfB1PoPd7h2ovYi4haYRu7EVvHK9f9sU0l1p
+	 YBYnMEoMV2aEG+OS390V9e0b2mgiEJUKgzazI8QYAzhI402n3W3o6vgle2n///Rec8
+	 h1EFpkntwB4wA==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: linux-crypto@vger.kernel.org,
 	Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH v2 3/6] lib/crc32: don't bother with pure and const function attributes
-Date: Fri,  7 Feb 2025 18:49:08 -0800
-Message-ID: <20250208024911.14936-4-ebiggers@kernel.org>
+Subject: [PATCH v2 5/6] lib/crc32: rename __crc32c_le_combine() to crc32c_combine()
+Date: Fri,  7 Feb 2025 18:49:10 -0800
+Message-ID: <20250208024911.14936-6-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250208024911.14936-1-ebiggers@kernel.org>
 References: <20250208024911.14936-1-ebiggers@kernel.org>
@@ -46,272 +46,150 @@ Content-Transfer-Encoding: 8bit
 
 From: Eric Biggers <ebiggers@google.com>
 
-Drop the use of __pure and __attribute_const__ from the CRC32 library
-functions that had them.  Both of these are unusual optimizations that
-don't help properly written code.  They seem more likely to cause
-problems than have any real benefit.
+Since the Castagnoli CRC32 is now always just crc32c(), rename
+__crc32c_le_combine() and __crc32c_le_shift() accordingly.
 
 Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- arch/arm64/lib/crc32-glue.c  |  6 +++---
- arch/riscv/lib/crc32-riscv.c | 13 ++++++-------
- include/linux/crc32.h        | 22 +++++++++++-----------
- lib/crc32.c                  | 15 +++++++--------
- 4 files changed, 27 insertions(+), 29 deletions(-)
+ drivers/infiniband/sw/siw/siw.h |  4 ++--
+ include/linux/crc32.h           | 28 +++++++++++++---------------
+ include/net/sctp/checksum.h     |  4 ++--
+ lib/crc32.c                     |  6 +++---
+ lib/crc_kunit.c                 |  2 +-
+ 5 files changed, 21 insertions(+), 23 deletions(-)
 
-diff --git a/arch/arm64/lib/crc32-glue.c b/arch/arm64/lib/crc32-glue.c
-index 15c4c9db573ec..265fbf36914b6 100644
---- a/arch/arm64/lib/crc32-glue.c
-+++ b/arch/arm64/lib/crc32-glue.c
-@@ -20,11 +20,11 @@ asmlinkage u32 crc32_be_arm64(u32 crc, unsigned char const *p, size_t len);
- 
- asmlinkage u32 crc32_le_arm64_4way(u32 crc, unsigned char const *p, size_t len);
- asmlinkage u32 crc32c_le_arm64_4way(u32 crc, unsigned char const *p, size_t len);
- asmlinkage u32 crc32_be_arm64_4way(u32 crc, unsigned char const *p, size_t len);
- 
--u32 __pure crc32_le_arch(u32 crc, const u8 *p, size_t len)
-+u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
- {
- 	if (!alternative_has_cap_likely(ARM64_HAS_CRC32))
- 		return crc32_le_base(crc, p, len);
- 
- 	if (len >= min_len && cpu_have_named_feature(PMULL) && crypto_simd_usable()) {
-@@ -41,11 +41,11 @@ u32 __pure crc32_le_arch(u32 crc, const u8 *p, size_t len)
- 
- 	return crc32_le_arm64(crc, p, len);
- }
- EXPORT_SYMBOL(crc32_le_arch);
- 
--u32 __pure crc32c_le_arch(u32 crc, const u8 *p, size_t len)
-+u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
- {
- 	if (!alternative_has_cap_likely(ARM64_HAS_CRC32))
- 		return crc32c_le_base(crc, p, len);
- 
- 	if (len >= min_len && cpu_have_named_feature(PMULL) && crypto_simd_usable()) {
-@@ -62,11 +62,11 @@ u32 __pure crc32c_le_arch(u32 crc, const u8 *p, size_t len)
- 
- 	return crc32c_le_arm64(crc, p, len);
- }
- EXPORT_SYMBOL(crc32c_le_arch);
- 
--u32 __pure crc32_be_arch(u32 crc, const u8 *p, size_t len)
-+u32 crc32_be_arch(u32 crc, const u8 *p, size_t len)
- {
- 	if (!alternative_has_cap_likely(ARM64_HAS_CRC32))
- 		return crc32_be_base(crc, p, len);
- 
- 	if (len >= min_len && cpu_have_named_feature(PMULL) && crypto_simd_usable()) {
-diff --git a/arch/riscv/lib/crc32-riscv.c b/arch/riscv/lib/crc32-riscv.c
-index 53d56ab422c72..a50f8e010417d 100644
---- a/arch/riscv/lib/crc32-riscv.c
-+++ b/arch/riscv/lib/crc32-riscv.c
-@@ -173,14 +173,13 @@ static inline u32 crc32_le_unaligned(u32 crc, unsigned char const *p,
- 	crc ^= crc_low;
- 
- 	return crc;
+diff --git a/drivers/infiniband/sw/siw/siw.h b/drivers/infiniband/sw/siw/siw.h
+index ea5eee50dc39d..4e692de1da933 100644
+--- a/drivers/infiniband/sw/siw/siw.h
++++ b/drivers/infiniband/sw/siw/siw.h
+@@ -674,12 +674,12 @@ static inline __wsum siw_csum_update(const void *buff, int len, __wsum sum)
  }
  
--static inline u32 __pure crc32_le_generic(u32 crc, unsigned char const *p,
--					  size_t len, u32 poly,
--					  unsigned long poly_qt,
--					  fallback crc_fb)
-+static inline u32 crc32_le_generic(u32 crc, unsigned char const *p, size_t len,
-+				   u32 poly, unsigned long poly_qt,
-+				   fallback crc_fb)
+ static inline __wsum siw_csum_combine(__wsum csum, __wsum csum2, int offset,
+ 				      int len)
  {
- 	size_t offset, head_len, tail_len;
- 	unsigned long const *p_ul;
- 	unsigned long s;
- 
-@@ -216,18 +215,18 @@ static inline u32 __pure crc32_le_generic(u32 crc, unsigned char const *p,
- 
- legacy:
- 	return crc_fb(crc, p, len);
+-	return (__force __wsum)__crc32c_le_combine((__force __u32)csum,
+-						   (__force __u32)csum2, len);
++	return (__force __wsum)crc32c_combine((__force __u32)csum,
++					      (__force __u32)csum2, len);
  }
  
--u32 __pure crc32_le_arch(u32 crc, const u8 *p, size_t len)
-+u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
+ static inline void siw_crc_skb(struct siw_rx_stream *srx, unsigned int len)
  {
- 	return crc32_le_generic(crc, p, len, CRC32_POLY_LE, CRC32_POLY_QT_LE,
- 				crc32_le_base);
- }
- EXPORT_SYMBOL(crc32_le_arch);
- 
--u32 __pure crc32c_le_arch(u32 crc, const u8 *p, size_t len)
-+u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
- {
- 	return crc32_le_generic(crc, p, len, CRC32C_POLY_LE,
- 				CRC32C_POLY_QT_LE, crc32c_le_base);
- }
- EXPORT_SYMBOL(crc32c_le_arch);
-@@ -254,11 +253,11 @@ static inline u32 crc32_be_unaligned(u32 crc, unsigned char const *p,
- 	crc ^= crc_low;
- 
- 	return crc;
- }
- 
--u32 __pure crc32_be_arch(u32 crc, const u8 *p, size_t len)
-+u32 crc32_be_arch(u32 crc, const u8 *p, size_t len)
- {
- 	size_t offset, head_len, tail_len;
- 	unsigned long const *p_ul;
- 	unsigned long s;
- 
+ 	const struct skb_checksum_ops siw_cs_ops = {
 diff --git a/include/linux/crc32.h b/include/linux/crc32.h
-index e70977014cfdc..61a7ec29d6338 100644
+index bc39b023eac0f..535071964f52f 100644
 --- a/include/linux/crc32.h
 +++ b/include/linux/crc32.h
-@@ -6,33 +6,33 @@
- #define _LINUX_CRC32_H
- 
- #include <linux/types.h>
- #include <linux/bitrev.h>
- 
--u32 __pure crc32_le_arch(u32 crc, const u8 *p, size_t len);
--u32 __pure crc32_le_base(u32 crc, const u8 *p, size_t len);
--u32 __pure crc32_be_arch(u32 crc, const u8 *p, size_t len);
--u32 __pure crc32_be_base(u32 crc, const u8 *p, size_t len);
--u32 __pure crc32c_le_arch(u32 crc, const u8 *p, size_t len);
--u32 __pure crc32c_le_base(u32 crc, const u8 *p, size_t len);
-+u32 crc32_le_arch(u32 crc, const u8 *p, size_t len);
-+u32 crc32_le_base(u32 crc, const u8 *p, size_t len);
-+u32 crc32_be_arch(u32 crc, const u8 *p, size_t len);
-+u32 crc32_be_base(u32 crc, const u8 *p, size_t len);
-+u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len);
-+u32 crc32c_le_base(u32 crc, const u8 *p, size_t len);
- 
--static inline u32 __pure crc32_le(u32 crc, const void *p, size_t len)
-+static inline u32 crc32_le(u32 crc, const void *p, size_t len)
- {
- 	if (IS_ENABLED(CONFIG_CRC32_ARCH))
- 		return crc32_le_arch(crc, p, len);
- 	return crc32_le_base(crc, p, len);
- }
- 
--static inline u32 __pure crc32_be(u32 crc, const void *p, size_t len)
-+static inline u32 crc32_be(u32 crc, const void *p, size_t len)
- {
- 	if (IS_ENABLED(CONFIG_CRC32_ARCH))
- 		return crc32_be_arch(crc, p, len);
- 	return crc32_be_base(crc, p, len);
- }
- 
- /* TODO: leading underscores should be dropped once callers have been updated */
--static inline u32 __pure __crc32c_le(u32 crc, const void *p, size_t len)
-+static inline u32 __crc32c_le(u32 crc, const void *p, size_t len)
- {
- 	if (IS_ENABLED(CONFIG_CRC32_ARCH))
- 		return crc32c_le_arch(crc, p, len);
- 	return crc32c_le_base(crc, p, len);
- }
-@@ -68,11 +68,11 @@ static inline u32 crc32_optimizations(void) { return 0; }
-  * 	   the crc32_le() value of seq_full, then crc_full ==
-  * 	   crc32_le_combine(crc1, crc2, len2) when crc_full was seeded
-  * 	   with the same initializer as crc1, and crc2 seed was 0. See
-  * 	   also crc32_combine_test().
-  */
--u32 __attribute_const__ crc32_le_shift(u32 crc, size_t len);
-+u32 crc32_le_shift(u32 crc, size_t len);
- 
+@@ -74,33 +74,31 @@ u32 crc32_le_shift(u32 crc, size_t len);
  static inline u32 crc32_le_combine(u32 crc1, u32 crc2, size_t len2)
  {
  	return crc32_le_shift(crc1, len2) ^ crc2;
  }
-@@ -93,11 +93,11 @@ static inline u32 crc32_le_combine(u32 crc1, u32 crc2, size_t len2)
-  * 	   the __crc32c_le() value of seq_full, then crc_full ==
-  * 	   __crc32c_le_combine(crc1, crc2, len2) when crc_full was
-  * 	   seeded with the same initializer as crc1, and crc2 seed
-  * 	   was 0. See also crc32c_combine_test().
-  */
--u32 __attribute_const__ __crc32c_le_shift(u32 crc, size_t len);
-+u32 __crc32c_le_shift(u32 crc, size_t len);
  
- static inline u32 __crc32c_le_combine(u32 crc1, u32 crc2, size_t len2)
++u32 crc32c_shift(u32 crc, size_t len);
++
+ /**
+- * __crc32c_le_combine - Combine two crc32c check values into one. For two
+- * 			 sequences of bytes, seq1 and seq2 with lengths len1
+- * 			 and len2, __crc32c_le() check values were calculated
+- * 			 for each, crc1 and crc2.
++ * crc32c_combine - Combine two crc32c check values into one. For two sequences
++ *		    of bytes, seq1 and seq2 with lengths len1 and len2, crc32c()
++ *		    check values were calculated for each, crc1 and crc2.
+  *
+  * @crc1: crc32c of the first block
+  * @crc2: crc32c of the second block
+  * @len2: length of the second block
+  *
+- * Return: The __crc32c_le() check value of seq1 and seq2 concatenated,
+- * 	   requiring only crc1, crc2, and len2. Note: If seq_full denotes
+- * 	   the concatenated memory area of seq1 with seq2, and crc_full
+- * 	   the __crc32c_le() value of seq_full, then crc_full ==
+- * 	   __crc32c_le_combine(crc1, crc2, len2) when crc_full was
+- * 	   seeded with the same initializer as crc1, and crc2 seed
+- * 	   was 0. See also crc32c_combine_test().
++ * Return: The crc32c() check value of seq1 and seq2 concatenated, requiring
++ *	   only crc1, crc2, and len2. Note: If seq_full denotes the concatenated
++ *	   memory area of seq1 with seq2, and crc_full the crc32c() value of
++ *	   seq_full, then crc_full == crc32c_combine(crc1, crc2, len2) when
++ *	   crc_full was seeded with the same initializer as crc1, and crc2 seed
++ *	   was 0. See also crc_combine_test().
+  */
+-u32 __crc32c_le_shift(u32 crc, size_t len);
+-
+-static inline u32 __crc32c_le_combine(u32 crc1, u32 crc2, size_t len2)
++static inline u32 crc32c_combine(u32 crc1, u32 crc2, size_t len2)
  {
- 	return __crc32c_le_shift(crc1, len2) ^ crc2;
+-	return __crc32c_le_shift(crc1, len2) ^ crc2;
++	return crc32c_shift(crc1, len2) ^ crc2;
  }
+ 
+ #define crc32(seed, data, length)  crc32_le(seed, (unsigned char const *)(data), length)
+ 
+ /*
+diff --git a/include/net/sctp/checksum.h b/include/net/sctp/checksum.h
+index 93041c970753e..291465c258102 100644
+--- a/include/net/sctp/checksum.h
++++ b/include/net/sctp/checksum.h
+@@ -34,12 +34,12 @@ static inline __wsum sctp_csum_update(const void *buff, int len, __wsum sum)
+ }
+ 
+ static inline __wsum sctp_csum_combine(__wsum csum, __wsum csum2,
+ 				       int offset, int len)
+ {
+-	return (__force __wsum)__crc32c_le_combine((__force __u32)csum,
+-						   (__force __u32)csum2, len);
++	return (__force __wsum)crc32c_combine((__force __u32)csum,
++					      (__force __u32)csum2, len);
+ }
+ 
+ static const struct skb_checksum_ops sctp_csum_ops = {
+ 	.update  = sctp_csum_update,
+ 	.combine = sctp_csum_combine,
 diff --git a/lib/crc32.c b/lib/crc32.c
-index ede6131f66fc4..3c080cda5e1c9 100644
+index 3c080cda5e1c9..554ef6827b80d 100644
 --- a/lib/crc32.c
 +++ b/lib/crc32.c
-@@ -35,19 +35,19 @@
+@@ -115,17 +115,17 @@ static u32 crc32_generic_shift(u32 crc, size_t len, u32 polynomial)
  
- MODULE_AUTHOR("Matt Domsch <Matt_Domsch@dell.com>");
- MODULE_DESCRIPTION("Various CRC32 calculations");
- MODULE_LICENSE("GPL");
- 
--u32 __pure crc32_le_base(u32 crc, const u8 *p, size_t len)
-+u32 crc32_le_base(u32 crc, const u8 *p, size_t len)
- {
- 	while (len--)
- 		crc = (crc >> 8) ^ crc32table_le[(crc & 255) ^ *p++];
- 	return crc;
- }
- EXPORT_SYMBOL(crc32_le_base);
- 
--u32 __pure crc32c_le_base(u32 crc, const u8 *p, size_t len)
-+u32 crc32c_le_base(u32 crc, const u8 *p, size_t len)
- {
- 	while (len--)
- 		crc = (crc >> 8) ^ crc32ctable_le[(crc & 255) ^ *p++];
- 	return crc;
- }
-@@ -56,11 +56,11 @@ EXPORT_SYMBOL(crc32c_le_base);
- /*
-  * This multiplies the polynomials x and y modulo the given modulus.
-  * This follows the "little-endian" CRC convention that the lsbit
-  * represents the highest power of x, and the msbit represents x^0.
-  */
--static u32 __attribute_const__ gf2_multiply(u32 x, u32 y, u32 modulus)
-+static u32 gf2_multiply(u32 x, u32 y, u32 modulus)
- {
- 	u32 product = x & 1 ? y : 0;
- 	int i;
- 
- 	for (i = 0; i < 31; i++) {
-@@ -82,12 +82,11 @@ static u32 __attribute_const__ gf2_multiply(u32 x, u32 y, u32 modulus)
-  * over separate ranges of a buffer, then summing them.
-  * This shifts the given CRC by 8*len bits (i.e. produces the same effect
-  * as appending len bytes of zero to the data), in time proportional
-  * to log(len).
-  */
--static u32 __attribute_const__ crc32_generic_shift(u32 crc, size_t len,
--						   u32 polynomial)
-+static u32 crc32_generic_shift(u32 crc, size_t len, u32 polynomial)
- {
- 	u32 power = polynomial;	/* CRC of x^32 */
- 	int i;
- 
- 	/* Shift up to 32 bits in the simple linear way */
-@@ -112,23 +111,23 @@ static u32 __attribute_const__ crc32_generic_shift(u32 crc, size_t len,
- 	}
- 
- 	return crc;
- }
- 
--u32 __attribute_const__ crc32_le_shift(u32 crc, size_t len)
-+u32 crc32_le_shift(u32 crc, size_t len)
+ u32 crc32_le_shift(u32 crc, size_t len)
  {
  	return crc32_generic_shift(crc, len, CRC32_POLY_LE);
  }
++EXPORT_SYMBOL(crc32_le_shift);
  
--u32 __attribute_const__ __crc32c_le_shift(u32 crc, size_t len)
-+u32 __crc32c_le_shift(u32 crc, size_t len)
+-u32 __crc32c_le_shift(u32 crc, size_t len)
++u32 crc32c_shift(u32 crc, size_t len)
  {
  	return crc32_generic_shift(crc, len, CRC32C_POLY_LE);
  }
- EXPORT_SYMBOL(crc32_le_shift);
- EXPORT_SYMBOL(__crc32c_le_shift);
+-EXPORT_SYMBOL(crc32_le_shift);
+-EXPORT_SYMBOL(__crc32c_le_shift);
++EXPORT_SYMBOL(crc32c_shift);
  
--u32 __pure crc32_be_base(u32 crc, const u8 *p, size_t len)
-+u32 crc32_be_base(u32 crc, const u8 *p, size_t len)
+ u32 crc32_be_base(u32 crc, const u8 *p, size_t len)
  {
  	while (len--)
  		crc = (crc << 8) ^ crc32table_be[(crc >> 24) ^ *p++];
- 	return crc;
+diff --git a/lib/crc_kunit.c b/lib/crc_kunit.c
+index 1e82fcf9489ef..40b4b41f21847 100644
+--- a/lib/crc_kunit.c
++++ b/lib/crc_kunit.c
+@@ -361,11 +361,11 @@ static u64 crc32c_wrapper(u64 crc, const u8 *p, size_t len)
+ 	return crc32c(crc, p, len);
  }
+ 
+ static u64 crc32c_combine_wrapper(u64 crc1, u64 crc2, size_t len2)
+ {
+-	return __crc32c_le_combine(crc1, crc2, len2);
++	return crc32c_combine(crc1, crc2, len2);
+ }
+ 
+ static const struct crc_variant crc_variant_crc32c = {
+ 	.bits = 32,
+ 	.le = true,
 -- 
 2.48.1
 
