@@ -1,115 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673F81F30A0;
-	Sat,  8 Feb 2025 16:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD151F30B7;
+	Sat,  8 Feb 2025 16:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739031788; cv=none; b=b/sGxWWBnlZXjsAwcN46eczkUmzUnCQEBZ1NFjA4umaw4jd/H51/J2wPJZxfi9Nz5KeotFRM4DOakPIS1rhLQIcymRNfBUSqE3eiHIxtKcmSNLf7g0qZfG9d7Sqt2gyy+Ji2nMLcnAawOf3PnrdozDY5gJZ5MObjI99iz5d/Auc=
+	t=1739031985; cv=none; b=tgJxtUPfWqrU7/2XSV6zobt1GdPkqZbcrnd1AKpEYmkNFGbV/y6bN7RdPsCJeMrTBoALihxNFQ4VE5KWlkx3+bVfAyqKZE1b0r2OxBlbMXdiMPk9OcgCUhXXLgOjF892ps6wf9773lYDgS8d0MJ0yw8R2JOmSA2hlVdSsLu0j6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739031788; c=relaxed/simple;
-	bh=Ekrz3bFy6IXUZ9DvsoaOzw9ElB1mg+eDRl5ttyj4wvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VF6KDtXDeXqqxPDOgjSosGlDHeXtdB7jXPntU7NBdXrjqGtjuQ6y4E+3QHO4VIVUUls9NWkwInt/kA1IC19G0x8c2Rt3aOtkHAY6u6AckQenVMccwZXS1Y+zpQ7HMHyVcWh1OKAd9U+Z+Bl2DrO1reJgeKSKOs0x4sUb7Igokmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tiXVaSFT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739031985; c=relaxed/simple;
+	bh=Mcw7j0ie/urAfl5vPu7xyM+/xQK3oGqkPv6j3lYhs/k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n8IvCyvW4z39cF4NSChqnQZa5p5IYVWgE++3r+U3Yjyza2ZlemhRyMcJWZIsLMQIdt92g/enSuMoyJ4eLWOs5K9/IlG7A3owmlYbrEu6Gd5gnd8h+EPDHTiMyq+1OuFS6YjDXNCS67OP1q5WGbmNa+3pMonmmE4XjObfsd0pgtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JHm5z3ig; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tiXVaSFT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E36EC4CED6;
-	Sat,  8 Feb 2025 16:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739031788;
-	bh=Ekrz3bFy6IXUZ9DvsoaOzw9ElB1mg+eDRl5ttyj4wvk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tiXVaSFTHCd2BnGBU6J1JW3BUWB/nZzL8J14ihe+0e8b4DmYj+q6zsClqRrejU/76
-	 ZgZv201/vtwztsb/vT/2SJUSkmzPNygOMZxH3NanW9TyDsS+inukDMbK9iu7ZwhFhi
-	 2qTIalO1FO0k8PtS0p/vg5Mfh8dGl6fCbPQKCIfkqY1/qeMLOmacfCeMAn3CBiPw0C
-	 /RjO67Y3E9RtwVKt4xfviV2x3a7Ot3zcygS+nftfOkO72CMyupenLYXgXlFJkAzQ96
-	 KAMMsqURuVsBPjle7acLshajVssjjYceo4cIRDG3i4+6kB/efmxSLxJrPSj1LUvqoF
-	 6vtkdClshGEaA==
-Date: Sat, 8 Feb 2025 16:23:00 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Cc: <robh@kernel.org>, <conor+dt@kernel.org>, <linux-iio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v12 7/9] iio: adc: adi-axi-adc: add oversampling
-Message-ID: <20250208162300.1e083279@jic23-huawei>
-In-Reply-To: <20250207140918.7814-8-antoniu.miclaus@analog.com>
-References: <20250207140918.7814-1-antoniu.miclaus@analog.com>
-	<20250207140918.7814-8-antoniu.miclaus@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JHm5z3ig"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5dca468c5e4so3424319a12.1;
+        Sat, 08 Feb 2025 08:26:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739031982; x=1739636782; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NkCXXh48JMCbajqYZdugEa9dJX77WDTXFyIk1OBCEMQ=;
+        b=JHm5z3ig1aonlB0irrYbO+ryNdEYcIb+o3AYzVOB4547M/xeUVUOipGlrPOZYnoiuP
+         mLsprXEhqLOm9HACSbapvFal+DBSBkwAVM404corsv8yDVP5M3amqNske0h1fqK4oeXu
+         80qviWunOgls44EM1d6MuG+VKoAM7tizehPiJ2ZLqr7Bt9tPlp6wD7N75KbwRCCKdgYc
+         9l2agSe4lGn+L+ky4UZ67AMja3SxZbF7nvkOAD1dm5bPhB0tQ+b6uy6uedNm7G73aUPM
+         /n0+f3nIwJrfELOWZAt6XxbydTw9+zFLqxfnH4qruzsCKe5PrmyihhFm+2Nz4rdlrHrT
+         P5dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739031982; x=1739636782;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NkCXXh48JMCbajqYZdugEa9dJX77WDTXFyIk1OBCEMQ=;
+        b=cPLdVuMCZUhw72cvrAedXgI/3TA9+DvNCN7cDnv/gCVDOb2H7KZX5pEgaFkuBRdx3l
+         ISIhzyteX1py3rJmbHFksUHfNXnJlkW8VHxouumY0SmTB+8N5d7ONprMB1OGj3W0VPpg
+         IwnKIZAR+mTxmYb5tS7VFpvMr84BB4JHML06WpJO+WomRw1storBB4wW5q+V9KsHjcHq
+         Xe/nHuMzq9Le8ZjTtJtJzMEXKUsRA0Dmg6r27C+fppB1wdXV9qnzhdyTkavzBRFnYrEo
+         ps7ZOL2KRzdYkDzqjLKRQZu4TLdW6v89HYHrmmwip1PjLLaioYKOdWvI/nkxCiKPb1bR
+         1/Pg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJR0dkOijZ1ZBd3AJD1B52dw/+LlfFn+vX/FipQTzfjVSOw6ICG1Q24cWlk5y2WDUVWVYaYClk11XLMSGz@vger.kernel.org, AJvYcCViohrzzNna4JU3WZugMOW4zSXaaRVH26Te8Gnz/Bdxgy7X9N+zUJgLJvJMmXc1UhIuZOspg8kWr/RKLag9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1whQA9a2begCbH1QN2eoT/L2aOabwzL67arax05pyDy4Swwdh
+	yTvQ+OCrCstF5lCQioU2nH+zckMYPNjX3kuaNw4CvDhtnln2+Y4PICbQXA==
+X-Gm-Gg: ASbGncuGxcZZHmGgH+gMfcDUARMeXC9WLjWmcrTY6Ew5L7RlPpuz1JKZiaKhU309MIA
+	9ik+mGcEJTZ0aCUNj/fExgI6Lp5ODnUNwJHLD1TCvOWa64JRZ6Cio7fcLt6Iav9e6KLQiRGdvYe
+	zem1NmpL0lorr5Msqj+kpgGOLeIbThxvcMZFWy+/9/CmZZA6iPqd4nWxrxofGyaKu9VTi4LTYvu
+	Cz9kyN4mK7KQGHTL5ZuhS/l6G/f0+aszrKsTUZlHd3oUcVpPAGG/rtm65b4OVk0/tVJ8GKoVooj
+	u8+OpPnK0WK4SdWH7SNE0R01YHby8dSdLQ==
+X-Google-Smtp-Source: AGHT+IFmsglSzYbPLk3UpNrclfflTnKL3d80AbtvI21c4XDleOJxjf2B88kBCdANVjxDOOn74gcA5g==
+X-Received: by 2002:a05:6402:4416:b0:5dc:c9ce:b022 with SMTP id 4fb4d7f45d1cf-5de45005a55mr9018076a12.9.1739031981726;
+        Sat, 08 Feb 2025 08:26:21 -0800 (PST)
+Received: from f.. (cst-prg-84-201.cust.vodafone.cz. [46.135.84.201])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de47d6461asm3193943a12.74.2025.02.08.08.26.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 08:26:21 -0800 (PST)
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: brauner@kernel.org
+Cc: viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: [PATCH v3 0/3] CONFIG_VFS_DEBUG at last
+Date: Sat,  8 Feb 2025 17:26:08 +0100
+Message-ID: <20250208162611.628145-1-mjguzik@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 7 Feb 2025 16:09:16 +0200
-Antoniu Miclaus <antoniu.miclaus@analog.com> wrote:
+This adds a super basic version just to get the mechanism going, along
+with sample usage.
 
-> Add support for enabling/disabling oversampling.
-> 
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
-> no changes in v12.
->  drivers/iio/adc/adi-axi-adc.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.c
-> index 272d82c6e887..872ff51e08a7 100644
-> --- a/drivers/iio/adc/adi-axi-adc.c
-> +++ b/drivers/iio/adc/adi-axi-adc.c
-> @@ -46,6 +46,7 @@
->  #define    ADI_AXI_ADC_CTRL_DDR_EDGESEL_MASK	BIT(1)
->  
->  #define ADI_AXI_ADC_REG_CNTRL_3			0x004c
-> +#define   AD485X_CNTRL_3_OS_EN_MSK		BIT(2)
->  #define   AD485X_CNTRL_3_PACKET_FORMAT_MSK	GENMASK(1, 0)
->  #define   AD485X_PACKET_FORMAT_20BIT		0x0
->  #define   AD485X_PACKET_FORMAT_24BIT		0x1
-> @@ -363,6 +364,28 @@ static int axi_adc_data_size_set(struct iio_backend *back, unsigned int size)
->  				  FIELD_PREP(AD485X_CNTRL_3_PACKET_FORMAT_MSK, val));
->  }
->  
-> +static int axi_adc_oversampling_ratio_set(struct iio_backend *back,
+The macro set is incomplete (e.g., lack of locking macros) and
+dump_inode routine fails to dump any state yet, to be implemented(tm).
 
-Same thing David pointed out in previous patch applies here.
-axi_adc_ad4851_oversampling_ration_set() or something like that.
+I think despite the primitive state this is complete enough to start
+sprinkling asserts as necessary.
 
+v3:
+- move dump_inode to fs/inode.c
+- s/failed/encountered/
+- pr_warn instead of pr_crit, matches dump_mapping
 
-> +					  unsigned int ratio)
-> +{
-> +	struct adi_axi_adc_state *st = iio_backend_get_priv(back);
-> +
-> +	/* The current state of the function enables or disables the
-> +	 * oversampling in REG_CNTRL_3 register. A ratio equal to 1 implies no
-> +	 * oversampling, while a value greater than 1 implies oversampling being
-> +	 * enabled.
-> +	 */
-> +	switch (ratio) {
-> +	case 0:
-> +		return -EINVAL;
-> +	case 1:
-> +		return regmap_clear_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
-> +					 AD485X_CNTRL_3_OS_EN_MSK);
-> +	default:
-> +		return regmap_set_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
-> +				       AD485X_CNTRL_3_OS_EN_MSK);
-> +	}
-> +}
-> +
->  static struct iio_buffer *axi_adc_request_buffer(struct iio_backend *back,
->  						 struct iio_dev *indio_dev)
->  {
-> @@ -428,6 +451,7 @@ static const struct iio_backend_ops adi_ad485x_ops = {
->  	.chan_status = axi_adc_chan_status,
->  	.interface_type_get = axi_adc_interface_type_get,
->  	.data_size_set = axi_adc_data_size_set,
-> +	.oversampling_ratio_set = axi_adc_oversampling_ratio_set,
->  	.debugfs_reg_access = iio_backend_debugfs_ptr(axi_adc_reg_access),
->  	.debugfs_print_chan_status = iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
->  };
+v2:
+- correct may_open
+- fixed up condition reporting:
+before:
+VFS_WARN_ON_INODE(__builtin_choose_expr((sizeof(int) ==
+sizeof(*(8 ? ((void *)((long)(__builtin_strlen(link)) * 0l)) : (int
+*)8))), __builtin_strlen(link), __fortify_strlen(link)) != linklen)
+failed for inode ff32f7c350c8aec8
+after:
+VFS_WARN_ON_INODE(strlen(link) != linklen) failed for inode ff2b81ddca13f338
+
+Mateusz Guzik (3):
+  vfs: add initial support for CONFIG_VFS_DEBUG
+  vfs: catch invalid modes in may_open()
+  vfs: use the new debug macros in inode_set_cached_link()
+
+ fs/inode.c               | 12 +++++++++++
+ fs/namei.c               |  2 ++
+ include/linux/fs.h       | 16 +++-----------
+ include/linux/vfsdebug.h | 45 ++++++++++++++++++++++++++++++++++++++++
+ lib/Kconfig.debug        |  9 ++++++++
+ 5 files changed, 71 insertions(+), 13 deletions(-)
+ create mode 100644 include/linux/vfsdebug.h
+
+-- 
+2.43.0
 
