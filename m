@@ -1,178 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA198522F;
-	Sat,  8 Feb 2025 08:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.8])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A6001A0BF3;
+	Sat,  8 Feb 2025 08:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739004594; cv=none; b=TYX6vJi4S9JnGCd5KkgeBahLQ68wLxy5llxVe1i4zD8nle+IzVD+SzUp/rS3vh6GjG4Wn6BR/j2eBnHKxb5xDNng+j4D4USK4TPLRBYnj+i6O66rSKQc1HtR7jfFnt0xUIxfskgHj24zXSwirlWM4q183aKJpvYkPnnJ5PPHLdM=
+	t=1739004732; cv=none; b=Cx4HzUEqea5ZJ1fSixiuXXUk1XVlzTeWqGhRYFS5cFLeNkED1SJnMYIyrhYhm24y0LLsPQzT26g9CCDen8Swj1LxsO5lhIwR9Mq6Xk3WUnw25lpOwciAdH6WZnFdnrH7cdAlnR3U6SrmzHhhP9CKR7zFnp+bngAD9rlRmnE4Vwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739004594; c=relaxed/simple;
-	bh=AuUeYp1A5NdnSP3v1LtC4B9Kji6WVYBlvjIfzZCR5iw=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j9UJy/TLfbpjdghu88QsgA62uhDTxjJKlWyjMmo5Pdzuw/PNc7p6HguyUcEUS/WOjW1qN1sAja8RgFlOeHvisTI78WmA3xZklsLzo0jQMz6d7u8m//+E0EKG7tzc9rXL+zPPC1B9GA/A1KOVQnrun6EvsyiHQNQ4ou+Xki9+UnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wxRunt+U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739004732; c=relaxed/simple;
+	bh=AZoMrwCMIpKGPHiKvFbL1EkmEsTsjgKEnMYG1p45oV8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dksOleNrjjKc3TbISKrSaKxuSp497GGeKAn9MPjVG4qZLopDMGX+U9u+x3aqKgwn6lt9uhDbjfY6MopLeffJU6U6xY22R1S4/7mjt+qKsEIKrPTNvJsJH+obdME5qCLiyUfq88f9JPekV1otnXy+mtAMIffi0SDY9sayv2V9FUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=b2xwJPoO; arc=none smtp.client-ip=117.135.210.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wxRunt+U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 753D6C4CED6;
-	Sat,  8 Feb 2025 08:49:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1739004594;
-	bh=AuUeYp1A5NdnSP3v1LtC4B9Kji6WVYBlvjIfzZCR5iw=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=wxRunt+U5RX1eax8W4IFVBCSXiEA1I0HsWHo+x8nnn0NU41bmSOhLQx0VeeSqzeo0
-	 ffRwzJEUzkxjPix90WwSrjZkk5XFRc5D03XbW3QDTWzqqDDFRXhxsEcZtWxaBRFd6W
-	 sRzEalRHg8BbO6Zcxn/7BTTMSmSOOApxyiyCBXXQ=
-Date: Sat, 8 Feb 2025 09:49:50 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-	Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	Haneen Mohammed <hamohammed.sa@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Melissa Wen <melissa.srw@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v3 8/8] drm/vkms: convert to use faux_device
-Message-ID: <2025020844-stank-catlike-2661@gregkh>
-References: <2025020620-skedaddle-olympics-1735@gregkh>
- <2025020625-unlaced-vagueness-ae34@gregkh>
- <Z6Y72LK1UW86x8av@louis-chauvet-laptop>
- <2025020855-ventricle-slang-b705@gregkh>
- <Z6cX5MG3yM4XL9jR@Host-003>
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="b2xwJPoO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=Wp52D9fpjdxEowIxQTuIVRiH+cfHPxfJV9jwR5WSAfM=;
+	b=b2xwJPoOQBDC2eqY8yzPGC4e5KHs0I4LoGjLCbe18y8xdNlJAWhr9ulXCaNxWs
+	S4gjDWE8sh/xJuECf5wVSq1bbbD5jna11J7tvgARUdmI/tqdw/MlXbrKvcYNLfeu
+	xUXMsKYa/WRm7+dsnRPZ6O7d/jf4oBS+jJN4AftnJpLCM=
+Received: from [172.19.20.199] (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wD35zHmGqdnQ8XpAg--.51012S2;
+	Sat, 08 Feb 2025 16:50:46 +0800 (CST)
+Message-ID: <28edc5df-eed5-45b8-ab6d-76e63ef635a9@126.com>
+Date: Sat, 8 Feb 2025 16:50:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z6cX5MG3yM4XL9jR@Host-003>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/cma: add an API to enable/disable concurrent memory
+ allocation for the CMA
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, david@redhat.com,
+ baolin.wang@linux.alibaba.com, aisheng.dong@nxp.com, liuzixing@hygon.cn
+References: <1737717687-16744-1-git-send-email-yangge1116@126.com>
+ <CAGsJ_4y2zjCzRUgxkx2GpspFBD9Yon=R3SLaGezk9drQz+ikrQ@mail.gmail.com>
+From: Ge Yang <yangge1116@126.com>
+In-Reply-To: <CAGsJ_4y2zjCzRUgxkx2GpspFBD9Yon=R3SLaGezk9drQz+ikrQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD35zHmGqdnQ8XpAg--.51012S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAF4kJr18ZFWkCw47Zw1DJrb_yoWrWryDpF
+	W8G3WYk345XrnrZ392qw4093ZIg397CF4UGFyagas7ZF9xtr12gr1UKw15ur98ArWkWF1I
+	vF4jq34a93WUZa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbPEfUUUUU=
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbifhntG2enCquwowAAsj
 
-On Sat, Feb 08, 2025 at 09:37:56AM +0100, Louis Chauvet wrote:
-> On 08/02/25 - 08:12, Greg Kroah-Hartman wrote:
-> > On Fri, Feb 07, 2025 at 05:59:04PM +0100, Louis Chauvet wrote:
-> > > On 06/02/25 - 18:38, Greg Kroah-Hartman wrote:
-> > > > The vkms driver does not need to create a platform device, as there is
-> > > > no real platform resources associated it,  it only did so because it was
-> > > > simple to do that in order to get a device to use for resource
-> > > > management of drm resources.  Change the driver to use the faux device
-> > > > instead as this is NOT a real platform device.
-> > > > 
-> > > > Cc: Louis Chauvet <louis.chauvet@bootlin.com>
-> > > > Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
-> > > > Cc: Simona Vetter <simona@ffwll.ch>
-> > > > Cc: Melissa Wen <melissa.srw@gmail.com>
-> > > > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > > > Cc: Maxime Ripard <mripard@kernel.org>
-> > > > Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> > > > Cc: David Airlie <airlied@gmail.com>
-> > > > Cc: dri-devel@lists.freedesktop.org
-> > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > ---
-> > > >  v3: new patch in the series.  For an example of the api working, does
-> > > >      not have to be merged at this time, but I can take it if the
-> > > >      maintainers give an ack.
-> > > 
-> > > Hi,
-> > > 
-> > > This patch cannot be merged into drm-misc-next because we modified the 
-> > > vkms_device structure in commit 49a167c393b0 ("drm/vkms: Switch to dynamic 
-> > > allocation for CRTC"), which is present in linux-next.
-> > > 
-> > > Once this conflict is resolved, I agree with changing from platform_device 
-> > > to faux_device.
-> > > 
-> > > Apart from this minor conflict, I believe your patch has revealed an issue 
-> > > in VKMS:
-> > > 
-> > > Without your patch:
-> > > 
-> > > 	bash-5.2# modprobe vkms
-> > > 	[drm] Initialized vkms 1.0.0 for vkms on minor 0
-> > > 	bash-5.2#
-> > > 
-> > > With your patch:
-> > > 
-> > > 	bash-5.2# modprobe vkms
-> > > 	faux vkms: Resources present before probing
-> > > 	[drm] Initialized vkms 1.0.0 for vkms on minor 0
-> > > 	bash-5.2#
-> > > 
-> > > After some investigation, I found that the issue is not caused by your 
-> > > patch but by VKMS itself:
-> > > 
-> > > During faux_device_create, the device core postpones the device probe to 
-> > > run it later [0]. This probe checks if the devres list is empty [1] and 
-> > > fails if it is not.
-> > > 
-> > > [0]:https://elixir.bootlin.com/linux/v6.13.1/source/drivers/base/bus.c#L534
-> > > [1]:https://elixir.bootlin.com/linux/v6.13.1/source/drivers/base/dd.c#L626
-> > > 
-> > > With a platform driver, the order of execution was:
-> > > 
-> > > 	platform_device_register_simple();
-> > > 		device_add();
-> > > 	*async* device_probe(); /* no issue, the devres is untouched */
-> > > 	devres_open_group();
-> > > 
-> > > But with faux-device, the order is:
-> > > 
-> > > 	faux_device_create();
-> > > 		device_add();
-> > > 	devres_open_group();
-> > > 	*async* device_probe(); /* issue here, because of the previous 
-> > > 				   devres_open_group */
-> > 
-> > Wait, what?  It shouuld be the exact same codepath, as faux_device() is
-> > not doing anything different from platform here.  You might just be
-> > hitting a race condition as the async probing is the same here.
-> 
-> Yes, this is the same codepath, and this is a race condition. VKMS was 
-> just lucky it never happend before. 
-> 
-> > > How do you think this should be solved? I would like to keep a simple 
-> > > solution, given that:
-> > > - we want to have multiple vkms devices (configfs [2])
-> > > - we need to ensure that device_probe is called before devres_open_group 
-> > >   and devm_drm_dev_alloc to avoid this error
-> > 
-> > How about we take out the async probe?  You are getting lucky that it's
-> > not hit on the platform device code today.  Faux really doesn't need
-> > async, I was just trying to make the system work the same way that
-> > platform devices did.
-> 
-> I think this should be sufficient, and allows for a very simple interface: 
-> once faux_device_create returns, you can use the device "as-is", no 
-> need to wait for the probe.
-> 
-> What change can I do to disable async probe and test?
 
-Try this patch:
 
-diff --git a/drivers/base/faux.c b/drivers/base/faux.c
-index 27879ae78f53..0b9d17cd41f2 100644
---- a/drivers/base/faux.c
-+++ b/drivers/base/faux.c
-@@ -73,7 +73,7 @@ static const struct bus_type faux_bus_type = {
- static struct device_driver faux_driver = {
- 	.name		= "faux_driver",
- 	.bus		= &faux_bus_type,
--	.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
-+	.probe_type	= PROBE_FORCE_SYNCHRONOUS,
- };
- 
- static void faux_device_release(struct device *dev)
+在 2025/1/28 17:58, Barry Song 写道:
+> On Sat, Jan 25, 2025 at 12:21 AM <yangge1116@126.com> wrote:
+>>
+>> From: yangge <yangge1116@126.com>
+>>
+>> Commit 60a60e32cf91 ("Revert "mm/cma.c: remove redundant cma_mutex lock"")
+>> simply reverts to the original method of using the cma_mutex to ensure
+>> that alloc_contig_range() runs sequentially. This change was made to avoid
+>> concurrency allocation failures. However, it can negatively impact
+>> performance when concurrent allocation of CMA memory is required.
+> 
+> Do we have some data?
+Yes, I will add it in the next version, thanks.
+> 
+>>
+>> To address this issue, we could introduce an API for concurrency settings,
+>> allowing users to decide whether their CMA can perform concurrent memory
+>> allocations or not.
+> 
+> Who is the intended user of cma_set_concurrency? 
+We have some drivers that use cma_set_concurrency(), but they have not 
+yet been merged into the mainline. The cma_alloc_mem() function in the 
+mainline also supports concurrent allocation of CMA memory. By applying 
+this patch, we can also achieve significant performance improvements in 
+certain scenarios. I will provide performance data in the next version.
+I also feel it is somewhat
+> unsafe since cma->concurr_alloc is not protected by any locks.
+Ok, thanks.
+> 
+> Will a user setting cma->concurr_alloc = 1 encounter the original issue that
+> commit 60a60e32cf91 was attempting to fix?
+> 
+Yes, if a user encounters the issue described in commit 60a60e32cf91, 
+they will not be able to set cma->concurr_alloc to 1.
+>>
+>> Fixes: 60a60e32cf91 ("Revert "mm/cma.c: remove redundant cma_mutex lock"")
+>> Signed-off-by: yangge <yangge1116@126.com>
+>> Cc: <stable@vger.kernel.org>
+>> ---
+>>   include/linux/cma.h |  2 ++
+>>   mm/cma.c            | 22 ++++++++++++++++++++--
+>>   mm/cma.h            |  1 +
+>>   3 files changed, 23 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/include/linux/cma.h b/include/linux/cma.h
+>> index d15b64f..2384624 100644
+>> --- a/include/linux/cma.h
+>> +++ b/include/linux/cma.h
+>> @@ -53,6 +53,8 @@ extern int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
+>>
+>>   extern void cma_reserve_pages_on_error(struct cma *cma);
+>>
+>> +extern bool cma_set_concurrency(struct cma *cma, bool concurrency);
+>> +
+>>   #ifdef CONFIG_CMA
+>>   struct folio *cma_alloc_folio(struct cma *cma, int order, gfp_t gfp);
+>>   bool cma_free_folio(struct cma *cma, const struct folio *folio);
+>> diff --git a/mm/cma.c b/mm/cma.c
+>> index de5bc0c..49a7186 100644
+>> --- a/mm/cma.c
+>> +++ b/mm/cma.c
+>> @@ -460,9 +460,17 @@ static struct page *__cma_alloc(struct cma *cma, unsigned long count,
+>>                  spin_unlock_irq(&cma->lock);
+>>
+>>                  pfn = cma->base_pfn + (bitmap_no << cma->order_per_bit);
+>> -               mutex_lock(&cma_mutex);
+>> +
+>> +               /*
+>> +                * If the user sets the concurr_alloc of CMA to true, concurrent
+>> +                * memory allocation is allowed. If the user sets it to false or
+>> +                * does not set it, concurrent memory allocation is not allowed.
+>> +                */
+>> +               if (!cma->concurr_alloc)
+>> +                       mutex_lock(&cma_mutex);
+>>                  ret = alloc_contig_range(pfn, pfn + count, MIGRATE_CMA, gfp);
+>> -               mutex_unlock(&cma_mutex);
+>> +               if (!cma->concurr_alloc)
+>> +                       mutex_unlock(&cma_mutex);
+>>                  if (ret == 0) {
+>>                          page = pfn_to_page(pfn);
+>>                          break;
+>> @@ -610,3 +618,13 @@ int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
+>>
+>>          return 0;
+>>   }
+>> +
+>> +bool cma_set_concurrency(struct cma *cma, bool concurrency)
+>> +{
+>> +       if (!cma)
+>> +               return false;
+>> +
+>> +       cma->concurr_alloc = concurrency;
+>> +
+>> +       return true;
+>> +}
+>> diff --git a/mm/cma.h b/mm/cma.h
+>> index 8485ef8..30f489d 100644
+>> --- a/mm/cma.h
+>> +++ b/mm/cma.h
+>> @@ -16,6 +16,7 @@ struct cma {
+>>          unsigned long   *bitmap;
+>>          unsigned int order_per_bit; /* Order of pages represented by one bit */
+>>          spinlock_t      lock;
+>> +       bool concurr_alloc;
+>>   #ifdef CONFIG_CMA_DEBUGFS
+>>          struct hlist_head mem_head;
+>>          spinlock_t mem_head_lock;
+>> --
+>> 2.7.4
+>>
+>>
+> 
+> Thanks
+> Barry
+
