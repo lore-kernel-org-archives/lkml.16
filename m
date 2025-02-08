@@ -1,70 +1,70 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F661AAA02
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 09:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968E01A83FF
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 09:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739005641; cv=none; b=f3EdmSwm6dRIfvOqQC9K0EJccyprdfJhg/P/4I0N4yz6R033s8DZIXfeIBSwF3k7pFQWfVs0lV9isRodoQ7x6G5EjCMJmyQNizkrfWCIo9+KHwMHoAEWkUplld3SP+t1XuHwi2NRPrEltLnEK96bF6NWl32pnCQelcMWqOvuGJA=
+	t=1739005650; cv=none; b=tPjTPnL/9B4hpzRUAHcpvXjXb1TmFZyQwkQqz132PrXnVBHzp6JvGSvuKcmGpZjkdaui6K5URWLRmStQ4+6HnDwpRLC+c0saFUIOQKJRcDLLmRK7YU33m1T9icXhcVDSTnLvqAzNX0EFUfsR5W0AmWLx1SpLGw0vOD8ldl/tqnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739005641; c=relaxed/simple;
-	bh=1xfujEgcopQsLi9UV0MMczW1iCjoBD2MMgqBq90OqW0=;
+	s=arc-20240116; t=1739005650; c=relaxed/simple;
+	bh=3zjvjInegWC72sMChUlFEfBWlYg5usr0GeivTuVi6ko=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oAJFHrr2fpr86i7gZNHC0CINs/ChHGvPCq8/CYcHkWkkyU2Rn1r2Tg2Z1aIqDjZb0kc7GD2B+EUwDICXZrvx28du8wMwS6OJ97PSa7UFhkHadz6uGuv023hhbXnSrm8IhZijova8cEXnW11KPWoJPhzc1JfIQt1Z0hJ4WJ2llIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EV7xu3rz; arc=none smtp.client-ip=209.85.219.45
+	 To:Cc:Content-Type; b=hVs01dq6huP33kqmgTJ9Um/ViaUqg5adjTFeMuaR9jGbYmwuMsvmG+39WwhHOmB8Y0AWXrZ2dwZD21x/10dY+zsiQTuXQX/Zv1DvniTJJ5XBvRGH1qKcvHMEsUzo/kX5YpL7sYnMj2Z0o795S0x3NGvW9XXpHL3HDQKovcXH4wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DI96snzI; arc=none smtp.client-ip=209.85.219.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EV7xu3rz"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e436c59113so25626726d6.3
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 01:07:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DI96snzI"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e4565be0e0so870586d6.3
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 01:07:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739005639; x=1739610439; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1739005647; x=1739610447; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ptmgZSAd+umUG4r8hP9JRIyGMb9lvC4E4/zunYGtxk=;
-        b=EV7xu3rzmcq5P1Gqql93JCvbsgNn8tqOAbdvhBtglZdN0SkeD+1O+kPT2TO1PVLIMP
-         QJ9o5G1wwh1QB5jjM5aKJBZtBfgYnIZsA7OtdVhuwJWmpgVQPAubB3gDcBfi45auJF+P
-         VCLbIjn9qGtMdPtOnaKndaMV8ZIDXLvQVVYsjUlY/SszJPNO7JOqE/0ZUI9TXEYB8sd1
-         4VtPgWhovbsVqwGJe2YeaQuCP67PDIp/xsIOx9sWFPvbdENn+aTKj0pRksIGibwZvi/Q
-         Gqt5UJkjdAXQY4dEdAF/Bh8hJ+NHByG45REH24MDSTy/QZc303cqCff8HahVcc9utxaE
-         Mxeg==
+        bh=KV6b6tnu4mDFf5flaAExZzS13cW4vzQ4yd+xbOv6QnE=;
+        b=DI96snzI9FYiywGws/ObiGxH0htON4LUCLbgiDGgT3R5b5Gbin8oUpszf2/Tg1HnjY
+         kmIvolxtOQmxYrTX9I7LKHBFCiRMMlC8fqT0x8I1XqLvoEPWLUiOl4TF6xgWfyoO3cuB
+         fY4Oe5+MsDuKZpdzYF2MCmGPZNPCyWc3kAhjJ6ArdJoVIRGbZEahrbeUWyLs2tWhEZlN
+         uqou1mmdc6+Xmvdu7YUn9CHaumpgr4z1yaTH+kXOnSE0f+gGyFn23RSTd+iXL8C/q771
+         0xTRE2MjPoxqx5vc3BG/EdpgweirKCP/pjhTn2Fkz9KdyC+OY/vTU1OqvDjEmkEfjnpa
+         0hjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739005639; x=1739610439;
+        d=1e100.net; s=20230601; t=1739005647; x=1739610447;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1ptmgZSAd+umUG4r8hP9JRIyGMb9lvC4E4/zunYGtxk=;
-        b=bNSLGfzmwYHPm9vrnjoafzCW6sdtIrn79Ri8WRRb7R8LfSd/54CI8UbDKpZNwCUNbX
-         UrTuAYH8oCSSVrq1brGSPeuTLA2yQbdMKO0YwJkGqPaCYMQO1Ipu2GyM/kBvaC4JypWe
-         qKcjFAL41cVvoLa5RgtNkr5KK0raQjzIVsC5MJtnY+DjFmv+J6weWITNhomgpdMG5K/h
-         nnCT29/K8eAelfSslhHS4VimapXvH8Nu+EfDslwLHR7y9ld4qogD0WBaIIfWzayBgI0s
-         4L+8tEqeH12nMwyV40csCpDrtNr2jCUHXhFQ1cV+f9QCjk1SPE9FEtF3C+GqR9A5AdUn
-         WZeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUx9x/KlWCGepc8rQ/vQabW6gn8dUc8EaCEC9Hqyh1kkrBosIG79lEPa4y98JqIaGvLkNlyvjxmUTaFt8A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnYrfy6ONWCXNHO4hbf7WSVaVAeKWxyDgNljXvEgP8M1iHah/V
-	h/2dYlw6Z9qQK4oUPh4mHdMuQ4ngXDD9ToUUirhnp4u7Ub1ieGenjNGYF0YTpnu8iTwASeGdps9
-	uRKmibaMjbe5GzjmAKLgIgUX2epNTlzk1m5jo
-X-Gm-Gg: ASbGncvPbeHEFh3MkVctmX6lQt78BjuJS5Oi4eIixy109Q7RepxgV7QsMsJwFKKytiI
-	XVCKsnpA968UqsWonL2acZjIcx/6jwa91xiiVfkyhiOGpKj0NButqhPvrYuyixDmlUgTsLaTnOg
+        bh=KV6b6tnu4mDFf5flaAExZzS13cW4vzQ4yd+xbOv6QnE=;
+        b=iDF+bTtf+eUjwRja7nBLQDcf3ezS0pgz/ZBkvTjRHQ6d8ogqJ1LVztV6ei1q8Aa6rn
+         4tPmHuKrk/SpH1WgDe1rv2i55XrkgNRpD0SMo2ogolKVLhrb1dLH9lvN3ND4jpjYhDAm
+         yOmovQlhX4QGxkUftbHRY7c6QUutjW6Z90OlWXi2fuQdp9ZSSl6jWvomKZFnLS6kiQZ2
+         y9aq2cLOOQcNsv8b5qyGqM/mMQ1WN9QnoXbJDNtEJBhsUqOSBdboXcJe06enHVugLDHp
+         QM2Xaru93DCQS1LDEfDjgRe6mRDFnG86hMwnaC6no5IW8RDOdDIHZJ3gt66p0psofOu2
+         piDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWXsAcrqVgsy1KHbBoiMuMqq8oshRgTIRYdx0WwLEHtj+MWAlZNqNNmFMC2K+jWXyShfnk971oc5boIkjY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNKWOPcb8oEeKZJZP+wcBNdMcuBgOaYjT6fHPqoAk03zWS0247
+	0kptGyasuz8bFGsh/P8lc04H7XhlsYNmupMOSLaHxJ5eet8gEW6vogfoIp75fizc31CT4TRaz3p
+	92P2JsB82dPIf6qGcc7fLNWuPF5/llpuGs6Tc
+X-Gm-Gg: ASbGnct69sa9NpdNlG7fb5NHYtkRCN5N3fxY7mOGges0Ngy8klWaOWtUAIjkMJ4lRcj
+	rlBilyD1zM603Flbo/PqbXS2ZmqcLnTZyrgp/eD9FKDxxAOksjWqPPKjyG24KtO+EsUZsuR1PKw
 	==
-X-Google-Smtp-Source: AGHT+IGay8gFdb7RAs7LiULPPCqhqkRSrI0RCOjR4/EWgtr5VVgVZx/Mxpf1kmvlCJSGYC8TOirqP8kKTgvxBt0iOjg=
-X-Received: by 2002:a05:6214:1c42:b0:6d8:6a74:ae68 with SMTP id
- 6a1803df08f44-6e4456fb66emr80802026d6.29.1739005638526; Sat, 08 Feb 2025
- 01:07:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEwAWBdNXNnenYw301s6tgUJrQCymVh5kAOIMP6trKA2Yy7KRRTbwrsjrPOe9VWfe9sOuVzgnsWo0lPFTebncQ=
+X-Received: by 2002:a05:6214:c26:b0:6e4:4011:9df7 with SMTP id
+ 6a1803df08f44-6e4456460a4mr94596206d6.16.1739005647181; Sat, 08 Feb 2025
+ 01:07:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207-bitmap-kunit-convert-v1-0-c520675343b6@gmail.com> <20250207-bitmap-kunit-convert-v1-1-c520675343b6@gmail.com>
-In-Reply-To: <20250207-bitmap-kunit-convert-v1-1-c520675343b6@gmail.com>
+References: <20250207-bitmap-kunit-convert-v1-0-c520675343b6@gmail.com> <20250207-bitmap-kunit-convert-v1-3-c520675343b6@gmail.com>
+In-Reply-To: <20250207-bitmap-kunit-convert-v1-3-c520675343b6@gmail.com>
 From: David Gow <davidgow@google.com>
-Date: Sat, 8 Feb 2025 17:07:05 +0800
-X-Gm-Features: AWEUYZk2p5h9eQu-fsq9yvNDD1LaZ2sxRstzOkmnoLGTphT_05FAb5N8QQl3Fa4
-Message-ID: <CABVgOS=25wXRt1eLDe+9Gyy+p9SNWek4jtM3khhGGy1L_E0-Ng@mail.gmail.com>
-Subject: Re: [PATCH 1/3] bitmap: remove _check_eq_u32_array
+Date: Sat, 8 Feb 2025 17:07:15 +0800
+X-Gm-Features: AWEUYZl3VMG9bkYXWB7fczBGO0VmDpt5H8KKuEN000aRvGzzge7D_cTVYUm0dpk
+Message-ID: <CABVgOS=W3Wny0q-Kpj6P1ZXyG1R_HYCrPLtnHiuruW9FxoHrfA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] bitmap: break kunit into test cases
 To: Tamir Duberstein <tamird@gmail.com>
 Cc: John Hubbard <jhubbard@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, 
 	Geert Uytterhoeven <geert@linux-m68k.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
@@ -76,76 +76,476 @@ Cc: John Hubbard <jhubbard@nvidia.com>, Andrew Morton <akpm@linux-foundation.org
 	linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org, 
 	linux-kselftest@vger.kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000005ff0e4062d9dcda2"
+	boundary="000000000000e56e9a062d9dcd9c"
 
---0000000000005ff0e4062d9dcda2
+--000000000000e56e9a062d9dcd9c
 Content-Type: text/plain; charset="UTF-8"
 
 On Sat, 8 Feb 2025 at 04:14, Tamir Duberstein <tamird@gmail.com> wrote:
 >
-> This has been unused since commit 3aa56885e516 ("bitmap: replace
-> bitmap_{from,to}_u32array") in 2018. Remove it to avoid the need to port
-> it to KUnit in this series.
+> Move some tests into `bitmap_test_cases` and parameterize
+> `test_bitmap_print_buf`. This gives us nicer output in the event of a
+> failure.
 >
 > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 > ---
 
-Makes sense.
+I very much like this cleanup: the static global 'kunittest' was annoying me.
+
+I think there's an argument to get rid of tc_err() entirely, and just
+use KUNIT_FAIL directly, but I'm happy either way: it is a lot of
+churn.
 
 Reviewed-by: David Gow <davidgow@google.com>
 
-Cheers,
+Thanks,
 -- David
 
 
->  lib/test_bitmap.c | 28 ----------------------------
->  1 file changed, 28 deletions(-)
+>  lib/bitmap_kunit.c | 182 ++++++++++++++++++++++++++---------------------------
+>  1 file changed, 89 insertions(+), 93 deletions(-)
 >
-> diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
-> index 65a75d58ed9e..c83829ef557f 100644
-> --- a/lib/test_bitmap.c
-> +++ b/lib/test_bitmap.c
-> @@ -100,34 +100,6 @@ __check_eq_pbl(const char *srcfile, unsigned int line,
->         return true;
+> diff --git a/lib/bitmap_kunit.c b/lib/bitmap_kunit.c
+> index 0605228288d6..f7b90f6d5f49 100644
+> --- a/lib/bitmap_kunit.c
+> +++ b/lib/bitmap_kunit.c
+> @@ -17,8 +17,6 @@
+>  static char pbl_buffer[PAGE_SIZE];
+>  static char print_buf[PAGE_SIZE * 2];
+>
+> -static struct kunit *kunittest;
+> -
+>  #define tc_err(fmt, ...) \
+>         KUNIT_FAIL(kunittest, fmt, ##__VA_ARGS__)
+>
+> @@ -96,7 +94,7 @@ static const unsigned long exp3_1_0[] = {
+>
+>  #define expect_eq_uint(x, y)           expect_eq_ulong((unsigned int)(x), (unsigned int)(y))
+>
+> -static void test_zero_clear(void)
+> +static void test_zero_clear(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(bmap, 1024);
+>
+> @@ -125,7 +123,7 @@ static void test_zero_clear(void)
+>         expect_eq_pbl("", bmap, 1024);
 >  }
 >
-> -static bool __init
-> -__check_eq_u32_array(const char *srcfile, unsigned int line,
-> -                    const u32 *exp_arr, unsigned int exp_len,
-> -                    const u32 *arr, unsigned int len) __used;
-> -static bool __init
-> -__check_eq_u32_array(const char *srcfile, unsigned int line,
-> -                    const u32 *exp_arr, unsigned int exp_len,
-> -                    const u32 *arr, unsigned int len)
+> -static void test_find_nth_bit(void)
+> +static void test_find_nth_bit(struct kunit *kunittest)
+>  {
+>         unsigned long b, bit, cnt = 0;
+>         DECLARE_BITMAP(bmap, 64 * 3);
+> @@ -166,7 +164,7 @@ static void test_find_nth_bit(void)
+>         }
+>  }
+>
+> -static void test_fill_set(void)
+> +static void test_fill_set(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(bmap, 1024);
+>
+> @@ -195,7 +193,7 @@ static void test_fill_set(void)
+>         expect_eq_pbl("0-1023", bmap, 1024);
+>  }
+>
+> -static void test_copy(void)
+> +static void test_copy(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(bmap1, 1024);
+>         DECLARE_BITMAP(bmap2, 1024);
+> @@ -234,7 +232,7 @@ static void test_copy(void)
+>         expect_eq_pbl("0-108,128-1023", bmap2, 1024);
+>  }
+>
+> -static void test_bitmap_region(void)
+> +static void test_bitmap_region(struct kunit *kunittest)
+>  {
+>         int pos, order;
+>
+> @@ -259,7 +257,7 @@ static void test_bitmap_region(void)
+>
+>  #define EXP2_IN_BITS   (sizeof(exp2) * 8)
+>
+> -static void test_replace(void)
+> +static void test_replace(struct kunit *kunittest)
+>  {
+>         unsigned int nbits = 64;
+>         unsigned int nlongs = DIV_ROUND_UP(nbits, BITS_PER_LONG);
+> @@ -300,7 +298,7 @@ static const unsigned long sg_scatter_exp[] = {
+>         BITMAP_FROM_U64(0x000000000000021aULL),
+>  };
+>
+> -static void test_bitmap_sg(void)
+> +static void test_bitmap_sg(struct kunit *kunittest)
+>  {
+>         unsigned int nbits = 64;
+>         DECLARE_BITMAP(bmap_gather, 100);
+> @@ -421,7 +419,7 @@ static const struct test_bitmap_parselist parselist_tests[] = {
+>
+>  };
+>
+> -static void test_bitmap_parselist(void)
+> +static void test_bitmap_parselist(struct kunit *kunittest)
+>  {
+>         int i;
+>         int err;
+> @@ -457,7 +455,7 @@ static void test_bitmap_parselist(void)
+>         }
+>  }
+>
+> -static void test_bitmap_printlist(void)
+> +static void test_bitmap_printlist(struct kunit *kunittest)
+>  {
+>         unsigned long *bmap = kmalloc(PAGE_SIZE, GFP_KERNEL);
+>         char *buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
+> @@ -533,7 +531,7 @@ static const struct test_bitmap_parselist parse_tests[] = {
+>  #undef step
+>  };
+>
+> -static void test_bitmap_parse(void)
+> +static void test_bitmap_parse(struct kunit *kunittest)
+>  {
+>         int i;
+>         int err;
+> @@ -568,7 +566,7 @@ static void test_bitmap_parse(void)
+>         }
+>  }
+>
+> -static void test_bitmap_arr32(void)
+> +static void test_bitmap_arr32(struct kunit *kunittest)
+>  {
+>         unsigned int nbits, next_bit;
+>         u32 arr[EXP1_IN_BITS / 32];
+> @@ -594,7 +592,7 @@ static void test_bitmap_arr32(void)
+>         }
+>  }
+>
+> -static void test_bitmap_arr64(void)
+> +static void test_bitmap_arr64(struct kunit *kunittest)
+>  {
+>         unsigned int nbits, next_bit;
+>         u64 arr[EXP1_IN_BITS / 64];
+> @@ -626,7 +624,7 @@ static void test_bitmap_arr64(void)
+>         }
+>  }
+>
+> -static noinline void test_mem_optimisations(void)
+> +static noinline void test_mem_optimisations(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(bmap1, 1024);
+>         DECLARE_BITMAP(bmap2, 1024);
+> @@ -669,7 +667,7 @@ static const unsigned char clump_exp[] = {
+>         0x05,   /* non-adjacent 2 bits set */
+>  };
+>
+> -static void test_for_each_set_clump8(void)
+> +static void test_for_each_set_clump8(struct kunit *kunittest)
+>  {
+>  #define CLUMP_EXP_NUMBITS 64
+>         DECLARE_BITMAP(bits, CLUMP_EXP_NUMBITS);
+> @@ -691,7 +689,7 @@ static void test_for_each_set_clump8(void)
+>                 expect_eq_clump8(start, CLUMP_EXP_NUMBITS, clump_exp, &clump);
+>  }
+>
+> -static void test_for_each_set_bit_wrap(void)
+> +static void test_for_each_set_bit_wrap(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(orig, 500);
+>         DECLARE_BITMAP(copy, 500);
+> @@ -716,7 +714,7 @@ static void test_for_each_set_bit_wrap(void)
+>         }
+>  }
+>
+> -static void test_for_each_set_bit(void)
+> +static void test_for_each_set_bit(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(orig, 500);
+>         DECLARE_BITMAP(copy, 500);
+> @@ -738,7 +736,7 @@ static void test_for_each_set_bit(void)
+>         expect_eq_bitmap(orig, copy, 500);
+>  }
+>
+> -static void test_for_each_set_bit_from(void)
+> +static void test_for_each_set_bit_from(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(orig, 500);
+>         DECLARE_BITMAP(copy, 500);
+> @@ -768,7 +766,7 @@ static void test_for_each_set_bit_from(void)
+>         }
+>  }
+>
+> -static void test_for_each_clear_bit(void)
+> +static void test_for_each_clear_bit(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(orig, 500);
+>         DECLARE_BITMAP(copy, 500);
+> @@ -790,7 +788,7 @@ static void test_for_each_clear_bit(void)
+>         expect_eq_bitmap(orig, copy, 500);
+>  }
+>
+> -static void test_for_each_clear_bit_from(void)
+> +static void test_for_each_clear_bit_from(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(orig, 500);
+>         DECLARE_BITMAP(copy, 500);
+> @@ -820,7 +818,7 @@ static void test_for_each_clear_bit_from(void)
+>         }
+>  }
+>
+> -static void test_for_each_set_bitrange(void)
+> +static void test_for_each_set_bitrange(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(orig, 500);
+>         DECLARE_BITMAP(copy, 500);
+> @@ -842,7 +840,7 @@ static void test_for_each_set_bitrange(void)
+>         expect_eq_bitmap(orig, copy, 500);
+>  }
+>
+> -static void test_for_each_clear_bitrange(void)
+> +static void test_for_each_clear_bitrange(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(orig, 500);
+>         DECLARE_BITMAP(copy, 500);
+> @@ -864,7 +862,7 @@ static void test_for_each_clear_bitrange(void)
+>         expect_eq_bitmap(orig, copy, 500);
+>  }
+>
+> -static void test_for_each_set_bitrange_from(void)
+> +static void test_for_each_set_bitrange_from(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(orig, 500);
+>         DECLARE_BITMAP(copy, 500);
+> @@ -894,7 +892,7 @@ static void test_for_each_set_bitrange_from(void)
+>         }
+>  }
+>
+> -static void test_for_each_clear_bitrange_from(void)
+> +static void test_for_each_clear_bitrange_from(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(orig, 500);
+>         DECLARE_BITMAP(copy, 500);
+> @@ -965,7 +963,7 @@ static struct test_bitmap_cut test_cut[] = {
+>         },
+>  };
+>
+> -static void test_bitmap_cut(void)
+> +static void test_bitmap_cut(struct kunit *kunittest)
+>  {
+>         unsigned long b[5], *in = &b[1], *out = &b[0];  /* Partial overlap */
+>         int i;
+> @@ -986,8 +984,14 @@ struct test_bitmap_print {
+>         unsigned long nbits;
+>         const char *mask;
+>         const char *list;
+> +       const char *name;
+>  };
+>
+> +static void param_to_desc(const struct test_bitmap_print *param, char *desc)
+> +{
+> +       strscpy(desc, param->name, KUNIT_PARAM_DESC_SIZE);
+> +}
+> +
+>  static const unsigned long small_bitmap[] = {
+>         BITMAP_FROM_U64(0x3333333311111111ULL),
+>  };
+> @@ -1082,35 +1086,34 @@ static const char large_list[] = /* more than 4KB */
+>         "49,2552-2553,2556-2557\n";
+>
+>  static const struct test_bitmap_print test_print[] = {
+> -       { small_bitmap, sizeof(small_bitmap) * BITS_PER_BYTE, small_mask, small_list },
+> -       { large_bitmap, sizeof(large_bitmap) * BITS_PER_BYTE, large_mask, large_list },
+> +       { small_bitmap, sizeof(small_bitmap) * BITS_PER_BYTE, small_mask, small_list, "small" },
+> +       { large_bitmap, sizeof(large_bitmap) * BITS_PER_BYTE, large_mask, large_list, "large" },
+>  };
+>
+> -static void test_bitmap_print_buf(void)
+> +KUNIT_ARRAY_PARAM(test_print, test_print, param_to_desc);
+> +
+> +static void test_bitmap_print_buf(struct kunit *kunittest)
+>  {
+> -       int i;
+> +       int n;
+>
+> -       for (i = 0; i < ARRAY_SIZE(test_print); i++) {
+> -               const struct test_bitmap_print *t = &test_print[i];
+> -               int n;
+> +       const struct test_bitmap_print *t = kunittest->param_value;
+>
+> -               n = bitmap_print_bitmask_to_buf(print_buf, t->bitmap, t->nbits,
+> -                                               0, 2 * PAGE_SIZE);
+> -               expect_eq_uint(strlen(t->mask) + 1, n);
+> -               expect_eq_str(t->mask, print_buf, n);
+> +       n = bitmap_print_bitmask_to_buf(print_buf, t->bitmap, t->nbits,
+> +                                       0, 2 * PAGE_SIZE);
+> +       expect_eq_uint(strlen(t->mask) + 1, n);
+> +       expect_eq_str(t->mask, print_buf, n);
+>
+> +       n = bitmap_print_list_to_buf(print_buf, t->bitmap, t->nbits,
+> +                                       0, 2 * PAGE_SIZE);
+> +       expect_eq_uint(strlen(t->list) + 1, n);
+> +       expect_eq_str(t->list, print_buf, n);
+> +
+> +       /* test by non-zero offset */
+> +       if (strlen(t->list) > PAGE_SIZE) {
+>                 n = bitmap_print_list_to_buf(print_buf, t->bitmap, t->nbits,
+> -                                            0, 2 * PAGE_SIZE);
+> -               expect_eq_uint(strlen(t->list) + 1, n);
+> -               expect_eq_str(t->list, print_buf, n);
+> -
+> -               /* test by non-zero offset */
+> -               if (strlen(t->list) > PAGE_SIZE) {
+> -                       n = bitmap_print_list_to_buf(print_buf, t->bitmap, t->nbits,
+> -                                                    PAGE_SIZE, PAGE_SIZE);
+> -                       expect_eq_uint(strlen(t->list) + 1 - PAGE_SIZE, n);
+> -                       expect_eq_str(t->list + PAGE_SIZE, print_buf, n);
+> -               }
+> +                                               PAGE_SIZE, PAGE_SIZE);
+> +               expect_eq_uint(strlen(t->list) + 1 - PAGE_SIZE, n);
+> +               expect_eq_str(t->list + PAGE_SIZE, print_buf, n);
+>         }
+>  }
+>
+> @@ -1118,7 +1121,7 @@ static void test_bitmap_print_buf(void)
+>   * FIXME: Clang breaks compile-time evaluations when KASAN and GCOV are enabled.
+>   * To workaround it, GCOV is force-disabled in Makefile for this configuration.
+>   */
+> -static void test_bitmap_const_eval(void)
+> +static void test_bitmap_const_eval(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(bitmap, BITS_PER_LONG);
+>         unsigned long initvar = BIT(2);
+> @@ -1186,7 +1189,7 @@ static void test_bitmap_const_eval(void)
+>  /*
+>   * Helper function to test bitmap_write() overwriting the chosen byte pattern.
+>   */
+> -static void test_bitmap_write_helper(const char *pattern)
+> +static void test_bitmap_write_helper(struct kunit *kunittest, const char *pattern)
+>  {
+>         DECLARE_BITMAP(bitmap, TEST_BIT_LEN);
+>         DECLARE_BITMAP(exp_bitmap, TEST_BIT_LEN);
+> @@ -1240,7 +1243,7 @@ static void test_bitmap_write_helper(const char *pattern)
+>         }
+>  }
+>
+> -static void test_bitmap_read_write(void)
+> +static void test_bitmap_read_write(struct kunit *kunittest)
+>  {
+>         unsigned char *pattern[3] = {"", "all:1/2", "all"};
+>         DECLARE_BITMAP(bitmap, TEST_BIT_LEN);
+> @@ -1286,10 +1289,10 @@ static void test_bitmap_read_write(void)
+>         }
+>
+>         for (pi = 0; pi < ARRAY_SIZE(pattern); pi++)
+> -               test_bitmap_write_helper(pattern[pi]);
+> +               test_bitmap_write_helper(kunittest, pattern[pi]);
+>  }
+>
+> -static void test_bitmap_read_perf(void)
+> +static void test_bitmap_read_perf(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(bitmap, TEST_BIT_LEN);
+>         unsigned int cnt, nbits, i;
+> @@ -1312,10 +1315,10 @@ static void test_bitmap_read_perf(void)
+>                 }
+>         }
+>         time = ktime_get() - time;
+> -       kunit_info(kunittest, "Time spent in %s:\t%llu\n", __func__, time);
+> +       kunit_info(kunittest, "Time spent:\t%llu\n", time);
+>  }
+>
+> -static void test_bitmap_write_perf(void)
+> +static void test_bitmap_write_perf(struct kunit *kunittest)
+>  {
+>         DECLARE_BITMAP(bitmap, TEST_BIT_LEN);
+>         unsigned int cnt, nbits, i;
+> @@ -1334,49 +1337,42 @@ static void test_bitmap_write_perf(void)
+>                 }
+>         }
+>         time = ktime_get() - time;
+> -       kunit_info(kunittest, "Time spent in %s:\t%llu\n", __func__, time);
+> +       kunit_info(kunittest, "Time spent:\t%llu\n", time);
+>  }
+>
+>  #undef TEST_BIT_LEN
+>
+> -static void bitmap_test(struct kunit *test)
 > -{
-> -       if (exp_len != len) {
-> -               pr_warn("[%s:%u] array length differ: expected %u, got %u\n",
-> -                       srcfile, line,
-> -                       exp_len, len);
-> -               return false;
-> -       }
+> -       kunittest = test;
 > -
-> -       if (memcmp(exp_arr, arr, len*sizeof(*arr))) {
-> -               pr_warn("[%s:%u] array contents differ\n", srcfile, line);
-> -               print_hex_dump(KERN_WARNING, "  exp:  ", DUMP_PREFIX_OFFSET,
-> -                              32, 4, exp_arr, exp_len*sizeof(*exp_arr), false);
-> -               print_hex_dump(KERN_WARNING, "  got:  ", DUMP_PREFIX_OFFSET,
-> -                              32, 4, arr, len*sizeof(*arr), false);
-> -               return false;
-> -       }
+> -       test_zero_clear();
+> -       test_fill_set();
+> -       test_copy();
+> -       test_bitmap_region();
+> -       test_replace();
+> -       test_bitmap_sg();
+> -       test_bitmap_arr32();
+> -       test_bitmap_arr64();
+> -       test_bitmap_parse();
+> -       test_bitmap_parselist();
+> -       test_bitmap_printlist();
+> -       test_mem_optimisations();
+> -       test_bitmap_cut();
+> -       test_bitmap_print_buf();
+> -       test_bitmap_const_eval();
+> -       test_bitmap_read_write();
+> -       test_bitmap_read_perf();
+> -       test_bitmap_write_perf();
 > -
-> -       return true;
+> -       test_find_nth_bit();
+> -       test_for_each_set_bit();
+> -       test_for_each_set_bit_from();
+> -       test_for_each_clear_bit();
+> -       test_for_each_clear_bit_from();
+> -       test_for_each_set_bitrange();
+> -       test_for_each_clear_bitrange();
+> -       test_for_each_set_bitrange_from();
+> -       test_for_each_clear_bitrange_from();
+> -       test_for_each_set_clump8();
+> -       test_for_each_set_bit_wrap();
 > -}
 > -
->  static bool __init __check_eq_clump8(const char *srcfile, unsigned int line,
->                                     const unsigned int offset,
->                                     const unsigned int size,
+>  static struct kunit_case bitmap_test_cases[] = {
+> -       KUNIT_CASE(bitmap_test),
+> +       KUNIT_CASE(test_zero_clear),
+> +       KUNIT_CASE(test_fill_set),
+> +       KUNIT_CASE(test_copy),
+> +       KUNIT_CASE(test_bitmap_region),
+> +       KUNIT_CASE(test_replace),
+> +       KUNIT_CASE(test_bitmap_sg),
+> +       KUNIT_CASE(test_bitmap_arr32),
+> +       KUNIT_CASE(test_bitmap_arr64),
+> +       KUNIT_CASE(test_bitmap_parse),
+> +       KUNIT_CASE(test_bitmap_parselist),
+> +       KUNIT_CASE(test_bitmap_printlist),
+> +       KUNIT_CASE(test_mem_optimisations),
+> +       KUNIT_CASE(test_bitmap_cut),
+> +       KUNIT_CASE_PARAM(test_bitmap_print_buf, test_print_gen_params),
+> +       KUNIT_CASE(test_bitmap_const_eval),
+> +       KUNIT_CASE(test_bitmap_read_write),
+> +       KUNIT_CASE(test_bitmap_read_perf),
+> +       KUNIT_CASE(test_bitmap_write_perf),
+> +
+> +       KUNIT_CASE(test_find_nth_bit),
+> +       KUNIT_CASE(test_for_each_set_bit),
+> +       KUNIT_CASE(test_for_each_set_bit_from),
+> +       KUNIT_CASE(test_for_each_clear_bit),
+> +       KUNIT_CASE(test_for_each_clear_bit_from),
+> +       KUNIT_CASE(test_for_each_set_bitrange),
+> +       KUNIT_CASE(test_for_each_clear_bitrange),
+> +       KUNIT_CASE(test_for_each_set_bitrange_from),
+> +       KUNIT_CASE(test_for_each_clear_bitrange_from),
+> +       KUNIT_CASE(test_for_each_set_clump8),
+> +       KUNIT_CASE(test_for_each_set_bit_wrap),
+>         {}
+>  };
+>
 >
 > --
 > 2.48.1
 >
 
---0000000000005ff0e4062d9dcda2
+--000000000000e56e9a062d9dcd9c
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -235,13 +635,13 @@ uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
 PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
 AmowggJmAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
 BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
-pjANBglghkgBZQMEAgEFAKCB1DAvBgkqhkiG9w0BCQQxIgQgOJhilG7ibWyICHiHtxd7jfq1Hem6
-kfdoAzMIoEYh3wYwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-MjA4MDkwNzE4WjBpBgkqhkiG9w0BCQ8xXDBaMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
+pjANBglghkgBZQMEAgEFAKCB1DAvBgkqhkiG9w0BCQQxIgQg6bVG2zaLx17qfbhZQIxg7PVCO0Kx
+zjvugs2VEmYB6n0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
+MjA4MDkwNzI3WjBpBgkqhkiG9w0BCQ8xXDBaMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
 YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBCjALBgkqhkiG9w0BAQcwCwYJYIZIAWUD
-BAIBMA0GCSqGSIb3DQEBAQUABIIBAIERfzIgWSsE+sH9ZbbgrCFr8qILjIy/P5zFJJUfpVuu42Wj
-8CHHZFEMT2nvEKTjVeMwCf1CQnH6OA6FuVAmJoDZTkvllSLYZ8Ek0W7Oru0Q4Y1ZFq74zkqNphyM
-Ozvr8COe/jOcbyQpmNKP/Y6gB3qRzo7aVvqrkUUtzPjSYuiBFt8daQgL0URCgSHw06mVMFoveBR7
-sGQSCSzSEoiKjPS/OxaRtqnIlkF08zrk4Bfz4g/RaU4lBrjdImUXmbVoU1P1ffArOkQGbqLNwXnQ
-qIOfPVik0DWTHzk9Ivm3o27ncf91DGY/akKW1vKBAIeTGpUtNMQqCPGYqGtDEN694TM=
---0000000000005ff0e4062d9dcda2--
+BAIBMA0GCSqGSIb3DQEBAQUABIIBAIOEdhrlwFtXtXcnMn0WFRS+xZn7B8zPL2uBzALtOLvQsyUn
+3ndC+ExZOLZlZDkScvOG1RJ5nrpQ7sOeLso/x8G/TV0Eg+sm2yWtxmNyVKc1F9hyzii3KbkVGxXI
+SsEB73zlHugYnoni9hBWJLtczjKXqzsI0ahufSRoiV/PWs1BKeesTj0Fpn/Eo9r12YJ8atk+hCz1
+ODXlKM0ipX/W0n6SBXh59VAnc/4SpBGAviMeluHaov3xhpsdqbIvXhZy3qweQZpnaVrE/iNHz2TN
+dbbx45g80KMo2/QCnmUhsZVJz9hXKnKHoBV7UMKaC4NbA/25e7vMVHzzNcbBuR0zuUQ=
+--000000000000e56e9a062d9dcd9c--
