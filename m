@@ -1,112 +1,76 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7E0241118
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 18:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E326E137E
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 18:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739040578; cv=none; b=dpmI+4aNDZfLkA5yAHu8HCjuwGxuGjs/WedL59q0Bun5uMUwlEMmbpm/rL0OYIF8QJQ/oEIfYmq3Tmo2JtsRxQzS73EltfSZwdcQnajls50w69Y8dE2uhCmXEY65NmEoTnzuQMgZAU/Nyv6mQTEuptF9oGB45ABzNyUTiI9QUbE=
+	t=1739040687; cv=none; b=JLI9wXCZhze9DXuhaX+lasy2HAnnSAuS8CoBGpfHazjwr0lEVaDClU6nFC9ezQjsTvUyeicpufnjDSYo1ayWZFaWXrch753SXi9Jm8DppqzYNHpEMVFEllptV9puxF8KBJ1+N29btZHrd/ebx44pPQSArj9WjzH5XI9zYLP/nRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739040578; c=relaxed/simple;
-	bh=WWpqIh6DPoZdZ6VmTWhgxhVTH4DAK5KjsdvKiNaO6AM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M0NyqpkfhCkIj290/YgVutYtHGDgLNHYi2lrRAvqMTabM32czfRdsEoshIL3NoDvCjrKYUO52z0lqY/4tXnmZnWWODLLFUHiTTmsMYain0ldr/k1PcceGA7NbPYRx4/V1Zx5SWNYmX3U2ZSn/Uy//DXq0AUMHonnci7K9OVv9yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MbGBuEg7; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739040687; c=relaxed/simple;
+	bh=ocQtBMyOozySwQUoJT5XoGfejv3UAKO+w7LOrRwBmi4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=mtw8VgClvql9kLMI3Y6i0aFH1BzXZHiJKmyyyVEHqdPOHR5G1zB9ABfKnjcqjhu8drqVJCAPNZOLqVnjGBt9vagybs/tgTh9KIYJpwrAvCuqqpP0loNMERPT01l2GuOru8ylN1/8rTntxNJTyIO1slAeQ9BjbTvZku3JwewOG0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cSLxDSiN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MbGBuEg7"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21f5268cf50so24524675ad.1
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 10:49:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739040576; x=1739645376; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zSLmSYdyN5pqVTnBSE3QaZaJyR/je4z0lfhrwlYoiX4=;
-        b=MbGBuEg7Dh24XTI5Li6Y+BnhbB67Mo+FQ7Cpu/K0km9gqRCl3sYrcx33hg1OKOwtNG
-         e1xqZcOsAMcbODMf09Uo4/dKMubopTufQh6N7pRYLsEy1Mzb1Dh/yGk6a/4Fs9kQsDiq
-         EwG9Je64kLgr5WW+bELhQ/ZKpsloyNFf/OjUZoXEXCNUGn4uCsqjN0uS/zwnUhzPrf4o
-         mfCdGiFnBEidX5euIw96kbL92h/ldQ0qpmiRV6HVXILJBAfOUYMwdP5Xzaaz1pfsa6D6
-         4XUqClaTwQpuSMFBAYXP7zaIHJSEIDzyGLtPF0n531Y0X0IH6O4dLhWeeP8wr0EyJqM5
-         OqHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739040576; x=1739645376;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zSLmSYdyN5pqVTnBSE3QaZaJyR/je4z0lfhrwlYoiX4=;
-        b=robS/+9asTwoCIK0NrFJZHAFzad4KufW5bCRxKfT+lV/axLJxjab7xKY66unClMR7O
-         UAfWGpygZToU3RNESK4GaYOYK48J7eTXMvpW1EIt5pq6XUnJhu6u1pkFqSUeAg5O27lW
-         u8GxdRZtYhteWn11B8AZUjAxo3gObW3KOg/8cGCgjp4nD+GzDRwsTHv0UUXP+TePoMS1
-         /Dy9biowPydhSQjLnq6+g3RLis6pO0I0Ws3OBQl57itFDZ7GYHXvDNIl1A7my2Z/c8aa
-         y0V1r8U82kCkC0Z/BwrmQ1iEWp777BXBXBViFsqjRB6rib32TaXbKg/bdSMpwAEwMmiI
-         TzlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVehijxKV/x+iU1H7Wmu7E+M8dhkYImEy3LkpRBYODtmdscaQmZ6hCIn/isDyVK2U4ccst+qYD1RWX4FEI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgiQ0LOBoyrxwgBxj55jBNWL7t04LXackjeU885RQpjjq7e9vI
-	RE8tsuwp3XxYcVpvr6IsiWFfbw4D5bA7sWG778yya0fl8rc9U/GF
-X-Gm-Gg: ASbGncsrOUVxuQ6n8sGGirk8diZp+IoirMOR7DXtdS+Akl+3wMQtwQNoWaKhdbMv9h7
-	uRpV7LCzSSmKE2Ol5Nu6Nf09w5NSIDR2PtSCFnJ+I6pGOsYvFY/M1SzhV3aEsZbiw0EJoRFz0VB
-	+poQBSUHG3UtfKaVV0ZqC3Qr/yj+imYvrCSsnUBFocEUib9dgz5C5Tt/lJtKh9cBmcYVatK9Ev9
-	D1M+/3yavnqBp3V/zXO+eDeYBKQSDEsSmhpXuGvsI0srd4PTMz8D5mUuiYg873HoDvzTESr0ZIj
-	QWtpYoDeei/XZhVG1PMQAmCFOMKBc0UVJ1cp8CvvHT58OA==
-X-Google-Smtp-Source: AGHT+IF3MJ6mgOQzZlCTQJfC7ZUaS7zqr5awqAUBdiEburDReXv2fXFkB22MR4PEJCbxeR95Vt3ydQ==
-X-Received: by 2002:a17:903:166c:b0:215:6cb2:7877 with SMTP id d9443c01a7336-21f4e1cbdaemr140068185ad.4.1739040575793;
-        Sat, 08 Feb 2025 10:49:35 -0800 (PST)
-Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:25f5:ea47:61af:a637])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51aee5ca8sm4272828a12.43.2025.02.08.10.49.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 10:49:34 -0800 (PST)
-From: I Hsin Cheng <richard120310@gmail.com>
-To: akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	I Hsin Cheng <richard120310@gmail.com>
-Subject: [PATCH] mm: pgtable: Ensure pml spinlock gets unlock
-Date: Sun,  9 Feb 2025 02:49:28 +0800
-Message-ID: <20250208184928.219960-1-richard120310@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cSLxDSiN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D750C4CED6;
+	Sat,  8 Feb 2025 18:51:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739040686;
+	bh=ocQtBMyOozySwQUoJT5XoGfejv3UAKO+w7LOrRwBmi4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=cSLxDSiNI9z7JD5E3qbP2Q9bNIajFXQ8nkWOG0DQD+LvxmAybYhZY/We1rTFe5WN8
+	 H/4gqZ2VlwqkDBFVwDD3gA5gAMnNLiLWx4EAULgyUmNoDIK6Ge9ISJxTFfS5ZhCwq9
+	 aQnCXZxmxhxi0gL37uUSrJvwnqNAg62ZSNW2zIOesqeCSgH9mQSTiRqD/JzWTv9zvv
+	 m89R7lubffnQ5AgmW8dKkBUfl39ayKvX+wUlpNzRXw75uGBjwhPMci+6nDTgDShB/H
+	 C7OHSJCoix8XmXrpktZ9PU0yR9LuqbX6szaUwsLTaWYw+e8cjLbHDFxl83ys3IPY5v
+	 pn6U8As/qI7VQ==
+Date: Sat, 8 Feb 2025 12:51:24 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: kbusch@kernel.org, axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+	andersson@kernel.org, konradybcio@kernel.org, rafael@kernel.org,
+	ulf.hansson@linaro.org
+Subject: Re: [PATCH] nvme-pci: Use NVME_QUIRK_SIMPLE_SUSPEND for Qualcomm
+ Snapdragon 8cx Gen 3 platforms
+Message-ID: <20250208185124.GA1120888@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250126050309.7243-1-manivannan.sadhasivam@linaro.org>
 
-When !start_pte is true, the "pml" spinlock is still being holded and
-the branch "out_pte" is taken. If "ptl" is equal to "pml", the lock
-"pml" will still be locked when the function returns.
+On Sun, Jan 26, 2025 at 10:33:09AM +0530, Manivannan Sadhasivam wrote:
+> On these platforms, power to the PCIe bus is not retained if the SoC enters
+> its own deep low power state called, CX power collapse state during system
+> suspend. Once the SoC resumes after going through CX power collapse, all
+> the PCIe bus state will be lost. So the NVMe devices on these platforms
+> won't resume properly, rendering the machines useless until forcefully
+> restarted by the users.
 
-It'll be better to set a new branch "out_pte" and jump to it when
-!start_pte is true at the first place, therefore no additional check for
-"start_pte" or "ptl != pml" is needed, simply unlock "pml" and return.
+I guess "forcefully restarted" means a power cycle?
 
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
----
- mm/pt_reclaim.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+> +++ b/drivers/nvme/host/pci.c
+> @@ -3162,6 +3162,16 @@ static unsigned long check_vendor_combination_bug(struct pci_dev *pdev)
+>  	if (dmi_match(DMI_BOARD_NAME, "LXKT-ZXEG-N6"))
+>  		return NVME_QUIRK_NO_APST;
+>  
+> +	/*
+> +	 * Qualcomm Snapdragon 8cx Gen 3 (SC8280XP) platforms doesn't retain
+> +	 * power to the PCIe bus after entering low power CX power collapse
+> +	 * state during system suspend. So shutdown the NVMe devices to have a
+> +	 * working system suspend on these platforms.
+> +	 */
+> +	if (dmi_match(DMI_PRODUCT_FAMILY, "SCP_MAKENA") ||
+> +	    dmi_match(DMI_PRODUCT_FAMILY, "ThinkPad X13s Gen 1"))
+> +		return NVME_QUIRK_SIMPLE_SUSPEND;
 
-diff --git a/mm/pt_reclaim.c b/mm/pt_reclaim.c
-index 7e9455a18aae..163e38f1728d 100644
---- a/mm/pt_reclaim.c
-+++ b/mm/pt_reclaim.c
-@@ -43,7 +43,7 @@ void try_to_free_pte(struct mm_struct *mm, pmd_t *pmd, unsigned long addr,
- 	pml = pmd_lock(mm, pmd);
- 	start_pte = pte_offset_map_rw_nolock(mm, pmd, addr, &pmdval, &ptl);
- 	if (!start_pte)
--		goto out_ptl;
-+		goto out_pte;
- 	if (ptl != pml)
- 		spin_lock_nested(ptl, SINGLE_DEPTH_NESTING);
- 
-@@ -68,4 +68,8 @@ void try_to_free_pte(struct mm_struct *mm, pmd_t *pmd, unsigned long addr,
- 		pte_unmap_unlock(start_pte, ptl);
- 	if (ptl != pml)
- 		spin_unlock(pml);
-+	return;
-+
-+out_pte:
-+	spin_unlock(pml);
- }
--- 
-2.43.0
-
+I certainly acknowledge that this is a big problem for users.  At the
+same time, this seems like a maintenance nightmare of
+platform-specific hacks scattered through endpoint drivers.
