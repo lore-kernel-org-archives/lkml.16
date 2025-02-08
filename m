@@ -1,230 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469A1248189;
-	Sat,  8 Feb 2025 15:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7FD13EFE3;
+	Sat,  8 Feb 2025 15:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739029044; cv=none; b=Ns1MSTKDwpAK/p1SaMWAI2cKwFbT7ybe0qqbc8iCbQ7BXgXa8xJQ28kTlBrfiSbnuqnAJzpZ4kTX8TV5Y35ObePgEom3EGXLTNshFNbW4U6eoh+/Ljti4H2CNtmzWbU8NbhKJEhmMYvOGjEPpX8Lr4YLCNIpxDqxSi1rNDK/Vdg=
+	t=1739029063; cv=none; b=NHj2h5wzw515e4BBPeXfyfEx94UPS3JJntIxppREV89Z9UFdCb/LXwSr81dYt/+kNapwDaKuocpN4fdgVM2iihKSpY/kMvmlcfmCaihRNRrzWrySi16awB6J73sQ6GzPY0P+spcE3Hn8hax+oGVI5renOr3r0GNDZ4/2BRocyZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739029044; c=relaxed/simple;
-	bh=Of+FGUU0azeEe6zTrINmA8le2Fyns8jIwH2YV16Evw0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J4EIiyk1dvzFvxKhj9OjPipgs/TzKy3z1D4BPZTGSNINxBzyQ/s8+6nnrO67xVl92KJykZbwyM5w4HnxyxQBEychYQYLXFwwYSzneSnSTVRtNQFMi6GSn5FgjFBJ92AmEc+5mFNZyX03M9Fbn6Lit5bi7KvgH7BYlGMdd3bGxd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vif3bfRS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739029063; c=relaxed/simple;
+	bh=VWCQV1asK8mkBC5s9MXTmP3MYrgvswMj5EQIzW1lZ+w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qZata5OxdjV5FEnNPNW+wD/Oxto/rJLreP6TYwx0YCPz4VAVYqxKDYxon8xEBij1CFrRox+Zwh9z3y8H4lnR3o3Wbwy85NT0NaCpELbEz5BQVW66DgSom2KqfZ7++OGGnkGlo6mfxis+uCDYeIsaTNK6qg0uuXnHvBTX0xJBmcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AZHw5krk; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vif3bfRS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CC23C4CED6;
-	Sat,  8 Feb 2025 15:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739029043;
-	bh=Of+FGUU0azeEe6zTrINmA8le2Fyns8jIwH2YV16Evw0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Vif3bfRSrPNw2Umvi9C0qjS5yIc4f5Z3n9moXOcAtztVXReVQLp8hhq6rDc29yWQH
-	 lzovMkJ7Optg9TPz4jDXGqEUU0+S6xnIHL4LKlip6Zdpo1FADS4QnIVAFV0u1GLZ0c
-	 5GqCbjtz2zhmuPUnewe5kFNcE6PCR3eeAoj/eP7qFeWhT81TQnpXtUIadrRhLn0yp6
-	 D/QAeftRnMyFdJij9MUmjsuVK+k8qVpjPDpPA69Xm+AcE9MUbCeD34/p+NIIwGvh+O
-	 EI3K4WjuNMbJCu0w9spHcvREVewZ7YMxVqQYxoYKHjcNWk74RzRfVHJxMs2vgAHqrm
-	 JanDAaqLRQKeQ==
-Date: Sat, 8 Feb 2025 15:37:11 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Robert Budai <robert.budai@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Alexandru Ardelean
- <alexandru.ardelean@analog.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Nuno Sa
- <nuno.sa@analog.com>, Ramona Gradinariu <ramona.gradinariu@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>, David Lechner
- <dlechner@baylibre.com>, Marcelo Schmitt <marcelo.schmitt@analog.com>, Paul
- Cercueil <paul@crapouillou.net>, Antoniu Miclaus
- <antoniu.miclaus@analog.com>, <linux-iio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v6 5/6] iio: imu: adis16550: add adis16550 support
-Message-ID: <20250208153711.1e0215d1@jic23-huawei>
-In-Reply-To: <20250204143612.85939-6-robert.budai@analog.com>
-References: <20250204143612.85939-1-robert.budai@analog.com>
-	<20250204143612.85939-6-robert.budai@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZHw5krk"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2fa44590eebso1197901a91.3;
+        Sat, 08 Feb 2025 07:37:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739029061; x=1739633861; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tkMGKQ7AKClIujpM9LEQv3XkqSpczhRaDa7fxIiDIII=;
+        b=AZHw5krk9RHxrj2N0FBYEJUwbM5D8EnIWdaiBC0dJFAXL1/z4YsG4xFG6cz33iN6pL
+         jZQpycoMnc5RLOzrgBlOBrg7GYfkGtlR/Bym0okuw96C+l+pGIHcOV155/U9Cz17f8Uk
+         0G5pl1bXQODCM5/O4jtAWyWi7fCkhJEE6/I5FfoX/uoIlp3PDJJX4o+mYhdf9UD7LZlK
+         Vg44Njvpc2bRaGP9FVv9DPey7IODqiBbHMs7XS4msgge/a/Ww+CdLJGMqfMoLY4cLYNH
+         UgPta1cHn+5Nd74cunYXhKcSWzbs8NcI33FO47GEg8uv2JHk0yM1RoRuEPfm0qcpNdLq
+         qWrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739029061; x=1739633861;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tkMGKQ7AKClIujpM9LEQv3XkqSpczhRaDa7fxIiDIII=;
+        b=Hgg4XnFmkwsXw5Ho374+Z7EN2UPCCx4LEL2maCU6E67l/a167iAp9lQjykiKelmx/0
+         7yIu5UA/FUS8wZqgCg8mQQ7JwyFNOzj+qq4lp+IJNgJks/yqzFwpOoaPb0dhSH5xTIZ6
+         KPPVpuxuQnd4BWT9DYp74nw3s6q9h7io9keuiLiv0NYS2vnkG07qddnIpxFPGFDkjVJg
+         KClwmtf7K5NTtIq2UrPZTUIKIdscoW/aiR74nMiAoS6L59VkuRe1oUMu7mQnbnKwhDq/
+         DLmeJPTC+n0fIWRBGMiEBO0iF31f1MOzeIgTUwn1JMEt82ac3lTuLsuodhAbtEGy1yg2
+         a2Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDVeJWUYHGmUaxLmLkK0eF7PyVwFtudv4J3PBa9YypLz+khsIR7bGxLs9IPYRQT98XY9XanK56aaazMtk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOC5IzYds1PSQans7Wy/BnmAYzu6PtP/bXd+CM3fIxiJgM7vne
+	aKLomfd1rOpB+Zrd2yySuEqtspxSNHtwNc5RWgmVBjaN8/rePD8A
+X-Gm-Gg: ASbGncs4qyBiCpekFNHngPBIZHu+WetsNU7FXfL0z5zRfh7wiHVKM9ELOa1vw3mvz/Y
+	uIzJ/1vK+XwoL2pMmxmdnKjO6KPbPl7dbalM0udd+uwXGXMbU1S7OEzN0oKQgiM/JOb4P6EE4mc
+	6i/f/bNSzN53BwLt+109srw6d9P8xH442I6kIZXAFfTIr+mkP54QbDoj8zmFJHcy8hUONpw4P39
+	BRPWXRoCrmNzfQuT+uzLLdxCDLfefi6Uok/ZBqtnYEraIINlD1vifcto2eMCKAHZJPzh6NhhB8S
+	cQpYA85p4R1gCY81XkxwC0X6Emx0wSSzTw==
+X-Google-Smtp-Source: AGHT+IEBiOdQixE/sEDSsEkCVBnZLT/H+JJ+GndkTmkOgrdPvikWjN62GqJMO8StduJyqgmGsrZUHQ==
+X-Received: by 2002:a05:6a00:c92:b0:725:df1a:27c with SMTP id d2e1a72fcca58-7305d4956ccmr11579244b3a.14.1739029060886;
+        Sat, 08 Feb 2025 07:37:40 -0800 (PST)
+Received: from [192.168.50.123] ([117.147.91.64])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048a9d4d7sm4883411b3a.16.2025.02.08.07.37.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Feb 2025 07:37:40 -0800 (PST)
+Message-ID: <be935464-8a36-4019-851a-881f82b2343e@gmail.com>
+Date: Sat, 8 Feb 2025 23:37:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v4 3/4] libbpf: Add libbpf_probe_bpf_kfunc API
+To: Eduard Zingerman <eddyz87@gmail.com>, ast@kernel.org,
+ daniel@iogearbox.net, andrii@kernel.org, haoluo@google.com,
+ jolsa@kernel.org, qmo@kernel.org
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250206051557.27913-1-chen.dylane@gmail.com>
+ <20250206051557.27913-4-chen.dylane@gmail.com>
+ <7d667c037e7396fb88cf243162c5aa8a537858bb.camel@gmail.com>
+From: Tao Chen <chen.dylane@gmail.com>
+In-Reply-To: <7d667c037e7396fb88cf243162c5aa8a537858bb.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 4 Feb 2025 16:36:09 +0200
-Robert Budai <robert.budai@analog.com> wrote:
+在 2025/2/8 06:35, Eduard Zingerman 写道:
+> On Thu, 2025-02-06 at 13:15 +0800, Tao Chen wrote:
+> 
+> [...]
+> 
+>>   LIBBPF_API int libbpf_probe_bpf_helper(enum bpf_prog_type prog_type,
+>>   				       enum bpf_func_id helper_id, const void *opts);
+>> -
+>> +/**
+>> + * @brief **libbpf_probe_bpf_kfunc()** detects if host kernel supports the
+>> + * use of a given BPF kfunc from specified BPF program type.
+>> + * @param prog_type BPF program type used to check the support of BPF kfunc
+>> + * @param kfunc_id The btf ID of BPF kfunc to check support for
+>> + * @param btf_fd The module BTF FD, if kfunc is defined in kernel module,
+>> + * btf_fd is used to point to module's BTF, 0 means kfunc defined in vmlinux.
+> 
+> Regarding '0' as special value:
+> in general FD is considered invalid only if it's negative, 0 is a valid FD.
+> Andrii, I remember there was a lengthy discussion about FD==0 and BPF,
+> but I don't remember the conclusion.
+> 
+>> + * @param opts reserved for future extensibility, should be NULL
+>> + * @return 1, if given combination of program type and kfunc is supported; 0,
+>> + * if the combination is not supported; negative error code if feature
+>> + * detection for provided input arguments failed or can't be performed
+>> + *
+>> + * Make sure the process has required set of CAP_* permissions (or runs as
+>> + * root) when performing feature checking.
+>> + */
+>> +LIBBPF_API int libbpf_probe_bpf_kfunc(enum bpf_prog_type prog_type,
+>> +				      int kfunc_id, int btf_fd, const void *opts);
+>>   /**
+>>    * @brief **libbpf_num_possible_cpus()** is a helper function to get the
+>>    * number of possible CPUs that the host kernel supports and expects.
+>> diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
+>> index a8b2936a1646..e93fae101efd 100644
+>> --- a/tools/lib/bpf/libbpf.map
+>> +++ b/tools/lib/bpf/libbpf.map
+>> @@ -436,4 +436,5 @@ LIBBPF_1.6.0 {
+>>   		bpf_linker__add_buf;
+>>   		bpf_linker__add_fd;
+>>   		bpf_linker__new_fd;
+>> +		libbpf_probe_bpf_kfunc;
+> 
+> This is now in conflict with bpf-next.
+> 
 
-> The ADIS16550 is a complete inertial system that includes a triaxis
-> gyroscope and a triaxis accelerometer. Each inertial sensor in the
-> ADIS16550 combines industry leading MEMS only technology with signal
-> conditioning that optimizes dynamic performance. The factory calibration
-> characterizes each sensor for sensitivity, bias, and alignment. As a
-> result, each sensor has its own dynamic compensation formulas that
-> provide accurate sensor measurements.
->=20
-> Co-developed-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
-> Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
-> Co-developed-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-> Signed-off-by: Robert Budai <robert.budai@analog.com>
+My bad, i will rebase the repo.
 
-A few minor comments inline given you will need to do a v7 for
-the DT feedback.  Otherwise I might just have tweaked these
-whilst applying.
+>>   } LIBBPF_1.5.0;
+>> diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
+>> index e142130cb83c..c7f2b2dfbcf1 100644
+>> --- a/tools/lib/bpf/libbpf_probes.c
+>> +++ b/tools/lib/bpf/libbpf_probes.c
+>> @@ -433,6 +433,61 @@ static bool can_probe_prog_type(enum bpf_prog_type prog_type)
+>>   	return true;
+>>   }
+>>   
+>> +int libbpf_probe_bpf_kfunc(enum bpf_prog_type prog_type, int kfunc_id, int btf_fd,
+>> +			   const void *opts)
+>> +{
+>> +	struct bpf_insn insns[] = {
+>> +		BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, BPF_PSEUDO_KFUNC_CALL, btf_fd, kfunc_id),
+>> +		BPF_EXIT_INSN(),
+>> +	};
+>> +	const size_t insn_cnt = ARRAY_SIZE(insns);
+>> +	char buf[4096];
+>> +	int *fd_array = NULL;
+>> +	size_t fd_array_cnt = 0, fd_array_cap = fd_array_cnt;
+>> +	int ret;
+>> +
+>> +	if (opts)
+>> +		return libbpf_err(-EINVAL);
+>> +
+>> +	if (!can_probe_prog_type(prog_type))
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	if (btf_fd) {
+>> +		ret = libbpf_ensure_mem((void **)&fd_array, &fd_array_cap,
+>> +					sizeof(int), fd_array_cnt + btf_fd);
+> 
+> Please take a look at the tools/testing/selftests/bpf/prog_tests/fd_array.c,
+> e.g. test case check_fd_array_cnt__fd_array_ok(). The offset field of the
+> call instruction does not have to be an fd (as it only has 16 bits),
+> instead it's an offset inside the fd_array.
+> Here it would be sufficient to allocate a small array on stack.
+> 
 
+Good idea，thanks for your guidance，I'll make the modifications in the 
+next version.
 
-> diff --git a/drivers/iio/imu/adis16550.c b/drivers/iio/imu/adis16550.c
-> new file mode 100644
-> index 000000000000..b20dc850346f
-> --- /dev/null
-> +++ b/drivers/iio/imu/adis16550.c
-> @@ -0,0 +1,1156 @@
-
-> +
-> +struct adis16550 {
-> +	const struct adis16550_chip_info *info;
-> +	struct adis adis;
-> +	unsigned long clk_freq_hz;
-> +	u32 sync_mode;
-> +	struct spi_transfer xfer[2];
-> +	u8 buffer[ADIS16550_BURST_DATA_LEN + sizeof(u32)] __aligned(IIO_DMA_MIN=
-ALIGN);
-> +	__be32 din[2] __aligned(IIO_DMA_MINALIGN);
-> +	__be32 dout[2] __aligned(IIO_DMA_MINALIGN);
-
-In most cases only one such marking is needed.  Devices tend not to interfe=
-re
-with themselves and we tend not to be changing values from software in one =
-of
-the buffer DMA is targetting whilst the device is using the others.
-
-So we normally just mark the first one of a set like this.  That avoids
-adding a lot of padding when it is not needed.
-
-> +};
-
-
-> +
-> +static int adis16550_set_gyro_filter_freq(struct adis16550 *st, int freq=
-_hz)
-> +{
-> +	u8 en =3D 0;
-> +
-> +	if (freq_hz)
-> +		en =3D 1;
-Could save a line or two without greatly affecting readability.
-Same thing applies in at least one other place.
-
-	u8 en =3D freq_hz ? 1 : 0;
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		/* In kernel, obtain the btf fd by means of the offset of
+>> +		 * the fd_array, and the offset is the btf fd.
+>> +		 */
+>> +		fd_array[btf_fd] = btf_fd;
+>> +	}
+> 
+> [...]
+> 
 
 
-> +
-> +	return __adis_update_bits(&st->adis, ADIS16550_REG_CONFIG,
-> +				  ADIS16550_GYRO_FIR_EN_MASK,
-> +				  FIELD_PREP(ADIS16550_GYRO_FIR_EN_MASK, en));
-> +}
-
-> +
-> +static irqreturn_t adis16550_trigger_handler(int irq, void *p)
-> +{
-
-> +	memcpy(data, &buffer[3], (ADIS16550_SCAN_ACCEL_Z -
-> +						ADIS16550_SCAN_GYRO_X + 2) *
-> +						sizeof(__be32));
-Strange alignment.
-	memcpy(data, &buffer[3],
-	       (ADIS16550_SCAN_ACCEL_Z - ADIS16550_SCAN_GYRO_X + 2) *
-	       sizeof(__be32));
-
-Is about the best I could come up with.
-Good to add a comment on why the + 2 as well.
-
-> +	iio_push_to_buffers_with_timestamp(indio_dev, data, pf->timestamp);
-> +done:
-> +	iio_trigger_notify_done(indio_dev->trig);
-> +	return IRQ_HANDLED;
-> +}
-
-
-
-> +static int adis16550_probe(struct spi_device *spi)
-> +{
-> +	u16 burst_length =3D ADIS16550_BURST_DATA_LEN;
-> +	struct device *dev =3D &spi->dev;
-> +	struct iio_dev *indio_dev;
-> +	struct adis16550 *st;
-> +	struct adis *adis;
-> +	int ret;
-> +
-> +	indio_dev =3D devm_iio_device_alloc(dev, sizeof(*st));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	st =3D iio_priv(indio_dev);
-> +	st->info =3D spi_get_device_match_data(spi);
-> +	if (!st->info)
-> +		return -EINVAL;
-> +	adis =3D &st->adis;
-> +	indio_dev->name =3D st->info->name;
-> +	indio_dev->channels =3D st->info->channels;
-> +	indio_dev->num_channels =3D st->info->num_channels;
-> +	indio_dev->available_scan_masks =3D adis16550_channel_masks;
-> +	indio_dev->info =3D &adis16550_info;
-> +	indio_dev->modes =3D INDIO_DIRECT_MODE;
-> +
-> +	st->adis.ops =3D &adis16550_ops;
-> +	st->xfer[0].tx_buf =3D st->buffer + burst_length;
-> +	st->xfer[0].len =3D 4;
-> +	st->xfer[0].cs_change =3D 1;
-> +	st->xfer[0].delay.value =3D 8;
-> +	st->xfer[0].delay.unit =3D SPI_DELAY_UNIT_USECS;
-> +	st->xfer[1].rx_buf =3D st->buffer;
-> +	st->xfer[1].len =3D burst_length;
-> +
-> +	spi_message_init_with_transfers(&adis->msg, st->xfer, 2);
-> +
-> +	ret =3D devm_regulator_get_enable(dev, "vdd");
-> +	if (ret)
-> +		return dev_err_probe(dev, ret,
-> +			      "Failed to get vdd regulator\n");
-
-Totally trivial but preference is to align after ( unless the line ends
-up too long. In those cases it is fine to indent just one tab more than
-the line above.
-
-Here it actually fits on one line anyway as it's exactly 80 chars.
-
-		return dev_err_probe(dev, ret, "Failed to get vdd regulator\n");
-
-> +
-> +	ret =3D adis_init(&st->adis, indio_dev, spi, &adis16550_data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D __adis_initial_startup(&st->adis);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D adis16550_config_sync(st);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D devm_adis_setup_buffer_and_trigger(&st->adis, indio_dev,
-> +						 adis16550_trigger_handler);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D devm_iio_device_register(dev, indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	adis16550_debugfs_init(indio_dev);
-> +
-> +	return 0;
-> +}
+-- 
+Best Regards
+Dylane Chen
