@@ -1,115 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5007914293;
-	Sat,  8 Feb 2025 13:31:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09C7246345;
+	Sat,  8 Feb 2025 13:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739021467; cv=none; b=Bw4RtV97SzbA8GSRCx6dubWGrYC+8KnUYO5VwVLDYqRtirE1C76eWm6FlT/fkMEVtkQdKNqOFyn88xgJfIpmTJgeveKg4lBXXa9W7a+2g1cZGG2mGMDnvCL5pfFCxGaXXkdg1zvUgaOy0H1mesH5+ZuRdgJ89mmnaH1yllIvyU4=
+	t=1739021554; cv=none; b=LeouW3UrspKq/K7FT5hJE8mRvdXajvOQWQLAPZCqcNnanKw9Fe1Mc4udOKUfRvfj7xDkggTSq2Ps2df/NbiB3EUucTYgB9+8dk8ZhbjVbbRvH28oCkfDmYMUDiAMz54MUI3ArB24hDSST0zmPLYsUspP8tVYnGo7gtXuxSftaMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739021467; c=relaxed/simple;
-	bh=LKDMaWLCIF+uCJKuTbg25hpkAhLvwwOs5aqoFMw5njA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KdlINCs3w88jEDxvst/d/4PUhJwjM1b6Sb2mXs2vC1x0MjkXiJjo8LDW36WRXAYVnHyqqopDGRBcSMn9YqFplvsAd5iMw1QLuRJqrndIw3LYmS8pm4OMHROkVaPkzehQ3tIOTdu/4xpknenz4644IySl6vGUmPDjziEZl2XbkWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ttae+IXu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739021554; c=relaxed/simple;
+	bh=VLUVgc8NZZ21G0lWwQ7ny+8mZQTDDefFbAQFB+DD/Ts=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=IVLCjGLmB9sY4UQGBgnzvFx7o7LaJiQeScsfdwn4/EJNWf+E5E95V91GXdppNl12jASDRuP8hp/rXU8P2RDMdYo+ZOqjRIlLfBTiWgEWSemrOyyWAboJ2prNDMj2Xpzy4BkMIoSa8tn8AqjiTvuf7udWgEg/A2mJsqUkqtBSGfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=MvzF116P; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ttae+IXu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C33F7C4CED6;
-	Sat,  8 Feb 2025 13:31:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739021466;
-	bh=LKDMaWLCIF+uCJKuTbg25hpkAhLvwwOs5aqoFMw5njA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Ttae+IXuHTUCJC8xZvrN4lbEBG9+S6cMwLyHfSotKHnkHo7UvHdcyBcvl06PV3qfb
-	 rjp2KmCExLtVN4Hu+EUv/f9pElV9DwzxmrkoIgvZSg8abyWD+Csodvs4pGe4a8zPG7
-	 4RJ2vKq5tEP5SiTtw+J+7y7qC4uflO+uO4wWL/9p7bVSQfnprZtQ8t9b9gUSnn9leX
-	 0s37jloxPp/72Y98TxAoG+46dei3+1pZ9Sn+xoIjc5DNhWpyYmH2cWnrn+NLji+PxQ
-	 /8N8Ukuh9scaei3ihZEt7V4HmQpNE0dXt6SGOL2tZ03eFZJ8/7swsTN5WQ0/P4idW6
-	 0h9Q+gh8tva2Q==
-Date: Sat, 8 Feb 2025 13:30:58 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Cryolitia PukNgae via B4 Relay <devnull+Cryolitia.gmail.com@kernel.org>
-Cc: Cryolitia@gmail.com, Alex Lanzano <lanzano.alex@gmail.com>, Lars-Peter
- Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, Yao Zi <ziyao@disroot.org>
-Subject: Re: [PATCH] iio: imu: bmi270: Match ACPI ID found on newer GPD
- firmware
-Message-ID: <20250208133058.3e5cb597@jic23-huawei>
-In-Reply-To: <20250206-bmi270-gpd-acpi-v1-1-db638cfb9a3c@gmail.com>
-References: <20250206-bmi270-gpd-acpi-v1-1-db638cfb9a3c@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="MvzF116P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1739021543;
+	bh=VLUVgc8NZZ21G0lWwQ7ny+8mZQTDDefFbAQFB+DD/Ts=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=MvzF116PQKO2uhGizEWzIBzOyiZNXEoh+m5rDgLHtSzQGCijsD8JqAqIpB4dTgeFF
+	 3NMYshpo336+7egUGlHi/vO1IU2vzIhpJ069CRiLmEgQ4vkKf85kBg3ZYvadMaA77L
+	 h/hOE9Aq+DyASLI7aR+voCQOR6wH48cHFfoFd1qg=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Sat, 08 Feb 2025 14:31:15 +0100
+Subject: [PATCH 2/2] rust: add kunitconfig
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250208-rust-kunit-v1-2-94a026be6d72@weissschuh.net>
+References: <20250208-rust-kunit-v1-0-94a026be6d72@weissschuh.net>
+In-Reply-To: <20250208-rust-kunit-v1-0-94a026be6d72@weissschuh.net>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <ndesaulniers@google.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739021542; l=600;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=VLUVgc8NZZ21G0lWwQ7ny+8mZQTDDefFbAQFB+DD/Ts=;
+ b=XwK4W5z5Q8bJnP6Nl/qMeWkVL2fm1JRP+9hMubchXYdjO7YrTUnamN3+tDsxa/tbM1Z22BnH8
+ zSR2QZucXGUAXh/+tJo55LXESO4FYmRuh7/+WOrb/BQnYCZpoJKyFkj
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-On Thu, 06 Feb 2025 15:09:42 +0800
-Cryolitia PukNgae via B4 Relay <devnull+Cryolitia.gmail.com@kernel.org> wrote:
+The kunitconfig file in a directory is used by kunit.py to enable all
+necessary kernel configurations to run the tests in that subdirectory.
+Add such a file for rust/.
 
-> From: Cryolitia PukNgae <Cryolitia@gmail.com>
-> 
-> Some GPD devices ship a buggy firmware that describes on-device BMI260 with ACPI ID "BMI0160". Since this is fixed in BIOS update v0.40[1], let's match the correct ID to detect the device. The buggy ID "BMI0160" is kept as well to maintain compatibility with older firmwares.
-> 
-> ---
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ rust/.kunitconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-This --- will break git picking up this patch as the
-sign off etc will be misgin.
+diff --git a/rust/.kunitconfig b/rust/.kunitconfig
+new file mode 100644
+index 0000000000000000000000000000000000000000..9e72a5ab03c9a122348fea7c1db69e1b3fedcc00
+--- /dev/null
++++ b/rust/.kunitconfig
+@@ -0,0 +1,3 @@
++CONFIG_KUNIT=y
++CONFIG_RUST=y
++CONFIG_RUST_KERNEL_DOCTESTS=y
 
-> Some GPD devices ship a buggy firmware that describes on-device BMI260 with ACPI ID "BMI0160". Since this is fixed in BIOS update v0.40[1], let's match the correct ID to detect the device. The buggy ID "BMI0160" is kept as well to maintain compatibility with older firmwares.
-Please wrap commit message at 75 chars
-> 
-> Link: http://download.softwincn.com/WIN%20Max%202024/Max2-7840-BIOS-V0.41.zip
-Link is an official tag so move down to the line above (no blank line) the
-Sign off and if you want to refer to it use
-Link: http://download.softwincn.com/WIN%20Max%202024/Max2-7840-BIOS-V0.41.zip # [1]
-or similar (so a comment after the tag).
-
-
-If you have any means to tell the manufacturer that this is not a complaint ID
-please do. They need to allocate them from their own ID space. 
-They are unlikely to be the Benson Medical Instruments company.
-https://uefi.org/PNP_ID_List?pnp_search=BMI
-
-So either GPD need to get their on PNP ID  (or ACPI ID) or they need
-to ask Bosch (BSG) to issue an ID for this sensor.
-
-It would really help if Windows stopped accepting drivers that made up these
-IDs, but I guess that ship long sailed.
-
-Jonathan
-
-> 
-> [1]. See the update nodes in the archive file above
-> 
-> Signed-off-by: Cryolitia PukNgae <Cryolitia@gmail.com>
-> ---
->  drivers/iio/imu/bmi270/bmi270_i2c.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/iio/imu/bmi270/bmi270_i2c.c b/drivers/iio/imu/bmi270/bmi270_i2c.c
-> index 44699ab589097eaa0eec5f2172245496ed031185..f66ae01e301df24f1e563e059da8cc531fc173eb 100644
-> --- a/drivers/iio/imu/bmi270/bmi270_i2c.c
-> +++ b/drivers/iio/imu/bmi270/bmi270_i2c.c
-> @@ -40,6 +40,8 @@ static const struct i2c_device_id bmi270_i2c_id[] = {
->  static const struct acpi_device_id bmi270_acpi_match[] = {
->  	/* GPD Win Mini, Aya Neo AIR Pro, OXP Mini Pro, etc. */
->  	{ "BMI0160",  (kernel_ulong_t)&bmi260_chip_info },
-> +	/* GPD Win Max 2 2023(sincice BIOS v0.40), etc. */
-
-since
-
-> +	{ "BMI0260",  (kernel_ulong_t)&bmi260_chip_info },
->  	{ }
->  };
->  
-> 
-> ---
-> base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
-> change-id: 20250206-bmi270-gpd-acpi-de4d12bce567
-> 
-> Best regards,
+-- 
+2.48.1
 
