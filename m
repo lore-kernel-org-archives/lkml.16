@@ -1,123 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A177241120
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 17:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD8B241103;
+	Sat,  8 Feb 2025 17:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739037222; cv=none; b=GUuB+zlBSK9qR9kWOlNtoMxVavEGXALyB+kZBE/2Yxgf0Y3u7qNY+kqACFIalrC9OoSWkBZGV9OHhCWtSDP8U45w8UjtbmiN59oQigOw3WNdbLEfPRnRwk+pbZEcgSYSmlkOT61SpzmGCmjG27+TQAT9k9+QhLCTnEGsCjWI81w=
+	t=1739037280; cv=none; b=EvJzfg3gVNEepqGxBkAuZ3mOUrNPDZdM2+4cYbFt/uP/O56b0LlxM2lnIMbtiT4WMplETM6zNBQSsZ1qqit1b+qGvwqB+FmPOEbEC6KcL9oI4wv12SDjR57tmYA1brx9cElTnHYvyPVKuytdy8hkERVV0bml46uuO2WmjqoQHCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739037222; c=relaxed/simple;
-	bh=RRtGHFGmLrqisfL3QQ1oJD+cnbzCmTqQ2HO1OS897G4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pyBcTJVV8Xt/8+wSl4MqrDGpym5qOO1GdSrB33iZ49HNeOodz4fBPzwDKxDJwLs+J4HgcXUvLG5grFf0kdrKGwzUeKjUqNYuaYkkhXzhqcDXk0IX0oE7HoslT7SDbbTtEU5RW4bMcRNUKsc2HcVArpJbGJvuGcBBv/0nmk3kY2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CWE2h1vF; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739037280; c=relaxed/simple;
+	bh=osB0eZEerqD0Z2PkEFhT54AKRNrkP7WKvuM52SiXxw4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E1Yygk91EceHms9AoeORclvpX1FvNwHpGBoa3irTkpPy7bZYD7G6uhFUVW4h95+yFuf3GZyCS0yBEoRMGcxIuRLXzwY+PcrAVGCoQGEo/QkS/MPQiN8m9TnMymZG7mbZmZhA4Wh7kT1KpLj9vERUKmJfSXfajos19hLVYqkzgiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=CH4YCom1; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CWE2h1vF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739037220; x=1770573220;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=RRtGHFGmLrqisfL3QQ1oJD+cnbzCmTqQ2HO1OS897G4=;
-  b=CWE2h1vFpO+6kfF081LfjkbsFaAoQ2O+QrRi0/uBdRogwjCiyYwVksT5
-   uoBCWPle9m3DB6j+yguzwmApjv5OgVnbL4DIMsx2EAf38Er48+Q2E8F3x
-   Oa20ibPRWQ6ReIRww6B8lpXB3/WQyCB43lAmU1UqZif9edh6BNTK2T9DJ
-   wKkjAhXc9hViFBf1BC0gR/3xfq314qnwiG+D+KIIdhwyof6NNgnE5gPrA
-   gHx1RzQJijxkkYNG1cSYlUzD8pveuMkOPqke9PcsrKpIuyiKhQET4Goen
-   TjBcL1KruG+Y1su0I8ZKlsJgsRy8xKnUSJcMWqdJTyBXYhqWjcUGI1b/2
-   g==;
-X-CSE-ConnectionGUID: H02qGvykSNGhZznMnKPMfg==
-X-CSE-MsgGUID: aAy+2j2CThCkCoKLcGUvxQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="43584791"
-X-IronPort-AV: E=Sophos;i="6.13,270,1732608000"; 
-   d="scan'208";a="43584791"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 09:53:39 -0800
-X-CSE-ConnectionGUID: EVHWD9QmShmHJ5J6U2olQQ==
-X-CSE-MsgGUID: H23x5btnSQ2sdXYSV+u/9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="116747501"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 08 Feb 2025 09:53:37 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tgp1K-0010Rv-21;
-	Sat, 08 Feb 2025 17:53:34 +0000
-Date: Sun, 9 Feb 2025 01:53:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [tip:sched/urgent 2/2] kernel/sched/fair.c:3785:11: error: no member
- named 'nr_queued' in 'struct cfs_rq'
-Message-ID: <202502090144.H79PM2fQ-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="CH4YCom1"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.1)
+ id 8adf9df2f880b954; Sat, 8 Feb 2025 18:54:28 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 5DB576B8D61;
+	Sat,  8 Feb 2025 18:54:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1739037268;
+	bh=osB0eZEerqD0Z2PkEFhT54AKRNrkP7WKvuM52SiXxw4=;
+	h=From:Subject:Date;
+	b=CH4YCom1GM3oRXIWfFQUe2sOEm2Kks+CmgiBE8SvWe+asGgcWSLJIyjZtlbr6Kbfv
+	 iAdYoGJNXR998mQDhdwgoijY6VYVqdyqOqS+W9CuWIgljarVNCJC5a33HYC7ErkKmq
+	 /RTkDa39VQf3F9jg2pZy2bMPtbSObYQSYXJgS2Wi1PISQwz4Y9olxij8e6BgFpv+R0
+	 bAylHBCAVF8iTsrMDfFDG5cAHWyAxK/CdBirAeKLBK3myE4lx2cvUXhF6aktxeSX9u
+	 CRETibjCS10G30WviNQN5S2tGjNpw3i/sN4xm/CkOSc15kWM5Ck6c8icT8f5GRzCCN
+	 9ThtogxkPUqYQ==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>,
+ Linux PCI <linux-pci@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Johan Hovold <johan@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Kevin Xie <kevin.xie@starfivetech.com>, Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH v1] PM: sleep: core: Restrict power.set_active propagation
+Date: Sat, 08 Feb 2025 18:54:28 +0100
+Message-ID: <6137505.lOV4Wx5bFT@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvdekjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeegfffhudejlefhtdegffekteduhfethffhieettefhkeevgfdvgfefieekiefgheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhtvghrnhesrhhofihlrghnugdrhhgrrhhvrghrugdrvgguuhdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=10 Fuz1=10 Fuz2=10
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/urgent
-head:   55294004b122c997591d9de8446f5a4c60402805
-commit: 55294004b122c997591d9de8446f5a4c60402805 [2/2] sched/fair: Adhere to place_entity() constraints
-config: x86_64-allnoconfig (https://download.01.org/0day-ci/archive/20250209/202502090144.H79PM2fQ-lkp@intel.com/config)
-compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250209/202502090144.H79PM2fQ-lkp@intel.com/reproduce)
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502090144.H79PM2fQ-lkp@intel.com/
+Commit 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status of
+parents and children") exposed an issue related to simple_pm_bus_pm_ops
+that uses pm_runtime_force_suspend() and pm_runtime_force_resume() as
+bus type PM callbacks for the noirq phases of system-wide suspend and
+resume.
 
-All errors (new ones prefixed by >>):
+The problem is that pm_runtime_force_suspend() does not distinguish
+runtime-suspended devices from devices for which runtime PM has never
+been enabled, so if it sees a device with runtime PM status set to
+RPM_ACTIVE, it will assume that runtime PM is enabled for that device
+and so it will attempt to suspend it with the help of its runtime PM
+callbacks which may not be ready for that.  As it turns out, this 
+causes simple_pm_bus_runtime_suspend() to crash due to a NULL pointer
+dereference.
 
->> kernel/sched/fair.c:3785:11: error: no member named 'nr_queued' in 'struct cfs_rq'
-    3785 |                 cfs_rq->nr_queued--;
-         |                 ~~~~~~  ^
-   kernel/sched/fair.c:3816:11: error: no member named 'nr_queued' in 'struct cfs_rq'
-    3816 |                 cfs_rq->nr_queued++;
-         |                 ~~~~~~  ^
-   2 errors generated.
+Another problem related to the above commit and simple_pm_bus_pm_ops is
+that setting runtime PM status of a device handled by the latter to
+RPM_ACTIVE will actually prevent it from being resumed because
+pm_runtime_force_resume() only resumes devices with runtime PM status
+set to RPM_SUSPENDED.
+
+To mitigate these issues, do not allow power.set_active to propagate
+beyond the parent of the device with DPM_FLAG_SMART_SUSPEND set that
+will need to be resumed, which should be a sufficient stop-gap for the
+time being, but they will need to be properly addressed in the future
+because in general during system-wide resume it is necessary to resume
+all devices in a dependency chain in which at least one device is going
+to be resumed.
+
+Fixes: 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status of parents and children")
+Closes: https://lore.kernel.org/linux-pm/1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com/
+Reported-by: Jon Hunter <jonathanh@nvidia.com>
+Tested-by: Johan Hovold <johan+linaro@kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/base/power/main.c |   21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
+
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -1191,24 +1191,18 @@
+ 	return PMSG_ON;
+ }
+ 
+-static void dpm_superior_set_must_resume(struct device *dev, bool set_active)
++static void dpm_superior_set_must_resume(struct device *dev)
+ {
+ 	struct device_link *link;
+ 	int idx;
+ 
+-	if (dev->parent) {
++	if (dev->parent)
+ 		dev->parent->power.must_resume = true;
+-		if (set_active)
+-			dev->parent->power.set_active = true;
+-	}
+ 
+ 	idx = device_links_read_lock();
+ 
+-	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
++	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node)
+ 		link->supplier->power.must_resume = true;
+-		if (set_active)
+-			link->supplier->power.set_active = true;
+-	}
+ 
+ 	device_links_read_unlock(idx);
+ }
+@@ -1287,9 +1281,12 @@
+ 		dev->power.must_resume = true;
+ 
+ 	if (dev->power.must_resume) {
+-		dev->power.set_active = dev->power.set_active ||
+-			dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND);
+-		dpm_superior_set_must_resume(dev, dev->power.set_active);
++		if (dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) {
++			dev->power.set_active = true;
++			if (dev->parent && !dev->parent->power.ignore_children)
++				dev->parent->power.set_active = true;
++		}
++		dpm_superior_set_must_resume(dev);
+ 	}
+ 
+ Complete:
 
 
-vim +3785 kernel/sched/fair.c
 
-  3773	
-  3774	static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
-  3775				    unsigned long weight)
-  3776	{
-  3777		bool curr = cfs_rq->curr == se;
-  3778	
-  3779		if (se->on_rq) {
-  3780			/* commit outstanding execution time */
-  3781			update_curr(cfs_rq);
-  3782			update_entity_lag(cfs_rq, se);
-  3783			se->deadline -= se->vruntime;
-  3784			se->rel_deadline = 1;
-> 3785			cfs_rq->nr_queued--;
-  3786			if (!curr)
-  3787				__dequeue_entity(cfs_rq, se);
-  3788			update_load_sub(&cfs_rq->load, se->load.weight);
-  3789		}
-  3790		dequeue_load_avg(cfs_rq, se);
-  3791	
-  3792		/*
-  3793		 * Because we keep se->vlag = V - v_i, while: lag_i = w_i*(V - v_i),
-  3794		 * we need to scale se->vlag when w_i changes.
-  3795		 */
-  3796		se->vlag = div_s64(se->vlag * se->load.weight, weight);
-  3797		if (se->rel_deadline)
-  3798			se->deadline = div_s64(se->deadline * se->load.weight, weight);
-  3799	
-  3800		update_load_set(&se->load, weight);
-  3801	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
