@@ -1,115 +1,182 @@
-Received: from siberian.tulip.relay.mailchannels.net (siberian.tulip.relay.mailchannels.net [23.83.218.246])
+Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02FA1C6FED;
-	Fri,  7 Feb 2025 23:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.246
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738972618; cv=pass; b=ElJih/K7+KOSsn2j49MYp67jWEro4ljWUcHmZXUb9AqBu7H1LcuPD52FmND+aLWggWoV75aeDqWNJB99r+rEsiqvSAfASNlzKOeyF308M6zga44ieWuUxSjS8Lmistry4QIf+iWPODvrz3XSbw2JvjQUigPpVZGOzkwRp4ch3yw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738972618; c=relaxed/simple;
-	bh=xjU2AoaATGbbGSjUdwSZk4LtHMEWHvAyBIlKDio5h3g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z981z+VNmz4PBlWgxu04WsVPhfd6q66sTBzoAcQt2Sz0+e2sfLy908Y+LIcgSy/ezI65vYZ8Sc7+CGtGU4fTT88ZbdhaxBJqGsNywjZwH7WFfQxUjzG88TWoufDOl2ZoTj2+7UlBZiC2P87SjD2vBWd1kKFb4fNlmJdzTQ6VOM4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=UHRKk8fK; arc=pass smtp.client-ip=23.83.218.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D41383;
+	Sat,  8 Feb 2025 00:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738972967; cv=none; b=JJFnFOI26okCRy4XfJBXUQkxZhavxPW4uBfBdD9AVrGqdZ4feVOwsduMhxlZ2CTtGCPFVMZb10s6WGwzCIcxmcXVCyXbcRQUgxpoVN7DgK4pfEq0ZpFUGrMOfumiB8WqRhqHK0VJy0L6hxXBzHJ/JmneaO9x9mu8Ngw4qhJ1MTQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738972967; c=relaxed/simple;
+	bh=TSP1JMmVi42tAOtGzn3k9oCoW5xLhTjyWksZSavSW7c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i6lzNbKm5x7VAD8wBZ2rkLMICdZlFSEw0aBuG1PfVdAF0Gt0bmnRk9a6BSKhlFhS/q1p7WxHrGCIIFuR3Qe5KNK0IVCPVbCBO+wqujZHmYGu3hajNPXpw00g2VbXZQKm3JOQliS7SECNHsBVJ8tDUliX5UyLl4hRs+E0/J73nR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com; spf=pass smtp.mailfrom=bsbernd.com; dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b=YHRtdASt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=uHGtx/8Y; arc=none smtp.client-ip=202.12.124.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsbernd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="UHRKk8fK"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 55D9580C67;
-	Fri,  7 Feb 2025 23:56:49 +0000 (UTC)
-Received: from pdx1-sub0-mail-a256.dreamhost.com (100-125-6-118.trex-nlb.outbound.svc.cluster.local [100.125.6.118])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id C2928828DD;
-	Fri,  7 Feb 2025 23:56:48 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1738972608; a=rsa-sha256;
-	cv=none;
-	b=mt1TUUeR7uCh8p/4i4X24dEMdktNlXP9txFbNzIjvDcKu3trAuQ3eMnQCbv4SnRs4GFA8+
-	5Ho5IsboCcO8KSBMdKtT7JGwPrYneSPuEk4Af3UnbOMSnfDxFx9FdGZAvC0Kc/a7M2PIzA
-	69FBPAqOs9cmurCDcaW9lB3urxNksODMYrYQnX7wA/W85c/Y5JOuVeXC7CjTgrABmucods
-	lKYs6jkebrdDrMURsDdPcE16eMoxqPpXM8AtVWUGavy+FBEDTRipvF4zup8C+TIfGAFbQS
-	jfYAbJnPowMY3IN+MJFCo5Yz+f6Ki6sj9uR/IMV8MUXB5FHfUjMQX4Ja9LvdfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1738972608;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=xjU2AoaATGbbGSjUdwSZk4LtHMEWHvAyBIlKDio5h3g=;
-	b=0TzXa9sclK5gftc/0CpYHp5bKfbcmUL6EBY0ZRcYdqEUm49TYpSqV6RCOl2R5gH+scZPrd
-	m41ebIhOG7EASr3TDkGe33L31fCROrzLBzAEO+UOyVuumd903DJUrM6ZxDS1RWIdAjAYJl
-	DJvZl5rlrwUAmJ/ZLnAkC3YLd77IF9oq7Ey2x8/p8nkPpIoxDP0ovi9oFNWaJSIEWXk1J+
-	mshFcZXK1pHqstddOMh9KrNxzVMVnyY6GuPMTjIZmAMA25QafsyHaSCaFCLQyRtBvta3HU
-	TaldSwycVgSEzciXXcTMYNxErDuox2py/vzy/ksKhQsJMm0WrewZchQBs6wv7A==
-ARC-Authentication-Results: i=1;
-	rspamd-68c88d6cff-rsb5v;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Quick-Snatch: 6706618518ad465d_1738972609100_1136860145
-X-MC-Loop-Signature: 1738972609100:3282361098
-X-MC-Ingress-Time: 1738972609100
-Received: from pdx1-sub0-mail-a256.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.125.6.118 (trex/7.0.2);
-	Fri, 07 Feb 2025 23:56:49 +0000
-Received: from offworld (unknown [172.58.112.146])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a256.dreamhost.com (Postfix) with ESMTPSA id 4YqW8v5RmQz9C;
-	Fri,  7 Feb 2025 15:56:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1738972608;
-	bh=xjU2AoaATGbbGSjUdwSZk4LtHMEWHvAyBIlKDio5h3g=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=UHRKk8fKCqoNxaZWb3s6gEoAOyGhYR9D4FCwkOUy5mbMDc1LCf+S/HMszDA3wPmMN
-	 6kjvpr7hHhfp7GOPNYPev63aDIvBXCG70L7m2gx62+6eHUPTQ5hEErDNKjatl1ExuZ
-	 XfKuYGv3jSeUOv/BuJA8oT9nH8PPrpLsDe71sSJeUujoLIRUZN0PjIjL+r8StB61A0
-	 L+Mu55TEL0TxgCPUZUtAGd8By5F4hHSPSqdOPLph8YZFUYIn0APEDgexYGJyOPS0j0
-	 DJ23Yr3cOWKnw9PYGcE14OR5bsi8HiTPlf4C/9oytDveHShGqJ8dISkXEGT1n8ofMd
-	 FpB8KOsQOzoEQ==
-Date: Fri, 7 Feb 2025 15:56:44 -0800
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Gregory Price <gourry@gourry.net>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 01/18] cxl: Remove else after return
-Message-ID: <20250207235644.bdocx2kwegy2stdo@offworld>
-References: <20250207153753.418849-1-rrichter@amd.com>
- <20250207153753.418849-2-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b="YHRtdASt";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uHGtx/8Y"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 688F1254010E;
+	Fri,  7 Feb 2025 19:02:42 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Fri, 07 Feb 2025 19:02:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bsbernd.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1738972962;
+	 x=1739059362; bh=mrWw7gmE3NDMuFQEpyImkKuDcSno+4GUyYuDqXBEHeo=; b=
+	YHRtdAStvjmtGKokAa6Y2Zrfunbbxso7mlsWZdg5xGhTf/Hrs4t0+/aUd9jRggtM
+	GrsmQhmihu7FTyCsUMoTrSxMDbSTUQD+pAbzq/uOU8SCaMLlyrePd7pziEoDdHJo
+	A0mnezmOriDfzpD3HYU2GBr0h7mXgZkGr7rjCiVsNnMBVCF32jwEYBnzbLdULhb5
+	/Rx/SLZT6mayGuB3JPSOA0Z+lJrffsu/otn7p9epqj8p8+UjYCH4tst9ttRh4j0C
+	6g+5Yi16nUyPpzE2eTQnyo4XzEz3LjgTL7Z57CiQE+kA3Ngs051ByBirO62hNkzx
+	bt/xzDZ0MRk6b7gx5ZgrWg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1738972962; x=
+	1739059362; bh=mrWw7gmE3NDMuFQEpyImkKuDcSno+4GUyYuDqXBEHeo=; b=u
+	HGtx/8YNzTm+lTQATs3ZEB/btMMaans8yIFigcc/Wgh5FbOPWTQopMeOIpmR8FLi
+	kOjqr6XcKhCdCPV4FlQcYBUPaCRRVfr3hCWUxXStV+OOcbsUftvklRPPCZY+EaGO
+	bSMxGBd1Ida58KYdysm0w9mCaWWEPyiAx0WYqA9h2i55Lq5SSVcrTJAFBLl/yWuY
+	jFe19sknFBsxzkzwwdgvlV0DGTTYulSVagk5Mh6/ZeV/eIuHDVW9oxMRuOdRomRk
+	VISOqjAxUSIFm6LnapII/NADXDXrn0AGLvKkt9cEI1nmsVL/tMeHLuRZyG03PEIn
+	cj5tw24PKtClVsjOk043Q==
+X-ME-Sender: <xms:IJ-mZxSC1TKDZEeOOlX0QW683tcGOf_6bHb_NBnLj6piHlDtfEYNow>
+    <xme:IJ-mZ6x2LAK606cQW2AoTstDH1aGL8honM13VHSHKTICIV0lKZjuPprpdQ5kENWrp
+    0sHID1Li3vV__jZ>
+X-ME-Received: <xmr:IJ-mZ21nfWXQiiTZ88T15QFKZeC0gzpmXf5qy_g6TiNNT7hvA7od1qS_ytu9sAqmLOane_Yh__9rKGNWR8V8OdMwmVjSeacg4QZvPgTR13Tfdf5LVxVf>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdeijecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddv
+    jeenucfhrhhomhepuegvrhhnugcuufgthhhusggvrhhtuceosggvrhhnugessghssggvrh
+    hnugdrtghomheqnecuggftrfgrthhtvghrnhepjeffuddtgefhfffggfejheetjeeukeei
+    teeiheevheetueeigfeiueelkeejkeeunecuffhomhgrihhnpehgihhthhhusgdrtghomh
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsvghr
+    nhgusegsshgsvghrnhgurdgtohhmpdhnsggprhgtphhtthhopeduvddpmhhouggvpehsmh
+    htphhouhhtpdhrtghpthhtohepjhhorghnnhgvlhhkohhonhhgsehgmhgrihhlrdgtohhm
+    pdhrtghpthhtohepvhgsrggskhgrsehsuhhsvgdrtgiipdhrtghpthhtohepmhhikhhloh
+    hssehsiigvrhgvughirdhhuhdprhgtphhtthhopeifihhllhihsehinhhfrhgruggvrggu
+    rdhorhhgpdhrtghpthhtoheptghhrhhishhtihgrnheshhgvuhhsvghlrdgvuhdprhgtph
+    htthhopehjohhsvghfsehtohigihgtphgrnhgurgdrtghomhdprhgtphhtthhopehmshii
+    vghrvgguihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheprhgvghhrvghsshhiohhnsh
+    eslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgv
+    lhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:IZ-mZ5BjsAQquoPRdCCIk9aFAJn_Kk7MSjUZZawKqQaPr_MF0xs1_w>
+    <xmx:IZ-mZ6iIkV1ZhC5dtnv_RbKcTcMqdI__c3w2hsXbxoSzO-8l15Uihg>
+    <xmx:IZ-mZ9q7hMMR1uHMmZdyR5jquTTgWWiSzatvNE0DVOHzcJ4bZmz0wg>
+    <xmx:IZ-mZ1hp3yuqJmcPghYQOezpPpVrgPEAd22-Pbb9Iod755E2MEJb_w>
+    <xmx:Ip-mZ7ZvGEVKrIRz2zwUDDXwnxXMfycBuSTmpA19O1NcILkjs1VrADvo>
+Feedback-ID: i5c2e48a5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 7 Feb 2025 19:02:39 -0500 (EST)
+Message-ID: <b828162e-716a-4ccd-95bb-d51e31cea538@bsbernd.com>
+Date: Sat, 8 Feb 2025 01:02:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250207153753.418849-2-rrichter@amd.com>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] Crash with Bad page state for FUSE/Flatpak
+ related applications since v6.13
+To: Joanne Koong <joannelkoong@gmail.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Miklos Szeredi <miklos@szeredi.hu>,
+ Matthew Wilcox <willy@infradead.org>, Christian Heusel
+ <christian@heusel.eu>, Josef Bacik <josef@toxicpanda.com>,
+ Miklos Szeredi <mszeredi@redhat.com>, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm <linux-mm@kvack.org>, =?UTF-8?Q?Mantas_Mikul=C4=97nas?=
+ <grawity@gmail.com>
+References: <2f681f48-00f5-4e09-8431-2b3dbfaa881e@heusel.eu>
+ <CAJfpegtaTET+R7Tc1MozTQWmYfgsRp6Bzc=HKonO=Uq1h6Nzgw@mail.gmail.com>
+ <Z6XWVU6ZTCIl3jnc@casper.infradead.org>
+ <03eb13ad-03a2-4982-9545-0a5506e043d0@suse.cz>
+ <CAJfpegtvy0N8dNK-jY1W-LX=TyGQxQTxHkgNJjFbWADUmzb6xA@mail.gmail.com>
+ <f8b08ef9-5bba-490c-9d99-9ab955e68732@suse.cz>
+ <94df7323-4ded-416a-b850-41e7ba034fdc@bsbernd.com>
+ <CAJnrk1atv4N-BDWnwmESvczJhkayXyQqnLEypkmuJNKBa6gq8A@mail.gmail.com>
+From: Bernd Schubert <bernd@bsbernd.com>
+Content-Language: en-US, de-DE, fr
+In-Reply-To: <CAJnrk1atv4N-BDWnwmESvczJhkayXyQqnLEypkmuJNKBa6gq8A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 07 Feb 2025, Robert Richter wrote:
 
->Remove unnecessary 'else' after return. Improves readability of code.
->It is easier to place comments. Check and fix all occurrences under
->drivers/cxl/.
->
->Signed-off-by: Robert Richter <rrichter@amd.com>
->Reviewed-by: Gregory Price <gourry@gourry.net>
->Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+On 2/7/25 19:40, Joanne Koong wrote:
+> On Fri, Feb 7, 2025 at 3:16 AM Bernd Schubert <bernd@bsbernd.com> wrote:
+>>
+>>
+>>
+>> On 2/7/25 11:55, Vlastimil Babka wrote:
+>>> On 2/7/25 11:43, Miklos Szeredi wrote:
+>>>> On Fri, 7 Feb 2025 at 11:25, Vlastimil Babka <vbabka@suse.cz> wrote:
+>>>>
+>>>>> Could be a use-after free of the page, which sets PG_lru again. The list
+>>>>> corruptions in __rmqueue_pcplist also suggest some page manipulation after
+>>>>> free. The -1 refcount suggests somebody was using the page while it was
+>>>>> freed due to refcount dropping to 0 and then did a put_page()?
+>>>>
+>>>> Can you suggest any debug options that could help pinpoint the offender?
+>>>
+>>> CONFIG_DEBUG_VM enables a check in put_page_testzero() that would catch the
+>>> underflow (modulo a tiny race window where it wouldn't). Worth trying.
+>>
+>> I typically run all of my tests with these options enabled
+>>
+>> https://github.com/bsbernd/tiny-qemu-virtio-kernel-config
+>>
+>>
+>> If Christian or Mantas could tell me what I need to install and run, I
+>> could probably quickly give it a try.
+>>
+> 
+> Copying/pasting from [1], these are the repro steps that's listed:
+> 
+> 1) Install Bottles: flatpak install flathub com.usebottles.bottles
+> 2) Open Bottles and create a bottle
+> 3) In a terminal open the kernel log using dmesg/journalctl in follow mode
+> 4) Once the bottle has been initialized, open it, select "Run
+> Executable" and point it at any Windows executable
+> Note that at that same moment a BUG: Bad page state in process fuse
+> mainloop error message will appear and the system will become
+> unresponsive (keyboard and mouse might still work but you'll be unable
+> to actually do anything, open or close any application, or even reboot
+> or shutdown; you are able to ping the device and initiate an SSH
+> connection but all it does is just display the banner)
+> 
+
+Thanks Joanne! Hmm, I found "wmplayer" in a c drive, but there doesn't
+happen much
+
+   5241 pts/0    Ss     0:00 -bash
+   5317 pts/1    S+     0:00 /home/bernd/.var/app/com.usebottles.bottles/data/bottles/runners/soda-9.0-1/bin/wi
+   5319 ?        Ss     0:01 /home/bernd/.var/app/com.usebottles.bottles/data/bottles/runners/soda-9.0-1/bin/wi
+   5321 pts/1    S+     0:01 C:\windows\system32\wineboot.exe --init
+   5345 ?        Ssl    0:01 C:\windows\system32\services.exe
+   5348 ?        Ssl    0:00 C:\windows\system32\winedevice.exe
+   5359 ?        Ssl    0:01 C:\windows\system32\winedevice.exe
+   5360 ?        I      0:00 [kworker/u130:0-rpciod]
+
+It runs it, but no system issue. I had also tried "Obfuscate", but didn't
+manage to feed it a file - it runs in the sandbox and no access to
+my $HOME.
+
+I need to see is if I can find some other files, but very late here
+and busy with something else. It also runs in x2gokdrive and wine
+then over another ssh hope to the vm guest, which has a kernel with all
+these debug options - slow.
+
+Bernd
+
+
+
+
+
