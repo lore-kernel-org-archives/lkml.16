@@ -1,326 +1,179 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDAC248164;
-	Sat,  8 Feb 2025 15:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739030048; cv=fail; b=IMSqOtWwInYJ+O7obI+XrFw5GRy+beargxyPSw08kmjBYk9pYVEeUvHZc4k3z0Fceu2DNZJ5MBr3TEr/flqXGOekccD7XflzOW8tN4sLLnxmBUiW3oUCnXelpxHrXecKbGLx76ZbBmkhTiAu6Niwt1liEoTZq3+xQ534i/oQmxA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739030048; c=relaxed/simple;
-	bh=f7GgU35sQ6T5bpASpfJNrcz7utmlyXYiO7uJHfJUtMc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CiuNff+ATJflMAe4MIPf0rB/dYltiGRPIC0bmNj5flMfpTt8r+bfTZDQJcrM35qoPGygrtAAh1drluxs5WS64TkL3hBwD3mpSA2TWynmoQfzGTyA2hhVhP94D6aQw/HRh6PBNyww6E8jZs6VKzXMsVbW+wgB+CAHu63xnhid1wI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=RRSjqNIH; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=bvvdQHL4; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 727DD248171;
+	Sat,  8 Feb 2025 15:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739030173; cv=none; b=sFELtoCv6qE+Hn+ij6YPFe8NOaWbKpiYdFB1Xo7pECaIGmYmRjnqJVYIhw45iGqpNTDJAbZadMsd4KRBsHhNx3n+VNiVBDHFYVNyFMYUT7RKNb8/Dk+wY9tpl1AB2rWoY3L7hjLrDOxCcEt6Z4u+mYXGGemSstYMfYMiRyY8pIc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739030173; c=relaxed/simple;
+	bh=BRk7BBm7oSdWplPPvfzhGPnNM6vM2mjwIOaR+mXLbRw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=UEQdgqBm52oufTXuuG9ld3fPkABR8rWtgitts8mH1OUgQ9FWvjRGCsuckVlzyhnHR/Vu3zMkkHrs3Ki23RnP6TUZZFPAUa6kiTAevWKLE1lWU4wBAshF6WXhRZDdkBwgxca+Mz+kITrZoY9d7Hen+D/gpW9rmKi5totQOb670ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ANsFnXT6; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RRSjqNIH";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="bvvdQHL4"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 518FQ1Zh004832;
-	Sat, 8 Feb 2025 15:53:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=nBYx7Eh/KR0BtSDRBC2OZUEKMdiIHhWMKyghUPiHSDA=; b=
-	RRSjqNIHbAjXCiGZPrP1cTURhn/LQmAKzH9QOl+pw5XnjeRUyqx2KbMqquezn21/
-	XItP9w3FemWudb9rkraPUkvosL1zpNKrrrtlhlt4A+8pI17xauzkyaFAnOqtLBVj
-	7zsN1WatFVNzCAV2PtU/WzFGKfi0eL3qKg/7EMzqTtmYeo/p7/kE8f0FAYAdKxnr
-	SKSRt2pUE6alPtmnTC67dh2vj/X7wjcaYvv7pt0dPZ5H6vKZoB6mCDPpjS/hIG0g
-	PyzrzkhF3JV0nl78xOgzhFKYE9DjBCip5rudr5Xqyh0caA4T9yARDxZcph17R9MI
-	XB/1bn1tHa9b9mMrM183ug==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44p0tn0b2e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 08 Feb 2025 15:53:28 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 518B4WXF037888;
-	Sat, 8 Feb 2025 15:53:27 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2172.outbound.protection.outlook.com [104.47.59.172])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44p62vc2dc-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 08 Feb 2025 15:53:27 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=C1MH2Av0ZDTkqu9sWuqDJe9loJaUYKG+UxuLxy3VGLqfAWBREdEBakHjPRFCypnXq3jOFsmhoTjVxCS3HqLa9Kjeqi3iUoHFaDRL5gCiMJ7LvW4PYTwu9uYzvuuLPwM3vDxMk2YD5WKXZK1o6ONu4ClGv+496gdWStFDsSrVlkqXdUBXlo6fZCKgUlcXMY16blksONL5SaAOe0+P1vSmpIWOh2Nhdlb/rdYXwSghj6gZ1oUJTzVbhEQyjVU77PZHdrd86yzH6gfEWA2uNHmMhG5XWzqqHrzqza2qIdSIpHENEu0ntzcuu3M3WgCKFW9Cq0Nv7y3LNH+0Xfv2XTBwJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nBYx7Eh/KR0BtSDRBC2OZUEKMdiIHhWMKyghUPiHSDA=;
- b=XwAcRCYZepcX9If2PIanFlYZgX4XUliMZt1FoDmkVw8TsfhdIiu/IRIu7V1mAtYONUiOjoyvTsQODtFHX1kueGA3DNdPWINWhifnnF/9AXGem7lu57/CGx3m+2A5cdORRnGAs4X1Z2YTpzpNugxAMlyzUQcHXzY/9Uzmu1xEzb/8ywqBYe0NeSpDJElXMCieo1fNA8SQEKTw60Cer406xiu/qiPX8FeW9Nvxo1EAny2jWlLUWHeIyirsQefhWwLqqnMdaIsk3MprmbC+42nz60HgyG6Kj19TEVwANsCbqyNuejq5zPzZuanmjp0APXd+Wsa74SY6DAgglL5hgJUZNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ANsFnXT6"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4361f65ca01so29426865e9.1;
+        Sat, 08 Feb 2025 07:56:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nBYx7Eh/KR0BtSDRBC2OZUEKMdiIHhWMKyghUPiHSDA=;
- b=bvvdQHL4XeHSEizs/F6Z72jWvkEDmuwaqdItbleuJthL/B+PPp21vToUywZgm4E/r/ycDLrGxyukZdN7bF6mgqJ7tX1V/U0kJ1uAzz9d6tCbg/qy8nlp5kbVJWLJrsWfPtaufjh3lZR3+faAc/pw4FdKbsqTinBaeajJBYuQekI=
-Received: from BYAPR10MB3366.namprd10.prod.outlook.com (2603:10b6:a03:14f::25)
- by PH0PR10MB5817.namprd10.prod.outlook.com (2603:10b6:510:12a::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.10; Sat, 8 Feb
- 2025 15:53:11 +0000
-Received: from BYAPR10MB3366.namprd10.prod.outlook.com
- ([fe80::baf2:dff1:d471:1c9]) by BYAPR10MB3366.namprd10.prod.outlook.com
- ([fe80::baf2:dff1:d471:1c9%4]) with mapi id 15.20.8398.025; Sat, 8 Feb 2025
- 15:53:11 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jaya Kumar <jayakumar.lkml@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        Kajtar Zsolt <soci@c64.rulez.org>, Maira Canal <mcanal@igalia.com>,
-        Simona Vetter <simona.vetter@ffwll.ch>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v3 1/3] mm: refactor rmap_walk_file() to separate out traversal logic
-Date: Sat,  8 Feb 2025 15:52:54 +0000
-Message-ID: <0d1acec0cba1e5a12f9b53efcabc397541c90517.1739029358.git.lorenzo.stoakes@oracle.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1739029358.git.lorenzo.stoakes@oracle.com>
-References: <cover.1739029358.git.lorenzo.stoakes@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: LO4P123CA0402.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:189::11) To BYAPR10MB3366.namprd10.prod.outlook.com
- (2603:10b6:a03:14f::25)
+        d=gmail.com; s=20230601; t=1739030170; x=1739634970; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gghYPUNRCdyG2yLo4ZGDDboCtEVr9fYIBuiGTMEQtB8=;
+        b=ANsFnXT6HjfphsLvjZI/EFQ0a3Z9hVKd2nPpoqURwz3pcQ+Q9ZNM0ujyWSlfzPNeql
+         C2gGMsDYA6OZrMpqMX9yNsFoMNSrcVNh2Eutt7R0XQ9Z1yhWviE21gY6mCV0D23f/TU+
+         jijhu10nd3ibtr6JimhQFOQFDewALVLQ7mq/RpB2pKtnOWSG/jc9KCbmB4rJNPaaCMex
+         09KDPr6mrxoeTXEfS8fEskDJTw369l5z8QA/OLmXuYMYIeluYEZ/AnKOSVwNd8g4p5oG
+         il6tSWkfcvRcYEiSxWGGMuHvTfJqoExHg7z7xjgDok3hpJvJDFxxSs31pjjvl7iRS/XG
+         hcpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739030170; x=1739634970;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=gghYPUNRCdyG2yLo4ZGDDboCtEVr9fYIBuiGTMEQtB8=;
+        b=GYUkvDnJp9A+q3gvk6rfzf0kaS4AGElhptgw3q43Wy78zPJu3sTuRTvLxtIb6nB+ie
+         6fI3cT7A+RcNTrjGwT16GAdBfgdl3ooMVthd3cri5AQMLwDEZ07Nk/+GxyNidUY7DqrQ
+         CkFs0/ygemyuI06uAKhGqPf21WTp9ArNnykn2RixyhmLSiCNplr65H6Wno02KowwQm9W
+         W31E9dSZcO0DBe3YmiUwm6xRiApPMdON+DWrLvSn6jj/Ohzb83nGJSGoEj0WHKJKb0xe
+         XHm246Zv/pvvGOIlgWrLHOyGK/3a9kA6uZFd1ElUjH1OiCAYJCaS9cIHAc6InelOWaTT
+         vxOw==
+X-Forwarded-Encrypted: i=1; AJvYcCU//KWqGZ5382xnDQq2sI3gm1L1PQkZVmOBSl8tb6hMpeWq9cummm4VLfNdPUOQah2rwu4G5aLy@vger.kernel.org, AJvYcCXg9GQhKsvxsgBrjiSqBr7GEs2ObwWnlX0DCdzA/DlTv600UfWODTdcTn1K5DIby2LyH+NyeaSByejzvxc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4c/lo3avrk7z/G2FuLQODq6mSpgekPsa0LQ79/eR0Qs+7U5A/
+	o7d4tFf8UoZElm2+n0PFXA8XFEws7jo2ZmAOSWkll7X74RzRrrEWWdoh0M6E
+X-Gm-Gg: ASbGncvlnecyebuH8hotNEITK1Ye9KhrqHzp5jaSRpPmzkluW9PlZt3DupU/FYVvIs+
+	fzYeaeqojsJcqUqOE4Nt4uuQY/NiYKBAEP8K/rE0/dfVE6gALV8EbN0pzLl/476buaaqwGGfCLM
+	NMX+T/XlY4glgZh4/niTKulXr9BOl3U6hncfbL3g9Neh4WaRN19GlWFrkN+m5FzXwYhmnPgWyVH
+	MEcAvthZcZp3/u/jiF91PfRmWX8lf63hWYwH0IxKEyQ2quCyO6rhkDLs1DwyPspWS/xSeq73IFg
+	6A639xUBjy8YVw3HuYMdmbFndbED6l5zWIvOx8DrmkQn0Ox/
+X-Google-Smtp-Source: AGHT+IEXT4VHtoN7BWCb9b46QkhkIIkudo6GwKbhv3dYWDQ39vj5aKhwilizZwe5JyZGlUhGnb2oMA==
+X-Received: by 2002:a7b:c001:0:b0:434:f5c0:3288 with SMTP id 5b1f17b1804b1-439250df455mr58897315e9.29.1739030169469;
+        Sat, 08 Feb 2025 07:56:09 -0800 (PST)
+Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dcae129sm88297535e9.17.2025.02.08.07.56.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 07:56:08 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 18929BE2EE7; Sat, 08 Feb 2025 16:56:07 +0100 (CET)
+Date: Sat, 8 Feb 2025 16:56:07 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	xen-devel@lists.xenproject.org, iommu@lists.linux.dev,
+	Radoslav =?iso-8859-1?Q?Bod=F3?= <radoslav.bodo@igalileo.cz>
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [6.1.y] Regression from b1e6e80a1b42 ("xen/swiotlb: add alignment
+ check for dma buffers") when booting with Xen and mpt3sas_cm0 _scsih_probe
+ failures
+Message-ID: <Z6d-l2nCO1mB4_wx@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR10MB3366:EE_|PH0PR10MB5817:EE_
-X-MS-Office365-Filtering-Correlation-Id: c439338e-7817-496e-f69c-08dd4858b0c9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7wNhdyKyzG91EA/d/zad6FTD/+G3UQtOFKKKqImqlYMn7U9Hr2NOT4t02kDG?=
- =?us-ascii?Q?geAnwGyVO40tBInzMXB4t5bc9MpY2W58BWB+E19x4Jyv4yAPOHeFEtdl0ywm?=
- =?us-ascii?Q?1JSBhkYgwSzrbWdZgNyZq3v9aujt/EO+k8v7SJHYoF4hiyJAG1lodMKsx0Mr?=
- =?us-ascii?Q?qKHhiIq1d5dOLCyV9A3YKIKMHWZjeCY6h43gQRqIsorf9F1THcK6guE4bcXn?=
- =?us-ascii?Q?WDYvvWLXO5Vvepz3gBA6pwk6Vo32ok5N4SnoZ9qMbKiAxLiH5dK2uTG2yeRl?=
- =?us-ascii?Q?IUAYwuDZqEVXp79yZdong8Vjn2S8S5elbISEWcO6glLS7P7e8YIbIClXMLeF?=
- =?us-ascii?Q?kGcFso4s0kG6a3N9UqrOejRTSoBMc4QLlH4tUtQiKthyZTzHPg5/50VJggN9?=
- =?us-ascii?Q?V1YsVn8A62QXaLQau75SfFsIiJnsHsngTnULwVBqxISqJcM7/maFghfyXtH8?=
- =?us-ascii?Q?2ufSRmVq3W3TXCLq3GGJOHpRG5UfUbHG5zqu3HC9HdEzfkTq/HL9yHc/0MFS?=
- =?us-ascii?Q?dYI/V4FegVoEy1o5SP4odtzwcW+lPyo1/8NRojD60U4Qeq9EtvceiNVJZgDC?=
- =?us-ascii?Q?beSqiHrP0ynq9vPveydc9edhwsq1EzAWAXZjorO7gz04mq4r15uM/s0U5h5o?=
- =?us-ascii?Q?u2/Pj7Z02saBXX2nqg+zMWUic6E3GAVdB/95jPcjeOVJ2xJCIpyWF3z/Dh7x?=
- =?us-ascii?Q?3wFOFL/El3aLgVsg5gW8Y+n9FuarFkAwYJGoqHn7IR4BYHeQPRb+tII6hri6?=
- =?us-ascii?Q?k96TYiLQW7G0en8FDwZeHtdDGUbqttlffpT29Se9DCVwmPCMQ8mLaHSRQGHg?=
- =?us-ascii?Q?FEB923eoPU/qBhNyiWKBh8zclxFsIfzIdIrTZJ4I4cqAYL6AU5c9jQ8T2Lxy?=
- =?us-ascii?Q?y+FsUUEV7hxVTmOsqXwxygbJIFCgtK2a/7VXShNTtXlpn1Me5WKs48+eEnMR?=
- =?us-ascii?Q?aGkzCZtdga2t1vV+PUmV6pP5NOzrJ55WMkaZ6Jd61VYYcGaurXgdSjNkMTma?=
- =?us-ascii?Q?CW2z8LiM/PKfiSPt5y79tf8tO9nDO9g1XHtw77htJv360xidx2jnJXiYHys+?=
- =?us-ascii?Q?styIZlWh/T/TR2gqwvHtdJHOppYXO3lmnYTLcmttMTXgvXjNwqTAkyi1RHfF?=
- =?us-ascii?Q?gWKf3+Ln6UMFsTJo8bNDcse/EhGv+rFmnOU/ysk7+yw/Wy0HUPt0AY8kHlzF?=
- =?us-ascii?Q?Eqi2dWTs6VhVKvRmQkPlqQq/tZQ1R9mqYYog/XiKz5uAEu42iXbEfllhTcaY?=
- =?us-ascii?Q?w4fhAVdZHIv4MYH0QQOaqnntSLm4dgxmSY25eawt5PCxwgvFtpknfyqplkBE?=
- =?us-ascii?Q?CuzWhRQ/LwUkkYVN5i5FPesvsSwog923AYeWNWqi45pri5fIUPAG69OFUYyr?=
- =?us-ascii?Q?nMUMWI/8bntPu9Ot8XLC0XmBfQux?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB3366.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?LnX8bNLvDsonGhQHQYdbawxV07SWpRBa/g3usDcxIo0bKVAaYSMr5ayjpVh0?=
- =?us-ascii?Q?k10xzz5q4ylbnu6vmmG6kP+gwiLVrj2XidYBiKjRzE/Qf83HBkhcNpUs7Zai?=
- =?us-ascii?Q?j1zF0mwkIQxwk10Ws5hD9/+dheYDQcyy1KwQPP2lt9ZHXwnXpDop9mYU5/jI?=
- =?us-ascii?Q?8Tt326AuNHeUWdZSsiMKs10BM1y4oVQ15KIVF8qlmul8vQr/bJHZMeqcg36T?=
- =?us-ascii?Q?QWd7cQzJzNluL9XfOsIPuIpqwYI86YAfC3xJOgyDI/J9Uy1ZUgVP4MwGTSal?=
- =?us-ascii?Q?l/XlJizwYXBhgb2wXfYZx0MclHTQnNFaDtIHN02mBhlquAif8XIFTWvZCv3D?=
- =?us-ascii?Q?XKyrcA1Ypc2PoTjOGjE6YVft2BeYNJEA6ekf1PJK9RXTfXApo4F0N29vaDpO?=
- =?us-ascii?Q?hVqcopASNtPTgJZxmLkH4XoThh96EUJ/G0lW1bBMe9z45XKFi3hKPKhN2yIB?=
- =?us-ascii?Q?htcO77c0oBa8BOsGh+C2KSNxq26+64Z9RMSl4pz93QApCce90EXCUSc7a59E?=
- =?us-ascii?Q?XU95LQIcK1fDZ2Z130HEht0LlDnrw7Ffkg7fEGPBo2P4YDKBXrclHVNx7wKs?=
- =?us-ascii?Q?E7orDTgjBikylzD37eCUzlYgNcO6VlnUNC5dzWHepUl9fe3gu2cd9fjsKChl?=
- =?us-ascii?Q?axRkTfwLGtRUCZduoRAoN+Fg07wGwSEkDBGBs3S5gUeAgg0cm4HlkhxE2oe5?=
- =?us-ascii?Q?pJvnsLg0bBzUUtGdY/fnm3bS2cvODGqAn5D8XzPgWVlqhiM0cbLhDJfzzq/r?=
- =?us-ascii?Q?1a4hBUTpveyG355adiNncK7vxgrtzv3qZIOlpJdZu8xZaEeSjeyp4L75ddc2?=
- =?us-ascii?Q?bsvNEVpKntWK78S1l6nYDeLRuSfd+i6as5H53j4Fhvn0vXvTKGB1UF/Htm4g?=
- =?us-ascii?Q?f86JDYJWQw0Q/cvG1lmZSbd6gso9RzM4vT33TO67FWb7MZ6p/U8Qlg0Vc/ns?=
- =?us-ascii?Q?0R3tyOo+lW1B2FqWIZhfG7KXxvCmGO3v1zZWfuVoVk6alkb13PHjpSctGB12?=
- =?us-ascii?Q?kG2SqArSJSvX6PXnbLC2XgHkLbfR+XlpQ6DFNkP1/5PALl0paCF+VikUSLAI?=
- =?us-ascii?Q?KME8/nU+2Qm6+mgKBSbjsWLab676m8aSgJOC09OEsZNUw3BOr0XCSdT7qrCV?=
- =?us-ascii?Q?VkLyvosYeNxlE6wlEEhxiishMk3f7MPNGM2Z+GGwNGLyE73yl+MqyqhGBGXH?=
- =?us-ascii?Q?ukXdEI9VhNNAsDqXx23uGsnSh8OetJrd/6DEbLGKCsRzSOAmnuMaBE3lKvv0?=
- =?us-ascii?Q?w6smIRy9WYroX2B/rP8R3Iy137MiCh64sYjAo/nFUaYoWSAA3qLOU/SvlC5/?=
- =?us-ascii?Q?+b6uOlAnls74Y3np9/BThy3t9VDcC5srQEi2so3WQ0p2GzZf5uYoW7zYSQcx?=
- =?us-ascii?Q?rY+7GtTFYDfm48Gj6VoaGZan90zd9uEFmAbbVLGKOg4Zu90qFKlzxk10Cdvn?=
- =?us-ascii?Q?W7cnINV0stNW581t+3xXTKC8bUoTHSe0/eVJeSllwPp5JHHQdqi++BDr125m?=
- =?us-ascii?Q?7dDT4+2EgPaukjyB8l0YIrH4WMjCq3HWtFS03RWirJnhNToe+6vWsTwF/1Pl?=
- =?us-ascii?Q?p8rA6kXPlEA+fxue6DZG/OT1pjm4nAVYGm6+qHjpmcMnQGSaoPpK2MWm8GJf?=
- =?us-ascii?Q?4Q=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	8aZPPlf0xwKXvgD2GZn41swcN3uypRt/CHVIbDQFq+x8PgZzM93M/eS1tXffUfd70EMJzSQhPHMwoRs7XYJZ7cSnlptX5CfNtkNbiA6KjDCT/PMxn+8Vl0hHQDW1eKgy/Sz9A97+vMRmli2yBbKUMkTcPw8Tn6Q90Mi73vdEnD/YIfeZXbliUDRJRDatI/vQ0XRNIdbdZrz9ro4lDWi7Uink09SRPDOduHxHjQpmR8TyQ+T5zvUDwXyFnXoVBYENRU0SQiWTTWeabOSBEaqgTkSPgy1a/y6ebUWf9pU+hDvgC4YYOQk0is2i+ZQl8BPKsd8PYIfYL2U/26vtQ2vegWtNUIbxSmScISDtyHZ7MPRckN7a407Rr0Mq6GHf32xEJyEqnbu+eg4r3Zfw/FLxbxzp495j58lOvm1kFsOWDEjac4UZ6FT+XbID8MtyhjG5E70zVFCDLx4vdBk3uNoPJaFc0jcKT4VgV+tINrYMmAzRivt6Gk2xjI9novKKO+wd9Bi/N9fDk2qWiDhDvqJKYDjtQBZZODQXOSuJhGwotvpYdA+vUIHlCKgYzEvCS2eOFNZnCqXRSQuA/hQQK+pmrZyfrQaOAoQ3Nv+6DegRCsg=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c439338e-7817-496e-f69c-08dd4858b0c9
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB3366.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2025 15:53:11.8170
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Cr5CktrSqpzRa4fsp99ILBHhxoKExWE4Sem6REgIZ79xFNYiz7rF5RhIBTn51YfH6dmlcOjC/SQJoigiw2dMLKChcHhtMzTHIY0OKU+o6wM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5817
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-08_06,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
- phishscore=0 spamscore=0 adultscore=0 suspectscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2501170000 definitions=main-2502080134
-X-Proofpoint-GUID: n3m9G8Wq72_alK1zBnmemJW8RsQEnY4z
-X-Proofpoint-ORIG-GUID: n3m9G8Wq72_alK1zBnmemJW8RsQEnY4z
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-In order to permit the traversal of the reverse mapping at a specified
-mapping and offset rather than those specified by an input folio, we need
-to separate out the portion of the rmap file logic which deals with this
-traversal from those parts of the logic which interact with the folio.
+Hi Juergen, hi all,
 
-This patch achieves this by adding a new static __rmap_walk_file() function
-which rmap_walk_file() invokes.
+Radoslav Bodó reported in Debian an issue after updating our kernel
+from 6.1.112 to 6.1.115. His report in full is at:
 
-This function permits the ability to pass NULL folio, on the assumption
-that the caller has provided for this correctly in the callbacks specified
-in the rmap_walk_control object.
+https://bugs.debian.org/1088159
 
-Though it provides for this, and adds debug asserts to ensure that, should
-a folio be specified, these are equal to the mapping and offset specified
-in the folio, there should be no functional change as a result of this
-patch.
+He reports that after switching to 6.1.115 (and present in any of the
+later 6.1.y series) booting under xen, the mptsas devices are not
+anymore accessible, the boot shows:
 
-The reason for adding this is to enable for future changes to permit users
-to be able to traverse mappings of userland-mapped kernel memory,
-write-protecting those mappings to enable page_mkwrite() or pfn_mkwrite()
-fault handlers to be retriggered on subsequent dirty.
+mpt3sas version 43.100.00.00 loaded
+mpt3sas_cm0: 63 BIT PCI BUS DMA ADDRESSING SUPPORTED, total mem (8086116 kB)
+mpt3sas_cm0: CurrentHostPageSize is 0: Setting default host page size to 4k
+mpt3sas_cm0: MSI-X vectors supported: 96
+mpt3sas_cm0:  0 40 40
+mpt3sas_cm0: High IOPs queues : disabled
+mpt3sas0-msix0: PCI-MSI-X enabled: IRQ 447
+mpt3sas0-msix1: PCI-MSI-X enabled: IRQ 448
+mpt3sas0-msix2: PCI-MSI-X enabled: IRQ 449
+mpt3sas0-msix3: PCI-MSI-X enabled: IRQ 450
+mpt3sas0-msix4: PCI-MSI-X enabled: IRQ 451
+mpt3sas0-msix5: PCI-MSI-X enabled: IRQ 452
+mpt3sas0-msix6: PCI-MSI-X enabled: IRQ 453
+mpt3sas0-msix7: PCI-MSI-X enabled: IRQ 454
+mpt3sas0-msix8: PCI-MSI-X enabled: IRQ 455
+mpt3sas0-msix9: PCI-MSI-X enabled: IRQ 456
+mpt3sas0-msix10: PCI-MSI-X enabled: IRQ 457
+mpt3sas0-msix11: PCI-MSI-X enabled: IRQ 458
+mpt3sas0-msix12: PCI-MSI-X enabled: IRQ 459
+mpt3sas0-msix13: PCI-MSI-X enabled: IRQ 460
+mpt3sas0-msix14: PCI-MSI-X enabled: IRQ 461
+mpt3sas0-msix15: PCI-MSI-X enabled: IRQ 462
+mpt3sas0-msix16: PCI-MSI-X enabled: IRQ 463
+mpt3sas0-msix17: PCI-MSI-X enabled: IRQ 464
+mpt3sas0-msix18: PCI-MSI-X enabled: IRQ 465
+mpt3sas0-msix19: PCI-MSI-X enabled: IRQ 466
+mpt3sas0-msix20: PCI-MSI-X enabled: IRQ 467
+mpt3sas0-msix21: PCI-MSI-X enabled: IRQ 468
+mpt3sas0-msix22: PCI-MSI-X enabled: IRQ 469
+mpt3sas0-msix23: PCI-MSI-X enabled: IRQ 470
+mpt3sas0-msix24: PCI-MSI-X enabled: IRQ 471
+mpt3sas0-msix25: PCI-MSI-X enabled: IRQ 472
+mpt3sas0-msix26: PCI-MSI-X enabled: IRQ 473
+mpt3sas0-msix27: PCI-MSI-X enabled: IRQ 474
+mpt3sas0-msix28: PCI-MSI-X enabled: IRQ 475
+mpt3sas0-msix29: PCI-MSI-X enabled: IRQ 476
+mpt3sas0-msix30: PCI-MSI-X enabled: IRQ 477
+mpt3sas0-msix31: PCI-MSI-X enabled: IRQ 478
+mpt3sas0-msix32: PCI-MSI-X enabled: IRQ 479
+mpt3sas0-msix33: PCI-MSI-X enabled: IRQ 480
+mpt3sas0-msix34: PCI-MSI-X enabled: IRQ 481
+mpt3sas0-msix35: PCI-MSI-X enabled: IRQ 482
+mpt3sas0-msix36: PCI-MSI-X enabled: IRQ 483
+mpt3sas0-msix37: PCI-MSI-X enabled: IRQ 484
+mpt3sas0-msix38: PCI-MSI-X enabled: IRQ 485
+mpt3sas0-msix39: PCI-MSI-X enabled: IRQ 486
+mpt3sas_cm0: iomem(0x00000000ac400000), mapped(0x00000000d9f45f61), size(65536)
+mpt3sas_cm0: ioport(0x0000000000006000), size(256)
+mpt3sas_cm0: CurrentHostPageSize is 0: Setting default host page size to 4k
+mpt3sas_cm0: scatter gather: sge_in_main_msg(1), sge_per_chain(7), sge_per_io(128), chains_per_io(19)
+mpt3sas_cm0: failure at drivers/scsi/mpt3sas/mpt3sas_scsih.c:12348/_scsih_probe()!
 
-Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
----
- mm/rmap.c | 79 +++++++++++++++++++++++++++++++++++++------------------
- 1 file changed, 53 insertions(+), 26 deletions(-)
+We were able to bissect the changes (see https://bugs.debian.org/1088159#64) down to
 
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 7825707929d8..52f98f6ccb56 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -2751,35 +2751,37 @@ static void rmap_walk_anon(struct folio *folio,
- 		anon_vma_unlock_read(anon_vma);
- }
- 
--/*
-- * rmap_walk_file - do something to file page using the object-based rmap method
-- * @folio: the folio to be handled
-- * @rwc: control variable according to each walk type
-- * @locked: caller holds relevant rmap lock
-+/**
-+ * __rmap_walk_file() - Traverse the reverse mapping for a file-backed mapping
-+ * of a page mapped within a specified page cache object at a specified offset.
-  *
-- * Find all the mappings of a folio using the mapping pointer and the vma chains
-- * contained in the address_space struct it points to.
-+ * @folio: 		Either the folio whose mappings to traverse, or if NULL,
-+ * 			the callbacks specified in @rwc will be configured such
-+ * 			as to be able to look up mappings correctly.
-+ * @mapping: 		The page cache object whose mapping VMAs we intend to
-+ * 			traverse. If @folio is non-NULL, this should be equal to
-+ *			folio_mapping(folio).
-+ * @pgoff_start:	The offset within @mapping of the page which we are
-+ * 			looking up. If @folio is non-NULL, this should be equal
-+ * 			to folio_pgoff(folio).
-+ * @nr_pages:		The number of pages mapped by the mapping. If @folio is
-+ *			non-NULL, this should be equal to folio_nr_pages(folio).
-+ * @rwc:		The reverse mapping walk control object describing how
-+ *			the traversal should proceed.
-+ * @locked:		Is the @mapping already locked? If not, we acquire the
-+ *			lock.
-  */
--static void rmap_walk_file(struct folio *folio,
--		struct rmap_walk_control *rwc, bool locked)
-+static void __rmap_walk_file(struct folio *folio, struct address_space *mapping,
-+			     pgoff_t pgoff_start, unsigned long nr_pages,
-+			     struct rmap_walk_control *rwc, bool locked)
- {
--	struct address_space *mapping = folio_mapping(folio);
--	pgoff_t pgoff_start, pgoff_end;
-+	pgoff_t pgoff_end = pgoff_start + nr_pages - 1;
- 	struct vm_area_struct *vma;
- 
--	/*
--	 * The page lock not only makes sure that page->mapping cannot
--	 * suddenly be NULLified by truncation, it makes sure that the
--	 * structure at mapping cannot be freed and reused yet,
--	 * so we can safely take mapping->i_mmap_rwsem.
--	 */
--	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
--
--	if (!mapping)
--		return;
-+	VM_WARN_ON_FOLIO(folio && mapping != folio_mapping(folio), folio);
-+	VM_WARN_ON_FOLIO(folio && pgoff_start != folio_pgoff(folio), folio);
-+	VM_WARN_ON_FOLIO(folio && nr_pages != folio_nr_pages(folio), folio);
- 
--	pgoff_start = folio_pgoff(folio);
--	pgoff_end = pgoff_start + folio_nr_pages(folio) - 1;
- 	if (!locked) {
- 		if (i_mmap_trylock_read(mapping))
- 			goto lookup;
-@@ -2794,8 +2796,7 @@ static void rmap_walk_file(struct folio *folio,
- lookup:
- 	vma_interval_tree_foreach(vma, &mapping->i_mmap,
- 			pgoff_start, pgoff_end) {
--		unsigned long address = vma_address(vma, pgoff_start,
--			       folio_nr_pages(folio));
-+		unsigned long address = vma_address(vma, pgoff_start, nr_pages);
- 
- 		VM_BUG_ON_VMA(address == -EFAULT, vma);
- 		cond_resched();
-@@ -2808,12 +2809,38 @@ static void rmap_walk_file(struct folio *folio,
- 		if (rwc->done && rwc->done(folio))
- 			goto done;
- 	}
--
- done:
- 	if (!locked)
- 		i_mmap_unlock_read(mapping);
- }
- 
-+/*
-+ * rmap_walk_file - do something to file page using the object-based rmap method
-+ * @folio: the folio to be handled
-+ * @rwc: control variable according to each walk type
-+ * @locked: caller holds relevant rmap lock
-+ *
-+ * Find all the mappings of a folio using the mapping pointer and the vma chains
-+ * contained in the address_space struct it points to.
-+ */
-+static void rmap_walk_file(struct folio *folio,
-+		struct rmap_walk_control *rwc, bool locked)
-+{
-+	/*
-+	 * The folio lock not only makes sure that folio->mapping cannot
-+	 * suddenly be NULLified by truncation, it makes sure that the structure
-+	 * at mapping cannot be freed and reused yet, so we can safely take
-+	 * mapping->i_mmap_rwsem.
-+	 */
-+	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
-+
-+	if (!folio->mapping)
-+		return;
-+
-+	__rmap_walk_file(folio, folio->mapping, folio->index,
-+			 folio_nr_pages(folio), rwc, locked);
-+}
-+
- void rmap_walk(struct folio *folio, struct rmap_walk_control *rwc)
- {
- 	if (unlikely(folio_test_ksm(folio)))
--- 
-2.48.1
+b1e6e80a1b42 ("xen/swiotlb: add alignment check for dma buffers")
 
+#regzbot introduced: b1e6e80a1b42
+#regzbot link: https://bugs.debian.org/1088159
+
+reverting the commit resolves the issue.
+
+Does that ring some bells?
+
+In fact we have two more bugs reported with similar symptoms but not
+yet confirmed they are the same, but I'm referencing them here as well
+in case we are able to cross-match to root cause:
+
+https://bugs.debian.org/1093371 (megaraid_sas didn't work anymore with
+Xen)
+
+and
+
+https://bugs.debian.org/1087807 (Unable to boot: i40e swiotlb buffer
+is full)
+
+(but again the these are yet not confirmed to have the same root
+cause).
+
+Thanks in advance,
+
+Regards,
+Salvatore
