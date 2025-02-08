@@ -1,121 +1,106 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB51241129;
-	Sat,  8 Feb 2025 19:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800E2241129;
+	Sat,  8 Feb 2025 19:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739041228; cv=none; b=Ruqy12DtdSyDf7+YCwpg2Fc65H5nmjXLoKFcRUQ7h7ZawpdARYfvEQS6nLWrb85Z85E8CfLoHvfvAQOiiTMFIM4CDSPj5FrTcGCMNDWYZ/FFAkb3kmc8tnJliKuSnhLtsepj9keKS9rJJVQiCHB3BtRl78AS67XzuTzf4oGowmk=
+	t=1739041565; cv=none; b=oqbWD9pzTsGVEt/oMXYuVClBtHCDZmApQW4qImTBdyFWmuwyt5y9cn+RhqgF6OZDycc8EEgQHIe3fwTLtMZvNRM/rLs0YI2flnPV8OjRYcu6RXxwVxAwsy6QLuYiWNCcYBpXspm4YwbBKQd2py7aGRKmCry28xDuxOSCKIzzvLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739041228; c=relaxed/simple;
-	bh=alWLYF/9OcbBa/I1+7yBqk1Z5iaf+prVR/oyQI0H9G4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=PZ6zuiZPiLxwMF6CV5AS7tW6FDgzcieAxk7PPimB/UW6UgGPrX4qKozsm+Pdt1Eo5Ri0yemGWR87AIiweiUVzCOB+j6PtvfqrJPF4Q4vPrmxE87vOfFGLgc8i+jaLSFcJN3LPIcNk21ZhUsHiXl31eX1xqLZpFR4LO3lxaAvlpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=DOC4jBhf; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1739041565; c=relaxed/simple;
+	bh=Qc1TkbcgBnnMnlIp9FOCRpKhwBc8BU4DABnj5Kl+BlM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=G2hWczqv0exJXjoX6aXj4+oFNTN6lopiJmCiG43yqCzVUS8X8Y82zw35xIDPtLQ1cgfsp5NUEXXqGZo24VcnPIsC/3QlYwJDaONPswHZ/vbnI8nbhIiNcDjjFX/GWU1ekCteE5RipToEbj6+79dhg6z34gJep0Rkzp3Rk9aA6Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EI7NCwu1; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="DOC4jBhf"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id D2ADB25D01;
-	Sat,  8 Feb 2025 20:00:16 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 55FrgB_ujl9K; Sat,  8 Feb 2025 20:00:15 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1739041215; bh=alWLYF/9OcbBa/I1+7yBqk1Z5iaf+prVR/oyQI0H9G4=;
-	h=From:Date:Subject:To:Cc;
-	b=DOC4jBhf/haJGplx2K8eiCjySQ5qbgEtpmkQ3ImmkbEXeHtImVv7v4Q3fGLF0mGE7
-	 7L/OdfBlNBQCIssAqszLDs+H4f+GEskwUBTuThpvWz4DJLpyk7I13rv35duIoF0HIj
-	 /ouUMNy8JwCqopdtjG2jKBi+M1Fz2V4bgJc+EjHZjbLHKZwwqgVa8OK2pNlc6PYcRI
-	 bdf8ePyZCdfuXsUrTZK+3FShLaP30618vZcaABPPC4Wj/AXXguL7RKve5Pv6ZLbikK
-	 xhalBciwDPH2s3/BZF79OXtG5DhHBeu/ojLzG2MQiAuJxWsx6zjhIDh4f/1dvtDzSL
-	 biy7RX9N2lDew==
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Date: Sun, 09 Feb 2025 00:29:30 +0530
-Subject: [PATCH] phy: exynos5-usbdrd: fix MPLL_MULTIPLIER and SSC_REFCLKSEL
- masks in refclk
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EI7NCwu1"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4361f664af5so34611255e9.1;
+        Sat, 08 Feb 2025 11:06:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739041562; x=1739646362; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OYUcGbynj47h/K2MRAirCRYD25qma3qo+katu8pukWY=;
+        b=EI7NCwu1LVRGFJQj/eCJJNGMXWmw3ykt8dgPC4G788oWGZWxyvHCGULoJnh6WVEog+
+         H/bFbYfoaBDwUS0gbUtkR/yx45F6LSHrBsMpiyywE0D8t7t0hJViBWmlplEVxAXrqgRX
+         pnWwrO+6+jcZUnO6jAhSr4pyPsJSBhWetyaKz8MGseIlEUqW+5J4wtykOjjApI8UOf3q
+         MejiB8ZJDS6DNmKY+5BFQr63jKrUyQerFlXBN2OFURiJaJXL8pMe9Y0/sKucS5q14sZz
+         p88Jv6tGaWX1Okd7UNyxjG1OqVKtAGVESUl/arthQvZeQ4l65zmcnztkgvip7k7JvJsY
+         CwQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739041562; x=1739646362;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OYUcGbynj47h/K2MRAirCRYD25qma3qo+katu8pukWY=;
+        b=Ay6+ct8z/7g6mAJs+7q2E7zvbt+IPBDJsDNHzuullTnhPbJatI1tZMs+/AWdBwBBZw
+         VGVwMcLa/v2678P5HamtP6Nb2ZYuXZ+qh541C0H7G2MnDIlmb2d22OG81zzN7PxPMTkx
+         nbwDdPciflvhy8KcV1ACEdnd8n9Qm1fiOgwjNAT7pONzM2P7HjA+HirHxs+jBexSdvLk
+         xon+n8M+3xXK/B2kKP7tEGhj7xg6M68W5w2dgEaLkwYWk4ReqzvrZZFQFrZNa64gWBt8
+         lkp5o9V6Eo4RewUH+Lnyu81eDSRuUmYZFfpBa+G6XcqULR5S2onC7LOh6IivyWZDUavA
+         nZgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUzceV7j3xSUcqCZGCUtuExsI0+UGaX1gBLoCePrczV2FM1LXyTQkAOyaLri5pb9HYDf9KKc2cg3ZZc9wGR@vger.kernel.org, AJvYcCVerfEPgQbnt/BLKQjMTMTDOTC1CEYG5S6qoSFPLIVprRJiQ0z5dj9cYjw4TtEV9zFr4PA4rmGXtXC0AFII@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWkJO5xFuzYIPSR0gEwYjRVLJhTJrHt/tK7GBcHR+G/aC4Tp6G
+	Z1eowdY06JreZ41HvFtoriupAlWlj2XFSgEaFgpmbhLYoTHpabbP
+X-Gm-Gg: ASbGncuPX7rHrJ2bRqpy4W7myyG0GE0vHxS6jWsGXlI8+KTZyedwgYJODyR6CBotBJr
+	Ro8eKhB+bO78X0WdS8lsiAkIp5U74Ug5UNUzEEgApUYsrMaG+nHL7c+a2mmRjWJI9IA6y8haDQ3
+	sN44NsAWht3P86thZWWxnkCS5Tn+DO5RN+yGin1pilIZxyd3JVPTRQB+RZ1RNX9z0fhV4++9KYk
+	AKSYWH56GMho+1Idi5wwZCOboS1QIPSKNft1vaoCETKVUZTAw2sq74nkbQFC9O7cLoU8rg5YPkm
+	F6JFDdOQMFxCH2sWObbtTyfOwfB8KA+R1VECz9L5sMseQ6Kun+DNUQ==
+X-Google-Smtp-Source: AGHT+IFNblGNxETUk8E7MRlCMTVW8TiIJo2DWkRcz/DW61BV+9yJVn7u8lFY/mMHcmdPnM8exjHv7A==
+X-Received: by 2002:a05:600c:1c0e:b0:434:f218:e1a8 with SMTP id 5b1f17b1804b1-439249a8455mr59395005e9.19.1739041561427;
+        Sat, 08 Feb 2025 11:06:01 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dcae841sm91787425e9.21.2025.02.08.11.06.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 11:06:01 -0800 (PST)
+Date: Sat, 8 Feb 2025 19:06:00 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>, Jan
+ Kara <jack@suse.cz>
+Subject: Re: [PATCH next 1/1] fs: Mark get_sigset_argpack() __always_inline
+Message-ID: <20250208190600.18075c88@pumpkin>
+In-Reply-To: <CAHk-=wicUO4WaEE6b010icQPpq+Gk_ZK5V2hF2iBQe-FqmBc3Q@mail.gmail.com>
+References: <20250208151347.89708-1-david.laight.linux@gmail.com>
+	<CAHk-=wicUO4WaEE6b010icQPpq+Gk_ZK5V2hF2iBQe-FqmBc3Q@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250209-exynos5-usbdrd-masks-v1-1-4f7f83f323d7@disroot.org>
-X-B4-Tracking: v=1; b=H4sIAJGpp2cC/x3MQQ5AMBBA0avIrE1SjVKuIhboYCJKOiFE3F1j+
- Rb/PyAUmATq5IFAJwtvPiJLExjmzk+E7KJBK22UVhbpuv0mBg/pXXC4drIIllRRUVkz5L2FmO6
- BRr7+bdO+7wekWIFpZgAAAA==
-X-Change-ID: 20250208-exynos5-usbdrd-masks-7e9e6985c4b8
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- Vivek Gautam <gautam.vivek@samsung.com>
-Cc: linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739041209; l=2085;
- i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=alWLYF/9OcbBa/I1+7yBqk1Z5iaf+prVR/oyQI0H9G4=;
- b=u7SS0kBpPe4GLUkdpGBcrXSlzjYQ5lTUc9poNrKPxjumtkDDCLanuInoWrIfZdaYIYKdJwsQ8
- spQArA691vLAEsK3NzHrFjhY0s2A0LvAotGppdNelchuuQ1ZOtDXhue
-X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
- pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-In exynos5_usbdrd_{pipe3,utmi}_set_refclk(), the masks
-PHYCLKRST_MPLL_MULTIPLIER_MASK and PHYCLKRST_SSC_REFCLKSEL_MASK are not
-inverted when applied to the register values. Fix it.
+On Sat, 8 Feb 2025 10:53:38 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Cc: stable@vger.kernel.org
-Fixes: 59025887fb08 ("phy: Add new Exynos5 USB 3.0 PHY driver")
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
-Patch picked up from:
-https://lore.kernel.org/all/20250204-exynos7870-usbphy-v1-1-f30a9857efeb@disroot.org/
----
- drivers/phy/samsung/phy-exynos5-usbdrd.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+> On Sat, 8 Feb 2025 at 07:14, David Laight <david.laight.linux@gmail.com> wrote:
+> >
+> > Since the function is 'hot enough' to worry about avoiding the
+> > overhead of copy_from_user() it must be worth forcing it to be
+> > inlined.  
+> 
+> Hmm. gcc certainly inlines this one for me regardless.
+> 
+> So it's either a gcc version issue (I have gcc-14.2.1), or it's some
+> build configuration thing that makes the function big enough in your
+> case that gcc decides not to inline things. Do you perhaps have some
+> debugging options enabled? At that point, inlining is the least of all
+> problems.
 
-diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-index c421b495eb0fe4396d76f8c9d7c198ad7cd08869..4a108fdab118c0edd76bd88dc9dbf6a498e064b3 100644
---- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-+++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-@@ -488,9 +488,9 @@ exynos5_usbdrd_pipe3_set_refclk(struct phy_usb_instance *inst)
- 	reg |=	PHYCLKRST_REFCLKSEL_EXT_REFCLK;
- 
- 	/* FSEL settings corresponding to reference clock */
--	reg &= ~PHYCLKRST_FSEL_PIPE_MASK |
--		PHYCLKRST_MPLL_MULTIPLIER_MASK |
--		PHYCLKRST_SSC_REFCLKSEL_MASK;
-+	reg &= ~(PHYCLKRST_FSEL_PIPE_MASK |
-+		 PHYCLKRST_MPLL_MULTIPLIER_MASK |
-+		 PHYCLKRST_SSC_REFCLKSEL_MASK);
- 	switch (phy_drd->extrefclk) {
- 	case EXYNOS5_FSEL_50MHZ:
- 		reg |= (PHYCLKRST_MPLL_MULTIPLIER_50M_REF |
-@@ -532,9 +532,9 @@ exynos5_usbdrd_utmi_set_refclk(struct phy_usb_instance *inst)
- 	reg &= ~PHYCLKRST_REFCLKSEL_MASK;
- 	reg |=	PHYCLKRST_REFCLKSEL_EXT_REFCLK;
- 
--	reg &= ~PHYCLKRST_FSEL_UTMI_MASK |
--		PHYCLKRST_MPLL_MULTIPLIER_MASK |
--		PHYCLKRST_SSC_REFCLKSEL_MASK;
-+	reg &= ~(PHYCLKRST_FSEL_UTMI_MASK |
-+		 PHYCLKRST_MPLL_MULTIPLIER_MASK |
-+		 PHYCLKRST_SSC_REFCLKSEL_MASK);
- 	reg |= PHYCLKRST_FSEL(phy_drd->extrefclk);
- 
- 	return reg;
+gcc 12.2.0 (from debian) - so not THAT old.
+clang 18 does inline it.
+I've turned off pretty much everything (except page table separation).
+And there isn't much unexpected in the object code.
 
----
-base-commit: df4b2bbff898227db0c14264ac7edd634e79f755
-change-id: 20250208-exynos5-usbdrd-masks-7e9e6985c4b8
+Can the 'alternatives' be flipped so the .o doesn't contain loads of nops?
+It'd be nice to see the clac and lfence.
 
-Best regards,
--- 
-Kaustabh Chakraborty <kauschluss@disroot.org>
-
+	David
