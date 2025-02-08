@@ -1,149 +1,131 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC82125D6;
-	Sat,  8 Feb 2025 01:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738979546; cv=pass; b=gOoq/Cr2aVk3OFnTphdextmNSstadbCih2qVRnAtgKXQAbHEcWv1gfhrR50eqNsLpPNcdFeNDXND627ED/6PxcAmu75P3UsZk/Nlf2G7pzxsCo5IGWNXkUoGkdM/h1FaF92JqT1DD41BRURuQ0AQ0h5ctdf7uhLkq3XSnWLZfBA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738979546; c=relaxed/simple;
-	bh=T+OfHvGj/ItJulWwCxdDM20dP4A51QzDsoFZS5fuvUQ=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=ah28NR5Igg8zy8CEmNsqKtpunAci2Nj19Wu6QhESECe04/KS1czIWzWFoTQFlhaBYXpUbMIPr/msKQrkmTuEGD+iYJiERk48G3AA6PS+VZNa1/LP6eGAq/KNUK7A63T+5sqT+VqgwjcmhoEaykWcyyt7srHT0uf0EriEVmi3dl0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=WlMkGvY9; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7363B19A;
+	Sat,  8 Feb 2025 01:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738979643; cv=none; b=lngSU06wRlyO1KX/W9NkMte4Dbq3Y7tQ/cpLL9rpQJjclasnjxlkMa179TT8bTjU74LS8g+ERJ0Y7hTbMS1LH5Erz9d/t3NFiuiqwIqiYQNfat2JQih10nRRU8APzjHf3dmUzkymMS2VoACT7qCMrd07NCVZWJVL2QnUZ5c1a4g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738979643; c=relaxed/simple;
+	bh=XS33MVhIjfVKk8upTaLO5OR1KiRd8GIcCgqMSRLT0VA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k/1nSmab7F4gkhTWnBzCNWlR03fZ7oQ6U+EbwGUA9fjxCMCvcKAWYHtMLleowVyiRuPwHKyTdzs0l1tjazpHh6NPC+G7MYpWQlVNCJA0kk4aVb9aPM+NwceTC5B83Yx7zlK2Z7XPbzoHHf8n6dTXBU6J4p8rwe2ECP5fybFNrb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lvA2GE9P; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="WlMkGvY9"
-ARC-Seal: i=1; a=rsa-sha256; t=1738979461; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=h2CVmME1bLtWs+lpPIUCddGbm75QUXyJduwQf2mWQqFO/uI5E0iZgWKVeMLNTe6UfHPvw9Qcu5m0p7bhP9Zr1Be6Tj4VUWPIx8c4ndS8Ts3uqSYO80thvKE+hqW1a/HWi12crxerRWw9YBNR9amrJAyhItRCMJButAip0Gqu0aQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1738979461; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=PnQQ74qGW3nrr9Iyl/h1mVaZVFhV1V7cZJEYI5JlgG8=; 
-	b=cqAt0nrq/GcU6kEGElDS7vQX/ta0nrCRZs0lMHqXdH9Eh6l9mWjVUN0CrBNG07ANlRUFL17MXeg+D800kK/G595HRG3PkUmNluEr7fBga03szDXOEKdCfty/N22ap9jzft8H6H6YPRfqQe74dqRySKEdKiayvXDEqU2Zr/Ns5ec=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1738979461;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=PnQQ74qGW3nrr9Iyl/h1mVaZVFhV1V7cZJEYI5JlgG8=;
-	b=WlMkGvY9HbEJdFULa/KOJp5WUFvpRz9192iI+n7Pq0RS5agXtuoFSiksyK3sbGiJ
-	E97n8aE4MsZTtA6bwjxtnqv8f8xOtB+3A2YFfC2XHRsH+M9BjUBsmu29FnjD4RgL/m7
-	Tj+8TmarbsOdpO9zVLX9miRCgZd5aGskP/9Usi4Q=
-Received: by mx.zohomail.com with SMTPS id 1738979455913786.8061412149839;
-	Fri, 7 Feb 2025 17:50:55 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvA2GE9P"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4361f664af5so28903955e9.1;
+        Fri, 07 Feb 2025 17:54:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738979640; x=1739584440; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/goMiwoZ9a2nGgXHy/KgywCzCXPCOrvFLwPlIkrV3lQ=;
+        b=lvA2GE9PGg16050w0Wz3CvC/I7hCbdYWHYaWZLy4JPergRHJ0cZzoA6lDLor4WVetI
+         scc27wKFfpHOHH9Jk7Wi1ry77gYo23B9Sttg8mZabdcUqN51svTEV48vcZCbC2Xg3MD2
+         ZdKr4wRWbnupooLlzIrOpmKI6unYojKg1njGusUfLa5xhfiNlCiGciLgntEPfKOei4H8
+         veJuE2wd+j8jZfybt8bDFEvAhZNnFLXJIg/mo8IQQVJZRxXm5eCDHIt/xmJsdftpZLrj
+         vJXtq4Vwsa/IuvwKbVN4T008xpfwzNcj9bc6/Fr12MAl93wGm3jxlW07mS16EDby6ENl
+         EZtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738979640; x=1739584440;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/goMiwoZ9a2nGgXHy/KgywCzCXPCOrvFLwPlIkrV3lQ=;
+        b=e4OuT08zkz2x51ZmbQ1HytnzQuVCCKwtMIqVfMViXfEJywIkMxqoPzhgpAHAkN1chk
+         YHlIKH3cKLzEBuGYo8/Ggv8is1xtUa0+QdjtCOmiSZAW9/jRznY+8uKCBjIkchKqcv1k
+         S6N7sliM0A20XJ/nr4Aank30mBfZLDDUcy5JhNshSINwf7CrUqT/NllJuccwUB6yBaAj
+         yO6Z7m28OHYkjuHrvxPOqPSPfFA9GJmAANyU3vWvQgDd9k4YOBX0R5Ty2FmeV62ikzeH
+         FA4scj94N+kIRTDQ9Dr8arxfbtGLUG6sxTAc7InfhdVorfJxpxsDFM21YqfUFO6c3ucY
+         35gA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0RcmWyLo/eShXKeu337atRo1hTkaIPYEjIG9Nf2JvV8u9VXeSTwpuMtSDUTVzIainaFZOxMqm5pqhP50=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAzGJ9OfdjzpgmR+z7VgTtkYcMXgXVwXR57rJTqORs9vhno4Z4
+	iwM7sqYgfkAAozTmIyveoZxugDRf0t6f2OCga6StlOlHJOXI9E3PRS8OG/dh+rh+gSceGJ2oC4V
+	FDVaU2ELRiGN9Q3qYuNSpu1Q9hnU=
+X-Gm-Gg: ASbGnctlq/QXTwdJkx6DK+wZCdAA9MhGct7A3J8hY5wB+zsFmFj/9w4t1XiRxFrNXZc
+	3GKbDM4HQyyt+RRW9juJ4mlJoFRLhPODla/7jzFnsiV4XWOEx6LgXQOfALLzXR3wqd7YlWur8E7
+	IuZZKA2lyqLGfbGgkG1D7WtOHJTWFw
+X-Google-Smtp-Source: AGHT+IG9ncxhWb1JDjWrffjcJaSLE/cGisHt3doGbPXfB2uc5syeNwNjChl7mOFipKQ8YpOR06lQMAWoY36G1lYyN2E=
+X-Received: by 2002:a05:6000:1041:b0:385:f0c9:4b66 with SMTP id
+ ffacd0b85a97d-38dc8dec2f6mr3125108f8f.33.1738979639593; Fri, 07 Feb 2025
+ 17:53:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH v10 7/8] rust: Add read_poll_timeout functions
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250207132623.168854-8-fujita.tomonori@gmail.com>
-Date: Fri, 7 Feb 2025 22:50:37 -0300
-Cc: linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- netdev@vger.kernel.org,
- andrew@lunn.ch,
- hkallweit1@gmail.com,
- tmgross@umich.edu,
- ojeda@kernel.org,
- alex.gaynor@gmail.com,
- gary@garyguo.net,
- bjorn3_gh@protonmail.com,
- benno.lossin@proton.me,
- a.hindborg@samsung.com,
- aliceryhl@google.com,
- anna-maria@linutronix.de,
- frederic@kernel.org,
- tglx@linutronix.de,
- arnd@arndb.de,
- jstultz@google.com,
- sboyd@kernel.org,
- mingo@redhat.com,
- peterz@infradead.org,
- juri.lelli@redhat.com,
- vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com,
- rostedt@goodmis.org,
- bsegall@google.com,
- mgorman@suse.de,
- vschneid@redhat.com,
- tgunders@redhat.com,
- me@kloenk.dev
+MIME-Version: 1.0
+References: <20250206105435.2159977-1-memxor@gmail.com> <20250206105435.2159977-12-memxor@gmail.com>
+In-Reply-To: <20250206105435.2159977-12-memxor@gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 7 Feb 2025 17:53:48 -0800
+X-Gm-Features: AWEUYZnAQdSbylvQFKH-kduRkJgF7cpFCzktTKz3eyY2jqCF3QQ_ePHqKFyE-Ks
+Message-ID: <CAADnVQL=E3F5-Uwa5_508e+OKzLnLGJGtAMhv1WW8kHobzBMgQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 11/26] rqspinlock: Add deadlock detection and recovery
+To: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Cc: bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>, Barret Rhoden <brho@google.com>, 
+	Josh Don <joshdon@google.com>, Dohyun Kim <dohyunkim@google.com>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kernel Team <kernel-team@meta.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <3F610447-C8B9-4F9D-ABDA-31989024D109@collabora.com>
-References: <20250207132623.168854-1-fujita.tomonori@gmail.com>
- <20250207132623.168854-8-fujita.tomonori@gmail.com>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
-X-ZohoMailClient: External
 
-Hi,
+On Thu, Feb 6, 2025 at 2:54=E2=80=AFAM Kumar Kartikeya Dwivedi <memxor@gmai=
+l.com> wrote:
+>
+> +/*
+> + * It is possible to run into misdetection scenarios of AA deadlocks on =
+the same
+> + * CPU, and missed ABBA deadlocks on remote CPUs when this function pops=
+ entries
+> + * out of order (due to lock A, lock B, unlock A, unlock B) pattern. The=
+ correct
+> + * logic to preserve right entries in the table would be to walk the arr=
+ay of
+> + * held locks and swap and clear out-of-order entries, but that's too
+> + * complicated and we don't have a compelling use case for out of order =
+unlocking.
+> + *
+> + * Therefore, we simply don't support such cases and keep the logic simp=
+le here.
+> + */
 
-> +
-> +/// Polls periodically until a condition is met or a timeout is =
-reached.
-> +///
-> +/// ```rust
-> +/// use kernel::io::poll::read_poll_timeout;
-> +/// use kernel::time::Delta;
-> +/// use kernel::sync::{SpinLock, new_spinlock};
-> +///
-> +/// let lock =3D KBox::pin_init(new_spinlock!(()), =
-kernel::alloc::flags::GFP_KERNEL)?;
-> +/// let g =3D lock.lock();
-> +/// read_poll_timeout(|| Ok(()), |()| true, Delta::from_micros(42), =
-Some(Delta::from_micros(42)));
-> +/// drop(g);
-> +///
-> +/// # Ok::<(), Error>(())
+The comment looks obsolete from the old version of this patch.
+Patch 25 is now enforces the fifo order in the verifier
+and code review will do the same for use of res_spin_lock()
+in bpf internals. So pls drop the comment or reword.
 
-IMHO, the example section here needs to be improved.
-
-> +/// ```
-> +#[track_caller]
-> +pub fn read_poll_timeout<Op, Cond, T>(
-> +    mut op: Op,
-> +    mut cond: Cond,
-> +    sleep_delta: Delta,
-> +    timeout_delta: Option<Delta>,
-> +) -> Result<T>
-> +where
-> +    Op: FnMut() -> Result<T>,
-> +    Cond: FnMut(&T) -> bool,
+> +static __always_inline void release_held_lock_entry(void)
 > +{
-> +    let start =3D Instant::now();
-> +    let sleep =3D !sleep_delta.is_zero();
+> +       struct rqspinlock_held *rqh =3D this_cpu_ptr(&rqspinlock_held_loc=
+ks);
 > +
-> +    if sleep {
-> +        might_sleep(Location::caller());
-> +    }
-> +
-> +    loop {
-> +        let val =3D op()?;
+> +       if (unlikely(rqh->cnt > RES_NR_HELD))
+> +               goto dec;
+> +       WRITE_ONCE(rqh->locks[rqh->cnt - 1], NULL);
+> +dec:
+> +       this_cpu_dec(rqspinlock_held_locks.cnt);
 
-I.e.: it=E2=80=99s not clear that `op` computes `val` until you read =
-this.
+..
+> +        * We don't have a problem if the dec and WRITE_ONCE above get re=
+ordered
+> +        * with each other, we either notice an empty NULL entry on top (=
+if dec
+> +        * succeeds WRITE_ONCE), or a potentially stale entry which canno=
+t be
+> +        * observed (if dec precedes WRITE_ONCE).
+> +        */
+> +       smp_wmb();
 
-> +        if cond(&val) {
-
-It=E2=80=99s a bit unclear how `cond` works, until you see this line =
-here.
-
-It=E2=80=99s even more important to explain this a tad better, since it =
-differs slightly from the C API.
-
-Also, it doesn=E2=80=99t help that `Op` and `Cond` take and return the =
-unit type in the
-only example provided.
-
-=E2=80=94 Daniel
-
+since smp_wmb() is needed to address ordering weakness vs try_cmpxchg_acqui=
+re()
+would it make sense to move it before this_cpu_dec() to address
+the 2nd part of the harmless race as well?
