@@ -1,87 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E46433B1;
-	Sat,  8 Feb 2025 01:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4698714A8B
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 01:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738976629; cv=none; b=Iz9XidlAd/46+fy75BN6YNCEWTJ6a1DR7wDGt+0SuoEL72awrfOd/NzfiVLiGxycrxsLyJd+wUlVRI1Yiwu6yLEvoKia4PMs9mh5i/0VlYHip6CVp7H2aaWVIqV6prcTq0mUVz1t4OOacc8QKGBvvvmbk8kyamR/I6kXBxvPty0=
+	t=1738976743; cv=none; b=oAcTueDhlTLbGo8Kb5l0MGGkniSdjvOQJmj+CwwDlLvgShEJgCG37JEGpWDRsjlUU+0lEjwGmhe83htEhPTlZ73G+HYyXFTCMjlvk6Hioow+Kjp6xhMggfPkOdfPG+7DksKpSy+9p5VkrBKQwkBsWNA+Cc6/sbkoQNWhUqm8HSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738976629; c=relaxed/simple;
-	bh=CSJEkYoSHgw6A84OR8krr3l1atnHur4QgCGXV3vANc0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=c8OoUw6qBIvDaOd7J91DlhRGSjfYNNtVM0bRX+QWs6KMs+g932RTZ957jd8A7Gc+6Nsbrsq5U9q248Tkvj5gtL6ZWoU0J1OYSsd8anKmKPFr/fv1BBztlcpYGAdLZk4lLvO6Bf9pNL4ioRUBqfWNit4c6aEpQZCFrAd/khTLuQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIMg4Vyx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738976743; c=relaxed/simple;
+	bh=d8vzZRwLPwViD420OdIgJhDQbhL+2kT+lTYaavjXEgk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jgmyWEsAbqPZIbu8HBUtDl2XhZ+1RdepJqezs5nCNQM5KBHOcaEfWHxV3djJgwDD1hEX4L3p2CAPwr5/1VOCMw+bVLCqv72HAlqC7QR8Dqq6VJjy7kyrdfWLhCblK6ncGaUzCNBDQmBXFP88JpoJdx+ORrlMvVV+nz0yPj/Av8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jjC6fNht; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIMg4Vyx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AE58C4CED1;
-	Sat,  8 Feb 2025 01:03:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738976629;
-	bh=CSJEkYoSHgw6A84OR8krr3l1atnHur4QgCGXV3vANc0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=FIMg4Vyx2VctynyIwBv18ADfdQFQSpFJ4y/o9e3/JjezrZdFaY5/F1jWot+jG76L0
-	 /8eAkVqV48Zq8k4h4M4yyvE0sxw1wJP6L+iFCeMzm2b50jePx//SG6DqRDnAbkxGqC
-	 qHeuPasGU+lw9x61cKyEHfHj2rk1M+gQs8+dDJDkJ2+F0gDsbKq2S3o3QLvyo08VbV
-	 o/pbIYgqMtSqv3zH44qKSXAMh4EXG5VjsP2V0idVu71wPJ7x7q3LPSleHNUuMUV8gd
-	 ONl/pltNWqDzVDi+GVV6VQ0tc05YfLMDbYHxEAHrKFgWS3pfWDd0F6LsWGSojqcJGO
-	 A/pwSprNO37HQ==
-From: broonie@kernel.org
-Date: Sat, 08 Feb 2025 01:03:27 +0000
-Subject: [PATCH 4/4] ASoC: tas2764: Add reg defaults for
- TAS2764_INT_CLK_CFG
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jjC6fNht"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738976742; x=1770512742;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=d8vzZRwLPwViD420OdIgJhDQbhL+2kT+lTYaavjXEgk=;
+  b=jjC6fNhtVYjIr3Z4tOtfx66lV+JHiHUcMFKPAhuPn4MemtsyUkIECpWa
+   TOEkqq+OEcBkO77ukfN5dl+cSROt8lf2hKeBzexZlRjBzQjCKDDfoo3Pq
+   OuO6h0H8H8ZntTTn6NZyK1Y7sM2WZFQIXIE1MWrvTTTcu2pN7RAtVd96U
+   HHoP+G3zeFFbPle/ZJ5tTjjte2PP2Q54RlWlosuUKkz5f2tShxGjZecc3
+   /9GiZYzn6zmJQ3wH97B+oHgyqsQjyutHXR77oUnc67qWa14Ii1E+HHCBL
+   CT1cgMXdlsI/nyTeG3i+6j2/PCKYRamyZ+3MylHRq7fMqGjCHO9atR9M2
+   g==;
+X-CSE-ConnectionGUID: SVkTEiGBSPaYKBBarX/mWQ==
+X-CSE-MsgGUID: gxM7DqydQVGisvzyFww1qA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39756997"
+X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
+   d="scan'208";a="39756997"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 17:05:41 -0800
+X-CSE-ConnectionGUID: S6SyaLI+TpuY3YmuzPn2cQ==
+X-CSE-MsgGUID: H55n+kLZTaO7+KZt1W2iow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="134911131"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 07 Feb 2025 17:05:38 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tgZHr-000zKh-1X;
+	Sat, 08 Feb 2025 01:05:35 +0000
+Date: Sat, 8 Feb 2025 09:04:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: zihan zhou <15645113830zzh@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, bsegall@google.com,
+	dietmar.eggemann@arm.com, juri.lelli@redhat.com,
+	linux-kernel@vger.kernel.org, mgorman@suse.de, mingo@redhat.com,
+	peterz@infradead.org, rostedt@goodmis.org,
+	vincent.guittot@linaro.org, vschneid@redhat.com
+Subject: Re: [PATCH V2 2/2] sched: Reduce the default slice to avoid tasks
+ getting an extra tick
+Message-ID: <202502080831.VwRnAlxo-lkp@intel.com>
+References: <20250207062402.33725-1-15645113830zzh@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250208-asoc-tas2764-v1-4-dbab892a69b5@kernel.org>
-References: <20250208-asoc-tas2764-v1-0-dbab892a69b5@kernel.org>
-In-Reply-To: <20250208-asoc-tas2764-v1-0-dbab892a69b5@kernel.org>
-To: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
- Baojun Xu <baojun.xu@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Dan Murphy <dmurphy@ti.com>, Hector Martin <marcan@marcan.st>, 
- =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=648; i=broonie@kernel.org;
- h=from:subject:message-id; bh=QB5fTSuWQRpBnz3TTt9b1t0jCO37QmgQ/WwnFRiQkBQ=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBnpq1jzB3C18ei2mHXnLmDEgPbn3b0h3Qr/S27H
- qFTeJ5wmDyJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZ6atYwAKCRAk1otyXVSH
- 0NXPB/4hP+54x8ywEjRgl75Ek2u0RmyrsCz/6qm8/a7B9jJRhfKM/iLG+Bp3Ty4aqDBYk83TiUH
- FCx758Hx2JLR0pUphlEO8lYM/lC3v2NpHPCvOx9pcoi5KFTyhZ9qx9VBpLJoBvBowIoGZLuOphk
- 4FkbuFyL4YLh3LQ8xETyMXmrr/UR1P9A5aCiiCyp1v/shpZn/hzKd/ly+fRo9FT64/U6RFo73uh
- L+qXCVzbKaMIeUYOTD8/X5WW9oWlRb+A8m0P0CssSBFZU3AJTvQabAzPqbnc4YYVqviq89vKn2f
- ZSQt7lB+XJB/x/NMcThqKx6we7DbokKlpC/fOzMs6VmIy7US
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207062402.33725-1-15645113830zzh@gmail.com>
 
-From: Hector Martin <marcan@marcan.st>
+Hi zihan,
 
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/codecs/tas2764.c | 1 +
- 1 file changed, 1 insertion(+)
+kernel test robot noticed the following build errors:
 
-diff --git a/sound/soc/codecs/tas2764.c b/sound/soc/codecs/tas2764.c
-index d01333c7dd93..49d32e957789 100644
---- a/sound/soc/codecs/tas2764.c
-+++ b/sound/soc/codecs/tas2764.c
-@@ -625,6 +625,7 @@ static const struct reg_default tas2764_reg_defaults[] = {
- 	{ TAS2764_TDM_CFG2, 0x0a },
- 	{ TAS2764_TDM_CFG3, 0x10 },
- 	{ TAS2764_TDM_CFG5, 0x42 },
-+	{ TAS2764_INT_CLK_CFG, 0x19 },
- };
- 
- static const struct regmap_range_cfg tas2764_regmap_ranges[] = {
+[auto build test ERROR on tip/sched/core]
+[also build test ERROR on peterz-queue/sched/core linus/master v6.14-rc1 next-20250207]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/zihan-zhou/sched-Reduce-the-default-slice-to-avoid-tasks-getting-an-extra-tick/20250207-142556
+base:   tip/sched/core
+patch link:    https://lore.kernel.org/r/20250207062402.33725-1-15645113830zzh%40gmail.com
+patch subject: [PATCH V2 2/2] sched: Reduce the default slice to avoid tasks getting an extra tick
+config: i386-randconfig-141-20250208 (https://download.01.org/0day-ci/archive/20250208/202502080831.VwRnAlxo-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502080831.VwRnAlxo-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502080831.VwRnAlxo-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from kernel/sched/build_utility.c:72:
+>> kernel/sched/debug.c:193:2: error: call to undeclared function 'sched_update_scaling'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     193 |         sched_update_scaling();
+         |         ^
+   1 error generated.
+
+
+vim +/sched_update_scaling +193 kernel/sched/debug.c
+
+   168	
+   169	
+   170	static ssize_t sched_base_slice_write(struct file *filp, const char __user *ubuf,
+   171					   size_t cnt, loff_t *ppos)
+   172	{
+   173		char buf[16];
+   174		unsigned int base_slice;
+   175	
+   176		if (cnt > 15)
+   177			cnt = 15;
+   178	
+   179		if (copy_from_user(&buf, ubuf, cnt))
+   180			return -EFAULT;
+   181		buf[cnt] = '\0';
+   182	
+   183		if (kstrtouint(buf, 10, &base_slice))
+   184			return -EINVAL;
+   185	
+   186	
+   187		base_slice = clamp_t(u64, base_slice,
+   188						NSEC_PER_MSEC/10,   /* HZ=1000 * 10 */
+   189						NSEC_PER_MSEC*100); /* HZ=100  / 10 */
+   190	
+   191		sysctl_sched_base_slice = base_slice;
+   192	
+ > 193		sched_update_scaling();
+   194	
+   195		*ppos += cnt;
+   196		return cnt;
+   197	}
+   198	
 
 -- 
-2.39.5
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
