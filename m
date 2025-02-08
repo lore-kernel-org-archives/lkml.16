@@ -1,85 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 009.lax.mailroute.net (009.lax.mailroute.net [199.89.1.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C57117B506
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 02:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F46522F;
+	Sat,  8 Feb 2025 02:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738983017; cv=none; b=iXYfLwN2V0eDo/P4MCC/KRBV4ZIFDKqoR318afVynsfNGvqtaWBRqNa/PNOZdWC63xpQJ78qM4RGbGuQ7KXvCaga7nisH+NcHci8ip/aivDn+WzlvRicmeIzqOSJOq9iMtcum6BMtw7IW25LTeYqpQdNUAKTUZN7Iij9kHhPpho=
+	t=1738983185; cv=none; b=Vc0Q49LNjpgLDO0CIefCw06UDbELRx4YYtXMKqmEmQS9r3+GGmz2uXQUUl+ncrk3eBtqW8lL2BvJdjxyLOjCVfR4gu3mKUcOwSCOoX6uQD20CrETHKlwbOQCWC2L2U04L+jAW/UjUsY/sSQEydW5rqfJlKmqFwNQPRyIqzC/AGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738983017; c=relaxed/simple;
-	bh=pDRzqpp8fUS1lYlC2zVt4ipLm46EmEyYzyuHUVJ7uDA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=MNHFhG34btb2JOgLUo7/HVPzv6oYj9PpXZar2b3TB/rIzqCP8fLNmjYRBH22BS0DXtGnVO/lwJce7l0GcUGdRq7alLbRDng4OS7gJ+x4G4FVwFk0w3UOBBwzOhwejbdmS9OSJlaW6zspPoAHOpvp4QVli0ofaDghvBTzds6/yRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=0fOTGxYe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738983185; c=relaxed/simple;
+	bh=oh6DENofgUHMz/8AVMYVJvixcYcOidKWKaEz5d0gzS0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LJPhW3ygG7BVCkBrYlRGJzSP0sFejJa5ZFX8q2q3OoLJvdmHEqjEVfemaNgBxMWWGp+pX+ezNxNqrzU1+9HAQ6OdBDyLB/W+T4Xsoq7I1fVpMZJHL+W2O7tEefnWKe/piUfZTVvTTz2TePnIVRSLtl0FSzgDK360qtQj/hS4Utk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=ovK51B/j; arc=none smtp.client-ip=199.89.1.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="0fOTGxYe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87B8CC4CED1;
-	Sat,  8 Feb 2025 02:50:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1738983015;
-	bh=pDRzqpp8fUS1lYlC2zVt4ipLm46EmEyYzyuHUVJ7uDA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=0fOTGxYeUAMW+cSH/0d9eI5mMBIljHmvTCF64i/LBiommBfR1v0tHDtj4i6bNZ4BK
-	 juCTFccDEGJb9hnjFjwxi19z3NxzTpVXssuoPRPwZfWcUltE86E6dDOlH3+IdZROB7
-	 204bQVNPBSLEv/GtIxxQGnxnevGHPsx15YtyD6DA=
-Date: Fri, 7 Feb 2025 18:50:14 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Jann Horn <jannh@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: use READ/WRITE_ONCE() for vma->vm_flags on migrate,
- mprotect
-Message-Id: <20250207185014.c5d9f8f3e7065c11a4825125@linux-foundation.org>
-In-Reply-To: <20250207172442.78836-1-lorenzo.stoakes@oracle.com>
-References: <20250207172442.78836-1-lorenzo.stoakes@oracle.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="ovK51B/j"
+Received: from localhost (localhost [127.0.0.1])
+	by 009.lax.mailroute.net (Postfix) with ESMTP id 4Yqb4G6s6MzlgTwQ;
+	Sat,  8 Feb 2025 02:53:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1738983177; x=1741575178; bh=4FFbTlx5LV+h8M1IzCJ0Rk7p
+	GIZ7DeOsHyH8TXJjSDA=; b=ovK51B/jZfMCkN27WBqitmpJjcsYl7CTAtYOJ0ru
+	g1M6jfDtDMRRgfL/kHBZaxJ0HvMS1TpS1gQ0+p3wiCNL0lTp1KSSnB4TFJLfMNI1
+	c8Y0ZuG46K1qUEPN5obo2BuL13OonTffTaTNhilC7u73/vgetPQztL9ZlPk1uX/6
+	991DT1LAkrZpAv1+UJz3KoVldfu/sIV5zeX8GGq98ehGtCDWNvUlf2gtlkKl/Rgz
+	p9ew5F56/F8sRtxZfKxQwO0vIhcPY1KdID2OrYF8FIXlbNtjc64c46NBpZHphrVN
+	2kO0yXLiAaNweHv9mbUf1gkZgyevGNkd5+0XUFOPRH1XgA==
+X-Virus-Scanned: by MailRoute
+Received: from 009.lax.mailroute.net ([127.0.0.1])
+ by localhost (009.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id Kc81cGdEH4Xr; Sat,  8 Feb 2025 02:52:57 +0000 (UTC)
+Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 009.lax.mailroute.net (Postfix) with ESMTPSA id 4Yqb434XJHzlgTwF;
+	Sat,  8 Feb 2025 02:52:50 +0000 (UTC)
+Message-ID: <e56577db-b94c-4f38-868b-dd3be65f780d@acm.org>
+Date: Fri, 7 Feb 2025 18:52:48 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 0/2] refcount: attempt to avoid imbalance warnings
+To: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Marco Elver <elver@google.com>, Nick Desaulniers <ndesaulniers@google.com>,
+ Alexander Aring <aahringo@redhat.com>, Will Deacon <will@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Mark Rutland <mark.rutland@arm.com>, thunder.leizhen@huawei.com,
+ jacob.e.keller@intel.com, Andrew Morton <akpm@linux-foundation.org>,
+ Sparse Mailing-list <linux-sparse@vger.kernel.org>,
+ cluster-devel <cluster-devel@redhat.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20220630135934.1799248-1-aahringo@redhat.com>
+ <CAHk-=wjZfO9hGqJ2_hGQG3U_XzSh9_XaXze=HgPdvJbgrvASfA@mail.gmail.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <CAHk-=wjZfO9hGqJ2_hGQG3U_XzSh9_XaXze=HgPdvJbgrvASfA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Fri,  7 Feb 2025 17:24:42 +0000 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
-
-> According to the syzbot report referenced here, it is possible to encounter
-> a race between mprotect() writing to the vma->vm_flags field and migration
-> checking whether the VMA is locked.
+On 6/30/22 9:34 AM, Linus Torvalds wrote:
+> On Thu, Jun 30, 2022 at 6:59 AM Alexander Aring <aahringo@redhat.com> wrote:
+>>
+>> I send this patch series as RFC because it was necessary to do a kref
+>> change after adding __cond_lock() to refcount_dec_and_lock()
+>> functionality.
 > 
-> There is no real problem with timing here per se, only that torn
-> reads/writes may occur. Therefore, as a proximate fix, ensure both
-> operations READ_ONCE() and WRITE_ONCE() to avoid this.
+> Can you try something like this instead?
 > 
-> This race is possible due to the ability to look up VMAs via the rmap,
-> which migration does in this case, which takes no mmap or VMA lock and
-> therefore does not preclude an operation to modify a VMA.
+> This is two separate patches - one for sparse, and one for the kernel.
 > 
-> When the final update of VMA flags is performed by mprotect, this will
-> cause the rmap lock to be taken while the VMA is inserted on split/merge.
+> This is only *very* lightly tested (ie I tested it on a single kernel
+> file that used refcount_dec_and_lock())
 > 
-> However the means by which we perform splits/merges in the kernel is that
-> we perform the split/merge operation on the VMA, acquiring/releasing locks
-> as needed, and only then, after having done so, modifying fields.
-> 
-> We should carefully examine and determine whether we can combine the two
-> operations so as to avoid such races, and whether it might be possible to
-> otherwise annotate these rmap field accesses.
+>                  Linus
 
-Thanks.
+(replying to an email from two years ago -- see also
+https://lore.kernel.org/linux-kernel/CAHk-=wjZfO9hGqJ2_hGQG3U_XzSh9_XaXze=HgPdvJbgrvASfA@mail.gmail.com/)
 
-If some poor person reads this code and wonders "why is it using
-READ_ONCE", what's our answer?  I guess it's "poke around with
-git-blame".
+Hi Luc,
 
-And I guess we can live with that - it doesn't seem practical to paste
-changelog text into every READ_ONCE() site.
+Are there any plans to add support for __cond_acquires() in sparse?
 
-Probably most people won't bother and READ_ONCEs of ->vm_flags will get
-pasted into other places where unneeded.
+Marco Elver (Cc-ed) and I are looking into enabling the Clang 
+-Wthread-safety compiler flag for Linux kernel code. If we want to keep the
+sparse locking annotations, a first step would be to convert all
+__cond_lock() annotations into __cond_acquires(). When I tried to make
+that change I noticed that sparse does not yet support
+__cond_acquires(). Hence my question about the plan to support
+__cond_acquires() in sparse?
 
-I do wonder if we can do better.
+Thanks,
 
+Bart.
