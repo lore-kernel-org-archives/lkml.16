@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C633241100;
-	Sat,  8 Feb 2025 21:59:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6886F241100;
+	Sat,  8 Feb 2025 21:59:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739051987; cv=none; b=pHOVhJXRqSfPImToAhPuEQRbUH4umaULgDd/y/JxuArLIGigQ6THAlp6ZcWD1zxo3Zm13w7CbjmRpDkT2E2PHsfjrzCU3liALrxX+kXIq8/4S1O36AZaHU46753ttmvQJ/i+ybGYB8EieGMf6mWSL3tSEwG178B6CWjAQMkDVFU=
+	t=1739051994; cv=none; b=NTWYrJvmDV1vSp61aCuPkljCVOzOAhkO9lReRT+u0mtuEQRxBrV54/sLs6fLpqk08cWr4EEvKbJqpLDfyeRFjXddLfMm9RRyrH1QOvBj0whQO2l3dlYUHXR4bx0DuVhYqwtZQ8QONG9FP9Qo5h3uK3Ah1mFJsDpjUhMvuuREWSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739051987; c=relaxed/simple;
-	bh=opvDsrP0v/P8S2rjtY57rhFycm7ls+7vP+qbBtwjixE=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=FtegmU/5ZwtXaY0sbIDDeFCp6C1WozA2RiwZbl0Kt5N4BuGl5/phA/wc3zZ5RK/K/B4D3fqEqrJSmYdVgzXgrPTeaWDW64lkqjBbuXve6vhIocpdBFzYkgBgeQcvRJryxY87GnVwDvvE8WVa/lo8oq3rfuYW1C+BcQFkkr4kPWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pbdYnpVi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739051994; c=relaxed/simple;
+	bh=RQCmYl4f87dO+OY/HCvK68sf4okDPgKkRLiTNMmiyZc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=GOIWJISm8bFymZn/XYlVgke0t2eirI2bHJv3g5T2UFngaXvecFQiNVicoe4QzyWpLHxOtj9nvNGojD3j2VddTzPtdoEmV7kV+Wk+rCoCPu6uQucZE5wGijuQ6oh9fn6Pm6GOav/PqcrQko0nwbuSpz6lCoi5JxBN+8g323cblZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oukq83vz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pbdYnpVi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7E70C4CED6;
-	Sat,  8 Feb 2025 21:59:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oukq83vz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46635C4CED6;
+	Sat,  8 Feb 2025 21:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739051985;
-	bh=opvDsrP0v/P8S2rjtY57rhFycm7ls+7vP+qbBtwjixE=;
+	s=k20201202; t=1739051994;
+	bh=RQCmYl4f87dO+OY/HCvK68sf4okDPgKkRLiTNMmiyZc=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=pbdYnpViYSdibMIOgowycpShOEeED793MU0djWSDvzG8l1rJgmytpqAVT1ZDnFrnZ
-	 ths4ul6mSsuUQUCN9WJpusnuUrO4Ke6ZZIDHW3c4dSxgtJludnq/7XRRIGWxUiDGkm
-	 rYMhGo7xHhvQwDDM6GwBbQaK1kL2x4yNtL5U8IDj0iF1n6dsDFn6504A5QRifIkp6o
-	 8TLF6bJ9HQDVOd1BJfdsaSjewbjTIoexdKfqKWUeHt23BN9oOBrXIjoJmYFhHcy6uY
-	 VRwhmLnwkYMf71BVFN2nLvRE2XJ7+ljiMRZvx2EqHeYPZF4vZE3COqk1yxgTDaggk8
-	 504zdpUGWZN1Q==
+	b=Oukq83vzCIvXjJO5y3C4cRwuw26kTnEt9ypes79IAUYLzWMF0oPZKS080pkqtAVyJ
+	 7xhFjS7jKptyj9fZRCtlgQjZQlhERfTPbxWn8ilyoA5tTurvS89Si4cOTv8GqGGPKK
+	 s9mq/2oDfErhj+XB/2MmYJikFO1LM2XZK+pacSx/98HBjePsKyGF2pbBQxktnXHMPx
+	 h4W8ZTgTgfLh4uWJf1MrboCzNRZGuSGeSJzcSZUdnXnpHZ0d9/4QTgWRjiCjdcXW76
+	 +fFUfUSDyVQlhrG6ztqQ/GVznZ5is+a51AZ6/ns/6mGouGwTBu+rEg4mS3RjYZC+f8
+	 kzngRGHyCXpWA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id F0BB0380AAF5;
-	Sat,  8 Feb 2025 22:00:14 +0000 (UTC)
-Subject: Re: [PULL REQUEST] i2c-for-6.14-rc2
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE002380AAF5;
+	Sat,  8 Feb 2025 22:00:23 +0000 (UTC)
+Subject: Re: [GIT PULL] SCSI fixes for 6.14-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <Z6dG_QT0l_ehhZd8@shikoro>
-References: <Z6dG_QT0l_ehhZd8@shikoro>
-X-PR-Tracked-List-Id: <linux-i2c.vger.kernel.org>
-X-PR-Tracked-Message-Id: <Z6dG_QT0l_ehhZd8@shikoro>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.14-rc2
-X-PR-Tracked-Commit-Id: 3bfa08fe9ec8dd79e183c88e1275be74191e7bc8
+In-Reply-To: <fa30513f6dbeb074de75d33b2270dcc60c1f8faa.camel@HansenPartnership.com>
+References: <fa30513f6dbeb074de75d33b2270dcc60c1f8faa.camel@HansenPartnership.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <fa30513f6dbeb074de75d33b2270dcc60c1f8faa.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+X-PR-Tracked-Commit-Id: 5233e3235dec3065ccc632729675575dbe3c6b8a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 74b5161d57c1dd221a20f89e3d490da56b223a29
-Message-Id: <173905201361.2669229.5599082119832862022.pr-tracker-bot@kernel.org>
-Date: Sat, 08 Feb 2025 22:00:13 +0000
-To: Wolfram Sang <wsa@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>, Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>
+X-PR-Merge-Commit-Id: 493f3f38da21cf61b25254f7a3dc817179b497c8
+Message-Id: <173905202240.2669229.3335363051326487603.pr-tracker-bot@kernel.org>
+Date: Sat, 08 Feb 2025 22:00:22 +0000
+To: James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, linux-scsi <linux-scsi@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sat, 8 Feb 2025 12:58:53 +0100:
+The pull request you sent on Sat, 08 Feb 2025 14:23:51 -0500:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.14-rc2
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/74b5161d57c1dd221a20f89e3d490da56b223a29
+https://git.kernel.org/torvalds/c/493f3f38da21cf61b25254f7a3dc817179b497c8
 
 Thank you!
 
