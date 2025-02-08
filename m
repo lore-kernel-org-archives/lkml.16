@@ -1,114 +1,79 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECD7157E6B;
-	Sat,  8 Feb 2025 06:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B497313D28F;
+	Sat,  8 Feb 2025 06:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738996925; cv=none; b=ukHx2G38CIrBbJVyJevTv97UQZR0Sbp79yc1ufzZTvODwXJ3U2QYEvj1GqXbmwuVL3O5uPa+iM+T51sjZBpwGsj3hEpIZYSJqCsD+IiMDhYqINlH3nl+O1uHx9KpsHxJH6drV6fdiFWPp1JHNgCNkd3FBa07D6owuIsN3mH112k=
+	t=1738997349; cv=none; b=kLdzRFSahXOx3LkxaSwnRIk8kUDt1oHH4AEuFx6Eox+jlRuwYWBGag/rHOIjObMY7+eB9A+IuA3av4turaYowpTVNLAlctqXT+eUH9VeXZYF7xOgui9iF7tLf3Og+JT7eqqgCkhS1VIg9dcakRabFfrqcg/JBIXfW+d2zVUkJ2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738996925; c=relaxed/simple;
-	bh=wWMaU7kgqaQKoYCnX/AS8gqZVoCu0I4JE4OFgye+g8E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WOo+Z7gIQIa+AHx7i1352f9D/JrU27ZYtThcuq/c0AjdapTbMqzKg7QCJZN1WlS9wRIcb05U9Ib3E+ybz+We0koV/rDB5WS+Z+INIWl1px4OWfWuff5wcdwz+2KEvGxam5tYOZunTopwryPMlggyEk84rAEnTutDRocFLmQEeHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HvsqJvHC; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HvsqJvHC"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e442b79de4so18806156d6.2;
-        Fri, 07 Feb 2025 22:42:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738996923; x=1739601723; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KNoF24EWj8YqX5r+Yb0JvKHiF3XwnsqNhDQYoay6GVM=;
-        b=HvsqJvHCYRRcgEhpZVy6X7g2H4ET4jp0UXf3e/O4cHeXbO1Ke51NDcsD4Y8t6Jts93
-         RTj1A4h63aGdha8NHOkDvw4LrHoUYOvahqJOrCaZw2EDZpFu85HYFZ18zAF297aIlBaY
-         V3Q5kG0GyyNSgfFR8JR6pV2hV6RhLbc2Ma35YqZZSUQRKVo97fX8Z7MIet81kAp2nfmX
-         a40yeTUl3aCTiIN7kaefhqeKyh+IG45GbMEXxkWYuirNnGEdGk86Mpi9XmnTc8JSqmdK
-         jojXLoXQcPNRpOKPFrDusUeLP3TGMz+/BLSEcMywRAu/qM8V0yPkOICOU/19oq1FLDEW
-         prbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738996923; x=1739601723;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KNoF24EWj8YqX5r+Yb0JvKHiF3XwnsqNhDQYoay6GVM=;
-        b=rnbYILwK8v6Ax7f6su67vswc6h7RhuJQF+tH5kXDAfk5HW268k64I7S9hZATLzyoNA
-         O6Mtk2PLK0wsan4e8qKUMarX/yjBPN5++ecS8bAahoRE8EsxZrgNbjbf8g+qChnkXjNR
-         QfveaZiazqktsMwUaZcCXdnJ2Ou3nnQBVAcKSPRWrfLTf23M6Z8IfklRc9ycwo0wizDV
-         0CFL6DrN4+VyiWSlh9Qo+FdgqI6o/nnqEZIzurJ6wr1WZoh0ejqUndYb/2Nc43C9+g5F
-         SQruL7MtBptN9nm8m76HiBQpJ7Wnwxx6bpWaH0yV8p6PpxBSVHTtoSh3uHT1v1zn8Iwy
-         I+sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVP0GQfukhZOG146+5VfTvJVpYjHwD+9gAzX5fJIIuizuWG5XJuljSGLEN4eTk369SoMmVkpi7CfsupEPItvg==@vger.kernel.org, AJvYcCVe/KQozHTLNBPHhU5DPQxC9am1O+8hClj0t6/xNQmAFrAZOsMxTrmQhypqxycC6uuX6Hz6MVtdaeJKsTM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfevUmOZ5YYyhXCIGBlxa8edjfv8MnqJ88oWf+0VVN405uBvLA
-	iTGq51iCMCHp11KowcgcBMYS4pEgoY2Q3F0PlWmedm3zLANhSCpK8zEM117AxJ52Au91efMz4wb
-	nwYSNuMVTMt7Ale06mHzBhW0AXpc=
-X-Gm-Gg: ASbGncuxwNC7K0ayhjln+w+1mpK11DBEQ8fIa90JyT5R6ro1s9594zXnlAquEypDjxO
-	Xazk/M2C5A1dXkrUnlpp+XEE2dNBhylmB4/Mg6krimwcDEEFjmwNkV+ik9vhmvDsquNf+Mlvcvk
-	M=
-X-Google-Smtp-Source: AGHT+IEs9HDzxbSnf4IuE2Us6jRZq5uN6GtBF34aMoCTWAhmW49kkqa8vONjcSMbO5sJv9M9Po/b4dEo6KUDYdx+FNc=
-X-Received: by 2002:a05:6214:c6e:b0:6d8:9e16:d08e with SMTP id
- 6a1803df08f44-6e445684b70mr70874766d6.26.1738996922769; Fri, 07 Feb 2025
- 22:42:02 -0800 (PST)
+	s=arc-20240116; t=1738997349; c=relaxed/simple;
+	bh=xwYPglYfWZQX9I96IJ2FCnH+PLuxow1CW5yBxYQe27A=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=tPPyG1b2Ba5ND+I5z5tMyVGrEEwEKIzYZ+ifHwDp/47XZ8A86YqgHFsSQrGletTIQrpQH6/4X85uHioz8wp048tmcReb7uw6IpH36o5WWmQ0qbjyFnL2kjhlpvLl8NyY5rqhmLEwvwufeUabFpBXTUDI6L87mN6/sgXAOATzzyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4YqhJd5LrJz5B1KR;
+	Sat,  8 Feb 2025 14:49:05 +0800 (CST)
+Received: from njb2app06.zte.com.cn ([10.55.23.119])
+	by mse-fl1.zte.com.cn with SMTP id 5186mwED099905;
+	Sat, 8 Feb 2025 14:48:58 +0800 (+08)
+	(envelope-from jiang.kun2@zte.com.cn)
+Received: from mapi (njb2app05[null])
+	by mapi (Zmail) with MAPI id mid204;
+	Sat, 8 Feb 2025 14:49:01 +0800 (CST)
+Date: Sat, 8 Feb 2025 14:49:01 +0800 (CST)
+X-Zmail-TransId: 2afd67a6fe5dffffffff823-4a626
+X-Mailer: Zmail v1.0
+Message-ID: <20250208144901218Q5ptVpqsQkb2MOEmW4Ujn@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250127063526.76687-1-laoar.shao@gmail.com> <Z5eOIQ4tDJr8N4UR@pathway.suse.cz>
- <CALOAHbBZc6ORGzXwBRwe+rD2=YGf1jub5TEr989_GpK54P2o1A@mail.gmail.com>
- <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz> <CALOAHbDwsZqo9inSLNV1FQV3NYx2=eztd556rCZqbRvEu+DDFQ@mail.gmail.com>
- <CAPhsuW4gYKHsmtHsBDUkx7a=apr_tSP_4aFWmmFNfqOJ+3GDGQ@mail.gmail.com>
- <CALOAHbDYFAntFbwMwGgnXkHh1audSoUwG1wFu_4e8P=c=hwZ0w@mail.gmail.com>
- <CAPhsuW4HsTab+w2r23bM52kcM1RBFBKP5ujVdDvxLE9OiqgMdA@mail.gmail.com>
- <CALOAHbAJBwSYju3-XEQwy0O1DNPawuEgmhrV5ECTrL9J388yDw@mail.gmail.com> <CAPhsuW51E4epDCrdNcQCG+SzHiyGhE+AocjmXoD-G0JExs9N1A@mail.gmail.com>
-In-Reply-To: <CAPhsuW51E4epDCrdNcQCG+SzHiyGhE+AocjmXoD-G0JExs9N1A@mail.gmail.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Sat, 8 Feb 2025 14:41:26 +0800
-X-Gm-Features: AWEUYZnkfqwAOyDcshbUwDrxk7zHdHKhEWMZwGV_f1rXNLE-APUdHuKjOXI0J5I
-Message-ID: <CALOAHbAaCbvr=F6PBJ+gnQa1WNidELzZW-P2_HmBsZ1tJd6FFg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/2] livepatch: Add support for hybrid mode
-To: Song Liu <song@kernel.org>
-Cc: bpf <bpf@vger.kernel.org>, Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, 
-	jpoimboe@kernel.org, jikos@kernel.org, joe.lawrence@redhat.com, 
-	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+From: <jiang.kun2@zte.com.cn>
+To: <bsingharora@gmail.com>, <akpm@linux-foundation.org>, <david@redhat.com>
+Cc: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <wang.yong12@zte.com.cn>,
+        <wang.yaxin@zte.com.cn>, <fan.yu9@zte.com.cn>, <he.peilin@zte.com.cn>,
+        <tu.qiang35@zte.com.cn>, <qiu.yutan@zte.com.cn>,
+        <zhang.yunkai@zte.com.cn>, <ye.xingchen@zte.com.cn>,
+        <xu.xin16@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIGxpbnV4IG5leHRdIHRhc2tzdGF0czogbW9kaWZ5IHRhc2tzdGF0cyB2ZXJzaW9u?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 5186mwED099905
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 67A6FE61.000/4YqhJd5LrJz5B1KR
 
-On Fri, Feb 7, 2025 at 2:01=E2=80=AFAM Song Liu <song@kernel.org> wrote:
->
-> On Wed, Feb 5, 2025 at 6:55=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com>=
- wrote:
-> [...]
-> > > I think we should first understand why the trampoline is not
-> > > freed.
-> >
-> > IIUC, the fexit works as follows,
-> >
-> >   bpf_trampoline
-> >     + __bpf_tramp_enter
-> >        + percpu_ref_get(&tr->pcref);
-> >
-> >     + call do_exit()
-> >
-> >     + __bpf_tramp_exit
-> >        + percpu_ref_put(&tr->pcref);
-> >
-> > Since do_exit() never returns, the refcnt of the trampoline image is
-> > never decremented, preventing it from being freed.
->
-> Thanks for the explanation. In this case, I think it makes sense to
-> disallow attaching fexit programs on __noreturn functions. I am not
-> sure what is the best solution for it though.
+From: Wang Yaxin <wang.yaxin@zte.com.cn>
 
-There is a tools/objtool/noreturns.h. Perhaps we could create a
-similar noreturns.h under kernel/bpf and add all relevant functions to
-the fexit deny list.
+add the "delay max" and the "delay min" to the taskstats structure,
+and the taskstats version needs to be updated accordingly.
 
---
-Regards
-Yafang
+Signed-off-by: Wang Yaxin <wang.yaxin@zte.com.cn>
+Signed-off-by: Kun Jiang <jiang.kun2@zte.com.cn>
+Reviewed-by: xu xin <xu.xin16@zte.com.cn>
+---
+ include/uapi/linux/taskstats.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/uapi/linux/taskstats.h b/include/uapi/linux/taskstats.h
+index 934e20ef7f79..95762232e018 100644
+--- a/include/uapi/linux/taskstats.h
++++ b/include/uapi/linux/taskstats.h
+@@ -34,7 +34,7 @@
+  */
+
+
+-#define TASKSTATS_VERSION	14
++#define TASKSTATS_VERSION	15
+ #define TS_COMM_LEN		32	/* should be >= TASK_COMM_LEN
+ 					 * in linux/sched.h */
+
+-- 
+2.25.1
