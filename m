@@ -1,51 +1,51 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5312C2500A4;
-	Sat,  8 Feb 2025 13:38:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6792475EF;
+	Sat,  8 Feb 2025 13:38:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739021896; cv=none; b=mjRbvgjE12qP0eOIXBWQoYjciav7VMQxrwFwwu4t59xWI9lKaLpj+/of48gv4HEYM0MSgvPoNCrK6aoBDyyyQo6wf8+7CNRu/pDLusUbMt0t8T6oL28eUle6VHD39onwuxkmR+SgpJ3pEb0pHXmK65AOdMvdxf1sWtZea2H13ZQ=
+	t=1739021901; cv=none; b=Ji0mVMEGvP0BnVKKBCcrk31PEAUT54tVUrmcODlfyeeH9eADb2W1O+epyTjPyhzEhE6QapjWt80tOwN4GFTneRA5yFNRIvNNs3OtLkV47I8nH0E1Pe4DqUseEDNYoYdSYSogjbNKT3CaYFvfiGkPC3ruoAgdW6TixxNpmxBBKC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739021896; c=relaxed/simple;
-	bh=ZdKRVU9eGRkL73ZQpCwd6P0zPapEQjUIU4zVNNVdh+I=;
+	s=arc-20240116; t=1739021901; c=relaxed/simple;
+	bh=gI2pA/dMXWtVaf4bIfmJEZPL3CWsf7D7LIheFkRsga4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GHJdpR8Ou81AQwG312hC617PUgjgaYYioQu51XTMCkEXHvKSIUkDy53qd8FOSQyeiuIwvH6YJWk3rzgCEfUIGCcmtn3yJEqbpc+pUSMGOBk1SpWh1FCWf7TH7DEDb+fULViWK3XPH+oomJdZMFRSrUBG4fj0S1qOl7V5FswE+ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A2yiDf/I; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version; b=mJXHV+ts+jHmFlN/9kd/y18aToOKU5nSiuJfqW6cN//Ag8Yj2Xs6S8f0K5upOwLDKJ9QwXMnEc9AyFTXJ2jGfdjOijO+PCt7BYtUo1OFvDP0SbhUQOBo2sklY4qYyXNZSu4sc+iJT/jVVa2q05wn3Jzt1/mU1yxIUDOt2JoJa3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MB3KvzBO; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A2yiDf/I"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MB3KvzBO"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739021894; x=1770557894;
+  t=1739021900; x=1770557900;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ZdKRVU9eGRkL73ZQpCwd6P0zPapEQjUIU4zVNNVdh+I=;
-  b=A2yiDf/Ih8c3DfBMGl7IYlh8xuk1Zi9El/B+TWZqAU1HcUFosnPhwY3R
-   j4DZxl/cEXvPrLuOjxZkZB0QtqCl7ZL79/Et3+JuyvesPRm1jxk5u1mjI
-   3tyTKSLgVtoD8EMad78e4cKCTlsTXXk1rT0Boq8pbAWzD7Vh5vlbQEIUU
-   b2nvV2u+V284kR7o9uh+WXbZjq8+wYgJsw/Jb50ETtLy9rPNI78xDUqeH
-   ngBLzc5JjUn57xwpwD6a2KeF/PpjxW4tyANBEfTUvilIv6L3toPuzARiA
-   Q2NepOusRLaLr9aSNmqWYVK7AqAwfQqQ0UDZG4ZJjeGYKntAmxgUxi1J7
-   A==;
-X-CSE-ConnectionGUID: OL23F5LUQVuvkVfBSpap3Q==
-X-CSE-MsgGUID: Abn/nMLGQBuQlVTpY9i9Zg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51084823"
+  bh=gI2pA/dMXWtVaf4bIfmJEZPL3CWsf7D7LIheFkRsga4=;
+  b=MB3KvzBOTXpqRHKXRUH6N5KG4Us4yra+/gyoNnsD87YKg5OCYd/mVKR9
+   oJALytit/Iz4c8RDlv8296RXp5siluLkhVLx2/kwOF5BPfpyRmP1VQ/t8
+   12RnuviHocMhbLf+ixyfBgFxqVch4TW0J6M82QVIn79mfytLVdmFRIjH2
+   LF8LZ9DQC9yTM5cSPhkl70HxlhvSO/sXy1ZW9mur4hvsNvADvxWekuGXD
+   1Chk9SUDo1TJ333jrwNaW8O929OxhGCqCx3F5mfp5h0bLPYw3TIYXQRrG
+   DG/29mtaNW9gYaDprwOujxW5tgg3Yc8wBrZpnCRaNQhtxeBFjnUhbzVj6
+   Q==;
+X-CSE-ConnectionGUID: g9ai4Q5IRVmM5gOONXB+wA==
+X-CSE-MsgGUID: 5VYy/YRARs+e/g8uA7GG2Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="51084854"
 X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="51084823"
+   d="scan'208";a="51084854"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 05:38:14 -0800
-X-CSE-ConnectionGUID: 1F28Iap4THqCFh1kCu8VZw==
-X-CSE-MsgGUID: Z9SiQ5RGTDakmZqwU8uR0g==
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 05:38:19 -0800
+X-CSE-ConnectionGUID: 0a15xgLrQniMpMTnrZUCPw==
+X-CSE-MsgGUID: pldJW8wpQ4GmBRovg/5tJg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116980872"
+   d="scan'208";a="116980886"
 Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by orviesa005.jf.intel.com with ESMTP; 08 Feb 2025 05:38:10 -0800
+  by orviesa005.jf.intel.com with ESMTP; 08 Feb 2025 05:38:15 -0800
 Received: from lincoln.igk.intel.com (lincoln.igk.intel.com [10.102.21.235])
-	by irvmail002.ir.intel.com (Postfix) with ESMTP id A5F3132CA1;
-	Sat,  8 Feb 2025 13:38:08 +0000 (GMT)
+	by irvmail002.ir.intel.com (Postfix) with ESMTP id ABD7432CA4;
+	Sat,  8 Feb 2025 13:38:13 +0000 (GMT)
 From: Larysa Zaremba <larysa.zaremba@intel.com>
 To: Tony Nguyen <anthony.l.nguyen@intel.com>,
 	intel-wired-lan@lists.osuosl.org
@@ -60,9 +60,9 @@ Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
 	linux-kernel@vger.kernel.org,
 	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
 	Mateusz Pacuszka <mateuszx.pacuszka@intel.com>
-Subject: [PATCH iwl-next v3 3/6] ice: receive LLDP on trusted VFs
-Date: Sat,  8 Feb 2025 14:22:44 +0100
-Message-ID: <20250208132251.1989365-4-larysa.zaremba@intel.com>
+Subject: [PATCH iwl-next v3 6/6] ice: enable LLDP TX for VFs through tc
+Date: Sat,  8 Feb 2025 14:22:47 +0100
+Message-ID: <20250208132251.1989365-7-larysa.zaremba@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250208132251.1989365-1-larysa.zaremba@intel.com>
 References: <20250208132251.1989365-1-larysa.zaremba@intel.com>
@@ -74,333 +74,320 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Mateusz Pacuszka <mateuszx.pacuszka@intel.com>
+Only a single VSI can be in charge of sending LLDP frames, sometimes it is
+beneficial to assign this function to a VF, that is possible to do with tc
+capabilities in the switchdev mode. It requires first blocking the PF from
+sending the LLDP frames with a following command:
 
-When a trusted VF tries to configure an LLDP multicast address, configure a
-rule that would mirror the traffic to this VF, untrusted VFs are not
-allowed to receive LLDP at all, so the request to add LLDP MAC address will
-always fail for them.
+tc filter add dev <ifname> egress protocol lldp flower skip_sw action drop
 
-Add a forwarding LLDP filter to a trusted VF when it tries to add an LLDP
-multicast MAC address. The MAC address has to be added after enabling
-trust (through restarting the LLDP service).
+Then it becomes possible to configure a forward rule from a VF port
+representor to uplink instead.
 
-Signed-off-by: Mateusz Pacuszka <mateuszx.pacuszka@intel.com>
-Co-developed-by: Larysa Zaremba <larysa.zaremba@intel.com>
-Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
+tc filter add dev <vf_ifname> ingress protocol lldp flower skip_sw
+action mirred egress redirect dev <ifname>
+
+How LLDP exclusivity was done previously is LLDP traffic was blocked for a
+whole port by a single rule and PF was bypassing that. Now at least in the
+switchdev mode, every separate VSI has to have its own drop rule. Another
+complication is the fact that tc does not respect when the driver refuses
+to delete a rule, so returning an error results in a HW rule still present
+with no way to reference it through tc. This is addressed by allowing the
+PF rule to be deleted at any time, but making the VF forward rule "dormant"
+in such case, this means it is deleted from HW but stays in tc and driver's
+bookkeeping to be restored when drop rule is added back to the PF.
+
+Implement tc configuration handling which enables the user to transmit LLDP
+packets from VF instead of PF.
+
 Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
 ---
- drivers/net/ethernet/intel/ice/ice_dcb_lib.c  |  2 +-
- drivers/net/ethernet/intel/ice/ice_ethtool.c  |  2 +-
- drivers/net/ethernet/intel/ice/ice_lib.c      | 48 ++++++++++++++++---
- drivers/net/ethernet/intel/ice/ice_lib.h      |  3 +-
- drivers/net/ethernet/intel/ice/ice_sriov.c    |  4 ++
- drivers/net/ethernet/intel/ice/ice_vf_lib.c   | 26 ++++++++++
- drivers/net/ethernet/intel/ice/ice_vf_lib.h   |  8 ++++
- drivers/net/ethernet/intel/ice/ice_virtchnl.c | 48 +++++++++++++++++--
- 8 files changed, 129 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_eswitch.c |   2 +
+ drivers/net/ethernet/intel/ice/ice_repr.c    |   7 +
+ drivers/net/ethernet/intel/ice/ice_tc_lib.c  | 159 +++++++++++++++++++
+ drivers/net/ethernet/intel/ice/ice_tc_lib.h  |   2 +
+ drivers/net/ethernet/intel/ice/ice_vf_lib.h  |   4 +
+ 5 files changed, 174 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_dcb_lib.c b/drivers/net/ethernet/intel/ice/ice_dcb_lib.c
-index a7c510832824..67988c7ab08e 100644
---- a/drivers/net/ethernet/intel/ice/ice_dcb_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_dcb_lib.c
-@@ -846,7 +846,7 @@ int ice_init_pf_dcb(struct ice_pf *pf, bool locked)
- 			goto dcb_init_err;
- 		}
+diff --git a/drivers/net/ethernet/intel/ice/ice_eswitch.c b/drivers/net/ethernet/intel/ice/ice_eswitch.c
+index 70a523e962d8..40547ff65e25 100644
+--- a/drivers/net/ethernet/intel/ice/ice_eswitch.c
++++ b/drivers/net/ethernet/intel/ice/ice_eswitch.c
+@@ -29,6 +29,7 @@ static int ice_eswitch_setup_env(struct ice_pf *pf)
+ 			return -ENODEV;
  
--		ice_cfg_sw_lldp(pf_vsi, false, true);
-+		ice_cfg_sw_rx_lldp(pf, true);
+ 	ice_remove_vsi_fltr(&pf->hw, uplink_vsi->idx);
++	ice_vsi_cfg_sw_lldp(uplink_vsi, true, false);
  
- 		pf->dcbx_cap = ice_dcb_get_mode(port_info, true);
- 		return 0;
-diff --git a/drivers/net/ethernet/intel/ice/ice_ethtool.c b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-index b0805704834d..ca29684ead21 100644
---- a/drivers/net/ethernet/intel/ice/ice_ethtool.c
-+++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-@@ -1818,7 +1818,7 @@ static int ice_set_priv_flags(struct net_device *netdev, u32 flags)
- 			/* Remove rule to direct LLDP packets to default VSI.
- 			 * The FW LLDP engine will now be consuming them.
- 			 */
--			ice_cfg_sw_lldp(vsi, false, false);
-+			ice_cfg_sw_rx_lldp(vsi->back, false);
- 
- 			/* AQ command to start FW LLDP agent will return an
- 			 * error if the agent is already started
-diff --git a/drivers/net/ethernet/intel/ice/ice_lib.c b/drivers/net/ethernet/intel/ice/ice_lib.c
-index edab19a44707..f55d85f10a06 100644
---- a/drivers/net/ethernet/intel/ice/ice_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_lib.c
-@@ -2065,12 +2065,15 @@ static void ice_vsi_set_tc_cfg(struct ice_vsi *vsi)
+ 	netif_addr_lock_bh(netdev);
+ 	__dev_uc_unsync(netdev, NULL);
+@@ -283,6 +284,7 @@ static void ice_eswitch_release_env(struct ice_pf *pf)
+ 	ice_fltr_add_mac_and_broadcast(uplink_vsi,
+ 				       uplink_vsi->port_info->mac.perm_addr,
+ 				       ICE_FWD_TO_VSI);
++	ice_vsi_cfg_sw_lldp(uplink_vsi, true, true);
  }
  
  /**
-- * ice_cfg_sw_lldp - Config switch rules for LLDP packet handling
-+ * ice_vsi_cfg_sw_lldp - Config switch rules for LLDP packet handling
-  * @vsi: the VSI being configured
-  * @tx: bool to determine Tx or Rx rule
-  * @create: bool to determine create or remove Rule
-+ *
-+ * Adding an ethtype Tx rule to the uplink VSI results in it being applied
-+ * to the whole port, so LLDP transmission for VFs will be blocked too.
-  */
--void ice_cfg_sw_lldp(struct ice_vsi *vsi, bool tx, bool create)
-+void ice_vsi_cfg_sw_lldp(struct ice_vsi *vsi, bool tx, bool create)
+diff --git a/drivers/net/ethernet/intel/ice/ice_repr.c b/drivers/net/ethernet/intel/ice/ice_repr.c
+index f81bf60f8365..cb08746556a6 100644
+--- a/drivers/net/ethernet/intel/ice/ice_repr.c
++++ b/drivers/net/ethernet/intel/ice/ice_repr.c
+@@ -337,6 +337,7 @@ void ice_repr_destroy(struct ice_repr *repr)
+ static void ice_repr_rem_vf(struct ice_repr *repr)
  {
- 	int (*eth_fltr)(struct ice_vsi *v, u16 type, u16 flag,
- 			enum ice_sw_fwd_act_type act);
-@@ -2109,6 +2112,37 @@ void ice_cfg_sw_lldp(struct ice_vsi *vsi, bool tx, bool create)
- 			 vsi->vsi_num, status);
+ 	ice_eswitch_decfg_vsi(repr->src_vsi, repr->parent_mac);
++	ice_pass_vf_tx_lldp(repr->src_vsi, true);
+ 	unregister_netdev(repr->netdev);
+ 	ice_devlink_destroy_vf_port(repr->vf);
+ 	ice_virtchnl_set_dflt_ops(repr->vf);
+@@ -418,6 +419,10 @@ static int ice_repr_add_vf(struct ice_repr *repr)
+ 	if (err)
+ 		goto err_netdev;
+ 
++	err = ice_drop_vf_tx_lldp(repr->src_vsi, true);
++	if (err)
++		goto err_drop_lldp;
++
+ 	err = ice_eswitch_cfg_vsi(repr->src_vsi, repr->parent_mac);
+ 	if (err)
+ 		goto err_cfg_vsi;
+@@ -430,6 +435,8 @@ static int ice_repr_add_vf(struct ice_repr *repr)
+ 	return 0;
+ 
+ err_cfg_vsi:
++	ice_pass_vf_tx_lldp(repr->src_vsi, true);
++err_drop_lldp:
+ 	unregister_netdev(repr->netdev);
+ err_netdev:
+ 	ice_devlink_destroy_vf_port(vf);
+diff --git a/drivers/net/ethernet/intel/ice/ice_tc_lib.c b/drivers/net/ethernet/intel/ice/ice_tc_lib.c
+index 095c1fe51d97..963d9b78c2ea 100644
+--- a/drivers/net/ethernet/intel/ice/ice_tc_lib.c
++++ b/drivers/net/ethernet/intel/ice/ice_tc_lib.c
+@@ -762,6 +762,153 @@ static int ice_eswitch_tc_parse_action(struct net_device *filter_dev,
+ 	return 0;
  }
  
-+/**
-+ * ice_cfg_sw_rx_lldp - Enable/disable software handling of LLDP
-+ * @pf: the PF being configured
-+ * @enable: enable or disable
-+ *
-+ * Configure switch rules to enable/disable LLDP handling by software
-+ * across PF.
-+ */
-+void ice_cfg_sw_rx_lldp(struct ice_pf *pf, bool enable)
++static bool ice_is_fltr_lldp(struct ice_tc_flower_fltr *fltr)
 +{
-+	struct ice_vsi *vsi;
++	return fltr->outer_headers.l2_key.n_proto == htons(ETH_P_LLDP);
++}
++
++static bool ice_is_fltr_pf_tx_lldp(struct ice_tc_flower_fltr *fltr)
++{
++	struct ice_vsi *vsi = fltr->src_vsi, *uplink;
++
++	if (!ice_is_switchdev_running(vsi->back))
++		return false;
++
++	uplink = vsi->back->eswitch.uplink_vsi;
++	return vsi == uplink && fltr->action.fltr_act == ICE_DROP_PACKET &&
++	       ice_is_fltr_lldp(fltr) &&
++	       fltr->direction == ICE_ESWITCH_FLTR_EGRESS &&
++	       fltr->flags == ICE_TC_FLWR_FIELD_ETH_TYPE_ID;
++}
++
++static bool ice_is_fltr_vf_tx_lldp(struct ice_tc_flower_fltr *fltr)
++{
++	struct ice_vsi *vsi = fltr->src_vsi, *uplink;
++
++	uplink = vsi->back->eswitch.uplink_vsi;
++	return fltr->src_vsi->type == ICE_VSI_VF && ice_is_fltr_lldp(fltr) &&
++	       fltr->direction == ICE_ESWITCH_FLTR_EGRESS &&
++	       fltr->dest_vsi == uplink;
++}
++
++static struct ice_tc_flower_fltr *
++ice_find_pf_tx_lldp_fltr(struct ice_pf *pf)
++{
++	struct ice_tc_flower_fltr *fltr;
++
++	hlist_for_each_entry(fltr, &pf->tc_flower_fltr_list, tc_flower_node)
++		if (ice_is_fltr_pf_tx_lldp(fltr))
++			return fltr;
++
++	return NULL;
++}
++
++static bool ice_any_vf_lldp_tx_ena(struct ice_pf *pf)
++{
 +	struct ice_vf *vf;
 +	unsigned int bkt;
 +
-+	vsi = ice_get_main_vsi(pf);
-+	ice_vsi_cfg_sw_lldp(vsi, false, enable);
++	ice_for_each_vf(pf, bkt, vf)
++		if (vf->lldp_tx_ena)
++			return true;
 +
-+	if (!test_bit(ICE_FLAG_SRIOV_ENA, pf->flags))
-+		return;
-+
-+	ice_for_each_vf(pf, bkt, vf) {
-+		vsi = ice_get_vf_vsi(vf);
-+
-+		if (WARN_ON(!vsi))
-+			continue;
-+
-+		if (ice_vf_is_lldp_ena(vf))
-+			ice_vsi_cfg_sw_lldp(vsi, false, enable);
-+	}
++	return false;
 +}
 +
- /**
-  * ice_set_agg_vsi - sets up scheduler aggregator node and move VSI into it
-  * @vsi: pointer to the VSI
-@@ -2537,7 +2571,7 @@ ice_vsi_setup(struct ice_pf *pf, struct ice_vsi_cfg_params *params)
- 	if (!ice_is_safe_mode(pf) && vsi->type == ICE_VSI_PF) {
- 		ice_fltr_add_eth(vsi, ETH_P_PAUSE, ICE_FLTR_TX,
- 				 ICE_DROP_PACKET);
--		ice_cfg_sw_lldp(vsi, true, true);
-+		ice_vsi_cfg_sw_lldp(vsi, true, true);
- 	}
- 
- 	if (!vsi->agg_node)
-@@ -2834,9 +2868,11 @@ int ice_vsi_release(struct ice_vsi *vsi)
- 	/* The Rx rule will only exist to remove if the LLDP FW
- 	 * engine is currently stopped
- 	 */
--	if (!ice_is_safe_mode(pf) && vsi->type == ICE_VSI_PF &&
--	    !test_bit(ICE_FLAG_FW_LLDP_AGENT, pf->flags))
--		ice_cfg_sw_lldp(vsi, false, false);
-+	if (!ice_is_safe_mode(pf) &&
-+	    !test_bit(ICE_FLAG_FW_LLDP_AGENT, pf->flags) &&
-+	    (vsi->type == ICE_VSI_PF || (vsi->type == ICE_VSI_VF &&
-+	     ice_vf_is_lldp_ena(vsi->vf))))
-+		ice_vsi_cfg_sw_lldp(vsi, false, false);
- 
- 	ice_vsi_decfg(vsi);
- 
-diff --git a/drivers/net/ethernet/intel/ice/ice_lib.h b/drivers/net/ethernet/intel/ice/ice_lib.h
-index b4c9cb28a016..654516c5fc3e 100644
---- a/drivers/net/ethernet/intel/ice/ice_lib.h
-+++ b/drivers/net/ethernet/intel/ice/ice_lib.h
-@@ -29,7 +29,8 @@ ice_vsi_stop_lan_tx_rings(struct ice_vsi *vsi, enum ice_disq_rst_src rst_src,
- 
- int ice_vsi_stop_xdp_tx_rings(struct ice_vsi *vsi);
- 
--void ice_cfg_sw_lldp(struct ice_vsi *vsi, bool tx, bool create);
-+void ice_vsi_cfg_sw_lldp(struct ice_vsi *vsi, bool tx, bool create);
-+void ice_cfg_sw_rx_lldp(struct ice_pf *pf, bool enable);
- 
- int ice_set_link(struct ice_vsi *vsi, bool ena);
- 
-diff --git a/drivers/net/ethernet/intel/ice/ice_sriov.c b/drivers/net/ethernet/intel/ice/ice_sriov.c
-index 33eac29b6a50..3069045ed222 100644
---- a/drivers/net/ethernet/intel/ice/ice_sriov.c
-+++ b/drivers/net/ethernet/intel/ice/ice_sriov.c
-@@ -62,6 +62,7 @@ static void ice_free_vf_res(struct ice_vf *vf)
- 	if (vf->lan_vsi_idx != ICE_NO_VSI) {
- 		ice_vf_vsi_release(vf);
- 		vf->num_mac = 0;
-+		vf->num_mac_lldp = 0;
- 	}
- 
- 	last_vector_idx = vf->first_vector_idx + vf->num_msix - 1;
-@@ -1405,6 +1406,9 @@ int ice_set_vf_trust(struct net_device *netdev, int vf_id, bool trusted)
- 
- 	mutex_lock(&vf->cfg_lock);
- 
-+	while (!trusted && vf->num_mac_lldp)
-+		ice_vf_update_mac_lldp_num(vf, ice_get_vf_vsi(vf), false);
-+
- 	vf->trusted = trusted;
- 	ice_reset_vf(vf, ICE_VF_RESET_NOTIFY);
- 	dev_info(ice_pf_to_dev(pf), "VF %u is now %strusted\n",
-diff --git a/drivers/net/ethernet/intel/ice/ice_vf_lib.c b/drivers/net/ethernet/intel/ice/ice_vf_lib.c
-index c7c0c2f50c26..589e9d524044 100644
---- a/drivers/net/ethernet/intel/ice/ice_vf_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_vf_lib.c
-@@ -226,6 +226,7 @@ static void ice_vf_clear_counters(struct ice_vf *vf)
- 		vsi->num_vlan = 0;
- 
- 	vf->num_mac = 0;
-+	vf->num_mac_lldp = 0;
- 	memset(&vf->mdd_tx_events, 0, sizeof(vf->mdd_tx_events));
- 	memset(&vf->mdd_rx_events, 0, sizeof(vf->mdd_rx_events));
- }
-@@ -1393,3 +1394,28 @@ struct ice_vsi *ice_get_vf_ctrl_vsi(struct ice_pf *pf, struct ice_vsi *vsi)
- 	rcu_read_unlock();
- 	return ctrl_vsi;
- }
-+
-+/**
-+ * ice_vf_update_mac_lldp_num - update the VF's number of LLDP addresses
-+ * @vf: a VF to add the address to
-+ * @vsi: the corresponding VSI
-+ * @incr: is the rule added or removed
-+ */
-+void ice_vf_update_mac_lldp_num(struct ice_vf *vf, struct ice_vsi *vsi,
-+				bool incr)
++int ice_pass_vf_tx_lldp(struct ice_vsi *vsi, bool deinit)
 +{
-+	bool lldp_by_fw = test_bit(ICE_FLAG_FW_LLDP_AGENT, vsi->back->flags);
-+	bool was_ena = ice_vf_is_lldp_ena(vf) && !lldp_by_fw;
-+	bool is_ena;
++	struct ice_rule_query_data remove_entry = {
++		.rid = vsi->vf->lldp_recipe_id,
++		.rule_id = vsi->vf->lldp_rule_id,
++		.vsi_handle = vsi->idx,
++	};
++	struct ice_pf *pf = vsi->back;
++	int err;
 +
-+	if (WARN_ON(!vsi)) {
-+		vf->num_mac_lldp = 0;
-+		return;
++	if (vsi->vf->lldp_tx_ena)
++		return 0;
++
++	if (!deinit && !ice_find_pf_tx_lldp_fltr(vsi->back))
++		return -EINVAL;
++
++	if (!deinit && ice_any_vf_lldp_tx_ena(pf))
++		return -EINVAL;
++
++	err = ice_rem_adv_rule_by_id(&pf->hw, &remove_entry);
++	if (!err)
++		vsi->vf->lldp_tx_ena = true;
++
++	return err;
++}
++
++int ice_drop_vf_tx_lldp(struct ice_vsi *vsi, bool init)
++{
++	struct ice_rule_query_data rule_added;
++	struct ice_adv_rule_info rinfo = {
++		.priority = 7,
++		.src_vsi = vsi->idx,
++		.sw_act = {
++			.src = vsi->idx,
++			.flag = ICE_FLTR_TX,
++			.fltr_act = ICE_DROP_PACKET,
++			.vsi_handle = vsi->idx,
++		},
++		.flags_info.act_valid = true,
++	};
++	struct ice_adv_lkup_elem list[3];
++	struct ice_pf *pf = vsi->back;
++	int err;
++
++	if (!init && !vsi->vf->lldp_tx_ena)
++		return 0;
++
++	ice_rule_add_direction_metadata(&list[0]);
++	ice_rule_add_src_vsi_metadata(&list[1]);
++	list[2].type = ICE_ETYPE_OL;
++	list[2].h_u.ethertype.ethtype_id = htons(ETH_P_LLDP);
++	list[2].m_u.ethertype.ethtype_id = htons(0xFFFF);
++
++	err = ice_add_adv_rule(&pf->hw, list, ARRAY_SIZE(list), &rinfo,
++			       &rule_added);
++	if (err) {
++		dev_err(&pf->pdev->dev,
++			"Failed to add an LLDP rule to VSI 0x%X: %d\n",
++			vsi->idx, err);
++	} else {
++		vsi->vf->lldp_recipe_id = rule_added.rid;
++		vsi->vf->lldp_rule_id = rule_added.rule_id;
++		vsi->vf->lldp_tx_ena = false;
 +	}
 +
-+	vf->num_mac_lldp += incr ? 1 : -1;
-+	is_ena = ice_vf_is_lldp_ena(vf) && !lldp_by_fw;
-+
-+	if (was_ena != is_ena)
-+		ice_vsi_cfg_sw_lldp(vsi, false, is_ena);
++	return err;
 +}
++
++static void ice_handle_add_pf_lldp_drop_rule(struct ice_vsi *vsi)
++{
++	struct ice_tc_flower_fltr *fltr;
++	struct ice_pf *pf = vsi->back;
++
++	hlist_for_each_entry(fltr, &pf->tc_flower_fltr_list, tc_flower_node) {
++		if (!ice_is_fltr_vf_tx_lldp(fltr))
++			continue;
++		ice_pass_vf_tx_lldp(fltr->src_vsi, true);
++		break;
++	}
++}
++
++static void ice_handle_del_pf_lldp_drop_rule(struct ice_pf *pf)
++{
++	int i;
++
++	/* Make the VF LLDP fwd to uplink rule dormant */
++	ice_for_each_vsi(pf, i) {
++		struct ice_vsi *vf_vsi = pf->vsi[i];
++
++		if (vf_vsi && vf_vsi->type == ICE_VSI_VF)
++			ice_drop_vf_tx_lldp(vf_vsi, false);
++	}
++}
++
+ static int
+ ice_eswitch_add_tc_fltr(struct ice_vsi *vsi, struct ice_tc_flower_fltr *fltr)
+ {
+@@ -779,6 +926,9 @@ ice_eswitch_add_tc_fltr(struct ice_vsi *vsi, struct ice_tc_flower_fltr *fltr)
+ 		return -EOPNOTSUPP;
+ 	}
+ 
++	if (ice_is_fltr_vf_tx_lldp(fltr))
++		return ice_pass_vf_tx_lldp(vsi, false);
++
+ 	lkups_cnt = ice_tc_count_lkups(flags, fltr);
+ 	list = kcalloc(lkups_cnt, sizeof(*list), GFP_ATOMIC);
+ 	if (!list)
+@@ -850,6 +1000,9 @@ ice_eswitch_add_tc_fltr(struct ice_vsi *vsi, struct ice_tc_flower_fltr *fltr)
+ 		goto exit;
+ 	}
+ 
++	if (ice_is_fltr_pf_tx_lldp(fltr))
++		ice_handle_add_pf_lldp_drop_rule(vsi);
++
+ 	/* store the output params, which are needed later for removing
+ 	 * advanced switch filter
+ 	 */
+@@ -1965,6 +2118,12 @@ static int ice_del_tc_fltr(struct ice_vsi *vsi, struct ice_tc_flower_fltr *fltr)
+ 	struct ice_pf *pf = vsi->back;
+ 	int err;
+ 
++	if (ice_is_fltr_pf_tx_lldp(fltr))
++		ice_handle_del_pf_lldp_drop_rule(pf);
++
++	if (ice_is_fltr_vf_tx_lldp(fltr))
++		return ice_drop_vf_tx_lldp(vsi, false);
++
+ 	rule_rem.rid = fltr->rid;
+ 	rule_rem.rule_id = fltr->rule_id;
+ 	rule_rem.vsi_handle = fltr->dest_vsi_handle;
+diff --git a/drivers/net/ethernet/intel/ice/ice_tc_lib.h b/drivers/net/ethernet/intel/ice/ice_tc_lib.h
+index da09fbba03ad..2e7d2ea08ee0 100644
+--- a/drivers/net/ethernet/intel/ice/ice_tc_lib.h
++++ b/drivers/net/ethernet/intel/ice/ice_tc_lib.h
+@@ -218,6 +218,8 @@ int
+ ice_del_cls_flower(struct ice_vsi *vsi, struct flow_cls_offload *cls_flower);
+ void ice_replay_tc_fltrs(struct ice_pf *pf);
+ bool ice_is_tunnel_supported(struct net_device *dev);
++int ice_drop_vf_tx_lldp(struct ice_vsi *vsi, bool init);
++int ice_pass_vf_tx_lldp(struct ice_vsi *vsi, bool deinit);
+ 
+ static inline bool ice_is_forward_action(enum ice_sw_fwd_act_type fltr_act)
+ {
 diff --git a/drivers/net/ethernet/intel/ice/ice_vf_lib.h b/drivers/net/ethernet/intel/ice/ice_vf_lib.h
-index 799b2c1f1184..f4c9ca1f51ce 100644
+index f4c9ca1f51ce..482f4285fd35 100644
 --- a/drivers/net/ethernet/intel/ice/ice_vf_lib.h
 +++ b/drivers/net/ethernet/intel/ice/ice_vf_lib.h
-@@ -134,6 +134,7 @@ struct ice_vf {
- 	unsigned long vf_caps;		/* VF's adv. capabilities */
- 	u8 num_req_qs;			/* num of queue pairs requested by VF */
- 	u16 num_mac;
-+	u16 num_mac_lldp;
- 	u16 num_vf_qs;			/* num of queue configured per VF */
- 	u8 vlan_strip_ena;		/* Outer and Inner VLAN strip enable */
- #define ICE_INNER_VLAN_STRIP_ENA	BIT(0)
-@@ -180,6 +181,11 @@ static inline u16 ice_vf_get_port_vlan_tpid(struct ice_vf *vf)
- 	return vf->port_vlan_info.tpid;
- }
+@@ -124,6 +124,7 @@ struct ice_vf {
+ 	u8 spoofchk:1;
+ 	u8 link_forced:1;
+ 	u8 link_up:1;			/* only valid if VF link is forced */
++	u8 lldp_tx_ena:1;
  
-+static inline bool ice_vf_is_lldp_ena(struct ice_vf *vf)
-+{
-+	return vf->num_mac_lldp && vf->trusted;
-+}
-+
- /* VF Hash Table access functions
-  *
-  * These functions provide abstraction for interacting with the VF hash table.
-@@ -245,6 +251,8 @@ ice_vf_clear_vsi_promisc(struct ice_vf *vf, struct ice_vsi *vsi, u8 promisc_m);
- int ice_reset_vf(struct ice_vf *vf, u32 flags);
- void ice_reset_all_vfs(struct ice_pf *pf);
- struct ice_vsi *ice_get_vf_ctrl_vsi(struct ice_pf *pf, struct ice_vsi *vsi);
-+void ice_vf_update_mac_lldp_num(struct ice_vf *vf, struct ice_vsi *vsi,
-+				bool incr);
- #else /* CONFIG_PCI_IOV */
- static inline struct ice_vf *ice_get_vf_by_id(struct ice_pf *pf, u16 vf_id)
- {
-diff --git a/drivers/net/ethernet/intel/ice/ice_virtchnl.c b/drivers/net/ethernet/intel/ice/ice_virtchnl.c
-index b6285433307c..ceaf7a0c73eb 100644
---- a/drivers/net/ethernet/intel/ice/ice_virtchnl.c
-+++ b/drivers/net/ethernet/intel/ice/ice_virtchnl.c
-@@ -2242,6 +2242,46 @@ ice_vfhw_mac_add(struct ice_vf *vf, struct virtchnl_ether_addr *vc_ether_addr)
- 	}
- }
+ 	u32 ptp_caps;
  
-+/**
-+ * ice_is_mc_lldp_eth_addr - check if the given MAC is a multicast LLDP address
-+ * @mac: address to check
-+ */
-+static bool ice_is_mc_lldp_eth_addr(const u8 *mac)
-+{
-+	const u8 lldp_mac_base[] = {0x01, 0x80, 0xc2, 0x00, 0x00};
-+
-+	if (memcmp(mac, lldp_mac_base, sizeof(lldp_mac_base)))
-+		return false;
-+
-+	return (mac[5] == 0x0e || mac[5] == 0x03 || mac[5] == 0x00);
-+}
-+
-+/**
-+ * ice_vc_can_add_mac - check if the VF is allowed to add a given MAC
-+ * @vf: a VF to add the address to
-+ * @mac: address to check
-+ */
-+static bool ice_vc_can_add_mac(const struct ice_vf *vf, const u8 *mac)
-+{
-+	struct device *dev = ice_pf_to_dev(vf->pf);
-+
-+	if (is_unicast_ether_addr(mac) &&
-+	    !ice_can_vf_change_mac((struct ice_vf *)vf)) {
-+		dev_err(dev,
-+			"VF attempting to override administratively set MAC address, bring down and up the VF interface to resume normal operation\n");
-+		return false;
-+	}
-+
-+	if (!vf->trusted && ice_is_mc_lldp_eth_addr(mac)) {
-+		dev_warn(dev,
-+			 "An untrusted VF %u is attempting to configure an LLDP multicast address\n",
-+			 vf->vf_id);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- /**
-  * ice_vc_add_mac_addr - attempt to add the MAC address passed in
-  * @vf: pointer to the VF info
-@@ -2260,10 +2300,8 @@ ice_vc_add_mac_addr(struct ice_vf *vf, struct ice_vsi *vsi,
- 	if (ether_addr_equal(mac_addr, vf->dev_lan_addr))
- 		return 0;
+@@ -150,6 +151,9 @@ struct ice_vf {
+ 	/* devlink port data */
+ 	struct devlink_port devlink_port;
  
--	if (is_unicast_ether_addr(mac_addr) && !ice_can_vf_change_mac(vf)) {
--		dev_err(dev, "VF attempting to override administratively set MAC address, bring down and up the VF interface to resume normal operation\n");
-+	if (!ice_vc_can_add_mac(vf, mac_addr))
- 		return -EPERM;
--	}
- 
- 	ret = ice_fltr_add_mac(vsi, mac_addr, ICE_FWD_TO_VSI);
- 	if (ret == -EEXIST) {
-@@ -2278,6 +2316,8 @@ ice_vc_add_mac_addr(struct ice_vf *vf, struct ice_vsi *vsi,
- 		return ret;
- 	} else {
- 		vf->num_mac++;
-+		if (ice_is_mc_lldp_eth_addr(mac_addr))
-+			ice_vf_update_mac_lldp_num(vf, vsi, true);
- 	}
- 
- 	ice_vfhw_mac_add(vf, vc_ether_addr);
-@@ -2372,6 +2412,8 @@ ice_vc_del_mac_addr(struct ice_vf *vf, struct ice_vsi *vsi,
- 	ice_vfhw_mac_del(vf, vc_ether_addr);
- 
- 	vf->num_mac--;
-+	if (ice_is_mc_lldp_eth_addr(mac_addr))
-+		ice_vf_update_mac_lldp_num(vf, vsi, false);
- 
- 	return 0;
- }
++	u16 lldp_recipe_id;
++	u16 lldp_rule_id;
++
+ 	u16 num_msix;			/* num of MSI-X configured on this VF */
+ 	struct ice_vf_qs_bw qs_bw[ICE_MAX_RSS_QS_PER_VF];
+ };
 -- 
 2.43.0
 
