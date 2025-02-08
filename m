@@ -1,121 +1,252 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3AC19F101
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 07:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086F3149C41
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 08:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739001598; cv=none; b=LStXgmtSFuw6lJe0lOwff/0jQ5LsXYVGzuqN8VtKEFVs0OiWhuTNQD5OK7PLu/mNJHTa/KrUOte5Yq0JMKXZQreI1Fpa4oRUQcdfEf/T7PEMZNnru7vwgG6R6jj5I1Sp3nQLd4JOamRNtNn80+G/SQ7pIXlq0Xz0J7+/hU57Koo=
+	t=1739001716; cv=none; b=iJruvzQenOsNXSDFsCDT6wZYpbWsduBhVW6gaN6yazFPvnf0Bkv16MvPDwiknFaY7PLWk/O1R8XAEVjKMn94g8+9yXXnT+J7nAu26oWqbn/ET+j0Q2njdEfCGOl7o8RHm9A4TqhB/I4/CFE0Ak4kCO+eIHShHh1VLtrHwAaUje8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739001598; c=relaxed/simple;
-	bh=d7ojekL/BiCyYAVzA3C2SArdrbbraYuLRGFQNfKkvfE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wls/xUdMs/N31TAihlixkBxOh/8GI+xOc4TL5VNM3ICBQ5VXtkHNMIj6+dGm2R75Xch4N6vd8yrGTk5dgMbQiotOGnyywRu5BdbjbJks6yrRLqa8u8E7QI/gmEmWZ0OeeRHtgaBzcXO7JRpzUx3MjbO7xwu45bzczqELzAOODMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=AJP2jsCw; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1739001716; c=relaxed/simple;
+	bh=qByOK+vKnmTijqs5GwiZI8SGsGgfVVU1bNLToMIz9SM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TWHBDrUHv8AFmyTeHSiJlJPTaKRCZGt85uWH7cZ4vDSkmfL+aEtkgKv+iINSbbJHcFYDqJ48XJFGJHK+eRDS1xL5PvHzZ790BrQpupTVNDE/1HuTgfvr6hU3/PJJu8FSXXDsetDLaOw1pYzR21QveNveK4YtPqmmkWJSykg++nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Vvz26943; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="AJP2jsCw"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5439e331cceso3243966e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 23:59:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1739001594; x=1739606394; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RTUTp09J3TkHO04+OyZOFWnP6EILcwwOXh/jpiP4ZkI=;
-        b=AJP2jsCwZLOev3Dg8eO4UJt45hqQXm3bmoAFCxr6infkyFTw6eFDGKswpVh+NY/Zus
-         RgS7mCB7+Vd5UdPLb0cRW/gmUkC9Iag+haStEv0LnVTU6jRj2fjRSlSOgxc0N3CDLCTE
-         zFfHEvZV70mu6XD1Ln4Ii1exlEzAzlv/glBg7DPoHtWEWKloSjGpPRtvAFqAuad/Yn7O
-         mobo2Bm5jnh7h+xQ2/II2CFcITvHbdy45H/Ib62u8uwS8pVGJuUGQhL5H1Z3bF1Qvm3c
-         kewID7Q+WIAG13G8DWfl1oh4pkg5skejqHsilH90nR47JuIay4yN4EC50uATqgIIX/Ei
-         NR8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739001594; x=1739606394;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RTUTp09J3TkHO04+OyZOFWnP6EILcwwOXh/jpiP4ZkI=;
-        b=TdJWJWvYnJbziI4ZyEwkuNkVnyM6GEV99vBB3hrWHfgv27Xhe0A0RrLpW3H2IdFm2V
-         HEnhvA2gh8urvWJnTavkdIBspTocjAvvsDgJ5ZCp3sfcASp45+v7H8eWDh0lNjnj7lcc
-         yDhghnohe4fgcHKNbegB7Ri/BFcmj0VEByssGHCb3slqmO0tMk9JFGdK+ExEwOrLBCnc
-         uqkH9MRRTTGzZD8DL8kiAo9AUgzbNoaBO4Mr8t6sZPdiwG9Lnh/CWxH9/Lpqut1/YJVh
-         cuA4ieBr0kYW8ByfZZx8hzaZc1Ph1nQutoRB2C7XwKIBh/UPeiiScy48Ls/bkwiCH4FU
-         lW5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUP/ANY2GWb85fJsahPqsMUL0QDjYK4+ppngprWYo5QEhEGZZwyWxmFss6BuQeeYQ+H6JWQgm/DUKDafhg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+bwiEiDgBJ5ziv+Xdwl4TA3YjUDCnIFx/HFHBGvPAmM3e0aHs
-	8aX5HY2vaV57T5Q5ci3uV97w2AiMj8XBRiDo4ZiY7BrGIH55Xw1/15cBHz+IIqxSYdypibJ854O
-	zK8IjYPVRrRmpO3Yu+zlEDBsKZhgiYQCtm3K2hw==
-X-Gm-Gg: ASbGncvPkrtRjPbAEaoYBXi7BEKXlA4tiLh/z17R9Rm4h5ZLBIzHDuXvbn8Q6036kta
-	3StDLIgfChOk37//gmC58vFVU0qRo/bv+k4v0TDCWPHatdBP/wMidlT4tAB2ODcAaSPmd33tbHA
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Vvz26943"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5187a6HB017462;
+	Sat, 8 Feb 2025 08:01:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=vwLFle
+	8z8wO4bq1qVCDQZh09gPzGRoCEY2ehD2AcHy8=; b=Vvz26943H4Dr2+EkU/mT4+
+	jgMBkUkRG6bFf8jJTS9shyvvrOT6ugXJt6vxl+hQmSLsYTNEsrSf7yeZNItp6reN
+	nwNfBxPQw4XGxsvfEEPoOCxd+ITBNlZ/6vHtnzHCEu9+AII5jlLTLYq9Si2u1Nt7
+	xTqoRO8EHZZAT3udSTFrO75CipdcbhrUzT3NneR2rgJKuTRndSfmGZ1GNqQY4oW/
+	VcVNW9xVTsDG4l14TdFS5A+zSc03nMGjzhLnlngzYZo4jPV0QbRKa4eRhfAYWf8p
+	YvlArh6AYp0DAkkGE4D1A8P4gJhftd8PGS9rBAI+3p2GeLc6WVqyvYqK5Hi35a0Q
 	==
-X-Google-Smtp-Source: AGHT+IHNBKUgdG3mmVsHbFdl3uVr3Q+JzefEbNXajL5yy04QQ9tefqJ/8k1ddeV63n4noi5xHd5M27eZroWTkogbhas=
-X-Received: by 2002:a05:6512:1195:b0:542:6d01:f55c with SMTP id
- 2adb3069b0e04-54414a962c4mr2450193e87.3.1739001594018; Fri, 07 Feb 2025
- 23:59:54 -0800 (PST)
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44p2ynr1k5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Feb 2025 08:01:37 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51881aXf027901;
+	Sat, 8 Feb 2025 08:01:36 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44p2ynr1k3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Feb 2025 08:01:36 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5185La7Y005292;
+	Sat, 8 Feb 2025 08:01:35 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j05kf3a4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Feb 2025 08:01:33 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51881VwE26673902
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 8 Feb 2025 08:01:31 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D01F2200BA;
+	Sat,  8 Feb 2025 08:01:31 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D2E01200B9;
+	Sat,  8 Feb 2025 08:01:28 +0000 (GMT)
+Received: from [9.39.23.47] (unknown [9.39.23.47])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat,  8 Feb 2025 08:01:28 +0000 (GMT)
+Message-ID: <0d4418ab-d531-413c-bbbd-6c97ea320490@linux.ibm.com>
+Date: Sat, 8 Feb 2025 13:31:27 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207161939.46139-11-ajones@ventanamicro.com>
-In-Reply-To: <20250207161939.46139-11-ajones@ventanamicro.com>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Sat, 8 Feb 2025 13:29:42 +0530
-X-Gm-Features: AWEUYZl3rnfE8vIlzOiLWPcC_pZ4X13tmZnTiRHW3C1wZw-naFaGo4PPV4QFVxE
-Message-ID: <CAK9=C2XmFtLHAxuWJVdvkUHFQTM+mE-D8E4sLvKxxUj_CqcbAQ@mail.gmail.com>
-Subject: Re: [PATCH 0/9] riscv: Unaligned access speed probing fixes and skipping
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, charlie@rivosinc.com, 
-	jesse@rivosinc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/9] sched: Add a generic function to return the
+ preemption string.
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev
+Cc: Ben Segall <bsegall@google.com>,
+        Catalin Marinas
+ <catalin.marinas@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Will Deacon <will@kernel.org>
+References: <20250203141632.440554-1-bigeasy@linutronix.de>
+ <20250203141632.440554-2-bigeasy@linutronix.de>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <20250203141632.440554-2-bigeasy@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: EPJptHoLEpY6kJzKaFTUubVcOttCPjEY
+X-Proofpoint-ORIG-GUID: tXWGLHMlr9CxQEQxlLh8GF5Fj2uROFWl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-08_03,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ priorityscore=1501 mlxscore=0 impostorscore=0 suspectscore=0
+ malwarescore=0 clxscore=1015 lowpriorityscore=0 mlxlogscore=999
+ bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502080059
 
-On Fri, Feb 7, 2025 at 9:49=E2=80=AFPM Andrew Jones <ajones@ventanamicro.co=
-m> wrote:
->
-> The first six patches of this series are fixes and cleanups of the
-> unaligned access speed probing code. The next two patches introduce
-> support to skip probing by matching vendor/arch/imp ids and checking a
-> table for the access speed type. The last patch applies the new skip
-> support to Ventana harts.
 
-Alternatively, we can also skip probing misaligned access when Zicclsm
-extension is present in the ISA string. The Zicclsm extension is defined
-as part of the ratified RVA23 profile.
 
-Regards,
-Anup
+On 2/3/25 19:46, Sebastian Andrzej Siewior wrote:
+> The individual architectures often add the preemption model to the begin
+> of the backtrace. This is the case on X86 or ARM64 for the "die" case
+> but not for regular warning. With the addition of DYNAMIC_PREEMPT for
+> PREEMPT_RT we end up with CONFIG_PREEMPT and CONFIG_PREEMPT_RT set
+> simultaneously. That means that everyone who tried to add that piece of
+> information gets it wrong for PREEMPT_RT because PREEMPT is checked
+> first.
+> 
+> Provide a generic function which returns the current scheduling model
+> considering LAZY preempt and the current state of PREEMPT_DYNAMIC.
+> [ The dynamic building of the string can lead to an empty string if the
+>    function is invoked simultaneously on two CPUs. ]
+> 
+> Co-developed-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Co-developed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>   include/linux/preempt.h |  2 ++
+>   kernel/sched/core.c     | 47 +++++++++++++++++++++++++++++++++++++++++
+>   kernel/sched/debug.c    | 10 +++++----
+>   kernel/sched/sched.h    |  1 +
+>   4 files changed, 56 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/preempt.h b/include/linux/preempt.h
+> index ca86235ac15c0..3e9808f2b5491 100644
+> --- a/include/linux/preempt.h
+> +++ b/include/linux/preempt.h
+> @@ -515,6 +515,8 @@ static inline bool preempt_model_rt(void)
+>   	return IS_ENABLED(CONFIG_PREEMPT_RT);
+>   }
+>   
+> +extern const char *preempt_model_str(void);
+> +
+>   /*
+>    * Does the preemption model allow non-cooperative preemption?
+>    *
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 165c90ba64ea9..bd2664755b09a 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -7646,10 +7646,57 @@ PREEMPT_MODEL_ACCESSOR(lazy);
+>   
+>   #else /* !CONFIG_PREEMPT_DYNAMIC: */
+>   
+> +#define preempt_dynamic_mode -1
+> +
+>   static inline void preempt_dynamic_init(void) { }
+>   
+>   #endif /* CONFIG_PREEMPT_DYNAMIC */
+>   
+> +const char *preempt_modes[] = {
+> +	"none", "voluntary", "full", "lazy", NULL,
+> +};
+> +
+> +const char *preempt_model_str(void)
+> +{
+> +	bool brace = IS_ENABLED(CONFIG_PREEMPT_RT) &&
+> +		(IS_ENABLED(CONFIG_PREEMPT_DYNAMIC) ||
+> +		 IS_ENABLED(CONFIG_PREEMPT_LAZY));
+> +	static char buf[128];
+> +
+> +	if (IS_ENABLED(CONFIG_PREEMPT_BUILD)) {
+> +		struct seq_buf s;
+> +
+> +		seq_buf_init(&s, buf, 128);
+> +		seq_buf_puts(&s, "PREEMPT");
+> +
+> +		if (IS_ENABLED(CONFIG_PREEMPT_RT))
+> +			seq_buf_printf(&s, "%sRT%s",
+> +				       brace ? "_{" : "_",
+> +				       brace ? "," : "");
+> +
+> +		if (IS_ENABLED(CONFIG_PREEMPT_DYNAMIC)) {
+> +			seq_buf_printf(&s, "(%s)%s",
+> +				       preempt_dynamic_mode > 0 ?
+> +				       preempt_modes[preempt_dynamic_mode] : "undef",
+> +				       brace ? "}" : "");
+> +			return seq_buf_str(&s);
+> +		}
+> +
+> +		if (IS_ENABLED(CONFIG_PREEMPT_LAZY)) {
+> +			seq_buf_printf(&s, "LAZY%s",
+> +				       brace ? "}" : "");
+> +			return seq_buf_str(&s);
+> +		}
+> +
+> +		return seq_buf_str(&s);
+> +	}
+> +
+> +	if (IS_ENABLED(CONFIG_PREEMPT_VOLUNTARY_BUILD))
+> +		return "VOLUNTARY";
+> +
+> +	return "NONE";
+> +}
 
->
-> (I'd be happy to split the fixes from the new skip support if we want to
-> discuss the skip support independently, but I want to base on the fixes
-> and I'm not sure if patchwork supports Based-on: $MESSAGE_ID/$LORE_URL
-> or not at the moment, so I'm just posting together for now in order to
-> be able to check for my patchwork green lights!)
->
-> Thanks,
-> drew
->
-> Andrew Jones (9):
->   riscv: Annotate unaligned access init functions
->   riscv: Fix riscv_online_cpu_vec
->   riscv: Fix check_unaligned_access_all_cpus
->   riscv: Change check_unaligned_access_speed_all_cpus to void
->   riscv: Fix set up of cpu hotplug callbacks
->   riscv: Fix set up of vector cpu hotplug callback
->   riscv: Prepare for unaligned access type table lookups
->   riscv: Implement check_unaligned_access_table
->   riscv: Add Ventana unaligned access table entries
->
->  arch/riscv/include/asm/cpufeature.h        |   4 +-
->  arch/riscv/include/asm/vendorid_list.h     |   1 +
->  arch/riscv/kernel/traps_misaligned.c       |  14 +-
->  arch/riscv/kernel/unaligned_access_speed.c | 278 ++++++++++++++-------
->  4 files changed, 200 insertions(+), 97 deletions(-)
->
-> --
-> 2.48.1
->
+nit: This means when it preempt=full, it is going to show PREEMPT or 
+PREEMPT_RT. Maybe that could be put into changelog or add code similar 
+to lazy for full as well, so it is easier for user to know if it is in 
+preempt=full model. In all other models, there is a suffix like 
+PREEMPTLAZY. Dynamic modes looks good.
+
+Reviewed-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+
+> +
+>   int io_schedule_prepare(void)
+>   {
+>   	int old_iowait = current->in_iowait;
+> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+> index fd7e852207157..755232ac88de9 100644
+> --- a/kernel/sched/debug.c
+> +++ b/kernel/sched/debug.c
+> @@ -244,11 +244,13 @@ static ssize_t sched_dynamic_write(struct file *filp, const char __user *ubuf,
+>   
+>   static int sched_dynamic_show(struct seq_file *m, void *v)
+>   {
+> -	static const char * preempt_modes[] = {
+> -		"none", "voluntary", "full", "lazy",
+> -	};
+> -	int j = ARRAY_SIZE(preempt_modes) - !IS_ENABLED(CONFIG_ARCH_HAS_PREEMPT_LAZY);
+>   	int i = IS_ENABLED(CONFIG_PREEMPT_RT) * 2;
+> +	int j;
+> +
+> +	/* Count entries in NULL terminated preempt_modes */
+> +	for (j = 0; preempt_modes[j]; j++)
+> +		;
+> +	j -= !IS_ENABLED(CONFIG_ARCH_HAS_PREEMPT_LAZY);
+>   
+>   	for (; i < j; i++) {
+>   		if (preempt_dynamic_mode == i)
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 38e0e323dda26..fb4486ceb978a 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -3619,6 +3619,7 @@ extern int preempt_dynamic_mode;
+>   extern int sched_dynamic_mode(const char *str);
+>   extern void sched_dynamic_update(int mode);
+>   #endif
+> +extern const char *preempt_modes[];
+>   
+>   #ifdef CONFIG_SCHED_MM_CID
+>   
+
