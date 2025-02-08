@@ -1,263 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D632913;
-	Sat,  8 Feb 2025 03:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738983776; cv=fail; b=DzwIqdM99Hk+hoBaEMhVbjn17Nf+4S1u/KQ5SnYYT91Qn311IC9jiq0x/GUmTJdJmp1ge7wZmoqt8dgyylMgh475XpQ5GaQcqWpEc2Z3CN8k7QNIl4+Q1+HjID6NU16/ayEdBneP25VtWBu9vAlcgN1QIVDyxeR3v0Vpo568Djc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738983776; c=relaxed/simple;
-	bh=PCiGpW6Ny1qXCUJlV8lp0DZdxVnMAkqtGgARReTvrVw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=KUgDX5p6zT4R/+k1UyRE+iX0/gHqWT0KEfvpMd1QIa2jhSC5jqQsGUD/dTs3TS4Y8UapqUvRqEaclHgYK6hd6S2LqJ8py4pkY6DDVoqRd9mvw/hIc5ohtSflPUobx4dxFzAyFiIYFNyaCN9uwUHK36L/12VfNHhYEcnBBu32L7E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n4Sah7x7; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AAA32913;
+	Sat,  8 Feb 2025 03:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738983858; cv=none; b=K95WHaVvGKpfeL5RJ/+sI5iks7v+pQVE0mzkOO7GcVSDTseAWBdKXaayg4AE15sO+/GJBK9L9k8jjyYG9eqa5065DA/zYmVXc7QrZhJD0E7niDcVPFvifuENwtTT5W3B1gE2i02YByoPPNMYJWjq/yG2N3gi7k4co9zU4XM1tsQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738983858; c=relaxed/simple;
+	bh=HxxbTdmm+TibAeqgcfMjuxXWZL7KynZF8XeEc08iYBY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DOIQcsDoErkuZQrL3BEH2LSa3vFZUtIEibx8BauLEUq0Vbv6fpF4kblTvfGjuMpsSFXY9Nl35yFp97atxGAQ+8HqCJdLV78Pv3gi0zqkV6/LKtj8BaD5uwTl92l9Bmn2pIwU89KJvdryMHeLWm4J7gievo+8nJIDJkAr5XIvkeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BZcvAdk1; arc=none smtp.client-ip=209.85.208.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n4Sah7x7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738983774; x=1770519774;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   in-reply-to:mime-version;
-  bh=PCiGpW6Ny1qXCUJlV8lp0DZdxVnMAkqtGgARReTvrVw=;
-  b=n4Sah7x7dPMSVPzQQtF0SU4hIty+/ZJqrRcKrb6eDQwcVguiZxyMTcKZ
-   AS+M7ztr0Ca+S/rQokRAhZdOR3ZeNyzQViXM3HT+KQaeWTo+mhk7VzQ+M
-   6hJPEMp/2aceN/OXeVhaYlC2b09CFh3LJ35w3qcCU6q2TxgRTTIQYY6YE
-   KH/G9lNq5wxjb2IlbA1m3kV5fgcfpGwfeD+SFr6kI4gWBUeakfb8F+Roz
-   3NdeaUIjkDyiROBvSa20A9A0QoFZ8UfkWDIp283e7JQoh1MXhKT3Ok7i5
-   eq2yZf/Q2Sl19vEqZtzbBwNjj1r9Dt1WItR8qdsH/pigVsXqz1QH5wcQb
-   w==;
-X-CSE-ConnectionGUID: sPXYnu3lTHOhyGONXNTf4g==
-X-CSE-MsgGUID: 4CU6dzg3Q1mDNJ9TzGlHZw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="50617781"
-X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
-   d="scan'208";a="50617781"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 19:02:54 -0800
-X-CSE-ConnectionGUID: kN8+znKGTcuO63n5wr3pbw==
-X-CSE-MsgGUID: uRzxJu4cQtGplZ6sE03cxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112577133"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Feb 2025 19:02:54 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Fri, 7 Feb 2025 19:02:53 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Fri, 7 Feb 2025 19:02:53 -0800
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.41) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 7 Feb 2025 19:02:52 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O455Bw+gq0a7yzlYqicjymshtkcO7I9NKhW4SBNO4KnREZff7w9/bNPkPiWlfvKtQ20GK5nTrtdvqOX/Hwh0jh5V64QdulyRishlCtZDKOwCB9PjYtx5fBX77/YYDt8RoxqAZiYnoE+ycbPkpqRwgDtI1nNoUNP9fZQLdTa/qeJsLBY4lGPapdaLS+D/qfEZIpFQu2IsnaIq/LL5ofv7lSJtklPNw0JTXHLnZ1c+H2tTtUCnFmQ3SQEqaMc+RoOFS6C9hBAwDz8reiP81IVD1fCb7pq91Fh7B9o3Id2lQ5xRwsFUz5hwtEc/QrtF8TqspztW+tSrzNmQzFBVVkQw+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qCFowSWl9tjP8UMN7KYG39WxNINn3ACw+rn57nJzlYo=;
- b=a/w5/rr1Taf5E7FKAVyIG1Wjgv2hgPfJvBwwv9z+fmc3ZGfG1FcRV59inusM1XkkpNZp8za3ChQQ3onvvahkeoJqP93HztjZjgpa1QYydaPo9y2jowj2zf/aan9e1StB1BP0mTfgTw0Hsq8M9bFEyChNnj+MJoja4WSK8XqCDKIfz1ap+c+5VDxswI22zl/QWowQJjfq1Pc4EOvIRwLQWw9YkhjI3j+Gp5YZypia1+lkXe8cuWHddBlFOjDMY4N9fxoagWxQyrFVh38vIS8QGsXTvdSxZkGc4jvewScg2ZJ029R677xucJ7X1+CVGSgMj3FEBOgNGcck/rmB9v8Jpw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
- CO1PR11MB4866.namprd11.prod.outlook.com (2603:10b6:303:91::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8422.15; Sat, 8 Feb 2025 03:02:50 +0000
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::e971:d8f4:66c4:12ca%4]) with mapi id 15.20.8422.010; Sat, 8 Feb 2025
- 03:02:50 +0000
-Date: Sat, 8 Feb 2025 11:01:43 +0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: <pbonzini@redhat.com>, <rick.p.edgecombe@intel.com>,
-	<linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>
-Subject: Re: [PATCH 4/4] KVM: x86/mmu: Free obsolete roots when pre-faulting
- SPTEs
-Message-ID: <Z6bJF8uA9R0x3QGp@yzhao56-desk.sh.intel.com>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20250207030640.1585-1-yan.y.zhao@intel.com>
- <20250207030931.1902-1-yan.y.zhao@intel.com>
- <Z6YixPh_j517vqcP@google.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Z6YixPh_j517vqcP@google.com>
-X-ClientProxiedBy: KL1PR01CA0111.apcprd01.prod.exchangelabs.com
- (2603:1096:820:3::27) To DS7PR11MB5966.namprd11.prod.outlook.com
- (2603:10b6:8:71::6)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZcvAdk1"
+Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-5de5bf41652so554000a12.1;
+        Fri, 07 Feb 2025 19:04:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738983853; x=1739588653; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yjC+K99sHuLBC1SWOWdiNm+irY8tDwRsTBF9CpEJdmk=;
+        b=BZcvAdk1ZLjIcO5NOYQj+Rvj1pM7U2iwc5vzGebDNZ2ZmnD2hEtVewpSioxSJ1icmF
+         wnK8AtITxz0xRuIDyKNmgxvXOdNnh8LqPe+vcgSV+B1WaydFhWTsAUFy6gwpBda5+Oki
+         XKQXs1lxp5N87LJ49Yd/Ev66kBKRFbwTlGzesd/LNmUR7C7embJeoXYSpkg0psewYaKI
+         Udrexng+94U0nULkCY8FE4d36kPyptqxdz/cH/s/8TDKx8ucWFA6FclQNgu3w7Mc8byr
+         E5GQMheaxGWzRrXe9iRHtgE6legmosCcI/mAJsvsTHJwAJyU6lQfTvcUWPRzFlVT19/d
+         D+Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738983853; x=1739588653;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yjC+K99sHuLBC1SWOWdiNm+irY8tDwRsTBF9CpEJdmk=;
+        b=BTF/i3vuOevOFF/tXhWljm4H0CQwU4X6xCLJCAWmamb+ZsBv8pieLWvh8aEXQGhkpk
+         Gdvd3iSACrgWYWZ/g+SkN8PdkhtcKM6q92cbufwy973oEt9lKyHPMsGHxJ8qQEHK9T9j
+         +1sFdwWDtoqss3XgcDVJzyAZR5cTTlrbXY8B2kVQc4OjlV2iOxP7pNAdXO0DFoaqWuVO
+         iR7aR/f92VsqJP5TCRMgyOQB5JGt86fT4eH9OIG3/9fFMGdQW+e9BXlpav+pInIGPRyO
+         tqnNGXG3b+ezfrxYaYxEp4nRAIGr8oeecDZQ53rJvaODCALxpx1qtIjHZhTTXQaEfYgj
+         r70g==
+X-Forwarded-Encrypted: i=1; AJvYcCVVzsqMoPbiVdA74vJ2RszWAgq48YaGBSyyfwjpkINbLlFZGRmMDXCFNftX1oi+DgTR+RdHLaz8vwFmgVc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyO2zt8RSuFjsMcFWbDzFGoicVKSZqu1KsRu8Vs28p2Cz310ocP
+	JcUG5pxLfEM0b+++n4nwC2yTfeE9xIn0WCdzqav5M7yjIK502bLPFmD9ETEGHkHI3vKm6+NgEcy
+	MUARtlIBzgzyHRVs257y2uRorwYQ=
+X-Gm-Gg: ASbGnct6jOr+m8bRpCkMUUUNj4bwPPSKw/CPAMbAIW10sbHO3Vnyj7dBWx/DrBlcv/P
+	ANAnMRNyu2aSBWIXoAnfCKuO4C9LnCqX4lCGF1rW7iBqEUt7rQzOtgObDhhC/pEWURt8jiFE9eB
+	Y=
+X-Google-Smtp-Source: AGHT+IEpffqioYc8FzNyaf4qBzxtDg8xfAqMVbDjSBfvR4Oecfrwg3Vz7TAhEDmRxRydbVIiW+4rwwYQefd9K+hSBv4=
+X-Received: by 2002:a05:6402:194b:b0:5dc:7fbe:730d with SMTP id
+ 4fb4d7f45d1cf-5de44fe9d71mr7386616a12.6.1738983853264; Fri, 07 Feb 2025
+ 19:04:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|CO1PR11MB4866:EE_
-X-MS-Office365-Filtering-Correlation-Id: 70e4df49-0d04-40fc-3fd2-08dd47ed12e7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?//QFYSY4nX2DMtQKkiRkD8wJPgCJxlGeWGRtXr0EfoCIXfsjotswUY27q3QY?=
- =?us-ascii?Q?+WyYOtjMXOq1RzfVSYFOlKJqTfx/cGhfe2MV6YjWQYOAzb79B94uBmk1/nRm?=
- =?us-ascii?Q?ZMjRNsKLfiaq2HiKsF9lN9G6567Yndukh20z94zeB52Egad2rZPwYrjjr+R/?=
- =?us-ascii?Q?vH9lKC8OnYftWBCB0CVxN5OO4btXdJHaL3ESxy5Jvt756R9A270QNGHzhWHD?=
- =?us-ascii?Q?6G37opRVe5paJhd1MUc5iuOTBruwtiz++DhM8giOc/XtKne+2pMBqr5nOLGZ?=
- =?us-ascii?Q?i6HcNaBht3otzIL9L1feTvy3AGyJrgXAK3creL1TXpC6B8douUc/ClTZkxGO?=
- =?us-ascii?Q?RcrJm0NmcCcn9AG6fCVhNDePGck5blNOWVZfAWgFFKdFN8llg4jChoeJRPAy?=
- =?us-ascii?Q?8NJZUvCy6DTZ57Od8tu8cqy1tRyiBdrz2qmJXWJ76H37PYHY3ujIfufKYyco?=
- =?us-ascii?Q?Nucb0OyGYEN6MMwdcsfuwYh69cUSjoS696LVonPdQxWwrsDaeWAUv4EUe6u/?=
- =?us-ascii?Q?luongrPzi+69vhyD0jTtoHvdlcQOtoaColBwCBcF/GGdBDs+wq6KjtDO6Xly?=
- =?us-ascii?Q?mDfgU96WuJp9IIuSwHm0ONUEJGL43tYjasVQdQl/gEFK0+q9hbzZ9aF94CPq?=
- =?us-ascii?Q?Y7h3be9qx0GAn8A8AhzLVOBuyo7rRc6wh7UZATxoNkI+wF2znSDvl9id7s4B?=
- =?us-ascii?Q?g3vTzb0vyeFv/J+k2YMJs9BQPIQoiNxc+i0qJ+DMrUYOkd+xF9qZg++JiRYj?=
- =?us-ascii?Q?Neuxc5MdIAC5LR3yVoagN1i5PnTCmYQYicA+iGrRTYBrR9GFzrer6lLM0S9C?=
- =?us-ascii?Q?Tq+9D80+l1z1E8qY3cu/rc7D1FV0NPq4M7jbcJhfZHsUCVuRgMnfxmX3+yL1?=
- =?us-ascii?Q?7UnCcL2dEJm8yFyXH6h+hjY1+vu7z14o+ykiGmgd+5sCAew/j861DCzASwW9?=
- =?us-ascii?Q?hyjDy5J9kG9L9N91pu2uF3TEqdDdvZwuhlYPr4ZQm0L8i41Y3kedUK/oAWnC?=
- =?us-ascii?Q?yzEWWsh0QCN9LU8WPAuqjYF1z5yfJfdTGANm3iJbd41dCsTEgD8zOGmAHJ9I?=
- =?us-ascii?Q?qMs4SkV4a7QuAplO0qmvTu7K9M2lcjj1ZCwMworx8AtDYmYDZC+xJI+KirNY?=
- =?us-ascii?Q?AiSiivPhSSceHkcDlSALp75IgCZBHPwflnKde55pBkMbEYuCaeS1PU9ur0O3?=
- =?us-ascii?Q?3qfyWG5pGV9EeSJub8YKfYmURPnGeW/8krplGGRjLdOUAArLMaolcMYIs2eq?=
- =?us-ascii?Q?FaViDe1+Quvz/amzavDRi5574CPRf+t7Yn+QjqDZEuOyTafwiFBOGuWjScqD?=
- =?us-ascii?Q?+muq8TznNRDWQD3UzcuKsUJa3eXVPaY1HkD0BTgZDyjYhYPOpadH5PAsfSMx?=
- =?us-ascii?Q?hVmLddk=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ldbNZZQA3vyxtzfg2n92XndPkHbXXDkE7vw+jYQ8sfkskC0e8FQcBoR31P/9?=
- =?us-ascii?Q?FLivlgZ4Uqgfgp7jpXF5smxIM5Hgsh6oVxwQAD4CSev7LjSeIb8h53NiwJ+I?=
- =?us-ascii?Q?Bb0YpDU9HDPK2t/LocR+hLZ5M83ZmFx7k4ldHpPxYDaF5o8OtkBnfC/CGL6B?=
- =?us-ascii?Q?czc6brilhLQ71MNDx96E/UXxEf4Ndl05vW7T/L/dMseGDGxfpdDYS6s2N4T1?=
- =?us-ascii?Q?Mf5HzlNpVi1IWNNKF75b14Vh3SrwZilS6FKDsLIYwiaSMLFvXUuHOfFHOynY?=
- =?us-ascii?Q?xPPCXrZ1O23Ck9uuCB2MCR2Q0W3YGBBpwoEieD6+zuX9ZN0eqjbCoHemmxxu?=
- =?us-ascii?Q?XNB5NpTQTmObcvK4saXHrLUOUGELxJdG4fq7uUzBmYeS7OLRekkjEPR0JYMF?=
- =?us-ascii?Q?Ypn6pzLOoSsQeuUMJ7sx5EJE7p7iubr8medqTYvVSW/koOkM36HqxsJVS95w?=
- =?us-ascii?Q?uTXbp0Uhy7JkY8noGQGbIsYWG+hSIhKaC4KNw9+rX6UquKbKdqHsVoRA1MJU?=
- =?us-ascii?Q?Yh9dVzcKiC+mfo0t4bXdG/bUBR4HIqg7XsuW3ORaWYyrlqTNnTZEmGAG7MkE?=
- =?us-ascii?Q?sGCWYBtW0RagqlNc8sdQPaYYcLJsw0xbxjh4Pzg7v76h5eOhlXCl7A2T1AZp?=
- =?us-ascii?Q?R4InzgltjksddbNkt7KVAeYxRwoSwezqfilW15hHAdvDuIjP9WEKmSPifCwS?=
- =?us-ascii?Q?QQYB9nyTWazGQ6Z2v7siSbX85eYkXRoxBvZhLoe+fX3vKLfUPrn2N7uJxb4p?=
- =?us-ascii?Q?3a/W7robXbJNi6DZuGnL2bjGszs9J1KhSfgZWUe/grvkWNokVfRh/eR3kN3v?=
- =?us-ascii?Q?OqtRex5zlcwQmUDF20kV0JDDwubSSpOsc8s36TeCUUDtWpT5ZV2zXA0FA5Pq?=
- =?us-ascii?Q?TR2j/WgkpYQgEMc97SVbbI4XwNAYMnUAq6Tpefsxflcc2Xszb7ODjBR4In0J?=
- =?us-ascii?Q?4hrlReJtTcT8q6GOu4fVuyrX3GwK47iZPhA8wdh0eWeiN1bhRmrzoGiJpQ8t?=
- =?us-ascii?Q?1cB2IM7HSqn9AV4MC3IzNdxltM4uzST2ND6zUAQSmp/VigIB9jPlX5VLmdpM?=
- =?us-ascii?Q?+E/1LSpI8cJpnYBBRYFdHZa0os3UgB8da9Wr0zd85BAaOhb+xX7f5GSOYdvZ?=
- =?us-ascii?Q?kBFcgxhyQuwCe7trsJFYd81TEmHE8hKTbo3+NXw+y/LDfY91ouEIOk+JlxjV?=
- =?us-ascii?Q?vYbNSs8YmSg1Yyej9PF6nBj+oame2Re8gaNmtjtC0vm3FOiFAej+i+qA4yKc?=
- =?us-ascii?Q?wU+1Pff0MvYOSRav1+7bkKxUso05ltnhVkUvn2hVtvk9xxzQbCLg3l5bZNtd?=
- =?us-ascii?Q?R5IOOh7/iiMEHTISVJpN9Y9TNuM2E2krm1qZ4jjYvnJwfECBnQwWds0OXRkk?=
- =?us-ascii?Q?hu9S8KiOgJPxl43LnalMG1L9V7WTfd5QL7IqsyOmIUPD/pOvMKg2IuRF9Ca2?=
- =?us-ascii?Q?Otewqe76qoL/ZFMsZ6BE8k35HvULPSEargKsIl1JJ4IXlWsuw7h6cxc9zN8m?=
- =?us-ascii?Q?PNPTX46fTU6mkOKIu1tDRSpxUnGGTO23ze+5N2cl4ebRhIlKM2s/mIW0FeGO?=
- =?us-ascii?Q?94HEiSgwDfWh0+sC2Tf2y4kF9knbPLB7tE43FUkg?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70e4df49-0d04-40fc-3fd2-08dd47ed12e7
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2025 03:02:50.8395
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1KnAUHAndc5ralfm6j1GNWas0j4pRRHR8I2qNttGv/cRVaBi+vbBBlbInf3tJMZDJa/qSe8Pg42OYgYYYGHbdw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4866
-X-OriginatorOrg: intel.com
+References: <20250206105435.2159977-1-memxor@gmail.com> <20250206105435.2159977-12-memxor@gmail.com>
+ <CAADnVQL=E3F5-Uwa5_508e+OKzLnLGJGtAMhv1WW8kHobzBMgQ@mail.gmail.com>
+In-Reply-To: <CAADnVQL=E3F5-Uwa5_508e+OKzLnLGJGtAMhv1WW8kHobzBMgQ@mail.gmail.com>
+From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Date: Sat, 8 Feb 2025 04:03:37 +0100
+X-Gm-Features: AWEUYZmo5Th1l7iYtvIDvAaFSUXU6ssq4vkO0stPQeynM7x5qg3kIxSA0EMK9Fs
+Message-ID: <CAP01T77XaGH=EDc=m2uL6gLWCM8jm5ycPgmZavXnThpDF6bY8g@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 11/26] rqspinlock: Add deadlock detection and recovery
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>, Barret Rhoden <brho@google.com>, 
+	Josh Don <joshdon@google.com>, Dohyun Kim <dohyunkim@google.com>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kernel Team <kernel-team@meta.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 07, 2025 at 07:12:04AM -0800, Sean Christopherson wrote:
-> On Fri, Feb 07, 2025, Yan Zhao wrote:
-> > Always free obsolete roots when pre-faulting SPTEs in case it's called
-> > after a root is invalidated (e.g., by memslot removal) but before any
-> > vcpu_enter_guest() processing of KVM_REQ_MMU_FREE_OBSOLETE_ROOTS.
-> > 
-> > Lack of kvm_mmu_free_obsolete_roots() in this scenario can lead to
-> > kvm_mmu_reload() failing to load a new root if the current root hpa is an
-> > obsolete root (which is not INVALID_PAGE). Consequently,
-> > kvm_arch_vcpu_pre_fault_memory() will retry infinitely due to the checking
-> > of is_page_fault_stale().
-> > 
-> > It's safe to call kvm_mmu_free_obsolete_roots() even if there are no
-> > obsolete roots or if it's called a second time when vcpu_enter_guest()
-> > later processes KVM_REQ_MMU_FREE_OBSOLETE_ROOTS. This is because
-> > kvm_mmu_free_obsolete_roots() sets an obsolete root to INVALID_PAGE and
-> > will do nothing to an INVALID_PAGE.
-> 
-> Why is userspace changing memslots while prefaulting?
-It currently only exists in the kvm selftest (written by myself...)
-Not sure if there's any real use case like this.
-
-> 
-> > 
-> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> > ---
-> >  arch/x86/kvm/mmu/mmu.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > index 47fd3712afe6..72f68458049a 100644
-> > --- a/arch/x86/kvm/mmu/mmu.c
-> > +++ b/arch/x86/kvm/mmu/mmu.c
-> > @@ -4740,7 +4740,12 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_vcpu *vcpu,
-> >  	/*
-> >  	 * reload is efficient when called repeatedly, so we can do it on
-> >  	 * every iteration.
-> > +	 * Before reload, free obsolete roots in case the prefault is called
-> > +	 * after a root is invalidated (e.g., by memslot removal) but
-> > +	 * before any vcpu_enter_guest() processing of
-> > +	 * KVM_REQ_MMU_FREE_OBSOLETE_ROOTS.
-> >  	 */
-> > +	kvm_mmu_free_obsolete_roots(vcpu);
-> >  	r = kvm_mmu_reload(vcpu);
-> >  	if (r)
-> >  		return r;
-> 
-> I would prefer to do check for obsolete roots in kvm_mmu_reload() itself, but
-Yes, it's better!
-I previously considered doing in this way, but I was afraid to introduce
-overhead (the extra compare) to kvm_mmu_reload(), which is called quite
-frequently.
-
-But maybe we can remove the check in vcpu_enter_guest() to reduce the overhead?
-
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b2d9a16fd4d3..6a1f2780a094 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -10731,8 +10731,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
-                                goto out;
-                        }
-                }
--               if (kvm_check_request(KVM_REQ_MMU_FREE_OBSOLETE_ROOTS, vcpu))
--                       kvm_mmu_free_obsolete_roots(vcpu);
-                if (kvm_check_request(KVM_REQ_MIGRATE_TIMER, vcpu))
-                        __kvm_migrate_timers(vcpu);
-                if (kvm_check_request(KVM_REQ_MASTERCLOCK_UPDATE, vcpu))
-
-> keep the main kvm_check_request() so that the common case handles the resulting
-> TLB flush without having to loop back around in vcpu_enter_guest().
-Hmm, I'm a little confused.
-What's is the resulting TLB flush?
-
-
-
-> diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-> index 050a0e229a4d..f2b36d32ef40 100644
-> --- a/arch/x86/kvm/mmu.h
-> +++ b/arch/x86/kvm/mmu.h
-> @@ -104,6 +104,9 @@ void kvm_mmu_track_write(struct kvm_vcpu *vcpu, gpa_t gpa, const u8 *new,
->  
->  static inline int kvm_mmu_reload(struct kvm_vcpu *vcpu)
->  {
-> +       if (kvm_check_request(KVM_REQ_MMU_FREE_OBSOLETE_ROOTS, vcpu))
-> +               kvm_mmu_free_obsolete_roots(vcpu);
-> +
->         /*
->          * Checking root.hpa is sufficient even when KVM has mirror root.
->          * We can have either:
+On Sat, 8 Feb 2025 at 02:54, Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
 >
+> On Thu, Feb 6, 2025 at 2:54=E2=80=AFAM Kumar Kartikeya Dwivedi <memxor@gm=
+ail.com> wrote:
+> >
+> > +/*
+> > + * It is possible to run into misdetection scenarios of AA deadlocks o=
+n the same
+> > + * CPU, and missed ABBA deadlocks on remote CPUs when this function po=
+ps entries
+> > + * out of order (due to lock A, lock B, unlock A, unlock B) pattern. T=
+he correct
+> > + * logic to preserve right entries in the table would be to walk the a=
+rray of
+> > + * held locks and swap and clear out-of-order entries, but that's too
+> > + * complicated and we don't have a compelling use case for out of orde=
+r unlocking.
+> > + *
+> > + * Therefore, we simply don't support such cases and keep the logic si=
+mple here.
+> > + */
+>
+> The comment looks obsolete from the old version of this patch.
+> Patch 25 is now enforces the fifo order in the verifier
+> and code review will do the same for use of res_spin_lock()
+> in bpf internals. So pls drop the comment or reword.
+>
+
+Ok.
+
+> > +static __always_inline void release_held_lock_entry(void)
+> > +{
+> > +       struct rqspinlock_held *rqh =3D this_cpu_ptr(&rqspinlock_held_l=
+ocks);
+> > +
+> > +       if (unlikely(rqh->cnt > RES_NR_HELD))
+> > +               goto dec;
+> > +       WRITE_ONCE(rqh->locks[rqh->cnt - 1], NULL);
+> > +dec:
+> > +       this_cpu_dec(rqspinlock_held_locks.cnt);
+>
+> ..
+> > +        * We don't have a problem if the dec and WRITE_ONCE above get =
+reordered
+> > +        * with each other, we either notice an empty NULL entry on top=
+ (if dec
+> > +        * succeeds WRITE_ONCE), or a potentially stale entry which can=
+not be
+> > +        * observed (if dec precedes WRITE_ONCE).
+> > +        */
+> > +       smp_wmb();
+>
+> since smp_wmb() is needed to address ordering weakness vs try_cmpxchg_acq=
+uire()
+> would it make sense to move it before this_cpu_dec() to address
+> the 2nd part of the harmless race as well?
+
+So you mean, even if the dec gets ordered with inc, the other side is
+bound to notice a NULL entry and not a stale entry, and we'll ensure
+the NULL write is always visible before the dec.
+Sounds like it should also work, I will think over it for a bit and
+probably make this change (and perhaps likewise on the unlock side).
