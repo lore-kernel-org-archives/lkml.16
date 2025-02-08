@@ -1,188 +1,189 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7FD13EFE3;
-	Sat,  8 Feb 2025 15:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED2213EFE3;
+	Sat,  8 Feb 2025 15:38:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739029063; cv=none; b=NHj2h5wzw515e4BBPeXfyfEx94UPS3JJntIxppREV89Z9UFdCb/LXwSr81dYt/+kNapwDaKuocpN4fdgVM2iihKSpY/kMvmlcfmCaihRNRrzWrySi16awB6J73sQ6GzPY0P+spcE3Hn8hax+oGVI5renOr3r0GNDZ4/2BRocyZ4=
+	t=1739029135; cv=none; b=LPhYhh5KF/As8xgAlglyKZzQV58oCikH96pOA/4Z1sUcmr+atTlewN5OAuK2eXTYrUgwNyjOMnvKyqKBmPJMlWcVd1maUCa7OitfT8lB788cNqqtq/uP35Dkz7uGc/4L7HCDyg8uOFC0YcCtscNE5SOwMRn44EcljNixKJWcCGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739029063; c=relaxed/simple;
-	bh=VWCQV1asK8mkBC5s9MXTmP3MYrgvswMj5EQIzW1lZ+w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qZata5OxdjV5FEnNPNW+wD/Oxto/rJLreP6TYwx0YCPz4VAVYqxKDYxon8xEBij1CFrRox+Zwh9z3y8H4lnR3o3Wbwy85NT0NaCpELbEz5BQVW66DgSom2KqfZ7++OGGnkGlo6mfxis+uCDYeIsaTNK6qg0uuXnHvBTX0xJBmcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AZHw5krk; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739029135; c=relaxed/simple;
+	bh=XNM/6f1VoE8anSwil56NQFr75jRiQ8aJ2WPeJxzFQdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AJcTGcFJR/+2KO+h3B5gTnDJ9iryMlWGvM9s2peqB33Y8o7+Ggl2v9WGcjc7AVsND3VutS5fYowSSS4k8BwlOquLKrmqbV/eSYJFKaZAF1fxaswXSEK8Dkv0aCrcOsZHw+Ze05iZIspaJ1be2ExtC+cs00pPcWAsKlV8sJmrgX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KlIe/8c4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZHw5krk"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2fa44590eebso1197901a91.3;
-        Sat, 08 Feb 2025 07:37:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739029061; x=1739633861; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tkMGKQ7AKClIujpM9LEQv3XkqSpczhRaDa7fxIiDIII=;
-        b=AZHw5krk9RHxrj2N0FBYEJUwbM5D8EnIWdaiBC0dJFAXL1/z4YsG4xFG6cz33iN6pL
-         jZQpycoMnc5RLOzrgBlOBrg7GYfkGtlR/Bym0okuw96C+l+pGIHcOV155/U9Cz17f8Uk
-         0G5pl1bXQODCM5/O4jtAWyWi7fCkhJEE6/I5FfoX/uoIlp3PDJJX4o+mYhdf9UD7LZlK
-         Vg44Njvpc2bRaGP9FVv9DPey7IODqiBbHMs7XS4msgge/a/Ww+CdLJGMqfMoLY4cLYNH
-         UgPta1cHn+5Nd74cunYXhKcSWzbs8NcI33FO47GEg8uv2JHk0yM1RoRuEPfm0qcpNdLq
-         qWrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739029061; x=1739633861;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tkMGKQ7AKClIujpM9LEQv3XkqSpczhRaDa7fxIiDIII=;
-        b=Hgg4XnFmkwsXw5Ho374+Z7EN2UPCCx4LEL2maCU6E67l/a167iAp9lQjykiKelmx/0
-         7yIu5UA/FUS8wZqgCg8mQQ7JwyFNOzj+qq4lp+IJNgJks/yqzFwpOoaPb0dhSH5xTIZ6
-         KPPVpuxuQnd4BWT9DYp74nw3s6q9h7io9keuiLiv0NYS2vnkG07qddnIpxFPGFDkjVJg
-         KClwmtf7K5NTtIq2UrPZTUIKIdscoW/aiR74nMiAoS6L59VkuRe1oUMu7mQnbnKwhDq/
-         DLmeJPTC+n0fIWRBGMiEBO0iF31f1MOzeIgTUwn1JMEt82ac3lTuLsuodhAbtEGy1yg2
-         a2Pw==
-X-Forwarded-Encrypted: i=1; AJvYcCWDVeJWUYHGmUaxLmLkK0eF7PyVwFtudv4J3PBa9YypLz+khsIR7bGxLs9IPYRQT98XY9XanK56aaazMtk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOC5IzYds1PSQans7Wy/BnmAYzu6PtP/bXd+CM3fIxiJgM7vne
-	aKLomfd1rOpB+Zrd2yySuEqtspxSNHtwNc5RWgmVBjaN8/rePD8A
-X-Gm-Gg: ASbGncs4qyBiCpekFNHngPBIZHu+WetsNU7FXfL0z5zRfh7wiHVKM9ELOa1vw3mvz/Y
-	uIzJ/1vK+XwoL2pMmxmdnKjO6KPbPl7dbalM0udd+uwXGXMbU1S7OEzN0oKQgiM/JOb4P6EE4mc
-	6i/f/bNSzN53BwLt+109srw6d9P8xH442I6kIZXAFfTIr+mkP54QbDoj8zmFJHcy8hUONpw4P39
-	BRPWXRoCrmNzfQuT+uzLLdxCDLfefi6Uok/ZBqtnYEraIINlD1vifcto2eMCKAHZJPzh6NhhB8S
-	cQpYA85p4R1gCY81XkxwC0X6Emx0wSSzTw==
-X-Google-Smtp-Source: AGHT+IEBiOdQixE/sEDSsEkCVBnZLT/H+JJ+GndkTmkOgrdPvikWjN62GqJMO8StduJyqgmGsrZUHQ==
-X-Received: by 2002:a05:6a00:c92:b0:725:df1a:27c with SMTP id d2e1a72fcca58-7305d4956ccmr11579244b3a.14.1739029060886;
-        Sat, 08 Feb 2025 07:37:40 -0800 (PST)
-Received: from [192.168.50.123] ([117.147.91.64])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048a9d4d7sm4883411b3a.16.2025.02.08.07.37.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Feb 2025 07:37:40 -0800 (PST)
-Message-ID: <be935464-8a36-4019-851a-881f82b2343e@gmail.com>
-Date: Sat, 8 Feb 2025 23:37:13 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KlIe/8c4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10DA2C4CED6;
+	Sat,  8 Feb 2025 15:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739029135;
+	bh=XNM/6f1VoE8anSwil56NQFr75jRiQ8aJ2WPeJxzFQdI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KlIe/8c4mq6aMpjIVAOTmKedtplOY/9X9GSlmYuu8nQ++AtOVSndQsBVwOWE5d/6T
+	 vKk5rvmiPkpijNhNKt+YsO6K4RWOpo0Qf2nDCSNyrGn0AA2hBW6X2KYU6D3oi7Hl42
+	 v75lBOCz4zfRffB4Xg7ATMBRgs9k2D/q+Vhk8aXwO2PFrt3PYmkw7rSToPiu8Gres1
+	 tVq+HUkjBGzvWq2jINFGx3BMcFkwFev7A9lnH+3HJ/2EYK9i3aifLTQwhI+UQvSxip
+	 y5LKBe5q2VxcyoRuJ4dnxmgENjAd3QqH2By+DKEBfeN+5xP94okIZV+ZPEgik5vYzy
+	 t1YUgUzA9VyzQ==
+Date: Sat, 8 Feb 2025 15:38:43 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>, Robert Budai
+ <robert.budai@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Alexandru Ardelean
+ <alexandru.ardelean@analog.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Nuno Sa
+ <nuno.sa@analog.com>, Ramona Gradinariu <ramona.gradinariu@analog.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>, Marcelo Schmitt
+ <marcelo.schmitt@analog.com>, Paul Cercueil <paul@crapouillou.net>, David
+ Lechner <dlechner@baylibre.com>, Antoniu Miclaus
+ <antoniu.miclaus@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH v6 4/6] dt-bindings: iio: Add adis16550 bindings
+Message-ID: <20250208153843.0353baa9@jic23-huawei>
+In-Reply-To: <20250205-styling-chirpy-79eae9437b3b@spud>
+References: <20250204143612.85939-1-robert.budai@analog.com>
+	<20250204143612.85939-5-robert.budai@analog.com>
+	<20250204-helium-marbled-a0863a0a18a8@spud>
+	<15065d0cd19f39d92ce860cd03802c368df74b34.camel@gmail.com>
+	<20250205-styling-chirpy-79eae9437b3b@spud>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v4 3/4] libbpf: Add libbpf_probe_bpf_kfunc API
-To: Eduard Zingerman <eddyz87@gmail.com>, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, haoluo@google.com,
- jolsa@kernel.org, qmo@kernel.org
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250206051557.27913-1-chen.dylane@gmail.com>
- <20250206051557.27913-4-chen.dylane@gmail.com>
- <7d667c037e7396fb88cf243162c5aa8a537858bb.camel@gmail.com>
-From: Tao Chen <chen.dylane@gmail.com>
-In-Reply-To: <7d667c037e7396fb88cf243162c5aa8a537858bb.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-在 2025/2/8 06:35, Eduard Zingerman 写道:
-> On Thu, 2025-02-06 at 13:15 +0800, Tao Chen wrote:
-> 
-> [...]
-> 
->>   LIBBPF_API int libbpf_probe_bpf_helper(enum bpf_prog_type prog_type,
->>   				       enum bpf_func_id helper_id, const void *opts);
->> -
->> +/**
->> + * @brief **libbpf_probe_bpf_kfunc()** detects if host kernel supports the
->> + * use of a given BPF kfunc from specified BPF program type.
->> + * @param prog_type BPF program type used to check the support of BPF kfunc
->> + * @param kfunc_id The btf ID of BPF kfunc to check support for
->> + * @param btf_fd The module BTF FD, if kfunc is defined in kernel module,
->> + * btf_fd is used to point to module's BTF, 0 means kfunc defined in vmlinux.
-> 
-> Regarding '0' as special value:
-> in general FD is considered invalid only if it's negative, 0 is a valid FD.
-> Andrii, I remember there was a lengthy discussion about FD==0 and BPF,
-> but I don't remember the conclusion.
-> 
->> + * @param opts reserved for future extensibility, should be NULL
->> + * @return 1, if given combination of program type and kfunc is supported; 0,
->> + * if the combination is not supported; negative error code if feature
->> + * detection for provided input arguments failed or can't be performed
->> + *
->> + * Make sure the process has required set of CAP_* permissions (or runs as
->> + * root) when performing feature checking.
->> + */
->> +LIBBPF_API int libbpf_probe_bpf_kfunc(enum bpf_prog_type prog_type,
->> +				      int kfunc_id, int btf_fd, const void *opts);
->>   /**
->>    * @brief **libbpf_num_possible_cpus()** is a helper function to get the
->>    * number of possible CPUs that the host kernel supports and expects.
->> diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
->> index a8b2936a1646..e93fae101efd 100644
->> --- a/tools/lib/bpf/libbpf.map
->> +++ b/tools/lib/bpf/libbpf.map
->> @@ -436,4 +436,5 @@ LIBBPF_1.6.0 {
->>   		bpf_linker__add_buf;
->>   		bpf_linker__add_fd;
->>   		bpf_linker__new_fd;
->> +		libbpf_probe_bpf_kfunc;
-> 
-> This is now in conflict with bpf-next.
-> 
+On Wed, 5 Feb 2025 19:52:37 +0000
+Conor Dooley <conor@kernel.org> wrote:
 
-My bad, i will rebase the repo.
+> On Wed, Feb 05, 2025 at 04:11:51PM +0000, Nuno S=C3=A1 wrote:
+> > On Tue, 2025-02-04 at 19:25 +0000, Conor Dooley wrote: =20
+> > > On Tue, Feb 04, 2025 at 04:36:08PM +0200, Robert Budai wrote: =20
+> > > > Document the ADIS16550 device devicetree bindings.
+> > > >=20
+> > > > Co-developed-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> > > > Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> > > > Signed-off-by: Ramona Gradinariu <ramona.gradinariu@analog.com>
+> > > > Signed-off-by: Robert Budai <robert.budai@analog.com>
+> > > > ---
+> > > >=20
+> > > > v6:
+> > > > - applied blank line suggestions
+> > > > - added clock-frequency dependency change suggestions
+> > > > - yamllint corrections
+> > > >=20
+> > > > =C2=A0.../bindings/iio/imu/adi,adis16550.yaml=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 83 +++++++++++++++++++
+> > > > =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 |=C2=A0 9 ++
+> > > > =C2=A02 files changed, 92 insertions(+)
+> > > > =C2=A0create mode 100644
+> > > > Documentation/devicetree/bindings/iio/imu/adi,adis16550.yaml
+> > > >=20
+> > > > diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis1655=
+0.yaml
+> > > > b/Documentation/devicetree/bindings/iio/imu/adi,adis16550.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..8750bb937979
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16550.yaml
+> > > > @@ -0,0 +1,83 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/iio/imu/adi,adis16550.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Analog Devices ADIS16550 and similar IMUs
+> > > > +
+> > > > +maintainers:
+> > > > +=C2=A0 - Nuno Sa <nuno.sa@analog.com>
+> > > > +=C2=A0 - Ramona Gradinariu <ramona.gradinariu@analog.com>
+> > > > +=C2=A0 - Antoniu Miclaus <antoniu.miclaus@analog.com>
+> > > > +
+> > > > +properties:
+> > > > +=C2=A0 compatible:
+> > > > +=C2=A0=C2=A0=C2=A0 enum:
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - adi,adis16550
+> > > > +
+> > > > +=C2=A0 reg:
+> > > > +=C2=A0=C2=A0=C2=A0 maxItems: 1
+> > > > +
+> > > > +=C2=A0 spi-cpha: true
+> > > > +=C2=A0 spi-cpol: true
+> > > > +
+> > > > +=C2=A0 spi-max-frequency:
+> > > > +=C2=A0=C2=A0=C2=A0 maximum: 15000000
+> > > > +
+> > > > +=C2=A0 vdd-supply: true
+> > > > +
+> > > > +=C2=A0 interrupts:
+> > > > +=C2=A0=C2=A0=C2=A0 maxItems: 1
+> > > > +
+> > > > +=C2=A0 reset-gpios:
+> > > > +=C2=A0=C2=A0=C2=A0 description:
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Must be the device tree identifier =
+of the RESET pin. If specified,
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 it will be asserted during driver p=
+robe. As the line is active low,
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 it should be marked GPIO_ACTIVE_LOW.
+> > > > +=C2=A0=C2=A0=C2=A0 maxItems: 1
+> > > > +
+> > > > +=C2=A0 clocks:
+> > > > +=C2=A0=C2=A0=C2=A0 description: If not provided, then the internal=
+ clock is used.
+> > > > +=C2=A0=C2=A0=C2=A0 maxItems: 1
+> > > > +
+> > > > +=C2=A0 clock-frequency:
+> > > > +=C2=A0=C2=A0=C2=A0 description: Clock frequency in Hz when an exte=
+rnal clock is used.
+> > > > +=C2=A0=C2=A0=C2=A0 oneOf:
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - minimum: 1
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 maximum: 128
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - minimum: 3000
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 maximum: 4500 =20
+> > >=20
+> > > I don't get why this is a property, to be honest. When you've got an
+> > > external clock, why isn't the frequency obtained from the clock provi=
+der
+> > > node?
+> > >  =20
+> >=20
+> > The main purpose of this property is actually to show/document the cons=
+trains of
+> > the external clock. We can very well just error out in the driver (and =
+we do
+> > that) and not have this property. I mentioned this property to Robert s=
+ome
+> > revisions ago and I also pointed out that I wasn't really sure if it sh=
+ould be
+> > used or not=C2=A0(I guess this is more for fixed clock providers...). I=
+IRC, I did
+> > asked for some advice/comments but we got none so I assume Robert just =
+decided
+> > to use it and see what you guys had to say about it. =20
+>=20
+> NGL, this is one of the kinda of things where if you're relying on
+> dt-bindings to avoid cocking up your board design, things have already
+> gotten pretty badly wrong! That said, "clock-frequency" is a
+> property for cpus, fixed-frequency clock providers and i2c buses, you'd
+> need a vendor prefix and a unit suffix here IMO. Also, I don't really
+> think that it actually does anything at all, given it does not constrain =
+the
+> clock you're linking to with the clocks property. This may as well just be
+> a comment in the description of the clocks property, for all that it does.
 
->>   } LIBBPF_1.5.0;
->> diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
->> index e142130cb83c..c7f2b2dfbcf1 100644
->> --- a/tools/lib/bpf/libbpf_probes.c
->> +++ b/tools/lib/bpf/libbpf_probes.c
->> @@ -433,6 +433,61 @@ static bool can_probe_prog_type(enum bpf_prog_type prog_type)
->>   	return true;
->>   }
->>   
->> +int libbpf_probe_bpf_kfunc(enum bpf_prog_type prog_type, int kfunc_id, int btf_fd,
->> +			   const void *opts)
->> +{
->> +	struct bpf_insn insns[] = {
->> +		BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, BPF_PSEUDO_KFUNC_CALL, btf_fd, kfunc_id),
->> +		BPF_EXIT_INSN(),
->> +	};
->> +	const size_t insn_cnt = ARRAY_SIZE(insns);
->> +	char buf[4096];
->> +	int *fd_array = NULL;
->> +	size_t fd_array_cnt = 0, fd_array_cap = fd_array_cnt;
->> +	int ret;
->> +
->> +	if (opts)
->> +		return libbpf_err(-EINVAL);
->> +
->> +	if (!can_probe_prog_type(prog_type))
->> +		return -EOPNOTSUPP;
->> +
->> +	if (btf_fd) {
->> +		ret = libbpf_ensure_mem((void **)&fd_array, &fd_array_cap,
->> +					sizeof(int), fd_array_cnt + btf_fd);
-> 
-> Please take a look at the tools/testing/selftests/bpf/prog_tests/fd_array.c,
-> e.g. test case check_fd_array_cnt__fd_array_ok(). The offset field of the
-> call instruction does not have to be an fd (as it only has 16 bits),
-> instead it's an offset inside the fd_array.
-> Here it would be sufficient to allocate a small array on stack.
-> 
+I'd just drop it.=20
 
-Good idea，thanks for your guidance，I'll make the modifications in the 
-next version.
-
->> +		if (ret)
->> +			return ret;
->> +
->> +		/* In kernel, obtain the btf fd by means of the offset of
->> +		 * the fd_array, and the offset is the btf fd.
->> +		 */
->> +		fd_array[btf_fd] = btf_fd;
->> +	}
-> 
-> [...]
-> 
+Jonathan
 
 
--- 
-Best Regards
-Dylane Chen
