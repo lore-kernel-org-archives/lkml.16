@@ -1,115 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B2F241CBE;
-	Sat,  8 Feb 2025 17:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB5D241CBE;
+	Sat,  8 Feb 2025 17:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739036018; cv=none; b=s5Ni4amMylAlNN0waBf0mbnx8fm8N+5HT3veM30h5Jace4iSDq3bNxC3daRWaoK7ik9dKSBovp/QI/HPKq5K1FxtP/6M7ZC/DOt7Pn9KgZOzbOymM3966cqwkZcuG4igdDgs7fQsVni1zZ+AM0mur2sAaH3+tP3UfBXOYPHe9qQ=
+	t=1739036158; cv=none; b=k6tBxacBjwBadPbAao//94er48JGQXy2wvaipMjRnQoG9L9ebvHdeYTbZCYKo8IK6tyiKb9Kcml/Uju+6nt7XdDbZhczlX4UBV/n4r7AhzRj/cJPOqBdywwA85+8DgK7lF0sCGksqc3P0c731vNALBCHxh4HQ4Ci+del7Zrtm7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739036018; c=relaxed/simple;
-	bh=57gd+e0DSkvmdpHjAnnGEvlQyQAfsLt1JdEwr4SZsPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qDbLECIqurTgviL0xCF3+FiT0O69e/vCJLg+2PJxezq1aTRhSeE25L81mmhuVD64tMn8hQPqWHrp197F3kjnO1XKplwRDd58t6s3qhYzeODu6i2EwfCNu8kcbutFiD6X2tni1gJ+TYGsconMLYktlUP+egU6oRlXZBFg+IXhacM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+egu9+6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739036158; c=relaxed/simple;
+	bh=eMZffd+CadDurEeqwJEY5xGDr/mcDUP+cWGAGDhXkVA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OsNfyOm4feEn83Gx0t59sKRCw/TnOjnGFtPqbrpyOffv4HDGNySZnPpTj31lSgnyJR4TTHZrPKhhN+pA9kpFS+A/4amJLzvkiAvxOLeisnQXh7KBWvfbGH6XX5v1lYVwhIr/A1ATbsUVvz2BB52gLSX18Vf+HEPqKrclnYhMhf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kLiuU9dn; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+egu9+6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12DD4C4CED6;
-	Sat,  8 Feb 2025 17:33:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739036018;
-	bh=57gd+e0DSkvmdpHjAnnGEvlQyQAfsLt1JdEwr4SZsPE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p+egu9+6Udf5wi2UagCTvvQ5RPfl2Ymre41tud+m3Y175wreFJzsMejRzYznBOOX5
-	 emJUBMqnkx7/zLH1B+VYvqAJSXpCNPYz5QSS1idNCZTYOEcM9hMxJWSX27FAnNsdAT
-	 /NdsjshqOm9oEPNGviIZ9drn+3q2Z3jgHFnJgzACiqtO0IK7DYoWgOX0rxqepMBMdK
-	 l7OoWEbDRZ4UiH4f98ih1C0UmmxPUYCo8M+uDi92RM8MrIFoxVq+yJC4iddXh7orr/
-	 LODPdqPR/Leh3Fn250NI9dSbKOjpqPwanlUd+XpIKn/PultiYgMdkeXVFj9cV9HpPY
-	 tahEW4R1Qv/9g==
-Received: by venus (Postfix, from userid 1000)
-	id C495A180616; Sat, 08 Feb 2025 18:33:35 +0100 (CET)
-Date: Sat, 8 Feb 2025 18:33:35 +0100
-From: Sebastian Reichel <sre@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Dmitry Mastykin <mastichi@gmail.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, e.shatokhin@yadro.com, arturas.moskvinas@gmail.com
-Subject: Re: [PATCH] pinctrl: mcp23s08: Get rid of spurious level interrupts
-Message-ID: <d26ukzhmjmvqle5zsc54lhnfaaheg5cox6hdttt42frj3sbwb4@eryduawlkyka>
-References: <20250122120504.1279790-1-mastichi@gmail.com>
- <CACRpkdbtjS54+g-K1azE2hHeTsiyzA_gFa2NBX6QZZ3D_H5Ryg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLiuU9dn"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7be8f281714so295981185a.1;
+        Sat, 08 Feb 2025 09:35:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739036156; x=1739640956; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pFzxysuPq7z+/AWWc6raq13TKutBoDxFqezNtvWPS14=;
+        b=kLiuU9dnLUH4gUhk80ah2meA8+dSLoWszYNr2UMrXAsh65NiuyERL47VnRO268sZdo
+         sd4j0v0E1RW5NKSdbxePPxvx3IVqhfmir6/0CZWupViQFBRyITDlJ3eHnBQoYO1d5uoq
+         14cA6sCS7iRdK1HC1VbSAEJDL3gpx91BXM3lpuuBxCiNx8L2qwK2MCubLtEOwLYmmkmf
+         P6i0pcWVWdQcFkRPwWO0IikY6LvIH+hIlEoqi+zKbstfW3mKDaEsCEL/GxHo7wAdJOxw
+         /xvaLwZpgHEFT+WqA2RqBE9KzmGTeRQhHjX4vj7lL2MbEaYG1NEcq5qW1fZUlENww7k5
+         hH3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739036156; x=1739640956;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pFzxysuPq7z+/AWWc6raq13TKutBoDxFqezNtvWPS14=;
+        b=g5TZBb49EMQ6MBfH3rSwaaFuU3sVZNQ/qaJ8t2yXT0K/hmONBxjBGtWfFg79wv5Qv5
+         OVDgYrFdmmAsC32Hc5iXARFkvHVvYwkmGHsz7JtmvJ2N+nmO3BJoeuaBwuGr0IsQUszL
+         dNqpggL/NLbRoZ7nDRW5JsvjO1SghhQuAIsC+xb+F4il75vdIT8Yi+boMim8Zdpul03J
+         8FzK/HQIyB9LeDf58/q2YpQkOKQuBqrGywRLdxmfJd0rrBnfcPNNRLZZPwK7T9C2PoUg
+         QrujyF+PfiPqmzSdBlkZSeYOhvT/+3X+X18qjUfrskmcOaBum3CYfbi50OIOqnc9SbeK
+         eZPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWDGena66Zw6+w623PEBc+1dVFigx6/A8jjbXUaeuG7HqkXYdt6/NuFDzZ8WBpbg/JtPwbs/0wL0PI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7M61YuXq1cQtCuK9wPOGhxOpNAb/2SoX4oqypA7S+T/TmKsCa
+	jZHq9sHhAHfQefBkySdp6OwU6b+u3CBoNnyqQmNFM7QGRrEorlbS
+X-Gm-Gg: ASbGncvgRckkWI0+AfjgwsK4rJEC1aeoLf5GGsoKqg97u1ARNOEpbiynoOhSvpqJurq
+	qiAnVt81cRiKezuliPw0wbBv2opWS+40FibA6C25d0zMws0iDRdKImPSsMEy3DT5ydfrpNhNepl
+	kV9bRn1rHoiMhIt7+9U7HVCl+OCeyZADyqVdI7HM12cNmUfZaRtUCwisTT8Rhi6nAhz0orS1ooE
+	v7cO0nnVNUt2lqBbR2fGpk8VMeNbbdO9qobnm/Zp9m7z0wZDbbE7HKNNMsHXILBCmiYS0LjENoM
+	FmrJx5AZN2n2Wt1oCbfjsfpbxgtWhd4nPO7AyWXiie+Cvfrqt85HFt+JfZ68
+X-Google-Smtp-Source: AGHT+IF0gm0hACvAn/KGurrADYXQRqp+r5zIZ86tyDekU7Pa/twFzTRNBMTXl1JBZ2fejh0stjaMlw==
+X-Received: by 2002:a05:620a:3191:b0:7b1:12f5:7af5 with SMTP id af79cd13be357-7c047bf3fbemr1034580885a.3.1739036156013;
+        Sat, 08 Feb 2025 09:35:56 -0800 (PST)
+Received: from localhost (DESKTOP-V1XZZQ5.ross.clarkson.edu. [128.153.205.31])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041dfcafdsm324136985a.46.2025.02.08.09.35.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 09:35:55 -0800 (PST)
+From: Brendan Connelly <brendanjconnelly17@gmail.com>
+To: corbet@lwn.net
+Cc: linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	dmitry.torokhov@gmail.com
+Subject: [PATCH] Documentation: input: Add section pertaining to polled input devices
+Date: Sat,  8 Feb 2025 12:35:54 -0500
+Message-Id: <20250208173554.209688-1-brendanjconnelly17@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="blov3ccqy2p2jfq4"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbtjS54+g-K1azE2hHeTsiyzA_gFa2NBX6QZZ3D_H5Ryg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
+Added section in Documentation/input/input-programming.rst about
+input_setup_polling() and input_set_poll_interval()
 
---blov3ccqy2p2jfq4
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pinctrl: mcp23s08: Get rid of spurious level interrupts
-MIME-Version: 1.0
+Signed-off-by: Brendan Connelly <brendanjconnelly17@gmail.com>
+---
+ Documentation/input/input-programming.rst | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Hi,
+diff --git a/Documentation/input/input-programming.rst b/Documentation/input/input-programming.rst
+index c9264814c7aa..2b3e6a34e34b 100644
+--- a/Documentation/input/input-programming.rst
++++ b/Documentation/input/input-programming.rst
+@@ -346,3 +346,22 @@ driver can handle these events, it has to set the respective bits in evbit,
+ 
+ This callback routine can be called from an interrupt or a BH (although that
+ isn't a rule), and thus must not sleep, and must not take too long to finish.
++
++Polled input devices
++~~~~~~~~~~~~~~~~~~~~
++
++Input polling is set up by passing an input device struct and a callback to
++the function::
++
++    int input_setup_polling(struct input_dev *dev,
++        void (*poll_fn)(struct input_dev *dev))
++
++Within the callback, devices should use the regular input_report_* functions
++and input_sync as is used by other devices.
++
++There is also the function::
++
++    void input_set_poll_interval(struct input_dev *dev, unsigned int interval)
++
++which is used to configure the interval, in milliseconds, that the device will
++be polled at.
+-- 
+2.39.5
 
-On Thu, Feb 06, 2025 at 10:25:51AM +0100, Linus Walleij wrote:
-> On Wed, Jan 22, 2025 at 1:05=E2=80=AFPM Dmitry Mastykin <mastichi@gmail.c=
-om> wrote:
->=20
-> > irq_mask()/irq_unmask() are not called for nested interrupts. So level
-> > interrupts are never masked, chip's interrupt output is not cleared on
-> > INTCAP or GPIO read, the irq handler is uselessly called again. Nested
-> > irq handler is not called again, because interrupt reason is cleared by
-> > its first call.
-> > /proc/interrupts shows that number of chip's irqs is greater than
-> > number of nested irqs.
-> >
-> > This patch adds masking and unmasking level interrupts inside irq handl=
-er.
-> >
-> > Signed-off-by: Dmitry Mastykin <mastichi@gmail.com>
->=20
-> Patch tentatively applied as non-urgent fix.
->=20
-> If this is urgent, I need a Fixes: tags and we should also tag it
-> for stable, is this a big problem for users? I don't have the big picture
-> here.
->=20
-> Adding Sebastian, if he's still using this expander.
-
-I use the 16 bit I2C version of this chip in the hackerspace
-together with gpio-keys and haven't noticed any IRQ issues. But the
-system is running a Debian stable (incl. its kernel), so quite far
-=66rom mainline :)
-
-Greetings,
-
--- Sebastian
-
---blov3ccqy2p2jfq4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmenlWsACgkQ2O7X88g7
-+ppKig//Rm0mFej2hDCkcPp5Q8lAJkBhuQ5f/iqnqZPFvZbe7QhUij+seg3H9ZRJ
-nmr80u496DEI3uioQ/Ub+5F/sC/nV5yUIObuRmo8Yg8SFkeFIkaE5xHuHgYxd+NU
-reMDs3ekWIx5WKhGF4qOjy8OqKqdyw48QTVNSawxGPGKM1hY9aafh0HPnqg2tlhr
-3JiGZvNXSIxza301yyjEPpDNu+SCuL/EEb/Kcb3Y54PJUtY4aqlU1nA15Yt0tJwU
-gVD1EjfcxdAYyPJuSQSvXM4FTnKnPigPRcWuxhkBHV6FVOTbhUqYnzj+IYq7WhFW
-BLK15q6vszyB5bg3jX3LD2fnYEtPQU+G1rcPv++bpYcmGPibhVM4PAeXlntU0e5E
-zwCs3UiDv+BJSXNn0e4rq2d/oJm/sy7OtAIrLWUlw+AY/NyG8i1sVCjODgWZQgAc
-3treSZ++iRiRRY05zqtfDySL8EFbf/q04TUNDw/17u9bM/ZkNR0Zv5rOBvHwdgre
-fOGPQF/vpVcLlZfXaj7rSmL1EiL9vNZCUzS80wU/S5eFNzHtwElo1j/Dl3QTUVUT
-GrVy8WX4V3Qf7plRJwM8A6l4hmm4R6e3vnf1pQSfEKhllm/t5XrFX7XtJxmlOegR
-MH7Wjmlsd35Cl5Hz8z6uk4m00YHPsUy1tCXHZY7SOIdFuwSXHWg=
-=Mzkr
------END PGP SIGNATURE-----
-
---blov3ccqy2p2jfq4--
