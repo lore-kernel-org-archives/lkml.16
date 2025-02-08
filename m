@@ -1,143 +1,137 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360F32475E6;
-	Sat,  8 Feb 2025 13:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22EE98F5B;
+	Sat,  8 Feb 2025 13:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739022886; cv=none; b=kVcFkjNIbbpY/HMjeyiPlDhJdTTmTeoMVoCguOWkWFEZp4tVQzMHMZfy4lGxTp7iHiu8++nGT1znLwRQ18HKn3h4OZ548HcgaM7WmSMMELq9aLt/jsvUDV0PAKpZcKWBceqG7Qu4FBMZcEZ09uu6KB2mk8edO7MzFvlqvVJIBao=
+	t=1739023115; cv=none; b=XUmhD3sN/7Iulx1IWZMiMWdew9Ac64xfPfLPlltgWnlcIAolmob4YpCRayHSn/ayb9RpEGXOJxrCe0PrKpEfJurtu+dNRo6IfftWjEdNpQj41YsEQpxHWJqvHC0Ong23yirVyIWHZOmnk+kAMCz/2jL8yNowZl+FFu/VqkuoUBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739022886; c=relaxed/simple;
-	bh=xAnjxESnAwa/zEVmWN3qdyx2toKtTQ2Wxc451Q+Vl00=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=SLKOozHsjgB4r2NbM+WnR+TDgSBgHK13HUr1L20rJ1BuANFbw7DKEgrWTjPSNoPFhyCNe3MGFXio40KACsWH+yEAu663nfxSyct4N78SiN+nv1XVAAXn67qGwFlkPMN/gIcs6bm/ZbeyXyIu6r1aHWLMjF142cIRZrmU7W+xvU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GMmTHfYA; arc=none smtp.client-ip=209.85.128.176
+	s=arc-20240116; t=1739023115; c=relaxed/simple;
+	bh=4J2pCMft8Eygz2X4LFNbMlwR82WXKgn8HLMP+R75lf8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JuImaxPYS2fCXfuf0HJlEstNowrF/VjV+0qxubKmPIBTcmFG5lurJ1pEDV4sv3ynyTVW5cCY8GceSSYUqxaGhgHAN+8t17Ko04DdeRAg/DslcfsG0ZPXdfwtp5FY18LP6J7GyKWFLxdFZe4ugiOhYOgC6J2nOzDFmw7mFEL6Es8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kz1lnoHN; arc=none smtp.client-ip=209.85.160.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GMmTHfYA"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6efe4e3d698so26892387b3.0;
-        Sat, 08 Feb 2025 05:54:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kz1lnoHN"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-46e28597955so26441551cf.0;
+        Sat, 08 Feb 2025 05:58:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739022884; x=1739627684; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xAnjxESnAwa/zEVmWN3qdyx2toKtTQ2Wxc451Q+Vl00=;
-        b=GMmTHfYAbo4oFraSc6muAxK+CTTswyNj7XKabY1u2YIC5YieN0l3XWGz5zTGTdUIVl
-         YKLql5YG9caTkqOa7ABZwpXYICh6NSIDhI7WCLh8AQTcPeojjFCr7/zah0AQAQO9PRng
-         F8cp2Fyqljpn7jkrp02E5OtqaQ6LTK4ChQ2GH+xn3o69jd+ZYTbFDkIIQmA9sWbiSDYZ
-         JNlFDWMxSdeHD/TV/2a199H7ifMYIBlx+IYgvOFAnuxDsQ+tAf30wS6dwrQ8dBxtJ0fe
-         7kpk5iUIx34hbn1Jbf81xaCGt8xQYUc6/OFf8XuaZfDZ4C7wwtfqNtDTKh3DFP3J2Cyq
-         FNaQ==
+        d=gmail.com; s=20230601; t=1739023113; x=1739627913; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=liyNbe7I3VQ6j3aIb4CNitPB4kxDl7AGYlkp+r+2abA=;
+        b=Kz1lnoHNitDGX/ykxEWKc6BtXQ502t/3OaepaRZlzDCK5a5Dw7yZPgXk6bpkP2D0Fg
+         HtiKi2gU9dHhFRsYHXLJPXrk5TtfNHojDtUwwJsV0H2TOO3leseKNvYMg7BDauu6tWce
+         ox7o2UDKLGtvSfhku1LPOduqhGQZfGvL/9oOkoSsCa5f6XodSt7py1FKqkbHOvD9TDE/
+         QIaKbOR68DLIzHaUf7H3OIfNs550dphz1abAjdl3W8Um9TEHuGiDDEj7YCQh7Zt5O60O
+         Q0Ymw23lUF3trgnwhzldq07OcDb7VMW33/GnPbQwK7l4bdL1RNcvLAFDs0vIJD0VHFbP
+         G7qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739022884; x=1739627684;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xAnjxESnAwa/zEVmWN3qdyx2toKtTQ2Wxc451Q+Vl00=;
-        b=ZWgEdupXzkCzp4FcXRCh5XpE9osXw8Oz8N8QL5cvz4Eaefj3aJ3HBmjzbjILCeaQvF
-         fpXU2Kot+kQiirYBSkQhK3sUkxBvCRnfp+JF5GVImjWggCPdgEhIH0A6u02D1FwL5SrT
-         /yc3JWdjhRu23xnkNTfHlF7qFbMg15kly8BUwtyKCVHaXEP58eyDkusk0Yw6642TIg4S
-         nt6JR4+yeo/vC9ygQL69uiA/AcdJDinyFY9LjBIn/dxVbxXo/pUBiCw8+I7VHYspEJG2
-         dJ3SinQVCZ88H77wiM/k/vRqMHGLdRUIV1rF9vSQimemRYe/jQtYjj/3GMWeQFSo9cpT
-         RmkA==
-X-Forwarded-Encrypted: i=1; AJvYcCWUDwXklX88ZAWEbw83SKTmahhX0z+WnU7OTWfV3fhpnqAm/cKhdBpy1uU/4ZEW7Zom6I5u/jsRcoLiAlGd0NKJPyuWzQ==@vger.kernel.org, AJvYcCX3h++EgwOiH1sC8uMWj4NfzaXGLAuYCriWgpQrejQPp9ax60IVM7CG4s+4m/kOFzeONZ8urDEyaDIm1tk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4IITaQOA7wRoaS/a6/VpWXY0fb2nkuXgZ8YHxqeA505+k0Mbt
-	Zu+yqx+X6STtyw19shNwHdp1tNjuLFcD2TMR5Z87/25DhkSF7h7H
-X-Gm-Gg: ASbGncsV3h1SoEj2CDPm7Fbl7uqlLrO5fQMGJyYLK4wHUx5Ep+ZJSgLgxWO83ZUlxzF
-	xgDPJ3kEQi3pJWeRxSIkT3fwOFF4oUoLJqBYkCwSRdh1FQ/gnoeDmjbz9ynco5uxsZJSVya3GIX
-	zE253M4/Scuuul4BlT3PugzY3gALyk7sZySb8jvr0OyjW4WB6/ClMbIhRoAE4eDWnUMKqCBaEe4
-	2kjUQUYRbPT3uaLLUeErplov6EKz0rrfVkyhOdlWnsT7l0C+Bv8sBMVHzPy35TsNQGyNh4UzbRe
-	I7KsgPw=
-X-Google-Smtp-Source: AGHT+IGOaJ5arC6FSU5V0uffp8x+SN3pKuMwXOVseN1MUDK9eekzQzuekSYZqkNLJZhCzNkh5nCjJQ==
-X-Received: by 2002:a05:690c:690b:b0:6f9:7921:480e with SMTP id 00721157ae682-6f9b280e465mr52260967b3.5.1739022884003;
-        Sat, 08 Feb 2025 05:54:44 -0800 (PST)
-Received: from localhost ([2800:bf0:82:3d2:4207:a956:ebad:2a64])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6f99ff6a2a0sm8984917b3.89.2025.02.08.05.54.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Feb 2025 05:54:43 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739023113; x=1739627913;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=liyNbe7I3VQ6j3aIb4CNitPB4kxDl7AGYlkp+r+2abA=;
+        b=o2iqLgW26kKA9kaKAeyKNRNFWg5aIqZGXF1XYyNABQ4tT8o/JUaE1soGydFMSs1MN+
+         UQFdPQjNnfaMMT1AsVir+89f1J+vLvmhPPuGZepLClvRjrf5YVpBAgHn1S7Uih4EJ9sk
+         Lyx134hNXN5u0Iqxxe8g03zf68wjXYM5kXHHRRplintPoAP/o9HvOZO5l0fNh4pScwwy
+         FG0RDgk8kHUJKh2GH7UmRhXFePd+qBcA5Zv9QcA6lC1lkhyw2Hd9EB/CA5yu174plFGN
+         TmjhwAaiA//l0iV6etVuqtEC3+VhVQ5hvVCFrpO+I4mqiO6JUYAtDbZrMZZiUWlQKedw
+         8ZVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgpz+4TjPqA7F/cER6vTPMXzWAGO7PNniTCzn3z+SksQW4EhjteWdmuWuvlS9cAAZVHoSXGgmUkeNNhKy46Cw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmQkT5ONqrLRzGd1ia4GoljYjcLQD0lZRMP5Rxi3L0Ka4HlRuc
+	7cwJdl9PCS8U5sMvQcaipJyyvzWcFrQvc/zyb5ZaxDuqsAN4wqn1
+X-Gm-Gg: ASbGncvHEIApejuCAadyXe+pJCY6cODZ0Xy6BNOTGzwW+/6r/x6Ch9qDFyxPkQ+P6Ad
+	b31vvbiZF8hAyG/OC7Fn/H1eB0iEEWixJayhIJuDiGiCcqDNKRgbI7gTTD2C0vVPLjsRIrSjeZE
+	+YWKoda0VU+Ka/ul1TK1/AjoB/b3HGvHh8JH9atFgTTWla1/uAzNCSzT0LwUJK7eBgGi18J07Cx
+	vHWYWdbi+GPwfcO8SbN6lxNnmkw/DPia6XzeM9FIU0idpTk2FR5JJjLx4tJOYSlefDJV1F8odgb
+	3oUfVsdMtij/KrEj87Y8l5uQ4zrVGtzhf2Y4q2NWUOhrCyx6XA==
+X-Google-Smtp-Source: AGHT+IEMHeOIvmcWQOK97rnqv2c6634Scsh2/9IOc6/FcWgNTDx6aSrOa0LgT0lOVMn/X0mX6YncNg==
+X-Received: by 2002:a05:622a:608f:b0:467:5da6:8096 with SMTP id d75a77b69052e-47167b04892mr119259091cf.44.1739023112867;
+        Sat, 08 Feb 2025 05:58:32 -0800 (PST)
+Received: from Tamirs-MacBook-Pro.local ([2600:4041:5be7:7c00:c58e:ed03:1b60:c56d])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471810804e9sm3268471cf.80.2025.02.08.05.58.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 05:58:31 -0800 (PST)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH v2 0/2] lib/prime_numbers: convert self-test to KUnit
+Date: Sat, 08 Feb 2025 08:58:27 -0500
+Message-Id: <20250208-prime_numbers-kunit-convert-v2-0-863119447e04@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 08 Feb 2025 08:54:41 -0500
-Message-Id: <D7N45UX5LBMY.NCG1A7Y0SKXF@gmail.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Limonciello, Mario"
- <mario.limonciello@amd.com>, "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Fix registration of tpacpi
- platform driver
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <mpearson-lenovo@squebb.ca>
- <20250208091438.5972-1-mpearson-lenovo@squebb.ca>
- <D7MSPR52PB4E.N0X1UFVQOODZ@gmail.com>
- <aee5fbe6-4309-450f-bea3-c0842172b043@app.fastmail.com>
-In-Reply-To: <aee5fbe6-4309-450f-bea3-c0842172b043@app.fastmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAANjp2cC/43NQQ6CMBCF4auQWVvTFqXRlfcwxEAZYKJtyRQaD
+ eHuVk7g8nuL/60QkQkjXIsVGBNFCj5DHwqwY+MHFNRlg5b6LLU0YmJy+PCLa5GjeC6eZmGDT8i
+ zMMpe2tKqTnUnyIWJsaf3Xr/X2SPFOfBnP0vqt/7XTUpIUcnK9Lo11qjyNriGXkcbHNTbtn0B1
+ n9g7MYAAAA=
+X-Change-ID: 20250207-prime_numbers-kunit-convert-71c9b3c1d1d4
+To: David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Luis Felipe Hernandez <luis.hernandez093@gmail.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-On Sat Feb 8, 2025 at 11:26 AM -05, Mark Pearson wrote:
-> Thanks Kurt,
->
-> On Fri, Feb 7, 2025, at 11:56 PM, Kurt Borja wrote:
->> Hi Mark,
->>
->> On Sat Feb 8, 2025 at 4:14 AM -05, Mark Pearson wrote:
->>> When reviewing and testing the recent platform profile changes I had
->>> missed that they prevent the tpacpi platform driver from registering.
->>> This error is seen in the kernel logs, and the various tpacpi entries
->>> are not created:
->>> [ 7550.642171] platform thinkpad_acpi: Resources present before probing
->>
->> This happens because in thinkpad_acpi_module_init(), ibm_init() is
->> called before platform_driver_register(&tpacpi_pdriver), therefore
->> devm_platform_profile_register() is called before tpacpi_pdev probes.
->>
->> As you can verify in [1], in the probing sequence, the driver core
->> verifies the devres list is empty, which in this case is not because of
->> the devm_ call.
->>
->>>
->>> I believe this is because the platform_profile driver registers the
->>> device as part of it's initialisation in devm_platform_profile_register=
-,
->>> and the thinkpad_acpi driver later fails as the resource is already use=
-d.
->>>
->>> Modified thinkpad_acpi so that it has a separate platform driver for th=
-e
->>> profile handling, leaving the existing tpacpi_pdev to register
->>> successfully.
->>
->> While this works, it does not address the problem directly. Also it is
->> discouraged to create "fake" platform devices [2].
->>
->> May I suggest moving tpacpi_pdriver registration before ibm_init()
->> instead, so ibm_init_struct's .init callbacks can use devres?
->>
->
-> Yep - you're right. Moving it before the init does also fix it.
->
-> I can't see any issues with this approach, but I'll test it out a bit mor=
-e carefully and do an updated version with this approach.
+This is a clear example of a unit test.
 
-Thinking about it a bit more. With this approach you should maybe create
-the tpacpi_pdev with platform_create_bundle() (I'm pretty sure you can
-pass a NULL (*probe) callback) to avoid races.
+I tested this using:
 
-platform_create_bundle() only returns after the device has been
-successfully bound to the driver.
+$ tools/testing/kunit/kunit.py run --arch arm64 --make_options LLVM=1 math-prime_numbers
 
-~ Kurt
+On success:
+; [08:51:41] ============== math-prime_numbers (1 subtest) ==============
+; [08:51:41] [PASSED] prime_numbers_test
+; [08:51:41] =============== [PASSED] math-prime_numbers ================
+; [08:51:41] ============================================================
+; [08:51:41] Testing complete. Ran 1 tests: passed: 1
 
->
-> Thanks for the pointer.
->
-> Mark
+On failure:
+; [08:50:19] ============== math-prime_numbers (1 subtest) ==============
+; [08:50:19]     # prime_numbers_test: ASSERTION FAILED at lib/math/tests/prime_numbers_kunit.c:28
+; [08:50:19]     Expected slow == fast, but
+; [08:50:19]         slow == 0 (0x0)
+; [08:50:19]         fast == 1 (0x1)
+; [08:50:19] is-prime(2)
+; [08:50:19] [FAILED] prime_numbers_test
+; [08:50:19] # module: prime_numbers_kunit
+; [08:50:19] # math-prime_numbers: primes.{last=61, .sz=64, .primes[]=...x28208a20a08a28ac} = 2-3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61
+; [08:50:19] =============== [FAILED] math-prime_numbers ================
+; [08:50:19] ============================================================
+; [08:50:19] Testing complete. Ran 1 tests: failed: 1
+
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Changes in v2:
+- Keep all the details hidden in prime_numbers.c; expose `with_primes`
+  for debug logging in the test. (David Gow)
+- Link to v1: https://lore.kernel.org/r/20250207-prime_numbers-kunit-convert-v1-0-6067f2b7c713@gmail.com
+
+---
+Tamir Duberstein (2):
+      lib/math: Hook up tests/Makefile
+      lib/prime_numbers: convert self-test to KUnit
+
+ lib/Kconfig.debug                            | 14 +++++
+ lib/math/Makefile                            |  4 +-
+ lib/math/prime_numbers.c                     | 82 ++++------------------------
+ lib/math/prime_numbers_private.h             | 17 ++++++
+ lib/math/tests/Makefile                      |  1 +
+ lib/math/tests/prime_numbers_kunit.c         | 59 ++++++++++++++++++++
+ tools/testing/selftests/lib/config           |  1 -
+ tools/testing/selftests/lib/prime_numbers.sh |  4 --
+ 8 files changed, 104 insertions(+), 78 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250207-prime_numbers-kunit-convert-71c9b3c1d1d4
+
+Best regards,
+-- 
+Tamir Duberstein <tamird@gmail.com>
 
