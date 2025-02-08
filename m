@@ -1,282 +1,244 @@
-Received: from SJ2PR03CU002.outbound.protection.outlook.com (mail-westusazon11023131.outbound.protection.outlook.com [52.101.44.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8830241123;
-	Sat,  8 Feb 2025 19:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.44.131
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739042307; cv=fail; b=m8UET3NUeMiGyEvta6vC2b7BG7T+2UfERpSW8mn9C4lYi/x+Ve+k8t9llPzy1GezqAVf+RiRyHJUXpxp0MRr8DegFuMF14OcFLtkR0MXKI1z//LQqnBP404ysI764ZlLiyyZdAFtmOfX6Yz3niRSNS2bXHVad4O0kxIVbaBE69s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739042307; c=relaxed/simple;
-	bh=GFoqbgLvC8+hhcfmEYe122fkhyIPb5WQGN0bUwZvGCQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=AzPdxrWoXfYFrcoFu6Zz8bed9BNlFFhEEXo/ccBWeITvm0oRZJ6iyIFUC9uCN9B5IuwkktDxjiDN6pySvIriCKawrygIIsXat1vsy9q/bwz+PhJt25FZEEn/rK5jdXrfzS3vfCVmmFEkoLXhbGYSrybDB7LD/m28bd+qx0udug8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com; spf=pass smtp.mailfrom=talpey.com; arc=fail smtp.client-ip=52.101.44.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=talpey.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pC58OiOcELIM5mrYGKDDwCJyInY4l3LzJJE0/WLDjY6NO5JBSbWOOjYewYAUJauGVm+OK08YSK9Iust3kNzva/ihzXJjF7+Dj/cmIe8xhRe9AUnYuZKjonlvsfJGuQmYX2x2NrgtEhPv47Cmf27yFeimxuztl+jepNoKivUTRFRK51wzRBt1yf2mHQCWPnK+jortDvtBJMZoV+SGN6KbrBJhTwXBAx27/T4zz6cZjXDqZQgLKv4cyaQXU5R8Sl9ftcT3bNaYuKhdEsLOtN+UWHzgVUfasjZVQQjCtbdrYtl+187mm9R1WaheEX6L8ShiwqFVR8w/KfCL1cVkus9a/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6f38KI/qOPfyD4qLLvvk2Iwa/T+95kvzer/0O61f+bc=;
- b=HE1ICKiWQMVifef23Eb7m4xHfmeFt/tF/qq6aYL57PwEPhmi2pMzslKjtpTlutVWNYUo/DBDphjPxs230YgjznGBC6UF6zA89WcFR0h9qzFifEJrnD8UkPra46SVaDAbXTRsv5STXtmaXM9KTIWJEbJhJ6iciQrX1p0ykhIKNSzdiX0buYNGtPp490kNsx2bhrOT4iRYd8tkIw5Cj4x91RjBZfZzOgcfY6HgBRfZrQJPAR0j7fqXJmc69GSIX0Rg4N8ba7ay8U5C/Uzke490qNdXbLU4yKUq+RMx6jvzkz40EF3+6F14kNb2ordZC+P5niQ9Wlp2+hhYi7wFDSlmaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
- dkim=pass header.d=talpey.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=talpey.com;
-Received: from SN6PR01MB5246.prod.exchangelabs.com (2603:10b6:805:d8::14) by
- LV2PR01MB7886.prod.exchangelabs.com (2603:10b6:408:14d::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8445.6; Sat, 8 Feb 2025 19:18:22 +0000
-Received: from SN6PR01MB5246.prod.exchangelabs.com
- ([fe80::cf18:495f:c6c:ec90]) by SN6PR01MB5246.prod.exchangelabs.com
- ([fe80::cf18:495f:c6c:ec90%6]) with mapi id 15.20.8445.005; Sat, 8 Feb 2025
- 19:18:22 +0000
-Message-ID: <29e739f1-2d85-40c2-a549-5ab9d71686b0@talpey.com>
-Date: Sat, 8 Feb 2025 14:18:19 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 6/7] nfsd: handle CB_SEQUENCE NFS4ERR_SEQ_MISORDERED
- error better
-To: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
- Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
- Dai Ngo <Dai.Ngo@oracle.com>, "J. Bruce Fields" <bfields@fieldses.org>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250207-nfsd-6-14-v5-0-f3b54fb60dc0@kernel.org>
- <20250207-nfsd-6-14-v5-6-f3b54fb60dc0@kernel.org>
- <28174296-129d-4459-aa23-a94bbf00d257@oracle.com>
- <3e4d14075482489cd010e4ea621c0bd368700e27.camel@kernel.org>
- <40970e33-4689-4623-a423-b346e739ba80@talpey.com>
- <66532654ca25280ffa30168a977601ba4a37aaab.camel@kernel.org>
-Content-Language: en-US
-From: Tom Talpey <tom@talpey.com>
-In-Reply-To: <66532654ca25280ffa30168a977601ba4a37aaab.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BLAPR03CA0092.namprd03.prod.outlook.com
- (2603:10b6:208:32a::7) To SN6PR01MB5246.prod.exchangelabs.com
- (2603:10b6:805:d8::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0974D241123;
+	Sat,  8 Feb 2025 19:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739042315; cv=none; b=kkxftXdm34DVwGTIAhRXPb8nALQ3z/QVBMH5/XJfky1IWk2xl+8B7URn8jaXeTQBl6FjOh/CsfXIPFUkv4vRzBzwY96LRV7oJeRUBjgjGM2I2gWBFOwqCgteOy+UdIUP7EGDiYNzOJdPb02sczWEWWQHmJTk/eAbU+UD+K0gQJg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739042315; c=relaxed/simple;
+	bh=06YsivD9cPlw1p3NS3iYiNBnIeE6ip0XuydpWe4ZnRk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nDYy+veaEd7A0UjRhdN3lRG81uqBK8SrwLjaUJV75CASKnfaVHXXtfOL0hnix5GPAUnPw7BWnRD15xOFrpvQCQD+X6M800yA+fU1x29YPbofpvKmNpl6/Iw+ZvoqlmamDSWC3QdBrlK9a7/prU9MqOWKQCSi1Eiyyrd/Wf3jMg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=e2dWfyZi; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="e2dWfyZi"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 518JHspA014951;
+	Sat, 8 Feb 2025 19:18:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	N9IY6xAkgcl+dzkucgeRtwv5Q9qiGeswZuCATj1aeE4=; b=e2dWfyZi5vSyMQbD
+	r5ya7xsAnuOUAJE2RKs6tp09Xg9FrPDyB9cDcPTbBL4F2P81CE1AJUy01+BNm9Rk
+	Fe2Ea3PVRKA2TBlzlok9Ff8A4QkKJb2Kp8qZBgJCfCu2FYV+AnwbR4mp/9CISKpN
+	wov50/JVzqlAsc9XVsyiXla8H33NoS7rsiJD/sivWYNbvlUjuMLhnoBHZ6SMCsX4
+	X7o/wbsNAFxPArcRAT45VSAfrgTRBqqcuk9x+Ro1HP+GEO45JgGS+CK7rbcn4OWa
+	nQu98ffvTx0XzJabDUwd8lGDmXUeVtzT2Wn8GjG2/ru42dM/R6nOeUaNcja+xkv5
+	d2CA4g==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0dx93d9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Feb 2025 19:18:10 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 518JI8gX002434
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 8 Feb 2025 19:18:09 GMT
+Received: from [10.216.46.73] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 8 Feb 2025
+ 11:18:00 -0800
+Message-ID: <be8a4f65-3b36-4740-a4f7-312126cfd547@quicinc.com>
+Date: Sun, 9 Feb 2025 00:47:56 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR01MB5246:EE_|LV2PR01MB7886:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8c1528f3-357d-41f6-a37e-08dd48755a7e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cHJEbHRIMkZxbjVVV1lFVVFhZGJ3bnRIL1d0LzNFaVRrb0V1UFhNODZaRzda?=
- =?utf-8?B?Q2h0eDBDM2IvYStCTkdvdkpLWk5TQUJjZ2RMcXRtODZpdG0rYXBUVW5mZzk5?=
- =?utf-8?B?ajRKUzR0dFFnV29Hd09HWjNWRllFamZhUXc0L2ZnSW9ZeUJzdGVDUHYrMlJa?=
- =?utf-8?B?TnM4VFVtTk50ZkhJS0NjWHFBbzVpSGZrcmpScE8zMUMwSGVyVHN6RmtUVzcw?=
- =?utf-8?B?UWtGOEFkZTZQZ3AyY01IWjM2WjYrRms1MnYzQzZ3NjB3TWJuUlNlMjZ6RC84?=
- =?utf-8?B?bThGK2duZnFOTlhYanduS1J6bHZTaWFJcVlYRDhld0FkMlIwcnRnR3phVWxt?=
- =?utf-8?B?di9sZlFoWEgzM3BjWWNwUnduQ0JtWVFGMndycnlyMDBmWkxSVHhxMkY2bDV1?=
- =?utf-8?B?SVVGQ0Iva053TlJPZVpKWEs4cVVFM1hJOEV1VVpXVmpYS0VnMnhqUUFjR2Jj?=
- =?utf-8?B?WWFjdnljc2N1QzlmdHVza1Q5ckVRYy93K1ErNHMrVk14MDAzQTdOZzJ2aXFC?=
- =?utf-8?B?a3g5TjkyUkp3SFFxK2RKcFI5NW1GSE9NeXVFcldTeXFJRmFZWmxZMUlrem5r?=
- =?utf-8?B?QWt3SnJKN3NyWjZ2ZHp4V3dIM0ttRlJ5K0tMaDh1YmtkZDhVKzVnaEVTRGpR?=
- =?utf-8?B?RC9ZVWs2NHR2UHNrU0RhL2RoV0hadjhISVJ5blNKOWhxZVpYVjVvUE5uV0xu?=
- =?utf-8?B?TCtsaVowa2RMV1JYZVNVZXBOd2lhM1dmYis1WDRxcmtQKzlLRGxiU1Biam1E?=
- =?utf-8?B?Y011OG90aFo1RWVBMnViRlMyVW4zOG9mdlFtUTdwQlFOWFFkMThKKzBJY0Ix?=
- =?utf-8?B?cFZ0SFR5TENiNE5ZcTVmSlRjM0hmZnVYN013R3FmZmJlNkcvNmV3TGl2dGZM?=
- =?utf-8?B?WWkwU0JYSFVKdUpPbE93dS9waGZTNksrQUJWa2lRNEtJRTZQZ3RMM0ZnSzdY?=
- =?utf-8?B?S1JleXlyZkNxdUcxdXdmc3JFYjFseERTRXJrQTFaUkRxZjBQcHR4UEJqRks4?=
- =?utf-8?B?cFQxOHU1K3N4VVkyOTN6Q1RNR2FDU255MytoMTN6Ty8rVXRjcnE2Zm12YXlk?=
- =?utf-8?B?UThRYTEzaGVRQyttbTZMNlRwWHl6ekFZT2hsZExNMnhWVTFxUHFHeklybU5K?=
- =?utf-8?B?YlNPekJhczlmSU1wYnlzRHJIbnE4TzBOYnlPUjNwcHFTcllacE9lY2ZjT1hq?=
- =?utf-8?B?eUx5cEtuUVRWSXRmSS85VlQyTnBZWTJxaCtQSnlNUmpRNTEzWkJnNzl0eDdu?=
- =?utf-8?B?SHV5R2VWTGx0RHlETUpZdEF1Syt4Y1d6SmtEU0ZCNmtjcTNlTHlQM0FhQlE2?=
- =?utf-8?B?a2tsVVUrb25aU1NwWFo4RTcybFcwSm5GZXpQSVNyNDZEOG96TExWRUtFUkhz?=
- =?utf-8?B?UFRHU0g4N1pMOGhxSkJWSUZReGprYktUNzUzd1ZObWVEdVc0bjNzdTRJVnU0?=
- =?utf-8?B?UXJrOHZVOVdldi9UMFB6NWRyWTJpcStPcUc1YUc2M2dSVE1kK3pESFlnRXhT?=
- =?utf-8?B?VHZlMCtxV3AxMTUvWWxLcVlBdUY3WEFKQlJqN0kyYkRlTjhkb2Nvb3NPTERQ?=
- =?utf-8?B?TE1qRU8zc1JoWlBmV3hrQStTWUpFbzRKS1lHWUIyUks0RHBIeWpURVcrVWNO?=
- =?utf-8?B?bjJkQlRkR01ZUmJmNkFxVjROSjNoMDZ1UFloRm1Sa1c3bnBWTEFSZUU5dGxu?=
- =?utf-8?B?bC9TNUNUTnVqNmM1TTJGR1p4MlhKTVI3ZzV3MFJVNnU2Tk5sbVJiakJ3djc3?=
- =?utf-8?B?S3ZJTVJ4NWZpZUcrSUxMaUtlV0dhd0xuandETWFhMEtaaGFNcCttMEZRTGpZ?=
- =?utf-8?B?dW02cHloZ2NwQ1JRZWgySHREMWJaNEdMT29PYnVQU3A2Rm5rTHczQWFxQUor?=
- =?utf-8?Q?HF7raHINmbPSa?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR01MB5246.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?V21uZEVUSnloMzR6ZWJYM2hmK3doNkVFaFNrZEhZdm1ibTlldWxMNytNQWIr?=
- =?utf-8?B?ZGZtSU1ybDFDcGNNbWxKd0h3WVNDM1NnV3A0NWtObkNWR3p4SHdpV1M4WGFx?=
- =?utf-8?B?eUFEdUUzeHA4RVBmQ0VETGNyOVp2VjJ3MVI4eWRKYXBScFdyN25iTGVlS3Ra?=
- =?utf-8?B?UURic0IvOGVmN0wzazR0U2ZDWDVqcE9xQkFmWWtIRS95MzBvdWhiOGVWclVS?=
- =?utf-8?B?enZ1aUV4UklRVnFOd2o4blZjUVFIQ3A0Z0IyZGUyYU5tcEcrQXZaeU11T1Vi?=
- =?utf-8?B?bUh6YlJDV1Y4RlpxYUwzbWNnUkpNU3hhUUVmcTh5cU5yWVRtTWtwcnUyTzJX?=
- =?utf-8?B?S3RUanpxUTlPdDNrcTc1WTN2cGMvMFJ3OEVKTTd1b2VHRk1JdlB0dGluc1E3?=
- =?utf-8?B?WnIyTTJvd0p0eEJ3NVJXcGx4VUFIRVhHLy8wRzIrcVhnRkYraC82OHVSUkp2?=
- =?utf-8?B?eWNOWk02UElSck9IaG1kUXFkZzJPVkEyemdvbDhMT1IwLzdDWWpMKy9sS01F?=
- =?utf-8?B?RFE1U0NXVFFTY25VcCs2SjdQSDVUcGNCL0trVGpUOXlldXFiaTE5dmxLdlJX?=
- =?utf-8?B?V293SjlNT2FJYTBwaVhYUGFxU0lJUFNRZmZMQUtlWHc1ellBcUIveUhhR3V3?=
- =?utf-8?B?ZENpVzBwSUNlTXZyc2hRYWM2U2dpN1h5eU5VUm5iM3ZFUjB0cjU5d2F2dk9a?=
- =?utf-8?B?OGR5aFZ6N2VKQnp6RWtoMDUzVVY0d1dWR2hRVnBYanlNdXZpT2V3UGZNd05x?=
- =?utf-8?B?Szl5VlRYMHVMeG9oeVlFV2U5WXErd0N5ZUFvWTZrVlBTWGxRaVBJRE9kVjNj?=
- =?utf-8?B?VHN4WDdZWVZRTVREZ1VxUEM5Z2tOYmNkUGJwaG1DVzhNSWltUm9GSzhmL21B?=
- =?utf-8?B?cERaRkgybWVkb3c2eEp6bXYxZzhUM0w4YzhBMWdLRG1ncWpCamNwUmNMZGtK?=
- =?utf-8?B?eERIVDk4bFBFVnJ2UjI3MmYxakZkRk9YdjVHVFQxMWEzYUpoZzN3UnpuNDhi?=
- =?utf-8?B?T0xWaDdZdGZZcFMxK2laRWNIc2d6Q2ZaTXZtU1BqcWp0dWc4NndBc3ZFYmFT?=
- =?utf-8?B?US8rbVFCTXdaZFUwMEpzcy9wOEtUZzZxZHVYVEpXSWJ3Y2s4TTlKUmlidXJY?=
- =?utf-8?B?RkdiSDlrYWZ0VXFlZDlOVm43b0czYkc5R1NISlgvZWsvTzRqclM1QlpyRFYr?=
- =?utf-8?B?MW5RV1I2MDhUVDZpaC8xQ2Vmbks2TzlrMkhLZ2RkSGowSy9IMXRnZ1FONzFk?=
- =?utf-8?B?RnZaVm9WbjNMdE9lNERNeHNlY3djTmlXWjIzcEFLNmZPRVJ1em4wYmIzVFpF?=
- =?utf-8?B?bXNsYjN1ZWFqdjY1ZHA1YWdWWWtabGUxSnNudVJIOER0SzlRYWRqVmlaTGlY?=
- =?utf-8?B?QmtmbDhseC9tK0ZMTEpBSXdiSUVPbmIySTR4ZVVqMjNYK3VvYkwzVStXUldD?=
- =?utf-8?B?bWtKNnBXam5LY0tNWUU3MFBTMzY4aHRwbEJaR2U1K0h1NjIveTFROE54Y3Nt?=
- =?utf-8?B?cGVXbjBwY3VKYTBZeUpyaFNCMTNoRHFBNjE2M0VqSkdQdTVRTytEcjZXaks1?=
- =?utf-8?B?SnUxdWdTWXEwa2JoRTFFcWI0Y0ZFRHpmVGkrZ0FKczdWbVpDUDkzTWwwaFNa?=
- =?utf-8?B?SUVDblBDQTRuWEpwUWhWR0lEald6Nm5NSUVkbXJhWloyUC9rVkR5N1R4dkFx?=
- =?utf-8?B?Y1N1d2dOYStaL05tcHdwWFlkT2FwMjU5aGhpVVdsYnVEU3dOaE5XTU9GM0Nq?=
- =?utf-8?B?OGZWa1F4eVBxMUlrR2JPZkdZMVdlZ1V0b29MeTVkVHdYdHVpelpzdkZkZXll?=
- =?utf-8?B?K1c2YlpBRFZVci94UXY5N3g5WCt5cUZiZXF0bXpKS0haa3ZjWXhCdlNzS0Rq?=
- =?utf-8?B?eXM1SXBhdlRCUmlqRnR0b2NuU0dOZzhoeXBHWkVlY0h0WHNCd2R5WlkyVGpI?=
- =?utf-8?B?NmZqRnJUUGhMSEZ0bE5xZHdKNDFCTmphc0tNb2hRT2s2S0duY0hNaFpFSzJx?=
- =?utf-8?B?dHF3dVE5aG5jaXF1d2JrRzRiaWRNQzJDRThqVCswWFpibGpSQUFTRm5lVDlK?=
- =?utf-8?B?dmJCSyt5dTFHQk9KSkRzMVh6dkVoaTY3SEs2RklxaWM0aURMZ2ppTVNDMnB6?=
- =?utf-8?Q?8BjCcO5KkVdD+uxBBhojeqEyq?=
-X-OriginatorOrg: talpey.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c1528f3-357d-41f6-a37e-08dd48755a7e
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR01MB5246.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2025 19:18:22.4515
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XQW5flQgM3norFjT7kTKk+92yFa07NmYu1Dagn3SPrVuVFYDYKLpIrrtO8xn3U8W
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR01MB7886
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] arm64: dts: qcom: sm8750: Add UFS nodes for SM8750
+ SoC
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Melody Olvera
+	<quic_molvera@quicinc.com>
+CC: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Satya Durga Srinivasu Prabhala
+	<quic_satyap@quicinc.com>,
+        Trilok Soni <quic_tsoni@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        Manish Pandey <quic_mapa@quicinc.com>
+References: <20250113-sm8750_ufs_master-v1-0-b3774120eb8c@quicinc.com>
+ <20250113-sm8750_ufs_master-v1-4-b3774120eb8c@quicinc.com>
+ <vifyx2lcaq3lhani5ovmxxqsknhkx24ggbu7sxnulrxv4gxzsk@bvmk3znm2ivl>
+Content-Language: en-US
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+In-Reply-To: <vifyx2lcaq3lhani5ovmxxqsknhkx24ggbu7sxnulrxv4gxzsk@bvmk3znm2ivl>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: H7MMEz91xnntvLV_dF1Nb-28qP3oy1uj
+X-Proofpoint-ORIG-GUID: H7MMEz91xnntvLV_dF1Nb-28qP3oy1uj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-08_08,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 malwarescore=0 priorityscore=1501 suspectscore=0
+ clxscore=1015 mlxscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0
+ phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502080163
 
-On 2/8/2025 11:08 AM, Jeff Layton wrote:
-> On Sat, 2025-02-08 at 13:40 -0500, Tom Talpey wrote:
->> On 2/8/2025 10:02 AM, Jeff Layton wrote:
->>> On Sat, 2025-02-08 at 12:01 -0500, Chuck Lever wrote:
->>>> On 2/7/25 4:53 PM, Jeff Layton wrote:
->>>>> For NFS4ERR_SEQ_MISORDERED, do one attempt with a seqid of 1, and then
->>>>> fall back to treating it like a BADSLOT if that fails.
->>>>>
->>>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->>>>> ---
->>>>>    fs/nfsd/nfs4callback.c | 16 ++++++++++------
->>>>>    1 file changed, 10 insertions(+), 6 deletions(-)
->>>>>
->>>>> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
->>>>> index 10067a34db3afff8d4e4383854ab9abd9767c2d6..d6e3e8bb2efabadda9f922318880e12e1cb2c23f 100644
->>>>> --- a/fs/nfsd/nfs4callback.c
->>>>> +++ b/fs/nfsd/nfs4callback.c
->>>>> @@ -1393,6 +1393,16 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
->>>>>    			goto requeue;
->>>>>    		rpc_delay(task, 2 * HZ);
->>>>>    		return false;
->>>>> +	case -NFS4ERR_SEQ_MISORDERED:
->>>>> +		/*
->>>>> +		 * Reattempt once with seq_nr 1. If that fails, treat this
->>>>> +		 * like BADSLOT.
->>>>> +		 */
->>>>
->>>> Nit: this comment says exactly what the code says. If it were me, I'd
->>>> remove it. Is there a "why" statement that could be made here? Like,
->>>> why retry with a seq_nr of 1 instead of just failing immediately?
->>>>
->>>
->>> There isn't one that I know of. It looks like Kinglong Mee added it in
->>> 7ba6cad6c88f, but there is no real mention of that in the changelog.
->>>
->>> TBH, I'm not enamored with this remedy either. What if the seq_nr was 2
->>> when we got this error, and we then retry with a seq_nr of 1? Does the
->>> server then treat that as a retransmission?
->>
->> So I assume you mean the requester sent seq_nr 1, saw a reply and sent a
->> subsequent seq_nr 2, to which it gets SEQ_MISORDERED.
->>
->> If so, yes definitely backing up the seq_nr to 1 will result in the
->> peer considering it to be a retransmission, which will be bad.
->>
-> 
-> Yes, that's what I meant.
-> 
->>> We might be best off
->>> dropping this and just always treating it like BADSLOT.
->>
->> But, why would this happen? Usually I'd think the peer sent seq_nr X
->> before it received a reply to seq_nr X-1, which would be a peer bug.
->>
->> OTOH, SEQ_MISORDERED is a valid response to an in-progress retry. So,
->> how does the requester know the difference?
->>
->> If treating it as BADSLOT completely resets the sequence, then sure,
->> but either a) the request is still in-progress, or b) if a bug is
->> causing the situation, well it's not going to converge on a functional
->> session.
->>
-> 
-> With this patchset, on BADSLOT, we'll set SEQ4_STATUS_BACKCHANNEL_FAULT
-> in the next forechannel SEQUENCE on the session. That should cause the
-> client to (eventually) send a DESTROY_SESSION and create a new one.
-> 
-> Unfortunately, in the meantime, because of the way the callback channel
-> update works, the server can end up trying to send the callback again
-> on the same session (and maybe more than once). I'm not sure that
-> that's a real problem per-se, but it's less than ideal.
-> 
->> Not sure I have a solid suggestion right now. Whatever the fix, it
->> should capture any subtlety in a comment.
->>
-> 
-> At this point, I'm leaning toward just treating it like BADSLOT.
-> Basically, mark the backchannel faulty, and leak the slot so that
-> nothing else uses it. That allows us to send backchannel requests on
-> the other slots until the session gets recreated.
 
-Hmm, leaking the slot is a workable approach, as long as it doesn't
-cascade more than a time or two. Some sort of trigger should be armed
-to prevent runaway retries.
 
-It's maybe worth considering what state the peer might be in when this
-happens. It too may effectively leak a slot, and if is retaining some
-bogus state either as a result of or because of the previous exchange(s)
-then this may lead to future hangs/failures. Not pretty, and maybe not
-worth trying to guess.
+On 1/14/2025 4:22 PM, Dmitry Baryshkov wrote:
+> On Mon, Jan 13, 2025 at 01:46:27PM -0800, Melody Olvera wrote:
+>> From: Nitin Rawat <quic_nitirawa@quicinc.com>
+>>
+>> Add UFS host controller and PHY nodes for SM8750 SoC.
+>>
+>> Co-developed-by: Manish Pandey <quic_mapa@quicinc.com>
+>> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
+>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+>> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sm8750.dtsi | 81 ++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 81 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>> index 3bbd7d18598ee0a3a0d5130c03a3166e1fc14d82..20690c102244b337847a6482dd83c37e19746de9 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>> @@ -13,6 +13,7 @@
+>>   #include <dt-bindings/power/qcom,rpmhpd.h>
+>>   #include <dt-bindings/power/qcom-rpmpd.h>
+>>   #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>> +#include <dt-bindings/gpio/gpio.h>
+>>   
+>>   / {
+>>   	interrupt-parent = <&intc>;
+>> @@ -1939,6 +1940,86 @@ mmss_noc: interconnect@1780000 {
+>>   			#interconnect-cells = <2>;
+>>   		};
+>>   
+>> +		ufs_mem_phy: phy@1d80000 {
+>> +			compatible = "qcom,sm8750-qmp-ufs-phy";
+>> +			reg = <0x0 0x01d80000 0x0 0x2000>;
+>> +
+>> +			clocks = <&rpmhcc RPMH_CXO_CLK>,
+>> +				 <&gcc GCC_UFS_PHY_PHY_AUX_CLK>,
+>> +				 <&tcsrcc TCSR_UFS_CLKREF_EN>;
+>> +			clock-names =	"ref",
+>> +					"ref_aux",
+>> +					"qref";
+>> +
+>> +			resets = <&ufs_mem_hc 0>;
+>> +			reset-names = "ufsphy";
+>> +
+>> +			power-domains = <&gcc GCC_UFS_MEM_PHY_GDSC>;
+>> +
+>> +			#clock-cells = <1>;
+>> +			#phy-cells = <0>;
+>> +
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		ufs_mem_hc: ufs@1d84000 {
+>> +			compatible = "qcom,sm8750-ufshc", "qcom,ufshc", "jedec,ufs-2.0";
+>> +			reg = <0x0 0x01d84000 0x0 0x3000>;
+>> +
+>> +			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
+>> +
+>> +			clocks = <&gcc GCC_UFS_PHY_AXI_CLK>,
+>> +				 <&gcc GCC_AGGRE_UFS_PHY_AXI_CLK>,
+>> +				 <&gcc GCC_UFS_PHY_AHB_CLK>,
+>> +				 <&gcc GCC_UFS_PHY_UNIPRO_CORE_CLK>,
+>> +				 <&rpmhcc RPMH_LN_BB_CLK3>,
+>> +				 <&gcc GCC_UFS_PHY_TX_SYMBOL_0_CLK>,
+>> +				 <&gcc GCC_UFS_PHY_RX_SYMBOL_0_CLK>,
+>> +				 <&gcc GCC_UFS_PHY_RX_SYMBOL_1_CLK>;
+>> +			clock-names = "core_clk",
+>> +				      "bus_aggr_clk",
+>> +				      "iface_clk",
+>> +				      "core_clk_unipro",
+>> +				      "ref_clk",
+>> +				      "tx_lane0_sync_clk",
+>> +				      "rx_lane0_sync_clk",
+>> +				      "rx_lane1_sync_clk";
+>> +			freq-table-hz = <100000000 403000000>,
+>> +					<0 0>,
+>> +					<0 0>,
+>> +					<100000000 403000000>,
+>> +					<100000000 403000000>,
+>> +					<0 0>,
+>> +					<0 0>,
+>> +					<0 0>;
+> 
+> Use OPP table instead
 
-Tom.
+Currently, OPP is not enabled in the device tree for any previous 
+targets. I plan to enable OPP in a separate patch at a later stage. This 
+is because there is an ongoing patch in the upstream that aims to enable 
+multiple-level clock scaling using OPP, which may introduce changes to 
+the device tree entries. To avoid extra efforts, I intend to enable OPP 
+once that patch is merged.
+Please let me know if you have any concerns.
+
 
 > 
->>>
->>> Thoughts?
->>>
->>>>
->>>>> +		if (session->se_cb_seq_nr[cb->cb_held_slot] != 1) {
->>>>> +			session->se_cb_seq_nr[cb->cb_held_slot] = 1;
->>>>> +			goto retry_nowait;
->>>>> +		}
->>>>> +		fallthrough;
->>>>>    	case -NFS4ERR_BADSLOT:
->>>>>    		/*
->>>>>    		 * BADSLOT means that the client and server are out of sync
->>>>> @@ -1403,12 +1413,6 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
->>>>>    		nfsd4_mark_cb_fault(cb->cb_clp);
->>>>>    		cb->cb_held_slot = -1;
->>>>>    		goto retry_nowait;
->>>>> -	case -NFS4ERR_SEQ_MISORDERED:
->>>>> -		if (session->se_cb_seq_nr[cb->cb_held_slot] != 1) {
->>>>> -			session->se_cb_seq_nr[cb->cb_held_slot] = 1;
->>>>> -			goto retry_nowait;
->>>>> -		}
->>>>> -		break;
->>>>>    	default:
->>>>>    		nfsd4_mark_cb_fault(cb->cb_clp);
->>>>>    	}
->>>>>
->>>>
->>>>
->>>
+>> +
+>> +			resets = <&gcc GCC_UFS_PHY_BCR>;
+>> +			reset-names = "rst";
+>> +
+>> +
+>> +			interconnects = <&aggre1_noc MASTER_UFS_MEM QCOM_ICC_TAG_ALWAYS
+>> +					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+>> +					<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
+>> +					 &config_noc SLAVE_UFS_MEM_CFG QCOM_ICC_TAG_ALWAYS>;
+> 
+> Shouldn't cpu-ufs be ACTIVE_ONLY?
+
+As per ufs driver implementation, Icc voting from ufs driver is removed 
+as part of low power mode (suspend or clock gating) and voted again in 
+resume/ungating path. Hence TAG_ALWAYS will have no power concern.
+All previous targets have the same configuration.
+
+Thanks,
+Nitin
+
+
+> 
+>> +			interconnect-names = "ufs-ddr",
+>> +					     "cpu-ufs";
+>> +
+>> +			power-domains = <&gcc GCC_UFS_PHY_GDSC>;
+>> +			required-opps = <&rpmhpd_opp_nom>;
+>> +
+>> +			iommus = <&apps_smmu 0x60 0>;
+>> +			dma-coherent;
+>> +
+>> +			lanes-per-direction = <2>;
+>> +
+>> +			phys = <&ufs_mem_phy>;
+>> +			phy-names = "ufsphy";
+>> +
+>> +			#reset-cells = <1>;
+>> +
+>> +			status = "disabled";
+>> +		};
+>> +
+>>   		tcsr_mutex: hwlock@1f40000 {
+>>   			compatible = "qcom,tcsr-mutex";
+>>   			reg = <0x0 0x01f40000 0x0 0x20000>;
+>>
+>> -- 
+>> 2.46.1
 >>
 > 
 
