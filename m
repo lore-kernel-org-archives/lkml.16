@@ -1,79 +1,149 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B7FA23
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 03:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4501DA5F
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 03:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738984669; cv=none; b=HHcoKmQxTxIzYJvCDQLvGohlOE47Os5YRWh/Pn83Wik69yJrlynJrZ4Qhma6xh/YCgIqOeD3GnKmEtEc9wr2NSYIDZwe4AgYku9jyoxtXUyPd9HG8EDy5xZgwHrJs1nDet6c+MFBg9Iy4myxawwWzQWUnYULUYBQ600uqUxv5pI=
+	t=1738985078; cv=none; b=oLgkiwcsGlb85JEa8odmC52jIi2rIk+t3qV93NIUMfvj2Ok9gUNSai2l5X14+zQn2Vs14ynqT3lBbU14z3Y3MV9uw8umXADAUtuKg1GEUk46tP15fy8u6Iuon9XX3T5aGl4nMh26iVZ96bf0lx0GGeBclsrvJauYCHJETseamr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738984669; c=relaxed/simple;
-	bh=/UPr5zPx5T4FSgK65mwgjPcgywZ4qh8s3ZC4e1gvk/M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n4QPQ1u0AtJVfm121XhHiEOiSmHv8PYGP34hiwzML7x9ra4CYShzxBF//eS0t7QJwCFRP/mDza/8mCCZAhvqazM0C17bzqIJ7NUtM7cOJSRCqn4ddvc6IHj9eeARPY9nkO2YQKLbYU8kcWLoSRw/wPhwbH3MlP5ch7LC8adTZK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=OcRAQPve; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1738985078; c=relaxed/simple;
+	bh=thhMImcNjkBOZVN3411pEW3GYeb5l0VTXUUDiUnUpWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G15Z1n1ABIPrX6EjnztWxHBaqrs5rpSu7Ja/4AagKiU3rGpd9isgdtWizga3HdODK+5yHWd3Xb1psDKMuaDIcznl4PANErbvZ12M9HNaKQ2/pdpEI+iiop17uwbUrt+BAME8BX7cloJK7Bp/jay03769Z9duzPdjHEp/jZxQC3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cQuxsSbU; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="OcRAQPve"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=JelDmvVCl54XiASmEJAB3CTSP86k4kOSQrqZHzkfw2g=; b=OcRAQPve0gXqkJK5PYQZiAOl2q
-	Y7mTExz2R44OC0LXKvrNWJmeox+vs+C24b3O4CwQ8Q02E+Pwe1Mbc2t1vfkUHgbuCbbgqz/7pT5pE
-	c8amTn/hmICzhW/pehfI3Ju4axJEc6mnB+aJ+OtfqXrCLJYwxHOOrYOQRwtO7CO4FGVnuWIQPxX+3
-	AjDG5oHgYur54cUFJ08nYvqyf1kdqfLRL/NaCOzGlEi480RwApxpSUMFtgt7r7WuuKZAGFeZfHh8T
-	GhLXeu9RmSUC+cXzlfnyJ1YGoXIz9sj8VDZyKRYaYWDN/UZW9rwhN281t9GZ37wxCk5qttdv+JCXo
-	aq4ptcmw==;
-Received: from [58.29.143.236] (helo=[192.168.1.6])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1tgbLQ-006Eux-QL; Sat, 08 Feb 2025 04:17:31 +0100
-Message-ID: <aedaba97-08a4-47bd-bb0d-7192dc2a91a5@igalia.com>
-Date: Sat, 8 Feb 2025 12:17:26 +0900
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cQuxsSbU"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30615661f98so28842421fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2025 19:24:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738985075; x=1739589875; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tc6hvH16HL02+LBdNm0oBeAynWr7uQ4sq+3344BeoFU=;
+        b=cQuxsSbUWSrGstyhWVkvDQ3KY2mQklY0+3v6MsbxbmMj8o9MBgViEIO6/YSIjaASnb
+         HF1xmFtWamH2BPMk9Nmt0dnbioq9M3sSTB8Ec8sAFA0+F9WGX2DopJXG1wH2RXD2TSk+
+         /u4SnctOF4HMvefgQ42H3NUaVaCNM2Q3L93KO1dRF/xfUMDUh6U/91JI56YELPSlp4ny
+         7vnH7BBomWjGDAkSAA7a7ymqZGM339E5KQeBR6y6LZuKs2gR2R6nJpJ7Llsa16aZmAWn
+         FehRxru9O2DOX9wXMcTYuNPLx/Qwg51nNU/Xx1Ty3exVNTG23Qstl4mLc3oqYxe1mWR2
+         2Avg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738985075; x=1739589875;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tc6hvH16HL02+LBdNm0oBeAynWr7uQ4sq+3344BeoFU=;
+        b=U21stQG0IO/ZQTVzSRxunQu4EI/5gu/AgbL5hNIJYaPbBYOLrXuqVPdpG71jTjvS8j
+         k8Axrl/dl9jTTuDRn6quwUy/tgnsgAtjcEjyh8YVNti2UA1CdUaBpT2RXUldA3rcJXjf
+         074D/nTFwpqWvk0IYaEXBLl0xgXUsz8oMm6+8mx/+1uJ4s65JNBVyoZZDpYScDNcGmo8
+         GWs6QJr8pV7o29z5oN6hx53m9MgW2ocx6c2DA8eE6AjS9z01ai6BkkWYALQ9hA4PdMuu
+         NnpinDt6NeA1Fg4pLbQSr5vEI15PKqwwGDdclyJ5BlRsmbZkAJUvFvudCVXttl1V4Y3R
+         S3cQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKgHlZa1uZItL8BK7dvprr5LSV3Ye7s78ytCeZ3oHn/E7LwmkkpUTSLG0wKbbjX6xc/Qj6VRoBD60Sqf4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYmL1/Xp4uvrhOF4yTaManVbqb0jsnLaruRjxDDo++z3/qP5Oj
+	psMAoHzttoxJq+4iE7fvmYjitKiRqeuq49SF00BHxbApu8GnJF1jNGpQh7DIMh8=
+X-Gm-Gg: ASbGncv7Taf850YEvu5jQRBYe+Apvy/xR7CfgsssYGlQ2QQreXnbyP0t5dqiu+p/mBJ
+	QonZnFYGMxACSqNBp0pfCbkS2MJaWH0pcaGE2/n2w/xtgKt2hauEPHW/X4jF3L0pdfxTtVOmxTT
+	jePF2tCl85jTtsseSw2aZnb8EXHAM+tRz/pg2P8CG6wT2Am/ZNYwpEkggcGw7HgpB4gk3Z4OFxv
+	8sxP2G79Ek/rcTJfLvjdcj+oBxkny6YF/NG6otl8QoZUFslwCZTZ4v6sPOiuV/fJ/g06CGcJxU7
+	GBybbIgFPFFDB6bZiCr8yjo5fT5YwHNBV7suZK/yb7egUHBAC44AsbGIZKlzkpuOPZnoiug=
+X-Google-Smtp-Source: AGHT+IFydtUFynrK2gRpKzEKvd+/uEV8NSFd5so2WMhom1ky7+A67a+p0tJRz+0pk2ZePPqPbJ3Tsw==
+X-Received: by 2002:a2e:a550:0:b0:306:1524:4a65 with SMTP id 38308e7fff4ca-307e57fed91mr19942481fa.20.1738985074455;
+        Fri, 07 Feb 2025 19:24:34 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de1a67c9sm6260441fa.48.2025.02.07.19.24.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 19:24:33 -0800 (PST)
+Date: Sat, 8 Feb 2025 05:24:29 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Simona Vetter <simona@ffwll.ch>, 
+	Simona Vetter <simona.vetter@ffwll.ch>, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 6/7] drm/msm/hdmi: also send the SPD and HDMI Vendor
+ Specific InfoFrames
+Message-ID: <ry2jfdxhbogl42wbiajll5et5n2puvu46fn25v25qwpac7bbyu@wvhz3ijtfd56>
+References: <20250208-bridge-hdmi-connector-v7-0-0c3837f00258@linaro.org>
+ <20250208-bridge-hdmi-connector-v7-6-0c3837f00258@linaro.org>
+ <9c35f577-2124-4f80-a5d3-542b47ed6825@quicinc.com>
+ <7hpfx2whiyt5pjfcqnzmx5wllezlyttugmvqg2pg3be546m75p@5jfyw4z5wxsw>
+ <af3fa1fd-122b-44e9-8e3b-48918bad7bab@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] sched_ext: Add a core event and update scx schedulers
-To: Andrea Righi <arighi@nvidia.com>, Tejun Heo <tj@kernel.org>
-Cc: void@manifault.com, kernel-dev@igalia.com, linux-kernel@vger.kernel.org
-References: <20250207031338.393045-1-changwoo@igalia.com>
- <Z6WnCHiwkvahtdgR@gpd3> <Z6Z9V7GgZxpFlp10@slm.duckdns.org>
- <Z6Z_CNBMp5greLf4@gpd3>
-From: Changwoo Min <changwoo@igalia.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <Z6Z_CNBMp5greLf4@gpd3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <af3fa1fd-122b-44e9-8e3b-48918bad7bab@quicinc.com>
 
-Hi Tejun and Andrea,
-
-On 25. 2. 8. 06:45, Andrea Righi wrote:
-> On Fri, Feb 07, 2025 at 11:38:31AM -1000, Tejun Heo wrote:
->> I'm not sure. BPF schedulers should be able to avoid getting the default
->> slice. Hopefully, with the added visibility, this should be easier now. I'm
->> not sure how much overriding the default value in ops helps in terms of
->> control. It's a very half-way measure. Instead, how about we add tracepoint
->> to scx_add_event() so that folks who want to get backtrace of specific
->> events can get them easily so that it's easier to debug where these counts
->> are coming from? Let's just make it easier to avoid these events.
+On Fri, Feb 07, 2025 at 07:05:14PM -0800, Abhinav Kumar wrote:
 > 
-> Yeah, that's a valid point, the implicit SCX_SLICE_DFL should be seen as a
-> countermeasure for unhandled situations. Instead of fixing the
-> countermeasure itself we should try to prevent it, if it proves to be
-> problematic. And I like the idea of having a way to backtrace specific
-> events.
+> 
+> On 2/7/2025 6:04 PM, Dmitry Baryshkov wrote:
+> > On Fri, Feb 07, 2025 at 05:31:20PM -0800, Abhinav Kumar wrote:
+> > > 
+> > > 
+> > > On 2/7/2025 4:27 PM, Dmitry Baryshkov wrote:
+> > > > Extend the driver to send SPD and HDMI Vendor Specific InfoFrames.
+> > > > 
+> > > > While the HDMI block has special block to send HVS InfoFrame, use
+> > > > GENERIC0 block instead. VENSPEC_INFO registers pack frame data in a way
+> > > > that requires manual repacking in the driver, while GENERIC0 doesn't
+> > > > have such format requirements. The msm-4.4 kernel uses GENERIC0 to send
+> > > > HDR InfoFrame which we do not at this point anyway.
+> > > > 
+> > > 
+> > > True that GENERIC_0/1 packets can be used for any infoframe. But because we
+> > > have so many of them, thats why when there are dedicated registers for some
+> > > of them, we use them to save the GENERIC0 ones for others.
+> > 
+> > True
+> > 
+> > > Lets take a case where we want to send HVSIF, SPD and HDR together for the
+> > > same frame, then we run out as there are no HDR specific infoframe registers
+> > > we can use. Is the expectation that we will migrate to VENSPEC_INFO regs for
+> > > HVSIF when we add HDR support?
+> > 
+> > Most likely, yes. That would be a part of the HDR support. At the same
+> > time note, we can use GENERIC0 to send new HFVS InfoFrames defined in
+> > HDMI 2.x (once Linux gets support for that). At the same time we can not
+> > use VENSPEC_INFO to send those.
+> > 
+> > I can imagine that the driver will have to switch GENERIC1 between HDR
+> > (if required) and SPD (in all other cases).
+> > 
+> 
+> We dont have to use GENERIC0 for HFVS infoframes. We have dedicated
+> HFVS_INFO registers for those.
 
-I agree that adding a tracepoint to scx_add_event() and 
-__scx_add_event() is a defenitely useful extension to further 
-investigate what's going on. I will take a look.
+Ack, I have been checking the old (apq8064) chipset.
 
-Regards,
-Changwoo Min
+> 
+> > > 
+> > > Also from a validation standpoint, I guess to really validate this change
+> > > you need an analyzer which decodes the HVSIF. So was this mostly sanity
+> > > tested at this pointed to make sure that the sink just comes up?
+> > 
+> > Vertex 2 dumps received HVS InfoFrame, so the InfoFrame contents has
+> > been validated (validated SPD, AUD, HVS and AVI frames).
+> > 
+> 
+> Yup, vertex2 validation is perfect for this!
+> 
+> Overall, I am fine with this,
+> 
+> Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+
+-- 
+With best wishes
+Dmitry
