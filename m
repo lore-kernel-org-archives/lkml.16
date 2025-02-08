@@ -1,97 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A7179CF
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 20:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F37243948
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 20:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739046097; cv=none; b=A6KE2XVmht99AybOftH0D7wCd3FAGeP51XkV4T1vI6XvLSOdhn1vbWJoT86kZ/K5aRyVYYHwvrgAwFyaeiZuZrXa5BKRg9mM0V6DbD8/ls0MqCOt7PT+8YcTqNFnGshRh/QpJ1expOzB1aVS23nWAHeuUICA2v2bfkAmFXEjP8o=
+	t=1739046326; cv=none; b=sUjvFL+8r4tB1d6fMhd1gtdyPWCTJa05shuL/I6xsR3Hm74B7jkLmauVv4LOnQJjEps3LtypxIxSMSRRt558N8GfZlpC6id/OPC78bcahQk1ZNFl4f7pS9jTD15a8NLPZQ3aC/NGEfnODTdChbo/T7lhjrRaV7ryCSqUeAHGEf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739046097; c=relaxed/simple;
-	bh=x1OIqM2FU3HqxaNcdd87MOtNvlcSZVhKbB9f+9f4H9I=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
-	 Content-Type; b=fGGM4XJdQvU/PhQUloFL9QgZLfSSCrIe7mairSf4IiaH8Y0FEay03Mkb2dEw4SeiILJLBBEwgw0s/EmBvQeLx/Zdj5bpXKj0lEAAtINZP6jdLEUeEv+bNC3Rm1JO5V2vTxVBncgdUOq6x2M0dVVGXXR01CeWoSw6sOHdzHmESR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M4BsADJY; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739046326; c=relaxed/simple;
+	bh=qguLn2lVdAay7Qgv9NyHlsgIV433J3xLJk6d/GB3DqQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uwrytiYoRZk3IjtyV7dSLIYi67SgBpduZNnwec3C/wI/6ZPGyam7m0lJJY967yREKEKiqjZn8OmOmV2+yccaTBir4LfBL04KIbI5CM59e8D3/At9l7dwiW/CLIMljMCz6Dqh/BdqL7xVwqiYdDJCZtTs+mlpBtrs+7e/0c+xGpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=icQqgaC8; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M4BsADJY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739046095;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=rDfuiscGWjU0HzVClM0mdvNpLypV4eXXeeagWgAcPN4=;
-	b=M4BsADJYYjaYCG+K5FWmFqeWHCPUR8cAnJuC/5sQ0gnrcLYn2kdZ5KFOasoBFksjbHe355
-	q+Rf/lINCO1SfK6iTRvVDlJru6TKc4muwL2eTLRCgRX6ZFl52VmQTDw8N99sp6fbVDE5fA
-	JRHZweq+6apl5JEHKOwzZ99XnjdwDec=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-110-sV3q8yFhPIC_pe3mlhzWMA-1; Sat,
- 08 Feb 2025 15:21:31 -0500
-X-MC-Unique: sV3q8yFhPIC_pe3mlhzWMA-1
-X-Mimecast-MFC-AGG-ID: sV3q8yFhPIC_pe3mlhzWMA
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1117A1955DD0;
-	Sat,  8 Feb 2025 20:21:28 +0000 (UTC)
-Received: from greed.delorie.com (unknown [10.22.88.57])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0A89E1956094;
-	Sat,  8 Feb 2025 20:21:26 +0000 (UTC)
-Received: from greed.delorie.com.redhat.com (localhost [127.0.0.1])
-	by greed.delorie.com (8.16.1/8.16.1) with ESMTP id 518KLOcp3191142;
-	Sat, 8 Feb 2025 15:21:24 -0500
-From: DJ Delorie <dj@redhat.com>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: miguel.ojeda.sandonis@gmail.com, eblake@redhat.com, will.newton@linaro.org,
-        eggert@cs.ucla.edu, linux-man@vger.kernel.org, dakr@kernel.org,
-        tamird@gmail.com, ojeda@kernel.org, alex.gaynor@gmail.com,
-        boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-        benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
-        tmgross@umich.edu, rust-for-linux@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] rust: alloc: satisfy `aligned_alloc` requirements
-In-Reply-To: <kfkku4rjsktgkufkuehliojv3izxdutc55inmv3yvenu33zr7e@lluedzjnqnki>
- (message from Alejandro Colomar on Sat, 8 Feb 2025 20:19:22 +0100)
-Date: Sat, 08 Feb 2025 15:21:24 -0500
-Message-ID: <xn4j14nq63.fsf@greed.delorie.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="icQqgaC8"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5450475df18so827134e87.2
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 12:25:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1739046321; x=1739651121; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0snXFD48srt2bPIw0/xHSEpJ3QuHpc2GgTYscYldOH0=;
+        b=icQqgaC8Msaq8e2nvkAB8PRz1Ten+Ls//yVenentnVguv5ITNaWlkpC7UMvfRW+Riv
+         LE7ZZAl8uFEHU+wXLF7S8VxQpLNjx2xpCRzQGm0oVzqvoCM3sVhc9ssArqvebCCB3r49
+         yJeYDbj+gWFt8jgum7/7s96GP2mFpiem3u1Ws=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739046321; x=1739651121;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0snXFD48srt2bPIw0/xHSEpJ3QuHpc2GgTYscYldOH0=;
+        b=lQDUBoqykS82OHrjn4FGChv7LzYFxpgn1eEAYY8tx72F1/YEudspR2SOEUXuZDHS/I
+         8aPRhvFsqXOIwUdWJp7UoJcZsNq5rCLuo0ZAQd0MK7hn+8gvKBKTZpL3zIstCX355gWk
+         EwL6t+bDgzshf0nzQKhlAas7gTmuYOBjU21Iy886s+PVUdy2o4fprk93YN39GJsis45B
+         HZ4sSDg9jhsC/L7OH2EJeGuBOtnQsySUyugjxwaEyhyHkvIZFiVfrJgTzXE1jy6vClKW
+         RwWJmfjXgjKmMnWoyNDeNGEzUpDDtVCZ04jHMpRd6idG9/HFhSD88s5R7KaAP12Mi0BD
+         mYnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUNnvPCrB6K8jqR4yezif/EGnYqqVzHklWZ6Jvhs2dpFpbq7Kww2uVB96TC/8Vxz6+pQMdXbVDkFqyKWgM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJ1Ze29aLQVzsy/EGEm5KhhrxdJ2fW/73WW2GK9KwGjnih1wV9
+	qdGck3O/bQAcb0EZW9+1XjKqJKRQWKI5s2M0WadQ0a/8ktaWPML1kWJR5Y2DPFGkIh3/hVD9+jr
+	ofDwF
+X-Gm-Gg: ASbGncuEnBJQTPxuIA7ELjRI0BSlb0I6h2+qSJb4gxtAVpjE1YV1UncWRa3I/TjcTGs
+	JXavB28tWkD3evCA0C0t7W0EMzTp+BAhg3jslwpPjPA4Ln2vXQUXulbexTvLiVMuq/+3yyq/K5g
+	6ChJf2C7tN8Eqbwg6jk/BiaKtLB0ldWFup6rBVCTdNfB17TSqOe/4FXiN5Ptp59CxWYge0hAvlT
+	Vvxf9Q4nSb581ag04sAQClds4r3Jy+ktaPjqTrdvM1/AC2H89SwN+1e9lmWsKinXfqglEvYvbWJ
+	Yf1vG167qLM4Do3JIcu1TyVFaGiLWEfVAtrfMeIPFwbW5mztineQrs9GRqE=
+X-Google-Smtp-Source: AGHT+IFn4PU/f3IX0Pp2k9AAx2BFR3z2vh5h/CB1GO39O21fhU/WTx623J7BZlsgfXTlM2u0ZByUIA==
+X-Received: by 2002:a05:6512:208b:b0:544:1080:6934 with SMTP id 2adb3069b0e04-54414b06e67mr2020288e87.46.1739046321039;
+        Sat, 08 Feb 2025 12:25:21 -0800 (PST)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54410555912sm804042e87.91.2025.02.08.12.25.18
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Feb 2025 12:25:18 -0800 (PST)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-3072f8dc069so33430881fa.3
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 12:25:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX0opaBZ8l2VI0622w/ZxRwXhDjD+CjmAV2Aa1TzDUM8N6iG9mv+yAHGG+k3LiUaIRMjADtOHe7syFTWg0=@vger.kernel.org
+X-Received: by 2002:a05:651c:1616:b0:302:1fce:3938 with SMTP id
+ 38308e7fff4ca-307e57fd416mr31605761fa.11.1739046317966; Sat, 08 Feb 2025
+ 12:25:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+References: <20250208105326.3850358-1-yelangyan@huaqin.corp-partner.google.com>
+ <20250208105326.3850358-3-yelangyan@huaqin.corp-partner.google.com>
+In-Reply-To: <20250208105326.3850358-3-yelangyan@huaqin.corp-partner.google.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Sat, 8 Feb 2025 12:25:06 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=U6AfAq1j1B7tP7HMqjwh9yNxJ44mfVfdP+KCFiUO0Xng@mail.gmail.com>
+X-Gm-Features: AWEUYZnkToH8gEJqi66QQhCeYhQX2_qfYzlMhuvpnRPH9ru5wjR-xYGs0fqUV7s
+Message-ID: <CAD=FV=U6AfAq1j1B7tP7HMqjwh9yNxJ44mfVfdP+KCFiUO0Xng@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] drm/panel: panel-himax-hx83102: support for
+ kingdisplay-kd110n11-51ie MIPI-DSI panel
+To: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
+Cc: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	airlied@gmail.com, simona@ffwll.ch, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, thierry.reding@gmail.com, sam@ravnborg.org, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Alejandro Colomar <alx@kernel.org> writes:
-> -  aligned_alloc()
->	It makes sure that the input is a power of two, or it fails.
+Hi,
+
+On Sat, Feb 8, 2025 at 2:53=E2=80=AFAM Langyan Ye
+<yelangyan@huaqin.corp-partner.google.com> wrote:
 >
-> -  posix_memalign()
+> The kingdisplay-kd110n11-51ie is a 10.95" TFT panel. The MIPI controller
+> on this panel is the same as the other panels here, so add this panel
+> to this driver.
 >
-> 	. . . It requires that the input is power of
-> 	two,
->
-> I wonder why glibc silently overaligns aligned_alloc() without reporting
-> an error for an alignment of 2, while it reports an error for an
-> alignment of 3.  It doesn't make much sense at first glance.  No
-> standard seems to require that, so it looks like an arbitrary choice.
+> Signed-off-by: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
+> ---
+>  drivers/gpu/drm/panel/panel-himax-hx83102.c | 115 ++++++++++++++++++++
+>  1 file changed, 115 insertions(+)
 
-Because 2 is a power of two, but 3 isn't.  No power of two is a multiple
-of 3.
-
-GNU malloc only supports alignments that are powers of two.  The
-resulting addresses might *happen* to be multiples of other numbers, but
-you cannot request that.
-
-As for why, ask Posix:
-
-"If the value of alignment is not a valid alignment supported by the
- implementation, a null pointer shall be returned."
- [EINVAL]
-    The value of alignment is not a valid alignment supported by the
-    implementation."
-
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
