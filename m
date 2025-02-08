@@ -1,204 +1,63 @@
-Received: from relay04.th.seeweb.it (relay04.th.seeweb.it [5.144.164.165])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D162244EA2
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 22:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD9419CD01
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 22:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739053451; cv=none; b=ZtE4iYWpb1D14UcLUx9OGT9x1wQoInt9JX3G4ISBXy/Jq+L5rVfMlGOiU4M9lqdp1IYDdIhLAm+RNjZWBwrIypyUCTpADoW9MujlTsLVBqG7sPs8BCznXSOJY8aZvd/N/QTG9X6MTMtefajF+XU/OpJsbgtJASOgKWhiX3qBNG4=
+	t=1739053527; cv=none; b=nNctE7qOd9ook543R+mGgDGQeEfJxNqjMcXvqdd/P6tHgwnv5mb3XoWs4DrBz035NSfgrSiDTjBYz7kEGQ7uh6GQnsLAIJtIz2FRfQmruIQg34YMg9Gi+hFJVb0wo3GU8IrYddscjkCd8itD9/hZIXpO/rKmJP5tiGuXBsUjBCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739053451; c=relaxed/simple;
-	bh=Is+Qs8gxBkUnO9SHFdZ152vDugn7Py1h5ACe9lKwTz8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZLBrD48tKlpPtnpXlQi+97ol1ADT4b8HLwXvKVWGZZZE8IXuuqU4ZAyjuhGJv+HgtAvUGoZRUTLY7Si8gyvE3w0dmhA4pgGRLHS5ZXuOfqXfvEjESDH0bsxwPzh6T7U1h6JnQlLg5fAOxzvuQ1nzv+eH64JDDbH/PGS7MdHq1V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
-Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 0E7742027E;
-	Sat,  8 Feb 2025 22:48:26 +0100 (CET)
-Date: Sat, 8 Feb 2025 22:48:24 +0100
-From: Marijn Suijten <marijn.suijten@somainline.org>
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: qcm6490-fairphone-fp5: Enable
- display
-Message-ID: <vm4wglq5xedieqwo4vy5eeszbx3a625jromi3ts3jkrhw3zccv@7eaol7dckbh7>
-Mail-Followup-To: Marijn Suijten <marijn.suijten@somainline.org>, 
-	Luca Weiss <luca.weiss@fairphone.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250202-fp5-display-v1-0-f52bf546e38f@fairphone.com>
- <20250202-fp5-display-v1-1-f52bf546e38f@fairphone.com>
+	s=arc-20240116; t=1739053527; c=relaxed/simple;
+	bh=W8YRp2EUsr2e13ALlxJD9zHZ4QyYP+Z87YyAlSSOFO0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=C2WBNO9CKX205Wy9PDyAOXkuBoFqo36un6ZYYLxH6/3AUx9s0wN8O7H1WdWsIUsmvwR10ppBOhiO9sHa2P2NvDyk69Y7DohacVOS4vCw5ad/QMP5/lQ/8qlPZ8QjmmS4XwGQwD8s4URW7Tc7xyKfXKhvC6Nh3oizUWSa1HfBgqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pcjfmV9m; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pcjfmV9m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8F0FC4CED6;
+	Sat,  8 Feb 2025 22:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739053526;
+	bh=W8YRp2EUsr2e13ALlxJD9zHZ4QyYP+Z87YyAlSSOFO0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=pcjfmV9mmrhaHEya9bq6KzA12ja0vT/sDg12VDxSGniovV/RLQDmPokGyYeiFdh1U
+	 vKw16PZBGVMFCEB2QOQklFYdPB/7QkiqzP1bpM+risQwzjf9tXwAE+KVhe5tToLCBE
+	 PgHXF3lXdSt2ioxHfoTWcVW/Z2AnauGIXC1YFrHxfohBIV8CZXQUU59bIaZ1iUD5wZ
+	 M0UFrU8/xCxMA+ruET1VYIZEIFcI/v8bF7LCm384vERyPxO7RzjmeY4MJ03WiXu3Cn
+	 tV6ZKOOO41IHCnIYYZgzz53Le7HF292bhvCrKCB2nqVOt+UjJQ/C5vusXNBSTPHYZl
+	 qy5YPHxmYaVQQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 340CE380AAF5;
+	Sat,  8 Feb 2025 22:25:56 +0000 (UTC)
+Subject: Re: [GIT PULL] execve fix for v6.14-rc2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <202502081228.796ABA4@keescook>
+References: <202502081228.796ABA4@keescook>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <202502081228.796ABA4@keescook>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/execve-v6.14-rc2
+X-PR-Tracked-Commit-Id: b029628be267cba3c7684ec684749fe3e4372398
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 8b0582f50952a0e225fabd97bb6f90ca5138a0e7
+Message-Id: <173905355466.2676587.9153761161069898680.pr-tracker-bot@kernel.org>
+Date: Sat, 08 Feb 2025 22:25:54 +0000
+To: Kees Cook <kees@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, "Eric W. Biederman" <ebiederm@xmission.com>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Kees Cook <kees@kernel.org>, Richard Henderson <richard.henderson@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250202-fp5-display-v1-1-f52bf546e38f@fairphone.com>
 
-On 2025-02-02 23:45:51, Luca Weiss wrote:
-> Configure the MDSS nodes for the phone and add the panel node.
-> 
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+The pull request you sent on Sat, 8 Feb 2025 12:28:46 -0800:
 
-Glad to hear (and see in real life) that you're able to use the 1:1:1 topology
-patches.
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/execve-v6.14-rc2
 
-Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/8b0582f50952a0e225fabd97bb6f90ca5138a0e7
 
-Thanks!
+Thank you!
 
-> ---
->  arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts | 94 ++++++++++++++++++++--
->  1 file changed, 89 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts b/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
-> index 389eca9b9e68187980e92ac921a77a3c3b54f6a5..965e32473a58ae4748e4cb748980fad1d2b06ab6 100644
-> --- a/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
-> +++ b/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
-> @@ -138,6 +138,34 @@ vreg_ois_dvdd_1p1: regulator-ois-dvdd-1p1 {
->  		vin-supply = <&vreg_s8b>;
->  	};
->  
-> +	vreg_oled_dvdd: regulator-oled-dvdd {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "oled_dvdd";
-> +		regulator-min-microvolt = <1200000>;
-> +		regulator-max-microvolt = <1200000>;
-> +
-> +		gpio = <&tlmm 51 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +
-> +		vin-supply = <&vreg_s1b>;
-> +
-> +		regulator-boot-on;
-> +	};
-> +
-> +	vreg_oled_vci: regulator-oled-vci {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "oled_vci";
-> +		regulator-min-microvolt = <3000000>;
-> +		regulator-max-microvolt = <3000000>;
-> +
-> +		gpio = <&pm8350c_gpios 7 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +
-> +		vin-supply = <&vreg_l13c>;
-> +
-> +		regulator-boot-on;
-> +	};
-> +
->  	reserved-memory {
->  		cont_splash_mem: cont-splash@e1000000 {
->  			reg = <0x0 0xe1000000 0x0 0x2300000>;
-> @@ -597,11 +625,6 @@ eeprom@51 {
->  	};
->  };
->  
-> -&dispcc {
-> -	/* Disable for now so simple-framebuffer continues working */
-> -	status = "disabled";
-> -};
-> -
->  &gcc {
->  	protected-clocks = <GCC_CFG_NOC_LPASS_CLK>,
->  			   <GCC_EDP_CLKREF_EN>,
-> @@ -733,6 +756,46 @@ &ipa {
->  	status = "okay";
->  };
->  
-> +&mdss {
-> +	status = "okay";
-> +};
-> +
-> +&mdss_dsi {
-> +	vdda-supply = <&vreg_l6b>;
-> +	status = "okay";
-> +
-> +	panel@0 {
-> +		compatible = "fairphone,fp5-rm692e5-boe", "raydium,rm692e5";
-> +		reg = <0>;
-> +
-> +		reset-gpios = <&tlmm 44 GPIO_ACTIVE_LOW>;
-> +
-> +		vci-supply = <&vreg_oled_vci>;
-> +		vddio-supply = <&vreg_l12c>;
-> +		dvdd-supply = <&vreg_oled_dvdd>;
-> +
-> +		pinctrl-0 = <&disp_reset_n_active>, <&mdp_vsync>;
-> +		pinctrl-1 = <&disp_reset_n_suspend>, <&mdp_vsync>;
-> +		pinctrl-names = "default", "sleep";
-> +
-> +		port {
-> +			panel_in: endpoint {
-> +				remote-endpoint = <&mdss_dsi0_out>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&mdss_dsi0_out {
-> +	data-lanes = <0 1 2 3>;
-> +	remote-endpoint = <&panel_in>;
-> +};
-> +
-> +&mdss_dsi_phy {
-> +	vdds-supply = <&vreg_l10c>;
-> +	status = "okay";
-> +};
-> +
->  &pm7250b_adc {
->  	pinctrl-0 = <&pm7250b_adc_default>;
->  	pinctrl-names = "default";
-> @@ -1026,6 +1089,20 @@ bluetooth_enable_default: bluetooth-enable-default-state {
->  		bias-disable;
->  	};
->  
-> +	disp_reset_n_active: disp-reset-n-active-state {
-> +		pins = "gpio44";
-> +		function = "gpio";
-> +		drive-strength = <8>;
-> +		bias-disable;
-> +	};
-> +
-> +	disp_reset_n_suspend: disp-reset-n-suspend-state {
-> +		pins = "gpio44";
-> +		function = "gpio";
-> +		drive-strength = <2>;
-> +		bias-pull-down;
-> +	};
-> +
->  	hall_sensor_default: hall-sensor-default-state {
->  		pins = "gpio155";
->  		function = "gpio";
-> @@ -1033,6 +1110,13 @@ hall_sensor_default: hall-sensor-default-state {
->  		bias-pull-up;
->  	};
->  
-> +	mdp_vsync: mdp-vsync-state {
-> +		pins = "gpio80";
-> +		function = "mdp_vsync";
-> +		drive-strength = <2>;
-> +		bias-pull-down;
-> +	};
-> +
->  	pm8008_int_default: pm8008-int-default-state {
->  		pins = "gpio25";
->  		function = "gpio";
-> 
-> -- 
-> 2.48.1
-> 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
