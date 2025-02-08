@@ -1,173 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03BC24111A;
-	Sat,  8 Feb 2025 18:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0839C241120;
+	Sat,  8 Feb 2025 18:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739040128; cv=none; b=UtV+5aV4LsELTNir47PQqbVDa2DwPemMWfksBbu9qMzCNhqtzUE+ctvV0z8YOPypnn0uCAmIypMwbPp0MDg/CTSVz1LL/cLtSz1AMwhYupSmhA6cB/CfriVYrw7ugjhHGBYaVP7AwF9LUyXNwiw3HQNmKzkn5A3zkhu+/7rjlos=
+	t=1739040162; cv=none; b=P1vJw24jkIPj05wQVrO1BhP08i9K9a5O125kcltJC0z1KvLHyi0GFUjcepMDWtbbZqG6jUXWSnJ35x4kfIXwclFd/xW2wq4fbeJ2zhxCuxTuYCUNlVYhNhxpmZYcFzDdA+UZbVOY5u5Ipgntn//HgAEHwwBHDZIAg+71qsX5KbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739040128; c=relaxed/simple;
-	bh=O5+f7g25dktPAuKcDwUZ3ZwwHa0/bFIM02gDm1CshkQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=bu+LXCljyBe8e2bBJtrQb9a/apqtjwdRvPkldIi4Moa77Vqo33q+VkeyoClpNscuTGXDXG8MFkY99fd4mJX/GFi6lWh2HI2fUgmkQukTnqRO9bGAaYrAICeYWuiChc8psOz7lSTcRP8DXxJwSeXtF9QleNhBmhqX5lWuSAFzDaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G/CANNVe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739040162; c=relaxed/simple;
+	bh=9FjKQ/BoQv+CHpMARBhnQGJ+h9/ib6o+976NotBuoh8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mJoWmTPH5fepC79Hn4l+6pr+wu8K53LxjLCqcFcQ/9iT/HCwmOZq9hx9rhS4s+48FM3sb/QhUTgrbz1MLkCHqzf598l9iWORdYUeCihJZxKy6srVfLiUzODMrvPMMalJxKBMOcxToVQhWu0wElFjlyn8NI7gaqri3wGT31pklwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fAn0uPJj; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G/CANNVe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24D60C4CED6;
-	Sat,  8 Feb 2025 18:42:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739040127;
-	bh=O5+f7g25dktPAuKcDwUZ3ZwwHa0/bFIM02gDm1CshkQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=G/CANNVe3b+P0HG2JdJnbP+p82zP1iXNJuVwwzTFJ65/TDRvpX/L++I4pl43HvBRt
-	 z4RY2iM6xrEJgsYM/4tsndY0kM9yaOp+fTPLLA3shNL6zyO/S2nPfQC7kQR427Ar4M
-	 YjVhdHhodiX3YyDKS6MioxrWW/o7s6vcvHQ49thgzBo6IHE5B4+WXJhgkovEoP1svi
-	 HOD5sY0ewGoH0MJ/wS+G4+7/HsLGHJmd73vHBFNbFPjxMboiqGq0+y8MzaJiz+r2lP
-	 QXhMWU1WHKyfCFQCCugUmRpWFb0ipsRAYm+G05af6X7MRWsoKbN2+OwdU1qKXkTWWI
-	 PydYygsdSOAGQ==
-Date: Sat, 8 Feb 2025 12:42:05 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI: Cleanup dev->resource + resno to use
- pci_resource_n()
-Message-ID: <20250208184205.GA1120420@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fAn0uPJj"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30613802a6bso33277121fa.1;
+        Sat, 08 Feb 2025 10:42:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739040159; x=1739644959; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OF3d2v/Cd40GRW7Y3SKITD/wzvp4wTLT0QafaTbIXWQ=;
+        b=fAn0uPJjLGkODVdE9xZTODp2fMRZHv6UqrPkn5zfwyFrSS8gO6OmGNGefzV0muNWkE
+         oK6X6ciLYRF/Y86Q3pGvboYTvmXz33xXxMK1P1xFiNPODEs+GWeUi+jTQLn5vkgXBMKn
+         J2N7ADmupdi/QJmKNDcLs+HHznwYVNrrgD8zL8voKxhLUkRZDM5/wl4t5eVipRPXDMDY
+         068edcm72meanNAzV9mOg0PoQkRjzEpv/320TpBVXnSnCznG8q9haGtU4LkV1EECU50R
+         iU1C6kP5a9wbnM+KaPy6jCgUp2lIdfBNG+S/bT7HhculnKPqE7uZjlQI1HGIFLe+sPiJ
+         LLxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739040159; x=1739644959;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OF3d2v/Cd40GRW7Y3SKITD/wzvp4wTLT0QafaTbIXWQ=;
+        b=Sbwd8UcoOb6lSSLBdN22dpe+gCbsQ5rF80UTokBf4CDt3Zt2GgrDHjT/ihMzzcQWE2
+         v4Syv+OVBKP7r+u6ilmmW4hpKHLO3SLom358U6EuQ6wPWfXI/YxO3CSpC89Y6yoSUi1n
+         5a0PZlyG+XwFrDryFnaHw+2v+fHUy5m4HqWenWleBXshEoSy1Cz/eBaSuYlOi1XRgH9H
+         2xcBBgMoP9pcC3Qek3l+fxvx8brJZFflusIJvZlr73YQdWe6ixmlcbWZYBj1XNy2gfRk
+         cjkiqujfyx+p8Q2ozGfgQEruK3YbfGvpGdrWZZ4NC0XwCzRdLlqEFp0XRwNXShd9ozST
+         hkzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVBgw40jhjEPOp3rA+su1w/KPCa2vFpn0Q+1DHtGSxvxIty+QAVRSDnLBLp+6GX4NomwgVze6AWXQ9DkE/xcudj@vger.kernel.org, AJvYcCW23v1EGlpC4No9iV49hosCOcJtNx6p2AP1ceBZxZFeLwM/oPHo2TPFMdh3/L5njcmLEeMmQKHcFGAq0SM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkDczOAXbTsc1HLb3LnK81LCYVTsupdoquUh7Rh48iyRLn9Gj2
+	Lbfc1JlzcL5q00yw+/SgKWJ9vMS+dCcvcKpseOQDECuGQX70ETPuG4Q2zN38GfkiXmOBj6WCBDV
+	j9g+qeFycoQjZbpHCbQc4yPwxC3g=
+X-Gm-Gg: ASbGncucaG7zuiRIKaOXZfjbLrsGdn7U5AGoGpSZHtsS1pqBOrJrwusCLpkepDSSsQ9
+	0KW5hQHCexmZsK54VnYHMvobuSJHkHID3KHZu/9bmD8faqAJDQgfYPqhQMkPUg4Av1Mncos2s6k
+	PCmwehDkyg6abYpfQAwYJ3q3ZGa4XfApE=
+X-Google-Smtp-Source: AGHT+IE5yIE5Ue/y+RzFKL8z9km0wUX+8BN+VY4C0BGBjE9wQybUdFtxMRSR6CK8CWLDtOvu3dWumbmGNC9v45fv/pQ=
+X-Received: by 2002:a05:651c:199f:b0:307:dc1f:e469 with SMTP id
+ 38308e7fff4ca-307e580c5d1mr26440881fa.20.1739040158468; Sat, 08 Feb 2025
+ 10:42:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250207162301.2842-1-ilpo.jarvinen@linux.intel.com>
+References: <20250207-bitmap-kunit-convert-v1-0-c520675343b6@gmail.com> <Z6eaDuXnT_rjVSNS@thinkpad>
+In-Reply-To: <Z6eaDuXnT_rjVSNS@thinkpad>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sat, 8 Feb 2025 13:42:02 -0500
+X-Gm-Features: AWEUYZka1JKrPSYInI4GKv2M2y8rfwixxdFsdqTGcwpCPpsY53i6WsWMtdiDkWA
+Message-ID: <CAJ-ks9=f8d7jh=15bHc28Z37p9rA-Kg4J2mQ++VBcsesVvezUA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] bitmap: convert self-test to KUnit
+To: Yury Norov <yury.norov@gmail.com>
+Cc: David Gow <davidgow@google.com>, John Hubbard <jhubbard@nvidia.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Naveen N Rao <naveen@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Shuah Khan <shuah@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, 
+	linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 07, 2025 at 06:23:01PM +0200, Ilpo Järvinen wrote:
-> Replace pointer arithmentic in finding the correct resource entry with
-> the pci_resource_n() helper.
-> 
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+On Sat, Feb 8, 2025 at 12:53=E2=80=AFPM Yury Norov <yury.norov@gmail.com> w=
+rote:
+>
+> [...]
+>
+> Take over means that you'd at least add the Co-developed-by tag.
 
-Applied to pci/resource for v6.15, thanks, Ilpo!
+I didn't use their code - the thing being "taken over" is the work of
+having these debates with the maintainers.
 
-> ---
->  drivers/pci/iov.c       |  2 +-
->  drivers/pci/pci.c       |  2 +-
->  drivers/pci/quirks.c    |  4 ++--
->  drivers/pci/setup-res.c | 12 ++++++------
->  4 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index 9e4770cdd4d5..121540f57d4b 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -952,7 +952,7 @@ void pci_iov_remove(struct pci_dev *dev)
->  void pci_iov_update_resource(struct pci_dev *dev, int resno)
->  {
->  	struct pci_sriov *iov = dev->is_physfn ? dev->sriov : NULL;
-> -	struct resource *res = dev->resource + resno;
-> +	struct resource *res = pci_resource_n(dev, resno);
->  	int vf_bar = resno - PCI_IOV_RESOURCES;
->  	struct pci_bus_region region;
->  	u16 cmd;
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 869d204a70a3..c4f710f782f6 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1884,7 +1884,7 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
->  
->  		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
->  		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
-> -		res = pdev->resource + bar_idx;
-> +		res = pci_resource_n(pdev, bar_idx);
->  		size = pci_rebar_bytes_to_size(resource_size(res));
->  		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
->  		ctrl |= FIELD_PREP(PCI_REBAR_CTRL_BAR_SIZE, size);
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index b84ff7bade82..5cc4610201b7 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -621,7 +621,7 @@ static void quirk_io(struct pci_dev *dev, int pos, unsigned int size,
->  {
->  	u32 region;
->  	struct pci_bus_region bus_region;
-> -	struct resource *res = dev->resource + pos;
-> +	struct resource *res = pci_resource_n(dev, pos);
->  	const char *res_name = pci_resource_name(dev, pos);
->  
->  	pci_read_config_dword(dev, PCI_BASE_ADDRESS_0 + (pos << 2), &region);
-> @@ -671,7 +671,7 @@ static void quirk_io_region(struct pci_dev *dev, int port,
->  {
->  	u16 region;
->  	struct pci_bus_region bus_region;
-> -	struct resource *res = dev->resource + nr;
-> +	struct resource *res = pci_resource_n(dev, nr);
->  
->  	pci_read_config_word(dev, port, &region);
->  	region &= ~(size - 1);
-> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> index ca14576bf2bf..ad6436007148 100644
-> --- a/drivers/pci/setup-res.c
-> +++ b/drivers/pci/setup-res.c
-> @@ -29,7 +29,7 @@ static void pci_std_update_resource(struct pci_dev *dev, int resno)
->  	u16 cmd;
->  	u32 new, check, mask;
->  	int reg;
-> -	struct resource *res = dev->resource + resno;
-> +	struct resource *res = pci_resource_n(dev, resno);
->  	const char *res_name = pci_resource_name(dev, resno);
->  
->  	/* Per SR-IOV spec 3.4.1.11, VF BARs are RO zero */
-> @@ -262,7 +262,7 @@ resource_size_t __weak pcibios_align_resource(void *data,
->  static int __pci_assign_resource(struct pci_bus *bus, struct pci_dev *dev,
->  		int resno, resource_size_t size, resource_size_t align)
->  {
-> -	struct resource *res = dev->resource + resno;
-> +	struct resource *res = pci_resource_n(dev, resno);
->  	resource_size_t min;
->  	int ret;
->  
-> @@ -325,7 +325,7 @@ static int _pci_assign_resource(struct pci_dev *dev, int resno,
->  
->  int pci_assign_resource(struct pci_dev *dev, int resno)
->  {
-> -	struct resource *res = dev->resource + resno;
-> +	struct resource *res = pci_resource_n(dev, resno);
->  	const char *res_name = pci_resource_name(dev, resno);
->  	resource_size_t align, size;
->  	int ret;
-> @@ -372,7 +372,7 @@ EXPORT_SYMBOL(pci_assign_resource);
->  int pci_reassign_resource(struct pci_dev *dev, int resno,
->  			  resource_size_t addsize, resource_size_t min_align)
->  {
-> -	struct resource *res = dev->resource + resno;
-> +	struct resource *res = pci_resource_n(dev, resno);
->  	const char *res_name = pci_resource_name(dev, resno);
->  	unsigned long flags;
->  	resource_size_t new_size;
-> @@ -411,7 +411,7 @@ int pci_reassign_resource(struct pci_dev *dev, int resno,
->  
->  void pci_release_resource(struct pci_dev *dev, int resno)
->  {
-> -	struct resource *res = dev->resource + resno;
-> +	struct resource *res = pci_resource_n(dev, resno);
->  	const char *res_name = pci_resource_name(dev, resno);
->  
->  	pci_info(dev, "%s %pR: releasing\n", res_name, res);
-> @@ -428,7 +428,7 @@ EXPORT_SYMBOL(pci_release_resource);
->  
->  int pci_resize_resource(struct pci_dev *dev, int resno, int size)
->  {
-> -	struct resource *res = dev->resource + resno;
-> +	struct resource *res = pci_resource_n(dev, resno);
->  	struct pci_host_bridge *host;
->  	int old, ret;
->  	u32 sizes;
-> 
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> -- 
-> 2.39.5
-> 
+> [...]
+>
+> KUNIT is disabled in defconfig, at least on x86_64. It is also disabled
+> on my Ubuntu 24.04 machine. If I take your patches, I'll be unable to
+> boot-test bitmaps. Even worse, I'll be unable to build the standalone
+> test from sources as a module and load it later.
+>
+> Or I misunderstand it, and there's a way to build some particular KUNIT
+> test without enabling KUNIT in config and/or re-compiling the whole kerne=
+l?
+> Please teach me, if so
+>
+> Unless you give me a way to build and run the test in true
+> production environment, I'm not going with KUNITs. Sorry.
+
+This is a question for David -- I don't know if this is possible.
+
+> [...]
+>
+> This is my evidence: sometimes people report performance or whatever
+> issues on their systems, suspecting bitmaps guilty. I ask them to run
+> the bitmap or find_bit test to narrow the problem. Sometimes I need to
+> test a hardware I have no access to, and I have to (kindly!) ask people
+> to build a small test and run it. I don't want to ask them to rebuild
+> the whole kernel, or even to build something else.
+>
+> https://lore.kernel.org/all/YuWk3titnOiQACzC@yury-laptop/
+
+This is compelling evidence, and it was not previously raised. Thank you.
+
+I notice that two things are true about the performance test part of
+test_bitmap.c:
+- It's a minority of the code in the file (48 lines out of 1462).
+- There are no assertions in it.
+
+Do you also find value in running the testing portion on other
+people's machines, to which you don't have access?
+
+> [...]
+>
+> Nice summary for the discussion. Unfortunately you missed my concerns.
+> Which are:
+>
+> Pros:
+>  - Now we switch to KUNITs because KUNITs are so good
+>
+> Cons:
+>  - Wipes git history;
+
+I was very careful to minimize churn, and the result is 249 lines on
+which I'd now own the blame (228 with `-w`). Still, it's a valid con.
+
+>  - Bloats the test's source code;
+
+The test is 74 lines shorter after this series.
+
+>  - Adds dependencies;
+>  - Doesn't run on most popular distros and defconfig;
+
+Yep, I understand your concerns much better now - and I'm grateful for
+your having taken the time to explain and show receipts. Still, I
+wonder if we can get the best of both worlds - either by finding what
+you need in KUnit, or by moving the testing bit to KUnit and keeping
+the performance bit where it is.
+
+Thanks.
+Tamir
