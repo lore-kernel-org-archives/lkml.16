@@ -1,44 +1,46 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07F3241C84;
-	Sat,  8 Feb 2025 16:53:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01532241C8C;
+	Sat,  8 Feb 2025 16:53:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739033601; cv=none; b=SaP7OKQM7KQFhBvW+gRIbRJgWGHKgDCxWTVfenkPJiiWt2C+7WfaCnpKha3G6vJM/LQ9+MiLl9L29x2r2JESdrLlI/jpO2lL5Nx0jzxL5cmv9XSbYG9E7yjmXvFopjrkB32VfryQmEtv8NWw1/XdmlJP0WF6fhR7nSnSMnR3n90=
+	t=1739033602; cv=none; b=fW+oxMbtcYBfhdhhZEGN2aoFqNMgDlfSBnpOCrzukoi2S4hnjR9u3L6pIyV1NWvmfkKFeBy0xOAc+HaLVsETvbTqeELMOj+2Sf2vFE0kwD8A/S4aEvtFxvAR4vsVFEOBOZnnqZ4kTEFCD+PcRmazFh0X2QAHduUZjOKpGwL8+Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739033601; c=relaxed/simple;
-	bh=rr/QKnV4d/0UoL/qDFzn5BlT9+ZvH3mb8SRM/+/ZCik=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iXGR1wRr/eHxUjWY+Tj++1LsfkPGFXR1QOLLuXtQZPLuLAkNxmWzbSOsND17mjVneGyjGh3kXdTN1TedJ1ULdNRmvT0ow28Grc6QgfewFDXDlZXlK4EBzc+Rql0LKjguSTIjcq6Ip7S6BuEjXM5AWPuW+2hszB+gsxgn7587RsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ToZMv6Yx; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1739033602; c=relaxed/simple;
+	bh=WI0WeaCttIZf49XTt9LBIm/8cZ/en7dT7KgKZ8UPLSs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BpIORZrq43eM/bZV+cG1RAxpptcNo/Lv6uGkDw+Qu5WZ4OCzSSTHI7M606gHS/hQvXzJSgDlveETGmK+JYfFZx47pzWF6/eSbOlk0drX9evT0vJ9Pa0pS7UqXYOeiOl7PkkiPP/ToOQJeQizcaljMx8Uk481QTKQSywWGbj/05o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OdxrRuhL; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ToZMv6Yx"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 518EUTsD026967;
-	Sat, 8 Feb 2025 16:52:54 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OdxrRuhL"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5184eN90012138;
+	Sat, 8 Feb 2025 16:53:06 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=zGOd74MDNP1qQjh1StNz01
-	7zyC7tg4pj4AvUqb5yuXo=; b=ToZMv6YxGavlkKqyMYKymPJtb61YPNJuBiIELa
-	F8KxGdgtDqUF4yUwWqMdBaAh7S6Y9qr+dURC2QpOwXYUfqB2P4XqtBcKgIvMzb5q
-	9TZ3rGqvZXrgYwfiWzYBvXx+G10XsWcTYS0ztl/SbLRGUvwuLnewKSAz6L5IT2Pd
-	+61YjmKOa0sMGc42Agd3X/Xr39cgFZdBCtTDOdvhsxkA1/sJgocucpmqzm/4btxs
-	agsgRIRaLnwFpczIb1Mec9Az1ucs5lZNzTHIWhiHqjk1Ok/upfjCJELpXNKVLfwJ
-	TROREVeofq9x9mrZDWeslq5QyYvi4OXgTpDx4coAaqUqF2QQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0e1gwtb-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	o1+od6eI06Dnh9zGqPX0kyE8z6nYRXKyK62kTGnmENU=; b=OdxrRuhLzAWL1kZz
+	Rlzo7tvQ7N8/U7JRjoLJvgwOVypP7Wj+Q/oKDATGBvhR6gw5XM39um6tT/5P3Hjk
+	asVZbCA8YALHoCoEFrjFYGtDIujFiDh+FkN0441NEslyeJSqqkHXtyuV2WneLkqM
+	0CYLTdI92RG+2SxsVz/gwTnJp9ERM4mpxbwKnDiF3VL1Wh5YbV5eSKdfUqxZNVKt
+	QW4IVmfeDJErszaOF0yiUo1DBQ6sL2GiGB+JANrqgsDz6XwTiFJDlUUchAqnOh0Y
+	jxHm+OKQsxpZ0tNAPggo3WsnmCCObVhbK58GljDJobIb8SAZ/C7BApRlOFI4sObe
+	dUls1Q==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0es8x0n-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 08 Feb 2025 16:52:53 +0000 (GMT)
+	Sat, 08 Feb 2025 16:53:06 +0000 (GMT)
 Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 518Gqqpa012818
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 518Gr4Bp028517
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 8 Feb 2025 16:52:52 GMT
+	Sat, 8 Feb 2025 16:53:05 GMT
 Received: from hu-vikramsa-hyd.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sat, 8 Feb 2025 08:52:47 -0800
+ 15.2.1544.9; Sat, 8 Feb 2025 08:52:59 -0800
 From: Vikram Sharma <quic_vikramsa@quicinc.com>
 To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
         <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
@@ -48,11 +50,15 @@ To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
         <will@kernel.org>
 CC: <linux-arm-kernel@lists.infradead.org>, <quic_vikramsa@quicinc.com>,
         <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v13 0/2] media: qcom: camss: Add sc7280 support
-Date: Sat, 8 Feb 2025 22:22:30 +0530
-Message-ID: <20250208165232.2371889-1-quic_vikramsa@quicinc.com>
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>
+Subject: [PATCH v13 2/2] arm64: dts: qcom: qcs6490-rb3gen2-vision-mezzanine: Add vision mezzanine
+Date: Sat, 8 Feb 2025 22:22:32 +0530
+Message-ID: <20250208165232.2371889-3-quic_vikramsa@quicinc.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250208165232.2371889-1-quic_vikramsa@quicinc.com>
+References: <20250208165232.2371889-1-quic_vikramsa@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,168 +71,153 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: XF6rwmNiTqN1NlwAuZZmjPlCV06fLOo5
-X-Proofpoint-GUID: XF6rwmNiTqN1NlwAuZZmjPlCV06fLOo5
+X-Proofpoint-GUID: xEudyWsZoGURc-gAstgeUDdVL2TozGja
+X-Proofpoint-ORIG-GUID: xEudyWsZoGURc-gAstgeUDdVL2TozGja
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-08_06,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- suspectscore=0 lowpriorityscore=0 mlxlogscore=999 impostorscore=0
- priorityscore=1501 adultscore=0 malwarescore=0 clxscore=1015 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502080142
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ suspectscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502080141
 
-SC7280 is a Qualcomm SoC. This series adds support to bring up the CSIPHY,
-CSID, VFE/RDI interfaces in SC7280.
+The Vision Mezzanine for the rb3gen2 ships with an imx577 camera sensor.
+Enable the IMX577 on the vision mezzanine.
 
-SC7280 provides
-- 3 x VFE, 3 RDI per VFE
-- 2 x VFE Lite, 4 RDI per VFE
-- 3 x CSID
-- 2 x CSID Lite
-- 5 x CSI PHY
+An example media-ctl pipeline for the imx577 is:
 
-We have tested this on qcs6490-rb3gen2-vision-mezzanine board having IMX577
-sensor.
+media-ctl --reset
+media-ctl -V '"imx577 '17-001a'":0[fmt:SRGGB10/4056x3040 field:none]'
+media-ctl -V '"msm_csiphy3":0[fmt:SRGGB10/4056x3040]'
+media-ctl -V '"msm_csid0":0[fmt:SRGGB10/4056x3040]'
+media-ctl -V '"msm_vfe0_rdi0":0[fmt:SRGGB10/4056x3040]'
+media-ctl -l '"msm_csiphy3":1->"msm_csid0":0[1]'
+media-ctl -l '"msm_csid0":1->"msm_vfe0_rdi0":0[1]'
 
-Used following tools for the sanity check of these changes.
+yavta -B capture-mplane -c -I -n 5 -f SRGGB10P -s 4056x3040 -F /dev/video0
 
-- make CHECK_DTBS=y W=1 DT_SCHEMA_FILES=media/qcom,sc7280-camss.yaml
-qcom/qcs6490-rb3gen2-vision-mezzanine.dtb
-- make DT_CHECKER_FLAGS=-m W=1
-DT_SCHEMA_FILES=media/qcom,sc7280-camss.yaml dt_binding_check
-- make -j32 W=1
-- ./scripts/checkpatch.pl
- 
-Changes in V13:
-- Updated commit text for [PATCH v12 2/2] - Dmitry
-- Updated Copyright to add 2025 for [PATCH v12 2/2] - Jie
-- Link to v12:
-  https://lore.kernel.org/linux-arm-msm/20250207090422.1609260-1-quic_vikramsa@quicinc.com/
-
-Changes in V12:
-- droped mclk-pins{} and put the properties directly under the
-  cam2-default-state and cam2-suspend-state node - Konrad.
-- Link to v11:
-  https://lore.kernel.org/linux-arm-msm/20250121125010.1853269-1-quic_vikramsa@quicinc.com/
-
-Changes in V11:
-- Moved [PATCH v10 1/4] and [PATCH v10 2/4] as a separate series.
-- Marked dependency on
-  https://lore.kernel.org/linux-arm-msm/20250121120901.1841142-1-quic_vikramsa@quicinc.com/
-- Sorted the header files alphabetically in dtso.
-- Removed invalid property for sensor.
-- Removed rst-pin from default and suspend states of pinctrl. We have verified
-  that for imx412 sensor there are no SET_SYSTEM_SLEEP_PM_OPS added.
-  So removing rst-pin does not make any difference in power management. 
-- Link to v10: https://lore.kernel.org/linux-arm-msm/20241217140656.965235-1-quic_vikramsa@quicinc.com/
-
-Changes in V10:
-- Updated cover letter to add link for v8 under changes in v9.
-- No change in the patches w.r.t V9
-- Link to v9: https://lore.kernel.org/linux-arm-msm/20241217133955.946426-1-quic_vikramsa@quicinc.com/
-
-Changes in V9:
-- Removed GCC_CAMERA_AHB_CLK as its always enabled.
-- Added GCC_CAMERA_SF_AXI_CLK.
-- Renamed gcc_cam_hf_axi to gcc_axi_hf.
-- V8 had 5 patches and V9 have 4 patches.
-- First 3 patches of V8 are already promoted to linux-next
-i.e  
-  media: dt-bindings: Add qcom,sc7280-camss
-  media: qcom: camss: Sort camss version enums and compatible strings
-  media: qcom: camss: Add support for camss driver on sc7280
-- 2 new patches are added to handle new comments from Konrad on
-  "Patch v8 4/5 arm64: dts: qcom: sc7280: Add support for camss" 
-  1 of the 2 new patches make changes in yaml and other one is making
-  change in camss driver to handle new comments in dtsi.
-- for "Patch v8 4/5 arm64: dts: qcom: sc7280: Add support for camss" I got
-  comments from Konrad to make changes for clock names so I had to make
-  respective changes in "bindings/media/qcom,sc7280-camss.yaml". As dtsi
-  changes are not merged yet, so there is no issues with backward
-  compatibility and I am assuming this should be acceptable.
-- Link to v8: https://lore.kernel.org/linux-arm-msm/20241206191900.2545069-1-quic_vikramsa@quicinc.com/
-  
-Changes in V8:
-- Changed node name from camss to isp.
-- Added QCOM_ICC_TAG_ACTIVE_ONLY and QCOM_ICC_TAG_ALWAYS tags for
-  interconnects. 
-- Added blank lines when required.
-- Modified power-domain-names from horizontal to vertical list.
-- Sorted pinctrl nodes based on gpio index.
-- Link to v7: https://lore.kernel.org/linux-arm-msm/20241204100003.300123-1-quic_vikramsa@quicinc.com/
-
-Changes in V7:
-- Changed unit address for camss in documention and dts.
-- Added avdd-supply and dvdd-supply for sensor.
-- Changed reg/clocks/interrupts name for vfe_lite and csid_lite.
-- Link to v6: https://lore.kernel.org/linux-arm-msm/20241127100421.3447601-1-quic_vikramsa@quicinc.com/
-
-Changes in V6:
-- Changed order of properties in Documentation [PATCH 1/5].
-- Updated description for ports in Documentaion [PATCH 1/5].
-- Moved regulators from csid to csiphy [PATCH 3/5].
-- Link to v5: https://lore.kernel.org/linux-arm-msm/20241112173032.2740119-1-quic_vikramsa@quicinc.com/ 
-
-Changes in V5:
-- Updated Commit text for [PATCH v5 1/6].
-- Moved reg after compatible string.
-- Renamed csi'x' clocks to vfe'x'_csid
-- Removed [PATCH v4 4/6] and raised a seprate series for this one.
-- Moved gpio states to mezzanine dtso.
-- Added more clock levels to address TPG related issues.
-- Renamed power-domains-names -> power-domain-names. 
-- Link to v4: https://lore.kernel.org/linux-arm-msm/20241030105347.2117034-1-quic_vikramsa@quicinc.com/ 
-
-Changes in V4:
-- V3 had 8 patches and V4 is reduced to 6.
-- Removed [Patch v3 2/8] as binding change is not required for dtso.
-- Removed [Patch v3 3/8] as the fix is already taken care in latest
-  kernel tip. 
-- Updated alignment for dtsi and dt-bindings.
-- Adding qcs6490-rb3gen2-vision-mezzanine as overlay. 
-- Link to v3: https://lore.kernel.org/linux-arm-msm/20241011140932.1744124-1-quic_vikramsa@quicinc.com/
-
-Changes in V3:
-- Added missed subject line for cover letter of V2.
-- Updated Alignment, indentation and properties order.
-- edit commit text for [PATCH 02/10] and [PATCH 03/10].
-- Refactor camss_link_entities.
-- Removed camcc enablement changes as it already done.
-- Link to v2: https://lore.kernel.org/linux-arm-msm/20240904-camss_on_sc7280_rb3gen2_vision_v2_patches-v1-0-b18ddcd7d9df@quicinc.com/
-
-Changes in V2:
-- Improved indentation/formatting.
-- Removed _src clocks and misleading code comments.
-- Added name fields for power domains and csid register offset in DTSI.
-- Dropped minItems field from YAML file.
-- Listed changes in alphabetical order.
-- Updated description and commit text to reflect changes
-- Changed the compatible string from imx412 to imx577.
-- Added board-specific enablement changes in the newly created vision
-  board DTSI file.
-- Fixed bug encountered during testing.
-- Moved logically independent changes to a new/seprate patch.
-- Removed cci0 as no sensor is on this port and MCLK2, which was a
-  copy-paste error from the RB5 board reference.
-- Added power rails, referencing the RB5 board.
-- Discarded Patch 5/6 completely (not required).
-- Removed unused enums.
-- Link to v1: https://lore.kernel.org/linux-arm-msm/20240629-camss_first_post_linux_next-v1-0-bc798edabc3a@quicinc.com/
-
+Signed-off-by: Hariram Purushothaman <quic_hariramp@quicinc.com>
+Signed-off-by: Trishansh Bhardwaj <quic_tbhardwa@quicinc.com>
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
-
-Vikram Sharma (2):
-  arm64: dts: qcom: sc7280: Add support for camss
-  arm64: dts: qcom: qcs6490-rb3gen2-vision-mezzanine: Add vision
-    mezzanine
-
- arch/arm64/boot/dts/qcom/Makefile             |   4 +
- .../qcs6490-rb3gen2-vision-mezzanine.dtso     |  89 +++++++++
- arch/arm64/boot/dts/qcom/sc7280.dtsi          | 178 ++++++++++++++++++
- 3 files changed, 271 insertions(+)
+---
+ arch/arm64/boot/dts/qcom/Makefile             |  4 +
+ .../qcs6490-rb3gen2-vision-mezzanine.dtso     | 89 +++++++++++++++++++
+ 2 files changed, 93 insertions(+)
  create mode 100644 arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
 
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 140b0b2abfb5..213d941b1b79 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -116,6 +116,10 @@ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs615-ride.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2.dtb
++
++qcs6490-rb3gen2-vision-mezzanine-dtbs := qcs6490-rb3gen2.dtb qcs6490-rb3gen2-vision-mezzanine.dtbo
++
++dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2-vision-mezzanine.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs8300-ride.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs8550-aim300-aiot.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs9100-ride.dtb
+diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
+new file mode 100644
+index 000000000000..b9e4a5214f70
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2024-2025 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++/*
++ * Camera Sensor overlay on top of rb3gen2 core kit.
++ */
++
++/dts-v1/;
++/plugin/;
++
++#include <dt-bindings/clock/qcom,camcc-sc7280.h>
++#include <dt-bindings/gpio/gpio.h>
++
++&camss {
++	vdda-phy-supply = <&vreg_l10c_0p88>;
++	vdda-pll-supply = <&vreg_l6b_1p2>;
++
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		/* The port index denotes CSIPHY id i.e. csiphy3 */
++		port@3 {
++			reg = <3>;
++
++			csiphy3_ep: endpoint {
++				clock-lanes = <7>;
++				data-lanes = <0 1 2 3>;
++				remote-endpoint = <&imx577_ep>;
++			};
++		};
++	};
++};
++
++&cci1 {
++	status = "okay";
++};
++
++&cci1_i2c1 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	camera@1a {
++		compatible = "sony,imx577";
++
++		reg = <0x1a>;
++
++		reset-gpios = <&tlmm 78 GPIO_ACTIVE_LOW>;
++		pinctrl-names = "default", "suspend";
++		pinctrl-0 = <&cam2_default>;
++		pinctrl-1 = <&cam2_suspend>;
++
++		clocks = <&camcc CAM_CC_MCLK3_CLK>;
++		assigned-clocks = <&camcc CAM_CC_MCLK3_CLK>;
++		assigned-clock-rates = <24000000>;
++
++		dovdd-supply = <&vreg_l18b_1p8>;
++		avdd-supply = <&vph_pwr>;
++		dvdd-supply = <&vph_pwr>;
++
++		port {
++			imx577_ep: endpoint {
++				link-frequencies = /bits/ 64 <600000000>;
++				data-lanes = <1 2 3 4>;
++				remote-endpoint = <&csiphy3_ep>;
++			};
++		};
++	};
++};
++
++&tlmm {
++	cam2_default: cam2-default-state {
++		pins = "gpio67";
++		function = "cam_mclk";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	cam2_suspend: cam2-suspend-state {
++		pins = "gpio67";
++		function = "cam_mclk";
++		drive-strength = <2>;
++		bias-pull-down;
++	};
++};
 -- 
 2.25.1
 
