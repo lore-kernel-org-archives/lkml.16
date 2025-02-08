@@ -1,157 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F5A2C6A3;
-	Sat,  8 Feb 2025 07:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA2A2C6A3;
+	Sat,  8 Feb 2025 07:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738998761; cv=none; b=twGMWwkuozY/GqnD83k7wrEsdudDN1SB1i+oaiDoX1cKmY/cJ8q/2CqFHTGYXgLGTJH57Gf5eFH7AjvuhlfEfDrMkSuOHy/apsNkKa1OYpKTaq4+jwTh+b71H9E5sGNEnDXcrid+zxswdlfhgxdZsGGMyf7HoORkOTbfPHlObEQ=
+	t=1738998772; cv=none; b=cUqMfRpWim7z/6wH+oM5ZNYHHXP8rYWUIje64GsDvJ7JEd10CP2yyGuRbelmeF2OVNbFYc8ZZqlGP5sGZ787Pj6K6agMZZbUZuEuBRfEAj0bFEaGW9itxI9RxY+3W5juS81KdfK20AXRMg0UO1DHmWYnK2VkiOJGafhV+bV2olU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738998761; c=relaxed/simple;
-	bh=Pyt2xpK/5RJwXZi+SVmuRDAyARjDEhYR26aol2nWBS8=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bq3q/HTGzy/8DBf273/P8ts73dcXiiQ9L8/7GMAyLcsHFmcR8EvcmRCxhmvSULsE+FwcZRxf51B/JlTUcHmAF7nxVuMt0UrXXuJwtSkYMvfl45gOX5iq3XdtJMzAGUDprhTSfrgkatt4787OQ2ueKtTIpldhl5Ei+K26tLYLwLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZXOYrzh+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738998772; c=relaxed/simple;
+	bh=qo2rmBOhkgUjavqEDJjhvu3pKNal74SswM8UWJCp9jc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V/HS/kBOGU7GTMXxZXaCK9UsVmtgV3GmKnQhw6+gQhSWTXRRzTd7VdF6MvYIbLn/dbS/xluqvs0AmTQBT16JIwWVJP9YAfE7rV7HgNJObzr7Pr5p4/cQNEap3H+b9ZHAHZB2Ho+c+vu61/1o5H8TDjAI2uTyIRtPNMhyvz2/WfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=RS/09akt; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZXOYrzh+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9678C4CED6;
-	Sat,  8 Feb 2025 07:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1738998760;
-	bh=Pyt2xpK/5RJwXZi+SVmuRDAyARjDEhYR26aol2nWBS8=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=ZXOYrzh+VNM1tRwpXkLWvaYfcOJh9g+a7jdHgOpCUA5K1oTcx+EZa5Hv8s0FLOa1q
-	 Q/I1NpnNl4Of85rja+7mGxZmpsaI80P7nKO9Vfo0XrRg88oO2W1Jxrpj2dH9MgxuVp
-	 83v4VMcPVa+h4mpNq0thW/gPM2Q1Pvhm+spjszZM=
-Date: Sat, 8 Feb 2025 08:12:37 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Lyude Paul <lyude@redhat.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-	Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	Haneen Mohammed <hamohammed.sa@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Melissa Wen <melissa.srw@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v3 8/8] drm/vkms: convert to use faux_device
-Message-ID: <2025020855-ventricle-slang-b705@gregkh>
-References: <2025020620-skedaddle-olympics-1735@gregkh>
- <2025020625-unlaced-vagueness-ae34@gregkh>
- <Z6Y72LK1UW86x8av@louis-chauvet-laptop>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RS/09akt"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5187CGxR3966865
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 8 Feb 2025 01:12:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1738998736;
+	bh=sjx4J8EG6AlNkv1ILZ/9qNmt0VFTmBM9+pJ2hNqo0EI=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=RS/09aktS9Dik6z613nHKvdSki6zzDV8fcBHWH7j/CNqey1dSaV/KT2Sy44hkCKHl
+	 xVROcGbfIH5yyCuAxTjaovtOUlm5XbakEccpG9yZejvUgYvMPb+rDIdnxXF4YnWYBp
+	 RB5pewV2D2C390w8xr7JuJ/ioEf7m0w3Zt8k66rs=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5187CGKW026088
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sat, 8 Feb 2025 01:12:16 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 8
+ Feb 2025 01:12:16 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sat, 8 Feb 2025 01:12:16 -0600
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.104])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5187CF1x072376;
+	Sat, 8 Feb 2025 01:12:15 -0600
+Date: Sat, 8 Feb 2025 12:42:14 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Peter Chen <peter.chen@kernel.org>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <pawell@cadence.com>,
+        <rogerq@kernel.org>, <gregkh@linuxfoundation.org>, <balbi@kernel.org>,
+        <jun.li@nxp.com>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
+Subject: Re: [PATCH] usb: cdns3: exit cdns3_gadget_udc_start if
+ FAST_REG_ACCESS cannot be set
+Message-ID: <miuivpqhatkgtw5g7rl6xj7o4gzxztz6hif53t765elwvhddsq@gqmbxkkabm2y>
+References: <20250206125943.786949-1-s-vadapalli@ti.com>
+ <20250207022523.GA22848@nchen-desktop>
+ <tf7qwkoybolexehzagzel67kdxdfsve2f3qdueomedld72v7pp@bquo47wpsxul>
+ <20250208053944.GA28062@nchen-desktop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <Z6Y72LK1UW86x8av@louis-chauvet-laptop>
+In-Reply-To: <20250208053944.GA28062@nchen-desktop>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Fri, Feb 07, 2025 at 05:59:04PM +0100, Louis Chauvet wrote:
-> On 06/02/25 - 18:38, Greg Kroah-Hartman wrote:
-> > The vkms driver does not need to create a platform device, as there is
-> > no real platform resources associated it,  it only did so because it was
-> > simple to do that in order to get a device to use for resource
-> > management of drm resources.  Change the driver to use the faux device
-> > instead as this is NOT a real platform device.
+On Sat, Feb 08, 2025 at 01:39:44PM +0800, Peter Chen wrote:
+> On 25-02-07 11:12:50, Siddharth Vadapalli wrote:
+> > On Fri, Feb 07, 2025 at 10:25:23AM +0800, Peter Chen wrote:
 > > 
-> > Cc: Louis Chauvet <louis.chauvet@bootlin.com>
-> > Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
-> > Cc: Simona Vetter <simona@ffwll.ch>
-> > Cc: Melissa Wen <melissa.srw@gmail.com>
-> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Cc: Maxime Ripard <mripard@kernel.org>
-> > Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> > Cc: David Airlie <airlied@gmail.com>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
-> >  v3: new patch in the series.  For an example of the api working, does
-> >      not have to be merged at this time, but I can take it if the
-> >      maintainers give an ack.
-> 
-> Hi,
-> 
-> This patch cannot be merged into drm-misc-next because we modified the 
-> vkms_device structure in commit 49a167c393b0 ("drm/vkms: Switch to dynamic 
-> allocation for CRTC"), which is present in linux-next.
-> 
-> Once this conflict is resolved, I agree with changing from platform_device 
-> to faux_device.
-> 
-> Apart from this minor conflict, I believe your patch has revealed an issue 
-> in VKMS:
-> 
-> Without your patch:
-> 
-> 	bash-5.2# modprobe vkms
-> 	[drm] Initialized vkms 1.0.0 for vkms on minor 0
-> 	bash-5.2#
-> 
-> With your patch:
-> 
-> 	bash-5.2# modprobe vkms
-> 	faux vkms: Resources present before probing
-> 	[drm] Initialized vkms 1.0.0 for vkms on minor 0
-> 	bash-5.2#
-> 
-> After some investigation, I found that the issue is not caused by your 
-> patch but by VKMS itself:
-> 
-> During faux_device_create, the device core postpones the device probe to 
-> run it later [0]. This probe checks if the devres list is empty [1] and 
-> fails if it is not.
-> 
-> [0]:https://elixir.bootlin.com/linux/v6.13.1/source/drivers/base/bus.c#L534
-> [1]:https://elixir.bootlin.com/linux/v6.13.1/source/drivers/base/dd.c#L626
-> 
-> With a platform driver, the order of execution was:
-> 
-> 	platform_device_register_simple();
-> 		device_add();
-> 	*async* device_probe(); /* no issue, the devres is untouched */
-> 	devres_open_group();
-> 
-> But with faux-device, the order is:
-> 
-> 	faux_device_create();
-> 		device_add();
-> 	devres_open_group();
-> 	*async* device_probe(); /* issue here, because of the previous 
-> 				   devres_open_group */
+> > Hello Peter,
+> > 
+> > > On 25-02-06 18:29:36, Siddharth Vadapalli wrote:
+> > > > When the device is in a low power state, access to the following
+> > > > registers takes a long time:
+> > > > - EP_CFG
+> > > > - EP_TRADDR
+> > > > - EP_CMD
+> > > > - EP_SEL
+> > > > - EP_STS
+> > > > - USB_CONF
 
-Wait, what?  It shouuld be the exact same codepath, as faux_device() is
-not doing anything different from platform here.  You might just be
-hitting a race condition as the async probing is the same here.
+[...]
 
-> How do you think this should be solved? I would like to keep a simple 
-> solution, given that:
-> - we want to have multiple vkms devices (configfs [2])
-> - we need to ensure that device_probe is called before devres_open_group 
->   and devm_drm_dev_alloc to avoid this error
+> > > > @@ -2997,6 +2997,20 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
+> > > >  	/* limit speed if necessary */
+> > > >  	max_speed = min(driver->max_speed, gadget->max_speed);
+> > > >  
+> > > > +	/*  keep Fast Access bit */
+> > > > +	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
+> > > > +	reg = readl(&priv_dev->regs->usb_pwr);
+> > > > +	if (!(reg & PUSB_PWR_FST_REG_ACCESS_STAT)) {
+> > > > +		ret = readl_poll_timeout_atomic(&priv_dev->regs->usb_pwr, reg,
+> > > > +						(reg & PUSB_PWR_FST_REG_ACCESS_STAT),
+> > > > +						10, 1000);
+> > > > +		if (ret) {
+> > > > +			dev_err(priv_dev->dev, "Failed to enable fast access\n");
+> > > > +			spin_unlock_irqrestore(&priv_dev->lock, flags);
+> > > > +			return ret;
+> > > > +		}
+> > > > +	}
+> > > > +
+> > > >  	switch (max_speed) {
+> > > >  	case USB_SPEED_FULL:
+> > > >  		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
+> > > 
+> > > Hi Siddharth,
+> > > 
+> > > Would you please keep this change at cdns3_gadget_config in case the
+> > > controller is power lost during the system suspend?
+> > 
+> > I did think of that initially, but the problem with doing so is that we
+> > are already accessing USB_CONF above in the "switch(max_speed)" section.
+> > The PUSB_PWR_FST_REG_ACCESS bit needs to be set before accessing any of:
+> > - EP_CFG
+> > - EP_TRADDR
+> > - EP_CMD
+> > - EP_SEL
+> > - EP_STS
+> > - USB_CONF
+> > 
+> > Please let me know if you have an alternate suggestion to address the
+> > above.
+> > 
+> 
+> How about move cdns3_gadget_config at the beginning of function
+> cdns3_gadget_udc_start, and add your changes at cdns3_gadget_config?
 
-How about we take out the async probe?  You are getting lucky that it's
-not hit on the platform device code today.  Faux really doesn't need
-async, I was just trying to make the system work the same way that
-platform devices did.
+Yes, I could do that, but I will still move the following section within
+cdns3_gadget_config() function to the top of that function:
 
-And as for the merge issue, not a problem, I just did this conversion
-for people to see how this works and ideally test it, as you did, to
-find issues!
+	/*  keep Fast Access bit */
+	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
 
-thanks,
+Additionally, I will update cdns3_gadget_config() to return an error
+code if Fast Access bit cannot be set. The diff corresponding to this is:
+--------------------------------------------------------------------------------------------
+diff --git a/drivers/usb/cdns3/cdns3-gadget.c b/drivers/usb/cdns3/cdns3-gadget.c
+index fd1beb10bba7..67d8b0805ba0 100644
+--- a/drivers/usb/cdns3/cdns3-gadget.c
++++ b/drivers/usb/cdns3/cdns3-gadget.c
+@@ -2935,10 +2935,24 @@ static int cdns3_gadget_pullup(struct usb_gadget *gadget, int is_on)
+ 	return 0;
+ }
+ 
+-static void cdns3_gadget_config(struct cdns3_device *priv_dev)
++static int cdns3_gadget_config(struct cdns3_device *priv_dev)
+ {
+ 	struct cdns3_usb_regs __iomem *regs = priv_dev->regs;
+ 	u32 reg;
++	int ret;
++
++	/*  keep Fast Access bit */
++	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
++	reg = readl(&priv_dev->regs->usb_pwr);
++	if (!(reg & PUSB_PWR_FST_REG_ACCESS_STAT)) {
++		ret = readl_poll_timeout_atomic(&priv_dev->regs->usb_pwr, reg,
++						(reg & PUSB_PWR_FST_REG_ACCESS_STAT),
++						10, 1000);
++		if (ret) {
++			dev_err(priv_dev->dev, "enabling fast access timed out\n");
++			return ret;
++		}
++	}
+ 
+ 	cdns3_ep0_config(priv_dev);
+ 
+@@ -2971,10 +2985,10 @@ static void cdns3_gadget_config(struct cdns3_device *priv_dev)
+ 	/* enable generic interrupt*/
+ 	writel(USB_IEN_INIT, &regs->usb_ien);
+ 	writel(USB_CONF_CLK2OFFDS | USB_CONF_L1DS, &regs->usb_conf);
+-	/*  keep Fast Access bit */
+-	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
+ 
+ 	cdns3_configure_dmult(priv_dev, NULL);
++
++	return 0;
+ }
+ 
+ /**
+@@ -2990,10 +3004,15 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
+ 	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
+ 	unsigned long flags;
+ 	enum usb_device_speed max_speed = driver->max_speed;
++	int ret;
+ 
+ 	spin_lock_irqsave(&priv_dev->lock, flags);
+ 	priv_dev->gadget_driver = driver;
+ 
++	ret = cdns3_gadget_config(priv_dev);
++	if (ret)
++		return ret;
++
+ 	/* limit speed if necessary */
+ 	max_speed = min(driver->max_speed, gadget->max_speed);
+ 
+@@ -3018,7 +3037,6 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
+ 		break;
+ 	}
+ 
+-	cdns3_gadget_config(priv_dev);
+ 	spin_unlock_irqrestore(&priv_dev->lock, flags);
+ 	return 0;
+ }
+@@ -3471,11 +3489,15 @@ __must_hold(&cdns->lock)
+ static int cdns3_gadget_resume(struct cdns *cdns, bool hibernated)
+ {
+ 	struct cdns3_device *priv_dev = cdns->gadget_dev;
++	int ret;
+ 
+ 	if (!priv_dev->gadget_driver)
+ 		return 0;
+ 
+-	cdns3_gadget_config(priv_dev);
++	ret = cdns3_gadget_config(priv_dev);
++	if (ret)
++		return ret;
++
+ 	if (hibernated)
+ 		writel(USB_CONF_DEVEN, &priv_dev->regs->usb_conf);
+--------------------------------------------------------------------------------------------
 
-greg k-h
+Regards,
+Siddharth.
