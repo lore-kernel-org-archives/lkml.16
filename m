@@ -1,166 +1,238 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFF71F2BAE;
-	Sat,  8 Feb 2025 22:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754961F2BA4;
+	Sat,  8 Feb 2025 22:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739055079; cv=none; b=AvnobsRBy38wZcXV0c3LWdvqsEpJXA8TTvW6/iuNvNwQ4fCET4DRoHwITcSkW5QmkHE8tVNFQ6c82oDy8qJpsiWBoLetvAGHeis7z1sB2Qn1HDEMvSAdcNXBWJJf2cCMDuTrCXDUsYefeF+16oXtpyIa7rxbJQ/O333IhKV9Oss=
+	t=1739055139; cv=none; b=OR/znim/ZBR9zuzPX2tO2reQQ3oIr4L1tgs03/WIqXP6G/zCpkwT1xUDafVaCaMK0JYO0ilzqeX8stolxhHbnYIFlxl3DCOju91SABKOSf0yyfqT4iFh4FIiedVZSNBMS6bFiEV5aB89P+kktGQvpz+Kfz8eewaGnso/h+4nkV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739055079; c=relaxed/simple;
-	bh=bG8iciPdsDovxlkJVQTSUjiduwBS3xd47SB2piZOgFA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r2HqGl4WtqakyMa8Sh0x6S98da3bjsIJPzp1U2qQqvL20zoNG4ixZC/tICHz8lPqE5LXfPeIzflHA0UAMD3L9Q44fjYf7WlCxSxKsvFDt8cEBiRpTXgT6ZHkwxC+K+dEfZX8RYn3H6j8St+K/VUcKKgiVFRtMuuG71Pz8IYQEwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JEkpStsP; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739055139; c=relaxed/simple;
+	bh=MlgId0leXS+5AjA+yhEPUiE0AYUyEZpLXsgN95T+CCs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ILCmVYsxGYIbKaUIbKIIPO2n0MpOHz3ySM86SnivWsxC6ZGO9r66K5WD6l4lwHm2vvxc0eLnc/cqyJnw0rfYFLZGXY3r+LGDg3vAVQbzH4w/AxhzMDTlcOFFV4uZ+fVawTlY3zVlnon8pwEQJtz+HBTA4g2i3GM4iG/EKN+PJfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=V7f/mfIN; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JEkpStsP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739055078; x=1770591078;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bG8iciPdsDovxlkJVQTSUjiduwBS3xd47SB2piZOgFA=;
-  b=JEkpStsP8J+gTXjUxBborukUmAd4epNgChLnULFjkmutiefBbuc7p+6s
-   T2zW8wzQvQansRcPXJBJZ8j10+wtcIddLhg2f9YO9T9TQzifhTg54vQmZ
-   ecyc3v2Tzxnbdj9w8maJwNovkmJmr9HGkVNW3T+t3RI8ptT1VAcJP+Pnh
-   gbX5oI7bCsDamlrhQaNo3Cb4FogfPjmJnToGsBbI9XvelR6SqJd6WiJMb
-   B869/58aZaZbfUwOYqEEYGfvt+qZyEc6Aq3edz6fp5qMt3XplnFSIMapn
-   01Qb5WFQVNnD1fUAS5H25QTb5VxZ6mt5UNJy2UHuabc1nd+TXua0j/DEA
-   g==;
-X-CSE-ConnectionGUID: sLfWKNmfRpWiL51z/qLy0w==
-X-CSE-MsgGUID: o4Ur7n//SW6UsYBrOb8vFw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="50298221"
-X-IronPort-AV: E=Sophos;i="6.13,271,1732608000"; 
-   d="scan'208";a="50298221"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 14:51:16 -0800
-X-CSE-ConnectionGUID: WjcthE2OSzuVz4DiindQcg==
-X-CSE-MsgGUID: tDNgQgIBSFGTpNVOpZw4Lg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,271,1732608000"; 
-   d="scan'208";a="112054509"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 08 Feb 2025 14:51:14 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tgtfL-0010k7-1c;
-	Sat, 08 Feb 2025 22:51:11 +0000
-Date: Sun, 9 Feb 2025 06:50:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tamir Duberstein <tamird@gmail.com>, David Gow <davidgow@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Luis Felipe Hernandez <luis.hernandez093@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	Tamir Duberstein <tamird@gmail.com>
-Subject: Re: [PATCH v2 2/2] lib/prime_numbers: convert self-test to KUnit
-Message-ID: <202502090640.RJYhwFQe-lkp@intel.com>
-References: <20250208-prime_numbers-kunit-convert-v2-2-863119447e04@gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="V7f/mfIN"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 518ImPdb014553;
+	Sat, 8 Feb 2025 22:52:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=LcXqDi6InTeTV70mo/mJK9
+	cImN6n1+Nfsus4uaK5U2s=; b=V7f/mfINzMbI0Omt7g+SaQt1b3nk0pgZwRol2V
+	gOrZ5BFQod/MHBpAHuZPcCkCCIHy0yK8gTqpIyZ3Hc5I3CgdH/jUBmLeNvOukBAV
+	iKHyKX2mRGa4y5lUJggcTALYv7YEVPPa8Mn6dXJK5OajWjqTRlry9CCgdkNZbQSZ
+	GtAL+rcocg9do09UU7ExXkG1jabqHKVXBcYJe6zjmB9YD/Um0jIn0l4VVm5ttvaP
+	DHmVYPWQRNyVwYJ3GMBSK30TulzAlJdojAzlDedmbLhcjnPqURTu3PygNzepB9ku
+	XHy4jIu0MisDhTOhiF4zAdf0fiJEnWdCYAu1L2CpMPOcZjnQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44p0dq992v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Feb 2025 22:52:05 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 518Mq4Dk019828
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 8 Feb 2025 22:52:04 GMT
+Received: from hu-vikramsa-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Sat, 8 Feb 2025 14:51:58 -0800
+From: Vikram Sharma <quic_vikramsa@quicinc.com>
+To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
+        <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        <cros-qcom-dts-watchers@chromium.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <quic_vikramsa@quicinc.com>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v14 0/2] media: qcom: camss: Add sc7280 support
+Date: Sun, 9 Feb 2025 04:21:41 +0530
+Message-ID: <20250208225143.2868279-1-quic_vikramsa@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250208-prime_numbers-kunit-convert-v2-2-863119447e04@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 4_N7cdBWC7b02otkzqT7CDyrGDwtaJn_
+X-Proofpoint-ORIG-GUID: 4_N7cdBWC7b02otkzqT7CDyrGDwtaJn_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-08_10,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ phishscore=0 spamscore=0 malwarescore=0 impostorscore=0 lowpriorityscore=0
+ clxscore=1015 priorityscore=1501 bulkscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
+ definitions=main-2502080196
 
-Hi Tamir,
+SC7280 is a Qualcomm SoC. This series adds support to bring up the CSIPHY,
+CSID, VFE/RDI interfaces in SC7280.
 
-kernel test robot noticed the following build errors:
+SC7280 provides
+- 3 x VFE, 3 RDI per VFE
+- 2 x VFE Lite, 4 RDI per VFE
+- 3 x CSID
+- 2 x CSID Lite
+- 5 x CSI PHY
 
-[auto build test ERROR on 2014c95afecee3e76ca4a56956a936e23283f05b]
+We have tested this on qcs6490-rb3gen2-vision-mezzanine board having IMX577
+sensor.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tamir-Duberstein/lib-math-Hook-up-tests-Makefile/20250208-220040
-base:   2014c95afecee3e76ca4a56956a936e23283f05b
-patch link:    https://lore.kernel.org/r/20250208-prime_numbers-kunit-convert-v2-2-863119447e04%40gmail.com
-patch subject: [PATCH v2 2/2] lib/prime_numbers: convert self-test to KUnit
-config: i386-buildonly-randconfig-001-20250209 (https://download.01.org/0day-ci/archive/20250209/202502090640.RJYhwFQe-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250209/202502090640.RJYhwFQe-lkp@intel.com/reproduce)
+Used following tools for the sanity check of these changes.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502090640.RJYhwFQe-lkp@intel.com/
+- make CHECK_DTBS=y W=1 DT_SCHEMA_FILES=media/qcom,sc7280-camss.yaml
+qcom/qcs6490-rb3gen2-vision-mezzanine.dtb
+- make DT_CHECKER_FLAGS=-m W=1
+DT_SCHEMA_FILES=media/qcom,sc7280-camss.yaml dt_binding_check
+- make -j32 W=1
+- ./scripts/checkpatch.pl
+ 
+Changes in V14:
+- Updated commit text for [PATCH v13 2/2] - Dmitry
+- Removed duplicate Reviewed-by tag for [PATCH v13 1/2] - Dmitry
+- Link to v13:
+  https://lore.kernel.org/linux-arm-msm/20250208165232.2371889-1-quic_vikramsa@quicinc.com/
 
-All errors (new ones prefixed by >>):
+Changes in V13:
+- Updated commit text for [PATCH v12 2/2] - Dmitry
+- Updated Copyright to add 2025 for [PATCH v12 2/2] - Jie
+- Link to v12:
+  https://lore.kernel.org/linux-arm-msm/20250207090422.1609260-1-quic_vikramsa@quicinc.com/
 
-   lib/math/prime_numbers.c: In function 'expand_to_next_prime':
->> lib/math/prime_numbers.c:126:15: error: implicit declaration of function 'kmalloc'; did you mean 'mm_alloc'? [-Werror=implicit-function-declaration]
-     126 |         new = kmalloc(sizeof(*new) + bitmap_size(sz),
-         |               ^~~~~~~
-         |               mm_alloc
-   lib/math/prime_numbers.c:126:13: warning: assignment to 'struct primes *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-     126 |         new = kmalloc(sizeof(*new) + bitmap_size(sz),
-         |             ^
->> lib/math/prime_numbers.c:134:17: error: implicit declaration of function 'kfree' [-Werror=implicit-function-declaration]
-     134 |                 kfree(new);
-         |                 ^~~~~
-   cc1: some warnings being treated as errors
+Changes in V12:
+- droped mclk-pins{} and put the properties directly under the
+  cam2-default-state and cam2-suspend-state node - Konrad.
+- Link to v11:
+  https://lore.kernel.org/linux-arm-msm/20250121125010.1853269-1-quic_vikramsa@quicinc.com/
 
+Changes in V11:
+- Moved [PATCH v10 1/4] and [PATCH v10 2/4] as a separate series.
+- Marked dependency on
+  https://lore.kernel.org/linux-arm-msm/20250121120901.1841142-1-quic_vikramsa@quicinc.com/
+- Sorted the header files alphabetically in dtso.
+- Removed invalid property for sensor.
+- Removed rst-pin from default and suspend states of pinctrl. We have verified
+  that for imx412 sensor there are no SET_SYSTEM_SLEEP_PM_OPS added.
+  So removing rst-pin does not make any difference in power management. 
+- Link to v10: https://lore.kernel.org/linux-arm-msm/20241217140656.965235-1-quic_vikramsa@quicinc.com/
 
-vim +126 lib/math/prime_numbers.c
+Changes in V10:
+- Updated cover letter to add link for v8 under changes in v9.
+- No change in the patches w.r.t V9
+- Link to v9: https://lore.kernel.org/linux-arm-msm/20241217133955.946426-1-quic_vikramsa@quicinc.com/
 
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  106  
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  107  static bool expand_to_next_prime(unsigned long x)
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  108  {
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  109  	const struct primes *p;
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  110  	struct primes *new;
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  111  	unsigned long sz, y;
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  112  
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  113  	/* Betrand's Postulate (or Chebyshev's theorem) states that if n > 3,
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  114  	 * there is always at least one prime p between n and 2n - 2.
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  115  	 * Equivalently, if n > 1, then there is always at least one prime p
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  116  	 * such that n < p < 2n.
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  117  	 *
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  118  	 * http://mathworld.wolfram.com/BertrandsPostulate.html
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  119  	 * https://en.wikipedia.org/wiki/Bertrand's_postulate
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  120  	 */
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  121  	sz = 2 * x;
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  122  	if (sz < x)
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  123  		return false;
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  124  
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  125  	sz = round_up(sz, BITS_PER_LONG);
-717c8ae7aae4f2 lib/prime_numbers.c Chris Wilson 2017-01-13 @126  	new = kmalloc(sizeof(*new) + bitmap_size(sz),
-717c8ae7aae4f2 lib/prime_numbers.c Chris Wilson 2017-01-13  127  		      GFP_KERNEL | __GFP_NOWARN);
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  128  	if (!new)
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  129  		return false;
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  130  
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  131  	mutex_lock(&lock);
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  132  	p = rcu_dereference_protected(primes, lockdep_is_held(&lock));
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  133  	if (x < p->last) {
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22 @134  		kfree(new);
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  135  		goto unlock;
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  136  	}
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  137  
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  138  	/* Where memory permits, track the primes using the
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  139  	 * Sieve of Eratosthenes. The sieve is to remove all multiples of known
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  140  	 * primes from the set, what remains in the set is therefore prime.
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  141  	 */
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  142  	bitmap_fill(new->primes, sz);
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  143  	bitmap_copy(new->primes, p->primes, p->sz);
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  144  	for (y = 2UL; y < sz; y = find_next_bit(new->primes, sz, y + 1))
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  145  		new->last = clear_multiples(y, new->primes, p->sz, sz);
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  146  	new->sz = sz;
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  147  
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  148  	BUG_ON(new->last <= x);
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  149  
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  150  	rcu_assign_pointer(primes, new);
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  151  	if (p != &small_primes)
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  152  		kfree_rcu((struct primes *)p, rcu);
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  153  
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  154  unlock:
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  155  	mutex_unlock(&lock);
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  156  	return true;
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  157  }
-cf4a7207b1cb4a lib/prime_numbers.c Chris Wilson 2016-12-22  158  
+Changes in V9:
+- Removed GCC_CAMERA_AHB_CLK as its always enabled.
+- Added GCC_CAMERA_SF_AXI_CLK.
+- Renamed gcc_cam_hf_axi to gcc_axi_hf.
+- V8 had 5 patches and V9 have 4 patches.
+- First 3 patches of V8 are already promoted to linux-next
+i.e  
+  media: dt-bindings: Add qcom,sc7280-camss
+  media: qcom: camss: Sort camss version enums and compatible strings
+  media: qcom: camss: Add support for camss driver on sc7280
+- 2 new patches are added to handle new comments from Konrad on
+  "Patch v8 4/5 arm64: dts: qcom: sc7280: Add support for camss" 
+  1 of the 2 new patches make changes in yaml and other one is making
+  change in camss driver to handle new comments in dtsi.
+- for "Patch v8 4/5 arm64: dts: qcom: sc7280: Add support for camss" I got
+  comments from Konrad to make changes for clock names so I had to make
+  respective changes in "bindings/media/qcom,sc7280-camss.yaml". As dtsi
+  changes are not merged yet, so there is no issues with backward
+  compatibility and I am assuming this should be acceptable.
+- Link to v8: https://lore.kernel.org/linux-arm-msm/20241206191900.2545069-1-quic_vikramsa@quicinc.com/
+  
+Changes in V8:
+- Changed node name from camss to isp.
+- Added QCOM_ICC_TAG_ACTIVE_ONLY and QCOM_ICC_TAG_ALWAYS tags for
+  interconnects. 
+- Added blank lines when required.
+- Modified power-domain-names from horizontal to vertical list.
+- Sorted pinctrl nodes based on gpio index.
+- Link to v7: https://lore.kernel.org/linux-arm-msm/20241204100003.300123-1-quic_vikramsa@quicinc.com/
+
+Changes in V7:
+- Changed unit address for camss in documention and dts.
+- Added avdd-supply and dvdd-supply for sensor.
+- Changed reg/clocks/interrupts name for vfe_lite and csid_lite.
+- Link to v6: https://lore.kernel.org/linux-arm-msm/20241127100421.3447601-1-quic_vikramsa@quicinc.com/
+
+Changes in V6:
+- Changed order of properties in Documentation [PATCH 1/5].
+- Updated description for ports in Documentaion [PATCH 1/5].
+- Moved regulators from csid to csiphy [PATCH 3/5].
+- Link to v5: https://lore.kernel.org/linux-arm-msm/20241112173032.2740119-1-quic_vikramsa@quicinc.com/ 
+
+Changes in V5:
+- Updated Commit text for [PATCH v5 1/6].
+- Moved reg after compatible string.
+- Renamed csi'x' clocks to vfe'x'_csid
+- Removed [PATCH v4 4/6] and raised a seprate series for this one.
+- Moved gpio states to mezzanine dtso.
+- Added more clock levels to address TPG related issues.
+- Renamed power-domains-names -> power-domain-names. 
+- Link to v4: https://lore.kernel.org/linux-arm-msm/20241030105347.2117034-1-quic_vikramsa@quicinc.com/ 
+
+Changes in V4:
+- V3 had 8 patches and V4 is reduced to 6.
+- Removed [Patch v3 2/8] as binding change is not required for dtso.
+- Removed [Patch v3 3/8] as the fix is already taken care in latest
+  kernel tip. 
+- Updated alignment for dtsi and dt-bindings.
+- Adding qcs6490-rb3gen2-vision-mezzanine as overlay. 
+- Link to v3: https://lore.kernel.org/linux-arm-msm/20241011140932.1744124-1-quic_vikramsa@quicinc.com/
+
+Changes in V3:
+- Added missed subject line for cover letter of V2.
+- Updated Alignment, indentation and properties order.
+- edit commit text for [PATCH 02/10] and [PATCH 03/10].
+- Refactor camss_link_entities.
+- Removed camcc enablement changes as it already done.
+- Link to v2: https://lore.kernel.org/linux-arm-msm/20240904-camss_on_sc7280_rb3gen2_vision_v2_patches-v1-0-b18ddcd7d9df@quicinc.com/
+
+Changes in V2:
+- Improved indentation/formatting.
+- Removed _src clocks and misleading code comments.
+- Added name fields for power domains and csid register offset in DTSI.
+- Dropped minItems field from YAML file.
+- Listed changes in alphabetical order.
+- Updated description and commit text to reflect changes
+- Changed the compatible string from imx412 to imx577.
+- Added board-specific enablement changes in the newly created vision
+  board DTSI file.
+- Fixed bug encountered during testing.
+- Moved logically independent changes to a new/seprate patch.
+- Removed cci0 as no sensor is on this port and MCLK2, which was a
+  copy-paste error from the RB5 board reference.
+- Added power rails, referencing the RB5 board.
+- Discarded Patch 5/6 completely (not required).
+- Removed unused enums.
+- Link to v1: https://lore.kernel.org/linux-arm-msm/20240629-camss_first_post_linux_next-v1-0-bc798edabc3a@quicinc.com/
+
+Signed-off-by: Vikram Sharma <quic_vikramsa@quicinc.com>
+
+Vikram Sharma (2):
+  arm64: dts: qcom: sc7280: Add support for camss
+  arm64: dts: qcom: qcs6490-rb3gen2-vision-mezzanine: Add vision
+    mezzanine
+
+ arch/arm64/boot/dts/qcom/Makefile             |   4 +
+ .../qcs6490-rb3gen2-vision-mezzanine.dtso     |  89 +++++++++
+ arch/arm64/boot/dts/qcom/sc7280.dtsi          | 178 ++++++++++++++++++
+ 3 files changed, 271 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs6490-rb3gen2-vision-mezzanine.dtso
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
