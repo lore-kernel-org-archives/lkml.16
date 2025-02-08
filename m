@@ -1,197 +1,537 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9764C130A7D;
-	Sat,  8 Feb 2025 02:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58607A41;
+	Sat,  8 Feb 2025 02:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738982421; cv=none; b=uC3D/v/hgWpdhAyifVlnnaYFI3V2bgsqwwsQHT4kBvLgzGdogcXdBG9zTTrXvvricDest/LxLvtKAqY7Qw8DF2Hgm3hmkDZUz1DsfG4Ux19ZXyX33XiBggqTYvVUjk5pLMyF4LhmQAeBdJImob0FpgkN5sn639cquU1b/KYiSfk=
+	t=1738982593; cv=none; b=kiRgST8dBAA/xgMRWOQw4+lAobex3xeKkNSb8h01h9hrswPc6xvNY3u2SLC0/dawxHbGkhhRw6oTq94BqjViSVQJoH2lheFSpSreAjXqPKgViuQNPoqFhSKPtmUc2tzm/uKK1zAUy2eUaOw3R4G4RD4+dHAft4jnkdxPsQ6s2lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738982421; c=relaxed/simple;
-	bh=CCE6g8psB7pQeEuzmbEF/71KvxZ14BfzQFajZKgBMGs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VedKq6puwScfk5QIEhOPlVKtpF2U98XistaC/+qXyIkAzz9K7sYADrX2i/1ivYCozncCjEAGcjwh0jnY5qaaTBTDwV3G6rjFLGm4WXQFI8lQgtSoYgJuykLsIRq24oAMIlWTuzrqXcyQ+X7UyzevmT5AtG3qbL6RtDfrGBgXATU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oi41XOjH; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738982593; c=relaxed/simple;
+	bh=w2NSxVOc40I5A6iJDLuor6h0/xjJT/Kks+uhl+dV5kg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UTJiKzy/PgGrHyWmQoIJaWJHC+bFLTsdKqKXHRgMV1Y7aJ1lxDeKhyKk+9Vyn1kv2fvlxsxTLz7yLBtGAW6a6a5mJ+WCgZbh5Z9wWizEc15tRJ5alhycyNOzACm5qFl+w5ZW08+vysRDVdRGeAwPAnF4qFbiVGZa14kCgCdfmhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=FQWLRsUg; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=i32l2juV; arc=none smtp.client-ip=202.12.124.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oi41XOjH"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38dc627eba6so1318885f8f.2;
-        Fri, 07 Feb 2025 18:40:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738982418; x=1739587218; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=srkQrrAnpadY8PLhAHZbzX0FKCYiY7EBmJzK416d56s=;
-        b=Oi41XOjHdJj7Bqg8mETz/wN831agW//j9DtIRdYjsYfJ72yKTZ2uXAasqvEqOPVVih
-         8I64K/Z8geDrVh+YbQJ4XXelLqCTM2NoDP5kxa7USVNFgA3HO4B355Oc6FehH/qFt8NL
-         4Fqxx5lc40bP7D3VQgmfLoCuS+mF/3doTeVhIvyvf3yy6X2k+/JxsXHLbsXEjjgCDwrN
-         JlvI75Y0aOkHYHgEw60+WPwkY/ahBBrJ9hkpDONGsCCG4yfuGqaKF4Sd2kIAKP7Xeos2
-         3tPIU1JodWuJu0CWYqBWKi0ZhKxdSLMzoG2VLl12PWTF80EssWXWLHbhoj7AT7gG73+E
-         6jBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738982418; x=1739587218;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=srkQrrAnpadY8PLhAHZbzX0FKCYiY7EBmJzK416d56s=;
-        b=a0JWc+IQFBbwcM8oSt6+QkcsBGoK3KDN4BruxaCpXVDgdCvR2XQAqa6KCYqVEDGpSF
-         vEM19CL9dBqtbWNgqvzNnrDgcCYeOhQXSDYKamjmpb5v0pwqLxFcb7+0M0migllnAAZc
-         0oFKp/gudWrb1G39mMPMgjn7Y8jL9Albi6snIQDofwZZlZhyz215pDpkSO0Ch5+lB+xg
-         SDOEOTXjTGfd9adPkZxvZGYNyprCfYjXGti2f26Yv3jSmr5ncmeWSgw3zpqri3LdLK8+
-         xX1Fh8rqov+grdSJIQkhiF7XbWUQO6SPa5+jvEZ8cyzM006xY59GbbRKligIojQG/0cN
-         825w==
-X-Forwarded-Encrypted: i=1; AJvYcCVLUxiDdtcUpsB2v7FTWpO8+WyNGtB6mF88PwqekCBxTfbndGynbxkC2eo8ZiVthUH7f/o=@vger.kernel.org, AJvYcCVWnj1u0nVRs0ijcWtCUFVw7+kw3BHjZml1bRvPr9StiLUGwMMvwGXJ7H0z1/fTg+m78zl5kwjugoLEIuyN@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwOHALcrMNY8dm+BU6zzvTZKaKtViVcRS5AOTteGs/xMjFyiWW
-	Sd0XH0f/RFppgH5lpcizwZZX2hOm2TIyKr8iEcecorTRVFXsquRPZrYuHOqcpz3wZqcKfc9YGRH
-	JEldfTEYrzH2pyBWQlQ87+71cdlY=
-X-Gm-Gg: ASbGncvNZkkkBnSu8Bill58r3XtADpAVUDwRE8X8BtMmIvUiNPlJbQUd2do6OTpsm5W
-	ALCmMGSoph0B4k9Dg2R8MV0SH0Pj+aJ5kRxn6iRoIc5Y0Qv2YIyOpVbu/B6788VH84jDsaczaTr
-	sW7RG0IHdZWEVKIeNVumNALSqeFv8e
-X-Google-Smtp-Source: AGHT+IEfhXFVKhUN2y1oi1TXHVdQ8x25Bg0Z/m21MOgikvbJIRkYv4XSKVjjcuzA74IMRgxZ+h4RSWQtz1ci/1yxZcE=
-X-Received: by 2002:a05:6000:154f:b0:38b:d7d2:12f6 with SMTP id
- ffacd0b85a97d-38dc8d98e9amr3557767f8f.2.1738982417610; Fri, 07 Feb 2025
- 18:40:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="FQWLRsUg";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="i32l2juV"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id D4EA8254016F;
+	Fri,  7 Feb 2025 21:43:09 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Fri, 07 Feb 2025 21:43:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1738982589;
+	 x=1739068989; bh=JnAUJP6f+n+Id3QdTI1JBV8/ZYL9nA844b3+f38N/0w=; b=
+	FQWLRsUgQEP4ddPCXh1OqLir+9v9pcXm7HwQlckYccZ06J7HJZ833wwQ3pHtaf97
+	6e6Z2Q2mIqzPdmouNRvUP5rO8UvJceTYtEQXqBA7ramQE+29qWsRJMtkTDq2bF2m
+	jRZ+eUbzlq/bkqmQ6U6eqck+fsJNckZ/+ue3cBov+uituHqOFBDWuemtnBA6V6G2
+	6XXe9j4etkDCFKL01G2KqiOp4Zu7HlMcd8qQi6TnOqjMWHEajTshQfmjT782hEn7
+	LaT06reWF6LEDBHJNVnorhIo/zUzR/00M3z5Glvj7njY2JV4ZW0z+5jjwk9O9UoH
+	dEBuckdIAMdbB2HNGcmvYg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1738982589; x=1739068989; bh=JnAUJP6f+n+Id3QdTI1JBV8/ZYL9nA844b3
+	+f38N/0w=; b=i32l2juValIoSFC7zsUCklN0BUdf1H2hNbDvri9ZEOhUbwXXyoM
+	eZcCOfmmBrc8bx/wRNATggu4oTn2i70X6e/4MQ2xAIpcllIIcudo3ulkGR15Y54D
+	pih1NvIdTAGg4XqOIChUs9w3QblMYO+FB/IJ7M9/MaAunlgyiXm04hq449ofSdJ3
+	WDFZOoRXhCtiWaeg6e5S3eoHHeaG+nQEHQeIErM4ybb9IuakdXFdHfGn8ffX/cfE
+	nKTGugjbB2IBQKET23HsWTEDMbyxH/Eik8euShgWlro6AWSJOoCP1OL/bJKLl9sA
+	rnaAVrPk9M8TdkV/BDatpOZ72BduAtVGkVg==
+X-ME-Sender: <xms:vMSmZ0OHwlQWa8X2CYP8_sruX6D21Wx7rR7ykuhd39vMYpIMajT7vQ>
+    <xme:vMSmZ6_lE_DvGWE43H1yLywQZ-kVAq-ysnskPfoQAimpVDowqQfQJV3oRsLVW2kk_
+    Ekw3IQPdbxWXP4>
+X-ME-Received: <xmr:vMSmZ7RdiI-gcczy6ugviIHHTSRAUNybueb2KyHUWKVj_5KwI5N_JAMYuYs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefuddtudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehgtderredttdej
+    necuhfhrohhmpeffvghmihcuofgrrhhivgcuqfgsvghnohhurhcuoeguvghmihesihhnvh
+    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpedvjeet
+    geekhfetudfhgfetffegfffguddvgffhffeifeeikeektdehgeetheffleenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeguvghmihesihhnvhhi
+    shhisghlvghthhhinhhgshhlrggsrdgtohhmpdhnsggprhgtphhtthhopeduledpmhhoug
+    gvpehsmhhtphhouhhtpdhrtghpthhtohephhhonhhglhgvihdurdhhuhgrnhhgsegrmhgu
+    rdgtohhmpdhrtghpthhtohepuggvmhhiohgsvghnohhurhesghhmrghilhdrtghomhdprh
+    gtphhtthhopehrrgihrdhhuhgrnhhgsegrmhgurdgtohhmpdhrtghpthhtohepshhtvghf
+    rghnohdrshhtrggsvghllhhinhhisegrmhgurdgtohhmpdhrtghpthhtohepvhhirhhtuh
+    grlhhiiigrthhiohhnsehlihhsthhsrdhlihhnuhigqdhfohhunhgurghtihhonhdrohhr
+    ghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopegrihhrlhhivggusehrvgguhhgrthdrtghomhdprhgtphhtthho
+    pegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtg
+    hpthhtohepughmihhtrhihrdhoshhiphgvnhhkohestgholhhlrggsohhrrgdrtghomh
+X-ME-Proxy: <xmx:vMSmZ8sJE2CFld1rE-6KSPlkMUjvK9e6f2uzxfx4lQ0ySenVA2GAbA>
+    <xmx:vcSmZ8dRT1AN5YFowHD2Z6UhfyUye-7DgufbQ_Y2HYaIW42mCIWopQ>
+    <xmx:vcSmZw04mevOc9kjeEWAwRiMpnbK61tLems7wdS8rFioTZYgtYMzIQ>
+    <xmx:vcSmZw8dMl32Vk9xurTuIKfYBdMoqS8yMzwzrK3tc6SH7CiroAW2og>
+    <xmx:vcSmZxBO2N4SnwHyZnKqpEAMQWrHjMlEWRUkKbHBy7d8_0rUmwG4Sgk4>
+Feedback-ID: iac594737:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 7 Feb 2025 21:43:07 -0500 (EST)
+Date: Fri, 7 Feb 2025 21:43:02 -0500
+From: Demi Marie Obenour <demi@invisiblethingslab.com>
+To: "Huang, Honglei1" <Honglei1.Huang@amd.com>
+Cc: Demi Marie Obenour <demiobenour@gmail.com>,
+	"Huang, Ray" <Ray.Huang@amd.com>,
+	"Stabellini, Stefano" <stefano.stabellini@amd.com>,
+	"virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	David Airlie <airlied@redhat.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Gurchetan Singh <gurchetansingh@chromium.org>,
+	Chia-I Wu <olvaffe@gmail.com>,
+	Akihiko Odaki <akihiko.odaki@daynix.com>,
+	"Zhu, Lingshan" <Lingshan.Zhu@amd.com>,
+	Xen developer discussion <xen-devel@lists.xenproject.org>,
+	Kernel KVM virtualization development <kvm@vger.kernel.org>,
+	Xenia Ragiadakou <burzalodowa@gmail.com>,
+	Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>
+Subject: Re: [RFC PATCH 3/3] drm/virtio: implement blob userptr resource
+ object
+Message-ID: <Z6bEuc6XW_0hFcyS@itl-email>
+References: <Z2WO2udH2zAEr6ln@phenom.ffwll.local>
+ <2fb36b50-4de2-4060-a4b7-54d221db8647@gmail.com>
+ <de8ade34-eb67-4bff-a1c9-27cb51798843@amd.com>
+ <Z36wV07M8B_wgWPl@phenom.ffwll.local>
+ <c42ae4f7-f5f4-4906-85aa-b049ed44d7e9@gmail.com>
+ <Z5waZsddenagCYtl@itl-email>
+ <7b0bf2d5-700a-4cc7-b410-a9b2e2083b5d@amd.com>
+ <Z6T9lDSj8Y9ATE3k@itl-email>
+ <b5cf2939-5853-4c1f-90eb-68f281106f86@amd.com>
+ <Z6a_URD8n72F2E41@itl-email>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <AM6PR03MB5080392CC36DB66E8EA202DE99F42@AM6PR03MB5080.eurprd03.prod.outlook.com>
- <CAADnVQLb--LzFmXZPLPa5V+cD1A9YzTnZSgno9ftcA4-GGTi8w@mail.gmail.com> <AM6PR03MB508011599420DB53480E8BF799F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
-In-Reply-To: <AM6PR03MB508011599420DB53480E8BF799F72@AM6PR03MB5080.eurprd03.prod.outlook.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 7 Feb 2025 18:40:06 -0800
-X-Gm-Features: AWEUYZlY5Cx47GrscuSXW8CNNyK9yWTnCSrStL43MJmsPS9ntY6SNnwBBCv6kDs
-Message-ID: <CAADnVQ+7RvuGsbnpeyMrZPKypKeUSULx42Gvmc9J_gnnkPffdA@mail.gmail.com>
-Subject: Re: [RFC] bpf: Rethinking BPF safety, BPF open-coded iterators, and
- possible improvements (runtime protection)
-To: Juntong Deng <juntong.deng@outlook.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, snorcht@gmail.com, 
-	Christian Brauner <brauner@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="iF+xZbPqvFG3L78Z"
+Content-Disposition: inline
+In-Reply-To: <Z6a_URD8n72F2E41@itl-email>
+
+
+--iF+xZbPqvFG3L78Z
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Date: Fri, 7 Feb 2025 21:43:02 -0500
+From: Demi Marie Obenour <demi@invisiblethingslab.com>
+To: "Huang, Honglei1" <Honglei1.Huang@amd.com>
+Cc: Demi Marie Obenour <demiobenour@gmail.com>,
+	"Huang, Ray" <Ray.Huang@amd.com>,
+	"Stabellini, Stefano" <stefano.stabellini@amd.com>,
+	"virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	David Airlie <airlied@redhat.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Gurchetan Singh <gurchetansingh@chromium.org>,
+	Chia-I Wu <olvaffe@gmail.com>,
+	Akihiko Odaki <akihiko.odaki@daynix.com>,
+	"Zhu, Lingshan" <Lingshan.Zhu@amd.com>,
+	Xen developer discussion <xen-devel@lists.xenproject.org>,
+	Kernel KVM virtualization development <kvm@vger.kernel.org>,
+	Xenia Ragiadakou <burzalodowa@gmail.com>,
+	Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>
+Subject: Re: [RFC PATCH 3/3] drm/virtio: implement blob userptr resource
+ object
 
-On Tue, Feb 4, 2025 at 4:40=E2=80=AFPM Juntong Deng <juntong.deng@outlook.c=
-om> wrote:
->
-> On 2025/2/4 23:59, Alexei Starovoitov wrote:
-> > On Tue, Feb 4, 2025 at 11:35=E2=80=AFPM Juntong Deng <juntong.deng@outl=
-ook.com> wrote:
-> >>
-> >> This discussion comes from the patch series open-coded BPF file
-> >> iterator, which was Nack-ed and thus ended [0].
-> >>
-> >> Thanks for the feedback from Christian, Linus, and Al, all very helpfu=
-l.
-> >>
-> >> The problems encountered in this patch series may also be encountered =
-in
-> >> other BPF open-coded iterators to be added in the future, or in other
-> >> BPF usage scenarios.
-> >>
-> >> So maybe this is a good opportunity for us to discuss all of this and
-> >> rethink BPF safety, BPF open coded iterators, and possible improvement=
-s.
-> >>
-> >> [0]:
-> >> https://lore.kernel.org/bpf/AM6PR03MB50801990BD93BFA2297A123599EC2@AM6=
-PR03MB5080.eurprd03.prod.outlook.com/T/#t
-> >>
-> >> What do we expect from BPF safety?
-> >> ----------------------------------
-> >>
-> >> Christian points out the important fact that BPF programs can hold
-> >> references for a long time and cause weird issues.
-> >>
-> >> This is an inherent flaw in BPF. Since the addition of bpf_loop and
-> >> BPF open-code iterators, the myth that BPF is "absolutely" safe has
-> >> been broken.
-> >>
-> >> The BPF verifier is a static verifier and has no way of knowing how
-> >> long a BPF program will actually run.
-> >>
-> >> For example, the following BPF program can freeze your computer, but
-> >> can pass the BPF verifier smoothly.
-> >>
-> >> SEC("raw_tp/sched_switch")
-> >> int BPF_PROG(on_switch)
-> >> {
-> >>          struct bpf_iter_num it;
-> >>          int *v;
-> >>          bpf_iter_num_new(&it, 0, 100000);
-> >>          while ((v =3D bpf_iter_num_next(&it))) {
-> >>                  struct bpf_iter_num it2;
-> >>                  bpf_iter_num_new(&it2, 0, 100000);
-> >>                  while ((v =3D bpf_iter_num_next(&it2))) {
-> >>                          bpf_printk("BPF Bomb\n");
-> >>                  }
-> >>                  bpf_iter_num_destroy(&it2);
-> >>          }
-> >>          bpf_iter_num_destroy(&it);
-> >>          return 0;
-> >> }
-> >>
-> >> This BPF program runs a huge loop at each schedule.
-> >>
-> >> bpf_iter_num_new is a common iterator that we can use in almost any
-> >> context, including LSM, sched-ext, tracing, etc.
-> >>
-> >> We can run large, long loops on any critical code path and freeze the
-> >> system, since the BPF verifier has no way of knowing how long the
-> >> iteration will run.
-> >
-> > This is completely orthogonal to the issue that Christian explained.
->
-> Thanks for your reply!
->
-> Completely orthogonal? Sorry, I may have some misunderstandings.
+On Fri, Feb 07, 2025 at 09:30:45PM -0500, Demi Marie Obenour wrote:
+> On Fri, Feb 07, 2025 at 07:07:11PM +0800, Huang, Honglei1 wrote:
+> > On 2025/2/7 2:21, Demi Marie Obenour wrote:
+> > > On Thu, Feb 06, 2025 at 06:53:55PM +0800, Huang, Honglei1 wrote:
+> > > > On 2025/1/31 8:33, Demi Marie Obenour wrote:
+> > > > > On Wed, Jan 29, 2025 at 03:54:59PM -0500, Demi Marie Obenour wrot=
+e:
+> > > > > > On 1/8/25 12:05 PM, Simona Vetter wrote:
+> > > > > > > On Fri, Dec 27, 2024 at 10:24:29AM +0800, Huang, Honglei1 wro=
+te:
+> > > > > > > >=20
+> > > > > > > > On 2024/12/22 9:59, Demi Marie Obenour wrote:
+> > > > > > > > > On 12/20/24 10:35 AM, Simona Vetter wrote:
+> > > > > > > > > > On Fri, Dec 20, 2024 at 06:04:09PM +0800, Honglei Huang=
+ wrote:
+> > > > > > > > > > > From: Honglei Huang <Honglei1.Huang@amd.com>
+> > > > > > > > > > >=20
+> > > > > > > > > > > A virtio-gpu userptr is based on HMM notifier.
+> > > > > > > > > > > Used for let host access guest userspace memory and
+> > > > > > > > > > > notice the change of userspace memory.
+> > > > > > > > > > > This series patches are in very beginning state,
+> > > > > > > > > > > User space are pinned currently to ensure the host
+> > > > > > > > > > > device memory operations are correct.
+> > > > > > > > > > > The free and unmap operations for userspace can be
+> > > > > > > > > > > handled by MMU notifier this is a simple and basice
+> > > > > > > > > > > SVM feature for this series patches.
+> > > > > > > > > > > The physical PFNS update operations is splited into
+> > > > > > > > > > > two OPs in here. The evicted memories won't be used
+> > > > > > > > > > > anymore but remap into host again to achieve same
+> > > > > > > > > > > effect with hmm_rang_fault.
+> > > > > > > > > >=20
+> > > > > > > > > > So in my opinion there are two ways to implement userpt=
+r that make sense:
+> > > > > > > > > >=20
+> > > > > > > > > > - pinned userptr with pin_user_pages(FOLL_LONGTERM). th=
+ere is not mmu
+> > > > > > > > > >      notifier
+> > > > > > > > > >=20
+> > > > > > > > > > - unpinnned userptr where you entirely rely on userptr =
+and do not hold any
+> > > > > > > > > >      page references or page pins at all, for full SVM =
+integration. This
+> > > > > > > > > >      should use hmm_range_fault ideally, since that's t=
+he version that
+> > > > > > > > > >      doesn't ever grab any page reference pins.
+> > > > > > > > > >=20
+> > > > > > > > > > All the in-between variants are imo really bad hacks, w=
+hether they hold a
+> > > > > > > > > > page reference or a temporary page pin (which seems to =
+be what you're
+> > > > > > > > > > doing here). In much older kernels there was some justi=
+fication for them,
+> > > > > > > > > > because strange stuff happened over fork(), but with FO=
+LL_LONGTERM this is
+> > > > > > > > > > now all sorted out. So there's really only fully pinned=
+, or true svm left
+> > > > > > > > > > as clean design choices imo.
+> > > > > > > > > >=20
+> > > > > > > > > > With that background, why does pin_user_pages(FOLL_LONG=
+TERM) not work for
+> > > > > > > > > > you?
+> > > > > > > > >=20
+> > > > > > > > > +1 on using FOLL_LONGTERM.  Fully dynamic memory manageme=
+nt has a huge cost
+> > > > > > > > > in complexity that pinning everything avoids.  Furthermor=
+e, this avoids the
+> > > > > > > > > host having to take action in response to guest memory re=
+claim requests.
+> > > > > > > > > This avoids additional complexity (and thus attack surfac=
+e) on the host side.
+> > > > > > > > > Furthermore, since this is for ROCm and not for graphics,=
+ I am less concerned
+> > > > > > > > > about supporting systems that require swappable GPU VRAM.
+> > > > > > > >=20
+> > > > > > > > Hi Sima and Demi,
+> > > > > > > >=20
+> > > > > > > > I totally agree the flag FOLL_LONGTERM is needed, I will ad=
+d it in next
+> > > > > > > > version.
+> > > > > > > >=20
+> > > > > > > > And for the first pin variants implementation, the MMU noti=
+fier is also
+> > > > > > > > needed I think.Cause the userptr feature in UMD generally u=
+sed like this:
+> > > > > > > > the registering of userptr always is explicitly invoked by =
+user code like
+> > > > > > > > "registerMemoryToGPU(userptrAddr, ...)", but for the userpt=
+r release/free,
+> > > > > > > > there is no explicit API for it, at least in hsakmt/KFD sta=
+ck. User just
+> > > > > > > > need call system call "free(userptrAddr)", then kernel driv=
+er will release
+> > > > > > > > the userptr by MMU notifier callback.Virtio-GPU has no othe=
+r way to know if
+> > > > > > > > user has been free the userptr except for MMU notifior.And =
+in UMD theres is
+> > > > > > > > no way to get the free() operation is invoked by user.The o=
+nly way is use
+> > > > > > > > MMU notifier in virtio-GPU driver and free the correspondin=
+g data in host by
+> > > > > > > > some virtio CMDs as far as I can see.
+> > > > > > > >=20
+> > > > > > > > And for the second way that is use hmm_range_fault, there i=
+s a predictable
+> > > > > > > > issues as far as I can see, at least in hsakmt/KFD stack. T=
+hat is the memory
+> > > > > > > > may migrate when GPU/device is working. In bare metal, when=
+ memory is
+> > > > > > > > migrating KFD driver will pause the compute work of the dev=
+ice in
+> > > > > > > > mmap_wirte_lock then use hmm_range_fault to remap the migra=
+ted/evicted
+> > > > > > > > memories to GPU then restore the compute work of device to =
+ensure the
+> > > > > > > > correction of the data. But in virtio-GPU driver the migrat=
+ion happen in
+> > > > > > > > guest kernel, the evict mmu notifier callback happens in gu=
+est, a virtio CMD
+> > > > > > > > can be used for notify host but as lack of mmap_write_lock =
+protection in
+> > > > > > > > host kernel, host will hold invalid data for a short period=
+ of time, this
+> > > > > > > > may lead to some issues. And it is hard to fix as far as I =
+can see.
+> > > > > > > >=20
+> > > > > > > > I will extract some APIs into helper according to your requ=
+est, and I will
+> > > > > > > > refactor the whole userptr implementation, use some callbac=
+ks in page
+> > > > > > > > getting path, let the pin method and hmm_range_fault can be=
+ choiced
+> > > > > > > > in this series patches.
+> > > > > > >=20
+> > > > > > > Ok, so if this is for svm, then you need full blast hmm, or t=
+he semantics
+> > > > > > > are buggy. You cannot fake svm with pin(FOLL_LONGTERM) userpt=
+r, this does
+> > > > > > > not work.
+> > > > > > >=20
+> > > > > > > The other option is that hsakmt/kfd api is completely busted,=
+ and that's
+> > > > > > > kinda not a kernel problem.
+> > > > > > > -Sima
+> > > > > >=20
+> > > > > > On further thought, I believe the driver needs to migrate the p=
+ages to
+> > > > > > device memory (really a virtio-GPU blob object) *and* take a FO=
+LL_LONGTERM
+> > > > > > pin on them.  The reason is that it isn=E2=80=99t possible to m=
+igrate these pages
+> > > > > > back to "host" memory without unmapping them from the GPU.  For=
+ the reasons
+> > > > > > I mention in [1], I believe that temporarily revoking access to=
+ virtio-GPU
+> > > > > > blob objects is not feasible.  Instead, the pages must be treat=
+ed as if
+> > > > > > they are permanently in device memory until guest userspace unm=
+aps them
+> > > > > > from the GPU, after which they must be migrated back to host me=
+mory.
+> > > > >=20
+> > > > > Discussion on IRC indicates that migration isn't reliable.  This =
+is
+> > > > > because Linux core memory management is largely lock-free for
+> > > > > performance reasons, so there is no way to prevent temporary elev=
+ation
+> > > > > of a page's reference count.  A page with an elevated reference c=
+ount
+> > > > > cannot be migrated.
+> > > > >=20
+> > > > > The only alternative I can think of is for the hypervisor to perf=
+orm the
+> > > > > migration.  The hypervisor can revoke the guest's access to the p=
+age
+> > > > > without the guest's consent or involvement.  The host can then re=
+place
+> > > > > the page with one of its own pages, which might be on the CPU or =
+GPU.
+> > > > > Further migration between the CPU and GPU is controlled by the ho=
+st
+> > > > > kernel-mode driver (KMD) and host kernel memory management.  The =
+guest
+> > > > > kernel driver must take a FOLL_LONGTERM pin before telling the ho=
+st to
+> > > > > use the pages, but that is all.
+> > > > >=20
+> > > > > On KVM, this should be essentially automatic, as guest memory rea=
+lly is
+> > > > > just host userspace memory.  On Xen, this requires that the backe=
+nd
+> > > > > domain can revoke fronted access to _any_ frontend page, or at le=
+ast
+> > > > > frontend pages that have been granted to the backend.  The backen=
+d will
+> > > > > then need to be able to handle page faults for the frontend pages=
+, and
+> > > > > replace the frontend pages with its own pages at will.  Furthermo=
+re,
+> > > > > revoking pages that the backend has installed into the frontend m=
+ust
+> > > > > never fail, because the backend will panic if it does fail.
+> > > > >=20
+> > > > > Sima, is putting guest pages under host kernel control the only o=
+ption?
+> > > > > I thought that this could be avoided by leaving the pages on the =
+CPU if
+> > > > > migration fails, but that won't work because there will be no way=
+ to
+> > > > > migrate them to the GPU later, causing performance problems that =
+would
+> > > > > be impossible to debug.  Is waiting (possibly forever) on migrati=
+on to
+> > > > > finish an option?  Otherwise, this might mean extra complexity in=
+ the
+> > > > > Xen hypervisor, as I do not believe the primitives needed are cur=
+rently
+> > > > > available.  Specifically, in addition to the primitives discussed=
+ at Xen
+> > > > > Project Summit 2024, the backend also needs to intercept access t=
+o, and
+> > > > > replace the contents of, arbitrary frontend-controlled pages.
+> > > >=20
+> > > > Hi Demi,
+> > > >=20
+> > > > I agree that to achieve the complete SVM feature in virtio-GPU, it =
+is
+> > > > necessary to have the hypervisor deeply involved and add new featur=
+es.
+> > > > It needs solid design, I saw the detailed reply in a another thread=
+, it
+> > > > is very helpful,looking forward to the response from the Xen/hyperv=
+isor
+> > > > experts.
+> > >=20
+> > >  From further discussion with Sima, I suspect that virtio-GPU cannot
+> > > support SVM with reasonable performance.  Native contexts have such g=
+ood
+> > > performance for graphics workloads because graphics workloads very ra=
+rely
+> > > perform blocking waits for host GPU operations to complete, so one can
+> > > make all frequently-used operations asynchronous and therefore hide t=
+he
+> > > guest <=3D> host latency.  SVM seems to require many synchronous GPU
+> > > operations, and I believe those will severely harm performance with
+> > > virtio-GPU.
+> > >=20
+> > > If you need full SVM for your workloads, I recommend using hardware
+> > > SR-IOV.  This should allow the guest to perform GPU virtual memory
+> > > operations without host involvement, which I expect will be much fast=
+er
+> > > than paravirtualizing these operations.  Scalable I/O virtualization
+> > > might also work, but it might also require paravirtualizing the
+> > > performance-critical address-space operations unless the hardware has
+> > > stage 2 translation tables.
+> > >=20
+> >=20
+> > Yes I think so, the SR-IOV or some other hardware virtualization are cl=
+ean
+> > design for ROCm/compute currently. But actually those hardware features
+> > supported solution also have their own limitation, like high hardware c=
+ost
+> > and the performance decreasing caused by different guest VMs hardware
+> > workload schedule. We are trying a low-cost, high-performance virtualiz=
+ation
+> > solution, it appears to be difficult to support full feature VS SR-IOV =
+at
+> > present. But it doesn't prevent us from enabling part of functions.
+> >=20
+> > > > So for the current virito-GPU userptr implementation, It can not su=
+pport the
+> > > > full SVM feature, it just can only let GPU access the user space me=
+mory,
+> > > > maybe can be called by userptr feature. I think I will finish this =
+small
+> > > > part firstly and then to try to complete the whole SVM feature.
+> > >=20
+> > > I think you will still have problems if the host is able to migrate
+> > > pages in any way.  This requires that the host install an MMU notifier
+> > > for the pages it has received from the guest, which in turn implies t=
+hat
+> > > the host must be able to prevent the guest from accessing the pages.
+> > > If the pages are used in grant table operations, this isn't possible.
+> > >=20
+> > > If you are willing to have the pages be pinned on the host side things
+> > > are much simpler.  Such pages will always be in system memory, and wi=
+ll
+> > > never be able to migrate to VRAM.  This will result in a performance
+> > > penalty and will likely require explicit prefetching by programs using
+> > > ROCm, but this may be acceptable for your use-cases.  The performance
+> > > penalty is the same as that with XNACK disabled, which is the case for
+> > > all RDNA2+ GPUs, so all code that aims to be portable to recent consu=
+mer
+> > > hardware will have to account for it anyway.
+> >=20
+> > Totally agreed. Actually memory migrating to VRAM is very common in GFX
+> > side, but in ROCm/KFD, maybe it can be disabled and not often used as f=
+ar as
+> > I know. ROCm/KFD always uses SDMA to transfer or copy data maybe this is
+> > faster than migrating to VRAM (needs further verification).
+> > But we have some method to workaround it. Really thanks for your remind=
+ing.
+>=20
+> I think you will do okay if you treat virtio-GPU as providing a virtual
+> GPU with no XNACK support.  XNACK is necessary for migrating pages
+> between GPU and CPU based on demand, and it is this migration that is
+> so hard to implement.  Furthermore, I highly doubt that the combination
+> of AMDKFD and the hardware you are targeting even supports XNACK.
+>=20
+> At Xen Project Summit 2024, AMD mentioned that it wanted to enable both
+> rendering (Vulkan/OpenGL) and compute (ROCm) with virtio-GPU native
+> contexts under Xen.  The only GPUs for which AMDKFD will enable XNACK
+> support are GFX9 GPUs, which are GCN and CDNA.  Shipping a GCN GPU in a
+> new design would be very unusual and CDNA (Instinct) accelerators do not
+> support graphics, so either AMD is using separate devices for compute
+> and graphics or the workloads will run with no XNACK support.  Since you
+> mention HW cost as an important consideration, I suspect the latter.
+>=20
+> I believe that the Instinct accelerators that support XNACK also support
+> SR-IOV, but if you wish to combine XNACK and virtio-GPU, this should be
+> possible subject to caveats.  The main caveat is that under no
+> circumstances can the host's Xen driver install an MMU notifier for
+> pages that the guest can use in grant table operations or DMA.  A driver
+> that installs an MMU notifier promises that it can block access to
+> pages in a bounded amount of time, and if the guest can DMA to the pages
+> or grant them to other domains this is not possible.  Without the Xen
+> driver installing an MMU notifier, there is no way for the pages to be
+> migrated to the GPU without risking use-after-free or at least data
+> corruption.  Instead, one of the following options will be needed:
+>=20
+> 1. hipMallocManaged() allocates the memory from the backend using the
+>    Map primitive discussed elsewhere.  Such memory is not mappable in
+>    the IOMMU (if there is an assigned PCI device) and cannot be used for
+>    grant table operations.  Memory allocated via system allocators
+>    (anonymous pages) is not able to be migrated.
+>=20
+> 2. The frontend uses shadow buffers for all I/O.  This allows the
+>    backend to use a new Steal primitive to revoke the guest's accesses
+>    to anonymous pages and handle page faults accordingly.
+>=20
+> 3. Same as 2 except that the frontend allocates all memory (except
+>    bounce buffers) from the backend, just like a KVM guest does, rather
+>    than from the Xen toolstack.
+>=20
+> 4. The frontend tries to migrate the pages to backend-provided ones, and
+>    falls back to leaving them pinned on the CPU.  The frontend's MMU
+>    notifier tells the backend to stop accessing the pages, blocking
+>    until the backend confirms this.  The frontend then moves the pages
+>    to its own memory and returns from the notifier.  This may require
+>    new AMDKFD APIs.
+>=20
+> 5. Same as 4 except that the frontend uses hmm_range_fault to move the
+>    pages to the backend in response to GPU page faults.  This requires a
+>    frontend <-> backend round-trip for each fault (slooooow) so a new
+>    fast mechanism for this might be needed.
+> --=20
+> Sincerely,
+> Demi Marie Obenour (she/her/hers)
+> Invisible Things Lab
 
-...
+CC Simona Vetter
+--=20
+Sincerely,
+Demi Marie Obenour (she/her/hers)
+Invisible Things Lab
 
-> program runs a huge loop at each schedule
+--iF+xZbPqvFG3L78Z
+Content-Type: application/pgp-signature; name="signature.asc"
 
-You've discovered bpf iterators and said, rephrasing,
-"loops can take a long time" and concluded with:
-"This is an inherent flaw in BPF".
+-----BEGIN PGP SIGNATURE-----
 
-This kind of rhetoric is not helpful.
-People that wanted to abuse bpf powers could have done it 10 years
-ago without iterators, loops, etc.
-One could create a hash map and populate it with collisions
-and long per bucket link lists. Though we have random seed with enough
-persistence hashtab becomes slow.
-Then just do bpf_map_lookup_elem() from the prog.
-This was a known issue that is gradually being fixed.
+iQIzBAEBCAAdFiEEopQtqVJW1aeuo9/sszaHOrMp8lMFAmemxLYACgkQszaHOrMp
+8lNYBw/7Be64tzuwDz/4BVd7UhUbrRB8Wq4mDkUNmrPQnLKzqx/9uHVjPgutkOoi
+XC9yonehg1OBMEg9ZNCiTJjVwPYe7ps//mF1XWqe9gicB7nmbRXdEmqe9ZzOtnMV
+Fci/nKtDRE1KkknwMKh01lrR/9tX1gd7RcekZPgZcC9FZ2iM1yNMwdSK+ypcnBSg
+m4l33YDjLltNa0qfrBWPREASBNnp4THLyxJlkxgENCo5YNbEsBuGYT/VL+oseaCJ
+CZWQD0u4WTCRCzNRPwSymUm9PTyhhUJWeQfK8AWBeR5UfOe2qlnheLfa1q6o4UR/
+EipGcZbtPF9lPVII3ek8XxaLPQOM2ug16wk/HvW+4BprOQ1J0+tyZrg/MXdjubLB
+o9sQcGv/+YQlsg0UXsy1rbRZbpht+Ybm9bpSiQLSYZSFO+Q5jbK6m/wCbX/JGAgo
+X4VFiNBjaFvVFgnoNYZfc+KKNHCsMBrV6dMj2B1xEW8tnIVNisn8aIyf4W8sFKBr
+Eo7A3/aRm84Go4141q/Xp+SS45kAHJxa929yOe1GG+NVJQR6lSW4Xa2Vax+xEmDN
+YCoivjfuyX9x82AqS4KAwkAIL2nJibrlOEt8Gtb8Oaq9pgDZX1Yb3AZRW63biGvD
+rmOLS713iMNBoMo6O7ZHgrIpM9+F+16JBZsVmk4HkIAeB4PHI44=
+=eCCo
+-----END PGP SIGNATURE-----
 
-> Could you please share a link to the patch? I am curious how we can
-> fix this.
-
-There is no "fix" for the iterator. There is no single patch either.
-The issues were discussed over many _years_ in LPC and LSFMM.
-Exception logic was a step to fixing it.
-Now we will do "exceptions part 2" or will rip out exceptions completely
-and go with "fast execute" approach.
-When either approach works we can add a watchdog (and other mechanisms)
-to cancel program execution.
-Unlike user space there is no easy way to sigkill bpf prog.
-We have to free up all resources cleanly.
-
-> Yes, I am willing to help, so I included a "Possible improvements"
-> section.
-
-With rants like "inherent flaw in BPF" it's hard to take
-your offer of help seriously.
-
-> I am also working on another patch about filters that we discussed
-> earlier, although it still needs some time.
-
-Pls focus on landing that first.
+--iF+xZbPqvFG3L78Z--
