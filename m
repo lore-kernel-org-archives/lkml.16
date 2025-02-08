@@ -1,194 +1,108 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6CC2475DE
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 13:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9E31A7264;
+	Sat,  8 Feb 2025 13:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739020808; cv=none; b=SlTAPr4yl1nmiOJI6cXiGcjCYKjYK48Qm98uCL1Gsa6qKxYFzWw6DS9LjPU2XT0Keb1KR0gW3SC7fXBm1ElkS5dUAviXFx1dNfuXbJJRiS2u4tRoX10YTBXE2jTBAtHy0Nl9BIu/QLpp5Q5JnlR5u7TSOdG5uI5i+yUtuJdjQec=
+	t=1739020838; cv=none; b=u4wmEI2uDrkMVJ432IPU68j25Kx9QFgYVfgU9Ow4jVU98nHx7vGwuMe2jim9MyF17CLbWZicYoL6OiCswWAZ6jzZv0WV5zUpL6JuG/Iq3GGhqMpats8bc0fm1c50ZtTa037LtuLINEk+xtqEEOwcBRh0wl0i4ewHwH0hgvgIPdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739020808; c=relaxed/simple;
-	bh=uVwyzt/tItFSCsM1garOIavaPp0mOJ/IxdrktLEFWqg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EIO7T4awU75jZZ+zptDRkUG3ikEDNPzHIjvl7qZsJys/MMvhl0vp47uSvct8ZFPFypFlkkZCkeBmHFvkvDmP46dANesNRSNGtEUqBTnvfIrqImd2pWRXCYPC9uK1Gk+4d+nh4Rsg7xkw9s51lldFhrJR3g+ERsXi3auyZX9C0BU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=DItOc9Tk; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1739020838; c=relaxed/simple;
+	bh=9W1Za/kbQu2xjBOIJYW7uwANkTVDwhxj/uoxldA8a54=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nh8Xv/4U/1KCMb0rd/m78bwupbnc6jLosrbB6ErD3WNY4jf950SlnjyjHpxbMZ7/Pw0an+hodFS3n9CUQ2BkzNWQxa6lDGvL63O65YK8YQyYGi25MgmabzIYRdBIyQBGVKbEk3Tb/OX4vXn2d7jKekfqGNOS1Jl9jwWx9SRsVQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RrOIag8i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DItOc9Tk"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2b29662f823so858245fac.3
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 05:20:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1739020806; x=1739625606; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qQXBJesm6hdX6sdQOLuuOTO47mcoibYoHxWWx1GQTIY=;
-        b=DItOc9TkGvW7YFT8X3mShOWC/eCYYGyyDhy9Hg6shC8nrlS6wIS2OZN2qhe4oE3IPr
-         gj0cbfwoUv2Yg7KYqUyZh9jQZCaXAAqM2icG8kz0d+BxC0I8qMNMmIRf2y9yqy5AtsoX
-         SMK02Bhzp438RfxT8VwaL95Ghag5LJeEMSurM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739020806; x=1739625606;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qQXBJesm6hdX6sdQOLuuOTO47mcoibYoHxWWx1GQTIY=;
-        b=eIikUKaNnqIq5/iLUrNm0etuPUZb5GSmJHXU+S/RRHM9M+lEMReB3coSkdZqmbypAz
-         EFZOc95NYkQDirluJRd4eWHpyKTjqd0VZeEqR2j/U+9x8sFmraVpQDyk+zb86z54ZKfO
-         S4JtmgzTOq6GTFv4nkalzad2Qbea7S1OjZ5nRX8Hi2fu10JmHSHj0CuZZvzBnxUiScEU
-         sfauwVRyoJ39oQeTAap6gadP04ObSZuxgtPcoV3hpv4h2wg3pLYS0XHUfAj23ZQsazBY
-         DluWVnKUdpE/Fa2dNS2Msx4EnZv0Xs8KJMEp/OUB+xvtyFgnztv1r/YcAxLqXsxB6mRK
-         K0uQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVOL/DdFgpzQ9i9PNkPzzd5zHan5asXTNmSEwhFPEgB1NUtzvR2ZaLyv9SZqlx3zt0wAYGlx9a3VLHRAYA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxfo/pAMsDvExwBdePxsftohGi5yn2JcvWUntj1qVRAyGm++dUV
-	x+A05V5t55KgxSncLX2x3XcM7izpiTHo10RkezZsaFgtIwoBWGfzTpEgelsXiE+rSWcf224IwWe
-	LOf4NgttqA4ba3YIZSFHVkxHb6qVxayeu/eyL
-X-Gm-Gg: ASbGncu4OIkhkVCTHnX1DxElAW2AuO6fJFkGpbj95fzKQ3VzfQNnhlVciYiZsE3wHKI
-	6zIBGSLyJkpZTXt9dmAuNEELHMT2MKvvBc/1PyNudDe3gIT4As+klnKnb6+rTLJlxWwuIdQ5g
-X-Google-Smtp-Source: AGHT+IHUDMFMNeFfQLpuCIinoaH8vwun17sJr30ypK/Vql6OT2GgYZmfbd5kAWijhOAl1ZPv5BoaGZSk6pf/1izXE18=
-X-Received: by 2002:a05:6870:9d83:b0:2b7:fc95:66e1 with SMTP id
- 586e51a60fabf-2b83eccb879mr3749132fac.19.1739020806030; Sat, 08 Feb 2025
- 05:20:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RrOIag8i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E52FAC4CED6;
+	Sat,  8 Feb 2025 13:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739020837;
+	bh=9W1Za/kbQu2xjBOIJYW7uwANkTVDwhxj/uoxldA8a54=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RrOIag8iqPc6KucVE91+M9OmAQtQ+pTpaePLyLuUomKErjy7CfkIoji0E2gJGBrPP
+	 juxtLBHD4HXGM+K2063t/St1rKXOYVYo2GJgEdWTCyCHAGX43DGvMJJIssiVRh0vdh
+	 naUzKVmpMN6/8o6jJHrA5XRi6FPUVwpCQCHT4Eresz0CpkfJud0IUbEuT6cnMvvWEJ
+	 F5lZE8DaR8bbeeC+a0Zaff3qqIWzgDvOPYXTtwoKZASCtLqZ99Jb+2CCE2ewI8su1a
+	 NZ7Qr23h/O7RZZBcQQC+CIbYF3LigoEkwoBcQR/tZpK5pZAvGGr9qE5ofDljpaqJJs
+	 vYWfToR/We03g==
+Date: Sat, 8 Feb 2025 13:20:22 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, David Lechner <dlechner@baylibre.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, Geert
+ Uytterhoeven <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>, Peter Rosin
+ <peda@axentia.se>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vinod Koul
+ <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Nuno
+ =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi
+ Iwai <tiwai@suse.com>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH v2 00/13] gpiolib: add gpiod_multi_set_value_cansleep
+Message-ID: <20250208132022.564e7a46@jic23-huawei>
+In-Reply-To: <CAHp75VdmN2wqwwnea0gtTQJ+Y5twQaJp6iEL2esEMCHDi8bvVg@mail.gmail.com>
+References: <20250206-gpio-set-array-helper-v2-0-1c5f048f79c3@baylibre.com>
+	<CAMRc=Mf9WQjVXvea7tHx0MJG2H8Yqxw=zGqvjp7dfD7+=huDKw@mail.gmail.com>
+	<CAPDyKFoNuXpTEm1rLPvAgib+ugqr7XyETZhfrNr6ypOOKRwjXQ@mail.gmail.com>
+	<CAHp75VdmN2wqwwnea0gtTQJ+Y5twQaJp6iEL2esEMCHDi8bvVg@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <a6b081ab-55fe-4d0c-8f69-c5e5a59e9141@stanley.mountain>
-In-Reply-To: <a6b081ab-55fe-4d0c-8f69-c5e5a59e9141@stanley.mountain>
-From: Selvin Xavier <selvin.xavier@broadcom.com>
-Date: Sat, 8 Feb 2025 18:49:53 +0530
-X-Gm-Features: AWEUYZnp-AswmT8TAXm8pvK2uC8j2IAW8B4F_BDv_oWdyoQAsMQ3lGMHqKJjoKw
-Message-ID: <CA+sbYW1L=RDfw2pgte5Ut6kHqrN_v1_h395+PYYroOpRM6Z3zg@mail.gmail.com>
-Subject: Re: [PATCH next] RDMA/bnxt_re: Fix buffer overflow in debugfs code
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000006b0437062da15508"
-
---0000000000006b0437062da15508
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 7, 2025 at 2:46=E2=80=AFPM Dan Carpenter <dan.carpenter@linaro.=
-org> wrote:
->
-> Add some bounds checking to prevent memory corruption in
-> bnxt_re_cc_config_set().  This is debugfs code so the bug can only be
-> triggered by root.
->
-> Fixes: 656dff55da19 ("RDMA/bnxt_re: Congestion control settings using deb=
-ugfs hook")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-Acked-by: Selvin Xavier <selvin.xavier@broadcom.com>
+On Fri, 7 Feb 2025 14:20:16 +0200
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Thanks,
-Selvin
-> ---
->  drivers/infiniband/hw/bnxt_re/debugfs.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/infiniband/hw/bnxt_re/debugfs.c b/drivers/infiniband=
-/hw/bnxt_re/debugfs.c
-> index f4dd2fb51867..d7354e7753fe 100644
-> --- a/drivers/infiniband/hw/bnxt_re/debugfs.c
-> +++ b/drivers/infiniband/hw/bnxt_re/debugfs.c
-> @@ -285,6 +285,9 @@ static ssize_t bnxt_re_cc_config_set(struct file *fil=
-p, const char __user *buffe
->         u32 val;
->         int rc;
->
-> +       if (count >=3D sizeof(buf))
-> +               return -EINVAL;
-> +
->         if (copy_from_user(buf, buffer, count))
->                 return -EFAULT;
->
-> --
-> 2.47.2
->
+> On Fri, Feb 7, 2025 at 11:48=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.o=
+rg> wrote:
+> > On Fri, 7 Feb 2025 at 08:49, Bartosz Golaszewski <brgl@bgdev.pl> wrote:=
+ =20
+> > > On Thu, Feb 6, 2025 at 11:48=E2=80=AFPM David Lechner <dlechner@bayli=
+bre.com> wrote: =20
+>=20
+> ...
+>=20
+> > > > Maintainers, if you prefer to have this go through the gpio tree, p=
+lease
+> > > > give your Acked-by:, otherwise I will resend what is left after the=
+ next
+> > > > kernel release. =20
+>=20
+> > > I can provide an immutable branch for the entire series for everyone
+> > > to pull or I can apply patch one, provide an immutable branch and
+> > > every subsystem can take their respective patches. What do you prefer=
+? =20
+> >
+> > The changes look small and trivial to me. I wouldn't mind if you take
+> > them all (at least for mmc). An immutable branch would be good, if it
+> > turns out that we need to pull them. =20
+>=20
+> +1 here, the potential user for immutable branch/tag is IIO.
+> The rest looks trivial and unlikely to have conflicts.
 
---0000000000006b0437062da15508
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+Whilst I'm not sure if we'll need it, definitely good to have immutable
+branch just in case.
 
-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
-FYMZp2DojLAq9f4Oi2OBetbnWxo0WGycXpmq/jC4PUx2u9mazQ79i80VLagGRshWniESXuf+SYG8
-+zBimjld9ZZnwm7itHAZdtme4YYFxx+EHa4PUxPV8t+hPHhsiIjirPa1pVXPbQIDAQABo4IB2zCC
-AdcwDgYDVR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDov
-L3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAu
-Y3J0MEEGCCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29u
-YWxzaWduMmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0
-cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBA
-MD6gPKA6hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2Ey
-MDIwLmNybDAlBgNVHREEHjAcgRpzZWx2aW4ueGF2aWVyQGJyb2FkY29tLmNvbTATBgNVHSUEDDAK
-BggrBgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQU3TaH
-dsgUhTW3LwObmZ20fj+8Xj8wDQYJKoZIhvcNAQELBQADggEBAAbt6Sptp6ZlTnhM2FDhkVXks68/
-iqvfL/e8wSPVdBxOuiP+8EXGLV3E72KfTTJXMbkcmFpK2K11poBDQJhz0xyOGTESjXNnN6Eqq+iX
-hQtF8xG2lzPq8MijKI4qXk5Vy5DYfwsVfcF0qJw5AhC32nU9uuIPJq8/mQbZfqmoanV/yadootGr
-j1Ze9ndr+YDXPpCymOsynmmw0ErHZGGW1OmMpAEt0A+613glWCURLDlP8HONi1wnINV6aDiEf0ad
-9NMGxDsp+YWiRXD3txfo2OMQbpIxM90QfhKKacX8t1J1oAAWxDrLVTJBXBNvz5tr+D1sYwuye93r
-hImmkM1unboxggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWdu
-IG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIw
-Agxy+Cu4x/7lM0zxY7cwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIKEvwiYAxzrt
-phzvga6/eHeL5LklF1Il+PwawEPiIk5NMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZI
-hvcNAQkFMQ8XDTI1MDIwODEzMjAwNlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJ
-YIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcN
-AQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCWdp9QiJ5UM7EkqoS5t8kDgZ+P6/M2
-cnoVTc2ZyjjNsIVv4Sy/KQO6PAPSfkjU47Rv1Du2o3fGuPfIQqhAkwS86M/gI2aAdgHImDQ9VpFV
-6KskKVeO2wGrzQKLg0aodXK7H5AGlP5mCtm8JrtbJ9lNC05lhEL5wvtfYXgGZoL8ru4TpgQgqUxe
-12tgX56yeRBlxACJ1Wy7nZrEpoYYvH+0bSB7fa2c921Q3f20j3XUatcppnZqcsVYi6t57TvEUY2F
-JAtR3QkoWDxW1snT2lyibu6QasoFHp0UTEleZA616NhMkEjFavKHX0vLoMPeigODC6D2Ir1tEZN0
-y8Lor9To
---0000000000006b0437062da15508--
+There is another change to the ad7606 on list, but it's no where near
+this code so shouldn't be a problem however this goes in.
+My slight preference would be an immutable with a tag on patch 1.
+I'll pull that and apply the IIO ones on top.
+
+If you want to grab the lot though that should be fine as well.
+
+Jonathan
+
+>=20
+
