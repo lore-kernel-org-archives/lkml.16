@@ -1,176 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549FA20328;
-	Sat,  8 Feb 2025 14:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042EE20328
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 14:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739024293; cv=none; b=Z8RdPYz3cbqheYE+NnVz62gi4CbtEUE9CG//yYtnyZysXlQzZlt8rtFth3VdJ+vD4mbgtWy7qGI8iqqNyw2TOSPXj3nwjkWnhFcmB/QMWg42liUXtgMSrgRVXMRzLpdaPrAI2Ko5maTobCjODJ8Cnf/tHyyQ25Ls+kw1nUiAMAg=
+	t=1739024504; cv=none; b=J3kn9zZPfCE26VenQongYzCqdnK7tLlBNo3O9+Q3w3ao6r6qx4zSTAw5gwJs6DX2nh42RSvf64oOStcFDJVoz3+5Qt3y8Fi0eLoKIkJ5F/Y6H6RZ55C/I73byfpBoCmIVVLlxi8SJgpP7h7nVj5YrOhh+PtpysEY5Xv6L80sD4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739024293; c=relaxed/simple;
-	bh=VPpd2YYWjZluEJs9Qvp1Y2nnNlnf0rQUcWOQWnGi/4E=;
+	s=arc-20240116; t=1739024504; c=relaxed/simple;
+	bh=WU+sOOHT6k3K6YZ/b2hxBHd5CiMb8fuXeIQVlDyaYqo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i03lqfHqxa2U5v3DTwrs3wNY4J8bOynkIVdsm3iuJ18vNUgpZNz4aEaZkO/sKJPscsbKjHVmghsf88pe+ftq4QEXfoNM9TfXQnQ+CEwFPGjJ8UXZl6t/mnH7VHLLGcVEmaPXxJvd9z98Wd2CAjN7gWPHwX7ca8Q6lTORX6Y99C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nbUq05oo; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=evESzwjg4PUIFJMKp1pFZJzw2cGh7WuReART8yRDRuPDiT3nZdBDigqSN6ySxA88LLfPjKO93EaMniMaX28KvL87HcCSTZ1Q3Ol/2H8falMfI7Z6VTEjIqfZCaZEtAI7wcKWa1ErjZF14XIQA+tzj34FKMDp+Jz8/ixo+MdKzwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ENXDSNgV; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nbUq05oo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739024290; x=1770560290;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VPpd2YYWjZluEJs9Qvp1Y2nnNlnf0rQUcWOQWnGi/4E=;
-  b=nbUq05oojgR1cH6uSddvh9ZyyMCKHie15sZ2GCfGEI2YVksj3CQGGbhu
-   7ZDBThtyfUoXmYYzfAFF9ZO0Wz7ZdvFCyu7eOfwsS5WwwkSirATBWqAAN
-   ABTC0rshmo89U/owjU9pnfT7qvDb7SNU4qm+TJQ+ix4kC2Lhqixaw5Ckn
-   cEOPXOAIiGnSusTeZw4yFlZOvpzfb86woGCBPSmNvn6fQ7YP1DceIUqQQ
-   kEXtJ+S4JYYVflUi5mJmDWapudmBvDogP8ZaPMXOUNeqPE2iQ+s7GQeqN
-   K27yV70aoEOWbtbmt8xBzgCBFKSAGbF9+XQLo1UhKLoc9GfGfEfHmkXmb
-   Q==;
-X-CSE-ConnectionGUID: a6VuQ+ByRuuuJDqOZiBVkA==
-X-CSE-MsgGUID: J7dVg1nETcKi0ErbuifjJw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="51044191"
-X-IronPort-AV: E=Sophos;i="6.13,270,1732608000"; 
-   d="scan'208";a="51044191"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 06:18:10 -0800
-X-CSE-ConnectionGUID: 5SCY/wYtTf2L5TycPuB0vA==
-X-CSE-MsgGUID: 0P956+EpRVirLOVEYoefGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,270,1732608000"; 
-   d="scan'208";a="116788686"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 08 Feb 2025 06:18:03 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tglei-00103D-12;
-	Sat, 08 Feb 2025 14:18:00 +0000
-Date: Sat, 8 Feb 2025 22:17:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Frank Li <Frank.Li@nxp.com>, Kishon Vijay Abraham I <kishon@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Niklas Cassel <cassel@kernel.org>,
-	dlemoal@kernel.org, jdmason@kudzu.us, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, imx@lists.linux.dev
-Subject: Re: [PATCH v14 06/15] PCI: endpoint: Add RC-to-EP doorbell support
- using platform MSI controller
-Message-ID: <202502082204.6PRR3cfG-lkp@intel.com>
-References: <20250207-ep-msi-v14-6-9671b136f2b8@nxp.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ENXDSNgV"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A183E82A;
+	Sat,  8 Feb 2025 15:20:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1739024418;
+	bh=WU+sOOHT6k3K6YZ/b2hxBHd5CiMb8fuXeIQVlDyaYqo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ENXDSNgV2OV6z8Bh46vXfQTGd1/4d0TTteGN95QOS4Lisju1Ypra8p+rdujk3Qq6O
+	 9IPuwEzFjfx9Dh6f7Z32a504X0Q3Z6PATh+To2SqdD+X1yCidysPhxMe+Qj/0FULVH
+	 xoEfMavuBYbegzpFwXLVwF0qFGERRa7UcD8OnM28=
+Date: Sat, 8 Feb 2025 16:21:25 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Charles Han <hanchunchao@inspur.com>
+Cc: tomi.valkeinen@ideasonboard.com, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+	simona@ffwll.ch, michal.simek@amd.com, vishal.sagar@amd.com,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm: xlnx: zynqmp_dpsub: Add NULL check in
+ zynqmp_audio_init
+Message-ID: <20250208142125.GC21843@pendragon.ideasonboard.com>
+References: <20250208100323.11625-1-hanchunchao@inspur.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250207-ep-msi-v14-6-9671b136f2b8@nxp.com>
+In-Reply-To: <20250208100323.11625-1-hanchunchao@inspur.com>
 
-Hi Frank,
+Hi Charles,
 
-kernel test robot noticed the following build errors:
+Thank you for the patch.
 
-[auto build test ERROR on 00f3246adeeacbda0bd0b303604e46eb59c32e6e]
+On Sat, Feb 08, 2025 at 06:03:22PM +0800, Charles Han wrote:
+> devm_kasprintf() can return a NULL pointer on failure,but this
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/platform-msi-Add-msi_remove_device_irq_domain-in-platform_device_msi_free_irqs_all/20250208-034445
-base:   00f3246adeeacbda0bd0b303604e46eb59c32e6e
-patch link:    https://lore.kernel.org/r/20250207-ep-msi-v14-6-9671b136f2b8%40nxp.com
-patch subject: [PATCH v14 06/15] PCI: endpoint: Add RC-to-EP doorbell support using platform MSI controller
-config: i386-buildonly-randconfig-003-20250208 (https://download.01.org/0day-ci/archive/20250208/202502082204.6PRR3cfG-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502082204.6PRR3cfG-lkp@intel.com/reproduce)
+s/but/ but/
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502082204.6PRR3cfG-lkp@intel.com/
+> returned value in zynqmp_audio_init() is not checked.
+> Add NULL check in zynqmp_audio_init(), to handle kernel NULL
+> pointer dereference error.
+> 
+> Fixes: 3ec5c1579305 ("drm: xlnx: zynqmp_dpsub: Add DP audio support")
+> Signed-off-by: Charles Han <hanchunchao@inspur.com>
 
-All errors (new ones prefixed by >>):
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-   drivers/pci/endpoint/pci-ep-msi.c: In function 'pci_epf_alloc_doorbell':
->> drivers/pci/endpoint/pci-ep-msi.c:53:15: error: implicit declaration of function 'platform_device_msi_init_and_alloc_irqs' [-Werror=implicit-function-declaration]
-      53 |         ret = platform_device_msi_init_and_alloc_irqs(&epf->dev, num_db, pci_epf_write_msi_msg);
-         |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/endpoint/pci-ep-msi.c: In function 'pci_epf_free_doorbell':
->> drivers/pci/endpoint/pci-ep-msi.c:75:9: error: implicit declaration of function 'platform_device_msi_free_irqs_all' [-Werror=implicit-function-declaration]
-      75 |         platform_device_msi_free_irqs_all(&epf->dev);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +/platform_device_msi_init_and_alloc_irqs +53 drivers/pci/endpoint/pci-ep-msi.c
-
-    26	
-    27	int pci_epf_alloc_doorbell(struct pci_epf *epf, u16 num_db)
-    28	{
-    29		struct pci_epc *epc = epf->epc;
-    30		struct device *dev = &epf->dev;
-    31		struct irq_domain *dom;
-    32		void *msg;
-    33		u32 rid;
-    34		int ret;
-    35		int i;
-    36	
-    37		rid = PCI_EPF_DEVID(epf->func_no, epf->vfunc_no);
-    38		dom = of_msi_map_get_device_domain(epc->dev.parent, rid, DOMAIN_BUS_PLATFORM_MSI);
-    39		if (!dom) {
-    40			dev_err(dev, "Can't find msi domain\n");
-    41			return -EINVAL;
-    42		}
-    43	
-    44		dev_set_msi_domain(dev, dom);
-    45	
-    46		msg = kcalloc(num_db, sizeof(struct pci_epf_doorbell_msg), GFP_KERNEL);
-    47		if (!msg)
-    48			return -ENOMEM;
-    49	
-    50		epf->num_db = num_db;
-    51		epf->db_msg = msg;
-    52	
-  > 53		ret = platform_device_msi_init_and_alloc_irqs(&epf->dev, num_db, pci_epf_write_msi_msg);
-    54		if (ret) {
-    55			/*
-    56			 * The pcie_ep DT node has to specify 'msi-parent' for EP
-    57			 * doorbell support to work. Right now only GIC ITS is
-    58			 * supported. If you have GIC ITS and reached this print,
-    59			 * perhaps you are missing 'msi-map' in DT.
-    60			 */
-    61			dev_err(dev, "Failed to allocate MSI\n");
-    62			kfree(msg);
-    63			return -ENOMEM;
-    64		}
-    65	
-    66		for (i = 0; i < num_db; i++)
-    67			epf->db_msg[i].virq = msi_get_virq(dev, i);
-    68	
-    69		return ret;
-    70	}
-    71	EXPORT_SYMBOL_GPL(pci_epf_alloc_doorbell);
-    72	
-    73	void pci_epf_free_doorbell(struct pci_epf *epf)
-    74	{
-  > 75		platform_device_msi_free_irqs_all(&epf->dev);
+> ---
+>  drivers/gpu/drm/xlnx/zynqmp_dp_audio.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c b/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
+> index fa5f0ace6084..f07ff4eb3a6d 100644
+> --- a/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
+> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp_audio.c
+> @@ -323,12 +323,16 @@ int zynqmp_audio_init(struct zynqmp_dpsub *dpsub)
+>  
+>  	audio->dai_name = devm_kasprintf(dev, GFP_KERNEL,
+>  					 "%s-dai", dev_name(dev));
+> +	if (!audio->dai_name)
+> +		return -ENOMEM;
+>  
+>  	for (unsigned int i = 0; i < ZYNQMP_NUM_PCMS; ++i) {
+>  		audio->link_names[i] = devm_kasprintf(dev, GFP_KERNEL,
+>  						      "%s-dp-%u", dev_name(dev), i);
+>  		audio->pcm_names[i] = devm_kasprintf(dev, GFP_KERNEL,
+>  						     "%s-pcm-%u", dev_name(dev), i);
+> +		if (!audio->link_names[i] || !audio->pcm_names[i])
+> +			return -ENOMEM;
+>  	}
+>  
+>  	audio->base = devm_platform_ioremap_resource_byname(pdev, "aud");
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+
+Laurent Pinchart
