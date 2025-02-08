@@ -1,302 +1,194 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7719B1DF244
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 11:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DEF1B3929;
+	Sat,  8 Feb 2025 11:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739013891; cv=none; b=IVvgZ75kO85BwFM/WQfbT7M+LCV6gM/dmc6KQMHddHmxNmv/KkypH7opndpcFEOssrw36aSmP0VLIXEqmpTTlbWLqf4IeNZ7VDlBR8+hL5+vvhkxRYYSRIeRsNt5SlQkjDx3pavw5Eu+7OsNhLTfObIgvKxZL08DPJ9ouyn8+1s=
+	t=1739013898; cv=none; b=SC/QHARKlxqmw6usMrEQpgiI/0gw3ASGQn7F8+4W1dtldiWF1W1lQb1MMKLTpG3Ffx6gaTOaUL/Bg5+q8fV3bUP0jGrmcN0BNEQLiuOuF6Y3CIqRgNxC6YhI3TM6tuxsiGUH1qj5b6riTOYcDMkOJATcLB/evMf/RMAO0fyFEJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739013891; c=relaxed/simple;
-	bh=QxCoR5fINOgaRG/7i/sZBWB8ob4zBL1L6L24kHwv/BM=;
+	s=arc-20240116; t=1739013898; c=relaxed/simple;
+	bh=v0kY2q5RP2GhNxjivPWegKlE87r10bfakOnRz0kN0k8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P7jD/Z0k+FmI7QLYGh3L3IWQmnUaTVmP0NoqgQECv0lI3hahPGmjY+1kduq80Qlku2grapA/4uZbWicxqIm+RRDw+OSNVpb1DLMPYuhrzwGoQ2HeIeaITCBrOgHTm8j3wq+8FYzEZRNn4VOFVcdDSHhNQSjsVVVACqZl8J3E6jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jA99cWQI; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=G8+YBUCoGLk8xfLvQHfd5fY1Q1Tghyk+Z3UcU8VrSAEOiS0DD797oOmAXEeicbrnuV80yw13Vtp/98NunetmfrgVLuINSSAO0tfVNGghmuC8YtoKGXHIZzgtV0CRpjvNJUE1kLTkV8uv+K4XX7HNFpSBJA2tr8OV6hhWNPjsgDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDq71QIB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jA99cWQI"
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-8671d8a9c3eso38742241.3
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 03:24:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739013888; x=1739618688; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=UR24c0ybsYSCT638vdO45F5vCET0OjoyBMHeBOmvILQ=;
-        b=jA99cWQIVwP/laXmvPPR8h/MaMlKNrqJq5uYxfmLWzBuDOo4yGcR6Zmk6mMGiL+22j
-         P8qczuU/9ya6Fcccnyv/xKae3lN4GMo0sTw2p9vHCwlxJTgjTi3w6WYShirb2XdmmGne
-         14GVtRCI3bKG9gV7VyB9LbRDhRRnSYhqYfZiIRfoLoXbsCP6GAEKOJ9pUBjC00oF8Rtq
-         TivPCEAiNgz/ebZtr2O80LzpLSTAl6xWUXoQz2Pl69bducqwW9figGDgGLKAjcWDdqxT
-         qA4o7D6l/GScfx4xp1dDlauIHNjwg5DNAbdUTfe5I579sjpiJ/dzJ546o1Elgt5B0IT0
-         s2Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739013888; x=1739618688;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UR24c0ybsYSCT638vdO45F5vCET0OjoyBMHeBOmvILQ=;
-        b=Ll4wHIYLsIu68rl3d3EXqKtDAbx+7gMVX3SSQ0JKcseIymlfvhCQcPln2pVbAuQeM9
-         N63oXB7n3BfalPF7P00kOZ4bSQ0ZH1JMfOMlv7lSoQ3VWMTYwlYQP2vDDNTs++5kmi3Y
-         I/GX0uav2PPA16+Lu4Aqjyy2qKs1SmE78Yuv9XXTf3zqF5OMqJPef5bnSo5TRAHp1HQi
-         IlGCj5olE2VhratS9ySuY3sqeTGHPDFq9SA+sIuCZS85OLD3t7oYOQtP2WwX0BqvdhLi
-         29/DYVdGrM08bjYUq2MCmFIWYJkF5zzG+T5b0ilJzXNzE702agqOn9FOWQ4dAuRlx0av
-         1h3g==
-X-Forwarded-Encrypted: i=1; AJvYcCUueZ9qrjukcTxGNDAndsTpCSbQnEIVL579WYZcIY1hmw30uHPlva+XPbU2t0QiK6nmyff/I4fDoYjWHnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yypk3lAeF1OBm07LrY/GgSxv3j12pkMmrVT9NUTc5g64F/bzEyU
-	RJ580p3n4US8SQzFScj0AbYxdBHb7AO5ikJaDF0IPtTYGJNjGFCdFHhVx4GguzSf6++G2ThgsBO
-	fc37E/zyRBI8n/ggls2RkD3xam0k5HUzvVaSK4LvLCaYt8d30o7g=
-X-Gm-Gg: ASbGncuCHj4CYxPWlfVPeIFxp+6x4hcywDC/4zWWekc3wTvVuhwzQfA6Ys2SdAZSvSz
-	M/wqNb9K2DIJjj4ZBbc+SXeN3iCNDHCemrDlyPdHjhBKzJuuRTRg+pTVNk84xryOZXlBK8sbPxc
-	5M1X+KqO14UZPb7arvygRZrmbFq+dkhQ==
-X-Google-Smtp-Source: AGHT+IF1RRMD7eUyWSo4zZ0nuD/PcQtH1/GOoYgWE/A3nO7nDenaKyW1khMDl4HonWSbq2qwn3LipNrUmvEW01Z/m7Y=
-X-Received: by 2002:a05:6102:32c6:b0:4b2:4877:2de4 with SMTP id
- ada2fe7eead31-4ba85e55589mr5245989137.15.1739013888241; Sat, 08 Feb 2025
- 03:24:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDq71QIB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8D2CC4CED6;
+	Sat,  8 Feb 2025 11:24:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739013897;
+	bh=v0kY2q5RP2GhNxjivPWegKlE87r10bfakOnRz0kN0k8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=qDq71QIB9p5nG6bJipYxnoLHZGDJSFhFhyWjQXe+dGoo5hB85aQvZzlPtWG/lggI9
+	 Ig2YduyYbxFcLbd4TJDU2wRVO792mw2sFE+XLgKXuf6XzMg6f+OnxDH0Ez5sC+aDIB
+	 pB+iD7xBiFfyusFKsvF9qqqqhYFcBnC8kukedvPd4N+sAibiT7b64TnJUwczW22Tyl
+	 ail48RAJ41N2Sx4fQT9dPc6jRk76zhrMIX8xMLsFYRejmeNjoQ0DzHNaUDEwEoGNc0
+	 Q9gZFp4z0fgusja7krrBHb8lP/HdVQo21T93NcJGxJJ4a5AgPISIWbMQdz+cZdnTKA
+	 nRTaYsNocszbQ==
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5f2e31139d9so1503796eaf.0;
+        Sat, 08 Feb 2025 03:24:57 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUwwYBCyHN/OxyPUU4rBl5ws/w+t8cTyGjaA2oOqcTXgSH+UMgGfmRbdFKYUYoNlj6rgG+Daz0o2bO5b9Q=@vger.kernel.org, AJvYcCVZ5SpoiWHonY1WgnLXWYUc0uZjfiykCmn41hbce8d57GWyBUqmjeot7FMdRwMayysXBnQr5kEiO+k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHaT3of5POfNPM2Oy6fkN25Kb8OUa0QxAbCi5FRBMAgFs2F3Bs
+	vnay31P2biA45ZNmbVjEo+01MSxi0RLtxGDYwXGZ//LUfMV1ziwiQ65VVDLXBNifwXL030XGJDP
+	OQCHMS7ALjp0wtAKde+QPPe+hpKQ=
+X-Google-Smtp-Source: AGHT+IGUtyAYBfOlhtXoZxL94yJwaOt4l//XmIev+fbw3I9vvksmNXaU42SX8RaOvXevlk06GW7ZOujF+PpnWBqCdQI=
+X-Received: by 2002:a05:6820:827:b0:5fa:73ed:de8 with SMTP id
+ 006d021491bc7-5fc5e71b079mr4214415eaf.6.1739013897093; Sat, 08 Feb 2025
+ 03:24:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206155234.095034647@linuxfoundation.org>
-In-Reply-To: <20250206155234.095034647@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Sat, 8 Feb 2025 16:54:36 +0530
-X-Gm-Features: AWEUYZkctiuP6MSaer6bJfW68j7DLMOLcCHAn7tCGTVoEJtcXFr3-AbwN1hwwf8
-Message-ID: <CA+G9fYvKzV=jo9AmKH2tJeLr0W8xyjxuVO-P+ZEBdou6C=mKUw@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/389] 6.6.76-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org, Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
-	linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Herbert Xu <herbert@gondor.apana.org.au>, willy@infradead.org, 
-	Pankaj Raghav <p.raghav@samsung.com>
+References: <12630185.O9o76ZdvQC@rjwysocki.net> <009d01db79b9$aecd1c70$0c675550$@telus.net>
+In-Reply-To: <009d01db79b9$aecd1c70$0c675550$@telus.net>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Sat, 8 Feb 2025 12:24:45 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0jELEw3yAoRFLPgEcfBRoUyd6tKSNHO2Q1O6_CoeR1Bng@mail.gmail.com>
+X-Gm-Features: AWEUYZm-gRCi0A1sn3TIJUROeDBBRYieqfiS8FTKYRJKUHGfsYCZFVE-q2W_HYs
+Message-ID: <CAJZ5v0jELEw3yAoRFLPgEcfBRoUyd6tKSNHO2Q1O6_CoeR1Bng@mail.gmail.com>
+Subject: Re: [RFT][PATCH v1] cpuidle: teo: Avoid selecting deepest idle state over-eagerly
+To: Doug Smythies <dsmythies@telus.net>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Christian Loehle <christian.loehle@arm.com>, 
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, 
+	Aboorva Devarajan <aboorvad@linux.ibm.com>, Linux PM <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 6 Feb 2025 at 21:36, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Hi Doug,
+
+On Sat, Feb 8, 2025 at 12:40=E2=80=AFAM Doug Smythies <dsmythies@telus.net>=
+ wrote:
 >
-> This is the start of the stable review cycle for the 6.6.76 release.
-> There are 389 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> Hi Rafael,
 >
-> Responses should be made by Sat, 08 Feb 2025 15:51:12 +0000.
-> Anything received after that time might be too late.
+> On 2025.02.04 12:58 Rafael J. Wysocki wrote:
+> >
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > It has been observed that the recent teo governor update which conclude=
+d
+> > with commit 16c8d7586c19 ("cpuidle: teo: Skip sleep length computation
+> > for low latency constraints") caused the max-jOPS score of the SPECjbb
+> > 2015 benchmark [1] on Intel Granite Rapids to decrease by around 1.4%.
+> > While it may be argued that this is not a significant increase, the
+> > previous score can be restored by tweaking the inequality used by teo
+> > to decide whether or not to preselect the deepest enabled idle state.
+> > That change also causes the critical-jOPS score of SPECjbb to increase
+> > by around 2%.
+> >
+> > Namely, the likelihood of selecting the deepest enabled idle state in
+> > teo on the platform in question has increased after commit 13ed5c4a6d9c
+> > ("cpuidle: teo: Skip getting the sleep length if wakeups are very
+> > frequent") because some timer wakeups were previously counted as non-
+> > timer ones and they were effectively added to the left-hand side of the
+> > inequality deciding whether or not to preselect the deepest idle state.
+> >
+> > Many of them are now (accurately) counted as timer wakeups, so the left=
+-
+> > hand side of that inequality is now effectively smaller in some cases,
+> > especially when timer wakeups often occur in the range below the target
+> > residency of the deepest enabled idle state and idle states with target
+> > residencies below CPUIDLE_FLAG_POLLING are often selected, but the
+> > majority of recent idle intervals are still above that value most of
+> > the time.  As a result, the deepest enabled idle state may be selected
+> > more often than it used to be selected in some cases.
+> >
+> > To counter that effect, add the sum of the hits metric for all of the
+> > idle states below the candidate one (which is the deepest enabled idle
+> > state at that point) to the left-hand side of the inequality mentioned
+> > above.  This will cause it to be more balanced because, in principle,
+> > putting both timer and non-timer wakeups on both sides of it is more
+> > consistent than only taking into account the timer wakeups in the range
+> > above the target residency of the deepest enabled idle state.
+> >
+> > Link: https://www.spec.org/jbb2015/
+> > Tested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >  drivers/cpuidle/governors/teo.c |    6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > --- a/drivers/cpuidle/governors/teo.c
+> > +++ b/drivers/cpuidle/governors/teo.c
+> > @@ -349,13 +349,13 @@
+> >         }
+> >
+> >         /*
+> > -        * If the sum of the intercepts metric for all of the idle stat=
+es
+> > -        * shallower than the current candidate one (idx) is greater th=
+an the
+> > +        * If the sum of the intercepts and hits metric for all of the =
+idle
+> > +        * states below the current candidate one (idx) is greater than=
+ the
+> >          * sum of the intercepts and hits metrics for the candidate sta=
+te and
+> >          * all of the deeper states, a shallower idle state is likely t=
+o be a
+> >          * better choice.
+> >          */
+> > -       if (2 * idx_intercept_sum > cpu_data->total - idx_hit_sum) {
+> > +       if (2 * (idx_intercept_sum + idx_hit_sum) > cpu_data->total) {
+> >                 int first_suitable_idx =3D idx;
+> >
+> >                 /*
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.76-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
+> I have only just started testing the recent idle governor changes,
+> and have not gotten very far yet.
 >
-> thanks,
+> There is a significant increase in processor package power during idle
+> with this patch, about 5 times increase (400%).
+
+Thanks for this data point!
+
+The restoration of the 1.4% benchmark score is not worth this cost IMV.
+
+> My processor: Intel(R) Core(TM) i5-10600K CPU @ 4.10GHz
+> Distro: Ubuntu 24.04.1, server, no desktop GUI.
+> CPU frequency scaling driver: intel_pstate
+> HWP: disabled.
+> CPU frequency scaling governor: performance
 >
-> greg k-h
+> Idle states:
+> $ grep . /sys/devices/system/cpu/cpu0/cpuidle/state*/name
+> /sys/devices/system/cpu/cpu0/cpuidle/state0/name:POLL
+> /sys/devices/system/cpu/cpu0/cpuidle/state1/name:C1_ACPI
+> /sys/devices/system/cpu/cpu0/cpuidle/state2/name:C2_ACPI
+> /sys/devices/system/cpu/cpu0/cpuidle/state3/name:C3_ACPI
+>
+> Test durations were >=3D 45 minutes each.
+>
+> Kernel 6.14-rc1: Includes cpuidle: teo: Cleanups and very frequent wakeup=
+s handling update
+> Average Idle Power: teo governor: 2.199 watts (+25.51%)
+> Average Idle power: menu governor: 1.873 watts (+6.91%)
 
+menu hasn't changed in 6.14-rc1, so this would be variation between
+runs I suppose.
 
-There are three different regressions found and reporting here,
-We are working on bisecting and investigating these issues,
+> Kernel 6.14-rc1-p: Added this patch for teo and "cpuidle: menu: Avoid dis=
+carding useful information when processing recent idle intervals" for menu
+> Average Idle Power: teo governor: 9.401 watts (+436.6%)
+> Only 69.61% idle is in the deepest idle state. More typically it would be=
+ 98% to 99%.
 
-1)
-Regression on qemu-arm64 and FVP noticed this kernel warning running
-selftests: arm64: check_hugetlb_options test case on 6.6.76-rc1 and
-6.6.76-rc2.
+Ah, not good.
 
-Test regression: WARNING-arch-arm64-mm-copypage-copy_highpage
+OK, this clearly doesn't go in the right direction.
 
-------------[ cut here ]------------
-[   96.920028] WARNING: CPU: 1 PID: 3611 at
-arch/arm64/mm/copypage.c:29 copy_highpage
-(arch/arm64/include/asm/mte.h:87)
-[   96.922100] Modules linked in: crct10dif_ce sm3_ce sm3 sha3_ce
-sha512_ce sha512_arm64 fuse drm backlight ip_tables x_tables
-[   96.925603] CPU: 1 PID: 3611 Comm: check_hugetlb_o Not tainted 6.6.76-rc2 #1
-[   96.926956] Hardware name: linux,dummy-virt (DT)
-[   96.927695] pstate: 43402009 (nZcv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
-[   96.928687] pc : copy_highpage (arch/arm64/include/asm/mte.h:87)
-[   96.929037] lr : copy_highpage
-(arch/arm64/include/asm/alternative-macros.h:232
-arch/arm64/include/asm/cpufeature.h:443
-arch/arm64/include/asm/cpufeature.h:504
-arch/arm64/include/asm/cpufeature.h:814 arch/arm64/mm/copypage.c:27)
-[   96.929399] sp : ffff800088aa3ab0
-[   96.930232] x29: ffff800088aa3ab0 x28: 00000000000001ff x27: 0000000000000000
-[   96.930784] x26: 0000000000000000 x25: 0000ffff9b800000 x24: 0000ffff9b9ff000
-[   96.931402] x23: fffffc0003257fc0 x22: ffff0000c95ff000 x21: ffff0000c93ff000
-[   96.932054] x20: fffffc0003257fc0 x19: fffffc000324ffc0 x18: 0000ffff9b800000
-[   96.933357] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
-[   96.934091] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
-[   96.935095] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
-[   96.935982] x8 : 0bfffc0001800000 x7 : 0000000000000000 x6 : 0000000000000000
-[   96.936536] x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000000000000
-[   96.937089] x2 : 0000000000000000 x1 : ffff0000c9600000 x0 : ffff0000c9400080
-[   96.939431] Call trace:
-[   96.939920] copy_highpage (arch/arm64/include/asm/mte.h:87)
-[   96.940443] copy_user_highpage (arch/arm64/mm/copypage.c:40)
-[   96.940963] copy_user_large_folio (mm/memory.c:5977 mm/memory.c:6109)
-[   96.941535] hugetlb_wp (mm/hugetlb.c:5701)
-[   96.941948] hugetlb_fault (mm/hugetlb.c:6237)
-[   96.942344] handle_mm_fault (mm/memory.c:5330)
-[   96.942794] do_page_fault (arch/arm64/mm/fault.c:513
-arch/arm64/mm/fault.c:626)
-[   96.943341] do_mem_abort (arch/arm64/mm/fault.c:846)
-[   96.943797] el0_da (arch/arm64/kernel/entry-common.c:133
-arch/arm64/kernel/entry-common.c:144
-arch/arm64/kernel/entry-common.c:547)
-[   96.944229] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:0)
-[   96.944765] el0t_64_sync (arch/arm64/kernel/entry.S:599)
-[   96.945383] ---[ end trace 0000000000000000 ]---
+> 28.6531% idle time is in state 1. More typically it would be 0.03%
+> Average Idle Power: menu governor: 1.820 watts (+3.9%)
+>
+> Kernel 6.13: before "cpuidle: teo: Cleanups and very frequent wakeups han=
+dling update"
+> Average Idle Power: teo governor: 1.752 watts (reference: 0.0%)
+> Average Idle power: menu governor: 1.909 watts (+9.0%)
 
-2)
-Regression on Gravition-V4 boot has noticed this kernel warning while
-booting the
-6.6.76-rc1 and 6.6.76-rc2.
+Thanks, I'm just going to drop this patch then.
 
-Boot regression: WARNING-crypto-testmgr-alg_test
-
-[   62.438009] ------------[ cut here ]------------
-[   62.440316] alg: self-tests for stdrng using drbg_nopr_hmac_sha512
-failed (rc=-22)
-[   62.440324] WARNING: CPU: 1 PID: 158 at crypto/testmgr.c:5936
-alg_test (crypto/testmgr.c:5936 (discriminator 1))
-[   62.443128] Modules linked in:
-[   62.443729] CPU: 1 PID: 158 Comm: cryptomgr_test Not tainted 6.6.76-rc2 #1
-[   62.445029] Hardware name: Amazon EC2 r8g.large/, BIOS 1.0 11/1/2018
-[   62.446248] pstate: 63400005 (nZCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
-[   62.447588] pc : alg_test (crypto/testmgr.c:5936 (discriminator 1))
-[   62.448306] lr : alg_test (crypto/testmgr.c:5936 (discriminator 1))
-[   62.449029] sp : ffff8000817c3d40
-[   62.449683] x29: ffff8000817c3d40 x28: ffffcf33cddf6388 x27: 0000000000000059
-[   62.451056] x26: 00000000ffffffea x25: 00000000ffffffff x24: ffffcf33cf699000
-[   62.452417] x23: ffffcf33cddf6388 x22: 000000000000000c x21: ffff0003c4627a80
-[   62.453786] x20: ffff0003c4627a00 x19: 0000000000000058 x18: 00000000fffffffe
-[   62.455163] x17: 72282064656c6961 x16: 6620323135616873 x15: ffff8000817c3950
-[   62.456545] x14: 0000000000000000 x13: 00000000000003f2 x12: 00000000ffffffea
-[   62.457927] x11: 00000000ffffefff x10: ffffcf33cf23d2d8 x9 : ffffcf33cf1e5278
-[   62.459319] x8 : 0000000000017fe8 x7 : c0000000ffffefff x6 : 0000000000057fa8
-[   62.460697] x5 : 0000000000000fff x4 : 0000000000000000 x3 : 0000000000000000
-[   62.462069] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0003c4697000
-[   62.463445] Call trace:
-[   62.463940] alg_test (crypto/testmgr.c:5936 (discriminator 1))
-[   62.464595] cryptomgr_test (crypto/algboss.c:182)
-[   62.465314] kthread (kernel/kthread.c:388)
-[   62.465920] ret_from_fork (arch/arm64/kernel/entry.S:862)
-[   62.466619] ---[ end trace 0000000000000000 ]---
-
-3)
-Regression on qemu-arm64 while running LTP fs fs_fill the following
-kernel warning found this was seen from the last rc round also.
-
-Boot regression: WARNING-fs-buffer-mark_buffer_dirty
-
-<3>[  942.039675] Buffer I/O error on dev loop0, logical block 153753,
-lost async page write
-<3>[  942.040482] I/O error, dev loop0, sector 1222152 op 0x1:(WRITE)
-flags 0x100000 phys_seg 1 prio class 2
-<3>[  942.041273] Buffer I/O error on dev loop0, logical block 152769,
-lost async page write
-<4>[  942.048676] ------------[ cut here ]------------
-<4>[ 942.051768] WARNING: CPU: 1 PID: 6290 at fs/buffer.c:1188
-mark_buffer_dirty (fs/buffer.c:0)
-<4>[  942.057394] Modules linked in: btrfs xor xor_neon raid6_pq
-zstd_compress libcrc32c tun crct10dif_ce sm3_ce sm3 sha3_ce sha512_ce
-sha512_arm64 fuse drm backlight ip_tables x_tables
-<4>[  942.068545] CPU: 1 PID: 6290 Comm: fs_fill Not tainted 6.6.76-rc2 #1
-<4>[  942.071224] Hardware name: linux,dummy-virt (DT)
-<4>[  942.074657] pstate: 83402009 (Nzcv daif +PAN -UAO +TCO +DIT
--SSBS BTYPE=--)
-<4>[ 942.076823] pc : mark_buffer_dirty (fs/buffer.c:0)
-<4>[ 942.077221] lr : mark_buffer_dirty_inode (fs/buffer.c:682)
-<4>[  942.077523] sp : ffff8000822d3820
-<4>[  942.077766] x29: ffff8000822d3820 x28: 00000000000278f1 x27:
-0000000000000001
-<4>[  942.081352] x26: 0000000000000000 x25: 0000000000001000 x24:
-ffff8000822d38e0
-<4>[  942.081928] x23: ffff8000822d39bc x22: ffff8000822d3920 x21:
-ffff0000ce30d1d0
-<4>[  942.082381] x20: ffff0000c0480b78 x19: ffff0000fabb3a90 x18:
-00000059f17bbe9e
-<4>[  942.082841] x17: 0000000000000000 x16: 0000000000000000 x15:
-00000000c6a2c000
-<4>[  942.084209] x14: 0000000000000001 x13: ffff8000822d0000 x12:
-ffff8000822d4000
-<4>[  942.085009] x11: edcfb2436f68dc00 x10: 000000000000d84f x9 :
-ffffb9036e21ef44
-<4>[  942.085793] x8 : 0000000000000418 x7 : 00000000000275d8 x6 :
-ffff0000e2a98400
-<4>[  942.086706] x5 : ffff0000c77db560 x4 : 00000000ffffffff x3 :
-ffff8000822d3710
-<4>[  942.087819] x2 : ffff0000c29b4200 x1 : ffff0000ce30d058 x0 :
-ffff0000fabb3a90
-<4>[  942.091430] Call trace:
-<4>[ 942.093962] mark_buffer_dirty (fs/buffer.c:0)
-<4>[ 942.095407] ext2_get_blocks (fs/ext2/inode.c:602 fs/ext2/inode.c:765)
-<4>[ 942.097279] ext2_get_block (fs/ext2/inode.c:793)
-<4>[ 942.098201] __block_write_begin_int (fs/buffer.c:2127)
-<4>[ 942.098948] block_write_begin (fs/buffer.c:2235)
-<4>[ 942.099493] ext2_write_begin (fs/ext2/inode.c:924)
-<4>[ 942.099933] generic_perform_write (mm/filemap.c:4006)
-<4>[ 942.102488] __generic_file_write_iter (mm/filemap.c:0)
-<4>[ 942.103176] generic_file_write_iter (mm/filemap.c:4125)
-<4>[ 942.103607] ext2_file_write_iter (fs/ext2/file.c:0)
-<4>[ 942.104071] do_iter_write (fs/read_write.c:736 fs/read_write.c:860)
-<4>[ 942.104499] vfs_writev (fs/read_write.c:933)
-<4>[ 942.104901] do_writev (fs/read_write.c:976)
-<4>[ 942.105307] __arm64_sys_writev (fs/read_write.c:1046)
-<4>[ 942.105565] invoke_syscall (arch/arm64/kernel/syscall.c:52)
-<4>[ 942.106973] el0_svc_common (include/linux/thread_info.h:127
-arch/arm64/kernel/syscall.c:142)
-<4>[ 942.107316] do_el0_svc (arch/arm64/kernel/syscall.c:154)
-<4>[ 942.107639] el0_svc (arch/arm64/kernel/entry-common.c:133
-arch/arm64/kernel/entry-common.c:144
-arch/arm64/kernel/entry-common.c:679)
-<4>[ 942.110407] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:731)
-<4>[ 942.111160] el0t_64_sync (arch/arm64/kernel/entry.S:599)
-<4>[  942.113215] ---[ end trace 0000000000000000 ]---
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Source
-* kernel version: 6.6.76-rc2
-* git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-* git sha: e5534ef3ba233d5207312b032b12b1d3788e94ac
-* git describe: v6.6.75-390-ge5534ef3ba23
-* project details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.75-390-ge5534ef3ba23
-
-##Boot log fvp-aemva-qemu-arm64
-qemu-arm64 log:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.75-390-ge5534ef3ba23/testrun/27228347/suite/log-parser-test/test/exception-warning-cpu-pid-at-archarm64mmcopypage-copy_highpage/log
-fvp-aemva log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.75-390-ge5534ef3ba23/testrun/27228386/suite/log-parser-test/test/exception-warning-cpu-pid-at-archarm64mmcopypage-copy_highpage/log
-fvp-aemva details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.75-390-ge5534ef3ba23/testrun/27228386/suite/log-parser-test/test/exception-warning-cpu-pid-at-archarm64mmcopypage-copy_highpage/details/
-fvp-aemva-qemu-arm64 history:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.75-390-ge5534ef3ba23/testrun/27228347/suite/log-parser-test/test/exception-warning-cpu-pid-at-archarm64mmcopypage-copy_highpage/history/
-
-
-##Boot log graviton-v4
-graviton-v4 log:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.75-390-ge5534ef3ba23/testrun/27228382/suite/log-parser-test/test/warning-warning-0m1mcpu-pid-at-cryptotestmgr-alg_test/log
-graviton-v4 details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.75-390-ge5534ef3ba23/testrun/27228382/suite/log-parser-test/test/warning-warning-0m1mcpu-pid-at-cryptotestmgr-alg_test/details/
-gravition-v4 history:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.75-390-ge5534ef3ba23/testrun/27228382/suite/log-parser-test/test/warning-warning-0m1mcpu-pid-at-cryptotestmgr-alg_test/history/
-
-##Boot log qemu-arm64
-* build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.75-390-ge5534ef3ba23/testrun/27228382/suite/log-parser-test/test/warning-warning-0m1mcpu-pid-at-cryptotestmgr-alg_test/details/
-qemu-arm64 fsbuffer details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.75-390-ge5534ef3ba23/testrun/27229114/suite/log-parser-test/test/exception-warning-cpu-pid-at-fsbuffer-mark_buffer_dirty/details/
-qemu-arm64 fsbuffer history:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.75-390-ge5534ef3ba23/testrun/27229261/suite/log-parser-test/test/exception-warning-cpu-pid-at-fsbuffer-mark_buffer_dirty/history/
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+If you don't mind, I'll have a couple more teo updates for testing.
