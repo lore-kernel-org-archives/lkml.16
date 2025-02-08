@@ -1,71 +1,77 @@
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCC926ACB;
-	Sat,  8 Feb 2025 08:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 3B43E26ACB;
+	Sat,  8 Feb 2025 08:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739001935; cv=none; b=mOMLNnQleA7wHnK8gf/AOiAcTghDTCvJuipuTRmEsZiJLtCCwusVqZL6OGGTmDRNeg6Z8DDdTtEDjuVCxKezGKk/yr17CZO3yNYm81ff1neQXWslBTY6exdiU7D887Mj/LgYDv7PGthDCjpz+r2Na+h+Mwkh2kBPfZbJXprcI4I=
+	t=1739001967; cv=none; b=aU97BBAzrjrtBx+SeOHuce//mbN72Yo5L+xs0iMHIitZdN27Uh3ELscfSjBMiRx9sULfzLQcrHNsZKNTGvVPVEDcW/mxjNzc2hd6DIJFtulHQ8ec55syOjv34xrADVvJ58oEyDRI6alSaiVEBN29WPovrCynFxfCXRA9fIAefdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739001935; c=relaxed/simple;
-	bh=wbPPDEMyvr3jFmtgy8HcllCGQwqur23bpd3k6/B2Cek=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ejFZ7Y/dxBPd8eEpav+IQV8d3PaeqV4rZxrQijBjwkyt5coWouvriqt0AheRRbHz3zcL5bMkW10UJVcbY6RC4jEf4zEMgnKaRF7nYqQclP7ITbOfQShY7HGP9+bTJS/PW4RL/faXdGYpJh5qy8kwaQTgzwEtOLpH75uX0dpvKcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c01:6750::1])
-	by smtp.qiye.163.com (Hmail) with ESMTP id a7bb8f72;
-	Sat, 8 Feb 2025 16:00:17 +0800 (GMT+08:00)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: dmitry.baryshkov@linaro.org
-Cc: amadeus@jmu.edu.cn,
-	andersson@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	konradybcio@kernel.org,
-	krzk+dt@kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/5] arm64: dts: qcom: ipq6018: move mp5496 regulator out of soc dtsi
-Date: Sat,  8 Feb 2025 16:00:15 +0800
-Message-Id: <20250208080015.553458-1-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <z6vspyykbj7e55uequibwacdx7uuwubtuabnsxagcudmqrfwn3@4gfna5rqiimc>
-References: <z6vspyykbj7e55uequibwacdx7uuwubtuabnsxagcudmqrfwn3@4gfna5rqiimc>
+	s=arc-20240116; t=1739001967; c=relaxed/simple;
+	bh=2G7fWeJaVopSDfue7QrMwmkPKAshv+qDPcUoTNC+Ee4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=GkWvy7T8ygWUAIqPf+F62vgQQrDhlIAIkO9VwiooJOT5z1FHi/8UPTrXw7KPkviq0HcxI9N8wO+gdkHDTGYI1uw5nSFhGwU6dQDiLRx8kWcH3IaBvOK1kYZXIfbn1E2OtF7OpM+gn9TQJpEiwhqJ9Kzp3kPkcrX+wAoJEe82QU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from localhost.localdomain (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 6926D6019A503;
+	Sat,  8 Feb 2025 16:05:56 +0800 (CST)
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+To: min.ma@amd.com,
+	lizhi.hou@amd.com,
+	ogabbay@kernel.org
+Cc: Su Hui <suhui@nfschina.com>,
+	quic_jhugo@quicinc.com,
+	George.Yang@amd.com,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] accel/amdxdna: Add missing include linux/slab.h
+Date: Sat,  8 Feb 2025 16:05:49 +0800
+Message-Id: <20250208080548.1062441-1-suhui@nfschina.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZQkIaVkoZQx9OH05ITR0ZTFYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJT0seQUgZSEFJGEtKQU1MTktBQUpZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE
-	5VSktLVUpCS0tZBg++
-X-HM-Tid: 0a94e492dde703a2kunma7bb8f72
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Kyo6MTo*KzIcFgIuLx9LAzU8
-	NxVPFCtVSlVKTEhCS0tKTUpDTExCVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
-	Sx5BSBlIQUkYS0pBTUxOS0FBSllXWQgBWUFNSEg3Bg++
 
-Hi,
-> Wouldn't it be better to move it to the board file without having
-> intermediate include files?
+When compiling without CONFIG_IA32_EMULATION, there are some errors:
 
-The intermediate include files were suggested by you:
-https://lore.kernel.org/lkml/xmvtbib3q72tnfpcaic3vbgwilpo7yjnqimr5uk2myjgtslbgm@mlp2kqvljayc/
+drivers/accel/amdxdna/amdxdna_mailbox.c: In function ‘mailbox_release_msg’:
+drivers/accel/amdxdna/amdxdna_mailbox.c:197:2: error: implicit declaration
+of function ‘kfree’.
+  197 |  kfree(mb_msg);
+      |  ^~~~~
+drivers/accel/amdxdna/amdxdna_mailbox.c: In function ‘xdna_mailbox_send_msg’:
+drivers/accel/amdxdna/amdxdna_mailbox.c:418:11: error:implicit declaration
+of function ‘kzalloc’.
+  418 |  mb_msg = kzalloc(sizeof(*mb_msg) + pkg_size, GFP_KERNEL);
+      |           ^~~~~~~
 
-Unlike mobile phones or development boards, the pmic (voltage) setting
-on routers is relatively fixed. (Because QCA will not provide relevant
-documents). On IPQ60xx SoCs, s2 supplies to cpu, l2 supplies to emmc.
-The downstream vendor kernel puts it in soc.dtsi (no device override),
-so I think the include files is more appropriate.
+Add the missing include.
 
-Thanks,
-Chukun
+Fixes: b87f920b9344 ("accel/amdxdna: Support hardware mailbox")
+Signed-off-by: Su Hui <suhui@nfschina.com>
+---
+ drivers/accel/amdxdna/amdxdna_mailbox.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/accel/amdxdna/amdxdna_mailbox.c b/drivers/accel/amdxdna/amdxdna_mailbox.c
+index 814b16bb1953..80b4b20addd6 100644
+--- a/drivers/accel/amdxdna/amdxdna_mailbox.c
++++ b/drivers/accel/amdxdna/amdxdna_mailbox.c
+@@ -12,6 +12,7 @@
+ 
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/amdxdna.h>
++#include <linux/slab.h>
+ 
+ #include "amdxdna_mailbox.h"
+ 
 -- 
-2.25.1
+2.30.2
 
