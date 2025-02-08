@@ -1,94 +1,152 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C763D23C8D0;
-	Sat,  8 Feb 2025 10:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5904023C8D4;
+	Sat,  8 Feb 2025 10:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739009664; cv=none; b=VFbxK0b0492W2E0H2XIFw/vcGK93LlRhGAInrXe9eP3+Jv+bIh2X+1iW9thdbYv14Cypa03IfhKbyB1lQmB3KsCwMQKbRt0MuKmgvUdU4t6lqFb7MpHLpkR4PvHMfmUyFgxzUkXLThACbtSIoHgh927xGUoe6NZlPYBvLW9hYGc=
+	t=1739009833; cv=none; b=EVmib5FBbwJNknYH1DXn17/rbOZY3tKQiQ8ncATLgvdo4lh0cxghZ6Ca0qNJmPrBS9NZR4m4BvhbMtytoIfj1oAMdQY8j7fvicTBKPDQ13fJ1UtEXS5a2tMOCQckAFK0a28oiHP8dC72lPBbDvDtqeSc8SWCUCRun4IEJRfFeUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739009664; c=relaxed/simple;
-	bh=lHlCTa++JQNY5yLxRtdf8QoMcBzRNGTE2Vwy5/XMOCY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mYax7Ji0hqzVlcwdJW828f3QezAyxrMEstWcxpEw4QSUGfokUPbvAd3XVMnXH5jr8kkS7hrunbUatgYg4E6Q3p+kYON8/nbmBfsiQW+w7drb7jd+7/VQtgMjzvPFdylV9ssOEs//H4VySowPu8wNdM99g8X4luMMd8n1ju3SV08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nua8zQ/H; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nua8zQ/H"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e589c258663so3052008276.1;
-        Sat, 08 Feb 2025 02:14:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739009661; x=1739614461; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lHlCTa++JQNY5yLxRtdf8QoMcBzRNGTE2Vwy5/XMOCY=;
-        b=Nua8zQ/Hk/iY/8xGSK/LdwNjpfvB2aGuNiXjmk0XiFVjL7I9fgmOvpfCTeU/DlC+2Q
-         zWkCI1kqTYO97/Yz/gn58GjY95gw7/go1HmZgl5sb6Gq6VkRmJDGPpDL84xWgZYzETwf
-         9ARvvdSkXn973God6X+hXs7p3UhtTmc/9Fdyf1IoNpokemiRN5ssROG2xoR6rKx2Z3k0
-         7UmojrvmeQw5PoZO3DWAOLCTvXaxxCh9LvZukts4tUx3Iy8pe7FIIou1LPRtL7bKc55+
-         AJh4Uj1hmwYjVjMzQfculzmL+AQwkCsDkOigG0me2dpMvYtka2SaGqY+llsFCYnl7BuY
-         KbFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739009661; x=1739614461;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lHlCTa++JQNY5yLxRtdf8QoMcBzRNGTE2Vwy5/XMOCY=;
-        b=Qamu11O8NAm6d91L0tn19LC8rdmgh0z4Dof3DGSXr6wp+o7de/QfMjAE/th8FL2pv6
-         X1D5FaRA4JWHySAwLubXz8EsgegPKiCmDOUDVSwIp1GD8YANy0AeHxECmsPMwcTt2l+5
-         j2viSDMd1kTY1V/rrEEGaKWCl97tKo4l6umoPP7ZwYQoamhToX0ixsxnZM5zHVTdmJX+
-         6kR+K+rrPrT9Qx44KbE7Vl7F1GLskYIMDVnOYt4STfi5xA3BrgkBgF7x0TSPiN4oYYCH
-         crDUb7iJ9GoqY39QF1Mved4TsoWXb4B3UNeapaBptPxiXRVxe49byX0AShTOkEoELk1d
-         ooLw==
-X-Forwarded-Encrypted: i=1; AJvYcCWUO+WI83LciLSLMublSBepOWj6t+zCFork2r/EmvZffwbvxKk3VyKBj4grLgba4f0oAKisDzOyEldeHBg=@vger.kernel.org, AJvYcCXnP52LvVzr+mUqmzaepIwAuy3rs8tHdtkRNMyI+ZYhws/2NQksGZLa/Ku50/yd/rUvM3IzY+2u@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmL7j+RwKKl1PIOlHY1BMmA3dpiDfAClKxOoLi79U2nasoikdZ
-	HrYsMOI2GLpgSUE0daC5XZAeEXTfgh8NQuoPf+gE0x/53jyc4eFlq209uuaaVIkvsTBjsH2WKlA
-	PI4Qjy5pq9wTW8TmNcAW0aXSx76A=
-X-Gm-Gg: ASbGnctaB8daKmujxOq0Eq7M39a3gCrYvZ7emij2CGAcsCe6HY6o4MuL6LOn6HuhxtL
-	W+BmdZEQOtzFCTC4PoB+C1vaeGHwB7vJKtnJ9/Qjil8eTMSkY3VVQL9DWxS74bjcAHNozpSA=
-X-Google-Smtp-Source: AGHT+IGJTnv0Jv1zGgHunoHT2gol4/G0RMD4RSz3LklZiU8Fl/L4w4+Hl+f6eU1srrJYqwe1I2fUwS7Kk/Ykj0OnFyM=
-X-Received: by 2002:a05:6902:188d:b0:e5b:1858:9f34 with SMTP id
- 3f1490d57ef6-e5b4619f369mr5462498276.16.1739009661634; Sat, 08 Feb 2025
- 02:14:21 -0800 (PST)
+	s=arc-20240116; t=1739009833; c=relaxed/simple;
+	bh=F5uUm7xNthdJlFWPzhW5FgGDAiMNjnlSrHx+bDSldUI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=P4d44aMfOej2mQq9WpmhMOK9difONtEWm/leXvHaD312W9XOvJ7QxdmTH/SD1vkZ+4QnsYzQrdn+ImbhVl901Wr4Al9eiLxNrNWWIeLPkgE2qIhvTpxkAJiCziCGlUTm9/ZNRliIgZmxMkxs4BEEtrOrX5IeBHDtF1zwMHqb76w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YqmwB59KVz4f3jMB;
+	Sat,  8 Feb 2025 18:16:42 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 4AC471A14E2;
+	Sat,  8 Feb 2025 18:17:05 +0800 (CST)
+Received: from [10.174.176.117] (unknown [10.174.176.117])
+	by APP2 (Coremail) with SMTP id Syh0CgDn8GMbL6dnymX1DA--.5837S2;
+	Sat, 08 Feb 2025 18:17:03 +0800 (CST)
+Subject: Re: [RESEND] [PATCH bpf-next 2/3] bpf: Overwrite the element in hash
+ map atomically
+To: =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@kernel.org>,
+ bpf@vger.kernel.org, rcu@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, "Paul E . McKenney" <paulmck@kernel.org>,
+ Cody Haas <chaas@riotgames.com>, Hou Tao <hotforest@gmail.com>
+References: <20250204082848.13471-1-hotforest@gmail.com>
+ <20250204082848.13471-3-hotforest@gmail.com>
+ <cca6daf2-48f4-57b9-59a9-75578bb755b9@huaweicloud.com>
+ <8734gr3yht.fsf@toke.dk>
+From: Hou Tao <houtao@huaweicloud.com>
+Message-ID: <d191084a-4ab4-8269-640f-1ecf269418a6@huaweicloud.com>
+Date: Sat, 8 Feb 2025 18:16:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208092732.3136629-1-dqfext@gmail.com> <Z6ckCZpOo1_rvmh6@shell.armlinux.org.uk>
- <CALW65jYG3vv9aCY_HDU4Wyij1kqfiOVOsZ3YnvioUf4AgSbnaw@mail.gmail.com> <Z6cp-TCckCNReUPd@shell.armlinux.org.uk>
-In-Reply-To: <Z6cp-TCckCNReUPd@shell.armlinux.org.uk>
-From: Qingfang Deng <dqfext@gmail.com>
-Date: Sat, 8 Feb 2025 18:14:07 +0800
-X-Gm-Features: AWEUYZmoA4XiGxbkn50VzS3TXo8SJfjOy3CnNZmFpsB8QTfYUzOVzyDXS0kfqNU
-Message-ID: <CALW65jY1kzcJT6sxvko5GMC3P4odon=ZvKn+ZfufAZR9jqb1Hg@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: ethernet: mediatek: add ethtool EEE callbacks
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8734gr3yht.fsf@toke.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:Syh0CgDn8GMbL6dnymX1DA--.5837S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxXrWrArWDuw4UGF4xXw1kZrb_yoW5Cw45pr
+	WrKF1jyF4kAa4j9w4IywsxuFWakrs3try8Jr4DJryrAwn0gr97Arn2ka1SgFyrAr4rJF1F
+	qw42qrnIkayjkFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4I
+	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+	WwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
+	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
+	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
+	IYCTnIWIevJa73UjIFyTuYvjxUIa0PDUUUU
+X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
 
-On Sat, Feb 8, 2025 at 5:55=E2=80=AFPM Russell King (Oracle)
-<linux@armlinux.org.uk> wrote:
-> Doesn't it need a bit more code to configure the MAC?
+Hi Toke,
 
-I think you're right. The MT7622 reference manual does not mention the
-EEE configuration register so I assumed it would be automatically
-enabled.
-I just checked the mtk_eth_soc.h and found two unused defs
-"MAC_MSR_EEE1G" and "MAC_MSR_EEE100M". I will use those to enable EEE.
-
+On 2/6/2025 11:05 PM, Toke Høiland-Jørgensen wrote:
+> Hou Tao <houtao@huaweicloud.com> writes:
 >
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+>> +cc Cody Haas
+>>
+>> Sorry for the resend. I sent the reply in the HTML format.
+>>
+>> On 2/4/2025 4:28 PM, Hou Tao wrote:
+>>> Currently, the update of existing element in hash map involves two
+>>> steps:
+>>> 1) insert the new element at the head of the hash list
+>>> 2) remove the old element
+>>>
+>>> It is possible that the concurrent lookup operation may fail to find
+>>> either the old element or the new element if the lookup operation starts
+>>> before the addition and continues after the removal.
+>>>
+>>> Therefore, replacing the two-step update with an atomic update. After
+>>> the change, the update will be atomic in the perspective of the lookup
+>>> operation: it will either find the old element or the new element.
+>>>
+>>> Signed-off-by: Hou Tao <hotforest@gmail.com>
+>>> ---
+>>>  kernel/bpf/hashtab.c | 14 ++++++++------
+>>>  1 file changed, 8 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+>>> index 4a9eeb7aef85..a28b11ce74c6 100644
+>>> --- a/kernel/bpf/hashtab.c
+>>> +++ b/kernel/bpf/hashtab.c
+>>> @@ -1179,12 +1179,14 @@ static long htab_map_update_elem(struct bpf_map *map, void *key, void *value,
+>>>  		goto err;
+>>>  	}
+>>>  
+>>> -	/* add new element to the head of the list, so that
+>>> -	 * concurrent search will find it before old elem
+>>> -	 */
+>>> -	hlist_nulls_add_head_rcu(&l_new->hash_node, head);
+>>> -	if (l_old) {
+>>> -		hlist_nulls_del_rcu(&l_old->hash_node);
+>>> +	if (!l_old) {
+>>> +		hlist_nulls_add_head_rcu(&l_new->hash_node, head);
+>>> +	} else {
+>>> +		/* Replace the old element atomically, so that
+>>> +		 * concurrent search will find either the new element or
+>>> +		 * the old element.
+>>> +		 */
+>>> +		hlist_nulls_replace_rcu(&l_new->hash_node, &l_old->hash_node);
+>>>  
+>>>  		/* l_old has already been stashed in htab->extra_elems, free
+>>>  		 * its special fields before it is available for reuse. Also
+>>>
+>> After thinking about it the second time, the atomic list replacement on
+>> the update side is enough to make lookup operation always find the
+>> existing element. However, due to the immediate reuse, the lookup may
+>> find an unexpected value. Maybe we should disable the immediate reuse
+>> for specific map (e.g., htab of maps).
+> Hmm, in an RCU-protected data structure, reusing the memory before an
+> RCU grace period has elapsed is just as wrong as freeing it, isn't it?
+> I.e., the reuse logic should have some kind of call_rcu redirection to
+> be completely correct?
+
+Not for all cases. There is SLAB_TYPESAFE_BY_RCU-typed slab. For hash
+map, the reuse is also tricky (e.g., the goto again case in
+lookup_nulls_elem_raw), however it can not prevent the lookup procedure
+from returning unexpected value. I had post a patch set [1] to "fix"
+that, but Alexei said it is "a known quirk". Here I am not sure about
+whether it is reasonable to disable the reuse for htab of maps only. I
+will post a v2 for the patch set.
+
+[1]:
+https://lore.kernel.org/bpf/20221230041151.1231169-1-houtao@huaweicloud.com/
+> -Toke
+
