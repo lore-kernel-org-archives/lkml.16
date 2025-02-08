@@ -1,42 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103B0243942;
-	Sat,  8 Feb 2025 20:32:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C93243946
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 20:34:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739046777; cv=none; b=PU0nsI2qwzKyRukDlSXXzE3zDetQz5kgE7jSPn8wFmxYNdHcVtWB2G4m1jrZSo0AtkWajLvjelmNQI+/WHRYq34onrw3Ii3wPt1FmMmAsbFEn6z73Yt4Hs4TgrzgBgkiJ6Islxqdv4iumOLj5nwqQTS6FEhmcx58N5Ge0/ODZoo=
+	t=1739046847; cv=none; b=gXUIu1EPm8GJldCDBE1WDGxLKhLbtJL7kHEQj+JA1FgqQXSZORpXv0vgLN/NVnijv2iwtanvWJLykU6sFeavcI3krCz20eUgDv1FSRXBv7ygXQgWW3fYx5q/630tmpqlS5dYmcxWrtOU1D2CgWY81vdt1T0I+Xk/Oc5DRnftBN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739046777; c=relaxed/simple;
-	bh=Ltr/1l/SbDtKRZMIZzd9idiEi51kqu97pT2cF7X4xxA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PoDY5XKfTSbmeB5TxAdVI5RCy31iCKuosNcRnn4P45/btUDZ6MaxEIGvwTqvXKF2Mxs+vE92hA4zNKgY07prYeAQxYuWzNOk0VwZNst1Do/YndAG6w3NEd2enKZqH+DYck6vLLHo+r4vZfGeoyPy52WJrFHT4NL35xciWnmXPFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UnxQYAV4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739046847; c=relaxed/simple;
+	bh=vnKHeHcFEi/dXgCxijbXcD8I5CY8A0Y6hC5FG1ZC76o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=EhfSHMg6gEmq7dEjzS9gKic/TW7+J1qTOzZ3yXqbWEfW44Krb/sk3mTqrTVfkpwVgppRijGRjps//OIslkxmXuFPpy1kuGECJ74g6hrYPciQhGT4P+bU4Nqdax57GzABjJxKvu09sqtPa224LQ3FNMPn3NG1qC/QeEHMxDB51tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aMIGqAjM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UnxQYAV4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1A25C4CED6;
-	Sat,  8 Feb 2025 20:32:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aMIGqAjM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24DF3C4CED6;
+	Sat,  8 Feb 2025 20:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739046776;
-	bh=Ltr/1l/SbDtKRZMIZzd9idiEi51kqu97pT2cF7X4xxA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UnxQYAV4NuOMGp2dph5SgknSoBHveIpqBvhOTmUaX/mwqZFxwwW1FsksrAmYXOwEL
-	 s7b/4inNTNLhPHAZu3GG9Fw/Ii+ZHsvSO9bAi8ktHar7jNQ6KvUGX6cYwLDSk/vDWv
-	 muXa2so2JVfN1tzj6uNJjyeEW7ywuvk24nuD+1J6gYxO4ZKZXNgO8cJuHShlxj8TPF
-	 Vkw5gWGMSrqLtJlPgFp2F1Qqz7Zt6GKnJ7JGZHVZ8MPIOiGM3qhuFUa+7Nuf5P6eCL
-	 l5NMkTDUQjN+r6DbUl2n465AMbDUNrWlB0cl0aitxbM4ITFMIDIRUtE+K/017yzXPS
-	 E+GBRXHkNSWzw==
-Date: Sat, 8 Feb 2025 22:32:52 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jerry Snitselaar <jsnitsel@redhat.com>,
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mike Seo <mikeseohyungjin@gmail.com>, kernel-dev@igalia.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] tpm: do not start chip while suspended
-Message-ID: <Z6e_dGIdUROiqgMo@kernel.org>
-References: <20250207-tpm-suspend-v2-1-b8cfb51d43ce@igalia.com>
+	s=k20201202; t=1739046847;
+	bh=vnKHeHcFEi/dXgCxijbXcD8I5CY8A0Y6hC5FG1ZC76o=;
+	h=Date:From:To:Cc:Subject:From;
+	b=aMIGqAjMIfahCS5cjAEIf970jkQ6HkVCAfBaJW9YEbDaGSzCNycHy4cSPeSAdd7NY
+	 IzueweNK1AxXOdUfvfyXvzs3fmRgQkgg7buuEuenStRNL2LGDDfXw7M8kKA0nxiAql
+	 4StJXR7vUr6QNQD0O8i7dhXSvA5xq41/j78OWkHLLmx/CLfpr7wppE1HE3dyiTHdoq
+	 nSSNbHWVI5dX0EF3N0wB/1KtjbrKbLh12yzB1J15r2tkXJU/SwofhMz3bXfmv3Cn7c
+	 UgfBcXGSGd+jmdIAB7H0uul945HSo1BugJlvO8d0prXLwLM2L7gkzcvpvzIUUt3cC+
+	 SQ/d8igQsi4PA==
+Date: Sat, 8 Feb 2025 12:34:06 -0800
+From: Kees Cook <kees@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Eyal Birger <eyal.birger@gmail.com>,
+	Kees Cook <kees@kernel.org>, Rafael Buchbinder <rafi@rbk.io>
+Subject: [GIT PULL] seccomp fix for v6.14-rc2
+Message-ID: <202502081231.AC11AB4@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,14 +41,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250207-tpm-suspend-v2-1-b8cfb51d43ce@igalia.com>
 
-On Fri, Feb 07, 2025 at 03:07:46PM -0300, Thadeu Lima de Souza Cascardo wrote:
-> Checking TPM_CHIP_FLAG_SUSPENDED after the call to tpm_find_get_ops() can
-> lead to a spurious tpm_chip_start() call:
+Hi Linus,
 
-Looks good to me.
+Please pull this seccomp fix for v6.14-rc2. This is really a work-around
+for x86_64 having grown a syscall to implement uretprobe, which has
+caused problems since v6.11. This may change in the future, but for now,
+this fixes the unintended seccomp filtering when uretprobe switched away
+from traps, and does so with something that should be easy to backport.
 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Thanks!
 
-BR, Jarkko
+-Kees
+
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+
+  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/seccomp-v6.14-rc2
+
+for you to fetch changes up to c2debdb8544f415eaf9292a866d4073912eeb561:
+
+  selftests/seccomp: validate uretprobe syscall passes through seccomp (2025-02-06 13:19:14 -0800)
+
+----------------------------------------------------------------
+seccomp fix for v6.14-rc2
+
+- Allow uretprobe on x86_64 to avoid behavioral complications (Eyal Birger)
+
+----------------------------------------------------------------
+Eyal Birger (2):
+      seccomp: passthrough uretprobe systemcall without filtering
+      selftests/seccomp: validate uretprobe syscall passes through seccomp
+
+ kernel/seccomp.c                              |  12 ++
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 199 ++++++++++++++++++++++++++
+ 2 files changed, 211 insertions(+)
+
+-- 
+Kees Cook
