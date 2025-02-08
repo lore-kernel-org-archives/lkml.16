@@ -1,179 +1,161 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 727DD248171;
-	Sat,  8 Feb 2025 15:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F79248184
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 15:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739030173; cv=none; b=sFELtoCv6qE+Hn+ij6YPFe8NOaWbKpiYdFB1Xo7pECaIGmYmRjnqJVYIhw45iGqpNTDJAbZadMsd4KRBsHhNx3n+VNiVBDHFYVNyFMYUT7RKNb8/Dk+wY9tpl1AB2rWoY3L7hjLrDOxCcEt6Z4u+mYXGGemSstYMfYMiRyY8pIc=
+	t=1739030329; cv=none; b=d5gFea6eu9xv8Ww/UEv2VLrIsj3zllrh9wyuVL4dQCWl2KgY3EGEVSq6o9HtpA8rg3J7DPqtCroVVxdrPUmkSgsDPt254FtKAHDmUy8PhMynGAKEJ1ey3/vsulww50gtz0aFYRSCbqY4NMIjOtuCpETPK0zrSaMt/rV8SodvLFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739030173; c=relaxed/simple;
-	bh=BRk7BBm7oSdWplPPvfzhGPnNM6vM2mjwIOaR+mXLbRw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=UEQdgqBm52oufTXuuG9ld3fPkABR8rWtgitts8mH1OUgQ9FWvjRGCsuckVlzyhnHR/Vu3zMkkHrs3Ki23RnP6TUZZFPAUa6kiTAevWKLE1lWU4wBAshF6WXhRZDdkBwgxca+Mz+kITrZoY9d7Hen+D/gpW9rmKi5totQOb670ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ANsFnXT6; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739030329; c=relaxed/simple;
+	bh=VruUlVMVabBGJe6x03ULqVMChydUyEZ5333+XkGxjCw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D0BGQwhuENNeqk8tB+He3qy80PL8++V70sghrFEW+0XRboxj2BEyTACg4asOuHBxFqU/VgdI3sTAhxIq6TiIwEz/fWzCFt1NNJue4x7ItLdor7tt5D0kw32zGrVYObYDgveng3YqsOVs83K29Q8s2KYDuBi6uPsDtV1FIVkObAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=V0cS+XNY; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ANsFnXT6"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4361f65ca01so29426865e9.1;
-        Sat, 08 Feb 2025 07:56:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="V0cS+XNY"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2fa122f62b5so607725a91.3
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 07:58:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739030170; x=1739634970; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gghYPUNRCdyG2yLo4ZGDDboCtEVr9fYIBuiGTMEQtB8=;
-        b=ANsFnXT6HjfphsLvjZI/EFQ0a3Z9hVKd2nPpoqURwz3pcQ+Q9ZNM0ujyWSlfzPNeql
-         C2gGMsDYA6OZrMpqMX9yNsFoMNSrcVNh2Eutt7R0XQ9Z1yhWviE21gY6mCV0D23f/TU+
-         jijhu10nd3ibtr6JimhQFOQFDewALVLQ7mq/RpB2pKtnOWSG/jc9KCbmB4rJNPaaCMex
-         09KDPr6mrxoeTXEfS8fEskDJTw369l5z8QA/OLmXuYMYIeluYEZ/AnKOSVwNd8g4p5oG
-         il6tSWkfcvRcYEiSxWGGMuHvTfJqoExHg7z7xjgDok3hpJvJDFxxSs31pjjvl7iRS/XG
-         hcpw==
+        d=bytedance.com; s=google; t=1739030326; x=1739635126; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GnldKxmzBqwKinjZR1oDYDVj5xkQePqA06ZEDoTPiUQ=;
+        b=V0cS+XNYCw3tjOuacOyjtN4H4yNSVyv7mudK67bfmtuc81ZbQoe1FygLLVyjqMhwb8
+         HjRThDR5KqOvGE6mJMdIB3tSXaK79SfLxB+ZynRZvqt9VxOBVHbBJe16ZtXJDnLpi98o
+         tnEt4zDdPo9r68wyX37fvs97n7lVMB8pQ/xJb/w7T7gJV/DY37fNbvT1hDQm3XboyS1T
+         PEjCEHSTe+V09bbA2HMS5V/A1YYUgs6fi77fypnjqP0MP21fuOxsCrqTFCfg+ZfiQfze
+         hgctJw2iFbBxQUJ+/kFxWSVuV1fmw5qtnA/pt3pr4i8iuhPxjy4op4GAdEocxu44HWQ4
+         pLIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739030170; x=1739634970;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gghYPUNRCdyG2yLo4ZGDDboCtEVr9fYIBuiGTMEQtB8=;
-        b=GYUkvDnJp9A+q3gvk6rfzf0kaS4AGElhptgw3q43Wy78zPJu3sTuRTvLxtIb6nB+ie
-         6fI3cT7A+RcNTrjGwT16GAdBfgdl3ooMVthd3cri5AQMLwDEZ07Nk/+GxyNidUY7DqrQ
-         CkFs0/ygemyuI06uAKhGqPf21WTp9ArNnykn2RixyhmLSiCNplr65H6Wno02KowwQm9W
-         W31E9dSZcO0DBe3YmiUwm6xRiApPMdON+DWrLvSn6jj/Ohzb83nGJSGoEj0WHKJKb0xe
-         XHm246Zv/pvvGOIlgWrLHOyGK/3a9kA6uZFd1ElUjH1OiCAYJCaS9cIHAc6InelOWaTT
-         vxOw==
-X-Forwarded-Encrypted: i=1; AJvYcCU//KWqGZ5382xnDQq2sI3gm1L1PQkZVmOBSl8tb6hMpeWq9cummm4VLfNdPUOQah2rwu4G5aLy@vger.kernel.org, AJvYcCXg9GQhKsvxsgBrjiSqBr7GEs2ObwWnlX0DCdzA/DlTv600UfWODTdcTn1K5DIby2LyH+NyeaSByejzvxc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4c/lo3avrk7z/G2FuLQODq6mSpgekPsa0LQ79/eR0Qs+7U5A/
-	o7d4tFf8UoZElm2+n0PFXA8XFEws7jo2ZmAOSWkll7X74RzRrrEWWdoh0M6E
-X-Gm-Gg: ASbGncvlnecyebuH8hotNEITK1Ye9KhrqHzp5jaSRpPmzkluW9PlZt3DupU/FYVvIs+
-	fzYeaeqojsJcqUqOE4Nt4uuQY/NiYKBAEP8K/rE0/dfVE6gALV8EbN0pzLl/476buaaqwGGfCLM
-	NMX+T/XlY4glgZh4/niTKulXr9BOl3U6hncfbL3g9Neh4WaRN19GlWFrkN+m5FzXwYhmnPgWyVH
-	MEcAvthZcZp3/u/jiF91PfRmWX8lf63hWYwH0IxKEyQ2quCyO6rhkDLs1DwyPspWS/xSeq73IFg
-	6A639xUBjy8YVw3HuYMdmbFndbED6l5zWIvOx8DrmkQn0Ox/
-X-Google-Smtp-Source: AGHT+IEXT4VHtoN7BWCb9b46QkhkIIkudo6GwKbhv3dYWDQ39vj5aKhwilizZwe5JyZGlUhGnb2oMA==
-X-Received: by 2002:a7b:c001:0:b0:434:f5c0:3288 with SMTP id 5b1f17b1804b1-439250df455mr58897315e9.29.1739030169469;
-        Sat, 08 Feb 2025 07:56:09 -0800 (PST)
-Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4391dcae129sm88297535e9.17.2025.02.08.07.56.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 07:56:08 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 18929BE2EE7; Sat, 08 Feb 2025 16:56:07 +0100 (CET)
-Date: Sat, 8 Feb 2025 16:56:07 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	xen-devel@lists.xenproject.org, iommu@lists.linux.dev,
-	Radoslav =?iso-8859-1?Q?Bod=F3?= <radoslav.bodo@igalileo.cz>
-Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [6.1.y] Regression from b1e6e80a1b42 ("xen/swiotlb: add alignment
- check for dma buffers") when booting with Xen and mpt3sas_cm0 _scsih_probe
- failures
-Message-ID: <Z6d-l2nCO1mB4_wx@eldamar.lan>
+        d=1e100.net; s=20230601; t=1739030326; x=1739635126;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GnldKxmzBqwKinjZR1oDYDVj5xkQePqA06ZEDoTPiUQ=;
+        b=hee9NkSZCXnfjMXLogzDLptxufkjhf+NHyI5W56/Ul5PeHQEW97tJ8BJrOS+TiaPLY
+         3MoEH1Xjqyz5qwnb2EZpDg5zjHd1N/MXj0tQ6+Y2mmTkZbDvgOx8hfgU1EsUs44OO0EK
+         vMFKlDWtS7b831VNbSMXofNe2xnCuYvxdgtXl6gQQ3YiKdd4TRsEsPL9Fr6OfnB3gGK6
+         P4CYinPGHqx5OD18YWXaIbQ+8NQr0Op6qPCHyJ++5KhFFCkertylmBGTxyxnI6ASCqnm
+         bbmFfnJm8dmxEInj+IZyqUVgyBpkeub8Mx/SIUnLiTtm1VcIEik+19WvdDyyiXlXt/Iy
+         gg4g==
+X-Forwarded-Encrypted: i=1; AJvYcCV+oNBeF+IvqqhI8hiSoOWb0RNmLXpXtiM5d56eJf52PIRcsn6yfDUDDaDjZ7iqZpTjPs4NQufboUUYBC0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/W9rtSpDj5TDhkp4YfAx0xOzzX+BvNUN2eBK8gABjTmiqA2YL
+	VLQCS/+9FqX5jEib2+cxlPU17LTT0xoV2lQxnT5I6lzsgSMs7gWrc3Q+rU+Ss+ch0R7PeountAP
+	n
+X-Gm-Gg: ASbGncvAGg8q6AB8AnP024gIeFoTpMk4IqACktSdzyEslll0gVJ0EKzHU2vS9jtk/ZA
+	0apewalZFoLfna1sdTVfsNiSOC3Yz1DemXVQ0ne2qmw3v/7l/seb8GnBK17I5n0es2xjz78UWu/
+	tXLEz4olV5W47zo3sYwb73iD3XFa+EfIyKii3E1BKKjRW1ucpPNavi2FJN95t49+ZcsYcUcIb/A
+	M8xCPCizxs7g+W9MLZp0GO/mBuU8pRLkhs2EZolFg26BdAr6+lmUTak85OdkW/opsaf/X7WzPW2
+	IjRH13pCGF4aEsmjTkUQe99qkVmS6ey1GX0Q
+X-Google-Smtp-Source: AGHT+IEp3jhINNJbAaq0fhtM3ghHgJhMNzOT+lO6NXSocYRA+5prw0KJxYLU6aLGqfrWgIWd9yeIDQ==
+X-Received: by 2002:a17:90b:2243:b0:2ee:d9f2:2acd with SMTP id 98e67ed59e1d1-2fa245452bdmr4474697a91.6.1739030326531;
+        Sat, 08 Feb 2025 07:58:46 -0800 (PST)
+Received: from [10.4.234.23] ([139.177.225.244])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad53bff9c82sm1231302a12.37.2025.02.08.07.58.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Feb 2025 07:58:45 -0800 (PST)
+Message-ID: <f37da359-bad1-4685-aa68-1d2a2d0f8bf3@bytedance.com>
+Date: Sat, 8 Feb 2025 23:58:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: Re: [PATCH v3 2/2] cgroup/rstat: Add run_delay accounting for
+ cgroups
+Content-Language: en-US
+To: kernel test robot <lkp@intel.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Tejun Heo <tj@kernel.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
+ <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Bitao Hu <yaoma@linux.alibaba.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Yury Norov
+ <yury.norov@gmail.com>, Chen Ridong <chenridong@huawei.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ "(open list:CONTROL GROUP (CGROUP))" <cgroups@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+References: <20250207041012.89192-3-wuyun.abel@bytedance.com>
+ <202502081318.c9fYNNx8-lkp@intel.com>
+From: Abel Wu <wuyun.abel@bytedance.com>
+In-Reply-To: <202502081318.c9fYNNx8-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Juergen, hi all,
+On 2/8/25 1:47 PM, kernel test robot Wrote:
+> Hi Abel,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on tj-cgroup/for-next]
+> [also build test ERROR on tip/sched/core akpm-mm/mm-everything linus/master v6.14-rc1 next-20250207]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Abel-Wu/cgroup-rstat-Fix-forceidle-time-in-cpu-stat/20250207-121257
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-next
+> patch link:    https://lore.kernel.org/r/20250207041012.89192-3-wuyun.abel%40bytedance.com
+> patch subject: [PATCH v3 2/2] cgroup/rstat: Add run_delay accounting for cgroups
+> config: x86_64-kexec (https://download.01.org/0day-ci/archive/20250208/202502081318.c9fYNNx8-lkp@intel.com/config)
+> compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502081318.c9fYNNx8-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202502081318.c9fYNNx8-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>     In file included from kernel/sched/build_policy.c:19:
+>     In file included from include/linux/sched/isolation.h:5:
+>     In file included from include/linux/cpuset.h:17:
+>     In file included from include/linux/mm.h:2224:
+>     include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+>       504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+>           |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+>       505 |                            item];
+>           |                            ~~~~
+>     include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+>       511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+>           |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+>       512 |                            NR_VM_NUMA_EVENT_ITEMS +
+>           |                            ~~~~~~~~~~~~~~~~~~~~~~
+>     include/linux/vmstat.h:524:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+>       524 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+>           |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+>       525 |                            NR_VM_NUMA_EVENT_ITEMS +
+>           |                            ~~~~~~~~~~~~~~~~~~~~~~
+>     In file included from kernel/sched/build_policy.c:59:
+>>> kernel/sched/cputime.c:254:22: error: no member named 'rq_sched_info' in 'struct rq'
+>       254 |         return cpu_rq(cpu)->rq_sched_info.run_delay;
+>           |                ~~~~~~~~~~~  ^
+>     3 warnings and 1 error generated.
 
-Radoslav Bodó reported in Debian an issue after updating our kernel
-from 6.1.112 to 6.1.115. His report in full is at:
+Oops.. SCHED_INFO can be selected by either TASK_DELAY_ACCT or SCHEDSTATS.
+Will fix. Thanks a lot!
 
-https://bugs.debian.org/1088159
+> 
+> 
+> vim +254 kernel/sched/cputime.c
+> 
+>     251	
+>     252	u64 get_cpu_run_delay(int cpu)
+>     253	{
+>   > 254		return cpu_rq(cpu)->rq_sched_info.run_delay;
+>     255	}
+>     256	#endif
+>     257	
+> 
 
-He reports that after switching to 6.1.115 (and present in any of the
-later 6.1.y series) booting under xen, the mptsas devices are not
-anymore accessible, the boot shows:
-
-mpt3sas version 43.100.00.00 loaded
-mpt3sas_cm0: 63 BIT PCI BUS DMA ADDRESSING SUPPORTED, total mem (8086116 kB)
-mpt3sas_cm0: CurrentHostPageSize is 0: Setting default host page size to 4k
-mpt3sas_cm0: MSI-X vectors supported: 96
-mpt3sas_cm0:  0 40 40
-mpt3sas_cm0: High IOPs queues : disabled
-mpt3sas0-msix0: PCI-MSI-X enabled: IRQ 447
-mpt3sas0-msix1: PCI-MSI-X enabled: IRQ 448
-mpt3sas0-msix2: PCI-MSI-X enabled: IRQ 449
-mpt3sas0-msix3: PCI-MSI-X enabled: IRQ 450
-mpt3sas0-msix4: PCI-MSI-X enabled: IRQ 451
-mpt3sas0-msix5: PCI-MSI-X enabled: IRQ 452
-mpt3sas0-msix6: PCI-MSI-X enabled: IRQ 453
-mpt3sas0-msix7: PCI-MSI-X enabled: IRQ 454
-mpt3sas0-msix8: PCI-MSI-X enabled: IRQ 455
-mpt3sas0-msix9: PCI-MSI-X enabled: IRQ 456
-mpt3sas0-msix10: PCI-MSI-X enabled: IRQ 457
-mpt3sas0-msix11: PCI-MSI-X enabled: IRQ 458
-mpt3sas0-msix12: PCI-MSI-X enabled: IRQ 459
-mpt3sas0-msix13: PCI-MSI-X enabled: IRQ 460
-mpt3sas0-msix14: PCI-MSI-X enabled: IRQ 461
-mpt3sas0-msix15: PCI-MSI-X enabled: IRQ 462
-mpt3sas0-msix16: PCI-MSI-X enabled: IRQ 463
-mpt3sas0-msix17: PCI-MSI-X enabled: IRQ 464
-mpt3sas0-msix18: PCI-MSI-X enabled: IRQ 465
-mpt3sas0-msix19: PCI-MSI-X enabled: IRQ 466
-mpt3sas0-msix20: PCI-MSI-X enabled: IRQ 467
-mpt3sas0-msix21: PCI-MSI-X enabled: IRQ 468
-mpt3sas0-msix22: PCI-MSI-X enabled: IRQ 469
-mpt3sas0-msix23: PCI-MSI-X enabled: IRQ 470
-mpt3sas0-msix24: PCI-MSI-X enabled: IRQ 471
-mpt3sas0-msix25: PCI-MSI-X enabled: IRQ 472
-mpt3sas0-msix26: PCI-MSI-X enabled: IRQ 473
-mpt3sas0-msix27: PCI-MSI-X enabled: IRQ 474
-mpt3sas0-msix28: PCI-MSI-X enabled: IRQ 475
-mpt3sas0-msix29: PCI-MSI-X enabled: IRQ 476
-mpt3sas0-msix30: PCI-MSI-X enabled: IRQ 477
-mpt3sas0-msix31: PCI-MSI-X enabled: IRQ 478
-mpt3sas0-msix32: PCI-MSI-X enabled: IRQ 479
-mpt3sas0-msix33: PCI-MSI-X enabled: IRQ 480
-mpt3sas0-msix34: PCI-MSI-X enabled: IRQ 481
-mpt3sas0-msix35: PCI-MSI-X enabled: IRQ 482
-mpt3sas0-msix36: PCI-MSI-X enabled: IRQ 483
-mpt3sas0-msix37: PCI-MSI-X enabled: IRQ 484
-mpt3sas0-msix38: PCI-MSI-X enabled: IRQ 485
-mpt3sas0-msix39: PCI-MSI-X enabled: IRQ 486
-mpt3sas_cm0: iomem(0x00000000ac400000), mapped(0x00000000d9f45f61), size(65536)
-mpt3sas_cm0: ioport(0x0000000000006000), size(256)
-mpt3sas_cm0: CurrentHostPageSize is 0: Setting default host page size to 4k
-mpt3sas_cm0: scatter gather: sge_in_main_msg(1), sge_per_chain(7), sge_per_io(128), chains_per_io(19)
-mpt3sas_cm0: failure at drivers/scsi/mpt3sas/mpt3sas_scsih.c:12348/_scsih_probe()!
-
-We were able to bissect the changes (see https://bugs.debian.org/1088159#64) down to
-
-b1e6e80a1b42 ("xen/swiotlb: add alignment check for dma buffers")
-
-#regzbot introduced: b1e6e80a1b42
-#regzbot link: https://bugs.debian.org/1088159
-
-reverting the commit resolves the issue.
-
-Does that ring some bells?
-
-In fact we have two more bugs reported with similar symptoms but not
-yet confirmed they are the same, but I'm referencing them here as well
-in case we are able to cross-match to root cause:
-
-https://bugs.debian.org/1093371 (megaraid_sas didn't work anymore with
-Xen)
-
-and
-
-https://bugs.debian.org/1087807 (Unable to boot: i40e swiotlb buffer
-is full)
-
-(but again the these are yet not confirmed to have the same root
-cause).
-
-Thanks in advance,
-
-Regards,
-Salvatore
