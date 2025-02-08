@@ -1,62 +1,62 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749221B415C
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 10:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96F81B85D2
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 10:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739011215; cv=none; b=Wek3QQ3Ldizti/GhHNOo994KBMTD+ErEKxUEvsE4tSLKYgcUJG+fUnH68RkJLn+ktfoFCW/L2wgiM43mH8VfFivkMkLHJdtR4fE//pN5w1+V12oHzqJ71qOH6+PdLiq5Ja8hARHGH2cRRacGnfyx6hkAd2AGRMTMhmhejq9gYA8=
+	t=1739011219; cv=none; b=WbaxXPWCZSgsqACGan+AaSzVtwAC2vu1T4/yCUOeD2tfLTAw6i8nAltWaVaK5WAkGV41t5TjjHFjIujiey0ZmLEwj7t4GpdoCR7RYyuVVVxVHW7TjaL/2Ni+0+WnO+/3zpTe8dOFWs4/omfCeYMFblodffJDuy61sTtYApicqug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739011215; c=relaxed/simple;
-	bh=eiRKbq2vepIQ7vYQL3IVoywHrok/Z1eF+aDZknLuwYw=;
+	s=arc-20240116; t=1739011219; c=relaxed/simple;
+	bh=n03AzBOBWmT08Gaw2Fpnbf95ax4MQddkTuaxTNL3zP8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dk+OshlqWK34C+ioMG2W660/SI2MMUXlNeAKiocxi9zOagTgu3f6O8hT6H6RGTyIMFXFIp/LfcczB7R2ZjiZzsjsHa+S/IPG0ngLdEupWPzuW+6mQ3qlM4fLMNJqSjbYUd6FIZXzFWzNoDPBNKr6SvdEYfDfDfkpUw8f5fUkQrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=go/gZIii; arc=none smtp.client-ip=209.85.214.176
+	 MIME-Version; b=bj3Bm1jrzdk1crQBGNM1woHvEPRcxjT8IAjr/Q/aAWm92ounZiP8JFuXd0eG+ldEvEHNr/KHW9Q9+qHkfIml6eojAoZBgxuJ0xARSXXiK2X98jS1moltiS3J3mDA+6AWxqXtORCgEfjeakJYrWPq1K3qEwvvhig2N+weZtb+sVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=JboYmYA5; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="go/gZIii"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f48ebaadfso42310225ad.2
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 02:40:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="JboYmYA5"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f48ab13d5so42522085ad.0
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 02:40:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1739011214; x=1739616014; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1739011217; x=1739616017; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=juzMyLx5J28dogWl0dvZjIex3AlV6esdHMv6/KGnTD4=;
-        b=go/gZIii2rGuVZxzTCCC4fCOOHTtI10Hm/8ng1WeJt84+Zb6eT0JhF5EYL7q9ObOPj
-         yEbEoUqZTpNwLl3GbEqAss704Jx2b2Yyj8C/gckmISEN77Jca+Z3jXUtKY19tyslRJZG
-         A72z3/pQ1iLjSTMfLT5XGsceASo3pesq6BswOeLjMLkcBsONQDZlJFlHgk+GUQkAooAA
-         vdcZkkXSPMFvlnpwTfR9j1Kcp0RehZwE62mQvzAp8NVopOGjo5WNh0tsSXvT4fIdlIzg
-         y/91C6CFgkbyewVRhUDx+o29kL2iAtYFeMK9SRpnrLNd4IiWO3opeAGH/QyhmJyZQuEb
-         hB6Q==
+        bh=SQGQvZxBQgd+2Ma/k6f6Q/GLYBdp+hkg2ZeYWxhonnA=;
+        b=JboYmYA56F94fUshJ0HZ2gOFmCF0Wdw5txp0sj6ReP5FGnUPHbbIalHDpoefzrGMGx
+         PWgcEr3c0qxPWd6Yg6B2YtAzgNm+Hyzp96YdXvv5G6CYr0ZNAylgvxCzYCC52c2Y4aw6
+         cLUYudS54DSUsSnavOD2pICevDWj5VqKO1YbhVfj9z0R5PKUEkcV6ckr4Zshq8lbswDF
+         udNZgfKRPPRfb3M0lIUQWWuaU8Vesfw/mQg3GOSr4Mru8pZ73tgy0kxDFq9mspIkwcBi
+         gPbVzbZMa4/wPZsKjKjCrgfkAVLsPQsVDxrZ41fJYeT9UzGlc6lxLQXbQxR3hXMGay/t
+         Li3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739011214; x=1739616014;
+        d=1e100.net; s=20230601; t=1739011217; x=1739616017;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=juzMyLx5J28dogWl0dvZjIex3AlV6esdHMv6/KGnTD4=;
-        b=lWNZ2K7NAx36ZD2Y1rj7bF0o6VfT7sdcLJDt6WE1cC15UAiX+R3o797G5c7nk0JLd1
-         p98119AbcoMRz7WAJf9mUmnF7esFFvKZUra+N7Yva4r9jyndAJOytID+iclen7+qV/Uu
-         /WgazZzEOHbYPdgRcIixqGxE9DrdHV+ifT+4gAmXHLkv2TEfeVB4wz3MzdEfhZ+WwcAs
-         XssuKhPWWBs9wTTOpvNqs3sLPmuu3KdUAm6OkHkmV2EmH803AZldoReR/HfuoyOJaGmx
-         1l+5RmzrAuUENiUeJSxk3xlEW7dGbGZtTQBfxAb57vJn/7wHx4zymsaXb7BwOGUhoKFw
-         SfZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWXHfNYqGagIMKtW7ahVrz5/5wXp5EPvKHV+BICm01Tp/7yPOuprhfHcAmueCTZgjd6wEJHGWgIQER9cvg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM+KluskEFPVIYihxMNL6q4W/4rKXN19d4M9Q9IqVxJGPuPH6T
-	Hh3+xc+Whdu2juFHRZLQljtmspeRmFlVrPvvhg3ahuTAM3bKRfmD5FQq+eo0sDE=
-X-Gm-Gg: ASbGncurX3IYFbMIhfD8Yvp1FmJlnBWPq7gZkM0okp2s5MJ7YHYVaZGabJ6C+Cy4B4W
-	bAJX1/RxAQB9Wk+y266fJzkjLwph55WAQ123cTtHRjlGmDPArKYHNCei6kg2OMJXIsJ215X4C2j
-	LOZReqw7m+D8R+sxvRIGRfHRzSiXLHZFs7MYtg5F1KNvgfqvThEzeM9xAhtFGM4wDFUefTVofuX
-	Tvlp3iMDvbeXGErXkiL01HuSg/ljibi9Adb0cl+8r7eAzfX3SudKZVFkwW3YTGFSnkPlZSUWwig
-	wkpsIjz6xL/HVcA9h3afmZKw5+qJZAL1WQ/iJLimkd4gfmfHMA==
-X-Google-Smtp-Source: AGHT+IFNmb13ZbZg6r1svxx+lR3YmmJ7/TTTWvUWZuHu1+y5DbctWyFT6u0lXzmMcuDYGTINuAWpuA==
-X-Received: by 2002:a05:6a20:d706:b0:1e0:ca1c:8581 with SMTP id adf61e73a8af0-1ee03a8dbb8mr12390695637.21.1739011213669;
-        Sat, 08 Feb 2025 02:40:13 -0800 (PST)
+        bh=SQGQvZxBQgd+2Ma/k6f6Q/GLYBdp+hkg2ZeYWxhonnA=;
+        b=RjTErByeApQu3t1FGvrzUKJf+W/S5YGSmmpYDpchsa2Hz1o7yrDtUBus2klEt19M8X
+         Yq8UakheVIE4TrkOGY8w0xWoSvr6z+bTSCzOsfCvro7x6f808m+bZQ+L5HCfZkfhRHzN
+         wjYwa1Y8u1cOCaJM+jvVlyLqJ/taplZthaK60NajHSUageuBMdlZEFBzlNcEUwEYeqU7
+         o87+4f3JLgWurNsDk+QJOD6kyPbQd3REzTMdHSMo5cJ7HMYCSjQjNxHpW96kXQD5aHIS
+         O7/SpEb1ZkdMGcy4b1wCOylHVvY6K30OpFCdL/Xl0aCUSbTYypFWRXUo/MTX1H9TuRGE
+         0qVg==
+X-Forwarded-Encrypted: i=1; AJvYcCXSyxcyFHRlLXLX8jPJ6Gk0roDPT2pjqaO9lvNKbcgqiVwVN9YaKuwjNUuGqKmYUYR6gqhUtCk58ass2PU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcHS6eGHz8/PCMR5aEiX5UJjwbrQjQJkEHyARE6gYH7fyt2Hvs
+	wsbng0YSJwTe6Gr8rVADbVwf4UvYejhLr5FWOj7P2oPojBz8WmaA8MeJLQXmDU8=
+X-Gm-Gg: ASbGncutqyRXYxX4frjUvvPBcKDj35gfhO73tzStkd6h3hzCr+5lh/96kniPt+kfPR1
+	z/7g5vep5BdaeXOVGKypUkSvpsep3HN3+wg+Qp1ArZOI5YYD01OFPE1YtYomxXWbEkM3e47+Z1N
+	7mBD55wagWlWk0M8h9mJ+zbKDuJ3oYznKtuXAWcpPm+WvgAuP+Nr5aff8V8SdsPm9W+mILxnK0T
+	fZEGZp+AQwQPBmJQwZipP3+uk8sWvHPHPA5gQhKtqwtfoQGjsqS0c5ST9OsXDRtPdAGTlkftsOc
+	yBkPEiQ2/1K6Fa2zIjFmDnkQLN73UtlrjJ2n8I4DgLHGqokycg==
+X-Google-Smtp-Source: AGHT+IFwKZ4ENzUKalHf5+THzKNZ277YQzoHoj85tFF8ysZVymo0KlkXTEeb4xQMHVqxLg83ynp2eA==
+X-Received: by 2002:a05:6a21:918b:b0:1ea:ddd1:2fcf with SMTP id adf61e73a8af0-1ee03a22bb9mr10999850637.4.1739011217015;
+        Sat, 08 Feb 2025 02:40:17 -0800 (PST)
 Received: from L6YN4KR4K9.bytedance.net ([139.177.225.254])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad5460b8d4bsm216325a12.11.2025.02.08.02.40.10
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad5460b8d4bsm216325a12.11.2025.02.08.02.40.14
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sat, 08 Feb 2025 02:40:13 -0800 (PST)
+        Sat, 08 Feb 2025 02:40:16 -0800 (PST)
 From: Yunhui Cui <cuiyunhui@bytedance.com>
 To: xueshuai@linux.alibaba.com,
 	renyu.zj@linux.alibaba.com,
@@ -66,9 +66,9 @@ To: xueshuai@linux.alibaba.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Yunhui Cui <cuiyunhui@bytedance.com>
-Subject: [PATCH v3 1/2] perf/dwc_pcie: fix some unreleased resources
-Date: Sat,  8 Feb 2025 18:40:01 +0800
-Message-Id: <20250208104002.60332-2-cuiyunhui@bytedance.com>
+Subject: [PATCH v3 2/2] perf/dwc_pcie: fix duplicate pci_dev devices
+Date: Sat,  8 Feb 2025 18:40:02 +0800
+Message-Id: <20250208104002.60332-3-cuiyunhui@bytedance.com>
 X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 In-Reply-To: <20250208104002.60332-1-cuiyunhui@bytedance.com>
 References: <20250208104002.60332-1-cuiyunhui@bytedance.com>
@@ -80,99 +80,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Release leaked resources, such as plat_dev and dev_info.
+During platform_device_register, wrongly using struct device
+pci_dev as platform_data caused a kmemdup copy of pci_dev. Worse
+still, accessing the duplicated device leads to list corruption as its
+mutex content (e.g., list, magic) remains the same as the original.
 
 Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
 ---
- drivers/perf/dwc_pcie_pmu.c | 33 ++++++++++++++++++++++-----------
- 1 file changed, 22 insertions(+), 11 deletions(-)
+ drivers/perf/dwc_pcie_pmu.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
-index cccecae9823f..19fa2ba8dd67 100644
+index 19fa2ba8dd67..4f6599e32bba 100644
 --- a/drivers/perf/dwc_pcie_pmu.c
 +++ b/drivers/perf/dwc_pcie_pmu.c
-@@ -572,8 +572,10 @@ static int dwc_pcie_register_dev(struct pci_dev *pdev)
+@@ -565,9 +565,7 @@ static int dwc_pcie_register_dev(struct pci_dev *pdev)
+ 	u32 sbdf;
+ 
+ 	sbdf = (pci_domain_nr(pdev->bus) << 16) | PCI_DEVID(pdev->bus->number, pdev->devfn);
+-	plat_dev = platform_device_register_data(NULL, "dwc_pcie_pmu", sbdf,
+-						 pdev, sizeof(*pdev));
+-
++	plat_dev = platform_device_register_simple("platform_dwc_pcie", sbdf, NULL, 0);
+ 	if (IS_ERR(plat_dev))
  		return PTR_ERR(plat_dev);
  
- 	dev_info = kzalloc(sizeof(*dev_info), GFP_KERNEL);
--	if (!dev_info)
-+	if (!dev_info) {
-+		platform_device_unregister(plat_dev);
- 		return -ENOMEM;
-+	}
+@@ -616,18 +614,26 @@ static struct notifier_block dwc_pcie_pmu_nb = {
  
- 	/* Cache platform device to handle pci device hotplug */
- 	dev_info->plat_dev = plat_dev;
-@@ -730,6 +732,15 @@ static struct platform_driver dwc_pcie_pmu_driver = {
- 	.driver = {.name = "dwc_pcie_pmu",},
+ static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
+ {
+-	struct pci_dev *pdev = plat_dev->dev.platform_data;
++	struct pci_dev *pdev;
+ 	struct dwc_pcie_pmu *pcie_pmu;
+ 	char *name;
+ 	u32 sbdf;
+ 	u16 vsec;
+ 	int ret;
+ 
++	sbdf = plat_dev->id;
++	pdev = pci_get_domain_bus_and_slot(sbdf >> 16, PCI_BUS_NUM(sbdf & 0xffff),
++					   sbdf & 0xff);
++	if (!pdev) {
++		pr_err("No pdev found for the sbdf 0x%x\n", sbdf);
++		return -ENODEV;
++	}
++
+ 	vsec = dwc_pcie_des_cap(pdev);
+ 	if (!vsec)
+ 		return -ENODEV;
+ 
+-	sbdf = plat_dev->id;
++	pci_dev_put(pdev);
+ 	name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%x", sbdf);
+ 	if (!name)
+ 		return -ENOMEM;
+@@ -642,7 +648,7 @@ static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
+ 	pcie_pmu->on_cpu = -1;
+ 	pcie_pmu->pmu = (struct pmu){
+ 		.name		= name,
+-		.parent		= &pdev->dev,
++		.parent		= &plat_dev->dev,
+ 		.module		= THIS_MODULE,
+ 		.attr_groups	= dwc_pcie_attr_groups,
+ 		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
+@@ -729,7 +735,7 @@ static int dwc_pcie_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_n
+ 
+ static struct platform_driver dwc_pcie_pmu_driver = {
+ 	.probe = dwc_pcie_pmu_probe,
+-	.driver = {.name = "dwc_pcie_pmu",},
++	.driver = {.name = "platform_dwc_pcie",},
  };
  
-+static void dwc_pcie_cleanup_devices(void)
-+{
-+	struct dwc_pcie_dev_info *dev_info, *tmp;
-+
-+	list_for_each_entry_safe(dev_info, tmp, &dwc_pcie_dev_info_head, dev_node) {
-+		dwc_pcie_unregister_dev(dev_info);
-+	}
-+}
-+
- static int __init dwc_pcie_pmu_init(void)
- {
- 	struct pci_dev *pdev = NULL;
-@@ -742,7 +753,7 @@ static int __init dwc_pcie_pmu_init(void)
- 		ret = dwc_pcie_register_dev(pdev);
- 		if (ret) {
- 			pci_dev_put(pdev);
--			return ret;
-+			goto err_cleanup;
- 		}
- 	}
- 
-@@ -751,35 +762,35 @@ static int __init dwc_pcie_pmu_init(void)
- 				      dwc_pcie_pmu_online_cpu,
- 				      dwc_pcie_pmu_offline_cpu);
- 	if (ret < 0)
--		return ret;
-+		goto err_cleanup;
- 
- 	dwc_pcie_pmu_hp_state = ret;
- 
- 	ret = platform_driver_register(&dwc_pcie_pmu_driver);
- 	if (ret)
--		goto platform_driver_register_err;
-+		goto err_remove_cpuhp;
- 
- 	ret = bus_register_notifier(&pci_bus_type, &dwc_pcie_pmu_nb);
- 	if (ret)
--		goto platform_driver_register_err;
-+		goto err_unregister_driver;
- 	notify = true;
- 
- 	return 0;
- 
--platform_driver_register_err:
-+err_unregister_driver:
-+	platform_driver_unregister(&dwc_pcie_pmu_driver);
-+err_remove_cpuhp:
- 	cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
--
-+err_cleanup:
-+	dwc_pcie_cleanup_devices();
- 	return ret;
- }
- 
- static void __exit dwc_pcie_pmu_exit(void)
- {
--	struct dwc_pcie_dev_info *dev_info, *tmp;
--
- 	if (notify)
- 		bus_unregister_notifier(&pci_bus_type, &dwc_pcie_pmu_nb);
--	list_for_each_entry_safe(dev_info, tmp, &dwc_pcie_dev_info_head, dev_node)
--		dwc_pcie_unregister_dev(dev_info);
-+	dwc_pcie_cleanup_devices();
- 	platform_driver_unregister(&dwc_pcie_pmu_driver);
- 	cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
- }
+ static void dwc_pcie_cleanup_devices(void)
 -- 
 2.39.2
 
