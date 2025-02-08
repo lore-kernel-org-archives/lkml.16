@@ -1,99 +1,59 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36BC13BAE3;
-	Sat,  8 Feb 2025 02:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7949245979
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 02:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738980324; cv=none; b=OQQ3G7h8HUNaTBM4uvNG/zutyuo4gnowka2UpUfetodYVWADiC8BGuMF5ttyf+jAW+YY0tbsxWo6KP1drL/9XnBXctsC26V0+cEh5k5FXiGhtdGI/EAfJwJSFlBRYNympeORr18yj1G44hRDwyqXh+2fMf4PxlzqiAxXq+dpM5g=
+	t=1738980735; cv=none; b=V6f60VMtM3NutvgTLllm3RryJXYMob2TnhyRhzjIR89ArFsI3drAPxlrB1vFxggOxw7ANHWtz+i61gOXYMJQB2P6bvq6TdoXj18x5WfE4mJp3j+W5EtyGmd71VzXOvxTa9ydCKn4LGbTd1C6doyP18VIVAr2i4Dqn83y3ANRjBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738980324; c=relaxed/simple;
-	bh=58t8IpyQGcJKNeTsLlLndRjaNSzrG9xb2nYxYwXkYV0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=cwRifeZRyJNirRF4vYglY4eRHgYzpiR4c6XfLl8CNSu1oURtSEdZtUPolyQppIzV/ngAxyt5ZnnvKgF1lDQ8EPA64DeRYdtxo49nPmBxXBFAfQBsrk3mlsNrPx3DcCq7iZRTfxLC4JQ1RgVwNYvq3KFlTQ+0SZAbfclbxayKJ+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Q6ZTOzSu; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1738980735; c=relaxed/simple;
+	bh=YnV64/QtT6U0smQk33tylYl9ShNbYNzDtqgLquTNWyQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bHkEeXRI4CxhjgL2Hp+IG/Zr6o+xoofGzk0oxZyySVtai3dDsSGFMoU8BQ28HsYxQ7IFmpZlWAg+Ei05qBLvy7XzR7ESKsRTuUeyda559mcbG5Ve9Sfghndw8u7BS1QjrxfDOg948ltuLotKgCVYSuB6vr/iX5W/EcWA3sVd7bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jfukqMPx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Q6ZTOzSu"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1738980317; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=PnO79n/yAvE5EfQyNJ74YN4HFwQURsznW0Z0JEn8xXo=;
-	b=Q6ZTOzSuhtm9UwcubY8NggqA18aZuEoO1A0CzKUHFUpMFW8k9amwi8zYgakttT9Eta3tyxjTaP7SmYYiVKTvKHGBfJEK0xAka1mi6eKckdxkUX3muF8dmGILBwKeGyL/oj7eQWQZqkbK/R14fexMDoaSY7N/q6rvO6CJMFg6KQY=
-Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WP-xQ4J_1738980312 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 08 Feb 2025 10:05:14 +0800
-Message-ID: <63720413-be3d-4ae3-aec7-3c62662116a9@linux.alibaba.com>
-Date: Sat, 8 Feb 2025 10:05:11 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jfukqMPx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF7BBC4CED1;
+	Sat,  8 Feb 2025 02:12:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738980735;
+	bh=YnV64/QtT6U0smQk33tylYl9ShNbYNzDtqgLquTNWyQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jfukqMPxgfD7U6Y5Fg86WRPYSmMLGC9XtkO8yc/xH+5G4Hbee1RqRobI8VIsYjl+7
+	 X6KjAYr7aA7mx1Zth4ZXYU/FDrAIeH1pyt0lcxfk9qqz/drdkHVS50tWeUv8/vjIjY
+	 //rWwdmNZR2sF8UMKnyT4SdK2tBUfepeznOIxtOm3H/7ftzDWMiHj2kcUgIRCrWDAq
+	 vq6o/eNFrTmogSTf9qlmnbg2qH53PawQMbmZi/qVQzcxKMSZJa0AOFlMnxvMELk+nJ
+	 IYb9V1+4gP+rq1DnnIXnq04BD3TxOuI5g2qOCUSFeOWyQBCYUzVmeYIzE2FI7C9sn7
+	 cnThItvu/SyYA==
+Date: Fri, 7 Feb 2025 18:12:13 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: David Engraf <david.engraf@sysgo.com>
+Cc: peterz@infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] objtool: Hide unnecessary compiler error message
+Message-ID: <20250208021213.2wip6pfgqn6jd2kw@jpoimboe>
+References: <20250203073610.206000-1-david.engraf@sysgo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 0/3] ACPI: APEI: handle synchronous errors in task
- work
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: yazen.ghannam@amd.com, mark.rutland@arm.com, catalin.marinas@arm.com,
- mingo@redhat.com, robin.murphy@arm.com, Jonathan.Cameron@Huawei.com,
- bp@alien8.de, rafael@kernel.org, linux-arm-kernel@lists.infradead.org,
- wangkefeng.wang@huawei.com, tanxiaofei@huawei.com, mawupeng1@huawei.com,
- tony.luck@intel.com, linmiaohe@huawei.com, naoya.horiguchi@nec.com,
- james.morse@arm.com, tongtiangen@huawei.com, gregkh@linuxfoundation.org,
- will@kernel.org, jarkko@kernel.org
-Cc: linux-acpi@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
- linux-edac@vger.kernel.org, x86@kernel.org, justin.he@arm.com,
- ardb@kernel.org, ying.huang@linux.alibaba.com, ashish.kalra@amd.com,
- baolin.wang@linux.alibaba.com, tglx@linutronix.de,
- dave.hansen@linux.intel.com, lenb@kernel.org, hpa@zytor.com,
- robert.moore@intel.com, lvying6@huawei.com, xiexiuqi@huawei.com,
- zhuo.song@linux.alibaba.com
-References: <20250107081735.16159-1-xueshuai@linux.alibaba.com>
- <8775a7d1-b4c5-467b-942c-3041e2994735@linux.alibaba.com>
-In-Reply-To: <8775a7d1-b4c5-467b-942c-3041e2994735@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250203073610.206000-1-david.engraf@sysgo.com>
 
-
-
-在 2025/1/22 13:36, Shuai Xue 写道:
-> Hi, Rafael,
+On Mon, Feb 03, 2025 at 08:36:10AM +0100, David Engraf wrote:
+> The check for using old libelf prints an error message when libelf.h is
+> not available but does not abort. This may confuse so hide the compiler
+> error message.
 > 
-> Gentle ping.
-> 
-> Thanks.
-> 
-> Best Regards,
-> Shuai
-> 
-> 在 2025/1/7 16:17, Shuai Xue 写道:
->> changes singce v17:
->> - rebase to Linux 6.13-rc7 with no functional changes
->> - add reviewed-by tag for patch 1-3 from Jane Chu
->> - add reviewed-by tag for patch 3 from Yazen
->>
->> changes singce v16:
->> - add reviewed-by tag for patch 1 and patch 2 from Yazen
->> - rewrite warning message for force kill (per Yazen)
->> - warn with dev_err in ghes (per Jarkko)
->> - add return value -ENXIO in memory_failure comments  (per Yazen)
->> - Link: https://lore.kernel.org/lkml/20241104015430.98599-1-xueshuai@linux.alibaba.com/
->>
->> changes singce v15:
->> - add HW_ERR and GHES_PFX prefix per Yazen
->>
->> changes since v14:
->> - add reviewed-by tags from Jarkko and Jonathan
->> - remove local variable and use twcb->pfn
->>
+> Signed-off-by: David Engraf <david.engraf@sysgo.com>
+> ---
+>  tools/objtool/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi, all,
+Queued, thanks!
 
-Gentle ping.
-
-Thanks.
-Shuai
-
+-- 
+Josh
