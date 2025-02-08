@@ -1,115 +1,114 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB734155316;
-	Sat,  8 Feb 2025 06:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECD7157E6B;
+	Sat,  8 Feb 2025 06:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738996472; cv=none; b=SumH4vUtRz6ELIYTZcDM8y54vz8CZylOimuAbTLDlRMDjmi6L63zc5PGOkqI3ifluh1qWsV7daIOPBFIdSeKK7u5dh+mNfxZ83s2LzIggTJTMXIX0HKz5ayJrnk9gAw1Ll+Vb2pykHtA/t1+xfVOQITuXLGRRdQKfEV4CamTA3Q=
+	t=1738996925; cv=none; b=ukHx2G38CIrBbJVyJevTv97UQZR0Sbp79yc1ufzZTvODwXJ3U2QYEvj1GqXbmwuVL3O5uPa+iM+T51sjZBpwGsj3hEpIZYSJqCsD+IiMDhYqINlH3nl+O1uHx9KpsHxJH6drV6fdiFWPp1JHNgCNkd3FBa07D6owuIsN3mH112k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738996472; c=relaxed/simple;
-	bh=tW0+Lr2QBZHrrpEVFfIMsDHMzu3gMifdnEelPOfNlFU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DL6kiIIu9DUMtG6zmOcVkBhUZUbA7h5DyH5XVPaX4s7YUF0MtPKj66WhY1+iPtstuogWTtMQ7NDOUGIM0HhbTwD/18YvTyojQKKECUapa+OUc6rSQ/rpdriojM978cUknPmzCCnTi7/w/bUuIdxy2mE7JJURIj+x8dhF6GWyHiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eS/1GPw7; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1738996925; c=relaxed/simple;
+	bh=wWMaU7kgqaQKoYCnX/AS8gqZVoCu0I4JE4OFgye+g8E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WOo+Z7gIQIa+AHx7i1352f9D/JrU27ZYtThcuq/c0AjdapTbMqzKg7QCJZN1WlS9wRIcb05U9Ib3E+ybz+We0koV/rDB5WS+Z+INIWl1px4OWfWuff5wcdwz+2KEvGxam5tYOZunTopwryPMlggyEk84rAEnTutDRocFLmQEeHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HvsqJvHC; arc=none smtp.client-ip=209.85.219.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eS/1GPw7"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f55fbb72bso23847415ad.2;
-        Fri, 07 Feb 2025 22:34:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HvsqJvHC"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e442b79de4so18806156d6.2;
+        Fri, 07 Feb 2025 22:42:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738996470; x=1739601270; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2W+B51lt0Lph92TfGDjy3Nv60PpTC1Kx1fbVhEsxz6A=;
-        b=eS/1GPw7ZCiJi0d6qIej30qLQH/rD6KQH2dhyMqbSPDoMdZsCOnJhb10+1ooKjir37
-         MHoqmScMuoZ2x3zCNIF5/avSKKei6ggoGAt7CiP2AY0qf+NueYFFir+9GVwICN3qeHbF
-         4pAZaQ9jhhNAJHu6/Eqkkh5582k5HYD5d66NcOMwUl24pav8j+952BTHd/6QQjgIiJtt
-         +dKZgKpdEz5Z6+o0EjLfYm+Cbh96j58QDu6bnszH4TKQk5DzLcyzFXnvw2HAgxodCO7i
-         a0VjXyKsXNYSY1j3tPyKixvPYo5Pzyj2/3oO6hsgiLZA8nrW6lWlQZBaSwRZ9agPtMd5
-         JJnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738996470; x=1739601270;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1738996923; x=1739601723; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2W+B51lt0Lph92TfGDjy3Nv60PpTC1Kx1fbVhEsxz6A=;
-        b=mBLxIL2voPB/xLL6wSBBJssLM7YlI7/qV5v+/y/Sb4UajpwAAs2YINgyTp97fQLYet
-         uzBLaZz60OfNq96iAoDNhklKJoGjvahtenUcgRfPvMd5p9nznZDdPu95uhhowN9zD+1S
-         DX/06wijgNa/7Jn3IxK9tnWfofDHtJPu6jBGBb7MJrCdbBTwQ+XfQA1tq/pW9s07+ndm
-         qeB/DVtbV6Qs7IRDQGUzRubUdWuRjvzRxs4i/4O+cXajlKpQjR0PjgGyyaTQ1CxxYOmo
-         Il1kHmQNHC7rYzFXqhgwyCB78aiGDiZRzmKUdZNk4J9HJ9JS00wZFl/FZ/Ua0hQaJipx
-         ReDg==
-X-Forwarded-Encrypted: i=1; AJvYcCU54rWGizMI0L6XvxRUSPgjOZn3uaZFg1ndS2M6VOAsDlSByLa6cI6X8ICaswe0WKuLb+0gjzfq2EPGxfHsglSB@vger.kernel.org, AJvYcCVlWWcwIpFZCCfydfwaAD/Cq1gg7a8n+XV/JGGvJS+FOpsrFE3pI9aDxSCHsm3oKHkHXclKiu4hcHImksA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpmwOUsezTwiDxnskOdIKJ/POuHormkU5Du120VJ675GGUAdko
-	HY6HSu1gVpTJyXkiwzCTEkyhvmLS/xcpRi+IDnSlHhuL/7SDDkUjtReXhZ/4eU0=
-X-Gm-Gg: ASbGncuEjfNCDW9DitUTjZAN0pXcyKHYh/sIkGEjzRxZR6lH/dLBP7Rj4H/j/SI5Pvi
-	XKYbv7ghwAxwvpw518VoxiP3qobgsvIHNNWvE5w4WDvRgAiY1VK/73jRVS3krzKbptX9C6morSH
-	TuXUtE6R1Yrg/Q86G7QqeZWoqIni6KPM9EHSlVzAs6L2AOx5TSUWIQgtHiMQ6pFvmC5mAJToiOZ
-	n1Jii0n5X07Rhbg44Z8ry1/DTdpA38uIWf20Gtg6AlRN3UQvWmANC7KB4rNuZgfHAyDp64qAoAC
-	fLQo+9We+JZrcy2oJtnT
-X-Google-Smtp-Source: AGHT+IGxDEdmYorBuzvy1xm/OAuvwxfLLCr+4DZX0PWuc9hzXBVQeJvcQ4in8LfTo0YLP/yKJiQXig==
-X-Received: by 2002:a17:902:c948:b0:21f:5e9c:c349 with SMTP id d9443c01a7336-21f5e9cc5bfmr58687075ad.43.1738996469608;
-        Fri, 07 Feb 2025 22:34:29 -0800 (PST)
-Received: from fedora ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f64a67488sm11037835ad.244.2025.02.07.22.34.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 22:34:28 -0800 (PST)
-Date: Sat, 8 Feb 2025 06:34:21 +0000
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Jay Vosburgh <jv@jvosburgh.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@kernel.org>, Jianbo Liu <jianbol@nvidia.com>,
-	Boris Pismenny <borisp@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>, Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 net 0/2] bonding: fix incorrect mac address setting
-Message-ID: <Z6b67YBbERi5v9gt@fedora>
-References: <20250207092920.543458-1-liuhangbin@gmail.com>
+        bh=KNoF24EWj8YqX5r+Yb0JvKHiF3XwnsqNhDQYoay6GVM=;
+        b=HvsqJvHCYRRcgEhpZVy6X7g2H4ET4jp0UXf3e/O4cHeXbO1Ke51NDcsD4Y8t6Jts93
+         RTj1A4h63aGdha8NHOkDvw4LrHoUYOvahqJOrCaZw2EDZpFu85HYFZ18zAF297aIlBaY
+         V3Q5kG0GyyNSgfFR8JR6pV2hV6RhLbc2Ma35YqZZSUQRKVo97fX8Z7MIet81kAp2nfmX
+         a40yeTUl3aCTiIN7kaefhqeKyh+IG45GbMEXxkWYuirNnGEdGk86Mpi9XmnTc8JSqmdK
+         jojXLoXQcPNRpOKPFrDusUeLP3TGMz+/BLSEcMywRAu/qM8V0yPkOICOU/19oq1FLDEW
+         prbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738996923; x=1739601723;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KNoF24EWj8YqX5r+Yb0JvKHiF3XwnsqNhDQYoay6GVM=;
+        b=rnbYILwK8v6Ax7f6su67vswc6h7RhuJQF+tH5kXDAfk5HW268k64I7S9hZATLzyoNA
+         O6Mtk2PLK0wsan4e8qKUMarX/yjBPN5++ecS8bAahoRE8EsxZrgNbjbf8g+qChnkXjNR
+         QfveaZiazqktsMwUaZcCXdnJ2Ou3nnQBVAcKSPRWrfLTf23M6Z8IfklRc9ycwo0wizDV
+         0CFL6DrN4+VyiWSlh9Qo+FdgqI6o/nnqEZIzurJ6wr1WZoh0ejqUndYb/2Nc43C9+g5F
+         SQruL7MtBptN9nm8m76HiBQpJ7Wnwxx6bpWaH0yV8p6PpxBSVHTtoSh3uHT1v1zn8Iwy
+         I+sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVP0GQfukhZOG146+5VfTvJVpYjHwD+9gAzX5fJIIuizuWG5XJuljSGLEN4eTk369SoMmVkpi7CfsupEPItvg==@vger.kernel.org, AJvYcCVe/KQozHTLNBPHhU5DPQxC9am1O+8hClj0t6/xNQmAFrAZOsMxTrmQhypqxycC6uuX6Hz6MVtdaeJKsTM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfevUmOZ5YYyhXCIGBlxa8edjfv8MnqJ88oWf+0VVN405uBvLA
+	iTGq51iCMCHp11KowcgcBMYS4pEgoY2Q3F0PlWmedm3zLANhSCpK8zEM117AxJ52Au91efMz4wb
+	nwYSNuMVTMt7Ale06mHzBhW0AXpc=
+X-Gm-Gg: ASbGncuxwNC7K0ayhjln+w+1mpK11DBEQ8fIa90JyT5R6ro1s9594zXnlAquEypDjxO
+	Xazk/M2C5A1dXkrUnlpp+XEE2dNBhylmB4/Mg6krimwcDEEFjmwNkV+ik9vhmvDsquNf+Mlvcvk
+	M=
+X-Google-Smtp-Source: AGHT+IEs9HDzxbSnf4IuE2Us6jRZq5uN6GtBF34aMoCTWAhmW49kkqa8vONjcSMbO5sJv9M9Po/b4dEo6KUDYdx+FNc=
+X-Received: by 2002:a05:6214:c6e:b0:6d8:9e16:d08e with SMTP id
+ 6a1803df08f44-6e445684b70mr70874766d6.26.1738996922769; Fri, 07 Feb 2025
+ 22:42:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207092920.543458-1-liuhangbin@gmail.com>
+References: <20250127063526.76687-1-laoar.shao@gmail.com> <Z5eOIQ4tDJr8N4UR@pathway.suse.cz>
+ <CALOAHbBZc6ORGzXwBRwe+rD2=YGf1jub5TEr989_GpK54P2o1A@mail.gmail.com>
+ <alpine.LSU.2.21.2501311414281.10231@pobox.suse.cz> <CALOAHbDwsZqo9inSLNV1FQV3NYx2=eztd556rCZqbRvEu+DDFQ@mail.gmail.com>
+ <CAPhsuW4gYKHsmtHsBDUkx7a=apr_tSP_4aFWmmFNfqOJ+3GDGQ@mail.gmail.com>
+ <CALOAHbDYFAntFbwMwGgnXkHh1audSoUwG1wFu_4e8P=c=hwZ0w@mail.gmail.com>
+ <CAPhsuW4HsTab+w2r23bM52kcM1RBFBKP5ujVdDvxLE9OiqgMdA@mail.gmail.com>
+ <CALOAHbAJBwSYju3-XEQwy0O1DNPawuEgmhrV5ECTrL9J388yDw@mail.gmail.com> <CAPhsuW51E4epDCrdNcQCG+SzHiyGhE+AocjmXoD-G0JExs9N1A@mail.gmail.com>
+In-Reply-To: <CAPhsuW51E4epDCrdNcQCG+SzHiyGhE+AocjmXoD-G0JExs9N1A@mail.gmail.com>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Sat, 8 Feb 2025 14:41:26 +0800
+X-Gm-Features: AWEUYZnkfqwAOyDcshbUwDrxk7zHdHKhEWMZwGV_f1rXNLE-APUdHuKjOXI0J5I
+Message-ID: <CALOAHbAaCbvr=F6PBJ+gnQa1WNidELzZW-P2_HmBsZ1tJd6FFg@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] livepatch: Add support for hybrid mode
+To: Song Liu <song@kernel.org>
+Cc: bpf <bpf@vger.kernel.org>, Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, 
+	jpoimboe@kernel.org, jikos@kernel.org, joe.lawrence@redhat.com, 
+	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Please hold on this patch. Our QE reported that with bare NIC, the
-backup NIC can't receive the NS messages even after joining the multicast
-MAC group. But after remove the backup NIC from bond, the NIC interface
-could receive the NS message.
+On Fri, Feb 7, 2025 at 2:01=E2=80=AFAM Song Liu <song@kernel.org> wrote:
+>
+> On Wed, Feb 5, 2025 at 6:55=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com>=
+ wrote:
+> [...]
+> > > I think we should first understand why the trampoline is not
+> > > freed.
+> >
+> > IIUC, the fexit works as follows,
+> >
+> >   bpf_trampoline
+> >     + __bpf_tramp_enter
+> >        + percpu_ref_get(&tr->pcref);
+> >
+> >     + call do_exit()
+> >
+> >     + __bpf_tramp_exit
+> >        + percpu_ref_put(&tr->pcref);
+> >
+> > Since do_exit() never returns, the refcnt of the trampoline image is
+> > never decremented, preventing it from being freed.
+>
+> Thanks for the explanation. In this case, I think it makes sense to
+> disallow attaching fexit programs on __noreturn functions. I am not
+> sure what is the best solution for it though.
 
-This is weird, it looks the backup NIC dropped the NS message somewhere,
-even using tcpdump (the NIC will be in promisc mode) I can't capture the
-NS message on backup slave.
+There is a tools/objtool/noreturns.h. Perhaps we could create a
+similar noreturns.h under kernel/bpf and add all relevant functions to
+the fexit deny list.
 
-I need to debug more.
-
-Thanks
-Hangbin
-On Fri, Feb 07, 2025 at 09:29:18AM +0000, Hangbin Liu wrote:
-> The mac address on backup slave should be convert from Solicited-Node
-> Multicast address, not from bonding unicast target address.
-> 
-> v3: also fix the mac setting for slave_set_ns_maddr. (Jay)
->     Add function description for slave_set_ns_maddr/slave_set_ns_maddrs (Jay)
-> v2: fix patch 01's subject
-> 
-> Hangbin Liu (2):
->   bonding: fix incorrect MAC address setting to receive NS messages
->   selftests: bonding: fix incorrect mac address
-> 
->  drivers/net/bonding/bond_options.c            | 55 ++++++++++++++++---
->  .../drivers/net/bonding/bond_options.sh       |  4 +-
->  2 files changed, 49 insertions(+), 10 deletions(-)
-> 
-> -- 
-> 2.46.0
-> 
+--
+Regards
+Yafang
