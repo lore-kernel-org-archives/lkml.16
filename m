@@ -1,146 +1,163 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77396149E16;
-	Sat,  8 Feb 2025 05:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADD017BA6;
+	Sat,  8 Feb 2025 05:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738992338; cv=none; b=dC/wtW4zJipg8q4MpXGM5efdMOeAY4l5l5Y+CWZGHB5SsNvfLajYYikdWrsdyaU+xH+g7h097sIYTYGlm3UYPsLXYEq6RU0xkmEA4fJb8s4SVvtzkqhH3nb8lJC6o+7h3dmuzMZI6ZFV1bdjZ+RCxFe7rGTB7MofrG0T7AlIdeo=
+	t=1738993195; cv=none; b=EKdQVm9opc30OH2n5t9+nZjOdXPNRlH/gqmZ5E1EIRO8zYWDmANqPGDPatk+eMYwjmzQ6A9ExWQKgYDpQZ52kJCHarU77Uu1iT+bR+FpIRBBZCxNMMDHLPqruBwdRYLM/5NxUQ34EKFIdrCCbmGIgSAWBjQdyeaRuqxTGtGWhTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738992338; c=relaxed/simple;
-	bh=0smO9XkikRJHjHLhsl4Z55KXOlo/iN4VDmT24NDqpzo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pEQ0+PlAfjZiL+/7DRgPd0bcoh6073MenIbH2mMHSuIuqeZXUVXJ4AWn1w6l2O8uJr1jHJHCC4RXdmpQzUES6cVfilg+t7ieuXIhErDO4Rgf/l6QGYySk3zkK0/NZGWW4+s6tJ0T6hAPnmX6Be9/jrwQPOhW/g8JoQC9YYNJN+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hvkqFV3k; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738993195; c=relaxed/simple;
+	bh=EIO2RApIMTaoQHu0AYGuzLxcnzfiMUbPkQ+Ttz9uEII=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bezvMdVPi36fGf/NACaf7GAR/fnOWukpvgaCBdmM/uzREP7m951Eqa3VGg+lQD5skLg1YFN4isN60Iclq94A7+Y5pGgImaKYhH9X4XCrv4wRWil8hX6zndKvXMwo5Gp+a2McAgSjbJSS4GLdOwXM06ep+YajPjHxyR20Vd1vgVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S7IS+KGI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvkqFV3k"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6f6c90b51c3so22513517b3.2;
-        Fri, 07 Feb 2025 21:25:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738992335; x=1739597135; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OF4xeNuYmWKv0YV6IejqFGNZBvcjnf68cZWsTxDa3ec=;
-        b=hvkqFV3kYGfpNfLLpGLfEvCcgRjG9DItGmy4SH151prvhhG6ZVkCSeZrbkVn43YavP
-         wfds0hH6HzUXWBZXiGlBA1jlF7tJF25ZQkkgJi2smVf7S7Kyfex9uttjHi5T3aTezESJ
-         VfqURSWUkuPqvXAX85KxiXMmLBao9K3163PHf8BbojTXIYWKFdiA0KJimUwXR2+zMMKK
-         X6avIE9czZpgjHj32wlunc3zZlVueTpfsEVCsLa4p/qbAeycZrYAnN18mcCrrzFv0Gdp
-         9F3QVfEX8w0T9Mt2yZz9pF9IAjRlyk0En/BqvAal/Noe0g2VaphBUYdFiiqg04f6H5pO
-         F/sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738992335; x=1739597135;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OF4xeNuYmWKv0YV6IejqFGNZBvcjnf68cZWsTxDa3ec=;
-        b=P23A81IkACJqR2CMOXuMR5Y9tC7PMEZ8UTnMTxELK6B9F3gwu1zSyRvKY+11pQIkBy
-         jz0nqEpFTx39JhK07rn5t3V8DyP8RR2lJ9re3okxyNXMOIpWSgO1keFReMQEKSc+RVu4
-         zT3/INRLaS3YSFHrsG1VKSiDZDj3iwJd+OdCrUcPiOWgyPEWyhHY4lRqDzo09AnblZDz
-         XIagBnry1gO9Q67X6+6sh/Hk9uR2vk9eFoKld6Q58lEJiZqyy+d7r1UAVUr4fVez+Z2W
-         xkjZVeqtUj3BfY9fC4x3Da/m1l/FB5ETO2bmv8lUNb0hvzHzN2FJMiKuL8lMoX6QDF5X
-         xUrA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8QzvJsHIpAos97EZq+DN3aHHRJuRIR/DSUcYbtzRhu5MP8StSXyt5stM5FFM/ZMCeGO/YOlBS2YN8MFd6kqQG0Q==@vger.kernel.org, AJvYcCXAIHl3eMu5RotfIS+RbiBhDwbJvzHJCF2gmxRo/OZg6mgbm6cxIruxxwsXejQLXZE+aDh4O0Lmzr0QlhY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQkl4y7L/3jhN5u4nPzx8I/8QranUifjIKQjgH3S2xdYPlY8Ou
-	7ZhI9qtGGD3pXPTFmVzdAK5H8qRytU6EOs+4Xzqyj+voigPTai0pqtH0/TE0qIuCd31ttIK7Ir6
-	hGJVCNliQMUaJdC7N6YP2Awp5dEM=
-X-Gm-Gg: ASbGnctYBa2MLZefTJmngrTNSLhFUmNvjWOBkeWDuLY8glsUsyWeSuSOb4YN0OYTUX4
-	qPZ7gpBYUjATKwxN54blWM9TGv4bO4wCL87oSFjf+wuM+DZD0EXS+iuJ3g1OwIr9PQoigA38=
-X-Google-Smtp-Source: AGHT+IHRJprD1huFADTVuVRMYonFd5A03KQn7mQ86Ll8vexC8rJh2lc9dxjfOMOmLSPzMAsUWdzw2FfxoXKXDCG3eiM=
-X-Received: by 2002:a05:690c:690f:b0:6ef:4a57:fc98 with SMTP id
- 00721157ae682-6f9b286125bmr62303867b3.16.1738992335302; Fri, 07 Feb 2025
- 21:25:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S7IS+KGI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A947C4CED6;
+	Sat,  8 Feb 2025 05:39:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738993194;
+	bh=EIO2RApIMTaoQHu0AYGuzLxcnzfiMUbPkQ+Ttz9uEII=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S7IS+KGI3Cu01/xSeKZlmjbimenl4l3+vdhqWbdTyYouNNAUtuuQyWwiHKVab3XdB
+	 IB8DBjZoyV7v0hhgNXxbff/mQ4HWs+m6zW94oGZB5LRvd4hYLwvkeeoIn3ilJEvi6r
+	 d5sR38oZnjxCT2bzT+5w4IMqQAl2yyowhLtQ14Cx4wgFbu/70jSYWyPIo+/4ANPurY
+	 K2Vsydclww71WiA2sgAFS235YE0a/UI72AZy008IOfcGiw/Mo7tN8/zXACsW96UHkI
+	 R6JA0YGDChkYHuY3eC0/8hCSicNYgXRy9TDwA71pP8+0ttdS7ftm/K4BaU25IZCoPJ
+	 n/1jziYmSveFg==
+Date: Sat, 8 Feb 2025 13:39:44 +0800
+From: Peter Chen <peter.chen@kernel.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: pawell@cadence.com, rogerq@kernel.org, gregkh@linuxfoundation.org,
+	balbi@kernel.org, jun.li@nxp.com, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, srk@ti.com
+Subject: Re: [PATCH] usb: cdns3: exit cdns3_gadget_udc_start if
+ FAST_REG_ACCESS cannot be set
+Message-ID: <20250208053944.GA28062@nchen-desktop>
+References: <20250206125943.786949-1-s-vadapalli@ti.com>
+ <20250207022523.GA22848@nchen-desktop>
+ <tf7qwkoybolexehzagzel67kdxdfsve2f3qdueomedld72v7pp@bquo47wpsxul>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250130030525.1482498-1-namhyung@kernel.org> <20250130030525.1482498-2-namhyung@kernel.org>
- <CAP-5=fVJDi2UuhTYk5g-QaLqZC29tAprKWs_0PKNmd+y=iugjA@mail.gmail.com>
- <Z6GCde4XqCuEZlgz@google.com> <CAP-5=fVrFzxcLZG8DyYh2rbd3u4133V6hhrQFCHsq_QMVVW=9g@mail.gmail.com>
- <Z6JosmbJBmiRHBKK@google.com>
-In-Reply-To: <Z6JosmbJBmiRHBKK@google.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Fri, 7 Feb 2025 21:25:24 -0800
-X-Gm-Features: AWEUYZlfkjXbRRmX0GGEkubcOp71j8vYwaX8UyWMtiebFMXMvXUMdsgMV46atqg
-Message-ID: <CAH0uvohMSS263T1ELDyy=OsOnjc8xDURpBqCfQPER5Urgwu2JA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] perf trace: Allocate syscall stats only if summary
- is on
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tf7qwkoybolexehzagzel67kdxdfsve2f3qdueomedld72v7pp@bquo47wpsxul>
 
-Hello Namhyung,
+On 25-02-07 11:12:50, Siddharth Vadapalli wrote:
+> On Fri, Feb 07, 2025 at 10:25:23AM +0800, Peter Chen wrote:
+> 
+> Hello Peter,
+> 
+> > On 25-02-06 18:29:36, Siddharth Vadapalli wrote:
+> > > When the device is in a low power state, access to the following
+> > > registers takes a long time:
+> > > - EP_CFG
+> > > - EP_TRADDR
+> > > - EP_CMD
+> > > - EP_SEL
+> > > - EP_STS
+> > > - USB_CONF
+> > > 
+> > > To address this, the fast register access feature can be enabled by
+> > > setting PUSB_PWR_FST_REG_ACCESS bit of the USB_PWR register, which
+> > > allows quick access by software. Software is expected to poll on
+> > > PUSB_PWR_FST_REG_ACCESS_STAT to ensure that fast register access has
+> > > been enabled by the controller. Attempting to access any of the
+> > > aforementioned registers after setting PUSB_PWR_FST_REG_ACCESS but
+> > > before PUSB_PWR_FST_REG_ACCESS_STAT has been set will result in
+> > > undefined behavior and potentially result in system hang.
+> > > 
+> > > Hence, poll on PUSB_PWR_FST_REG_ACCESS_STAT before proceeding with
+> > > gadget configuration, and exit if it cannot be enabled.
+> > > 
+> > > Fixes: b5148d946f45 ("usb: cdns3: gadget: set fast access bit")
+> > > Cc: <stable@vger.kernel.org>
+> > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> > > ---
+> > > 
+> > > Hello,
+> > > 
+> > > This patch is based on commit
+> > > 92514ef226f5 Merge tag 'for-6.14-rc1-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+> > > of Mainline Linux.
+> > > 
+> > > Regards,
+> > > Siddharth.
+> > > 
+> > >  drivers/usb/cdns3/cdns3-gadget.c | 18 ++++++++++++++++--
+> > >  1 file changed, 16 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/usb/cdns3/cdns3-gadget.c b/drivers/usb/cdns3/cdns3-gadget.c
+> > > index fd1beb10bba7..b62691944272 100644
+> > > --- a/drivers/usb/cdns3/cdns3-gadget.c
+> > > +++ b/drivers/usb/cdns3/cdns3-gadget.c
+> > > @@ -2971,8 +2971,6 @@ static void cdns3_gadget_config(struct cdns3_device *priv_dev)
+> > >  	/* enable generic interrupt*/
+> > >  	writel(USB_IEN_INIT, &regs->usb_ien);
+> > >  	writel(USB_CONF_CLK2OFFDS | USB_CONF_L1DS, &regs->usb_conf);
+> > > -	/*  keep Fast Access bit */
+> > > -	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
+> > >  
+> > >  	cdns3_configure_dmult(priv_dev, NULL);
+> > >  }
+> > > @@ -2990,6 +2988,8 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
+> > >  	struct cdns3_device *priv_dev = gadget_to_cdns3_device(gadget);
+> > >  	unsigned long flags;
+> > >  	enum usb_device_speed max_speed = driver->max_speed;
+> > > +	int ret;
+> > > +	u32 reg;
+> > >  
+> > >  	spin_lock_irqsave(&priv_dev->lock, flags);
+> > >  	priv_dev->gadget_driver = driver;
+> > > @@ -2997,6 +2997,20 @@ static int cdns3_gadget_udc_start(struct usb_gadget *gadget,
+> > >  	/* limit speed if necessary */
+> > >  	max_speed = min(driver->max_speed, gadget->max_speed);
+> > >  
+> > > +	/*  keep Fast Access bit */
+> > > +	writel(PUSB_PWR_FST_REG_ACCESS, &priv_dev->regs->usb_pwr);
+> > > +	reg = readl(&priv_dev->regs->usb_pwr);
+> > > +	if (!(reg & PUSB_PWR_FST_REG_ACCESS_STAT)) {
+> > > +		ret = readl_poll_timeout_atomic(&priv_dev->regs->usb_pwr, reg,
+> > > +						(reg & PUSB_PWR_FST_REG_ACCESS_STAT),
+> > > +						10, 1000);
+> > > +		if (ret) {
+> > > +			dev_err(priv_dev->dev, "Failed to enable fast access\n");
+> > > +			spin_unlock_irqrestore(&priv_dev->lock, flags);
+> > > +			return ret;
+> > > +		}
+> > > +	}
+> > > +
+> > >  	switch (max_speed) {
+> > >  	case USB_SPEED_FULL:
+> > >  		writel(USB_CONF_SFORCE_FS, &priv_dev->regs->usb_conf);
+> > 
+> > Hi Siddharth,
+> > 
+> > Would you please keep this change at cdns3_gadget_config in case the
+> > controller is power lost during the system suspend?
+> 
+> I did think of that initially, but the problem with doing so is that we
+> are already accessing USB_CONF above in the "switch(max_speed)" section.
+> The PUSB_PWR_FST_REG_ACCESS bit needs to be set before accessing any of:
+> - EP_CFG
+> - EP_TRADDR
+> - EP_CMD
+> - EP_SEL
+> - EP_STS
+> - USB_CONF
+> 
+> Please let me know if you have an alternate suggestion to address the
+> above.
+> 
 
-On Tue, Feb 4, 2025 at 11:21=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Tue, Feb 04, 2025 at 07:59:01AM -0800, Ian Rogers wrote:
-> > On Mon, Feb 3, 2025 at 6:59=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> > >
-> > > On Sat, Feb 01, 2025 at 10:57:00PM -0800, Ian Rogers wrote:
-> > > > On Wed, Jan 29, 2025 at 7:05=E2=80=AFPM Namhyung Kim <namhyung@kern=
-el.org> wrote:
-> > > > >
-> > > > > The syscall stats are used only when summary is requested.  Let's=
- avoid
-> > > > > unnecessary operations.  Pass 'trace' pointer to check summary an=
-d give
-> > > > > output file together.
-> > > >
-> > > > I don't think this last sentence makes sense.
-> > >
-> > > Thanks for your review.  I'd say:  Pass 'trace' pointer instead of do=
-ing
-> > > 'summary' option and 'output' file pointer separately.
-> >
-> > This still doesn't make sense. There is lazier initialization:
-> > ```
-> > -               ttrace->syscall_stats =3D intlist__new(NULL);
-> > +               if (trace->summary)
-> > +                       ttrace->syscall_stats =3D intlist__new(NULL);
-> > ```
-> > and there are functions that take a FILE* but now we're going to use
-> > the one in trace instead:
->
-> Yep, those FILE* (fp) was from trace->output.
->
->
-> > ```
-> > @@ -1568,7 +1569,7 @@ static struct thread_trace *thread__trace(struct
-> > thread *thread, FILE *fp)
-> >
-> >         return ttrace;
-> >  fail:
-> > -       color_fprintf(fp, PERF_COLOR_RED,
-> > +       color_fprintf(trace->output, PERF_COLOR_RED,
-> >                       "WARNING: not enough memory, dropping samples!\n"=
-);
-> >         return NULL;
-> > ```
-> > So why does the one passed to trace still exist? Unfortunately names
-> > like "fp" and "output" are not intention revealing.
->
-> I think "fp" is a conventional name for file pointers (probably from
-> K&R?).
->
-> >
-> > Anyway, from the commit message and the code I don't understand what
-> > this change is trying to do.
->
-> I don't know where you didn't get it.  Apparently my English is not good
-> enough.  So this commit does two things.
+How about move cdns3_gadget_config at the beginning of function
+cdns3_gadget_udc_start, and add your changes at cdns3_gadget_config?
 
-I don't think so. Please don't say that to yourself. :)
-
-Thanks,
-Howard
+Regards,
+Peter
