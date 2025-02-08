@@ -1,106 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5F413EFE3;
-	Sat,  8 Feb 2025 15:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEAB313EFE3;
+	Sat,  8 Feb 2025 15:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739028620; cv=none; b=NysHEf0AxaUGVr2ClwK5vQc90LarB1/gKxGw0TWjjfMWpmq4aG9LtqMoMFJ0sEPxTMlzRdzDaHbCPQx84cKRVf4a8zM24n7qLQVobN48amtvBa9cX3ftW92QuN+auQ6mxovJEJLw4lRZmfTBu7rcFTuTS5gkRlZtyqQnArubCT4=
+	t=1739028697; cv=none; b=f+2+aMxoFj+N09I1Nz4RzA3qoPFAXodPaVuX9rGw1oinwSKp6n/d+ptL+APbndolpSBZKDXaC9eJZccbJMVntJ2ywdWWtw8eTQ8H96K6TukYxat0h0ezSkVbuW06M9PLg09dco41TN3Z8H1d7Q6w0IfjWEsV8G1ALlKeWoUNotI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739028620; c=relaxed/simple;
-	bh=8HJ2lM2SOnHYyQoVMiqtqy+Vyu6PArUz60SZ2F8HSXo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kPNTOVwQf4L/iWGHivbRgAVmXsFn+8KIRGFOnLF6vvA5eLTmLsSTXh9Gqb9+cQjBIg+rZPhj4UgvNEZLmmIQ0qJA383cg+RCaTw2cGDtposeGKYOQd3bBHQZyJdd9pFeivLhQydpagGPV+lHb9qU2dgnxd+Txi7u5ZQy2skVyUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87EDDC4CED6;
-	Sat,  8 Feb 2025 15:30:18 +0000 (UTC)
-Date: Sat, 8 Feb 2025 10:30:17 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Borislav Petkov <bp@alien8.de>
-Subject: [PATCH] tracing: Add traceoff_after_boot option
-Message-ID: <20250208103017.48a7ec83@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739028697; c=relaxed/simple;
+	bh=xUEyeDJYNR6Ucl+LArrtXhSHez6IpDdlM3WRuVS2+go=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=d4wDXCTJ41JaNm4vcIh5HOinGSDn0JX+75SHvvuQirTsjhsTlh1Y0CCJNIDkLen87MoX+If4y28sQHLTfUAiERWFdfip3WEDGVq4Y/7fbrTHPvYW1Sycn3gq2d0jLl5uoVHyntmspGmeqD7kIvL5lRjol+QMwgVh5VZWIfsYJV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=OTJYcSmQ; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="OTJYcSmQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1739028668; x=1739633468; i=markus.elfring@web.de;
+	bh=7smLfTFL5BKYAZQkazi7scNRCK0L6bFwsDahCQSasH4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=OTJYcSmQXnJ28ne+zJmF6sLLBOptrLx32EOeU3FkEeHE/fASP5Eox2XGtb7+ncld
+	 yQSdqQOgj6SstGmXeXNKCCdcUfhnTxqb8IO4bigyzGKGJp0VaU7JOcCXVOKDQzt6g
+	 1dlBhC+zk6V3a+bVfvQyNRSqYEtwLMVoL8bBBrMnqZBr8QYseV/bhicAbvOGCpQ8d
+	 MDcTGiBtJjEqSk2Uk4AsQb8mQNO+BHJTs/nAeZwRVCMMh4qCr6c2RnQrPOXgEKSi1
+	 bOq2iXySPtsuAskQ2tJLbD3P36vJoJhblc/tSnrHw+iJwt5xeNsj6vV8L7RqNlcRu
+	 SBy/6spmRo0tjdoX+Q==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.11]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MLRUX-1txUjf1q67-00TWna; Sat, 08
+ Feb 2025 16:31:08 +0100
+Message-ID: <e1fffd3b-d3dd-4f46-b7b6-1f03f934dd30@web.de>
+Date: Sat, 8 Feb 2025 16:31:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+To: Tudor Ambarus <tudor.ambarus@linaro.org>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ Alim Akhtar <alim.akhtar@samsung.com>, Conor Dooley <conor+dt@kernel.org>,
+ Jassi Brar <jassisinghbrar@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-team@android.com,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Peter Griffin <peter.griffin@linaro.org>, Rob Herring <robh@kernel.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Will McVicker <willmcvicker@google.com>
+References: <20250207-gs101-acpm-v7-2-ffd7b2fb15ae@linaro.org>
+Subject: Re: [PATCH v7 2/3] firmware: add Exynos ACPM protocol driver
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250207-gs101-acpm-v7-2-ffd7b2fb15ae@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:41VPE8YHUwhgvBJ+GjhA+69xcvqt1/dXMka1JYXhGwdWO2uxU0+
+ 7/tUEhDlca6pJpreqOxT0yc/2G/pKFSQk8NqsO5zPkOwc4nOZXKtDDL69ehUZu0GpAS81OU
+ 39aVyHgvoCaT4xVlWeAtznFQTeDWQTehi/JwsFJUoLHGcrnkRVilv49G07dM7mLxhlhmWIF
+ +3qOlG8VmFmL3NQOo14qA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:+Z9MQ63j70M=;uZzfcpFuhUOZtbmhzft5U8Jbey4
+ oW3o5TdOkWPhufzVXoEqHrHgOXYQ8NpDuKZb4xpCXgiS6Qyo4AuvUCgTe7BZbVu4WAi4N/JH0
+ zGr+STweUFR1vfLD1QhQHFMITyWEwOVUpgMFVTXMpaMQ64mbr4vm8s8izDP6pzSCR1O5NhQwV
+ AK4b8btFxk9umsrQ0/npcAH/y5gTeSMUm8Xg27MhXrMR2JoJ7Bg98sYuF+lXU/Lg8Dn4WbmQu
+ 9kv5wBwWDa2VuDvPr5VtqWvIQGmyUBrqeNbwQeRmfk4jVYhpFpWeOhiuE5C0bzxPbEL8eJbj6
+ 8xzl/LwSeSNqDltqHg3ypRCSYCEOHKKSj8Q/Im3KE7QIaw5+tx4J+bg4PexXvv45pEuVKKrCp
+ +tGvJj0oJt90uCAyZEmLe4b18AeMBj9swUVTNGccuhLRpZyvX2LGZroc0TxPjSER5c5ekYjxP
+ LtNsMmEPP9312NhQc2Hc+VpErdKURktZ5ExFWlkFoSFKXjTcfNgsWFBqcE7C3sXQtyFskYrKq
+ Bs6Jcu8NJWrZuu6qefCMkXMHrUgbEg+lyLGNg7v9/zUnZJPftE97bC3CQYqH81R2GAc9FzE4/
+ bY1q0TAat7MiBJIL0MMv1/4fvXM69Lkh34TmaDPzNemx39PpiNGeCF6id+bD0s6ua7TAGUeOR
+ 84nDWnnhRap3ZD06RhIQQALB5bgkWA675BjFZrPR0kZl4pxtJcbTrCC4zfbMCeVOTwH/cqxZd
+ C0ebnUnggHraL7/ayhiDebCZhmAc5MdWs63W4amaTV54WRUyHM6p8GfLzaw/8FxtZjvS0SQLR
+ d2g6drU5YREC0PJnlfvSgB8Onne5cnINZFr4t7TKqPSzZ3YHjICz3qb9JT5MXPRrkJzBRfyYu
+ psXOvWzMkXFHGz/SNa5J6f76smmSwDOlruZOrIopD+AENAAfbpmHSvh5zqNQtmTDUfseI2KWa
+ 3zNCPBdwsawfyxNXPk2a755BNZZjzrvEsLye9EXdllqhVJtQCY2CLgd24foxFwyWDumZ6UYM2
+ ieLaAmbfHVwAiNTWJC8Gq/RmbBFM9qnmhRkoXYbaeg5gU5xJqKmsEPPsUesXyXMacp2m2PZ4b
+ ab8mzmhmaYTxDjzw5nTlg6spCC16Kq8l+NR6LRZsBZrA6VdW5z1jMR1BYpjnqCgriMIKuvNdP
+ J5lL8/sjouxpw4+2eOIHUXjxAoee+6DKC1A9BYNCRuwuFDPkE5VbJuS9QPZQ62TXJBS3Pyxsk
+ WZ5PPQxbgGDHfzh7p0tNbIHclpu/M/suXyG8m3MrnGPodUSHHT8XP+88JbDVilxTAv9ek1Ws6
+ wJ6sua0IP8dbmq/ZnnyihOJuA71AB0fDvrxJou7h4spXl5S1R55LV9BJYK+B8OxU+EeRifYXV
+ Xggs3O4ztBhwqsWXygWmLH90ptIRKVbmYQTkZZhyDkA9BVwIinOHhs75tosNloZrGp55rp87A
+ NZmER3mT0QMIGakfNHiH4dgDRVHI=
 
-From: Steven Rostedt <rostedt@goodmis.org>
+=E2=80=A6
+> +++ b/drivers/firmware/samsung/exynos-acpm.c
+> @@ -0,0 +1,771 @@
+=E2=80=A6
+> +static int acpm_dequeue_by_polling(struct acpm_chan *achan,
+> +				   const struct acpm_xfer *xfer)
+> +{
+=E2=80=A6
+> +	do {
+> +		mutex_lock(&achan->rx_lock);
+> +		ret =3D acpm_get_rx(achan, xfer);
+> +		mutex_unlock(&achan->rx_lock);
+=E2=80=A6
 
-Sometimes tracing is used to debug issues during the boot process. Since
-the trace buffer has a limited amount of storage, it may be prudent to
-disable tracing after the boot is finished, otherwise the critical
-information may be overwritten.  With this option, the main tracing buffer
-will be turned off at the end of the boot process.
+Under which circumstances would you become interested to apply a statement
+like =E2=80=9Cguard(mutex)(&achan->rx_lock);=E2=80=9D?
+https://elixir.bootlin.com/linux/v6.13.1/source/include/linux/mutex.h#L201
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- Documentation/admin-guide/kernel-parameters.txt |  9 +++++++++
- kernel/trace/trace.c                            | 11 +++++++++++
- 2 files changed, 20 insertions(+)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb8752b42ec8..e8ca4eabd152 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -7279,6 +7279,15 @@
- 			See also "Event triggers" in Documentation/trace/events.rst
- 
- 
-+	traceoff_after_boot
-+			[FTRACE] Sometimes tracing is used to debug issues
-+			during the boot process. Since the trace buffer has a
-+			limited amount of storage, it may be prudent to
-+			disable tracing after the boot is finished, otherwise
-+			the critical information may be overwritten.  With this
-+			option, the main tracing buffer will be turned off at
-+			the end of the boot process.
-+
- 	traceoff_on_warning
- 			[FTRACE] enable this option to disable tracing when a
- 			warning is hit. This turns off "tracing_on". Tracing can
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 1496a5ac33ae..1af18908ac3d 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -87,6 +87,7 @@ void __init disable_tracing_selftest(const char *reason)
- static struct trace_iterator *tracepoint_print_iter;
- int tracepoint_printk;
- static bool tracepoint_printk_stop_on_boot __initdata;
-+static bool traceoff_after_boot __initdata;
- static DEFINE_STATIC_KEY_FALSE(tracepoint_printk_key);
- 
- /* For tracers that don't implement custom flags */
-@@ -330,6 +331,13 @@ static int __init set_tracepoint_printk_stop(char *str)
- }
- __setup("tp_printk_stop_on_boot", set_tracepoint_printk_stop);
- 
-+static int __init set_traceoff_after_boot(char *str)
-+{
-+	traceoff_after_boot = true;
-+	return 1;
-+}
-+__setup("traceoff_after_boot", set_traceoff_after_boot);
-+
- unsigned long long ns2usecs(u64 nsec)
- {
- 	nsec += 500;
-@@ -10706,6 +10714,9 @@ __init static int late_trace_init(void)
- 		tracepoint_printk = 0;
- 	}
- 
-+	if (traceoff_after_boot)
-+		tracing_off();
-+
- 	tracing_set_default_clock();
- 	clear_boot_tracer();
- 	return 0;
--- 
-2.45.2
-
+Regards,
+Markus
