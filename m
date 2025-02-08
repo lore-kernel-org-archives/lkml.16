@@ -1,64 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99A5187848
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 06:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB734155316;
+	Sat,  8 Feb 2025 06:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738994414; cv=none; b=fWKHuYdlT9dbtZM9sqhDuQHhlFGDOY5or60Z+ImL5Tn2oFX1dM/8FGCv0dVgTbtOuxnTQhSTKqtvHzt9tu2OLg1SXwB13bdItH3dSgEvH1ZOEzyltg5ZuCnKmHVw1J30+mQJMPi6N+y5IhVD6+sg1//7hdWmB+l+TgCC4cZMU90=
+	t=1738996472; cv=none; b=SumH4vUtRz6ELIYTZcDM8y54vz8CZylOimuAbTLDlRMDjmi6L63zc5PGOkqI3ifluh1qWsV7daIOPBFIdSeKK7u5dh+mNfxZ83s2LzIggTJTMXIX0HKz5ayJrnk9gAw1Ll+Vb2pykHtA/t1+xfVOQITuXLGRRdQKfEV4CamTA3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738994414; c=relaxed/simple;
-	bh=v8GABo1UwktwEyJJqWmZGaAZAFNtICPfnzaZpX+Utb4=;
+	s=arc-20240116; t=1738996472; c=relaxed/simple;
+	bh=tW0+Lr2QBZHrrpEVFfIMsDHMzu3gMifdnEelPOfNlFU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ab6HhK8p8XJyRTQ9NHh9KxJqcyXfqbuTZSyAoOIzHi7DXHJCxQM7au9LUpKItZtBs8wgovRFdj8P9FnSSJR6nrDDaJBhNvpgTjpHx+3wbZwCCEk+UztGtraAVcYLOPLoXilWvCur58HZCaxypycBAT+aAFI+pe8twrtjIdAspcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mcrpZJ7C; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DL6kiIIu9DUMtG6zmOcVkBhUZUbA7h5DyH5XVPaX4s7YUF0MtPKj66WhY1+iPtstuogWTtMQ7NDOUGIM0HhbTwD/18YvTyojQKKECUapa+OUc6rSQ/rpdriojM978cUknPmzCCnTi7/w/bUuIdxy2mE7JJURIj+x8dhF6GWyHiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eS/1GPw7; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mcrpZJ7C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738994413; x=1770530413;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=v8GABo1UwktwEyJJqWmZGaAZAFNtICPfnzaZpX+Utb4=;
-  b=mcrpZJ7Ccg28nxTBwszYkOCq0fzszL/kywMvOZ07ndWM+UpGfp80ByW7
-   LC0IObYwJsuShjseCl6Ka8wVKRcVOxLPMqoWFgdbmQ6APpzGwxb9fOXIV
-   DAIYbXz5SMljYcmkInGYEtg7k1vZ6eAvlHMqW35Hsfi9yP9a7RlToBcB1
-   rE+rhxUqeIVt9cYSo4GZy5Tjufd+Fr/nwUfSH7OkjrykbnpWPdq13MlhM
-   VDOey2SuNmKGvo9r53pkMtpDzPyWRF6MCGcxrMF5RYOy+roFZZFY66ExB
-   sgs7eAw4AM9NEzXbMdhB2kVP5+BLIBVytu8LEQZqELYMXljufbQlLfmKE
-   Q==;
-X-CSE-ConnectionGUID: 2yubInMvSK+1VqFRvVHh8g==
-X-CSE-MsgGUID: iEmTMXiRRUqY8EZwySOyVg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="51028713"
-X-IronPort-AV: E=Sophos;i="6.13,269,1732608000"; 
-   d="scan'208";a="51028713"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 22:00:12 -0800
-X-CSE-ConnectionGUID: Kz5/PTaSRZeW6SsyjxyI+g==
-X-CSE-MsgGUID: aj7zVIGPTeudqEkQRkDA9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="134956830"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 07 Feb 2025 22:00:09 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tgdss-000zbz-2j;
-	Sat, 08 Feb 2025 06:00:06 +0000
-Date: Sat, 8 Feb 2025 13:59:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: zihan zhou <15645113830zzh@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, bsegall@google.com,
-	dietmar.eggemann@arm.com, juri.lelli@redhat.com,
-	linux-kernel@vger.kernel.org, mgorman@suse.de, mingo@redhat.com,
-	peterz@infradead.org, rostedt@goodmis.org,
-	vincent.guittot@linaro.org, vschneid@redhat.com
-Subject: Re: [PATCH V2 2/2] sched: Reduce the default slice to avoid tasks
- getting an extra tick
-Message-ID: <202502081304.ujyIUca2-lkp@intel.com>
-References: <20250207062402.33725-1-15645113830zzh@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eS/1GPw7"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f55fbb72bso23847415ad.2;
+        Fri, 07 Feb 2025 22:34:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738996470; x=1739601270; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2W+B51lt0Lph92TfGDjy3Nv60PpTC1Kx1fbVhEsxz6A=;
+        b=eS/1GPw7ZCiJi0d6qIej30qLQH/rD6KQH2dhyMqbSPDoMdZsCOnJhb10+1ooKjir37
+         MHoqmScMuoZ2x3zCNIF5/avSKKei6ggoGAt7CiP2AY0qf+NueYFFir+9GVwICN3qeHbF
+         4pAZaQ9jhhNAJHu6/Eqkkh5582k5HYD5d66NcOMwUl24pav8j+952BTHd/6QQjgIiJtt
+         +dKZgKpdEz5Z6+o0EjLfYm+Cbh96j58QDu6bnszH4TKQk5DzLcyzFXnvw2HAgxodCO7i
+         a0VjXyKsXNYSY1j3tPyKixvPYo5Pzyj2/3oO6hsgiLZA8nrW6lWlQZBaSwRZ9agPtMd5
+         JJnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738996470; x=1739601270;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2W+B51lt0Lph92TfGDjy3Nv60PpTC1Kx1fbVhEsxz6A=;
+        b=mBLxIL2voPB/xLL6wSBBJssLM7YlI7/qV5v+/y/Sb4UajpwAAs2YINgyTp97fQLYet
+         uzBLaZz60OfNq96iAoDNhklKJoGjvahtenUcgRfPvMd5p9nznZDdPu95uhhowN9zD+1S
+         DX/06wijgNa/7Jn3IxK9tnWfofDHtJPu6jBGBb7MJrCdbBTwQ+XfQA1tq/pW9s07+ndm
+         qeB/DVtbV6Qs7IRDQGUzRubUdWuRjvzRxs4i/4O+cXajlKpQjR0PjgGyyaTQ1CxxYOmo
+         Il1kHmQNHC7rYzFXqhgwyCB78aiGDiZRzmKUdZNk4J9HJ9JS00wZFl/FZ/Ua0hQaJipx
+         ReDg==
+X-Forwarded-Encrypted: i=1; AJvYcCU54rWGizMI0L6XvxRUSPgjOZn3uaZFg1ndS2M6VOAsDlSByLa6cI6X8ICaswe0WKuLb+0gjzfq2EPGxfHsglSB@vger.kernel.org, AJvYcCVlWWcwIpFZCCfydfwaAD/Cq1gg7a8n+XV/JGGvJS+FOpsrFE3pI9aDxSCHsm3oKHkHXclKiu4hcHImksA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpmwOUsezTwiDxnskOdIKJ/POuHormkU5Du120VJ675GGUAdko
+	HY6HSu1gVpTJyXkiwzCTEkyhvmLS/xcpRi+IDnSlHhuL/7SDDkUjtReXhZ/4eU0=
+X-Gm-Gg: ASbGncuEjfNCDW9DitUTjZAN0pXcyKHYh/sIkGEjzRxZR6lH/dLBP7Rj4H/j/SI5Pvi
+	XKYbv7ghwAxwvpw518VoxiP3qobgsvIHNNWvE5w4WDvRgAiY1VK/73jRVS3krzKbptX9C6morSH
+	TuXUtE6R1Yrg/Q86G7QqeZWoqIni6KPM9EHSlVzAs6L2AOx5TSUWIQgtHiMQ6pFvmC5mAJToiOZ
+	n1Jii0n5X07Rhbg44Z8ry1/DTdpA38uIWf20Gtg6AlRN3UQvWmANC7KB4rNuZgfHAyDp64qAoAC
+	fLQo+9We+JZrcy2oJtnT
+X-Google-Smtp-Source: AGHT+IGxDEdmYorBuzvy1xm/OAuvwxfLLCr+4DZX0PWuc9hzXBVQeJvcQ4in8LfTo0YLP/yKJiQXig==
+X-Received: by 2002:a17:902:c948:b0:21f:5e9c:c349 with SMTP id d9443c01a7336-21f5e9cc5bfmr58687075ad.43.1738996469608;
+        Fri, 07 Feb 2025 22:34:29 -0800 (PST)
+Received: from fedora ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f64a67488sm11037835ad.244.2025.02.07.22.34.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 22:34:28 -0800 (PST)
+Date: Sat, 8 Feb 2025 06:34:21 +0000
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Jay Vosburgh <jv@jvosburgh.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@kernel.org>, Jianbo Liu <jianbol@nvidia.com>,
+	Boris Pismenny <borisp@nvidia.com>,
+	Tariq Toukan <tariqt@nvidia.com>, Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 net 0/2] bonding: fix incorrect mac address setting
+Message-ID: <Z6b67YBbERi5v9gt@fedora>
+References: <20250207092920.543458-1-liuhangbin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,76 +79,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250207062402.33725-1-15645113830zzh@gmail.com>
+In-Reply-To: <20250207092920.543458-1-liuhangbin@gmail.com>
 
-Hi zihan,
+Please hold on this patch. Our QE reported that with bare NIC, the
+backup NIC can't receive the NS messages even after joining the multicast
+MAC group. But after remove the backup NIC from bond, the NIC interface
+could receive the NS message.
 
-kernel test robot noticed the following build errors:
+This is weird, it looks the backup NIC dropped the NS message somewhere,
+even using tcpdump (the NIC will be in promisc mode) I can't capture the
+NS message on backup slave.
 
-[auto build test ERROR on tip/sched/core]
-[also build test ERROR on peterz-queue/sched/core linus/master v6.14-rc1 next-20250207]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I need to debug more.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/zihan-zhou/sched-Reduce-the-default-slice-to-avoid-tasks-getting-an-extra-tick/20250207-142556
-base:   tip/sched/core
-patch link:    https://lore.kernel.org/r/20250207062402.33725-1-15645113830zzh%40gmail.com
-patch subject: [PATCH V2 2/2] sched: Reduce the default slice to avoid tasks getting an extra tick
-config: x86_64-randconfig-072-20250208 (https://download.01.org/0day-ci/archive/20250208/202502081304.ujyIUca2-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502081304.ujyIUca2-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502081304.ujyIUca2-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from kernel/sched/build_utility.c:72:
-   kernel/sched/debug.c: In function 'sched_base_slice_write':
->> kernel/sched/debug.c:193:9: error: implicit declaration of function 'sched_update_scaling'; did you mean 'sched_update_numa'? [-Werror=implicit-function-declaration]
-     193 |         sched_update_scaling();
-         |         ^~~~~~~~~~~~~~~~~~~~
-         |         sched_update_numa
-   cc1: some warnings being treated as errors
-
-
-vim +193 kernel/sched/debug.c
-
-   168	
-   169	
-   170	static ssize_t sched_base_slice_write(struct file *filp, const char __user *ubuf,
-   171					   size_t cnt, loff_t *ppos)
-   172	{
-   173		char buf[16];
-   174		unsigned int base_slice;
-   175	
-   176		if (cnt > 15)
-   177			cnt = 15;
-   178	
-   179		if (copy_from_user(&buf, ubuf, cnt))
-   180			return -EFAULT;
-   181		buf[cnt] = '\0';
-   182	
-   183		if (kstrtouint(buf, 10, &base_slice))
-   184			return -EINVAL;
-   185	
-   186	
-   187		base_slice = clamp_t(u64, base_slice,
-   188						NSEC_PER_MSEC/10,   /* HZ=1000 * 10 */
-   189						NSEC_PER_MSEC*100); /* HZ=100  / 10 */
-   190	
-   191		sysctl_sched_base_slice = base_slice;
-   192	
- > 193		sched_update_scaling();
-   194	
-   195		*ppos += cnt;
-   196		return cnt;
-   197	}
-   198	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks
+Hangbin
+On Fri, Feb 07, 2025 at 09:29:18AM +0000, Hangbin Liu wrote:
+> The mac address on backup slave should be convert from Solicited-Node
+> Multicast address, not from bonding unicast target address.
+> 
+> v3: also fix the mac setting for slave_set_ns_maddr. (Jay)
+>     Add function description for slave_set_ns_maddr/slave_set_ns_maddrs (Jay)
+> v2: fix patch 01's subject
+> 
+> Hangbin Liu (2):
+>   bonding: fix incorrect MAC address setting to receive NS messages
+>   selftests: bonding: fix incorrect mac address
+> 
+>  drivers/net/bonding/bond_options.c            | 55 ++++++++++++++++---
+>  .../drivers/net/bonding/bond_options.sh       |  4 +-
+>  2 files changed, 49 insertions(+), 10 deletions(-)
+> 
+> -- 
+> 2.46.0
+> 
