@@ -1,27 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524BC182BC
-	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 14:39:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2A4182BC;
+	Sat,  8 Feb 2025 14:41:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739025570; cv=none; b=alZuCIS6kWY8+QrNyVPTtrUbcCUheYE0Tc/aUu41rQIzVTpKHpPfS0rrQU8qOtRJyUPBmaOtb1p9FtZ+Pg0XIiQ4oar/w9feuqlXGLsdRg+GMvacPLxGOgTtAaXZa4eJm7KtnikZ4XNWF21gZkz+9iTHFoALqw8RSin1JVB8K5g=
+	t=1739025718; cv=none; b=WJke2LIm9l4N8SD0TNBYrDEL1kr1l3jwvbX1G+2o9IVzj+cOa3lWyeydksOdB98/WHiqR97+3/ms0kZxfSkRmVoWvhYdCmOlYhMDzNsbUtZZVgdufRZGWgVaDb0a6GK7PD1T9ppvE4yAO68WtTayUr2G1UYCPjIdDmNJvSa5c6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739025570; c=relaxed/simple;
-	bh=rwqtgUf9JnD69b2BfEjhKYVa48SUbWggqHe3Wp8kEYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=s+nsKmo7ozIxurbA/qLZzxMxdStOrGMyY4JQozugANRoTRpO2XHCzkgUJMyrJKlOMCKo2ATiTjGKldqWlAtm6X94OdiFX8a/NzZlxDxG4H5AeQ+sPR1m96pPIEGYggaGV8U9nQbKdem8akhlWbCxjhowSDH8gtRsoY5+oCPhKQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A396C4CED6;
-	Sat,  8 Feb 2025 14:39:28 +0000 (UTC)
-Date: Sat, 8 Feb 2025 09:39:27 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [GIT PULL] ftrace: Fix function graph notrace setting
-Message-ID: <20250208093927.3be357ae@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739025718; c=relaxed/simple;
+	bh=v6O0wHCS7tYjG+Hrj1O45g6uXfFBsmmLZ1PFGkMFSak=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=czjDH2ZwN6Dgdu+MXzTsq2axU9RS8oyn8OOAc8TZWwk5Ck1ftrC0/1MQ8zvRTSGHekWjWh+8bJyrRUuQAotEYPr6gvehIY9Q8fIk+zq8myjGO4LzCcaL03UICASfAbwHmlyv/l+Vd2z9MkLNg3CoPP+n68etrfalK2V5CLdAHxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JTHnha+1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JTHnha+1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 742DAC4CED6;
+	Sat,  8 Feb 2025 14:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739025717;
+	bh=v6O0wHCS7tYjG+Hrj1O45g6uXfFBsmmLZ1PFGkMFSak=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JTHnha+1/tR5LX550fPcj+oJG7b8wGiClq5QDHB4FSArhO4ksqF0kHAP74hhRq9DJ
+	 FxJ1d2ualCmlm7gLbAkCCl5EBKDKWlJ8jFMApkBFVOVqJFf7LKBus702WZVzKWly7v
+	 kcOjFSZCb90xsaQslYvpnPlunH1fANauCNwdSDMLg3I2f7odXbFcbGqtk2naDuuN+k
+	 Q0MERC0Sx9/9oz2+GjhcTy+gIXbpSksol4Hw59pb9G2Fy6RmnH06uaH/2sgD4FAmwD
+	 8ZyySbgywUSDBwECDlIC5dAjXQSW7fmpokplUOGxCD2oJi6oCx99xPXkgQUua5bmhT
+	 sFmY5P2F7Uq4Q==
+Date: Sat, 8 Feb 2025 14:41:47 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Alisa-Dariana Roman <alisadariana@gmail.com>
+Cc: "Rob Herring (Arm)" <robh@kernel.org>, Alisa-Dariana Roman
+ <alisa.roman@analog.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Ramona Gradinariu <ramona.bolboaca13@gmail.com>, David Lechner
+ <dlechner@baylibre.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>
+Subject: Re: [PATCH v4 2/3] iio: adc: ad7191: add AD7191
+Message-ID: <20250208144147.14be0d4c@jic23-huawei>
+In-Reply-To: <20250203133254.313106-3-alisa.roman@analog.com>
+References: <20250203133254.313106-1-alisa.roman@analog.com>
+	<20250203133254.313106-3-alisa.roman@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,103 +53,48 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Mon,  3 Feb 2025 15:31:27 +0200
+Alisa-Dariana Roman <alisadariana@gmail.com> wrote:
+
+> AD7191 is a pin-programmable, ultra-low noise 24-bit sigma-delta ADC
+> designed for precision bridge sensor measurements. It features two
+> differential analog input channels, selectable output rates,
+> programmable gain, internal temperature sensor and simultaneous
+> 50Hz/60Hz rejection.
+> 
+> Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
+Hi,
+
+Just one trivial additional comment from me as you'll be doing a v5
+anyway.  If it had just been this I'd have tweaked it whilst applying.
+
+Thanks,
+
+Jonathan
+
+> diff --git a/drivers/iio/adc/ad7191.c b/drivers/iio/adc/ad7191.c
+> new file mode 100644
+> index 000000000000..4a9e66853294
+> --- /dev/null
+> +++ b/drivers/iio/adc/ad7191.c
+
+> +static int ad7191_setup(struct iio_dev *indio_dev, struct device *dev)
+
+dev isn't used, so drop that parameter.
+
+> +{
+> +	struct ad7191_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	ret = ad7191_init_regulators(indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ad7191_config_setup(indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return ad7191_clock_setup(st);
+> +}
 
 
-Linus,
-
-function graph fix of notrace functions:
-
-When the function graph tracer was restructured to use the global section
-of the meta data in the shadow stack, the bit logic was changed. There's a
-TRACE_GRAPH_NOTRACE_BIT that is the bit number in the mask that tells if
-the function graph tracer is currently in the "notrace" mode. The
-TRACE_GRAPH_NOTRACE is the mask with that bit set. But when the code was
-restructured, the TRACE_GRAPH_NOTRACE_BIT was used when it should have
-been the TRACE_GRAPH_NOTRACE mask. This made notrace not work properly.
-
-
-Please pull the latest ftrace-v6.14-rc1 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-ftrace-v6.14-rc1
-
-Tag SHA1: 9f1894050febeedc75e6cbaef2bd02ea6094a9d9
-Head SHA1: c8c9b1d2d5b4377c72a979f5a26e842a869aefc9
-
-
-Steven Rostedt (1):
-      fgraph: Fix set_graph_notrace with setting TRACE_GRAPH_NOTRACE_BIT
-
-----
- kernel/trace/trace_functions_graph.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
----------------------------
-commit c8c9b1d2d5b4377c72a979f5a26e842a869aefc9
-Author: Steven Rostedt <rostedt@goodmis.org>
-Date:   Sat Feb 8 00:15:11 2025 -0500
-
-    fgraph: Fix set_graph_notrace with setting TRACE_GRAPH_NOTRACE_BIT
-    
-    The code was restructured where the function graph notrace code, that
-    would not trace a function and all its children is done by setting a
-    NOTRACE flag when the function that is not to be traced is hit.
-    
-    There's a TRACE_GRAPH_NOTRACE_BIT which defines the bit in the flags and a
-    TRACE_GRAPH_NOTRACE which is the mask with that bit set. But the
-    restructuring used TRACE_GRAPH_NOTRACE_BIT when it should have used
-    TRACE_GRAPH_NOTRACE.
-    
-    For example:
-    
-     # cd /sys/kernel/tracing
-     # echo set_track_prepare stack_trace_save  > set_graph_notrace
-     # echo function_graph > current_tracer
-     # cat trace
-    [..]
-     0)               |                          __slab_free() {
-     0)               |                            free_to_partial_list() {
-     0)               |                                  arch_stack_walk() {
-     0)               |                                    __unwind_start() {
-     0)   0.501 us    |                                      get_stack_info();
-    
-    Where a non filter trace looks like:
-    
-     # echo > set_graph_notrace
-     # cat trace
-     0)               |                            free_to_partial_list() {
-     0)               |                              set_track_prepare() {
-     0)               |                                stack_trace_save() {
-     0)               |                                  arch_stack_walk() {
-     0)               |                                    __unwind_start() {
-    
-    Where the filter should look like:
-    
-     # cat trace
-     0)               |                            free_to_partial_list() {
-     0)               |                              _raw_spin_lock_irqsave() {
-     0)   0.350 us    |                                preempt_count_add();
-     0)   0.351 us    |                                do_raw_spin_lock();
-     0)   2.440 us    |                              }
-    
-    Cc: stable@vger.kernel.org
-    Cc: Masami Hiramatsu <mhiramat@kernel.org>
-    Cc: Mark Rutland <mark.rutland@arm.com>
-    Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-    Link: https://lore.kernel.org/20250208001511.535be150@batman.local.home
-    Fixes: b84214890a9bc ("function_graph: Move graph notrace bit to shadow stack global var")
-    Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 54d850997c0a..136c750b0b4d 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -198,7 +198,7 @@ int trace_graph_entry(struct ftrace_graph_ent *trace,
- 	 * returning from the function.
- 	 */
- 	if (ftrace_graph_notrace_addr(trace->func)) {
--		*task_var |= TRACE_GRAPH_NOTRACE_BIT;
-+		*task_var |= TRACE_GRAPH_NOTRACE;
- 		/*
- 		 * Need to return 1 to have the return called
- 		 * that will clear the NOTRACE bit.
