@@ -1,172 +1,133 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mail-40136.proton.ch (mail-40136.proton.ch [185.70.40.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8DF192D8E;
-	Sat,  8 Feb 2025 11:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A9D381C4
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 11:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739014748; cv=none; b=TiVLpIVzhn6C5noofd57WTpOev/jfYLRh5u67oRbww85xMUFiE9Te+Z1ibjM53QgpIEiA2lRhq44gN1Md1mfRkJqAzRH4pc9yFzhI9TqevpqBr6Mqhq/CK9gPZ88An73qEjvKT9D+twkcVk24o4lbh3Dt52GBn5WGvxCeLDKaCQ=
+	t=1739015297; cv=none; b=rCFmFeBpSJrvPWAc1ggpgpV8vJ2HZTNsWgI/ueV/EwCp/iCkEpGtMv/FxpKSasnjorq8Q2ZIMOWFmyesiWbMBv9UdX5MHnAiOuPGrL0yGJo8UMxoz29Zw1VJjQtpmrswX0L4g3p/L740n13zGnYZvTWAj4CALty5IPh/wul++Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739014748; c=relaxed/simple;
-	bh=zioSV5FoyqQ1wMxljuDUquhhC8wslPi7gyKxYv740Qs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DRPP9MxRAds1WlXyEbFs357nefkN4NdUSxVHH1/2QzAAHeS5rXeRZeUE5vAktDl6hoMoVH50YS44kqynRl+ozYFyI6UTnOKADVxB/ohissFj6bYSsg4cyvY2C7CP6sgylXyTgYawJ7TGzV5iqO7whe8laYVSoYbSAdwCc7eXBbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Yqpkk2fQJz4f3jcn;
-	Sat,  8 Feb 2025 19:38:38 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 92A8E1A1733;
-	Sat,  8 Feb 2025 19:38:59 +0800 (CST)
-Received: from [10.67.108.244] (unknown [10.67.108.244])
-	by APP4 (Coremail) with SMTP id gCh0CgCnC2BQQqdnhbwJDQ--.2631S3;
-	Sat, 08 Feb 2025 19:38:57 +0800 (CST)
-Message-ID: <4efc66e7-8dd3-49d4-8f5d-1034536e2fcd@huaweicloud.com>
-Date: Sat, 8 Feb 2025 19:38:56 +0800
+	s=arc-20240116; t=1739015297; c=relaxed/simple;
+	bh=787HLahI1gR3pxHVdvg6VbZ+r5+hu0/XsUcLMYmKGo4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hff5HoioNpHe6EG/6RZfyTd0DTV7/BHFLcWHG4/isuzGtzCWcBNetvjcFvaMirbiGRXCIplge2Q/mhXQWSagB4tqF0aQHZFM+HarsHpTb2eJjA4fJggQ9h8kTsth69qLtlarV+ufYuz2a5ozYn+yQ883PlWCviGpSRCxqGcbTKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=samcday.com; spf=pass smtp.mailfrom=samcday.com; dkim=pass (2048-bit key) header.d=samcday.com header.i=@samcday.com header.b=nnILzhku; arc=none smtp.client-ip=185.70.40.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=samcday.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samcday.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=samcday.com header.i=@samcday.com header.b="nnILzhku"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samcday.com;
+	s=protonmail3; t=1739015285; x=1739274485;
+	bh=fqXGb4xkbpQ0L35eAF1vg2qfe+5RtceymN/yB4WQDN0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=nnILzhkuR3Aq8k6D0K4iPC2REP17wtmxD9xpNgpDGPYQGSVnSjWs94Lkq4sQWxHJM
+	 pERual5Vr+52zkCnaZzU5V9X4MrUDkkNKHTbudZdjfxBNl5g4u03JdF5RaKRSLvTYK
+	 eDo4jLkhcID07xVDCyRWGivjT9270CVDBHenTJ05L7tQlIqMLEN3godz9qricy1XTd
+	 g9q5ApIV8A0B+ORGwcSM/x++403Psc01rIVihbmTA+d459ZHz+VbfY5IEQ1VlGMnBE
+	 EwcBg/yiE+SV6duFtusRO19RDwLUVTFrXBXTMmFTkG86TnfWNbooR2y3msbcZ1gy+N
+	 ncPWmsRrh0Zhw==
+Date: Sat, 08 Feb 2025 11:47:59 +0000
+To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, Vinod Koul <vkoul@kernel.org>, Md Sadre Alam <quic_mdalam@quicinc.com>
+From: Sam Day <me@samcday.com>
+Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Georgi Djakov <djakov@kernel.org>
+Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Avoid accessing BAM_REVISION on remote BAM
+Message-ID: <D7N1GSRWCLS1.1EZM4HWUDSE75@samcday.com>
+In-Reply-To: <20250207-bam-read-fix-v1-1-027975cf1a04@oss.qualcomm.com>
+References: <20250207-bam-read-fix-v1-1-027975cf1a04@oss.qualcomm.com>
+Feedback-ID: 25366008:user:proton
+X-Pm-Message-ID: fb3c4aa22d5d73dc3fdabfd7684db8b96e20f2fd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] perf/core: Fix warning due to unordred pmu_ctx_list
-Content-Language: en-US
-To: peterz@infradead.org
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- ravi.bangoria@amd.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250122073356.1824736-1-luogengkun@huaweicloud.com>
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-In-Reply-To: <20250122073356.1824736-1-luogengkun@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnC2BQQqdnhbwJDQ--.2631S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWryUKw1UKr43Gr1DGw1rJFb_yoW5Zr47pr
-	WkArnayFWkKr10vayaya1DXw1YgryfXr4DWwn8C34FyFW3WFWDGa17Gw15JF909rs7WFy2
-	yw4jqF17t3yDta7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUF1
-	v3UUUUU
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+Hello Bjorn,
 
-On 2025/1/22 15:33, Luo Gengkun wrote:
-> Syskaller triggers a warning due to prev_epc->pmu != next_epc->pmu in
-> perf_event_swap_task_ctx_data. vmcore shows that two lists have the same
-> perf_event_pmu_context, but not in the same order.
+On Fri Feb 7, 2025 at 9:17 PM CET, Bjorn Andersson wrote:
+> Commit '57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing
+> unavailable register")' made this read unconditional, in order to
+> identify if the instance is BAM-NDP or BAM-Lite.
+> But the BAM_REVISION register is not accessible on remotely managed BAM
+> instances and attempts to access it causes the system to crash.
 >
-> The problem is that the order of pmu_ctx_list for the parent is impacted by
-> the time when an event/pmu is added. While the order for a child is
-> impacted by the event order in the pinned_groups and flexible_groups. So
-> the order of pmu_ctx_list in the parent and child may be different.
+> Move the access back to be conditional and expand the checks that was
+> introduced to restore the old behavior when no revision information is
+> available.
 >
-> To fix this problem, insert the perf_event_pmu_context to proper place
-> after iteration of pmu_ctx_list.
->
-> The follow testcase can trigger above warning:
->
->   # perf record -e cycles --call-graph lbr -- taskset -c 3 ./a.out &
->   # perf stat -e cpu-clock,cs -p xxx // xxx is the pid of a.out
->
-> test.c
->
-> void main() {
->          int count = 0;
->          pid_t pid;
->
->          printf("%d running\n", getpid());
->          sleep(30);
->          printf("running\n");
->
->          pid = fork();
->          if (pid == -1) {
->                  printf("fork error\n");
->                  return;
->          }
->          if (pid == 0) {
->                  while (1) {
->                          count++;
->                  }
->          } else {
->                  while (1) {
->                          count++;
->                  }
->          }
-> }
->
-> The testcase first open a lbr event, so it will alloc task_ctx_data, and
-> then open tracepoint and software events, so the parent ctx will have 3
-> different perf_event_pmu_contexts. When doing inherit, child ctx will
-> insert the perf_event_pmu_context in another order then the warning will
-> trigger.
->
-> Fixes: bd2756811766 ("perf: Rewrite core context handling")
-> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> Fixes: 57a7138d0627 ("dmaengine: qcom: bam_dma: Avoid writing unavailable=
+ register")
+> Reported-by: Georgi Djakov <djakov@kernel.org>
+> Closes: https://lore.kernel.org/lkml/9ef3daa8-cdb1-49f2-8d19-a72d6210ff3a=
+@kernel.org/
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
 > ---
-> 1. update commit message.
-> 2. modify annotation style.
-> 3. add reviewed by.
-> Link to v2: https://lore.kernel.org/all/20250121130802.1813928-1-luogengkun@huaweicloud.com/
-> Link to v1: https://lore.kernel.org/all/20250120114344.632474-1-luogengkun@huaweicloud.com
+>  drivers/dma/qcom/bam_dma.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+> index c14557efd577..d42d913492a8 100644
+> --- a/drivers/dma/qcom/bam_dma.c
+> +++ b/drivers/dma/qcom/bam_dma.c
+> @@ -445,8 +445,8 @@ static void bam_reset(struct bam_device *bdev)
+>  =09writel_relaxed(val, bam_addr(bdev, 0, BAM_CTRL));
+> =20
+>  =09/* set descriptor threshold, start with 4 bytes */
+> -=09if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
+> -=09=09     BAM_NDP_REVISION_END))
+> +=09if (!bdev->bam_revision ||
+> +=09    in_range(bdev->bam_revision, BAM_NDP_REVISION_START, BAM_NDP_REVI=
+SION_END))
+>  =09=09writel_relaxed(DEFAULT_CNT_THRSHLD,
+>  =09=09=09       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
+> =20
+> @@ -1006,8 +1006,8 @@ static void bam_apply_new_config(struct bam_chan *b=
+chan,
+>  =09=09=09maxburst =3D bchan->slave.src_maxburst;
+>  =09=09else
+>  =09=09=09maxburst =3D bchan->slave.dst_maxburst;
+> -=09=09if (in_range(bdev->bam_revision, BAM_NDP_REVISION_START,
+> -=09=09=09     BAM_NDP_REVISION_END))
+> +=09=09if (!bdev->bam_revision ||
+> +=09=09    in_range(bdev->bam_revision, BAM_NDP_REVISION_START, BAM_NDP_R=
+EVISION_END))
+>  =09=09=09writel_relaxed(maxburst,
+>  =09=09=09=09       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
+>  =09}
+> @@ -1199,11 +1199,12 @@ static int bam_init(struct bam_device *bdev)
+>  =09u32 val;
+> =20
+>  =09/* read revision and configuration information */
+> -=09val =3D readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
+> -=09if (!bdev->num_ees)
+> +=09if (!bdev->num_ees) {
+> +=09=09val =3D readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
+>  =09=09bdev->num_ees =3D (val >> NUM_EES_SHIFT) & NUM_EES_MASK;
+> =20
+> -=09bdev->bam_revision =3D val & REVISION_MASK;
+> +=09=09bdev->bam_revision =3D val & REVISION_MASK;
+> +=09}
+> =20
+>  =09/* check that configured EE is within range */
+>  =09if (bdev->ee >=3D bdev->num_ees)
 >
 > ---
->   kernel/events/core.c | 11 +++++++++--
->   1 file changed, 9 insertions(+), 2 deletions(-)
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> change-id: 20250207-bam-read-fix-2b31297d3fa1
 >
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 065f9188b44a..3f68fbbf3de0 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -4950,7 +4950,7 @@ static struct perf_event_pmu_context *
->   find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
->   		     struct perf_event *event)
->   {
-> -	struct perf_event_pmu_context *new = NULL, *epc;
-> +	struct perf_event_pmu_context *new = NULL, *pos = NULL, *epc;
->   	void *task_ctx_data = NULL;
->   
->   	if (!ctx->task) {
-> @@ -5007,12 +5007,19 @@ find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
->   			atomic_inc(&epc->refcount);
->   			goto found_epc;
->   		}
-> +		/* Make sure the pmu_ctx_list is sorted by pmu */
-> +		if (!pos && epc->pmu->type > pmu->type)
-> +			pos = epc;
->   	}
->   
->   	epc = new;
->   	new = NULL;
->   
-> -	list_add(&epc->pmu_ctx_entry, &ctx->pmu_ctx_list);
-> +	if (!pos)
-> +		list_add_tail(&epc->pmu_ctx_entry, &ctx->pmu_ctx_list);
-> +	else
-> +		list_add(&epc->pmu_ctx_entry, pos->pmu_ctx_entry.prev);
-> +
->   	epc->ctx = ctx;
->   
->   found_epc:
+> Best regards,
 
-ping.  Does this patch look ready? If so, perhaps we can merge this patch.
+Thank you, this fixes the early synchronous external abort in
+bam_dma_probe on my msm8916 device.
 
-Thanks,
+Tested-by: Sam Day <me@samcday.com>
 
-Gengkun
+Regards,
+-Sam
+
 
