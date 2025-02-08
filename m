@@ -1,99 +1,183 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527221DDE9;
-	Sat,  8 Feb 2025 14:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200F61DDE9
+	for <linux-kernel@vger.kernel.org>; Sat,  8 Feb 2025 14:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739023686; cv=none; b=OxvMoPCfS0/pH699CnfI3HBPUpTCOIHpYbY7wtaPVYF7DEaIe5BkQTpDZPQiAuIiURDzQOqdXW7NhBPzj1VZI+4Nnqkud5cJ3ioiGKkaFIJIkkWHGpTi3n8YHzTa28N2ZixaA+7A6Xi+jhJGFLnLOM2wOMPrW2it0qIzgVuuRGA=
+	t=1739023913; cv=none; b=P6YZR88748lhVlYzoqnA3NWxrLW3WBX+PeZKuUJAXHrN4ORb+2y278yGIzHbRW1tF7Ls7fyULxnjG87OwUWlDdy0J582opR1zuIcOef4zaMwrNsF3GoLaLIXoRHnn1JyCSgN/FJIefn3hEFcZTI28/xEtpbLckJ3oYs5XjR9SaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739023686; c=relaxed/simple;
-	bh=ukEa5XK/fbvZ+kOzOgajfYHBFDKhGTZ1zwJtm3mW+AA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YYf+tXhDa6mPJUMFDWkFSu5t99JNjOrZsb/oW5icKu+eQ73hbukmiEt7iTT/ttoDaGTcqcdp0kKxmvoV1qQJ+SI1MfizGqiXGdzSFj0zzmEIzsQiVA7A7x1dHb7rhSJCiK6PuCQl0NR7fiNC1PNYpkaoreM/Bhe0/rRVa6Lypxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dS3z42sa; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739023913; c=relaxed/simple;
+	bh=MeI7b1MDCEx0olxQadT+Ty7PL2MvK5weZpR1W6XTun8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N6VXJRflns3Mw8yVWAiJWMy3g53O/fP2ognYUfiOUAj8gX7rCIa7zjSm4DEXwjXZxm4ZvzcoqzUPl/WmuUpqXtJJwp/Wna1FgWTXptjkuakVkip53EGKDroPbefFWaL597yPWQsg3iHTqQOt1LSiqL9Z5U4bLD4DwU+jgO9jNKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Vdq52X8K; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dS3z42sa"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30615661f98so31633881fa.2;
-        Sat, 08 Feb 2025 06:08:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739023682; x=1739628482; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gvVvqYfa0K3hSBZJohhJTyzLukhxxEshJdnpWZxz49k=;
-        b=dS3z42sayBvRU2b+lMAVIpZOviSjR8hE9Z0ibyZSwJZ/bKao93Zuj30T+JSsMB2pUX
-         liE62ozPIo/FaHc4jb50qqUyeaiDAqAadEAoSLmInniJ6JLAmnB6xbhZIpkUIwEibYqh
-         HIpxGVN07GqmBhTnOUYTbO4aVcmr2MKDO+S9aWcrgVF3xPXDSK/sjcozYyp79E2OC8CH
-         yfaGcDA6NIi0gh931bCrrBHf+6s9tuvzriBixwW+43+DvVqMwWzkW33rnRh6+83StWoc
-         RCUXnzaHoDq1DhP37msicjf7WcefVvmphvGf7nQrVq/7eTRUoq52vgR6xBEYE8X9U8LB
-         91nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739023682; x=1739628482;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gvVvqYfa0K3hSBZJohhJTyzLukhxxEshJdnpWZxz49k=;
-        b=UBWAqZWIpBg2iC20Z9hpI3DMfvPRkLaosGHTgyx/azq7Dl5ufJVWU1y2qMv9YCneuV
-         fVMh7w4Ato9db6lxCcdEoG47XTUSsAsEtvi0LubJeLMHSEVJKPVAISC8hjdnfPTWU3Yx
-         jmOKNuzssUUG4++DF1v6vfdW5NLLfpdhEd9tetdGePGRIzoOvMSfAsoMkRje2i/K8vB3
-         bkZHmLNjs32gzVZBJMJOzmkubGi2XM50qXN+BJrd460EsC68/MLNukCEiiw0sIDLUqPJ
-         9jDUuHb+k5iptsa0pwr04sdn4hjbwraOK2BsMu1wqw/ZH1dokMFdNSOgTKS3eRKRvLOL
-         9rxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWHvFxtpF6X/O2O7vuCp1Ni6oT1624QrQ5/eIS68fRz0Le7UEHDSvjU+CeqD4Z5rbAcj2o3dY2mwqtMf5yjY/s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUbo1pzTVlZFbcflXzFDJQb02ajGSFUoTBliZhHJnZDwYKlf4M
-	4go54Ns4mSPP8kwZbrjVSBUaeJHyG38Ss6KehqQIyeRUJUz/SF+6LMAoPzUTeqwk9mrHuto4uVf
-	e3q8ed46YlNPcgBV+XIJ5CDwSoAM=
-X-Gm-Gg: ASbGncsqugvzGE3bLuQeSs4mq2K8E+b+g1i0O/vpW61CiYj77LbanRvmmdGNK+AAlrU
-	gc0QlBWMGbSUM3ab9vExLf9rVTtV1Al/cx8/0zFvUz9MMpYyeP4BeTfQBl/tWztulWdS6dMRiDM
-	nc2oZx0jqCEB/TKbHCP+IKGaadsi4CKMA=
-X-Google-Smtp-Source: AGHT+IFvOGIF4LfMhYYdGspRLaGgOv7gxDCTVh4wothvBFE6N+wt6sBv5sH2njrq2CoeoLMqMw5YyHYNAUbDZ0Ob6ak=
-X-Received: by 2002:a2e:bc12:0:b0:300:1aa5:4938 with SMTP id
- 38308e7fff4ca-307e57ff04bmr26395391fa.18.1739023682085; Sat, 08 Feb 2025
- 06:08:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Vdq52X8K"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 518DGVd1016257;
+	Sat, 8 Feb 2025 14:10:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=uMTVfU
+	n/5m1Rzb1bO8xvYzC6kl7kpndEbLeAxr3QBGs=; b=Vdq52X8KBa2bb9adwBI2Ry
+	zNW3MGPXoyOVV9HoxNYddYWdlXcp5jY6otrq8HnYnLoRAyI2d9bFkTzY/O6IHb2T
+	6gDAaOcj722Ik+hYrMXgDffDaT0yYlq+CCj+JkEnT2lxrXMhEjyBS+ohc9Aufujf
+	0AidSzWftrZxJi9XeU8cztmY0Yn6sKVBgXfnsvtIAkGCBlXR6wEJ8OmBFfXU9AZW
+	3AJTiJN+YCWO9oDiyHsUMadbrmG0gOm8CycwiYyll9qp83rsltHfdksEkx95wemF
+	b1wsTPHrxfyCYfw7Dyy+SPxL/H+XyOeZLntOWK+kFFO9KmvMLCVlpc2/B+o08PKQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44p1379ay6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Feb 2025 14:10:43 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 518EAgrC016684;
+	Sat, 8 Feb 2025 14:10:42 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44p1379ay3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Feb 2025 14:10:42 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 518A3lxS007133;
+	Sat, 8 Feb 2025 14:10:41 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxb08du9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Feb 2025 14:10:41 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 518EAdJn20513200
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 8 Feb 2025 14:10:39 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 16FD020096;
+	Sat,  8 Feb 2025 13:42:37 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1F9AF20095;
+	Sat,  8 Feb 2025 13:42:33 +0000 (GMT)
+Received: from [9.39.23.47] (unknown [9.39.23.47])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat,  8 Feb 2025 13:42:22 +0000 (GMT)
+Message-ID: <936f0451-a4ee-4e14-9ce9-9cd9613fc55c@linux.ibm.com>
+Date: Sat, 8 Feb 2025 19:12:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208-prime_numbers-kunit-convert-v2-0-863119447e04@gmail.com> <20250208-prime_numbers-kunit-convert-v2-2-863119447e04@gmail.com>
-In-Reply-To: <20250208-prime_numbers-kunit-convert-v2-2-863119447e04@gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sat, 8 Feb 2025 09:07:25 -0500
-X-Gm-Features: AWEUYZmd7KySeiONhiS4__nLYzXpCIb40MrStvhI0h7vsHBq5LMwvwMt937TQ78
-Message-ID: <CAJ-ks9k4enQzhq6akAMWZ0FeZ-Sfz2PbcG386-YYD1yxpjQgaA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] lib/prime_numbers: convert self-test to KUnit
-To: David Gow <davidgow@google.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Luis Felipe Hernandez <luis.hernandez093@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/9] powerpc: Use preempt_model_str().
+To: Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+        Ben Segall <bsegall@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org
+References: <20250203141632.440554-1-bigeasy@linutronix.de>
+ <20250203141632.440554-6-bigeasy@linutronix.de>
+ <65c6f60d-bb52-48bd-a02c-87ffd2a915d4@csgroup.eu>
+ <20250203160103.9DikC9FJ@linutronix.de>
+ <51999b8e-61c0-48b7-b744-c83d39e7f311@csgroup.eu>
+ <20250204082223.6iNyq_KR@linutronix.de>
+ <7b51f7de-8e4b-4766-85ca-dee24832c693@linux.ibm.com>
+ <93833119-9406-4d30-aa7b-4521adb3a573@csgroup.eu>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <93833119-9406-4d30-aa7b-4521adb3a573@csgroup.eu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: GPkCd9c96HNUEu_yFJHxBRUCThtVLmOl
+X-Proofpoint-GUID: 5PiEU9b4tb5D8gIq7yPYICElXc8kNgjK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-08_06,2025-02-07_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ spamscore=0 bulkscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
+ impostorscore=0 suspectscore=0 phishscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502080117
 
-On Sat, Feb 8, 2025 at 8:58=E2=80=AFAM Tamir Duberstein <tamird@gmail.com> =
-wrote:
->
-> [...]
->
-> diff --git a/lib/math/prime_numbers.c b/lib/math/prime_numbers.c
-> index 9a17ee9af93a..540d9b7b178f 100644
-> --- a/lib/math/prime_numbers.c
-> +++ b/lib/math/prime_numbers.c
-> @@ -64,7 +58,13 @@ static const struct primes __rcu *primes =3D RCU_INITI=
-ALIZER(&small_primes);
->
->  static unsigned long selftest_max;
 
-Shoot, this snuck into v2. Please pretend this isn't here, I'll remove
-it after your review in v3.
 
-> [...]
->
->  module_param_named(selftest, selftest_max, ulong, 0400);
->
-> [...]
+On 2/8/25 18:25, Christophe Leroy wrote:
+> 
+> 
+> Le 08/02/2025 à 08:35, Shrikanth Hegde a écrit :
+>>
+>>
+>> On 2/4/25 13:52, Sebastian Andrzej Siewior wrote:
+>>> Use preempt_model_str() instead of manually conducting the preemption
+>>> model. Use pr_emerg() instead of printk() to pass a loglevel.
+>>
+>> even on powerpc, i see __die ends up calling show_regs_print_info().
+>> Why print it twice?
+> 
+> I don't understand what you mean, what is printed twice ?
+> 
+> I can't see show_regs_print_info() printing the preemption model, am I 
+> missing something ?
+> 
 
-Same here.
+Patch 2/9 add preemption string in dump_stack_print_info.
+
+__die -> show_regs() _> show_regs_print_info() -> 
+dump_stack_print_info() -> init_utsname()->version, preempt_model_str(), 
+BUILD_ID_VAL);
+
+Wont we end up in this path?
+
+> Christophe
+> 
+>>
+>>>
+>>> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>>> Cc: Nicholas Piggin <npiggin@gmail.com>
+>>> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+>>> Cc: Naveen N Rao <naveen@kernel.org>
+>>> Cc: linuxppc-dev@lists.ozlabs.org
+>>> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+>>> ---
+>>> v2…v3:
+>>>    - Use printk() instead of pr_emerg() to remain consistent with the
+>>>      other invocations in terms of printing context.
+>>>
+>>>   arch/powerpc/kernel/traps.c | 4 ++--
+>>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+>>> index edf5cabe5dfdb..d6d77d92b3358 100644
+>>> --- a/arch/powerpc/kernel/traps.c
+>>> +++ b/arch/powerpc/kernel/traps.c
+>>> @@ -263,10 +263,10 @@ static int __die(const char *str, struct 
+>>> pt_regs *regs, long err)
+>>>   {
+>>>       printk("Oops: %s, sig: %ld [#%d]\n", str, err, ++die_counter);
+>>> -    printk("%s PAGE_SIZE=%luK%s%s%s%s%s%s %s\n",
+>>> +    printk("%s PAGE_SIZE=%luK%s %s %s%s%s%s %s\n",
+>>>              IS_ENABLED(CONFIG_CPU_LITTLE_ENDIAN) ? "LE" : "BE",
+>>>              PAGE_SIZE / 1024, get_mmu_str(),
+>>> -           IS_ENABLED(CONFIG_PREEMPT) ? " PREEMPT" : "",
+>>> +           preempt_model_str(),
+>>>              IS_ENABLED(CONFIG_SMP) ? " SMP" : "",
+>>>              IS_ENABLED(CONFIG_SMP) ? (" NR_CPUS=" 
+>>> __stringify(NR_CPUS)) : "",
+>>>              debug_pagealloc_enabled() ? " DEBUG_PAGEALLOC" : "",
+>>
+> 
+
