@@ -1,187 +1,142 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBCB2CA6;
-	Sat,  8 Feb 2025 00:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C4B2CA6;
+	Sat,  8 Feb 2025 00:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738975394; cv=none; b=DbVbXBt4+onQKF5Sp/GPS3Wv269LVD5eNf0PGxKZ//SzRwOSPAGK+r4I0vN0fKK5XFJoLrCxkak5t3m3vRu1r8gXnfsWUUg0WV4WJ2vRroh17aYWIHhcJ+Qm3xmhsb5MP6G0YxYbXyxXJmmsijFY74T7rG/4GbdfXgSZkx58cdU=
+	t=1738975419; cv=none; b=njA3Vpg3F6JiGdDw5elQP+fIJ24KT9g3lrdQ5EV5h8i5GM/Oi3vBsJ0fXr/YPneq4i15W7SVAjH+AQ3cm0lExj/oxUhDcIA/mR8Yu1kp/4vm4RcDdUkekNzeTJHpScWZjMzX0gQZBoguOMg/Wn6X9zxnSor3wIhsjpKhvyfLvBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738975394; c=relaxed/simple;
-	bh=hmOk+kVgEY0Gm3FuBx7MCIpGtTuGb1YVT7o392Sr0FE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YFpkVkD1/Sx4658cW/CI+ghso4gbDvnEPi8pWTy5OFsA78iuHRrcrJSyDyNry2uFz+iFW9DayWCrDO919HZAOZOrMy6TQKv1ZNICTjRkBMc+CnwmcHmhp3RgEWfHgDK8ZHdMSyLkn1Juik9Az/befJYy6J02X1Wl8l8XViPfduY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OffX088E; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1738975419; c=relaxed/simple;
+	bh=Xg/MgPonWvECjQA65kTkegGR9LxFyeFNABlwMtYCpSU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XiGgawgiE16br+CZfWR8eFKtKWuZ3FfI7Vm/fPXDCR5le6WOOrCjErmri4p/TpYgUICS+z3VrIrRPi+P+VPgaartNyNKxSbnYo8OMrZDPXDuMA1RAyTcbzupBxI6hLnqTev2YzUHERDeGDxNnh1jbW41rfR1ZMJFpJAeHnQIWcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C4DDrIpN; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OffX088E"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517FrckV002495;
-	Sat, 8 Feb 2025 00:42:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	KCEiIoHCtst/NhjzeQGoVC0FR2YSA7BYdxQis/rSROM=; b=OffX088EVJC02fFn
-	ZoEivQTAiOTd7WGjxECmfAPqYCqVE8ytKduJtGgmDUwNIUs0ho7iObz7/j5fvgxA
-	Sp7jhTSTfIUaiD62QIjo8z1gGtSkmOjtJRtSoLc8dFl1Na6kzwclaFhq3MIaKy3T
-	GvUTrj+xfpvsmcfnLwiE67sD4lPjxXcJ3yWAwimYtd8SF0QrDXNDGct3H/ZsVJBm
-	tjeMqX69yio2oRfRaKMg+MlwIZlusUZE5xHJt+5VKWLsJkTfJw3uO7043T00yFAe
-	LYy5x3YJKey0Lz43RhM9r8K8fVXb1hRezKsfmULWZHPQ8zYGYhe4O9yka19SWN5w
-	06a1mw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44nn7fs3pm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 08 Feb 2025 00:42:49 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5180gmHl008244
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 8 Feb 2025 00:42:48 GMT
-Received: from [10.110.94.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 7 Feb 2025
- 16:42:47 -0800
-Message-ID: <cdfa5cfd-6cdf-45cf-ac18-c2c217d4211a@quicinc.com>
-Date: Fri, 7 Feb 2025 16:42:46 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C4DDrIpN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738975418; x=1770511418;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Xg/MgPonWvECjQA65kTkegGR9LxFyeFNABlwMtYCpSU=;
+  b=C4DDrIpNf8vJJnJBzKMDonz9rnLAg6Q/aYS9ivdQH2rNqZPpJvWuDR1v
+   b1QFeoOez57D3Lr2vbmrha0DpOYarmR4ZGjA/jWQqFRpSEvB4RjODnCCX
+   XiPlAtIfHRHrtILpu6z6BaOr4cJxiK01g4gzdrqGlrGpCzKsyWaCEXbZk
+   +YqknnLobo1yjzEskA41pRlHsOPxLp3qZP3eyjioEQU6fb5bthE0E8xq+
+   xq89UqRqb6/R0+aZmB4nf0QrZutQD/n2dfZ2NU7+cifRZvaOJjAT+Bc/K
+   SmjuB1svbaTtQOIrDjpuoMJb547he64trZ4NcP5iOBhaU6h2mPmULdHN/
+   Q==;
+X-CSE-ConnectionGUID: jFmxIjEdQVykWolBG3ldfw==
+X-CSE-MsgGUID: VAFIXI9pS5KdQHrqHsXVng==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39892893"
+X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
+   d="scan'208";a="39892893"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 16:43:37 -0800
+X-CSE-ConnectionGUID: Ge764EICRVGS8/4ATAXARw==
+X-CSE-MsgGUID: gxJI/wlCTI2SpRIv2Y6toA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,268,1732608000"; 
+   d="scan'208";a="116672578"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 07 Feb 2025 16:43:32 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tgYwU-000zGd-14;
+	Sat, 08 Feb 2025 00:43:30 +0000
+Date: Sat, 8 Feb 2025 08:43:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Kumar Kartikeya Dwivedi <memxor@gmail.com>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>,
+	Will Deacon <will@kernel.org>, Waiman Long <llong@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>,
+	Dohyun Kim <dohyunkim@google.com>,
+	linux-arm-kernel@lists.infradead.org, kernel-team@meta.com
+Subject: Re: [PATCH bpf-next v2 18/26] rqspinlock: Add entry to Makefile,
+ MAINTAINERS
+Message-ID: <202502080835.XRxxo7P5-lkp@intel.com>
+References: <20250206105435.2159977-19-memxor@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/7] drm/msm/hdmi: program HDMI timings during
- atomic_pre_enable
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Andrzej Hajda
-	<andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert
- Foss <rfoss@kernel.org>,
-        Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej
- Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        Simona Vetter <simona@ffwll.ch>,
-        Simona
- Vetter <simona.vetter@ffwll.ch>
-CC: <dri-devel@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20250208-bridge-hdmi-connector-v7-0-0c3837f00258@linaro.org>
- <20250208-bridge-hdmi-connector-v7-2-0c3837f00258@linaro.org>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20250208-bridge-hdmi-connector-v7-2-0c3837f00258@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: RHTzmRBfGq36tSuCNDeI_LPDsup84izJ
-X-Proofpoint-ORIG-GUID: RHTzmRBfGq36tSuCNDeI_LPDsup84izJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-07_11,2025-02-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
- spamscore=0 priorityscore=1501 bulkscore=0 mlxscore=0 lowpriorityscore=0
- clxscore=1015 phishscore=0 impostorscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502080002
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206105435.2159977-19-memxor@gmail.com>
 
+Hi Kumar,
 
+kernel test robot noticed the following build warnings:
 
-On 2/7/2025 4:27 PM, Dmitry Baryshkov wrote:
-> The mode_set callback is deprecated, it doesn't get the
-> drm_bridge_state, just mode-related argumetns. Also Abhinav pointed out
-> that HDMI timings should be programmed after setting up HDMI PHY and
-> PLL. Rework the code to program HDMI timings at the end of
-> atomic_pre_enable().
-> 
+[auto build test WARNING on 0abff462d802a352c87b7f5e71b442b09bf9cfff]
 
-I think now this needs to be changed that, program the HDMI timings at 
-the beginning of atomic_pre_enable() to match the location of mode_set()
+url:    https://github.com/intel-lab-lkp/linux/commits/Kumar-Kartikeya-Dwivedi/locking-Move-MCS-struct-definition-to-public-header/20250206-190258
+base:   0abff462d802a352c87b7f5e71b442b09bf9cfff
+patch link:    https://lore.kernel.org/r/20250206105435.2159977-19-memxor%40gmail.com
+patch subject: [PATCH bpf-next v2 18/26] rqspinlock: Add entry to Makefile, MAINTAINERS
+config: x86_64-randconfig-121-20250207 (https://download.01.org/0day-ci/archive/20250208/202502080835.XRxxo7P5-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502080835.XRxxo7P5-lkp@intel.com/reproduce)
 
-With that fixed,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502080835.XRxxo7P5-lkp@intel.com/
 
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+sparse warnings: (new ones prefixed by >>)
+>> kernel/locking/rqspinlock.c:101:39: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got struct rqspinlock_held * @@
+   kernel/locking/rqspinlock.c:101:39: sparse:     expected void const [noderef] __percpu *__vpp_verify
+   kernel/locking/rqspinlock.c:101:39: sparse:     got struct rqspinlock_held *
+   kernel/locking/rqspinlock.c:123:39: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got struct rqspinlock_held * @@
+   kernel/locking/rqspinlock.c:123:39: sparse:     expected void const [noderef] __percpu *__vpp_verify
+   kernel/locking/rqspinlock.c:123:39: sparse:     got struct rqspinlock_held *
+   kernel/locking/rqspinlock.c:136:51: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got struct rqspinlock_held * @@
+   kernel/locking/rqspinlock.c:136:51: sparse:     expected void const [noderef] __percpu *__vpp_verify
+   kernel/locking/rqspinlock.c:136:51: sparse:     got struct rqspinlock_held *
+   kernel/locking/rqspinlock.c:206:39: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got struct rqspinlock_held * @@
+   kernel/locking/rqspinlock.c:206:39: sparse:     expected void const [noderef] __percpu *__vpp_verify
+   kernel/locking/rqspinlock.c:206:39: sparse:     got struct rqspinlock_held *
+>> kernel/locking/rqspinlock.c:572:41: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected struct qnode *qnodes @@     got struct qnode [noderef] __percpu * @@
+   kernel/locking/rqspinlock.c:572:41: sparse:     expected struct qnode *qnodes
+   kernel/locking/rqspinlock.c:572:41: sparse:     got struct qnode [noderef] __percpu *
+   kernel/locking/rqspinlock.c: note: in included file:
+   kernel/locking/qspinlock.h:67:16: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void const [noderef] __percpu *__vpp_verify @@     got struct mcs_spinlock * @@
+   kernel/locking/qspinlock.h:67:16: sparse:     expected void const [noderef] __percpu *__vpp_verify
+   kernel/locking/qspinlock.h:67:16: sparse:     got struct mcs_spinlock *
 
-> Reviewed-by: Maxime Ripard <mripard@kernel.org>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->   drivers/gpu/drm/msm/hdmi/hdmi_bridge.c | 24 ++++++++++++++++--------
->   1 file changed, 16 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
-> index d839c71091dcdc3b020fcbba8d698d58ee7fc749..bd94b3a70f0e5e457a88f089b491103a8c09567b 100644
-> --- a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
-> +++ b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
-> @@ -126,15 +126,29 @@ static void msm_hdmi_config_avi_infoframe(struct hdmi *hdmi)
->   	hdmi_write(hdmi, REG_HDMI_INFOFRAME_CTRL1, val);
->   }
->   
-> +static void msm_hdmi_set_timings(struct hdmi *hdmi,
-> +				 const struct drm_display_mode *mode);
-> +
->   static void msm_hdmi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
->   					      struct drm_bridge_state *old_bridge_state)
->   {
-> +	struct drm_atomic_state *state = old_bridge_state->base.state;
->   	struct hdmi_bridge *hdmi_bridge = to_hdmi_bridge(bridge);
->   	struct hdmi *hdmi = hdmi_bridge->hdmi;
->   	struct hdmi_phy *phy = hdmi->phy;
-> +	struct drm_encoder *encoder = bridge->encoder;
-> +	struct drm_connector *connector;
-> +	struct drm_connector_state *conn_state;
-> +	struct drm_crtc_state *crtc_state;
->   
->   	DBG("power up");
->   
-> +	connector = drm_atomic_get_new_connector_for_encoder(state, encoder);
-> +	conn_state = drm_atomic_get_new_connector_state(state, connector);
-> +	crtc_state = drm_atomic_get_new_crtc_state(state, conn_state->crtc);
-> +
-> +	msm_hdmi_set_timings(hdmi, &crtc_state->adjusted_mode);
-> +
->   	if (!hdmi->power_on) {
->   		msm_hdmi_phy_resource_enable(phy);
->   		msm_hdmi_power_on(bridge);
-> @@ -177,17 +191,12 @@ static void msm_hdmi_bridge_atomic_post_disable(struct drm_bridge *bridge,
->   	}
->   }
->   
-> -static void msm_hdmi_bridge_mode_set(struct drm_bridge *bridge,
-> -		 const struct drm_display_mode *mode,
-> -		 const struct drm_display_mode *adjusted_mode)
-> +static void msm_hdmi_set_timings(struct hdmi *hdmi,
-> +				 const struct drm_display_mode *mode)
->   {
-> -	struct hdmi_bridge *hdmi_bridge = to_hdmi_bridge(bridge);
-> -	struct hdmi *hdmi = hdmi_bridge->hdmi;
->   	int hstart, hend, vstart, vend;
->   	uint32_t frame_ctrl;
->   
-> -	mode = adjusted_mode;
-> -
->   	hdmi->pixclock = mode->clock * 1000;
->   
->   	hstart = mode->htotal - mode->hsync_start;
-> @@ -306,7 +315,6 @@ static const struct drm_bridge_funcs msm_hdmi_bridge_funcs = {
->   	.atomic_reset = drm_atomic_helper_bridge_reset,
->   	.atomic_pre_enable = msm_hdmi_bridge_atomic_pre_enable,
->   	.atomic_post_disable = msm_hdmi_bridge_atomic_post_disable,
-> -	.mode_set = msm_hdmi_bridge_mode_set,
->   	.mode_valid = msm_hdmi_bridge_mode_valid,
->   	.edid_read = msm_hdmi_bridge_edid_read,
->   	.detect = msm_hdmi_bridge_detect,
-> 
+vim +101 kernel/locking/rqspinlock.c
 
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06   97  
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06   98  static noinline int check_deadlock_AA(rqspinlock_t *lock, u32 mask,
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06   99  				      struct rqspinlock_timeout *ts)
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  100  {
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06 @101  	struct rqspinlock_held *rqh = this_cpu_ptr(&rqspinlock_held_locks);
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  102  	int cnt = min(RES_NR_HELD, rqh->cnt);
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  103  
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  104  	/*
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  105  	 * Return an error if we hold the lock we are attempting to acquire.
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  106  	 * We'll iterate over max 32 locks; no need to do is_lock_released.
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  107  	 */
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  108  	for (int i = 0; i < cnt - 1; i++) {
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  109  		if (rqh->locks[i] == lock)
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  110  			return -EDEADLK;
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  111  	}
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  112  	return 0;
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  113  }
+6516ce00a1482f Kumar Kartikeya Dwivedi 2025-02-06  114  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
