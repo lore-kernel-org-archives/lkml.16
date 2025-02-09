@@ -1,103 +1,134 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B701D934D
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 18:46:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BAE51DED69
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 18:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739126784; cv=none; b=li2ONoe9QFycaSH9imkdfu8PhJ1i8gY9tE2Qr6vCDuU8YxNme7VG6rijecFSNH7+uH9zSIN5V9KAoUqqns/Q13FUqVBrIGVD/ZUYsqjoYAAlRn5eAZABKrp0h6f9cOh4OIH1KWlYXjOXxJzWH9QNDxVsV0mQI+0GqGGxXyfhBUU=
+	t=1739127005; cv=none; b=dFYRqKBH0SUA3uD8wnkZF7QTakPf98NwlZykI7yNTXcaOFoJ5vq6XN0Y/kDsmA4Spd5sEJpJ0kQ6Jb2UdHtiMtGr0AzrfYLX1Z3ArJsxLp4uJaPyy5d7QcM1E5vK/QuVg1TI/Nyo8FmVjp4uWuPkMtbwBIcTs9A/PAs9xit45Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739126784; c=relaxed/simple;
-	bh=Z0exPwYpyB309Go0LJdY5JTDAMje5GwGG3TVn8LyKTQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=drlzQxJPzdjtW/+ZoFLGwP5xV+V4j5ETTurcTC33xVtkx+IvnUEEw2PsdeGDxixFvHmewz5Tp9FyKU6DwIaqMUSEZ5rY2WrBhcIOGABkPs6JbeY2pZHdb7Ctbr0/Rz6QknnmuN0Ljaf7f0fObEvM/tx0p4CwWfZSY1CjGI/UrjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=c45SxwBR; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="c45SxwBR"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aa68b513abcso700079466b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 10:46:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1739126781; x=1739731581; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=299OX1xBTdJBPWgTGDe6mblBfhAuT0bmyryb6qbXkF0=;
-        b=c45SxwBRlxbUxEzSqWlcn0vcqS9BB2XZtcgBA8G9XJqfkOu1ZMqz34LQuzFlvpBJGJ
-         SpdbcS+AwaoizCSGiD1w6QQpQS01o5LGs+UUwUWX1AMl/rRbtiAXuj5lpycvG+n6gdnU
-         xoq1jzwGy081zLVGqj8yHxIInW+yNBBkz339Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739126781; x=1739731581;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=299OX1xBTdJBPWgTGDe6mblBfhAuT0bmyryb6qbXkF0=;
-        b=jBoiSvrK+eIPOhblhvtiSHy4ICo47/GXdh46MM8hBFXKUwpyuPomXC+ES3cnr66L7C
-         7RfPH8x4fa2RTP5c0RqaAckOlRbeibU1uGp5tWr8PCGpaHqC4wB72HmYl/ScwMaK8xVQ
-         EPx0aFlO6HUv9c+rLJFmYTWL9svA0FQELFB6P9DYS5fnssLVtu6J/y/3S8lCT4irtrma
-         tqrOFPlm5J6yiPjnzsR7I6BgBIXIDQxlI+Sd1flvtCWraFd1wDnvlMlxhZxI6g4hoZux
-         DdAIdnx/7OPdQL14XsVpczAhrJjINIPvk1yXOeBmOdi9lodurUxBpgfwVTUzsKpNR2Ye
-         C4kQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVB3d98f6Fo8Ta8ZOBkgdJ+5p1ANU78/cpe5a8A21terGkojjdTvMqZvh81P47YE2vEH3ya2Yp+1Cc8MBk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw84BLLRmEgUWoQHDQbpeYZ3yO1x2q42WlK9fxGaknNnPnRKJve
-	hFd4I87/YDEOAMda10bHjUf5RoryuvH003LvtthmczBgoOEBpbv15YISTCqregGQQPJrb3ItY6I
-	LP/g=
-X-Gm-Gg: ASbGnctZZTjkEkGmwu4cjDcXaae3QMOHyl8WsCqeYmengBKq8wnphAstd74eR8i0faN
-	RUBGAFYThZhfQKjSJ8S2OQitP3DDz0OzmIOwQHHOZiYH098w3sXOCW0uvTX+SB4ZPUTCKGdjJ4c
-	BNyJKC4A39rV52QOnnNJJBHtdv+o/hAVY2T6L6KYHtF8dBKhMjG82NYEeARcf8wP2V/6x0APdkt
-	zNE108NVp3ifTdZirskhb92jIhMrMOA7+Kp9cKsd75tWeHDzoUGXBR8PwsXSotBEsHeJizsnZTl
-	LlydbrxHOdJtS+jML/DSe+a84pVj+PkrwUfdTSBKIXo5iX8vby1ICf59T8b1UYq0uA==
-X-Google-Smtp-Source: AGHT+IH8c18EQsta2qVVi29rwU9dKfMMtPKzT4jLUP+LWZQl6TFcgT9NFEEhHoCFVjl6qOh/Y6H1/g==
-X-Received: by 2002:a17:907:6d1e:b0:aa6:a7ef:7f1f with SMTP id a640c23a62f3a-ab789aed651mr1349220066b.11.1739126780791;
-        Sun, 09 Feb 2025 10:46:20 -0800 (PST)
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772f843b4sm709395966b.42.2025.02.09.10.46.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2025 10:46:20 -0800 (PST)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aaec111762bso897311166b.2
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 10:46:20 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV95B9qbzcTEfL9vU16yNocNg+HfDPtMWDcqabfYNhLgde1Yz/lWs0DibNoCNsgfGUMK20JtfCdHIDYfAQ=@vger.kernel.org
-X-Received: by 2002:a17:907:9726:b0:ab7:5b58:f467 with SMTP id
- a640c23a62f3a-ab789c629ffmr1156201866b.40.1739126779662; Sun, 09 Feb 2025
- 10:46:19 -0800 (PST)
+	s=arc-20240116; t=1739127005; c=relaxed/simple;
+	bh=3wLDvgWyN7SVzBX9JjvfScNUZMMmVLXaj6rPjdq8/8A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NVjXTbMQsvcsJPoIZ12XjOhr/XaTeoFQ2EXjVRJXlTfuHOJO+bhxkfwlb0YQrHsyHFkIbdK+eB9QhTD85t90O3x1EacR4Xv/FnSOETO5vKIpKXEMOcbC+Vv4Z14oxhDauxaajXDaif++Xi4Y6xrfYgdnN5AnIqTWnGIDZnp4xG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4Yrc4y5BH2z9sPd;
+	Sun,  9 Feb 2025 19:42:10 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id ogLfoC-SXGTd; Sun,  9 Feb 2025 19:42:10 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4Yrc4y4J49z9rvV;
+	Sun,  9 Feb 2025 19:42:10 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 7541C8B764;
+	Sun,  9 Feb 2025 19:42:10 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id uy_LGgAXm037; Sun,  9 Feb 2025 19:42:10 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 7B5028B763;
+	Sun,  9 Feb 2025 19:42:09 +0100 (CET)
+Message-ID: <deb0d4fa-d2ec-4acc-b217-b5ebb683bf05@csgroup.eu>
+Date: Sun, 9 Feb 2025 19:42:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250209105600.3388-1-david.laight.linux@gmail.com>
- <20250209105600.3388-2-david.laight.linux@gmail.com> <CAHk-=wgu0B+9ZSmXaL6EyYQyDsWRGZv48jRGKJMphpO4bNiu_A@mail.gmail.com>
- <20250209183437.340dcee6@pumpkin> <CAHk-=wgkEDmf7V+F5jP6On3=pEewRYGbZyvs1E3K-3n3HYr4=Q@mail.gmail.com>
-In-Reply-To: <CAHk-=wgkEDmf7V+F5jP6On3=pEewRYGbZyvs1E3K-3n3HYr4=Q@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 9 Feb 2025 10:46:03 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjv5x4ee-nKLfwoYwgJ9OqBkd+wqGn-dgWpHdpA2oZqqw@mail.gmail.com>
-X-Gm-Features: AWEUYZmY_webv9q8a6uZQUIkEL63ugKdCcPkMcgteGn1w1zExAU2n4DAjnsukHg
-Message-ID: <CAHk-=wjv5x4ee-nKLfwoYwgJ9OqBkd+wqGn-dgWpHdpA2oZqqw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] uaccess: Simplify code pattern for masked user copies
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Arnd Bergmann <arnd@arndb.de>, Kees Cook <kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/9] powerpc: Use preempt_model_str().
+To: Shrikanth Hegde <sshegde@linux.ibm.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+ Ben Segall <bsegall@google.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>,
+ Juri Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>,
+ Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Valentin Schneider <vschneid@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Will Deacon <will@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org
+References: <20250203141632.440554-1-bigeasy@linutronix.de>
+ <20250203141632.440554-6-bigeasy@linutronix.de>
+ <65c6f60d-bb52-48bd-a02c-87ffd2a915d4@csgroup.eu>
+ <20250203160103.9DikC9FJ@linutronix.de>
+ <51999b8e-61c0-48b7-b744-c83d39e7f311@csgroup.eu>
+ <20250204082223.6iNyq_KR@linutronix.de>
+ <7b51f7de-8e4b-4766-85ca-dee24832c693@linux.ibm.com>
+ <93833119-9406-4d30-aa7b-4521adb3a573@csgroup.eu>
+ <936f0451-a4ee-4e14-9ce9-9cd9613fc55c@linux.ibm.com>
+ <0f05c020-47e4-444d-90ab-9eb8414f4ef8@csgroup.eu>
+ <b95272d4-e593-48e9-aa32-8758394f4b61@linux.ibm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <b95272d4-e593-48e9-aa32-8758394f4b61@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, 9 Feb 2025 at 10:40, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> It's *really* easy to miss the "oh, that changes X" when the only
-> little tiny sign of it is that "&" character inside the argument list,
-> and then the *normal* mental model is that arguments are arguments
-> *to* the function, not returns *from* the function.
 
-While I'm ranting, this is just another case of "C++ really got this
-very very wrong".
 
-C++ made pass-by-reference really easy, and removed the need for even
-that tiny marker in the caller.
+Le 09/02/2025 à 15:38, Shrikanth Hegde a écrit :
+> 
+> 
+> On 2/8/25 23:25, Christophe Leroy wrote:
+>>
+>>
+>> Le 08/02/2025 à 14:42, Shrikanth Hegde a écrit :
+>>>
+>>>
+>>> On 2/8/25 18:25, Christophe Leroy wrote:
+>>>>
+>>>>
+>>>> Le 08/02/2025 à 08:35, Shrikanth Hegde a écrit :
+>>>>>
+>>>>>
+>>>>> On 2/4/25 13:52, Sebastian Andrzej Siewior wrote:
+>>>>>> Use preempt_model_str() instead of manually conducting the preemption
+>>>>>> model. Use pr_emerg() instead of printk() to pass a loglevel.
+>>>>>
+>>>>> even on powerpc, i see __die ends up calling show_regs_print_info().
+>>>>> Why print it twice?
+>>>>
+>>>> I don't understand what you mean, what is printed twice ?
+>>>>
+>>>> I can't see show_regs_print_info() printing the preemption model, am 
+>>>> I missing something ?
+>>>>
+>>>
+>>> Patch 2/9 add preemption string in dump_stack_print_info.
+>>>
+>>> __die -> show_regs() _> show_regs_print_info() -> 
+>>> dump_stack_print_info() -> init_utsname()->version, 
+>>> preempt_model_str(), BUILD_ID_VAL);
+>>>
+>>> Wont we end up in this path?
+>>
+>> Indeed I missed that. You are right, we now get the information twice:
+> 
+> I think we can remove it from arch specific code and rely on lib/ 
+> dump_stack?
 
-So then you really can't even visually see that "oh, that call changes
-its argument", and have to just know.
+Yes I guess so.
 
-              Linus
+> 
+> And similar concern of printk vs pr_warn/pr_emerg would apply to that as 
+> well i guess.
+
+Well, powerpc's show_regs() calls it with 
+show_regs_print_info(KERN_DEFAULT);
+
+And dump_stack_print_info() uses printk with log_lvl so there should be 
+no concern here.
+
+> 
+>>
+>> [  440.068216] BUG: Unable to handle kernel data access on write at 
+>> 0xc09036fc
+
