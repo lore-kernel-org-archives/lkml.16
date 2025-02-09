@@ -1,186 +1,130 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7E7A47
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 00:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C18136A
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 00:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739060060; cv=none; b=rm8C8b1EINjEkDebB/trd/xMCxj0ERAf7DBQjsYCfyluES6M3z5EfvthZDRhFPRsyqLwQ30CDoR4gzQccDzoRRMxd+RwNf9F6Aqc60D2ycvfE7ShnfFkD1K7C04vAqMtcJTFuqkextBfm+quFDgpf6tzl5dUDdzgoVxV4e/OxXo=
+	t=1739060371; cv=none; b=M9k8u5PFpzMmGXIQqdEsFUYCZb2baYKwwulcLecKY2UVToJQZKa6fHDwhpug/T4OhIJbp9MfsZjFk8UJDEMXcF/nYAVanaxVJl1Er1tMGZBrMx7rVw7u7G8l3u5SEwvrQAYyxn1qJB9tvT2//cRaC4F28VYFYVfRuumNeutmw4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739060060; c=relaxed/simple;
-	bh=ib1K4Km+h+BeZ78R9k20FnpaiVh+aw5wr2g7Y132/1Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QWHAoUfT4ymzwvrIDryG3oePtdSJcO/6SNrSFJ1rnlqQcG3gorGRyYBfg/lZsf0nUtT+LI5yOuZeMR7CyEP/cfZGEkDa4nICDIO9eORT4z0//4TvEkfw47bzIqa8RNansbS0S6yio1vIe7rxT+Qf7WF2O7QSBNiS/fDS5eKzx04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=ECAJJttt; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="ECAJJttt"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4678afeb133so41570171cf.0
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 16:14:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1739060058; x=1739664858; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zHcRKHoHeO3yYwQrJ0rL+RTEHK8K10d3+YiRJ46SQRc=;
-        b=ECAJJtttxxQ3aDZHnBtAB+dXIptSd3Z/+/pIGSuDhg6E4oADrGP4xKvyE7hD7KXiDX
-         iLEwdduedEXBEU5Ke3pKWc9I1PD3LRvVirbwr3v1rKoBFcfgK6dbWeDDHZRFkihVlHEV
-         zELHmqSygNDT2uHIXJkmJGXx176dgIN1vdZxkMfPYVQY9s3NM60pKooxBoWDSp7VXMqr
-         vLQrIKl1oZJz4F6/R783TGjT3FuKaCRet2odsPge6IeSMP1P5Jc9GS/RtR5Q9JXIYStW
-         rkE70EOrcK82q6IE3GiwtiPYwktNgEiBYbadPRjD4eQhVj5o7PNFG7Wd+jsas4Ym67rg
-         KKsA==
+	s=arc-20240116; t=1739060371; c=relaxed/simple;
+	bh=C/K6eAfrjQ31gBQ+jL+8yvFxveWps9ggzg2aVOPJq9c=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=f2tHjTrhIjhB4qiN942tTjkl9nS9pd2oujvaMtL+/N/kEKL3FnzAnZ6BjaW7aDMvqj4N2yHttoMWCJH4wY8b3Aj6pWGy+Qveo2o2wQH7ijMXy1SMNE5O1fM69O8RITgLXpfIN24GxJemyUbL0w3mERttk9z7Tn27n2Qt+C9aem8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d13d1f8420so15771715ab.1
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 16:19:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739060058; x=1739664858;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zHcRKHoHeO3yYwQrJ0rL+RTEHK8K10d3+YiRJ46SQRc=;
-        b=fzGhi5aGZYUB7VDoERduS5cbuoAXNRGrpWnVzqn2DPd/pkpjLMVsESxVTstbDLqKFc
-         OyeEujUxcwnODee9jZJtTdXzsh0XYtKR+UPFVyzCJIBVGQrSjlqgdS9dCCo2eF4BYvMm
-         tZtsxBIHM+Bv5yDYL5KK7P7nrgGalj+0+wvUk4U0erkJcZW+sKfaNiFFM6B79jq60GLn
-         iYGim3W7EA6U99vMIijDh01l1JgURBu6ddR5mnnGsSedl3/c8hSBysfLYX/Khnb8zEHZ
-         8SZJD+BPCxnWDAUJMeYmeG7VUkxOmqoQpQFHUchcFOfTGvuIiwLuaTYdb5re4YXygecW
-         sKag==
-X-Forwarded-Encrypted: i=1; AJvYcCUez86pcQ/hfxLpyPYUTOu8Fagg/tmSGTmE32O/isxzLZDzRvyPdn9WRV2++Q9L4uLVFrfmxQ4tiJJqDGY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdFisc/1Juh1U3leeVaoQFIyErSEjDd7WwVDm4F/nBe+M9xnc/
-	Nwf/1XgVg6Ayf56vAFsTxnAUm0baWO2rx8yl7Mr/69cNpyDbgt0/1ARa7oFDINpGpRwP+KSs8AT
-	r8T7TMMTCEQigg+FMrwTHPN8HE5V+RZze6aaYnA==
-X-Gm-Gg: ASbGnct5n59ztbnnVYL5osx0Zy23XbnG2PiqhA938eNnFgDw7zufjVXxC6D9qOrK+XD
-	vH7RhvxE8k8OtDm+pbC5JY5FNkU7+9uo+kZ9LDDLYDZtJZ6gZlJ4RK1+QEtWH8UOkYcy6dQ==
-X-Google-Smtp-Source: AGHT+IEZxHNt3mZP0AuiY+W9AaSnauAT6AJRQRznlE6PgIrsIXbAga4WSCyQOQlcL+3VJDDj9abWUIyU1/BOi9O7OEA=
-X-Received: by 2002:a05:622a:1186:b0:471:8a10:63c0 with SMTP id
- d75a77b69052e-4718a1066demr10288491cf.10.1739060057757; Sat, 08 Feb 2025
- 16:14:17 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739060369; x=1739665169;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5TwDhLvTG33fGX0NUP4PJo8UU819dO3p8hiVZZIufPo=;
+        b=xTGL0dbSFpqG05/MWfuJK7sR08Lm6qs8VFoYQcjOJvlJXAVzmDigMInxq/Rf1pGnBo
+         wbkUvWQxTmUSl983EODcjSdenBbIGcuFjEBOrDj1aH+ab7m1+6OVrYGLbdjOvGHd6dpG
+         fJwUpG91w6GHgLk8jDsO6MQr9Tak+XclV3roKMVWmwaC1sydWgc71Cjrd94ZHQkll+jJ
+         lLWucN6S8uPiXF3V5rfrYpZYcBBz2FWpOSXKN3jiiZ4GGKo6xdZjqvf1PFz+kHadZW2w
+         /DJGnKfglSUm7GZ2Yd8Pq0HpAUon1HTfBGj8esFNLC89K8fJ4vbuRpa+hwEpRlMkQxri
+         lZUg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8vmAqnED3EMG3YYCpHdvfRx+ixXtptJAV+jrDqGK5VpKHPTKJKhFyH/3TGEnt3P8QTZ83ZanzFMJupKc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAy+90K6ah2q7NkQCe2ZF2ey6z3WfhVxq3Ho0vUeM2PEIjGAjQ
+	dUKsCe91ctkmKND44QcXm0HriMTzhDCmqUEBhLLS6+h2DqcCm6N2T41UKqINUlLKz4Db9MyvWHF
+	XQCxz9nvZsMx5p1ikwOKX+Cf+371XvIgAaefWwT2CnlUVeJl9Xqe8gnA=
+X-Google-Smtp-Source: AGHT+IHSUu4bqcmPja9EI0/WD+00zrh1cDMgeOgEy4rU65hL7IOAe/0G0ZftcASw5CCJLIJBS3Bco1JXPU6koeSIR30WJ2gAjPAr
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206132754.2596694-1-rppt@kernel.org> <CAM_iQpU9DDg2Oi33_dfPqVpd9j_2O+WD7ovo__f48BA9DztwXQ@mail.gmail.com>
-In-Reply-To: <CAM_iQpU9DDg2Oi33_dfPqVpd9j_2O+WD7ovo__f48BA9DztwXQ@mail.gmail.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Sat, 8 Feb 2025 19:13:40 -0500
-X-Gm-Features: AWEUYZm7hjYyWx8OgJnvEXBjFKJR8cD76rObTCepJOM4ok5LDKRuBdQi0XQitL0
-Message-ID: <CA+CK2bBrO+khpX+U3F+d8wCb3GutVD=3HtU-94gHQJSoenQcKw@mail.gmail.com>
-Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-To: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org, 
-	Alexander Graf <graf@amazon.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Andy Lutomirski <luto@kernel.org>, Anthony Yznaga <anthony.yznaga@oracle.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>, 
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>, Borislav Petkov <bp@alien8.de>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	David Woodhouse <dwmw2@infradead.org>, Eric Biederman <ebiederm@xmission.com>, 
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Pratyush Yadav <ptyadav@amazon.de>, 
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, 
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Usama Arif <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, 
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+X-Received: by 2002:a92:cda8:0:b0:3ce:7cca:db24 with SMTP id
+ e9e14a558f8ab-3d13dd62ad2mr61650135ab.13.1739060369158; Sat, 08 Feb 2025
+ 16:19:29 -0800 (PST)
+Date: Sat, 08 Feb 2025 16:19:29 -0800
+In-Reply-To: <66f01abe.050a0220.3195df.009d.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a7f491.050a0220.3d72c.0031.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] WARNING in bch2_fs_release
+From: syzbot <syzbot+08d08d52c3a09bfc70f7@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 8, 2025 at 6:39=E2=80=AFPM Cong Wang <xiyou.wangcong@gmail.com>=
- wrote:
->
-> Hi Mike,
->
-> On Thu, Feb 6, 2025 at 5:28=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wr=
-ote:
-> >
-> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> >
-> > Hi,
-> >
-> > This a next version of Alex's "kexec: Allow preservation of ftrace buff=
-ers"
-> > series (https://lore.kernel.org/all/20240117144704.602-1-graf@amazon.co=
-m),
-> > just to make things simpler instead of ftrace we decided to preserve
-> > "reserve_mem" regions.
-> >
-> > The patches are also available in git:
-> > https://git.kernel.org/rppt/h/kho/v4
-> >
-> >
-> > Kexec today considers itself purely a boot loader: When we enter the ne=
-w
-> > kernel, any state the previous kernel left behind is irrelevant and the
-> > new kernel reinitializes the system.
-> >
-> > However, there are use cases where this mode of operation is not what w=
-e
-> > actually want. In virtualization hosts for example, we want to use kexe=
-c
-> > to update the host kernel while virtual machine memory stays untouched.
-> > When we add device assignment to the mix, we also need to ensure that
-> > IOMMU and VFIO states are untouched. If we add PCIe peer to peer DMA, w=
-e
-> > need to do the same for the PCI subsystem. If we want to kexec while an
-> > SEV-SNP enabled virtual machine is running, we need to preserve the VM
-> > context pages and physical memory. See "pkernfs: Persisting guest memor=
-y
-> > and kernel/device state safely across kexec" Linux Plumbers
-> > Conference 2023 presentation for details:
-> >
-> >   https://lpc.events/event/17/contributions/1485/
-> >
-> > To start us on the journey to support all the use cases above, this pat=
-ch
-> > implements basic infrastructure to allow hand over of kernel state acro=
-ss
-> > kexec (Kexec HandOver, aka KHO). As a really simple example target, we =
-use
-> > memblock's reserve_mem.
-> > With this patch set applied, memory that was reserved using "reserve_me=
-m"
-> > command line options remains intact after kexec and it is guaranteed to
-> > reside at the same physical address.
->
-> Nice work!
->
-> One concern there is that using memblock to reserve memory as crashkernel=
-=3D
-> is not flexible. I worked on kdump years ago and one of the biggest pains
-> of kdump is how much memory should be reserved with crashkernel=3D. And
-> it is still a pain today.
->
-> If we reserve more, that would mean more waste for the 1st kernel. If we
-> reserve less, that would induce more OOM for the 2nd kernel.
->
-> I'd suggest considering using CMA, where the "reserved" memory can be
-> still reusable for other purposes, just that pages can be migrated out of=
- this
-> reserved region on demand, that is, when loading a kexec kernel. Of cours=
-e,
-> we need to make sure they are not reused by what you want to preserve her=
-e,
-> e.g., IOMMU. So you might need additional work to make it work, but still=
- I
-> believe this is the right direction.
+syzbot has found a reproducer for the following issue on:
 
-This is exactly what scratch memory is used for. Unlike crashkernel=3D,
-the entire scratch area is available to user applications as CMA, as
-we know that no kernel-reserved memory will come from that area. This
-doesn't work for crashkernel=3D, because in some cases, the user pages
-might also need to be preserved in the crash dump. However, if user
-pages are going to be discarded from the crash dump (as is done 99% of
-the time), then it is better to also make it use CMA or ZONE_MOVABLE
-and use only the memory occupied by the crash kernel and do not waste
-any memory at all. We have an internal patch at Google that does this,
-and I think it would be a good improvement for the upstream kernel to
-carry as well.
+HEAD commit:    8f6629c004b1 kbuild: Move -Wenum-enum-conversion to W=2
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=12b102a4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=147b7d49d83b8036
+dashboard link: https://syzkaller.appspot.com/bug?extid=08d08d52c3a09bfc70f7
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1312cbdf980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=129411b0580000
 
-Pasha
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/f60addb0f276/disk-8f6629c0.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/59d0658fa6fd/vmlinux-8f6629c0.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/25afa4128fc2/bzImage-8f6629c0.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/574abc7822e2/mount_0.gz
 
->
-> Just my two cents.
->
-> Thanks!
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+08d08d52c3a09bfc70f7@syzkaller.appspotmail.com
+
+bcachefs (loop0): shutting down
+bcachefs (loop0): shutdown complete
+------------[ cut here ]------------
+online_reserved not 0 at shutdown: 1792
+WARNING: CPU: 0 PID: 5820 at fs/bcachefs/super.c:585 __bch2_fs_free fs/bcachefs/super.c:585 [inline]
+WARNING: CPU: 0 PID: 5820 at fs/bcachefs/super.c:585 bch2_fs_release+0x744/0x7b0 fs/bcachefs/super.c:624
+Modules linked in:
+CPU: 0 UID: 0 PID: 5820 Comm: syz-executor117 Not tainted 6.14.0-rc1-syzkaller-00187-g8f6629c004b1 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+RIP: 0010:__bch2_fs_free fs/bcachefs/super.c:585 [inline]
+RIP: 0010:bch2_fs_release+0x744/0x7b0 fs/bcachefs/super.c:624
+Code: 41 5e 41 5f 5d e9 2c 67 33 fd e8 37 85 49 fd e9 06 fd ff ff e8 2d 85 49 fd 90 48 c7 c7 a0 6a 55 8c 4c 89 ee e8 fd 2f 0a fd 90 <0f> 0b 90 90 e9 13 fd ff ff 44 89 f1 80 e1 07 38 c1 0f 8c 18 fb ff
+RSP: 0018:ffffc90003e2fb88 EFLAGS: 00010246
+RAX: c22db852ba485a00 RBX: ffff888077104a10 RCX: ffff88807de41e00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 1ffff1100ee20942 R08: ffffffff81800b32 R09: 1ffff110170c519a
+R10: dffffc0000000000 R11: ffffed10170c519b R12: 00000000fffffff8
+R13: 0000000000000700 R14: dffffc0000000000 R15: 0000607f47622c00
+FS:  000055555c502380(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fff51ad82bc CR3: 00000000781b8000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ kobject_cleanup lib/kobject.c:689 [inline]
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x22f/0x480 lib/kobject.c:737
+ deactivate_locked_super+0xc4/0x130 fs/super.c:473
+ cleanup_mnt+0x41f/0x4b0 fs/namespace.c:1413
+ task_work_run+0x24f/0x310 kernel/task_work.c:227
+ ptrace_notify+0x2d2/0x380 kernel/signal.c:2522
+ ptrace_report_syscall include/linux/ptrace.h:415 [inline]
+ ptrace_report_syscall_exit include/linux/ptrace.h:477 [inline]
+ syscall_exit_work+0xc7/0x1d0 kernel/entry/common.c:173
+ syscall_exit_to_user_mode_prepare kernel/entry/common.c:200 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:205 [inline]
+ syscall_exit_to_user_mode+0x24a/0x340 kernel/entry/common.c:218
+ do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f8aac0ec447
+Code: 07 00 48 83 c4 08 5b 5d c3 66 2e 0f 1f 84 00 00 00 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 c7 c2 b8 ff ff ff f7 d8 64 89 02 b8
+RSP: 002b:00007fff51ad82a8 EFLAGS: 00000202 ORIG_RAX: 00000000000000a6
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00007f8aac0ec447
+RDX: 0000000000000000 RSI: 0000000000000009 RDI: 00007fff51ad8360
+RBP: 00007fff51ad8360 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000202 R12: 00007fff51ad93d0
+R13: 000055555c5036c0 R14: 0000000000000001 R15: 431bde82d7b634db
+ </TASK>
+
+
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
