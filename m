@@ -1,152 +1,132 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay04.th.seeweb.it (relay04.th.seeweb.it [5.144.164.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DD31DF25E;
-	Sun,  9 Feb 2025 21:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B221DF25E
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 21:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739137253; cv=none; b=ngw6kcWZaeIB2P2+iDgq6HfGepN9EbDeDeulKMyY+PZKUkDMk6LLcdkswpymybxzajLPwwAoaV4qKZEUAS2v50y/NBwCOZZI4aj3CAkiMcA7zR3diTEq5YC1VcZRz0HvBmOs4yBE8l37iVA1d0U7lkTYOk1CAdKDYKEuo0vCtCg=
+	t=1739137384; cv=none; b=lmdygRCHoRvP1SarD+gvtT3ZI1LIvnQtO3QQBflQTHkOhtLEf30U2A6rqgoJaqgNJJUzKCcLhlm4gDYf+yTqY33agO8DFIEOiIElEU7qt2fCJXgydi2SZr3wwb2kG7JapwiKj9ODtEvsUshS0ncDG4rWvB8asD7H7YGDrQv5w/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739137253; c=relaxed/simple;
-	bh=Ziv+M3+50z5eMM14eZX0Oixu3FyWuNm2XqHRVSZ5PAY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NmYH3eTo6QyKOmqFQuFt7CNKdQqfV0RwgBIh4d4PQ7lVg3BFIu6713XZjbGXuI0CzBkGxk963xCCKPGXNFvcce1e/HJGDw6/UAi8LMBDJCv3EqOtV6BSj5bTP/eveznD5CBELb17Nz04CEtJVcQbmoHJ1JNH58A7xzEcvdbXlrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c7x9TxFY; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7x9TxFY"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4394036c0efso2714785e9.2;
-        Sun, 09 Feb 2025 13:40:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739137250; x=1739742050; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4vHmVTfsnRz1JF9lpJrmG696etUTSYNASGKo7x++LBE=;
-        b=c7x9TxFY/YtdPTUK6K7gXgSxyh46EgD/eL63m0S/9rFiR2oDKKYLlRPs3lmXHe0wEU
-         rwLAKosIw8YLIRXZiUGWiydg+ueW8WnFaLk0f9PvOq8olNc/CrmmCCeAgG2YoMWH2X4I
-         adcpxU3EXAl6JTV/57/K6QjWanl3Ly6J7D5dfISaQ6dMyrMqv2d8YKtEKmCNfdJceQEM
-         J+sT0dZwVeL5nSxqpKE9QqB71ZY/Hws5njlx0YPk4iytSe649g2pfZ6l+IxW0sr45ors
-         3dOPg3OQpx6ySqha3dpxNN3T/5e/HgFq44Uc1sfQ9tT51RNwrKdBbEgN7uYGJKbNOwen
-         eEHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739137250; x=1739742050;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4vHmVTfsnRz1JF9lpJrmG696etUTSYNASGKo7x++LBE=;
-        b=FOa3p67V+mgadTb+GRYq9fHv0IiLUTD+BbPdhn3UVVg/23wZX//uEoBYtCwP1AxFoj
-         Xtt6tFcT+uzmNTBFDUGqZ71647u03Mo1586WHe5jJQg9/3fkDgywBzwyVGM7bRPfryu0
-         lmIe1kG5DPGsON0faMVyKnzklPQSWhYb+HyZIL5IGiXksEizM8TExHhG1tcLMjeQT2Ba
-         JIyevy32gmD3dXOVWE8HrU8ffV8OG9Erm8jWdjLM5ZEl9/OPcJBLSo8mzlAPQzen1T1G
-         AY5zFBJYg5LfCVqvQMHVGgjw/m9LArr79UdDk6PAWUx0ZLVk0Q+LGq94Bh16OLa7FRBo
-         Rlhw==
-X-Forwarded-Encrypted: i=1; AJvYcCVRs7OiNhmxrAOTblEGVIHzLZENqXctoux0+XJHkRV6WH24jv2DiPiJDASqnuSMN7ynr+225365TDlJ@vger.kernel.org, AJvYcCW+lKuonkcRBVjIJaHw58Jb9efWw0BgiUhwzM9NfSF7tTCZ28v11wGFV/3h2mh69FGzStzw4sEQS0XaUUtp@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPS683saBjufxHsjQ7X/jDlXoE9i/LuGgYgZnxr9KmuUeU22kK
-	ZRYNX26hua6hby0qHz/ZluAL0Nx52SbAamoezRou7v8TsKTeQG+2
-X-Gm-Gg: ASbGncvqz7pIFuK57CxqxRsU1wljY5UaOC8I8qe81kZv87LSEuZQ7xIWM8DOjQcFGlr
-	1mLRLFqk2I2v9YfZ6ET/B5eCeUZvOjngImzNbRg7S2K1Xhm4IcuZ1qXdfAXvfghhitJW+yrYE7k
-	NXVEnCNxKSuuW4cRFCq3WLez4gMkJUL+elGAOkqwnbx4+3xPwW88Fj15d7ZmZqjJrB//5eI6p5D
-	YAOABUC/uUpHCpPFJRyl8nyNfvViUU6JA6AvoAy3/8qDiFTlMl9dV91/hg/1DlURizDZdcBBbXS
-	Vau69hhTKjNp0V+W/IXpLhIgnctRZXD+Jr+0rxE4bzLMNnP2L1ZNbg==
-X-Google-Smtp-Source: AGHT+IFSxBwa9KnAS8L9/EAz8cLmuKb/l0d8yDFFaz3zOamCgdFD5cNHDH4gBGKhfk0z5d3IqpoPdw==
-X-Received: by 2002:a05:600c:34c2:b0:439:3ba0:d564 with SMTP id 5b1f17b1804b1-4393ba0d6f4mr32217185e9.6.1739137249560;
-        Sun, 09 Feb 2025 13:40:49 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390db10b2fsm158834885e9.33.2025.02.09.13.40.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 13:40:48 -0800 (PST)
-Date: Sun, 9 Feb 2025 21:40:47 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin"
- <hpa@zytor.com>, Catalin Marinas <catalin.marinas@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf
- <jpoimboe@redhat.com>, Andi Kleen <ak@linux.intel.com>, Dan Williams
- <dan.j.williams@intel.com>, linux-arch@vger.kernel.org, Kees Cook
- <keescook@chromium.org>, kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH 1/1] x86: In x86-64 barrier_nospec can always be lfence
-Message-ID: <20250209214047.4552e806@pumpkin>
-In-Reply-To: <CAHk-=wiQQQ9yo84KCk=Y_61siPsrH=dF9t5LPva0Sbh_RZ0-3Q@mail.gmail.com>
-References: <20250209191008.142153-1-david.laight.linux@gmail.com>
-	<CAHk-=wiQQQ9yo84KCk=Y_61siPsrH=dF9t5LPva0Sbh_RZ0-3Q@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	s=arc-20240116; t=1739137384; c=relaxed/simple;
+	bh=7iQeAa2scXE3ZIzMVva1f79wDDea0/qP7onDXsbm9Ps=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Iqk26AUR9sUxr3oQs8Dedu3nNcDbN5JffcOcPzvKNJA0Iu7mhgqTaRCMqInLaNzrA/TEpQrXbhrCmenNxTBDFrV7NBu39GykcotudVtsvAbMqZezlcI1reRjSN6dycpGvUARiDAC157piXuzAZDAgrKvdk1GOWhbV6wnAzm9BH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from Marijn-Arch-PC.localdomain (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id D953F20189;
+	Sun,  9 Feb 2025 22:42:58 +0100 (CET)
+From: Marijn Suijten <marijn.suijten@somainline.org>
+Subject: [PATCH v2 0/3] drm/msm: Initial fixes for DUALPIPE (+DSC) topology
+Date: Sun, 09 Feb 2025 22:42:51 +0100
+Message-Id: <20250209-drm-msm-initial-dualpipe-dsc-fixes-v2-0-9a60184fdc36@somainline.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFshqWcC/42Py26DMBBFfwV53als4wegqup/VFkYPCQjYUxtQ
+ I2i/Hsdom666m7ujHTO3BvLmAgz66obS7hTpjiXIF8qNlzcfEYgXzKTXCquhAGfAoQcgGZayU3
+ gNzcttCD4PMBI35ihHrkVuud1PypWQEvC41A4n6eSL5TXmK6HcxeP7S/e/ge/C+BgG4c1YutMa
+ z9yDI7miWZ8jenMTvenNOHXVgqtTzMLmLM7CnXVWxFqLqQEv2wghIA1LnGK5yvsEgRorrHVrVF
+ ubP/g3x+VepcRhhgCrV2FXjde8BqNd0I7peQ4NlYb27SNNY0famdMGctj9x+nBKsXcQEAAA==
+X-Change-ID: 20240416-drm-msm-initial-dualpipe-dsc-fixes-3f0715b03bf4
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ David Airlie <airlied@gmail.com>, Vinod Koul <vkoul@kernel.org>, 
+ Simona Vetter <simona@ffwll.ch>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Jordan Crouse <jordan@cosmicpenguin.net>, 
+ ~postmarketos/upstreaming@lists.sr.ht, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Martin Botka <martin.botka@somainline.org>, 
+ Jami Kettunen <jami.kettunen@somainline.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Marijn Suijten <marijn.suijten@somainline.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2983;
+ i=marijn.suijten@somainline.org; h=from:subject:message-id;
+ bh=7iQeAa2scXE3ZIzMVva1f79wDDea0/qP7onDXsbm9Ps=;
+ b=owEBbQKS/ZANAwAIAfFi0jHH5IZ2AcsmYgBnqSFdxu2CR2ze+AQ7M195h1/C/TpArGiTkE2pB
+ woHN0p+LPaJAjMEAAEIAB0WIQROiwG5pb6la1/WZxbxYtIxx+SGdgUCZ6khXQAKCRDxYtIxx+SG
+ djrjEACKVj6FsoZsvRDiP8kpL5aey9nLdXbume5bJujSMGoMrm5WLXIa0+cm62lhoK5dWgIFNFM
+ wrlNlO/AgnUBeEJmJdhOvrusqHqtXrWLKZ/lZczSg8fi/adZtZ4io7xNOMGxU0SPYtvvE3MsKvu
+ DLBDgDOIx7ZQkpodHayG9hc2xD/4kV6IjL4edgAX/0EDRIqUXAn3e4jSzLHLYM5Q2RaIMr27Bxl
+ T7kjs6ydiE0W0wUslcH6rcRPtRpb8hvQ0XZY6DG7/Z5xYpcIjjWBLg26v5LHP0QJHkj/oFqp4jD
+ /VcEFkfDR/VRaW6WLDqBCEIEs3pUFMRZr7cqcDcsTxPA/y+MoKw5vdAf2Nj+74xZIXCX5Z06Ho+
+ +HS49UV4RMBsZmDVJlhy5QTxXx0oZV9WFHjRpCqsyAr4esYXoDs20I2Bcgd7fwYa4Ym3IRWuxZt
+ u3d/r/46qnMRnV8gGu3jv2lMBPoanK60MlXBoMdiGJjhkFpQkvxQ7AYuaGHOUviGW5MNmIG5SpO
+ yQcXBsn7YgCPIoAAza7T0xyrGCW18YzqKt9xnDQI7VeKyCePRakAnTLfzQBkOHuao4G1Y7XzeCF
+ Hxnx8rjk9+4mP2VF9qRF1+kMKQDk1JoZ0FJKM8+7yRr1d3bgRBIiKeBQtRdnZ6u6mpUGYXkN3QO
+ dCE8rGMo3tNbV7A==
+X-Developer-Key: i=marijn.suijten@somainline.org; a=openpgp;
+ fpr=4E8B01B9A5BEA56B5FD66716F162D231C7E48676
 
-On Sun, 9 Feb 2025 11:32:32 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+This series covers a step-up towards supporting the DUALPIPE DSC
+topology, also known as 2:2:2 topology (on active-CTL hardware).  It
+involves 2 layer mixers, 2 DSC compression encoders, and 2 interfaces
+(on DSI, this is called bonded-DSI) where bandwidth constraints (e.g. 4k
+panels at 120Hz) require two interfaces to transmit pixel data.
 
-> On Sun, 9 Feb 2025 at 11:10, David Laight <david.laight.linux@gmail.com> wrote:
-> >
-> > +#define barrier_nospec() __rmb()  
-> 
-> This is one of those "it happens to work, but it's wrong" things.
-> 
-> Just make it explicit that it's "lfence" in the current implementation.
+Enabling this topology will be hard(er) than downstream as hacking a
+layout type in DTS won't be describing the hardware, but "dynamically"
+determining it at runtime may pose some of a challenge that is left to a
+future series.  Such changes will also involve the 1:1:1 topology needed
+for constrained hardware like the Fairphone 5 on SC7280 with access to
+only one DSC encoder and thus ruled out of the current 2:2:1 topology.
 
-Easily done.
+Likewise, the patches and discussions around improving active-CTL
+configuration to support bonded interfaces (that share a single CTL
+block) are still in full swing and hence elided from this series, apart
+from one patch to fix the ACTIVE_DSC register coding to support updates,
+so that it is not forgotten about.
 
-Any idea what the one used to synchronise rdtsc should be?
-'lfence' is the right instruction (give or take), but it isn't
-a speculation issue.
-It really is 'wait for all memory accesses to finish' to give
-a sensible(ish) answer for cycle timing.
-And on old cpu you want nothing - not a locked memory access.
+This issue and successful resolution of all the problems is discussed
+and demonstrated in https://gitlab.freedesktop.org/drm/msm/-/issues/41.
 
-> 
-> Is __rmb() also an lfence? Yes. And that's actually very confusing too
-> too. Because on x86, a regular read barrier is a no-op, and the "main"
-> rmb definition is actually this:
-> 
->   #define __dma_rmb()     barrier()
->   #define __smp_rmb()     dma_rmb()
-> 
-> so that it's only a compiler barrier.
+Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
+---
+Changes in v2:
+- Dropped patches that were applied;
+- dsi_mgr_setup_components() now sets both the usecase and phy_mode
+  prior to calling msm_dsi_host_register(), and for non-bonded too;
+- Added patch to remove a forced num_intf = 1 when DSC is enabled;
+- Reworked hdisplay/2 "fix" when calculating "DSC timing" to instead use
+  dsc->slice_count, allowing us to remove msm_dsc_get_slices_per_intf()
+  entirely;
+- Link to v1: https://lore.kernel.org/r/20240417-drm-msm-initial-dualpipe-dsc-fixes-v1-0-78ae3ee9a697@somainline.org
 
-I couldn't work out why __smp_mb() is so much stronger than the rmb()
-and wmb() forms - I presume the is history there I wasn't looking for.
+Depends on:
+- https://lore.kernel.org/linux-arm-msm/20250122-dpu-111-topology-v2-1-505e95964af9@somainline.org/
+  (only to prevent conflicts with the patch that removes a hardcoded
+   num_intf = 1;).
 
-> And yes, __rmb() exists as the architecture-specific helper for "I
-> need to synchronize with unordered IO accesses" and is purely about
-> driver IO.
+---
+Marijn Suijten (3):
+      drm/msm/dsi: Use existing per-interface slice count in DSC timing
+      drm/msm/dsi: Set PHY usescase (and mode) before registering DSI host
+      drm/msm/dpu: Remove arbitrary limit of 1 interface in DSC topology
 
-I'd missed the history of it being IO related.
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c |  7 ++++---
+ drivers/gpu/drm/msm/dsi/dsi_host.c          |  8 ++++----
+ drivers/gpu/drm/msm/dsi/dsi_manager.c       | 30 ++++++++++++++++++-----------
+ drivers/gpu/drm/msm/msm_dsc_helper.h        | 11 -----------
+ 4 files changed, 27 insertions(+), 29 deletions(-)
+---
+base-commit: ed58d103e6da15a442ff87567898768dc3a66987
+change-id: 20240416-drm-msm-initial-dualpipe-dsc-fixes-3f0715b03bf4
+prerequisite-message-id: <20250122-dpu-111-topology-v2-1-505e95964af9@somainline.org>
+prerequisite-patch-id: 9ed44ae089b173f452a6603e6739b0b3bf2d9274
 
-...
-> And some day in the future, maybe even that implementation equivalence
-> ends up going away again, and we end up with new barrier instructions
-> that depend on new CPU capabilities (or fake software capabilities:
-> kernel bootup flags that say "don't bother with the nospec
-> barriers").
-
-Actually there is already the cpu flag to treat addresses with the top
-bit set as 'supervisor' in the initial address decode - rather that
-checking the page table in parallel with the d-cache accesses.
-When that hits real silicon then patching out the barrier_nospec()
-lfence would make sense.
-There is also your kernel build machine where you don't care.
-So compiling them out or boot patching them out is a real option.
-
-This does make it more clear that the rdtsc code has the wrong barrier.
-
-> So please keep the __rmb() and the barrier_nospec() separate, don't
-> tie them together. They just have *soo* many differences, both
-> conceptual and practical.
-
-A simple V2 :-)
-
-	David
-
-> 
->              Linus
+Best regards,
+-- 
+Marijn Suijten <marijn.suijten@somainline.org>
 
