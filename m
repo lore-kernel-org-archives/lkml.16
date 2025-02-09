@@ -1,49 +1,47 @@
 Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6D11632CA;
-	Sun,  9 Feb 2025 10:24:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF431581E5;
+	Sun,  9 Feb 2025 10:25:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739096689; cv=none; b=r7rL+4DlfiM2wMRdyhPGDO6Nm7b5nSrBgIgwxpH/XGQzcc7GS6qM8lv9WAg8dzNZqDKXVWIkmJDyvMH++GEzvgmL7424DH8cSTaE6ElXkzcbaWXFMxanVfMxRv0qHMuEHcJjdt89gjLpF7qeQqlMwZEwXywFWIhfxaT5KmFGuGY=
+	t=1739096747; cv=none; b=rr1q/vzQhNmFlxk/KAsH2d6CqXplyEqt3N51MuQ1iRcT1vep13XHouGPOMsTw5gHg/rer8g3AYnOE0OnKBE04CkkPzykDBXaJtrPNKK7gQTUzB4s6Mwy5GEVUAN5fBo/Bhi38xy2eqUvU19MuaEiYy+5ns7RA2r6fr+2vcHZHn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739096689; c=relaxed/simple;
-	bh=3NCPduHHQv8qdKsgN94aNo0UPsTGxLa4UahtZr2kT0Q=;
+	s=arc-20240116; t=1739096747; c=relaxed/simple;
+	bh=56AiyWWAPmqUuIe3wpQsaB1KGID+cdJYyD3tuB1DMhI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BwSbnoVe+WDwxOLUZS33UGQxxaZG1Peql7hk9t63o0biFnGBfXGbXJGCY3O9HCMph1hXrqoRDJyDp6+odC1k3Hdm8qYBRwBVrjE7HAiGZ3zLU9oPc+/YuDp4LrPPgFhxERyhlMMmX7wso7hJYXlIdX5XIImPG/zxSqRMKN0h+CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=SYscmWD7; arc=none smtp.client-ip=144.6.53.87
+	 Content-Type:Content-Disposition:In-Reply-To; b=aaANEsg8HrRCvHs2sDFtULKaJVbRqMtz6qgf8jrNBb/HfPfQr7WE50fomY+vuOrfl6ve/fIEfS/0Yu/ISfsY2SoXElGhMp2HUinbp00A5ceKaYMYmn/fPhunbm0g2/7fiFsZ/WnI2kAq0OF9cHtuAJjHqCLXeE/DzFbPA4d79n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=O3p3Jg4O; arc=none smtp.client-ip=144.6.53.87
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="SYscmWD7"
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="O3p3Jg4O"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
 	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
 	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=6BS69AeaICn+Fpx1fgS+yRMjzgfzhGmys0CnrPMcR/0=; b=SYscmWD7QXTNk+BGGsr1+Z0kSx
-	DptDF9tlATofOY+gKDyzQ31DoNAvqVTwRXKz/rKwfT4MAH+cmpeFiZv8ntQDHSIBse7YZ1AQqjatR
-	h3nCinNNB/eJTTAYUGKBe4UUjHnFMSoJo+Z6s0g0RZXIHI6PMpMNUpSGVtzOBFlevmBDFrTBIj9yp
-	HWHoLn02cqZywxdy1SkQFrWZUpR5ncKGt7/cfNzIBE/w2X66hEyovyFIR2fEb2/rjdgaKuPzXdwBG
-	jWCehWAxeOztg0pYIYlma69D2vvk2h/vmTt5i9heCpBeTFHG4mjgnBAa9rUNJONFY+u8NtxXz+A4f
-	oJjvWTKQ==;
+	bh=1iBm607sBxcA6KdkZ1ibPdZIisFBHiGLsffWZjG6130=; b=O3p3Jg4OPyqL2e3J+baquR0gL/
+	JdgazGqX94YfNiEpSOt0/1NJBX1KVhhD1XVSo4CBlkaeQIFwEkTpUXkDkM3xxAWlvHQ3OM7+/IHKt
+	WUy+KJ7J4GpRjKOMDGPhREj7t2qZwuoQ1BSxHicAIcd1vkTokZTRJp1sfScV//bCs/DXxDVYofSKx
+	uwnVEFPyZC4HQ/JbUc4fGBh+Y9WV6wQu1f/tMl4KLuUji8U4RX6wIajyo1pSEpXs2PaygzqplTn/k
+	sWak4NBN3qDcJmtyVMTLVIHBXviJ3BZxyaoC4kyQC18PbL8HwJq/ZlNmDqeRJuyj1+lzxUycfQoQK
+	kGdwts7w==;
 Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
 	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1th4HX-00GIpf-2F;
-	Sun, 09 Feb 2025 18:24:41 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 09 Feb 2025 18:24:40 +0800
-Date: Sun, 9 Feb 2025 18:24:40 +0800
+	id 1th4IR-00GIsF-0Y;
+	Sun, 09 Feb 2025 18:25:36 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 09 Feb 2025 18:25:35 +0800
+Date: Sun, 9 Feb 2025 18:25:35 +0800
 From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Kristen Carlson Accardi <kristen@linux.intel.com>
-Cc: linux-crypto@vger.kernel.org, davem@davemloft.net,
-	vinicius.gomes@intel.com,
-	Kristen Carlson Accardi <kristen.c.accardi@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Add Vinicius Gomes to MAINTAINERS for IAA
- Crypto
-Message-ID: <Z6iCaMpVHQZAg85g@gondor.apana.org.au>
-References: <20250128235744.1369399-1-kristen@linux.intel.com>
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Kamlesh Gurudasani <kamlesh@ti.com>
+Subject: Re: [PATCH v2] hwrng: imx-rngc - add runtime pm
+Message-ID: <Z6iCn97oKQuXZd-Y@gondor.apana.org.au>
+References: <20250118160701.32624-1-martin@kaiser.cx>
+ <20250201183907.82570-1-martin@kaiser.cx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,15 +50,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250128235744.1369399-1-kristen@linux.intel.com>
+In-Reply-To: <20250201183907.82570-1-martin@kaiser.cx>
 
-On Tue, Jan 28, 2025 at 03:57:43PM -0800, Kristen Carlson Accardi wrote:
-> Add Vinicius Gomes to the MAINTAINERS list for the IAA Crypto driver.
+On Sat, Feb 01, 2025 at 07:39:07PM +0100, Martin Kaiser wrote:
+> Add runtime power management to the imx-rngc driver. Disable the
+> peripheral clock when the rngc is idle.
 > 
-> Signed-off-by: Kristen Carlson Accardi <kristen.c.accardi@intel.com>
+> The callback functions from struct hwrng wake the rngc up when they're
+> called and set it to idle on exit. Helper functions which are invoked
+> from the callbacks assume that the rngc is active.
+> 
+> Device init and probe are done before runtime pm is enabled. The
+> peripheral clock will be handled manually during these steps. Do not use
+> devres any more to enable/disable the peripheral clock, this conflicts
+> with runtime pm.
+> 
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 > ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
+> v2:
+>  - remove unnecessary err = 0; assignment
+> 
+>  drivers/char/hw_random/imx-rngc.c | 69 +++++++++++++++++++++++--------
+>  1 file changed, 52 insertions(+), 17 deletions(-)
 
 Patch applied.  Thanks.
 -- 
