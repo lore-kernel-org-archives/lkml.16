@@ -1,162 +1,98 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24F120EB
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 02:21:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1BA28EC;
+	Sun,  9 Feb 2025 02:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739067684; cv=none; b=FHWLCxH+ATrSzjIeQsObXsTzQlseOVI6lu/AxcKkVx65GIWMoVhMI42qdQf77A1AdNIHjg6aUl+4eid1wzsxNUQ6aYcvWYx7dIpptG58UiDALTmHsS4gXvYvwxeYkvuX6IxjV6EjRAeJWXgzxa6ZBaGn2TKymnMNsUFxwaSvCHQ=
+	t=1739068600; cv=none; b=MGIF2Rqz6RYSvREHP3/43zUCfvN35QAU8gPuZ5PJV5nRJoAhrgtxrJxdxAERVjK+TwgtG8h8KBzAfKubyY8YEOdejk1NUu/lZT4vob5rtOMJ42Ukh0wxhGf8639uELn9IVGofoaoRPHQoINzlVrL+JOg+YoI3KSsKtaby5jeTFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739067684; c=relaxed/simple;
-	bh=oLJie9UWNJxd9BkkGwaeRdy2QSgvFMiToNByFI6z9Rs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VlVlfZVb/7EqW9Z27LWT3bhLZLVoA8W0sWeAjzXuF630vUSSCA6hG5hl5dn6/nKAaq6FZ4xRoxRXd9Nc7Qrh/WGvFC/+ICZEKk46CGO58YtXXrxSefLXf+7iuyBtWwdM4QTGcUwk+VtQPEe1+mQ6U3w3tw0CnnVKuahLIoe9G/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tqGf/1aj; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739068600; c=relaxed/simple;
+	bh=pS69x2HAuQdB5WvJUFht2GfCqUjziWpMjHIUcXpBMZQ=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=ugFsJVVt8+3WlL8xWhGFthHGRVjoKoV2mNwmiHs5ZvN8MYu9BT7HMWO+qUwAQO+zN1zGtV3U/5crHclgI6ri+tyAd8SJUnvg5Eis2AWUiG0S4jSZ3HqIkEFr2Gsy51b3wGNesFXTVqaQ8WNQo/dlrmzToN0zgI6w+t4mEcWoqf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hXARCNBP; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tqGf/1aj"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2163affd184so96865ad.1
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 18:21:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hXARCNBP"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-467838e75ffso43973931cf.3;
+        Sat, 08 Feb 2025 18:36:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739067682; x=1739672482; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aPYRBH8N0cFSlMms6AVV4eSsR5UK0yhiANnm0hFSLXo=;
-        b=tqGf/1aj/fi6ZXNkBJhuns+7xcKAHeM0jgyENdye4OKMs6uRx+LE0G25XKHPRYCJGo
-         aPjOrENbZV1Ozys6+eNlcxRPUuZ14UNwoM+j9tKVR2sala4AVVXz6Z9+9BcEkxfUNfpD
-         7eer4AbJoke921pxMvM33ZxC+VvzphFXMxMrzye98DzVIGItZys54fXo7q5ffbuE+sxf
-         5JbXIl83pEiQlUoFXbnCJLmvfcRZsdQu6bux+uijssiSq+4MKTx5K4M6fKobplpSwgFV
-         7vPuam4HEVkIK1zvd+GDxlb8484Q67aAak7aB0u1uaWtgD9MQgNtrMalLvtxkhQskJvD
-         /esw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739067682; x=1739672482;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1739068598; x=1739673398; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aPYRBH8N0cFSlMms6AVV4eSsR5UK0yhiANnm0hFSLXo=;
-        b=tB7B/KM2mNbBy5p8h2sTK1RuYPquLmldlWCFRhyC7aE+SuJkrWzujSDIjhVnZMivpC
-         o47BJJE5iGVuuyotAXoPqDFOuDcykqJn9b9ZEEVR0z95yDrjYgHngqN+CuVLndnrja7W
-         3+7DoJwDqpcFblNDM7gpt7zLSGJWzi0t1ZruCAmBljRhNMqenpal4caSajwSBX9KRun/
-         asjp7FjpK2QAQBdr4TD+RFTOjFgHAmuhkjtMw/g9N91/cJ4EMTZgc2Gwxm4embavjgg1
-         JJne7widhZsdikoAPSLFbvg2XeHzEHMoiwWNAUG9ml2z7/JaZ5XCWuJUSyq9gp2+ECXq
-         cyGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWhUbBP6CQHacGPrCOrTbalVtqQAw5hFFB8tzvx16hAIUk55ac9ALmI0Sj1sCjppFOlP2iQLxvCG2unYXs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkmIj7Q2Tfp0u6H9Bgix7JzGVuo/184XItrx5SRRmumOkX1Tpc
-	oPYDyj1lwSci0lCuWaJ2j4vgti2SR2ZVC8gsqlAzdNRD37YN7I9L0OMQ/MGUtQ==
-X-Gm-Gg: ASbGncsihofOpsTGrlwOuDke2L4aeIkSuSS7XpfldcOe/qw6RNu53LJziJRKYRNRR22
-	MAvoFazBzwgO63ICB9ivYQdw3hgG7rGjDTTCtWeHZQWqhE9ewjCPeeX1cY1pq6DwujHMaxjIEkW
-	ZAbhUcbnMgkSVdC2HJjGIiiQ0ijN6+bdAp4TGpdwTJpIl8bwknupaZM6CDKOAibB9SmXyYpPdbv
-	UrO8dRteXgejfPyHnspHrXfLe019EjaRNSyxUI7IOm2I/5ovX7CwNvz7EQAIQuEnXbXkXHCLaPc
-	rGSvNQ8HE5t8QZp+n3K2eGX9NfiYh2z0xfd7EHfazfe8oeOxLJvi0w==
-X-Google-Smtp-Source: AGHT+IEowLr0ODuJvhhRX0k3wQ9ChkhKhAElhUwga2QcQJLk+imc7mKSniosyKtNBmFd0SxXKu92Ag==
-X-Received: by 2002:a17:903:144b:b0:21f:3e29:9cd4 with SMTP id d9443c01a7336-21f69e53acdmr2101805ad.20.1739067681888;
-        Sat, 08 Feb 2025 18:21:21 -0800 (PST)
-Received: from google.com (147.141.16.34.bc.googleusercontent.com. [34.16.141.147])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73048c15baesm5148861b3a.121.2025.02.08.18.21.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 18:21:21 -0800 (PST)
-Date: Sun, 9 Feb 2025 02:21:16 +0000
-From: Peilin Ye <yepeilin@google.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: bpf <bpf@vger.kernel.org>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	bpf@ietf.org, Xu Kuohai <xukuohai@huaweicloud.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	David Vernet <void@manifault.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Quentin Monnet <qmo@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	Yingchi Long <longyingchi24s@ict.ac.cn>,
-	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>,
-	Neel Natu <neelnatu@google.com>,
-	Benjamin Segall <bsegall@google.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next v2 4/9] bpf: Introduce load-acquire and
- store-release instructions
-Message-ID: <Z6gRHDLfA7cjnlSn@google.com>
-References: <cover.1738888641.git.yepeilin@google.com>
- <d03d8c3305e311c6cb29924119b5eecae8370bbc.1738888641.git.yepeilin@google.com>
- <CAADnVQ+L0h8qXfYkC3+ORyQkXFJ2MgO8FDHr_Ha0QMAtS_ujag@mail.gmail.com>
+        bh=c91HWZy1fFlDgVz0qIHWmpnAmmBH8HnmyKAc0GogYB8=;
+        b=hXARCNBP5vYad0CRZMavwrIPdbZLM54e2BKBsJ7bGGoHXEjkR9gGx+f7kx+4rstP/j
+         yfdeQAZdF+yEvFW5pZoTyrhtBzdWj4GEXweYEAssfwB9cZ27yxpkMPoAo/wMPGAO24uR
+         +vx1pGUyJyGVbi1eMNhFLhdM5T0vu/EBQuMGCyT6M6H78xAccHBgsgBcVFdNa6t8chV/
+         mK73rHHJr7EVHZGRJAJGciuiD/AZ94BNsRlCZ4n/Zk1c/hexueH8NoqnSlNonoeYCrFd
+         lE3zQFRjyV8ew36V18BcXZ4+dIwMYnE361aUVGWdBxE17LNwolXuQpf6moOJLytnuJyG
+         mM/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739068598; x=1739673398;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=c91HWZy1fFlDgVz0qIHWmpnAmmBH8HnmyKAc0GogYB8=;
+        b=kMffhsqZZ/OX+INkxPpEsgfoASPSgc436pGBFlTAIioF/TAjHUW5wFWQ9HnzJdcPu2
+         YnGdXa6NQvoNLvFpW5vQ9rqHKKGYOPBV1S02Kg3eqW1PVho6uMntO6pBX0rC8Wp0ZNkN
+         1qUEqEtQzoUFvdr/8NfSZEPscWZ6ZG9/EZR1Sq4bzFrfprNYJn8v0r92f7bt+CHWyz6x
+         9h/J+wXux95fXd0K2DJ94p3wu7mr5wMZU6wi5X2Jw6BbhiSAfOVqIVewujy1vPn3kKxZ
+         GO8KZcHkqjKIRLI1L0wy90J8IBowI31J/KdncI8miOLoUrVazFfpU1DOSKtYHpjO07EL
+         0bFg==
+X-Forwarded-Encrypted: i=1; AJvYcCVj/NV+tQb989EqNOOss6nxG545X8YXvEcFxEIAJaj0vpePOyziJWzjVYa6RDllwjF2RNJuaAE4axCpzys=@vger.kernel.org, AJvYcCXxR1mg28YYlUQg6JhhfnYAnwcAlkDs/F76EnSDLTDn9xYln2h5upv1xRHeRMmjHbHFfuvX1LPSHjODPR5hK3Dz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/GIO49AlYMthVzpZJtTPYG9QzZE3qhcQuzQEPFxkvI2N2sE5Z
+	5bH7OqyLZt8CwM3psfPfnN0k8eq2XqO0jJPwKQkclifKKDL2w9OFuF/ACwGo
+X-Gm-Gg: ASbGncv/e3Z8HkUtG6ta/wXpf0X6SqL/acQsYo565Dc1lsjfzFqA1fPBUiR4rRuRu0a
+	Dz3PvWykmy8ZGUSkhNiPn2ubNjc5rfTjFKsbuE1z3wZ6t/sPRh56HBGwaqxsaco8MKQgxpIHjUU
+	kNAHCVpYglhPxg7NTei6xV7BabIqEI0ComJBJjllu/pVe7n8PUuQQzXbYaNw9jdslCJl10yLEGA
+	rPjkUTHNfvq1VwfuPQeNy4sPiwyVXR3PEzoPVKZ+Fa0jTUNq8Xm0r6gcDUJtOKYW9ILdC7di231
+	SV+n2gUsbV8nxstUyyqaVLkM0HkTr9XwA1XRVcqSWb60GMbiYvFCjhnnJw==
+X-Google-Smtp-Source: AGHT+IE5Rj5g4p6RW6TyFbdKmS/l+asLvxM8qVlCkNFu4snbUM1SLLePMINQHVvRngLLyItLy4wjgQ==
+X-Received: by 2002:a05:6214:d69:b0:6e4:3fb2:538a with SMTP id 6a1803df08f44-6e44572761fmr150702436d6.42.1739068598267;
+        Sat, 08 Feb 2025 18:36:38 -0800 (PST)
+Received: from [192.168.1.105] (c-73-176-204-61.hsd1.il.comcast.net. [73.176.204.61])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e449e0d2b8sm20387276d6.23.2025.02.08.18.36.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Feb 2025 18:36:37 -0800 (PST)
+Message-ID: <77e0e915-36c3-4c95-84b8-0b73aaa17951@gmail.com>
+Date: Sat, 8 Feb 2025 20:36:36 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAADnVQ+L0h8qXfYkC3+ORyQkXFJ2MgO8FDHr_Ha0QMAtS_ujag@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+From: Eric Salem <ericsalem@gmail.com>
+Subject: [PATCH] selftests: mm: Fixed typo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Alexei,
+Fixed misspelling.
 
-On Sat, Feb 08, 2025 at 01:30:46PM -0800, Alexei Starovoitov wrote:
-> > Introduce BPF instructions with load-acquire and store-release
-> > semantics, as discussed in [1].  The following new flags are defined:
-> >
-> >   BPF_ATOMIC_LOAD         0x10
-> >   BPF_ATOMIC_STORE        0x20
-> >   BPF_ATOMIC_TYPE(imm)    ((imm) & 0xf0)
-> >
-> >   BPF_RELAXED        0x0
-> >   BPF_ACQUIRE        0x1
-> >   BPF_RELEASE        0x2
-> >   BPF_ACQ_REL        0x3
-> >   BPF_SEQ_CST        0x4
-> 
-> I still don't like this.
-> 
-> Earlier you said:
-> 
-> > If yes, I think we either:
-> >
-> >  (a) add more flags to imm<4-7>: maybe LOAD_SEQ_CST (0x3) and
-> >      STORE_SEQ_CST (0x6); need to skip OR (0x4) and AND (0x5) used by
-> >      RMW atomics
-> >  (b) specify memorder in imm<0-3>
-> >
-> > I chose (b) for fewer "What would be a good numerical value so that RMW
-> > atomics won't need to use it in imm<4-7>?" questions to answer.
-> >
-> > If we're having dedicated fields for memorder, I think it's better to
-> > define all possible values once and for all, just so that e.g. 0x2 will
-> > always mean RELEASE in a memorder field.  Initially I defined all six of
-> > them [2], then Yonghong suggested dropping CONSUME [3].
-> 
-> I don't think we should be defining "all possible values",
-> since these are the values that llvm and C model supports,
-> but do we have any plans to support anything bug ld_acq/st_rel ?
-> I haven't heard anything.
-> What even the meaning of BPF_ATOMIC_LOAD | BPF_ACQ_REL ?
-> 
-> What does the verifier suppose to do? reject for now? and then what?
-> Map to what insn?
-> 
-> These values might imply that bpf infra is supposed to map all the values
-> to cpu instructions, but that's not what we're doing here.
-> We're only dealing with two specific instructions.
-> We're not defining a memory model for all future new instructions.
+Signed-off-by: Eric Salem <ericsalem@gmail.com>
+---
+ tools/testing/selftests/mm/uffd-common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Got it!  In v3, I'll change it back to:
-
-  #define BPF_LOAD_ACQ   0x10
-  #define BPF_STORE_REL  0x20
-
-Thanks,
-Peilin Ye
-
+diff --git a/tools/testing/selftests/mm/uffd-common.c b/tools/testing/selftests/mm/uffd-common.c
+index 717539eddf98..f23c57d9d1bd 100644
+--- a/tools/testing/selftests/mm/uffd-common.c
++++ b/tools/testing/selftests/mm/uffd-common.c
+@@ -323,7 +323,7 @@ int uffd_test_ctx_init(uint64_t features, const char **errmsg)
+ 	ret = userfaultfd_open(&features);
+ 	if (ret) {
+ 		if (errmsg)
+-			*errmsg = "possible lack of priviledge";
++			*errmsg = "possible lack of privilege";
+ 		return ret;
+ 	}
+ 
+-- 
+2.48.1
