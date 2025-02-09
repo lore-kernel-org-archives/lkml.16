@@ -1,62 +1,62 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875F64C7C
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 02:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5A92F30
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 02:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739066506; cv=none; b=V4j0GZkO4vSSCxKmeXkBAxiNS4UVJUHmOf+NW2+dHyeyQxZVd1om3AT9xEwXftVD5bT8/ZizVzRwaAmpe/gZ5S5v+6X1DFJL7L1uTuuw8JkmKPicEn2GRBUOHRUMGYolDjADhaifDEd/fbeE81pleHhwURTBKD84OmdpZr90PKM=
+	t=1739066599; cv=none; b=IaPyAX0PoeRaPra4P8PrSjnEXTSVYSl695gezFOZs35VzdKINXAFmEti46l06WtMoykClsv3AreKja6Gfxu6iMAJhFCiD6kNCwAb5JWCPgNxQB+1PJcRKpfqV2i99ldvkfjPbbJyXnhQcvGLyfU9QoljBc8Mpor7QF35jnxVB4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739066506; c=relaxed/simple;
-	bh=THGZ8Vrsa2RzqHUTLLeUQHBwhUf+BdwCqd63mIVa3I8=;
+	s=arc-20240116; t=1739066599; c=relaxed/simple;
+	bh=d1EJ75Pc9Bdw/RDQVXEClZmre12GMlFmoxKXL2tLefg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pK5ZjtfnUer0A7MdrjIytaxS7hbzyp1Bx5J3wBt1/PkcVbC6dEDY/r6sE5I4jCkPpBQxJU1DBwZruTStDu5EwDFfJ4YnW/4g/0WE8POSFZ2RaagthdgXyu3HfWnhkeZ3CUN/XFIJkYe3ZGQ+pWnhwCgeMoy8GdJ/hXoUSO/tuUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EfHyiwnx; arc=none smtp.client-ip=209.85.167.42
+	 Content-Type:Content-Disposition:In-Reply-To; b=P2pVfR4vjqJ6cobxSKXtBqLtTnEvQSev3dWbG7xdqoHY7bp7EewUeOREjSGm8nl3+phubuTR5xbVddcYy1CbcThWKC9TtXkJvee7hqgwg1WVnVzVvP4EJAdVRCb0UXJ9GngQ7dr0232siuP71Gziahv7lS0zw4Rl9uG6wuJPCFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=onMe/n11; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EfHyiwnx"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5450622b325so680934e87.1
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 18:01:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="onMe/n11"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-3086edccb4cso17046891fa.2
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 18:03:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739066502; x=1739671302; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739066595; x=1739671395; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2PGp1XgnxteHu9RdPhVH5sY4q1WTjnO00NTGkJChuoM=;
-        b=EfHyiwnxizO/5EZij6ZWEixRVBMwpEs/HqtsX+LbLaQoz+vP+VBWf755xR99vSw+aE
-         oXvliuP2kdO+mMNs7umHFKDS8t5jY2I1ouW5rdZDfT2f0OMJ0azNCuynIH8Hr5FIQLqI
-         xJCY4Ao5ryaoDTOujFGP7riCOG9EZ3bYRggtMrfJGtGFJvBXk58KO9ttippWPTrREs0G
-         gfRX4jEeS7j+EQx9RQRbGnCkQIumHtFcUm7xL/YXe8a/I4Ef6LfVn4U3L6a5B1lFzPFY
-         LsOwiu0sIoFzUlHe4bSGX4fK1t0CRhoeDNqj5ayhGjyirVOKLUMaJofg3bEXyqrbZ2Xn
-         UJBQ==
+        bh=EeeZzWVf5/vhmXv9AEOt/1s5u145QYyGEt7ZWKzhLQM=;
+        b=onMe/n11G+tt560mWYgGtqvKHrERd8dPt08zt2dKvmNn3gCz+QtuzJoa//O3EQTVzq
+         IYjCfbJV1NEjOingImauBRVgSt0RGzxXITdwijnH1Ru5ZNnj1mkjt+4BlhjTLXpNHy4y
+         4UDusmKDK1T+Cy2vHXbI+CpayIoQZmEi+PnYzpVfwE+fHebrDDJjWIG0qdZzIMKbMoXf
+         BSWq03kjWYzpuhqjOiV84cbwaPkv+uLDSUQH4nF3yzdj4nMAXPYbdXykA3YLRvsQHe0v
+         Vdq/nJMxyi0l6GWsgSmAMY8S5fN/Kg1bF3nUgHmduZv91LN4Rw7FVWBjPv53PRwmnfWD
+         Y3aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739066502; x=1739671302;
+        d=1e100.net; s=20230601; t=1739066595; x=1739671395;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2PGp1XgnxteHu9RdPhVH5sY4q1WTjnO00NTGkJChuoM=;
-        b=k4wTExDjoVRSmR0IrE++lxnRr7NB7K46UQOPAeJb+wuDx/wpFSaZ43k6o+u6mx2b1P
-         M3nrybfxysKcQVjK5IVFAqy9QA0/lFK8L+sTpkUzmLWkDPYXCitmDssCXoJdbpwiCpFA
-         5lcFkLQDzeMZjNxdcluMOkFXF+M+8dkVM+1cVDLefKXwtVW9f/jSxflVsgdZDf7ldPL+
-         /BO1InIz7KPXLaov9iZzP9K60KDf2e2JbZTaxfq0g+YkVD2uljMR9y18kQgwy5w6zSSD
-         QnNuPiFr32X51i0KSVt20F5A3ZsQi7g5+XO1qcXJXxVGtE3GIQhZy1gDXiiGdYyLOa51
-         OHOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXKt98wVZuyzy2Q6OFKNxV7UayIgXGJboz8zVxnPqD/4r4kzxsMhBLb85BLAvBV/kvy2FqbxvQL8oRJwps=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz40PuJgrm5hs6DQjB7Sz7kguuo3aSY1gHnFVHSs1VkxYeJVwev
-	hdpqOlIV5QOAcNiSNY+hZqaiG75/oRvNBQqhbR/ukHWyky9yEGnKuo9/BZ+q4o4=
-X-Gm-Gg: ASbGncuoddR/TIV+PwmO8nqm3aLj5XH5vu7rnZlVF2myPi+yXieVwCq2JmH7+sHGh9z
-	kiF2YMomvh4/nImtyDkEZtBeQcc1oBdfm2DmSLwlfkcwHxQ5L7Y08Vly5m1qadVMSI8kLRcKluD
-	fOPfZnsHqCmehjYjjYho/jq6bYYho3hGOdtrk/yIFakDSJCQPoDnb8atUAv85/RsTJ3Tn0u9PZu
-	zwJMRJAiFwFBZmnLS16TtJv/ZLXHpfMJoR5cHOI2+w32eviO1NnBuSC6QmTj9B8umEajsJ5XRcd
-	ZWpOVcnUd89FAFRkqaK6+Uz+zq3aw5cHaw7e7uHxuZ2AKvsnd1Jw/zVIW3o/Vx7r3vsSPrE=
-X-Google-Smtp-Source: AGHT+IGJS1+g4puxkPbuLs8WIzLmSKlUfwG5DYlgVtVpvbpfwu+I92SkzuZNAQBNdSTJnZpCoPa0/A==
-X-Received: by 2002:a05:6512:159e:b0:540:1c18:4e38 with SMTP id 2adb3069b0e04-54414aa88bemr2594802e87.28.1739066502582;
-        Sat, 08 Feb 2025 18:01:42 -0800 (PST)
+        bh=EeeZzWVf5/vhmXv9AEOt/1s5u145QYyGEt7ZWKzhLQM=;
+        b=WJZwYfFASFSAoi8hBQGo2v8ufyunKgconV9i6kKl0W/uvGYDe6ITRdFrI8PId7aiod
+         z/oDTOc3HBRVlmjGEbNlCKkL5kbgsBtgHBDzHb5hMT2pQhAkFDSCrvSivJffQg1SOP+s
+         totr7Vr8TLMyREG6IV2U92a1poVQP7SuQUjVr6RHsT+PSkx6iLoyKiAagKeE/vlXEVtG
+         0CiS4AhtBKjhGpbXxUX+93dRamm5CeNSzKVUH4M+GQQ1vA7MkFxue+V/YgKkKTPgxIuT
+         Xgtq7M1k/i9Cxpk6l/c1Bocqw5QcU1PNG1y6e7vBNBE6wQpsRPigbdb0r/NhwFl8Ogm8
+         IwGA==
+X-Forwarded-Encrypted: i=1; AJvYcCV9wr87sOUod3Yfhj0Adnk9KahNS0ZTWRBsRvDB4YkJV79GCs3mocb2X2VjuBBwBsR9k84ElDQBgTs7DfE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzV9hXpaKpubdQGBI8pJ5OtudX24BjbisdGfvwvdmoggCf0RxWu
+	Ex+qbnDcB+Ac/frShX70MU8pip/MVPtEBhD6q6cmmOp4rH3P8+g3DdNuCh3Nouo=
+X-Gm-Gg: ASbGncuPvgptAoP/plgDUW1PZrTzUpy/8ooZq+v5Tt9+LHOtvJW99OAYXGIjKf4A1vI
+	m9Ejb3VRkEah/MkneU28316wzL1GNsV7vugvDVgBgIdH99hRSKiEGBBFd3gw+Qf9i0SrpcuSMk3
+	fJhjHNJ//Pb+nKGBUweaZpQyf3m4a2Jhv6Sb38u0H1Fz5EF01cAgkDODnQflMrUsTASw41jUvMA
+	lgF7opKt0+G9LmbJk7ZZfAMJ7qQSfQPCTLO+ULF6mm6bRnlO28vDKv53yNwPDR4Tfnxk5LqP3ij
+	nH3axHYfxfnALhY2Nqlxd8mGUATIMO2/rNN03ceUXwfBcUuNMpzcoaOxzzDh9YpBIUvYeIw=
+X-Google-Smtp-Source: AGHT+IHY5xrwx7bXOZb5Z6RthMsSdn9sw/6mONLcYjPXUl5AfcW7b5fwlydWpYhPXPuU1dPWf8dH0Q==
+X-Received: by 2002:a05:651c:1603:b0:302:210d:3b44 with SMTP id 38308e7fff4ca-307e5a8de19mr26127411fa.35.1739066595390;
+        Sat, 08 Feb 2025 18:03:15 -0800 (PST)
 Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5450a36fa4asm28876e87.167.2025.02.08.18.01.40
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de2f8193sm8451191fa.111.2025.02.08.18.03.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 18:01:41 -0800 (PST)
-Date: Sun, 9 Feb 2025 04:01:39 +0200
+        Sat, 08 Feb 2025 18:03:14 -0800 (PST)
+Date: Sun, 9 Feb 2025 04:03:11 +0200
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To: Maxime Ripard <mripard@kernel.org>
 Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -66,11 +66,11 @@ Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
 	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
 	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 07/35] drm/atomic-helper: Change parameter name of
- drm_atomic_helper_wait_for_dependencies()
-Message-ID: <ttjrs6vggvbwc7rprctmkigjusd6gog4pxysicxdxtweeojflp@zm7nh7zvfq5q>
+Subject: Re: [PATCH v2 08/35] drm/atomic-helper: Change parameter name of
+ drm_atomic_helper_commit_tail()
+Message-ID: <jmakx5twoivqyx2c5mkcwazgiuwi4csefsozmomussn7ppi2lu@pux4uen74old>
 References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
- <20250204-bridge-connector-v2-7-35dd6c834e08@kernel.org>
+ <20250204-bridge-connector-v2-8-35dd6c834e08@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,20 +79,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250204-bridge-connector-v2-7-35dd6c834e08@kernel.org>
+In-Reply-To: <20250204-bridge-connector-v2-8-35dd6c834e08@kernel.org>
 
-On Tue, Feb 04, 2025 at 03:57:35PM +0100, Maxime Ripard wrote:
-> drm_atomic_helper_wait_for_dependencies() waits for all the dependencies
-> a commit has before going forward with it. It takes the drm_atomic_state
-> being committed as a parameter.
+On Tue, Feb 04, 2025 at 03:57:36PM +0100, Maxime Ripard wrote:
+> drm_atomic_helper_commit_tail() is the final part of an atomic commit,
+> and is given a parameter with the drm_atomic_state being committed.
 > 
 > However, that parameter name is called (and documented) as old_state,
 > which is pretty confusing. Let's rename that variable as state.
 > 
 > Signed-off-by: Maxime Ripard <mripard@kernel.org>
 > ---
->  drivers/gpu/drm/drm_atomic_helper.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  drivers/gpu/drm/drm_atomic_helper.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
 > 
 
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
