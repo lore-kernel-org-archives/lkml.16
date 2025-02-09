@@ -1,200 +1,175 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F0A7602D
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 05:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558C81392
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 05:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739077469; cv=none; b=brgAqQnLJ1UVM5Ncsx4C0yWeOrNxCUXzWPGWMAiDoewv2tqIN4/40WOZyu4uPs7jcPSIXT8NgHzpN4X+avRxiwWuqGK+0tQbKQt5Ocfv/k4kPnO9Cb21JyFg1EOhXRZJYuFJ+GN2Sf782Yg3fTkGVJgrJTOyn/JAcDfqPbi+uko=
+	t=1739077610; cv=none; b=AlT6A3HgWY8CgPkkKU1Fsa2SBOWN8vj5wzxCDw23/sqoGvLdMgZxVeQzji8R7/IjtXhBsJLtBZe1V8AxzuxK3UXuwGh5B8My1fY0hDy/cc+68fxgPxSXMxVWrRu4Re8kg8t90jDBFVE4bAXaFjGLENtwsJn+mkn7vYBX/P1ktF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739077469; c=relaxed/simple;
-	bh=8yXTe1OVYj5JbnkZl3XT42RRvKOsy4P0SYyjAUxDUnQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Nw/JfEp+QxF9qnOUPAKHTtennL2Dkr54LvADeG47i8hBp+tEkF+gZY/7r58l2LBoRrbmsjK6Y97E1pnYjIHXYZCUlr/v0MOXJduMH5/HTRgFTLqTGd6/yugq2gWDiuIA7NxI5E7yvOmNcTD6csVvcML1iUBocK+dC1gZvyv/XJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=JSsMXTFE; arc=none smtp.client-ip=54.254.200.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1739077610; c=relaxed/simple;
+	bh=0M7wHxw7m62S0roh+2L9puv7sZHqrnnVrbBFJ3TVoX8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aHaF86AFTmf0rYhubKliwqE88tY8MsT1p9nxHt8r/NzwByraEtLqXyJZFNVsKZP0C0IN6SyTxwfuwJ4R8sVA39w0PU/wfyMIsQ4cVE90MOF+aG77vXEMHTZms9BjBahZfsRBxJbTW7K4PeQQLpuIkNIdvVvlBB0wlb+qn2EK7WQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UlNN1hK8; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="JSsMXTFE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1739077417;
-	bh=Z6ksVB32RXVttz8UCUtXbrkj4oFxmHS+sTWhuis6k8E=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=JSsMXTFEeXR0OssNbTzmqP5vy4kbzzhZOHWqOk65qjG/qoGVUWa7IbiPPG//0mwFe
-	 l4wlnXImm+V51F/7/+2mqmOJcwDoZCNXFZHN/HYvWLUo0EBhbUy3Ttck4uXTwFPSpD
-	 gT7FzxMit3CBKlNIdBgojX7h7ciRZkCKWjYpQ1do=
-X-QQ-mid: bizesmtpip2t1739077409txaffsj
-X-QQ-Originating-IP: Ix4VF44njFOVpDxDUDRswVWHR+c9YaMA2uaiDU6wwTc=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Sun, 09 Feb 2025 13:03:28 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 15359551948840619641
-From: WangYuli <wangyuli@uniontech.com>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	guanwentao@uniontech.com,
-	jiaxun.yang@flygoat.com,
-	wangyuli@uniontech.com
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	chenlinxuan@uniontech.com,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tianyang Zhang <zhangtianyang@loongson.cn>,
-	Liupu Wang <wangliupu@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>
-Subject: [PATCH v2 2/2] LoongArch: Remove the deprecated notifier hook mechanism
-Date: Sun,  9 Feb 2025 13:02:58 +0800
-Message-ID: <BE6A6E80196F688F+20250209050258.2090416-3-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250209050258.2090416-1-wangyuli@uniontech.com>
-References: <20250209050258.2090416-1-wangyuli@uniontech.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UlNN1hK8"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5450b91da41so31551e87.3
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 21:06:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739077606; x=1739682406; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kVlSJmm9NvMImPEH3NGDwLgQcH3oQGXNxfeyjGWMh5c=;
+        b=UlNN1hK8uHA6CGru0tMVEizfAskzwaFH4lvvjuBll1Bf9yZ3kpjSrjsiAuArBun0BQ
+         9wSL43+RsrHcO8BdktpcHX6h5yYQdmF9YbwDE+AYHS45B6AKQNBJ2k9aa7sUhtstidZC
+         JgjrKf+uI7Qu2LtXybVfhs22GFOJRwslKpLomoo7QstfVOBtxKbNh67bI2UOKH7QMEg6
+         efej5KbYN1W5UFaF/CWXB8RYoWNU/3Os3+fFQ/RfxOiDRhYaOGH1lMpRg3jJf8zoxI4z
+         4Bv/YBJXwnEXKfRSx+pILYDvGiepYac1ve6PimUHRffvR/Rr8//l/gMpaAFn8/JyjIg7
+         FALw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739077606; x=1739682406;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kVlSJmm9NvMImPEH3NGDwLgQcH3oQGXNxfeyjGWMh5c=;
+        b=FwBtb1MAm0qpLBAhEsq0mtZu4wiVT+NKp2nSOADrH2cyUmJrFK3j4rxqAuPN+yGjMe
+         uPvN6dLwMn8XvfW7FOZ8K3i1E3L9TjG+d1scfrbOlq+z6lBXApc1TcShLcJBdTkS1Bom
+         GnnQHgbJAgjkDLaZQzNBzcJtMtOuBEMdzKlNQ/av+JJIncff2SWzexFpJsoAGCWe6ZX7
+         fkgbuHH96IMQs/fRqu/E9ST7FnXZh52J/OZqe/6xMhwMKEE5L+7TuMuImV0YrRlp4L2t
+         HGT/7ciSwolpbp2eE5P6R8QckIkbMoKstOfF5BHmFy54uIHddEdId0xkkIsRc5rC5CQ7
+         nVWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6fgm7rJ+Kg93eVG5bVr80jgjmf9270MjzZepdL4GqQ/s8O78WjFTRybAOYK0O7p0HwN7KH2So46ttkk4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywu5s8aBvKlTDqL0nykI14zqip/Dtv830kC/t3XhwJPkhy912Pb
+	hQx0hQrHL3ZriEj950S4tFtY9BslW6ZLH539r6rirpS8m/nWh0V/6KQcr9TZeRA=
+X-Gm-Gg: ASbGncsvechMwHCLUzV+peMoDN47GIyQnWqu/oPaHHJIVjxqBERV4pisemNus3/Ui3b
+	CxoA49Sk5zR0yvkbTToRvztXzWPml2st5PxpoYibrA91jMGnlhfBQw0GyJOJ5aj8bqXXVMTeXLe
+	erj3ijD7x3sS0ticIWdog0IKiiBaaXhDduY50wL8ZYoBP6UDzd2obOkY6mEEI63MYv0Vvw8gAGs
+	FsAXfwkVqeINhufuN68j4fIh7a75wPhjD9nET9kmRSv8ANfuWZBSs5xBeJF+QRUYRILROpn8J5f
+	lweSh5e+7PDk3qlzBiU8MdM=
+X-Google-Smtp-Source: AGHT+IGGyZEKYTi8ojVgaUz/MI5jPCUO8zO80LpqW7NV53cAhGN5vJjCPYZWQx16G6Wo65PTqKzfqw==
+X-Received: by 2002:a05:6512:5cb:b0:545:a5e:b4ef with SMTP id 2adb3069b0e04-5450a5eb5abmr163353e87.16.1739077606235;
+        Sat, 08 Feb 2025 21:06:46 -0800 (PST)
+Received: from umbar.lan ([192.130.178.90])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54506ef1733sm245576e87.1.2025.02.08.21.06.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 21:06:44 -0800 (PST)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH v4 00/16] drm/msm/hdmi: rework and fix the HPD even
+ generation
+Date: Sun, 09 Feb 2025 07:04:44 +0200
+Message-Id: <20250209-fd-hdmi-hpd-v4-0-6224568ed87f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MUAUrqfXubadP0KxQlkSUI0GFE1h0MJnPqvENMHiNlciUAysIlE/HUNZ
-	BMHnVAaZnTVgmQlfhXpz88k/LcMR+JIC4ZEd2q4KlXcPmiBq/iHD0QBm2JOzUSKZMP+HF7S
-	UVuKTZl5ztzbx4UGVZAcKGukGmjeaEfxjPk4uJ6DdA/1lvRwWObVBfrJpNjCMc4wwtCNBoS
-	F9abrljTngMr5/1+El7GD4D/pI/4F6ivAQYxhRNjZO2OflUdyVweqsY0kKr2qoBkqdtVWHM
-	fLW/ESusi6gAh4jIVr4c/tVywDHdxmyaLZ1SOS0QuShvFaPUNoNv4qsQuS8jmD9mOPU9G2j
-	Q4LkbY2P9f2DTPRMRypCzbTHBArLl6jPpfdYgO64SXKnrKM5SY92xYBB+ZcBzsIIV9ktSzE
-	8Z8SvUk3gtFQyAdybaeHFhpxc0C/mmPitXpEOWxZB7GM0pUqlGELltHq56D/RoSmZOxI18c
-	8aKspAXDhY13Rs3xSLez8hHeiGFTT83LdshdF22edFMKh+lAR8/MVrCl53CmOza0hkmcPJc
-	qYqkPvC8CrcLvmpQkyQ2qmXG7zK/yZHB4VkCjCXATBHB5/+QEnIZwbiGp8njO6uVvtRIadx
-	57OgCWF8G5Tu5IhKICP1L3I7gamT9aZ6Ijet1yYnoKS9XolN14t5gYM7he7zBnLMmdS3fMl
-	1ztXKRv+WwLGelVmIr/5+JZgnu8dnn2b3TdGeJ3Q9WoZGBzBlsCjdd8KYR8f/5PfqsZ3T2o
-	VVa/2VWcWo55naE3wQchZNTTKBzHwdI76IgCwd6TtME1ZWwyHii+VTxlB2GjlYy6rY3g+2L
-	Q/8BoR6RRbD/KbBxiYBfV91Ey2IdLVnIvGVr7RG8n4ab1ZnQy4f/J6fwKI0QvjDE5viKb1H
-	yaNhkCVCDHFSsjjq1o3CQHcE+zy1Yjp76xfn64Uq01rskKlm9Rwcoysgi/TZMD8isM1tf9h
-	XSI0w+EHcL/0yRIiKTItc/zpF+mJu+InU/Erv/u0dxhE+dpfhE2rhyRR1Sk44IN2nfDupX8
-	Rc+dM8tQPsx20+pHrhdcG+YNyRCHyDRt9ZfpXXxcmSj398xj3K6amT77Kk0HqaCO82RVy5J
-	MLrctWQRmsy1NYTv9AFID0=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG03qGcC/22QzW6DMBCEXwX53KWODTbi1PeoevDPEqwWO7EpC
+ ory7l2IqiZSDz6MpflmZq+sYA5YWF9dWcYllJAiiealYm408YgQPGkmuGh4KwQMHkY/BRhPHlB
+ 2qvNolUHOyHHKOITLTnv/ID3kNME8ZjS/DMmV5IK3rZC1Vp2QcACizXmtrclrGT/T8vYVosmpT
+ vm4QcdQ5pTXveEiNvT/ZRYBHJzk1lvtWqfxkbO1WeSfWVHyk1mSuVNNa1TjrFfyyXy7b8t4/qY
+ DzfeBzJqC4NJE9ftqKtMrPYh4mdnj8fpqD5Rcg83B098e6lKM6GgYaJS6bVCpg+f9oint9gMi/
+ hwVlgEAAA==
+X-Change-ID: 20240522-fd-hdmi-hpd-e3868deb6ae0
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Simona Vetter <simona.vetter@ffwll.ch>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3416;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=0M7wHxw7m62S0roh+2L9puv7sZHqrnnVrbBFJ3TVoX8=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnqDfgbYzSCRwoGYrYy1OinGcWsU+YQjbwTggiJ
+ KwMg6tN+YqJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ6g34AAKCRCLPIo+Aiko
+ 1acrB/0QDrH8a1TlDIzJlgKCCsuYxBSAYqPZiGIqdrNd5p/Y1f6SIE8cjT+qz5uCpbNwSwJLmID
+ FkTKRoGzI3vQe2W33vzHbTrcGPRSCLovOTHvGGr3hDkCJjTWRhooNRjvkrPXxcBNl3ciu/+PEVF
+ y0xhBV7fD1F/vUUvo05716mGqXCYq9yxiCrZOiTOM/LUEg02xvRWM/l6UvpDe08hoF7eu58bIMM
+ IWd0QBMmaWMasxlekZEN4ppbzTbX0C8zmyFbiMCjHpjUJ59H33Tvw/2tKMYqK6Op9TtEBaF0xPe
+ sqV5jL1JZ14UXoKbzdKaUtg5zmIbcwbaUTJAMkYiFlqsIfUZ
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-The notifier hook mechanism in proc and cpuinfo is actually unnecessary
-for LoongArch because it's not used anywhere.
+The MSM HDMI driver is plagued with the long-standing bug. If HDMI cable
+is disconnected, in most of the cases cable reconnection will not be
+detected properly. We have been carrying the patch from [1] in our
+integration tree for ages. The time has come to fix the long-standing
+bug and implement proper HPD handling.
 
-It was originally added to the MIPS code in commit d6d3c9afaab4 ("MIPS:
-MT: proc: Add support for printing VPE and TC ids"), and LoongArch
-then inherited it.
+This series was tested on msm8996 and apq8064 boards. Previously HPD
+handling sometimes could trigger in the CRTC event handling, however I
+can no longer reproduce it now.
 
-But as the kernel code stands now, this notifier hook mechanism doesn't
-really make sense for either LoongArch or MIPS.
+[1] https://lore.kernel.org/linux-arm-msm/20171027105732.19235-2-architt@codeaurora.org/
 
-In addition, the seq_file declaration needs to be moved to its proper
-place, as only the show_ipi_list() function in smp.c requires it.
-
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tianyang Zhang <zhangtianyang@loongson.cn>
-Cc: Liupu Wang <wangliupu@loongson.cn>
-Cc: Bibo Mao <maobibo@loongson.cn>
-Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
 ---
- arch/loongarch/include/asm/cpu-info.h | 21 ---------------------
- arch/loongarch/include/asm/smp.h      |  1 +
- arch/loongarch/kernel/proc.c          | 22 ----------------------
- 3 files changed, 1 insertion(+), 43 deletions(-)
+Changes in v4:
+- Added bindings patches. Dropped hpd-gpios from the IFC6410 board DT.
+- Fixed checkpatch.pl warning about non-const string arrays.
+- Rebased on top of linux-next and the MSM HDMI patchset.
+- Link to v3: https://lore.kernel.org/r/20240623-fd-hdmi-hpd-v3-0-8645a64cbd63@linaro.org
 
-diff --git a/arch/loongarch/include/asm/cpu-info.h b/arch/loongarch/include/asm/cpu-info.h
-index 35e0a230a484..7f5bc0ad9d50 100644
---- a/arch/loongarch/include/asm/cpu-info.h
-+++ b/arch/loongarch/include/asm/cpu-info.h
-@@ -76,27 +76,6 @@ extern const char *__cpu_full_name[];
- #define cpu_family_string()	__cpu_family[raw_smp_processor_id()]
- #define cpu_full_name_string()	__cpu_full_name[raw_smp_processor_id()]
- 
--struct seq_file;
--struct notifier_block;
--
--extern int register_proc_cpuinfo_notifier(struct notifier_block *nb);
--extern int proc_cpuinfo_notifier_call_chain(unsigned long val, void *v);
--
--#define proc_cpuinfo_notifier(fn, pri)					\
--({									\
--	static struct notifier_block fn##_nb = {			\
--		.notifier_call = fn,					\
--		.priority = pri						\
--	};								\
--									\
--	register_proc_cpuinfo_notifier(&fn##_nb);			\
--})
--
--struct proc_cpuinfo_notifier_args {
--	struct seq_file *m;
--	unsigned long n;
--};
--
- static inline bool cpus_are_siblings(int cpua, int cpub)
- {
- 	struct cpuinfo_loongarch *infoa = &cpu_data[cpua];
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index 3383c9d24e94..34ba80c312d0 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -91,6 +91,7 @@ extern void calculate_cpu_foreign_map(void);
- /*
-  * Generate IPI list text
-  */
-+struct seq_file;
- extern void show_ipi_list(struct seq_file *p, int prec);
- 
- static inline void arch_send_call_function_single_ipi(int cpu)
-diff --git a/arch/loongarch/kernel/proc.c b/arch/loongarch/kernel/proc.c
-index 56a230238c9c..cea30768ae92 100644
---- a/arch/loongarch/kernel/proc.c
-+++ b/arch/loongarch/kernel/proc.c
-@@ -13,28 +13,12 @@
- #include <asm/processor.h>
- #include <asm/time.h>
- 
--/*
-- * No lock; only written during early bootup by CPU 0.
-- */
--static RAW_NOTIFIER_HEAD(proc_cpuinfo_chain);
--
--int __ref register_proc_cpuinfo_notifier(struct notifier_block *nb)
--{
--	return raw_notifier_chain_register(&proc_cpuinfo_chain, nb);
--}
--
--int proc_cpuinfo_notifier_call_chain(unsigned long val, void *v)
--{
--	return raw_notifier_call_chain(&proc_cpuinfo_chain, val, v);
--}
--
- static int show_cpuinfo(struct seq_file *m, void *v)
- {
- 	unsigned long n = (unsigned long) v - 1;
- 	unsigned int isa = cpu_data[n].isa_level;
- 	unsigned int version = cpu_data[n].processor_id & 0xff;
- 	unsigned int fp_version = cpu_data[n].fpu_vers;
--	struct proc_cpuinfo_notifier_args proc_cpuinfo_notifier_args;
- 
- #ifdef CONFIG_SMP
- 	if (!cpu_online(n))
-@@ -97,12 +81,6 @@ static int show_cpuinfo(struct seq_file *m, void *v)
- 		      cpu_data[n].watch_ireg_count, cpu_data[n].watch_dreg_count);
- 	}
- 
--	proc_cpuinfo_notifier_args.m = m;
--	proc_cpuinfo_notifier_args.n = n;
--
--	raw_notifier_call_chain(&proc_cpuinfo_chain, 0,
--				&proc_cpuinfo_notifier_args);
--
- 	seq_printf(m, "\n\n");
- 
- 	return 0;
+Changes in v3:
+- Rebase on top of linux-next
+- Dropped the patches that were replaced by the HDMI Connector
+  framework
+- Picked up the mode_set -> atomic_pre_enable patch
+- Link to v2: https://lore.kernel.org/r/20240522-fd-hdmi-hpd-v2-0-c30bdb7c5c7e@linaro.org
+
+---
+Dmitry Baryshkov (16):
+      dt-bindings: display/msm/hdmi: drop obsolete GPIOs from schema
+      dt-bindings: display/msm: hdmi: drop hpd-gpios
+      drm/msm/hdmi: convert clock and regulator arrays to const arrays
+      drm/msm/hdmi: move the alt_iface clock to the hpd list
+      drm/msm/hdmi: simplify extp clock handling
+      drm/msm/hdmi: drop clock frequency assignment
+      drm/msm/hdmi: switch to clk_bulk API
+      drm/msm/hdmi: switch to pm_runtime_resume_and_get()
+      drm/msm/hdmi: add runtime PM calls to DDC transfer function
+      drm/msm/hdmi: implement proper runtime PM handling
+      drm/msm/hdmi: rename hpd_clks to pwr_clks
+      drm/msm/hdmi: expand the HDMI_CFG macro
+      drm/msm/hdmi: drop hpd-gpios support
+      drm/msm/hdmi: ensure that HDMI is up if HPD is requested
+      drm/msm/hdmi: wire in hpd_enable/hpd_disable bridge ops
+      ARM: dts: qcom: apq8064-ifc6410: drop HDMI HPD GPIO
+
+ .../devicetree/bindings/display/msm/hdmi.yaml      |  20 ---
+ arch/arm/boot/dts/qcom/qcom-apq8064-ifc6410.dts    |   1 -
+ drivers/gpu/drm/msm/hdmi/hdmi.c                    | 147 ++++++++++-----------
+ drivers/gpu/drm/msm/hdmi/hdmi.h                    |  28 ++--
+ drivers/gpu/drm/msm/hdmi/hdmi_bridge.c             |  55 +++-----
+ drivers/gpu/drm/msm/hdmi/hdmi_hpd.c                | 141 ++++----------------
+ drivers/gpu/drm/msm/hdmi/hdmi_i2c.c                |  14 +-
+ drivers/gpu/drm/msm/hdmi/hdmi_phy.c                |   6 +-
+ 8 files changed, 141 insertions(+), 271 deletions(-)
+---
+base-commit: 866e43b945bf98f8e807dfa45eca92f931f3a032
+change-id: 20240522-fd-hdmi-hpd-e3868deb6ae0
+prerequisite-change-id: 20240307-bridge-hdmi-connector-7e3754e661d0:v7
+prerequisite-patch-id: 2ab3eb29f644faba596a27259c8c4d35f824b37b
+prerequisite-patch-id: 469e655ccdfd1989d58b043a6b4766d40a334ba4
+prerequisite-patch-id: caf6f731bbce246ee20f92f128a1480c230aa9f3
+prerequisite-patch-id: 56a9d57d44360d0913023c4d77f765c2ebf29749
+prerequisite-patch-id: ac7b8e8a14af4f45170ef5df6a632adb6d8ed483
+prerequisite-patch-id: 4b6ed8a13b525d2c6a3ee449ba2381041d78dacd
+prerequisite-patch-id: 396e7abb756bb9c8818d44dca8fb3f819c011ee0
+
+Best regards,
 -- 
-2.47.2
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
