@@ -1,225 +1,279 @@
-Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.154])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2041.outbound.protection.outlook.com [40.107.95.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A571922F5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513071632CA;
 	Sun,  9 Feb 2025 10:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=137.74.80.154
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739096402; cv=none; b=E/X8BOQy23LoJ9PWV/R6o3WKUJX/Wd1jSfVBbEkayUr9Jh0bkDG6WaQmSB4muf2Sq/dcnQFKWaM5MKTFg8U1U2Y7DdvqIYmwiOQ+TH5k61JsUrbHlBcAA2FCPEckVh3ooGgCU6LW21zrSOiDSCZVrnGTpX/SKfnADfm3idj35vs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739096402; cv=fail; b=gGQbqg8tmJ8zmdtvx2tPfoLWhdLkYG8c26nnRvAuJMkPILWvLuZOmj4/k/6Nt84E7EM9Jjwtg8C0/7eXnIQO9NtoqnNWNf0orhlNNgNhNGb/o6/UD7rQK1J5d44SO08yRibOgyGsvQpb84K1FK84+IEVncR2dTsGdUprYujuBko=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739096402; c=relaxed/simple;
-	bh=gHIr4MYiPNO1q+EC1QWzZKZXTvbEbzgL6XP3d/qHxRo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=byQ1B9E8zXkBnb2Vq6RMKDziwH0sNqtCsOeQS3Zi+kPRmgZtvsUxAFRqXHY5zXoZ9lGWfqLy3a+TUEmPhxOTstB+Bu/KSdSYoQmp0ViYiGqLBfqfNFbnlKYpyCjEieiU/jko3PrGAvEx7X6xBKa0S6oTnsyFggKZeHt5uRNHF2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=B9xDffNT; arc=none smtp.client-ip=137.74.80.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	bh=8yxiMWQrM/4YsFWl9P5Cf1xj9cskLAhWehgNwQmkJAs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DO3n2ITd4nq+oWusrTQRMpIpmtwvbaGgdoJueF3P8Zi9APseFbMn3zhi7hTsqintSpoAbqwjsm0j+f4iFQjc+ZzZRMRfsosFbDxBoX9pD2hXaVl8+NkNiyYaBV6t9YXDWfWYsu1EgpPo2FUGa31XZa9DasA4nuPmqfkdzq1hqdY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=iAQTAPTk; arc=fail smtp.client-ip=40.107.95.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="B9xDffNT"
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay4.mymailcheap.com (Postfix) with ESMTPS id 6AD0820159;
-	Sun,  9 Feb 2025 10:19:52 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id F21824023E;
-	Sun,  9 Feb 2025 10:19:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1739096391; bh=gHIr4MYiPNO1q+EC1QWzZKZXTvbEbzgL6XP3d/qHxRo=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=B9xDffNTlcK5c4t/NSH9FghY/sxEGdOHXE1bp7YPDT20vbFb+1cbz1DrWBhC8832e
-	 TuB24jf8KxMBcTKiFfn1DwsDsqkHPcWx9m0EMaiM1Netr2F9AeHLPpLVE0JEgb2ohN
-	 YdbC23OGRVF88dbCO3d41NwOg+PTD7kR+6TMumhY=
-Received: from [172.29.0.1] (unknown [203.175.14.47])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id B876B4050D;
-	Sun,  9 Feb 2025 10:19:47 +0000 (UTC)
-Message-ID: <5b4349c8-26ae-4c95-8e60-9cccbb1befe6@aosc.io>
-Date: Sun, 9 Feb 2025 18:19:43 +0800
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="iAQTAPTk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WjheUbLeZWPdFhGafdXpxzyNxr9vSThRgBhxb4mT6stxX1kOM/ANqurVrbJtOIM1QWEmvmSq40E2DKoVAH0gV3UZv1KmNuiS5eGqTXzMOFkqm8lOs5KG37UneJ6Y2smmQdJVzUmEMR5CereLiBRo4o26h00KxwxTlaSc5OeQPovvWtgeajOuAm62kD//sTD2XY54U/wEpwHNAANF5gigseJFwbj7W+DVsQKzSbDukJ8VP78Km9Y4v5fX7S4YoGPw5lgzYpS5j3DBk26Q5Q3lpDnQJlREVRBkjKc8J06+9CDqKhMCl6Ih+dFxrQN19vCY/xFohDO/ZwFRcWd6yKgmkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=u+pBSAJWrUyVPddSTLcqC8g6AQVKZkYAzdB5JH7FPZ0=;
+ b=D6bcVpQyyjU6tsk7ana99gWy8ii/if81WJjKiuH5nbLxnllWZDhJnWpph3X+5kSk/yKB9tg8Th9363OFOqax0p9xu35iPBrRgofGykeQBFqU673Y61Ve4CUZVXgNJd8zcTC34v3JaWkDfLPJydpmt/U+uPtKmjdd0P8ZgFC45i0wAjegj/OLLUBV9+0h8bxIW49SkTQd/ymTjSvPX7L6nJvM4tOo/+IxBfrH4qsAUbaaD0PZK4PEkziYnK+6ocQ195Wz7dijcI2URM61CuVGR6OrFXrkL/E40p3qF0ShHUdzYHrOzleTwc30SAhtVez9gu15vZogLuJ8vrzlfBkawA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u+pBSAJWrUyVPddSTLcqC8g6AQVKZkYAzdB5JH7FPZ0=;
+ b=iAQTAPTks+Bo0ODeBfPFig4TfC8xebeN0wnWUWhQfqF7SeIHLCUMpxjvWnExtUi3GTpUZC9oe4mj5JT1dNeGvX/8aO1j6I9XhQ/W6AO+NABC9Ewo+GKpfHjF6e8TerVEwch/0Z1SkLw6oobdoEd0he594sNQB1sUDDlsIbXlYJDKm5wByOtC91qBZGz8QWJR/COCMFgi09mA5EwlmWHgf+cS/6MCSz4bosBwbCeP71pv9IWnHlvVLj96BYzE9OKNhLHVBV9aK0VfqGGPgdacvbH/4t/rFjqlHGEhDkXKTYrtxDVQ2ab8kCBdfY+m2N5TBWcdz6YgWiYyoBdpkqHQkQ==
+Received: from PH8PR07CA0032.namprd07.prod.outlook.com (2603:10b6:510:2cf::6)
+ by DS0PR12MB9397.namprd12.prod.outlook.com (2603:10b6:8:1bd::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Sun, 9 Feb
+ 2025 10:19:56 +0000
+Received: from SN1PEPF0002529E.namprd05.prod.outlook.com
+ (2603:10b6:510:2cf:cafe::d2) by PH8PR07CA0032.outlook.office365.com
+ (2603:10b6:510:2cf::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.31 via Frontend Transport; Sun,
+ 9 Feb 2025 10:19:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ SN1PEPF0002529E.mail.protection.outlook.com (10.167.242.5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8445.10 via Frontend Transport; Sun, 9 Feb 2025 10:19:56 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sun, 9 Feb 2025
+ 02:19:55 -0800
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Sun, 9 Feb 2025 02:19:55 -0800
+Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com
+ (10.126.190.181) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Sun, 9 Feb 2025 02:19:49 -0800
+From: Tariq Toukan <tariqt@nvidia.com>
+To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
+ Lunn" <andrew+netdev@lunn.ch>
+CC: <netdev@vger.kernel.org>, Saeed Mahameed <saeedm@nvidia.com>, Gal Pressman
+	<gal@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>, Simon Horman
+	<horms@kernel.org>, Donald Hunter <donald.hunter@gmail.com>, Jiri Pirko
+	<jiri@resnulli.us>, Jonathan Corbet <corbet@lwn.net>, Leon Romanovsky
+	<leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Alexei Starovoitov
+	<ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, "Jesper Dangaard
+ Brouer" <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
+	"Richard Cochran" <richardcochran@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<bpf@vger.kernel.org>, Amir Tzin <amirtz@nvidia.com>, Aya Levin
+	<ayal@nvidia.com>
+Subject: [PATCH net-next 12/15] net/mlx5e: Add direct TIRs to devlink rx reporter diagnose
+Date: Sun, 9 Feb 2025 12:17:13 +0200
+Message-ID: <20250209101716.112774-13-tariqt@nvidia.com>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20250209101716.112774-1-tariqt@nvidia.com>
+References: <20250209101716.112774-1-tariqt@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] USB: core: Enable root_hub's remote wakeup for wakeup
- sources
-From: Mingcong Bai <jeffbai@aosc.io>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Huacai Chen
- <chenhuacai@loongson.cn>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Kexy Biscuit <kexybiscuit@aosc.io>
-References: <20250131100630.342995-1-chenhuacai@loongson.cn>
- <2f583e59-5322-4cac-aaaf-02163084c32c@rowland.harvard.edu>
- <CAAhV-H7Dt1bEo8qcwfVfcjTOgXSKW71D19k3+418J6CtV3pVsQ@mail.gmail.com>
- <fbe4a6c4-f8ba-4b5b-b20f-9a2598934c42@rowland.harvard.edu>
- <61fecc0b-d5ac-4fcb-aca7-aa84d8219493@rowland.harvard.edu>
- <2a8d65f4-6832-49c5-9d61-f8c0d0552ed4@aosc.io>
- <06c81c97-7e5f-412b-b6af-04368dd644c9@rowland.harvard.edu>
- <6838de5f-2984-4722-9ee5-c4c62d13911b@aosc.io>
- <6363c5ba-c576-42a8-8a09-31d55768618c@rowland.harvard.edu>
- <9f363d74-24ce-43fe-b0e3-7aef5000abb3@aosc.io>
- <425bf21b-8aa6-4de0-bbe4-c815b9df51a7@rowland.harvard.edu>
- <0ca08039-73fb-4c4b-ad10-15be8129d1b7@aosc.io>
-Content-Language: en-US
-In-Reply-To: <0ca08039-73fb-4c4b-ad10-15be8129d1b7@aosc.io>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: nf1.mymailcheap.com
-X-Rspamd-Queue-Id: F21824023E
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.62 / 10.00];
-	BAYES_SPAM(0.72)[76.60%];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_ONE(0.00)[1];
-	TO_DN_SOME(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[]
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002529E:EE_|DS0PR12MB9397:EE_
+X-MS-Office365-Filtering-Correlation-Id: 69f9041f-2c68-46d8-a218-08dd48f34cf1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|7416014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?SsyLwBcfLiIhqceJ1FKZfJA9nPry+nZfJucn1/+EKpyidFZVGmwG+k668Atc?=
+ =?us-ascii?Q?WKdLenERtdc1d2ciVXoVn6Jl0lksAB0vVxVIFnfFLzQ5D60RywE54F9Rv7v8?=
+ =?us-ascii?Q?HtBxdose49sn66kuYJUpbHa0t/3hEUaHDDsQhTGCoYiviw86/rkA899SaQwl?=
+ =?us-ascii?Q?rQRM8SAdUM4wldrDoeDq67LlBSQ5OfAMnhOMQeEK3RgcQxbhGpxW2+MZBpko?=
+ =?us-ascii?Q?FpTD5vKqlkXJMuTDhTxW3wCpxdxATU0OdLg0IXDqqpI39PsTawvROVRwxb01?=
+ =?us-ascii?Q?J+SbuoE//jVQjTUSGIknusVRRls6Ubf5zCFUfJX20JNN9N7U9l+029Y7fncD?=
+ =?us-ascii?Q?Mn/HwrGuulwD7bN3oH/AWBJXS30Zlbbee12Gfr0kkf4n0IH+Yn3Gz/VUQ6mX?=
+ =?us-ascii?Q?2z1lIT9dZ9LYc3bNB/y8N5srcMJsNMBqciylRCJE+oDM4k0akNg6YvrEFTpK?=
+ =?us-ascii?Q?AWsWtMA790tS5sogAkS0RPWv/SnO1UvCHmVAw7brqxwBwoaXKHfuCInFLQge?=
+ =?us-ascii?Q?Eke089Gal+i2EtbMSokFO4fi7Bf071S2hk5GVLAnyVh1bRJJpaApVOL9A9Br?=
+ =?us-ascii?Q?gCecDktjWSPoqjW86rPcyMCY9kd7ortLklEqZVUFO0d9hMeLDF/mqeSbz7M3?=
+ =?us-ascii?Q?p2yq93PLOxDdmxAgIvWOGvJi6kIvJv9K96SCnEmE9WfbP7QfS7vA9HaNOjV9?=
+ =?us-ascii?Q?uQEtNAAtRPoue2m2SJEh2wOldeGVVFK2qu+O+VztdkKx+n6M5MfELj9MhZ6t?=
+ =?us-ascii?Q?DgndZ7OrG7O3WmUq6wmCASjnoXrc+/QyP+qtnxoPBKNfUV9qPrMYu7dk1BSc?=
+ =?us-ascii?Q?V1OgTPn7fY6LdrQN3oFSwUIGp82fcZsuqC6L+KQ8Mu99rCCCG1rdA6yZstSH?=
+ =?us-ascii?Q?TUeJp1psFpZI0VZBFGNGETacsoHM084aNF8n2DBR5iitaDyedCFwQMZoV/oC?=
+ =?us-ascii?Q?zhtCPoLGhfzkN9laUUTch1U7rOP+fpVGtzJJgSL/zOwpENFBbcRzJs/pSAKW?=
+ =?us-ascii?Q?4vYK8XR3ISeV6rza7YjSbF/qbx/YGll1/X+5C+Yqkefywa8uCjnnGYhzAJlP?=
+ =?us-ascii?Q?d1j3tdr8e7tWnYmDuay4q1FNzcRLOuzVz3WOxLVY1ExiFgjRvzsIE6tg7pAF?=
+ =?us-ascii?Q?j26wZ9Q7h3WRNvWPgBeRZGeWMxU4syrZoaXijoKjwFkJmZsHEY4TkdcN72AR?=
+ =?us-ascii?Q?MuLJ2gIpjUYpnI58L/83kJVWaMzWtO5dlcPzQ2U4PSTrQB+6rCwU8aHBNH4Q?=
+ =?us-ascii?Q?CnoiZu/xxOysI673POBPNaS3ZMxIcJJJ85eKa31iMVfHXBKdBUYB8XBlL2Ud?=
+ =?us-ascii?Q?w4OlelNc80lR2sPApUSoYQZ9BmezLLjwCyZrFNWATVjJG9v8esXjrVEF/kLM?=
+ =?us-ascii?Q?NzwVAz7MgMI5KbU1D6B1v/cKFB/ivB/FY7gQlT68WbSgiTTE4hrFiwwa/Ym2?=
+ =?us-ascii?Q?yew3zofWIzcxn1eKWpiIafky/Ir9asfrn4fYfv3OPtXb2/FbGnJMHBLdXlsm?=
+ =?us-ascii?Q?Q8dJueFtP9jNThs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(7416014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2025 10:19:56.0229
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69f9041f-2c68-46d8-a218-08dd48f34cf1
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002529E.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9397
 
-Hi Alan,
+From: Amir Tzin <amirtz@nvidia.com>
 
-<snip>
+Add "RX resources" tag to the output of rx reporter diagnose callback.
+Underneath add tag for direct TIRs, for each TIR expose its tirn and
+the corresponding rqtn.
 
-> This all makes sense. Since Huacai's patch was originally intended to 
-> fix Loongson's OHCI implementation, I was beginning to suspect if it 
-> exists for OHCI implementations found on older x86 platforms, say, AMD's 
-> SB600/700 series south bridges. Also to see if this issue is shared 
-> between OHCI and UHCI.
-> 
-> I have purchased a motherboard to test this and will report back as soon 
-> as I get my hands on it.
-> 
+$ sudo devlink health diagnose auxiliary/mlx5_core.eth.0/65535 reporter rx
+ ....
+ rx resources:
+   Direct TIRs:
+       ix: 0 tirn: 20 rqtn: 1
+       ix: 1 tirn: 21 rqtn: 2
+       ix: 2 tirn: 22 rqtn: 3
+       ix: 3 tirn: 23 rqtn: 4
+       ix: 4 tirn: 24 rqtn: 5
+       ix: 5 tirn: 25 rqtn: 6
+       ix: 6 tirn: 26 rqtn: 7
+       ix: 7 tirn: 27 rqtn: 8
+       ix: 8 tirn: 28 rqtn: 9
+       ix: 9 tirn: 29 rqtn: 10
+       ix: 10 tirn: 30 rqtn: 11
+       ix: 11 tirn: 31 rqtn: 12
+       ix: 12 tirn: 32 rqtn: 13
+       ix: 13 tirn: 33 rqtn: 14
+       ix: 14 tirn: 34 rqtn: 15
+       ix: 15 tirn: 35 rqtn: 16
+       ix: 16 tirn: 36 rqtn: 17
+       ix: 17 tirn: 37 rqtn: 18
+       ix: 18 tirn: 38 rqtn: 19
+       ix: 19 tirn: 39 rqtn: 20
+       ix: 20 tirn: 40 rqtn: 21
+       ix: 21 tirn: 41 rqtn: 22
+       ix: 22 tirn: 42 rqtn: 23
+       ix: 23 tirn: 43 rqtn: 24
 
-I have since purchased a Gigabyte GA-78LMT-S2 motherboard with an SB710 
-south bridge, the USB OHCI controllers and USB device tree are as follows:
+Signed-off-by: Amir Tzin <amirtz@nvidia.com>
+Reviewed-by: Aya Levin <ayal@nvidia.com>
+Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+---
+ .../mellanox/mlx5/core/en/reporter_rx.c       | 32 +++++++++++++++++++
+ .../ethernet/mellanox/mlx5/core/en/rx_res.c   |  7 +++-
+ .../ethernet/mellanox/mlx5/core/en/rx_res.h   |  2 ++
+ 3 files changed, 40 insertions(+), 1 deletion(-)
 
-00:12.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD/ATI] 
-SB7x0/SB8x0/SB9x0 USB OHCI0 Controller [1002:4397]
-00:12.1 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD/ATI] 
-SB7x0 USB OHCI1 Controller [1002:4398]
-00:13.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD/ATI] 
-SB7x0/SB8x0/SB9x0 USB OHCI0 Controller [1002:4397]
-00:13.1 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD/ATI] 
-SB7x0 USB OHCI1 Controller [1002:4398]
-00:14.5 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD/ATI] 
-SB7x0/SB8x0/SB9x0 USB OHCI2 Controller [1002:4399]
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_rx.c b/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_rx.c
+index 9255ab662af9..bb513a22dc66 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_rx.c
+@@ -338,6 +338,37 @@ static void mlx5e_rx_reporter_build_diagnose_output_ptp_rq(struct mlx5e_rq *rq,
+ 	devlink_fmsg_obj_nest_end(fmsg);
+ }
+ 
++static void mlx5e_rx_reporter_diagnose_rx_res_dir_tirns(struct mlx5e_rx_res *rx_res,
++							struct devlink_fmsg *fmsg)
++{
++	unsigned int max_nch = mlx5e_rx_res_get_max_nch(rx_res);
++	int i;
++
++	devlink_fmsg_arr_pair_nest_start(fmsg, "Direct TIRs");
++
++	for (i = 0; i < max_nch; i++) {
++		devlink_fmsg_obj_nest_start(fmsg);
++
++		devlink_fmsg_u32_pair_put(fmsg, "ix", i);
++		devlink_fmsg_u32_pair_put(fmsg, "tirn", mlx5e_rx_res_get_tirn_direct(rx_res, i));
++		devlink_fmsg_u32_pair_put(fmsg, "rqtn", mlx5e_rx_res_get_rqtn_direct(rx_res, i));
++
++		devlink_fmsg_obj_nest_end(fmsg);
++	}
++
++	devlink_fmsg_arr_pair_nest_end(fmsg);
++}
++
++static void mlx5e_rx_reporter_diagnose_rx_res(struct mlx5e_priv *priv,
++					      struct devlink_fmsg *fmsg)
++{
++	struct mlx5e_rx_res *rx_res = priv->rx_res;
++
++	mlx5e_health_fmsg_named_obj_nest_start(fmsg, "RX resources");
++	mlx5e_rx_reporter_diagnose_rx_res_dir_tirns(rx_res, fmsg);
++	mlx5e_health_fmsg_named_obj_nest_end(fmsg);
++}
++
+ static void mlx5e_rx_reporter_diagnose_rqs(struct mlx5e_priv *priv, struct devlink_fmsg *fmsg)
+ {
+ 	struct mlx5e_ptp *ptp_ch = priv->channels.ptp;
+@@ -373,6 +404,7 @@ static int mlx5e_rx_reporter_diagnose(struct devlink_health_reporter *reporter,
+ 
+ 	mlx5e_rx_reporter_diagnose_common_config(priv, fmsg);
+ 	mlx5e_rx_reporter_diagnose_rqs(priv, fmsg);
++	mlx5e_rx_reporter_diagnose_rx_res(priv, fmsg);
+ unlock:
+ 	mutex_unlock(&priv->state_lock);
+ 	return 0;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/rx_res.c b/drivers/net/ethernet/mellanox/mlx5/core/en/rx_res.c
+index a86eade9a9e0..4e301bb5e305 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/rx_res.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/rx_res.c
+@@ -497,6 +497,11 @@ void mlx5e_rx_res_destroy(struct mlx5e_rx_res *res)
+ 	mlx5e_rx_res_free(res);
+ }
+ 
++unsigned int mlx5e_rx_res_get_max_nch(struct mlx5e_rx_res *res)
++{
++	return res->max_nch;
++}
++
+ u32 mlx5e_rx_res_get_tirn_direct(struct mlx5e_rx_res *res, unsigned int ix)
+ {
+ 	return mlx5e_tir_get_tirn(&res->channels[ix].direct_tir);
+@@ -522,7 +527,7 @@ u32 mlx5e_rx_res_get_tirn_ptp(struct mlx5e_rx_res *res)
+ 	return mlx5e_tir_get_tirn(&res->ptp.tir);
+ }
+ 
+-static u32 mlx5e_rx_res_get_rqtn_direct(struct mlx5e_rx_res *res, unsigned int ix)
++u32 mlx5e_rx_res_get_rqtn_direct(struct mlx5e_rx_res *res, unsigned int ix)
+ {
+ 	return mlx5e_rqt_get_rqtn(&res->channels[ix].direct_rqt);
+ }
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/rx_res.h b/drivers/net/ethernet/mellanox/mlx5/core/en/rx_res.h
+index 7b1a9f0f1874..391671b09c91 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/rx_res.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/rx_res.h
+@@ -34,6 +34,8 @@ u32 mlx5e_rx_res_get_tirn_direct(struct mlx5e_rx_res *res, unsigned int ix);
+ u32 mlx5e_rx_res_get_tirn_rss(struct mlx5e_rx_res *res, enum mlx5_traffic_types tt);
+ u32 mlx5e_rx_res_get_tirn_rss_inner(struct mlx5e_rx_res *res, enum mlx5_traffic_types tt);
+ u32 mlx5e_rx_res_get_tirn_ptp(struct mlx5e_rx_res *res);
++u32 mlx5e_rx_res_get_rqtn_direct(struct mlx5e_rx_res *res, unsigned int ix);
++unsigned int mlx5e_rx_res_get_max_nch(struct mlx5e_rx_res *res);
+ 
+ /* Activate/deactivate API */
+ void mlx5e_rx_res_channels_activate(struct mlx5e_rx_res *res, struct mlx5e_channels *chs);
+-- 
+2.45.0
 
-/:  Bus 001.Port 001: Dev 001, Class=root_hub, Driver=ohci-pci/3p, 12M
-     ID 1d6b:0001 Linux Foundation 1.1 root hub
-/:  Bus 002.Port 001: Dev 001, Class=root_hub, Driver=ehci-pci/6p, 480M
-     ID 1d6b:0002 Linux Foundation 2.0 root hub
-/:  Bus 003.Port 001: Dev 001, Class=root_hub, Driver=ehci-pci/6p, 480M
-     ID 1d6b:0002 Linux Foundation 2.0 root hub
-/:  Bus 004.Port 001: Dev 001, Class=root_hub, Driver=ohci-pci/3p, 12M
-     ID 1d6b:0001 Linux Foundation 1.1 root hub
-/:  Bus 005.Port 001: Dev 001, Class=root_hub, Driver=ohci-pci/3p, 12M
-     ID 1d6b:0001 Linux Foundation 1.1 root hub
-/:  Bus 006.Port 001: Dev 001, Class=root_hub, Driver=ohci-pci/3p, 12M
-     ID 1d6b:0001 Linux Foundation 1.1 root hub
-     |__ Port 002: Dev 004, If 0, Class=Human Interface Device, 
-Driver=usbhid, 1.5M
-         ID 17ef:6099 Lenovo
-     |__ Port 003: Dev 003, If 0, Class=Human Interface Device, 
-Driver=usbhid, 1.5M
-         ID 046d:c077 Logitech, Inc. Mouse
-/:  Bus 007.Port 001: Dev 001, Class=root_hub, Driver=ohci-pci/2p, 12M
-     ID 1d6b:0001 Linux Foundation 1.1 root hub
-
-Long story short - wake from keyboard via OHCI works (as opposed to what 
-we have found with the Loongson XA61200 motherboard, which also has an 
-OHCI controller, but in its 7A2000 bridge chip).
-
-Huacai, I suspect that we are looking at a Loongson-specific issue.
-
-For your reference, here are the equivalent logs which I have supplied 
-for the ThinkPad X200s (which, according to my previous testing, failed 
-to wake up from an external keyboard plugged into its UHCI interface). 
-The OHCI to which the keyboard is connected to on this motherboard 
-corresponds to PCI device 0000:00:13.1:
-
-`grep . /sys/bus/usb/devices/*/serial`:
-
-/sys/bus/usb/devices/usb1/serial:0000:00:12.0
-/sys/bus/usb/devices/usb2/serial:0000:00:12.2
-/sys/bus/usb/devices/usb3/serial:0000:00:13.2
-/sys/bus/usb/devices/usb4/serial:0000:00:12.1
-/sys/bus/usb/devices/usb5/serial:0000:00:13.0
-/sys/bus/usb/devices/usb6/serial:0000:00:13.1
-/sys/bus/usb/devices/usb7/serial:0000:00:14.5
-
-`cat /sys/kernel/debug/usb/ohci/0000:00:13.1/*`:
-
-size = 32
-  0 [117]: ed8/00000000dd878181 (ls dev4 ep1in-int qlen 1 max 8 00083084)
-  1 [ 92]: ed8/000000001f1ee77f (ls dev3 ep1in-int qlen 1 max 4 00043083)
-  8 [117]: ed8/00000000dd878181
-  9 [ 92]: ed8/000000001f1ee77f
-16 [117]: ed8/00000000dd878181
-17 [ 92]: ed8/000000001f1ee77f
-24 [117]: ed8/00000000dd878181
-25 [ 92]: ed8/000000001f1ee77f
-bus pci, device 0000:00:13.1
-OHCI PCI host controller
-ohci_hcd
-OHCI 1.0, NO legacy support registers, rh state running
-control 0x28f RWC HCFS=operational IE PLE CBSR=3
-cmdstatus 0x00000 SOC=0
-intrstatus 0x00000024 FNO SF
-intrenable 0x8000005a MIE RHSC UE RD WDH
-ed_controlhead 0108d0e0
-hcca frame 0x6d8a
-fmintvl 0xa7782edf FIT FSMPS=0xa778 FI=0x2edf
-fmremaining 0x80001dd1 FRT FR=0x1dd1
-periodicstart 0x2a2f
-lsthresh 0x0628
-hub poll timer off
-roothub.a 02000b03 POTPGT=2 OCPM NPS PSM NDP=3(3)
-roothub.b 00000000 PPCM=0000 DR=0000
-roothub.status 00008000 DRWE
-roothub.portstatus [0] 0x00000100 PPS
-roothub.portstatus [1] 0x00000303 LSDA PPS PES CCS
-roothub.portstatus [2] 0x00000303 LSDA PPS PES CCS
-
-`lspci -vv -s 13.0`:
-
-00:13.0 USB controller: Advanced Micro Devices, Inc. [AMD/ATI] 
-SB7x0/SB8x0/SB9x0 USB OHCI0 Controller (prog-if 10 [OHCI])
-	Subsystem: Gigabyte Technology Co., Ltd GA-78/880-series motherboard
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- 
-Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap- 66MHz+ UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 32, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 18
-	NUMA node: 0
-	Region 0: Memory at fe02b000 (32-bit, non-prefetchable) [size=4K]
-	Kernel driver in use: ohci-pci
-
-`lspci -vv -s 13.1`:
-
-00:13.1 USB controller: Advanced Micro Devices, Inc. [AMD/ATI] SB7x0 USB 
-OHCI1 Controller (prog-if 10 [OHCI])
-	Subsystem: Gigabyte Technology Co., Ltd GA-MA78GM-S2H motherboard
-	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- 
-Stepping- SERR- FastB2B- DisINTx-
-	Status: Cap- 66MHz+ UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-	Latency: 32, Cache Line Size: 64 bytes
-	Interrupt: pin A routed to IRQ 18
-	NUMA node: 0
-	Region 0: Memory at fe02a000 (32-bit, non-prefetchable) [size=4K]
-	Kernel driver in use: ohci-pci
-
-Best Regards,
-Mingcong Bai
