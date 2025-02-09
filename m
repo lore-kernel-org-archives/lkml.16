@@ -1,147 +1,131 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307121E0080
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 19:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB291922D4
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 19:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739129890; cv=none; b=UEeV1XrhyFsZnaPLW3pIkjE/3Ur58dOHGTrfxu+8Pji5wCYBN+v+YhFSSXHyvB+9IsuUtDHvuR3LRyQfVPZ0Q95NezQclxz/ntBzl3GCsPzln9B48N7wr50JTBqWGsODeWMTKvjb1Oei0PxW/i3+35/IwQIKwelSWVRApZWwq9k=
+	t=1739130211; cv=none; b=KPYhx3UM+Uteo+B4MztVOOSzVz4cYxUKJ/nBKKaYWQhq3m0CcP0Y62PCWS4QgJmWJaa8V0Um90yYaecmAZpSO3IcBlKlWQoEkAOtyIzvu6Ez5C2ebjemCsFj7CVJVxeWf7/Z83mx5jWFA4MNnc+sOi7znMqXnp8vCivwJnT+5PY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739129890; c=relaxed/simple;
-	bh=bakGvPthngL3gTQwUPSt/EUmVwDuJ8/w4DuyMlVWo/M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AvX3h/xTCjG10vk4up/VGSWSvRg2na8LNx+FD+V2pwNFzDtMssAB9cRINcz5XZDhmfFB/x5t5xy7Bgfqvu5yoBsGTgdJ6rEcF/j/wkfyEjfFGBIksZCitBcyjgdxPHiJGcVwm2w2n3y3YQuvDXSKqyRPXp/XZc1dMNzIT3mWwp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W8+vf2tB; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1739130211; c=relaxed/simple;
+	bh=eY+LOEE0CAuEQDygTaDwzp3VBIWS4wQc7Y/dqaU0B4s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=upPA5G6Q02npWnr79I9b3S7eo2gnyio16I8ooGvmD/dEJVrfWyjY13IbJk7kQRLfHd819AMxlsGelvpqUcyFeHUXOyr086HwmJpdx9roYO0PdFjoe/G+5ngtBWLqdtPVTzKFPKh24mWZ1BRuKXkDsJSygc1VZvqC2cyYNuwa8Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=abYbKg+H; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W8+vf2tB"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5dbf5fb2c39so887149a12.2
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 11:38:08 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="abYbKg+H"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ab7b80cc3d2so73704766b.3
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 11:43:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739129887; x=1739734687; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=l9Ero5vcDcOepXZ2yFnMrKTNvfLViDvWS1bPisX99zU=;
-        b=W8+vf2tBlCSDaBnp12F8FyMij7XzS/h6ZRDfEEkRAHKIXIC9NnIACIVTW3RnKhkP6g
-         u0JdU3IZ1QhLvFF2DVpz9moJS0LGFynUoYNjqyfYIltTU3r+7PQvO83segdIj0sbdj9j
-         JyasB6v8zUGL14Yas1hp5ZzQRdhjJg4C/JwOO9eEYceCT9Kc4ix+gHs0kIr4a2/XpXnL
-         a7BiZnoj8flHvN2S459RyMUTJJGuW0HlqZxBcg2Y83AM7yjB7kurKnHQkKREcXz15oSN
-         NEA2MHN3ZhGniFCF6HwfipRkh9J7sLyjLHN/MZgbyclAQoXYbB4n5nO3+6TKh1cuGB3L
-         qx9w==
+        d=linux-foundation.org; s=google; t=1739130207; x=1739735007; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=bJK5Dm1zTepUPVPm42tFyMDvmg4IjkhGFViLjAhYWCc=;
+        b=abYbKg+H1aivvVCH3Wsgk2QDGZlOQu8QS1mKI96YFjDR5pYu+Xbvj5/dBeUd/6H0or
+         HKx5D7XX69U8L8g7CwHfkSyOO+SbLE8jMHBO3AhbbidNL5uVrvUAzEXaVMv/8hgOqXGM
+         WX2ZZGVtEi4LagKyIO4Q0wwtTzAXe7Z74x+aY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739129887; x=1739734687;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1739130207; x=1739735007;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=l9Ero5vcDcOepXZ2yFnMrKTNvfLViDvWS1bPisX99zU=;
-        b=VCqb7X9hyrxmfjuRGsmobCEHhr+XZoyvQio4OywY7umqiBOcFlTnZ3oh2508236LdF
-         z20BOhzGQpZYnaEaYuOaDEQ8KdUh7Y0O42PNoVTzYA4EV9EoRMVGXad0ZQ6reLooOfAv
-         Rv9d+buaaOnmX6hni/E4A+WbQdRJO9hSD6orQqKm07SVS1vrJmI5suGT5aJDhHuFhRxl
-         O9cQLyByos5TgLTBDAe3vj0cU9w2P3Hp6nBddmgS2nT+YeujhlxejpYiZRAYqIjIrxzK
-         AZNcEyLQxZecAioBoQnMIHogVAEFGvKSkcnuITrh4guxUM6YJ5PUvVElkB2Sd8f0jcaj
-         N/mg==
-X-Forwarded-Encrypted: i=1; AJvYcCX6e+2BvLcqwT9tDAAlkLePYqBRwMsy2HSWZO4G+nynlC0LcpUcNvX8pwUAzg29dHX9u5AjhWDnBE1otXY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCGWx2h4QlgTZSF/O3tQKaiUvU+OAquUmnD7PdKNIYGXMFwpNr
-	MB6BDFcR9eAY2a+LfHsRSJqdi98zd5nFiPlOTyKcDw/u5v+rPsXwmMA/a00887M=
-X-Gm-Gg: ASbGncsvCRzskFdZsHT2iQ260fFaEScc4gP+DHQ0dsusqgbnkKJIHapbGyHwOxdOhJb
-	2QKde6GETTT0vj9N5reYJVDu1vGX5Wj7s1b2LvBXqVqPYyk5pkSvQoJ3mX6Nt0hXEXLH7KhHCfM
-	T9gB1WAs/JzaYX/YeQdPqYHhq2ANvhA3S2hTOwJcOxwykiNKyaGJ3uHaqrRLEH4FcQjlMBnuqxS
-	kz6j7W+xwMTjgF8flKahgXkB3aQG+y8meILkrHyRlRcsd3qhfE3SFCxD0huZ36XBzxYlw+qa9fE
-	bXfm7obAL/1SMrNhtR8BLdf8RPyBkqqBbe0=
-X-Google-Smtp-Source: AGHT+IEJL5E8qZHI2wQRhsWzOfx3kHSAmyv/sAKbVBbstYeeqOih+ViYs1THV7h2OAlqRYYee6hngQ==
-X-Received: by 2002:a05:6402:5290:b0:5dc:7fbe:72f1 with SMTP id 4fb4d7f45d1cf-5de4503fea6mr4713950a12.2.1739129887485;
-        Sun, 09 Feb 2025 11:38:07 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.144])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab784d4aadbsm617189566b.113.2025.02.09.11.38.05
+        bh=bJK5Dm1zTepUPVPm42tFyMDvmg4IjkhGFViLjAhYWCc=;
+        b=islgAsFLKA2dtH9OjFP6hN4RVxnIhocT1EOYgS+8eDBsq9t+yEsC3UjgZia3xlIT/u
+         ueE+hcy11W9ET780FYUkiasce9kg8aPkNkBXQZFlQr9iJwYT9FojGYy6bXrw7ZOWPtu9
+         CwkXtxOm38mRJzljQEf2y4r+hS+OniEk2si8B7PIlzjuUZikkI0+S7IbQV3M2iMSBZqT
+         y1jRuJ7BVlXsv3e/CUmzZhyEVJ1JWd+wwbbdBVpxaQy8/xJsCf1zBTNFw3s3/T7JnhII
+         9GlGAAsivbckCoCYP01aFWV6akdTy4rOXoeaugs24AhratAuVEMikM7VJslgs4ZmHzXL
+         QWLA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKKctJJIYQtXNvysbn2lxnsbXmxkUHPdHRIITaNJ0Rj/LLUtKjA0SNNWmYn/ycKKKEZSR3mL/p0BFTYKM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv+3n8k+V9JVdFyn1e8x/IS/gATCc7TY0kCiVjal6YYTTsyNO6
+	xBGzme009aJgl0vrKJZ7UyHQalcNuDVK/4WK4jd56UC5mNrRBfL3uYRY2WGB4NYmPo7xvDCvvxN
+	EZcQ=
+X-Gm-Gg: ASbGncubjcfxTSPQsA+lmsC5DL9imekSsn7uJ121xMDLRDDX2M3TgD+9COnPqtQnSTS
+	u/P54OUIO3dTUt41hiWqobJw/PN8gpadEB8a+3Aw/GWXoy8WDoUfL7fDZVpiDvswc8CTztYUNGt
+	5hY6yKrl71gE+ngGjp1UU1hAFqyA3DVTCIGe+6Oxqm81sy56EJLIhqDNIxMeEr4ayXhp1zQGXPH
+	MXI9pfkNpeVfPbfjkt1EmhQdI+Qp+dJOhCuB7VLnj6eb0vnRoFn/m2j1crR40PADCcuSMhW5LXD
+	bmPtwRqulOXobr7FMgRgrLU8MN51u5jQWVuDrU2pcFYGmgj9e4aF1AqnZFxtd/fNgA==
+X-Google-Smtp-Source: AGHT+IF8BnR5Mtl4n0HDmKW57VbmUoAqDp637it4wQbSMy1UE8L80h7f9zuu4xRzFCQOuGi/+pIj7w==
+X-Received: by 2002:a05:6402:2681:b0:5de:5190:cfc7 with SMTP id 4fb4d7f45d1cf-5de5190d22cmr23371142a12.19.1739130207484;
+        Sun, 09 Feb 2025 11:43:27 -0800 (PST)
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab791c89296sm512506566b.106.2025.02.09.11.43.25
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2025 11:38:06 -0800 (PST)
-Message-ID: <e67c0375-1024-483b-aabf-6a11339ab9af@linaro.org>
-Date: Sun, 9 Feb 2025 20:38:04 +0100
+        Sun, 09 Feb 2025 11:43:27 -0800 (PST)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab7b80cc3d2so73701966b.3
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 11:43:25 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCViUVJnUIHvPJXnrqMmhQoWi2GD+aOhYLnH1iTUkGiIJFaj6yxG9+Lw1R9J/pLgM8eg0yo3JM83vsVqyuc=@vger.kernel.org
+X-Received: by 2002:a05:6402:3907:b0:5dc:893d:6df3 with SMTP id
+ 4fb4d7f45d1cf-5de44e5b84bmr32924793a12.0.1739130204955; Sun, 09 Feb 2025
+ 11:43:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Patchset status - 'Add support for Maxim Integrated MAX77705
- PMIC'
-To: Dzmitry Sankouski <dsankouski@gmail.com>,
- Sebastian Reichel <sre@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>,
- Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Pavel Machek <pavel@ucw.cz>,
- Hans de Goede <hdegoede@redhat.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>,
- Purism Kernel Team <kernel@puri.sm>, Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: linux-pm@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, linux-input@vger.kernel.org,
- linux-leds@vger.kernel.org
-References: <CABTCjFBx-QpCKFWs5MPCgLAjJWT6ygrvS_A0nJk2BBxmWAxF+Q@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <CABTCjFBx-QpCKFWs5MPCgLAjJWT6ygrvS_A0nJk2BBxmWAxF+Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250209174711.60889-1-david.laight.linux@gmail.com>
+ <20250209182422.GK3660748@nvidia.com> <20250209190003.661db659@pumpkin>
+In-Reply-To: <20250209190003.661db659@pumpkin>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 9 Feb 2025 11:43:08 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgecfFK=fDpk6+-C_gNOnzRKhO5wwuB7V396GwTRBhBJQ@mail.gmail.com>
+X-Gm-Features: AWEUYZk1H6ql_sGrHEzKjC-gC5jO7hHDwKbbSp8AXf5o2F5Ayv6H0Qw3ZibIdkY
+Message-ID: <CAHk-=wgecfFK=fDpk6+-C_gNOnzRKhO5wwuB7V396GwTRBhBJQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] mm: Remove the access_ok() call from gup_fast_fallback().
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Jan Kara <jack@suse.cz>, 
+	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On 09/02/2025 15:13, Dzmitry Sankouski wrote:
-> For the patchset I sent 2 weeks ago, [patchwork][1] shows status
-> 'Handled Elsewhere, archived'. Is anything blocking it?
-> 
-> [1]: https://patchwork.kernel.org/project/linux-pm/list/?series=927848&archive=both&state=*
+On Sun, 9 Feb 2025 at 11:00, David Laight <david.laight.linux@gmail.com> wrote:
+>
+> They still do 'stuff' and end up containing a slow memory synchronising
+> instruction (to avoid speculative accesses controlled by the application).
+>
+> But there are better ways to handle bad user pointers.
 
-That's PM patchwork, not necessarily power supply. But anyway, what does
-the cover letter say? Who do you expect to merge it? Above link does not
-provide cover letter, unfortunately.
+Not always. If you use __get_user() and friends, you basically *have*
+to use access_ok(), or you have to be playing games (like some tracing
+code does, which actually wants to use it as a "I want a kernel
+pointer _or_ a user pointer{".
 
-Best regards,
-Krzysztof
+Now, admittedly probably nobody should be using __get_user() and
+friends any more. Almost all the reasons for using it are entirely
+historical and just not true any more.
+
+But also, comparing against TASK_SIZE_MAX isn't actually the same as
+access_ok() historically. We've moved in that direction, yes, but we
+very much used to have a distinction between "this is the fixed
+maximum", and "this is the actual run-time size".
+
+We've moved towards just using TASK_SIZE_MAX mainly because the
+run-time size check was annoyingly expensive is some pretty critical
+code.
+
+But historically the TASK_SIZE_MAX thing is the "this is fast but not
+exact, use it only for special code that knows what it is doing", and
+"access_ok()" was "this is proper"
+
+> So, mostly access_ok() isn't needed outside the architecture code
+> that handles userspace accesses.
+
+Oh, there is still a fair amount of code that really does need it.
+
+Admittedly most of it should either be converted to just using regular
+get/put_user(), or into the modern "user_access_begin()" model, but we
+do have a number of __get/put_user() users that still very much need
+that access_ok().
+
+And anything that follows page tables had better check that it's
+proper. But in that case, I do believe checking for TASK_SIZE_MAX
+tends to be equivalent.
+
+              Linus
