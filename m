@@ -1,152 +1,61 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B511B85D0
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 23:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839BE243398
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 23:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739144902; cv=none; b=GiPM96MTtlHAtOVLwjFjLdUhmz9Wdp6fNaUUhkYXhD+bQKsbAyCO1zPfGTGbhclnTOkfExg35heNv0TwNEVVJ6sy1q4BwqyNOIi0bwHJyrVWPdlo/3GkyIyZD/SXeRaOArKKkY4WcrRRx4J2zjZhzqPakJ9hgu4IQcxxa25YnFE=
+	t=1739145034; cv=none; b=egfNhrhY6GefmsfnygGlwkXhMUOb/li/D0r/I2EriBgYv8CuG1UKbKp1Z/ifRVP+6BIp1Zy0VmiZVrSQ6rKzUB10hiBmFDjzgLK1kClEEmVlU31MnCw81zq3WIQ2qrnhBs2J1FiKXmjwjgE+LnsG8WQuS0fpKbHc7rhp4fy3wHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739144902; c=relaxed/simple;
-	bh=a6UE8wMAI9FZv9/ryS9Bcv0eROubbnj/uI47miCzcbY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EXeOlbWaQE5qH3mRf+FU9dyzaQKnBlXsYCDifuSg/N8Qjb+pGkB3arZpGx1KZv1UxhbB0KUFjt2WvgHuNi33IhMddwSFYcGGZMHoUYIqlPPfUcDZQd0QkoathK26HG6pUA2m/qxZi032VlElVxFKDipRKXOFxgQ7OTVkopW+Crw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=YZBKIMA4; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="YZBKIMA4"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id B1F3A2C03DE;
-	Mon, 10 Feb 2025 12:48:19 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1739144899;
-	bh=l/upjVotxSoO3Ct3ZBm+CDlsrjYDM2i5ETyqoJk0qzc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YZBKIMA49aPw2Zwiy4uyVrZqabdC6EeVmEfnSsRP70m685bXQL/jEpL/X/jasdwcZ
-	 M5sLaAFvrf3A/SI/avxfbWtuzB4Sa+6HgdbqwT/QqzpbjAWORvKAiJd7EY5r8f1YfK
-	 sXabkSZtwFxNOXwNy2EJzi3mVIsvPOn8e8sRgwbOoqu32Qhtrq8oaaM4DgvQ4yv180
-	 sNAsrpLios1m6gvUiCetrZJMSg+SGo3s/Kr3/kaxv7IQzaYqqHmKmTm3Qq7neU7QA3
-	 QpoYSAL/xDk0o4kvgzis4CT4+ioI2IuvFh5C0zvyNRvq5cBfWMUVli7ilqGW7Pqfg9
-	 DLTDhxqEjLbww==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B67a93ec30000>; Mon, 10 Feb 2025 12:48:19 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id 63BF813ED4A;
-	Mon, 10 Feb 2025 12:48:19 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id 53040280789; Mon, 10 Feb 2025 12:48:19 +1300 (NZDT)
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-To: lee@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	tsbogend@alpha.franken.de
-Cc: linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH net-next 5/5] mips: dts: cameo-rtl9302c: Add switch block
-Date: Mon, 10 Feb 2025 12:47:51 +1300
-Message-ID: <20250209234751.460404-6-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250209234751.460404-1-chris.packham@alliedtelesis.co.nz>
-References: <20250209234751.460404-1-chris.packham@alliedtelesis.co.nz>
+	s=arc-20240116; t=1739145034; c=relaxed/simple;
+	bh=yBO6AIJ9HHlZi2gVVUcQ5GTHpfKmff9t97vsnL8Guwo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=StkWWFWdSY4U1SKaMMxvIqfDUgadnoPxU/+E7RBiHCgouG8SafMgoUZNXapX3kgJY3X9y86MwgkaFJXUzF34PLwt2GqnDEG2D5r7mDgBSY5Q/gOW1Ic8NvoBaKW6VXaIyWnjjU3bv2aG08jXoS0ScnbIhdqp5BdSxmvFToQQKaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d162c02150so2057845ab.0
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 15:50:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739145031; x=1739749831;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hCMyHAFSBUg3/FvAK+7HAV0zKvgB7Cxwor2EeXLPwWY=;
+        b=kjo5NCS4A7bLrBCg+S2Xh1wXYV8BseUWlJcxob6BT18/9WWLgxXpPlkPVfIbYawGUE
+         AA/ODm6sj28V025hqElauvLZaULQ/9AtlATz4kV18L6p1VoYYeMZayfa/z5awwCgrjVd
+         FtcwbAyt2NxNz74ll34evkK5WHcKxNkphtYcdET0ZLPcPcXUKVek3fB5gDt4wGIHa63W
+         3xA7pcNrDBLr4jocQbSXRY0KTokeSzxt34Ve+4e0MeZLa2H531Wx4FHMG1I8HNLHw1at
+         x6Lzzepli6DvmoHEdpOqY24ujP8LmaU0m1xY3aL4BpgzMN3C+OX/0riXbd2vznoGCszb
+         kxjQ==
+X-Gm-Message-State: AOJu0YxEXvqbLi4scvM0nnjwMHoGAkCUsbPv5gybsQaiSG3/aPcoSC/f
+	4niB532KXRv/ssdFOm57E48tKqW/8s+N0rU1MGHUmRgEBwbwgrxqi3clJZ6kT3mjXOMydsU60sg
+	u9qhF8raXoBNK8rBIq8zW3Xg9aNq9+AOduSew6hDVSXSsokaMcD3Y3eA=
+X-Google-Smtp-Source: AGHT+IGobN1/SNO9moDIKOY1TPp//Z+jKocU0ca0jyrXSfKLXJIYKtlODNb8yF6mZvr1Ngwy9jL6SdF2qLX3zMkD26DKtPxI8CRW
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=QNvLRRLL c=1 sm=1 tr=0 ts=67a93ec3 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=T2h4t0Lz3GQA:10 a=VwQbUJbxAAAA:8 a=PSQZVNSXpqiPPuIuS3oA:9 a=3ZKOabzyN94A:10 a=Ouh7WndvZ0esTx3naE_M:22
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
+X-Received: by 2002:a05:6e02:c8f:b0:3d1:4a69:e58f with SMTP id
+ e9e14a558f8ab-3d14a69e74bmr54735355ab.2.1739145031644; Sun, 09 Feb 2025
+ 15:50:31 -0800 (PST)
+Date: Sun, 09 Feb 2025 15:50:31 -0800
+In-Reply-To: <67a841a5.050a0220.110943.0017.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67a93f47.050a0220.3d72c.0044.GAE@google.com>
+Subject: Re: [syzbot] 
+From: syzbot <syzbot+812641c6c3d7586a1613@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add the switch port and phys to the cameo-rtl9302c-2x-rtl8224-2xge
-board.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
+***
 
-Notes:
-    This is technically v7 of [1]. Differences from that are that I've
-    omitted the MDIO busses and PHYs while I'm trying to sort out the swi=
-tch
-    bindings. I'll add these back in a follow up series.
-   =20
-    [1] - https://lore.kernel.org/lkml/20250204030249.1965444-7-chris.pac=
-kham@alliedtelesis.co.nz/
+Subject: 
+Author: qasdev00@gmail.com
 
- .../cameo-rtl9302c-2x-rtl8224-2xge.dts        | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
-
-diff --git a/arch/mips/boot/dts/realtek/cameo-rtl9302c-2x-rtl8224-2xge.dt=
-s b/arch/mips/boot/dts/realtek/cameo-rtl9302c-2x-rtl8224-2xge.dts
-index 6789bf374044..51306c104b01 100644
---- a/arch/mips/boot/dts/realtek/cameo-rtl9302c-2x-rtl8224-2xge.dts
-+++ b/arch/mips/boot/dts/realtek/cameo-rtl9302c-2x-rtl8224-2xge.dts
-@@ -71,3 +71,51 @@ partition@1180000 {
- 		};
- 	};
- };
-+
-+&switch0 {
-+	ethernet-ports {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+
-+		port@0 {
-+			reg =3D <0>;
-+			phy-mode =3D "usxgmii";
-+		};
-+		port@1 {
-+			reg =3D <1>;
-+			phy-mode =3D "usxgmii";
-+		};
-+		port@2 {
-+			reg =3D <2>;
-+			phy-mode =3D "usxgmii";
-+		};
-+		port@3 {
-+			reg =3D <3>;
-+			phy-mode =3D "usxgmii";
-+		};
-+		port@16 {
-+			reg =3D <16>;
-+			phy-mode =3D "usxgmii";
-+		};
-+		port@17 {
-+			reg =3D <17>;
-+			phy-mode =3D "usxgmii";
-+		};
-+		port@18 {
-+			reg =3D <18>;
-+			phy-mode =3D "usxgmii";
-+		};
-+		port@19 {
-+			reg =3D <19>;
-+			phy-mode =3D "usxgmii";
-+		};
-+		port@24{
-+			reg =3D <24>;
-+			phy-mode =3D "10gbase-r";
-+		};
-+		port@25{
-+			reg =3D <25>;
-+			phy-mode =3D "10gbase-r";
-+		};
-+	};
-+};
---=20
-2.48.1
-
+#syz test
