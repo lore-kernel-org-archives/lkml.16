@@ -1,76 +1,137 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366D31E22E9
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 19:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F821DF980
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 19:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739129223; cv=none; b=gbKrCtt5un9qDIY7NU/dAyWge9T45sBRIixdIzxCVqWw4xVsN6LZmxgLSlJTf+GLXZdl0s03xyPOWK/nd32khVhUEmj1/OLxgNRyZbf4uLuJtiutasnFfWMjSJ733XrMgd+wn9N0JK5bTxdcnpgb6XhXgAyIJlRsk3uhspPMHQQ=
+	t=1739129575; cv=none; b=E/fLPJ9hquL+kkB5763sIdYv80QsoG7X4EEaJGmgjukiN6IFnxwzBzUe0yUED4F5g6dhJE25enMRhr/4Zl3aO3zt97f51Q3kSg3fPysIKpKYTdfLT1M6PpTQ6VZiDWLo3dH8E90XSBSV6R5fgQFP/Zr6hAoyPf0Jr59pIePCZu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739129223; c=relaxed/simple;
-	bh=Vyd0UobHk6QyUMIqma6yCedoS8r/66Qmz3flmHKGW98=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=BHIxjUNbN4ZI/qiM43/IkeocONuELn8dE6MG2FuDleFwaes/jzkZSAxonTnUuURqt+4uqVFpyyAddkQzj1ZXArTu+VxrJ3r/vpwoO+GkK9oeSBr53daGZfqLWf+0bXQEiqyxRHOnSvf5zX6wdP/+t8kXDhX3Ch3+1F+btMueWjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d143f1353bso16292305ab.0
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 11:27:01 -0800 (PST)
+	s=arc-20240116; t=1739129575; c=relaxed/simple;
+	bh=Hw5Jj54lHlKsvWdyOciOtY61GHLLyD922U2Ybh/FkBA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SEG1a3KsXiPtOOd7Cohu5ZCtJx8GiAHDRHKVU5JaBmkjs9yMICHNvm2l7WOdAljU0CzIaucCm/d4hANnqNxkOVK2EDMJ0YDMccTuLccwSh+jeZaaRTA592DN5XD1/VaSUlTBkSzDnbDIIWUIDOmDT7jcVd1rvnzgr2CR8A3O/Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=CCKEhFQ/; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="CCKEhFQ/"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab2b29dfc65so587311966b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 11:32:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1739129571; x=1739734371; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3OYZn6iFxER/JL2avDuYDbzyExRqovS2QnLbQ0tqh0Y=;
+        b=CCKEhFQ/ka9jHoF+rCN80edG+lKN7KiqmDTefhqlo3tE/y9AloLgmyLAS4TS5Sc2sJ
+         15Td6En7r1d8yOQIUxZh9iMYyS3fxXq083bIyEltlzz0ZUHr+Hg/nuUmOwMRPeuLEvrW
+         4py7UZcQ2ooqDUYsVDPGR0B9NlKq9BWF9yc2g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739129221; x=1739734021;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lm3T2WLDaPlgZdqyMgzRB/LNX82XeoMBy/H3NA3BdvA=;
-        b=qWQ7qcS0lmebG/ifX51ZGq1St0yCpVlKTbQn3hrIXe34xSWqQbGqy15NmceyNqInvU
-         pEd4nrv2jr3l8Qc9IkgAnJMIcekcpFGY4393zPdRcx/98tFrdanEU0Jsbk2Mwwk2auzA
-         lc0KpcVCOn/WhzVKiXYEOixDwjQo1zk4+ZCXpnfbW6MWvgdva6lhqYbm00RlQFAYDkyn
-         jEa9nDWzn74JSy8gvI8E1/73anAyhjQRfnAoPhc/j87jRbGA0/qrbpjzpF9CQnVfQ5Wy
-         Q8ria4DreFwtZ5jXQjQtucKhI4/ryKop2Wv0kaWgNt/r1ADtQDBY1HrusrUyaNpn/m0Y
-         1pPg==
-X-Forwarded-Encrypted: i=1; AJvYcCXiRxn/tQpaAA/dKGzigM81f7XSBtAFc3k2o3yTbbsEueCmFHoS9R5KxhZyGAiXJzlQtivnyds+EkiRKMk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz35F+Kb3HqGcjD/FxysKSi8A3K5zfL1QZ/hllJMy2Cwg3vl3vk
-	GaIqq1BcR0YwHCa+PKkaBjaawMpkuB6baJE8QYZpA8LDmHKU0klgz/UazbAlEiRHcDiGXqfA1GN
-	QpLJUsEUfN6OCsfpNXzN9j1si9QCtb7sXObU3NIYjACiCg031EAd1irk=
-X-Google-Smtp-Source: AGHT+IGkxGZKejY1F3ygYzzaUi1hUqpXmA/5+5Xn8TKUNvFSY0sOPF6pRt3WrIZfaS1l833h6uU3OAju00rg4KLYoZHT8rVj7Ppf
+        d=1e100.net; s=20230601; t=1739129571; x=1739734371;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3OYZn6iFxER/JL2avDuYDbzyExRqovS2QnLbQ0tqh0Y=;
+        b=LK+wUNBtDje8F4C58JFxXD2kA4gaXSm+POjx9HkQPYIove8NMG1elrmt3+AhvbWRRC
+         9CTebEdy5QcTG3W3ntIplBoycLedkFvG/3UZpM0LJJ4Hv2dhrrP5R3ARFQzFay3f4qi1
+         3eDQicMhARoB2qkfYEtr/NX55NeogIAgTa/rsU7WZJH3xrHzNMi/OCWw3Eql362V1k3A
+         SW7R89L/YaipD7WyatWDunEmz5K/uQeYf0BVVJxBpCf9nnzXXvp5o7I9m0qLM8qSFUOV
+         gPukSKje7KWyxl3wb1GIq9Zya2of3oJBPJtylVqDDlnTk6tS0hFXDzVPfkv7ieZwW7u1
+         bI+w==
+X-Forwarded-Encrypted: i=1; AJvYcCXWuTGg+mOSO/ugXepQS7itwq6V4U1YKkUGmMJB5yjPr2oBZJdTJ2xc3b4xPtv5WE49i8c8ub9vSB+Rh18=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyuj5EFj91VyTgPhA6ZALHufteokEFaOk8hb0isFt+FZt6rWaiJ
+	C5fj9/MTq+LrZzG2w2ZL4YoZ0+DYJ453o83obd2Xv/MKlCJOmDuwqIJg4YxaSaSO0i4UVku5NW7
+	SYFQ=
+X-Gm-Gg: ASbGncsu6Q5o+CKgBZPWtPpwS8ou2Mr/ocJVxW1AEaHrDOXWuHensiV3nCK1WrlSEAd
+	Y6VLOsego4uSdoVf99DzhFJiD5QY6S3O5fjr8ZyQB9m36Gedcq6fuHqnt8NfpsJxfUydd5mkKc7
+	PFZyyBJnk2eZ0yaGlK4+ZNIRWcMi8EykmGbS+P40WYh0OQ+iWM2ygyEFG7tKZGo6NvBVSJTGjbs
+	oR0Jhx60agWPDZy3uG7oHz2r/sOEsvGNua7pJO12eFTc0H3TSmaDHpvX3Cy/k0tAVJ4w3DgjMc4
+	CQLF6BdufqZ7FHPAKgYRcU4XEOUzaAbgRBwvC3JiY4nAXV1aknRIG4BlZ15LZICi0w==
+X-Google-Smtp-Source: AGHT+IFkBTayQV33Rs165Xjyn+0dEl7f953zfUtR1kFs+f22AvcJthKHU8Yw4ZXCzEjlnOgu24YhLQ==
+X-Received: by 2002:a17:907:3f27:b0:ab6:58bc:715b with SMTP id a640c23a62f3a-ab789ca29b4mr1055665266b.55.1739129571189;
+        Sun, 09 Feb 2025 11:32:51 -0800 (PST)
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7aab8d8fasm295795066b.58.2025.02.09.11.32.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Feb 2025 11:32:49 -0800 (PST)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ab2b29dfc65so587309366b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 11:32:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU9mAD8dJQ2xigwU7jPp4Ww2Ht5TF/IW0UhrD8nQcYCXm8oK0mffSE/7bO9cCYTPSEYZ04Eesq1PF+CzfQ=@vger.kernel.org
+X-Received: by 2002:a17:907:7e92:b0:aaf:c259:7f6 with SMTP id
+ a640c23a62f3a-ab789c627e1mr1220851466b.45.1739129569271; Sun, 09 Feb 2025
+ 11:32:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:b4d:b0:3cf:ae67:4115 with SMTP id
- e9e14a558f8ab-3d13dd2547dmr43310225ab.8.1739129221395; Sun, 09 Feb 2025
- 11:27:01 -0800 (PST)
-Date: Sun, 09 Feb 2025 11:27:01 -0800
-In-Reply-To: <66f01abe.050a0220.3195df.009d.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a90185.050a0220.3d72c.0040.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] WARNING in bch2_fs_release
-From: syzbot <syzbot+08d08d52c3a09bfc70f7@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20250209191008.142153-1-david.laight.linux@gmail.com>
+In-Reply-To: <20250209191008.142153-1-david.laight.linux@gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 9 Feb 2025 11:32:32 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiQQQ9yo84KCk=Y_61siPsrH=dF9t5LPva0Sbh_RZ0-3Q@mail.gmail.com>
+X-Gm-Features: AWEUYZkIEyygdjdtgqEM9UjeSXpn0CystKuNI2lg08YFjtDgCkT1DG_hRzS76Rc
+Message-ID: <CAHk-=wiQQQ9yo84KCk=Y_61siPsrH=dF9t5LPva0Sbh_RZ0-3Q@mail.gmail.com>
+Subject: Re: [PATCH 1/1] x86: In x86-64 barrier_nospec can always be lfence
+To: David Laight <david.laight.linux@gmail.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@redhat.com>, 
+	Andi Kleen <ak@linux.intel.com>, Dan Williams <dan.j.williams@intel.com>, 
+	linux-arch@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
+	kernel-hardening@lists.openwall.com
 Content-Type: text/plain; charset="UTF-8"
 
-syzbot has bisected this issue to:
+On Sun, 9 Feb 2025 at 11:10, David Laight <david.laight.linux@gmail.com> wrote:
+>
+> +#define barrier_nospec() __rmb()
 
-commit 8b22abb4c84058e9533d71a4814e54316ba2621f
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Sat Oct 12 02:53:09 2024 +0000
+This is one of those "it happens to work, but it's wrong" things.
 
-    bcachefs: -o norecovery now bails out of recovery earlier
+Just make it explicit that it's "lfence" in the current implementation.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=121ddb18580000
-start commit:   8f6629c004b1 kbuild: Move -Wenum-enum-conversion to W=2
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=111ddb18580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=161ddb18580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=147b7d49d83b8036
-dashboard link: https://syzkaller.appspot.com/bug?extid=08d08d52c3a09bfc70f7
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1312cbdf980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=129411b0580000
+Is __rmb() also an lfence? Yes. And that's actually very confusing too
+too. Because on x86, a regular read barrier is a no-op, and the "main"
+rmb definition is actually this:
 
-Reported-by: syzbot+08d08d52c3a09bfc70f7@syzkaller.appspotmail.com
-Fixes: 8b22abb4c840 ("bcachefs: -o norecovery now bails out of recovery earlier")
+  #define __dma_rmb()     barrier()
+  #define __smp_rmb()     dma_rmb()
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+so that it's only a compiler barrier.
+
+And yes, __rmb() exists as the architecture-specific helper for "I
+need to synchronize with unordered IO accesses" and is purely about
+driver IO.
+
+We should have called it "relaxed_rmb()" or "io_rmb()" or something
+like that, but the IO memory ordering issues actually came up before
+the modern SMP ordering issues, so due to that historical thing,
+"rmb()" ends up being about the IO ordering.
+
+It's confusing, I know. And historical. And too painful to change
+because it all works and lots of people know the rules (except looking
+around, it seems possibly the sunrpc code is confused, and uses
+"rmb()" for SMP synchronization)
+
+But basically a barrier_nospec() is not a IO read barrier, and an IO
+read barrier is not a barrier_nospec().
+
+They just happen to be implemented using the same instruction because
+an existing instruction - that nobody uses in normal situations -
+ended up effectively doing what that nospec barrier needed to do.
+
+And some day in the future, maybe even that implementation equivalence
+ends up going away again, and we end up with new barrier instructions
+that depend on new CPU capabilities (or fake software capabilities:
+kernel bootup flags that say "don't bother with the nospec
+barriers").,
+
+So please keep the __rmb() and the barrier_nospec() separate, don't
+tie them together. They just have *soo* many differences, both
+conceptual and practical.
+
+             Linus
