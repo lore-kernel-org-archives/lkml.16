@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75C8175D53;
-	Sun,  9 Feb 2025 10:51:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0154714F115;
+	Sun,  9 Feb 2025 10:52:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739098295; cv=none; b=Q7fR9qcdWaz9RXE3ulfDCNz8jOu/DA0C/tLmrMJB1PORN/fxgJmbdQ5AwD2+D0bv/m0ex7y4n9uWQkDo0fSx7fnckgI6Ev4e4422IADOioYCen41aXQ7tD0D2ehrJOAt1Lq8brkzbRmgxJ8xgoFPtfJgP/DrmTNppNdcTey6P54=
+	t=1739098327; cv=none; b=RRxWdkVwWW5lkDSCY3SkQ8eSFv1wYYi8b8485H0zMaDlrSiska9yisUNr2DccuWEEU4+IGRbBrwZchJ8UzJrNex1G3VYwm95SBztn0W2LK70ifmqRZ6LmmYDvPUbIMObozHOE9pF5ocF9habxppOv+wReGXsC/UaKxfLKuS0XUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739098295; c=relaxed/simple;
-	bh=gymlXchE1X2Mi5HturvFxODMkGlE+6Fknw2D00ypeLw=;
+	s=arc-20240116; t=1739098327; c=relaxed/simple;
+	bh=Bum5g239Xhor2LHlA16e9wEojA4q1pFCVhiTPMAEbMI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g9QJCwRfW0KiVajRrma2MmtofIucmwlNX+oGfPZxGVAnDJ3QRwb5DbQ6jyGoQTsZGCHXlBUVwQwpc+sfwRRGrMVyCfDzPSPDjfcbhaTzI4DdfIm/E+CqFAGr46U+Nbe5gQjuj832dQci0ZtS++oId35MEKvAbVRZAQpdqt7VpFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cljLsJTM; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=XPCJfQazx7MBmG3+gNDIKxhuV4SxYvKYu10+khZGZAApWuKMzbajR3it5EnNtbvODSo54FJ2vK9V1C4v4LA/prpIMibuizsVabltflrkE5XYrBl9DBPbgoCXjUFT34sJn1wiMz7KuYt1AFrOcjDLrfh9GQ0o10Z+/hgujCX78rA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XBvdd+qQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cljLsJTM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FB5EC4CEDD;
-	Sun,  9 Feb 2025 10:51:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XBvdd+qQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DED42C4CEDD;
+	Sun,  9 Feb 2025 10:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739098293;
-	bh=gymlXchE1X2Mi5HturvFxODMkGlE+6Fknw2D00ypeLw=;
+	s=k20201202; t=1739098326;
+	bh=Bum5g239Xhor2LHlA16e9wEojA4q1pFCVhiTPMAEbMI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cljLsJTMFJ70nnAYdWOlI2nx0RjdQ3pzCPH+wuHrs3WRAVMaGAUasVRUloiaTyhIb
-	 BXxsQKARNs5eTvvnDxXD6bLDQt202LyauVWHOnXjhxoaXO89cH5PECKgcarAT7fYX+
-	 wcOE2AwauN0t4E9sWZVRiL39vIKCI7vwLOLyTJvM8YtiADS4k/jVtkZz2pYnF73dp5
-	 RLzK032K01GR6oAPsk42TOw/rHs4l6PhmWXWVFGlFkzefWkfgy+qfvuUbqRxsv7afU
-	 mnPBCMzXHpdq+MAQxkXTyzp4rWn4Qsu14ItFtdbTRdQAQSHTbd7p8+l37gp+ZRzG6C
-	 G79QpJg/VZjvw==
-Message-ID: <2942fbc2-55c5-4789-89d4-e4bf3158a34b@kernel.org>
-Date: Sun, 9 Feb 2025 11:51:27 +0100
+	b=XBvdd+qQyO5c7GiTnIzUcULCy3jccXb/5HLpRixk4+qOmAyfO3Juz+OBFzbDsRSlc
+	 oOX28JfDaRlXucZCA18CZl4OaPxironqER5kNIY93HD35ur1Mm/XRz2mpa5AFP6V6H
+	 80Dq6+ZDm+EQkkZwjeqUOZb4k57uvP1xTPvkZ04+FNVULhqlZpngHYe1Er3PgAsAJc
+	 /8Nwvkk3k/65tORTqY7PbbKTPeHv6chFN/IsYvZxkhrHDBap1XHXHPwAvkUxXI6cF9
+	 jm0Ub+84zLZCfs2YrN4aua6Ff22uaI8TKKsa3JyEUICYQUnuP/oIbnPZH8QSJoBRFi
+	 LN4Md+PeGCoXw==
+Message-ID: <d2bced2f-a791-471e-89b6-d78017c9d306@kernel.org>
+Date: Sun, 9 Feb 2025 11:51:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,17 +35,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [v2,2/2] dt-bindings: memory-controllers: Add MediaTek DRAM
- controller interface
+Subject: Re: [v2,1/2] memory/mediatek: Add an interface to get current DDR
+ data rate
 To: Crystal Guo <crystal.guo@mediatek.com>, Rob Herring <robh@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
  <matthias.bgg@gmail.com>,
  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Project_Global_Chrome_Upstream_Group@mediatek.com
-References: <20250207014437.17920-1-crystal.guo@mediatek.com>
- <20250207014437.17920-3-crystal.guo@mediatek.com>
+ Project_Global_Chrome_Upstream_Group@mediatek.com,
+ kernel test robot <lkp@intel.com>
+References: <20250206121629.12186-1-crystal.guo@mediatek.com>
+ <20250206121629.12186-2-crystal.guo@mediatek.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -91,16 +92,18 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250207014437.17920-3-crystal.guo@mediatek.com>
+In-Reply-To: <20250206121629.12186-2-crystal.guo@mediatek.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 07/02/2025 02:42, Crystal Guo wrote:
-> A MediaTek DRAM controller interface to provide the current DDR data rate.
+On 06/02/2025 13:16, Crystal Guo wrote:
+> Add MediaTek DRAMC driver to provide an interface that can
+> obtain current DDR data rate.
 > 
-Duplicated patch.
-
-You also ignored several comments so that's a NAK.
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202412210955.FvO0Pee3-lkp@intel.
+> com/
+> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
 
 <form letter>
 This is a friendly reminder during the review process.
