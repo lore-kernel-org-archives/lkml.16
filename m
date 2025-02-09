@@ -1,103 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8546F1EC00B;
-	Sun,  9 Feb 2025 22:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45721E3772
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 22:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739138839; cv=none; b=NMfILx1einYrXSGu5h+4dqb5hWLOz4NtXAMUopaWP4vJbxzT5Hovy9AwIBTdMYqXqhpvFAbU6hrhfd1SFlgfOh/ps7FjLAqXYyXZIBVyKLTt2CkH7rvoDHkc/aMl6W6+BBEBCWKeCoXwAjt5qih/EC+3+FqPg0l63kyPXsBnFj4=
+	t=1739138936; cv=none; b=PpovYs3vCFZZgL/D+WkokAml3i+An8i35Z7VcPFNGiDoR6vaq8jSDJAu59EB15LfdYXldKOHzF1tFfLYs/uw6TkVakKXLcxhuzYZZ96U5gtPYpp65xmMBVTbEuaRuyYTB3AHDfmFiD2asgcT/ZK9OTGviuB/i4qwq2ZbsayE0Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739138839; c=relaxed/simple;
-	bh=7bTmvynIcYiz/go7F/gd0OjRidGHVoLNQtWkgB0LMfk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=J0QQRGD300P4KQx4CCSmpLM70s/ta1+VKQLdXcKkmXsejDZbFoH+KfENP+I8zFJuhGv8MsLPr0SyfDAIYakLl/o1v9aeb0jW23lnZ+X0+ZY8CgD8pvSFYNPkvBHcEtjTfsKQ/WawGNbTqWCcsTouxLwvZppKoWUFi4q6b4IAH0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RvvR7aE2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739138936; c=relaxed/simple;
+	bh=5DOuGnXuaFqcLhfTqbGrEhlr2Wac8X+DomJF6Rsevcw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CTbrKjw2qYs2uzwVogdF//5hYjjoPhtbXKlr3uJUr/Ql4OolBYoj2rrClQLSIdZA14PwDMXHZmqlKgqQs91M1Wud/GqSyNSdGrgTqStKZJWjskmFa3qb9SpOZ69Sd8LHCzFW/fbCAL0PsS4I/x5luO4+oZoZUpcQzvYHUDh3PVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aOZBycUq; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RvvR7aE2"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F3890C4CEDD;
-	Sun,  9 Feb 2025 22:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739138839;
-	bh=7bTmvynIcYiz/go7F/gd0OjRidGHVoLNQtWkgB0LMfk=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=RvvR7aE2IduKCZO2+HgeRAcZko10QKhYvzUG51AYBSkkQUarXIkf/5l1JRIm3/gN9
-	 adorX8b+BVs+PEeVBKLbmkbM6YEOE4McByeoy/qBrECe5Xs6rD3UDH1HlTWKtdNHC/
-	 zFhM3DX8D9Tisj2RyS71s1hSdBxi35sO2TbL3OS39nbyaPDMFpkoz2xu4HBMxdkxz2
-	 DNliCZsFauUn5S4ITuzcLMfY/hZcPry3JYSgHUyQyZSHJ5CX+tLqqCyv7jWUnYUjPd
-	 TYJIEfYFP//PSGLQOj2daTYB6Wup663MUDMdQxPUThmI8HYojSsruhVVQZziXSZP5R
-	 X7+4Q+HScVTcA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBD7C021A1;
-	Sun,  9 Feb 2025 22:07:18 +0000 (UTC)
-From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Sun, 09 Feb 2025 23:06:50 +0100
-Subject: [PATCH] dt-bindings: leds: Allow differently named multicolor leds
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aOZBycUq"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739138932;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=H7sOTGB7YQQ4FwrjrH7kz3zB1WAq4sy6rI1LruA9pJI=;
+	b=aOZBycUqBfEC0rSGDO5vF706auIBur5D8nbnQLV9rL8ioKyogGWH2Q4VpiMqf4TnlJKFWG
+	KA62vWseCQg8008/9xw2zYPiWZicracqqNneYg81XCK6A0j3iAAhAT6gLF8T+B63tChMk+
+	sD2DvZRXrFoliZCskjxkpiCxWxuakTU=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ACPI: power: Use str_on_off() helper function
+Date: Sun,  9 Feb 2025 23:08:35 +0100
+Message-ID: <20250209220835.78434-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250209-multi-led-v1-1-5aebccbd2db7@posteo.net>
-X-B4-Tracking: v=1; b=H4sIAPkmqWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIwNL3dzSnJJM3ZzUFF1LS0vDVCMD06TUtBQloPqCotS0zAqwWdGxtbU
- AW+6O3FsAAAA=
-X-Change-ID: 20250209-multi-led-9991e205befd
-To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1739138838; l=1273;
- i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=9DQV3fzmb755ljBlke0ZoorMkJDPL/aQrPGsmH2YR6s=;
- b=RP039EUEyquTEMyQNTLm+9+PhfrD1leUx+R6Jn1isuufyR91nebysUfOTuthgqMwqq5uI7H0b
- 0oa6ntbmI4rBwKJKOU4QT1/MC4amAnO2bV3G77+zHucHk4VoTeiJNTp
-X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
- pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
-X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
- auth_id=156
-X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Reply-To: j.ne@posteo.net
+X-Migadu-Flow: FLOW_OUT
 
-From: "J. Neuschäfer" <j.ne@posteo.net>
+Remove hard-coded strings by using the str_on_off() helper function.
 
-In some cases, a board may have multiple multi-leds, which can't be
-distinguished by unit address. In such cases it should be possible to
-name them differently, for example multi-led-a and multi-led-b.
-This patch adds another node name pattern to leds-class-multicolor.yaml
-to allow such names.
-
-Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/acpi/power.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-index bb40bb9e036ee00e06d21e2321ecd5a7d471c408..c22af25b6430be71300c0e37f696cd61112ea190 100644
---- a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-+++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-@@ -21,7 +21,9 @@ description: |
+diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
+index 25174c24d3d7..b7243d7563b1 100644
+--- a/drivers/acpi/power.c
++++ b/drivers/acpi/power.c
+@@ -29,6 +29,7 @@
+ #include <linux/init.h>
+ #include <linux/types.h>
+ #include <linux/slab.h>
++#include <linux/string_choices.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/sysfs.h>
+ #include <linux/acpi.h>
+@@ -197,7 +198,7 @@ static int __get_state(acpi_handle handle, u8 *state)
+ 	cur_state = sta & ACPI_POWER_RESOURCE_STATE_ON;
  
- properties:
-   $nodename:
--    pattern: "^multi-led(@[0-9a-f])?$"
-+    oneOf:
-+      - pattern: "^multi-led(@[0-9a-f])?$"
-+      - pattern: "^multi-led-.*$"
+ 	acpi_handle_debug(handle, "Power resource is %s\n",
+-			  cur_state ? "on" : "off");
++			  str_on_off(cur_state));
  
-   color:
-     description: |
-
----
-base-commit: 645b5c24cf8590eea322a4fd79c811817046a2e6
-change-id: 20250209-multi-led-9991e205befd
-
-Best regards,
+ 	*state = cur_state;
+ 	return 0;
+@@ -240,7 +241,7 @@ static int acpi_power_get_list_state(struct list_head *list, u8 *state)
+ 			break;
+ 	}
+ 
+-	pr_debug("Power resource list is %s\n", cur_state ? "on" : "off");
++	pr_debug("Power resource list is %s\n", str_on_off(cur_state));
+ 
+ 	*state = cur_state;
+ 	return 0;
 -- 
-J. Neuschäfer <j.ne@posteo.net>
-
+2.48.1
 
