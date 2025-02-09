@@ -1,269 +1,222 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA2D7DA82
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 14:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C37D13AA31;
+	Sun,  9 Feb 2025 14:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739112865; cv=none; b=S6NCpCpw2UYsabq+yFuCFW1d8QyxMqONJU/2l19oNvCm6bkDv5iWHm0brbx8MQa1L5hOhHfwLFtNHEZAbvRrykmobRNnIlzdnBdvA0kFiEOXbN+mphEqP7AoRHYMRwBswBsxzaV+3ehDdDjFdxli3jKKw00MwLlQcY8AXPZUap8=
+	t=1739112914; cv=none; b=jOuTNYU1Dv+cHWVjPJmmjJzAHA2X/f4tvGHthKsablNWwotti+GxZxQTyuKqvs7NCqDPtGq5LLE5Jh8OCUIVcCBxv6N/QgYywl08lZykHwYkfjAGX+GjTSIg2M56mvq7yP6/RXRWLjAmdV3LT9QdpoJFm8PrPbscFJXx0q08XsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739112865; c=relaxed/simple;
-	bh=AeJ96wjGswKTDXfnHm36nX76HZaeJ9jxU/Zu8QddFAQ=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Sd7j7urSuDir3wStixjhDeAhbHiANcyBfB+gL2lDyqWJT/m6WpOKtChAhZ4tIoRenC3L67cXhANsPNrdYr5gZpqeiCvNHPOXBDOtr0cFffgYq1mQ/AnYKjKpnSyx0PgTMTVxAXwUea/k+yvCawWdIzM3xuJyZZnnAszJUD1xRwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d143f1353bso15273365ab.0
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 06:54:23 -0800 (PST)
+	s=arc-20240116; t=1739112914; c=relaxed/simple;
+	bh=k3txjtZx9ekcvt6SENF5b58wE9f6OfkDAQXrlFXv3cs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X7LjvmdRkSKt9vZdIpl+X++Cdk6FSjfSmmsxVZNZ7pmmt5n3Pc9OSvVU0ubHZTVpxU+DMoZHOf3mwqC407vh0CFW5e+tbQhsufNXcUflKbB9/gDlHZKvlgexwto4vxfr5C3v/sHPYePjBXyEvLQ29Ka6iEsrmH64+R+NtedB8gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W9SoOJ2x; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9SoOJ2x"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4394036c0efso1546925e9.2;
+        Sun, 09 Feb 2025 06:55:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739112911; x=1739717711; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VR6UdNPUPJ42D/VBzpeWAAtAvkLAE7xD5d1I3/gJKTc=;
+        b=W9SoOJ2x2SGXwB40g3+hXfVyyiJICJfZrcuP5ahKoiEZ9fhSvZsMDHcGuwAmhxGS07
+         DZSilgD1shHdRpFHuN3KstcT0Y7ZFLWU9RzrWYHJsOxHMCWAOP0ULsiADyvC4XNQ8rx4
+         OLzBsZXhom0B5G8buHN1PBKsosLRtyOPv7UkcWF5UEa30EFuphExby2urniPReSu/7Ht
+         rLTBPJLmrZ15ZB/06qgegcLtQ74LNRV+fvDfHS/JKdvT2BdAWWJ6PLisO/B8hAW5xuvX
+         nwKZ33sXflvZKt38gV91SJnPALJ860ijO1aFW9vbsEvKmFDXUhnkOHfsjfUTZbkSk6U3
+         HK7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739112863; x=1739717663;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7nz9UlUnjnQqbAEiWSUUu4+Q2pwjTLwC0fT1nvy12d8=;
-        b=wfrlgrtMK0KMM7/8NQ3ukmx63mNE45WS4YOHn2ZCTHM5guLNdOBPPChlwa2MMJGQUj
-         456gzPtLLTH60ix5paja8QkKk/81fdcaTOxyAOaQKeli1uptv6RE1MMsSQO2A/I5uMSB
-         oQ14Cgzmz4PWKoA0R2X7msLWKdKAeY16ALXteeHWeqCOdJMxwAmTfHtvBv+/TxczSVxp
-         DBEK0BwZRS09lgWTGzMsEOdBEGrlmvjqhLA7zmpVOmIhwKYlJaH3kRV1cn7Dav8wEHQB
-         UZZ2NGfYJbKZCk2f2L86i6pvF14V/uKJtYp4BcKhhblhJq52eaJxv7vrkDZCRpsIeGD8
-         fGsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVKLWT+fhSrq3pqZGuY2fo8HLgngwx6PyC7435FSwNATfgkGoY7st5HhWiZu/M2S/p5SGlu5zZP53SWGs4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1Azk+f+thN8g0C1ltFC8KVu4cQuz6Oxx7eIg31uSyIxZuWXO5
-	mAdRsplvFxgegmrx3k8bWH4u0rt4xgs1ob0s5iv47zp7W/Q/fx4VMIgdczkG4xpUqgW1+uglFts
-	WdxGffIcDWPnnHyVkKe0SWPaas6jF3NkB+M+hSC9zMgQnxLkKpBeNrRY=
-X-Google-Smtp-Source: AGHT+IFkaLhp8zlBB3MCaA6wNK6oj75MPtlBGQ2bmAJG360+Cx4h1/qyi3420m2OlYv/bLOiSX4hhbttf7Qtq6cIR7uB3VdBhiG8
+        d=1e100.net; s=20230601; t=1739112911; x=1739717711;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VR6UdNPUPJ42D/VBzpeWAAtAvkLAE7xD5d1I3/gJKTc=;
+        b=ChS1Qu2O/A9osmGqWSzeF4B4jvFsNmPIonrN7sfV6yX6mldsekihXGLCdfcmG0/2IA
+         nh2TkaWEbxFnuku70fXWzyep8ctjkxeubhval4SMoSznLp+1iFg3Kg4JM2sTJoaoEPvx
+         7SBOWQAtdD+DbxeoNuR2g1Oum55kIkZUpDadZmBP8QCcJi8U0IFe3ycBWeyUk82qqjd/
+         Iu3Z47N08KbjnvNgJAdJMpyAKtCAUNaKIjzpyQZqAz6NMKk8Hs4FTthvamnGknIedIZd
+         j1Cic79cXe/sx93GD458TsEcXPUs/i269kSolxhnr6nMJY5JCO+frke2SmkweOA/Z4OO
+         kSvw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+5ZLwTftQv5KvlvAA6BdFPiT7vCgs6BzrKI7lb8Gq5x7lqV3s8DIzxvIAB3evkdArX3m6pR9LEXeO0pYQ@vger.kernel.org, AJvYcCXp1eGwerU0lgRG+kmvIsGUNOxpAPf+6AKArtlRYwyJvPDUQQiIms0Jbrb5dn3XL05Mf7cLQuui2O3W+WUR@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAg5Sz1Lm3h1Vr9HAbSCLtp5812BfndJHVL1b6cgF7WSl2cMrR
+	qwMz/E4yn2H/NZvXtebpe5+1OXBeC7Z4DvWM41ZMNYkkKVfkyoZyJEo44Q==
+X-Gm-Gg: ASbGncvywX7oxWNPQltyOnjwBCMCD4kSCpS6Qpkx7cKW3c+Us/c75nXL1dTwe/vnUnX
+	XP/0Ne8OqNEMY1nlPG88hqinzTNY0fc/7cdwAr5ISy843x/526d+epq+fPoLriKyNqyFp+GutrP
+	XkrMHh2Vd/rEmPvkN3ovI5aS8TvOTWx99hbhhuhkb21p0l0GdtcW79m5hO7M4VofTv36JOOAGeI
+	mth0fvm0mrg1c37FH79nLqo+hbIt8/BS8SpTZjBn6YW9LavJdhsae09v8eLUfQM+Tg8hyP+g+dk
+	RrXcS+wzxbqRuuAKORo8SWs9PnijiwQxzMnV+uRTLhNiqgDcFPQ0ktdbPhfq
+X-Google-Smtp-Source: AGHT+IFHe7gvVLclb1m+4Z27Ar57CqWhA65W6sLxSy8rAjGx/OK7ohocscL6lEIOsqgeUbXb4Kh4PA==
+X-Received: by 2002:a05:6000:2aa:b0:38d:daf3:be6a with SMTP id ffacd0b85a97d-38ddaf3c061mr2341962f8f.40.1739112910710;
+        Sun, 09 Feb 2025 06:55:10 -0800 (PST)
+Received: from localhost.localdomain (93-34-91-161.ip49.fastwebnet.it. [93.34.91.161])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-439069290c7sm138387205e9.0.2025.02.09.06.55.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2025 06:55:10 -0800 (PST)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	linux-mtd@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Christian Marangi <ansuelsmth@gmail.com>
+Subject: [PATCH] mtd: rawnand: qcom: finish converting register to FIELD_PREP
+Date: Sun,  9 Feb 2025 15:54:32 +0100
+Message-ID: <20250209145439.19047-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:216a:b0:3cf:fd28:852 with SMTP id
- e9e14a558f8ab-3d13dd0280fmr104591105ab.3.1739112863190; Sun, 09 Feb 2025
- 06:54:23 -0800 (PST)
-Date: Sun, 09 Feb 2025 06:54:23 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67a8c19f.050a0220.110943.001b.GAE@google.com>
-Subject: [syzbot] [nilfs?] possible deadlock in nilfs_bmap_clear (2)
-From: syzbot <syzbot+4d7417d6eb8b36554c0d@syzkaller.appspotmail.com>
-To: konishi.ryusuke@gmail.com, linux-kernel@vger.kernel.org, 
-	linux-nilfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+With some research in some obscure old QSDK, it was possible to find the
+MASK of the last register there were still set with raw shift and
+convert them to FIELD_PREP API.
 
-syzbot found the following issue on:
+This is only a cleanup and modernize the code a bit and doesn't make
+any behaviour change.
 
-HEAD commit:    5c8c229261f1 Merge tag 'kthreads-fixes-2025-02-04' of git:..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=113e93df980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1909f2f0d8e641ce
-dashboard link: https://syzkaller.appspot.com/bug?extid=4d7417d6eb8b36554c0d
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-5c8c2292.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/fc7bd0937147/vmlinux-5c8c2292.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/55fb37b08731/bzImage-5c8c2292.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4d7417d6eb8b36554c0d@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.14.0-rc1-syzkaller-00028-g5c8c229261f1 #0 Not tainted
-------------------------------------------------------
-kswapd0/77 is trying to acquire lock:
-ffff888011b773c0 (&bmap->b_sem){++++}-{4:4}, at: nilfs_bmap_clear+0x29/0xa0 fs/nilfs2/bmap.c:305
-
-but task is already holding lock:
-ffffffff8ea392e0 (fs_reclaim){+.+.}-{0:0}, at: balance_pgdat mm/vmscan.c:6886 [inline]
-ffffffff8ea392e0 (fs_reclaim){+.+.}-{0:0}, at: kswapd+0xb9f/0x3b10 mm/vmscan.c:7264
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #3 (fs_reclaim){+.+.}-{0:0}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       __fs_reclaim_acquire mm/page_alloc.c:3853 [inline]
-       fs_reclaim_acquire+0x88/0x130 mm/page_alloc.c:3867
-       might_alloc include/linux/sched/mm.h:318 [inline]
-       slab_pre_alloc_hook mm/slub.c:4066 [inline]
-       slab_alloc_node mm/slub.c:4144 [inline]
-       kmem_cache_alloc_node_noprof+0x48/0x380 mm/slub.c:4216
-       __alloc_skb+0x1c3/0x440 net/core/skbuff.c:668
-       alloc_skb include/linux/skbuff.h:1331 [inline]
-       alloc_uevent_skb+0x74/0x230 lib/kobject_uevent.c:289
-       uevent_net_broadcast_untagged lib/kobject_uevent.c:326 [inline]
-       kobject_uevent_net_broadcast+0x2fd/0x580 lib/kobject_uevent.c:410
-       kobject_uevent_env+0x57d/0x8e0 lib/kobject_uevent.c:608
-       kobject_synth_uevent+0x4ef/0xae0 lib/kobject_uevent.c:207
-       bus_uevent_store+0x116/0x170 drivers/base/bus.c:832
-       kernfs_fop_write_iter+0x3a0/0x500 fs/kernfs/file.c:334
-       new_sync_write fs/read_write.c:586 [inline]
-       vfs_write+0xacf/0xd10 fs/read_write.c:679
-       ksys_write+0x18f/0x2b0 fs/read_write.c:731
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #2 (uevent_sock_mutex){+.+.}-{4:4}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
-       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
-       uevent_net_broadcast_untagged lib/kobject_uevent.c:317 [inline]
-       kobject_uevent_net_broadcast+0x280/0x580 lib/kobject_uevent.c:410
-       kobject_uevent_env+0x57d/0x8e0 lib/kobject_uevent.c:608
-       loop_set_size drivers/block/loop.c:235 [inline]
-       loop_set_status+0x687/0x9e0 drivers/block/loop.c:1292
-       lo_ioctl+0xcd9/0x2600
-       blkdev_ioctl+0x57d/0x6a0 block/ioctl.c:693
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl+0xf5/0x170 fs/ioctl.c:892
-       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (&q->q_usage_counter(io)#17){++++}-{0:0}:
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       bio_queue_enter block/blk.h:77 [inline]
-       blk_mq_submit_bio+0x14e1/0x25a0 block/blk-mq.c:3091
-       __submit_bio+0x2cf/0x6a0 block/blk-core.c:628
-       __submit_bio_noacct_mq block/blk-core.c:715 [inline]
-       submit_bio_noacct_nocheck+0x4d3/0xe30 block/blk-core.c:744
-       nilfs_mdt_submit_block+0x5c5/0x880 fs/nilfs2/mdt.c:153
-       nilfs_mdt_read_block+0xeb/0x430 fs/nilfs2/mdt.c:178
-       nilfs_mdt_get_block+0x10a/0xa30 fs/nilfs2/mdt.c:254
-       nilfs_palloc_get_block+0x181/0x2a0 fs/nilfs2/alloc.c:239
-       nilfs_palloc_get_desc_block fs/nilfs2/alloc.c:296 [inline]
-       nilfs_palloc_prepare_alloc_entry+0x3ee/0x1070 fs/nilfs2/alloc.c:607
-       nilfs_dat_prepare_alloc fs/nilfs2/dat.c:78 [inline]
-       nilfs_dat_prepare_update+0x6e/0x320 fs/nilfs2/dat.c:250
-       nilfs_direct_propagate+0x1ec/0x3c0 fs/nilfs2/direct.c:279
-       nilfs_bmap_propagate+0x75/0x120 fs/nilfs2/bmap.c:329
-       nilfs_collect_file_data+0x4d/0xd0 fs/nilfs2/segment.c:589
-       nilfs_segctor_apply_buffers+0x184/0x340 fs/nilfs2/segment.c:1010
-       nilfs_segctor_scan_file+0x791/0xa50 fs/nilfs2/segment.c:1059
-       nilfs_segctor_collect_blocks fs/nilfs2/segment.c:1221 [inline]
-       nilfs_segctor_collect fs/nilfs2/segment.c:1547 [inline]
-       nilfs_segctor_do_construct+0x1c2b/0x6ea0 fs/nilfs2/segment.c:2122
-       nilfs_segctor_construct+0x181/0x6b0 fs/nilfs2/segment.c:2478
-       nilfs_segctor_thread_construct fs/nilfs2/segment.c:2586 [inline]
-       nilfs_segctor_thread+0x69e/0xe80 fs/nilfs2/segment.c:2700
-       kthread+0x7a9/0x920 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
--> #0 (&bmap->b_sem){++++}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3163 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3282 [inline]
-       validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
-       __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
-       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
-       down_write+0x99/0x220 kernel/locking/rwsem.c:1577
-       nilfs_bmap_clear+0x29/0xa0 fs/nilfs2/bmap.c:305
-       nilfs_clear_inode+0x147/0x2a0 fs/nilfs2/inode.c:836
-       nilfs_evict_inode+0x105/0x500 fs/nilfs2/inode.c:856
-       evict+0x4e8/0x9a0 fs/inode.c:796
-       dispose_list fs/inode.c:845 [inline]
-       prune_icache_sb+0x239/0x2f0 fs/inode.c:1033
-       super_cache_scan+0x38c/0x4b0 fs/super.c:223
-       do_shrink_slab+0x72d/0x1160 mm/shrinker.c:437
-       shrink_slab_memcg mm/shrinker.c:550 [inline]
-       shrink_slab+0x878/0x14d0 mm/shrinker.c:628
-       shrink_one+0x43b/0x850 mm/vmscan.c:4868
-       shrink_many mm/vmscan.c:4929 [inline]
-       lru_gen_shrink_node mm/vmscan.c:5007 [inline]
-       shrink_node+0x37c5/0x3e50 mm/vmscan.c:5978
-       kswapd_shrink_node mm/vmscan.c:6807 [inline]
-       balance_pgdat mm/vmscan.c:6999 [inline]
-       kswapd+0x20f3/0x3b10 mm/vmscan.c:7264
-       kthread+0x7a9/0x920 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-other info that might help us debug this:
-
-Chain exists of:
-  &bmap->b_sem --> uevent_sock_mutex --> fs_reclaim
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(fs_reclaim);
-                               lock(uevent_sock_mutex);
-                               lock(fs_reclaim);
-  lock(&bmap->b_sem);
-
- *** DEADLOCK ***
-
-2 locks held by kswapd0/77:
- #0: ffffffff8ea392e0 (fs_reclaim){+.+.}-{0:0}, at: balance_pgdat mm/vmscan.c:6886 [inline]
- #0: ffffffff8ea392e0 (fs_reclaim){+.+.}-{0:0}, at: kswapd+0xb9f/0x3b10 mm/vmscan.c:7264
- #1: ffff888043b8c0e0 (&type->s_umount_key#49){.+.+}-{4:4}, at: super_trylock_shared fs/super.c:562 [inline]
- #1: ffff888043b8c0e0 (&type->s_umount_key#49){.+.+}-{4:4}, at: super_cache_scan+0x94/0x4b0 fs/super.c:196
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 77 Comm: kswapd0 Not tainted 6.14.0-rc1-syzkaller-00028-g5c8c229261f1 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2076
- check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2208
- check_prev_add kernel/locking/lockdep.c:3163 [inline]
- check_prevs_add kernel/locking/lockdep.c:3282 [inline]
- validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
- __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
- lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
- down_write+0x99/0x220 kernel/locking/rwsem.c:1577
- nilfs_bmap_clear+0x29/0xa0 fs/nilfs2/bmap.c:305
- nilfs_clear_inode+0x147/0x2a0 fs/nilfs2/inode.c:836
- nilfs_evict_inode+0x105/0x500 fs/nilfs2/inode.c:856
- evict+0x4e8/0x9a0 fs/inode.c:796
- dispose_list fs/inode.c:845 [inline]
- prune_icache_sb+0x239/0x2f0 fs/inode.c:1033
- super_cache_scan+0x38c/0x4b0 fs/super.c:223
- do_shrink_slab+0x72d/0x1160 mm/shrinker.c:437
- shrink_slab_memcg mm/shrinker.c:550 [inline]
- shrink_slab+0x878/0x14d0 mm/shrinker.c:628
- shrink_one+0x43b/0x850 mm/vmscan.c:4868
- shrink_many mm/vmscan.c:4929 [inline]
- lru_gen_shrink_node mm/vmscan.c:5007 [inline]
- shrink_node+0x37c5/0x3e50 mm/vmscan.c:5978
- kswapd_shrink_node mm/vmscan.c:6807 [inline]
- balance_pgdat mm/vmscan.c:6999 [inline]
- kswapd+0x20f3/0x3b10 mm/vmscan.c:7264
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-
-
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/mtd/nand/raw/qcom_nandc.c    | 36 ++++++++++++++--------------
+ include/linux/mtd/nand-qpic-common.h |  6 ++++-
+ 2 files changed, 23 insertions(+), 19 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
+index 6720b547892b..5eaa0be367cd 100644
+--- a/drivers/mtd/nand/raw/qcom_nandc.c
++++ b/drivers/mtd/nand/raw/qcom_nandc.c
+@@ -165,9 +165,9 @@ static void nandc_set_read_loc_first(struct nand_chip *chip,
+ {
+ 	struct qcom_nand_controller *nandc = get_qcom_nand_controller(chip);
+ 	__le32 locreg_val;
+-	u32 val = (((cw_offset) << READ_LOCATION_OFFSET) |
+-		  ((read_size) << READ_LOCATION_SIZE) |
+-		  ((is_last_read_loc) << READ_LOCATION_LAST));
++	u32 val = FIELD_PREP(READ_LOCATION_OFFSET_MASK, cw_offset) |
++		  FIELD_PREP(READ_LOCATION_SIZE_MASK, read_size) |
++		  FIELD_PREP(READ_LOCATION_LAST_MASK, is_last_read_loc);
+ 
+ 	locreg_val = cpu_to_le32(val);
+ 
+@@ -197,9 +197,9 @@ static void nandc_set_read_loc_last(struct nand_chip *chip,
+ {
+ 	struct qcom_nand_controller *nandc = get_qcom_nand_controller(chip);
+ 	__le32 locreg_val;
+-	u32 val = (((cw_offset) << READ_LOCATION_OFFSET) |
+-		  ((read_size) << READ_LOCATION_SIZE) |
+-		  ((is_last_read_loc) << READ_LOCATION_LAST));
++	u32 val = FIELD_PREP(READ_LOCATION_OFFSET_MASK, cw_offset) |
++		  FIELD_PREP(READ_LOCATION_SIZE_MASK, read_size) |
++		  FIELD_PREP(READ_LOCATION_LAST_MASK, is_last_read_loc);
+ 
+ 	locreg_val = cpu_to_le32(val);
+ 
+@@ -271,14 +271,14 @@ static void update_rw_regs(struct qcom_nand_host *host, int num_cw, bool read, i
+ 	}
+ 
+ 	if (host->use_ecc) {
+-		cfg0 = cpu_to_le32((host->cfg0 & ~(7U << CW_PER_PAGE)) |
+-				(num_cw - 1) << CW_PER_PAGE);
++		cfg0 = cpu_to_le32((host->cfg0 & ~CW_PER_PAGE_MASK) |
++				   FIELD_PREP(CW_PER_PAGE_MASK, (num_cw - 1)));
+ 
+ 		cfg1 = cpu_to_le32(host->cfg1);
+ 		ecc_bch_cfg = cpu_to_le32(host->ecc_bch_cfg);
+ 	} else {
+-		cfg0 = cpu_to_le32((host->cfg0_raw & ~(7U << CW_PER_PAGE)) |
+-				(num_cw - 1) << CW_PER_PAGE);
++		cfg0 = cpu_to_le32((host->cfg0_raw & ~CW_PER_PAGE_MASK) |
++				   FIELD_PREP(CW_PER_PAGE_MASK, (num_cw - 1)));
+ 
+ 		cfg1 = cpu_to_le32(host->cfg1_raw);
+ 		ecc_bch_cfg = cpu_to_le32(ECC_CFG_ECC_DISABLE);
+@@ -882,12 +882,12 @@ static void qcom_nandc_codeword_fixup(struct qcom_nand_host *host, int page)
+ 			    host->bbm_size - host->cw_data;
+ 
+ 	host->cfg0 &= ~(SPARE_SIZE_BYTES_MASK | UD_SIZE_BYTES_MASK);
+-	host->cfg0 |= host->spare_bytes << SPARE_SIZE_BYTES |
+-		      host->cw_data << UD_SIZE_BYTES;
++	host->cfg0 |= FIELD_PREP(SPARE_SIZE_BYTES_MASK, host->spare_bytes) |
++		      FIELD_PREP(UD_SIZE_BYTES_MASK, host->cw_data);
+ 
+ 	host->ecc_bch_cfg &= ~ECC_NUM_DATA_BYTES_MASK;
+-	host->ecc_bch_cfg |= host->cw_data << ECC_NUM_DATA_BYTES;
+-	host->ecc_buf_cfg = (host->cw_data - 1) << NUM_STEPS;
++	host->ecc_bch_cfg |= FIELD_PREP(ECC_NUM_DATA_BYTES_MASK, host->cw_data);
++	host->ecc_buf_cfg = FIELD_PREP(NUM_STEPS_MASK, host->cw_data - 1);
+ }
+ 
+ /* implements ecc->read_page() */
+@@ -1531,7 +1531,7 @@ static int qcom_nand_attach_chip(struct nand_chip *chip)
+ 			    FIELD_PREP(ECC_PARITY_SIZE_BYTES_BCH_MASK, host->ecc_bytes_hw);
+ 
+ 	if (!nandc->props->qpic_version2)
+-		host->ecc_buf_cfg = 0x203 << NUM_STEPS;
++		host->ecc_buf_cfg = FIELD_PREP(NUM_STEPS_MASK, 0x203);
+ 
+ 	host->clrflashstatus = FS_READY_BSY_N;
+ 	host->clrreadstatus = 0xc0;
+@@ -1817,7 +1817,7 @@ static int qcom_misc_cmd_type_exec(struct nand_chip *chip, const struct nand_sub
+ 		q_op.cmd_reg |= cpu_to_le32(PAGE_ACC | LAST_PAGE);
+ 		nandc->regs->addr0 = q_op.addr1_reg;
+ 		nandc->regs->addr1 = q_op.addr2_reg;
+-		nandc->regs->cfg0 = cpu_to_le32(host->cfg0_raw & ~(7 << CW_PER_PAGE));
++		nandc->regs->cfg0 = cpu_to_le32(host->cfg0_raw & ~CW_PER_PAGE_MASK);
+ 		nandc->regs->cfg1 = cpu_to_le32(host->cfg1_raw);
+ 		instrs = 3;
+ 	} else if (q_op.cmd_reg != cpu_to_le32(OP_RESET_DEVICE)) {
+@@ -1900,8 +1900,8 @@ static int qcom_param_page_type_exec(struct nand_chip *chip,  const struct nand_
+ 	/* configure CMD1 and VLD for ONFI param probing in QPIC v1 */
+ 	if (!nandc->props->qpic_version2) {
+ 		nandc->regs->vld = cpu_to_le32((nandc->vld & ~READ_START_VLD));
+-		nandc->regs->cmd1 = cpu_to_le32((nandc->cmd1 & ~(0xFF << READ_ADDR))
+-				    | NAND_CMD_PARAM << READ_ADDR);
++		nandc->regs->cmd1 = cpu_to_le32((nandc->cmd1 & ~READ_ADDR_MASK) |
++						FIELD_PREP(READ_ADDR_MASK, NAND_CMD_PARAM));
+ 	}
+ 
+ 	nandc->regs->exec = cpu_to_le32(1);
+diff --git a/include/linux/mtd/nand-qpic-common.h b/include/linux/mtd/nand-qpic-common.h
+index 4d9b736ff8b7..35e7ee0f7809 100644
+--- a/include/linux/mtd/nand-qpic-common.h
++++ b/include/linux/mtd/nand-qpic-common.h
+@@ -108,7 +108,7 @@
+ #define	ECC_FORCE_CLK_OPEN		BIT(30)
+ 
+ /* NAND_DEV_CMD1 bits */
+-#define	READ_ADDR			0
++#define	READ_ADDR_MASK			GENMASK(7, 0)
+ 
+ /* NAND_DEV_CMD_VLD bits */
+ #define	READ_START_VLD			BIT(0)
+@@ -119,6 +119,7 @@
+ 
+ /* NAND_EBI2_ECC_BUF_CFG bits */
+ #define	NUM_STEPS			0
++#define	NUM_STEPS_MASK			GENMASK(9, 0)
+ 
+ /* NAND_ERASED_CW_DETECT_CFG bits */
+ #define	ERASED_CW_ECC_MASK		1
+@@ -139,8 +140,11 @@
+ 
+ /* NAND_READ_LOCATION_n bits */
+ #define READ_LOCATION_OFFSET		0
++#define READ_LOCATION_OFFSET_MASK	GENMASK(9, 0)
+ #define READ_LOCATION_SIZE		16
++#define READ_LOCATION_SIZE_MASK		GENMASK(25, 16)
+ #define READ_LOCATION_LAST		31
++#define READ_LOCATION_LAST_MASK		BIT(31)
+ 
+ /* Version Mask */
+ #define	NAND_VERSION_MAJOR_MASK		0xf0000000
+-- 
+2.47.1
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
