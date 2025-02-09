@@ -1,59 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5AA243375
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 01:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF45819
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 01:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739063854; cv=none; b=nU5ZKUpc/bOGXipMk/gXxln08jDhYprp4TeIjPRJ8szImVg0J2RZE/mBsoGcKrq5P8gpZNuYLspU0J3LtlLoeSLjXzHzlR4dHHRELj5U9KoH28k8y1zYKp1ToKpc0o6qoq1YDRnw3F6/R3TibgK5Wr3k/sxe5QnRuStf8DP6XwA=
+	t=1739064061; cv=none; b=BhkZPN6P1kfp94XsHcSodGaJJgWkeKy6biy5r6l6/bv1oxYUI0/hx15oPOSksoivhhy/7phwvgITOZ/7g9plrG8k1MRT2Mp8jH444YkIU2ZaV0lgmXzNKm6//zST9In84dUbei3/1Ma7DUn38TvakY3/28EQpZh1f16iLcZ2bb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739063854; c=relaxed/simple;
-	bh=sVtQbgsXxHzZTFKn+LZ5B5JP5BPeTu4wzSaeNxyuZIk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hhIwchN4MHuswpr4mjVD9bOUex1im9b90G4B8xCCBjqJPksCpGvvwoBux2Q4Qdgz8cr34mg5igtzSkj1catquDyJJW2Gmim79L2Joyavfnp0zNphh+2M3yDViIM8DECW5M+NGVHKX+5EgNqTG6IPumo7d75Fu0MKgwOy2QZ7O4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YQZJ08Vr; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739064061; c=relaxed/simple;
+	bh=0yT4kCguKthCX77sHnaX2cmW9VUop5SJXnZ6SnY+D5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=obUjm/g0FDUF73LcTYlqXfDrSmMICiL6odOgnITL6YZ2GGhD2blM8xqOjbI0MQtn6FIv/8OHb4r+z+swkj08brpTpoe6az2iciFHhUQISNNG7DTAtcgSrN+BJRq9NX2Vo0tnRMIezOHW5GbxRrC7QU8KyiNfT2PIU4R8Tkceb0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L6mWWCqA; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YQZJ08Vr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739063853; x=1770599853;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=sVtQbgsXxHzZTFKn+LZ5B5JP5BPeTu4wzSaeNxyuZIk=;
-  b=YQZJ08VrvyqtvK2RUK91Ox7IkI0FBNI15Kus061nkMm/3APGWHBWj/ju
-   VGre7re+BLr1vo8HvLR4ijR4RGNQy/IBeCtRrECPaTGF96eekaGe/X8HD
-   dPr2VK8msqmVgLoXDfvzzx2ruvDyrrwcd1YmLkb3j3vqYMioTtBSvGioH
-   zLXU3L05Yk/UokmRYaJzb5iBrr4Yjkk6Z6ewnqnwxy33LVOoxcnRpqyS+
-   6KFETdBXFyD5iS+egUK7ta3cgrI3kBKDb2059Otrvpm3H39EPlH6D3qfc
-   q+e3WksWpfCbW3ofjNpM+NTgIIaDW6DfuhYrMd0TiMTRXLSuB22i0YPln
-   g==;
-X-CSE-ConnectionGUID: J4z51v6gRWKhTplArz7BXw==
-X-CSE-MsgGUID: XH+OQ6RZTRy3s1SSPGlEmA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="49912907"
-X-IronPort-AV: E=Sophos;i="6.13,271,1732608000"; 
-   d="scan'208";a="49912907"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 17:17:33 -0800
-X-CSE-ConnectionGUID: tb9Lb4fmTQKhx+YV2n6Ikg==
-X-CSE-MsgGUID: ldnmpi+jR7OwYkPhvfbIAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,271,1732608000"; 
-   d="scan'208";a="116906562"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 08 Feb 2025 17:17:31 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tgvwu-0010si-28;
-	Sun, 09 Feb 2025 01:17:28 +0000
-Date: Sun, 9 Feb 2025 09:17:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Alex Maftei (amaftei)" <amaftei@solarflare.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: drivers/net/ethernet/sfc/ethtool_common.c:170:32: warning: '%-24s'
- directive output may be truncated writing between 24 and 31 bytes into a
- region of size between 0 and 25
-Message-ID: <202502090929.SpDqk1CS-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L6mWWCqA"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-3072f8dc069so34641731fa.3
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2025 17:20:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739064057; x=1739668857; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=L1xFKvBTExFhCQASwzsuUzGTNrXZOyD7hG5DLI836F0=;
+        b=L6mWWCqA7KbdcPfEmw0LEMd0Z8Ownx/kMHEj8c+kRsu/DpNmRVZofFGAmz7XaYWddI
+         Y1c0vg0SASuaJwyZw7LDUooA/IQpvYA3NHYycIKrLNbs8jvjgnPZpe63CNtttBGuqprj
+         c6C82bVLziz0ISfGcaCWG4mpXt+gR/V/NCddMky/TcPdiU1VsF9bHMib9jZZ3B2ngl8F
+         IqZDHiuqwzGEBFD8LPc3qz4Uu5VNJu51eu4lgfq7K8NXc/qAwxcK7bEanrOXEQIPM3MP
+         ILHhv+zVbuREvDh0QaGN2LGzOhWJAJHu0Vso/Wyfyuu6okQfvpzgXszbe9UwLJWTVOQu
+         nciA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739064057; x=1739668857;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L1xFKvBTExFhCQASwzsuUzGTNrXZOyD7hG5DLI836F0=;
+        b=l8dm7YukTyYYdsMZeX6zVpww61WCajESTchsEapi0yihAqquCK6o6HZt40ytQFxezj
+         Q1F2QiFEtwnD+sWPWg4Ql0525jvk6Z9e+/bPCR1mC6Uzv/IxpAOEcUrzKd8dCY93r8pc
+         kPYx9+5X66QuYad5wwgYovyyLN5ohmIAcg9kw4AuYNS96RgTDV66sM64GLO2CPk5HGjz
+         zVSbxFY262CqzFsLn7xXqNf+nj199ztyLEvEdgbotSvKbzvCD6+chhzHMpzYnk5H8gxr
+         2mBZ6ahbp+9lEJ0g5OSbNAvhsEUcMC4EUE3yf0MSgy6QJH9LfbZ3onCwldvYX+R2mniX
+         56vg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2CQvsCeYgByGL9tNfIyKZnmCb1pRYMhcNUrDRP5rLJ7G4hUup5yIRLaEuHGblHVFKGHcmJcIpM/A10vs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJZyYzB7Wd/VU8MgxZxN8cGdxdTLPB3B9YvvKe7nKPgl/Ar5kr
+	qOGC4p3HmV11RTJ0AkC3IVxW7QWmliJGyC4LeQfOH8pXKoIngJZk5iQtxlvDnWo=
+X-Gm-Gg: ASbGncuUgMaMQAvKi3jcwgUKHFHKE4Sj+eDpVqu8Q4Vh/MD2nerUHTjBRiNonaIciRW
+	p2WVNsQ4p2X4SZ+HL4CgNm79Ohqu/tr71dBmiQ1R7vtkM7DFLHBSIY0+vZI90NIFuTLhG9xn+ol
+	I+qp7tR5GBU6j852mJj0B08cNsEXiuDhTwhfDl+JBvxfqTBYMNIB9tJTAG8BbuxNgbWnz7clkrI
+	yW5iQNtQHTw6sH2qRJGJJf8Hn1PlqvvDz7fc1/2q9/LbTvcDnSSKDdRPMIc42xQv05UlAF57I7a
+	D9b6bIU2tIQ6aT5SSDQIqJeJeZGPGd61IPqOeHnaVYHOCTJdQxsCnRKByF3Nv/5fTPJT+y4=
+X-Google-Smtp-Source: AGHT+IEqf9njH57lPjDoguVBxyuYhVfWY6eG4RAwezPlVjJ1Ry1UmV8BlTHnLNi8bXe5ky8c13pKww==
+X-Received: by 2002:a05:651c:98a:b0:302:3e14:34c8 with SMTP id 38308e7fff4ca-307e583df86mr32501471fa.22.1739064057189;
+        Sat, 08 Feb 2025 17:20:57 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-307de2dc241sm8608341fa.97.2025.02.08.17.20.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2025 17:20:55 -0800 (PST)
+Date: Sun, 9 Feb 2025 03:20:53 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/35] drm/atomic-helper: Fix commit_tail state
+ variable name
+Message-ID: <52relusmwrcg6dmzs7yl22kbsmzjdgx2sltpelo657jx3slhz6@6bdhzrjjbq4p>
+References: <20250204-bridge-connector-v2-0-35dd6c834e08@kernel.org>
+ <20250204-bridge-connector-v2-6-35dd6c834e08@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,138 +79,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250204-bridge-connector-v2-6-35dd6c834e08@kernel.org>
 
-Hi Alex,
+On Tue, Feb 04, 2025 at 03:57:34PM +0100, Maxime Ripard wrote:
+> Even though the commit_tail () drm_atomic_state parameter is called
+> old_state, it's actually the state being committed which is confusing.
+> 
+> It's even more confusing since the atomic_commit_tail hook being called
+> by commit_tail() parameter is called state.
+> 
+> Let's rename the variable from old_state to state to make it less
+> confusing.
+> 
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+>  drivers/gpu/drm/drm_atomic_helper.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
 
-FYI, the error/warning still remains.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   9946eaf552b194bb352c2945b54ff98c8193b3f1
-commit: 3653954da498fc80c5da3642ae3f8d8168d7f820 sfc: move some ethtool code
-date:   5 years ago
-config: alpha-randconfig-p001-20211207 (https://download.01.org/0day-ci/archive/20250209/202502090929.SpDqk1CS-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250209/202502090929.SpDqk1CS-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502090929.SpDqk1CS-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/net/ethernet/sfc/ethtool_common.c:150:6: warning: no previous prototype for 'efx_fill_test' [-Wmissing-prototypes]
-     150 | void efx_fill_test(unsigned int test_index, u8 *strings, u64 *data,
-         |      ^~~~~~~~~~~~~
-   drivers/net/ethernet/sfc/ethtool_common.c:192:5: warning: no previous prototype for 'efx_fill_loopback_test' [-Wmissing-prototypes]
-     192 | int efx_fill_loopback_test(struct efx_nic *efx,
-         |     ^~~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/sfc/ethtool_common.c:296:8: warning: no previous prototype for 'efx_describe_per_queue_stats' [-Wmissing-prototypes]
-     296 | size_t efx_describe_per_queue_stats(struct efx_nic *efx, u8 *strings)
-         |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/sfc/ethtool_common.c: In function 'efx_fill_test':
->> drivers/net/ethernet/sfc/ethtool_common.c:170:32: warning: '%-24s' directive output may be truncated writing between 24 and 31 bytes into a region of size between 0 and 25 [-Wformat-truncation=]
-     170 |                          "%-6s %-24s", unit_str, test_str);
-         |                                ^~~~~             ~~~~~~~~
-   drivers/net/ethernet/sfc/ethtool_common.c:168:17: note: 'snprintf' output between 32 and 64 bytes into a destination of size 32
-     168 |                 snprintf(strings + test_index * ETH_GSTRING_LEN,
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     169 |                          ETH_GSTRING_LEN,
-         |                          ~~~~~~~~~~~~~~~~
-     170 |                          "%-6s %-24s", unit_str, test_str);
-         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +170 drivers/net/ethernet/sfc/ethtool_common.c
-
-   136	
-   137	/**
-   138	 * efx_fill_test - fill in an individual self-test entry
-   139	 * @test_index:		Index of the test
-   140	 * @strings:		Ethtool strings, or %NULL
-   141	 * @data:		Ethtool test results, or %NULL
-   142	 * @test:		Pointer to test result (used only if data != %NULL)
-   143	 * @unit_format:	Unit name format (e.g. "chan\%d")
-   144	 * @unit_id:		Unit id (e.g. 0 for "chan0")
-   145	 * @test_format:	Test name format (e.g. "loopback.\%s.tx.sent")
-   146	 * @test_id:		Test id (e.g. "PHYXS" for "loopback.PHYXS.tx_sent")
-   147	 *
-   148	 * Fill in an individual self-test entry.
-   149	 */
-   150	void efx_fill_test(unsigned int test_index, u8 *strings, u64 *data,
-   151			   int *test, const char *unit_format, int unit_id,
-   152			   const char *test_format, const char *test_id)
-   153	{
-   154		char unit_str[ETH_GSTRING_LEN], test_str[ETH_GSTRING_LEN];
-   155	
-   156		/* Fill data value, if applicable */
-   157		if (data)
-   158			data[test_index] = *test;
-   159	
-   160		/* Fill string, if applicable */
-   161		if (strings) {
-   162			if (strchr(unit_format, '%'))
-   163				snprintf(unit_str, sizeof(unit_str),
-   164					 unit_format, unit_id);
-   165			else
-   166				strcpy(unit_str, unit_format);
-   167			snprintf(test_str, sizeof(test_str), test_format, test_id);
-   168			snprintf(strings + test_index * ETH_GSTRING_LEN,
-   169				 ETH_GSTRING_LEN,
- > 170				 "%-6s %-24s", unit_str, test_str);
-   171		}
-   172	}
-   173	
-   174	#define EFX_CHANNEL_NAME(_channel) "chan%d", _channel->channel
-   175	#define EFX_TX_QUEUE_NAME(_tx_queue) "txq%d", _tx_queue->queue
-   176	#define EFX_RX_QUEUE_NAME(_rx_queue) "rxq%d", _rx_queue->queue
-   177	#define EFX_LOOPBACK_NAME(_mode, _counter)			\
-   178		"loopback.%s." _counter, STRING_TABLE_LOOKUP(_mode, efx_loopback_mode)
-   179	
-   180	/**
-   181	 * efx_fill_loopback_test - fill in a block of loopback self-test entries
-   182	 * @efx:		Efx NIC
-   183	 * @lb_tests:		Efx loopback self-test results structure
-   184	 * @mode:		Loopback test mode
-   185	 * @test_index:		Starting index of the test
-   186	 * @strings:		Ethtool strings, or %NULL
-   187	 * @data:		Ethtool test results, or %NULL
-   188	 *
-   189	 * Fill in a block of loopback self-test entries.  Return new test
-   190	 * index.
-   191	 */
- > 192	int efx_fill_loopback_test(struct efx_nic *efx,
-   193				   struct efx_loopback_self_tests *lb_tests,
-   194				   enum efx_loopback_mode mode,
-   195				   unsigned int test_index, u8 *strings, u64 *data)
-   196	{
-   197		struct efx_channel *channel =
-   198			efx_get_channel(efx, efx->tx_channel_offset);
-   199		struct efx_tx_queue *tx_queue;
-   200	
-   201		efx_for_each_channel_tx_queue(tx_queue, channel) {
-   202			efx_fill_test(test_index++, strings, data,
-   203				      &lb_tests->tx_sent[tx_queue->queue],
-   204				      EFX_TX_QUEUE_NAME(tx_queue),
-   205				      EFX_LOOPBACK_NAME(mode, "tx_sent"));
-   206			efx_fill_test(test_index++, strings, data,
-   207				      &lb_tests->tx_done[tx_queue->queue],
-   208				      EFX_TX_QUEUE_NAME(tx_queue),
-   209				      EFX_LOOPBACK_NAME(mode, "tx_done"));
-   210		}
-   211		efx_fill_test(test_index++, strings, data,
-   212			      &lb_tests->rx_good,
-   213			      "rx", 0,
-   214			      EFX_LOOPBACK_NAME(mode, "rx_good"));
-   215		efx_fill_test(test_index++, strings, data,
-   216			      &lb_tests->rx_bad,
-   217			      "rx", 0,
-   218			      EFX_LOOPBACK_NAME(mode, "rx_bad"));
-   219	
-   220		return test_index;
-   221	}
-   222	
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+With best wishes
+Dmitry
