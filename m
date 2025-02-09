@@ -1,143 +1,288 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96B91DE3A4;
-	Sun,  9 Feb 2025 12:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6DF1CDA2E
+	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 12:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739102927; cv=none; b=SjN9KDU1tbsbRJ/atQBIhlWdwe/f6hj6+iHy+RW+C4AisaaxR19e5QhaKp3SRSah+Fro3BZWepuVXkqvHOnmJRKl5efXY6K1bt68Ix01hZonYwZmX6RX0/zCoPCTK4U4iQivvzjUW82PKNoVwDZikZfTNGuO2ytupeiU5w1AF+I=
+	t=1739103045; cv=none; b=OzabCTd31z3tvX9zfji0V5DK5GEez0nrr1dCtR0BtTe3KVV5FVT26xdhearQ52GsktUhp5mX5jEFYPLL+YJ8ExBOzE37tmNU0XMA1VTtrwVP4kxevgJpynhglOsoOGcVh+Ood6FeTXmIa6yFc2a6bglDjz49NUmrVIAufbP2fSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739102927; c=relaxed/simple;
-	bh=2TP22hxOEICZNy2QAA3gw0n6NcXDvq4rtVS2k/EDs0E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dF37Gs37cAtLwUJsB/7otzLJOW4XWKCnzqRUZMd+ue1PJRvbe/uEa1v0AdjfDsjdPt93uYYk0x6JXd0ugDC6UQX9FnU86bX3iCy/j/BZ0aynAsMTb6HiQkS+Q/GyRjEUQLo+6uWbu9yBMr6d8vVXwycZHCIZid+SC4Dr31ENrR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=3F0jeXQT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PAzpwAAC; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
+	s=arc-20240116; t=1739103045; c=relaxed/simple;
+	bh=lAtOdq+WWJIuGZNQk7Xg0uOJHV3pYMgVP5DE2KKTab8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N+27pZyhgXGoUusFHbla1puBwHTCfHFuTjIdVkPXizyffhKGre+I0k598k+QSbxMXdIppFRF3vmHOCn2JSxrliaMI5WHNNmnuzVMWn4ObOFO2vkmrRXOyW+haDyVHVFA+rAcgq1GTqNG6b/kdXpP8CoBlj/5gkRuLadzGjsmiis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=R+34ZJtA; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="3F0jeXQT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PAzpwAAC"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 06E01114017D;
-	Sun,  9 Feb 2025 07:08:45 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Sun, 09 Feb 2025 07:08:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
-	 t=1739102925; x=1739189325; bh=X5aBAGrXYeGWYQPtEy5vsaWjbZj+IWqd
-	9ax7z3rWpNc=; b=3F0jeXQT9EZmcdqTszZwdlGCgfG14CQ3d4F+jgLYwd46wBFs
-	doxkeBCOWs9j5vbGm85YS9+azPJP13DA21Md0Uu2l0oIBb8f2+GDeWP18hI2bYkb
-	toMID0V9AkEcKkKgc9V/q9rOgootBrEcq/xwuFhZlXfTxswEGLGNSK5RIZaPer76
-	r7FI/uWyeczVbpPoCLJnIjIGwIyug3eM5ypix2vlHO11iD0gEWvvBvtEBt1rkv28
-	FOgCRPxz/Gg7oZqANGZzbktDt5lmu8XoRNhu00PbwT6tEl5U/IIsGy3EBgKQhc7L
-	/mL3FyUaYcP3/E4TAKPtbiJ5xcfQFofyLIylxw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1739102925; x=
-	1739189325; bh=X5aBAGrXYeGWYQPtEy5vsaWjbZj+IWqd9ax7z3rWpNc=; b=P
-	AzpwAACrBXYwadw4/8wYysB1iEcs2nqgaz4dEX7QYzrwdYSfQCekU1BWnmQaY/zv
-	BTnMMDGflCVl9lRB0jxGCQo2f7wnm1eV38cCLdqQZ7+spFWcr2U8cDq+jfP6HsAd
-	Fv7Qh1NyL81B6RaXWgANFq/+Cqa60CyTIlIxXyp6c6Sh1rqgHhHKcXYSOg+tajSG
-	TqLUnouGXsn9aAonlaAxKNu2f9lYQtq2LuD1uePGYMABxDL9m56nmHGP4j7MPT+U
-	FIcwVoDkQqB7MS03BtSeMbUsKtCxgDIG6L4DIDp6+sTTX01ERTNSPrS2HDsDO5LZ
-	ANWhRncdy9doPS5FfSzRQ==
-X-ME-Sender: <xms:zJqoZ6wZTpewWe6Fq9Rs6zY-LP3tDOf4awhTPIDRIOL1bDSqw8OVbg>
-    <xme:zJqoZ2SS17H9cmomQPEs7Nf5rcg-yZP7AbPO--VwumkUlTpq286BrA6vIZqkjSWn2
-    QqAecQsljOBa5_Yxb8>
-X-ME-Received: <xmr:zJqoZ8WE3wne-MIkb89LdCxDjsjlBsfgONPofu_0Mb9-P1myHvRR8rRoZluL4ZQDMlPSIXjifBK66jmRH4i1UWGFqjQlwbaP9zT0fRiC6vpN1KyzxqHT_q0Uz7F73ec>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefhedtlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfgggtgfesthekredtredt
-    jeenucfhrhhomhepufhvvghnucfrvghtvghruceoshhvvghnsehsvhgvnhhpvghtvghrrd
-    guvghvqeenucggtffrrghtthgvrhhnpeefvdeiffefhfeifefggefhleduueejueekjeev
-    hfffudegudduveeutdevtddtheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshhvvghnsehs
-    vhgvnhhpvghtvghrrdguvghvpdhnsggprhgtphhtthhopeduuddpmhhouggvpehsmhhtph
-    houhhtpdhrtghpthhtohepmhgrrhgtrghnsehmrghrtggrnhdrshhtpdhrtghpthhtohep
-    rghlhihsshgrsehrohhsvghniiifvghighdrihhopdhrtghpthhtoheprhhosghhsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprg
-    hsrghhiheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgr
-    rhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtth
-    hopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:zJqoZwjy84WOkRRdFd9vsjnLnvTnUE01Nn1schEF8l3guacgCyDAnA>
-    <xmx:zJqoZ8AB9X8Ib3VujFBXy6ou_Xx2FuKIp8feDDAokY0o1LfaSnUAZQ>
-    <xmx:zJqoZxLbyjjFOnGx7-BrIE-gSZNHX7-fkIa9B2_4MHxdjLLlKKpVhQ>
-    <xmx:zJqoZzAEZ3Lz0F3CGN5PnSefGHf2gwWeO3116l_5mipoStsVII1_-w>
-    <xmx:zJqoZ1LW9UNQAik2VZ7wE1jwTnKiSVNahPx2ox6HH52rgJroj_pE7fy2>
-Feedback-ID: i51094778:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 9 Feb 2025 07:08:43 -0500 (EST)
-From: Sven Peter <sven@svenpeter.dev>
-To: Hector Martin <marcan@marcan.st>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nick Chan <towinchenmi@gmail.com>
-Cc: Sven Peter <sven@svenpeter.dev>
-Subject: Re: [PATCH v7 RESEND 00/11] Add PMGR nodes for Apple A7-A11, T2 SoCs
-Date: Sun,  9 Feb 2025 13:08:25 +0100
-Message-Id: <173910236336.99422.7931682758239477812.b4-ty@svenpeter.dev>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20250203121831.36053-1-towinchenmi@gmail.com>
-References: <20250203121831.36053-1-towinchenmi@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="R+34ZJtA"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739103040;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=SIVo+p2WBKxH76RhpJyOO6etMSnG42YvlxRKnc5V7YU=;
+	b=R+34ZJtA6RvvpJPYZHEjPy9PFOyEhn7ptRfO8bZ5Nb6wO2Pk9VKni1hCJ1xIB7qzaObxW/
+	XDt8Op3nES3eQsUcVPurrceADZPhjb3z7pc3WM5dceCriQunpAxMJTUChMMNyffdRfU0Qp
+	59+tisbA8eMAkQPFcG4LLTTzgaxpirw=
+From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Devarsh Thakkar <devarsht@ti.com>,
+	Praneeth Bajjuri <praneeth@ti.com>,
+	Udit Kumar <u-kumar1@ti.com>,
+	Jayesh Choudhary <j-choudhary@ti.com>,
+	DRI Development List <dri-devel@lists.freedesktop.org>,
+	Linux Kernel List <linux-kernel@vger.kernel.org>,
+	Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Subject: [PATCH v9 00/13]drm/bridge: cdns-dsi: Fix the color-shift issue
+Date: Sun,  9 Feb 2025 17:40:19 +0530
+Message-Id: <20250209121032.32655-1-aradhya.bhatia@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+
+Hello all,
+
+This series provides some crucial fixes and improvements for the Cadence's DSI
+TX (cdns-dsi) controller found commonly in Texas Instruments' J7 family of SoCs,
+as well as in Sitara AM62P and AM62L SoCs.
+
+Along with that, this series aims to fix the color-shift issue that has been
+going on with the DSI controller. This controller requires to be enabled before
+the previous entity enables its stream[0]. It's a strict requirement which, if
+not followed, causes the colors to "shift" on the display. The fix happens in
+2 steps.
+
+    1. The bridge pre_enable calls have been shifted before the crtc_enable and
+       the bridge post_disable calls have been shifted after the crtc_disable.
+       This has been done as per the definition of bridge pre_enable.
+
+       "The display pipe (i.e. clocks and timing signals) feeding this bridge
+       will not yet be running when this callback is called".
+
+       Since CRTC is also a source feeding the bridge, it should not be enabled
+       before the bridges in the pipeline are pre_enabled.
+
+       The sequence of enable after this patch will look like:
+
+	        bridge[n]_pre_enable
+	        ...
+	        bridge[1]_pre_enable
+
+	        crtc_enable
+	        encoder_enable
+
+	        bridge[1]_enable
+	        ...
+	        bridge[n]_enable
+
+       and vice-versa for the bridge chain disable sequence.
 
 
-On Mon, 03 Feb 2025 20:15:44 +0800, Nick Chan wrote:
-> This series adds the PMGR nodes and all known power state subnodes for
-> Apple A7-A11, T2 SoCs, along with the associated dt-bindings.
-> 
-> Dependencies:
-> - Split s8000/s8003 SoC DTS files
-> https://lore.kernel.org/asahi/20250203113949.14760-1-towinchenmi@gmail.com/T
-> 
-> [...]
+    2. The cdns-dsi enable / disable sequences have now been moved to pre_enable
+       and post_disable sequences. This is the only way to have cdns-dsi drivers
+       be up and ready before the previous entity is enables its streaming.
 
-Applied, thanks!
+The DSI also spec requires the Clock and Data Lanes be ready before the DSI TX
+enables its stream[0]. A patch has been added to make the code wait for that to
+happen. Going ahead with further DSI (and DSS configuration), while the lanes
+are not ready, has been found to be another reason for shift in colors.
 
-[01/11] dt-bindings: arm: apple: apple,pmgr: Add A7-A11, T2 compatibles
-        commit: 7fe03f8ff55d33fe6398637f78a8620dd2a78b38
-[02/11] dt-bindings: arm: apple: apple,pmgr-pwrstate: Add A7-A11, T2 compatibles
-        commit: 20f47443dba233a18b78abc844d588da5d014c78
-[03/11] arm64: dts: apple: s5l8960x: Add PMGR node
-        commit: 9c4c4274a38f005ace99b6eb3a2d5479dc4b2bf9
-[04/11] arm64: dts: apple: t7000: Add PMGR node
-        commit: e128cbf424ad1faa270d49f57b46ca8060fcc8bb
-[05/11] arm64: dts: apple: t7001: Add PMGR node
-        commit: 4cac0e58c9649d27a4263d9bbaaaaaff6fa3f014
-[06/11] arm64: dts: apple: s800-0-3: Add PMGR nodes
-        commit: bd89a1ba301a06d0e9ba9ebc6a3a739846744334
-[07/11] arm64: dts: apple: s8001: Add PMGR nodes
-        commit: 1925d31880e6f6f99288168cb663cc72f06d9bb3
-[08/11] arm64: dts: apple: t8010: Add PMGR nodes
-        commit: 5152d41a6eb80a368bd65070239e171ec5e174b6
-[09/11] arm64: dts: apple: t8011: Add PMGR nodes
-        commit: c6dfa348fd7a5d3ae5d96e2a68d4a760698f61cf
-[10/11] arm64: dts: apple: t8012: Add PMGR nodes
-        commit: 576df27a7605073cb361a978bbf28da21245dd82
-[11/11] arm64: dts: apple: t8015: Add PMGR nodes
-        commit: 68795d7ab0a259dd38bcc6aea14e75cc55ad0bdc
+These patches have been tested with J721E based BeagleboneAI64 along with a
+RaspberryPi 7" DSI panel. The extra patches can be found in the
+"next_dsi-v9_2-tests" branch[1] of my github fork if anyone would like to test
+them.
 
-Best regards,
+Thanks,
+Aradhya
+
+
+* Important note about the authorship of patches *
+
+All but one of the patches have been authored when I owned a "ti.com" based
+email id, i.e. <a-bhatia1@ti.com>. This email id is not in use anymore, and all
+the work done later has been part of my personal work. Since the original
+patches were authored using TI's email id, I have maintained the original
+authorships as they are, as well as their sign offs.
+
+I have further added another sign off that uses my current (and personal) email
+id, the one that is being used to send this revision, i.e.
+<aradhya.bhatia@linux.dev>.
+
+
+* Note on checkpatch warnings in patch 11/13 *
+Patch 11/13 caueses the checkpatch to flare up for 1 warning, and 1 check -
+
+WARNING: line length of 101 exceeds 100 columns
+#63: FILE: drivers/gpu/drm/drm_atomic_helper.c:1252:
+
+CHECK: Lines should not end with a '('
+#77: FILE: drivers/gpu/drm/drm_atomic_helper.c:1266:
+
+This patch is largely duplicating the original code, with minor differences to
+perform different operations. Both these lines of code pre-exist in the file and
+have simply been duplicated. I have decided to keep them as is to maintain the
+uniformity and the originaly intended readability. Should perhaps a fix be
+required, this patch/series is not the right place, and another patch can be
+created to fix this across the whole file.
+
+
+[0]: Section 12.6.5.7.3: "Start-up Procedure" [For DSI TX controller]
+     in TDA4VM Technical Reference Manual https://www.ti.com/lit/zip/spruil1
+
+[1]: https://github.com/aradhya07/linux-ab/tree/next_dsi-v9_2-tests
+
+
+Change Log:
+  - Changes in v9:
+    - Fix the oops in 11/13 - where the encoder_bridge_enable _was_ pre_enabling
+      the bridges instead of enabling.
+    - Add the following tags:
+      - Dmitry Baryshkov's R-b in patches 2, 10, 11, and A-b in patch 12.
+      - Jayesh Choudhary's R-b in patch 12.
+      - Tomi Valkeinen's R-b in patches 2, 10, 11, 12.
+
+  - Changes in v8:
+    - Move the phy de-initialization to bridge post_disable() instead of bridge
+      disable() in patch-3.
+    - Copy the private bridge state (dsi_cfg), in addition to the bridge_state,
+      in patch-9.
+    - Split patch v7:11/12 into three patches, v8:{10,11,12}/13, to separate out
+      different refactorings into different patches, and improve bisectability.
+    - Move patch v7:02/12 down to v8:06/12, to keep the initial patches for
+      fixes only.
+    - Drop patch v7:04/12 as it doesn't become relevant until patch v7:12/12.
+    - Add R-b tags of Dmitry Baryshkov in patch-9 and patch-3, and of
+      Tomi Valkeinen in patch-9.
+   
+  - Changes in v7:
+    - phy_init()/exit() were called from the PM path in v6. Change it back to
+      the bridge enable/disable path in patch-3, so that the phy_init() can go
+      back to being called after D-Phy reset assert.
+    - Reword commit text in patch-5 to explain the need of the fix.
+    - Drop the stray code in patch-10.
+    - Add R-b tag of Dmitry Baryshkov in patch-6.
+
+  - Changes in v6:
+    - Reword patch 3 to better explain the fixes around phy de-init.
+    - Fix the Lane ready timeout condition in patch 7.
+    - Fix the dsi _bridge_atomic_check() implementation by adding a new
+      bridge state structure in patch 10.
+    - Rework and combine patches v5:11/13 and v5:12/13 to v6:11/12.
+    - Generate the patches of these series using the "patience" algorithm.
+      Note: All patches, except v6:11/12, *do not* differ from their default
+      (greedy) algorithm variants.
+      For patch 11, the patience algorithm significantly improves the readability.
+    - Rename and move the Bridge enable/disable enums from public to private
+      in patch 11.
+    - Add R-b tags of Tomi Valkeinen in patch 6, and Dmitry Baryshkov in patch 2.
+
+  - Changes in v5:
+    - Fix subject and description in patch 1/13.
+    - Add patch to check the return value of
+      phy_mipi_dphy_get_default_config() (patch: 6/13).
+    - Change the Clk and Data Lane ready timeout from forever to 5s.
+    - Print an error instead of calling WARN_ON_ONCE in patch 7/13.
+    - Drop patch v4-07/11: "drm/bridge: cdns-dsi: Reset the DCS write FIFO".
+      There has been some inconsistencies found with this patch upon further
+      testing. This patch was being used to enable a DSI panel based on ILITEK
+      ILI9881C bridge. This will be debugged separately.
+    - Add patch to move the DSI mode check from _atomic_enable() to
+      _atomic_check() (patch: 10/13).
+    - Split patch v4-10/11 into 2 patches - 11/13 and 12/13.
+      Patch 11/13 separates out the Encoder-Bridge operations into a helper
+      function *without* changing the logic. Patch 12/13 then changes the order
+      of the encoder-bridge operations as was intended in the original patch.
+    - Add detailed comment for patch 13/13.
+    - Add Tomi Valkeinen's R-b in patches 1, 2, 4, 5, 7, 8, 9, 13.
+
+  - Changes in v4:
+    - Add new patch, "drm/bridge: cdns-dsi: Move to devm_drm_of_get_bridge()",
+      to update to an auto-managed way of finding next bridge in the chain.
+    - Drop patch "drm/bridge: cdns-dsi: Fix the phy_initialized variable" and
+      add "drm/bridge: cdns-dsi: Fix Phy _init() and _exit()" that properly
+      de-initializes the Phy and maintains the initialization state.
+    - Reword patch "drm/bridge: cdns-dsi: Reset the DCS write FIFO" to explain
+      the HW concerns better.
+    - Add R-b tag from Dmitry Baryshkov for patches 1/11 and 8/11.
+
+  - Changes in v3:
+    - Reword the commit message for patch "drm/bridge: cdns-dsi: Fix OF node
+      pointer".
+    - Add a new helper API to figure out DSI host input pixel format
+      in patch "drm/mipi-dsi: Add helper to find input format".
+    - Use a common function for bridge pre-enable and enable, and bridge disable
+      and post-disable, to avoid code duplication.
+    - Add T-b tag from Dominik Haller in patch 5/10. (Missed to add it in v2).
+    - Add R-b tag from Dmitry Baryshkov for patch 8/10.
+
+  - Changes in v2:
+    - Drop patch "drm/tidss: Add CRTC mode_fixup"
+    - Split patch "drm/bridge: cdns-dsi: Fix minor bugs" into 4 separate ones
+    - Drop support for early_enable/late_disable APIs and instead re-order the
+      pre_enable / post_disable APIs to be called before / after crtc_enable /
+      crtc_disable.
+    - Drop support for early_enable/late_disable in cdns-dsi and use
+      pre_enable/post_disable APIs instead to do bridge enable/disable.
+
+
+Previous versions:
+
+v1: https://lore.kernel.org/all/20240511153051.1355825-1-a-bhatia1@ti.com/
+v2: https://lore.kernel.org/all/20240530093621.1925863-1-a-bhatia1@ti.com/
+v3: https://lore.kernel.org/all/20240617105311.1587489-1-a-bhatia1@ti.com/
+v4: https://lore.kernel.org/all/20240622110929.3115714-1-a-bhatia1@ti.com/
+v5: https://lore.kernel.org/all/20241019195411.266860-1-aradhya.bhatia@linux.dev/
+v6: https://lore.kernel.org/all/20250111192738.308889-1-aradhya.bhatia@linux.dev/
+v7: https://lore.kernel.org/all/20250114055626.18816-1-aradhya.bhatia@linux.dev/
+v8: https://lore.kernel.org/all/20250126191551.741957-1-aradhya.bhatia@linux.dev/
+
+Aradhya Bhatia (13):
+  drm/bridge: cdns-dsi: Fix connecting to next bridge
+  drm/bridge: cdns-dsi: Fix phy de-init and flag it so
+  drm/bridge: cdns-dsi: Fix the clock variable for mode_valid()
+  drm/bridge: cdns-dsi: Check return value when getting default PHY
+    config
+  drm/bridge: cdns-dsi: Wait for Clk and Data Lanes to be ready
+  drm/bridge: cdns-dsi: Move to devm_drm_of_get_bridge()
+  drm/mipi-dsi: Add helper to find input format
+  drm/bridge: cdns-dsi: Support atomic bridge APIs
+  drm/bridge: cdns-dsi: Move DSI mode check to _atomic_check()
+  drm/atomic-helper: Refactor crtc & encoder-bridge op loops into
+    separate functions
+  drm/atomic-helper: Separate out bridge pre_enable/post_disable from
+    enable/disable
+  drm/atomic-helper: Re-order bridge chain pre-enable and post-disable
+  drm/bridge: cdns-dsi: Use pre_enable/post_disable to enable/disable
+
+ .../gpu/drm/bridge/cadence/cdns-dsi-core.c    | 225 ++++++++++++++----
+ .../gpu/drm/bridge/cadence/cdns-dsi-core.h    |   2 -
+ drivers/gpu/drm/drm_atomic_helper.c           | 160 +++++++++++--
+ drivers/gpu/drm/drm_mipi_dsi.c                |  37 +++
+ include/drm/drm_mipi_dsi.h                    |   1 +
+ 5 files changed, 349 insertions(+), 76 deletions(-)
+
+
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
 -- 
-Sven Peter <sven@svenpeter.dev>
+2.34.1
+
