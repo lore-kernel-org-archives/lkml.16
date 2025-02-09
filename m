@@ -1,134 +1,94 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82396241C89
-	for <linux-kernel@vger.kernel.org>; Sun,  9 Feb 2025 23:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC76413213E;
+	Sun,  9 Feb 2025 23:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739144524; cv=none; b=APCcj7Xy4Sm0RUXGnJkkDAPu36zHBbEMGn164Xi43XYgADrL8dE2Vbh/F+yoAUmtSvyP7HWKle88Y0P9v0vK/ueXRjyZWokN2hkZSBLgJvohyKjCIl0RQipsCME/2wpsyjCBV6ZSIRVXxZsV5wg9dheb6RSksbK5hS7nHiPuoZM=
+	t=1739144637; cv=none; b=D7JHRh4O1N0+RsaUMBzAfoXMXPDJHHQrI1izJFkBf6i/22roIjTdK+yH7xt8Iw90YHiw1wOEaannuW+WsAFgWJTCIT5TNU+0oG3P3h4c6ES6rXW2BvEIeTw5BjCjnofao/lZFqPBXuB3V/tkQ5VGjpd93b2dsb68sAJoT6Aacy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739144524; c=relaxed/simple;
-	bh=rQPvUG/o2rTnO0CHjoBObshc5YBL9GZpqX7CFdJ8An0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZH/xFJCY9gr4xhfp9E9Y7WvYivRPvynT4AtKpbTXyVW0mFvs0Ytisv4//HfITv0Fayf766MUsopimOLpLvFcRn/wjPSG7Pcvn/OgH9+6eOQLurB2Jy3ddhMta2ixv+jPl7x161YVxXyU1qmQKYec6LnjLKCI/L4N4/7KZKL69vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zIEG+E8b; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1739144637; c=relaxed/simple;
+	bh=noCtb+T/OhhYSXkE4cDzdfX7moejIlYhBJ7IM96/zpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Df+qEh1B4hK02VKXhb5i+m68t+5IZXrBeDIStSLlK7Li1fLwv2+AkSH7f4uv6B07bEy5+K63pKPlcnRopcwNByCWcVXN9mVfFjqeGOTWkGTaXkqgOPPVGDOZSUdXxl6X3/ofPt1X6LVBuBMis/0rZVHhkKstwHA0/P5gmD2QAr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=YgdoGZ2K; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zIEG+E8b"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f72fac367so98715ad.0
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2025 15:42:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739144523; x=1739749323; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8r8GqE7AcCzw/ZhoiEBDX6FoohFVz6Qw8VfxhrWWFOM=;
-        b=zIEG+E8bEF+bBarWVfDVOeq/DEHOmfg5+zUKXlafarCXGV4Asg4F2jOykJBZ/Emajf
-         myWRkMTWdf6jb1+LOO4rfXuuU4SR8hxMBSYICJnftsRASqd1z1ZkuEBd9JpqLt7zXk7Y
-         jd1yxfdo6BPT/bYM/zpu4GCyoYUpjoLZlSYqnTHOh8d40rutX1WTZytI10PLAANU+FEx
-         zjA1+3V8I9yPcf85pUSdVBEE7ZJjZQobSPckSL7/02XMfOtU3kt86Sy3Ev0EpB4Kviys
-         D6so5t6HVGZPL6KmoZypjozGXNo99fhLb/jInvwbe6pbD93C/Q74Lg5Jj0U8o+Qm+mR3
-         uUgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739144523; x=1739749323;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8r8GqE7AcCzw/ZhoiEBDX6FoohFVz6Qw8VfxhrWWFOM=;
-        b=rC/us/iuHJrVddO7yYnbjBkVRa7YZShCOGx2oHdEoejXUm2DMR0x2KBL2oruSEOKOX
-         yfnNtHd6hiEyBYqUHOiAZh4dtm1GGTr53S+Iwb1goEw95FlMN9EHNUoAePxWYiQ1Ze9Q
-         VFN2/Weq8NGwAmQTfbeFCofyz/eWYhXA4VTiv4qI5kdGMx0kYQDE/jAfcK5MFqSPkv86
-         ngeC5OhGloY98Sy/tUtPuL6ik4GkB7oUpWRs6e3z/v/9IaNTvie6W/izo31TmnTc53/Z
-         4srbZZioI5+5YHyHrDTxQNnvc1AoiDg1YS0Io6Poy0amnDlvWSWaVjC33F2hC0HlQBnr
-         Uevw==
-X-Forwarded-Encrypted: i=1; AJvYcCV62B2zi7stW0quPWuNkcAX5Aso+lWMAPiFExFtlyXfzxiiqynxe9Zw3n8DWVXgeXLVO/rznysluVXpzpA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/w6THLjuOPe7R0UFlY1EiBL8pbswR8kJtFTsMyfZ49zDGp/Q6
-	w1x7xwMzgRsa7OWGhUBUzy79sJ3GrJ+OFKU7f1xhD5juzXKhiog/6cQOIgtVwQ==
-X-Gm-Gg: ASbGnctNKmtxjL2G+3zYS5dXGcSO9v4ZR10fZqS5yML2tjeO5uzvlgCP8/QXU0wTkIY
-	hYezBMR8QzPICFCZDFf1JhT4su6gNxOFgwXoY7/ggsZeXWUYojZ25TRPNUYjSq9rWt10g2kBIc2
-	afVFRAgMrDHVuQIO7lw0DRVuj59j/XZMUvf934ad7t6PzWMW3KqnKhhPIA7CRYa96vcN+tTpDOO
-	J+bzrSoAXSHwHdiEnmDHc9WNb1dma0XKSJXlAWr3XruWaVDuZxQX8rnpMLF2OSvv4kfysR18iM7
-	0CX9W2ki12WNHsVqnptpDalAln8j9V4oeVz/JYAKenRNQbgS3oS73A==
-X-Google-Smtp-Source: AGHT+IGWHtUanwi++EymoxyoPMciInVawa1/VM+FGRotgFZ32k+cNoaAFIfQ4hVKBEquC6xHERYLiQ==
-X-Received: by 2002:a17:903:2406:b0:21f:2ded:bfc5 with SMTP id d9443c01a7336-21f69e53a84mr2650125ad.28.1739144522571;
-        Sun, 09 Feb 2025 15:42:02 -0800 (PST)
-Received: from google.com (147.141.16.34.bc.googleusercontent.com. [34.16.141.147])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51af64c1dsm6573311a12.52.2025.02.09.15.42.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2025 15:42:02 -0800 (PST)
-Date: Sun, 9 Feb 2025 23:41:56 +0000
-From: Peilin Ye <yepeilin@google.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: bpf <bpf@vger.kernel.org>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	bpf@ietf.org, Xu Kuohai <xukuohai@huaweicloud.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	David Vernet <void@manifault.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Quentin Monnet <qmo@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	Yingchi Long <longyingchi24s@ict.ac.cn>,
-	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>,
-	Neel Natu <neelnatu@google.com>,
-	Benjamin Segall <bsegall@google.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next v2 4/9] bpf: Introduce load-acquire and
- store-release instructions
-Message-ID: <Z6k9RELOQxp67rIn@google.com>
-References: <cover.1738888641.git.yepeilin@google.com>
- <d03d8c3305e311c6cb29924119b5eecae8370bbc.1738888641.git.yepeilin@google.com>
- <CAADnVQ+L0h8qXfYkC3+ORyQkXFJ2MgO8FDHr_Ha0QMAtS_ujag@mail.gmail.com>
- <Z6gRHDLfA7cjnlSn@google.com>
- <CAADnVQLkHA9LGv99k2TZOJEGUU=dw=q6nVurJ=aoh0v6cFS6zQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YgdoGZ2K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1739144628;
+	bh=S+k5j9aCreUGV8EOrFnBqZ50BADkyroJy1yvGRzjlKE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=YgdoGZ2KnV6XDkqisyFNLwuL+qktKNoWZuOEJGHEUBQ80T11J94C/7S6XlseA3Skr
+	 V8R3ELugq0RhSxG5gfdrZZwLKn1G8PFObuGrT3yRa4OZLmzTrsQpDmbW3KfuqPxe+4
+	 TMg2jURd7we7F6X51O/Z/VsOWh61qgQXxyXy9hbWTaoAP4oO+bR91kpfwbBzmyr/AY
+	 3vd1G3HsGdIY1EVx0ho0MPLOPuBogDzQtWItWnmrbEePj71jkzx482LsN3BhCvChYY
+	 otO9haMBZCqz4H8OaBRHMyO2Vf/yMcLeMSRjubF8iw35kCRuJb7gFXjNDAi/EDD2Ej
+	 l1zJ3HQIC9eEQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Yrkn005bKz4wcm;
+	Mon, 10 Feb 2025 10:43:47 +1100 (AEDT)
+Date: Mon, 10 Feb 2025 10:43:47 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires
+ <benjamin.tissoires@redhat.com>
+Cc: Jiri Kosina <jkosina@suse.com>, Kate Hsuan <hpa@redhat.com>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the hid tree
+Message-ID: <20250210104347.3d291afb@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAADnVQLkHA9LGv99k2TZOJEGUU=dw=q6nVurJ=aoh0v6cFS6zQ@mail.gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/fPr_iMSqNX_5+qDOiuYDeXk";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Sat, Feb 08, 2025 at 07:46:54PM -0800, Alexei Starovoitov wrote:
-> > > These values might imply that bpf infra is supposed to map all the values
-> > > to cpu instructions, but that's not what we're doing here.
-> > > We're only dealing with two specific instructions.
-> > > We're not defining a memory model for all future new instructions.
-> >
-> > Got it!  In v3, I'll change it back to:
-> >
-> >   #define BPF_LOAD_ACQ   0x10
-> >   #define BPF_STORE_REL  0x20
-> 
-> why not 1 and 2 ?
-> All other bits are reserved and the verifier will make sure they're zero,
-> so when/if we need to extend it then it wouldn't matter whether
-> lower 4 bits are reserved or other bits.
-> Say, we decide to support cmpwait_relaxed as a new insn.
-> It can take the value 3 and arm64 JIT will map it to ldxr+wfe+...
-> 
-> Then with this new load_acq and cmpwait_relaxed we can efficiently
-> implement both smp_cond_load_relaxed and smp_cond_load_acquire.
+--Sig_/fPr_iMSqNX_5+qDOiuYDeXk
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ah, I see.  When you suggested "LOAD_ACQ=1 and STORE_REL=2" earlier, I
-didn't realize you meant 1 and 2 in imm<0-3>.
+Hi all,
 
-Thanks,
-Peilin Ye
+After merging the hid tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
 
+ERROR: modpost: "led_mc_calc_color_components" [drivers/hid/hid-lg-g15.ko] =
+undefined!
+ERROR: modpost: "devm_led_classdev_multicolor_register_ext" [drivers/hid/hi=
+d-lg-g15.ko] undefined!
+
+Caused by commit
+
+  a3a064146c50 ("HID: hid-lg-g15: Use standard multicolor LED API")
+
+# CONFIG_LEDS_CLASS_MULTICOLOR is not set
+
+I have used the hid tree from next-20250207 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/fPr_iMSqNX_5+qDOiuYDeXk
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmepPbMACgkQAVBC80lX
+0GynFAf/aldM/WEc17NZM6A7MSWUEzRRcAyCobbbfDT5LQN8S4V6s7zItEQJHXLy
+ngDCLC2jgXlVaHhZo9DI3u44UjGOAzWj/gI2VwFR0A0EP9RBNj3+9HKEMXSWOIb1
++1SXnAc3V75inv+28G+ZKcVn9FBPai3Cl7y0gxSxFN2h2Di+T+EpFZHme4NaDPx1
+2sgM+qRAj55WuQRCVW7HxX3MkfbPtNerI4p4P/QDdH2xGX+Od9op9xkPipyCcOR3
+8cPzFcJ2MabFMhhP62GTyQGk8aGfaCqYEfnov7FchuhPw0xLm6JR70HXUGZ1MpRm
+4zwcv8VCAFa8MGRfxl+U2o8Fk/tfsg==
+=mkZV
+-----END PGP SIGNATURE-----
+
+--Sig_/fPr_iMSqNX_5+qDOiuYDeXk--
