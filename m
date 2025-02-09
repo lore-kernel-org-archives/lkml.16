@@ -1,333 +1,195 @@
-Received: from freeshell.de (freeshell.de [116.202.128.144])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2078.outbound.protection.outlook.com [40.107.212.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EF61EE7D2;
-	Sun,  9 Feb 2025 23:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.128.144
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739144044; cv=none; b=kKSsUIzJbjpb969wfTIt5SDmw3tcZV2mRQREqnGzIrG328nk44g1WGirMxdrfpajX3L6Snmkwc8ADRp1kKtMr7DHI/zSYNUR9nvNPuxiUNwvoTA6sb5o3oxuXS3oVqFFTq1qm/ESpe/kBFF/roEIk+C/43BGPR7InyUxUvBHeRI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739144044; c=relaxed/simple;
-	bh=+piqG18DawjLNIakce6Qj6c5L7teq/4f6yLP4+/quUs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ihBs/3ITW5LzUlV2JGcmW2+MeNpPJFXgqLLm/usBSDERJz7zPnssQVF/6rhPg9e5uUxVKblHIvgLAmfMuJo1n9RJgzXTJS8EuZNKzcX68ameSSTuXu+dTbetDhQxuueIGn9E9nV/1UON5jV35EmWp8sGtqjAs358qlCTMIvrweM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de; spf=pass smtp.mailfrom=freeshell.de; arc=none smtp.client-ip=116.202.128.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freeshell.de
-Received: from [192.168.2.35] (unknown [98.97.27.21])
-	(Authenticated sender: e)
-	by freeshell.de (Postfix) with ESMTPSA id 13AD3B4C054A;
-	Mon, 10 Feb 2025 00:33:48 +0100 (CET)
-Message-ID: <b2d579e8-3535-4d7b-b0c1-8fab5fbd937f@freeshell.de>
-Date: Sun, 9 Feb 2025 15:33:47 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E6614B08A;
+	Sun,  9 Feb 2025 23:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739144147; cv=fail; b=pRkcUgZEpNnupDfXyPVNcqGAyMK6568fVuDeenFt0I4/OP51xyotHorfQVvFJM1BSDaae2S7+SY7NvvlBdujIZs98eAyxlKuGrt1sgv6458R7sHioi3esveIwiac9XufsGD4I1dYQwGMRySycHSOjFNvwNqaD+0oQgsjm4Oy1Qk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739144147; c=relaxed/simple;
+	bh=c2fEmCjUA0TQPxvPEKs8KpvEfEdQRuw19IXDXnu0+AI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=IOFcYlwSmQq/wL5vVcNlubxIu+GYypNj473aymLE2Wen5zCKGHFT56KWJt8GOfCIgZoBQk2hOz7fvxbP3JJG49pPg4kPp6kanb6vwZ0dFCYonkMnrDObADb0wXGnoiMyyZKpcR3rZuXFAifUtQsYwpXxg3b9uoCiY+cgmbkylQU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=AWbcZzF9; arc=fail smtp.client-ip=40.107.212.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="AWbcZzF9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ydslxx6D0K7oIvicwlFr/zMkf6MVV+c9jy5M8S/Ji8b2ynoGNHrPM+QY03Mzp3WtGdZ+b3SiCFxLV2g3GligS3pDQw2s+cPzIPm4cKNUEBmm+Qvy+AApEVNQkvR7BV6JPnxAeKX78sEBROleChasESFx7BVevtnikx4Q+siYVdqh3mPG/luvkPTE8cGfYC+x1d/xZozDscJArHbPVfx7mn8aJJNwKSng7m94rfZboTDadYwHt0PGqCc8AHY3gdpIGBNXOvuzPf9Kd9pmNHzyWC8jN9GADFZaLsBQTGDuUpsIJBTkId667KElh+m0xRqI4udCfksLJG33kjVBdjzuvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RQTkoXlLWvzGTmDQMcZPGJnDbOoTMlLaKU7mfTe5CYA=;
+ b=Vvr5jtcvz2N+x6cv1iqwdYgWilnOlNJhSnzcIBi4hXWp9eDBA056c6gaZuiEOq5b5HTUr2nuDjsg1wQRFuTTJ9pYchtQVFEQQ33FcetHpeScD2qiW0lfJCDSpoNQgnDzJE7mJ79i7PA24BMymhZC6lp48jWgqatijjsuc89Yuu/UjbZJgHDX+BhQUflOSP/LmiI/2K6Epv+fA3RcprstaPR3kRpIn8RJPO7Hw4YOlKpKMmeA1G7S1BA442O60B234E1cUFygskZRQftgpOvSLii5ZiKC2Y7DcDoTNZvl2iUGpffTYNco+qKVLps7Oma9fZNhm8j9DLTNv3ObpLchdw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RQTkoXlLWvzGTmDQMcZPGJnDbOoTMlLaKU7mfTe5CYA=;
+ b=AWbcZzF9lK4hXXH7H35X38/z6nRfUTlOlz2TOwfKW8HtvHf1ENIZToST4lI6Z4YjbbqHawe4hIexZJ63WiSvgf8ZGW1SGNU7jCZlpnZYtslqNwX4EWi8wHtyLE6nPYkWSmIrj3YD5gqnXnVvaV2hcrLmjHOvXVGFwdrScXPKytZ3v8ahedvLyrAbr9lZ9hbM5QYHec9XuVU8m9/kINRmT4tQVYvgNMjvtEgpToLZldNxnmkxARPdw4yyhjjy6Q3QfnOKT7hCklkslHGsR2b8RD4CqOHV/GPDMMTYdANMO1ZYzaYZ0ThEIAoL7TG6Pua/2+p4QFqncfqVQct8rQzkxQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ DS0PR12MB6464.namprd12.prod.outlook.com (2603:10b6:8:c4::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8422.15; Sun, 9 Feb 2025 23:35:42 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::953f:2f80:90c5:67fe%7]) with mapi id 15.20.8422.015; Sun, 9 Feb 2025
+ 23:35:40 +0000
+Date: Mon, 10 Feb 2025 10:35:35 +1100
+From: Alistair Popple <apopple@nvidia.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
+	alison.schofield@intel.com, lina@asahilina.net, zhang.lyra@gmail.com, 
+	gerald.schaefer@linux.ibm.com, vishal.l.verma@intel.com, dave.jiang@intel.com, 
+	logang@deltatee.com, bhelgaas@google.com, jack@suse.cz, jgg@ziepe.ca, 
+	catalin.marinas@arm.com, will@kernel.org, mpe@ellerman.id.au, npiggin@gmail.com, 
+	dave.hansen@linux.intel.com, ira.weiny@intel.com, willy@infradead.org, djwong@kernel.org, 
+	tytso@mit.edu, linmiaohe@huawei.com, david@redhat.com, peterx@redhat.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de, david@fromorbit.com, 
+	chenhuacai@kernel.org, kernel@xen0n.name, loongarch@lists.linux.dev
+Subject: Re: [PATCH v6 21/26] fs/dax: Properly refcount fs dax pages
+Message-ID: <y2uilkilpl4k5snzxntt4x62z4d3mumxqyog3gy3zrey3jewuz@x3ftslqihoil>
+References: <cover.11189864684e31260d1408779fac9db80122047b.1736488799.git-series.apopple@nvidia.com>
+ <b2175bb80d5be44032da2e2944403d97b48e2985.1736488799.git-series.apopple@nvidia.com>
+ <6785db6bdd17d_20fa294fc@dwillia2-xfh.jf.intel.com.notmuch>
+ <zbvq7pr2v7zkaghxda2d3bnyt64kicyxuwart6jt5cbtm7a2tr@nkursuyanyoe>
+ <67a59f0f7832c_2d1e294fa@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67a59f0f7832c_2d1e294fa@dwillia2-xfh.jf.intel.com.notmuch>
+X-ClientProxiedBy: SYBPR01CA0205.ausprd01.prod.outlook.com
+ (2603:10c6:10:16::25) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] riscv: dts: starfive: jh7110-common: replace
- syscrg clock assignments
-To: Hal Feng <hal.feng@linux.starfivetech.com>,
- Emil Renner Berthing <emil.renner.berthing@canonical.com>,
- Conor Dooley <conor@kernel.org>, Emil Renner Berthing <kernel@esmil.dk>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org, Hal Feng <hal.feng@starfivetech.com>
-References: <20250203013730.269558-1-e@freeshell.de>
- <20250203013730.269558-2-e@freeshell.de>
- <CAJM55Z-M9MsJAtPi-t=_tNV3oG_kdDiS6H=H3koJwTEwB8GJ-Q@mail.gmail.com>
- <981a3f30-c646-423a-a2dd-e19fef5c69e5@freeshell.de>
- <05B9953079BA21AF+fffef577-a880-4ed6-a71b-14ec82aeea97@linux.starfivetech.com>
-Content-Language: en-US
-From: E Shattow <e@freeshell.de>
-In-Reply-To: <05B9953079BA21AF+fffef577-a880-4ed6-a71b-14ec82aeea97@linux.starfivetech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|DS0PR12MB6464:EE_
+X-MS-Office365-Filtering-Correlation-Id: 653b3e5d-9b6f-45b4-b85f-08dd49627681
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?/RdVMZG+bmXjNksHgrBHcdy738bNYHywwjd9mPQl8n4TgFMgbvlusl8SWN/v?=
+ =?us-ascii?Q?Ga0tJc0TBHksquIiF+Bt6tyZxvHnN+HQoy/DCMVF7/bJI/JY+/R/sjqh/wdr?=
+ =?us-ascii?Q?F++TlHjX6f0S7OYP8mg5aN1MhszwQpTBnQr/cfFv6XMwc/Cvr/xF/6bd8We4?=
+ =?us-ascii?Q?5HnVKKU3suWNqdGnqzZyAeWPS8EkVIn+TZ1E4KIyv0tpbol/7b61z417eQ85?=
+ =?us-ascii?Q?yBnnRJ50AqxbbpjhvTDuoa4LTrat8RH5QMnqUxxoBSQHI+M8fdmiF9nEI/x4?=
+ =?us-ascii?Q?l8wVjIUxtoORvs22cGezE3Xkbno56pYy7gbUNbtbAod4K2iJuLKFBzVWW5d3?=
+ =?us-ascii?Q?4lRJYgMYzvP7MSdzCtM542jFgylvN1+JOFUXB9XLnzYy3LGK0rcIbMBnhZTe?=
+ =?us-ascii?Q?cZI4dt6k5Pltva0PyMD98/M4t/o0BheujShlj/PgOX0uZY8qm8vcp7xGOIg8?=
+ =?us-ascii?Q?/jHRJ+EynWZ3Ome7R+iZozwuj0x42YNNUw+ZdNiKuSHeZ2KQmLavv/fl+45H?=
+ =?us-ascii?Q?Q419SJ9OHj0kyMZIpu1T0hRogdGNe50TAxN6ylmgXQvwDi2QJ2rWbd53i4oh?=
+ =?us-ascii?Q?n32ksdYBfosvBb1M1+4A8hSJCMz2lcWqpQjy+NzORDb0arR6cKZeitwZdFuX?=
+ =?us-ascii?Q?gdEkQ6Qk5sJn+LGKVkUHuGMSsm7qdH2KU77Ef8Mb0Q2vyPMoVdKUmPpkJKZR?=
+ =?us-ascii?Q?0sJUQD5w8Fh8r4oSoBs4vHhvxIjYsucREEjSjEAPUmpdbazqsxDlzkIblFUe?=
+ =?us-ascii?Q?wNfIpQy3eXV7QxzFPIvtWcKzc+CDvsySO2o/WjeVkLY1jmYEvqTY2uXW++dp?=
+ =?us-ascii?Q?7syCTgBIWIqajD5oPkF8FeBh9/QebIzBMC4I4U9t2KTRA1RV+AYVh1WMqcPr?=
+ =?us-ascii?Q?yIgLT5Q/feiWPOV1pfx0sVW5156aSUgnKMympk+CmNhjk/fdkr7esp+z1QvL?=
+ =?us-ascii?Q?P8T8XOfy6goUYa5o7gFbP+2pus/325Jx1QeXHsR8wIl59rKyhsoDenuhrqoa?=
+ =?us-ascii?Q?QUSQgJSCacVexhSdIl8nO2dYxOstqdGiCjw5rJ6Fve6l1bIK0QNy9tLDtW6w?=
+ =?us-ascii?Q?Imid3L5PCblDDBzf6LMvx+kKxNTW1x4rU7MSeAFR2H4WM/7b1vMdEPxt/4U9?=
+ =?us-ascii?Q?znlbW3Vmu8FUIIHJM7I/hEYMfkNlaId/TO8qKTI/04Jd7zCiQDyuYeD+NnKM?=
+ =?us-ascii?Q?yC1bnpVJbVvhtgc2GRcM10+D4RpAh6WpZwYT4GF/J9sE6lIRUwirv2GuZu0J?=
+ =?us-ascii?Q?JgdKDuje/yAtdEUdeRPS7silLMYCb3UIO1UvgEEQu4CjnLHkBzW1GKdUs97c?=
+ =?us-ascii?Q?gbH95lyrjcPE/+aQyAwxnsHj86G4g8e/089nOTnyGqhzyLi7W1eZww0rvqx4?=
+ =?us-ascii?Q?es6iV0lLLkdh21Hy6T4D3kWOHS75?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?D5X8FxttLxLQ321QhCDIKXrhO1VIYJgl8Vngx9GONhcnrnJuPj99h4EupFLG?=
+ =?us-ascii?Q?pewdZP5CEFR1EUV/4b1HeSUGwGBqAk8zDj5J3zh87kVvlk6wKwBwiOd89qfW?=
+ =?us-ascii?Q?ot6Cspd4t3ScymfCZC17cxW5TlaswZ5OL3LUZ8P5XsyzT6FrzjFZpcC+xT6x?=
+ =?us-ascii?Q?ETBJVghGKQSEsOOP/MwUmopuNSymwUrs4lxV36creKiaJWw75ysc2TAAX1Ki?=
+ =?us-ascii?Q?74pHnCg1u6mtW6ownm1oi+mna1E54m1FOdPAQ2+1bW1QAKoWxUxfFcu+BCVy?=
+ =?us-ascii?Q?Avr/vl+vziUcEe3cKpMPXHbWOWI8GR5Hl/PBj//pIs2gRVYmu4FoI/zSvlrQ?=
+ =?us-ascii?Q?Q1Efv9gYlwLVszwMmU0LmtyvkUTJTcUPu+um9dtb6lPKlsKAEJaTxHZIiQhL?=
+ =?us-ascii?Q?zmqCyVjxNBwzxGNCsdEeV8V2WhWdAJr2XeucV8p+/zglaikc1SVZ4hxBwdN/?=
+ =?us-ascii?Q?sSQDIhol3gG5EBvLIcgpJyEb6YWpeZrsTcjS8a7/nEgKMnoqJ3u2MVvMztC2?=
+ =?us-ascii?Q?vrSBchJz1kHZRc08+e2q9au218klLt7UcLOfMOPaOoquTKQMlWnWCVu/vg35?=
+ =?us-ascii?Q?cq3Gel41b6IvG5CkjH8ndjPavN8HuY7R9YkvCP1igwyHtNku1scVaNO5mUIM?=
+ =?us-ascii?Q?dio3KafV50hjttiG1Y4AAI6lTmh0jjayPcQyWJvfbDUXbT0sDWMnGC+b6mxe?=
+ =?us-ascii?Q?UtOeMa+hb83zCiIxp6/TDZlRo9lG1710hfMq1t/r4V4z+tua9SaIKSDZzu6X?=
+ =?us-ascii?Q?SwG8VT+upCHozTAkbwvmnTw1kuC5Et2EPh5lSAyiWC1hc9psDVhijWUahdEz?=
+ =?us-ascii?Q?pfqZ3uB13yP9KxMDNBJuhNHpL6oZgOAWiY7zjG7wSNYJdO59ISVei7InukoF?=
+ =?us-ascii?Q?D4O2H/cjAbcHaf+U3H1HiycPW44yTHgX2jCuDSt5EPGUV0VWZG9fQf43DIiB?=
+ =?us-ascii?Q?cQP8ebNqvng/lqIT67OTVYIELfh9fo7+bpZMmMUg/sTuguw4s4tik81ehhUk?=
+ =?us-ascii?Q?38P7ex9xl8GQELsofjtbHMA1IW7v7tB+2XV8ze6yAK0cjD2Vrp47TR7kyl4D?=
+ =?us-ascii?Q?Kv8uaWY+Rw8TCgKbZW958NkOp83tHnPL6x4wg9mriz2EqmxP9F++FbwfwsT0?=
+ =?us-ascii?Q?cjDqxtggszaBRZXuhSAU3WBUKRzMPbAbEKWdtzP8OFXv85uBPJjJ9z84arIM?=
+ =?us-ascii?Q?mU2ovJ5jGl7EA8NXp6140FtuYPkEAlIaxw4RACm1VHwQ4iP1ebdSrGXKXQF4?=
+ =?us-ascii?Q?V+xAlbY7X24/RE2l/RlIeUzc6271UVsn2sq9tK2SlLOn6/hAj/UuaoEHiC2Z?=
+ =?us-ascii?Q?XOM9jjkiyKGp/4TArRsCOo9IrxwjBaI//r2VqJWbIje9UngIyEWWsRLaJ97k?=
+ =?us-ascii?Q?9n4PBzw5HUqY/0F8CbTuHoKz/0yXQf+KSkIg2FHNxOFKapz9YLXuuopGR0zY?=
+ =?us-ascii?Q?JkXaXz4Cre2WfL2hYmnl5jrGErmXIIny5sMHrqHUZ/AN3v1MVnXdmPi13xbj?=
+ =?us-ascii?Q?OOZqiJaZmut6xPBGUxmUz0BCxfxEeJbcc3aByiHjP2TKtkVktzDQnU1xfykc?=
+ =?us-ascii?Q?xPVfyjLVnVa6AztiInwEc30HhIYUVZtpux9+DBN/?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 653b3e5d-9b6f-45b4-b85f-08dd49627681
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2025 23:35:40.2096
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Vi2g87gCeu5dWYEMg2cHR7DQFaXnebvK5/Vz0gJSRQTusr1SemD5AGwuXQkupA/oqF2Tl9XqFBLiSehrsyZ+aQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6464
 
-
-
-On 2/7/25 00:31, Hal Feng wrote:
-> On 2/5/2025 8:52 PM, E Shattow wrote:
->>
->>
->> On 2/5/25 02:16, Emil Renner Berthing wrote:
->>> E Shattow wrote:
->>>> Replace syscrg assignments of clocks, clock parents, and rates with
->>>> default settings for compatibility with downstream boot loader SPL
->>>> secondary program loader.
->>>>
->>>> Signed-off-by: E Shattow <e@freeshell.de>
->>>> ---
->>>>  arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 11 ++++++++---
->>>>  1 file changed, 8 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>>> index 48fb5091b817..a5661b677687 100644
->>>> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>>> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>>> @@ -359,9 +359,14 @@ spi_dev0: spi@0 {
->>>>  };
->>>>
->>>>  &syscrg {
->>>> -	assigned-clocks = <&syscrg JH7110_SYSCLK_CPU_CORE>,
->>>> -			  <&pllclk JH7110_PLLCLK_PLL0_OUT>;
->>>> -	assigned-clock-rates = <500000000>, <1500000000>;
->>>> +	assigned-clocks = <&syscrg JH7110_SYSCLK_CPU_ROOT>,
->>>> +			  <&syscrg JH7110_SYSCLK_BUS_ROOT>,
->>>> +			  <&syscrg JH7110_SYSCLK_PERH_ROOT>,
->>>> +			  <&syscrg JH7110_SYSCLK_QSPI_REF>;
->>>> +	assigned-clock-parents = <&pllclk JH7110_PLLCLK_PLL0_OUT>,
->>>> +				 <&pllclk JH7110_PLLCLK_PLL2_OUT>,
->>>> +				 <&pllclk JH7110_PLLCLK_PLL2_OUT>,
->>>> +				 <&syscrg JH7110_SYSCLK_QSPI_REF_SRC>;
->>>
->>> I think Conor asked about this too, but you still don't write why it's ok to
->>> drop the 500MHz and 1,5GHz assignments to the cpu-core and pll0 clocks
->>> respectively. You should add this to the commit message itself.
->>>
->>> /Emil
->>
->> Is this a remedy for a bug in the JH7110 CPU? I'm not clear why tweaking
->> the frequencies and increasing core voltage was ever needed.
->>
->> This goes back to series "clk: starfive: jh7110-sys: Fix lower rate of
->> CPUfreq by setting PLL0 rate to 1.5GHz" [1].
->>
->> Since [1] I have had problems with several passively cooled Milk-V Mars
->> CM Lite systems powering off due to thermal limits. My experience then
->> is that the specialized 1.5GHz operation is not appropriate for all
->> JH7110 CPU board layouts and applications.
->>
->> Hal says I failed to get these assignments in Linux to work in U-Boot
->> because U-Boot doesn't have driver support to increase CPU voltage, and
->> Hal offering to add this to a driver in U-Boot... but that's the wrong
->> way around in my opinion, unless there's some defect in the JH7110 CPU
->> that it won't run reliably with hardware defaults.
->>
->> 1:
->> https://lore.kernel.org/all/20240603020607.25122-1-xingyu.wu@starfivetech.com/
->>
->> What is the correct thing to do here?
->>
->> -E
->>
->> From mboxrd@z Thu Jan  1 00:00:00 1970
->> Return-Path: <linux-riscv-bounces+linux-riscv=archiver.kernel.org@lists.infradead.org>
->> X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
->> 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
->> Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
->> 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
->> 	(No client certificate requested)
->> 	by smtp.lore.kernel.org (Postfix) with ESMTPS id B9A24C02192
->> 	for <linux-riscv@archiver.kernel.org>; Wed,  5 Feb 2025 13:10:59 +0000 (UTC)
->> DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
->> 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
->> 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
->> 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
->> 	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
->> 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
->> 	List-Owner; bh=GY86gaXkDRjEBAUNvogHkHuyO230wjLSabDM8v7zKQQ=; b=Un7uhhDTAT8/9N
->> 	FxyCZTIeuEf9Tz2EWguoSASPTIRzVsA8OD+zansoq7n0Em+ejnESLoVicWRdNflaSCojelA6mxlZr
->> 	79fy10oRgiIKMOAb1fwJcsq+rGF8jSdXwi0a2zKjGYb4u4ZNy/uLBiIynsSH/VCYysTKQK6p7wAiC
->> 	7RYsK3WfvbZKMTBmH2vKxA7ERtfZGfNAJqRjHzBM06+ZfEDf9V2UQ3pGUdGPoTZYkQoS8smFEx47Z
->> 	U3KclAiQD6NRzOmPD/VXwUGXQEpLonSaLk7kbAdo3cWww6Wyou3w4XqxHQpym6FyLsKAWWSk7d4vx
->> 	ZbYQckPNKc65NmLst1TA==;
->> Received: from localhost ([::1] helo=bombadil.infradead.org)
->> 	by bombadil.infradead.org with esmtp (Exim 4.98 #2 (Red Hat Linux))
->> 	id 1tffB9-00000003Lk1-2ly8;
->> 	Wed, 05 Feb 2025 13:10:55 +0000
->> Received: from freeshell.de ([2a01:4f8:231:482b::2])
->> 	by bombadil.infradead.org with esmtps (Exim 4.98 #2 (Red Hat Linux))
->> 	id 1tfetw-00000003I2R-42Et
->> 	for linux-riscv@lists.infradead.org;
->> 	Wed, 05 Feb 2025 12:53:10 +0000
->> Received: from [192.168.2.35] (unknown [98.97.25.24])
->> 	(Authenticated sender: e)
->> 	by freeshell.de (Postfix) with ESMTPSA id 7ADA8B4C01E1;
->> 	Wed,  5 Feb 2025 13:53:01 +0100 (CET)
->> Message-ID: <981a3f30-c646-423a-a2dd-e19fef5c69e5@freeshell.de>
->> Date: Wed, 5 Feb 2025 04:52:59 -0800
->> MIME-Version: 1.0
->> User-Agent: Mozilla Thunderbird
->> Subject: Re: [PATCH v2 1/5] riscv: dts: starfive: jh7110-common: replace
->>  syscrg clock assignments
->> To: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
->>  Conor Dooley <conor@kernel.org>, Emil Renner Berthing <kernel@esmil.dk>,
->>  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
->>  Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
->>  <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
->> Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
->>  linux-riscv@lists.infradead.org
->> References: <20250203013730.269558-1-e@freeshell.de>
->>  <20250203013730.269558-2-e@freeshell.de>
->>  <CAJM55Z-M9MsJAtPi-t=_tNV3oG_kdDiS6H=H3koJwTEwB8GJ-Q@mail.gmail.com>
->> Content-Language: en-US
->> From: E Shattow <e@freeshell.de>
->> In-Reply-To: <CAJM55Z-M9MsJAtPi-t=_tNV3oG_kdDiS6H=H3koJwTEwB8GJ-Q@mail.gmail.com>
->> X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
->> X-CRM114-CacheID: sfid-20250205_045309_156119_468548BF 
->> X-CRM114-Status: GOOD (  16.14  )
->> X-BeenThere: linux-riscv@lists.infradead.org
->> X-Mailman-Version: 2.1.34
->> Precedence: list
->> List-Id: <linux-riscv.lists.infradead.org>
->> List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
->>  <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
->> List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
->> List-Post: <mailto:linux-riscv@lists.infradead.org>
->> List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
->> List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
->>  <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
->> Content-Type: text/plain; charset="us-ascii"
->> Content-Transfer-Encoding: 7bit
->> Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
->> Errors-To: linux-riscv-bounces+linux-riscv=archiver.kernel.org@lists.infradead.org
->>
->>
->>
->> On 2/5/25 02:16, Emil Renner Berthing wrote:
->>> E Shattow wrote:
->>>> Replace syscrg assignments of clocks, clock parents, and rates with
->>>> default settings for compatibility with downstream boot loader SPL
->>>> secondary program loader.
->>>>
->>>> Signed-off-by: E Shattow <e@freeshell.de>
->>>> ---
->>>>  arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 11 ++++++++---
->>>>  1 file changed, 8 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>>> index 48fb5091b817..a5661b677687 100644
->>>> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>>> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>>> @@ -359,9 +359,14 @@ spi_dev0: spi@0 {
->>>>  };
->>>>
->>>>  &syscrg {
->>>> -	assigned-clocks = <&syscrg JH7110_SYSCLK_CPU_CORE>,
->>>> -			  <&pllclk JH7110_PLLCLK_PLL0_OUT>;
->>>> -	assigned-clock-rates = <500000000>, <1500000000>;
->>>> +	assigned-clocks = <&syscrg JH7110_SYSCLK_CPU_ROOT>,
->>>> +			  <&syscrg JH7110_SYSCLK_BUS_ROOT>,
->>>> +			  <&syscrg JH7110_SYSCLK_PERH_ROOT>,
->>>> +			  <&syscrg JH7110_SYSCLK_QSPI_REF>;
->>>> +	assigned-clock-parents = <&pllclk JH7110_PLLCLK_PLL0_OUT>,
->>>> +				 <&pllclk JH7110_PLLCLK_PLL2_OUT>,
->>>> +				 <&pllclk JH7110_PLLCLK_PLL2_OUT>,
->>>> +				 <&syscrg JH7110_SYSCLK_QSPI_REF_SRC>;
->>>
->>> I think Conor asked about this too, but you still don't write why it's ok to
->>> drop the 500MHz and 1,5GHz assignments to the cpu-core and pll0 clocks
->>> respectively. You should add this to the commit message itself.
->>>
->>> /Emil
->>
->> Is this a remedy for a bug in the JH7110 CPU? I'm not clear why tweaking
->> the frequencies and increasing core voltage was ever needed.
->>
->> This goes back to series "clk: starfive: jh7110-sys: Fix lower rate of
->> CPUfreq by setting PLL0 rate to 1.5GHz" [1].
->>
->> Since [1] I have had problems with several passively cooled Milk-V Mars
->> CM Lite systems powering off due to thermal limits. My experience then
->> is that the specialized 1.5GHz operation is not appropriate for all
->> JH7110 CPU board layouts and applications.
->>
->> Hal says I failed to get these assignments in Linux to work in U-Boot
->> because U-Boot doesn't have driver support to increase CPU voltage, and
->> Hal offering to add this to a driver in U-Boot... but that's the wrong
->> way around in my opinion, unless there's some defect in the JH7110 CPU
->> that it won't run reliably with hardware defaults.
->>
->> 1:
->> https://lore.kernel.org/all/20240603020607.25122-1-xingyu.wu@starfivetech.com/
->>
->> What is the correct thing to do here?
+On Thu, Feb 06, 2025 at 09:50:07PM -0800, Dan Williams wrote:
+> Alistair Popple wrote:
+> > On Mon, Jan 13, 2025 at 07:35:07PM -0800, Dan Williams wrote:
+> > > Alistair Popple wrote:
+> > 
+> > [...]
+> > 
+> > > ...and here is that aformentioned patch:
+> > 
+> > This patch is different from what you originally posted here:
+> > https://yhbt.net/lore/linux-s390/172721874675.497781.3277495908107141898.stgit@dwillia2-xfh.jf.intel.com/
+> > 
+> > > -- 8< --
+> > > Subject: dcssblk: Mark DAX broken, remove FS_DAX_LIMITED support
+> > > 
+> > > From: Dan Williams <dan.j.williams@intel.com>
+> > > 
+> > > The dcssblk driver has long needed special case supoprt to enable
+> > > limited dax operation, so called CONFIG_FS_DAX_LIMITED. This mode
+> > > works around the incomplete support for ZONE_DEVICE on s390 by forgoing
+> > > the ability of dax-mapped pages to support GUP.
+> > > 
+> > > Now, pending cleanups to fsdax that fix its reference counting [1] depend on
+> > > the ability of all dax drivers to supply ZONE_DEVICE pages.
+> > > 
+> > > To allow that work to move forward, dax support needs to be paused for
+> > > dcssblk until ZONE_DEVICE support arrives. That work has been known for
+> > > a few years [2], and the removal of "pte_devmap" requirements [3] makes the
+> > > conversion easier.
+> > > 
+> > > For now, place the support behind CONFIG_BROKEN, and remove PFN_SPECIAL
+> > > (dcssblk was the only user).
+> > 
+> > Specifically it no longer removes PFN_SPECIAL. Was this intentional? Or should I
+> > really have picked up the original patch from the mailing list?
 > 
-> Please see my reply in
-> https://lore.kernel.org/all/ZQ2PR01MB130736F5C893337606FD6937E6F1A@ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn/
-> 
-> Thanks.
-> 
-> Best regards,
-> Hal
-> 
+> I think this patch that only removes the dccsblk usage of PFN_SPECIAL is
+> sufficient. Leave the rest to the pfn_t cleanup.
 
-What is the explanation to remove the (hardware default) CPU power
-supply 0.9V operation, and remove hardware default CPU speed?
-
-I would think you will want jh7110.dtsi similar as follows:
-
-        cpu_opp: opp-table-0 {
-                        compatible = "operating-points-v2";
-                        opp-shared;
-                        opp-250000000 {
-                                        opp-hz = /bits/ 64 <250000000>;
-                                        opp-microvolt = <800000>;
-                        };
-                        opp-333000000 {
-                                        opp-hz = /bits/ 64 <333000000>;
-                                        opp-microvolt = <800000>;
-                        };
-                        opp-375000000 {
-                                        opp-hz = /bits/ 64 <375000000>;
-                                        opp-microvolt = <800000>;
-                        };
-                        opp-500000000 {
-                                        opp-hz = /bits/ 64 <500000000>;
-                                        opp-microvolt = <800000>;
-                        };
-                        opp-750000000 {
-                                        opp-hz = /bits/ 64 <750000000>;
-                                        opp-microvolt = <800000>;
-                        };
-                        opp-1000000000 {
-                                        opp-hz = /bits/ 64 <1000000000>;
-                                        opp-microvolt = <900000>;
-                        };
-                        opp-1500000000 {
-                                        opp-hz = /bits/ 64 <1500000000>;
-                                        opp-microvolt = <1040000>;
-                        };
-        };
-
-I guess at the voltages here, you will have to provide a correction
-about what is realistic.
-
-Board makers are designing their board layout with opp-1000000000
-default voltage with default clock frequency and not opp-1500000000 on
-an increased voltage and maximum clock speed yes?
-
-We should not exceed the hardware default CPU voltage (and clock
-frequency) for all boards without some very good reason, and I do not
-accept "because more voltage and higher frequency is faster" to be a
-reason to do this.
-
-Hal, you have not explained why it is *necessary* to have this
-non-default voltage and clock frequency table for all boards. I know
-that using a JH7110 board that allows 1.5GHz operation results in
-thermal over-temperature and shutdown, where it then does no work at all
-and is not useful to me. I do accept that you want 1.5GHz operation, for
-a specific board that is no problem with me because I do not have that
-board to test if it is any problem; I have to trust that you have done
-this testing, then.
-
-Summary of my thoughts are:
-
-1. Yes to support for lower and higher core voltage and clock frequency
-
-2. No to imposing non-default hardware profiles on all boards, unless
-there is some actual reason why it is strictly necessary (thermal
-performance testing, operational stability, power savings, ...)
-
-Question follow-up:
-
-1. Can we restore 1GHz operation ?  I ask if there is a property or
-strategy here to force 1GHz maximum operation unless the user decides
-for exceeding the hardware default 0.9V ?
-
--E
+Makes sense. I noticed it when rebaing the pfn_t cleanup because previously it
+did remove PFN_SPECIAL so was just wondering if it was intentional. I will add
+a patch removing PFN_SPECIAL to the pfn_t/pXX_devmap cleanup series I'm writing
+now.
